@@ -9,11 +9,11 @@ exports[`ConfigCacheTestCases side-effects pure-deferred-import pure-deferred-im
   \\\\****************/
 (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   n: () => (/* binding */ readLazy)
-/* harmony export */ });
-/* deferred harmony import */ var _pure_cjs__WEBPACK_DEFERRED_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__.zO(/*! ./pure-cjs */ 896, /* default-with-named */ 2);
-/* harmony import */ var _side_js__WEBPACK_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__(/*! ./side.js */ 270);
+/* esm export */ __webpack_require__.d(__webpack_exports__, {
+/* esm export */   n: () => (/* binding */ readLazy)
+/* esm export */ });
+/* deferred esm import */ var _pure_cjs__WEBPACK_DEFERRED_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__.zO(/*! ./pure-cjs */ 896, /* default-with-named */ 2);
+/* esm import */ var _side_js__WEBPACK_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__(/*! ./side.js */ 270);
 
 
 
@@ -43,9 +43,9 @@ exports.l = function (a, b) {
   \\\\*****************/
 (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   P: () => (/* binding */ extra)
-/* harmony export */ });
+/* esm export */ __webpack_require__.d(__webpack_exports__, {
+/* esm export */   P: () => (/* binding */ extra)
+/* esm export */ });
 function extra(a) {
 	return a + 1;
 }
@@ -134,7 +134,7 @@ function extra(a) {
 /*!******************!*\\\\
   !*** ./index.js ***!
   \\\\******************/
-/* harmony import */ var _lib_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./lib.js */ 174);
+/* esm import */ var _lib_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./lib.js */ 174);
 
 
 it(\\"should evaluate the deferred module on access\\", () => {
@@ -153,11 +153,11 @@ exports[`ConfigCacheTestCases side-effects pure-deferred-import pure-deferred-im
   \\\\****************/
 (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   n: () => (/* binding */ readLazy)
-/* harmony export */ });
-/* deferred harmony import */ var _pure_cjs__WEBPACK_DEFERRED_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__.zO(/*! ./pure-cjs */ 896, /* default-with-named */ 2);
-/* harmony import */ var _side_js__WEBPACK_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__(/*! ./side.js */ 270);
+/* esm export */ __webpack_require__.d(__webpack_exports__, {
+/* esm export */   n: () => (/* binding */ readLazy)
+/* esm export */ });
+/* deferred esm import */ var _pure_cjs__WEBPACK_DEFERRED_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__.zO(/*! ./pure-cjs */ 896, /* default-with-named */ 2);
+/* esm import */ var _side_js__WEBPACK_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__(/*! ./side.js */ 270);
 
 
 
@@ -187,9 +187,9 @@ exports.l = function (a, b) {
   \\\\*****************/
 (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   P: () => (/* binding */ extra)
-/* harmony export */ });
+/* esm export */ __webpack_require__.d(__webpack_exports__, {
+/* esm export */   P: () => (/* binding */ extra)
+/* esm export */ });
 function extra(a) {
 	return a + 1;
 }
@@ -278,7 +278,7 @@ function extra(a) {
 /*!******************!*\\\\
   !*** ./index.js ***!
   \\\\******************/
-/* harmony import */ var _lib_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./lib.js */ 174);
+/* esm import */ var _lib_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./lib.js */ 174);
 
 
 it(\\"should evaluate the deferred module on access\\", () => {
@@ -517,11 +517,11 @@ exports[`ConfigCacheTestCases side-effects pure-deferred-import pure-deferred-im
   \\\\****************/
 (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   n: () => (/* binding */ readLazy)
-/* harmony export */ });
-/* deferred harmony import */ var _pure_cjs__WEBPACK_DEFERRED_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__.zO(/*! ./pure-cjs */ 896, /* default-with-named */ 2);
-/* harmony import */ var _side_js__WEBPACK_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__(/*! ./side.js */ 270);
+/* esm export */ __webpack_require__.d(__webpack_exports__, {
+/* esm export */   n: () => (/* binding */ readLazy)
+/* esm export */ });
+/* deferred esm import */ var _pure_cjs__WEBPACK_DEFERRED_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__.zO(/*! ./pure-cjs */ 896, /* default-with-named */ 2);
+/* esm import */ var _side_js__WEBPACK_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__(/*! ./side.js */ 270);
 
 
 
@@ -551,9 +551,9 @@ exports.l = function (a, b) {
   \\\\*****************/
 (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   P: () => (/* binding */ extra)
-/* harmony export */ });
+/* esm export */ __webpack_require__.d(__webpack_exports__, {
+/* esm export */   P: () => (/* binding */ extra)
+/* esm export */ });
 function extra(a) {
 	return a + 1;
 }
@@ -642,7 +642,7 @@ function extra(a) {
 /*!******************!*\\\\
   !*** ./index.js ***!
   \\\\******************/
-/* harmony import */ var _lib_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./lib.js */ 174);
+/* esm import */ var _lib_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./lib.js */ 174);
 
 
 it(\\"should evaluate the deferred module on access\\", () => {
@@ -771,11 +771,11 @@ exports[`ConfigCacheTestCases side-effects pure-deferred-import pure-deferred-im
   \\\\****************/
 (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   n: () => (/* binding */ readLazy)
-/* harmony export */ });
-/* deferred harmony import */ var _pure_cjs__WEBPACK_DEFERRED_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__.zO(/*! ./pure-cjs */ 896, /* default-with-named */ 2);
-/* harmony import */ var _side_js__WEBPACK_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__(/*! ./side.js */ 270);
+/* esm export */ __webpack_require__.d(__webpack_exports__, {
+/* esm export */   n: () => (/* binding */ readLazy)
+/* esm export */ });
+/* deferred esm import */ var _pure_cjs__WEBPACK_DEFERRED_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__.zO(/*! ./pure-cjs */ 896, /* default-with-named */ 2);
+/* esm import */ var _side_js__WEBPACK_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__(/*! ./side.js */ 270);
 
 
 
@@ -805,9 +805,9 @@ exports.l = function (a, b) {
   \\\\*****************/
 (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   P: () => (/* binding */ extra)
-/* harmony export */ });
+/* esm export */ __webpack_require__.d(__webpack_exports__, {
+/* esm export */   P: () => (/* binding */ extra)
+/* esm export */ });
 function extra(a) {
 	return a + 1;
 }
@@ -896,7 +896,7 @@ function extra(a) {
 /*!******************!*\\\\
   !*** ./index.js ***!
   \\\\******************/
-/* harmony import */ var _lib_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./lib.js */ 174);
+/* esm import */ var _lib_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./lib.js */ 174);
 
 
 it(\\"should evaluate the deferred module on access\\", () => {

@@ -30,7 +30,7 @@ it("should use the same accessor syntax for import and export", function() {
 
 	// Checking harmonyexportinitfragment.js formation of standard export fragment
 	// Array format: "a", 0, bar (value) or "a", () => bar (getter)
-	expectSourceToMatch(source, `\\/\\* harmony export \\*\\/   "a", .*bar`);
+	expectSourceToMatch(source, `\\/\\* esm export \\*\\/   "a", .*bar`);
 
 	// The `require()` edge makes ./harmony-module a wrapped member, so both sides read
 	// the mangled export through `.a`. The accessor call is parenthesized so `new` and

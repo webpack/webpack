@@ -1,4 +1,4 @@
-// Sync `var` external — defer should produce a `/* deferred harmony import */`
+// Sync `var` external — defer should produce a `/* deferred esm import */`
 // runtime statement because `buildMeta.async` is not set.
 import * as syncDeferNs from /* webpackDefer: true */ "ext-var-sync";
 

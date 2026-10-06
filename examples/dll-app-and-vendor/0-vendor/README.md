@@ -72,9 +72,9 @@ module.exports = __webpack_require__;
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   square: () => (/* binding */ square)
-/* harmony export */ });
+/* esm export */ __webpack_require__.d(__webpack_exports__, {
+/* esm export */   square: () => (/* binding */ square)
+/* esm export */ });
 function square(n) {
 	return n * n;
 }
@@ -161,7 +161,7 @@ function square(n) {
 ## Unoptimized
 
 ```
-asset vendor.js 3.49 KiB [emitted] (name: main)
+asset vendor.js 3.48 KiB [emitted] (name: main)
 chunk (runtime: main) vendor.js (main) 57 bytes (javascript) 614 bytes (runtime) [entry] [rendered]
   > main
   runtime modules 614 bytes 3 modules

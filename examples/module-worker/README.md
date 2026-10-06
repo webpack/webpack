@@ -757,9 +757,9 @@ export const __webpack_esm_modules__ = {
 (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   fibonacci: () => (/* binding */ fibonacci)
-/* harmony export */ });
+/* esm export */ __webpack_require__.d(__webpack_exports__, {
+/* esm export */   fibonacci: () => (/* binding */ fibonacci)
+/* esm export */ });
 function fibonacci(n) {
 	return n < 1 ? 0 : n <= 2 ? 1 : fibonacci(n - 1) + fibonacci(n - 2);
 }
@@ -778,8 +778,8 @@ function fibonacci(n) {
 asset main.js 7.79 KiB [emitted] [javascript module] (name: main)
 asset chat.js 6.01 KiB [emitted] [javascript module] (name: chat)
 asset workers/fibonacci.js 5.67 KiB [emitted] [javascript module] (name: fibonacci)
-asset 936.js 1020 bytes [emitted] [javascript module]
-asset 129.js 842 bytes [emitted] [javascript module]
+asset 936.js 1010 bytes [emitted] [javascript module]
+asset 129.js 830 bytes [emitted] [javascript module]
 chunk (runtime: 9a81d90cfd0dfd13d748, main) 129.js 103 bytes [rendered]
   > ./fibonacci ./example.js 70:30-51
   > ./fibonacci ./fib-worker.js 2:29-50

@@ -81,16 +81,16 @@ let __webpack_exports__ = {};
 /*! other exports [not provided] [maybe used in main (runtime-defined)] */
 /*! runtime requirements: __webpack_exports__, __webpack_require__.r, __webpack_require__.d, __webpack_require__.* */
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
-/* harmony export */   increment: () => (/* binding */ increment),
-/* harmony export */   value: () => (/* binding */ value)
-/* harmony export */ });
+/* esm export */ __webpack_require__.d(__webpack_exports__, {
+/* esm export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
+/* esm export */   increment: () => (/* binding */ increment),
+/* esm export */   value: () => (/* binding */ value)
+/* esm export */ });
 var value = 0;
 function increment() {
 	value++;
 }
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("MyLibrary");
+/* esm default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("MyLibrary");
 
 /******/ 	return __webpack_exports__;
 /******/ })()
@@ -103,7 +103,7 @@ function increment() {
 ## Unoptimized
 
 ```
-asset MyLibrary.umd.js 2.69 KiB [emitted] (name: main)
+asset MyLibrary.umd.js 2.67 KiB [emitted] (name: main)
 chunk (runtime: main) MyLibrary.umd.js (main) 92 bytes (javascript) 614 bytes (runtime) [entry] [rendered]
   > ./example main
   runtime modules 614 bytes 3 modules

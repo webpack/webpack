@@ -338,11 +338,11 @@ let __webpack_exports__ = {};
 /*! exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__, __webpack_require__.b, __webpack_require__.r, __webpack_exports__, __webpack_require__.* */
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _images_file_png__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./images/file.png */ 1);
-/* harmony import */ var _images_file_jpg__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./images/file.jpg */ 2);
-/* harmony import */ var _images_file_svg__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./images/file.svg */ 3);
-/* harmony import */ var _content_file_text__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./content/file.text */ 5);
-/* harmony import */ var _content_bytes_svg__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./content/bytes.svg */ 6);
+/* esm import */ var _images_file_png__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./images/file.png */ 1);
+/* esm import */ var _images_file_jpg__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./images/file.jpg */ 2);
+/* esm import */ var _images_file_svg__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./images/file.svg */ 3);
+/* esm import */ var _content_file_text__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./content/file.text */ 5);
+/* esm import */ var _content_bytes_svg__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./content/bytes.svg */ 6);
 // There are different ways to use files:
 
 // 1. Using `import something from "./file.ext";`

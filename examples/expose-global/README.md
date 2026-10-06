@@ -120,9 +120,9 @@ export const PI = 3.14;
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ jQuery)
-/* harmony export */ });
+/* esm export */ __webpack_require__.d(__webpack_exports__, {
+/* esm export */   "default": () => (/* binding */ jQuery)
+/* esm export */ });
 // A library a script outside the bundle expects to find on a global.
 function jQuery(selector) {
 	return `element(${selector})`;
@@ -143,10 +143,10 @@ globalThis.$ = globalThis.jQuery = jQuery;
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   PI: () => (/* binding */ PI),
-/* harmony export */   add: () => (/* binding */ add)
-/* harmony export */ });
+/* esm export */ __webpack_require__.d(__webpack_exports__, {
+/* esm export */   PI: () => (/* binding */ PI),
+/* esm export */   add: () => (/* binding */ add)
+/* esm export */ });
 function add(first, second) {
 	return first + second;
 }
@@ -224,8 +224,8 @@ let __webpack_exports__ = {};
 /*! exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__, __webpack_require__.r, __webpack_exports__, __webpack_require__.* */
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _jquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./jquery */ 1);
-/* harmony import */ var _math__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./math */ 2);
+/* esm import */ var _jquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./jquery */ 1);
+/* esm import */ var _math__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./math */ 2);
 
 
 
@@ -244,7 +244,7 @@ console.log((0,_math__WEBPACK_IMPORTED_MODULE_1__.add)(1, 2), globalThis.add(1, 
 ## Unoptimized
 
 ```
-asset output.js 4.71 KiB [emitted] (name: main)
+asset output.js 4.68 KiB [emitted] (name: main)
 chunk (runtime: main) output.js (main) 535 bytes (javascript) 614 bytes (runtime) [entry] [rendered]
   > ./example.js main
   runtime modules 614 bytes 3 modules

@@ -132,10 +132,10 @@ When compiling for other targets like node.js, electron or WebWorkers, it may be
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   AlternativeCreateUserAction: () => (/* binding */ AlternativeCreateUserAction),
-/* harmony export */   CreateUserAction: () => (/* binding */ CreateUserAction)
-/* harmony export */ });
+/* esm export */ __webpack_require__.d(__webpack_exports__, {
+/* esm export */   AlternativeCreateUserAction: () => (/* binding */ AlternativeCreateUserAction),
+/* esm export */   CreateUserAction: () => (/* binding */ CreateUserAction)
+/* esm export */ });
 // import() doesn't care about whether a module is an async module or not
 const UserApi = __webpack_require__.e(/*! import() */ "UserApi_js").then(() => (__webpack_require__(/*! ./UserApi.js */ 2)));
 
@@ -464,7 +464,7 @@ let __webpack_exports__ = {};
 /*! exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__, __webpack_require__.r, __webpack_exports__, __webpack_require__.* */
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _Actions_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Actions.js */ 1);
+/* esm import */ var _Actions_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Actions.js */ 1);
 
 
 (async ()=> {
@@ -496,10 +496,10 @@ __webpack_require__.r(__webpack_exports__);
 
 __webpack_require__.a(module, async (__webpack_handle_async_dependencies__, __webpack_async_result__) => { try {
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   createUser: () => (/* binding */ createUser)
-/* harmony export */ });
-/* harmony import */ var _db_connection_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./db-connection.js */ 3);
+/* esm export */ __webpack_require__.d(__webpack_exports__, {
+/* esm export */   createUser: () => (/* binding */ createUser)
+/* esm export */ });
+/* esm import */ var _db_connection_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./db-connection.js */ 3);
 var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_db_connection_js__WEBPACK_IMPORTED_MODULE_0__]);
 var __webpack_async_dependencies_result__ = (__webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__);
 _db_connection_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_async_dependencies_result__[0];
@@ -528,10 +528,10 @@ __webpack_async_result__();
 
 __webpack_require__.a(module, async (__webpack_handle_async_dependencies__, __webpack_async_result__) => { try {
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   close: () => (/* binding */ close),
-/* harmony export */   dbCall: () => (/* binding */ dbCall)
-/* harmony export */ });
+/* esm export */ __webpack_require__.d(__webpack_exports__, {
+/* esm export */   close: () => (/* binding */ close),
+/* esm export */   dbCall: () => (/* binding */ dbCall)
+/* esm export */ });
 const connectToDB = async url => {
 	await new Promise(r => setTimeout(r, 1000));
 };
@@ -568,7 +568,7 @@ __webpack_async_result__();
 
 ```
 asset output.js 14.4 KiB [emitted] (name: main)
-asset UserApi_js.output.js 3.05 KiB [emitted]
+asset UserApi_js.output.js 3.02 KiB [emitted]
 chunk (runtime: main) UserApi_js.output.js 617 bytes [rendered]
   > ./UserApi.js ./Actions.js 22:30-52
   > ./UserApi.js ./Actions.js 2:16-38

@@ -38,10 +38,10 @@ export function increment(val) {
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   increment: () => (/* binding */ increment)
-/* harmony export */ });
-/* harmony import */ var _math__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./math */ 2);
+/* esm export */ __webpack_require__.d(__webpack_exports__, {
+/* esm export */   increment: () => (/* binding */ increment)
+/* esm export */ });
+/* esm import */ var _math__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./math */ 2);
 
 function increment(val) {
     return (0,_math__WEBPACK_IMPORTED_MODULE_0__.add)(val, 1);
@@ -60,9 +60,9 @@ function increment(val) {
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   add: () => (/* binding */ add)
-/* harmony export */ });
+/* esm export */ __webpack_require__.d(__webpack_exports__, {
+/* esm export */   add: () => (/* binding */ add)
+/* esm export */ });
 function add() {
 	var sum = 0, i = 0, args = arguments, l = args.length;
 	while (i < l) {
@@ -295,7 +295,7 @@ let __webpack_exports__ = {};
 /*! exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__, __webpack_require__.r, __webpack_exports__, __webpack_require__.e, __webpack_require__.* */
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _increment__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./increment */ 1);
+/* esm import */ var _increment__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./increment */ 1);
 
 var a = 1;
 (0,_increment__WEBPACK_IMPORTED_MODULE_0__.increment)(a); // 2
@@ -317,7 +317,7 @@ __webpack_require__.e(/*! import() */ 655).then(() => (__webpack_require__(/*! .
 
 ```
 asset output.js 11.2 KiB [emitted] (name: main)
-asset 655.output.js 761 bytes [emitted]
+asset 655.output.js 749 bytes [emitted]
 chunk (runtime: main) 655.output.js 24 bytes [rendered]
   > ./async-loaded ./example.js 6:0-24
   ./async-loaded.js 24 bytes [built] [code generated]

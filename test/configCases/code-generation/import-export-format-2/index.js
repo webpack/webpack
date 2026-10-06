@@ -33,7 +33,7 @@ it("should use the same accessor syntax for import and export", function() {
 
 	// Checking harmonyexportinitfragment.js formation of standard export fragment
 	// Array format: "bar", 0, bar (value) or "bar", () => bar (getter)
-	expectSourceToMatch(source, `\\/\\* harmony export \\*\\/   "bar", .*bar`);
+	expectSourceToMatch(source, `\\/\\* esm export \\*\\/   "bar", .*bar`);
 
 	// Both targets become wrapped members read through lazy accessors: `.bar`
 	// unquoted and `["default"]` quoted, as exported. The call is parenthesized so

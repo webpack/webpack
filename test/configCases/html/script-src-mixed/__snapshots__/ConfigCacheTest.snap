@@ -28,9 +28,9 @@ exports[`ConfigCacheTestCases html script-src-mixed exported tests should chain 
 const moduleA = \\"module-a value\\";
 globalThis.__moduleA = moduleA;
 
-/* harmony export */ __webpack_require__.d(__webpack_exports__, [
-/* harmony export */   \\"o\\", 0, /* binding */ moduleA
-/* harmony export */ ]);
+/* esm export */ __webpack_require__.d(__webpack_exports__, [
+/* esm export */   \\"o\\", 0, /* binding */ moduleA
+/* esm export */ ]);
 
 
 /***/ }
@@ -163,7 +163,7 @@ export const __webpack_esm_modules__ = {
   \\\\*********************/
 (__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) {
 
-/* harmony import */ var _module_a_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./module-a.js */ 219);
+/* esm import */ var _module_a_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./module-a.js */ 219);
 
 
 // module-b imports module-a; under the chained dependOn webpack should

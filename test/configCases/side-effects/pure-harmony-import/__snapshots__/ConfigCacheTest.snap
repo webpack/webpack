@@ -9,9 +9,9 @@ exports[`ConfigCacheTestCases side-effects pure-harmony-import pure-harmony-impo
   \\\\***********************/
 (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   y: () => (/* binding */ div)
-/* harmony export */ });
+/* esm export */ __webpack_require__.d(__webpack_exports__, {
+/* esm export */   y: () => (/* binding */ div)
+/* esm export */ });
 global.PURE_HARMONY_IMPORT_SIDE_EFFECT = true;
 
 function div(a, b) {
@@ -27,9 +27,9 @@ function div(a, b) {
   \\\\*********************/
 (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   l: () => (/* binding */ mul)
-/* harmony export */ });
+/* esm export */ __webpack_require__.d(__webpack_exports__, {
+/* esm export */   l: () => (/* binding */ mul)
+/* esm export */ });
 function mul(a, b) {
 	return a * b;
 }
@@ -87,8 +87,8 @@ function mul(a, b) {
 /*!******************!*\\\\
   !*** ./index.js ***!
   \\\\******************/
-/* harmony import */ var _pure_esm__WEBPACK_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__(/*! ./pure-esm */ 217);
-/* harmony import */ var _impure_esm__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./impure-esm */ 351);
+/* esm import */ var _pure_esm__WEBPACK_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__(/*! ./pure-esm */ 217);
+/* esm import */ var _impure_esm__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./impure-esm */ 351);
 
 
 
@@ -109,9 +109,9 @@ exports[`ConfigCacheTestCases side-effects pure-harmony-import pure-harmony-impo
   \\\\***********************/
 (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   y: () => (/* binding */ div)
-/* harmony export */ });
+/* esm export */ __webpack_require__.d(__webpack_exports__, {
+/* esm export */   y: () => (/* binding */ div)
+/* esm export */ });
 global.PURE_HARMONY_IMPORT_SIDE_EFFECT = true;
 
 function div(a, b) {
@@ -127,9 +127,9 @@ function div(a, b) {
   \\\\*********************/
 (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   l: () => (/* binding */ mul)
-/* harmony export */ });
+/* esm export */ __webpack_require__.d(__webpack_exports__, {
+/* esm export */   l: () => (/* binding */ mul)
+/* esm export */ });
 function mul(a, b) {
 	return a * b;
 }
@@ -187,8 +187,8 @@ function mul(a, b) {
 /*!******************!*\\\\
   !*** ./index.js ***!
   \\\\******************/
-/* harmony import */ var _pure_esm__WEBPACK_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__(/*! ./pure-esm */ 217);
-/* harmony import */ var _impure_esm__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./impure-esm */ 351);
+/* esm import */ var _pure_esm__WEBPACK_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__(/*! ./pure-esm */ 217);
+/* esm import */ var _impure_esm__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./impure-esm */ 351);
 
 
 
@@ -209,9 +209,9 @@ exports[`ConfigCacheTestCases side-effects pure-harmony-import pure-harmony-impo
   \\\\***********************/
 (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   y: () => (/* binding */ div)
-/* harmony export */ });
+/* esm export */ __webpack_require__.d(__webpack_exports__, {
+/* esm export */   y: () => (/* binding */ div)
+/* esm export */ });
 global.PURE_HARMONY_IMPORT_SIDE_EFFECT = true;
 
 function div(a, b) {
@@ -227,9 +227,9 @@ function div(a, b) {
   \\\\*********************/
 (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   l: () => (/* binding */ mul)
-/* harmony export */ });
+/* esm export */ __webpack_require__.d(__webpack_exports__, {
+/* esm export */   l: () => (/* binding */ mul)
+/* esm export */ });
 function mul(a, b) {
 	return a * b;
 }
@@ -287,8 +287,8 @@ function mul(a, b) {
 /*!******************!*\\\\
   !*** ./index.js ***!
   \\\\******************/
-/* harmony import */ var _pure_esm__WEBPACK_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__(/*! ./pure-esm */ 217);
-/* harmony import */ var _impure_esm__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./impure-esm */ 351);
+/* esm import */ var _pure_esm__WEBPACK_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__(/*! ./pure-esm */ 217);
+/* esm import */ var _impure_esm__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./impure-esm */ 351);
 
 
 
@@ -309,9 +309,9 @@ exports[`ConfigCacheTestCases side-effects pure-harmony-import pure-harmony-impo
   \\\\***********************/
 (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   y: () => (/* binding */ div)
-/* harmony export */ });
+/* esm export */ __webpack_require__.d(__webpack_exports__, {
+/* esm export */   y: () => (/* binding */ div)
+/* esm export */ });
 global.PURE_HARMONY_IMPORT_SIDE_EFFECT = true;
 
 function div(a, b) {
@@ -327,9 +327,9 @@ function div(a, b) {
   \\\\*********************/
 (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   l: () => (/* binding */ mul)
-/* harmony export */ });
+/* esm export */ __webpack_require__.d(__webpack_exports__, {
+/* esm export */   l: () => (/* binding */ mul)
+/* esm export */ });
 function mul(a, b) {
 	return a * b;
 }
@@ -387,8 +387,8 @@ function mul(a, b) {
 /*!******************!*\\\\
   !*** ./index.js ***!
   \\\\******************/
-/* harmony import */ var _pure_esm__WEBPACK_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__(/*! ./pure-esm */ 217);
-/* harmony import */ var _impure_esm__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./impure-esm */ 351);
+/* esm import */ var _pure_esm__WEBPACK_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__(/*! ./pure-esm */ 217);
+/* esm import */ var _impure_esm__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./impure-esm */ 351);
 
 
 

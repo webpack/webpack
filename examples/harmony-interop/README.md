@@ -102,10 +102,10 @@ exports.readFile = function() {};
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   readFile: () => (/* reexport safe */ _fs__WEBPACK_IMPORTED_MODULE_0__.readFile)
-/* harmony export */ });
-/* harmony import */ var _fs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./fs */ 1);
+/* esm export */ __webpack_require__.d(__webpack_exports__, {
+/* esm export */   readFile: () => (/* reexport safe */ _fs__WEBPACK_IMPORTED_MODULE_0__.readFile)
+/* esm export */ });
+/* esm import */ var _fs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./fs */ 1);
 // reexport a CommonJs module
 
 // Note that the default export doesn't reexport via export *
@@ -147,12 +147,12 @@ var namedExport = module.named;
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
-/* harmony export */   named: () => (/* binding */ named)
-/* harmony export */ });
+/* esm export */ __webpack_require__.d(__webpack_exports__, {
+/* esm export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
+/* esm export */   named: () => (/* binding */ named)
+/* esm export */ });
 // just some exports
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("default");
+/* esm default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("default");
 var named = "named";
 
 
@@ -236,10 +236,10 @@ let __webpack_exports__ = {};
 /*! exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__, __webpack_require__.n, __webpack_require__.r, __webpack_exports__, __webpack_require__.* */
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _fs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./fs */ 1);
-/* harmony import */ var _reexport_commonjs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./reexport-commonjs */ 2);
-/* harmony import */ var _example2__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./example2 */ 3);
-/* harmony import */ var _example2__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_example2__WEBPACK_IMPORTED_MODULE_2__);
+/* esm import */ var _fs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./fs */ 1);
+/* esm import */ var _reexport_commonjs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./reexport-commonjs */ 2);
+/* esm import */ var _example2__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./example2 */ 3);
+/* esm import */ var _example2__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_example2__WEBPACK_IMPORTED_MODULE_2__);
 // harmony module
 
 // import from CommonJS module
@@ -268,7 +268,7 @@ _fs__WEBPACK_IMPORTED_MODULE_0__.readFile("file");
 ## Unoptimized
 
 ```
-asset output.js 6.99 KiB [emitted] (name: main)
+asset output.js 6.94 KiB [emitted] (name: main)
 chunk (runtime: main) output.js (main) 1.13 KiB (javascript) 883 bytes (runtime) [entry] [rendered]
   > ./example.js main
   dependent modules 785 bytes [dependent] 4 modules

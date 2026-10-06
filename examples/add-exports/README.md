@@ -137,10 +137,10 @@ module.exports = Legacy;
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   PI: () => (/* binding */ PI),
-/* harmony export */   add: () => (/* binding */ add)
-/* harmony export */ });
+/* esm export */ __webpack_require__.d(__webpack_exports__, {
+/* esm export */   PI: () => (/* binding */ PI),
+/* esm export */   add: () => (/* binding */ add)
+/* esm export */ });
 // A vendored file — it defines values and exports nothing.
 const PI = 3.14;
 
@@ -230,9 +230,9 @@ let __webpack_exports__ = {};
 /*! exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__, __webpack_require__.n, __webpack_require__.r, __webpack_exports__, __webpack_require__.* */
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _legacy_global__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./legacy-global */ 1);
-/* harmony import */ var _legacy_global__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_legacy_global__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _math__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./math */ 2);
+/* esm import */ var _legacy_global__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./legacy-global */ 1);
+/* esm import */ var _legacy_global__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_legacy_global__WEBPACK_IMPORTED_MODULE_0__);
+/* esm import */ var _math__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./math */ 2);
 
 
 
@@ -249,7 +249,7 @@ console.log(new (_legacy_global__WEBPACK_IMPORTED_MODULE_0___default())().versio
 ## Unoptimized
 
 ```
-asset output.js 4.85 KiB [emitted] (name: main)
+asset output.js 4.82 KiB [emitted] (name: main)
 chunk (runtime: main) output.js (main) 417 bytes (javascript) 883 bytes (runtime) [entry] [rendered]
   > ./example.js main
   runtime modules 883 bytes 4 modules

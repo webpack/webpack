@@ -12,8 +12,8 @@ export const __webpack_esm_modules__ = {
   \\\\****************/
 (__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) {
 
-/* harmony import */ var _dependency_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./dependency.js */ 784);
-/* harmony import */ var _dependency_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_dependency_js__WEBPACK_IMPORTED_MODULE_0__);
+/* esm import */ var _dependency_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./dependency.js */ 784);
+/* esm import */ var _dependency_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_dependency_js__WEBPACK_IMPORTED_MODULE_0__);
 
 
 

@@ -84,7 +84,7 @@ export const memory = await getMemoryFromParentInWorker();
 
 __webpack_require__.a(module, async (__webpack_handle_async_dependencies__, __webpack_async_result__) => { try {
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _magic_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./magic.js */ 1);
+/* esm import */ var _magic_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./magic.js */ 1);
 var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_magic_js__WEBPACK_IMPORTED_MODULE_0__]);
 var __webpack_async_dependencies_result__ = (__webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__);
 _magic_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_async_dependencies_result__[0];
@@ -120,12 +120,12 @@ __webpack_async_result__();
 
 __webpack_require__.a(module, async (__webpack_handle_async_dependencies__, __webpack_async_result__) => { try {
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   get: () => (/* reexport safe */ _magic_wat__WEBPACK_IMPORTED_MODULE_0__.get),
-/* harmony export */   getNumber: () => (/* reexport safe */ _magic_wat__WEBPACK_IMPORTED_MODULE_0__.getNumber),
-/* harmony export */   set: () => (/* reexport safe */ _magic_wat__WEBPACK_IMPORTED_MODULE_0__.set)
-/* harmony export */ });
-/* harmony import */ var _magic_wat__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./magic.wat */ 2);
+/* esm export */ __webpack_require__.d(__webpack_exports__, {
+/* esm export */   get: () => (/* reexport safe */ _magic_wat__WEBPACK_IMPORTED_MODULE_0__.get),
+/* esm export */   getNumber: () => (/* reexport safe */ _magic_wat__WEBPACK_IMPORTED_MODULE_0__.getNumber),
+/* esm export */   set: () => (/* reexport safe */ _magic_wat__WEBPACK_IMPORTED_MODULE_0__.set)
+/* esm export */ });
+/* esm import */ var _magic_wat__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./magic.wat */ 2);
 var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_magic_wat__WEBPACK_IMPORTED_MODULE_0__]);
 var __webpack_async_dependencies_result__ = (__webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__);
 _magic_wat__WEBPACK_IMPORTED_MODULE_0__ = __webpack_async_dependencies_result__[0];
@@ -160,8 +160,8 @@ var __webpack_instantiate__ = ([WEBPACK_IMPORTED_MODULE_0]) => {
 }
 __webpack_require__.a(module, async (__webpack_handle_async_dependencies__, __webpack_async_result__) => {
 	try {
-	/* harmony import */ var WEBPACK_IMPORTED_MODULE_0 = __webpack_require__(/*! ./memory.js */ 3);
-	/* harmony import */ var WEBPACK_IMPORTED_MODULE_1 = __webpack_require__(/*! ./magic-number.js */ 4);
+	/* esm import */ var WEBPACK_IMPORTED_MODULE_0 = __webpack_require__(/*! ./memory.js */ 3);
+	/* esm import */ var WEBPACK_IMPORTED_MODULE_1 = __webpack_require__(/*! ./magic-number.js */ 4);
 	var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([WEBPACK_IMPORTED_MODULE_0]);
 	var [WEBPACK_IMPORTED_MODULE_0] = __webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__;
 	await __webpack_require__.v(exports, module.id, "cf07fd0bebb4a2f09ee0", {
@@ -189,9 +189,9 @@ __webpack_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 
 __webpack_require__.a(module, async (__webpack_handle_async_dependencies__, __webpack_async_result__) => { try {
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   memory: () => (/* binding */ memory)
-/* harmony export */ });
+/* esm export */ __webpack_require__.d(__webpack_exports__, {
+/* esm export */   memory: () => (/* binding */ memory)
+/* esm export */ });
 async function getMemoryFromParentInWorker() {
 	await new Promise(r => setTimeout(r, 200));
 	// fake
@@ -216,10 +216,10 @@ __webpack_async_result__();
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   getNumber: () => (/* binding */ getNumber),
-/* harmony export */   getRandomNumber: () => (/* binding */ getRandomNumber)
-/* harmony export */ });
+/* esm export */ __webpack_require__.d(__webpack_exports__, {
+/* esm export */   getNumber: () => (/* binding */ getNumber),
+/* esm export */   getRandomNumber: () => (/* binding */ getRandomNumber)
+/* esm export */ });
 function getNumber() {
 	return 42;
 }

@@ -100,7 +100,7 @@ module.exports = config;
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _greeter_ts__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./greeter.ts */ 2);
+/* esm import */ var _greeter_ts__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./greeter.ts */ 2);
 
 
 const alice       = { name: "Alice", age: 31 };
@@ -123,9 +123,9 @@ console.log((0,_greeter_ts__WEBPACK_IMPORTED_MODULE_0__.greet)(bob));
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   greet: () => (/* binding */ greet)
-/* harmony export */ });
+/* esm export */ __webpack_require__.d(__webpack_exports__, {
+/* esm export */   greet: () => (/* binding */ greet)
+/* esm export */ });
                        
 	             
 	            
@@ -216,7 +216,7 @@ console.log(__webpack_require__(/*! ./index */ 1));
 ## Unoptimized
 
 ```
-asset output.js 4.03 KiB [emitted] (name: main)
+asset output.js 4.01 KiB [emitted] (name: main)
 chunk (runtime: main) output.js (main) 375 bytes (javascript) 614 bytes (runtime) [entry] [rendered]
   > ./example.js main
   runtime modules 614 bytes 3 modules

@@ -128,8 +128,8 @@ module.exports = config;
 
 __webpack_require__.a(module, async (__webpack_handle_async_dependencies__, __webpack_async_result__) => { try {
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _program_wasm__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./program.wasm */ 1);
-/* harmony import */ var _emscripten_module__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./emscripten-module */ 2);
+/* esm import */ var _program_wasm__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./program.wasm */ 1);
+/* esm import */ var _emscripten_module__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./emscripten-module */ 2);
 var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_program_wasm__WEBPACK_IMPORTED_MODULE_0__]);
 var __webpack_async_dependencies_result__ = (__webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__);
 _program_wasm__WEBPACK_IMPORTED_MODULE_0__ = __webpack_async_dependencies_result__[0];
@@ -186,9 +186,9 @@ __webpack_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ createModule)
-/* harmony export */ });
+/* esm export */ __webpack_require__.d(__webpack_exports__, {
+/* esm export */   "default": () => (/* binding */ createModule)
+/* esm export */ });
 // Minimal stand-in for the JS "glue" Emscripten emits with
 // `-sMODULARIZE -sEXPORT_ES6`. Real glue is large and minified, but the
 // contract a bundler must satisfy is small: a default-exported factory that

@@ -165,9 +165,9 @@ toRawContainerUsingString.appendChild(markdownToRawText);
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
+/* esm export */ __webpack_require__.d(__webpack_exports__, {
+/* esm export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* esm export */ });
 // Imports
 var ___HTML_LOADER_IMPORT_0___ = new URL(/* asset import */ __webpack_require__(/*! ./file.png */ 2), __webpack_require__.b);
 // Module
@@ -386,7 +386,7 @@ This line is part of the same quote.</p>
 </ol>
 </section>`;
 // Exports
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (code);
+/* esm default export */ const __WEBPACK_DEFAULT_EXPORT__ = (code);
 
 /***/ }),
 /* 2 */
@@ -548,9 +548,9 @@ let __webpack_exports__ = {};
 /*! exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__, __webpack_require__.r, __webpack_exports__, __webpack_require__.* */
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _file_md__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./file.md */ 1);
-/* harmony import */ var _raw_to_uint8_array_md__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./raw-to-uint8-array.md */ 3);
-/* harmony import */ var _raw_to_string_md__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./raw-to-string.md */ 4);
+/* esm import */ var _file_md__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./file.md */ 1);
+/* esm import */ var _raw_to_uint8_array_md__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./raw-to-uint8-array.md */ 3);
+/* esm import */ var _raw_to_string_md__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./raw-to-string.md */ 4);
 // Import Markdown file and convert it to HTML
 
 

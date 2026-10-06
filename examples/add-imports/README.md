@@ -276,8 +276,8 @@ let __webpack_exports__ = {};
 /*! exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__, __webpack_require__.n, __webpack_require__.r, __webpack_exports__, __webpack_require__.* */
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _legacy_lib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./legacy-lib */ 1);
-/* harmony import */ var _legacy_lib__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_legacy_lib__WEBPACK_IMPORTED_MODULE_0__);
+/* esm import */ var _legacy_lib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./legacy-lib */ 1);
+/* esm import */ var _legacy_lib__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_legacy_lib__WEBPACK_IMPORTED_MODULE_0__);
 
 
 console.log(_legacy_lib__WEBPACK_IMPORTED_MODULE_0___default().render());
@@ -293,7 +293,7 @@ console.log(_legacy_lib__WEBPACK_IMPORTED_MODULE_0___default().render());
 ## Unoptimized
 
 ```
-asset output.js 4.78 KiB [emitted] (name: main)
+asset output.js 4.77 KiB [emitted] (name: main)
 chunk (runtime: main) output.js (main) 725 bytes (javascript) 883 bytes (runtime) [entry] [rendered]
   > ./example.js main
   runtime modules 883 bytes 4 modules

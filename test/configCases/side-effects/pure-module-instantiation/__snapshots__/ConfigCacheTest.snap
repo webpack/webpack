@@ -67,8 +67,8 @@ exports.l = function (a, b) {
 /*!******************!*\\\\
   !*** ./index.js ***!
   \\\\******************/
-/* harmony import */ var _pure__WEBPACK_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__(/*! ./pure */ 647);
-/* harmony import */ var _impure__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./impure */ 849);
+/* esm import */ var _pure__WEBPACK_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__(/*! ./pure */ 647);
+/* esm import */ var _impure__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./impure */ 849);
 
 
 
@@ -147,8 +147,8 @@ exports.l = function (a, b) {
 /*!******************!*\\\\
   !*** ./index.js ***!
   \\\\******************/
-/* harmony import */ var _pure__WEBPACK_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__(/*! ./pure */ 647);
-/* harmony import */ var _impure__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./impure */ 849);
+/* esm import */ var _pure__WEBPACK_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__(/*! ./pure */ 647);
+/* esm import */ var _impure__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./impure */ 849);
 
 
 
@@ -227,8 +227,8 @@ exports.l = function (a, b) {
 /*!******************!*\\\\
   !*** ./index.js ***!
   \\\\******************/
-/* harmony import */ var _pure__WEBPACK_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__(/*! ./pure */ 647);
-/* harmony import */ var _impure__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./impure */ 849);
+/* esm import */ var _pure__WEBPACK_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__(/*! ./pure */ 647);
+/* esm import */ var _impure__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./impure */ 849);
 
 
 
@@ -307,8 +307,8 @@ exports.l = function (a, b) {
 /*!******************!*\\\\
   !*** ./index.js ***!
   \\\\******************/
-/* harmony import */ var _pure__WEBPACK_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__(/*! ./pure */ 647);
-/* harmony import */ var _impure__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./impure */ 849);
+/* esm import */ var _pure__WEBPACK_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__(/*! ./pure */ 647);
+/* esm import */ var _impure__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./impure */ 849);
 
 
 
