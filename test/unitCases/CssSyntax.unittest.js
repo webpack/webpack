@@ -5134,6 +5134,10 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(
 				settled("a{color:rgb(67.2549019608%, 66.862745098%, 91.9607843137%)}")
 			).toBe("a{color:rgb(67.2549019608%,66.862745098%,91.9607843137%)}");
+			// ...however the function's name is spelled.
+			expect(
+				settled("a{color:r\\67 b(67.2549019608%, 66.862745098%, 91.9607843137%)}")
+			).toBe("a{color:rgb(67.2549019608%,66.862745098%,91.9607843137%)}");
 			// Only a channel reads the percentage as a byte: a length still rounds.
 			expect(settled("a{width:66.862745098%}")).toBe("a{width:66.8627%}");
 			expect(settled(".a{flex:0 0 16.66666667%;opacity:16.66666667%}")).toBe(

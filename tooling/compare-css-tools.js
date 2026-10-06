@@ -211,16 +211,16 @@ const fetchPackedStylesheets = async () => {
 		log(`fetching ${one.package}@${one.version} …`);
 		const directory = path.dirname(target);
 		await fs.promises.mkdir(directory, { recursive: true });
+		// On Windows `npm` is a `.cmd`, which only a shell runs, and a shell joins
+		// arguments unquoted: the tarball lands in `cwd`, so no path is one.
 		const { stdout } = await execFile(
 			"npm",
-			[
-				"pack",
-				`${one.package}@${one.version}`,
-				"--json",
-				"--pack-destination",
-				directory
-			],
-			{ cwd: CACHE, maxBuffer: 64 * 1024 * 1024 }
+			["pack", `${one.package}@${one.version}`, "--json"],
+			{
+				cwd: directory,
+				maxBuffer: 64 * 1024 * 1024,
+				shell: process.platform === "win32"
+			}
 		);
 		const [packed] = JSON.parse(stdout);
 		const tarball = path.join(directory, packed.filename);
