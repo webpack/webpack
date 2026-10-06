@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases env-string should print correct stats for env-string 1`] = `
+"string:
+  Environment (--env): \\"production\\"
+
+object:
+  Environment (--env): {
+    \\"prod\\": [
+      \\"foo\\",
+      \\"bar\\"
+    ],
+    \\"baz\\": true
+  }"
+`;
