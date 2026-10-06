@@ -1331,8 +1331,6 @@ const MINIFIED_FAILURES = [
 			"statements/for/scope-body-lex-open.js (strict)",
 			"statements/let/global-use-before-initialization-in-prior-statement.js (sloppy)",
 			"statements/let/global-use-before-initialization-in-prior-statement.js (strict)",
-			"statements/switch/scope-lex-open-case.js (sloppy)",
-			"statements/switch/scope-lex-open-case.js (strict)",
 			"statements/using/global-use-before-initialization-in-prior-statement.js (sloppy)",
 			"statements/using/global-use-before-initialization-in-prior-statement.js (strict)",
 			"statements/with/has-binding-idref-with-proxy-env.js (sloppy)",
@@ -1639,7 +1637,9 @@ const MINIFIED_FAILURES = [
 			"literals/string/line-continuation-double.js (sloppy)",
 			"literals/string/line-continuation-double.js (strict)",
 			"literals/string/line-continuation-single.js (sloppy)",
-			"literals/string/line-continuation-single.js (strict)"
+			"literals/string/line-continuation-single.js (strict)",
+			"statements/switch/scope-lex-open-case.js (sloppy)",
+			"statements/switch/scope-lex-open-case.js (strict)"
 		]
 	},
 	{
