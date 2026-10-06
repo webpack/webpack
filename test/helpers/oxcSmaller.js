@@ -297,7 +297,6 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: sequences/issue_2062",
 			"terser compress: sequences/issue_2313",
 			"terser compress: sequences/lift_sequences_2",
-			"terser compress: template-string/array_join",
 			"terser compress: template-string/do_not_optimize_tagged_template_1",
 			"terser compress: template-string/respect_inline_script",
 			"terser compress: template-string/template_concattenating_string",
@@ -927,8 +926,6 @@ const OXC_SMALLER_BY_REASON = [
 			"swc exec: terser_issue_t292_no_flatten_with_arg_colliding_with_arg_value_inner_scope",
 			"swc minifier: fixture/issues/10807/input.js",
 			"swc minifier: fixture/issues/11645/with-parent-scope-nested-block/input.js",
-			"swc minifier: fixture/issues/12199/template/input.js",
-			"swc minifier: fixture/issues/12200/2/input.js",
 			"swc minifier: fixture/issues/12212/with-scope/input.js",
 			"swc minifier: fixture/issues/6636/input.js",
 			"swc minifier: fixture/issues/7783/1/input.js",
@@ -1097,7 +1094,6 @@ const OXC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/11829/input.js",
 			"swc minifier: fixture/issues/12187/input.js",
 			"swc minifier: fixture/issues/12191/iterator-errors/input.js",
-			"swc minifier: fixture/next/swc-4559/input.js",
 			"swc minifier: fixture/projects/backbone/18/input.js",
 			"swc minifier: fixture/projects/react/3/input.js"
 		]

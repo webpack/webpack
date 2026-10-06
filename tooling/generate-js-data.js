@@ -769,7 +769,13 @@ const FOLDED_BUILT_INS = {
 		"parseFloat",
 		"parseInt"
 	],
-	"Number.prototype": ["toString"],
+	"Number.prototype": [
+		"toExponential",
+		"toFixed",
+		"toPrecision",
+		"toString",
+		"valueOf"
+	],
 	String: ["fromCharCode", "fromCodePoint"],
 	"String.prototype": [
 		"charAt",
@@ -914,12 +920,6 @@ const UNFOLDED_BUILT_INS = {
 	],
 	"it answers an array, which gzips worse as a literal than the call": [
 		"String.prototype.split"
-	],
-	"of number literals, the printer folds `toString` alone": [
-		"Number.prototype.toExponential",
-		"Number.prototype.toFixed",
-		"Number.prototype.toPrecision",
-		"Number.prototype.valueOf"
 	],
 	"rarely called on literals, so not weighed yet": [
 		"escape",
