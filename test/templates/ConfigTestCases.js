@@ -317,6 +317,26 @@ const describeCases = (config) => {
 							// Wait for uncaught errors to occur
 							setTimeout(done, 200);
 						};
+
+						/**
+						 * Runs the compiler, reporting a synchronous throw from a hook
+						 * (e.g. a `compilation` tap) to the callback like a failed run.
+						 * @param {import("../../").Compiler} compiler compiler
+						 * @param {(err: Error | null, stats?: import("../../").Stats) => void} callback run callback
+						 * @returns {void}
+						 */
+						const runCompiler = (compiler, callback) => {
+							let called = false;
+							try {
+								compiler.run((err, stats) => {
+									called = true;
+									callback(err, stats);
+								});
+							} catch (err) {
+								if (called) throw err;
+								callback(/** @type {Error} */ (err));
+							}
+						};
 						if (config.cache) {
 							it(`${testName} should pre-compile to fill disk cache (1st)`, (done) => {
 								rimraf.sync(outputDirectory);
@@ -327,7 +347,7 @@ const describeCases = (config) => {
 
 								const compiler = require("../..")(options);
 
-								compiler.run((err) => {
+								runCompiler(compiler, (err) => {
 									deprecationTracker();
 									if (err) return handleFatalError(err, done);
 									// Check after close: the disk cache is stored during close,
@@ -377,7 +397,7 @@ const describeCases = (config) => {
 
 								const compiler = require("../..")(options);
 
-								compiler.run((err, stats) => {
+								runCompiler(compiler, (err, stats) => {
 									deprecationTracker();
 									if (err) {
 										return handleFatalError(/** @type {Error} */ (err), done);

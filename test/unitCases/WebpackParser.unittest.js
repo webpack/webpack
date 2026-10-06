@@ -7,8 +7,12 @@ const os = require("os");
 const path = require("path");
 const acorn = require("acorn");
 const JavascriptParser = require("../../lib/javascript/JavascriptParser");
+const { parse: webpackParse } = require("../../lib/javascript/syntax").parser;
 const { Parser } = require("../../lib/javascript/syntax-parser");
-const { parse: webpackParse } = require("../../lib/javascript/syntax-parser");
+
+/** @typedef {import("../../lib/javascript/syntax-parser").CollectedComment} CollectedComment */
+/** @typedef {import("../../lib/javascript/syntax-parser").ParserOptions} ParserOptions */
+/** @typedef {{ ast: import("estree").Program, comments: CollectedComment[] }} ParseResult */
 const {
 	firstDifference,
 	reportable
@@ -25,22 +29,38 @@ const locationMapperFor = (code) => {
 };
 
 /**
+ * Parse with the options a build hands the parser: ranges alone become lazy
+ * offsets, and comments are collected lazily or eagerly to match.
  * @param {string} code source
- * @param {object=} options extra parse options
- * @returns {import("../../lib/javascript/JavascriptParser").ParseResult} result
+ * @param {object=} options extra parse options, plus `comments` to collect them
+ * @returns {ParseResult} result
  */
-const parse = (code, options) =>
-	JavascriptParser._parse(
-		code,
-		/** @type {import("../../lib/javascript/JavascriptParser").InternalParseOptions} */ ({
+const parse = (code, options) => {
+	const { comments: collectComments, ...rest } =
+		/** @type {ParserOptions & { comments?: boolean }} */ ({
 			sourceType: "script",
 			ecmaVersion: "latest",
 			comments: true,
 			ranges: true,
 			allowHashBang: true,
 			...options
-		})
-	);
+		});
+	/** @type {CollectedComment[]} */
+	const comments = [];
+	const lazyNodes = rest.ranges === true && rest.locations !== true;
+	/** @type {ParserOptions} */
+	const parserOptions = {
+		allowReturnOutsideFunction: rest.sourceType === "script",
+		...rest,
+		ranges: lazyNodes ? false : rest.ranges,
+		lazyNodes
+	};
+	if (collectComments === true) {
+		if (lazyNodes) parserOptions.lazyComments = comments;
+		else parserOptions.onComment = comments;
+	}
+	return { ast: webpackParse(code, parserOptions), comments };
+};
 
 describe("WebpackParser", () => {
 	describe("lazy comments", () => {
@@ -1641,6 +1661,26 @@ describe("WebpackParser", () => {
 		const { WebpackParser } = require("../../lib/javascript/syntax-parser");
 
 		/**
+		 * The retry as a script after a failed module parse is `_parse`'s own, so
+		 * this block alone goes through it rather than the syntax parser.
+		 * @param {string} code source
+		 * @param {object=} options extra parse options
+		 * @returns {import("../../lib/javascript/JavascriptParser").ParseResult} result
+		 */
+		const parseThroughJavascriptParser = (code, options) =>
+			JavascriptParser._parse(
+				code,
+				/** @type {import("../../lib/javascript/JavascriptParser").InternalParseOptions} */ ({
+					sourceType: "auto",
+					ecmaVersion: "latest",
+					comments: true,
+					ranges: true,
+					allowHashBang: true,
+					...options
+				})
+			);
+
+		/**
 		 * @param {string} code source
 		 * @param {object=} options extra parse options
 		 * @returns {{ ast: import("../../lib/javascript/JavascriptParser").ParseResult["ast"], parses: number }} result and acorn parse count
@@ -1651,7 +1691,7 @@ describe("WebpackParser", () => {
 				(/** @type {unknown} */ (WebpackParser.prototype));
 			const spy = jest.spyOn(proto, "parse");
 			try {
-				const { ast } = parse(code, { sourceType: "auto", ...options });
+				const { ast } = parseThroughJavascriptParser(code, options);
 				return { ast, parses: spy.mock.calls.length };
 			} finally {
 				spy.mockRestore();
@@ -1714,7 +1754,7 @@ describe("WebpackParser", () => {
 					/** @type {{ parse: () => unknown }} */
 					(/** @type {unknown} */ (WebpackParser.prototype));
 				const spy = jest.spyOn(proto, "parse");
-				expect(() => parse(code, { sourceType: "auto" })).toThrow(
+				expect(() => parseThroughJavascriptParser(code)).toThrow(
 					/'return' outside of function/
 				);
 				const parses = spy.mock.calls.length;
@@ -1727,7 +1767,7 @@ describe("WebpackParser", () => {
 
 		it("should not downgrade a return inside a class static block", () => {
 			expect(() =>
-				parse("class C { static { return; } }", { sourceType: "auto" })
+				parseThroughJavascriptParser("class C { static { return; } }")
 			).toThrow(/'return' outside of function/);
 		});
 

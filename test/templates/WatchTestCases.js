@@ -14,6 +14,7 @@ require("../helpers/warmup-webpack");
  * @typedef {object} WatchTestConfig
  * @property {((i: EXPECTED_ANY, options: EXPECTED_ANY) => string)=} findBundle
  * @property {boolean=} noTests
+ * @property {boolean=} restartCompiler close the compiler after each step and start a new one
  */
 
 const path = require("path");
@@ -281,6 +282,12 @@ const describeCases = (config) => {
 								applyConfig(options, 0);
 							}
 
+							const testConfigPath = path.join(testDirectory, "test.config.js");
+							// A fresh compiler per step reads the cache back from disk
+							const restartCompiler = Boolean(
+								fs.existsSync(testConfigPath) &&
+									require(testConfigPath).restartCompiler
+							);
 							const state = {};
 							let runIdx = 0;
 							let waitMode = false;
@@ -321,9 +328,11 @@ const describeCases = (config) => {
 							).step = run.name;
 							copyDiff(path.join(testDirectory, run.name), tempDirectory, true);
 
-							timer = setTimeout(() => {
+							const startCompiler = () => {
 								try {
-									deprecationTracker = deprecationTracking.start();
+									if (!deprecationTracker) {
+										deprecationTracker = deprecationTracking.start();
+									}
 
 									const webpack = require("../..");
 
@@ -480,8 +489,15 @@ const describeCases = (config) => {
 														if (runIdx < runs.length) {
 															run = runs[runIdx];
 															waitMode = true;
-															timer = setTimeout(() => {
+															timer = setTimeout(async () => {
 																try {
+																	if (restartCompiler) {
+																		// closing stores the pack, so the next compiler
+																		// restores every unchanged module from disk
+																		const error = await closeCompiler();
+																		if (error) throw error;
+																		closing = undefined;
+																	}
 																	waitMode = false;
 																	/** @type {{ step: string | undefined }} */ (
 																		currentWatchStepModule
@@ -491,6 +507,7 @@ const describeCases = (config) => {
 																		tempDirectory,
 																		false
 																	);
+																	if (restartCompiler) startCompiler();
 																} catch (error) {
 																	fail(/** @type {Error} */ (error));
 																}
@@ -527,7 +544,8 @@ const describeCases = (config) => {
 								} catch (error) {
 									fail(/** @type {Error} */ (error));
 								}
-							}, 300);
+							};
+							timer = setTimeout(startCompiler, 300);
 						}, 45000);
 
 						for (const run of runs) {

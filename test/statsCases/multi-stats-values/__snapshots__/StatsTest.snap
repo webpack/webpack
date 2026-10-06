@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases multi-stats-values should print correct stats for multi-stats-values 1`] = `
+"webpack compiled with 1 warning
+
+webpack compiled with 1 warning"
+`;

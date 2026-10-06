@@ -25,6 +25,9 @@ it("should write the runtime module urls out but not a module's own", () => {
 	// A runtime module is emitted beside the wrappers, so its maps are written out.
 	expect(bundle).toContain(`${"chunk"}Urls = {`);
 	expect(bundle).toContain(`${"css"}Urls = {`);
+	// A literal `import()` parses inside the wrapper, so chunks are still imported
+	// by name.
+	expect(bundle).toContain(`import("./${__NAME__}-lazy.mjs")`);
 	// Module code is wrapped, where `import.meta` is a syntax error, so it keeps the
 	// runtime form.
 	expect(bundle).not.toContain(`"./${__NAME__}-thing.txt", import.meta.url)`);

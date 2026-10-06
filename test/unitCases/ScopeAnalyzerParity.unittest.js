@@ -9,8 +9,8 @@
 
 const fs = require("fs");
 const path = require("path");
-const JavascriptParser = require("../../lib/javascript/JavascriptParser");
 const analyzeScope = require("../../lib/javascript/ScopeAnalyzer");
+const { parse } = require("../../lib/javascript/syntax").parser;
 const supportsEslintScope = require("../helpers/supportsEslintScope");
 
 /** @import { Program } from "estree" */
@@ -171,7 +171,7 @@ const resolutions = (root, free) => {
 
 /**
  * @param {string} code source code
- * @param {"module" | "script" | "auto"} sourceType how to parse it
+ * @param {"module" | "script"} sourceType how to parse it
  * @returns {EXPECTED_ANY} the two analyses, normalized
  */
 const analyzeBoth = (code, sourceType) => {
@@ -181,7 +181,7 @@ const analyzeBoth = (code, sourceType) => {
 	// eslint-scope reads `range` to tell a function's parameter list from its
 	// body, so the parse has to serve it
 	const ast = /** @type {Program} */ (
-		JavascriptParser._parse(code, { sourceType, ranges: true }).ast
+		parse(code, { sourceType, ecmaVersion: "latest", ranges: true })
 	);
 
 	// records references everywhere, as the reference does
@@ -497,7 +497,7 @@ describeIfSupported("ScopeAnalyzer matches eslint-scope", () => {
 
 				for (const file of files) {
 					const code = fs.readFileSync(file, "utf8");
-					const { ours, theirs } = analyzeBoth(code, "auto");
+					const { ours, theirs } = analyzeBoth(code, "module");
 					const label = path.relative(root, file);
 
 					expect({ file: label, ...ours }).toEqual({ file: label, ...theirs });

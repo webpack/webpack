@@ -67,8 +67,8 @@
 
 "use strict";
 
-const JavascriptParser = require("../../lib/javascript/JavascriptParser");
 const analyzeScope = require("../../lib/javascript/ScopeAnalyzer");
+const { parse: parseProgram } = require("../../lib/javascript/syntax").parser;
 
 /** @import { Program } from "estree" */
 
@@ -112,7 +112,7 @@ const startOf = (node) => /** @type {EXPECTED_ANY} */ (node).start;
  * @returns {Program} the parsed program
  */
 const parse = (code, sourceType = "module") =>
-	JavascriptParser._parse(code, { sourceType }).ast;
+	parseProgram(code, { sourceType, ecmaVersion: "latest" });
 
 /**
  * @param {Program} ast a program to analyse

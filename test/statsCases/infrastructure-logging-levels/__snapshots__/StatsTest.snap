@@ -1,0 +1,22 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases infrastructure-logging-levels should print correct stats for infrastructure-logging-levels 1`] = `
+"<-> [Verbose] Group
+  <e> [Verbose] Error
+  <w> [Verbose] Warning
+  <i> [Verbose] Info
+      [Verbose] Log
+  <-> [Verbose] Collapsed group
+        [Verbose] Log inside collapsed group
+<t> [Verbose] Time: X ms
+<-> [Debugged] Group
+  <e> [Debugged] Error
+  <w> [Debugged] Warning
+  <i> [Debugged] Info
+      [Debugged] Log
+      [Debugged] Debug
+  <-> [Debugged] Collapsed group
+        [Debugged] Log inside collapsed group
+<t> [Debugged] Time: X ms
+"
+`;

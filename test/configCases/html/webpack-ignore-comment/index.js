@@ -7,5 +7,7 @@ it("should handle webpackIgnore comments on img src attributes", () => {
 	expect(page).toMatch(/<img src="[a-f0-9]+\.png" alt="b">/);
 	expect(page).toMatch(/<img src="[a-f0-9]+\.png" alt="c">/);
 	expect(page).toMatch(/<img src="[a-f0-9]+\.png" alt="d">/);
+	// a magic comment without `webpackIgnore` neither ignores nor warns
+	expect(page).toMatch(/<img src="[a-f0-9]+\.png" alt="e">/);
 	expect(page).toMatchSnapshot();
 });

@@ -1,3 +1,0 @@
-window.foo = {
-  bar: true,;
-};

@@ -12,6 +12,8 @@ exports[`ConfigTestCases html webpack-ignore-comment exported tests should handl
 <!-- webpackIgnore: { -->
 <img src=\\"09a1a1112c577c279435.png\\" alt=\\"c\\">
 <img src=\\"09a1a1112c577c279435.png\\" alt=\\"d\\">
+<!-- webpackPreload: true -->
+<img src=\\"09a1a1112c577c279435.png\\" alt=\\"e\\">
 </body>
 </html>
 "

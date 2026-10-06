@@ -9,5 +9,9 @@ it("should resolve url() references in SVG presentation attributes", () => {
 	expect(page).toMatch(/mask="url\([0-9a-f]+\.svg#m\)"/);
 	// Internal FuncIRI references stay untouched
 	expect(page).toContain('clip-path="url(#clip)"');
+	// Values with no url(), no value or an empty url() are left alone
+	expect(page).toContain('<rect fill="red" stroke mask="url()"/>');
+	// The url() is read decoded, so an entity in it reaches the request
+	expect(page).toMatch(/marker="url\([0-9a-f]+\.svg\?a&b#z\)"/);
 	expect(page).toMatchSnapshot();
 });

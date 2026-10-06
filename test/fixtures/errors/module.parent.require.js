@@ -1,1 +1,0 @@
-module.parent.require('./file');

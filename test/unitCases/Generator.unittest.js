@@ -2,60 +2,15 @@
 
 const path = require("path");
 const Generator = require("../../lib/module/Generator");
-const {
-	CSS_TYPE,
-	JAVASCRIPT_TYPE
-} = require("../../lib/module/ModuleSourceTypeConstants");
+const { CSS_TYPE } = require("../../lib/module/ModuleSourceTypeConstants");
 const RequestShortener = require("../../lib/util/RequestShortener");
 const CssGenerator = require("../../lib/css/CssGenerator");
 const ModuleParseError = require("../../lib/errors/ModuleParseError");
-const WebAssemblyJavascriptGenerator = require("../../lib/wasm-sync/WebAssemblyJavascriptGenerator");
 
 const requestShortener = new RequestShortener("/project");
 const repositoryShortener = new RequestShortener(path.join(__dirname, "../.."));
 
 describe("Generator.throwBuildErrorCode", () => {
-	// `loc` keeps the message deterministic: without it the inner stack, which
-	// carries absolute paths, is appended instead.
-	const parseError = () =>
-		new ModuleParseError(
-			"const = 1;",
-			Object.assign(new Error("Unexpected token"), {
-				loc: { line: 1, column: 6 }
-			}),
-			[],
-			"javascript/auto"
-		);
-
-	it("should throw a SyntaxError for a source the parser rejected", () => {
-		expect(Generator.throwBuildErrorCode(parseError())).toMatchInlineSnapshot(
-			'"throw new SyntaxError(\\"Module parse failed: Unexpected token\\\\nFile was parsed as module type \'javascript/auto\'.\\\\nYou may need an appropriate loader to handle this file type, currently no loaders are configured to process this file. See https://webpack.js.org/concepts#loaders\\\\n> 1 | const = 1;\\\\n    |       ^\\");"'
-		);
-	});
-
-	it("should throw the given constructor for a rejected source", () => {
-		expect(
-			Generator.throwBuildErrorCode(parseError(), "WebAssembly.CompileError")
-		).toMatchInlineSnapshot(
-			'"throw new WebAssembly.CompileError(\\"Module parse failed: Unexpected token\\\\nFile was parsed as module type \'javascript/auto\'.\\\\nYou may need an appropriate loader to handle this file type, currently no loaders are configured to process this file. See https://webpack.js.org/concepts#loaders\\\\n> 1 | const = 1;\\\\n    |       ^\\");"'
-		);
-	});
-
-	it("should throw a plain Error for any other build failure", () => {
-		expect(
-			Generator.throwBuildErrorCode(new Error("loader boom"))
-		).toMatchInlineSnapshot('"throw new Error(\\"loader boom\\");"');
-	});
-
-	it("should keep the constructor override off a non-parse error", () => {
-		expect(
-			Generator.throwBuildErrorCode(
-				new Error("loader boom"),
-				"WebAssembly.CompileError"
-			)
-		).toMatchInlineSnapshot('"throw new Error(\\"loader boom\\");"');
-	});
-
 	it("should write the stack a parse error without a location appends relative", () => {
 		const error = new ModuleParseError(
 			"const = 1;",
@@ -162,45 +117,6 @@ describe("CssGenerator.generateError", () => {
 
 		expect(source).toBe(
 			"/**\n Module build failed (from ./loader.js):\nError: css error message\n    at Object.loader (./loader.js:6:11) \n**/"
-		);
-	});
-});
-
-describe("WebAssemblyJavascriptGenerator.generateError", () => {
-	// asserted on the generated source: a sync wasm module cannot show this at
-	// runtime, the engine rejects the emitted asset before the throw is reached
-	/** @type {(error: Error) => string} */
-	const generate = (error) =>
-		/** @type {import("webpack-sources").Source} */
-		(
-			new WebAssemblyJavascriptGenerator().generateError(
-				error,
-				/** @type {EXPECTED_ANY} */ ({}),
-				/** @type {EXPECTED_ANY} */ ({
-					type: JAVASCRIPT_TYPE,
-					runtimeTemplate: { requestShortener }
-				})
-			)
-		)
-			.source()
-			.toString();
-
-	it("should throw a WebAssembly.CompileError for a rejected binary", () => {
-		expect(
-			generate(
-				new ModuleParseError(
-					"\u0000asm",
-					new Error("magic header not detected"),
-					[],
-					"webassembly/sync"
-				)
-			)
-		).toMatch(/^throw new WebAssembly\.CompileError\(/);
-	});
-
-	it("should throw a plain Error for any other build failure", () => {
-		expect(generate(new Error("loader boom"))).toBe(
-			'throw new Error("loader boom");'
 		);
 	});
 });

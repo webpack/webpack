@@ -43,3 +43,26 @@ it("should copy nothing from below a symlink it copied as a link", () => {
 		"no-follow/relative.txt"
 	]);
 });
+
+it("should copy a 'from' naming a file symlink as a link when not following", () => {
+	const link = path.resolve(__dirname, "named-link/relative.txt");
+
+	expect(fs.lstatSync(link).isSymbolicLink()).toBe(true);
+	expect(fs.readlinkSync(link)).toBe(path.join("real", "a.txt"));
+	const asset = __STATS__.assets.find(
+		(asset) => asset.name === "named-link/relative.txt"
+	);
+	expect(asset.info.symlink).toBeDefined();
+});
+
+it("should copy what a 'from' naming a file symlink points at when following", () => {
+	const file = path.resolve(__dirname, "named-followed/relative.txt");
+
+	expect(fs.lstatSync(file).isSymbolicLink()).toBe(false);
+	expect(read("named-followed/relative.txt")).toBe("a");
+});
+
+it("should skip a link 'ignore' names when not following", () => {
+	expect(exists("ignored-link/relative.txt")).toBe(false);
+	expect(read("ignored-link/real/a.txt")).toBe("a");
+});
