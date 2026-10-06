@@ -1247,6 +1247,16 @@ const CORRECTED_CASES = [
 		{ compress: {}, mangle: false }
 	],
 	[
+		"an unused class extending an arrow or an async arrow",
+		"for (var f of [function () { var C = class extends (() => {}) {}; }, function () { var C = class extends (async () => {}) {}; }]) { try { f(); console.log('no'); } catch (e) { console.log(e.name); } }",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an unused class declaration extending a number",
+		"try { (function () { class C extends 1 {} })(); console.log('no'); } catch (e) { console.log(e.name); }",
+		{ compress: {}, mangle: false }
+	],
+	[
 		"a `for` head's `let` beside an unused name with effects, closures reading each iteration's binding",
 		"function init() { return 3; } (function () { var fns = []; for (let i = 0, n = init(); i < 3; i++) fns.push(() => i); console.log(fns.map((f) => f()).join()); })();",
 		{ compress: {}, mangle: false }
