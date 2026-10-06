@@ -418,7 +418,7 @@ const IMPROVED_CASES = [
 	],
 	[
 		"a logical expression assigning what it tests, from ECMAScript 2021",
-		"var o = {}; function f(a, b) { a || (a = b); o.p || (o.p = 1); o.q ?? (o.q = 2); o.p && (o[\"p\"] = 3); return a; } console.log(f(0, 4), f(5, 6), JSON.stringify(o));",
+		"function f(a, b, o, k) { a || (a = b); o.p || (o.p = 1); o.q ?? (o.q = 2); o.p && (o[\"p\"] = 3); o[0] || (o[0] = 4); o[k] ?? (o[k] = 5); return a; } var o = {}; console.log(f(0, 4, o, \"r\"), f(5, 6, o, \"s\"), JSON.stringify(o));",
 		{ compress: { ecma: 2021 }, ecma: 2021, mangle: false }
 	],
 	[
@@ -4677,7 +4677,11 @@ describe("syntax-printer", () => {
 				["function f(c) { return null == c ? void 0 : c?.a; } console.log(f(null), f({ a: 1 }));", target(2021)],
 				["var o = { p: 0, q: 1 }; function f(k) { o[k + 1] || (o[k + 1] = 2); return o; } console.log(f(\"p\"), f(\"q\"));", target(2021)],
 				["var g = function f() { \"use strict\"; try { f = f || 1; } catch (e) { return e.name; } return typeof f; }; console.log(g());", target(2021)],
-				["x = x || 1; var x; console.log(x);", target(2021)]
+				["x = x || 1; var x; console.log(x);", target(2021)],
+				["console.log(function () { var other = {}, o = { get p() { o = other; return 0; }, set p(v) {} }, first = o; o.p || (o.p = 1); return [first === o, other.p]; }());", target(2021)],
+				["var n = 0; Object.defineProperty(globalThis, \"a\", { get: function () { return n++ ? null : { p: 1 }; }, configurable: true }); function f() { return null == a ? void 0 : a.p; } try { console.log(f()); } catch (e) { console.log(e.name); }", target(2021)],
+				["function f(o, c) { with (o) { return null == c ? void 0 : c.p; } } console.log(f({}, null), f({ c: { p: 2 } }, { p: 1 }));", target(2021)],
+				["function f(o, c) { with (o) { c || (c = 1); return c; } } console.log(f({}, 0), f({ c: 0 }, 2));", target(2021)]
 			];
 			for (const [input, options] of cases) {
 				const { code } = await minify(input, options);
