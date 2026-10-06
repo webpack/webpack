@@ -463,6 +463,22 @@ const IMPROVED_CASES = [
 			`var a = ${stringArray(100, (index) => `w${index}.`)}, b = ${stringArray(100, (index) => `w${index}.,(`)}; console.log(a[5], b[5], a.length + b.length);`
 		],
 		[
+			"an array of strings holding `.`, `,`, `(` and `)` split on a space",
+			`var a = ${stringArray(100, (index) => `w${index}.,()`)}; console.log(a[5], a.length);`
+		],
+		[
+			"an array of strings holding quotes, a newline and a backslash",
+			`var a = ${stringArray(100, (index) => ["a\"b", "c'd", "e\nf", "g\\h"][index % 4] + index)}; console.log(a[0], a[1], a[2], a[3], a.length);`
+		],
+		[
+			"an array of strings built again on each call, and arrays of them",
+			`function f() { return ${stringArray(100)}; } var x = f(); x[0] = "y"; var n = [${stringArray(100)}, ${stringArray(100)}]; console.log(f()[0], x === f(), n[1][99]);`
+		],
+		[
+			"an array of strings split beside long arrays holding a number or a hole, left alone",
+			`var a = ${stringArray(100)}, b = ${stringArray(100).slice(0, -1)}, 1], c = ${stringArray(100).slice(0, -1)}, , "z"]; console.log(a.length, typeof b[100], 100 in c, c.length);`
+		],
+		[
 			"an array of empty strings",
 			`var a = ${stringArray(100, () => "")}; console.log(a.length, a.every((s) => s === ""));`
 		],
