@@ -196,6 +196,15 @@ const runProgram = (code) => {
 // place runs its body as a block, or in its list when nothing in it is scoped.
 const TRY = "try { console.log(1); } catch (e) {}";
 
+/**
+ * An array literal of strings, as source.
+ * @param {number} length how many strings
+ * @param {(index: number) => string=} string the string at each index
+ * @returns {string} the literal
+ */
+const stringArray = (length, string = (index) => `w${index}`) =>
+	JSON.stringify(Array.from({ length }, (_, index) => string(index)));
+
 /** @type {[string, string, import("terser").MinifyOptions][]} */
 const IMPROVED_CASES = [
 	[
@@ -435,7 +444,40 @@ const IMPROVED_CASES = [
 		"a `catch` binding nothing reads, from ECMAScript 2019",
 		"try { null.p; } catch (e) { console.log(1); }",
 		{ compress: { ecma: 2019 }, ecma: 2019, mangle: false }
-	]
+	],
+	...[
+		[
+			"an array of strings split on `.`",
+			`var a = ${stringArray(100)}; console.log(a.length, a[0], a[99], Array.isArray(a)); a.push("x"); console.log(a.length);`
+		],
+		[
+			"an array of single characters, every delimiter among them, split on nothing",
+			`var a = ${stringArray(100, (index) => ". ,()abcdefghijklmnopqrstu"[index % 26])}; console.log(a.join(""), a.length);`
+		],
+		[
+			"an array of single characters past ASCII split on nothing",
+			`var b = ${stringArray(100, (index) => String.fromCharCode(0xe0 + (index % 26)))}; console.log(b[3], b.length);`
+		],
+		[
+			"an array of strings holding `.` split on `,`, and on `)` past `(`",
+			`var a = ${stringArray(100, (index) => `w${index}.`)}, b = ${stringArray(100, (index) => `w${index}.,(`)}; console.log(a[5], b[5], a.length + b.length);`
+		],
+		[
+			"an array of empty strings",
+			`var a = ${stringArray(100, () => "")}; console.log(a.length, a.every((s) => s === ""));`
+		],
+		[
+			"an array of lone surrogates, joined into pairs and split apart",
+			`var a = [${Array.from({ length: 100 }, (_, index) => (index % 2 ? '"\\ude00"' : '"\\ud83d"')).join(", ")}]; console.log(a.length, a[0].length, a[0].charCodeAt(0), a[1].charCodeAt(0));`
+		]
+	].map(
+		([name, input]) =>
+			/** @type {[string, string, import("terser").MinifyOptions]} */ ([
+				name,
+				input,
+				{ compress: {}, mangle: false }
+			])
+	)
 ];
 
 // What the `improve` phase leaves as terser writes it: each body has something
@@ -516,7 +558,12 @@ const KEPT_CASES = [
 	["an array of something no literal", "console.log([Math.random() > 2].join());"],
 	["a function left out", 'console.log(Math.sin(1), "a,b".split(","));'],
 	["a method the oldest Node lacks", 'console.log("abc".at(-1), "abc".replaceAll("b", "x"));'],
-	["an optional call", 'console.log("abc"?.charAt(1));']
+	["an optional call", 'console.log("abc"?.charAt(1));'],
+	["an array of 99 strings, too short to split", `var a = ${stringArray(99)}; console.log(a.length);`],
+	["an array of strings holding every delimiter", `var a = ${stringArray(100, (index) => `w${index}. ,()`)}; console.log(a.length);`],
+	["an array of strings and a number", `var a = ${stringArray(100).slice(0, -1)}, 1]; console.log(a.length, typeof a[100]);`],
+	["an array of strings with a hole", `var a = ${stringArray(100).slice(0, -1)}, , "z"]; console.log(a.length, 100 in a);`],
+	["an index into an array of strings, folded first", `console.log(${stringArray(100)}[3]);`]
 ];
 
 // Each prints one thing and terser's output another, under the options named.

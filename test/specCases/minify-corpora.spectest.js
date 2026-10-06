@@ -1402,7 +1402,17 @@ const IMPROVED_YET_BIGGER = {
 	"fixture/issues/number-radix-conversion/input.js (its own options)":
 		"6 bytes fewer, 9 more gzipped: the folded base-36 digits are a string gzip finds no run in",
 	"fixture/issues/number-radix-conversion/input.js (the default minimizer's options)":
-		"6 bytes fewer, 9 more gzipped: the folded base-36 digits are a string gzip finds no run in"
+		"6 bytes fewer, 9 more gzipped: the folded base-36 digits are a string gzip finds no run in",
+	"RGI_Emoji_Flag_Sequence.js (the default minimizer's options)":
+		"507 bytes fewer, 8 more gzipped: each emoji sequence split out of the array loses the quotes gzip matched around the same code points",
+	"RGI_Emoji_Modifier_Sequence.js (the default minimizer's options)":
+		"1319 bytes fewer, 22 more gzipped: each emoji sequence split out of the array loses the quotes gzip matched around the same code points",
+	"rgi-emoji-14.0.js (the default minimizer's options)":
+		"213 bytes fewer, 6 more gzipped: each emoji sequence split out of the array loses the quotes gzip matched around the same code points",
+	"rgi-emoji-15.1.js (the default minimizer's options)":
+		"225 bytes fewer, 9 more gzipped: each emoji sequence split out of the array loses the quotes gzip matched around the same code points",
+	"rgi-emoji-17.0.js (the default minimizer's options)":
+		"315 bytes fewer, 3 more gzipped: each emoji sequence split out of the array loses the quotes gzip matched around the same code points"
 };
 
 // Sources whose shorter spelling no longer repeats text gzip matched, by the

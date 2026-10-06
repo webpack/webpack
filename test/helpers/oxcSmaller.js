@@ -861,7 +861,6 @@ const OXC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/next/asmjs/1/input.js",
 			"swc minifier: fixture/next/chakra/input.js",
 			"swc minifier: fixture/next/feedback-2/codemirror/input.js",
-			"swc minifier: fixture/next/react-pdf-renderer/input.js",
 			"swc minifier: fixture/next/regression-1/framework-798bab57daac3897/input.js",
 			"swc minifier: fixture/next/styled-components/1/input.js",
 			"swc minifier: fixture/next/target-es2015/static/chunks/main-04b5934c26266542/input.js",
