@@ -4939,6 +4939,224 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		});
 	});
 
+	// Each case below is one a real stylesheet of the comparison corpus wrote,
+	// and each is held to its own output as well: a second minify adds nothing.
+	describe("what a wider corpus found", () => {
+		/**
+		 * @param {string} css a stylesheet
+		 * @param {CssEnvironment=} environment the target's CSS abilities
+		 * @returns {string} its minified serialization, checked to be settled
+		 */
+		const settled = (css, environment) => {
+			const once = minify(css, environment);
+			expect(minify(once, environment)).toBe(once);
+			return once;
+		};
+		const legacy = { browsers: ["chrome 100", "firefox 100", "safari 15.4"] };
+
+		it("takes back a rule the joined at-rule repeats, its rules read apart", () => {
+			expect(
+				settled(
+					"@media x{.a{color:red}}.b{top:0}@media x{.c{top:1px}}@media x{.a{color:red}}"
+				)
+			).toBe(".b{top:0}@media x{.c{top:1px}.a{color:red}}");
+		});
+
+		it("takes back a rule the joined at-rule repeats beside one nesting a rule", () => {
+			expect(
+				settled(
+					"@media x{.a{color:red}}@media x{.c{.d{top:1px}}}.b{top:0}@media x{.a{color:red}}"
+				)
+			).toBe("@media x{.c{.d{top:1px}}}.b{top:0}@media x{.a{color:red}}");
+		});
+
+		it.each([
+			[
+				"@media x{.a{color:red}}@media x{@media y{.c{top:1px}}}.b{top:0}@media x{.a{color:red}}",
+				"@media x{@media y{.c{top:1px}}}.b{top:0}@media x{.a{color:red}}"
+			],
+			[
+				"@media x{.a{color:red}}@media x{@media y{.c{top:1px}}}.b{top:0}@media x{@media y{.c{top:1px}}}",
+				"@media x{.a{color:red}}.b{top:0}@media x{@media y{.c{top:1px}}}"
+			],
+			[
+				"@media x{.a{color:red}}@media x{@layer y{.c{top:1px}}}.b{top:0}@media x{@layer y{.c{top:1px}}}",
+				"@media x{.a{color:red}@layer y{}}.b{top:0}@media x{@layer y{.c{top:1px}}}"
+			],
+			[
+				"@media x{.a{color:red}}@media x{@font-face{font-family:x}}.b{top:0}@media x{.a{color:red}}",
+				"@media x{@font-face{font-family:x}}.b{top:0}@media x{.a{color:red}}"
+			]
+		])("reads a joined at-rule's blocks as either side would: %s", (css, out) => {
+			expect(settled(css)).toBe(out);
+		});
+
+		it("keeps the joined at-rule whole where it holds a declaration", () => {
+			expect(
+				minify(
+					"@media x{.a{color:red}}@media x{top:0;left:0}.b{top:0}@media x{.a{color:red}}"
+				)
+			).toBe("@media x{.a{color:red}top:0;left:0}.b{top:0}@media x{.a{color:red}}");
+			expect(
+				minify(
+					"@media x{.a{color:red}}@media x{@media y{top:0;left:0}}.b{top:0}@media x{.a{color:red}}"
+				)
+			).toBe(
+				"@media x{.a{color:red}@media y{top:0;left:0}}.b{top:0}@media x{.a{color:red}}"
+			);
+		});
+
+		it.each([
+			[
+				".a{padding-top:0;color:red}.a{padding-bottom:2px;padding-left:2px;padding-right:2px}",
+				".a{padding:0 2px 2px;color:red}"
+			],
+			[
+				".a{padding-top:0!important}.a{padding-bottom:2px!important;padding-left:2px!important;padding-right:2px!important}",
+				".a{padding:0 2px 2px!important}"
+			],
+			[".a{top:0}.a{right:0;bottom:0;left:0}", ".a{inset:0}"]
+		])("merges a box two joined rules wrote between them: %s", (css, out) => {
+			expect(settled(css)).toBe(out);
+		});
+
+		it("leaves the joined sides apart where merging longhands is turned off", () => {
+			expect(
+				new SourceProcessor().process(".a{top:0}.a{right:0;bottom:0;left:0}", {
+					mode: "minify",
+					transforms: { mergeLonghands: false }
+				}).code
+			).toBe(".a{top:0;right:0;bottom:0;left:0}");
+		});
+
+		it("keeps the joined sides apart where the shorthand stands between", () => {
+			const css =
+				".a{padding-top:0;padding:1px}.a{padding-bottom:2px;padding-left:2px;padding-right:2px}";
+			expect(settled(css)).toBe(css);
+		});
+
+		it.each([
+			[
+				"something between writes the family",
+				".a{padding-top:0;padding-inline:1px}.a{padding-bottom:2px;padding-left:2px;padding-right:2px}"
+			],
+			[
+				"one side is `!important`",
+				".a{padding-top:0!important}.a{padding-bottom:2px;padding-left:2px;padding-right:2px}"
+			],
+			[
+				"a side holds two components",
+				".a{margin-top:0}.a{margin-bottom:1px 2px;margin-left:2px;margin-right:2px}"
+			],
+			[
+				"a side is a bare number",
+				".a{padding-top:0}.a{padding-bottom:2;padding-left:2px;padding-right:2px}"
+			],
+			[
+				"a side is a substitution",
+				".a{padding-top:var(--x)}.a{padding-bottom:2px;padding-left:2px;padding-right:2px}"
+			],
+			[
+				"a side is written twice",
+				".a{padding-top:0;padding-top:1px}.a{padding-bottom:2px;padding-left:2px;padding-right:2px}"
+			]
+		])("keeps the joined sides apart where %s", (_name, css) => {
+			const out = settled(css);
+			expect(out).not.toMatch(/[{;](padding|margin):/);
+		});
+
+		it("keeps the sides apart where the target reads no `inset`", () => {
+			expect(
+				settled(".a{top:0}.a{right:0;bottom:0;left:0}", {
+					browsers: ["chrome 80"]
+				})
+			).toBe(".a{top:0;right:0;bottom:0;left:0}");
+		});
+
+		it.each([
+			["a{animation:x 1s 2s;animation-delay:0s}", "a{animation:x 1s}"],
+			["a{animation:x 1s;animation-delay:0s}", "a{animation:x 1s}"],
+			["a{animation:x 1s linear;animation-timing-function:ease}", "a{animation:x 1s}"],
+			["a{animation:x 1s;animation-timing-function:ease}", "a{animation:x 1s}"],
+			["a{animation:x 1s;animation-duration:0s}", "a{animation:x}"],
+			["a{animation:x;animation-duration:0s}", "a{animation:x}"],
+			// A delay after it would read as the duration once it went.
+			["a{animation:x 1s 2s;animation-duration:0s}", "a{animation:x 0s 2s}"],
+			["a{animation:x 1s 3;animation-iteration-count:1}", "a{animation:x 1s}"],
+			["a{animation:x 1s paused;animation-play-state:running}", "a{animation:x 1s}"],
+			// Nothing would be left of the shorthand.
+			[
+				"a{animation:ease;animation-timing-function:ease}",
+				"a{animation:ease;animation-timing-function:ease}"
+			]
+		])("folds a longhand's initial into an animation as no value: %s", (css, out) => {
+			expect(settled(css)).toBe(out);
+		});
+
+		it("joins a seam's rule into the one before it once they print alike", () => {
+			expect(
+				settled(
+					"@supports (x:y){.a{left:1px}}@supports (x:y){.a{right:1px}}@supports (x:y){.b{left:1px}}@supports (x:y){.b{right:1px}}"
+				)
+			).toBe("@supports (x:y){.a,.b{left:1px;right:1px}}");
+		});
+
+		it("merges no family whose longhand holds a substitution", () => {
+			// Invalid at computed-value time, the shorthand would lose every slot
+			// where the longhand loses only its color.
+			const css =
+				"a{border-block-start-width:thin;border-block-start-style:solid;border-block-start-color:rgba(var(--c),var(--o))}";
+			expect(settled(css)).toBe(css);
+		});
+
+		it("keeps a percentage channel a hair off a byte's half as written", () => {
+			expect(
+				settled("a{color:rgb(67.2549019608%, 66.862745098%, 91.9607843137%)}")
+			).toBe("a{color:rgb(67.2549019608%,66.862745098%,91.9607843137%)}");
+			expect(settled("a{width:66.862745098%}")).toBe(
+				"a{width:66.862745098%}"
+			);
+			// An exact half rounds up in every engine.
+			expect(settled("a{color:rgba(50%,50%,50%,.5)}")).toBe(
+				"a{color:#80808080}"
+			);
+		});
+
+		it("keeps the space after a substitution in a custom property", () => {
+			expect(
+				settled(":root{--b:var(--w) var(--s) var(--c);--t:var(--a) [x];--u:(1px) var(--a)}")
+			).toBe(":root{--b:var(--w) var(--s) var(--c);--t:var(--a)[x];--u:(1px)var(--a)}");
+		});
+
+		it("writes a prefixed copy in the order its rule prints", () => {
+			expect(settled(".b:autofill,.a:autofill{x:1}", legacy)).toBe(
+				".a:-webkit-autofill,.b:-webkit-autofill{x:1}.a:autofill,.b:autofill{x:1}"
+			);
+			expect(
+				settled(
+					".b:-webkit-autofill,.a:-webkit-autofill{x:1}.a:autofill,.b:autofill{x:1}",
+					legacy
+				)
+			).toBe(
+				".a:-webkit-autofill,.b:-webkit-autofill{x:1}.a:autofill,.b:autofill{x:1}"
+			);
+		});
+
+		it("joins the rules a dropped prefixed rule stood between", () => {
+			expect(
+				settled(".a:hover,.b:hover{x:1}.b:-moz-any-link{x:1}.b:any-link{x:1}", {
+					browsers: ["chrome 120", "firefox 120", "safari 17"]
+				})
+			).toBe(".a:hover,.b:any-link,.b:hover{x:1}");
+		});
+
+		it("writes a folded relative color with the spacing it prints with", () => {
+			expect(
+				settled("a{box-shadow:0 0 oklch(from #215db0 l c h/0)}", legacy)
+			).toBe("a{box-shadow:0 0#215db000;box-shadow:0 0 oklch(from #215db0 l c h/0)}");
+		});
+	});
+
 	describe("a rule a later one of the same selector writes wholly again", () => {
 		it("drops the earlier, whatever stands between", () => {
 			expect(
@@ -10557,7 +10775,7 @@ describe("CssSyntax minify — a fallback for a color the target cannot read", (
 				["chrome 100"]
 			)
 		).toBe(
-			"a{box-shadow:0 0 2px #a16945,0 0 4px #977d30;" +
+			"a{box-shadow:0 0 2px#a16945,0 0 4px#977d30;" +
 				"box-shadow:0 0 2px lab(50% 20 30),0 0 4px oklch(.6 .1 90)}"
 		);
 		expect(

@@ -12,7 +12,8 @@ const path = require("path");
 const {
 	CACHE: CSS_CACHE,
 	GENERATED_FIXTURES,
-	INSTALLED_FIXTURES
+	INSTALLED_FIXTURES,
+	PACKED_FIXTURES
 } = require("../../tooling/compare-css-tools");
 const {
 	APP_SHELL,
@@ -108,7 +109,8 @@ const benchmarkStylesheets = (minify) =>
 				(/** @type {[string, string]} */ [label, file]) =>
 					/** @type {[string, string]} */ ([label, `node_modules/${file}`])
 			),
-			...GENERATED_FIXTURES
+			...GENERATED_FIXTURES,
+			...PACKED_FIXTURES
 		],
 		minify
 	);
