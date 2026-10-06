@@ -11161,36 +11161,6 @@ declare interface HtmlAstSkip {
 	 */
 	doctype?: boolean;
 }
-
-/**
- * A materialized attribute as returned by `A.attributes` (tests/tooling) —
- * the parser-facing representation is an id into the attribute columns, read
- * through the scalar `A.attr*` accessors.
- */
-declare interface HtmlAttribute {
-	/**
-	 * lowercased (and, in foreign content, adjusted) attribute name
-	 */
-	name: string;
-	value: string;
-
-	/**
-	 * name used by the html5lib tree serializer (foreign-namespaced)
-	 */
-	serializedName?: string;
-
-	/**
-	 * source offset, or -1 on adoption-agency clones
-	 */
-	nameStart: number;
-	nameEnd: number;
-
-	/**
-	 * source offset, or -1 when valueless / on clones
-	 */
-	valueStart: number;
-	valueEnd: number;
-}
 declare interface HtmlChunkNameData {
 	/**
 	 * the page's path, escaped for use in a name
@@ -11792,29 +11762,23 @@ declare class HtmlSourceProcessor extends SourceProcessor<
 		 */
 		source(n?: number, end?: number): string;
 		/**
-		 * An element's tag name (lowercased, adjusted in foreign content), a
-		 * doctype's name, a processing instruction's target; "" for other nodes.
+		 * An element's or attribute's name (lowercased, adjusted in foreign content),
+		 * a doctype's name, a processing instruction's target; "" for other nodes.
 		 */
 		name(n?: number): string;
 		namespace(n?: number): number;
 		selfClosing(n?: number): boolean;
-		attributes(n?: number): HtmlAttribute[];
 		attributeCount(n?: number): number;
 		/**
-		 * The i-th attribute of an element, as an id for the `attribute*` reads.
+		 * The i-th attribute of an element, as a node the shared reads take.
 		 */
-		attributeAt(i: number, n?: number): number;
+		attribute(i: number, n?: number): number;
 		/**
 		 * Linear lookup by (lowercased) name.
 		 */
 		findAttribute(name: string, n?: number): number;
-		attributeName(a: number): string;
-		attributeValue(a: number): string;
-		attributeNameStart(a: number): number;
-		attributeNameEnd(a: number): number;
-		attributeValueStart(a: number): number;
-		attributeValueEnd(a: number): number;
-		tagEnd(n?: number): number;
+		valueStart(a: number): number;
+		valueEnd(a: number): number;
 		nameStart(n?: number): number;
 		nameEnd(n?: number): number;
 		/**
@@ -11847,8 +11811,8 @@ declare class HtmlSourceProcessor extends SourceProcessor<
 		contentEnd(n?: number): number;
 		templateContent(n?: number): number;
 		/**
-		 * A text's, comment's or processing instruction's data, character
-		 * references decoded; "" for other nodes.
+		 * A text's, comment's, processing instruction's or attribute's data,
+		 * character references decoded; "" for other nodes.
 		 */
 		value(n?: number): string;
 		publicId(_n?: number): null | string;
@@ -34476,29 +34440,23 @@ declare namespace exports {
 					 */
 					source(n?: number, end?: number): string;
 					/**
-					 * An element's tag name (lowercased, adjusted in foreign content), a
-					 * doctype's name, a processing instruction's target; "" for other nodes.
+					 * An element's or attribute's name (lowercased, adjusted in foreign content),
+					 * a doctype's name, a processing instruction's target; "" for other nodes.
 					 */
 					name(n?: number): string;
 					namespace(n?: number): number;
 					selfClosing(n?: number): boolean;
-					attributes(n?: number): HtmlAttribute[];
 					attributeCount(n?: number): number;
 					/**
-					 * The i-th attribute of an element, as an id for the `attribute*` reads.
+					 * The i-th attribute of an element, as a node the shared reads take.
 					 */
-					attributeAt(i: number, n?: number): number;
+					attribute(i: number, n?: number): number;
 					/**
 					 * Linear lookup by (lowercased) name.
 					 */
 					findAttribute(name: string, n?: number): number;
-					attributeName(a: number): string;
-					attributeValue(a: number): string;
-					attributeNameStart(a: number): number;
-					attributeNameEnd(a: number): number;
-					attributeValueStart(a: number): number;
-					attributeValueEnd(a: number): number;
-					tagEnd(n?: number): number;
+					valueStart(a: number): number;
+					valueEnd(a: number): number;
 					nameStart(n?: number): number;
 					nameEnd(n?: number): number;
 					/**
@@ -34531,8 +34489,8 @@ declare namespace exports {
 					contentEnd(n?: number): number;
 					templateContent(n?: number): number;
 					/**
-					 * A text's, comment's or processing instruction's data, character
-					 * references decoded; "" for other nodes.
+					 * A text's, comment's, processing instruction's or attribute's data,
+					 * character references decoded; "" for other nodes.
 					 */
 					value(n?: number): string;
 					publicId(_n?: number): null | string;
@@ -34570,6 +34528,7 @@ declare namespace exports {
 					export let Comment: 5;
 					export let Doctype: 6;
 					export let ProcessingInstruction: 7;
+					export let Attribute: 8;
 				}
 				export let QUOTE_DOUBLE: 1;
 				export let QUOTE_NONE: 0;
@@ -34631,29 +34590,23 @@ declare namespace exports {
 						 */
 						source(n?: number, end?: number): string;
 						/**
-						 * An element's tag name (lowercased, adjusted in foreign content), a
-						 * doctype's name, a processing instruction's target; "" for other nodes.
+						 * An element's or attribute's name (lowercased, adjusted in foreign content),
+						 * a doctype's name, a processing instruction's target; "" for other nodes.
 						 */
 						name(n?: number): string;
 						namespace(n?: number): number;
 						selfClosing(n?: number): boolean;
-						attributes(n?: number): HtmlAttribute[];
 						attributeCount(n?: number): number;
 						/**
-						 * The i-th attribute of an element, as an id for the `attribute*` reads.
+						 * The i-th attribute of an element, as a node the shared reads take.
 						 */
-						attributeAt(i: number, n?: number): number;
+						attribute(i: number, n?: number): number;
 						/**
 						 * Linear lookup by (lowercased) name.
 						 */
 						findAttribute(name: string, n?: number): number;
-						attributeName(a: number): string;
-						attributeValue(a: number): string;
-						attributeNameStart(a: number): number;
-						attributeNameEnd(a: number): number;
-						attributeValueStart(a: number): number;
-						attributeValueEnd(a: number): number;
-						tagEnd(n?: number): number;
+						valueStart(a: number): number;
+						valueEnd(a: number): number;
 						nameStart(n?: number): number;
 						nameEnd(n?: number): number;
 						/**
@@ -34686,8 +34639,8 @@ declare namespace exports {
 						contentEnd(n?: number): number;
 						templateContent(n?: number): number;
 						/**
-						 * A text's, comment's or processing instruction's data, character
-						 * references decoded; "" for other nodes.
+						 * A text's, comment's, processing instruction's or attribute's data,
+						 * character references decoded; "" for other nodes.
 						 */
 						value(n?: number): string;
 						publicId(_n?: number): null | string;
@@ -34736,29 +34689,23 @@ declare namespace exports {
 									 */
 									source(n?: number, end?: number): string;
 									/**
-									 * An element's tag name (lowercased, adjusted in foreign content), a
-									 * doctype's name, a processing instruction's target; "" for other nodes.
+									 * An element's or attribute's name (lowercased, adjusted in foreign content),
+									 * a doctype's name, a processing instruction's target; "" for other nodes.
 									 */
 									name(n?: number): string;
 									namespace(n?: number): number;
 									selfClosing(n?: number): boolean;
-									attributes(n?: number): HtmlAttribute[];
 									attributeCount(n?: number): number;
 									/**
-									 * The i-th attribute of an element, as an id for the `attribute*` reads.
+									 * The i-th attribute of an element, as a node the shared reads take.
 									 */
-									attributeAt(i: number, n?: number): number;
+									attribute(i: number, n?: number): number;
 									/**
 									 * Linear lookup by (lowercased) name.
 									 */
 									findAttribute(name: string, n?: number): number;
-									attributeName(a: number): string;
-									attributeValue(a: number): string;
-									attributeNameStart(a: number): number;
-									attributeNameEnd(a: number): number;
-									attributeValueStart(a: number): number;
-									attributeValueEnd(a: number): number;
-									tagEnd(n?: number): number;
+									valueStart(a: number): number;
+									valueEnd(a: number): number;
 									nameStart(n?: number): number;
 									nameEnd(n?: number): number;
 									/**
@@ -34791,8 +34738,8 @@ declare namespace exports {
 									contentEnd(n?: number): number;
 									templateContent(n?: number): number;
 									/**
-									 * A text's, comment's or processing instruction's data, character
-									 * references decoded; "" for other nodes.
+									 * A text's, comment's, processing instruction's or attribute's data,
+									 * character references decoded; "" for other nodes.
 									 */
 									value(n?: number): string;
 									publicId(_n?: number): null | string;
@@ -34872,29 +34819,23 @@ declare namespace exports {
 						 */
 						source(n?: number, end?: number): string;
 						/**
-						 * An element's tag name (lowercased, adjusted in foreign content), a
-						 * doctype's name, a processing instruction's target; "" for other nodes.
+						 * An element's or attribute's name (lowercased, adjusted in foreign content),
+						 * a doctype's name, a processing instruction's target; "" for other nodes.
 						 */
 						name(n?: number): string;
 						namespace(n?: number): number;
 						selfClosing(n?: number): boolean;
-						attributes(n?: number): HtmlAttribute[];
 						attributeCount(n?: number): number;
 						/**
-						 * The i-th attribute of an element, as an id for the `attribute*` reads.
+						 * The i-th attribute of an element, as a node the shared reads take.
 						 */
-						attributeAt(i: number, n?: number): number;
+						attribute(i: number, n?: number): number;
 						/**
 						 * Linear lookup by (lowercased) name.
 						 */
 						findAttribute(name: string, n?: number): number;
-						attributeName(a: number): string;
-						attributeValue(a: number): string;
-						attributeNameStart(a: number): number;
-						attributeNameEnd(a: number): number;
-						attributeValueStart(a: number): number;
-						attributeValueEnd(a: number): number;
-						tagEnd(n?: number): number;
+						valueStart(a: number): number;
+						valueEnd(a: number): number;
 						nameStart(n?: number): number;
 						nameEnd(n?: number): number;
 						/**
@@ -34927,8 +34868,8 @@ declare namespace exports {
 						contentEnd(n?: number): number;
 						templateContent(n?: number): number;
 						/**
-						 * A text's, comment's or processing instruction's data, character
-						 * references decoded; "" for other nodes.
+						 * A text's, comment's, processing instruction's or attribute's data,
+						 * character references decoded; "" for other nodes.
 						 */
 						value(n?: number): string;
 						publicId(_n?: number): null | string;
@@ -34975,29 +34916,23 @@ declare namespace exports {
 							 */
 							source(n?: number, end?: number): string;
 							/**
-							 * An element's tag name (lowercased, adjusted in foreign content), a
-							 * doctype's name, a processing instruction's target; "" for other nodes.
+							 * An element's or attribute's name (lowercased, adjusted in foreign content),
+							 * a doctype's name, a processing instruction's target; "" for other nodes.
 							 */
 							name(n?: number): string;
 							namespace(n?: number): number;
 							selfClosing(n?: number): boolean;
-							attributes(n?: number): HtmlAttribute[];
 							attributeCount(n?: number): number;
 							/**
-							 * The i-th attribute of an element, as an id for the `attribute*` reads.
+							 * The i-th attribute of an element, as a node the shared reads take.
 							 */
-							attributeAt(i: number, n?: number): number;
+							attribute(i: number, n?: number): number;
 							/**
 							 * Linear lookup by (lowercased) name.
 							 */
 							findAttribute(name: string, n?: number): number;
-							attributeName(a: number): string;
-							attributeValue(a: number): string;
-							attributeNameStart(a: number): number;
-							attributeNameEnd(a: number): number;
-							attributeValueStart(a: number): number;
-							attributeValueEnd(a: number): number;
-							tagEnd(n?: number): number;
+							valueStart(a: number): number;
+							valueEnd(a: number): number;
 							nameStart(n?: number): number;
 							nameEnd(n?: number): number;
 							/**
@@ -35030,8 +34965,8 @@ declare namespace exports {
 							contentEnd(n?: number): number;
 							templateContent(n?: number): number;
 							/**
-							 * A text's, comment's or processing instruction's data, character
-							 * references decoded; "" for other nodes.
+							 * A text's, comment's, processing instruction's or attribute's data,
+							 * character references decoded; "" for other nodes.
 							 */
 							value(n?: number): string;
 							publicId(_n?: number): null | string;

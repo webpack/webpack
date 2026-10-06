@@ -13,11 +13,7 @@ const {
 	URL_ATTRIBUTES
 } = require("../../../../lib/html/data");
 const { SourceProcessor } = require("../../../../lib/html/syntax");
-const {
-	NodeType,
-	decodeEntities,
-	parseSrcset
-} = require("../../../../lib/html/syntax-parser");
+const { NodeType, parseSrcset } = require("../../../../lib/html/syntax-parser");
 
 /**
  * The HTML integer parse rules, spelled out here rather than reused from `lib/`
@@ -54,13 +50,10 @@ const appliesTo = (on, tagName) =>
  * bytes without changing the meaning does not read as a difference.
  * @param {string} tagName lowercased element name
  * @param {string} name attribute name
- * @param {string} rawValue attribute value, as the source spells it
+ * @param {string} value attribute value, references decoded
  * @returns {string} its canonical form
  */
-const canonicalValue = (tagName, name, rawValue) => {
-	// `attributes()` reports the source bytes, so the references have to go
-	// before anything below reads the value the parser actually builds.
-	const value = decodeEntities(rawValue, true);
+const canonicalValue = (tagName, name, value) => {
 	if (appliesTo(BOOLEAN_ATTRIBUTES.get(name), tagName)) return "<boolean>";
 	if (appliesTo(TOKEN_LIST_ATTRIBUTES.get(name), tagName)) {
 		// The ordered set parser splits on ASCII whitespace and drops the empties.
@@ -123,19 +116,16 @@ const tree = (html) => {
 		.use({
 			[NodeType.Element]: (nodePath) => {
 				const tagName = nodePath.name();
-				const attributes = nodePath
-					.attributes()
-					.map(
-						(attribute) =>
-							`${attribute.name}=${canonicalValue(
-								tagName,
-								attribute.name,
-								attribute.value
-							)}`
-					)
-					.sort()
-					.join(" ");
-				out.push(`<${tagName} ${attributes}>`);
+				/** @type {string[]} */
+				const attributes = [];
+				for (let i = 0; i < nodePath.attributeCount(); i++) {
+					const attribute = nodePath.attribute(i);
+					const name = nodePath.name(attribute);
+					attributes.push(
+						`${name}=${canonicalValue(tagName, name, nodePath.value(attribute))}`
+					);
+				}
+				out.push(`<${tagName} ${attributes.sort().join(" ")}>`);
 			},
 			[NodeType.Text]: (nodePath) => {
 				const parent = nodePath.parent;

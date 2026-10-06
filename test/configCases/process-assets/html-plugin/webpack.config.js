@@ -166,11 +166,9 @@ class HtmlInlinePlugin {
 								.use({
 									[NodeType.Element]: (path) => {
 										if (path.name() !== "script") return;
-										let url;
-										for (const attribute of path.attributes()) {
-											if (attribute.name === "src") url = attribute.value;
-										}
-										if (url === undefined) return;
+										const src = path.findAttribute("src");
+										if (src === 0) return;
+										let url = path.value(src);
 										if (url.startsWith(publicPath)) {
 											url = url.slice(publicPath.length);
 										}

@@ -5,6 +5,7 @@ const {
 	NS_MATHML,
 	NS_SVG,
 	NodeType,
+	_attributeList,
 	decodeEntities
 } = require("../../lib/html/syntax-parser");
 
@@ -58,7 +59,7 @@ const serializeHtmlTree = (root) => {
 			/** @type {Record<number, string>} */ (NS_PREFIX)[A.namespace(node)] ||
 			"";
 		lines.push(`${indent}<${prefix}${A.name(node)}>`);
-		const attrs = [...A.attributes(node)].sort((a, b) => {
+		const attrs = _attributeList(node).sort((a, b) => {
 			const an = a.serializedName || a.name;
 			const bn = b.serializedName || b.name;
 			return an < bn ? -1 : an > bn ? 1 : 0;

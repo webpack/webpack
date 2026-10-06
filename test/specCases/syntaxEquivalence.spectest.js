@@ -20,7 +20,7 @@ const {
 	REWRITABLE_ATTRIBUTES
 } = require("../../lib/html/data");
 const { SourceProcessor: HtmlSourceProcessor } = require("../../lib/html/syntax");
-const { A, NS_MATHML, NS_SVG, NodeType, decodeEntities, parseHtml } = require("../../lib/html/syntax-parser");
+const { A, NS_MATHML, NS_SVG, NodeType, _attributeList, decodeEntities, parseHtml } = require("../../lib/html/syntax-parser");
 const expectNoDeprecations = require("../helpers/expectNoDeprecations");
 const launchBrowser = require("../helpers/launchBrowser");
 
@@ -1244,7 +1244,7 @@ const domShapeOf = (source) => {
 			const namespace =
 				/** @type {Record<number, string>} */ (NS_PREFIX)[A.namespace(child)] ||
 				"";
-			const written = [...A.attributes(child)]
+			const written = _attributeList(child)
 				.map((attribute) => {
 					const name = attribute.serializedName || attribute.name;
 					// The printer may rewrite these — a boolean written bare, an enumerated value

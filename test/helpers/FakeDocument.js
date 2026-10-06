@@ -66,10 +66,16 @@ const parseFragment = (html) => {
 					lastEnd = end;
 					open = {
 						tag: path.name(),
-						attributes: path.attributes().map((attribute) => ({
-							name: attribute.name,
-							value: attribute.value
-						})),
+						attributes: Array.from(
+							{ length: path.attributeCount() },
+							(_, i) => {
+								const attribute = path.attribute(i);
+								return {
+									name: path.name(attribute),
+									value: path.value(attribute)
+								};
+							}
+						),
 						text: ""
 					};
 					elements.push(open);

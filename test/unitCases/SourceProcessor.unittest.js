@@ -499,6 +499,63 @@ describe("SourceProcessor", () => {
 			expect(html).toEqual(["html|", "b|", "|a & b", "|c"]);
 		});
 
+		it("reads html attributes as nodes through the shared members", () => {
+			const input = `<p>\n<a href="/x?a&amp;b" title=t data-x>y</a>`;
+			/** @type {Record<string, unknown>[]} */
+			const seen = [];
+			new HtmlSourceProcessor()
+				.use([HtmlNodeType.Element], (path) => {
+					if (path.name() !== "a") return;
+					for (let i = 0, a = path.attribute(0); a !== 0; a = path.attribute(++i)) {
+						seen.push({
+							type: path.type(a),
+							name: path.name(a),
+							value: path.value(a),
+							source: path.source(a),
+							written:
+								path.valueStart(a) === -1
+									? null
+									: path.source(path.valueStart(a), path.valueEnd(a)),
+							nameSource: path.source(path.nameStart(a), path.nameEnd(a)),
+							loc: path.loc(a).start
+						});
+					}
+					expect(path.attribute(path.attributeCount())).toBe(0);
+					expect(path.findAttribute("id")).toBe(0);
+					expect(path.name(path.findAttribute("title"))).toBe("title");
+				})
+				.process(input);
+			expect(seen).toEqual([
+				{
+					type: HtmlNodeType.Attribute,
+					name: "href",
+					value: "/x?a&b",
+					source: 'href="/x?a&amp;b"',
+					written: "/x?a&amp;b",
+					nameSource: "href",
+					loc: { line: 2, column: 3 }
+				},
+				{
+					type: HtmlNodeType.Attribute,
+					name: "title",
+					value: "t",
+					source: "title=t",
+					written: "t",
+					nameSource: "title",
+					loc: { line: 2, column: 21 }
+				},
+				{
+					type: HtmlNodeType.Attribute,
+					name: "data-x",
+					value: "",
+					source: "data-x",
+					written: null,
+					nameSource: "data-x",
+					loc: { line: 2, column: 29 }
+				}
+			]);
+		});
+
 		it("reads the html root and a template's content at index 0", () => {
 			/** @type {[number, number | null, number][]} */
 			const seen = [];

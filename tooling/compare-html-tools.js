@@ -1315,7 +1315,7 @@ for (const [name, type] of Object.entries(NodeType)) {
 const htmlInnerRanges = (nodePath) => {
 	if (nodePath.type() !== NodeType.Element) return undefined;
 	const start = nodePath.start();
-	const tagEnd = nodePath.tagEnd();
+	const tagEnd = nodePath.contentStart();
 	// The parser inserted this element, or the adoption agency cloned it: no tag
 	// was written, so it states no offsets to hold.
 	if (tagEnd <= start) return undefined;
@@ -1323,15 +1323,15 @@ const htmlInnerRanges = (nodePath) => {
 	const inner = [["opening tag", start, tagEnd]];
 	const count = nodePath.attributeCount();
 	for (let index = 0; index < count; index++) {
-		const attribute = nodePath.attributeAt(index);
-		const nameStart = nodePath.attributeNameStart(attribute);
-		const nameEnd = nodePath.attributeNameEnd(attribute);
+		const attribute = nodePath.attribute(index);
+		const nameStart = nodePath.nameStart(attribute);
+		const nameEnd = nodePath.nameEnd(attribute);
 		if (nameStart < start || nameStart >= tagEnd) continue;
 		inner.push(["attribute name", nameStart, nameEnd]);
 		inner.push([
 			"attribute value",
-			nodePath.attributeValueStart(attribute),
-			nodePath.attributeValueEnd(attribute)
+			nodePath.valueStart(attribute),
+			nodePath.valueEnd(attribute)
 		]);
 	}
 	return inner;
@@ -1559,9 +1559,9 @@ const htmlPurityDigest = (html, print) => {
 			digest.update(`|<${nodePath.name()}>|${nodePath.namespace()}`);
 			const count = nodePath.attributeCount();
 			for (let index = 0; index < count; index++) {
-				const attribute = nodePath.attributeAt(index);
+				const attribute = nodePath.attribute(index);
 				digest.update(
-					`|${nodePath.attributeName(attribute)}=${nodePath.attributeValue(attribute)}`
+					`|${nodePath.name(attribute)}=${nodePath.value(attribute)}`
 				);
 			}
 		}

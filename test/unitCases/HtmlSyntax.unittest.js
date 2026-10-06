@@ -10,7 +10,7 @@
 
 const fs = require("fs");
 const path = require("path");
-const { A, NS_HTML, NS_MATHML, NS_SVG, NodeType, QUOTE_DOUBLE, QUOTE_NONE, QUOTE_SINGLE, decodeEntities, escapeAttribute, escapeText, parseCssUrls, parseHtml: parseHtmlRefs, parseMsapplicationTask, parseSrc, parseSrcset, tokenize } = require("../../lib/html/syntax-parser");
+const { A, NS_HTML, _attributeList, NS_MATHML, NS_SVG, NodeType, QUOTE_DOUBLE, QUOTE_NONE, QUOTE_SINGLE, decodeEntities, escapeAttribute, escapeText, parseCssUrls, parseHtml: parseHtmlRefs, parseMsapplicationTask, parseSrc, parseSrcset, tokenize } = require("../../lib/html/syntax-parser");
 const { builtinEmbeddedRenderer } = require("../../lib/html/builtinEmbeddedRenderer");
 const serializeHtmlTree = require("../helpers/serializeHtmlTree");
 
@@ -3108,12 +3108,12 @@ const materialize = (ref) => {
 				type,
 				tagName: A.name(ref),
 				namespace: A.namespace(ref),
-				attributes: A.attributes(ref),
+				attributes: _attributeList(ref),
 				children: childrenOf(ref).map(materialize),
 				selfClosing: A.selfClosing(ref),
 				start: A.start(ref),
 				end: A.end(ref),
-				tagEnd: A.tagEnd(ref),
+				tagEnd: A.contentStart(ref),
 				nameEnd: A.nameEnd(ref),
 				contentEnd: A.contentEnd(ref),
 				templateContent:
@@ -7177,14 +7177,13 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 			.use({
 				[NodeType.Element]: (path) => {
 					if (path.name() !== "iframe") return;
-					for (const attribute of path.attributes()) {
-						if (attribute.name === "srcdoc") readBack = attribute.value;
-					}
+					const srcdoc = path.findAttribute("srcdoc");
+					if (srcdoc !== 0) readBack = path.value(srcdoc);
 				}
 			})
 			.process(out, {});
 		expect(readBack).toBeDefined();
-		expect(decodeEntities(/** @type {string} */ (readBack), true)).toBe(
+		expect(readBack).toBe(
 			payload
 		);
 	});
@@ -8376,21 +8375,21 @@ describe("parseHtml — path accessor completeness", () => {
 						log.push(`index:${path.index}`);
 						log.push(`attrs:${path.attributeCount()}`);
 						const id = path.findAttribute("id");
-						log.push(`id:${path.attributeName(id)}=${path.attributeValue(id)}`);
+						log.push(`id:${path.name(id)}=${path.value(id)}`);
 						log.push(
 							`idName:${SRC.slice(
-								path.attributeNameStart(id),
-								path.attributeNameEnd(id)
+								path.nameStart(id),
+								path.nameEnd(id)
 							)}`
 						);
 						log.push(
 							`idValue:${SRC.slice(
-								path.attributeValueStart(id),
-								path.attributeValueEnd(id)
+								path.valueStart(id),
+								path.valueEnd(id)
 							)}`
 						);
-						const checked = path.attributeAt(1);
-						log.push(`checkedValueStart:${path.attributeValueStart(checked)}`);
+						const checked = path.attribute(1);
+						log.push(`checkedValueStart:${path.valueStart(checked)}`);
 						log.push(`firstChildType:${path.type(path.child(0))}`);
 						log.push(
 							`nextSibling:${path.child(
