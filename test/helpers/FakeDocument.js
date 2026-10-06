@@ -65,7 +65,7 @@ const parseFragment = (html) => {
 					if (end === 0 || path.start() < lastEnd) return;
 					lastEnd = end;
 					open = {
-						tag: path.tagName(),
+						tag: path.name(),
 						attributes: path.attributes().map((attribute) => ({
 							name: attribute.name,
 							value: attribute.value

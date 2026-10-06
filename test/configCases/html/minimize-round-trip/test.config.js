@@ -122,7 +122,7 @@ const tree = (html) => {
 	new SourceProcessor()
 		.use({
 			[NodeType.Element]: (nodePath) => {
-				const tagName = nodePath.tagName();
+				const tagName = nodePath.name();
 				const attributes = nodePath
 					.attributes()
 					.map(
@@ -139,7 +139,7 @@ const tree = (html) => {
 			},
 			[NodeType.Text]: (nodePath) => {
 				const parent = nodePath.parentOf();
-				const parentName = parent === 0 ? "" : nodePath.tagName(parent);
+				const parentName = parent === 0 ? "" : nodePath.name(parent);
 				if (parentName === "style") {
 					out.push(`#css:${canonicalValue("", "style", nodePath.data())}`);
 					return;

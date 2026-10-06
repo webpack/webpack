@@ -13,6 +13,41 @@ Read this before touching the CSS, HTML or JavaScript parser, printer or minifie
 - A minify entry the default minimizer dispatches to: `cssMinify.js`, `htmlMinify.js`, `jsMinify.js`.
 - A spec-conformance suite (`yarn test:css-parsing`, `test:html5lib`, `test:test262`) and the invariants and ecosystem comparison in [tooling/COMPARE_TOOLS.md](../tooling/COMPARE_TOOLS.md).
 
+## The node path
+
+Every visitor and node printer receives one argument, the language's `path`: `webpack.css.syntax`, `webpack.html.syntax` and, later, `webpack.javascript.syntax` hand over an object with the same members under the same names. `NodePath<TNode>` in `lib/util/SourceProcessor.js` is that contract, and `SourceProcessor` takes only a path satisfying it, so a missing or misnamed member fails `lint:types`.
+
+```js
+const empty = [];
+new SourceProcessor()
+	.use({
+		[NodeType.Element]: (path) => {
+			if (path.childCount() === 0) empty.push(path.loc().start);
+		}
+	})
+	.process(source);
+```
+
+| Member                          | Returns                                                       |
+| ------------------------------- | ------------------------------------------------------------- |
+| `node`, `parent`, `index`       | the current node, its parent (`null` at a root), its position |
+| `skipChildren()`                | stops the walk descending (enter only)                        |
+| `type(n)`                       | the language's `NodeType`                                     |
+| `start(n)`, `end(n)`            | offsets into the parsed input                                 |
+| `range(n)`, `loc(n)`            | `[start, end]`; `{ start, end }` as `{ line, column }`        |
+| `source(n)`                     | the node as written                                           |
+| `sourceSlice(start, end)`       | the input between two offsets                                 |
+| `childCount(n)`, `childAt(i,n)` | children without allocating a list                            |
+| `children(n)`                   | the children as a new array                                   |
+
+Conventions every language keeps, and a new member follows:
+
+- **A node is an integer id**, valid until the next parse. The path is one object rebound before each callback; read it during the callback, never keep it.
+- **The node is the last argument and optional**, defaulting to the current one: `path.end()`, `path.end(other)`, `path.childAt(0)`.
+- **Nothing is stored for a read.** A member reads the columns the parser already fills or derives its answer when called: HTML counts `index` along the sibling links and makes `loc`'s converter on its first call in a parse. The walk writes no more than its position, so a read nobody makes costs nothing. A derived read says so in its JSDoc, with the cheaper way to get the same answer, such as `firstChild` / `nextSibling` rather than looping over `childAt` in HTML.
+- **The path only reads.** Writers stay internal to the parser (`_setNodeEnd` in CSS).
+- **One concept, one name.** Language-specific members use the shared vocabulary: `name`, `nameStart` and `nameEnd` for what a node is called (a tag, at-rule, function or declaration), and `contentStart` / `contentEnd` for its payload (an element's body, a `url()`'s contents). Anything else is the language's own (`attributeAt` in HTML, `declarations` in CSS).
+
 ## Generated tables
 
 **In the generator, derive — don't type out.** Read tables from published datasets (`mdn-data`, `color-name`, `@webref/idl`) whenever derivable, _including by analyzing a grammar rather than listing names_: the value-definition syntax says which properties take an `<integer>`, so that set is computed. An existing `SUPPLEMENT` table counts as a source too — cosine at each eighth turn is sine two eighths along, and each inverse trig table is its forward one read back.

@@ -347,6 +347,154 @@ describe("SourceProcessor", () => {
 		});
 	});
 
+	describe("node path", () => {
+		/**
+		 * @param {string} input source
+		 * @param {number} offset offset into it
+		 * @returns {{ line: number, column: number }} 1-based line, 0-based column
+		 */
+		const lineColumn = (input, offset) => {
+			const before = input.slice(0, offset).split("\n");
+			return { line: before.length, column: before[before.length - 1].length };
+		};
+
+		/**
+		 * Reads a node through `NodePath` members only, as a language-agnostic visitor would.
+		 * @param {import("../../lib/util/SourceProcessor").NodePath<EXPECTED_ANY>} path path
+		 * @param {string} input the parsed source
+		 * @returns {Record<string, unknown>} what a shared visitor sees
+		 */
+		const describeNode = (path, input) => {
+			const [start, end] = path.range();
+			const parent = path.parent;
+			return {
+				range: start === path.start() && end === path.end(),
+				loc: path.loc(),
+				expectedLoc: {
+					start: lineColumn(input, start),
+					end: lineColumn(input, end)
+				},
+				source: path.source(),
+				slice: path.sourceSlice(start, end),
+				index: path.index,
+				atIndex:
+					parent === null ? null : path.childAt(path.index, parent) === path.node,
+				childCount: path.childCount(),
+				children: path.children()
+			};
+		};
+
+		it("reads html nodes through the shared members", () => {
+			const input = "<ul>\n<li>a</li>\n<li>b</li></ul>";
+			/** @type {Record<string, unknown>[]} */
+			const seen = [];
+			/** @type {number[]} */
+			const listChildren = [];
+			/** @type {[string, string, number][]} name, its source, content offset */
+			const implied = [];
+			new HtmlSourceProcessor()
+				.use({
+					[HtmlNodeType.Element]: (path) => {
+						if (path.name() === "ul") {
+							for (let i = 0; i < path.childCount(); i++) {
+								listChildren.push(path.childAt(i));
+							}
+							expect(listChildren).toEqual(path.children());
+							expect(path.childAt(listChildren.length)).toBe(0);
+						}
+						if (path.name() === "li") seen.push(describeNode(path, input));
+						implied.push([
+							path.name(),
+							path.sourceSlice(path.nameStart(), path.nameEnd()),
+							path.contentStart() - path.start()
+						]);
+					}
+				})
+				.process(input);
+			expect(implied).toEqual([
+				["html", "", 0],
+				["head", "", 0],
+				["body", "", 0],
+				["ul", "ul", 4],
+				["li", "li", 4],
+				["li", "li", 4]
+			]);
+			expect(seen).toHaveLength(2);
+			for (const node of seen) {
+				expect(node.range).toBe(true);
+				expect(node.loc).toEqual(node.expectedLoc);
+				expect(node.source).toBe(node.slice);
+				expect(node.atIndex).toBe(true);
+				expect(node.childCount).toBe(1);
+			}
+			expect(seen.map((node) => node.index)).toEqual([1, 3]);
+			expect(seen.map((node) => node.source)).toEqual([
+				"<li>a</li>",
+				"<li>b</li>"
+			]);
+			expect(seen[1].loc).toEqual({
+				start: { line: 3, column: 0 },
+				end: { line: 3, column: 10 }
+			});
+		});
+
+		it("reads the html root and a template's content at index 0", () => {
+			/** @type {[number, number | null, number][]} */
+			const seen = [];
+			new HtmlSourceProcessor()
+				.use({
+					[HtmlNodeType.Document]: (path) => {
+						seen.push([path.type(), path.parent, path.index]);
+					},
+					[HtmlNodeType.DocumentFragment]: (path) => {
+						seen.push([path.type(), path.parent, path.index]);
+					}
+				})
+				.process("<template><b></b><i></i></template>");
+			expect(seen).toHaveLength(2);
+			expect(seen[0]).toEqual([HtmlNodeType.Document, null, 0]);
+			expect(seen[1][0]).toBe(HtmlNodeType.DocumentFragment);
+			expect(seen[1][1]).not.toBeNull();
+			expect(seen[1][2]).toBe(0);
+		});
+
+		it("reads css nodes through the shared members", () => {
+			const input = "a {\n\tcolor: rgb(1, 2,\n3);\n}";
+			// Leaves reuse ids that held lists in this parse, so a leaf reading
+			// its id's leftover list slots would report children.
+			new CssSourceProcessor().process(`a{b:${"f(".repeat(40)}${")".repeat(40)}}`);
+			/** @type {Record<string, unknown>[]} */
+			const seen = [];
+			new CssSourceProcessor()
+				.use({
+					[CssNodeType.Function]: (path) => {
+						const count = path.childCount();
+						const children = [];
+						for (let i = 0; i < count; i++) children.push(path.childAt(i));
+						expect(children).toEqual(path.children());
+					},
+					[CssNodeType.Number]: (path) => {
+						seen.push(describeNode(path, input));
+					}
+				})
+				.process(input);
+			expect(seen.map((node) => node.source)).toEqual(["1", "2", "3"]);
+			for (const node of seen) {
+				expect(node.range).toBe(true);
+				expect(node.loc).toEqual(node.expectedLoc);
+				expect(node.source).toBe(node.slice);
+				expect(node.atIndex).toBe(true);
+				expect(node.childCount).toBe(0);
+				expect(node.children).toEqual([]);
+			}
+			expect(seen.map((node) => node.index)).toEqual([0, 3, 6]);
+			expect(seen[2].loc).toEqual({
+				start: { line: 3, column: 0 },
+				end: { line: 3, column: 1 }
+			});
+		});
+	});
+
 	describe("visitors", () => {
 		it("fires a css visitor for each node of that type, and still prints", () => {
 			/** @type {string[]} */
@@ -368,7 +516,7 @@ describe("SourceProcessor", () => {
 			new HtmlSourceProcessor()
 				.use({
 					[HtmlNodeType.Element]: (path) => {
-						seen.push(path.tagName());
+						seen.push(path.name());
 					}
 				})
 				.process("<div><p>x</p></div>");

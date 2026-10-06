@@ -3094,7 +3094,7 @@ const materialize = (ref) => {
 			const tc = A.templateContent(ref);
 			return {
 				type,
-				tagName: A.tagName(ref),
+				tagName: A.name(ref),
 				namespace: A.namespace(ref),
 				attributes: A.attributes(ref),
 				children: A.children(ref).map(materialize),
@@ -3913,8 +3913,8 @@ const { NodeType } = require("../../lib/html/syntax-parser");
 			.use(
 				/** @type {import("../../lib/html/syntax-printer").VisitorMap} */ ({
 					[NodeType.Element]: {
-						enter: (path) => log.push(`enter:${path.tagName()}`),
-						exit: (path) => log.push(`exit:${path.tagName()}`)
+						enter: (path) => log.push(`enter:${path.name()}`),
+						exit: (path) => log.push(`exit:${path.name()}`)
 					},
 					[NodeType.Text]: (path) => log.push(`text:${path.data()}`)
 				})
@@ -3965,8 +3965,8 @@ const { NodeType } = require("../../lib/html/syntax-parser");
 		new SourceProcessor()
 			.use({
 				[NodeType.Element]: (path) => {
-					log.push(path.tagName());
-					if (path.tagName() === "div") path.skipChildren();
+					log.push(path.name());
+					if (path.name() === "div") path.skipChildren();
 				}
 			})
 			.process("<div><span>a</span></div><p>b</p>");
@@ -3979,7 +3979,7 @@ const { NodeType } = require("../../lib/html/syntax-parser");
 		new SourceProcessor()
 			.use({
 				[NodeType.DocumentFragment]: () => log.push("fragment"),
-				[NodeType.Element]: (path) => log.push(path.tagName())
+				[NodeType.Element]: (path) => log.push(path.name())
 			})
 			.process("<template><p>x</p></template>");
 		expect(log).toEqual(["html", "head", "template", "fragment", "p", "body"]);
@@ -7164,7 +7164,7 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 		new SourceProcessor()
 			.use({
 				[NodeType.Element]: (path) => {
-					if (path.tagName() !== "iframe") return;
+					if (path.name() !== "iframe") return;
 					for (const attribute of path.attributes()) {
 						if (attribute.name === "srcdoc") readBack = attribute.value;
 					}
@@ -8047,8 +8047,8 @@ describe("SourceProcessor — streamed walk recycling", () => {
 			.use(
 				/** @type {import("../../lib/html/syntax-printer").VisitorMap} */ ({
 					[NodeType.Element]: {
-						enter: (path) => log.push(`+${path.tagName()}`),
-						exit: (path) => log.push(`-${path.tagName()}`)
+						enter: (path) => log.push(`+${path.name()}`),
+						exit: (path) => log.push(`-${path.name()}`)
 					}
 				})
 			)
@@ -8100,12 +8100,12 @@ describe("SourceProcessor — streamed walk recycling", () => {
 				/** @type {import("../../lib/html/syntax-printer").VisitorMap} */ ({
 					[NodeType.Element]: {
 						enter: (path) => {
-							log.push(`+${path.tagName()}`);
+							log.push(`+${path.name()}`);
 							// `div` stays open while its subtree streams, so its skipped
 							// descendants are the ones the walk tracks without entering
-							if (path.tagName() === "div") path.skipChildren();
+							if (path.name() === "div") path.skipChildren();
 						},
-						exit: (path) => log.push(`-${path.tagName()}`)
+						exit: (path) => log.push(`-${path.name()}`)
 					}
 				})
 			)
@@ -8219,8 +8219,8 @@ describe("SourceProcessor — streamed walk recycling", () => {
 						exit: () => log.push("-doc")
 					},
 					[NodeType.Element]: {
-						enter: (path) => log.push(`+${path.tagName()}`),
-						exit: (path) => log.push(`-${path.tagName()}`)
+						enter: (path) => log.push(`+${path.name()}`),
+						exit: (path) => log.push(`-${path.name()}`)
 					}
 				})
 			)
@@ -8250,7 +8250,7 @@ describe("SourceProcessor — streamed walk offsets", () => {
 			.use(
 				/** @type {import("../../lib/html/syntax-printer").VisitorMap} */ ({
 					[NodeType.Element]: (path) => {
-						seen.push([path.tagName(), path.start(), path.end()]);
+						seen.push([path.name(), path.start(), path.end()]);
 					}
 				})
 			)
@@ -8294,12 +8294,12 @@ describe("SourceProcessor — streamed walk offsets", () => {
 					/** @type {import("../../lib/html/syntax-printer").VisitorMap} */ ({
 						[NodeType.Element]: {
 							enter: (path) => {
-								if (path.tagName() === "div" && atEnter === -1) {
+								if (path.name() === "div" && atEnter === -1) {
 									atEnter = path.end();
 								}
 							},
 							exit: (path) => {
-								if (path.tagName() === "div" && atExit === -1) {
+								if (path.name() === "div" && atExit === -1) {
 									atExit = path.end();
 								}
 							}
@@ -8356,10 +8356,10 @@ describe("parseHtml — path accessor completeness", () => {
 						);
 					},
 					[NodeType.Element]: (path) => {
-						if (path.tagName() !== "div") return;
+						if (path.name() !== "div") return;
 						log.push(`node:${path.node !== null}`);
 						log.push(
-							`parentTag:${path.tagName(/** @type {number} */ (path.parent))}`
+							`parentTag:${path.name(/** @type {number} */ (path.parent))}`
 						);
 						log.push(`parentOf:${path.parentOf() === path.parent}`);
 						log.push(`attrs:${path.attributeCount()}`);
@@ -10021,7 +10021,7 @@ describe("parseHtml — quirks and foreign-content arcs", () => {
 			const children = A.children(node);
 			if (children.length === 0) break;
 			node = children[children.length - 1];
-			if (A.type(node) === NodeType.Element && A.tagName(node) === "i") depth++;
+			if (A.type(node) === NodeType.Element && A.name(node) === "i") depth++;
 		}
 		expect(depth).toBe(5000);
 	});
@@ -10849,7 +10849,7 @@ describe("SourceProcessor — reusing work across a print", () => {
 		let node = parseHtmlRefs(html);
 		for (;;) {
 			const children = A.children(node);
-			if (children.length === 0) return A.tagName(node);
+			if (children.length === 0) return A.name(node);
 			node = children[children.length - 1];
 		}
 	};
@@ -10879,7 +10879,7 @@ describe("SourceProcessor — reusing work across a print", () => {
 		const walk = (node) => {
 			for (const child of A.children(node)) {
 				if (A.type(child) === NodeType.Element) {
-					names.push(A.tagName(child));
+					names.push(A.name(child));
 					walk(child);
 				}
 			}

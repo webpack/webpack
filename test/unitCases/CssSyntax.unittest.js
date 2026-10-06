@@ -887,9 +887,10 @@ describe("CssSyntax — SourceProcessor", () => {
 					[NodeType.QualifiedRule]: (
 						/** @type {import("../../lib/css/syntax-parser").CssPath} */ path
 					) => {
-						// Round-trip the writers (set each field back to its own value).
-						path.setEnd(path.node, path.end());
-						path.setBlockEnd(path.node, path.blockEnd());
+						// The writer stays off the path; round-trip it (set the end back to itself).
+						const { _setNodeEnd } = require("../../lib/css/syntax-parser");
+
+						_setNodeEnd(path.node, path.end());
 					}
 				})
 			)

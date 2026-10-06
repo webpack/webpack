@@ -57,7 +57,7 @@ const serializeHtmlTree = (root) => {
 		const prefix =
 			/** @type {Record<number, string>} */ (NS_PREFIX)[A.namespace(node)] ||
 			"";
-		lines.push(`${indent}<${prefix}${A.tagName(node)}>`);
+		lines.push(`${indent}<${prefix}${A.name(node)}>`);
 		const attrs = [...A.attributes(node)].sort((a, b) => {
 			const an = a.serializedName || a.name;
 			const bn = b.serializedName || b.name;

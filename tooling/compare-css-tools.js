@@ -1193,8 +1193,7 @@ const opaqueDeclarationRanges = (css) => {
 			enter: () => {},
 			exit: (nodePath) => {
 				const name = nodePath.unescapedName().toLowerCase();
-				const first =
-					nodePath.childCount() === 1 ? nodePath.childAt(nodePath.node, 0) : -1;
+				const first = nodePath.childCount() === 1 ? nodePath.childAt(0) : -1;
 				if (
 					name.startsWith("--") ||
 					// CSS Syntax 3 §7.1 reads a urange off the source text, and Chromium

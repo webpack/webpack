@@ -165,7 +165,7 @@ class HtmlInlinePlugin {
 							new SourceProcessor()
 								.use({
 									[NodeType.Element]: (path) => {
-										if (path.tagName() !== "script") return;
+										if (path.name() !== "script") return;
 										let url;
 										for (const attribute of path.attributes()) {
 											if (attribute.name === "src") url = attribute.value;

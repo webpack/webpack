@@ -1240,7 +1240,7 @@ const domShapeOf = (source) => {
 			child = A.nextSibling(child)
 		) {
 			if (A.type(child) !== NodeType.Element) continue;
-			const tag = A.tagName(child);
+			const tag = A.name(child);
 			const namespace =
 				/** @type {Record<number, string>} */ (NS_PREFIX)[A.namespace(child)] ||
 				"";

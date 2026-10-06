@@ -1401,13 +1401,13 @@ const htmlNodeRuns = (html, fragmentContext) => {
 					held: 0,
 					lo: html.length,
 					hi: 0,
-					tag: nodePath.type() === NodeType.Element ? nodePath.tagName() : ""
+					tag: nodePath.type() === NodeType.Element ? nodePath.name() : ""
 				});
 			},
 			exit: (nodePath) => {
 				const frame = /** @type {EXPECTED_ANY} */ (stack.pop());
 				const type = nodePath.type();
-				const tag = type === NodeType.Element ? nodePath.tagName() : "";
+				const tag = type === NodeType.Element ? nodePath.name() : "";
 				const start = nodePath.start();
 				const end = nodePath.end();
 				const size = frame.held + 1;
@@ -1556,7 +1556,7 @@ const htmlPurityDigest = (html, print) => {
 			`${NODE_TYPE_NAMES[type]}[${nodePath.start()},${nodePath.end()})`
 		);
 		if (type === NodeType.Element) {
-			digest.update(`|<${nodePath.tagName()}>|${nodePath.namespace()}`);
+			digest.update(`|<${nodePath.name()}>|${nodePath.namespace()}`);
 			const count = nodePath.attributeCount();
 			for (let index = 0; index < count; index++) {
 				const attribute = nodePath.attributeAt(index);
