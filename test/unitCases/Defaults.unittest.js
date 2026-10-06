@@ -616,6 +616,7 @@ describe("snapshots", () => {
 		        "exprContextRegExp": false,
 		        "exprContextRequest": ".",
 		        "importMeta": true,
+		        "localImportBindings": false,
 		        "sourceImport": false,
 		        "specNamespaceObject": false,
 		        "strictExportPresence": undefined,
@@ -1466,6 +1467,9 @@ describe("snapshots", () => {
 		-         "localIdentName": "[fullhash]",
 		+         "localIdentName": "[uniqueName]-[id]-[local]",
 		@@ ... @@
+		-         "localImportBindings": false,
+		+         "localImportBindings": true,
+		@@ ... @@
 		-         "exportsDepth": Infinity,
 		+         "exportsDepth": 1,
 		@@ ... @@
@@ -1716,7 +1720,9 @@ describe("snapshots", () => {
 			+         "anonymousDefaultExportName": false,
 			@@ ... @@
 			-         "importMeta": true,
+			-         "localImportBindings": false,
 			+         "importMeta": "preserve-unknown",
+			+         "localImportBindings": true,
 			@@ ... @@
 			-         "exportsDepth": Infinity,
 			+         "exportsDepth": 1,
@@ -1746,11 +1752,11 @@ describe("snapshots", () => {
 			-       "jsonp",
 			-       "import-scripts",
 			+       "import",
-			+     ],
-			+     "enabledLibraryTypes": Array [
-			+       "module",
 			@@ ... @@
 			-     "enabledLibraryTypes": Array [],
+			+     "enabledLibraryTypes": Array [
+			+       "module",
+			+     ],
 			@@ ... @@
 			-       "dynamicImport": undefined,
 			-       "dynamicImportInWorker": undefined,
@@ -1872,6 +1878,9 @@ describe("snapshots", () => {
 			-         "anonymousDefaultExportName": true,
 			+         "anonymousDefaultExportName": false,
 			@@ ... @@
+			-         "localImportBindings": false,
+			+         "localImportBindings": true,
+			@@ ... @@
 			-         "exportsDepth": Infinity,
 			+         "exportsDepth": 1,
 			@@ ... @@
@@ -1990,7 +1999,7 @@ describe("snapshots", () => {
 			+           Object {
 			+             "resourceQuery": /(\\?|&)raw(&|$)/,
 			+             "type": "asset/source",
-			+           },
+			@@ ... @@
 			+           Object {
 			+             "resourceQuery": /(\\?|&)url(&|$)/,
 			+             "type": "asset/resource",
@@ -1998,7 +2007,7 @@ describe("snapshots", () => {
 			+           Object {
 			+             "resourceQuery": /(\\?|&)no-inline(&|$)/,
 			+             "type": "asset/resource",
-			@@ ... @@
+			+           },
 			+           Object {
 			+             "resourceQuery": /(\\?|&)inline(&|$)/,
 			+             "type": "asset/inline",
@@ -2028,6 +2037,9 @@ describe("snapshots", () => {
 			+         "anonymousDefaultExportName": false,
 			@@ ... @@
 			+         "exportsPresence": "error",
+			@@ ... @@
+			-         "localImportBindings": false,
+			+         "localImportBindings": true,
 			@@ ... @@
 			-         "strictModeViolations": "warn",
 			+         "strictModeViolations": "error",
@@ -2068,11 +2080,10 @@ describe("snapshots", () => {
 			-     "devtoolNamespace": "webpack",
 			+     "devtoolNamespace": "myLib",
 			@@ ... @@
-			+     ],
+			-     "enabledLibraryTypes": Array [],
 			+     "enabledLibraryTypes": Array [
 			+       "var",
-			@@ ... @@
-			-     "enabledLibraryTypes": Array [],
+			+     ],
 			@@ ... @@
 			-     "hashDigestLength": 20,
 			-     "hashFunction": "md4",
@@ -4521,6 +4532,9 @@ describe("snapshots", () => {
 			-         "localIdentName": "[fullhash]",
 			+         "localIdentName": "[uniqueName]-[id]-[local]",
 			@@ ... @@
+			-         "localImportBindings": false,
+			+         "localImportBindings": true,
+			@@ ... @@
 			-         "exportsDepth": Infinity,
 			+         "exportsDepth": 1,
 			@@ ... @@
@@ -6375,9 +6389,7 @@ describe("optimization.minimize", () => {
 			} finally {
 				MinimizerPlugin.prototype.apply = apply;
 			}
-			return Array.isArray(implementation)
-				? implementation[0]
-				: implementation;
+			return Array.isArray(implementation) ? implementation[0] : implementation;
 		};
 
 		// terser as the plugin publishes it, until the printer is proven on real
@@ -6387,7 +6399,9 @@ describe("optimization.minimize", () => {
 			path: require.resolve("minimizer-webpack-plugin"),
 			export: "terserMinify"
 		});
-		expect(wiredMinify(true)).toBe(require.resolve("../../lib/javascript/jsMinify"));
+		expect(wiredMinify(true)).toBe(
+			require.resolve("../../lib/javascript/jsMinify")
+		);
 
 		/**
 		 * @param {boolean} futureDefaults whether `experiments.futureDefaults` is on

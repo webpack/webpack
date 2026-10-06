@@ -3,8 +3,7 @@
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	mode: "development",
-	devtool: "source-map-scopes",
-	entry: "./index.js",
+	devtool: false,
 	module: {
 		parser: {
 			javascript: {

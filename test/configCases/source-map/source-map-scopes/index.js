@@ -12,10 +12,13 @@ it("names the expression behind every binding a debugger cannot resolve", () => 
 	expect(map.scopes.length).toBeGreaterThan(0);
 	expect(map.names).toContain("Module");
 
-	// Every imported binding reads through the namespace at runtime, so the map
-	// has to name each one.
-	for (const name of ["mutable", "fn", "CONSTANT", "namespace"]) {
+	// These read through the namespace at runtime, so the map has to say so.
+	for (const name of ["mutable", "namespace"]) {
 		expect(map.names).toContain(name);
+	}
+	// A binding webpack declared locally resolves under its own name already.
+	for (const name of ["CONSTANT", "fn"]) {
+		expect(map.names).not.toContain(name);
 	}
 	expect(
 		map.names.filter((name) => name.includes("WEBPACK_IMPORTED_MODULE")).length

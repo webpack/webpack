@@ -12667,6 +12667,7 @@ declare class InitFragment<GenerateContext> {
 	static STAGE_PROVIDES: number;
 	static STAGE_ASYNC_DEPENDENCIES: number;
 	static STAGE_ASYNC_ESM_IMPORTS: number;
+	static STAGE_ESM_IMPORT_BINDINGS: number;
 
 	/**
 	 * use `STAGE_ESM_EXPORTS` — TODO in the next major release: remove
@@ -15903,6 +15904,12 @@ declare interface JavascriptParserOptions {
 	importMetaContext?: boolean;
 
 	/**
+	 * Read an imported ESM binding into a local variable of the same name wherever that is observationally equal to the live binding, so a debugger resolves it under the name the source uses.
+	 * @since 5.112.0
+	 */
+	localImportBindings?: boolean;
+
+	/**
 	 * Include polyfills or mocks for various node stuff.
 	 */
 	node?: false | NodeOptions;
@@ -16541,6 +16548,21 @@ declare interface KnownJavascriptModuleBuildInfo {
 	 * whether this module was parsed with `optimization.inlineExports` enabled (gates inlining of its exports)
 	 */
 	inlineExports?: boolean;
+
+	/**
+	 * whether this module was parsed with `module.parser.javascript.localImportBindings` enabled (gates binding its imports locally)
+	 */
+	localImportBindings?: boolean;
+
+	/**
+	 * names of own exports the language pins to one value, so an importer may read them into a local binding
+	 */
+	stableExports?: Set<string>;
+
+	/**
+	 * imported names a class of the same name extends, where a reference in the heritage clause resolves to the class at runtime but to the import here
+	 */
+	classHeritageNames?: Set<string>;
 
 	/**
 	 * module scope holds a `using`/`await using` declaration, so its resources must be disposed when the module finished evaluating
@@ -19148,6 +19170,7 @@ declare class ModuleExternalInitFragment extends InitFragment<GenerateContext> {
 	static STAGE_PROVIDES: number;
 	static STAGE_ASYNC_DEPENDENCIES: number;
 	static STAGE_ASYNC_ESM_IMPORTS: number;
+	static STAGE_ESM_IMPORT_BINDINGS: number;
 
 	/**
 	 * use `STAGE_ESM_EXPORTS` — TODO in the next major release: remove

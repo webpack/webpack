@@ -3014,6 +3014,11 @@
           "type": "boolean",
           "deprecated": true
         },
+        "localImportBindings": {
+          "description": "Read an imported ESM binding into a local variable of the same name wherever that is observationally equal to the live binding, so a debugger resolves it under the name the source uses.",
+          "type": "boolean",
+          "added": "5.112.0"
+        },
         "node": {
           "$ref": "#/definitions/Node"
         },

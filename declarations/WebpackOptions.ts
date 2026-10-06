@@ -2422,6 +2422,12 @@ export interface JavascriptParserOptions {
 	 */
 	importMetaContext?: boolean;
 	/**
+	 * Read an imported ESM binding into a local variable of the same name wherever that is observationally equal to the live binding, so a debugger resolves it under the name the source uses.
+	 *
+	 * @since 5.112.0
+	 */
+	localImportBindings?: boolean;
+	/**
 	 * Include polyfills or mocks for various node stuff.
 	 */
 	node?: Node;

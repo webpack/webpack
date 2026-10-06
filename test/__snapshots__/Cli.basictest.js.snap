@@ -5138,6 +5138,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-javascript-auto-local-import-bindings": Object {
+    "configs": Array [
+      Object {
+        "description": "Read an imported ESM binding into a local variable of the same name wherever that is observationally equal to the live binding, so a debugger resolves it under the name the source uses.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.localImportBindings",
+        "type": "boolean",
+      },
+    ],
+    "description": "Read an imported ESM binding into a local variable of the same name wherever that is observationally equal to the live binding, so a debugger resolves it under the name the source uses.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-parser-javascript-auto-node": Object {
     "configs": Array [
       Object {
@@ -6574,6 +6587,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "module-parser-javascript-dynamic-local-import-bindings": Object {
+    "configs": Array [
+      Object {
+        "description": "Read an imported ESM binding into a local variable of the same name wherever that is observationally equal to the live binding, so a debugger resolves it under the name the source uses.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.localImportBindings",
+        "type": "boolean",
+      },
+    ],
+    "description": "Read an imported ESM binding into a local variable of the same name wherever that is observationally equal to the live binding, so a debugger resolves it under the name the source uses.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-parser-javascript-dynamic-node": Object {
     "configs": Array [
       Object {
@@ -7863,6 +7889,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-javascript-esm-local-import-bindings": Object {
+    "configs": Array [
+      Object {
+        "description": "Read an imported ESM binding into a local variable of the same name wherever that is observationally equal to the live binding, so a debugger resolves it under the name the source uses.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.localImportBindings",
+        "type": "boolean",
+      },
+    ],
+    "description": "Read an imported ESM binding into a local variable of the same name wherever that is observationally equal to the live binding, so a debugger resolves it under the name the source uses.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-parser-javascript-esm-node": Object {
     "configs": Array [
       Object {
@@ -8909,6 +8948,19 @@ Object {
       },
     ],
     "description": "Enable/disable evaluating import.meta.webpackHot.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-local-import-bindings": Object {
+    "configs": Array [
+      Object {
+        "description": "Read an imported ESM binding into a local variable of the same name wherever that is observationally equal to the live binding, so a debugger resolves it under the name the source uses.",
+        "multiple": false,
+        "path": "module.parser.javascript.localImportBindings",
+        "type": "boolean",
+      },
+    ],
+    "description": "Read an imported ESM binding into a local variable of the same name wherever that is observationally equal to the live binding, so a debugger resolves it under the name the source uses.",
     "multiple": false,
     "simpleType": "boolean",
   },
