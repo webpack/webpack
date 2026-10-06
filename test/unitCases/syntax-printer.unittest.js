@@ -445,6 +445,26 @@ const IMPROVED_CASES = [
 		{ compress: { ecma: 2020 }, ecma: 2020, mangle: false }
 	],
 	[
+		"a test for null or undefined storing what it guards, from ECMAScript 2020",
+		"function f(c) { var t; return (t = c.a) === null || t === void 0 ? void 0 : t.b(t); } function g(c) { var t; return (t = c.a) === null || t === void 0 ? void 0 : t(); } console.log(f({ a: null }), f({ a: { b: (t) => typeof t } }), g({}), g({ a: () => 2 }));",
+		{ compress: { ecma: 2020 }, ecma: 2020, mangle: false }
+	],
+	[
+		"a strict test for null and one for undefined, the first storing the name",
+		"function f(c, d) { var t, u; return [(t = c.a) === null || t === void 0, void 0 !== (u = c.b) && null !== u, d || (t = c.a) === null || t === void 0, t, u]; } console.log(f({}, 0), f({ a: 0, b: null }, 1), f({ a: null, b: 2 }, 0));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a conditional assigning one target either way",
+		"var log = []; function c(x) { log.push(x); return x; } c(1) ? r = 1 : r = 2; function f(x) { var o = { set p(v) { log.push(v); } }; c(x) ? o.p = 3 : o.p = 4; c(x) ? o[0] = 5 : o[0] = 6; } f(0); var g = { m(x) { c(x) ? this.p = 7 : this.p = 8; return this.p; } }; console.log(r, g.m(1), log.join());",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a conditional assigning a property of `this` at the top level or in a class extending none",
+		"c(1) ? this.q = 1 : this.q = 2; class C { m(x) { c(x) ? this.p = 3 : this.p = 4; return this.p; } } function c(x) { return x; } console.log(q, new C().m(0));",
+		{ compress: {}, mangle: false }
+	],
+	[
 		"a `const` nothing writes, as `let`",
 		"function f(o) { const a = o.x + 1, { b } = o; for (const k of [a, b]) console.log(k); { const c = [a]; console.log(c, c); } } f({ x: 1, b: 2 }); f({ x: 3, b: 4 });",
 		{ compress: {}, mangle: false }
@@ -564,6 +584,14 @@ const KEPT_CASES = [
 	["an integer compared with zero where it is no test, or two values a BigInt may be", "function f(a, b) { console.log((a | +b) !== 0, (a | b) !== 0 ? 1 : 2, a - b === 0); } f(1n, 1n); f(1, 2);"],
 	["a nested array literal concatenated", 'console.log([1, [2, 3]] + "");'],
 	["a fraction's `toString` in a radix other than ten", "console.log(0.5.toString(3));"],
+	["a conditional assigning through `with`", "var o = { a: 0 }; with (o) Math.random() < 2 ? a = 1 : a = 2; console.log(o.a);"],
+	["a conditional assigning an undeclared global in strict code", '"use strict"; globalThis.r = 0; Math.random() < 2 ? r = 1 : r = 2; console.log(r);'],
+	["a conditional assigning `this` in a field of a class extending another", "class A {} class B extends A { p = Math.random() < 2 ? this.q = 1 : this.q = 2; } console.log(new B().q);"],
+	["a conditional assigning `this` before `super()`", "class A {} class B extends A { constructor(x) { try { x ? this.p = 1 : this.p = 2; } catch (e) { console.log(e.name); } super(); } } new B(1);"],
+	["a conditional assigning a property of a reassigned name", "function f(x) { var o = {}; function c() { o = {}; return x; } c() ? o.p = 1 : o.p = 2; return o.p; } console.log(f(1));"],
+	["a conditional assigning a key read from a name", 'function f(x, k) { var o = {}; Math.random() < 2 ? o[k] = 1 : o[k] = 2; return o.a; } console.log(f(1, "a"));'],
+	["a conditional adding to its target", "var a = 0; Math.random() < 2 ? a += 1 : a += 2; console.log(a);"],
+	["a strict test for null and undefined of a global", "console.log(globalThis.g === null || globalThis.g === void 0, typeof g);"],
 	["a `concat` keeping a hole", "console.log([, 1].concat(2).length, 0 in [, 1].concat(2));"],
 	["a `Number` shadowed by a variable", "var Number = { NaN: 1 }; console.log(Number.NaN);"],
 	["`Number.EPSILON`, longer as a number", "console.log(Number.EPSILON);"],
