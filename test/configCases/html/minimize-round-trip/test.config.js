@@ -141,20 +141,19 @@ const tree = (html) => {
 				const parent = nodePath.parent;
 				const parentName = parent === null ? "" : nodePath.name(parent);
 				if (parentName === "style") {
-					out.push(`#css:${canonicalValue("", "style", nodePath.data())}`);
+					out.push(`#css:${canonicalValue("", "style", nodePath.value())}`);
 					return;
 				}
 				// Whitespace nothing renders is dropped by design.
 				if (
 					(parentName === "head" || parentName === "html") &&
-					nodePath.data().trim() === ""
+					nodePath.value().trim() === ""
 				) {
 					return;
 				}
-				out.push(`#text:${nodePath.data()}`);
+				out.push(`#text:${nodePath.value()}`);
 			},
-			[NodeType.Doctype]: (nodePath) =>
-				out.push(`#doctype:${nodePath.doctypeName()}`)
+			[NodeType.Doctype]: (nodePath) => out.push(`#doctype:${nodePath.name()}`)
 		})
 		.process(html, {});
 	return out;

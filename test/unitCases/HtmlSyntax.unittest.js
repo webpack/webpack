@@ -3128,17 +3128,17 @@ const materialize = (ref) => {
 		case NodeType.ProcessingInstruction:
 			return {
 				type,
-				target: A.piTarget(ref),
-				data: A.data(ref),
+				target: A.name(ref),
+				data: A.value(ref),
 				start: A.start(ref),
 				end: A.end(ref)
 			};
 		case NodeType.Doctype:
 			return {
 				type,
-				name: A.doctypeName(ref),
-				publicId: A.doctypePublicId(ref),
-				systemId: A.doctypeSystemId(ref),
+				name: A.name(ref),
+				publicId: A.publicId(ref),
+				systemId: A.systemId(ref),
 				start: A.start(ref),
 				end: A.end(ref)
 			};
@@ -3148,7 +3148,7 @@ const materialize = (ref) => {
 				type: /** @type {typeof NodeType.Text | typeof NodeType.Comment} */ (
 					type
 				),
-				data: A.data(ref),
+				data: A.value(ref),
 				start: A.start(ref),
 				end: A.end(ref)
 			};
@@ -3928,7 +3928,7 @@ const { NodeType } = require("../../lib/html/syntax-parser");
 						enter: (path) => log.push(`enter:${path.name()}`),
 						exit: (path) => log.push(`exit:${path.name()}`)
 					},
-					[NodeType.Text]: (path) => log.push(`text:${path.data()}`)
+					[NodeType.Text]: (path) => log.push(`text:${path.value()}`)
 				})
 			)
 			.process("<div><span>a</span>b</div>");
@@ -3965,7 +3965,7 @@ const { NodeType } = require("../../lib/html/syntax-parser");
 		new SourceProcessor()
 			.use({
 				[NodeType.Doctype]: () => log.push("doctype"),
-				[NodeType.Comment]: (path) => log.push(`comment:${path.data()}`)
+				[NodeType.Comment]: (path) => log.push(`comment:${path.value()}`)
 			})
 			.process("<!DOCTYPE html><!--c--><p>x</p>");
 		expect(log).toEqual(["doctype", "comment:c"]);
@@ -8147,7 +8147,7 @@ describe("SourceProcessor — streamed walk recycling", () => {
 		new SourceProcessor()
 			.use(
 				/** @type {import("../../lib/html/syntax-printer").VisitorMap} */ ({
-					[NodeType.Text]: (path) => text.push(path.data())
+					[NodeType.Text]: (path) => text.push(path.value())
 				})
 			)
 			// Entity references split the tokenizer's text runs; the walk must not
@@ -8364,7 +8364,7 @@ describe("parseHtml — path accessor completeness", () => {
 					[NodeType.Doctype]: (path) => {
 						const n = path.node;
 						log.push(
-							`doctype:${path.doctypePublicId(n)}/${path.doctypeSystemId(n)}`
+							`doctype:${path.publicId(n)}/${path.systemId(n)}`
 						);
 					},
 					[NodeType.Element]: (path) => {
@@ -9625,9 +9625,9 @@ describe("token parts reported by the tokenizer", () => {
 		for (const child of childrenOf(parseHtmlRefs(source))) {
 			if (A.type(child) === NodeType.Doctype) {
 				return {
-					name: A.doctypeName(child),
-					publicId: A.doctypePublicId(child),
-					systemId: A.doctypeSystemId(child)
+					name: A.name(child),
+					publicId: A.publicId(child),
+					systemId: A.systemId(child)
 				};
 			}
 		}
@@ -9645,7 +9645,7 @@ describe("token parts reported by the tokenizer", () => {
 		 * @param {import("../../lib/html/syntax-parser").HtmlNodeRef} node node
 		 */
 		const walk = (node) => {
-			if (A.type(node) === NodeType.Comment) out.push(A.data(node));
+			if (A.type(node) === NodeType.Comment) out.push(A.value(node));
 			for (const child of childrenOf(node)) walk(child);
 		};
 		for (const child of childrenOf(parseHtmlRefs(source))) walk(child);

@@ -877,7 +877,7 @@ describe("CssSyntax — SourceProcessor", () => {
 					[NodeType.String]: (
 						/** @type {import("../../lib/css/syntax-parser").CssPath} */ path
 					) => {
-						seen.unescaped = path.unescaped();
+						seen.unescaped = path.value();
 					},
 					[NodeType.Ident]: (
 						/** @type {import("../../lib/css/syntax-parser").CssPath} */ path
@@ -3788,7 +3788,7 @@ describe("CssSyntax — path accessors", () => {
 					[NodeType.AtRule]: (/** @type {CssPath} */ path) => {
 						log.push(`at:${path.name()}`);
 						log.push(
-							`atName:${SRC.slice(path.nameStart() + 1, path.nameEnd())}`
+							`atName:${path.source(path.nameStart(), path.nameEnd())}`
 						);
 						log.push(`prelude:${path.childCount() > 0}`);
 						log.push(
@@ -3813,12 +3813,14 @@ describe("CssSyntax — path accessors", () => {
 					},
 					[NodeType.Declaration]: (/** @type {CssPath} */ path) => {
 						if (path.important()) {
-							log.push(`decl:${path.name()}=${path.unescapedName()}`);
+							log.push(
+								`decl:${path.source(path.nameStart(), path.nameEnd())}=${path.name()}`
+							);
 						}
 					},
 					[NodeType.Url]: (/** @type {CssPath} */ path) => {
 						log.push(
-							`url:${SRC.slice(path.contentStart(), path.contentEnd())}`
+							`url:${SRC.slice(path.valueStart(), path.valueEnd())}`
 						);
 					},
 					[NodeType.SimpleBlock]: (/** @type {CssPath} */ path) => {
@@ -9604,7 +9606,7 @@ describe("CssSyntax — a string the source never closed", () => {
 			.use({
 				[NodeType.String]: {
 					enter: (/** @type {import("../../lib/css/syntax-parser").CssPath} */ path) =>
-						seen.push(path.unescaped())
+						seen.push(path.value())
 				}
 			})
 			.process(source);

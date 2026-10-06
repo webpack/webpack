@@ -79,7 +79,7 @@ const parseFragment = (html) => {
 				}
 			},
 			[NodeType.Text]: (path) => {
-				if (open !== undefined) open.text += path.data();
+				if (open !== undefined) open.text += path.value();
 			}
 		})
 		.process(html, {});

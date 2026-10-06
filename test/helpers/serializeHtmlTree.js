@@ -33,9 +33,9 @@ const serializeHtmlTree = (root) => {
 		const indent = `| ${"  ".repeat(depth)}`;
 		const type = A.type(node);
 		if (type === NodeType.Doctype) {
-			let s = `<!DOCTYPE ${A.doctypeName(node) || ""}`;
-			const publicId = A.doctypePublicId(node);
-			const systemId = A.doctypeSystemId(node);
+			let s = `<!DOCTYPE ${A.name(node) || ""}`;
+			const publicId = A.publicId(node);
+			const systemId = A.systemId(node);
 			if (publicId !== null || systemId !== null) {
 				s += ` "${publicId || ""}" "${systemId || ""}"`;
 			}
@@ -43,15 +43,15 @@ const serializeHtmlTree = (root) => {
 			return;
 		}
 		if (type === NodeType.Comment) {
-			lines.push(`${indent}<!-- ${A.data(node)} -->`);
+			lines.push(`${indent}<!-- ${A.value(node)} -->`);
 			return;
 		}
 		if (type === NodeType.ProcessingInstruction) {
-			lines.push(`${indent}<?${A.piTarget(node)} ${A.data(node)}?>`);
+			lines.push(`${indent}<?${A.name(node)} ${A.value(node)}?>`);
 			return;
 		}
 		if (type === NodeType.Text) {
-			lines.push(`${indent}"${A.data(node)}"`);
+			lines.push(`${indent}"${A.value(node)}"`);
 			return;
 		}
 		const prefix =

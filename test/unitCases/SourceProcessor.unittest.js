@@ -457,6 +457,48 @@ describe("SourceProcessor", () => {
 			});
 		});
 
+		it("reads names and values decoded, and as written through source", () => {
+			/** @type {string[]} */
+			const css = [];
+			new CssSourceProcessor()
+				.use(
+					[CssNodeType.AtRule, CssNodeType.Declaration, CssNodeType.String],
+					(path) => {
+						const written =
+							path.type() === CssNodeType.String
+								? path.source()
+								: path.source(path.nameStart(), path.nameEnd());
+						css.push(`${path.name()}|${path.value()}|${written}`);
+					}
+				)
+				.process('@m\\65 dia x{a{co\\6cor:red;content:"\\41 b"}}');
+			expect(css).toEqual([
+				"media||m\\65 dia",
+				"color||co\\6cor",
+				"content||content",
+				'|Ab|"\\41 b"'
+			]);
+			/** @type {string[]} */
+			const html = [];
+			new HtmlSourceProcessor()
+				.use(
+					[
+						HtmlNodeType.Doctype,
+						HtmlNodeType.Element,
+						HtmlNodeType.Text,
+						HtmlNodeType.Comment
+					],
+					(path) => {
+						if (path.type() === HtmlNodeType.Element && path.parent !== null) {
+							if (path.name() !== "b") return;
+						}
+						html.push(`${path.name()}|${path.value()}`);
+					}
+				)
+				.process("<!DOCTYPE html><B>a &amp; b</B><!--c-->");
+			expect(html).toEqual(["html|", "b|", "|a & b", "|c"]);
+		});
+
 		it("reads the html root and a template's content at index 0", () => {
 			/** @type {[number, number | null, number][]} */
 			const seen = [];

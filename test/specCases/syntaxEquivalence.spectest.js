@@ -1263,7 +1263,7 @@ const domShapeOf = (source) => {
 			if (inPage && !VERBATIM_TEXT.has(tag)) {
 				let own = "";
 				for (let tIndex = 0, t = A.child(0, child); t !== 0; t = A.child(++tIndex, child)) {
-					if (A.type(t) === NodeType.Text) own += A.data(t);
+					if (A.type(t) === NodeType.Text) own += A.value(t);
 				}
 				text.push(own.replace(ASCII_WHITESPACE, " "));
 			}
