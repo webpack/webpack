@@ -4604,7 +4604,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			["only one side takes it", "a{place-content:baseline baseline}"],
 			// Two are invalid, and a substitution may be two values itself.
 			["it is a CSS-wide keyword", "a{gap:inherit inherit}"],
-			["it is a substitution", "a{gap:var(--a) var(--a)}"],
+			["it is a substitution", "a{gap:var(--a)var(--a)}"],
 			// `repeat-x` is the one-value spelling of a pair, so it never doubles.
 			["the keyword never pairs", "a{background-repeat:repeat-x repeat-x}"],
 			// `mdn-data` states `black` as this one's initial, which it cannot take.
