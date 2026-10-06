@@ -435,6 +435,41 @@ const IMPROVED_CASES = [
 		{ compress: { ecma: 2021 }, ecma: 2021, mangle: false }
 	],
 	[
+		"a property assigned its own arithmetic, as a compound assignment",
+		'function f(o, x) { o.p = o.p + x; o["q"] = o["q"] * x; return o; } console.log(JSON.stringify(f({ p: 1, q: 2 }, 3)));',
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a call of what `Object` is passed, as a call of it",
+		"function g() { return this === undefined; } var a = { b() { return this === a; } }; function f() { \"use strict\"; return [Object(g)(), Object(a.b)()]; } console.log(f());",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an optional link on a parenthesized chain, joined to it, from ECMAScript 2020",
+		"function f(a) { return [(a?.b)?.c, (a?.b)?.(1), (a?.b)?.[0]]; } console.log(f(null), f({ b: null }), f({ b: Object.assign((x) => x, { c: 2, 0: 3 }) }));",
+		{ compress: { ecma: 2020 }, ecma: 2020, mangle: false }
+	],
+	[
+		"a `typeof` against `\"object\"` beside a test for `null`, as the value's truthiness",
+		'function f(x) { return [typeof x === "object" && x !== null, typeof x != "object" || x == null, typeof x == "object" && x != null]; } console.log(f(null), f({}), f(1));',
+		{ compress: {}, mangle: false }
+	],
+	[
+		"`Array` of two values and a spread, as an array literal",
+		"function f(c) { return [new Array(1, 2, ...c), Array(c, 1, ...c)]; } console.log(JSON.stringify(f([3])));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"`AggregateError` constructed without `new`",
+		'console.log(new AggregateError([1], "m").message);',
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a computed `__proto__` or `constructor` key, written as a name where it means the same",
+		'var o = { ["__proto__"]() { return 1; } }; class C { ["__proto__"] = 2; static ["constructor"]() { return 3; } } console.log(o.__proto__(), new C().__proto__, C.constructor());',
+		{ compress: {}, mangle: false }
+	],
+	[
 		"a variable assigned its own logical expression, from ECMAScript 2021",
 		"function f(a, b) { a = a || b; return a; } function g(a, b) { console.log(b); a = a ?? b; return a; } var E; (function (E) { E[E.A = 0] = \"A\"; })(E || (E = {})); console.log(f(0, 1), f(2, 3), g(null, 4), g(5, 6), E[0]);",
 		{ compress: { ecma: 2021 }, ecma: 2021, mangle: false }
@@ -583,6 +618,13 @@ const KEPT_CASES = [
 	["a character of a string literal deleted, or half of a surrogate pair", 'try { console.log(delete "abc"[0], "\\ud83d\\ude00"[0].length); } catch (e) { console.log(e.name); }'],
 	["an integer compared with zero where it is no test, or two values a BigInt may be", "function f(a, b) { console.log((a | +b) !== 0, (a | b) !== 0 ? 1 : 2, a - b === 0); } f(1n, 1n); f(1, 2);"],
 	["a nested array literal concatenated", 'console.log([1, [2, 3]] + "");'],
+	["a property assigned its own arithmetic through a name reassigned", "function f(o, x) { o.p = o.p + x; o[x] = o[x] + 1; o = {}; return o; } console.log(f({ p: 1 }, 2));"],
+	["a call of `Object` passed two values, spread, or shadowed", "function f(Object) { return Object(g)(); } function g() { return 1; } console.log(f((x) => x), Object(g, 1)(), Object(...h)()); var h = [g];"],
+	["a link on a parenthesized chain that is not optional", "var a = { b: { c: 1 } }; console.log((a?.b).c);"],
+	["`__proto__` as the key of an object literal's value, which sets its prototype", 'var o = { ["__proto__"]: [] }; console.log(Array.isArray(o), o.__proto__ === Object.prototype);'],
+	["`constructor` as the key of a method or a static field", 'class C { ["constructor"]() { return 1; } static ["constructor"] = 2; } console.log(new C().constructor === C, C.constructor);'],
+	["a `typeof` against `\"object\"` beside another test", 'var o = { p: {} }, y = 1; console.log(typeof o.p == "object" && o.p !== null, typeof o == "object" && y !== null, typeof o == "object" && o !== 1);'],
+	["`Array` of one value and a spread", "var c = [3]; console.log(Array(1, ...c).length, Array(...c).length);"],
 	["a fraction's `toString` in a radix other than ten", "console.log(0.5.toString(3));"],
 	["a conditional assigning through `with`", "var o = { a: 0 }; with (o) Math.random() < 2 ? a = 1 : a = 2; console.log(o.a);"],
 	["a conditional assigning an undeclared global in strict code", '"use strict"; globalThis.r = 0; Math.random() < 2 ? r = 1 : r = 2; console.log(r);'],
