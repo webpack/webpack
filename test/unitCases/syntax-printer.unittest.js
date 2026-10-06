@@ -1375,6 +1375,16 @@ const CORRECTED_CASES = [
 		{ compress: {}, mangle: false }
 	],
 	[
+		"a `for` head's `let` beside an unused name with effects, closures reading each iteration's binding",
+		"function init() { return 3; } (function () { var fns = []; for (let i = 0, n = init(); i < 3; i++) fns.push(() => i); console.log(fns.map((f) => f()).join()); })();",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"two `for` heads declaring one `let` name, each beside an unused name with effects",
+		"function f() { return 1; } function g(a) { for (let i = 0, n = f(); i < 1; i++) console.log(i); for (let i = 5, n = f(); i < 6; i++) console.log(i); return a; } console.log(g(2));",
+		{ compress: {}, mangle: false }
+	],
+	[
 		"a BigInt beside a Number, `null`, `undefined`, a boolean or a numeric string, nobody reads",
 		"function t(f) { try { f(); console.log('no'); } catch (e) { console.log(e.name); } } t(function () { 1n + 1; }); t(function () { 1n + null; }); t(function () { 1n + void 0; }); t(function () { !0 + 1n; }); t(function () { 1n - 'a'; }); t(function () { 1 << 1n; });",
 		{ compress: {}, mangle: false }
