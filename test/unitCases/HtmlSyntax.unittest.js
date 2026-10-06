@@ -3329,6 +3329,38 @@ describe("parseHtml", () => {
 			});
 		});
 
+		it("should read what the input ran out in as far as it goes", () => {
+			const [root] = parseXml("<r>a<!FOO b").children;
+			expect(/** @type {MatElement} */ (root).children).toMatchObject([
+				{ type: NodeType.Text, data: "a" },
+				{ type: NodeType.Comment, data: "FOO b" }
+			]);
+			expect(parseXml('<!DOCTYPE r [<!ENTITY a "x">').children).toMatchObject(
+				[{ type: NodeType.Doctype, name: "r" }]
+			);
+		});
+
+		it("should replace a NUL in text and read a bare attribute an entity holds", () => {
+			const [text] = /** @type {MatElement} */ (
+				parseXml("<r>a\0b</r>").children[0]
+			).children;
+			expect(text).toMatchObject({ type: NodeType.Text, data: "a\uFFFDb" });
+			const [cdata] = /** @type {MatElement} */ (
+				parseXml("<r><![CDATA[a\0b]]></r>").children[0]
+			).children;
+			expect(cdata).toMatchObject({ type: NodeType.Text, data: "a\uFFFDb" });
+			const [, root] = parseXml(
+				'<!DOCTYPE r [<!ENTITY e "<x a/>">]><r>&e;</r>'
+			).children;
+			const [x] = /** @type {MatElement} */ (root).children;
+			expect(
+				/** @type {MatElement} */ (x).attributes.map(({ name, value }) => [
+					name,
+					value
+				])
+			).toEqual([["a", ""]]);
+		});
+
 		it("should preserve case-sensitive element and attribute names", () => {
 			const root = /** @type {MatElement} */ (
 				parseXml('<Root ID="upper" id="lower"><Child/></Root>').children[0]
@@ -3948,6 +3980,35 @@ b&#10;c">
 						})
 					).code
 				).toBe(document);
+			});
+
+			it("should resolve a prefixed stylesheet's namespace through its own prefix", () => {
+				const { builtinEmbeddedRenderer } = require("../../lib/html/builtinEmbeddedRenderer");
+				expect(
+					/** @type {{ code: string }} */ (
+						new SourceProcessor().process(
+							'<s:svg xmlns:s="http://www.w3.org/2000/svg"><s:style>a { b : c }</s:style><style>d { e : f }</style></s:svg>',
+							{
+								xml: true,
+								mode: "minify",
+								renderEmbeddedSource: builtinEmbeddedRenderer()
+							}
+						)
+					).code
+				).toBe(
+					'<s:svg xmlns:s="http://www.w3.org/2000/svg"><s:style>a{b:c}</s:style><style>d { e : f }</style></s:svg>'
+				);
+			});
+
+			it("should keep a stylesheet an asynchronous renderer declines", async () => {
+				const document =
+					'<svg xmlns="http://www.w3.org/2000/svg"><style>a { b : c }</style><rect style="fill : red"/></svg>';
+				const { code } = await new SourceProcessor().processAsync(document, {
+					xml: true,
+					mode: "minify",
+					renderEmbeddedSource: () => Promise.resolve(undefined)
+				});
+				expect(code).toBe(document);
 			});
 
 			it("should close what the input ran out in", () => {

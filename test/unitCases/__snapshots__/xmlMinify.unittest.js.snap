@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`xmlMinify should hand the stylesheets the CSS minifier's options 1`] = `"<svg xmlns=\\"http://www.w3.org/2000/svg\\"><style>a{width:6pc}</style></svg>"`;
+
+exports[`xmlMinify should hand the stylesheets the target's browsers 1`] = `
+"<?xml version=\\"1.0\\" encoding=\\"UTF-8\\"?><svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 10 10\\">
+	<style>.dot{fill:red;-webkit-user-select:none;user-select:none}</style>
+	<circle class=\\"dot\\" cx=\\"5\\" cy=\\"5\\" r=\\"4\\" style=\\"stroke:#0f0\\"/>
+</svg>"
+`;
+
+exports[`xmlMinify should minify the document and the stylesheets it holds 1`] = `
+"<?xml version=\\"1.0\\" encoding=\\"UTF-8\\"?><svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 10 10\\">
+	<style>.dot{fill:red;user-select:none}</style>
+	<circle class=\\"dot\\" cx=\\"5\\" cy=\\"5\\" r=\\"4\\" style=\\"stroke:#0f0\\"/>
+</svg>"
+`;
