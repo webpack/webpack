@@ -3471,6 +3471,16 @@ describe("parseHtml", () => {
 			});
 		});
 
+		it("should require a lowercase hexadecimal marker", () => {
+			const root = /** @type {MatElement} */ (
+				parseXml("<root>&#x4A;&#X4A;</root>").children[0]
+			);
+			expect(root.children[0]).toMatchObject({
+				type: NodeType.Text,
+				data: "J&#X4A;"
+			});
+		});
+
 		it("should not decode HTML-only or differently-cased entity names", () => {
 			const root = /** @type {MatElement} */ (
 				parseXml("<root>&nbsp;&AMP;&amp;</root>").children[0]
