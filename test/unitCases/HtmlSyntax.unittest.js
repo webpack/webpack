@@ -7778,7 +7778,7 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 			// carries whatever the renderer just made of them.
 			[
 				"svg",
-				"stylesheet",
+				"foreign-element",
 				'<svg viewBox="0 0 2 2"><style>.s { fill : red }</style><rect style="fill : red"/><script>var b = 2</script></svg>'
 			]
 		]);
@@ -7793,7 +7793,7 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 			["css", "block-contents", "fill : red"],
 			[
 				"svg",
-				"stylesheet",
+				"foreign-element",
 				'<svg viewBox="0 0 2 2"><rect style="fill : red"/></svg>'
 			]
 		]);
@@ -7821,7 +7821,9 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 	});
 
 	it("offers a self-closing `<svg>`", () => {
-		expect(offered("<svg/>")).toEqual([["svg", "stylesheet", "<svg/>"]]);
+		expect(offered("<svg/>")).toEqual([
+			["svg", "foreign-element", "<svg/>"]
+		]);
 	});
 
 	it("keeps a map the renderer attached to an inline `<style>` / `<script>`", () => {
@@ -7867,7 +7869,7 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 		expect(
 			offered('<svg><iframe srcdoc="&lt;p&gt;x&lt;/p&gt;"/></svg>')
 		).toEqual([
-			["svg", "stylesheet", '<svg><iframe srcdoc="<p>x</p>"/></svg>']
+			["svg", "foreign-element", '<svg><iframe srcdoc="<p>x</p>"/></svg>']
 		]);
 	});
 
@@ -9772,7 +9774,7 @@ describe("htmlMinify — one document reaching every embedded site", () => {
 			"javascript/script",
 			"css/block-contents",
 			"javascript/event-handler",
-			"svg",
+			"svg/foreign-element",
 			"html",
 			"html"
 		]);

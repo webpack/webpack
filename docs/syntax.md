@@ -38,6 +38,7 @@ Read this before touching the CSS, HTML or JavaScript parser, printer or minifie
 
 - `parseHtml(…, { xml: true })` reads XML 1.0 through `tokenizeXml` and its own token handlers (`XML_PARSE_CALLBACKS`), so the HTML handlers carry no XML branch on their per-token path. Names are case-sensitive, there are no insertion modes, and the internal DTD subset's entities and attribute defaults are applied — an entity holding markup is tokenized in place and printed as its reference, under a nesting limit and an expansion budget.
 - The printer then writes XML, never HTML, and offers `renderEmbeddedSource` only an SVG or XHTML element's `<style>` (of no type or `text/css`) and `style=""` — the namespaces where they are CSS. `xmlMinify.js` hands those to `builtinEmbeddedRenderer` with the CSS options and browsers a `.css` asset gets.
+- An SVG `data:` URL a stylesheet or a document holds is minified the same way while the XML minimizer is on (`svg` in `cssMinify` and `htmlMinify`): `builtinEmbeddedRenderer` answers it only where that is shorter, quoting a tie with `'` (`xmlQuote`) since the URL usually sits in `"`. An HTML `<svg>` subtree is offered with `as: "foreign-element"` and declined: it is HTML's to print. One in a `style=""` whose payload holds the quote the declaration list switches to is not offered yet.
 - `yarn test:xmlconf` holds both halves to the W3C XML Conformance Test Suite: each document's canonical form, and each printed output reading back to it.
 
 ## JavaScript
