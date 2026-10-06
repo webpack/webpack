@@ -2096,6 +2096,130 @@ describe("WebpackParser acorn-override fast-path gates", () => {
 		);
 	});
 
+	describe("parenthesized expression lists", () => {
+		/** @type {import("acorn").Options} */
+		const referenceOptions = { ecmaVersion: "latest", sourceType: "script" };
+
+		it("does not copy lists for single parenthesized expressions", () => {
+			const code = "(((first))); second + ((third)); ((fourth));";
+			const parser = new WebpackParser(lazyOptions, code);
+			const releaseScratch = jest.spyOn(parser, "_releaseScratch");
+			const ast = parser.parse();
+			expect(releaseScratch).toHaveBeenCalledTimes(1);
+			expect(releaseScratch).toHaveBeenCalledWith(
+				expect.any(Array),
+				ast.body.length
+			);
+			expect(parser._arrDepth).toBe(0);
+			expect(
+				firstDifference(ast, acorn.parse(code, referenceOptions), "program")
+			).toBeNull();
+		});
+
+		it.each([
+			"(((value))); (other);",
+			"(first, (second), third); (fourth, fifth);",
+			"() => (value); (first) => ((first));",
+			"(first, second) => (first, second);",
+			"(first = (value),) => (first);",
+			"({ first = (value) }) => (first);",
+			"(...values) => (values);",
+			"(first) => (second) => (first, second);",
+			"((first) => (first))((second));",
+			"(value)\n(next);",
+			"function* f() { return (yield (value)); }",
+			"async function f() { return (await (value)); }"
+		])("preserves the AST for %s", (code) => {
+			for (const preserveParens of [false, true]) {
+				const options = { ...lazyOptions, preserveParens };
+				expect(
+					firstDifference(
+						WebpackParser.parse(code, options),
+						acorn.parse(code, { ...referenceOptions, preserveParens }),
+						"program"
+					)
+				).toBeNull();
+			}
+		});
+
+		it.each([
+			"();",
+			"(value,);",
+			"(...values);",
+			"(...values,) => values;",
+			"({ value = 1 });",
+			"(value)\n=> value;",
+			"((value)) => value;",
+			"(first, first) => first;",
+			"function* f() { return (value = yield 1) => value; }",
+			"async function f() { return (value = await 1) => value; }"
+		])("preserves the error for %s", (code) => {
+			/** @type {SyntaxError | undefined} */
+			let expectedError;
+			try {
+				acorn.parse(code, referenceOptions);
+			} catch (error) {
+				if (!(error instanceof SyntaxError)) throw error;
+				expectedError = error;
+			}
+			expect(expectedError).toBeInstanceOf(SyntaxError);
+			expect(() => WebpackParser.parse(code, lazyOptions)).toThrow(
+				expectedError
+			);
+		});
+
+		it("gives arrow hooks independent lists that survive pool reuse", () => {
+			/** @type {import("estree").Expression[][]} */
+			const lists = [];
+			class Plugin extends WebpackParser {
+				/**
+				 * @param {import("estree").Expression[]} expressions parenthesized expressions
+				 * @returns {boolean} whether an arrow body may follow
+				 */
+				shouldParseArrow(expressions) {
+					lists.push(expressions);
+					return super.shouldParseArrow(expressions);
+				}
+			}
+			const code = "(first); (second) => (third); (fourth, fifth);";
+			expect(
+				firstDifference(
+					Plugin.parse(code, lazyOptions),
+					acorn.parse(code, referenceOptions),
+					"program"
+				)
+			).toBeNull();
+			expect(
+				lists.map((list) =>
+					list.map((node) =>
+						/** @type {import("estree").Identifier} */ (node).name
+					)
+				)
+			).toEqual([["first"], ["second"], ["third"], ["fourth", "fifth"]]);
+		});
+
+		it("honors changes to a list made by an arrow hook", () => {
+			class Plugin extends WebpackParser {
+				/**
+				 * @param {import("estree").Expression[]} expressions parenthesized expressions
+				 * @returns {boolean} whether an arrow body may follow
+				 */
+				shouldParseArrow(expressions) {
+					expressions.push(expressions[0]);
+					return false;
+				}
+			}
+			const ast = Plugin.parse("(value);", lazyOptions);
+			const expression = /** @type {import("estree").SequenceExpression} */ (
+				/** @type {import("estree").ExpressionStatement} */ (ast.body[0])
+					.expression
+			);
+			expect(expression.type).toBe("SequenceExpression");
+			expect(expression.expressions).toHaveLength(2);
+			expect(expression.expressions[0]).toBe(expression.expressions[1]);
+		});
+	});
+
 	it("keeps the token fast path off for plugins overriding tokenizer internals", () => {
 		let calls = 0;
 		class Plugin extends WebpackParser {
