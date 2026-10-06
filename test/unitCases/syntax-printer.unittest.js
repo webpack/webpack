@@ -5125,6 +5125,30 @@ describe("syntax-printer", () => {
 			);
 		});
 
+		it("should keep a comment before a joined `let`, printed where terser prints one before a joined `var`", async () => {
+			const { minify } = await load();
+			/** @type {import("terser").MinifyOptions} */
+			const options = {
+				compress: {},
+				mangle: false,
+				format: { comments: "some" }
+			};
+			const { code } = await minify(
+				"function f(o) { let a = o.x; /*! b */ const b = g(); a++; return [a, b, b]; }",
+				options
+			);
+			expect(code).toBe(
+				"function f(o){let a=o.x,b=g();/*! b */return a++,[a,b,b]}"
+			);
+			const joinedVars = await terserReference().minify(
+				"function f(o) { var a = o.x; /*! b */ var b = g(); a++; return [a, b, b]; }",
+				options
+			);
+			expect(joinedVars.code).toBe(
+				"function f(o){var a=o.x,b=g();/*! b */return[++a,b,b]}"
+			);
+		});
+
 		it("should leave the program's value alone under `expression`", async () => {
 			const { minify } = await load();
 			const input = `!function () { ${TRY} console.log(2); }();`;
