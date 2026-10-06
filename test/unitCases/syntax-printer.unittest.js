@@ -516,11 +516,11 @@ const IMPROVED_CASES = [
 		],
 		[
 			"`Boolean` of a value as `!!`, a comparison of an integer with zero read as the integer",
-			"function f(a, b) { return [Boolean(), Boolean(a), Boolean(!a), Boolean((a | +b) !== 0), Boolean(a ? (a | +b) === 0 : (b >>> 1) !== 0)]; } console.log(f(0, 1), f(3, 0), f(1n, 2));"
+			"function f(a, b) { return [Boolean(), Boolean(a), Boolean(!a), Boolean((a | +b) !== 0), Boolean(a ? (a | +b) === 0 : (b >>> 1) !== 0), Boolean(a ? b : a), Boolean(a ? (a | +b) !== 0 : b)]; } console.log(f(0, 1), f(3, 0), f(1n, 2));"
 		],
 		[
 			"an integer tested against zero as the integer, numbers compared loosely",
-			"function f(a, b) { if ((a | +b) !== 0) console.log(1); if (0 == (a >>> b)) console.log(2); if (+a === 0) console.log(3); if ((a & ~b) === 0) console.log(4); } f(1, 2); f(0, 0); f(-1, NaN);"
+			"function f(a, b) { if ((a | +b) !== 0) console.log(1); if (0 == (a >>> b)) console.log(2); if (+a === 0) console.log(3); if ((a & ~b) === 0) console.log(4); if (~+a !== 0) console.log(5); } f(1, 2); f(0, 0); f(-1, NaN);"
 		],
 		[
 			"`??` after a value never `null` or `undefined`",
@@ -552,6 +552,10 @@ const IMPROVED_CASES = [
 // of its function's own, or the call passes, keeps or constructs something.
 /** @type {[string, string][]} */
 const KEPT_CASES = [
+	["a bigint and a number concatenated, which throws", "try { console.log(1n + 2); } catch (e) { console.log(e.name); }"],
+	["an array literal joining to a string longer than it", 'console.log([!0, !0, !0] + "");'],
+	["`+` and `~` of what a literal does not give", "function f(a) { return [+[a], ~a !== 0 ? 1 : 2]; } console.log(f(1), f(1n));"],
+	["a string literal indexed past its end, by no constant or as a target", 'function f(i) { var s = "abc"; "abc"[0] = 1; return ["abc"[5], "abc"[i], "abc"[1.5], "abc"[-1]]; } console.log(f(1));'],
 	["a `Boolean` passed a spread or a second argument", "function f(a, b) { return [Boolean(...a), Boolean(a, b())]; } console.log(f([0], () => 1));"],
 	["a conversion of no literal, which `+` and `\"\"+` would read otherwise for a BigInt or a symbol", "function f(a) { return [Number(a), String(a), BigInt(a)]; } console.log(f(1n));"],
 	["a conversion a variable shadows", "function f(Boolean, Number) { return [Boolean(1), Number(true)]; } console.log(f(String, String));"],
