@@ -6723,6 +6723,10 @@ declare class CssSourceProcessor extends SourceProcessor<
 		 * Stop the walk descending into the current node (enter only).
 		 */
 		skipChildren(): void;
+		/**
+		 * Stop the walk: no visitor fires after the current one returns.
+		 */
+		stop(): void;
 		inValue(): boolean;
 		type(n?: NodeSyntaxParser): number;
 		start(n?: NodeSyntaxParser): number;
@@ -11763,6 +11767,10 @@ declare class HtmlSourceProcessor extends SourceProcessor<
 		 * Stop the walk descending into the current node (enter only).
 		 */
 		skipChildren(): void;
+		/**
+		 * Stop the walk: no visitor fires after the current one returns.
+		 */
+		stop(): void;
 		type(n?: number): number;
 		start(n?: number): number;
 		end(n?: number): number;
@@ -20673,6 +20681,11 @@ declare interface NodePath<TNode> {
 	 * stop the walk descending into the current node (enter only)
 	 */
 	skipChildren: () => void;
+
+	/**
+	 * end the walk: no visitor fires after the current one returns, and a print still completes
+	 */
+	stop: () => void;
 
 	/**
 	 * the node's `NodeType`
@@ -29691,6 +29704,14 @@ declare abstract class SourceProcessor<
 	): SourceProcessor<TPath, TNode, TProcessOptions, TPrintOptions>;
 
 	/**
+	 * Register one bucket for several node types, as a map naming each would.
+	 */
+	use(
+		types: number[],
+		bucket: VisitorBucket<TPath>
+	): SourceProcessor<TPath, TNode, TProcessOptions, TPrintOptions>;
+
+	/**
 	 * Parse `input` once and fire the visitors in source order. Asking for output
 	 * — `mode`, the one thing that names it — makes the same walk print, given a
 	 * printer supplied at construction: a
@@ -33860,6 +33881,10 @@ declare namespace exports {
 					 * Stop the walk descending into the current node (enter only).
 					 */
 					skipChildren(): void;
+					/**
+					 * Stop the walk: no visitor fires after the current one returns.
+					 */
+					stop(): void;
 					inValue(): boolean;
 					type(n?: NodeSyntaxParser): number;
 					start(n?: NodeSyntaxParser): number;
@@ -34026,6 +34051,10 @@ declare namespace exports {
 						 * Stop the walk descending into the current node (enter only).
 						 */
 						skipChildren(): void;
+						/**
+						 * Stop the walk: no visitor fires after the current one returns.
+						 */
+						stop(): void;
 						inValue(): boolean;
 						type(n?: NodeSyntaxParser): number;
 						start(n?: NodeSyntaxParser): number;
@@ -34080,6 +34109,10 @@ declare namespace exports {
 									 * Stop the walk descending into the current node (enter only).
 									 */
 									skipChildren(): void;
+									/**
+									 * Stop the walk: no visitor fires after the current one returns.
+									 */
+									stop(): void;
 									inValue(): boolean;
 									type(n?: NodeSyntaxParser): number;
 									start(n?: NodeSyntaxParser): number;
@@ -34209,6 +34242,10 @@ declare namespace exports {
 						 * Stop the walk descending into the current node (enter only).
 						 */
 						skipChildren(): void;
+						/**
+						 * Stop the walk: no visitor fires after the current one returns.
+						 */
+						stop(): void;
 						inValue(): boolean;
 						type(n?: NodeSyntaxParser): number;
 						start(n?: NodeSyntaxParser): number;
@@ -34261,6 +34298,10 @@ declare namespace exports {
 							 * Stop the walk descending into the current node (enter only).
 							 */
 							skipChildren(): void;
+							/**
+							 * Stop the walk: no visitor fires after the current one returns.
+							 */
+							stop(): void;
 							inValue(): boolean;
 							type(n?: NodeSyntaxParser): number;
 							start(n?: NodeSyntaxParser): number;
@@ -34391,6 +34432,10 @@ declare namespace exports {
 					 * Stop the walk descending into the current node (enter only).
 					 */
 					skipChildren(): void;
+					/**
+					 * Stop the walk: no visitor fires after the current one returns.
+					 */
+					stop(): void;
 					type(n?: number): number;
 					start(n?: number): number;
 					end(n?: number): number;
@@ -34543,6 +34588,10 @@ declare namespace exports {
 						 * Stop the walk descending into the current node (enter only).
 						 */
 						skipChildren(): void;
+						/**
+						 * Stop the walk: no visitor fires after the current one returns.
+						 */
+						stop(): void;
 						type(n?: number): number;
 						start(n?: number): number;
 						end(n?: number): number;
@@ -34645,6 +34694,10 @@ declare namespace exports {
 									 * Stop the walk descending into the current node (enter only).
 									 */
 									skipChildren(): void;
+									/**
+									 * Stop the walk: no visitor fires after the current one returns.
+									 */
+									stop(): void;
 									type(n?: number): number;
 									start(n?: number): number;
 									end(n?: number): number;
@@ -34778,6 +34831,10 @@ declare namespace exports {
 						 * Stop the walk descending into the current node (enter only).
 						 */
 						skipChildren(): void;
+						/**
+						 * Stop the walk: no visitor fires after the current one returns.
+						 */
+						stop(): void;
 						type(n?: number): number;
 						start(n?: number): number;
 						end(n?: number): number;
@@ -34878,6 +34935,10 @@ declare namespace exports {
 							 * Stop the walk descending into the current node (enter only).
 							 */
 							skipChildren(): void;
+							/**
+							 * Stop the walk: no visitor fires after the current one returns.
+							 */
+							stop(): void;
 							type(n?: number): number;
 							start(n?: number): number;
 							end(n?: number): number;

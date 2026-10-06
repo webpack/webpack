@@ -495,6 +495,144 @@ describe("SourceProcessor", () => {
 		});
 	});
 
+	describe("stop", () => {
+		it("ends a css walk: no later visitor, exit or comment fires", () => {
+			/** @type {string[]} */
+			const log = [];
+			const processor = new CssSourceProcessor()
+				.use({
+					[CssNodeType.QualifiedRule]: {
+						enter: () => log.push("rule"),
+						exit: () => log.push("rule exit")
+					},
+					[CssNodeType.Declaration]: (path) => {
+						log.push(path.name());
+						if (path.name() === "b") path.stop();
+					},
+					[CssNodeType.Comment]: () => log.push("comment")
+				})
+				.use({
+					[CssNodeType.Declaration]: (path) => log.push(`second ${path.name()}`)
+				});
+			processor.process("x{a:1;b:2;c:3}/* c */y{d:4}");
+			expect(log).toEqual(["rule", "a", "second a", "b"]);
+			log.length = 0;
+			processor.process("x{a:1}/* c */");
+			expect(log).toEqual(["rule", "a", "second a", "rule exit", "comment"]);
+		});
+
+		it("stops css visitors but still prints the whole output", () => {
+			const css = "a { color: red }\nb { top: 0 }\nc { left: 0 }";
+			let fired = 0;
+			const { code } = new CssSourceProcessor()
+				.use({
+					[CssNodeType.Declaration]: (path) => {
+						fired++;
+						path.stop();
+					}
+				})
+				.process(css, { mode: "minify" });
+			expect(fired).toBe(1);
+			expect(code).toBe(
+				new CssSourceProcessor().process(css, { mode: "minify" }).code
+			);
+		});
+
+		it("ends an html walk, and the next parse starts afresh", () => {
+			/** @type {string[]} */
+			const log = [];
+			const processor = new HtmlSourceProcessor().use([HtmlNodeType.Element], {
+				enter: (path) => {
+					log.push(path.name());
+					if (path.name() === "base") path.stop();
+				},
+				exit: (path) => log.push(`/${path.name()}`)
+			});
+			processor.process("<base href=/a><p>x</p><i>y</i>");
+			expect(log).toEqual(["html", "head", "base"]);
+			log.length = 0;
+			processor.process("<p>x</p>");
+			expect(log).toEqual([
+				"html",
+				"head",
+				"/head",
+				"body",
+				"p",
+				"/p",
+				"/body",
+				"/html"
+			]);
+		});
+
+		it("ends a streamed html walk mid-parse", () => {
+			// Past the node count where the walk streams during tree construction.
+			const html = `<ul>${"<li>x</li>".repeat(40000)}</ul>`;
+			let seen = 0;
+			new HtmlSourceProcessor()
+				.use([HtmlNodeType.Element], (path) => {
+					if (path.name() === "li" && ++seen === 10) path.stop();
+				})
+				.process(html);
+			expect(seen).toBe(10);
+			let total = 0;
+			new HtmlSourceProcessor()
+				.use([HtmlNodeType.Element], (path) => {
+					if (path.name() === "li") total++;
+				})
+				.process(html);
+			expect(total).toBe(40000);
+		});
+
+		it("stops html visitors but still prints the whole output", () => {
+			const html = "<div><p>a</p><p>b</p></div>";
+			/** @type {string[]} */
+			const log = [];
+			const { code } = new HtmlSourceProcessor()
+				.use([HtmlNodeType.Element], {
+					enter: (path) => {
+						log.push(path.name());
+						if (path.name() === "div") path.stop();
+					},
+					exit: (path) => log.push(`/${path.name()}`)
+				})
+				.process(html, { mode: "minify" });
+			expect(log).toEqual(["html", "head", "/head", "body", "div"]);
+			expect(code).toBe(
+				new HtmlSourceProcessor().process(html, { mode: "minify" }).code
+			);
+		});
+	});
+
+	describe("use with an array of node types", () => {
+		it("registers one visitor for every listed type, in each language", () => {
+			/** @type {string[]} */
+			const css = [];
+			new CssSourceProcessor()
+				.use([CssNodeType.Number, CssNodeType.Dimension], (path) =>
+					css.push(path.source())
+				)
+				.process("a{top:1px;z-index:2;left:3em}");
+			expect(css).toEqual(["1px", "2", "3em"]);
+			/** @type {string[]} */
+			const html = [];
+			new HtmlSourceProcessor()
+				.use([HtmlNodeType.Text, HtmlNodeType.Comment], {
+					exit: (path) => html.push(path.source())
+				})
+				.process("<p>a<!--b-->c</p>");
+			expect(html).toEqual(["a", "<!--b-->", "c"]);
+		});
+
+		it("requires a visitor", () => {
+			expect(() =>
+				new CssSourceProcessor().use(
+					[CssNodeType.Number],
+					/** @type {EXPECTED_ANY} */ (undefined)
+				)
+			).toThrow(TypeError);
+		});
+	});
+
 	describe("visitors", () => {
 		it("fires a css visitor for each node of that type, and still prints", () => {
 			/** @type {string[]} */

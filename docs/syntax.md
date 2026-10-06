@@ -32,6 +32,7 @@ new SourceProcessor()
 | ------------------------------- | ------------------------------------------------------------- |
 | `node`, `parent`, `index`       | the current node, its parent (`null` at a root), its position |
 | `skipChildren()`                | stops the walk descending (enter only)                        |
+| `stop()`                        | ends the walk: no visitor fires after the current one returns |
 | `type(n)`                       | the language's `NodeType`                                     |
 | `start(n)`, `end(n)`            | offsets into the parsed input                                 |
 | `range(n)`, `loc(n)`            | `[start, end]`; `{ start, end }` as `{ line, column }`        |
@@ -40,6 +41,16 @@ new SourceProcessor()
 | `childCount(n)`, `childAt(i,n)` | children without allocating a list                            |
 | `children(n)`                   | the children as a new array                                   |
 
+`skipChildren()` still fires the node's `exit`, as estraverse's `skip` does, since the printer prints a node there; Babel's `skip()` also drops the `exit`, which is why ours isn't named `skip`. After `stop()` neither the current node's remaining visitors nor any pending `exit` fire, as in Babel. A print still writes the whole output, and a walk-only parse ends there: CSS once the top-level rule it was called in closes, HTML at once (HTML visits nothing before about 49k nodes have parsed, so stopping early in a big document still pays for that much parsing).
+
+One visitor serves several node types through an array, resolved once in `use()` so the walk sees the same per-type slots:
+
+```js
+processor.use([NodeType.Text, NodeType.Comment], (path) => {
+	ranges.push(path.range());
+});
+```
+
 Conventions every language keeps, and a new member follows:
 
 - **A node is an integer id**, valid until the next parse. The path is one object rebound before each callback; read it during the callback, never keep it.
@@ -47,6 +58,18 @@ Conventions every language keeps, and a new member follows:
 - **Nothing is stored for a read.** A member reads the columns the parser already fills or derives its answer when called: HTML counts `index` along the sibling links and makes `loc`'s converter on its first call in a parse. The walk writes no more than its position, so a read nobody makes costs nothing. A derived read says so in its JSDoc, with the cheaper way to get the same answer, such as `firstChild` / `nextSibling` rather than looping over `childAt` in HTML.
 - **The path only reads.** Writers stay internal to the parser (`_setNodeEnd` in CSS).
 - **One concept, one name.** Language-specific members use the shared vocabulary: `name`, `nameStart` and `nameEnd` for what a node is called (a tag, at-rule, function or declaration), and `contentStart` / `contentEnd` for its payload (an element's body, a `url()`'s contents). Anything else is the language's own (`attributeAt` in HTML, `declarations` in CSS).
+
+### Compared with Babel's `NodePath`
+
+Babel's path is the reference for the vocabulary; what ours lacks, and why:
+
+- **Ancestry** (`parentPath`, `findParent`, `getAncestry`): HTML keeps a parent column (`parentOf`); CSS stores no parents and would pay a stack push and pop per node.
+- **Siblings and container** (`getPrevSibling`, `getNextSibling`, `key`, `listKey`): HTML links next siblings only, and a CSS rule has two lists (prelude and block), so `index` alone does not name the list.
+- **Visitor `state`** (Babel's second argument): visitors capture their state in closures.
+- **Mutation** (`replaceWith`, `remove`, `insertBefore`, `insertAfter`): changes go through the printer and parser-internal writers; a transform API should be designed once for every language.
+- **Persistent paths**: Babel allocates a path per node, which may be kept. Ours is one rebound object over integer ids, which is what keeps the walk allocation-free, and it stays that way.
+- **`traverse(visitor)` on a subtree, `requeue()`, `type` as a string with `isX()`**: types are numeric `NodeType` members; an `is(type)` helper can be added if wanted.
+- **JavaScript only**: `scope`, bindings, `evaluate()`, `isPure()` belong on the JavaScript path when it is built.
 
 ## Generated tables
 
