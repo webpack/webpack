@@ -10,8 +10,9 @@ const pageContent = typeof page === "string" ? page : "";
 const matches = (/** @type {RegExp} */ re) => pageContent.match(re) || [];
 
 it("should bundle every executable JavaScript script type", () => {
-	// One marker per spelling in the generated table, so an entry that is
-	// mis-routed leaves its own body inline and names itself in the failure.
+	// One marker per spelling in the generated table, then no `type` and two
+	// spellings matched on their trimmed, lowercased essence; a mis-routed one
+	// leaves its own body inline and names itself in the failure.
 	expect(matches(/window\.__t\d+/g)).toEqual([]);
 
 	// The tags are adjacent, so they form runs — three of them, since the
@@ -23,7 +24,7 @@ it("should bundle every executable JavaScript script type", () => {
 		.map((url) => url.replace(/.*src="/, "").replace(/"$/, ""))
 		.map((name) => fs.readFileSync(path.resolve(__dirname, name), "utf-8"))
 		.join("\n");
-	for (let i = 0; i < 18; i++) {
+	for (let i = 0; i < 21; i++) {
 		expect(bundled).toContain(`window.__t${i} = true`);
 	}
 });

@@ -8,10 +8,16 @@ module.exports = {
 	module: {
 		rules: [
 			{
-				test: /loaded\.html$/,
-				loader: path.resolve(__dirname, "bom-loader.js")
+				test: /page\.html$/,
+				loader: path.resolve(__dirname, "ast-loader.js")
 			}
 		]
 	},
-	experiments: { html: true }
+	optimization: {
+		emitOnErrors: true
+	},
+	bail: false,
+	experiments: {
+		html: true
+	}
 };

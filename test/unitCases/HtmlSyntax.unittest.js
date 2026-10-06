@@ -8529,6 +8529,44 @@ describe("parseCssUrls", () => {
 	it("should return nothing when the value carries no url()", () => {
 		expect(parseCssUrls("fill:red")).toEqual([]);
 	});
+
+	it("should skip an empty url(), quoted or not", () => {
+		expect(parseCssUrls("mask:url()")).toEqual([]);
+		expect(parseCssUrls('mask:url("")')).toEqual([]);
+		expect(parseCssUrls("mask:url( '' ) url(a.png)")).toEqual([
+			["a.png", 19, 24]
+		]);
+	});
+});
+
+describe("JAVASCRIPT_SCRIPT_TYPES", () => {
+	const { JAVASCRIPT_SCRIPT_TYPES } = require("../../lib/html/data");
+
+	// Pinned against the spec list, not read from the table: a dropped entry
+	// would otherwise just shrink what the table-driven cases check.
+	// cspell:ignore jscript livescript
+	it("should carry every JavaScript MIME essence the spec lists", () => {
+		expect([...JAVASCRIPT_SCRIPT_TYPES].sort()).toEqual([
+			"",
+			"application/ecmascript",
+			"application/javascript",
+			"application/x-ecmascript",
+			"application/x-javascript",
+			"module",
+			"text/ecmascript",
+			"text/javascript",
+			"text/javascript1.0",
+			"text/javascript1.1",
+			"text/javascript1.2",
+			"text/javascript1.3",
+			"text/javascript1.4",
+			"text/javascript1.5",
+			"text/jscript",
+			"text/livescript",
+			"text/x-ecmascript",
+			"text/x-javascript"
+		]);
+	});
 });
 
 // Fused state transitions: the tokenizer runs fully predictable follow-up arcs

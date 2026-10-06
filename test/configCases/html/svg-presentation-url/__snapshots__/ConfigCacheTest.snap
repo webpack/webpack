@@ -13,6 +13,8 @@ exports[`ConfigCacheTestCases html svg-presentation-url exported tests should re
 	<rect width=\\"100\\" height=\\"100\\" fill=\\"url(0e15be1ea86afc9b4529.svg#grad)\\" clip-path=\\"url(#clip)\\"/>
 	<rect width=\\"100\\" height=\\"100\\" stroke=\\"url('0e15be1ea86afc9b4529.svg#grad')\\" filter=\\"url(0e15be1ea86afc9b4529.svg#blur)\\"/>
 	<text mask=\\"url(0e15be1ea86afc9b4529.svg#m)\\">masked</text>
+	<rect fill=\\"red\\" stroke mask=\\"url()\\"/>
+	<rect marker=\\"url(0e15be1ea86afc9b4529.svg?a&b#z)\\"/>
 </svg>
 
 </body>
