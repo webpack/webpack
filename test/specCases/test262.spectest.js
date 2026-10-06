@@ -1465,35 +1465,6 @@ const MINIFIED_FAILURES = [
 	},
 	{
 		reason:
-			"terser writes a program that no longer parses",
-		minifiers: ["terser", "printer"],
-		tests: [
-			"global-code/return.js (sloppy)",
-			"global-code/return.js (strict)",
-			"statements/return/S12.9_A1_T1.js (sloppy)",
-			"statements/return/S12.9_A1_T1.js (strict)",
-			"statements/return/S12.9_A1_T10.js (sloppy)",
-			"statements/return/S12.9_A1_T10.js (strict)",
-			"statements/return/S12.9_A1_T2.js (sloppy)",
-			"statements/return/S12.9_A1_T2.js (strict)",
-			"statements/return/S12.9_A1_T3.js (sloppy)",
-			"statements/return/S12.9_A1_T3.js (strict)",
-			"statements/return/S12.9_A1_T4.js (sloppy)",
-			"statements/return/S12.9_A1_T4.js (strict)",
-			"statements/return/S12.9_A1_T5.js (sloppy)",
-			"statements/return/S12.9_A1_T5.js (strict)",
-			"statements/return/S12.9_A1_T6.js (sloppy)",
-			"statements/return/S12.9_A1_T6.js (strict)",
-			"statements/return/S12.9_A1_T7.js (sloppy)",
-			"statements/return/S12.9_A1_T7.js (strict)",
-			"statements/return/S12.9_A1_T8.js (sloppy)",
-			"statements/return/S12.9_A1_T8.js (strict)",
-			"statements/return/S12.9_A1_T9.js (sloppy)",
-			"statements/return/S12.9_A1_T9.js (strict)"
-		]
-	},
-	{
-		reason:
 			"terser drops an evaluation that throws",
 		minifiers: ["terser"],
 		tests: [
@@ -2072,6 +2043,22 @@ const deliberateProductionDivergences = [
 	"statements/class/definition/prototype-getter.js",
 	"module-code/eval-export-dflt-expr-err-get-value.js"
 ];
+
+// A Script runs as CommonJS, which may return at its top level, so webpack
+// builds these where the spec rejects them.
+const deliberateDivergences = [
+	"global-code/return.js",
+	"statements/return/S12.9_A1_T1.js",
+	"statements/return/S12.9_A1_T2.js",
+	"statements/return/S12.9_A1_T3.js",
+	"statements/return/S12.9_A1_T4.js",
+	"statements/return/S12.9_A1_T5.js",
+	"statements/return/S12.9_A1_T6.js",
+	"statements/return/S12.9_A1_T7.js",
+	"statements/return/S12.9_A1_T8.js",
+	"statements/return/S12.9_A1_T9.js",
+	"statements/return/S12.9_A1_T10.js"
+];
 /* cspell:enable */
 
 const testFiles = fs
@@ -2152,6 +2139,7 @@ describe("test262", () => {
 						meta.features.includes("source-phase-imports-module-source")) &&
 						!(meta.negative && meta.negative.phase === "parse")) ||
 					knownBugs.includes(name) ||
+					deliberateDivergences.includes(name) ||
 					(mode === "production" &&
 						deliberateProductionDivergences.includes(name)) ||
 					(minify !== undefined && renamedByMinifier.test(name))
@@ -2359,12 +2347,16 @@ describe("test262", () => {
 
 						const { warnings, errors } = stats.compilation;
 
+						// webpack reports the parse error, or the engine throws it loading the
+						// bundle; a bundle that runs into the test's unreachable call is not one.
 						const isExpectedParseError =
 							errored &&
 							meta.negative &&
 							meta.negative.phase === "parse" &&
-							// meta.negative.type === errored.constructor.name &&
-							errors.every((item) => item.name === "ModuleParseError");
+							errors.every((item) => item.name === "ModuleParseError") &&
+							(errors.length > 0 ||
+								(typeof errored === "object" &&
+									errored.name === "SyntaxError"));
 
 						const isExpectedRuntimeError =
 							errored &&
