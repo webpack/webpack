@@ -417,6 +417,11 @@ const IMPROVED_CASES = [
 		{ compress: {}, mangle: false }
 	],
 	[
+		"names a pattern binds that nothing reads, beside a nested pattern, a string and inert defaults",
+		"console.log(function (o) { const [a, [b, c]] = o; const { length: n, x } = \"ab\"; const { y = -1n, z = !0, w } = { w: 1 }; const [] = [1, ...o]; return b + n + w; }([0, [1, 2]]));",
+		{ compress: { ecma: 2020 }, ecma: 2020, mangle: false }
+	],
+	[
 		"a `catch` binding nothing reads, from ECMAScript 2019",
 		"try { null.p; } catch (e) { console.log(1); }",
 		{ compress: { ecma: 2019 }, ecma: 2019, mangle: false }
@@ -4592,6 +4597,7 @@ describe("syntax-printer", () => {
 				["console.log(function () { var o = Math.random() < 2 ? { a: 1, b: 2 } : {}; const { a, b } = o; return a; }());", modern],
 				['console.log(function () { const { a, b } = { a: 1, get b() { console.log(2); } }; return a; }());', modern],
 				["console.log(function (o) { const [a, b] = o; return a; }(Math.random() < 2 ? [1, 2] : []));", modern],
+				['console.log(function () { var it = { [Symbol.iterator]() { console.log("iterated"); return [][Symbol.iterator](); } }; const [] = [...it]; const { a } = { ...it }; return 2; }());', modern],
 				["console.log(function (s) { try { const { a = Math.abs(s) } = {}; } catch (e) { return e.name; } return 2; }(Symbol()));", modern],
 				["class B {} class C extends B { constructor() { const { a = this } = {}; super(); } } try { new C(); } catch (e) { console.log(e.name); }", modern]
 			];
