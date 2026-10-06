@@ -1375,6 +1375,21 @@ const CORRECTED_CASES = [
 		{ compress: {}, mangle: false }
 	],
 	[
+		"a switch's one case reading a `let` declared in its body",
+		'var f; switch (null) { case (f = function () { return x; }, null): let x = "inside"; } console.log(f());',
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a switch's case and default, the case reading a `let` declared in its body",
+		"var f, g; switch (Math.random() < 2) { case (f = () => x, true): g = 1; let x = 2; break; default: g = 0; } console.log(f(), g);",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a switch's matching case reading a class declared in its body",
+		"var f; switch (0) { case (f = () => typeof C, 0): class C {} } console.log(f());",
+		{ compress: {}, mangle: false }
+	],
+	[
 		"an empty function's parameter default an `instanceof` reaching `Symbol.hasInstance`",
 		"function g() { var n = 0, F = {}; F[Symbol.hasInstance] = function () { n++; return true; }; (function (a = 0 instanceof F) {})(); console.log(n); } g();",
 		{ compress: {}, mangle: false }
