@@ -568,22 +568,22 @@ chunk (runtime: runtime) react-vendors.js (react-vendors) 87 bytes ={runtime}= >
   ./node_modules/prop-types.js 31 bytes [built] [code generated]
     [used exports unknown]
     from origin ./lazy.js
-      harmony side effect evaluation prop-types ./lazy.js 2:0-35
-      harmony import specifier prop-types ./lazy.js 4:20-29
+      esm side effect evaluation prop-types ./lazy.js 2:0-35
+      esm import specifier prop-types ./lazy.js 4:20-29
     cjs self exports reference ./node_modules/prop-types.js 1:0-14
     entry prop-types react-vendors
   ./node_modules/react-dom.js 30 bytes [built] [code generated]
     [used exports unknown]
     from origin ./page1.js
-      harmony side effect evaluation react-dom ./page1.js 3:0-33
-      harmony import specifier react-dom ./page1.js 5:36-44
+      esm side effect evaluation react-dom ./page1.js 3:0-33
+      esm import specifier react-dom ./page1.js 5:36-44
     cjs self exports reference ./node_modules/react-dom.js 1:0-14
     entry react-dom react-vendors
   ./node_modules/react.js 26 bytes [built] [code generated]
     [used exports unknown]
     from origin ./page1.js
-      harmony side effect evaluation react ./page1.js 2:0-26
-      harmony import specifier react ./page1.js 5:29-34
+      esm side effect evaluation react ./page1.js 2:0-26
+      esm import specifier react ./page1.js 5:29-34
     cjs self exports reference ./node_modules/react.js 1:0-14
     entry react react-vendors
 chunk (runtime: runtime) runtime.js (runtime) 6.18 KiB ={other-vendors}= ={react-vendors}= >{app}< >{page1}< [entry] [rendered]
@@ -639,22 +639,22 @@ chunk (runtime: runtime) react-vendors.js (react-vendors) 87 bytes ={runtime}= >
   ./node_modules/prop-types.js 31 bytes [built] [code generated]
     [used exports unknown]
     from origin ./lazy.js
-      harmony side effect evaluation prop-types ./lazy.js 2:0-35
-      harmony import specifier prop-types ./lazy.js 4:20-29
+      esm side effect evaluation prop-types ./lazy.js 2:0-35
+      esm import specifier prop-types ./lazy.js 4:20-29
     cjs self exports reference ./node_modules/prop-types.js 1:0-14
     entry prop-types react-vendors
   ./node_modules/react-dom.js 30 bytes [built] [code generated]
     [used exports unknown]
     from origin ./page1.js
-      harmony side effect evaluation react-dom ./page1.js 3:0-33
-      harmony import specifier react-dom ./page1.js 5:36-44
+      esm side effect evaluation react-dom ./page1.js 3:0-33
+      esm import specifier react-dom ./page1.js 5:36-44
     cjs self exports reference ./node_modules/react-dom.js 1:0-14
     entry react-dom react-vendors
   ./node_modules/react.js 26 bytes [built] [code generated]
     [used exports unknown]
     from origin ./page1.js
-      harmony side effect evaluation react ./page1.js 2:0-26
-      harmony import specifier react ./page1.js 5:29-34
+      esm side effect evaluation react ./page1.js 2:0-26
+      esm import specifier react ./page1.js 5:29-34
     cjs self exports reference ./node_modules/react.js 1:0-14
     entry react react-vendors
 chunk (runtime: runtime) runtime.js (runtime) 6.18 KiB ={other-vendors}= ={react-vendors}= >{app}< >{page1}< [entry] [rendered]

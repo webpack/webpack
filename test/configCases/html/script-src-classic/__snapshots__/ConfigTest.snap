@@ -6,9 +6,9 @@ exports[`ConfigTestCases html script-src-classic exported tests should emit IIFE
 /*!*************************!*\\\\
   !*** ./module-entry.js ***!
   \\\\*************************/
-/* unused harmony export value */
+/* unused esm export value */
 const value = \\"module entry\\";
-/* unused harmony default export */ var __WEBPACK_DEFAULT_EXPORT__ = ((/* unused pure expression or super */ null && (value)));
+/* unused esm default export */ var __WEBPACK_DEFAULT_EXPORT__ = ((/* unused pure expression or super */ null && (value)));
 
 /******/ })()
 ;"

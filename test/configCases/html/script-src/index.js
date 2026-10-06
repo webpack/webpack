@@ -70,8 +70,8 @@ it("should bundle <script type=module src> through ESM resolution alongside clas
 		.find((c) => c.includes('"module entry"'));
 	expect(moduleChunk).toBeDefined();
 	expect(moduleChunk).toMatchSnapshot();
-	// ESM-parsed: harmony hints, no CommonJS-style module.exports.
-	expect(moduleChunk).toContain("unused harmony");
+	// ESM-parsed: esm hints, no CommonJS-style module.exports.
+	expect(moduleChunk).toContain("unused esm");
 	expect(moduleChunk).not.toContain("module.exports =");
 	// Chunk format follows `output.module` — no IIFE bootstrap.
 	expect(moduleChunk).not.toContain("// webpackBootstrap");

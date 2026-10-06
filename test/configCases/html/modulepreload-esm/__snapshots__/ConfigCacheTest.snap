@@ -6,7 +6,7 @@ exports[`ConfigCacheTestCases html modulepreload-esm exported tests should emit 
   \\\\********************/
 const value = \\"preload module\\";
 globalThis.__preloadLoaded = true;
-/* unused harmony default export */ var __WEBPACK_DEFAULT_EXPORT__ = ((/* unused pure expression or super */ null && (value)));
+/* unused esm default export */ var __WEBPACK_DEFAULT_EXPORT__ = ((/* unused pure expression or super */ null && (value)));
 
 "
 `;

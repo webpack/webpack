@@ -1,5 +1,5 @@
 ---
-"webpack": patch
+"webpack": minor
 ---
 
-Write `esm` rather than `harmony` in the comments a bundle carries.
+Say `esm` rather than `harmony` in bundle comments and stats dependency types.

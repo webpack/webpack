@@ -7,8 +7,8 @@ exports[`StatsTestCases graph-correctness-modules should print correct stats for
     ./e2.js X bytes [built] [code generated]
       entry ./e2 e2
     ./module-x.js X bytes [dependent] [built] [code generated]
-      harmony side effect evaluation ./module-x ./e1.js 1:0-20
-      harmony side effect evaluation ./module-x ./e2.js 1:0-20
+      esm side effect evaluation ./module-x ./e1.js 1:0-20
+      esm side effect evaluation ./module-x ./e2.js 1:0-20
       import() ./module-x ./module-b.js 2:0-20
 chunk (runtime: e1, e2) b.js (b) X bytes <{996}> >{390}< [rendered]
   ./module-b.js X bytes [built] [code generated]
@@ -19,8 +19,8 @@ chunk (runtime: e1) e1.js (e1) X bytes (javascript) X KiB (runtime) >{460}< >{99
     ./e1.js X bytes [built] [code generated]
       entry ./e1 e1
     ./module-x.js X bytes [dependent] [built] [code generated]
-      harmony side effect evaluation ./module-x ./e1.js 1:0-20
-      harmony side effect evaluation ./module-x ./e2.js 1:0-20
+      esm side effect evaluation ./module-x ./e1.js 1:0-20
+      esm side effect evaluation ./module-x ./e2.js 1:0-20
       import() ./module-x ./module-b.js 2:0-20
 chunk (runtime: e1, e2) c.js (c) X bytes <{130}> <{199}> >{996}< [rendered]
   ./module-c.js X bytes [built] [code generated]
