@@ -1293,6 +1293,25 @@ const LET_HEAD_CASES = [
 	]
 ];
 
+// terser refuses a body's lexical `arguments` beside the function's own, so with
+// corrections off the printer refuses it too, and the print is measured against
+// the input.
+/** @type {[string, string][]} */
+const LEXICAL_ARGUMENTS_CASES = [
+	[
+		"a `let arguments` beside a parameter default reading `arguments`",
+		"var args; function f(x = args = arguments) { let arguments = 5; return [typeof args, args.length, arguments]; } console.log(f(undefined, 7));"
+	],
+	[
+		"a `const arguments` in a body without parameters",
+		"function g() { const arguments = 3; return arguments; } console.log(g(1, 2));"
+	],
+	[
+		"a `let arguments` in a generator and a method",
+		"function* h(x = arguments.length) { let arguments = x; yield arguments; } var o = { m(y = arguments[0]) { let arguments = y + 1; return arguments; } }; console.log(h(1, 2).next().value, o.m(4));"
+	]
+];
+
 // Each writes a name where terser writes it as a keyword, through the `improve`
 // phase rather than the `correct` one, so terser's bytes are not the measure.
 /** @type {[string, string, import("terser").MinifyOptions][]} */
@@ -4809,6 +4828,31 @@ describe("syntax-printer", () => {
 				try {
 					const uncorrected = await minify(input, options);
 					expect(runProgram(/** @type {string} */ (uncorrected.code))).not.toBe(expected);
+				} finally {
+					corrections.enabled = true;
+				}
+			});
+		}
+	});
+
+	describe("a lexical `arguments` in a function body", () => {
+		for (const [name, input] of LEXICAL_ARGUMENTS_CASES) {
+			it(`should print what the input prints: ${name}`, async () => {
+				const { minify, corrections } = await load();
+				const options = { compress: { passes: 2 }, mangle: true };
+				const expected = runProgram(input);
+				const { code } = await minify(input, options);
+				expect(runProgram(/** @type {string} */ (code))).toBe(expected);
+
+				if (!corrections) throw new Error("the correct phase is not installed");
+				corrections.enabled = false;
+				try {
+					await expect(minify(input, options)).rejects.toThrow(
+						'"arguments" is redeclared'
+					);
+					await expect(
+						terserReference().minify(input, options)
+					).rejects.toThrow('"arguments" is redeclared');
 				} finally {
 					corrections.enabled = true;
 				}

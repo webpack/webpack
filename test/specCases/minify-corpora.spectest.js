@@ -1056,7 +1056,9 @@ const REFUSED_BY_REFERENCE = {
 	"Unexpected token: operator (>)":
 		"Annex B reads this as the identifier it is, not an operator",
 	"Strict mode may not include a with statement":
-		"the corpus reads this module as a script, where `with` is allowed"
+		"the corpus reads this module as a script, where `with` is allowed",
+	'"arguments" is redeclared':
+		"a function body may declare `arguments` with `let` or `const`, shadowing the function's own"
 };
 
 /**

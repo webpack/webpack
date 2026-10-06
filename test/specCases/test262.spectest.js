@@ -1253,6 +1253,15 @@ const MINIFIED_FAILURES = [
 			"terser rejects a redeclaration the spec allows, and the printer ports that refusal",
 		minifiers: ["terser", "printer"],
 		tests: [
+			"statements/for/scope-head-lex-open.js (sloppy)",
+			"statements/for/scope-head-lex-open.js (strict)"
+		]
+	},
+	{
+		reason:
+			"terser rejects a redeclaration the spec allows",
+		minifiers: ["terser"],
+		tests: [
 			"eval-code/direct/async-func-decl-fn-body-cntns-arguments-lex-bind-declare-arguments-and-assign.js (sloppy)",
 			"eval-code/direct/async-func-decl-fn-body-cntns-arguments-lex-bind-declare-arguments.js (sloppy)",
 			"eval-code/direct/async-func-expr-named-fn-body-cntns-arguments-lex-bind-declare-arguments-and-assign.js (sloppy)",
@@ -1263,8 +1272,6 @@ const MINIFIED_FAILURES = [
 			"eval-code/direct/async-meth-fn-body-cntns-arguments-lex-bind-declare-arguments.js (sloppy)",
 			"expressions/function/arguments-with-arguments-lex.js (sloppy)",
 			"expressions/generators/arguments-with-arguments-lex.js (sloppy)",
-			"statements/for/scope-head-lex-open.js (sloppy)",
-			"statements/for/scope-head-lex-open.js (strict)",
 			"statements/function/arguments-with-arguments-lex.js (sloppy)",
 			"statements/generators/arguments-with-arguments-lex.js (sloppy)"
 		]
