@@ -4881,6 +4881,49 @@ describe("syntax-printer", () => {
 		});
 	});
 
+	describe("an async generator returning `undefined`", () => {
+		/**
+		 * @param {string} code a program logging once its promises settle
+		 * @returns {Promise<string>} what it logged
+		 */
+		const runSettled = async (code) => {
+			/** @type {string[]} */
+			const lines = [];
+			vm.runInNewContext(code, {
+				console: {
+					log: (/** @type {unknown} */ value) => lines.push(String(value))
+				}
+			});
+			for (let i = 0; i < 10; i++) {
+				await new Promise((resolve) => {
+					setImmediate(resolve);
+				});
+			}
+			return lines.join("\n");
+		};
+
+		it("should keep the tick its awaited value takes", async () => {
+			const { minify, corrections } = await load();
+			if (!corrections) throw new Error("the correct phase is not installed");
+			const input =
+				"var log = []; async function* a() { return; } async function* b() { return undefined; } async function* c() { if (log) return void 0; yield 1; } Promise.resolve().then(() => log.push('tick 1')).then(() => log.push('tick 2')).then(() => console.log(log.join())); a().next().then(() => log.push('a')); b().next().then(() => log.push('b')); c().next().then(() => log.push('c'));";
+			const options = { compress: {}, mangle: false };
+			const expected = await runSettled(input);
+			const { code } = await minify(input, options);
+			expect(await runSettled(/** @type {string} */ (code))).toBe(expected);
+
+			corrections.enabled = false;
+			try {
+				const uncorrected = await minify(input, options);
+				expect(
+					await runSettled(/** @type {string} */ (uncorrected.code))
+				).not.toBe(expected);
+			} finally {
+				corrections.enabled = true;
+			}
+		});
+	});
+
 	describe("a BigInt operation nobody reads", () => {
 		// The port drops `Symbol()` where terser keeps it, and refuses a constant
 		// division by zero that terser drops.
