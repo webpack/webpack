@@ -365,22 +365,27 @@ describe("SourceProcessor", () => {
 		 * @returns {Record<string, unknown>} what a shared visitor sees
 		 */
 		const describeNode = (path, input) => {
-			const [start, end] = path.range();
+			const start = path.start();
+			const end = path.end();
 			const parent = path.parent;
+			/** @type {unknown[]} */
+			const children = [];
+			for (let i = 0, c = path.child(0); c !== 0; c = path.child(++i)) {
+				children.push(c);
+			}
 			return {
-				range: start === path.start() && end === path.end(),
 				loc: path.loc(),
 				expectedLoc: {
 					start: lineColumn(input, start),
 					end: lineColumn(input, end)
 				},
 				source: path.source(),
-				slice: path.sourceSlice(start, end),
+				slice: path.source(start, end),
 				index: path.index,
 				atIndex:
-					parent === null ? null : path.childAt(path.index, parent) === path.node,
+					parent === null ? null : path.child(path.index, parent) === path.node,
 				childCount: path.childCount(),
-				children: path.children()
+				children
 			};
 		};
 
@@ -388,7 +393,7 @@ describe("SourceProcessor", () => {
 			const input = "<ul>\n<li>a</li>\n<li>b</li></ul>";
 			/** @type {Record<string, unknown>[]} */
 			const seen = [];
-			/** @type {number[]} */
+			/** @type {[number, string][]} each child of the list, and its own first child's type */
 			const listChildren = [];
 			/** @type {[string, string, number][]} name, its source, content offset */
 			const implied = [];
@@ -396,21 +401,35 @@ describe("SourceProcessor", () => {
 				.use({
 					[HtmlNodeType.Element]: (path) => {
 						if (path.name() === "ul") {
+							// Reading each child's own children between steps keeps the
+							// list's place: the cursor is per parent.
 							for (let i = 0; i < path.childCount(); i++) {
-								listChildren.push(path.childAt(i));
+								const item = path.child(i);
+								const inner = path.child(0, item);
+								listChildren.push([
+									path.type(item),
+									inner === 0 ? "" : path.source(inner)
+								]);
 							}
-							expect(listChildren).toEqual(path.children());
-							expect(path.childAt(listChildren.length)).toBe(0);
+							expect(path.child(listChildren.length)).toBe(0);
+							expect(path.child(1)).toBe(path.child(1));
+							expect(path.type(path.child(0))).toBe(HtmlNodeType.Text);
 						}
 						if (path.name() === "li") seen.push(describeNode(path, input));
 						implied.push([
 							path.name(),
-							path.sourceSlice(path.nameStart(), path.nameEnd()),
+							path.source(path.nameStart(), path.nameEnd()),
 							path.contentStart() - path.start()
 						]);
 					}
 				})
 				.process(input);
+			expect(listChildren).toEqual([
+				[HtmlNodeType.Text, ""],
+				[HtmlNodeType.Element, "a"],
+				[HtmlNodeType.Text, ""],
+				[HtmlNodeType.Element, "b"]
+			]);
 			expect(implied).toEqual([
 				["html", "", 0],
 				["head", "", 0],
@@ -421,11 +440,11 @@ describe("SourceProcessor", () => {
 			]);
 			expect(seen).toHaveLength(2);
 			for (const node of seen) {
-				expect(node.range).toBe(true);
 				expect(node.loc).toEqual(node.expectedLoc);
 				expect(node.source).toBe(node.slice);
 				expect(node.atIndex).toBe(true);
 				expect(node.childCount).toBe(1);
+				expect(node.children).toHaveLength(1);
 			}
 			expect(seen.map((node) => node.index)).toEqual([1, 3]);
 			expect(seen.map((node) => node.source)).toEqual([
@@ -442,13 +461,8 @@ describe("SourceProcessor", () => {
 			/** @type {[number, number | null, number][]} */
 			const seen = [];
 			new HtmlSourceProcessor()
-				.use({
-					[HtmlNodeType.Document]: (path) => {
-						seen.push([path.type(), path.parent, path.index]);
-					},
-					[HtmlNodeType.DocumentFragment]: (path) => {
-						seen.push([path.type(), path.parent, path.index]);
-					}
+				.use([HtmlNodeType.Document, HtmlNodeType.DocumentFragment], (path) => {
+					seen.push([path.type(), path.parent, path.index]);
 				})
 				.process("<template><b></b><i></i></template>");
 			expect(seen).toHaveLength(2);
@@ -465,22 +479,24 @@ describe("SourceProcessor", () => {
 			new CssSourceProcessor().process(`a{b:${"f(".repeat(40)}${")".repeat(40)}}`);
 			/** @type {Record<string, unknown>[]} */
 			const seen = [];
+			/** @type {string[]} */
+			const args = [];
 			new CssSourceProcessor()
 				.use({
 					[CssNodeType.Function]: (path) => {
-						const count = path.childCount();
-						const children = [];
-						for (let i = 0; i < count; i++) children.push(path.childAt(i));
-						expect(children).toEqual(path.children());
+						for (let i = 0; i < path.childCount(); i++) {
+							args.push(path.source(path.child(i)));
+						}
+						expect(path.child(path.childCount())).toBe(0);
 					},
 					[CssNodeType.Number]: (path) => {
 						seen.push(describeNode(path, input));
 					}
 				})
 				.process(input);
+			expect(args).toEqual(["1", ",", " ", "2", ",", "\n", "3"]);
 			expect(seen.map((node) => node.source)).toEqual(["1", "2", "3"]);
 			for (const node of seen) {
-				expect(node.range).toBe(true);
 				expect(node.loc).toEqual(node.expectedLoc);
 				expect(node.source).toBe(node.slice);
 				expect(node.atIndex).toBe(true);

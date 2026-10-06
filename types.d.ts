@@ -6731,13 +6731,15 @@ declare class CssSourceProcessor extends SourceProcessor<
 		type(n?: NodeSyntaxParser): number;
 		start(n?: NodeSyntaxParser): number;
 		end(n?: NodeSyntaxParser): number;
-		range(n?: NodeSyntaxParser): [number, number];
 		loc(n?: NodeSyntaxParser): {
 			start: { line: number; column: number };
 			end: { line: number; column: number };
 		};
-		source(n?: NodeSyntaxParser): string;
-		sourceSlice(start: number, end: number): string;
+		/**
+		 * A node's text as written, but for an escape the input ran out of, which is
+		 * the character it names (§4.3.5 inside a string, §4.3.7 anywhere else).
+		 */
+		source(n?: number | NodeSyntaxParser, end?: number): string;
 		value(n?: NodeSyntaxParser): string;
 		unescaped(n?: NodeSyntaxParser): string;
 		typeFlag(n?: NodeSyntaxParser): string;
@@ -6748,10 +6750,11 @@ declare class CssSourceProcessor extends SourceProcessor<
 		nameEnd(n?: NodeSyntaxParser): number;
 		unescapedName(n?: NodeSyntaxParser): string;
 		atKeyword(n?: NodeSyntaxParser): string;
-		children(n?: NodeSyntaxParser): ComponentValue[];
-		prelude(n?: NodeSyntaxParser): ComponentValue[];
+		/**
+		 * A rule's children are its prelude; its block is read with {@link declarations }.
+		 */
 		childCount(n?: NodeSyntaxParser): number;
-		childAt(i: number, n?: NodeSyntaxParser): ComponentValue;
+		child(i: number, n?: NodeSyntaxParser): ComponentValue;
 		/**
 		 * A block big enough to stream hands its children to the visitors as each one
 		 * finishes rather than collecting them, so both lists read as an empty block
@@ -11774,7 +11777,6 @@ declare class HtmlSourceProcessor extends SourceProcessor<
 		type(n?: number): number;
 		start(n?: number): number;
 		end(n?: number): number;
-		range(n?: number): [number, number];
 		/**
 		 * Line / column are converted only when asked, by a converter made on the
 		 * first call of a parse. Valid during the walk, as {@link source } is.
@@ -11784,11 +11786,9 @@ declare class HtmlSourceProcessor extends SourceProcessor<
 			end: { line: number; column: number };
 		};
 		/**
-		 * Raw source slice `[start, end)` — valid only during the walk (the printer's
-		 * window), before `parseHtml` releases `_htmlSource`.
+		 * A node's text as written; valid during the walk, before `parseHtml` releases the source.
 		 */
-		source(n?: number): string;
-		sourceSlice(start: number, end: number): string;
+		source(n?: number, end?: number): string;
 		name(n?: number): string;
 		namespace(n?: number): number;
 		selfClosing(n?: number): boolean;
@@ -11845,19 +11845,15 @@ declare class HtmlSourceProcessor extends SourceProcessor<
 		doctypeName(n?: number): string;
 		doctypePublicId(_n?: number): null | string;
 		doctypeSystemId(_n?: number): null | string;
-		firstChild(n?: number): number;
-		nextSibling(n?: number): number;
-		parentOf(n?: number): number;
 		/**
-		 * Counted along the sibling links: walk them with `firstChild` / `nextSibling`
-		 * rather than looping over `childAt`.
+		 * Counted along the sibling links once per node and visitor call.
 		 */
 		childCount(n?: number): number;
 		/**
-		 * Reached along the sibling links, as {@link childCount } is counted.
+		 * Reached along the sibling links from the last child read under `n`, so a
+		 * loop over a node's children takes one step per child.
 		 */
-		childAt(i: number, n?: number): number;
-		children(n?: number): number[];
+		child(i: number, n?: number): number;
 	},
 	number,
 	HtmlProcessOptions
@@ -20703,24 +20699,14 @@ declare interface NodePath<TNode> {
 	end: (n?: TNode) => number;
 
 	/**
-	 * start / end offsets
-	 */
-	range: (n?: TNode) => [number, number];
-
-	/**
 	 * line / column location
 	 */
 	loc: (n?: TNode) => NodeLocation;
 
 	/**
-	 * the node's source text
+	 * the node's source text, or the input between two offsets
 	 */
-	source: (n?: TNode) => string;
-
-	/**
-	 * the source between two offsets
-	 */
-	sourceSlice: (start: number, end: number) => string;
+	source: (n?: number | TNode, end?: number) => string;
 
 	/**
 	 * number of children
@@ -20730,12 +20716,7 @@ declare interface NodePath<TNode> {
 	/**
 	 * the i-th child
 	 */
-	childAt: (i: number, n?: TNode) => TNode;
-
-	/**
-	 * the children, as a new array
-	 */
-	children: (n?: TNode) => TNode[];
+	child: (i: number, n?: TNode) => TNode;
 }
 
 /**
@@ -33889,13 +33870,15 @@ declare namespace exports {
 					type(n?: NodeSyntaxParser): number;
 					start(n?: NodeSyntaxParser): number;
 					end(n?: NodeSyntaxParser): number;
-					range(n?: NodeSyntaxParser): [number, number];
 					loc(n?: NodeSyntaxParser): {
 						start: { line: number; column: number };
 						end: { line: number; column: number };
 					};
-					source(n?: NodeSyntaxParser): string;
-					sourceSlice(start: number, end: number): string;
+					/**
+					 * A node's text as written, but for an escape the input ran out of, which is
+					 * the character it names (§4.3.5 inside a string, §4.3.7 anywhere else).
+					 */
+					source(n?: number | NodeSyntaxParser, end?: number): string;
 					value(n?: NodeSyntaxParser): string;
 					unescaped(n?: NodeSyntaxParser): string;
 					typeFlag(n?: NodeSyntaxParser): string;
@@ -33906,10 +33889,11 @@ declare namespace exports {
 					nameEnd(n?: NodeSyntaxParser): number;
 					unescapedName(n?: NodeSyntaxParser): string;
 					atKeyword(n?: NodeSyntaxParser): string;
-					children(n?: NodeSyntaxParser): ComponentValue[];
-					prelude(n?: NodeSyntaxParser): ComponentValue[];
+					/**
+					 * A rule's children are its prelude; its block is read with {@link declarations }.
+					 */
 					childCount(n?: NodeSyntaxParser): number;
-					childAt(i: number, n?: NodeSyntaxParser): ComponentValue;
+					child(i: number, n?: NodeSyntaxParser): ComponentValue;
 					/**
 					 * A block big enough to stream hands its children to the visitors as each one
 					 * finishes rather than collecting them, so both lists read as an empty block
@@ -34059,13 +34043,15 @@ declare namespace exports {
 						type(n?: NodeSyntaxParser): number;
 						start(n?: NodeSyntaxParser): number;
 						end(n?: NodeSyntaxParser): number;
-						range(n?: NodeSyntaxParser): [number, number];
 						loc(n?: NodeSyntaxParser): {
 							start: { line: number; column: number };
 							end: { line: number; column: number };
 						};
-						source(n?: NodeSyntaxParser): string;
-						sourceSlice(start: number, end: number): string;
+						/**
+						 * A node's text as written, but for an escape the input ran out of, which is
+						 * the character it names (§4.3.5 inside a string, §4.3.7 anywhere else).
+						 */
+						source(n?: number | NodeSyntaxParser, end?: number): string;
 						value(n?: NodeSyntaxParser): string;
 						unescaped(n?: NodeSyntaxParser): string;
 						typeFlag(n?: NodeSyntaxParser): string;
@@ -34076,10 +34062,11 @@ declare namespace exports {
 						nameEnd(n?: NodeSyntaxParser): number;
 						unescapedName(n?: NodeSyntaxParser): string;
 						atKeyword(n?: NodeSyntaxParser): string;
-						children(n?: NodeSyntaxParser): ComponentValue[];
-						prelude(n?: NodeSyntaxParser): ComponentValue[];
+						/**
+						 * A rule's children are its prelude; its block is read with {@link declarations }.
+						 */
 						childCount(n?: NodeSyntaxParser): number;
-						childAt(i: number, n?: NodeSyntaxParser): ComponentValue;
+						child(i: number, n?: NodeSyntaxParser): ComponentValue;
 						/**
 						 * A block big enough to stream hands its children to the visitors as each one
 						 * finishes rather than collecting them, so both lists read as an empty block
@@ -34117,13 +34104,15 @@ declare namespace exports {
 									type(n?: NodeSyntaxParser): number;
 									start(n?: NodeSyntaxParser): number;
 									end(n?: NodeSyntaxParser): number;
-									range(n?: NodeSyntaxParser): [number, number];
 									loc(n?: NodeSyntaxParser): {
 										start: { line: number; column: number };
 										end: { line: number; column: number };
 									};
-									source(n?: NodeSyntaxParser): string;
-									sourceSlice(start: number, end: number): string;
+									/**
+									 * A node's text as written, but for an escape the input ran out of, which is
+									 * the character it names (§4.3.5 inside a string, §4.3.7 anywhere else).
+									 */
+									source(n?: number | NodeSyntaxParser, end?: number): string;
 									value(n?: NodeSyntaxParser): string;
 									unescaped(n?: NodeSyntaxParser): string;
 									typeFlag(n?: NodeSyntaxParser): string;
@@ -34134,10 +34123,11 @@ declare namespace exports {
 									nameEnd(n?: NodeSyntaxParser): number;
 									unescapedName(n?: NodeSyntaxParser): string;
 									atKeyword(n?: NodeSyntaxParser): string;
-									children(n?: NodeSyntaxParser): ComponentValue[];
-									prelude(n?: NodeSyntaxParser): ComponentValue[];
+									/**
+									 * A rule's children are its prelude; its block is read with {@link declarations }.
+									 */
 									childCount(n?: NodeSyntaxParser): number;
-									childAt(i: number, n?: NodeSyntaxParser): ComponentValue;
+									child(i: number, n?: NodeSyntaxParser): ComponentValue;
 									/**
 									 * A block big enough to stream hands its children to the visitors as each one
 									 * finishes rather than collecting them, so both lists read as an empty block
@@ -34250,13 +34240,15 @@ declare namespace exports {
 						type(n?: NodeSyntaxParser): number;
 						start(n?: NodeSyntaxParser): number;
 						end(n?: NodeSyntaxParser): number;
-						range(n?: NodeSyntaxParser): [number, number];
 						loc(n?: NodeSyntaxParser): {
 							start: { line: number; column: number };
 							end: { line: number; column: number };
 						};
-						source(n?: NodeSyntaxParser): string;
-						sourceSlice(start: number, end: number): string;
+						/**
+						 * A node's text as written, but for an escape the input ran out of, which is
+						 * the character it names (§4.3.5 inside a string, §4.3.7 anywhere else).
+						 */
+						source(n?: number | NodeSyntaxParser, end?: number): string;
 						value(n?: NodeSyntaxParser): string;
 						unescaped(n?: NodeSyntaxParser): string;
 						typeFlag(n?: NodeSyntaxParser): string;
@@ -34267,10 +34259,11 @@ declare namespace exports {
 						nameEnd(n?: NodeSyntaxParser): number;
 						unescapedName(n?: NodeSyntaxParser): string;
 						atKeyword(n?: NodeSyntaxParser): string;
-						children(n?: NodeSyntaxParser): ComponentValue[];
-						prelude(n?: NodeSyntaxParser): ComponentValue[];
+						/**
+						 * A rule's children are its prelude; its block is read with {@link declarations }.
+						 */
 						childCount(n?: NodeSyntaxParser): number;
-						childAt(i: number, n?: NodeSyntaxParser): ComponentValue;
+						child(i: number, n?: NodeSyntaxParser): ComponentValue;
 						/**
 						 * A block big enough to stream hands its children to the visitors as each one
 						 * finishes rather than collecting them, so both lists read as an empty block
@@ -34306,13 +34299,15 @@ declare namespace exports {
 							type(n?: NodeSyntaxParser): number;
 							start(n?: NodeSyntaxParser): number;
 							end(n?: NodeSyntaxParser): number;
-							range(n?: NodeSyntaxParser): [number, number];
 							loc(n?: NodeSyntaxParser): {
 								start: { line: number; column: number };
 								end: { line: number; column: number };
 							};
-							source(n?: NodeSyntaxParser): string;
-							sourceSlice(start: number, end: number): string;
+							/**
+							 * A node's text as written, but for an escape the input ran out of, which is
+							 * the character it names (§4.3.5 inside a string, §4.3.7 anywhere else).
+							 */
+							source(n?: number | NodeSyntaxParser, end?: number): string;
 							value(n?: NodeSyntaxParser): string;
 							unescaped(n?: NodeSyntaxParser): string;
 							typeFlag(n?: NodeSyntaxParser): string;
@@ -34323,10 +34318,11 @@ declare namespace exports {
 							nameEnd(n?: NodeSyntaxParser): number;
 							unescapedName(n?: NodeSyntaxParser): string;
 							atKeyword(n?: NodeSyntaxParser): string;
-							children(n?: NodeSyntaxParser): ComponentValue[];
-							prelude(n?: NodeSyntaxParser): ComponentValue[];
+							/**
+							 * A rule's children are its prelude; its block is read with {@link declarations }.
+							 */
 							childCount(n?: NodeSyntaxParser): number;
-							childAt(i: number, n?: NodeSyntaxParser): ComponentValue;
+							child(i: number, n?: NodeSyntaxParser): ComponentValue;
 							/**
 							 * A block big enough to stream hands its children to the visitors as each one
 							 * finishes rather than collecting them, so both lists read as an empty block
@@ -34439,7 +34435,6 @@ declare namespace exports {
 					type(n?: number): number;
 					start(n?: number): number;
 					end(n?: number): number;
-					range(n?: number): [number, number];
 					/**
 					 * Line / column are converted only when asked, by a converter made on the
 					 * first call of a parse. Valid during the walk, as {@link source } is.
@@ -34449,11 +34444,9 @@ declare namespace exports {
 						end: { line: number; column: number };
 					};
 					/**
-					 * Raw source slice `[start, end)` — valid only during the walk (the printer's
-					 * window), before `parseHtml` releases `_htmlSource`.
+					 * A node's text as written; valid during the walk, before `parseHtml` releases the source.
 					 */
-					source(n?: number): string;
-					sourceSlice(start: number, end: number): string;
+					source(n?: number, end?: number): string;
 					name(n?: number): string;
 					namespace(n?: number): number;
 					selfClosing(n?: number): boolean;
@@ -34510,19 +34503,15 @@ declare namespace exports {
 					doctypeName(n?: number): string;
 					doctypePublicId(_n?: number): null | string;
 					doctypeSystemId(_n?: number): null | string;
-					firstChild(n?: number): number;
-					nextSibling(n?: number): number;
-					parentOf(n?: number): number;
 					/**
-					 * Counted along the sibling links: walk them with `firstChild` / `nextSibling`
-					 * rather than looping over `childAt`.
+					 * Counted along the sibling links once per node and visitor call.
 					 */
 					childCount(n?: number): number;
 					/**
-					 * Reached along the sibling links, as {@link childCount } is counted.
+					 * Reached along the sibling links from the last child read under `n`, so a
+					 * loop over a node's children takes one step per child.
 					 */
-					childAt(i: number, n?: number): number;
-					children(n?: number): number[];
+					child(i: number, n?: number): number;
 				};
 				export let BLOCK_CONTENTS: "block-contents";
 				export let CC_APOSTROPHE: 39;
@@ -34595,7 +34584,6 @@ declare namespace exports {
 						type(n?: number): number;
 						start(n?: number): number;
 						end(n?: number): number;
-						range(n?: number): [number, number];
 						/**
 						 * Line / column are converted only when asked, by a converter made on the
 						 * first call of a parse. Valid during the walk, as {@link source } is.
@@ -34605,11 +34593,9 @@ declare namespace exports {
 							end: { line: number; column: number };
 						};
 						/**
-						 * Raw source slice `[start, end)` — valid only during the walk (the printer's
-						 * window), before `parseHtml` releases `_htmlSource`.
+						 * A node's text as written; valid during the walk, before `parseHtml` releases the source.
 						 */
-						source(n?: number): string;
-						sourceSlice(start: number, end: number): string;
+						source(n?: number, end?: number): string;
 						name(n?: number): string;
 						namespace(n?: number): number;
 						selfClosing(n?: number): boolean;
@@ -34666,19 +34652,15 @@ declare namespace exports {
 						doctypeName(n?: number): string;
 						doctypePublicId(_n?: number): null | string;
 						doctypeSystemId(_n?: number): null | string;
-						firstChild(n?: number): number;
-						nextSibling(n?: number): number;
-						parentOf(n?: number): number;
 						/**
-						 * Counted along the sibling links: walk them with `firstChild` / `nextSibling`
-						 * rather than looping over `childAt`.
+						 * Counted along the sibling links once per node and visitor call.
 						 */
 						childCount(n?: number): number;
 						/**
-						 * Reached along the sibling links, as {@link childCount } is counted.
+						 * Reached along the sibling links from the last child read under `n`, so a
+						 * loop over a node's children takes one step per child.
 						 */
-						childAt(i: number, n?: number): number;
-						children(n?: number): number[];
+						child(i: number, n?: number): number;
 					}>[],
 					writer:
 						| undefined
@@ -34701,7 +34683,6 @@ declare namespace exports {
 									type(n?: number): number;
 									start(n?: number): number;
 									end(n?: number): number;
-									range(n?: number): [number, number];
 									/**
 									 * Line / column are converted only when asked, by a converter made on the
 									 * first call of a parse. Valid during the walk, as {@link source } is.
@@ -34711,11 +34692,9 @@ declare namespace exports {
 										end: { line: number; column: number };
 									};
 									/**
-									 * Raw source slice `[start, end)` — valid only during the walk (the printer's
-									 * window), before `parseHtml` releases `_htmlSource`.
+									 * A node's text as written; valid during the walk, before `parseHtml` releases the source.
 									 */
-									source(n?: number): string;
-									sourceSlice(start: number, end: number): string;
+									source(n?: number, end?: number): string;
 									name(n?: number): string;
 									namespace(n?: number): number;
 									selfClosing(n?: number): boolean;
@@ -34772,19 +34751,15 @@ declare namespace exports {
 									doctypeName(n?: number): string;
 									doctypePublicId(_n?: number): null | string;
 									doctypeSystemId(_n?: number): null | string;
-									firstChild(n?: number): number;
-									nextSibling(n?: number): number;
-									parentOf(n?: number): number;
 									/**
-									 * Counted along the sibling links: walk them with `firstChild` / `nextSibling`
-									 * rather than looping over `childAt`.
+									 * Counted along the sibling links once per node and visitor call.
 									 */
 									childCount(n?: number): number;
 									/**
-									 * Reached along the sibling links, as {@link childCount } is counted.
+									 * Reached along the sibling links from the last child read under `n`, so a
+									 * loop over a node's children takes one step per child.
 									 */
-									childAt(i: number, n?: number): number;
-									children(n?: number): number[];
+									child(i: number, n?: number): number;
 								},
 								number,
 								HtmlPrintOptions
@@ -34838,7 +34813,6 @@ declare namespace exports {
 						type(n?: number): number;
 						start(n?: number): number;
 						end(n?: number): number;
-						range(n?: number): [number, number];
 						/**
 						 * Line / column are converted only when asked, by a converter made on the
 						 * first call of a parse. Valid during the walk, as {@link source } is.
@@ -34848,11 +34822,9 @@ declare namespace exports {
 							end: { line: number; column: number };
 						};
 						/**
-						 * Raw source slice `[start, end)` — valid only during the walk (the printer's
-						 * window), before `parseHtml` releases `_htmlSource`.
+						 * A node's text as written; valid during the walk, before `parseHtml` releases the source.
 						 */
-						source(n?: number): string;
-						sourceSlice(start: number, end: number): string;
+						source(n?: number, end?: number): string;
 						name(n?: number): string;
 						namespace(n?: number): number;
 						selfClosing(n?: number): boolean;
@@ -34909,19 +34881,15 @@ declare namespace exports {
 						doctypeName(n?: number): string;
 						doctypePublicId(_n?: number): null | string;
 						doctypeSystemId(_n?: number): null | string;
-						firstChild(n?: number): number;
-						nextSibling(n?: number): number;
-						parentOf(n?: number): number;
 						/**
-						 * Counted along the sibling links: walk them with `firstChild` / `nextSibling`
-						 * rather than looping over `childAt`.
+						 * Counted along the sibling links once per node and visitor call.
 						 */
 						childCount(n?: number): number;
 						/**
-						 * Reached along the sibling links, as {@link childCount } is counted.
+						 * Reached along the sibling links from the last child read under `n`, so a
+						 * loop over a node's children takes one step per child.
 						 */
-						childAt(i: number, n?: number): number;
-						children(n?: number): number[];
+						child(i: number, n?: number): number;
 					},
 					writer: PrintContext<
 						{
@@ -34942,7 +34910,6 @@ declare namespace exports {
 							type(n?: number): number;
 							start(n?: number): number;
 							end(n?: number): number;
-							range(n?: number): [number, number];
 							/**
 							 * Line / column are converted only when asked, by a converter made on the
 							 * first call of a parse. Valid during the walk, as {@link source } is.
@@ -34952,11 +34919,9 @@ declare namespace exports {
 								end: { line: number; column: number };
 							};
 							/**
-							 * Raw source slice `[start, end)` — valid only during the walk (the printer's
-							 * window), before `parseHtml` releases `_htmlSource`.
+							 * A node's text as written; valid during the walk, before `parseHtml` releases the source.
 							 */
-							source(n?: number): string;
-							sourceSlice(start: number, end: number): string;
+							source(n?: number, end?: number): string;
 							name(n?: number): string;
 							namespace(n?: number): number;
 							selfClosing(n?: number): boolean;
@@ -35013,19 +34978,15 @@ declare namespace exports {
 							doctypeName(n?: number): string;
 							doctypePublicId(_n?: number): null | string;
 							doctypeSystemId(_n?: number): null | string;
-							firstChild(n?: number): number;
-							nextSibling(n?: number): number;
-							parentOf(n?: number): number;
 							/**
-							 * Counted along the sibling links: walk them with `firstChild` / `nextSibling`
-							 * rather than looping over `childAt`.
+							 * Counted along the sibling links once per node and visitor call.
 							 */
 							childCount(n?: number): number;
 							/**
-							 * Reached along the sibling links, as {@link childCount } is counted.
+							 * Reached along the sibling links from the last child read under `n`, so a
+							 * loop over a node's children takes one step per child.
 							 */
-							childAt(i: number, n?: number): number;
-							children(n?: number): number[];
+							child(i: number, n?: number): number;
 						},
 						number,
 						HtmlPrintOptions

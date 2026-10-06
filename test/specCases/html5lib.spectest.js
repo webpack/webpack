@@ -321,7 +321,7 @@ const runTreeCase = (c) => {
 		scripting: c.scriptMode === "on"
 	});
 	// In fragment mode the result is the children of the synthesized root.
-	const first = A.firstChild(doc);
+	const first = A.child(0, doc);
 	return serialize(c.fragment && first !== 0 ? first : doc);
 };
 
@@ -639,7 +639,7 @@ const runCdataCase = (input) => {
 	const doc = parseHtml(`<![CDATA[${input}`, 0, {
 		fragmentContext: "svg svg"
 	});
-	return serialize(A.firstChild(doc));
+	return serialize(A.child(0, doc));
 };
 /** @type {Map<string, { state: string, lastStartTag: (string | null), count: number }>} */
 const unreachableByShape = new Map();

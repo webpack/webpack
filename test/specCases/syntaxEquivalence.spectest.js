@@ -1235,9 +1235,9 @@ const domShapeOf = (source) => {
 	 */
 	const walk = (node, depth, renders) => {
 		for (
-			let child = A.firstChild(node);
+			let childIndex = 0, child = A.child(0, node);
 			child !== 0;
-			child = A.nextSibling(child)
+			child = A.child(++childIndex, node)
 		) {
 			if (A.type(child) !== NodeType.Element) continue;
 			const tag = A.name(child);
@@ -1262,7 +1262,7 @@ const domShapeOf = (source) => {
 			const inPage = renders || (namespace === "" && tag === "body");
 			if (inPage && !VERBATIM_TEXT.has(tag)) {
 				let own = "";
-				for (let t = A.firstChild(child); t !== 0; t = A.nextSibling(t)) {
+				for (let tIndex = 0, t = A.child(0, child); t !== 0; t = A.child(++tIndex, child)) {
 					if (A.type(t) === NodeType.Text) own += A.data(t);
 				}
 				text.push(own.replace(ASCII_WHITESPACE, " "));

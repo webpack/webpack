@@ -3080,6 +3080,18 @@ describe("tokenize", () => {
 /** @typedef {MatElement | MatText | MatComment | MatDoctype | MatProcessingInstruction} MatNode */
 
 /**
+ * @param {number} ref node
+ * @returns {number[]} its children, read one by one through the path
+ */
+const childrenOf = (ref) => {
+	const out = [];
+	for (let i = 0, c = A.child(0, ref); c !== 0; c = A.child(++i, ref)) {
+		out.push(c);
+	}
+	return out;
+};
+
+/**
  * `parseHtml` hands back integer refs into reused module-level columns, valid
  * only until the next parse, so each tree is materialized eagerly. Every field
  * is read through `A`, which is how this suite reaches the whole accessor
@@ -3097,7 +3109,7 @@ const materialize = (ref) => {
 				tagName: A.name(ref),
 				namespace: A.namespace(ref),
 				attributes: A.attributes(ref),
-				children: A.children(ref).map(materialize),
+				children: childrenOf(ref).map(materialize),
 				selfClosing: A.selfClosing(ref),
 				start: A.start(ref),
 				end: A.end(ref),
@@ -3108,7 +3120,7 @@ const materialize = (ref) => {
 					tc !== 0
 						? {
 								type: NodeType.DocumentFragment,
-								children: A.children(tc).map(materialize)
+								children: childrenOf(tc).map(materialize)
 							}
 						: undefined
 			};
@@ -3153,7 +3165,7 @@ const parseHtml = (src, fragmentContext, skip) => {
 	const doc = parseHtmlRefs(src, 0, { fragmentContext, skip });
 	return {
 		type: NodeType.Document,
-		children: A.children(doc).map(materialize)
+		children: childrenOf(doc).map(materialize)
 	};
 };
 
@@ -8005,8 +8017,8 @@ describe("parseHtml — tree-construction edge cases (SoA columns)", () => {
 
 	it("parses text in a foreign fragment context", () => {
 		const doc = parseHtmlRefs("x<div>y", 0, { fragmentContext: "svg" });
-		const root = A.firstChild(doc);
-		expect(A.type(A.firstChild(root))).toBe(NodeType.Text);
+		const root = A.child(0, doc);
+		expect(A.type(A.child(0, root))).toBe(NodeType.Text);
 	});
 
 	it("runs the adoption agency in a table-row fragment context", () => {
@@ -8361,7 +8373,7 @@ describe("parseHtml — path accessor completeness", () => {
 						log.push(
 							`parentTag:${path.name(/** @type {number} */ (path.parent))}`
 						);
-						log.push(`parentOf:${path.parentOf() === path.parent}`);
+						log.push(`index:${path.index}`);
 						log.push(`attrs:${path.attributeCount()}`);
 						const id = path.findAttribute("id");
 						log.push(`id:${path.attributeName(id)}=${path.attributeValue(id)}`);
@@ -8379,8 +8391,13 @@ describe("parseHtml — path accessor completeness", () => {
 						);
 						const checked = path.attributeAt(1);
 						log.push(`checkedValueStart:${path.attributeValueStart(checked)}`);
-						log.push(`firstChildType:${path.type(path.firstChild())}`);
-						log.push(`nextSibling:${path.nextSibling()}`);
+						log.push(`firstChildType:${path.type(path.child(0))}`);
+						log.push(
+							`nextSibling:${path.child(
+								path.index + 1,
+								/** @type {number} */ (path.parent)
+							)}`
+						);
 					}
 				})
 			)
@@ -8389,7 +8406,7 @@ describe("parseHtml — path accessor completeness", () => {
 			"doctype:p/s",
 			"node:true",
 			"parentTag:body",
-			"parentOf:true",
+			"index:0",
 			"attrs:2",
 			"id:id=d",
 			"idName:id",
@@ -9605,7 +9622,7 @@ describe("token parts reported by the tokenizer", () => {
 	 * @returns {{ name: (string | null), publicId: (string | null), systemId: (string | null) }} the parsed doctype
 	 */
 	const doctypeOf = (source) => {
-		for (const child of A.children(parseHtmlRefs(source))) {
+		for (const child of childrenOf(parseHtmlRefs(source))) {
 			if (A.type(child) === NodeType.Doctype) {
 				return {
 					name: A.doctypeName(child),
@@ -9629,9 +9646,9 @@ describe("token parts reported by the tokenizer", () => {
 		 */
 		const walk = (node) => {
 			if (A.type(node) === NodeType.Comment) out.push(A.data(node));
-			for (const child of A.children(node)) walk(child);
+			for (const child of childrenOf(node)) walk(child);
 		};
-		for (const child of A.children(parseHtmlRefs(source))) walk(child);
+		for (const child of childrenOf(parseHtmlRefs(source))) walk(child);
 		return out;
 	};
 
@@ -10018,7 +10035,7 @@ describe("parseHtml — quirks and foreign-content arcs", () => {
 		let node = parseHtmlRefs("<i>".repeat(5000));
 		let depth = 0;
 		for (;;) {
-			const children = A.children(node);
+			const children = childrenOf(node);
 			if (children.length === 0) break;
 			node = children[children.length - 1];
 			if (A.type(node) === NodeType.Element && A.name(node) === "i") depth++;
@@ -10038,7 +10055,7 @@ describe("parseHtml — quirks and foreign-content arcs", () => {
 const treeOf = (source, fragmentContext) => {
 	const doc = parseHtmlRefs(source, 0, { fragmentContext });
 	// In fragment mode the tree is the children of the synthesized root.
-	const first = A.firstChild(doc);
+	const first = A.child(0, doc);
 	return serializeHtmlTree(fragmentContext && first !== 0 ? first : doc);
 };
 
@@ -10848,7 +10865,7 @@ describe("SourceProcessor — reusing work across a print", () => {
 	const deepestTagName = (html) => {
 		let node = parseHtmlRefs(html);
 		for (;;) {
-			const children = A.children(node);
+			const children = childrenOf(node);
 			if (children.length === 0) return A.name(node);
 			node = children[children.length - 1];
 		}
@@ -10877,7 +10894,7 @@ describe("SourceProcessor — reusing work across a print", () => {
 		 * @returns {void}
 		 */
 		const walk = (node) => {
-			for (const child of A.children(node)) {
+			for (const child of childrenOf(node)) {
 				if (A.type(child) === NodeType.Element) {
 					names.push(A.name(child));
 					walk(child);

@@ -138,8 +138,8 @@ const tree = (html) => {
 				out.push(`<${tagName} ${attributes}>`);
 			},
 			[NodeType.Text]: (nodePath) => {
-				const parent = nodePath.parentOf();
-				const parentName = parent === 0 ? "" : nodePath.name(parent);
+				const parent = nodePath.parent;
+				const parentName = parent === null ? "" : nodePath.name(parent);
 				if (parentName === "style") {
 					out.push(`#css:${canonicalValue("", "style", nodePath.data())}`);
 					return;

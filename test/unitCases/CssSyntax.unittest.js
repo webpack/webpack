@@ -882,7 +882,7 @@ describe("CssSyntax — SourceProcessor", () => {
 					[NodeType.Ident]: (
 						/** @type {import("../../lib/css/syntax-parser").CssPath} */ path
 					) => {
-						seen.range = path.range();
+						seen.range = [path.start(), path.end()];
 					},
 					[NodeType.QualifiedRule]: (
 						/** @type {import("../../lib/css/syntax-parser").CssPath} */ path
@@ -3790,7 +3790,7 @@ describe("CssSyntax — path accessors", () => {
 						log.push(
 							`atName:${SRC.slice(path.nameStart() + 1, path.nameEnd())}`
 						);
-						log.push(`prelude:${path.prelude().length > 0}`);
+						log.push(`prelude:${path.childCount() > 0}`);
 						log.push(
 							`childRules:${
 								/** @type {import("../../lib/css/syntax-parser").Rule[]} */ (
@@ -3827,7 +3827,7 @@ describe("CssSyntax — path accessors", () => {
 					[NodeType.Function]: {
 						enter: (/** @type {CssPath} */ path) => {
 							if (path.name() === "var") {
-								log.push(`fnChildren:${path.children().length > 0}`);
+								log.push(`fnChildren:${path.childCount() > 0}`);
 							}
 						},
 						exit: (/** @type {CssPath} */ path) => {
@@ -3872,7 +3872,7 @@ describe("CssSyntax — path accessors", () => {
 				/** @type {import("../../lib/css/syntax-parser").VisitorMap} */ ({
 					[NodeType.QualifiedRule]: (/** @type {CssPath} */ path) => {
 						out.push([
-							path.prelude().length > 0,
+							path.childCount() > 0,
 							/** @type {import("../../lib/css/syntax-parser").Declaration[]} */ (
 								path.declarations()
 							).length,

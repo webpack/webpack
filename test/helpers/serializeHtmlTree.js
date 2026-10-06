@@ -73,16 +73,30 @@ const serializeHtmlTree = (root) => {
 		const tc = A.templateContent(node);
 		if (tc !== 0) {
 			lines.push(`| ${"  ".repeat(depth + 1)}content`);
-			for (let c = A.firstChild(tc); c !== 0; c = A.nextSibling(c)) {
+			for (
+				let cIndex = 0, c = A.child(0, tc);
+				c !== 0;
+				c = A.child(++cIndex, tc)
+			) {
 				walk(c, depth + 2);
 			}
 			return;
 		}
-		for (let c = A.firstChild(node); c !== 0; c = A.nextSibling(c)) {
+		for (
+			let cIndex = 0, c = A.child(0, node);
+			c !== 0;
+			c = A.child(++cIndex, node)
+		) {
 			walk(c, depth + 1);
 		}
 	};
-	for (let c = A.firstChild(root); c !== 0; c = A.nextSibling(c)) walk(c, 0);
+	for (
+		let cIndex = 0, c = A.child(0, root);
+		c !== 0;
+		c = A.child(++cIndex, root)
+	) {
+		walk(c, 0);
+	}
 	return lines.join("\n");
 };
 
