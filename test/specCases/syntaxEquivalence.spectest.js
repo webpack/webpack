@@ -1648,7 +1648,7 @@ const LOWERING_FIXTURES = [
 			"#c{background:left top url(data:image/gif;base64,R0lGODlhAQABAAAAACw=)}" +
 			"#d{mask:url(data:image/gif;base64,R0lGODlhAQABAAAAACw=) border-box}",
 		browsers: ["chrome 130"],
-		produces: ["background:red", "border-left:none", "column-rule:red"],
+		produces: ["background:red", "border-left:0", "column-rule:red"],
 		html: "<button id=b>x</button><div id=c></div><div id=d></div>",
 		probes: [
 			["#b", "background-position"],
@@ -1728,7 +1728,7 @@ const LOWERING_FIXTURES = [
 		produces: [
 			"@media (width>=1px)",
 			"@supports (color:red){",
-			"border:none",
+			"border:0",
 			"transition:opacity.3s",
 			"color:#333",
 			"#c{color:blue}"

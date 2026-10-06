@@ -14999,6 +14999,13 @@ describe("CssSyntax minify — what a comparison with other minifiers found", ()
 		// A pseudo-element is no argument `:is()` takes.
 		[".a:is(:before){x:1}", ".a:is(:before){x:1}"],
 		[".a:is(.b .c){x:1}", ".a:is(.b .c){x:1}"],
+		// Past a pseudo-element a compound takes only a few pseudo-classes.
+		[
+			"[type=file]::file-selector-button:is([aria-current]){x:1}",
+			"[type=file]::file-selector-button:is([aria-current]){x:1}"
+		],
+		[".a::before:is(:hover) .b:is(:hover){x:1}", ".a:before:is(:hover) .b:hover{x:1}"],
+		[".a:is(:hover)::before{x:1}", ".a:hover:before{x:1}"],
 		["@supports selector(:is(.a)){.b{x:1}}", "@supports selector(:is(.a)){.b{x:1}}"]
 	])("unwraps %s as %s", (css, expected) => {
 		expect(settled(css)).toBe(expected);

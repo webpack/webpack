@@ -12,7 +12,7 @@ Array [
   "/*! normalize-string: should not transform quotation marks when mixed (2) */.t08:after{content:'\\"string\\" is \\\\'intact\\\\''}",
   "/*! normalize-string: should transform escaped single quotation marks when mixed */.t09:after{content:'\\\\'string\\\\' is \\"intact\\"'}",
   "/*! normalize-string: should transform escaped double quotation marks when mixed */.t10:after{content:\\"'string' is \\\\\\"intact\\\\\\"\\"}",
-  "/*! normalize-string: should work with the attr function */.t11:after{content:\\"(\\" attr(href) \\")\\"}",
+  "/*! normalize-string: should work with the attr function */.t11:after{content:\\"(\\"attr(href)\\")\\"}",
   "/*! normalize-string: should join multiple line strings */.t12:after{content:\\" > this is some really\\\\
                      long text which is broken\\\\
                      over several lines.\\"}",
