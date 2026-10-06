@@ -4597,7 +4597,7 @@ describe("syntax-printer", () => {
 				["console.log(function () { var o = Math.random() < 2 ? { a: 1, b: 2 } : {}; const { a, b } = o; return a; }());", modern],
 				['console.log(function () { const { a, b } = { a: 1, get b() { console.log(2); } }; return a; }());', modern],
 				["console.log(function (o) { const [a, b] = o; return a; }(Math.random() < 2 ? [1, 2] : []));", modern],
-				['console.log(function () { var it = { [Symbol.iterator]() { console.log("iterated"); return [][Symbol.iterator](); } }; const [] = [...it]; const { a } = { ...it }; return 2; }());', modern],
+				['console.log(function () { var it = { [Symbol.iterator]() { console.log("iterated"); return [][Symbol.iterator](); } }; const [] = [...it]; const { a } = { ...it }; const [] = [[...it]]; const {} = { d: { ...it } }; return 2; }());', modern],
 				["console.log(function (s) { try { const { a = Math.abs(s) } = {}; } catch (e) { return e.name; } return 2; }(Symbol()));", modern],
 				["class B {} class C extends B { constructor() { const { a = this } = {}; super(); } } try { new C(); } catch (e) { console.log(e.name); }", modern]
 			];
