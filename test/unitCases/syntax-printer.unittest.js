@@ -1375,6 +1375,16 @@ const CORRECTED_CASES = [
 		{ compress: {}, mangle: false }
 	],
 	[
+		"a class's static method computed as `prototype`",
+		"try { class C { static ['prototype']() {} } console.log(typeof C); } catch (e) { console.log(e.name); }",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an unused class with a static field computed as `prototype`, or extending a local async function",
+		"for (var f of [function () { class C { static ['prototype'] = 1; } }, function () { async function g() {} class A extends g {} }]) { try { f(); console.log('no'); } catch (e) { console.log(e.name); } }",
+		{ compress: {}, mangle: false }
+	],
+	[
 		"an unused name's update dropped from an array read by index",
 		"function f() { return 'f'; } function g() { return 'g'; } function t() { var b; return [--b, f(), g()][1]; } console.log(t());",
 		{ compress: {}, mangle: false }
