@@ -2505,6 +2505,29 @@ describe("syntax-printer", () => {
 		});
 	}
 
+	// Objects `hoist_props` splits or keeps, declared where its check looks and
+	// read where only its transform does.
+	/** @type {[string, string][]} */
+	const HOIST_CASES = [
+		["an object read in a nested function", "function f() { var o = { a: 1, b: g() }; return function () { return o.a + o.b; }; } sink(f);"],
+		["an object declared in a nested function", "function f() { return function () { var o = { a: 1, b: g() }; return o.a + o.b; }; } sink(f);"],
+		["an object with a computed key", "function f() { var o = { [k]: 1, b: g() }; return o.b; } sink(f);"],
+		["an object with a spread", "function f() { var o = { ...p, b: g() }; return o.b; } sink(f);"],
+		["a value that is not an object", "function f() { var o = g(); return o.a + o.b; } sink(f);"]
+	];
+
+	for (const [name, source] of HOIST_CASES) {
+		it(`should hoist properties as terser does: ${name}`, async () => {
+			const { minify } = await load();
+			const reference = terserReference();
+			for (const options of [{ compress: { passes: 2 }, mangle: true }, { compress: { hoist_props: true }, mangle: false }]) {
+				const ours = await unimproved(() => minify(source, options));
+				const theirs = await reference.minify(source, options);
+				expect(ours.code).toBe(theirs.code);
+			}
+		});
+	}
+
 	// Sources reaching each node class's flow analysis: hoisted functions read
 	// before a write, branches, loops, chains and the assignments it tracks.
 	/** @type {[string, string, import("terser").CompressOptions?][]} */
