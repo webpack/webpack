@@ -17,8 +17,9 @@ module.exports = {
 		expect(css).toContain("stroke-dasharray:calc(1000)");
 		expect(css).toContain("stroke-dashoffset:calc(1.5)");
 		expect(css).toContain("-webkit-perspective:calc(1000)");
-		// A unit settles it, and so does a property that reads a number as one.
-		expect(css).toContain("stroke-width:2px");
+		// A unit settles it, and so does a property that reads a number as one;
+		// a folded px length is then written in SVG user units.
+		expect(css).toContain(".e,.f{stroke-width:2}");
 		expect(css).toContain("opacity:.5");
 		expect(css).toContain("z-index:2");
 		expect(css).toContain("width:10px");

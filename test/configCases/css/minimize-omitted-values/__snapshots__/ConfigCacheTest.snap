@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases css minimize-omitted-values minimize-omitted-values should compile 1`] = `
+Array [
+  ".c1{--l:96%}.c2{--l:90%!important;--l:96%}.c3{--L:1;--l:2}.t1{translate:-3rem}.t2{translate:1px 2px}.t3{translate:10%0%}.t4{scale:2}.t5{scale:2 3}.p1{background-image:linear-gradient(red,red),linear-gradient(blue,blue);background-position:10%73%,90%}.p2{background-image:linear-gradient(red,red),linear-gradient(blue,blue);background-position:top,50%100%}.s1{stroke-dasharray:1,200}.s2{stroke-width:2}.s3{stroke-dashoffset:-124}.s4{stroke-width:2em}.g1{display:grid;grid-area:2/1/4/3}.g2{grid-area:a}.g3{grid-area:a/c/b}.g4{grid-area:span 2/1/auto/-1}.g5{grid-row:1/2!important;grid-column:3/4}.g6{grid-area:--x/1/auto}.g7{grid-area:span a/span 2/auto/3}.g8{grid-row:1 2;grid-column:1}",
+]
+`;
