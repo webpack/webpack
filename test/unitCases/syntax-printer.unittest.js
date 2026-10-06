@@ -395,6 +395,46 @@ const IMPROVED_CASES = [
 		"a `+` beside a number literal in arithmetic",
 		'var d = Math.random() < 2 ? "5" : ""; console.log(1000 * +d, 1 - +d, 5 | +d, 2 ** +d);',
 		{ compress: {}, mangle: false }
+	],
+	[
+		"names a declared pattern binds that nothing reads",
+		'!function () { var o = Math.random() < 2 ? { a: 1, b: 2, c: { d: 3, e: 4 } } : {}; const { a, b = 5, c: { d, e } } = o; const [p, q, r] = [1, 2, 3]; const { s, t } = { s: 1, t: 2 }; console.log(a, d, q, s); }();',
+		{ compress: { pure_getters: true }, mangle: false }
+	],
+	[
+		"names a parameter's pattern binds that nothing reads",
+		"console.log([[{ a: 1, b: 2 }, [3, 4]]].map(function ([{ a, b }, [c, d]]) { return a + d; })[0]);",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a pattern naming nothing, reading a literal",
+		"!function () { const { a } = {}; const [b] = [1]; console.log(2); }();",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a pattern naming nothing, reading a literal whose function spreads",
+		"console.log(function (o) { const {} = { f: () => [...o] }; return 2; }([1]));",
+		{ compress: { ecma: 2020 }, ecma: 2020, mangle: false }
+	],
+	[
+		"a pattern naming nothing, reading `null`, which still throws",
+		"try { !function () { const { a } = null; }(); } catch (e) { console.log(e.name); }",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"names a pattern binds that nothing reads, beside a nested pattern, a string and inert defaults",
+		"console.log(function (o) { const [a, [b, c]] = o; const { length: n, x } = \"ab\"; const { y = -1n, z = !0, w } = { w: 1 }; const [] = [1, ...o]; return b + n + w; }([0, [1, 2]]));",
+		{ compress: { ecma: 2020 }, ecma: 2020, mangle: false }
+	],
+	[
+		"an array pattern naming nothing, still looking up its value's iterator",
+		'delete Array.prototype[Symbol.iterator]; try { !function () { const [a, b, c] = [1, 2, 3]; }(); console.log("no"); } catch (e) { console.log(e.name); }',
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a `catch` binding nothing reads, from ECMAScript 2019",
+		"try { null.p; } catch (e) { console.log(1); }",
+		{ compress: { ecma: 2019 }, ecma: 2019, mangle: false }
 	]
 ];
 
@@ -2332,7 +2372,7 @@ describe("syntax-printer", () => {
 				compress: compress.defaults ? { ...compress } : { defaults: false, ...compress },
 				mangle: false
 			});
-			const ours = await minify(source, settings());
+			const ours = await unimproved(() => minify(source, settings()));
 			const theirs = await reference.minify(source, settings());
 			expect(ours.code).toBe(theirs.code);
 		});
@@ -2351,7 +2391,7 @@ describe("syntax-printer", () => {
 					}
 					return merged;
 				};
-				const ours = await minify(source, settings());
+				const ours = await unimproved(() => minify(source, settings()));
 				const theirs = await reference.minify(source, settings());
 				expect(ours.code).toBe(theirs.code);
 			}
@@ -4551,6 +4591,35 @@ describe("syntax-printer", () => {
 				expect(code).toBe(reference.code);
 			});
 		}
+
+		it("should keep a pattern's names and a `catch` binding where dropping them changes what runs", async () => {
+			const { minify } = await load();
+			/** @type {import("terser").MinifyOptions} */
+			const modern = { compress: { ecma: 2020 }, ecma: 2020, mangle: false };
+			/** @type {[string, import("terser").MinifyOptions][]} */
+			const cases = [
+				["try { null.p; } catch (e) { console.log(1); }", { compress: {}, mangle: false }],
+				["try { throw 1; } catch (e) { console.log(e); }", modern],
+				['try { throw 1; } catch (e) { var e = 2; console.log(e); }', modern],
+				["var e = 0; try { throw 1; } catch (e) { var e = 2; } console.log(e);", modern],
+				["var e = 0; try { throw 1; } catch (e) { e = 2; } console.log(e);", modern],
+				["console.log(function () { var o = Math.random() < 2 ? { a: 1, b: 2 } : {}; const { a, ...r } = o; return r.b; }());", modern],
+				["console.log(function () { const { a = console.log(1) } = {}; return 2; }());", modern],
+				["console.log(function () { const { [console.log(1)]: a } = {}; return 2; }());", modern],
+				['console.log(function (k) { const { [k]: a } = {}; return 2; }({ toString() { console.log(1); return "a"; } }));', modern],
+				["console.log(function () { var o = Math.random() < 2 ? { a: 1, b: 2 } : {}; const { a, b } = o; return a; }());", modern],
+				['console.log(function () { const { a, b } = { a: 1, get b() { console.log(2); } }; return a; }());', modern],
+				["console.log(function (o) { const [a, b] = o; return a; }(Math.random() < 2 ? [1, 2] : []));", modern],
+				['console.log(function () { var it = { [Symbol.iterator]() { console.log("iterated"); return [][Symbol.iterator](); } }; const [] = [...it]; const { a } = { ...it }; const [] = [[...it]]; const {} = { d: { ...it }, e: 1 }; return 2; }());', modern],
+				["console.log(function (s) { try { const { a = Math.abs(s) } = {}; } catch (e) { return e.name; } return 2; }(Symbol()));", modern],
+				["class B {} class C extends B { constructor() { const { a = this } = {}; super(); } } try { new C(); } catch (e) { console.log(e.name); }", modern]
+			];
+			for (const [input, options] of cases) {
+				const { code } = await minify(input, options);
+				const reference = await terserReference().minify(input, options);
+				expect(code).toBe(reference.code);
+			}
+		});
 
 		it("should leave the program's value alone under `expression`", async () => {
 			const { minify } = await load();
