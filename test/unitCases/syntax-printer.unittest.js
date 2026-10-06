@@ -645,6 +645,7 @@ const KEPT_CASES = [
 	["an index into an array of strings, folded first", `console.log(${stringArray(100)}[3]);`],
 	["a computed key a class can write as it is", 'class C { ["prototype"] = 1; ["prototype"]() {} static ["#prototype"] = 2; static ["constructor"] = 3; static [0]() {} } console.log(new C().prototype, C["#prototype"], C.constructor, typeof C[0]);'],
 	["an unused class whose static keys are not known to be `prototype`", 'function f(k) { var p = "prototype"; class K { static x() {} static ["y"] = 1; ["prototype"]() {} [p]() {} static [k]() {} static [0]() {} static [-1]() {} static [["x"]]() {} static [["prototype", "x"]]() {} static [[]]() {} static [[k]]() {} static [[...k]]() {} } return 1; } console.log(f("x"), f(1));'],
+	["a computed `__proto__` an object can write as an arrow", 'var o = { ["__proto__"]() { return 1; }, a() { return 2; } }; console.log(Object.keys(o).join(), o.__proto__(), o.a());'],
 	["a computed key an object can write as it is", 'var o = { ["#constructor"]() { return 1; }, ["prototype"]: 2 }, p = { get ["#" + "constructor"]() { return 3; } }; console.log(o["#constructor"](), o.prototype, p["#constructor"]);']
 ];
 
@@ -1333,6 +1334,16 @@ const CORRECTED_CASES = [
 		"an unused class whose static key converts to `prototype`",
 		'for (var f of [function () { class C { static [["prototype"]]() {} } }, function () { class C { static [[["proto" + "type"]]] = 1; } }, function () { class C { static [{ toString() { return "prototype"; } }]() {} } }, function () { var k = ["prototype"]; class C { static [k]() {} } }, function () { const k = { toString: () => "prototype" }; class C { static [k] = 1; } }]) { try { f(); console.log("made"); } catch (e) { console.log(e.name); } }',
 		{ compress: {}, mangle: false }
+	],
+	[
+		"an object method named `__proto__`, which an arrow would set as the prototype",
+		'var r = (o) => [Object.getPrototypeOf(o) === Object.prototype, Object.keys(o).join()]; console.log(r({ __proto__() { return 1; } }), r({ "__proto__"() { return 2; } }), r({ async __proto__() { return 3; } }));',
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an object's `__proto__` set to a function, which a method would define as a property",
+		'var r = (o) => [Object.getPrototypeOf(o) === Object.prototype, Object.keys(o).join()]; console.log(r({ __proto__: function () {} }), r({ "__proto__": async function () {} }), r({ __proto__: () => {} }));',
+		{ compress: { unsafe_methods: true }, ecma: 2020, mangle: false }
 	],
 	[
 		"a static class member keyed `prototype`, of each kind",
