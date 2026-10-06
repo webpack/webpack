@@ -1144,6 +1144,21 @@ const CORRECTED_CASES = [
 		"an `instanceof` nobody reads, its built-in name rebound by `with`",
 		"with ({ Map: { [Symbol.hasInstance]() { console.log('with'); } } }) { [] instanceof Map; }",
 		{ compress: {}, mangle: false }
+	],
+	[
+		"an `instanceof` nobody reads, of a built-in name the program assigns",
+		"Object = { [Symbol.hasInstance]() { console.log('hit'); } }; [] instanceof Object; console.log(1);",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an `instanceof` nobody reads, of a built-in name assigned, without `reduce_vars` to count it",
+		"Object = { [Symbol.hasInstance]() { console.log('hit'); } }; [] instanceof Object; console.log(1);",
+		{ compress: { reduce_vars: false }, mangle: false }
+	],
+	[
+		"an `instanceof` nobody reads, of a built-in name a function assigns",
+		"function f() { Object = { [Symbol.hasInstance]() { console.log('hit'); } }; } f(); [] instanceof Object; console.log(1);",
+		{ compress: {}, mangle: false }
 	]
 ];
 
