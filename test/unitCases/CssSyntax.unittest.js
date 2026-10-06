@@ -14465,9 +14465,28 @@ describe("CssSyntax minify — a fallback the target reads past", () => {
 	});
 
 	it("reads no function the table does not name", () => {
+		expect(minifyFor("a{background:red;background:paint(x)}", MODERN)).toBe(
+			"a{background:red;background:paint(x)}"
+		);
+	});
+
+	it("reads a gradient of keywords, amounts and colors every engine names", () => {
 		expect(
 			minifyFor("a{background:red;background:linear-gradient(red,blue)}", MODERN)
-		).toBe("a{background:red;background:linear-gradient(red,blue)}");
+		).toBe("a{background:linear-gradient(red,blue)}");
+		expect(
+			minifyFor(
+				"a{background-image:-o-linear-gradient(45deg,#fff 25%,transparent 25%);background-image:linear-gradient(45deg,#fff 25%,transparent 25%)}",
+				MODERN
+			)
+		).toBe("a{background-image:linear-gradient(45deg,#fff 25%,#0000 25%)}");
+		// An interpolation space, and a call inside, are not asked here.
+		expect(
+			minifyFor("a{background:red;background:linear-gradient(in oklch,red,blue)}", MODERN)
+		).toBe("a{background:red;background:linear-gradient(in oklch,red,blue)}");
+		expect(
+			minifyFor("a{background:red;background:linear-gradient(red,var(--c))}", MODERN)
+		).toBe("a{background:red;background:linear-gradient(red,var(--c))}");
 	});
 
 	it("reads no empty call, which names a value no engine can read", () => {
@@ -15057,6 +15076,60 @@ describe("CssSyntax minify — what a comparison with other minifiers found", ()
 		]
 	])("writes %s as %s", (css, expected) => {
 		expect(settled(css)).toBe(expected);
+	});
+
+	describe("for a target", () => {
+		const modern = ["chrome 130", "firefox 130", "safari 18"];
+		it.each([
+			[
+				"@supports ((-webkit-mask-image:none) or (mask-image:none)){a{x:1}}",
+				"@supports (mask-image:none){a{x:1}}"
+			],
+			[
+				"@supports not ((-webkit-mask-image:none) or (mask-image:none)){a{x:1}}",
+				"@supports not (mask-image:none){a{x:1}}"
+			],
+			[
+				"@supports (position:-webkit-sticky) or (position:sticky){a{x:1}}",
+				"@supports (position:sticky){a{x:1}}"
+			],
+			// Either alone reads apart from the other, and so do two values.
+			[
+				"@supports (-webkit-mask-image:none) and (mask-image:none){a{x:1}}",
+				"@supports (-webkit-mask-image:none) and (mask-image:none){a{x:1}}"
+			],
+			[
+				"@supports (-webkit-mask-image:none) or (mask-image:url(x)){a{x:1}}",
+				"@supports (-webkit-mask-image:none) or (mask-image:url(x)){a{x:1}}"
+			],
+			[
+				"@supports (-webkit-mask-image:none) or (mask-image:none) or (x:y){a{x:1}}",
+				"@supports (mask-image:none) or (x:y){a{x:1}}"
+			],
+			[
+				"@supports (-webkit-mask-image:none) or selector(a){a{x:1}}",
+				"@supports (-webkit-mask-image:none) or selector(a){a{x:1}}"
+			],
+			[
+				"a{background-image:-webkit-linear-gradient(45deg,#ffffff26 25%,red);background-image:linear-gradient(45deg,#ffffff26 25%,red)}",
+				"a{background-image:linear-gradient(45deg,#ffffff26 25%,red)}"
+			]
+		])("writes %s as %s", (css, expected) => {
+			const once = minifyFor(css, modern);
+			expect(minifyFor(once, modern)).toBe(once);
+			expect(once).toBe(expected);
+		});
+
+		it("keeps the vendor test an older target needs", () => {
+			const css = "@supports (-webkit-mask-image:none) or (mask-image:none){a{x:1}}";
+			expect(minifyFor(css, ["safari 14"])).toBe(css);
+			expect(
+				minifyFor(
+					"a{background-image:-webkit-linear-gradient(red,#ffffff26);background-image:linear-gradient(red,#ffffff26)}",
+					["safari 9"]
+				)
+			).toContain("-webkit-linear-gradient");
+		});
 	});
 
 	it.each([

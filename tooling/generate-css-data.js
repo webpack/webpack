@@ -5639,6 +5639,12 @@ const collectValueSupport = (
 		if (!node || !node.__compat) continue;
 		table.push([name, collectSupportedFrom([`css.types.color.${name}`])]);
 	}
+	// A gradient is named by its function the same way, which is what says when a
+	// fallback written before one is read for nothing.
+	for (const name of Object.keys(bcd.css.types.gradient)) {
+		if (name.startsWith("__")) continue;
+		table.push([name, collectSupportedFrom([`css.types.gradient.${name}`])]);
+	}
 	for (const [property, node] of Object.entries(propertyNodes)) {
 		if (property.startsWith("__")) continue;
 		const entry = /** @type {PartialPropertyTable} */ (properties)[property];
