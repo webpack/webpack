@@ -1,10 +1,9 @@
 "use strict";
 
 module.exports = [
+	// the whole message, once: the other entries pin only what varies
 	[
-		/Can't resolve '\.\/button\.js'/,
-		/Did you mean '\.\/Button\.js'\?/,
-		/'Button\.js' exists in that directory and differs from the request only in casing/
+		/^Module not found: Error: Can't resolve '\.\/button\.js' in '[^']*'\nDid you mean '\.\/Button\.js'\?\n'Button\.js' exists in that directory and differs from the request only in casing\. Case-sensitive filesystems \(most Linux ones\) fail to resolve it, even when the same build succeeds on a case-insensitive one\.$/
 	],
 	[
 		/Can't resolve '\.\/button'/,
