@@ -760,7 +760,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/next/octokit/static/chunks/357-72bd409f1472b1b8/input.js",
 			"swc minifier: fixture/next/react-ace/chunks/8a28b14e.d8fbda268ed281a1/input.js",
 			"swc minifier: fixture/next/react-chartjs/input.js",
-			"swc minifier: fixture/next/react-pdf-renderer/input.js",
 			"swc minifier: fixture/next/styled-components/1/input.js",
 			"swc minifier: fixture/next/syncfusion/933-e9f9a6bf671b96fc/input.js",
 			"swc minifier: fixture/next/target-es2015/static/chunks/main-04b5934c26266542/input.js",
