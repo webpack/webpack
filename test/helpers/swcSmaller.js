@@ -20,7 +20,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/12223/nested-function-control/input.js",
 			"swc minifier: fixture/issues/12227/input.js",
 			"swc minifier: fixture/issues/12301/input.js",
-			"swc minifier: fixture/issues/12303/input.js",
 			"swc minifier: fixture/issues/2262/1/input.js",
 			"swc minifier: fixture/issues/6175/1/input.js",
 			"swc minifier: fixture/issues/7331/2/input.js",
@@ -405,6 +404,7 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/terser/issue-2535-2/2/input.js",
 			"swc minifier: fixture/terser/issue-2535-2/4/input.js",
 			"swc minifier: full/size/54531ba076299b43c00a0d234240369f93371a41/input.js",
+			"swc minifier: projects/files/underscore-1.5.2.js",
 			"terser compress: collapse_vars/collapse_rhs_conditional_2",
 			"terser compress: comparing/self_comparison_2",
 			"terser compress: conditionals/cond_7_1",
@@ -446,7 +446,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/6957/1/input.js",
 			"swc minifier: fixture/issues/6957/2/input.js",
 			"swc minifier: fixture/issues/7714/1/input.js",
-			"swc minifier: fixture/issues/8706/input.js",
 			"swc minifier: fixture/issues/9741_multiple_methods/input.js",
 			"swc minifier: fixture/issues/non-finite-number-method-call/input.js",
 			"swc minifier: fixture/next/swc-4559/input.js",
@@ -669,7 +668,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/array-constructor-length/input.js",
 			"swc minifier: fixture/non-finite-number-literals/input.js",
 			"swc minifier: fixture/projects/yui/2/input.js",
-			"swc minifier: pass-1/issue-6123/1/input.js",
 			"terser compress: collapse_vars/collapse_vars_properties",
 			"terser compress: pure_funcs/assign"
 		]
