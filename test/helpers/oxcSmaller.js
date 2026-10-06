@@ -754,14 +754,11 @@ const OXC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/10466/input.js",
 			"swc minifier: fixture/issues/11684/bindings/input.js",
 			"swc minifier: fixture/issues/5684/input.js",
-			"swc minifier: fixture/issues/6407/1/input.js",
 			"swc minifier: fixture/issues/7004/input.js",
 			"swc minifier: fixture/issues/8324/input.js",
 			"swc minifier: fixture/issues/9460/strict-mode/input.js",
 			"swc minifier: fixture/issues/framer-motion/1/input.js",
 			"swc minifier: fixture/projects/backbone/12/input.js",
-			"swc minifier: pass-1/6/input.js",
-			"swc minifier: pass-1/issues/6407/1/input.js",
 			"terser compress: arguments/modified",
 			"terser compress: async/for_await_of",
 			"terser compress: async/for_await_of_2",
@@ -770,7 +767,6 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: collapse_vars/compound_assignment",
 			"terser compress: collapse_vars/do_not_place_chain_on_lhs_2",
 			"terser compress: evaluate/and",
-			"terser compress: issue-1248/brackets_with_const_let_mix_0",
 			"terser compress: sequences/lift_sequences_1",
 			"terser compress: sequences/lift_sequences_3"
 		]
