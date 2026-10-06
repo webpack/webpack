@@ -1678,10 +1678,12 @@ for (const { reason, minifiers, tests } of MINIFIED_FAILURES) {
 	}
 }
 
-// Each mode the suite builds with; production is built once per minimizer.
+// Each mode the suite builds with. Production is built unminified, so what fails
+// there is webpack's own, then once per minimizer.
 // TODO remove the `terser` mode once webpack's printer has replaced terser
 const MODES = [
 	{ name: "development", mode: "development" },
+	{ name: "production (unminified)", mode: "production" },
 	{ name: "production", mode: "production", minify: "terser" },
 	{
 		name: "production (future defaults)",
