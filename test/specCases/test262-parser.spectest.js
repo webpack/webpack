@@ -3,7 +3,7 @@
 const fs = require("fs");
 const path = require("path");
 const acorn = require("acorn");
-const JavascriptParser = require("../../lib/javascript/JavascriptParser");
+const { parse } = require("../../lib/javascript/syntax").parser;
 const {
 	firstDifference,
 	reportable
@@ -14,7 +14,9 @@ const {
 /** @typedef {{ ranges?: boolean, locations?: boolean, comments?: boolean }} Mode */
 /** @typedef {import("acorn").Program} Program */
 /** @typedef {import("acorn").Comment} Comment */
-/** @typedef {import("../../lib/javascript/JavascriptParser").ParseResult} ParseResult */
+/** @typedef {import("../../lib/javascript/syntax-parser").ParserOptions} ParserOptions */
+/** @typedef {import("../../lib/javascript/syntax-parser").CollectedComment} CollectedComment */
+/** @typedef {{ ast: import("estree").Program, comments: CollectedComment[] }} ParseResult */
 
 const corpusDir = path.resolve(__dirname, "../external/test262-cases/test");
 const hasCorpus =
@@ -24,8 +26,8 @@ const hasCorpus =
 // parser several times slower, so jest's default 30s is far too tight.
 const AREA_TIMEOUT = 600000;
 
-// The option sets a caller can hand `JavascriptParser._parse`. Ranges alone is
-// the one webpack uses, and the only one that takes the lazy-node path.
+// The option sets compared against acorn. Ranges alone is the one webpack
+// uses, and the only one that takes the lazy-node path.
 /** @type {[string, Mode][]} */
 const MODES = [
 	["without ranges or comments", {}],
@@ -53,6 +55,31 @@ const sourceTypeOf = (code) => {
 };
 
 /**
+ * Parse with webpack's parser the way a build hands it options: ranges alone
+ * become lazy offsets, with comments collected lazily alongside.
+ * @param {string} code the source
+ * @param {Mode & { sourceType: "module" | "script", ecmaVersion: "latest", allowHashBang: boolean }} options what acorn is given too
+ * @returns {ParseResult} the program and its comments
+ */
+const parseOurs = (code, { comments: collectComments, ...options }) => {
+	/** @type {CollectedComment[]} */
+	const comments = [];
+	const lazyNodes = options.ranges === true && options.locations !== true;
+	/** @type {ParserOptions} */
+	const parserOptions = {
+		...options,
+		allowReturnOutsideFunction: options.sourceType === "script",
+		ranges: lazyNodes ? false : options.ranges,
+		lazyNodes
+	};
+	if (collectComments === true) {
+		if (lazyNodes) parserOptions.lazyComments = comments;
+		else parserOptions.onComment = comments;
+	}
+	return { ast: parse(code, parserOptions), comments };
+};
+
+/**
  * Parse one file with both parsers and record how they disagreed.
  * @param {string} file absolute path of the test262 file
  * @param {Mode} mode the options both parsers are given
@@ -76,7 +103,7 @@ const compareFile = (file, mode, trees, verdicts) => {
 	/** @type {Error | undefined} */
 	let ourError;
 	try {
-		ours = JavascriptParser._parse(code, { ...options });
+		ours = parseOurs(code, options);
 	} catch (err) {
 		ourError = /** @type {Error} */ (err);
 	}
@@ -90,7 +117,7 @@ const compareFile = (file, mode, trees, verdicts) => {
 	try {
 		theirs = acorn.parse(code, {
 			...options,
-			// `_parse` sets this from the goal symbol, so acorn has to match
+			// `parseOurs` sets this from the goal symbol, so acorn has to match
 			allowReturnOutsideFunction: sourceType === "script",
 			...(mode.comments === true ? { onComment: comments } : {})
 		});

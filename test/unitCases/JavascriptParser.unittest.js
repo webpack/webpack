@@ -5,11 +5,33 @@
 // cspell:ignore fghsub notry fghsub notry notry this's ijksub this's ijksub fghsub fghsub notry ijksub ijksub strrring strrring strr strrring strrring strr Sstrrringy strone stronetwo stronetwothree stronetwo stronetwothree stronetwothreefour onetwo onetwo twothree twothree twothree threefour onetwo onetwo threefour threefour fourfive startstrmid igmy igmyi igmya
 const BasicEvaluatedExpression = require("../../lib/javascript/BasicEvaluatedExpression");
 const JavascriptParser = require("../../lib/javascript/JavascriptParser");
+const { parse } = require("../../lib/javascript/syntax").parser;
 const {
 	BLOCK_DECLARATIONS,
 	HOISTED_DECLARATIONS,
 	MODULE_DECLARATIONS
 } = require("../../lib/javascript/syntax-parser");
+
+/** @typedef {import("../../lib/javascript/syntax-parser").CollectedComment} CollectedComment */
+
+/**
+ * Parse through the syntax parser on the lazy-node path a build takes, which
+ * alone leaves the declaration records, collecting comments as it goes.
+ * @param {string} code source code
+ * @param {"module" | "script"} sourceType goal symbol
+ * @returns {{ ast: import("estree").Program, comments: CollectedComment[] }} the program and its comments
+ */
+const parseWithComments = (code, sourceType) => {
+	/** @type {CollectedComment[]} */
+	const comments = [];
+	const ast = parse(code, {
+		sourceType,
+		ecmaVersion: "latest",
+		lazyNodes: true,
+		lazyComments: comments
+	});
+	return { ast, comments };
+};
 
 describe("JavascriptParser", () => {
 	describe("strict directive spelling", () => {
@@ -869,12 +891,7 @@ describe("JavascriptParser", () => {
 				const expr = /** @type {Record<string, string>} */ (cases)[name];
 
 				it(name, () => {
-					const actual = JavascriptParser._parse(
-						expr,
-						/** @type {import("../../lib/javascript/JavascriptParser").InternalParseOptions} */ (
-							/** @type {unknown} */ ({})
-						)
-					);
+					const actual = parse(expr, { ecmaVersion: "latest" });
 					expect(typeof actual).toBe("object");
 				});
 			}
@@ -1050,12 +1067,7 @@ describe("JavascriptParser", () => {
 
 				it(name, () => {
 					const parser = new JavascriptParser();
-					const { ast } = JavascriptParser._parse(
-						expr.code,
-						/** @type {import("../../lib/javascript/JavascriptParser").InternalParseOptions} */ ({
-							ranges: true
-						})
-					);
+					const ast = parse(expr.code, { ecmaVersion: "latest", ranges: true });
 					expect(typeof ast).toBe("object");
 					expect(
 						parser.parseCalculatedString(
@@ -1383,11 +1395,7 @@ function outer() { var inOuter = 1; }
 		});
 
 		it("collects its own from an AST another parser built", () => {
-			const { ast, comments } = JavascriptParser._parse(EVERY_POSITION, {
-				sourceType: "script",
-				ranges: true,
-				comments: true
-			});
+			const { ast, comments } = parseWithComments(EVERY_POSITION, "script");
 			// strip the parser's record: what a preparsed AST from a loader looks
 			// like, and the only thing that separates the two paths
 			/** @type {EXPECTED_ANY} */
@@ -1463,10 +1471,7 @@ for (target of [ ]) { var fromForOfTarget = 1; }
 		});
 
 		it("records the program's imports and re-exports, and nothing else", () => {
-			const { ast } = JavascriptParser._parse(
-				"import a from './a';\nexport * from './b';\nexport { a };\nexport default 1;\nvar plain = 1;\nif (plain) { var nested = 1; }",
-				{ sourceType: "module", ranges: true, comments: true }
-			);
+			const { ast } = parseWithComments("import a from './a';\nexport * from './b';\nexport { a };\nexport default 1;\nvar plain = 1;\nif (plain) { var nested = 1; }", "module");
 			expect(
 				/** @type {EXPECTED_ANY} */ (ast)[MODULE_DECLARATIONS].filter(
 					(/** @type {EXPECTED_ANY} */ _entry, /** @type {number} */ index) =>
@@ -1562,11 +1567,7 @@ for (target of [ ]) { var fromForOfTarget = 1; }
 				);
 				return sources;
 			};
-			const { ast, comments } = JavascriptParser._parse(source, {
-				sourceType: "module",
-				ranges: true,
-				comments: true
-			});
+			const { ast, comments } = parseWithComments(source, "module");
 			/** @type {EXPECTED_ANY} */
 			(ast)[MODULE_DECLARATIONS] = undefined;
 			/** @type {EXPECTED_ANY} */
@@ -1576,16 +1577,8 @@ for (target of [ ]) { var fromForOfTarget = 1; }
 		});
 
 		it("ignores the record of an AST handed to it, which may have been edited", () => {
-			const { ast, comments } = JavascriptParser._parse("var first = 1;", {
-				sourceType: "script",
-				ranges: true,
-				comments: true
-			});
-			const { ast: spliced } = JavascriptParser._parse("var second = 2;", {
-				sourceType: "script",
-				ranges: true,
-				comments: true
-			});
+			const { ast, comments } = parseWithComments("var first = 1;", "script");
+			const { ast: spliced } = parseWithComments("var second = 2;", "script");
 			// a loader may hand back a tree it changed after it was read, so the
 			// record the parse left on it no longer says what the tree declares
 			/** @type {EXPECTED_ANY} */
@@ -1805,11 +1798,7 @@ class WithStatic { static { const inStaticBlock = 20; } }
 		});
 
 		it("collects its own from an AST another parser built", () => {
-			const { ast, comments } = JavascriptParser._parse(EVERY_POSITION, {
-				sourceType: "module",
-				ranges: true,
-				comments: true
-			});
+			const { ast, comments } = parseWithComments(EVERY_POSITION, "module");
 			// strip the parser's record: what a preparsed AST from a loader looks
 			// like, and the only thing that separates the two paths
 			const strip = (/** @type {EXPECTED_ANY} */ node) => {
@@ -1896,11 +1885,7 @@ class WithStatic { static { const inStaticBlock = 20; } }
 			// bound raised past what a mask holds fails this case
 			const filler = "void 0;\n".repeat(40);
 			const source = `const early = 1;\n${filler}const late = 2;`;
-			const { ast } = JavascriptParser._parse(source, {
-				sourceType: "module",
-				ranges: true,
-				comments: true
-			});
+			const { ast } = parseWithComments(source, "module");
 			const recorded = /** @type {EXPECTED_ANY} */ (ast)[SLOT];
 			expect(Array.isArray(recorded)).toBe(true);
 			expect(recorded).toEqual([0, 41]);
@@ -1911,11 +1896,7 @@ class WithStatic { static { const inStaticBlock = 20; } }
 			const { BLOCK_DECLARATIONS: SLOT } = require(
 				"../../lib/javascript/syntax-parser"
 			);
-			const { ast } = JavascriptParser._parse("void 0;\nconst only = 1;", {
-				sourceType: "module",
-				ranges: true,
-				comments: true
-			});
+			const { ast } = parseWithComments("void 0;\nconst only = 1;", "module");
 			// one declaration at index 1 and nothing allocated to say so
 			expect(/** @type {EXPECTED_ANY} */ (ast)[SLOT]).toBe(0b10);
 		});
@@ -1965,11 +1946,7 @@ class WithStatic { static { const inStaticBlock = 20; } }
 		 */
 		const attachedTo = (source, index, sourceAvailable = true) => {
 			const parser = new JavascriptParser("module");
-			const { ast, comments } = JavascriptParser._parse(source, {
-				sourceType: "module",
-				ranges: true,
-				comments: true
-			});
+			const { ast, comments } = parseWithComments(source, "module");
 			parser.comments = comments;
 			parser._source = sourceAvailable ? source : undefined;
 			const statement = ast.body[index];
@@ -2040,11 +2017,7 @@ class WithStatic { static { const inStaticBlock = 20; } }
 		it("does not read every later comment to find an attached run", () => {
 			const source = "/* before */function f() {}" + "/* after */".repeat(1024);
 			const parser = new JavascriptParser("module");
-			const { ast, comments } = JavascriptParser._parse(source, {
-				sourceType: "module",
-				ranges: true,
-				comments: true
-			});
+			const { ast, comments } = parseWithComments(source, "module");
 			let reads = 0;
 			for (const comment of comments) {
 				const range = comment.range;

@@ -4,8 +4,8 @@
 
 "use strict";
 
-const JavascriptParser = require("../../lib/javascript/JavascriptParser");
 const analyzeScope = require("../../lib/javascript/ScopeAnalyzer");
+const { parse } = require("../../lib/javascript/syntax").parser;
 const {
 	getAllReferences,
 	renameIdentifiers
@@ -20,7 +20,7 @@ const {
  */
 const moduleScopeOf = (code) =>
 	analyzeScope(
-		JavascriptParser._parse(code, { sourceType: "module" }).ast,
+		parse(code, { sourceType: "module", ecmaVersion: "latest" }),
 		true
 	).moduleScope;
 
