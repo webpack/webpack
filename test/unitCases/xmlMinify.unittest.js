@@ -84,6 +84,18 @@ describe("SVG data URLs", () => {
 		expect(print("'")).toBe("<a b='c'/>");
 	});
 
+	it("should minify the ones an inline stylesheet holds, and only those", () => {
+		const render = builtinEmbeddedRenderer({ svg: true });
+		expect(
+			render(
+				`a{background:url("data:image/svg+xml,${SVG}")}b{background:url("data:text/css,a { color : red }")}`,
+				{ type: "css", hostType: "html" }
+			)
+		).toBe(
+			`a{background:url("data:image/svg+xml,${MINIFIED}")}b{background:url("data:text/css,a { color : red }")}`
+		);
+	});
+
 	it("should decline what it is not asked for, or cannot shorten", () => {
 		const render = builtinEmbeddedRenderer({ svg: true });
 		// An inline `<svg>` is the HTML printer's.
