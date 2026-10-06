@@ -3830,6 +3830,40 @@ const poolPrefixWindows = (browsers) => {
 };
 
 /**
+ * The vendor spellings a still-released engine parses as a property of its own —
+ * one BCD files apart from the standard name it stands for — so dropping one
+ * changes what that engine computes for it, whatever the standard one says.
+ * @param {[string, [string, [string, number, number][]][]][]} table the property prefix table
+ * @returns {string[]} those spellings, sorted
+ */
+const collectParsedLegacySpellings = (table) => {
+	/** @type {Set<string>} */
+	const parsed = new Set();
+	for (const [name, spellings] of table) {
+		for (const [spelling] of spellings) {
+			const prefix = /^-[a-z]+-/.exec(spelling);
+			if (prefix === null) continue;
+			const own = spelling.slice(prefix[0].length);
+			const feature = own === name ? undefined : bcd.css.properties[own];
+			if (feature === undefined || feature.__compat === undefined) continue;
+			const read = Object.entries(feature.__compat.support).some(
+				([browser, entries]) =>
+					!SUPPLEMENT.browsersNotAssumedCurrent.includes(browser) &&
+					(Array.isArray(entries) ? entries : [entries]).some(
+						(entry) =>
+							entry.prefix === prefix[0] &&
+							entry.version_added &&
+							!entry.version_removed &&
+							!entry.flags
+					)
+			);
+			if (read) parsed.add(spelling);
+		}
+	}
+	return [...parsed].sort();
+};
+
+/**
  * @param {[string, [string, [string, number, number][]][]][]} table one axis' prefix table
  * @returns {string} the `Map` literal, each window list named by its pool index
  */
@@ -3873,7 +3907,7 @@ const eighthTurnEntries = (values) => {
 // Spec prose no dataset states: an equivalence between two spellings, or a
 // judgement about what a construct still does. Each carries the reason it has to
 // be written out rather than derived.
-/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], fontStretchPercentages: [string, string][], filterFunctionOmitted: [string, string][], positionKeywordPercentages: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], featurelessPseudoClasses: string[], initialValueKeywords: [string, string][], initialKeywordsAnEngineReadsApart: string[], unmergeableSlotKeywords: [string, string][], zeroUnitKeepingProperties: string[], calcRejectingProperties: string[], numberOnlyOutsideCalcProperties: string[], clampedValueRanges: [string, string, number, number][], stepPositionMinimumCounts: [string, number][], autoSecondValueProperties: string[], defaultGradientDirections: string[], defaultGradientPositions: string[], reversedGradientDirections: string[], gradientSideAngles: [string, string][], xAxisTransforms: [string, string][], negativeAcceptingProperties: string[], placeShorthands: string[], oneValuePairShorthands: string[], familyShorthands: string[], orderedShorthands: string[], omittableInitialKeywords: string[], pairLonghandOverrides: [string, string[]][], droppableWhenEmptyAtRules: string[], replacedByNameAtRules: string[], classSpellings: [string, string[]][], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[], colorSpacePrimitives: [string, string][], oklabMatrices: number[][], systemUiStack: string[], colorTransfers: [string, string][], predefinedColorSpaces: [string, string, string, string][], colorPrimaries: [string, number[]][], colorWhitePoints: [string, number[]][], enginesDisagreeOnTransfer: string[], calcConstantValues: [string, string][], quarterTurnAngle: [string, number][], eighthTurnSine: (number | null)[], eighthTurnTangent: (number | null)[], mathFunctionFold: [string, string, string, string, string | null, boolean][], mathPrimitives: [string, string][], predefinedCounterStyles: string[], predefinedCounterNames: string[], cssModulesKeywordSupplement: [string, string, number][] }} */
+/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], fontStretchPercentages: [string, string][], filterFunctionOmitted: [string, string][], positionKeywordPercentages: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], featurelessPseudoClasses: string[], initialValueKeywords: [string, string][], initialKeywordsAnEngineReadsApart: string[], unmergeableSlotKeywords: [string, string][], zeroUnitKeepingProperties: string[], calcRejectingProperties: string[], numberOnlyOutsideCalcProperties: string[], clampedValueRanges: [string, string, number, number][], stepPositionMinimumCounts: [string, number][], autoSecondValueProperties: string[], defaultGradientDirections: string[], defaultGradientPositions: string[], reversedGradientDirections: string[], gradientSideAngles: [string, string][], xAxisTransforms: [string, string][], negativeAcceptingProperties: string[], placeShorthands: string[], browsersNotAssumedCurrent: string[], oneValuePairShorthands: string[], familyShorthands: string[], orderedShorthands: string[], omittableInitialKeywords: string[], pairLonghandOverrides: [string, string[]][], droppableWhenEmptyAtRules: string[], replacedByNameAtRules: string[], classSpellings: [string, string[]][], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[], colorSpacePrimitives: [string, string][], oklabMatrices: number[][], systemUiStack: string[], colorTransfers: [string, string][], predefinedColorSpaces: [string, string, string, string][], colorPrimaries: [string, number[]][], colorWhitePoints: [string, number[]][], enginesDisagreeOnTransfer: string[], calcConstantValues: [string, string][], quarterTurnAngle: [string, number][], eighthTurnSine: (number | null)[], eighthTurnTangent: (number | null)[], mathFunctionFold: [string, string, string, string, string | null, boolean][], mathPrimitives: [string, string][], predefinedCounterStyles: string[], predefinedCounterNames: string[], cssModulesKeywordSupplement: [string, string, number][] }} */
 
 const SUPPLEMENT = {
 	// CSS Values 4's list. `mdn-data` has no `css-wide-keyword` production.
@@ -4064,6 +4098,11 @@ const SUPPLEMENT = {
 	// Newer than the longhands they merge, so the merge would lose both
 	// declarations. Named because `mdn-data` states no version.
 	placeShorthands: ["place-content", "place-items", "place-self"],
+	// WHY: the browsers `assumeCurrentBrowsers` does not minify for. `ie` and
+	// `ie_mob` are no longer released, which the compat data does not state.
+	// `op_mob` is Chromium, but BCD files it behind (a `:not()` list as never),
+	// so its row would answer for the data rather than the engine.
+	browsersNotAssumedCurrent: ["ie", "ie_mob", "op_mob"],
 	// WHY: Pair shorthands whose *two-value* form is the newer one, so the merge is
 	// safe only where it collapses to a single value: `overflow: hidden` is CSS
 	// 2.1 and reads everywhere `overflow-x` does, while `overflow: hidden scroll`
@@ -7143,11 +7182,26 @@ const collectData = async () => {
 	]);
 	const valueSupport = collectValueSupport(colorValueFunctions);
 	const pooled = poolSupport([supportedFrom, selectorSupport, valueSupport]);
+	for (const browser of SUPPLEMENT.browsersNotAssumedCurrent) {
+		if (!pooled.browsers.includes(browser)) {
+			throw new Error(
+				`browsersNotAssumedCurrent names ${browser}, which no table covers`
+			);
+		}
+	}
+	// `TP` reads as newer than every release and older than `NEVER`.
+	const currentBrowsers = pooled.browsers
+		.filter(
+			(browser) => !SUPPLEMENT.browsersNotAssumedCurrent.includes(browser)
+		)
+		.map((browser) => `${browser} TP`);
 	const prefixedAtRules = collectPrefixTable(bcd.css["at-rules"]);
 	const prefixedValues = collectPrefixedValues();
 	// Built before the template so the window pool below is complete when it is
 	// written; the order fixes the indices the tables name.
 	const prefixedPropertiesText = prefixLiteral(prefixedProperties);
+	const parsedLegacySpellings =
+		collectParsedLegacySpellings(prefixedProperties);
 	const prefixedSelectorsText = prefixLiteral(prefixedSelectors);
 	const prefixedAtRulesText = prefixLiteral(prefixedAtRules);
 	const prefixedValuesText = prefixedValueLiteral(prefixedValues);
@@ -7930,6 +7984,15 @@ const NEVER = ${NEVER_LITERAL};
 /** @type {string[]} */
 const SUPPORT_BROWSERS = ${JSON.stringify(pooled.browsers)};
 
+// The browsers above \`assumeCurrentBrowsers\` minifies for where no browserslist
+// is selected, each at a version past any real one.
+/** @type {string[]} */
+const CURRENT_BROWSERS = ${JSON.stringify(currentBrowsers)};
+
+// The prefixed spellings one of those still parses as a property of its own (the
+// 2009 flexbox's \`-webkit-box-pack\`), which minifying for them therefore keeps.
+const PARSED_LEGACY_SPELLINGS = ${setLiteral(parsedLegacySpellings)};
+
 // The versions themselves, rows of \`SUPPORT_BROWSERS.length\` laid end to end,
 // one row per distinct profile: a construct names the row it reads rather than
 // carrying its own copy of it. \`NEVER\` is a browser that never shipped it.
@@ -8010,7 +8073,7 @@ module.exports.COLOR_KEYWORDS = COLOR_KEYWORDS;\nmodule.exports.getColorNameToRg
 module.exports.COMPOUND_CONTINUATIONS = COMPOUND_CONTINUATIONS;
 module.exports.getCssModulesKeywords = getCssModulesKeywords;
 module.exports.CSS_MODULES_KEYWORD_OPTIONS = CSS_MODULES_KEYWORD_OPTIONS;
-module.exports.CSS_WIDE_KEYWORDS = CSS_WIDE_KEYWORDS;
+module.exports.CSS_WIDE_KEYWORDS = CSS_WIDE_KEYWORDS;\nmodule.exports.CURRENT_BROWSERS = CURRENT_BROWSERS;\nmodule.exports.PARSED_LEGACY_SPELLINGS = PARSED_LEGACY_SPELLINGS;
 module.exports.CUBIC_BEZIER_KEYWORDS = CUBIC_BEZIER_KEYWORDS;\nmodule.exports.CUSTOM_IDENT_LIST_PROPERTIES = CUSTOM_IDENT_LIST_PROPERTIES;\nmodule.exports.DEFAULT_GRADIENT_DIRECTIONS = DEFAULT_GRADIENT_DIRECTIONS;\nmodule.exports.DEFAULT_GRADIENT_POSITIONS = DEFAULT_GRADIENT_POSITIONS;\nmodule.exports.REVERSED_GRADIENT_DIRECTIONS = REVERSED_GRADIENT_DIRECTIONS;
 module.exports.DISPLAY_SHORT_FORMS = DISPLAY_SHORT_FORMS;\nmodule.exports.DROPPABLE_WHEN_EMPTY_AT_RULES = DROPPABLE_WHEN_EMPTY_AT_RULES;
 module.exports.EASING_KEYWORDS = EASING_KEYWORDS;

@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases css minimize-assume-current-browsers minimize-assume-current-browsers should compile 1`] = `
+Array [
+  "/*! Minified for the current release of each engine, as no target is named */",
+  "/*! a prefix only discontinued engines needed goes */.t01{display:flex;align-items:center}",
+  "/*! the 2009 flexbox stays: every current engine still reads it on its own */.t02{display:flex;-webkit-box-pack:center;justify-content:center}",
+  "/*! a prefix every current engine reads the standard name in place of goes */.t03{backdrop-filter:blur(4px)}",
+  "/*! a prefix a current engine still needs stays */.t04{-webkit-user-select:none;user-select:none}",
+  "/*! nothing is added: a copy one engine reads changes what it computes */.t05{line-clamp:2}",
+  "/*! a fallback every current engine reads past goes */.t06{width:max-content}",
+]
+`;

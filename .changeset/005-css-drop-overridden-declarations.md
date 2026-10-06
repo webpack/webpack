@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Add `optimization.minimize.css.dropOverriddenDeclarations`, dropping a declaration a later one overrides where no target is named.
+Add `optimization.minimize.css` `dropOverriddenDeclarations` and `assumeCurrentBrowsers` for builds naming no target.

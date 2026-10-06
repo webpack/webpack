@@ -1,0 +1,22 @@
+"use strict";
+
+/** @type {import("../../../../").Configuration} */
+module.exports = {
+	// `web` names no browsers, so what the output is minified for is the option's.
+	target: "web",
+	mode: "production",
+	output: {
+		pathinfo: false
+	},
+	optimization: {
+		minimize: {
+			css: { extractComments: false, assumeCurrentBrowsers: true }
+		},
+		// `"..."` keeps the default minimizer, which is what reads
+		// `optimization.minimize.css` and hands it to `cssMinify`.
+		minimizer: ["..."]
+	},
+	experiments: {
+		css: true
+	}
+};

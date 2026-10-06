@@ -14378,3 +14378,66 @@ describe("CssSyntax — recurseBlocks", () => {
 		);
 	});
 });
+
+describe("CssSyntax minify — assumeCurrentBrowsers", () => {
+	const legacy =
+		".a{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;-webkit-box-pack:center;justify-content:center;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);-webkit-user-select:none;user-select:none;width:-moz-max-content;width:max-content}";
+	const current =
+		".a{display:flex;align-items:center;-webkit-box-pack:center;justify-content:center;backdrop-filter:blur(4px);-webkit-user-select:none;user-select:none;width:max-content}";
+	/**
+	 * @param {string} css source text
+	 * @param {import("../../lib/css/syntax-parser").CssProcessOptions} options print options beside `mode`
+	 * @returns {string} its minified serialization
+	 */
+	const minify = (css, options) =>
+		new SourceProcessor().process(css, { mode: "minify", ...options }).code;
+
+	it("leaves every prefix and fallback as written when off", () => {
+		expect(minify(legacy, {})).toBe(legacy);
+	});
+
+	it.each([
+		["no environment", {}],
+		["an environment naming no browsers", { environment: {} }],
+		["an empty selection", { environment: { browsers: [] } }]
+	])("minifies for current engines given %s", (_name, options) => {
+		expect(minify(legacy, { assumeCurrentBrowsers: true, ...options })).toBe(
+			current
+		);
+	});
+
+	it("writes no prefix a current engine would read on its own", () => {
+		const css =
+			".a{user-select:none;line-clamp:2}@keyframes k{to{color:red}}::placeholder{color:red}";
+		expect(minify(css, { assumeCurrentBrowsers: true })).toBe(
+			minify(css, {})
+		);
+	});
+
+	it("is overridden by a selected target", () => {
+		const options = { environment: { browsers: ["safari 15"] } };
+		expect(
+			minify(".a{user-select:none}", { assumeCurrentBrowsers: true, ...options })
+		).toBe(minify(".a{user-select:none}", options));
+	});
+
+	it("leaves prefixes alone where prefixing is turned off", () => {
+		expect(
+			minify(".a{-ms-flex-align:center;align-items:center}", {
+				assumeCurrentBrowsers: true,
+				environment: { vendorPrefixes: false }
+			})
+		).toBe(".a{-ms-flex-align:center;align-items:center}");
+	});
+
+	it("is not read outside a minifying print", () => {
+		const css = ".a{-ms-flex-align:center;align-items:center}";
+		/**
+		 * @param {import("../../lib/css/syntax-parser").CssProcessOptions} options print options beside `mode`
+		 * @returns {string} its formatted serialization
+		 */
+		const format = (options) =>
+			new SourceProcessor().process(css, { mode: "beautify", ...options }).code;
+		expect(format({ assumeCurrentBrowsers: true })).toBe(format({}));
+	});
+});

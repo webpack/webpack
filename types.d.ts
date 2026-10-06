@@ -1515,6 +1515,11 @@ declare interface BuiltinEmbeddedRendererOptions {
 	environment?: CssEnvironment;
 
 	/**
+	 * minify for the current release of every engine still shipped where `environment` selects no browsers: every spelling is decided as for a target naming those engines, except that no prefix is written and one a current engine still parses as a property of its own is kept; off by default, and only read while printing
+	 */
+	assumeCurrentBrowsers?: boolean;
+
+	/**
 	 * rewrite a length into a shorter unit it is exactly equal in (`16px` -> `1pc`); off by default because it earns nothing once the asset is compressed, and only read while printing. A time is always rewritten
 	 */
 	convertLengthUnits?: boolean;
@@ -6553,6 +6558,11 @@ declare interface CssPrintOptions {
 	) => undefined | string;
 
 	/**
+	 * minify for the current release of every engine still shipped where `environment` selects no browsers: every spelling is decided as for a target naming those engines, except that no prefix is written and one a current engine still parses as a property of its own is kept; off by default, and only read while printing
+	 */
+	assumeCurrentBrowsers?: boolean;
+
+	/**
 	 * rewrite a length into a shorter unit it is exactly equal in (`16px` -> `1pc`); off by default because it earns nothing once the asset is compressed, and only read while printing. A time is always rewritten
 	 */
 	convertLengthUnits?: boolean;
@@ -6637,6 +6647,11 @@ declare interface CssProcessOptions {
 	 * what the target can read (the CSS entries of `output.environment`), so a spelling it would not understand is never reached for; only read while printing, and an absent entry means the modern spelling is available
 	 */
 	environment?: CssEnvironment;
+
+	/**
+	 * minify for the current release of every engine still shipped where `environment` selects no browsers: every spelling is decided as for a target naming those engines, except that no prefix is written and one a current engine still parses as a property of its own is kept; off by default, and only read while printing
+	 */
+	assumeCurrentBrowsers?: boolean;
 
 	/**
 	 * rewrite a length into a shorter unit it is exactly equal in (`16px` -> `1pc`); off by default because it earns nothing once the asset is compressed, and only read while printing. A time is always rewritten
@@ -22016,6 +22031,12 @@ declare interface Optimization {
  */
 declare interface OptimizationMinimizeCss {
 	/**
+	 * Minify for the current release of every engine still shipped where no `browserslist` target is selected, keeping what each of them computes: a vendor-prefixed declaration none of them needs is dropped (IE's `-ms-flex-align`, `-webkit-backdrop-filter` now that Safari reads `backdrop-filter`), one a current engine still needs or parses as a property of its own is kept (`-webkit-user-select`, the 2009 flexbox's `-webkit-box-pack`), no prefix is added, and a fallback every one of them reads past is dropped (`width:-moz-max-content` before `width:max-content`). Off by default, because no target otherwise states nothing about the engines and leaves every prefix and fallback as written; lightningcss assumes current engines unconditionally instead. A selected target always wins over this.
+	 * @since 5.112.0
+	 */
+	assumeCurrentBrowsers?: boolean;
+
+	/**
 	 * Write a color the `browserslist` target cannot read as an extra declaration before the one naming it, in a spelling it does read: `color: oklch(59.686% 0.15619 49.7694)` is written as `color: #c65d06` and then the `oklch()` itself, so an engine reading neither the Lab family nor `hwb()` is left with a color rather than with nothing. The fallback is that color clipped into the sRGB gamut and rounded, which the declaration standing after it corrects wherever it is read. Nothing is written where the author already set the property earlier in the same block, where the color holds a substitution or a relative reference this cannot fold, or where the fallback would still name a function the target cannot read. On by default, and only in effect for a `browserslist` target — any other target names no browsers to answer for.
 	 * @since 5.111.0
 	 */
@@ -33673,6 +33694,7 @@ declare namespace exports {
 			minimizerOptions?: {
 				as?: "stylesheet" | "block-contents";
 				environment?: CssEnvironment;
+				assumeCurrentBrowsers?: boolean;
 				convertLengthUnits?: boolean;
 				convertApproximateColors?: boolean;
 				dropOverriddenDeclarations?: boolean;
@@ -34204,6 +34226,7 @@ declare namespace exports {
 			> & {
 				environment?: CssEnvironment;
 				css?: {
+					assumeCurrentBrowsers?: boolean;
 					convertLengthUnits?: boolean;
 					convertApproximateColors?: boolean;
 					dropOverriddenDeclarations?: boolean;

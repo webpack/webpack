@@ -11261,6 +11261,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "optimization-minimize-css-assume-current-browsers": Object {
+    "configs": Array [
+      Object {
+        "description": "Minify for the current release of every engine still shipped where no \`browserslist\` target is selected, keeping what each of them computes: a vendor-prefixed declaration none of them needs is dropped (IE's \`-ms-flex-align\`, \`-webkit-backdrop-filter\` now that Safari reads \`backdrop-filter\`), one a current engine still needs or parses as a property of its own is kept (\`-webkit-user-select\`, the 2009 flexbox's \`-webkit-box-pack\`), no prefix is added, and a fallback every one of them reads past is dropped (\`width:-moz-max-content\` before \`width:max-content\`). Off by default, because no target otherwise states nothing about the engines and leaves every prefix and fallback as written; lightningcss assumes current engines unconditionally instead. A selected target always wins over this.",
+        "multiple": false,
+        "path": "optimization.minimize.css.assumeCurrentBrowsers",
+        "type": "boolean",
+      },
+    ],
+    "description": "Minify for the current release of every engine still shipped where no \`browserslist\` target is selected, keeping what each of them computes: a vendor-prefixed declaration none of them needs is dropped (IE's \`-ms-flex-align\`, \`-webkit-backdrop-filter\` now that Safari reads \`backdrop-filter\`), one a current engine still needs or parses as a property of its own is kept (\`-webkit-user-select\`, the 2009 flexbox's \`-webkit-box-pack\`), no prefix is added, and a fallback every one of them reads past is dropped (\`width:-moz-max-content\` before \`width:max-content\`). Off by default, because no target otherwise states nothing about the engines and leaves every prefix and fallback as written; lightningcss assumes current engines unconditionally instead. A selected target always wins over this.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "optimization-minimize-css-color-fallbacks": Object {
     "configs": Array [
       Object {
@@ -12025,6 +12038,19 @@ Object {
       },
     ],
     "description": "Minimize CSS assets: \`false\` disables it, an object configures what the built-in minimizer may do beyond the transforms that always apply.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-options-css-assume-current-browsers": Object {
+    "configs": Array [
+      Object {
+        "description": "Minify for the current release of every engine still shipped where no \`browserslist\` target is selected, keeping what each of them computes: a vendor-prefixed declaration none of them needs is dropped (IE's \`-ms-flex-align\`, \`-webkit-backdrop-filter\` now that Safari reads \`backdrop-filter\`), one a current engine still needs or parses as a property of its own is kept (\`-webkit-user-select\`, the 2009 flexbox's \`-webkit-box-pack\`), no prefix is added, and a fallback every one of them reads past is dropped (\`width:-moz-max-content\` before \`width:max-content\`). Off by default, because no target otherwise states nothing about the engines and leaves every prefix and fallback as written; lightningcss assumes current engines unconditionally instead. A selected target always wins over this.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.css.assumeCurrentBrowsers",
+        "type": "boolean",
+      },
+    ],
+    "description": "Minify for the current release of every engine still shipped where no \`browserslist\` target is selected, keeping what each of them computes: a vendor-prefixed declaration none of them needs is dropped (IE's \`-ms-flex-align\`, \`-webkit-backdrop-filter\` now that Safari reads \`backdrop-filter\`), one a current engine still needs or parses as a property of its own is kept (\`-webkit-user-select\`, the 2009 flexbox's \`-webkit-box-pack\`), no prefix is added, and a fallback every one of them reads past is dropped (\`width:-moz-max-content\` before \`width:max-content\`). Off by default, because no target otherwise states nothing about the engines and leaves every prefix and fallback as written; lightningcss assumes current engines unconditionally instead. A selected target always wins over this.",
     "multiple": false,
     "simpleType": "boolean",
   },
