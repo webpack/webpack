@@ -5113,8 +5113,10 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(
 				settled("a{color:rgb(67.2549019608%, 66.862745098%, 91.9607843137%)}")
 			).toBe("a{color:rgb(67.2549019608%,66.862745098%,91.9607843137%)}");
-			expect(settled("a{width:66.862745098%}")).toBe(
-				"a{width:66.862745098%}"
+			// Only a channel reads the percentage as a byte: a length still rounds.
+			expect(settled("a{width:66.862745098%}")).toBe("a{width:66.8627%}");
+			expect(settled(".a{flex:0 0 16.66666667%;opacity:16.66666667%}")).toBe(
+				".a{flex:0 0 16.6667%;opacity:.166667}"
 			);
 			// An exact half rounds up in every engine.
 			expect(settled("a{color:rgba(50%,50%,50%,.5)}")).toBe(
