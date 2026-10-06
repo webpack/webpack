@@ -4963,9 +4963,17 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// 2/19em is 2px at 19px, which `.105263em` misses: Chromium floors it to
 			// `1.98438px`, and a border or outline width to `1px`.
 			expect(settled("a{outline-offset:-0.1052631579em}")).toBe(
-				"a{outline-offset:-.105263158em}"
+				"a{outline-offset:-.10526316em}"
 			);
-			expect(settled("a{width:calc(1em/9.5)}")).toBe("a{width:.105263158em}");
+			expect(settled("a{width:calc(1em/9.5)}")).toBe("a{width:.10526316em}");
+			// As many digits as the float at 3px takes, and six where no whole
+			// pixel lands the length on a step.
+			expect(settled("a{width:.3333333333em}")).toBe("a{width:.33333333em}");
+			expect(settled("a{width:.7071067812em}")).toBe("a{width:.707107em}");
+			// `.125em` would land on a step at 8px where the written length does not.
+			expect(settled("a{width:.12499999em}")).toBe("a{width:.12499999em}");
+			// 13/252em at 63px: `.0515873em` is 3.25px only until parsed to a float.
+			expect(settled("a{width:.05158730159em}")).toBe("a{width:.051587302em}");
 			// A pixel, a percentage and a bare number round as before.
 			expect(settled("a{width:1.0526315789px}")).toBe("a{width:1.05263px}");
 			expect(settled("a{width:33.33333333%}")).toBe("a{width:33.3333%}");
@@ -8400,8 +8408,8 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			["calc(100%/3)", "33.3333%"],
 			["calc(1/3*1px)", ".333333px"],
 			["calc((6/10 - .375)*1em)", ".225em"],
-			// ...and nine where the engine scales the length by a font size.
-			["calc((6/14 - .375)*1em)", ".0535714286em"],
+			// ...and up to nine where the engine scales the length by a font size.
+			["calc((6/14 - .375)*1em)", ".05357143em"],
 			// An angle rounds the same way, as lightningcss rounds it.
 			["calc(1turn/3)", ".333333turn"],
 			["calc(90deg/7)", "12.8571deg"],
