@@ -54,3 +54,86 @@ describe("xmlMinify", () => {
 		expect(xmlMinify.filter("page.html")).toBe(false);
 	});
 });
+
+describe("SVG data URLs", () => {
+	const { builtinEmbeddedRenderer, htmlMinify } = webpack.html;
+	const { cssMinify } = webpack.css;
+	const SVG = "<svg xmlns='http://www.w3.org/2000/svg'  >  <rect   width='1' />  </svg>";
+	const MINIFIED = "<svg xmlns='http://www.w3.org/2000/svg'>  <rect width='1'/>  </svg>";
+	const OFFER = { type: "svg", hostType: "css" };
+
+	it("should minify one with the XML minifier, quoting with `'` on a tie", () => {
+		const render = builtinEmbeddedRenderer({ svg: true });
+		expect(render(SVG, OFFER)).toBe(MINIFIED);
+		// A value holding `'` still takes the quote that costs nothing.
+		expect(render(`<svg  a="'" b='x' />`, OFFER)).toBe(`<svg a="'" b='x'/>`);
+	});
+
+	it("should print a tie in `\"` unless asked otherwise", () => {
+		/**
+		 * @param {("\"" | "'")=} xmlQuote the quote a tie takes
+		 * @returns {string} the printed document
+		 */
+		const print = (xmlQuote) =>
+			new webpack.html.syntax.SourceProcessor().process("<a  b='c' />", {
+				xml: true,
+				mode: "minify",
+				xmlQuote
+			}).code;
+		expect(print(undefined)).toBe('<a b="c"/>');
+		expect(print("'")).toBe("<a b='c'/>");
+	});
+
+	it("should decline what it is not asked for, or cannot shorten", () => {
+		const render = builtinEmbeddedRenderer({ svg: true });
+		// An inline `<svg>` is the HTML printer's.
+		expect(render(SVG, { ...OFFER, as: "foreign-element" })).toBeUndefined();
+		expect(render("<svg/>", OFFER)).toBeUndefined();
+		expect(builtinEmbeddedRenderer()(SVG, OFFER)).toBeUndefined();
+	});
+
+	it("should decline one offered while an HTML parse is running", () => {
+		const render = builtinEmbeddedRenderer({ svg: true });
+		/** @type {(string | undefined)[]} */
+		const answers = [];
+		new webpack.html.syntax.SourceProcessor().process("<svg> </svg>", {
+			mode: "minify",
+			renderEmbeddedSource: () => {
+				answers.push(render(SVG, OFFER));
+				return undefined;
+			}
+		});
+		expect(answers).toEqual([undefined]);
+	});
+
+	it("should minify the ones a stylesheet holds, after the caller's renderer", async () => {
+		const css = `a{background:url("data:image/svg+xml,${SVG}")}b{background:url("data:text/css,a { color : red }")}`;
+		const { code } = await cssMinify({ "a.css": css }, undefined, {
+			svg: true
+		});
+		expect(code).toBe(
+			`a{background:url("data:image/svg+xml,${MINIFIED}")}b{background:url("data:text/css,a { color : red }")}`
+		);
+		const answered = await cssMinify({ "a.css": css }, undefined, {
+			svg: true,
+			renderEmbeddedSource: (source, info) =>
+				info.type === "css" ? "a{color:red}" : undefined
+		});
+		expect(answered.code).toBe(
+			`a{background:url("data:image/svg+xml,${MINIFIED}")}b{background:url(data:text/css,a{color:red})}`
+		);
+		const own = await cssMinify({ "a.css": css }, undefined, {
+			svg: true,
+			renderEmbeddedSource: () => "<svg/>"
+		});
+		expect(own.code).toContain("url(data:image/svg+xml,<svg/>)");
+	});
+
+	it("should minify the ones a page holds only when asked", async () => {
+		const html = `<img src="data:image/svg+xml,${SVG}">`;
+		expect(
+			(await htmlMinify({ "a.html": html }, undefined, { svg: true })).code
+		).toBe(`<img src="data:image/svg+xml,${MINIFIED}">`);
+		expect((await htmlMinify({ "a.html": html })).code).toBe(html);
+	});
+});
