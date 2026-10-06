@@ -14503,3 +14503,80 @@ describe("CssSyntax minify — values a browser reads the same when omitted", ()
 		);
 	});
 });
+
+describe("CssSyntax minify — a 2009 flexbox property under its own display", () => {
+	const chrome = ["chrome 120"];
+
+	it.each([
+		[
+			"the line-clamp idiom",
+			".a{display:-webkit-box;-webkit-box-orient:vertical;flex-direction:column;-webkit-line-clamp:2;overflow:hidden}"
+		],
+		[
+			"a packed box",
+			".a{display:-webkit-box;-webkit-box-pack:center;justify-content:center}"
+		],
+		[
+			"an inline box",
+			".a{display:-webkit-inline-box;-webkit-box-align:center;align-items:center}"
+		],
+		[
+			"a flexed child of one",
+			".a{display:-moz-box;-moz-box-flex:1;flex:1}"
+		],
+		[
+			"an important box over a flex one",
+			".a{display:-webkit-box!important;display:flex;-webkit-box-pack:center;justify-content:center}"
+		],
+		[
+			"a box a later display no engine reads cannot replace",
+			".a{display:-webkit-box;display:invalid;-webkit-box-orient:vertical;flex-direction:column}"
+		],
+		[
+			"a box written after a flex one",
+			".a{display:flex;display:-webkit-box;-webkit-box-pack:center;justify-content:center}"
+		]
+	])("keeps the property %s lays out by", (_name, css) => {
+		expect(minifyFor(css, chrome)).toBe(css);
+	});
+
+	it.each([
+		[
+			"a flex box",
+			".a{display:-webkit-box;display:flex;-webkit-box-pack:center;justify-content:center}",
+			".a{display:flex;justify-content:center}"
+		],
+		[
+			"an important flex box over an important box",
+			".a{display:-webkit-box!important;display:flex!important;-webkit-box-pack:center;justify-content:center}",
+			".a{display:flex!important;justify-content:center}"
+		],
+		[
+			"a plain box under an important flex one",
+			".a{display:flex!important;display:-webkit-box;-webkit-box-pack:center;justify-content:center}",
+			".a{display:flex!important;justify-content:center}"
+		],
+		[
+			"an inline flex box",
+			".a{display:-webkit-box;display:inline-flex;-webkit-box-pack:center;justify-content:center}",
+			".a{display:inline-flex;justify-content:center}"
+		],
+		[
+			"an alias written after its twin",
+			".a{position:sticky;position:-webkit-sticky}",
+			".a{position:sticky}"
+		],
+		[
+			"no display at all",
+			".a{-webkit-box-pack:center;justify-content:center}",
+			".a{justify-content:center}"
+		]
+	])("drops it from %s, which the standard one lays out", (_name, css, expected) => {
+		expect(minifyFor(css, chrome)).toBe(expected);
+	});
+
+	it("keeps an important alias its plain twin would leave to other rules", () => {
+		const css = ".a{position:-webkit-sticky!important;position:sticky}";
+		expect(minifyFor(css, chrome)).toBe(css);
+	});
+});

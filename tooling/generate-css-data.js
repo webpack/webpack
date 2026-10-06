@@ -3873,7 +3873,7 @@ const eighthTurnEntries = (values) => {
 // Spec prose no dataset states: an equivalence between two spellings, or a
 // judgement about what a construct still does. Each carries the reason it has to
 // be written out rather than derived.
-/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], fontStretchPercentages: [string, string][], filterFunctionOmitted: [string, string][], positionKeywordPercentages: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], featurelessPseudoClasses: string[], initialValueKeywords: [string, string][], initialKeywordsAnEngineReadsApart: string[], unmergeableSlotKeywords: [string, string][], zeroUnitKeepingProperties: string[], calcRejectingProperties: string[], numberOnlyOutsideCalcProperties: string[], clampedValueRanges: [string, string, number, number][], stepPositionMinimumCounts: [string, number][], autoSecondValueProperties: string[], defaultGradientDirections: string[], defaultGradientPositions: string[], reversedGradientDirections: string[], gradientSideAngles: [string, string][], xAxisTransforms: [string, string][], negativeAcceptingProperties: string[], placeShorthands: string[], svgUserUnitProperties: string[], oneValuePairShorthands: string[], familyShorthands: string[], orderedShorthands: string[], omittableInitialKeywords: string[], pairLonghandOverrides: [string, string[]][], droppableWhenEmptyAtRules: string[], replacedByNameAtRules: string[], classSpellings: [string, string[]][], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[], colorSpacePrimitives: [string, string][], oklabMatrices: number[][], systemUiStack: string[], colorTransfers: [string, string][], predefinedColorSpaces: [string, string, string, string][], colorPrimaries: [string, number[]][], colorWhitePoints: [string, number[]][], enginesDisagreeOnTransfer: string[], calcConstantValues: [string, string][], quarterTurnAngle: [string, number][], eighthTurnSine: (number | null)[], eighthTurnTangent: (number | null)[], mathFunctionFold: [string, string, string, string, string | null, boolean][], mathPrimitives: [string, string][], predefinedCounterStyles: string[], predefinedCounterNames: string[], cssModulesKeywordSupplement: [string, string, number][] }} */
+/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], fontStretchPercentages: [string, string][], filterFunctionOmitted: [string, string][], positionKeywordPercentages: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], featurelessPseudoClasses: string[], initialValueKeywords: [string, string][], initialKeywordsAnEngineReadsApart: string[], unmergeableSlotKeywords: [string, string][], zeroUnitKeepingProperties: string[], calcRejectingProperties: string[], numberOnlyOutsideCalcProperties: string[], clampedValueRanges: [string, string, number, number][], stepPositionMinimumCounts: [string, number][], autoSecondValueProperties: string[], defaultGradientDirections: string[], defaultGradientPositions: string[], reversedGradientDirections: string[], gradientSideAngles: [string, string][], xAxisTransforms: [string, string][], negativeAcceptingProperties: string[], placeShorthands: string[], svgUserUnitProperties: string[], legacyBoxProperties: string[], legacyBoxDisplays: string[], oneValuePairShorthands: string[], familyShorthands: string[], orderedShorthands: string[], omittableInitialKeywords: string[], pairLonghandOverrides: [string, string[]][], droppableWhenEmptyAtRules: string[], replacedByNameAtRules: string[], classSpellings: [string, string[]][], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[], colorSpacePrimitives: [string, string][], oklabMatrices: number[][], systemUiStack: string[], colorTransfers: [string, string][], predefinedColorSpaces: [string, string, string, string][], colorPrimaries: [string, number[]][], colorWhitePoints: [string, number[]][], enginesDisagreeOnTransfer: string[], calcConstantValues: [string, string][], quarterTurnAngle: [string, number][], eighthTurnSine: (number | null)[], eighthTurnTangent: (number | null)[], mathFunctionFold: [string, string, string, string, string | null, boolean][], mathPrimitives: [string, string][], predefinedCounterStyles: string[], predefinedCounterNames: string[], cssModulesKeywordSupplement: [string, string, number][] }} */
 
 const SUPPLEMENT = {
 	// CSS Values 4's list. `mdn-data` has no `css-wide-keyword` production.
@@ -4071,6 +4071,26 @@ const SUPPLEMENT = {
 		"stroke-dasharray",
 		"stroke-dashoffset",
 		"stroke-width"
+	],
+	// The 2009 flexbox draft's properties, which BCD files as properties of their
+	// own that no engine ever spelled without a prefix.
+	legacyBoxProperties: [
+		"box-align",
+		"box-direction",
+		"box-flex",
+		"box-ordinal-group",
+		"box-orient",
+		"box-pack"
+	],
+	// WHY: the displays that lay a box out by that draft, where every engine still
+	// reads those properties and not the ones that replaced them: under
+	// `display:-webkit-box`, `-webkit-line-clamp` reads `-webkit-box-orient`, and
+	// `flex-direction` is read by nothing.
+	legacyBoxDisplays: [
+		"-webkit-box",
+		"-webkit-inline-box",
+		"-moz-box",
+		"-moz-inline-box"
 	],
 	// WHY: Pair shorthands whose *two-value* form is the newer one, so the merge is
 	// safe only where it collapses to a single value: `overflow: hidden` is CSS
@@ -6698,15 +6718,11 @@ const PROPERTY_SPELLING_EXCLUSIONS = new Map([
 	// fork that WebView ran carries the `-webkit-border-image` shorthand and no
 	// longhand of it, and no other engine's property list has ever had this name.
 	["border-image-slice", ["-webkit-border-image-slice"]],
-	// WHY: The 2009 flexbox draft's names, which BCD files as properties of their own
-	// that no engine ever spelled without a prefix. `PREFIX_SUPPLEMENT` states each
-	// as the legacy spelling of the property that replaced it.
-	["box-align", ["-webkit-", "-moz-"]],
-	["box-direction", ["-webkit-", "-moz-"]],
-	["box-flex", ["-webkit-", "-moz-"]],
-	["box-ordinal-group", ["-webkit-", "-moz-"]],
-	["box-orient", ["-webkit-", "-moz-"]],
-	["box-pack", ["-webkit-", "-moz-"]]
+	// The 2009 flexbox draft's names: `PREFIX_SUPPLEMENT` states each as the
+	// legacy spelling of the property that replaced it instead.
+	...SUPPLEMENT.legacyBoxProperties.map(
+		(name) => /** @type {[string, string[]]} */ ([name, ["-webkit-", "-moz-"]])
+	)
 ]);
 
 // A vendor spelling BCD files under a keyword it does not spell, by keyword —
@@ -7156,6 +7172,12 @@ const collectData = async () => {
 	// Built before the template so the window pool below is complete when it is
 	// written; the order fixes the indices the tables name.
 	const prefixedPropertiesText = prefixLiteral(prefixedProperties);
+	const legacyBoxSpellings = prefixedProperties
+		.flatMap(([, spellings]) => spellings.map(([spelling]) => spelling))
+		.filter((spelling) =>
+			SUPPLEMENT.legacyBoxProperties.includes(spelling.replace(/^-[a-z]+-/, ""))
+		)
+		.sort();
 	const prefixedSelectorsText = prefixLiteral(prefixedSelectors);
 	const prefixedAtRulesText = prefixLiteral(prefixedAtRules);
 	const prefixedValuesText = prefixedValueLiteral(prefixedValues);
@@ -7244,7 +7266,14 @@ const ONE_VALUE_PAIR_SHORTHANDS = ${setLiteral(oneValuePairShorthands)};
 const PLACE_SHORTHANDS = ${setLiteral(SUPPLEMENT.placeShorthands)};
 
 // The stroke lengths a bare number writes in px, the unit it is read in.
-const SVG_USER_UNIT_PROPERTIES = ${setLiteral(SUPPLEMENT.svgUserUnitProperties)};
+const SVG_USER_UNIT_PROPERTIES = ${setLiteral(
+		SUPPLEMENT.svgUserUnitProperties
+	)};
+
+// The displays that lay a box out by the 2009 flexbox draft, and that draft's
+// prefixed properties, which such a box reads in place of their replacements.
+const LEGACY_BOX_DISPLAYS = ${setLiteral(SUPPLEMENT.legacyBoxDisplays)};
+const LEGACY_BOX_SPELLINGS = ${setLiteral(legacyBoxSpellings)};
 
 // The keywords a shorthand's longhands disagree on, so a merge writing one into
 // every slot would turn a declaration the engine kept into a shorthand it drops:
@@ -7466,7 +7495,9 @@ const REVERSED_GRADIENT_DIRECTIONS = ${setLiteral(
 
 // A linear gradient's side keyword -> the shorter angle naming the same flow.
 /** @type {Map<string, string>} */
-const GRADIENT_SIDE_ANGLES = new Map(${JSON.stringify(SUPPLEMENT.gradientSideAngles)});
+const GRADIENT_SIDE_ANGLES = new Map(${JSON.stringify(
+		SUPPLEMENT.gradientSideAngles
+	)});
 
 // A name CSS matches ASCII case-insensitively but spells with a capital ->
 // that spelling, so lowercasing a name normalizes its case without printing
@@ -8034,7 +8065,7 @@ module.exports.FAMILY_SLOT_INITIALS = FAMILY_SLOT_INITIALS;\nmodule.exports.FAMI
 module.exports.FILTER_FUNCTION_OMITTED = FILTER_FUNCTION_OMITTED;\nmodule.exports.FLEX_KEYWORDS = FLEX_KEYWORDS;\nmodule.exports.FONT_SIZE_KEYWORDS = FONT_SIZE_KEYWORDS;\nmodule.exports.FONT_STRETCH_PERCENTAGES = FONT_STRETCH_PERCENTAGES;
 module.exports.FONT_WEIGHT_NUMBERS = FONT_WEIGHT_NUMBERS;
 module.exports.GENERIC_FONT_FAMILIES = GENERIC_FONT_FAMILIES;\nmodule.exports.GRADIENT_LAST_POSITIONS = GRADIENT_LAST_POSITIONS;\nmodule.exports.GRADIENT_SIDE_ANGLES = GRADIENT_SIDE_ANGLES;\nmodule.exports.getInitialValueKeywords = getInitialValueKeywords;\nmodule.exports.INTEGER_PROPERTIES = INTEGER_PROPERTIES;\nmodule.exports.getKeywordOnlyProperties = getKeywordOnlyProperties;\nmodule.exports.LATER_COLOR_NAMES = LATER_COLOR_NAMES;
-module.exports.LAYER_INITIALS = LAYER_INITIALS;\nmodule.exports.LEGACY_PSEUDO_ELEMENTS = LEGACY_PSEUDO_ELEMENTS;
+module.exports.LAYER_INITIALS = LAYER_INITIALS;\nmodule.exports.LEGACY_BOX_DISPLAYS = LEGACY_BOX_DISPLAYS;\nmodule.exports.LEGACY_BOX_SPELLINGS = LEGACY_BOX_SPELLINGS;\nmodule.exports.LEGACY_PSEUDO_ELEMENTS = LEGACY_PSEUDO_ELEMENTS;
 module.exports.LENGTH_ONLY_FUNCTIONS = LENGTH_ONLY_FUNCTIONS;
 module.exports.LINEAR_GRADIENTS = LINEAR_GRADIENTS;\nmodule.exports.LINEAR_SRGB_TO_P3 = LINEAR_SRGB_TO_P3;
 module.exports.MATH_FUNCTIONS = MATH_FUNCTIONS;
