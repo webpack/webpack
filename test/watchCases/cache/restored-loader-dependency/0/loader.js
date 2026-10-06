@@ -2,7 +2,7 @@ const fs = require("fs");
 const path = require("path");
 
 // The module source never changes, only the file declared with addDependency.
-/** @type {import("../../../../").LoaderDefinition} */
+/** @type {import("../../../../../").LoaderDefinition} */
 module.exports = function trackedLoader() {
 	const tracked = path.resolve(__dirname, "tracked.txt");
 	this.addDependency(tracked);

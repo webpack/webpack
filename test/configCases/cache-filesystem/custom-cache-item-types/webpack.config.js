@@ -110,7 +110,8 @@ module.exports = {
 							"cache-result.json",
 							new compiler.webpack.sources.RawSource(
 								JSON.stringify({
-									filesystem: Boolean(cache) && cache.type === "filesystem",
+									filesystem:
+										typeof cache === "object" && cache.type === "filesystem",
 									restored: Boolean(restored)
 								})
 							)
