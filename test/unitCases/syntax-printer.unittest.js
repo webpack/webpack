@@ -2479,6 +2479,42 @@ describe("syntax-printer", () => {
 			"function f(a) { if (a) { x(); return; y(); } z(); } sink(f);",
 			{ dead_code: false }
 		]
+,
+		[
+			"a variable copying another replaced at every read",
+			"function f(x) { var a = x; return a + a; } function g(x) { var a = x; a = 2; return a; } function h(x, y) { var a = x; if (y) return a; return a + 1; } sink(f, g, h);",
+			{ defaults: false, collapse_vars: true }
+		],
+		[
+			"a variable copying another replaced at every read, under the defaults",
+			"function f(x) { var a = x; return a + a; } function g(x) { var a = x; a = 2; return a; } function h(x, y) { var a = x; if (y) return a; return a + 1; } sink(f, g, h);",
+			{}
+		],
+		[
+			"a collapse scan into a switch",
+			"function f(x) { var a = g(); switch (x) { case a: return 1; case 2: return a; } } function h() { var a = g(); switch (a) { case 1: return 2; } } function k(x) { var a = g(); switch (x) { default: return 0; case a: return 1; } } sink(f, h, k);",
+			{}
+		],
+		[
+			"a collapse into an immediately invoked function's rest parameter and 'this' argument",
+			"function f() { return (function (a) { return a; })(this.x); } sink(f, (function (a, ...rest) { return a + rest.length; })(1, 2, 3), (function (a) { return a; })(undefined), (function (a, b) { return a + b; })(1, 2, 3));",
+			{}
+		],
+		[
+			"a collapse stopping in a conditional branch",
+			"function f(x) { var a = g(); return x ? a : 1; } function h(x) { var a = g(); if (x) return a; return 0; } function k(x) { var a = g(); return x && a; } sink(f, h, k);",
+			{}
+		],
+		[
+			"a collapse of an assignment read once, in each place it may stop",
+			"function f(x, y) { var a; if ((a = x) && y) return a; return 0; } function g(x) { var a; return (a = x) ? a : 0; } function h(x) { var a; switch (a = x) { case 1: return a; } } function k(x) { var a; for (a = x; a < 10; a++) q(a); } function m(x) { var a; q(a = x, a); } function n(x) { var a; return [a = x, a]; } function p(x) { var a; var b = (a = x, a); return b; } function r(x) { var a; return a = x; } function s(x) { var a; (a = x), q(a); } sink(f, g, h, k, m, n, p, r, s);",
+			{}
+		],
+		[
+			"a collapse of an assignment read once, in each place it may stop, alone",
+			"function f(x, y) { var a; if ((a = x) && y) return a; return 0; } function g(x) { var a; return (a = x) ? a : 0; } function h(x) { var a; switch (a = x) { case 1: return a; } } function k(x) { var a; for (a = x; a < 10; a++) q(a); } function m(x) { var a; q(a = x, a); } function n(x) { var a; return [a = x, a]; } function p(x) { var a; var b = (a = x, a); return b; } function r(x) { var a; return a = x; } function s(x) { var a; (a = x), q(a); } sink(f, g, h, k, m, n, p, r, s);",
+			{ defaults: false, collapse_vars: true }
+		]
 	];
 
 	for (const [name, source, options] of COMPRESS_CASES) {
