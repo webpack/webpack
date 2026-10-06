@@ -2296,6 +2296,16 @@ describe("syntax-printer", () => {
 			"an assignment in a dropped sequence head collapsed",
 			"function f(g) { var a, x; x = (a = g(), 1); return a + x; } sink(f);",
 			{ defaults: false, collapse_vars: true }
+		],
+		[
+			"a collapse scan reaching a for loop's test",
+			"function f() { let a = x(); for (; a < 10; ) z(); } sink(f);",
+			{}
+		],
+		[
+			"a collapse scan in a try stopping after an expression with effects",
+			"function f(b) { try { var a = b.c; x() + q(a); } catch (e) {} } sink(f);",
+			{}
 		]
 	];
 
