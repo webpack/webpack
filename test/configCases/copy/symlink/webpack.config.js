@@ -73,6 +73,21 @@ module.exports = (env, { testPath }) => {
 					from: source,
 					globOptions: { followSymlinks: false },
 					to: "no-follow"
+				},
+				// `stat` reports a file link as a plain file, so nothing but `lstat`
+				// says a `from` naming it names a link
+				{
+					from: path.join(source, "relative.txt"),
+					globOptions: { followSymlinks: false },
+					to: "named-link"
+				},
+				{ from: path.join(source, "relative.txt"), to: "named-followed" },
+				{
+					// `ignore` is resolved from the context, which the tree is outside of
+					context: source,
+					from: source,
+					globOptions: { followSymlinks: false, ignore: ["**/relative.txt"] },
+					to: "ignored-link"
 				}
 			]
 		},

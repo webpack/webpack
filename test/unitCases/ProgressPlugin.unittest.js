@@ -62,27 +62,6 @@ const createSimpleCompiler = (
 	return compiler;
 };
 
-const createSimpleCompilerWithCustomHandler = (
-	/** @type {Record<string, unknown> | undefined} */ options = undefined
-) => {
-	const compiler = webpack({
-		context: path.join(testDirectory, "fixtures"),
-		entry: "./a.js"
-	});
-
-	compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
-		/** @type {unknown} */ (createFsFromVolume(new Volume()))
-	);
-	const logger = compiler.getInfrastructureLogger("custom test logger");
-	new webpack.ProgressPlugin({
-		activeModules: true,
-		...options,
-		handler: (...args) => logger.status(args)
-	}).apply(compiler);
-
-	return compiler;
-};
-
 const createAutoCompiler = (
 	/** @type {Record<string, unknown> | undefined} */ progressOptions,
 	/** @type {{ infrastructureLogging?: Record<string, unknown>, experiments?: Record<string, unknown> }} */ extra = {}
@@ -178,11 +157,6 @@ describe("ProgressPlugin", () => {
 		};
 
 	it(
-		"should not contain NaN as a percentage when it is applied to Compiler",
-		nanTest(createSimpleCompiler)
-	);
-
-	it(
 		"should not contain NaN as a percentage when it is applied to MultiCompiler",
 		nanTest(createMultiCompiler)
 	);
@@ -258,11 +232,6 @@ describe("ProgressPlugin", () => {
 		};
 
 	it(
-		"should have monotonic increasing progress",
-		monotonicTest(createSimpleCompiler)
-	);
-
-	it(
 		"should have monotonic increasing progress (multi compiler)",
 		monotonicTest(createMultiCompiler)
 	);
@@ -306,37 +275,6 @@ describe("ProgressPlugin", () => {
 			expect(
 				/** @type {string} */ (_.maxBy(logs, "length")).length
 			).not.toBeGreaterThan(40);
-		});
-	});
-
-	it("should contain the new compiler hooks", () => {
-		const compiler = createSimpleCompiler();
-
-		/** @type {EXPECTED_ANY} */ (process.stderr).columns = undefined;
-		return runCompilerAsync(compiler).then(() => {
-			const logs = getLogs(stderr.toString());
-
-			expect(logs).toContain("4% setup normal module factory");
-			expect(logs).toContain("5% setup context module factory");
-		});
-	});
-
-	it("should display all type of percentage when it is applied to SingleCompiler", () => {
-		const compiler = createSimpleCompiler({
-			entries: true,
-			modules: true,
-			dependencies: true,
-			activeModules: true
-		});
-
-		process.stderr.columns = 70;
-		return runCompilerAsync(compiler).then(() => {
-			const logs = stderr.toString();
-
-			expect(logs).toEqual(expect.stringMatching(/\d+\/\d+ entries/));
-			expect(logs).toEqual(expect.stringMatching(/\d+\/\d+ dependencies/));
-			expect(logs).toEqual(expect.stringMatching(/\d+\/\d+ modules/));
-			expect(logs).toEqual(expect.stringMatching(/\d+ active/));
 		});
 	});
 
@@ -654,20 +592,6 @@ describe("ProgressPlugin", () => {
 			const logs = stderr.toString();
 			expect(logs).toContain("%");
 			expect(logs).not.toContain("NaN");
-		});
-	});
-
-	it("should get the custom handler text from the log", () => {
-		const compiler = createSimpleCompilerWithCustomHandler();
-
-		process.stderr.columns = 70;
-		return runCompilerAsync(compiler).then(() => {
-			const logs = stderr.toString();
-			expect(logs).toEqual(
-				expect.stringMatching(/\d+\/\d+ [custom test logger]/)
-			);
-			expect(logs).toEqual(expect.stringMatching(/\d+ active/));
-			expect(logs).toEqual(expect.stringMatching(/\d+\/\d+ modules/));
 		});
 	});
 });

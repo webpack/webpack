@@ -1,16 +1,21 @@
 "use strict";
 
-// elements of the `#configs` context module, whose `request` is relative to the
-// resolved directory while `originalRequest` is what the user wrote
-const CONTEXT_ELEMENTS = new Set(["./a.js", "./b.js", "./c.js", "./d.js"]);
+// elements of the `#configs` and `./configs?query#hash` context modules, whose
+// `request` is relative to the resolved directory while `originalRequest` is
+// what the user wrote
+const CONTEXT_ELEMENT = /^\.\/(?:[a-d]|q|nested\/f)\.js(\?query#hash)?$/;
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	externalsType: "commonjs",
 	externals: [
 		({ request, originalRequest }, callback) => {
-			if (CONTEXT_ELEMENTS.has(request)) {
-				const expected = `#configs/${request.slice(2)}`;
+			const element = CONTEXT_ELEMENT.exec(request);
+			if (element) {
+				// the query and fragment the context carries are not repeated
+				const expected = `${
+					element[1] ? "./configs" : "#configs"
+				}/${request.slice(2)}`;
 				if (originalRequest !== expected) {
 					return callback(
 						new Error(
