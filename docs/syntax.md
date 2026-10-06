@@ -15,56 +15,55 @@ Read this before touching the CSS, HTML or JavaScript parser, printer or minifie
 
 ## The node path
 
-Every visitor and node printer receives one argument, the language's `path`: `webpack.css.syntax`, `webpack.html.syntax` and, later, `webpack.javascript.syntax` hand over an object with the same members under the same names. `NodePath<TNode>` in `lib/util/SourceProcessor.js` is that contract, and `SourceProcessor` takes only a path satisfying it, so a missing or misnamed member fails `lint:types`.
+Every visitor and node printer receives one argument, the language's `path`: `webpack.css.syntax`, `webpack.html.syntax` and, later, `webpack.javascript.syntax` hand over an object with the same members under the same names, named after ESTree where ESTree has the concept. `NodePath<TNode>` in `lib/util/SourceProcessor.js` is that contract, and `SourceProcessor` takes only a path satisfying it, so a missing or misnamed member fails `lint:types`.
 
 ```js
-const empty = [];
+const links = [];
 new SourceProcessor()
-	.use({
-		[NodeType.Element]: (path) => {
-			if (path.childCount() === 0) empty.push(path.loc().start);
-		}
+	.use([NodeType.Element], (path) => {
+		const href = path.findAttribute("href");
+		if (href !== 0) links.push([path.value(href), path.loc(href).start]);
 	})
 	.process(source);
 ```
 
-| Member                          | Returns                                                       |
-| ------------------------------- | ------------------------------------------------------------- |
-| `node`, `parent`, `index`       | the current node, its parent (`null` at a root), its position |
-| `skipChildren()`                | stops the walk descending (enter only)                        |
-| `stop()`                        | ends the walk: no visitor fires after the current one returns |
-| `type(n)`                       | the language's `NodeType`                                     |
-| `start(n)`, `end(n)`            | offsets into the parsed input                                 |
-| `range(n)`, `loc(n)`            | `[start, end]`; `{ start, end }` as `{ line, column }`        |
-| `source(n)`                     | the node as written                                           |
-| `sourceSlice(start, end)`       | the input between two offsets                                 |
-| `childCount(n)`, `childAt(i,n)` | children without allocating a list                            |
-| `children(n)`                   | the children as a new array                                   |
+| Member                         | Returns                                                       | CSS                                             | HTML                                    | ESTree (JS, to come)            |
+| ------------------------------ | ------------------------------------------------------------- | ----------------------------------------------- | --------------------------------------- | ------------------------------- |
+| `node`, `parent`, `index`      | the current node, its parent (`null` at a root), its position | ✓                                               | ✓                                       | Babel `node`, `parent`, `key`   |
+| `skipChildren()`, `stop()`     | don't descend into this node; end the walk                    | ✓                                               | ✓                                       | estraverse `skip`, Babel `stop` |
+| `type(n)`                      | the language's `NodeType` member                              | CSS Syntax names                                | DOM names, plus `Attribute`             | `type`                          |
+| `start(n)`, `end(n)`           | offsets into the parsed input                                 | ✓                                               | ✓ (an attribute's past its quote)       | `start`, `end`                  |
+| `loc(n)`                       | `{ start, end }` as `{ line, column }`                        | ✓                                               | ✓                                       | `loc`                           |
+| `source(n)`, `source(s, e)`    | the node as written; the input between two offsets            | ✓                                               | ✓                                       | Babel `getSource()`             |
+| `name(n)`                      | its name, decoded; `""` without one                           | at-rule, declaration, function                  | element, attribute, doctype, PI target  | `Identifier.name`               |
+| `value(n)`                     | its value, decoded; `""` without one                          | token value (escapes resolved)                  | text, comment, PI data, attribute value | `Literal.value`                 |
+| `childCount(n)`, `child(i, n)` | its children, one by one, `0` past the end                    | a function's or block's value, a rule's prelude | child nodes                             | children in visitor-key order   |
+
+Language-specific members follow the same shape — a read is `field(n)`, a list `fieldCount(n)` with `field(i, n)`, offsets `fieldStart(n)` / `fieldEnd(n)` — and use the spec's word for the field:
+
+- **Both**: `nameStart`/`nameEnd` (where the name is written, `-1` without one), `valueStart`/`valueEnd` (a `url()`'s contents, an attribute's value).
+- **CSS**: `typeFlag`, `important`, `inValue`, `declarations`/`childRules` and `blockStart`/`blockEnd` (a rule's block), `blockToken` (a simple block's bracket).
+- **HTML**: `namespace`, `selfClosing`, `contentStart`/`contentEnd`, `openTag`/`closeTag`, `sourceClosed`, `templateContent`, `publicId`/`systemId`, and `attributeCount`/`attribute(i, n)`/`findAttribute(name, n)`, whose results are nodes the shared members read.
 
 `skipChildren()` still fires the node's `exit`, as estraverse's `skip` does, since the printer prints a node there; Babel's `skip()` also drops the `exit`, which is why ours isn't named `skip`. After `stop()` neither the current node's remaining visitors nor any pending `exit` fire, as in Babel. A print still writes the whole output, and a walk-only parse ends there: CSS once the top-level rule it was called in closes, HTML at once (HTML visits nothing before about 49k nodes have parsed, so stopping early in a big document still pays for that much parsing).
 
-One visitor serves several node types through an array, resolved once in `use()` so the walk sees the same per-type slots:
-
-```js
-processor.use([NodeType.Text, NodeType.Comment], (path) => {
-	ranges.push(path.range());
-});
-```
+One visitor serves several node types through an array, resolved once in `use()` so the walk sees the same per-type slots: `processor.use([NodeType.Text, NodeType.Comment], visitor)`.
 
 Conventions every language keeps, and a new member follows:
 
-- **A node is an integer id**, valid until the next parse. The path is one object rebound before each callback; read it during the callback, never keep it.
-- **The node is the last argument and optional**, defaulting to the current one: `path.end()`, `path.end(other)`, `path.childAt(0)`.
-- **Nothing is stored for a read.** A member reads the columns the parser already fills or derives its answer when called: HTML counts `index` along the sibling links and makes `loc`'s converter on its first call in a parse. The walk writes no more than its position, so a read nobody makes costs nothing. A derived read says so in its JSDoc, with the cheaper way to get the same answer, such as `firstChild` / `nextSibling` rather than looping over `childAt` in HTML.
-- **The path only reads.** Writers stay internal to the parser (`_setNodeEnd` in CSS).
-- **One concept, one name.** Language-specific members use the shared vocabulary: `name`, `nameStart` and `nameEnd` for what a node is called (a tag, at-rule, function or declaration), and `contentStart` / `contentEnd` for its payload (an element's body, a `url()`'s contents). Anything else is the language's own (`attributeAt` in HTML, `declarations` in CSS).
+- **A node is an integer id**, valid until the next parse; `0` is no node, and an HTML attribute's id is negative. The path is one object rebound before each callback; read it during the callback, never keep it.
+- **The node is the last argument and optional**, defaulting to the current one: `path.end()`, `path.end(other)`, `path.child(0)`.
+- **`name` and `value` are what the language's spec defines**, decoded as ESTree's `Identifier.name` and `Literal.value` are; the spelling as written is `source(nameStart, nameEnd)`. A node without one answers `""`, an offset it lacks `-1`.
+- **Walk children one way everywhere**: `for (let i = 0, c = path.child(0); c !== 0; c = path.child(++i))`. HTML keeps where the last `child` read stopped per parent, so this takes one step per child even with nested loops.
+- **Nothing is stored for a read.** A member reads the columns the parser already fills or derives its answer when called: HTML counts `index` along the sibling links and makes `loc`'s converter on its first call in a parse. The walk writes no more than its position, so a read nobody makes costs nothing.
+- **The path only reads.** Writers stay internal to the parser (`_setNodeEnd` in CSS), and so do the raw readers the printers use (`_rawName`, `_attributeList`, …).
 
 ### Compared with Babel's `NodePath`
 
 Babel's path is the reference for the vocabulary; what ours lacks, and why:
 
-- **Ancestry** (`parentPath`, `findParent`, `getAncestry`): HTML keeps a parent column (`parentOf`); CSS stores no parents and would pay a stack push and pop per node.
-- **Siblings and container** (`getPrevSibling`, `getNextSibling`, `key`, `listKey`): HTML links next siblings only, and a CSS rule has two lists (prelude and block), so `index` alone does not name the list.
+- **Ancestry** (`parentPath`, `findParent`, `getAncestry`): HTML keeps a parent column; CSS stores no parents and would pay a stack push and pop per node.
+- **Siblings and container** (`getPrevSibling`, `getNextSibling`, `key`, `listKey`): the next sibling is `child(index + 1, parent)`; a CSS rule has two lists (prelude and block), so `index` alone does not name the list, and a streamed block is never held to be counted.
 - **Visitor `state`** (Babel's second argument): visitors capture their state in closures.
 - **Mutation** (`replaceWith`, `remove`, `insertBefore`, `insertAfter`): changes go through the printer and parser-internal writers; a transform API should be designed once for every language.
 - **Persistent paths**: Babel allocates a path per node, which may be kept. Ours is one rebound object over integer ids, which is what keeps the walk allocation-free, and it stays that way.
