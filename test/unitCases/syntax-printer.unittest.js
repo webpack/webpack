@@ -1171,6 +1171,81 @@ const CORRECTED_CASES = [
 		"an arrow returning a value, passed a spread reaching its pattern default",
 		"function g() { var a = 0; var args = [0, { get y() { a++; } }]; var f = (x, { y } = {}) => 1; console.log(f(...args), a); } g();",
 		{ compress: {}, mangle: false }
+	],
+	[
+		"an `instanceof` nobody reads, its right side no constructor",
+		"for (const f of [() => 1 instanceof 1, () => true instanceof true, () => { var G = function () {}; G.prototype = undefined; ({}) instanceof G; }]) { try { f(); console.log('no'); } catch (e) { console.log(e.name); } }",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an `instanceof` nobody reads, reaching `Symbol.hasInstance`",
+		"var n = 0, F = {}, G = {}, H = {}; F[Symbol.hasInstance] = function () { n++; }; Object.defineProperty(G, Symbol.hasInstance, { get() { n++; } }); H[Symbol.hasInstance] = {}; 0 instanceof F; try { 0 instanceof G; } catch (e) {} try { 0 instanceof H; } catch (e) { console.log(e.name); } console.log(n);",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an `instanceof` nobody reads under `!`, `void`, `typeof` and `&&`",
+		"var n = 0, F = {}; F[Symbol.hasInstance] = function () { n++; return true; }; var t = 1; !(0 instanceof F); void (0 instanceof F); typeof (0 instanceof F); t && 0 instanceof F; console.log(n);",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an `instanceof` as an empty `if`'s test, a conditional's with one value and a sequence's first",
+		"var n = 0, F = {}; F[Symbol.hasInstance] = function () { n++; return true; }; if (0 instanceof F) {} var r = 0 instanceof F ? 1 : 1; console.log((0 instanceof F, r), n);",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an `instanceof` nobody reads in an arrow's body",
+		"var n = 0, F = {}; F[Symbol.hasInstance] = function () { n++; return true; }; var g = () => { 0 instanceof F; }; g(); console.log(n);",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an `in` nobody reads, its right side no object",
+		"try { 'a' in 1; console.log('no'); } catch (e) { console.log(e.name); }",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an `in` nobody reads, reaching a proxy's `has`",
+		"var n = 0, p = new Proxy({}, { has() { n++; return true; } }); 'a' in p; console.log(n);",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an empty function's parameter default an `instanceof` reaching `Symbol.hasInstance`",
+		"function g() { var n = 0, F = {}; F[Symbol.hasInstance] = function () { n++; return true; }; (function (a = 0 instanceof F) {})(); console.log(n); } g();",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an `instanceof` nobody reads, a proxy in its left side's prototypes",
+		"var n = 0, P = new Proxy({}, { getPrototypeOf() { n++; return null; } }), Q = new Proxy(function () {}, { getPrototypeOf() { n++; return null; } }); ({ __proto__: P }) instanceof Object; (class extends Q {}) instanceof Object; P instanceof Object; console.log(n);",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an `instanceof` nobody reads, its built-in name shadowed by a parameter",
+		"function f(Object) { [] instanceof Object; } f({ [Symbol.hasInstance]() { console.log('a'); } }); f({ [Symbol.hasInstance]() { console.log('b'); } });",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an `instanceof` nobody reads, its built-in name rebound by a direct `eval`",
+		"function g() { eval('var Array = { [Symbol.hasInstance]() { console.log(\"eval\"); } }'); [] instanceof Array; } g();",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an `instanceof` nobody reads, its built-in name rebound by `with`",
+		"with ({ Map: { [Symbol.hasInstance]() { console.log('with'); } } }) { [] instanceof Map; }",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an `instanceof` nobody reads, of a built-in name the program assigns",
+		"Object = { [Symbol.hasInstance]() { console.log('hit'); } }; [] instanceof Object; console.log(1);",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an `instanceof` nobody reads, of a built-in name assigned, without `reduce_vars` to count it",
+		"Object = { [Symbol.hasInstance]() { console.log('hit'); } }; [] instanceof Object; console.log(1);",
+		{ compress: { reduce_vars: false }, mangle: false }
+	],
+	[
+		"an `instanceof` nobody reads, of a built-in name a function assigns",
+		"function f() { Object = { [Symbol.hasInstance]() { console.log('hit'); } }; } f(); [] instanceof Object; console.log(1);",
+		{ compress: {}, mangle: false }
 	]
 ];
 
@@ -4612,6 +4687,43 @@ describe("syntax-printer", () => {
 				}
 			});
 		}
+	});
+
+	describe("a relation whose value is read", () => {
+		it("should leave an `instanceof` of a built-in on a literal as terser does", async () => {
+			const { minify, corrections } = await load();
+			if (!corrections) throw new Error("the correct phase is not installed");
+			const input =
+				"[] instanceof Object; ({}) instanceof Object; 1 instanceof Number; (() => 1) instanceof Function; (class {}) instanceof Object; /a/ instanceof RegExp; console.log(1);";
+			const options = { compress: {}, mangle: false };
+			const { code } = await minify(input, options);
+			corrections.enabled = false;
+			try {
+				expect((await minify(input, options)).code).toBe(code);
+			} finally {
+				corrections.enabled = true;
+			}
+			expect(code).toBe("console.log(1);");
+		});
+
+		it("should keep an `instanceof` of `Proxy`, which has no prototype", async () => {
+			const { minify } = await load();
+			const input =
+				"try { [] instanceof Proxy; console.log('no'); } catch (e) { console.log(e.name); }";
+			const { code } = await minify(input, { compress: {}, mangle: false });
+			expect(code).toContain("instanceof Proxy");
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+		});
+
+		it("should write what terser writes", async () => {
+			const { minify } = await load();
+			const input =
+				"var F = function () {}; console.log('a' in { a: 1 }, [] instanceof Array, new F() instanceof F);";
+			const options = { compress: {}, mangle: false };
+			const { code } = await minify(input, options);
+			const reference = await terserReference().minify(input, options);
+			expect(code).toBe(reference.code);
+		});
 	});
 
 	describe("a call whose parameters run nothing", () => {
