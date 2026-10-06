@@ -2144,6 +2144,11 @@ describe("syntax-printer", () => {
 			"bitwise negation and 32-bit contexts",
 			"sink(~~a, ~~(a | 0), ~(~a), ~1, ~-1, ~123456789, a | ~~b, ~(a & b), ~~a >>> 0, (~a) ^ 0, +a | 0, ~a ? 1 : 2);",
 			{ passes: 2, unsafe_math: true }
+		],
+		[
+			"an assignment in a dropped sequence head collapsed",
+			"function f(g) { var a, x; x = (a = g(), 1); return a + x; } sink(f);",
+			{ defaults: false, collapse_vars: true }
 		]
 	];
 
