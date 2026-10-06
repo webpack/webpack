@@ -661,7 +661,6 @@ const SWC_SMALLER_BY_REASON = [
 		'swc picks shorter spellings for comparisons and coercions: `"u">typeof x`, `null==x`, `==` between operands of one type, `!!x` for `Boolean(x)`, no `|0` on an int32',
 		[
 			"swc minifier: fixture/issues/10281/input.js",
-			"swc minifier: fixture/issues/11082/input.js",
 			"swc minifier: fixture/issues/12186/nested-bitwise/input.js",
 			"swc minifier: fixture/issues/12186/signed-shift/input.js",
 			"swc minifier: fixture/issues/12307/input.js",

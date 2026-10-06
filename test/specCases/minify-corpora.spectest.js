@@ -1277,8 +1277,10 @@ const improvedYetBiggerSeen = new Set();
  * @type {Record<string, string>}
  */
 const IMPROVED_YET_BIGGER = {
-	"benches-full/echarts.js (the default minimizer's options)":
-		"2 bytes fewer, 3 more gzipped: the shorter `typeof x<\"u\"` and constructor calls break runs gzip reused",
+	"projects/files/jquery.mobile-1.4.2.js (its own options)":
+		"40 bytes fewer, 3 more gzipped: `this.p=c?x:y` breaks the `c?this.p=x:this.p=y` runs gzip reused",
+	"projects/files/jquery.mobile-1.4.2.js (the default minimizer's options)":
+		"30 bytes fewer, 2 more gzipped: `this.p=c?x:y` breaks the `c?this.p=x:this.p=y` runs gzip reused",
 	"benches-full/vue.js (the default minimizer's options)":
 		"9 bytes fewer, 6 more gzipped: the shorter `typeof x<\"u\"` and constructor calls break runs gzip reused",
 	"fixture/projects/next/.archive-4/framework-054ead69ea8124b4cb27/input.js (its own options)":
