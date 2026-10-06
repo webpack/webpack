@@ -17,8 +17,8 @@
 .t10 { color: red !important; color: blue }
 /*! ...but a later `!important` does override an earlier plain one */
 .t11 { color: red; color: blue !important }
-/*! a custom property's value is handed back by `getPropertyValue()`, so the
-   pair stands whatever this option says */
+/*! a custom property's value is never checked, so the later one wins in every
+   engine and the earlier goes whatever this option says */
 .t12 { --x: red; --x: lab(50% 100 -100) }
 /*! a rule between them parts the two, so neither overrides the other */
 .t13 { color: red; & .inner { color: lime } color: blue }

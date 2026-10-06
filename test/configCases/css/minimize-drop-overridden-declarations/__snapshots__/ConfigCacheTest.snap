@@ -8,8 +8,8 @@ Array [
   "/*! ...and one spelled in a way that is not a fallback at all */.t04{margin-top:2px}",
   "/*! an earlier \`!important\` is not overridden by a later plain one */.t10{color:red!important;color:blue}",
   "/*! ...but a later \`!important\` does override an earlier plain one */.t11{color:blue!important}",
-  "/*! a custom property's value is handed back by \`getPropertyValue()\`, so the
-   pair stands whatever this option says */.t12{--x:red;--x:lab(50% 100 -100)}",
+  "/*! a custom property's value is never checked, so the later one wins in every
+   engine and the earlier goes whatever this option says */.t12{--x:lab(50% 100 -100)}",
   "/*! a rule between them parts the two, so neither overrides the other */.t13{color:red;& .inner{color:lime}color:blue}",
   "/*! a keyframe ignores \`!important\`, so one there stands over nothing */@keyframes t14{0%{color:red!important;color:blue}}",
 ]

@@ -4635,7 +4635,6 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 				"both axes carry an offset",
 				"a{background-position:left 10px top 20px}"
 			],
-			["a comma parts two layers", "a{background-position:left top,right top}"],
 			["the two keywords share an axis", "a{background-position:left right}"],
 			["the same, on the other axis", "a{background-position:top bottom}"],
 			// A third component is `transform-origin`'s z offset, which the two-value
@@ -14375,6 +14374,132 @@ describe("CssSyntax — recurseBlocks", () => {
 		}).code;
 		expect(asked).toBe(
 			new SourceProcessor().process(css, { mode: "minify" }).code
+		);
+	});
+});
+
+describe("CssSyntax minify — values a browser reads the same when omitted", () => {
+	const settled = (/** @type {string} */ css) => {
+		const once = minifyFor(css);
+		expect(minifyFor(once)).toBe(once);
+		return once;
+	};
+
+	it.each([
+		["a custom property written again", "a{--l:90%;--l:96%}", "a{--l:96%}"],
+		["its later write marked important", "a{--l:1;--l:2!important}", "a{--l:2!important}"],
+		["an important earlier write", "a{--l:1!important;--l:2}", "a{--l:1!important;--l:2}"],
+		["a name differing in case", "a{--L:1;--l:2}", "a{--L:1;--l:2}"],
+		["two different names", "a{--a:1;--b:2;--a:3}", "a{--b:2;--a:3}"],
+		["a keyframe's important write", "@keyframes k{0%{--l:1;--l:2!important}}", "@keyframes k{0%{--l:1;--l:2!important}}"],
+		["a keyframe's plain write", "@keyframes k{0%{--l:1;--l:2}}", "@keyframes k{0%{--l:2}}"]
+	])("drops %s only when it is never read", (_name, css, expected) => {
+		expect(settled(css)).toBe(expected);
+	});
+
+	it("leaves the pair a light-dark() lowering writes to that lowering", () => {
+		const legacy = ["chrome 100", "firefox 100", "safari 15.4"];
+		const css =
+			".a{color:light-dark(#fff,#000)}.b{color-scheme:light dark;--webpack-light:red}";
+		const once = minifyFor(css, legacy);
+		expect(once).toContain(
+			".b{color-scheme:light dark;--webpack-light:red;--webpack-light:initial;"
+		);
+		expect(minifyFor(once, legacy)).toBe(once);
+		expect(minifyFor("a{--webpack-light:1;--webpack-light:2}", legacy)).toBe(
+			"a{--webpack-light:1;--webpack-light:2}"
+		);
+		expect(minifyFor("a{--l:1;--l:2}", legacy)).toBe("a{--l:2}");
+		expect(minifyFor("a{--webpack-light:1;--webpack-light:2}")).toBe(
+			"a{--webpack-light:2}"
+		);
+	});
+
+	it("drops a custom property written again among many declarations", () => {
+		const many = Array.from({ length: 40 }, (_, i) => `--v${i}:${i}`).join(";");
+		expect(settled(`a{--l:1;${many};--l:2}`)).toBe(
+			`a{${many};--l:2}`
+		);
+		expect(settled(`a{--l:1!important;${many};--l:2}`)).toBe(
+			`a{--l:1!important;${many};--l:2}`
+		);
+	});
+
+	it.each([
+		["translate:1px 0", "1px"],
+		["translate:1px 2px 0", "1px 2px"],
+		["translate:1px 0 0", "1px"],
+		["translate:0 0", "0"],
+		["translate:10% 0%", "10%0%"],
+		["translate:1px 0 2px", "1px 0 2px"],
+		["translate:calc(1px + 1%) 0", "calc(1px + 1%)0"],
+		["scale:2 2", "2"],
+		["scale:2 3 1", "2 3"],
+		["scale:2 2 1", "2"],
+		["scale:2 2 3", "2 2 3"],
+		["scale:none", "none"],
+		["rotate:45deg", "45deg"]
+	])("writes %s with what an omission means left out", (declaration, value) => {
+		const [property] = declaration.split(":");
+		expect(settled(`a{${declaration}}`)).toBe(`a{${property}:${value}}`);
+	});
+
+	it.each([
+		["two layers", "10% 73%,90% 50%", "10%73%,90%"],
+		["keyword layers", "left top,right bottom", "0%0%,100%100%"],
+		["a layer with a call", "10% 50%,calc(1px + 1%) 50%", "10%50%,calc(1px + 1%)50%"],
+		["one layer", "10% 50%", "10%"]
+	])("shortens each position of %s", (_name, value, expected) => {
+		expect(settled(`a{background-position:${value}}`)).toBe(
+			`a{background-position:${expected}}`
+		);
+	});
+
+	it.each([
+		["stroke-width:2px", "stroke-width:2"],
+		["stroke-dashoffset:-1.5px", "stroke-dashoffset:-1.5"],
+		["stroke-dasharray:1px,200px", "stroke-dasharray:1,200"],
+		["stroke-dasharray:1px 2em", "stroke-dasharray:1 2em"],
+		["stroke-width:2em", "stroke-width:2em"],
+		["stroke-width:calc(1px + 1%)", "stroke-width:calc(1px + 1%)"],
+		["line-height:2px", "line-height:2px"]
+	])("writes %s in SVG user units only where a number means px", (declaration, expected) => {
+		expect(settled(`a{${declaration}}`)).toBe(`a{${expected}}`);
+	});
+
+	it.each([
+		["two pairs", "grid-row:2/4;grid-column:1/3", "grid-area:2/1/4/3"],
+		["named lines", "grid-row:a;grid-column:a", "grid-area:a"],
+		["an end the start implies", "grid-row:a/b;grid-column:c", "grid-area:a/c/b"],
+		["a span start", "grid-row:span 2;grid-column:1/-1", "grid-area:span 2/1/auto/-1"],
+		["both important", "grid-row:1/2!important;grid-column:3/4!important", "grid-area:1/3/2/4!important"],
+		["one important", "grid-row:1/2!important;grid-column:3/4", "grid-row:1/2!important;grid-column:3/4"],
+		["a grid property between", "grid-row:1/2;grid-area:x;grid-column:3/4", "grid-row:1/2;grid-area:x;grid-column:3/4"],
+		["a prefixed property between", "grid-row:1/2;-ms-grid-row:1;grid-column:3/4", "grid-row:1/2;-ms-grid-row:1;grid-column:3/4"],
+		["all between", "grid-row:1/2;all:unset;grid-column:3/4", "grid-row:1/2;all:unset;grid-column:3/4"],
+		["a CSS-wide keyword", "grid-row:inherit;grid-column:1", "grid-row:inherit;grid-column:1"],
+		["a var()", "grid-row:var(--r);grid-column:1", "grid-row:var(--r);grid-column:1"],
+		["three parts", "grid-row:1/2/3;grid-column:1", "grid-row:1/2/3;grid-column:1"],
+		["a repeated longhand", "grid-row:1;grid-row:2;grid-column:1", "grid-area:2/1"],
+		["a longhand written twice", "grid-row:1!important;grid-row:2;grid-column:1", "grid-row:1!important;grid-row:2;grid-column:1"],
+		["a dashed name", "grid-row:--x/auto;grid-column:1", "grid-area:--x/1/auto"],
+		["a dashed end the start implies", "grid-row:--x;grid-column:1", "grid-area:--x/1"],
+		["a non-ASCII name", "grid-row:é/auto;grid-column:1", "grid-area:é/1/auto"],
+		["a named span", "grid-row:span a;grid-column:span 2/3", "grid-area:span a/span 2/auto/3"],
+		["a line zero", "grid-row:0;grid-column:1", "grid-row:0;grid-column:1"],
+		["two integers", "grid-row:1 2;grid-column:1", "grid-row:1 2;grid-column:1"],
+		["a span of zero", "grid-row:span 0;grid-column:1", "grid-row:span 0;grid-column:1"],
+		["a span of auto", "grid-row:span auto;grid-column:1", "grid-row:span auto;grid-column:1"],
+		["a reserved name", "grid-row:1/default;grid-column:1", "grid-row:1/default;grid-column:1"],
+		["an empty line", "grid-row:1/;grid-column:1", "grid-row:1/;grid-column:1"],
+		["an escaped name", "grid-row:\\31 a;grid-column:1", "grid-row:\\31 a;grid-column:1"]
+	])("folds grid-row and grid-column given %s", (_name, body, expected) => {
+		expect(settled(`a{${body}}`)).toBe(`a{${expected}}`);
+	});
+
+	it("keeps grid-row and grid-column apart across a nested rule", () => {
+		expect(settled("a{grid-row:2/4;b{color:red}grid-column:1/3}")).toBe(
+			"a{grid-row:2/4;b{color:red}grid-column:1/3}"
 		);
 	});
 });

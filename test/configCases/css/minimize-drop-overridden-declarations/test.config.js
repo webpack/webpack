@@ -16,6 +16,7 @@ module.exports = {
 		expect(css).toContain(".t02{display:flex}");
 		// What it still declines, each for a reason of its own.
 		expect(css).toContain(".t10{color:red!important;color:blue}");
-		expect(css).toContain(".t12{--x:red;--x:lab(50% 100 -100)}");
+		// A custom property's later value is read in every engine, option or not.
+		expect(css).toContain(".t12{--x:lab(50% 100 -100)}");
 	}
 };
