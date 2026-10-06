@@ -422,6 +422,11 @@ const IMPROVED_CASES = [
 		{ compress: { ecma: 2020 }, ecma: 2020, mangle: false }
 	],
 	[
+		"an array pattern naming nothing, still looking up its value's iterator",
+		'delete Array.prototype[Symbol.iterator]; try { !function () { const [a, b, c] = [1, 2, 3]; }(); console.log("no"); } catch (e) { console.log(e.name); }',
+		{ compress: {}, mangle: false }
+	],
+	[
 		"a `catch` binding nothing reads, from ECMAScript 2019",
 		"try { null.p; } catch (e) { console.log(1); }",
 		{ compress: { ecma: 2019 }, ecma: 2019, mangle: false }
