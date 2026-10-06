@@ -15017,6 +15017,10 @@ describe("CssSyntax minify — what a comparison with other minifiers found", ()
 		// A keyword starting its slot as the one word filling it says nothing.
 		["a{animation:.2s steps(2) normal forwards running x}", "a{animation:.2s steps(2)forwards x}"],
 		["a{animation:x 1s ease}", "a{animation:x 1s}"],
+		[
+			"a{animation:.2s cubic-bezier(.38,0,.24,1) normal forwards running x}",
+			"a{animation:.2s cubic-bezier(.38,0,.24,1)forwards x}"
+		],
 		// Two words filling a slot make the second the name.
 		["a{animation:1s reverse normal}", "a{animation:1s reverse normal}"],
 		["a{animation:1s normal normal}", "a{animation:1s normal normal}"],
@@ -15077,6 +15081,7 @@ describe("CssSyntax minify — what a comparison with other minifiers found", ()
 		["@supports not (((a:b) or (c:d))){a{x:1}}", "@supports not ((a:b) or (c:d)){a{x:1}}"],
 		["@supports (a:b) and ((c:d)){a{x:1}}", "@supports (a:b) and (c:d){a{x:1}}"],
 		['@supports (content:"((x))"){a{x:1}}', '@supports (content:"((x))"){a{x:1}}'],
+		[String.raw`@supports ((--x:a\(b)){a{x:1}}`, String.raw`@supports (--x:a\(b){a{x:1}}`],
 		[
 			"@container scroll-state(stuck : top) and style(--x: 1){a{x:1}}",
 			"@container scroll-state(stuck:top) and style(--x: 1){a{x:1}}"
@@ -15112,6 +15117,14 @@ describe("CssSyntax minify — what a comparison with other minifiers found", ()
 			[
 				"@supports (-webkit-mask-image:none) or (mask-image:none) or (x:y){a{x:1}}",
 				"@supports (mask-image:none) or (x:y){a{x:1}}"
+			],
+			[
+				"@supports ((selector(a)) or (x:y)){a{x:1}}",
+				"@supports (selector(a)) or (x:y){a{x:1}}"
+			],
+			[
+				"@supports ((a:b) and (c:d)) or (-webkit-mask-image:none) or (mask-image:none){a{x:1}}",
+				"@supports ((a:b) and (c:d)) or (mask-image:none){a{x:1}}"
 			],
 			[
 				"@supports (-webkit-mask-image:none) or selector(a){a{x:1}}",
@@ -15150,7 +15163,11 @@ describe("CssSyntax minify — what a comparison with other minifiers found", ()
 		['a{grid-template-areas:"a";grid-template-rows:var(--r);grid-template-columns:1fr}'],
 		['a{grid-template-areas:"a";grid-template-rows:1fr!important;grid-template-columns:1fr}'],
 		['a{grid-template-areas:"a";grid-template-rows:1fr;grid-gap:1px;grid-template-columns:1fr}'],
-		["a{grid-template-areas:inherit;grid-template-rows:1fr;grid-template-columns:1fr}"]
+		["a{grid-template-areas:inherit;grid-template-rows:1fr;grid-template-columns:1fr}"],
+		// A write still read, a rule or a vendor property between.
+		['a{grid-template-areas:"a";grid-template-rows:1fr!important;grid-template-rows:2fr;grid-template-columns:1fr}'],
+		['a{grid-template-areas:"a";&:hover{x:1}grid-template-rows:1fr;grid-template-columns:1fr}'],
+		['a{grid-template-areas:"a";-webkit-x:1;grid-template-rows:1fr;grid-template-columns:1fr}']
 	])("keeps %s apart", (css) => {
 		expect(settled(css)).not.toContain("grid-template:");
 	});
