@@ -619,6 +619,7 @@ const KEPT_CASES = [
 	["an integer compared with zero where it is no test, or two values a BigInt may be", "function f(a, b) { console.log((a | +b) !== 0, (a | b) !== 0 ? 1 : 2, a - b === 0); } f(1n, 1n); f(1, 2);"],
 	["a nested array literal concatenated", 'console.log([1, [2, 3]] + "");'],
 	["a property assigned its own arithmetic through a name reassigned", "function f(o, x) { o.p = o.p + x; o[x] = o[x] + 1; o = {}; return o; } console.log(f({ p: 1 }, 2));"],
+	["`eval` called through `Object`, which a direct `eval` would not read as", 'var x = 1; function f() { var x = 2; return Object(eval)("x"); } console.log(f(), Object(eval)("x"));'],
 	["a call of `Object` passed two values, spread, or shadowed", "function f(Object) { return Object(g)(); } function g() { return 1; } console.log(f((x) => x), Object(g, 1)(), Object(...h)()); var h = [g];"],
 	["a link on a parenthesized chain that is not optional", "var a = { b: { c: 1 } }; console.log((a?.b).c);"],
 	["`__proto__` as the key of an object literal's value, which sets its prototype", 'var o = { ["__proto__"]: [] }; console.log(Array.isArray(o), o.__proto__ === Object.prototype);'],
