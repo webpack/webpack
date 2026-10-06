@@ -14529,6 +14529,10 @@ describe("CssSyntax minify — a 2009 flexbox property under its own display", (
 			".a{display:-webkit-box!important;display:flex;-webkit-box-pack:center;justify-content:center}"
 		],
 		[
+			"a box a later display no engine reads cannot replace",
+			".a{display:-webkit-box;display:invalid;-webkit-box-orient:vertical;flex-direction:column}"
+		],
+		[
 			"a box written after a flex one",
 			".a{display:flex;display:-webkit-box;-webkit-box-pack:center;justify-content:center}"
 		]
@@ -14551,6 +14555,11 @@ describe("CssSyntax minify — a 2009 flexbox property under its own display", (
 			"a plain box under an important flex one",
 			".a{display:flex!important;display:-webkit-box;-webkit-box-pack:center;justify-content:center}",
 			".a{display:flex!important;justify-content:center}"
+		],
+		[
+			"an inline flex box",
+			".a{display:-webkit-box;display:inline-flex;-webkit-box-pack:center;justify-content:center}",
+			".a{display:inline-flex;justify-content:center}"
 		],
 		[
 			"an alias written after its twin",

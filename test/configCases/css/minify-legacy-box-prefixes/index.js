@@ -1,6 +1,6 @@
 import "./style.css";
 
-// A lowered `light-dark()` has to print what minifying that print would print.
-it("should lower light-dark() to its own fixed point", () => {
+// What the stylesheet minifies to is asserted in `test.config.js`.
+it("should bundle the 2009 flexbox stylesheet", () => {
 	expect(true).toBe(true);
 });
