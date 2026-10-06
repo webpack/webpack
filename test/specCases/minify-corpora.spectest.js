@@ -1,6 +1,6 @@
 "use strict";
 
-// cspell:ignore fnames napi reminify reminifies ufuzz
+// cspell:ignore destructurings fnames napi reminify reminifies ufuzz
 
 // Holds webpack's JavaScript minifier to every test terser, swc and oxc write
 // for theirs. Each source of each corpus below is minified by webpack and by the
@@ -1551,6 +1551,15 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 			"S13_A1.js (the default minimizer's options)",
 			"S14_A3.js (the default minimizer's options)",
 			"S8.7_A5_T2.js (the default minimizer's options)"
+		]
+	],
+	[
+		"a pattern's unused names dropped where the source repeats the pattern gzip matched",
+		[
+			"array-elements-without-initializer.js (the default minimizer's options)",
+			"destructuring/reduce_vars (a module mangled at its top level)",
+			"destructuring/reduce_vars (the default minimizer's options)",
+			"parameters/default_values_in_destructurings (a module mangled at its top level)"
 		]
 	]
 ])) {
