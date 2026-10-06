@@ -131,7 +131,7 @@ Array [
   "/*! width: calc(attr(data-w px) + 1px) — same as lightningcss: calc(attr(data-w px) + 1px) */.k127{width:calc(attr(data-w px) + 1px)}",
   "/*! width: calc(1px + anchor-size(width)) — same as lightningcss: calc(1px + anchor-size(width)) */.k128{width:calc(1px + anchor-size(width))}",
   "/*! width: calc-size(auto, size * 2) — lightningcss: calc-size(auto, size * 2) — ours is shorter */.k129{width:calc-size(auto,size*2)}",
-  "/*! width: calc(100cqw / 3) — lightningcss: 33.3333cqw — a length the engine scales keeps nine digits, as one landing on whole pixels needs */.k130{width:33.3333333cqw}",
+  "/*! width: calc(100cqw / 3) — lightningcss: 33.3333cqw — a length the engine scales keeps the digits it lands on a whole-pixel step with */.k130{width:33.333333cqw}",
   "/*! width: CALC(1PX + 2PX) — same as lightningcss: 3px */.k131{width:3px}",
   "/*! width: calc( 1px  +  2px ) — same as lightningcss: 3px */.k132{width:3px}",
   "/*! width: -webkit-calc(1px + 2px) — same as lightningcss: -webkit-calc(1px + 2px) */.k133{width:-webkit-calc(1px + 2px)}",
