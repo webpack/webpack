@@ -2431,7 +2431,13 @@ describe("syntax-printer", () => {
 		["a name declared twice apart", "function f() { var a = 1; sink(a); var a = g(); return a; } sink(f);", {}],
 		["side effects after a kept name", "function f() { var b = x(), a = g(), c = h(); return b + c; } sink(f);", {}],
 		["an assignment to an unused name in a nested function", "function f() { var a; sink(function () { a = g(); }); } sink(f);", {}],
-		["a fixed value reassigned in a nested getter", "let foo = () => 1; const obj = { get 0() { foo = () => 2; return 40; } }; console.log(obj); var c = obj[0]; console.log(foo(c));", { toplevel: true, compress: { drop_console: true } }]
+		["a fixed value reassigned in a nested getter", "let foo = () => 1; const obj = { get 0() { foo = () => 2; return 40; } }; console.log(obj); var c = obj[0]; console.log(foo(c));", { toplevel: true, compress: { drop_console: true } }],
+		["`arguments` in sloppy code", "function f() { return function (a, b) { return arguments[0]; }; } sink(f);", { compress: { keep_fargs: false } }],
+		["`arguments` in a strict function", 'function f() { "use strict"; return function (a, b) { return arguments[0]; }; } sink(f);', { compress: { keep_fargs: false } }],
+		["`arguments` in its own strict body", 'function f() { return function (a, b) { "use strict"; return arguments[0]; }; } sink(f);', { compress: { keep_fargs: false } }],
+		["`arguments` in a class", "class C { m() { return function (a, b) { return arguments[0]; }; } } sink(C);", { compress: { keep_fargs: false } }],
+		["`arguments` under an expression arrow", "function f() { return () => [function (a, b) { return arguments[0]; }]; } sink(f);", { compress: { keep_fargs: false } }],
+		["`arguments` in a strict program", '"use strict"; sink(function (a, b) { return arguments[0]; });', { compress: { keep_fargs: false } }]
 	];
 
 	// Cases of terser's own suite reaching a branch no case above reaches, under
