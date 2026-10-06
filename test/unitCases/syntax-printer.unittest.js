@@ -1375,6 +1375,21 @@ const CORRECTED_CASES = [
 		{ compress: {}, mangle: false }
 	],
 	[
+		"a BigInt beside a Number, `null`, `undefined`, a boolean or a numeric string, nobody reads",
+		"function t(f) { try { f(); console.log('no'); } catch (e) { console.log(e.name); } } t(function () { 1n + 1; }); t(function () { 1n + null; }); t(function () { 1n + void 0; }); t(function () { !0 + 1n; }); t(function () { 1n - 'a'; }); t(function () { 1 << 1n; });",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a BigInt raised to a negative power or shifted unsigned, nobody reads",
+		"function t(f) { try { f(); console.log('no'); } catch (e) { console.log(e.name); } } t(function () { 2n ** -1n; }); t(function () { 5n >>> 1n; });",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a wrapped BigInt beside a Number, nobody reads",
+		"function t(f) { try { f(); console.log('no'); } catch (e) { console.log(e.name); } } t(function () { Object(1n) + 1; }); t(function () { Object(2n) >>> 0n; });",
+		{ compress: {}, mangle: false }
+	],
+	[
 		"a strict `arguments.callee` nobody reads",
 		"'use strict'; try { (function () { arguments.callee; })(); console.log('no'); } catch (e) { console.log(e.name); }",
 		{ compress: {}, mangle: false }
@@ -5082,6 +5097,29 @@ describe("syntax-printer", () => {
 			const { code } = await minify(input, options);
 			const reference = await terserReference().minify(input, options);
 			expect(code).toBe(reference.code);
+		});
+	});
+
+	describe("a BigInt operation nobody reads", () => {
+		// The port drops `Symbol()` where terser keeps it, and refuses a constant
+		// division by zero that terser drops.
+		it("should keep a division by zero and a Symbol converted", async () => {
+			const { minify } = await load();
+			const input =
+				"function t(f) { try { f(); console.log('no'); } catch (e) { console.log(e.name); } } t(function () { 1n / 0n; }); t(function () { 1n % 0n; }); t(function () { Symbol('1') + 0n; }); t(function () { Symbol() - 1; });";
+			const { code } = await minify(input, { compress: {}, mangle: false });
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+		});
+
+		it("should write what terser writes where it cannot throw", async () => {
+			const { minify } = await load();
+			const input =
+				"function t(a) { 1n * 1n; -1n; 1n + 'a'; 2n ** 1n; 1n / 2n; a % 2; } t(1); console.log('x');";
+			const options = { compress: {}, mangle: false };
+			const { code } = await minify(input, options);
+			const reference = await terserReference().minify(input, options);
+			expect(code).toBe(reference.code);
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
 		});
 	});
 
