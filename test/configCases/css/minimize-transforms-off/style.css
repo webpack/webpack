@@ -26,3 +26,6 @@
 .t13 { color: red }
 /*! mergeLonghands: the four sides stay four declarations */
 .t14 { margin-top: 1px; margin-right: 2px; margin-bottom: 1px; margin-left: 2px }
+/*! reorderDeclarations: each block keeps the order it was written in */
+.t15 { top: 0; color: red }
+.t16 { color: red; top: 0 }

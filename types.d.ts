@@ -6596,6 +6596,11 @@ declare interface CssPrintOptions {
 	 * give a rule the selectors of a later one printing the same block, and an at-rule the block of a later one stating the same condition, past the rules between them; off by default, since it reorders the cascade and is sound only where nothing between declares what the block being moved does for an element it can match — a condition between counting for what its own rules declare
 	 */
 	mergeDistantRules?: boolean;
+
+	/**
+	 * print each style rule's declarations grouped by cascade group, each group keeping its own order; the processor sets it where `reorderDeclarations` finds the grouping compresses smaller
+	 */
+	groupDeclarations?: boolean;
 }
 declare interface CssProcessOptions {
 	/**
@@ -6685,6 +6690,11 @@ declare interface CssProcessOptions {
 	 * which of the meaning-preserving rewrites the minifying print makes; each is on unless it is `false`
 	 */
 	transforms?: CssTransformOptions;
+
+	/**
+	 * print each style rule's declarations grouped by cascade group, each group keeping its own order; the processor sets it where `reorderDeclarations` finds the grouping compresses smaller
+	 */
+	groupDeclarations?: boolean;
 
 	/**
 	 * collects what `renderEmbeddedSource` would be offered instead of offering it, for a caller whose renderer is asynchronous: the print leaves a marker for each and `finish` puts the answers in their place, so one parse serves both. Takes precedence over `renderEmbeddedSource`
@@ -6830,6 +6840,11 @@ declare interface CssTransformOptions {
 	 * drop a rule or declaration nothing can read: an empty rule, and one an identical later one supersedes
 	 */
 	removeDeadRules?: boolean;
+
+	/**
+	 * print a style rule's declarations grouped by the properties that can see each other's order, where the stylesheet then compresses smaller
+	 */
+	reorderDeclarations?: boolean;
 
 	/**
 	 * write a `:dir()` the target cannot read as the `[dir]` attribute selector, which reads the attribute rather than the directionality an element may inherit
@@ -22120,6 +22135,12 @@ declare interface OptimizationMinimizeCss {
 	 * @since 5.110.0
 	 */
 	removeDeadRules?: boolean;
+
+	/**
+	 * Print a style rule's declarations grouped wherever the stylesheet then compresses smaller: custom properties first by name, then each group of properties by its first word, so blocks that set the same things read alike and rules printing the same block join. Only declarations whose order nothing can see are moved — a shorthand and what it sets, a property and its alias or vendor spelling, and a logical property and its physical twin each keep their order — and a block holding a property no dataset names, `all` or a nested rule is printed as written. On by default. Whether it pays is decided per stylesheet by compressing both orders, which costs a second print where it does; a minified `style=""` and a print a visitor walks are never reordered.
+	 * @since 5.112.0
+	 */
+	reorderDeclarations?: boolean;
 
 	/**
 	 * Shorten the values of custom properties (`--x: #ffffff` -> `#fff`, `--y: 0.5rem` -> `.5rem`), which are otherwise written back exactly as authored. Off by default: `getComputedStyle().getPropertyValue()` hands this text back, so a rewritten value is a different CSSOM — the one place a declaration's authored text survives. What it may rewrite is exactly what any other value's tokens may be, a color in a substitution's fallback included — that fallback being the property's value rather than the function's own argument.

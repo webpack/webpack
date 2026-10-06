@@ -28,8 +28,11 @@
 // The comparison packages are NOT webpack dependencies: they install into
 // `node_modules/.cache/`, so nothing here reaches webpack's own tree.
 
+const { execFile: execFileCallback } = require("child_process");
 const fs = require("fs");
 const path = require("path");
+const { promisify } = require("util");
+const zlib = require("zlib");
 // What every other tool assumes when told no target: current engines only.
 // Resolved rather than written out, so it does not go stale.
 const MODERN_BROWSERS = require("browserslist")(
@@ -103,6 +106,7 @@ const CACHE_NAME = "css-tool-comparison";
 const CACHE = path.join(ROOT, "node_modules/.cache", CACHE_NAME);
 const MODULES = path.join(CACHE, "node_modules");
 const load = loaderFor(CACHE);
+const execFile = promisify(execFileCallback);
 
 // Enough of Tailwind's utility surface to look like a real build. `@source
 // inline` expands the braces itself, so the fixture needs no project to scan.
@@ -136,8 +140,110 @@ const GENERATED_FIXTURES = [
 	["Tailwind 4 + daisyUI 5", "tailwind-daisyui.css", TAILWIND_DAISYUI]
 ];
 
+// Packages whose dependency trees dwarf the one stylesheet read from them — a
+// component library installs its framework and icons too — are fetched as a
+// lone tarball each, pinned in `stylesheets.json`, and only that file is kept.
+/** @type {{ label: string, package: string, version: string, file: string, integrity: string }[]} */
+const PACKED_STYLESHEETS = require("./comparison/css-tool-comparison/stylesheets.json");
+
+/** @type {[string, string][]} */
+const PACKED_FIXTURES = PACKED_STYLESHEETS.map((one) => [
+	one.label,
+	path.join(
+		"stylesheets",
+		`${one.package.replace(/^@/, "").replace(/\//g, "-")}-${one.version}`,
+		path.basename(one.file)
+	)
+]);
+
+/**
+ * One file out of a gzipped npm tarball, wherever its top directory is named.
+ * Reads ustar headers, so a `prefix` field and a pax header in front of a long
+ * name both resolve.
+ * @param {Buffer} tarball the `.tgz` as fetched
+ * @param {string} file the path inside the package
+ * @returns {Buffer | undefined} its content, or undefined where it is absent
+ */
+const extractPackedFile = (tarball, file) => {
+	const tar = zlib.gunzipSync(tarball);
+	/** @type {string | undefined} */
+	let longName;
+	for (let at = 0; at + 512 <= tar.length;) {
+		const header = tar.subarray(at, at + 512);
+		if (header[0] === 0) break;
+		const field = (/** @type {number} */ from, /** @type {number} */ to) =>
+			header.toString("utf8", from, to).replace(/\0[\s\S]*$/, "");
+		const size = Number.parseInt(field(124, 136).trim() || "0", 8);
+		const type = field(156, 157);
+		const body = tar.subarray(at + 512, at + 512 + size);
+		at += 512 + Math.ceil(size / 512) * 512;
+		if (type === "x") {
+			const match = /\d+ path=([^\n]*)\n/.exec(body.toString("utf8"));
+			if (match !== null) longName = match[1];
+			continue;
+		}
+		const prefix = field(345, 500);
+		const name =
+			longName !== undefined
+				? longName
+				: prefix.length === 0
+					? field(0, 100)
+					: `${prefix}/${field(0, 100)}`;
+		longName = undefined;
+		if (
+			(type === "0" || type === "") &&
+			name.slice(name.indexOf("/") + 1) === file
+		) {
+			return Buffer.from(body);
+		}
+	}
+	return undefined;
+};
+
+/**
+ * Fetch every stylesheet `stylesheets.json` pins that the cache lacks.
+ * @returns {Promise<void>}
+ */
+const fetchPackedStylesheets = async () => {
+	for (const [i, one] of PACKED_STYLESHEETS.entries()) {
+		const target = path.join(CACHE, PACKED_FIXTURES[i][1]);
+		if (await exists(target)) continue;
+		log(`fetching ${one.package}@${one.version} …`);
+		const directory = path.dirname(target);
+		await fs.promises.mkdir(directory, { recursive: true });
+		const { stdout } = await execFile(
+			"npm",
+			[
+				"pack",
+				`${one.package}@${one.version}`,
+				"--json",
+				"--pack-destination",
+				directory
+			],
+			{ cwd: CACHE, maxBuffer: 64 * 1024 * 1024 }
+		);
+		const [packed] = JSON.parse(stdout);
+		const tarball = path.join(directory, packed.filename);
+		if (packed.integrity !== one.integrity) {
+			throw new Error(
+				`${one.package}@${one.version} is ${packed.integrity}, pinned as ${one.integrity}`
+			);
+		}
+		const content = extractPackedFile(
+			await fs.promises.readFile(tarball),
+			one.file
+		);
+		await fs.promises.rm(tarball);
+		if (content === undefined) {
+			throw new Error(`${one.package}@${one.version} holds no ${one.file}`);
+		}
+		await fs.promises.writeFile(target, content);
+	}
+};
+
 const setup = async () => {
 	await installPackages(CACHE_NAME);
+	await fetchPackedStylesheets();
 	for (const [, out, source] of GENERATED_FIXTURES) {
 		const target = path.join(CACHE, out);
 		if (await exists(target)) continue;
@@ -207,6 +313,10 @@ const fixtures = () => [
 	),
 	.../** @type {[string, string][]} */ (
 		GENERATED_FIXTURES.map(([label, file]) => [label, path.join(CACHE, file)])
+	),
+	...PACKED_FIXTURES.map(
+		([label, file]) =>
+			/** @type {[string, string]} */ ([label, path.join(CACHE, file)])
 	)
 ];
 
@@ -1776,5 +1886,6 @@ module.exports = {
 	INSTALLED_FIXTURES,
 	GENERATED_FIXTURES: /** @type {[string, string][]} */ (
 		GENERATED_FIXTURES.map(([label, file]) => [label, file])
-	)
+	),
+	PACKED_FIXTURES
 };

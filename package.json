@@ -159,6 +159,7 @@
     "@types/node": "^26.2.0",
     "@types/xxhashjs": "^0.2.4",
     "@webdiscus/pug-loader": "^2.11.1",
+    "@webref/css": "^8.7.5",
     "@webref/elements": "^2.8.0",
     "@webref/idl": "^3.83.1",
     "acorn": "^8.16.0",

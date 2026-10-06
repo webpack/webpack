@@ -2935,6 +2935,11 @@
     pug "^3.0.3"
     webpack-merge "^6.0.1"
 
+"@webref/css@^8.7.5":
+  version "8.7.5"
+  resolved "https://registry.yarnpkg.com/@webref/css/-/css-8.7.5.tgz#e61ad15102c82a84a2c7a49e19d9a1cddcb8e7d4"
+  integrity sha512-VQygoDH6OptDhYib3Uxo2e1uftOv2Tx9yddzUyAXOmsLquyrV46w5VzXla2kPAIK70+Lo56NzzrltKMqiBrrLg==
+
 "@webref/elements@^2.8.0":
   version "2.9.0"
   resolved "https://registry.yarnpkg.com/@webref/elements/-/elements-2.9.0.tgz#647a2191164356cd87a067530d453bf5d078a332"

@@ -87,7 +87,7 @@ jobs:
       - run: node tooling/retry.js yarn --frozen-lockfile
 
       # The framework stylesheets and documents the comparisons install, which
-      # the sweep reads as well: the corpus a contributor builds is 34
+      # the sweep reads as well: the corpus a contributor builds is 77
       # stylesheets wider than the one a bare checkout holds, and a finding has
       # already lived in exactly those. Shares its key and its paths with the
       # equivalence job, so whichever runs first fills it for the other and the
@@ -98,7 +98,7 @@ jobs:
           path: |
             node_modules/.cache/css-tool-comparison
             node_modules/.cache/html-tool-comparison
-          key: comparison-corpus-${{ runner.os }}-${{ hashFiles('tooling/comparison/css-tool-comparison/package.json', 'tooling/comparison/css-tool-comparison/package-lock.json', 'tooling/comparison/html-tool-comparison/package.json', 'tooling/comparison/html-tool-comparison/package-lock.json') }}
+          key: comparison-corpus-${{ runner.os }}-${{ hashFiles('tooling/comparison/css-tool-comparison/package.json', 'tooling/comparison/css-tool-comparison/package-lock.json', 'tooling/comparison/css-tool-comparison/stylesheets.json', 'tooling/comparison/html-tool-comparison/package.json', 'tooling/comparison/html-tool-comparison/package-lock.json') }}
 
       # A key of its own rather than a third path on the one above: the
       # equivalence job shares that entry and reads neither the JavaScript
@@ -413,7 +413,7 @@ jobs:
           path: |
             node_modules/.cache/css-tool-comparison
             node_modules/.cache/html-tool-comparison
-          key: comparison-corpus-${{ runner.os }}-${{ hashFiles('tooling/comparison/css-tool-comparison/package.json', 'tooling/comparison/css-tool-comparison/package-lock.json', 'tooling/comparison/html-tool-comparison/package.json', 'tooling/comparison/html-tool-comparison/package-lock.json') }}
+          key: comparison-corpus-${{ runner.os }}-${{ hashFiles('tooling/comparison/css-tool-comparison/package.json', 'tooling/comparison/css-tool-comparison/package-lock.json', 'tooling/comparison/css-tool-comparison/stylesheets.json', 'tooling/comparison/html-tool-comparison/package.json', 'tooling/comparison/html-tool-comparison/package-lock.json') }}
 
       # The third corpus: the framework stylesheets and documents the tool
       # comparisons install. Not fatal — the suite reads whichever fixtures are

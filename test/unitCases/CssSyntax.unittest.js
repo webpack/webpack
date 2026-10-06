@@ -4940,6 +4940,224 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		});
 	});
 
+	// Each case below is one a real stylesheet of the comparison corpus wrote,
+	// and each is held to its own output as well: a second minify adds nothing.
+	describe("what a wider corpus found", () => {
+		/**
+		 * @param {string} css a stylesheet
+		 * @param {CssEnvironment=} environment the target's CSS abilities
+		 * @returns {string} its minified serialization, checked to be settled
+		 */
+		const settled = (css, environment) => {
+			const once = minify(css, environment);
+			expect(minify(once, environment)).toBe(once);
+			return once;
+		};
+		const legacy = { browsers: ["chrome 100", "firefox 100", "safari 15.4"] };
+
+		it("takes back a rule the joined at-rule repeats, its rules read apart", () => {
+			expect(
+				settled(
+					"@media x{.a{color:red}}.b{top:0}@media x{.c{top:1px}}@media x{.a{color:red}}"
+				)
+			).toBe(".b{top:0}@media x{.c{top:1px}.a{color:red}}");
+		});
+
+		it("takes back a rule the joined at-rule repeats beside one nesting a rule", () => {
+			expect(
+				settled(
+					"@media x{.a{color:red}}@media x{.c{.d{top:1px}}}.b{top:0}@media x{.a{color:red}}"
+				)
+			).toBe("@media x{.c{.d{top:1px}}}.b{top:0}@media x{.a{color:red}}");
+		});
+
+		it.each([
+			[
+				"@media x{.a{color:red}}@media x{@media y{.c{top:1px}}}.b{top:0}@media x{.a{color:red}}",
+				"@media x{@media y{.c{top:1px}}}.b{top:0}@media x{.a{color:red}}"
+			],
+			[
+				"@media x{.a{color:red}}@media x{@media y{.c{top:1px}}}.b{top:0}@media x{@media y{.c{top:1px}}}",
+				"@media x{.a{color:red}}.b{top:0}@media x{@media y{.c{top:1px}}}"
+			],
+			[
+				"@media x{.a{color:red}}@media x{@layer y{.c{top:1px}}}.b{top:0}@media x{@layer y{.c{top:1px}}}",
+				"@media x{.a{color:red}@layer y{}}.b{top:0}@media x{@layer y{.c{top:1px}}}"
+			],
+			[
+				"@media x{.a{color:red}}@media x{@font-face{font-family:x}}.b{top:0}@media x{.a{color:red}}",
+				"@media x{@font-face{font-family:x}}.b{top:0}@media x{.a{color:red}}"
+			]
+		])("reads a joined at-rule's blocks as either side would: %s", (css, out) => {
+			expect(settled(css)).toBe(out);
+		});
+
+		it("keeps the joined at-rule whole where it holds a declaration", () => {
+			expect(
+				minify(
+					"@media x{.a{color:red}}@media x{top:0;left:0}.b{top:0}@media x{.a{color:red}}"
+				)
+			).toBe("@media x{.a{color:red}top:0;left:0}.b{top:0}@media x{.a{color:red}}");
+			expect(
+				minify(
+					"@media x{.a{color:red}}@media x{@media y{top:0;left:0}}.b{top:0}@media x{.a{color:red}}"
+				)
+			).toBe(
+				"@media x{.a{color:red}@media y{top:0;left:0}}.b{top:0}@media x{.a{color:red}}"
+			);
+		});
+
+		it.each([
+			[
+				".a{padding-top:0;color:red}.a{padding-bottom:2px;padding-left:2px;padding-right:2px}",
+				".a{padding:0 2px 2px;color:red}"
+			],
+			[
+				".a{padding-top:0!important}.a{padding-bottom:2px!important;padding-left:2px!important;padding-right:2px!important}",
+				".a{padding:0 2px 2px!important}"
+			],
+			[".a{top:0}.a{right:0;bottom:0;left:0}", ".a{inset:0}"]
+		])("merges a box two joined rules wrote between them: %s", (css, out) => {
+			expect(settled(css)).toBe(out);
+		});
+
+		it("leaves the joined sides apart where merging longhands is turned off", () => {
+			expect(
+				new SourceProcessor().process(".a{top:0}.a{right:0;bottom:0;left:0}", {
+					mode: "minify",
+					transforms: { mergeLonghands: false }
+				}).code
+			).toBe(".a{top:0;right:0;bottom:0;left:0}");
+		});
+
+		it("keeps the joined sides apart where the shorthand stands between", () => {
+			const css =
+				".a{padding-top:0;padding:1px}.a{padding-bottom:2px;padding-left:2px;padding-right:2px}";
+			expect(settled(css)).toBe(css);
+		});
+
+		it.each([
+			[
+				"something between writes the family",
+				".a{padding-top:0;padding-inline:1px}.a{padding-bottom:2px;padding-left:2px;padding-right:2px}"
+			],
+			[
+				"one side is `!important`",
+				".a{padding-top:0!important}.a{padding-bottom:2px;padding-left:2px;padding-right:2px}"
+			],
+			[
+				"a side holds two components",
+				".a{margin-top:0}.a{margin-bottom:1px 2px;margin-left:2px;margin-right:2px}"
+			],
+			[
+				"a side is a bare number",
+				".a{padding-top:0}.a{padding-bottom:2;padding-left:2px;padding-right:2px}"
+			],
+			[
+				"a side is a substitution",
+				".a{padding-top:var(--x)}.a{padding-bottom:2px;padding-left:2px;padding-right:2px}"
+			],
+			[
+				"a side is written twice",
+				".a{padding-top:0;padding-top:1px}.a{padding-bottom:2px;padding-left:2px;padding-right:2px}"
+			]
+		])("keeps the joined sides apart where %s", (_name, css) => {
+			const out = settled(css);
+			expect(out).not.toMatch(/[{;](padding|margin):/);
+		});
+
+		it("keeps the sides apart where the target reads no `inset`", () => {
+			expect(
+				settled(".a{top:0}.a{right:0;bottom:0;left:0}", {
+					browsers: ["chrome 80"]
+				})
+			).toBe(".a{top:0;right:0;bottom:0;left:0}");
+		});
+
+		it.each([
+			["a{animation:x 1s 2s;animation-delay:0s}", "a{animation:x 1s}"],
+			["a{animation:x 1s;animation-delay:0s}", "a{animation:x 1s}"],
+			["a{animation:x 1s linear;animation-timing-function:ease}", "a{animation:x 1s}"],
+			["a{animation:x 1s;animation-timing-function:ease}", "a{animation:x 1s}"],
+			["a{animation:x 1s;animation-duration:0s}", "a{animation:x}"],
+			["a{animation:x;animation-duration:0s}", "a{animation:x}"],
+			// A delay after it would read as the duration once it went.
+			["a{animation:x 1s 2s;animation-duration:0s}", "a{animation:x 0s 2s}"],
+			["a{animation:x 1s 3;animation-iteration-count:1}", "a{animation:x 1s}"],
+			["a{animation:x 1s paused;animation-play-state:running}", "a{animation:x 1s}"],
+			// Nothing would be left of the shorthand.
+			[
+				"a{animation:ease;animation-timing-function:ease}",
+				"a{animation:ease;animation-timing-function:ease}"
+			]
+		])("folds a longhand's initial into an animation as no value: %s", (css, out) => {
+			expect(settled(css)).toBe(out);
+		});
+
+		it("joins a seam's rule into the one before it once they print alike", () => {
+			expect(
+				settled(
+					"@supports (x:y){.a{left:1px}}@supports (x:y){.a{right:1px}}@supports (x:y){.b{left:1px}}@supports (x:y){.b{right:1px}}"
+				)
+			).toBe("@supports (x:y){.a,.b{left:1px;right:1px}}");
+		});
+
+		it("merges no family whose longhand holds a substitution", () => {
+			// Invalid at computed-value time, the shorthand would lose every slot
+			// where the longhand loses only its color.
+			const css =
+				"a{border-block-start-width:thin;border-block-start-style:solid;border-block-start-color:rgba(var(--c),var(--o))}";
+			expect(settled(css)).toBe(css);
+		});
+
+		it("keeps a percentage channel a hair off a byte's half as written", () => {
+			expect(
+				settled("a{color:rgb(67.2549019608%, 66.862745098%, 91.9607843137%)}")
+			).toBe("a{color:rgb(67.2549019608%,66.862745098%,91.9607843137%)}");
+			expect(settled("a{width:66.862745098%}")).toBe(
+				"a{width:66.862745098%}"
+			);
+			// An exact half rounds up in every engine.
+			expect(settled("a{color:rgba(50%,50%,50%,.5)}")).toBe(
+				"a{color:#80808080}"
+			);
+		});
+
+		it("keeps the space after a substitution in a custom property", () => {
+			expect(
+				settled(":root{--b:var(--w) var(--s) var(--c);--t:var(--a) [x];--u:(1px) var(--a)}")
+			).toBe(":root{--b:var(--w) var(--s) var(--c);--t:var(--a)[x];--u:(1px)var(--a)}");
+		});
+
+		it("writes a prefixed copy in the order its rule prints", () => {
+			expect(settled(".b:autofill,.a:autofill{x:1}", legacy)).toBe(
+				".a:-webkit-autofill,.b:-webkit-autofill{x:1}.a:autofill,.b:autofill{x:1}"
+			);
+			expect(
+				settled(
+					".b:-webkit-autofill,.a:-webkit-autofill{x:1}.a:autofill,.b:autofill{x:1}",
+					legacy
+				)
+			).toBe(
+				".a:-webkit-autofill,.b:-webkit-autofill{x:1}.a:autofill,.b:autofill{x:1}"
+			);
+		});
+
+		it("joins the rules a dropped prefixed rule stood between", () => {
+			expect(
+				settled(".a:hover,.b:hover{x:1}.b:-moz-any-link{x:1}.b:any-link{x:1}", {
+					browsers: ["chrome 120", "firefox 120", "safari 17"]
+				})
+			).toBe(".a:hover,.b:any-link,.b:hover{x:1}");
+		});
+
+		it("writes a folded relative color with the spacing it prints with", () => {
+			expect(
+				settled("a{box-shadow:0 0 oklch(from #215db0 l c h/0)}", legacy)
+			).toBe("a{box-shadow:0 0#215db000;box-shadow:0 0 oklch(from #215db0 l c h/0)}");
+		});
+	});
+
 	describe("a rule a later one of the same selector writes wholly again", () => {
 		it("drops the earlier, whatever stands between", () => {
 			expect(
@@ -7101,10 +7319,19 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(minify("a{margin:1px;margin-top:1px}")).toBe("a{margin:1px}");
 		});
 
-		it("declines a fold the two declarations do not allow", () => {
-			// Anything between them is read between them.
+		it("reads what stands between the two in the order it prints", () => {
 			const parted = "a{margin:0;color:red;margin-top:1px}";
-			expect(minify(parted)).toBe(parted);
+			expect(
+				new SourceProcessor().process(parted, {
+					mode: "minify",
+					transforms: { reorderDeclarations: false }
+				}).code
+			).toBe(parted);
+			// Grouped, `color` no longer stands between them.
+			expect(minify(parted)).toBe("a{color:red;margin:1px 0 0}");
+		});
+
+		it("declines a fold the two declarations do not allow", () => {
 			// An `!important` longhand is not the same declaration as a plain one.
 			const important = "a{margin:0!important;margin-top:1px}";
 			expect(minify(important)).toBe(important);
@@ -7297,7 +7524,6 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 				["the shorthand has two layers", "a{transition:a.2s,b.3s;transition-delay:.1s}"],
 				["one is `!important`", "a{outline:1px solid!important;outline-color:red}"],
 				["the longhand is a substitution", "a{border-left:1px solid;border-left-color:var(--a)}"],
-				["a declaration stands between", "a{border-left:1px solid;color:red;border-left-color:blue}"],
 				["the longhand is another side's", "a{border-left:1px solid;border-top-color:red}"],
 				// An engine reading `text-wrap` as one keyword drops a value of two.
 				["the shorthand was once one keyword", "a{text-wrap:wrap;text-wrap-style:balance}"],
@@ -7307,6 +7533,17 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 				["a keyword is also a name", "a{list-style:disc;list-style-position:inside}"]
 			])("keeps it where %s", (_name, css) => {
 				expect(minify(css)).toBe(css);
+			});
+
+			it("keeps it where a declaration prints between", () => {
+				const css = "a{border-left:1px solid;color:red;border-left-color:blue}";
+				expect(
+					new SourceProcessor().process(css, {
+						mode: "minify",
+						transforms: { reorderDeclarations: false }
+					}).code
+				).toBe(css);
+				expect(minify(css)).toBe("a{border-left:1px solid blue;color:red}");
 			});
 		});
 
@@ -10558,7 +10795,7 @@ describe("CssSyntax minify — a fallback for a color the target cannot read", (
 				["chrome 100"]
 			)
 		).toBe(
-			"a{box-shadow:0 0 2px #a16945,0 0 4px #977d30;" +
+			"a{box-shadow:0 0 2px#a16945,0 0 4px#977d30;" +
 				"box-shadow:0 0 2px lab(50% 20 30),0 0 4px oklch(.6 .1 90)}"
 		);
 		expect(
@@ -11701,6 +11938,29 @@ describe("CssSyntax minify — the version each rewrite turns on at", () => {
 describe("CssSyntax minify — light-dark()", () => {
 	const DEFAULTS = ":where(:root){--webpack-light:initial;--webpack-dark:}";
 
+	it.each([
+		// The dark half, which a block stating `dark` alone carries.
+		".x{color-scheme:dark;--webpack-light:;--webpack-dark:initial}",
+		// Sorted apart by a grouped print, another property between them.
+		".x{color-scheme:light dark;--webpack-dark:;--a:1;--webpack-light:initial}"
+	])("reads the pair a lowering wrote in any order: %s", (block) => {
+		const once = minifyFor(`${block}a{color:light-dark(red,blue)}`, [
+			"chrome 100"
+		]);
+		// Nothing written again: no dark-scheme copy beside the pair already there.
+		expect(once).not.toContain("prefers-color-scheme");
+		expect(minifyFor(once, ["chrome 100"])).toBe(once);
+	});
+
+	it("writes the toggle beside half of the pair, which is the author's", () => {
+		expect(
+			minifyFor(
+				".x{color-scheme:light dark;--webpack-light:initial}a{color:light-dark(red,blue)}",
+				["chrome 100"]
+			)
+		).toContain("@media (prefers-color-scheme:dark){.x{");
+	});
+
 	it("writes the pair the color scheme switches", () => {
 		expect(minifyFor("a{color:light-dark(red,blue)}", ["chrome 100"])).toBe(
 			`a{color:var(--webpack-light,red) var(--webpack-dark,blue)}${DEFAULTS}`
@@ -11713,9 +11973,11 @@ describe("CssSyntax minify — light-dark()", () => {
 				"chrome 100"
 			])
 		).toBe(
-			"html{color-scheme:light dark;--webpack-light:initial;--webpack-dark:}" +
-				"@media (prefers-color-scheme:dark){html{--webpack-light:;--webpack-dark:initial}}" +
-				`a{color:var(--webpack-light,red) var(--webpack-dark,blue)}${DEFAULTS}`
+			// Grouped, as this one compresses smaller: the pair sorts by name.
+			"html{--webpack-dark:;--webpack-light:initial;color-scheme:light dark}" +
+				"@media (prefers-color-scheme:dark){html{--webpack-dark:initial;--webpack-light:}}" +
+				"a{color:var(--webpack-light,red) var(--webpack-dark,blue)}" +
+				":where(:root){--webpack-dark:;--webpack-light:initial}"
 		);
 		// One scheme alone answers for itself, with no query to defer to.
 		expect(
@@ -12549,16 +12811,17 @@ describe("CssSyntax minify — nesting the target cannot read", () => {
 		// The copy repeats the rule's prelude, which the hoist resolves against
 		// the parent and may join into a list.
 		const L = "b{color:light-dark(red,blue)}";
+		// Grouped, as each compresses smaller: the pair sorts by name.
 		const tail =
 			"b{color:var(--webpack-light,red) var(--webpack-dark,blue)}" +
-			":where(:root){--webpack-light:initial;--webpack-dark:}";
+			":where(:root){--webpack-dark:;--webpack-light:initial}";
 		/**
 		 * @param {string} selector the rule's prelude standing on its own
 		 * @returns {string} the rule and the dark-scheme copy naming it
 		 */
 		const scheme = (selector) =>
-			`${selector}{color-scheme:light dark;--webpack-light:initial;--webpack-dark:}` +
-			`@media (prefers-color-scheme:dark){${selector}{--webpack-light:;--webpack-dark:initial}}`;
+			`${selector}{--webpack-dark:;--webpack-light:initial;color-scheme:light dark}` +
+			`@media (prefers-color-scheme:dark){${selector}{--webpack-dark:initial;--webpack-light:}}`;
 		expect(minifyFor(`a{&:hover{color-scheme:light dark}}${L}`, HOIST_T)).toBe(
 			scheme("a:hover") + tail
 		);
@@ -14375,6 +14638,179 @@ describe("CssSyntax — recurseBlocks", () => {
 		}).code;
 		expect(asked).toBe(
 			new SourceProcessor().process(css, { mode: "minify" }).code
+		);
+	});
+});
+
+describe("CssSyntax minify — declarations grouped where that compresses smaller", () => {
+	/**
+	 * @param {string} css a stylesheet
+	 * @returns {string} it printed with its declarations grouped
+	 */
+	const grouped = (css) =>
+		new SourceProcessor().process(css, {
+			mode: "minify",
+			groupDeclarations: true
+		}).code;
+	const { _regroupDeclarations } = require("../../lib/css/syntax-parser");
+
+	it.each([
+		// Custom properties by name, then each group by its first word.
+		[
+			".a{top:0;color:red;--b:1;--a:2;width:1px;display:block}",
+			".a{--a:2;--b:1;color:red;display:block;top:0;width:1px}"
+		],
+		// A logical property and its physical twin read each other's order.
+		[".a{inline-size:2px;color:red;width:1px}", ".a{color:red;inline-size:2px;width:1px}"],
+		// So do a shorthand and a longhand it sets under another name.
+		[".a{line-height:2;color:red;font:12px x}", ".a{color:red;line-height:2;font:12px x}"],
+		// A vendor spelling no dataset names reads as the property it prefixes.
+		[".a{top:0;-zz-color:red;color:blue}", ".a{-zz-color:red;color:blue;top:0}"],
+		// What a merge took in prints nothing, and goes last.
+		[
+			".a{margin-top:0;color:red;margin-right:0;margin-bottom:0;margin-left:0;--z:1}",
+			".a{--z:1;color:red;margin:0}"
+		],
+		[".a{color:red;top:0}", ".a{color:red;top:0}"]
+	])("groups a style rule's declarations: %s", (css, out) => {
+		expect(grouped(css)).toBe(out);
+	});
+
+	it.each([
+		// Nothing says what an unknown property or `all` reads.
+		".a{top:0;foo:1;color:red}",
+		".a{top:0;all:unset;color:red}",
+		// A nested rule is read between the declarations around it.
+		".a{top:0;color:red;&:hover{top:1px}}",
+		// An at-rule's block holds descriptors, not properties.
+		"@font-face{src:url(x);font-family:y}"
+	])("keeps a block as written: %s", (css) => {
+		expect(grouped(css)).toBe(css);
+	});
+
+	it("joins the rules grouping makes alike", () => {
+		expect(grouped(".a{color:red;top:0}.b{top:0;color:red}")).toBe(
+			".a,.b{color:red;top:0}"
+		);
+	});
+
+	it.each([
+		[".a{top:0;color:red}", ".a{color:red;top:0}"],
+		['.a{x:"}{";top:0;color:red}', '.a{color:red;top:0;x:"}{"}'],
+		["/*{*/.a{top:0;color:red}", "/*{*/.a{color:red;top:0}"],
+		[".a\\{{top:0;color:red}", ".a\\{{color:red;top:0}"],
+		[".a{background:url(a;b);top:0;color:red}", ".a{background:url(a;b);color:red;top:0}"],
+		["@media x{.b{top:0;color:red}}", "@media x{.b{color:red;top:0}}"],
+		["@keyframes k{0%{top:0;color:red}}", "@keyframes k{0%{color:red;top:0}}"],
+		["}.a{top:0;color:red}", "}.a{color:red;top:0}"],
+		// Nothing a block cannot be read as declarations of known properties.
+		[".a{:x;color:red}", ".a{:x;color:red}"],
+		[".a{top:0;b{c:d}}", ".a{top:0;b{c:d}}"],
+		["@font-face{top:0;color:red}", "@font-face{top:0;color:red}"],
+		[".a{top:0;color:red", ".a{top:0;color:red"]
+	])("reads the order off a printed stylesheet: %s", (css, out) => {
+		expect(_regroupDeclarations(css)).toBe(out);
+	});
+
+	// The second `.c` is grouped, so the first compresses better grouped too.
+	const pays = ".a{top:0;color:red}.b{x:1}.c{color:red;top:0}";
+
+	it("prints it grouped where that compresses smaller", () => {
+		const { code } = new SourceProcessor().process(pays, { mode: "minify" });
+		expect(code).toBe(".a{color:red;top:0}.b{x:1}.c{color:red;top:0}");
+		expect(new SourceProcessor().process(code, { mode: "minify" }).code).toBe(
+			code
+		);
+	});
+
+	it.each(
+		/** @type {[string, string, import("../../lib/css/syntax-parser").CssProcessOptions][]} */ ([
+		["the stylesheet compresses no smaller", ".a{top:0;color:red}", {}],
+		[
+			"`reorderDeclarations` is off",
+			pays,
+			{ transforms: { reorderDeclarations: false } }
+		],
+		["it is a `style` attribute", "top:0;color:red", { as: "block-contents" }]
+	]))("prints it as written where %s", (_name, css, options) => {
+		expect(
+			new SourceProcessor().process(css, { ...options, mode: "minify" }).code
+		).toBe(css);
+	});
+
+	it("prints it as written where a visitor walks it", () => {
+		let seen = 0;
+		const { code } = new SourceProcessor()
+			.use({
+				[NodeType.Declaration]: () => {
+					seen++;
+				}
+			})
+			.process(pays, { mode: "minify" });
+		expect(code).toBe(pays);
+		// Each declaration once: the walk ran once.
+		expect(seen).toBe(5);
+	});
+
+	it("asks a renderer nothing again in the second print", async () => {
+		const svg = 'url("data:image/svg+xml,<svg>  <rect/></svg>")';
+		const css = `.a{top:0;color:red;background:${svg}}.b{x:1}.c{color:red;top:0;background:${svg}}`;
+		const out =
+			".a{background:url(data:image/svg+xml,<svg>\\ <rect/></svg>);color:red;top:0}.b{x:1}" +
+			".c{background:url(data:image/svg+xml,<svg>\\ <rect/></svg>);color:red;top:0}";
+		let asked = 0;
+		/**
+		 * @param {string} source the payload
+		 * @returns {string} it, its runs of spaces collapsed
+		 */
+		const render = (source) => {
+			asked++;
+			return source.replace(/ {2}/g, " ");
+		};
+		expect(
+			new SourceProcessor().process(css, {
+				mode: "minify",
+				renderEmbeddedSource: render
+			}).code
+		).toBe(out);
+		// Once per site in the first print, and nothing again in the second.
+		expect(asked).toBe(2);
+		const later = await new SourceProcessor().processAsync(css, {
+			mode: "minify",
+			renderEmbeddedSource: async (source) => render(source)
+		});
+		expect(later.code).toBe(out);
+		expect(asked).toBe(4);
+	});
+
+	it("asks an async renderer once where grouping does not pay", async () => {
+		const css =
+			'.a{top:0;color:red;background:url("data:image/svg+xml,<svg>  <rect/></svg>")}';
+		let asked = 0;
+		const { code } = await new SourceProcessor().processAsync(css, {
+			mode: "minify",
+			renderEmbeddedSource: async (source) => {
+				asked++;
+				return source;
+			}
+		});
+		expect(code).toBe(css);
+		expect(asked).toBe(1);
+	});
+
+	it("keeps the map pointing at each rule", () => {
+		const { map } = new SourceProcessor().process(pays, {
+			mode: "minify",
+			source: "a.css",
+			content: pays
+		});
+		expect(map.mappings).toBe(
+			new SourceProcessor().process(pays, {
+				mode: "minify",
+				source: "a.css",
+				content: pays,
+				transforms: { reorderDeclarations: false }
+			}).map.mappings
 		);
 	});
 });

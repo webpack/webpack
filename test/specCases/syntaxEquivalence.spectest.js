@@ -1476,7 +1476,8 @@ const LOWERING_FIXTURES = [
 		introduces: ["--webpack-light", "--webpack-dark"],
 		produces: [
 			"var(--webpack-light,#aaa) var(--webpack-dark,#444)",
-			":where(:root){--webpack-light:initial",
+			// Grouped, as this sheet compresses smaller: the pair sorts by name.
+			":where(:root){--webpack-dark:;--webpack-light:initial",
 			"@media (prefers-color-scheme:dark){html{"
 		],
 		css:

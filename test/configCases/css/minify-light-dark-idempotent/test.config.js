@@ -14,12 +14,14 @@ module.exports = {
 
 		// The empty value carries no space: a second pass takes one off, and all
 		// three engines read either spelling as nothing.
-		expect(css).toContain("--webpack-dark:}");
+		expect(css).toMatch(/--webpack-dark:[;}]/);
 		expect(css).not.toContain("--webpack-dark: ");
-		expect(css).toContain("--webpack-light:;");
+		expect(css).toMatch(/--webpack-light:[;}]/);
 		// The block stating the scheme carries the toggle, and the pair is written
-		// there once.
-		expect(css).toContain("color-scheme:light dark;--own:1;--webpack-light:");
+		// there once — grouped, as this sheet compresses smaller that way.
+		expect(css).toContain(
+			":root{--own:1;--webpack-dark:;--webpack-light:initial;color-scheme:light dark}"
+		);
 		// Four: the two blocks stating the scheme, the one that already carried the
 		// pair, and the defaulting rule — never a fifth from re-reading one.
 		expect(css.match(/--webpack-light:initial/g)).toHaveLength(4);
@@ -27,7 +29,7 @@ module.exports = {
 		expect(css).toContain(".scheme-light-dark{color:red}");
 		// An authored `--webpack-light` is the author's, so the toggle still goes in.
 		expect(css).toContain(
-			".authored{color-scheme:light dark;--webpack-light:red;"
+			".authored{--webpack-dark:;--webpack-light:red;--webpack-light:initial;"
 		);
 		// A shouted call is the same call.
 		expect(css).toContain(".shouted{color:var(--webpack-light,#abc)");

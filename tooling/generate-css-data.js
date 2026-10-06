@@ -41,6 +41,10 @@ const bcd =
 /** @typedef {{ support: { [browser: string]: BcdSupport | BcdSupport[] } }} BcdCompat */
 /** @typedef {{ __compat?: BcdCompat }} BcdNode */
 
+/** @type {{ properties: { name: string, longhands?: string[], resetLonghands?: string[], legacyAliasOf?: string, logicalPropertyGroup?: string }[] }} */
+const webrefCss = require("@webref/css/css.json");
+/** @type {PackageManifest} */
+const webrefCssPackage = require("@webref/css/package.json");
 /** @type {PackageManifest} */
 const colorNamePackage = require("color-name/package.json");
 /** @type {PartialSyntaxTable} */
@@ -63,7 +67,7 @@ const mdnDataPackage = require("mdn-data/package.json");
  * @returns {string} the versions, as one list
  */
 const sourceVersions = () =>
-	`mdn-data ${mdnDataPackage.version}, color-name ${colorNamePackage.version}, @mdn/browser-compat-data ${bcd.__meta.version}`;
+	`mdn-data ${mdnDataPackage.version}, color-name ${colorNamePackage.version}, @mdn/browser-compat-data ${bcd.__meta.version}, @webref/css ${webrefCssPackage.version}`;
 
 // WHY: CSS Value Definition Syntax (CSS Values 4 §2) — the notation every `mdn-data`
 // grammar is written in — parsed into a tree the collectors below analyze.
@@ -569,6 +573,124 @@ const collectShorthandLonghands = () => {
 		if (longhands.length !== 0) out.push([name, longhands]);
 	}
 	return out;
+};
+
+/**
+ * Every property a dataset names, partitioned so two declarations whose order in
+ * a block can change what either sets share a group: a shorthand and what it
+ * sets, an alias or vendor spelling and its property, the logical and physical
+ * members of one group, and — for what no dataset relates — one first word.
+ * @param {[string, [string, [string, number, number][]][]][]} prefixedProperties each property's vendor spellings
+ * @returns {string[][]} the groups, each sorted, ordered by their first name
+ */
+const collectCascadeGroups = (prefixedProperties) => {
+	/** @type {Map<string, string>} */
+	const parent = new Map();
+	/**
+	 * @param {string} name a property, or a key standing for a relation
+	 * @returns {string} its group's representative
+	 */
+	const find = (name) => {
+		let root = parent.get(name);
+		if (root === undefined) {
+			parent.set(name, name);
+			return name;
+		}
+		while (root !== parent.get(root)) {
+			root = /** @type {string} */ (parent.get(root));
+		}
+		parent.set(name, root);
+		return root;
+	};
+	/**
+	 * @param {string} one a property or relation key
+	 * @param {string} other another
+	 */
+	const union = (one, other) => {
+		const a = find(one);
+		const b = find(other);
+		if (a !== b) parent.set(b, a);
+	};
+	/** @type {Set<string>} */
+	const names = new Set();
+	/**
+	 * @param {string} name a property a dataset names
+	 */
+	const note = (name) => {
+		const lowered = name.toLowerCase();
+		names.add(lowered);
+		// The backstop: a relation no dataset states mostly stays inside one word
+		// (`-webkit-margin-start` and `margin-left`).
+		union(lowered, `word:${lowered.replace(/^-[a-z]+-/, "").split("-")[0]}`);
+	};
+	for (const property of webrefCss.properties) {
+		note(property.name);
+		for (const longhand of [
+			...(property.longhands || []),
+			...(property.resetLonghands || [])
+		]) {
+			note(longhand);
+			union(property.name, longhand);
+		}
+		if (property.legacyAliasOf !== undefined) {
+			note(property.legacyAliasOf);
+			union(property.name, property.legacyAliasOf);
+		}
+		if (property.logicalPropertyGroup !== undefined) {
+			union(property.name, `logical:${property.logicalPropertyGroup}`);
+		}
+	}
+	for (const [name, longhands] of collectShorthandLonghands()) {
+		note(name);
+		for (const longhand of longhands) {
+			note(longhand);
+			union(name, longhand);
+		}
+	}
+	for (const name of Object.keys(properties)) note(name);
+	// A property's own entry only: the alternative names nested beneath it are
+	// mostly values (`-ms-flexbox` for `display: flex`), and webref states the rest.
+	for (const [name, node] of Object.entries(bcd.css.properties)) {
+		note(name);
+		// Every property BCD names carries its own compat entry.
+		const compat = /** @type {BcdCompat} */ (node.__compat);
+		for (const support of Object.values(compat.support)) {
+			for (const entry of Array.isArray(support) ? support : [support]) {
+				const spelling = entry.prefix
+					? entry.prefix + name
+					: entry.alternative_name;
+				if (spelling === undefined) continue;
+				note(spelling);
+				union(name, spelling);
+			}
+		}
+	}
+	for (const [name, spelled] of prefixedProperties) {
+		note(name);
+		for (const [spelling] of spelled) {
+			note(spelling);
+			union(name, spelling);
+		}
+	}
+	for (const [legacy, property] of SUPPLEMENT.legacyShorthands) {
+		note(legacy);
+		note(property);
+		union(legacy, property);
+	}
+	// `all` sets every property but two, so it shares a group with everything:
+	// left out, it is a property the printer knows nothing about.
+	names.delete("all");
+	/** @type {Map<string, string[]>} */
+	const groups = new Map();
+	for (const name of names) {
+		const root = find(name);
+		const group = groups.get(root);
+		if (group === undefined) groups.set(root, [name]);
+		else group.push(name);
+	}
+	return [...groups.values()]
+		.map((group) => group.sort())
+		.sort((a, b) => (a[0] < b[0] ? -1 : 1));
 };
 
 const collectPairLonghands = () => {
@@ -3873,11 +3995,23 @@ const eighthTurnEntries = (values) => {
 // Spec prose no dataset states: an equivalence between two spellings, or a
 // judgement about what a construct still does. Each carries the reason it has to
 // be written out rather than derived.
-/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], fontStretchPercentages: [string, string][], filterFunctionOmitted: [string, string][], positionKeywordPercentages: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], featurelessPseudoClasses: string[], initialValueKeywords: [string, string][], initialKeywordsAnEngineReadsApart: string[], unmergeableSlotKeywords: [string, string][], zeroUnitKeepingProperties: string[], calcRejectingProperties: string[], numberOnlyOutsideCalcProperties: string[], clampedValueRanges: [string, string, number, number][], stepPositionMinimumCounts: [string, number][], autoSecondValueProperties: string[], defaultGradientDirections: string[], defaultGradientPositions: string[], reversedGradientDirections: string[], gradientSideAngles: [string, string][], xAxisTransforms: [string, string][], negativeAcceptingProperties: string[], placeShorthands: string[], oneValuePairShorthands: string[], familyShorthands: string[], orderedShorthands: string[], omittableInitialKeywords: string[], pairLonghandOverrides: [string, string[]][], droppableWhenEmptyAtRules: string[], replacedByNameAtRules: string[], classSpellings: [string, string[]][], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[], colorSpacePrimitives: [string, string][], oklabMatrices: number[][], systemUiStack: string[], colorTransfers: [string, string][], predefinedColorSpaces: [string, string, string, string][], colorPrimaries: [string, number[]][], colorWhitePoints: [string, number[]][], enginesDisagreeOnTransfer: string[], calcConstantValues: [string, string][], quarterTurnAngle: [string, number][], eighthTurnSine: (number | null)[], eighthTurnTangent: (number | null)[], mathFunctionFold: [string, string, string, string, string | null, boolean][], mathPrimitives: [string, string][], predefinedCounterStyles: string[], predefinedCounterNames: string[], cssModulesKeywordSupplement: [string, string, number][] }} */
+/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], fontStretchPercentages: [string, string][], filterFunctionOmitted: [string, string][], positionKeywordPercentages: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], featurelessPseudoClasses: string[], initialValueKeywords: [string, string][], initialKeywordsAnEngineReadsApart: string[], unmergeableSlotKeywords: [string, string][], zeroUnitKeepingProperties: string[], calcRejectingProperties: string[], numberOnlyOutsideCalcProperties: string[], clampedValueRanges: [string, string, number, number][], stepPositionMinimumCounts: [string, number][], autoSecondValueProperties: string[], defaultGradientDirections: string[], defaultGradientPositions: string[], reversedGradientDirections: string[], gradientSideAngles: [string, string][], xAxisTransforms: [string, string][], negativeAcceptingProperties: string[], placeShorthands: string[], legacyShorthands: [string, string][], oneValuePairShorthands: string[], familyShorthands: string[], orderedShorthands: string[], omittableInitialKeywords: string[], pairLonghandOverrides: [string, string[]][], droppableWhenEmptyAtRules: string[], replacedByNameAtRules: string[], classSpellings: [string, string[]][], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[], colorSpacePrimitives: [string, string][], oklabMatrices: number[][], systemUiStack: string[], colorTransfers: [string, string][], predefinedColorSpaces: [string, string, string, string][], colorPrimaries: [string, number[]][], colorWhitePoints: [string, number[]][], enginesDisagreeOnTransfer: string[], calcConstantValues: [string, string][], quarterTurnAngle: [string, number][], eighthTurnSine: (number | null)[], eighthTurnTangent: (number | null)[], mathFunctionFold: [string, string, string, string, string | null, boolean][], mathPrimitives: [string, string][], predefinedCounterStyles: string[], predefinedCounterNames: string[], cssModulesKeywordSupplement: [string, string, number][] }} */
 
 const SUPPLEMENT = {
 	// CSS Values 4's list. `mdn-data` has no `css-wide-keyword` production.
 	cssWideKeywords: ["inherit", "initial", "revert", "revert-layer", "unset"],
+	// WHY: CSS Break 3 §3.4 makes each `page-break-*` a legacy shorthand of the
+	// `break-*` it names, in prose no dataset states as longhands or an alias.
+	// Chromium and WebKit read `-webkit-column-break-*` the same way — measured:
+	// `-webkit-column-break-inside:avoid` after `break-inside:avoid-column` wins.
+	legacyShorthands: [
+		["-webkit-column-break-after", "break-after"],
+		["-webkit-column-break-before", "break-before"],
+		["-webkit-column-break-inside", "break-inside"],
+		["page-break-after", "break-after"],
+		["page-break-before", "break-before"],
+		["page-break-inside", "break-inside"]
+	],
 	// CSS Easing 1 §2 defines each keyword as exactly this curve; the syntax
 	// database describes `cubic-bezier()`'s shape, not which curves have a name.
 	// Keyed by the arguments as `Number` prints them.
@@ -7132,6 +7266,7 @@ const collectData = async () => {
 	const unitGroupBase = collectUnitGroupBase();
 	const eighthTurnCosine = collectEighthTurnCosine();
 	const prefixedProperties = collectPrefixTable(bcd.css.properties, true, true);
+	const cascadeGroups = collectCascadeGroups(prefixedProperties);
 	const prefixSpellingKeywords = collectPrefixSpellingKeywords();
 	const prefixSpellingNumbers = collectPrefixSpellingNumbers();
 	const prefixedSelectors = collectPrefixTable(bcd.css.selectors, true);
@@ -7279,6 +7414,19 @@ const SLASH_LONGHANDS = new Map([${slashLonghands
 const getShorthandLonghands = memoize(() => new Map([${shorthandLonghands
 		.map(([name, longhands]) => `["${name}", ${setLiteral(longhands)}]`)
 		.join(", ")}]));
+
+// Every property a dataset names, one group per string, so two declarations
+// whose order can change what a block sets share one. \`all\` and an unknown
+// property are in none: a block holding one is read in the order written.
+const getCascadeGroups = memoize(() => {
+	const names = [${cascadeGroups.map((group) => `"${group.join(" ")}"`).join(", ")}];
+	/** @type {Map<string, number>} */
+	const groups = new Map();
+	for (let group = 0; group < names.length; group++) {
+		for (const name of names[group].split(" ")) groups.set(name, group);
+	}
+	return groups;
+});
 
 // WHY: Every longhand the three merge tables above can consume, so a block is asked
 // once whether it holds anything mergeable at all. Two of them have to be
@@ -8005,7 +8153,7 @@ module.exports.AUTO_SECOND_VALUE_PROPERTIES = AUTO_SECOND_VALUE_PROPERTIES;
 module.exports.BOX_FAMILY_PREFIX = BOX_FAMILY_PREFIX;
 module.exports.BOX_LONGHANDS = BOX_LONGHANDS;
 module.exports.BOX_SHORTHANDS = BOX_SHORTHANDS;
-module.exports.CALC_CONSTANTS = CALC_CONSTANTS;\nmodule.exports.CALC_REJECTING_PROPERTIES = CALC_REJECTING_PROPERTIES;\nmodule.exports.CANONICAL_NAMES = CANONICAL_NAMES;\nmodule.exports.CLAMPED_VALUE_RANGES = CLAMPED_VALUE_RANGES;\nmodule.exports.COLOR_ARGUMENT_FUNCTIONS = COLOR_ARGUMENT_FUNCTIONS;\nmodule.exports.COLOR_FUNCTIONS = COLOR_FUNCTIONS;
+module.exports.CALC_CONSTANTS = CALC_CONSTANTS;\nmodule.exports.CALC_REJECTING_PROPERTIES = CALC_REJECTING_PROPERTIES;\nmodule.exports.CANONICAL_NAMES = CANONICAL_NAMES;\nmodule.exports.getCascadeGroups = getCascadeGroups;\nmodule.exports.CLAMPED_VALUE_RANGES = CLAMPED_VALUE_RANGES;\nmodule.exports.COLOR_ARGUMENT_FUNCTIONS = COLOR_ARGUMENT_FUNCTIONS;\nmodule.exports.COLOR_FUNCTIONS = COLOR_FUNCTIONS;
 module.exports.COLOR_KEYWORDS = COLOR_KEYWORDS;\nmodule.exports.getColorNameToRgb = getColorNameToRgb;\nmodule.exports.getColorNameToShortest = getColorNameToShortest;\nmodule.exports.COLOR_ONLY_PROPERTIES = COLOR_ONLY_PROPERTIES;\nmodule.exports.getColorSpaceModel = getColorSpaceModel;
 module.exports.COMPOUND_CONTINUATIONS = COMPOUND_CONTINUATIONS;
 module.exports.getCssModulesKeywords = getCssModulesKeywords;
