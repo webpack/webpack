@@ -218,6 +218,7 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"webpack writes the same program in a spelling longer or compressing worse than oxc's",
 		[
+			"oxc minifier: mangler/property_mangler.rs:90",
 			"swc exec: concat_tpl_keeps_delimiter_after_interpolation",
 			"swc exec: issue_11517_http_status",
 			"swc exec: issue_4788_1",

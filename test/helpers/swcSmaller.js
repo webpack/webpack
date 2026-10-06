@@ -849,6 +849,10 @@ const SWC_SMALLER_BY_REASON = [
 	[
 		"swc's output is wrong: it drops the global assignment `i = typeof 1n`, so `i` is never set",
 		["terser compress: typeof/typeof_evaluation"]
+	],
+	[
+		"swc drops an `in` or `instanceof` whose right side it cannot see, which throws where that side is no object and runs a proxy's or `Symbol.hasInstance`'s code",
+		["terser compress: pure_funcs/relational"]
 	]
 ];
 
