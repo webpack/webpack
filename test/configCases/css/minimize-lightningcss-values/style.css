@@ -280,3 +280,17 @@ var(--bar, 40px); }
 .foo { box-shadow: 0 0 currentcolor }
 /*! corpora: .foo { text-shadow: 1px 1px 2px currentColor, 0 0 1px red } */
 .foo { text-shadow: 1px 1px 2px currentColor, 0 0 1px red }
+/*! corpora: .foo { flex: 1 75% } */
+.foo { flex: 1 75% }
+/*! corpora: .foo { padding-inline: 1rem 1rem } */
+.foo { padding-inline: 1rem 1rem }
+/*! corpora: .foo { background: white } */
+.foo { background: white }
+/*! corpora: .foo { transform: translate(calc(-4%)) } */
+.foo { transform: translate(calc(-4%)) }
+/*! corpora: .foo { font: normal normal normal 24px/1 "Material Design Icons" } */
+.foo { font: normal normal normal 24px/1 "Material Design Icons" }
+/*! corpora: .foo { scale: 95% } */
+.foo { scale: 95% }
+/*! corpora: .foo { transition-duration: 416.667ms } */
+.foo { transition-duration: 416.667ms }

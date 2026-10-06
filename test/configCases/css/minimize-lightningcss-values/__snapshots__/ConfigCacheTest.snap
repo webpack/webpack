@@ -137,5 +137,12 @@ Array [
   "/*! corpora: .foo { background: conic-gradient(from 90deg at 50% 50%, black, white) } */.foo{background:conic-gradient(from 90deg,#000,#fff)}",
   "/*! corpora: .foo { box-shadow: 0 0 currentcolor } */.foo{box-shadow:0 0}",
   "/*! corpora: .foo { text-shadow: 1px 1px 2px currentColor, 0 0 1px red } */.foo{text-shadow:1px 1px 2px,0 0 1px red}",
+  "/*! corpora: .foo { flex: 1 75% } */.foo{flex:75%}",
+  "/*! corpora: .foo { padding-inline: 1rem 1rem } */.foo{padding-inline:1rem}",
+  "/*! corpora: .foo { background: white } */.foo{background:#fff}",
+  "/*! corpora: .foo { transform: translate(calc(-4%)) } */.foo{transform:translate(-4%)}",
+  "/*! corpora: .foo { font: normal normal normal 24px/1 \\"Material Design Icons\\" } */.foo{font:24px/1 Material Design Icons}",
+  "/*! corpora: .foo { scale: 95% } */.foo{scale:.95}",
+  "/*! corpora: .foo { transition-duration: 416.667ms } */.foo{transition-duration:.416667s}",
 ]
 `;
