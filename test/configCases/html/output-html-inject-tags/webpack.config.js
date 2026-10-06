@@ -55,7 +55,7 @@ const tagPlugin = (groups) => ({
 	}
 });
 
-/** @type {(name: string, plugin: import("../../../../").WebpackPluginInstance, entry?: string, html?: { csp?: boolean }) => import("../../../../").Configuration} */
+/** @type {(name: string, plugin: import("../../../../").WebpackPluginInstance, entry?: string, html?: { csp?: boolean | { nonce: string } }) => import("../../../../").Configuration} */
 const config = (name, plugin, entry = "./src/main.js", html = {}) => ({
 	name,
 	target: "web",
@@ -126,6 +126,13 @@ module.exports = [
 		tagPlugin([{ tag: "script", children: "console.log(1)" }]),
 		"./src/main.js",
 		{ csp: true }
+	),
+	// an injected inline <script> gets the CSP nonce too
+	config(
+		"csp-nonce",
+		tagPlugin([{ tag: "script", children: "console.log(2)" }]),
+		"./src/main.js",
+		{ csp: { nonce: "__N__" } }
 	),
 	// a fragment with no <head>/<body>: head tags prepend, body tags append
 	config(

@@ -55,9 +55,35 @@ it("merges a custom directive and honors hashFunction", () => {
 });
 
 it("does not override a page that already declares a CSP", () => {
-	const metas = cspMeta(readHtml("existing.html"));
+	const html = readHtml("existing.html");
 	// exactly the author's policy, untouched — no injected baseline
-	expect(metas).toEqual(["default-src 'none'"]);
+	expect(cspMeta(html)).toEqual(["default-src 'none'"]);
+	// byte-identical to `src/has-csp.html`
+	expect(html).toBe(
+		"<!doctype html><html><head><meta http-equiv=\"Content-Security-Policy\" content=\"default-src 'none'\"><title>Has</title></head><body></body></html>"
+	);
+});
+
+it("injects CSP past a non-CSP <meta charset>", () => {
+	const html = readHtml("charset.html");
+	const metas = cspMeta(html);
+	expect(metas).toHaveLength(1);
+	expect(metas[0]).toContain(sha("sha256", inlineStyle(html)));
+	expect(html).toContain('<meta charset="utf-8">');
+});
+
+it("covers an external injected <script src> by 'self' without hashing it", () => {
+	const html = readHtml("external-script.html");
+	const [policy] = cspMeta(html);
+	expect(html).toContain('src="external-script.js"');
+	expect(policy).toContain("script-src 'self'");
+	expect(policy).not.toMatch(/'sha\d+-/);
+});
+
+it("adds the nonce to an injected inline <script>", () => {
+	const html = readHtml("nonce-script.html");
+	expect(html).toMatch(/<script nonce="__NONCE__">/);
+	expect(cspMeta(html)[0]).toContain("'nonce-__NONCE__'");
 });
 
 it("hashes an inlined <script> body into script-src", () => {

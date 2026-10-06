@@ -1,0 +1,12 @@
+.base {
+	color: red;
+}
+
+.button {
+	composes: base;
+	color: blue;
+}
+
+.other {
+	color: green;
+}

@@ -35,16 +35,22 @@ const recordModuleHash = (key) =>
  * @param {boolean} withBase whether the entry sets a `baseUri`
  * @param {string} publicPath the public path under test
  * @param {boolean=} relative whether the reference keeps the runtime form
+ * @param {string=} baseUri the base the entry sets, when not `BASE`
  * @returns {import("../../../../").Configuration} configuration
  */
-const base = (name, index, withBase, publicPath, relative = false) => ({
+const base = (
+	name,
+	index,
+	withBase,
+	publicPath,
+	relative = false,
+	baseUri = BASE
+) => ({
 	name: `${name}:${withBase ? "base" : "none"}`,
 	target: "node",
 	mode: "development",
 	devtool: false,
-	entry: withBase
-		? { main: { import: "./index.js", baseUri: BASE } }
-		: "./index.js",
+	entry: withBase ? { main: { import: "./index.js", baseUri } } : "./index.js",
 	output: {
 		module: true,
 		filename: `bundle${index}.mjs`,
@@ -73,8 +79,11 @@ module.exports = [
 	// Here the base really does reach the baked url, so it has to be hashed.
 	base("reads-base", 6, false, "./"),
 	base("reads-base", 7, true, "./"),
+	// An empty base is still a base, so it must not hash like none at all.
+	base("empty-base", 8, false, "./"),
+	base("empty-base", 9, true, "./", false, ""),
 	{
-		...base("report", 8, false, "auto"),
+		...base("report", 10, false, "auto"),
 		// Compilers run concurrently, so name every pair above as a dependency —
 		// otherwise this one can report before they have recorded their hashes.
 		dependencies: [
@@ -85,14 +94,24 @@ module.exports = [
 			"relative:none",
 			"relative:base",
 			"reads-base:none",
-			"reads-base:base"
+			"reads-base:base",
+			"empty-base:none",
+			"empty-base:base"
 		],
 		plugins: [
 			function apply() {
 				this.hooks.done.tap("testcase", () => {
-					for (const name of ["auto", "root", "relative", "reads-base"]) {
+					for (const name of [
+						"auto",
+						"root",
+						"relative",
+						"reads-base",
+						"empty-base"
+					]) {
 						expect(
-							`${name} reported: ${hashes.has(`${name}:none`)} ${hashes.has(`${name}:base`)}`
+							`${name} reported: ${hashes.has(`${name}:none`)} ${hashes.has(
+								`${name}:base`
+							)}`
 						).toBe(`${name} reported: true true`);
 					}
 					// The base cannot reach the code, so it must not reach the hash.
@@ -105,6 +124,9 @@ module.exports = [
 					// code — so the hash has to tell them apart.
 					expect(hashes.get("reads-base:base")).not.toBe(
 						hashes.get("reads-base:none")
+					);
+					expect(hashes.get("empty-base:base")).not.toBe(
+						hashes.get("empty-base:none")
 					);
 				});
 			}
