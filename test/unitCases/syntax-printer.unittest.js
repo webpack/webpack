@@ -679,6 +679,7 @@ const KEPT_CASES = [
 	["a string method left out", 'try { console.log("a".join()); } catch (e) { console.log(2); }'],
 	["an array of something no literal", "console.log([[Math.random() > 2]].join());"],
 	["an array joined holding a value no string, number or boolean", "console.log([{}, Math.random() > 2].join(\"-\"), [Math.random() > 2, 1].join(1));"],
+	["an array of no value joined where a global may be rebound", 'function f(o) { with (o) return [[null].join(), [void 0].join("-"), [,].join()]; } console.log(f({}));'],
 	["an array joined, longer as a concatenation", 'function f(a, b, c) { return [a * 1, b * 1, c * 1].join("------"); } console.log(f(1, 2, 3));'],
 	["a number method throwing for its argument", "try { console.log((1).toFixed(101)); } catch (e) { console.log(e.name); }"],
 	["a function left out", 'console.log(Math.sin(1), "a,b".split(","));'],
