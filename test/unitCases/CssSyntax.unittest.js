@@ -7234,9 +7234,9 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		// A `calc()` inside a math expression is what a parenthesis already says,
 		// but a declaration holding a substitution keeps its value as written, so
 		// dropping the keyword there builds a different CSSOM.
-		it("keeps a nested `calc()`", () => {
+		it("keeps a nested `calc()` as the parentheses it is", () => {
 			expect(minify("a{width:calc(1em + calc(var(--w)*2))}")).toBe(
-				"a{width:calc(1em + calc(var(--w)*2))}"
+				"a{width:calc(1em + (var(--w)*2))}"
 			);
 		});
 
@@ -8168,7 +8168,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			);
 			expect(
 				minify("@supports ((a:b) or (c:d)) and ((a:b) or (c:d)){a{color:red}}")
-			).toBe("@supports ((a:b) or (c:d)){a{color:red}}");
+			).toBe("@supports (a:b) or (c:d){a{color:red}}");
 			expect(minify("@media (color) and (color){a{color:red}}")).toBe(
 				"@media (color){a{color:red}}"
 			);
@@ -8724,7 +8724,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// arguments refuse: Chromium reads `round(down,4.5cm,1.5cm)` as 113.386px
 			// and `round(down,45mm,15mm)` as 170.079px.
 			expect(value("round(down,calc(4.5cm),calc(1.5cm))")).toBe(
-				"round(down,calc(4.5cm),calc(1.5cm))"
+				"round(down,(4.5cm),(1.5cm))"
 			);
 			expect(value("round(down,min(4.5cm,9cm),1.5cm)")).toBe(
 				"round(down,min(4.5cm,9cm),1.5cm)"
@@ -15028,6 +15028,34 @@ describe("CssSyntax minify — what a comparison with other minifiers found", ()
 			'a{grid-template:"a"1fr/1fr;color:red}'
 		]
 	])("merges %s into %s", (css, expected) => {
+		expect(settled(css)).toBe(expected);
+	});
+
+	it.each([
+		// A nested `calc()` is parentheses, whatever a substitution expands to.
+		["a{width:calc(1px*calc(1 - var(--r)))}", "a{width:calc(1px*(1 - var(--r)))}"],
+		["a{width:min(calc(var(--a) + 1px),10px)}", "a{width:min((var(--a) + 1px),10px)}"],
+		["a{--x:calc(calc(var(--a)*2))}", "a{--x:calc(calc(var(--a)*2))}"],
+		// Zero outside a math function, where only `1/-0` tells it apart.
+		["a{margin:-0 -0px}", "a{margin:0}"],
+		["a{width:calc(1px/-0)}", "a{width:calc(1px/-0)}"],
+		["a{--x:-0}", "a{--x:-0}"],
+		// A translation's `0%` is of the element's own box.
+		["a{transform:translate(calc(0% - 16px))}", "a{transform:translate(-16px)}"],
+		["a{transform:translate(calc(0% + 1px),calc(0% - -2px))}", "a{transform:translate(1px,2px)}"],
+		["a{transform:translateY(calc(5px - 0%))}", "a{transform:translateY(5px)}"],
+		["a{transform:translate(calc(-100% + 16px))}", "a{transform:translate(calc(-100% + 16px))}"],
+		// Elsewhere it is of a size that may be indefinite.
+		["a{width:calc(0% - 16px)}", "a{width:calc(0% - 16px)}"],
+		["@supports ((a:b) or (c:d)){a{x:1}}", "@supports (a:b) or (c:d){a{x:1}}"],
+		["@supports not (((a:b) or (c:d))){a{x:1}}", "@supports not ((a:b) or (c:d)){a{x:1}}"],
+		["@supports (a:b) and ((c:d)){a{x:1}}", "@supports (a:b) and (c:d){a{x:1}}"],
+		['@supports (content:"((x))"){a{x:1}}', '@supports (content:"((x))"){a{x:1}}'],
+		[
+			"@container scroll-state(stuck : top) and style(--x: 1){a{x:1}}",
+			"@container scroll-state(stuck:top) and style(--x: 1){a{x:1}}"
+		]
+	])("writes %s as %s", (css, expected) => {
 		expect(settled(css)).toBe(expected);
 	});
 
