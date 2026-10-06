@@ -1247,6 +1247,46 @@ const CORRECTED_CASES = [
 		{ compress: {}, mangle: false }
 	],
 	[
+		"a strict `arguments.callee` nobody reads",
+		"'use strict'; try { (function () { arguments.callee; })(); console.log('no'); } catch (e) { console.log(e.name); }",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an empty strict function's `caller`, read",
+		"function foo() { 'use strict'; } try { foo.caller; console.log('no'); } catch (e) { console.log(e.name); }",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a function's `caller` assigned in strict code",
+		"'use strict'; try { (function () { var foo = function () {}; foo.caller = 20; })(); console.log('no'); } catch (e) { console.log(e.name); }",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an arrow's `arguments` nobody reads",
+		"try { (function () { var t = (() => 1).arguments; })(); console.log('no'); } catch (e) { console.log(e.name); }",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an array spreading a generator nobody reads",
+		"function* g() { console.log('ran'); yield 1; } function t() { var it = g(); [...it]; } t();",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an unused array holding a hole, a generator's spread and a call",
+		"function* g() { console.log('ran'); yield 1; } function f() { console.log('f'); } function t() { var it = g(); var a = [, ...it, f()]; } t();",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a pure call's argument spreading a generator",
+		"function* g() { console.log('ran'); yield 1; } function f() {} function t() { var it = g(); /*#__PURE__*/ f(...it); } t();",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a pure native method's argument spreading a generator",
+		"function* g() { console.log('ran'); yield 1; } function o() { console.log('o'); return 'a'; } function t() { var it = g(); (o() + '').indexOf(...it); } t();",
+		{ compress: { unsafe: true }, mangle: false }
+	],
+	[
 		"a switch's one case reading a `let` declared in its body",
 		'var f; switch (null) { case (f = function () { return x; }, null): let x = "inside"; } console.log(f());',
 		{ compress: {}, mangle: false }
@@ -2427,7 +2467,7 @@ describe("syntax-printer", () => {
 		],
 		[
 			"side effects of every statement kind",
-			"function f() { try { a(); } catch (e) { b(); } finally { c(); } switch (x) { case 1: y(); default: z(); } if (a) b(); else c(); l: for (;;) break l; { d(); } return e; } void f; (function () { var u = 1; u++; --u; delete u.x; typeof u; })(); (() => 1)(); new Date(); new Foo(); `a${b}c`; tag`x`; [...a]; ({ [k]: v, ...r }); class K { [a()] = 1; static [b()] = 2; static { c(); } #m() {} get #g() {} set #s(v) {} m() {} }",
+			"function f() { try { a(); } catch (e) { b(); } finally { c(); } switch (x) { case 1: y(); default: z(); } if (a) b(); else c(); l: for (;;) break l; { d(); } return e; } void f; (function () { var u = 1; u++; --u; delete u.x; typeof u; })(); (() => 1)(); new Date(); new Foo(); `a${b}c`; tag`x`; [...[a]]; ({ [k]: v, ...r }); class K { [a()] = 1; static [b()] = 2; static { c(); } #m() {} get #g() {} set #s(v) {} m() {} }",
 			{ passes: 2, toplevel: true, side_effects: true, pure_new: true }
 		],
 		[
@@ -4813,6 +4853,19 @@ describe("syntax-printer", () => {
 			const { code } = await minify(input, options);
 			const reference = await terserReference().minify(input, options);
 			expect(code).toBe(reference.code);
+		});
+	});
+
+	describe("a spread nobody reads", () => {
+		it("should write what terser writes where it runs no iterator", async () => {
+			const { minify } = await load();
+			const input =
+				"function t(a) { [...[1, a]]; [...'ab']; var o = null; o?.f(...a); } t([1]); console.log('x');";
+			const options = { compress: {}, mangle: false };
+			const { code } = await minify(input, options);
+			const reference = await terserReference().minify(input, options);
+			expect(code).toBe(reference.code);
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
 		});
 	});
 
