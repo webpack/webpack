@@ -445,6 +445,11 @@ const IMPROVED_CASES = [
 		{ compress: { ecma: 2020 }, ecma: 2020, mangle: false }
 	],
 	[
+		"a `const` nothing writes, as `let`",
+		"function f(o) { const a = o.x + 1, { b } = o; for (const k of [a, b]) console.log(k); { const c = [a]; console.log(c, c); } } f({ x: 1, b: 2 }); f({ x: 3, b: 4 });",
+		{ compress: {}, mangle: false }
+	],
+	[
 		"a pattern naming nothing, reading `null`, which still throws",
 		"try { !function () { const { a } = null; }(); } catch (e) { console.log(e.name); }",
 		{ compress: {}, mangle: false }
@@ -529,7 +534,7 @@ const KEPT_CASES = [
 	["a shadowed `Array`", "function f(Array) { return new Array(1, 2); } console.log(f(function (a, b) { this.s = a + b; }).s, f(function () { this.s = 0; }).s);"],
 	["a `+` beside no number literal", 'var s = Math.random() < 2 ? "5" : ""; console.log("2" - +s, +s - +s, 1 + +s);'],
 	["a `var`", "!function () { var a = Math.random(); console.log(a, a); }();"],
-	["a `return`", `!function () { for (const x of [1, 2]) { ${TRY} if (x) return; } console.log(2); }();`],
+	["a `return`", `!function () { for (let x of [1, 2]) { ${TRY} if (x) return; } console.log(2); }();`],
 	["`this`", `!function () { ${TRY} console.log(this); }();`],
 	["`arguments`", `!function () { ${TRY} console.log(arguments.length); }();`],
 	["`new.target`", `!function () { ${TRY} console.log(new.target); }();`],
@@ -2645,7 +2650,7 @@ describe("syntax-printer", () => {
 					compress: { ...base, ...compress },
 					mangle: Object.keys(base).length !== 0
 				});
-				const ours = await minify(source, settings());
+				const ours = await unimproved(() => minify(source, settings()));
 				const theirs = await reference.minify(source, settings());
 				expect(ours.code).toBe(theirs.code);
 				outputs.push(/** @type {string} */ (ours.code));
@@ -4792,18 +4797,37 @@ describe("syntax-printer", () => {
 				['try { throw 1; } catch (e) { var e = 2; console.log(e); }', modern],
 				["var e = 0; try { throw 1; } catch (e) { var e = 2; } console.log(e);", modern],
 				["var e = 0; try { throw 1; } catch (e) { e = 2; } console.log(e);", modern],
-				["console.log(function () { var o = Math.random() < 2 ? { a: 1, b: 2 } : {}; const { a, ...r } = o; return r.b; }());", modern],
-				["console.log(function () { const { a = console.log(1) } = {}; return 2; }());", modern],
-				["console.log(function () { const { [console.log(1)]: a } = {}; return 2; }());", modern],
-				['console.log(function (k) { const { [k]: a } = {}; return 2; }({ toString() { console.log(1); return "a"; } }));', modern],
-				["console.log(function () { var o = Math.random() < 2 ? { a: 1, b: 2 } : {}; const { a, b } = o; return a; }());", modern],
-				['console.log(function () { const { a, b } = { a: 1, get b() { console.log(2); } }; return a; }());', modern],
-				["console.log(function (o) { const [a, b] = o; return a; }(Math.random() < 2 ? [1, 2] : []));", modern],
-				['console.log(function () { var it = { [Symbol.iterator]() { console.log("iterated"); return [][Symbol.iterator](); } }; const [] = [...it]; const { a } = { ...it }; const [] = [[...it]]; const {} = { d: { ...it }, e: 1 }; return 2; }());', modern],
-				["console.log(function (s) { try { const { a = Math.abs(s) } = {}; } catch (e) { return e.name; } return 2; }(Symbol()));", modern],
-				["class B {} class C extends B { constructor() { const { a = this } = {}; super(); } } try { new C(); } catch (e) { console.log(e.name); }", modern]
+				["console.log(function () { var o = Math.random() < 2 ? { a: 1, b: 2 } : {}; let { a, ...r } = o; return r.b; }());", modern],
+				["console.log(function () { let { a = console.log(1) } = {}; return 2; }());", modern],
+				["console.log(function () { let { [console.log(1)]: a } = {}; return 2; }());", modern],
+				['console.log(function (k) { let { [k]: a } = {}; return 2; }({ toString() { console.log(1); return "a"; } }));', modern],
+				["console.log(function () { var o = Math.random() < 2 ? { a: 1, b: 2 } : {}; let { a, b } = o; return a; }());", modern],
+				['console.log(function () { let { a, b } = { a: 1, get b() { console.log(2); } }; return a; }());', modern],
+				["console.log(function (o) { let [a, b] = o; return a; }(Math.random() < 2 ? [1, 2] : []));", modern],
+				['console.log(function () { var it = { [Symbol.iterator]() { console.log("iterated"); return [][Symbol.iterator](); } }; let [] = [...it]; let { a } = { ...it }; let [] = [[...it]]; let {} = { d: { ...it }, e: 1 }; return 2; }());', modern],
+				["console.log(function (s) { try { let { a = Math.abs(s) } = {}; } catch (e) { return e.name; } return 2; }(Symbol()));", modern],
+				["class B {} class C extends B { constructor() { let { a = this } = {}; super(); } } try { new C(); } catch (e) { console.log(e.name); }", modern]
 			];
-			for (const [input, options] of cases) {
+			for (let [input, options] of cases) {
+				const { code } = await minify(input, options);
+				const reference = await terserReference().minify(input, options);
+				expect(code).toBe(reference.code);
+			}
+		});
+
+		it("should keep a `const` something writes, an `eval` reaches or the top level declares", async () => {
+			const { minify } = await load();
+			const options = { compress: {}, mangle: false };
+			const cases = [
+				"function f(o) { const a = o.x; try { a = 2; } catch (e) { console.log(e.name); } return a; } console.log(f({ x: 1 }));",
+				"function f(o) { const a = o.x; try { a++; } catch (e) { console.log(e.name); } return a; } console.log(f({ x: 1 }));",
+				"function f(o) { const a = o.x; try { [, a] = [1, 2]; } catch (e) { console.log(e.name); } return a; } console.log(f({ x: 1 }));",
+				"function f(o) { const a = o.x; try { ({ b: a } = { b: 2 }); } catch (e) { console.log(e.name); } return a; } console.log(f({ x: 1 }));",
+				"function f(o) { const a = o.x; try { for (a in o); } catch (e) { console.log(e.name); } return a; } console.log(f({ x: 1 }));",
+				"function f(o) { const a = o.x; try { eval(\"a = 2\"); } catch (e) { console.log(e.name); } return a; } console.log(f({ x: 1 }));",
+				"const a = Math.random() < 2; console.log(a, a);"
+			];
+			for (const input of cases) {
 				const { code } = await minify(input, options);
 				const reference = await terserReference().minify(input, options);
 				expect(code).toBe(reference.code);

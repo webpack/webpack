@@ -18435,7 +18435,7 @@ declare interface Minifier {
 	) => Promise<MinifyOutput>;
 	phases: string[];
 	corrections?: { enabled: boolean };
-	improvements?: { enabled: boolean };
+	improvements?: { enabled: boolean; lets: { enabled: boolean } };
 	modules: MinifierModules;
 }
 
