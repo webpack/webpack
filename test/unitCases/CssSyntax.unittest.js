@@ -15258,6 +15258,12 @@ describe("CssSyntax minify — what a comparison with other minifiers found", ()
 		["a{transform:translate(calc(0% - 16px))}", "a{transform:translate(-16px)}"],
 		["a{transform:translate(calc(0% + 1px),calc(0% - -2px))}", "a{transform:translate(1px,2px)}"],
 		["a{transform:translateY(calc(5px - 0%))}", "a{transform:translateY(5px)}"],
+		["a{transform:translate3d(calc(0% - 16px),0,0)}", "a{transform:translate(-16px)}"],
+		// The digits a second pass would find, found on the first.
+		["a{max-height:89.99785714em}", "a{max-height:89.997857em}"],
+		// A lone basis means `1 1 <basis>`, however the three were written.
+		["a{flex:1;flex-basis:33%}", "a{flex:33%}"],
+		["a{flex-grow:1;flex-shrink:1;flex-basis:100%}", "a{flex:100%}"],
 		["a{transform:translate(calc(-100% + 16px))}", "a{transform:translate(calc(-100% + 16px))}"],
 		// Elsewhere it is of a size that may be indefinite.
 		["a{width:calc(0% - 16px)}", "a{width:calc(0% - 16px)}"],

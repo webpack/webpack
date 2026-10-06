@@ -5640,6 +5640,21 @@ const collectSelectorSupport = () => {
 };
 
 /**
+ * When each browser first read each gradient function, by its name, which is
+ * what says when a fallback written before one is read for nothing.
+ * @returns {[string, [string, number][]][]} the versions, by function name
+ */
+const collectGradientSupport = () => {
+	/** @type {[string, [string, number][]][]} */
+	const table = [];
+	for (const name of Object.keys(bcd.css.types.gradient)) {
+		if (name.startsWith("__")) continue;
+		table.push([name, collectSupportedFrom([`css.types.gradient.${name}`])]);
+	}
+	return table;
+};
+
+/**
  * When each browser first read a value a declaration may name, keyed by the
  * spelling the printer looks one up by: a color function by its own name, and a
  * property's keyword as `"<property> <keyword>"`. Only a construct BCD gives a
@@ -5662,12 +5677,6 @@ const collectValueSupport = (
 		const node = /** @type {EXPECTED_ANY} */ (bcd.css.types.color)[name];
 		if (!node || !node.__compat) continue;
 		table.push([name, collectSupportedFrom([`css.types.color.${name}`])]);
-	}
-	// A gradient is named by its function the same way, which is what says when a
-	// fallback written before one is read for nothing.
-	for (const name of Object.keys(bcd.css.types.gradient)) {
-		if (name.startsWith("__")) continue;
-		table.push([name, collectSupportedFrom([`css.types.gradient.${name}`])]);
 	}
 	for (const [property, node] of Object.entries(propertyNodes)) {
 		if (property.startsWith("__")) continue;
@@ -7209,7 +7218,10 @@ const collectData = async () => {
 		name,
 		collectSupportedFrom(paths)
 	]);
-	const valueSupport = collectValueSupport(colorValueFunctions);
+	const valueSupport = [
+		...collectValueSupport(colorValueFunctions),
+		...collectGradientSupport()
+	].sort((a, b) => (a[0] < b[0] ? -1 : 1));
 	const pooled = poolSupport([supportedFrom, selectorSupport, valueSupport]);
 	const prefixedAtRules = collectPrefixTable(bcd.css["at-rules"]);
 	const prefixedValues = collectPrefixedValues();
