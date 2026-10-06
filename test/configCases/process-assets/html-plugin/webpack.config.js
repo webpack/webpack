@@ -174,8 +174,8 @@ class HtmlInlinePlugin {
 										}
 										if (!this.inline.test(url)) return;
 										matches.push({
-											start: path.start(),
-											length: path.end() - path.start(),
+											start: path.range()[0],
+											length: path.range()[1] - path.range()[0],
 											asset: /** @type {Asset} */ (compilation.getAsset(url))
 										});
 									}

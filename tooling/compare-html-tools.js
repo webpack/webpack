@@ -1314,24 +1314,27 @@ for (const [name, type] of Object.entries(NodeType)) {
  */
 const htmlInnerRanges = (nodePath) => {
 	if (nodePath.type() !== NodeType.Element) return undefined;
-	const start = nodePath.start();
-	const tagEnd = nodePath.contentStart();
+	const start = nodePath.range()[0];
+	const content = nodePath.contentRange();
 	// The parser inserted this element, or the adoption agency cloned it: no tag
 	// was written, so it states no offsets to hold.
-	if (tagEnd <= start) return undefined;
+	if (content === null || content[0] <= start) return undefined;
+	const tagEnd = content[0];
 	/** @type {[string, number, number][]} */
 	const inner = [["opening tag", start, tagEnd]];
 	const count = nodePath.attributeCount();
 	for (let index = 0; index < count; index++) {
 		const attribute = nodePath.attribute(index);
-		const nameStart = nodePath.nameStart(attribute);
-		const nameEnd = nodePath.nameEnd(attribute);
+		const [nameStart, nameEnd] = /** @type {[number, number]} */ (
+			nodePath.nameRange(attribute)
+		);
 		if (nameStart < start || nameStart >= tagEnd) continue;
 		inner.push(["attribute name", nameStart, nameEnd]);
+		const value = nodePath.valueRange(attribute);
 		inner.push([
 			"attribute value",
-			nodePath.valueStart(attribute),
-			nodePath.valueEnd(attribute)
+			value === null ? -1 : value[0],
+			value === null ? -1 : value[1]
 		]);
 	}
 	return inner;
@@ -1363,8 +1366,8 @@ const htmlSpans = (html) =>
 				}
 				new SourceProcessor().use(visitors).process(html, {});
 			},
-			start: (nodePath) => nodePath.start(),
-			end: (nodePath) => nodePath.end(),
+			start: (nodePath) => nodePath.range()[0],
+			end: (nodePath) => nodePath.range()[1],
 			name: (nodePath) => NODE_TYPE_NAMES[nodePath.type()],
 			inner: htmlInnerRanges
 		})
@@ -1408,8 +1411,8 @@ const htmlNodeRuns = (html, fragmentContext) => {
 				const frame = /** @type {EXPECTED_ANY} */ (stack.pop());
 				const type = nodePath.type();
 				const tag = type === NodeType.Element ? nodePath.name() : "";
-				const start = nodePath.start();
-				const end = nodePath.end();
+				const start = nodePath.range()[0];
+				const end = nodePath.range()[1];
 				const size = frame.held + 1;
 				const lo = Math.min(frame.lo, start);
 				const hi = Math.max(frame.hi, end);
@@ -1552,9 +1555,7 @@ const htmlPurityDigest = (html, print) => {
 	const visitors = {};
 	const read = (/** @type {EXPECTED_ANY} */ nodePath) => {
 		const type = nodePath.type();
-		digest.update(
-			`${NODE_TYPE_NAMES[type]}[${nodePath.start()},${nodePath.end()})`
-		);
+		digest.update(`${NODE_TYPE_NAMES[type]}[${nodePath.range().join(",")})`);
 		if (type === NodeType.Element) {
 			digest.update(`|<${nodePath.name()}>|${nodePath.namespace()}`);
 			const count = nodePath.attributeCount();

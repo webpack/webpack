@@ -10,7 +10,7 @@
 
 const fs = require("fs");
 const path = require("path");
-const { A, NS_HTML, _attributeList, NS_MATHML, NS_SVG, NodeType, QUOTE_DOUBLE, QUOTE_NONE, QUOTE_SINGLE, decodeEntities, escapeAttribute, escapeText, parseCssUrls, parseHtml: parseHtmlRefs, parseMsapplicationTask, parseSrc, parseSrcset, tokenize } = require("../../lib/html/syntax-parser");
+const { A, NS_HTML, _attributeList, _contentEndOf, _contentStartOf, _endOf, _nameEndOf, _startOf, NS_MATHML, NS_SVG, NodeType, QUOTE_DOUBLE, QUOTE_NONE, QUOTE_SINGLE, decodeEntities, escapeAttribute, escapeText, parseCssUrls, parseHtml: parseHtmlRefs, parseMsapplicationTask, parseSrc, parseSrcset, tokenize } = require("../../lib/html/syntax-parser");
 const { builtinEmbeddedRenderer } = require("../../lib/html/builtinEmbeddedRenderer");
 const serializeHtmlTree = require("../helpers/serializeHtmlTree");
 
@@ -3111,11 +3111,11 @@ const materialize = (ref) => {
 				attributes: _attributeList(ref),
 				children: childrenOf(ref).map(materialize),
 				selfClosing: A.selfClosing(ref),
-				start: A.start(ref),
-				end: A.end(ref),
-				tagEnd: A.contentStart(ref),
-				nameEnd: A.nameEnd(ref),
-				contentEnd: A.contentEnd(ref),
+				start: _startOf(ref),
+				end: _endOf(ref),
+				tagEnd: _contentStartOf(ref),
+				nameEnd: _nameEndOf(ref),
+				contentEnd: _contentEndOf(ref),
 				templateContent:
 					tc !== 0
 						? {
@@ -3130,8 +3130,8 @@ const materialize = (ref) => {
 				type,
 				target: A.name(ref),
 				data: A.value(ref),
-				start: A.start(ref),
-				end: A.end(ref)
+				start: A.range(ref)[0],
+				end: A.range(ref)[1]
 			};
 		case NodeType.Doctype:
 			return {
@@ -3139,8 +3139,8 @@ const materialize = (ref) => {
 				name: A.name(ref),
 				publicId: A.publicId(ref),
 				systemId: A.systemId(ref),
-				start: A.start(ref),
-				end: A.end(ref)
+				start: A.range(ref)[0],
+				end: A.range(ref)[1]
 			};
 		default:
 			// Text / Comment
@@ -3149,8 +3149,8 @@ const materialize = (ref) => {
 					type
 				),
 				data: A.value(ref),
-				start: A.start(ref),
-				end: A.end(ref)
+				start: A.range(ref)[0],
+				end: A.range(ref)[1]
 			};
 	}
 };
@@ -8283,7 +8283,7 @@ describe("SourceProcessor — streamed walk offsets", () => {
 			.use(
 				/** @type {import("../../lib/html/syntax-printer").VisitorMap} */ ({
 					[NodeType.Element]: (path) => {
-						seen.push([path.name(), path.start(), path.end()]);
+						seen.push([path.name(), path.range()[0], path.range()[1]]);
 					}
 				})
 			)
@@ -8328,12 +8328,12 @@ describe("SourceProcessor — streamed walk offsets", () => {
 						[NodeType.Element]: {
 							enter: (path) => {
 								if (path.name() === "div" && atEnter === -1) {
-									atEnter = path.end();
+									atEnter = path.range()[1];
 								}
 							},
 							exit: (path) => {
 								if (path.name() === "div" && atExit === -1) {
-									atExit = path.end();
+									atExit = path.range()[1];
 								}
 							}
 						}
@@ -8399,19 +8399,12 @@ describe("parseHtml — path accessor completeness", () => {
 						const id = path.findAttribute("id");
 						log.push(`id:${path.name(id)}=${path.value(id)}`);
 						log.push(
-							`idName:${SRC.slice(
-								path.nameStart(id),
-								path.nameEnd(id)
-							)}`
+							`idName:${SRC.slice(.../** @type {[number, number]} */ (path.nameRange(id)))}`
 						);
 						log.push(
-							`idValue:${SRC.slice(
-								path.valueStart(id),
-								path.valueEnd(id)
-							)}`
+							`idValue:${SRC.slice(.../** @type {[number, number]} */ (path.valueRange(id)))}`
 						);
-						const checked = path.attribute(1);
-						log.push(`checkedValueStart:${path.valueStart(checked)}`);
+						log.push(`checkedValue:${path.valueRange(path.attribute(1))}`);
 						log.push(`firstChildType:${path.type(path.child(0))}`);
 						log.push(
 							`nextSibling:${path.child(
@@ -8432,7 +8425,7 @@ describe("parseHtml — path accessor completeness", () => {
 			"id:id=d",
 			"idName:id",
 			"idValue:d",
-			"checkedValueStart:-1",
+			"checkedValue:null",
 			`firstChildType:${NodeType.Text}`,
 			"nextSibling:0"
 		]);

@@ -6729,12 +6729,8 @@ declare class CssSourceProcessor extends SourceProcessor<
 		stop(): void;
 		inValue(): boolean;
 		type(n?: NodeSyntaxParser): number;
-		start(n?: NodeSyntaxParser): number;
-		end(n?: NodeSyntaxParser): number;
-		loc(n?: NodeSyntaxParser): {
-			start: { line: number; column: number };
-			end: { line: number; column: number };
-		};
+		range(n?: NodeSyntaxParser): [number, number];
+		loc(n?: NodeSyntaxParser): [number, number, number, number];
 		/**
 		 * A node's text exactly as the input wrote it (`name` and `value` decode).
 		 */
@@ -6748,11 +6744,9 @@ declare class CssSourceProcessor extends SourceProcessor<
 		value(n?: NodeSyntaxParser): string | number;
 		unit(n?: NodeSyntaxParser): string;
 		typeFlag(n?: NodeSyntaxParser): string;
-		valueStart(n?: NodeSyntaxParser): number;
-		valueEnd(n?: NodeSyntaxParser): number;
+		valueRange(n?: NodeSyntaxParser): null | [number, number];
 		name(n?: NodeSyntaxParser): string;
-		nameStart(n?: NodeSyntaxParser): number;
-		nameEnd(n?: NodeSyntaxParser): number;
+		nameRange(n?: NodeSyntaxParser): null | [number, number];
 		/**
 		 * A rule's children are its prelude; its block is read with {@link declarations }.
 		 */
@@ -6768,9 +6762,8 @@ declare class CssSourceProcessor extends SourceProcessor<
 		/**
 		 * Reads as an empty block on a streamed rule; see {@link declarations }.
 		 */
-		childRules(n?: NodeSyntaxParser): null | RuleSyntaxParser[];
-		blockStart(n?: NodeSyntaxParser): number;
-		blockEnd(n?: NodeSyntaxParser): number;
+		rules(n?: NodeSyntaxParser): null | RuleSyntaxParser[];
+		blockRange(n?: NodeSyntaxParser): null | [number, number];
 		important(n?: NodeSyntaxParser): boolean;
 		blockToken(n?: NodeSyntaxParser): SimpleBlockToken;
 	},
@@ -11748,16 +11741,12 @@ declare class HtmlSourceProcessor extends SourceProcessor<
 		 */
 		stop(): void;
 		type(n?: number): number;
-		start(n?: number): number;
-		end(n?: number): number;
+		range(n?: number): [number, number];
 		/**
 		 * Line / column are converted only when asked, by a converter made on the
 		 * first call of a parse. Valid during the walk, as {@link source } is.
 		 */
-		loc(n?: number): {
-			start: { line: number; column: number };
-			end: { line: number; column: number };
-		};
+		loc(n?: number): [number, number, number, number];
 		/**
 		 * A node's text as written; valid during the walk, before `parseHtml` releases the source.
 		 */
@@ -11778,10 +11767,8 @@ declare class HtmlSourceProcessor extends SourceProcessor<
 		 * Linear lookup by (lowercased) name.
 		 */
 		findAttribute(name: string, n?: number): number;
-		valueStart(a: number): number;
-		valueEnd(a: number): number;
-		nameStart(n?: number): number;
-		nameEnd(n?: number): number;
+		valueRange(n?: number): null | [number, number];
+		nameRange(n?: number): null | [number, number];
 		/**
 		 * Whether the source wrote this element's end tag rather than the parser
 		 * popping it for an implied close. Read back off the range instead of marked
@@ -11808,8 +11795,11 @@ declare class HtmlSourceProcessor extends SourceProcessor<
 		 * source to echo, and slicing one would spell `</>`.
 		 */
 		closeTag(n?: number): string;
-		contentStart(n?: number): number;
-		contentEnd(n?: number): number;
+		/**
+		 * Between the opening tag and the end tag, or where the content ends when
+		 * the source left the end tag out.
+		 */
+		contentRange(n?: number): null | [number, number];
 		templateContent(n?: number): number;
 		/**
 		 * A text's, comment's, processing instruction's or attribute's data,
@@ -20601,10 +20591,6 @@ declare interface NodeLike {
 	sourceFile?: string;
 	range?: [number, number];
 }
-declare interface NodeLocation {
-	start: { line: number; column: number };
-	end: { line: number; column: number };
-}
 
 /**
  * Options object for node compatibility features.
@@ -20662,19 +20648,14 @@ declare interface NodePath<TNode, TValue = unknown> {
 	type: (n?: TNode) => number;
 
 	/**
-	 * start offset
+	 * start and end offsets in the input
 	 */
-	start: (n?: TNode) => number;
+	range: (n?: TNode) => [number, number];
 
 	/**
-	 * end offset
+	 * start line and column, end line and column (lines from 1, columns from 0)
 	 */
-	end: (n?: TNode) => number;
-
-	/**
-	 * line / column location
-	 */
-	loc: (n?: TNode) => NodeLocation;
+	loc: (n?: TNode) => [number, number, number, number];
 
 	/**
 	 * the node's source text, or the input between two offsets
@@ -33851,12 +33832,8 @@ declare namespace exports {
 					stop(): void;
 					inValue(): boolean;
 					type(n?: NodeSyntaxParser): number;
-					start(n?: NodeSyntaxParser): number;
-					end(n?: NodeSyntaxParser): number;
-					loc(n?: NodeSyntaxParser): {
-						start: { line: number; column: number };
-						end: { line: number; column: number };
-					};
+					range(n?: NodeSyntaxParser): [number, number];
+					loc(n?: NodeSyntaxParser): [number, number, number, number];
 					/**
 					 * A node's text exactly as the input wrote it (`name` and `value` decode).
 					 */
@@ -33870,11 +33847,9 @@ declare namespace exports {
 					value(n?: NodeSyntaxParser): string | number;
 					unit(n?: NodeSyntaxParser): string;
 					typeFlag(n?: NodeSyntaxParser): string;
-					valueStart(n?: NodeSyntaxParser): number;
-					valueEnd(n?: NodeSyntaxParser): number;
+					valueRange(n?: NodeSyntaxParser): null | [number, number];
 					name(n?: NodeSyntaxParser): string;
-					nameStart(n?: NodeSyntaxParser): number;
-					nameEnd(n?: NodeSyntaxParser): number;
+					nameRange(n?: NodeSyntaxParser): null | [number, number];
 					/**
 					 * A rule's children are its prelude; its block is read with {@link declarations }.
 					 */
@@ -33890,9 +33865,8 @@ declare namespace exports {
 					/**
 					 * Reads as an empty block on a streamed rule; see {@link declarations }.
 					 */
-					childRules(n?: NodeSyntaxParser): null | RuleSyntaxParser[];
-					blockStart(n?: NodeSyntaxParser): number;
-					blockEnd(n?: NodeSyntaxParser): number;
+					rules(n?: NodeSyntaxParser): null | RuleSyntaxParser[];
+					blockRange(n?: NodeSyntaxParser): null | [number, number];
 					important(n?: NodeSyntaxParser): boolean;
 					blockToken(n?: NodeSyntaxParser): SimpleBlockToken;
 				};
@@ -34027,12 +34001,8 @@ declare namespace exports {
 						stop(): void;
 						inValue(): boolean;
 						type(n?: NodeSyntaxParser): number;
-						start(n?: NodeSyntaxParser): number;
-						end(n?: NodeSyntaxParser): number;
-						loc(n?: NodeSyntaxParser): {
-							start: { line: number; column: number };
-							end: { line: number; column: number };
-						};
+						range(n?: NodeSyntaxParser): [number, number];
+						loc(n?: NodeSyntaxParser): [number, number, number, number];
 						/**
 						 * A node's text exactly as the input wrote it (`name` and `value` decode).
 						 */
@@ -34046,11 +34016,9 @@ declare namespace exports {
 						value(n?: NodeSyntaxParser): string | number;
 						unit(n?: NodeSyntaxParser): string;
 						typeFlag(n?: NodeSyntaxParser): string;
-						valueStart(n?: NodeSyntaxParser): number;
-						valueEnd(n?: NodeSyntaxParser): number;
+						valueRange(n?: NodeSyntaxParser): null | [number, number];
 						name(n?: NodeSyntaxParser): string;
-						nameStart(n?: NodeSyntaxParser): number;
-						nameEnd(n?: NodeSyntaxParser): number;
+						nameRange(n?: NodeSyntaxParser): null | [number, number];
 						/**
 						 * A rule's children are its prelude; its block is read with {@link declarations }.
 						 */
@@ -34068,9 +34036,8 @@ declare namespace exports {
 						/**
 						 * Reads as an empty block on a streamed rule; see {@link declarations }.
 						 */
-						childRules(n?: NodeSyntaxParser): null | RuleSyntaxParser[];
-						blockStart(n?: NodeSyntaxParser): number;
-						blockEnd(n?: NodeSyntaxParser): number;
+						rules(n?: NodeSyntaxParser): null | RuleSyntaxParser[];
+						blockRange(n?: NodeSyntaxParser): null | [number, number];
 						important(n?: NodeSyntaxParser): boolean;
 						blockToken(n?: NodeSyntaxParser): SimpleBlockToken;
 					}>[],
@@ -34091,12 +34058,8 @@ declare namespace exports {
 									stop(): void;
 									inValue(): boolean;
 									type(n?: NodeSyntaxParser): number;
-									start(n?: NodeSyntaxParser): number;
-									end(n?: NodeSyntaxParser): number;
-									loc(n?: NodeSyntaxParser): {
-										start: { line: number; column: number };
-										end: { line: number; column: number };
-									};
+									range(n?: NodeSyntaxParser): [number, number];
+									loc(n?: NodeSyntaxParser): [number, number, number, number];
 									/**
 									 * A node's text exactly as the input wrote it (`name` and `value` decode).
 									 */
@@ -34110,11 +34073,9 @@ declare namespace exports {
 									value(n?: NodeSyntaxParser): string | number;
 									unit(n?: NodeSyntaxParser): string;
 									typeFlag(n?: NodeSyntaxParser): string;
-									valueStart(n?: NodeSyntaxParser): number;
-									valueEnd(n?: NodeSyntaxParser): number;
+									valueRange(n?: NodeSyntaxParser): null | [number, number];
 									name(n?: NodeSyntaxParser): string;
-									nameStart(n?: NodeSyntaxParser): number;
-									nameEnd(n?: NodeSyntaxParser): number;
+									nameRange(n?: NodeSyntaxParser): null | [number, number];
 									/**
 									 * A rule's children are its prelude; its block is read with {@link declarations }.
 									 */
@@ -34132,9 +34093,8 @@ declare namespace exports {
 									/**
 									 * Reads as an empty block on a streamed rule; see {@link declarations }.
 									 */
-									childRules(n?: NodeSyntaxParser): null | RuleSyntaxParser[];
-									blockStart(n?: NodeSyntaxParser): number;
-									blockEnd(n?: NodeSyntaxParser): number;
+									rules(n?: NodeSyntaxParser): null | RuleSyntaxParser[];
+									blockRange(n?: NodeSyntaxParser): null | [number, number];
 									important(n?: NodeSyntaxParser): boolean;
 									blockToken(n?: NodeSyntaxParser): SimpleBlockToken;
 								},
@@ -34230,12 +34190,8 @@ declare namespace exports {
 						stop(): void;
 						inValue(): boolean;
 						type(n?: NodeSyntaxParser): number;
-						start(n?: NodeSyntaxParser): number;
-						end(n?: NodeSyntaxParser): number;
-						loc(n?: NodeSyntaxParser): {
-							start: { line: number; column: number };
-							end: { line: number; column: number };
-						};
+						range(n?: NodeSyntaxParser): [number, number];
+						loc(n?: NodeSyntaxParser): [number, number, number, number];
 						/**
 						 * A node's text exactly as the input wrote it (`name` and `value` decode).
 						 */
@@ -34249,11 +34205,9 @@ declare namespace exports {
 						value(n?: NodeSyntaxParser): string | number;
 						unit(n?: NodeSyntaxParser): string;
 						typeFlag(n?: NodeSyntaxParser): string;
-						valueStart(n?: NodeSyntaxParser): number;
-						valueEnd(n?: NodeSyntaxParser): number;
+						valueRange(n?: NodeSyntaxParser): null | [number, number];
 						name(n?: NodeSyntaxParser): string;
-						nameStart(n?: NodeSyntaxParser): number;
-						nameEnd(n?: NodeSyntaxParser): number;
+						nameRange(n?: NodeSyntaxParser): null | [number, number];
 						/**
 						 * A rule's children are its prelude; its block is read with {@link declarations }.
 						 */
@@ -34271,9 +34225,8 @@ declare namespace exports {
 						/**
 						 * Reads as an empty block on a streamed rule; see {@link declarations }.
 						 */
-						childRules(n?: NodeSyntaxParser): null | RuleSyntaxParser[];
-						blockStart(n?: NodeSyntaxParser): number;
-						blockEnd(n?: NodeSyntaxParser): number;
+						rules(n?: NodeSyntaxParser): null | RuleSyntaxParser[];
+						blockRange(n?: NodeSyntaxParser): null | [number, number];
 						important(n?: NodeSyntaxParser): boolean;
 						blockToken(n?: NodeSyntaxParser): SimpleBlockToken;
 					},
@@ -34292,12 +34245,8 @@ declare namespace exports {
 							stop(): void;
 							inValue(): boolean;
 							type(n?: NodeSyntaxParser): number;
-							start(n?: NodeSyntaxParser): number;
-							end(n?: NodeSyntaxParser): number;
-							loc(n?: NodeSyntaxParser): {
-								start: { line: number; column: number };
-								end: { line: number; column: number };
-							};
+							range(n?: NodeSyntaxParser): [number, number];
+							loc(n?: NodeSyntaxParser): [number, number, number, number];
 							/**
 							 * A node's text exactly as the input wrote it (`name` and `value` decode).
 							 */
@@ -34311,11 +34260,9 @@ declare namespace exports {
 							value(n?: NodeSyntaxParser): string | number;
 							unit(n?: NodeSyntaxParser): string;
 							typeFlag(n?: NodeSyntaxParser): string;
-							valueStart(n?: NodeSyntaxParser): number;
-							valueEnd(n?: NodeSyntaxParser): number;
+							valueRange(n?: NodeSyntaxParser): null | [number, number];
 							name(n?: NodeSyntaxParser): string;
-							nameStart(n?: NodeSyntaxParser): number;
-							nameEnd(n?: NodeSyntaxParser): number;
+							nameRange(n?: NodeSyntaxParser): null | [number, number];
 							/**
 							 * A rule's children are its prelude; its block is read with {@link declarations }.
 							 */
@@ -34333,9 +34280,8 @@ declare namespace exports {
 							/**
 							 * Reads as an empty block on a streamed rule; see {@link declarations }.
 							 */
-							childRules(n?: NodeSyntaxParser): null | RuleSyntaxParser[];
-							blockStart(n?: NodeSyntaxParser): number;
-							blockEnd(n?: NodeSyntaxParser): number;
+							rules(n?: NodeSyntaxParser): null | RuleSyntaxParser[];
+							blockRange(n?: NodeSyntaxParser): null | [number, number];
 							important(n?: NodeSyntaxParser): boolean;
 							blockToken(n?: NodeSyntaxParser): SimpleBlockToken;
 						},
@@ -34431,16 +34377,12 @@ declare namespace exports {
 					 */
 					stop(): void;
 					type(n?: number): number;
-					start(n?: number): number;
-					end(n?: number): number;
+					range(n?: number): [number, number];
 					/**
 					 * Line / column are converted only when asked, by a converter made on the
 					 * first call of a parse. Valid during the walk, as {@link source } is.
 					 */
-					loc(n?: number): {
-						start: { line: number; column: number };
-						end: { line: number; column: number };
-					};
+					loc(n?: number): [number, number, number, number];
 					/**
 					 * A node's text as written; valid during the walk, before `parseHtml` releases the source.
 					 */
@@ -34461,10 +34403,8 @@ declare namespace exports {
 					 * Linear lookup by (lowercased) name.
 					 */
 					findAttribute(name: string, n?: number): number;
-					valueStart(a: number): number;
-					valueEnd(a: number): number;
-					nameStart(n?: number): number;
-					nameEnd(n?: number): number;
+					valueRange(n?: number): null | [number, number];
+					nameRange(n?: number): null | [number, number];
 					/**
 					 * Whether the source wrote this element's end tag rather than the parser
 					 * popping it for an implied close. Read back off the range instead of marked
@@ -34491,8 +34431,11 @@ declare namespace exports {
 					 * source to echo, and slicing one would spell `</>`.
 					 */
 					closeTag(n?: number): string;
-					contentStart(n?: number): number;
-					contentEnd(n?: number): number;
+					/**
+					 * Between the opening tag and the end tag, or where the content ends when
+					 * the source left the end tag out.
+					 */
+					contentRange(n?: number): null | [number, number];
 					templateContent(n?: number): number;
 					/**
 					 * A text's, comment's, processing instruction's or attribute's data,
@@ -34581,16 +34524,12 @@ declare namespace exports {
 						 */
 						stop(): void;
 						type(n?: number): number;
-						start(n?: number): number;
-						end(n?: number): number;
+						range(n?: number): [number, number];
 						/**
 						 * Line / column are converted only when asked, by a converter made on the
 						 * first call of a parse. Valid during the walk, as {@link source } is.
 						 */
-						loc(n?: number): {
-							start: { line: number; column: number };
-							end: { line: number; column: number };
-						};
+						loc(n?: number): [number, number, number, number];
 						/**
 						 * A node's text as written; valid during the walk, before `parseHtml` releases the source.
 						 */
@@ -34611,10 +34550,8 @@ declare namespace exports {
 						 * Linear lookup by (lowercased) name.
 						 */
 						findAttribute(name: string, n?: number): number;
-						valueStart(a: number): number;
-						valueEnd(a: number): number;
-						nameStart(n?: number): number;
-						nameEnd(n?: number): number;
+						valueRange(n?: number): null | [number, number];
+						nameRange(n?: number): null | [number, number];
 						/**
 						 * Whether the source wrote this element's end tag rather than the parser
 						 * popping it for an implied close. Read back off the range instead of marked
@@ -34641,8 +34578,11 @@ declare namespace exports {
 						 * source to echo, and slicing one would spell `</>`.
 						 */
 						closeTag(n?: number): string;
-						contentStart(n?: number): number;
-						contentEnd(n?: number): number;
+						/**
+						 * Between the opening tag and the end tag, or where the content ends when
+						 * the source left the end tag out.
+						 */
+						contentRange(n?: number): null | [number, number];
 						templateContent(n?: number): number;
 						/**
 						 * A text's, comment's, processing instruction's or attribute's data,
@@ -34680,16 +34620,12 @@ declare namespace exports {
 									 */
 									stop(): void;
 									type(n?: number): number;
-									start(n?: number): number;
-									end(n?: number): number;
+									range(n?: number): [number, number];
 									/**
 									 * Line / column are converted only when asked, by a converter made on the
 									 * first call of a parse. Valid during the walk, as {@link source } is.
 									 */
-									loc(n?: number): {
-										start: { line: number; column: number };
-										end: { line: number; column: number };
-									};
+									loc(n?: number): [number, number, number, number];
 									/**
 									 * A node's text as written; valid during the walk, before `parseHtml` releases the source.
 									 */
@@ -34710,10 +34646,8 @@ declare namespace exports {
 									 * Linear lookup by (lowercased) name.
 									 */
 									findAttribute(name: string, n?: number): number;
-									valueStart(a: number): number;
-									valueEnd(a: number): number;
-									nameStart(n?: number): number;
-									nameEnd(n?: number): number;
+									valueRange(n?: number): null | [number, number];
+									nameRange(n?: number): null | [number, number];
 									/**
 									 * Whether the source wrote this element's end tag rather than the parser
 									 * popping it for an implied close. Read back off the range instead of marked
@@ -34740,8 +34674,11 @@ declare namespace exports {
 									 * source to echo, and slicing one would spell `</>`.
 									 */
 									closeTag(n?: number): string;
-									contentStart(n?: number): number;
-									contentEnd(n?: number): number;
+									/**
+									 * Between the opening tag and the end tag, or where the content ends when
+									 * the source left the end tag out.
+									 */
+									contentRange(n?: number): null | [number, number];
 									templateContent(n?: number): number;
 									/**
 									 * A text's, comment's, processing instruction's or attribute's data,
@@ -34810,16 +34747,12 @@ declare namespace exports {
 						 */
 						stop(): void;
 						type(n?: number): number;
-						start(n?: number): number;
-						end(n?: number): number;
+						range(n?: number): [number, number];
 						/**
 						 * Line / column are converted only when asked, by a converter made on the
 						 * first call of a parse. Valid during the walk, as {@link source } is.
 						 */
-						loc(n?: number): {
-							start: { line: number; column: number };
-							end: { line: number; column: number };
-						};
+						loc(n?: number): [number, number, number, number];
 						/**
 						 * A node's text as written; valid during the walk, before `parseHtml` releases the source.
 						 */
@@ -34840,10 +34773,8 @@ declare namespace exports {
 						 * Linear lookup by (lowercased) name.
 						 */
 						findAttribute(name: string, n?: number): number;
-						valueStart(a: number): number;
-						valueEnd(a: number): number;
-						nameStart(n?: number): number;
-						nameEnd(n?: number): number;
+						valueRange(n?: number): null | [number, number];
+						nameRange(n?: number): null | [number, number];
 						/**
 						 * Whether the source wrote this element's end tag rather than the parser
 						 * popping it for an implied close. Read back off the range instead of marked
@@ -34870,8 +34801,11 @@ declare namespace exports {
 						 * source to echo, and slicing one would spell `</>`.
 						 */
 						closeTag(n?: number): string;
-						contentStart(n?: number): number;
-						contentEnd(n?: number): number;
+						/**
+						 * Between the opening tag and the end tag, or where the content ends when
+						 * the source left the end tag out.
+						 */
+						contentRange(n?: number): null | [number, number];
 						templateContent(n?: number): number;
 						/**
 						 * A text's, comment's, processing instruction's or attribute's data,
@@ -34907,16 +34841,12 @@ declare namespace exports {
 							 */
 							stop(): void;
 							type(n?: number): number;
-							start(n?: number): number;
-							end(n?: number): number;
+							range(n?: number): [number, number];
 							/**
 							 * Line / column are converted only when asked, by a converter made on the
 							 * first call of a parse. Valid during the walk, as {@link source } is.
 							 */
-							loc(n?: number): {
-								start: { line: number; column: number };
-								end: { line: number; column: number };
-							};
+							loc(n?: number): [number, number, number, number];
 							/**
 							 * A node's text as written; valid during the walk, before `parseHtml` releases the source.
 							 */
@@ -34937,10 +34867,8 @@ declare namespace exports {
 							 * Linear lookup by (lowercased) name.
 							 */
 							findAttribute(name: string, n?: number): number;
-							valueStart(a: number): number;
-							valueEnd(a: number): number;
-							nameStart(n?: number): number;
-							nameEnd(n?: number): number;
+							valueRange(n?: number): null | [number, number];
+							nameRange(n?: number): null | [number, number];
 							/**
 							 * Whether the source wrote this element's end tag rather than the parser
 							 * popping it for an implied close. Read back off the range instead of marked
@@ -34967,8 +34895,11 @@ declare namespace exports {
 							 * source to echo, and slicing one would spell `</>`.
 							 */
 							closeTag(n?: number): string;
-							contentStart(n?: number): number;
-							contentEnd(n?: number): number;
+							/**
+							 * Between the opening tag and the end tag, or where the content ends when
+							 * the source left the end tag out.
+							 */
+							contentRange(n?: number): null | [number, number];
 							templateContent(n?: number): number;
 							/**
 							 * A text's, comment's, processing instruction's or attribute's data,

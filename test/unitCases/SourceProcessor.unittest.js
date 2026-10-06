@@ -351,11 +351,11 @@ describe("SourceProcessor", () => {
 		/**
 		 * @param {string} input source
 		 * @param {number} offset offset into it
-		 * @returns {{ line: number, column: number }} 1-based line, 0-based column
+		 * @returns {[number, number]} 1-based line, 0-based column
 		 */
 		const lineColumn = (input, offset) => {
 			const before = input.slice(0, offset).split("\n");
-			return { line: before.length, column: before[before.length - 1].length };
+			return [before.length, before[before.length - 1].length];
 		};
 
 		/**
@@ -365,8 +365,7 @@ describe("SourceProcessor", () => {
 		 * @returns {Record<string, unknown>} what a shared visitor sees
 		 */
 		const describeNode = (path, input) => {
-			const start = path.start();
-			const end = path.end();
+			const [start, end] = path.range();
 			const parent = path.parent;
 			/** @type {unknown[]} */
 			const children = [];
@@ -375,10 +374,7 @@ describe("SourceProcessor", () => {
 			}
 			return {
 				loc: path.loc(),
-				expectedLoc: {
-					start: lineColumn(input, start),
-					end: lineColumn(input, end)
-				},
+				expectedLoc: [...lineColumn(input, start), ...lineColumn(input, end)],
 				source: path.source(),
 				slice: path.source(start, end),
 				index: path.index,
@@ -395,7 +391,7 @@ describe("SourceProcessor", () => {
 			const seen = [];
 			/** @type {[number, string][]} each child of the list, and its own first child's type */
 			const listChildren = [];
-			/** @type {[string, string, number][]} name, its source, content offset */
+			/** @type {[string, string | null, number | null][]} name, its source, content offset */
 			const implied = [];
 			new HtmlSourceProcessor()
 				.use({
@@ -416,10 +412,12 @@ describe("SourceProcessor", () => {
 							expect(path.type(path.child(0))).toBe(HtmlNodeType.Text);
 						}
 						if (path.name() === "li") seen.push(describeNode(path, input));
+						const name = path.nameRange();
+						const content = path.contentRange();
 						implied.push([
 							path.name(),
-							path.source(path.nameStart(), path.nameEnd()),
-							path.contentStart() - path.start()
+							name === null ? null : path.source(...name),
+							content === null ? null : content[0] - path.range()[0]
 						]);
 					}
 				})
@@ -431,9 +429,9 @@ describe("SourceProcessor", () => {
 				[HtmlNodeType.Element, "b"]
 			]);
 			expect(implied).toEqual([
-				["html", "", 0],
-				["head", "", 0],
-				["body", "", 0],
+				["html", null, null],
+				["head", null, null],
+				["body", null, null],
 				["ul", "ul", 4],
 				["li", "li", 4],
 				["li", "li", 4]
@@ -451,10 +449,7 @@ describe("SourceProcessor", () => {
 				"<li>a</li>",
 				"<li>b</li>"
 			]);
-			expect(seen[1].loc).toEqual({
-				start: { line: 3, column: 0 },
-				end: { line: 3, column: 10 }
-			});
+			expect(seen[1].loc).toEqual([3, 0, 3, 10]);
 		});
 
 		it("reads names and values decoded, and as written through source", () => {
@@ -467,7 +462,7 @@ describe("SourceProcessor", () => {
 						const written =
 							path.type() === CssNodeType.String
 								? path.source()
-								: path.source(path.nameStart(), path.nameEnd());
+								: path.source(.../** @type {[number, number]} */ (path.nameRange()));
 						css.push(`${path.name()}|${path.value()}|${written}`);
 					}
 				)
@@ -517,7 +512,7 @@ describe("SourceProcessor", () => {
 							path.source(),
 							path.value(),
 							path.unit(),
-							path.source(path.start(), path.end())
+							path.source(path.range()[0], path.range()[1])
 						]);
 					}
 				)
@@ -534,8 +529,55 @@ describe("SourceProcessor", () => {
 			]);
 		});
 
+		it("reads every part of a node as a [start, end] range", () => {
+			const css = "@media x{a{b:url(c)}}@import 'd';";
+			/** @type {Record<string, unknown>[]} */
+			const cssSeen = [];
+			new CssSourceProcessor()
+				.use([CssNodeType.AtRule, CssNodeType.Url], (path) => {
+					/**
+					 * @param {[number, number] | null} range range
+					 * @returns {string | null} what it covers
+					 */
+					const text = (range) => (range === null ? null : path.source(...range));
+					cssSeen.push({
+						source: path.source(...path.range()),
+						name: text(path.nameRange()),
+						value: text(path.valueRange()),
+						block: text(path.blockRange()),
+						rules: (path.rules() || []).length
+					});
+				})
+				.process(css);
+			expect(cssSeen).toEqual([
+				{ source: "@media x{a{b:url(c)}}", name: "media", value: null, block: "{a{b:url(c)}}", rules: 1 },
+				{ source: "url(c)", name: null, value: "c", block: null, rules: 0 },
+				{ source: "@import 'd'", name: "import", value: null, block: null, rules: 0 }
+			]);
+			const html = "<div id=a>x</div><p>y<br><p>z";
+			/** @type {Record<string, unknown>[]} */
+			const htmlSeen = [];
+			new HtmlSourceProcessor()
+				.use([HtmlNodeType.Element], (path) => {
+					const content = path.contentRange();
+					if (content === null) return;
+					htmlSeen.push({
+						source: path.source(...path.range()),
+						name: path.source(.../** @type {[number, number]} */ (path.nameRange())),
+						content: path.source(...content)
+					});
+				})
+				.process(html);
+			expect(htmlSeen).toEqual([
+				{ source: "<div id=a>x</div>", name: "div", content: "x" },
+				{ source: "<p>y<br>", name: "p", content: "y<br>" },
+				{ source: "<br>", name: "br", content: "" },
+				{ source: "<p>z", name: "p", content: "z" }
+			]);
+		});
+
 		it("answers empty for a css node without a name, value or block token", () => {
-			/** @type {[number, string, number, string | number, string][]} */
+			/** @type {[number, string, [number, number] | null, string | number, string][]} */
 			const seen = [];
 			new CssSourceProcessor()
 				.use(
@@ -544,7 +586,7 @@ describe("SourceProcessor", () => {
 						seen.push([
 							path.type(),
 							path.name(),
-							path.nameStart(),
+							path.nameRange(),
 							path.value(),
 							path.blockToken()
 						]);
@@ -552,10 +594,10 @@ describe("SourceProcessor", () => {
 				)
 				.process("a[b]{}");
 			expect(seen).toEqual([
-				[CssNodeType.QualifiedRule, "", -1, "", ""],
-				[CssNodeType.Ident, "", -1, "a", ""],
-				[CssNodeType.SimpleBlock, "", -1, "", "["],
-				[CssNodeType.Ident, "", -1, "b", ""]
+				[CssNodeType.QualifiedRule, "", null, "", ""],
+				[CssNodeType.Ident, "", null, "a", ""],
+				[CssNodeType.SimpleBlock, "", null, "", "["],
+				[CssNodeType.Ident, "", null, "b", ""]
 			]);
 		});
 
@@ -567,17 +609,17 @@ describe("SourceProcessor", () => {
 				.use([HtmlNodeType.Element], (path) => {
 					if (path.name() !== "a") return;
 					for (let i = 0, a = path.attribute(0); a !== 0; a = path.attribute(++i)) {
+						const valueRange = path.valueRange(a);
 						seen.push({
 							type: path.type(a),
 							name: path.name(a),
 							value: path.value(a),
 							source: path.source(a),
-							written:
-								path.valueStart(a) === -1
-									? null
-									: path.source(path.valueStart(a), path.valueEnd(a)),
-							nameSource: path.source(path.nameStart(a), path.nameEnd(a)),
-							loc: path.loc(a).start
+							written: valueRange === null ? null : path.source(...valueRange),
+							nameSource: path.source(
+								.../** @type {[number, number]} */ (path.nameRange(a))
+							),
+							loc: path.loc(a).slice(0, 2)
 						});
 					}
 					expect(path.attribute(path.attributeCount())).toBe(0);
@@ -593,7 +635,7 @@ describe("SourceProcessor", () => {
 					source: 'href="/x?a&amp;b"',
 					written: "/x?a&amp;b",
 					nameSource: "href",
-					loc: { line: 2, column: 3 }
+					loc: [2, 3]
 				},
 				{
 					type: HtmlNodeType.Attribute,
@@ -602,7 +644,7 @@ describe("SourceProcessor", () => {
 					source: "title=t",
 					written: "t",
 					nameSource: "title",
-					loc: { line: 2, column: 21 }
+					loc: [2, 21]
 				},
 				{
 					type: HtmlNodeType.Attribute,
@@ -611,7 +653,7 @@ describe("SourceProcessor", () => {
 					source: "data-x",
 					written: null,
 					nameSource: "data-x",
-					loc: { line: 2, column: 29 }
+					loc: [2, 29]
 				}
 			]);
 		});
@@ -663,10 +705,7 @@ describe("SourceProcessor", () => {
 				expect(node.children).toEqual([]);
 			}
 			expect(seen.map((node) => node.index)).toEqual([0, 3, 6]);
-			expect(seen[2].loc).toEqual({
-				start: { line: 3, column: 0 },
-				end: { line: 3, column: 1 }
-			});
+			expect(seen[2].loc).toEqual([3, 0, 3, 1]);
 		});
 	});
 
