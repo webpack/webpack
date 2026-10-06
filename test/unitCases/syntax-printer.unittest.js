@@ -430,6 +430,21 @@ const IMPROVED_CASES = [
 		{ compress: { ecma: 2020 }, ecma: 2020, mangle: false }
 	],
 	[
+		"a logical expression assigning what it tests, from ECMAScript 2021",
+		"function f(a, b, o) { a || (a = b); o.p || (o.p = 1); o.q ?? (o.q = 2); o.p && (o[\"p\"] = 3); o[0] || (o[0] = 4); return a; } var o = {}; console.log(f(0, 4, o), f(5, 6, o), JSON.stringify(o));",
+		{ compress: { ecma: 2021 }, ecma: 2021, mangle: false }
+	],
+	[
+		"a variable assigned its own logical expression, from ECMAScript 2021",
+		"function f(a, b) { a = a || b; return a; } function g(a, b) { console.log(b); a = a ?? b; return a; } var E; (function (E) { E[E.A = 0] = \"A\"; })(E || (E = {})); console.log(f(0, 1), f(2, 3), g(null, 4), g(5, 6), E[0]);",
+		{ compress: { ecma: 2021 }, ecma: 2021, mangle: false }
+	],
+	[
+		"a test for null or undefined guarding a chain, from ECMAScript 2020",
+		"function f(c) { return null == c ? void 0 : c.a.b(); } function g(c) { return null != c ? c() : void 0; } function h(c) { return void 0 == c ? void 0 : c.a?.[0]; } console.log(f(null), f({ a: { b: () => 1 } }), g(void 0), g(() => 2), h(null), h({ a: [3] }));",
+		{ compress: { ecma: 2020 }, ecma: 2020, mangle: false }
+	],
+	[
 		"a pattern naming nothing, reading `null`, which still throws",
 		"try { !function () { const { a } = null; }(); } catch (e) { console.log(e.name); }",
 		{ compress: {}, mangle: false }
@@ -4732,6 +4747,39 @@ describe("syntax-printer", () => {
 				expect(code).toBe(reference.code);
 			});
 		}
+
+		it("should keep a logical expression and a test for null where the shorter form needs a later ECMAScript or reads differently", async () => {
+			const { minify } = await load();
+			/**
+			 * @param {import("terser").ECMA} ecma the ECMAScript version targeted
+			 * @returns {import("terser").MinifyOptions} options targeting it
+			 */
+			const target = (ecma) => ({ compress: { ecma }, ecma, mangle: false });
+			/** @type {[string, import("terser").MinifyOptions][]} */
+			const cases = [
+				["function f(a, b) { a || (a = b); return a; } console.log(f(0, 1), f(2, 3));", target(2020)],
+				["function f(c) { return null == c ? void 0 : c.a; } console.log(f(null), f({ a: 1 }));", target(2019)],
+				["function f(c) { return null === c ? void 0 : c.a; } console.log(f(null), f({ a: 1 }));", target(2021)],
+				["function f(c) { return null == c ? null : c.a; } console.log(f(null), f({ a: 1 }));", target(2021)],
+				["function f(c) { return null == c.d ? void 0 : c.d.e; } console.log(f({}), f({ d: { e: 1 } }));", target(2021)],
+				["function f(c) { return null == c ? void 0 : g(c); } function g(c) { return c; } console.log(f(null), f(1), g(2));", target(2021)],
+				["function f(c) { return null == c ? void 0 : (c || g).a; } function g() {} console.log(f(null), f({ a: 1 }));", target(2021)],
+				["function f(c) { return null == c ? void 0 : c?.a; } console.log(f(null), f({ a: 1 }));", target(2021)],
+				["var o = { p: 0, q: 1 }; function f(k) { o[k + 1] || (o[k + 1] = 2); return o; } console.log(f(\"p\"), f(\"q\"));", target(2021)],
+				["var g = function f() { \"use strict\"; try { f = f || 1; } catch (e) { return e.name; } return typeof f; }; console.log(g());", target(2021)],
+				["x = x || 1; var x; console.log(x);", target(2021)],
+				["console.log(function () { var other = {}, o = { get p() { o = other; return 0; }, set p(v) {} }, first = o; o.p || (o.p = 1); return [first === o, other.p]; }());", target(2021)],
+				["var n = 0; Object.defineProperty(globalThis, \"a\", { get: function () { return n++ ? null : { p: 1 }; }, configurable: true }); function f() { return null == a ? void 0 : a.p; } try { console.log(f()); } catch (e) { console.log(e.name); }", target(2021)],
+				["function f(o, c) { with (o) { return null == c ? void 0 : c.p; } } console.log(f({}, null), f({ c: { p: 2 } }, { p: 1 }));", target(2021)],
+				["function f(o, c) { with (o) { c || (c = 1); return c; } } console.log(f({}, 0), f({ c: 0 }, 2));", target(2021)],
+				["function f(o, k) { o[k] || (o[k] = 1); return o; } var n = 0; console.log(JSON.stringify(f({}, { toString: function () { return \"k\" + n++; } })));", target(2021)]
+			];
+			for (const [input, options] of cases) {
+				const { code } = await minify(input, options);
+				const reference = await terserReference().minify(input, options);
+				expect(code).toBe(reference.code);
+			}
+		});
 
 		it("should keep a pattern's names and a `catch` binding where dropping them changes what runs", async () => {
 			const { minify } = await load();
