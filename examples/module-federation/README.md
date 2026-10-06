@@ -463,7 +463,7 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 	
 /************************************************************************/
 /******/ 	/* webpack/runtime/compat get default export */
-/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	// getDefaultExport function for compatibility with non-esm modules
 /******/ 	__webpack_require__.n = (module) => {
 /******/ 		const getter = module && module.__esModule ?
 /******/ 			() => (module['default']) :
@@ -503,7 +503,7 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/define property getters */
-/******/ 	// define getter/value functions for harmony exports
+/******/ 	// define getter/value functions for esm exports
 /******/ 	__webpack_require__.d = (exports, definition) => {
 /******/ 		for(var key in definition) {
 /******/ 			if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
@@ -1073,7 +1073,7 @@ __webpack_require__.d(exports, {
 /******/ 	
 /************************************************************************/
 /******/ 	/* webpack/runtime/define property getters */
-/******/ 	// define getter/value functions for harmony exports
+/******/ 	// define getter/value functions for esm exports
 /******/ 	__webpack_require__.d = (exports, definition) => {
 /******/ 		for(var key in definition) {
 /******/ 			if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
@@ -1573,7 +1573,7 @@ __webpack_require__.d(exports, {
 /******/ 	
 /************************************************************************/
 /******/ 	/* webpack/runtime/compat get default export */
-/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	// getDefaultExport function for compatibility with non-esm modules
 /******/ 	__webpack_require__.n = (module) => {
 /******/ 		const getter = module && module.__esModule ?
 /******/ 			() => (module['default']) :
@@ -1583,7 +1583,7 @@ __webpack_require__.d(exports, {
 /******/ 	};
 /******/ 	
 /******/ 	/* webpack/runtime/define property getters */
-/******/ 	// define getter/value functions for harmony exports
+/******/ 	// define getter/value functions for esm exports
 /******/ 	__webpack_require__.d = (exports, definition) => {
 /******/ 		for(var key in definition) {
 /******/ 			if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
@@ -2012,7 +2012,7 @@ __webpack_require__.d(exports, {
 
 ```
 app:
-  asset src_bootstrap_js.js 46.9 KiB [emitted]
+  asset src_bootstrap_js.js 46.6 KiB [emitted]
   asset app.js 29.7 KiB [emitted] (name: app)
   asset vendors-node_modules_react_index_js.js 29.7 KiB [emitted] (id hint: vendors)
   chunk (runtime: app) app.js (app) 672 bytes (javascript) 42 bytes (share-init) 18.9 KiB (runtime) [entry] [rendered]
@@ -2039,11 +2039,11 @@ app:
   app (webpack X.X.X) compiled successfully
 
 mfe-b:
-  assets by chunk 1 MiB (id hint: vendors)
-    asset vendors-node_modules_date-fns_index_js.js 997 KiB [emitted] (id hint: vendors)
+  assets by chunk 1020 KiB (id hint: vendors)
+    asset vendors-node_modules_date-fns_index_js.js 987 KiB [emitted] (id hint: vendors)
     asset vendors-node_modules_react_index_js.js 29.7 KiB [emitted] (id hint: vendors)
   asset mfeBBB.js 23.8 KiB [emitted] (name: mfeBBB)
-  asset src-b_Component_js.js 4.02 KiB [emitted]
+  asset src-b_Component_js.js 3.99 KiB [emitted]
   chunk (runtime: mfeBBB) mfeBBB.js (mfeBBB) 42 bytes (javascript) 84 bytes (share-init) 15.8 KiB (runtime) [entry] [rendered]
     > mfeBBB
     runtime modules 15.8 KiB 10 modules
@@ -2068,12 +2068,12 @@ mfe-b:
   mfe-b (webpack X.X.X) compiled successfully
 
 mfe-c:
-  assets by chunk 1020 KiB (id hint: vendors)
-    asset vendors-node_modules_date-fns_index_js.js 997 KiB [emitted] (id hint: vendors)
+  assets by chunk 1010 KiB (id hint: vendors)
+    asset vendors-node_modules_date-fns_index_js.js 988 KiB [emitted] (id hint: vendors)
     asset vendors-node_modules_lodash_random_js.js 24.8 KiB [emitted] (id hint: vendors)
   asset mfeCCC.js 25.2 KiB [emitted] (name: mfeCCC)
-  asset src-c_LazyComponent_js.js 4.09 KiB [emitted]
-  asset src-c_Component_js.js 3.9 KiB [emitted]
+  asset src-c_LazyComponent_js.js 4.05 KiB [emitted]
+  asset src-c_Component_js.js 3.87 KiB [emitted]
   chunk (runtime: mfeCCC) mfeCCC.js (mfeCCC) 42 bytes (javascript) 84 bytes (share-init) 16.6 KiB (runtime) [entry] [rendered]
     > mfeCCC
     runtime modules 16.6 KiB 12 modules

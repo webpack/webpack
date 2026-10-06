@@ -426,7 +426,7 @@ describe("NormalModule", () => {
 				const list = bailouts.get(modules[i]);
 				expect(list).toHaveLength(1);
 				expect(list[0]()).toMatch(
-					/Dependency \(harmony side effect evaluation\)/
+					/Dependency \(esm side effect evaluation\)/
 				);
 			}
 		});

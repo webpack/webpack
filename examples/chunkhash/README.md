@@ -156,7 +156,7 @@ module.exports = config;
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/define property getters */
-/******/ 	// define getter/value functions for harmony exports
+/******/ 	// define getter/value functions for esm exports
 /******/ 	__webpack_require__.d = (exports, definition) => {
 /******/ 		for(var key in definition) {
 /******/ 			if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
@@ -379,9 +379,9 @@ chunk (runtime: runtime~main) main.[chunkhash].js (main) 55 bytes [initial] [ren
   ./example.js 55 bytes [built] [code generated]
     [used exports unknown]
     entry ./example main
-chunk (runtime: runtime~main) runtime~main.[chunkhash].js (runtime~main) 7 KiB [entry] [rendered]
+chunk (runtime: runtime~main) runtime~main.[chunkhash].js (runtime~main) 6.99 KiB [entry] [rendered]
   > ./example main
-  runtime modules 7 KiB 10 modules
+  runtime modules 6.99 KiB 10 modules
 chunk (runtime: runtime~main) 2.[chunkhash].js 28 bytes [rendered]
   > ./async1 ./example.js 2:0-18
   ./async1.js 28 bytes [built] [code generated]

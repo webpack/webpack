@@ -130,7 +130,7 @@ module.exports = webpackAsyncContext;
 /******/ 	
 /************************************************************************/
 /******/ 	/* webpack/runtime/define property getters */
-/******/ 	// define getter/value functions for harmony exports
+/******/ 	// define getter/value functions for esm exports
 /******/ 	__webpack_require__.d = (exports, definition) => {
 /******/ 		for(var key in definition) {
 /******/ 			if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
@@ -342,9 +342,9 @@ __webpack_require__(1)("./ba" + createContextVar).then(function(bar) {
 
 ```
 asset output.js 10.9 KiB [emitted] (name: main)
-asset 792.output.js 846 bytes [emitted] (name: chunk-bar-baz2)
-asset 994.output.js 846 bytes [emitted] (name: chunk-bar-baz0)
-asset 45.output.js 845 bytes [emitted] (name: chunk-foo)
+asset 792.output.js 830 bytes [emitted] (name: chunk-bar-baz2)
+asset 994.output.js 830 bytes [emitted] (name: chunk-bar-baz0)
+asset 45.output.js 829 bytes [emitted] (name: chunk-foo)
 chunk (runtime: main) 45.output.js (chunk-foo) 38 bytes [rendered]
   > ./templates/foo ./example.js 1:0-62
   > ./example.js 5:0-8:16

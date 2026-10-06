@@ -59,13 +59,13 @@ export { DialogInline } from "./DialogInline";
 /*! namespace exports */
 /*! export default [provided] [used in main] [could be renamed] */
 /*! runtime requirements: __webpack_require__, __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
-/*! Dependency (harmony side effect evaluation) with side effects at 1:0-58 */
+/*! Dependency (esm side effect evaluation) with side effects at 1:0-58 */
 (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ Button)
-/* harmony export */ });
-/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-dev-runtime */ "../../node_modules/react/jsx-dev-runtime.js");
+/* esm export */ __webpack_require__.d(__webpack_exports__, {
+/* esm export */   "default": () => (/* binding */ Button)
+/* esm export */ });
+/* esm import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-dev-runtime */ "../../node_modules/react/jsx-dev-runtime.js");
 
 const Button = () => {
   return /*#__PURE__*/(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxDEV)("button", {}, void 0, false);
@@ -81,13 +81,13 @@ const Button = () => {
 /*! namespace exports */
 /*! export Checkbox [provided] [used in main] [could be renamed] */
 /*! runtime requirements: __webpack_require__, __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
-/*! Dependency (harmony side effect evaluation) with side effects at 1:0-58 */
+/*! Dependency (esm side effect evaluation) with side effects at 1:0-58 */
 (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   Checkbox: () => (/* binding */ Checkbox)
-/* harmony export */ });
-/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-dev-runtime */ "../../node_modules/react/jsx-dev-runtime.js");
+/* esm export */ __webpack_require__.d(__webpack_exports__, {
+/* esm export */   Checkbox: () => (/* binding */ Checkbox)
+/* esm export */ });
+/* esm import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-dev-runtime */ "../../node_modules/react/jsx-dev-runtime.js");
 
 const Checkbox = () => {
   return /*#__PURE__*/(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxDEV)("input", {
@@ -105,13 +105,13 @@ const Checkbox = () => {
 /*! namespace exports */
 /*! export default [provided] [used in main] [could be renamed] */
 /*! runtime requirements: __webpack_require__, __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
-/*! Dependency (harmony side effect evaluation) with side effects at 1:0-58 */
+/*! Dependency (esm side effect evaluation) with side effects at 1:0-58 */
 (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-dev-runtime */ "../../node_modules/react/jsx-dev-runtime.js");
+/* esm export */ __webpack_require__.d(__webpack_exports__, {
+/* esm export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* esm export */ });
+/* esm import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-dev-runtime */ "../../node_modules/react/jsx-dev-runtime.js");
 
 const Dialog = ({
   children
@@ -120,7 +120,7 @@ const Dialog = ({
     children: children
   }, void 0, false);
 };
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Dialog);
+/* esm default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Dialog);
 
 /***/ },
 
@@ -131,11 +131,11 @@ const Dialog = ({
 /*! namespace exports */
 /*! export DialogInline [provided] [unused] [could be renamed] */
 /*! runtime requirements: __webpack_require__ */
-/*! Dependency (harmony side effect evaluation) with side effects at 1:0-58 */
+/*! Dependency (esm side effect evaluation) with side effects at 1:0-58 */
 (__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) {
 
-/* unused harmony export DialogInline */
-/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-dev-runtime */ "../../node_modules/react/jsx-dev-runtime.js");
+/* unused esm export DialogInline */
+/* esm import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-dev-runtime */ "../../node_modules/react/jsx-dev-runtime.js");
 
 const DialogInline = ({
   children
@@ -158,18 +158,18 @@ const DialogInline = ({
 /*! export Dialog [provided] [used in main] [could be renamed] -> ./components/Dialog.js .default */
 /*! export DialogInline [provided] [unused] [could be renamed] -> ./components/DialogInline.js .DialogInline */
 /*! runtime requirements: __webpack_require__, __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
-/*! Dependency (harmony side effect evaluation) with side effects at 1:0-45 */
+/*! Dependency (esm side effect evaluation) with side effects at 1:0-45 */
 (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   Button: () => (/* reexport safe */ _Button__WEBPACK_IMPORTED_MODULE_0__["default"]),
-/* harmony export */   Checkbox: () => (/* reexport safe */ _Checkbox__WEBPACK_IMPORTED_MODULE_1__.Checkbox),
-/* harmony export */   Dialog: () => (/* reexport safe */ _Dialog__WEBPACK_IMPORTED_MODULE_2__["default"])
-/* harmony export */ });
-/* harmony import */ var _Button__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Button */ "./components/Button.js");
-/* harmony import */ var _Checkbox__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Checkbox */ "./components/Checkbox.js");
-/* harmony import */ var _Dialog__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Dialog */ "./components/Dialog.js");
-/* harmony import */ var _DialogInline__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./DialogInline */ "./components/DialogInline.js");
+/* esm export */ __webpack_require__.d(__webpack_exports__, {
+/* esm export */   Button: () => (/* reexport safe */ _Button__WEBPACK_IMPORTED_MODULE_0__["default"]),
+/* esm export */   Checkbox: () => (/* reexport safe */ _Checkbox__WEBPACK_IMPORTED_MODULE_1__.Checkbox),
+/* esm export */   Dialog: () => (/* reexport safe */ _Dialog__WEBPACK_IMPORTED_MODULE_2__["default"])
+/* esm export */ });
+/* esm import */ var _Button__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Button */ "./components/Button.js");
+/* esm import */ var _Checkbox__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Checkbox */ "./components/Checkbox.js");
+/* esm import */ var _Dialog__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Dialog */ "./components/Dialog.js");
+/* esm import */ var _DialogInline__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./DialogInline */ "./components/DialogInline.js");
 
 
 
@@ -185,15 +185,15 @@ const DialogInline = ({
 /*! export default [provided] [maybe used in main (runtime-defined)] [usage prevents renaming] */
 /*! other exports [not provided] [maybe used in main (runtime-defined)] */
 /*! runtime requirements: __webpack_require__, __webpack_exports__, __webpack_require__.r, __webpack_require__.d, __webpack_require__.* */
-/*! Dependency (harmony side effect evaluation) with side effects at 1:0-49 */
+/*! Dependency (esm side effect evaluation) with side effects at 1:0-49 */
 (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _components__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components */ "./components/index.js");
-/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-dev-runtime */ "../../node_modules/react/jsx-dev-runtime.js");
+/* esm export */ __webpack_require__.d(__webpack_exports__, {
+/* esm export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* esm export */ });
+/* esm import */ var _components__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components */ "./components/index.js");
+/* esm import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-dev-runtime */ "../../node_modules/react/jsx-dev-runtime.js");
 
 
 const Dashboard = () => {
@@ -201,7 +201,7 @@ const Dashboard = () => {
     children: [/*#__PURE__*/(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxDEV)(_components__WEBPACK_IMPORTED_MODULE_0__.Button, {}, void 0, false), /*#__PURE__*/(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxDEV)(_components__WEBPACK_IMPORTED_MODULE_0__.Checkbox, {}, void 0, false)]
   }, void 0, true);
 };
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Dashboard);
+/* esm default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Dashboard);
 
 /***/ }
 
@@ -221,13 +221,13 @@ const Dashboard = () => {
 /*! namespace exports */
 /*! export default [provided] [used in main] [could be renamed] */
 /*! runtime requirements: __webpack_require__, __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
-/*! Dependency (harmony side effect evaluation) with side effects at 1:0-58 */
+/*! Dependency (esm side effect evaluation) with side effects at 1:0-58 */
 (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ Button)
-/* harmony export */ });
-/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-dev-runtime */ "../../node_modules/react/jsx-dev-runtime.js");
+/* esm export */ __webpack_require__.d(__webpack_exports__, {
+/* esm export */   "default": () => (/* binding */ Button)
+/* esm export */ });
+/* esm import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-dev-runtime */ "../../node_modules/react/jsx-dev-runtime.js");
 
 const Button = () => {
   return /*#__PURE__*/(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxDEV)("button", {}, void 0, false);
@@ -243,13 +243,13 @@ const Button = () => {
 /*! namespace exports */
 /*! export Checkbox [provided] [used in main] [could be renamed] */
 /*! runtime requirements: __webpack_require__, __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
-/*! Dependency (harmony side effect evaluation) with side effects at 1:0-58 */
+/*! Dependency (esm side effect evaluation) with side effects at 1:0-58 */
 (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   Checkbox: () => (/* binding */ Checkbox)
-/* harmony export */ });
-/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-dev-runtime */ "../../node_modules/react/jsx-dev-runtime.js");
+/* esm export */ __webpack_require__.d(__webpack_exports__, {
+/* esm export */   Checkbox: () => (/* binding */ Checkbox)
+/* esm export */ });
+/* esm import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-dev-runtime */ "../../node_modules/react/jsx-dev-runtime.js");
 
 const Checkbox = () => {
   return /*#__PURE__*/(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxDEV)("input", {
@@ -267,13 +267,13 @@ const Checkbox = () => {
 /*! namespace exports */
 /*! export default [provided] [used in main] [could be renamed] */
 /*! runtime requirements: __webpack_require__, __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
-/*! Dependency (harmony side effect evaluation) with side effects at 1:0-58 */
+/*! Dependency (esm side effect evaluation) with side effects at 1:0-58 */
 (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-dev-runtime */ "../../node_modules/react/jsx-dev-runtime.js");
+/* esm export */ __webpack_require__.d(__webpack_exports__, {
+/* esm export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* esm export */ });
+/* esm import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-dev-runtime */ "../../node_modules/react/jsx-dev-runtime.js");
 
 const Dialog = ({
   children
@@ -282,7 +282,7 @@ const Dialog = ({
     children: children
   }, void 0, false);
 };
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Dialog);
+/* esm default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Dialog);
 
 /***/ },
 
@@ -293,11 +293,11 @@ const Dialog = ({
 /*! namespace exports */
 /*! export DialogInline [provided] [unused] [could be renamed] */
 /*! runtime requirements: __webpack_require__ */
-/*! Dependency (harmony side effect evaluation) with side effects at 1:0-58 */
+/*! Dependency (esm side effect evaluation) with side effects at 1:0-58 */
 (__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) {
 
-/* unused harmony export DialogInline */
-/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-dev-runtime */ "../../node_modules/react/jsx-dev-runtime.js");
+/* unused esm export DialogInline */
+/* esm import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-dev-runtime */ "../../node_modules/react/jsx-dev-runtime.js");
 
 const DialogInline = ({
   children
@@ -320,18 +320,18 @@ const DialogInline = ({
 /*! export Dialog [provided] [used in main] [could be renamed] -> ./components/Dialog.js .default */
 /*! export DialogInline [provided] [unused] [could be renamed] -> ./components/DialogInline.js .DialogInline */
 /*! runtime requirements: __webpack_require__, __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
-/*! Dependency (harmony side effect evaluation) with side effects at 1:0-45 */
+/*! Dependency (esm side effect evaluation) with side effects at 1:0-45 */
 (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   Button: () => (/* reexport safe */ _Button__WEBPACK_IMPORTED_MODULE_0__["default"]),
-/* harmony export */   Checkbox: () => (/* reexport safe */ _Checkbox__WEBPACK_IMPORTED_MODULE_1__.Checkbox),
-/* harmony export */   Dialog: () => (/* reexport safe */ _Dialog__WEBPACK_IMPORTED_MODULE_2__["default"])
-/* harmony export */ });
-/* harmony import */ var _Button__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Button */ "./components/Button.js");
-/* harmony import */ var _Checkbox__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Checkbox */ "./components/Checkbox.js");
-/* harmony import */ var _Dialog__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Dialog */ "./components/Dialog.js");
-/* harmony import */ var _DialogInline__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./DialogInline */ "./components/DialogInline.js");
+/* esm export */ __webpack_require__.d(__webpack_exports__, {
+/* esm export */   Button: () => (/* reexport safe */ _Button__WEBPACK_IMPORTED_MODULE_0__["default"]),
+/* esm export */   Checkbox: () => (/* reexport safe */ _Checkbox__WEBPACK_IMPORTED_MODULE_1__.Checkbox),
+/* esm export */   Dialog: () => (/* reexport safe */ _Dialog__WEBPACK_IMPORTED_MODULE_2__["default"])
+/* esm export */ });
+/* esm import */ var _Button__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Button */ "./components/Button.js");
+/* esm import */ var _Checkbox__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Checkbox */ "./components/Checkbox.js");
+/* esm import */ var _Dialog__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Dialog */ "./components/Dialog.js");
+/* esm import */ var _DialogInline__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./DialogInline */ "./components/DialogInline.js");
 
 
 
@@ -347,15 +347,15 @@ const DialogInline = ({
 /*! export default [provided] [maybe used in main (runtime-defined)] [usage prevents renaming] */
 /*! other exports [not provided] [maybe used in main (runtime-defined)] */
 /*! runtime requirements: __webpack_require__, __webpack_exports__, __webpack_require__.r, __webpack_require__.d, __webpack_require__.* */
-/*! Dependency (harmony side effect evaluation) with side effects at 1:0-47 */
+/*! Dependency (esm side effect evaluation) with side effects at 1:0-47 */
 (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _components__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components */ "./components/index.js");
-/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-dev-runtime */ "../../node_modules/react/jsx-dev-runtime.js");
+/* esm export */ __webpack_require__.d(__webpack_exports__, {
+/* esm export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* esm export */ });
+/* esm import */ var _components__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components */ "./components/index.js");
+/* esm import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-dev-runtime */ "../../node_modules/react/jsx-dev-runtime.js");
 
 
 const Login = () => {
@@ -363,7 +363,7 @@ const Login = () => {
     children: [/*#__PURE__*/(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxDEV)(_components__WEBPACK_IMPORTED_MODULE_0__.Button, {}, void 0, false), /*#__PURE__*/(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxDEV)(_components__WEBPACK_IMPORTED_MODULE_0__.Dialog, {}, void 0, false)]
   }, void 0, true);
 };
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Login);
+/* esm default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Login);
 
 /***/ }
 
@@ -382,11 +382,11 @@ const Login = () => {
 ```
 asset vendors-node_modules_react_jsx-dev-runtime_js.output.js 95.1 KiB [emitted] (id hint: vendors)
 asset output.js 11.1 KiB [emitted] (name: main)
-asset pages_Dashboard_js.output.js 7.42 KiB [emitted]
-asset pages_Login_js.output.js 7.4 KiB [emitted]
-chunk (runtime: main) output.js (main) 208 bytes (javascript) 5.41 KiB (runtime) [entry] [rendered]
+asset pages_Dashboard_js.output.js 7.28 KiB [emitted]
+asset pages_Login_js.output.js 7.25 KiB [emitted]
+chunk (runtime: main) output.js (main) 208 bytes (javascript) 5.4 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.41 KiB 9 modules
+  runtime modules 5.4 KiB 9 modules
   dependent modules 160 bytes [dependent] 1 module
   ./example.js 48 bytes [built] [code generated]
     [no exports used]
@@ -419,17 +419,17 @@ chunk (runtime: main) vendors-node_modules_react_jsx-dev-runtime_js.output.js (i
     from origin ./pages/Dashboard.js 5 reasons
     from origin ./pages/Login.js 5 reasons
     from origin ./components/Button.js
-      harmony side effect evaluation react/jsx-dev-runtime ./components/Button.js 1:0-58
-      harmony import specifier react/jsx-dev-runtime ./components/Button.js 3:22-29
+      esm side effect evaluation react/jsx-dev-runtime ./components/Button.js 1:0-58
+      esm import specifier react/jsx-dev-runtime ./components/Button.js 3:22-29
     from origin ./components/Checkbox.js
-      harmony side effect evaluation react/jsx-dev-runtime ./components/Checkbox.js 1:0-58
-      harmony import specifier react/jsx-dev-runtime ./components/Checkbox.js 3:22-29
+      esm side effect evaluation react/jsx-dev-runtime ./components/Checkbox.js 1:0-58
+      esm import specifier react/jsx-dev-runtime ./components/Checkbox.js 3:22-29
     from origin ./components/Dialog.js
-      harmony side effect evaluation react/jsx-dev-runtime ./components/Dialog.js 1:0-58
-      harmony import specifier react/jsx-dev-runtime ./components/Dialog.js 5:22-29
+      esm side effect evaluation react/jsx-dev-runtime ./components/Dialog.js 1:0-58
+      esm import specifier react/jsx-dev-runtime ./components/Dialog.js 5:22-29
     from origin ./components/DialogInline.js
-      harmony side effect evaluation react/jsx-dev-runtime ./components/DialogInline.js 1:0-58
-      harmony import specifier react/jsx-dev-runtime ./components/DialogInline.js 5:22-29
+      esm side effect evaluation react/jsx-dev-runtime ./components/DialogInline.js 1:0-58
+      esm import specifier react/jsx-dev-runtime ./components/DialogInline.js 5:22-29
 webpack X.X.X compiled successfully
 ```
 

@@ -10,43 +10,43 @@ cacheable modules X bytes
       ./components/src/CompAB/CompB.js X bytes [orphan] [built]
         [only some exports used: default]
         [inactive] from origin ./components/src/CompAB/index.js
-          [inactive] harmony side effect evaluation ./CompB ./components/src/CompAB/index.js 2:0-43
-          [inactive] harmony export imported specifier ./CompB ./components/src/CompAB/index.js 2:0-43
-        [inactive] harmony export imported specifier ./CompAB ./components/src/index.js 1:0-40 (skipped side-effect-free modules)
-        harmony import specifier ./components ./main.js 4:15-20 (skipped side-effect-free modules)
+          [inactive] esm side effect evaluation ./CompB ./components/src/CompAB/index.js 2:0-43
+          [inactive] esm export imported specifier ./CompB ./components/src/CompAB/index.js 2:0-43
+        [inactive] esm export imported specifier ./CompAB ./components/src/index.js 1:0-40 (skipped side-effect-free modules)
+        esm import specifier ./components ./main.js 4:15-20 (skipped side-effect-free modules)
       ./components/src/index.js X bytes [orphan] [built]
         [module unused]
         [inactive] from origin ./main.js + 1 modules
-          [inactive] harmony side effect evaluation ./components ./main.js + 1 modules ./main.js 1:0-44
-          [inactive] harmony import specifier ./components ./main.js + 1 modules ./main.js 3:15-20
-          [inactive] harmony import specifier ./components ./main.js + 1 modules ./main.js 4:15-20
+          [inactive] esm side effect evaluation ./components ./main.js + 1 modules ./main.js 1:0-44
+          [inactive] esm import specifier ./components ./main.js + 1 modules ./main.js 3:15-20
+          [inactive] esm import specifier ./components ./main.js + 1 modules ./main.js 4:15-20
         [inactive] from origin ./foo.js
-          [inactive] harmony side effect evaluation ./components ./foo.js 1:0-37
-          [inactive] harmony import specifier ./components ./foo.js 3:20-25
+          [inactive] esm side effect evaluation ./components ./foo.js 1:0-37
+          [inactive] esm import specifier ./components ./foo.js 3:20-25
       ./components/src/CompAB/index.js X bytes [orphan] [built]
         [module unused]
-        [inactive] harmony side effect evaluation ./CompAB ./components/src/index.js 1:0-40
-        [inactive] harmony export imported specifier ./CompAB ./components/src/index.js 1:0-40
-        [inactive] harmony export imported specifier ./CompAB ./components/src/index.js 1:0-40
+        [inactive] esm side effect evaluation ./CompAB ./components/src/index.js 1:0-40
+        [inactive] esm export imported specifier ./CompAB ./components/src/index.js 1:0-40
+        [inactive] esm export imported specifier ./CompAB ./components/src/index.js 1:0-40
     code generated modules X bytes [code generated]
       ./components/src/CompAB/CompA.js X bytes [built] [code generated]
         [only some exports used: default]
         [inactive] from origin ./components/src/CompAB/index.js
-          [inactive] harmony side effect evaluation ./CompA ./components/src/CompAB/index.js 1:0-43
-          [inactive] harmony export imported specifier ./CompA ./components/src/CompAB/index.js 1:0-43
-        [inactive] harmony export imported specifier ./CompAB ./components/src/index.js 1:0-40 (skipped side-effect-free modules)
-        harmony import specifier ./components ./foo.js 3:20-25 (skipped side-effect-free modules)
-        harmony import specifier ./components ./main.js + 1 modules ./main.js 3:15-20 (skipped side-effect-free modules)
+          [inactive] esm side effect evaluation ./CompA ./components/src/CompAB/index.js 1:0-43
+          [inactive] esm export imported specifier ./CompA ./components/src/CompAB/index.js 1:0-43
+        [inactive] esm export imported specifier ./CompAB ./components/src/index.js 1:0-40 (skipped side-effect-free modules)
+        esm import specifier ./components ./foo.js 3:20-25 (skipped side-effect-free modules)
+        esm import specifier ./components ./main.js + 1 modules ./main.js 3:15-20 (skipped side-effect-free modules)
       ./components/src/CompAB/utils.js X bytes [built] [code generated]
         from origin ./components/src/CompAB/CompA.js
-          [inactive] harmony side effect evaluation ./utils ./components/src/CompAB/CompA.js 1:0-35
-          harmony import specifier ./utils ./components/src/CompAB/CompA.js 5:5-12
+          [inactive] esm side effect evaluation ./utils ./components/src/CompAB/CompA.js 1:0-35
+          esm import specifier ./utils ./components/src/CompAB/CompA.js 5:5-12
         from origin ./components/src/CompAB/CompB.js
-          [inactive] harmony side effect evaluation ./utils ./components/src/CompAB/CompB.js 1:0-30
-          harmony import specifier ./utils ./components/src/CompAB/CompB.js 5:2-5
+          [inactive] esm side effect evaluation ./utils ./components/src/CompAB/CompB.js 1:0-30
+          esm import specifier ./utils ./components/src/CompAB/CompB.js 5:2-5
         from origin ./main.js + 1 modules
-          [inactive] harmony side effect evaluation ./utils ./main.js + 1 modules ./components/src/CompAB/CompB.js 1:0-30
-          harmony import specifier ./utils ./main.js + 1 modules ./components/src/CompAB/CompB.js 5:2-5
+          [inactive] esm side effect evaluation ./utils ./main.js + 1 modules ./components/src/CompAB/CompB.js 1:0-30
+          esm import specifier ./utils ./main.js + 1 modules ./components/src/CompAB/CompB.js 5:2-5
   modules by path ./*.js X bytes
     ./main.js + 1 modules X bytes [built] [code generated]
       [no exports used]
@@ -56,10 +56,10 @@ cacheable modules X bytes
       | ./components/src/CompAB/CompB.js X bytes [built]
       |   [only some exports used: default]
       |   [inactive] from origin ./components/src/CompAB/index.js
-      |     [inactive] harmony side effect evaluation ./CompB ./components/src/CompAB/index.js 2:0-43
-      |     [inactive] harmony export imported specifier ./CompB ./components/src/CompAB/index.js 2:0-43
-      |   [inactive] harmony export imported specifier ./CompAB ./components/src/index.js 1:0-40 (skipped side-effect-free modules)
-      |   harmony import specifier ./components ./main.js 4:15-20 (skipped side-effect-free modules)
+      |     [inactive] esm side effect evaluation ./CompB ./components/src/CompAB/index.js 2:0-43
+      |     [inactive] esm export imported specifier ./CompB ./components/src/CompAB/index.js 2:0-43
+      |   [inactive] esm export imported specifier ./CompAB ./components/src/index.js 1:0-40 (skipped side-effect-free modules)
+      |   esm import specifier ./components ./main.js 4:15-20 (skipped side-effect-free modules)
     ./foo.js X bytes [built] [code generated]
       [only some exports used: default]
       import() ./foo ./main.js + 1 modules ./main.js 6:0-15

@@ -152,7 +152,7 @@ let __webpack_exports__ = {};
 /*! exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__, __webpack_require__.r, __webpack_exports__, __webpack_require__.* */
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _images_file_svg__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./images/file.svg */ 1);
+/* esm import */ var _images_file_svg__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./images/file.svg */ 1);
 
 
 const container = document.createElement("div");

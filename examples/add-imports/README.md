@@ -230,7 +230,7 @@ module.exports = function $(selector) {
 /******/ 	
 /************************************************************************/
 /******/ 	/* webpack/runtime/compat get default export */
-/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	// getDefaultExport function for compatibility with non-esm modules
 /******/ 	__webpack_require__.n = (module) => {
 /******/ 		const getter = module && module.__esModule ?
 /******/ 			() => (module['default']) :
@@ -240,7 +240,7 @@ module.exports = function $(selector) {
 /******/ 	};
 /******/ 	
 /******/ 	/* webpack/runtime/define property getters */
-/******/ 	// define getter/value functions for harmony exports
+/******/ 	// define getter/value functions for esm exports
 /******/ 	__webpack_require__.d = (exports, definition) => {
 /******/ 		for(var key in definition) {
 /******/ 			if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
@@ -276,8 +276,8 @@ let __webpack_exports__ = {};
 /*! exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__, __webpack_require__.n, __webpack_require__.r, __webpack_exports__, __webpack_require__.* */
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _legacy_lib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./legacy-lib */ 1);
-/* harmony import */ var _legacy_lib__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_legacy_lib__WEBPACK_IMPORTED_MODULE_0__);
+/* esm import */ var _legacy_lib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./legacy-lib */ 1);
+/* esm import */ var _legacy_lib__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_legacy_lib__WEBPACK_IMPORTED_MODULE_0__);
 
 
 console.log(_legacy_lib__WEBPACK_IMPORTED_MODULE_0___default().render());
@@ -293,10 +293,10 @@ console.log(_legacy_lib__WEBPACK_IMPORTED_MODULE_0___default().render());
 ## Unoptimized
 
 ```
-asset output.js 4.78 KiB [emitted] (name: main)
-chunk (runtime: main) output.js (main) 725 bytes (javascript) 883 bytes (runtime) [entry] [rendered]
+asset output.js 4.76 KiB [emitted] (name: main)
+chunk (runtime: main) output.js (main) 725 bytes (javascript) 875 bytes (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 883 bytes 4 modules
+  runtime modules 875 bytes 4 modules
   dependent modules 659 bytes [dependent] 3 modules
   ./example.js 66 bytes [built] [code generated]
     [no exports]
@@ -309,9 +309,9 @@ webpack X.X.X compiled successfully
 
 ```
 asset output.js 885 bytes [emitted] [minimized] (name: main)
-chunk (runtime: main) output.js (main) 725 bytes (javascript) 1.04 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 725 bytes (javascript) 1.03 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 1.04 KiB 4 modules
+  runtime modules 1.03 KiB 4 modules
   dependent modules 236 bytes [dependent] 2 modules
   ./example.js + 1 modules 489 bytes [built] [code generated]
     [no exports]

@@ -185,7 +185,7 @@ var x = "x";
 /******/ 	
 /************************************************************************/
 /******/ 	/* webpack/runtime/define property getters */
-/******/ 	// define getter/value functions for harmony exports
+/******/ 	// define getter/value functions for esm exports
 /******/ 	__webpack_require__.d = (exports, definition) => {
 /******/ 		for(var key in definition) {
 /******/ 			if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
@@ -497,9 +497,9 @@ chunk (runtime: main) lazy_js.output.js 263 bytes [rendered]
     [exports: c, d, x, y]
     [all exports used]
     import() ./lazy ./example.js + 2 modules ./example.js 4:0-16
-chunk (runtime: main) output.js (main) 367 bytes (javascript) 5.29 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 367 bytes (javascript) 5.28 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.29 KiB 8 modules
+  runtime modules 5.28 KiB 8 modules
   dependent modules 100 bytes [dependent] 1 module
   ./example.js + 2 modules 267 bytes [built] [code generated]
     [no exports]
@@ -520,9 +520,9 @@ chunk (runtime: main) lazy_js.output.js 263 bytes [rendered]
     [exports: c, d, x, y]
     [all exports used]
     import() ./lazy ./example.js + 2 modules ./example.js 4:0-16
-chunk (runtime: main) output.js (main) 367 bytes (javascript) 5.29 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 367 bytes (javascript) 5.28 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.29 KiB 8 modules
+  runtime modules 5.28 KiB 8 modules
   dependent modules 100 bytes [dependent] 2 modules
   ./example.js + 2 modules 267 bytes [built] [code generated]
     [no exports]

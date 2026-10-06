@@ -193,7 +193,7 @@ export const add = (content, from) => {
 /******/ 
 /************************************************************************/
 /******/ /* webpack/runtime/define property getters */
-/******/ // define getter/value functions for harmony exports
+/******/ // define getter/value functions for esm exports
 /******/ __webpack_require__.d = (exports, definition) => {
 /******/ 	for(var key in definition) {
 /******/ 		if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
@@ -442,7 +442,7 @@ fibWorker.onmessage = event => {
 /******/ 
 /************************************************************************/
 /******/ /* webpack/runtime/define property getters */
-/******/ // define getter/value functions for harmony exports
+/******/ // define getter/value functions for esm exports
 /******/ __webpack_require__.d = (exports, definition) => {
 /******/ 	for(var key in definition) {
 /******/ 		if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
@@ -618,7 +618,7 @@ var e={};const t={};function o(s){const r=t[s];if(void 0!==r)return r.exports;co
 /******/ 
 /************************************************************************/
 /******/ /* webpack/runtime/define property getters */
-/******/ // define getter/value functions for harmony exports
+/******/ // define getter/value functions for esm exports
 /******/ __webpack_require__.d = (exports, definition) => {
 /******/ 	for(var key in definition) {
 /******/ 		if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
@@ -757,9 +757,9 @@ export const __webpack_esm_modules__ = {
 (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   fibonacci: () => (/* binding */ fibonacci)
-/* harmony export */ });
+/* esm export */ __webpack_require__.d(__webpack_exports__, {
+/* esm export */   fibonacci: () => (/* binding */ fibonacci)
+/* esm export */ });
 function fibonacci(n) {
 	return n < 1 ? 0 : n <= 2 ? 1 : fibonacci(n - 1) + fibonacci(n - 2);
 }
@@ -776,10 +776,10 @@ function fibonacci(n) {
 
 ```
 asset main.js 7.79 KiB [emitted] [javascript module] (name: main)
-asset chat.js 6.01 KiB [emitted] [javascript module] (name: chat)
+asset chat.js 6 KiB [emitted] [javascript module] (name: chat)
 asset workers/fibonacci.js 5.67 KiB [emitted] [javascript module] (name: fibonacci)
-asset 936.js 1020 bytes [emitted] [javascript module]
-asset 129.js 842 bytes [emitted] [javascript module]
+asset 936.js 1010 bytes [emitted] [javascript module]
+asset 129.js 830 bytes [emitted] [javascript module]
 chunk (runtime: 9a81d90cfd0dfd13d748, main) 129.js 103 bytes [rendered]
   > ./fibonacci ./example.js 70:30-51
   > ./fibonacci ./fib-worker.js 2:29-50
@@ -788,21 +788,21 @@ chunk (runtime: 9a81d90cfd0dfd13d748, main) 129.js 103 bytes [rendered]
     [used exports unknown]
     import() ./fibonacci ./example.js 70:30-51
     import() ./fibonacci ./fib-worker.js 2:29-50
-chunk (runtime: 1fad8bf8de78b0a77bfd) chat.js (chat) 442 bytes (javascript) 2.79 KiB (runtime) [entry] [rendered]
+chunk (runtime: 1fad8bf8de78b0a77bfd) chat.js (chat) 442 bytes (javascript) 2.78 KiB (runtime) [entry] [rendered]
   > ./example.js 25:19-31:1
-  runtime modules 2.79 KiB 5 modules
+  runtime modules 2.78 KiB 5 modules
   ./chat-worker.js 442 bytes [built] [code generated]
     [used exports unknown]
     new Worker() ./chat-worker.js ./example.js 25:19-31:1
-chunk (runtime: 9a81d90cfd0dfd13d748) workers/fibonacci.js (fibonacci) 176 bytes (javascript) 2.79 KiB (runtime) [entry] [rendered]
+chunk (runtime: 9a81d90cfd0dfd13d748) workers/fibonacci.js (fibonacci) 176 bytes (javascript) 2.78 KiB (runtime) [entry] [rendered]
   > ./example.js 80:18-84:2
-  runtime modules 2.79 KiB 5 modules
+  runtime modules 2.78 KiB 5 modules
   ./fib-worker.js 176 bytes [built] [code generated]
     [used exports unknown]
     new Worker() ./fib-worker.js ./example.js 80:18-84:2
-chunk (runtime: main) main.js (main) 2.25 KiB (javascript) 2.79 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) main.js (main) 2.25 KiB (javascript) 2.78 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 2.79 KiB 5 modules
+  runtime modules 2.78 KiB 5 modules
   ./example.js 2.25 KiB [built] [code generated]
     [used exports unknown]
     entry ./example.js main
@@ -833,9 +833,9 @@ chunk (runtime: 9a81d90cfd0dfd13d748, main) 129.js 103 bytes [rendered]
     [all exports used]
     import() ./fibonacci ./example.js 70:30-51
     import() ./fibonacci ./fib-worker.js 2:29-50
-chunk (runtime: 1fad8bf8de78b0a77bfd) chat.js (chat) 442 bytes (javascript) 2.95 KiB (runtime) [entry] [rendered]
+chunk (runtime: 1fad8bf8de78b0a77bfd) chat.js (chat) 442 bytes (javascript) 2.94 KiB (runtime) [entry] [rendered]
   > ./example.js 25:19-31:1
-  runtime modules 2.95 KiB 4 modules
+  runtime modules 2.94 KiB 4 modules
   ./chat-worker.js 442 bytes [built] [code generated]
     [no exports used]
     new Worker() ./chat-worker.js ./example.js 25:19-31:1

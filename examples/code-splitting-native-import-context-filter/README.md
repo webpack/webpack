@@ -153,7 +153,7 @@ module.exports = webpackAsyncContext;
 /******/ 	
 /************************************************************************/
 /******/ 	/* webpack/runtime/define property getters */
-/******/ 	// define getter/value functions for harmony exports
+/******/ 	// define getter/value functions for esm exports
 /******/ 	__webpack_require__.d = (exports, definition) => {
 /******/ 		for(var key in definition) {
 /******/ 			if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
@@ -367,9 +367,9 @@ getTemplate("baz.noimport");
 
 ```
 asset output.js 10.8 KiB [emitted] (name: main)
-asset 717.output.js 846 bytes [emitted]
-asset 776.output.js 846 bytes [emitted]
-asset 0.output.js 844 bytes [emitted]
+asset 717.output.js 830 bytes [emitted]
+asset 776.output.js 830 bytes [emitted]
+asset 0.output.js 828 bytes [emitted]
 chunk (runtime: main) 0.output.js 38 bytes [rendered]
   > ./baz ./templates/ lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ referencedExports:  namespace object ./baz
   > ./baz.js ./templates/ lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ referencedExports:  namespace object ./baz.js

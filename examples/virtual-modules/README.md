@@ -207,17 +207,17 @@ module.exports = config;
 
 __webpack_require__.a(module, async (__webpack_handle_async_dependencies__, __webpack_async_result__) => { try {
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var virtual_my_module__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! virtual:my-module */ 1);
-/* harmony import */ var virtual_my_async_module__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! virtual:my-async-module */ 2);
-/* harmony import */ var virtual_build_info__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! virtual:build-info */ 3);
-/* harmony import */ var virtual_my_json_modules__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! virtual:my-json-modules */ 4);
-/* harmony import */ var virtual_my_typescript_module__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! virtual:my-typescript-module */ 5);
-/* harmony import */ var virtual_hello_ts__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! virtual:hello.ts */ 6);
-/* harmony import */ var virtual_routes__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! virtual:routes */ 7);
-/* harmony import */ var virtual_code_from_file__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! virtual:code-from-file */ 8);
-/* harmony import */ var my_custom_scheme_my_module__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! my-custom-scheme:my-module */ 9);
-/* harmony import */ var virtual_src_components_button_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! virtual:src/components/button.js */ 10);
-/* harmony import */ var virtual_logo_svg__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! virtual:logo.svg */ 12);
+/* esm import */ var virtual_my_module__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! virtual:my-module */ 1);
+/* esm import */ var virtual_my_async_module__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! virtual:my-async-module */ 2);
+/* esm import */ var virtual_build_info__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! virtual:build-info */ 3);
+/* esm import */ var virtual_my_json_modules__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! virtual:my-json-modules */ 4);
+/* esm import */ var virtual_my_typescript_module__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! virtual:my-typescript-module */ 5);
+/* esm import */ var virtual_hello_ts__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! virtual:hello.ts */ 6);
+/* esm import */ var virtual_routes__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! virtual:routes */ 7);
+/* esm import */ var virtual_code_from_file__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! virtual:code-from-file */ 8);
+/* esm import */ var my_custom_scheme_my_module__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! my-custom-scheme:my-module */ 9);
+/* esm import */ var virtual_src_components_button_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! virtual:src/components/button.js */ 10);
+/* esm import */ var virtual_logo_svg__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! virtual:logo.svg */ 12);
 
 
 
@@ -275,9 +275,9 @@ __webpack_async_result__();
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   msg: () => (/* binding */ msg)
-/* harmony export */ });
+/* esm export */ __webpack_require__.d(__webpack_exports__, {
+/* esm export */   msg: () => (/* binding */ msg)
+/* esm export */ });
 const msg = "from virtual module"
 
 /***/ }),
@@ -292,10 +292,10 @@ const msg = "from virtual module"
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("async-value");
+/* esm export */ __webpack_require__.d(__webpack_exports__, {
+/* esm export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* esm export */ });
+/* esm default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("async-value");
 
 /***/ }),
 /* 3 */
@@ -309,9 +309,9 @@ __webpack_require__.r(__webpack_exports__);
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   version: () => (/* binding */ version)
-/* harmony export */ });
+/* esm export */ __webpack_require__.d(__webpack_exports__, {
+/* esm export */   version: () => (/* binding */ version)
+/* esm export */ });
 const version = "1.0.0"
 
 /***/ }),
@@ -340,11 +340,11 @@ module.exports = /*#__PURE__*/JSON.parse('{"name":"virtual-url-plugin"}');
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
+/* esm export */ __webpack_require__.d(__webpack_exports__, {
+/* esm export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* esm export */ });
 const value = "value-from-typescript";
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (value);
+/* esm default export */ const __WEBPACK_DEFAULT_EXPORT__ = (value);
 
 
 /***/ }),
@@ -359,9 +359,9 @@ const value = "value-from-typescript";
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   hello: () => (/* binding */ hello)
-/* harmony export */ });
+/* esm export */ __webpack_require__.d(__webpack_exports__, {
+/* esm export */   hello: () => (/* binding */ hello)
+/* esm export */ });
 const hello = 'hello';
 
 
@@ -377,9 +377,9 @@ const hello = 'hello';
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   routes: () => (/* binding */ routes)
-/* harmony export */ });
+/* esm export */ __webpack_require__.d(__webpack_exports__, {
+/* esm export */   routes: () => (/* binding */ routes)
+/* esm export */ });
 const routes = {a: () => __webpack_require__.e(/*! import() */ 1).then(() => (__webpack_require__(/*! ./routes/a.js */ 13))),
 b: () => __webpack_require__.e(/*! import() */ 2).then(() => (__webpack_require__(/*! ./routes/b.js */ 14)))}
 
@@ -396,10 +396,10 @@ b: () => __webpack_require__.e(/*! import() */ 2).then(() => (__webpack_require_
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   first: () => (/* binding */ first),
-/* harmony export */   second: () => (/* binding */ second)
-/* harmony export */ });
+/* esm export */ __webpack_require__.d(__webpack_exports__, {
+/* esm export */   first: () => (/* binding */ first),
+/* esm export */   second: () => (/* binding */ second)
+/* esm export */ });
 const first = "first";
 const second = "second";
 
@@ -418,12 +418,12 @@ const second = "second";
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
+/* esm export */ __webpack_require__.d(__webpack_exports__, {
+/* esm export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* esm export */ });
 const msg = "from virtual module with custom scheme";
 
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (msg);
+/* esm default export */ const __WEBPACK_DEFAULT_EXPORT__ = (msg);
 
 /***/ }),
 /* 10 */
@@ -437,10 +437,10 @@ const msg = "from virtual module with custom scheme";
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   button: () => (/* binding */ button)
-/* harmony export */ });
-/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./utils */ 11);
+/* esm export */ __webpack_require__.d(__webpack_exports__, {
+/* esm export */   button: () => (/* binding */ button)
+/* esm export */ });
+/* esm import */ var _utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./utils */ 11);
 const button = (0,_utils__WEBPACK_IMPORTED_MODULE_0__.trim)('button ');
 
 /***/ }),
@@ -455,9 +455,9 @@ const button = (0,_utils__WEBPACK_IMPORTED_MODULE_0__.trim)('button ');
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   trim: () => (/* binding */ trim)
-/* harmony export */ });
+/* esm export */ __webpack_require__.d(__webpack_exports__, {
+/* esm export */   trim: () => (/* binding */ trim)
+/* esm export */ });
 const trim = (str) => str.trim();
 
 /***/ }),
@@ -586,7 +586,7 @@ module.exports = __webpack_require__.p + "logo.svg";
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/define property getters */
-/******/ 	// define getter/value functions for harmony exports
+/******/ 	// define getter/value functions for esm exports
 /******/ 	__webpack_require__.d = (exports, definition) => {
 /******/ 		for(var key in definition) {
 /******/ 			if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
@@ -688,9 +688,9 @@ module.exports = __webpack_require__.p + "logo.svg";
 ## Unoptimized
 
 ```
-asset output.js 19.8 KiB [emitted] (name: main)
-asset 1.output.js 787 bytes [emitted]
-asset 2.output.js 787 bytes [emitted]
+asset output.js 19.6 KiB [emitted] (name: main)
+asset 1.output.js 771 bytes [emitted]
+asset 2.output.js 771 bytes [emitted]
 asset logo.svg 78 bytes [emitted] [from: virtual:logo.svg] (auxiliary name: main)
 chunk (runtime: main) output.js (main) 1.98 KiB (javascript) 78 bytes (asset) 3.95 KiB (runtime) [entry] [rendered]
   > ./example.js main

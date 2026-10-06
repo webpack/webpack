@@ -8,7 +8,7 @@ exports[`ConfigCacheTestCases concatenate-modules commonjs-wrapped-assignment-as
 /******/ 	
 /************************************************************************/
 /******/ 	/* webpack/runtime/compat get default export */
-/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	// getDefaultExport function for compatibility with non-esm modules
 /******/ 	__webpack_require__.n = (module) => {
 /******/ 		const getter = module && module.__esModule ?
 /******/ 			() => (module['default']) :
@@ -35,7 +35,7 @@ exports[`ConfigCacheTestCases concatenate-modules commonjs-wrapped-assignment-as
 /******/ 	};
 /******/ 	
 /******/ 	/* webpack/runtime/define property getters */
-/******/ 	// define getter/value functions for harmony exports
+/******/ 	// define getter/value functions for esm exports
 /******/ 	__webpack_require__.d = (exports, definition) => {
 /******/ 		for(var key in definition) {
 /******/ 			if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
@@ -287,7 +287,7 @@ exports[`ConfigCacheTestCases concatenate-modules commonjs-wrapped-assignment-as
 /******/ 	
 /************************************************************************/
 /******/ 	/* webpack/runtime/compat get default export */
-/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	// getDefaultExport function for compatibility with non-esm modules
 /******/ 	__webpack_require__.n = (module) => {
 /******/ 		const getter = module && module.__esModule ?
 /******/ 			() => (module['default']) :
@@ -314,7 +314,7 @@ exports[`ConfigCacheTestCases concatenate-modules commonjs-wrapped-assignment-as
 /******/ 	};
 /******/ 	
 /******/ 	/* webpack/runtime/define property getters */
-/******/ 	// define getter/value functions for harmony exports
+/******/ 	// define getter/value functions for esm exports
 /******/ 	__webpack_require__.d = (exports, definition) => {
 /******/ 		for(var key in definition) {
 /******/ 			if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
@@ -566,7 +566,7 @@ exports[`ConfigCacheTestCases concatenate-modules commonjs-wrapped-assignment-as
 /******/ 	
 /************************************************************************/
 /******/ 	/* webpack/runtime/compat get default export */
-/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	// getDefaultExport function for compatibility with non-esm modules
 /******/ 	__webpack_require__.n = (module) => {
 /******/ 		const getter = module && module.__esModule ?
 /******/ 			() => (module['default']) :
@@ -593,7 +593,7 @@ exports[`ConfigCacheTestCases concatenate-modules commonjs-wrapped-assignment-as
 /******/ 	};
 /******/ 	
 /******/ 	/* webpack/runtime/define property getters */
-/******/ 	// define getter/value functions for harmony exports
+/******/ 	// define getter/value functions for esm exports
 /******/ 	__webpack_require__.d = (exports, definition) => {
 /******/ 		for(var key in definition) {
 /******/ 			if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
@@ -845,7 +845,7 @@ exports[`ConfigCacheTestCases concatenate-modules commonjs-wrapped-assignment-as
 /******/ 	
 /************************************************************************/
 /******/ 	/* webpack/runtime/compat get default export */
-/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	// getDefaultExport function for compatibility with non-esm modules
 /******/ 	__webpack_require__.n = (module) => {
 /******/ 		const getter = module && module.__esModule ?
 /******/ 			() => (module['default']) :
@@ -872,7 +872,7 @@ exports[`ConfigCacheTestCases concatenate-modules commonjs-wrapped-assignment-as
 /******/ 	};
 /******/ 	
 /******/ 	/* webpack/runtime/define property getters */
-/******/ 	// define getter/value functions for harmony exports
+/******/ 	// define getter/value functions for esm exports
 /******/ 	__webpack_require__.d = (exports, definition) => {
 /******/ 		for(var key in definition) {
 /******/ 			if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {

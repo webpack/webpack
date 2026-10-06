@@ -194,7 +194,7 @@ export const add = (content, from) => {
 /******/ 	
 /************************************************************************/
 /******/ 	/* webpack/runtime/define property getters */
-/******/ 	// define getter/value functions for harmony exports
+/******/ 	// define getter/value functions for esm exports
 /******/ 	__webpack_require__.d = (exports, definition) => {
 /******/ 		for(var key in definition) {
 /******/ 			if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
@@ -566,7 +566,7 @@ onconnect = function (e) {
 /******/ 	
 /************************************************************************/
 /******/ 	/* webpack/runtime/define property getters */
-/******/ 	// define getter/value functions for harmony exports
+/******/ 	// define getter/value functions for esm exports
 /******/ 	__webpack_require__.d = (exports, definition) => {
 /******/ 		for(var key in definition) {
 /******/ 			if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
@@ -679,9 +679,9 @@ onmessage = async event => {
 /*! runtime requirements: __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
 (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   fibonacci: () => (/* binding */ fibonacci)
-/* harmony export */ });
+/* esm export */ __webpack_require__.d(__webpack_exports__, {
+/* esm export */   fibonacci: () => (/* binding */ fibonacci)
+/* esm export */ });
 function fibonacci(n) {
 	return n < 1 ? 0 : n <= 2 ? 1 : fibonacci(n - 1) + fibonacci(n - 2);
 }
@@ -700,7 +700,7 @@ function fibonacci(n) {
 asset main.js 11.5 KiB [emitted] (name: main)
 asset workers/fibonacci.js 4.67 KiB [emitted] (name: fibonacci)
 asset chat.js 839 bytes [emitted] (name: chat)
-asset 129.js 729 bytes [emitted]
+asset 129.js 717 bytes [emitted]
 chunk (runtime: 9a81d90cfd0dfd13d748, main) 129.js 103 bytes [rendered]
   > ./fibonacci ./example.js 70:30-51
   > ./fibonacci ./fib-worker.js 2:29-50

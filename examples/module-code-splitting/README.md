@@ -79,7 +79,7 @@ export function reset() {
 /******/ 
 /************************************************************************/
 /******/ /* webpack/runtime/define property getters */
-/******/ // define getter/value functions for harmony exports
+/******/ // define getter/value functions for esm exports
 /******/ __webpack_require__.d = (exports, definition) => {
 /******/ 	for(var key in definition) {
 /******/ 		if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
@@ -223,11 +223,11 @@ var e={};const t={};function o(r){const n=t[r];if(void 0!==n)return n.exports;co
 ## Unoptimized
 
 ```
-asset output.js 5.94 KiB [emitted] [javascript module] (name: main)
-asset 1.output.js 1.3 KiB [emitted] [javascript module]
-chunk (runtime: main) output.js (main) 420 bytes (javascript) 2.79 KiB (runtime) [entry] [rendered]
+asset output.js 5.93 KiB [emitted] [javascript module] (name: main)
+asset 1.output.js 1.28 KiB [emitted] [javascript module]
+chunk (runtime: main) output.js (main) 420 bytes (javascript) 2.78 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 2.79 KiB 5 modules
+  runtime modules 2.78 KiB 5 modules
   ./example.js + 1 modules 420 bytes [built] [code generated]
     [no exports]
     [no exports used]

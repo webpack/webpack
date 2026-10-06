@@ -46,7 +46,7 @@ it("should chain multiple <script type=module src> via dependOn and share module
 	expect(moduleB).toMatchSnapshot();
 	// module-a is the esm-script-group leader and owns the runtime.
 	expect(moduleA).toContain("function __webpack_require__(moduleId)");
-	expect(moduleA).toContain("harmony export");
+	expect(moduleA).toContain("esm export");
 	// module-b shares the runtime via dependOn — no own bootstrap.
 	expect(moduleB).not.toContain("function __webpack_require__(moduleId)");
 	// And module-a's source is NOT duplicated into module-b's chunk — the

@@ -114,9 +114,9 @@ module.exports = config;
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   platform: () => (/* binding */ platform)
-/* harmony export */ });
+/* esm export */ __webpack_require__.d(__webpack_exports__, {
+/* esm export */   platform: () => (/* binding */ platform)
+/* esm export */ });
 // Universal feature detection. The bundle assumes no platform-specific global at
 // build time, so the environment is resolved at runtime instead. Deno and Bun
 // are checked before Node because both also expose a Node-compatible `process`.
@@ -176,7 +176,7 @@ function platform() {
 /******/ 
 /************************************************************************/
 /******/ /* webpack/runtime/define property getters */
-/******/ // define getter/value functions for harmony exports
+/******/ // define getter/value functions for esm exports
 /******/ __webpack_require__.d = (exports, definition) => {
 /******/ 	for(var key in definition) {
 /******/ 		if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
@@ -291,7 +291,7 @@ let __webpack_exports__ = {};
 /*! exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__, __webpack_require__.r, __webpack_exports__, __webpack_require__.e, __webpack_require__.* */
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _env__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./env */ 1);
+/* esm import */ var _env__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./env */ 1);
 // One source file, one ESM bundle, every runtime. `target: "universal"` tells
 // webpack to emit only the runtime features that browser, web worker, Node.js,
 // Electron and NW.js all share, so this entry runs as-is on each one.
@@ -330,9 +330,9 @@ export const __webpack_esm_modules__ = {
 (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   render: () => (/* binding */ render)
-/* harmony export */ });
+/* esm export */ __webpack_require__.d(__webpack_exports__, {
+/* esm export */   render: () => (/* binding */ render)
+/* esm export */ });
 // Lazily loaded on both platforms. Picks the right output sink at runtime: the
 // DOM in a browser, stdout in Node.
 function render(message) {
@@ -354,8 +354,8 @@ function render(message) {
 ## Unoptimized
 
 ```
-asset output.mjs 7.68 KiB [emitted] [javascript module] (name: main)
-asset render_js.mjs 998 bytes [emitted] [javascript module]
+asset output.mjs 7.66 KiB [emitted] [javascript module] (name: main)
+asset render_js.mjs 986 bytes [emitted] [javascript module]
 chunk (runtime: main) output.mjs (main) 1.16 KiB (javascript) 2.82 KiB (runtime) [entry] [rendered]
   > ./example.js main
   runtime modules 2.82 KiB 5 modules

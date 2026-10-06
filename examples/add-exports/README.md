@@ -137,10 +137,10 @@ module.exports = Legacy;
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   PI: () => (/* binding */ PI),
-/* harmony export */   add: () => (/* binding */ add)
-/* harmony export */ });
+/* esm export */ __webpack_require__.d(__webpack_exports__, {
+/* esm export */   PI: () => (/* binding */ PI),
+/* esm export */   add: () => (/* binding */ add)
+/* esm export */ });
 // A vendored file — it defines values and exports nothing.
 const PI = 3.14;
 
@@ -184,7 +184,7 @@ function add(first, second) {
 /******/ 	
 /************************************************************************/
 /******/ 	/* webpack/runtime/compat get default export */
-/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	// getDefaultExport function for compatibility with non-esm modules
 /******/ 	__webpack_require__.n = (module) => {
 /******/ 		const getter = module && module.__esModule ?
 /******/ 			() => (module['default']) :
@@ -194,7 +194,7 @@ function add(first, second) {
 /******/ 	};
 /******/ 	
 /******/ 	/* webpack/runtime/define property getters */
-/******/ 	// define getter/value functions for harmony exports
+/******/ 	// define getter/value functions for esm exports
 /******/ 	__webpack_require__.d = (exports, definition) => {
 /******/ 		for(var key in definition) {
 /******/ 			if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
@@ -230,9 +230,9 @@ let __webpack_exports__ = {};
 /*! exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__, __webpack_require__.n, __webpack_require__.r, __webpack_exports__, __webpack_require__.* */
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _legacy_global__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./legacy-global */ 1);
-/* harmony import */ var _legacy_global__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_legacy_global__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _math__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./math */ 2);
+/* esm import */ var _legacy_global__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./legacy-global */ 1);
+/* esm import */ var _legacy_global__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_legacy_global__WEBPACK_IMPORTED_MODULE_0__);
+/* esm import */ var _math__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./math */ 2);
 
 
 
@@ -249,10 +249,10 @@ console.log(new (_legacy_global__WEBPACK_IMPORTED_MODULE_0___default())().versio
 ## Unoptimized
 
 ```
-asset output.js 4.85 KiB [emitted] (name: main)
-chunk (runtime: main) output.js (main) 417 bytes (javascript) 883 bytes (runtime) [entry] [rendered]
+asset output.js 4.81 KiB [emitted] (name: main)
+chunk (runtime: main) output.js (main) 417 bytes (javascript) 875 bytes (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 883 bytes 4 modules
+  runtime modules 875 bytes 4 modules
   dependent modules 297 bytes [dependent] 2 modules
   ./example.js 120 bytes [built] [code generated]
     [no exports]
@@ -265,9 +265,9 @@ webpack X.X.X compiled successfully
 
 ```
 asset output.js 514 bytes [emitted] [minimized] (name: main)
-chunk (runtime: main) output.js (main) 417 bytes (javascript) 672 bytes (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 417 bytes (javascript) 664 bytes (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 672 bytes 3 modules
+  runtime modules 664 bytes 3 modules
   dependent modules 141 bytes [dependent] 1 module
   ./example.js + 1 modules 276 bytes [built] [code generated]
     [no exports]

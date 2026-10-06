@@ -25,7 +25,7 @@ exports[`ConfigCacheTestCases concatenate-modules commonjs-wrapped-external-new-
 /******/ 	};
 /******/ 	
 /******/ 	/* webpack/runtime/define property getters */
-/******/ 	// define getter/value functions for harmony exports
+/******/ 	// define getter/value functions for esm exports
 /******/ 	__webpack_require__.d = (exports, definition) => {
 /******/ 		if(Array.isArray(definition)) {
 /******/ 			var i = 0;
@@ -70,9 +70,9 @@ exports.l = raw;
 
 // MODULE: ./esm-user.mjs
 var esm_user_namespaceFn = /*#__PURE__*/__webpack_require__.cw((__unused_webpack___webpack_module__, __webpack_exports__) => {
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   make: () => (/* binding */ make)
-/* harmony export */ });
+/* esm export */ __webpack_require__.d(__webpack_exports__, {
+/* esm export */   make: () => (/* binding */ make)
+/* esm export */ });
 (external_events_namespaceFn());
 // required by a CommonJS module, so wrapping propagates from here to the
 // external: the default import becomes the external's accessor call
@@ -84,9 +84,9 @@ function make() {
 
 const raw = (external_events_namespaceFn());
 
-/* harmony export */ __webpack_require__.d(__webpack_exports__, [
-/* harmony export */   \\"raw\\", 0, /* binding */ raw
-/* harmony export */ ]);
+/* esm export */ __webpack_require__.d(__webpack_exports__, [
+/* esm export */   \\"raw\\", 0, /* binding */ raw
+/* esm export */ ]);
 
 });
 
@@ -132,7 +132,7 @@ exports[`ConfigCacheTestCases concatenate-modules commonjs-wrapped-external-new-
 /******/ 	};
 /******/ 	
 /******/ 	/* webpack/runtime/define property getters */
-/******/ 	// define getter/value functions for harmony exports
+/******/ 	// define getter/value functions for esm exports
 /******/ 	__webpack_require__.d = (exports, definition) => {
 /******/ 		if(Array.isArray(definition)) {
 /******/ 			var i = 0;
@@ -177,9 +177,9 @@ exports.l = raw;
 
 // MODULE: ./esm-user.mjs
 var esm_user_namespaceFn = /*#__PURE__*/__webpack_require__.cw((__unused_webpack___webpack_module__, __webpack_exports__) => {
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   make: () => (/* binding */ make)
-/* harmony export */ });
+/* esm export */ __webpack_require__.d(__webpack_exports__, {
+/* esm export */   make: () => (/* binding */ make)
+/* esm export */ });
 (external_events_namespaceFn());
 // required by a CommonJS module, so wrapping propagates from here to the
 // external: the default import becomes the external's accessor call
@@ -191,9 +191,9 @@ function make() {
 
 const raw = (external_events_namespaceFn());
 
-/* harmony export */ __webpack_require__.d(__webpack_exports__, [
-/* harmony export */   \\"raw\\", 0, /* binding */ raw
-/* harmony export */ ]);
+/* esm export */ __webpack_require__.d(__webpack_exports__, [
+/* esm export */   \\"raw\\", 0, /* binding */ raw
+/* esm export */ ]);
 
 });
 
@@ -239,7 +239,7 @@ exports[`ConfigCacheTestCases concatenate-modules commonjs-wrapped-external-new-
 /******/ 	};
 /******/ 	
 /******/ 	/* webpack/runtime/define property getters */
-/******/ 	// define getter/value functions for harmony exports
+/******/ 	// define getter/value functions for esm exports
 /******/ 	__webpack_require__.d = (exports, definition) => {
 /******/ 		if(Array.isArray(definition)) {
 /******/ 			var i = 0;
@@ -284,9 +284,9 @@ exports.l = raw;
 
 // MODULE: ./esm-user.mjs
 var esm_user_namespaceFn = /*#__PURE__*/__webpack_require__.cw((__unused_webpack___webpack_module__, __webpack_exports__) => {
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   make: () => (/* binding */ make)
-/* harmony export */ });
+/* esm export */ __webpack_require__.d(__webpack_exports__, {
+/* esm export */   make: () => (/* binding */ make)
+/* esm export */ });
 (external_events_namespaceFn());
 // required by a CommonJS module, so wrapping propagates from here to the
 // external: the default import becomes the external's accessor call
@@ -298,9 +298,9 @@ function make() {
 
 const raw = (external_events_namespaceFn());
 
-/* harmony export */ __webpack_require__.d(__webpack_exports__, [
-/* harmony export */   \\"raw\\", 0, /* binding */ raw
-/* harmony export */ ]);
+/* esm export */ __webpack_require__.d(__webpack_exports__, [
+/* esm export */   \\"raw\\", 0, /* binding */ raw
+/* esm export */ ]);
 
 });
 
@@ -346,7 +346,7 @@ exports[`ConfigCacheTestCases concatenate-modules commonjs-wrapped-external-new-
 /******/ 	};
 /******/ 	
 /******/ 	/* webpack/runtime/define property getters */
-/******/ 	// define getter/value functions for harmony exports
+/******/ 	// define getter/value functions for esm exports
 /******/ 	__webpack_require__.d = (exports, definition) => {
 /******/ 		if(Array.isArray(definition)) {
 /******/ 			var i = 0;
@@ -391,9 +391,9 @@ exports.l = raw;
 
 // MODULE: ./esm-user.mjs
 var esm_user_namespaceFn = /*#__PURE__*/__webpack_require__.cw((__unused_webpack___webpack_module__, __webpack_exports__) => {
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   make: () => (/* binding */ make)
-/* harmony export */ });
+/* esm export */ __webpack_require__.d(__webpack_exports__, {
+/* esm export */   make: () => (/* binding */ make)
+/* esm export */ });
 (external_events_namespaceFn());
 // required by a CommonJS module, so wrapping propagates from here to the
 // external: the default import becomes the external's accessor call
@@ -405,9 +405,9 @@ function make() {
 
 const raw = (external_events_namespaceFn());
 
-/* harmony export */ __webpack_require__.d(__webpack_exports__, [
-/* harmony export */   \\"raw\\", 0, /* binding */ raw
-/* harmony export */ ]);
+/* esm export */ __webpack_require__.d(__webpack_exports__, [
+/* esm export */   \\"raw\\", 0, /* binding */ raw
+/* esm export */ ]);
 
 });
 

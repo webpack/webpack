@@ -68,7 +68,7 @@ module.exports = config;
 # dist/dll.js
 
 ```javascript
-var dll_82d9f4fee183005d8a79;
+var dll_505e61ec8c400927a910;
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ([
 /* 0 */
@@ -175,7 +175,7 @@ exports.c = "c";
 /******/ 	
 /************************************************************************/
 /******/ 	/* webpack/runtime/define property getters */
-/******/ 	// define getter/value functions for harmony exports
+/******/ 	// define getter/value functions for esm exports
 /******/ 	__webpack_require__.d = (exports, definition) => {
 /******/ 		for(var key in definition) {
 /******/ 			if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
@@ -205,7 +205,7 @@ exports.c = "c";
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module doesn't tell about it's top-level declarations so it can't be inlined
 /******/ 	let __webpack_exports__ = __webpack_require__(0);
-/******/ 	dll_82d9f4fee183005d8a79 = __webpack_exports__;
+/******/ 	dll_505e61ec8c400927a910 = __webpack_exports__;
 /******/ 	
 /******/ })()
 ;
@@ -214,7 +214,7 @@ exports.c = "c";
 # dist/dll-manifest.json
 
 ```javascript
-{"name":"dll_82d9f4fee183005d8a79","content":{"./example.js":{"id":1,"buildMeta":{"exportsType":"namespace"},"exports":["a","b","c"]}}}
+{"name":"dll_505e61ec8c400927a910","content":{"./example.js":{"id":1,"buildMeta":{"exportsType":"namespace"},"exports":["a","b","c"]}}}
 ```
 
 # Info
@@ -223,9 +223,9 @@ exports.c = "c";
 
 ```
 asset dll.js 4.44 KiB [emitted] (name: dll)
-chunk (runtime: dll) dll.js (dll) 211 bytes (javascript) 614 bytes (runtime) [entry] [rendered]
+chunk (runtime: dll) dll.js (dll) 211 bytes (javascript) 610 bytes (runtime) [entry] [rendered]
   > dll
-  runtime modules 614 bytes 3 modules
+  runtime modules 610 bytes 3 modules
   dependent modules 199 bytes [dependent] 2 modules
   dll dll 12 bytes [built] [code generated]
     [used exports unknown]
@@ -238,9 +238,9 @@ webpack X.X.X compiled successfully
 
 ```
 asset dll.js 647 bytes [emitted] [minimized] (name: dll)
-chunk (runtime: dll) dll.js (dll) 211 bytes (javascript) 614 bytes (runtime) [entry] [rendered]
+chunk (runtime: dll) dll.js (dll) 211 bytes (javascript) 610 bytes (runtime) [entry] [rendered]
   > dll
-  runtime modules 614 bytes 3 modules
+  runtime modules 610 bytes 3 modules
   dependent modules 199 bytes [dependent] 2 modules
   dll dll 12 bytes [built] [code generated]
     dll entry

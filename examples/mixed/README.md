@@ -111,18 +111,18 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// AMD Module Fo
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _commonjs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./commonjs */ 1);
-/* harmony import */ var _commonjs__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_commonjs__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _amd__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./amd */ 2);
-/* harmony import */ var _amd__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_amd__WEBPACK_IMPORTED_MODULE_1__);
+/* esm export */ __webpack_require__.d(__webpack_exports__, {
+/* esm export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* esm export */ });
+/* esm import */ var _commonjs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./commonjs */ 1);
+/* esm import */ var _commonjs__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_commonjs__WEBPACK_IMPORTED_MODULE_0__);
+/* esm import */ var _amd__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./amd */ 2);
+/* esm import */ var _amd__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_amd__WEBPACK_IMPORTED_MODULE_1__);
 // ES6 Modules
 
 
 
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (456);
+/* esm default export */ const __WEBPACK_DEFAULT_EXPORT__ = (456);
 
 
 /***/ })
@@ -162,7 +162,7 @@ __webpack_require__.r(__webpack_exports__);
 /******/ 	
 /************************************************************************/
 /******/ 	/* webpack/runtime/compat get default export */
-/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	// getDefaultExport function for compatibility with non-esm modules
 /******/ 	__webpack_require__.n = (module) => {
 /******/ 		const getter = module && module.__esModule ?
 /******/ 			() => (module['default']) :
@@ -172,7 +172,7 @@ __webpack_require__.r(__webpack_exports__);
 /******/ 	};
 /******/ 	
 /******/ 	/* webpack/runtime/define property getters */
-/******/ 	// define getter/value functions for harmony exports
+/******/ 	// define getter/value functions for esm exports
 /******/ 	__webpack_require__.d = (exports, definition) => {
 /******/ 		for(var key in definition) {
 /******/ 			if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
@@ -471,9 +471,9 @@ module.exports = function() {
 ```
 asset output.js 13.3 KiB [emitted] (name: main)
 asset require_context_templates_sync_recursive_js_.output.js 2.29 KiB [emitted]
-chunk (runtime: main) output.js (main) 1010 bytes (javascript) 5.55 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 1010 bytes (javascript) 5.54 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.55 KiB 9 modules
+  runtime modules 5.54 KiB 9 modules
   dependent modules 617 bytes [dependent] 3 modules
   ./example.js 396 bytes [built] [code generated]
     [used exports unknown]
@@ -493,9 +493,9 @@ webpack X.X.X compiled successfully
 ```
 asset output.js 2.48 KiB [emitted] [minimized] (name: main)
 asset require_context_templates_sync_recursive_js_.output.js 625 bytes [emitted] [minimized]
-chunk (runtime: main) output.js (main) 1010 bytes (javascript) 5.55 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 1010 bytes (javascript) 5.54 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.55 KiB 9 modules
+  runtime modules 5.54 KiB 9 modules
   dependent modules 617 bytes [dependent] 3 modules
   ./example.js 396 bytes [built] [code generated]
     [no exports used]

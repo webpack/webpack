@@ -283,8 +283,8 @@ vendor:
   vendor (webpack X.X.X) compiled successfully
 
 app:
-  asset pageB.js 300 bytes [emitted] [minimized] (name: pageB)
   asset pageA.js 298 bytes [emitted] [minimized] (name: pageA)
+  asset pageB.js 298 bytes [emitted] [minimized] (name: pageB)
   asset pageC.js 183 bytes [emitted] [minimized] (name: pageC)
   chunk (runtime: pageB) pageB.js (pageB) 144 bytes [entry] [rendered]
     > ./pageB pageB

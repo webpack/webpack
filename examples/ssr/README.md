@@ -431,7 +431,7 @@ Keyed by emitted asset, with the entrypoint graph alongside it.
 client:
   assets by path *.js 1.9 MiB
     asset main.js 1.9 MiB [emitted] (name: main)
-    asset page_js.js 1.79 KiB [emitted]
+    asset page_js.js 1.77 KiB [emitted]
   assets by path *.json 2.54 KiB
     asset ssr-manifest.json 2.16 KiB [emitted]
     asset manifest.json 389 bytes [emitted]
@@ -439,10 +439,10 @@ client:
     asset page_js.css 352 bytes [emitted]
     asset main.css 263 bytes [emitted] (name: main)
   Entrypoint main 1.9 MiB = main.js 1.9 MiB main.css 263 bytes
-  chunk (runtime: main) main.js, main.css (main) 1.85 MiB (javascript) 176 bytes (css) 9.28 KiB (runtime) [entry] [rendered]
+  chunk (runtime: main) main.js, main.css (main) 1.85 MiB (javascript) 176 bytes (css) 9.27 KiB (runtime) [entry] [rendered]
     > ./example.js main
     dependent modules 1.85 MiB (javascript) 176 bytes (css) [dependent] 17 modules
-    runtime modules 9.28 KiB 12 modules
+    runtime modules 9.27 KiB 12 modules
     ./example.js 617 bytes [built] [code generated]
       [no exports]
       [used exports unknown]
@@ -457,8 +457,8 @@ client:
   client (webpack X.X.X) compiled successfully
 
 server:
-  asset main.mjs 21.6 KiB [emitted] [javascript module] (name: main)
-  asset page_js.mjs 1.63 KiB [emitted] [javascript module]
+  asset main.mjs 21.5 KiB [emitted] [javascript module] (name: main)
+  asset page_js.mjs 1.61 KiB [emitted] [javascript module]
   asset page_js.css 352 bytes [emitted]
   chunk (runtime: main) main.mjs (main) 5.07 KiB (javascript) 6.21 KiB (runtime) [entry] [rendered]
     > ./server.js main
@@ -519,9 +519,9 @@ server:
   asset main.mjs 4.69 KiB [emitted] [javascript module] [minimized] (name: main)
   asset page_js-page_css.mjs 647 bytes [emitted] [javascript module] [minimized]
   asset page_js-page_css.css 197 bytes [emitted] [minimized]
-  chunk (runtime: main) main.mjs (main) 5.07 KiB (javascript) 6.05 KiB (runtime) [entry] [rendered]
+  chunk (runtime: main) main.mjs (main) 5.07 KiB (javascript) 6.04 KiB (runtime) [entry] [rendered]
     > ./server.js main
-    runtime modules 6.05 KiB 8 modules
+    runtime modules 6.04 KiB 8 modules
     dependent modules 84 bytes [dependent] 2 modules
     ./server.js + 6 modules 4.99 KiB [not cacheable] [built] [code generated]
       [exports: renderDocument]

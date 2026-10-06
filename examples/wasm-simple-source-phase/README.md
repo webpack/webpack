@@ -77,8 +77,8 @@ export function fibonacciJavascript(i) {
 
 __webpack_require__.a(module, async (__webpack_handle_async_dependencies__, __webpack_async_result__) => { try {
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _add_wasm__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./add.wasm */ 1);
-/* harmony import */ var _math__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./math */ 2);
+/* esm import */ var _add_wasm__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./add.wasm */ 1);
+/* esm import */ var _math__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./math */ 2);
 var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_add_wasm__WEBPACK_IMPORTED_MODULE_0__, _math__WEBPACK_IMPORTED_MODULE_1__]);
 ([_add_wasm__WEBPACK_IMPORTED_MODULE_0__, _math__WEBPACK_IMPORTED_MODULE_1__] = __webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__);
 
@@ -145,16 +145,16 @@ __webpack_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 
 __webpack_require__.a(module, async (__webpack_handle_async_dependencies__, __webpack_async_result__) => { try {
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   add: () => (/* binding */ add),
-/* harmony export */   factorial: () => (/* binding */ factorial),
-/* harmony export */   factorialJavascript: () => (/* binding */ factorialJavascript),
-/* harmony export */   fibonacci: () => (/* binding */ fibonacci),
-/* harmony export */   fibonacciJavascript: () => (/* binding */ fibonacciJavascript)
-/* harmony export */ });
-/* harmony import */ var _add_wasm__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./add.wasm */ 1);
-/* harmony import */ var _factorial_wasm__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./factorial.wasm */ 3);
-/* harmony import */ var _fibonacci_wasm__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./fibonacci.wasm */ 4);
+/* esm export */ __webpack_require__.d(__webpack_exports__, {
+/* esm export */   add: () => (/* binding */ add),
+/* esm export */   factorial: () => (/* binding */ factorial),
+/* esm export */   factorialJavascript: () => (/* binding */ factorialJavascript),
+/* esm export */   fibonacci: () => (/* binding */ fibonacci),
+/* esm export */   fibonacciJavascript: () => (/* binding */ fibonacciJavascript)
+/* esm export */ });
+/* esm import */ var _add_wasm__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./add.wasm */ 1);
+/* esm import */ var _factorial_wasm__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./factorial.wasm */ 3);
+/* esm import */ var _fibonacci_wasm__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./fibonacci.wasm */ 4);
 var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_add_wasm__WEBPACK_IMPORTED_MODULE_0__, _factorial_wasm__WEBPACK_IMPORTED_MODULE_1__, _fibonacci_wasm__WEBPACK_IMPORTED_MODULE_2__]);
 ([_add_wasm__WEBPACK_IMPORTED_MODULE_0__, _factorial_wasm__WEBPACK_IMPORTED_MODULE_1__, _fibonacci_wasm__WEBPACK_IMPORTED_MODULE_2__] = __webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__);
 
@@ -326,7 +326,7 @@ __webpack_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/define property getters */
-/******/ 	// define getter/value functions for harmony exports
+/******/ 	// define getter/value functions for esm exports
 /******/ 	__webpack_require__.d = (exports, definition) => {
 /******/ 		for(var key in definition) {
 /******/ 			if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
@@ -393,7 +393,7 @@ __webpack_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 ## Unoptimized
 
 ```
-asset output.js 13.8 KiB [emitted] (name: main)
+asset output.js 13.7 KiB [emitted] (name: main)
 asset 690d0ef01c3f29042287.wasm 67 bytes [emitted] [immutable] (auxiliary name: main)
 asset f215af0bd9b5ea85aee7.wasm 62 bytes [emitted] [immutable] (auxiliary name: main)
 asset 0bb22d2508a3f5746503.wasm 41 bytes [emitted] [immutable] (auxiliary name: main)

@@ -155,7 +155,7 @@ let __webpack_exports__ = {};
 /*! exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__, __webpack_require__.r, __webpack_exports__, __webpack_require__.* */
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var library__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! library */ 1);
+/* esm import */ var library__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! library */ 1);
 
 
 // Valid value

@@ -64,13 +64,13 @@ exports.foo = "bar";
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _node_modules_css_loader_dist_runtime_noSourceMaps_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/noSourceMaps.js */ 3);
-/* harmony import */ var _node_modules_css_loader_dist_runtime_noSourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_noSourceMaps_js__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/api.js */ 4);
-/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__);
+/* esm export */ __webpack_require__.d(__webpack_exports__, {
+/* esm export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* esm export */ });
+/* esm import */ var _node_modules_css_loader_dist_runtime_noSourceMaps_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/noSourceMaps.js */ 3);
+/* esm import */ var _node_modules_css_loader_dist_runtime_noSourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_noSourceMaps_js__WEBPACK_IMPORTED_MODULE_0__);
+/* esm import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/api.js */ 4);
+/* esm import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__);
 // Imports
 
 
@@ -81,7 +81,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, `.some-class {
 }
 `, ""]);
 // Exports
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
+/* esm default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
 
 /***/ }),
@@ -232,7 +232,7 @@ module.exports = function (cssWithMappingToString) {
 /******/ 	
 /************************************************************************/
 /******/ 	/* webpack/runtime/compat get default export */
-/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	// getDefaultExport function for compatibility with non-esm modules
 /******/ 	__webpack_require__.n = (module) => {
 /******/ 		const getter = module && module.__esModule ?
 /******/ 			() => (module['default']) :
@@ -242,7 +242,7 @@ module.exports = function (cssWithMappingToString) {
 /******/ 	};
 /******/ 	
 /******/ 	/* webpack/runtime/define property getters */
-/******/ 	// define getter/value functions for harmony exports
+/******/ 	// define getter/value functions for esm exports
 /******/ 	__webpack_require__.d = (exports, definition) => {
 /******/ 		for(var key in definition) {
 /******/ 			if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
@@ -303,11 +303,11 @@ Prints in node.js (`enhanced-require example.js`) and in browser:
 ## Unoptimized
 
 ```
-asset output.js 8.72 KiB [emitted] (name: main)
-chunk (runtime: main) output.js (main) 3.01 KiB (javascript) 883 bytes (runtime) [entry] [rendered]
+asset output.js 8.68 KiB [emitted] (name: main)
+chunk (runtime: main) output.js (main) 3.01 KiB (javascript) 875 bytes (runtime) [entry] [rendered]
   > ./example.js main
   dependent modules 2.81 KiB [dependent] 4 modules
-  runtime modules 883 bytes 4 modules
+  runtime modules 875 bytes 4 modules
   ./example.js 205 bytes [built] [code generated]
     [used exports unknown]
     entry ./example.js main
@@ -318,10 +318,10 @@ webpack X.X.X compiled successfully
 
 ```
 asset output.js 1.81 KiB [emitted] [minimized] (name: main)
-chunk (runtime: main) output.js (main) 3.01 KiB (javascript) 1.23 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 3.01 KiB (javascript) 1.22 KiB (runtime) [entry] [rendered]
   > ./example.js main
   dependent modules 2.81 KiB [dependent] 4 modules
-  runtime modules 1.23 KiB 4 modules
+  runtime modules 1.22 KiB 4 modules
   ./example.js 205 bytes [built] [code generated]
     [no exports used]
     entry ./example.js main

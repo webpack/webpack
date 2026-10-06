@@ -6,7 +6,7 @@ exports[`ConfigTestCases html modulepreload-esm exported tests should emit modul
   \\\\********************/
 const value = \\"preload module\\";
 globalThis.__preloadLoaded = true;
-/* unused harmony default export */ var __WEBPACK_DEFAULT_EXPORT__ = ((/* unused pure expression or super */ null && (value)));
+/* unused esm default export */ var __WEBPACK_DEFAULT_EXPORT__ = ((/* unused pure expression or super */ null && (value)));
 
 "
 `;
@@ -22,11 +22,11 @@ exports[`ConfigTestCases html modulepreload-esm exported tests should emit modul
 
 const value = \\"preload module\\";
 globalThis.__preloadLoaded = true;
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (value);
+/* esm default export */ const __WEBPACK_DEFAULT_EXPORT__ = (value);
 
-/* harmony export */ __webpack_require__.d(__webpack_exports__, [
-/* harmony export */   \\"A\\", 0, __WEBPACK_DEFAULT_EXPORT__
-/* harmony export */ ]);
+/* esm export */ __webpack_require__.d(__webpack_exports__, [
+/* esm export */   \\"A\\", 0, __WEBPACK_DEFAULT_EXPORT__
+/* esm export */ ]);
 
 
 /***/ }
@@ -65,7 +65,7 @@ globalThis.__preloadLoaded = true;
 /******/ 
 /************************************************************************/
 /******/ /* webpack/runtime/define property getters */
-/******/ // define getter/value functions for harmony exports
+/******/ // define getter/value functions for esm exports
 /******/ __webpack_require__.d = (exports, definition) => {
 /******/ 	if(Array.isArray(definition)) {
 /******/ 		var i = 0;
@@ -92,7 +92,7 @@ let __webpack_exports__ = {};
 /*!******************!*\\\\
   !*** ./entry.js ***!
   \\\\******************/
-/* harmony import */ var _preload_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./preload.js */ 492);
+/* esm import */ var _preload_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./preload.js */ 492);
 
 
 globalThis.__entryResult = \`entry: \${_preload_js__WEBPACK_IMPORTED_MODULE_0__/* [\\"default\\"] */ .A}\`;

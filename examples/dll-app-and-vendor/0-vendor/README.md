@@ -46,7 +46,7 @@ export function square(n) {
 # dist/vendor.js
 
 ```javascript
-var vendor_lib_33d63e473c68d46c4363;
+var vendor_lib_a16fdb96b85e013fb74c;
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ([
 /* 0 */
@@ -72,9 +72,9 @@ module.exports = __webpack_require__;
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   square: () => (/* binding */ square)
-/* harmony export */ });
+/* esm export */ __webpack_require__.d(__webpack_exports__, {
+/* esm export */   square: () => (/* binding */ square)
+/* esm export */ });
 function square(n) {
 	return n * n;
 }
@@ -114,7 +114,7 @@ function square(n) {
 /******/ 	
 /************************************************************************/
 /******/ 	/* webpack/runtime/define property getters */
-/******/ 	// define getter/value functions for harmony exports
+/******/ 	// define getter/value functions for esm exports
 /******/ 	__webpack_require__.d = (exports, definition) => {
 /******/ 		for(var key in definition) {
 /******/ 			if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
@@ -144,7 +144,7 @@ function square(n) {
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module doesn't tell about it's top-level declarations so it can't be inlined
 /******/ 	let __webpack_exports__ = __webpack_require__(0);
-/******/ 	vendor_lib_33d63e473c68d46c4363 = __webpack_exports__;
+/******/ 	vendor_lib_a16fdb96b85e013fb74c = __webpack_exports__;
 /******/ 	
 /******/ })()
 ;
@@ -153,7 +153,7 @@ function square(n) {
 # dist/vendor-manifest.json
 
 ```javascript
-{"name":"vendor_lib_33d63e473c68d46c4363","content":{"../node_modules/example-vendor.js":{"id":1,"buildMeta":{"exportsType":"namespace"},"exports":["square"]}}}
+{"name":"vendor_lib_a16fdb96b85e013fb74c","content":{"../node_modules/example-vendor.js":{"id":1,"buildMeta":{"exportsType":"namespace"},"exports":["square"]}}}
 ```
 
 # Info
@@ -161,10 +161,10 @@ function square(n) {
 ## Unoptimized
 
 ```
-asset vendor.js 3.49 KiB [emitted] (name: main)
-chunk (runtime: main) vendor.js (main) 57 bytes (javascript) 614 bytes (runtime) [entry] [rendered]
+asset vendor.js 3.48 KiB [emitted] (name: main)
+chunk (runtime: main) vendor.js (main) 57 bytes (javascript) 610 bytes (runtime) [entry] [rendered]
   > main
-  runtime modules 614 bytes 3 modules
+  runtime modules 610 bytes 3 modules
   dependent modules 45 bytes [dependent] 1 module
   dll main 12 bytes [built] [code generated]
     [used exports unknown]
@@ -177,9 +177,9 @@ webpack X.X.X compiled successfully
 
 ```
 asset vendor.js 609 bytes [emitted] [minimized] (name: main)
-chunk (runtime: main) vendor.js (main) 57 bytes (javascript) 614 bytes (runtime) [entry] [rendered]
+chunk (runtime: main) vendor.js (main) 57 bytes (javascript) 610 bytes (runtime) [entry] [rendered]
   > main
-  runtime modules 614 bytes 3 modules
+  runtime modules 610 bytes 3 modules
   dependent modules 45 bytes [dependent] 1 module
   dll main 12 bytes [built] [code generated]
     dll entry
