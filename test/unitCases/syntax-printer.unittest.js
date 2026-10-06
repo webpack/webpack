@@ -4601,6 +4601,8 @@ describe("syntax-printer", () => {
 				["try { null.p; } catch (e) { console.log(1); }", { compress: {}, mangle: false }],
 				["try { throw 1; } catch (e) { console.log(e); }", modern],
 				['try { throw 1; } catch (e) { var e = 2; console.log(e); }', modern],
+				["var e = 0; try { throw 1; } catch (e) { var e = 2; } console.log(e);", modern],
+				["var e = 0; try { throw 1; } catch (e) { e = 2; } console.log(e);", modern],
 				["console.log(function () { var o = Math.random() < 2 ? { a: 1, b: 2 } : {}; const { a, ...r } = o; return r.b; }());", modern],
 				["console.log(function () { const { a = console.log(1) } = {}; return 2; }());", modern],
 				["console.log(function () { const { [console.log(1)]: a } = {}; return 2; }());", modern],
