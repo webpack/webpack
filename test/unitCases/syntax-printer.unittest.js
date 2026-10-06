@@ -1296,13 +1296,18 @@ const CORRECTED_CASES = [
 	],
 	[
 		"a class method keyed `#constructor`, of each kind",
-		'class C { ["#constructor"]() { return 1; } get ["#constructor"]() { return 2; } } class D { set ["#constructor"](v) {} *["#constructor"]() {} async ["#constructor"]() {} async *["#constructor"]() {} } class E { static ["#constructor"]() { return 3; } static get ["#constructor"]() { return 4; } static set [`#constructor`](v) {} static *["#constructor"]() {} static async ["#constructor"]() {} } console.log(new C()["#constructor"], typeof D.prototype["#constructor"], typeof E["#constructor"]);',
+		'class C { ["#constructor"]() { return 1; } get ["#constructor"]() { return 2; } } class D { set ["#constructor"](v) {} *["#constructor"]() {} async ["#constructor"]() {} async *["#constructor"]() {} } class E { static ["#constructor"]() { return 3; } static get ["#constructor"]() { return 4; } static set [`#constructor`](v) {} static *["#constructor"]() {} static async ["#constructor"]() {} static async *["#constructor"]() {} } console.log(new C()["#constructor"], typeof D.prototype["#constructor"], typeof E["#constructor"]);',
 		{ compress: { passes: 2 }, mangle: true }
 	],
 	[
 		"an unused class with a static member keyed `prototype`, of each kind",
-		'for (const f of [function () { class C { static ["prototype"]() {} } }, function () { (class { static ["prototype"] = 1; }); }, function () { var C = class { static get ["prototype"]() {} }; }, function () { return 1, class { static set ["prototype"](v) {} }, 2; }, function () { class C { static *[`prototype`]() {} } }, function () { class C { static async ["proto" + "type"]() {} } }]) { try { f(); console.log("made"); } catch (e) { console.log(e.name); } }',
+		'for (const f of [function () { class C { static ["prototype"]() {} } }, function () { (class { static ["prototype"] = 1; }); }, function () { var C = class { static get ["prototype"]() {} }; }, function () { return 1, class { static set ["prototype"](v) {} }, 2; }, function () { class C { static *[`prototype`]() {} } }, function () { class C { static async ["proto" + "type"]() {} } }, function () { class C { static async *["prototype"]() {} } }, function () { class C { static ["prototype"]; } }]) { try { f(); console.log("made"); } catch (e) { console.log(e.name); } }',
 		{ compress: {}, mangle: false }
+	],
+	[
+		"an unused class keyed `prototype` in each position",
+		'for (const f of [function () { class C extends (console.log("extends"), Object) { static ["prototype"]() {} } }, function () { class C { static { console.log("block"); } static ["prototype"] = 1; } }, function () { class C { static ["prototype"] = C; } }, function () { return typeof class { static ["prototype"]() {} }; }, function (a) { a ? class { static ["prototype"]() {} } : 0; }, function (a) { a || class { static ["prototype"]() {} }; }, function () { const C = class { static ["prototype"]() {} }; }, function () { let C = class { static ["prototype"]() {} }; }, function () { var o = { m: class { static ["prototype"]() {} } }; }, () => void class { static ["prototype"]() {} }]) { try { f(); console.log("made"); } catch (e) { console.log(e.name); } }',
+		{ compress: { passes: 2 }, mangle: true }
 	],
 	[
 		"an unused class whose static key reads a variable holding `prototype`",
@@ -1326,7 +1331,7 @@ const CORRECTED_CASES = [
 	],
 	[
 		"a static class member keyed `prototype`, of each kind",
-		'for (const make of [() => class { static ["prototype"] = 1; }, () => class { static [`prototype`]() {} }, () => class { static get ["proto" + "type"]() {} }, () => class { static set ["prototype"](v) {} }, () => class { static *["prototype"]() {} }, () => class { static async ["prototype"]() {} }]) { try { make(); console.log("made"); } catch (e) { console.log(e.name); } }',
+		'for (const make of [() => class { static ["prototype"] = 1; }, () => class { static [`prototype`]() {} }, () => class { static get ["proto" + "type"]() {} }, () => class { static set ["prototype"](v) {} }, () => class { static *["prototype"]() {} }, () => class { static async ["prototype"]() {} }, () => class { static async *["prototype"]() {} }, () => class { static ["prototype"]; }]) { try { make(); console.log("made"); } catch (e) { console.log(e.name); } }',
 		{ compress: {}, mangle: false }
 	]
 ];
