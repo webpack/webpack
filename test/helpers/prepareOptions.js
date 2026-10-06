@@ -1,6 +1,6 @@
 "use strict";
 
-/** @import { Configuration } from "../../" */
+/** @import { Configuration, MultiConfiguration } from "../../" */
 /** @typedef {Configuration | Configuration[]} Config */
 /** @typedef {{ testPath?: string, srcPath?: string, env?: Record<string, unknown> }} Argv */
 /** @typedef {(env: Record<string, unknown> | undefined, argv: Argv) => Config | Promise<Config>} ConfigFn */
@@ -54,9 +54,22 @@ const prepareOptions = (options, argv = {}) => {
 
 	if (Array.isArray(unwrapped)) {
 		const items = unwrapped.map((_options) => handleFunction(_options, argv));
+		/**
+		 * @param {Configuration[]} configs the prepared children
+		 * @returns {Configuration[]} them, with the array's own `parallelism`
+		 */
+		const withParallelism = (configs) =>
+			/** @type {MultiConfiguration} */ (unwrapped).parallelism === undefined
+				? configs
+				: Object.assign(configs, {
+						parallelism: /** @type {MultiConfiguration} */ (unwrapped)
+							.parallelism
+					});
 		return items.some((item) => isPromise(item))
-			? Promise.all(/** @type {Promise<Configuration>[]} */ (items))
-			: /** @type {Configuration[]} */ (items);
+			? Promise.all(/** @type {Promise<Configuration>[]} */ (items)).then(
+					withParallelism
+				)
+			: withParallelism(/** @type {Configuration[]} */ (items));
 	}
 
 	return handleFunction(unwrapped, argv);
