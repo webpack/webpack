@@ -4189,12 +4189,14 @@ const SUPPLEMENT = {
 	// WHY: At-rules whose empty block is inert. Not `@keyframes` (an empty one still
 	// runs the animation, firing its events) and not `@layer` (an empty block
 	// declares the layer's cascade order). An empty `@starting-style` states no
-	// starting value, so nothing transitions from one (CSS Transitions 2 §3).
+	// starting value, so nothing transitions from one (CSS Transitions 2 §3). Gecko's
+	// `@-moz-document` is a condition over its rules as `@media` is.
 	droppableWhenEmptyAtRules: [
 		"media",
 		"supports",
 		"container",
-		"starting-style"
+		"starting-style",
+		"-moz-document"
 	],
 	// WHY: At-rules holding rules whose prelude names one thing rather than stating a
 	// condition, so a second block with the same prelude replaces the first

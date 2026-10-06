@@ -4954,6 +4954,27 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		};
 		const legacy = { browsers: ["chrome 100", "firefox 100", "safari 15.4"] };
 
+		it("keeps the digits a font-relative length lands on whole pixels with", () => {
+			// 2/19em is 2px at 19px, which `.105263em` misses: Chromium floors it to
+			// `1.98438px`, and a border or outline width to `1px`.
+			expect(settled("a{outline-offset:-0.1052631579em}")).toBe(
+				"a{outline-offset:-.105263158em}"
+			);
+			expect(settled("a{width:calc(1em/9.5)}")).toBe("a{width:.105263158em}");
+			// A pixel, a percentage and a bare number round as before.
+			expect(settled("a{width:1.0526315789px}")).toBe("a{width:1.05263px}");
+			expect(settled("a{width:33.33333333%}")).toBe("a{width:33.3333%}");
+			expect(settled("a{opacity:.3333333333}")).toBe("a{opacity:.333333}");
+		});
+
+		it("drops the `@-moz-document` a later copy of its rule empties", () => {
+			expect(
+				settled(
+					"@-moz-document url-prefix(){.a{top:0}}.b{top:1px}@-moz-document url-prefix(){.a{top:0}}"
+				)
+			).toBe(".b{top:1px}@-moz-document url-prefix(){.a{top:0}}");
+		});
+
 		it("takes back a rule the joined at-rule repeats, its rules read apart", () => {
 			expect(
 				settled(
@@ -8370,7 +8391,8 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			["calc(100%/3)", "33.3333%"],
 			["calc(1/3*1px)", ".333333px"],
 			["calc((6/10 - .375)*1em)", ".225em"],
-			["calc((6/14 - .375)*1em)", ".0535714em"],
+			// ...and nine where the engine scales the length by a font size.
+			["calc((6/14 - .375)*1em)", ".0535714286em"],
 			// An angle rounds the same way, as lightningcss rounds it.
 			["calc(1turn/3)", ".333333turn"],
 			["calc(90deg/7)", "12.8571deg"],

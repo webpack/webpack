@@ -1929,10 +1929,14 @@ const compareStyles = async ({ pairs, types }) => {
 							`${prefix}any`
 						]
 					);
-				} else if (kind === "CSSSupportsRule") {
+				} else if (
+					kind === "CSSSupportsRule" ||
+					// Gecko's `@-moz-document`, a condition over its rules as `@supports` is.
+					kind === "CSSMozDocumentRule"
+				) {
 					walk(
 						any.cssRules,
-						`${context}@supports ${spacedOnce(any.conditionText)}`,
+						`${context}@${kind === "CSSSupportsRule" ? "supports" : "-moz-document"} ${spacedOnce(any.conditionText)}`,
 						parents,
 						scope,
 						lengths
