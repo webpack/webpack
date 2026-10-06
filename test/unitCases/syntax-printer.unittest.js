@@ -197,13 +197,17 @@ const runProgram = (code) => {
 const TRY = "try { console.log(1); } catch (e) {}";
 
 /**
- * An array literal of strings, as source.
+ * An array literal of strings, as source, with what `JSON.stringify` leaves
+ * that a script could read otherwise escaped.
  * @param {number} length how many strings
  * @param {(index: number) => string=} string the string at each index
  * @returns {string} the literal
  */
 const stringArray = (length, string = (index) => `w${index}`) =>
-	JSON.stringify(Array.from({ length }, (_, index) => string(index)));
+	JSON.stringify(Array.from({ length }, (_, index) => string(index))).replace(
+		/[<>/\u2028\u2029]/g,
+		(character) => `\\u${character.charCodeAt(0).toString(16).padStart(4, "0")}`
+	);
 
 /** @type {[string, string, import("terser").MinifyOptions][]} */
 const IMPROVED_CASES = [
