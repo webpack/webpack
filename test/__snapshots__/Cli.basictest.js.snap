@@ -1053,6 +1053,32 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "experiments-lazy-compilation-test-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS; a \`!\` prefix excludes what it matches.",
+        "multiple": true,
+        "path": "experiments.lazyCompilation.test.glob[]",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS; a \`!\` prefix excludes what it matches.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "experiments-lazy-compilation-test-glob-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in 'experiments.lazyCompilation.test.glob' configuration. A list of glob patterns.",
+        "multiple": false,
+        "path": "experiments.lazyCompilation.test.glob",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in 'experiments.lazyCompilation.test.glob' configuration. A list of glob patterns.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "experiments-source-import": Object {
     "configs": Array [
       Object {
@@ -1392,13 +1418,19 @@ Object {
   "ignore-warnings-file": Object {
     "configs": Array [
       Object {
-        "description": "A RegExp to select the origin file for the warning.",
+        "description": "A RegExp or a glob to select the origin file for the warning.",
         "multiple": true,
         "path": "ignoreWarnings[].file",
         "type": "RegExp",
       },
+      Object {
+        "description": "A glob matching the origin file for the warning at any depth.",
+        "multiple": true,
+        "path": "ignoreWarnings[].file",
+        "type": "string",
+      },
     ],
-    "description": "A RegExp to select the origin file for the warning.",
+    "description": "A RegExp or a glob to select the origin file for the warning. A glob matching the origin file for the warning at any depth.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -2292,8 +2324,14 @@ Object {
         "path": "module.noParse[]",
         "type": "path",
       },
+      Object {
+        "description": "A glob, when it matches the module's resource path at any depth the module is not parsed.",
+        "multiple": true,
+        "path": "module.noParse[]",
+        "type": "string",
+      },
     ],
-    "description": "A regular expression, when matched the module is not parsed. An absolute path, when the module starts with this path it is not parsed.",
+    "description": "A regular expression, when matched the module is not parsed. An absolute path, when the module starts with this path it is not parsed. A glob, when it matches the module's resource path at any depth the module is not parsed.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -13535,6 +13573,32 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "output-clean-keep-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS; a \`!\` prefix excludes what it matches.",
+        "multiple": true,
+        "path": "output.clean.keep.glob[]",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS; a \`!\` prefix excludes what it matches.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "output-clean-keep-glob-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in 'output.clean.keep.glob' configuration. A list of glob patterns.",
+        "multiple": false,
+        "path": "output.clean.keep.glob",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in 'output.clean.keep.glob' configuration. A list of glob patterns.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "output-compare-before-emit": Object {
     "configs": Array [
       Object {
@@ -17479,8 +17543,14 @@ Object {
         "path": "resolveLoader.restrictions[]",
         "type": "path",
       },
+      Object {
+        "description": "A glob the resolve result must match at any depth.",
+        "multiple": true,
+        "path": "resolveLoader.restrictions[]",
+        "type": "string",
+      },
     ],
-    "description": "Resolve restriction. Resolve result must fulfill this restriction.",
+    "description": "Resolve restriction. Resolve result must fulfill this restriction. A glob the resolve result must match at any depth.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -17734,8 +17804,14 @@ Object {
         "path": "resolve.restrictions[]",
         "type": "path",
       },
+      Object {
+        "description": "A glob the resolve result must match at any depth.",
+        "multiple": true,
+        "path": "resolve.restrictions[]",
+        "type": "string",
+      },
     ],
-    "description": "Resolve restriction. Resolve result must fulfill this restriction.",
+    "description": "Resolve restriction. Resolve result must fulfill this restriction. A glob the resolve result must match at any depth.",
     "multiple": true,
     "simpleType": "string",
   },

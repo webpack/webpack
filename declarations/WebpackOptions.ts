@@ -309,7 +309,11 @@ export interface CleanOptions {
 	/**
 	 * Keep these assets.
 	 */
-	keep?: RegExp | RelativePath | import("../lib/output/CleanPlugin").KeepFn;
+	keep?:
+		| RegExp
+		| RelativePath
+		| GlobCondition
+		| import("../lib/output/CleanPlugin").KeepFn;
 }
 
 /**
@@ -1884,6 +1888,17 @@ export type GeneratorOptionsByModuleType = GeneratorOptionsByModuleTypeKnown &
 	GeneratorOptionsByModuleTypeUnknown;
 
 /**
+ * Match glob patterns against the value, `!` in front of a pattern excludes it. Path separators are normalized to `/` on every OS, and a relative pattern matches at any depth.
+ * @since 5.112.0
+ */
+export interface GlobCondition {
+	/**
+	 * Glob patterns to match.
+	 */
+	glob: RuleSetGlobs | RuleSetGlob;
+}
+
+/**
  * An expression which is used to address the global object/scope in runtime code.
  */
 export type GlobalObject = NonEmptyString;
@@ -2173,9 +2188,11 @@ export type IgnoreWarnings = Array<
 	| /** Ignore specific warnings. */ /** A RegExp to select the warning message. */ RegExp
 	| {
 			/**
-			 * A RegExp to select the origin file for the warning.
+			 * A RegExp or a glob to select the origin file for the warning.
 			 */
-			file?: RegExp;
+			file?:
+				| RegExp
+				| /** A glob matching the origin file for the warning at any depth. @since 5.112.0 */ NonEmptyString;
 			/**
 			 * A RegExp to select the warning message.
 			 */
@@ -2632,7 +2649,11 @@ export interface LazyCompilationOptions {
 	/**
 	 * Specify which entrypoints or import()ed modules should be lazily compiled. This is matched with the imported module and not the entrypoint name.
 	 */
-	test?: RegExp | string | import("../lib/hmr/LazyCompilationPlugin").TestFn;
+	test?:
+		| RegExp
+		| string
+		| GlobCondition
+		| import("../lib/hmr/LazyCompilationPlugin").TestFn;
 }
 
 /**
@@ -2953,10 +2974,12 @@ export type NoParse =
 	| /** @minItems 1 */ Array<
 			| /** Don't parse files matching. It's matched against the full resolved request. */ /** A regular expression, when matched the module is not parsed. */ RegExp
 			| /** An absolute path, when the module starts with this path it is not parsed. */ AbsolutePath
+			| /** A glob, when it matches the module's resource path at any depth the module is not parsed. @since 5.112.0 */ NonEmptyRelativePath
 			| import("../lib/module/NormalModule").NoParseFn
 	  >
 	| /** A regular expression, when matched the module is not parsed. */ RegExp
 	| /** An absolute path, when the module starts with this path it is not parsed. */ AbsolutePath
+	| /** A glob, when it matches the module's resource path at any depth the module is not parsed. @since 5.112.0 */ NonEmptyRelativePath
 	| import("../lib/module/NormalModule").NoParseFn;
 
 /**
@@ -3648,7 +3671,10 @@ export interface OptimizationSplitChunksCacheGroup {
 	 * Assign modules to a cache group by module name.
 	 */
 	test?:
-		RegExp | string | import("../lib/optimize/SplitChunksPlugin").CheckTestFn;
+		| RegExp
+		| string
+		| GlobCondition
+		| import("../lib/optimize/SplitChunksPlugin").CheckTestFn;
 	/**
 	 * Assign modules to a cache group by module type.
 	 */
@@ -4946,6 +4972,7 @@ export interface ResolveOptions {
 	restrictions?: Array<
 		| /** Resolve restriction. Resolve result must fulfill this restriction. */ RegExp
 		| AbsolutePath
+		| /** A glob the resolve result must match at any depth. @since 5.112.0 */ NonEmptyRelativePath
 	>;
 	/**
 	 * A list of directories in which requests that are server-relative URLs (starting with '/') are resolved.
