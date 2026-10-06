@@ -509,6 +509,34 @@ const IMPROVED_CASES = [
 		[
 			"an array of lone surrogates, joined into pairs and split apart",
 			`var a = [${Array.from({ length: 100 }, (_, index) => (index % 2 ? '"\\ude00"' : '"\\ud83d"')).join(", ")}]; console.log(a.length, a[0].length, a[0].charCodeAt(0), a[1].charCodeAt(0));`
+		],
+		[
+			"an equality negated as the opposite one, a boolean negated twice as itself",
+			"function f(a, b, o) { return [!(a == b), !(a !== b), !!(a < b), !!(a in o), !!delete o.x, !!(a && b), !!(a || b)]; } console.log(f(1, 2, {}), f(2, 2, { 2: 1 }));"
+		],
+		[
+			"`Boolean` of a value as `!!`, a comparison of an integer with zero read as the integer",
+			"function f(a, b) { return [Boolean(), Boolean(a), Boolean(!a), Boolean((a | +b) !== 0), Boolean(a ? (a | +b) === 0 : (b >>> 1) !== 0)]; } console.log(f(0, 1), f(3, 0), f(1n, 2));"
+		],
+		[
+			"an integer tested against zero as the integer, numbers compared loosely",
+			"function f(a, b) { if ((a | +b) !== 0) console.log(1); if (0 == (a >>> b)) console.log(2); if (+a === 0) console.log(3); if ((a & ~b) === 0) console.log(4); } f(1, 2); f(0, 0); f(-1, NaN);"
+		],
+		[
+			"`??` after a value never `null` or `undefined`",
+			"function f(a, b) { return [!a ?? b, (a + \"x\") ?? b, typeof a ?? b, (a * 2) ?? b, [a] ?? b]; } console.log(f(1, 2), f(null, 3));"
+		],
+		[
+			"an array literal or a bigint concatenated, `+` of an array literal",
+			"function f(a) { return [[] + 0, 0 + [], [1, null, , true, void 0] + \"\", [] + typeof a, `${a}` + [], \"\" + 12n, 0x1fn + \"\", +[], +[\" 7 \"], +[1, 2]]; } console.log(f(1));"
+		],
+		[
+			"a character a string literal is indexed at",
+			"function f() { return [\"abc\"[1], \"abc\"[-0], \"abc\"[2]]; } console.log(f());"
+		],
+		[
+			"`Number`, `String` and `BigInt` of a literal, `toString` of a boolean or a string",
+			"function f() { return [Number(), Number(true), Number(null), Number(void 0), Number(\" 0x10 \"), String(), String(1e21), String([1, 2]), BigInt(5), true.toString(), \"xy\".toString()]; } console.log(f().map(String));"
 		]
 	].map(
 		([name, input]) =>
@@ -524,6 +552,13 @@ const IMPROVED_CASES = [
 // of its function's own, or the call passes, keeps or constructs something.
 /** @type {[string, string][]} */
 const KEPT_CASES = [
+	["a `Boolean` passed a spread or a second argument", "function f(a, b) { return [Boolean(...a), Boolean(a, b())]; } console.log(f([0], () => 1));"],
+	["a conversion of no literal, which `+` and `\"\"+` would read otherwise for a BigInt or a symbol", "function f(a) { return [Number(a), String(a), BigInt(a)]; } console.log(f(1n));"],
+	["a conversion a variable shadows", "function f(Boolean, Number) { return [Boolean(1), Number(true)]; } console.log(f(String, String));"],
+	["a `BigInt` of a fraction, which throws", "try { console.log(BigInt(1.5)); } catch (e) { console.log(e.name); }"],
+	["a character of a string literal deleted, or half of a surrogate pair", 'try { console.log(delete "abc"[0], "\\ud83d\\ude00"[0].length); } catch (e) { console.log(e.name); }'],
+	["an integer compared with zero where it is no test, or two values a BigInt may be", "function f(a, b) { console.log((a | +b) !== 0, (a | b) !== 0 ? 1 : 2, a - b === 0); } f(1n, 1n); f(1, 2);"],
+	["a nested array literal concatenated", 'console.log([1, [2, 3]] + "");'],
 	["a fraction's `toString` in a radix other than ten", "console.log(0.5.toString(3));"],
 	["a `concat` keeping a hole", "console.log([, 1].concat(2).length, 0 in [, 1].concat(2));"],
 	["a `Number` shadowed by a variable", "var Number = { NaN: 1 }; console.log(Number.NaN);"],
@@ -593,7 +628,7 @@ const KEPT_CASES = [
 	["an argument some other operator makes", 'console.log("abc".indexOf(typeof Math.random()));'],
 	["a global no built-in", "try { console.log(abs(1)); } catch (e) { console.log(2); }"],
 	["a function its object does not have", "try { console.log(Number.abs(-1)); } catch (e) { console.log(2); }"],
-	["a method of no literal", "console.log(String(1).charAt(0));"],
+	["a method of no literal", "console.log(String(typeof x).charAt(0));"],
 	["a string method left out", 'try { console.log("a".join()); } catch (e) { console.log(2); }'],
 	["an array of something no literal", "console.log([Math.random() > 2].join());"],
 	["a function left out", 'console.log(Math.sin(1), "a,b".split(","));'],

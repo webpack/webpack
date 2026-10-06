@@ -1281,8 +1281,6 @@ const IMPROVED_YET_BIGGER = {
 		"2 bytes fewer, 3 more gzipped: the shorter `typeof x<\"u\"` and constructor calls break runs gzip reused",
 	"benches-full/vue.js (the default minimizer's options)":
 		"9 bytes fewer, 6 more gzipped: the shorter `typeof x<\"u\"` and constructor calls break runs gzip reused",
-	"fixture/next/regression-1/framework-798bab57daac3897/input.js (its own options)":
-		"92 bytes fewer, 1 more gzipped: the shorter `typeof x<\"u\"` breaks the `\"…\"!=typeof` runs gzip reused",
 	"fixture/projects/next/.archive-4/framework-054ead69ea8124b4cb27/input.js (its own options)":
 		"83 bytes fewer, 8 more gzipped: the shorter `typeof x<\"u\"` breaks the `\"…\"!=typeof` runs gzip reused",
 	"fixture/projects/next/.archive-4/framework-054ead69ea8124b4cb27/input.js (the default minimizer's options)":
@@ -1389,8 +1387,6 @@ const IMPROVED_YET_BIGGER = {
 		"20 bytes fewer, 1 more gzipped: the folded `Number` constant stays quoted in the messages, which gzip had matched",
 	"not-an-object-throws.js (the default minimizer's options)":
 		"20 bytes fewer, 2 more gzipped: the folded `Number` constant stays quoted in the messages, which gzip had matched",
-	"S9.2_A4_T3.js (the default minimizer's options)":
-		"41 bytes fewer, 4 more gzipped: the folded `Number` constant stays quoted in the messages, which gzip had matched",
 	"S15.7.4.5_A1.4_T01.js (the default minimizer's options)":
 		"28 bytes fewer, 2 more gzipped: the folded `Number` constant stays quoted in the messages, which gzip had matched",
 	"S15.5.4.19_A1_T6.js (the default minimizer's options)":
@@ -1457,7 +1453,6 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 			"S11.6.1_A2.2_T2.js (the default minimizer's options)",
 			"S11.6.2_A2.1_T1.js (the default minimizer's options)",
 			"S11.7.1_A2.1_T1.js (the default minimizer's options)",
-			"S11.7.3_A2.1_T1.js (the default minimizer's options)",
 			"S11.8.3_A2.1_T1.js (the default minimizer's options)",
 			"S11.8.6_A7_T3.js (the default minimizer's options)",
 			"S11.9.2_A7.1.js (the default minimizer's options)",
@@ -1507,14 +1502,10 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 			"S15.6.4.2_A1_T1.js (the default minimizer's options)",
 			"S15.6.4.2_A1_T2.js (the default minimizer's options)",
 			"S15.6.4.3_A1_T1.js (the default minimizer's options)",
-			"S25.4.4.3_A4.1_T2.js (the default minimizer's options)",
 			"S8.12.8_A1.js (the default minimizer's options)",
 			"S8.12.8_A2.js (the default minimizer's options)",
 			"S8.6.2_A6.js (the default minimizer's options)",
 			"S8.7_A5_T1.js (the default minimizer's options)",
-			"S9.2_A6_T1.js (the default minimizer's options)",
-			"S9.3_A5_T1.js (the default minimizer's options)",
-			"S9.8_A5_T1.js (the default minimizer's options)",
 			"argument-is-new-reg-exp-and-instance-is-string-hello.js (the default minimizer's options)",
 			"arguments-are-new-reg-exp-and-4-and-instance-is-string-hello.js (the default minimizer's options)",
 			"arguments-are-new-reg-exp-and-hi-and-instance-is-string-hello.js (the default minimizer's options)",
@@ -1559,6 +1550,38 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 			"S13_A1.js (the default minimizer's options)",
 			"S14_A3.js (the default minimizer's options)",
 			"S8.7_A5_T2.js (the default minimizer's options)"
+		]
+	],
+	[
+		"a conversion or a `!!` written shorter where the source's own messages quote it, which gzip matched",
+		[
+			"S15.2.4.3_A9.js (the default minimizer's options)",
+			"S15.5.1.1_A1_T10.js (the default minimizer's options)",
+			"S15.5.1.1_A1_T16.js (the default minimizer's options)",
+			"S15.5.1.1_A1_T17.js (the default minimizer's options)",
+			"S15.5.1.1_A1_T2.js (the default minimizer's options)",
+			"S15.5.1.1_A1_T3.js (the default minimizer's options)",
+			"S15.5.1.1_A2_T1.js (the default minimizer's options)",
+			"S15.5.4.10_A1_T7.js (the default minimizer's options)",
+			"S15.5.4.12_A1_T7.js (the default minimizer's options)",
+			"S15.6.1.1_A1_T5.js (the default minimizer's options)",
+			"S15.6.1.1_A2.js (the default minimizer's options)",
+			"symbol-coercion.js (the default minimizer's options)",
+			"symbol-tag-non-str-bigint.js (the default minimizer's options)"
+		]
+	],
+	[
+		"a literal folded into the string it makes where the source repeats the literal gzip matched",
+		[
+			"evaluate/unsafe_array (a module mangled at its top level)",
+			"evaluate/unsafe_array (reminify 2 {\"mangle\":false})",
+			"evaluate/unsafe_array (reminify 3 {})",
+			"evaluate/unsafe_array (reminify 4 {\"toplevel\":true})",
+			"evaluate/unsafe_array (reminify 7 {\"safari10\":true})",
+			"evaluate/unsafe_array (reminify 8 {\"compress\":{\"reduce_funcs\":false}})",
+			"evaluate/unsafe_array (the default minimizer's options)",
+			"fixture/issues/string-index-utf16/input.js (its own options)",
+			"fixture/issues/string-index-utf16/input.js (the default minimizer's options)"
 		]
 	],
 	[
