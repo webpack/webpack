@@ -499,6 +499,31 @@ describe("SourceProcessor", () => {
 			expect(html).toEqual(["html|", "b|", "|a & b", "|c"]);
 		});
 
+		it("answers empty for a css node without a name, value or block token", () => {
+			/** @type {[number, string, number, string, string][]} */
+			const seen = [];
+			new CssSourceProcessor()
+				.use(
+					[CssNodeType.QualifiedRule, CssNodeType.Ident, CssNodeType.SimpleBlock],
+					(path) => {
+						seen.push([
+							path.type(),
+							path.name(),
+							path.nameStart(),
+							path.value(),
+							path.blockToken()
+						]);
+					}
+				)
+				.process("a[b]{}");
+			expect(seen).toEqual([
+				[CssNodeType.QualifiedRule, "", -1, "", ""],
+				[CssNodeType.Ident, "", -1, "a", ""],
+				[CssNodeType.SimpleBlock, "", -1, "", "["],
+				[CssNodeType.Ident, "", -1, "b", ""]
+			]);
+		});
+
 		it("reads html attributes as nodes through the shared members", () => {
 			const input = `<p>\n<a href="/x?a&amp;b" title=t data-x>y</a>`;
 			/** @type {Record<string, unknown>[]} */

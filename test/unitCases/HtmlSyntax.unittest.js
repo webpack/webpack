@@ -3550,7 +3550,29 @@ describe("parseHtml", () => {
 		const div = body(src)[0];
 		const span = /** @type {MatElement} */ (div.children[0]);
 		expect(div.end).toBe(src.length);
-		expect(span.end).toBe(src.length);
+		// Closed by `</div>`, which names its parent: its source ends where that starts.
+		expect(src.slice(span.start, span.end)).toBe("<span>text");
+	});
+
+	it("should end an implicitly closed element where its content ends", () => {
+		const src = "<p>one<p>two<ul><li>a<li>b</ul><br>";
+		const nodes = body(src);
+		const spans = nodes.map((n) =>
+			src.slice(/** @type {MatElement} */ (n).start, /** @type {MatElement} */ (n).end)
+		);
+		expect(spans).toEqual(["<p>one", "<p>two", "<ul><li>a<li>b</ul>", "<br>"]);
+		const items = /** @type {MatElement} */ (nodes[2]).children.map((n) =>
+			src.slice(/** @type {MatElement} */ (n).start, /** @type {MatElement} */ (n).end)
+		);
+		expect(items).toEqual(["<li>a", "<li>b"]);
+	});
+
+	it("should keep whitespace the closed element holds inside its range", () => {
+		const src = "<table><colgroup> x</table>";
+		// The `x` is foster-parented before the table; the space stays in colgroup.
+		const table = /** @type {MatElement} */ (body(src)[1]);
+		const colgroup = /** @type {MatElement} */ (table.children[0]);
+		expect(src.slice(colgroup.start, colgroup.end)).toBe("<colgroup> ");
 	});
 
 	it("should foster-parent misplaced content out of tables", () => {
