@@ -1375,6 +1375,11 @@ const CORRECTED_CASES = [
 		{ compress: {}, mangle: false }
 	],
 	[
+		"an unused name's update dropped from an array read by index",
+		"function f() { return 'f'; } function g() { return 'g'; } function t() { var b; return [--b, f(), g()][1]; } console.log(t());",
+		{ compress: {}, mangle: false }
+	],
+	[
 		"an unused class extending an arrow or an async arrow",
 		"for (var f of [function () { var C = class extends (() => {}) {}; }, function () { var C = class extends (async () => {}) {}; }]) { try { f(); console.log('no'); } catch (e) { console.log(e.name); } }",
 		{ compress: {}, mangle: false }
