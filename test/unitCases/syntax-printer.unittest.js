@@ -1213,7 +1213,7 @@ const CORRECTED_CASES = [
 	],
 	[
 		"an `instanceof` nobody reads, its right side no constructor",
-		"for (const f of [() => 1 instanceof 1, () => true instanceof true, () => { var G = function () {}; G.prototype = undefined; ({}) instanceof G; }]) { try { f(); console.log('no'); } catch (e) { console.log(e.name); } }",
+		"for (let f of [() => 1 instanceof 1, () => true instanceof true, () => { var G = function () {}; G.prototype = undefined; ({}) instanceof G; }]) { try { f(); console.log('no'); } catch (e) { console.log(e.name); } }",
 		{ compress: {}, mangle: false }
 	],
 	[
