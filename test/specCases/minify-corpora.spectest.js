@@ -1464,6 +1464,7 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 			"S15.10.4.1_A1_T4.js (the default minimizer's options)",
 			"S15.10.4.1_A8_T12.js (the default minimizer's options)",
 			"S15.10.7_A2_T2.js (the default minimizer's options)",
+			"S15.3.5.3_A2_T2.js (the default minimizer's options)",
 			"S15.3.5_A1_T1.js (the default minimizer's options)",
 			"S15.4.2.1_A1.1_T3.js (the default minimizer's options)",
 			"S15.4.2.2_A1.1_T3.js (the default minimizer's options)",
