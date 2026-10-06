@@ -14927,3 +14927,123 @@ describe("CssSyntax — the flex properties", () => {
 		expect(minifyFor(css)).toBe(expected);
 	});
 });
+
+describe("CssSyntax minify — what a comparison with other minifiers found", () => {
+	const settled = (/** @type {string} */ css) => {
+		const once = minifyFor(css);
+		expect(minifyFor(once)).toBe(once);
+		return once;
+	};
+
+	it.each([
+		// A substitution's tokens are parted like any other's.
+		["a{padding:var(--a) var(--b)}", "a{padding:var(--a)var(--b)}"],
+		["a{box-shadow:0 0 0 2px rgb(var(--p)) inset}", "a{box-shadow:0 0 0 2px rgb(var(--p))inset}"],
+		// A custom property's value is what a script reads back.
+		[":root{--b:var(--w) var(--s)}", ":root{--b:var(--w) var(--s)}"],
+		// A bare number does not take a sign on, a dimension does.
+		["a{margin:0 0 -2px}", "a{margin:0 0-2px}"],
+		["a{margin:0 -.5em}", "a{margin:0-.5em}"],
+		["a{margin:1px -2px}", "a{margin:1px -2px}"],
+		["a{margin:1e3 -2px}", "a{margin:1e3 -2px}"],
+		["a{width:calc(2 - 1px)}", "a{width:calc(2 - 1px)}"],
+		// A sign starting a token takes the number after it on.
+		["a{x:a - .5}", "a{x:a - .5}"]
+	])("separates %s as %s", (css, expected) => {
+		expect(settled(css)).toBe(expected);
+	});
+
+	it.each([
+		["a{border:none}", "a{border:0}"],
+		["a{outline:NONE!important}", "a{outline:0!important}"],
+		["a{border-top:none}", "a{border-top:0}"],
+		["a{border-block-end:none}", "a{border-block-end:0}"],
+		["a{column-rule:none}", "a{column-rule:0}"],
+		// No width beside the style here, so `none` stays the one word.
+		["a{border-style:none}", "a{border-style:none}"],
+		["a{text-decoration:none}", "a{text-decoration:none}"]
+	])("writes %s as %s", (css, expected) => {
+		expect(settled(css)).toBe(expected);
+	});
+
+	it.each([
+		[".a:is(:hover)>b{x:1}", ".a:hover>b{x:1}"],
+		[":is(:is(.s),.s select){x:1}", ":is(.s,.s select){x:1}"],
+		[".v:is(:has(.a))~.s{x:1}", ".v:has(.a)~.s{x:1}"],
+		[":is(div).a{x:1}", "div.a{x:1}"],
+		["a :is(div){x:1}", "a div{x:1}"],
+		[".a:not(:is(.b)){x:1}", ".a:not(.b){x:1}"],
+		// A type selector only leads a compound.
+		[".a:is(div){x:1}", ".a:is(div){x:1}"],
+		// `:is()` forgives what an engine cannot parse; a bare compound does not.
+		[".a:is(:-moz-foo){x:1}", ".a:is(:-moz-foo){x:1}"],
+		// A pseudo-element is no argument `:is()` takes.
+		[".a:is(:before){x:1}", ".a:is(:before){x:1}"],
+		[".a:is(.b .c){x:1}", ".a:is(.b .c){x:1}"],
+		["@supports selector(:is(.a)){.b{x:1}}", "@supports selector(:is(.a)){.b{x:1}}"]
+	])("unwraps %s as %s", (css, expected) => {
+		expect(settled(css)).toBe(expected);
+	});
+
+	it.each([
+		// A later longhand goes into the shorthand, a negative decimal included.
+		["a{animation:x .8s infinite alternate;animation-delay:-.2s}", "a{animation:x.8s infinite alternate -.2s}"],
+		// A keyword starting its slot as the one word filling it says nothing.
+		["a{animation:.2s steps(2) normal forwards running x}", "a{animation:.2s steps(2)forwards x}"],
+		["a{animation:x 1s ease}", "a{animation:x 1s}"],
+		// Two words filling a slot make the second the name.
+		["a{animation:1s reverse normal}", "a{animation:1s reverse normal}"],
+		["a{animation:1s normal normal}", "a{animation:1s normal normal}"],
+		["a{animation:x 1s ease steps(2)}", "a{animation:x 1s ease steps(2)}"]
+	])("writes the animation %s as %s", (css, expected) => {
+		expect(settled(css)).toBe(expected);
+	});
+
+	it.each([
+		["a{container-name:x;container-type:inline-size}", "a{container:x/inline-size}"],
+		["a{container-type:size;container-name:a}", "a{container:a/size}"],
+		[
+			'a{grid-template-areas:"a b" "c d";grid-template-rows:auto 1fr;grid-template-columns:1fr 2fr}',
+			'a{grid-template:"a b""c d"1fr/1fr 2fr}'
+		],
+		[
+			'a{grid-template-areas:"a b";grid-template-rows:auto;grid-template-columns:none}',
+			'a{grid-template:"a b"}'
+		],
+		[
+			"a{grid-template-areas:none;grid-template-rows:1fr;grid-template-columns:repeat(3,1fr)}",
+			"a{grid-template:1fr/repeat(3,1fr)}"
+		],
+		[
+			"a{grid-template-areas:none;grid-template-rows:none;grid-template-columns:none}",
+			"a{grid-template:none}"
+		],
+		// The earlier of two writes is dead, and goes.
+		[
+			'a{grid-template-areas:"a";grid-template-rows:1fr;grid-template-rows:2fr;grid-template-columns:1fr}',
+			'a{grid-template:"a"2fr/1fr}'
+		],
+		[
+			'a{grid-template-areas:"a";grid-template-rows:1fr;color:red;grid-template-columns:1fr}',
+			'a{grid-template:"a"1fr/1fr;color:red}'
+		]
+	])("merges %s into %s", (css, expected) => {
+		expect(settled(css)).toBe(expected);
+	});
+
+	it.each([
+		// An area row with no size is an `auto` one, where `none` is no row at all.
+		['a{grid-template-areas:"a";grid-template-rows:none;grid-template-columns:1fr}'],
+		// One size per area string.
+		['a{grid-template-areas:"a""b";grid-template-rows:1fr;grid-template-columns:1fr}'],
+		// What the areas form cannot hold.
+		['a{grid-template-areas:"a";grid-template-rows:1fr;grid-template-columns:repeat(2,1fr)}'],
+		['a{grid-template-areas:"a";grid-template-rows:[x]1fr;grid-template-columns:1fr}'],
+		['a{grid-template-areas:"a";grid-template-rows:var(--r);grid-template-columns:1fr}'],
+		['a{grid-template-areas:"a";grid-template-rows:1fr!important;grid-template-columns:1fr}'],
+		['a{grid-template-areas:"a";grid-template-rows:1fr;grid-gap:1px;grid-template-columns:1fr}'],
+		["a{grid-template-areas:inherit;grid-template-rows:1fr;grid-template-columns:1fr}"]
+	])("keeps %s apart", (css) => {
+		expect(settled(css)).not.toContain("grid-template:");
+	});
+});

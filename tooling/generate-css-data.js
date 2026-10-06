@@ -703,7 +703,7 @@ const collectSlashLonghands = () => {
 		const tree = grammarOf(property.syntax);
 		if (tree.type !== "sequence" || tree.items.length !== 2) continue;
 		const [first, rest] = tree.items;
-		if (first.type !== "type" || rest.type !== "multiplier") continue;
+		if (rest.type !== "multiplier") continue;
 		if (rest.comma || rest.min !== 0) continue;
 		if (rest.max !== longhands.length - 1) continue;
 		const body = rest.body.type === "group" ? rest.body.body : rest.body;
@@ -711,8 +711,19 @@ const collectSlashLonghands = () => {
 		const [slash, repeated] = body.items;
 		if (slash.type !== "literal" || slash.value !== "/") continue;
 		// The same production on both sides, so every slot takes the same values
-		// and the order `computed` states is the order they are written in.
-		if (repeated.type !== "type" || repeated.name !== first.name) continue;
+		// and the order `computed` states is the order they are written in — or a
+		// pair naming its own two longhands, in that order (`container`).
+		const sameProduction =
+			first.type === "type" &&
+			repeated.type === "type" &&
+			repeated.name === first.name;
+		const ownPair =
+			longhands.length === 2 &&
+			first.type === "property" &&
+			repeated.type === "property" &&
+			first.name === longhands[0] &&
+			repeated.name === longhands[1];
+		if (!sameProduction && !ownPair) continue;
 		out.push([name, longhands]);
 	}
 	return out.sort((a, b) => (a[0] < b[0] ? -1 : 1));
