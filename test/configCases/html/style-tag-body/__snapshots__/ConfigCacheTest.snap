@@ -5,14 +5,17 @@ exports[`ConfigCacheTestCases html style-tag-body exported tests should hand the
 <html>
 <head>
 <title>style-tag-body</title>
+<style></style>
+<meta name=\\"description\\" content=\\"style-tag-body\\">
 <style>/*!********************************************************************************************************************************!*\\\\
   !*** css data:text/css;base64,LmZpcnN0IHsgY29sb3I6IHJlZDsgfTwhLS0gWCAtLT4uc2Vjb25kIHsgY29sb3I6IGJsdWU7IH0= (exportType: text) ***!
   \\\\********************************************************************************************************************************/
 .first { color: red; }<!-- X -->.second { color: blue; }</style>
-<style></style>
-<style>   </style>
 </head>
-<body><p>Hi</p></body>
+<body>
+<div>Hi</div>
+<style>   </style>
+</body>
 </html>
 "
 `;
