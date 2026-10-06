@@ -29,14 +29,27 @@ module.exports = [
 	config("object", { optimization: { minimizeOptions: { xml: {} } } }),
 	// And absent, it stays off.
 	config("absent", {}),
-	// A minimizer of the user's own that matches `.svg` keeps the type.
+	// Every type turned off: no minimizer is applied at all.
+	config("none", {
+		experiments: { futureDefaults: true },
+		optimization: {
+			minimizeOptions: {
+				javascript: false,
+				css: false,
+				html: false,
+				json: false,
+				xml: false
+			}
+		}
+	}),
+	// A minimizer of the user's own matching every type keeps them all.
 	config("claimed", {
 		experiments: { futureDefaults: true },
 		optimization: {
 			minimize: true,
 			minimizer: [
 				new MinimizerPlugin({
-					test: /\.svg$/,
+					test: /\.(?:css|html|json|svg)$/,
 					parallel: false,
 					minify: () => ({ code: "<svg/>" })
 				}),

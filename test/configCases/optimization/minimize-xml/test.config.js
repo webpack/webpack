@@ -3,7 +3,7 @@
 const fs = require("fs");
 const path = require("path");
 
-const NAMES = ["future", "disabled", "object", "absent", "claimed"];
+const NAMES = ["future", "disabled", "object", "absent", "none", "claimed"];
 
 module.exports = {
 	findBundle(i) {
