@@ -1336,6 +1336,11 @@ const CORRECTED_CASES = [
 		{ compress: {}, mangle: false }
 	],
 	[
+		"an unused class whose static key converts to `prototype`, its array evaluated",
+		'for (var f of [function () { class C { static [["prototype"]]() {} } }, function () { class C { static [[["proto" + "type"]]] = 1; } }, function () { class C { static [["x"]]() {} } }, function () { class C { static [{ a: 1 }]() {} static [null]() {} } }]) { try { f(); console.log("made"); } catch (e) { console.log(e.name); } }',
+		{ compress: { unsafe: true }, mangle: false }
+	],
+	[
 		"an object method named `__proto__`, which an arrow would set as the prototype",
 		'var r = (o) => [Object.getPrototypeOf(o) === Object.prototype, Object.keys(o).join()]; console.log(r({ __proto__() { return 1; } }), r({ "__proto__"() { return 2; } }), r({ async __proto__() { return 3; } }));',
 		{ compress: {}, mangle: false }
