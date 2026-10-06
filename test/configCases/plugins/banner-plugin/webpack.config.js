@@ -31,6 +31,10 @@ module.exports = {
 			test: /vendors\.js$/
 		}),
 		new webpack.BannerPlugin({
+			banner: "Match glob",
+			test: { glob: ["*.js", "!bundle0.js"] }
+		}),
+		new webpack.BannerPlugin({
 			banner: ({ chunk }) => `multiline\nbanner\n${chunk.name}`
 		}),
 		new webpack.BannerPlugin(
