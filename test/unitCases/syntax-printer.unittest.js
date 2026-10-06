@@ -523,6 +523,46 @@ const KEPT_CASES = [
 /** @type {[string, string, import("terser").MinifyOptions][]} */
 const CORRECTED_CASES = [
 	[
+		"new.target with unsafe arrow conversion enabled",
+		"console.log((function () { return new.target; })());",
+		{ compress: { passes: 2, ecma: 2015, unsafe_arrows: true }, mangle: false }
+	],
+	[
+		"new.target in an inlined function",
+		"console.log((function () { return !new.target; })());",
+		{ compress: { passes: 2 }, mangle: false }
+	],
+	[
+		"new.target in a called function inside a constructor",
+		"class Outer { constructor() { this.value = (function () { return new.target; })(); } } console.log(new Outer().value === undefined);",
+		{ compress: { passes: 2 }, mangle: false }
+	],
+	[
+		"new.target captured by a returned arrow",
+		"console.log((function () { return () => new.target; })()());",
+		{ compress: { passes: 2 }, mangle: false }
+	],
+	[
+		"new.target captured by an object's method",
+		"const object = { method() { return () => new.target; } }; console.log(object.method()());",
+		{ compress: { passes: 2 }, mangle: false }
+	],
+	[
+		"new.target in a returned class's computed key",
+		"console.log((function () { return class { [new.target]() {} }; })().prototype.undefined !== undefined);",
+		{ compress: { passes: 2 }, mangle: false }
+	],
+	[
+		"new.target in a class's computed key captured by an arrow",
+		"console.log((function () { return () => class { [new.target]() {} }; })()().prototype.undefined !== undefined);",
+		{ compress: { passes: 2 }, mangle: false }
+	],
+	[
+		"new.target in a returned class's heritage",
+		"console.log(Object.getPrototypeOf((function () { return class extends (new.target || Object) {}; })()) === Object);",
+		{ compress: { passes: 2 }, mangle: false }
+	],
+	[
 		"a `{ __proto__ }` shorthand, printed",
 		"var __proto__ = null; console.log(Object.getPrototypeOf({ __proto__ }) === Object.prototype);",
 		{ compress: false, mangle: false }
@@ -4341,6 +4381,17 @@ describe("syntax-printer", () => {
 		it("should install", async () => {
 			const { phases } = await load();
 			expect(phases).toContain("correct");
+		});
+
+		it("should still inline around a nested function owning new.target", async () => {
+			const { minify } = await load();
+			const input =
+				"const Inner = (function () { return function () { return new.target; }; })(); console.log(new Inner() === Inner);";
+			const options = { compress: { passes: 2 }, mangle: false };
+			const { code } = await minify(input, options);
+			const reference = await terserReference().minify(input, options);
+			expect(code).toBe(reference.code);
+			expect(runProgram(/** @type {string} */ (code))).toBe("true");
 		});
 
 		for (const expression of ["+1n", "1n % 0n"]) {
