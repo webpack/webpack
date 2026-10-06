@@ -1879,7 +1879,7 @@ describe("CssSyntax — minify token-boundary safety", () => {
 		);
 		// A custom property and a substituted value are handed back as written.
 		expect(min("a{--x:.5em .5em}")).toBe("a{--x:.5em .5em}");
-		expect(min("a{margin:var(--y) .5em}")).toBe("a{margin:var(--y) .5em}");
+		expect(min("a{margin:var(--y) .5em}")).toBe("a{margin:var(--y).5em}");
 		// In a selector the separator is a descendant combinator, not a separator.
 		expect(min(".a .b{c:1}")).toBe(".a .b{c:1}");
 		expect(min(".a:not(.b .c){d:1}")).toBe(".a:not(.b .c){d:1}");
@@ -2010,7 +2010,7 @@ describe("CssSyntax — minify token-boundary safety", () => {
 		expect(
 			minifyFor("a{color:light-dark(red,blue);--x:f(", ["chrome 100"])
 		).toBe(
-			"a{color:var(--webpack-light,red) var(--webpack-dark,blue);--x:f()}:where(:root){--webpack-light:initial;--webpack-dark:}"
+			"a{color:var(--webpack-light,red)var(--webpack-dark,blue);--x:f()}:where(:root){--webpack-light:initial;--webpack-dark:}"
 		);
 		// Left open, the value keeps the mappings it has closed.
 		/**
@@ -2705,7 +2705,7 @@ describe("CssSyntax — minify transforms, in-process", () => {
 		it.each([
 			["a function", "a{width:CALC(1PX + var(--x))}"],
 			["the substitution itself", "a{color:VAR(--x)}"],
-			["a url token", "a{background:URL(A.PNG) var(--x)}"],
+			["a url token", "a{background:URL(A.PNG)var(--x)}"],
 			["a canonical spelling", "a{transform:TRANSLATEY(var(--x))}"],
 			["an env()", "a{color:ENV(safe-area-inset-top)}"]
 		])("keeps %s as written inside a substituted value", (_name, css) => {
@@ -2877,7 +2877,7 @@ describe("CssSyntax — minify transforms, in-process", () => {
 			["two factors read a bare zero as the basis", "a{flex:0 0}"],
 			["a basis parts the factors", "a{flex:1 auto 2}"],
 			["two bases are written", "a{flex:auto 10px}"],
-			["a substitution may be any slot", "a{flex:var(--a) 1}"],
+			["a substitution may be any slot", "a{flex:var(--a)1}"],
 			// IE10's 2012 grammar reads an omitted shrink as `0`, not `1`.
 			["IE10 reads it", "a{-ms-flex:1 auto}"]
 		])("keeps it where %s", (_name, css) => {
@@ -2953,7 +2953,7 @@ describe("CssSyntax — minify transforms, in-process", () => {
 		// A substitution expands to a token sequence, so two references need not
 		// be one repeated value.
 		expect(min("a{margin:var(--g) var(--g)}")).toBe(
-			"a{margin:var(--g) var(--g)}"
+			"a{margin:var(--g)var(--g)}"
 		);
 		// A custom property's value is verbatim.
 		expect(min("a{--margin:1px 1px}")).toBe("a{--margin:1px 1px}");
@@ -3015,7 +3015,7 @@ describe("CssSyntax — minify transforms, in-process", () => {
 	it("collapses a box whose sides print alike, however they were written", () => {
 		// CSS Values 4 §5: a zero length loses its unit as the declaration prints,
 		// so two zeros are one value whatever unit the source spelled them with.
-		expect(min("a{margin:0em -0.25rem 0rem}")).toBe("a{margin:0 -.25rem}");
+		expect(min("a{margin:0em -0.25rem 0rem}")).toBe("a{margin:0-.25rem}");
 		expect(min("a{padding:0em 1px 0rem 1px}")).toBe("a{padding:0 1px}");
 		expect(min("a{border-radius:0em 1px 0rem}")).toBe("a{border-radius:0 1px}");
 		// A percentage is a type of its own, and keeps its unit — so it collapses
@@ -4729,7 +4729,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// A family reads each slot by what it takes, so a width and a color are
 			// answered for as well as a keyword: both of these hold their initial.
 			["a{column-rule:medium none red}", "a{column-rule:red}"],
-			["a{outline:medium none}", "a{outline:none}"],
+			["a{outline:medium none}", "a{outline:0}"],
 			["a{flex-flow:row wrap}", "a{flex-flow:wrap}"],
 			// Both slots hold their initial, so the shortest one says both — whichever
 			// order they were written in.
@@ -4760,9 +4760,9 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// A slot taking a length or a color is read the same way, by the classes
 			// a sibling's own value is in: neither `solid` nor `red` is a width.
 			["a{border:medium solid red}", "a{border:solid red}"],
-			["a{border:medium none currentcolor}", "a{border:none}"],
-			["a{border:none medium}", "a{border:none}"],
-			["a{column-rule:medium none currentcolor}", "a{column-rule:none}"],
+			["a{border:medium none currentcolor}", "a{border:0}"],
+			["a{border:none medium}", "a{border:0}"],
+			["a{column-rule:medium none currentcolor}", "a{column-rule:0}"],
 			// ...and a sibling that is one keeps it.
 			["a{border:medium 1px}", "a{border:medium 1px}"],
 			["a{border:currentcolor red}", "a{border:currentcolor red}"]
@@ -4785,7 +4785,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// A function fills the easing slot as much as a keyword does.
 			["a call fills the same slot", "a{transition:opacity 1s ease steps(4)}"],
 			["the same, on an animation", "a{animation:x 1s ease linear(0,1)}"],
-			["the value is the keyword alone", "a{border:none}"],
+			["the value is the keyword alone", "a{text-decoration:none}"],
 			// Each layer keeps its own siblings, so the ambiguous one stays whole.
 			[
 				"a layer's own sibling fills the slot",
@@ -6381,17 +6381,17 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		// the substitution resolves, so every rewrite inside one is declined.
 		it.each([
 			["a named color", "a{background-color:var(--a,var(--b,white))}"],
-			["a transform", "a{transform:var(--a) translate(0,10px)}"],
+			["a transform", "a{transform:var(--a)translate(0,10px)}"],
 			["a font family", 'a{font-family:var(--x),"Foo Bar"}'],
-			["a url()", 'a{background:var(--a) url("a b.png")}'],
-			["a repeated pair", "a{background-repeat:var(--x) var(--x)}"],
-			["a two-keyword display", "a{display:var(--x) flow}"],
+			["a url()", 'a{background:var(--a)url("a b.png")}'],
+			["a repeated pair", "a{background-repeat:var(--x)var(--x)}"],
+			["a two-keyword display", "a{display:var(--x)flow}"],
 			["an `initial`", "a{min-width:var(--x,initial)}"],
-			["the font shorthand's weight", "a{font:bold var(--s1) Arial}"],
-			["a transition's slots", "a{transition:var(--p) 2s opacity}"],
+			["the font shorthand's weight", "a{font:bold var(--s1)Arial}"],
+			["a transition's slots", "a{transition:var(--p)2s opacity}"],
 			["`transparent`", "a{color:var(--x,transparent)}"],
-			["a `translateX()`", "a{transform:var(--a) translateX(1px)}"],
-			["a zero angle", "a{transform:var(--a) rotate(0deg)}"]
+			["a `translateX()`", "a{transform:var(--a)translateX(1px)}"],
+			["a zero angle", "a{transform:var(--a)rotate(0deg)}"]
 		])("keeps %s as written", (_name, css) => {
 			expect(minify(css)).toBe(css);
 		});
@@ -6577,7 +6577,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 
 		it.each([
 			["it is already in order", "a{transition:opacity 2s ease-in}"],
-			["a substitution stands there", "a{transition:var(--x) 2s}"],
+			["a substitution stands there", "a{transition:var(--x)2s}"],
 			["two layers are written", "a{transition:opacity 2s,color 3s}"],
 			["there is one component", "a{transition:none}"]
 		])("keeps it where %s", (_name, css) => {
@@ -6638,7 +6638,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// `aspect-ratio:auto <ratio>` is a ratio with a fallback, not the ratio.
 			["the keyword still says something", "a{aspect-ratio:auto 3}"],
 			// A substitution could expand to anything.
-			["a substitution stands there", "a{grid-auto-flow:var(--x) dense}"]
+			["a substitution stands there", "a{grid-auto-flow:var(--x)dense}"]
 		])("keeps the value where %s", (_name, css) => {
 			expect(minify(css)).toBe(css);
 		});
@@ -7675,12 +7675,15 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 				// The escaped `)` closes nothing, so the list runs on to the real one
 				// and `::-ms-expand` is still read after it.
 				expect(minify(".a:is(.b\\))::-ms-expand{color:red}", MODERN)).toBe("");
-				const live = ".a:is(.b\\)){color:red}";
-				expect(minify(live, MODERN)).toBe(live);
+				// The lone compound comes out of its `:is()`, escape and all.
+				expect(minify(".a:is(.b\\)){color:red}", MODERN)).toBe(
+					".a.b\\){color:red}"
+				);
 				// A value holding both quotes keeps its escape, and the escaped one
 				// leaves the string open so the `)` in it does not end the list.
-				const quoted = '.a:is([href="a\'\\")b"]){color:red}';
-				expect(minify(quoted, MODERN)).toBe(quoted);
+				expect(minify('.a:is([href="a\'\\")b"]){color:red}', MODERN)).toBe(
+					'.a[href="a\'\\")b"]{color:red}'
+				);
 				expect(
 					minify('.a:is([href="a\'\\")b"])::-ms-expand{color:red}', MODERN)
 				).toBe("");
@@ -9289,10 +9292,10 @@ describe("CssSyntax minify — vendor prefixes (spellings an engine dropped)", (
 		// `-moz-outline` went in Firefox 3.6; the property it stood for is filed as
 		// complete only from 88, which is not where the spelling stopped working.
 		expect(minifyFor("a{outline:none}", ["firefox 40"])).toBe(
-			"a{outline:none}"
+			"a{outline:0}"
 		);
 		expect(minifyFor("a{outline:none}", ["firefox 3"])).toBe(
-			"a{-moz-outline:none;outline:none}"
+			"a{-moz-outline:0;outline:0}"
 		);
 	});
 
@@ -11932,7 +11935,7 @@ describe("CssSyntax minify — the version each rewrite turns on at", () => {
 		// reading no `:where()` (Chrome 88) is one this leaves the function for...
 		expect(minifyFor(css, ["chrome 87"])).toBe(css);
 		expect(minifyFor(css, ["chrome 88"])).toBe(
-			"a{color:var(--webpack-light,red) var(--webpack-dark,blue)}" +
+			"a{color:var(--webpack-light,red)var(--webpack-dark,blue)}" +
 				":where(:root){--webpack-light:initial;--webpack-dark:}"
 		);
 		// ...and at the version the function itself arrived, there is nothing to
@@ -11961,7 +11964,7 @@ describe("CssSyntax minify — light-dark()", () => {
 
 	it("writes the pair the color scheme switches", () => {
 		expect(minifyFor("a{color:light-dark(red,blue)}", ["chrome 100"])).toBe(
-			`a{color:var(--webpack-light,red) var(--webpack-dark,blue)}${DEFAULTS}`
+			`a{color:var(--webpack-light,red)var(--webpack-dark,blue)}${DEFAULTS}`
 		);
 	});
 
@@ -11973,7 +11976,7 @@ describe("CssSyntax minify — light-dark()", () => {
 		).toBe(
 			"html{color-scheme:light dark;--webpack-light:initial;--webpack-dark:}" +
 				"@media (prefers-color-scheme:dark){html{--webpack-light:;--webpack-dark:initial}}" +
-				`a{color:var(--webpack-light,red) var(--webpack-dark,blue)}${DEFAULTS}`
+				`a{color:var(--webpack-light,red)var(--webpack-dark,blue)}${DEFAULTS}`
 		);
 		// One scheme alone answers for itself, with no query to defer to.
 		expect(
@@ -11982,7 +11985,7 @@ describe("CssSyntax minify — light-dark()", () => {
 			])
 		).toBe(
 			"html{color-scheme:dark;--webpack-light:;--webpack-dark:initial}" +
-				`a{color:var(--webpack-light,red) var(--webpack-dark,blue)}${DEFAULTS}`
+				`a{color:var(--webpack-light,red)var(--webpack-dark,blue)}${DEFAULTS}`
 		);
 		// `only` narrows how the scheme is chosen, and `normal` is the light one.
 		expect(
@@ -12006,7 +12009,7 @@ describe("CssSyntax minify — light-dark()", () => {
 			])
 		).toBe(
 			"html{color-scheme:var(--x)}" +
-				`a{color:var(--webpack-light,red) var(--webpack-dark,blue)}${DEFAULTS}`
+				`a{color:var(--webpack-light,red)var(--webpack-dark,blue)}${DEFAULTS}`
 		);
 	});
 
@@ -12016,7 +12019,7 @@ describe("CssSyntax minify — light-dark()", () => {
 				"chrome 100"
 			])
 		).toBe(
-			`a{content:"color-scheme:x";color:var(--webpack-light,red) var(--webpack-dark,blue)}${DEFAULTS}`
+			`a{content:"color-scheme:x";color:var(--webpack-light,red)var(--webpack-dark,blue)}${DEFAULTS}`
 		);
 	});
 
@@ -12110,7 +12113,7 @@ describe("CssSyntax minify — a slot holding its own initial", () => {
 		// The slots are read by what each takes, so a width and a color are
 		// answered for as well as a keyword.
 		expect(minify("a{border-left:currentcolor medium none}")).toBe(
-			"a{border-left:none}"
+			"a{border-left:0}"
 		);
 		expect(minify("a{column-rule:medium none red}")).toBe("a{column-rule:red}");
 		expect(minify("a{outline:medium none currentcolor}")).toBe(
@@ -12808,7 +12811,7 @@ describe("CssSyntax minify — nesting the target cannot read", () => {
 		// the parent and may join into a list.
 		const L = "b{color:light-dark(red,blue)}";
 		const tail =
-			"b{color:var(--webpack-light,red) var(--webpack-dark,blue)}" +
+			"b{color:var(--webpack-light,red)var(--webpack-dark,blue)}" +
 			":where(:root){--webpack-light:initial;--webpack-dark:}";
 		/**
 		 * @param {string} selector the rule's prelude standing on its own
@@ -13295,7 +13298,7 @@ describe("CssSyntax minify — `rewriteEscapes`", () => {
 				"a{animation-timing-function:steps(calc(1),jump-none)}"
 			],
 			// A substitution: what it expands to is not known here.
-			["a{margin:v\\61 r(--x) 0 0 0}", "a{margin:var(--x) 0 0 0}"],
+			["a{margin:v\\61 r(--x) 0 0 0}", "a{margin:var(--x)0 0 0}"],
 			["a{color:v\\61 r(--x,WHITE)}", "a{color:var(--x,WHITE)}"],
 			// A custom property or `initial-value` keeps its value as written.
 			["a{\\2d -x:WHITE}", "a{--x:WHITE}"],

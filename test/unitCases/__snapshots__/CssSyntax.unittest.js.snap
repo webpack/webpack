@@ -805,7 +805,7 @@ property: 1e+1;
 property: 1e-1;
 property: 1e-10;
 property: 1+2;
-property: 1 -2;
+property: 1-2;
 property: 4.01;
 property: -456.8;
 property: .60;

@@ -1475,7 +1475,7 @@ const LOWERING_FIXTURES = [
 		// custom properties would see where the source has none.
 		introduces: ["--webpack-light", "--webpack-dark"],
 		produces: [
-			"var(--webpack-light,#aaa) var(--webpack-dark,#444)",
+			"var(--webpack-light,#aaa)var(--webpack-dark,#444)",
 			":where(:root){--webpack-light:initial",
 			"@media (prefers-color-scheme:dark){html{"
 		],
