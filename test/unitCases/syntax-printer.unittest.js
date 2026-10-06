@@ -894,7 +894,135 @@ const CORRECTED_CASES = [
 		"a catch parameter default's closure reading a name its block declares, compressed",
 		"function g() { var a, b; let x = 'out'; try { throw []; } catch ([_ = a = () => x]) { b = () => x; let x = 'in'; } console.log(a(), b()); } g();",
 		{ compress: {}, mangle: false }
+	],
+	[
+		"an empty function's object pattern default assigning in its own default",
+		"function g() { var a; function f({ y = a = 1 } = {}) {} f(); console.log(a); } g();",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an empty function's array pattern default assigning in its own default",
+		"function g() { var a; function f([y = a = 1] = []) {} f(); console.log(a); } g();",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an empty function's nested pattern default assigning",
+		"function g() { var a; function f([[y = a = 1]] = [[]]) {} f(); console.log(a); } g();",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an empty function's pattern default with a computed key assigning",
+		"function g() { var a; function f({ [a = 2]: y } = {}) {} f(); console.log(a); } g();",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an empty arrow's pattern default assigning",
+		"function g() { var a; var f = ({ y = a = 1 } = {}) => {}; f(); console.log(a); } g();",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an empty function called twice, its pattern default counting",
+		"function g() { var a = 0; function f({ y = a++ } = {}) {} f(); f(); console.log(a); } g();",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an empty function's pattern defaulting to `null`, which throws",
+		"function g() { function f({ y } = null) {} try { f(); console.log('ran'); } catch (e) { console.log(e.name); } } g();",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an empty function passed an object its pattern default's inner default reads",
+		"function g() { var a; function f({ y = a = 1 } = {}) {} f({}); console.log(a); } g();",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an empty function passed `undefined` for its pattern default",
+		"function g() { var a; function f({ y = a = 1 } = {}) {} f(void 0); console.log(a); } g();",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an empty function's second parameter defaulting to a pattern",
+		"function g() { var a; function f(x, { y = a = 1 } = {}) {} f(0); console.log(a); } g();",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an empty function expression called in place, its pattern default assigning",
+		"function g() { var a; (function ({ y = a = 1 } = {}) {})(); console.log(a); } g();",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an empty function's pattern defaulting to an object with a getter",
+		"function g() { var a = 0; function f({ y } = { get y() { a++; } }) {} f(); console.log(a); } g();",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an empty function's array pattern defaulting to a number, which throws",
+		"function g() { function f([y] = 1) {} try { f(); console.log('ran'); } catch (e) { console.log(e.name); } } g();",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an empty function's rest pattern assigning in its default",
+		"function g() { var a; function f(...[y = a = 1]) {} f(); console.log(a); } g();",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an empty function passed a spread of a generator",
+		"function g() { var n = 0; function* it() { n++; } function f() {} f(...it()); console.log(n); } g();",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an empty function's pattern defaulting to an object whose prototype has a getter",
+		"function g() { var a = 0; function f({ y } = { __proto__: { get y() { a++; } } }) {} f(); console.log(a); } g();",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an empty function's array pattern defaulting to a spread of an iterator",
+		"function g() { var n = 0; function* gen() { n++; yield 1; } var it = gen(); function f([y] = [...it]) {} f(); console.log(n); } g();",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an empty function's pattern defaulting to a spread object with a getter",
+		"function g() { var a = 0; var o = { get y() { a++; } }; function f({ y } = { ...o }) {} f(); console.log(a); } g();",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an empty function passed an object whose getter its pattern reads",
+		"function g() { var a = 0; function f({ y } = {}) {} f({ get y() { a++; } }); console.log(a); } g();",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an empty function passed a spread reaching its pattern default",
+		"function g() { var a = 0; var args = [0, { get y() { a++; } }]; function f(x, { y } = {}) {} f(...args); console.log(a); } g();",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a function returning a value, passed a spread reaching its pattern default",
+		"function g() { var a = 0; var args = [0, { get y() { a++; } }]; function f(x, { y } = {}) { return 1; } console.log(f(...args), a); } g();",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an arrow returning a value, passed a spread reaching its pattern default",
+		"function g() { var a = 0; var args = [0, { get y() { a++; } }]; var f = (x, { y } = {}) => 1; console.log(f(...args), a); } g();",
+		{ compress: {}, mangle: false }
 	]
+];
+
+// Calls whose parameters run nothing on a call passing nothing, which the
+// `correct` phase leaves to terser to drop or inline.
+/** @type {[string, string][]} */
+const NO_EFFECT_PARAMETER_CASES = [
+	["a default without effects", "function g() { function f(y = 1) {} f(); console.log('x'); } g();"],
+	["a pattern defaulting to an empty object", "function g() { function f({ y } = {}) {} f(); console.log('x'); } g();"],
+	["a pattern defaulting to an empty array", "function g() { function f([y] = []) {} f(); console.log('x'); } g();"],
+	["a function inlined, its pattern default assigning", "function g() { var a; function f({ y = a = 1 } = {}) { return y; } console.log(f(), a); } g();"],
+	["a generator's pattern default", "function g() { var a; function* f({ y = a = 1 } = {}) {} f(); console.log(a); } g();"],
+	["an async function's pattern default", "function g() { var a; async function f({ y = a = 1 } = {}) {} f(); console.log(a); } g();"],
+	["a pattern defaulting to an object of plain properties", "function g() { function f({ y } = { y: 1 }) {} f(); console.log('x'); } g();"],
+	["a pattern defaulting to an array without a spread", "function g() { function f([y] = [1, 2]) {} f(); console.log('x'); } g();"],
+	["a pattern defaulting to a computed `__proto__` key, an own property", "function g() { function f({ y } = { ['__proto__']: 1 }) {} f(); console.log('x'); } g();"],
+	["a pattern default holding a function with a pattern of its own", "function g() { var a; function f({ y = () => { var { z = a = 1 } = {}; } } = {}) {} f(); console.log(a); } g();"],
+	["a plain rest parameter", "function g() { function f(...y) {} f(); console.log('x'); } g();"],
+	["a spread array literal", "function g() { function f() {} f(...[1, 2]); console.log('x'); } g();"]
 ];
 
 // terser's parser refuses `let` as a name, so with corrections off the print
@@ -4266,6 +4394,19 @@ describe("syntax-printer", () => {
 				} finally {
 					corrections.enabled = true;
 				}
+			});
+		}
+	});
+
+	describe("a call whose parameters run nothing", () => {
+		for (const [name, input] of NO_EFFECT_PARAMETER_CASES) {
+			it(`should write what terser writes: ${name}`, async () => {
+				const { minify } = await load();
+				const options = { compress: {}, mangle: false };
+				const { code } = await minify(input, options);
+				const reference = await terserReference().minify(input, options);
+				expect(code).toBe(reference.code);
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
 			});
 		}
 	});
