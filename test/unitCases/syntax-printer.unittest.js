@@ -412,6 +412,11 @@ const IMPROVED_CASES = [
 		{ compress: {}, mangle: false }
 	],
 	[
+		"a pattern naming nothing, reading a literal whose function spreads",
+		"console.log(function (o) { const {} = { f: () => [...o] }; return 2; }([1]));",
+		{ compress: { ecma: 2020 }, ecma: 2020, mangle: false }
+	],
+	[
 		"a pattern naming nothing, reading `null`, which still throws",
 		"try { !function () { const { a } = null; }(); } catch (e) { console.log(e.name); }",
 		{ compress: {}, mangle: false }
@@ -4599,10 +4604,11 @@ describe("syntax-printer", () => {
 				["console.log(function () { var o = Math.random() < 2 ? { a: 1, b: 2 } : {}; const { a, ...r } = o; return r.b; }());", modern],
 				["console.log(function () { const { a = console.log(1) } = {}; return 2; }());", modern],
 				["console.log(function () { const { [console.log(1)]: a } = {}; return 2; }());", modern],
+				['console.log(function (k) { const { [k]: a } = {}; return 2; }({ toString() { console.log(1); return "a"; } }));', modern],
 				["console.log(function () { var o = Math.random() < 2 ? { a: 1, b: 2 } : {}; const { a, b } = o; return a; }());", modern],
 				['console.log(function () { const { a, b } = { a: 1, get b() { console.log(2); } }; return a; }());', modern],
 				["console.log(function (o) { const [a, b] = o; return a; }(Math.random() < 2 ? [1, 2] : []));", modern],
-				['console.log(function () { var it = { [Symbol.iterator]() { console.log("iterated"); return [][Symbol.iterator](); } }; const [] = [...it]; const { a } = { ...it }; const [] = [[...it]]; const {} = { d: { ...it } }; return 2; }());', modern],
+				['console.log(function () { var it = { [Symbol.iterator]() { console.log("iterated"); return [][Symbol.iterator](); } }; const [] = [...it]; const { a } = { ...it }; const [] = [[...it]]; const {} = { d: { ...it }, e: 1 }; return 2; }());', modern],
 				["console.log(function (s) { try { const { a = Math.abs(s) } = {}; } catch (e) { return e.name; } return 2; }(Symbol()));", modern],
 				["class B {} class C extends B { constructor() { const { a = this } = {}; super(); } } try { new C(); } catch (e) { console.log(e.name); }", modern]
 			];
