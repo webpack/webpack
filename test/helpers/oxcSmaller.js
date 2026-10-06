@@ -1477,6 +1477,10 @@ const OXC_SMALLER_BY_REASON = [
 		["terser compress: issue-1052/multiple_functions"]
 	],
 	[
+		"oxc's output differs: it drops an unused class extending a regular expression, whose definition throws a TypeError",
+		["terser compress: harmony/class_extends_regex"]
+	],
+	[
 		"oxc's output is wrong: it renames `LocalCtor` inside a `with` body, so a `LocalCtor` property on the `with` object is no longer used",
 		["swc minifier: fixture/issues/11684/with-scope/input.js"]
 	],
