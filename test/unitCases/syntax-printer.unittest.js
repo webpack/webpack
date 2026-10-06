@@ -2437,6 +2437,7 @@ describe("syntax-printer", () => {
 		["`arguments` in its own strict body", 'function f() { return function (a, b) { "use strict"; return arguments[0]; }; } sink(f);', { compress: { keep_fargs: false } }],
 		["`arguments` in a class", "class C { m() { return function (a, b) { return arguments[0]; }; } } sink(C);", { compress: { keep_fargs: false } }],
 		["`arguments` under an expression arrow", "function f() { return () => [function (a, b) { return arguments[0]; }]; } sink(f);", { compress: { keep_fargs: false } }],
+		["`arguments` inherited by an expression arrow", "function f(a, b) { return () => arguments[0]; } sink(f);", { compress: { keep_fargs: false } }],
 		["`arguments` in a strict program", '"use strict"; sink(function (a, b) { return arguments[0]; });', { compress: { keep_fargs: false } }]
 	];
 
