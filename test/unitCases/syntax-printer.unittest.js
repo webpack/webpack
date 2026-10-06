@@ -2373,6 +2373,11 @@ describe("syntax-printer", () => {
 			{ passes: 2, negate_iife: true, sequences: true }
 		],
 		[
+			"a hoisted function read before what it reads is written, beside functions reading none of it",
+			"function f() { h = 5; console.log([1].map(function (i) { return g() + i; }), k(), a()); var x = 2; function g() { return x + h; } function h() { return 1; } var k = function () { return 2; }; var a = () => 3; function u() { return 4; } return u; } f();",
+			{ reduce_vars: true, unused: true, passes: 2 }
+		],
+		[
 			"self-referential classes and templates",
 			"var A = class A { static x = A.y; }; class B { static [B] = 1; } `${a}${b}`; String.raw`x${y}`; sink(`a${1}b${'c'}d`);",
 			{ passes: 2, toplevel: true, unused: true, evaluate: true }
