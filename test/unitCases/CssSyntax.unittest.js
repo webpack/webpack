@@ -1030,7 +1030,7 @@ describe("CssSyntax — SourceProcessor", () => {
 					) => names.push(path.name()),
 					[NodeType.Url]: (
 						/** @type {import("../../lib/css/syntax-parser").CssPath} */ path
-					) => urls.push(path.value())
+					) => urls.push(/** @type {string} */ (path.value()))
 				})
 			)
 			.process("color: red; background: url(a.png)", {
@@ -3538,7 +3538,7 @@ describe("CssSyntax — skip set (CssProcessOptions.skip)", () => {
 				/** @type {import("../../lib/css/syntax-parser").VisitorMap} */ ({
 					[NodeType.Url]: (
 						/** @type {import("../../lib/css/syntax-parser").CssPath} */ path
-					) => urls.push(path.value())
+					) => urls.push(/** @type {string} */ (path.value()))
 				})
 			)
 			.process(":x(url(p.png)){color:red}", {
@@ -3687,7 +3687,7 @@ describe("CssSyntax — skip set (CssProcessOptions.skip)", () => {
 				/** @type {import("../../lib/css/syntax-parser").VisitorMap} */ ({
 					[NodeType.Url]: (
 						/** @type {import("../../lib/css/syntax-parser").CssPath} */ path
-					) => urls.push(path.value())
+					) => urls.push(/** @type {string} */ (path.value()))
 				})
 			)
 			.process("@import url(x.css);", {
@@ -3722,7 +3722,7 @@ describe("CssSyntax — skip set (CssProcessOptions.skip)", () => {
 					[NodeType.Number]: () => seen.push("num"),
 					[NodeType.Ident]: (
 						/** @type {import("../../lib/css/syntax-parser").CssPath} */ path
-					) => seen.push(path.value())
+					) => seen.push(/** @type {string} */ (path.value()))
 				})
 			)
 			.process("p: 1 foo", {
@@ -9606,7 +9606,7 @@ describe("CssSyntax — a string the source never closed", () => {
 			.use({
 				[NodeType.String]: {
 					enter: (/** @type {import("../../lib/css/syntax-parser").CssPath} */ path) =>
-						seen.push(path.value())
+						seen.push(/** @type {string} */ (path.value()))
 				}
 			})
 			.process(source);

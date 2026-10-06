@@ -6736,16 +6736,17 @@ declare class CssSourceProcessor extends SourceProcessor<
 			end: { line: number; column: number };
 		};
 		/**
-		 * A node's text as written, but for an escape the input ran out of, which is
-		 * the character it names (§4.3.5 inside a string, §4.3.7 anywhere else).
+		 * A node's text exactly as the input wrote it (`name` and `value` decode).
 		 */
 		source(n?: number | NodeSyntaxParser, end?: number): string;
 		/**
-		 * The token's value as CSS Syntax defines it, escapes resolved: a string
-		 * without its quotes, a hash without its `#`, a `url()`'s contents; "" for
-		 * a rule, declaration, function or block, which have children instead.
+		 * The token's value as CSS Syntax defines it: a number for a number,
+		 * percentage or dimension, otherwise text with escapes resolved (a string
+		 * without its quotes, a hash without its `#`, a `url()`'s contents, a
+		 * comment's text); "" for a rule, declaration, function or block.
 		 */
-		value(n?: NodeSyntaxParser): string;
+		value(n?: NodeSyntaxParser): string | number;
+		unit(n?: NodeSyntaxParser): string;
 		typeFlag(n?: NodeSyntaxParser): string;
 		valueStart(n?: NodeSyntaxParser): number;
 		valueEnd(n?: NodeSyntaxParser): number;
@@ -20629,7 +20630,7 @@ declare interface NodeOptions {
  * The members every language's `path` has under the same name and meaning, so
  * a visitor written against it reads any grammar; see `docs/syntax.md`.
  */
-declare interface NodePath<TNode, TValue = string> {
+declare interface NodePath<TNode, TValue = unknown> {
 	/**
 	 * the current node
 	 */
@@ -29653,7 +29654,7 @@ declare interface SourcePosition {
  * ```
  */
 declare abstract class SourceProcessor<
-	TPath extends NodePath<TNode, string>,
+	TPath extends NodePath<TNode, unknown>,
 	TNode,
 	TProcessOptions = object,
 	TPrintOptions = object
@@ -33857,16 +33858,17 @@ declare namespace exports {
 						end: { line: number; column: number };
 					};
 					/**
-					 * A node's text as written, but for an escape the input ran out of, which is
-					 * the character it names (§4.3.5 inside a string, §4.3.7 anywhere else).
+					 * A node's text exactly as the input wrote it (`name` and `value` decode).
 					 */
 					source(n?: number | NodeSyntaxParser, end?: number): string;
 					/**
-					 * The token's value as CSS Syntax defines it, escapes resolved: a string
-					 * without its quotes, a hash without its `#`, a `url()`'s contents; "" for
-					 * a rule, declaration, function or block, which have children instead.
+					 * The token's value as CSS Syntax defines it: a number for a number,
+					 * percentage or dimension, otherwise text with escapes resolved (a string
+					 * without its quotes, a hash without its `#`, a `url()`'s contents, a
+					 * comment's text); "" for a rule, declaration, function or block.
 					 */
-					value(n?: NodeSyntaxParser): string;
+					value(n?: NodeSyntaxParser): string | number;
+					unit(n?: NodeSyntaxParser): string;
 					typeFlag(n?: NodeSyntaxParser): string;
 					valueStart(n?: NodeSyntaxParser): number;
 					valueEnd(n?: NodeSyntaxParser): number;
@@ -34032,16 +34034,17 @@ declare namespace exports {
 							end: { line: number; column: number };
 						};
 						/**
-						 * A node's text as written, but for an escape the input ran out of, which is
-						 * the character it names (§4.3.5 inside a string, §4.3.7 anywhere else).
+						 * A node's text exactly as the input wrote it (`name` and `value` decode).
 						 */
 						source(n?: number | NodeSyntaxParser, end?: number): string;
 						/**
-						 * The token's value as CSS Syntax defines it, escapes resolved: a string
-						 * without its quotes, a hash without its `#`, a `url()`'s contents; "" for
-						 * a rule, declaration, function or block, which have children instead.
+						 * The token's value as CSS Syntax defines it: a number for a number,
+						 * percentage or dimension, otherwise text with escapes resolved (a string
+						 * without its quotes, a hash without its `#`, a `url()`'s contents, a
+						 * comment's text); "" for a rule, declaration, function or block.
 						 */
-						value(n?: NodeSyntaxParser): string;
+						value(n?: NodeSyntaxParser): string | number;
+						unit(n?: NodeSyntaxParser): string;
 						typeFlag(n?: NodeSyntaxParser): string;
 						valueStart(n?: NodeSyntaxParser): number;
 						valueEnd(n?: NodeSyntaxParser): number;
@@ -34095,16 +34098,17 @@ declare namespace exports {
 										end: { line: number; column: number };
 									};
 									/**
-									 * A node's text as written, but for an escape the input ran out of, which is
-									 * the character it names (§4.3.5 inside a string, §4.3.7 anywhere else).
+									 * A node's text exactly as the input wrote it (`name` and `value` decode).
 									 */
 									source(n?: number | NodeSyntaxParser, end?: number): string;
 									/**
-									 * The token's value as CSS Syntax defines it, escapes resolved: a string
-									 * without its quotes, a hash without its `#`, a `url()`'s contents; "" for
-									 * a rule, declaration, function or block, which have children instead.
+									 * The token's value as CSS Syntax defines it: a number for a number,
+									 * percentage or dimension, otherwise text with escapes resolved (a string
+									 * without its quotes, a hash without its `#`, a `url()`'s contents, a
+									 * comment's text); "" for a rule, declaration, function or block.
 									 */
-									value(n?: NodeSyntaxParser): string;
+									value(n?: NodeSyntaxParser): string | number;
+									unit(n?: NodeSyntaxParser): string;
 									typeFlag(n?: NodeSyntaxParser): string;
 									valueStart(n?: NodeSyntaxParser): number;
 									valueEnd(n?: NodeSyntaxParser): number;
@@ -34233,16 +34237,17 @@ declare namespace exports {
 							end: { line: number; column: number };
 						};
 						/**
-						 * A node's text as written, but for an escape the input ran out of, which is
-						 * the character it names (§4.3.5 inside a string, §4.3.7 anywhere else).
+						 * A node's text exactly as the input wrote it (`name` and `value` decode).
 						 */
 						source(n?: number | NodeSyntaxParser, end?: number): string;
 						/**
-						 * The token's value as CSS Syntax defines it, escapes resolved: a string
-						 * without its quotes, a hash without its `#`, a `url()`'s contents; "" for
-						 * a rule, declaration, function or block, which have children instead.
+						 * The token's value as CSS Syntax defines it: a number for a number,
+						 * percentage or dimension, otherwise text with escapes resolved (a string
+						 * without its quotes, a hash without its `#`, a `url()`'s contents, a
+						 * comment's text); "" for a rule, declaration, function or block.
 						 */
-						value(n?: NodeSyntaxParser): string;
+						value(n?: NodeSyntaxParser): string | number;
+						unit(n?: NodeSyntaxParser): string;
 						typeFlag(n?: NodeSyntaxParser): string;
 						valueStart(n?: NodeSyntaxParser): number;
 						valueEnd(n?: NodeSyntaxParser): number;
@@ -34294,16 +34299,17 @@ declare namespace exports {
 								end: { line: number; column: number };
 							};
 							/**
-							 * A node's text as written, but for an escape the input ran out of, which is
-							 * the character it names (§4.3.5 inside a string, §4.3.7 anywhere else).
+							 * A node's text exactly as the input wrote it (`name` and `value` decode).
 							 */
 							source(n?: number | NodeSyntaxParser, end?: number): string;
 							/**
-							 * The token's value as CSS Syntax defines it, escapes resolved: a string
-							 * without its quotes, a hash without its `#`, a `url()`'s contents; "" for
-							 * a rule, declaration, function or block, which have children instead.
+							 * The token's value as CSS Syntax defines it: a number for a number,
+							 * percentage or dimension, otherwise text with escapes resolved (a string
+							 * without its quotes, a hash without its `#`, a `url()`'s contents, a
+							 * comment's text); "" for a rule, declaration, function or block.
 							 */
-							value(n?: NodeSyntaxParser): string;
+							value(n?: NodeSyntaxParser): string | number;
+							unit(n?: NodeSyntaxParser): string;
 							typeFlag(n?: NodeSyntaxParser): string;
 							valueStart(n?: NodeSyntaxParser): number;
 							valueEnd(n?: NodeSyntaxParser): number;

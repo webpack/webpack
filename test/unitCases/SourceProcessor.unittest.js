@@ -499,8 +499,43 @@ describe("SourceProcessor", () => {
 			expect(html).toEqual(["html|", "b|", "|a & b", "|c"]);
 		});
 
+		it("reads css numbers as numbers and leaves source exactly as written", () => {
+			/** @type {[string, unknown, string, string][]} */
+			const seen = [];
+			const input = "a{w:1\\70x;p:50%;n:+1.50e1;i:a\u0000b}/* c */z{y:q\\";
+			new CssSourceProcessor()
+				.use(
+					[
+						CssNodeType.Dimension,
+						CssNodeType.Percentage,
+						CssNodeType.Number,
+						CssNodeType.Ident,
+						CssNodeType.Comment
+					],
+					(path) => {
+						seen.push([
+							path.source(),
+							path.value(),
+							path.unit(),
+							path.source(path.start(), path.end())
+						]);
+					}
+				)
+				.process(input);
+			expect(seen).toEqual([
+				["a", "a", "", "a"],
+				["1\\70x", 1, "px", "1\\70x"],
+				["50%", 50, "", "50%"],
+				["+1.50e1", 15, "", "+1.50e1"],
+				["a\u0000b", "a\uFFFDb", "", "a\u0000b"],
+				["/* c */", " c ", "", "/* c */"],
+				["z", "z", "", "z"],
+				["q\\", "q\uFFFD", "", "q\\"]
+			]);
+		});
+
 		it("answers empty for a css node without a name, value or block token", () => {
-			/** @type {[number, string, number, string, string][]} */
+			/** @type {[number, string, number, string | number, string][]} */
 			const seen = [];
 			new CssSourceProcessor()
 				.use(
