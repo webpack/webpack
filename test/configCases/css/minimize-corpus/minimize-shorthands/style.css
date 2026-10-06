@@ -160,7 +160,7 @@
 .t60 { font-weight: BOLD }
 /*! font-weight: the `@font-face` descriptor means the same */
 @font-face { font-family: x; font-weight: normal }
-/*! declined: inside the `font` shorthand a `normal` may be the style or variant */
+/*! font: a `normal` before the size may be the style or variant, not a weight, and goes as the default of each */
 .t61 { font: normal 12px serif }
 /*! declined: the keyword means something else on every other property */
 .t62 { font-variant: normal; line-height: normal }

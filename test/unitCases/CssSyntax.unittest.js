@@ -2747,8 +2747,20 @@ describe("CssSyntax — minify transforms, in-process", () => {
 
 	it("drops a `flex` shrink factor that is its own default", () => {
 		expect(min("a{flex:0 1 auto}")).toBe("a{flex:0 auto}");
-		expect(min("a{flex:1 1 0px}")).toBe("a{flex:1 0px}");
+		expect(min("a{flex:3 1 0px}")).toBe("a{flex:3 0px}");
 		expect(min("a{flex:2 1 50%}")).toBe("a{flex:2 50%}");
+	});
+
+	it("writes a `flex` value of default factors as its basis alone", () => {
+		// CSS Flexbox 1 §7.1.1 reads a lone basis as `1 1 <basis>`.
+		expect(min("a{flex:1 1 0px}")).toBe("a{flex:0px}");
+		expect(min("a{flex:1 1 50%}")).toBe("a{flex:50%}");
+		expect(min("a{flex:1 1 max-content}")).toBe("a{flex:max-content}");
+		// A math function could read as a factor, and `0%` is `flex:1`'s own.
+		expect(min("a{flex:1 1 calc(1px + 1em)}")).toBe(
+			"a{flex:1 calc(1px + 1em)}"
+		);
+		expect(min("a{flex:1 1 0%}")).toBe("a{flex:1}");
 	});
 
 	it("keeps a `flex` value no keyword spells", () => {
@@ -2864,6 +2876,7 @@ describe("CssSyntax — minify transforms, in-process", () => {
 			["a{flex:auto 1}", "a{flex:auto}"],
 			["a{flex:1 1}", "a{flex:1}"],
 			["a{flex:2 1}", "a{flex:2}"],
+			["a{flex:content 1}", "a{flex:content}"],
 			["a{FLEX:1 AUTO}", "a{flex:auto}"],
 			["a{-webkit-flex:1 auto}", "a{-webkit-flex:auto}"]
 		])("%s", (css, expected) => {
@@ -2872,7 +2885,7 @@ describe("CssSyntax — minify transforms, in-process", () => {
 
 		it.each([
 			["the factors are already shortest", "a{flex:2 50%}"],
-			["a basis first is no shorter", "a{flex:content 1}"],
+			["a basis first is no shorter", "a{flex:content 2}"],
 			["the shrink is no default", "a{flex:1 0 auto}"],
 			["two factors read a bare zero as the basis", "a{flex:0 0}"],
 			["a basis parts the factors", "a{flex:1 auto 2}"],
@@ -4141,7 +4154,10 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// A zero time keeps a unit where a zero length drops one, so the shorter
 			// of the two it can carry is still worth reaching for.
 			["0ms", "0s"],
-			["-0ms", "0s"]
+			["-0ms", "0s"],
+			// A power of ten moves the point, where a double divides inexactly.
+			["416.667ms", ".416667s"],
+			["-1250ms", "-1.25s"]
 		])("rewrites %s", (input, expected) => {
 			expect(value(input)).toBe(expected);
 		});
@@ -4168,6 +4184,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			["40Q"],
 			// scientific notation is left alone
 			["1e3px"],
+			["1e-10s"],
 			// a unit outside the absolute families
 			["1.5em"],
 			["50%"]
@@ -4544,6 +4561,10 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 				"a{background-repeat:no-repeat}"
 			],
 			["a{mask-repeat:round round}", "a{mask-repeat:round}"],
+			// One value of a pair shorthand sets both its sides.
+			["a{padding-inline:1rem 1rem}", "a{padding-inline:1rem}"],
+			["a{overflow:hidden hidden}", "a{overflow:hidden}"],
+			["a{place-items:center center}", "a{place-items:center}"],
 			// `initial` computes to the initial value, which is often a shorter word.
 			["a{min-width:initial}", "a{min-width:auto}"],
 			// ...but not where that word is itself a length: `zoom` scales the keyword and
@@ -4579,6 +4600,11 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// drops, not one to make valid.
 			["the pair is not a repeat style", "a{background:red red}"],
 			["the pair is a shorthand's other slot", "a{mask:none none}"],
+			// Alone, `baseline` sets `justify-content` to `start`, which it cannot be.
+			["only one side takes it", "a{place-content:baseline baseline}"],
+			// Two are invalid, and a substitution may be two values itself.
+			["it is a CSS-wide keyword", "a{gap:inherit inherit}"],
+			["it is a substitution", "a{gap:var(--a) var(--a)}"],
 			// `repeat-x` is the one-value spelling of a pair, so it never doubles.
 			["the keyword never pairs", "a{background-repeat:repeat-x repeat-x}"],
 			// `mdn-data` states `black` as this one's initial, which it cannot take.
@@ -6559,6 +6585,29 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		});
 	});
 
+	describe("a `normal` before the font shorthand's size", () => {
+		it.each([
+			[
+				'a{font:normal normal normal 24px/1 "Material Design Icons"}',
+				"a{font:24px/1 Material Design Icons}"
+			],
+			["a{font:normal bold 12px Arial}", "a{font:700 12px Arial}"],
+			// After the size it is the line height, which the size does not imply.
+			["a{font:normal 12px/normal Arial}", "a{font:12px/normal Arial}"]
+		])("%s", (css, expected) => {
+			expect(minify(css)).toBe(expected);
+		});
+
+		it.each([
+			// Five is past the grammar's four slots, so the value is invalid.
+			["more than four precede it", "a{font:normal normal normal normal normal 12px x}"],
+			// A keyword size is not told from a family word here.
+			["the size is a keyword", "a{font:normal small Arial}"]
+		])("keeps it where %s", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
+	});
+
 	describe("a transition written in slot order", () => {
 		it.each([
 			["a{transition:ease-in 2s opacity}", "a{transition:opacity 2s ease-in}"],
@@ -6595,7 +6644,10 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			[
 				'a{font-family:"Foo Bar","sans-serif"}',
 				'a{font-family:Foo Bar,"sans-serif"}'
-			]
+			],
+			// After the size, the shorthand reads only families.
+			['a{font:12px "Foo Bar"}', "a{font:12px Foo Bar}"],
+			['a{font:12px/1 "Foo Bar",serif}', "a{font:12px/1 Foo Bar,serif}"]
 		])("%s", (css, expected) => {
 			expect(minify(css)).toBe(expected);
 		});
@@ -6608,11 +6660,17 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			["a word starts with a digit", 'a{font-family:"1st Ave"}'],
 			["a word is no identifier", 'a{font-family:"a.b"}'],
 			["two spaces part its words", 'a{font-family:"My  Font"}'],
-			// The family slot of the shorthand is read among the other slots.
+			// A word before it may be the same family's, which a string beside it
+			// makes invalid; unquoted, the declaration would apply.
 			[
-				"it is the `font` shorthand",
-				'a{font:12px "Foo Bar"}',
-				'a{font:12px"Foo Bar"}'
+				"a word precedes it in the `font` shorthand",
+				'a{font:12px Foo "Bar"}',
+				'a{font:12px Foo"Bar"}'
+			],
+			[
+				"a component follows it in the `font` shorthand",
+				'a{font:12px "Foo Bar" bold}',
+				'a{font:12px"Foo Bar"bold}'
 			],
 			["the property takes a string", 'a{content:"Foo Bar"}'],
 			["it is a custom property's value", 'a{--x:"Foo Bar"}']
@@ -7143,6 +7201,8 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			["a{color:magenta}", "a{color:#f0f}"],
 			["a{color:WHITE}", "a{color:#fff}"],
 			["a{border:1px solid white}", "a{border:1px solid#fff}"],
+			// No image `background` takes is a bare identifier.
+			["a{background:url(x.png) white}", "a{background:url(x.png)#fff}"],
 			[
 				"a{box-shadow:0 0 1px lightgoldenrodyellow}",
 				"a{box-shadow:0 0 1px#fafad2}"
@@ -7158,7 +7218,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// An identifier here may be the author's own name.
 			["the property names a keyframe", "a{animation-name:white}"],
 			["the property names a grid area", "a{grid-area:white}"],
-			["the property also takes an image", "a{background:white}"],
+			["it names a paint worklet", "a{background:paint(white)}"],
 			["it is a custom property's value", "a{--x:white}"],
 			[
 				"it is the syntax a condition tests",
@@ -8244,6 +8304,12 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			);
 			expect(minify("a{opacity:.5;opacity:1}")).toBe("a{opacity:1}");
 			expect(minify("a{color:red;color:inherit}")).toBe("a{color:inherit}");
+			// A hex with no alpha is read wherever a name is: the later name too,
+			// written as one.
+			expect(minify("a{background:red;background:white}")).toBe(
+				"a{background:#fff}"
+			);
+			expect(minify("a{color:red;color:rebeccapurple}")).toBe("a{color:#639}");
 			// Whatever stands between them, which can only lose to the later one
 			// wherever it would have beaten this.
 			expect(minify("a{color:red;background:red;color:blue}")).toBe(
@@ -8259,10 +8325,11 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			["a newer color spelling", "a{color:#eee;color:lab(50% 40 -30)}"],
 			["a hex the other states no alpha for", "a{color:#fff;color:#33333380}"],
 			["a unit the earlier one does not write", "a{width:1em;width:2dvh}"],
+			["a hex stating an alpha", "a{color:red;color:#ff000080}"],
 			[
-				"a name that arrived later",
-				"a{color:red;color:rebeccapurple}",
-				"a{color:red;color:#639}"
+				"a name that arrived later, written with an alpha",
+				"a{color:red;color:transparent}",
+				"a{color:red;color:#0000}"
 			],
 			// A keyword an engine may not know is not one either — and `display`
 			// is where that pair is written on purpose.
@@ -8446,13 +8513,28 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(minify("a{color:hsl(calc(360/7) 50% 50%)}")).toBe("a{color:#bfad40}");
 			expect(minify("a{color:rgb(0 0 0/calc(1/3))}")).toBe("a{color:#0005}");
 			expect(minify("a{color:rgb(calc(255/7) 0 0)}")).toBe("a{color:#240000}");
+			// A transform function other than `perspective()` takes a negative too.
+			expect(minify("a{transform:scale(calc(-1/3))}")).toBe(
+				"a{transform:scale(-.333333)}"
+			);
+			expect(minify("a{transform:translate(calc(-4%))}")).toBe(
+				"a{transform:translate(-4%)}"
+			);
 			// A bounded argument clamps a `calc()` and drops a bare value outside it,
-			// and a filter function takes no negative, so both keep the parentheses.
+			// and a filter function or `perspective()` takes no negative, so they keep
+			// the parentheses.
 			expect(
 				minify("a{transition-timing-function:cubic-bezier(calc(1/2),0,1,1)}")
 			).toBe("a{transition-timing-function:cubic-bezier(calc(.5),0,1,1)}");
-			expect(minify("a{transform:scale(calc(-1/3))}")).toBe(
-				"a{transform:scale(calc(-1/3))}"
+			expect(minify("a{filter:brightness(calc(-1/2))}")).toBe(
+				"a{filter:brightness(calc(-.5))}"
+			);
+			expect(minify("a{transform:perspective(calc(-1px/3))}")).toBe(
+				"a{transform:perspective(calc(-1px/3))}"
+			);
+			// A bare zero is a length where `calc(-0)`, a number, is not one.
+			expect(minify("a{transform:translate(calc(-0))}")).toBe(
+				"a{transform:translate(calc(0))}"
 			);
 		});
 
@@ -13367,6 +13449,89 @@ describe("CssSyntax minify — `rewriteEscapes`", () => {
 	});
 });
 
+describe("CssSyntax minify — `declareCharset`", () => {
+	/**
+	 * @param {string} css a stylesheet
+	 * @param {import("../../lib/css/syntax-parser").CssProcessOptions=} options more options
+	 * @returns {string} its minified serialization
+	 */
+	const declared = (css, options) =>
+		new SourceProcessor().process(css, {
+			mode: "minify",
+			declareCharset: true,
+			...options
+		}).code;
+
+	it.each([
+		['a{content:"\\1F600"}', '@charset "UTF-8";a{content:"\u{1F600}"}'],
+		// The one whitespace a hex escape ends at is part of it.
+		[
+			'a{content:"\\1F600 a\\1F600  b"}',
+			'@charset "UTF-8";a{content:"\u{1F600}a\u{1F600} b"}'
+		],
+		['a{content:"\\01F600"}', '@charset "UTF-8";a{content:"\u{1F600}"}'],
+		// An escape in the BMP beside it keeps its spelling.
+		[
+			'a{content:"\\e900\\1F600"}',
+			'@charset "UTF-8";a{content:"\\e900\u{1F600}"}'
+		],
+		// One `@charset` opens the file, the authored one dropped as before.
+		[
+			'@charset "UTF-8";a{content:"\\1F600"}',
+			'@charset "UTF-8";a{content:"\u{1F600}"}'
+		],
+		// A string holding the character itself keeps the one the source opens with.
+		[
+			'@charset "UTF-8";a{content:"\u{1F600}"}',
+			'@charset "UTF-8";a{content:"\u{1F600}"}'
+		]
+	])("writes %s with the character", (css, printed) => {
+		expect(declared(css)).toBe(printed);
+	});
+
+	it("declares it again when its own output is minified", () => {
+		const once = declared('a{content:"\\1F600"}');
+		expect(declared(once)).toBe(once);
+	});
+
+	it.each([
+		["the character is in the BMP", 'a{content:"\\e900"}'],
+		["it is past Unicode", 'a{content:"\\110000"}'],
+		["the backslash is escaped", 'a{content:"\\\\1F600"}'],
+		["it is a custom property's value", 'a{--x:"\\1F600"}'],
+		["it is an identifier's", ".\\1F600{color:red}"],
+		["the character is an identifier's", '@charset "UTF-8";.\u{1F600}{top:0}', ".\u{1F600}{top:0}"],
+		// As before, a source writing the character itself is left as it reads.
+		["the source opens with none", 'a{content:"\u{1F600}"}']
+	])("writes no `@charset` where %s", (_name, css, printed = css) => {
+		expect(declared(css)).toBe(printed);
+	});
+
+	it("keeps the escape without the option, or without `rewriteEscapes`", () => {
+		const css = 'a{content:"\\1F600"}';
+		expect(declared(css, { declareCharset: false })).toBe(css);
+		expect(declared(css, { transforms: { rewriteEscapes: false } })).toBe(css);
+	});
+
+	it("keeps it in the declarations of a `style` attribute", () => {
+		// They are read in the document's encoding, with no opening bytes of their own.
+		const css = 'content:"\\1F600"';
+		expect(declared(css, { as: "block-contents" })).toBe(css);
+	});
+
+	it("maps the stylesheet past the `@charset` it opens with", () => {
+		const css = 'a{content:"\\1F600"}';
+		const { map } = new SourceProcessor().process(css, {
+			mode: "minify",
+			declareCharset: true,
+			source: "a.css",
+			content: css
+		});
+		// Column 17, past `@charset "UTF-8";`, maps to the input's first byte.
+		expect(JSON.stringify(map)).toContain('"mappings":"iBAAA"');
+	});
+});
+
 describe("CssSyntax minify — `@custom-selector`", () => {
 	const sheet = "@custom-selector :--h h1,h2;:--h{color:red}";
 	const on = { customSelectors: true };
@@ -13558,6 +13723,21 @@ describe("cssMinify export", () => {
 		expect(cssMinify.supportsWorkerThreads()).toBe(true);
 		expect(cssMinify.filter("a.css")).toBe(true);
 		expect(cssMinify.filter("a.html")).toBe(false);
+		// Last, so a `@charset` the print opens with stays the file's first bytes.
+		expect(cssMinify.getBannerPosition()).toBe("end");
+	});
+
+	it("declares UTF-8 for a file of its own, not for a `style` attribute", async () => {
+		const cssMinify = require("../../lib/css/cssMinify");
+
+		const sheet = await cssMinify({ "a.css": 'a{content:"\\1F600"}' });
+		expect(sheet.code).toBe('@charset "UTF-8";a{content:"\u{1F600}"}');
+		const attribute = await cssMinify(
+			{ "a.css": 'content:"\\1F600"' },
+			undefined,
+			{ as: "block-contents" }
+		);
+		expect(attribute.code).toBe('content:"\\1F600"');
 	});
 
 	it("minifies through the public entry", async () => {
@@ -14718,6 +14898,10 @@ describe("CssSyntax minify — values a browser reads the same when omitted", ()
 		["scale:2 3 1", "2 3"],
 		["scale:2 2 1", "2"],
 		["scale:2 2 3", "2 2 3"],
+		// A percentage scales by a hundredth of itself, where that is no longer.
+		["scale:95%", ".95"],
+		["scale:150% 150%", "1.5"],
+		["scale:5%", "5%"],
 		["scale:none", "none"],
 		["rotate:45deg", "45deg"]
 	])("writes %s with what an omission means left out", (declaration, value) => {

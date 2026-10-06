@@ -11,8 +11,9 @@ module.exports = {
 		const read = (name) =>
 			fs.readFileSync(path.join(options.output.path, name), "utf8");
 		expect(read("bundle0.css")).toBe(
-			"/*! For license information please see bundle0.css.LICENSE.txt */\n" +
-				".reset{margin:0}.button{color:red}.icon{color:blue}"
+			// The banner goes last, where it cannot stand before a `@charset`.
+			".reset{margin:0}.button{color:red}.icon{color:blue}" +
+				"/*! For license information please see bundle0.css.LICENSE.txt */"
 		);
 		expect(read("bundle0.css.LICENSE.txt")).toBe(
 			"/*!\n * Kit 1.0 - Button\n * Released under the MIT license\n */\n\n" +

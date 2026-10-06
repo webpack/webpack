@@ -1,5 +1,5 @@
 ---
-"webpack": patch
+"webpack": minor
 ---
 
-Fold CSS longhands, shorten `flex`, shapes, shadows, selectors and omittable values, drop overridden rules, and fix edge cases.
+Shorten CSS values, selectors and astral escapes, fold longhands and drop overridden rules.

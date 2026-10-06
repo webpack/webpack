@@ -3331,6 +3331,30 @@ const collectLengthOnlyFunctions = () => {
 };
 
 /**
+ * The transform functions a negative argument is valid in: the alternatives of
+ * `<transform-function>` whose own grammar bounds no number from below, which
+ * leaves `perspective()` out.
+ * @returns {string[]} the function names, lowercased, sorted
+ */
+const collectNegativeAcceptingFunctions = () => {
+	const transform = definitions.get("transform-function");
+	if (transform === undefined) {
+		throw new Error("`<transform-function>` is gone: the grammar moved");
+	}
+	const names = [];
+	for (const reference of references(transform)) {
+		const syntax = definitions.get(reference);
+		if (syntax === undefined || !reference.endsWith("()")) {
+			throw new Error(`\`<transform-function>\` names ${reference}, unread`);
+		}
+		if (!/\[\s*0\s*,/.test(syntax)) {
+			names.push(reference.slice(0, -2).toLowerCase());
+		}
+	}
+	return names.sort();
+};
+
+/**
  * The functions that are a color, out of `<color>`'s own grammar — so a value
  * spelled as one fills a color slot. A gradient is an `<image>`, not one.
  * @param {Iterable<string>} spellings what `<color>` is spelled by
@@ -7172,6 +7196,7 @@ const collectData = async () => {
 	}
 	assertClassesArePrintable(slotAccepts);
 	const lengthOnlyFunctions = collectLengthOnlyFunctions();
+	const negativeAcceptingFunctions = collectNegativeAcceptingFunctions();
 	const unitGroupBase = collectUnitGroupBase();
 	const eighthTurnCosine = collectEighthTurnCosine();
 	const prefixedProperties = collectPrefixTable(bcd.css.properties, true, true);
@@ -7944,6 +7969,10 @@ const NEGATIVE_ACCEPTING_PROPERTIES = ${setLiteral(
 // a dropped declaration valid.
 const LENGTH_ONLY_FUNCTIONS = ${setLiteral(lengthOnlyFunctions)};
 
+// The transform functions a negative argument is valid in, all but those whose
+// grammar bounds one from below (\`perspective()\`).
+const NEGATIVE_ACCEPTING_FUNCTIONS = ${setLiteral(negativeAcceptingFunctions)};
+
 // Packed \`0xrrggbb\` -> the shortest named color with that value. Only names that
 // can beat \`#rrggbb\`; anything longer would never be picked.
 const RGB_TO_NAME = new Map([
@@ -8092,7 +8121,7 @@ module.exports.MATH_FUNCTION_ARITY = MATH_FUNCTION_ARITY;
 module.exports.MATH_FUNCTION_FOLD = MATH_FUNCTION_FOLD;
 module.exports.MATH_FUNCTION_KEYWORDS = MATH_FUNCTION_KEYWORDS;
 module.exports.MATH_FUNCTION_SUM_ARGUMENTS = MATH_FUNCTION_SUM_ARGUMENTS;\nmodule.exports.MERGEABLE_AT_RULES = MERGEABLE_AT_RULES;\nmodule.exports.MERGE_LONGHANDS = MERGE_LONGHANDS;
-module.exports.NEGATIVE_ACCEPTING_PROPERTIES = NEGATIVE_ACCEPTING_PROPERTIES;\nmodule.exports.NEVER = NEVER;
+module.exports.NEGATIVE_ACCEPTING_FUNCTIONS = NEGATIVE_ACCEPTING_FUNCTIONS;\nmodule.exports.NEGATIVE_ACCEPTING_PROPERTIES = NEGATIVE_ACCEPTING_PROPERTIES;\nmodule.exports.NEVER = NEVER;
 module.exports.NTH_NAMED_EQUIVALENTS = NTH_NAMED_EQUIVALENTS;\nmodule.exports.NTH_PSEUDO_FUNCTIONS = NTH_PSEUDO_FUNCTIONS;\nmodule.exports.OMITTABLE_INITIAL_KEYWORDS = OMITTABLE_INITIAL_KEYWORDS;
 module.exports.ONE_VALUE_PAIR_SHORTHANDS = ONE_VALUE_PAIR_SHORTHANDS;\nmodule.exports.ORDERED_LONGHANDS = ORDERED_LONGHANDS;
 module.exports.NUMBER_ARGUMENT_FUNCTIONS = NUMBER_ARGUMENT_FUNCTIONS;\nmodule.exports.NUMBER_ONLY_OUTSIDE_CALC_PROPERTIES = NUMBER_ONLY_OUTSIDE_CALC_PROPERTIES;\nmodule.exports.NUMBER_ZERO_PROPERTIES = NUMBER_ZERO_PROPERTIES;\nmodule.exports.PAIR_LONGHANDS = PAIR_LONGHANDS;\nmodule.exports.PLACE_SHORTHANDS = PLACE_SHORTHANDS;\nmodule.exports.POSITION_PROPERTIES = POSITION_PROPERTIES;\nmodule.exports.POSITION_X_KEYWORDS = POSITION_X_KEYWORDS;\nmodule.exports.POSITION_Y_KEYWORDS = POSITION_Y_KEYWORDS;
