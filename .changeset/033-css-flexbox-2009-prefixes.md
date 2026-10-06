@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Prefix and drop the 2009 flexbox draft's names like other vendor spellings.
+Prefix and drop the 2009 flexbox draft's names like other vendor spellings, keeping them where a box lays out by that draft.

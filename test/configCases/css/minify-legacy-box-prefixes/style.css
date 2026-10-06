@@ -1,0 +1,16 @@
+/* A box laid out by the 2009 flexbox draft reads that draft's properties, not
+   the ones that replaced them, so a target needing no prefix still keeps them. */
+.clamp {
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	flex-direction: column;
+	-webkit-line-clamp: 2;
+	overflow: hidden;
+}
+.pack { display: -webkit-box; -webkit-box-pack: center; justify-content: center }
+.important { display: -webkit-box !important; display: flex; -webkit-box-align: center; align-items: center }
+
+/* Where a flex box wins, or nothing names the display, the standard one lays
+   the box out and the prefixed one goes. */
+.flex { display: -webkit-box; display: flex; -webkit-box-pack: center; justify-content: center }
+.utility { -webkit-box-pack: center; justify-content: center }
