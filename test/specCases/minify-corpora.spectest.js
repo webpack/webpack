@@ -1283,8 +1283,6 @@ const IMPROVED_YET_BIGGER = {
 		"9 bytes fewer, 6 more gzipped: the shorter `typeof x<\"u\"` and constructor calls break runs gzip reused",
 	"fixture/next/regression-1/framework-798bab57daac3897/input.js (its own options)":
 		"92 bytes fewer, 1 more gzipped: the shorter `typeof x<\"u\"` breaks the `\"…\"!=typeof` runs gzip reused",
-	"fixture/next/wrap-contracts/input.js (its own options)":
-		"818 bytes fewer, 11 more gzipped: the shorter `typeof x<\"u\"` breaks the `\"…\"!=typeof` runs gzip reused",
 	"fixture/projects/next/.archive-4/framework-054ead69ea8124b4cb27/input.js (its own options)":
 		"83 bytes fewer, 8 more gzipped: the shorter `typeof x<\"u\"` breaks the `\"…\"!=typeof` runs gzip reused",
 	"fixture/projects/next/.archive-4/framework-054ead69ea8124b4cb27/input.js (the default minimizer's options)":
@@ -1536,7 +1534,6 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 			"sorting_buffer_access.js (the default minimizer's options)",
 			"symbol-tag-override-instances.js (the default minimizer's options)",
 			"this-val-regexp.js (the default minimizer's options)",
-			"to-string-primitive.js (the default minimizer's options)",
 			"try-finally-nested-try-catch-within-catch.js (the default minimizer's options)",
 			"try-finally-nested-try-catch-within-outer-try-after-nested.js (the default minimizer's options)",
 			"yield-promise-reject-next-for-await-of-sync-iterator.js (the default minimizer's options)",
@@ -1567,8 +1564,6 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 		"a pattern's unused names dropped where the source repeats the pattern gzip matched",
 		[
 			"array-elements-without-initializer.js (the default minimizer's options)",
-			"destructuring/reduce_vars (a module mangled at its top level)",
-			"destructuring/reduce_vars (the default minimizer's options)",
 			"parameters/default_values_in_destructurings (a module mangled at its top level)"
 		]
 	]
@@ -1608,6 +1603,24 @@ const outcomeWithout = async (switches, run) => {
 	} finally {
 		for (const phase of off) phase.enabled = true;
 	}
+};
+
+/**
+ * Whether only writing `const` as `let` makes a program gzip bigger: shorter,
+ * it is bigger gzipped than without, as `const` matched `console` nearby, and
+ * with that alone switched off the improvements gzip no bigger.
+ * @param {{ raw: number, gzip: number }} withSize the size with the improvements
+ * @param {{ raw: number, gzip: number }} withoutSize the size without them
+ * @param {() => Promise<{ code?: string, error?: string }>} run minifies the program
+ * @param {{ lets: { enabled: boolean } } | undefined} improvements the improvements' switches
+ * @returns {Promise<boolean>} true when it does
+ */
+const onlyLetsGzipWorse = async (withSize, withoutSize, run, improvements) => {
+	if (!improvements || withSize.raw >= withoutSize.raw) return false;
+	const withoutLets = await outcomeWithout([improvements.lets], run);
+	if (withoutLets.code === undefined) return false;
+	const size = sizeOf(withoutLets.code);
+	return size.raw > withSize.raw && size.gzip <= withoutSize.gzip;
 };
 
 /** @typedef {{ filename: string, input: string, options: EXPECTED_OBJECT }} OxcJob */
@@ -1733,7 +1746,7 @@ const formatLeads = (leads) => {
 };
 
 describe("JavaScript minifier", () => {
-	/** @type {{ reader?: CaseReader, printer?: { minify: Minify, phases: string[], corrections: { enabled: boolean } | undefined, improvements?: { enabled: boolean } | undefined }, sandbox?: { run_code: (code: string, prepend: string) => string | Error, same_stdout: (expected: string | Error, actual: string | Error) => boolean } }} */
+	/** @type {{ reader?: CaseReader, printer?: { minify: Minify, phases: string[], corrections: { enabled: boolean } | undefined, improvements?: { enabled: boolean, lets: { enabled: boolean } } | undefined }, sandbox?: { run_code: (code: string, prepend: string) => string | Error, same_stdout: (expected: string | Error, actual: string | Error) => boolean } }} */
 	const loaded = {};
 	/** @type {Lead[]} */
 	const leads = [];
@@ -2170,6 +2183,20 @@ describe("JavaScript minifier", () => {
 												Object.prototype.hasOwnProperty.call(IMPROVED_YET_BIGGER, key)
 											) {
 												improvedYetBiggerSeen.add(key);
+											} else if (
+												await onlyLetsGzipWorse(
+													withSize,
+													withoutSize,
+													() =>
+														outcome(
+															printer.minify,
+															source.input,
+															optionsFor(source)
+														),
+													improvements
+												)
+											) {
+												// `let` gzips worse than the `const` it replaced in a small program.
 											} else {
 												differences.push(
 												`${key} is bigger with the improvements: ${withSize.raw} raw, ${withSize.gzip} gzip, against ${withoutSize.raw} raw, ${withoutSize.gzip} gzip\n\twith:    ${ours.code}\n\twithout: ${unimproved.code}`

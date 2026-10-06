@@ -11,7 +11,7 @@ const SCRIPT = `
 "use strict";
 function unusedHelper(a, b) { return a + b; }
 sink(function outer() {
-	const list = [1, 2, 3].map((value) => value * 2);
+	let list = [1, 2, 3].map((value) => value * 2);
 	if (list.length > 0) { console.log(list); } else { console.log("empty"); }
 	return list;
 });
@@ -21,7 +21,7 @@ const MODULE = `
 /*! @preserve banner */
 import { readFile } from "node:fs/promises";
 export async function read(path) {
-	const text = await readFile(path, "utf8");
+	let text = await readFile(path, "utf8");
 	return text.length > 0 ? text : undefined;
 }
 `;
