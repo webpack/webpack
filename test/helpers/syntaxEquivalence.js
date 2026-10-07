@@ -1767,9 +1767,17 @@ const compareStyles = async ({ pairs, types }) => {
 		// Sized, so a percentage resolves to a length rather than to zero.
 		probe.style.cssText = "width:97px;height:89px";
 		probe.style.setProperty(name, value);
-		return probe.style.getPropertyValue(name) === ""
-			? value
-			: cascadeValue(name, getComputedStyle(probe).getPropertyValue(name));
+		const out =
+			probe.style.getPropertyValue(name) === ""
+				? value
+				: cascadeValue(name, getComputedStyle(probe).getPropertyValue(name));
+		// WebKit starts a transition from what the probe last computed, so the next
+		// property read would come back mid-transition: clear it and restyle.
+		if (/^(?:-[a-z]+-)?(?:transition|animation)/.test(name)) {
+			probe.style.cssText = "";
+			getComputedStyle(probe).getPropertyValue("transition-property");
+		}
+		return out;
 	};
 
 	/**
