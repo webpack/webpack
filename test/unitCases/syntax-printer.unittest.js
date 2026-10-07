@@ -1508,6 +1508,21 @@ const CORRECTED_CASES = [
 		{ compress: {}, mangle: false }
 	],
 	[
+		"a read of a `let` before its declaration in the same block",
+		"function t(f) { try { f(); console.log('no'); } catch (e) { console.log(e.name); } } t(function () { { x; let x; } }); t(function () { typeof y; let y = 1; });",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a closure in a `for-of` head reading the loop's own binding",
+		"var probe; for (let x of (probe = function () { typeof x; }, [])); try { probe(); console.log('no'); } catch (e) { console.log(e.name); }",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a closure called before the `let` it reads is declared",
+		"function g() { function f() { return x + 1; } try { f(); console.log('no'); } catch (e) { console.log(e.name); } let x = null; } g();",
+		{ compress: {}, mangle: false }
+	],
+	[
 		"an unused class whose static key a variable names `prototype`",
 		"function t(f) { try { f(); console.log('no'); } catch (e) { console.log(e.name); } } var x = 'prototype'; t(function () { (0, class { static [x] = 42; }); }); t(function () { (0, class { static [x]; }); });",
 		{ compress: {}, mangle: false }
