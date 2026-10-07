@@ -607,24 +607,36 @@ const collectPropertyAliases = (prefixedProperties) => {
 };
 
 /**
- * Each property's place in the printed order of a block's declarations: the
- * index of the first `SUPPLEMENT.declarationFamilies` entry naming it or a word
- * it starts with, and -1 for one no family names, which keeps its place.
+ * Each property's place in the printed order of a block's declarations: its
+ * place among the `SUPPLEMENT.declarationFamilies` members, one past its
+ * family's last member for a property only a member's name starts, and -1 for
+ * one no family names, which keeps its place. Another spelling of a property
+ * takes that property's place, so the two never part.
  * @param {string[]} names every property a dataset names
+ * @param {[string, string][]} aliases `[spelling, property]` for every other spelling
  * @returns {[string, number][]} `[property, rank]`, sorted by property
  */
-const collectDeclarationRanks = (names) => {
+const collectDeclarationRanks = (names, aliases) => {
+	const aliasOf = new Map(aliases);
+	/** @type {Map<string, number>} */
+	const members = new Map();
+	/** @type {[string, number][]} */
+	const words = [];
+	let rank = 0;
+	for (const family of SUPPLEMENT.declarationFamilies) {
+		for (const member of family) members.set(member, rank++);
+		for (const member of family) words.push([`${member}-`, rank]);
+		rank++;
+	}
 	/** @type {[string, number][]} */
 	const out = [];
 	for (const name of [...new Set(names)].sort()) {
-		const bare = name.replace(/^-[a-z]+-/, "");
+		const bare = (aliasOf.get(name) || name).replace(/^-[a-z]+-/, "");
+		const member = members.get(bare);
+		const word = words.find(([prefix]) => bare.startsWith(prefix));
 		out.push([
 			name,
-			SUPPLEMENT.declarationFamilies.findIndex((family) =>
-				family.some(
-					(member) => bare === member || bare.startsWith(`${member}-`)
-				)
-			)
+			member !== undefined ? member : word !== undefined ? word[1] : -1
 		]);
 	}
 	return out;
@@ -3976,13 +3988,114 @@ const SUPPLEMENT = {
 	// family names keeping its place before them. It is the order lightningcss
 	// prints its property handlers in: one order every rule shares lets deflate
 	// match longer runs — measured 3.4 KB smaller over the corpus with a target.
+	// Members print in the order listed and any other property a member's name
+	// starts last in its family: 1.5 KB smaller gzip, 3.5 KB brotli again.
 	declarationFamilies: [
 		["direction"],
-		["background"],
-		["border"],
-		["outline"],
-		["flex", "order", "box-orient", "box-pack"],
-		["grid"],
+		[
+			"background",
+			"background-color",
+			"background-image",
+			"background-position",
+			"background-position-x",
+			"background-position-y",
+			"background-repeat",
+			"background-size",
+			"background-attachment",
+			"background-origin",
+			"background-clip"
+		],
+		[
+			"border",
+			"border-style",
+			"border-width",
+			"border-color",
+			"border-top",
+			"border-top-style",
+			"border-top-width",
+			"border-top-color",
+			"border-block-start",
+			"border-block-start-style",
+			"border-block-start-width",
+			"border-block-start-color",
+			"border-block",
+			"border-block-style",
+			"border-block-width",
+			"border-block-color",
+			"border-block-end",
+			"border-block-end-style",
+			"border-block-end-width",
+			"border-block-end-color",
+			"border-bottom",
+			"border-bottom-style",
+			"border-bottom-width",
+			"border-bottom-color",
+			"border-left",
+			"border-left-style",
+			"border-left-width",
+			"border-left-color",
+			"border-inline-start",
+			"border-inline-start-style",
+			"border-inline-start-width",
+			"border-inline-start-color",
+			"border-inline",
+			"border-inline-style",
+			"border-inline-width",
+			"border-inline-color",
+			"border-inline-end",
+			"border-inline-end-style",
+			"border-inline-end-width",
+			"border-inline-end-color",
+			"border-right",
+			"border-right-style",
+			"border-right-width",
+			"border-right-color",
+			"border-image",
+			"border-image-source",
+			"border-image-slice",
+			"border-image-width",
+			"border-image-outset",
+			"border-image-repeat",
+			"border-radius",
+			"border-top-left-radius",
+			"border-start-start-radius",
+			"border-top-right-radius",
+			"border-start-end-radius",
+			"border-bottom-right-radius",
+			"border-end-end-radius",
+			"border-bottom-left-radius",
+			"border-end-start-radius"
+		],
+		["outline", "outline-width", "outline-style", "outline-color"],
+		[
+			"box-orient",
+			"flex-flow",
+			"flex-wrap",
+			"flex-direction",
+			"flex",
+			"flex-grow",
+			"flex-shrink",
+			"flex-basis",
+			"order",
+			"box-pack"
+		],
+		[
+			"grid",
+			"grid-template",
+			"grid-template-rows",
+			"grid-template-columns",
+			"grid-template-areas",
+			"grid-auto-rows",
+			"grid-auto-columns",
+			"grid-auto-flow",
+			"grid-area",
+			"grid-row",
+			"grid-row-start",
+			"grid-row-end",
+			"grid-column",
+			"grid-column-start",
+			"grid-column-end"
+		],
 		[
 			"justify-content",
 			"align-content",
@@ -4011,21 +4124,103 @@ const SUPPLEMENT = {
 			"max-inline-size",
 			"max-block-size"
 		],
-		["margin"],
-		["padding"],
-		["font", "line-height"],
-		["text-decoration"],
-		["list-style"],
-		["transition"],
-		["animation"],
+		[
+			"margin",
+			"margin-top",
+			"margin-block-start",
+			"margin-block",
+			"margin-block-end",
+			"margin-bottom",
+			"margin-left",
+			"margin-inline-start",
+			"margin-inline",
+			"margin-inline-end",
+			"margin-right"
+		],
+		[
+			"padding",
+			"padding-top",
+			"padding-block-start",
+			"padding-block",
+			"padding-block-end",
+			"padding-bottom",
+			"padding-left",
+			"padding-inline-start",
+			"padding-inline",
+			"padding-inline-end",
+			"padding-right"
+		],
+		[
+			"font",
+			"font-family",
+			"font-size",
+			"font-style",
+			"font-weight",
+			"font-stretch",
+			"font-variant-caps",
+			"line-height"
+		],
+		[
+			"text-decoration",
+			"text-decoration-line",
+			"text-decoration-style",
+			"text-decoration-color",
+			"text-decoration-thickness"
+		],
+		[
+			"list-style",
+			"list-style-type",
+			"list-style-image",
+			"list-style-position"
+		],
+		[
+			"transition",
+			"transition-property",
+			"transition-duration",
+			"transition-timing-function",
+			"transition-delay"
+		],
+		[
+			"animation",
+			"animation-name",
+			"animation-duration",
+			"animation-timing-function",
+			"animation-iteration-count",
+			"animation-direction",
+			"animation-play-state",
+			"animation-delay",
+			"animation-fill-mode"
+		],
 		["display"],
 		["position"],
-		["top", "right", "bottom", "left", "inset"],
-		["overflow"],
-		["translate", "rotate", "scale", "transform"],
+		[
+			"inset",
+			"top",
+			"inset-block-start",
+			"inset-block",
+			"inset-block-end",
+			"bottom",
+			"left",
+			"inset-inline-start",
+			"inset-inline",
+			"inset-inline-end",
+			"right"
+		],
+		["overflow", "overflow-x", "overflow-y"],
+		["transform", "translate", "rotate", "scale"],
 		["box-shadow"],
-		["mask"],
-		["container"]
+		[
+			"mask",
+			"mask-image",
+			"mask-position",
+			"mask-size",
+			"mask-repeat",
+			"mask-clip",
+			"mask-origin",
+			"mask-composite",
+			"mask-mode"
+		],
+		["container", "container-type", "container-name"]
 	],
 	// CSS Break 3 §3.4 makes each `page-break-*` a legacy shorthand of a `break-*`,
 	// as engines read `-webkit-column-break-*`; CSS Grid 2 §10.1 aliases `grid-*gap`.
@@ -7337,11 +7532,14 @@ const collectData = async () => {
 	const eighthTurnCosine = collectEighthTurnCosine();
 	const prefixedProperties = collectPrefixTable(bcd.css.properties, true, true);
 	const propertyAliases = collectPropertyAliases(prefixedProperties);
-	const declarationRanks = collectDeclarationRanks([
-		...Object.keys(properties),
-		...Object.keys(bcd.css.properties),
-		...propertyAliases.map(([spelling]) => spelling)
-	]);
+	const declarationRanks = collectDeclarationRanks(
+		[
+			...Object.keys(properties),
+			...Object.keys(bcd.css.properties),
+			...propertyAliases.map(([spelling]) => spelling)
+		],
+		propertyAliases
+	);
 	const prefixSpellingKeywords = collectPrefixSpellingKeywords();
 	const prefixSpellingNumbers = collectPrefixSpellingNumbers();
 	const prefixedSelectors = collectPrefixTable(bcd.css.selectors, true);
