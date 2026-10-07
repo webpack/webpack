@@ -272,6 +272,11 @@ const IMPROVED_CASES = [
 		{ compress: { passes: 2 }, mangle: true }
 	],
 	[
+		"a conditional whose other branch is its test, or ends as its other branch",
+		"function f(a, b, c) { var r = []; return [a ? b : a, a ? (r.push(1), c) : c, a ? (r.push(2), r.push(3), c) : c, r.join()]; } console.log(f(0, 1, 2), f(3, 4, 5));",
+		{ compress: {}, mangle: false }
+	],
+	[
 		"a nested function reading its own `this`",
 		`!function () { ${TRY} console.log([1].map(function () { return typeof this; })[0]); }();`,
 		{ compress: {}, mangle: false }
@@ -649,6 +654,8 @@ const IMPROVED_CASES = [
 // of its function's own, or the call passes, keeps or constructs something.
 /** @type {[string, string][]} */
 const KEPT_CASES = [
+	["a conditional whose other branch reads a global getter again", 'var n = 0; Object.defineProperty(globalThis, "g", { get: function () { return n++; }, configurable: true }); function f(b) { return g ? b : g; } console.log(f(1), f(2));'],
+	["a conditional whose other branch reads a getter twice or a different binding", "var n = 0, o = { get x() { return ++n; } }; function f(b) { var a = 1; { let a = 0; var r = a ? b : o.x ? b : o.x; } return [r, a, n]; } console.log(f(2));"],
 	["a bigint and a number concatenated, which throws", "try { console.log(1n + 2); } catch (e) { console.log(e.name); }"],
 	["an array literal joining to a string longer than it", 'console.log([!0, !0, !0] + "");'],
 	["`+` and `~` of what a literal does not give", "function f(a) { return [+[a], ~a !== 0 ? 1 : 2]; } console.log(f(1), f(1n));"],

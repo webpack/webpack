@@ -1438,6 +1438,14 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 		]
 	],
 	[
+		"`c ? x : c` written as `c && x` where the source repeats the conditional gzip matched",
+		[
+			"bound-to-collator-instance.js (the default minimizer's options)",
+			"returns-same-results-as-NumberFormat.js (the default minimizer's options)",
+			"short-circuit-compound-assignment.js (the default minimizer's options)"
+		]
+	],
+	[
 		"`Array` written as a literal where the source writes the call again",
 		[
 			"S15.4.1_A1.1_T1.js (the default minimizer's options)",
