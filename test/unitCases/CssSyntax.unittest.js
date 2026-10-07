@@ -4735,6 +4735,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// order they were written in.
 			["a{flex-flow:row nowrap}", "a{flex-flow:row}"],
 			["a{flex-flow:nowrap row}", "a{flex-flow:row}"],
+			["a{flex-flow:row wrap balance}", "a{flex-flow:wrap balance}"],
 			["a{list-style:disc outside}", "a{list-style:disc}"],
 			["a{mask:url(a.svg) match-source add}", "a{mask:url(a.svg)}"],
 			[
@@ -4810,7 +4811,11 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			["a background states two layers", "a{background:none,url(a.png)}"],
 			// A `/` reaches a slot through another's value, so the components are no
 			// longer this one flat list.
-			["a background states a size", "a{background:none 50%/cover}"]
+			["a background states a size", "a{background:none 50%/cover}"],
+			// A `||` slot's components stand together, so the keyword parting two of
+			// one slot leaves a value the engine drops — and dropping it revives it.
+			["it parts one slot's keywords", "a{flex-flow:wrap row balance}"],
+			["the same, on a line", "a{text-decoration:underline solid overline}"]
 		])("keeps it where %s", (_name, css, printed = css) => {
 			expect(minify(css)).toBe(printed);
 		});
