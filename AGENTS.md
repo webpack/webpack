@@ -14,7 +14,7 @@ A `> [!REQUIRED]` callout directly under a heading makes that whole section **ma
 
 ## Working style
 
-Five habits against the usual coding-agent failures: assuming silently, overbuilding, editing what it doesn't understand, padding every answer. They bias toward caution over speed, so use judgement on a one-line fix:
+Five habits that counter the usual coding-agent failures (assuming silently, overbuilding, editing what it doesn't understand, padding every answer). They bias toward caution over speed, so use judgement on a one-line fix:
 
 - **Think before coding.** State your assumptions up front. When a request has several readings that lead to different work, present them rather than picking silently; when the difference is minor, state the assumption, go on and flag it in the report. Say so when a simpler approach exists, and push back when warranted. When something is unclear enough that any reading could waste the work, stop, name what is confusing and ask.
 - **Simplicity first.** Write the minimum that solves the ask: no feature beyond it, no abstraction for single-use code, no "flexibility" or configurability nobody asked for, no error handling for impossible scenarios. If you write 200 lines and it could be 50, rewrite. Would a senior engineer call it overcomplicated? Then simplify. Performance outranks size: on a hot path, longer code that measurably saves CPU or memory beats shorter code ([Performance and memory](#performance-and-memory)). Still, measure the win and weigh it against the code it costs; a marginal gain doesn't justify a large body of code.
