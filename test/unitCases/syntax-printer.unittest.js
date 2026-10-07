@@ -232,6 +232,16 @@ const IMPROVED_CASES = [
 		{ compress: {}, mangle: false }
 	],
 	[
+		"a `var`, moving to the function around the call",
+		"function f(x) { console.log(x); (function () { if (x) { var a = console.log.name; console.log(a, a); } })(); } f(1); f(0);",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a `var` moving into a function called in place, which then stays one",
+		"function f(x) { (function () { if (x) { var a = console.log.name; console.log(a, a); } (function () { if (x) { var b = console.log.name; console.log(b, b); } })(); })(); } f(1);",
+		{ compress: {}, mangle: false }
+	],
+	[
 		"a class, kept in a block",
 		"(() => { class A {} console.log(typeof new A(), A.name); })();",
 		{ compress: {}, mangle: false }
@@ -691,6 +701,7 @@ const KEPT_CASES = [
 	["a `let` copying a parameter written later, or through `arguments` or `eval`", 'function f(a, c) { let b = a; let d = c; a = 3; arguments[1] = 4; return [b, d]; } function g(a) { let b = a; eval("a = 5"); return b; } console.log(f(1, 2), g(1));'],
 	["a `let` copying a binding declared after it", "function f() { let b = c; let c = 1; return b; } try { console.log(f()); } catch (e) { console.log(e.name); }"],
 	["a `let` copying a longer name read more than once, where names keep their length", "function f(longBinding) { let x = longBinding; g(); return x + x + x; } function g() {} console.log(f(1));"],
+	["a `var` the function around the call names elsewhere, or a call it repeats", 'var a = "g"; function f(x) { (function () { if (x) { var a = console.log.name; console.log(a, a); } })(); console.log(a); for (var i = 0; i < 2; i++) (function () { var b; if (i) b = i; console.log(b); })(); } f(1);'],
 	["a `return`", `!function () { for (let x of [1, 2]) { ${TRY} if (x) return; } console.log(2); }();`],
 	["`this`", `!function () { ${TRY} console.log(this); }();`],
 	["`arguments`", `!function () { ${TRY} console.log(arguments.length); }();`],
@@ -4963,7 +4974,7 @@ describe("syntax-printer", () => {
 				if (!corrections) throw new Error("the correct phase is not installed");
 				corrections.enabled = false;
 				try {
-					const uncorrected = await minify(input, options);
+					const uncorrected = await unimproved(() => minify(input, options));
 					const reference = await terserReference().minify(input, options);
 					expect(uncorrected.code).toBe(reference.code);
 					expect(runProgram(/** @type {string} */ (reference.code))).not.toBe(expected);
