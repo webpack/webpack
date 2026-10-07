@@ -1,4 +1,4 @@
-/** @type {import("../../../../").PitchLoaderDefinitionFunction} */
+/** @type {import("../../../../../").PitchLoaderDefinitionFunction} */
 module.exports.pitch = function (remainingRequest) {
 	return `
 	import { getString as _getString, memory } from ${

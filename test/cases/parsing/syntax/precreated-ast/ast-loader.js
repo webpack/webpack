@@ -3,7 +3,7 @@
 const acorn = require("acorn");
 const acornParser = acorn.Parser;
 
-/** @type {import("../../../../").LoaderDefinition} */
+/** @type {import("../../../../../").LoaderDefinition} */
 module.exports = function (source) {
 	/** @type {acorn.Comment[]} */
 	const comments = [];

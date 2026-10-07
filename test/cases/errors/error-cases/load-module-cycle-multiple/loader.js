@@ -1,6 +1,6 @@
 const { promisify } = require("util");
 
-/** @type {import("../../../../").LoaderDefinitionFunction} */
+/** @type {import("../../../../../").LoaderDefinitionFunction} */
 exports.default = function (source) {
 	const content = JSON.parse(source);
 	// content is one reference or an array of references
