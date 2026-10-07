@@ -227,7 +227,7 @@ const stringArray = (length, string = (index) => `w${index}`) =>
 		(character) => `\\u${character.charCodeAt(0).toString(16).padStart(4, "0")}`
 	);
 
-/** @type {[string, string, import("terser").MinifyOptions][]} */
+/** @type {[string, string, import("terser").MinifyOptions, string?][]} */
 const IMPROVED_CASES = [
 	[
 		"a function, its body joining the list",
@@ -556,6 +556,18 @@ const IMPROVED_CASES = [
 		"a `let` declaration beside one written from a `const`, joined, its names mangled",
 		"function f(o) { const a = o.x; let b = o.y; b++; for (const k of [a, b]) { const c = k + b; let d = [c, c]; d.push(a); console.log(d); } } f({ x: 1, y: 2 });",
 		{ compress: {} }
+	],
+	[
+		"a `const` nothing writes, as `let`, the names mangled",
+		"function f(object) { const first = object.x + 1, { second } = object; for (const key of [first, second]) console.log(key); { const list = [first]; console.log(list, list); } } f({ x: 1, second: 2 }); f({ x: 3, second: 4 });",
+		{ compress: {}, mangle: true },
+		"function f(o){let n=o.x+1,{second:c}=o;for(let o of[n,c])console.log(o);{let o=[n];console.log(o,o)}}f({x:1,second:2}),f({x:3,second:4});"
+	],
+	[
+		"`const` and `let` declarations joined, patterns among them, the names mangled",
+		"function run(input) { const alpha = input.a + 1; let gamma = input.c; const { beta } = input; gamma += alpha; const [delta, epsilon] = input.d; let { eta } = input; for (const item of [alpha, beta, delta]) { const twice = item * 2; const thrice = item * 3; console.log(twice, thrice, eta); } { const inner = alpha + 1; let other = inner; other++; console.log(inner, other, epsilon); } return gamma; } console.log(run({ a: 1, b: 2, c: 3, d: [4, 5], eta: 6 }));",
+		{ compress: {}, mangle: true },
+		"function run(o){let n=o.a+1,t=o.c,{beta:c}=o;t+=n;let[e,l]=o.d,{eta:s}=o;for(let o of[n,c,e]){let n=2*o,t=3*o;console.log(n,t,s)}{let o=n+1,t=o;t++,console.log(o,t,l)}return t}console.log(run({a:1,b:2,c:3,d:[4,5],eta:6}));"
 	],
 	[
 		"a pattern naming nothing, reading `null`, which still throws",
@@ -2773,6 +2785,11 @@ describe("syntax-printer", () => {
 			"top-level catch parameters for old engines",
 			"try { sink(1); } catch (e) { sink(e); } try { sink(2); } catch (q) { sink(q); } sink(e);",
 			{ mangle: { ie8: true } }
+		],
+		[
+			"a private name a dropped class leaves behind",
+			"const self = this; sink(function () { class C { [self.#f] = 1; #f = 2; } });",
+			{}
 		]
 	];
 
@@ -5674,12 +5691,13 @@ describe("syntax-printer", () => {
 			expect(phases).toContain("improve");
 		});
 
-		for (const [name, input, options] of IMPROVED_CASES) {
+		for (const [name, input, options, written] of IMPROVED_CASES) {
 			it(`should write less, printing the same: ${name}`, async () => {
 				const { minify, improvements } = await load();
 				const expected = runProgram(input);
 				const { code } = await minify(input, options);
 				expect(runProgram(/** @type {string} */ (code))).toBe(expected);
+				if (written !== undefined) expect(code).toBe(written);
 
 				if (!improvements) throw new Error("the improve phase is not installed");
 				improvements.enabled = false;
@@ -7442,6 +7460,7 @@ describe("syntax-printer", () => {
 				"function f(a, b) { var c = a + b; try { g(); } catch (e) { var e = 1; l: for (;;) { m: break l; } } return function h(x, y) { return x + y + c + h; }; } f(1, 2); var $foo = 1; foo; console.log(f);",
 				"function outer() { if (a) { function inner(x) { return x; } inner(1); } var y = function named(z, w) { return named(z) + w; }; try {} catch (q) { var q; } return [, y, , outer]; } outer();",
 				"switch (function () { var v = 'v'; try { throw 'e'; } catch (e) { console.log(v); } }()) { default: (function () { try {} catch (u) {} })(); } var b = 10; switch (function () { b; try {} catch (b) { var b; } }()) { default: (function () { try {} catch (u) {} })(); }",
+				"function pick(first, second, third) { if (first) return /* a dropped note */ first + second; if (second) return /* another */ [second, third]; throw /* why */ new Error(third); } sink(pick);",
 				"var reused = 1; function f() { var a1, a2, a3, a4, a5, a6, a7, a8, a9, b1, b2, b3, b4, b5, b6, b7, b8, b9, c1, c2, c3, c4, c5, c6, c7, c8, c9, d1, d2, d3, d4, d5, d6, d7, d8, d9, e1, e2, e3, e4, e5, e6, e7, e8, e9, f1, f2, f3, f4, f5, f6, f7, f8, f9; return [a1, a2, a3, a4, a5, a6, a7, a8, a9, b1, b2, b3, b4, b5, b6, b7, b8, b9, c1, c2, c3, c4, c5, c6, c7, c8, c9, d1, d2, d3, d4, d5, d6, d7, d8, d9, e1, e2, e3, e4, e5, e6, e7, e8, e9, f1, f2, f3, f4, f5, f6, f7, f8, f9, reused]; }"
 			]) {
 				it(`should mangle as terser's mangler does: ${source.slice(0, 60)}`, async () => {
