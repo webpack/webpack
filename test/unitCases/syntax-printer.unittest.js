@@ -563,6 +563,16 @@ const IMPROVED_CASES = [
 		{ compress: { ecma: 2020 }, ecma: 2020, mangle: false }
 	],
 	[
+		"a test for null or undefined whose value nothing reads, as nullish coalescing, from ECMAScript 2020",
+		"function f(a, b, o) { null == a && b(1); null != o.p || b(2); void 0 == (o.q = a) && b(3); return o.q; } console.log(f(null, console.log, {}), f(0, console.log, { p: 1 }));",
+		{ compress: { ecma: 2020 }, ecma: 2020, mangle: false }
+	],
+	[
+		"a test for null or undefined guarding a write of what it tests, as a logical assignment, from ECMAScript 2021",
+		"function f(a, o) { null == a && (a = 1); null == o.p && (o.p = 2); return [a, o.p]; } console.log(f(null, {}), f(0, { p: 3 }));",
+		{ compress: { ecma: 2021 }, ecma: 2021, mangle: false }
+	],
+	[
 		"a strict test for null and one for undefined, the first storing the name",
 		"function f(c, d) { var t, u; return [(t = c.a) === null || t === void 0, void 0 !== (u = c.b) && null !== u, d || (t = c.a) === null || t === void 0, t, u]; } console.log(f({}, 0), f({ a: 0, b: null }, 1), f({ a: null, b: 2 }, 0));",
 		{ compress: {}, mangle: false }
@@ -5776,7 +5786,10 @@ describe("syntax-printer", () => {
 				["var n = 0; Object.defineProperty(globalThis, \"b\", { get: function () { return n++ ? null : 1; }, configurable: true }); function f() { return null != b ? b : 2; } console.log(f());", target(2021)],
 				["function f(o, c) { with (o) { return null != c ? c : 1; } } console.log(f({}, null), f({ c: 2 }, 3));", target(2021)],
 				["function f(c, d) { return [-c == d ? 1 : d, void g(d) == d ? 2 : d]; } function g() {} console.log(f(1, -1), f(1, null));", target(2021)],
-				["function f(o, k) { o[k] || (o[k] = 1); return o; } var n = 0; console.log(JSON.stringify(f({}, { toString: function () { return \"k\" + n++; } })));", target(2021)]
+				["function f(o, k) { o[k] || (o[k] = 1); return o; } var n = 0; console.log(JSON.stringify(f({}, { toString: function () { return \"k\" + n++; } })));", target(2021)],
+				["function f(a, b) { null == a && b(); } f(null, console.log);", target(2019)],
+				["function f(a, b) { return null == a && b(); } console.log(f(1, console.log));", target(2021)],
+				["function f(a, b) { null === a && b(1); null != a && b(2); null == a || b(3); 0 == a && b(4); void g() == a && b(5); a && b(6); } function g() {} f(null, console.log);", target(2021)]
 			];
 			for (const [input, options] of cases) {
 				const { code } = await minify(input, options);

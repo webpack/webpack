@@ -320,8 +320,7 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/substitute_alternate_syntax.rs:851",
 			"oxc minifier: peephole/substitute_alternate_syntax.rs:867",
 			"oxc minifier: peephole/substitute_alternate_syntax.rs:868",
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:873",
-			"terser compress: sequences/side_effects_cascade_3"
+			"oxc minifier: peephole/substitute_alternate_syntax.rs:873"
 		]
 	],
 	[
