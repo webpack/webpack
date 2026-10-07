@@ -5348,6 +5348,59 @@ describe("syntax-printer", () => {
 		});
 	});
 
+	describe("`pure_conversions`", () => {
+		const input =
+			"function t(f) { try { f(); console.log('no'); } catch (e) { console.log(e.name); } } var o = { valueOf() { throw { name: 'thrown' }; } }, bad = Object.create(null); t(function () { 0 == o; }); t(function () { o < 1; }); t(function () { (class { get [bad]() {} }); }); t(function () { ({ [bad]: 1 }); }); t(function () { o == null; o === 1; });";
+
+		it("should drop a conversion as terser does by default", async () => {
+			const { minify } = await load();
+			const options = { compress: {}, mangle: false };
+			const { code } = await minify(input, options);
+			const reference = await terserReference().minify(input, options);
+			expect(code).toBe(reference.code);
+		});
+
+		it("should keep a comparison or a key converting an object when off", async () => {
+			const { minify } = await load();
+			const withSymbols = `${input} t(function () { 1n < Symbol(); }); t(function () { (class { [Symbol.iterator]() {} }); });`;
+			const { code } = await minify(withSymbols, {
+				compress: { pure_conversions: false },
+				mangle: false
+			});
+			expect(runProgram(/** @type {string} */ (code))).toBe(
+				runProgram(withSymbols)
+			);
+		});
+
+		it("should keep each comparison and key converting an object when off", async () => {
+			const { minify } = await load();
+			const { code } = await minify(input, {
+				compress: { pure_conversions: false },
+				mangle: false
+			});
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+		});
+	});
+
+	describe("`keep_fnames` and a private method", () => {
+		const input =
+			"var C = class { #method() {} static #field = function () {}; get() { return [this.#method.name, C.#field.name]; } }; console.log(new C().get().join());";
+
+		it("should keep the private name a method's `name` reads", async () => {
+			const { minify } = await load();
+			const { code } = await minify(input, {
+				compress: {},
+				mangle: true,
+				keep_fnames: true
+			});
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			const mangled = await minify(input, { compress: {}, mangle: true });
+			expect(runProgram(/** @type {string} */ (mangled.code))).not.toBe(
+				runProgram(input)
+			);
+		});
+	});
+
 	describe("a literal only a property of escapes", () => {
 		it("should drop its unused reads as terser does", async () => {
 			const { minify } = await load();
