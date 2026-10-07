@@ -576,6 +576,32 @@ describe("SourceProcessor", () => {
 			]);
 		});
 
+		it("ends an html element with the end tag naming it, whichever path closes it", () => {
+			// `</b>` and `</a>` go through the adoption agency, `</span>` through the
+			// generic end tag, `</div>` and `</li>` through their own rules, and the
+			// second `<b>` is closed by its parent's end tag instead.
+			const html = "<div><b>b</b><a>a</a><span>s</span><li>l</li><p><b>z</p></div>";
+			/** @type {string[]} */
+			const seen = [];
+			new HtmlSourceProcessor()
+				.use([HtmlNodeType.Element], (path) => {
+					if (path.parent !== null && path.name(path.parent) === "body") return;
+					if (path.name() === "html" || path.name() === "head" || path.name() === "body") {
+						return;
+					}
+					seen.push(path.source());
+				})
+				.process(html);
+			expect(seen).toEqual([
+				"<b>b</b>",
+				"<a>a</a>",
+				"<span>s</span>",
+				"<li>l</li>",
+				"<p><b>z</p>",
+				"<b>z"
+			]);
+		});
+
 		it("answers empty for a css node without a name, value or block token", () => {
 			/** @type {[number, string, [number, number] | null, string | number, string][]} */
 			const seen = [];
