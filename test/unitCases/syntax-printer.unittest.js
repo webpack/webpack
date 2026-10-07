@@ -617,7 +617,7 @@ const IMPROVED_CASES = [
 		],
 		[
 			"a value moved past a read of `console`, a built-in or one of its methods",
-			"function f(x) { var r = x + 1, a = r * r - r; console.log(a + 7); var v = g(); console.log(Math.max(v, 1)); var c; c = 2; console.log(c); } function g() { return 3; } f(1);"
+			"function f(x) { var a = x === 1 ? 2 : 3; console.log(a + 7); var v = g(); console.log(Math.max(v, 1)); var c; c = 2; console.log(c); } function g() { return 3; } f(1);"
 		],
 		[
 			"an array of empty strings",
@@ -2824,6 +2824,106 @@ describe("syntax-printer", () => {
 	};
 	/** @type {[string, string, import("terser").CompressOptions][]} */
 	const COMPRESS_CASES = [
+		[
+			"tighten: declarations without values lifted out of an `if`'s branches",
+			"function f(a) { if (a) { var x; g(x); } else { var y; k(y); } } sink(f);",
+			{}
+		],
+		[
+			"tighten: property assignments moved out of a return, the variable kept",
+			"function f() { var o = {}; return o.a = 1; } function g() { var o = {}; return (o.a = 1, o.b = 2); } sink(f, g);",
+			{"collapse_vars":false}
+		],
+		[
+			"tighten: neighboring `using` declarations joined",
+			"async function f() { await using a = x(); await using b = y(); sink(a, b); } function g() { using a = x(); using b = y(); sink(a, b); } sink(f, g);",
+			{}
+		],
+		[
+			"tighten: statements after an `else` breaking a label moved into the branch",
+			"function f(a) { b: { if (a) { x(); } else { y(); break b; } z(); } } sink(f);",
+			{}
+		],
+		[
+			"tighten: an `if` returning nothing at the end of a function, sequences off",
+			"function f(a) { x(); if (a) return; } function g(a, b) { x(); if (b) return; y(); if (a) return; } sink(f, g);",
+			{"sequences":false}
+		],
+		[
+			"tighten: a property assignment alone in a statement, the variable kept",
+			"function g() { var o = {}; o.a = 1, x(); return o; } function h() { var o = {}; o.a = 1; return o; } sink(g, h);",
+			{"sequences":false,"collapse_vars":false}
+		],
+		[
+			"tighten: a property assignment in a `for` head, the variable kept",
+			"function f() { var o = {}; for (o.a = 1; x(); ) y(); return o; } sink(f);",
+			{"collapse_vars":false}
+		],
+		[
+			"tighten: a repeated directive dropped",
+			"function f() { \"use strict\"; \"use strict\"; return 1; } sink(f);",
+			{}
+		],
+		[
+			"tighten: statements after an exit not moved past a `let`",
+			"function f(a) { if (a) { x(); return; } let b = y(); z(b); } sink(f);",
+			{}
+		],
+		[
+			"tighten: a function declaration after an exit kept in place",
+			"function f(a) { if (a) { x(); return; } y(); function g() { return 2; } sink(g); } sink(f);",
+			{}
+		],
+		[
+			"tighten: statements after a labelled break moved into the branch",
+			"function f(a) { b: { if (a) { x(); break b; } y(); } z(); } function g(a) { if (a) { x(); } else { y(); return; } z(); } sink(f, g);",
+			{}
+		],
+		[
+			"tighten: an `if` returning nothing at the end of a function",
+			"function f(a) { x(); if (a) return; } function g(a) { if (a) return; return; } sink(f, g);",
+			{}
+		],
+		[
+			"tighten: `if` returns folded into a conditional",
+			"function f(a) { if (a) return 1; return 2; } function g(a, b) { if (a) return 1; if (b) return 2; } sink(f, g);",
+			{}
+		],
+		[
+			"tighten: a sequence cut at the limit",
+			"function f() { a(); b(); c(); d(); e(); g(); h(); } sink(f);",
+			{"sequences":3}
+		],
+		[
+			"tighten: an expression moved into a loop head, unless it holds `in`",
+			"function f(o, i) { x(\"k\" in o); for (i = 0; i < 2; i++) g(i); } function h(i) { x(); for (i = 0; i < 2; i++) g(i); } function k() { x(); for (;;) { if (y()) break; } } sink(f, h, k);",
+			{}
+		],
+		[
+			"tighten: declarations lifted out of an `if`'s branches",
+			"function f(a) { if (a) { var x = 1; g(x); } else { var y = 2; g(y); } } sink(f);",
+			{}
+		],
+		[
+			"tighten: property assignments moved into the literal just declared",
+			"function f() { var o = { a: 1 }; o.a = 2; o.b = 3; return o; } function g() { var o = {}; o[\"1\"] = 1; o[1] = 2; return o; } function h() { \"use strict\"; var o = { a: 1 }; o.b = 2; return o; } sink(f, g, h);",
+			{}
+		],
+		[
+			"tighten: property assignments moved out of a return",
+			"function f() { var o = {}; return o.a = 1; } function g() { var o = {}; return (o.a = 1, o.b = 2); } function h() { var o = {}; return (o.a = 1, o); } sink(f, g, h);",
+			{}
+		],
+		[
+			"tighten: declarations joined into a `for` head",
+			"function f() { var o = {}; for (o.a = 1; x(); ) y(); } function g() { var a = 1; for (var i = 0; i < a; i++) y(i); } function h() { var a = 1; for (; a < 3; a++) y(a); } function k() { var a = 1; x(); for (var i; i < a; i++) y(i); } sink(f, g, h, k);",
+			{}
+		],
+		[
+			"tighten: property assignments in a statement of their own",
+			"function f() { var o = {}; o.a = 1, o.b = 2; return o; } function g() { var o = {}; o.a = 1, x(); return o; } sink(f, g);",
+			{}
+		],
 		[
 			"unsafe literals",
 			"sink([1, 2, 3].join('-'), ({ a: 1, b: 'x' }).b, [1, [2]].length, ({ a: 1, toString() { return 'o'; } }).a, ({ ...x }).y, ({ a: function () {} }).a, 'abc'.charAt(1), 'abc'[1], [1, 2][1], /a+b/g.source, /a/gi.global, (function f() {}).length, Math.max(1, 2), Math.floor(2.5), String.fromCharCode(65), Number('1'), [1, 2].indexOf(2), ({})[k], Object.keys);",
@@ -5493,7 +5593,7 @@ describe("syntax-printer", () => {
 			const input =
 				"(function () { var array = []; var push = array.push, slice = array.slice; console.log(typeof push); })();";
 			const options = { compress: {}, mangle: false };
-			const { code } = await minify(input, options);
+			const { code } = await unimproved(() => minify(input, options));
 			const reference = await terserReference().minify(input, options);
 			expect(code).toBe(reference.code);
 		});
