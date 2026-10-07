@@ -325,6 +325,11 @@ const IMPROVED_CASES = [
 		{ compress: {}, mangle: false }
 	],
 	[
+		"a conditional choosing `1` or `0`, as a number conversion of its test",
+		"function f(a, b) { var x = a ? 1 : 0, y = a ? 0 : 1; return [x, y, a < b ? 1 : 0, !a ? 1 : 0, b + (a ? 1 : 0), b - (a ? 0 : 1), (a ? 1 : 0).toFixed(1), -(a ? 1 : 0), typeof (a ? 1 : 0)]; } for (var v of [0, 1, \"\", \"x\", NaN, null, {}, 0n, 2n]) console.log(f(v, 1), f(v, \"s\"));",
+		{ compress: {}, mangle: false }
+	],
+	[
 		"a nested function reading its own `this`",
 		`!function () { ${TRY} console.log([1].map(function () { return typeof this; })[0]); }();`,
 		{ compress: {}, mangle: false }
@@ -749,6 +754,7 @@ const KEPT_CASES = [
 	["a bigint and a number concatenated, which throws", "try { console.log(1n + 2); } catch (e) { console.log(e.name); }"],
 	["consecutive `if`s leaving with different values or to different labels", 'function f(a, b) { if (a) return 1; if (b) return 2; x: for (;;) { for (;;) { if (a) break x; if (b) break; console.log(3); break x; } console.log(4); break; } for (var i = 0; i < 2; i++) console.log(i); } f(1, 0); f(0, 1); f(0, 0);'],
 	["an array literal joining to a string longer than it", 'console.log([!0, !0, !0] + "");'],
+	["a conditional choosing `1` or `0` that a number conversion writes no shorter, or choosing `-0`", "function f(a, b) { return [a < b ? 0 : 1, a + b ? 1 : 0, a in b ? 0 : 1, a ? 1 : -0, a ? 2 : 0, a ? -1 : 0]; } console.log(f(1, {}), f(0, { 0: 1 }));"],
 	["`+` and `~` of what a literal does not give", "function f(a) { return [+[a], ~a !== 0 ? 1 : 2]; } console.log(f(1), f(1n));"],
 	["a string literal indexed past its end, by no constant or as a target", 'function f(i) { var s = "abc"; "abc"[0] = 1; return ["abc"[5], "abc"[i], "abc"[1.5], "abc"[-1]]; } console.log(f(1));'],
 	["a `new` whose constructor reads `arguments` or a rest, extends a class, or is rebound", 'function f(h) { function Z(a) { this.n = arguments.length; } function R(...a) { this.n = a.length; } class B { constructor(a) { this.n = arguments.length; } } class C extends B {} var V = function (a) { this.n = 1; }; if (h) V = function () { this.n = arguments.length; }; return [new Z(1, 2).n, new R(1, 2).n, new C(1, 2).n, new V(1, 2).n]; } console.log(f(0), f(1));'],

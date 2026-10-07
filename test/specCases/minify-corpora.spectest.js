@@ -1280,8 +1280,8 @@ const rivalSmallerSeen = new Set();
  * @type {Record<string, string>}
  */
 const IMPROVED_YET_BIGGER = {
-	"projects/files/jquery.mobile-1.4.2.js (its own options)":
-		"40 bytes fewer, 3 more gzipped: `this.p=c?x:y` breaks the `c?this.p=x:this.p=y` runs gzip reused",
+	"arrow/object_parens (its own options)":
+		"3 bytes fewer, 1 more gzipped: `+!!{}` breaks the `()=>(` runs of the arrows around it gzip reused",
 	"projects/files/jquery.mobile-1.4.2.js (the default minimizer's options)":
 		"30 bytes fewer, 2 more gzipped: `this.p=c?x:y` breaks the `c?this.p=x:this.p=y` runs gzip reused",
 	"fixture/next/regression-1/framework-798bab57daac3897/input.js (its own options)":
