@@ -13470,6 +13470,8 @@ describe("CssSyntax minify — `declareCharset`", () => {
 			'@charset "UTF-8";a{content:"\u{1F600}a\u{1F600} b"}'
 		],
 		['a{content:"\\01F600"}', '@charset "UTF-8";a{content:"\u{1F600}"}'],
+		// A CRLF pair is that one whitespace, so no newline is left in the string.
+		['a{content:"\\1F600\r\nx"}', '@charset "UTF-8";a{content:"\u{1F600}x"}'],
 		// An escape in the BMP beside it keeps its spelling.
 		[
 			'a{content:"\\e900\\1F600"}',
