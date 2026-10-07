@@ -1,5 +1,5 @@
 
-it("import-lazy: should be possible to import json data async", function() {
+it("should be possible to import json data async", function() {
 	return Promise.all([
 		import("../data/a.json"),
 		import("../data/b.json"),

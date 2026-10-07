@@ -1,7 +1,7 @@
 import globals from "./globals.json?all";
 import someGlobals from "./globals.json";
 
-it("weird-properties: should be able to read all properties", () => {
+it("should be able to read all properties", () => {
 	const walk = o => {
 		for (const p of Object.keys(o)) {
 			const child = o[p];
@@ -15,7 +15,7 @@ it("weird-properties: should be able to read all properties", () => {
 	walk(globals);
 });
 
-it("weird-properties: should allow accessing some properties with tree-shaking", () => {
+it("should allow accessing some properties with tree-shaking", () => {
 	expect(someGlobals.builtin.constructor).toBe(false);
 	expect(someGlobals.es5.eval).toBe(false);
 	expect(someGlobals.es5.undefined).toBe(false);

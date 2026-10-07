@@ -5,7 +5,7 @@ import d from "../data/d.json";
 import e from "../data/e.json";
 import f from "../data/f.json";
 
-it("import-with-default: should be possible to import json data", function() {
+it("should be possible to import json data", function() {
 	expect({a}).toEqual({a: null});
 	expect(b).toBe(123);
 	expect(c).toEqual([1, 2, 3, 4]);
