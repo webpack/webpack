@@ -235,7 +235,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: collapse_vars/collapse_vars_side_effects_2",
 			"terser compress: collapse_vars/collapse_vars_while",
 			"terser compress: collapse_vars/issue_1537_destructuring_1",
-			"terser compress: collapse_vars/issue_2187_1",
 			"terser compress: collapse_vars/issue_2436_9",
 			"terser compress: collapse_vars/var_defs",
 			"terser compress: collapse_vars/var_side_effects_2",
@@ -588,9 +587,7 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/member_expr/callee/input.js",
 			"swc minifier: fixture/projects/wmr/archive-1/chunks/index.bf24abaa/input.js",
 			"swc minifier: fixture/projects/wmr/archive-1/chunks/index.ddc4110d/input.js",
-			"swc minifier: pass-1/issue-6788/1/input.js",
-			"terser compress: hoist_props/direct_access_2",
-			"terser compress: template-string/tagged_call_with_invalid_escape_2"
+			"terser compress: hoist_props/direct_access_2"
 		]
 	],
 	[
