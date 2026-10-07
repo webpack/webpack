@@ -5436,6 +5436,24 @@ describe("syntax-printer", () => {
 				runProgram(input)
 			);
 		});
+
+		it("should never quote a kept private name", async () => {
+			const { minify } = await load();
+			const program =
+				"class C { #ࢶ = 1; #\u{104B0}; static #\u{104B1}() { return 2; } #if = 3; get() { return [#ࢶ in this, this.#ࢶ, C.#\u{104B1}(), this.#if]; } } console.log(new C().get().join());";
+			for (const format of [{}, { ascii_only: false }, { quote_keys: true }]) {
+				const { code } = await minify(program, {
+					compress: {},
+					mangle: true,
+					keep_fnames: true,
+					format: { ...format, ie8: true }
+				});
+				expect(code).not.toMatch(/#["']/);
+				expect(runProgram(/** @type {string} */ (code))).toBe(
+					runProgram(program)
+				);
+			}
+		});
 	});
 
 	describe("a literal only a property of escapes", () => {
