@@ -12,13 +12,15 @@ module.exports = {
 		expect(css).toMatchSnapshot("minify-legacy-box-prefixes");
 
 		expect(css).toContain(
-			".clamp{display:-webkit-box;-webkit-box-orient:vertical;flex-direction:column;"
+			".clamp{-webkit-line-clamp:2;-webkit-box-orient:vertical;flex-direction:column;display:-webkit-box;"
 		);
-		expect(css).toContain(".pack{display:-webkit-box;-webkit-box-pack:center;");
 		expect(css).toContain(
-			".important{display:-webkit-box!important;display:flex;-webkit-box-align:center;"
+			".pack{-webkit-box-pack:center;justify-content:center;display:-webkit-box}"
 		);
-		expect(css).toContain(".flex{display:flex;justify-content:center}");
+		expect(css).toContain(
+			".important{-webkit-box-align:center;align-items:center;display:-webkit-box!important;display:flex}"
+		);
+		expect(css).toContain(".flex{justify-content:center;display:flex}");
 		expect(css).toContain(".utility{justify-content:center}");
 	}
 };

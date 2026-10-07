@@ -2647,7 +2647,7 @@ describe("CssSyntax — minify transforms, in-process", () => {
 		// author's, so a top-level identifier in one of its values is a keyword.
 		it.each([
 			["a{DISPLAY:GRID}", "a{display:grid}"],
-			["a{position:ABSOLUTE;float:LEFT}", "a{position:absolute;float:left}"],
+			["a{position:ABSOLUTE;float:LEFT}", "a{float:left;position:absolute}"],
 			["a{white-space:PRE-WRAP}", "a{white-space:pre-wrap}"],
 			["a{transform:NONE}", "a{transform:none}"],
 			// A vendor spelling is read as the property it spells.
@@ -5068,7 +5068,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		it.each([
 			[
 				".a{padding-top:0;color:red}.a{padding-bottom:2px;padding-left:2px;padding-right:2px}",
-				".a{padding:0 2px 2px;color:red}"
+				".a{color:red;padding:0 2px 2px}"
 			],
 			[
 				".a{padding-top:0!important}.a{padding-bottom:2px!important;padding-left:2px!important;padding-right:2px!important}",
@@ -5085,7 +5085,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 					mode: "minify",
 					transforms: { mergeLonghands: false }
 				}).code
-			).toBe(".a{top:0;right:0;bottom:0;left:0}");
+			).toBe(".a{top:0;bottom:0;left:0;right:0}");
 		});
 
 		it("keeps the joined sides apart where the shorthand stands between", () => {
@@ -5129,7 +5129,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 				settled(".a{top:0}.a{right:0;bottom:0;left:0}", {
 					browsers: ["chrome 80"]
 				})
-			).toBe(".a{top:0;right:0;bottom:0;left:0}");
+			).toBe(".a{top:0;bottom:0;left:0;right:0}");
 		});
 
 		it.each([
@@ -5179,7 +5179,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// Only a channel reads the percentage as a byte: a length still rounds.
 			expect(settled("a{width:66.862745098%}")).toBe("a{width:66.8627%}");
 			expect(settled(".a{flex:0 0 16.66666667%;opacity:16.66666667%}")).toBe(
-				".a{flex:0 0 16.6667%;opacity:.166667}"
+				".a{opacity:.166667;flex:0 0 16.6667%}"
 			);
 			// An exact half rounds up in every engine.
 			expect(settled("a{color:rgba(50%,50%,50%,.5)}")).toBe(
@@ -5228,7 +5228,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 				minify(
 					"@media all{.c{margin-left:1em;width:1px}.d{width:2px}.c{width:3px;margin-left:.75em;color:red}}"
 				)
-			).toBe("@media all{.d{width:2px}.c{width:3px;margin-left:.75em;color:red}}");
+			).toBe("@media all{.d{width:2px}.c{color:red;width:3px;margin-left:.75em}}");
 		});
 
 		it("drops each earlier copy, the one a copy between took included", () => {
@@ -6116,7 +6116,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// declaration is one the earlier cannot have been read behind.
 			expect(minify("a{color:red}a{color:blue}")).toBe("a{color:blue}");
 			expect(minify("a{color:red;top:0}a{color:blue;left:0}")).toBe(
-				"a{top:0;color:blue;left:0}"
+				"a{color:blue;top:0;left:0}"
 			);
 			// ...and not where the earlier one may still be what an engine reads.
 			const fallback = "a{color:#fff}a{color:var(--x)}";
@@ -7329,7 +7329,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 				minify(
 					"a{margin-top:1px;margin-right:2px;color:red;margin-bottom:1px;margin-left:2px}"
 				)
-			).toBe("a{margin:1px 2px;color:red}");
+			).toBe("a{color:red;margin:1px 2px}");
 		});
 
 		it.each([
@@ -7423,7 +7423,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(minify(parted)).toBe(parted);
 			// One writing anything else is not, so the longhand folds past it.
 			expect(minify("a{margin:0;color:red;margin-top:1px}")).toBe(
-				"a{margin:1px 0 0;color:red}"
+				"a{color:red;margin:1px 0 0}"
 			);
 			// An `!important` longhand is not the same declaration as a plain one.
 			const important = "a{margin:0!important;margin-top:1px}";
@@ -7948,12 +7948,12 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			const sub =
 				"a{grid-row-start:1;grid-column-start:2;grid-row-end:var(--x);grid-column-end:4}";
 			expect(minify(sub)).toBe(
-				"a{grid-row-start:1;grid-column:2/4;grid-row-end:var(--x)}"
+				"a{grid-row-start:1;grid-row-end:var(--x);grid-column:2/4}"
 			);
 			const wide =
 				"a{grid-row-start:inherit;grid-column-start:2;grid-row-end:3;grid-column-end:4}";
 			expect(minify(wide)).toBe(
-				"a{grid-row-start:inherit;grid-column:2/4;grid-row-end:3}"
+				"a{grid-row-start:inherit;grid-row-end:3;grid-column:2/4}"
 			);
 		});
 
@@ -8329,7 +8329,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// Whatever stands between them, which can only lose to the later one
 			// wherever it would have beaten this.
 			expect(minify("a{color:red;background:red;color:blue}")).toBe(
-				"a{background:red;color:blue}"
+				"a{color:blue;background:red}"
 			);
 		});
 
@@ -9076,7 +9076,7 @@ describe("CssSyntax minify — vendor prefixes (properties)", () => {
 			expect(minifyFor(css, ["android 4.3"])).toBe(printed);
 		}
 		expect(minifyFor("a{order:1;flex:.5}", ["firefox 20"])).toBe(
-			"a{-moz-box-ordinal-group:2;order:1;-moz-box-flex:.5;flex:.5}"
+			"a{-moz-box-flex:.5;flex:.5;-moz-box-ordinal-group:2;order:1}"
 		);
 	});
 
@@ -9193,7 +9193,7 @@ describe("CssSyntax minify — vendor prefixes (properties)", () => {
 				"ie 10"
 			])
 		).toBe(
-			"a{-ms-flex-order:1;order:1;-ms-flex-positive:2;flex-grow:2;-ms-flex-preferred-size:4px;flex-basis:4px;-ms-flex-wrap:nowrap;flex-wrap:nowrap}"
+			"a{-ms-flex-wrap:nowrap;flex-wrap:nowrap;-ms-flex-positive:2;flex-grow:2;-ms-flex-preferred-size:4px;flex-basis:4px;-ms-flex-order:1;order:1}"
 		);
 		expect(
 			minifyFor("a{flex-grow:2;flex-shrink:3;flex-basis:4px}", ["ie 10"])
@@ -9207,7 +9207,7 @@ describe("CssSyntax minify — vendor prefixes (properties)", () => {
 				["ie 10"]
 			)
 		).toBe(
-			"a{-ms-flex-align:start;align-items:flex-start;-ms-flex-item-align:end;align-self:flex-end;-ms-flex-pack:distribute;justify-content:space-around;-ms-flex-line-pack:justify;align-content:space-between}"
+			"a{-ms-flex-pack:distribute;justify-content:space-around;-ms-flex-line-pack:justify;align-content:space-between;-ms-flex-item-align:end;align-self:flex-end;-ms-flex-align:start;align-items:flex-start}"
 		);
 	});
 
@@ -14192,7 +14192,7 @@ describe("SourceProcessor — mergeDistantRules", () => {
 				true
 			)
 		).toBe(
-			".z{top:2px;display:block;margin:2px 3px}.z,h2.y{all:unset;border:1px solid red}span{border-top-color:blue}"
+			".z{margin:2px 3px;display:block;top:2px}.z,h2.y{all:unset;border:1px solid red}span{border-top-color:blue}"
 		);
 	});
 
@@ -15085,22 +15085,22 @@ describe("CssSyntax minify — a 2009 flexbox property under its own display", (
 		[
 			"a flex box",
 			".a{display:-webkit-box;display:flex;-webkit-box-pack:center;justify-content:center}",
-			".a{display:flex;justify-content:center}"
+			".a{justify-content:center;display:flex}"
 		],
 		[
 			"an important flex box over an important box",
 			".a{display:-webkit-box!important;display:flex!important;-webkit-box-pack:center;justify-content:center}",
-			".a{display:flex!important;justify-content:center}"
+			".a{justify-content:center;display:flex!important}"
 		],
 		[
 			"a plain box under an important flex one",
 			".a{display:flex!important;display:-webkit-box;-webkit-box-pack:center;justify-content:center}",
-			".a{display:flex!important;justify-content:center}"
+			".a{justify-content:center;display:flex!important}"
 		],
 		[
 			"an inline flex box",
 			".a{display:-webkit-box;display:inline-flex;-webkit-box-pack:center;justify-content:center}",
-			".a{display:inline-flex;justify-content:center}"
+			".a{justify-content:center;display:inline-flex}"
 		],
 		[
 			"an alias written after its twin",
@@ -15318,7 +15318,7 @@ describe("CssSyntax minify — what a comparison with other minifiers found", ()
 		],
 		[
 			'a{grid-template-areas:"a";grid-template-rows:1fr;color:red;grid-template-columns:1fr}',
-			'a{grid-template:"a"1fr/1fr;color:red}'
+			'a{color:red;grid-template:"a"1fr/1fr}'
 		]
 	])("merges %s into %s", (css, expected) => {
 		expect(settled(css)).toBe(expected);
@@ -15470,7 +15470,7 @@ describe("CssSyntax minify — what a comparison with other minifiers found", ()
 	});
 });
 
-describe("CssSyntax minify — folds and merges past what they cannot interact with", () => {
+describe("CssSyntax minify — declaration order", () => {
 	const modern = ["chrome 130", "firefox 130", "safari 18"];
 	/**
 	 * @param {string} css source text
@@ -15483,6 +15483,57 @@ describe("CssSyntax minify — folds and merges past what they cannot interact w
 		return once;
 	};
 
+	it.each([
+		// What no family ranks stays first, as written; the rest follow by family.
+		[
+			"a{position:relative;display:block;cursor:pointer;line-height:0}",
+			"a{cursor:pointer;line-height:0;display:block;position:relative}"
+		],
+		["a{transform:none;transition:none}", "a{transition:none;transform:none}"],
+		["a{font-size:2em;margin:0}", "a{margin:0;font-size:2em}"],
+		// A custom property is a name of its own, kept where it stands.
+		["a{display:block;--v:1;color:var(--v)}", "a{--v:1;color:var(--v);display:block}"],
+		// Two rules joined are put in that order too.
+		[".a{display:block}.a{color:red}", ".a{color:red;display:block}"],
+		// A nested rule that prints nothing is no rule the order has to keep.
+		["a{display:block;color:red;& b{}}", "a{color:red;display:block}"],
+		["@keyframes k{0%{transform:none;opacity:0}}", "@keyframes k{0%{opacity:0;transform:none}}"],
+		// Within a family, in the family's own order.
+		[
+			"a{transition-delay:1s;transition-property:opacity;height:0;width:0}",
+			"a{width:0;height:0;transition-property:opacity;transition-delay:1s}"
+		],
+		// A property only a member's name starts follows the family's members.
+		["a{overflow-wrap:anywhere;overflow-x:hidden}", "a{overflow-x:hidden;overflow-wrap:anywhere}"],
+		// A vendor property no standard one aliases is read by its words.
+		[
+			"a{-webkit-border-before:1px solid;border-right-width:2px}",
+			"a{-webkit-border-before:1px solid;border-right-width:2px}"
+		]
+	])("prints %s as %s", (css, expected) => {
+		expect(settled(css, modern)).toBe(expected);
+	});
+
+	it.each([
+		// A property no dataset names may be one whose order matters.
+		"a{x-unknown:1;display:block;color:red}",
+		// `grid` sets the gaps, so the two keep the order they were written in.
+		"a{gap:1px;grid:auto/auto}",
+		// Two spellings of one property.
+		"a{overflow-wrap:anywhere;word-wrap:break-word}",
+		// A rule holding a nested one.
+		"a{display:block;color:red;& b{top:0}}",
+		// One staying at its index while one written before it moves past it.
+		"a{margin-left:1px;margin:var(--a);--b:2}"
+	])("keeps %s as written", (css) => {
+		expect(settled(css, modern)).toBe(css);
+	});
+
+	it("keeps the order with `reorderDeclarations` off", () => {
+		const css = "a{display:block;color:red}";
+		expect(minifyForWith(css, modern, { reorderDeclarations: false })).toBe(css);
+	});
+
 	it("folds a longhand into its shorthand past what writes something else", () => {
 		expect(settled("a{margin:0;padding:0;list-style:none;margin-left:-15px}", modern)).toBe(
 			"a{margin:0 0 0-15px;padding:0;list-style:none}"
@@ -15494,7 +15545,7 @@ describe("CssSyntax minify — folds and merges past what they cannot interact w
 		// A side sets no corner's radius, though its name starts the corner's.
 		expect(
 			settled("a{border-radius:4px;border-bottom:1px solid red;border-bottom-right-radius:0}", modern)
-		).toBe("a{border-radius:4px 4px 0;border-bottom:1px solid red}");
+		).toBe("a{border-bottom:1px solid red;border-radius:4px 4px 0}");
 		// A flow-relative side may be the physical one, so it parts the two.
 		const parted = "a{margin:0;margin-inline-start:2px;margin-left:3px}";
 		expect(settled(parted, modern)).toBe(parted);
@@ -15509,9 +15560,9 @@ describe("CssSyntax minify — folds and merges past what they cannot interact w
 			'a{grid-template-areas:"a";grid-template-rows:1fr;grid-auto-flow:row;grid-template-columns:1fr}',
 			'a{grid-template:"a"1fr/1fr;grid-auto-flow:row}'
 		],
-		["a{grid-row:1/2;grid-auto-flow:row;grid-column:3/4}", "a{grid-area:1/3/2/4;grid-auto-flow:row}"],
-		["a{margin-top:1px;--x:1;margin-right:1px;margin-bottom:1px;margin-left:1px}", "a{margin:1px;--x:1}"]
-	])("merges %s past what the shorthand does not set", (css, expected) => {
+		["a{grid-row:1/2;grid-auto-flow:row;grid-column:3/4}", "a{grid-auto-flow:row;grid-area:1/3/2/4}"],
+		["a{margin-top:1px;--x:1;margin-right:1px;margin-bottom:1px;margin-left:1px}", "a{--x:1;margin:1px}"]
+	])("merges %s past what the shorthand does not set, as the order would", (css, expected) => {
 		expect(settled(css, modern)).toBe(expected);
 	});
 
