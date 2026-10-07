@@ -262,6 +262,11 @@ const IMPROVED_CASES = [
 		{ compress: {}, mangle: false }
 	],
 	[
+		"a `new` passing arguments past what its constructor reads",
+		'function f() { function Z(a) { this.a = a; } class A { constructor() { this.n = 1; } } class B {} return [new Z(1, 2, 3).a, new A(1, 2).n, new B(1) instanceof B, new Z(4, g(), 5).a]; } function g() { console.log("g"); } console.log(f());',
+		{ compress: {}, mangle: false }
+	],
+	[
 		"two calls in a sequence, one keeping a `let` in a block",
 		`(() => { let a = console.log.name; console.log(a, a); })(); (() => { ${TRY} console.log(2); })();`,
 		{ compress: { passes: 2 }, mangle: true }
@@ -648,6 +653,8 @@ const KEPT_CASES = [
 	["an array literal joining to a string longer than it", 'console.log([!0, !0, !0] + "");'],
 	["`+` and `~` of what a literal does not give", "function f(a) { return [+[a], ~a !== 0 ? 1 : 2]; } console.log(f(1), f(1n));"],
 	["a string literal indexed past its end, by no constant or as a target", 'function f(i) { var s = "abc"; "abc"[0] = 1; return ["abc"[5], "abc"[i], "abc"[1.5], "abc"[-1]]; } console.log(f(1));'],
+	["a `new` whose constructor reads `arguments` or a rest, extends a class, or is rebound", 'function f(h) { function Z(a) { this.n = arguments.length; } function R(...a) { this.n = a.length; } class B { constructor(a) { this.n = arguments.length; } } class C extends B {} var V = function (a) { this.n = 1; }; if (h) V = function () { this.n = arguments.length; }; return [new Z(1, 2).n, new R(1, 2).n, new C(1, 2).n, new V(1, 2).n]; } console.log(f(0), f(1));'],
+	["a `new` of what constructs nothing", 'function f() { var F = () => 1, G = function* (a) {}, H = async function (a) {}, O = { a: 1 }; try { new F(1, 2); } catch (e) { console.log(e.name); } try { new G(1, 2); } catch (e) { console.log(e.name); } try { new H(1, 2); } catch (e) { console.log(e.name); } try { new O(1, 2); } catch (e) { console.log(e.name); } } f();'],
 	["a `Boolean` passed a spread or a second argument", "function f(a, b) { return [Boolean(...a), Boolean(a, b())]; } console.log(f([0], () => 1));"],
 	["a conversion of no literal, which `+` and `\"\"+` would read otherwise for a BigInt or a symbol", "function f(a) { return [Number(a), String(a), BigInt(a)]; } console.log(f(1n));"],
 	["a conversion a variable shadows", "function f(Boolean, Number) { return [Boolean(1), Number(true)]; } console.log(f(String, String));"],

@@ -1431,6 +1431,13 @@ const IMPROVED_YET_BIGGER = {
 // spelling written; an entry that stops compressing worse fails until retired.
 for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 	[
+		"`new` arguments its constructor no longer reads dropped, where a twin `new` beside it keeps them",
+		[
+			"new/new_statements_3 (a module mangled at its top level)",
+			"new/new_statements_3 (the default minimizer's options)"
+		]
+	],
+	[
 		"`Array` written as a literal where the source writes the call again",
 		[
 			"S15.4.1_A1.1_T1.js (the default minimizer's options)",
