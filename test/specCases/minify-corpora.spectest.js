@@ -1298,6 +1298,12 @@ const rivalSmallerSeen = new Set();
 const IMPROVED_YET_BIGGER = {
 	"arrow/object_parens (its own options)":
 		"3 bytes fewer, 1 more gzipped: `+!!{}` breaks the `()=>(` runs of the arrows around it gzip reused",
+	"inline/inline_into_scope_conflict_enclosed_2 (reminify 2 {\"mangle\":false})":
+		"5 bytes fewer, 1 more gzipped: `{x();return}` breaks the `return x()` run the function before it repeats",
+	"fixture/issues/8173/input.js (the default minimizer's options)":
+		"7 bytes fewer, 2 more gzipped: `{x(n);return}` breaks the `return void` runs of the helpers around it",
+	"fixture/issues/vercel/006/input.js (its own options)":
+		"12 bytes fewer, 1 more gzipped: `{x();return}` breaks the `return void` runs of the branches around it",
 	"projects/files/react-17.0.1.js (its own options)":
 		"33 bytes fewer, 3 more gzipped: `!!x` in place of `null!==x` breaks the runs of `null!==` gzip reused",
 	"fixture/next/octokit/static/chunks/357-72bd409f1472b1b8/input.js (its own options)":
