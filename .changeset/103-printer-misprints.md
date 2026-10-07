@@ -1,5 +1,5 @@
 ---
-"webpack": patch
+"webpack": minor
 ---
 
-Fix minified code that threw, read the wrong binding or no longer parsed.
+Fix minified code that threw, and add `pure_conversions` and `pure_heritage`.
