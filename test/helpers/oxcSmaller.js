@@ -171,7 +171,6 @@ const OXC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/pr/11381/input.js",
 			"swc minifier: fixture/pr/6272/input.js",
 			"swc minifier: fixture/projects/backbone/16/input.js",
-			"swc minifier: fixture/projects/backbone/19/input.js",
 			"swc minifier: fixture/projects/backbone/20/input.js",
 			"swc minifier: fixture/projects/backbone/6/input.js",
 			"swc minifier: fixture/projects/jquery/26/input.js",

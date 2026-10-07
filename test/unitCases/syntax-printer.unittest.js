@@ -310,6 +310,12 @@ const IMPROVED_CASES = [
 		{ compress: {}, mangle: false }
 	],
 	[
+		"a `return` of `undefined` in an `if` ending a function, and `if (c) return; return x` there, falling off after an `if`",
+		'function f(a, b) { if (a) { var h = b.p; return h && h.q ? h : void 0; } } function g(a, b) { if (a) { for (; !b.n();); if (b.x) return; return b.y; } } function k(a, b) { if (a) { for (; !b.n();); b.m(); } else { for (; !b.n();); b.m(); } } var o = { p: { q: 1 }, n: () => 1, m() { console.log("m"); }, x: 0, y: 2 }; k(1, o); console.log(f(1, o), f(0, o), g(1, o), g(0, o));',
+		{ compress: {}, mangle: false },
+		'function f(a,b){if(a){var h=b.p;if(h&&h.q)return h}}function g(a,b){if(a){for(;!b.n(););if(!b.x)return b.y}}function k(a,b){if(a){for(;!b.n(););b.m()}else{for(;!b.n(););b.m()}}var o={p:{q:1},n:()=>1,m(){console.log("m")},x:0,y:2};k(1,o),console.log(f(1,o),f(0,o),g(1,o),g(0,o));'
+	],
+	[
 		"a function's last `return void` of a call, which terser leaves with its defaults off",
 		"var r = []; function f(a) { r.push(a); return void r.push(a + 1); } f(1); console.log(r.join(), f(2));",
 		{ compress: { defaults: false }, mangle: false }
@@ -852,6 +858,7 @@ const KEPT_CASES = [
 	["a conditional whose other branch reads a global getter again", 'var n = 0; Object.defineProperty(globalThis, "g", { get: function () { return n++; }, configurable: true }); function f(b) { return g ? b : g; } console.log(f(1), f(2));'],
 	["a conditional whose other branch reads a getter twice or a different binding", "var n = 0, o = { get x() { return ++n; } }; function f(b) { var a = 1; { let a = 0; var r = a ? b : o.x ? b : o.x; } return [r, a, n]; } console.log(f(2));"],
 	["a bigint and a number concatenated, which throws", "try { console.log(1n + 2); } catch (e) { console.log(e.name); }"],
+	["a `return` of `undefined` in an `if` an async generator ends with, or in a loop, a `try` or an `if` something follows", "async function* a(c) { if (c) { await 0; return c.x ? 1 : void 0; } } function b(c) { for (var i of c) { g(); return i ? 1 : void 0; } } function d(c) { try { g(); return c ? 1 : void 0; } finally { g(); } } function e(c, x) { if (c) { g(); return x ? 1 : void 0; } g(); } function g() {} console.log(b([1]), d(1), e(1, 0)); a({ x: 1 }).next().then((r) => console.log(r.value));"],
 	["consecutive `if`s leaving with different values or to different labels", 'function f(a, b) { if (a) return 1; if (b) return 2; x: for (;;) { for (;;) { if (a) break x; if (b) break; console.log(3); break x; } console.log(4); break; } for (var i = 0; i < 2; i++) console.log(i); } f(1, 0); f(0, 1); f(0, 0);'],
 	["consecutive `if`s leaving by a bare `return`, which terser merges itself", 'function f(a, b) { if (a) return; if (b) return; console.log("fall through"); } f(1, 0); f(0, 1); f(0, 0);'],
 	["consecutive `if`s alike whose branch does not always leave", 'function f(a, b) { for (var i = 0; i < 3; i++) { if (a === i) try { g(i); } finally { console.log(i); } if (b === i) try { g(i); } finally { console.log(i); } console.log(i); } } function g(i) { console.log("g", i); } f(0, 1); f(1, 1);'],
