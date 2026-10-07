@@ -505,6 +505,11 @@ const IMPROVED_CASES = [
 		{ compress: { ecma: 2020 }, ecma: 2020, mangle: false }
 	],
 	[
+		"a test for null or undefined choosing what it tests, from ECMAScript 2020",
+		"function f(c, d) { return [null != c ? c : 1, void 0 == c ? 2 : c, d || (null != c ? c : 3)]; } function g(c) { var t; return [null == (t = c.a) ? 4 : t, (t = c.b) !== null && t !== void 0 ? t : 5]; } console.log(f(null, 0), f(0, 1), g({}), g({ a: 6, b: 7 }));",
+		{ compress: { ecma: 2020 }, ecma: 2020, mangle: false }
+	],
+	[
 		"a strict test for null and one for undefined, the first storing the name",
 		"function f(c, d) { var t, u; return [(t = c.a) === null || t === void 0, void 0 !== (u = c.b) && null !== u, d || (t = c.a) === null || t === void 0, t, u]; } console.log(f({}, 0), f({ a: 0, b: null }, 1), f({ a: null, b: 2 }, 0));",
 		{ compress: {}, mangle: false }
@@ -5187,6 +5192,10 @@ describe("syntax-printer", () => {
 				["var n = 0; Object.defineProperty(globalThis, \"a\", { get: function () { return n++ ? null : { p: 1 }; }, configurable: true }); function f() { return null == a ? void 0 : a.p; } try { console.log(f()); } catch (e) { console.log(e.name); }", target(2021)],
 				["function f(o, c) { with (o) { return null == c ? void 0 : c.p; } } console.log(f({}, null), f({ c: { p: 2 } }, { p: 1 }));", target(2021)],
 				["function f(o, c) { with (o) { c || (c = 1); return c; } } console.log(f({}, 0), f({ c: 0 }, 2));", target(2021)],
+				["function f(c) { return null != c ? c : 1; } console.log(f(null), f(0));", target(2019)],
+				["function f(c) { return [null != c.d ? c.d : 1, null != c ? c.d : 2]; } console.log(f({}), f({ d: 0 }));", target(2021)],
+				["var n = 0; Object.defineProperty(globalThis, \"b\", { get: function () { return n++ ? null : 1; }, configurable: true }); function f() { return null != b ? b : 2; } console.log(f());", target(2021)],
+				["function f(o, c) { with (o) { return null != c ? c : 1; } } console.log(f({}, null), f({ c: 2 }, 3));", target(2021)],
 				["function f(o, k) { o[k] || (o[k] = 1); return o; } var n = 0; console.log(JSON.stringify(f({}, { toString: function () { return \"k\" + n++; } })));", target(2021)]
 			];
 			for (const [input, options] of cases) {
