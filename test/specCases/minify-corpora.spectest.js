@@ -1284,12 +1284,8 @@ const IMPROVED_YET_BIGGER = {
 		"3 bytes fewer, 1 more gzipped: `+!!{}` breaks the `()=>(` runs of the arrows around it gzip reused",
 	"projects/files/jquery.mobile-1.4.2.js (the default minimizer's options)":
 		"30 bytes fewer, 2 more gzipped: `this.p=c?x:y` breaks the `c?this.p=x:this.p=y` runs gzip reused",
-	"fixture/next/regression-1/framework-798bab57daac3897/input.js (its own options)":
-		"195 bytes fewer, 23 more gzipped: `!!x` in place of `null!==x` breaks the runs of `null!==` gzip reused",
 	"projects/files/react-17.0.1.js (its own options)":
 		"33 bytes fewer, 3 more gzipped: `!!x` in place of `null!==x` breaks the runs of `null!==` gzip reused",
-	"fixture/projects/next/.archive-4/framework-054ead69ea8124b4cb27/input.js (its own options)":
-		"196 bytes fewer, 9 more gzipped: the shorter `typeof x<\"u\"` breaks the `\"…\"!=typeof` runs gzip reused",
 	"evaluate/string_case (the default minimizer's options)":
 		"57 bytes fewer, 5 more gzipped: `\"I\".toLowerCase().charCodeAt(0)` matched the calls around it",
 	"evaluate/string_case (a module mangled at its top level)":
@@ -1455,7 +1451,6 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 	[
 		"`if(c)return x` written where `return c?x:void 0` matched the returns around it",
 		[
-			"fixture/next/octokit/static/chunks/357-72bd409f1472b1b8/input.js (its own options)",
 			"fixture/next/octokit/static/chunks/357-72bd409f1472b1b8/input.js (the default minimizer's options)",
 			"if_return/if_return_same_value (its own options)",
 			"if_return/if_return_same_value (the default minimizer's options)",
@@ -1644,6 +1639,14 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 		[
 			"regress-1383630.js (the default minimizer's options)",
 			"reviver-forward-modifies-object.js (the default minimizer's options)"
+		]
+	],
+	[
+		"a value read once moved into the property it is stored to, where the declaration or arguments it leaves matched the ones around it",
+		[
+			"fixture/issues/11684/preserved/input.js (its own options)",
+			"fixture/issues/11684/preserved/input.js (the default minimizer's options)",
+			"fixture/projects/jquery/24/input.js (its own options)"
 		]
 	],
 	[
