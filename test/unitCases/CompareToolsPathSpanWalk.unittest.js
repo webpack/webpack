@@ -31,7 +31,7 @@ const walked = (length, steps, ranges, inner = {}) => {
 				enter(/** @type {EXPECTED_ANY} */ (step));
 			}
 		},
-		name: (node) => String(node),
+		name: String,
 		start: (node) => ranges[String(node)][0],
 		end: (node) => ranges[String(node)][1],
 		inner: (node) => inner[String(node)],

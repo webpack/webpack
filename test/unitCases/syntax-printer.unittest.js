@@ -4,7 +4,6 @@
 
 const vm = require("vm");
 const {
-	FORMAT_DEFAULTS,
 	IGNORED_FORMAT_OPTIONS,
 	createCompressHelpers,
 	createUnicode,
@@ -183,7 +182,7 @@ const runProgram = (code) => {
 		vm.runInNewContext(code, {
 			console: {
 				log: (/** @type {unknown[]} */ ...values) =>
-					lines.push(values.map((value) => String(value)).join(" "))
+					lines.push(values.map(String).join(" "))
 			}
 		});
 	} catch (err) {
@@ -411,7 +410,7 @@ const IMPROVED_CASES = [
 	],
 	[
 		"names a declared pattern binds that nothing reads",
-		'!function () { var o = Math.random() < 2 ? { a: 1, b: 2, c: { d: 3, e: 4 } } : {}; const { a, b = 5, c: { d, e } } = o; const [p, q, r] = [1, 2, 3]; const { s, t } = { s: 1, t: 2 }; console.log(a, d, q, s); }();',
+		"!function () { var o = Math.random() < 2 ? { a: 1, b: 2, c: { d: 3, e: 4 } } : {}; const { a, b = 5, c: { d, e } } = o; const [p, q, r] = [1, 2, 3]; const { s, t } = { s: 1, t: 2 }; console.log(a, d, q, s); }();",
 		{ compress: { pure_getters: true }, mangle: false }
 	],
 	[
@@ -630,12 +629,12 @@ const KEPT_CASES = [
 	["case not in ASCII", 'console.log("\\u00c4B".toLowerCase());'],
 	["a call that throws", 'try { console.log(decodeURI("%")); } catch (e) { console.log(1); }'],
 	["a result longer than the call", 'console.log("ab".repeat(100));'],
-	["a built-in call that throws", 'try { new Set(1); } catch (e) { console.log(1); } try { Object.keys(null); } catch (e) { console.log(2); }'],
+	["a built-in call that throws", "try { new Set(1); } catch (e) { console.log(1); } try { Object.keys(null); } catch (e) { console.log(2); }"],
 	["a RegExp an older Node rejects", 'try { RegExp("a", "v"); } catch (e) { console.log(1); } try { RegExp("[", "g"); } catch (e) { console.log(2); }'],
 	["a RegExp pattern holding a slash", 'try { RegExp("a/b"); console.log(1); } catch (e) { console.log(2); }'],
 	["a RegExp with flags not a string", 'try { RegExp("a", 1); } catch (e) { console.log(1); }'],
-	["a RegExp pattern not a string", 'try { RegExp(1); console.log(1); } catch (e) { console.log(2); }'],
-	["a count too large to run", 'try { new Uint8Array(1e9); console.log(1); } catch (e) { console.log(2); }'],
+	["a RegExp pattern not a string", "try { RegExp(1); console.log(1); } catch (e) { console.log(2); }"],
+	["a count too large to run", "try { new Uint8Array(1e9); console.log(1); } catch (e) { console.log(2); }"],
 	["an argument no literal", "function f(a) { String(a); Object.keys({ [a]: 1 }); Object.keys({ get b() { return 1; } }); Object.keys({ __proto__: a }); Object.keys([a]); Object.keys({ b: a }); } f([1]); console.log(1);"],
 	["a built-in that runs code", 'eval("console.log(1)");'],
 	["a built-in global the program declares", "var Set = function () { console.log(1); }; new Set();"],
@@ -1918,10 +1917,12 @@ describe("syntax-printer", () => {
 	it("should port every compress helper the phases read under terser's name", async () => {
 		const modules = await loadTerserSources(importTerserSource);
 		const helpers = createCompressHelpers(modules);
+
 		const printerSource = require("fs").readFileSync(
 			require.resolve("../../lib/javascript/syntax-printer"),
 			"utf8"
 		);
+
 		/** @type {Record<"common" | "inference" | "flags" | "utils", Set<string>>} */
 		const read = {
 			common: new Set(),
@@ -2752,7 +2753,7 @@ describe("syntax-printer", () => {
 				const settings = () => {
 					const merged = { ...base, ...JSON.parse(JSON.stringify(options)) };
 					if (options.compress) {
-						merged.compress = { ...(base.compress || {}), ...options.compress };
+						merged.compress = { ...base.compress, ...options.compress };
 					}
 					return merged;
 				};
@@ -3557,13 +3558,13 @@ describe("syntax-printer", () => {
 		expect(defun.identifiers).toEqual([toplevel.body[0].id, again]);
 		expect(defun.init).toBe(toplevel.body[0]);
 		ast.defineVariable(scope, ast.SymbolVarNode({ name: "f", scope: null }), null);
-		expect(defun.init).toBe(null);
+		expect(defun.init).toBeNull();
 		ast.defineVariable(scope, ast.SymbolVarNode({ name: "v", scope }), toplevel);
-		expect(scope.getBinding("v").init).toBe(null);
+		expect(scope.getBinding("v").init).toBeNull();
 		const lambda = toplevel.body[2].expression;
 		const lambdaScope = lambda.block_scope;
 		ast.defineVariable(lambdaScope, ast.SymbolVarNode({ name: "g", scope: lambdaScope }), null);
-		expect(lambdaScope.getBinding("g").init).toBe(null);
+		expect(lambdaScope.getBinding("g").init).toBeNull();
 		expect(ast.defineFunction(lambdaScope, ast.SymbolLambdaNode({ name: "g", scope: lambdaScope }), lambda).init).toBe(lambda);
 
 		// An arrow moved into a function reads that function's `arguments`.
@@ -3709,7 +3710,9 @@ describe("syntax-printer", () => {
 
 	it("should name a predicate per node class answering on the node's data", async () => {
 		const { ast } = (await load()).modules;
+
 		const { NODE_KIND_ANCESTRY } = require("../../lib/javascript/syntax-printer");
+
 		/**
 		 * @param {string} name a kind
 		 * @returns {string[]} it and the kinds it is one of
@@ -3784,6 +3787,7 @@ describe("syntax-printer", () => {
 		);
 
 		const data = require("../../lib/javascript/syntax-printer-data").nativeObjectTables();
+
 		/** @type {Set<string>} */
 		const globalNames = new Set(["globalThis", "Reflect", "unknownGlobal"]);
 		/** @type {Set<string>} */
@@ -4762,8 +4766,11 @@ describe("syntax-printer", () => {
 				if (!corrections) throw new Error("the correct phase is not installed");
 				corrections.enabled = false;
 				try {
-					await expect(minify(input, options)).rejects.toThrow();
-					await expect(terserReference().minify(input, options)).rejects.toThrow();
+					const engineError = expression === "+1n" ? TypeError : RangeError;
+					await expect(minify(input, options)).rejects.toThrow(engineError);
+					await expect(
+						terserReference().minify(input, options)
+					).rejects.toThrow(engineError);
 				} finally {
 					corrections.enabled = true;
 				}
@@ -5069,7 +5076,7 @@ describe("syntax-printer", () => {
 			const cases = [
 				["try { null.p; } catch (e) { console.log(1); }", { compress: {}, mangle: false }],
 				["try { throw 1; } catch (e) { console.log(e); }", modern],
-				['try { throw 1; } catch (e) { var e = 2; console.log(e); }', modern],
+				["try { throw 1; } catch (e) { var e = 2; console.log(e); }", modern],
 				["var e = 0; try { throw 1; } catch (e) { var e = 2; } console.log(e);", modern],
 				["var e = 0; try { throw 1; } catch (e) { e = 2; } console.log(e);", modern],
 				["console.log(function () { var o = Math.random() < 2 ? { a: 1, b: 2 } : {}; let { a, ...r } = o; return r.b; }());", modern],
@@ -5077,13 +5084,13 @@ describe("syntax-printer", () => {
 				["console.log(function () { let { [console.log(1)]: a } = {}; return 2; }());", modern],
 				['console.log(function (k) { let { [k]: a } = {}; return 2; }({ toString() { console.log(1); return "a"; } }));', modern],
 				["console.log(function () { var o = Math.random() < 2 ? { a: 1, b: 2 } : {}; let { a, b } = o; return a; }());", modern],
-				['console.log(function () { let { a, b } = { a: 1, get b() { console.log(2); } }; return a; }());', modern],
+				["console.log(function () { let { a, b } = { a: 1, get b() { console.log(2); } }; return a; }());", modern],
 				["console.log(function (o) { let [a, b] = o; return a; }(Math.random() < 2 ? [1, 2] : []));", modern],
 				['console.log(function () { var it = { [Symbol.iterator]() { console.log("iterated"); return [][Symbol.iterator](); } }; let [] = [...it]; let { a } = { ...it }; let [] = [[...it]]; let {} = { d: { ...it }, e: 1 }; return 2; }());', modern],
 				["console.log(function (s) { try { let { a = Math.abs(s) } = {}; } catch (e) { return e.name; } return 2; }(Symbol()));", modern],
 				["class B {} class C extends B { constructor() { let { a = this } = {}; super(); } } try { new C(); } catch (e) { console.log(e.name); }", modern]
 			];
-			for (let [input, options] of cases) {
+			for (const [input, options] of cases) {
 				const { code } = await minify(input, options);
 				const reference = await terserReference().minify(input, options);
 				expect(code).toBe(reference.code);
@@ -6219,8 +6226,8 @@ describe("syntax-printer", () => {
 			}
 			for (const [node, theirDefinition] of theirDefinitions) {
 				let expected = null;
-				if (ast.isLabelNode(node)) expected = labelOf.get(node);
-				else if (ast.isLabelRefNode(node)) expected = labelOf.get(theirDefinition);
+				if (ast.isLabelNode(node)) {expected = labelOf.get(node);}
+				else if (ast.isLabelRefNode(node)) {expected = labelOf.get(theirDefinition);}
 				else if (ast.isSymbolNode(node) && theirDefinition && theirDefinition !== star) {
 					expected = definitionOf.get(theirDefinition);
 				}
@@ -6488,7 +6495,9 @@ describe("syntax-printer", () => {
 
 		it("should hold terser's scopes in webpack's scope model", async () => {
 			const { minify, modules } = await load();
+
 			const analyzeScope = require("../../lib/javascript/ScopeAnalyzer");
+
 			const { ast: tree } = /** @type {EXPECTED_ANY} */ (
 				await minify(
 					"var a = function f(b) { { let c = b; } try {} catch (e) { let d = e; } return f; };",

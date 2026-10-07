@@ -17,7 +17,7 @@ describe("default minimizer module paths", () => {
 		const originalApply = MinimizerPlugin.prototype.apply;
 		/** @type {EXPECTED_ANY} */
 		let rawOptions;
-		MinimizerPlugin.prototype.apply = function () {
+		MinimizerPlugin.prototype.apply = function apply() {
 			rawOptions = /** @type {EXPECTED_ANY} */ (this).rawOptions;
 		};
 		try {

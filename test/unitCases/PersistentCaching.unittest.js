@@ -4,7 +4,9 @@ require("../helpers/warmup-webpack");
 
 const fs = require("fs");
 const path = require("path");
+
 const testDirectory = path.resolve(__dirname, "..");
+
 const util = require("util");
 const vm = require("vm");
 const rimraf = require("rimraf");

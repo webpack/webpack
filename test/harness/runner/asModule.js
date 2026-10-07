@@ -6,7 +6,6 @@ const { ESModuleStatus, getNodeVersion } = require("./RunnerHelpers");
 const [major] = getNodeVersion();
 
 const SYNTHETIC_MODULES_STORE = "__SYNTHETIC_MODULES_STORE";
-const LINKER = () => {};
 
 /**
  * @param {vm.SourceTextModule | vm.Module | EXPECTED_ANY} something module or object

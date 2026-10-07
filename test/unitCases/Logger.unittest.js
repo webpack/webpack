@@ -1,6 +1,6 @@
 "use strict";
 
-const { Logger, LogType } = require("../../lib/logging/Logger");
+const { LogType, Logger } = require("../../lib/logging/Logger");
 
 /**
  * @returns {{ logger: Logger, entries: [string, EXPECTED_ANY[]][] }} a logger recording what it logged

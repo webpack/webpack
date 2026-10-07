@@ -197,9 +197,11 @@ describe("compare-tools-harness", () => {
 
 		describe("with PROFILE set", () => {
 			const previous = process.env.PROFILE;
+
 			beforeEach(() => {
 				process.env.PROFILE = "1";
 			});
+
 			afterEach(() => {
 				if (previous === undefined) delete process.env.PROFILE;
 				else process.env.PROFILE = previous;

@@ -11,8 +11,8 @@ const acorn = /** @type {ParserExports} */ (
 );
 const {
 	Parser,
-	Position,
 	ParserSourceLocation,
+	Position,
 	defaultOptions,
 	getLineInfo,
 	isIdentifierChar,

@@ -124,11 +124,9 @@ describe("browserslist target", () => {
 		});
 	}
 
-	// A browser listed at a bare major version (no minor component, e.g.
-	// `safari 10`, which browserslist emits) must be treated as `<major>.0`, so
-	// it matches a feature whose first supported version is given as a
-	// `[major, minor]` pair. Otherwise the missing minor coerces to `NaN` and
-	// the equal-major comparison wrongly reports the feature as unsupported.
+	// browserslist emits bare majors (`safari 10`); one reads as `<major>.0`, or
+	// the missing minor coerces to `NaN` against a `[major, minor]` first version
+	// and the equal-major comparison wrongly reports the feature unsupported.
 	describe("bare major version equals `<major>.0`", () => {
 		it("resolves `safari 10` the same as `safari 10.0`", () => {
 			expect(resolve(["safari 10"])).toEqual(resolve(["safari 10.0"]));

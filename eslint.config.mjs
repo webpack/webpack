@@ -62,9 +62,10 @@ export default defineConfig([
 		"!test/templates/*.js",
 		"!test/specCases/*.js",
 		"!test/benchmarkCases/**/*.mjs",
-		// Only what these two directories hold directly: `runner/` and `snapshot/`
-		// carry lint errors of their own, which are not this list's to unblock.
+		"!test/unitCases/*.unittest.js",
 		"!test/harness/*.js",
+		"!test/harness/runner/*.js",
+		"!test/harness/snapshot/*.js",
 		"!test/harness/runtimes/*.js",
 		"!test/harness/benchmark/**/*.mjs",
 		"!test/_helpers/**/*.mjs",
@@ -332,6 +333,38 @@ export default defineConfig([
 			"n/no-unsupported-features/es-builtins": "off",
 			"n/no-unsupported-features/es-syntax": "off",
 			"n/no-unsupported-features/node-builtins": "off"
+		}
+	},
+	{
+		// Unit tests run under the repo's own Node, not the baseline, and two of
+		// them reach ESM-only packages through a dynamic import.
+		files: ["test/unitCases/*.unittest.js"],
+		languageOptions: {
+			ecmaVersion: 2022
+		},
+		rules: {
+			"n/no-unsupported-features/es-builtins": "off",
+			"n/no-unsupported-features/es-syntax": "off",
+			"n/no-unsupported-features/node-builtins": "off"
+		}
+	},
+	{
+		// The printer tests hold JavaScript sources as strings: template
+		// placeholders and unusual whitespace are the input under test, and
+		// terser's AST factories (`ast.NumberNode({…})`) are called without `new`.
+		files: ["test/unitCases/syntax-printer*.unittest.js"],
+		rules: {
+			"no-template-curly-in-string": "off",
+			"no-irregular-whitespace": "off",
+			"new-cap": ["error", { capIsNew: false }]
+		}
+	},
+	{
+		// The snapshot helper registers `beforeAll`/`afterAll` on behalf of the
+		// suite that calls it, so its hooks sit outside any `describe`.
+		files: ["test/harness/snapshot/index.js"],
+		rules: {
+			"jest/require-top-level-describe": "off"
 		}
 	},
 	{

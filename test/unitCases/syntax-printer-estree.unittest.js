@@ -6,6 +6,8 @@
 
 const acorn = require("acorn");
 const { load } = require("../../lib/javascript/syntax").printer;
+const { NODE_KIND_ANCESTRY } = require("../../lib/javascript/syntax-printer");
+const ACORN_CORPUS = require("../fixtures/acorn-corpus.json");
 const {
 	kindName,
 	loadTerserSources,
@@ -18,8 +20,6 @@ const {
  * @returns {Promise<EXPECTED_ANY>} the module, imported through this file's runtime
  */
 const importTerserSource = (specifier) => import(specifier);
-const ACORN_CORPUS = require("../fixtures/acorn-corpus.json");
-const { NODE_KIND_ANCESTRY } = require("../../lib/javascript/syntax-printer");
 
 // What terser calls each field webpack's nodes name as ESTree does, by the
 // kind renaming it, terser's class, whose kinds rename it too.
