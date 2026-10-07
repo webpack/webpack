@@ -62,9 +62,7 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/esbuild.rs:645",
 			"oxc minifier: peephole/esbuild.rs:684",
 			"oxc minifier: peephole/esbuild.rs:688",
-			"oxc minifier: peephole/esbuild.rs:692",
 			"oxc minifier: peephole/esbuild.rs:700",
-			"oxc minifier: peephole/esbuild.rs:706",
 			"oxc minifier: peephole/esbuild.rs:824",
 			"oxc minifier: peephole/esbuild.rs:828",
 			"oxc minifier: peephole/esbuild.rs:832",
@@ -573,7 +571,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/minimize_conditions.rs:1130",
 			"oxc minifier: peephole/minimize_conditions.rs:1206",
 			"oxc minifier: peephole/minimize_conditions.rs:1226",
-			"oxc minifier: peephole/minimize_conditions.rs:124",
 			"oxc minifier: peephole/minimize_conditions.rs:1245",
 			"oxc minifier: peephole/minimize_conditions.rs:1254",
 			"oxc minifier: peephole/minimize_conditions.rs:1294",
@@ -596,7 +593,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/minimize_conditions.rs:1320",
 			"oxc minifier: peephole/minimize_conditions.rs:1321",
 			"oxc minifier: peephole/minimize_conditions.rs:1325",
-			"oxc minifier: peephole/minimize_conditions.rs:133",
 			"oxc minifier: peephole/minimize_conditions.rs:1334",
 			"oxc minifier: peephole/minimize_conditions.rs:1335",
 			"oxc minifier: peephole/minimize_conditions.rs:1336",
@@ -1339,7 +1335,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/minimize_statements.rs:133",
 			"oxc minifier: peephole/minimize_statements.rs:137",
 			"oxc minifier: peephole/minimize_statements.rs:141",
-			"oxc minifier: peephole/minimize_statements.rs:177",
 			"oxc minifier: peephole/minimize_statements.rs:188",
 			"oxc minifier: peephole/minimize_statements.rs:195",
 			"oxc minifier: peephole/minimize_statements.rs:351"
@@ -1411,7 +1406,6 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc writes `if` statements shorter, as oxc's `peephole/minimize_if_statement.rs` tests show",
 		[
-			"oxc minifier: peephole/minimize_if_statement.rs:61",
 			"oxc minifier: peephole/minimize_if_statement.rs:74",
 			"oxc minifier: peephole/minimize_if_statement.rs:78",
 			"oxc minifier: peephole/minimize_if_statement.rs:82"
