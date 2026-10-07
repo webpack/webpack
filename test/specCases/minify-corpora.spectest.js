@@ -1699,8 +1699,7 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 	[
 		"`!!x` in place of `null!=x`, which breaks the runs of `null!=` gzip reused",
 		[
-			"fixture/next/31084/xml2js/parser/input.js (the default minimizer's options)",
-			"fixture/next/regression-1/framework-798bab57daac3897/input.js (the default minimizer's options)"
+			"fixture/next/31084/xml2js/parser/input.js (the default minimizer's options)"
 		]
 	]
 ])) {
