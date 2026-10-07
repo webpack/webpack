@@ -14831,3 +14831,88 @@ describe("CssSyntax minify — a 2009 flexbox property under its own display", (
 		expect(minifyFor(css, chrome)).toBe(css);
 	});
 });
+
+// Flexbox 2 added `flex-line-count`, a longhand neither `flex` nor `flex-flow`
+// resets. Every flex property `mdn-data` names is pinned here, so the next one
+// fails until someone checks which shorthand, if any, the spec puts it in.
+describe("CssSyntax — the flex properties", () => {
+	const { getShorthandLonghands } = require("../../lib/css/data");
+
+	const FLEX_SHORTHANDS = new Map([
+		["flex", ["flex-basis", "flex-grow", "flex-shrink"]],
+		["flex-flow", ["flex-direction", "flex-wrap"]]
+	]);
+	// The flex properties no shorthand sets, with a value each takes.
+	const STANDALONE = new Map([["flex-line-count", "2"]]);
+
+	it("knows every flex property mdn-data names", () => {
+		const names = Object.keys(require("mdn-data/css/properties.json")).filter(
+			(name) => name.startsWith("flex")
+		);
+		expect(names.sort()).toEqual(
+			[
+				...FLEX_SHORTHANDS.keys(),
+				...[...FLEX_SHORTHANDS.values()].flat(),
+				...STANDALONE.keys()
+			].sort()
+		);
+	});
+
+	it.each([...FLEX_SHORTHANDS])(
+		"folds only its own longhands into %s",
+		(shorthand, longhands) => {
+			expect(
+				[.../** @type {Set<string>} */ (getShorthandLonghands().get(shorthand))].sort()
+			).toEqual(longhands);
+		}
+	);
+
+	it.each([...STANDALONE.keys()])("puts %s in no shorthand", (property) => {
+		for (const [, longhands] of getShorthandLonghands()) {
+			expect(longhands.has(property)).toBe(false);
+		}
+	});
+
+	describe.each([...STANDALONE])("%s", (property, value) => {
+		const own = `${property}:${value}`;
+
+		it.each([
+			[`a{${own};flex:1}`, `a{${own};flex:1}`],
+			[`a{flex:1;${own}}`, `a{flex:1;${own}}`],
+			[`a{${own};flex-flow:wrap}`, `a{${own};flex-flow:wrap}`],
+			[
+				`a{flex-direction:column;flex-wrap:wrap;${own}}`,
+				`a{flex-flow:column wrap;${own}}`
+			],
+			[
+				`a{flex-grow:1;flex-shrink:1;flex-basis:0;${own}}`,
+				`a{flex:1 1 0;${own}}`
+			],
+			// The merge reads the `flex-` family as one, which is the safe side.
+			[`.a{${own}}.b{flex:1}.c{${own}}`, `.a{${own}}.b{flex:1}.c{${own}}`]
+		])("keeps its own declaration in %s", (css, expected) => {
+			expect(
+				new SourceProcessor().process(css, {
+					mode: "minify",
+					mergeDistantRules: true
+				}).code
+			).toBe(expected);
+		});
+	});
+
+	it.each([
+		["a{flex-line-count:+2}", "a{flex-line-count:2}"],
+		["a{flex-line-count:calc(1 + 1)}", "a{flex-line-count:2}"],
+		// An `<integer>` rounds a non-integer, so the `calc()` is what says so.
+		["a{flex-line-count:calc(3/2)}", "a{flex-line-count:calc(3/2)}"],
+		["a{flex-line-count:calc(NaN)}", "a{flex-line-count:calc(NaN)}"],
+		["a{flex-wrap:balance}", "a{flex-wrap:balance}"],
+		// An engine not reading `balance` drops a shorthand carrying it whole.
+		[
+			"a{flex-direction:column;flex-wrap:balance}",
+			"a{flex-direction:column;flex-wrap:balance}"
+		]
+	])("minifies %s", (css, expected) => {
+		expect(minifyFor(css)).toBe(expected);
+	});
+});
