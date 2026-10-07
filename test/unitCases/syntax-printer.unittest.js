@@ -1508,6 +1508,16 @@ const CORRECTED_CASES = [
 		{ compress: {}, mangle: false }
 	],
 	[
+		"an unused class whose static key a variable names `prototype`",
+		"function t(f) { try { f(); console.log('no'); } catch (e) { console.log(e.name); } } var x = 'prototype'; t(function () { (0, class { static [x] = 42; }); }); t(function () { (0, class { static [x]; }); });",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a block's async function a folded `switch` drops, read after it",
+		"try { switch (0) { default: async function x() {} } x; console.log('no'); } catch (e) { console.log(e.name); }",
+		{ compress: {}, mangle: false }
+	],
+	[
 		"a concatenation tested for its truth, converting an object",
 		"function t(f) { try { f(); console.log('no'); } catch (e) { console.log(e.name); } } var o = { valueOf() { throw { name: 'thrown' }; }, toString() { throw { name: 'thrown' }; } }; t(function () { if (o + 'q') console.log('yes'); });",
 		{ compress: {}, mangle: false }
