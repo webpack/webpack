@@ -1281,6 +1281,12 @@ const IMPROVED_YET_BIGGER = {
 		"40 bytes fewer, 3 more gzipped: `this.p=c?x:y` breaks the `c?this.p=x:this.p=y` runs gzip reused",
 	"projects/files/jquery.mobile-1.4.2.js (the default minimizer's options)":
 		"30 bytes fewer, 2 more gzipped: `this.p=c?x:y` breaks the `c?this.p=x:this.p=y` runs gzip reused",
+	"fixture/next/regression-1/framework-798bab57daac3897/input.js (its own options)":
+		"195 bytes fewer, 23 more gzipped: `!!x` in place of `null!==x` breaks the runs of `null!==` gzip reused",
+	"fixture/next/regression-1/framework-798bab57daac3897/input.js (the default minimizer's options)":
+		"214 bytes fewer, 6 more gzipped: `!!x` in place of `null!==x` breaks the runs of `null!==` gzip reused",
+	"projects/files/react-17.0.1.js (its own options)":
+		"33 bytes fewer, 3 more gzipped: `!!x` in place of `null!==x` breaks the runs of `null!==` gzip reused",
 	"benches-full/vue.js (the default minimizer's options)":
 		"9 bytes fewer, 6 more gzipped: the shorter `typeof x<\"u\"` and constructor calls break runs gzip reused",
 	"fixture/projects/next/.archive-4/framework-054ead69ea8124b4cb27/input.js (its own options)":

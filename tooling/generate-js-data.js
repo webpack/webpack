@@ -828,6 +828,7 @@ const SIZED_BY_ARGUMENT_METHODS = ["padEnd", "padStart", "repeat"];
 // Constructors the spec has construct the same called without `new`, which
 // `improve` calls so; `RegExp` only where it is passed no regular expression.
 const CONSTRUCTED_WHEN_CALLED = [
+	"AggregateError",
 	"Array",
 	"Error",
 	"EvalError",
