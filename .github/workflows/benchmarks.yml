@@ -78,13 +78,8 @@ jobs:
           # last I/O race that perturbs allocation counts between runs.
           UV_THREADPOOL_SIZE: 1
   benchmark-memory:
-    strategy:
-      fail-fast: false
-      matrix:
-        shard: [1/4, 2/4, 3/4, 4/4]
     runs-on: ubuntu-latest
-    # The harness has no deadline of its own and a watch bench waits on a
-    # rebuild callback; main's slowest shard is ~55m, so this only trips on a hang.
+    # The four shards run back to back here (~8m each), so this only trips on a hang.
     timeout-minutes: 120
     permissions:
       issues: write
@@ -116,13 +111,15 @@ jobs:
       - name: Run memory benchmarks
         uses: CodSpeedHQ/action@c4fd08a3a159bd0cc208da1e0edf32b8c47d75e5 # v5.4.0
         with:
-          run: yarn benchmark --ci
+          # Memory mode primes and measures a shard's cases in one process, so
+          # its counts depend on which cases share it. One process per former shard
+          # keeps every case's company, and so CodSpeed's baseline, unchanged.
+          run: SHARD=1/4 yarn benchmark --ci && SHARD=2/4 yarn benchmark --ci && SHARD=3/4 yarn benchmark --ci && SHARD=4/4 yarn benchmark --ci
           mode: "memory"
           token: ${{ secrets.CODSPEED_TOKEN }}
         env:
           LAST_COMMIT: 1
           NEGATIVE_FILTER: ${{ github.event_name != 'schedule' && 'on-schedule' || '' }}
-          SHARD: ${{ matrix.shard }}
           # Single libuv thread → deterministic fs-completion order, removing the
           # last I/O race that perturbs allocation counts between runs.
           UV_THREADPOOL_SIZE: 1
