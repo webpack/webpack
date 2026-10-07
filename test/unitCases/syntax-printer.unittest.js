@@ -777,6 +777,11 @@ const KEPT_CASES = [
 /** @type {[string, string, import("terser").MinifyOptions][]} */
 const CORRECTED_CASES = [
 	[
+		"a default calling out, in a declaration moved into its one use",
+		'function make() { return { pick }; function pick(node, type, initial = type, flow = cast(node)) {} } function cast(node) { console.log("cast", node); } make().pick(1);',
+		{ compress: { keep_fargs: false }, mangle: false }
+	],
+	[
 		"new.target with unsafe arrow conversion enabled",
 		"console.log((function () { return new.target; })());",
 		{ compress: { passes: 2, ecma: 2015, unsafe_arrows: true }, mangle: false }
@@ -3733,6 +3738,14 @@ describe("syntax-printer", () => {
 		expect(copy.label.references).toHaveLength(1);
 		expect(ast.cloneNode(labeled, false).body).toBe(labeled.body);
 
+		// A deep copy holds no list of the original's, an empty one included.
+		const lists = parsed("function f() { g(a); }").body[0];
+		const deep = ast.cloneNode(lists, true);
+		expect(deep.params).not.toBe(lists.params);
+		expect(deep.body.body).not.toBe(lists.body.body);
+		const call = lists.body.body[0].expression;
+		expect(deep.body.body[0].expression.arguments).not.toBe(call.arguments);
+
 		const toplevel = parsed("function f(a) { return a; }");
 		const declared = toplevel.body[0];
 		const cloned = ast.cloneNode(declared, true, toplevel);
@@ -4551,15 +4564,13 @@ describe("syntax-printer", () => {
 		expect(count).toBeGreaterThan(300);
 	});
 
-	it("should hand back a fresh list, which a clone may share", async () => {
+	it("should hand back a list anew only where a transform changes it", async () => {
 		const { ast, parse, utils } = (await load()).modules;
 		const { createTransformer } = ast;
 		const toplevel = parse.parse("a; b; c; d;");
 		const { body } = toplevel;
 		ast.transformNode(toplevel, createTransformer(() => undefined));
-		// terser's shallow clone shares lists, so each transform must copy them.
-		expect(toplevel.body).not.toBe(body);
-		expect(toplevel.body).toEqual(body);
+		expect(toplevel.body).toBe(body);
 
 		ast.transformNode(toplevel, createTransformer(
 				/**
