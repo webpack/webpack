@@ -1167,7 +1167,7 @@ describe("CssSyntax — block streaming", () => {
 		// it — and its own second span must name where the first cut left it.
 		const dead = ".p{color:red}.q{color:blue}";
 		const victim =
-			".victim{align-items:flex-start;border-radius:0;opacity:1;background:red}";
+			".victim{opacity:1;background:red;border-radius:0;align-items:flex-start}";
 		const src = `@layer outer{${repeat(
 			6000,
 			(i) => `.f${i}{color:red}`
@@ -2647,7 +2647,7 @@ describe("CssSyntax — minify transforms, in-process", () => {
 		// author's, so a top-level identifier in one of its values is a keyword.
 		it.each([
 			["a{DISPLAY:GRID}", "a{display:grid}"],
-			["a{position:ABSOLUTE;float:LEFT}", "a{position:absolute;float:left}"],
+			["a{position:ABSOLUTE;float:LEFT}", "a{float:left;position:absolute}"],
 			["a{white-space:PRE-WRAP}", "a{white-space:pre-wrap}"],
 			["a{transform:NONE}", "a{transform:none}"],
 			// A vendor spelling is read as the property it spells.
@@ -5069,7 +5069,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		it.each([
 			[
 				".a{padding-top:0;color:red}.a{padding-bottom:2px;padding-left:2px;padding-right:2px}",
-				".a{padding:0 2px 2px;color:red}"
+				".a{color:red;padding:0 2px 2px}"
 			],
 			[
 				".a{padding-top:0!important}.a{padding-bottom:2px!important;padding-left:2px!important;padding-right:2px!important}",
@@ -5180,7 +5180,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// Only a channel reads the percentage as a byte: a length still rounds.
 			expect(settled("a{width:66.862745098%}")).toBe("a{width:66.8627%}");
 			expect(settled(".a{flex:0 0 16.66666667%;opacity:16.66666667%}")).toBe(
-				".a{flex:0 0 16.6667%;opacity:.166667}"
+				".a{opacity:.166667;flex:0 0 16.6667%}"
 			);
 			// An exact half rounds up in every engine.
 			expect(settled("a{color:rgba(50%,50%,50%,.5)}")).toBe(
@@ -5229,7 +5229,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 				minify(
 					"@media all{.c{margin-left:1em;width:1px}.d{width:2px}.c{width:3px;margin-left:.75em;color:red}}"
 				)
-			).toBe("@media all{.d{width:2px}.c{width:3px;margin-left:.75em;color:red}}");
+			).toBe("@media all{.d{width:2px}.c{color:red;width:3px;margin-left:.75em}}");
 		});
 
 		it("drops each earlier copy, the one a copy between took included", () => {
@@ -6117,7 +6117,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// declaration is one the earlier cannot have been read behind.
 			expect(minify("a{color:red}a{color:blue}")).toBe("a{color:blue}");
 			expect(minify("a{color:red;top:0}a{color:blue;left:0}")).toBe(
-				"a{top:0;color:blue;left:0}"
+				"a{color:blue;top:0;left:0}"
 			);
 			// ...and not where the earlier one may still be what an engine reads.
 			const fallback = "a{color:#fff}a{color:var(--x)}";
@@ -7330,7 +7330,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 				minify(
 					"a{margin-top:1px;margin-right:2px;color:red;margin-bottom:1px;margin-left:2px}"
 				)
-			).toBe("a{margin:1px 2px;color:red}");
+			).toBe("a{color:red;margin:1px 2px}");
 		});
 
 		it.each([
@@ -7419,9 +7419,13 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		});
 
 		it("declines a fold the two declarations do not allow", () => {
-			// Anything between them is read between them.
-			const parted = "a{margin:0;color:red;margin-top:1px}";
+			// A declaration between that writes the same side is read between them.
+			const parted = "a{margin:0;margin-block-start:2px;margin-top:1px}";
 			expect(minify(parted)).toBe(parted);
+			// One writing anything else is not, so the longhand folds past it.
+			expect(minify("a{margin:0;color:red;margin-top:1px}")).toBe(
+				"a{color:red;margin:1px 0 0}"
+			);
 			// An `!important` longhand is not the same declaration as a plain one.
 			const important = "a{margin:0!important;margin-top:1px}";
 			expect(minify(important)).toBe(important);
@@ -7614,7 +7618,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 				["the shorthand has two layers", "a{transition:a.2s,b.3s;transition-delay:.1s}"],
 				["one is `!important`", "a{outline:1px solid!important;outline-color:red}"],
 				["the longhand is a substitution", "a{border-left:1px solid;border-left-color:var(--a)}"],
-				["a declaration stands between", "a{border-left:1px solid;color:red;border-left-color:blue}"],
+				["a declaration writing the same side stands between", "a{border-left:1px solid;border-inline-start-color:red;border-left-color:blue}"],
 				["the longhand is another side's", "a{border-left:1px solid;border-top-color:red}"],
 				// An engine reading `text-wrap` as one keyword drops a value of two.
 				["the shorthand was once one keyword", "a{text-wrap:wrap;text-wrap-style:balance}"],
@@ -8313,7 +8317,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// Whatever stands between them, which can only lose to the later one
 			// wherever it would have beaten this.
 			expect(minify("a{color:red;background:red;color:blue}")).toBe(
-				"a{background:red;color:blue}"
+				"a{color:blue;background:red}"
 			);
 		});
 
@@ -9391,8 +9395,8 @@ describe("CssSyntax minify — vendor prefixes (spellings an engine dropped)", (
 		expect(minifyFor("a{columns:2}", ["chrome 40"])).toBe(
 			"a{-webkit-columns:2;columns:2}"
 		);
-		expect(minifyFor("a{column-gap:10px;columns:2}", ["chrome 130"])).toBe(
-			"a{column-gap:10px;columns:2}"
+		expect(minifyFor("a{columns:2;column-gap:10px}", ["chrome 130"])).toBe(
+			"a{columns:2;column-gap:10px}"
 		);
 	});
 
@@ -13309,7 +13313,7 @@ describe("CssSyntax minify — `foldCase`", () => {
 		// A custom property, a custom ident and an id are case-sensitive, so the
 		// fold has to stop at each of them however loudly they are written.
 		const css =
-			"@keyframes Spin{0%{opacity:0}}.a{--Foo:1;animation-name:Spin;color:var(--Foo)}#Abc{grid-area:Foot}";
+			"@keyframes Spin{0%{opacity:0}}.a{--Foo:1;color:var(--Foo);animation-name:Spin}#Abc{grid-area:Foot}";
 		expect(minifyForWith(css, ["chrome 120"], { foldCase: true })).toBe(css);
 	});
 
@@ -14155,7 +14159,7 @@ describe("SourceProcessor — mergeDistantRules", () => {
 				true
 			)
 		).toBe(
-			".z{top:2px;display:block;margin:2px 3px}.z,h2.y{all:unset;border:1px solid red}span{border-top-color:blue}"
+			".z{margin:2px 3px;display:block;top:2px}.z,h2.y{all:unset;border:1px solid red}span{border-top-color:blue}"
 		);
 	});
 
@@ -14979,31 +14983,31 @@ describe("CssSyntax minify — a 2009 flexbox property under its own display", (
 	it.each([
 		[
 			"the line-clamp idiom",
-			".a{display:-webkit-box;-webkit-box-orient:vertical;flex-direction:column;-webkit-line-clamp:2;overflow:hidden}"
+			".a{-webkit-line-clamp:2;-webkit-box-orient:vertical;flex-direction:column;display:-webkit-box;overflow:hidden}"
 		],
 		[
 			"a packed box",
-			".a{display:-webkit-box;-webkit-box-pack:center;justify-content:center}"
+			".a{-webkit-box-pack:center;justify-content:center;display:-webkit-box}"
 		],
 		[
 			"an inline box",
-			".a{display:-webkit-inline-box;-webkit-box-align:center;align-items:center}"
+			".a{-webkit-box-align:center;align-items:center;display:-webkit-inline-box}"
 		],
 		[
 			"a flexed child of one",
-			".a{display:-moz-box;-moz-box-flex:1;flex:1}"
+			".a{-moz-box-flex:1;flex:1;display:-moz-box}"
 		],
 		[
 			"an important box over a flex one",
-			".a{display:-webkit-box!important;display:flex;-webkit-box-pack:center;justify-content:center}"
+			".a{-webkit-box-pack:center;justify-content:center;display:-webkit-box!important;display:flex}"
 		],
 		[
 			"a box a later display no engine reads cannot replace",
-			".a{display:-webkit-box;display:invalid;-webkit-box-orient:vertical;flex-direction:column}"
+			".a{-webkit-box-orient:vertical;flex-direction:column;display:-webkit-box;display:invalid}"
 		],
 		[
 			"a box written after a flex one",
-			".a{display:flex;display:-webkit-box;-webkit-box-pack:center;justify-content:center}"
+			".a{-webkit-box-pack:center;justify-content:center;display:flex;display:-webkit-box}"
 		]
 	])("keeps the property %s lays out by", (_name, css) => {
 		expect(minifyFor(css, chrome)).toBe(css);
@@ -15013,22 +15017,22 @@ describe("CssSyntax minify — a 2009 flexbox property under its own display", (
 		[
 			"a flex box",
 			".a{display:-webkit-box;display:flex;-webkit-box-pack:center;justify-content:center}",
-			".a{display:flex;justify-content:center}"
+			".a{justify-content:center;display:flex}"
 		],
 		[
 			"an important flex box over an important box",
 			".a{display:-webkit-box!important;display:flex!important;-webkit-box-pack:center;justify-content:center}",
-			".a{display:flex!important;justify-content:center}"
+			".a{justify-content:center;display:flex!important}"
 		],
 		[
 			"a plain box under an important flex one",
 			".a{display:flex!important;display:-webkit-box;-webkit-box-pack:center;justify-content:center}",
-			".a{display:flex!important;justify-content:center}"
+			".a{justify-content:center;display:flex!important}"
 		],
 		[
 			"an inline flex box",
 			".a{display:-webkit-box;display:inline-flex;-webkit-box-pack:center;justify-content:center}",
-			".a{display:inline-flex;justify-content:center}"
+			".a{justify-content:center;display:inline-flex}"
 		],
 		[
 			"an alias written after its twin",
@@ -15245,7 +15249,7 @@ describe("CssSyntax minify — what a comparison with other minifiers found", ()
 		],
 		[
 			'a{grid-template-areas:"a";grid-template-rows:1fr;color:red;grid-template-columns:1fr}',
-			'a{grid-template:"a"1fr/1fr;color:red}'
+			'a{color:red;grid-template:"a"1fr/1fr}'
 		]
 	])("merges %s into %s", (css, expected) => {
 		expect(settled(css)).toBe(expected);
@@ -15395,5 +15399,69 @@ describe("CssSyntax minify — what a comparison with other minifiers found", ()
 		['a{grid-template-areas:"a";-webkit-x:1;grid-template-rows:1fr;grid-template-columns:1fr}']
 	])("keeps %s apart", (css) => {
 		expect(settled(css)).not.toContain("grid-template:");
+	});
+});
+
+describe("CssSyntax minify — declaration order", () => {
+	const modern = ["chrome 130", "firefox 130", "safari 18"];
+	/**
+	 * @param {string} css source text
+	 * @param {string[]=} browsers the selection to target
+	 * @returns {string} the output, checked to print again unchanged
+	 */
+	const settled = (css, browsers) => {
+		const once = minifyFor(css, browsers);
+		expect(minifyFor(once, browsers)).toBe(once);
+		return once;
+	};
+
+	it.each([
+		// What no family ranks stays first, as written; the rest follow by family.
+		[
+			"a{position:relative;display:block;cursor:pointer;line-height:0}",
+			"a{cursor:pointer;line-height:0;display:block;position:relative}"
+		],
+		["a{transform:none;transition:none}", "a{transition:none;transform:none}"],
+		["a{font-size:2em;margin:0}", "a{margin:0;font-size:2em}"],
+		// A custom property is a name of its own, kept where it stands.
+		["a{display:block;--v:1;color:var(--v)}", "a{--v:1;color:var(--v);display:block}"],
+		// Two rules joined are put in that order too.
+		[".a{display:block}.a{color:red}", ".a{color:red;display:block}"],
+		// A nested rule that prints nothing is no rule the order has to keep.
+		["a{display:block;color:red;& b{}}", "a{color:red;display:block}"],
+		["@keyframes k{0%{transform:none;opacity:0}}", "@keyframes k{0%{opacity:0;transform:none}}"]
+	])("prints %s as %s", (css, expected) => {
+		expect(settled(css, modern)).toBe(expected);
+	});
+
+	it.each([
+		// A property no dataset names may be one whose order matters.
+		"a{x-unknown:1;display:block;color:red}",
+		// `grid` sets the gaps, so the two keep the order they were written in.
+		"a{gap:1px;grid:auto/auto}",
+		// Two spellings of one property.
+		"a{overflow-wrap:anywhere;word-wrap:break-word}",
+		// A rule holding a nested one.
+		"a{display:block;color:red;& b{top:0}}"
+	])("keeps %s as written", (css) => {
+		expect(settled(css, modern)).toBe(css);
+	});
+
+	it("keeps the order with `reorderDeclarations` off", () => {
+		const css = "a{display:block;color:red}";
+		expect(minifyForWith(css, modern, { reorderDeclarations: false })).toBe(css);
+	});
+
+	it("folds a longhand into its shorthand past what writes something else", () => {
+		expect(settled("a{margin:0;padding:0;list-style:none;margin-left:-15px}", modern)).toBe(
+			"a{margin:0 0 0-15px;padding:0;list-style:none}"
+		);
+		// A vendor copy the target drops stands in no fold's way.
+		expect(
+			settled("a{-ms-flex:1;flex:1;-ms-flex-preferred-size:100%;flex-basis:100%}", modern)
+		).toBe("a{flex:100%}");
+		// A flow-relative side may be the physical one, so it parts the two.
+		const parted = "a{margin:0;margin-inline-start:2px;margin-left:3px}";
+		expect(settled(parted, modern)).toBe(parted);
 	});
 });
