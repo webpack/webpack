@@ -319,8 +319,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/substitute_alternate_syntax.rs:416",
 			"oxc minifier: peephole/substitute_alternate_syntax.rs:417",
 			"oxc minifier: peephole/substitute_alternate_syntax.rs:715",
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:718",
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:720",
 			"oxc minifier: peephole/substitute_alternate_syntax.rs:848",
 			"oxc minifier: peephole/substitute_alternate_syntax.rs:849",
 			"oxc minifier: peephole/substitute_alternate_syntax.rs:851",
@@ -444,7 +442,6 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: rename/mangle_catch_var_toplevel",
 			"terser compress: template-string/tagged_template_with_comment",
 			"terser compress: typescript/typescript_disabled_interface",
-			"terser compress: yield/yield_as_identifier_outside_strict_mode",
 			"terser compress: yield/yield_await_comment",
 			"terser input: comments/filter.js",
 			"terser input: issue-585/input.js",
@@ -1307,7 +1304,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/remove_unused_private_members.rs:32",
 			"oxc minifier: peephole/remove_unused_private_members.rs:36",
 			"oxc minifier: peephole/remove_unused_private_members.rs:37",
-			"oxc minifier: peephole/remove_unused_private_members.rs:49",
 			"oxc minifier: peephole/remove_unused_private_members.rs:5",
 			"oxc minifier: peephole/remove_unused_private_members.rs:58",
 			"oxc minifier: peephole/remove_unused_private_members.rs:9"
@@ -1323,7 +1319,6 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: export/import_multiple_string",
 			"terser compress: export/import_string",
 			"terser compress: harmony/import_all_statement",
-			"terser compress: harmony/import_statement",
 			"terser input: spidermonkey/input-no-astring.js"
 		]
 	],
