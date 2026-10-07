@@ -1450,6 +1450,17 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 		]
 	],
 	[
+		"`if(c)return x` written where `return c?x:void 0` matched the returns around it",
+		[
+			"fixture/next/octokit/static/chunks/357-72bd409f1472b1b8/input.js (its own options)",
+			"fixture/next/octokit/static/chunks/357-72bd409f1472b1b8/input.js (the default minimizer's options)",
+			"if_return/if_return_same_value (its own options)",
+			"if_return/if_return_same_value (the default minimizer's options)",
+			"replacer-function-result-undefined.js (the default minimizer's options)",
+			"stringify-replacer.js (the default minimizer's options)"
+		]
+	],
+	[
 		"`new` dropped before a constructor the source quotes or writes again beside it",
 		[
 			"15.2.3.5-4-12.js (the default minimizer's options)",
