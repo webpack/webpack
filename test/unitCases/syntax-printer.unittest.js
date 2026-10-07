@@ -48,6 +48,24 @@ const unimproved = async (run) => {
 	}
 };
 
+/**
+ * Runs a minify with the `correct` phase off, which writes what terser writes
+ * where terser assumes a conversion or a getter runs no code.
+ * @template T
+ * @param {() => Promise<T>} run the minify
+ * @returns {Promise<T>} its result
+ */
+const uncorrected = async (run) => {
+	const { corrections } = await load();
+	if (!corrections) throw new Error("the correct phase is not installed");
+	corrections.enabled = false;
+	try {
+		return await run();
+	} finally {
+		corrections.enabled = true;
+	}
+};
+
 /** @typedef {(input: EXPECTED_ANY, options: EXPECTED_ANY) => Promise<EXPECTED_ANY>} Minifying terser's `minify` or webpack's, for what both are given */
 
 /**
@@ -768,7 +786,7 @@ const KEPT_CASES = [
 	["an array of strings with a hole", `var a = ${stringArray(100).slice(0, -1)}, , "z"]; console.log(a.length, 100 in a);`],
 	["an index into an array of strings, folded first", `console.log(${stringArray(100)}[3]);`],
 	["a computed key a class can write as it is", 'class C { ["prototype"] = 1; ["prototype"]() {} static ["#prototype"] = 2; static ["constructor"] = 3; static [0]() {} } console.log(new C().prototype, C["#prototype"], C.constructor, typeof C[0]);'],
-	["an unused class whose static keys are not known to be `prototype`", 'function f(k) { var p = "prototype"; class K { static x() {} static ["y"] = 1; ["prototype"]() {} [p]() {} static [k]() {} static [0]() {} static [-1]() {} static [["x"]]() {} static [["prototype", "x"]]() {} static [[]]() {} static [[k]]() {} static [[...k]]() {} } return 1; } console.log(f("x"), f(1));'],
+	["an unused class whose static keys are not known to be `prototype`", 'function f(k) { var p = "prototype"; class K { static x() {} static ["y"] = 1; ["prototype"]() {} [p]() {} static [k]() {} static [0]() {} static [-1]() {} static [["x"]]() {} static [["prototype", "x"]]() {} static [[]]() {} static [[k]]() {} } return 1; } console.log(f("x"), f(1));'],
 	["a computed `__proto__` an object can write as an arrow", 'var o = { ["__proto__"]() { return 1; }, a() { return 2; } }; console.log(Object.keys(o).join(), o.__proto__(), o.a());'],
 	["a computed key an object can write as it is", 'var o = { ["#constructor"]() { return 1; }, ["prototype"]: 2 }, p = { get ["#" + "constructor"]() { return 3; } }; console.log(o["#constructor"](), o.prototype, p["#constructor"]);']
 ];
@@ -1375,6 +1393,206 @@ const CORRECTED_CASES = [
 		{ compress: {}, mangle: false }
 	],
 	[
+		"a class's static method computed as `prototype`",
+		"try { class C { static ['prototype']() {} } console.log(typeof C); } catch (e) { console.log(e.name); }",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an unused class with a static field computed as `prototype`, or extending a local async function",
+		"for (var f of [function () { class C { static ['prototype'] = 1; } }, function () { async function g() {} class A extends g {} }]) { try { f(); console.log('no'); } catch (e) { console.log(e.name); } }",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an unused name's update dropped from an array read by index",
+		"function f() { return 'f'; } function g() { return 'g'; } function t() { var b; return [--b, f(), g()][1]; } console.log(t());",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an unused class extending an arrow or an async arrow",
+		"for (var f of [function () { var C = class extends (() => {}) {}; }, function () { var C = class extends (async () => {}) {}; }]) { try { f(); console.log('no'); } catch (e) { console.log(e.name); } }",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an unused class declaration extending a number",
+		"try { (function () { class C extends 1 {} })(); console.log('no'); } catch (e) { console.log(e.name); }",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a `for` head's `let` beside an unused name with effects, closures reading each iteration's binding",
+		"function init() { return 3; } (function () { var fns = []; for (let i = 0, n = init(); i < 3; i++) fns.push(() => i); console.log(fns.map((f) => f()).join()); })();",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"two `for` heads declaring one `let` name, each beside an unused name with effects",
+		"function f() { return 1; } function g(a) { for (let i = 0, n = f(); i < 1; i++) console.log(i); for (let i = 5, n = f(); i < 6; i++) console.log(i); return a; } console.log(g(2));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a BigInt beside a Number, `null`, `undefined`, a boolean or a numeric string, nobody reads",
+		"function t(f) { try { f(); console.log('no'); } catch (e) { console.log(e.name); } } t(function () { 1n + 1; }); t(function () { 1n + null; }); t(function () { 1n + void 0; }); t(function () { !0 + 1n; }); t(function () { 1n - 'a'; }); t(function () { 1 << 1n; });",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a BigInt raised to a negative power or shifted unsigned, nobody reads",
+		"function t(f) { try { f(); console.log('no'); } catch (e) { console.log(e.name); } } t(function () { 2n ** -1n; }); t(function () { 5n >>> 1n; });",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a wrapped BigInt beside a Number, nobody reads",
+		"function t(f) { try { f(); console.log('no'); } catch (e) { console.log(e.name); } } t(function () { Object(1n) + 1; }); t(function () { Object(2n) >>> 0n; });",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an arithmetic operation, a `+` and a negation converting an object nobody reads",
+		"function t(f) { try { f(); console.log('no'); } catch (e) { console.log(e.name); } } var o = { valueOf() { throw { name: 'thrown' }; }, toString() { throw { name: 'thrown' }; } }; t(function () { o + 1; }); t(function () { o * 2; }); t(function () { -o; });",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a template converting an object nobody reads",
+		"function t(f) { try { f(); console.log('no'); } catch (e) { console.log(e.name); } } var o = { valueOf() { throw { name: 'thrown' }; }, toString() { throw { name: 'thrown' }; } }; t(function () { `${o}`; });",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an assignment nobody reads to a key converting an object",
+		"function t(f) { try { f(); console.log('no'); } catch (e) { console.log(e.name); } } var o = { valueOf() { throw { name: 'thrown' }; }, toString() { throw { name: 'thrown' }; } }; t(function () { var b = {}; b[o] ^= 1; });",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an assignment to a property of a primitive, which a setter on its prototype reads",
+		"var n = 0; Object.defineProperty(Number.prototype, 'x', { set() { n++; } }); (function () { 0..x = 1; })(); console.log(n);",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an object spreading a proxy nobody reads",
+		"var n = 0, p = new Proxy({}, { ownKeys() { n++; return []; } }); (function () { var o = { ...p }; })(); console.log(n);",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a closure reading a `let` before its declaration",
+		"function g() { function f() { return x + 1; } console.log(f()); let x; return x; } try { console.log(g()); } catch (e) { console.log(e.name); }",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a destructuring default reading a `let` declared after it",
+		"try { (function () { var y; [y = z] = []; let z; })(); console.log('no'); } catch (e) { console.log(e.name); }",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a getter defined on an object handed to `Object.defineProperty`",
+		"(function () { var o = {}; Object.defineProperty(o, 'g', { get() { console.log('get'); return 1; } }); var t = o.g; })();",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a class expression's own name assigned in its body",
+		"function t(f) { try { f(); console.log('no'); } catch (e) { console.log(e.name); } } t(function () { new (class C { constructor() { C = 42; } })(); });",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"`this` read in an arrow before `super()`",
+		"class C extends null { constructor() { try { (() => { this; })(); console.log('no'); } catch (e) { console.log(e.name); } return {}; } } new C();",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an unused class extending its own name",
+		"function t(f) { try { f(); console.log('no'); } catch (e) { console.log(e.name); } } t(function () { class x extends x {} }); t(function () { (class y extends y {}); });",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a name read in a `with` through a proxy's `has`",
+		"var log = []; var env = new Proxy({}, { has(t, k) { log.push('has:' + String(k)); return false; } }); with (env) { Object; } console.log(log.join());",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a block's async and generator functions read after the block",
+		"function t(f) { try { f(); console.log('no'); } catch (e) { console.log(e.name); } } t(function () { switch (0) { default: async function x() {} } x; }); t(function () { { function* g() {} } g; });",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a read of a `let` before its declaration in the same block",
+		"function t(f) { try { f(); console.log('no'); } catch (e) { console.log(e.name); } } t(function () { { x; let x; } }); t(function () { typeof y; let y = 1; });",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a closure in a `for-of` head reading the loop's own binding",
+		"var probe; for (let x of (probe = function () { typeof x; }, [])); try { probe(); console.log('no'); } catch (e) { console.log(e.name); }",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a closure called before the `let` it reads is declared",
+		"function g() { function f() { return x + 1; } try { f(); console.log('no'); } catch (e) { console.log(e.name); } let x = null; } g();",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an unused class whose static key a variable names `prototype`",
+		"function t(f) { try { f(); console.log('no'); } catch (e) { console.log(e.name); } } var x = 'prototype'; t(function () { (0, class { static [x] = 42; }); }); t(function () { (0, class { static [x]; }); });",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a block's async function a folded `switch` drops, read after it",
+		"try { switch (0) { default: async function x() {} } x; console.log('no'); } catch (e) { console.log(e.name); }",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a concatenation tested for its truth, converting an object",
+		"function t(f) { try { f(); console.log('no'); } catch (e) { console.log(e.name); } } var o = { valueOf() { throw { name: 'thrown' }; }, toString() { throw { name: 'thrown' }; } }; t(function () { if (o + 'q') console.log('yes'); });",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a strict `arguments.callee` nobody reads",
+		"'use strict'; try { (function () { arguments.callee; })(); console.log('no'); } catch (e) { console.log(e.name); }",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an empty strict function's `caller`, read",
+		"function foo() { 'use strict'; } try { foo.caller; console.log('no'); } catch (e) { console.log(e.name); }",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a function's `caller` assigned in strict code",
+		"'use strict'; try { (function () { var foo = function () {}; foo.caller = 20; })(); console.log('no'); } catch (e) { console.log(e.name); }",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an arrow's `arguments` nobody reads",
+		"try { (function () { var t = (() => 1).arguments; })(); console.log('no'); } catch (e) { console.log(e.name); }",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an array spreading a generator nobody reads",
+		"function* g() { console.log('ran'); yield 1; } function t() { var it = g(); [...it]; } t();",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an unused array holding a hole, a generator's spread and a call",
+		"function* g() { console.log('ran'); yield 1; } function f() { console.log('f'); } function t() { var it = g(); var a = [, ...it, f()]; } t();",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a pure call's argument spreading a generator",
+		"function* g() { console.log('ran'); yield 1; } function f() {} function t() { var it = g(); /*#__PURE__*/ f(...it); } t();",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a pure native method's argument spreading a generator",
+		"function* g() { console.log('ran'); yield 1; } function o() { console.log('o'); return 'a'; } function t() { var it = g(); (o() + '').indexOf(...it); } t();",
+		{ compress: { unsafe: true }, mangle: false }
+	],
+	[
+		"a switch's one case reading a `let` declared in its body",
+		'var f; switch (null) { case (f = function () { return x; }, null): let x = "inside"; } console.log(f());',
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a switch's case and default, the case reading a `let` declared in its body",
+		"var f, g; switch (Math.random() < 2) { case (f = () => x, true): g = 1; let x = 2; break; default: g = 0; } console.log(f(), g);",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a switch's matching case reading a class declared in its body",
+		"var f; switch (0) { case (f = () => typeof C, 0): class C {} } console.log(f());",
+		{ compress: {}, mangle: false }
+	],
+	[
 		"an empty function's parameter default an `instanceof` reaching `Symbol.hasInstance`",
 		"function g() { var n = 0, F = {}; F[Symbol.hasInstance] = function () { n++; return true; }; (function (a = 0 instanceof F) {})(); console.log(n); } g();",
 		{ compress: {}, mangle: false }
@@ -1522,6 +1740,25 @@ const LET_HEAD_CASES = [
 	[
 		"a `let [` starting a statement",
 		"var let = [1]; (let)[0] = 2; console.log(let[0]);"
+	]
+];
+
+// terser refuses a body's lexical `arguments` beside the function's own, so with
+// corrections off the printer refuses it too, and the print is measured against
+// the input.
+/** @type {[string, string][]} */
+const LEXICAL_ARGUMENTS_CASES = [
+	[
+		"a `let arguments` beside a parameter default reading `arguments`",
+		"var args; function f(x = args = arguments) { let arguments = 5; return [typeof args, args.length, arguments]; } console.log(f(undefined, 7));"
+	],
+	[
+		"a `const arguments` in a body without parameters",
+		"function g() { const arguments = 3; return arguments; } console.log(g(1, 2));"
+	],
+	[
+		"a `let arguments` in a generator and a method",
+		"function* h(x = arguments.length) { let arguments = x; yield arguments; } var o = { m(y = arguments[0]) { let arguments = y + 1; return arguments; } }; console.log(h(1, 2).next().value, o.m(4));"
 	]
 ];
 
@@ -2417,7 +2654,10 @@ describe("syntax-printer", () => {
 							...settings,
 							format: { ...settings.format }
 						});
-					const ours = await minify({ "input.js": source }, options());
+					// Nor has it a correct phase, which writes more where terser assumes less.
+					const ours = await uncorrected(() =>
+						minify({ "input.js": source }, options())
+					);
 					const referenceOptions = options();
 					for (const name of IGNORED_FORMAT_OPTIONS) {
 						delete (/** @type {Record<string, unknown>} */ (referenceOptions.format))[
@@ -2586,7 +2826,7 @@ describe("syntax-printer", () => {
 		],
 		[
 			"side effects of every statement kind",
-			"function f() { try { a(); } catch (e) { b(); } finally { c(); } switch (x) { case 1: y(); default: z(); } if (a) b(); else c(); l: for (;;) break l; { d(); } return e; } void f; (function () { var u = 1; u++; --u; delete u.x; typeof u; })(); (() => 1)(); new Date(); new Foo(); `a${b}c`; tag`x`; [...a]; ({ [k]: v, ...r }); class K { [a()] = 1; static [b()] = 2; static { c(); } #m() {} get #g() {} set #s(v) {} m() {} }",
+			"function f() { try { a(); } catch (e) { b(); } finally { c(); } switch (x) { case 1: y(); default: z(); } if (a) b(); else c(); l: for (;;) break l; { d(); } return e; } void f; (function () { var u = 1; u++; --u; delete u.x; typeof u; })(); (() => 1)(); new Date(); new Foo(); `a${b}c`; tag`x`; [...[a]]; ({ [k]: v, ...r }); class K { [a()] = 1; static [b()] = 2; static { c(); } #m() {} get #g() {} set #s(v) {} m() {} }",
 			{ passes: 2, toplevel: true, side_effects: true, pure_new: true }
 		],
 		[
@@ -2709,7 +2949,9 @@ describe("syntax-printer", () => {
 						mangle: false,
 						compress: JSON.parse(JSON.stringify(options))
 					});
-					expect(await outcome(minify, settings())).toEqual(
+					expect(
+						await uncorrected(() => outcome(minify, settings()))
+					).toEqual(
 						await outcome(reference.minify, settings())
 					);
 				}
@@ -5011,6 +5253,254 @@ describe("syntax-printer", () => {
 		});
 	});
 
+	describe("an async generator returning `undefined`", () => {
+		/**
+		 * @param {string} code a program logging once its promises settle
+		 * @returns {Promise<string>} what it logged
+		 */
+		const runSettled = async (code) => {
+			/** @type {string[]} */
+			const lines = [];
+			vm.runInNewContext(code, {
+				console: {
+					log: (/** @type {unknown} */ value) => lines.push(String(value))
+				}
+			});
+			for (let i = 0; i < 10; i++) {
+				await new Promise((resolve) => {
+					setImmediate(resolve);
+				});
+			}
+			return lines.join("\n");
+		};
+
+		it("should keep the tick its awaited value takes", async () => {
+			const { minify, corrections } = await load();
+			if (!corrections) throw new Error("the correct phase is not installed");
+			const input =
+				"var log = [], yes = 1, no = 0, count = 0; async function* a() { return; } async function* b() { return undefined; } async function* c() { if (log) return void 0; yield 1; } async function* d() { if (yes) { count++; return; } return 1; } async function* e() { if (yes) return; else return 1; } async function* f() { if (no) return 1; else { count++; return; } } async function* g() { count++; if (no) return 1; return void 0; } Promise.resolve().then(() => log.push('tick 1')).then(() => log.push('tick 2')).then(() => console.log(log.join())); for (const run of [a, b, c, d, e, f, g]) run().next().then(() => log.push(run.name));";
+			const options = { compress: {}, mangle: false };
+			const expected = await runSettled(input);
+			const { code } = await minify(input, options);
+			expect(await runSettled(/** @type {string} */ (code))).toBe(expected);
+
+			corrections.enabled = false;
+			try {
+				const uncorrected = await minify(input, options);
+				expect(
+					await runSettled(/** @type {string} */ (uncorrected.code))
+				).not.toBe(expected);
+			} finally {
+				corrections.enabled = true;
+			}
+		});
+	});
+
+	describe("a BigInt operation nobody reads", () => {
+		// The port drops `Symbol()` where terser keeps it, and refuses a constant
+		// division by zero that terser drops.
+		it("should keep a write to a `const` nobody reads", async () => {
+			const { minify } = await load();
+			const input =
+				"try { (function () { const a = 1; a = 2; })(); console.log('no'); } catch (e) { console.log(e.name); }";
+			const { code } = await minify(input, { compress: {}, mangle: false });
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+		});
+
+		it("should keep a division by zero and a Symbol converted", async () => {
+			const { minify } = await load();
+			const input =
+				"function t(f) { try { f(); console.log('no'); } catch (e) { console.log(e.name); } } t(function () { 1n / 0n; }); t(function () { 1n % 0n; }); t(function () { Symbol('1') + 0n; }); t(function () { Symbol() - 1; });";
+			const { code } = await minify(input, { compress: {}, mangle: false });
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+		});
+
+		it("should write what terser writes where it cannot throw", async () => {
+			const { minify } = await load();
+			const input =
+				"function t() { 1n * 1n; -1n; 1n + 'a'; 2n ** 1n; 1n / 2n; 3 % 2; } t(); console.log('x');";
+			const options = { compress: {}, mangle: false };
+			const { code } = await minify(input, options);
+			const reference = await terserReference().minify(input, options);
+			expect(code).toBe(reference.code);
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+		});
+	});
+
+	describe("a spread nobody reads", () => {
+		it("should write what terser writes where it runs no iterator", async () => {
+			const { minify } = await load();
+			const input =
+				"function t(a) { [...[1, a]]; [...'ab']; var o = null; o?.f(...a); } t([1]); console.log('x');";
+			const options = { compress: {}, mangle: false };
+			const { code } = await minify(input, options);
+			const reference = await terserReference().minify(input, options);
+			expect(code).toBe(reference.code);
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+		});
+
+		it("should keep spreading an `arguments` that is not the function's own", async () => {
+			const { minify } = await load();
+			const input =
+				"var it = { [Symbol.iterator]() { console.log('iterated'); return [][Symbol.iterator](); } }; function a(arguments) { [...arguments]; } function b() { var arguments = it; [...arguments]; } function c() { arguments = it; [...arguments]; } a(it); b(); c();";
+			const { code } = await minify(input, { compress: {}, mangle: false });
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+		});
+	});
+
+	describe("`pure_conversions`", () => {
+		const input =
+			"function t(f) { try { f(); console.log('no'); } catch (e) { console.log(e.name); } } var o = { valueOf() { throw { name: 'thrown' }; } }, bad = Object.create(null); t(function () { 0 == o; }); t(function () { o < 1; }); t(function () { (class { get [bad]() {} }); }); t(function () { ({ [bad]: 1 }); }); t(function () { o == null; o === 1; });";
+
+		it("should drop a conversion as terser does by default", async () => {
+			const { minify } = await load();
+			const options = { compress: {}, mangle: false };
+			const { code } = await minify(input, options);
+			const reference = await terserReference().minify(input, options);
+			expect(code).toBe(reference.code);
+		});
+
+		it("should keep a comparison or a key converting an object when off", async () => {
+			const { minify } = await load();
+			const withSymbols = `${input} t(function () { 1n < Symbol(); }); t(function () { (class { [Symbol.iterator]() {} }); });`;
+			const { code } = await minify(withSymbols, {
+				compress: { pure_conversions: false },
+				mangle: false
+			});
+			expect(runProgram(/** @type {string} */ (code))).toBe(
+				runProgram(withSymbols)
+			);
+		});
+
+		it("should keep each comparison and key converting an object when off", async () => {
+			const { minify } = await load();
+			const { code } = await minify(input, {
+				compress: { pure_conversions: false },
+				mangle: false
+			});
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+		});
+	});
+
+	describe("`pure_heritage`", () => {
+		const input =
+			"function t(f) { try { f(); console.log('no'); } catch (e) { console.log(e.name); } } var bound = function () {}.bind(); t(function () { class A extends bound {} }); t(function () { class B extends null {} class C extends class {} {} });";
+
+		it("should drop a class extending what it cannot see as terser does by default", async () => {
+			const { minify } = await load();
+			const options = { compress: {}, mangle: false };
+			const { code } = await minify(input, options);
+			const reference = await terserReference().minify(input, options);
+			expect(code).toBe(reference.code);
+		});
+
+		it("should keep a class extending what may be no constructor when off", async () => {
+			const { minify } = await load();
+			const { code } = await minify(input, {
+				compress: { pure_heritage: false },
+				mangle: false
+			});
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+		});
+	});
+
+	describe("`keep_classnames` and a name a literal gives", () => {
+		it("should keep `{ default: class {} }.default`, which names the class", async () => {
+			const { minify } = await load();
+			const input =
+				"var n; const D = { default: class {} }.default, F = { default: function () {} }.default; (function () { var unused = { default: class { static f = (n = this.name); } }.default; })(); console.log(D.name, F.name, n);";
+			const { code } = await minify(input, {
+				compress: {},
+				mangle: true,
+				keep_classnames: true,
+				keep_fnames: true
+			});
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+		});
+	});
+
+	describe("`keep_fnames` and a private method", () => {
+		const input =
+			"var C = class { #method() {} static #field = function () {}; get() { return [this.#method.name, C.#field.name]; } }; console.log(new C().get().join());";
+
+		it("should keep the private name a method's `name` reads", async () => {
+			const { minify } = await load();
+			const { code } = await minify(input, {
+				compress: {},
+				mangle: true,
+				keep_fnames: true
+			});
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			const mangled = await minify(input, { compress: {}, mangle: true });
+			expect(runProgram(/** @type {string} */ (mangled.code))).not.toBe(
+				runProgram(input)
+			);
+		});
+
+		it("should never quote a kept private name", async () => {
+			const { minify } = await load();
+			const program =
+				"class C { #ࢶ = 1; #\u{104B0}; static #\u{104B1}() { return 2; } #if = 3; get() { return [#ࢶ in this, this.#ࢶ, C.#\u{104B1}(), this.#if]; } } console.log(new C().get().join());";
+			for (const format of [{}, { ascii_only: false }, { quote_keys: true }]) {
+				const { code } = await minify(program, {
+					compress: {},
+					mangle: true,
+					keep_fnames: true,
+					format: { ...format, ie8: true }
+				});
+				expect(code).not.toMatch(/#["']/);
+				expect(runProgram(/** @type {string} */ (code))).toBe(
+					runProgram(program)
+				);
+			}
+		});
+	});
+
+	describe("a literal only a property of escapes", () => {
+		it("should drop its unused reads as terser does", async () => {
+			const { minify } = await load();
+			const input =
+				"(function () { var array = []; var push = array.push, slice = array.slice; console.log(typeof push); })();";
+			const options = { compress: {}, mangle: false };
+			const { code } = await minify(input, options);
+			const reference = await terserReference().minify(input, options);
+			expect(code).toBe(reference.code);
+		});
+	});
+
+	describe("what oxc proves runs no code", () => {
+		/** @type {[string, string, string][]} */
+		const cases = [
+			[
+				"a literal's conversion, a constant of `Math` and an arguments spread",
+				"function f() { [...arguments]; } -[]; +{ a: 1 }; `${[1]}`; 0 - {}; Math.PI * 2; ({ ...{ set a(v) {} } }); ({ ...function () {} }); f();",
+				"function f(){}f();"
+			],
+			[
+				"a template and a concatenation kept for their conversions",
+				"function f(b, d) { `a${b}c${d}e`; `x${1}${g() ? 1 : 2}${d}`; 'a' + b + 'c' + d; 'a' + (b + 'c'); b + `${d}`; } function g() {} f(1, 2);",
+				'function f(b,d){`${b}${d}`,g(),`${d}`,""+b+d,b+"",b+`${d}`}function g(){}f(1,2);'
+			],
+			[
+				"an object kept for its spreads",
+				"function f(b) { ({ x: 1, ...b, ...b, [g()]: g(), y: 2, ...b }); } function g() {} f({});",
+				"function f(b){({...b,...b}),g(),g(),{...b}}function g(){}f({});"
+			],
+			[
+				"an async generator's returns merged",
+				"async function* f(a, b, c) { if (a) return b; return c; } async function* g(a, c) { if (a) return; return c; } f(); g();",
+				"async function*f(a,b,c){return a?b:c}async function*g(a,c){if(!a)return c}f(),g();"
+			]
+		];
+		for (const [name, input, expected] of cases) {
+			it(`should drop or reduce it as oxc does: ${name}`, async () => {
+				const { minify } = await load();
+				const { code } = await minify(input, { compress: {}, mangle: false });
+				expect(code).toBe(expected);
+			});
+		}
+	});
+
 	describe("a call whose parameters run nothing", () => {
 		for (const [name, input] of NO_EFFECT_PARAMETER_CASES) {
 			it(`should write what terser writes: ${name}`, async () => {
@@ -5091,6 +5581,31 @@ describe("syntax-printer", () => {
 		}
 	});
 
+	describe("a lexical `arguments` in a function body", () => {
+		for (const [name, input] of LEXICAL_ARGUMENTS_CASES) {
+			it(`should print what the input prints: ${name}`, async () => {
+				const { minify, corrections } = await load();
+				const options = { compress: { passes: 2 }, mangle: true };
+				const expected = runProgram(input);
+				const { code } = await minify(input, options);
+				expect(runProgram(/** @type {string} */ (code))).toBe(expected);
+
+				if (!corrections) throw new Error("the correct phase is not installed");
+				corrections.enabled = false;
+				try {
+					await expect(minify(input, options)).rejects.toThrow(
+						'"arguments" is redeclared'
+					);
+					await expect(
+						terserReference().minify(input, options)
+					).rejects.toThrow('"arguments" is redeclared');
+				} finally {
+					corrections.enabled = true;
+				}
+			});
+		}
+	});
+
 	describe("a name a context reserves", () => {
 		for (const [name, input, options] of RESERVED_NAME_CASES) {
 			it(`should not write it where it is a keyword: ${name}`, async () => {
@@ -5154,7 +5669,7 @@ describe("syntax-printer", () => {
 			it(`should write what terser writes: ${name}`, async () => {
 				const { minify } = await load();
 				const options = { compress: {}, mangle: false };
-				const { code } = await minify(input, options);
+				const { code } = await uncorrected(() => minify(input, options));
 				const reference = await terserReference().minify(input, options);
 				expect(code).toBe(reference.code);
 			});
@@ -6895,6 +7410,7 @@ describe("syntax-printer", () => {
 				"a: { b: for (;;) { c: if (x) break b; } d: e: while (y) { (function () { f: g: for (;;) continue f; })(); break d; } }",
 				"function f(a, b) { var c = a + b; try { g(); } catch (e) { var e = 1; l: for (;;) { m: break l; } } return function h(x, y) { return x + y + c + h; }; } f(1, 2); var $foo = 1; foo; console.log(f);",
 				"function outer() { if (a) { function inner(x) { return x; } inner(1); } var y = function named(z, w) { return named(z) + w; }; try {} catch (q) { var q; } return [, y, , outer]; } outer();",
+				"switch (function () { var v = 'v'; try { throw 'e'; } catch (e) { console.log(v); } }()) { default: (function () { try {} catch (u) {} })(); } var b = 10; switch (function () { b; try {} catch (b) { var b; } }()) { default: (function () { try {} catch (u) {} })(); }",
 				"var reused = 1; function f() { var a1, a2, a3, a4, a5, a6, a7, a8, a9, b1, b2, b3, b4, b5, b6, b7, b8, b9, c1, c2, c3, c4, c5, c6, c7, c8, c9, d1, d2, d3, d4, d5, d6, d7, d8, d9, e1, e2, e3, e4, e5, e6, e7, e8, e9, f1, f2, f3, f4, f5, f6, f7, f8, f9; return [a1, a2, a3, a4, a5, a6, a7, a8, a9, b1, b2, b3, b4, b5, b6, b7, b8, b9, c1, c2, c3, c4, c5, c6, c7, c8, c9, d1, d2, d3, d4, d5, d6, d7, d8, d9, e1, e2, e3, e4, e5, e6, e7, e8, e9, f1, f2, f3, f4, f5, f6, f7, f8, f9, reused]; }"
 			]) {
 				it(`should mangle as terser's mangler does: ${source.slice(0, 60)}`, async () => {
