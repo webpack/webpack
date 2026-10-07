@@ -360,15 +360,27 @@ const MINIFIERS = {
 };
 // cspell:ignore fnames
 
-// test262 reads functions' and classes' `name`, and converts or extends values
-// that run code or throw on purpose, as code shipped minified does not; only the
-// printer can be told to keep those, terser's cases being listed below.
+// test262 breaks on purpose what minified code is assumed not to, so both modes
+// build with those assumptions off.
 const MINIFY_OPTIONS = {
-	terser: { compress: { passes: 2 }, keep_fnames: true, keep_classnames: true },
-	printer: {
-		compress: { passes: 2, pure_conversions: false, pure_heritage: false },
-		keep_fnames: true,
-		keep_classnames: true
+	compress: {
+		passes: 2,
+		// It reads properties that throw: of `null`, or through a getter.
+		pure_getters: false
+	},
+	// It reads functions' and classes' `name`.
+	keep_fnames: true,
+	keep_classnames: true
+};
+// The printer's own switches, which terser lacks.
+const PRINTER_OPTIONS = {
+	...MINIFY_OPTIONS,
+	compress: {
+		...MINIFY_OPTIONS.compress,
+		// It converts objects whose `valueOf` or `toString` runs code or throws.
+		pure_conversions: false,
+		// It extends what is no constructor.
+		pure_heritage: false
 	}
 };
 
@@ -1661,7 +1673,8 @@ const compile = async (entry, scenario, options = {}) =>
 						new MinimizerPlugin({
 							test: /\.[cm]?js$/i,
 							minify: MINIFIERS[minify],
-							minimizerOptions: MINIFY_OPTIONS[minify],
+							minimizerOptions:
+								minify === "printer" ? PRINTER_OPTIONS : MINIFY_OPTIONS,
 							parallel: false
 						})
 					]
