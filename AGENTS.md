@@ -12,6 +12,15 @@ A `> [!REQUIRED]` callout directly under a heading makes that whole section **ma
 - **One fact, one place**: link instead of restating, and don't copy what the repo already says (a directory listing, the `package.json` scripts, a signature).
 - **Docs live in `docs/`**, never `lib/` (it is published); renaming a heading breaks its `#anchor` links, so grep for them.
 
+## Working style
+
+Four habits, after Andrej Karpathy's notes on how coding agents go wrong (assuming silently, overbuilding, editing what they don't understand). They bias toward caution over speed, so use judgement on a one-line fix:
+
+- **Think before coding.** State your assumptions up front. When a request has two readings that lead to different work, present both rather than picking silently. Say so when a simpler approach exists or a premise looks wrong. When confused, name what is unclear and ask instead of guessing.
+- **Simplicity first.** Write the minimum that solves the ask: no feature beyond it, no abstraction for single-use code, no configurability nobody asked for, no handling for impossible errors. If 200 lines could be 50, rewrite before pushing. Would a senior maintainer call it overcomplicated? Then simplify.
+- **Surgical changes.** Every changed line traces to the request. Don't improve adjacent code, comments or formatting, refactor what isn't broken, or delete pre-existing dead code — mention it instead. Match the surrounding style. Remove only the imports, variables and functions your own change orphaned.
+- **Goal-driven execution.** Turn the task into a verifiable goal before starting: "fix the bug" is "write the failing test, then make it pass" ([Testing](#testing)); "refactor X" is "tests pass before and after". For multi-step work, state a short plan with a check per step (`1. [step] → verify: [check]`) and loop until every check passes; "make it work" is too weak to loop on.
+
 ## Commands
 
 Use **yarn**, not npm. Every command is a `package.json` script; these are the ones whose use isn't obvious from the name:
