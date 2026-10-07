@@ -1478,6 +1478,16 @@ const OXC_SMALLER_BY_REASON = [
 		["terser compress: issue-1052/multiple_functions"]
 	],
 	[
+		"oxc's output differs: it drops a class whose static member's computed key may be `\"prototype\"`, which throws a TypeError as the class is defined",
+		[
+			"oxc minifier: ecmascript/may_have_side_effects.rs:445",
+			"oxc minifier: ecmascript/may_have_side_effects.rs:451",
+			"oxc minifier: ecmascript/may_have_side_effects.rs:816",
+			"oxc minifier: peephole/remove_unused_expression.rs:734",
+			"oxc minifier: peephole/remove_unused_expression.rs:749"
+		]
+	],
+	[
 		"oxc's output differs: it drops a name read in a `with` body, which runs the object's `has` trap or getter",
 		["oxc minifier: peephole/esbuild.rs:1637"]
 	],
