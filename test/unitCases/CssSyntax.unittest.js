@@ -13522,7 +13522,9 @@ describe("CssSyntax minify — `declareCharset`", () => {
 		// One a source declares with nothing but ASCII after it is dropped.
 		["the output is ASCII", '@charset "UTF-8";a{top:0}', "a{top:0}"],
 		// The comment holding the character is not printed.
-		["only a dropped comment holds one", "/* \u4E2D */a{top:0}", "a{top:0}"]
+		["only a dropped comment holds one", "/* \u4E2D */a{top:0}", "a{top:0}"],
+		// Decoding drops the BOM, which is no character of the output.
+		["only a BOM is non-ASCII", "\uFEFFa{top:0}", "a{top:0}"]
 	])("writes no `@charset` where %s", (_name, css, printed = css) => {
 		expect(declared(css)).toBe(printed);
 	});
@@ -13534,7 +13536,13 @@ describe("CssSyntax minify — `declareCharset`", () => {
 		['a{content:"\u{1F600}"}', '@charset "UTF-8";a{content:"\u{1F600}"}'],
 		['a{content:"\u00E9"}', '@charset "UTF-8";a{content:"\u00E9"}'],
 		[".\u4E2D{top:0}", '@charset "UTF-8";.\u4E2D{top:0}'],
-		["/*! \u4E2D */a{top:0}", '@charset "UTF-8";/*! \u4E2D */a{top:0}']
+		["/*! \u4E2D */a{top:0}", '@charset "UTF-8";/*! \u4E2D */a{top:0}'],
+		// The BOM is not carried behind the `@charset`, where it reads as a selector.
+		["\uFEFF.\u4E2D{top:0}", '@charset "UTF-8";.\u4E2D{top:0}'],
+		[
+			'\uFEFF@charset "utf-8";.\u4E2D{top:0}',
+			'@charset "UTF-8";.\u4E2D{top:0}'
+		]
 	])("writes %s with a `@charset`", (css, printed) => {
 		expect(declared(css)).toBe(printed);
 	});
