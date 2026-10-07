@@ -465,6 +465,11 @@ const IMPROVED_CASES = [
 		{ compress: { ecma: 2016 }, ecma: 2016, mangle: false }
 	],
 	[
+		"a parameter or `var` times a remainder, quotient or product, the name moved last",
+		"function f(a, b, c) { var d = b - c; return [a * (b % c), 2 * (b / c), -3 * (b * c), d * (c % b)]; } console.log(f(5, 7, 3).join());",
+		{ compress: {}, mangle: false }
+	],
+	[
 		"an arrow naming `yield` in an async function, which reserves only `await`",
 		"var yield; async function f(n) { while (n--) { (() => { yield = 1; })(); } } f(2); console.log(yield);",
 		{ compress: { passes: 2 }, mangle: false }
@@ -841,6 +846,7 @@ const IMPROVED_CASES = [
 /** @type {[string, string][]} */
 const KEPT_CASES = [
 	["a conditional whose two sequences end in one chain made optional at different links", "function f(flag, obj, t) { return flag ? (t(), obj?.b.c) : (t(1), obj.b?.c); } console.log(f(1, { b: { c: 1 } }, () => 0), f(0, {}, () => 0));"],
+	["a product whose left side may read differently once its right side converts", 'var n = 2; function f(a, b) { var o = { valueOf: function () { a = n = 10; return b; } }; return [a * (o % 4), n * (o % 4), this.k * (o % 4)]; } function g(a, b) { return [a * (b % 3), arguments.length]; } function h(b) { let a = b + 1; return [a * (b % 3), a]; } console.log(f.call({ k: 3 }, 2, 7), g(2, 7), h(7));'],
 	["a conditional whose branches end in one chain made optional at different links", "function f(flag, obj, t) { return flag ? (t(), obj?.b.c) : obj.b?.c; } console.log(f(1, { b: { c: 1 } }, () => 0), f(0, {}, () => 0));"],
 	["a `return` of `undefined` in an async generator, which awaits the value a bare `return` does not", "var r = []; async function* f(a) { for (;;) { if (a()) return void r.push(1); yield r.push(2); } } var o = { async *m(a) { if (a) return void r.push(3); yield 4; } }; f(() => 1).next().then(() => o.m(1).next()).then(() => console.log(r.join()));"],
 	["a conditional whose other branch reads a global getter again", 'var n = 0; Object.defineProperty(globalThis, "g", { get: function () { return n++; }, configurable: true }); function f(b) { return g ? b : g; } console.log(f(1), f(2));'],
