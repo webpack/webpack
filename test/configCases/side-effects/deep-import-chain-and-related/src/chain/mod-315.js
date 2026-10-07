@@ -1,0 +1,3 @@
+import { value as imported } from "./mod-316.js";
+export const value = [imported, 315];
+export const config = { id: 315 };
