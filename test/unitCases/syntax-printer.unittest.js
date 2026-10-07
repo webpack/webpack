@@ -544,6 +544,11 @@ const IMPROVED_CASES = [
 		"try { null.p; } catch (e) { console.log(1); }",
 		{ compress: { ecma: 2019 }, ecma: 2019, mangle: false }
 	],
+	[
+		"a `const` copying a closure's binding, read as it beside an inner binding of the same name",
+		"var h = (function () { const t = [0, 0]; return function (o) { const s = t; s[0]++; { let t = o; t.v = s[0]; } return o; }; })(); console.log(h({}).v, h({}).v);",
+		{ compress: { passes: 2 }, mangle: false }
+	],
 	...[
 		[
 			"an array of strings split on `.`",
@@ -610,6 +615,10 @@ const IMPROVED_CASES = [
 			"function f() { return [\"abc\"[1], \"abc\"[-0], \"abc\"[2]]; } console.log(f());"
 		],
 		[
+			"a `const` only copying a parameter read as the parameter",
+			"function f(a) { const b = a; g(b); return b[0]; } function g(x) { x.push(2); } console.log(f([1]));"
+		],
+		[
 			"`Number`, `String` and `BigInt` of a literal, `toString` of a boolean or a string",
 			"function f() { return [Number(), Number(true), Number(null), Number(void 0), Number(\" 0x10 \"), String(), String(1e21), String([1, 2]), BigInt(5), true.toString(), \"xy\".toString()]; } console.log(f().map(String));"
 		]
@@ -664,6 +673,9 @@ const KEPT_CASES = [
 	["a shadowed `Array`", "function f(Array) { return new Array(1, 2); } console.log(f(function (a, b) { this.s = a + b; }).s, f(function () { this.s = 0; }).s);"],
 	["a `+` beside no number literal", 'var s = Math.random() < 2 ? "5" : ""; console.log("2" - +s, +s - +s, 1 + +s);'],
 	["a `var`", "!function () { var a = Math.random(); console.log(a, a); }();"],
+	["a `let` copying a parameter written later, or through `arguments` or `eval`", 'function f(a, c) { let b = a; let d = c; a = 3; arguments[1] = 4; return [b, d]; } function g(a) { let b = a; eval("a = 5"); return b; } console.log(f(1, 2), g(1));'],
+	["a `let` copying a binding declared after it", "function f() { let b = c; let c = 1; return b; } try { console.log(f()); } catch (e) { console.log(e.name); }"],
+	["a `let` copying a longer name read more than once, where names keep their length", "function f(longBinding) { let x = longBinding; g(); return x + x + x; } function g() {} console.log(f(1));"],
 	["a `return`", `!function () { for (let x of [1, 2]) { ${TRY} if (x) return; } console.log(2); }();`],
 	["`this`", `!function () { ${TRY} console.log(this); }();`],
 	["`arguments`", `!function () { ${TRY} console.log(arguments.length); }();`],
