@@ -1,6 +1,6 @@
 "use strict";
 
-// cspell:ignore argnames autowhatever chartjs cryptojs defun dont farg fargs firestore hoofd instancesearch joda lvalues nonmatching redef syncfusion
+// cspell:ignore argnames autowhatever chartjs cryptojs defun dont farg fargs firestore hoofd instancesearch joda lvalues nonmatching outstatic redef syncfusion
 
 // What swc's minifier does that webpack's does not yet, each with the tests
 // whose output under their own options is bigger than swc's recorded one.
@@ -819,6 +819,33 @@ const SWC_SMALLER_BY_REASON = [
 	[
 		"swc drops an `in` or `instanceof` whose right side it cannot see, which throws where that side is no object and runs a proxy's or `Symbol.hasInstance`'s code",
 		["terser compress: pure_funcs/relational"]
+	],
+	[
+		"swc drops or moves an operation converting a value that may be an object or a symbol, which runs its `valueOf` or `toString` or throws, as oxc keeps it",
+		[
+			"swc minifier: fixture/issues/5680/input.js",
+			"swc minifier: fixture/issues/vercel/007/input.js",
+			"swc minifier: fixture/next/outstatic/1/input.js",
+			"terser compress: arrow/async_function_expression",
+			"terser compress: async/async_function_declaration",
+			"terser compress: async/async_function_expression",
+			"terser compress: collapse_vars/conditional_2",
+			"terser compress: collapse_vars/issue_2364_5",
+			"terser compress: collapse_vars/var_side_effects_1",
+			"terser compress: collapse_vars/var_side_effects_3",
+			"terser compress: dead-code/dead_code_constant_boolean_should_warn_more",
+			"terser compress: dead-code/dead_code_constant_boolean_should_warn_more_strict",
+			"terser compress: drop-unused/global_var",
+			"terser compress: issue-1275/string_plus_optimization",
+			"terser compress: pure_funcs/arithmetic",
+			"terser compress: pure_funcs/array",
+			"terser compress: sequences/side_effects_cascade_3",
+			"terser compress: typeof/typeof_in_boolean_context"
+		]
+	],
+	[
+		"swc knows a `let` nothing reassigns holds the number it starts with, where webpack reads that only with `reduce_vars`, which this config turns off",
+		["swc minifier: fixture/issues/3126/1/input.js"]
 	],
 	[
 		'swc drops a function\'s lone `"use strict"`, so reading its `caller` or `arguments` no longer throws',

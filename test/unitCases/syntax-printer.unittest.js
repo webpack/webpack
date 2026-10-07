@@ -5323,6 +5323,18 @@ describe("syntax-printer", () => {
 		});
 	});
 
+	describe("a literal only a property of escapes", () => {
+		it("should drop its unused reads as terser does", async () => {
+			const { minify } = await load();
+			const input =
+				"(function () { var array = []; var push = array.push, slice = array.slice; console.log(typeof push); })();";
+			const options = { compress: {}, mangle: false };
+			const { code } = await minify(input, options);
+			const reference = await terserReference().minify(input, options);
+			expect(code).toBe(reference.code);
+		});
+	});
+
 	describe("what oxc proves runs no code", () => {
 		/** @type {[string, string, string][]} */
 		const cases = [

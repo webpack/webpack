@@ -1558,12 +1558,6 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 		]
 	],
 	[
-		"a `+` dropped beside a number literal where the source quotes it",
-		[
-			"exp-operator-precedence-unary-expression-semantics.js (the default minimizer's options)"
-		]
-	],
-	[
 		"`typeof x<\"u\"` where the source repeats the `\"undefined\"` comparison gzip matched",
 		[
 			"S11.1.6_A3_T7.js (the default minimizer's options)",

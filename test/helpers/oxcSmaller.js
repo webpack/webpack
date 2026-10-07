@@ -1478,6 +1478,10 @@ const OXC_SMALLER_BY_REASON = [
 		["terser compress: issue-1052/multiple_functions"]
 	],
 	[
+		"oxc's output differs: it drops a name read in a `with` body, which runs the object's `has` trap or getter",
+		["oxc minifier: peephole/esbuild.rs:1637"]
+	],
+	[
 		"oxc's output differs: it drops an unused class extending a regular expression, whose definition throws a TypeError",
 		["terser compress: harmony/class_extends_regex"]
 	],
