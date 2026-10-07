@@ -813,6 +813,18 @@ const IMPROVED_CASES = [
 		[
 			"a value read once moved into a property of `this` in a block, an arrow or the top level",
 			"function g(n) { console.log(n); return n; } function E(x) { if (x) { var a = g(1); this.v = a; } var k = () => { var b = g(2); this.w = b; }; k(); } var e = new E(1); { let c = g(3); this.z = c; } console.log(e.v, e.w, z);"
+		],
+		[
+			"assignments opening the statement after a `var`, as its values",
+			"var k; function f(o) { var a, b; a = o.x; b = o.y; console.log(a, b, a, b); } function g(o) { var a; return a = o.x, console.log(a, a), a; } function h(o) { var a; return a = o.x, k = function () { return a; }; } function m(o) { var a; a = o.x; try { console.log(a); } finally { console.log(a + 1); } } f({ x: 1, y: 2 }); h({ x: 4 }); m({ x: 5 }); console.log(g({ x: 3 }), k());"
+		],
+		[
+			"an assignment read first in an `if`, `switch`, `return` or call, as the `var`'s value",
+			"function f(o) { var a; if (a = o.x) return a; return a + 1; } function g(o) { var a; switch (a = o.x) { case 1: console.log(a); break; case 2: console.log(2 * a); } return a; } function h(o) { var a; return [typeof (a = o.x) + a, !(a = o.x) && a === 0]; } function k(o) { var a; (a = o.x)(a); } function m(o) { var a; return (a = o.x)`t${a}`; } function n(o) { var a; return (a = o.x)?.(a); } function p(o) { var a; if (a = o.x) { for (var i = 0; i < a; i++) console.log(i); return a; } } console.log(p({ x: 2 }), f({ x: 1 }), f({ x: 0 }), g({ x: 1 }), g({ x: 2 }), h({ x: 0 })); k({ x: console.log }); console.log(m({ x: String.raw }), n({ x: String }), n({}));"
+		],
+		[
+			"a loop's opening assignments, as a `var` in its head or before it",
+			"function f(o) { var i, j; for (i = 0, j = 1; i < o.length; i++, j++) console.log(o[i], j); return i + j; } function g(o) { var i, j; for (i = 0, j = 1, console.log(i); i < o.length; i++, j++) console.log(o[i], j); return i + j; } console.log(f([5, 6]), g([7]));"
 		]
 	].map(
 		([name, input]) =>
@@ -968,7 +980,10 @@ const KEPT_CASES = [
 	["an unused class whose static keys are not known to be `prototype`", 'function f(k) { var p = "prototype"; class K { static x() {} static ["y"] = 1; ["prototype"]() {} [p]() {} static [k]() {} static [0]() {} static [-1]() {} static [["x"]]() {} static [["prototype", "x"]]() {} static [[]]() {} static [[k]]() {} } return 1; } console.log(f("x"), f(1));'],
 	["a computed `__proto__` an object can write as an arrow", 'var o = { ["__proto__"]() { return 1; }, a() { return 2; } }; console.log(Object.keys(o).join(), o.__proto__(), o.a());'],
 	["a value read once kept from a store that reads first what it may change", 'function g(n) { console.log(n); return n; } function f(o, k) { let l = {}; var a = g(1); o[k] = a; var b = g(2); o.p.q = b; var c = g(3); o.r += c; var d = g(4); l.x = d; var e = g(5); o.s = o.p.t; console.log(e); return function () { var a = g(6); o.u = a; }; } function h(args) { args[0] = {}; return 1; } function m(o) { var a = h(arguments); o.x = a; } class A {} class B extends A { constructor() { var a = (super(), 1); this.v = a; } } var p = { p: {}, r: 1 }; f(p, "s")(); m(p); var q = g(7); p.y = q; console.log(JSON.stringify(p), new B().v);'],
-	["a computed key an object can write as it is", 'var o = { ["#constructor"]() { return 1; }, ["prototype"]: 2 }, p = { get ["#" + "constructor"]() { return 3; } }; console.log(o["#constructor"](), o.prototype, p["#constructor"]);']
+	["a computed key an object can write as it is", 'var o = { ["#constructor"]() { return 1; }, ["prototype"]: 2 }, p = { get ["#" + "constructor"]() { return 3; } }; console.log(o["#constructor"](), o.prototype, p["#constructor"]);'],
+	["an assignment to a `var` declared before another's value, which runs first", "function f(o) { var a, b = o.y; a = o.x; console.log(a, b, a, b); } f({ x: 1, y: 2 });"],
+	["an assignment to a `var` assigned again by what follows, or before a function that would need parentheses", "function f(o) { var a; a = o.x; console.log(a); a = o.y; console.log(a); } function g() { var x; if (x = true, 0 !== (x ^= true)) throw 1; if (x = new Boolean(true), 0 !== (x ^= true)) throw 2; } function h(o) { var b; b = o.x, function () { console.log(b); }.call(o), console.log(b); } f({ x: 1, y: 2 }); g(); h({ x: 3 });"],
+	["an assignment whose property is then written, or that is compound, or calls `eval`", "function f(o) { var a; (a = o.x).p = 1; console.log(a, a); } function g(o) { var a = 1; a += o.x; console.log(a, a); } function h(o) { var eval; (eval = o.x)(\"1\"); return eval; } f({ x: {} }); g({ x: 1 }); console.log(h({ x: String }));"]
 ];
 
 // Each prints one thing and terser's output another, under the options named.

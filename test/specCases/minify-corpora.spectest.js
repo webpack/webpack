@@ -1,6 +1,6 @@
 "use strict";
 
-// cspell:ignore destructurings fnames napi reminify reminifies ufuzz
+// cspell:ignore destructurings fnames fromindex napi reminify reminifies tointeger ufuzz
 
 // Holds webpack's JavaScript minifier to every test terser, swc and oxc write
 // for theirs. Each source of each corpus below is minified by webpack and by the
@@ -1475,7 +1475,6 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 	[
 		"`if(c)return x` written where `return c?x:void 0` matched the returns around it",
 		[
-			"fixture/next/octokit/static/chunks/357-72bd409f1472b1b8/input.js (the default minimizer's options)",
 			"if_return/if_return_same_value (its own options)",
 			"if_return/if_return_same_value (the default minimizer's options)",
 			"replacer-function-result-undefined.js (the default minimizer's options)",
@@ -1509,11 +1508,8 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 			"S11.5.3_A2.1_T1.js (the default minimizer's options)",
 			"S11.6.1_A2.1_T1.js (the default minimizer's options)",
 			"S11.6.1_A2.2_T2.js (the default minimizer's options)",
-			"S11.6.2_A2.1_T1.js (the default minimizer's options)",
-			"S11.7.1_A2.1_T1.js (the default minimizer's options)",
 			"S11.8.3_A2.1_T1.js (the default minimizer's options)",
 			"S11.8.6_A7_T3.js (the default minimizer's options)",
-			"S11.9.2_A7.1.js (the default minimizer's options)",
 			"S11.9.4_A2.1_T1.js (the default minimizer's options)",
 			"S11.9.4_A7.js (the default minimizer's options)",
 			"S11.9.5_A2.1_T1.js (the default minimizer's options)",
@@ -1596,7 +1592,6 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 			"S11.1.6_A3_T7.js (the default minimizer's options)",
 			"S12.6.2_A2.js (the default minimizer's options)",
 			"S13.2.2_A15_T1.js (the default minimizer's options)",
-			"S13.2.2_A15_T3.js (the default minimizer's options)",
 			"S13.2.2_A16_T2.js (the default minimizer's options)",
 			"S13.2.2_A16_T3.js (the default minimizer's options)",
 			"S13_A1.js (the default minimizer's options)",
@@ -1678,6 +1673,34 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 		[
 			"array-elements-without-initializer.js (the default minimizer's options)",
 			"parameters/default_values_in_destructurings (a module mangled at its top level)"
+		]
+	],
+	[
+		"an assignment moved into the `var` before it, where the source repeats the assignment gzip matched",
+		[
+			"S11.4.7_A2.2_T1.js (the default minimizer's options)",
+			"S11.4.8_A2.2_T1.js (the default minimizer's options)",
+			"S11.8.4_A2.1_T1.js (the default minimizer's options)",
+			"S11.8.6_A2.1_T1.js (the default minimizer's options)",
+			"S11.8.7_A2.1_T1.js (the default minimizer's options)",
+			"S12.6.3_A11_T2.js (the default minimizer's options)",
+			"S12.6.3_A12_T2.js (the default minimizer's options)",
+			"S9.5_A3.1_T4.js (the default minimizer's options)",
+			"S9.6_A3.1_T4.js (the default minimizer's options)",
+			"fixture/collapse-vars/cascade-statement/execution/input.js (its own options)",
+			"fromIndex-minus-zero.js (the default minimizer's options)",
+			"search-not-found-returns-minus-one.js (the default minimizer's options)",
+			"sequences/lift_sequences_4 (the default minimizer's options)",
+			"that-arg-coerced-to-string.js (the default minimizer's options)",
+			"this-value-coerced-to-string.js (the default minimizer's options)",
+			"tointeger-fromindex.js (the default minimizer's options)"
+		]
+	],
+	[
+		"`!!x` in place of `null!=x`, which breaks the runs of `null!=` gzip reused",
+		[
+			"fixture/next/31084/xml2js/parser/input.js (the default minimizer's options)",
+			"fixture/next/regression-1/framework-798bab57daac3897/input.js (the default minimizer's options)"
 		]
 	]
 ])) {
