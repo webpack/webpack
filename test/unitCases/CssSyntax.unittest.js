@@ -13519,10 +13519,23 @@ describe("CssSyntax minify — `declareCharset`", () => {
 		["the backslash is escaped", 'a{content:"\\\\1F600"}'],
 		["it is a custom property's value", 'a{--x:"\\1F600"}'],
 		["it is an identifier's", ".\\1F600{color:red}"],
-		["the character is an identifier's", '@charset "UTF-8";.\u{1F600}{top:0}', ".\u{1F600}{top:0}"],
-		// As before, a source writing the character itself is left as it reads.
-		["the source opens with none", 'a{content:"\u{1F600}"}']
+		// One a source declares with nothing but ASCII after it is dropped.
+		["the output is ASCII", '@charset "UTF-8";a{top:0}', "a{top:0}"],
+		// The comment holding the character is not printed.
+		["only a dropped comment holds one", "/* \u4E2D */a{top:0}", "a{top:0}"]
 	])("writes no `@charset` where %s", (_name, css, printed = css) => {
+		expect(declared(css)).toBe(printed);
+	});
+
+	// Wherever the output holds a non-ASCII character, as cssnano keeps one, so
+	// it is read as UTF-8 even where served from a page in another encoding.
+	it.each([
+		['@charset "UTF-8";.\u{1F600}{top:0}', '@charset "UTF-8";.\u{1F600}{top:0}'],
+		['a{content:"\u{1F600}"}', '@charset "UTF-8";a{content:"\u{1F600}"}'],
+		['a{content:"\u00E9"}', '@charset "UTF-8";a{content:"\u00E9"}'],
+		[".\u4E2D{top:0}", '@charset "UTF-8";.\u4E2D{top:0}'],
+		["/*! \u4E2D */a{top:0}", '@charset "UTF-8";/*! \u4E2D */a{top:0}']
+	])("writes %s with a `@charset`", (css, printed) => {
 		expect(declared(css)).toBe(printed);
 	});
 
@@ -13776,7 +13789,7 @@ describe("cssMinify export", () => {
 			"a.css": Buffer.from('a::before {\n\tcontent: "é";\n}\n', "utf8")
 		});
 
-		expect(code).toBe('a:before{content:"é"}');
+		expect(code).toBe('@charset "UTF-8";a:before{content:"é"}');
 	});
 
 	describe("extractComments", () => {

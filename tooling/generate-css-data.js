@@ -5962,8 +5962,7 @@ const collectSelectorSupport = () => {
 };
 
 /**
- * When each browser first read each gradient function, by its name, which is
- * what says when a fallback written before one is read for nothing.
+ * When each browser first read each gradient function, by its name.
  * @returns {[string, [string, number][]][]} the versions, by function name
  */
 const collectGradientSupport = () => {

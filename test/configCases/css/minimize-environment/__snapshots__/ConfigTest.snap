@@ -2,6 +2,7 @@
 
 exports[`ConfigTestCases css minimize-environment minimize-environment should compile 1`] = `
 Array [
+  "@charset \\"UTF-8\\";",
   "/*! the keyword stays a keyword */.t01{background-color:transparent}",
   "/*! ...and the function stays the keyword, which every engine reads */.t02{background-color:transparent}",
   "/*! ...including inside a gradient */.t03{background-image:linear-gradient(red,transparent)}",

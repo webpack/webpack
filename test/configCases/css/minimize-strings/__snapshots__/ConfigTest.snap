@@ -2,6 +2,7 @@
 
 exports[`ConfigTestCases css minimize-strings minimize-strings should compile 1`] = `
 Array [
+  "@charset \\"UTF-8\\";",
   "/*! normalize-string: should prefer double quotes by default */.t01:after{content:\\"\\"}",
   "/*! normalize-string: should transform single quotes to double quotes by default */.t02:after{content:\\"\\"}",
   "/*! normalize-string: should keep single quotes inside a double quoted string intact */.t03:after{content:\\"'string' is intact\\"}",

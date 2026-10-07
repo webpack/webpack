@@ -6593,7 +6593,7 @@ declare interface CssPrintOptions {
 	deferEmbeddedSource?: DeferredEmbeddedSource[];
 
 	/**
-	 * write a string's hex escape of a character past U+FFFF as the character, which costs fewer bytes than the escape after compression, and open the stylesheet with `@charset "UTF-8"` so it is read as UTF-8 wherever it is served; for a stylesheet that is a file of its own, as `@charset` is read only as one's opening bytes. Off by default, and only read while printing
+	 * open the stylesheet with `@charset "UTF-8"` exactly when its output holds a non-ASCII character, so it is read as UTF-8 wherever it is served, and write a string's hex escape of a character past U+FFFF as the character, which costs fewer bytes once compressed; for a stylesheet that is a file of its own, as `@charset` is read only as one's opening bytes. Off by default, and only read while printing
 	 */
 	declareCharset?: boolean;
 
@@ -6644,7 +6644,7 @@ declare interface CssProcessOptions {
 	environment?: CssEnvironment;
 
 	/**
-	 * write a string's hex escape of a character past U+FFFF as the character, which costs fewer bytes than the escape after compression, and open the stylesheet with `@charset "UTF-8"` so it is read as UTF-8 wherever it is served; for a stylesheet that is a file of its own, as `@charset` is read only as one's opening bytes. Off by default, and only read while printing
+	 * open the stylesheet with `@charset "UTF-8"` exactly when its output holds a non-ASCII character, so it is read as UTF-8 wherever it is served, and write a string's hex escape of a character past U+FFFF as the character, which costs fewer bytes once compressed; for a stylesheet that is a file of its own, as `@charset` is read only as one's opening bytes. Off by default, and only read while printing
 	 */
 	declareCharset?: boolean;
 
@@ -24815,6 +24815,12 @@ declare class PrintContext<TPath, TNode, TPrintOptions = object> {
 	 * this must not be used on one (see {@link take}).
 	 */
 	retract(index: number): void;
+
+	/**
+	 * Whether the output after a piece holds a character outside ASCII, the
+	 * comments still waiting to be placed included.
+	 */
+	writesNonAscii(index: number): boolean;
 
 	/**
 	 * Fold `text` into an already-emitted piece, in front of the character it ends
