@@ -212,6 +212,11 @@ const stringArray = (length, string = (index) => `w${index}`) =>
 /** @type {[string, string, import("terser").MinifyOptions][]} */
 const IMPROVED_CASES = [
 	[
+		"tabs in a long string, written raw, beside an escaped backslash",
+		`console.log("${"row\\t".repeat(30)}", "a\\\\t${"b\\t".repeat(50)}", "c\\td\\te");`,
+		{ compress: {}, mangle: false }
+	],
+	[
 		"a function, its body joining the list",
 		`!function () { ${TRY} console.log(2); }();`,
 		{ compress: {}, mangle: false }
