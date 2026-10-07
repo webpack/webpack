@@ -14708,6 +14708,20 @@ describe("CssSyntax minify — a fallback the target reads past", () => {
 		expect(
 			minifyFor("a{background:red;background:linear-gradient(red,var(--c))}", MODERN)
 		).toBe("a{background:linear-gradient(red,var(--c))}");
+		// Nor what an escape in a string beside it says.
+		expect(
+			minifyFor('a{content:"a";content:var(--c,"\\)")}', MODERN)
+		).toBe('a{content:var(--c,"\\)")}');
+	});
+
+	it("reads no hex alpha a target names no support for", () => {
+		const css = "a{background:red;background:linear-gradient(#f008,#fff)}";
+		expect(minifyForWith(css, ["chrome 50"], { lowerUnsupported: false })).toBe(
+			css
+		);
+		expect(minifyForWith(css, MODERN, { lowerUnsupported: false })).toBe(
+			"a{background:linear-gradient(#f008,#fff)}"
+		);
 	});
 
 	it("reads no empty call, which names a value no engine can read", () => {
