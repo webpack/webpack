@@ -654,6 +654,7 @@ const IMPROVED_CASES = [
 // of its function's own, or the call passes, keeps or constructs something.
 /** @type {[string, string][]} */
 const KEPT_CASES = [
+	["a conditional whose branches end in one chain made optional at different links", "function f(flag, obj, t) { return flag ? (t(), obj?.b.c) : obj.b?.c; } console.log(f(1, { b: { c: 1 } }, () => 0), f(0, {}, () => 0));"],
 	["a conditional whose other branch reads a global getter again", 'var n = 0; Object.defineProperty(globalThis, "g", { get: function () { return n++; }, configurable: true }); function f(b) { return g ? b : g; } console.log(f(1), f(2));'],
 	["a conditional whose other branch reads a getter twice or a different binding", "var n = 0, o = { get x() { return ++n; } }; function f(b) { var a = 1; { let a = 0; var r = a ? b : o.x ? b : o.x; } return [r, a, n]; } console.log(f(2));"],
 	["a bigint and a number concatenated, which throws", "try { console.log(1n + 2); } catch (e) { console.log(e.name); }"],
