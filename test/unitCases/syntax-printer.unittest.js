@@ -670,7 +670,11 @@ const KEPT_CASES = [
 	["an array of strings holding every delimiter", `var a = ${stringArray(100, (index) => `w${index}. ,()`)}; console.log(a.length);`],
 	["an array of strings and a number", `var a = ${stringArray(100).slice(0, -1)}, 1]; console.log(a.length, typeof a[100]);`],
 	["an array of strings with a hole", `var a = ${stringArray(100).slice(0, -1)}, , "z"]; console.log(a.length, 100 in a);`],
-	["an index into an array of strings, folded first", `console.log(${stringArray(100)}[3]);`]
+	["an index into an array of strings, folded first", `console.log(${stringArray(100)}[3]);`],
+	["a computed key a class can write as it is", 'class C { ["prototype"] = 1; ["prototype"]() {} static ["#prototype"] = 2; static ["constructor"] = 3; static [0]() {} } console.log(new C().prototype, C["#prototype"], C.constructor, typeof C[0]);'],
+	["an unused class whose static keys are not known to be `prototype`", 'function f(k) { var p = "prototype"; class K { static x() {} static ["y"] = 1; ["prototype"]() {} [p]() {} static [k]() {} static [0]() {} static [-1]() {} static [["x"]]() {} static [["prototype", "x"]]() {} static [[]]() {} static [[k]]() {} static [[...k]]() {} } return 1; } console.log(f("x"), f(1));'],
+	["a computed `__proto__` an object can write as an arrow", 'var o = { ["__proto__"]() { return 1; }, a() { return 2; } }; console.log(Object.keys(o).join(), o.__proto__(), o.a());'],
+	["a computed key an object can write as it is", 'var o = { ["#constructor"]() { return 1; }, ["prototype"]: 2 }, p = { get ["#" + "constructor"]() { return 3; } }; console.log(o["#constructor"](), o.prototype, p["#constructor"]);']
 ];
 
 // Each prints one thing and terser's output another, under the options named.
@@ -1312,6 +1316,71 @@ const CORRECTED_CASES = [
 	[
 		"an `instanceof` nobody reads, of a built-in name a function assigns",
 		"function f() { Object = { [Symbol.hasInstance]() { console.log('hit'); } }; } f(); [] instanceof Object; console.log(1);",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a class field keyed `#constructor`, instance, static and bare",
+		'class C { ["#constructor"] = 1; static ["#constructor"] = 2; } class D { ["#" + "constructor"]; } console.log(new C()["#constructor"], C["#constructor"], "#constructor" in new D());',
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a class method keyed `#constructor`, of each kind",
+		'class C { ["#constructor"]() { return 1; } get ["#constructor"]() { return 2; } } class D { set ["#constructor"](v) {} *["#constructor"]() {} async ["#constructor"]() {} async *["#constructor"]() {} } class E { static ["#constructor"]() { return 3; } static get ["#constructor"]() { return 4; } static set [`#constructor`](v) {} static *["#constructor"]() {} static async ["#constructor"]() {} static async *["#constructor"]() {} } console.log(new C()["#constructor"], typeof D.prototype["#constructor"], typeof E["#constructor"]);',
+		{ compress: { passes: 2 }, mangle: true }
+	],
+	[
+		"an unused class with a static member keyed `prototype`, of each kind",
+		'for (var f of [function () { class C { static ["prototype"]() {} } }, function () { (class { static ["prototype"] = 1; }); }, function () { var C = class { static get ["prototype"]() {} }; }, function () { return 1, class { static set ["prototype"](v) {} }, 2; }, function () { class C { static *[`prototype`]() {} } }, function () { class C { static async ["proto" + "type"]() {} } }, function () { class C { static async *["prototype"]() {} } }, function () { class C { static ["prototype"]; } }]) { try { f(); console.log("made"); } catch (e) { console.log(e.name); } }',
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an unused class keyed `prototype` in each position",
+		'for (var f of [function () { class C extends (console.log("extends"), Object) { static ["prototype"]() {} } }, function () { class C { static { console.log("block"); } static ["prototype"] = 1; } }, function () { class C { static ["prototype"] = C; } }, function () { return typeof class { static ["prototype"]() {} }; }, function (a) { a ? class { static ["prototype"]() {} } : 0; }, function (a) { a || class { static ["prototype"]() {} }; }, function () { const C = class { static ["prototype"]() {} }; }, function () { let C = class { static ["prototype"]() {} }; }, function () { var o = { m: class { static ["prototype"]() {} } }; }, () => void class { static ["prototype"]() {} }]) { try { f(); console.log("made"); } catch (e) { console.log(e.name); } }',
+		{ compress: { passes: 2 }, mangle: true }
+	],
+	[
+		"an unused class whose static key reads a variable holding `prototype`",
+		'function f(y) { var x = "prototype"; try { class C { static [x] = y; } console.log("made"); } catch (e) { console.log(e.name); } } f(1); f(2);',
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a class keyed `prototype` in an array whose length is folded",
+		'try { console.log([class { static ["prototype"]() {} }].length); } catch (e) { console.log(e.name); }',
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a class keyed `prototype` moved past an assignment the catch reads",
+		'function f() { var y = 1; try { var C = class { static ["prototype"]() {} }; y = 2; return C; } catch (e) { return y; } } console.log(f());',
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an unused class keyed `prototype` beside an assignment the catch reads",
+		'var y = 1; try { y = 2, class { static ["prototype"]() {} }; } catch (e) { console.log(e.name, y); }',
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an unused class whose static key converts to `prototype`",
+		'for (var f of [function () { class C { static [["prototype"]]() {} } }, function () { class C { static [[["proto" + "type"]]] = 1; } }, function () { class C { static [{ toString() { return "prototype"; } }]() {} } }, function () { var k = ["prototype"]; class C { static [k]() {} } }, function () { const k = { toString: () => "prototype" }; class C { static [k] = 1; } }]) { try { f(); console.log("made"); } catch (e) { console.log(e.name); } }',
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an unused class whose static key converts to `prototype`, its array evaluated",
+		'for (var f of [function () { class C { static [["prototype"]]() {} } }, function () { class C { static [[["proto" + "type"]]] = 1; } }, function () { class C { static [["x"]]() {} } }, function () { class C { static [{ a: 1 }]() {} static [null]() {} } }]) { try { f(); console.log("made"); } catch (e) { console.log(e.name); } }',
+		{ compress: { unsafe: true }, mangle: false }
+	],
+	[
+		"an object method named `__proto__`, which an arrow would set as the prototype",
+		'var r = (o) => [Object.getPrototypeOf(o) === Object.prototype, Object.keys(o).join()]; console.log(r({ __proto__() { return 1; } }), r({ "__proto__"() { return 2; } }), r({ async __proto__() { return 3; } }));',
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an object's `__proto__` set to a function, which a method would define as a property",
+		'var r = (o) => [Object.getPrototypeOf(o) === Object.prototype, Object.keys(o).join()]; console.log(r({ __proto__: function () {} }), r({ "__proto__": async function () {} }), r({ __proto__: () => {} }));',
+		{ compress: { unsafe_methods: true }, ecma: 2020, mangle: false }
+	],
+	[
+		"a static class member keyed `prototype`, of each kind",
+		'for (var make of [() => class { static ["prototype"] = 1; }, () => class { static [`prototype`]() {} }, () => class { static get ["proto" + "type"]() {} }, () => class { static set ["prototype"](v) {} }, () => class { static *["prototype"]() {} }, () => class { static async ["prototype"]() {} }, () => class { static async *["prototype"]() {} }, () => class { static ["prototype"]; }]) { try { make(); console.log("made"); } catch (e) { console.log(e.name); } }',
 		{ compress: {}, mangle: false }
 	]
 ];
