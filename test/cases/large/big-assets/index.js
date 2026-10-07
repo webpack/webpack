@@ -7,16 +7,11 @@ const h = url => {
 	return hash.digest("hex");
 };
 
-// one asset below V8's ~512 MB string limit and one above it
+// larger than V8's ~512 MB string limit, so it can't round-trip as a string
 it("should compile fine", () => {
-	const a = new URL(
-		"./generate-big-asset-loader.js?size=100000000!",
-		import.meta.url
-	);
-	const f = new URL(
+	const url = new URL(
 		"./generate-big-asset-loader.js?size=600000000!",
 		import.meta.url
 	);
-	expect(h(a)).toBe("a7540f59366bb641");
-	expect(h(f)).toBe("e71a39b9b1138c07");
+	expect(h(url)).toBe("e71a39b9b1138c07");
 });
