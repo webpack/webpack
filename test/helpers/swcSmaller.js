@@ -386,7 +386,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/next/43052/input.js",
 			"swc minifier: fixture/projects/backbone/12/input.js",
 			"swc minifier: fixture/projects/backbone/19/input.js",
-			"swc minifier: fixture/projects/jquery/.17/input.js",
 			"swc minifier: fixture/projects/mootools/3/input.js",
 			"swc minifier: fixture/projects/react/13/input.js",
 			"swc minifier: fixture/projects/yui/12/input.js",

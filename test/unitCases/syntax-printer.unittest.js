@@ -295,6 +295,16 @@ const IMPROVED_CASES = [
 		{ compress: {}, mangle: false }
 	],
 	[
+		"a function's last `return` of `undefined`, written as the statement or `if` it falls off after",
+		"var r = []; function g(a) { return a ? void 0 : a + 1; } function h(a) { return a ? 2 * a : void 0; } function k(a) { return r.push(a), void r.push(a); } var m = () => { r.push(3); return void r.push(4); }; k(2); m(); console.log(r.join(), g(0), g(1), h(0), h(2));",
+		{ compress: { passes: 2 }, mangle: false }
+	],
+	[
+		"a function's last `return void` of a call, which terser leaves with its defaults off",
+		"var r = []; function f(a) { r.push(a); return void r.push(a + 1); } f(1); console.log(r.join(), f(2));",
+		{ compress: { defaults: false }, mangle: false }
+	],
+	[
 		"a call between expressions, which terser joined in a sequence",
 		`console.log(0); (() => { ${TRY} console.log(2); })(); console.log(3);`,
 		{ compress: {}, mangle: false }
@@ -808,6 +818,7 @@ const KEPT_CASES = [
 	["a getter of a built-in prototype", "try { Map.prototype.size; } catch (e) { console.log(1); }"],
 	["a property read too deep", "try { Math.PI.toFixed; console.log(1); } catch (e) { console.log(2); }"],
 	["an optional built-in call", "Math?.max(1); JSON.parse?.(\"1\"); console.log(1);"],
+	["an arrow of one conditional `return`, which prints as its value", "var f = (a) => (a ? void 0 : a + 1); console.log(f(0), f(1));"],
 	["a static the generated tables leave out", "try { Math.nope(); } catch (e) { console.log(1); }"],
 	["a call of something that is no built-in", "var o = { f: function () { console.log(1); } }; o.f(); (0, o.f)();"],
 	["a `RegExp` newer than ES2018, which a newer host engine reads too", 'RegExp("(?i:a)"); console.log(1);'],
@@ -5750,8 +5761,8 @@ describe("syntax-printer", () => {
 			/** @type {[string, import("terser").MinifyOptions][]} */
 			const cases = [
 				["function f(a, b) { a || (a = b); return a; } console.log(f(0, 1), f(2, 3));", target(2020)],
-				["function f(c) { return null == c ? void 0 : c.a; } console.log(f(null), f({ a: 1 }));", target(2019)],
-				["function f(c) { return null === c ? void 0 : c.a; } console.log(f(null), f({ a: 1 }));", target(2021)],
+				["function f(c) { return [null == c ? void 0 : c.a]; } console.log(f(null), f({ a: 1 }));", target(2019)],
+				["function f(c) { return [null === c ? void 0 : c.a]; } console.log(f(null), f({ a: 1 }));", target(2021)],
 				["function f(c) { return null == c ? null : c.a; } console.log(f(null), f({ a: 1 }));", target(2021)],
 				["function f(a) { return \"\".concat(a, \"-x\"); } console.log(f(1));", target(5)],
 				["function f(a, b) { return [a.concat(b), \"``````\".concat(b)]; } console.log(f([1], 2));", target(2015)],
@@ -5760,16 +5771,16 @@ describe("syntax-printer", () => {
 				["function f(a, b) { return Math.pow(a, 3); } console.log(f(2));", target(2015)],
 				["function f(a, b) { return [Math.pow(a, b), Math.pow(2, 3)]; } console.log(f(2, 3));", target(2016)],
 				["function f(Math, a) { return Math.pow(a, 3); } console.log(f({ pow: (a, b) => a + b }, 2));", target(2016)],
-				["function f(c) { return null == c.d ? void 0 : c.d.e; } console.log(f({}), f({ d: { e: 1 } }));", target(2021)],
-				["function f(c) { return null == c ? void 0 : g(c); } function g(c) { return c; } console.log(f(null), f(1), g(2));", target(2021)],
-				["function f(c) { return null == c ? void 0 : (c || g).a; } function g() {} console.log(f(null), f({ a: 1 }));", target(2021)],
-				["function f(c) { return null == c ? void 0 : c?.a; } console.log(f(null), f({ a: 1 }));", target(2021)],
+				["function f(c) { return [null == c.d ? void 0 : c.d.e]; } console.log(f({}), f({ d: { e: 1 } }));", target(2021)],
+				["function f(c) { return [null == c ? void 0 : g(c)]; } function g(c) { return c; } console.log(f(null), f(1), g(2));", target(2021)],
+				["function f(c) { return [null == c ? void 0 : (c || g).a]; } function g() {} console.log(f(null), f({ a: 1 }));", target(2021)],
+				["function f(c) { return [null == c ? void 0 : c?.a]; } console.log(f(null), f({ a: 1 }));", target(2021)],
 				["var o = { p: 0, q: 1 }; function f(k) { o[k + 1] || (o[k + 1] = 2); return o; } console.log(f(\"p\"), f(\"q\"));", target(2021)],
 				["var g = function f() { \"use strict\"; try { f = f || 1; } catch (e) { return e.name; } return typeof f; }; console.log(g());", target(2021)],
 				["x = x || 1; var x; print(x); function print(v) { console.log(v); }", target(2021)],
 				["console.log(function () { var other = {}, o = { get p() { o = other; return 0; }, set p(v) {} }, first = o; o.p || (o.p = 1); return [first === o, other.p]; }());", target(2021)],
-				["var n = 0; Object.defineProperty(globalThis, \"a\", { get: function () { return n++ ? null : { p: 1 }; }, configurable: true }); function f() { return null == a ? void 0 : a.p; } try { console.log(f()); } catch (e) { console.log(e.name); }", target(2021)],
-				["function f(o, c) { with (o) { return null == c ? void 0 : c.p; } } console.log(f({}, null), f({ c: { p: 2 } }, { p: 1 }));", target(2021)],
+				["var n = 0; Object.defineProperty(globalThis, \"a\", { get: function () { return n++ ? null : { p: 1 }; }, configurable: true }); function f() { return [null == a ? void 0 : a.p]; } try { console.log(f()); } catch (e) { console.log(e.name); }", target(2021)],
+				["function f(o, c) { with (o) { return [null == c ? void 0 : c.p]; } } console.log(f({}, null), f({ c: { p: 2 } }, { p: 1 }));", target(2021)],
 				["function f(o, c) { with (o) { c || (c = 1); return c; } } console.log(f({}, 0), f({ c: 0 }, 2));", target(2021)],
 				["function f(c) { return null != c ? c : 1; } console.log(f(null), f(0));", target(2019)],
 				["function f(c) { return [null != c.d ? c.d : 1, null != c ? c.d : 2]; } console.log(f({}), f({ d: 0 }));", target(2021)],
