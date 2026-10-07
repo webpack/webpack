@@ -320,6 +320,11 @@ const IMPROVED_CASES = [
 		{ compress: {}, mangle: false }
 	],
 	[
+		"a negated test nobody reads the value of, as the opposite operator",
+		"function f(a, b) { !a || b.push(1); !a && b.push(2); !a.length || b.push(3), b.push(4); for (;;) { !a || b.push(5); break; } return b.join(); } console.log(f(0, []), f(1, []), f([], []));",
+		{ compress: {}, mangle: false }
+	],
+	[
 		"a RegExp no one reads",
 		'new RegExp("foobar", "i"); new RegExp("a+"); RegExp("(?<a>x)\\\\k<a>", "gimsuy"); Math?.prototype.toString; console.log(1);',
 		{ compress: {}, mangle: false }
@@ -701,6 +706,7 @@ const KEPT_CASES = [
 	["a conditional assigning a key read from a name", 'function f(x, k) { var o = {}; Math.random() < 2 ? o[k] = 1 : o[k] = 2; return o.a; } console.log(f(1, "a"));'],
 	["a conditional adding to its target", "var a = 0; Math.random() < 2 ? a += 1 : a += 2; console.log(a);"],
 	["a strict test for null and undefined of a global", "console.log(globalThis.g === null || globalThis.g === void 0, typeof g);"],
+	["a negated test whose value is read", "function f(a, b) { var x = !a || b; return [x, !a && b, (!a || b, !a && b)]; } console.log(f(0, 1), f(1, 0));"],
 	["a `concat` keeping a hole", "console.log([, 1].concat(2).length, 0 in [, 1].concat(2));"],
 	["a `Number` shadowed by a variable", "var Number = { NaN: 1 }; console.log(Number.NaN);"],
 	["`Number.EPSILON`, longer as a number", "console.log(Number.EPSILON);"],
