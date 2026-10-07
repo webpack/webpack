@@ -297,7 +297,7 @@ One upstream corpus is vendored rather than pinned as a submodule:
 yarn test:basic --testPathPatterns="ConfigTestCases" --testNamePattern="<category> <case>"
 ```
 
-Swap in `StatsTestCases`, `HotTestCases`, `WatchTestCases`, … (full matrix in [below](#how-to-run-tests)). The `test262`, `html5lib`, `syntax-equivalence` and `css-parsing` suites need submodules — run `git submodule update --init --depth 1 test/external/test262-cases test/external/html5lib-tests test/external/wpt test/external/css-parsing-tests` first, or they fail confusingly.
+Swap in `StatsTestCases`, `HotTestCases`, `WatchTestCases`, … (full matrix in [below](#how-to-run-tests)). Prefix `WEBPACK_TEST_STATS=1` to also write each build's verbose `stats.txt` (`stats.<step>.txt` for watch cases) next to its output under `test/js/`; it's off by default because it costs about as much as the build. The `test262`, `html5lib`, `syntax-equivalence` and `css-parsing` suites need submodules — run `git submodule update --init --depth 1 test/external/test262-cases test/external/html5lib-tests test/external/wpt test/external/css-parsing-tests` first, or they fail confusingly.
 
 **A `configCases/` case** is a mini project: `index.js` (assertions; a throw fails) plus `webpack.config.js`; the emitted bundle is executed, so it must run. Optional: `errors.js` / `warnings.js` export matcher arrays for expected diagnostics (otherwise any error/warning fails the case); `test.filter.js` returns `false` to skip (e.g. by Node version when the fixture itself needs newer syntax — see [Target the Node baseline](AGENTS.md#target-the-node-baseline)); `test.config.js` customizes the run (e.g. `findBundle`).
 
