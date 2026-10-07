@@ -1,5 +1,5 @@
 {
-  "name": "foo",
+  "name": "foo-a",
   "version": "1.0.0",
   "module": "./a.js"
 }
