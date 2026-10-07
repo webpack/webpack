@@ -14,12 +14,13 @@ A `> [!REQUIRED]` callout directly under a heading makes that whole section **ma
 
 ## Working style
 
-Four habits that counter the usual coding-agent failures (assuming silently, overbuilding, editing what it doesn't understand). They bias toward caution over speed, so use judgement on a one-line fix:
+Five habits that counter the usual coding-agent failures (assuming silently, overbuilding, editing what it doesn't understand, padding every answer). They bias toward caution over speed, so use judgement on a one-line fix:
 
 - **Think before coding.** State your assumptions up front; if uncertain, ask. When a request has several readings, present them rather than picking silently. Say so when a simpler approach exists, and push back when warranted. When something is unclear, stop, name what is confusing and ask.
 - **Simplicity first.** Write the minimum that solves the ask: no feature beyond it, no abstraction for single-use code, no "flexibility" or configurability nobody asked for, no error handling for impossible scenarios. If you write 200 lines and it could be 50, rewrite. Would a senior engineer call it overcomplicated? Then simplify.
 - **Surgical changes.** Every changed line traces directly to the request. Don't "improve" adjacent code, comments or formatting; don't refactor what isn't broken; match the existing style even where you'd do it differently. Remove the imports, variables and functions your own change made unused. Remove other dead code only when nothing uses it (no class, function, method or test) and it isn't public API (not exported or re-exported, not in `types.d.ts`, not reachable through `package.json` `exports`, not a deep import `yarn find-deep-imports:check` reports); if you can't tell whether it is used or what it is for, ask.
 - **Goal-driven execution.** Turn the task into a verifiable goal before starting: "add validation" is "write tests for invalid inputs, then make them pass"; "fix the bug" is "write a test that reproduces it, then make it pass" ([Testing](#testing)); "refactor X" is "tests pass before and after". For multi-step work, state a short plan with a check per step (`1. [step] → verify: [check]`). Strong success criteria let you loop on your own; "make it work" needs constant clarification.
+- **Answer plainly.** Use the fewest words that keep the context, meaning and point: no preamble, filler or restating what the reader can see. Show rather than describe: a code block with before and after for anything changed, a table or code block for what moved, what a run printed or where a regression sits.
 
 These habits are working when diffs carry only requested changes, code is simple the first time, and clarifying questions come before implementation rather than after mistakes.
 
