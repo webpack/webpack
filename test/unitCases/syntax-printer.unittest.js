@@ -706,6 +706,10 @@ const IMPROVED_CASES = [
 		[
 			"`Number`, `String` and `BigInt` of a literal, `toString` of a boolean or a string",
 			"function f() { return [Number(), Number(true), Number(null), Number(void 0), Number(\" 0x10 \"), String(), String(1e21), String([1, 2]), BigInt(5), true.toString(), \"xy\".toString()]; } console.log(f().map(String));"
+		],
+		[
+			"a `#__PURE__` call of a function written in place, passed nothing, as the value it returns",
+			"function g(x) { return [x]; } var o = { m: g }; function f(a) { var x = /* @__PURE__ */ (() => [a, 1])(), y = /* @__PURE__ */ (function () { return new Map(); })(), z = /* @__PURE__ */ (() => g(a))(), w = /* @__PURE__ */ (() => o.m(2))(); /* @__PURE__ */ (() => g(a))(); return [x, y.size, z, w, /* @__PURE__ */ (function () { return; })()]; } console.log(f(1));"
 		]
 	].map(
 		([name, input]) =>
@@ -758,6 +762,7 @@ const KEPT_CASES = [
 	["a negated test whose value is read", "function f(a, b) { var x = !a || b; return [x, !a && b, (!a || b, !a && b)]; } console.log(f(0, 1), f(1, 0));"],
 	["a `concat` keeping a hole", "console.log([, 1].concat(2).length, 0 in [, 1].concat(2));"],
 	["a `Number` shadowed by a variable", "var Number = { NaN: 1 }; console.log(Number.NaN);"],
+	["a `#__PURE__` call of a function passed something, called optionally, async, running more than a `return`, or returning what has side effects", "function g(x) { return x; } var o = { p: { q: g } }; console.log(/* @__PURE__ */ ((a) => a)(1), /* @__PURE__ */ (() => 1)?.(), /* @__PURE__ */ (() => { g(); return 1; })(), /* @__PURE__ */ (() => g(g()))(), /* @__PURE__ */ (() => o.p.q(1))(), /* @__PURE__ */ (async () => 1)() instanceof Promise, /* @__PURE__ */ (() => o.p)());"],
 	["`Number.EPSILON`, longer as a number", "console.log(Number.EPSILON);"],
 	["safe-integer bounds, whose digits gzip worse", "console.log(Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER);"],
 	["a `RegExp` constructed from a regular expression", "var r = /a/g; console.log(new RegExp(r) === r, RegExp(r) === r);"],
