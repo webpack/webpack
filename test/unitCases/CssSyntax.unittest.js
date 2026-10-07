@@ -1679,8 +1679,8 @@ describe("CssSyntax — minify token-boundary safety", () => {
 		// so the separator a fusing junction needs there is an empty comment: `a b`
 		// would match what `a/**/b` (two adjacent type selectors) never does.
 		expect(min("a/**/b{c:1}")).toBe("a/**/b{c:1}");
-		expect(min("@scope (div/**/span){a{c:1}}")).toBe(
-			"@scope (div/**/span){a{c:1}}"
+		expect(min("@scope(div/**/span){a{c:1}}")).toBe(
+			"@scope(div/**/span){a{c:1}}"
 		);
 		// A comment the source spelled out where nothing would fuse still goes.
 		expect(min("a/**/ b{c:1}")).toBe("a b{c:1}");
@@ -10063,7 +10063,7 @@ describe("CssSyntax minify — the list a joined at-rule's seam leaves", () => {
 		"@supports (color:red)",
 		"@layer a",
 		"@container (width>0px)",
-		"@scope (.x)",
+		"@scope(.x)",
 		"@starting-style"
 	];
 
@@ -15463,5 +15463,83 @@ describe("CssSyntax minify — declaration order", () => {
 		// A flow-relative side may be the physical one, so it parts the two.
 		const parted = "a{margin:0;margin-inline-start:2px;margin-left:3px}";
 		expect(settled(parted, modern)).toBe(parted);
+	});
+});
+
+describe("CssSyntax minify — the same rewrite in every context", () => {
+	const modern = ["chrome 130", "firefox 130", "safari 18"];
+	const bodies = [
+		"border:none",
+		"border-block:none",
+		"border-inline-start:none",
+		"outline:none",
+		"column-rule:medium none",
+		"transform:translate(calc(0% + 1px),calc(0% - 2vw))",
+		"transform:translateX(calc(1rem - 0%))",
+		"transform:translateZ(calc(0% + 1px))",
+		"transform:translate3d(calc(0% + 1px),0,calc(0% + 2px))",
+		"color:#fff;color:var(--c)",
+		"color:var(--a);color:var(--b)",
+		"padding:1px;padding:env(safe-area-inset-top)",
+		"width:10px;width:calc(var(--w)*2)",
+		"color:red;color:if(style(--x:1):red;else:blue)",
+		"position:relative;display:block;cursor:pointer;line-height:0",
+		"gap:1px;grid:auto/auto",
+		"margin-left:0;color:red;margin-inline-start:8px;display:block",
+		"margin:0;padding:0;list-style:none;margin-left:-15px",
+		"margin:0;margin-inline-start:2px;margin-left:3px",
+		"grid-area:1/1;color:red;grid-row-start:2",
+		"grid-column:span 2/3;grid-column-start:1"
+	];
+	/** @type {((body: string) => string)[]} */
+	const contexts = [
+		(body) => `@media (width>=600px){.a{${body}}}`,
+		(body) => `@supports (display:grid){.a{${body}}}`,
+		(body) => `@container card (width>=400px){.a{${body}}}`,
+		(body) => `@layer base{.a{${body}}}`,
+		(body) => `@scope (.card){.a{${body}}}`,
+		(body) => `@starting-style{.a{${body}}}`,
+		(body) => `.p{.a{${body}}}`,
+		(body) => `.p{&:hover{${body}}}`,
+		(body) => `.p{@media (width>=600px){${body}}}`,
+		(body) => `@keyframes k{0%{${body}}}`
+	];
+
+	it.each(bodies)("rewrites %s alike wherever it stands", (body) => {
+		const top = minifyFor(`.a{${body}}`, modern);
+		const block = top.slice(top.indexOf("{"));
+		for (const wrap of contexts) {
+			const once = minifyFor(wrap(body), modern);
+			expect(once).toContain(block);
+			expect(minifyFor(once, modern)).toBe(once);
+		}
+	});
+});
+
+describe("CssSyntax minify — grid lines, `@scope` and substitutions", () => {
+	const modern = ["chrome 130", "firefox 130", "safari 18"];
+
+	it.each([
+		// A later line is written into the shorthand, with what its omission means.
+		[".a{grid-area:1/1;grid-row-start:2}", ".a{grid-area:2/1}"],
+		[".a{grid-area:a;grid-column-end:b}", ".a{grid-area:a/a/a/b}"],
+		[".a{grid-area:a;grid-row-end:a}", ".a{grid-area:a}"],
+		[".a{grid-row:1;grid-row-end:3}", ".a{grid-row:1/3}"],
+		[".a{grid-column:span 2/3;grid-column-start:1}", ".a{grid-column:1/3}"],
+		[".a{grid-area:1/2/3/4;grid-column-end:auto}", ".a{grid-area:1/2/3}"],
+		// A substitution may stand for any number of lines.
+		[".a{grid-area:var(--a);grid-row-start:1}", ".a{grid-area:var(--a);grid-row-start:1}"],
+		// The root list follows the name; `to` still needs its space.
+		["@scope (.a) to (.b){.c{color:red}}", "@scope(.a) to (.b){.c{color:red}}"],
+		// Each substitution parses where every target reads it, and no further.
+		[".a{padding:1px;padding:env(safe-area-inset-top)}", ".a{padding:env(safe-area-inset-top)}"],
+		[
+			".a{color:red;color:if(style(--x:1):red;else:blue)}",
+			".a{color:red;color:if(style(--x:1):red;else:blue)}"
+		],
+		['.a{content:"a";content:attr(title)}', '.a{content:"a";content:attr(title)}'],
+		[".a{color:red;color:--f()}", ".a{color:red;color:--f()}"]
+	])("writes %s as %s", (css, expected) => {
+		expect(minifyFor(css, modern)).toBe(expected);
 	});
 });

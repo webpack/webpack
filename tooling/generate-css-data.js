@@ -7354,11 +7354,21 @@ const collectData = async () => {
 	const valueSupport = [
 		...collectValueSupport(colorValueFunctions),
 		...collectGradientSupport(),
-		// Where `var()` is read, any declaration holding it parses.
-		/** @type {[string, [string, number][]]} */ ([
-			"var",
-			collectSupportedFrom(["css.types.var"])
-		])
+		// Where a substitution function is read, any declaration holding it parses.
+		// `attr()` is left out: its row is the `content` reading, not this one.
+		...[...substitutionFunctions]
+			.filter(
+				(name) =>
+					name !== "attr" &&
+					/** @type {EXPECTED_ANY} */ (bcd.css.types)[name] !== undefined
+			)
+			.map(
+				(name) =>
+					/** @type {[string, [string, number][]]} */ ([
+						name,
+						collectSupportedFrom([`css.types.${name}`])
+					])
+			)
 	].sort((a, b) => (a[0] < b[0] ? -1 : 1));
 	const pooled = poolSupport([supportedFrom, selectorSupport, valueSupport]);
 	const prefixedAtRules = collectPrefixTable(bcd.css["at-rules"]);
