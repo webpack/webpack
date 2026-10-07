@@ -14,12 +14,14 @@ A `> [!REQUIRED]` callout directly under a heading makes that whole section **ma
 
 ## Working style
 
-Four habits, after Andrej Karpathy's notes on how coding agents go wrong (assuming silently, overbuilding, editing what they don't understand). They bias toward caution over speed, so use judgement on a one-line fix:
+Four habits that counter the usual coding-agent failures (assuming silently, overbuilding, editing what it doesn't understand). They bias toward caution over speed, so use judgement on a one-line fix:
 
-- **Think before coding.** State your assumptions up front. When a request has two readings that lead to different work, present both rather than picking silently. Say so when a simpler approach exists or a premise looks wrong. When confused, name what is unclear and ask instead of guessing.
-- **Simplicity first.** Write the minimum that solves the ask: no feature beyond it, no abstraction for single-use code, no configurability nobody asked for, no handling for impossible errors. If 200 lines could be 50, rewrite before pushing. Would a senior maintainer call it overcomplicated? Then simplify.
-- **Surgical changes.** Every changed line traces to the request. Don't improve adjacent code, comments or formatting, refactor what isn't broken, or delete pre-existing dead code — mention it instead. Match the surrounding style. Remove only the imports, variables and functions your own change orphaned.
-- **Goal-driven execution.** Turn the task into a verifiable goal before starting: "fix the bug" is "write the failing test, then make it pass" ([Testing](#testing)); "refactor X" is "tests pass before and after". For multi-step work, state a short plan with a check per step (`1. [step] → verify: [check]`) and loop until every check passes; "make it work" is too weak to loop on.
+- **Think before coding.** State your assumptions up front; if uncertain, ask. When a request has several readings, present them rather than picking silently. Say so when a simpler approach exists, and push back when warranted. When something is unclear, stop, name what is confusing and ask.
+- **Simplicity first.** Write the minimum that solves the ask: no feature beyond it, no abstraction for single-use code, no "flexibility" or configurability nobody asked for, no error handling for impossible scenarios. If you write 200 lines and it could be 50, rewrite. Would a senior engineer call it overcomplicated? Then simplify.
+- **Surgical changes.** Every changed line traces directly to the request. Don't "improve" adjacent code, comments or formatting; don't refactor what isn't broken; match the existing style even where you'd do it differently. Mention unrelated dead code, don't delete it. Remove the imports, variables and functions your own change made unused, and no pre-existing dead code unless asked.
+- **Goal-driven execution.** Turn the task into a verifiable goal before starting: "add validation" is "write tests for invalid inputs, then make them pass"; "fix the bug" is "write a test that reproduces it, then make it pass" ([Testing](#testing)); "refactor X" is "tests pass before and after". For multi-step work, state a short plan with a check per step (`1. [step] → verify: [check]`). Strong success criteria let you loop on your own; "make it work" needs constant clarification.
+
+These habits are working when diffs carry only requested changes, code is simple the first time, and clarifying questions come before implementation rather than after mistakes.
 
 ## Commands
 
