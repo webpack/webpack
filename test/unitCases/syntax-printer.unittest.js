@@ -543,6 +543,10 @@ const IMPROVED_CASES = [
 			"function f(a, b) { if ((a | +b) !== 0) console.log(1); if (0 == (a >>> b)) console.log(2); if (+a === 0) console.log(3); if ((a & ~b) === 0) console.log(4); if (~+a !== 0) console.log(5); } f(1, 2); f(0, 0); f(-1, NaN);"
 		],
 		[
+			"a function returning what a function it calls in place returns, written with that function's body",
+			"var f = function () { return function () { for (var i = 0; i < 2; i++) console.log(i); }(); }; f(); var g = () => (function () { for (var j = 0; j < 2; j++) console.log(j); return j; })(); console.log(g());"
+		],
+		[
 			"`??` after a value never `null` or `undefined`",
 			"function f(a, b) { return [!a ?? b, (a + \"x\") ?? b, typeof a ?? b, (a * 2) ?? b, [a] ?? b]; } console.log(f(1, 2), f(null, 3));"
 		],
@@ -635,6 +639,7 @@ const KEPT_CASES = [
 	["a RegExp pattern holding a slash", 'try { RegExp("a/b"); console.log(1); } catch (e) { console.log(2); }'],
 	["a RegExp with flags not a string", 'try { RegExp("a", 1); } catch (e) { console.log(1); }'],
 	["a RegExp pattern not a string", 'try { RegExp(1); console.log(1); } catch (e) { console.log(2); }'],
+	["a function returning a call in place of a function reading its own `this`, naming itself, holding a directive or declaring a parameter's name", 'var o = { m: function () { return function () { for (var i = 0; i < 2; i++) console.log(typeof this, i); }(); } }; o.m(); var f = function () { return function g() { for (var i = 0; i < 2; i++) console.log(typeof g, i); }(); }; f(); var h = function () { return function () { "use strict"; for (var i = 0; i < 2; i++) console.log(typeof this, i); }(); }; h(); var k = function (a) { return function () { for (var a in { x: 1, y: 2 }) console.log(a); }(); }; k(1);'],
 	["a count too large to run", 'try { new Uint8Array(1e9); console.log(1); } catch (e) { console.log(2); }'],
 	["an argument no literal", "function f(a) { String(a); Object.keys({ [a]: 1 }); Object.keys({ get b() { return 1; } }); Object.keys({ __proto__: a }); Object.keys([a]); Object.keys({ b: a }); } f([1]); console.log(1);"],
 	["a built-in that runs code", 'eval("console.log(1)");'],

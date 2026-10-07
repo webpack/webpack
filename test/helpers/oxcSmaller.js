@@ -1449,10 +1449,8 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc inlines a function into its call site, where terser keeps the call",
 		[
-			"swc exec: terser_collapse_vars_issue_2203_4",
 			"swc minifier: fixture/issues/12182/receiver-sensitive/input.js",
 			"swc minifier: fixture/pr/11987/input.js",
-			"terser compress: collapse_vars/issue_2203_4",
 			"terser compress: inline/noinline_annotation_2",
 			"terser compress: properties/skip_computed_properties"
 		]

@@ -288,8 +288,6 @@ const SWC_SMALLER_BY_REASON = [
 	[
 		"swc inlines a function into its call site, where terser keeps the call: one used once, a small one used a few times, or an IIFE unwrapped into statements",
 		[
-			"swc minifier: fixture/issues/10054/for/input.js",
-			"swc minifier: fixture/issues/10054/if/input.js",
 			"swc minifier: fixture/issues/10532/input.js",
 			"swc minifier: fixture/issues/10746/input.js",
 			"swc minifier: fixture/issues/10876/1/input.js",
