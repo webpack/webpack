@@ -485,6 +485,11 @@ const IMPROVED_CASES = [
 		{ compress: {}, mangle: false }
 	],
 	[
+		"a `let` declaration beside one written from a `const`, joined, its names mangled",
+		"function f(o) { const a = o.x; let b = o.y; b++; for (const k of [a, b]) { const c = k + b; let d = [c, c]; d.push(a); console.log(d); } } f({ x: 1, y: 2 });",
+		{ compress: {} }
+	],
+	[
 		"a pattern naming nothing, reading `null`, which still throws",
 		"try { !function () { const { a } = null; }(); } catch (e) { console.log(e.name); }",
 		{ compress: {}, mangle: false }
@@ -5129,6 +5134,41 @@ describe("syntax-printer", () => {
 				const reference = await terserReference().minify(input, options);
 				expect(code).toBe(reference.code);
 			}
+		});
+
+		it("should leave `let` declarations apart under `join_vars: false`", async () => {
+			const { minify } = await load();
+			const { code } = await minify(
+				"function f(o) { const a = o.x; let b = o.y; b++; return [a, b]; } console.log(f({ x: 1, y: 2 }));",
+				{ compress: { join_vars: false }, mangle: false }
+			);
+			expect(code).toBe(
+				"function f(o){let a=o.x;let b=o.y;return b++,[a,b]}console.log(f({x:1,y:2}));"
+			);
+		});
+
+		it("should keep a comment before a joined `let`, printed where terser prints one before a joined `var`", async () => {
+			const { minify } = await load();
+			/** @type {import("terser").MinifyOptions} */
+			const options = {
+				compress: {},
+				mangle: false,
+				format: { comments: "some" }
+			};
+			const { code } = await minify(
+				"function f(o) { let a = o.x; /*! b */ const b = g(); a++; return [a, b, b]; }",
+				options
+			);
+			expect(code).toBe(
+				"function f(o){let a=o.x,b=g();/*! b */return a++,[a,b,b]}"
+			);
+			const joinedVars = await terserReference().minify(
+				"function f(o) { var a = o.x; /*! b */ var b = g(); a++; return [a, b, b]; }",
+				options
+			);
+			expect(joinedVars.code).toBe(
+				"function f(o){var a=o.x,b=g();/*! b */return[++a,b,b]}"
+			);
 		});
 
 		it("should leave the program's value alone under `expression`", async () => {
