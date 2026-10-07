@@ -1573,6 +1573,18 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 		]
 	],
 	[
+		"an empty constructor dropped where the source repeats it gzip matched",
+		[
+			"classConstructorNoCall.js (the default minimizer's options)",
+			"className.js (the default minimizer's options)",
+			"harmony/classes (the default minimizer's options)",
+			"staticConstructor.js (the default minimizer's options)",
+			"superElemDelete.js (the default minimizer's options)",
+			"superPropChains.js (the default minimizer's options)",
+			"superPropStatics.js (the default minimizer's options)"
+		]
+	],
+	[
 		"a literal folded into the string it makes where the source repeats the literal gzip matched",
 		[
 			"evaluate/unsafe_array (a module mangled at its top level)",

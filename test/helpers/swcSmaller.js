@@ -12,7 +12,6 @@ const SWC_SMALLER_BY_REASON = [
 		"swc drops what nothing reads or what has no effect: unused variables and destructuring, side-effect-free `new Map()` and pure calls, an empty constructor",
 		[
 			"swc minifier: fixture/issues/11303/input.js",
-			"swc minifier: fixture/issues/11320/input.js",
 			"swc minifier: fixture/issues/12192/input.js",
 			"swc minifier: fixture/issues/12193/input.js",
 			"swc minifier: fixture/issues/12204/nullish-arguments/input.js",
@@ -69,7 +68,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: functions/issue_2647_2",
 			"terser compress: functions/issue_2647_3",
 			"terser compress: harmony/array_spread_of_sequence",
-			"terser compress: harmony/classes",
 			"terser compress: harmony/fat_arrow_as_param",
 			"terser compress: harmony/issue_2794_4",
 			"terser compress: harmony/issue_2794_6",

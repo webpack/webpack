@@ -531,6 +531,10 @@ const IMPROVED_CASES = [
 			`var a = [${Array.from({ length: 100 }, (_, index) => (index % 2 ? '"\\ude00"' : '"\\ud83d"')).join(", ")}]; console.log(a.length, a[0].length, a[0].charCodeAt(0), a[1].charCodeAt(0));`
 		],
 		[
+			"an empty constructor of a class extending nothing, and a class constructed for nothing that runs nothing",
+			'class A { constructor() {} m() { return 1; } } console.log(new A().m(), A.length); new class { x = 1; foo() {} }(); new class {}(console.log("argument"));'
+		],
+		[
 			"an equality negated as the opposite one, a boolean negated twice as itself",
 			"function f(a, b, o) { return [!(a == b), !(a !== b), !!(a < b), !!(a in o), !!delete o.x, !!(a && b), !!(a || b)]; } console.log(f(1, 2, {}), f(2, 2, { 2: 1 }));"
 		],
@@ -627,6 +631,7 @@ const KEPT_CASES = [
 	["a `Math` the program declares", "var Math = { abs: () => 9 }; console.log(Math.abs(-1));"],
 	["a global a direct `eval` could rebind", 'function f() { eval(""); return Math.abs(-1); } console.log(f());'],
 	["a global a `with` could rebind", "with ({}) console.log(Math.abs(-1));"],
+	["a constructor with a parameter, in a derived class, computed or static, and a class constructed whose field, key, block or constructor runs something", 'class A { constructor(a) {} } class B extends A { constructor() { super(); } } class C { ["constructor"]() { return 1; } static constructor() { return 2; } } console.log(A.length, new B() instanceof A, new C().constructor === C, C.constructor()); new class { p = console.log("p"); }(); new class { [console.log("k")]() {} }(); new class { static { console.log("s"); } }(); new class { constructor() { console.log("c"); } }();'],
 	["case not in ASCII", 'console.log("\\u00c4B".toLowerCase());'],
 	["a call that throws", 'try { console.log(decodeURI("%")); } catch (e) { console.log(1); }'],
 	["a result longer than the call", 'console.log("ab".repeat(100));'],

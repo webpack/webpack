@@ -246,6 +246,7 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: functions/unsafe_call_2",
 			"terser compress: harmony/array_literal_with_spread_2b",
 			"terser compress: harmony/array_literal_with_spread_4a",
+			"terser compress: harmony/classes",
 			"terser compress: harmony/export_default_object_expression",
 			"terser compress: harmony/issue_2345",
 			"terser compress: ie8/dont_screw_try_catch_undefined",
