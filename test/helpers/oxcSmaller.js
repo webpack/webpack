@@ -322,8 +322,7 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/substitute_alternate_syntax.rs:851",
 			"oxc minifier: peephole/substitute_alternate_syntax.rs:867",
 			"oxc minifier: peephole/substitute_alternate_syntax.rs:868",
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:873",
-			"terser compress: sequences/side_effects_cascade_3"
+			"oxc minifier: peephole/substitute_alternate_syntax.rs:873"
 		]
 	],
 	[
@@ -655,6 +654,7 @@ const OXC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/firebase/dist/1/input.js",
 			"swc minifier: fixture/issues/react-instancesearch/004/input.js",
 			"swc minifier: fixture/issues/react/hooks/3/input.js",
+			"swc minifier: fixture/issues/vercel/005/input.js",
 			"swc minifier: fixture/next/31077/static/chunks/1606726a.10299989c08cb523/input.js",
 			"swc minifier: fixture/next/33265/static/chunks/pages/index-cb36c1bf7f830e3c/input.js",
 			"swc minifier: fixture/next/36127/2/3/input.js",
@@ -686,6 +686,7 @@ const OXC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/projects/next/archive-3/pages/dynamic/ssr-true-6d4aa8fc503b9d073aef/input.js",
 			"swc minifier: fixture/projects/react/.6/input.js",
 			"swc minifier: fixture/projects/wmr/archive-1/chunks/hoofd.module.6c5395cb/input.js",
+			"swc minifier: full/vercel/ms/1/input.js",
 			"swc minifier: projects/files/backbone-1.1.0.js",
 			"swc minifier: projects/files/jquery-1.9.1.js",
 			"swc minifier: projects/files/jquery.mobile-1.4.2.js",
