@@ -508,6 +508,11 @@ const IMPROVED_CASES = [
 		{ compress: {}, mangle: false }
 	],
 	[
+		"a string's `concat` as a template, from ECMAScript 2015, converting each value in the same order",
+		'var log = []; function o(n) { return { toString() { log.push(n); return n; } }; } function f(p, a, n) { return ["".concat(p, "-item"), "".concat(p, "-").concat(a, "-x"), "a".concat(1, n, "z"), "".concat(n, "${").concat("`"), "".concat(o("x"), "!").concat(o("y"))]; } console.log(f("ant", o("a"), 2), log.join());',
+		{ compress: { ecma: 2015 }, ecma: 2015, mangle: false }
+	],
+	[
 		"an optional link on a parenthesized chain, joined to it, from ECMAScript 2020",
 		"function f(a) { return [(a?.b)?.c, (a?.b)?.(1), (a?.b)?.[0]]; } console.log(f(null), f({ b: null }), f({ b: Object.assign((x) => x, { c: 2, 0: 3 }) }));",
 		{ compress: { ecma: 2020 }, ecma: 2020, mangle: false }
@@ -5742,6 +5747,10 @@ describe("syntax-printer", () => {
 				["function f(c) { return null == c ? void 0 : c.a; } console.log(f(null), f({ a: 1 }));", target(2019)],
 				["function f(c) { return null === c ? void 0 : c.a; } console.log(f(null), f({ a: 1 }));", target(2021)],
 				["function f(c) { return null == c ? null : c.a; } console.log(f(null), f({ a: 1 }));", target(2021)],
+				["function f(a) { return \"\".concat(a, \"-x\"); } console.log(f(1));", target(5)],
+				["function f(a, b) { return [a.concat(b), \"``````\".concat(b)]; } console.log(f([1], 2));", target(2015)],
+				["function f(a) { try { return \"x`\".concat(a)`y`; } catch (e) { return e.name; } } console.log(f(1));", target(2015)],
+				["var log = []; function o(n) { return { toString() { log.push(n); return n; } }; } function f(a, b) { return [\"\".concat(a, b), \"\".concat(a, \"-\", b), \"\".concat(...a)]; } console.log(f(o(\"a\"), o(\"b\")), f([1], 2), log.join());", target(2015)],
 				["function f(a, b) { return Math.pow(a, 3); } console.log(f(2));", target(2015)],
 				["function f(a, b) { return [Math.pow(a, b), Math.pow(2, 3)]; } console.log(f(2, 3));", target(2016)],
 				["function f(Math, a) { return Math.pow(a, 3); } console.log(f({ pow: (a, b) => a + b }, 2));", target(2016)],
