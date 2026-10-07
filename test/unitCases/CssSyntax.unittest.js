@@ -4755,7 +4755,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// A family reads each slot by what it takes, so a width and a color are
 			// answered for as well as a keyword: both of these hold their initial.
 			["a{column-rule:medium none red}", "a{column-rule:red}"],
-			["a{outline:medium none}", "a{outline:0}"],
+			["a{outline:medium none}", "a{outline:none}"],
 			["a{flex-flow:row wrap}", "a{flex-flow:wrap}"],
 			// Both slots hold their initial, so the shortest one says both — whichever
 			// order they were written in.
@@ -4788,7 +4788,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			["a{border:medium solid red}", "a{border:solid red}"],
 			["a{border:medium none currentcolor}", "a{border:0}"],
 			["a{border:none medium}", "a{border:0}"],
-			["a{column-rule:medium none currentcolor}", "a{column-rule:0}"],
+			["a{column-rule:medium none currentcolor}", "a{column-rule:none}"],
 			// ...and a sibling that is one keeps it.
 			["a{border:medium 1px}", "a{border:medium 1px}"],
 			["a{border:currentcolor red}", "a{border:currentcolor red}"]
@@ -9374,10 +9374,10 @@ describe("CssSyntax minify — vendor prefixes (spellings an engine dropped)", (
 		// `-moz-outline` went in Firefox 3.6; the property it stood for is filed as
 		// complete only from 88, which is not where the spelling stopped working.
 		expect(minifyFor("a{outline:none}", ["firefox 40"])).toBe(
-			"a{outline:0}"
+			"a{outline:none}"
 		);
 		expect(minifyFor("a{outline:none}", ["firefox 3"])).toBe(
-			"a{-moz-outline:0;outline:0}"
+			"a{-moz-outline:none;outline:none}"
 		);
 	});
 
@@ -15160,10 +15160,12 @@ describe("CssSyntax minify — what a comparison with other minifiers found", ()
 
 	it.each([
 		["a{border:none}", "a{border:0}"],
-		["a{outline:NONE!important}", "a{outline:0!important}"],
+		["a{border:NONE!important}", "a{border:0!important}"],
 		["a{border-top:none}", "a{border-top:0}"],
 		["a{border-block-end:none}", "a{border-block-end:0}"],
-		["a{column-rule:none}", "a{column-rule:0}"],
+		// `medium` computes as 3px for these whatever the style, so `0` differs.
+		["a{outline:none}", "a{outline:none}"],
+		["a{column-rule:none}", "a{column-rule:none}"],
 		// No width beside the style here, so `none` stays the one word.
 		["a{border-style:none}", "a{border-style:none}"],
 		["a{text-decoration:none}", "a{text-decoration:none}"]
