@@ -1,5 +1,5 @@
 {
-  "name": "css-order",
+  "name": "css-order-concatenate-modules",
   "version": "1.0.0",
   "sideEffects": false,
   "devDependencies": {

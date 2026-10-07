@@ -1,5 +1,5 @@
 {
-  "name": "pkg",
+  "name": "entry-exports-field-imports",
   "exports": "./pkg.mjs",
   "imports": {
     "#internal": "./pkg.mjs"

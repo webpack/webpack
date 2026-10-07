@@ -1,5 +1,5 @@
 {
-    "name": "css-order2",
+    "name": "css-order-reexport",
     "version": "1.0.0",
     "sideEffects": false,
     "devDependencies": {

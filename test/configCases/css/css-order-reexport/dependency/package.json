@@ -1,5 +1,5 @@
 {
-  "name": "dependency",
+  "name": "css-order-reexport-dependency",
   "version": "1.0.0",
   "private": true,
   "sideEffects": false,
