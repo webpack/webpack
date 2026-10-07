@@ -300,6 +300,11 @@ const IMPROVED_CASES = [
 		{ compress: { passes: 2 }, mangle: false }
 	],
 	[
+		"a function's last `return void` of a call, which terser leaves with its defaults off",
+		"var r = []; function f(a) { r.push(a); return void r.push(a + 1); } f(1); console.log(r.join(), f(2));",
+		{ compress: { defaults: false }, mangle: false }
+	],
+	[
 		"a call between expressions, which terser joined in a sequence",
 		`console.log(0); (() => { ${TRY} console.log(2); })(); console.log(3);`,
 		{ compress: {}, mangle: false }
