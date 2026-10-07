@@ -70,7 +70,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: harmony/array_spread_of_sequence",
 			"terser compress: harmony/fat_arrow_as_param",
 			"terser compress: harmony/issue_2794_4",
-			"terser compress: harmony/issue_2794_6",
 			"terser compress: harmony/object_spread_of_sequence",
 			"terser compress: identity/inline_identity_dont_lose_this_when_arg",
 			"terser compress: issue-1639/issue_1639_2",
@@ -550,7 +549,6 @@ const SWC_SMALLER_BY_REASON = [
 		"swc merges imports of one module, drops unused specifiers, and folds a declaration into its `export default`",
 		[
 			"swc minifier: fixture/check/1/input.js",
-			"swc minifier: fixture/issues/11133/input.js",
 			"swc minifier: fixture/issues/11257/input.js",
 			"swc minifier: fixture/issues/11321/input.js",
 			"swc minifier: fixture/issues/12185/input.js",

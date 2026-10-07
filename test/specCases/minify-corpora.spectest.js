@@ -1270,6 +1270,9 @@ const webpackRefusalsSeen = new Set();
 const misprintsSeen = new Set();
 /** @type {Set<string>} */
 const improvedYetBiggerSeen = new Set();
+// Each `SWC_SMALLER` and `OXC_SMALLER` entry met, as `<table>: <source>`.
+/** @type {Set<string>} */
+const rivalSmallerSeen = new Set();
 
 /**
  * Outputs the `improve` phase writes shorter yet gzip compresses worse, each
@@ -2071,6 +2074,7 @@ describe("JavaScript minifier", () => {
 								table,
 								lead.source
 							);
+							if (listed) rivalSmallerSeen.add(`${tableName}: ${lead.source}`);
 							if (worse && !listed) {
 								differences.push(
 									`${lead.source} is bigger than ${lead.rival}'s output: ${lead.ours} raw, ${lead.oursGzip} gzip, against ${lead.theirs} raw, ${lead.theirsGzip} gzip`
@@ -2330,7 +2334,9 @@ describe("JavaScript minifier", () => {
 								const oxc = oxcOutputs.get(source);
 								const oxcKey = `${corpus.name}: ${source.name}`;
 								if (oxc instanceof Error && setName === oxcSet) {
-									if (!Object.prototype.hasOwnProperty.call(OXC_SMALLER, oxcKey)) {
+									if (Object.prototype.hasOwnProperty.call(OXC_SMALLER, oxcKey)) {
+										rivalSmallerSeen.add(`OXC_SMALLER: ${oxcKey}`);
+									} else {
 										differences.push(`${oxcKey} aborts oxc: ${oxc.message}`);
 									}
 								} else if (
@@ -2372,7 +2378,13 @@ describe("JavaScript minifier", () => {
 				.map((key) => `REFERENCE_MISPRINTS: ${key}`),
 			...Object.keys(IMPROVED_YET_BIGGER)
 				.filter((key) => !improvedYetBiggerSeen.has(key))
-				.map((key) => `IMPROVED_YET_BIGGER: ${key}`)
+				.map((key) => `IMPROVED_YET_BIGGER: ${key}`),
+			...Object.keys(SWC_SMALLER)
+				.map((key) => `SWC_SMALLER: ${key}`)
+				.filter((entry) => !rivalSmallerSeen.has(entry)),
+			...Object.keys(OXC_SMALLER)
+				.map((key) => `OXC_SMALLER: ${key}`)
+				.filter((entry) => !rivalSmallerSeen.has(entry))
 		]).toEqual([]);
 	});
 });
