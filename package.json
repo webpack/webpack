@@ -212,7 +212,7 @@
     "nyc": "^18.0.0",
     "open-cli": "^9.0.0",
     "oxc-minify": "^0.152.0",
-    "oxc-parser": "^0.151.0",
+    "oxc-parser": "^0.152.0",
     "pkg-pr-new": "^0.0.88",
     "playwright-core": "^1.63.0",
     "prettier": "^3.8.2",
