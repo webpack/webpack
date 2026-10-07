@@ -12511,9 +12511,10 @@ describe("CssSyntax minify — the declaration a lowered shorthand kills", () =>
 		);
 	});
 
-	it("keeps an earlier one where the later is a substitution", () => {
-		const css = "a{text-decoration:overline;text-decoration:var(--x)}";
-		expect(minifyFor(css, T)).toBe(css);
+	it("lowers no substitution, which parses where `var()` is read", () => {
+		expect(
+			minifyFor("a{text-decoration:overline;text-decoration:var(--x)}", T)
+		).toBe("a{text-decoration:var(--x)}");
 	});
 
 	it.each([
@@ -14662,13 +14663,14 @@ describe("CssSyntax minify — a fallback the target reads past", () => {
 				MODERN
 			)
 		).toBe("a{background-image:linear-gradient(45deg,#fff 25%,#0000 25%)}");
-		// An interpolation space, and a call inside, are not asked here.
+		// An interpolation space is not asked here.
 		expect(
 			minifyFor("a{background:red;background:linear-gradient(in oklch,red,blue)}", MODERN)
 		).toBe("a{background:red;background:linear-gradient(in oklch,red,blue)}");
+		// A `var()` inside parses wherever `var()` is read, whatever it holds.
 		expect(
 			minifyFor("a{background:red;background:linear-gradient(red,var(--c))}", MODERN)
-		).toBe("a{background:red;background:linear-gradient(red,var(--c))}");
+		).toBe("a{background:linear-gradient(red,var(--c))}");
 	});
 
 	it("reads no empty call, which names a value no engine can read", () => {
@@ -15292,6 +15294,29 @@ describe("CssSyntax minify — what a comparison with other minifiers found", ()
 
 	describe("for a target", () => {
 		const modern = ["chrome 130", "firefox 130", "safari 18"];
+		it.each([
+			// A declaration holding `var()` parses wherever `var()` is read.
+			["a{color:#fff;color:var(--b)}", modern, "a{color:var(--b)}"],
+			["a{color:var(--a);color:VAR(--b)}", modern, "a{color:VAR(--b)}"],
+			["a{color:#fff;color:var(--b)}", ["ie 11"], "a{color:#fff;color:var(--b)}"],
+			// A string spelling the name is no call.
+			['a{width:1px;width:"var("}', modern, 'a{width:1px;width:"var("}'],
+			["a{color:red;color:avar(--b)}", modern, "a{color:red;color:avar(--b)}"]
+		])("drops what %s writes before a substitution", (css, browsers, expected) => {
+			expect(minifyFor(css, browsers)).toBe(expected);
+		});
+
+		it("drops a rule a join writes again, in the one pass", () => {
+			// The two later rules join first; the joined one writes the first again.
+			const css =
+				"@layer x{.s{color:red}@supports (x:y){.s{color:blue}}.s{color:red}.s{opacity:.8}}";
+			const once = minifyFor(css, modern);
+			expect(once).toBe(
+				"@layer x{@supports (x:y){.s{color:blue}}.s{color:red;opacity:.8}}"
+			);
+			expect(minifyFor(once, modern)).toBe(once);
+		});
+
 		it.each([
 			[
 				"@supports ((-webkit-mask-image:none) or (mask-image:none)){a{x:1}}",

@@ -7220,7 +7220,12 @@ const collectData = async () => {
 	]);
 	const valueSupport = [
 		...collectValueSupport(colorValueFunctions),
-		...collectGradientSupport()
+		...collectGradientSupport(),
+		// Where `var()` is read, any declaration holding it parses.
+		/** @type {[string, [string, number][]]} */ ([
+			"var",
+			collectSupportedFrom(["css.types.var"])
+		])
 	].sort((a, b) => (a[0] < b[0] ? -1 : 1));
 	const pooled = poolSupport([supportedFrom, selectorSupport, valueSupport]);
 	const prefixedAtRules = collectPrefixTable(bcd.css["at-rules"]);
