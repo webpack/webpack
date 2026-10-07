@@ -2110,11 +2110,11 @@ describe("CssSyntax — minify keeps input the grammar rejects", () => {
 	const min = (src) =>
 		new SourceProcessor().process(src, { mode: "minify" }).code;
 
-	it("keeps the sourceMappingURL pragma", () => {
-		// A `/*#` pragma is a link, not a comment — dropping it breaks the map of
-		// an already-built stylesheet webpack only passes through.
+	it("drops the sourceMappingURL pragma", () => {
+		// The map it names is the source's, which the minified text no longer
+		// matches; every minifier compared, terser for `//#` included, drops it.
 		expect(min("/*# sourceMappingURL=a.css.map */\n.v{color:red}")).toBe(
-			"/*# sourceMappingURL=a.css.map */.v{color:red}"
+			".v{color:red}"
 		);
 		expect(min("/* inert */.v{color:red}")).toBe(".v{color:red}");
 	});
@@ -3217,8 +3217,7 @@ describe("CssSyntax — the per-transform switches", () => {
 	describe("comments", () => {
 		const css =
 			"/*inert*//*! banner *//* @license L */a{b:c}/*# sourceMappingURL=x.map */";
-		const banners =
-			"/*! banner *//* @license L */a{b:c}/*# sourceMappingURL=x.map */";
+		const banners = "/*! banner *//* @license L */a{b:c}";
 		const every =
 			"/*inert*//*! banner *//* @license L */a{b:c}/*# sourceMappingURL=x.map */";
 
@@ -3241,12 +3240,12 @@ describe("CssSyntax — the per-transform switches", () => {
 			expect(min(css, { comments })).toBe(expected);
 		});
 
-		// The pragma is a link to a source map rather than a comment, so the two
-		// banner levels carry it; a selector the author wrote decides it like any
-		// other comment, or `comments` would have a case it cannot express.
+		// The pragma names the source's own map, which minified text no longer
+		// matches, so the banner levels drop it as terser drops `//#`; a selector
+		// the author wrote decides it like any other comment.
 		it.each([
-			[undefined, true],
-			[/** @type {const} */ ("some"), true],
+			[undefined, false],
+			[/** @type {const} */ ("some"), false],
 			[/** @type {const} */ ("all"), true],
 			[true, true],
 			[false, false],
@@ -13806,22 +13805,22 @@ describe("cssMinify export", () => {
 			// The plugin's default: a banner or license, once each, and the pragma stays.
 			[
 				true,
-				"a{color:red}b{color:blue}c{margin:0}/*# sourceMappingURL=a.map */",
+				"a{color:red}b{color:blue}c{margin:0}",
 				["/*! one */", "/* @license two */"]
 			],
 			[
 				{},
-				"a{color:red}b{color:blue}c{margin:0}/*# sourceMappingURL=a.map */",
+				"a{color:red}b{color:blue}c{margin:0}",
 				["/*! one */", "/* @license two */"]
 			],
 			[
 				/license/,
-				"a{color:red}b{color:blue}c{margin:0}/*# sourceMappingURL=a.map */",
+				"a{color:red}b{color:blue}c{margin:0}",
 				["/* @license two */"]
 			],
 			[
 				"^!",
-				"a{color:red}b{color:blue}c{margin:0}/*# sourceMappingURL=a.map */",
+				"a{color:red}b{color:blue}c{margin:0}",
 				["/*! one */"]
 			],
 			[
@@ -13839,13 +13838,13 @@ describe("cssMinify export", () => {
 					condition: (/** @type {{ value: string }} */ comment) =>
 						comment.value.includes("two")
 				},
-				"a{color:red}b{color:blue}c{margin:0}/*# sourceMappingURL=a.map */",
+				"a{color:red}b{color:blue}c{margin:0}",
 				["/* @license two */"]
 			],
 			// Extracting with a condition nothing meets still leaves the rest out.
 			[
 				{ condition: false },
-				"a{color:red}b{color:blue}c{margin:0}/*# sourceMappingURL=a.map */",
+				"a{color:red}b{color:blue}c{margin:0}",
 				undefined
 			]
 		])("takes out what %p names", async (extractComments, code, extracted) => {
@@ -13858,7 +13857,7 @@ describe("cssMinify export", () => {
 		it.each([
 			[
 				true,
-				"a{color:red}b{color:blue}c{margin:0}/*# sourceMappingURL=a.map */",
+				"a{color:red}b{color:blue}c{margin:0}",
 				["/*! one */", "/* @license two */"]
 			],
 			[
@@ -13873,13 +13872,13 @@ describe("cssMinify export", () => {
 			],
 			[
 				/license/,
-				"a{color:red}b{color:blue}c{margin:0}/*# sourceMappingURL=a.map */",
+				"a{color:red}b{color:blue}c{margin:0}",
 				["/* @license two */"]
 			],
 			[
 				(/** @type {{ value: string }} */ comment) =>
 					comment.value.includes("one"),
-				"a{color:red}b{color:blue}c{margin:0}/*# sourceMappingURL=a.map */",
+				"a{color:red}b{color:blue}c{margin:0}",
 				["/*! one */"]
 			]
 		])(
@@ -13898,7 +13897,7 @@ describe("cssMinify export", () => {
 			["`minimize.css` asks for none", true, { extractComments: false }]
 		])("leaves them in place where %s", async (_name, extractComments, options) => {
 			expect(await run(extractComments, options)).toEqual({
-				code: "/*! one */a{color:red}b{color:blue}/*! one *//* @license two */c{margin:0}/*# sourceMappingURL=a.map */",
+				code: "/*! one */a{color:red}b{color:blue}/*! one *//* @license two */c{margin:0}",
 				extractedComments: undefined
 			});
 		});
