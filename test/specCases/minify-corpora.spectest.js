@@ -1287,12 +1287,6 @@ const IMPROVED_YET_BIGGER = {
 		"214 bytes fewer, 6 more gzipped: `!!x` in place of `null!==x` breaks the runs of `null!==` gzip reused",
 	"projects/files/react-17.0.1.js (its own options)":
 		"33 bytes fewer, 3 more gzipped: `!!x` in place of `null!==x` breaks the runs of `null!==` gzip reused",
-	"benches-full/vue.js (the default minimizer's options)":
-		"9 bytes fewer, 6 more gzipped: the shorter `typeof x<\"u\"` and constructor calls break runs gzip reused",
-	"fixture/projects/next/.archive-4/framework-054ead69ea8124b4cb27/input.js (its own options)":
-		"83 bytes fewer, 8 more gzipped: the shorter `typeof x<\"u\"` breaks the `\"…\"!=typeof` runs gzip reused",
-	"fixture/projects/next/.archive-4/framework-054ead69ea8124b4cb27/input.js (the default minimizer's options)":
-		"83 bytes fewer, 3 more gzipped: the shorter `typeof x<\"u\"` breaks the `\"…\"!=typeof` runs gzip reused",
 	"evaluate/string_case (the default minimizer's options)":
 		"57 bytes fewer, 5 more gzipped: `\"I\".toLowerCase().charCodeAt(0)` matched the calls around it",
 	"evaluate/string_case (a module mangled at its top level)":

@@ -735,7 +735,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/projects/jquery/12/input.js",
 			"swc minifier: fixture/projects/mootools/.11/input.js",
 			"swc minifier: fixture/projects/next/.archive-4/266-aee26c928109d49d6151/input.js",
-			"swc minifier: fixture/projects/next/.archive-4/framework-054ead69ea8124b4cb27/input.js",
 			"swc minifier: fixture/projects/next/.archive-4/main-2953d6142ff4a439dbc0/input.js",
 			"swc minifier: fixture/projects/next/.archive-4/pages/development-logs/link-with-no-prefetch-53313deb99cf94686856/input.js",
 			"swc minifier: fixture/projects/next/.archive-4/pages/development-logs/link-with-prefetch-false-13db3186d6589f014e19/input.js",

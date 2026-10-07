@@ -19,7 +19,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/esbuild.rs:1020",
 			"oxc minifier: peephole/esbuild.rs:1032",
 			"oxc minifier: peephole/esbuild.rs:1041",
-			"oxc minifier: peephole/esbuild.rs:1165",
 			"oxc minifier: peephole/esbuild.rs:1181",
 			"oxc minifier: peephole/esbuild.rs:1185",
 			"oxc minifier: peephole/esbuild.rs:1194",
@@ -41,7 +40,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/esbuild.rs:1305",
 			"oxc minifier: peephole/esbuild.rs:145",
 			"oxc minifier: peephole/esbuild.rs:1489",
-			"oxc minifier: peephole/esbuild.rs:1609",
 			"oxc minifier: peephole/esbuild.rs:1778",
 			"oxc minifier: peephole/esbuild.rs:1798",
 			"oxc minifier: peephole/esbuild.rs:2309",
@@ -755,7 +753,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/remove_unused_expression.rs:347",
 			"oxc minifier: peephole/remove_unused_expression.rs:352",
 			"oxc minifier: peephole/remove_unused_expression.rs:360",
-			"oxc minifier: peephole/remove_unused_expression.rs:408",
 			"oxc minifier: peephole/remove_unused_expression.rs:446",
 			"oxc minifier: peephole/remove_unused_expression.rs:484",
 			"oxc minifier: peephole/remove_unused_expression.rs:514",
@@ -1105,9 +1102,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/minimize_exit_points.rs:369",
 			"oxc minifier: peephole/minimize_exit_points.rs:375",
 			"oxc minifier: peephole/minimize_exit_points.rs:377",
-			"oxc minifier: peephole/minimize_exit_points.rs:432",
-			"oxc minifier: peephole/minimize_exit_points.rs:60",
-			"oxc minifier: peephole/minimize_exit_points.rs:61",
 			"oxc minifier: peephole/minimize_exit_points.rs:62",
 			"oxc minifier: peephole/minimize_exit_points.rs:74",
 			"oxc minifier: peephole/minimize_exit_points.rs:78",
@@ -1372,8 +1366,7 @@ const OXC_SMALLER_BY_REASON = [
 		"oxc pushes `!` into an expression to write it shorter, as oxc's `peephole/minimize_not_expression.rs` tests show",
 		[
 			"oxc minifier: peephole/minimize_not_expression.rs:54",
-			"oxc minifier: peephole/minimize_not_expression.rs:69",
-			"oxc minifier: peephole/minimize_not_expression.rs:9"
+			"oxc minifier: peephole/minimize_not_expression.rs:69"
 		]
 	],
 	[
