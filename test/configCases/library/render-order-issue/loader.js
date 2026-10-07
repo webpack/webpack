@@ -15,7 +15,7 @@ module.exports = function loader(code) {
   if (request.includes("entry2")) {
     setTimeout(() => {
       callback(null, code);
-    }, 2000);
+    }, 200);
   } else {
     callback(null, code);
   }

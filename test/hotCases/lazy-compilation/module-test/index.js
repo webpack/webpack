@@ -5,18 +5,21 @@ it("should not lazily compile configured imports", (done) => {
 	const promiseB = import("./moduleB").then((r) => (resolvedB = r));
 	expect(resolvedA).toBe(undefined);
 	expect(resolvedB).toBe(undefined);
-	setTimeout(() => {
-		expect(resolvedA).toBe(undefined);
-		expect(resolvedB).toHaveProperty("default", "B");
-	}, 1000);
-	NEXT_DEFERRED(
-		require("../../update")(done, true, () => {
-			promiseA.then((result) => {
-				expect(result).toHaveProperty("default", "A");
-				setTimeout(() => {
-					done();
-				}, 100);
-			}, done);
+	// moduleB is a plain async chunk, while moduleA needs a re-compile first
+	promiseB
+		.then(() => {
+			expect(resolvedA).toBe(undefined);
+			expect(resolvedB).toHaveProperty("default", "B");
+			NEXT_DEFERRED(
+				require("../../update")(done, true, () => {
+					promiseA.then((result) => {
+						expect(result).toHaveProperty("default", "A");
+						setTimeout(() => {
+							done();
+						}, 100);
+					}, done);
+				})
+			);
 		})
-	);
+		.catch(done);
 });

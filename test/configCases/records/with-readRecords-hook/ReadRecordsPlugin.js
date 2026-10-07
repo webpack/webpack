@@ -8,7 +8,7 @@ class ReadRecordsPlugin {
 		compiler.hooks.readRecords.tapAsync("ReadRecordsPlugin", callback => {
 			setTimeout(() => {
 				callback();
-			}, 1000);
+			}, 10);
 		});
 	}
 }
