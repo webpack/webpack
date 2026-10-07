@@ -819,6 +819,10 @@ const SWC_SMALLER_BY_REASON = [
 	[
 		"swc drops an `in` or `instanceof` whose right side it cannot see, which throws where that side is no object and runs a proxy's or `Symbol.hasInstance`'s code",
 		["terser compress: pure_funcs/relational"]
+	],
+	[
+		'swc drops a function\'s lone `"use strict"`, so reading its `caller` or `arguments` no longer throws',
+		["terser compress: functions/drop_lone_use_strict"]
 	]
 ];
 

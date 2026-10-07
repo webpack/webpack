@@ -1508,6 +1508,11 @@ const CORRECTED_CASES = [
 		{ compress: {}, mangle: false }
 	],
 	[
+		"a concatenation tested for its truth, converting an object",
+		"function t(f) { try { f(); console.log('no'); } catch (e) { console.log(e.name); } } var o = { valueOf() { throw { name: 'thrown' }; }, toString() { throw { name: 'thrown' }; } }; t(function () { if (o + 'q') console.log('yes'); });",
+		{ compress: {}, mangle: false }
+	],
+	[
 		"a strict `arguments.callee` nobody reads",
 		"'use strict'; try { (function () { arguments.callee; })(); console.log('no'); } catch (e) { console.log(e.name); }",
 		{ compress: {}, mangle: false }
@@ -5248,7 +5253,7 @@ describe("syntax-printer", () => {
 			const { minify, corrections } = await load();
 			if (!corrections) throw new Error("the correct phase is not installed");
 			const input =
-				"var log = []; async function* a() { return; } async function* b() { return undefined; } async function* c() { if (log) return void 0; yield 1; } Promise.resolve().then(() => log.push('tick 1')).then(() => log.push('tick 2')).then(() => console.log(log.join())); a().next().then(() => log.push('a')); b().next().then(() => log.push('b')); c().next().then(() => log.push('c'));";
+				"var log = [], yes = 1, no = 0, count = 0; async function* a() { return; } async function* b() { return undefined; } async function* c() { if (log) return void 0; yield 1; } async function* d() { if (yes) { count++; return; } return 1; } async function* e() { if (yes) return; else return 1; } async function* f() { if (no) return 1; else { count++; return; } } async function* g() { count++; if (no) return 1; return void 0; } Promise.resolve().then(() => log.push('tick 1')).then(() => log.push('tick 2')).then(() => console.log(log.join())); for (const run of [a, b, c, d, e, f, g]) run().next().then(() => log.push(run.name));";
 			const options = { compress: {}, mangle: false };
 			const expected = await runSettled(input);
 			const { code } = await minify(input, options);
@@ -5308,6 +5313,47 @@ describe("syntax-printer", () => {
 			expect(code).toBe(reference.code);
 			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
 		});
+
+		it("should keep spreading an `arguments` that is not the function's own", async () => {
+			const { minify } = await load();
+			const input =
+				"var it = { [Symbol.iterator]() { console.log('iterated'); return [][Symbol.iterator](); } }; function a(arguments) { [...arguments]; } function b() { var arguments = it; [...arguments]; } function c() { arguments = it; [...arguments]; } a(it); b(); c();";
+			const { code } = await minify(input, { compress: {}, mangle: false });
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+		});
+	});
+
+	describe("what oxc proves runs no code", () => {
+		/** @type {[string, string, string][]} */
+		const cases = [
+			[
+				"a literal's conversion, a constant of `Math` and an arguments spread",
+				"function f() { [...arguments]; } -[]; +{ a: 1 }; `${[1]}`; 0 - {}; Math.PI * 2; ({ ...{ set a(v) {} } }); ({ ...function () {} }); f();",
+				"function f(){}f();"
+			],
+			[
+				"a template and a concatenation kept for their conversions",
+				"function f(b, d) { `a${b}c${d}e`; `x${1}${g() ? 1 : 2}${d}`; 'a' + b + 'c' + d; 'a' + (b + 'c'); b + `${d}`; } function g() {} f(1, 2);",
+				'function f(b,d){`${b}${d}`,g(),`${d}`,""+b+d,b+"",b+`${d}`}function g(){}f(1,2);'
+			],
+			[
+				"an object kept for its spreads",
+				"function f(b) { ({ x: 1, ...b, ...b, [g()]: g(), y: 2, ...b }); } function g() {} f({});",
+				"function f(b){({...b,...b}),g(),g(),{...b}}function g(){}f({});"
+			],
+			[
+				"an async generator's returns merged",
+				"async function* f(a, b, c) { if (a) return b; return c; } async function* g(a, c) { if (a) return; return c; } f(); g();",
+				"async function*f(a,b,c){return a?b:c}async function*g(a,c){if(!a)return c}f(),g();"
+			]
+		];
+		for (const [name, input, expected] of cases) {
+			it(`should drop or reduce it as oxc does: ${name}`, async () => {
+				const { minify } = await load();
+				const { code } = await minify(input, { compress: {}, mangle: false });
+				expect(code).toBe(expected);
+			});
+		}
 	});
 
 	describe("a call whose parameters run nothing", () => {

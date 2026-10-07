@@ -50,9 +50,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/esbuild.rs:2368",
 			"oxc minifier: peephole/esbuild.rs:2372",
 			"oxc minifier: peephole/esbuild.rs:255",
-			"oxc minifier: peephole/esbuild.rs:286",
-			"oxc minifier: peephole/esbuild.rs:287",
-			"oxc minifier: peephole/esbuild.rs:288",
 			"oxc minifier: peephole/esbuild.rs:494",
 			"oxc minifier: peephole/esbuild.rs:520",
 			"oxc minifier: peephole/esbuild.rs:596",
@@ -219,6 +216,7 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: drop-console/unexpected_side_effects_dropping_console",
 			"terser compress: drop-unused/class_used_within_itself_3_classname",
 			"terser compress: drop-unused/drop_var",
+			"terser compress: drop-unused/issue_2768",
 			"terser compress: drop-unused/issue_3146_1",
 			"terser compress: drop-unused/issue_3146_2",
 			"terser compress: drop-unused/issue_3192",
@@ -256,6 +254,7 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: issue-597/beautify_off_1",
 			"terser compress: issue-597/beautify_on_1",
 			"terser compress: issue-973/this_binding_sequences",
+			"terser compress: lhs_constants/lhs_constants",
 			"terser compress: mangleprops-mangleprop-annotation/mangleprop_annotation",
 			"terser compress: mangleprops-mangleprop-annotation/mangleprop_annotation_partial",
 			"terser compress: new/new_statements_3",
@@ -277,17 +276,18 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: reduce_vars/issue_2440_with_1",
 			"terser compress: reduce_vars/issue_2440_with_2",
 			"terser compress: reduce_vars/issue_639",
+			"terser compress: reduce_vars/multi_def_2",
 			"terser compress: reduce_vars/redefine_arguments_2",
 			"terser compress: reduce_vars/unsafe_evaluate_side_effect_free_1",
 			"terser compress: rename/function_catch_catch",
 			"terser compress: sequences/call",
 			"terser compress: sequences/hoist_decl",
 			"terser compress: sequences/issue_1758",
-			"terser compress: sequences/issue_2062",
 			"terser compress: sequences/issue_2313",
 			"terser compress: sequences/lift_sequences_2",
 			"terser compress: template-string/do_not_optimize_tagged_template_1",
 			"terser compress: template-string/respect_inline_script",
+			"terser compress: template-string/side_effects",
 			"terser compress: template-string/template_concattenating_string",
 			"terser compress: template-string/template_string_evaluate_with_many_segments",
 			"terser compress: template-string/template_string_nested",
@@ -326,7 +326,8 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/substitute_alternate_syntax.rs:851",
 			"oxc minifier: peephole/substitute_alternate_syntax.rs:867",
 			"oxc minifier: peephole/substitute_alternate_syntax.rs:868",
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:873"
+			"oxc minifier: peephole/substitute_alternate_syntax.rs:873",
+			"terser compress: sequences/side_effects_cascade_3"
 		]
 	],
 	[
@@ -544,8 +545,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: ecmascript/may_have_side_effects.rs:1402",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:1403",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:1404",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:1579",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:1580",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:1638",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:264",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:302",
@@ -770,7 +769,8 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/remove_unused_expression.rs:587",
 			"oxc minifier: peephole/remove_unused_expression.rs:589",
 			"oxc minifier: peephole/remove_unused_expression.rs:688",
-			"oxc minifier: peephole/remove_unused_expression.rs:914"
+			"oxc minifier: peephole/remove_unused_expression.rs:914",
+			"oxc minifier: peephole/remove_unused_expression.rs:92"
 		]
 	],
 	[
@@ -989,6 +989,7 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc writes a variable's value at its one read and drops the variable, or an alias of another binding",
 		[
+			"oxc minifier: peephole/esbuild.rs:2274",
 			"swc exec: indirect_eval_1",
 			"swc exec: issue_11517_continue",
 			"swc exec: terser_destructuring_mangle_destructuring_decl",
