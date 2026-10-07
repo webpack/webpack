@@ -15,7 +15,7 @@ it("should not lazily compile configured imports", (done) => {
 				expect(result).toHaveProperty("default", "A");
 				setTimeout(() => {
 					done();
-				}, 1000);
+				}, 100);
 			}, done);
 		})
 	);

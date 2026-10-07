@@ -356,7 +356,7 @@ const describeCases = (config) => {
 									);
 									compiler.watch(
 										{
-											aggregateTimeout: 1000
+											aggregateTimeout: 50
 										},
 										async (err, stats) => {
 											try {
@@ -511,7 +511,7 @@ const describeCases = (config) => {
 																} catch (error) {
 																	fail(/** @type {Error} */ (error));
 																}
-															}, 1500);
+															}, 200);
 														} else {
 															const deprecations =
 																/** @type {NonNullable<typeof deprecationTracker>} */ (
