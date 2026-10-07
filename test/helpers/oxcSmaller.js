@@ -841,7 +841,6 @@ const OXC_SMALLER_BY_REASON = [
 			"swc exec: issue_8964",
 			"swc exec: terser_harmony_issue_2349b",
 			"swc exec: terser_issue_t292_no_flatten_with_arg_colliding_with_arg_value_inner_scope",
-			"swc minifier: fixture/issues/10807/input.js",
 			"swc minifier: fixture/issues/11645/with-parent-scope-nested-block/input.js",
 			"swc minifier: fixture/issues/12212/with-scope/input.js",
 			"swc minifier: fixture/issues/6636/input.js",

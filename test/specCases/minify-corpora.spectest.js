@@ -1618,7 +1618,6 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 		"an empty constructor dropped where the source repeats it gzip matched",
 		[
 			"classConstructorNoCall.js (the default minimizer's options)",
-			"className.js (the default minimizer's options)",
 			"harmony/classes (the default minimizer's options)",
 			"staticConstructor.js (the default minimizer's options)",
 			"superElemDelete.js (the default minimizer's options)",
