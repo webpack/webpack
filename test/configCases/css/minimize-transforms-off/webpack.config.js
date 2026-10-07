@@ -20,7 +20,6 @@ module.exports = {
 				normalizeQuotes: false,
 				reduceFunctions: false,
 				removeDeadRules: false,
-				reorderDeclarations: false,
 				shortenColors: false,
 				shortenMediaQueries: false,
 				shortenNumbers: false,

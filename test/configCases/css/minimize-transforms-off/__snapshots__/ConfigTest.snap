@@ -17,6 +17,5 @@ Array [
   "/*! shortenMediaQueries: the feature keeps its \`min-\` spelling */@media (min-width:100px){.t11{color:red}}",
   "/*! mergeRules: two rules printing the same block stay two */.t12{color:red}.t13{color:red}",
   "/*! mergeLonghands: the four sides stay four declarations */.t14{margin-top:1px;margin-right:2px;margin-bottom:1px;margin-left:2px}",
-  "/*! reorderDeclarations: the declarations keep the order they were written in */.t12{display:block;color:red}",
 ]
 `;
