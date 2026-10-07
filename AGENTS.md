@@ -26,7 +26,7 @@ Every other script, with what it does: [TESTING_DOCS.md](TESTING_DOCS.md#more-sc
 
 Never run `yarn jest`/`npx jest`: the required `--experimental-vm-modules` flag lives only in `test:base`, and bare jest crashes the ESM/test262 suites. Running a single case: [TESTING_DOCS.md](TESTING_DOCS.md).
 
-Claude Code sessions get the "never" rules of this guide enforced by the hooks in `.claude/` (which commands and edits they refuse, and the lint they run on a session's edits when the model stops: [docs/architecture.md](docs/architecture.md)); `/pre-push` walks the push checklist. A refusal names the rule — follow it, don't work around it.
+In a Claude Code session the hooks in `.claude/` lint the files the session edited each time the model stops ([docs/architecture.md](docs/architecture.md)), and `/pre-push` walks the push checklist. A lint failure the hook reports is yours to fix before pushing.
 
 **CI must come back fully green** ([details](docs/pull-requests.md#after-opening-the-pr--every-check-ends-green)); read the job list from `.github/workflows/`, not memory. Two jobs are unusual — watch both when touching hot paths or large fixtures: the benchmark's memory mode is sensitive to fixture size and to which cases share its process, and the Bun job runs under `--smol` and surfaces OOMs Node doesn't. Every job costing more than a few minutes waits on `lint`, `basic` and `unit` (needed for merge anyway), so while one of them is red most of the run reports `skipped`. That includes the benchmarks: on a PR `test.yml` calls `benchmarks.yml` behind those three (reported as `benchmarks / benchmark (1/4)`); on `main` nothing gates them (plain `benchmark (1/4)`) so CodSpeed always has a baseline.
 

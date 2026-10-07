@@ -5,9 +5,9 @@ const os = require("os");
 const path = require("path");
 
 /**
- * What every hook reads first: the tool call Claude Code wrote to stdin and the
- * repo it runs in. `WEBPACK_CLAUDE_HOOKS=off` turns the hooks off for a contributor
- * who wants none of them.
+ * What both hooks read first: the event Claude Code wrote to stdin and the repo
+ * they run in. `WEBPACK_CLAUDE_HOOKS=off` turns them off for a contributor who
+ * wants neither.
  */
 
 /** @typedef {{ session_id?: string, stop_hook_active?: boolean, tool_name?: string, tool_input?: { command?: string, file_path?: string } }} HookInput */
@@ -52,7 +52,7 @@ const sessionFile = (sessionId, kind) =>
 	);
 
 /**
- * Ends the hook refusing the tool call, with the reason Claude Code shows the model.
+ * Ends the hook with a failure, with the reason Claude Code shows the model.
  * @param {string} reason what to tell the model
  * @returns {void}
  */
