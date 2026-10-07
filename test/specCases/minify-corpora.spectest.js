@@ -1646,7 +1646,8 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 		[
 			"fixture/issues/11684/preserved/input.js (its own options)",
 			"fixture/issues/11684/preserved/input.js (the default minimizer's options)",
-			"fixture/projects/jquery/24/input.js (its own options)"
+			"fixture/projects/jquery/24/input.js (its own options)",
+			"projects/files/jquery.mobile-1.4.2.js (its own options)"
 		]
 	],
 	[
