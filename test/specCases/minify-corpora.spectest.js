@@ -1408,7 +1408,17 @@ const IMPROVED_YET_BIGGER = {
 	"rgi-emoji-15.1.js (the default minimizer's options)":
 		"225 bytes fewer, 9 more gzipped: each emoji sequence split out of the array loses the quotes gzip matched around the same code points",
 	"rgi-emoji-17.0.js (the default minimizer's options)":
-		"315 bytes fewer, 3 more gzipped: each emoji sequence split out of the array loses the quotes gzip matched around the same code points"
+		"315 bytes fewer, 3 more gzipped: each emoji sequence split out of the array loses the quotes gzip matched around the same code points",
+	"exponential.js (the default minimizer's options)":
+		"421 bytes fewer, 15 more gzipped: each folded call repeats the string the test asserts it equals",
+	"fixture/issues/6957/exponential/input.js (its own options)":
+		"421 bytes fewer, 14 more gzipped: each folded call repeats the string the test asserts it equals",
+	"fixture/issues/6957/exponential/input.js (the default minimizer's options)":
+		"421 bytes fewer, 15 more gzipped: each folded call repeats the string the test asserts it equals",
+	"range.js (the default minimizer's options)":
+		"11 to 14 bytes fewer, 2 to 3 more gzipped: each folded call repeats the string the test asserts it equals",
+	"return-values.js (the default minimizer's options)":
+		"392 bytes fewer, 18 more gzipped: each folded call repeats the string the test asserts it equals",
 };
 
 // Sources whose shorter spelling no longer repeats text gzip matched, by the

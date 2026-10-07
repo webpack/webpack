@@ -357,6 +357,21 @@ const IMPROVED_CASES = [
 		{ compress: { booleans: false, keep_infinity: true }, mangle: false }
 	],
 	[
+		"`toFixed`, `toPrecision`, `toExponential` and `valueOf` of number literals",
+		"console.log((0).toFixed(), 1..toFixed(1), 110..toFixed(4), (1e-101).toPrecision(3), (-0).toPrecision(3), (1 / 0).toPrecision(3), 1.5.toExponential(2), (1e21).toFixed(2), (1).valueOf());",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an array of strings, numbers and booleans joined, as a concatenation",
+		'function f(x, y) { return [+x + 1, +y + 2, "z"].join(""); } function g(x) { return [, `${x}`, "a", null, !x].join("-"); } function h(x) { return [`${x}`].join(); } function k(x) { return [[!x].join(), [x * 1, !x].join()]; } console.log(f(1, 2), g("x"), g(""), h(3), k(0), k(2));',
+		{ compress: {}, mangle: false }
+	],
+	[
+		"`Math.pow` with one number side, as `**` from ECMAScript 2016",
+		"function f(a, b) { return [Math.pow(a, 3), Math.pow(2, b), Math.pow(-a, 2), Math.pow(a + b, 0.5), Math.pow(-2, b)]; } console.log(f(2, 3).join());",
+		{ compress: { ecma: 2016 }, ecma: 2016, mangle: false }
+	],
+	[
 		"an arrow naming `yield` in an async function, which reserves only `await`",
 		"var yield; async function f(n) { while (n--) { (() => { yield = 1; })(); } } f(2); console.log(yield);",
 		{ compress: { passes: 2 }, mangle: false }
@@ -662,7 +677,11 @@ const KEPT_CASES = [
 	["a function its object does not have", "try { console.log(Number.abs(-1)); } catch (e) { console.log(2); }"],
 	["a method of no literal", "console.log(String(typeof x).charAt(0));"],
 	["a string method left out", 'try { console.log("a".join()); } catch (e) { console.log(2); }'],
-	["an array of something no literal", "console.log([Math.random() > 2].join());"],
+	["an array of something no literal", "console.log([[Math.random() > 2]].join());"],
+	["an array joined holding a value no string, number or boolean", "console.log([{}, Math.random() > 2].join(\"-\"), [Math.random() > 2, 1].join(1));"],
+	["an array of no value joined where a global may be rebound", 'function f(o) { with (o) return [[null].join(), [void 0].join("-"), [,].join()]; } console.log(f({}));'],
+	["an array joined, longer as a concatenation", 'function f(a, b, c) { return [a * 1, b * 1, c * 1].join("------"); } console.log(f(1, 2, 3));'],
+	["a number method throwing for its argument", "try { console.log((1).toFixed(101)); } catch (e) { console.log(e.name); }"],
 	["a function left out", 'console.log(Math.sin(1), "a,b".split(","));'],
 	["a method the oldest Node lacks", 'console.log("abc".at(-1), "abc".replaceAll("b", "x"));'],
 	["an optional call", 'console.log("abc"?.charAt(1));'],
@@ -5041,6 +5060,9 @@ describe("syntax-printer", () => {
 				["function f(c) { return null == c ? void 0 : c.a; } console.log(f(null), f({ a: 1 }));", target(2019)],
 				["function f(c) { return null === c ? void 0 : c.a; } console.log(f(null), f({ a: 1 }));", target(2021)],
 				["function f(c) { return null == c ? null : c.a; } console.log(f(null), f({ a: 1 }));", target(2021)],
+				["function f(a, b) { return Math.pow(a, 3); } console.log(f(2));", target(2015)],
+				["function f(a, b) { return [Math.pow(a, b), Math.pow(2, 3)]; } console.log(f(2, 3));", target(2016)],
+				["function f(Math, a) { return Math.pow(a, 3); } console.log(f({ pow: (a, b) => a + b }, 2));", target(2016)],
 				["function f(c) { return null == c.d ? void 0 : c.d.e; } console.log(f({}), f({ d: { e: 1 } }));", target(2021)],
 				["function f(c) { return null == c ? void 0 : g(c); } function g(c) { return c; } console.log(f(null), f(1), g(2));", target(2021)],
 				["function f(c) { return null == c ? void 0 : (c || g).a; } function g() {} console.log(f(null), f({ a: 1 }));", target(2021)],
