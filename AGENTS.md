@@ -12,9 +12,21 @@ A `> [!REQUIRED]` callout directly under a heading makes that whole section **ma
 - **One fact, one place**: link instead of restating, and don't copy what the repo already says (a directory listing, the `package.json` scripts, a signature).
 - **Docs live in `docs/`**, never `lib/` (it is published); renaming a heading breaks its `#anchor` links, so grep for them.
 
+## Working style
+
+Five habits that counter the usual coding-agent failures (assuming silently, overbuilding, editing what it doesn't understand, padding every answer). They bias toward caution over speed, so use judgement on a one-line fix:
+
+- **Think before coding.** State your assumptions up front. When a request has several readings that lead to different work, present them rather than picking silently; when the difference is minor, state the assumption, go on and flag it in the report. Say so when a simpler approach exists, and push back when warranted. When something is unclear enough that any reading could waste the work, stop, name what is confusing and ask.
+- **Simplicity first.** Write the minimum that solves the ask: no feature beyond it, no abstraction for single-use code, no "flexibility" or configurability nobody asked for, no error handling for impossible scenarios. If you write 200 lines and it could be 50, rewrite. Would a senior engineer call it overcomplicated? Then simplify. Performance outranks size: on a hot path, longer code that measurably saves CPU or memory beats shorter code ([Performance and memory](#performance-and-memory)). Still, measure the win and weigh it against the code it costs; a marginal gain doesn't justify a large body of code.
+- **Surgical changes.** Every changed line traces directly to the request. Don't "improve" adjacent code, comments or formatting; don't refactor what isn't broken; match the existing style even where you'd do it differently. Remove the imports, variables and functions your own change made unused. Remove other dead code only when nothing uses it (no class, function, method or test) and it isn't public API (not exported or re-exported, not in `types.d.ts`, not reachable through `package.json` `exports`, not a deep import `yarn find-deep-imports:check` reports); if you can't tell whether it is used or what it is for, ask.
+- **Goal-driven execution.** Turn the task into a verifiable goal before starting: "add validation" is "write tests for invalid inputs, then make them pass"; "fix the bug" is "write a test that reproduces it, then make it pass" ([Testing](#testing)); "refactor X" is "tests pass before and after". For multi-step work, state a short plan with a check per step (`1. [step] → verify: [check]`). Strong success criteria let you loop on your own; "make it work" needs constant clarification.
+- **Answer plainly.** Use the fewest words that keep the context, meaning and point: no preamble, filler or restating what the reader can see. Lead with what could not be verified; say when a test failed or a step was skipped, and never round partial work up to done. Spell out an abbreviation in parentheses the first time it appears, so nobody has to look it up. Cite code as `path:line`, one per sentence, and put the rest in words. Show rather than describe: a code block with before and after for anything changed (the PR body's Summary [asks for the same](docs/pull-requests.md#pull-request-body)), a table or code block for what moved, what a run printed or where a regression sits.
+
+These habits are working when diffs carry only requested changes, code is simple the first time, and clarifying questions come before implementation rather than after mistakes.
+
 ## Commands
 
-Use **yarn**, not npm. Every command is a `package.json` script; these are the ones whose use isn't obvious from the name:
+Use **yarn**, not npm. A fresh checkout has no `node_modules`: if a script fails on a missing module, run `yarn --frozen-lockfile` first, the same command CI uses. Every command is a `package.json` script; these are the ones whose use isn't obvious from the name:
 
 - `yarn fix` — `fix:code` (ESLint) + `fix:special` + `fmt` (Prettier). Prefer as the final step.
 - `yarn fix:special` — Regenerate `types.d.ts`, declarations, schema validators and generated runtime code.
