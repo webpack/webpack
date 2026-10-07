@@ -26,7 +26,7 @@ These habits are working when diffs carry only requested changes, code is simple
 
 ## Commands
 
-Use **yarn**, not npm. A fresh checkout has no `node_modules`, so nothing below runs until `yarn --frozen-lockfile` has; a cloud session's SessionStart hook (`.claude/hooks/session-start.sh`) runs it, so if a script fails on a missing module, run it yourself. Every command is a `package.json` script; these are the ones whose use isn't obvious from the name:
+Use **yarn**, not npm. A fresh checkout has no `node_modules`: if a script fails on a missing module, run `yarn --frozen-lockfile` first, the same command CI uses. Every command is a `package.json` script; these are the ones whose use isn't obvious from the name:
 
 - `yarn fix` — `fix:code` (ESLint) + `fix:special` + `fmt` (Prettier). Prefer as the final step.
 - `yarn fix:special` — Regenerate `types.d.ts`, declarations, schema validators and generated runtime code.
