@@ -6521,7 +6521,7 @@ jest-matcher-utils@30.5.1:
     jest-diff "30.5.1"
     pretty-format "30.5.1"
 
-jest-matcher-utils@30.5.2:
+jest-matcher-utils@30.5.2, jest-matcher-utils@^30.3.0:
   version "30.5.2"
   resolved "https://registry.yarnpkg.com/jest-matcher-utils/-/jest-matcher-utils-30.5.2.tgz#360433048fea76513dd2ceed6dfaf5f488164ed5"
   integrity sha512-lFkB365PTIHOhPzwrb9T6gvlDnPpOZ7/c3ewOKKB7bzztqjVrtlyRL2MkyfJXpyY2u2SKw001JKrTx14fBUFcQ==

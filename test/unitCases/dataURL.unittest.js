@@ -1,5 +1,8 @@
 "use strict";
 
+const cssMinify = require("../../lib/css/cssMinify");
+const htmlMinify = require("../../lib/html/htmlMinify");
+const htmlSyntax = require("../../lib/html/syntax");
 const {
 	EMBEDDED_LANGUAGES,
 	URIRegEx,
@@ -12,9 +15,6 @@ const {
 	parseDataURI,
 	readEmbeddedDataURI
 } = require("../../lib/util/dataURL");
-const cssMinify = require("../../lib/css/cssMinify");
-const htmlMinify = require("../../lib/html/htmlMinify");
-const htmlSyntax = require("../../lib/html/syntax");
 
 describe("dataURL", () => {
 	it("should decode base64 payloads", () => {
@@ -142,7 +142,7 @@ describe("decodeDataURIPayload", () => {
 				)
 			);
 		expect(decode("data:text/css,a%7Bcolor%3Ared%7D")).toBe("a{color:red}");
-		expect(decode("data:text/css,%C3%A9")).toBe("\u00e9");
+		expect(decode("data:text/css,%C3%A9")).toBe("\u00E9");
 		// A `%` starting no escape is itself, as the URL parser reads it.
 		expect(decode("data:text/css,a%zz%2")).toBe("a%zz%2");
 		expect(decode("data:text/css;charset=utf-8,%41")).toBe("A");
@@ -219,7 +219,7 @@ describe("encodeDataURIPayload", () => {
 	it("should escape only what the URL parser would read differently", () => {
 		expect(encodeDataURIPayload("a b\"<>'{}")).toBe("a b\"<>'{}");
 		expect(encodeDataURIPayload("100%#x")).toBe("100%25%23x");
-		expect(encodeDataURIPayload("a\tb\nc\rd\u0000\u007f")).toBe(
+		expect(encodeDataURIPayload("a\tb\nc\rd\u0000\u007F")).toBe(
 			"a%09b%0Ac%0Dd%00%7F"
 		);
 		// Trailing spaces are stripped off a URL, leading ones inside it are not.

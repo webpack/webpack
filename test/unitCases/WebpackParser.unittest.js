@@ -6,6 +6,7 @@ const fs = require("fs");
 const os = require("os");
 const path = require("path");
 const acorn = require("acorn");
+const ACORN_VERSION = require("acorn/package.json").version;
 const JavascriptParser = require("../../lib/javascript/JavascriptParser");
 const { parse: webpackParse } = require("../../lib/javascript/syntax").parser;
 const { Parser } = require("../../lib/javascript/syntax-parser");
@@ -2633,7 +2634,11 @@ describe("WebpackParser acorn-override fast-path gates", () => {
 // the corpus it owes the same answers on. What each case expects comes from
 // acorn itself, parsed side by side below.
 
-/** @typedef {{ type: { label: string }, value: unknown, start: number, end: number, loc?: object, range?: [number, number] }} TokenLike */
+/** @typedef {{ line: number, column: number }} PositionLike */
+/** @typedef {{ start: PositionLike, end: PositionLike }} SourceLocationLike */
+/** @typedef {{ type: { label: string }, value: unknown, start: number, end: number, loc?: SourceLocationLike, range?: [number, number] }} TokenLike */
+/** @typedef {{ type: string, value: unknown, start: number, end: number, loc?: SourceLocationLike, range?: [number, number] }} TokenShape */
+/** @typedef {{ type: string, value: string, start: number, end: number, loc?: SourceLocationLike, range?: [number, number] }} CommentLike */
 /** @typedef {Record<string, EXPECTED_ANY>} Options */
 /** @typedef {{ file: string, code: string, options: Options, commonjs?: false, error?: string }} Corpus */
 /** @typedef {{ file: string, code: string, options?: Options, error?: string }} RecordedCase */
@@ -2641,7 +2646,6 @@ describe("WebpackParser acorn-override fast-path gates", () => {
 /** @typedef {{ case: string, file: string, webpack: string, acorn: string }} VerdictDifference */
 
 const CORPUS_FILE = path.resolve(__dirname, "../fixtures/acorn-corpus.json");
-const ACORN_VERSION = require("acorn/package.json").version;
 // acorn ships no tests in its npm tarball, so the corpus is vendored. Refresh
 // it by cloning acorn at this version here, then re-running this file with
 // WEBPACK_UPDATE_ACORN_CORPUS=1 set.
@@ -2882,7 +2886,7 @@ const isEngineValidated = (ours, theirs) =>
  * A token as both parsers describe one: their `TokenType` instances are
  * different objects of different classes, so the label stands in for the type.
  * @param {TokenLike} token the token either parser reported
- * @returns {object} what the comparison reads
+ * @returns {TokenShape} what the comparison reads
  */
 const tokenShape = (token) => ({
 	type: token.type.label,
@@ -2930,11 +2934,11 @@ const runsAsCommonjs = (testCase) =>
  * @returns {void}
  */
 const compareCase = (testCase, parse, engineValidates, mode, trees, verdicts) => {
-	/** @type {object[]} */
+	/** @type {CommentLike[]} */
 	const ourComments = [];
 	/** @type {TokenLike[]} */
 	const ourTokens = [];
-	/** @type {object[]} */
+	/** @type {CommentLike[]} */
 	const theirComments = [];
 	/** @type {TokenLike[]} */
 	const theirTokens = [];

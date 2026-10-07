@@ -1,8 +1,8 @@
 "use strict";
 
 const Dependency = require("../../lib/graph/Dependency");
-const Module = require("../../lib/module/Module");
 const ModuleGraph = require("../../lib/graph/ModuleGraph");
+const Module = require("../../lib/module/Module");
 
 /**
  * @returns {Module} module

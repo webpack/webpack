@@ -145,7 +145,7 @@ describe("ChunkGraph", () => {
 			);
 			// Every module in no chunk is answered with this one array, so a caller
 			// ignoring "do not modify" must not be able to reach the others.
-			expect(() => chunks.push(new Chunk("a", false))).toThrow();
+			expect(() => chunks.push(new Chunk("a", false))).toThrow(TypeError);
 		});
 
 		it("takes its chunks back when disconnected", () => {
@@ -207,7 +207,7 @@ describe("ChunkGraph", () => {
 			expect(() =>
 				/** @type {EXPECTED_ANY} */
 				(chunkGraph.getModuleChunks(module)).push(new Chunk("b", false))
-			).toThrow();
+			).toThrow(TypeError);
 		});
 
 		it("forgets the runtime it cached when its chunk changes", () => {

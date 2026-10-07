@@ -1,8 +1,8 @@
 "use strict";
 
+const webpack = require("../../");
 const ESMExportImportedSpecifierDependency = require("../../lib/dependencies/esm/ESMExportImportedSpecifierDependency");
 const ObjectMiddleware = require("../../lib/serialization/ObjectMiddleware");
-const webpack = require("../../");
 
 const ESM_REQUEST =
 	"webpack/lib/dependencies/esm/ESMExportImportedSpecifierDependency";
@@ -81,7 +81,7 @@ describe("DeprecatedAliases", () => {
 			it(`should not read ${request} / ${name}`, () => {
 				expect(() =>
 					ObjectMiddleware.getDeserializerFor(request, name)
-				).toThrow();
+				).toThrow("No deserializer registered for");
 			});
 		}
 	});

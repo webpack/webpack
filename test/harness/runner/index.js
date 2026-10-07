@@ -789,8 +789,9 @@ class TestRunner {
 
 			const esm = getModuleInstance(modulePath, content);
 
-			if (esmReturnStatus === ESModuleStatus.Unlinked)
+			if (esmReturnStatus === ESModuleStatus.Unlinked) {
 				return Promise.resolve(esm);
+			}
 
 			const link = async () => {
 				await esm.link(

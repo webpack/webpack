@@ -1525,7 +1525,9 @@ for (target of [ ]) { var fromForOfTarget = 1; }
 
 		it("keeps no record when a plugin owns a production that records", () => {
 			const source = "class Declared {}\nvar plain = 1;\nfunction named() {}";
+
 			const { WebpackParser } = require("../../lib/javascript/syntax-parser");
+
 			const options = {
 				ecmaVersion: 2022,
 				lazyNodes: true,
@@ -1566,7 +1568,9 @@ for (target of [ ]) { var fromForOfTarget = 1; }
 
 		it("keeps no module record when a plugin reads imports or exports", () => {
 			const source = "import a from './a';\nexport * from './b';";
+
 			const { WebpackParser } = require("../../lib/javascript/syntax-parser");
+
 			const options = {
 				ecmaVersion: 2022,
 				lazyNodes: true,
@@ -1599,6 +1603,7 @@ for (target of [ ]) { var fromForOfTarget = 1; }
 
 		it("records only the declarations the program itself states", () => {
 			const { WebpackParser } = require("../../lib/javascript/syntax-parser");
+
 			// the option lets an import stand where no program states it, which
 			// is the one way a declaration reaches the record from a scope below
 			const program = /** @type {EXPECTED_ANY} */ (
@@ -1813,6 +1818,7 @@ class WithStatic { static { const inStaticBlock = 20; } }
 			const { BLOCK_DECLARATIONS: SLOT, MAX_MASKED_INDEX } = require(
 				"../../lib/javascript/syntax-parser"
 			);
+
 			// a mask is one 31-bit number, so an index it cannot hold must reach the
 			// fallback: `1 << 32` is `1 << 0`, which would claim the wrong statement
 			expect(MAX_MASKED_INDEX).toBeLessThan(31);
@@ -1831,6 +1837,7 @@ class WithStatic { static { const inStaticBlock = 20; } }
 			const { BLOCK_DECLARATIONS: SLOT } = require(
 				"../../lib/javascript/syntax-parser"
 			);
+
 			const { ast } = parseWithComments("void 0;\nconst only = 1;", "module");
 			// one declaration at index 1 and nothing allocated to say so
 			expect(/** @type {EXPECTED_ANY} */ (ast)[SLOT]).toBe(0b10);
@@ -1838,6 +1845,7 @@ class WithStatic { static { const inStaticBlock = 20; } }
 
 		it("rejects a statement written before the first case", () => {
 			const { WebpackParser } = require("../../lib/javascript/syntax-parser");
+
 			expect(() =>
 				WebpackParser.parse(
 					"switch (1) { notACase(); }",
@@ -1950,18 +1958,22 @@ class WithStatic { static { const inStaticBlock = 20; } }
 		);
 
 		it("does not read every later comment to find an attached run", () => {
-			const source = "/* before */function f() {}" + "/* after */".repeat(1024);
+			const source = `/* before */function f() {}${"/* after */".repeat(1024)}`;
 			const parser = new JavascriptParser("module");
 			const { ast, comments } = parseWithComments(source, "module");
 			let reads = 0;
+			/**
+			 * @param {[number, number] | undefined} range the comment's range
+			 * @returns {PropertyDescriptor} a getter counting every read of it
+			 */
+			const counting = (range) => ({
+				get() {
+					reads++;
+					return range;
+				}
+			});
 			for (const comment of comments) {
-				const range = comment.range;
-				Object.defineProperty(comment, "range", {
-					get() {
-						reads++;
-						return range;
-					}
-				});
+				Object.defineProperty(comment, "range", counting(comment.range));
 			}
 			parser.comments = comments;
 			parser._source = source;

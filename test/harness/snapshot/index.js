@@ -9,23 +9,25 @@ const { SnapshotState } = require("jest-snapshot");
  * @param {string} suiteName Name of the test suite
  * @returns {string} Snapshot path
  */
-const getSnapshotPath = function (caseDir, suiteName) {
+function getSnapshotPath(caseDir, suiteName) {
 	suiteName = suiteName.replace(/Cases/, "");
 
 	return path.join(caseDir, "__snapshots__", `${suiteName}.snap`);
-};
+}
 
-/** @type {Array<{ caseDir: string, suiteName: string, originalState: SnapshotState, perCaseState: SnapshotState, snapshotPath: string }>} */
+/** @typedef {{ caseDir: string, suiteName: string, originalState: SnapshotState, perCaseState: SnapshotState, snapshotPath: string }} SnapshotContext */
+
+/** @type {SnapshotContext[]} */
 const activeSnapshotContexts = [];
 
 /**
  * Creates a per-case SnapshotState
  * @param {string} caseDir Absolute path to the test case directory
  * @param {string} suiteName Name of the test suite
- * @param {SnapshotState} [originalState] Original snapshot state
+ * @param {SnapshotState=} originalState Original snapshot state
  * @returns {SnapshotState} Per-case snapshot state
  */
-const createPerCaseSnapshotState = function (
+function createPerCaseSnapshotState(
 	caseDir,
 	suiteName,
 	originalState = expect.getState().snapshotState
@@ -38,14 +40,14 @@ const createPerCaseSnapshotState = function (
 		prettierPath: s._prettierPath,
 		rootDir: s._rootDir || process.cwd()
 	});
-};
+}
 
 /**
  * @param {string} caseDir Absolute path to the test case directory
  * @param {string} suiteName Name of the test suite
- * @returns {{ caseDir: string, suiteName: string, originalState: SnapshotState, perCaseState: SnapshotState, snapshotPath: string }} snapshot context
+ * @returns {SnapshotContext} snapshot context
  */
-const activateSnapshotState = function (caseDir, suiteName) {
+function activateSnapshotState(caseDir, suiteName) {
 	const originalState = expect.getState().snapshotState;
 	const snapshotContext = {
 		caseDir,
@@ -57,22 +59,22 @@ const activateSnapshotState = function (caseDir, suiteName) {
 
 	activeSnapshotContexts.push(snapshotContext);
 	return snapshotContext;
-};
+}
 
 /**
- * @param {{ caseDir: string, suiteName: string, originalState: SnapshotState, perCaseState: SnapshotState, snapshotPath: string }} snapshotContext snapshot context
+ * @param {SnapshotContext} snapshotContext snapshot context
  */
-const deactivateSnapshotState = function (snapshotContext) {
+function deactivateSnapshotState(snapshotContext) {
 	const index = activeSnapshotContexts.lastIndexOf(snapshotContext);
 	if (index >= 0) {
 		activeSnapshotContexts.splice(index, 1);
 	}
-};
+}
 
 /**
- * @param {{ caseDir: string, suiteName: string, originalState: SnapshotState, perCaseState: SnapshotState, snapshotPath: string }} snapshotContext snapshot context
+ * @param {SnapshotContext} snapshotContext snapshot context
  */
-const finalizePerCaseSnapshotState = function (snapshotContext) {
+function finalizePerCaseSnapshotState(snapshotContext) {
 	const { originalState, perCaseState } = snapshotContext;
 
 	if (perCaseState.getUncheckedCount()) {
@@ -84,22 +86,25 @@ const finalizePerCaseSnapshotState = function (snapshotContext) {
 	originalState.matched += perCaseState.matched;
 	originalState.updated += perCaseState.updated;
 	originalState.added += perCaseState.added;
-};
+}
 
-const getActiveSnapshotState = function () {
+/**
+ * @returns {SnapshotState | undefined} the per-case state of the innermost active case
+ */
+function getActiveSnapshotState() {
 	const snapshotContext =
 		activeSnapshotContexts[activeSnapshotContexts.length - 1];
 
 	return snapshotContext && snapshotContext.perCaseState;
-};
+}
 
 /**
  * Registers per-case snapshot hooks
  * @param {string} caseDir Absolute path to the test case directory
  * @param {string} suiteName Name of the test suite
  */
-const registerPerCaseSnapshotHooks = function (caseDir, suiteName) {
-	/** @type {{ caseDir: string, suiteName: string, originalState: SnapshotState, perCaseState: SnapshotState, snapshotPath: string } | undefined} */
+function registerPerCaseSnapshotHooks(caseDir, suiteName) {
+	/** @type {SnapshotContext | undefined} */
 	let snapshotContext;
 
 	beforeAll(() => {
@@ -118,7 +123,7 @@ const registerPerCaseSnapshotHooks = function (caseDir, suiteName) {
 			snapshotContext = undefined;
 		}
 	});
-};
+}
 
 /**
  * Matches `received` against a snapshot stored in a dedicated per-kind
@@ -129,7 +134,7 @@ const registerPerCaseSnapshotHooks = function (caseDir, suiteName) {
  * @param {string} kind Snapshot kind, used as filename (e.g. "errors")
  * @param {EXPECTED_ANY} received The value to match against the snapshot
  */
-const matchKindSnapshot = function (caseDir, kind, received) {
+function matchKindSnapshot(caseDir, kind, received) {
 	const snapshotPath = path.join(caseDir, "__snapshots__", `${kind}.snap`);
 	const parentState =
 		getActiveSnapshotState() || expect.getState().snapshotState;
@@ -147,6 +152,7 @@ const matchKindSnapshot = function (caseDir, kind, received) {
 	// matcher context. Using `kind` as currentTestName produces the
 	// stable key "<kind> 1" (e.g. "errors 1"), independent of suite.
 	const { toMatchSnapshot } = require("jest-snapshot");
+
 	const context = /** @type {EXPECTED_ANY} */ ({
 		snapshotState: kindState,
 		currentTestName: kind,
@@ -172,8 +178,8 @@ const matchKindSnapshot = function (caseDir, kind, received) {
 		parentState.updated += kindState.updated;
 		parentState.added += kindState.added;
 	}
-};
+}
 
 module.exports.getActiveSnapshotState = getActiveSnapshotState;
-module.exports.registerPerCaseSnapshotHooks = registerPerCaseSnapshotHooks;
 module.exports.matchKindSnapshot = matchKindSnapshot;
+module.exports.registerPerCaseSnapshotHooks = registerPerCaseSnapshotHooks;

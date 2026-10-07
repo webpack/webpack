@@ -3,7 +3,9 @@
 require("../helpers/warmup-webpack");
 
 const path = require("path");
+
 const testDirectory = path.resolve(__dirname, "..");
+
 const fs = require("graceful-fs");
 const rimraf = require("rimraf");
 

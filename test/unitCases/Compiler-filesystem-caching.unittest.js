@@ -5,7 +5,9 @@ require("../helpers/warmup-webpack");
 // Switching devtool between two compilers on one disk cache needs a compiler
 // per option set, which neither the config nor the watch harness provides.
 const path = require("path");
+
 const testDirectory = path.resolve(__dirname, "..");
+
 const fs = require("graceful-fs");
 const rimraf = /** @type {{ sync: (path: string) => void }} */ (
 	require("rimraf")

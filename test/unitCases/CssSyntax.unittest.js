@@ -1906,9 +1906,8 @@ describe("CssSyntax — minify token-boundary safety", () => {
 	// but `webpack.css.syntax` minifies whatever source it is handed.
 	it("keeps an attribute value the tokenizer closed at EOF", () => {
 		// The quote is written back before the transforms read the string, so `bar`
-		// is the value either way and the same unquoting a closed string gets
-		// applies. An at-rule prelude still prints at EOF, unlike a qualified rule
-		// (§5.4.3), so the `];` follows.
+		// is the value either way and gets the unquoting a closed string gets. An
+		// at-rule prelude still prints at EOF, unlike a qualified rule (§5.4.3).
 		expect(min('@unknown [foo="bar')).toBe("@unknown [foo=bar];");
 		expect(min("@unknown [foo='bar")).toBe("@unknown [foo=bar];");
 		// The escape swallows the final quote, so this one is unterminated too. Its
@@ -14266,8 +14265,8 @@ describe("SourceProcessor — mergeDistantRules", () => {
 describe("CssData — the version tables stay in their element type", () => {
 	const {
 		NEVER,
-		getPrefixWindows,
 		PREFIX_WINDOW_STARTS,
+		getPrefixWindows,
 		getSupportProfiles
 	} = require("../../lib/css/data");
 

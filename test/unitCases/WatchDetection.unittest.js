@@ -1,7 +1,9 @@
 "use strict";
 
 const path = require("path");
+
 const testDirectory = path.resolve(__dirname, "..");
+
 const fs = require("graceful-fs");
 const { Volume, createFsFromVolume } = require("memfs");
 

@@ -6363,7 +6363,7 @@ describe("optimization.minimize", () => {
 			MinimizerPlugin.prototype.apply =
 				/** @type {EXPECTED_ANY} */
 				(
-					function () {
+					function apply() {
 						implementation =
 							/** @type {EXPECTED_ANY} */
 							(this).options.minimizer.implementation;

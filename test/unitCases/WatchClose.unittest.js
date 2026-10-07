@@ -3,7 +3,9 @@
 require("../helpers/warmup-webpack");
 
 const path = require("path");
+
 const testDirectory = path.resolve(__dirname, "..");
+
 const expectNoDeprecations = require("../helpers/expectNoDeprecations");
 
 expectNoDeprecations();

@@ -1,8 +1,9 @@
 "use strict";
 
 const path = require("path");
-const RequestShortener = require("../../lib/util/RequestShortener");
 const RuntimeTemplate = require("../../lib/template/RuntimeTemplate");
+const RequestShortener = require("../../lib/util/RequestShortener");
+
 const testDirectory = path.resolve(__dirname, "..");
 
 /**

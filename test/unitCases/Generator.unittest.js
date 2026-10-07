@@ -1,11 +1,11 @@
 "use strict";
 
 const path = require("path");
+const CssGenerator = require("../../lib/css/CssGenerator");
+const ModuleParseError = require("../../lib/errors/ModuleParseError");
 const Generator = require("../../lib/module/Generator");
 const { CSS_TYPE } = require("../../lib/module/ModuleSourceTypeConstants");
 const RequestShortener = require("../../lib/util/RequestShortener");
-const CssGenerator = require("../../lib/css/CssGenerator");
-const ModuleParseError = require("../../lib/errors/ModuleParseError");
 
 const requestShortener = new RequestShortener("/project");
 const repositoryShortener = new RequestShortener(path.join(__dirname, "../.."));

@@ -105,7 +105,9 @@ describe("jsMinify", () => {
 	}
 
 	it("should report a parse error rather than throwing a different shape", async () => {
-		await expect(jsMinify({ "broken.js": "function (" })).rejects.toThrow();
+		await expect(jsMinify({ "broken.js": "function (" })).rejects.toThrow(
+			"Unexpected token"
+		);
 	});
 
 	it("should match string comment patterns like RegExp conditions", async () => {

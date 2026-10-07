@@ -10,8 +10,8 @@
 
 const fs = require("fs");
 const path = require("path");
-const { A, NS_HTML, NS_MATHML, NS_SVG, NodeType, QUOTE_DOUBLE, QUOTE_NONE, QUOTE_SINGLE, decodeEntities, escapeAttribute, escapeText, parseCssUrls, parseHtml: parseHtmlRefs, parseMsapplicationTask, parseSrc, parseSrcset, tokenize } = require("../../lib/html/syntax-parser");
 const { builtinEmbeddedRenderer } = require("../../lib/html/builtinEmbeddedRenderer");
+const { A, NS_HTML, NS_MATHML, NS_SVG, NodeType, QUOTE_DOUBLE, QUOTE_NONE, QUOTE_SINGLE, decodeEntities, escapeAttribute, escapeText, parseCssUrls, parseHtml: parseHtmlRefs, parseMsapplicationTask, parseSrc, parseSrcset, tokenize } = require("../../lib/html/syntax-parser");
 const serializeHtmlTree = require("../helpers/serializeHtmlTree");
 
 describe("tokenize", () => {
@@ -3025,7 +3025,7 @@ describe("tokenize", () => {
 			// the loop have to answer the same way.
 			const quote = '"'.charCodeAt(0);
 			expect(escapeAttribute('c"d\u00A0e', quote, true)).toBe(
-				'c&quot;d\u00A0e'
+				"c&quot;d\u00A0e"
 			);
 			expect(escapeAttribute('c"d\u00A0e', quote)).toBe("c&quot;d&nbsp;e");
 			expect(escapeAttribute("a\u00A0b", quote, true)).toBe("a\u00A0b");
@@ -5787,10 +5787,10 @@ describe("SourceProcessor — attribute quote spelling", () => {
 	it("writes U+00A0 as the character, however the source spelled it", () => {
 		// A value's own spelling does not decide the output, so the character and
 		// `&nbsp;` are one attribute and print as one.
-		expect(minify('<img alt="nb\u00a0sp">')).toBe(
+		expect(minify('<img alt="nb\u00A0sp">')).toBe(
 			minify('<img alt="nb&nbsp;sp">')
 		);
-		expect(minify('<img alt="nb&nbsp;sp">')).toBe("<img alt=nb\u00a0sp>");
+		expect(minify('<img alt="nb&nbsp;sp">')).toBe("<img alt=nb\u00A0sp>");
 	});
 
 	it("keeps every other reference the value spells", () => {
@@ -5801,7 +5801,7 @@ describe("SourceProcessor — attribute quote spelling", () => {
 			"<img alt='&amp;quot; literal \"q\"'>"
 		);
 		expect(minify('<img alt="nb&nbsp;sp &quot;q&quot;">')).toBe(
-			"<img alt='nb\u00a0sp \"q\"'>"
+			"<img alt='nb\u00A0sp \"q\"'>"
 		);
 		expect(minify('<img alt="line&#10;br &quot;q&quot;">')).toBe(
 			"<img alt='line&#10;br \"q\"'>"
@@ -5987,10 +5987,9 @@ describe("SourceProcessor — a duplicate attribute name", () => {
 	});
 
 	it("is carried over where the tag spells a foreign delimiter", () => {
-		// `{%` / `%}` tokenize as attribute names, so `{% endif %}` repeats both
-		// and §13.2.5.33 drops them. What the print may not do is write that drop
-		// out: the bytes between the names it kept are the template's, so they are
-		// copied from the source rather than rebuilt from the attributes.
+		// `{%` / `%}` tokenize as attribute names, so `{% endif %}` repeats both and
+		// §13.2.5.33 drops them. The print may not write that drop out: the bytes
+		// between the kept names are the template's, so they come from the source.
 		expect(minify("<div {{cond}} id=a id=b></div>")).toBe(
 			"<div {{cond}} id=a id=b></div>"
 		);
@@ -7273,10 +7272,10 @@ describe("SourceProcessor — inline CSS honors the target's abilities", () => {
 	it("keeps a lowered list that holds both quotes", () => {
 		expect(
 			minifyLegacy(
-				`<p style="content:'\\''; background: hwb(194 0% 0%)">x`
+				"<p style=\"content:'\\''; background: hwb(194 0% 0%)\">x"
 			)
 		).toBe(
-			`<p style="content:'\\'';background:#00c3ff;background:hwb(194 0% 0%)">x`
+			"<p style=\"content:'\\'';background:#00c3ff;background:hwb(194 0% 0%)\">x"
 		);
 	});
 
@@ -7296,10 +7295,10 @@ describe("SourceProcessor — inline CSS honors the target's abilities", () => {
 	});
 
 	it("writes a list the same whichever references the source spelled", () => {
-		const plain = minifyLegacy(`<p style="content:'\\'';color:red">x`);
-		expect(plain).toBe(`<p style="content:'\\'';color:red">x`);
+		const plain = minifyLegacy("<p style=\"content:'\\'';color:red\">x");
+		expect(plain).toBe("<p style=\"content:'\\'';color:red\">x");
 		expect(
-			minifyLegacy(`<p style="content:&#39;\\&#39;&#39;;color:red">x`)
+			minifyLegacy("<p style=\"content:&#39;\\&#39;&#39;;color:red\">x")
 		).toBe(plain);
 	});
 });
@@ -11207,7 +11206,7 @@ describe("htmlMinify export", () => {
 
 		it("keeps the comments `comments` names that are not taken", async () => {
 			expect(await run(true, { comments: "plain" })).toEqual({
-				code: "<p>a</p><!-- plain -->" + rest.slice(8),
+				code: `<p>a</p><!-- plain -->${rest.slice(8)}`,
 				extractedComments: ["<!--! one -->", "<!-- @license two -->"]
 			});
 		});
@@ -11592,7 +11591,7 @@ describe("SourceProcessor — a byte order mark", () => {
 	it("keeps the doctype it stands before when beautifying", () => {
 		expect(
 			new SourceProcessor().process(page, { mode: "beautify" }).code
-		).toMatch(/^﻿<!DOCTYPE html>/);
+		).toMatch(/^\uFEFF<!DOCTYPE html>/);
 	});
 
 	it("walks the doctype it stands before", () => {

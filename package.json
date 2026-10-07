@@ -194,6 +194,7 @@
     "jest-diff": "^30.3.0",
     "jest-environment-node": "^30.3.0",
     "jest-junit": "^17.0.0",
+    "jest-matcher-utils": "^30.3.0",
     "jest-snapshot": "^30.3.0",
     "jest-worker": "^30.2.0",
     "json-loader": "^0.5.7",

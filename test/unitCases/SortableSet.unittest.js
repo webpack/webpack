@@ -137,11 +137,11 @@ describe("util/SortableSet", () => {
 				calls++;
 				return undefined;
 			};
-			expect(sortableSet.getFromUnorderedCache(nothing)).toBe(undefined);
-			expect(sortableSet.getFromUnorderedCache(nothing)).toBe(undefined);
+			expect(sortableSet.getFromUnorderedCache(nothing)).toBeUndefined();
+			expect(sortableSet.getFromUnorderedCache(nothing)).toBeUndefined();
 			expect(calls).toBe(2);
 			sortableSet.getFromUnorderedCache(size);
-			expect(sortableSet.getFromUnorderedCache(nothing)).toBe(undefined);
+			expect(sortableSet.getFromUnorderedCache(nothing)).toBeUndefined();
 			expect(calls).toBe(3);
 		});
 

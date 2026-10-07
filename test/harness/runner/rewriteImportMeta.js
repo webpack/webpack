@@ -52,7 +52,7 @@ module.exports = (content, makeMeta) => {
 	// apply from the end so earlier offsets stay valid
 	ranges.sort((a, b) => b[0] - a[0]);
 	for (const [start, end] of ranges) {
-		src = src.slice(0, start) + "__vm_import_meta" + src.slice(end);
+		src = `${src.slice(0, start)}__vm_import_meta${src.slice(end)}`;
 	}
 	return `const __vm_import_meta = ${JSON.stringify(makeMeta())};\n${src}`;
 };

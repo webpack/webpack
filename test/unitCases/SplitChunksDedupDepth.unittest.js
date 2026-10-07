@@ -17,7 +17,7 @@ describe("optimization.splitChunks.dedupDepth", () => {
 			expect(
 				() => new SplitChunksPlugin({ dedupDepth })
 			).toThrowErrorMatchingInlineSnapshot(
-				`"\\"optimization.splitChunks.dedupDepth\\" must be an integer between 0 and 4294967295."`
+				"\"\\\"optimization.splitChunks.dedupDepth\\\" must be an integer between 0 and 4294967295.\""
 			);
 		});
 	}

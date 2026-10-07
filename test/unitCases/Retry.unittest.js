@@ -70,7 +70,7 @@ describe("retry", () => {
 			const code = await retry("cmd", ["a"], {
 				delay: 0,
 				run: (command, args) => {
-					calls.push([command].concat(args));
+					calls.push([command, ...args]);
 					return Promise.resolve(0);
 				}
 			});

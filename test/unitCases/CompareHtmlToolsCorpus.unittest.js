@@ -76,7 +76,7 @@ const minify = (html, options) =>
 	new SourceProcessor().process(html, { mode: "minify", ...options }).code;
 
 describe("compare-html-tools — the cold constructs fixture", () => {
-	it.each(COLD.concat(THIN))("carries %s", (_name, probe) => {
+	it.each([...COLD, ...THIN])("carries %s", (_name, probe) => {
 		expect(COLD_CONSTRUCTS.toLowerCase()).toContain(probe.toLowerCase());
 	});
 

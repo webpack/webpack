@@ -1,7 +1,7 @@
 "use strict";
 
-const { numberToIdentifier } = require("../../lib/template/Template");
 const numberHash = require("../../lib/ids/numberHash");
+const { numberToIdentifier } = require("../../lib/template/Template");
 
 describe("numberHash", () => {
 	for (const n of [10, 100, 1000, 10000]) {
