@@ -54,7 +54,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/esbuild.rs:598",
 			"oxc minifier: peephole/esbuild.rs:599",
 			"oxc minifier: peephole/esbuild.rs:600",
-			"oxc minifier: peephole/esbuild.rs:617",
 			"oxc minifier: peephole/esbuild.rs:628",
 			"oxc minifier: peephole/esbuild.rs:629",
 			"oxc minifier: peephole/esbuild.rs:632",
@@ -757,7 +756,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/remove_unused_expression.rs:531",
 			"oxc minifier: peephole/remove_unused_expression.rs:535",
 			"oxc minifier: peephole/remove_unused_expression.rs:539",
-			"oxc minifier: peephole/remove_unused_expression.rs:545",
 			"oxc minifier: peephole/remove_unused_expression.rs:560",
 			"oxc minifier: peephole/remove_unused_expression.rs:587",
 			"oxc minifier: peephole/remove_unused_expression.rs:589",
@@ -880,7 +878,6 @@ const OXC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/projects/backbone/7/input.js",
 			"swc minifier: fixture/projects/jquery/18/input.js",
 			"swc minifier: fixture/projects/jquery/7/input.js",
-			"swc minifier: fixture/projects/mootools/10/input.js",
 			"swc minifier: fixture/projects/mootools/6/input.js",
 			"swc minifier: fixture/projects/mootools/8/input.js",
 			"swc minifier: fixture/projects/react/15/input.js",
@@ -1217,14 +1214,11 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/minimize_conditional_expression.rs:181",
 			"oxc minifier: peephole/minimize_conditional_expression.rs:182",
 			"oxc minifier: peephole/minimize_conditional_expression.rs:44",
-			"oxc minifier: peephole/minimize_conditional_expression.rs:48",
 			"oxc minifier: peephole/minimize_conditional_expression.rs:55",
 			"oxc minifier: peephole/minimize_conditional_expression.rs:72",
 			"oxc minifier: peephole/minimize_conditional_expression.rs:73",
 			"oxc minifier: peephole/minimize_conditional_expression.rs:80",
-			"oxc minifier: peephole/minimize_conditional_expression.rs:84",
-			"oxc minifier: peephole/minimize_conditional_expression.rs:97",
-			"oxc minifier: peephole/minimize_conditional_expression.rs:98"
+			"oxc minifier: peephole/minimize_conditional_expression.rs:84"
 		]
 	],
 	[
