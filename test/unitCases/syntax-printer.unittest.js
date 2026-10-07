@@ -5382,6 +5382,43 @@ describe("syntax-printer", () => {
 		});
 	});
 
+	describe("`pure_heritage`", () => {
+		const input =
+			"function t(f) { try { f(); console.log('no'); } catch (e) { console.log(e.name); } } var bound = function () {}.bind(); t(function () { class A extends bound {} }); t(function () { class B extends null {} class C extends class {} {} });";
+
+		it("should drop a class extending what it cannot see as terser does by default", async () => {
+			const { minify } = await load();
+			const options = { compress: {}, mangle: false };
+			const { code } = await minify(input, options);
+			const reference = await terserReference().minify(input, options);
+			expect(code).toBe(reference.code);
+		});
+
+		it("should keep a class extending what may be no constructor when off", async () => {
+			const { minify } = await load();
+			const { code } = await minify(input, {
+				compress: { pure_heritage: false },
+				mangle: false
+			});
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+		});
+	});
+
+	describe("`keep_classnames` and a name a literal gives", () => {
+		it("should keep `{ default: class {} }.default`, which names the class", async () => {
+			const { minify } = await load();
+			const input =
+				"var n; const D = { default: class {} }.default, F = { default: function () {} }.default; (function () { var unused = { default: class { static f = (n = this.name); } }.default; })(); console.log(D.name, F.name, n);";
+			const { code } = await minify(input, {
+				compress: {},
+				mangle: true,
+				keep_classnames: true,
+				keep_fnames: true
+			});
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+		});
+	});
+
 	describe("`keep_fnames` and a private method", () => {
 		const input =
 			"var C = class { #method() {} static #field = function () {}; get() { return [this.#method.name, C.#field.name]; } }; console.log(new C().get().join());";
