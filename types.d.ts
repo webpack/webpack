@@ -33453,6 +33453,7 @@ declare namespace exports {
 					isIdentifierChar: (character: string) => boolean;
 					isIdentifierStartBroad: (character: string) => boolean;
 					isIdentifierCharBroad: (character: string) => boolean;
+					isIdentifierCharacter: (character: string) => boolean;
 					isIdentifierString: (
 						str: string,
 						allowSurrogates?: boolean
