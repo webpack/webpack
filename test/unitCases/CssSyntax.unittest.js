@@ -15263,6 +15263,12 @@ describe("CssSyntax minify — what a comparison with other minifiers found", ()
 		["a{transform:translate(calc(0% + 1px),calc(0% - -2px))}", "a{transform:translate(1px,2px)}"],
 		["a{transform:translateY(calc(5px - 0%))}", "a{transform:translateY(5px)}"],
 		["a{transform:translate3d(calc(0% - 16px),0,0)}", "a{transform:translate(-16px)}"],
+		// A z slot takes no percentage: the declaration is invalid and stays so.
+		["a{transform:translateZ(calc(0% + 1px))}", "a{transform:translateZ(calc(0% + 1px))}"],
+		[
+			"a{transform:translate3d(calc(0% + 1px),0,calc(0% + 2px))}",
+			"a{transform:translate3d(1px,0,calc(0% + 2px))}"
+		],
 		// The digits a second pass would find, found on the first.
 		["a{max-height:89.99785714em}", "a{max-height:89.997857em}"],
 		// A lone basis means `1 1 <basis>`, however the three were written.
