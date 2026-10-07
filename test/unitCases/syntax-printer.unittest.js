@@ -285,6 +285,11 @@ const IMPROVED_CASES = [
 		{ compress: { side_effects: false }, mangle: false }
 	],
 	[
+		"consecutive `if`s leaving the same way",
+		'function f(a, b, c) { if (a == null) return true; if (g(a, b)) return true; if (c) return true; for (var i = 0; i < 2; i++) { if (a === i) continue; if (b === i) continue; console.log(i); } try { if (a === 7) throw a; if (b === 7) throw a; } catch (e) { console.log("caught", e); } for (;;) { if (a) break; if (b) break; console.log(3); break; } return false; } function g(a, b) { return a === b; } console.log(f(1, 1), f(null, 2), f(7, 0), f(0, 7), f(0, 0, 0));',
+		{ compress: {}, mangle: false }
+	],
+	[
 		"an arrow reading `this`, which it shares",
 		`(() => { ${TRY} console.log(typeof this); })();`,
 		{ compress: {}, mangle: false }
@@ -642,7 +647,7 @@ const IMPROVED_CASES = [
 		],
 		[
 			"a value moved past a read of `console`, a built-in or one of its methods",
-			"function f(x) { var r = x + 1, a = r * r - r; console.log(a + 7); var v = g(); console.log(Math.max(v, 1)); var c; c = 2; console.log(c); } function g() { return 3; } f(1);"
+			"function f(x) { var a = x === 1 ? 2 : 3; console.log(a + 7); var v = g(); console.log(Math.max(v, 1)); var c; c = 2; console.log(c); } function g() { return 3; } f(1);"
 		],
 		[
 			"an array of empty strings",
@@ -710,6 +715,7 @@ const KEPT_CASES = [
 	["a conditional whose other branch reads a global getter again", 'var n = 0; Object.defineProperty(globalThis, "g", { get: function () { return n++; }, configurable: true }); function f(b) { return g ? b : g; } console.log(f(1), f(2));'],
 	["a conditional whose other branch reads a getter twice or a different binding", "var n = 0, o = { get x() { return ++n; } }; function f(b) { var a = 1; { let a = 0; var r = a ? b : o.x ? b : o.x; } return [r, a, n]; } console.log(f(2));"],
 	["a bigint and a number concatenated, which throws", "try { console.log(1n + 2); } catch (e) { console.log(e.name); }"],
+	["consecutive `if`s leaving with different values or to different labels", 'function f(a, b) { if (a) return 1; if (b) return 2; x: for (;;) { for (;;) { if (a) break x; if (b) break; console.log(3); break x; } console.log(4); break; } for (var i = 0; i < 2; i++) console.log(i); } f(1, 0); f(0, 1); f(0, 0);'],
 	["an array literal joining to a string longer than it", 'console.log([!0, !0, !0] + "");'],
 	["`+` and `~` of what a literal does not give", "function f(a) { return [+[a], ~a !== 0 ? 1 : 2]; } console.log(f(1), f(1n));"],
 	["a string literal indexed past its end, by no constant or as a target", 'function f(i) { var s = "abc"; "abc"[0] = 1; return ["abc"[5], "abc"[i], "abc"[1.5], "abc"[-1]]; } console.log(f(1));'],
@@ -5521,7 +5527,7 @@ describe("syntax-printer", () => {
 			const input =
 				"(function () { var array = []; var push = array.push, slice = array.slice; console.log(typeof push); })();";
 			const options = { compress: {}, mangle: false };
-			const { code } = await minify(input, options);
+			const { code } = await unimproved(() => minify(input, options));
 			const reference = await terserReference().minify(input, options);
 			expect(code).toBe(reference.code);
 		});

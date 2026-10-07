@@ -62,9 +62,7 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/esbuild.rs:645",
 			"oxc minifier: peephole/esbuild.rs:684",
 			"oxc minifier: peephole/esbuild.rs:688",
-			"oxc minifier: peephole/esbuild.rs:692",
 			"oxc minifier: peephole/esbuild.rs:700",
-			"oxc minifier: peephole/esbuild.rs:706",
 			"oxc minifier: peephole/esbuild.rs:824",
 			"oxc minifier: peephole/esbuild.rs:828",
 			"oxc minifier: peephole/esbuild.rs:832",
@@ -573,7 +571,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/minimize_conditions.rs:1130",
 			"oxc minifier: peephole/minimize_conditions.rs:1206",
 			"oxc minifier: peephole/minimize_conditions.rs:1226",
-			"oxc minifier: peephole/minimize_conditions.rs:124",
 			"oxc minifier: peephole/minimize_conditions.rs:1245",
 			"oxc minifier: peephole/minimize_conditions.rs:1254",
 			"oxc minifier: peephole/minimize_conditions.rs:1294",
@@ -596,7 +593,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/minimize_conditions.rs:1320",
 			"oxc minifier: peephole/minimize_conditions.rs:1321",
 			"oxc minifier: peephole/minimize_conditions.rs:1325",
-			"oxc minifier: peephole/minimize_conditions.rs:133",
 			"oxc minifier: peephole/minimize_conditions.rs:1334",
 			"oxc minifier: peephole/minimize_conditions.rs:1335",
 			"oxc minifier: peephole/minimize_conditions.rs:1336",
@@ -655,6 +651,7 @@ const OXC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/firebase/dist/1/input.js",
 			"swc minifier: fixture/issues/react-instancesearch/004/input.js",
 			"swc minifier: fixture/issues/react/hooks/3/input.js",
+			"swc minifier: fixture/issues/vercel/005/input.js",
 			"swc minifier: fixture/next/31077/static/chunks/1606726a.10299989c08cb523/input.js",
 			"swc minifier: fixture/next/33265/static/chunks/pages/index-cb36c1bf7f830e3c/input.js",
 			"swc minifier: fixture/next/36127/2/3/input.js",
@@ -686,6 +683,7 @@ const OXC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/projects/next/archive-3/pages/dynamic/ssr-true-6d4aa8fc503b9d073aef/input.js",
 			"swc minifier: fixture/projects/react/.6/input.js",
 			"swc minifier: fixture/projects/wmr/archive-1/chunks/hoofd.module.6c5395cb/input.js",
+			"swc minifier: full/vercel/ms/1/input.js",
 			"swc minifier: projects/files/backbone-1.1.0.js",
 			"swc minifier: projects/files/jquery-1.9.1.js",
 			"swc minifier: projects/files/jquery.mobile-1.4.2.js",
@@ -1339,7 +1337,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/minimize_statements.rs:133",
 			"oxc minifier: peephole/minimize_statements.rs:137",
 			"oxc minifier: peephole/minimize_statements.rs:141",
-			"oxc minifier: peephole/minimize_statements.rs:177",
 			"oxc minifier: peephole/minimize_statements.rs:188",
 			"oxc minifier: peephole/minimize_statements.rs:195",
 			"oxc minifier: peephole/minimize_statements.rs:351"
@@ -1411,7 +1408,6 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc writes `if` statements shorter, as oxc's `peephole/minimize_if_statement.rs` tests show",
 		[
-			"oxc minifier: peephole/minimize_if_statement.rs:61",
 			"oxc minifier: peephole/minimize_if_statement.rs:74",
 			"oxc minifier: peephole/minimize_if_statement.rs:78",
 			"oxc minifier: peephole/minimize_if_statement.rs:82"

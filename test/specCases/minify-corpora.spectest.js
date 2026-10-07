@@ -1602,6 +1602,16 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 		]
 	],
 	[
+		"consecutive `if`s leaving with one value merged, where the source repeats the `if` gzip matched",
+		[
+			"S7.9_A5.8_T1.js (the default minimizer's options)",
+			"S7.9_A5.9_T1.js (the default minimizer's options)",
+			"if_return/if_return_same_value (its own options)",
+			"if_return/if_return_same_value (the default minimizer's options)",
+			"symbol-logical-not-evaluation.js (the default minimizer's options)"
+		]
+	],
+	[
 		"a literal folded into the string it makes where the source repeats the literal gzip matched",
 		[
 			"evaluate/unsafe_array (a module mangled at its top level)",
