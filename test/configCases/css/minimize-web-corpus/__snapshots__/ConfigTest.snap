@@ -1,0 +1,49 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases css minimize-web-corpus minimize-web-corpus should compile: minimize-dead-rules 1`] = `
+Array [
+  "/*! two copies with a rule between them: the first goes */.between1{color:teal}.t01{color:red}",
+  "/*! and with a whole block between them */@media screen{.between2{color:teal}}.t02{color:red}",
+  "/*! copies in two blocks sharing a condition */.between3{color:teal}@media print{.t03{color:red}}",
+  "/*! the same selector under a different condition is a different rule */@media screen{.t04{color:red}}@media print{.t04{color:red}}",
+  "/*! the same selector with a different block is not a copy */.t05{color:red}.between5{color:teal}.t05{color:blue}",
+  "/*! three copies leave the last, and the two they parted meet */.m1,.m2{color:teal}.t06{color:red}",
+  "/*! a block a cut empties goes, as an empty one written here would */.between7{color:teal}@media (monochrome){.t07{color:red}}",
+  "/*! a keyframe repeated at one offset is left to the printer */@keyframes t08{0%{opacity:0}to{opacity:1}}",
+  "/*! a rule nested in another is read under it, so a copy elsewhere under the
+   same rule makes it dead even where the two blocks differ otherwise */.t09{width:1px}.between9{color:teal}.t09{height:2px;.inner{color:red}}",
+  "/*! and the same selector under another rule is another rule */.t10a{.inner{color:red}}.t10b{.inner{color:red}}",
+  "/*! a raw passthrough the parser kept verbatim stands among the rules it
+   separates, and is counted among them */@media (width>=1px){*zoom: 1}.between11{color:teal}@media (width>=1px){.t11{.inner{color:red}}}",
+]
+`;
+
+exports[`ConfigTestCases css minimize-web-corpus minimize-web-corpus should compile: minimize-escaped-at-rule-names 1`] = `
+Array [
+  "/*! the first statement of a layer is where it sits in the cascade, so a later
+   copy of it never stands in for it */@layer first;.t01{color:red}@layer first;",
+  "/*! a keyframe selector is read under the rule it is written in */@keyframes t02{0%{opacity:0}to{opacity:1}}",
+  "/*! a media feature in the prelude is read as a range */@media (width>=1px){.t03{color:red}}",
+  "/*! a condition whose block is empty paints nothing */.t04{color:red}",
+  "/*! ...but each anonymous layer is a layer of its own, so the pair stands */@layer{.t05{color:red}}@layer{.t05{color:blue}}",
+  "/*! a name no table names takes no branch */@unknown-rule (color:red){.t06{color:red}}",
+]
+`;
+
+exports[`ConfigTestCases css minimize-web-corpus minimize-web-corpus should compile: minimize-gradient-position-validity 1`] = `
+Array [
+  "/*! at cannot follow a color stop; the earlier declaration must remain effective */.named{background-image:linear-gradient(red,blue);background-image:radial-gradient(red at center,blue)}",
+  "/*! a hex color with a position is still a stop */.hex{background-image:repeating-radial-gradient(#123 10px at 50%,blue 20px)}",
+  "/*! a color function is also a stop */.function{background-image:conic-gradient(color(display-p3 1 0 0) at center center,blue)}",
+  "/*! a context-dependent color can carry a position */.current{background-image:repeating-conic-gradient(currentColor 10deg at 50% 50%,blue 20deg)}",
+  "/*! a conic stop can put its angle before its color */.angle-first{background-image:conic-gradient(10deg red at center,blue)}",
+  "/*! system colors are stops too */.system{background-image:radial-gradient(Canvas at center,blue)}",
+  "/*! valid preludes still lose their default positions */.shape{background-image:radial-gradient(circle,red,blue)}.position-only{background-image:radial-gradient(red,blue)}.size{background-image:repeating-radial-gradient(10px 20px,red,blue 5px)}.rotation{background-image:conic-gradient(from 90deg,red,blue)}.repeating{background-image:repeating-conic-gradient(red,blue 20deg)}",
+]
+`;
+
+exports[`ConfigTestCases css minimize-web-corpus minimize-web-corpus should compile: minimize-merge-rules-order 1`] = `
+Array [
+  ".t03-a,.t03-b{position:absolute;display:block;transform:scale(.6)}.t03-b{transform:scale(1)}.cell-early,.cell-late,.row-early,.row-late{box-shadow:0 0 red;background:white;color:#000}",
+]
+`;

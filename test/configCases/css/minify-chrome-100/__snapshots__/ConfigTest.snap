@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases css minify-chrome-100 minify-chrome-100 should compile: minify-hoisted-nested-join 1`] = `".a .x,.a .y{top:0}.b .o,.b .p,.b .q{left:0}.c,.c .x,.c .y{right:0}.d{bottom:1px}.d .x,.d .y{bottom:0}.e .x{margin:0}.e .y{margin:1px}.e .z{margin:0}@media print{.f .x,.f .y{padding:0}}.g{top:0;.x{top:0}left:0}.h,.i .x{color:teal}.j .x,.k .y{outline-width:1px}.l,.m .x{outline-color:red}.n,.o,.o .x{order:3}"`;
+
+exports[`ConfigTestCases css minify-chrome-100 minify-chrome-100 should compile: minify-light-dark-idempotent 1`] = `".a{color:var(--webpack-light,#fff) var(--webpack-dark,#000)}:root{color-scheme:light dark;--own:1;--webpack-light:initial;--webpack-dark:}@media (prefers-color-scheme:dark){:root{--webpack-light:;--webpack-dark:initial}}.scheme-written{color-scheme:light dark;--webpack-light:initial;--webpack-dark:}.written{color:var(--webpack-light,#eee) var(--webpack-dark,#111)}.scheme-light-dark{color:red}.authored{color-scheme:light dark;--webpack-light:red;--webpack-light:initial;--webpack-dark:}@media (prefers-color-scheme:dark){.authored{--webpack-light:;--webpack-dark:initial}}.shouted{color:var(--webpack-light,#abc) var(--webpack-dark,#123)}:where(:root){--webpack-light:initial;--webpack-dark:}"`;
+
+exports[`ConfigTestCases css minify-chrome-100 minify-chrome-100 should compile: minify-light-dark-name-only 1`] = `".scheme-light-dark{color-scheme:light dark}.b{width:my-light-dark(1px)}.a{color:red}"`;
+
+exports[`ConfigTestCases css minify-chrome-100 minify-chrome-100 should compile: minify-nested-combinator 1`] = `".a>.child{top:0}.b+.next{top:1px}.c~.later{top:2px}.d>.child{top:3px}.e || .col{top:4px}.f .inside{top:5px}:is(.g,.h)>.child{top:6px}.i>.child{top:7px}.j .z,.j+.y,.j>.x{left:0}"`;
+
+exports[`ConfigTestCases css minify-chrome-100 minify-chrome-100 should compile: minify-nested-idempotent 1`] = `".a{width:1px}.mid{color:teal}.a{height:2px}.a .x{color:red}.p,.q .r{color:blue}.q .s{color:green}.t{--c:1;color:navy}.t .u{color:navy}.v,.v .w{top:0}.z{top:1px}.y{--c:1;color:olive}.y{.y{color:olive}--c:1;color:olive}.k .l,.l .m{left:0}@media print{.k .l{left:0}}.e,.e f: (1) [2]{g:h}.e .i{top:0}"`;
