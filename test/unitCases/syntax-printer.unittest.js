@@ -588,6 +588,10 @@ const IMPROVED_CASES = [
 			`var a = ${stringArray(100)}, b = ${stringArray(100).slice(0, -1)}, 1], c = ${stringArray(100).slice(0, -1)}, , "z"]; console.log(a.length, typeof b[100], 100 in c, c.length);`
 		],
 		[
+			"a value moved past a read of `console`, a built-in or one of its methods",
+			"function f(x) { var r = x + 1, a = r * r - r; console.log(a + 7); var v = g(); console.log(Math.max(v, 1)); var c; c = 2; console.log(c); } function g() { return 3; } f(1);"
+		],
+		[
 			"an array of empty strings",
 			`var a = ${stringArray(100, () => "")}; console.log(a.length, a.every((s) => s === ""));`
 		],
@@ -697,6 +701,8 @@ const KEPT_CASES = [
 	["`new.target`", `!function () { ${TRY} console.log(new.target); }();`],
 	["an arrow reading `this`", `!function () { ${TRY} [1].map(() => this); }();`],
 	["an arrow calling `eval`", `!function () { ${TRY} [1].map(() => eval("this")); }();`],
+	["a value with effects kept before a read of `console`, which it may patch", 'var log = console.log; function g() { console.log = function (x) { log("patched", x); }; return 1; } function f() { var v = g(); console.log(v); console.log = log; } f(); f();'],
+	["a value kept before a global no built-in names, a member a built-in computes, a shadowed built-in, or a built-in the value writes", 'function f(Math) { var v = g(); h(v); var w = g(); console.log(RegExp.$1, w); var x = g(); console.log(Math.max(x)); } function k() { var o = console; var u = (console = { log: function () { o.log("new"); } }, 1); console.log(u); console = o; } var h = console.log; function g() { return 2; } f({ max: String }); k();'],
 	["a parameter given an argument", `!function (a) { ${TRY} console.log(a); }(Math.random());`],
 	["a parameter given nothing", `!function (a) { ${TRY} console.log(a, a = Math.random()); }();`],
 	["a name", `!function f() { ${TRY} console.log(f); }();`],
@@ -5182,7 +5188,7 @@ describe("syntax-printer", () => {
 				["function f(c) { return null == c ? void 0 : c?.a; } console.log(f(null), f({ a: 1 }));", target(2021)],
 				["var o = { p: 0, q: 1 }; function f(k) { o[k + 1] || (o[k + 1] = 2); return o; } console.log(f(\"p\"), f(\"q\"));", target(2021)],
 				["var g = function f() { \"use strict\"; try { f = f || 1; } catch (e) { return e.name; } return typeof f; }; console.log(g());", target(2021)],
-				["x = x || 1; var x; console.log(x);", target(2021)],
+				["x = x || 1; var x; print(x); function print(v) { console.log(v); }", target(2021)],
 				["console.log(function () { var other = {}, o = { get p() { o = other; return 0; }, set p(v) {} }, first = o; o.p || (o.p = 1); return [first === o, other.p]; }());", target(2021)],
 				["var n = 0; Object.defineProperty(globalThis, \"a\", { get: function () { return n++ ? null : { p: 1 }; }, configurable: true }); function f() { return null == a ? void 0 : a.p; } try { console.log(f()); } catch (e) { console.log(e.name); }", target(2021)],
 				["function f(o, c) { with (o) { return null == c ? void 0 : c.p; } } console.log(f({}, null), f({ c: { p: 2 } }, { p: 1 }));", target(2021)],

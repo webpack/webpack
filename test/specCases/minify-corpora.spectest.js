@@ -1287,8 +1287,6 @@ const IMPROVED_YET_BIGGER = {
 		"214 bytes fewer, 6 more gzipped: `!!x` in place of `null!==x` breaks the runs of `null!==` gzip reused",
 	"projects/files/react-17.0.1.js (its own options)":
 		"33 bytes fewer, 3 more gzipped: `!!x` in place of `null!==x` breaks the runs of `null!==` gzip reused",
-	"benches-full/vue.js (the default minimizer's options)":
-		"9 bytes fewer, 6 more gzipped: the shorter `typeof x<\"u\"` and constructor calls break runs gzip reused",
 	"fixture/projects/next/.archive-4/framework-054ead69ea8124b4cb27/input.js (its own options)":
 		"83 bytes fewer, 8 more gzipped: the shorter `typeof x<\"u\"` breaks the `\"…\"!=typeof` runs gzip reused",
 	"fixture/projects/next/.archive-4/framework-054ead69ea8124b4cb27/input.js (the default minimizer's options)":
@@ -1317,8 +1315,6 @@ const IMPROVED_YET_BIGGER = {
 		"10 bytes fewer, 7 more gzipped: the folded `[3,2,1].join(\"-\")` matched the one left after it",
 	"harmony/issue_2345 (reminify 8 {\"compress\":{\"reduce_funcs\":false}})":
 		"10 bytes fewer, 7 more gzipped: the folded `[3,2,1].join(\"-\")` matched the one left after it",
-	"fixture/issues/12215/input.js (its own options)":
-		"20 bytes fewer, 5 more gzipped: the folded global call matched a shadowed one beside it",
 	"issue_8864_1 (its own options)":
 		"19 bytes fewer, 1 more gzipped: the folded `toUpperCase()` matched the one left in the template",
 	"S15.1.3.3_A4_T2.js (the default minimizer's options)":
@@ -1619,6 +1615,13 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 			"evaluate/unsafe_array (the default minimizer's options)",
 			"fixture/issues/string-index-utf16/input.js (its own options)",
 			"fixture/issues/string-index-utf16/input.js (the default minimizer's options)"
+		]
+	],
+	[
+		"a value read where a built-in read stood between, where the source repeats the declaration gzip matched",
+		[
+			"regress-1383630.js (the default minimizer's options)",
+			"reviver-forward-modifies-object.js (the default minimizer's options)"
 		]
 	],
 	[
