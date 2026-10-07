@@ -1,14 +1,14 @@
 "use strict";
 
-const NamespaceFacadeModule = require("../lib/optimize/NamespaceFacadeModule");
-const SplitExportModule = require("../lib/optimize/SplitExportModule");
+const NamespaceFacadeModule = require("../../lib/optimize/NamespaceFacadeModule");
+const SplitExportModule = require("../../lib/optimize/SplitExportModule");
 
 const { FacadeDependency } = NamespaceFacadeModule;
 
-/** @typedef {import("../lib/serialization/ObjectMiddleware").ObjectDeserializerContext} ObjectDeserializerContext */
-/** @typedef {import("../lib/serialization/ObjectMiddleware").ObjectSerializerContext} ObjectSerializerContext */
+/** @typedef {import("../../lib/serialization/ObjectMiddleware").ObjectDeserializerContext} ObjectDeserializerContext */
+/** @typedef {import("../../lib/serialization/ObjectMiddleware").ObjectSerializerContext} ObjectSerializerContext */
 
-const requestShortener = /** @type {import("../lib/RequestShortener")} */ (
+const requestShortener = /** @type {import("../../lib/util/RequestShortener")} */ (
 	/** @type {unknown} */ ({ shorten: (/** @type {string} */ r) => r })
 );
 
