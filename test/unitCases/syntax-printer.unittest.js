@@ -625,6 +625,12 @@ const IMPROVED_CASES = [
 		"function run(o){let n=o.a+1,t=o.c,{beta:c}=o;t+=n;let[e,l]=o.d,{eta:s}=o;for(let o of[n,c,e]){let n=2*o,t=3*o;console.log(n,t,s)}{let o=n+1,t=o;t++,console.log(o,t,l)}return t}console.log(run({a:1,b:2,c:3,d:[4,5],eta:6}));"
 	],
 	[
+		"`const` declarations heading loops and holding holes, defaults and rests, written as `let` where they stand",
+		"function run(input) { for (const head = input.x; head; ) { console.log(head); break; } for (const [, second] of input.list) console.log(second); const { c = 1, d: { e } = {}, ...rest } = input; const [first, ...others] = input.arr; let counter = 2; const sum = counter + c; console.log(e, rest, first, others, counter, sum); counter++; { const k = input.k; const l = input.l; console.log(k, l); } return () => { const p = input.p; console.log(p); }; } run({ x: 1, list: [[1, 2]], c: 3, d: { e: 4 }, arr: [5, 6], k: 7, l: 8, p: 9 })();",
+		{ compress: {}, mangle: true },
+		"function run(o){for(let n=o.x;n;){console.log(n);break}for(let[,n]of o.list)console.log(n);let{c:n=1,d:{e:l}={},...c}=o,[s,...r]=o.arr,t=2,e=t+n;console.log(l,c,s,r,t,e),t++;{let n=o.k,l=o.l;console.log(n,l)}return()=>{let n=o.p;console.log(n)}}run({x:1,list:[[1,2]],c:3,d:{e:4},arr:[5,6],k:7,l:8,p:9})();"
+	],
+	[
 		"a pattern naming nothing, reading `null`, which still throws",
 		"try { !function () { const { a } = null; }(); } catch (e) { console.log(e.name); }",
 		{ compress: {}, mangle: false }
