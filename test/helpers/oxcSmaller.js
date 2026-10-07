@@ -320,8 +320,7 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/substitute_alternate_syntax.rs:851",
 			"oxc minifier: peephole/substitute_alternate_syntax.rs:867",
 			"oxc minifier: peephole/substitute_alternate_syntax.rs:868",
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:873",
-			"terser compress: sequences/side_effects_cascade_3"
+			"oxc minifier: peephole/substitute_alternate_syntax.rs:873"
 		]
 	],
 	[
@@ -560,9 +559,6 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc writes conditions shorter, as oxc's `peephole/minimize_conditions.rs` tests show",
 		[
-			"oxc minifier: peephole/minimize_conditions.rs:1030",
-			"oxc minifier: peephole/minimize_conditions.rs:1032",
-			"oxc minifier: peephole/minimize_conditions.rs:1045",
 			"oxc minifier: peephole/minimize_conditions.rs:1055",
 			"oxc minifier: peephole/minimize_conditions.rs:1068",
 			"oxc minifier: peephole/minimize_conditions.rs:111",
@@ -1205,10 +1201,6 @@ const OXC_SMALLER_BY_REASON = [
 		"oxc writes conditional expressions shorter, as oxc's `peephole/minimize_conditional_expression.rs` tests show",
 		[
 			"oxc minifier: peephole/minimize_conditional_expression.rs:104",
-			"oxc minifier: peephole/minimize_conditional_expression.rs:112",
-			"oxc minifier: peephole/minimize_conditional_expression.rs:115",
-			"oxc minifier: peephole/minimize_conditional_expression.rs:121",
-			"oxc minifier: peephole/minimize_conditional_expression.rs:122",
 			"oxc minifier: peephole/minimize_conditional_expression.rs:181",
 			"oxc minifier: peephole/minimize_conditional_expression.rs:182",
 			"oxc minifier: peephole/minimize_conditional_expression.rs:44",
