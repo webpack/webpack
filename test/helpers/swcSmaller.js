@@ -536,7 +536,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/11512-exhaustive/iife-anon-arg-unused/input.js",
 			"swc minifier: fixture/issues/11512-exhaustive/iife-anon-default-unused/input.js",
 			"swc minifier: fixture/issues/11645/control-known-arity-drop/input.js",
-			"swc minifier: fixture/issues/11684/class-decl/input.js",
 			"swc minifier: fixture/issues/11684/class-expression/input.js",
 			"swc minifier: fixture/issues/11684/constructor-scopes/input.js",
 			"swc minifier: fixture/issues/11684/identifier-reduce-vars-only/input.js",
