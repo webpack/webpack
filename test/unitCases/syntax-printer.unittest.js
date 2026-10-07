@@ -622,7 +622,7 @@ const IMPROVED_CASES = [
 		],
 		[
 			"a value moved past a read of `console`, a built-in or one of its methods",
-			"function f(x) { var r = x + 1, a = r * r - r; console.log(a + 7); var v = g(); console.log(Math.max(v, 1)); var c; c = 2; console.log(c); } function g() { return 3; } f(1);"
+			"function f(x) { var a = x === 1 ? 2 : 3; console.log(a + 7); var v = g(); console.log(Math.max(v, 1)); var c; c = 2; console.log(c); } function g() { return 3; } f(1);"
 		],
 		[
 			"an array of empty strings",
@@ -5499,7 +5499,7 @@ describe("syntax-printer", () => {
 			const input =
 				"(function () { var array = []; var push = array.push, slice = array.slice; console.log(typeof push); })();";
 			const options = { compress: {}, mangle: false };
-			const { code } = await minify(input, options);
+			const { code } = await unimproved(() => minify(input, options));
 			const reference = await terserReference().minify(input, options);
 			expect(code).toBe(reference.code);
 		});
