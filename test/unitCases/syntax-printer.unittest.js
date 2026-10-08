@@ -583,13 +583,13 @@ const IMPROVED_CASES = [
 	[
 		"a loop copying `arguments` for a rest parameter as a spread, from ECMAScript 2015, joined to a following `var`",
 		"function f(a) { for (var args = [], _i = 1; _i < arguments.length; _i++) args[_i - 1] = arguments[_i]; for (var i = 0; i < args.length; i++) console.log(a, args[i]); } function g() { var args = []; for (var _i = 0; _i < arguments.length; ++_i) args[_i] = arguments[_i]; var n = args.join(); console.log(n, n); return [args, function () { function h() { return arguments[0]; } return h; }]; } function k(a, b) { for (var rest = [], _i = 2; _i < arguments.length; _i++) rest[_i - 2] = arguments[_i]; return rest; } f(1, 2, 3); console.log(g(1, 2)[0], k(1), k(1, 2, 3, 4), g.length, k.length);",
-		{ compress: { ecma: 2015 }, ecma: 2015, mangle: false },
+		{ compress: { ecma: 2015, unsafe: true }, ecma: 2015, mangle: false },
 		"function f(a){for(var args=[...arguments].slice(1),i=0;i<args.length;i++)console.log(a,args[i])}function g(){var args=[...arguments],n=args.join();return console.log(n,n),[args,function(){return function(){return arguments[0]}}]}function k(a,b){var rest=[...arguments].slice(2);return rest}f(1,2,3),console.log(g(1,2)[0],k(1),k(1,2,3,4),g.length,k.length);"
 	],
 	[
 		"a loop copying `arguments` under a label nothing can name, once terser has dropped the label",
 		"function f(a) { l: for (var rest = [], _i = 1; _i < arguments.length; _i++) rest[_i - 1] = arguments[_i]; return [a, rest]; } console.log(f(1), f(1, 2, 3));",
-		{ compress: { ecma: 2015 }, ecma: 2015, mangle: false },
+		{ compress: { ecma: 2015, unsafe: true }, ecma: 2015, mangle: false },
 		"function f(a){var rest=[...arguments].slice(1);return[a,rest]}console.log(f(1),f(1,2,3));"
 	],
 	[
@@ -6156,13 +6156,16 @@ describe("syntax-printer", () => {
 			}
 		});
 
-		it("should keep a loop copying `arguments` that a spread would not copy the same, or before ECMAScript 2015", async () => {
+		it("should keep a loop copying `arguments` that a spread would not copy the same, before ECMAScript 2015, or past its start without `unsafe`", async () => {
 			const { minify } = await load();
 			/** @type {import("terser").MinifyOptions} */
 			const modern = { compress: { ecma: 2015 }, ecma: 2015, mangle: false };
+			/** @type {import("terser").MinifyOptions} */
+			const unsafe = { compress: { ecma: 2015, unsafe: true }, ecma: 2015, mangle: false };
 			/** @type {[string, import("terser").MinifyOptions][]} */
 			const cases = [
 				["function f() { for (var a = [], i = 0; i < arguments.length; i++) a[i] = arguments[i]; return a; } console.log(f(1, 2));", { compress: {}, mangle: false }],
+				["function f(b) { for (var a = [], i = 1; i < arguments.length; i++) a[i - 1] = arguments[i]; return a; } console.log(f(1, 2));", modern],
 				["function f() { for (var a = [], i = 0; i < arguments.length; i++) a[i] = arguments[i]; return [a, i]; } console.log(f(1, 2));", modern],
 				["function f() { for (var a = [], i = 0; i < arguments.length; i++) a[i] = arguments[i]; return [a, arguments.length]; } console.log(f(1, 2));", modern],
 				["function f() { for (var a = [], i = 0; i < arguments.length; i++) a[i] = arguments[i]; return [a, eval(\"i\")]; } console.log(f(1, 2));", modern],
@@ -6170,8 +6173,8 @@ describe("syntax-printer", () => {
 				["function f() { for (var a = [0], i = 0; i < arguments.length; i++) a[i] = arguments[i]; return a; } console.log(f(1, 2));", modern],
 				["function f() { for (var a = [], i = 0.5; i < arguments.length; i++) a[i] = arguments[i]; return a; } console.log(f(1, 2));", modern],
 				["function f(b) { for (var a = [], i = 0; i < b.length; i++) a[i] = arguments[i]; return a; } console.log(f(1, 2));", modern],
-				["function f() { for (var a = [], i = 1; i < arguments.length; i++) a[i] = arguments[i]; return a; } console.log(f(1, 2));", modern],
-				["function f() { for (var a = [], i = 1; i < arguments.length; i++) a[i - 2] = arguments[i]; return a; } console.log(f(1, 2));", modern],
+				["function f() { for (var a = [], i = 1; i < arguments.length; i++) a[i] = arguments[i]; return a; } console.log(f(1, 2));", unsafe],
+				["function f() { for (var a = [], i = 1; i < arguments.length; i++) a[i - 2] = arguments[i]; return a; } console.log(f(1, 2));", unsafe],
 				["function f() { for (var a = [], i = 0; i < arguments.length; i += 1) a[i] = arguments[i]; return a; } console.log(f(1, 2));", modern],
 				["function f() { for (var a = [], i = 0; i <= arguments.length; i++) a[i] = arguments[i]; return a; } console.log(f(1, 2));", modern],
 				["function f() { for (var a = [], i = 0; i < arguments.length; i++) a[i] += arguments[i]; return a; } console.log(f(1, 2));", modern],
