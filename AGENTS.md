@@ -228,6 +228,7 @@ Read [docs/performance.md](docs/performance.md) before claiming or measuring a p
 - **Subscribe to every PR you open** and stay subscribed until it is merged or closed, or the requester says stop.
 - **Never post to GitHub on your own initiative** — comments, review replies, PR body edits after opening (except installing the template over an auto-created body), replies to bots. Bring the finding and your draft reply into the session.
 - **Don't rebase or merge the base branch into an open PR unasked.**
+- **A question is not a go-ahead**: asked what happened, why, or whether you changed something, answer and propose the change, then push only once the requester agrees, even to fix your own mistake. A request phrased as a question ("could you…?") is still a request.
 - **Every check ends green**; read coverage only once every uploading suite has reported.
 - **A wake that changes nothing ends with no message.**
 
