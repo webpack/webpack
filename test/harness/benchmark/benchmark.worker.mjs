@@ -1424,9 +1424,8 @@ async function registerBenchmark(bench, task, casesPath) {
 }
 
 /**
- * Run one benchmark task in its own bench. Used by the jest-worker pool for
- * time/simulation runs, where per-process isolation is fine (and better) for
- * deterministic instruction counts.
+ * Run one benchmark task in its own bench. Used by the jest-worker pool, where
+ * per-process isolation keeps instruction and allocation counts deterministic.
  * @param {object} options options
  * @param {BenchmarkTask} options.task benchmark task
  * @param {string} options.casesPath benchmark cases directory
@@ -1457,50 +1456,6 @@ export async function run({
 	return {
 		benchmark: task.benchmark,
 		scenario: task.scenario ? task.scenario.name : "unit",
-		results
-	};
-}
-
-/**
- * Run every task in one shared bench and process. Used for CodSpeed memory
- * mode: a single `Bench`, one global prime pass, one setup/teardown — identical
- * to the pre-parallel harness, so allocation counts stay stable and comparable
- * across PRs (per-benchmark benches shift them). Never used with the worker pool.
- * @param {object} options options
- * @param {BenchmarkTask[]} options.tasks benchmark tasks
- * @param {string} options.casesPath benchmark cases directory
- * @param {string} options.baseOutputPath base output directory
- * @param {string=} options.callingFile harness path relative to the git root
- * @returns {Promise<BenchmarkResult>} combined benchmark result
- */
-export async function runAll({
-	tasks,
-	casesPath,
-	baseOutputPath: baseOutputPathArg,
-	callingFile
-}) {
-	console.log(`Process ${process.pid}: running ${tasks.length} task(s) in one bench`);
-
-	baseOutputPath = baseOutputPathArg;
-	rootCallingFile = callingFile;
-
-	const bench = await createBenchInstance();
-
-	/** @type {Result[]} */
-	const results = [];
-	attachResultCollector(bench, results);
-
-	// Register every task up front so the memory-mode global prime pass warms
-	// all of them before any measurement (removes cross-task order dependence).
-	for (const task of tasks) {
-		await registerBenchmark(bench, task, casesPath);
-	}
-
-	await bench.run();
-
-	return {
-		benchmark: "all",
-		scenario: "all",
 		results
 	};
 }
