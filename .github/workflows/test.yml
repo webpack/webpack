@@ -528,6 +528,14 @@ jobs:
         os: [ubuntu-latest, windows-latest, macos-latest]
         node-version: [22.x, 24.x, 26.x]
         part: [a, b]
+        # A pull request runs macOS on 24.x only: its runners queue for hours
+        # under the org cap, and `lib/` has no macOS-only branch. `main` keeps
+        # all three; on a push the empty `os` excludes nothing.
+        exclude:
+          - os: ${{ github.event_name == 'pull_request' && 'macos-latest' || '' }}
+            node-version: 22.x
+          - os: ${{ github.event_name == 'pull_request' && 'macos-latest' || '' }}
+            node-version: 26.x
         include:
           # Test with main branches of webpack dependencies
           - os: ubuntu-latest
