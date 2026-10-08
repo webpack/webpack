@@ -588,6 +588,11 @@ const IMPROVED_CASES = [
 		{ compress: { ecma: 2021 }, ecma: 2021, mangle: false }
 	],
 	[
+		"a property of `this` assigned its own logical expression or arithmetic, from ECMAScript 2021",
+		'var log = []; class B {} class C extends B { constructor(early) { if (early) this.p || (this.p = 0); super(); } get p() { log.push("get"); return this._p; } set p(v) { log.push("set " + v); this._p = v; } m() { this.p || (this.p = 1); this.p && (this.p = 2); this.q == null && (this.q = 3); this[0] = this[0] + 4; this.p = this.p - 5; return [this.p, this.q, this[0]]; } } var o = new C(); try { new C(1); } catch (e) { log.push(e.name); } var f = { n: 0, g() { return () => this.n || (this.n = 6); } }; console.log(o.m(), o.m(), f.g()(), log.join());',
+		{ compress: { ecma: 2021 }, ecma: 2021, mangle: false }
+	],
+	[
 		"a strict test for null and one for undefined, the first storing the name",
 		"function f(c, d) { var t, u; return [(t = c.a) === null || t === void 0, void 0 !== (u = c.b) && null !== u, d || (t = c.a) === null || t === void 0, t, u]; } console.log(f({}, 0), f({ a: 0, b: null }, 1), f({ a: null, b: 2 }, 0));",
 		{ compress: {}, mangle: false }
@@ -5927,6 +5932,8 @@ describe("syntax-printer", () => {
 				["function f(o, c) { with (o) { return null != c ? c : 1; } } console.log(f({}, null), f({ c: 2 }, 3));", target(2021)],
 				["function f(c, d) { return [-c == d ? 1 : d, void g(d) == d ? 2 : d]; } function g() {} console.log(f(1, -1), f(1, null));", target(2021)],
 				["function f(o, k) { o[k] || (o[k] = 1); return o; } var n = 0; console.log(JSON.stringify(f({}, { toString: function () { return \"k\" + n++; } })));", target(2021)],
+				["var o = { m(k) { this[k] || (this[k] = 1); this.a.b || (this.a.b = 2); return this; }, a: {} }, n = 0; console.log(JSON.stringify(o.m({ toString: function () { return \"k\" + n++; } })));", target(2021)],
+				["var o = { m() { this.p || (this.p = 1); return this.p; } }; console.log(o.m());", target(2020)],
 				["function f(a, b) { null == a && b(); } f(null, console.log);", target(2019)],
 				["function f(a, b) { return null == a && b(); } console.log(f(1, console.log));", target(2021)],
 				["function f(a, b) { null === a && b(1); null != a && b(2); null == a || b(3); 0 == a && b(4); void g() == a && b(5); a && b(6); } function g() {} f(null, console.log);", target(2021)]
