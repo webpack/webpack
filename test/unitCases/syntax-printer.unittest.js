@@ -657,7 +657,12 @@ const IMPROVED_CASES = [
 	[
 		"a call of a function returning a constant, kept where code outside reads the function",
 		'const f = () => "a string long enough that a copy costs more than a call"; console.log(f(), f());',
-		{ compress: { toplevel: "funcs" }, mangle: false }
+		{
+			compress: {
+				toplevel: /** @type {boolean} */ (/** @type {unknown} */ ("funcs"))
+			},
+			mangle: false
+		}
 	],
 	[
 		"a `const` copying a closure's binding, read as it beside an inner binding of the same name",
