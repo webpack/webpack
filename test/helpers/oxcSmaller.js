@@ -1229,7 +1229,6 @@ const OXC_SMALLER_BY_REASON = [
 		"oxc shortens edge cases of the language, as oxc's `peephole/obscure_edge_cases.rs` tests show",
 		[
 			"oxc minifier: peephole/obscure_edge_cases.rs:222",
-			"oxc minifier: peephole/obscure_edge_cases.rs:229",
 			"oxc minifier: peephole/obscure_edge_cases.rs:366",
 			"oxc minifier: peephole/obscure_edge_cases.rs:367",
 			"oxc minifier: peephole/obscure_edge_cases.rs:368",
