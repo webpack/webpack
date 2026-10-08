@@ -513,8 +513,8 @@ class BenchmarkRunner {
 		// Simulation is the only Valgrind mode; its shadow memory is only freed
 		// on process exit.
 		const underValgrind = getCodspeedRunnerMode() === "simulation";
-		// Memory mode measures each task alone in a fresh process, so its counts
-		// don't depend on which tasks share a shard and match a filtered local run.
+		// Memory mode measures each task in a fresh process (CodSpeed keys results
+		// by PID), so counts don't depend on which tasks share a shard.
 		const isolated = getCodspeedRunnerMode() === "memory";
 
 		// Bound the pool by RAM, not just cores: a Valgrind build peaks near 11 GiB,
@@ -527,7 +527,7 @@ class BenchmarkRunner {
 			Math.floor((totalGiB - reserveGiB) / perWorkerGiB)
 		);
 
-		const numWorkers = isolated ? 1 : Math.min(cpuWorkers, memWorkers);
+		const numWorkers = Math.min(cpuWorkers, memWorkers);
 
 		const workerPool = /** @type {BenchmarkWorker} */ (
 			new Worker(
