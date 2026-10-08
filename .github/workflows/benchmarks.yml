@@ -79,14 +79,8 @@ jobs:
           UV_THREADPOOL_SIZE: 1
   benchmark-memory:
     runs-on: ubuntu-latest
-    # The four shards run back to back here (~8m each), so this only trips on a hang.
+    # Every case runs in this one job (~26m), so this only trips on a hang.
     timeout-minutes: 120
-    env:
-      LAST_COMMIT: 1
-      NEGATIVE_FILTER: ${{ github.event_name != 'schedule' && 'on-schedule' || '' }}
-      # Single libuv thread → deterministic fs-completion order, removing the
-      # last I/O race that perturbs allocation counts between runs.
-      UV_THREADPOOL_SIZE: 1
     permissions:
       issues: write
       pull-requests: write
@@ -114,41 +108,15 @@ jobs:
           const toGb=b=>(b/1024**3).toFixed(2)+" GB";
           console.log(`--- Memory Status ---\nTotal: ${toGb(os.totalmem())}\nFree:  ${toGb(os.freemem())}\nUsed:  ${toGb(os.totalmem()-os.freemem())}`)'
 
-      # One step per shard: memory mode primes and measures a shard's cases in
-      # one process, so its counts depend on which cases share it, and CodSpeed
-      # stalls processing all four shards' events as a single upload.
-      - name: Run memory benchmarks (1/4)
+      - name: Run memory benchmarks
         uses: CodSpeedHQ/action@c4fd08a3a159bd0cc208da1e0edf32b8c47d75e5 # v5.4.0
         with:
           run: yarn benchmark --ci
           mode: "memory"
           token: ${{ secrets.CODSPEED_TOKEN }}
         env:
-          SHARD: 1/4
-
-      - name: Run memory benchmarks (2/4)
-        uses: CodSpeedHQ/action@c4fd08a3a159bd0cc208da1e0edf32b8c47d75e5 # v5.4.0
-        with:
-          run: yarn benchmark --ci
-          mode: "memory"
-          token: ${{ secrets.CODSPEED_TOKEN }}
-        env:
-          SHARD: 2/4
-
-      - name: Run memory benchmarks (3/4)
-        uses: CodSpeedHQ/action@c4fd08a3a159bd0cc208da1e0edf32b8c47d75e5 # v5.4.0
-        with:
-          run: yarn benchmark --ci
-          mode: "memory"
-          token: ${{ secrets.CODSPEED_TOKEN }}
-        env:
-          SHARD: 3/4
-
-      - name: Run memory benchmarks (4/4)
-        uses: CodSpeedHQ/action@c4fd08a3a159bd0cc208da1e0edf32b8c47d75e5 # v5.4.0
-        with:
-          run: yarn benchmark --ci
-          mode: "memory"
-          token: ${{ secrets.CODSPEED_TOKEN }}
-        env:
-          SHARD: 4/4
+          LAST_COMMIT: 1
+          NEGATIVE_FILTER: ${{ github.event_name != 'schedule' && 'on-schedule' || '' }}
+          # Single libuv thread → deterministic fs-completion order, removing the
+          # last I/O race that perturbs allocation counts between runs.
+          UV_THREADPOOL_SIZE: 1
