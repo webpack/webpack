@@ -523,6 +523,12 @@ const IMPROVED_CASES = [
 		{ compress: { ecma: 2021 }, ecma: 2021, mangle: false }
 	],
 	[
+		"a logical expression running a sequence that ends assigning what it tests, from ECMAScript 2021",
+		'function f(a, b, o, log) { a || (log.push(1), a = b); o.p || (log.push(o.p), o.p = 2); a && (log.push(a), a = 3); o[0] ?? (log.push(4), o[0] = a); return [a, log.join()]; } var o = {}; console.log(f(0, 4, o, []), f(5, 6, o, []), JSON.stringify(o));',
+		{ compress: { ecma: 2021 }, ecma: 2021, mangle: false },
+		'function f(a,b,o,log){return a||=(log.push(1),b),o.p||=(log.push(o.p),2),a&&=(log.push(a),3),o[0]??=(log.push(4),a),[a,log.join()]}var o={};console.log(f(0,4,o,[]),f(5,6,o,[]),JSON.stringify(o));'
+	],
+	[
 		"a property assigned its own arithmetic, as a compound assignment",
 		'function f(o, x) { o.p = o.p + x; o["q"] = o["q"] * x; return o; } console.log(JSON.stringify(f({ p: 1, q: 2 }, 3)));',
 		{ compress: {}, mangle: false }
@@ -5950,6 +5956,11 @@ describe("syntax-printer", () => {
 				["var n = 0; Object.defineProperty(globalThis, \"a\", { get: function () { return n++ ? null : { p: 1 }; }, configurable: true }); function f() { return [null == a ? void 0 : a.p]; } try { console.log(f()); } catch (e) { console.log(e.name); }", target(2021)],
 				["function f(o, c) { with (o) { return [null == c ? void 0 : c.p]; } } console.log(f({}, null), f({ c: { p: 2 } }, { p: 1 }));", target(2021)],
 				["function f(o, c) { with (o) { c || (c = 1); return c; } } console.log(f({}, 0), f({ c: 0 }, 2));", target(2021)],
+				["function f(a, b) { a || (b(), a = 1); return a; } console.log(f(0, function () {}));", target(2020)],
+				["function f(o, c) { with (o) { c || (g(), c = 1); return c; } } function g() {} console.log(f({}, 0), f({ c: 0 }, 2));", target(2021)],
+				["var first = { p: 0 }, other = { p: 0 }, o = first; function f() { o.p || (o = other, o.p = 1); return [first.p, other.p]; } console.log(f());", target(2021)],
+				["function f(a, b) { a || (b(), a = 1, b()); return a; } console.log(f(0, function () {}));", target(2021)],
+				["function f(a, b, c) { a || (b(), c = 1); return [a, c]; } console.log(f(0, function () {}));", target(2021)],
 				["function f(c) { return null != c ? c : 1; } console.log(f(null), f(0));", target(2019)],
 				["function f(c) { return [null != c.d ? c.d : 1, null != c ? c.d : 2]; } console.log(f({}), f({ d: 0 }));", target(2021)],
 				["var n = 0; Object.defineProperty(globalThis, \"b\", { get: function () { return n++ ? null : 1; }, configurable: true }); function f() { return null != b ? b : 2; } console.log(f());", target(2021)],
