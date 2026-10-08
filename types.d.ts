@@ -938,11 +938,7 @@ declare interface BannerPluginOptions {
 	 * Exclude all modules matching any of these conditions.
 	 */
 	exclude?:
-		| string
-		| RegExp
-		| ((str: string) => boolean)
-		| RuleGlob
-		| RuleObject[];
+		string | RegExp | ((str: string) => boolean) | RuleGlob | RuleObject[];
 
 	/**
 	 * If true, banner will be placed at the end of the output.
@@ -953,11 +949,7 @@ declare interface BannerPluginOptions {
 	 * Include all modules matching any of these conditions.
 	 */
 	include?:
-		| string
-		| RegExp
-		| ((str: string) => boolean)
-		| RuleGlob
-		| RuleObject[];
+		string | RegExp | ((str: string) => boolean) | RuleGlob | RuleObject[];
 
 	/**
 	 * If true, banner will not be wrapped in a comment.
@@ -972,12 +964,7 @@ declare interface BannerPluginOptions {
 	/**
 	 * Include all modules that pass test assertion.
 	 */
-	test?:
-		| string
-		| RegExp
-		| ((str: string) => boolean)
-		| RuleGlob
-		| RuleObject[];
+	test?: string | RegExp | ((str: string) => boolean) | RuleGlob | RuleObject[];
 }
 declare interface BaseResolveRequest {
 	/**
@@ -3348,10 +3335,7 @@ declare interface CleanOptions {
 	 * Keep these assets.
 	 */
 	keep?:
-		| string
-		| RegExp
-		| GlobCondition
-		| ((path: string) => undefined | boolean);
+		string | RegExp | GlobCondition | ((path: string) => undefined | boolean);
 }
 declare class CleanPlugin {
 	constructor(options?: CleanOptions);
@@ -31380,11 +31364,7 @@ declare interface SourceMapDevToolPluginOptions {
 	 * Exclude modules that match the given value from source map generation.
 	 */
 	exclude?:
-		| string
-		| RegExp
-		| ((str: string) => boolean)
-		| RuleGlob
-		| RuleObject[];
+		string | RegExp | ((str: string) => boolean) | RuleGlob | RuleObject[];
 
 	/**
 	 * Generator string or function to create identifiers of modules for the 'sources' array in the SourceMap used only if 'moduleFilenameTemplate' would result in a conflict.
@@ -31406,21 +31386,13 @@ declare interface SourceMapDevToolPluginOptions {
 	 * Decide whether to ignore source files that match the specified value in the SourceMap.
 	 */
 	ignoreList?:
-		| string
-		| RegExp
-		| ((str: string) => boolean)
-		| RuleGlob
-		| RuleObject[];
+		string | RegExp | ((str: string) => boolean) | RuleGlob | RuleObject[];
 
 	/**
 	 * Include source maps for module paths that match the given value.
 	 */
 	include?:
-		| string
-		| RegExp
-		| ((str: string) => boolean)
-		| RuleGlob
-		| RuleObject[];
+		string | RegExp | ((str: string) => boolean) | RuleGlob | RuleObject[];
 
 	/**
 	 * Indicates whether SourceMaps from loaders should be used (defaults to true).
@@ -31457,12 +31429,7 @@ declare interface SourceMapDevToolPluginOptions {
 	/**
 	 * Include source maps for modules based on their extension (defaults to .js and .css).
 	 */
-	test?:
-		| string
-		| RegExp
-		| ((str: string) => boolean)
-		| RuleGlob
-		| RuleObject[];
+	test?: string | RegExp | ((str: string) => boolean) | RuleGlob | RuleObject[];
 }
 
 /**
