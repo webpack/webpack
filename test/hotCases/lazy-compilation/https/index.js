@@ -33,7 +33,7 @@ it("should compile to lazy imported module", (done) => {
 								expect(result).toHaveProperty("default", 43);
 								setTimeout(() => {
 									done();
-								}, 1000);
+								}, 100);
 							}, done);
 						})
 					);

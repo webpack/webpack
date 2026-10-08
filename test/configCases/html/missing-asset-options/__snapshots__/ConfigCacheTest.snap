@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases html missing-asset-options exported tests should report a module-not-found error and render a data: placeholder 1`] = `
+"<!DOCTYPE html>
+<html>
+<head><title>missing-asset</title></head>
+<body>
+<img src=\\"data:,\\">
+</body>
+</html>
+"
+`;
+
+exports[`ConfigCacheTestCases html missing-asset-options exported tests should report a module-not-found error and render a data: placeholder 2`] = `
+"<!DOCTYPE html>
+<html>
+<head><title>missing-asset</title></head>
+<body>
+<img src=\\"data:,\\">
+</body>
+</html>
+"
+`;

@@ -1,4 +1,4 @@
-import * as namespace from "../destructuring-namespace-import/module";
+import * as namespace from "../destructuring-variants/destructuring-namespace-import/module";
 
 it("should work with destructuring", function() {
 	const key = "fo" + "o";

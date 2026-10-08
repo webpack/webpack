@@ -33,6 +33,11 @@ const supportsObjectHasOwn = require("../helpers/supportsObjectHasOwn");
 const supportsOptionalChaining = require("../helpers/supportsOptionalChaining");
 
 const testRootDirectory = path.join(__dirname, "..");
+// Deno and Bun miss a change copied in this soon after the last build, so they
+// keep the long waits; Node's watcher and file timestamps resolve the short ones
+const slowWatch = Boolean(process.versions.deno || process.versions.bun);
+const STEP_DELAY = slowWatch ? 1500 : 200;
+const AGGREGATE_TIMEOUT = slowWatch ? 1000 : 50;
 
 /**
  * @param {string} src src
@@ -356,7 +361,7 @@ const describeCases = (config) => {
 									);
 									compiler.watch(
 										{
-											aggregateTimeout: 1000
+											aggregateTimeout: AGGREGATE_TIMEOUT
 										},
 										async (err, stats) => {
 											try {
@@ -384,14 +389,17 @@ const describeCases = (config) => {
 													colors: false
 												};
 												fs.mkdirSync(outputDirectory, { recursive: true });
-												fs.writeFileSync(
-													path.join(
-														outputDirectory,
-														`stats.${runs[runIdx] && runs[runIdx].name}.txt`
-													),
-													stats.toString(statOptions),
-													"utf8"
-												);
+												// verbose stats cost as much as the build; WEBPACK_TEST_STATS=1 writes them
+												if (process.env.WEBPACK_TEST_STATS) {
+													fs.writeFileSync(
+														path.join(
+															outputDirectory,
+															`stats.${runs[runIdx] && runs[runIdx].name}.txt`
+														),
+														stats.toString(statOptions),
+														"utf8"
+													);
+												}
 												const jsonStats = stats.toJson({
 													errorDetails: true
 												});
@@ -511,7 +519,7 @@ const describeCases = (config) => {
 																} catch (error) {
 																	fail(/** @type {Error} */ (error));
 																}
-															}, 1500);
+															}, STEP_DELAY);
 														} else {
 															const deprecations =
 																/** @type {NonNullable<typeof deprecationTracker>} */ (

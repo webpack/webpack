@@ -499,11 +499,14 @@ const describeCases = (config) => {
 									colors: false
 								};
 								fs.mkdirSync(outputDirectory, { recursive: true });
-								fs.writeFileSync(
-									path.join(outputDirectory, "stats.txt"),
-									stats.toString(statOptions),
-									"utf8"
-								);
+								// verbose stats cost as much as the build; WEBPACK_TEST_STATS=1 writes them
+								if (process.env.WEBPACK_TEST_STATS) {
+									fs.writeFileSync(
+										path.join(outputDirectory, "stats.txt"),
+										stats.toString(statOptions),
+										"utf8"
+									);
+								}
 								const jsonStats = stats.toJson({
 									errorDetails: true
 								});

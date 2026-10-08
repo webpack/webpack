@@ -1,0 +1,688 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases html imported-pages exported tests adoption-agency-noahs-ark: should handle the noahs ark condition in the adoption agency algorithm 1`] = `
+"<!DOCTYPE html>
+<html>
+<head><title>adoption-agency-noahs-ark</title></head>
+<body>
+<p><b><b><b><b>bold</p>
+<p>still bold</b></p>
+<b><i><s><u><p></b></u></s></i></p>
+</body>
+</html>
+"
+`;
+
+exports[`ConfigTestCases html imported-pages exported tests adoption-agency-table: should handle formatting elements misnested inside table context 1`] = `
+"<!DOCTYPE html>
+<html>
+<head><title>adoption-agency-table</title></head>
+<body>
+<table><b><tr><td>foo</td></tr></b></table>
+</body>
+</html>
+"
+`;
+
+exports[`ConfigTestCases html imported-pages exported tests basic: should compile and export html as string 1`] = `
+"<!DOCTYPE html>
+<html>
+<head><title>Test</title></head>
+<body>
+<h1>My First Heading</h1>
+<p>My first paragraph.</p>
+<h2>An Unordered HTML List</h2>
+
+<ul>
+	<li>Coffee</li>
+	<li>Tea</li>
+	<li>Milk</li>
+</ul>
+
+<h2>An Ordered HTML List</h2>
+
+<ol>
+	<li>Coffee</li>
+	<li>Tea</li>
+	<li>Milk</li>
+</ol>
+
+<script src=\\"page.js\\"></script>
+
+<!-- comment -->
+
+<div>Foo</div>
+
+
+<div>BAR</div>
+
+<input type=\\"text\\" />
+
+<script src=\\"page1.js\\"></script>
+
+<picture>
+	<source media=\\"(min-width: 650px)\\" srcset=\\"31d6cfe0d16ae931b73c.png\\">
+	<source media=\\"(min-width: 465px)\\" srcset=\\"31d6cfe0d16ae931b73c.png\\">
+	<img src=\\"31d6cfe0d16ae931b73c.png\\" alt=\\"Flowers\\" style=\\"width:auto;\\">
+</picture>
+
+<img disabled src=\\"31d6cfe0d16ae931b73c.png\\">
+<img disabled  src=\\"31d6cfe0d16ae931b73c.png\\">
+<img data-empty=\\"\\" src=\\"31d6cfe0d16ae931b73c.png\\">
+<img data-unquoted=unquoted src=\\"31d6cfe0d16ae931b73c.png\\">
+
+<![CDATA[<img src=\\"image.png\\">]]><img src=\\"31d6cfe0d16ae931b73c.png\\">
+
+<a rel=\\"author\\" href=\\"./simple.html\\">link text</a>
+
+<a href=\\"tel:1-408-555-5555\\">Call me</a>
+
+<!----><img src=\\"31d6cfe0d16ae931b73c.png\\">-->
+<!--><img src=\\"31d6cfe0d16ae931b73c.png\\">-->
+<!--<!--<img src=\\"image.png\\">-->
+<!--<img src=\\"image.png\\">-->
+
+<!--Text < img src=\\"image.png\\" >
+Text <<img src=\\"image.png\\">
+Text ><img src=\\"image.png\\">-->
+
+<br>
+<br />
+
+&lt;div id = &quot;character&quot;&gt;
+&copy; 2007
+or
+&#169; 2007
+
+<br>
+
+<img src=\\"data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==\\" alt=\\"Red dot\\" />
+
+<img src=\\"   31d6cfe0d16ae931b73c.png   \\">
+<img src=\\"
+31d6cfe0d16ae931b73c.png
+\\">
+<img srcset=\\"   31d6cfe0d16ae931b73c.png   \\" src=\\"   31d6cfe0d16ae931b73c.png   \\" alt=\\"Elva dressed as a fairy\\">
+<img srcset=\\"
+31d6cfe0d16ae931b73c.png
+\\" src=\\"
+31d6cfe0d16ae931b73c.png
+\\" alt=\\"Elva dressed as a fairy\\">
+
+<img srcset=\\"#test\\" src=\\"#test\\" alt=\\"Elva dressed as a fairy\\">
+
+<flag-icon src=\\"image.png\\"></flag-icon>
+<MyStrangeTag13 src=\\"image.png\\" alt=\\"Smiley face\\" />
+<MyStrangeTag13 src=\\"image.png\\" alt=\\"Smiley face\\"> Test </MyStrangeTag13>
+<a- src=\\"image.png\\"></a->
+<a-. src=\\"image.png\\">test</a-.>
+<a-- src=\\"image.png\\">test</a-->
+<aÀ-豈 src=\\"image.png\\">test</aÀ-豈>
+<aÀ-Ⰰ src=\\"image.png\\" />
+
+<INVALID_TAG_NAME src=\\"image.png\\" />
+<invalid-CUSTOM-TAG src=\\"image.png\\" />
+
+<p>Text</p>
+<p >Text</p>
+<p   >Text</p>
+
+<script src=\\"page2.js\\"></script>
+<script src=\\"page3.js\\"></script>
+
+<img src=\\"#hash\\" />
+<img src='31d6cfe0d16ae931b73c.png#hash' />
+<img src=31d6cfe0d16ae931b73c.png#hash />
+<img src=31d6cfe0d16ae931b73c.png# />
+<img srcset=\\"31d6cfe0d16ae931b73c.png#hash\\" />
+<img srcset=\\"31d6cfe0d16ae931b73c.png#foo 480w, 31d6cfe0d16ae931b73c.png#bar 800w\\" sizes=\\"(max-width: 600px) 480px, 800px\\" src=\\"31d6cfe0d16ae931b73c.png#baz\\" alt=\\"Elva dressed as a fairy\\">
+
+<span>foo</span> <span>bar</span>
+
+<tag>Text</tag>
+<TAG>Text</TAG>
+
+<input type=\\"checkbox\\" name=\\"vehicle\\" value=\\"car\\" checked=\\"checked\\" />
+
+<br />
+
+<a href=\\"https://www.w3schools.com/html/\\">Visit our HTML tutorial</a>
+<a HREF=\\"https://www.w3schools.com/html/\\">Visit our HTML tutorial</a>
+
+<div data-b=\\"2\\" data-a=\\"1\\" data-c=\\"3\\">text</div>
+<div class=\\"f a b e d c\\">text</div>
+
+<input type=\\"text\\">
+
+<button onclick=\\"   document.getElementById('demo').innerHTML    =    Date()\\">The time is?</button>
+
+<div class=\\"will-be-parsed\\">
+	<template type=\\"some_type\\">
+		<div class=\\"will-not-be-parse\\"></div>
+	</template>
+</div>
+
+<img src=\\"data:,\\">
+
+</body>
+</html>
+"
+`;
+
+exports[`ConfigTestCases html imported-pages exported tests broken-html-syntax: should compile and export html as string 1`] = `
+"Text < img src=\\"image.png\\" >
+Text <<img src=\\"31d6cfe0d16ae931b73c.png\\">
+Text ><img src=\\"31d6cfe0d16ae931b73c.png\\">
+
+<a foo><bar></a><!-- --><![CDATA[]]]><?foo?><!bar><boo/>boohay
+<<<<>foo
+<!-->>><<foo
+&;122222222222222222222222222222
+"
+`;
+
+exports[`ConfigTestCases html imported-pages exported tests case-insensitive: extracts assets from upper- and mixed-case tags and attributes 1`] = `
+"<!doctype html>
+<html>
+	<head>
+		<META NAME=\\"Thumbnail\\" CONTENT=\\"31d6cfe0d16ae931b73c.png\\" />
+	</head>
+	<body>
+		<IMG SRC=\\"31d6cfe0d16ae931b73c.png\\" />
+		<Img SrC=\\"31d6cfe0d16ae931b73c.png\\" />
+		<INPUT TYPE=\\"IMAGE\\" SRC=\\"31d6cfe0d16ae931b73c.png\\" />
+		<VIDEO POSTER=\\"31d6cfe0d16ae931b73c.png\\"></VIDEO>
+		<picture><SOURCE SRCSET=\\"31d6cfe0d16ae931b73c.png\\" /></picture>
+		<EMBED SRC=\\"31d6cfe0d16ae931b73c.png\\" />
+		<OBJECT DATA=\\"31d6cfe0d16ae931b73c.png\\"></OBJECT>
+		<svg><rect FILL=\\"url(31d6cfe0d16ae931b73c.png)\\" /></svg>
+	</body>
+</html>
+"
+`;
+
+exports[`ConfigTestCases html imported-pages exported tests edge-cases: should skip non-resolvable URLs and match tags case-insensitively 1`] = `
+"<!DOCTYPE html>
+<html>
+<head><title>Edge cases</title></head>
+<body>
+
+<!-- Empty value: no dependency, left as-is -->
+<img src=\\"\\" alt=\\"empty\\">
+<link rel=\\"icon\\" href=\\"\\">
+<img srcset=\\"\\" alt=\\"empty-srcset\\">
+
+<!-- Hash-only: left untouched -->
+<img src=\\"#anchor\\" alt=\\"hash\\">
+
+<!-- Already a data URI: left untouched -->
+<img src=\\"data:image/gif;base64,R0lGODlhAQABAAAAACw=\\" alt=\\"data-uri\\">
+
+<!-- Case-insensitive tag and attribute matching -->
+<IMG SRC=\\"09a1a1112c577c279435.png\\" alt=\\"upper-tag-attr\\">
+<img SRCSET=\\"09a1a1112c577c279435.png 200w, 09a1a1112c577c279435.png 400w\\" alt=\\"upper-srcset\\">
+<IMG SRCSET=\\"09a1a1112c577c279435.png 800w\\" alt=\\"upper-tag-and-srcset\\">
+
+<!-- Sanity: a normal resolvable source still rewrites -->
+<img src=\\"09a1a1112c577c279435.png\\" alt=\\"ok\\">
+
+</body>
+</html>
+"
+`;
+
+exports[`ConfigTestCases html imported-pages exported tests empty: should compile and export html as string 1`] = `""`;
+
+exports[`ConfigTestCases html imported-pages exported tests entities: should decode character references in attribute URLs before resolving 1`] = `
+"<!DOCTYPE html>
+<html>
+<head><title>Entities</title></head>
+<body>
+
+<img src=\\"09a1a1112c577c279435.png\\" alt=\\"numeric reference in path\\">
+<img src=\\"09a1a1112c577c279435.png\\" alt=\\"amp in filename\\">
+<img src=\\"09a1a1112c577c279435.png?x=1&y=2\\" alt=\\"amp in query\\">
+<img srcset=\\"09a1a1112c577c279435.png 1x, 09a1a1112c577c279435.png 2x\\" alt=\\"references in srcset\\">
+<img srcset=\\"09a1a1112c577c279435.png&#32;1x,&#32;09a1a1112c577c279435.png 2x\\" alt=\\"entity-encoded whitespace splits candidates\\">
+<img src=\\"&num;foo\\" alt=\\"decodes to fragment-only, must be skipped\\">
+<img src=\\"&#32;&#32;\\" alt=\\"decodes to whitespace-only, must be skipped\\">
+<link rel=\\"&#105;con\\" href=\\"09a1a1112c577c279435.png\\">
+<meta name=\\"twitter&#58;image\\" content=\\"09a1a1112c577c279435.png\\">
+
+</body>
+</html>
+"
+`;
+
+exports[`ConfigTestCases html imported-pages exported tests entity-decode: decodes HTML entities in an extracted attribute URL 1`] = `
+"<!DOCTYPE html>
+<html>
+	<body>
+		<img src=\\"31d6cfe0d16ae931b73c.png\\" alt=\\"entity in url\\">
+	</body>
+</html>
+"
+`;
+
+exports[`ConfigTestCases html imported-pages exported tests full-lexer-integration: should compile a kitchen-sink HTML document through all lexer states 1`] = `
+"<!DOCTYPE html>
+<html lang=\\"en\\">
+<head>
+<meta charset=\\"UTF-8\\">
+<meta name=\\"viewport\\" content=\\"width=device-width, initial-scale=1.0\\">
+<title>Kitchen &amp; Sink &#x2014; Full Lexer Test</title>
+</head>
+<body>
+<!-- Standard comment -->
+<!---->
+<!----->
+<!-- Multi
+     line
+     comment -->
+<!--<img src=\\"image.png\\">-->
+
+<div id=\\"double-quoted\\" class=\\"foo bar\\" data-x=\\"a&amp;b\\">Double quoted</div>
+<div id='single-quoted' class='baz' data-y='c&lt;d'>Single quoted</div>
+<div id=unquoted class=plain>Unquoted attributes</div>
+
+<img src=\\"31d6cfe0d16ae931b73c.png\\" alt=\\"test image\\" width=\\"1\\" height=\\"1\\" />
+<br/>
+<hr />
+<input type=\\"text\\" value=\\"hello&quot;world\\" disabled />
+<input type=\\"checkbox\\" checked />
+
+<a href=\\"simple.html?a=1&amp;b=2&amp;c=3\\">Entity in URL</a>
+<a href='simple.html?x=1&lt;2'>Single quoted URL</a>
+<a href=simple.html>Unquoted URL</a>
+
+<p>Named entities: &amp; &lt; &gt; &quot;</p>
+<p>Decimal numeric: &#65;&#66;&#67;</p>
+<p>Hex numeric: &#x41;&#x42;&#x43;</p>
+<p>Upper hex: &#X44;&#X45;</p>
+<p>Bare ampersand: Tom & Jerry</p>
+<p>Unknown entity: &unknown; stays raw</p>
+<p>Missing semicolon: &amp without semicolon</p>
+<p>Empty numeric: &#; and &#x;</p>
+<p>Large codepoint: &#999;</p>
+
+<textarea>
+  RCDATA content: <not-a-tag> &amp; entities work here
+</textarea>
+
+<script type=\\"text/plain\\">
+  var x = \\"<div>not parsed as tags</div>\\";
+  var y = \\"<!-- not a comment -->\\";
+  var z = 1 < 2 && 3 > 1;
+</script>
+
+<script type=\\"text/plain\\">
+  This script type is non-standard but valid HTML.
+</script>
+
+<!-- Non-CSS style type stays raw -->
+<style type=\\"text/foo\\">
+  this is not CSS, stays untouched
+</style>
+
+<div data-empty=\\"\\" data-bool data-single='x' data-double=\\"y\\" data-unquoted=z>
+  Mixed attribute styles
+</div>
+
+<![CDATA[<div>ignored cdata</div>]]><img src=\\"31d6cfe0d16ae931b73c.png\\">
+
+<p>Self-closing voids: <br/><hr/><img src=\\"31d6cfe0d16ae931b73c.png\\"/></p>
+
+<div class=\\"nested\\">
+  <div class=\\"level-1\\">
+    <div class=\\"level-2\\">
+      <span>Deep nesting</span>
+    </div>
+  </div>
+</div>
+
+<p>Text</p>
+<p >Text</p>
+<p   >Text</p>
+
+</body>
+</html>
+"
+`;
+
+exports[`ConfigTestCases html imported-pages exported tests invisible-space: should compile and export html as string 1`] = `
+"<html><body><ul><li> \\\\u2028 -   Text   </li><li> \\\\u2029 -   Text   </li></ul></body></html>
+"
+`;
+
+exports[`ConfigTestCases html imported-pages exported tests legacy-and-obsolete-sources: should resolve legacy and obsolete source attributes 1`] = `
+"<!DOCTYPE html>
+<html>
+<head>
+<title>Legacy and obsolete sources</title>
+<link rel=\\"image_src\\" href=\\"a024183765ea16a3fa14.png\\">
+<meta name=\\"thumbnail\\" content=\\"a024183765ea16a3fa14.png\\">
+</head>
+<body>
+
+<object classid=\\"a024183765ea16a3fa14.png\\" data=\\"a024183765ea16a3fa14.png\\">
+	<param name=\\"movie\\" valuetype=\\"ref\\" value=\\"a024183765ea16a3fa14.png\\">
+	<param name=\\"bgcolor\\" value=\\"./skip.png\\">
+</object>
+
+<applet code=\\"a024183765ea16a3fa14.png\\" object=\\"a024183765ea16a3fa14.png\\"></applet>
+
+<math><mglyph src=\\"a024183765ea16a3fa14.png\\"></math>
+
+</body>
+</html>
+"
+`;
+
+exports[`ConfigTestCases html imported-pages exported tests legacy-background: should resolve the deprecated \`background\` attribute on body/table/td/th 1`] = `
+"<!DOCTYPE html>
+<html>
+<head><title>Legacy background</title></head>
+<body background=\\"a024183765ea16a3fa14.png\\">
+
+<table background=\\"a024183765ea16a3fa14.png\\">
+	<tr>
+		<th background=\\"a024183765ea16a3fa14.png\\">head</th>
+		<td background=\\"a024183765ea16a3fa14.png\\">cell</td>
+	</tr>
+</table>
+
+</body>
+</html>
+"
+`;
+
+exports[`ConfigTestCases html imported-pages exported tests meta-twitter-player-stream: should resolve the twitter:player:stream meta content as an asset 1`] = `
+"<!DOCTYPE html>
+<html>
+<head>
+<title>Test</title>
+<meta name=\\"twitter:card\\" content=\\"player\\">
+<meta name=\\"twitter:player:stream\\" content=\\"2bbf24ed4ead06945961.mp4\\">
+</head>
+<body></body>
+</html>
+"
+`;
+
+exports[`ConfigTestCases html imported-pages exported tests misnested-tags-in-body: should handle various misnested tags and aliases in the body 1`] = `
+"<!DOCTYPE html>
+<html>
+<head><title>misnested-tags-in-body</title></head>
+<body>
+<meta charset=\\"utf-8\\">
+<a><a></a>
+<nobr><nobr></nobr>
+<select><input></select>
+<select><select></select>
+<image src=\\"1533dedc3e2a08df8a07.png\\">
+<noembed>foo</noembed>
+</body>
+</html>
+"
+`;
+
+exports[`ConfigTestCases html imported-pages exported tests null-char-parse: should compile HTML containing null characters 1`] = `
+"<!DOCTYPE html>
+<html>
+<head><title>null-char-parse</title></head>
+<body>
+<textarea>before after</textarea>
+<xmp>raw text</xmp>
+</body>
+</html>
+"
+`;
+
+exports[`ConfigTestCases html imported-pages exported tests skip-behavior: should silently skip whitespace-only source attribute values 1`] = `
+"<!DOCTYPE html>
+<html>
+<head><title>skip behavior</title></head>
+<body>
+
+<!-- whitespace-only: skip, no error -->
+<img src=\\"   \\" alt=\\"ws-only\\">
+<img srcset=\\"   \\" alt=\\"ws-only-srcset\\">
+
+<!-- sanity: normal src still resolves -->
+<img src=\\"09a1a1112c577c279435.png\\" alt=\\"ok\\">
+
+</body>
+</html>
+"
+`;
+
+exports[`ConfigTestCases html imported-pages exported tests svg-legacy-references: should resolve references in legacy SVG elements (font-face-uri, cursor, altGlyph, tref, glyphRef) 1`] = `
+"<!DOCTYPE html>
+<html>
+<head><title>Legacy SVG references</title></head>
+<body>
+<svg xmlns=\\"http://www.w3.org/2000/svg\\">
+	<font><font-face><font-face-src><font-face-uri xlink:href=\\"2c197f0854373cc57b06.ttf\\"/></font-face-src></font-face></font>
+	<cursor xlink:href=\\"c8ae14f4541ddd88406f.png\\"/>
+	<text><altGlyph xlink:href=\\"e1ab5e4441f8f5d35b0f.svg#g\\">x</altGlyph></text>
+	<text><tref xlink:href=\\"e1ab5e4441f8f5d35b0f.svg#t\\"/></text>
+	<glyphRef xlink:href=\\"e1ab5e4441f8f5d35b0f.svg#gr\\"/>
+	<use xlink:href=\\"#local\\"/>
+</svg>
+</body>
+</html>
+"
+`;
+
+exports[`ConfigTestCases html imported-pages exported tests svg-marker-cursor-references: should resolve url() references in SVG marker and cursor presentation attributes 1`] = `
+"<!DOCTYPE html>
+<html>
+<head><title>SVG marker and cursor url()</title></head>
+<body>
+
+<svg width=\\"200\\" height=\\"200\\">
+	<defs>
+		<marker id=\\"arrow\\"><path d=\\"M0,0 L10,5 L0,10 z\\"/></marker>
+	</defs>
+	<line x1=\\"0\\" y1=\\"0\\" x2=\\"100\\" y2=\\"100\\"
+		marker=\\"url(dc6915c04562fde305fc.svg#a)\\"
+		marker-start=\\"url('dc6915c04562fde305fc.svg#s')\\"
+		marker-mid=\\"url(dc6915c04562fde305fc.svg#m)\\"
+		marker-end=\\"url(dc6915c04562fde305fc.svg#e)\\"/>
+	<rect width=\\"50\\" height=\\"50\\" cursor=\\"url(dc6915c04562fde305fc.svg)\\" fill=\\"none\\"/>
+	<rect width=\\"50\\" height=\\"50\\" marker-start=\\"url(#arrow)\\"/>
+</svg>
+
+</body>
+</html>
+"
+`;
+
+exports[`ConfigTestCases html imported-pages exported tests svg-namespace: should rewrite svg-namespace fill/stroke urls but skip html elements 1`] = `
+"<!DOCTYPE html>
+<html>
+<head><title>svg-namespace</title></head>
+<body>
+<div fill=\\"url(./icon.svg)\\" stroke=\\"url(./icon.svg)\\"></div>
+<svg xmlns=\\"http://www.w3.org/2000/svg\\">
+  <circle fill=\\"url(632c776e44062205cc81.svg)\\" cx=\\"10\\" cy=\\"10\\" r=\\"5\\"/>
+</svg>
+</body>
+</html>
+"
+`;
+
+exports[`ConfigTestCases html imported-pages exported tests svg-paint-server-references: should resolve external SVG paint-server and color-profile references 1`] = `
+"<!DOCTYPE html>
+<html>
+<head><title>SVG paint servers</title></head>
+<body>
+
+<svg width=\\"200\\" height=\\"200\\">
+	<defs>
+		<linearGradient id=\\"g1\\" href=\\"5141f55e7ff89741c215.svg#base\\"/>
+		<radialGradient id=\\"g2\\" xlink:href=\\"5141f55e7ff89741c215.svg#base\\"/>
+		<pattern id=\\"p1\\" href=\\"5141f55e7ff89741c215.svg#tile\\"/>
+		<filter id=\\"f1\\" xlink:href=\\"5141f55e7ff89741c215.svg#blur\\"/>
+		<linearGradient id=\\"g3\\" href=\\"#g1\\"/>
+	</defs>
+	<rect width=\\"100\\" height=\\"100\\" fill=\\"url(#g1)\\"/>
+</svg>
+
+<svg><color-profile name=\\"sRGB\\" xlink:href=\\"42b59ea9ac36054f76a5.icc\\"/></svg>
+
+</body>
+</html>
+"
+`;
+
+exports[`ConfigTestCases html imported-pages exported tests svg-presentation-url: should resolve url() references in SVG presentation attributes 1`] = `
+"<!DOCTYPE html>
+<html>
+<head><title>SVG presentation url()</title></head>
+<body>
+
+<svg width=\\"200\\" height=\\"200\\">
+	<defs>
+		<clipPath id=\\"clip\\"><circle cx=\\"50\\" cy=\\"50\\" r=\\"40\\"/></clipPath>
+	</defs>
+	<rect width=\\"100\\" height=\\"100\\" fill=\\"url(0e15be1ea86afc9b4529.svg#grad)\\" clip-path=\\"url(#clip)\\"/>
+	<rect width=\\"100\\" height=\\"100\\" stroke=\\"url('0e15be1ea86afc9b4529.svg#grad')\\" filter=\\"url(0e15be1ea86afc9b4529.svg#blur)\\"/>
+	<text mask=\\"url(0e15be1ea86afc9b4529.svg#m)\\">masked</text>
+	<rect fill=\\"red\\" stroke mask=\\"url()\\"/>
+	<rect marker=\\"url(0e15be1ea86afc9b4529.svg?a&b#z)\\"/>
+</svg>
+
+</body>
+</html>
+"
+`;
+
+exports[`ConfigTestCases html imported-pages exported tests svg-references: should resolve external textPath and mpath references 1`] = `
+"<!DOCTYPE html>
+<html>
+<head><title>SVG references</title></head>
+<body>
+
+<svg width=\\"200\\" height=\\"200\\">
+	<text><textPath href=\\"258a547148033fda8727.svg#curve\\">external</textPath></text>
+	<text><textPath xlink:href=\\"#local-path\\">local</textPath></text>
+	<animateMotion><mpath href=\\"258a547148033fda8727.svg#curve\\"/></animateMotion>
+	<animateMotion><mpath xlink:href=\\"#local-motion\\"/></animateMotion>
+</svg>
+
+</body>
+</html>
+"
+`;
+
+exports[`ConfigTestCases html imported-pages exported tests template-content: should rewrite asset URLs inside <template> content 1`] = `
+"<!DOCTYPE html>
+<html>
+<head><title>Template</title></head>
+<body>
+
+<template>
+	<img src=\\"09a1a1112c577c279435.png\\" alt=\\"in-template\\">
+	<img srcset=\\"09a1a1112c577c279435.png 480w, 09a1a1112c577c279435.png 800w\\" alt=\\"in-template-srcset\\">
+	<template>
+		<img src=\\"09a1a1112c577c279435.png\\" alt=\\"nested-template\\">
+	</template>
+</template>
+
+<img src=\\"09a1a1112c577c279435.png\\" alt=\\"outside-template\\">
+
+</body>
+</html>
+"
+`;
+
+exports[`ConfigTestCases html imported-pages exported tests webpack-ignore: should support webpackIgnore magic comment in html modules 1`] = `
+"<!DOCTYPE html>
+<html>
+<head><title>webpackIgnore</title></head>
+<body>
+<!-- Resolved: no comment -->
+<img src=\\"31d6cfe0d16ae931b73c.png\\" alt=\\"resolved\\">
+
+<!-- webpackIgnore: true -->
+<img src=\\"./ignored.png\\" alt=\\"ignored\\">
+
+<!-- webpackIgnore: false -->
+<img src=\\"31d6cfe0d16ae931b73c.png\\" alt=\\"resolved-explicit-false\\">
+
+<!--  webpackIgnore:   true  -->
+<img src=\\"./still-ignored.png\\" srcset=\\"./still-ignored.png 2x\\" alt=\\"ignored-with-srcset\\">
+
+<!-- webpackIgnore: true -->
+<!-- a regular comment overrides the webpackIgnore -->
+<img src=\\"31d6cfe0d16ae931b73c.png\\" alt=\\"overridden\\">
+
+<!-- not-a-magic-comment -->
+<!-- webpackIgnore: true -->
+<img src=\\"./still-ignored2.png\\" alt=\\"ignored-last-wins\\">
+
+<!-- webpackIgnore: true -->
+<div>
+	<img src=\\"31d6cfe0d16ae931b73c.png\\" alt=\\"nested-not-ignored\\">
+</div>
+
+<div>
+	<!-- webpackIgnore: true -->
+</div>
+<img src=\\"31d6cfe0d16ae931b73c.png\\" alt=\\"after-nested-comment\\">
+
+<!-- webpackIgnore: 1 -->
+<img src=\\"31d6cfe0d16ae931b73c.png\\" alt=\\"warning-non-boolean\\">
+
+<!? webpackIgnore: true ?>
+<img src=\\"31d6cfe0d16ae931b73c.png\\" alt=\\"bogus-comment-not-magic\\">
+</body>
+</html>
+"
+`;
+
+exports[`ConfigTestCases html imported-pages exported tests webpack-ignore-comment: should handle webpackIgnore comments on img src attributes 1`] = `
+"<!DOCTYPE html>
+<html>
+<head><title>webpack-ignore-comment</title></head>
+<body>
+<!-- webpackIgnore: true -->
+<img src=\\"./image.png\\" alt=\\"a\\">
+<!-- webpackIgnore: \\"yes\\" -->
+<img src=\\"09a1a1112c577c279435.png\\" alt=\\"b\\">
+<!-- webpackIgnore: { -->
+<img src=\\"09a1a1112c577c279435.png\\" alt=\\"c\\">
+<img src=\\"09a1a1112c577c279435.png\\" alt=\\"d\\">
+<!-- webpackPreload: true -->
+<img src=\\"09a1a1112c577c279435.png\\" alt=\\"e\\">
+</body>
+</html>
+"
+`;
+
+exports[`ConfigTestCases html imported-pages exported tests xhtml: should compile and export html as string 1`] = `
+"<!DOCTYPE html PUBLIC \\"-//W3C//DTD XHTML 1.1//EN\\"
+	\\"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\\">
+<html xmlns=\\"http://www.w3.org/1999/xhtml\\">
+<head>
+	<title>Title of document</title>
+</head>
+<body>
+
+some content here...
+
+<br />
+
+<a href=\\"https://www.w3schools.com/html/\\">Visit our HTML tutorial</a>
+<a HREF=\\"https://www.w3schools.com/html/\\">Visit our HTML tutorial</a>
+
+<input type=\\"checkbox\\" name=\\"vehicle\\" value=\\"car\\" checked=\\"checked\\" />
+
+<tag>Text</tag>
+<TAG>Text</TAG>
+
+</body>
+</html>
+"
+`;

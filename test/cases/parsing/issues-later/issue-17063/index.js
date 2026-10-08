@@ -1,0 +1,46 @@
+import foo, { named } from "./lib";
+
+// webpack's ESMDetectionParserPlugin was skipping the arguments of `define`
+// calls in ES modules, so import bindings used inside the callback were not
+// rewritten. Calling `define(...)` is what fires the parser's call hook.
+var __globalThis = Function("return this")();
+var __hadDefine = Object.prototype.hasOwnProperty.call(__globalThis, "define");
+var __previousDefine = __globalThis.define;
+__globalThis.define = function () {};
+
+var cbDefault;
+var cbNamed;
+var cbBoth;
+
+define((cbDefault = function () {
+	return foo;
+}));
+
+define((cbNamed = function () {
+	return named;
+}));
+
+define("named-module", ["./lib"], (cbBoth = function (lib) {
+	// Reference both the AMD-style argument and the harmony import binding.
+	return [foo, named, lib && lib.default];
+}));
+
+if (__hadDefine) {
+	__globalThis.define = __previousDefine;
+} else {
+	delete __globalThis.define;
+}
+
+it("issue-17063: should link default import binding inside `define` callback (issue #17063)", function () {
+	expect(cbDefault()).toBe(42);
+});
+
+it("issue-17063: should link named import binding inside `define` callback (issue #17063)", function () {
+	expect(cbNamed()).toBe("named-value");
+});
+
+it("issue-17063: should link import bindings inside `define(name, deps, fn)` callback (issue #17063)", function () {
+	var result = cbBoth(undefined);
+	expect(result[0]).toBe(42);
+	expect(result[1]).toBe("named-value");
+});
