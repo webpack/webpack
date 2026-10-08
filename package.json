@@ -113,7 +113,9 @@
     "cover:html5lib": "yarn cover:base --testMatch \"<rootDir>/test/specCases/html5lib.spectest.js\" --coverage",
     "cover:syntax-equivalence": "yarn cover:base --testMatch \"<rootDir>/test/specCases/syntaxEquivalence.spectest.js\" --coverage",
     "cover:css-parsing": "yarn cover:base --testMatch \"<rootDir>/test/specCases/cssParsing-webpack.spectest.js\" --coverage",
-    "cover:minify-corpora": "yarn cover:base --testMatch \"<rootDir>/test/specCases/minify-corpora.spectest.js\" --coverage"
+    "cover:minify-corpora": "yarn cover:base --testMatch \"<rootDir>/test/specCases/minify-corpora.spectest.js\" --coverage",
+    "cover:test262-parser": "yarn cover:base --testMatch \"<rootDir>/test/specCases/test262-parser.spectest.js\" --coverage",
+    "cover:minify-fuzz": "yarn cover:base --testMatch \"<rootDir>/test/specCases/minify-fuzz.spectest.js\" --coverage"
   },
   "lint-staged": {
     "*.{js,cjs,mjs}": [

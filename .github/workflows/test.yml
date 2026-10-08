@@ -295,12 +295,12 @@ jobs:
             script: cover:html5lib
             flags: html5lib
           # Parses all of test262 with webpack's parser and with acorn and
-          # compares the trees. Coverage instrumentation makes the parser ~5x
-          # slower, so this leg runs without it — every line it reaches is
-          # covered by the suites that upload.
+          # compares the trees. Instrumented although that makes the parser ~5x
+          # slower: about 7 min uninstrumented, well inside the job's bound.
           - language: js
             submodules: test/external/test262-cases
-            script: test:test262-parser
+            script: cover:test262-parser
+            flags: test262-parser
           # Minifies every source of each JS corpus with the published minifier
           # and with webpack's own: the same bytes back, and where a test says
           # what its input prints, an output printing it too. It uploads, as
@@ -314,7 +314,8 @@ jobs:
           # prints. A leg of its own, as the phases it installs outlive the file.
           - language: minify-fuzz
             submodules: test/external/terser
-            script: test:minify-fuzz
+            script: cover:minify-fuzz
+            flags: minify-fuzz
     runs-on: ubuntu-latest
     # Bounded: the js leg allows ten minutes per area per mode, so a stall
     # would otherwise hold a runner for the 6h default.
