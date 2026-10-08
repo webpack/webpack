@@ -854,6 +854,10 @@ const IMPROVED_CASES = [
 		[
 			"a loop's opening assignments, as a `var` in its head or before it",
 			"function f(o) { var i, j; for (i = 0, j = 1; i < o.length; i++, j++) console.log(o[i], j); return i + j; } function g(o) { var i, j; for (i = 0, j = 1, console.log(i); i < o.length; i++, j++) console.log(o[i], j); return i + j; } console.log(f([5, 6]), g([7]));"
+		],
+		[
+			"a value with effects moved past a `var` of an outer function that nothing writes again",
+			'var t = []; function g(k) { t.push(k); return k; } function o() { var s = { a: 1, b: 2 }; return function (k) { var x = g(k); return s[x] + t.length; }; } var f = o(); console.log(f("a"), f("b"), g(3));'
 		]
 	].map(
 		([name, input]) =>
@@ -936,6 +940,8 @@ const KEPT_CASES = [
 	["an arrow calling `eval`", `!function () { ${TRY} [1].map(() => eval("this")); }();`],
 	["a value with effects kept before a read of `console`, which it may patch", 'var log = console.log; function g() { console.log = function (x) { log("patched", x); }; return 1; } function f() { var v = g(); console.log(v); console.log = log; } f(); f();'],
 	["a value kept before a global no built-in names, a member a built-in computes, a shadowed built-in, or a built-in the value writes", 'function f(Math) { var v = g(); h(v); var w = g(); console.log(RegExp.$1, w); var x = g(); console.log(Math.max(x)); } function k() { var o = console; var u = (console = { log: function () { o.log("new"); } }, 1); console.log(u); console = o; } var h = console.log; function g() { return 2; } f({ max: String }); k();'],
+	["a value with effects kept before a `var` written again, declared in a generator, or a parameter", 'function o(p) { var s = { a: 1 }; function* gen() { var t = { a: 2 }; yield function (k) { var x = h(k); return t[x]; }; } function h(k) { s = { a: 3 }; return k; } return [function (k) { var x = h(k); return s[x]; }, function (k) { var x = h(k); return p[x]; }, gen().next().value]; } var r = o({ a: 4 }); console.log(r[0]("a"), r[1]("a"), r[2]("a"));'],
+	["a value with effects kept before a `let`, a `var` a loop or a pattern writes, or behind an `await`", 'function o() { let s = { a: 1 }; for (var t in { a: 1 }); var u = {}; [u] = [{ a: 2 }]; var v = { a: 3 }; return [function (k) { var x = h(k); return s[x]; }, function (k) { var x = h(k); return t[x]; }, function (k) { var x = h(k); return u[x]; }, async function (k) { var x = await h(k); return v[x]; }]; } function h(k) { return k; } console.log(o().map((f) => f("a")).join());'],
 	["a parameter given an argument", `!function (a) { ${TRY} console.log(a); }(Math.random());`],
 	["a parameter given nothing", `!function (a) { ${TRY} console.log(a, a = Math.random()); }();`],
 	["a name", `!function f() { ${TRY} console.log(f); }();`],
