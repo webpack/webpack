@@ -1306,8 +1306,6 @@ const IMPROVED_YET_BIGGER = {
 		"12 bytes fewer, 1 more gzipped: `{x();return}` breaks the `return void` runs of the branches around it",
 	"projects/files/react-17.0.1.js (its own options)":
 		"33 bytes fewer, 3 more gzipped: `!!x` in place of `null!==x` breaks the runs of `null!==` gzip reused",
-	"fixture/next/octokit/static/chunks/357-72bd409f1472b1b8/input.js (its own options)":
-		"76 bytes fewer, 2 more gzipped: `c?(x,r):(y,r)` written `(c?x:y),r` loses the second `,r)` gzip matched",
 	"evaluate/string_case (the default minimizer's options)":
 		"57 bytes fewer, 5 more gzipped: `\"I\".toLowerCase().charCodeAt(0)` matched the calls around it",
 	"evaluate/string_case (a module mangled at its top level)":
