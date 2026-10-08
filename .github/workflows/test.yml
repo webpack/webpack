@@ -302,20 +302,12 @@ jobs:
             script: cover:test262-parser
             flags: test262-parser
           # Minifies every source of each JS corpus with the published minifier
-          # and with webpack's own: the same bytes back, and where a test says
-          # what its input prints, an output printing it too. It uploads, as
-          # the one suite reaching every compressor phase the printer owns.
+          # and with webpack's own, then runs terser's fuzzer on fixed seeds:
+          # each output prints what its input prints. One leg saves a runner.
           - language: minify-corpora
             submodules: test/external/terser test/external/test262-cases test/external/swc test/external/oxc
-            script: cover:minify-corpora
+            script: cover:minify
             flags: minify-corpora
-          # Runs terser's fuzzer against webpack's minifier: fixed seeds, so the
-          # same random programs each run, each output printing what its program
-          # prints. A leg of its own, as the phases it installs outlive the file.
-          - language: minify-fuzz
-            submodules: test/external/terser
-            script: cover:minify-fuzz
-            flags: minify-fuzz
     runs-on: ubuntu-latest
     # Bounded: the js leg allows ten minutes per area per mode, so a stall
     # would otherwise hold a runner for the 6h default.

@@ -19,7 +19,6 @@ coverage:
           - test262
           - minify-corpora
           - test262-parser
-          - minify-fuzz
         target: auto
     patch:
       default:
