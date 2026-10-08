@@ -440,6 +440,11 @@ const IMPROVED_CASES = [
 		{ compress: { ecma: 2016 }, ecma: 2016, mangle: false }
 	],
 	[
+		"`Number`'s safe-integer bounds and epsilon, as powers of two from ECMAScript 2016",
+		"console.log(Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER, Number.EPSILON, -Number.EPSILON, 1 / Number.EPSILON, Number.MAX_SAFE_INTEGER.toString(16));",
+		{ compress: { ecma: 2016 }, ecma: 2016, mangle: false }
+	],
+	[
 		"an arrow naming `yield` in an async function, which reserves only `await`",
 		"var yield; async function f(n) { while (n--) { (() => { yield = 1; })(); } } f(2); console.log(yield);",
 		{ compress: { passes: 2 }, mangle: false }
@@ -5910,6 +5915,10 @@ describe("syntax-printer", () => {
 				["function f(a, b) { return Math.pow(a, 3); } console.log(f(2));", target(2015)],
 				["function f(a, b) { return [Math.pow(a, b), Math.pow(2, 3)]; } console.log(f(2, 3));", target(2016)],
 				["function f(Math, a) { return Math.pow(a, 3); } console.log(f({ pow: (a, b) => a + b }, 2));", target(2016)],
+				["console.log(Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER, Number.EPSILON);", target(2015)],
+				["function f(Number) { return Number.MAX_SAFE_INTEGER; } console.log(f({ MAX_SAFE_INTEGER: 1 }));", target(2016)],
+				["function f(o) { with (o) return Number.EPSILON; } console.log(f({ Number: { EPSILON: 1 } }));", target(2016)],
+				["console.log(delete Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER++, Number?.EPSILON);", target(2020)],
 				["function f(c) { return [null == c.d ? void 0 : c.d.e]; } console.log(f({}), f({ d: { e: 1 } }));", target(2021)],
 				["function f(c) { return [null == c ? void 0 : g(c)]; } function g(c) { return c; } console.log(f(null), f(1), g(2));", target(2021)],
 				["function f(c) { return [null == c ? void 0 : (c || g).a]; } function g() {} console.log(f(null), f({ a: 1 }));", target(2021)],

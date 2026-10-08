@@ -807,7 +807,13 @@ const FOLDED_BUILT_INS = {
 
 // Static values `improve` writes as the number they hold where that is shorter.
 const FOLDED_CONSTANTS = {
-	Number: ["EPSILON", "NEGATIVE_INFINITY", "NaN", "POSITIVE_INFINITY"]
+	Number: ["NEGATIVE_INFINITY", "NaN", "POSITIVE_INFINITY"]
+};
+
+// Static values `improve` writes as a power of two, as `2**53-1`, from
+// ECMAScript 2016: their digits are longer, or gzip worse, than their name.
+const POWER_OF_TWO_CONSTANTS = {
+	Number: ["EPSILON", "MAX_SAFE_INTEGER", "MIN_SAFE_INTEGER"]
 };
 
 // Methods whose answer for a string outside ASCII follows the engine's Unicode
@@ -864,10 +870,6 @@ const UNFOLDED_BUILT_INS = {
 		"Array.prototype.length",
 		"Array.@@species",
 		"Array.prototype.@@unscopables"
-	],
-	"its sixteen digits gzip worse than the name they replace": [
-		"Number.MAX_SAFE_INTEGER",
-		"Number.MIN_SAFE_INTEGER"
 	],
 	"it runs code, or answers differently on each call": ["eval", "Math.random"],
 	"the spec lets each engine approximate its answer": [
@@ -1041,7 +1043,7 @@ const isNoLaterThan = (version, limit) => {
 /**
  * The built-ins `improve` folds, checked against BCD: each one present, on the
  * owner it is spelled under, and in every Node webpack builds on.
- * @returns {{ globals: string[], statics: Record<string, string[]>, methods: Record<string, string[]>, constants: Record<string, string[]>, unicodeDependent: string[], sizedByArgument: string[], constructedWhenCalled: string[] }} the tables
+ * @returns {{ globals: string[], statics: Record<string, string[]>, methods: Record<string, string[]>, constants: Record<string, string[]>, powerOfTwoConstants: Record<string, string[]>, unicodeDependent: string[], sizedByArgument: string[], constructedWhenCalled: string[] }} the tables
  */
 const collectFoldedBuiltIns = () => {
 	const members = collectBuiltInMembers();
@@ -1094,6 +1096,17 @@ const collectFoldedBuiltIns = () => {
 	for (const [owner, names] of Object.entries(FOLDED_CONSTANTS)) {
 		for (const name of names) place(`${owner}.${name}`, "FOLDED_CONSTANTS");
 	}
+	for (const [owner, names] of Object.entries(POWER_OF_TWO_CONSTANTS)) {
+		for (const name of names) {
+			place(`${owner}.${name}`, "POWER_OF_TWO_CONSTANTS");
+			// The printer writes 2**k, 2**k-1 or 1-2**k, k its magnitude's log rounded.
+			const value = /** @type {EXPECTED_ANY} */ (global)[owner][name];
+			const power = 2 ** Math.round(Math.log2(Math.abs(value)));
+			if (![power, power - 1, 1 - power].includes(value)) {
+				throw new Error(`${owner}.${name} is no power of two, nor one off it`);
+			}
+		}
+	}
 	for (const [reason, names] of Object.entries(UNFOLDED_BUILT_INS)) {
 		for (const name of names) place(name, `left out as "${reason}"`);
 	}
@@ -1123,6 +1136,7 @@ const collectFoldedBuiltIns = () => {
 		statics,
 		methods,
 		constants: FOLDED_CONSTANTS,
+		powerOfTwoConstants: POWER_OF_TWO_CONSTANTS,
 		unicodeDependent: UNICODE_DEPENDENT_METHODS,
 		sizedByArgument: SIZED_BY_ARGUMENT_METHODS,
 		constructedWhenCalled: CONSTRUCTED_WHEN_CALLED
@@ -1140,6 +1154,7 @@ const renderFoldedBuiltIns = () => `
  * @property {Record<string, string[]>} statics the functions of each global object
  * @property {Record<string, string[]>} methods the prototype methods of each constructor
  * @property {Record<string, string[]>} constants the static values of each global object
+ * @property {Record<string, string[]>} powerOfTwoConstants the static values of each global object written as a power of two
  * @property {string[]} unicodeDependent the string methods folded on ASCII only
  * @property {string[]} sizedByArgument the string methods a count or length argument sizes
  * @property {string[]} constructedWhenCalled the constructors that construct the same without \`new\`
