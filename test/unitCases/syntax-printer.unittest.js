@@ -667,6 +667,26 @@ const IMPROVED_CASES = [
 		{ compress: { ecma: 2019 }, ecma: 2019, mangle: false }
 	],
 	[
+		"a call of a function returning a constant longer than the call, kept wherever its value goes on as it is",
+		'!function () { function f() { return "a string long enough that a copy costs more than a call"; } function h() { return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]; } function g() { return f(); } var o = { a: f() }, x, y = f(); x = f(); o.d ||= f(); console.log(f(), [f()], "<" + f() + ">", o.a || f(), o.b ? f() : 3, (o.c, f()), x, y, o.d, h(), h(), g(), g(), Array(1, 2), Array(3, 4)); }();',
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a call of a function returning a constant, kept where the function stays anyway",
+		'!function () { function f() { return "a string long enough that a copy costs more than a call"; } console.log(f(), f()); }();',
+		{ compress: { unused: false }, mangle: false }
+	],
+	[
+		"a call of a function returning a constant, kept where code outside reads the function",
+		'const f = () => "a string long enough that a copy costs more than a call"; console.log(f(), f());',
+		{
+			compress: {
+				toplevel: /** @type {boolean} */ (/** @type {unknown} */ ("funcs"))
+			},
+			mangle: false
+		}
+	],
+	[
 		"a `const` copying a closure's binding, read as it beside an inner binding of the same name",
 		"var h = (function () { const t = [0, 0]; return function (o) { const s = t; s[0]++; { let t = o; t.v = s[0]; } return o; }; })(); console.log(h({}).v, h({}).v);",
 		{ compress: { passes: 2 }, mangle: false }
@@ -826,6 +846,7 @@ const KEPT_CASES = [
 	["a `RegExp` constructed from a regular expression", "var r = /a/g; console.log(new RegExp(r) === r, RegExp(r) === r);"],
 	["a spread `Array` call", "var a = [3]; console.log(Array(...a).length);"],
 	["a shadowed `Array`", "function f(Array) { return new Array(1, 2); } console.log(f(function (a, b) { this.s = a + b; }).s, f(function () { this.s = 0; }).s);"],
+	["a call of a function returning a short constant or none, called once, marked `@__INLINE__`, or read by a test or an operator", '!function () { function f() { return "a string long enough that a copy costs more than a call"; } function g() { return "ab"; } function k() { return "a string long enough that a copy costs more than a call"; } function n() {} function r() { return; } var id = (x) => x; f(); console.log(/* @__INLINE__ */ f(), f() ? 1 : 2, typeof f(), f().length, f() || 1, !f(), g(), g(), k(), n(), n(), r(), r(), id(), id(void 0)); }();'],
 	["a `+` beside no number literal", 'var s = Math.random() < 2 ? "5" : ""; console.log("2" - +s, +s - +s, 1 + +s);'],
 	["a `var`", "!function () { var a = Math.random(); console.log(a, a); }();"],
 	["a `let` copying a parameter written later, or through `arguments` or `eval`", 'function f(a, c) { let b = a; let d = c; a = 3; arguments[1] = 4; return [b, d]; } function g(a) { let b = a; eval("a = 5"); return b; } console.log(f(1, 2), g(1));'],

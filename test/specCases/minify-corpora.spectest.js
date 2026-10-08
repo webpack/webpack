@@ -1328,6 +1328,8 @@ const IMPROVED_YET_BIGGER = {
 		"10 bytes fewer, 7 more gzipped: the folded `[3,2,1].join(\"-\")` matched the one left after it",
 	"harmony/issue_2345 (reminify 8 {\"compress\":{\"reduce_funcs\":false}})":
 		"10 bytes fewer, 7 more gzipped: the folded `[3,2,1].join(\"-\")` matched the one left after it",
+	"functions/issue_3054 (its own options)":
+		"2 bytes fewer, 2 more gzipped: the call `return f()` kept breaks the `return{a:!0}` the function beside it repeats",
 	"issue_8864_1 (its own options)":
 		"19 bytes fewer, 1 more gzipped: the folded `toUpperCase()` matched the one left in the template",
 	"S15.1.3.3_A4_T2.js (the default minimizer's options)":
