@@ -315,6 +315,16 @@ const IMPROVED_CASES = [
 		{ compress: { defaults: false }, mangle: false }
 	],
 	[
+		"a `return` of `undefined` before the end, as its statements and a bare `return`",
+		'var r = []; function f(a, b) { for (var i = 0; i < 3; i++) { if (a === i) { r.push(i); r.push(b); return; } r.push(-i); } } function g(a) { switch (a) { case 1: r.push(1); return; case 2: r.push(2); r.push(3); return; } r.push(4); } function h(a) { try { if (a) { r.push("x"); r.push(a); return; } } finally { r.push("y"); } r.push(a); } f(1, 2); f(5, 6); g(1); g(2); g(3); h(0); h(1); console.log(r.join());',
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a `return` of `undefined` as an `else` or a loop's body, braced, which terser leaves with its defaults off",
+		"var r = []; function f(a) { if (a) r.push(1); else return void r.push(2); r.push(3); } function g(a) { for (;;) return r.push(a), void 0; } function h(a) { if (a) return \"x\", void r.push(a); else return void r.push(0); } f(0); f(1); g(4); h(0); h(5); console.log(r.join());",
+		{ compress: { defaults: false }, mangle: false }
+	],
+	[
 		"a call between expressions, which terser joined in a sequence",
 		`console.log(0); (() => { ${TRY} console.log(2); })(); console.log(3);`,
 		{ compress: {}, mangle: false }
@@ -820,6 +830,7 @@ const IMPROVED_CASES = [
 const KEPT_CASES = [
 	["a conditional whose two sequences end in one chain made optional at different links", "function f(flag, obj, t) { return flag ? (t(), obj?.b.c) : (t(1), obj.b?.c); } console.log(f(1, { b: { c: 1 } }, () => 0), f(0, {}, () => 0));"],
 	["a conditional whose branches end in one chain made optional at different links", "function f(flag, obj, t) { return flag ? (t(), obj?.b.c) : obj.b?.c; } console.log(f(1, { b: { c: 1 } }, () => 0), f(0, {}, () => 0));"],
+	["a `return` of `undefined` in an async generator, which awaits the value a bare `return` does not", "var r = []; async function* f(a) { for (;;) { if (a()) return void r.push(1); yield r.push(2); } } var o = { async *m(a) { if (a) return void r.push(3); yield 4; } }; f(() => 1).next().then(() => o.m(1).next()).then(() => console.log(r.join()));"],
 	["a conditional whose other branch reads a global getter again", 'var n = 0; Object.defineProperty(globalThis, "g", { get: function () { return n++; }, configurable: true }); function f(b) { return g ? b : g; } console.log(f(1), f(2));'],
 	["a conditional whose other branch reads a getter twice or a different binding", "var n = 0, o = { get x() { return ++n; } }; function f(b) { var a = 1; { let a = 0; var r = a ? b : o.x ? b : o.x; } return [r, a, n]; } console.log(f(2));"],
 	["a bigint and a number concatenated, which throws", "try { console.log(1n + 2); } catch (e) { console.log(e.name); }"],
@@ -6018,6 +6029,16 @@ describe("syntax-printer", () => {
 				expect(code).toBe(reference.code);
 			});
 		}
+
+		it("should split a `return` of `undefined` outside a function", async () => {
+			const { minify } = await load();
+			const { code } = await minify("if (a()) { b(); return; } c();", {
+				parse: { bare_returns: true },
+				compress: {},
+				mangle: false
+			});
+			expect(code).toBe("if(a()){b();return}c();");
+		});
 
 		it("should keep a logical expression and a test for null where the shorter form needs a later ECMAScript or reads differently", async () => {
 			const { minify } = await load();
