@@ -753,6 +753,14 @@ const IMPROVED_CASES = [
 		[
 			"a `#__PURE__` call of a function written in place, passed nothing, as the value it returns",
 			"function g(x) { return [x]; } var o = { m: g }; function f(a) { var x = /* @__PURE__ */ (() => [a, 1])(), y = /* @__PURE__ */ (function () { return new Map(); })(), z = /* @__PURE__ */ (() => g(a))(), w = /* @__PURE__ */ (() => o.m(2))(); /* @__PURE__ */ (() => g(a))(); return [x, y.size, z, w, /* @__PURE__ */ (function () { return; })()]; } console.log(f(1));"
+		],
+		[
+			"a value read once moved into a property of a parameter, a function or `this` it is stored to",
+			"function g(n) { console.log(n); return n; } function f(o, p) { function h() {} var a = g(1); o.x = a; var b = g(2); p[0] = b; var c = g(3); o[\"y\"] = c; var d = g(4); h.p = d; return [o.x, o.y, p[0], h.p]; } function C() { var a = g(5); this.v = a; } class D { constructor() { var a = g(6); this.v = a; } } var o = { constructor() { var a = g(7); this.v = a; return this; } }; console.log(f({}, []), new C().v, new D().v, o.constructor().v);"
+		],
+		[
+			"a value read once moved into a property of `this` in a block, an arrow or the top level",
+			"function g(n) { console.log(n); return n; } function E(x) { if (x) { var a = g(1); this.v = a; } var k = () => { var b = g(2); this.w = b; }; k(); } var e = new E(1); { let c = g(3); this.z = c; } console.log(e.v, e.w, z);"
 		]
 	].map(
 		([name, input]) =>
@@ -902,6 +910,7 @@ const KEPT_CASES = [
 	["a computed key a class can write as it is", 'class C { ["prototype"] = 1; ["prototype"]() {} static ["#prototype"] = 2; static ["constructor"] = 3; static [0]() {} } console.log(new C().prototype, C["#prototype"], C.constructor, typeof C[0]);'],
 	["an unused class whose static keys are not known to be `prototype`", 'function f(k) { var p = "prototype"; class K { static x() {} static ["y"] = 1; ["prototype"]() {} [p]() {} static [k]() {} static [0]() {} static [-1]() {} static [["x"]]() {} static [["prototype", "x"]]() {} static [[]]() {} static [[k]]() {} } return 1; } console.log(f("x"), f(1));'],
 	["a computed `__proto__` an object can write as an arrow", 'var o = { ["__proto__"]() { return 1; }, a() { return 2; } }; console.log(Object.keys(o).join(), o.__proto__(), o.a());'],
+	["a value read once kept from a store that reads first what it may change", 'function g(n) { console.log(n); return n; } function f(o, k) { let l = {}; var a = g(1); o[k] = a; var b = g(2); o.p.q = b; var c = g(3); o.r += c; var d = g(4); l.x = d; var e = g(5); o.s = o.p.t; console.log(e); return function () { var a = g(6); o.u = a; }; } function h(args) { args[0] = {}; return 1; } function m(o) { var a = h(arguments); o.x = a; } class A {} class B extends A { constructor() { var a = (super(), 1); this.v = a; } } var p = { p: {}, r: 1 }; f(p, "s")(); m(p); var q = g(7); p.y = q; console.log(JSON.stringify(p), new B().v);'],
 	["a computed key an object can write as it is", 'var o = { ["#constructor"]() { return 1; }, ["prototype"]: 2 }, p = { get ["#" + "constructor"]() { return 3; } }; console.log(o["#constructor"](), o.prototype, p["#constructor"]);']
 ];
 
