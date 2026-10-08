@@ -521,10 +521,7 @@ const SWC_SMALLER_BY_REASON = [
 	],
 	[
 		"swc drops `new` before a built-in that constructs the same when called (`Error`, `RegExp`, `Array`)",
-		[
-			"swc minifier: fixture/issues/12187/input.js",
-			"swc minifier: fixture/projects/backbone/18/input.js"
-		]
+		["swc minifier: fixture/issues/12187/input.js"]
 	],
 	[
 		"swc drops call and `new` arguments past the parameters of a callee it can see, and an unused parameter whose default is pure",

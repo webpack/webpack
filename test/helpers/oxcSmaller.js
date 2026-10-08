@@ -973,11 +973,9 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc drops `new` before a built-in that constructs the same when called",
 		[
-			"swc exec: regexp_1",
 			"swc minifier: fixture/issues/11829/input.js",
 			"swc minifier: fixture/issues/12187/input.js",
 			"swc minifier: fixture/issues/12191/iterator-errors/input.js",
-			"swc minifier: fixture/projects/backbone/18/input.js",
 			"swc minifier: fixture/projects/react/3/input.js"
 		]
 	],

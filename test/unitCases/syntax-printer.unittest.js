@@ -535,6 +535,12 @@ const IMPROVED_CASES = [
 		{ compress: {}, mangle: false }
 	],
 	[
+		"`RegExp` given a pattern or flags sure to be a string",
+		'var s = Math.random() < 2 ? "a" : "b", g = Math.random() < 2; console.log(new RegExp("^" + s + "$").test("a"), new RegExp(`${s}+`).source, new RegExp(s, g ? "g" : "i").flags, new RegExp(typeof s).source);',
+		{ compress: {}, mangle: false },
+		'var s=Math.random()<2?"a":"b",g=Math.random()<2;console.log(RegExp("^"+s+"$").test("a"),RegExp(`${s}+`).source,RegExp(s,g?"g":"i").flags,RegExp(typeof s).source);'
+	],
+	[
 		"a `+` beside a number literal in arithmetic",
 		'var d = Math.random() < 2 ? "5" : ""; console.log(1000 * +d, 1 - +d, 5 | +d, 2 ** +d);',
 		{ compress: {}, mangle: false }
@@ -933,6 +939,7 @@ const KEPT_CASES = [
 	["`Number.EPSILON`, longer as a number", "console.log(Number.EPSILON);"],
 	["safe-integer bounds, whose digits gzip worse", "console.log(Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER);"],
 	["a `RegExp` constructed from a regular expression", "var r = /a/g; console.log(new RegExp(r) === r, RegExp(r) === r);"],
+	["a `RegExp` constructed from what may be a regular expression, with flags that may be missing", "function f(a, b, g) { return [new RegExp(a + b).source, new RegExp(a, g) === a]; } var r = /a/; console.log(f(1, 2), f(r, void 0, void 0));"],
 	["a spread `Array` call", "var a = [3]; console.log(Array(...a).length);"],
 	["a shadowed `Array`", "function f(Array) { return new Array(1, 2); } console.log(f(function (a, b) { this.s = a + b; }).s, f(function () { this.s = 0; }).s);"],
 	["a call of a function returning a short constant or none, called once, marked `@__INLINE__`, or read by a test or an operator", '!function () { function f() { return "a string long enough that a copy costs more than a call"; } function g() { return "ab"; } function k() { return "a string long enough that a copy costs more than a call"; } function n() {} function r() { return; } var id = (x) => x; f(); console.log(/* @__INLINE__ */ f(), f() ? 1 : 2, typeof f(), f().length, f() || 1, !f(), g(), g(), k(), n(), n(), r(), r(), id(), id(void 0)); }();'],

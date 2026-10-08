@@ -1578,7 +1578,6 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 			"non-callable-join-string-tag.js (the default minimizer's options)",
 			"optional-catch-binding-throws.js (the default minimizer's options)",
 			"predicate-throws-then-closing-iterator-also-throws.js (the default minimizer's options)",
-			"quantifier-integer-limit.js (the default minimizer's options)",
 			"sorting_buffer_access.js (the default minimizer's options)",
 			"symbol-tag-override-instances.js (the default minimizer's options)",
 			"this-val-regexp.js (the default minimizer's options)",
