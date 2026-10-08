@@ -530,8 +530,9 @@ jobs:
         node-version: [22.x, 24.x, 26.x]
         part: [a, b]
         include:
-          # Test with main branches of webpack dependencies. The only jobs
-          # collecting coverage: instrumenting slows every job that runs it.
+          # Test with main branches of webpack dependencies. Instrumenting
+          # slows every job that runs it, so only these and the Windows and
+          # macOS LTS jobs below collect coverage.
           - os: ubuntu-latest
             node-version: lts/*
             part: a
@@ -541,6 +542,13 @@ jobs:
             node-version: lts/*
             part: b
             use_main_branches: 1
+            coverage: true
+          # Code reached only on Windows or macOS; keep 24.x the current LTS.
+          - os: windows-latest
+            node-version: 24.x
+            coverage: true
+          - os: macos-latest
+            node-version: 24.x
             coverage: true
           # Test on old Node.js versions
           - os: ubuntu-latest
