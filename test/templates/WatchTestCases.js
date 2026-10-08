@@ -34,17 +34,18 @@ const supportsOptionalChaining = require("../helpers/supportsOptionalChaining");
 
 const testRootDirectory = path.join(__dirname, "..");
 // Deno and Bun miss a change copied in this soon after the last build, so they
-// keep the long waits; macOS's watcher misses one at 200 ms under CI load
+// keep the long waits; Node's watcher and file timestamps resolve the short ones
 const slowWatch = Boolean(process.versions.deno || process.versions.bun);
-const STEP_DELAY = slowWatch ? 1500 : process.platform === "darwin" ? 1000 : 200;
+const STEP_DELAY = slowWatch ? 1500 : 200;
 const AGGREGATE_TIMEOUT = slowWatch ? 1000 : 50;
 
 /**
  * @param {string} src src
  * @param {string} dest dest
  * @param {boolean} initial is initial?
+ * @param {Set<string>=} changed collects the files written or deleted
  */
-function copyDiff(src, dest, initial) {
+function copyDiff(src, dest, initial, changed) {
 	if (!fs.existsSync(dest)) fs.mkdirSync(dest);
 	const files = fs.readdirSync(src);
 	for (const filename of files) {
@@ -52,9 +53,10 @@ function copyDiff(src, dest, initial) {
 		const destFile = path.join(dest, filename);
 		const directory = fs.statSync(srcFile).isDirectory();
 		if (directory) {
-			copyDiff(srcFile, destFile, initial);
+			copyDiff(srcFile, destFile, initial, changed);
 		} else {
 			const content = fs.readFileSync(srcFile);
+			if (changed) changed.add(destFile);
 			if (/^DELETE\s*$/.test(content.toString("utf8"))) {
 				fs.unlinkSync(destFile);
 			} else if (/^DELETE_DIRECTORY\s*$/.test(content.toString("utf8"))) {
@@ -72,6 +74,18 @@ function copyDiff(src, dest, initial) {
 			}
 		}
 	}
+}
+
+/**
+ * @param {string} file file
+ * @param {Iterable<string>} paths files or directories
+ * @returns {boolean} true when the file is one of the paths or inside one
+ */
+function isWithin(file, paths) {
+	for (const item of paths) {
+		if (file === item || file.startsWith(item + path.sep)) return true;
+	}
+	return false;
 }
 
 /**
@@ -300,6 +314,13 @@ const describeCases = (config) => {
 							/** @type {string | null | undefined} */
 							let triggeringFilename;
 							let lastHash = "";
+							/** @type {Set<string>} */
+							let lastFileDependencies = new Set();
+							/** @type {string[]} */
+							let lastContextDependencies = [];
+							// watched files the current step changed which no build has reported yet
+							/** @type {Set<string>} */
+							let unseenChanges = new Set();
 
 							const currentWatchStepModule = require("../helpers/currentWatchStep");
 
@@ -371,6 +392,20 @@ const describeCases = (config) => {
 													throw new Error("No stats reported from Compiler");
 												}
 												if (waitMode) return;
+												// macOS can report one step's changes over more than the aggregate
+												// timeout; a build that missed some reuses the stale cached module,
+												// and the late change starts the build this step's tests wait for
+												for (const child of compilers) {
+													// a watched directory reports itself, not the file inside it
+													const reported = [
+														...(child.modifiedFiles || []),
+														...(child.removedFiles || [])
+													];
+													for (const file of unseenChanges) {
+														if (isWithin(file, reported)) unseenChanges.delete(file);
+													}
+												}
+												if (unseenChanges.size > 0) return;
 												if (run.done && stats.hash === lastHash) return;
 												if (run.done && lastHash !== stats.hash) {
 													throw new Error(
@@ -381,6 +416,22 @@ const describeCases = (config) => {
 												lastHash = stats.hash;
 												run.done = true;
 												run.stats = stats;
+												lastFileDependencies = new Set();
+												lastContextDependencies = [];
+												for (const { compilation } of /** @type {import("../../").Stats[]} */ (
+													"stats" in stats ? stats.stats : [stats]
+												)) {
+													// a missing directory is watched for existence, not content
+													for (const file of compilation.fileDependencies) {
+														lastFileDependencies.add(file);
+													}
+													for (const file of compilation.missingDependencies) {
+														lastFileDependencies.add(file);
+													}
+													lastContextDependencies.push(
+														...compilation.contextDependencies
+													);
+												}
 												const statOptions = {
 													preset: "verbose",
 													cached: true,
@@ -510,11 +561,61 @@ const describeCases = (config) => {
 																	/** @type {{ step: string | undefined }} */ (
 																		currentWatchStepModule
 																	).step = run.name;
+																	/** @type {Set<string>} */
+																	const changed = new Set();
 																	copyDiff(
 																		path.join(testDirectory, run.name),
 																		tempDirectory,
-																		false
+																		false,
+																		changed
 																	);
+																	unseenChanges = new Set();
+																	if (!restartCompiler && watchedCompiler) {
+																		// only a file the last build watched reports its change
+																		for (const file of changed) {
+																			if (
+																				lastFileDependencies.has(file) ||
+																				isWithin(file, lastContextDependencies)
+																			) {
+																				unseenChanges.add(file);
+																			}
+																		}
+																		// WatchIgnorePlugin marks what no build will report, and a managed
+																		// or immutable path reports its package, not the file changed in it
+																		for (const child of "compilers" in watchedCompiler
+																			? watchedCompiler.compilers
+																			: [watchedCompiler]) {
+																			for (const file of unseenChanges) {
+																				for (const item of [
+																					...child.managedPaths,
+																					...child.immutablePaths
+																				]) {
+																					if (
+																						typeof item === "string"
+																							? isWithin(file, [path.resolve(item)])
+																							: item.test(file)
+																					) {
+																						unseenChanges.delete(file);
+																					}
+																				}
+																			}
+																			const watcher =
+																				child.watching && child.watching.watcher;
+																			if (!watcher || !watcher.getInfo) continue;
+																			const info = watcher.getInfo();
+																			/** @type {string[]} */
+																			const ignored = [];
+																			for (const [item, entry] of [
+																				...info.fileTimeInfoEntries,
+																				...info.contextTimeInfoEntries
+																			]) {
+																				if (entry === "ignore") ignored.push(item);
+																			}
+																			for (const file of unseenChanges) {
+																				if (isWithin(file, ignored)) unseenChanges.delete(file);
+																			}
+																		}
+																	}
 																	if (restartCompiler) startCompiler();
 																} catch (error) {
 																	fail(/** @type {Error} */ (error));
