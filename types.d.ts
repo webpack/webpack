@@ -683,6 +683,7 @@ declare interface AssetTimestamps {
 declare interface Ast {
 	[index: string]: any;
 	expressionOf(node: NodeShape): undefined | NodeShape;
+	createStackTransformer(before?: Function, after?: Function): CompressorShape;
 	namesOf(node: NodeShape): (null | NodeShape)[];
 	wrapOptimizer(
 		name: string,
