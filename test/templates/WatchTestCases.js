@@ -34,9 +34,9 @@ const supportsOptionalChaining = require("../helpers/supportsOptionalChaining");
 
 const testRootDirectory = path.join(__dirname, "..");
 // Deno and Bun miss a change copied in this soon after the last build, so they
-// keep the long waits; Node's watcher and file timestamps resolve the short ones
+// keep the long waits; macOS's watcher misses one at 200 ms under CI load
 const slowWatch = Boolean(process.versions.deno || process.versions.bun);
-const STEP_DELAY = slowWatch ? 1500 : 200;
+const STEP_DELAY = slowWatch ? 1500 : process.platform === "darwin" ? 1000 : 200;
 const AGGREGATE_TIMEOUT = slowWatch ? 1000 : 50;
 
 /**
