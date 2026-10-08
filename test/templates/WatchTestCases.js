@@ -33,11 +33,8 @@ const supportsObjectHasOwn = require("../helpers/supportsObjectHasOwn");
 const supportsOptionalChaining = require("../helpers/supportsOptionalChaining");
 
 const testRootDirectory = path.join(__dirname, "..");
-// Deno and Bun miss a change copied in this soon after the last build, so they
-// keep the long waits; Node's watcher and file timestamps resolve the short ones
-const slowWatch = Boolean(process.versions.deno || process.versions.bun);
-const STEP_DELAY = slowWatch ? 1500 : 200;
-const AGGREGATE_TIMEOUT = slowWatch ? 1000 : 50;
+const STEP_DELAY = 200;
+const AGGREGATE_TIMEOUT = 50;
 
 /**
  * @param {string} src src
