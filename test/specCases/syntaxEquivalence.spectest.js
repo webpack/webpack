@@ -185,7 +185,7 @@ const CUSTOM_PROPERTY = "--webpack-probe";
 // exactly, so an entry outlives its defect by one run.
 const FILED_CONFIG_CSS_DEFECTS = new Map([
 	[
-		"test/configCases/css/minimize-values/style.css",
+		"test/configCases/css/minimize-corpus/minimize-values/style.css",
 		"webkit only: not a printer defect — `shape-image-threshold: 12.5%` prints as `.125`, the number CSS Shapes 1 says the percentage names, but WebKit takes no percentage there, so it drops the source's declaration and reads the printed one"
 	]
 ]);
