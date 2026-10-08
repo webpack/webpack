@@ -385,7 +385,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/drop-console-es2015/input.js",
 			"swc minifier: fixture/issues/object-accessor-function-boundary/input.js",
 			"swc minifier: fixture/next/43052/input.js",
-			"swc minifier: fixture/projects/backbone/19/input.js",
 			"swc minifier: fixture/projects/jquery/24/input.js",
 			"swc minifier: fixture/projects/mootools/3/input.js",
 			"swc minifier: fixture/projects/react/13/input.js",
