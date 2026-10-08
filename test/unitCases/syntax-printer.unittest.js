@@ -6173,6 +6173,15 @@ describe("syntax-printer", () => {
 			}
 		});
 
+		it("should write the `const` declarations of a body moved up in place as one `let`", async () => {
+			const { minify } = await load();
+			const { code } = await minify(
+				"export function f(a) { return function () { const b = a.x(); const c = a.y(); a.z(b, c); return b + c; }(); }",
+				{ module: true, compress: {}, mangle: false }
+			);
+			expect(code).toMatchSnapshot();
+		});
+
 		it("should leave `let` declarations apart under `join_vars: false`", async () => {
 			const { minify } = await load();
 			const { code } = await minify(
