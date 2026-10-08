@@ -1,6 +1,6 @@
 "use strict";
 
-// cspell:ignore argnames autowhatever chartjs cryptojs defun dont farg fargs firestore hoofd instancesearch joda lvalues nonmatching redef syncfusion
+// cspell:ignore argnames autowhatever chartjs cryptojs defun dont farg fargs firestore hoofd instancesearch joda lvalues nonmatching outstatic redef syncfusion
 
 // What swc's minifier does that webpack's does not yet, each with the tests
 // whose output under their own options is bigger than swc's recorded one.
@@ -70,7 +70,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: harmony/array_spread_of_sequence",
 			"terser compress: harmony/fat_arrow_as_param",
 			"terser compress: harmony/issue_2794_4",
-			"terser compress: harmony/issue_2794_6",
 			"terser compress: harmony/object_spread_of_sequence",
 			"terser compress: identity/inline_identity_dont_lose_this_when_arg",
 			"terser compress: issue-1639/issue_1639_2",
@@ -235,7 +234,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: collapse_vars/collapse_vars_side_effects_2",
 			"terser compress: collapse_vars/collapse_vars_while",
 			"terser compress: collapse_vars/issue_1537_destructuring_1",
-			"terser compress: collapse_vars/issue_2187_1",
 			"terser compress: collapse_vars/issue_2436_9",
 			"terser compress: collapse_vars/var_defs",
 			"terser compress: collapse_vars/var_side_effects_2",
@@ -387,7 +385,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/next/43052/input.js",
 			"swc minifier: fixture/projects/backbone/12/input.js",
 			"swc minifier: fixture/projects/backbone/19/input.js",
-			"swc minifier: fixture/projects/jquery/.17/input.js",
 			"swc minifier: fixture/projects/mootools/3/input.js",
 			"swc minifier: fixture/projects/react/13/input.js",
 			"swc minifier: fixture/projects/yui/12/input.js",
@@ -453,9 +450,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/do-while-false-control-flow/input.js",
 			"swc minifier: fixture/issues/do-while-false-terminal-jump/rejected/input.js",
 			"swc minifier: fixture/issues/do-while-false-terminal-jump/scope-directives/input.js",
-			"swc minifier: fixture/projects/backbone/2/input.js",
-			"swc minifier: fixture/projects/backbone/5/input.js",
-			"swc minifier: fixture/projects/mootools/10/input.js",
 			"swc minifier: fixture/projects/mootools/8/input.js",
 			"swc minifier: fixture/simple/switch/const/call/input.js",
 			"swc minifier: fixture/simple/switch/const/order/input.js",
@@ -463,8 +457,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: pass-1/4/input.js",
 			"terser compress: collapse_vars/boolean_binary_1",
 			"terser compress: collapse_vars/boolean_binary_2",
-			"terser compress: conditionals/cond_8",
-			"terser compress: conditionals/cond_8b",
 			"terser compress: conditionals/issue_2535_1",
 			"terser compress: issue-1673/side_effects_else",
 			"terser compress: issue-637/wrongly_optimized",
@@ -539,7 +531,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/11512-exhaustive/iife-anon-arg-unused/input.js",
 			"swc minifier: fixture/issues/11512-exhaustive/iife-anon-default-unused/input.js",
 			"swc minifier: fixture/issues/11645/control-known-arity-drop/input.js",
-			"swc minifier: fixture/issues/11684/class-decl/input.js",
 			"swc minifier: fixture/issues/11684/class-expression/input.js",
 			"swc minifier: fixture/issues/11684/constructor-scopes/input.js",
 			"swc minifier: fixture/issues/11684/identifier-reduce-vars-only/input.js",
@@ -556,7 +547,6 @@ const SWC_SMALLER_BY_REASON = [
 		"swc merges imports of one module, drops unused specifiers, and folds a declaration into its `export default`",
 		[
 			"swc minifier: fixture/check/1/input.js",
-			"swc minifier: fixture/issues/11133/input.js",
 			"swc minifier: fixture/issues/11257/input.js",
 			"swc minifier: fixture/issues/11321/input.js",
 			"swc minifier: fixture/issues/12185/input.js",
@@ -589,9 +579,7 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/member_expr/callee/input.js",
 			"swc minifier: fixture/projects/wmr/archive-1/chunks/index.bf24abaa/input.js",
 			"swc minifier: fixture/projects/wmr/archive-1/chunks/index.ddc4110d/input.js",
-			"swc minifier: pass-1/issue-6788/1/input.js",
-			"terser compress: hoist_props/direct_access_2",
-			"terser compress: template-string/tagged_call_with_invalid_escape_2"
+			"terser compress: hoist_props/direct_access_2"
 		]
 	],
 	[
@@ -733,7 +721,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/next/wrap-contracts/input.js",
 			"swc minifier: fixture/projects/backbone/20/input.js",
 			"swc minifier: fixture/projects/jquery/12/input.js",
-			"swc minifier: fixture/projects/mootools/.11/input.js",
 			"swc minifier: fixture/projects/next/.archive-4/266-aee26c928109d49d6151/input.js",
 			"swc minifier: fixture/projects/next/.archive-4/framework-054ead69ea8124b4cb27/input.js",
 			"swc minifier: fixture/projects/next/.archive-4/main-2953d6142ff4a439dbc0/input.js",
@@ -819,6 +806,37 @@ const SWC_SMALLER_BY_REASON = [
 	[
 		"swc drops an `in` or `instanceof` whose right side it cannot see, which throws where that side is no object and runs a proxy's or `Symbol.hasInstance`'s code",
 		["terser compress: pure_funcs/relational"]
+	],
+	[
+		"swc drops or moves an operation converting a value that may be an object or a symbol, which runs its `valueOf` or `toString` or throws, as oxc keeps it",
+		[
+			"swc minifier: fixture/issues/5680/input.js",
+			"swc minifier: fixture/issues/vercel/007/input.js",
+			"swc minifier: fixture/next/outstatic/1/input.js",
+			"terser compress: arrow/async_function_expression",
+			"terser compress: async/async_function_declaration",
+			"terser compress: async/async_function_expression",
+			"terser compress: collapse_vars/conditional_2",
+			"terser compress: collapse_vars/issue_2364_5",
+			"terser compress: collapse_vars/var_side_effects_1",
+			"terser compress: collapse_vars/var_side_effects_3",
+			"terser compress: dead-code/dead_code_constant_boolean_should_warn_more",
+			"terser compress: dead-code/dead_code_constant_boolean_should_warn_more_strict",
+			"terser compress: drop-unused/global_var",
+			"terser compress: issue-1275/string_plus_optimization",
+			"terser compress: pure_funcs/arithmetic",
+			"terser compress: pure_funcs/array",
+			"terser compress: sequences/side_effects_cascade_3",
+			"terser compress: typeof/typeof_in_boolean_context"
+		]
+	],
+	[
+		"swc knows a `let` nothing reassigns holds the number it starts with, where webpack reads that only with `reduce_vars`, which this config turns off",
+		["swc minifier: fixture/issues/3126/1/input.js"]
+	],
+	[
+		'swc drops a function\'s lone `"use strict"`, so reading its `caller` or `arguments` no longer throws',
+		["terser compress: functions/drop_lone_use_strict"]
 	]
 ];
 

@@ -1270,6 +1270,9 @@ const webpackRefusalsSeen = new Set();
 const misprintsSeen = new Set();
 /** @type {Set<string>} */
 const improvedYetBiggerSeen = new Set();
+// Each `SWC_SMALLER` and `OXC_SMALLER` entry met, as `<table>: <source>`.
+/** @type {Set<string>} */
+const rivalSmallerSeen = new Set();
 
 /**
  * Outputs the `improve` phase writes shorter yet gzip compresses worse, each
@@ -1277,22 +1280,18 @@ const improvedYetBiggerSeen = new Set();
  * @type {Record<string, string>}
  */
 const IMPROVED_YET_BIGGER = {
+	"arrow/object_parens (its own options)":
+		"3 bytes fewer, 1 more gzipped: `+!!{}` breaks the `()=>(` runs of the arrows around it gzip reused",
 	"projects/files/jquery.mobile-1.4.2.js (its own options)":
-		"40 bytes fewer, 3 more gzipped: `this.p=c?x:y` breaks the `c?this.p=x:this.p=y` runs gzip reused",
+		"50 bytes fewer, 1 more gzipped: `if(null!=r)return r` in place of `return null==r?void 0:r` loses the `return null==` gzip reused",
 	"projects/files/jquery.mobile-1.4.2.js (the default minimizer's options)":
 		"30 bytes fewer, 2 more gzipped: `this.p=c?x:y` breaks the `c?this.p=x:this.p=y` runs gzip reused",
 	"fixture/next/regression-1/framework-798bab57daac3897/input.js (its own options)":
 		"195 bytes fewer, 23 more gzipped: `!!x` in place of `null!==x` breaks the runs of `null!==` gzip reused",
-	"fixture/next/regression-1/framework-798bab57daac3897/input.js (the default minimizer's options)":
-		"214 bytes fewer, 6 more gzipped: `!!x` in place of `null!==x` breaks the runs of `null!==` gzip reused",
 	"projects/files/react-17.0.1.js (its own options)":
 		"33 bytes fewer, 3 more gzipped: `!!x` in place of `null!==x` breaks the runs of `null!==` gzip reused",
-	"benches-full/vue.js (the default minimizer's options)":
-		"9 bytes fewer, 6 more gzipped: the shorter `typeof x<\"u\"` and constructor calls break runs gzip reused",
 	"fixture/projects/next/.archive-4/framework-054ead69ea8124b4cb27/input.js (its own options)":
-		"83 bytes fewer, 8 more gzipped: the shorter `typeof x<\"u\"` breaks the `\"…\"!=typeof` runs gzip reused",
-	"fixture/projects/next/.archive-4/framework-054ead69ea8124b4cb27/input.js (the default minimizer's options)":
-		"83 bytes fewer, 3 more gzipped: the shorter `typeof x<\"u\"` breaks the `\"…\"!=typeof` runs gzip reused",
+		"196 bytes fewer, 9 more gzipped: the shorter `typeof x<\"u\"` breaks the `\"…\"!=typeof` runs gzip reused",
 	"evaluate/string_case (the default minimizer's options)":
 		"57 bytes fewer, 5 more gzipped: `\"I\".toLowerCase().charCodeAt(0)` matched the calls around it",
 	"evaluate/string_case (a module mangled at its top level)":
@@ -1317,8 +1316,6 @@ const IMPROVED_YET_BIGGER = {
 		"10 bytes fewer, 7 more gzipped: the folded `[3,2,1].join(\"-\")` matched the one left after it",
 	"harmony/issue_2345 (reminify 8 {\"compress\":{\"reduce_funcs\":false}})":
 		"10 bytes fewer, 7 more gzipped: the folded `[3,2,1].join(\"-\")` matched the one left after it",
-	"fixture/issues/12215/input.js (its own options)":
-		"20 bytes fewer, 5 more gzipped: the folded global call matched a shadowed one beside it",
 	"issue_8864_1 (its own options)":
 		"19 bytes fewer, 1 more gzipped: the folded `toUpperCase()` matched the one left in the template",
 	"S15.1.3.3_A4_T2.js (the default minimizer's options)":
@@ -1438,6 +1435,14 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 		]
 	],
 	[
+		"`c ? x : c` written as `c && x` where the source repeats the conditional gzip matched",
+		[
+			"bound-to-collator-instance.js (the default minimizer's options)",
+			"returns-same-results-as-NumberFormat.js (the default minimizer's options)",
+			"short-circuit-compound-assignment.js (the default minimizer's options)"
+		]
+	],
+	[
 		"`Array` written as a literal where the source writes the call again",
 		[
 			"S15.4.1_A1.1_T1.js (the default minimizer's options)",
@@ -1447,6 +1452,17 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 			"fixture/issues/12201/input.js (its own options)",
 			"fixture/issues/12201/input.js (the default minimizer's options)",
 			"terser_array_constructor_unsafe (its own options)"
+		]
+	],
+	[
+		"`if(c)return x` written where `return c?x:void 0` matched the returns around it",
+		[
+			"fixture/next/octokit/static/chunks/357-72bd409f1472b1b8/input.js (its own options)",
+			"fixture/next/octokit/static/chunks/357-72bd409f1472b1b8/input.js (the default minimizer's options)",
+			"if_return/if_return_same_value (its own options)",
+			"if_return/if_return_same_value (the default minimizer's options)",
+			"replacer-function-result-undefined.js (the default minimizer's options)",
+			"stringify-replacer.js (the default minimizer's options)"
 		]
 	],
 	[
@@ -1558,12 +1574,6 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 		]
 	],
 	[
-		"a `+` dropped beside a number literal where the source quotes it",
-		[
-			"exp-operator-precedence-unary-expression-semantics.js (the default minimizer's options)"
-		]
-	],
-	[
 		"`typeof x<\"u\"` where the source repeats the `\"undefined\"` comparison gzip matched",
 		[
 			"S11.1.6_A3_T7.js (the default minimizer's options)",
@@ -1608,6 +1618,16 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 		]
 	],
 	[
+		"consecutive `if`s leaving with one value merged, where the source repeats the `if` gzip matched",
+		[
+			"S7.9_A5.8_T1.js (the default minimizer's options)",
+			"S7.9_A5.9_T1.js (the default minimizer's options)",
+			"if_return/if_return_same_value (its own options)",
+			"if_return/if_return_same_value (the default minimizer's options)",
+			"symbol-logical-not-evaluation.js (the default minimizer's options)"
+		]
+	],
+	[
 		"a literal folded into the string it makes where the source repeats the literal gzip matched",
 		[
 			"evaluate/unsafe_array (a module mangled at its top level)",
@@ -1619,6 +1639,13 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 			"evaluate/unsafe_array (the default minimizer's options)",
 			"fixture/issues/string-index-utf16/input.js (its own options)",
 			"fixture/issues/string-index-utf16/input.js (the default minimizer's options)"
+		]
+	],
+	[
+		"a value read where a built-in read stood between, where the source repeats the declaration gzip matched",
+		[
+			"regress-1383630.js (the default minimizer's options)",
+			"reviver-forward-modifies-object.js (the default minimizer's options)"
 		]
 	],
 	[
@@ -2049,6 +2076,7 @@ describe("JavaScript minifier", () => {
 								table,
 								lead.source
 							);
+							if (listed) rivalSmallerSeen.add(`${tableName}: ${lead.source}`);
 							if (worse && !listed) {
 								differences.push(
 									`${lead.source} is bigger than ${lead.rival}'s output: ${lead.ours} raw, ${lead.oursGzip} gzip, against ${lead.theirs} raw, ${lead.theirsGzip} gzip`
@@ -2308,7 +2336,9 @@ describe("JavaScript minifier", () => {
 								const oxc = oxcOutputs.get(source);
 								const oxcKey = `${corpus.name}: ${source.name}`;
 								if (oxc instanceof Error && setName === oxcSet) {
-									if (!Object.prototype.hasOwnProperty.call(OXC_SMALLER, oxcKey)) {
+									if (Object.prototype.hasOwnProperty.call(OXC_SMALLER, oxcKey)) {
+										rivalSmallerSeen.add(`OXC_SMALLER: ${oxcKey}`);
+									} else {
 										differences.push(`${oxcKey} aborts oxc: ${oxc.message}`);
 									}
 								} else if (
@@ -2350,7 +2380,13 @@ describe("JavaScript minifier", () => {
 				.map((key) => `REFERENCE_MISPRINTS: ${key}`),
 			...Object.keys(IMPROVED_YET_BIGGER)
 				.filter((key) => !improvedYetBiggerSeen.has(key))
-				.map((key) => `IMPROVED_YET_BIGGER: ${key}`)
+				.map((key) => `IMPROVED_YET_BIGGER: ${key}`),
+			...Object.keys(SWC_SMALLER)
+				.map((key) => `SWC_SMALLER: ${key}`)
+				.filter((entry) => !rivalSmallerSeen.has(entry)),
+			...Object.keys(OXC_SMALLER)
+				.map((key) => `OXC_SMALLER: ${key}`)
+				.filter((entry) => !rivalSmallerSeen.has(entry))
 		]).toEqual([]);
 	});
 });

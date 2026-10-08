@@ -174,7 +174,7 @@ Array [
 ]
 `;
 
-exports[`jsMinify should minify: module goal (with source map) 1`] = `"import{readFile as t}from\\"node:fs/promises\\";export async function read(e){let o=await t(e,\\"utf8\\");return o.length>0?o:void 0}"`;
+exports[`jsMinify should minify: module goal (with source map) 1`] = `"import{readFile as t}from\\"node:fs/promises\\";export async function read(e){let n=await t(e,\\"utf8\\");return n.length>0?n:null}"`;
 
 exports[`jsMinify should minify: module goal (with source map) 2`] = `
 Array [
@@ -182,7 +182,7 @@ Array [
 ]
 `;
 
-exports[`jsMinify should minify: module goal 1`] = `"import{readFile as t}from\\"node:fs/promises\\";export async function read(e){let o=await t(e,\\"utf8\\");return o.length>0?o:void 0}"`;
+exports[`jsMinify should minify: module goal 1`] = `"import{readFile as t}from\\"node:fs/promises\\";export async function read(e){let n=await t(e,\\"utf8\\");return n.length>0?n:null}"`;
 
 exports[`jsMinify should minify: module goal 2`] = `
 Array [
@@ -190,7 +190,7 @@ Array [
 ]
 `;
 
-exports[`jsMinify should minify: module option (with source map) 1`] = `"import{readFile as t}from\\"node:fs/promises\\";export async function read(e){let o=await t(e,\\"utf8\\");return o.length>0?o:void 0}"`;
+exports[`jsMinify should minify: module option (with source map) 1`] = `"import{readFile as t}from\\"node:fs/promises\\";export async function read(e){let n=await t(e,\\"utf8\\");return n.length>0?n:null}"`;
 
 exports[`jsMinify should minify: module option (with source map) 2`] = `
 Array [
@@ -198,7 +198,7 @@ Array [
 ]
 `;
 
-exports[`jsMinify should minify: module option 1`] = `"import{readFile as t}from\\"node:fs/promises\\";export async function read(e){let o=await t(e,\\"utf8\\");return o.length>0?o:void 0}"`;
+exports[`jsMinify should minify: module option 1`] = `"import{readFile as t}from\\"node:fs/promises\\";export async function read(e){let n=await t(e,\\"utf8\\");return n.length>0?n:null}"`;
 
 exports[`jsMinify should minify: module option 2`] = `
 Array [
