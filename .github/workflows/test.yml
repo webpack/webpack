@@ -529,11 +529,8 @@ jobs:
         node-version: [22.x, 24.x, 26.x]
         part: [a, b]
         include:
-          # Coverage only on the LTS line, on every OS: instrumenting slows a
-          # job, and 22.x and 26.x reach no `lib/` code 24.x doesn't.
-          - node-version: 24.x
-            coverage: true
-          # Test with main branches of webpack dependencies
+          # Test with main branches of webpack dependencies. The only jobs
+          # collecting coverage: instrumenting slows every job that runs it.
           - os: ubuntu-latest
             node-version: lts/*
             part: a
