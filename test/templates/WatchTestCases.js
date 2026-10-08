@@ -35,6 +35,8 @@ const supportsOptionalChaining = require("../helpers/supportsOptionalChaining");
 const testRootDirectory = path.join(__dirname, "..");
 const STEP_DELAY = 200;
 const AGGREGATE_TIMEOUT = 50;
+const RETOUCH_DELAY = 1000;
+const RETOUCH_LIMIT = 3;
 
 /**
  * @param {string} src src
@@ -91,10 +93,10 @@ function isWithin(file, paths) {
 const describeCases = (config) => {
 	describe(config.name, () => {
 		beforeAll(() => {
-			let dest = path.join(testRootDirectory, "js");
-			if (!fs.existsSync(dest)) fs.mkdirSync(dest);
-			dest = path.join(testRootDirectory, "js", `${config.name}-src`);
-			if (!fs.existsSync(dest)) fs.mkdirSync(dest);
+			// other suites' workers create test/js at the same time
+			fs.mkdirSync(path.join(testRootDirectory, "js", `${config.name}-src`), {
+				recursive: true
+			});
 		});
 
 		if (process.env.NO_WATCH_TESTS) {
@@ -153,6 +155,8 @@ const describeCases = (config) => {
 						let closing;
 						/** @type {ReturnType<typeof setTimeout> | undefined} */
 						let timer;
+						/** @type {ReturnType<typeof setTimeout> | undefined} */
+						let retouchTimer;
 						/** @type {ReturnType<typeof deprecationTracking.start> | undefined} */
 						let deprecationTracker;
 						let failed = false;
@@ -161,6 +165,7 @@ const describeCases = (config) => {
 						/** @returns {Promise<Error | null | undefined>} compiler close result */
 						const closeCompiler = () => {
 							clearTimeout(timer);
+							clearTimeout(retouchTimer);
 							if (!closing) {
 								closing = new Promise((resolve) => {
 									if (watchedCompiler) watchedCompiler.close(resolve);
@@ -351,6 +356,38 @@ const describeCases = (config) => {
 							).step = run.name;
 							copyDiff(path.join(testDirectory, run.name), tempDirectory, true);
 
+							/**
+							 * Gives the watcher a new mtime for each change no build reported while idle.
+							 * @param {import("../../").Compiler[]} compilers watched compilers
+							 * @param {number} retries re-touches left before the step fails
+							 */
+							const retouchUnseenChanges = (compilers, retries) => {
+								retouchTimer = setTimeout(() => {
+									if (failed || unseenChanges.size === 0) return;
+									// a build still running reports the changes when it ends
+									if (
+										compilers.some(
+											(child) => child.watching && child.watching.running
+										)
+									) {
+										return retouchUnseenChanges(compilers, retries);
+									}
+									if (retries === 0) {
+										return fail(
+											new Error(
+												`No build reported the change to ${[...unseenChanges].join(", ")}`
+											)
+										);
+									}
+									// macOS can drop a change event entirely
+									const now = new Date();
+									for (const file of unseenChanges) {
+										if (fs.existsSync(file)) fs.utimesSync(file, now, now);
+									}
+									retouchUnseenChanges(compilers, retries - 1);
+								}, RETOUCH_DELAY);
+							};
+
 							const startCompiler = () => {
 								try {
 									if (!deprecationTracker) {
@@ -403,6 +440,7 @@ const describeCases = (config) => {
 													}
 												}
 												if (unseenChanges.size > 0) return;
+												clearTimeout(retouchTimer);
 												if (run.done && stats.hash === lastHash) return;
 												if (run.done && lastHash !== stats.hash) {
 													throw new Error(
@@ -579,9 +617,11 @@ const describeCases = (config) => {
 																		}
 																		// WatchIgnorePlugin marks what no build will report, and a managed
 																		// or immutable path reports its package, not the file changed in it
-																		for (const child of "compilers" in watchedCompiler
-																			? watchedCompiler.compilers
-																			: [watchedCompiler]) {
+																		const children =
+																			"compilers" in watchedCompiler
+																				? watchedCompiler.compilers
+																				: [watchedCompiler];
+																		for (const child of children) {
 																			for (const file of unseenChanges) {
 																				for (const item of [
 																					...child.managedPaths,
@@ -611,6 +651,9 @@ const describeCases = (config) => {
 																			for (const file of unseenChanges) {
 																				if (isWithin(file, ignored)) unseenChanges.delete(file);
 																			}
+																		}
+																		if (unseenChanges.size > 0) {
+																			retouchUnseenChanges(children, RETOUCH_LIMIT);
 																		}
 																	}
 																	if (restartCompiler) startCompiler();

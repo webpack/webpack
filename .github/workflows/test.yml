@@ -295,26 +295,19 @@ jobs:
             script: cover:html5lib
             flags: html5lib
           # Parses all of test262 with webpack's parser and with acorn and
-          # compares the trees. Coverage instrumentation makes the parser ~5x
-          # slower, so this leg runs without it — every line it reaches is
-          # covered by the suites that upload.
+          # compares the trees. Instrumented although that makes the parser ~5x
+          # slower: about 7 min uninstrumented, well inside the job's bound.
           - language: js
             submodules: test/external/test262-cases
-            script: test:test262-parser
+            script: cover:test262-parser
+            flags: test262-parser
           # Minifies every source of each JS corpus with the published minifier
-          # and with webpack's own: the same bytes back, and where a test says
-          # what its input prints, an output printing it too. It uploads, as
-          # the one suite reaching every compressor phase the printer owns.
+          # and with webpack's own, then runs terser's fuzzer on fixed seeds:
+          # each output prints what its input prints. One leg saves a runner.
           - language: minify-corpora
             submodules: test/external/terser test/external/test262-cases test/external/swc test/external/oxc
-            script: cover:minify-corpora
+            script: cover:minify
             flags: minify-corpora
-          # Runs terser's fuzzer against webpack's minifier: fixed seeds, so the
-          # same random programs each run, each output printing what its program
-          # prints. A leg of its own, as the phases it installs outlive the file.
-          - language: minify-fuzz
-            submodules: test/external/terser
-            script: test:minify-fuzz
     runs-on: ubuntu-latest
     # Bounded: the js leg allows ten minutes per area per mode, so a stall
     # would otherwise hold a runner for the 6h default.
@@ -529,7 +522,9 @@ jobs:
         node-version: [22.x, 24.x, 26.x]
         part: [a, b]
         include:
-          # Test with main branches of webpack dependencies
+          # Test with main branches of webpack dependencies. These and the
+          # Windows and macOS LTS jobs below collect coverage; a new key here
+          # would join these jobs' names, which the required checks match.
           - os: ubuntu-latest
             node-version: lts/*
             part: a
@@ -538,6 +533,13 @@ jobs:
             node-version: lts/*
             part: b
             use_main_branches: 1
+          # Code reached only on Windows or macOS; keep 24.x the current LTS.
+          - os: windows-latest
+            node-version: 24.x
+            coverage: true
+          - os: macos-latest
+            node-version: 24.x
+            coverage: true
           # Test on old Node.js versions
           - os: ubuntu-latest
             node-version: 20.x
@@ -623,14 +625,13 @@ jobs:
       - run: yarn cover:integration:${{ matrix.part }} --ci --cacheDirectory .jest-cache || yarn cover:integration:${{ matrix.part }} --ci --cacheDirectory .jest-cache -f
         env:
           MAIN_BRANCHES: ${{ matrix.use_main_branches }}
-        if: matrix.node-version != '10.x' && matrix.node-version != '12.x' && matrix.node-version != '14.x' && matrix.node-version != '16.x' && matrix.node-version != '18.x' && matrix.node-version != '20.x'
+        if: matrix.coverage || matrix.use_main_branches
 
-      # Don't run code coverage analysis on older versions of NodeJS, this will speed up our CI
       - run: yarn test:integration:${{ matrix.part }} --ci --cacheDirectory .jest-cache || yarn test:integration:${{ matrix.part }} --ci --cacheDirectory .jest-cache -f
-        if: matrix.node-version == '10.x' || matrix.node-version == '12.x' || matrix.node-version == '14.x' || matrix.node-version == '16.x' || matrix.node-version == '18.x' || matrix.node-version == '20.x'
+        if: ${{ !matrix.coverage && !matrix.use_main_branches }}
 
       - run: yarn report:cover:merge
-        if: matrix.node-version != '10.x' && matrix.node-version != '12.x' && matrix.node-version != '14.x' && matrix.node-version != '16.x' && matrix.node-version != '18.x' && matrix.node-version != '20.x'
+        if: matrix.coverage || matrix.use_main_branches
 
       - name: Codecov
         uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7.1.1
@@ -641,7 +642,7 @@ jobs:
           flags: integration
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-        if: matrix.node-version != '10.x' && matrix.node-version != '12.x' && matrix.node-version != '14.x' && matrix.node-version != '16.x' && matrix.node-version != '18.x' && matrix.node-version != '20.x'
+        if: matrix.coverage || matrix.use_main_branches
 
   # The eight benchmark shards are around four runner-hours, so on a pull
   # request they come through here, behind the same three cheap jobs. A push to
