@@ -1057,7 +1057,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/minimize_exit_points.rs:284",
 			"oxc minifier: peephole/minimize_exit_points.rs:319",
 			"oxc minifier: peephole/minimize_exit_points.rs:323",
-			"oxc minifier: peephole/minimize_exit_points.rs:35",
 			"oxc minifier: peephole/minimize_exit_points.rs:362",
 			"oxc minifier: peephole/minimize_exit_points.rs:369",
 			"oxc minifier: peephole/minimize_exit_points.rs:375",

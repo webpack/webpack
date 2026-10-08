@@ -718,7 +718,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/next/react-chartjs/input.js",
 			"swc minifier: fixture/next/styled-components/1/input.js",
 			"swc minifier: fixture/next/syncfusion/933-e9f9a6bf671b96fc/input.js",
-			"swc minifier: fixture/next/target-es2015/static/chunks/main-04b5934c26266542/input.js",
 			"swc minifier: fixture/next/wrap-contracts/input.js",
 			"swc minifier: fixture/projects/backbone/20/input.js",
 			"swc minifier: fixture/projects/jquery/12/input.js",
