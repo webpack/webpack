@@ -522,19 +522,17 @@ jobs:
         node-version: [22.x, 24.x, 26.x]
         part: [a, b]
         include:
-          # Test with main branches of webpack dependencies. Instrumenting
-          # slows every job that runs it, so only these and the Windows and
-          # macOS LTS jobs below collect coverage.
+          # Test with main branches of webpack dependencies. These and the
+          # Windows and macOS LTS jobs below collect coverage; a new key here
+          # would join these jobs' names, which the required checks match.
           - os: ubuntu-latest
             node-version: lts/*
             part: a
             use_main_branches: 1
-            coverage: true
           - os: ubuntu-latest
             node-version: lts/*
             part: b
             use_main_branches: 1
-            coverage: true
           # Code reached only on Windows or macOS; keep 24.x the current LTS.
           - os: windows-latest
             node-version: 24.x
@@ -627,13 +625,13 @@ jobs:
       - run: yarn cover:integration:${{ matrix.part }} --ci --cacheDirectory .jest-cache || yarn cover:integration:${{ matrix.part }} --ci --cacheDirectory .jest-cache -f
         env:
           MAIN_BRANCHES: ${{ matrix.use_main_branches }}
-        if: matrix.coverage
+        if: matrix.coverage || matrix.use_main_branches
 
       - run: yarn test:integration:${{ matrix.part }} --ci --cacheDirectory .jest-cache || yarn test:integration:${{ matrix.part }} --ci --cacheDirectory .jest-cache -f
-        if: ${{ !matrix.coverage }}
+        if: ${{ !matrix.coverage && !matrix.use_main_branches }}
 
       - run: yarn report:cover:merge
-        if: matrix.coverage
+        if: matrix.coverage || matrix.use_main_branches
 
       - name: Codecov
         uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7.1.1
@@ -644,7 +642,7 @@ jobs:
           flags: integration
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-        if: matrix.coverage
+        if: matrix.coverage || matrix.use_main_branches
 
   # The eight benchmark shards are around four runner-hours, so on a pull
   # request they come through here, behind the same three cheap jobs. A push to
