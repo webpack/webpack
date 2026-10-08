@@ -231,7 +231,7 @@
     "remark-rehype": "^11.1.2",
     "rimraf": "^3.0.2",
     "script-loader": "^0.7.2",
-    "simple-git": "^3.28.0",
+    "simple-git": "^4.0.1",
     "style-loader": "^4.0.0",
     "terser": "^5.51.0",
     "three": "^0.186.0",
