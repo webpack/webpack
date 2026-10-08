@@ -202,8 +202,6 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: collapse_vars/collapse_rhs_conditional_2",
 			"terser compress: collapse_vars/collapse_vars_side_effects_2",
 			"terser compress: collapse_vars/collapse_vars_while",
-			"terser compress: collapse_vars/double_def_1",
-			"terser compress: collapse_vars/double_def_2",
 			"terser compress: concat-strings/concat_1",
 			"terser compress: conditionals/cond_9",
 			"terser compress: conditionals/ifs_6",
@@ -221,7 +219,6 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: evaluate/unsafe_array",
 			"terser compress: evaluate/unsafe_integer_key",
 			"terser compress: functions/function_returning_constant_literal",
-			"terser compress: functions/issue_3018",
 			"terser compress: functions/unsafe_apply_2",
 			"terser compress: functions/unsafe_call_2",
 			"terser compress: harmony/array_literal_with_spread_2b",
@@ -265,7 +262,6 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: properties/join_object_assignments_void_0",
 			"terser compress: properties/mangle_properties",
 			"terser compress: reduce_vars/chained_assignments",
-			"terser compress: reduce_vars/issue_1814_2",
 			"terser compress: reduce_vars/issue_2440_with_1",
 			"terser compress: reduce_vars/issue_2440_with_2",
 			"terser compress: reduce_vars/issue_639",
@@ -601,9 +597,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/minimize_conditions.rs:1373",
 			"oxc minifier: peephole/minimize_conditions.rs:1374",
 			"oxc minifier: peephole/minimize_conditions.rs:1407",
-			"oxc minifier: peephole/minimize_conditions.rs:1423",
-			"oxc minifier: peephole/minimize_conditions.rs:1424",
-			"oxc minifier: peephole/minimize_conditions.rs:1425",
 			"oxc minifier: peephole/minimize_conditions.rs:1433",
 			"oxc minifier: peephole/minimize_conditions.rs:1438",
 			"oxc minifier: peephole/minimize_conditions.rs:1463",
@@ -690,9 +683,7 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc writes `const` as `let` and joins neighboring declarations",
 		[
-			"swc minifier: fixture/issues/10466/input.js",
 			"swc minifier: fixture/issues/11684/bindings/input.js",
-			"swc minifier: fixture/issues/5684/input.js",
 			"swc minifier: fixture/issues/7004/input.js",
 			"swc minifier: fixture/issues/8324/input.js",
 			"swc minifier: fixture/issues/9460/strict-mode/input.js",
@@ -701,10 +692,8 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: arguments/modified",
 			"terser compress: async/for_await_of",
 			"terser compress: async/for_await_of_2",
-			"terser compress: collapse_vars/cascade_if_1",
 			"terser compress: collapse_vars/collapse_rhs_loop",
 			"terser compress: collapse_vars/compound_assignment",
-			"terser compress: collapse_vars/do_not_place_chain_on_lhs_2",
 			"terser compress: evaluate/and",
 			"terser compress: sequences/lift_sequences_1",
 			"terser compress: sequences/lift_sequences_3"
@@ -1132,7 +1121,6 @@ const OXC_SMALLER_BY_REASON = [
 		"oxc writes a variable's value at its one read and drops the variable, as oxc's `peephole/inline_single_use_variable.rs` tests show",
 		[
 			"oxc minifier: peephole/inline_single_use_variable.rs:102",
-			"oxc minifier: peephole/inline_single_use_variable.rs:226",
 			"oxc minifier: peephole/inline_single_use_variable.rs:242",
 			"oxc minifier: peephole/inline_single_use_variable.rs:258",
 			"oxc minifier: peephole/inline_single_use_variable.rs:282",
@@ -1150,19 +1138,8 @@ const OXC_SMALLER_BY_REASON = [
 		[
 			"oxc minifier: peephole/merge_assignments_to_declarations.rs:106",
 			"oxc minifier: peephole/merge_assignments_to_declarations.rs:107",
-			"oxc minifier: peephole/merge_assignments_to_declarations.rs:11",
-			"oxc minifier: peephole/merge_assignments_to_declarations.rs:12",
-			"oxc minifier: peephole/merge_assignments_to_declarations.rs:13",
-			"oxc minifier: peephole/merge_assignments_to_declarations.rs:14",
-			"oxc minifier: peephole/merge_assignments_to_declarations.rs:15",
-			"oxc minifier: peephole/merge_assignments_to_declarations.rs:16",
-			"oxc minifier: peephole/merge_assignments_to_declarations.rs:17",
-			"oxc minifier: peephole/merge_assignments_to_declarations.rs:19",
-			"oxc minifier: peephole/merge_assignments_to_declarations.rs:20",
-			"oxc minifier: peephole/merge_assignments_to_declarations.rs:21",
 			"oxc minifier: peephole/merge_assignments_to_declarations.rs:27",
 			"oxc minifier: peephole/merge_assignments_to_declarations.rs:40",
-			"oxc minifier: peephole/merge_assignments_to_declarations.rs:5",
 			"oxc minifier: peephole/merge_assignments_to_declarations.rs:52",
 			"oxc minifier: peephole/merge_assignments_to_declarations.rs:97"
 		]
@@ -1286,10 +1263,8 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/remove_dead_code.rs:121",
 			"oxc minifier: peephole/remove_dead_code.rs:196",
 			"oxc minifier: peephole/remove_dead_code.rs:224",
-			"oxc minifier: peephole/remove_dead_code.rs:255",
 			"oxc minifier: peephole/remove_dead_code.rs:256",
-			"oxc minifier: peephole/remove_dead_code.rs:30",
-			"oxc minifier: peephole/remove_dead_code.rs:63"
+			"oxc minifier: peephole/remove_dead_code.rs:30"
 		]
 	],
 	[
@@ -1301,7 +1276,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/collapse_variable_declarations.rs:226",
 			"oxc minifier: peephole/collapse_variable_declarations.rs:234",
 			"oxc minifier: peephole/collapse_variable_declarations.rs:237",
-			"oxc minifier: peephole/collapse_variable_declarations.rs:49",
 			"oxc minifier: peephole/collapse_variable_declarations.rs:54",
 			"oxc minifier: peephole/collapse_variable_declarations.rs:97",
 			"oxc minifier: peephole/collapse_variable_declarations.rs:99"
