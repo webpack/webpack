@@ -1300,6 +1300,8 @@ const IMPROVED_YET_BIGGER = {
 		"3 bytes fewer, 1 more gzipped: `+!!{}` breaks the `()=>(` runs of the arrows around it gzip reused",
 	"projects/files/react-17.0.1.js (its own options)":
 		"33 bytes fewer, 3 more gzipped: `!!x` in place of `null!==x` breaks the runs of `null!==` gzip reused",
+	"fixture/next/octokit/static/chunks/357-72bd409f1472b1b8/input.js (its own options)":
+		"76 bytes fewer, 2 more gzipped: `c?(x,r):(y,r)` written `(c?x:y),r` loses the second `,r)` gzip matched",
 	"evaluate/string_case (the default minimizer's options)":
 		"57 bytes fewer, 5 more gzipped: `\"I\".toLowerCase().charCodeAt(0)` matched the calls around it",
 	"evaluate/string_case (a module mangled at its top level)":
@@ -1618,7 +1620,6 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 		"an empty constructor dropped where the source repeats it gzip matched",
 		[
 			"classConstructorNoCall.js (the default minimizer's options)",
-			"className.js (the default minimizer's options)",
 			"harmony/classes (the default minimizer's options)",
 			"staticConstructor.js (the default minimizer's options)",
 			"superElemDelete.js (the default minimizer's options)",
