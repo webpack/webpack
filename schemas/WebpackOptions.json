@@ -379,11 +379,11 @@
               "absolutePath": false
             },
             {
-              "$ref": "#/definitions/GlobCondition"
-            },
-            {
               "instanceof": "Function",
               "tsType": "import('../lib/output/CleanPlugin').KeepFn"
+            },
+            {
+              "$ref": "#/definitions/GlobCondition"
             }
           ]
         }
@@ -3353,11 +3353,11 @@
               "type": "string"
             },
             {
-              "$ref": "#/definitions/GlobCondition"
-            },
-            {
               "instanceof": "Function",
               "tsType": "import('../lib/hmr/LazyCompilationPlugin').TestFn"
+            },
+            {
+              "$ref": "#/definitions/GlobCondition"
             }
           ]
         }
@@ -4865,11 +4865,11 @@
               "type": "string"
             },
             {
-              "$ref": "#/definitions/GlobCondition"
-            },
-            {
               "instanceof": "Function",
               "tsType": "import('../lib/optimize/SplitChunksPlugin').CheckTestFn"
+            },
+            {
+              "$ref": "#/definitions/GlobCondition"
             }
           ]
         },

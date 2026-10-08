@@ -312,8 +312,8 @@ export interface CleanOptions {
 	keep?:
 		| RegExp
 		| RelativePath
-		| GlobCondition
-		| import("../lib/output/CleanPlugin").KeepFn;
+		| import("../lib/output/CleanPlugin").KeepFn
+		| GlobCondition;
 }
 
 /**
@@ -2652,8 +2652,8 @@ export interface LazyCompilationOptions {
 	test?:
 		| RegExp
 		| string
-		| GlobCondition
-		| import("../lib/hmr/LazyCompilationPlugin").TestFn;
+		| import("../lib/hmr/LazyCompilationPlugin").TestFn
+		| GlobCondition;
 }
 
 /**
@@ -3673,8 +3673,8 @@ export interface OptimizationSplitChunksCacheGroup {
 	test?:
 		| RegExp
 		| string
-		| GlobCondition
-		| import("../lib/optimize/SplitChunksPlugin").CheckTestFn;
+		| import("../lib/optimize/SplitChunksPlugin").CheckTestFn
+		| GlobCondition;
 	/**
 	 * Assign modules to a cache group by module type.
 	 */

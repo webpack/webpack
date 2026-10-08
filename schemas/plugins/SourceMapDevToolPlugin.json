@@ -22,6 +22,7 @@
                 {
                   "type": "array",
                   "items": {
+                    "description": "A glob pattern.",
                     "type": "string",
                     "minLength": 1
                   },
