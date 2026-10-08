@@ -812,6 +812,7 @@ const KEPT_CASES = [
 	["a conditional whose other branch reads a getter twice or a different binding", "var n = 0, o = { get x() { return ++n; } }; function f(b) { var a = 1; { let a = 0; var r = a ? b : o.x ? b : o.x; } return [r, a, n]; } console.log(f(2));"],
 	["a bigint and a number concatenated, which throws", "try { console.log(1n + 2); } catch (e) { console.log(e.name); }"],
 	["consecutive `if`s leaving with different values or to different labels", 'function f(a, b) { if (a) return 1; if (b) return 2; x: for (;;) { for (;;) { if (a) break x; if (b) break; console.log(3); break x; } console.log(4); break; } for (var i = 0; i < 2; i++) console.log(i); } f(1, 0); f(0, 1); f(0, 0);'],
+	["consecutive `if`s leaving by a bare `return`, which terser merges itself", 'function f(a, b) { if (a) return; if (b) return; console.log("fall through"); } f(1, 0); f(0, 1); f(0, 0);'],
 	["consecutive `if`s alike whose branch does not always leave", 'function f(a, b) { for (var i = 0; i < 3; i++) { if (a === i) try { g(i); } finally { console.log(i); } if (b === i) try { g(i); } finally { console.log(i); } console.log(i); } } function g(i) { console.log("g", i); } f(0, 1); f(1, 1);'],
 	["an array literal joining to a string longer than it", 'console.log([!0, !0, !0] + "");'],
 	["a conditional choosing `1` or `0` that a number conversion writes no shorter, or choosing `-0`", "function f(a, b) { return [a < b ? 0 : 1, a + b ? 1 : 0, a in b ? 0 : 1, a ? 1 : -0, a ? 2 : 0, a ? -1 : 0]; } console.log(f(1, {}), f(0, { 0: 1 }));"],

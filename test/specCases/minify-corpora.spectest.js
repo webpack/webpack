@@ -1298,8 +1298,6 @@ const rivalSmallerSeen = new Set();
 const IMPROVED_YET_BIGGER = {
 	"arrow/object_parens (its own options)":
 		"3 bytes fewer, 1 more gzipped: `+!!{}` breaks the `()=>(` runs of the arrows around it gzip reused",
-	"projects/files/jquery.mobile-1.4.2.js (its own options)":
-		"50 bytes fewer, 1 more gzipped: `if(null!=r)return r` in place of `return null==r?void 0:r` loses the `return null==` gzip reused",
 	"projects/files/react-17.0.1.js (its own options)":
 		"33 bytes fewer, 3 more gzipped: `!!x` in place of `null!==x` breaks the runs of `null!==` gzip reused",
 	"evaluate/string_case (the default minimizer's options)":
@@ -1634,7 +1632,6 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 			"S7.9_A5.8_T1.js (the default minimizer's options)",
 			"S7.9_A5.9_T1.js (the default minimizer's options)",
 			"fixture/issues/12229/input.js (its own options)",
-			"fixture/next/regression-1/framework-798bab57daac3897/input.js (the default minimizer's options)",
 			"if_return/if_return_same_value (its own options)",
 			"if_return/if_return_same_value (the default minimizer's options)",
 			"symbol-logical-not-evaluation.js (the default minimizer's options)"
@@ -1666,8 +1663,7 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 		[
 			"fixture/issues/11684/preserved/input.js (its own options)",
 			"fixture/issues/11684/preserved/input.js (the default minimizer's options)",
-			"fixture/projects/jquery/24/input.js (its own options)",
-			"projects/files/jquery.mobile-1.4.2.js (its own options)"
+			"fixture/projects/jquery/24/input.js (its own options)"
 		]
 	],
 	[
