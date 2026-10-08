@@ -22,7 +22,7 @@ const fs = require("fs");
 const path = require("path");
 const { Volume, createFsFromVolume } = require("memfs");
 const webpack = require("../..");
-const { A, QUOTE_NONE, decodeEntities, parseHtml, tokenize } = require("../../lib/html/syntax-parser");
+const { A, NodeType, QUOTE_NONE, decodeEntities, parseHtml, tokenize } = require("../../lib/html/syntax-parser");
 const expectNoDeprecations = require("../helpers/expectNoDeprecations");
 const serialize = require("../helpers/serializeHtmlTree");
 
@@ -539,6 +539,16 @@ const runTokenizerCase = (input, context) => {
 			return end;
 		},
 		comment(source, start, end, dataStart, dataEnd) {
+			// `tokenize` reports a `<?…>` as one comment range and leaves telling a
+			// processing instruction apart, or dropping one EOF cut, to the tree.
+			if (source.charCodeAt(start + 1) === 0x3f) {
+				const node = A.firstChild(parseHtml(source.slice(start, end), 0));
+				if (A.type(node) === NodeType.ProcessingInstruction) {
+					tokens.push(["ProcessingInstruction", A.piTarget(node), A.data(node)]);
+					return end;
+				}
+				if (A.type(node) !== NodeType.Comment) return end;
+			}
 			tokens.push(["Comment", replaceNull(source.slice(dataStart, dataEnd))]);
 			return end;
 		},

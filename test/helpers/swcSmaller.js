@@ -364,7 +364,8 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: inline/issue_308",
 			"terser compress: issue-t292/no_flatten_with_arg_colliding_with_arg_value_inner_scope",
 			"terser compress: issue-t292/no_flatten_with_var_colliding_with_arg_value_inner_scope",
-			"terser compress: reduce_vars/variables_collision_in_immediately_invoked_func"
+			"terser compress: reduce_vars/variables_collision_in_immediately_invoked_func",
+			"swc minifier: fixture/object-factory-inline-cost/scalar/input.js"
 		]
 	],
 	[

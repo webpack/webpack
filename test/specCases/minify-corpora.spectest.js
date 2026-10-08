@@ -1123,13 +1123,29 @@ const REFERENCE_MISPRINTS = {
 	"test262: instn-resolve-empty-import.js (printing alone)": EMPTY_IMPORT,
 	"test262: instn-resolve-empty-import.js (the default minimizer's options)":
 		EMPTY_IMPORT,
-	"oxc minifier: peephole/remove_unused_declaration.rs:1051 (printing alone)":
+	"oxc minifier: peephole/remove_unused_declaration.rs:1008 (printing alone)":
 		EMPTY_IMPORT,
-	"oxc minifier: peephole/remove_unused_declaration.rs:1051 (the default minimizer's options)":
+	"oxc minifier: peephole/remove_unused_declaration.rs:1008 (the default minimizer's options)":
+		EMPTY_IMPORT,
+	"oxc minifier: peephole/remove_unused_declaration.rs:1009 (printing alone)":
+		EMPTY_IMPORT,
+	"oxc minifier: peephole/remove_unused_declaration.rs:1009 (the default minimizer's options)":
+		EMPTY_IMPORT,
+	"oxc minifier: peephole/merge_import_export.rs:42 (printing alone)":
+		EMPTY_IMPORT,
+	"oxc minifier: peephole/merge_import_export.rs:42 (the default minimizer's options)":
+		EMPTY_IMPORT,
+	"oxc minifier: peephole/merge_import_export.rs:43 (printing alone)":
+		EMPTY_IMPORT,
+	"oxc minifier: peephole/merge_import_export.rs:43 (the default minimizer's options)":
 		EMPTY_IMPORT,
 	"oxc minifier: peephole/remove_unused_declaration.rs:1058 (printing alone)":
 		EMPTY_IMPORT,
 	"oxc minifier: peephole/remove_unused_declaration.rs:1058 (the default minimizer's options)":
+		EMPTY_IMPORT,
+	"oxc minifier: peephole/remove_unused_declaration.rs:1065 (printing alone)":
+		EMPTY_IMPORT,
+	"oxc minifier: peephole/remove_unused_declaration.rs:1065 (the default minimizer's options)":
 		EMPTY_IMPORT,
 	"test262: import-attribute-empty.js (printing alone)": EMPTY_ATTRIBUTES,
 	"test262: import-attribute-empty.js (the default minimizer's options)":
