@@ -2464,6 +2464,8 @@ exports[`syntax-printer should drive a minify as terser does: sources inherited 
 
 exports[`syntax-printer should drop unused names as terser does: sequences emptied in a tree 1`] = `"function f(a){sink(a,0);0}sink(f);"`;
 
+exports[`syntax-printer should keep a wrapped file's comments and mappings 1`] = `"(function(exports){/* lead */var alpha=1;beta(alpha)})(typeof Lib==\\"undefined\\"?Lib={}:Lib);"`;
+
 exports[`syntax-printer should mangle exactly as terser does: a catch parameter redefining a function-scoped name 1`] = `"function run(n){try{sink(n)}catch(n){sink(n)}return n}sink(run(1));"`;
 
 exports[`syntax-printer should mangle exactly as terser does: a function declared inside a block 1`] = `"function host(){sink(1);return\\"function\\"}sink(host());"`;
@@ -2491,6 +2493,10 @@ exports[`syntax-printer should mangle exactly as terser does: options this phase
 exports[`syntax-printer should mangle exactly as terser does: reserved names, which stay as written 1`] = `"function keep(reservedName,e){return reservedName+e}sink(keep(1,2));"`;
 
 exports[`syntax-printer should mangle exactly as terser does: short exported names, which no scope hands out even where unseen 1`] = `"export const z=1,y=2;export function crowded(n,o,r,t,e,c,d,i,p,s,u,x,f,k,w,a,b,g,h,j,l,m,q,v,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,$,_,nn,on,rn,tn,en,cn,dn,pn){return sink(n,o,r,t,e,c,d,i,p,s,u,x,f,k,w,a,b,g,h,j,l,m,q,v,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,$,_,nn,on,rn,tn,en,cn,dn,pn)}"`;
+
+exports[`syntax-printer should map a \`global_defs\` source to itself, not to the file's tokens 1`] = `"function f(){return cfg.value}export{f};"`;
+
+exports[`syntax-printer should print a call's comments to a \`pure_funcs\` function 1`] = `"/*a*/foo(/*b*/x,2/*c*/)"`;
 
 exports[`syntax-printer should print exactly as terser does: asm.js, whose numbers are printed as written 1`] = `"function module(n){\\"use asm\\";var u=1.0,e=0x10;function r(){return+(u+2.50)}return{f:r}}sink(module,1);"`;
 
@@ -2522,3 +2528,5 @@ exports[`syntax-printer should print exactly as terser does: statements a missin
 exports[`syntax-printer should print exactly as terser does: strings needing each escape and each quote 1`] = `"sink('a\\"b',\\"c'd\\",\\"e'f\\\\\\"g'\\",\\"\\\\\\\\ \\\\b \\\\f \\\\n \\\\r \\\\t \\\\v\\",\\"\\\\0\\",\\"\\\\x001\\",\\"\\\\x001\\",\\"\\\\u2028\\\\u2029\\\\ufeff\\",\\"é ☃ 😀\\",\\"\\\\ud800 \\\\udc00 \\\\ud83d\\",\\"'\\\\\\"'\\",\\"q'\\\\n\\",'r\\"\\\\t');"`;
 
 exports[`syntax-printer should print exactly as terser does: templates, tagged and raw 1`] = `"sink(\`a\${b}c\\\\nd\${e}\`,tag\`x\\\\u{61}\${y}\\\\\`\`,String.raw\`\\\\\${z}\`,\\"\${w}\\");"`;
+
+exports[`syntax-printer should read a \`new Function\` body's tokens from its own source 1`] = `"Function(\\"n,o\\",\\"console.log(n,o)\\");"`;

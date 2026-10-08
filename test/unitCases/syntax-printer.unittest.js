@@ -4090,6 +4090,64 @@ describe("syntax-printer", () => {
 		).rejects.toThrow("`@A` is not one expression");
 	});
 
+	it("should map a `global_defs` source to itself, not to the file's tokens", async () => {
+		const { minify } = await load();
+		const { code, map } = await minify(
+			"var x = 1;\nfunction f() { return CONF; }\nexport { f };",
+			{
+				compress: { global_defs: { "@CONF": "cfg.value" } },
+				mangle: false,
+				module: true,
+				sourceMap: { asObject: true }
+			}
+		);
+		expect(code).toMatchSnapshot();
+		// `x` is never printed, so naming it means `CONF` read the file's tokens.
+		expect(/** @type {{ names: string[] }} */ (map).names).toEqual(["f"]);
+	});
+
+	it("should read a `new Function` body's tokens from its own source", async () => {
+		const { minify } = await load();
+		const { code } = await minify("new Function('a', 'b', 'console.log(a, b)')", {
+			compress: { passes: 2, unsafe: true, unsafe_Function: true }
+		});
+		expect(code).toMatchSnapshot();
+	});
+
+	it("should print a call's comments to a `pure_funcs` function", async () => {
+		const { minify } = await load();
+		/** @type {string[]} */
+		const printed = [];
+		await minify("/*a*/ foo(/*b*/ x, 2 /*c*/);", {
+			compress: {
+				pure_funcs: (
+					/** @type {{ print_to_string: (options: { comments: boolean }) => string }} */ node
+				) => {
+					printed.push(node.print_to_string({ comments: true }));
+					return true;
+				}
+			},
+			mangle: false
+		});
+		expect(printed[0]).toMatchSnapshot();
+	});
+
+	it("should keep a wrapped file's comments and mappings", async () => {
+		const { minify } = await load();
+		const { code, map } = await minify(
+			"/* lead */ var alpha = 1;\nbeta(alpha);",
+			/** @type {import("terser").MinifyOptions & { wrap: string }} */ ({
+				wrap: "Lib",
+				compress: false,
+				mangle: false,
+				format: { comments: "all" },
+				sourceMap: { asObject: true }
+			})
+		);
+		expect(code).toMatchSnapshot();
+		expect(/** @type {{ names: string[] }} */ (map).names).toEqual(["alpha", "beta"]);
+	});
+
 	it("should compress what the compressor's scopes decide as terser does", async () => {
 		const { minify } = await load();
 		/** @type {[string, EXPECTED_OBJECT, string][]} */
@@ -6249,7 +6307,11 @@ describe("syntax-printer", () => {
 					const expected = theirExpressions[i].print_to_string(
 						withoutLayout(given)
 					);
-					const printed = modules.printToString(expression, given);
+					const printed = modules.printToString(
+						expression,
+						given,
+						ours.ast.tokenTables
+					);
 					compared++;
 					if (printed !== expected) {
 						differences.push(
@@ -6858,25 +6920,25 @@ describe("syntax-printer", () => {
 				definition.mangled_name || definition.name
 			);
 			const [a, b, c, d] = declarator.init.properties;
-			expect([a.quote, modules.mapNameOf(a)]).toEqual(["'", "a"]);
-			expect([Boolean(b.quote), b.key.type, modules.mapNameOf(b)]).toEqual([
+			expect([a.quote, modules.mapNameOf(a, tree.tokenTables)]).toEqual(["'", "a"]);
+			expect([Boolean(b.quote), b.key.type, modules.mapNameOf(b, tree.tokenTables)]).toEqual([
 				false,
 				"Identifier",
 				"b"
 			]);
-			expect([c.computed, modules.mapNameOf(c)]).toEqual([true, "c"]);
+			expect([c.computed, modules.mapNameOf(c, tree.tokenTables)]).toEqual([true, "c"]);
 			expect([d.method, d.quote]).toEqual([true, '"']);
 			const [e, f, g] = tree.body[1].body.body;
-			expect([e.type, e.quote, modules.mapNameOf(e)]).toEqual([
+			expect([e.type, e.quote, modules.mapNameOf(e, tree.tokenTables)]).toEqual([
 				"PropertyDefinition",
 				"'",
 				"e"
 			]);
-			expect([f.key.type, modules.mapNameOf(f)]).toEqual([
+			expect([f.key.type, modules.mapNameOf(f, tree.tokenTables)]).toEqual([
 				"PrivateIdentifier",
 				f.key.name
 			]);
-			expect([g.computed, modules.mapNameOf(g)]).toEqual([true, "g"]);
+			expect([g.computed, modules.mapNameOf(g, tree.tokenTables)]).toEqual([true, "g"]);
 			const [attribute] = tree.body[2].attributes.properties;
 			expect([attribute.key.name, attribute.value.quote]).toEqual(["type", "'"]);
 		});
