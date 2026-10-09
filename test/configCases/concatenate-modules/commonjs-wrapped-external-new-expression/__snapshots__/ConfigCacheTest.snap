@@ -54,7 +54,7 @@ exports[`ConfigCacheTestCases concatenate-modules commonjs-wrapped-external-new-
 
 // MODULE: external \\"events\\"
 var external_events_namespaceFn = /*#__PURE__*/__webpack_require__.cw((module) => {
-module.exports = require(\\"events\\");
+module.exports = require(\\"node:events\\");
 });
 
 // MODULE: ./mid.cjs
@@ -161,7 +161,7 @@ exports[`ConfigCacheTestCases concatenate-modules commonjs-wrapped-external-new-
 
 // MODULE: external \\"events\\"
 var external_events_namespaceFn = /*#__PURE__*/__webpack_require__.cw((module) => {
-module.exports = require(\\"events\\");
+module.exports = require(\\"node:events\\");
 });
 
 // MODULE: ./mid.cjs
@@ -268,7 +268,7 @@ exports[`ConfigCacheTestCases concatenate-modules commonjs-wrapped-external-new-
 
 // MODULE: external \\"events\\"
 var external_events_namespaceFn = /*#__PURE__*/__webpack_require__.cw((module) => {
-module.exports = require(\\"events\\");
+module.exports = require(\\"node:events\\");
 });
 
 // MODULE: ./mid.cjs
@@ -375,7 +375,7 @@ exports[`ConfigCacheTestCases concatenate-modules commonjs-wrapped-external-new-
 
 // MODULE: external \\"events\\"
 var external_events_namespaceFn = /*#__PURE__*/__webpack_require__.cw((module) => {
-module.exports = require(\\"events\\");
+module.exports = require(\\"node:events\\");
 });
 
 // MODULE: ./mid.cjs
