@@ -9,7 +9,10 @@
 const path = require("path");
 // The comparison has to know which family names are keywords, and the table
 // that says so is generated rather than written twice.
-const { GENERIC_FONT_FAMILIES } = require("../../lib/css/data");
+const {
+	GENERIC_FONT_FAMILIES,
+	getDeclarationRanks
+} = require("../../lib/css/data");
 const { SourceProcessor: CssSourceProcessor } = require("../../lib/css/syntax");
 const { readToken } = require("../../lib/css/syntax-parser");
 const {
@@ -2659,6 +2662,68 @@ describe(`engine quirks a workaround depends on in real ${ENGINE}`, () => {
 			}
 		);
 	}
+});
+
+describe(`declaration order in real ${ENGINE}`, () => {
+	/** @type {import("puppeteer-core").Browser} */
+	let browser;
+	/** @type {import("puppeteer-core").Page} */
+	let page;
+
+	beforeAll(async () => {
+		browser = await launchBrowser({
+			browser: ENGINE,
+			protocolTimeout: FILE_TIMEOUT
+		});
+		page = await browser.newPage();
+		await page.setContent(POLICED_PAGE);
+	}, FILE_TIMEOUT);
+
+	afterAll(async () => {
+		if (page !== undefined) await page.close();
+		if (browser !== undefined) await browser.close();
+	});
+
+	// The engine, not the data, says which longhands each property sets, so a
+	// spec relating two properties before `mdn-data` does fails here first.
+	it("moves no declaration past one setting a longhand it sets", async () => {
+		const ranks = getDeclarationRanks();
+		/** @type {Record<string, string[]>} */
+		const sets = await page.evaluate((names) => {
+			/** @type {Record<string, string[]>} */
+			const out = {};
+			const element = document.createElement("div");
+			for (const name of names) {
+				element.style.cssText = "";
+				element.style.setProperty(name, "inherit");
+				if (element.style.length !== 0) out[name] = [...element.style];
+			}
+			return out;
+		}, [...ranks.keys()]);
+		const names = Object.keys(sets);
+		/** @type {string[]} */
+		const moved = [];
+		for (let i = 0; i < names.length; i++) {
+			for (let j = i + 1; j < names.length; j++) {
+				const [first, second] =
+					/** @type {number} */ (ranks.get(names[i])) >
+					/** @type {number} */ (ranks.get(names[j]))
+						? [names[i], names[j]]
+						: [names[j], names[i]];
+				if (ranks.get(first) === ranks.get(second)) continue;
+				if (!sets[first].some((longhand) => sets[second].includes(longhand))) {
+					continue;
+				}
+				const { code } = new CssSourceProcessor().process(
+					`a{${first}:var(--a);${second}:var(--b)}`,
+					{ mode: "minify" }
+				);
+				const at = code.indexOf(`{${second}:`);
+				if (at !== -1 && at < code.indexOf(`;${first}:`)) moved.push(code);
+			}
+		}
+		expect(moved).toEqual([]);
+	});
 });
 
 describe("a minified page renders as the page it came from", () => {

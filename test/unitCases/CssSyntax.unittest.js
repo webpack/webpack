@@ -5085,7 +5085,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 					mode: "minify",
 					transforms: { mergeLonghands: false }
 				}).code
-			).toBe(".a{top:0;bottom:0;left:0;right:0}");
+			).toBe(".a{top:0;right:0;bottom:0;left:0}");
 		});
 
 		it("keeps the joined sides apart where the shorthand stands between", () => {
@@ -5129,7 +5129,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 				settled(".a{top:0}.a{right:0;bottom:0;left:0}", {
 					browsers: ["chrome 80"]
 				})
-			).toBe(".a{top:0;bottom:0;left:0;right:0}");
+			).toBe(".a{top:0;right:0;bottom:0;left:0}");
 		});
 
 		it.each([
@@ -7948,12 +7948,12 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			const sub =
 				"a{grid-row-start:1;grid-column-start:2;grid-row-end:var(--x);grid-column-end:4}";
 			expect(minify(sub)).toBe(
-				"a{grid-row-start:1;grid-row-end:var(--x);grid-column:2/4}"
+				"a{grid-row-start:1;grid-column:2/4;grid-row-end:var(--x)}"
 			);
 			const wide =
 				"a{grid-row-start:inherit;grid-column-start:2;grid-row-end:3;grid-column-end:4}";
 			expect(minify(wide)).toBe(
-				"a{grid-row-start:inherit;grid-row-end:3;grid-column:2/4}"
+				"a{grid-row-start:inherit;grid-column:2/4;grid-row-end:3}"
 			);
 		});
 
@@ -9076,7 +9076,7 @@ describe("CssSyntax minify — vendor prefixes (properties)", () => {
 			expect(minifyFor(css, ["android 4.3"])).toBe(printed);
 		}
 		expect(minifyFor("a{order:1;flex:.5}", ["firefox 20"])).toBe(
-			"a{-moz-box-flex:.5;flex:.5;-moz-box-ordinal-group:2;order:1}"
+			"a{-moz-box-ordinal-group:2;order:1;-moz-box-flex:.5;flex:.5}"
 		);
 	});
 
@@ -9193,7 +9193,7 @@ describe("CssSyntax minify — vendor prefixes (properties)", () => {
 				"ie 10"
 			])
 		).toBe(
-			"a{-ms-flex-wrap:nowrap;flex-wrap:nowrap;-ms-flex-positive:2;flex-grow:2;-ms-flex-preferred-size:4px;flex-basis:4px;-ms-flex-order:1;order:1}"
+			"a{-ms-flex-order:1;order:1;-ms-flex-positive:2;flex-grow:2;-ms-flex-preferred-size:4px;flex-basis:4px;-ms-flex-wrap:nowrap;flex-wrap:nowrap}"
 		);
 		expect(
 			minifyFor("a{flex-grow:2;flex-shrink:3;flex-basis:4px}", ["ie 10"])
@@ -9207,7 +9207,7 @@ describe("CssSyntax minify — vendor prefixes (properties)", () => {
 				["ie 10"]
 			)
 		).toBe(
-			"a{-ms-flex-pack:distribute;justify-content:space-around;-ms-flex-line-pack:justify;align-content:space-between;-ms-flex-item-align:end;align-self:flex-end;-ms-flex-align:start;align-items:flex-start}"
+			"a{-ms-flex-align:start;align-items:flex-start;-ms-flex-item-align:end;align-self:flex-end;-ms-flex-pack:distribute;justify-content:space-around;-ms-flex-line-pack:justify;align-content:space-between}"
 		);
 	});
 
@@ -15498,13 +15498,18 @@ describe("CssSyntax minify — declaration order", () => {
 		// A nested rule that prints nothing is no rule the order has to keep.
 		["a{display:block;color:red;& b{}}", "a{color:red;display:block}"],
 		["@keyframes k{0%{transform:none;opacity:0}}", "@keyframes k{0%{opacity:0;transform:none}}"],
-		// Within a family, in the family's own order.
+		// Within a family, in the order written.
 		[
 			"a{transition-delay:1s;transition-property:opacity;height:0;width:0}",
-			"a{width:0;height:0;transition-property:opacity;transition-delay:1s}"
+			"a{height:0;width:0;transition-delay:1s;transition-property:opacity}"
 		],
-		// A property only a member's name starts follows the family's members.
-		["a{overflow-wrap:anywhere;overflow-x:hidden}", "a{overflow-x:hidden;overflow-wrap:anywhere}"],
+		// A property only a member's name starts is in that member's family.
+		[
+			"a{overflow-wrap:anywhere;display:block;overflow-x:hidden}",
+			"a{display:block;overflow-wrap:anywhere;overflow-x:hidden}"
+		],
+		// A custom property moves; what reads it reads the computed value.
+		["a{margin-left:1px;margin:var(--a);--b:2}", "a{--b:2;margin-left:1px;margin:var(--a)}"],
 		// A vendor property no standard one aliases is read by its words.
 		[
 			"a{-webkit-border-before:1px solid;border-right-width:2px}",
@@ -15524,7 +15529,9 @@ describe("CssSyntax minify — declaration order", () => {
 		// A rule holding a nested one.
 		"a{display:block;color:red;& b{top:0}}",
 		// One staying at its index while one written before it moves past it.
-		"a{margin-left:1px;margin:var(--a);--b:2}"
+		"a{width:0;flex:1;all:unset}",
+		// Members of one family, whose relation a spec may change before data does.
+		"a{flex-line-count:2;flex-flow:wrap}"
 	])("keeps %s as written", (css) => {
 		expect(settled(css, modern)).toBe(css);
 	});
@@ -15545,7 +15552,7 @@ describe("CssSyntax minify — declaration order", () => {
 		// A side sets no corner's radius, though its name starts the corner's.
 		expect(
 			settled("a{border-radius:4px;border-bottom:1px solid red;border-bottom-right-radius:0}", modern)
-		).toBe("a{border-bottom:1px solid red;border-radius:4px 4px 0}");
+		).toBe("a{border-radius:4px 4px 0;border-bottom:1px solid red}");
 		// A flow-relative side may be the physical one, so it parts the two.
 		const parted = "a{margin:0;margin-inline-start:2px;margin-left:3px}";
 		expect(settled(parted, modern)).toBe(parted);
@@ -15560,7 +15567,7 @@ describe("CssSyntax minify — declaration order", () => {
 			'a{grid-template-areas:"a";grid-template-rows:1fr;grid-auto-flow:row;grid-template-columns:1fr}',
 			'a{grid-template:"a"1fr/1fr;grid-auto-flow:row}'
 		],
-		["a{grid-row:1/2;grid-auto-flow:row;grid-column:3/4}", "a{grid-auto-flow:row;grid-area:1/3/2/4}"],
+		["a{grid-row:1/2;grid-auto-flow:row;grid-column:3/4}", "a{grid-area:1/3/2/4;grid-auto-flow:row}"],
 		["a{margin-top:1px;--x:1;margin-right:1px;margin-bottom:1px;margin-left:1px}", "a{--x:1;margin:1px}"]
 	])("merges %s past what the shorthand does not set, as the order would", (css, expected) => {
 		expect(settled(css, modern)).toBe(expected);

@@ -519,7 +519,7 @@ Array [
    selection that reads \`oklch()\` the hex before it is read by nothing and goes
    (see the \`minimize-dead-fallbacks\` case) */.t20d{color:#c65d06;color:oklch(90% .3 140)}",
   "/*! merge-longhand: a duplicate declaration resolves to the last of them */.t21{color:red}",
-  "/*! ...whatever stands between */.t22{background:blue;color:red}",
+  "/*! ...whatever stands between */.t22{color:red;background:blue}",
   "/*! ...and however the earlier one was spelled */.t23{color:red}",
   "/*! ...including a custom property */.t24{--x:1}",
   "/*! declined: a nested rule parts the declarations around it into their own
@@ -1025,7 +1025,7 @@ Array [
   "/*! join: ...including as a compound of its own */.c{& .n6,& .n7{top:0}}",
   "/*! declined: a nested rule of its own, whose \`&\` would become the joined list */.d{.n8{top:0;i{top:1px}}.n9{top:0;i{top:1px}}}",
   "/*! declined: a vendor pseudo is one an engine may not parse */.e{.n10::-webkit-scrollbar{top:0}.n11::-webkit-scrollbar{top:0}}",
-  "/*! values: a number, a time, a zero angle and a color all fold the same nested */.f{.n12{transition-duration:.5s;transform:rotate(0);color:#fff;width:5px}}",
+  "/*! values: a number, a time, a zero angle and a color all fold the same nested */.f{.n12{color:#fff;width:5px;transition-duration:.5s;transform:rotate(0)}}",
   "/*! shorthand: four sides merge into the one shorthand inside a nested rule */.g{.n13{margin:1px 2px}}",
   "/*! shorthand: ...and a slot holding its own initial goes */.h{.n14{transition:opacity 1s}}",
   "/*! filter: an argument that is the amount an omitted one means says nothing */.i{.n15{filter:blur()grayscale()}}",
@@ -1056,7 +1056,7 @@ Array [
 
 exports[`ConfigCacheTestCases css minimize-corpus minimize-corpus should compile: minimize-omitted-values 1`] = `
 Array [
-  ".c1{--l:96%}.c2{--l:90%!important;--l:96%}.c3{--L:1;--l:2}.t1{translate:-3rem}.t2{translate:1px 2px}.t3{translate:10%0%}.t4{scale:2}.t5{scale:2 3}.p1{background-image:linear-gradient(red,red),linear-gradient(blue,blue);background-position:10%73%,90%}.p2{background-image:linear-gradient(red,red),linear-gradient(blue,blue);background-position:top,50%100%}.s1{stroke-dasharray:1,200}.s2{stroke-width:2}.s3{stroke-dashoffset:-124}.s4{stroke-width:2em}.g1{display:grid;grid-area:2/1/4/3}.g2{grid-area:a}.g3{grid-area:a/c/b}.g4{grid-area:span 2/1/auto/-1}.g5{grid-row:1/2!important;grid-column:3/4}.g6{grid-area:--x/1/auto}.g7{grid-area:span a/span 2/auto/3}.g8{grid-row:1 2;grid-column:1}",
+  ".c1{--l:96%}.c2{--l:90%!important;--l:96%}.c3{--L:1;--l:2}.t1{translate:-3rem}.t2{translate:1px 2px}.t3{translate:10%0%}.t4{scale:2}.t5{scale:2 3}.p1{background-image:linear-gradient(red,red),linear-gradient(blue,blue);background-position:10%73%,90%}.p2{background-image:linear-gradient(red,red),linear-gradient(blue,blue);background-position:top,50%100%}.s1{stroke-dasharray:1,200}.s2{stroke-width:2}.s3{stroke-dashoffset:-124}.s4{stroke-width:2em}.g1{grid-area:2/1/4/3;display:grid}.g2{grid-area:a}.g3{grid-area:a/c/b}.g4{grid-area:span 2/1/auto/-1}.g5{grid-row:1/2!important;grid-column:3/4}.g6{grid-area:--x/1/auto}.g7{grid-area:span a/span 2/auto/3}.g8{grid-row:1 2;grid-column:1}",
 ]
 `;
 
@@ -1163,7 +1163,7 @@ Array [
 
 exports[`ConfigCacheTestCases css minimize-corpus minimize-corpus should compile: minimize-shorthand-folds 1`] = `
 Array [
-  ".f1{display:flex;flex:auto}.f2{flex:auto}.f3{flex:1}.f4{flex:2}.f5{flex:2 50%}.f6{flex:content}.f7{flex:1 1 0}.s1{clip-path:circle()}.s2{clip-path:circle(at 10px 20px)}.s3{clip-path:ellipse()}.s4{clip-path:inset(0)}.s5{clip-path:inset(1px 2px)}.s6{clip-path:inset(1px round 5px 6px/1px)}.s7{clip-path:inset(1px round 5px)}.s8{clip-path:polygon(0 0,10px 10px,0 10px)}.s9{clip-path:path(\\"M0 0L10 10L0 10Z\\")}.s10{shape-outside:circle()border-box;float:left}.s11{clip-path:circle(50% at 50% 50%)}.l1{border-left:0}.l2{border-top:1px solid red}.l3{outline:1px solid red}.l4{column-rule:1px solid red}.l5{display:flex;flex-flow:column wrap}.l6{text-emphasis:dot red}.l7{text-decoration:underline red}.l8{flex:auto}.l9{flex:1 0 auto}.l10{transition:opacity.2s.1s}.l11,.l12{transition:opacity.2s}.l13{animation:x 2s linear infinite}.l14{animation:x 1s infinite.3s}.l15{animation:x 1s alternate}.l16{animation:x 1s;animation-fill-mode:none}.l17{transition:opacity;transition-delay:.1s}@keyframes x{to{opacity:0}}.i1{box-shadow:inset 0 0 0 1px red}.i2{box-shadow:inset red 1px 1px,0 0 2px blue}@media all{.r2{top:3px}.r1{top:2px;color:#456}}",
+  ".f1{flex:auto;display:flex}.f2{flex:auto}.f3{flex:1}.f4{flex:2}.f5{flex:2 50%}.f6{flex:content}.f7{flex:1 1 0}.s1{clip-path:circle()}.s2{clip-path:circle(at 10px 20px)}.s3{clip-path:ellipse()}.s4{clip-path:inset(0)}.s5{clip-path:inset(1px 2px)}.s6{clip-path:inset(1px round 5px 6px/1px)}.s7{clip-path:inset(1px round 5px)}.s8{clip-path:polygon(0 0,10px 10px,0 10px)}.s9{clip-path:path(\\"M0 0L10 10L0 10Z\\")}.s10{shape-outside:circle()border-box;float:left}.s11{clip-path:circle(50% at 50% 50%)}.l1{border-left:0}.l2{border-top:1px solid red}.l3{outline:1px solid red}.l4{column-rule:1px solid red}.l5{flex-flow:column wrap;display:flex}.l6{text-emphasis:dot red}.l7{text-decoration:underline red}.l8{flex:auto}.l9{flex:1 0 auto}.l10{transition:opacity.2s.1s}.l11,.l12{transition:opacity.2s}.l13{animation:x 2s linear infinite}.l14{animation:x 1s infinite.3s}.l15{animation:x 1s alternate}.l16{animation:x 1s;animation-fill-mode:none}.l17{transition:opacity;transition-delay:.1s}@keyframes x{to{opacity:0}}.i1{box-shadow:inset 0 0 0 1px red}.i2{box-shadow:inset red 1px 1px,0 0 2px blue}@media all{.r2{top:3px}.r1{color:#456;top:2px}}",
 ]
 `;
 
@@ -1179,7 +1179,7 @@ Array [
   "/*! box: colors, not lengths */.t07{border-color:red}",
   "/*! box: keywords */.t08{border-style:solid}",
   "/*! box: a \`calc()\` resolves to one value, so repeating it is repeating a value */.t09{padding:3px}",
-  "/*! box: every property in the generated table */.t10{border-image-outset:1;border-image-width:2px;corner-shape:round;inset:0;mask-border-outset:3;mask-border-width:4px;scroll-margin:5px;scroll-padding:6px}",
+  "/*! box: every property in the generated table */.t10{corner-shape:round;scroll-margin:5px;scroll-padding:6px;border-image-outset:1;border-image-width:2px;inset:0;mask-border-outset:3;mask-border-width:4px}",
   "/*! box: \`!important\` is not one of the values */.t11{padding:7px!important}",
   "/*! box: a case-different re-spelling is the same value once normalized */.t12{margin:1px}",
   "/*! box: five values is not the notation, so nothing is assumed */.t13{margin:1px 1px 1px 1px 1px}",
@@ -1232,7 +1232,7 @@ Array [
    — the dead first write goes, and the family reads as the one write left */.t57{margin:3px 2px 1px}",
   "/*! declined: something between the four writes the same family, so the merge would move it */.t57b{margin-top:1px;margin-inline-start:9px;margin-right:2px;margin-bottom:3px;margin-left:4px}",
   "/*! declined: ...and a vendor prefix does not hide that — Chromium reads \`-webkit-margin-start\` */.t57c{margin-top:1px;-webkit-margin-start:9px;margin-right:2px;margin-bottom:3px;margin-left:4px}",
-  "/*! merge-longhand: an unrelated property between them is free to move */.t57d{margin:1px 2px 3px 4px;color:red}",
+  "/*! merge-longhand: an unrelated property between them is free to move */.t57d{color:red;margin:1px 2px 3px 4px}",
   "/*! declined: \`all\` writes every family */.t57e{margin-top:1px;all:unset;margin-right:2px;margin-bottom:3px;margin-left:4px}",
   "/*! webpack: \`border-radius\`'s longhands are corners, matched by name */.t58{border-radius:1px}",
   "/*! font-weight: the keyword CSS Fonts 4 defines as 400 */.t59{font-weight:400}",
@@ -1414,7 +1414,7 @@ Array [
   "/*! \`flex:0\` is grow=0,basis=0%; \`flex:0px\` is grow=1,basis=0px */.l{flex:0px}",
   "/*! a negative zero keeps its fraction too, and still drops the leading zero */.m{grid-row:.0}",
   "/*! the shared slot is the second entry here, not the first */.n{font-family:serif,\\"My Font\\"Extra}",
-  "/*! a lone string in a later slot still unquotes */.o{font-family:serif,My Font,monospace}@property --len{syntax:\\"<length>\\";initial-value:0px;inherits:false}@property --tint{syntax:\\"<color>\\";initial-value:#ff0000;inherits:false}.property-descriptors{width:var(--len);color:var(--tint);margin:0;background:red}",
+  "/*! a lone string in a later slot still unquotes */.o{font-family:serif,My Font,monospace}@property --len{syntax:\\"<length>\\";initial-value:0px;inherits:false}@property --tint{syntax:\\"<color>\\";initial-value:#ff0000;inherits:false}.property-descriptors{color:var(--tint);background:red;width:var(--len);margin:0}",
   "/*! a literal past \`oblique\`'s ±90deg is rejected where the \`calc()\` is clamped */.p{font-style:oblique calc(100deg)}",
   "/*! the same in the other direction */.q{font-style:oblique calc(-95deg)}",
   "/*! Chrome takes \`100grad\` off though it is the \`90deg\` the range allows */.r{font-style:oblique calc(100grad)}",
@@ -1506,7 +1506,7 @@ Array [
    revive the declaration, so a comma keeps the function */.t58{transform:translateX(1px,2px)}",
   "/*! convert-values: a zero length needs no unit (CSS Values 4 §5) */.t59{margin:0}",
   "/*! convert-values: every length unit, and \`%\` is a different type */.t60{width:0;height:0;top:0;left:0;right:0%}",
-  "/*! webpack: a zero time, angle or \`<flex>\` still needs its unit */.t61{transition-duration:0s;rotate:0deg;grid-template-columns:0fr 1fr}",
+  "/*! webpack: a zero time, angle or \`<flex>\` still needs its unit */.t61{grid-template-columns:0fr 1fr;transition-duration:0s;rotate:0deg}",
   "/*! webpack: \`flex-basis\` keeps it — IE 11 drops a \`flex\` whose basis has none */.t62{flex-basis:0px}",
   "/*! webpack: ...and so does the shorthand carrying one */.t63{flex:0px}",
   "/*! webpack: one component of several */.t64{margin:0 1px}",
@@ -1560,13 +1560,13 @@ Array [
   "/*! webpack: ...with a percentage axis scaled to the space's own 100% */.t98{color:#484848}",
   "/*! webpack: declined: outside the sRGB gamut, a hex would clip it */.t99{color:oklch(90% .4 140)}",
   "/*! webpack: an alpha rides along into the hex */.t100{color:#5f0c}",
-  "/*! webpack: the merge steps over what does not write the family */.t101{margin:1px 2px;color:red}",
+  "/*! webpack: the merge steps over what does not write the family */.t101{color:red;margin:1px 2px}",
   "/*! webpack: the shorthand takes the longhands written after it, and the one
    written before it stays where it is */.t102{margin-top:1px;margin:9px 2px 1px}",
   "/*! webpack: declined: a logical property that writes the same sides */.t103{margin-top:1px;margin-inline:9px;margin-right:2px;margin-bottom:1px;margin-left:2px}",
   "/*! webpack: declined: \`all\` writes everything */.t104{margin-top:1px;all:unset;margin-right:2px;margin-bottom:1px;margin-left:2px}",
   "/*! webpack: declined: \`border\` writes every border-color longhand */.t105{border-top-color:red;border:1px solid;border-right-color:red;border-bottom-color:red;border-left-color:red}",
-  "/*! webpack: ...but an unrelated property between them does not */.t106{border-color:red;color:red}",
+  "/*! webpack: ...but an unrelated property between them does not */.t106{color:red;border-color:red}",
   "/*! webpack: a child rule outside the family is nothing the merge steps over */.t106a{margin:1px 2px;&:hover{color:red}}",
   "/*! webpack: declined: one between them may write the family itself */.t106b{margin-top:1px;margin-right:2px;@supports (color:red){margin-top:9px}margin-bottom:1px;margin-left:2px}",
   "/*! webpack: the four corners merge too, clockwise from the top left */.t107{border-radius:1px 2px 3px 4px}",
@@ -1643,14 +1643,14 @@ Array [
    another — omitting its group leaves exactly that keyword */.t99{grid-auto-flow:dense}",
   "/*! declined: the other alternative of the group is not the initial */.t99a{grid-auto-flow:column dense}",
   "/*! declined: no engine reads \`balance\`, and a shorthand carrying one value the
-   engine cannot read is dropped whole — taking \`flex-direction\` with it */.flex-balance{display:flex;flex-direction:column;flex-wrap:balance}",
-  "/*! the same pair merges where both values are ones an engine reads */.flex-wrap{display:flex;flex-flow:column wrap}",
+   engine cannot read is dropped whole — taking \`flex-direction\` with it */.flex-balance{flex-direction:column;flex-wrap:balance;display:flex}",
+  "/*! the same pair merges where both values are ones an engine reads */.flex-wrap{flex-flow:column wrap;display:flex}",
   "/*! declined: \`initial\` is resolved before \`zoom\` scales a length, so the
-   keyword it would be replaced by is a different computed value under one */.initial-length{outline-width:initial;border-top-width:initial;font-size:initial}",
+   keyword it would be replaced by is a different computed value under one */.initial-length{border-top-width:initial;outline-width:initial;font-size:initial}",
   "/*! a keyword that is not a length is the value \`initial\` computes to */.initial-keyword{float:none;display:inline}",
   "/*! \`mdn-data\` writes this one's initial as prose, so the keyword is supplemented */.initial-prose{text-align:start}",
-  "/*! scientific: an exponent is written plainly where that is no longer */.sci01{opacity:2;line-height:2.5;width:.001px;font-weight:400}",
+  "/*! scientific: an exponent is written plainly where that is no longer */.sci01{opacity:2;width:.001px;line-height:2.5;font-weight:400}",
   "/*! scientific: ...else on an integer mantissa */.sci02{width:1e4px;margin-left:15e-8px;transition-duration:1s}",
-  "/*! scientific: an integer property keeps a <number>, which it throws out */.sci03{z-index:2e0;order:1e0;column-count:3e0}",
+  "/*! scientific: an integer property keeps a <number>, which it throws out */.sci03{z-index:2e0;column-count:3e0;order:1e0}",
 ]
 `;

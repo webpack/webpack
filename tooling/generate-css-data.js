@@ -608,10 +608,9 @@ const collectPropertyAliases = (prefixedProperties) => {
 
 /**
  * Each property's place in the printed order of a block's declarations: its
- * place among the `SUPPLEMENT.declarationFamilies` members, one past its
- * family's last member for a property only a member's name starts, and -1 for
- * one no family names, which keeps its place. Another spelling of a property
- * takes that property's place, so the two never part.
+ * `SUPPLEMENT.declarationFamilies` family's place, shared by every property a
+ * member's name starts, and -1 for one no family names, which keeps its place.
+ * Another spelling of a property takes that property's place, so the two never part.
  * @param {string[]} names every property a dataset names
  * @param {[string, string][]} aliases `[spelling, property]` for every other spelling
  * @returns {[string, number][]} `[property, rank]`, sorted by property
@@ -624,8 +623,10 @@ const collectDeclarationRanks = (names, aliases) => {
 	const words = [];
 	let rank = 0;
 	for (const family of SUPPLEMENT.declarationFamilies) {
-		for (const member of family) members.set(member, rank++);
-		for (const member of family) words.push([`${member}-`, rank]);
+		for (const member of family) {
+			members.set(member, rank);
+			words.push([`${member}-`, rank]);
+		}
 		rank++;
 	}
 	/** @type {[string, number][]} */
@@ -3988,8 +3989,8 @@ const SUPPLEMENT = {
 	// family names keeping its place before them. It is the order lightningcss
 	// prints its property handlers in: one order every rule shares lets deflate
 	// match longer runs — measured 3.4 KB smaller over the corpus with a target.
-	// Members print in the order listed and any other property a member's name
-	// starts last in its family: 1.5 KB smaller gzip, 3.5 KB brotli again.
+	// Within a family declarations keep the order they were written in, as in
+	// lightningcss: a spec relating two members moves nothing before data knows.
 	declarationFamilies: [
 		["direction"],
 		[
