@@ -251,6 +251,18 @@ const IMPROVED_CASES = [
 		"function k(start,stop,step){let n,ticks;return[(ticks=Array(n=Math.ceil((stop=Math.floor(stop/step))-start+1))).length,n,stop]}console.log(k(1,10,3));"
 	],
 	[
+		"an assignment moved past a built-in kept out of the object of the property it reads",
+		"console.log(function () { var o = { p: 4 }; o = {}; console.log(o.p); return o.p; }());",
+		{ compress: {}, mangle: false },
+		"console.log(function(){var o={};return console.log(o.p),o.p}());"
+	],
+	[
+		"a function written in place passed a parameter of its parameter's name, the read of it dropped",
+		"function f(a) { return (function (a) { return [a, a]; })(a); } console.log(f(1));",
+		{ compress: {}, mangle: false },
+		"function f(a){return[a,a]}console.log(f(1));"
+	],
+	[
 		"an assignment of names only its function sees folded past a call and a property read",
 		"globalThis.h = function (v) { return v * 2; }; function f(o, a, b, x) { x = !a === b || 0; o.p.q(); return [h(x), x]; } console.log(f({ p: { q: function () {} } }, 0, true));",
 		{ compress: {}, mangle: false },
@@ -6660,6 +6672,74 @@ describe("syntax-printer", () => {
 			const { code } = await minify(input, { mangle: false });
 			expect(code).toContain(".keys({a:1})");
 			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+		});
+
+		it("should keep an `Object.keys` call where the program may write that member of `Object`", async () => {
+			const { minify } = await load();
+			const patched = 'function () { return ["patched"]; }';
+			for (const [input, call] of [
+				[`Object.keys = ${patched}; console.log(Object.keys({ 1: 2 }));`, ".keys({1:2})"],
+				[`Object["values"] = ${patched}; console.log(Object.values({ a: 1 }));`, ".values({a:1})"],
+				[`Object.assign(Object, { entries: ${patched} }); console.log(Object.entries({ a: 1 }));`, ".entries({a:1})"],
+				[`var key = "keys"; Object[key] = ${patched}; console.log(Object.keys({ a: 1 }));`, ".keys({a:1})"],
+				[`[Object.keys] = [${patched}]; console.log(Object.keys({ a: 1 }));`, ".keys({a:1})"],
+				[`({ k: Object.keys = null } = { k: ${patched} }); console.log(Object.keys({ a: 1 }));`, ".keys({a:1})"],
+				['for (Object.keys in { a: 1 }); try { console.log(Object.keys({ a: 1 })); } catch (e) { console.log(e.name); }', ".keys({a:1})"],
+				['delete Object.values; try { console.log(Object.values({ a: 1 })); } catch (e) { console.log(e.name); }', ".values({a:1})"]
+			]) {
+				const { code } = await minify(input, { mangle: false });
+				expect(code).toContain(call);
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			}
+		});
+
+		it("should fold an `Object.keys` call where the program writes another member and reads `Object` only to call, test or type it", async () => {
+			const { minify } = await load();
+			const input =
+				'Object.values = function () { return ["patched"]; }; console.log(typeof Object, {} instanceof Object, Object(1) + 1, Object.keys({ a: 1 }), Object.values({ b: 2 }));';
+			const { code } = await minify(input, { mangle: false });
+			expect(code).toContain('["a"]');
+			expect(code).toContain(".values({b:2})");
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+		});
+
+		it("should keep the value of a name read in place of its copy, where the copy's one read folds away", async () => {
+			const { minify } = await load();
+			const input =
+				'globalThis.somethingGlobal = function () { return "called"; }; (function () { var index = somethingGlobal; const esm = index; console.log(esm()); })(); (function () { var index = somethingGlobal; const esm = index; console.log(typeof esm); })();';
+			for (const options of [
+				{},
+				{ compress: { passes: 2 }, mangle: false },
+				{ compress: { toplevel: true }, mangle: false }
+			]) {
+				const { code } = await minify(input, options);
+				expect(code).not.toContain("void 0");
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			}
+		});
+
+		it("should fold constants a later pass knows rather than an assignment into their sum", async () => {
+			const { minify } = await load();
+			const { code } = await minify(
+				"function f() { var a = 1, b = 2, c = 3; if (a) { b = c; } else { c = b; } console.log(a + b); console.log(b + c); } f();",
+				{ compress: { passes: 2 }, mangle: false }
+			);
+			expect(code).toBe("function f(){console.log(4),console.log(6)}f();");
+		});
+
+		it("should keep an assignment to a name the program shares where it would fold into the read after it", async () => {
+			const { minify } = await load();
+			const options = { compress: {}, mangle: false };
+			const stops = await minify(
+				"var start = 1, step = 3, stop = g(10); let n, ticks; stop = Math.floor(stop / step); ticks = Array(n = Math.ceil(stop - start + 1)); console.log(ticks.length, n, stop); function g(v) { return v; }",
+				options
+			);
+			expect(stops.code).toContain("stop=Math.floor(stop/step),ticks=");
+			const lets = await minify(
+				"var a = h(3); let x, y; x = a * 2; y = g(x); console.log(x, y); function g(v) { return v + 1; } function h(v) { return v; }",
+				options
+			);
+			expect(lets.code).toContain("x=2*a,y=g(x)");
 		});
 
 		it("should keep a logical expression negating its test as the test of a conditional where `booleans` is off", async () => {
