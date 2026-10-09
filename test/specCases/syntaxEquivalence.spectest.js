@@ -20,7 +20,7 @@ const {
 	REWRITABLE_ATTRIBUTES
 } = require("../../lib/html/data");
 const { SourceProcessor: HtmlSourceProcessor } = require("../../lib/html/syntax");
-const { A, NS_MATHML, NS_SVG, NodeType, decodeEntities, parseHtml } = require("../../lib/html/syntax-parser");
+const { A, NS_MATHML, NS_SVG, NodeType, _attributeList, decodeEntities, parseHtml } = require("../../lib/html/syntax-parser");
 const expectNoDeprecations = require("../helpers/expectNoDeprecations");
 const launchBrowser = require("../helpers/launchBrowser");
 
@@ -1235,16 +1235,16 @@ const domShapeOf = (source) => {
 	 */
 	const walk = (node, depth, renders) => {
 		for (
-			let child = A.firstChild(node);
+			let childIndex = 0, child = A.child(0, node);
 			child !== 0;
-			child = A.nextSibling(child)
+			child = A.child(++childIndex, node)
 		) {
 			if (A.type(child) !== NodeType.Element) continue;
-			const tag = A.tagName(child);
+			const tag = A.name(child);
 			const namespace =
 				/** @type {Record<number, string>} */ (NS_PREFIX)[A.namespace(child)] ||
 				"";
-			const written = [...A.attributes(child)]
+			const written = _attributeList(child)
 				.map((attribute) => {
 					const name = attribute.serializedName || attribute.name;
 					// The printer may rewrite these — a boolean written bare, an enumerated value
@@ -1262,8 +1262,8 @@ const domShapeOf = (source) => {
 			const inPage = renders || (namespace === "" && tag === "body");
 			if (inPage && !VERBATIM_TEXT.has(tag)) {
 				let own = "";
-				for (let t = A.firstChild(child); t !== 0; t = A.nextSibling(t)) {
-					if (A.type(t) === NodeType.Text) own += A.data(t);
+				for (let tIndex = 0, t = A.child(0, child); t !== 0; t = A.child(++tIndex, child)) {
+					if (A.type(t) === NodeType.Text) own += A.value(t);
 				}
 				text.push(own.replace(ASCII_WHITESPACE, " "));
 			}

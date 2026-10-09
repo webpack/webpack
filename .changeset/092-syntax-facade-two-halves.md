@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Reduce `css.syntax` and `html.syntax` to `parser`, `printer`, `SourceProcessor`.
+Reduce `css.syntax`/`html.syntax` to `parser`, `printer`, `SourceProcessor` with one node path.

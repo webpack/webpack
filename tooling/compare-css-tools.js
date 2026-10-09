@@ -875,11 +875,15 @@ const cssInnerRanges = (nodePath) => {
 	const type = nodePath.type();
 	/** @type {[string, number, number][]} */
 	const inner = [];
-	if (NAMED.has(type)) {
-		inner.push(["name", nodePath.nameStart(), nodePath.nameEnd()]);
-	}
+	const name = NAMED.has(type) ? nodePath.nameRange() : null;
+	if (name !== null) inner.push(["name", name[0], name[1]]);
 	if (BLOCKED.has(type)) {
-		inner.push(["block", nodePath.blockStart(), nodePath.blockEnd()]);
+		const block = nodePath.blockRange();
+		inner.push([
+			"block",
+			block === null ? -1 : block[0],
+			block === null ? -1 : block[1]
+		]);
 	}
 	return inner.length === 0 ? undefined : inner;
 };
@@ -906,8 +910,8 @@ const cssSpans = (css) =>
 				}
 				new SourceProcessor().use(visitors).process(css, {});
 			},
-			start: (nodePath) => nodePath.start(),
-			end: (nodePath) => nodePath.end(),
+			start: (nodePath) => nodePath.range()[0],
+			end: (nodePath) => nodePath.range()[1],
 			name: (nodePath) => NODE_TYPE_NAMES[nodePath.type()],
 			// A comment reaches the walk from the tokenizer rather than from the
 			// tree, so it arrives before the rule holding it has opened.
@@ -966,8 +970,8 @@ const cssNodeRuns = (css) => {
 				held[held.length - 1] += size;
 				runs.push({
 					type: nodePath.type(),
-					start: nodePath.start(),
-					end: nodePath.end(),
+					start: nodePath.range()[0],
+					end: nodePath.range()[1],
 					size
 				});
 			}
@@ -1080,13 +1084,16 @@ const cssPurityDigest = (css, print) => {
 	const digest = hasher();
 	/** @type {Record<number, { enter: () => void, exit: (nodePath: EXPECTED_ANY) => void }>} */
 	const visitors = {};
-	const read = (/** @type {EXPECTED_ANY} */ nodePath) => {
+	const read = (
+		/** @type {import("../lib/css/syntax-parser").CssPath} */ nodePath
+	) => {
 		const type = nodePath.type();
-		digest.update(
-			`${NODE_TYPE_NAMES[type]}[${nodePath.start()},${nodePath.end()})`
-		);
+		digest.update(`${NODE_TYPE_NAMES[type]}[${nodePath.range().join(",")})`);
 		if (NAMED.has(type)) {
-			digest.update(`|${nodePath.name()}|${nodePath.unescapedName()}`);
+			const written = nodePath.source(
+				.../** @type {[number, number]} */ (nodePath.nameRange())
+			);
+			digest.update(`|${written}|${nodePath.name()}`);
 		}
 		digest.update("\n");
 	};
@@ -1192,9 +1199,8 @@ const opaqueDeclarationRanges = (css) => {
 		[NodeType.Declaration]: {
 			enter: () => {},
 			exit: (nodePath) => {
-				const name = nodePath.unescapedName().toLowerCase();
-				const first =
-					nodePath.childCount() === 1 ? nodePath.childAt(nodePath.node, 0) : -1;
+				const name = nodePath.name().toLowerCase();
+				const first = nodePath.childCount() === 1 ? nodePath.child(0) : -1;
 				if (
 					name.startsWith("--") ||
 					// CSS Syntax 3 §7.1 reads a urange off the source text, and Chromium
@@ -1207,7 +1213,7 @@ const opaqueDeclarationRanges = (css) => {
 						nodePath.type(first) === NodeType.SimpleBlock &&
 						nodePath.blockToken(first) === "{")
 				) {
-					ranges.push([nodePath.start(), nodePath.end()]);
+					ranges.push([nodePath.range()[0], nodePath.range()[1]]);
 				}
 			}
 		}

@@ -35,6 +35,8 @@ const {
 const htmlMinify = require("../lib/html/htmlMinify");
 const { SourceProcessor } = require("../lib/html/syntax");
 const {
+	NS_MATHML,
+	NS_SVG,
 	NodeType,
 	QUOTE_NONE,
 	decodeEntities,
@@ -1314,24 +1316,27 @@ for (const [name, type] of Object.entries(NodeType)) {
  */
 const htmlInnerRanges = (nodePath) => {
 	if (nodePath.type() !== NodeType.Element) return undefined;
-	const start = nodePath.start();
-	const tagEnd = nodePath.tagEnd();
+	const start = nodePath.range()[0];
+	const content = nodePath.contentRange();
 	// The parser inserted this element, or the adoption agency cloned it: no tag
 	// was written, so it states no offsets to hold.
-	if (tagEnd <= start) return undefined;
+	if (content === null || content[0] <= start) return undefined;
+	const tagEnd = content[0];
 	/** @type {[string, number, number][]} */
 	const inner = [["opening tag", start, tagEnd]];
 	const count = nodePath.attributeCount();
 	for (let index = 0; index < count; index++) {
-		const attribute = nodePath.attributeAt(index);
-		const nameStart = nodePath.attributeNameStart(attribute);
-		const nameEnd = nodePath.attributeNameEnd(attribute);
+		const attribute = nodePath.attribute(index);
+		const [nameStart, nameEnd] = /** @type {[number, number]} */ (
+			nodePath.nameRange(attribute)
+		);
 		if (nameStart < start || nameStart >= tagEnd) continue;
 		inner.push(["attribute name", nameStart, nameEnd]);
+		const value = nodePath.valueRange(attribute);
 		inner.push([
 			"attribute value",
-			nodePath.attributeValueStart(attribute),
-			nodePath.attributeValueEnd(attribute)
+			value === null ? -1 : value[0],
+			value === null ? -1 : value[1]
 		]);
 	}
 	return inner;
@@ -1363,8 +1368,8 @@ const htmlSpans = (html) =>
 				}
 				new SourceProcessor().use(visitors).process(html, {});
 			},
-			start: (nodePath) => nodePath.start(),
-			end: (nodePath) => nodePath.end(),
+			start: (nodePath) => nodePath.range()[0],
+			end: (nodePath) => nodePath.range()[1],
 			name: (nodePath) => NODE_TYPE_NAMES[nodePath.type()],
 			inner: htmlInnerRanges
 		})
@@ -1373,6 +1378,20 @@ const htmlSpans = (html) =>
 /**
  * @typedef {{ what: string, type: number, tag: string, start: number, end: number, size: number, lo: number, hi: number, context: string }} NodeRun
  */
+
+/**
+ * The fragment context a node's children are read back in: its tag, prefixed
+ * with the namespace a foreign one lives in.
+ * @param {EXPECTED_ANY} nodePath the node
+ * @returns {string} the context, or `""` for a node that is not an element
+ */
+const fragmentContextOf = (nodePath) => {
+	if (nodePath.type() !== NodeType.Element) return "";
+	const namespace = nodePath.namespace();
+	if (namespace === NS_SVG) return `svg ${nodePath.name()}`;
+	if (namespace === NS_MATHML) return `math ${nodePath.name()}`;
+	return nodePath.name();
+};
 
 // Reparsing every node costs a parse of its own, so a document would cost its
 // size times its depth. Each one is capped at this many times its own bytes.
@@ -1390,8 +1409,8 @@ const SLICE_BUDGET_FACTOR = 4;
 const htmlNodeRuns = (html, fragmentContext) => {
 	/** @type {NodeRun[]} */
 	const runs = [];
-	/** @type {{ held: number, lo: number, hi: number, tag: string }[]} */
-	const stack = [{ held: 0, lo: html.length, hi: 0, tag: "" }];
+	/** @type {{ held: number, lo: number, hi: number, context: string }[]} */
+	const stack = [{ held: 0, lo: html.length, hi: 0, context: "" }];
 	/** @type {Record<number, { enter: (nodePath: EXPECTED_ANY) => void, exit: (nodePath: EXPECTED_ANY) => void }>} */
 	const visitors = {};
 	for (const type of Object.values(NodeType)) {
@@ -1401,15 +1420,15 @@ const htmlNodeRuns = (html, fragmentContext) => {
 					held: 0,
 					lo: html.length,
 					hi: 0,
-					tag: nodePath.type() === NodeType.Element ? nodePath.tagName() : ""
+					context: fragmentContextOf(nodePath)
 				});
 			},
 			exit: (nodePath) => {
 				const frame = /** @type {EXPECTED_ANY} */ (stack.pop());
 				const type = nodePath.type();
-				const tag = type === NodeType.Element ? nodePath.tagName() : "";
-				const start = nodePath.start();
-				const end = nodePath.end();
+				const tag = type === NodeType.Element ? nodePath.name() : "";
+				const start = nodePath.range()[0];
+				const end = nodePath.range()[1];
 				const size = frame.held + 1;
 				const lo = Math.min(frame.lo, start);
 				const hi = Math.max(frame.hi, end);
@@ -1426,7 +1445,7 @@ const htmlNodeRuns = (html, fragmentContext) => {
 					size,
 					lo,
 					hi,
-					context: parent.tag
+					context: parent.context
 				});
 			}
 		};
@@ -1454,6 +1473,20 @@ const runDigest = (runs, at) => {
 		out.push(`${one.what}[${one.start - node.start},${one.end - node.start})`);
 	}
 	return out.join(" ");
+};
+
+/**
+ * Whether a node's subtree has a `table` directly inside a `p`, which only quirks
+ * mode builds; a fragment parse is never in quirks mode, so it can't read it back.
+ * @param {readonly NodeRun[]} runs every node in post-order
+ * @param {number} at the node
+ * @returns {boolean} whether the subtree depends on the document's mode
+ */
+const holdsQuirksTable = (runs, at) => {
+	for (let index = at - runs[at].size + 1; index <= at; index++) {
+		if (runs[index].tag === "table" && runs[index].context === "p") return true;
+	}
+	return false;
 };
 
 /**
@@ -1492,7 +1525,8 @@ const htmlSlices = (html) => {
 			node.end <= node.start ||
 			node.start > node.lo ||
 			node.end < node.hi ||
-			node.context === ""
+			node.context === "" ||
+			holdsQuirksTable(runs, at)
 		) {
 			skipped++;
 			continue;
@@ -1552,16 +1586,14 @@ const htmlPurityDigest = (html, print) => {
 	const visitors = {};
 	const read = (/** @type {EXPECTED_ANY} */ nodePath) => {
 		const type = nodePath.type();
-		digest.update(
-			`${NODE_TYPE_NAMES[type]}[${nodePath.start()},${nodePath.end()})`
-		);
+		digest.update(`${NODE_TYPE_NAMES[type]}[${nodePath.range().join(",")})`);
 		if (type === NodeType.Element) {
-			digest.update(`|<${nodePath.tagName()}>|${nodePath.namespace()}`);
+			digest.update(`|<${nodePath.name()}>|${nodePath.namespace()}`);
 			const count = nodePath.attributeCount();
 			for (let index = 0; index < count; index++) {
-				const attribute = nodePath.attributeAt(index);
+				const attribute = nodePath.attribute(index);
 				digest.update(
-					`|${nodePath.attributeName(attribute)}=${nodePath.attributeValue(attribute)}`
+					`|${nodePath.name(attribute)}=${nodePath.value(attribute)}`
 				);
 			}
 		}

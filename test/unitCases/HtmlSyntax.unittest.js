@@ -10,7 +10,7 @@
 
 const fs = require("fs");
 const path = require("path");
-const { A, NS_HTML, NS_MATHML, NS_SVG, NodeType, QUOTE_DOUBLE, QUOTE_NONE, QUOTE_SINGLE, decodeEntities, escapeAttribute, escapeText, parseCssUrls, parseHtml: parseHtmlRefs, parseMsapplicationTask, parseSrc, parseSrcset, tokenize } = require("../../lib/html/syntax-parser");
+const { A, NS_HTML, _attributeList, _contentEndOf, _contentStartOf, _endOf, _nameEndOf, _startOf, NS_MATHML, NS_SVG, NodeType, QUOTE_DOUBLE, QUOTE_NONE, QUOTE_SINGLE, decodeEntities, escapeAttribute, escapeText, parseCssUrls, parseHtml: parseHtmlRefs, parseMsapplicationTask, parseSrc, parseSrcset, tokenize } = require("../../lib/html/syntax-parser");
 const { builtinEmbeddedRenderer } = require("../../lib/html/builtinEmbeddedRenderer");
 const serializeHtmlTree = require("../helpers/serializeHtmlTree");
 
@@ -3080,6 +3080,18 @@ describe("tokenize", () => {
 /** @typedef {MatElement | MatText | MatComment | MatDoctype | MatProcessingInstruction} MatNode */
 
 /**
+ * @param {number} ref node
+ * @returns {number[]} its children, read one by one through the path
+ */
+const childrenOf = (ref) => {
+	const out = [];
+	for (let i = 0, c = A.child(0, ref); c !== 0; c = A.child(++i, ref)) {
+		out.push(c);
+	}
+	return out;
+};
+
+/**
  * `parseHtml` hands back integer refs into reused module-level columns, valid
  * only until the next parse, so each tree is materialized eagerly. Every field
  * is read through `A`, which is how this suite reaches the whole accessor
@@ -3094,21 +3106,21 @@ const materialize = (ref) => {
 			const tc = A.templateContent(ref);
 			return {
 				type,
-				tagName: A.tagName(ref),
+				tagName: A.name(ref),
 				namespace: A.namespace(ref),
-				attributes: A.attributes(ref),
-				children: A.children(ref).map(materialize),
+				attributes: _attributeList(ref),
+				children: childrenOf(ref).map(materialize),
 				selfClosing: A.selfClosing(ref),
-				start: A.start(ref),
-				end: A.end(ref),
-				tagEnd: A.tagEnd(ref),
-				nameEnd: A.nameEnd(ref),
-				contentEnd: A.contentEnd(ref),
+				start: _startOf(ref),
+				end: _endOf(ref),
+				tagEnd: _contentStartOf(ref),
+				nameEnd: _nameEndOf(ref),
+				contentEnd: _contentEndOf(ref),
 				templateContent:
 					tc !== 0
 						? {
 								type: NodeType.DocumentFragment,
-								children: A.children(tc).map(materialize)
+								children: childrenOf(tc).map(materialize)
 							}
 						: undefined
 			};
@@ -3116,19 +3128,19 @@ const materialize = (ref) => {
 		case NodeType.ProcessingInstruction:
 			return {
 				type,
-				target: A.piTarget(ref),
-				data: A.data(ref),
-				start: A.start(ref),
-				end: A.end(ref)
+				target: A.name(ref),
+				data: A.value(ref),
+				start: A.range(ref)[0],
+				end: A.range(ref)[1]
 			};
 		case NodeType.Doctype:
 			return {
 				type,
-				name: A.doctypeName(ref),
-				publicId: A.doctypePublicId(ref),
-				systemId: A.doctypeSystemId(ref),
-				start: A.start(ref),
-				end: A.end(ref)
+				name: A.name(ref),
+				publicId: A.publicId(ref),
+				systemId: A.systemId(ref),
+				start: A.range(ref)[0],
+				end: A.range(ref)[1]
 			};
 		default:
 			// Text / Comment
@@ -3136,9 +3148,9 @@ const materialize = (ref) => {
 				type: /** @type {typeof NodeType.Text | typeof NodeType.Comment} */ (
 					type
 				),
-				data: A.data(ref),
-				start: A.start(ref),
-				end: A.end(ref)
+				data: A.value(ref),
+				start: A.range(ref)[0],
+				end: A.range(ref)[1]
 			};
 	}
 };
@@ -3153,7 +3165,7 @@ const parseHtml = (src, fragmentContext, skip) => {
 	const doc = parseHtmlRefs(src, 0, { fragmentContext, skip });
 	return {
 		type: NodeType.Document,
-		children: A.children(doc).map(materialize)
+		children: childrenOf(doc).map(materialize)
 	};
 };
 
@@ -3538,7 +3550,29 @@ describe("parseHtml", () => {
 		const div = body(src)[0];
 		const span = /** @type {MatElement} */ (div.children[0]);
 		expect(div.end).toBe(src.length);
-		expect(span.end).toBe(src.length);
+		// Closed by `</div>`, which names its parent: its source ends where that starts.
+		expect(src.slice(span.start, span.end)).toBe("<span>text");
+	});
+
+	it("should end an implicitly closed element where its content ends", () => {
+		const src = "<p>one<p>two<ul><li>a<li>b</ul><br>";
+		const nodes = body(src);
+		const spans = nodes.map((n) =>
+			src.slice(/** @type {MatElement} */ (n).start, /** @type {MatElement} */ (n).end)
+		);
+		expect(spans).toEqual(["<p>one", "<p>two", "<ul><li>a<li>b</ul>", "<br>"]);
+		const items = /** @type {MatElement} */ (nodes[2]).children.map((n) =>
+			src.slice(/** @type {MatElement} */ (n).start, /** @type {MatElement} */ (n).end)
+		);
+		expect(items).toEqual(["<li>a", "<li>b"]);
+	});
+
+	it("should keep whitespace the closed element holds inside its range", () => {
+		const src = "<table><colgroup> x</table>";
+		// The `x` is foster-parented before the table; the space stays in colgroup.
+		const table = /** @type {MatElement} */ (body(src)[1]);
+		const colgroup = /** @type {MatElement} */ (table.children[0]);
+		expect(src.slice(colgroup.start, colgroup.end)).toBe("<colgroup> ");
 	});
 
 	it("should foster-parent misplaced content out of tables", () => {
@@ -3913,10 +3947,10 @@ const { NodeType } = require("../../lib/html/syntax-parser");
 			.use(
 				/** @type {import("../../lib/html/syntax-printer").VisitorMap} */ ({
 					[NodeType.Element]: {
-						enter: (path) => log.push(`enter:${path.tagName()}`),
-						exit: (path) => log.push(`exit:${path.tagName()}`)
+						enter: (path) => log.push(`enter:${path.name()}`),
+						exit: (path) => log.push(`exit:${path.name()}`)
 					},
-					[NodeType.Text]: (path) => log.push(`text:${path.data()}`)
+					[NodeType.Text]: (path) => log.push(`text:${path.value()}`)
 				})
 			)
 			.process("<div><span>a</span>b</div>");
@@ -3953,7 +3987,7 @@ const { NodeType } = require("../../lib/html/syntax-parser");
 		new SourceProcessor()
 			.use({
 				[NodeType.Doctype]: () => log.push("doctype"),
-				[NodeType.Comment]: (path) => log.push(`comment:${path.data()}`)
+				[NodeType.Comment]: (path) => log.push(`comment:${path.value()}`)
 			})
 			.process("<!DOCTYPE html><!--c--><p>x</p>");
 		expect(log).toEqual(["doctype", "comment:c"]);
@@ -3965,8 +3999,8 @@ const { NodeType } = require("../../lib/html/syntax-parser");
 		new SourceProcessor()
 			.use({
 				[NodeType.Element]: (path) => {
-					log.push(path.tagName());
-					if (path.tagName() === "div") path.skipChildren();
+					log.push(path.name());
+					if (path.name() === "div") path.skipChildren();
 				}
 			})
 			.process("<div><span>a</span></div><p>b</p>");
@@ -3979,7 +4013,7 @@ const { NodeType } = require("../../lib/html/syntax-parser");
 		new SourceProcessor()
 			.use({
 				[NodeType.DocumentFragment]: () => log.push("fragment"),
-				[NodeType.Element]: (path) => log.push(path.tagName())
+				[NodeType.Element]: (path) => log.push(path.name())
 			})
 			.process("<template><p>x</p></template>");
 		expect(log).toEqual(["html", "head", "template", "fragment", "p", "body"]);
@@ -7164,15 +7198,14 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 		new SourceProcessor()
 			.use({
 				[NodeType.Element]: (path) => {
-					if (path.tagName() !== "iframe") return;
-					for (const attribute of path.attributes()) {
-						if (attribute.name === "srcdoc") readBack = attribute.value;
-					}
+					if (path.name() !== "iframe") return;
+					const srcdoc = path.findAttribute("srcdoc");
+					if (srcdoc !== 0) readBack = path.value(srcdoc);
 				}
 			})
 			.process(out, {});
 		expect(readBack).toBeDefined();
-		expect(decodeEntities(/** @type {string} */ (readBack), true)).toBe(
+		expect(readBack).toBe(
 			payload
 		);
 	});
@@ -8005,8 +8038,8 @@ describe("parseHtml — tree-construction edge cases (SoA columns)", () => {
 
 	it("parses text in a foreign fragment context", () => {
 		const doc = parseHtmlRefs("x<div>y", 0, { fragmentContext: "svg" });
-		const root = A.firstChild(doc);
-		expect(A.type(A.firstChild(root))).toBe(NodeType.Text);
+		const root = A.child(0, doc);
+		expect(A.type(A.child(0, root))).toBe(NodeType.Text);
 	});
 
 	it("runs the adoption agency in a table-row fragment context", () => {
@@ -8047,8 +8080,8 @@ describe("SourceProcessor — streamed walk recycling", () => {
 			.use(
 				/** @type {import("../../lib/html/syntax-printer").VisitorMap} */ ({
 					[NodeType.Element]: {
-						enter: (path) => log.push(`+${path.tagName()}`),
-						exit: (path) => log.push(`-${path.tagName()}`)
+						enter: (path) => log.push(`+${path.name()}`),
+						exit: (path) => log.push(`-${path.name()}`)
 					}
 				})
 			)
@@ -8100,12 +8133,12 @@ describe("SourceProcessor — streamed walk recycling", () => {
 				/** @type {import("../../lib/html/syntax-printer").VisitorMap} */ ({
 					[NodeType.Element]: {
 						enter: (path) => {
-							log.push(`+${path.tagName()}`);
+							log.push(`+${path.name()}`);
 							// `div` stays open while its subtree streams, so its skipped
 							// descendants are the ones the walk tracks without entering
-							if (path.tagName() === "div") path.skipChildren();
+							if (path.name() === "div") path.skipChildren();
 						},
-						exit: (path) => log.push(`-${path.tagName()}`)
+						exit: (path) => log.push(`-${path.name()}`)
 					}
 				})
 			)
@@ -8135,7 +8168,7 @@ describe("SourceProcessor — streamed walk recycling", () => {
 		new SourceProcessor()
 			.use(
 				/** @type {import("../../lib/html/syntax-printer").VisitorMap} */ ({
-					[NodeType.Text]: (path) => text.push(path.data())
+					[NodeType.Text]: (path) => text.push(path.value())
 				})
 			)
 			// Entity references split the tokenizer's text runs; the walk must not
@@ -8219,8 +8252,8 @@ describe("SourceProcessor — streamed walk recycling", () => {
 						exit: () => log.push("-doc")
 					},
 					[NodeType.Element]: {
-						enter: (path) => log.push(`+${path.tagName()}`),
-						exit: (path) => log.push(`-${path.tagName()}`)
+						enter: (path) => log.push(`+${path.name()}`),
+						exit: (path) => log.push(`-${path.name()}`)
 					}
 				})
 			)
@@ -8250,7 +8283,7 @@ describe("SourceProcessor — streamed walk offsets", () => {
 			.use(
 				/** @type {import("../../lib/html/syntax-printer").VisitorMap} */ ({
 					[NodeType.Element]: (path) => {
-						seen.push([path.tagName(), path.start(), path.end()]);
+						seen.push([path.name(), path.range()[0], path.range()[1]]);
 					}
 				})
 			)
@@ -8294,13 +8327,13 @@ describe("SourceProcessor — streamed walk offsets", () => {
 					/** @type {import("../../lib/html/syntax-printer").VisitorMap} */ ({
 						[NodeType.Element]: {
 							enter: (path) => {
-								if (path.tagName() === "div" && atEnter === -1) {
-									atEnter = path.end();
+								if (path.name() === "div" && atEnter === -1) {
+									atEnter = path.range()[1];
 								}
 							},
 							exit: (path) => {
-								if (path.tagName() === "div" && atExit === -1) {
-									atExit = path.end();
+								if (path.name() === "div" && atExit === -1) {
+									atExit = path.range()[1];
 								}
 							}
 						}
@@ -8352,35 +8385,33 @@ describe("parseHtml — path accessor completeness", () => {
 					[NodeType.Doctype]: (path) => {
 						const n = path.node;
 						log.push(
-							`doctype:${path.doctypePublicId(n)}/${path.doctypeSystemId(n)}`
+							`doctype:${path.publicId(n)}/${path.systemId(n)}`
 						);
 					},
 					[NodeType.Element]: (path) => {
-						if (path.tagName() !== "div") return;
+						if (path.name() !== "div") return;
 						log.push(`node:${path.node !== null}`);
 						log.push(
-							`parentTag:${path.tagName(/** @type {number} */ (path.parent))}`
+							`parentTag:${path.name(/** @type {number} */ (path.parent))}`
 						);
-						log.push(`parentOf:${path.parentOf() === path.parent}`);
+						log.push(`index:${path.index}`);
 						log.push(`attrs:${path.attributeCount()}`);
 						const id = path.findAttribute("id");
-						log.push(`id:${path.attributeName(id)}=${path.attributeValue(id)}`);
+						log.push(`id:${path.name(id)}=${path.value(id)}`);
 						log.push(
-							`idName:${SRC.slice(
-								path.attributeNameStart(id),
-								path.attributeNameEnd(id)
-							)}`
+							`idName:${SRC.slice(.../** @type {[number, number]} */ (path.nameRange(id)))}`
 						);
 						log.push(
-							`idValue:${SRC.slice(
-								path.attributeValueStart(id),
-								path.attributeValueEnd(id)
+							`idValue:${SRC.slice(.../** @type {[number, number]} */ (path.valueRange(id)))}`
+						);
+						log.push(`checkedValue:${path.valueRange(path.attribute(1))}`);
+						log.push(`firstChildType:${path.type(path.child(0))}`);
+						log.push(
+							`nextSibling:${path.child(
+								path.index + 1,
+								/** @type {number} */ (path.parent)
 							)}`
 						);
-						const checked = path.attributeAt(1);
-						log.push(`checkedValueStart:${path.attributeValueStart(checked)}`);
-						log.push(`firstChildType:${path.type(path.firstChild())}`);
-						log.push(`nextSibling:${path.nextSibling()}`);
 					}
 				})
 			)
@@ -8389,12 +8420,12 @@ describe("parseHtml — path accessor completeness", () => {
 			"doctype:p/s",
 			"node:true",
 			"parentTag:body",
-			"parentOf:true",
+			"index:0",
 			"attrs:2",
 			"id:id=d",
 			"idName:id",
 			"idValue:d",
-			"checkedValueStart:-1",
+			"checkedValue:null",
 			`firstChildType:${NodeType.Text}`,
 			"nextSibling:0"
 		]);
@@ -9605,12 +9636,12 @@ describe("token parts reported by the tokenizer", () => {
 	 * @returns {{ name: (string | null), publicId: (string | null), systemId: (string | null) }} the parsed doctype
 	 */
 	const doctypeOf = (source) => {
-		for (const child of A.children(parseHtmlRefs(source))) {
+		for (const child of childrenOf(parseHtmlRefs(source))) {
 			if (A.type(child) === NodeType.Doctype) {
 				return {
-					name: A.doctypeName(child),
-					publicId: A.doctypePublicId(child),
-					systemId: A.doctypeSystemId(child)
+					name: A.name(child),
+					publicId: A.publicId(child),
+					systemId: A.systemId(child)
 				};
 			}
 		}
@@ -9628,10 +9659,10 @@ describe("token parts reported by the tokenizer", () => {
 		 * @param {import("../../lib/html/syntax-parser").HtmlNodeRef} node node
 		 */
 		const walk = (node) => {
-			if (A.type(node) === NodeType.Comment) out.push(A.data(node));
-			for (const child of A.children(node)) walk(child);
+			if (A.type(node) === NodeType.Comment) out.push(A.value(node));
+			for (const child of childrenOf(node)) walk(child);
 		};
-		for (const child of A.children(parseHtmlRefs(source))) walk(child);
+		for (const child of childrenOf(parseHtmlRefs(source))) walk(child);
 		return out;
 	};
 
@@ -10018,10 +10049,10 @@ describe("parseHtml — quirks and foreign-content arcs", () => {
 		let node = parseHtmlRefs("<i>".repeat(5000));
 		let depth = 0;
 		for (;;) {
-			const children = A.children(node);
+			const children = childrenOf(node);
 			if (children.length === 0) break;
 			node = children[children.length - 1];
-			if (A.type(node) === NodeType.Element && A.tagName(node) === "i") depth++;
+			if (A.type(node) === NodeType.Element && A.name(node) === "i") depth++;
 		}
 		expect(depth).toBe(5000);
 	});
@@ -10038,7 +10069,7 @@ describe("parseHtml — quirks and foreign-content arcs", () => {
 const treeOf = (source, fragmentContext) => {
 	const doc = parseHtmlRefs(source, 0, { fragmentContext });
 	// In fragment mode the tree is the children of the synthesized root.
-	const first = A.firstChild(doc);
+	const first = A.child(0, doc);
 	return serializeHtmlTree(fragmentContext && first !== 0 ? first : doc);
 };
 
@@ -10848,8 +10879,8 @@ describe("SourceProcessor — reusing work across a print", () => {
 	const deepestTagName = (html) => {
 		let node = parseHtmlRefs(html);
 		for (;;) {
-			const children = A.children(node);
-			if (children.length === 0) return A.tagName(node);
+			const children = childrenOf(node);
+			if (children.length === 0) return A.name(node);
 			node = children[children.length - 1];
 		}
 	};
@@ -10877,9 +10908,9 @@ describe("SourceProcessor — reusing work across a print", () => {
 		 * @returns {void}
 		 */
 		const walk = (node) => {
-			for (const child of A.children(node)) {
+			for (const child of childrenOf(node)) {
 				if (A.type(child) === NodeType.Element) {
-					names.push(A.tagName(child));
+					names.push(A.name(child));
 					walk(child);
 				}
 			}

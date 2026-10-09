@@ -13,11 +13,7 @@ const {
 	URL_ATTRIBUTES
 } = require("../../../../lib/html/data");
 const { SourceProcessor } = require("../../../../lib/html/syntax");
-const {
-	NodeType,
-	decodeEntities,
-	parseSrcset
-} = require("../../../../lib/html/syntax-parser");
+const { NodeType, parseSrcset } = require("../../../../lib/html/syntax-parser");
 
 /**
  * The HTML integer parse rules, spelled out here rather than reused from `lib/`
@@ -54,13 +50,10 @@ const appliesTo = (on, tagName) =>
  * bytes without changing the meaning does not read as a difference.
  * @param {string} tagName lowercased element name
  * @param {string} name attribute name
- * @param {string} rawValue attribute value, as the source spells it
+ * @param {string} value attribute value, references decoded
  * @returns {string} its canonical form
  */
-const canonicalValue = (tagName, name, rawValue) => {
-	// `attributes()` reports the source bytes, so the references have to go
-	// before anything below reads the value the parser actually builds.
-	const value = decodeEntities(rawValue, true);
+const canonicalValue = (tagName, name, value) => {
 	if (appliesTo(BOOLEAN_ATTRIBUTES.get(name), tagName)) return "<boolean>";
 	if (appliesTo(TOKEN_LIST_ATTRIBUTES.get(name), tagName)) {
 		// The ordered set parser splits on ASCII whitespace and drops the empties.
@@ -122,39 +115,35 @@ const tree = (html) => {
 	new SourceProcessor()
 		.use({
 			[NodeType.Element]: (nodePath) => {
-				const tagName = nodePath.tagName();
-				const attributes = nodePath
-					.attributes()
-					.map(
-						(attribute) =>
-							`${attribute.name}=${canonicalValue(
-								tagName,
-								attribute.name,
-								attribute.value
-							)}`
-					)
-					.sort()
-					.join(" ");
-				out.push(`<${tagName} ${attributes}>`);
+				const tagName = nodePath.name();
+				/** @type {string[]} */
+				const attributes = [];
+				for (let i = 0; i < nodePath.attributeCount(); i++) {
+					const attribute = nodePath.attribute(i);
+					const name = nodePath.name(attribute);
+					attributes.push(
+						`${name}=${canonicalValue(tagName, name, nodePath.value(attribute))}`
+					);
+				}
+				out.push(`<${tagName} ${attributes.sort().join(" ")}>`);
 			},
 			[NodeType.Text]: (nodePath) => {
-				const parent = nodePath.parentOf();
-				const parentName = parent === 0 ? "" : nodePath.tagName(parent);
+				const parent = nodePath.parent;
+				const parentName = parent === null ? "" : nodePath.name(parent);
 				if (parentName === "style") {
-					out.push(`#css:${canonicalValue("", "style", nodePath.data())}`);
+					out.push(`#css:${canonicalValue("", "style", nodePath.value())}`);
 					return;
 				}
 				// Whitespace nothing renders is dropped by design.
 				if (
 					(parentName === "head" || parentName === "html") &&
-					nodePath.data().trim() === ""
+					nodePath.value().trim() === ""
 				) {
 					return;
 				}
-				out.push(`#text:${nodePath.data()}`);
+				out.push(`#text:${nodePath.value()}`);
 			},
-			[NodeType.Doctype]: (nodePath) =>
-				out.push(`#doctype:${nodePath.doctypeName()}`)
+			[NodeType.Doctype]: (nodePath) => out.push(`#doctype:${nodePath.name()}`)
 		})
 		.process(html, {});
 	return out;

@@ -703,7 +703,7 @@ describe("CssSyntax — Node / Token", () => {
 	});
 
 	it("computes 1-based line / 0-based column via loc", () => {
-		/** @type {{ start: { line: number, column: number }, end: { line: number, column: number } } | undefined} */
+		/** @type {[number, number, number, number] | undefined} */
 		let loc;
 		new SourceProcessor()
 			.use({
@@ -712,14 +712,7 @@ describe("CssSyntax — Node / Token", () => {
 				) => (loc = path.loc())
 			})
 			.process("a{\n  color: red\n}");
-		expect(/** @type {NonNullable<typeof loc>} */ (loc).start).toEqual({
-			line: 2,
-			column: 2
-		});
-		expect(/** @type {NonNullable<typeof loc>} */ (loc).end).toEqual({
-			line: 3,
-			column: 0
-		});
+		expect(loc).toEqual([2, 2, 3, 0]);
 	});
 
 	it("lazily computes a token's value once", () => {
@@ -877,19 +870,20 @@ describe("CssSyntax — SourceProcessor", () => {
 					[NodeType.String]: (
 						/** @type {import("../../lib/css/syntax-parser").CssPath} */ path
 					) => {
-						seen.unescaped = path.unescaped();
+						seen.unescaped = path.value();
 					},
 					[NodeType.Ident]: (
 						/** @type {import("../../lib/css/syntax-parser").CssPath} */ path
 					) => {
-						seen.range = path.range();
+						seen.range = [path.range()[0], path.range()[1]];
 					},
 					[NodeType.QualifiedRule]: (
 						/** @type {import("../../lib/css/syntax-parser").CssPath} */ path
 					) => {
-						// Round-trip the writers (set each field back to its own value).
-						path.setEnd(path.node, path.end());
-						path.setBlockEnd(path.node, path.blockEnd());
+						// The writer stays off the path; round-trip it (set the end back to itself).
+						const { _setNodeEnd } = require("../../lib/css/syntax-parser");
+
+						_setNodeEnd(path.node, path.range()[1]);
 					}
 				})
 			)
@@ -1029,7 +1023,7 @@ describe("CssSyntax — SourceProcessor", () => {
 					) => names.push(path.name()),
 					[NodeType.Url]: (
 						/** @type {import("../../lib/css/syntax-parser").CssPath} */ path
-					) => urls.push(path.value())
+					) => urls.push(/** @type {string} */ (path.value()))
 				})
 			)
 			.process("color: red; background: url(a.png)", {
@@ -1118,7 +1112,7 @@ describe("CssSyntax — block streaming", () => {
 				[type]: (/** @type {import("../../lib/css/syntax-parser").CssPath} */ path) => {
 					if (seen) return;
 					seen = true;
-					const rules = path.childRules();
+					const rules = path.rules();
 					count = rules === null ? null : rules.length;
 				}
 			})
@@ -1141,9 +1135,9 @@ describe("CssSyntax — block streaming", () => {
 			const type = NodeType[/** @type {keyof typeof NodeType} */ (name)];
 			map[type] = {
 				enter: (/** @type {import("../../lib/css/syntax-parser").CssPath} */ path) =>
-					seq.push(`+${name}|${path.index}|${path.start()}`),
+					seq.push(`+${name}|${path.index}|${path.range()[0]}`),
 				exit: (/** @type {import("../../lib/css/syntax-parser").CssPath} */ path) =>
-					seq.push(`-${name}|${path.index}|${path.start()}`)
+					seq.push(`-${name}|${path.index}|${path.range()[0]}`)
 			};
 		}
 		new SourceProcessor().use(map).process(src, extra);
@@ -1386,7 +1380,7 @@ describe("CssSyntax — block streaming", () => {
 						/** @type {import("../../lib/css/syntax-parser").CssPath} */ path
 					) => {
 						const decls = path.declarations();
-						const rules = path.childRules();
+						const rules = path.rules();
 						seen.push(decls === null ? null : decls.length);
 						seen.push(rules === null ? null : rules.length);
 					}
@@ -3537,7 +3531,7 @@ describe("CssSyntax — skip set (CssProcessOptions.skip)", () => {
 				/** @type {import("../../lib/css/syntax-parser").VisitorMap} */ ({
 					[NodeType.Url]: (
 						/** @type {import("../../lib/css/syntax-parser").CssPath} */ path
-					) => urls.push(path.value())
+					) => urls.push(/** @type {string} */ (path.value()))
 				})
 			)
 			.process(":x(url(p.png)){color:red}", {
@@ -3586,7 +3580,7 @@ describe("CssSyntax — skip set (CssProcessOptions.skip)", () => {
 			const map = {
 				[NodeType.QualifiedRule]: (
 					/** @type {import("../../lib/css/syntax-parser").CssPath} */ path
-				) => log.push(`rule:${path.start()}-${path.end()}`),
+				) => log.push(`rule:${path.range()[0]}-${path.range()[1]}`),
 				[NodeType.Declaration]: (
 					/** @type {import("../../lib/css/syntax-parser").CssPath} */ path
 				) => log.push(`decl:${path.name()}`),
@@ -3686,7 +3680,7 @@ describe("CssSyntax — skip set (CssProcessOptions.skip)", () => {
 				/** @type {import("../../lib/css/syntax-parser").VisitorMap} */ ({
 					[NodeType.Url]: (
 						/** @type {import("../../lib/css/syntax-parser").CssPath} */ path
-					) => urls.push(path.value())
+					) => urls.push(/** @type {string} */ (path.value()))
 				})
 			)
 			.process("@import url(x.css);", {
@@ -3721,7 +3715,7 @@ describe("CssSyntax — skip set (CssProcessOptions.skip)", () => {
 					[NodeType.Number]: () => seen.push("num"),
 					[NodeType.Ident]: (
 						/** @type {import("../../lib/css/syntax-parser").CssPath} */ path
-					) => seen.push(path.value())
+					) => seen.push(/** @type {string} */ (path.value()))
 				})
 			)
 			.process("p: 1 foo", {
@@ -3787,13 +3781,13 @@ describe("CssSyntax — path accessors", () => {
 					[NodeType.AtRule]: (/** @type {CssPath} */ path) => {
 						log.push(`at:${path.name()}`);
 						log.push(
-							`atName:${SRC.slice(path.nameStart() + 1, path.nameEnd())}`
+							`atName:${path.source(.../** @type {[number, number]} */ (path.nameRange()))}`
 						);
-						log.push(`prelude:${path.prelude().length > 0}`);
+						log.push(`prelude:${path.childCount() > 0}`);
 						log.push(
 							`childRules:${
 								/** @type {import("../../lib/css/syntax-parser").Rule[]} */ (
-									path.childRules()
+									path.rules()
 								).length
 							}`
 						);
@@ -3804,20 +3798,22 @@ describe("CssSyntax — path accessors", () => {
 								).length
 							}`
 						);
-						log.push(`blockOpen:${SRC[path.blockStart()]}`);
-						log.push(`blockClose:${SRC[path.blockEnd() - 1]}`);
-						log.push(`span:${SRC.slice(path.start(), path.start() + 6)}`);
+						log.push(`blockOpen:${SRC[/** @type {[number, number]} */ (path.blockRange())[0]]}`);
+						log.push(`blockClose:${SRC[/** @type {[number, number]} */ (path.blockRange())[1] - 1]}`);
+						log.push(`span:${SRC.slice(path.range()[0], path.range()[0] + 6)}`);
 						log.push(`node:${path.node !== null}`);
 						log.push(`parent:${path.parent}`);
 					},
 					[NodeType.Declaration]: (/** @type {CssPath} */ path) => {
 						if (path.important()) {
-							log.push(`decl:${path.name()}=${path.unescapedName()}`);
+							log.push(
+								`decl:${path.source(.../** @type {[number, number]} */ (path.nameRange()))}=${path.name()}`
+							);
 						}
 					},
 					[NodeType.Url]: (/** @type {CssPath} */ path) => {
 						log.push(
-							`url:${SRC.slice(path.contentStart(), path.contentEnd())}`
+							`url:${SRC.slice(/** @type {[number, number]} */ (path.valueRange())[0], /** @type {[number, number]} */ (path.valueRange())[1])}`
 						);
 					},
 					[NodeType.SimpleBlock]: (/** @type {CssPath} */ path) => {
@@ -3826,7 +3822,7 @@ describe("CssSyntax — path accessors", () => {
 					[NodeType.Function]: {
 						enter: (/** @type {CssPath} */ path) => {
 							if (path.name() === "var") {
-								log.push(`fnChildren:${path.children().length > 0}`);
+								log.push(`fnChildren:${path.childCount() > 0}`);
 							}
 						},
 						exit: (/** @type {CssPath} */ path) => {
@@ -3835,7 +3831,7 @@ describe("CssSyntax — path accessors", () => {
 					},
 					[NodeType.Comment]: {
 						enter: (/** @type {CssPath} */ path) => {
-							log.push(`comment:${SRC.slice(path.start(), path.end())}`);
+							log.push(`comment:${SRC.slice(path.range()[0], path.range()[1])}`);
 							log.push(`commentParent:${path.parent}`);
 						},
 						exit: () => log.push("commentExit")
@@ -3871,12 +3867,12 @@ describe("CssSyntax — path accessors", () => {
 				/** @type {import("../../lib/css/syntax-parser").VisitorMap} */ ({
 					[NodeType.QualifiedRule]: (/** @type {CssPath} */ path) => {
 						out.push([
-							path.prelude().length > 0,
+							path.childCount() > 0,
 							/** @type {import("../../lib/css/syntax-parser").Declaration[]} */ (
 								path.declarations()
 							).length,
 							/** @type {import("../../lib/css/syntax-parser").Rule[]} */ (
-								path.childRules()
+								path.rules()
 							).length
 						]);
 					}
@@ -9603,7 +9599,7 @@ describe("CssSyntax — a string the source never closed", () => {
 			.use({
 				[NodeType.String]: {
 					enter: (/** @type {import("../../lib/css/syntax-parser").CssPath} */ path) =>
-						seen.push(path.unescaped())
+						seen.push(/** @type {string} */ (path.value()))
 				}
 			})
 			.process(source);

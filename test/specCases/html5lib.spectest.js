@@ -321,7 +321,7 @@ const runTreeCase = (c) => {
 		scripting: c.scriptMode === "on"
 	});
 	// In fragment mode the result is the children of the synthesized root.
-	const first = A.firstChild(doc);
+	const first = A.child(0, doc);
 	return serialize(c.fragment && first !== 0 ? first : doc);
 };
 
@@ -542,9 +542,9 @@ const runTokenizerCase = (input, context) => {
 			// `tokenize` reports a `<?…>` as one comment range and leaves telling a
 			// processing instruction apart, or dropping one EOF cut, to the tree.
 			if (source.charCodeAt(start + 1) === 0x3f) {
-				const node = A.firstChild(parseHtml(source.slice(start, end), 0));
+				const node = A.child(0, parseHtml(source.slice(start, end), 0));
 				if (A.type(node) === NodeType.ProcessingInstruction) {
-					tokens.push(["ProcessingInstruction", A.piTarget(node), A.data(node)]);
+					tokens.push(["ProcessingInstruction", A.name(node), A.value(node)]);
 					return end;
 				}
 				if (A.type(node) !== NodeType.Comment) return end;
@@ -639,7 +639,7 @@ const runCdataCase = (input) => {
 	const doc = parseHtml(`<![CDATA[${input}`, 0, {
 		fragmentContext: "svg svg"
 	});
-	return serialize(A.firstChild(doc));
+	return serialize(A.child(0, doc));
 };
 /** @type {Map<string, { state: string, lastStartTag: (string | null), count: number }>} */
 const unreachableByShape = new Map();

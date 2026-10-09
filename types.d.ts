@@ -6708,7 +6708,7 @@ declare interface CssProcessOptions {
  * `grammar`. All configuration is per `process` call. `process(src, { minimize:
  * true })` returns `{ code, map }` — the safely-minified serialization (built by
  * the same walk that fires visitors) and its source map; without `minimize` it
- * just walks and returns `undefined`. Babel-style usage:
+ * just walks and returns `undefined`. Usage:
  * ```
  * new CssSourceProcessor().use({ [NodeType.AtRule]: (path) => {} }).process(source, { skip });
  * ```
@@ -6723,30 +6723,35 @@ declare class CssSourceProcessor extends SourceProcessor<
 		 * Stop the walk descending into the current node (enter only).
 		 */
 		skipChildren(): void;
+		/**
+		 * Stop the walk: no visitor fires after the current one returns.
+		 */
+		stop(): void;
 		inValue(): boolean;
 		type(n?: NodeSyntaxParser): number;
-		start(n?: NodeSyntaxParser): number;
-		end(n?: NodeSyntaxParser): number;
 		range(n?: NodeSyntaxParser): [number, number];
-		loc(n?: NodeSyntaxParser): {
-			start: { line: number; column: number };
-			end: { line: number; column: number };
-		};
-		source(n?: NodeSyntaxParser): string;
-		value(n?: NodeSyntaxParser): string;
-		unescaped(n?: NodeSyntaxParser): string;
+		loc(n?: NodeSyntaxParser): [number, number, number, number];
+		/**
+		 * A node's text exactly as the input wrote it (`name` and `value` decode).
+		 */
+		source(n?: number | NodeSyntaxParser, end?: number): string;
+		/**
+		 * The token's value as CSS Syntax defines it: a number for a number,
+		 * percentage or dimension, otherwise text with escapes resolved (a string
+		 * without its quotes, a hash without its `#`, a `url()`'s contents, a
+		 * comment's text); "" for a rule, declaration, function or block.
+		 */
+		value(n?: NodeSyntaxParser): string | number;
+		unit(n?: NodeSyntaxParser): string;
 		typeFlag(n?: NodeSyntaxParser): string;
-		contentStart(n?: NodeSyntaxParser): number;
-		contentEnd(n?: NodeSyntaxParser): number;
+		valueRange(n?: NodeSyntaxParser): null | [number, number];
 		name(n?: NodeSyntaxParser): string;
-		nameStart(n?: NodeSyntaxParser): number;
-		nameEnd(n?: NodeSyntaxParser): number;
-		unescapedName(n?: NodeSyntaxParser): string;
-		atKeyword(n?: NodeSyntaxParser): string;
-		children(n?: NodeSyntaxParser): ComponentValue[];
-		prelude(n?: NodeSyntaxParser): ComponentValue[];
+		nameRange(n?: NodeSyntaxParser): null | [number, number];
+		/**
+		 * A rule's children are its prelude; its block is read with {@link declarations }.
+		 */
 		childCount(n?: NodeSyntaxParser): number;
-		childAt(n: NodeSyntaxParser, i: number): ComponentValue;
+		child(i: number, n?: NodeSyntaxParser): ComponentValue;
 		/**
 		 * A block big enough to stream hands its children to the visitors as each one
 		 * finishes rather than collecting them, so both lists read as an empty block
@@ -6757,13 +6762,10 @@ declare class CssSourceProcessor extends SourceProcessor<
 		/**
 		 * Reads as an empty block on a streamed rule; see {@link declarations }.
 		 */
-		childRules(n?: NodeSyntaxParser): null | RuleSyntaxParser[];
-		blockStart(n?: NodeSyntaxParser): number;
-		blockEnd(n?: NodeSyntaxParser): number;
+		rules(n?: NodeSyntaxParser): null | RuleSyntaxParser[];
+		blockRange(n?: NodeSyntaxParser): null | [number, number];
 		important(n?: NodeSyntaxParser): boolean;
 		blockToken(n?: NodeSyntaxParser): SimpleBlockToken;
-		setEnd(n: NodeSyntaxParser, v: number): void;
-		setBlockEnd(n: NodeSyntaxParser, v: number): void;
 	},
 	NodeSyntaxParser,
 	CssProcessOptions
@@ -11153,36 +11155,6 @@ declare interface HtmlAstSkip {
 	 */
 	doctype?: boolean;
 }
-
-/**
- * A materialized attribute as returned by `A.attributes` (tests/tooling) —
- * the parser-facing representation is an id into the attribute columns, read
- * through the scalar `A.attr*` accessors.
- */
-declare interface HtmlAttribute {
-	/**
-	 * lowercased (and, in foreign content, adjusted) attribute name
-	 */
-	name: string;
-	value: string;
-
-	/**
-	 * name used by the html5lib tree serializer (foreign-namespaced)
-	 */
-	serializedName?: string;
-
-	/**
-	 * source offset, or -1 on adoption-agency clones
-	 */
-	nameStart: number;
-	nameEnd: number;
-
-	/**
-	 * source offset, or -1 when valueless / on clones
-	 */
-	valueStart: number;
-	valueEnd: number;
-}
 declare interface HtmlChunkNameData {
 	/**
 	 * the page's path, escaped for use in a name
@@ -11746,7 +11718,7 @@ declare interface HtmlResourceHintWebpackOptions {
 
 /**
  * The generic visitor coordinator (`util/SourceProcessor`) bound to the HTML
- * `grammar`. Babel-style usage:
+ * `grammar`. Usage:
  * ```
  * new HtmlSourceProcessor().use({ [NodeType.Element]: (path) => {}, [NodeType.Comment]: { enter, exit } }).process(source, { skip });
  * ```
@@ -11757,39 +11729,46 @@ declare class HtmlSourceProcessor extends SourceProcessor<
 		get node(): number;
 		get parent(): null | number;
 		/**
+		 * Counted along the sibling links when asked, so the walk stores nothing for it.
+		 */
+		get index(): number;
+		/**
 		 * Stop the walk descending into the current node (enter only).
 		 */
 		skipChildren(): void;
-		type(n?: number): number;
-		start(n?: number): number;
-		end(n?: number): number;
 		/**
-		 * Raw source slice `[start, end)` — valid only during the walk (the printer's
-		 * window), before `parseHtml` releases `_htmlSource`.
+		 * Stop the walk: no visitor fires after the current one returns.
 		 */
-		source(n?: number): string;
-		sourceSpanAt(from: number, to: number): string;
-		tagName(n?: number): string;
+		stop(): void;
+		type(n?: number): number;
+		range(n?: number): [number, number];
+		/**
+		 * Line / column are converted only when asked, by a converter made on the
+		 * first call of a parse. Valid during the walk, as {@link source } is.
+		 */
+		loc(n?: number): [number, number, number, number];
+		/**
+		 * A node's text as written; valid during the walk, before `parseHtml` releases the source.
+		 */
+		source(n?: number, end?: number): string;
+		/**
+		 * An element's or attribute's name (lowercased, adjusted in foreign content),
+		 * a doctype's name, a processing instruction's target; "" for other nodes.
+		 */
+		name(n?: number): string;
 		namespace(n?: number): number;
 		selfClosing(n?: number): boolean;
-		attributes(n?: number): HtmlAttribute[];
 		attributeCount(n?: number): number;
 		/**
-		 * The i-th attribute of an element, as an id for the `attribute*` reads.
+		 * The i-th attribute of an element, as a node the shared reads take.
 		 */
-		attributeAt(i: number, n?: number): number;
+		attribute(i: number, n?: number): number;
 		/**
 		 * Linear lookup by (lowercased) name.
 		 */
 		findAttribute(name: string, n?: number): number;
-		attributeName(a: number): string;
-		attributeValue(a: number): string;
-		attributeNameStart(a: number): number;
-		attributeNameEnd(a: number): number;
-		attributeValueStart(a: number): number;
-		attributeValueEnd(a: number): number;
-		tagEnd(n?: number): number;
-		nameEnd(n?: number): number;
+		valueRange(n?: number): null | [number, number];
+		nameRange(n?: number): null | [number, number];
 		/**
 		 * Whether the source wrote this element's end tag rather than the parser
 		 * popping it for an implied close. Read back off the range instead of marked
@@ -11798,6 +11777,14 @@ declare class HtmlSourceProcessor extends SourceProcessor<
 		 * region printed from source ever ask.
 		 */
 		sourceClosed(n?: number): boolean;
+		/**
+		 * Raw source of an element's opening tag, `[start, tagEnd)` — attribute quoting
+		 * / spacing / case preserved byte-for-byte (walk-window only) — or `""` for a
+		 * parser-inserted element (auto `html`/`head`/`body`/`tbody`, …), which has no
+		 * real source tag: its offsets are zero-width or borrow the triggering token,
+		 * so the sliced name doesn't match this element. The empty string lets a printer
+		 * treat such an element as transparent.
+		 */
 		openTag(n?: number): string;
 		/**
 		 * An element's end tag, generated as `</name>` from the opening tag's own name
@@ -11808,17 +11795,28 @@ declare class HtmlSourceProcessor extends SourceProcessor<
 		 * source to echo, and slicing one would spell `</>`.
 		 */
 		closeTag(n?: number): string;
-		contentEnd(n?: number): number;
+		/**
+		 * Between the opening tag and the end tag, or where the content ends when
+		 * the source left the end tag out.
+		 */
+		contentRange(n?: number): null | [number, number];
 		templateContent(n?: number): number;
-		data(n?: number): string;
-		piTarget(n?: number): string;
-		doctypeName(n?: number): string;
-		doctypePublicId(_n?: number): null | string;
-		doctypeSystemId(_n?: number): null | string;
-		firstChild(n?: number): number;
-		nextSibling(n?: number): number;
-		parentOf(n?: number): number;
-		children(n?: number): number[];
+		/**
+		 * A text's, comment's, processing instruction's or attribute's data,
+		 * character references decoded; "" for other nodes.
+		 */
+		value(n?: number): string;
+		publicId(_n?: number): null | string;
+		systemId(_n?: number): null | string;
+		/**
+		 * Counted along the sibling links once per node and visitor call.
+		 */
+		childCount(n?: number): number;
+		/**
+		 * Reached along the sibling links from the last child read under `n`, so a
+		 * loop over a node's children takes one step per child.
+		 */
+		child(i: number, n?: number): number;
 	},
 	number,
 	HtmlProcessOptions
@@ -20612,6 +20610,77 @@ declare interface NodeOptions {
 	 * Include a polyfill for the 'global' variable.
 	 */
 	global?: boolean | "warn";
+}
+
+/**
+ * The members every language's `path` has under the same name and meaning, so
+ * a visitor written against it reads any grammar; see `docs/syntax.md`.
+ */
+declare interface NodePath<TNode, TValue = unknown> {
+	/**
+	 * the current node
+	 */
+	node: TNode;
+
+	/**
+	 * the enclosing node (null at a root)
+	 */
+	parent: null | TNode;
+
+	/**
+	 * the current node's index among its siblings
+	 */
+	index: number;
+
+	/**
+	 * stop the walk descending into the current node (enter only)
+	 */
+	skipChildren: () => void;
+
+	/**
+	 * end the walk: no visitor fires after the current one returns, and a print still completes
+	 */
+	stop: () => void;
+
+	/**
+	 * the node's `NodeType`
+	 */
+	type: (n?: TNode) => number;
+
+	/**
+	 * start and end offsets in the input
+	 */
+	range: (n?: TNode) => [number, number];
+
+	/**
+	 * start line and column, end line and column (lines from 1, columns from 0)
+	 */
+	loc: (n?: TNode) => [number, number, number, number];
+
+	/**
+	 * the node's source text, or the input between two offsets
+	 */
+	source: (n?: number | TNode, end?: number) => string;
+
+	/**
+	 * the node's name as the language defines it, decoded ("" when it has none)
+	 */
+	name: (n?: TNode) => string;
+
+	/**
+	 * the node's value as the language defines it, decoded
+	 */
+	value: (n?: TNode) => TValue;
+
+	/**
+	 * number of children
+	 */
+	childCount: (n?: TNode) => number;
+
+	/**
+	 * the i-th child
+	 */
+	child: (i: number, n?: TNode) => TNode;
 }
 
 /**
@@ -29559,24 +29628,32 @@ declare interface SourcePosition {
  * Visitor coordinator: owns the visitor registry and drives a language
  * `grammar` over the source. Language-agnostic — each syntax (CSS, HTML, …)
  * binds its own grammar, node-type enum and (optionally) node printer.
- * Babel-style usage:
+ * Usage:
  * ```
  * processor.use({ [NodeType.X]: (path) => {}, [NodeType.Y]: { enter, exit } });
  * processor.process(source);
  * ```
  */
 declare abstract class SourceProcessor<
-	TPath,
+	TPath extends NodePath<TNode, unknown>,
 	TNode,
 	TProcessOptions = object,
 	TPrintOptions = object
 > {
 	/**
-	 * Register a Babel-style visitor map; calls accumulate per node type.
+	 * Register a visitor map; calls accumulate per node type.
 	 * A bucket is a function (= `{ enter }`) or `{ enter?, exit? }`.
 	 */
 	use(
 		map: VisitorMap<TPath>
+	): SourceProcessor<TPath, TNode, TProcessOptions, TPrintOptions>;
+
+	/**
+	 * Register one bucket for several node types, as a map naming each would.
+	 */
+	use(
+		types: number[],
+		bucket: VisitorBucket<TPath>
 	): SourceProcessor<TPath, TNode, TProcessOptions, TPrintOptions>;
 
 	/**
@@ -32110,9 +32187,9 @@ type VisitorBucket<TPath> =
 	VisitorFn<TPath> | { enter?: VisitorFn<TPath>; exit?: VisitorFn<TPath> };
 
 /**
- * Babel-style visitor map keyed by a numeric node-type discriminator; a bucket
+ * Visitor map keyed by a numeric node-type discriminator; a bucket
  * is a function (enter-only) or `{ enter?, exit? }`.
- * A visitor receives a single `path` argument (the Babel `path` shape): the
+ * A visitor receives a single `path` argument: the
  * language's AST accessor with the current position on it — `path.node`,
  * `path.parent` (null at a root) — plus `path.skipChildren()` (enter only)
  * to stop the walk descending, and every field-read method (which defaults
@@ -33749,30 +33826,35 @@ declare namespace exports {
 					 * Stop the walk descending into the current node (enter only).
 					 */
 					skipChildren(): void;
+					/**
+					 * Stop the walk: no visitor fires after the current one returns.
+					 */
+					stop(): void;
 					inValue(): boolean;
 					type(n?: NodeSyntaxParser): number;
-					start(n?: NodeSyntaxParser): number;
-					end(n?: NodeSyntaxParser): number;
 					range(n?: NodeSyntaxParser): [number, number];
-					loc(n?: NodeSyntaxParser): {
-						start: { line: number; column: number };
-						end: { line: number; column: number };
-					};
-					source(n?: NodeSyntaxParser): string;
-					value(n?: NodeSyntaxParser): string;
-					unescaped(n?: NodeSyntaxParser): string;
+					loc(n?: NodeSyntaxParser): [number, number, number, number];
+					/**
+					 * A node's text exactly as the input wrote it (`name` and `value` decode).
+					 */
+					source(n?: number | NodeSyntaxParser, end?: number): string;
+					/**
+					 * The token's value as CSS Syntax defines it: a number for a number,
+					 * percentage or dimension, otherwise text with escapes resolved (a string
+					 * without its quotes, a hash without its `#`, a `url()`'s contents, a
+					 * comment's text); "" for a rule, declaration, function or block.
+					 */
+					value(n?: NodeSyntaxParser): string | number;
+					unit(n?: NodeSyntaxParser): string;
 					typeFlag(n?: NodeSyntaxParser): string;
-					contentStart(n?: NodeSyntaxParser): number;
-					contentEnd(n?: NodeSyntaxParser): number;
+					valueRange(n?: NodeSyntaxParser): null | [number, number];
 					name(n?: NodeSyntaxParser): string;
-					nameStart(n?: NodeSyntaxParser): number;
-					nameEnd(n?: NodeSyntaxParser): number;
-					unescapedName(n?: NodeSyntaxParser): string;
-					atKeyword(n?: NodeSyntaxParser): string;
-					children(n?: NodeSyntaxParser): ComponentValue[];
-					prelude(n?: NodeSyntaxParser): ComponentValue[];
+					nameRange(n?: NodeSyntaxParser): null | [number, number];
+					/**
+					 * A rule's children are its prelude; its block is read with {@link declarations }.
+					 */
 					childCount(n?: NodeSyntaxParser): number;
-					childAt(n: NodeSyntaxParser, i: number): ComponentValue;
+					child(i: number, n?: NodeSyntaxParser): ComponentValue;
 					/**
 					 * A block big enough to stream hands its children to the visitors as each one
 					 * finishes rather than collecting them, so both lists read as an empty block
@@ -33783,13 +33865,10 @@ declare namespace exports {
 					/**
 					 * Reads as an empty block on a streamed rule; see {@link declarations }.
 					 */
-					childRules(n?: NodeSyntaxParser): null | RuleSyntaxParser[];
-					blockStart(n?: NodeSyntaxParser): number;
-					blockEnd(n?: NodeSyntaxParser): number;
+					rules(n?: NodeSyntaxParser): null | RuleSyntaxParser[];
+					blockRange(n?: NodeSyntaxParser): null | [number, number];
 					important(n?: NodeSyntaxParser): boolean;
 					blockToken(n?: NodeSyntaxParser): SimpleBlockToken;
-					setEnd(n: NodeSyntaxParser, v: number): void;
-					setBlockEnd(n: NodeSyntaxParser, v: number): void;
 				};
 				export let CC_0: number;
 				export let CC_APOSTROPHE: number;
@@ -33916,30 +33995,35 @@ declare namespace exports {
 						 * Stop the walk descending into the current node (enter only).
 						 */
 						skipChildren(): void;
+						/**
+						 * Stop the walk: no visitor fires after the current one returns.
+						 */
+						stop(): void;
 						inValue(): boolean;
 						type(n?: NodeSyntaxParser): number;
-						start(n?: NodeSyntaxParser): number;
-						end(n?: NodeSyntaxParser): number;
 						range(n?: NodeSyntaxParser): [number, number];
-						loc(n?: NodeSyntaxParser): {
-							start: { line: number; column: number };
-							end: { line: number; column: number };
-						};
-						source(n?: NodeSyntaxParser): string;
-						value(n?: NodeSyntaxParser): string;
-						unescaped(n?: NodeSyntaxParser): string;
+						loc(n?: NodeSyntaxParser): [number, number, number, number];
+						/**
+						 * A node's text exactly as the input wrote it (`name` and `value` decode).
+						 */
+						source(n?: number | NodeSyntaxParser, end?: number): string;
+						/**
+						 * The token's value as CSS Syntax defines it: a number for a number,
+						 * percentage or dimension, otherwise text with escapes resolved (a string
+						 * without its quotes, a hash without its `#`, a `url()`'s contents, a
+						 * comment's text); "" for a rule, declaration, function or block.
+						 */
+						value(n?: NodeSyntaxParser): string | number;
+						unit(n?: NodeSyntaxParser): string;
 						typeFlag(n?: NodeSyntaxParser): string;
-						contentStart(n?: NodeSyntaxParser): number;
-						contentEnd(n?: NodeSyntaxParser): number;
+						valueRange(n?: NodeSyntaxParser): null | [number, number];
 						name(n?: NodeSyntaxParser): string;
-						nameStart(n?: NodeSyntaxParser): number;
-						nameEnd(n?: NodeSyntaxParser): number;
-						unescapedName(n?: NodeSyntaxParser): string;
-						atKeyword(n?: NodeSyntaxParser): string;
-						children(n?: NodeSyntaxParser): ComponentValue[];
-						prelude(n?: NodeSyntaxParser): ComponentValue[];
+						nameRange(n?: NodeSyntaxParser): null | [number, number];
+						/**
+						 * A rule's children are its prelude; its block is read with {@link declarations }.
+						 */
 						childCount(n?: NodeSyntaxParser): number;
-						childAt(n: NodeSyntaxParser, i: number): ComponentValue;
+						child(i: number, n?: NodeSyntaxParser): ComponentValue;
 						/**
 						 * A block big enough to stream hands its children to the visitors as each one
 						 * finishes rather than collecting them, so both lists read as an empty block
@@ -33952,13 +34036,10 @@ declare namespace exports {
 						/**
 						 * Reads as an empty block on a streamed rule; see {@link declarations }.
 						 */
-						childRules(n?: NodeSyntaxParser): null | RuleSyntaxParser[];
-						blockStart(n?: NodeSyntaxParser): number;
-						blockEnd(n?: NodeSyntaxParser): number;
+						rules(n?: NodeSyntaxParser): null | RuleSyntaxParser[];
+						blockRange(n?: NodeSyntaxParser): null | [number, number];
 						important(n?: NodeSyntaxParser): boolean;
 						blockToken(n?: NodeSyntaxParser): SimpleBlockToken;
-						setEnd(n: NodeSyntaxParser, v: number): void;
-						setBlockEnd(n: NodeSyntaxParser, v: number): void;
 					}>[],
 					writer:
 						| undefined
@@ -33971,30 +34052,35 @@ declare namespace exports {
 									 * Stop the walk descending into the current node (enter only).
 									 */
 									skipChildren(): void;
+									/**
+									 * Stop the walk: no visitor fires after the current one returns.
+									 */
+									stop(): void;
 									inValue(): boolean;
 									type(n?: NodeSyntaxParser): number;
-									start(n?: NodeSyntaxParser): number;
-									end(n?: NodeSyntaxParser): number;
 									range(n?: NodeSyntaxParser): [number, number];
-									loc(n?: NodeSyntaxParser): {
-										start: { line: number; column: number };
-										end: { line: number; column: number };
-									};
-									source(n?: NodeSyntaxParser): string;
-									value(n?: NodeSyntaxParser): string;
-									unescaped(n?: NodeSyntaxParser): string;
+									loc(n?: NodeSyntaxParser): [number, number, number, number];
+									/**
+									 * A node's text exactly as the input wrote it (`name` and `value` decode).
+									 */
+									source(n?: number | NodeSyntaxParser, end?: number): string;
+									/**
+									 * The token's value as CSS Syntax defines it: a number for a number,
+									 * percentage or dimension, otherwise text with escapes resolved (a string
+									 * without its quotes, a hash without its `#`, a `url()`'s contents, a
+									 * comment's text); "" for a rule, declaration, function or block.
+									 */
+									value(n?: NodeSyntaxParser): string | number;
+									unit(n?: NodeSyntaxParser): string;
 									typeFlag(n?: NodeSyntaxParser): string;
-									contentStart(n?: NodeSyntaxParser): number;
-									contentEnd(n?: NodeSyntaxParser): number;
+									valueRange(n?: NodeSyntaxParser): null | [number, number];
 									name(n?: NodeSyntaxParser): string;
-									nameStart(n?: NodeSyntaxParser): number;
-									nameEnd(n?: NodeSyntaxParser): number;
-									unescapedName(n?: NodeSyntaxParser): string;
-									atKeyword(n?: NodeSyntaxParser): string;
-									children(n?: NodeSyntaxParser): ComponentValue[];
-									prelude(n?: NodeSyntaxParser): ComponentValue[];
+									nameRange(n?: NodeSyntaxParser): null | [number, number];
+									/**
+									 * A rule's children are its prelude; its block is read with {@link declarations }.
+									 */
 									childCount(n?: NodeSyntaxParser): number;
-									childAt(n: NodeSyntaxParser, i: number): ComponentValue;
+									child(i: number, n?: NodeSyntaxParser): ComponentValue;
 									/**
 									 * A block big enough to stream hands its children to the visitors as each one
 									 * finishes rather than collecting them, so both lists read as an empty block
@@ -34007,13 +34093,10 @@ declare namespace exports {
 									/**
 									 * Reads as an empty block on a streamed rule; see {@link declarations }.
 									 */
-									childRules(n?: NodeSyntaxParser): null | RuleSyntaxParser[];
-									blockStart(n?: NodeSyntaxParser): number;
-									blockEnd(n?: NodeSyntaxParser): number;
+									rules(n?: NodeSyntaxParser): null | RuleSyntaxParser[];
+									blockRange(n?: NodeSyntaxParser): null | [number, number];
 									important(n?: NodeSyntaxParser): boolean;
 									blockToken(n?: NodeSyntaxParser): SimpleBlockToken;
-									setEnd(n: NodeSyntaxParser, v: number): void;
-									setBlockEnd(n: NodeSyntaxParser, v: number): void;
 								},
 								NodeSyntaxParser,
 								CssPrintOptions
@@ -34101,30 +34184,35 @@ declare namespace exports {
 						 * Stop the walk descending into the current node (enter only).
 						 */
 						skipChildren(): void;
+						/**
+						 * Stop the walk: no visitor fires after the current one returns.
+						 */
+						stop(): void;
 						inValue(): boolean;
 						type(n?: NodeSyntaxParser): number;
-						start(n?: NodeSyntaxParser): number;
-						end(n?: NodeSyntaxParser): number;
 						range(n?: NodeSyntaxParser): [number, number];
-						loc(n?: NodeSyntaxParser): {
-							start: { line: number; column: number };
-							end: { line: number; column: number };
-						};
-						source(n?: NodeSyntaxParser): string;
-						value(n?: NodeSyntaxParser): string;
-						unescaped(n?: NodeSyntaxParser): string;
+						loc(n?: NodeSyntaxParser): [number, number, number, number];
+						/**
+						 * A node's text exactly as the input wrote it (`name` and `value` decode).
+						 */
+						source(n?: number | NodeSyntaxParser, end?: number): string;
+						/**
+						 * The token's value as CSS Syntax defines it: a number for a number,
+						 * percentage or dimension, otherwise text with escapes resolved (a string
+						 * without its quotes, a hash without its `#`, a `url()`'s contents, a
+						 * comment's text); "" for a rule, declaration, function or block.
+						 */
+						value(n?: NodeSyntaxParser): string | number;
+						unit(n?: NodeSyntaxParser): string;
 						typeFlag(n?: NodeSyntaxParser): string;
-						contentStart(n?: NodeSyntaxParser): number;
-						contentEnd(n?: NodeSyntaxParser): number;
+						valueRange(n?: NodeSyntaxParser): null | [number, number];
 						name(n?: NodeSyntaxParser): string;
-						nameStart(n?: NodeSyntaxParser): number;
-						nameEnd(n?: NodeSyntaxParser): number;
-						unescapedName(n?: NodeSyntaxParser): string;
-						atKeyword(n?: NodeSyntaxParser): string;
-						children(n?: NodeSyntaxParser): ComponentValue[];
-						prelude(n?: NodeSyntaxParser): ComponentValue[];
+						nameRange(n?: NodeSyntaxParser): null | [number, number];
+						/**
+						 * A rule's children are its prelude; its block is read with {@link declarations }.
+						 */
 						childCount(n?: NodeSyntaxParser): number;
-						childAt(n: NodeSyntaxParser, i: number): ComponentValue;
+						child(i: number, n?: NodeSyntaxParser): ComponentValue;
 						/**
 						 * A block big enough to stream hands its children to the visitors as each one
 						 * finishes rather than collecting them, so both lists read as an empty block
@@ -34137,13 +34225,10 @@ declare namespace exports {
 						/**
 						 * Reads as an empty block on a streamed rule; see {@link declarations }.
 						 */
-						childRules(n?: NodeSyntaxParser): null | RuleSyntaxParser[];
-						blockStart(n?: NodeSyntaxParser): number;
-						blockEnd(n?: NodeSyntaxParser): number;
+						rules(n?: NodeSyntaxParser): null | RuleSyntaxParser[];
+						blockRange(n?: NodeSyntaxParser): null | [number, number];
 						important(n?: NodeSyntaxParser): boolean;
 						blockToken(n?: NodeSyntaxParser): SimpleBlockToken;
-						setEnd(n: NodeSyntaxParser, v: number): void;
-						setBlockEnd(n: NodeSyntaxParser, v: number): void;
 					},
 					writer: PrintContext<
 						{
@@ -34154,30 +34239,35 @@ declare namespace exports {
 							 * Stop the walk descending into the current node (enter only).
 							 */
 							skipChildren(): void;
+							/**
+							 * Stop the walk: no visitor fires after the current one returns.
+							 */
+							stop(): void;
 							inValue(): boolean;
 							type(n?: NodeSyntaxParser): number;
-							start(n?: NodeSyntaxParser): number;
-							end(n?: NodeSyntaxParser): number;
 							range(n?: NodeSyntaxParser): [number, number];
-							loc(n?: NodeSyntaxParser): {
-								start: { line: number; column: number };
-								end: { line: number; column: number };
-							};
-							source(n?: NodeSyntaxParser): string;
-							value(n?: NodeSyntaxParser): string;
-							unescaped(n?: NodeSyntaxParser): string;
+							loc(n?: NodeSyntaxParser): [number, number, number, number];
+							/**
+							 * A node's text exactly as the input wrote it (`name` and `value` decode).
+							 */
+							source(n?: number | NodeSyntaxParser, end?: number): string;
+							/**
+							 * The token's value as CSS Syntax defines it: a number for a number,
+							 * percentage or dimension, otherwise text with escapes resolved (a string
+							 * without its quotes, a hash without its `#`, a `url()`'s contents, a
+							 * comment's text); "" for a rule, declaration, function or block.
+							 */
+							value(n?: NodeSyntaxParser): string | number;
+							unit(n?: NodeSyntaxParser): string;
 							typeFlag(n?: NodeSyntaxParser): string;
-							contentStart(n?: NodeSyntaxParser): number;
-							contentEnd(n?: NodeSyntaxParser): number;
+							valueRange(n?: NodeSyntaxParser): null | [number, number];
 							name(n?: NodeSyntaxParser): string;
-							nameStart(n?: NodeSyntaxParser): number;
-							nameEnd(n?: NodeSyntaxParser): number;
-							unescapedName(n?: NodeSyntaxParser): string;
-							atKeyword(n?: NodeSyntaxParser): string;
-							children(n?: NodeSyntaxParser): ComponentValue[];
-							prelude(n?: NodeSyntaxParser): ComponentValue[];
+							nameRange(n?: NodeSyntaxParser): null | [number, number];
+							/**
+							 * A rule's children are its prelude; its block is read with {@link declarations }.
+							 */
 							childCount(n?: NodeSyntaxParser): number;
-							childAt(n: NodeSyntaxParser, i: number): ComponentValue;
+							child(i: number, n?: NodeSyntaxParser): ComponentValue;
 							/**
 							 * A block big enough to stream hands its children to the visitors as each one
 							 * finishes rather than collecting them, so both lists read as an empty block
@@ -34190,13 +34280,10 @@ declare namespace exports {
 							/**
 							 * Reads as an empty block on a streamed rule; see {@link declarations }.
 							 */
-							childRules(n?: NodeSyntaxParser): null | RuleSyntaxParser[];
-							blockStart(n?: NodeSyntaxParser): number;
-							blockEnd(n?: NodeSyntaxParser): number;
+							rules(n?: NodeSyntaxParser): null | RuleSyntaxParser[];
+							blockRange(n?: NodeSyntaxParser): null | [number, number];
 							important(n?: NodeSyntaxParser): boolean;
 							blockToken(n?: NodeSyntaxParser): SimpleBlockToken;
-							setEnd(n: NodeSyntaxParser, v: number): void;
-							setBlockEnd(n: NodeSyntaxParser, v: number): void;
 						},
 						NodeSyntaxParser,
 						CssPrintOptions
@@ -34278,39 +34365,46 @@ declare namespace exports {
 					get node(): number;
 					get parent(): null | number;
 					/**
+					 * Counted along the sibling links when asked, so the walk stores nothing for it.
+					 */
+					get index(): number;
+					/**
 					 * Stop the walk descending into the current node (enter only).
 					 */
 					skipChildren(): void;
-					type(n?: number): number;
-					start(n?: number): number;
-					end(n?: number): number;
 					/**
-					 * Raw source slice `[start, end)` — valid only during the walk (the printer's
-					 * window), before `parseHtml` releases `_htmlSource`.
+					 * Stop the walk: no visitor fires after the current one returns.
 					 */
-					source(n?: number): string;
-					sourceSpanAt(from: number, to: number): string;
-					tagName(n?: number): string;
+					stop(): void;
+					type(n?: number): number;
+					range(n?: number): [number, number];
+					/**
+					 * Line / column are converted only when asked, by a converter made on the
+					 * first call of a parse. Valid during the walk, as {@link source } is.
+					 */
+					loc(n?: number): [number, number, number, number];
+					/**
+					 * A node's text as written; valid during the walk, before `parseHtml` releases the source.
+					 */
+					source(n?: number, end?: number): string;
+					/**
+					 * An element's or attribute's name (lowercased, adjusted in foreign content),
+					 * a doctype's name, a processing instruction's target; "" for other nodes.
+					 */
+					name(n?: number): string;
 					namespace(n?: number): number;
 					selfClosing(n?: number): boolean;
-					attributes(n?: number): HtmlAttribute[];
 					attributeCount(n?: number): number;
 					/**
-					 * The i-th attribute of an element, as an id for the `attribute*` reads.
+					 * The i-th attribute of an element, as a node the shared reads take.
 					 */
-					attributeAt(i: number, n?: number): number;
+					attribute(i: number, n?: number): number;
 					/**
 					 * Linear lookup by (lowercased) name.
 					 */
 					findAttribute(name: string, n?: number): number;
-					attributeName(a: number): string;
-					attributeValue(a: number): string;
-					attributeNameStart(a: number): number;
-					attributeNameEnd(a: number): number;
-					attributeValueStart(a: number): number;
-					attributeValueEnd(a: number): number;
-					tagEnd(n?: number): number;
-					nameEnd(n?: number): number;
+					valueRange(n?: number): null | [number, number];
+					nameRange(n?: number): null | [number, number];
 					/**
 					 * Whether the source wrote this element's end tag rather than the parser
 					 * popping it for an implied close. Read back off the range instead of marked
@@ -34319,6 +34413,14 @@ declare namespace exports {
 					 * region printed from source ever ask.
 					 */
 					sourceClosed(n?: number): boolean;
+					/**
+					 * Raw source of an element's opening tag, `[start, tagEnd)` — attribute quoting
+					 * / spacing / case preserved byte-for-byte (walk-window only) — or `""` for a
+					 * parser-inserted element (auto `html`/`head`/`body`/`tbody`, …), which has no
+					 * real source tag: its offsets are zero-width or borrow the triggering token,
+					 * so the sliced name doesn't match this element. The empty string lets a printer
+					 * treat such an element as transparent.
+					 */
 					openTag(n?: number): string;
 					/**
 					 * An element's end tag, generated as `</name>` from the opening tag's own name
@@ -34329,17 +34431,28 @@ declare namespace exports {
 					 * source to echo, and slicing one would spell `</>`.
 					 */
 					closeTag(n?: number): string;
-					contentEnd(n?: number): number;
+					/**
+					 * Between the opening tag and the end tag, or where the content ends when
+					 * the source left the end tag out.
+					 */
+					contentRange(n?: number): null | [number, number];
 					templateContent(n?: number): number;
-					data(n?: number): string;
-					piTarget(n?: number): string;
-					doctypeName(n?: number): string;
-					doctypePublicId(_n?: number): null | string;
-					doctypeSystemId(_n?: number): null | string;
-					firstChild(n?: number): number;
-					nextSibling(n?: number): number;
-					parentOf(n?: number): number;
-					children(n?: number): number[];
+					/**
+					 * A text's, comment's, processing instruction's or attribute's data,
+					 * character references decoded; "" for other nodes.
+					 */
+					value(n?: number): string;
+					publicId(_n?: number): null | string;
+					systemId(_n?: number): null | string;
+					/**
+					 * Counted along the sibling links once per node and visitor call.
+					 */
+					childCount(n?: number): number;
+					/**
+					 * Reached along the sibling links from the last child read under `n`, so a
+					 * loop over a node's children takes one step per child.
+					 */
+					child(i: number, n?: number): number;
 				};
 				export let BLOCK_CONTENTS: "block-contents";
 				export let CC_APOSTROPHE: 39;
@@ -34364,6 +34477,7 @@ declare namespace exports {
 					export let Comment: 5;
 					export let Doctype: 6;
 					export let ProcessingInstruction: 7;
+					export let Attribute: 8;
 				}
 				export let QUOTE_DOUBLE: 1;
 				export let QUOTE_NONE: 0;
@@ -34398,39 +34512,46 @@ declare namespace exports {
 						get node(): number;
 						get parent(): null | number;
 						/**
+						 * Counted along the sibling links when asked, so the walk stores nothing for it.
+						 */
+						get index(): number;
+						/**
 						 * Stop the walk descending into the current node (enter only).
 						 */
 						skipChildren(): void;
-						type(n?: number): number;
-						start(n?: number): number;
-						end(n?: number): number;
 						/**
-						 * Raw source slice `[start, end)` — valid only during the walk (the printer's
-						 * window), before `parseHtml` releases `_htmlSource`.
+						 * Stop the walk: no visitor fires after the current one returns.
 						 */
-						source(n?: number): string;
-						sourceSpanAt(from: number, to: number): string;
-						tagName(n?: number): string;
+						stop(): void;
+						type(n?: number): number;
+						range(n?: number): [number, number];
+						/**
+						 * Line / column are converted only when asked, by a converter made on the
+						 * first call of a parse. Valid during the walk, as {@link source } is.
+						 */
+						loc(n?: number): [number, number, number, number];
+						/**
+						 * A node's text as written; valid during the walk, before `parseHtml` releases the source.
+						 */
+						source(n?: number, end?: number): string;
+						/**
+						 * An element's or attribute's name (lowercased, adjusted in foreign content),
+						 * a doctype's name, a processing instruction's target; "" for other nodes.
+						 */
+						name(n?: number): string;
 						namespace(n?: number): number;
 						selfClosing(n?: number): boolean;
-						attributes(n?: number): HtmlAttribute[];
 						attributeCount(n?: number): number;
 						/**
-						 * The i-th attribute of an element, as an id for the `attribute*` reads.
+						 * The i-th attribute of an element, as a node the shared reads take.
 						 */
-						attributeAt(i: number, n?: number): number;
+						attribute(i: number, n?: number): number;
 						/**
 						 * Linear lookup by (lowercased) name.
 						 */
 						findAttribute(name: string, n?: number): number;
-						attributeName(a: number): string;
-						attributeValue(a: number): string;
-						attributeNameStart(a: number): number;
-						attributeNameEnd(a: number): number;
-						attributeValueStart(a: number): number;
-						attributeValueEnd(a: number): number;
-						tagEnd(n?: number): number;
-						nameEnd(n?: number): number;
+						valueRange(n?: number): null | [number, number];
+						nameRange(n?: number): null | [number, number];
 						/**
 						 * Whether the source wrote this element's end tag rather than the parser
 						 * popping it for an implied close. Read back off the range instead of marked
@@ -34439,6 +34560,14 @@ declare namespace exports {
 						 * region printed from source ever ask.
 						 */
 						sourceClosed(n?: number): boolean;
+						/**
+						 * Raw source of an element's opening tag, `[start, tagEnd)` — attribute quoting
+						 * / spacing / case preserved byte-for-byte (walk-window only) — or `""` for a
+						 * parser-inserted element (auto `html`/`head`/`body`/`tbody`, …), which has no
+						 * real source tag: its offsets are zero-width or borrow the triggering token,
+						 * so the sliced name doesn't match this element. The empty string lets a printer
+						 * treat such an element as transparent.
+						 */
 						openTag(n?: number): string;
 						/**
 						 * An element's end tag, generated as `</name>` from the opening tag's own name
@@ -34449,17 +34578,28 @@ declare namespace exports {
 						 * source to echo, and slicing one would spell `</>`.
 						 */
 						closeTag(n?: number): string;
-						contentEnd(n?: number): number;
+						/**
+						 * Between the opening tag and the end tag, or where the content ends when
+						 * the source left the end tag out.
+						 */
+						contentRange(n?: number): null | [number, number];
 						templateContent(n?: number): number;
-						data(n?: number): string;
-						piTarget(n?: number): string;
-						doctypeName(n?: number): string;
-						doctypePublicId(_n?: number): null | string;
-						doctypeSystemId(_n?: number): null | string;
-						firstChild(n?: number): number;
-						nextSibling(n?: number): number;
-						parentOf(n?: number): number;
-						children(n?: number): number[];
+						/**
+						 * A text's, comment's, processing instruction's or attribute's data,
+						 * character references decoded; "" for other nodes.
+						 */
+						value(n?: number): string;
+						publicId(_n?: number): null | string;
+						systemId(_n?: number): null | string;
+						/**
+						 * Counted along the sibling links once per node and visitor call.
+						 */
+						childCount(n?: number): number;
+						/**
+						 * Reached along the sibling links from the last child read under `n`, so a
+						 * loop over a node's children takes one step per child.
+						 */
+						child(i: number, n?: number): number;
 					}>[],
 					writer:
 						| undefined
@@ -34468,39 +34608,46 @@ declare namespace exports {
 									get node(): number;
 									get parent(): null | number;
 									/**
+									 * Counted along the sibling links when asked, so the walk stores nothing for it.
+									 */
+									get index(): number;
+									/**
 									 * Stop the walk descending into the current node (enter only).
 									 */
 									skipChildren(): void;
-									type(n?: number): number;
-									start(n?: number): number;
-									end(n?: number): number;
 									/**
-									 * Raw source slice `[start, end)` — valid only during the walk (the printer's
-									 * window), before `parseHtml` releases `_htmlSource`.
+									 * Stop the walk: no visitor fires after the current one returns.
 									 */
-									source(n?: number): string;
-									sourceSpanAt(from: number, to: number): string;
-									tagName(n?: number): string;
+									stop(): void;
+									type(n?: number): number;
+									range(n?: number): [number, number];
+									/**
+									 * Line / column are converted only when asked, by a converter made on the
+									 * first call of a parse. Valid during the walk, as {@link source } is.
+									 */
+									loc(n?: number): [number, number, number, number];
+									/**
+									 * A node's text as written; valid during the walk, before `parseHtml` releases the source.
+									 */
+									source(n?: number, end?: number): string;
+									/**
+									 * An element's or attribute's name (lowercased, adjusted in foreign content),
+									 * a doctype's name, a processing instruction's target; "" for other nodes.
+									 */
+									name(n?: number): string;
 									namespace(n?: number): number;
 									selfClosing(n?: number): boolean;
-									attributes(n?: number): HtmlAttribute[];
 									attributeCount(n?: number): number;
 									/**
-									 * The i-th attribute of an element, as an id for the `attribute*` reads.
+									 * The i-th attribute of an element, as a node the shared reads take.
 									 */
-									attributeAt(i: number, n?: number): number;
+									attribute(i: number, n?: number): number;
 									/**
 									 * Linear lookup by (lowercased) name.
 									 */
 									findAttribute(name: string, n?: number): number;
-									attributeName(a: number): string;
-									attributeValue(a: number): string;
-									attributeNameStart(a: number): number;
-									attributeNameEnd(a: number): number;
-									attributeValueStart(a: number): number;
-									attributeValueEnd(a: number): number;
-									tagEnd(n?: number): number;
-									nameEnd(n?: number): number;
+									valueRange(n?: number): null | [number, number];
+									nameRange(n?: number): null | [number, number];
 									/**
 									 * Whether the source wrote this element's end tag rather than the parser
 									 * popping it for an implied close. Read back off the range instead of marked
@@ -34509,6 +34656,14 @@ declare namespace exports {
 									 * region printed from source ever ask.
 									 */
 									sourceClosed(n?: number): boolean;
+									/**
+									 * Raw source of an element's opening tag, `[start, tagEnd)` — attribute quoting
+									 * / spacing / case preserved byte-for-byte (walk-window only) — or `""` for a
+									 * parser-inserted element (auto `html`/`head`/`body`/`tbody`, …), which has no
+									 * real source tag: its offsets are zero-width or borrow the triggering token,
+									 * so the sliced name doesn't match this element. The empty string lets a printer
+									 * treat such an element as transparent.
+									 */
 									openTag(n?: number): string;
 									/**
 									 * An element's end tag, generated as `</name>` from the opening tag's own name
@@ -34519,17 +34674,28 @@ declare namespace exports {
 									 * source to echo, and slicing one would spell `</>`.
 									 */
 									closeTag(n?: number): string;
-									contentEnd(n?: number): number;
+									/**
+									 * Between the opening tag and the end tag, or where the content ends when
+									 * the source left the end tag out.
+									 */
+									contentRange(n?: number): null | [number, number];
 									templateContent(n?: number): number;
-									data(n?: number): string;
-									piTarget(n?: number): string;
-									doctypeName(n?: number): string;
-									doctypePublicId(_n?: number): null | string;
-									doctypeSystemId(_n?: number): null | string;
-									firstChild(n?: number): number;
-									nextSibling(n?: number): number;
-									parentOf(n?: number): number;
-									children(n?: number): number[];
+									/**
+									 * A text's, comment's, processing instruction's or attribute's data,
+									 * character references decoded; "" for other nodes.
+									 */
+									value(n?: number): string;
+									publicId(_n?: number): null | string;
+									systemId(_n?: number): null | string;
+									/**
+									 * Counted along the sibling links once per node and visitor call.
+									 */
+									childCount(n?: number): number;
+									/**
+									 * Reached along the sibling links from the last child read under `n`, so a
+									 * loop over a node's children takes one step per child.
+									 */
+									child(i: number, n?: number): number;
 								},
 								number,
 								HtmlPrintOptions
@@ -34569,39 +34735,46 @@ declare namespace exports {
 						get node(): number;
 						get parent(): null | number;
 						/**
+						 * Counted along the sibling links when asked, so the walk stores nothing for it.
+						 */
+						get index(): number;
+						/**
 						 * Stop the walk descending into the current node (enter only).
 						 */
 						skipChildren(): void;
-						type(n?: number): number;
-						start(n?: number): number;
-						end(n?: number): number;
 						/**
-						 * Raw source slice `[start, end)` — valid only during the walk (the printer's
-						 * window), before `parseHtml` releases `_htmlSource`.
+						 * Stop the walk: no visitor fires after the current one returns.
 						 */
-						source(n?: number): string;
-						sourceSpanAt(from: number, to: number): string;
-						tagName(n?: number): string;
+						stop(): void;
+						type(n?: number): number;
+						range(n?: number): [number, number];
+						/**
+						 * Line / column are converted only when asked, by a converter made on the
+						 * first call of a parse. Valid during the walk, as {@link source } is.
+						 */
+						loc(n?: number): [number, number, number, number];
+						/**
+						 * A node's text as written; valid during the walk, before `parseHtml` releases the source.
+						 */
+						source(n?: number, end?: number): string;
+						/**
+						 * An element's or attribute's name (lowercased, adjusted in foreign content),
+						 * a doctype's name, a processing instruction's target; "" for other nodes.
+						 */
+						name(n?: number): string;
 						namespace(n?: number): number;
 						selfClosing(n?: number): boolean;
-						attributes(n?: number): HtmlAttribute[];
 						attributeCount(n?: number): number;
 						/**
-						 * The i-th attribute of an element, as an id for the `attribute*` reads.
+						 * The i-th attribute of an element, as a node the shared reads take.
 						 */
-						attributeAt(i: number, n?: number): number;
+						attribute(i: number, n?: number): number;
 						/**
 						 * Linear lookup by (lowercased) name.
 						 */
 						findAttribute(name: string, n?: number): number;
-						attributeName(a: number): string;
-						attributeValue(a: number): string;
-						attributeNameStart(a: number): number;
-						attributeNameEnd(a: number): number;
-						attributeValueStart(a: number): number;
-						attributeValueEnd(a: number): number;
-						tagEnd(n?: number): number;
-						nameEnd(n?: number): number;
+						valueRange(n?: number): null | [number, number];
+						nameRange(n?: number): null | [number, number];
 						/**
 						 * Whether the source wrote this element's end tag rather than the parser
 						 * popping it for an implied close. Read back off the range instead of marked
@@ -34610,6 +34783,14 @@ declare namespace exports {
 						 * region printed from source ever ask.
 						 */
 						sourceClosed(n?: number): boolean;
+						/**
+						 * Raw source of an element's opening tag, `[start, tagEnd)` — attribute quoting
+						 * / spacing / case preserved byte-for-byte (walk-window only) — or `""` for a
+						 * parser-inserted element (auto `html`/`head`/`body`/`tbody`, …), which has no
+						 * real source tag: its offsets are zero-width or borrow the triggering token,
+						 * so the sliced name doesn't match this element. The empty string lets a printer
+						 * treat such an element as transparent.
+						 */
 						openTag(n?: number): string;
 						/**
 						 * An element's end tag, generated as `</name>` from the opening tag's own name
@@ -34620,56 +34801,74 @@ declare namespace exports {
 						 * source to echo, and slicing one would spell `</>`.
 						 */
 						closeTag(n?: number): string;
-						contentEnd(n?: number): number;
+						/**
+						 * Between the opening tag and the end tag, or where the content ends when
+						 * the source left the end tag out.
+						 */
+						contentRange(n?: number): null | [number, number];
 						templateContent(n?: number): number;
-						data(n?: number): string;
-						piTarget(n?: number): string;
-						doctypeName(n?: number): string;
-						doctypePublicId(_n?: number): null | string;
-						doctypeSystemId(_n?: number): null | string;
-						firstChild(n?: number): number;
-						nextSibling(n?: number): number;
-						parentOf(n?: number): number;
-						children(n?: number): number[];
+						/**
+						 * A text's, comment's, processing instruction's or attribute's data,
+						 * character references decoded; "" for other nodes.
+						 */
+						value(n?: number): string;
+						publicId(_n?: number): null | string;
+						systemId(_n?: number): null | string;
+						/**
+						 * Counted along the sibling links once per node and visitor call.
+						 */
+						childCount(n?: number): number;
+						/**
+						 * Reached along the sibling links from the last child read under `n`, so a
+						 * loop over a node's children takes one step per child.
+						 */
+						child(i: number, n?: number): number;
 					},
 					writer: PrintContext<
 						{
 							get node(): number;
 							get parent(): null | number;
 							/**
+							 * Counted along the sibling links when asked, so the walk stores nothing for it.
+							 */
+							get index(): number;
+							/**
 							 * Stop the walk descending into the current node (enter only).
 							 */
 							skipChildren(): void;
-							type(n?: number): number;
-							start(n?: number): number;
-							end(n?: number): number;
 							/**
-							 * Raw source slice `[start, end)` — valid only during the walk (the printer's
-							 * window), before `parseHtml` releases `_htmlSource`.
+							 * Stop the walk: no visitor fires after the current one returns.
 							 */
-							source(n?: number): string;
-							sourceSpanAt(from: number, to: number): string;
-							tagName(n?: number): string;
+							stop(): void;
+							type(n?: number): number;
+							range(n?: number): [number, number];
+							/**
+							 * Line / column are converted only when asked, by a converter made on the
+							 * first call of a parse. Valid during the walk, as {@link source } is.
+							 */
+							loc(n?: number): [number, number, number, number];
+							/**
+							 * A node's text as written; valid during the walk, before `parseHtml` releases the source.
+							 */
+							source(n?: number, end?: number): string;
+							/**
+							 * An element's or attribute's name (lowercased, adjusted in foreign content),
+							 * a doctype's name, a processing instruction's target; "" for other nodes.
+							 */
+							name(n?: number): string;
 							namespace(n?: number): number;
 							selfClosing(n?: number): boolean;
-							attributes(n?: number): HtmlAttribute[];
 							attributeCount(n?: number): number;
 							/**
-							 * The i-th attribute of an element, as an id for the `attribute*` reads.
+							 * The i-th attribute of an element, as a node the shared reads take.
 							 */
-							attributeAt(i: number, n?: number): number;
+							attribute(i: number, n?: number): number;
 							/**
 							 * Linear lookup by (lowercased) name.
 							 */
 							findAttribute(name: string, n?: number): number;
-							attributeName(a: number): string;
-							attributeValue(a: number): string;
-							attributeNameStart(a: number): number;
-							attributeNameEnd(a: number): number;
-							attributeValueStart(a: number): number;
-							attributeValueEnd(a: number): number;
-							tagEnd(n?: number): number;
-							nameEnd(n?: number): number;
+							valueRange(n?: number): null | [number, number];
+							nameRange(n?: number): null | [number, number];
 							/**
 							 * Whether the source wrote this element's end tag rather than the parser
 							 * popping it for an implied close. Read back off the range instead of marked
@@ -34678,6 +34877,14 @@ declare namespace exports {
 							 * region printed from source ever ask.
 							 */
 							sourceClosed(n?: number): boolean;
+							/**
+							 * Raw source of an element's opening tag, `[start, tagEnd)` — attribute quoting
+							 * / spacing / case preserved byte-for-byte (walk-window only) — or `""` for a
+							 * parser-inserted element (auto `html`/`head`/`body`/`tbody`, …), which has no
+							 * real source tag: its offsets are zero-width or borrow the triggering token,
+							 * so the sliced name doesn't match this element. The empty string lets a printer
+							 * treat such an element as transparent.
+							 */
 							openTag(n?: number): string;
 							/**
 							 * An element's end tag, generated as `</name>` from the opening tag's own name
@@ -34688,17 +34895,28 @@ declare namespace exports {
 							 * source to echo, and slicing one would spell `</>`.
 							 */
 							closeTag(n?: number): string;
-							contentEnd(n?: number): number;
+							/**
+							 * Between the opening tag and the end tag, or where the content ends when
+							 * the source left the end tag out.
+							 */
+							contentRange(n?: number): null | [number, number];
 							templateContent(n?: number): number;
-							data(n?: number): string;
-							piTarget(n?: number): string;
-							doctypeName(n?: number): string;
-							doctypePublicId(_n?: number): null | string;
-							doctypeSystemId(_n?: number): null | string;
-							firstChild(n?: number): number;
-							nextSibling(n?: number): number;
-							parentOf(n?: number): number;
-							children(n?: number): number[];
+							/**
+							 * A text's, comment's, processing instruction's or attribute's data,
+							 * character references decoded; "" for other nodes.
+							 */
+							value(n?: number): string;
+							publicId(_n?: number): null | string;
+							systemId(_n?: number): null | string;
+							/**
+							 * Counted along the sibling links once per node and visitor call.
+							 */
+							childCount(n?: number): number;
+							/**
+							 * Reached along the sibling links from the last child read under `n`, so a
+							 * loop over a node's children takes one step per child.
+							 */
+							child(i: number, n?: number): number;
 						},
 						number,
 						HtmlPrintOptions

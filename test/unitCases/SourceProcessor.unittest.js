@@ -347,6 +347,551 @@ describe("SourceProcessor", () => {
 		});
 	});
 
+	describe("node path", () => {
+		/**
+		 * @param {string} input source
+		 * @param {number} offset offset into it
+		 * @returns {[number, number]} 1-based line, 0-based column
+		 */
+		const lineColumn = (input, offset) => {
+			const before = input.slice(0, offset).split("\n");
+			return [before.length, before[before.length - 1].length];
+		};
+
+		/**
+		 * Reads a node through `NodePath` members only, as a language-agnostic visitor would.
+		 * @param {import("../../lib/util/SourceProcessor").NodePath<EXPECTED_ANY>} path path
+		 * @param {string} input the parsed source
+		 * @returns {Record<string, unknown>} what a shared visitor sees
+		 */
+		const describeNode = (path, input) => {
+			const [start, end] = path.range();
+			const parent = path.parent;
+			/** @type {unknown[]} */
+			const children = [];
+			for (let i = 0, c = path.child(0); c !== 0; c = path.child(++i)) {
+				children.push(c);
+			}
+			return {
+				loc: path.loc(),
+				expectedLoc: [...lineColumn(input, start), ...lineColumn(input, end)],
+				source: path.source(),
+				slice: path.source(start, end),
+				index: path.index,
+				atIndex:
+					parent === null ? null : path.child(path.index, parent) === path.node,
+				childCount: path.childCount(),
+				children
+			};
+		};
+
+		it("reads html nodes through the shared members", () => {
+			const input = "<ul>\n<li>a</li>\n<li>b</li></ul>";
+			/** @type {Record<string, unknown>[]} */
+			const seen = [];
+			/** @type {[number, string][]} each child of the list, and its own first child's type */
+			const listChildren = [];
+			/** @type {[string, string | null, number | null][]} name, its source, content offset */
+			const implied = [];
+			new HtmlSourceProcessor()
+				.use({
+					[HtmlNodeType.Element]: (path) => {
+						if (path.name() === "ul") {
+							// Reading each child's own children between steps keeps the
+							// list's place: the cursor is per parent.
+							for (let i = 0; i < path.childCount(); i++) {
+								const item = path.child(i);
+								const inner = path.child(0, item);
+								listChildren.push([
+									path.type(item),
+									inner === 0 ? "" : path.source(inner)
+								]);
+							}
+							expect(path.child(listChildren.length)).toBe(0);
+							expect(path.child(1)).toBe(path.child(1));
+							expect(path.type(path.child(0))).toBe(HtmlNodeType.Text);
+						}
+						if (path.name() === "li") seen.push(describeNode(path, input));
+						const name = path.nameRange();
+						const content = path.contentRange();
+						implied.push([
+							path.name(),
+							name === null ? null : path.source(...name),
+							content === null ? null : content[0] - path.range()[0]
+						]);
+					}
+				})
+				.process(input);
+			expect(listChildren).toEqual([
+				[HtmlNodeType.Text, ""],
+				[HtmlNodeType.Element, "a"],
+				[HtmlNodeType.Text, ""],
+				[HtmlNodeType.Element, "b"]
+			]);
+			expect(implied).toEqual([
+				["html", null, null],
+				["head", null, null],
+				["body", null, null],
+				["ul", "ul", 4],
+				["li", "li", 4],
+				["li", "li", 4]
+			]);
+			expect(seen).toHaveLength(2);
+			for (const node of seen) {
+				expect(node.loc).toEqual(node.expectedLoc);
+				expect(node.source).toBe(node.slice);
+				expect(node.atIndex).toBe(true);
+				expect(node.childCount).toBe(1);
+				expect(node.children).toHaveLength(1);
+			}
+			expect(seen.map((node) => node.index)).toEqual([1, 3]);
+			expect(seen.map((node) => node.source)).toEqual([
+				"<li>a</li>",
+				"<li>b</li>"
+			]);
+			expect(seen[1].loc).toEqual([3, 0, 3, 10]);
+		});
+
+		it("reads names and values decoded, and as written through source", () => {
+			/** @type {string[]} */
+			const css = [];
+			new CssSourceProcessor()
+				.use(
+					[CssNodeType.AtRule, CssNodeType.Declaration, CssNodeType.String],
+					(path) => {
+						const written =
+							path.type() === CssNodeType.String
+								? path.source()
+								: path.source(.../** @type {[number, number]} */ (path.nameRange()));
+						css.push(`${path.name()}|${path.value()}|${written}`);
+					}
+				)
+				.process('@m\\65 dia x{a{co\\6cor:red;content:"\\41 b"}}');
+			expect(css).toEqual([
+				"media||m\\65 dia",
+				"color||co\\6cor",
+				"content||content",
+				'|Ab|"\\41 b"'
+			]);
+			/** @type {string[]} */
+			const html = [];
+			new HtmlSourceProcessor()
+				.use(
+					[
+						HtmlNodeType.Doctype,
+						HtmlNodeType.Element,
+						HtmlNodeType.Text,
+						HtmlNodeType.Comment
+					],
+					(path) => {
+						if (path.type() === HtmlNodeType.Element && path.parent !== null) {
+							if (path.name() !== "b") return;
+						}
+						html.push(`${path.name()}|${path.value()}`);
+					}
+				)
+				.process("<!DOCTYPE html><B>a &amp; b</B><!--c-->");
+			expect(html).toEqual(["html|", "b|", "|a & b", "|c"]);
+		});
+
+		it("reads css numbers as numbers and leaves source exactly as written", () => {
+			/** @type {[string, unknown, string, string][]} */
+			const seen = [];
+			const input = "a{w:1\\70x;p:50%;n:+1.50e1;i:a\u0000b}/* c */z{y:q\\";
+			new CssSourceProcessor()
+				.use(
+					[
+						CssNodeType.Dimension,
+						CssNodeType.Percentage,
+						CssNodeType.Number,
+						CssNodeType.Ident,
+						CssNodeType.Comment
+					],
+					(path) => {
+						seen.push([
+							path.source(),
+							path.value(),
+							path.unit(),
+							path.source(path.range()[0], path.range()[1])
+						]);
+					}
+				)
+				.process(input);
+			expect(seen).toEqual([
+				["a", "a", "", "a"],
+				["1\\70x", 1, "px", "1\\70x"],
+				["50%", 50, "", "50%"],
+				["+1.50e1", 15, "", "+1.50e1"],
+				["a\u0000b", "a\uFFFDb", "", "a\u0000b"],
+				["/* c */", " c ", "", "/* c */"],
+				["z", "z", "", "z"],
+				["q\\", "q\uFFFD", "", "q\\"]
+			]);
+		});
+
+		it("reads every part of a node as a [start, end] range", () => {
+			const css = "@media x{a{b:url(c)}}@import 'd';";
+			/** @type {Record<string, unknown>[]} */
+			const cssSeen = [];
+			new CssSourceProcessor()
+				.use([CssNodeType.AtRule, CssNodeType.Url], (path) => {
+					/**
+					 * @param {[number, number] | null} range range
+					 * @returns {string | null} what it covers
+					 */
+					const text = (range) => (range === null ? null : path.source(...range));
+					cssSeen.push({
+						source: path.source(...path.range()),
+						name: text(path.nameRange()),
+						value: text(path.valueRange()),
+						block: text(path.blockRange()),
+						rules: (path.rules() || []).length
+					});
+				})
+				.process(css);
+			expect(cssSeen).toEqual([
+				{ source: "@media x{a{b:url(c)}}", name: "media", value: null, block: "{a{b:url(c)}}", rules: 1 },
+				{ source: "url(c)", name: null, value: "c", block: null, rules: 0 },
+				{ source: "@import 'd'", name: "import", value: null, block: null, rules: 0 }
+			]);
+			const html = "<div id=a>x</div><p>y<br><p>z";
+			/** @type {Record<string, unknown>[]} */
+			const htmlSeen = [];
+			new HtmlSourceProcessor()
+				.use([HtmlNodeType.Element], (path) => {
+					const content = path.contentRange();
+					if (content === null) return;
+					htmlSeen.push({
+						source: path.source(...path.range()),
+						name: path.source(.../** @type {[number, number]} */ (path.nameRange())),
+						content: path.source(...content)
+					});
+				})
+				.process(html);
+			expect(htmlSeen).toEqual([
+				{ source: "<div id=a>x</div>", name: "div", content: "x" },
+				{ source: "<p>y<br>", name: "p", content: "y<br>" },
+				{ source: "<br>", name: "br", content: "" },
+				{ source: "<p>z", name: "p", content: "z" }
+			]);
+		});
+
+		it("ends an html element with the end tag naming it, whichever path closes it", () => {
+			// `</b>` and `</a>` go through the adoption agency, `</span>` through the
+			// generic end tag, `</div>` and `</li>` through their own rules, and the
+			// second `<b>` is closed by its parent's end tag instead.
+			const html = "<div><b>b</b><a>a</a><span>s</span><li>l</li><p><b>z</p></div>";
+			/** @type {string[]} */
+			const seen = [];
+			new HtmlSourceProcessor()
+				.use([HtmlNodeType.Element], (path) => {
+					if (path.parent !== null && path.name(path.parent) === "body") return;
+					if (path.name() === "html" || path.name() === "head" || path.name() === "body") {
+						return;
+					}
+					seen.push(path.source());
+				})
+				.process(html);
+			expect(seen).toEqual([
+				"<b>b</b>",
+				"<a>a</a>",
+				"<span>s</span>",
+				"<li>l</li>",
+				"<p><b>z</p>",
+				"<b>z"
+			]);
+		});
+
+		it("ends a foreign element with the end tag naming it", () => {
+			const html =
+				'<svg><marker><path d="x"/><b-c></b-c></marker><script></script></svg>';
+			/** @type {string[]} */
+			const seen = [];
+			new HtmlSourceProcessor()
+				.use([HtmlNodeType.Element], (path) => {
+					if (path.namespace() !== 0) seen.push(path.source());
+				})
+				.process(html);
+			expect(seen).toEqual([
+				html,
+				'<marker><path d="x"/><b-c></b-c></marker>',
+				'<path d="x"/>',
+				"<b-c></b-c>",
+				"<script></script>"
+			]);
+		});
+
+		it("answers empty for a css node without a name, value or block token", () => {
+			/** @type {[number, string, [number, number] | null, string | number, string][]} */
+			const seen = [];
+			new CssSourceProcessor()
+				.use(
+					[CssNodeType.QualifiedRule, CssNodeType.Ident, CssNodeType.SimpleBlock],
+					(path) => {
+						seen.push([
+							path.type(),
+							path.name(),
+							path.nameRange(),
+							path.value(),
+							path.blockToken()
+						]);
+					}
+				)
+				.process("a[b]{}");
+			expect(seen).toEqual([
+				[CssNodeType.QualifiedRule, "", null, "", ""],
+				[CssNodeType.Ident, "", null, "a", ""],
+				[CssNodeType.SimpleBlock, "", null, "", "["],
+				[CssNodeType.Ident, "", null, "b", ""]
+			]);
+		});
+
+		it("reads html attributes as nodes through the shared members", () => {
+			const input = `<p>\n<a href="/x?a&amp;b" title=t data-x>y</a>`;
+			/** @type {Record<string, unknown>[]} */
+			const seen = [];
+			new HtmlSourceProcessor()
+				.use([HtmlNodeType.Element], (path) => {
+					if (path.name() !== "a") return;
+					for (let i = 0, a = path.attribute(0); a !== 0; a = path.attribute(++i)) {
+						const valueRange = path.valueRange(a);
+						seen.push({
+							type: path.type(a),
+							name: path.name(a),
+							value: path.value(a),
+							source: path.source(a),
+							written: valueRange === null ? null : path.source(...valueRange),
+							nameSource: path.source(
+								.../** @type {[number, number]} */ (path.nameRange(a))
+							),
+							loc: path.loc(a).slice(0, 2)
+						});
+					}
+					expect(path.attribute(path.attributeCount())).toBe(0);
+					expect(path.findAttribute("id")).toBe(0);
+					expect(path.name(path.findAttribute("title"))).toBe("title");
+				})
+				.process(input);
+			expect(seen).toEqual([
+				{
+					type: HtmlNodeType.Attribute,
+					name: "href",
+					value: "/x?a&b",
+					source: 'href="/x?a&amp;b"',
+					written: "/x?a&amp;b",
+					nameSource: "href",
+					loc: [2, 3]
+				},
+				{
+					type: HtmlNodeType.Attribute,
+					name: "title",
+					value: "t",
+					source: "title=t",
+					written: "t",
+					nameSource: "title",
+					loc: [2, 21]
+				},
+				{
+					type: HtmlNodeType.Attribute,
+					name: "data-x",
+					value: "",
+					source: "data-x",
+					written: null,
+					nameSource: "data-x",
+					loc: [2, 29]
+				}
+			]);
+		});
+
+		it("reads the html root and a template's content at index 0", () => {
+			/** @type {[number, number | null, number][]} */
+			const seen = [];
+			new HtmlSourceProcessor()
+				.use([HtmlNodeType.Document, HtmlNodeType.DocumentFragment], (path) => {
+					seen.push([path.type(), path.parent, path.index]);
+				})
+				.process("<template><b></b><i></i></template>");
+			expect(seen).toHaveLength(2);
+			expect(seen[0]).toEqual([HtmlNodeType.Document, null, 0]);
+			expect(seen[1][0]).toBe(HtmlNodeType.DocumentFragment);
+			expect(seen[1][1]).not.toBeNull();
+			expect(seen[1][2]).toBe(0);
+		});
+
+		it("reads css nodes through the shared members", () => {
+			const input = "a {\n\tcolor: rgb(1, 2,\n3);\n}";
+			// Leaves reuse ids that held lists in this parse, so a leaf reading
+			// its id's leftover list slots would report children.
+			new CssSourceProcessor().process(`a{b:${"f(".repeat(40)}${")".repeat(40)}}`);
+			/** @type {Record<string, unknown>[]} */
+			const seen = [];
+			/** @type {string[]} */
+			const args = [];
+			new CssSourceProcessor()
+				.use({
+					[CssNodeType.Function]: (path) => {
+						for (let i = 0; i < path.childCount(); i++) {
+							args.push(path.source(path.child(i)));
+						}
+						expect(path.child(path.childCount())).toBe(0);
+					},
+					[CssNodeType.Number]: (path) => {
+						seen.push(describeNode(path, input));
+					}
+				})
+				.process(input);
+			expect(args).toEqual(["1", ",", " ", "2", ",", "\n", "3"]);
+			expect(seen.map((node) => node.source)).toEqual(["1", "2", "3"]);
+			for (const node of seen) {
+				expect(node.loc).toEqual(node.expectedLoc);
+				expect(node.source).toBe(node.slice);
+				expect(node.atIndex).toBe(true);
+				expect(node.childCount).toBe(0);
+				expect(node.children).toEqual([]);
+			}
+			expect(seen.map((node) => node.index)).toEqual([0, 3, 6]);
+			expect(seen[2].loc).toEqual([3, 0, 3, 1]);
+		});
+	});
+
+	describe("stop", () => {
+		it("ends a css walk: no later visitor, exit or comment fires", () => {
+			/** @type {string[]} */
+			const log = [];
+			const processor = new CssSourceProcessor()
+				.use({
+					[CssNodeType.QualifiedRule]: {
+						enter: () => log.push("rule"),
+						exit: () => log.push("rule exit")
+					},
+					[CssNodeType.Declaration]: (path) => {
+						log.push(path.name());
+						if (path.name() === "b") path.stop();
+					},
+					[CssNodeType.Comment]: () => log.push("comment")
+				})
+				.use({
+					[CssNodeType.Declaration]: (path) => log.push(`second ${path.name()}`)
+				});
+			processor.process("x{a:1;b:2;c:3}/* c */y{d:4}");
+			expect(log).toEqual(["rule", "a", "second a", "b"]);
+			log.length = 0;
+			processor.process("x{a:1}/* c */");
+			expect(log).toEqual(["rule", "a", "second a", "rule exit", "comment"]);
+		});
+
+		it("stops css visitors but still prints the whole output", () => {
+			const css = "a { color: red }\nb { top: 0 }\nc { left: 0 }";
+			let fired = 0;
+			const { code } = new CssSourceProcessor()
+				.use({
+					[CssNodeType.Declaration]: (path) => {
+						fired++;
+						path.stop();
+					}
+				})
+				.process(css, { mode: "minify" });
+			expect(fired).toBe(1);
+			expect(code).toBe(
+				new CssSourceProcessor().process(css, { mode: "minify" }).code
+			);
+		});
+
+		it("ends an html walk, and the next parse starts afresh", () => {
+			/** @type {string[]} */
+			const log = [];
+			const processor = new HtmlSourceProcessor().use([HtmlNodeType.Element], {
+				enter: (path) => {
+					log.push(path.name());
+					if (path.name() === "base") path.stop();
+				},
+				exit: (path) => log.push(`/${path.name()}`)
+			});
+			processor.process("<base href=/a><p>x</p><i>y</i>");
+			expect(log).toEqual(["html", "head", "base"]);
+			log.length = 0;
+			processor.process("<p>x</p>");
+			expect(log).toEqual([
+				"html",
+				"head",
+				"/head",
+				"body",
+				"p",
+				"/p",
+				"/body",
+				"/html"
+			]);
+		});
+
+		it("ends a streamed html walk mid-parse", () => {
+			// Past the node count where the walk streams during tree construction.
+			const html = `<ul>${"<li>x</li>".repeat(40000)}</ul>`;
+			let seen = 0;
+			new HtmlSourceProcessor()
+				.use([HtmlNodeType.Element], (path) => {
+					if (path.name() === "li" && ++seen === 10) path.stop();
+				})
+				.process(html);
+			expect(seen).toBe(10);
+			let total = 0;
+			new HtmlSourceProcessor()
+				.use([HtmlNodeType.Element], (path) => {
+					if (path.name() === "li") total++;
+				})
+				.process(html);
+			expect(total).toBe(40000);
+		});
+
+		it("stops html visitors but still prints the whole output", () => {
+			const html = "<div><p>a</p><p>b</p></div>";
+			/** @type {string[]} */
+			const log = [];
+			const { code } = new HtmlSourceProcessor()
+				.use([HtmlNodeType.Element], {
+					enter: (path) => {
+						log.push(path.name());
+						if (path.name() === "div") path.stop();
+					},
+					exit: (path) => log.push(`/${path.name()}`)
+				})
+				.process(html, { mode: "minify" });
+			expect(log).toEqual(["html", "head", "/head", "body", "div"]);
+			expect(code).toBe(
+				new HtmlSourceProcessor().process(html, { mode: "minify" }).code
+			);
+		});
+	});
+
+	describe("use with an array of node types", () => {
+		it("registers one visitor for every listed type, in each language", () => {
+			/** @type {string[]} */
+			const css = [];
+			new CssSourceProcessor()
+				.use([CssNodeType.Number, CssNodeType.Dimension], (path) =>
+					css.push(path.source())
+				)
+				.process("a{top:1px;z-index:2;left:3em}");
+			expect(css).toEqual(["1px", "2", "3em"]);
+			/** @type {string[]} */
+			const html = [];
+			new HtmlSourceProcessor()
+				.use([HtmlNodeType.Text, HtmlNodeType.Comment], {
+					exit: (path) => html.push(path.source())
+				})
+				.process("<p>a<!--b-->c</p>");
+			expect(html).toEqual(["a", "<!--b-->", "c"]);
+		});
+
+		it("requires a visitor", () => {
+			expect(() =>
+				new CssSourceProcessor().use(
+					[CssNodeType.Number],
+					/** @type {EXPECTED_ANY} */ (undefined)
+				)
+			).toThrow(TypeError);
+		});
+	});
+
 	describe("visitors", () => {
 		it("fires a css visitor for each node of that type, and still prints", () => {
 			/** @type {string[]} */
@@ -368,7 +913,7 @@ describe("SourceProcessor", () => {
 			new HtmlSourceProcessor()
 				.use({
 					[HtmlNodeType.Element]: (path) => {
-						seen.push(path.tagName());
+						seen.push(path.name());
 					}
 				})
 				.process("<div><p>x</p></div>");

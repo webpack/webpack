@@ -61,15 +61,21 @@ const parseFragment = (html) => {
 		.use({
 			[NodeType.Element]: {
 				enter: (path) => {
-					const end = path.end();
-					if (end === 0 || path.start() < lastEnd) return;
+					const end = path.range()[1];
+					if (end === 0 || path.range()[0] < lastEnd) return;
 					lastEnd = end;
 					open = {
-						tag: path.tagName(),
-						attributes: path.attributes().map((attribute) => ({
-							name: attribute.name,
-							value: attribute.value
-						})),
+						tag: path.name(),
+						attributes: Array.from(
+							{ length: path.attributeCount() },
+							(_, i) => {
+								const attribute = path.attribute(i);
+								return {
+									name: path.name(attribute),
+									value: path.value(attribute)
+								};
+							}
+						),
 						text: ""
 					};
 					elements.push(open);
@@ -79,7 +85,7 @@ const parseFragment = (html) => {
 				}
 			},
 			[NodeType.Text]: (path) => {
-				if (open !== undefined) open.text += path.data();
+				if (open !== undefined) open.text += path.value();
 			}
 		})
 		.process(html, {});
