@@ -2732,6 +2732,74 @@ const ESTREE_PRINT_PROGRAM_FORMATS = [
 ];
 
 describe("syntax-printer", () => {
+	it("should parse a nested expression in as many stack frames per level as acorn", async () => {
+		const { minify } = await load();
+		const acorn = require("acorn");
+		const { WebpackParser } = require("../../lib/javascript/syntax-parser");
+
+		/**
+		 * @param {{ readWord: () => EXPECTED_ANY }} prototype where the probe reads names
+		 * @param {(source: string) => unknown} parse reads a source through it
+		 * @returns {Promise<number>} the frames one more level of `a * (…)` takes
+		 */
+		const framesPerLevel = async (prototype, parse) => {
+			/**
+			 * @param {number} depth how deep the expression nests
+			 * @returns {Promise<number>} the frames below its innermost name
+			 */
+			const framesAt = async (depth) => {
+				let source = "deepest";
+				for (let i = 0; i < depth; i++) {
+					source = `a ${i % 2 ? "+" : "*"} (${source})`;
+				}
+				/** @type {number | undefined} */
+				let frames;
+				const { readWord } = prototype;
+				prototype.readWord = function readDeepest() {
+					if (
+						frames === undefined &&
+						/** @type {EXPECTED_ANY} */ (this).input.startsWith(
+							"deepest",
+							/** @type {EXPECTED_ANY} */ (this).pos
+						)
+					) {
+						frames = /** @type {string} */ (new Error("probe").stack).split(
+							"\n"
+						).length;
+					}
+					return readWord.call(this);
+				};
+				try {
+					await parse(`x = ${source};`);
+				} finally {
+					prototype.readWord = readWord;
+				}
+				return /** @type {number} */ (frames);
+			};
+			const { stackTraceLimit } = Error;
+			Error.stackTraceLimit = Infinity;
+			try {
+				return ((await framesAt(20)) - (await framesAt(10))) / 10;
+			} finally {
+				Error.stackTraceLimit = stackTraceLimit;
+			}
+		};
+
+		expect(
+			await framesPerLevel(WebpackParser.prototype, (source) =>
+				minify(source, { compress: false, mangle: false })
+			)
+		).toBe(
+			await framesPerLevel(
+				/** @type {{ readWord: () => EXPECTED_ANY }} */ (
+					/** @type {unknown} */ (acorn.Parser.prototype)
+				),
+				(source) =>
+				acorn.parse(source, { ecmaVersion: "latest" })
+			)
+		);
+	});
+
 	it("should install every phase", async () => {
 		const printer = await load();
 		expect(typeof printer.minify).toBe("function");

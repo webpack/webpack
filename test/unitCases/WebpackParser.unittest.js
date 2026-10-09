@@ -1109,6 +1109,86 @@ describe("WebpackParser", () => {
 			);
 		});
 
+		it("should spend as many stack frames per nesting level as acorn, lazy or not", () => {
+			const { WebpackParser } = require("../../lib/javascript/syntax-parser");
+
+			/**
+			 * @param {{ extend: (plugin: EXPECTED_ANY) => { parse: (input: string, options: EXPECTED_ANY) => unknown } }} Parser the parser to probe
+			 * @param {Partial<ParserOptions>} options how to parse
+			 * @returns {number} the frames one more level of `a * (…)` takes
+			 */
+			const framesPerLevel = (Parser, options) => {
+				/** @type {number | undefined} */
+				let frames;
+				const Probe = Parser.extend(
+					(/** @type {EXPECTED_ANY} */ Base) =>
+						class extends Base {
+							/**
+							 * @param {boolean=} liberal whether keywords are names
+							 * @returns {EXPECTED_ANY} the identifier
+							 */
+							parseIdent(liberal) {
+								if (this.value === "deepest") {
+									frames = /** @type {string} */ (
+										new Error("probe").stack
+									).split("\n").length;
+								}
+								return super.parseIdent(liberal);
+							}
+						}
+				);
+				/**
+				 * @param {number} depth how deep the expression nests
+				 * @returns {number} the frames below its innermost name
+				 */
+				const framesAt = (depth) => {
+					let source = "deepest";
+					for (let i = 0; i < depth; i++) {
+						source = `a ${i % 2 ? "+" : "*"} (${source})`;
+					}
+					Probe.parse(`x = ${source};`, {
+						ecmaVersion: "latest",
+						...options
+					});
+					return /** @type {number} */ (frames);
+				};
+				const { stackTraceLimit } = Error;
+				Error.stackTraceLimit = Infinity;
+				try {
+					return (framesAt(20) - framesAt(10)) / 10;
+				} finally {
+					Error.stackTraceLimit = stackTraceLimit;
+				}
+			};
+
+			const acornFrames = framesPerLevel(acorn.Parser, {});
+			expect(framesPerLevel(WebpackParser, {})).toBe(acornFrames);
+			expect(
+				framesPerLevel(WebpackParser, { lazyNodes: true, ranges: false })
+			).toBe(acornFrames);
+		});
+
+		it("should keep a plugin's own override when parsing without lazy nodes", () => {
+			const { WebpackParser } = require("../../lib/javascript/syntax-parser");
+
+			let atoms = 0;
+			const Counting = WebpackParser.extend(
+				(Base) =>
+					class extends Base {
+						/**
+						 * @param {...EXPECTED_ANY} args what acorn passes
+						 * @returns {EXPECTED_ANY} the atom
+						 */
+						parseExprAtom(...args) {
+							atoms++;
+							return super.parseExprAtom(...args);
+						}
+					}
+			);
+			Counting.parse("a + (b * c);", { ecmaVersion: "latest" });
+			expect(atoms).toBe(4);
+		});
+
 		it("should check identifier parameter lists like acorn", () => {
 			// sloppy simple functions allow duplicates; arrows and strict don't
 			expect(parse("function f(a, a) { return a; }").ast).toBeDefined();

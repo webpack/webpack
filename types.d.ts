@@ -32939,6 +32939,11 @@ declare class WebpackParser extends SyntaxParser {
 	static extend(
 		...plugins: ((BaseParser: typeof SyntaxParser) => typeof SyntaxParser)[]
 	): typeof WebpackParser;
+
+	/**
+	 * Parses as this class with lazy nodes, and otherwise as the class
+	 * `eagerParserOf` derives from it.
+	 */
 	static parse(
 		input: string,
 		options?: Partial<OptionsSyntaxParser>
@@ -33505,6 +33510,9 @@ declare namespace exports {
 				}
 				export let wordsRegexp: (words: string) => RegExp;
 				export let MAX_MASKED_INDEX: 30;
+				export let eagerParserOf: (
+					Parser: typeof WebpackParser
+				) => typeof WebpackParser;
 				export let buildLineStarts: (source: string) => number[];
 				export let collectCjsRequireSpecifiers: (source: string) => Set<string>;
 				export let declaresIntoBlock: (statement?: any) => boolean;
