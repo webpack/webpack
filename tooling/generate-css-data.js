@@ -4123,7 +4123,9 @@ const SUPPLEMENT = {
 			"min-inline-size",
 			"min-block-size",
 			"max-inline-size",
-			"max-block-size"
+			"max-block-size",
+			// WebKit reads `size` outside `@page` as `width` and `height`.
+			"size"
 		],
 		[
 			"margin",

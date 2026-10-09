@@ -15531,7 +15531,9 @@ describe("CssSyntax minify — declaration order", () => {
 		// One staying at its index while one written before it moves past it.
 		"a{width:0;flex:1;all:unset}",
 		// Members of one family, whose relation a spec may change before data does.
-		"a{flex-line-count:2;flex-flow:wrap}"
+		"a{flex-line-count:2;flex-flow:wrap}",
+		// WebKit reads `size` as `width` and `height`, which no dataset says.
+		"a{width:var(--a);size:var(--b)}"
 	])("keeps %s as written", (css) => {
 		expect(settled(css, modern)).toBe(css);
 	});
