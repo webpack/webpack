@@ -1640,6 +1640,19 @@ const LOWERING_FIXTURES = [
 		]
 	},
 	{
+		name: "a lone border none a later rule gives a style",
+		css: ".a{border:none}.a.b{border-style:solid}.c{border-left:none}.c.d{border-left-style:solid}",
+		browsers: ["chrome 130"],
+		produces: [".a{border:none}", ".c{border-left:none}"],
+		html: '<div class="a b"></div><div class="c d"></div>',
+		probes: [
+			[".a", "border-top-width"],
+			[".a", "border-top-style"],
+			[".c", "border-left-width"],
+			[".c", "border-left-style"]
+		]
+	},
+	{
 		name: "a slot holding the value an unwritten one takes",
 		css:
 			"#b{background:0% 0% / auto repeat scroll padding-box border-box red;" +
@@ -1648,7 +1661,7 @@ const LOWERING_FIXTURES = [
 			"#c{background:left top url(data:image/gif;base64,R0lGODlhAQABAAAAACw=)}" +
 			"#d{mask:url(data:image/gif;base64,R0lGODlhAQABAAAAACw=) border-box}",
 		browsers: ["chrome 130"],
-		produces: ["background:red", "border-left:0", "column-rule:red"],
+		produces: ["background:red", "border-left:none", "column-rule:red"],
 		html: "<button id=b>x</button><div id=c></div><div id=d></div>",
 		probes: [
 			["#b", "background-position"],
@@ -1728,7 +1741,7 @@ const LOWERING_FIXTURES = [
 		produces: [
 			"@media (width>=1px)",
 			"@supports (color:red){",
-			"border:0",
+			"border:none",
 			"transition:opacity.3s",
 			"color:#333",
 			"#c{color:blue}"

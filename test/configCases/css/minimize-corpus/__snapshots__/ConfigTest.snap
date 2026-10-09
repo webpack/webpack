@@ -1637,7 +1637,7 @@ Array [
   "/*! webpack: a zero time keeps a unit, and \`s\` is the shorter one it can carry */.t98{transition-duration:0s}",
   "/*! webpack: a shorthand slot holding its own initial goes, and a slot taking a
    length or a color is read by the classes a sibling's own value is in — every
-   slot holding its initial leaves the shortest of them saying all of them */.t98a{border:0}.t98b{column-rule:none}.t98c{border:solid red}",
+   slot holding its initial leaves the shortest of them saying all of them */.t98a{border:none}.t98b{column-rule:none}.t98c{border:solid red}",
   "/*! declined: a sibling filling the slot keeps the initial there */.t98d{border:medium 1px}.t98e{border:currentcolor red}",
   "/*! webpack: a component spelling the property's own initial says nothing beside
    another — omitting its group leaves exactly that keyword */.t99{grid-auto-flow:dense}",
