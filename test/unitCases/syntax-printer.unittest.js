@@ -6526,6 +6526,7 @@ describe("syntax-printer", () => {
 			});
 
 			it("should keep a string where a template reads otherwise or does not parse", async () => {
+				/** @type {[string, import("terser").MinifyOptions][]} */
 				const kept = [
 					['("a\\nb"); function m() { "use asm"; var s = "c\\nd"; return {}; } "e\\nf"`g`;', options],
 					['import a from "a\\nb" with { type: "c\\nd" }; export * from "e\\nf"; export { g } from "h\\ni"; import("j\\nk");', { ...options, module: true }]
