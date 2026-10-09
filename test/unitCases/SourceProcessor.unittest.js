@@ -602,6 +602,25 @@ describe("SourceProcessor", () => {
 			]);
 		});
 
+		it("ends a foreign element with the end tag naming it", () => {
+			const html =
+				'<svg><marker><path d="x"/><b-c></b-c></marker><script></script></svg>';
+			/** @type {string[]} */
+			const seen = [];
+			new HtmlSourceProcessor()
+				.use([HtmlNodeType.Element], (path) => {
+					if (path.namespace() !== 0) seen.push(path.source());
+				})
+				.process(html);
+			expect(seen).toEqual([
+				html,
+				'<marker><path d="x"/><b-c></b-c></marker>',
+				'<path d="x"/>',
+				"<b-c></b-c>",
+				"<script></script>"
+			]);
+		});
+
 		it("answers empty for a css node without a name, value or block token", () => {
 			/** @type {[number, string, [number, number] | null, string | number, string][]} */
 			const seen = [];
