@@ -19082,6 +19082,16 @@ declare class Module extends DependenciesBlock {
 	nameForCondition(): null | string;
 
 	/**
+	 * Returns the module this one was built around: itself, or the root of a scope-hoisted concatenation.
+	 */
+	getRootModule(): Module;
+
+	/**
+	 * Returns the modules this one was built from: itself, or every module merged by scope hoisting.
+	 */
+	getSourceModules(): Iterable<Module>;
+
+	/**
 	 * Returns the reason this module cannot be concatenated, when one exists.
 	 */
 	getConcatenationBailoutReason(
