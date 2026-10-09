@@ -1,6 +1,7 @@
 "use strict";
 
 const { WebpackError } = require("../../../../");
+const currentWatchStep = require("../../../helpers/currentWatchStep");
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {
@@ -14,10 +15,9 @@ module.exports = {
 	plugins: [
 		{
 			apply(compiler) {
-				let build = 0;
 				compiler.hooks.thisCompilation.tap("Test", (compilation) => {
 					// Only step 1 has no late m.js in "parent", so "child" keeps its copy.
-					const expected = build++ === 1 ? 1 : 0;
+					const expected = currentWatchStep.step === "1" ? 1 : 0;
 					compilation.hooks.afterChunks.tap("Test", () => {
 						const child =
 							/** @type {import("../../../../").ChunkGroup} */
