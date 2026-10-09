@@ -2046,11 +2046,6 @@ const CORRECTED_CASES = [
 		"an assignment nobody reads to an unused name, converting a BigInt beside a Number",
 		"function f(...r) { r *= 1n; } function g(a) { var b = a; b -= 1n; } try { f(0); console.log('no'); } catch (e) { console.log(e.name); } try { g(1); console.log('no'); } catch (e) { console.log(e.name); }",
 		{ compress: {}, mangle: false }
-	],
-	[
-		"an array destructuring assignment an argument list holds after an assignment or a spread, which V8 refuses bare",
-		"var a = 0, b, c = [1], d = []; function f() {} f((a += 1), ([b] = c)); f([...d, 1], ([b] = c)); console.log(a, b);",
-		{ compress: false, mangle: false }
 	]
 ];
 
@@ -5953,6 +5948,29 @@ describe("syntax-printer", () => {
 				}
 			});
 		}
+
+		it("should parenthesize a destructuring assignment V8 refuses bare after another argument", async () => {
+			const { minify, corrections } = await load();
+			const input =
+				"var a = 0, b, c = [1], d = []; function f() {} f((a += 1), ([b] = c)); f([...d, 1], ([b] = c)); console.log(a, b);";
+			const options = { compress: false, mangle: false };
+			const { code } = await minify(input, options);
+			expect(code).toContain("f(a+=1,([b]=c))");
+			expect(code).toContain("f([...d,1],([b]=c))");
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+
+			// Other engines read terser's bare output, so only its bytes are compared.
+			if (!corrections) throw new Error("the correct phase is not installed");
+			corrections.enabled = false;
+			try {
+				const uncorrected = await minify(input, options);
+				const reference = await terserReference().minify(input, options);
+				expect(uncorrected.code).toBe(reference.code);
+				expect(reference.code).toContain("f(a+=1,[b]=c)");
+			} finally {
+				corrections.enabled = true;
+			}
+		});
 
 		it("should fold a block's function in strict code, or read in its block, as terser does", async () => {
 			const { minify } = await load();
