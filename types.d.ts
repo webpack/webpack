@@ -907,7 +907,8 @@ declare interface BannerPluginOptions {
 	/**
 	 * Exclude all modules matching any of these conditions.
 	 */
-	exclude?: string | RegExp | ((str: string) => boolean) | RuleObject[];
+	exclude?:
+		string | RegExp | ((str: string) => boolean) | RuleGlob | RuleObject[];
 
 	/**
 	 * If true, banner will be placed at the end of the output.
@@ -917,7 +918,8 @@ declare interface BannerPluginOptions {
 	/**
 	 * Include all modules matching any of these conditions.
 	 */
-	include?: string | RegExp | ((str: string) => boolean) | RuleObject[];
+	include?:
+		string | RegExp | ((str: string) => boolean) | RuleGlob | RuleObject[];
 
 	/**
 	 * If true, banner will not be wrapped in a comment.
@@ -932,7 +934,7 @@ declare interface BannerPluginOptions {
 	/**
 	 * Include all modules that pass test assertion.
 	 */
-	test?: string | RegExp | ((str: string) => boolean) | RuleObject[];
+	test?: string | RegExp | ((str: string) => boolean) | RuleGlob | RuleObject[];
 }
 declare interface BaseResolveRequest {
 	/**
@@ -3291,7 +3293,8 @@ declare interface CleanOptions {
 	/**
 	 * Keep these assets.
 	 */
-	keep?: string | RegExp | ((path: string) => undefined | boolean);
+	keep?:
+		string | RegExp | GlobCondition | ((path: string) => undefined | boolean);
 }
 declare class CleanPlugin {
 	constructor(options?: CleanOptions);
@@ -5132,9 +5135,9 @@ declare interface Configuration {
 		| RegExp
 		| {
 				/**
-				 * A RegExp to select the origin file for the warning.
+				 * A RegExp or a glob to select the origin file for the warning.
 				 */
-				file?: RegExp;
+				file?: string | RegExp;
 				/**
 				 * A RegExp to select the warning message.
 				 */
@@ -10900,6 +10903,17 @@ declare class GetChunkFilenameRuntimeModule extends RuntimeModule {
 declare interface GetOptionsMethod<OptionsType> {
 	(): OptionsType;
 	(schema: Parameters<typeof validateFunction>[0]): OptionsType;
+}
+
+/**
+ * Match glob patterns against the value, `!` in front of a pattern excludes it. Path separators are normalized to `/` on every OS, and a relative pattern matches at any depth.
+ * @since 5.112.0
+ */
+declare interface GlobCondition {
+	/**
+	 * Glob patterns to match.
+	 */
+	glob: string | string[];
 }
 
 /**
@@ -17220,7 +17234,7 @@ declare interface LazyCompilationOptions {
 	/**
 	 * Specify which entrypoints or import()ed modules should be lazily compiled. This is matched with the imported module and not the entrypoint name.
 	 */
-	test?: string | RegExp | ((module: Module) => boolean);
+	test?: string | RegExp | GlobCondition | ((module: Module) => boolean);
 }
 type LazyFunction<
 	InputValue,
@@ -18289,23 +18303,27 @@ declare interface MatchObject {
 		| string
 		| RegExp
 		| ((str: string) => boolean)
-		| (string | RegExp | ((str: string) => boolean))[];
+		| GlobCondition
+		| (string | RegExp | ((str: string) => boolean) | GlobCondition)[];
 	include?:
 		| string
 		| RegExp
 		| ((str: string) => boolean)
-		| (string | RegExp | ((str: string) => boolean))[];
+		| GlobCondition
+		| (string | RegExp | ((str: string) => boolean) | GlobCondition)[];
 	exclude?:
 		| string
 		| RegExp
 		| ((str: string) => boolean)
-		| (string | RegExp | ((str: string) => boolean))[];
+		| GlobCondition
+		| (string | RegExp | ((str: string) => boolean) | GlobCondition)[];
 }
 type Matcher =
 	| string
 	| RegExp
 	| ((str: string) => boolean)
-	| (string | RegExp | ((str: string) => boolean))[];
+	| GlobCondition
+	| (string | RegExp | ((str: string) => boolean) | GlobCondition)[];
 
 /**
  * Defines the maybe mergeable init fragment type used by this module.
@@ -20827,6 +20845,11 @@ declare class NormalModule extends Module {
 	 * loader may fail with anything, and what reads the failure expects an error.
 	 */
 	markModuleAsErrored(error?: any): void;
+
+	/**
+	 * An absolute path string is a prefix of `content`; a relative one is a glob
+	 * matched against the resource path, without loaders and query.
+	 */
 	applyNoParseRule(
 		rule: string | RegExp | ((content: string) => boolean),
 		content: string
@@ -22672,6 +22695,7 @@ declare interface OptimizationSplitChunksCacheGroup {
 	test?:
 		| string
 		| RegExp
+		| GlobCondition
 		| ((module: Module, context: CacheGroupsContext) => boolean);
 
 	/**
@@ -27097,7 +27121,18 @@ declare interface RuleCondition {
 			| "phase"]
 	) => boolean;
 }
-type RuleObject = string | RegExp | ((str: string) => boolean);
+
+/**
+ * Glob patterns matched against the file name, `!` in front of a pattern excludes it, and a relative pattern matches at any depth.
+ * @since 5.112.0
+ */
+declare interface RuleGlob {
+	/**
+	 * Glob patterns to match.
+	 */
+	glob: string | string[];
+}
+type RuleObject = string | RegExp | ((str: string) => boolean) | RuleGlob;
 
 /**
  * Defines the rule set type used by this module.
@@ -29434,7 +29469,8 @@ declare interface SourceMapDevToolPluginOptions {
 	/**
 	 * Exclude modules that match the given value from source map generation.
 	 */
-	exclude?: string | RegExp | ((str: string) => boolean) | RuleObject[];
+	exclude?:
+		string | RegExp | ((str: string) => boolean) | RuleGlob | RuleObject[];
 
 	/**
 	 * Generator string or function to create identifiers of modules for the 'sources' array in the SourceMap used only if 'moduleFilenameTemplate' would result in a conflict.
@@ -29455,12 +29491,14 @@ declare interface SourceMapDevToolPluginOptions {
 	/**
 	 * Decide whether to ignore source files that match the specified value in the SourceMap.
 	 */
-	ignoreList?: string | RegExp | ((str: string) => boolean) | RuleObject[];
+	ignoreList?:
+		string | RegExp | ((str: string) => boolean) | RuleGlob | RuleObject[];
 
 	/**
 	 * Include source maps for module paths that match the given value.
 	 */
-	include?: string | RegExp | ((str: string) => boolean) | RuleObject[];
+	include?:
+		string | RegExp | ((str: string) => boolean) | RuleGlob | RuleObject[];
 
 	/**
 	 * Indicates whether SourceMaps from loaders should be used (defaults to true).
@@ -29497,7 +29535,7 @@ declare interface SourceMapDevToolPluginOptions {
 	/**
 	 * Include source maps for modules based on their extension (defaults to .js and .css).
 	 */
-	test?: string | RegExp | ((str: string) => boolean) | RuleObject[];
+	test?: string | RegExp | ((str: string) => boolean) | RuleGlob | RuleObject[];
 }
 
 /**

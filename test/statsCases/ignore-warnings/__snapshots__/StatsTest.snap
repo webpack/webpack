@@ -13,5 +13,8 @@ WARNING in ./module2.js?1 3:12-16
 Should not import the named export 'name' (imported as 'name') from default-exporting module (only default export is available soon)
  @ ./index.js 6:0-21
 
-webpack x.x.x compiled with 2 warnings in X ms"
+WARNING in kept.css
+warning about kept.css
+
+webpack x.x.x compiled with 3 warnings in X ms"
 `;

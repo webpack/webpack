@@ -381,6 +381,9 @@
             {
               "instanceof": "Function",
               "tsType": "import('../lib/output/CleanPlugin').KeepFn"
+            },
+            {
+              "$ref": "#/definitions/GlobCondition"
             }
           ]
         }
@@ -2330,6 +2333,26 @@
         }
       }
     },
+    "GlobCondition": {
+      "description": "Match glob patterns against the value, `!` in front of a pattern excludes it. Path separators are normalized to `/` on every OS, and a relative pattern matches at any depth.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "glob": {
+          "description": "Glob patterns to match.",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/RuleSetGlobs"
+            },
+            {
+              "$ref": "#/definitions/RuleSetGlob"
+            }
+          ]
+        }
+      },
+      "required": ["glob"],
+      "added": "5.112.0"
+    },
     "GlobalObject": {
       "description": "An expression which is used to address the global object/scope in runtime code.",
       "type": "string",
@@ -2719,9 +2742,19 @@
             "additionalProperties": false,
             "properties": {
               "file": {
-                "description": "A RegExp to select the origin file for the warning.",
-                "instanceof": "RegExp",
-                "tsType": "RegExp"
+                "description": "A RegExp or a glob to select the origin file for the warning.",
+                "anyOf": [
+                  {
+                    "instanceof": "RegExp",
+                    "tsType": "RegExp"
+                  },
+                  {
+                    "description": "A glob matching the origin file for the warning at any depth.",
+                    "type": "string",
+                    "minLength": 1,
+                    "added": "5.112.0"
+                  }
+                ]
               },
               "message": {
                 "description": "A RegExp to select the warning message.",
@@ -3322,6 +3355,9 @@
             {
               "instanceof": "Function",
               "tsType": "import('../lib/hmr/LazyCompilationPlugin').TestFn"
+            },
+            {
+              "$ref": "#/definitions/GlobCondition"
             }
           ]
         }
@@ -3774,6 +3810,13 @@
                 "absolutePath": true
               },
               {
+                "description": "A glob, when it matches the module's resource path at any depth the module is not parsed.",
+                "type": "string",
+                "absolutePath": false,
+                "minLength": 1,
+                "added": "5.112.0"
+              },
+              {
                 "instanceof": "Function",
                 "tsType": "import('../lib/module/NormalModule').NoParseFn"
               }
@@ -3790,6 +3833,13 @@
           "description": "An absolute path, when the module starts with this path it is not parsed.",
           "type": "string",
           "absolutePath": true
+        },
+        {
+          "description": "A glob, when it matches the module's resource path at any depth the module is not parsed.",
+          "type": "string",
+          "absolutePath": false,
+          "minLength": 1,
+          "added": "5.112.0"
         },
         {
           "instanceof": "Function",
@@ -4817,6 +4867,9 @@
             {
               "instanceof": "Function",
               "tsType": "import('../lib/optimize/SplitChunksPlugin').CheckTestFn"
+            },
+            {
+              "$ref": "#/definitions/GlobCondition"
             }
           ]
         },
@@ -6463,6 +6516,13 @@
               {
                 "type": "string",
                 "absolutePath": true
+              },
+              {
+                "description": "A glob the resolve result must match at any depth.",
+                "type": "string",
+                "absolutePath": false,
+                "minLength": 1,
+                "added": "5.112.0"
               }
             ]
           }

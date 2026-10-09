@@ -4,17 +4,26 @@
   "additionalProperties": false,
   "properties": {
     "paths": {
-      "description": "A list of RegExps or absolute paths to directories or files that should be ignored.",
+      "description": "A list of RegExps, absolute paths or globs to directories or files that should be ignored.",
       "type": "array",
       "items": {
-        "description": "RegExp or absolute path to directories or files that should be ignored.",
+        "description": "RegExp, absolute path or glob to directories or files that should be ignored.",
         "anyOf": [
           {
             "instanceof": "RegExp",
             "tsType": "RegExp"
           },
           {
-            "type": "string"
+            "description": "An absolute path to a directory or file that should be ignored.",
+            "type": "string",
+            "absolutePath": true
+          },
+          {
+            "description": "A glob matching, at any depth, the directories or files that should be ignored.",
+            "type": "string",
+            "absolutePath": false,
+            "minLength": 1,
+            "added": "5.112.0"
           }
         ]
       },

@@ -807,6 +807,31 @@ describe("Validation", () => {
 		(msg) => expect(msg).toMatch(/options\.filename/)
 	);
 
+	createTestCase(
+		"BannerPlugin empty glob list",
+		{
+			plugins: [
+				new (require("../..").BannerPlugin)({
+					banner: "banner",
+					exclude: { glob: [] }
+				})
+			]
+		},
+		(msg) => expect(msg).toContain("options.exclude.glob should be a non-empty array")
+	);
+
+	createTestCase(
+		"SourceMapDevToolPlugin empty glob list",
+		{
+			plugins: [
+				new (require("../..").SourceMapDevToolPlugin)({
+					exclude: { glob: [] }
+				})
+			]
+		},
+		(msg) => expect(msg).toContain("options.exclude.glob should be a non-empty array")
+	);
+
 	describe("did you mean", () => {
 		createTestCase(
 			"module.rules",
