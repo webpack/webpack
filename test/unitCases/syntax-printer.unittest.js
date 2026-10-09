@@ -504,6 +504,36 @@ const IMPROVED_CASES = [
 		{ compress: { ecma: 2016 }, ecma: 2016, mangle: false }
 	],
 	[
+		"a `RegExp` of string literals as a regular expression literal, its slashes escaped",
+		'function f(RegExp) { return RegExp("abc"); } var r = [RegExp("ab+c", "g"), new RegExp("a/b/c[/]"), RegExp(""), new RegExp("(?<=a)(?<n>b)", "su"), RegExp("x", "gd"), RegExp("x", "v"), RegExp("a\\nb"), RegExp("a\\\\d"), f(String)]; try { RegExp("a", "gg"); } catch (e) { r.push(e.name); } console.log(r.map(String).join());',
+		{ compress: { ecma: 2020 }, ecma: 2020, mangle: false },
+		'function f(RegExp){return RegExp("abc")}var r=[/ab+c/g,/a\\/b\\/c[/]/,/(?:)/,/(?<=a)(?<n>b)/su,RegExp("x","gd"),RegExp("x","v"),RegExp("a\\nb"),RegExp("a\\\\d"),f(String)];try{RegExp("a","gg")}catch(e){r.push(e.name)}console.log(r.map(String).join());'
+	],
+	[
+		"a `RegExp` as a literal only in syntax the targeted ECMAScript reads",
+		'var r = [RegExp("ab+c", "y"), RegExp("(?<=a)b"), RegExp("a", "s"), RegExp("(?<n>a)", "u")]; console.log(r.map(String).join());',
+		{ compress: { ecma: 2015 }, ecma: 2015, mangle: false },
+		'var r=[/ab+c/y,RegExp("(?<=a)b"),RegExp("a","s"),RegExp("(?<n>a)","u")];console.log(r.map(String).join());'
+	],
+	[
+		"a `+` dropped where `-`, `*`, `/`, `%` or `**` converts, with `unsafe_math`",
+		'function f(a, b, g) { return [+a - b, b * +a, (+a) ** b, b ** +a, +a % +b, +g() - +a, "2" / +b, +a - g(), g() - +a, a - +b, +a | b, +a + b]; } console.log(f(2, 3, () => 4).join());',
+		{ compress: { unsafe_math: true }, mangle: false },
+		'function f(a,b,g){return[a-b,b*+a,a**b,b**+a,a%b,g()-a,"2"/b,+a-g(),g()-+a,a-+b,+a|b,+a+b]}console.log(f(2,3,()=>4).join());'
+	],
+	[
+		"`Math.pow` of no number literal as `**` from ECMAScript 2016, with `unsafe_math`",
+		'function f(a, b) { return [Math.pow(a, b), Math.pow(-a, b), Math.pow(a + 1, b * 2), Math.pow(a, -b), Math.pow(typeof a, b), Math.pow(2, 3)]; } console.log(f(2, 3).join());',
+		{ compress: { ecma: 2016, unsafe_math: true }, ecma: 2016, mangle: false },
+		'function f(a,b){return[a**b,(-a)**b,(a+1)**(2*b),a**-b,(typeof a)**b,Math.pow(2,3)]}console.log(f(2,3).join());'
+	],
+	[
+		"`Object.keys`, `values` and `entries` of an object literal as an array literal",
+		'function f(a, Object) { return Object.keys({ a: 1 }); } function k() { return 1; } function g(a) { var h = () => 1; return [Object.keys({ b: 1, a: a, 2: 3, 1: h, b: 5, "x y": 6, 1e21: 7 }), Object.values({ b: 1, a: a, 2: 3, b: 5 }), Object.entries({ b: 1, a: a, 2: 3 }), Object.keys({ a: k() }), Object.keys({ c() {} }), Object.values({ a: function () {} }), Object.entries({ a: class {} }), Object.keys({ 4294967295: 1, 4294967294: 2 }), Object.keys({ a: 1 }, 2), f(0, { keys: String })]; } console.log(JSON.stringify(g(4)));',
+		{ compress: {}, mangle: false },
+		'function f(a,Object){return Object.keys({a:1})}function k(){return 1}function g(a){return[["1","2","b","a","x y","1e+21"],[3,5,a],[["2",3],["b",1],["a",a]],Object.keys({a:k()}),Object.keys({c(){}}),Object.values({a:function(){}}),Object.entries({a:class{}}),Object.keys({4294967295:1,4294967294:2}),Object.keys({a:1},2),f(0,{keys:String})]}console.log(JSON.stringify(g(4)));'
+	],
+	[
 		"`Number`'s safe-integer bounds and epsilon, as powers of two from ECMAScript 2016",
 		"console.log(Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER, Number.EPSILON, -Number.EPSILON, 1 / Number.EPSILON, Number.MAX_SAFE_INTEGER.toString(16));",
 		{ compress: { ecma: 2016 }, ecma: 2016, mangle: false }
@@ -1072,12 +1102,13 @@ const KEPT_CASES = [
 	["a result longer than the call", 'console.log("ab".repeat(100));'],
 	["a built-in call that throws", 'try { new Set(1); } catch (e) { console.log(1); } try { Object.keys(null); } catch (e) { console.log(2); }'],
 	["a RegExp an older Node rejects", 'try { RegExp("a", "v"); } catch (e) { console.log(1); } try { RegExp("[", "g"); } catch (e) { console.log(2); }'],
-	["a RegExp pattern holding a slash", 'try { RegExp("a/b"); console.log(1); } catch (e) { console.log(2); }'],
+	["a RegExp pattern holding a slash and a line break", 'try { RegExp("a/b\\n"); console.log(1); } catch (e) { console.log(2); }'],
+	["a `+` in arithmetic, which a BigInt reads otherwise without `unsafe_math`", "function f(a, b) { return [+a - b, a * +b]; } console.log(f(2, 3), f(2n, 3n).length);"],
 	["a RegExp with flags not a string", 'try { RegExp("a", 1); } catch (e) { console.log(1); }'],
 	["a RegExp pattern not a string", 'try { RegExp(1); console.log(1); } catch (e) { console.log(2); }'],
 	["a function returning a call in place of a function reading its own `this`, naming itself, holding a directive or declaring a parameter's name", 'var o = { m: function () { return function () { for (var i = 0; i < 2; i++) console.log(typeof this, i); }(); } }; o.m(); var f = function () { return function g() { for (var i = 0; i < 2; i++) console.log(typeof g, i); }(); }; f(); var h = function () { return function () { "use strict"; for (var i = 0; i < 2; i++) console.log(typeof this, i); }(); }; h(); var k = function (a) { return function () { for (var a in { x: 1, y: 2 }) console.log(a); }(); }; k(1);'],
 	["a count too large to run", 'try { new Uint8Array(1e9); console.log(1); } catch (e) { console.log(2); }'],
-	["an argument no literal", "function f(a) { String(a); Object.keys({ [a]: 1 }); Object.keys({ get b() { return 1; } }); Object.keys({ __proto__: a }); Object.keys([a]); Object.keys({ b: a }); } f([1]); console.log(1);"],
+	["an argument no literal", "function f(a) { String(a); Object.keys({ [a]: 1 }); Object.keys({ get b() { return 1; } }); Object.keys({ __proto__: a }); Object.keys([a]); Object.keys({ b: a }, 0); } f([1]); console.log(1);"],
 	["a built-in that runs code", 'eval("console.log(1)");'],
 	["a built-in global the program declares", "var Set = function () { console.log(1); }; new Set();"],
 	["a built-in call a `with` could rebind", "with ({ JSON: { parse: function () { console.log(1); } } }) JSON.parse(\"1\");"],
