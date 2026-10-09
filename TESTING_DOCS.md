@@ -113,6 +113,7 @@ Directories come first, in alphabetical order, then the individual files worth t
   - `syntaxEquivalence.spectest.js` — `yarn test:syntax-equivalence`
   - `cssParsing-webpack.spectest.js` — `yarn test:css-parsing`
   - `minify-corpora.spectest.js` — `yarn test:minify-corpora`
+  - `js-fuzz.spectest.js` — `yarn test:js-fuzz`: programs from `test/helpers/jsFuzzProgram.js`, in the sloppy ES5 terser's ufuzz writes and in modern syntax, minified under ufuzz's option sets and webpack's; the parser is held to acorn's tree on each program and output, the printer to the tree it read and to its own output, and each output to what its program prints. Needs no submodule; `JS_FUZZ_SEED=<n>` replays one seed, `JS_FUZZ_SEED=random` runs a new one named in the test's title, and `JS_FUZZ_PROGRAMS` sets the programs per seed.
 
 ### `statsCases/`
 
