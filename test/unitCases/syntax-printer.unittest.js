@@ -519,7 +519,13 @@ const IMPROVED_CASES = [
 		"a `+` dropped where `-`, `*`, `/`, `%` or `**` converts, with `unsafe_math`",
 		'function f(a, b, g) { return [+a - b, b * +a, (+a) ** b, b ** +a, +a % +b, +g() - +a, "2" / +b, +a - g(), g() - +a, a - +b, +a | b, +a + b]; } console.log(f(2, 3, () => 4).join());',
 		{ compress: { unsafe_math: true }, mangle: false },
-		'function f(a,b,g){return[a-b,b*+a,a**b,b**+a,a%b,g()-a,"2"/b,+a-g(),g()-+a,a-+b,+a|b,+a+b]}console.log(f(2,3,()=>4).join());'
+		'function f(a,b,g){return[+a-b,b*+a,(+a)**b,b**+a,+a%b,+g()-a,"2"/b,+a-g(),g()-+a,a-+b,+a|b,+a+b]}console.log(f(2,3,()=>4).join());'
+	],
+	[
+		"a `+` dropped on the right only, so two BigInts still throw, with `unsafe_math`",
+		'function f(a, b) { try { return String(+a * +b); } catch (_err) { return "threw"; } } console.log(f(2, 3), f(2n, 3n), f(2, 3n));',
+		{ compress: { unsafe_math: true }, mangle: false },
+		'function f(a,b){try{return String(+a*b)}catch(_err){return"threw"}}console.log(f(2,3),f(2n,3n),f(2,3n));'
 	],
 	[
 		"`Math.pow` of no number literal as `**` from ECMAScript 2016, with `unsafe_math`",
@@ -1029,6 +1035,10 @@ const IMPROVED_CASES = [
 // of its function's own, or the call passes, keeps or constructs something.
 /** @type {[string, string][]} */
 const KEPT_CASES = [
+	[
+		"a `RegExp` call where the program assigns the global",
+		'RegExp = function (pattern) { return "own " + pattern; }; console.log(RegExp("a"));'
+	],
 	["a function read as the test of a conditional another function calls", "function k() { function f() { return 1; } return function (g, h) { return (f ? g : h)(); }; } console.log(k()(function () { return 2; }, function () { return 3; }));"],
 	["an assignment moved past a global call in a `try` whose `catch` reads it", "globalThis.g = function () { throw 1; }; function f(a) { var x; try { x = a + 1; g(); h(x); } catch (e) { return x; } } function h(v) { console.log(v); } console.log(f(1));"],
 	["an assignment to a name a closure reads, or from a property or a call, moved past a global call", "globalThis.g = function () { o.v = 5; }; var o = { v: 1 }; function f(a, x) { function r() { return x; } x = a + 1; g(); h(x); return r(); } function k(x) { x = o.v; g(); h(x); return x; } function m(a, x) { x = h(a); g(); h(x); return x; } function h(v) { console.log(v); return v; } console.log(f(1), k(), m(2));"],
@@ -6642,6 +6652,15 @@ describe("syntax-printer", () => {
 				expect(code).toBe(reference.code);
 			});
 		}
+
+		it("should keep an `Object.keys` call where the program assigns the global", async () => {
+			const { minify } = await load();
+			const input =
+				'Object = { keys: function () { return ["own"]; } }; console.log(Object.keys({ a: 1 }));';
+			const { code } = await minify(input, { mangle: false });
+			expect(code).toContain(".keys({a:1})");
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+		});
 
 		it("should keep a logical expression negating its test as the test of a conditional where `booleans` is off", async () => {
 			const { minify } = await load();
