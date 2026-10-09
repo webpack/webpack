@@ -2,6 +2,7 @@ import { writeFile } from "fs";
 import fs from "fs/promises";
 import { Session } from "inspector";
 import { createRequire } from "module";
+import os from "os";
 import path from "path";
 import { fileURLToPath, pathToFileURL } from "url";
 import vm from "vm";
@@ -67,6 +68,11 @@ import { Bench, hrtimeNow } from "tinybench";
 
 const GENERATE_PROFILE = typeof process.env.PROFILE !== "undefined";
 const codspeedRunnerMode = getCodspeedRunnerMode();
+
+// Production builds minify in a worker-thread pool sized from the core count. Each
+// worker boots its own V8 in this process and races the main thread, so memory mode
+// runs the minimizer inline to measure webpack's allocations, not a thread's boot.
+if (codspeedRunnerMode === "memory") os.availableParallelism = () => 1;
 
 // Emitted entry of a `-runtime` benchmark; fixed so the bench can locate it.
 const RUNTIME_BUNDLE_FILENAME = "bundle.js";

@@ -530,6 +530,17 @@ class BenchmarkRunner {
 		// CodSpeed's runner tracks one benchmark at a time: concurrent workers
 		// interleave start/stop markers and the run reports no results.
 		const numWorkers = isolated ? 1 : Math.min(cpuWorkers, memWorkers);
+		// Memory mode counts native allocations, so V8's own work must stay out of them:
+		// Maglev compiles despite `--no-opt`, helper threads split GC work, and a major
+		// GC starts on a timer or falls inside the sample by a few KB of live heap.
+		const memoryV8Flags = isolated
+			? [
+					"--no-maglev",
+					"--single-threaded",
+					"--no-incremental-marking",
+					"--initial-old-space-size=1024"
+				]
+			: [];
 
 		const workerPool = /** @type {BenchmarkWorker} */ (
 			new Worker(
@@ -543,7 +554,10 @@ class BenchmarkRunner {
 					idleMemoryLimit: underValgrind || isolated ? 0 : undefined,
 					// Forward the V8 flags CodSpeed needs (seeds, --no-opt, …) so the
 					// child processes measure under the same deterministic conditions.
-					forkOptions: { silent: false, execArgv: getV8Flags() }
+					forkOptions: {
+						silent: false,
+						execArgv: [...getV8Flags(), ...memoryV8Flags]
+					}
 				}
 			)
 		);
