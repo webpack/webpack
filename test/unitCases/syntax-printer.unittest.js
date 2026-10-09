@@ -852,9 +852,9 @@ const IMPROVED_CASES = [
 	],
 	[
 		"a `var` copying a parameter, read inside a class whose name the parameter's was",
-		"function f(b) { var a = b; g(b); return new (class b { m() { return a; } })().m(); } function g() {} console.log(f(1));",
+		"function f(b) { var a = b; g(b); return new (class b { m() { return [a, a]; } })().m(); } function g() {} console.log(f(1));",
 		{ compress: { passes: 2 }, mangle: false },
-		"function f(b){return g(b),(new class{m(){return b}}).m()}function g(){}console.log(f(1));"
+		"function f(b){return g(b),(new class{m(){return[b,b]}}).m()}function g(){}console.log(f(1));"
 	],
 	[
 		"a function written in place passed the names of its parameters, which it reads instead, its value called, tagged, typed or read past a chain",
@@ -1130,6 +1130,7 @@ const KEPT_CASES = [
 	["a `let` copying a parameter written later, or through `arguments` or `eval`", 'function f(a, c) { let b = a; let d = c; a = 3; arguments[1] = 4; return [b, d]; } function g(a) { let b = a; eval("a = 5"); return b; } console.log(f(1, 2), g(1));'],
 	["a `let` copying a binding declared after it", "function f() { let b = c; let c = 1; return b; } try { console.log(f()); } catch (e) { console.log(e.name); }"],
 	["a `let` copying a longer name read more than once, where names keep their length", "function f(longBinding) { let x = longBinding; g(); return x + x + x; } function g() {} console.log(f(1));"],
+	["a `var` read once copying a parameter of a function called in place, whose argument terser writes in its place", "function* gen() { yield { ...(function (arg) { var y = arg; return { ...y }; })(yield) }; } var it = gen(); it.next(); console.log(it.next({ a: 1 }).value);"],
 	["a `var` copying a parameter, read in a block declaring the parameter's name, or in a class of that name", "function f(b) { var a = b; g(b); { let b = 9; g(b); return [a, b]; } } function h(b) { var a = b; g(b); return new (class b { m() { return a; } })().m(); } function g() {} console.log(f(1), h(1));"],
 	["a `var` copying a `var` a loop sets again, read by a function inside", "var fns = []; function f(n) { for (var i = 0; i < n; i++) { var b = i * 2; var a = b; g(b); fns.push(function () { return a; }); } } function g() {} f(2); console.log(fns.map(function (h) { return h(); }));"],
 	["a `var` copying a `let` a loop declares each time round, read by a function inside", "var fns = []; function f(list) { for (let b of list) { var a = b; g(b); fns.push(function () { return a; }); } } function g() {} f([1, 2]); console.log(fns.map(function (h) { return h(); }));"],
