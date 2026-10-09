@@ -542,9 +542,9 @@ const runTokenizerCase = (input, context) => {
 			// `tokenize` reports a `<?…>` as one comment range and leaves telling a
 			// processing instruction apart, or dropping one EOF cut, to the tree.
 			if (source.charCodeAt(start + 1) === 0x3f) {
-				const node = A.firstChild(parseHtml(source.slice(start, end), 0));
+				const node = A.child(0, parseHtml(source.slice(start, end), 0));
 				if (A.type(node) === NodeType.ProcessingInstruction) {
-					tokens.push(["ProcessingInstruction", A.piTarget(node), A.data(node)]);
+					tokens.push(["ProcessingInstruction", A.name(node), A.value(node)]);
 					return end;
 				}
 				if (A.type(node) !== NodeType.Comment) return end;
