@@ -2,7 +2,7 @@
 
 exports[`ConfigTestCases css minimize-transforms-off minimize-transforms-off should compile 1`] = `
 Array [
-  "/* Every \`optimization.minimize.css\` transform switch is off here, so each rule
+  "@charset \\"UTF-8\\";/* Every \`optimization.minimize.css\` transform switch is off here, so each rule
    below keeps what the transform named in its comment would have rewritten —
    this comment among them. Whitespace still goes: collapsing it is not one of
    the rewrites a switch names. */",

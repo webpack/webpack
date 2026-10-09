@@ -571,6 +571,48 @@ const collectShorthandLonghands = () => {
 	return out;
 };
 
+/**
+ * Every spelling a dataset gives a property under another name — a vendor
+ * prefix, an alternative name, a legacy shorthand — mapped to that property, so
+ * two declarations of one property are known as one wherever they are spelled.
+ * @param {[string, [string, [string, number, number][]][]][]} prefixedProperties each property's vendor spellings
+ * @returns {[string, string][]} `[spelling, property]`, sorted by spelling
+ */
+const collectPropertyAliases = (prefixedProperties) => {
+	/** @type {Map<string, string>} */
+	const out = new Map();
+	for (const [name, node] of Object.entries(bcd.css.properties)) {
+		const compat = /** @type {BcdCompat | undefined} */ (node.__compat);
+		if (compat === undefined) continue;
+		for (const support of Object.values(compat.support)) {
+			for (const entry of Array.isArray(support) ? support : [support]) {
+				const spelling = entry.prefix
+					? entry.prefix + name
+					: entry.alternative_name;
+				if (spelling !== undefined && spelling !== name) {
+					out.set(spelling.toLowerCase(), name);
+				}
+			}
+		}
+	}
+	for (const [name, spelled] of prefixedProperties) {
+		for (const [spelling] of spelled) {
+			if (spelling !== name) out.set(spelling, name);
+		}
+	}
+	for (const [spelling, name] of SUPPLEMENT.legacyShorthandAliases) {
+		out.set(spelling, name);
+	}
+	return [...out].sort((a, b) => (a[0] < b[0] ? -1 : 1));
+};
+
+/**
+ * Every property a dataset names, under each of its spellings.
+ * @param {string[]} names every property name and spelling a dataset gives
+ * @returns {string[]} those names, once each, sorted
+ */
+const collectKnownProperties = (names) => [...new Set(names)].sort();
+
 const collectPairLonghands = () => {
 	/** @type {[string, string[]][]} */
 	const out = [];
@@ -703,7 +745,7 @@ const collectSlashLonghands = () => {
 		const tree = grammarOf(property.syntax);
 		if (tree.type !== "sequence" || tree.items.length !== 2) continue;
 		const [first, rest] = tree.items;
-		if (first.type !== "type" || rest.type !== "multiplier") continue;
+		if (rest.type !== "multiplier") continue;
 		if (rest.comma || rest.min !== 0) continue;
 		if (rest.max !== longhands.length - 1) continue;
 		const body = rest.body.type === "group" ? rest.body.body : rest.body;
@@ -711,8 +753,19 @@ const collectSlashLonghands = () => {
 		const [slash, repeated] = body.items;
 		if (slash.type !== "literal" || slash.value !== "/") continue;
 		// The same production on both sides, so every slot takes the same values
-		// and the order `computed` states is the order they are written in.
-		if (repeated.type !== "type" || repeated.name !== first.name) continue;
+		// and the order `computed` states is the order they are written in — or a
+		// pair naming its own two longhands, in that order (`container`).
+		const sameProduction =
+			first.type === "type" &&
+			repeated.type === "type" &&
+			repeated.name === first.name;
+		const ownPair =
+			longhands.length === 2 &&
+			first.type === "property" &&
+			repeated.type === "property" &&
+			first.name === longhands[0] &&
+			repeated.name === longhands[1];
+		if (!sameProduction && !ownPair) continue;
 		out.push([name, longhands]);
 	}
 	return out.sort((a, b) => (a[0] < b[0] ? -1 : 1));
@@ -3320,6 +3373,30 @@ const collectLengthOnlyFunctions = () => {
 };
 
 /**
+ * The transform functions a negative argument is valid in: the alternatives of
+ * `<transform-function>` whose own grammar bounds no number from below, which
+ * leaves `perspective()` out.
+ * @returns {string[]} the function names, lowercased, sorted
+ */
+const collectNegativeAcceptingFunctions = () => {
+	const transform = definitions.get("transform-function");
+	if (transform === undefined) {
+		throw new Error("`<transform-function>` is gone: the grammar moved");
+	}
+	const names = [];
+	for (const reference of references(transform)) {
+		const syntax = definitions.get(reference);
+		if (syntax === undefined || !reference.endsWith("()")) {
+			throw new Error(`\`<transform-function>\` names ${reference}, unread`);
+		}
+		if (!/\[\s*0\s*,/.test(syntax)) {
+			names.push(reference.slice(0, -2).toLowerCase());
+		}
+	}
+	return names.sort();
+};
+
+/**
  * The functions that are a color, out of `<color>`'s own grammar — so a value
  * spelled as one fills a color slot. A gradient is an `<image>`, not one.
  * @param {Iterable<string>} spellings what `<color>` is spelled by
@@ -3873,11 +3950,24 @@ const eighthTurnEntries = (values) => {
 // Spec prose no dataset states: an equivalence between two spellings, or a
 // judgement about what a construct still does. Each carries the reason it has to
 // be written out rather than derived.
-/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], fontStretchPercentages: [string, string][], filterFunctionOmitted: [string, string][], positionKeywordPercentages: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], featurelessPseudoClasses: string[], initialValueKeywords: [string, string][], initialKeywordsAnEngineReadsApart: string[], unmergeableSlotKeywords: [string, string][], zeroUnitKeepingProperties: string[], calcRejectingProperties: string[], numberOnlyOutsideCalcProperties: string[], clampedValueRanges: [string, string, number, number][], stepPositionMinimumCounts: [string, number][], autoSecondValueProperties: string[], defaultGradientDirections: string[], defaultGradientPositions: string[], reversedGradientDirections: string[], gradientSideAngles: [string, string][], xAxisTransforms: [string, string][], negativeAcceptingProperties: string[], placeShorthands: string[], svgUserUnitProperties: string[], legacyBoxProperties: string[], legacyBoxDisplays: string[], oneValuePairShorthands: string[], familyShorthands: string[], orderedShorthands: string[], omittableInitialKeywords: string[], pairLonghandOverrides: [string, string[]][], droppableWhenEmptyAtRules: string[], replacedByNameAtRules: string[], classSpellings: [string, string[]][], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[], colorSpacePrimitives: [string, string][], oklabMatrices: number[][], systemUiStack: string[], colorTransfers: [string, string][], predefinedColorSpaces: [string, string, string, string][], colorPrimaries: [string, number[]][], colorWhitePoints: [string, number[]][], enginesDisagreeOnTransfer: string[], calcConstantValues: [string, string][], quarterTurnAngle: [string, number][], eighthTurnSine: (number | null)[], eighthTurnTangent: (number | null)[], mathFunctionFold: [string, string, string, string, string | null, boolean][], mathPrimitives: [string, string][], predefinedCounterStyles: string[], predefinedCounterNames: string[], cssModulesKeywordSupplement: [string, string, number][] }} */
+/** @type {{ cssWideKeywords: string[], legacyShorthandAliases: [string, string][], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], fontStretchPercentages: [string, string][], filterFunctionOmitted: [string, string][], positionKeywordPercentages: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], featurelessPseudoClasses: string[], initialValueKeywords: [string, string][], initialKeywordsAnEngineReadsApart: string[], unmergeableSlotKeywords: [string, string][], zeroUnitKeepingProperties: string[], calcRejectingProperties: string[], numberOnlyOutsideCalcProperties: string[], clampedValueRanges: [string, string, number, number][], stepPositionMinimumCounts: [string, number][], autoSecondValueProperties: string[], defaultGradientDirections: string[], defaultGradientPositions: string[], reversedGradientDirections: string[], gradientSideAngles: [string, string][], xAxisTransforms: [string, string][], negativeAcceptingProperties: string[], placeShorthands: string[], svgUserUnitProperties: string[], legacyBoxProperties: string[], legacyBoxDisplays: string[], oneValuePairShorthands: string[], familyShorthands: string[], orderedShorthands: string[], omittableInitialKeywords: string[], pairLonghandOverrides: [string, string[]][], droppableWhenEmptyAtRules: string[], replacedByNameAtRules: string[], classSpellings: [string, string[]][], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[], colorSpacePrimitives: [string, string][], oklabMatrices: number[][], systemUiStack: string[], colorTransfers: [string, string][], predefinedColorSpaces: [string, string, string, string][], colorPrimaries: [string, number[]][], colorWhitePoints: [string, number[]][], enginesDisagreeOnTransfer: string[], calcConstantValues: [string, string][], quarterTurnAngle: [string, number][], eighthTurnSine: (number | null)[], eighthTurnTangent: (number | null)[], mathFunctionFold: [string, string, string, string, string | null, boolean][], mathPrimitives: [string, string][], predefinedCounterStyles: string[], predefinedCounterNames: string[], cssModulesKeywordSupplement: [string, string, number][] }} */
 
 const SUPPLEMENT = {
 	// CSS Values 4's list. `mdn-data` has no `css-wide-keyword` production.
 	cssWideKeywords: ["inherit", "initial", "revert", "revert-layer", "unset"],
+	// CSS Break 3 §3.4 makes each `page-break-*` a legacy shorthand of a `break-*`,
+	// as engines read `-webkit-column-break-*`; CSS Grid 2 §10.1 aliases `grid-*gap`.
+	legacyShorthandAliases: [
+		["-webkit-column-break-after", "break-after"],
+		["-webkit-column-break-before", "break-before"],
+		["-webkit-column-break-inside", "break-inside"],
+		["grid-column-gap", "column-gap"],
+		["grid-gap", "gap"],
+		["grid-row-gap", "row-gap"],
+		["page-break-after", "break-after"],
+		["page-break-before", "break-before"],
+		["page-break-inside", "break-inside"]
+	],
 	// CSS Easing 1 §2 defines each keyword as exactly this curve; the syntax
 	// database describes `cubic-bezier()`'s shape, not which curves have a name.
 	// Keyed by the arguments as `Number` prints them.
@@ -5605,6 +5695,20 @@ const collectSelectorSupport = () => {
 };
 
 /**
+ * When each browser first read each gradient function, by its name.
+ * @returns {[string, [string, number][]][]} the versions, by function name
+ */
+const collectGradientSupport = () => {
+	/** @type {[string, [string, number][]][]} */
+	const table = [];
+	for (const name of Object.keys(bcd.css.types.gradient)) {
+		if (name.startsWith("__")) continue;
+		table.push([name, collectSupportedFrom([`css.types.gradient.${name}`])]);
+	}
+	return table;
+};
+
+/**
  * When each browser first read a value a declaration may name, keyed by the
  * spelling the printer looks one up by: a color function by its own name, and a
  * property's keyword as `"<property> <keyword>"`. Only a construct BCD gives a
@@ -7155,9 +7259,16 @@ const collectData = async () => {
 	}
 	assertClassesArePrintable(slotAccepts);
 	const lengthOnlyFunctions = collectLengthOnlyFunctions();
+	const negativeAcceptingFunctions = collectNegativeAcceptingFunctions();
 	const unitGroupBase = collectUnitGroupBase();
 	const eighthTurnCosine = collectEighthTurnCosine();
 	const prefixedProperties = collectPrefixTable(bcd.css.properties, true, true);
+	const propertyAliases = collectPropertyAliases(prefixedProperties);
+	const knownProperties = collectKnownProperties([
+		...Object.keys(properties),
+		...Object.keys(bcd.css.properties),
+		...propertyAliases.map(([spelling]) => spelling)
+	]);
 	const prefixSpellingKeywords = collectPrefixSpellingKeywords();
 	const prefixSpellingNumbers = collectPrefixSpellingNumbers();
 	const prefixedSelectors = collectPrefixTable(bcd.css.selectors, true);
@@ -7167,7 +7278,25 @@ const collectData = async () => {
 		name,
 		collectSupportedFrom(paths)
 	]);
-	const valueSupport = collectValueSupport(colorValueFunctions);
+	const valueSupport = [
+		...collectValueSupport(colorValueFunctions),
+		...collectGradientSupport(),
+		// Where a substitution function is read, any declaration holding it parses.
+		// `attr()` is left out: its row is the `content` reading, not this one.
+		...[...substitutionFunctions]
+			.filter(
+				(name) =>
+					name !== "attr" &&
+					/** @type {EXPECTED_ANY} */ (bcd.css.types)[name] !== undefined
+			)
+			.map(
+				(name) =>
+					/** @type {[string, [string, number][]]} */ ([
+						name,
+						collectSupportedFrom([`css.types.${name}`])
+					])
+			)
+	].sort((a, b) => (a[0] < b[0] ? -1 : 1));
 	const pooled = poolSupport([supportedFrom, selectorSupport, valueSupport]);
 	const prefixedAtRules = collectPrefixTable(bcd.css["at-rules"]);
 	const prefixedValues = collectPrefixedValues();
@@ -7315,6 +7444,16 @@ const ORDERED_LONGHANDS = new Map([${orderedLonghands
 const SLASH_LONGHANDS = new Map([${slashLonghands
 		.map(([name, longhands]) => `["${name}", ${JSON.stringify(longhands)}]`)
 		.join(", ")}]);
+
+// Every other spelling of a property — vendor, alternative or legacy — mapped to
+// the property, so two declarations of one property are known wherever spelled.
+const getPropertyAliases = memoize(() => new Map([${propertyAliases
+		.map(([spelling, name]) => `["${spelling}", "${name}"]`)
+		.join(", ")}]));
+
+// Every property a dataset names, so one no dataset names is known to say
+// nothing of what it sets beyond its words.
+const getKnownProperties = memoize(() => ${setLiteral(knownProperties)});
 
 // Every longhand each shorthand sets, so one block can be asked whether another
 // could shadow it. Not every shorthand prefixes its longhands: \`inset\` sets \`top\`.
@@ -7927,6 +8066,10 @@ const NEGATIVE_ACCEPTING_PROPERTIES = ${setLiteral(
 // a dropped declaration valid.
 const LENGTH_ONLY_FUNCTIONS = ${setLiteral(lengthOnlyFunctions)};
 
+// The transform functions a negative argument is valid in, all but those whose
+// grammar bounds one from below (\`perspective()\`).
+const NEGATIVE_ACCEPTING_FUNCTIONS = ${setLiteral(negativeAcceptingFunctions)};
+
 // Packed \`0xrrggbb\` -> the shortest named color with that value. Only names that
 // can beat \`#rrggbb\`; anything longer would never be picked.
 const RGB_TO_NAME = new Map([
@@ -8049,7 +8192,7 @@ module.exports.AUTO_SECOND_VALUE_PROPERTIES = AUTO_SECOND_VALUE_PROPERTIES;
 module.exports.BOX_FAMILY_PREFIX = BOX_FAMILY_PREFIX;
 module.exports.BOX_LONGHANDS = BOX_LONGHANDS;
 module.exports.BOX_SHORTHANDS = BOX_SHORTHANDS;
-module.exports.CALC_CONSTANTS = CALC_CONSTANTS;\nmodule.exports.CALC_REJECTING_PROPERTIES = CALC_REJECTING_PROPERTIES;\nmodule.exports.CANONICAL_NAMES = CANONICAL_NAMES;\nmodule.exports.CLAMPED_VALUE_RANGES = CLAMPED_VALUE_RANGES;\nmodule.exports.COLOR_ARGUMENT_FUNCTIONS = COLOR_ARGUMENT_FUNCTIONS;\nmodule.exports.COLOR_FUNCTIONS = COLOR_FUNCTIONS;
+module.exports.CALC_CONSTANTS = CALC_CONSTANTS;\nmodule.exports.CALC_REJECTING_PROPERTIES = CALC_REJECTING_PROPERTIES;\nmodule.exports.CANONICAL_NAMES = CANONICAL_NAMES;\nmodule.exports.getKnownProperties = getKnownProperties;\nmodule.exports.getPropertyAliases = getPropertyAliases;\nmodule.exports.CLAMPED_VALUE_RANGES = CLAMPED_VALUE_RANGES;\nmodule.exports.COLOR_ARGUMENT_FUNCTIONS = COLOR_ARGUMENT_FUNCTIONS;\nmodule.exports.COLOR_FUNCTIONS = COLOR_FUNCTIONS;
 module.exports.COLOR_KEYWORDS = COLOR_KEYWORDS;\nmodule.exports.getColorNameToRgb = getColorNameToRgb;\nmodule.exports.getColorNameToShortest = getColorNameToShortest;\nmodule.exports.COLOR_ONLY_PROPERTIES = COLOR_ONLY_PROPERTIES;\nmodule.exports.getColorSpaceModel = getColorSpaceModel;
 module.exports.COMPOUND_CONTINUATIONS = COMPOUND_CONTINUATIONS;
 module.exports.getCssModulesKeywords = getCssModulesKeywords;
@@ -8075,7 +8218,7 @@ module.exports.MATH_FUNCTION_ARITY = MATH_FUNCTION_ARITY;
 module.exports.MATH_FUNCTION_FOLD = MATH_FUNCTION_FOLD;
 module.exports.MATH_FUNCTION_KEYWORDS = MATH_FUNCTION_KEYWORDS;
 module.exports.MATH_FUNCTION_SUM_ARGUMENTS = MATH_FUNCTION_SUM_ARGUMENTS;\nmodule.exports.MERGEABLE_AT_RULES = MERGEABLE_AT_RULES;\nmodule.exports.MERGE_LONGHANDS = MERGE_LONGHANDS;
-module.exports.NEGATIVE_ACCEPTING_PROPERTIES = NEGATIVE_ACCEPTING_PROPERTIES;\nmodule.exports.NEVER = NEVER;
+module.exports.NEGATIVE_ACCEPTING_FUNCTIONS = NEGATIVE_ACCEPTING_FUNCTIONS;\nmodule.exports.NEGATIVE_ACCEPTING_PROPERTIES = NEGATIVE_ACCEPTING_PROPERTIES;\nmodule.exports.NEVER = NEVER;
 module.exports.NTH_NAMED_EQUIVALENTS = NTH_NAMED_EQUIVALENTS;\nmodule.exports.NTH_PSEUDO_FUNCTIONS = NTH_PSEUDO_FUNCTIONS;\nmodule.exports.OMITTABLE_INITIAL_KEYWORDS = OMITTABLE_INITIAL_KEYWORDS;
 module.exports.ONE_VALUE_PAIR_SHORTHANDS = ONE_VALUE_PAIR_SHORTHANDS;\nmodule.exports.ORDERED_LONGHANDS = ORDERED_LONGHANDS;
 module.exports.NUMBER_ARGUMENT_FUNCTIONS = NUMBER_ARGUMENT_FUNCTIONS;\nmodule.exports.NUMBER_ONLY_OUTSIDE_CALC_PROPERTIES = NUMBER_ONLY_OUTSIDE_CALC_PROPERTIES;\nmodule.exports.NUMBER_ZERO_PROPERTIES = NUMBER_ZERO_PROPERTIES;\nmodule.exports.PAIR_LONGHANDS = PAIR_LONGHANDS;\nmodule.exports.PLACE_SHORTHANDS = PLACE_SHORTHANDS;\nmodule.exports.POSITION_PROPERTIES = POSITION_PROPERTIES;\nmodule.exports.POSITION_X_KEYWORDS = POSITION_X_KEYWORDS;\nmodule.exports.POSITION_Y_KEYWORDS = POSITION_Y_KEYWORDS;

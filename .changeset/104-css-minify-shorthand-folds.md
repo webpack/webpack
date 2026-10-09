@@ -1,5 +1,5 @@
 ---
-"webpack": patch
+"webpack": minor
 ---
 
-Fold CSS longhands, shorten `flex`, shapes, shadows and omittable values, drop overridden rules, and fix edge cases.
+Shorten CSS values, selectors and astral escapes, fold longhands, drop overridden rules and a source stylesheet's stale `sourceMappingURL` comment, and write `@charset "UTF-8"` exactly when the output holds a non-ASCII character.

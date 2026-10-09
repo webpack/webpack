@@ -22,9 +22,7 @@ module.exports = {
 		);
 		expect(css).toContain(".e{text-decoration:overline!important;");
 		expect(css).toContain(".f{text-decoration-line:underline;");
-		expect(css).toContain(
-			".g{text-decoration:overline;text-decoration:var(--x)}"
-		);
+		expect(css).toContain(".g{text-decoration:var(--x)}");
 
 		const again = await cssMinify({ "bundle0.css": css }, undefined, {
 			environment: { browsers: ["safari 15"] }

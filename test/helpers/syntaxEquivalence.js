@@ -1754,7 +1754,10 @@ const compareStyles = async ({ pairs, types }) => {
 	};
 
 	const probe = document.createElement("div");
-	document.body.append(probe);
+	// A transition or animation is read on its own element: WebKit would start
+	// one on the probe, and every property read after came back mid-transition.
+	const motionProbe = document.createElement("div");
+	document.body.append(probe, motionProbe);
 
 	/**
 	 * A declaration no element computes as it stands, read as the property it is
@@ -1764,12 +1767,15 @@ const compareStyles = async ({ pairs, types }) => {
 	 * @returns {string} the value, spelled once
 	 */
 	const computedAs = (name, value) => {
+		const target = /^(?:-[a-z]+-)?(?:transition|animation)/.test(name)
+			? motionProbe
+			: probe;
 		// Sized, so a percentage resolves to a length rather than to zero.
-		probe.style.cssText = "width:97px;height:89px";
-		probe.style.setProperty(name, value);
-		return probe.style.getPropertyValue(name) === ""
+		target.style.cssText = "width:97px;height:89px";
+		target.style.setProperty(name, value);
+		return target.style.getPropertyValue(name) === ""
 			? value
-			: cascadeValue(name, getComputedStyle(probe).getPropertyValue(name));
+			: cascadeValue(name, getComputedStyle(target).getPropertyValue(name));
 	};
 
 	/**
@@ -2567,6 +2573,7 @@ const compareStyles = async ({ pairs, types }) => {
 	}
 	for (const frame of frames) frame.remove();
 	probe.remove();
+	motionProbe.remove();
 	return reports;
 };
 

@@ -19,6 +19,7 @@ Array [
 
 exports[`ConfigTestCases css minimize-corpus minimize-corpus should compile: minimize-calc 1`] = `
 Array [
+  "@charset \\"UTF-8\\";",
   "/*! calc: a sum of one unit is that unit */.c01{width:3px}",
   "/*! calc: ...and subtraction the same way */.c02{width:6px}",
   "/*! calc: a product by a plain number */.c03{width:2px}",
@@ -164,13 +165,14 @@ Array [
   "/*! math: ...at every depth it nests */.c21{width:calc-size(calc-size(auto,3px),7px)}",
   "/*! declined: \`size\` is not a constant, so nothing reduces */.c22{width:calc-size(auto,size + 10px)}",
   "/*! declined: a fold inside a stepped function would re-unit its result, which is
-   the rewrite that function's own arguments refuse */.q08{margin-left:round(down,calc(4.5cm),calc(1.5cm))}",
+   the rewrite that function's own arguments refuse */.q08{margin-left:round(down,(4.5cm),(1.5cm))}",
   "/*! declined: ...including another stepped function */.q09{margin-left:round(down,round(down,10cm,3cm),1cm)}",
 ]
 `;
 
 exports[`ConfigTestCases css minimize-corpus minimize-corpus should compile: minimize-calc-lightningcss 1`] = `
 Array [
+  "@charset \\"UTF-8\\";",
   "/*! width: calc(1px + 2px) — same as lightningcss: 3px */.k001{width:3px}",
   "/*! width: calc(10px - 4px) — same as lightningcss: 6px */.k002{width:6px}",
   "/*! width: calc(2px * 3) — same as lightningcss: 6px */.k003{width:6px}",
@@ -300,7 +302,7 @@ Array [
   "/*! width: calc(attr(data-w px) + 1px) — same as lightningcss: calc(attr(data-w px) + 1px) */.k127{width:calc(attr(data-w px) + 1px)}",
   "/*! width: calc(1px + anchor-size(width)) — same as lightningcss: calc(1px + anchor-size(width)) */.k128{width:calc(1px + anchor-size(width))}",
   "/*! width: calc-size(auto, size * 2) — lightningcss: calc-size(auto, size * 2) — ours is shorter */.k129{width:calc-size(auto,size*2)}",
-  "/*! width: calc(100cqw / 3) — lightningcss: 33.3333cqw — a length the engine scales keeps nine digits, as one landing on whole pixels needs */.k130{width:33.3333333cqw}",
+  "/*! width: calc(100cqw / 3) — lightningcss: 33.3333cqw — a length the engine scales keeps the digits it lands on a whole-pixel step with */.k130{width:33.333333cqw}",
   "/*! width: CALC(1PX + 2PX) — same as lightningcss: 3px */.k131{width:3px}",
   "/*! width: calc( 1px  +  2px ) — same as lightningcss: 3px */.k132{width:3px}",
   "/*! width: -webkit-calc(1px + 2px) — same as lightningcss: -webkit-calc(1px + 2px) */.k133{width:-webkit-calc(1px + 2px)}",
@@ -336,7 +338,7 @@ Array [
   "/*! filter: brightness(calc(1 / 2)) — same as lightningcss: brightness(.5) */.k163{filter:brightness(.5)}",
   "/*! transform: scale(calc(1 / 3), calc(1 / 2)) — same as lightningcss: scale(.333333,.5) */.k164{transform:scale(.333333,.5)}",
   "/*! transform: matrix(calc(1 / 3), 0, 0, 1, 0, 0) — lightningcss: matrix(.333333,0,0,1,0,0) — the same matrix, which ours writes as the shorter scaleX() */.k165{transform:scaleX(.333333)}",
-  "/*! transform: scale(calc(-1 / 3)) — lightningcss: scale(-.333333) — a negative argument keeps its calc(), as a filter function of the same shape takes none */.k166{transform:scale(calc(-1/3))}",
+  "/*! transform: scale(calc(-1 / 3)) — same as lightningcss: scale(-.333333) */.k166{transform:scale(-.333333)}",
   "/*! transition-timing-function: cubic-bezier(calc(1 / 2), 0, 1, 1) — lightningcss: cubic-bezier(.5,0,1,1) — a bounded argument keeps its calc(), which clamps where a bare value outside it is dropped */.k167{transition-timing-function:cubic-bezier(calc(.5),0,1,1)}",
   "/*! color: rgb(calc(255 / 7) 0 0) — same as lightningcss: #240000 */.k168{color:#240000}",
   "/*! color: rgba(0, 0, 0, calc(1 / 3)) — same as lightningcss: #0005 */.k169{color:#0005}",
@@ -352,6 +354,7 @@ Array [
 
 exports[`ConfigTestCases css minimize-corpus minimize-corpus should compile: minimize-colors 1`] = `
 Array [
+  "@charset \\"UTF-8\\";",
   "/*! colormin: should minify lowercase color values */.t01{color:#ff0}",
   "/*! colormin: should minify uppercase color values */.t02{color:#ff0}",
   "/*! colormin: should minify color values (2) */.t03{box-shadow:0 1px 3px#ffe6dc80}",
@@ -460,12 +463,13 @@ Array [
   "/*! whitespace: an escaped tab ends the value it is written in */.w11{--x:1;--y:red\\\\	}",
   "/*! params: a custom property in a @supports condition */@supports (--foo:green){.p1{color:red}}",
   "/*! params: an empty value in one */@supports (--foo:){.p2{background:green}}",
-  "/*! params: two of them across \`or\` */@supports ((--foo:) or (--bar:green)){.p3{background:green}}",
+  "/*! params: two of them across \`or\` */@supports (--foo:) or (--bar:green){.p3{background:green}}",
 ]
 `;
 
 exports[`ConfigTestCases css minimize-corpus minimize-corpus should compile: minimize-declined 1`] = `
 Array [
+  "@charset \\"UTF-8\\";",
   "/*! declined here only because this case builds for no particular target — for a
    selection with no hex alpha it stays, and otherwise it is \`#0000\`
    (see the \`minimize-environment\` case) (lightningcss: #0000) */.t05{background-color:#0000}",
@@ -569,7 +573,7 @@ Array [
   "/*! webpack: an empty @supports is inert */",
   "/*! webpack: an empty @container is inert */",
   "/*! webpack: an empty @page is kept (its margin boxes are not modelled) */@page{}",
-  "/*! webpack: an empty @scope is kept */@scope (.t09){}",
+  "/*! webpack: an empty @scope is kept */@scope(.t09){}",
   "/*! webpack: a nested empty rule is dropped, the outer one survives */.t10{color:red}",
   "/*! webpack: an outer rule left empty by its nested rules is dropped */",
   "/*! webpack: input the grammar rejects is not \\"empty\\" */.t14{*zoom: 1}",
@@ -693,7 +697,7 @@ Array [
   "/*! esbuild: @media (1px < width < 2px) {div{color:red}} */@media (1px<width<2px){div{color:red}}",
   "/*! esbuild: @media junk(1, 2, 3) {div{color:red}} */@media junk(1,2,3){div{color:red}}",
   "/*! esbuild: @scope { div { color: red } } */@scope{div{color:red}}",
-  "/*! esbuild: @scope (a, .b) to (c > *) { div { color: red } } */@scope (a,.b) to (c>*){div{color:red}}",
+  "/*! esbuild: @scope (a, .b) to (c > *) { div { color: red } } */@scope(a,.b) to (c>*){div{color:red}}",
   "/*! esbuild: @font-face { font-family: 'Open Sans'; src: url('OpenSans.woff') format('woff') } */@font-face{font-family:Open Sans;src:url(http://example.test/OpenSans.woff)format(\\"woff\\")}",
   "/*! esbuild: @page { margin: 1cm } */@page{margin:1cm}",
   "/*! esbuild: @page :first { margin: 1cm } */@page :first{margin:1cm}",
@@ -766,20 +770,20 @@ Array [
   "/*! test_selectors: :foo(bar) { color: yellow } */:foo(bar){color:#ff0}",
   "/*! test_selectors: ::foo(bar) { color: yellow } */::foo(bar){color:#ff0}",
   "/*! test_selectors: ::foo(*) { color: yellow } */::foo(*){color:#ff0}",
-  "/*! test_selectors: :is(.foo) { color: yellow } */:is(.foo){color:#ff0}",
-  "/*! test_selectors: :is(#foo) { color: yellow } */:is(#foo){color:#ff0}",
-  "/*! test_selectors: a:is(.foo) { color: yellow } */a:is(.foo){color:#ff0}",
-  "/*! test_selectors: a:is([data-test]) { color: yellow } */a:is([data-test]){color:#ff0}",
+  "/*! test_selectors: :is(.foo) { color: yellow } */.foo{color:#ff0}",
+  "/*! test_selectors: :is(#foo) { color: yellow } */#foo{color:#ff0}",
+  "/*! test_selectors: a:is(.foo) { color: yellow } */",
+  "/*! test_selectors: a:is([data-test]) { color: yellow } */a[data-test]{color:#ff0}",
   "/*! test_selectors: .foo:is(a) { color: yellow } */.foo:is(a){color:#ff0}",
   "/*! test_selectors: .foo:is(*|a) { color: yellow } */.foo:is(*|a){color:#ff0}",
   "/*! test_selectors: .foo:is(*) { color: yellow } */.foo:is(*){color:#ff0}",
   "/*! test_selectors: @namespace svg url(http://www.w3.org/2000/svg); .foo:is(svg|a) { color: yellow } */@namespace svg url(http://www.w3.org/2000/svg);.foo:is(svg|a){color:#ff0}",
   "/*! test_selectors: a:is(.foo .bar) { color: yellow } */a:is(.foo .bar){color:#ff0}",
   "/*! test_selectors: :is(.foo, .bar) { color: yellow } */:is(.foo,.bar){color:#ff0}",
-  "/*! test_selectors: a:is(:not(.foo)) { color: yellow } */a:is(:not(.foo)){color:#ff0}",
-  "/*! test_selectors: a:is(:first-child) { color: yellow } */a:is(:first-child){color:#ff0}",
-  "/*! test_selectors: a:is(:has(.foo)) { color: yellow } */a:is(:has(.foo)){color:#ff0}",
-  "/*! test_selectors: a:is(:is(.foo)) { color: yellow } */a:is(:is(.foo)){color:#ff0}",
+  "/*! test_selectors: a:is(:not(.foo)) { color: yellow } */a:not(.foo){color:#ff0}",
+  "/*! test_selectors: a:is(:first-child) { color: yellow } */a:first-child{color:#ff0}",
+  "/*! test_selectors: a:is(:has(.foo)) { color: yellow } */a:has(.foo){color:#ff0}",
+  "/*! test_selectors: a:is(:is(.foo)) { color: yellow } */a.foo{color:#ff0}",
   "/*! test_selectors: :host(:hover) {color: red} */:host(:hover){color:red}",
   "/*! test_selectors: ::slotted(:hover) {color: red} */::slotted(:hover){color:red}",
   "/*! test_selectors: :root::view-transition {position: fixed} */:root::view-transition{position:fixed}",
@@ -932,7 +936,7 @@ Array [
   "/*! test_custom_properties: .foo { --test:foo ; } */.foo{--test:foo}",
   "/*! test_custom_properties: .foo { --test: var(--foo, 20px); } */.foo{--test:var(--foo,20px)}",
   "/*! test_custom_properties: .foo { transition: var(--foo, 20px), var(--bar, 40px); } */.foo{transition:var(--foo,20px),var(--bar,40px)}",
-  "/*! test_custom_properties: .foo { background: var(--color) var(--image); } */.foo{background:var(--color) var(--image)}",
+  "/*! test_custom_properties: .foo { background: var(--color) var(--image); } */.foo{background:var(--color)var(--image)}",
   "/*! test_custom_properties: .foo { height: calc(var(--spectrum-global-dimension-size-300) / 2); } */.foo{height:calc(var(--spectrum-global-dimension-size-300)/2)}",
   "/*! test_custom_properties: .foo { color: var(--color, rgb(255, 255, 0)); } */",
   "/*! test_custom_properties: .foo { color: var(--color, #ffff00); } */.foo{color:var(--color,#ff0)}",
@@ -990,6 +994,13 @@ Array [
   "/*! corpora: .foo { background: conic-gradient(from 90deg at 50% 50%, black, white) } */.foo{background:conic-gradient(from 90deg,#000,#fff)}",
   "/*! corpora: .foo { box-shadow: 0 0 currentcolor } */.foo{box-shadow:0 0}",
   "/*! corpora: .foo { text-shadow: 1px 1px 2px currentColor, 0 0 1px red } */.foo{text-shadow:1px 1px 2px,0 0 1px red}",
+  "/*! corpora: .foo { flex: 1 75% } */.foo{flex:75%}",
+  "/*! corpora: .foo { padding-inline: 1rem 1rem } */.foo{padding-inline:1rem}",
+  "/*! corpora: .foo { background: white } */.foo{background:#fff}",
+  "/*! corpora: .foo { transform: translate(calc(-4%)) } */.foo{transform:translate(-4%)}",
+  "/*! corpora: .foo { font: normal normal normal 24px/1 \\"Material Design Icons\\" } */.foo{font:24px/1 Material Design Icons}",
+  "/*! corpora: .foo { scale: 95% } */.foo{scale:.95}",
+  "/*! corpora: .foo { transition-duration: 416.667ms } */.foo{transition-duration:.416667s}",
 ]
 `;
 
@@ -1008,6 +1019,7 @@ Array [
 
 exports[`ConfigTestCases css minimize-corpus minimize-corpus should compile: minimize-nesting 1`] = `
 Array [
+  "@charset \\"UTF-8\\";",
   "/*! join: adjacent nested rules printing the same block are the one rule they stand for */.a{.n1,.n2>.n3{color:red}}",
   "/*! join: ...and \`&\` joins there, an engine that cannot read it losing the block either way */.b{&.n4,&.n5{top:0}}",
   "/*! join: ...including as a compound of its own */.c{& .n6,& .n7{top:0}}",
@@ -1050,6 +1062,7 @@ Array [
 
 exports[`ConfigTestCases css minimize-corpus minimize-corpus should compile: minimize-selectors 1`] = `
 Array [
+  "@charset \\"UTF-8\\";",
   "/*! lightningcss: [foo=\\"baz\\"] */[foo=baz]{color:red}",
   "/*! lightningcss: [foo=\\"foo bar\\"] */[foo=\\"foo bar\\"]{color:red}",
   "/*! lightningcss: [foo=\\"foo bar baz\\"] */[foo=\\"foo bar baz\\"]{color:red}",
@@ -1095,9 +1108,9 @@ Array [
   "/*! webpack: an id keeps its escape when unescaping would unmake the ident */#\\\\31 abc{color:red}",
   "/*! webpack: an id unescapes like any other identifier */#Abc{color:red}",
   "/*! webpack: a value's identifier unescapes too */.t50{font-family:Arial}",
-  "/*! webpack: a descendant combinator before a pseudo-class in a scope root */@scope (div :hover){.t51{color:red}}",
-  "/*! webpack: ...and in a scope limit */@scope (.a .b) to (.c :where(.d)){.t52{color:red}}",
-  "/*! webpack: a combinator's own whitespace still goes */@scope (div>p) to (span+em){.t53{color:red}}",
+  "/*! webpack: a descendant combinator before a pseudo-class in a scope root */@scope(div :hover){.t51{color:red}}",
+  "/*! webpack: ...and in a scope limit */@scope(.a .b) to (.c :where(.d)){.t52{color:red}}",
+  "/*! webpack: a combinator's own whitespace still goes */@scope(div>p) to (span+em){.t53{color:red}}",
   "/*! webpack: a query condition still loses the whitespace around its \`:\` */@media (width>=100px){.t54{color:red}}",
   "/*! webpack: ...and \`@supports\` keeps behaving as a condition */@supports (color:red){.t55{color:red}}",
   "/*! lightningcss: .t56:before — Selectors 4 §3.3 keeps the one-colon spelling */.t56:before{color:red}",
@@ -1150,12 +1163,13 @@ Array [
 
 exports[`ConfigTestCases css minimize-corpus minimize-corpus should compile: minimize-shorthand-folds 1`] = `
 Array [
-  ".f1{display:flex;flex:auto}.f2{flex:auto}.f3{flex:1}.f4{flex:2}.f5{flex:2 50%}.f6{flex:content 1}.f7{flex:1 1 0}.s1{clip-path:circle()}.s2{clip-path:circle(at 10px 20px)}.s3{clip-path:ellipse()}.s4{clip-path:inset(0)}.s5{clip-path:inset(1px 2px)}.s6{clip-path:inset(1px round 5px 6px/1px)}.s7{clip-path:inset(1px round 5px)}.s8{clip-path:polygon(0 0,10px 10px,0 10px)}.s9{clip-path:path(\\"M0 0L10 10L0 10Z\\")}.s10{shape-outside:circle()border-box;float:left}.s11{clip-path:circle(50% at 50% 50%)}.l1{border-left:0}.l2{border-top:1px solid red}.l3{outline:1px solid red}.l4{column-rule:1px solid red}.l5{display:flex;flex-flow:column wrap}.l6{text-emphasis:dot red}.l7{text-decoration:underline red}.l8{flex:auto}.l9{flex:1 0 auto}.l10{transition:opacity.2s.1s}.l11,.l12{transition:opacity.2s}.l13{animation:x 2s linear infinite}.l14{animation:x 1s infinite.3s}.l15{animation:x 1s alternate}.l16{animation:x 1s;animation-fill-mode:none}.l17{transition:opacity;transition-delay:.1s}@keyframes x{to{opacity:0}}.i1{box-shadow:inset 0 0 0 1px red}.i2{box-shadow:inset red 1px 1px,0 0 2px blue}@media all{.r2{top:3px}.r1{top:2px;color:#456}}",
+  ".f1{display:flex;flex:auto}.f2{flex:auto}.f3{flex:1}.f4{flex:2}.f5{flex:2 50%}.f6{flex:content}.f7{flex:1 1 0}.s1{clip-path:circle()}.s2{clip-path:circle(at 10px 20px)}.s3{clip-path:ellipse()}.s4{clip-path:inset(0)}.s5{clip-path:inset(1px 2px)}.s6{clip-path:inset(1px round 5px 6px/1px)}.s7{clip-path:inset(1px round 5px)}.s8{clip-path:polygon(0 0,10px 10px,0 10px)}.s9{clip-path:path(\\"M0 0L10 10L0 10Z\\")}.s10{shape-outside:circle()border-box;float:left}.s11{clip-path:circle(50% at 50% 50%)}.l1{border-left:0}.l2{border-top:1px solid red}.l3{outline:1px solid red}.l4{column-rule:1px solid red}.l5{display:flex;flex-flow:column wrap}.l6{text-emphasis:dot red}.l7{text-decoration:underline red}.l8{flex:auto}.l9{flex:1 0 auto}.l10{transition:opacity.2s.1s}.l11,.l12{transition:opacity.2s}.l13{animation:x 2s linear infinite}.l14{animation:x 1s infinite.3s}.l15{animation:x 1s alternate}.l16{animation:x 1s;animation-fill-mode:none}.l17{transition:opacity;transition-delay:.1s}@keyframes x{to{opacity:0}}.i1{box-shadow:inset 0 0 0 1px red}.i2{box-shadow:inset red 1px 1px,0 0 2px blue}@media all{.r2{top:3px}.r1{top:2px;color:#456}}",
 ]
 `;
 
 exports[`ConfigTestCases css minimize-corpus minimize-corpus should compile: minimize-shorthands 1`] = `
 Array [
+  "@charset \\"UTF-8\\";",
   "/*! box: every side equal */.t01{margin:1px}",
   "/*! box: axes equal */.t02{margin:1px 2px}",
   "/*! box: left equal to right */.t03{margin:1px 2px 3px}",
@@ -1169,8 +1183,8 @@ Array [
   "/*! box: \`!important\` is not one of the values */.t11{padding:7px!important}",
   "/*! box: a case-different re-spelling is the same value once normalized */.t12{margin:1px}",
   "/*! box: five values is not the notation, so nothing is assumed */.t13{margin:1px 1px 1px 1px 1px}",
-  "/*! declined: a substitution expands to a token sequence, so two references need not be one value */.t14{margin:var(--gap) var(--gap)}",
-  "/*! declined: the same for \`env()\` */.t15{padding:env(safe-area-inset-top) env(safe-area-inset-top)}",
+  "/*! declined: a substitution expands to a token sequence, so two references need not be one value */.t14{margin:var(--gap)var(--gap)}",
+  "/*! declined: the same for \`env()\` */.t15{padding:env(safe-area-inset-top)env(safe-area-inset-top)}",
   "/*! declined: \`fill\` may sit anywhere among the four, so position is not fixed */.t16{border-image-slice:10 10 10 10 fill}",
   "/*! declined: a custom property's value is verbatim */.t17{--margin:1px 1px}",
   "/*! radius: both boxes equal, so the \`/\` says nothing */.t18{border-radius:1px}",
@@ -1189,10 +1203,10 @@ Array [
   "/*! flex: the basis goes on its own where the shrink is not \`1\` */.t30b{flex:1 2}",
   "/*! flex: three longhands are the same value, so they merge and then shorten */.t30c{flex:2 3 10px}",
   "/*! declined: a prefixed property is a different property */.t31{-webkit-box-flex:0 0 auto}",
-  "/*! declined: \`attr()\` substitutes a token sequence too, through its fallback */.t35{margin:attr(data-m type(<length>),1px 2px 3px) attr(data-m type(<length>),1px 2px 3px)}",
-  "/*! declined: the same for \`if()\` */.t36{margin:if(style(--x: 1): 1px 2px 3px;else: 4px) if(style(--x: 1): 1px 2px 3px;else: 4px)}",
-  "/*! declined: ...and \`inherit()\`, which substitutes a custom property's whole value */.t37{margin:inherit(--gap) inherit(--gap)}",
-  "/*! declined: ...and \`first-valid()\` */.t38{margin:first-valid(1px 2px 3px) first-valid(1px 2px 3px)}",
+  "/*! declined: \`attr()\` substitutes a token sequence too, through its fallback */.t35{margin:attr(data-m type(<length>),1px 2px 3px)attr(data-m type(<length>),1px 2px 3px)}",
+  "/*! declined: the same for \`if()\` */.t36{margin:if(style(--x: 1): 1px 2px 3px;else: 4px)if(style(--x: 1): 1px 2px 3px;else: 4px)}",
+  "/*! declined: ...and \`inherit()\`, which substitutes a custom property's whole value */.t37{margin:inherit(--gap)inherit(--gap)}",
+  "/*! declined: ...and \`first-valid()\` */.t38{margin:first-valid(1px 2px 3px)first-valid(1px 2px 3px)}",
   "/*! a function only ending in a substitution's name is a different function */.t39{margin:myvar(1px)}",
   "/*! declined: only \`border-radius\` takes a second box, so a \`/\` elsewhere is invalid — collapsing it would switch the declaration on */.t32{margin:1px 1px/1px 1px}",
   "/*! declined: the same for a property whose one box would otherwise collapse */.t33{padding:2px/2px}",
@@ -1224,7 +1238,7 @@ Array [
   "/*! font-weight: the keyword CSS Fonts 4 defines as 400 */.t59{font-weight:400}",
   "/*! font-weight: ...and as 700, whatever its case */.t60{font-weight:700}",
   "/*! font-weight: the \`@font-face\` descriptor means the same */@font-face{font-family:x;font-weight:400}",
-  "/*! declined: inside the \`font\` shorthand a \`normal\` may be the style or variant */.t61{font:normal 12px serif}",
+  "/*! font: a \`normal\` before the size may be the style or variant, not a weight, and goes as the default of each */.t61{font:12px serif}",
   "/*! declined: the keyword means something else on every other property */.t62{font-variant:normal;line-height:normal}",
   "/*! transition: a comma parts two layers, and each holds its own slots */.t63{transition:opacity 1s,color 1s}",
   "/*! transition: ...so only the layer whose slots are unambiguous gives its keyword up */.t63b{transition:opacity 1s,ease 1s ease}",
@@ -1266,8 +1280,8 @@ Array [
    the order it writes them */.t94{grid-area:1/2/3/4}",
   "/*! ...and each axis' pair is its own shorthand */.t95{grid-row:1/3}.t96{grid-column:a/a}",
   "/*! declined: a longhand holding two components is a slot the \`/\` form cannot
-   tell apart from the next one */.t97{grid-row-start:span 2;grid-column-start:2;grid-row-end:3;grid-column-end:4}",
-  "/*! declined: a substitution could expand across the \`/\` into another slot */.t98{grid-row-start:1;grid-column-start:2;grid-row-end:3;grid-column-end:var(--x)}",
+   tell apart from the next one */.t97{grid-row-start:span 2;grid-column:2/4;grid-row-end:3}",
+  "/*! declined: a substitution could expand across the \`/\` into another slot */.t98{grid-row:1/3;grid-column-start:2;grid-column-end:var(--x)}",
   "/*! declined: a CSS-wide keyword beside another value is a shorthand no engine reads */.t99{grid-row-start:inherit;grid-column-start:inherit;grid-row-end:inherit;grid-column-end:inherit}",
 ]
 `;
@@ -1350,7 +1364,7 @@ Array [
 
 exports[`ConfigTestCases css minimize-corpus minimize-corpus should compile: minimize-urls 1`] = `
 Array [
-  "@import url(http://website.test/foo.css);",
+  "@charset \\"UTF-8\\";@import url(http://website.test/foo.css);",
   "/*! normalize-url: should strip double quotes */.t01{background:url(http://website.test/cat.jpg)}",
   "/*! normalize-url: should strip single quotes */.t02{background:url(http://website.test/cat.jpg)}",
   "/*! normalize-url: should strip double quotes uppercase URL */.t03{background:url(http://website.test/cat.jpg)}",
@@ -1385,6 +1399,7 @@ Array [
 
 exports[`ConfigTestCases css minimize-corpus minimize-corpus should compile: minimize-value-validity 1`] = `
 Array [
+  "@charset \\"UTF-8\\";",
   "/*! invalid: a quoted family beside a bare identifier matches no family list */.a{font-family:\\"Lucida\\"Grande,sans-serif}",
   "/*! valid: a lone string is a family, so unquoting it stays one */.b{font-family:Lucida Grande,sans-serif}",
   "/*! invalid: \`<integer>\` takes no fraction, so this computes \`auto\` */.c{grid-row:1.0}",
@@ -1397,7 +1412,7 @@ Array [
   "/*! a bare number here is a multiple of the border width, not a length */.j{border-image-outset:0px}",
   "/*! the same, and neither was found by a test — the grammar says both */.k{border-image-width:0px}",
   "/*! \`flex:0\` is grow=0,basis=0%; \`flex:0px\` is grow=1,basis=0px */.l{flex:0px}",
-  "/*! a negative zero keeps its fraction too, and still drops the leading zero */.m{grid-row:-.0}",
+  "/*! a negative zero keeps its fraction too, and still drops the leading zero */.m{grid-row:.0}",
   "/*! the shared slot is the second entry here, not the first */.n{font-family:serif,\\"My Font\\"Extra}",
   "/*! a lone string in a later slot still unquotes */.o{font-family:serif,My Font,monospace}@property --len{syntax:\\"<length>\\";initial-value:0px;inherits:false}@property --tint{syntax:\\"<color>\\";initial-value:#ff0000;inherits:false}.property-descriptors{width:var(--len);color:var(--tint);margin:0;background:red}",
   "/*! a literal past \`oblique\`'s ±90deg is rejected where the \`calc()\` is clamped */.p{font-style:oblique calc(100deg)}",
@@ -1413,6 +1428,7 @@ Array [
 
 exports[`ConfigTestCases css minimize-corpus minimize-corpus should compile: minimize-values 1`] = `
 Array [
+  "@charset \\"UTF-8\\";",
   "/*! convert-values: should convert milliseconds to seconds */.t01{transition-duration:.5s}",
   "/*! convert-values: should convert milliseconds to seconds (2) */.t02{animation:opacity 0s 1s}",
   "/*! convert-values: should convert seconds to milliseconds */.t03{transition-duration:5ms}",
@@ -1470,7 +1486,7 @@ Array [
    is six bytes saying nothing */@media (width>=100px){.t47a{color:red}}",
   "/*! declined: \`all\` on its own is the whole query, and \`only\` before it is there
    to hide the rule from an engine reading CSS 2's grammar */@media all{.t47b{color:red}}@media only all and (width>=100px){.t47c{color:red}}@media not all and (width>=100px){.t47d{color:red}}",
-  "/*! webpack: an operand a condition already states, whichever rule states it */@media (monochrome){.t47e{color:red}}@supports (display:grid){.t47f{color:red}}@supports ((display:grid) or (display:flex)){.t47g{color:red}}",
+  "/*! webpack: an operand a condition already states, whichever rule states it */@media (monochrome){.t47e{color:red}}@supports (display:grid){.t47f{color:red}}@supports (display:grid) or (display:flex){.t47g{color:red}}",
   "/*! declined: a chain mixing the two operators is no flat list of either's, and
    two queries are not two operands of anything */@supports (display:grid) and (display:flex) or (display:table){.t47h{color:red}}@media (monochrome),(monochrome){.t47i{color:red}}",
   "/*! webpack: a media feature is a length, a ratio or an integer and nothing
@@ -1492,7 +1508,7 @@ Array [
   "/*! convert-values: every length unit, and \`%\` is a different type */.t60{width:0;height:0;top:0;left:0;right:0%}",
   "/*! webpack: a zero time, angle or \`<flex>\` still needs its unit */.t61{transition-duration:0s;rotate:0deg;grid-template-columns:0fr 1fr}",
   "/*! webpack: \`flex-basis\` keeps it — IE 11 drops a \`flex\` whose basis has none */.t62{flex-basis:0px}",
-  "/*! webpack: ...and so does the shorthand carrying one */.t63{flex:1 0px}",
+  "/*! webpack: ...and so does the shorthand carrying one */.t63{flex:0px}",
   "/*! webpack: one component of several */.t64{margin:0 1px}",
   "/*! lightningcss: (width>=1200px) — \`min-X: Y\` is exactly \`X >= Y\` */@media (width>=1200px){.t65{color:red}}",
   "/*! lightningcss: (width<=1199.98px) */@media (width<=1199.98px){.t66{color:red}}",
@@ -1568,7 +1584,7 @@ Array [
   "/*! webpack: declined: a substitution could stand for any of the three */.t123{outline-width:3px;outline-style:dashed;outline-color:var(--c)}",
   "/*! webpack: declined: a CSS-wide keyword means something else in a shorthand */.t124{flex-direction:column;flex-wrap:inherit}",
   "/*! webpack: the merge steps over what does not write the family */.t125{column-rule:groove#639;color:red}",
-  "/*! webpack: declined: \`outline-offset\` is in the family and would be stepped over */.t126{outline-width:3px;outline-offset:1px;outline-style:dashed;outline-color:red}",
+  "/*! webpack: \`outline\` sets no \`outline-offset\`, so the merge steps over it */.t126{outline:3px dashed red;outline-offset:1px}",
   "/*! webpack: four slots, a percentage only the thickness takes, and the two
    spelling their own initials come out */.t127{text-decoration:#123 10%}",
   "/*! webpack: a system color is a color keyword like any other */.t128{text-decoration:line-through double canvastext from-font}",
@@ -1621,7 +1637,7 @@ Array [
   "/*! webpack: a zero time keeps a unit, and \`s\` is the shorter one it can carry */.t98{transition-duration:0s}",
   "/*! webpack: a shorthand slot holding its own initial goes, and a slot taking a
    length or a color is read by the classes a sibling's own value is in — every
-   slot holding its initial leaves the shortest of them saying all of them */.t98a{border:none}.t98b{column-rule:none}.t98c{border:solid red}",
+   slot holding its initial leaves the shortest of them saying all of them */.t98a{border:0}.t98b{column-rule:none}.t98c{border:solid red}",
   "/*! declined: a sibling filling the slot keeps the initial there */.t98d{border:medium 1px}.t98e{border:currentcolor red}",
   "/*! webpack: a component spelling the property's own initial says nothing beside
    another — omitting its group leaves exactly that keyword */.t99{grid-auto-flow:dense}",

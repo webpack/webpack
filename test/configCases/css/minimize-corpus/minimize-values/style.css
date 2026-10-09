@@ -341,7 +341,7 @@
 .t124 { flex-direction: column; flex-wrap: inherit }
 /*! webpack: the merge steps over what does not write the family */
 .t125 { column-rule-width: medium; color: red; column-rule-style: groove; column-rule-color: rebeccapurple }
-/*! webpack: declined: `outline-offset` is in the family and would be stepped over */
+/*! webpack: `outline` sets no `outline-offset`, so the merge steps over it */
 .t126 { outline-width: 3px; outline-offset: 1px; outline-style: dashed; outline-color: red }
 /*! webpack: four slots, a percentage only the thickness takes, and the two
    spelling their own initials come out */

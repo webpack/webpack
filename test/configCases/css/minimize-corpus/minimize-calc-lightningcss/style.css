@@ -260,7 +260,7 @@
 .k128 { width: calc(1px + anchor-size(width)) }
 /*! width: calc-size(auto, size * 2) — lightningcss: calc-size(auto, size * 2) — ours is shorter */
 .k129 { width: calc-size(auto, size * 2) }
-/*! width: calc(100cqw / 3) — lightningcss: 33.3333cqw — a length the engine scales keeps nine digits, as one landing on whole pixels needs */
+/*! width: calc(100cqw / 3) — lightningcss: 33.3333cqw — a length the engine scales keeps the digits it lands on a whole-pixel step with */
 .k130 { width: calc(100cqw / 3) }
 /*! width: CALC(1PX + 2PX) — same as lightningcss: 3px */
 .k131 { width: CALC(1PX + 2PX) }
@@ -332,7 +332,7 @@
 .k164 { transform: scale(calc(1 / 3), calc(1 / 2)) }
 /*! transform: matrix(calc(1 / 3), 0, 0, 1, 0, 0) — lightningcss: matrix(.333333,0,0,1,0,0) — the same matrix, which ours writes as the shorter scaleX() */
 .k165 { transform: matrix(calc(1 / 3), 0, 0, 1, 0, 0) }
-/*! transform: scale(calc(-1 / 3)) — lightningcss: scale(-.333333) — a negative argument keeps its calc(), as a filter function of the same shape takes none */
+/*! transform: scale(calc(-1 / 3)) — same as lightningcss: scale(-.333333) */
 .k166 { transform: scale(calc(-1 / 3)) }
 /*! transition-timing-function: cubic-bezier(calc(1 / 2), 0, 1, 1) — lightningcss: cubic-bezier(.5,0,1,1) — a bounded argument keeps its calc(), which clamps where a bare value outside it is dropped */
 .k167 { transition-timing-function: cubic-bezier(calc(1 / 2), 0, 1, 1) }

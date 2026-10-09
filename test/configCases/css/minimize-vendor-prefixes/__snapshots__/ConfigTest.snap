@@ -2,6 +2,7 @@
 
 exports[`ConfigTestCases css minimize-vendor-prefixes minimize-vendor-prefixes should compile 1`] = `
 Array [
+  "@charset \\"UTF-8\\";",
   "/*! chrome 40 and firefox 40 read \`user-select\` only prefixed, and Safari has no
    unprefixed form, so \`-webkit-\` and \`-moz-\` are added before it */.t01{-webkit-user-select:none;-moz-user-select:none;user-select:none}",
   "/*! same for \`appearance\` */.t02{-webkit-appearance:none;-moz-appearance:none;appearance:none}",

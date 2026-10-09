@@ -6594,6 +6594,11 @@ declare interface CssPrintOptions {
 	deferEmbeddedSource?: DeferredEmbeddedSource[];
 
 	/**
+	 * open the stylesheet with `@charset "UTF-8"` exactly when its output holds a non-ASCII character, so it is read as UTF-8 wherever it is served, and write a string's hex escape of a character past U+FFFF as the character, which costs fewer bytes once compressed; for a stylesheet that is a file of its own, as `@charset` is read only as one's opening bytes. Off by default, and only read while printing
+	 */
+	declareCharset?: boolean;
+
+	/**
 	 * give a rule the selectors of a later one printing the same block, and an at-rule the block of a later one stating the same condition, past the rules between them; off by default, since it reorders the cascade and is sound only where nothing between declares what the block being moved does for an element it can match — a condition between counting for what its own rules declare
 	 */
 	mergeDistantRules?: boolean;
@@ -6638,6 +6643,11 @@ declare interface CssProcessOptions {
 	 * what the target can read (the CSS entries of `output.environment`), so a spelling it would not understand is never reached for; only read while printing, and an absent entry means the modern spelling is available
 	 */
 	environment?: CssEnvironment;
+
+	/**
+	 * open the stylesheet with `@charset "UTF-8"` exactly when its output holds a non-ASCII character, so it is read as UTF-8 wherever it is served, and write a string's hex escape of a character past U+FFFF as the character, which costs fewer bytes once compressed; for a stylesheet that is a file of its own, as `@charset` is read only as one's opening bytes. Off by default, and only read while printing
+	 */
+	declareCharset?: boolean;
 
 	/**
 	 * rewrite a length into a shorter unit it is exactly equal in (`16px` -> `1pc`); off by default because it earns nothing once the asset is compressed, and only read while printing. A time is always rewritten
@@ -24797,6 +24807,12 @@ declare class PrintContext<TPath, TNode, TPrintOptions = object> {
 	retract(index: number): void;
 
 	/**
+	 * Whether the output after a piece holds a character outside ASCII, the
+	 * comments still waiting to be placed included.
+	 */
+	writesNonAscii(index: number): boolean;
+
+	/**
 	 * Fold `text` into an already-emitted piece, in front of the character it ends
 	 * with — a later sibling whose body belongs inside that piece, as a repeated
 	 * named `@layer` block's does. Mappings are piece-relative and this only grows
@@ -33718,6 +33734,7 @@ declare namespace exports {
 		}>;
 		export namespace cssMinify {
 			export let supportsWorkerThreads: () => boolean;
+			export let getBannerPosition: () => "end";
 			export let getTypes: () => string[];
 			export let getEmbeddedTypes: () => string[];
 			export let filter: (name: string) => boolean;
