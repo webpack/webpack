@@ -6781,7 +6781,7 @@ describe("syntax-printer", () => {
 		it("should keep a binding read in place of its copy captured where a function declaring its name inlines the reader", async () => {
 			const { minify } = await load();
 			const input =
-				"function inner(b) { let a = b; g(b); var f = function () { return a + a; }; return function (b) { return [f(), b]; }; } function g() {} console.log(inner(1)(2));";
+				"function outer(b) { var a = b; g(b); var f = function () { return [a, a]; }; return function (b) { return f().concat(b); }; } function inner(b) { let a = b; g(b); var f = function () { return a + a; }; return function (b) { return [f(), b]; }; } function g() {} console.log(outer(1)(2), inner(1)(2));";
 			for (const options of [
 				{ compress: { passes: 2 }, mangle: false },
 				{ compress: { passes: 3 } }
