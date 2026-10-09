@@ -15,7 +15,7 @@ exports.modules = {
 
 
 ;// external \\"fs\\"
-const external_fs_namespaceObject = require(\\"fs\\");
+const external_fs_namespaceObject = require(\\"node:fs\\");
 var external_fs_default = /*#__PURE__*/__webpack_require__.n(external_fs_namespaceObject);
 // EXTERNAL MODULE: ./dependency.js
 var dependency = __webpack_require__(784);

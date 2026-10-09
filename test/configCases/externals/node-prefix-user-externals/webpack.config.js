@@ -27,5 +27,14 @@ module.exports = [
 			libraryTarget: "commonjs2",
 			environment: { nodePrefixForCoreModules: true }
 		}
+	},
+	{
+		name: "add",
+		target: "web",
+		externals: { fs: "commonjs fs", path: "commonjs path" },
+		output: {
+			libraryTarget: "commonjs2",
+			environment: { nodePrefixForCoreModules: true }
+		}
 	}
 ];
