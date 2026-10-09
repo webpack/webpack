@@ -1933,6 +1933,26 @@ const CORRECTED_CASES = [
 		"a static class member keyed `prototype`, of each kind",
 		'for (var make of [() => class { static ["prototype"] = 1; }, () => class { static [`prototype`]() {} }, () => class { static get ["proto" + "type"]() {} }, () => class { static set ["prototype"](v) {} }, () => class { static *["prototype"]() {} }, () => class { static async ["prototype"]() {} }, () => class { static async *["prototype"]() {} }, () => class { static ["prototype"]; }]) { try { make(); console.log("made"); } catch (e) { console.log(e.name); } }',
 		{ compress: {}, mangle: false }
+	],
+	[
+		"tagged templates of one value but other raw text, as a function's two returns",
+		"function g(c) { if (c) return String.raw`A`; return String.raw`\\x41`; } console.log(g(1), g(0));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"tagged templates of one value but other raw text, as a conditional's branches",
+		"function g(c) { return c ? String.raw`\\n` : String.raw`\\x0a`; } function h(c) { var r = c ? String.raw`a${c}b` : String.raw`\\x61${c}b`; return r; } console.log(g(1), g(0), h(1), h(0));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"tagged templates of one value but other raw text, as `switch` cases",
+		"function g(c) { switch (c) { case 1: return String.raw`\\u0041`; case 2: return String.raw`A`; } } console.log(g(1), g(2));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"templates a tag of its own reads the raw text of",
+		'var t = function (s) { return s.raw.join("|"); }; function g(c) { if (c) return t`a${c}\\x62`; return t`\\x61${c}b`; } console.log(g(1), g(0));',
+		{ compress: {}, mangle: false }
 	]
 ];
 
@@ -4947,6 +4967,42 @@ describe("syntax-printer", () => {
 				expect(ours.map((node) => [kindName(node), ast.nodeSize(node, compressor)])).toEqual(
 					theirs.map((node) => [kindName(node), node.size(compressor)])
 				);
+			}
+		}
+	});
+
+	it("should still merge templates as terser does where no tag reads raw text apart", async () => {
+		const { minify } = await load();
+		const inputs = [
+			// No tag reads the raw text of a template with none.
+			"function g(c) { if (c) return `A`; return `\\x41`; } console.log(g(1), g(0));",
+			"function g(c) { if (c) return String.raw`\\x41${c}`; return String.raw`\\x41${c}`; } console.log(g(1), g(0));",
+			// A value between the segments compares as a value, whatever its spelling.
+			"function g(c) { if (c) return String.raw`a${1}b`; return String.raw`a${0x1}b`; } console.log(g(1), g(0));",
+			"function g(c, k) { return c ? String.raw`a${k}c${k}d` : String.raw`a${k}c`; } console.log(g(1, 2), g(0, 2));"
+		];
+		for (const input of inputs) {
+			const options = { compress: {}, mangle: false };
+			const { code } = await minify(input, options);
+			const reference = await terserReference().minify(input, options);
+			expect(code).toBe(reference.code);
+		}
+	});
+
+	it("should keep apart tagged templates whose invalid escapes differ", async () => {
+		const { minify } = await load();
+		// Neither has a value to compare, only the raw text the tag reads.
+		const pairs = [
+			["String.raw`\\u{`", "String.raw`\\x`"],
+			["String.raw`\\unicode`", "String.raw`\\x1`"],
+			["String.raw`C:\\users`", "String.raw`C:\\xyz`"],
+			["String.raw`a${c}\\u`", "String.raw`a${c}\\x`"]
+		];
+		for (const [first, second] of pairs) {
+			const input = `function g(c) { if (c) return ${first}; return ${second}; } function h(c) { return c ? ${first} : ${second}; } console.log(g(1), g(0), h(1), h(0));`;
+			for (const options of [{ compress: {}, mangle: false }, { compress: { passes: 2 }, mangle: true }]) {
+				const { code } = await minify(input, options);
+				expect([input, runProgram(/** @type {string} */ (code))]).toEqual([input, runProgram(input)]);
 			}
 		}
 	});
