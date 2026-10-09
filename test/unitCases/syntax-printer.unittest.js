@@ -233,6 +233,30 @@ const stringArray = (length, string = (index) => `w${index}`) =>
 /** @type {[string, string, import("terser").MinifyOptions, string?][]} */
 const IMPROVED_CASES = [
 	[
+		"an assignment to a `let` folded into the first read of it",
+		"function f(a) { let x, y; x = a * 2; y = g(x); return [x, y]; } function g(v) { return v + 1; } console.log(f(3));",
+		{ compress: {}, mangle: false },
+		"function f(a){let x,y;return[x=2*a,y=g(x)]}function g(v){return v+1}console.log(f(3));"
+	],
+	[
+		"an increment of a name only its function sees folded past a global it calls",
+		"globalThis.swap = function (a, i, j) { console.log(a[i], a[j]); }; function f(array, j, right) { ++j; swap(array, j, right); return j; } console.log(f([1, 2, 3], 0, 2));",
+		{ compress: {}, mangle: false },
+		"function f(array,j,right){return swap(array,++j,right),j}globalThis.swap=function(a,i,j){console.log(a[i],a[j])},console.log(f([1,2,3],0,2));"
+	],
+	[
+		"an assignment with effects folded past built-ins it reads and the `let`s they set",
+		"function k(start, stop, step) { let n, ticks; stop = Math.floor(stop / step); ticks = Array(n = Math.ceil(stop - start + 1)); return [ticks.length, n, stop]; } console.log(k(1, 10, 3));",
+		{ compress: {}, mangle: false },
+		"function k(start,stop,step){let n,ticks;return[(ticks=Array(n=Math.ceil((stop=Math.floor(stop/step))-start+1))).length,n,stop]}console.log(k(1,10,3));"
+	],
+	[
+		"an assignment of names only its function sees folded past a call and a property read",
+		"globalThis.h = function (v) { return v * 2; }; function f(o, a, b, x) { x = !a === b || 0; o.p.q(); return [h(x), x]; } console.log(f({ p: { q: function () {} } }, 0, true));",
+		{ compress: {}, mangle: false },
+		"function f(o,a,b,x){return o.p.q(),[h(x=!a===b||0),x]}globalThis.h=function(v){return 2*v},console.log(f({p:{q:function(){}}},0,!0));"
+	],
+	[
 		"tabs in a long string, written raw, beside an escaped backslash",
 		`console.log("${"row\\t".repeat(30)}", "a\\\\t${"b\\t".repeat(50)}", "c\\td\\te");`,
 		{ compress: {}, mangle: false }
@@ -937,6 +961,11 @@ const IMPROVED_CASES = [
 // of its function's own, or the call passes, keeps or constructs something.
 /** @type {[string, string][]} */
 const KEPT_CASES = [
+	["an assignment moved past a global call in a `try` whose `catch` reads it", "globalThis.g = function () { throw 1; }; function f(a) { var x; try { x = a + 1; g(); h(x); } catch (e) { return x; } } function h(v) { console.log(v); } console.log(f(1));"],
+	["an assignment to a name a closure reads, or from a property or a call, moved past a global call", "globalThis.g = function () { o.v = 5; }; var o = { v: 1 }; function f(a, x) { function r() { return x; } x = a + 1; g(); h(x); return r(); } function k(x) { x = o.v; g(); h(x); return x; } function m(a, x) { x = h(a); g(); h(x); return x; } function h(v) { console.log(v); return v; } console.log(f(1), k(), m(2));"],
+	["an assignment that may throw or has effects, moved past a global call", 'globalThis.g = function () {}; function f(k, o, x) { x = k in o; g(); h(x); return x; } function m(a, x) { x = ++a; g(); h(x); return [x, a]; } function h(v) { console.log(v); } console.log(f("a", { a: 1 }), m(1));'],
+	["an assignment to a parameter `arguments` reads, or at the top level, moved past a global call", "globalThis.g = function () {}; function f(a) { a = a + 1; g(); h(a); return arguments[0]; } var x; x = y + 1; g(); h(x); function h(v) { console.log(v); } var y = 2; console.log(f(1), x);"],
+	["an assignment to a `let` in its dead zone, or of an outer function, moved past a global call", "globalThis.g = function () { return 1; }; function f() { try { x = 1; g(x); } catch (e) { console.log(e.name); } let x; } let z; function m(a) { z = a; g(); h(z); } function h(v) { console.log(v); } f(); m(2);"],
 	["a conditional whose two sequences end in one chain made optional at different links", "function f(flag, obj, t) { return flag ? (t(), obj?.b.c) : (t(1), obj.b?.c); } console.log(f(1, { b: { c: 1 } }, () => 0), f(0, {}, () => 0));"],
 	["a product whose left side may read differently once its right side converts", 'var n = 2; function f(a, b) { var o = { valueOf: function () { a = n = 10; return b; } }; return [a * (o % 4), n * (o % 4), this.k * (o % 4)]; } function g(a, b) { return [a * (b % 3), arguments.length]; } function h(b) { let a = b + 1; return [a * (b % 3), a]; } function e() { var a = 2; return a * (eval("a = 10") % 3); } console.log(f.call({ k: 3 }, 2, 7), g(2, 7), h(7), e());'],
 	["a conditional whose branches end in one chain made optional at different links", "function f(flag, obj, t) { return flag ? (t(), obj?.b.c) : obj.b?.c; } console.log(f(1, { b: { c: 1 } }, () => 0), f(0, {}, () => 0));"],
@@ -6732,7 +6761,7 @@ describe("syntax-printer", () => {
 				{ compress: { join_vars: false }, mangle: false }
 			);
 			expect(code).toBe(
-				"function f(o){let a=o.x;let b=o.y;return b++,[a,b]}console.log(f({x:1,y:2}));"
+				"function f(o){let a=o.x;let b=o.y;return[a,++b]}console.log(f({x:1,y:2}));"
 			);
 		});
 
@@ -6749,7 +6778,7 @@ describe("syntax-printer", () => {
 				options
 			);
 			expect(code).toBe(
-				"function f(o){let a=o.x,b=g();/*! b */return a++,[a,b,b]}"
+				"function f(o){let a=o.x,b=g();/*! b */return[++a,b,b]}"
 			);
 			const joinedVars = await terserReference().minify(
 				"function f(o) { var a = o.x; /*! b */ var b = g(); a++; return [a, b, b]; }",
