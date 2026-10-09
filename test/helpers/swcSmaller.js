@@ -632,7 +632,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/12186/signed-shift/input.js",
 			"swc minifier: fixture/issues/12307/input.js",
 			"swc minifier: fixture/issues/array-constructor-length/input.js",
-			"swc minifier: fixture/projects/yui/2/input.js",
 			"terser compress: collapse_vars/collapse_vars_properties",
 			"terser compress: pure_funcs/assign"
 		]

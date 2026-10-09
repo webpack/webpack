@@ -356,6 +356,12 @@ const IMPROVED_CASES = [
 		{ compress: {}, mangle: false }
 	],
 	[
+		"a conditional choosing a boolean, kept where `!` would parenthesize its test",
+		"function f(a, b, c, d, e) { var r = [a & b ? true : c, a & b ? c : false, a + b ? false : c, a | b ? e() : true, a && b ? c : false, a || b ? c : false, a < b && c ? false : d, (a & b ? true : c) + 1, -(a & b ? c : false), (a & b ? c : false) ?? d, a & b ? (e(), c) : false, a & b ? true : c ? 1 : 2, a & b ? false : c ?? d, a & b ? c && d : false, a & b ? c || d : true]; return [r, a ^ b ? c : false]; } function* g(a, b) { yield a & b ? true : b; } function h(a, b, c) { switch (c) { case a & b ? c : false: return -a & b ? c : false; case 2: return 2; } } function k() { return 5; } for (var v of [0, 1, 2, NaN, \"\", \"x\", null]) console.log(f(v, 3, \"c\", 4, k), f(v, 0, null, 4, k), [...g(v, 1)], h(v, 1, 1), h(v, 2, false));",
+		{ compress: {}, mangle: false },
+		'function f(a,b,c,d,e){return[[a&b?!0:c,a&b?c:!1,a+b?!1:c,a|b?e():!0,a&&b?c:!1,a||b?c:!1,a<b&&c?!1:d,(a&b?!0:c)+1,-(a&b?c:!1),(a&b?c:!1)??d,a&b?(e(),c):!1,a&b?!0:c?1:2,a&b?!1:c??d,a&b?c&&d:!1,a&b?c||d:!0],a^b?c:!1]}function*g(a,b){yield a&b?!0:b}function h(a,b,c){switch(c){case a&b?c:!1:return-a&b?c:!1;case 2:return 2}}function k(){return 5}for(var v of[0,1,2,NaN,"","x",null])console.log(f(v,3,"c",4,k),f(v,0,null,4,k),[...g(v,1)],h(v,1,1),h(v,2,!1));'
+	],
+	[
 		"a nested function reading its own `this`",
 		`!function () { ${TRY} console.log([1].map(function () { return typeof this; })[0]); }();`,
 		{ compress: {}, mangle: false }
@@ -886,6 +892,7 @@ const KEPT_CASES = [
 	["consecutive `if`s alike whose branch does not always leave", 'function f(a, b) { for (var i = 0; i < 3; i++) { if (a === i) try { g(i); } finally { console.log(i); } if (b === i) try { g(i); } finally { console.log(i); } console.log(i); } } function g(i) { console.log("g", i); } f(0, 1); f(1, 1);'],
 	["an array literal joining to a string longer than it", 'console.log([!0, !0, !0] + "");'],
 	["a conditional choosing `1` or `0` that a number conversion writes no shorter, or choosing `-0`", "function f(a, b) { return [a < b ? 0 : 1, a + b ? 1 : 0, a in b ? 0 : 1, a ? 1 : -0, a ? 2 : 0, a ? -1 : 0]; } console.log(f(1, {}), f(0, { 0: 1 }));"],
+	["a logical expression negating what needs no parentheses, in a condition, or no shorter as a conditional", "var r; function f(a, b, c, d, e) { if (!(a & b) && c) e(); while (!(a & b) && c) c = e(); return [!!a && b, !a || b, (!(a & b) && c) || d, (r = a) ? true : c]; } function g(a, b, c) { return a & b ? false : c; } function k() { return 0; } console.log(f(1, 2, 0, 4, k), f(0, 1, 2, 4, k), g(1, 2, 3), r);"],
 	["`+` and `~` of what a literal does not give", "function f(a) { return [+[a], ~a !== 0 ? 1 : 2]; } console.log(f(1), f(1n));"],
 	["a string literal indexed past its end, by no constant or as a target", 'function f(i) { var s = "abc"; "abc"[0] = 1; return ["abc"[5], "abc"[i], "abc"[1.5], "abc"[-1]]; } console.log(f(1));'],
 	["a `new` whose constructor reads `arguments` or a rest, extends a class, or is rebound", 'function f(h) { function Z(a) { this.n = arguments.length; } function R(...a) { this.n = a.length; } class B { constructor(a) { this.n = arguments.length; } } class C extends B {} var V = function (a) { this.n = 1; }; if (h) V = function () { this.n = arguments.length; }; return [new Z(1, 2).n, new R(1, 2).n, new C(1, 2).n, new V(1, 2).n]; } console.log(f(0), f(1));'],
@@ -6227,6 +6234,17 @@ describe("syntax-printer", () => {
 				expect(code).toBe(reference.code);
 			});
 		}
+
+		it("should keep a logical expression negating its test as the test of a conditional where `booleans` is off", async () => {
+			const { minify } = await load();
+			const { code } = await minify(
+				"function f(a, b, c, x, y) { return [(!!(a & b) && c) ? x : y, (!(a & b) || c) ? x : y]; }",
+				{ compress: { booleans: false }, mangle: false }
+			);
+			expect(code).toBe(
+				"function f(a,b,c,x,y){return[!!(a&b)&&c?x:y,a&b&&!c?y:x]}"
+			);
+		});
 
 		it("should split a `return` of `undefined` outside a function", async () => {
 			const { minify } = await load();
