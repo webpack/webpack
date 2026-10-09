@@ -6708,7 +6708,7 @@ declare interface CssProcessOptions {
  * `grammar`. All configuration is per `process` call. `process(src, { minimize:
  * true })` returns `{ code, map }` — the safely-minified serialization (built by
  * the same walk that fires visitors) and its source map; without `minimize` it
- * just walks and returns `undefined`. Babel-style usage:
+ * just walks and returns `undefined`. Usage:
  * ```
  * new CssSourceProcessor().use({ [NodeType.AtRule]: (path) => {} }).process(source, { skip });
  * ```
@@ -11718,7 +11718,7 @@ declare interface HtmlResourceHintWebpackOptions {
 
 /**
  * The generic visitor coordinator (`util/SourceProcessor`) bound to the HTML
- * `grammar`. Babel-style usage:
+ * `grammar`. Usage:
  * ```
  * new HtmlSourceProcessor().use({ [NodeType.Element]: (path) => {}, [NodeType.Comment]: { enter, exit } }).process(source, { skip });
  * ```
@@ -29628,7 +29628,7 @@ declare interface SourcePosition {
  * Visitor coordinator: owns the visitor registry and drives a language
  * `grammar` over the source. Language-agnostic — each syntax (CSS, HTML, …)
  * binds its own grammar, node-type enum and (optionally) node printer.
- * Babel-style usage:
+ * Usage:
  * ```
  * processor.use({ [NodeType.X]: (path) => {}, [NodeType.Y]: { enter, exit } });
  * processor.process(source);
@@ -29641,7 +29641,7 @@ declare abstract class SourceProcessor<
 	TPrintOptions = object
 > {
 	/**
-	 * Register a Babel-style visitor map; calls accumulate per node type.
+	 * Register a visitor map; calls accumulate per node type.
 	 * A bucket is a function (= `{ enter }`) or `{ enter?, exit? }`.
 	 */
 	use(
@@ -32187,9 +32187,9 @@ type VisitorBucket<TPath> =
 	VisitorFn<TPath> | { enter?: VisitorFn<TPath>; exit?: VisitorFn<TPath> };
 
 /**
- * Babel-style visitor map keyed by a numeric node-type discriminator; a bucket
+ * Visitor map keyed by a numeric node-type discriminator; a bucket
  * is a function (enter-only) or `{ enter?, exit? }`.
- * A visitor receives a single `path` argument (the Babel `path` shape): the
+ * A visitor receives a single `path` argument: the
  * language's AST accessor with the current position on it — `path.node`,
  * `path.parent` (null at a root) — plus `path.skipChildren()` (enter only)
  * to stop the walk descending, and every field-read method (which defaults
