@@ -235,6 +235,11 @@ const IMPROVED_CASES = [
 		{ compress: {}, mangle: false }
 	],
 	[
+		"line breaks written raw in templates, where the source spells `\\n` often",
+		`var lines = "${"line\\n".repeat(1000)}"; console.log(lines.length, "a\`b\${c}\\\\n\\r\\n", \`d\\n\${lines.length}\`, String.raw\`e\\n\`);`,
+		{ compress: {}, mangle: false, ecma: 2015 }
+	],
+	[
 		"a function, its body joining the list",
 		`!function () { ${TRY} console.log(2); }();`,
 		{ compress: {}, mangle: false }
@@ -6592,6 +6597,71 @@ describe("syntax-printer", () => {
 			const { code } = await minify(input, options);
 			const reference = await terserReference().minify(input, options);
 			expect(code).toBe(reference.code);
+		});
+
+		describe("line breaks written raw in templates", () => {
+			/**
+			 * @param {number} count how many `\n` escapes
+			 * @returns {string} a declaration spelling them
+			 */
+			const escapes = (count) => `var many = "${"\\n".repeat(count)}";`;
+			/**
+			 * @param {number} count how many line breaks
+			 * @returns {string} the declaration of `escapes`, written raw
+			 */
+			const raw = (count) => `var many=\`${"\n".repeat(count)}\`;`;
+			/** @type {import("terser").MinifyOptions} */
+			const options = { compress: false, mangle: false, ecma: 2015 };
+			/**
+			 * @param {string | Record<string, string>} input the source
+			 * @param {import("terser").MinifyOptions=} given the options
+			 * @returns {Promise<string>} what is written
+			 */
+			const print = async (input, given = options) => {
+				const { minify } = await load();
+				return /** @type {string} */ ((await minify(input, given)).code);
+			};
+
+			it("should escape what a template reads apart, and keep a key or a tag's own", async () => {
+				expect(
+					await print(
+						`console.log("a\`b\${c}\\\\n\\r\\n", \`d\\n\${1}\`, String.raw\`e\\n\`, { "f\\ng": 1, ["h\\ni"]: 2 }); ${escapes(1000)}`
+					)
+				).toBe(
+					`console.log(\`a\\\`b\\\${c}\\\\n\\r\n\`,\`d\n\${1}\`,String.raw\`e\\n\`,{"f\\ng":1,[\`h\ni\`]:2});${raw(1000)}`
+				);
+			});
+
+			it("should keep a string where a template reads otherwise or does not parse", async () => {
+				/** @type {[string, import("terser").MinifyOptions][]} */
+				const kept = [
+					['("a\\nb"); function m() { "use asm"; var s = "c\\nd"; return {}; } "e\\nf"`g`;', options],
+					['import a from "a\\nb" with { type: "c\\nd" }; export * from "e\\nf"; export { g } from "h\\ni"; import("j\\nk");', { ...options, module: true }]
+				];
+				for (const [input, given] of kept) {
+					const reference = await terserReference().minify(input, given);
+					expect(await print(`${input} ${escapes(1000)}`, given)).toBe(
+						`${reference.code}${raw(1000)}`
+					);
+				}
+			});
+
+			it("should count the escapes of every file read into the program", async () => {
+				expect(await print({ a: escapes(500), b: escapes(500) })).toBe(
+					`${raw(500)}${raw(500)}`
+				);
+			});
+
+			it("should keep escapes where the source spells `\\n` seldom or sparsely, or targets ES5", async () => {
+				const escaped = `var many="${"\\n".repeat(1000)}";`;
+				expect(await print(escapes(999))).toBe(escaped.replace("\\n", ""));
+				expect(
+					await print(`${escapes(1000)} /*${"x".repeat(500000)}*/`)
+				).toBe(escaped);
+				expect(
+					await print(escapes(1000), { compress: false, mangle: false })
+				).toBe(escaped);
+			});
 		});
 	});
 
