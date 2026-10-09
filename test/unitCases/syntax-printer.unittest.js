@@ -786,6 +786,12 @@ const IMPROVED_CASES = [
 		}
 	],
 	[
+		"a `let` or `const` copying a parameter, written through with calls between its reads, read as the parameter",
+		"function f(p) { let a = p; g(); a.s = 0, a.r = g(); return a; } function h(p) { const c = p; c.s = 2; g(); c.r = 1; return c.s + c.r; } function g() { return 5; } console.log(f({}), h({}));",
+		{ compress: { passes: 2 }, mangle: false },
+		"function f(p){return g(),p.s=0,p.r=g(),p}function h(p){return p.s=2,g(),p.r=1,p.s+p.r}function g(){return 5}console.log(f({}),h({}));"
+	],
+	[
 		"a `const` copying a closure's binding, read as it beside an inner binding of the same name",
 		"var h = (function () { const t = [0, 0]; return function (o) { const s = t; s[0]++; { let t = o; t.v = s[0]; } return o; }; })(); console.log(h({}).v, h({}).v);",
 		{ compress: { passes: 2 }, mangle: false }
@@ -1022,6 +1028,8 @@ const KEPT_CASES = [
 	["a call of a function returning a short constant or none, called once, marked `@__INLINE__`, or read by a test or an operator", '!function () { function f() { return "a string long enough that a copy costs more than a call"; } function g() { return "ab"; } function k() { return "a string long enough that a copy costs more than a call"; } function n() {} function r() { return; } var id = (x) => x; f(); console.log(/* @__INLINE__ */ f(), f() ? 1 : 2, typeof f(), f().length, f() || 1, !f(), g(), g(), k(), n(), n(), r(), r(), id(), id(void 0)); }();'],
 	["a `+` beside no number literal", 'var s = Math.random() < 2 ? "5" : ""; console.log("2" - +s, +s - +s, 1 + +s);'],
 	["a `var`", "!function () { var a = Math.random(); console.log(a, a); }();"],
+	["a `let` copying a parameter, written through, then written by a pattern or read in a function inside", "function f(p, q) { let a = p; a.s = 1; [a] = [q]; return a; } function h(p) { let a = p; a.s = 1; g(); return function () { return a.s; }; } function k(p) { var r = m(); let a = p; a.s = 1; return [r, a.s]; function m() { try { return a; } catch (e) { return e.name; } } } function g() {} console.log(f({}, 2), h({})(), k({}));"],
+	["a `var` copying a parameter, written through, read past the branch setting it or before a loop sets it", "function f(p, c) { if (c) { var a = p; a.s = 1; } return a; } function h(p, n) { var r = []; for (var i = 0; i < n; i++) { if (i) r.push(a === p); var a = p; a.s = i; g(); } return r; } function g() {} console.log(f({}, 1), f({}, 0), h({}, 3));"],
 	["a `let` copying a parameter written later, or through `arguments` or `eval`", 'function f(a, c) { let b = a; let d = c; a = 3; arguments[1] = 4; return [b, d]; } function g(a) { let b = a; eval("a = 5"); return b; } console.log(f(1, 2), g(1));'],
 	["a `let` copying a binding declared after it", "function f() { let b = c; let c = 1; return b; } try { console.log(f()); } catch (e) { console.log(e.name); }"],
 	["a `let` copying a longer name read more than once, where names keep their length", "function f(longBinding) { let x = longBinding; g(); return x + x + x; } function g() {} console.log(f(1));"],
