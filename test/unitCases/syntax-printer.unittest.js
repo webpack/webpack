@@ -4989,6 +4989,39 @@ describe("syntax-printer", () => {
 		}
 	});
 
+	it("should keep tagged templates of other raw text apart wherever equal values merge", async () => {
+		const { minify } = await load();
+		/** @type {((a: string, b: string) => string)[]} */
+		const shapes = [
+			(a, b) => `function g(c) { if (c === 1) return ${a}; if (c === 2) return ${b}; return 0; }`,
+			(a, b) => `function g(c) { if (c === 1) return ${a}; else if (c === 2) return ${b}; return 0; }`,
+			(a, b) => `function g(c) { return c ? (h(1), ${a}) : (h(2), ${b}); }`,
+			(a, b) => `function g(c) { if (c) { h(1); return ${a}; } else { h(2); return ${b}; } }`,
+			(a, b) => `function g(c) { var r; if (c) r = h(${a}); else r = h(${b}); return r; }`,
+			(a, b) => `function g(c) { return c ? String.raw\`<\${${a}}>\` : String.raw\`<\${${b}}>\`; }`,
+			(a, b) => `function g(c) { return c ? t()${a.slice(a.indexOf("`"))} : t()${b.slice(b.indexOf("`"))}; }`,
+			(a, b) => `function g(c) { if (c ? ${a} : ${b}) return h(c ? ${a} : ${b}); }`,
+			(a, b) => `function g(c) { var r = 0; c ? r = ${a} : r = ${b}; return r; }`,
+			(a, b) => `function g(c) { var o = c ? { k: ${a} } : { k: ${b} }; return o.k; }`,
+			(a, b) => `function g(c) { return (c ? [${a}] : [${b}])[0]; }`
+		];
+		const pairs = [
+			["String.raw`A`", "String.raw`\\x41`"],
+			["String.raw`\\u{`", "String.raw`\\x`"]
+		];
+		/** @type {import("terser").MinifyOptions[]} */
+		const optionSets = [{ compress: {}, mangle: false }, {}, { compress: { passes: 2 }, toplevel: true }];
+		for (const shape of shapes) {
+			for (const [a, b] of pairs) {
+				const input = `function h(x) { return x; } function t() { return String.raw; } ${shape(a, b)} console.log(g(1), g(0), g(2));`;
+				for (const options of optionSets) {
+					const { code } = await minify(input, options);
+					expect([input, options, runProgram(/** @type {string} */ (code))]).toEqual([input, options, runProgram(input)]);
+				}
+			}
+		}
+	});
+
 	it("should keep apart tagged templates whose invalid escapes differ", async () => {
 		const { minify } = await load();
 		// Neither has a value to compare, only the raw text the tag reads.
