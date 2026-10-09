@@ -2830,6 +2830,76 @@ describe("syntax-printer", () => {
 		expect(ourCache).toEqual(theirCache);
 	});
 
+	describe("the shortest names handed to the names read most", () => {
+		/**
+		 * A function with more locals than one-character names, the last read often.
+		 * @param {number} reads how often each of the last twenty is read
+		 * @param {string=} globals what else the function logs
+		 * @returns {string} the program
+		 */
+		const crowded = (reads, globals = "") => {
+			const names = Array.from({ length: 80 }, (_, i) => `variable${i}`);
+			const busy = names
+				.slice(60)
+				.map((name) => Array.from({ length: reads }, () => name).join("+"));
+			return `(function (input) {
+				${names.map((name, i) => `var ${name} = input + ${i};`).join(" ")}
+				console.log(${names.join("+")}, ${busy.join(", ")}${globals});
+			})(1);
+			(function (first, second) { console.log(first, second); })(2, 3);`;
+		};
+		/** @type {import("terser").MinifyOptions} */
+		const options = { compress: false, mangle: true };
+
+		it("should give the busiest names one character where that saves enough", async () => {
+			const { minify, improvements } = await load();
+			const reference = terserReference();
+			const source = crowded(15);
+			const { code } = await minify(source, options);
+			const theirs = await reference.minify(source, options);
+			expect(/** @type {string} */ (code).length).toBeLessThan(
+				/** @type {string} */ (theirs.code).length - 200
+			);
+			expect(runProgram(/** @type {string} */ (code))).toBe(
+				runProgram(source)
+			);
+			const phase = /** @type {{ enabled: boolean }} */ (improvements);
+			phase.enabled = false;
+			try {
+				expect((await minify(source, options)).code).toBe(theirs.code);
+			} finally {
+				phase.enabled = true;
+			}
+		});
+
+		it("should keep the names as handed out where that saves too little", async () => {
+			const { minify } = await load();
+			const source = crowded(5);
+			const { code } = await minify(source, options);
+			expect(code).toBe((await terserReference().minify(source, options)).code);
+		});
+
+		it("should never hand a local a name it reads as a global", async () => {
+			const { minify } = await load();
+			// Every one-character name is a global here, and handed out next door.
+			const letters = [
+				..."abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ$_"
+			];
+			const parameters = letters.slice(0, 20).map((_, i) => `parameter${i}`);
+			const source = `${crowded(15, letters.map((name) => `, typeof ${name}`).join(""))}
+			(function (${parameters.join(", ")}) { console.log(${parameters.join(", ")}); })();`;
+			const { code } = await minify(source, options);
+			expect(runProgram(/** @type {string} */ (code))).toBe(
+				runProgram(source)
+			);
+			// Declared at the top level, which is not mangled, they stay as written too.
+			const declared = `var ${letters.map((name) => `${name} = "${name}"`).join(", ")};\n${source}`;
+			expect(
+				runProgram(/** @type {string} */ ((await minify(declared, options)).code))
+			).toBe(runProgram(declared));
+		});
+	});
+
 	it("should minify a source too large to keep its buffers as terser does", async () => {
 		const { minify } = await load();
 		const reference = terserReference();
