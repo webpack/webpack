@@ -5695,6 +5695,47 @@ const collectSelectorSupport = () => {
 };
 
 /**
+ * When each browser first read each length and angle unit, keyed `"unit <name>"`.
+ * A row grouping several units names them in its description; an absolute
+ * length has no row of its own, so the `<length>` type's row answers for it.
+ * @returns {[string, [string, number][]][]} the versions, by unit
+ */
+const collectUnitSupport = () => {
+	/** @type {Map<string, [string, number][]>} */
+	const out = new Map();
+	for (const type of ["length", "angle"]) {
+		const node = /** @type {EXPECTED_ANY} */ (bcd.css.types)[type];
+		for (const name of Object.keys(node)) {
+			if (name.startsWith("__")) continue;
+			/** @type {string[]} */
+			const units = [];
+			if (/^[a-z]+$/i.test(name)) {
+				units.push(name);
+			} else {
+				const listed = /<code>([a-z]+)<\/code>/gi;
+				const description = String(node[name].__compat.description || "");
+				let match;
+				while ((match = listed.exec(description)) !== null) {
+					units.push(match[1]);
+				}
+			}
+			if (units.length === 0) {
+				throw new Error(`css.types.${type}.${name} names no unit: bcd moved`);
+			}
+			const versions = collectSupportedFrom([`css.types.${type}.${name}`]);
+			for (const unit of units) out.set(`unit ${unit.toLowerCase()}`, versions);
+		}
+	}
+	const base = collectSupportedFrom(["css.types.length"]);
+	for (const [unit, group] of SUPPLEMENT.absoluteUnitScale) {
+		if (group === "length" && !out.has(`unit ${unit}`)) {
+			out.set(`unit ${unit}`, base);
+		}
+	}
+	return [...out].sort((a, b) => (a[0] < b[0] ? -1 : 1));
+};
+
+/**
  * When each browser first read each gradient function, by its name.
  * @returns {[string, [string, number][]][]} the versions, by function name
  */
@@ -7281,6 +7322,7 @@ const collectData = async () => {
 	const valueSupport = [
 		...collectValueSupport(colorValueFunctions),
 		...collectGradientSupport(),
+		...collectUnitSupport(),
 		// Where a substitution function is read, any declaration holding it parses.
 		// `attr()` is left out: its row is the `content` reading, not this one.
 		...[...substitutionFunctions]

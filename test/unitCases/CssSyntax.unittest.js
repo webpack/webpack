@@ -4785,8 +4785,8 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// A slot taking a length or a color is read the same way, by the classes
 			// a sibling's own value is in: neither `solid` nor `red` is a width.
 			["a{border:medium solid red}", "a{border:solid red}"],
-			["a{border:medium none currentcolor}", "a{border:0}"],
-			["a{border:none medium}", "a{border:0}"],
+			["a{border:medium none currentcolor}", "a{border:none}"],
+			["a{border:none medium}", "a{border:none}"],
 			["a{column-rule:medium none currentcolor}", "a{column-rule:none}"],
 			// ...and a sibling that is one keeps it.
 			["a{border:medium 1px}", "a{border:medium 1px}"],
@@ -12211,7 +12211,7 @@ describe("CssSyntax minify — a slot holding its own initial", () => {
 		// The slots are read by what each takes, so a width and a color are
 		// answered for as well as a keyword.
 		expect(minify("a{border-left:currentcolor medium none}")).toBe(
-			"a{border-left:0}"
+			"a{border-left:none}"
 		);
 		expect(minify("a{column-rule:medium none red}")).toBe("a{column-rule:red}");
 		expect(minify("a{outline:medium none currentcolor}")).toBe(
@@ -14690,6 +14690,27 @@ describe("CssSyntax minify — a fallback the target reads past", () => {
 		);
 	});
 
+	it.each([
+		// Safari read `dvh` from 15.4, so 15 still needs the `vh` gradient.
+		["safari 15", true],
+		["safari 16", false]
+	])("keeps a gradient fallback where %s reads no unit the later one names", (browser, kept) => {
+		const css =
+			"a{background-image:linear-gradient(red 10vh,blue);background-image:linear-gradient(red 10dvh,blue)}";
+		expect(minifyFor(css, [browser])).toBe(
+			kept ? css : "a{background-image:linear-gradient(red 10dvh,blue)}"
+		);
+	});
+
+	it("reads no unit the tables do not name", () => {
+		const css = "a{background:red;background:linear-gradient(red 1foo,blue)}";
+		expect(minifyFor(css, MODERN)).toBe(css);
+		// An absolute length is read wherever the gradient is.
+		expect(
+			minifyFor("a{background:red;background:linear-gradient(red 1px,blue 2em)}", MODERN)
+		).toBe("a{background:linear-gradient(red 1px,blue 2em)}");
+	});
+
 	it("reads a gradient of keywords, amounts and colors every engine names", () => {
 		expect(
 			minifyFor("a{background:red;background:linear-gradient(red,blue)}", MODERN)
@@ -15212,11 +15233,12 @@ describe("CssSyntax minify — what a comparison with other minifiers found", ()
 	});
 
 	it.each([
-		["a{border:none}", "a{border:0}"],
-		["a{border:NONE!important}", "a{border:0!important}"],
-		["a{border-top:none}", "a{border-top:0}"],
-		["a{border-block-end:none}", "a{border-block-end:0}"],
-		// `medium` computes as 3px for these whatever the style, so `0` differs.
+		// `none` sets the width to `medium`, which a later style shows as 3px.
+		["a{border:none}", "a{border:none}"],
+		["a{border:NONE!important}", "a{border:none!important}"],
+		["a{border-top:none}", "a{border-top:none}"],
+		["a{border-block-end:none}", "a{border-block-end:none}"],
+		[".a{border:none}.a.b{border-style:solid}", ".a{border:none}.a.b{border-style:solid}"],
 		["a{outline:none}", "a{outline:none}"],
 		["a{column-rule:none}", "a{column-rule:none}"],
 		// No width beside the style here, so `none` stays the one word.
