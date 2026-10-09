@@ -1306,8 +1306,6 @@ const IMPROVED_YET_BIGGER = {
 		"12 bytes fewer, 1 more gzipped: `{x();return}` breaks the `return void` runs of the branches around it",
 	"fixture/issues/d3-color/1/input.js (the default minimizer's options)":
 		"2 bytes fewer, 1 more gzipped: `p*e*h` breaks the `h*(` runs of the products beside it gzip reused",
-	"fixture/next/31077/static/chunks/1606726a.10299989c08cb523/input.js (the default minimizer's options)":
-		"117 bytes fewer, 15 more gzipped: `c?x:!1` in place of `!!(c)&&x` breaks the `return!!(` runs gzip reused",
 	"projects/files/react-17.0.1.js (its own options)":
 		"33 bytes fewer, 3 more gzipped: `!!x` in place of `null!==x` breaks the runs of `null!==` gzip reused",
 	"evaluate/string_case (the default minimizer's options)":
