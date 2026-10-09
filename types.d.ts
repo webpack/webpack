@@ -2071,6 +2071,11 @@ declare class Chunk {
 	hasRuntime(): boolean;
 
 	/**
+	 * Returns whether this chunk carries a hot update rather than regular output.
+	 */
+	isHotUpdate(): boolean;
+
+	/**
 	 * Checks whether it can be initial.
 	 */
 	canBeInitial(): boolean;
@@ -2802,6 +2807,11 @@ declare abstract class ChunkGroup {
 	 * load instead of being created lazily.
 	 */
 	isInitial(): boolean;
+
+	/**
+	 * Returns whether this chunk group is an entrypoint, an async one (e.g. a worker) included.
+	 */
+	isEntrypoint(): boolean;
 
 	/**
 	 * Adds a child chunk group to the current group.
