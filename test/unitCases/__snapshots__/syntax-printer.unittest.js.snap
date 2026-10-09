@@ -2470,7 +2470,7 @@ exports[`syntax-printer should keep a wrapped file's comments and mappings 1`] =
 
 exports[`syntax-printer should mangle exactly as terser does: a catch parameter redefining a function-scoped name 1`] = `"function run(n){try{sink(n)}catch(n){sink(n)}return n}sink(run(1));"`;
 
-exports[`syntax-printer should mangle exactly as terser does: a function declared inside a block 1`] = `"function host(){sink(1);return\\"function\\"}sink(host());"`;
+exports[`syntax-printer should mangle exactly as terser does: a function declared inside a block 1`] = `"function host(){{function n(){return 1}sink(n())}return typeof n}sink(host());"`;
 
 exports[`syntax-printer should mangle exactly as terser does: a function expression whose argument could shadow its name 1`] = `"sink(function n(i){return n&&i});"`;
 
