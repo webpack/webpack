@@ -75,6 +75,7 @@ export default defineConfig([
 		"test/external/terser/**",
 		"test/external/swc/**",
 		"test/external/oxc/**",
+		"test/external/xml-conformance-suite/**/*.*",
 
 		// Ignore some folders
 		"benchmark",
@@ -374,7 +375,8 @@ export default defineConfig([
 			"tooling/compare-css-tools.js",
 			"tooling/compare-html-tools.js",
 			"tooling/compare-js-tools.js",
-			"tooling/compare-tools-harness.js"
+			"tooling/compare-tools-harness.js",
+			"tooling/compare-xml-tools.js"
 		],
 		rules: {
 			"n/no-unsupported-features/node-builtins": "off"
@@ -404,9 +406,13 @@ export default defineConfig([
 	},
 	{
 		// `color-name` is ESM, so the CSS data generator reaches its table through a
-		// dynamic import rather than a `require` no jest `vm` supports.
-		// `html-minifier-next` is ESM only and is imported the same way.
-		files: ["tooling/generate-css-data.js", "tooling/compare-html-tools.js"],
+		// dynamic import rather than a `require` no jest `vm` supports; the HTML and
+		// XML comparisons import their ESM-only tools the same way.
+		files: [
+			"tooling/generate-css-data.js",
+			"tooling/compare-html-tools.js",
+			"tooling/compare-xml-tools.js"
+		],
 		rules: {
 			"n/no-unsupported-features/es-syntax": [
 				"error",
