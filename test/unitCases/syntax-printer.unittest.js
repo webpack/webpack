@@ -1029,6 +1029,7 @@ const IMPROVED_CASES = [
 // of its function's own, or the call passes, keeps or constructs something.
 /** @type {[string, string][]} */
 const KEPT_CASES = [
+	["a function read as the test of a conditional another function calls", "function k() { function f() { return 1; } return function (g, h) { return (f ? g : h)(); }; } console.log(k()(function () { return 2; }, function () { return 3; }));"],
 	["an assignment moved past a global call in a `try` whose `catch` reads it", "globalThis.g = function () { throw 1; }; function f(a) { var x; try { x = a + 1; g(); h(x); } catch (e) { return x; } } function h(v) { console.log(v); } console.log(f(1));"],
 	["an assignment to a name a closure reads, or from a property or a call, moved past a global call", "globalThis.g = function () { o.v = 5; }; var o = { v: 1 }; function f(a, x) { function r() { return x; } x = a + 1; g(); h(x); return r(); } function k(x) { x = o.v; g(); h(x); return x; } function m(a, x) { x = h(a); g(); h(x); return x; } function h(v) { console.log(v); return v; } console.log(f(1), k(), m(2));"],
 	["an assignment that may throw or has effects, moved past a global call", 'globalThis.g = function () {}; function f(k, o, x) { x = k in o; g(); h(x); return x; } function m(a, x) { x = ++a; g(); h(x); return [x, a]; } function h(v) { console.log(v); } console.log(f("a", { a: 1 }), m(1));'],
