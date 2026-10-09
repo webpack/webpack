@@ -15494,6 +15494,10 @@ describe("CssSyntax minify — declaration order", () => {
 		// A nested rule that prints nothing is no rule the order has to keep.
 		["a{display:block;color:red;& b{}}", "a{color:red;display:block}"],
 		["@keyframes k{0%{transform:none;opacity:0}}", "@keyframes k{0%{opacity:0;transform:none}}"],
+		// A group rule nested in a style rule holds that rule's declarations.
+		["a{@media (min-width:1px){display:block;color:red}}", "a{@media (width>=1px){color:red;display:block}}"],
+		// An at-rule's own descriptors are no style rule's declarations.
+		["@font-face{src:url(a.woff);font-family:a}", "@font-face{src:url(a.woff);font-family:a}"],
 		// Within a family, in the order written.
 		[
 			"a{transition-delay:1s;transition-property:opacity;height:0;width:0}",
