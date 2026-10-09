@@ -126,6 +126,7 @@ jobs:
           SHARD: 1/2
 
       - name: Run memory benchmarks (2/2)
+        if: ${{ !cancelled() }}
         uses: CodSpeedHQ/action@c4fd08a3a159bd0cc208da1e0edf32b8c47d75e5 # v5.4.0
         with:
           run: yarn benchmark --ci
