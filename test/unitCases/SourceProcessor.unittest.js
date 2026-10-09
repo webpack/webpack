@@ -758,6 +758,50 @@ describe("SourceProcessor", () => {
 			]);
 		});
 
+		it("answers fields and flags only for the node that owns them", () => {
+			/** @type {string[]} */
+			const flagged = [];
+			/** @type {Record<number, (path: import("../../lib/css/syntax-parser").CssPath) => void>} */
+			const visitors = {};
+			for (const type of Object.values(CssNodeType)) {
+				visitors[type] = (path) => {
+					if (path.type() !== CssNodeType.Declaration && path.flag(CssFlag.important)) {
+						flagged.push(path.source());
+					}
+				};
+			}
+			// The second rule's nodes reuse the first rule's ids.
+			new CssSourceProcessor()
+				.use(visitors)
+				.process("a{x:y !important} b c d e f g h{z:1}");
+			expect(flagged).toEqual([]);
+			/** @type {unknown[]} */
+			const css = [];
+			new CssSourceProcessor()
+				.use([CssNodeType.QualifiedRule], (path) => {
+					css.push(path.fieldAt(-1, CssField.declarations), path.fieldAt(-1, CssField.prelude));
+				})
+				.process("a{b:c;d:e}");
+			expect(css).toEqual([0, 0]);
+
+			new HtmlSourceProcessor().process('<p a="1" b="2" c="3">x</p>');
+			/** @type {unknown[]} */
+			const html = [];
+			new HtmlSourceProcessor()
+				.use([HtmlNodeType.Text], (path) => {
+					html.push(
+						path.fieldCount(HtmlField.attributes),
+						path.fieldAt(0, HtmlField.attributes),
+						path.fieldNamed(HtmlField.attributes, "a")
+					);
+				})
+				.use([HtmlNodeType.Element], (path) => {
+					if (path.name() === "p") html.push(path.fieldAt(-1, HtmlField.attributes));
+				})
+				.process('hello <i x="1"></i><p a="1">');
+			expect(html).toEqual([0, 0, 0, 0]);
+		});
+
 		it("reads html attributes as nodes through the shared members", () => {
 			const input = `<p>\n<a href="/x?a&amp;b" title=t data-x>y</a>`;
 			/** @type {Record<string, unknown>[]} */

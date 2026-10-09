@@ -6767,6 +6767,9 @@ declare class CssSourceProcessor extends SourceProcessor<
 			name: string,
 			n?: NodeSyntaxParser
 		): NodeSyntaxParser;
+		/**
+		 * Only a container's flags are cleared when its id is reused, so a leaf has none.
+		 */
 		flag(flag: number, n?: NodeSyntaxParser): boolean;
 		blockRange(n?: NodeSyntaxParser): null | [number, number];
 		blockToken(n?: NodeSyntaxParser): SimpleBlockToken;
@@ -33903,6 +33906,9 @@ declare namespace exports {
 						name: string,
 						n?: NodeSyntaxParser
 					): NodeSyntaxParser;
+					/**
+					 * Only a container's flags are cleared when its id is reused, so a leaf has none.
+					 */
 					flag(flag: number, n?: NodeSyntaxParser): boolean;
 					blockRange(n?: NodeSyntaxParser): null | [number, number];
 					blockToken(n?: NodeSyntaxParser): SimpleBlockToken;
@@ -34089,6 +34095,9 @@ declare namespace exports {
 							name: string,
 							n?: NodeSyntaxParser
 						): NodeSyntaxParser;
+						/**
+						 * Only a container's flags are cleared when its id is reused, so a leaf has none.
+						 */
 						flag(flag: number, n?: NodeSyntaxParser): boolean;
 						blockRange(n?: NodeSyntaxParser): null | [number, number];
 						blockToken(n?: NodeSyntaxParser): SimpleBlockToken;
@@ -34155,6 +34164,9 @@ declare namespace exports {
 										name: string,
 										n?: NodeSyntaxParser
 									): NodeSyntaxParser;
+									/**
+									 * Only a container's flags are cleared when its id is reused, so a leaf has none.
+									 */
 									flag(flag: number, n?: NodeSyntaxParser): boolean;
 									blockRange(n?: NodeSyntaxParser): null | [number, number];
 									blockToken(n?: NodeSyntaxParser): SimpleBlockToken;
@@ -34293,6 +34305,9 @@ declare namespace exports {
 							name: string,
 							n?: NodeSyntaxParser
 						): NodeSyntaxParser;
+						/**
+						 * Only a container's flags are cleared when its id is reused, so a leaf has none.
+						 */
 						flag(flag: number, n?: NodeSyntaxParser): boolean;
 						blockRange(n?: NodeSyntaxParser): null | [number, number];
 						blockToken(n?: NodeSyntaxParser): SimpleBlockToken;
@@ -34354,6 +34369,9 @@ declare namespace exports {
 								name: string,
 								n?: NodeSyntaxParser
 							): NodeSyntaxParser;
+							/**
+							 * Only a container's flags are cleared when its id is reused, so a leaf has none.
+							 */
 							flag(flag: number, n?: NodeSyntaxParser): boolean;
 							blockRange(n?: NodeSyntaxParser): null | [number, number];
 							blockToken(n?: NodeSyntaxParser): SimpleBlockToken;
