@@ -4805,6 +4805,21 @@ describe("syntax-printer", () => {
 		expect(ast.nodeSize(second)).toBeGreaterThan(0);
 	});
 
+	it("should size a label once names are mangled as terser does, never as a variable", async () => {
+		const { minify } = await load();
+		/** @type {[string, import("terser").MinifyOptions][]} */
+		const cases = [
+			["function f() { return 0; var x = 0 && f(); L: for (;;); }", { toplevel: true }],
+			["function f() { return 0; var x = 0 && f(); L: for (;;) break L; }", { toplevel: true }],
+			["!function () { function f() { return 0; var x = 0 && f(); L: for (;;) break L; } console.log(f()); }();", {}],
+			["!function () { function f() { return 0; var x = 0 && f(); L: do continue L; while (0); } console.log(f(), f()); }();", { compress: { passes: 2 } }]
+		];
+		for (const [input, options] of cases) {
+			const { code } = await minify(input, options);
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+		}
+	});
+
 	it("should size and compare every node as terser does", async () => {
 		const {
 			minify,
