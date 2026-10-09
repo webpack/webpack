@@ -4836,6 +4836,78 @@ describe("syntax-printer", () => {
 		}
 	});
 
+	it("should size a tagged template whose escape has no value by the text it prints", async () => {
+		const { minify } = await load();
+		const templates = [
+			"String.raw`C:\\users\\xyz`",
+			"String.raw`\\u{`",
+			"String.raw`\\01`",
+			"String.raw`a${x}\\unicode`",
+			"((s) => s.raw.join())`\\u{110000}${x}\\x`"
+		];
+		// Compared or tested, and after the `return` of a function calling itself,
+		// which is measured to decide whether to keep its calls.
+		/** @type {((template: string) => string)[]} */
+		const programs = [
+			(t) => `var x = 1; if (!${t}) console.log(1); console.log(${t} ? 1 : 2, ${t} == ${t});`,
+			(t) => `!function () { var x = 1; function f() { return 0; var y = 0 && f(); ${t}; } console.log(f(), f()); }();`
+		];
+		/** @type {import("terser").MinifyOptions[]} */
+		const optionSets = [{}, { toplevel: true }, { mangle: false }];
+		for (const template of templates) {
+			for (const program of programs) {
+				const input = program(template);
+				for (const options of optionSets) {
+					const { code } = await minify(input, options);
+					expect([input, options, runProgram(/** @type {string} */ (code))]).toEqual([input, options, runProgram(input)]);
+				}
+			}
+		}
+	});
+
+	it("should size a template's text by its value as terser does, and by the text it prints where it has none", async () => {
+		const {
+			minify,
+			modules: { ast }
+		} = await load();
+		const reference = terserReference();
+		// Valid escapes, whose value is shorter than the text, then invalid ones a
+		// tag allows, which have no value.
+		const valid = "x = `\\x41${a}\\u{1F600}\\n`; y = String.raw`\\x41${a}\\t`;";
+		/** @returns {EXPECTED_ANY} the options, asking for the tree */
+		const settings = () => ({ compress: false, mangle: false, format: { ast: true, code: false } });
+		const { ast: ourTree } = /** @type {EXPECTED_ANY} */ (
+			await minify(`${valid} z = String.raw\`C:\\users\\xyz\${a}\\u{\`;`, settings())
+		);
+		// terser's parser refuses the last template, which a tag allows.
+		const { ast: tree } = /** @type {EXPECTED_ANY} */ (await reference.minify(valid, settings()));
+		/** @type {EXPECTED_ANY[]} */
+		const ours = [];
+		ast.walkNode(ourTree, ast.createWalker((/** @type {EXPECTED_ANY} */ node) => {
+				if (kindName(node) === "TemplateSegment") ours.push(node);
+			})
+		);
+		/** @type {EXPECTED_ANY[]} */
+		const theirs = [];
+		tree.walk({
+			/**
+			 * @param {EXPECTED_ANY} node a node of terser's tree
+			 * @param {EXPECTED_FUNCTION=} descend walks its children
+			 */
+			_visit(node, descend) {
+				if (kindName(node) === "TemplateSegment") theirs.push(node);
+				if (descend) descend.call(node);
+			}
+		});
+		expect(ours).toHaveLength(6);
+		const withValue = ours.slice(0, 4);
+		expect(withValue.map((node) => ast.nodeSize(node))).toEqual(theirs.map((node) => node.size()));
+		expect(withValue.map((node) => ast.nodeSize(node))).toEqual([1, 3, 1, 1]);
+		const invalid = ours.slice(4);
+		expect(invalid.map((node) => node.value)).toEqual([null, null]);
+		expect(invalid.map((node) => ast.nodeSize(node))).toEqual(invalid.map((node) => node.raw.length));
+	});
+
 	it("should size a label and its references once compressed as terser does, one byte each when mangled", async () => {
 		const {
 			minify,
