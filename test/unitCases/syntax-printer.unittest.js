@@ -830,7 +830,7 @@ const IMPROVED_CASES = [
 		"a function written in place passed the names of its parameters, which it reads instead, its value called, tagged, typed or read past a chain",
 		'function f(o, k) { var a = (function (o, k) { return o.k ? o.m : o[k]; })(o, k)(), c = typeof (function (o, k) { return o[k] || o.p; })(o, k), d = (function (o, k) { return o?.[o.k]?.[k]; })(o, k).length, e = (function (o, k) { return o[k] ? o.u : o.t; })(o, k)`x`; return [a === o, c, d, e]; } console.log(f({ k: "p", p: { q: "ab" }, m() { return this; }, t(s) { return s[0]; } }, "q"));',
 		{ compress: {}, mangle: false },
-		'function f(o,k){var a=function(){return o.k?o.m:o[k]}()(),c=typeof function(){return o[k]||o.p}(),d=function(){return o?.[o.k]?.[k]}().length,e=function(){return o[k]?o.u:o.t}()`x`;return[a===o,c,d,e]}console.log(f({k:"p",p:{q:"ab"},m(){return this},t:s=>s[0]},"q"));'
+		'function f(o,k){var a=(o.k?o.m:o[k])(),c=typeof(o[k]||o.p),d=(o?.[o.k]?.[k]).length,e=(o[k]?o.u:o.t)`x`;return[a===o,c,d,e]}console.log(f({k:"p",p:{q:"ab"},m(){return this},t:s=>s[0]},"q"));'
 	],
 	[
 		"an arrow written in place passed the names of its parameters, naming `yield` inside a generator",
@@ -982,6 +982,38 @@ const IMPROVED_CASES = [
 		[
 			"a function, an arrow and a function declaration read once, as the argument of a `#__PURE__` call",
 			"function wrap(f) { return { f: f }; } function o() { var F = function (a) { return a + 1; }, A = (b) => b * 2; function D(c) { return c - 1; } return [/* @__PURE__ */ wrap(F), /* @__PURE__ */ wrap(A), /* @__PURE__ */ wrap(D)]; } console.log(o().map(function (w) { return w.f(3); }).join());"
+		],
+		[
+			"a function written in place passed the name of its parameter, a `let` read before it is set, or a global",
+			"function f() { try { return (function (a) { return [a, a]; })(a); } catch (e) { return e.name; } let a = 1; } function g() { return (function (b) { return [b, b]; })(b); } var b = 1; console.log(f(), g());"
+		],
+		[
+			"a function written in place passed the name of its parameter, a `var` read before it is set",
+			"function f() { var g = (function (a) { return [a, a]; })(a); var a = 1; return g; } console.log(f());"
+		],
+		[
+			"a function declared once, inlined where a conditional choosing it is called",
+			"!function () { function center(s) { return s + 1; } function number(s) { return s * 2; } function make(b) { return function (x) { return (b ? center : number)(x); }; } console.log(make(1)(3), make(0)(3)); }();"
+		],
+		[
+			"functions declared once, inlined where nested conditionals choosing them are called",
+			"!function () { function f1(s) { return s + 1; } function f2(s) { return s * 2; } function f3(s) { return s - 1; } function make(a, b) { return function (x) { return (a ? f1 : b ? f2 : f3)(x); }; } console.log(make(1, 0)(3), make(0, 1)(3), make(0, 0)(3)); }();"
+		],
+		[
+			"a function read in a conditional's test stays, those it chooses to call are inlined",
+			"!function () { function f1(s) { return s + 1; } function f2(s) { return s * 2; } function f3(s) { return s - 1; } function make(b) { return function (x) { return (f1(b) ? f2 : f3)(x); }; } console.log(make(1)(3), make(-1)(3)); }();"
+		],
+		[
+			"a function passed the variables of its parameters' names, set before the call, flattened into it",
+			"!function () { var log = []; function show(props, name) { props.get = function () { return name; }; log.push(props.get()); } function create(type, flag) { var props = {}, name = type.name; flag && show(props, name); return props; } console.log(create({ name: \"a\" }, 1).get(), create({ name: \"b\" }, 0).get, log.join()); }();"
+		],
+		[
+			"a function passed the variables of its parameters' names, flattened into it, no closure reading them",
+			"!function () { function show(props, name) { props.seen = name; } function create(type, flag) { if (flag) var props = {}; var name = type.name; flag && show(props, name); return props; } console.log(create({ name: \"a\" }, 1).seen, create({ name: \"b\" }, 0)); }();"
+		],
+		[
+			"a function passed the parameters of its own parameters' names, flattened into it",
+			"!function () { function show(props, name) { var n = name + 1; props.seen = n; } function create(props, name, flag) { flag && show(props, name); return props; } console.log(create({}, \"a\", 1).seen, create({}, \"b\", 0).seen); }();"
 		]
 	].map(
 		([name, input]) =>
@@ -1167,12 +1199,19 @@ const KEPT_CASES = [
 	["a function written in place calling `eval`", 'function f(a) { return (function (a) { return [a, a, eval("a")]; })(a); } console.log(f(1));'],
 	["a function written in place with a default value", "function f(a, b) { return (function (a, b = 2) { return [a, a, b]; })(a, b); } console.log(f(1));"],
 	["a function written in place passed a spread", "function f(a, c) { return (function (a, b) { return [a, a, b]; })(a, ...c); } console.log(f(1, [2]));"],
-	["a function written in place passed a `let` before it is set, or a global", "function f() { try { return (function (a) { return [a, a]; })(a); } catch (e) { return e.name; } let a = 1; } function g() { return (function (b) { return [b, b]; })(b); } var b = 1; console.log(f(), g());"],
-	["a function written in place passed a `var` before it is set", "function f() { var g = (function (a) { return [a, a]; })(a); var a = 1; return g; } console.log(f());"],
 	["a function written in place passed a name declared twice, or declaring its parameter again", "function f(a, b) { var a; return [(function (a) { return [a, a]; })(a), (function (b) { var b; return [b, b]; })(b)]; } console.log(f(1, 2));"],
 	["a function written in place passed a name a `with` may read", "function f(a) { with ({}) return (function (a) { return [a, a]; })(a); } console.log(f(1));"],
 	["a function written in place passed an undeclared name", "function f() { return (function (a) { return [a, a]; })(a); } try { console.log(f()); } catch (e) { console.log(e.name); }"],
-	["a function written in place passed the name of its one parameter, which would stay called", "function f(o) { return (function (o) { var t = o.a; return [t, t, o.b]; })(o); } console.log(f({ a: 1, b: 2 }));"]
+	["a function written in place passed the name of its one parameter, which would stay called", "function f(o) { return (function (o) { var t = o.a; return [t, t, o.b]; })(o); } console.log(f({ a: 1, b: 2 }));"],
+	["functions calling themselves, chosen by a conditional that is called", "!function () { function fact(n) { return n < 2 ? 1 : n * fact(n - 1); } function sum(n) { return n < 1 ? 0 : n + sum(n - 1); } function make(b) { return function (x) { return (b ? fact : sum)(x); }; } console.log(make(1)(4), make(0)(4)); }();"],
+	["functions chosen by a conditional that is constructed or passed on", "!function () { function P(s) { this.s = s; } function Q(s) { this.s = -s; } function f1(s) { return s + 1; } function f2(s) { return s * 2; } function make(b) { return function (x) { return [new (b ? P : Q)(x).s, [x].map(b ? f1 : f2)]; }; } console.log(make(1)(3), make(0)(3)); }();"],
+	["a function passed variables of its parameters' names that a closure in it reads, set in a loop or after the call", "!function () { var fs = []; function show(props, name) { props.get = function () { return name; }; } function create(list) { for (var i = 0; i < list.length; i++) { var props = {}, name = list[i]; list[i] && show(props, name); fs.push(props); } } function late(props, flag) { flag && show(props, name); var name = \"late\"; return props; } create([\"a\", \"b\"]); console.log(fs.map(function (p) { return p.get(); }).join(), late({}, 1).get()); }();"],
+	["a function passed a variable of another name, or of its name but written", "!function () { function show(props, name) { props.seen = name; } function other(props, value, name, flag) { flag && show(props, value); return [props, name]; } function written(props, name, flag) { flag && show(props, name); name = 2; return [props, name]; } console.log(other({}, \"a\", \"n\", 1)[0].seen, written({}, \"a\", 1)[0].seen); }();"],
+	["a function passed variables of its parameters' names, which a pattern or a `for` head writes", "!function () { function show(props, name) { props.get = function () { return name; }; } function pattern(props, name, flag) { flag && show(props, name); [name] = [\"later\"]; return props; } function head(props, name, flag) { flag && show(props, name); for (name in { later: 1 }); return props; } console.log(pattern({}, \"a\", 1).get(), head({}, \"a\", 1).get()); }();"],
+	["a function incrementing a parameter, passed the variable of its name", "!function () { function show(props, name) { props.seen = name++; props.next = name; } function create(props, name, flag) { flag && show(props, name); return [props, name]; } console.log(create({}, \"a\", 1)[0].next, create({}, 1, 1)[0].next); }();"],
+	["a function writing a parameter by a pattern, passed the variable of its name", "!function () { function show(props, name) { [name] = [name + \"!\"]; props.seen = name; } function create(props, name, flag) { flag && show(props, name); return [props, name]; } console.log(create({}, \"a\", 1)[0].seen, create({}, \"b\", 0)[0].seen); }();"],
+	["a function passed variables of its parameters' names, of a function reading `arguments` or `eval`", "!function () { function show(props, name) { props.seen = name; } function args(props, name, flag) { flag && show(props, name); return [props, name, arguments.length]; } function evaluates(props, name, flag) { flag && show(props, name); return [props, eval(\"name\")]; } console.log(args({}, \"a\", 1)[0].seen, evaluates({}, \"b\", 1)[0].seen); }();"],
+	["a function passed a global of its parameter's name", "var name = \"g\"; !function () { function show(props, name) { props.seen = name; } function create(props, flag) { flag && show(props, name); return props; } console.log(create({}, 1).seen, create({}, 0).seen); }();"]
 ];
 
 // Each prints one thing and terser's output another, under the options named.
