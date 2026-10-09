@@ -287,11 +287,11 @@ const withCodSpeed = async (bench) => {
 	const callingFile = getCallingFile();
 
 	if (codspeedRunnerMode === "simulation" || codspeedRunnerMode === "memory") {
-		// Memory mode counts allocations in the instrumented region, and with `--no-opt`
-		// JIT stabilization is not a factor, so two warmup runs populate require.cache and
-		// V8 hidden classes. More warmup only bloats the heap and invites an in-run GC.
+		// Memory mode runs each task in a fresh process whose prime pass already fills
+		// require.cache and V8 hidden classes (`--no-opt` rules out JIT), so a warmup
+		// run only adds allocation events CodSpeed must process and upload.
 		const warmupIterations =
-			codspeedRunnerMode === "memory" ? 2 : bench.iterations - 1;
+			codspeedRunnerMode === "memory" ? 0 : bench.iterations - 1;
 
 		const setupBenchRun = () => {
 			setupCore();

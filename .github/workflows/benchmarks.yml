@@ -116,29 +116,20 @@ jobs:
 
       # Each case is measured in its own process, so shards only split the
       # upload: one archive past ~80M allocation events exceeds CodSpeed's limit.
-      - name: Run memory benchmarks (1/3)
+      - name: Run memory benchmarks (1/2)
         uses: CodSpeedHQ/action@c4fd08a3a159bd0cc208da1e0edf32b8c47d75e5 # v5.4.0
         with:
           run: yarn benchmark --ci
           mode: "memory"
           token: ${{ secrets.CODSPEED_TOKEN }}
         env:
-          SHARD: 1/3
+          SHARD: 1/2
 
-      - name: Run memory benchmarks (2/3)
+      - name: Run memory benchmarks (2/2)
         uses: CodSpeedHQ/action@c4fd08a3a159bd0cc208da1e0edf32b8c47d75e5 # v5.4.0
         with:
           run: yarn benchmark --ci
           mode: "memory"
           token: ${{ secrets.CODSPEED_TOKEN }}
         env:
-          SHARD: 2/3
-
-      - name: Run memory benchmarks (3/3)
-        uses: CodSpeedHQ/action@c4fd08a3a159bd0cc208da1e0edf32b8c47d75e5 # v5.4.0
-        with:
-          run: yarn benchmark --ci
-          mode: "memory"
-          token: ${{ secrets.CODSPEED_TOKEN }}
-        env:
-          SHARD: 3/3
+          SHARD: 2/2
