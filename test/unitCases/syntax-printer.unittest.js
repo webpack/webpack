@@ -4807,16 +4807,75 @@ describe("syntax-printer", () => {
 
 	it("should size a label once names are mangled as terser does, never as a variable", async () => {
 		const { minify } = await load();
-		/** @type {[string, import("terser").MinifyOptions][]} */
-		const cases = [
-			["function f() { return 0; var x = 0 && f(); L: for (;;); }", { toplevel: true }],
-			["function f() { return 0; var x = 0 && f(); L: for (;;) break L; }", { toplevel: true }],
-			["!function () { function f() { return 0; var x = 0 && f(); L: for (;;) break L; } console.log(f()); }();", {}],
-			["!function () { function f() { return 0; var x = 0 && f(); L: do continue L; while (0); } console.log(f(), f()); }();", { compress: { passes: 2 } }]
+		// After the `return` of a function calling itself, which is measured to
+		// decide whether to keep its calls.
+		const bodies = [
+			"L: for (;;);",
+			"L: for (;;) break L;",
+			"L: do continue L; while (0);",
+			"L: { break L; }",
+			"A: B: for (;;) break A;",
+			"var L = 1; L: for (;;) break L;",
+			"f: for (;;) break f;",
+			"L: for (;;) break L; L: for (;;) break L;",
+			"(() => { L: for (;;) break L; })();",
+			"({ m() { L: for (;;) break L; } }).m();",
+			"class K { static { L: for (;;) break L; } }",
+			"switch (x) { case 1: L: for (;;) break L; } try {} finally { M: { break M; } }",
+			"\\u004C: for (;;) break L;",
+			"aVeryLongLabelNameIndeed: for (;;) break aVeryLongLabelNameIndeed;"
 		];
-		for (const [input, options] of cases) {
-			const { code } = await minify(input, options);
-			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+		/** @type {import("terser").MinifyOptions[]} */
+		const optionSets = [{}, { toplevel: true }, { mangle: false }];
+		for (const body of bodies) {
+			const input = `!function () { var x = 1; function f() { return 0; var y = 0 && f(); ${body} } console.log(f(), f()); }();`;
+			for (const options of optionSets) {
+				const { code } = await minify(input, options);
+				expect([body, options, runProgram(/** @type {string} */ (code))]).toEqual([body, options, runProgram(input)]);
+			}
+		}
+	});
+
+	it("should size a label and its references once compressed as terser does, one byte each when mangled", async () => {
+		const {
+			minify,
+			modules: { ast }
+		} = await load();
+		const reference = terserReference();
+		const sources = [
+			"function g(h) { aVeryLongLabel: for (var i of h()) { for (var j of h()) { if (j) continue aVeryLongLabel; h(j); } h(i); } } g(Math.random);",
+			"function g(h) { outerLoopLabel: for (;;) { for (;;) { if (h()) break outerLoopLabel; h(); } } } g(Math.random);"
+		];
+		for (const source of sources) {
+			/** @returns {EXPECTED_ANY} the options, asking for the tree */
+			const settings = () => ({ compress: {}, mangle: false, format: { ast: true, code: false } });
+			const { ast: ourTree } = /** @type {EXPECTED_ANY} */ (await minify(source, settings()));
+			const { ast: tree } = /** @type {EXPECTED_ANY} */ (await reference.minify(source, settings()));
+			tree.figure_out_scope({});
+			/** @type {EXPECTED_ANY[]} */
+			const ours = [];
+			ast.walkNode(ourTree, ast.createWalker((/** @type {EXPECTED_ANY} */ node) => {
+					if (/Label/.test(kindName(node))) ours.push(node);
+				})
+			);
+			/** @type {EXPECTED_ANY[]} */
+			const theirs = [];
+			tree.walk({
+				/**
+				 * @param {EXPECTED_ANY} node a node of terser's tree
+				 * @param {EXPECTED_FUNCTION=} descend walks its children
+				 */
+				_visit(node, descend) {
+					if (/Label/.test(kindName(node))) theirs.push(node);
+					if (descend) descend.call(node);
+				}
+			});
+			expect(theirs.map((node) => kindName(node))).toEqual(["LabeledStatement", "Label", "LabelRef"]);
+			for (const compressor of [undefined, { _mangle_options: {} }]) {
+				expect(ours.map((node) => [kindName(node), ast.nodeSize(node, compressor)])).toEqual(
+					theirs.map((node) => [kindName(node), node.size(compressor)])
+				);
+			}
 		}
 	});
 
