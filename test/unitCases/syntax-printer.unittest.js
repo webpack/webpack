@@ -588,7 +588,7 @@ const IMPROVED_CASES = [
 	[
 		"Babel's loop copying a rest parameter out of `arguments` as a spread, from ECMAScript 2015",
 		"function all() { for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) { args[_key] = arguments[_key]; } return args; } function rest(a) { for (var _len = arguments.length, others = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; ++_key) others[_key - 1] = arguments[_key]; return [a, others.length, others]; } var o = { m: function () { var self = this; for (var _len2 = arguments.length, more = new Array(_len2 > 2 ? _len2 - 2 : 0), _key2 = 2; _key2 < _len2; _key2++) { more[_key2 - 2] = arguments[_key2]; } return [self === o, more]; } }; console.log(all(), all(1, 2), rest(), rest(1), rest(1, 2, 3), o.m(1), o.m(1, 2, 3, 4));",
-		{ compress: { ecma: 2015 }, ecma: 2015, mangle: false },
+		{ compress: { ecma: 2015, unsafe: true }, ecma: 2015, mangle: false },
 		"function all(){var args=[...arguments];return args}function rest(a){var others=[...arguments].slice(1);return[a,others.length,others]}var o={m:function(){var more=[...arguments].slice(2);return[this===o,more]}};console.log(all(),all(1,2),rest(),rest(1),rest(1,2,3),o.m(1),o.m(1,2,3,4));"
 	],
 	[
@@ -6411,7 +6411,8 @@ describe("syntax-printer", () => {
 				["function f() { var n; for (var n = arguments.length, a = Array(n), k = 0; k < n; k++) a[k] = arguments[k]; return a; } console.log(f(1, 2));", target(2015)],
 				["function f() { for (var n = arguments.length, a = Array(n), k = 0, z = 1; k < n; k++) a[k] = arguments[k] + z; return a; } console.log(f(1, 2));", target(2015)],
 				["function f() { for (var n = arguments.length, a = Array(n), k = 0; k < n; k++) a[k] = arguments[k] + 1; for (var m = arguments.length, b = Array(m), j = 0; j <= m; j++) b[j] = arguments[j]; for (var p = arguments.length, c = Array(p), i = 1; i < p; i++) c[i - 1] = arguments[i]; for (var q = arguments.length, d = Array(q > 1 ? q - 1 : 0), h = 1; h < q; h++) d[h - 2] = arguments[h]; return [a, b, c, d]; } console.log(f(1, 2));", target(2015)],
-				["var g = () => { for (var n = arguments.length, a = Array(n), k = 0; k < n; k++) a[k] = arguments[k]; return a; }; try { console.log(g(1)); } catch (e) { console.log(e.name); }", target(2015)]
+				["var g = () => { for (var n = arguments.length, a = Array(n), k = 0; k < n; k++) a[k] = arguments[k]; return a; }; try { console.log(g(1)); } catch (e) { console.log(e.name); }", target(2015)],
+				["function f(b) { for (var n = arguments.length, a = Array(n > 1 ? n - 1 : 0), k = 1; k < n; k++) a[k - 1] = arguments[k]; return a; } console.log(f(1, 2, 3));", target(2015)]
 			];
 			for (const [input, options] of cases) {
 				const { code } = await minify(input, options);

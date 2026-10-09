@@ -658,6 +658,12 @@ const SWC_SMALLER_BY_REASON = [
 		]
 	],
 	[
+		"swc writes Babel's copy of `arguments` from an index past 0 as a rest parameter, where webpack needs `unsafe` to trust `Array.prototype.slice`",
+		[
+			"swc minifier: fixture/next/target-es2015/static/chunks/main-04b5934c26266542/input.js"
+		]
+	],
+	[
 		"real-world code, where the gap sums several of the transforms above; split it once those land",
 		[
 			"swc minifier: fixture/issues/10473/input.js",
