@@ -6653,6 +6653,21 @@ describe("syntax-printer", () => {
 			);
 		});
 
+		it("should keep a binding read in place of its copy captured where a function declaring its name inlines the reader", async () => {
+			const { minify } = await load();
+			const input =
+				"function inner(b) { let a = b; g(b); var f = function () { return a + a; }; return function (b) { return [f(), b]; }; } function g() {} console.log(inner(1)(2));";
+			for (const options of [
+				{ compress: { passes: 2 }, mangle: false },
+				{ compress: { passes: 3 } }
+			]) {
+				const { code } = await minify(input, options);
+				expect(runProgram(/** @type {string} */ (code))).toBe(
+					runProgram(input)
+				);
+			}
+		});
+
 		it("should split a `return` of `undefined` outside a function", async () => {
 			const { minify } = await load();
 			const { code } = await minify("if (a()) { b(); return; } c();", {
