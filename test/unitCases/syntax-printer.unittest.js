@@ -6235,6 +6235,17 @@ describe("syntax-printer", () => {
 			});
 		}
 
+		it("should keep a logical expression negating its test as the test of a conditional where `booleans` is off", async () => {
+			const { minify } = await load();
+			const { code } = await minify(
+				"function f(a, b, c, x, y) { return [(!!(a & b) && c) ? x : y, (!(a & b) || c) ? x : y]; }",
+				{ compress: { booleans: false }, mangle: false }
+			);
+			expect(code).toBe(
+				"function f(a,b,c,x,y){return[!!(a&b)&&c?x:y,a&b&&!c?y:x]}"
+			);
+		});
+
 		it("should split a `return` of `undefined` outside a function", async () => {
 			const { minify } = await load();
 			const { code } = await minify("if (a()) { b(); return; } c();", {
