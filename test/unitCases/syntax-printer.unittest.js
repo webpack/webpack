@@ -845,6 +845,18 @@ const IMPROVED_CASES = [
 		{ compress: { passes: 2 }, mangle: false }
 	],
 	[
+		"a `var` only copying a parameter read as the parameter, the copy a TypeScript `for…of` loop makes among them",
+		"function contains(array, value) { for (var _i = 0, array_1 = array; _i < array_1.length; _i++) { var v = array_1[_i]; if (v === value) return true; } return false; } function f(b) { var a = b; g(); return [a.x, a.y]; } function g() {} console.log(contains([1, 2], 2), contains([], 1), f({ x: 1, y: 2 }));",
+		{ compress: {}, mangle: false },
+		"function contains(array,value){for(var _i=0;_i<array.length;_i++){if(array[_i]===value)return!0}return!1}function f(b){return g(),[b.x,b.y]}function g(){}console.log(contains([1,2],2),contains([],1),f({x:1,y:2}));"
+	],
+	[
+		"a `var` copying a parameter, read inside a class whose name the parameter's was",
+		"function f(b) { var a = b; g(b); return new (class b { m() { return a; } })().m(); } function g() {} console.log(f(1));",
+		{ compress: { passes: 2 }, mangle: false },
+		"function f(b){return g(b),(new class{m(){return b}}).m()}function g(){}console.log(f(1));"
+	],
+	[
 		"a function written in place passed the names of its parameters, which it reads instead, its value called, tagged, typed or read past a chain",
 		'function f(o, k) { var a = (function (o, k) { return o.k ? o.m : o[k]; })(o, k)(), c = typeof (function (o, k) { return o[k] || o.p; })(o, k), d = (function (o, k) { return o?.[o.k]?.[k]; })(o, k).length, e = (function (o, k) { return o[k] ? o.u : o.t; })(o, k)`x`; return [a === o, c, d, e]; } console.log(f({ k: "p", p: { q: "ab" }, m() { return this; }, t(s) { return s[0]; } }, "q"));',
 		{ compress: {}, mangle: false },
@@ -1118,6 +1130,9 @@ const KEPT_CASES = [
 	["a `let` copying a parameter written later, or through `arguments` or `eval`", 'function f(a, c) { let b = a; let d = c; a = 3; arguments[1] = 4; return [b, d]; } function g(a) { let b = a; eval("a = 5"); return b; } console.log(f(1, 2), g(1));'],
 	["a `let` copying a binding declared after it", "function f() { let b = c; let c = 1; return b; } try { console.log(f()); } catch (e) { console.log(e.name); }"],
 	["a `let` copying a longer name read more than once, where names keep their length", "function f(longBinding) { let x = longBinding; g(); return x + x + x; } function g() {} console.log(f(1));"],
+	["a `var` copying a parameter, read in a block declaring the parameter's name, or in a class of that name", "function f(b) { var a = b; g(b); { let b = 9; g(b); return [a, b]; } } function h(b) { var a = b; g(b); return new (class b { m() { return a; } })().m(); } function g() {} console.log(f(1), h(1));"],
+	["a `var` copying a `var` a loop sets again, read by a function inside", "var fns = []; function f(n) { for (var i = 0; i < n; i++) { var b = i * 2; var a = b; g(b); fns.push(function () { return a; }); } } function g() {} f(2); console.log(fns.map(function (h) { return h(); }));"],
+	["a `var` copying a `let` a loop declares each time round, read by a function inside", "var fns = []; function f(list) { for (let b of list) { var a = b; g(b); fns.push(function () { return a; }); } } function g() {} f([1, 2]); console.log(fns.map(function (h) { return h(); }));"],
 	["a `var` the function around the call names elsewhere, or a call it repeats", 'var a = "g"; function f(x) { (function () { if (x) { var a = console.log.name; console.log(a, a); } })(); console.log(a); for (var i = 0; i < 2; i++) (function () { var b; if (i) b = i; console.log(b); })(); } f(1);'],
 	["two functions called in place declaring one `var` a closure keeps, or reading a name the other declares", 'function h(x, r) { (function () { if (x) { var a = x.p; r.push(() => a + a); } })(); (function () { if (x) { var a = x.q; r.push(() => a + a); } })(); } function k(x) { (function () { if (x) { var b = x.q; console.log(a, b, b); } })(); (function () { if (x) { var a = x.p; console.log(a, a); } })(); } var a = "outer", r = []; h({ p: 1, q: 2 }, r); k({ p: 1, q: 2 }); console.log(r.map((f) => f()));'],
 	["a function called in place inside `with`, whose `var` the object could answer for", 'function f(o) { with (o) { (function () { if (o) { var a = r.length + 1; r.push(() => a + a); } })(); } return o.r.map((g) => g()); } console.log(f({ a: 2, r: [] }));'],
@@ -6775,6 +6790,20 @@ describe("syntax-printer", () => {
 					runProgram(input)
 				);
 			}
+		});
+
+		it("should keep the value of a binding read again in place of its copy", async () => {
+			const { minify } = await load();
+			const input =
+				"function f() { var v = this.v; var m = v; return g(m) ? m : [m]; } function h() { let v = this.v; let m = v; return g(m) ? m : [m]; } function g(x) { return void 0 === x; } console.log(f.call({ v: 1 }), h.call({ v: 2 }));";
+			const { code } = await minify(input, {
+				compress: { passes: 2 },
+				mangle: false
+			});
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			expect(code).toBe(
+				"function f(){var v=this.v;return g(v)?v:[v]}function h(){let v=this.v;return g(v)?v:[v]}function g(x){return void 0===x}console.log(f.call({v:1}),h.call({v:2}));"
+			);
 		});
 
 		it("should split a `return` of `undefined` outside a function", async () => {
