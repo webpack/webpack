@@ -35,6 +35,7 @@ const {
 const htmlMinify = require("../lib/html/htmlMinify");
 const { SourceProcessor } = require("../lib/html/syntax");
 const {
+	Field,
 	NS_MATHML,
 	NS_SVG,
 	NodeType,
@@ -1324,9 +1325,9 @@ const htmlInnerRanges = (nodePath) => {
 	const tagEnd = content[0];
 	/** @type {[string, number, number][]} */
 	const inner = [["opening tag", start, tagEnd]];
-	const count = nodePath.attributeCount();
+	const count = nodePath.fieldCount(Field.attributes);
 	for (let index = 0; index < count; index++) {
-		const attribute = nodePath.attribute(index);
+		const attribute = nodePath.fieldAt(index, Field.attributes);
 		const [nameStart, nameEnd] = /** @type {[number, number]} */ (
 			nodePath.nameRange(attribute)
 		);
@@ -1589,9 +1590,9 @@ const htmlPurityDigest = (html, print) => {
 		digest.update(`${NODE_TYPE_NAMES[type]}[${nodePath.range().join(",")})`);
 		if (type === NodeType.Element) {
 			digest.update(`|<${nodePath.name()}>|${nodePath.namespace()}`);
-			const count = nodePath.attributeCount();
+			const count = nodePath.fieldCount(Field.attributes);
 			for (let index = 0; index < count; index++) {
-				const attribute = nodePath.attribute(index);
+				const attribute = nodePath.fieldAt(index, Field.attributes);
 				digest.update(
 					`|${nodePath.name(attribute)}=${nodePath.value(attribute)}`
 				);

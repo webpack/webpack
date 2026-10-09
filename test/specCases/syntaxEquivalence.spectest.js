@@ -20,7 +20,7 @@ const {
 	REWRITABLE_ATTRIBUTES
 } = require("../../lib/html/data");
 const { SourceProcessor: HtmlSourceProcessor } = require("../../lib/html/syntax");
-const { A, NS_MATHML, NS_SVG, NodeType, _attributeList, decodeEntities, parseHtml } = require("../../lib/html/syntax-parser");
+const { A, Field, NS_MATHML, NS_SVG, NodeType, _attributeList, decodeEntities, parseHtml } = require("../../lib/html/syntax-parser");
 const expectNoDeprecations = require("../helpers/expectNoDeprecations");
 const launchBrowser = require("../helpers/launchBrowser");
 
@@ -1267,7 +1267,7 @@ const domShapeOf = (source) => {
 				}
 				text.push(own.replace(ASCII_WHITESPACE, " "));
 			}
-			const content = A.templateContent(child);
+			const content = A.field(Field.content, child);
 			if (content !== 0) walk(content, depth + 1, true);
 			walk(child, depth + 1, inPage);
 		}

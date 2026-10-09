@@ -1,9 +1,17 @@
 "use strict";
 
 const { SourceProcessor: CssSourceProcessor } = require("../../lib/css/syntax");
-const { NodeType: CssNodeType } = require("../../lib/css/syntax-parser");
+const {
+	Field: CssField,
+	Flag: CssFlag,
+	NodeType: CssNodeType
+} = require("../../lib/css/syntax-parser");
 const { SourceProcessor: HtmlSourceProcessor } = require("../../lib/html/syntax");
-const { NodeType: HtmlNodeType } = require("../../lib/html/syntax-parser");
+const {
+	Field: HtmlField,
+	Flag: HtmlFlag,
+	NodeType: HtmlNodeType
+} = require("../../lib/html/syntax-parser");
 const GenericSourceProcessor = require("../../lib/util/SourceProcessor");
 const { PrintContext } = require("../../lib/util/SourceProcessor");
 
@@ -545,7 +553,7 @@ describe("SourceProcessor", () => {
 						name: text(path.nameRange()),
 						value: text(path.valueRange()),
 						block: text(path.blockRange()),
-						rules: (path.rules() || []).length
+						rules: path.fieldCount(CssField.rules)
 					});
 				})
 				.process(css);
@@ -646,6 +654,110 @@ describe("SourceProcessor", () => {
 			]);
 		});
 
+		it("reads css structure through fields and flags", () => {
+			const css =
+				'@import "a.css"; @media screen { a { color: red !important; width: 1px } b {} } c { d: f(1) }';
+			/** @type {unknown[]} */
+			const seen = [];
+			new CssSourceProcessor()
+				.use(
+					[
+						CssNodeType.AtRule,
+						CssNodeType.QualifiedRule,
+						CssNodeType.Declaration
+					],
+					(path) => {
+						/**
+						 * @param {number} field a field
+						 * @returns {string[]} each item's source
+						 */
+						const items = (field) => {
+							/** @type {string[]} */
+							const out = [];
+							for (let i = 0, n = path.fieldCount(field); i < n; i++) {
+								out.push(path.source(path.fieldAt(i, field)).trim());
+							}
+							expect(path.fieldAt(path.fieldCount(field), field)).toBe(0);
+							return out;
+						};
+						const width = path.fieldNamed(CssField.declarations, "width");
+						seen.push([
+							path.type(),
+							path.name(),
+							items(CssField.prelude).join(""),
+							items(CssField.value).join(""),
+							items(CssField.declarations),
+							items(CssField.rules).length,
+							/** @type {unknown} */ (width) === 0 ? null : path.source(width),
+							path.fieldNamed(CssField.declarations, "margin"),
+							path.flag(CssFlag.important),
+							path.field(CssField.value)
+						]);
+					}
+				)
+				.process(css);
+			expect(seen).toEqual([
+				[CssNodeType.AtRule, "import", '"a.css"', "", [], 0, null, 0, false, 0],
+				[CssNodeType.AtRule, "media", "screen", "", [], 2, null, 0, false, 0],
+				[
+					CssNodeType.QualifiedRule,
+					"",
+					"a",
+					"",
+					["color: red !important", "width: 1px"],
+					0,
+					"width: 1px ",
+					0,
+					false,
+					0
+				],
+				[CssNodeType.Declaration, "color", "", "red", [], 0, null, 0, true, 0],
+				[CssNodeType.Declaration, "width", "", "1px", [], 0, null, 0, false, 0],
+				[CssNodeType.QualifiedRule, "", "b", "", [], 0, null, 0, false, 0],
+				[CssNodeType.QualifiedRule, "", "c", "", ["d: f(1)"], 0, null, 0, false, 0],
+				[CssNodeType.Declaration, "d", "", "f(1)", [], 0, null, 0, false, 0]
+			]);
+		});
+
+		it("reads html structure through fields and flags", () => {
+			const html = `<p a="1" b><br><template><i>t</i></template>`;
+			/** @type {unknown[]} */
+			const seen = [];
+			new HtmlSourceProcessor()
+				.use([HtmlNodeType.Element], (path) => {
+					const name = path.name();
+					if (name !== "p" && name !== "br" && name !== "template") return;
+					const b = path.fieldNamed(HtmlField.attributes, "b");
+					const content = path.field(HtmlField.content);
+					seen.push([
+						name,
+						path.fieldCount(HtmlField.attributes),
+						path.name(path.fieldAt(0, HtmlField.attributes)),
+						path.fieldAt(2, HtmlField.attributes),
+						b === 0 ? null : path.source(b),
+						path.fieldNamed(HtmlField.attributes, "c"),
+						path.flag(HtmlFlag.selfClosing),
+						content === 0 ? 0 : path.type(content),
+						path.fieldCount(HtmlField.content),
+						path.field(HtmlField.attributes)
+					]);
+					if (name === "p") {
+						const a = path.fieldAt(0, HtmlField.attributes);
+						expect(path.fieldCount(HtmlField.attributes, a)).toBe(0);
+						expect(path.fieldAt(0, HtmlField.attributes, a)).toBe(0);
+						expect(path.fieldNamed(HtmlField.attributes, "x", a)).toBe(0);
+						expect(path.flag(HtmlFlag.selfClosing, a)).toBe(false);
+						expect(path.field(HtmlField.content, a)).toBe(0);
+					}
+				})
+				.process(html);
+			expect(seen).toEqual([
+				["p", 2, "a", 0, "b", 0, false, 0, 0, 0],
+				["br", 0, "", 0, null, 0, true, 0, 0, 0],
+				["template", 0, "", 0, null, 0, false, HtmlNodeType.DocumentFragment, 0, 0]
+			]);
+		});
+
 		it("reads html attributes as nodes through the shared members", () => {
 			const input = `<p>\n<a href="/x?a&amp;b" title=t data-x>y</a>`;
 			/** @type {Record<string, unknown>[]} */
@@ -653,7 +765,11 @@ describe("SourceProcessor", () => {
 			new HtmlSourceProcessor()
 				.use([HtmlNodeType.Element], (path) => {
 					if (path.name() !== "a") return;
-					for (let i = 0, a = path.attribute(0); a !== 0; a = path.attribute(++i)) {
+					for (
+						let i = 0, a = path.fieldAt(0, HtmlField.attributes);
+						a !== 0;
+						a = path.fieldAt(++i, HtmlField.attributes)
+					) {
 						const valueRange = path.valueRange(a);
 						seen.push({
 							type: path.type(a),
@@ -667,9 +783,11 @@ describe("SourceProcessor", () => {
 							loc: path.loc(a).slice(0, 2)
 						});
 					}
-					expect(path.attribute(path.attributeCount())).toBe(0);
-					expect(path.findAttribute("id")).toBe(0);
-					expect(path.name(path.findAttribute("title"))).toBe("title");
+					expect(
+						path.fieldAt(path.fieldCount(HtmlField.attributes), HtmlField.attributes)
+					).toBe(0);
+					expect(path.fieldNamed(HtmlField.attributes, "id")).toBe(0);
+					expect(path.name(path.fieldNamed(HtmlField.attributes, "title"))).toBe("title");
 				})
 				.process(input);
 			expect(seen).toEqual([

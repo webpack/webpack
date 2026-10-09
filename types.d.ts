@@ -6748,23 +6748,27 @@ declare class CssSourceProcessor extends SourceProcessor<
 		name(n?: NodeSyntaxParser): string;
 		nameRange(n?: NodeSyntaxParser): null | [number, number];
 		/**
-		 * A rule's children are its prelude; its block is read with {@link declarations }.
+		 * A rule's children are its prelude; its block is read with {@link fieldAt }.
 		 */
 		childCount(n?: NodeSyntaxParser): number;
 		child(i: number, n?: NodeSyntaxParser): ComponentValue;
 		/**
-		 * A block big enough to stream hands its children to the visitors as each one
-		 * finishes rather than collecting them, so both lists read as an empty block
-		 * on it — `null`, which means no block at all, is still only for the `@…;`
-		 * forms. Read a block's children from the walk, not from here.
+		 * CSS has no single-node field; every `Field` is a list.
 		 */
-		declarations(n?: NodeSyntaxParser): null | DeclarationSyntaxParser[];
+		field(_field: number, _n?: NodeSyntaxParser): NodeSyntaxParser;
 		/**
-		 * Reads as an empty block on a streamed rule; see {@link declarations }.
+		 * A block big enough to stream hands its children to the visitors as each
+		 * one finishes rather than collecting them, so its lists read as empty here.
 		 */
-		rules(n?: NodeSyntaxParser): null | RuleSyntaxParser[];
+		fieldCount(field: number, n?: NodeSyntaxParser): number;
+		fieldAt(i: number, field: number, n?: NodeSyntaxParser): NodeSyntaxParser;
+		fieldNamed(
+			field: number,
+			name: string,
+			n?: NodeSyntaxParser
+		): NodeSyntaxParser;
+		flag(flag: number, n?: NodeSyntaxParser): boolean;
 		blockRange(n?: NodeSyntaxParser): null | [number, number];
-		important(n?: NodeSyntaxParser): boolean;
 		blockToken(n?: NodeSyntaxParser): SimpleBlockToken;
 	},
 	NodeSyntaxParser,
@@ -11757,16 +11761,17 @@ declare class HtmlSourceProcessor extends SourceProcessor<
 		 */
 		name(n?: number): string;
 		namespace(n?: number): number;
-		selfClosing(n?: number): boolean;
-		attributeCount(n?: number): number;
+		field(field: number, n?: number): number;
+		fieldCount(field: number, n?: number): number;
 		/**
-		 * The i-th attribute of an element, as a node the shared reads take.
+		 * An attribute item is a node the shared reads take.
 		 */
-		attribute(i: number, n?: number): number;
+		fieldAt(i: number, field: number, n?: number): number;
 		/**
-		 * Linear lookup by (lowercased) name.
+		 * Attribute names are stored lowercased, so `name` is compared as written.
 		 */
-		findAttribute(name: string, n?: number): number;
+		fieldNamed(field: number, name: string, n?: number): number;
+		flag(flag: number, n?: number): boolean;
 		valueRange(n?: number): null | [number, number];
 		nameRange(n?: number): null | [number, number];
 		/**
@@ -11800,7 +11805,6 @@ declare class HtmlSourceProcessor extends SourceProcessor<
 		 * the source left the end tag out.
 		 */
 		contentRange(n?: number): null | [number, number];
-		templateContent(n?: number): number;
 		/**
 		 * A text's, comment's, processing instruction's or attribute's data,
 		 * character references decoded; "" for other nodes.
@@ -20681,6 +20685,31 @@ declare interface NodePath<TNode, TValue = unknown> {
 	 * the i-th child
 	 */
 	child: (i: number, n?: TNode) => TNode;
+
+	/**
+	 * the node in a single-node `Field` (0 when empty)
+	 */
+	field: (field: number, n?: TNode) => TNode;
+
+	/**
+	 * number of items in a list `Field`
+	 */
+	fieldCount: (field: number, n?: TNode) => number;
+
+	/**
+	 * the i-th item of a list `Field` (0 past the end)
+	 */
+	fieldAt: (i: number, field: number, n?: TNode) => TNode;
+
+	/**
+	 * the first item of a list `Field` with that `name` (0 when none)
+	 */
+	fieldNamed: (field: number, name: string, n?: TNode) => TNode;
+
+	/**
+	 * whether a `Flag` is set
+	 */
+	flag: (flag: number, n?: TNode) => boolean;
 }
 
 /**
@@ -33851,23 +33880,31 @@ declare namespace exports {
 					name(n?: NodeSyntaxParser): string;
 					nameRange(n?: NodeSyntaxParser): null | [number, number];
 					/**
-					 * A rule's children are its prelude; its block is read with {@link declarations }.
+					 * A rule's children are its prelude; its block is read with {@link fieldAt }.
 					 */
 					childCount(n?: NodeSyntaxParser): number;
 					child(i: number, n?: NodeSyntaxParser): ComponentValue;
 					/**
-					 * A block big enough to stream hands its children to the visitors as each one
-					 * finishes rather than collecting them, so both lists read as an empty block
-					 * on it — `null`, which means no block at all, is still only for the `@…;`
-					 * forms. Read a block's children from the walk, not from here.
+					 * CSS has no single-node field; every `Field` is a list.
 					 */
-					declarations(n?: NodeSyntaxParser): null | DeclarationSyntaxParser[];
+					field(_field: number, _n?: NodeSyntaxParser): NodeSyntaxParser;
 					/**
-					 * Reads as an empty block on a streamed rule; see {@link declarations }.
+					 * A block big enough to stream hands its children to the visitors as each
+					 * one finishes rather than collecting them, so its lists read as empty here.
 					 */
-					rules(n?: NodeSyntaxParser): null | RuleSyntaxParser[];
+					fieldCount(field: number, n?: NodeSyntaxParser): number;
+					fieldAt(
+						i: number,
+						field: number,
+						n?: NodeSyntaxParser
+					): NodeSyntaxParser;
+					fieldNamed(
+						field: number,
+						name: string,
+						n?: NodeSyntaxParser
+					): NodeSyntaxParser;
+					flag(flag: number, n?: NodeSyntaxParser): boolean;
 					blockRange(n?: NodeSyntaxParser): null | [number, number];
-					important(n?: NodeSyntaxParser): boolean;
 					blockToken(n?: NodeSyntaxParser): SimpleBlockToken;
 				};
 				export let CC_0: number;
@@ -33898,6 +33935,15 @@ declare namespace exports {
 				export let LIST_KIND_SELECTOR: 0;
 				export let LIST_NO: 2;
 				export let LIST_UNKNOWN: 0;
+				export namespace Field {
+					export let prelude: 1;
+					export let value: 2;
+					export let declarations: 3;
+					export let rules: 4;
+				}
+				export namespace Flag {
+					export let important: 1;
+				}
 				export namespace NodeType {
 					export let Ident: number;
 					export let Function: number;
@@ -34020,25 +34066,31 @@ declare namespace exports {
 						name(n?: NodeSyntaxParser): string;
 						nameRange(n?: NodeSyntaxParser): null | [number, number];
 						/**
-						 * A rule's children are its prelude; its block is read with {@link declarations }.
+						 * A rule's children are its prelude; its block is read with {@link fieldAt }.
 						 */
 						childCount(n?: NodeSyntaxParser): number;
 						child(i: number, n?: NodeSyntaxParser): ComponentValue;
 						/**
-						 * A block big enough to stream hands its children to the visitors as each one
-						 * finishes rather than collecting them, so both lists read as an empty block
-						 * on it — `null`, which means no block at all, is still only for the `@…;`
-						 * forms. Read a block's children from the walk, not from here.
+						 * CSS has no single-node field; every `Field` is a list.
 						 */
-						declarations(
-							n?: NodeSyntaxParser
-						): null | DeclarationSyntaxParser[];
+						field(_field: number, _n?: NodeSyntaxParser): NodeSyntaxParser;
 						/**
-						 * Reads as an empty block on a streamed rule; see {@link declarations }.
+						 * A block big enough to stream hands its children to the visitors as each
+						 * one finishes rather than collecting them, so its lists read as empty here.
 						 */
-						rules(n?: NodeSyntaxParser): null | RuleSyntaxParser[];
+						fieldCount(field: number, n?: NodeSyntaxParser): number;
+						fieldAt(
+							i: number,
+							field: number,
+							n?: NodeSyntaxParser
+						): NodeSyntaxParser;
+						fieldNamed(
+							field: number,
+							name: string,
+							n?: NodeSyntaxParser
+						): NodeSyntaxParser;
+						flag(flag: number, n?: NodeSyntaxParser): boolean;
 						blockRange(n?: NodeSyntaxParser): null | [number, number];
-						important(n?: NodeSyntaxParser): boolean;
 						blockToken(n?: NodeSyntaxParser): SimpleBlockToken;
 					}>[],
 					writer:
@@ -34077,25 +34129,34 @@ declare namespace exports {
 									name(n?: NodeSyntaxParser): string;
 									nameRange(n?: NodeSyntaxParser): null | [number, number];
 									/**
-									 * A rule's children are its prelude; its block is read with {@link declarations }.
+									 * A rule's children are its prelude; its block is read with {@link fieldAt }.
 									 */
 									childCount(n?: NodeSyntaxParser): number;
 									child(i: number, n?: NodeSyntaxParser): ComponentValue;
 									/**
-									 * A block big enough to stream hands its children to the visitors as each one
-									 * finishes rather than collecting them, so both lists read as an empty block
-									 * on it — `null`, which means no block at all, is still only for the `@…;`
-									 * forms. Read a block's children from the walk, not from here.
+									 * CSS has no single-node field; every `Field` is a list.
 									 */
-									declarations(
-										n?: NodeSyntaxParser
-									): null | DeclarationSyntaxParser[];
+									field(
+										_field: number,
+										_n?: NodeSyntaxParser
+									): NodeSyntaxParser;
 									/**
-									 * Reads as an empty block on a streamed rule; see {@link declarations }.
+									 * A block big enough to stream hands its children to the visitors as each
+									 * one finishes rather than collecting them, so its lists read as empty here.
 									 */
-									rules(n?: NodeSyntaxParser): null | RuleSyntaxParser[];
+									fieldCount(field: number, n?: NodeSyntaxParser): number;
+									fieldAt(
+										i: number,
+										field: number,
+										n?: NodeSyntaxParser
+									): NodeSyntaxParser;
+									fieldNamed(
+										field: number,
+										name: string,
+										n?: NodeSyntaxParser
+									): NodeSyntaxParser;
+									flag(flag: number, n?: NodeSyntaxParser): boolean;
 									blockRange(n?: NodeSyntaxParser): null | [number, number];
-									important(n?: NodeSyntaxParser): boolean;
 									blockToken(n?: NodeSyntaxParser): SimpleBlockToken;
 								},
 								NodeSyntaxParser,
@@ -34209,25 +34270,31 @@ declare namespace exports {
 						name(n?: NodeSyntaxParser): string;
 						nameRange(n?: NodeSyntaxParser): null | [number, number];
 						/**
-						 * A rule's children are its prelude; its block is read with {@link declarations }.
+						 * A rule's children are its prelude; its block is read with {@link fieldAt }.
 						 */
 						childCount(n?: NodeSyntaxParser): number;
 						child(i: number, n?: NodeSyntaxParser): ComponentValue;
 						/**
-						 * A block big enough to stream hands its children to the visitors as each one
-						 * finishes rather than collecting them, so both lists read as an empty block
-						 * on it — `null`, which means no block at all, is still only for the `@…;`
-						 * forms. Read a block's children from the walk, not from here.
+						 * CSS has no single-node field; every `Field` is a list.
 						 */
-						declarations(
-							n?: NodeSyntaxParser
-						): null | DeclarationSyntaxParser[];
+						field(_field: number, _n?: NodeSyntaxParser): NodeSyntaxParser;
 						/**
-						 * Reads as an empty block on a streamed rule; see {@link declarations }.
+						 * A block big enough to stream hands its children to the visitors as each
+						 * one finishes rather than collecting them, so its lists read as empty here.
 						 */
-						rules(n?: NodeSyntaxParser): null | RuleSyntaxParser[];
+						fieldCount(field: number, n?: NodeSyntaxParser): number;
+						fieldAt(
+							i: number,
+							field: number,
+							n?: NodeSyntaxParser
+						): NodeSyntaxParser;
+						fieldNamed(
+							field: number,
+							name: string,
+							n?: NodeSyntaxParser
+						): NodeSyntaxParser;
+						flag(flag: number, n?: NodeSyntaxParser): boolean;
 						blockRange(n?: NodeSyntaxParser): null | [number, number];
-						important(n?: NodeSyntaxParser): boolean;
 						blockToken(n?: NodeSyntaxParser): SimpleBlockToken;
 					},
 					writer: PrintContext<
@@ -34264,25 +34331,31 @@ declare namespace exports {
 							name(n?: NodeSyntaxParser): string;
 							nameRange(n?: NodeSyntaxParser): null | [number, number];
 							/**
-							 * A rule's children are its prelude; its block is read with {@link declarations }.
+							 * A rule's children are its prelude; its block is read with {@link fieldAt }.
 							 */
 							childCount(n?: NodeSyntaxParser): number;
 							child(i: number, n?: NodeSyntaxParser): ComponentValue;
 							/**
-							 * A block big enough to stream hands its children to the visitors as each one
-							 * finishes rather than collecting them, so both lists read as an empty block
-							 * on it — `null`, which means no block at all, is still only for the `@…;`
-							 * forms. Read a block's children from the walk, not from here.
+							 * CSS has no single-node field; every `Field` is a list.
 							 */
-							declarations(
-								n?: NodeSyntaxParser
-							): null | DeclarationSyntaxParser[];
+							field(_field: number, _n?: NodeSyntaxParser): NodeSyntaxParser;
 							/**
-							 * Reads as an empty block on a streamed rule; see {@link declarations }.
+							 * A block big enough to stream hands its children to the visitors as each
+							 * one finishes rather than collecting them, so its lists read as empty here.
 							 */
-							rules(n?: NodeSyntaxParser): null | RuleSyntaxParser[];
+							fieldCount(field: number, n?: NodeSyntaxParser): number;
+							fieldAt(
+								i: number,
+								field: number,
+								n?: NodeSyntaxParser
+							): NodeSyntaxParser;
+							fieldNamed(
+								field: number,
+								name: string,
+								n?: NodeSyntaxParser
+							): NodeSyntaxParser;
+							flag(flag: number, n?: NodeSyntaxParser): boolean;
 							blockRange(n?: NodeSyntaxParser): null | [number, number];
-							important(n?: NodeSyntaxParser): boolean;
 							blockToken(n?: NodeSyntaxParser): SimpleBlockToken;
 						},
 						NodeSyntaxParser,
@@ -34393,16 +34466,17 @@ declare namespace exports {
 					 */
 					name(n?: number): string;
 					namespace(n?: number): number;
-					selfClosing(n?: number): boolean;
-					attributeCount(n?: number): number;
+					field(field: number, n?: number): number;
+					fieldCount(field: number, n?: number): number;
 					/**
-					 * The i-th attribute of an element, as a node the shared reads take.
+					 * An attribute item is a node the shared reads take.
 					 */
-					attribute(i: number, n?: number): number;
+					fieldAt(i: number, field: number, n?: number): number;
 					/**
-					 * Linear lookup by (lowercased) name.
+					 * Attribute names are stored lowercased, so `name` is compared as written.
 					 */
-					findAttribute(name: string, n?: number): number;
+					fieldNamed(field: number, name: string, n?: number): number;
+					flag(flag: number, n?: number): boolean;
 					valueRange(n?: number): null | [number, number];
 					nameRange(n?: number): null | [number, number];
 					/**
@@ -34436,7 +34510,6 @@ declare namespace exports {
 					 * the source left the end tag out.
 					 */
 					contentRange(n?: number): null | [number, number];
-					templateContent(n?: number): number;
 					/**
 					 * A text's, comment's, processing instruction's or attribute's data,
 					 * character references decoded; "" for other nodes.
@@ -34469,6 +34542,13 @@ declare namespace exports {
 				export let NS_HTML: 0;
 				export let NS_MATHML: 1;
 				export let NS_SVG: 2;
+				export namespace Field {
+					export let attributes: 1;
+					export let content: 2;
+				}
+				export namespace Flag {
+					export let selfClosing: 4;
+				}
 				export namespace NodeType {
 					export let Document: 1;
 					export let DocumentFragment: 2;
@@ -34540,16 +34620,17 @@ declare namespace exports {
 						 */
 						name(n?: number): string;
 						namespace(n?: number): number;
-						selfClosing(n?: number): boolean;
-						attributeCount(n?: number): number;
+						field(field: number, n?: number): number;
+						fieldCount(field: number, n?: number): number;
 						/**
-						 * The i-th attribute of an element, as a node the shared reads take.
+						 * An attribute item is a node the shared reads take.
 						 */
-						attribute(i: number, n?: number): number;
+						fieldAt(i: number, field: number, n?: number): number;
 						/**
-						 * Linear lookup by (lowercased) name.
+						 * Attribute names are stored lowercased, so `name` is compared as written.
 						 */
-						findAttribute(name: string, n?: number): number;
+						fieldNamed(field: number, name: string, n?: number): number;
+						flag(flag: number, n?: number): boolean;
 						valueRange(n?: number): null | [number, number];
 						nameRange(n?: number): null | [number, number];
 						/**
@@ -34583,7 +34664,6 @@ declare namespace exports {
 						 * the source left the end tag out.
 						 */
 						contentRange(n?: number): null | [number, number];
-						templateContent(n?: number): number;
 						/**
 						 * A text's, comment's, processing instruction's or attribute's data,
 						 * character references decoded; "" for other nodes.
@@ -34636,16 +34716,17 @@ declare namespace exports {
 									 */
 									name(n?: number): string;
 									namespace(n?: number): number;
-									selfClosing(n?: number): boolean;
-									attributeCount(n?: number): number;
+									field(field: number, n?: number): number;
+									fieldCount(field: number, n?: number): number;
 									/**
-									 * The i-th attribute of an element, as a node the shared reads take.
+									 * An attribute item is a node the shared reads take.
 									 */
-									attribute(i: number, n?: number): number;
+									fieldAt(i: number, field: number, n?: number): number;
 									/**
-									 * Linear lookup by (lowercased) name.
+									 * Attribute names are stored lowercased, so `name` is compared as written.
 									 */
-									findAttribute(name: string, n?: number): number;
+									fieldNamed(field: number, name: string, n?: number): number;
+									flag(flag: number, n?: number): boolean;
 									valueRange(n?: number): null | [number, number];
 									nameRange(n?: number): null | [number, number];
 									/**
@@ -34679,7 +34760,6 @@ declare namespace exports {
 									 * the source left the end tag out.
 									 */
 									contentRange(n?: number): null | [number, number];
-									templateContent(n?: number): number;
 									/**
 									 * A text's, comment's, processing instruction's or attribute's data,
 									 * character references decoded; "" for other nodes.
@@ -34763,16 +34843,17 @@ declare namespace exports {
 						 */
 						name(n?: number): string;
 						namespace(n?: number): number;
-						selfClosing(n?: number): boolean;
-						attributeCount(n?: number): number;
+						field(field: number, n?: number): number;
+						fieldCount(field: number, n?: number): number;
 						/**
-						 * The i-th attribute of an element, as a node the shared reads take.
+						 * An attribute item is a node the shared reads take.
 						 */
-						attribute(i: number, n?: number): number;
+						fieldAt(i: number, field: number, n?: number): number;
 						/**
-						 * Linear lookup by (lowercased) name.
+						 * Attribute names are stored lowercased, so `name` is compared as written.
 						 */
-						findAttribute(name: string, n?: number): number;
+						fieldNamed(field: number, name: string, n?: number): number;
+						flag(flag: number, n?: number): boolean;
 						valueRange(n?: number): null | [number, number];
 						nameRange(n?: number): null | [number, number];
 						/**
@@ -34806,7 +34887,6 @@ declare namespace exports {
 						 * the source left the end tag out.
 						 */
 						contentRange(n?: number): null | [number, number];
-						templateContent(n?: number): number;
 						/**
 						 * A text's, comment's, processing instruction's or attribute's data,
 						 * character references decoded; "" for other nodes.
@@ -34857,16 +34937,17 @@ declare namespace exports {
 							 */
 							name(n?: number): string;
 							namespace(n?: number): number;
-							selfClosing(n?: number): boolean;
-							attributeCount(n?: number): number;
+							field(field: number, n?: number): number;
+							fieldCount(field: number, n?: number): number;
 							/**
-							 * The i-th attribute of an element, as a node the shared reads take.
+							 * An attribute item is a node the shared reads take.
 							 */
-							attribute(i: number, n?: number): number;
+							fieldAt(i: number, field: number, n?: number): number;
 							/**
-							 * Linear lookup by (lowercased) name.
+							 * Attribute names are stored lowercased, so `name` is compared as written.
 							 */
-							findAttribute(name: string, n?: number): number;
+							fieldNamed(field: number, name: string, n?: number): number;
+							flag(flag: number, n?: number): boolean;
 							valueRange(n?: number): null | [number, number];
 							nameRange(n?: number): null | [number, number];
 							/**
@@ -34900,7 +34981,6 @@ declare namespace exports {
 							 * the source left the end tag out.
 							 */
 							contentRange(n?: number): null | [number, number];
-							templateContent(n?: number): number;
 							/**
 							 * A text's, comment's, processing instruction's or attribute's data,
 							 * character references decoded; "" for other nodes.

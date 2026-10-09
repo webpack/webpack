@@ -10,7 +10,7 @@
 
 const fs = require("fs");
 const path = require("path");
-const { A, NS_HTML, _attributeList, _contentEndOf, _contentStartOf, _endOf, _nameEndOf, _startOf, NS_MATHML, NS_SVG, NodeType, QUOTE_DOUBLE, QUOTE_NONE, QUOTE_SINGLE, decodeEntities, escapeAttribute, escapeText, parseCssUrls, parseHtml: parseHtmlRefs, parseMsapplicationTask, parseSrc, parseSrcset, tokenize } = require("../../lib/html/syntax-parser");
+const { A, Field, Flag, NS_HTML, _attributeList, _contentEndOf, _contentStartOf, _endOf, _nameEndOf, _startOf, NS_MATHML, NS_SVG, NodeType, QUOTE_DOUBLE, QUOTE_NONE, QUOTE_SINGLE, decodeEntities, escapeAttribute, escapeText, parseCssUrls, parseHtml: parseHtmlRefs, parseMsapplicationTask, parseSrc, parseSrcset, tokenize } = require("../../lib/html/syntax-parser");
 const { builtinEmbeddedRenderer } = require("../../lib/html/builtinEmbeddedRenderer");
 const serializeHtmlTree = require("../helpers/serializeHtmlTree");
 
@@ -3103,14 +3103,14 @@ const materialize = (ref) => {
 	const type = A.type(ref);
 	switch (type) {
 		case NodeType.Element: {
-			const tc = A.templateContent(ref);
+			const tc = A.field(Field.content, ref);
 			return {
 				type,
 				tagName: A.name(ref),
 				namespace: A.namespace(ref),
 				attributes: _attributeList(ref),
 				children: childrenOf(ref).map(materialize),
-				selfClosing: A.selfClosing(ref),
+				selfClosing: A.flag(Flag.selfClosing, ref),
 				start: _startOf(ref),
 				end: _endOf(ref),
 				tagEnd: _contentStartOf(ref),
@@ -7199,7 +7199,7 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 			.use({
 				[NodeType.Element]: (path) => {
 					if (path.name() !== "iframe") return;
-					const srcdoc = path.findAttribute("srcdoc");
+					const srcdoc = path.fieldNamed(Field.attributes, "srcdoc");
 					if (srcdoc !== 0) readBack = path.value(srcdoc);
 				}
 			})
@@ -8395,8 +8395,8 @@ describe("parseHtml — path accessor completeness", () => {
 							`parentTag:${path.name(/** @type {number} */ (path.parent))}`
 						);
 						log.push(`index:${path.index}`);
-						log.push(`attrs:${path.attributeCount()}`);
-						const id = path.findAttribute("id");
+						log.push(`attrs:${path.fieldCount(Field.attributes)}`);
+						const id = path.fieldNamed(Field.attributes, "id");
 						log.push(`id:${path.name(id)}=${path.value(id)}`);
 						log.push(
 							`idName:${SRC.slice(.../** @type {[number, number]} */ (path.nameRange(id)))}`
@@ -8404,7 +8404,7 @@ describe("parseHtml — path accessor completeness", () => {
 						log.push(
 							`idValue:${SRC.slice(.../** @type {[number, number]} */ (path.valueRange(id)))}`
 						);
-						log.push(`checkedValue:${path.valueRange(path.attribute(1))}`);
+						log.push(`checkedValue:${path.valueRange(path.fieldAt(1, Field.attributes))}`);
 						log.push(`firstChildType:${path.type(path.child(0))}`);
 						log.push(
 							`nextSibling:${path.child(

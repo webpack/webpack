@@ -2,6 +2,7 @@
 
 const {
 	A,
+	Field,
 	NS_MATHML,
 	NS_SVG,
 	NodeType,
@@ -71,7 +72,7 @@ const serializeHtmlTree = (root) => {
 				}="${decodeEntities(a.value, true)}"`
 			);
 		}
-		const tc = A.templateContent(node);
+		const tc = A.field(Field.content, node);
 		if (tc !== 0) {
 			lines.push(`| ${"  ".repeat(depth + 1)}content`);
 			for (

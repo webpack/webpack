@@ -3,7 +3,7 @@
 const fs = require("fs");
 const path = require("path");
 const { SourceProcessor } = require("../../lib/css/syntax");
-const { NodeType, TT_AT_KEYWORD, TT_BAD_STRING_TOKEN, TT_BAD_URL_TOKEN, TT_CDC, TT_CDO, TT_COLON, TT_COMMA, TT_COMMENT, TT_DELIM, TT_DIMENSION, TT_EOF, TT_FUNCTION, TT_HASH, TT_IDENTIFIER, TT_LEFT_CURLY_BRACKET, TT_LEFT_PARENTHESIS, TT_LEFT_SQUARE_BRACKET, TT_NUMBER, TT_PERCENTAGE, TT_RIGHT_CURLY_BRACKET, TT_RIGHT_PARENTHESIS, TT_RIGHT_SQUARE_BRACKET, TT_SEMICOLON, TT_STRING, TT_URL, TT_WHITESPACE, TokenStream, buildSkipSet, normalizeUrl, parseABlocksContents, parseACommaSeparatedListOfComponentValues, parseAComponentValue, parseADeclaration, parseAListOfComponentValues, parseARule, parseAStylesheet, parseAStylesheetsContents, readToken } = require("../../lib/css/syntax-parser");
+const { Field, Flag, NodeType, TT_AT_KEYWORD, TT_BAD_STRING_TOKEN, TT_BAD_URL_TOKEN, TT_CDC, TT_CDO, TT_COLON, TT_COMMA, TT_COMMENT, TT_DELIM, TT_DIMENSION, TT_EOF, TT_FUNCTION, TT_HASH, TT_IDENTIFIER, TT_LEFT_CURLY_BRACKET, TT_LEFT_PARENTHESIS, TT_LEFT_SQUARE_BRACKET, TT_NUMBER, TT_PERCENTAGE, TT_RIGHT_CURLY_BRACKET, TT_RIGHT_PARENTHESIS, TT_RIGHT_SQUARE_BRACKET, TT_SEMICOLON, TT_STRING, TT_URL, TT_WHITESPACE, TokenStream, buildSkipSet, normalizeUrl, parseABlocksContents, parseACommaSeparatedListOfComponentValues, parseAComponentValue, parseADeclaration, parseAListOfComponentValues, parseARule, parseAStylesheet, parseAStylesheetsContents, readToken } = require("../../lib/css/syntax-parser");
 
 /**
  * @param {string} css a stylesheet
@@ -1112,8 +1112,8 @@ describe("CssSyntax — block streaming", () => {
 				[type]: (/** @type {import("../../lib/css/syntax-parser").CssPath} */ path) => {
 					if (seen) return;
 					seen = true;
-					const rules = path.rules();
-					count = rules === null ? null : rules.length;
+					count =
+						path.blockRange() === null ? null : path.fieldCount(Field.rules);
 				}
 			})
 			.process(src, { mode: "minify" });
@@ -1379,10 +1379,9 @@ describe("CssSyntax — block streaming", () => {
 					[NodeType.AtRule]: (
 						/** @type {import("../../lib/css/syntax-parser").CssPath} */ path
 					) => {
-						const decls = path.declarations();
-						const rules = path.rules();
-						seen.push(decls === null ? null : decls.length);
-						seen.push(rules === null ? null : rules.length);
+						const block = path.blockRange() !== null;
+						seen.push(block ? path.fieldCount(Field.declarations) : null);
+						seen.push(block ? path.fieldCount(Field.rules) : null);
 					}
 				})
 				.process(src, { mode: "minify" });
@@ -1531,8 +1530,10 @@ describe("CssSyntax — block streaming", () => {
 				) => {
 					if (seen) return;
 					seen = true;
-					const decls = path.declarations();
-					declared = decls === null ? null : decls.length;
+					declared =
+						path.blockRange() === null
+							? null
+							: path.fieldCount(Field.declarations);
 				}
 			})
 			.process(src, { mode: "minify" });
@@ -3785,17 +3786,10 @@ describe("CssSyntax — path accessors", () => {
 						);
 						log.push(`prelude:${path.childCount() > 0}`);
 						log.push(
-							`childRules:${
-								/** @type {import("../../lib/css/syntax-parser").Rule[]} */ (
-									path.rules()
-								).length
-							}`
+							`childRules:${path.fieldCount(Field.rules)}`
 						);
 						log.push(
-							`decls:${
-								/** @type {import("../../lib/css/syntax-parser").Declaration[]} */ (
-									path.declarations()
-								).length
+							`decls:${path.fieldCount(Field.declarations)
 							}`
 						);
 						log.push(`blockOpen:${SRC[/** @type {[number, number]} */ (path.blockRange())[0]]}`);
@@ -3805,7 +3799,7 @@ describe("CssSyntax — path accessors", () => {
 						log.push(`parent:${path.parent}`);
 					},
 					[NodeType.Declaration]: (/** @type {CssPath} */ path) => {
-						if (path.important()) {
+						if (path.flag(Flag.important)) {
 							log.push(
 								`decl:${path.source(.../** @type {[number, number]} */ (path.nameRange()))}=${path.name()}`
 							);
@@ -3868,12 +3862,8 @@ describe("CssSyntax — path accessors", () => {
 					[NodeType.QualifiedRule]: (/** @type {CssPath} */ path) => {
 						out.push([
 							path.childCount() > 0,
-							/** @type {import("../../lib/css/syntax-parser").Declaration[]} */ (
-								path.declarations()
-							).length,
-							/** @type {import("../../lib/css/syntax-parser").Rule[]} */ (
-								path.rules()
-							).length
+							path.fieldCount(Field.declarations),
+							path.fieldCount(Field.rules)
 						]);
 					}
 				})

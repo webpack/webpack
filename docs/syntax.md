@@ -21,29 +21,44 @@ Every visitor and node printer receives one argument, the language's `path`: `we
 const links = [];
 new SourceProcessor()
 	.use([NodeType.Element], (path) => {
-		const href = path.findAttribute("href");
+		const href = path.fieldNamed(Field.attributes, "href");
 		if (href !== 0) links.push([path.value(href), path.loc(href)]);
 	})
 	.process(source);
 ```
 
-| Member                         | Returns                                                               | CSS                                                                                               | HTML                                    | JavaScript (ESTree)           |
-| ------------------------------ | --------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- | --------------------------------------- | ----------------------------- |
-| `node`, `parent`, `index`      | the current node, its parent (`null` at a root), its position         | ✓                                                                                                 | ✓                                       | ✓                             |
-| `skipChildren()`, `stop()`     | don't descend into this node; end the walk                            | ✓                                                                                                 | ✓                                       | ✓                             |
-| `type(n)`                      | the language's `NodeType` member                                      | CSS Syntax names                                                                                  | DOM names, plus `Attribute`             | `type`                        |
-| `range(n)`                     | `[start, end]` offsets into the parsed input, as acorn's `range`      | ✓                                                                                                 | ✓ (an attribute's end past its quote)   | `range`                       |
-| `loc(n)`                       | `[line, column, endLine, endColumn]`, lines from 1 and columns from 0 | ✓                                                                                                 | ✓                                       | `loc`                         |
-| `source(n)`, `source(s, e)`    | the node as written; the input between two offsets                    | ✓                                                                                                 | ✓                                       | ✓                             |
-| `name(n)`                      | its name, decoded; `""` without one                                   | at-rule, declaration, function                                                                    | element, attribute, doctype, PI target  | `Identifier.name`             |
-| `value(n)`                     | its value, decoded; `""` without one                                  | token value: a number for a number, percentage or dimension; text with escapes resolved otherwise | text, comment, PI data, attribute value | `Literal.value`               |
-| `childCount(n)`, `child(i, n)` | its children, one by one, `0` past the end                            | a function's or block's value, a rule's prelude                                                   | child nodes                             | children in visitor-key order |
+| Member                                 | Returns                                                               | CSS                                                                                               | HTML                                    | JavaScript (ESTree)           |
+| -------------------------------------- | --------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- | --------------------------------------- | ----------------------------- |
+| `node`, `parent`, `index`              | the current node, its parent (`null` at a root), its position         | ✓                                                                                                 | ✓                                       | ✓                             |
+| `skipChildren()`, `stop()`             | don't descend into this node; end the walk                            | ✓                                                                                                 | ✓                                       | ✓                             |
+| `type(n)`                              | the language's `NodeType` member                                      | CSS Syntax names                                                                                  | DOM names, plus `Attribute`             | `type`                        |
+| `range(n)`                             | `[start, end]` offsets into the parsed input, as acorn's `range`      | ✓                                                                                                 | ✓ (an attribute's end past its quote)   | `range`                       |
+| `loc(n)`                               | `[line, column, endLine, endColumn]`, lines from 1 and columns from 0 | ✓                                                                                                 | ✓                                       | `loc`                         |
+| `source(n)`, `source(s, e)`            | the node as written; the input between two offsets                    | ✓                                                                                                 | ✓                                       | ✓                             |
+| `name(n)`                              | its name, decoded; `""` without one                                   | at-rule, declaration, function                                                                    | element, attribute, doctype, PI target  | `Identifier.name`             |
+| `value(n)`                             | its value, decoded; `""` without one                                  | token value: a number for a number, percentage or dimension; text with escapes resolved otherwise | text, comment, PI data, attribute value | `Literal.value`               |
+| `childCount(n)`, `child(i, n)`         | its children, one by one, `0` past the end                            | a function's or block's value, a rule's prelude                                                   | child nodes                             | children in visitor-key order |
+| `field(F, n)`                          | the node in a single-node `Field`, `0` when empty                     | none                                                                                              | `content`                               | `left`, `callee`, …           |
+| `fieldCount(F, n)`, `fieldAt(i, F, n)` | a list `Field`, one item at a time, `0` past the end                  | `prelude`, `value`, `declarations`, `rules`                                                       | `attributes`                            | `arguments`, `params`, …      |
+| `fieldNamed(F, name, n)`               | the first item of a list `Field` whose `name` is `name`, `0` if none  | ✓                                                                                                 | ✓                                       | ✓                             |
+| `flag(F, n)`                           | whether a `Flag` is set                                               | `important`                                                                                       | `selfClosing`                           | `computed`, `optional`, …     |
 
-Language-specific members follow the same shape — a read is `field(n)`, a list `fieldCount(n)` with `field(i, n)`, where a part is written `fieldRange(n)` — and use the spec's word for the field:
+`Field` and `Flag` are exported beside `NodeType` and named with the spec's word: CSS Syntax's for CSS (a rule's `declarations` and `rules` read as empty on a block big enough to stream, so read those from the walk), the DOM's for HTML. A `Flag` is the bit it sets in the node's flags column, so `flag` is one mask.
+
+```js
+path.fieldNamed(Field.declarations, "color"); // CSS: the declaration, 0 if none
+path.flag(Flag.important); // CSS
+path.field(Field.content); // HTML: a <template>'s fragment
+for (let i = 0, n = path.fieldCount(Field.attributes); i < n; i++) {
+	names.push(path.name(path.fieldAt(i, Field.attributes))); // HTML: nodes the shared members read
+}
+```
+
+What has no field or flag form keeps a member of its own, in the spec's word:
 
 - **Both**: `nameRange` (where the name is written), `valueRange` (a `url()`'s contents, an attribute's value).
-- **CSS**: `unit` (a dimension's), `typeFlag`, `important`, `inValue`, `declarations` and `rules` (a rule's block), `blockRange`, `blockToken` (a simple block's bracket).
-- **HTML**: `namespace`, `selfClosing`, `contentRange` (between the opening and end tags, or to where the content ends when the end tag was left out), `openTag`/`closeTag`, `sourceClosed`, `templateContent`, `publicId`/`systemId`, and `attributeCount`/`attribute(i, n)`/`findAttribute(name, n)`, whose results are nodes the shared members read.
+- **CSS**: `unit` (a dimension's), `typeFlag`, `inValue`, `blockRange` (`null` for an at-rule without a block), `blockToken` (a simple block's bracket).
+- **HTML**: `namespace`, `contentRange` (between the opening and end tags, or to where the content ends when the end tag was left out), `openTag`/`closeTag`, `sourceClosed`, `publicId`/`systemId`.
 
 `skipChildren()` still fires the node's `exit`, since the printer prints a node there. After `stop()` neither the current node's remaining visitors nor any pending `exit` fire. A print still writes the whole output, and a walk-only parse ends there: CSS once the top-level rule it was called in closes, HTML at once (HTML visits nothing before about 49k nodes have parsed, so stopping early in a big document still pays for that much parsing).
 
@@ -53,11 +68,12 @@ Conventions every language keeps, and a new member follows:
 
 - **A node is an integer id**, valid until the next parse; `0` is no node, and an HTML attribute's id is negative. The path is one object rebound before each callback; read it during the callback, never keep it.
 - **The node is the last argument and optional**, defaulting to the current one: `path.range()`, `path.range(other)`, `path.child(0)`.
+- **A node has at most one `name` and one `value`; every other part is a `Field` or a `Flag`**, so the five generic members cover any grammar instead of one method per part.
 - **`name` and `value` are what the language's spec defines**, decoded as ESTree's `Identifier.name` and `Literal.value` are: escapes and character references resolved, a number as a number, a comment's text without its delimiters. **`source` is exactly the input**, so the spelling as written is `source(...path.nameRange())`. A node without a name or value answers `""`, a missing part `null`.
 - **Positions are ranges**: `[start, end]` like acorn's `range`, `loc` the same as `[line, column, endLine, endColumn]`. Each is a fresh array per call, so the parsers and printers read scalar positions internally (`_startOf`, `_nameEndOf`, …) and a read nobody makes allocates nothing.
 - **Walk children one way everywhere**: `for (let i = 0, c = path.child(0); c !== 0; c = path.child(++i))`. HTML keeps where the last `child` read stopped per parent, so this takes one step per child even with nested loops.
 - **Nothing is stored for a read.** A member reads the columns the parser already fills or derives its answer when called: HTML counts `index` along the sibling links and makes `loc`'s converter on its first call in a parse. The walk writes no more than its position, so a read nobody makes costs nothing.
-- **The path only reads.** Writers stay internal to the parser (`_setNodeEnd` in CSS), and so do the raw readers the printers use (`_rawName`, `_attributeList`, …).
+- **The path only reads.** Writers stay internal to the parser (`_setNodeEnd` in CSS), and so do the raw readers the printers use (`_rawName`, `_attributeList`, `_declarationsOf`, …).
 
 ## Generated tables
 
