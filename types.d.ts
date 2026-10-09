@@ -6845,6 +6845,11 @@ declare interface CssTransformOptions {
 	removeDeadRules?: boolean;
 
 	/**
+	 * print a style rule's declarations in one order by family, so blocks setting the same things read alike; only declarations whose order nothing can see move
+	 */
+	reorderDeclarations?: boolean;
+
+	/**
 	 * write a `:dir()` the target cannot read as the `[dir]` attribute selector, which reads the attribute rather than the directionality an element may inherit
 	 */
 	rewriteDirSelector?: boolean;
@@ -22200,6 +22205,12 @@ declare interface OptimizationMinimizeCss {
 	 * @since 5.110.0
 	 */
 	removeDeadRules?: boolean;
+
+	/**
+	 * Print a style rule's declarations in one order by property family, the properties no family names first where they were written, so blocks setting the same things read alike and compress smaller. Only declarations whose order nothing can see move: two spellings of one property, a shorthand and what it sets, two shorthands sharing a longhand, and a flow-relative side and a physical one keep theirs, and a block holding a property no dataset names or a nested rule is printed as written. On by default.
+	 * @since 5.112.0
+	 */
+	reorderDeclarations?: boolean;
 
 	/**
 	 * Shorten the values of custom properties (`--x: #ffffff` -> `#fff`, `--y: 0.5rem` -> `.5rem`), which are otherwise written back exactly as authored. Off by default: `getComputedStyle().getPropertyValue()` hands this text back, so a rewritten value is a different CSSOM — the one place a declaration's authored text survives. What it may rewrite is exactly what any other value's tokens may be, a color in a substitution's fallback included — that fallback being the property's value rather than the function's own argument.

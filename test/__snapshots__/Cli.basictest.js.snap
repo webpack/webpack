@@ -11503,6 +11503,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "optimization-minimize-css-reorder-declarations": Object {
+    "configs": Array [
+      Object {
+        "description": "Print a style rule's declarations in one order by property family, the properties no family names first where they were written, so blocks setting the same things read alike and compress smaller. Only declarations whose order nothing can see move: two spellings of one property, a shorthand and what it sets, two shorthands sharing a longhand, and a flow-relative side and a physical one keep theirs, and a block holding a property no dataset names or a nested rule is printed as written. On by default.",
+        "multiple": false,
+        "path": "optimization.minimize.css.reorderDeclarations",
+        "type": "boolean",
+      },
+    ],
+    "description": "Print a style rule's declarations in one order by property family, the properties no family names first where they were written, so blocks setting the same things read alike and compress smaller. Only declarations whose order nothing can see move: two spellings of one property, a shorthand and what it sets, two shorthands sharing a longhand, and a flow-relative side and a physical one keep theirs, and a block holding a property no dataset names or a nested rule is printed as written. On by default.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "optimization-minimize-css-rewrite-custom-properties": Object {
     "configs": Array [
       Object {
@@ -12267,6 +12280,19 @@ Object {
       },
     ],
     "description": "Drop a rule or declaration nothing can read: a rule whose block ends up empty, a declaration a later one in the same block overrides, a rule an identical later sibling makes dead, and the \`@charset\` naming an encoding the output is not written in. On by default. Joining rules that are not dead is \`mergeRules\`.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-options-css-reorder-declarations": Object {
+    "configs": Array [
+      Object {
+        "description": "Print a style rule's declarations in one order by property family, the properties no family names first where they were written, so blocks setting the same things read alike and compress smaller. Only declarations whose order nothing can see move: two spellings of one property, a shorthand and what it sets, two shorthands sharing a longhand, and a flow-relative side and a physical one keep theirs, and a block holding a property no dataset names or a nested rule is printed as written. On by default.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.css.reorderDeclarations",
+        "type": "boolean",
+      },
+    ],
+    "description": "Print a style rule's declarations in one order by property family, the properties no family names first where they were written, so blocks setting the same things read alike and compress smaller. Only declarations whose order nothing can see move: two spellings of one property, a shorthand and what it sets, two shorthands sharing a longhand, and a flow-relative side and a physical one keep theirs, and a block holding a property no dataset names or a nested rule is printed as written. On by default.",
     "multiple": false,
     "simpleType": "boolean",
   },
