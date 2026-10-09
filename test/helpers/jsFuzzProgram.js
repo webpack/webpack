@@ -195,6 +195,59 @@ const COMMENTED_UPDATES = [
 const KEYS = ["a", "b", "c", "length", "0", "1", "constructor"];
 const METHODS = ["a", "b", "c", "length"];
 const MUTABLE = new Set(["var", "let", "param"]);
+const NUMBER_ARGUMENTS = [
+	"0",
+	"1",
+	"2",
+	"-1",
+	"3.5",
+	"255",
+	"1e3",
+	"NaN",
+	"-0",
+	"Infinity"
+];
+const STRING_RECEIVERS = [
+	'"abc"',
+	'""',
+	'"a,b,c"',
+	'" x "',
+	'"ff"',
+	'"\\u00e9"'
+];
+const STRING_METHODS = [
+	"charAt",
+	"charCodeAt",
+	"indexOf",
+	"lastIndexOf",
+	"slice",
+	"substring",
+	"toUpperCase",
+	"toLowerCase",
+	"trim",
+	"repeat",
+	"padStart",
+	"startsWith",
+	"includes",
+	"concat"
+];
+const MATH_UNARY = [
+	"abs",
+	"floor",
+	"ceil",
+	"round",
+	"sign",
+	"trunc",
+	"sqrt",
+	"cbrt",
+	"log2"
+];
+
+/**
+ * @typedef {object} Program
+ * @property {string} code the source
+ * @property {boolean} module whether it is a module, strict and able to `await` at its top level
+ */
 
 /**
  * mulberry32: a small seeded generator, so a seed always writes the same programs.
@@ -215,7 +268,7 @@ const createRandom = (seed) => {
 /**
  * A generator of programs for a seed: each call writes the next program.
  * @param {number} seed the seed
- * @returns {() => string} the next program per call
+ * @returns {() => Program} the next program per call
  */
 const createProgramGenerator = (seed) => {
 	const random = createRandom(seed);
@@ -585,6 +638,95 @@ const createProgramGenerator = (seed) => {
 	};
 
 	/**
+	 * @returns {string} an array literal of literals
+	 */
+	const literalArray = () => {
+		const elements = [];
+		for (let i = below(4); i >= 0; i--) {
+			elements.push(chance(0.1) ? "" : literal());
+		}
+		return `[${elements.join(", ")}${elements[elements.length - 1] === "" ? "," : ""}]`;
+	};
+
+	/**
+	 * What webpack's own rewrites, the `improve` phase, look for: built-ins on
+	 * literals, spellings with a shorter equal, and assignments it folds.
+	 * @param {Context} context the context
+	 * @param {number} depth how much more an expression may nest
+	 * @returns {string} an expression
+	 */
+	const rewriteTarget = (context, depth) => {
+		const number = () => pick(NUMBER_ARGUMENTS);
+		const string = () => pick(STRING_RECEIVERS);
+		const target = pickBinding(context, (b) => MUTABLE.has(b.kind));
+		switch (below(20)) {
+			case 0:
+				return `Math.${pick(["max", "min", "pow", "atan2"])}(${number()}, ${number()})`;
+			case 1:
+				return `Math.${pick(MATH_UNARY)}(${number()})`;
+			case 2:
+				return `${string()}.${pick(STRING_METHODS)}(${pick(["", "0", "1", "-1", "2", '"b"'])})`;
+			case 3:
+				return `${string()}.split(${pick(['","', '""', '"b"'])})${chance(0.5) ? ".length" : ""}`;
+			case 4:
+				return `(${number()}).${pick(["toString", "toFixed", "toPrecision"])}(${pick(["", "2", "16", "36"])})`;
+			case 5:
+				return `${literalArray()}.${pick(["join", "indexOf", "includes", "concat", "slice", "at"])}(${pick(["", '","', '"-"', "1", literalArray()])})`;
+			case 6:
+				return `${literalArray()}${pick([".length", "[0]", "[1]", "[5]"])}`;
+			case 7:
+				return `${pick(["new Array", "Array", "new Object", "Object"])}(${pick(["", "3", "1, 2", '"a"', literal()])})`;
+			case 8:
+				return `${pick(["Number", "String", "Boolean", "BigInt"])}(${pick([literal(), number(), '"0x10"', '" 12 "', "1.5"])})`;
+			case 9:
+				return `${pick(["parseInt", "parseFloat"])}(${pick(['"ff"', '" 1.5e3x"', '"0x1f"', string()])}${pick(["", ", 16", ", 2", ", 36"])})`;
+			case 10:
+				return `JSON.stringify(${chance(0.5) ? literalArray() : `{ a: ${literal()}, "b c": ${literal()} }`})`;
+			case 11:
+				return `${pick(["new RegExp", "RegExp"])}(${pick(['"a+"', '"[b]"', '"\\\\d"', '"/"'])}${pick(["", ', "g"', ', "i"'])})${pick([".source", ".flags", '.test("ab1")'])}`;
+			case 12:
+				return `${pick(["new Error", "Error", "new TypeError", "TypeError"])}(${string()})${pick([".message", ".name"])}`;
+			case 13:
+				return pick([
+					"+[]",
+					'"" + [1, 2]',
+					"[] + {}",
+					'+"0x10"',
+					'"" + 1n',
+					"!!+[]",
+					"~~1.5"
+				]);
+			case 14:
+				return `${pick(["!!", "Boolean", "!"])}(${expression(context, depth - 1)})`;
+			case 15: {
+				const left = expression(context, depth - 1);
+				return `!((${left}) ${pick(["==", "===", "!=", "<"])} (${expression(context, depth - 1)}))`;
+			}
+			case 16:
+				if (target === undefined) return literal();
+				return `(typeof ${target.name} ${pick(['== "undefined"', '!= "undefined"', '> "u"'])})`;
+			case 17:
+				if (target === undefined) return literal();
+				return pick([
+					`(${target.name} || (${target.name} = ${expression(context, depth - 1)}))`,
+					`(${target.name} && (${target.name} = ${expression(context, depth - 1)}))`,
+					`(${target.name} ?? (${target.name} = ${expression(context, depth - 1)}))`,
+					`(${target.name} = ${target.name} || (${expression(context, depth - 1)}))`
+				]);
+			case 18:
+				if (target === undefined) return literal();
+				return pick([
+					`(${target.name} == null ? void 0 : ${target.name}.length)`,
+					`(${target.name} === null || ${target.name} === void 0 ? void 0 : ${target.name}.a)`,
+					`((${target.name} = ${expression(context, depth - 1)}) === null || ${target.name} === void 0 ? void 0 : ${target.name}.length)`
+				]);
+			default:
+				if (target === undefined) return literal();
+				return `((${expression(context, depth - 1)}) ? ${target.name} = ${expression(context, depth - 1)} : ${target.name} = ${expression(context, depth - 1)})`;
+		}
+	};
+
+	/**
 	 * @param {Context} context the context
 	 * @param {number} depth how much more an expression may nest
 	 * @returns {string} an expression
@@ -597,8 +739,13 @@ const createProgramGenerator = (seed) => {
 			);
 			return binding !== undefined && chance(0.5) ? binding.name : literal();
 		}
-		const kind = below(36);
+		const kind = below(40);
 		switch (kind) {
+			case 36:
+			case 37:
+			case 38:
+			case 39:
+				return rewriteTarget(context, depth);
 			case 26:
 				return pick([
 					`(a++ + (${expression(context, depth - 1)}))`,
@@ -834,8 +981,13 @@ const createProgramGenerator = (seed) => {
 	 */
 	const statement = (context) => {
 		const shallow = context.depth < 3;
-		const kind = below(shallow ? 31 : 8);
+		const kind = below(shallow ? 33 : 8);
 		switch (kind) {
+			case 31:
+				// Read for no value: what the `improve` phase drops as unobservable.
+				return `${pick(["Math.PI", "JSON", "Object.prototype.toString", "new Set", "Object.keys([])", 'new RegExp("a", "i")', "[1].concat([2])", "Math.max(1, 2)"])};`;
+			case 32:
+				return `(function () { ${guard()} ${block(functionContext(context), 2)} })();`;
 			case 24:
 				return chance(0.5)
 					? "c = c + 1;"
@@ -1085,9 +1237,10 @@ const createProgramGenerator = (seed) => {
 
 	return () => {
 		counter = 0;
-		// ufuzz runs every program inside a function, which gives it `arguments`;
-		// half are, and the rest keep top-level names for `toplevel` to rename.
-		const wrapped = chance(0.5);
+		// Half are modules. ufuzz runs every program inside a function, which gives
+		// it `arguments`; half the scripts are, the rest keep top-level names.
+		const isModule = chance(0.5);
+		const wrapped = !isModule && chance(0.5);
 		/** @type {Context} */
 		const context = {
 			bindings: [
@@ -1097,11 +1250,11 @@ const createProgramGenerator = (seed) => {
 			depth: 0,
 			inFunction: false,
 			inGenerator: false,
-			inAsync: false,
+			inAsync: isModule,
 			inLoop: false,
 			inSwitch: false,
 			inClass: false,
-			strict: false,
+			strict: isModule,
 			hasArguments: wrapped,
 			scopeTop: true,
 			labels: [],
@@ -1120,7 +1273,11 @@ const createProgramGenerator = (seed) => {
 				declaredFunction ||
 				(context.bindings.length > declared && chance(0.5))
 			) {
-				statements.push(written);
+				const exported =
+					isModule &&
+					chance(0.4) &&
+					/^(?:let|const|var|function|class|async function)\b/.test(written);
+				statements.push(exported ? `export ${written}` : written);
 				continue;
 			}
 			// What a `try` block declares is out of scope after it, but for `var`.
@@ -1132,8 +1289,11 @@ const createProgramGenerator = (seed) => {
 			);
 		}
 		const body = `${statements.join("\n")}\n_print(null, a, b, c);`;
-		return `${PRELUDE}${wrapped ? `!function () {\n${body}\n}();` : body}\n`;
+		return {
+			code: `${PRELUDE}${wrapped ? `!function () {\n${body}\n}();` : body}\n`,
+			module: isModule
+		};
 	};
 };
 
-module.exports = { createProgramGenerator };
+module.exports = { createProgramGenerator, createRandom };

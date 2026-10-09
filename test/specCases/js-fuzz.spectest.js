@@ -1,6 +1,6 @@
 "use strict";
 
-// cspell:ignore fargs
+// cspell:ignore fargs fnames funs
 
 // Generates programs from fixed seeds and holds webpack's parser to acorn's tree
 // on each program and each output, its printer to the tree it read and to its
@@ -10,9 +10,14 @@ const vm = require("vm");
 const acorn = require("acorn");
 const { parse } = require("../../lib/javascript/syntax").parser;
 const { firstDifference } = require("../helpers/compareParserOutput");
-const { createProgramGenerator } = require("../helpers/jsFuzzProgram");
+const {
+	createProgramGenerator,
+	createRandom
+} = require("../helpers/jsFuzzProgram");
 
 /** @typedef {(code: string, options: EXPECTED_OBJECT) => Promise<{ code?: string }>} Minify */
+/** @typedef {import("../helpers/jsFuzzProgram").Program} Program */
+/** @typedef {Record<string, EXPECTED_ANY>} MinifyOptions */
 
 const SEEDS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 const PROGRAMS_PER_SEED = Number(process.env.JS_FUZZ_PROGRAMS) || 50;
@@ -52,6 +57,90 @@ const OPTION_SETS = [
 	{ compress: { passes: 2 }, mangle: true, toplevel: true }
 ];
 
+// The compress options a program must print the same under, on or off; the
+// unsafe ones, `keep_fargs`, `pure_getters` and `pure_new` change by contract
+// what these programs observe.
+const COMPRESS_FLAGS = [
+	"arrows",
+	"booleans",
+	"collapse_vars",
+	"comparisons",
+	"computed_props",
+	"conditionals",
+	"dead_code",
+	"directives",
+	"evaluate",
+	"hoist_funs",
+	"hoist_props",
+	"hoist_vars",
+	"if_return",
+	"join_vars",
+	"keep_classnames",
+	"keep_fnames",
+	"keep_infinity",
+	"loops",
+	"negate_iife",
+	"properties",
+	"reduce_funcs",
+	"reduce_vars",
+	"sequences",
+	"side_effects",
+	"switches",
+	"typeofs",
+	"unused"
+];
+
+// The format options and the values each is tried with.
+/** @type {[string, unknown[]][]} */
+const FORMAT_CHOICES = [
+	["ascii_only", [true, false]],
+	["braces", [true, false]],
+	["comments", [false, "all", "some"]],
+	["ecma", [5, 2015, 2020]],
+	["keep_numbers", [true, false]],
+	["keep_quoted_props", [true, false]],
+	["max_line_len", [false, 60]],
+	["quote_style", [0, 1, 2, 3]],
+	["semicolons", [true, false]],
+	["wrap_func_args", [true, false]],
+	["wrap_iife", [true, false]]
+];
+
+/**
+ * Options picked at random from what a program must print the same under, so
+ * each program meets option combinations no fixed set names.
+ * @param {() => number} random a number in [0, 1) per call
+ * @returns {MinifyOptions} the options
+ */
+const randomOptions = (random) => {
+	/**
+	 * @template T
+	 * @param {T[]} list the choices
+	 * @returns {T} one of them
+	 */
+	const pick = (list) => list[Math.floor(random() * list.length)];
+	/** @type {MinifyOptions} */
+	const compress = {};
+	for (const name of COMPRESS_FLAGS) {
+		if (random() < 0.3) compress[name] = random() < 0.5;
+	}
+	if (random() < 0.3) compress.passes = pick([1, 2, 3]);
+	if (random() < 0.3) compress.inline = pick([0, 1, 2, 3]);
+	if (random() < 0.3) compress.ecma = pick([5, 2015, 2020]);
+	if (random() < 0.2) compress.pure_conversions = false;
+	/** @type {MinifyOptions} */
+	const format = {};
+	for (const [name, values] of FORMAT_CHOICES) {
+		if (random() < 0.3) format[name] = pick(values);
+	}
+	return {
+		compress: random() < 0.1 ? false : compress,
+		mangle: pick([false, true, { keep_fnames: true }, { toplevel: true }]),
+		format,
+		toplevel: random() < 0.5
+	};
+};
+
 // V8 reads every argument before an unparenthesized array destructuring
 // assignment as a pattern, refusing `f(a += 1, [b] = c)` and `f([...a, b], [c]
 // = d)` though the spec allows both and terser writes them alike.
@@ -68,12 +157,15 @@ const ENGINE_REFUSALS = new Map([
  * Whether the engine refuses a program acorn reads, for a reason
  * `ENGINE_REFUSALS` lists.
  * @param {string} code the program
+ * @param {boolean} isModule whether it is a module
  * @returns {boolean} whether it is refused for a listed reason
  */
-const refusedByEngine = (code) => {
+const refusedByEngine = (code, isModule) => {
 	try {
 		// eslint-disable-next-line no-new
-		new vm.Script(code);
+		if (isModule) new vm.SourceTextModule(code);
+		// eslint-disable-next-line no-new
+		else new vm.Script(code);
 		return false;
 	} catch (err) {
 		return ENGINE_REFUSALS.has(/** @type {Error} */ (err).message);
@@ -96,16 +188,25 @@ const seedsToRun = () => {
  * What a program prints and, if it throws, the kind of error, after the
  * promise jobs it queued have run.
  * @param {string} code the program
+ * @param {boolean} isModule whether it runs as a module, which imports nothing
  * @returns {Promise<string>} its transcript
  */
-const run = async (code) => {
+const run = async (code, isModule) => {
 	/** @type {string[]} */
 	const lines = [];
 	const context = vm.createContext({
 		console: { log: (/** @type {string} */ line) => lines.push(line) }
 	});
 	try {
-		vm.runInContext(code, context, { timeout: RUN_TIMEOUT });
+		if (isModule) {
+			const evaluated = new vm.SourceTextModule(code, { context });
+			await evaluated.link(() => {
+				throw new Error("a fuzzed module imports nothing");
+			});
+			await evaluated.evaluate({ timeout: RUN_TIMEOUT });
+		} else {
+			vm.runInContext(code, context, { timeout: RUN_TIMEOUT });
+		}
 	} catch (err) {
 		const error = /** @type {Error} */ (err);
 		lines.push(`threw <${error && error.name}>`);
@@ -119,11 +220,12 @@ const run = async (code) => {
 /**
  * webpack's parser given what a build gives it: ranges served lazily.
  * @param {string} code the source
+ * @param {boolean} isModule whether it is a module
  * @returns {import("estree").Program} the program
  */
-const parseOurs = (code) =>
+const parseOurs = (code, isModule) =>
 	parse(code, {
-		sourceType: "script",
+		sourceType: isModule ? "module" : "script",
 		ecmaVersion: "latest",
 		ranges: false,
 		lazyNodes: true
@@ -132,11 +234,16 @@ const parseOurs = (code) =>
 /**
  * acorn's tree for a source.
  * @param {string} code the source
+ * @param {boolean} isModule whether it is a module
  * @param {boolean} ranges whether nodes carry `range`
  * @returns {import("acorn").Program} the program
  */
-const parseAcorn = (code, ranges) =>
-	acorn.parse(code, { sourceType: "script", ecmaVersion: "latest", ranges });
+const parseAcorn = (code, isModule, ranges) =>
+	acorn.parse(code, {
+		sourceType: isModule ? "module" : "script",
+		ecmaVersion: "latest",
+		ranges
+	});
 
 /**
  * A tree with what printing may respell taken out: positions, a literal's or an
@@ -197,20 +304,41 @@ const normalize = (node, tagged) => {
 };
 
 /**
+ * A source's tokens, without the line breaks and comments printing a second
+ * time may move; read by parsing, which tells a regular expression from `/`.
+ * @param {string} code the source
+ * @param {boolean} isModule whether it is a module
+ * @returns {string} its tokens, one per line
+ */
+const tokensOf = (code, isModule) => {
+	/** @type {string[]} */
+	const tokens = [];
+	acorn.parse(code, {
+		sourceType: isModule ? "module" : "script",
+		ecmaVersion: "latest",
+		onToken: (token) => {
+			tokens.push(code.slice(token.start, token.end));
+		}
+	});
+	return tokens.join("\n");
+};
+
+/**
  * Where webpack's parser and acorn's disagree on a source, or why neither reads it.
  * @param {string} code the source
+ * @param {boolean} isModule whether it is a module
  * @returns {string | undefined} the disagreement
  */
-const parserDifference = (code) => {
+const parserDifference = (code, isModule) => {
 	let ours;
 	try {
-		ours = parseOurs(code);
+		ours = parseOurs(code, isModule);
 	} catch (err) {
 		return `rejects it: ${/** @type {Error} */ (err).message}`;
 	}
 	let theirs;
 	try {
-		theirs = parseAcorn(code, true);
+		theirs = parseAcorn(code, isModule, true);
 	} catch (err) {
 		return `acorn rejects it: ${/** @type {Error} */ (err).message}`;
 	}
@@ -222,12 +350,13 @@ const parserDifference = (code) => {
 
 /**
  * The first check one program fails, or none.
- * @param {string} program the program
+ * @param {Program} program the program
+ * @param {MinifyOptions[]} optionSets what it is minified under
  * @param {Minify} minify webpack's minifier
  * @returns {Promise<string | undefined>} the first failure
  */
-const checkProgram = async (program, minify) => {
-	const parsed = parserDifference(program);
+const checkProgram = async ({ code: source, module: isModule }, optionSets, minify) => {
+	const parsed = parserDifference(source, isModule);
 	if (parsed !== undefined) return `parser: ${parsed}`;
 
 	/**
@@ -240,35 +369,45 @@ const checkProgram = async (program, minify) => {
 			(await minify(code, JSON.parse(JSON.stringify(options)))).code
 		);
 
-	const expected = await run(program);
-	const read = normalize(parseAcorn(program, false));
+	const expected = await run(source, isModule);
+	const read = normalize(parseAcorn(source, isModule, false));
 	/** @type {Set<string>} */
 	const seen = new Set();
-	for (const options of OPTION_SETS) {
+	for (const set of optionSets) {
+		// A module is minified as one, strict and its top level its own.
+		const options = isModule ? { ...set, module: true } : set;
 		const label = JSON.stringify(options);
 		let code;
 		try {
-			code = await write(program, options);
+			code = await write(source, options);
 		} catch (err) {
 			return `minify ${label}: throws ${/** @type {Error} */ (err).message}`;
 		}
 		if (seen.has(code)) continue;
 		seen.add(code);
-		const parsedOutput = parserDifference(code);
+		const parsedOutput = parserDifference(code, isModule);
 		if (parsedOutput !== undefined) {
 			return `minify ${label}: parser on the output: ${parsedOutput}\n\toutput: ${code}`;
 		}
-		// `safari10` is a format option too: it keeps what works around Safari 10.
-		const reprinted = await write(
-			code,
-			"safari10" in options ? { ...PRINT_ONLY, safari10: true } : PRINT_ONLY
-		);
-		if (reprinted !== code) {
+		// Printed again under the same format, `safari10` and `module` included.
+		const reprinted = await write(code, {
+			...PRINT_ONLY,
+			format: options.format,
+			safari10: options.safari10,
+			module: options.module
+		});
+		let sameTokens;
+		try {
+			sameTokens = tokensOf(reprinted, isModule) === tokensOf(code, isModule);
+		} catch (err) {
+			return `minify ${label}: printer writes its output as what does not parse: ${/** @type {Error} */ (err).message}\n\toutput:    ${code}\n\treprinted: ${reprinted}`;
+		}
+		if (!sameTokens) {
 			return `minify ${label}: printer writes its output otherwise\n\toutput:    ${code}\n\treprinted: ${reprinted}`;
 		}
-		if (options === PRINT_ONLY) {
+		if (set === PRINT_ONLY) {
 			const difference = firstDifference(
-				normalize(parseAcorn(code, false)),
+				normalize(parseAcorn(code, isModule, false)),
 				read,
 				"program"
 			);
@@ -276,8 +415,8 @@ const checkProgram = async (program, minify) => {
 				return `printer: reads back differently at ${difference.at}: ${difference.ours} vs ${difference.acorn}\n\toutput: ${code}`;
 			}
 		}
-		const printed = await run(code);
-		if (printed !== expected && !refusedByEngine(code)) {
+		const printed = await run(code, isModule);
+		if (printed !== expected && !refusedByEngine(code, isModule)) {
 			return `minify ${label}: prints differently\n\toutput: ${code}\n\texpected:\n${expected}\n\tprinted:\n${printed}`;
 		}
 	}
@@ -300,7 +439,7 @@ describe("JavaScript fuzzer", () => {
 		const programs = [first(), first()];
 
 		expect([again(), again()]).toEqual(programs);
-		expect(createProgramGenerator(2)()).not.toBe(programs[0]);
+		expect(createProgramGenerator(2)().code).not.toBe(programs[0].code);
 	});
 
 	for (const seed of seedsToRun()) {
@@ -309,14 +448,22 @@ describe("JavaScript fuzzer", () => {
 			async () => {
 				const minify = /** @type {Minify} */ (loaded.minify);
 				const next = createProgramGenerator(seed);
+				const random = createRandom(seed);
 				/** @type {string[]} */
 				const failures = [];
 				for (let round = 1; round <= PROGRAMS_PER_SEED; round++) {
 					const program = next();
-					const failure = await checkProgram(program, minify);
+					const optionSets = [
+						...OPTION_SETS,
+						randomOptions(random),
+						randomOptions(random)
+					];
+					const failure = await checkProgram(program, optionSets, minify);
 					// A failing program is the finding: the rest of the seed waits on it.
 					if (failure !== undefined) {
-						failures.push(`round ${round}: ${failure}\n\tprogram:\n${program}`);
+						failures.push(
+							`round ${round}${program.module ? " (module)" : ""}: ${failure}\n\tprogram:\n${program.code}`
+						);
 						break;
 					}
 				}
