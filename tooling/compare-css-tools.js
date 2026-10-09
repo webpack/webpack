@@ -859,11 +859,13 @@ for (const [name, type] of Object.entries(NodeType)) {
 // Which types state a sub-range of their own. One accessor view answers every
 // property for every node, so reading `nameStart` off a token reports whatever
 // that column holds for it — the type decides, never what came back.
+/** @type {Set<number>} */
 const NAMED = new Set([
 	NodeType.Declaration,
 	NodeType.AtRule,
 	NodeType.Function
 ]);
+/** @type {Set<number>} */
 const BLOCKED = new Set([NodeType.AtRule, NodeType.QualifiedRule]);
 
 /**

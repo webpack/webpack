@@ -411,6 +411,21 @@ type AnyLoaderContext = NormalModuleLoaderContext<any> &
 	HotModuleReplacementPluginLoaderContext;
 
 /**
+ * The parts of a language that names none: every node type has every part.
+ */
+declare interface AnyParts {
+	types: number;
+	list: number;
+	single: number;
+	flag: number;
+	lists: Record<number, number>;
+	singles: Record<number, number>;
+	flags: Record<number, number>;
+	items: Record<number, number>;
+	visitors: VisitorMap<any>;
+}
+
+/**
  * Defines the argument type used by this module.
  */
 declare interface Argument {
@@ -5977,6 +5992,29 @@ declare interface CssAutoOrModuleParserOptions {
 	 */
 	urlHints?: UrlHintRule[];
 }
+type CssComponentValueType =
+	| 1
+	| 2
+	| 3
+	| 4
+	| 5
+	| 6
+	| 7
+	| 8
+	| 9
+	| 22
+	| 10
+	| 11
+	| 12
+	| 13
+	| 14
+	| 15
+	| 16
+	| 17
+	| 18
+	| 19
+	| 20
+	| 21;
 
 /**
  * Defines the css data type used by this module.
@@ -6068,6 +6106,7 @@ declare interface CssImportDependencyMeta {
 	media?: string;
 }
 type CssLayer = undefined | string;
+type CssListField = 1 | 2 | 3 | 4;
 declare class CssLoadingRuntimeModule extends RuntimeModule {
 	constructor(runtimeRequirements: ReadonlySet<string>);
 	static getCompilationHooks: (compilation: Compilation) => {
@@ -6401,6 +6440,325 @@ declare class CssModulesPlugin {
 		>;
 	};
 }
+type CssNodePath<T = number> = Omit<
+	{
+		get node(): NodeSyntaxParser;
+		get parent(): null | NodeSyntaxParser;
+		get index(): number;
+		/**
+		 * Stop the walk descending into the current node (enter only).
+		 */
+		skipChildren(): void;
+		/**
+		 * Stop the walk: no visitor fires after the current one returns.
+		 */
+		stop(): void;
+		inValue(): boolean;
+		type(n?: NodeSyntaxParser): number;
+		range(n?: NodeSyntaxParser): [number, number];
+		loc(n?: NodeSyntaxParser): [number, number, number, number];
+		/**
+		 * A node's text exactly as the input wrote it (`name` and `value` decode).
+		 */
+		source(n?: number | NodeSyntaxParser, end?: number): string;
+		/**
+		 * The token's value as CSS Syntax defines it: a number for a number,
+		 * percentage or dimension, otherwise text with escapes resolved (a string
+		 * without its quotes, a hash without its `#`, a `url()`'s contents, a
+		 * comment's text); "" for a rule, declaration, function or block.
+		 */
+		value(n?: NodeSyntaxParser): string | number;
+		unit(n?: NodeSyntaxParser): string;
+		typeFlag(n?: NodeSyntaxParser): string;
+		valueRange(n?: NodeSyntaxParser): null | [number, number];
+		name(n?: NodeSyntaxParser): string;
+		nameRange(n?: NodeSyntaxParser): null | [number, number];
+		/**
+		 * A rule's children are its prelude; its block is read with {@link fieldAt }.
+		 */
+		childCount(n?: NodeSyntaxParser): number;
+		child(i: number, n?: NodeSyntaxParser): ComponentValue;
+		/**
+		 * CSS has no single-node field; every `Field` is a list.
+		 */
+		field(_field: number, _n?: NodeSyntaxParser): NodeSyntaxParser;
+		/**
+		 * A block big enough to stream hands its children to the visitors as each
+		 * one finishes rather than collecting them, so its lists read as empty here.
+		 */
+		fieldCount(field: number, n?: NodeSyntaxParser): number;
+		fieldAt(i: number, field: number, n?: NodeSyntaxParser): NodeSyntaxParser;
+		fieldNamed(
+			field: number,
+			name: string,
+			n?: NodeSyntaxParser
+		): NodeSyntaxParser;
+		/**
+		 * Only a container's flags are cleared when its id is reused, so a leaf has none.
+		 */
+		flag(flag: number, n?: NodeSyntaxParser): boolean;
+		blockRange(n?: NodeSyntaxParser): null | [number, number];
+		blockToken(n?: NodeSyntaxParser): SimpleBlockToken;
+	},
+	"flag" | "node" | "field" | "fieldCount" | "fieldAt" | "fieldNamed"
+> & {
+	readonly node: TypedNode<NodeSyntaxParser, T>;
+	field<
+		R extends NodeSyntaxParser = TypedNode<NodeSyntaxParser, T>,
+		F extends number = number
+	>(
+		field: F &
+			PartOf<
+				R,
+				{
+					"1": never;
+					"2": never;
+					"3": never;
+					"4": never;
+					"5": never;
+					"6": never;
+					"7": never;
+					"8": never;
+					"9": never;
+					"10": never;
+					"11": never;
+					"12": never;
+					"13": never;
+					"14": never;
+					"15": never;
+					"16": never;
+					"17": never;
+					"18": never;
+					"19": never;
+					"20": never;
+					"21": never;
+					"22": never;
+					"23": never;
+					"24": never;
+					"25": never;
+					"26": never;
+					"27": never;
+					"28": never;
+				},
+				never
+			>,
+		n?: R
+	): TypedNode<
+		NodeSyntaxParser,
+		{
+			[index: number]: number;
+			"1": CssComponentValueType;
+			"2": CssComponentValueType;
+			"3": 23;
+			"4": 25 | 24;
+		}[F]
+	>;
+	fieldCount<R extends NodeSyntaxParser = TypedNode<NodeSyntaxParser, T>>(
+		field: PartOf<
+			R,
+			{
+				"1": never;
+				"2": 2;
+				"3": never;
+				"4": never;
+				"5": never;
+				"6": never;
+				"7": never;
+				"8": never;
+				"9": never;
+				"10": never;
+				"11": never;
+				"12": never;
+				"13": never;
+				"14": never;
+				"15": never;
+				"16": never;
+				"17": never;
+				"18": never;
+				"19": never;
+				"20": never;
+				"21": never;
+				"22": 2;
+				"23": 2;
+				"24": 1 | 3 | 4;
+				"25": 1 | 3 | 4;
+				"26": 4;
+				"27": never;
+				"28": never;
+			},
+			CssListField
+		>,
+		n?: R
+	): number;
+	fieldAt<
+		R extends NodeSyntaxParser = TypedNode<NodeSyntaxParser, T>,
+		F extends number = number
+	>(
+		i: number,
+		field: F &
+			PartOf<
+				R,
+				{
+					"1": never;
+					"2": 2;
+					"3": never;
+					"4": never;
+					"5": never;
+					"6": never;
+					"7": never;
+					"8": never;
+					"9": never;
+					"10": never;
+					"11": never;
+					"12": never;
+					"13": never;
+					"14": never;
+					"15": never;
+					"16": never;
+					"17": never;
+					"18": never;
+					"19": never;
+					"20": never;
+					"21": never;
+					"22": 2;
+					"23": 2;
+					"24": 1 | 3 | 4;
+					"25": 1 | 3 | 4;
+					"26": 4;
+					"27": never;
+					"28": never;
+				},
+				CssListField
+			>,
+		n?: R
+	): TypedNode<
+		NodeSyntaxParser,
+		{
+			[index: number]: number;
+			"1": CssComponentValueType;
+			"2": CssComponentValueType;
+			"3": 23;
+			"4": 25 | 24;
+		}[F]
+	>;
+	fieldNamed<
+		R extends NodeSyntaxParser = TypedNode<NodeSyntaxParser, T>,
+		F extends number = number
+	>(
+		field: F &
+			PartOf<
+				R,
+				{
+					"1": never;
+					"2": 2;
+					"3": never;
+					"4": never;
+					"5": never;
+					"6": never;
+					"7": never;
+					"8": never;
+					"9": never;
+					"10": never;
+					"11": never;
+					"12": never;
+					"13": never;
+					"14": never;
+					"15": never;
+					"16": never;
+					"17": never;
+					"18": never;
+					"19": never;
+					"20": never;
+					"21": never;
+					"22": 2;
+					"23": 2;
+					"24": 1 | 3 | 4;
+					"25": 1 | 3 | 4;
+					"26": 4;
+					"27": never;
+					"28": never;
+				},
+				CssListField
+			>,
+		name: string,
+		n?: R
+	): TypedNode<
+		NodeSyntaxParser,
+		{
+			[index: number]: number;
+			"1": CssComponentValueType;
+			"2": CssComponentValueType;
+			"3": 23;
+			"4": 25 | 24;
+		}[F]
+	>;
+	flag<R extends NodeSyntaxParser = TypedNode<NodeSyntaxParser, T>>(
+		flag: PartOf<
+			R,
+			{
+				"1": never;
+				"2": never;
+				"3": never;
+				"4": never;
+				"5": never;
+				"6": never;
+				"7": never;
+				"8": never;
+				"9": never;
+				"10": never;
+				"11": never;
+				"12": never;
+				"13": never;
+				"14": never;
+				"15": never;
+				"16": never;
+				"17": never;
+				"18": never;
+				"19": never;
+				"20": never;
+				"21": never;
+				"22": never;
+				"23": 1;
+				"24": never;
+				"25": never;
+				"26": never;
+				"27": never;
+				"28": never;
+			},
+			1
+		>,
+		n?: R
+	): boolean;
+};
+type CssNodeType =
+	| 1
+	| 2
+	| 3
+	| 4
+	| 5
+	| 6
+	| 7
+	| 8
+	| 9
+	| 22
+	| 10
+	| 11
+	| 12
+	| 13
+	| 14
+	| 15
+	| 16
+	| 17
+	| 18
+	| 19
+	| 20
+	| 25
+	| 24
+	| 23
+	| 26
+	| 21
+	| 27
+	| 28;
 declare abstract class CssParser extends Parser {
 	defaultMode: "global" | "auto" | "local" | "pure";
 	options: {
@@ -6532,6 +6890,115 @@ declare interface CssParserOptions {
 	 * @since 5.109.0
 	 */
 	urlHints?: UrlHintRule[];
+}
+
+/**
+ * CSS's parts by node type, which type each visitor's path; CSS has no
+ * single-node `Field`.
+ */
+declare interface CssParts {
+	types: CssNodeType;
+	list: CssListField;
+	single: never;
+	flag: 1;
+	lists: {
+		"1": never;
+		"2": 2;
+		"3": never;
+		"4": never;
+		"5": never;
+		"6": never;
+		"7": never;
+		"8": never;
+		"9": never;
+		"10": never;
+		"11": never;
+		"12": never;
+		"13": never;
+		"14": never;
+		"15": never;
+		"16": never;
+		"17": never;
+		"18": never;
+		"19": never;
+		"20": never;
+		"21": never;
+		"22": 2;
+		"23": 2;
+		"24": 1 | 3 | 4;
+		"25": 1 | 3 | 4;
+		"26": 4;
+		"27": never;
+		"28": never;
+	};
+	singles: {
+		"1": never;
+		"2": never;
+		"3": never;
+		"4": never;
+		"5": never;
+		"6": never;
+		"7": never;
+		"8": never;
+		"9": never;
+		"10": never;
+		"11": never;
+		"12": never;
+		"13": never;
+		"14": never;
+		"15": never;
+		"16": never;
+		"17": never;
+		"18": never;
+		"19": never;
+		"20": never;
+		"21": never;
+		"22": never;
+		"23": never;
+		"24": never;
+		"25": never;
+		"26": never;
+		"27": never;
+		"28": never;
+	};
+	flags: {
+		"1": never;
+		"2": never;
+		"3": never;
+		"4": never;
+		"5": never;
+		"6": never;
+		"7": never;
+		"8": never;
+		"9": never;
+		"10": never;
+		"11": never;
+		"12": never;
+		"13": never;
+		"14": never;
+		"15": never;
+		"16": never;
+		"17": never;
+		"18": never;
+		"19": never;
+		"20": never;
+		"21": never;
+		"22": never;
+		"23": 1;
+		"24": never;
+		"25": never;
+		"26": never;
+		"27": never;
+		"28": never;
+	};
+	items: {
+		[index: number]: number;
+		"1": CssComponentValueType;
+		"2": CssComponentValueType;
+		"3": 23;
+		"4": 25 | 24;
+	};
+	visitors: CssVisitorMap;
 }
 
 /**
@@ -6775,7 +7242,9 @@ declare class CssSourceProcessor extends SourceProcessor<
 		blockToken(n?: NodeSyntaxParser): SimpleBlockToken;
 	},
 	NodeSyntaxParser,
-	CssProcessOptions
+	CssProcessOptions,
+	object,
+	CssParts
 > {
 	constructor();
 	static PrintContext: typeof PrintContext;
@@ -6880,6 +7349,96 @@ declare interface CssTransformOptions {
 	 * write a value the shortest way its property's own grammar allows
 	 */
 	shortenValues?: boolean;
+}
+
+/**
+ * A visitor map whose each visitor's path is typed by its node type.
+ */
+declare interface CssVisitorMap {
+	"1"?:
+		| VisitorFn<CssNodePath<1>>
+		| { enter?: VisitorFn<CssNodePath<1>>; exit?: VisitorFn<CssNodePath<1>> };
+	"2"?:
+		| VisitorFn<CssNodePath<2>>
+		| { enter?: VisitorFn<CssNodePath<2>>; exit?: VisitorFn<CssNodePath<2>> };
+	"3"?:
+		| VisitorFn<CssNodePath<3>>
+		| { enter?: VisitorFn<CssNodePath<3>>; exit?: VisitorFn<CssNodePath<3>> };
+	"4"?:
+		| VisitorFn<CssNodePath<4>>
+		| { enter?: VisitorFn<CssNodePath<4>>; exit?: VisitorFn<CssNodePath<4>> };
+	"5"?:
+		| VisitorFn<CssNodePath<5>>
+		| { enter?: VisitorFn<CssNodePath<5>>; exit?: VisitorFn<CssNodePath<5>> };
+	"6"?:
+		| VisitorFn<CssNodePath<6>>
+		| { enter?: VisitorFn<CssNodePath<6>>; exit?: VisitorFn<CssNodePath<6>> };
+	"7"?:
+		| VisitorFn<CssNodePath<7>>
+		| { enter?: VisitorFn<CssNodePath<7>>; exit?: VisitorFn<CssNodePath<7>> };
+	"8"?:
+		| VisitorFn<CssNodePath<8>>
+		| { enter?: VisitorFn<CssNodePath<8>>; exit?: VisitorFn<CssNodePath<8>> };
+	"9"?:
+		| VisitorFn<CssNodePath<9>>
+		| { enter?: VisitorFn<CssNodePath<9>>; exit?: VisitorFn<CssNodePath<9>> };
+	"10"?:
+		| VisitorFn<CssNodePath<10>>
+		| { enter?: VisitorFn<CssNodePath<10>>; exit?: VisitorFn<CssNodePath<10>> };
+	"11"?:
+		| VisitorFn<CssNodePath<11>>
+		| { enter?: VisitorFn<CssNodePath<11>>; exit?: VisitorFn<CssNodePath<11>> };
+	"12"?:
+		| VisitorFn<CssNodePath<12>>
+		| { enter?: VisitorFn<CssNodePath<12>>; exit?: VisitorFn<CssNodePath<12>> };
+	"13"?:
+		| VisitorFn<CssNodePath<13>>
+		| { enter?: VisitorFn<CssNodePath<13>>; exit?: VisitorFn<CssNodePath<13>> };
+	"14"?:
+		| VisitorFn<CssNodePath<14>>
+		| { enter?: VisitorFn<CssNodePath<14>>; exit?: VisitorFn<CssNodePath<14>> };
+	"15"?:
+		| VisitorFn<CssNodePath<15>>
+		| { enter?: VisitorFn<CssNodePath<15>>; exit?: VisitorFn<CssNodePath<15>> };
+	"16"?:
+		| VisitorFn<CssNodePath<16>>
+		| { enter?: VisitorFn<CssNodePath<16>>; exit?: VisitorFn<CssNodePath<16>> };
+	"17"?:
+		| VisitorFn<CssNodePath<17>>
+		| { enter?: VisitorFn<CssNodePath<17>>; exit?: VisitorFn<CssNodePath<17>> };
+	"18"?:
+		| VisitorFn<CssNodePath<18>>
+		| { enter?: VisitorFn<CssNodePath<18>>; exit?: VisitorFn<CssNodePath<18>> };
+	"19"?:
+		| VisitorFn<CssNodePath<19>>
+		| { enter?: VisitorFn<CssNodePath<19>>; exit?: VisitorFn<CssNodePath<19>> };
+	"20"?:
+		| VisitorFn<CssNodePath<20>>
+		| { enter?: VisitorFn<CssNodePath<20>>; exit?: VisitorFn<CssNodePath<20>> };
+	"21"?:
+		| VisitorFn<CssNodePath<21>>
+		| { enter?: VisitorFn<CssNodePath<21>>; exit?: VisitorFn<CssNodePath<21>> };
+	"22"?:
+		| VisitorFn<CssNodePath<22>>
+		| { enter?: VisitorFn<CssNodePath<22>>; exit?: VisitorFn<CssNodePath<22>> };
+	"23"?:
+		| VisitorFn<CssNodePath<23>>
+		| { enter?: VisitorFn<CssNodePath<23>>; exit?: VisitorFn<CssNodePath<23>> };
+	"24"?:
+		| VisitorFn<CssNodePath<24>>
+		| { enter?: VisitorFn<CssNodePath<24>>; exit?: VisitorFn<CssNodePath<24>> };
+	"25"?:
+		| VisitorFn<CssNodePath<25>>
+		| { enter?: VisitorFn<CssNodePath<25>>; exit?: VisitorFn<CssNodePath<25>> };
+	"26"?:
+		| VisitorFn<CssNodePath<26>>
+		| { enter?: VisitorFn<CssNodePath<26>>; exit?: VisitorFn<CssNodePath<26>> };
+	"27"?:
+		| VisitorFn<CssNodePath<27>>
+		| { enter?: VisitorFn<CssNodePath<27>>; exit?: VisitorFn<CssNodePath<27>> };
+	"28"?:
+		| VisitorFn<CssNodePath<28>>
+		| { enter?: VisitorFn<CssNodePath<28>>; exit?: VisitorFn<CssNodePath<28>> };
 }
 type DeclarationEstreeIndex =
 	FunctionDeclaration | VariableDeclaration | ClassDeclaration;
@@ -11388,6 +11947,198 @@ declare interface HtmlMutableTag {
 	 */
 	remove?: boolean;
 }
+type HtmlNodePath<T = number> = Omit<
+	{
+		get node(): number;
+		get parent(): null | number;
+		/**
+		 * Counted along the sibling links when asked, so the walk stores nothing for it.
+		 */
+		get index(): number;
+		/**
+		 * Stop the walk descending into the current node (enter only).
+		 */
+		skipChildren(): void;
+		/**
+		 * Stop the walk: no visitor fires after the current one returns.
+		 */
+		stop(): void;
+		type(n?: number): number;
+		range(n?: number): [number, number];
+		/**
+		 * Line / column are converted only when asked, by a converter made on the
+		 * first call of a parse. Valid during the walk, as {@link source } is.
+		 */
+		loc(n?: number): [number, number, number, number];
+		/**
+		 * A node's text as written; valid during the walk, before `parseHtml` releases the source.
+		 */
+		source(n?: number, end?: number): string;
+		/**
+		 * An element's or attribute's name (lowercased, adjusted in foreign content),
+		 * a doctype's name, a processing instruction's target; "" for other nodes.
+		 */
+		name(n?: number): string;
+		namespace(n?: number): number;
+		field(field: number, n?: number): number;
+		fieldCount(field: number, n?: number): number;
+		/**
+		 * An attribute item is a node the shared reads take.
+		 */
+		fieldAt(i: number, field: number, n?: number): number;
+		/**
+		 * Attribute names are stored lowercased, so `name` is compared as written.
+		 */
+		fieldNamed(field: number, name: string, n?: number): number;
+		flag(flag: number, n?: number): boolean;
+		valueRange(n?: number): null | [number, number];
+		nameRange(n?: number): null | [number, number];
+		/**
+		 * Whether the source wrote this element's end tag rather than the parser
+		 * popping it for an implied close. Read back off the range instead of marked
+		 * during the parse: an element's end spans the token that closed it, so its
+		 * own end tag is the last thing in it — and only the few elements around a
+		 * region printed from source ever ask.
+		 */
+		sourceClosed(n?: number): boolean;
+		/**
+		 * Raw source of an element's opening tag, `[start, tagEnd)` — attribute quoting
+		 * / spacing / case preserved byte-for-byte (walk-window only) — or `""` for a
+		 * parser-inserted element (auto `html`/`head`/`body`/`tbody`, …), which has no
+		 * real source tag: its offsets are zero-width or borrow the triggering token,
+		 * so the sliced name doesn't match this element. The empty string lets a printer
+		 * treat such an element as transparent.
+		 */
+		openTag(n?: number): string;
+		/**
+		 * An element's end tag, generated as `</name>` from the opening tag's own name
+		 * (exact source casing, correct for foreign camelCase elements). Generated, not
+		 * sliced: element `end` offsets don't span the end tag, and an omitted optional
+		 * end tag (`<li>`, `<p>`, …) still serializes to the same DOM. `""` when the
+		 * parser inserted the element, as {@link openTag } does — it has no name in the
+		 * source to echo, and slicing one would spell `</>`.
+		 */
+		closeTag(n?: number): string;
+		/**
+		 * Between the opening tag and the end tag, or where the content ends when
+		 * the source left the end tag out.
+		 */
+		contentRange(n?: number): null | [number, number];
+		/**
+		 * A text's, comment's, processing instruction's or attribute's data,
+		 * character references decoded; "" for other nodes.
+		 */
+		value(n?: number): string;
+		publicId(_n?: number): null | string;
+		systemId(_n?: number): null | string;
+		/**
+		 * Counted along the sibling links once per node and visitor call.
+		 */
+		childCount(n?: number): number;
+		/**
+		 * Reached along the sibling links from the last child read under `n`, so a
+		 * loop over a node's children takes one step per child.
+		 */
+		child(i: number, n?: number): number;
+	},
+	"flag" | "node" | "field" | "fieldCount" | "fieldAt" | "fieldNamed"
+> & {
+	readonly node: TypedNode<number, T>;
+	field<R extends number = TypedNode<number, T>, F extends number = number>(
+		field: F &
+			PartOf<
+				R,
+				{
+					"1": never;
+					"2": never;
+					"3": 2;
+					"4": never;
+					"5": never;
+					"6": never;
+					"7": never;
+					"8": never;
+				},
+				2
+			>,
+		n?: R
+	): TypedNode<number, { [index: number]: number; "1": 8; "2": 2 }[F]>;
+	fieldCount<R extends number = TypedNode<number, T>>(
+		field: PartOf<
+			R,
+			{
+				"1": never;
+				"2": never;
+				"3": 1;
+				"4": never;
+				"5": never;
+				"6": never;
+				"7": never;
+				"8": never;
+			},
+			1
+		>,
+		n?: R
+	): number;
+	fieldAt<R extends number = TypedNode<number, T>, F extends number = number>(
+		i: number,
+		field: F &
+			PartOf<
+				R,
+				{
+					"1": never;
+					"2": never;
+					"3": 1;
+					"4": never;
+					"5": never;
+					"6": never;
+					"7": never;
+					"8": never;
+				},
+				1
+			>,
+		n?: R
+	): TypedNode<number, { [index: number]: number; "1": 8; "2": 2 }[F]>;
+	fieldNamed<
+		R extends number = TypedNode<number, T>,
+		F extends number = number
+	>(
+		field: F &
+			PartOf<
+				R,
+				{
+					"1": never;
+					"2": never;
+					"3": 1;
+					"4": never;
+					"5": never;
+					"6": never;
+					"7": never;
+					"8": never;
+				},
+				1
+			>,
+		name: string,
+		n?: R
+	): TypedNode<number, { [index: number]: number; "1": 8; "2": 2 }[F]>;
+	flag<R extends number = TypedNode<number, T>>(
+		flag: PartOf<
+			R,
+			{
+				"1": never;
+				"2": never;
+				"3": 4;
+				"4": never;
+				"5": never;
+				"6": never;
+				"7": never;
+				"8": never;
+			},
+			4
+		>,
+		n?: R
+	): boolean;
+};
+type HtmlNodeType = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
 declare interface HtmlParseOptions {
 	/**
 	 * context element name for fragment parsing (e.g. `td`, `svg path`); omit for a full document
@@ -11487,6 +12238,48 @@ declare interface HtmlParserOptions {
 	 * @since 5.109.0
 	 */
 	urlHints?: UrlHintRule[];
+}
+
+/**
+ * HTML's parts by node type, which type each visitor's path.
+ */
+declare interface HtmlParts {
+	types: HtmlNodeType;
+	list: 1;
+	single: 2;
+	flag: 4;
+	lists: {
+		"1": never;
+		"2": never;
+		"3": 1;
+		"4": never;
+		"5": never;
+		"6": never;
+		"7": never;
+		"8": never;
+	};
+	singles: {
+		"1": never;
+		"2": never;
+		"3": 2;
+		"4": never;
+		"5": never;
+		"6": never;
+		"7": never;
+		"8": never;
+	};
+	flags: {
+		"1": never;
+		"2": never;
+		"3": 4;
+		"4": never;
+		"5": never;
+		"6": never;
+		"7": never;
+		"8": never;
+	};
+	items: { [index: number]: number; "1": 8; "2": 2 };
+	visitors: HtmlVisitorMap;
 }
 
 /**
@@ -11826,7 +12619,9 @@ declare class HtmlSourceProcessor extends SourceProcessor<
 		child(i: number, n?: number): number;
 	},
 	number,
-	HtmlProcessOptions
+	HtmlProcessOptions,
+	object,
+	HtmlParts
 > {
 	constructor();
 	static PrintContext: typeof PrintContext;
@@ -12032,6 +12827,36 @@ declare interface HtmlTransformOptions {
 declare interface HtmlTransformTagsContext {
 	outputName: string;
 	html: string;
+}
+
+/**
+ * A visitor map whose each visitor's path is typed by its node type.
+ */
+declare interface HtmlVisitorMap {
+	"1"?:
+		| VisitorFn<HtmlNodePath<1>>
+		| { enter?: VisitorFn<HtmlNodePath<1>>; exit?: VisitorFn<HtmlNodePath<1>> };
+	"2"?:
+		| VisitorFn<HtmlNodePath<2>>
+		| { enter?: VisitorFn<HtmlNodePath<2>>; exit?: VisitorFn<HtmlNodePath<2>> };
+	"3"?:
+		| VisitorFn<HtmlNodePath<3>>
+		| { enter?: VisitorFn<HtmlNodePath<3>>; exit?: VisitorFn<HtmlNodePath<3>> };
+	"4"?:
+		| VisitorFn<HtmlNodePath<4>>
+		| { enter?: VisitorFn<HtmlNodePath<4>>; exit?: VisitorFn<HtmlNodePath<4>> };
+	"5"?:
+		| VisitorFn<HtmlNodePath<5>>
+		| { enter?: VisitorFn<HtmlNodePath<5>>; exit?: VisitorFn<HtmlNodePath<5>> };
+	"6"?:
+		| VisitorFn<HtmlNodePath<6>>
+		| { enter?: VisitorFn<HtmlNodePath<6>>; exit?: VisitorFn<HtmlNodePath<6>> };
+	"7"?:
+		| VisitorFn<HtmlNodePath<7>>
+		| { enter?: VisitorFn<HtmlNodePath<7>>; exit?: VisitorFn<HtmlNodePath<7>> };
+	"8"?:
+		| VisitorFn<HtmlNodePath<8>>
+		| { enter?: VisitorFn<HtmlNodePath<8>>; exit?: VisitorFn<HtmlNodePath<8>> };
 }
 
 /**
@@ -20620,10 +21445,69 @@ declare interface NodeOptions {
 }
 
 /**
- * The members every language's `path` has under the same name and meaning, so
- * a visitor written against it reads any grammar; see `docs/syntax.md`.
+ * A language's parts, by node type: what its `Field`s and `Flag`s apply to.
  */
-declare interface NodePath<TNode, TValue = unknown> {
+declare interface NodeParts {
+	/**
+	 * every `NodeType` member
+	 */
+	types: number;
+
+	/**
+	 * every list `Field`
+	 */
+	list: number;
+
+	/**
+	 * every single-node `Field`
+	 */
+	single: number;
+
+	/**
+	 * every `Flag`
+	 */
+	flag: number;
+
+	/**
+	 * the list `Field`s of each node type
+	 */
+	lists: Record<number, number>;
+
+	/**
+	 * the single-node `Field`s of each node type
+	 */
+	singles: Record<number, number>;
+
+	/**
+	 * the `Flag`s of each node type
+	 */
+	flags: Record<number, number>;
+
+	/**
+	 * the node type of each `Field`'s items
+	 */
+	items: Record<number, number>;
+
+	/**
+	 * a visitor map whose each path is typed by its key
+	 */
+	visitors: object;
+}
+type NodePath<TNode, TValue = unknown> = NodePathReads<TNode, TValue> &
+	NodePathFields<TNode>;
+
+/**
+ * Structure read through a language's `Field` and `Flag`. Declared as methods so
+ * a language's path may accept only the parts each node type has.
+ */
+declare interface NodePathFields<TNode> {
+	field(field: number, n?: TNode): TNode;
+	fieldCount(field: number, n?: TNode): number;
+	fieldAt(i: number, field: number, n?: TNode): TNode;
+	fieldNamed(field: number, name: string, n?: TNode): TNode;
+	flag(flag: number, n?: TNode): boolean;
+}
+declare interface NodePathReads<TNode, TValue = unknown> {
 	/**
 	 * the current node
 	 */
@@ -20688,31 +21572,6 @@ declare interface NodePath<TNode, TValue = unknown> {
 	 * the i-th child
 	 */
 	child: (i: number, n?: TNode) => TNode;
-
-	/**
-	 * the node in a single-node `Field` (0 when empty)
-	 */
-	field: (field: number, n?: TNode) => TNode;
-
-	/**
-	 * number of items in a list `Field`
-	 */
-	fieldCount: (field: number, n?: TNode) => number;
-
-	/**
-	 * the i-th item of a list `Field` (0 past the end)
-	 */
-	fieldAt: (i: number, field: number, n?: TNode) => TNode;
-
-	/**
-	 * the first item of a list `Field` with that `name` (0 when none)
-	 */
-	fieldNamed: (field: number, name: string, n?: TNode) => TNode;
-
-	/**
-	 * whether a `Flag` is set
-	 */
-	flag: (flag: number, n?: TNode) => boolean;
 }
 
 /**
@@ -24353,6 +25212,11 @@ declare interface ParserStateBase {
 	compilation: Compilation;
 	options: WebpackOptionsNormalizedWithDefaults;
 }
+type PartOf<R, M extends Record<number, number>, D> = number extends (R & {
+	readonly __nodeType: unknown;
+})["__nodeType"]
+	? D
+	: M[(R & { readonly __nodeType: unknown })["__nodeType"] & number];
 declare interface PathCacheFunctions {
 	/**
 	 * cached join
@@ -29670,23 +30534,33 @@ declare abstract class SourceProcessor<
 	TPath extends NodePath<TNode, unknown>,
 	TNode,
 	TProcessOptions = object,
-	TPrintOptions = object
+	TPrintOptions = object,
+	TParts extends NodeParts = AnyParts
 > {
 	/**
-	 * Register a visitor map; calls accumulate per node type.
+	 * Register one bucket for several node types, as a map naming each would;
+	 * its path takes only the parts those types have.
+	 */
+	use<T extends number>(
+		types: T[],
+		bucket: VisitorBucket<TypedNodePath<TPath, TNode, TParts, T>>
+	): SourceProcessor<TPath, TNode, TProcessOptions, TPrintOptions, TParts>;
+
+	/**
+	 * Register a visitor map; calls accumulate per node type, and each
+	 * visitor's path takes only its type's parts.
 	 * A bucket is a function (= `{ enter }`) or `{ enter?, exit? }`.
 	 */
 	use(
-		map: VisitorMap<TPath>
-	): SourceProcessor<TPath, TNode, TProcessOptions, TPrintOptions>;
+		map: TParts["visitors"]
+	): SourceProcessor<TPath, TNode, TProcessOptions, TPrintOptions, TParts>;
 
 	/**
-	 * Register one bucket for several node types, as a map naming each would.
+	 * Register a visitor map built at runtime, keyed by any node type.
 	 */
 	use(
-		types: number[],
-		bucket: VisitorBucket<TPath>
-	): SourceProcessor<TPath, TNode, TProcessOptions, TPrintOptions>;
+		map: VisitorMap<TPath>
+	): SourceProcessor<TPath, TNode, TProcessOptions, TPrintOptions, TParts>;
 
 	/**
 	 * Parse `input` once and fire the visitors in source order. Asking for output
@@ -31986,6 +32860,35 @@ declare class TypeScriptPlugin {
 	constructor();
 	apply(compiler: Compiler): void;
 }
+type TypedNode<TNode, T> = TNode & { readonly __nodeType: T };
+type TypedNodePath<TPath, TNode, P extends NodeParts, T> = Omit<
+	TPath,
+	"flag" | "node" | "field" | "fieldCount" | "fieldAt" | "fieldNamed"
+> & {
+	readonly node: TypedNode<TNode, T>;
+	field<R = TypedNode<TNode, T>, F extends number = number>(
+		field: F & PartOf<R, P["singles"], P["single"]>,
+		n?: R
+	): TypedNode<TNode, P["items"][F]>;
+	fieldCount<R = TypedNode<TNode, T>>(
+		field: PartOf<R, P["lists"], P["list"]>,
+		n?: R
+	): number;
+	fieldAt<R = TypedNode<TNode, T>, F extends number = number>(
+		i: number,
+		field: F & PartOf<R, P["lists"], P["list"]>,
+		n?: R
+	): TypedNode<TNode, P["items"][F]>;
+	fieldNamed<R = TypedNode<TNode, T>, F extends number = number>(
+		field: F & PartOf<R, P["lists"], P["list"]>,
+		name: string,
+		n?: R
+	): TypedNode<TNode, P["items"][F]>;
+	flag<R = TypedNode<TNode, T>>(
+		flag: PartOf<R, P["flags"], P["flag"]>,
+		n?: R
+	): boolean;
+};
 declare const UNDEFINED_MARKER: unique symbol;
 type UnsafeCacheData = KnownUnsafeCacheData & Record<string, any>;
 
@@ -33951,34 +34854,34 @@ declare namespace exports {
 					export let important: 1;
 				}
 				export namespace NodeType {
-					export let Ident: number;
-					export let Function: number;
-					export let AtKeyword: number;
-					export let Hash: number;
-					export let String: number;
-					export let BadString: number;
-					export let Url: number;
-					export let BadUrl: number;
-					export let Delim: number;
-					export let Number: number;
-					export let Percentage: number;
-					export let Dimension: number;
-					export let Whitespace: number;
-					export let Colon: number;
-					export let Semicolon: number;
-					export let Comma: number;
-					export let RightParenthesis: number;
-					export let RightSquareBracket: number;
-					export let RightCurlyBracket: number;
-					export let CDO: number;
-					export let CDC: number;
-					export let SimpleBlock: number;
-					export let Declaration: number;
-					export let AtRule: number;
-					export let QualifiedRule: number;
-					export let Stylesheet: number;
-					export let Comment: number;
-					export let Raw: number;
+					export let Ident: 1;
+					export let Function: 2;
+					export let AtKeyword: 3;
+					export let Hash: 4;
+					export let String: 5;
+					export let BadString: 6;
+					export let Url: 7;
+					export let BadUrl: 8;
+					export let Delim: 9;
+					export let Number: 10;
+					export let Percentage: 11;
+					export let Dimension: 12;
+					export let Whitespace: 13;
+					export let Colon: 14;
+					export let Semicolon: 15;
+					export let Comma: 16;
+					export let RightParenthesis: 17;
+					export let RightSquareBracket: 18;
+					export let RightCurlyBracket: 19;
+					export let CDO: 20;
+					export let CDC: 21;
+					export let SimpleBlock: 22;
+					export let Declaration: 23;
+					export let AtRule: 24;
+					export let QualifiedRule: 25;
+					export let Stylesheet: 26;
+					export let Comment: 27;
+					export let Raw: 28;
 				}
 				export let TT_AT_KEYWORD: 16;
 				export let TT_BAD_STRING_TOKEN: 4;
@@ -34006,24 +34909,24 @@ declare namespace exports {
 				export let TT_STRING: 3;
 				export let TT_URL: 18;
 				export let TT_WHITESPACE: 2;
-				export let T_AT_RULE: number;
-				export let T_BAD_STRING: number;
-				export let T_COMMA: number;
-				export let T_COMMENT: number;
-				export let T_DECLARATION: number;
-				export let T_DELIM: number;
-				export let T_DIMENSION: number;
-				export let T_FUNCTION: number;
-				export let T_HASH: number;
-				export let T_IDENT: number;
-				export let T_NUMBER: number;
-				export let T_PERCENTAGE: number;
-				export let T_QUALIFIED_RULE: number;
-				export let T_RAW: number;
-				export let T_SIMPLE_BLOCK: number;
-				export let T_STRING: number;
-				export let T_URL: number;
-				export let T_WHITESPACE: number;
+				export let T_AT_RULE: 24;
+				export let T_BAD_STRING: 6;
+				export let T_COMMA: 16;
+				export let T_COMMENT: 27;
+				export let T_DECLARATION: 23;
+				export let T_DELIM: 9;
+				export let T_DIMENSION: 12;
+				export let T_FUNCTION: 2;
+				export let T_HASH: 4;
+				export let T_IDENT: 1;
+				export let T_NUMBER: 10;
+				export let T_PERCENTAGE: 11;
+				export let T_QUALIFIED_RULE: 25;
+				export let T_RAW: 28;
+				export let T_SIMPLE_BLOCK: 22;
+				export let T_STRING: 5;
+				export let T_URL: 7;
+				export let T_WHITESPACE: 13;
 				export let VENDOR_PREFIX: RegExp;
 				export let asciiLowerCaseName: (s: string) => string;
 				export let buildSkipSet: (nodeTypes: number[]) => Uint8Array;

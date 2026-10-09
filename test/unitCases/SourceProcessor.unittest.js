@@ -668,7 +668,7 @@ describe("SourceProcessor", () => {
 					],
 					(path) => {
 						/**
-						 * @param {number} field a field
+						 * @param {import("../../lib/css/syntax-parser").CssListField} field a field
 						 * @returns {string[]} each item's source
 						 */
 						const items = (field) => {
@@ -691,6 +691,7 @@ describe("SourceProcessor", () => {
 							/** @type {unknown} */ (width) === 0 ? null : path.source(width),
 							path.fieldNamed(CssField.declarations, "margin"),
 							path.flag(CssFlag.important),
+							// @ts-expect-error CSS has no single-node field
 							path.field(CssField.value)
 						]);
 					}
@@ -738,15 +739,23 @@ describe("SourceProcessor", () => {
 						path.fieldNamed(HtmlField.attributes, "c"),
 						path.flag(HtmlFlag.selfClosing),
 						content === 0 ? 0 : path.type(content),
+						// @ts-expect-error `content` is a single node, not a list
 						path.fieldCount(HtmlField.content),
+						// @ts-expect-error `attributes` is a list, not a single node
 						path.field(HtmlField.attributes)
 					]);
 					if (name === "p") {
 						const a = path.fieldAt(0, HtmlField.attributes);
+						// An attribute has no parts: each read below fails to type-check too.
+						// @ts-expect-error no attributes
 						expect(path.fieldCount(HtmlField.attributes, a)).toBe(0);
+						// @ts-expect-error no attributes
 						expect(path.fieldAt(0, HtmlField.attributes, a)).toBe(0);
+						// @ts-expect-error no attributes
 						expect(path.fieldNamed(HtmlField.attributes, "x", a)).toBe(0);
+						// @ts-expect-error no flags
 						expect(path.flag(HtmlFlag.selfClosing, a)).toBe(false);
+						// @ts-expect-error no content
 						expect(path.field(HtmlField.content, a)).toBe(0);
 					}
 				})
@@ -790,8 +799,11 @@ describe("SourceProcessor", () => {
 			new HtmlSourceProcessor()
 				.use([HtmlNodeType.Text], (path) => {
 					html.push(
+						// @ts-expect-error a text node has no attributes
 						path.fieldCount(HtmlField.attributes),
+						// @ts-expect-error a text node has no attributes
 						path.fieldAt(0, HtmlField.attributes),
+						// @ts-expect-error a text node has no attributes
 						path.fieldNamed(HtmlField.attributes, "a")
 					);
 				})
@@ -800,6 +812,59 @@ describe("SourceProcessor", () => {
 				})
 				.process('hello <i x="1"></i><p a="1">');
 			expect(html).toEqual([0, 0, 0, 0]);
+		});
+
+		it("types each visitor's path by the node types it visits", () => {
+			/** @type {unknown[]} */
+			const css = [];
+			new CssSourceProcessor()
+				.use([CssNodeType.QualifiedRule], (path) => {
+					const declaration = path.fieldAt(0, CssField.declarations);
+					css.push(
+						path.flag(CssFlag.important, declaration),
+						// @ts-expect-error a rule is never `!important`
+						path.flag(CssFlag.important),
+						// @ts-expect-error a declaration has no nested rules
+						path.fieldCount(CssField.rules, declaration),
+						// @ts-expect-error a rule's component values are its prelude
+						path.fieldCount(CssField.value),
+						// @ts-expect-error CSS has no single-node field
+						path.field(CssField.value)
+					);
+				})
+				.use({
+					[CssNodeType.Ident]: (path) => {
+						// @ts-expect-error an ident has no value list
+						css.push(path.fieldCount(CssField.value));
+					}
+				})
+				.process("a{b:c !important}");
+			expect(css).toEqual([true, false, 0, 0, 0, 0, 0]);
+
+			/** @type {unknown[]} */
+			const html = [];
+			new HtmlSourceProcessor()
+				.use([HtmlNodeType.Element], (path) => {
+					const attribute = path.fieldAt(0, HtmlField.attributes);
+					if (attribute === 0) return;
+					html.push(
+						path.name(attribute),
+						// @ts-expect-error an attribute has no attributes
+						path.fieldCount(HtmlField.attributes, attribute),
+						// @ts-expect-error an attribute is never self-closing
+						path.flag(HtmlFlag.selfClosing, attribute)
+					);
+				})
+				.use([HtmlNodeType.Comment, HtmlNodeType.Text], (path) => {
+					html.push(
+						// @ts-expect-error a comment or text has no attributes
+						path.fieldNamed(HtmlField.attributes, "a"),
+						// @ts-expect-error nor a template's content
+						path.field(HtmlField.content)
+					);
+				})
+				.process('<p a="1"><!--c-->');
+			expect(html).toEqual(["a", 0, false, 0, 0]);
 		});
 
 		it("reads html attributes as nodes through the shared members", () => {

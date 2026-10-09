@@ -54,6 +54,8 @@ for (let i = 0, n = path.fieldCount(Field.attributes); i < n; i++) {
 }
 ```
 
+The types follow the same tables: a visitor registered for some node types gets a path whose `field`, `fieldCount`, `fieldAt`, `fieldNamed` and `flag` accept only the parts those types have, and an item read from a field is typed as its node type. So `use([NodeType.Comment], (path) => path.fieldCount(Field.attributes))` fails to type-check, as does reading attributes off an attribute; a node of unknown type (`parent`, `child(i)`) takes any part.
+
 What has no field or flag form keeps a member of its own, in the spec's word:
 
 - **Both**: `nameRange` (where the name is written), `valueRange` (a `url()`'s contents, an attribute's value).
