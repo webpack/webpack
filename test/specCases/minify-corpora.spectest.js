@@ -1,6 +1,6 @@
 "use strict";
 
-// cspell:ignore destructurings fnames fromindex napi reminify reminifies tointeger ufuzz
+// cspell:ignore defun destructurings fnames fromindex napi reminify reminifies targettype tointeger ufuzz
 
 // Holds webpack's JavaScript minifier to every test terser, swc and oxc write
 // for theirs. Each source of each corpus below is minified by webpack and by the
@@ -1306,8 +1306,6 @@ const IMPROVED_YET_BIGGER = {
 		"12 bytes fewer, 1 more gzipped: `{x();return}` breaks the `return void` runs of the branches around it",
 	"fixture/issues/d3-color/1/input.js (the default minimizer's options)":
 		"2 bytes fewer, 1 more gzipped: `p*e*h` breaks the `h*(` runs of the products beside it gzip reused",
-	"projects/files/react-17.0.1.js (its own options)":
-		"33 bytes fewer, 3 more gzipped: `!!x` in place of `null!==x` breaks the runs of `null!==` gzip reused",
 	"evaluate/string_case (the default minimizer's options)":
 		"57 bytes fewer, 5 more gzipped: `\"I\".toLowerCase().charCodeAt(0)` matched the calls around it",
 	"evaluate/string_case (a module mangled at its top level)":
@@ -1696,9 +1694,49 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 		]
 	],
 	[
-		"`!!x` in place of `null!=x`, which breaks the runs of `null!=` gzip reused",
+		"an assignment or update folded into the read after it, where the source repeats the `x = y, f(x)` gzip matched",
 		[
-			"fixture/next/31084/xml2js/parser/input.js (the default minimizer's options)"
+			"dead-code/return_assignment (the default minimizer's options)",
+			"dead-code/return_assignment (a module mangled at its top level)",
+			"dead-code/return_assignment (reminify 2 {\"mangle\":false})",
+			"dead-code/return_assignment (reminify 3 {})",
+			"dead-code/return_assignment (reminify 7 {\"safari10\":true})",
+			"dead-code/return_assignment (reminify 8 {\"compress\":{\"reduce_funcs\":false}})",
+			"reduce_vars/modified (reminify 2 {\"mangle\":false})",
+			"reduce_vars/defun_assign (a module mangled at its top level)",
+			"reduce_vars/defun_assign (reminify 4 {\"toplevel\":true})",
+			"terser_insane_2 (its own options)",
+			"terser_insane_2 (the default minimizer's options)",
+			"fixture/check/1/input.js (the default minimizer's options)",
+			"catch-parameter-shadowing-catch-parameter.js (the default minimizer's options)",
+			"custom-separator-result-from-tostring-on-each-value.js (the default minimizer's options)",
+			"detached-buffer-zero-count-custom-ctor-other-targettype.js (the default minimizer's options)",
+			"length-property-ignored.js (the default minimizer's options)",
+			"test-option-currency.js (the default minimizer's options)"
+		]
+	],
+	[
+		"`RegExp` of literals written as a literal, where the source writes the call again or has no other `/` for gzip to code cheaply",
+		[
+			"fixture/issues/4234/input.js (the default minimizer's options)",
+			"flag-accessors.js (the default minimizer's options)",
+			"null.js (the default minimizer's options)",
+			"S7.8.1_A1_T2.js (the default minimizer's options)",
+			"S15.5.4.10_A1_T14.js (the default minimizer's options)",
+			"S15.5.4.11_A1_T14.js (the default minimizer's options)",
+			"S15.5.4.12_A1_T14.js (the default minimizer's options)",
+			"S15.5.4.16_A1_T14.js (the default minimizer's options)",
+			"S15.5.4.18_A1_T14.js (the default minimizer's options)",
+			"S15.10.7_A1_T2.js (the default minimizer's options)",
+			"source.js (the default minimizer's options)",
+			"this-cross-realm-instance.js (the default minimizer's options)"
+		]
+	],
+	[
+		"`Object.keys` or `entries` of a literal written as the array, where the source writes the call again",
+		[
+			"fixture/issues/12214/input.js (the default minimizer's options)",
+			"transitions-close-together.js (the default minimizer's options)"
 		]
 	]
 ])) {

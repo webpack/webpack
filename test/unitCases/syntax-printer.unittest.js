@@ -233,6 +233,42 @@ const stringArray = (length, string = (index) => `w${index}`) =>
 /** @type {[string, string, import("terser").MinifyOptions, string?][]} */
 const IMPROVED_CASES = [
 	[
+		"an assignment to a `let` folded into the first read of it",
+		"function f(a) { let x, y; x = a * 2; y = g(x); return [x, y]; } function g(v) { return v + 1; } console.log(f(3));",
+		{ compress: {}, mangle: false },
+		"function f(a){let x,y;return[x=2*a,y=g(x)]}function g(v){return v+1}console.log(f(3));"
+	],
+	[
+		"an increment of a name only its function sees folded past a global it calls",
+		"globalThis.swap = function (a, i, j) { console.log(a[i], a[j]); }; function f(array, j, right) { ++j; swap(array, j, right); return j; } console.log(f([1, 2, 3], 0, 2));",
+		{ compress: {}, mangle: false },
+		"function f(array,j,right){return swap(array,++j,right),j}globalThis.swap=function(a,i,j){console.log(a[i],a[j])},console.log(f([1,2,3],0,2));"
+	],
+	[
+		"an assignment with effects folded past built-ins it reads and the `let`s they set",
+		"function k(start, stop, step) { let n, ticks; stop = Math.floor(stop / step); ticks = Array(n = Math.ceil(stop - start + 1)); return [ticks.length, n, stop]; } console.log(k(1, 10, 3));",
+		{ compress: {}, mangle: false },
+		"function k(start,stop,step){let n,ticks;return[(ticks=Array(n=Math.ceil((stop=Math.floor(stop/step))-start+1))).length,n,stop]}console.log(k(1,10,3));"
+	],
+	[
+		"an assignment moved past a built-in kept out of the object of the property it reads",
+		"console.log(function () { var o = { p: 4 }; o = {}; console.log(o.p); return o.p; }());",
+		{ compress: {}, mangle: false },
+		"console.log(function(){var o={};return console.log(o.p),o.p}());"
+	],
+	[
+		"a function written in place passed a parameter of its parameter's name, the read of it dropped",
+		"function f(a) { return (function (a) { return [a, a]; })(a); } console.log(f(1));",
+		{ compress: {}, mangle: false },
+		"function f(a){return[a,a]}console.log(f(1));"
+	],
+	[
+		"an assignment of names only its function sees folded past a call and a property read",
+		"globalThis.h = function (v) { return v * 2; }; function f(o, a, b, x) { x = !a === b || 0; o.p.q(); return [h(x), x]; } console.log(f({ p: { q: function () {} } }, 0, true));",
+		{ compress: {}, mangle: false },
+		"function f(o,a,b,x){return o.p.q(),[h(x=!a===b||0),x]}globalThis.h=function(v){return 2*v},console.log(f({p:{q:function(){}}},0,!0));"
+	],
+	[
 		"tabs in a long string, written raw, beside an escaped backslash",
 		`console.log("${"row\\t".repeat(30)}", "a\\\\t${"b\\t".repeat(50)}", "c\\td\\te");`,
 		{ compress: {}, mangle: false }
@@ -478,6 +514,42 @@ const IMPROVED_CASES = [
 		"`Math.pow` with one number side, as `**` from ECMAScript 2016",
 		"function f(a, b) { return [Math.pow(a, 3), Math.pow(2, b), Math.pow(-a, 2), Math.pow(a + b, 0.5), Math.pow(-2, b)]; } console.log(f(2, 3).join());",
 		{ compress: { ecma: 2016 }, ecma: 2016, mangle: false }
+	],
+	[
+		"a `RegExp` of string literals as a regular expression literal, its slashes escaped",
+		'function f(RegExp) { return RegExp("abc"); } var r = [RegExp("ab+c", "g"), new RegExp("a/b/c[/]"), RegExp(""), new RegExp("(?<=a)(?<n>b)", "su"), RegExp("x", "gd"), RegExp("x", "v"), RegExp("a\\nb"), RegExp("a\\\\d"), f(String)]; try { RegExp("a", "gg"); } catch (e) { r.push(e.name); } console.log(r.map(String).join());',
+		{ compress: { ecma: 2020 }, ecma: 2020, mangle: false },
+		'function f(RegExp){return RegExp("abc")}var r=[/ab+c/g,/a\\/b\\/c[/]/,/(?:)/,/(?<=a)(?<n>b)/su,RegExp("x","gd"),RegExp("x","v"),RegExp("a\\nb"),RegExp("a\\\\d"),f(String)];try{RegExp("a","gg")}catch(e){r.push(e.name)}console.log(r.map(String).join());'
+	],
+	[
+		"a `RegExp` as a literal only in syntax the targeted ECMAScript reads",
+		'var r = [RegExp("ab+c", "y"), RegExp("(?<=a)b"), RegExp("a", "s"), RegExp("(?<n>a)", "u")]; console.log(r.map(String).join());',
+		{ compress: { ecma: 2015 }, ecma: 2015, mangle: false },
+		'var r=[/ab+c/y,RegExp("(?<=a)b"),RegExp("a","s"),RegExp("(?<n>a)","u")];console.log(r.map(String).join());'
+	],
+	[
+		"a `+` dropped where `-`, `*`, `/`, `%` or `**` converts, with `unsafe_math`",
+		'function f(a, b, g) { return [+a - b, b * +a, (+a) ** b, b ** +a, +a % +b, +g() - +a, "2" / +b, +a - g(), g() - +a, a - +b, +a | b, +a + b]; } console.log(f(2, 3, () => 4).join());',
+		{ compress: { unsafe_math: true }, mangle: false },
+		'function f(a,b,g){return[+a-b,b*+a,(+a)**b,b**+a,+a%b,+g()-a,"2"/b,+a-g(),g()-+a,a-+b,+a|b,+a+b]}console.log(f(2,3,()=>4).join());'
+	],
+	[
+		"a `+` dropped on the right only, so two BigInts still throw, with `unsafe_math`",
+		'function f(a, b) { try { return String(+a * +b); } catch (_err) { return "threw"; } } console.log(f(2, 3), f(2n, 3n), f(2, 3n));',
+		{ compress: { unsafe_math: true }, mangle: false },
+		'function f(a,b){try{return String(+a*b)}catch(_err){return"threw"}}console.log(f(2,3),f(2n,3n),f(2,3n));'
+	],
+	[
+		"`Math.pow` of no number literal as `**` from ECMAScript 2016, with `unsafe_math`",
+		'function f(a, b) { return [Math.pow(a, b), Math.pow(-a, b), Math.pow(a + 1, b * 2), Math.pow(a, -b), Math.pow(typeof a, b), Math.pow(2, 3)]; } console.log(f(2, 3).join());',
+		{ compress: { ecma: 2016, unsafe_math: true }, ecma: 2016, mangle: false },
+		'function f(a,b){return[a**b,(-a)**b,(a+1)**(2*b),a**-b,(typeof a)**b,Math.pow(2,3)]}console.log(f(2,3).join());'
+	],
+	[
+		"`Object.keys`, `values` and `entries` of an object literal as an array literal",
+		'function f(a, Object) { return Object.keys({ a: 1 }); } function k() { return 1; } function g(a) { var h = () => 1; return [Object.keys({ b: 1, a: a, 2: 3, 1: h, b: 5, "x y": 6, 1e21: 7 }), Object.values({ b: 1, a: a, 2: 3, b: 5 }), Object.entries({ b: 1, a: a, 2: 3 }), Object.keys({ a: k() }), Object.keys({ c() {} }), Object.values({ a: function () {} }), Object.entries({ a: class {} }), Object.keys({ 4294967295: 1, 4294967294: 2 }), Object.keys({ a: 1 }, 2), f(0, { keys: String })]; } console.log(JSON.stringify(g(4)));',
+		{ compress: {}, mangle: false },
+		'function f(a,Object){return Object.keys({a:1})}function k(){return 1}function g(a){return[["1","2","b","a","x y","1e+21"],[3,5,a],[["2",3],["b",1],["a",a]],Object.keys({a:k()}),Object.keys({c(){}}),Object.values({a:function(){}}),Object.entries({a:class{}}),Object.keys({4294967295:1,4294967294:2}),Object.keys({a:1},2),f(0,{keys:String})]}console.log(JSON.stringify(g(4)));'
 	],
 	[
 		"`Number`'s safe-integer bounds and epsilon, as powers of two from ECMAScript 2016",
@@ -762,6 +834,12 @@ const IMPROVED_CASES = [
 		}
 	],
 	[
+		"a `let` or `const` copying a parameter, written through with calls between its reads, read as the parameter",
+		"function f(p) { let a = p; g(); a.s = 0, a.r = g(); return a; } function h(p) { const c = p; c.s = 2; g(); c.r = 1; return c.s + c.r; } function g() { return 5; } console.log(f({}), h({}));",
+		{ compress: { passes: 2 }, mangle: false },
+		"function f(p){return g(),p.s=0,p.r=g(),p}function h(p){return p.s=2,g(),p.r=1,p.s+p.r}function g(){return 5}console.log(f({}),h({}));"
+	],
+	[
 		"a `const` copying a closure's binding, read as it beside an inner binding of the same name",
 		"var h = (function () { const t = [0, 0]; return function (o) { const s = t; s[0]++; { let t = o; t.v = s[0]; } return o; }; })(); console.log(h({}).v, h({}).v);",
 		{ compress: { passes: 2 }, mangle: false }
@@ -770,7 +848,7 @@ const IMPROVED_CASES = [
 		"a function written in place passed the names of its parameters, which it reads instead, its value called, tagged, typed or read past a chain",
 		'function f(o, k) { var a = (function (o, k) { return o.k ? o.m : o[k]; })(o, k)(), c = typeof (function (o, k) { return o[k] || o.p; })(o, k), d = (function (o, k) { return o?.[o.k]?.[k]; })(o, k).length, e = (function (o, k) { return o[k] ? o.u : o.t; })(o, k)`x`; return [a === o, c, d, e]; } console.log(f({ k: "p", p: { q: "ab" }, m() { return this; }, t(s) { return s[0]; } }, "q"));',
 		{ compress: {}, mangle: false },
-		'function f(o,k){var a=function(){return o.k?o.m:o[k]}()(),c=typeof function(){return o[k]||o.p}(),d=function(){return o?.[o.k]?.[k]}().length,e=function(){return o[k]?o.u:o.t}()`x`;return[a===o,c,d,e]}console.log(f({k:"p",p:{q:"ab"},m(){return this},t:s=>s[0]},"q"));'
+		'function f(o,k){var a=(o.k?o.m:o[k])(),c=typeof(o[k]||o.p),d=(o?.[o.k]?.[k]).length,e=(o[k]?o.u:o.t)`x`;return[a===o,c,d,e]}console.log(f({k:"p",p:{q:"ab"},m(){return this},t:s=>s[0]},"q"));'
 	],
 	[
 		"an arrow written in place passed the names of its parameters, naming `yield` inside a generator",
@@ -922,6 +1000,38 @@ const IMPROVED_CASES = [
 		[
 			"a function, an arrow and a function declaration read once, as the argument of a `#__PURE__` call",
 			"function wrap(f) { return { f: f }; } function o() { var F = function (a) { return a + 1; }, A = (b) => b * 2; function D(c) { return c - 1; } return [/* @__PURE__ */ wrap(F), /* @__PURE__ */ wrap(A), /* @__PURE__ */ wrap(D)]; } console.log(o().map(function (w) { return w.f(3); }).join());"
+		],
+		[
+			"a function written in place passed the name of its parameter, a `let` read before it is set, or a global",
+			"function f() { try { return (function (a) { return [a, a]; })(a); } catch (e) { return e.name; } let a = 1; } function g() { return (function (b) { return [b, b]; })(b); } var b = 1; console.log(f(), g());"
+		],
+		[
+			"a function written in place passed the name of its parameter, a `var` read before it is set",
+			"function f() { var g = (function (a) { return [a, a]; })(a); var a = 1; return g; } console.log(f());"
+		],
+		[
+			"a function declared once, inlined where a conditional choosing it is called",
+			"!function () { function center(s) { return s + 1; } function number(s) { return s * 2; } function make(b) { return function (x) { return (b ? center : number)(x); }; } console.log(make(1)(3), make(0)(3)); }();"
+		],
+		[
+			"functions declared once, inlined where nested conditionals choosing them are called",
+			"!function () { function f1(s) { return s + 1; } function f2(s) { return s * 2; } function f3(s) { return s - 1; } function make(a, b) { return function (x) { return (a ? f1 : b ? f2 : f3)(x); }; } console.log(make(1, 0)(3), make(0, 1)(3), make(0, 0)(3)); }();"
+		],
+		[
+			"a function read in a conditional's test stays, those it chooses to call are inlined",
+			"!function () { function f1(s) { return s + 1; } function f2(s) { return s * 2; } function f3(s) { return s - 1; } function make(b) { return function (x) { return (f1(b) ? f2 : f3)(x); }; } console.log(make(1)(3), make(-1)(3)); }();"
+		],
+		[
+			"a function passed the variables of its parameters' names, set before the call, flattened into it",
+			"!function () { var log = []; function show(props, name) { props.get = function () { return name; }; log.push(props.get()); } function create(type, flag) { var props = {}, name = type.name; flag && show(props, name); return props; } console.log(create({ name: \"a\" }, 1).get(), create({ name: \"b\" }, 0).get, log.join()); }();"
+		],
+		[
+			"a function passed the variables of its parameters' names, flattened into it, no closure reading them",
+			"!function () { function show(props, name) { props.seen = name; } function create(type, flag) { if (flag) var props = {}; var name = type.name; flag && show(props, name); return props; } console.log(create({ name: \"a\" }, 1).seen, create({ name: \"b\" }, 0)); }();"
+		],
+		[
+			"a function passed the parameters of its own parameters' names, flattened into it",
+			"!function () { function show(props, name) { var n = name + 1; props.seen = n; } function create(props, name, flag) { flag && show(props, name); return props; } console.log(create({}, \"a\", 1).seen, create({}, \"b\", 0).seen); }();"
 		]
 	].map(
 		([name, input]) =>
@@ -937,6 +1047,16 @@ const IMPROVED_CASES = [
 // of its function's own, or the call passes, keeps or constructs something.
 /** @type {[string, string][]} */
 const KEPT_CASES = [
+	[
+		"a `RegExp` call where the program assigns the global",
+		'RegExp = function (pattern) { return "own " + pattern; }; console.log(RegExp("a"));'
+	],
+	["a function read as the test of a conditional another function calls", "function k() { function f() { return 1; } return function (g, h) { return (f ? g : h)(); }; } console.log(k()(function () { return 2; }, function () { return 3; }));"],
+	["an assignment moved past a global call in a `try` whose `catch` reads it", "globalThis.g = function () { throw 1; }; function f(a) { var x; try { x = a + 1; g(); h(x); } catch (e) { return x; } } function h(v) { console.log(v); } console.log(f(1));"],
+	["an assignment to a name a closure reads, or from a property or a call, moved past a global call", "globalThis.g = function () { o.v = 5; }; var o = { v: 1 }; function f(a, x) { function r() { return x; } x = a + 1; g(); h(x); return r(); } function k(x) { x = o.v; g(); h(x); return x; } function m(a, x) { x = h(a); g(); h(x); return x; } function h(v) { console.log(v); return v; } console.log(f(1), k(), m(2));"],
+	["an assignment that may throw or has effects, moved past a global call", 'globalThis.g = function () {}; function f(k, o, x) { x = k in o; g(); h(x); return x; } function m(a, x) { x = ++a; g(); h(x); return [x, a]; } function h(v) { console.log(v); } console.log(f("a", { a: 1 }), m(1));'],
+	["an assignment to a parameter `arguments` reads, or at the top level, moved past a global call", "globalThis.g = function () {}; function f(a) { a = a + 1; g(); h(a); return arguments[0]; } var x; x = y + 1; g(); h(x); function h(v) { console.log(v); } var y = 2; console.log(f(1), x);"],
+	["an assignment to a `let` in its dead zone, or of an outer function, moved past a global call", "globalThis.g = function () { return 1; }; function f() { try { x = 1; g(x); } catch (e) { console.log(e.name); } let x; } let z; function m(a) { z = a; g(); h(z); } function h(v) { console.log(v); } f(); m(2);"],
 	["a conditional whose two sequences end in one chain made optional at different links", "function f(flag, obj, t) { return flag ? (t(), obj?.b.c) : (t(1), obj.b?.c); } console.log(f(1, { b: { c: 1 } }, () => 0), f(0, {}, () => 0));"],
 	["a product whose left side may read differently once its right side converts", 'var n = 2; function f(a, b) { var o = { valueOf: function () { a = n = 10; return b; } }; return [a * (o % 4), n * (o % 4), this.k * (o % 4)]; } function g(a, b) { return [a * (b % 3), arguments.length]; } function h(b) { let a = b + 1; return [a * (b % 3), a]; } function e() { var a = 2; return a * (eval("a = 10") % 3); } console.log(f.call({ k: 3 }, 2, 7), g(2, 7), h(7), e());'],
 	["a conditional whose branches end in one chain made optional at different links", "function f(flag, obj, t) { return flag ? (t(), obj?.b.c) : obj.b?.c; } console.log(f(1, { b: { c: 1 } }, () => 0), f(0, {}, () => 0));"],
@@ -993,6 +1113,8 @@ const KEPT_CASES = [
 	["a call of a function returning a short constant or none, called once, marked `@__INLINE__`, or read by a test or an operator", '!function () { function f() { return "a string long enough that a copy costs more than a call"; } function g() { return "ab"; } function k() { return "a string long enough that a copy costs more than a call"; } function n() {} function r() { return; } var id = (x) => x; f(); console.log(/* @__INLINE__ */ f(), f() ? 1 : 2, typeof f(), f().length, f() || 1, !f(), g(), g(), k(), n(), n(), r(), r(), id(), id(void 0)); }();'],
 	["a `+` beside no number literal", 'var s = Math.random() < 2 ? "5" : ""; console.log("2" - +s, +s - +s, 1 + +s);'],
 	["a `var`", "!function () { var a = Math.random(); console.log(a, a); }();"],
+	["a `let` copying a parameter, written through, then written by a pattern or read in a function inside", "function f(p, q) { let a = p; a.s = 1; [a] = [q]; return a; } function h(p) { let a = p; a.s = 1; g(); return function () { return a.s; }; } function k(p) { var r = m(); let a = p; a.s = 1; return [r, a.s]; function m() { try { return a; } catch (e) { return e.name; } } } function g() {} console.log(f({}, 2), h({})(), k({}));"],
+	["a `var` copying a parameter, written through, read past the branch setting it or before a loop sets it", "function f(p, c) { if (c) { var a = p; a.s = 1; } return a; } function h(p, n) { var r = []; for (var i = 0; i < n; i++) { if (i) r.push(a === p); var a = p; a.s = i; g(); } return r; } function g() {} console.log(f({}, 1), f({}, 0), h({}, 3));"],
 	["a `let` copying a parameter written later, or through `arguments` or `eval`", 'function f(a, c) { let b = a; let d = c; a = 3; arguments[1] = 4; return [b, d]; } function g(a) { let b = a; eval("a = 5"); return b; } console.log(f(1, 2), g(1));'],
 	["a `let` copying a binding declared after it", "function f() { let b = c; let c = 1; return b; } try { console.log(f()); } catch (e) { console.log(e.name); }"],
 	["a `let` copying a longer name read more than once, where names keep their length", "function f(longBinding) { let x = longBinding; g(); return x + x + x; } function g() {} console.log(f(1));"],
@@ -1035,12 +1157,13 @@ const KEPT_CASES = [
 	["a result longer than the call", 'console.log("ab".repeat(100));'],
 	["a built-in call that throws", 'try { new Set(1); } catch (e) { console.log(1); } try { Object.keys(null); } catch (e) { console.log(2); }'],
 	["a RegExp an older Node rejects", 'try { RegExp("a", "v"); } catch (e) { console.log(1); } try { RegExp("[", "g"); } catch (e) { console.log(2); }'],
-	["a RegExp pattern holding a slash", 'try { RegExp("a/b"); console.log(1); } catch (e) { console.log(2); }'],
+	["a RegExp pattern holding a slash and a line break", 'try { RegExp("a/b\\n"); console.log(1); } catch (e) { console.log(2); }'],
+	["a `+` in arithmetic, which a BigInt reads otherwise without `unsafe_math`", "function f(a, b) { return [+a - b, a * +b]; } console.log(f(2, 3), f(2n, 3n).length);"],
 	["a RegExp with flags not a string", 'try { RegExp("a", 1); } catch (e) { console.log(1); }'],
 	["a RegExp pattern not a string", 'try { RegExp(1); console.log(1); } catch (e) { console.log(2); }'],
 	["a function returning a call in place of a function reading its own `this`, naming itself, holding a directive or declaring a parameter's name", 'var o = { m: function () { return function () { for (var i = 0; i < 2; i++) console.log(typeof this, i); }(); } }; o.m(); var f = function () { return function g() { for (var i = 0; i < 2; i++) console.log(typeof g, i); }(); }; f(); var h = function () { return function () { "use strict"; for (var i = 0; i < 2; i++) console.log(typeof this, i); }(); }; h(); var k = function (a) { return function () { for (var a in { x: 1, y: 2 }) console.log(a); }(); }; k(1);'],
 	["a count too large to run", 'try { new Uint8Array(1e9); console.log(1); } catch (e) { console.log(2); }'],
-	["an argument no literal", "function f(a) { String(a); Object.keys({ [a]: 1 }); Object.keys({ get b() { return 1; } }); Object.keys({ __proto__: a }); Object.keys([a]); Object.keys({ b: a }); } f([1]); console.log(1);"],
+	["an argument no literal", "function f(a) { String(a); Object.keys({ [a]: 1 }); Object.keys({ get b() { return 1; } }); Object.keys({ __proto__: a }); Object.keys([a]); Object.keys({ b: a }, 0); } f([1]); console.log(1);"],
 	["a built-in that runs code", 'eval("console.log(1)");'],
 	["a built-in global the program declares", "var Set = function () { console.log(1); }; new Set();"],
 	["a built-in call a `with` could rebind", "with ({ JSON: { parse: function () { console.log(1); } } }) JSON.parse(\"1\");"],
@@ -1099,12 +1222,19 @@ const KEPT_CASES = [
 	["a function written in place calling `eval`", 'function f(a) { return (function (a) { return [a, a, eval("a")]; })(a); } console.log(f(1));'],
 	["a function written in place with a default value", "function f(a, b) { return (function (a, b = 2) { return [a, a, b]; })(a, b); } console.log(f(1));"],
 	["a function written in place passed a spread", "function f(a, c) { return (function (a, b) { return [a, a, b]; })(a, ...c); } console.log(f(1, [2]));"],
-	["a function written in place passed a `let` before it is set, or a global", "function f() { try { return (function (a) { return [a, a]; })(a); } catch (e) { return e.name; } let a = 1; } function g() { return (function (b) { return [b, b]; })(b); } var b = 1; console.log(f(), g());"],
-	["a function written in place passed a `var` before it is set", "function f() { var g = (function (a) { return [a, a]; })(a); var a = 1; return g; } console.log(f());"],
 	["a function written in place passed a name declared twice, or declaring its parameter again", "function f(a, b) { var a; return [(function (a) { return [a, a]; })(a), (function (b) { var b; return [b, b]; })(b)]; } console.log(f(1, 2));"],
 	["a function written in place passed a name a `with` may read", "function f(a) { with ({}) return (function (a) { return [a, a]; })(a); } console.log(f(1));"],
 	["a function written in place passed an undeclared name", "function f() { return (function (a) { return [a, a]; })(a); } try { console.log(f()); } catch (e) { console.log(e.name); }"],
-	["a function written in place passed the name of its one parameter, which would stay called", "function f(o) { return (function (o) { var t = o.a; return [t, t, o.b]; })(o); } console.log(f({ a: 1, b: 2 }));"]
+	["a function written in place passed the name of its one parameter, which would stay called", "function f(o) { return (function (o) { var t = o.a; return [t, t, o.b]; })(o); } console.log(f({ a: 1, b: 2 }));"],
+	["functions calling themselves, chosen by a conditional that is called", "!function () { function fact(n) { return n < 2 ? 1 : n * fact(n - 1); } function sum(n) { return n < 1 ? 0 : n + sum(n - 1); } function make(b) { return function (x) { return (b ? fact : sum)(x); }; } console.log(make(1)(4), make(0)(4)); }();"],
+	["functions chosen by a conditional that is constructed or passed on", "!function () { function P(s) { this.s = s; } function Q(s) { this.s = -s; } function f1(s) { return s + 1; } function f2(s) { return s * 2; } function make(b) { return function (x) { return [new (b ? P : Q)(x).s, [x].map(b ? f1 : f2)]; }; } console.log(make(1)(3), make(0)(3)); }();"],
+	["a function passed variables of its parameters' names that a closure in it reads, set in a loop or after the call", "!function () { var fs = []; function show(props, name) { props.get = function () { return name; }; } function create(list) { for (var i = 0; i < list.length; i++) { var props = {}, name = list[i]; list[i] && show(props, name); fs.push(props); } } function late(props, flag) { flag && show(props, name); var name = \"late\"; return props; } create([\"a\", \"b\"]); console.log(fs.map(function (p) { return p.get(); }).join(), late({}, 1).get()); }();"],
+	["a function passed a variable of another name, or of its name but written", "!function () { function show(props, name) { props.seen = name; } function other(props, value, name, flag) { flag && show(props, value); return [props, name]; } function written(props, name, flag) { flag && show(props, name); name = 2; return [props, name]; } console.log(other({}, \"a\", \"n\", 1)[0].seen, written({}, \"a\", 1)[0].seen); }();"],
+	["a function passed variables of its parameters' names, which a pattern or a `for` head writes", "!function () { function show(props, name) { props.get = function () { return name; }; } function pattern(props, name, flag) { flag && show(props, name); [name] = [\"later\"]; return props; } function head(props, name, flag) { flag && show(props, name); for (name in { later: 1 }); return props; } console.log(pattern({}, \"a\", 1).get(), head({}, \"a\", 1).get()); }();"],
+	["a function incrementing a parameter, passed the variable of its name", "!function () { function show(props, name) { props.seen = name++; props.next = name; } function create(props, name, flag) { flag && show(props, name); return [props, name]; } console.log(create({}, \"a\", 1)[0].next, create({}, 1, 1)[0].next); }();"],
+	["a function writing a parameter by a pattern, passed the variable of its name", "!function () { function show(props, name) { [name] = [name + \"!\"]; props.seen = name; } function create(props, name, flag) { flag && show(props, name); return [props, name]; } console.log(create({}, \"a\", 1)[0].seen, create({}, \"b\", 0)[0].seen); }();"],
+	["a function passed variables of its parameters' names, of a function reading `arguments` or `eval`", "!function () { function show(props, name) { props.seen = name; } function args(props, name, flag) { flag && show(props, name); return [props, name, arguments.length]; } function evaluates(props, name, flag) { flag && show(props, name); return [props, eval(\"name\")]; } console.log(args({}, \"a\", 1)[0].seen, evaluates({}, \"b\", 1)[0].seen); }();"],
+	["a function passed a global of its parameter's name", "var name = \"g\"; !function () { function show(props, name) { props.seen = name; } function create(props, flag) { flag && show(props, name); return props; } console.log(create({}, 1).seen, create({}, 0).seen); }();"]
 ];
 
 // Each prints one thing and terser's output another, under the options named.
@@ -6535,6 +6665,92 @@ describe("syntax-printer", () => {
 			});
 		}
 
+		it("should keep an assignment to a `let` before the declaration in its block", async () => {
+			const { minify } = await load();
+			const input =
+				"function f() { { x = 1; let x; return x; } } function g() { { y = 2; let y; y += 1; return y; } } try { console.log(f()); } catch (e) { console.log(e.name); } try { console.log(g()); } catch (e) { console.log(e.name); }";
+			const { code } = await minify(input, { mangle: false });
+			expect(code).toContain("x=1;let x");
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+		});
+
+		it("should keep an `Object.keys` call where the program assigns the global", async () => {
+			const { minify } = await load();
+			const input =
+				'Object = { keys: function () { return ["own"]; } }; console.log(Object.keys({ a: 1 }));';
+			const { code } = await minify(input, { mangle: false });
+			expect(code).toContain(".keys({a:1})");
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+		});
+
+		it("should keep an `Object.keys` call where the program may write that member of `Object`", async () => {
+			const { minify } = await load();
+			const patched = 'function () { return ["patched"]; }';
+			for (const [input, call] of [
+				[`Object.keys = ${patched}; console.log(Object.keys({ 1: 2 }));`, ".keys({1:2})"],
+				[`Object["values"] = ${patched}; console.log(Object.values({ a: 1 }));`, ".values({a:1})"],
+				[`Object.assign(Object, { entries: ${patched} }); console.log(Object.entries({ a: 1 }));`, ".entries({a:1})"],
+				[`var key = "keys"; Object[key] = ${patched}; console.log(Object.keys({ a: 1 }));`, ".keys({a:1})"],
+				[`[Object.keys] = [${patched}]; console.log(Object.keys({ a: 1 }));`, ".keys({a:1})"],
+				[`({ k: Object.keys = null } = { k: ${patched} }); console.log(Object.keys({ a: 1 }));`, ".keys({a:1})"],
+				['for (Object.keys in { a: 1 }); try { console.log(Object.keys({ a: 1 })); } catch (e) { console.log(e.name); }', ".keys({a:1})"],
+				['delete Object.values; try { console.log(Object.values({ a: 1 })); } catch (e) { console.log(e.name); }', ".values({a:1})"]
+			]) {
+				const { code } = await minify(input, { mangle: false });
+				expect(code).toContain(call);
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			}
+		});
+
+		it("should fold an `Object.keys` call where the program writes another member and reads `Object` only to call, test or type it", async () => {
+			const { minify } = await load();
+			const input =
+				'Object.values = function () { return ["patched"]; }; console.log(typeof Object, {} instanceof Object, Object(1) + 1, Object.keys({ a: 1 }), Object.values({ b: 2 }));';
+			const { code } = await minify(input, { mangle: false });
+			expect(code).toContain('["a"]');
+			expect(code).toContain(".values({b:2})");
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+		});
+
+		it("should keep the value of a name read in place of its copy, where the copy's one read folds away", async () => {
+			const { minify } = await load();
+			const input =
+				'globalThis.somethingGlobal = function () { return "called"; }; (function () { var index = somethingGlobal; const esm = index; console.log(esm()); })(); (function () { var index = somethingGlobal; const esm = index; console.log(typeof esm); })();';
+			for (const options of [
+				{},
+				{ compress: { passes: 2 }, mangle: false },
+				{ compress: { toplevel: true }, mangle: false }
+			]) {
+				const { code } = await minify(input, options);
+				expect(code).not.toContain("void 0");
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			}
+		});
+
+		it("should fold constants a later pass knows rather than an assignment into their sum", async () => {
+			const { minify } = await load();
+			const { code } = await minify(
+				"function f() { var a = 1, b = 2, c = 3; if (a) { b = c; } else { c = b; } console.log(a + b); console.log(b + c); } f();",
+				{ compress: { passes: 2 }, mangle: false }
+			);
+			expect(code).toBe("function f(){console.log(4),console.log(6)}f();");
+		});
+
+		it("should keep an assignment to a name the program shares where it would fold into the read after it", async () => {
+			const { minify } = await load();
+			const options = { compress: {}, mangle: false };
+			const stops = await minify(
+				"var start = 1, step = 3, stop = g(10); let n, ticks; stop = Math.floor(stop / step); ticks = Array(n = Math.ceil(stop - start + 1)); console.log(ticks.length, n, stop); function g(v) { return v; }",
+				options
+			);
+			expect(stops.code).toContain("stop=Math.floor(stop/step),ticks=");
+			const lets = await minify(
+				"var a = h(3); let x, y; x = a * 2; y = g(x); console.log(x, y); function g(v) { return v + 1; } function h(v) { return v; }",
+				options
+			);
+			expect(lets.code).toContain("x=2*a,y=g(x)");
+		});
+
 		it("should keep a logical expression negating its test as the test of a conditional where `booleans` is off", async () => {
 			const { minify } = await load();
 			const { code } = await minify(
@@ -6544,6 +6760,21 @@ describe("syntax-printer", () => {
 			expect(code).toBe(
 				"function f(a,b,c,x,y){return[!!(a&b)&&c?x:y,a&b&&!c?y:x]}"
 			);
+		});
+
+		it("should keep a binding read in place of its copy captured where a function declaring its name inlines the reader", async () => {
+			const { minify } = await load();
+			const input =
+				"function inner(b) { let a = b; g(b); var f = function () { return a + a; }; return function (b) { return [f(), b]; }; } function g() {} console.log(inner(1)(2));";
+			for (const options of [
+				{ compress: { passes: 2 }, mangle: false },
+				{ compress: { passes: 3 } }
+			]) {
+				const { code } = await minify(input, options);
+				expect(runProgram(/** @type {string} */ (code))).toBe(
+					runProgram(input)
+				);
+			}
 		});
 
 		it("should split a `return` of `undefined` outside a function", async () => {
@@ -6732,7 +6963,7 @@ describe("syntax-printer", () => {
 				{ compress: { join_vars: false }, mangle: false }
 			);
 			expect(code).toBe(
-				"function f(o){let a=o.x;let b=o.y;return b++,[a,b]}console.log(f({x:1,y:2}));"
+				"function f(o){let a=o.x;let b=o.y;return[a,++b]}console.log(f({x:1,y:2}));"
 			);
 		});
 
@@ -6749,7 +6980,7 @@ describe("syntax-printer", () => {
 				options
 			);
 			expect(code).toBe(
-				"function f(o){let a=o.x,b=g();/*! b */return a++,[a,b,b]}"
+				"function f(o){let a=o.x,b=g();/*! b */return[++a,b,b]}"
 			);
 			const joinedVars = await terserReference().minify(
 				"function f(o) { var a = o.x; /*! b */ var b = g(); a++; return [a, b, b]; }",
