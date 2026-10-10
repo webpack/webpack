@@ -3143,6 +3143,15 @@ describe("CssSyntax — the per-transform switches", () => {
 		expect(min(css, { [name]: false })).toBe(off);
 	});
 
+	it("keeps `!important` on a longhand folded into its shorthand", () => {
+		expect(min("a{margin:1px !important;margin-top:2px !important}")).toBe(
+			"a{margin:2px 1px 1px!important}"
+		);
+		expect(min("a{grid-row:1 !important;grid-row-end:3 !important}")).toBe(
+			"a{grid-row:1/3!important}"
+		);
+	});
+
 	// A `url()` holds two rewrites, and each answers to its own switch: writing
 	// a data URI's percent-escapes as the bytes they name, and taking the quotes
 	// off a body that is a url-token without them.
