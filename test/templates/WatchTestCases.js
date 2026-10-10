@@ -349,7 +349,7 @@ const describeCases = (config) => {
 							let triggeringFilename;
 							let lastHash = "";
 							/** @type {Set<string>} */
-							let lastFileDependencies = new Set();
+							const lastFileDependencies = new Set();
 							/** @type {string[]} */
 							let lastContextDependencies = [];
 							/** @type {Set<string>} */
@@ -464,14 +464,14 @@ const describeCases = (config) => {
 									for (const child of compilers) {
 										// Count changes consumed by builds invalidated before their callback.
 										child.hooks.watchRun.tap("WatchTestCasesTest", () => {
-											// a watched directory reports itself, not the file inside it
+											// A directory event can arrive before an explicitly watched file's event.
 											const reported = [
 												...(child.modifiedFiles || []),
 												...(child.removedFiles || [])
 											];
 											for (const file of unseenChanges) {
 												if (
-													isWithin(file, reported) ||
+													(!lastFileDependencies.has(file) && isWithin(file, reported)) ||
 													reported.some((item) => isWithin(item, [file]))
 												) {
 													unseenChanges.delete(file);
@@ -513,7 +513,7 @@ const describeCases = (config) => {
 													throw new Error("No stats reported from Compiler");
 												}
 												if (waitMode) return;
-												lastFileDependencies = new Set();
+												lastFileDependencies.clear();
 												lastContextDependencies = [];
 												lastMissingDependencies = new Set();
 												for (const { compilation } of /** @type {import("../../").Stats[]} */ (
