@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Invalidate unaffected module caches when connection activity changes.
+Invalidate unaffected caches when connection activity or async status changes.
