@@ -2099,8 +2099,18 @@ const CORRECTED_CASES = [
 		{ compress: {}, mangle: false }
 	],
 	[
+		"a function in a `default` a matching case skips, which leaves its name unset",
+		"function f(x) { switch (0) { default: function b() {} case x(): } return typeof b; } var n = 0; console.log(f(function () { return n++; }), f(function () { return n++; }));",
+		{ compress: {}, mangle: false }
+	],
+	[
 		"a `var` under an `if`, a label and a `finally` in `default`s before a calling case",
 		'var b = "outer", c = "outer", d = "outer"; function f(x) { switch (0) { default: if (0) var b; case x(): } switch (0) { default: L: var c; case x(): } switch (0) { default: try {} finally { var d; } case x(): } for (var i = 0; i < 2; i++) (b = x(b)), (c = x(c)), (d = x(d)); return [b, c, d].join(); } console.log(f(function (v) { return v + 1; }), b, c, d);',
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a `var` under a `switch`, a loop and a `catch` of its name in `default`s before a calling case",
+		'var b = "outer", c = "outer", d = "outer", e = "outer"; function f(x) { switch (0) { default: switch (1) { case 2: var b; } case x(): } switch (0) { default: while (0) var c; case x(): } switch (0) { default: do var d; while (0); case x(): } switch (0) { default: try {} catch (e) { var e; } case x(): } for (var i = 0; i < 2; i++) (b = x(b)), (c = x(c)), (d = x(d)), (e = x(e)); return [b, c, d, e].join(); } console.log(f(function (v) { return v + 1; }), b, c, d, e);',
 		{ compress: {}, mangle: false }
 	],
 	[
@@ -6159,7 +6169,8 @@ describe("syntax-printer", () => {
 				"function f(x) { switch (0) { default: async function b() {} case x(): } } sink(f);",
 				"function f(x) { switch (0) { default: (function () { var b; }); case x(): } } sink(f);",
 				"function f(x) { switch (0) { default: (() => { var b; }); case x(): } } sink(f);",
-				"function f(x) { switch (0) { default: class B {} case x(): } } sink(f);"
+				"function f(x) { switch (0) { default: class B {} case x(): } } sink(f);",
+				"function f(x) { switch (0) { default: function* b() {} case x(): } } sink(f);"
 			]) {
 				const { code } = await minify(input, options);
 				expect(code).toBe((await terserReference().minify(input, options)).code);
@@ -6174,7 +6185,8 @@ describe("syntax-printer", () => {
 				'var b = "outer"; function f(x) { switch (0) { case 1: var b; case 0: x(); } for (var i = 0; i < 2; i++) b = x(b); return b; } console.log(f(function (v) { return v + 1; }), b);',
 				'var b = "outer"; function f(x) { switch (0) { default: var b; } for (var i = 0; i < 2; i++) b = x(b); return b; } console.log(f(function (v) { return v + 1; }), b);',
 				'var b = "outer"; function f(x) { switch (0) { default: for (var b in {}); case x(): } for (var i = 0; i < 2; i++) b = x(b); return b; } console.log(f(function (v) { return v + 1; }), b);',
-				"function f(x) { switch (0) { default: var b; case (b = x(), 9): } return b; } console.log(f(function () { return 4; }));"
+				"function f(x) { switch (0) { default: var b; case (b = x(), 9): } return b; } console.log(f(function () { return 4; }));",
+				'var r = []; function f(x) { switch (x) { case 1: var b; r.push(1); break; case 2: r.push(2); break; case 3: case 4: var b; r.push(1); break; } return b; } for (var k = 0; k < 6; k++) f(k); console.log(r.join());'
 			]) {
 				for (const options of [
 					{ compress: {}, mangle: false },
