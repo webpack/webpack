@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Fix JavaScript minifier crashes and altered behavior, including parameter aliases.
+Fix JavaScript minifier crashes, altered behavior and unparsable output, including parameter aliases.
