@@ -5,14 +5,17 @@ const PLUGIN_NAME = "DependencyWithoutKindsPlugin";
 /** @typedef {import("../../../../").Compiler} Compiler */
 /** @typedef {import("../../../../").javascript.JavascriptParser} JavascriptParser */
 /** @typedef {Compiler["webpack"]} WebpackApi */
+/** @typedef {typeof import("../../../../").Dependency} DependencyClass */
+/** @typedef {typeof import("../../../../").template.DependencyTemplate} DependencyTemplateClass */
+/** @typedef {{ ForeignDependency: DependencyClass, ForeignDependencyTemplate: DependencyTemplateClass }} Foreign */
 
-/** @type {undefined | EXPECTED_ANY} */
+/** @type {Foreign | undefined} */
 let cached;
 
 /**
  * Builds a dependency that, like one extending an older webpack's `Dependency`, has no `is()`.
  * @param {WebpackApi} webpack the `compiler.webpack` object
- * @returns {EXPECTED_ANY} the dependency class and its template
+ * @returns {Foreign} the dependency class and its template
  */
 const getForeign = (webpack) => {
 	if (cached !== undefined) return cached;
