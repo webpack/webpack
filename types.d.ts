@@ -424,7 +424,6 @@ declare interface AnyParts {
 	parts: Record<number, number>;
 	texts: Record<number, number>;
 	items: Record<number, number>;
-	visitors: VisitorMap<any>;
 }
 
 /**
@@ -6442,8 +6441,9 @@ declare class CssModulesPlugin {
 		>;
 	};
 }
-type CssNodePath<T = number> = Omit<
+type CssNodePath<T = number, S = unknown> = Omit<
 	{
+		state: unknown;
 		get node(): NodeSyntaxParser;
 		get parent(): null | NodeSyntaxParser;
 		get index(): number;
@@ -6504,6 +6504,7 @@ type CssNodePath<T = number> = Omit<
 	},
 	| "flag"
 	| "node"
+	| "state"
 	| "within"
 	| "field"
 	| "fieldCount"
@@ -6512,6 +6513,7 @@ type CssNodePath<T = number> = Omit<
 	| "textOf"
 > & {
 	readonly node: TypedNode<NodeSyntaxParser, T>;
+	readonly state: S;
 	within(type: CssNodeType): boolean;
 	field<
 		R extends NodeSyntaxParser = TypedNode<NodeSyntaxParser, T>,
@@ -7063,7 +7065,6 @@ declare interface CssParts {
 		"3": 23;
 		"4": 25 | 24;
 	};
-	visitors: CssVisitorMap;
 }
 
 /**
@@ -7246,8 +7247,9 @@ declare interface CssProcessOptions {
  * ```
  * @experimental exposed as `webpack.css.syntax.SourceProcessor`; unstable API
  */
-declare class CssSourceProcessor extends SourceProcessor<
+declare class CssSourceProcessor<TState = unknown> extends SourceProcessor<
 	{
+		state: unknown;
 		get node(): NodeSyntaxParser;
 		get parent(): null | NodeSyntaxParser;
 		get index(): number;
@@ -7309,7 +7311,9 @@ declare class CssSourceProcessor extends SourceProcessor<
 	NodeSyntaxParser,
 	CssProcessOptions,
 	object,
-	CssParts
+	CssParts,
+	TState,
+	CssVisitorMap<TState>
 > {
 	constructor();
 	static PrintContext: typeof PrintContext;
@@ -7415,95 +7419,175 @@ declare interface CssTransformOptions {
 	 */
 	shortenValues?: boolean;
 }
-
-/**
- * A visitor map whose each visitor's path is typed by its node type.
- */
-declare interface CssVisitorMap {
+declare interface CssVisitorMap<S = unknown> {
 	"1"?:
-		| VisitorFn<CssNodePath<1>>
-		| { enter?: VisitorFn<CssNodePath<1>>; exit?: VisitorFn<CssNodePath<1>> };
+		| VisitorFn<CssNodePath<1, S>>
+		| {
+				enter?: VisitorFn<CssNodePath<1, S>>;
+				exit?: VisitorFn<CssNodePath<1, S>>;
+		  };
 	"2"?:
-		| VisitorFn<CssNodePath<2>>
-		| { enter?: VisitorFn<CssNodePath<2>>; exit?: VisitorFn<CssNodePath<2>> };
+		| VisitorFn<CssNodePath<2, S>>
+		| {
+				enter?: VisitorFn<CssNodePath<2, S>>;
+				exit?: VisitorFn<CssNodePath<2, S>>;
+		  };
 	"3"?:
-		| VisitorFn<CssNodePath<3>>
-		| { enter?: VisitorFn<CssNodePath<3>>; exit?: VisitorFn<CssNodePath<3>> };
+		| VisitorFn<CssNodePath<3, S>>
+		| {
+				enter?: VisitorFn<CssNodePath<3, S>>;
+				exit?: VisitorFn<CssNodePath<3, S>>;
+		  };
 	"4"?:
-		| VisitorFn<CssNodePath<4>>
-		| { enter?: VisitorFn<CssNodePath<4>>; exit?: VisitorFn<CssNodePath<4>> };
+		| VisitorFn<CssNodePath<4, S>>
+		| {
+				enter?: VisitorFn<CssNodePath<4, S>>;
+				exit?: VisitorFn<CssNodePath<4, S>>;
+		  };
 	"5"?:
-		| VisitorFn<CssNodePath<5>>
-		| { enter?: VisitorFn<CssNodePath<5>>; exit?: VisitorFn<CssNodePath<5>> };
+		| VisitorFn<CssNodePath<5, S>>
+		| {
+				enter?: VisitorFn<CssNodePath<5, S>>;
+				exit?: VisitorFn<CssNodePath<5, S>>;
+		  };
 	"6"?:
-		| VisitorFn<CssNodePath<6>>
-		| { enter?: VisitorFn<CssNodePath<6>>; exit?: VisitorFn<CssNodePath<6>> };
+		| VisitorFn<CssNodePath<6, S>>
+		| {
+				enter?: VisitorFn<CssNodePath<6, S>>;
+				exit?: VisitorFn<CssNodePath<6, S>>;
+		  };
 	"7"?:
-		| VisitorFn<CssNodePath<7>>
-		| { enter?: VisitorFn<CssNodePath<7>>; exit?: VisitorFn<CssNodePath<7>> };
+		| VisitorFn<CssNodePath<7, S>>
+		| {
+				enter?: VisitorFn<CssNodePath<7, S>>;
+				exit?: VisitorFn<CssNodePath<7, S>>;
+		  };
 	"8"?:
-		| VisitorFn<CssNodePath<8>>
-		| { enter?: VisitorFn<CssNodePath<8>>; exit?: VisitorFn<CssNodePath<8>> };
+		| VisitorFn<CssNodePath<8, S>>
+		| {
+				enter?: VisitorFn<CssNodePath<8, S>>;
+				exit?: VisitorFn<CssNodePath<8, S>>;
+		  };
 	"9"?:
-		| VisitorFn<CssNodePath<9>>
-		| { enter?: VisitorFn<CssNodePath<9>>; exit?: VisitorFn<CssNodePath<9>> };
+		| VisitorFn<CssNodePath<9, S>>
+		| {
+				enter?: VisitorFn<CssNodePath<9, S>>;
+				exit?: VisitorFn<CssNodePath<9, S>>;
+		  };
 	"10"?:
-		| VisitorFn<CssNodePath<10>>
-		| { enter?: VisitorFn<CssNodePath<10>>; exit?: VisitorFn<CssNodePath<10>> };
+		| VisitorFn<CssNodePath<10, S>>
+		| {
+				enter?: VisitorFn<CssNodePath<10, S>>;
+				exit?: VisitorFn<CssNodePath<10, S>>;
+		  };
 	"11"?:
-		| VisitorFn<CssNodePath<11>>
-		| { enter?: VisitorFn<CssNodePath<11>>; exit?: VisitorFn<CssNodePath<11>> };
+		| VisitorFn<CssNodePath<11, S>>
+		| {
+				enter?: VisitorFn<CssNodePath<11, S>>;
+				exit?: VisitorFn<CssNodePath<11, S>>;
+		  };
 	"12"?:
-		| VisitorFn<CssNodePath<12>>
-		| { enter?: VisitorFn<CssNodePath<12>>; exit?: VisitorFn<CssNodePath<12>> };
+		| VisitorFn<CssNodePath<12, S>>
+		| {
+				enter?: VisitorFn<CssNodePath<12, S>>;
+				exit?: VisitorFn<CssNodePath<12, S>>;
+		  };
 	"13"?:
-		| VisitorFn<CssNodePath<13>>
-		| { enter?: VisitorFn<CssNodePath<13>>; exit?: VisitorFn<CssNodePath<13>> };
+		| VisitorFn<CssNodePath<13, S>>
+		| {
+				enter?: VisitorFn<CssNodePath<13, S>>;
+				exit?: VisitorFn<CssNodePath<13, S>>;
+		  };
 	"14"?:
-		| VisitorFn<CssNodePath<14>>
-		| { enter?: VisitorFn<CssNodePath<14>>; exit?: VisitorFn<CssNodePath<14>> };
+		| VisitorFn<CssNodePath<14, S>>
+		| {
+				enter?: VisitorFn<CssNodePath<14, S>>;
+				exit?: VisitorFn<CssNodePath<14, S>>;
+		  };
 	"15"?:
-		| VisitorFn<CssNodePath<15>>
-		| { enter?: VisitorFn<CssNodePath<15>>; exit?: VisitorFn<CssNodePath<15>> };
+		| VisitorFn<CssNodePath<15, S>>
+		| {
+				enter?: VisitorFn<CssNodePath<15, S>>;
+				exit?: VisitorFn<CssNodePath<15, S>>;
+		  };
 	"16"?:
-		| VisitorFn<CssNodePath<16>>
-		| { enter?: VisitorFn<CssNodePath<16>>; exit?: VisitorFn<CssNodePath<16>> };
+		| VisitorFn<CssNodePath<16, S>>
+		| {
+				enter?: VisitorFn<CssNodePath<16, S>>;
+				exit?: VisitorFn<CssNodePath<16, S>>;
+		  };
 	"17"?:
-		| VisitorFn<CssNodePath<17>>
-		| { enter?: VisitorFn<CssNodePath<17>>; exit?: VisitorFn<CssNodePath<17>> };
+		| VisitorFn<CssNodePath<17, S>>
+		| {
+				enter?: VisitorFn<CssNodePath<17, S>>;
+				exit?: VisitorFn<CssNodePath<17, S>>;
+		  };
 	"18"?:
-		| VisitorFn<CssNodePath<18>>
-		| { enter?: VisitorFn<CssNodePath<18>>; exit?: VisitorFn<CssNodePath<18>> };
+		| VisitorFn<CssNodePath<18, S>>
+		| {
+				enter?: VisitorFn<CssNodePath<18, S>>;
+				exit?: VisitorFn<CssNodePath<18, S>>;
+		  };
 	"19"?:
-		| VisitorFn<CssNodePath<19>>
-		| { enter?: VisitorFn<CssNodePath<19>>; exit?: VisitorFn<CssNodePath<19>> };
+		| VisitorFn<CssNodePath<19, S>>
+		| {
+				enter?: VisitorFn<CssNodePath<19, S>>;
+				exit?: VisitorFn<CssNodePath<19, S>>;
+		  };
 	"20"?:
-		| VisitorFn<CssNodePath<20>>
-		| { enter?: VisitorFn<CssNodePath<20>>; exit?: VisitorFn<CssNodePath<20>> };
+		| VisitorFn<CssNodePath<20, S>>
+		| {
+				enter?: VisitorFn<CssNodePath<20, S>>;
+				exit?: VisitorFn<CssNodePath<20, S>>;
+		  };
 	"21"?:
-		| VisitorFn<CssNodePath<21>>
-		| { enter?: VisitorFn<CssNodePath<21>>; exit?: VisitorFn<CssNodePath<21>> };
+		| VisitorFn<CssNodePath<21, S>>
+		| {
+				enter?: VisitorFn<CssNodePath<21, S>>;
+				exit?: VisitorFn<CssNodePath<21, S>>;
+		  };
 	"22"?:
-		| VisitorFn<CssNodePath<22>>
-		| { enter?: VisitorFn<CssNodePath<22>>; exit?: VisitorFn<CssNodePath<22>> };
+		| VisitorFn<CssNodePath<22, S>>
+		| {
+				enter?: VisitorFn<CssNodePath<22, S>>;
+				exit?: VisitorFn<CssNodePath<22, S>>;
+		  };
 	"23"?:
-		| VisitorFn<CssNodePath<23>>
-		| { enter?: VisitorFn<CssNodePath<23>>; exit?: VisitorFn<CssNodePath<23>> };
+		| VisitorFn<CssNodePath<23, S>>
+		| {
+				enter?: VisitorFn<CssNodePath<23, S>>;
+				exit?: VisitorFn<CssNodePath<23, S>>;
+		  };
 	"24"?:
-		| VisitorFn<CssNodePath<24>>
-		| { enter?: VisitorFn<CssNodePath<24>>; exit?: VisitorFn<CssNodePath<24>> };
+		| VisitorFn<CssNodePath<24, S>>
+		| {
+				enter?: VisitorFn<CssNodePath<24, S>>;
+				exit?: VisitorFn<CssNodePath<24, S>>;
+		  };
 	"25"?:
-		| VisitorFn<CssNodePath<25>>
-		| { enter?: VisitorFn<CssNodePath<25>>; exit?: VisitorFn<CssNodePath<25>> };
+		| VisitorFn<CssNodePath<25, S>>
+		| {
+				enter?: VisitorFn<CssNodePath<25, S>>;
+				exit?: VisitorFn<CssNodePath<25, S>>;
+		  };
 	"26"?:
-		| VisitorFn<CssNodePath<26>>
-		| { enter?: VisitorFn<CssNodePath<26>>; exit?: VisitorFn<CssNodePath<26>> };
+		| VisitorFn<CssNodePath<26, S>>
+		| {
+				enter?: VisitorFn<CssNodePath<26, S>>;
+				exit?: VisitorFn<CssNodePath<26, S>>;
+		  };
 	"27"?:
-		| VisitorFn<CssNodePath<27>>
-		| { enter?: VisitorFn<CssNodePath<27>>; exit?: VisitorFn<CssNodePath<27>> };
+		| VisitorFn<CssNodePath<27, S>>
+		| {
+				enter?: VisitorFn<CssNodePath<27, S>>;
+				exit?: VisitorFn<CssNodePath<27, S>>;
+		  };
 	"28"?:
-		| VisitorFn<CssNodePath<28>>
-		| { enter?: VisitorFn<CssNodePath<28>>; exit?: VisitorFn<CssNodePath<28>> };
+		| VisitorFn<CssNodePath<28, S>>
+		| {
+				enter?: VisitorFn<CssNodePath<28, S>>;
+				exit?: VisitorFn<CssNodePath<28, S>>;
+		  };
 }
 type DeclarationEstreeIndex =
 	FunctionDeclaration | VariableDeclaration | ClassDeclaration;
@@ -12012,8 +12096,9 @@ declare interface HtmlMutableTag {
 	 */
 	remove?: boolean;
 }
-type HtmlNodePath<T = number> = Omit<
+type HtmlNodePath<T = number, S = unknown> = Omit<
 	{
+		state: unknown;
 		get node(): number;
 		get parent(): null | number;
 		/**
@@ -12084,6 +12169,7 @@ type HtmlNodePath<T = number> = Omit<
 	},
 	| "flag"
 	| "node"
+	| "state"
 	| "within"
 	| "field"
 	| "fieldCount"
@@ -12092,6 +12178,7 @@ type HtmlNodePath<T = number> = Omit<
 	| "textOf"
 > & {
 	readonly node: TypedNode<number, T>;
+	readonly state: S;
 	within(type: HtmlNodeType): boolean;
 	field<R extends number = TypedNode<number, T>, F extends number = number>(
 		i: number,
@@ -12355,7 +12442,6 @@ declare interface HtmlParts {
 		"8": never;
 	};
 	items: { [index: number]: number; "1": 8; "2": 2 };
-	visitors: HtmlVisitorMap;
 }
 
 /**
@@ -12600,8 +12686,9 @@ declare interface HtmlResourceHintWebpackOptions {
  * ```
  * @experimental exposed as `webpack.html.syntax.SourceProcessor`; unstable API
  */
-declare class HtmlSourceProcessor extends SourceProcessor<
+declare class HtmlSourceProcessor<TState = unknown> extends SourceProcessor<
 	{
+		state: unknown;
 		get node(): number;
 		get parent(): null | number;
 		/**
@@ -12673,7 +12760,9 @@ declare class HtmlSourceProcessor extends SourceProcessor<
 	number,
 	HtmlProcessOptions,
 	object,
-	HtmlParts
+	HtmlParts,
+	TState,
+	HtmlVisitorMap<TState>
 > {
 	constructor();
 	static PrintContext: typeof PrintContext;
@@ -12880,35 +12969,55 @@ declare interface HtmlTransformTagsContext {
 	outputName: string;
 	html: string;
 }
-
-/**
- * A visitor map whose each visitor's path is typed by its node type.
- */
-declare interface HtmlVisitorMap {
+declare interface HtmlVisitorMap<S = unknown> {
 	"1"?:
-		| VisitorFn<HtmlNodePath<1>>
-		| { enter?: VisitorFn<HtmlNodePath<1>>; exit?: VisitorFn<HtmlNodePath<1>> };
+		| VisitorFn<HtmlNodePath<1, S>>
+		| {
+				enter?: VisitorFn<HtmlNodePath<1, S>>;
+				exit?: VisitorFn<HtmlNodePath<1, S>>;
+		  };
 	"2"?:
-		| VisitorFn<HtmlNodePath<2>>
-		| { enter?: VisitorFn<HtmlNodePath<2>>; exit?: VisitorFn<HtmlNodePath<2>> };
+		| VisitorFn<HtmlNodePath<2, S>>
+		| {
+				enter?: VisitorFn<HtmlNodePath<2, S>>;
+				exit?: VisitorFn<HtmlNodePath<2, S>>;
+		  };
 	"3"?:
-		| VisitorFn<HtmlNodePath<3>>
-		| { enter?: VisitorFn<HtmlNodePath<3>>; exit?: VisitorFn<HtmlNodePath<3>> };
+		| VisitorFn<HtmlNodePath<3, S>>
+		| {
+				enter?: VisitorFn<HtmlNodePath<3, S>>;
+				exit?: VisitorFn<HtmlNodePath<3, S>>;
+		  };
 	"4"?:
-		| VisitorFn<HtmlNodePath<4>>
-		| { enter?: VisitorFn<HtmlNodePath<4>>; exit?: VisitorFn<HtmlNodePath<4>> };
+		| VisitorFn<HtmlNodePath<4, S>>
+		| {
+				enter?: VisitorFn<HtmlNodePath<4, S>>;
+				exit?: VisitorFn<HtmlNodePath<4, S>>;
+		  };
 	"5"?:
-		| VisitorFn<HtmlNodePath<5>>
-		| { enter?: VisitorFn<HtmlNodePath<5>>; exit?: VisitorFn<HtmlNodePath<5>> };
+		| VisitorFn<HtmlNodePath<5, S>>
+		| {
+				enter?: VisitorFn<HtmlNodePath<5, S>>;
+				exit?: VisitorFn<HtmlNodePath<5, S>>;
+		  };
 	"6"?:
-		| VisitorFn<HtmlNodePath<6>>
-		| { enter?: VisitorFn<HtmlNodePath<6>>; exit?: VisitorFn<HtmlNodePath<6>> };
+		| VisitorFn<HtmlNodePath<6, S>>
+		| {
+				enter?: VisitorFn<HtmlNodePath<6, S>>;
+				exit?: VisitorFn<HtmlNodePath<6, S>>;
+		  };
 	"7"?:
-		| VisitorFn<HtmlNodePath<7>>
-		| { enter?: VisitorFn<HtmlNodePath<7>>; exit?: VisitorFn<HtmlNodePath<7>> };
+		| VisitorFn<HtmlNodePath<7, S>>
+		| {
+				enter?: VisitorFn<HtmlNodePath<7, S>>;
+				exit?: VisitorFn<HtmlNodePath<7, S>>;
+		  };
 	"8"?:
-		| VisitorFn<HtmlNodePath<8>>
-		| { enter?: VisitorFn<HtmlNodePath<8>>; exit?: VisitorFn<HtmlNodePath<8>> };
+		| VisitorFn<HtmlNodePath<8, S>>
+		| {
+				enter?: VisitorFn<HtmlNodePath<8, S>>;
+				exit?: VisitorFn<HtmlNodePath<8, S>>;
+		  };
 }
 
 /**
@@ -21549,11 +21658,6 @@ declare interface NodeParts {
 	 * the node type of each `Field`'s items
 	 */
 	items: Record<number, number>;
-
-	/**
-	 * a visitor map whose each path is typed by its key
-	 */
-	visitors: object;
 }
 type NodePath<TNode, TValue = unknown> = NodePathReads<TNode, TValue> &
 	NodePathFields<TNode>;
@@ -21596,6 +21700,11 @@ declare interface NodePathReads<TNode, TValue = unknown> {
 	 * end the walk: no visitor fires after the current one returns, and a print still completes
 	 */
 	stop: () => void;
+
+	/**
+	 * the run's state, as `process` was given it
+	 */
+	state: unknown;
 
 	/**
 	 * the node's `NodeType`
@@ -28604,6 +28713,13 @@ type RuleSetUseItem =
 			options?: string | { [index: string]: any };
 	  };
 type RuleSyntaxParser = AtRule | QualifiedRule;
+
+/**
+ * what a run hands its visitors as `path.state`
+ */
+declare interface RunState<S> {
+	state?: S;
+}
 declare class RuntimeChunkPlugin {
 	/**
 	 * Creates an instance of RuntimeChunkPlugin.
@@ -30599,7 +30715,9 @@ declare abstract class SourceProcessor<
 	TNode,
 	TProcessOptions = object,
 	TPrintOptions = object,
-	TParts extends NodeParts = AnyParts
+	TParts extends NodeParts = AnyParts,
+	TState = unknown,
+	TVisitors = VisitorMap<any>
 > {
 	/**
 	 * Register one bucket for several node types, as a map naming each would;
@@ -30607,8 +30725,16 @@ declare abstract class SourceProcessor<
 	 */
 	use<T extends number>(
 		types: T[],
-		bucket: VisitorBucket<TypedNodePath<TPath, TNode, TParts, T>>
-	): SourceProcessor<TPath, TNode, TProcessOptions, TPrintOptions, TParts>;
+		bucket: VisitorBucket<TypedNodePath<TPath, TNode, TParts, T, TState>>
+	): SourceProcessor<
+		TPath,
+		TNode,
+		TProcessOptions,
+		TPrintOptions,
+		TParts,
+		TState,
+		TVisitors
+	>;
 
 	/**
 	 * Register a visitor map; calls accumulate per node type, and each
@@ -30616,15 +30742,31 @@ declare abstract class SourceProcessor<
 	 * A bucket is a function (= `{ enter }`) or `{ enter?, exit? }`.
 	 */
 	use(
-		map: TParts["visitors"]
-	): SourceProcessor<TPath, TNode, TProcessOptions, TPrintOptions, TParts>;
+		map: TVisitors
+	): SourceProcessor<
+		TPath,
+		TNode,
+		TProcessOptions,
+		TPrintOptions,
+		TParts,
+		TState,
+		TVisitors
+	>;
 
 	/**
 	 * Register a visitor map built at runtime, keyed by any node type.
 	 */
 	use(
 		map: VisitorMap<TPath>
-	): SourceProcessor<TPath, TNode, TProcessOptions, TPrintOptions, TParts>;
+	): SourceProcessor<
+		TPath,
+		TNode,
+		TProcessOptions,
+		TPrintOptions,
+		TParts,
+		TState,
+		TVisitors
+	>;
 
 	/**
 	 * Parse `input` once and fire the visitors in source order. Asking for output
@@ -30639,16 +30781,21 @@ declare abstract class SourceProcessor<
 	 */
 	process(
 		input: string,
-		options: TProcessOptions & { mode: "beautify" | "minify" } & {
-			source: string;
-			content?: string;
-		}
+		options: TProcessOptions &
+			RunState<TState> & { mode: "beautify" | "minify" } & {
+				source: string;
+				content?: string;
+			}
 	): { code: string; map: SourceMap };
 	process(
 		input: string,
-		options: TProcessOptions & { mode: "beautify" | "minify" }
+		options: TProcessOptions &
+			RunState<TState> & { mode: "beautify" | "minify" }
 	): { code: string; map: undefined };
-	process(input: string, options?: TProcessOptions): undefined;
+	process(
+		input: string,
+		options?: TProcessOptions & RunState<TState>
+	): undefined;
 
 	/**
 	 * {@link process}, for a caller whose renderer answers asynchronously. Code
@@ -30662,16 +30809,15 @@ declare abstract class SourceProcessor<
 	 */
 	processAsync(
 		input: string,
-		options: Omit<TProcessOptions, "renderEmbeddedSource"> & {
-			mode: "beautify" | "minify";
-		} & {
-			source?: string;
-			content?: string;
-			renderEmbeddedSource?: (
-				source: string,
-				hole?: any
-			) => undefined | string | Promise<undefined | string>;
-		}
+		options: Omit<TProcessOptions, "renderEmbeddedSource"> &
+			RunState<TState> & { mode: "beautify" | "minify" } & {
+				source?: string;
+				content?: string;
+				renderEmbeddedSource?: (
+					source: string,
+					hole?: any
+				) => undefined | string | Promise<undefined | string>;
+			}
 	): Promise<{ code: string; map?: SourceMap }>;
 }
 declare interface SourceTable {
@@ -32925,10 +33071,11 @@ declare class TypeScriptPlugin {
 	apply(compiler: Compiler): void;
 }
 type TypedNode<TNode, T> = TNode & { readonly __nodeType: T };
-type TypedNodePath<TPath, TNode, P extends NodeParts, T> = Omit<
+type TypedNodePath<TPath, TNode, P extends NodeParts, T, S = unknown> = Omit<
 	TPath,
 	| "flag"
 	| "node"
+	| "state"
 	| "within"
 	| "field"
 	| "fieldCount"
@@ -32937,6 +33084,7 @@ type TypedNodePath<TPath, TNode, P extends NodeParts, T> = Omit<
 	| "textOf"
 > & {
 	readonly node: TypedNode<TNode, T>;
+	readonly state: S;
 	within(type: P["types"]): boolean;
 	field<R = TypedNode<TNode, T>, F extends number = number>(
 		i: number,
@@ -34830,6 +34978,7 @@ declare namespace exports {
 		export namespace syntax {
 			export namespace parser {
 				export let A: {
+					state: unknown;
 					get node(): NodeSyntaxParser;
 					get parent(): null | NodeSyntaxParser;
 					get index(): number;
@@ -35026,6 +35175,7 @@ declare namespace exports {
 				export let grammar: (
 					input: string,
 					visitors: CompiledVisitorBucket<{
+						state: unknown;
 						get node(): NodeSyntaxParser;
 						get parent(): null | NodeSyntaxParser;
 						get index(): number;
@@ -35095,6 +35245,7 @@ declare namespace exports {
 						| undefined
 						| PrintContext<
 								{
+									state: unknown;
 									get node(): NodeSyntaxParser;
 									get parent(): null | NodeSyntaxParser;
 									get index(): number;
@@ -35239,6 +35390,7 @@ declare namespace exports {
 			export namespace printer {
 				export let printer: (
 					path: {
+						state: unknown;
 						get node(): NodeSyntaxParser;
 						get parent(): null | NodeSyntaxParser;
 						get index(): number;
@@ -35306,6 +35458,7 @@ declare namespace exports {
 					},
 					writer: PrintContext<
 						{
+							state: unknown;
 							get node(): NodeSyntaxParser;
 							get parent(): null | NodeSyntaxParser;
 							get index(): number;
@@ -35448,6 +35601,7 @@ declare namespace exports {
 		export namespace syntax {
 			export namespace parser {
 				export let A: {
+					state: unknown;
 					get node(): number;
 					get parent(): null | number;
 					/**
@@ -35589,6 +35743,7 @@ declare namespace exports {
 				export let grammar: (
 					input: string,
 					visitors: CompiledVisitorBucket<{
+						state: unknown;
 						get node(): number;
 						get parent(): null | number;
 						/**
@@ -35661,6 +35816,7 @@ declare namespace exports {
 						| undefined
 						| PrintContext<
 								{
+									state: unknown;
 									get node(): number;
 									get parent(): null | number;
 									/**
@@ -35764,6 +35920,7 @@ declare namespace exports {
 				export let MODULE_SCRIPT: "module";
 				export let printer: (
 					path: {
+						state: unknown;
 						get node(): number;
 						get parent(): null | number;
 						/**
@@ -35834,6 +35991,7 @@ declare namespace exports {
 					},
 					writer: PrintContext<
 						{
+							state: unknown;
 							get node(): number;
 							get parent(): null | number;
 							/**

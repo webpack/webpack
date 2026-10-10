@@ -990,6 +990,56 @@ describe("SourceProcessor", () => {
 			expect(css).toEqual(["p\uFFFD", ""]);
 		});
 
+		it("hands every visitor the run's state, typed by the processor", () => {
+			/** @type {import("../../lib/css/syntax").SourceProcessor<{ values: string[] }>} */
+			const css = new CssSourceProcessor();
+			css
+				.use([CssNodeType.Ident], (path) => {
+					path.state.values.push(String(path.value()));
+					// @ts-expect-error the state has no `count`
+					path.state.count = 1;
+				})
+				.use({
+					[CssNodeType.Dimension]: (path) => {
+						path.state.values.push(path.source());
+					}
+				});
+			/** @type {{ values: string[] }} */
+			const state = { values: [] };
+			css.process("a{b:c 1px}", { state });
+			expect(state.values).toEqual(["a", "c", "1px"]);
+			// Only type-checked: a state of another shape is refused.
+			const wrongState = () =>
+				// @ts-expect-error a state of another shape
+				css.process("a{}", { state: { values: 1 } });
+			expect(typeof wrongState).toBe("function");
+
+			/** @type {import("../../lib/html/syntax").SourceProcessor<{ paragraphs: number }>} */
+			const html = new HtmlSourceProcessor();
+			/** @type {unknown[]} */
+			const seen = [];
+			html.use([HtmlNodeType.Element], (path) => {
+				if (path.name() !== "p") return;
+				const inner = { values: [] };
+				css.process("x{}", { state: inner });
+				// A run of another language leaves this one's state as it found it.
+				seen.push(path.state === outer, inner.values.length);
+				path.state.paragraphs++;
+			});
+			const outer = { paragraphs: 0 };
+			html.process("<p></p><p></p>", { state: outer });
+			expect(seen).toEqual([true, 1, true, 1]);
+			expect(outer.paragraphs).toBe(2);
+			const { A } = require("../../lib/html/syntax-parser");
+
+			expect(A.state).toBeUndefined();
+			const throwing = new HtmlSourceProcessor().use([HtmlNodeType.Element], () => {
+				throw new Error("visitor");
+			});
+			expect(() => throwing.process("<p></p>", { state: outer })).toThrow("visitor");
+			expect(A.state).toBeUndefined();
+		});
+
 		it("knows a streamed block's ancestors until it closes", () => {
 			let rules = "";
 			for (let i = 0; i < 1800; i++) {
