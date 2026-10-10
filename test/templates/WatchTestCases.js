@@ -181,7 +181,7 @@ const describeCases = (config) => {
 							}
 							return closing;
 						};
-						/** @type {{ name: string, done?: boolean, stats?: import("../../").Stats, it?: EXPECTED_ANY, getNumberOfTests?: () => number }[]} */
+						/** @type {{ name: string, done?: boolean, stats?: import("../../").Stats | import("../../").MultiStats, it?: EXPECTED_ANY, getNumberOfTests?: () => number }[]} */
 						const runs = fs
 							.readdirSync(testDirectory)
 							.sort()
@@ -461,6 +461,8 @@ const describeCases = (config) => {
 										compiler instanceof webpack.MultiCompiler
 											? compiler.compilers
 											: [compiler];
+									/** @type {Map<import("../../").Compiler, import("../../").Stats>} */
+									const latestStats = new Map();
 									for (const child of compilers) {
 										// Count changes consumed by builds invalidated before their callback.
 										child.hooks.watchRun.tap("WatchTestCasesTest", () => {
@@ -505,12 +507,26 @@ const describeCases = (config) => {
 										{
 											aggregateTimeout: AGGREGATE_TIMEOUT
 										},
-										async (err, stats) => {
+										async (
+											err,
+											/** @type {import("../../").Stats | import("../../").MultiStats | undefined} */ stats
+										) => {
 											try {
 												if (failed) return;
 												if (err) return handleWatchError(err);
 												if (!stats) {
 													throw new Error("No stats reported from Compiler");
+												}
+												// MultiCompiler reports only rebuilt children; retain the others
+												// when comparing hashes, dependencies and executing every bundle.
+												if ("stats" in stats) {
+													for (const result of stats.stats) {
+														latestStats.set(result.compilation.compiler, result);
+													}
+													stats.stats = compilers.map(
+														(child) =>
+															/** @type {import("../../").Stats} */ (latestStats.get(child))
+													);
 												}
 												if (waitMode) return;
 												lastFileDependencies.clear();
