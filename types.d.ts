@@ -5354,6 +5354,7 @@ declare class ConstDependency extends NullDependency {
 		| "esm-import-specifier"
 		| "esm-compatibility"
 		| "commonjs-require"
+		| "commonjs-export-require"
 		| "html-source"
 		| "html-entry"
 		| "webassembly-import"
@@ -6151,7 +6152,15 @@ declare class CssLoadingRuntimeModule extends RuntimeModule {
 	 */
 	static STAGE_TRIGGER: number;
 	static KINDS: Set<
-		"runtime" | "normal" | "context" | "remote" | "consume-shared" | "external"
+		| "html"
+		| "runtime"
+		| "normal"
+		| "css"
+		| "context"
+		| "remote"
+		| "consume-shared"
+		| "external"
+		| "concatenated"
 	>;
 
 	/**
@@ -7187,6 +7196,7 @@ declare class Dependency {
 			| "esm-import-specifier"
 			| "esm-compatibility"
 			| "commonjs-require"
+			| "commonjs-export-require"
 			| "html-source"
 			| "html-entry"
 			| "webassembly-import"
@@ -7363,6 +7373,7 @@ declare class Dependency {
 		| "esm-import-specifier"
 		| "esm-compatibility"
 		| "commonjs-require"
+		| "commonjs-export-require"
 		| "html-source"
 		| "html-entry"
 		| "webassembly-import"
@@ -8117,6 +8128,7 @@ declare class ESMImportDependency extends ModuleDependency {
 		| "esm-import-specifier"
 		| "esm-compatibility"
 		| "commonjs-require"
+		| "commonjs-export-require"
 		| "html-source"
 		| "html-entry"
 		| "webassembly-import"
@@ -10031,7 +10043,15 @@ declare class ExternalModule extends Module {
 		universal?: boolean
 	) => InitFragment<ChunkRenderContextJavascriptModulesPlugin>;
 	static KINDS: Set<
-		"runtime" | "normal" | "context" | "remote" | "consume-shared" | "external"
+		| "html"
+		| "runtime"
+		| "normal"
+		| "css"
+		| "context"
+		| "remote"
+		| "consume-shared"
+		| "external"
+		| "concatenated"
 	>;
 
 	/**
@@ -11031,7 +11051,15 @@ declare class GetChunkFilenameRuntimeModule extends RuntimeModule {
 	 */
 	static STAGE_TRIGGER: number;
 	static KINDS: Set<
-		"runtime" | "normal" | "context" | "remote" | "consume-shared" | "external"
+		| "html"
+		| "runtime"
+		| "normal"
+		| "css"
+		| "context"
+		| "remote"
+		| "consume-shared"
+		| "external"
+		| "concatenated"
 	>;
 
 	/**
@@ -16339,7 +16367,15 @@ declare class JsonpChunkLoadingRuntimeModule extends RuntimeModule {
 	 */
 	static STAGE_TRIGGER: number;
 	static KINDS: Set<
-		"runtime" | "normal" | "context" | "remote" | "consume-shared" | "external"
+		| "html"
+		| "runtime"
+		| "normal"
+		| "css"
+		| "context"
+		| "remote"
+		| "consume-shared"
+		| "external"
+		| "concatenated"
 	>;
 
 	/**
@@ -17720,7 +17756,15 @@ declare class LoadScriptRuntimeModule extends HelperRuntimeModule {
 	 */
 	static STAGE_TRIGGER: number;
 	static KINDS: Set<
-		"runtime" | "normal" | "context" | "remote" | "consume-shared" | "external"
+		| "html"
+		| "runtime"
+		| "normal"
+		| "css"
+		| "context"
+		| "remote"
+		| "consume-shared"
+		| "external"
+		| "concatenated"
 	>;
 
 	/**
@@ -19049,12 +19093,15 @@ declare class Module extends DependenciesBlock {
 	 */
 	is<
 		K extends
+			| "html"
 			| "runtime"
 			| "normal"
+			| "css"
 			| "context"
 			| "remote"
 			| "consume-shared"
 			| "external"
+			| "concatenated"
 	>(kind: K): boolean;
 
 	/**
@@ -19174,7 +19221,15 @@ declare class Module extends DependenciesBlock {
 	 */
 	static getSourceBasicTypes(module: Module): ReadonlySet<string>;
 	static KINDS: Set<
-		"runtime" | "normal" | "context" | "remote" | "consume-shared" | "external"
+		| "html"
+		| "runtime"
+		| "normal"
+		| "css"
+		| "context"
+		| "remote"
+		| "consume-shared"
+		| "external"
+		| "concatenated"
 	>;
 }
 declare class ModuleChunkLoadingRuntimeModule extends RuntimeModule {
@@ -19218,7 +19273,15 @@ declare class ModuleChunkLoadingRuntimeModule extends RuntimeModule {
 	 */
 	static STAGE_TRIGGER: number;
 	static KINDS: Set<
-		"runtime" | "normal" | "context" | "remote" | "consume-shared" | "external"
+		| "html"
+		| "runtime"
+		| "normal"
+		| "css"
+		| "context"
+		| "remote"
+		| "consume-shared"
+		| "external"
+		| "concatenated"
 	>;
 
 	/**
@@ -19264,6 +19327,7 @@ declare class ModuleDependency extends Dependency {
 		| "esm-import-specifier"
 		| "esm-compatibility"
 		| "commonjs-require"
+		| "commonjs-export-require"
 		| "html-source"
 		| "html-entry"
 		| "webassembly-import"
@@ -21170,7 +21234,15 @@ declare class NormalModule extends Module {
 		context: ObjectDeserializerContextObjectMiddlewareObject_2
 	): NormalModule;
 	static KINDS: Set<
-		"runtime" | "normal" | "context" | "remote" | "consume-shared" | "external"
+		| "html"
+		| "runtime"
+		| "normal"
+		| "css"
+		| "context"
+		| "remote"
+		| "consume-shared"
+		| "external"
+		| "concatenated"
 	>;
 
 	/**
@@ -21918,6 +21990,7 @@ declare class NullDependency extends Dependency {
 		| "esm-import-specifier"
 		| "esm-compatibility"
 		| "commonjs-require"
+		| "commonjs-export-require"
 		| "html-source"
 		| "html-entry"
 		| "webassembly-import"
@@ -27969,7 +28042,15 @@ declare class RuntimeModule extends Module {
 	 */
 	static STAGE_TRIGGER: number;
 	static KINDS: Set<
-		"runtime" | "normal" | "context" | "remote" | "consume-shared" | "external"
+		| "html"
+		| "runtime"
+		| "normal"
+		| "css"
+		| "context"
+		| "remote"
+		| "consume-shared"
+		| "external"
+		| "concatenated"
 	>;
 
 	/**
