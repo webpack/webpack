@@ -15533,7 +15533,9 @@ describe("CssSyntax minify — declaration order", () => {
 		// Members of one family, whose relation a spec may change before data does.
 		"a{flex-line-count:2;flex-flow:wrap}",
 		// WebKit reads `size` as `width` and `height`, which no dataset says.
-		"a{width:var(--a);size:var(--b)}"
+		"a{width:var(--a);size:var(--b)}",
+		// Descriptors of an at-rule that holds no style rules.
+		"@font-face{src:url(a.woff);font-family:x}"
 	])("keeps %s as written", (css) => {
 		expect(settled(css, modern)).toBe(css);
 	});
