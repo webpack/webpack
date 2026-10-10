@@ -2328,6 +2328,116 @@ const CORRECTED_CASES = [
 		"a top-level `var` in a `default` a strict script writes after the `switch`",
 		'"use strict"; function g() { return 1; } switch (0) { default: var b; case g(): } try { b = 2; console.log(b); } catch (e) { console.log(e.name); }',
 		{ compress: {}, mangle: false }
+	],
+	[
+		"a sloppy block's function under a `let`, `const` or `class` of its name in a block around it",
+		"var r = []; (function () { { let f = 1; { function f() {} } } try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); })(); (function () { { const f = 1; if (true) function f() {} } try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); })(); (function () { { class f {} switch (1) { default: function f() {} } } try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); })(); console.log(r.join());",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a sloppy block's function under a `for`, `for-in` or `for-of` head's `let`",
+		"var r = []; (function () { for (let f; ; ) { { function f() {} } break; } try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); })(); (function () { for (let f in { a: 1 }) { if (true) function f() {} } try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); })(); (function () { for (let f of [0]) { switch (1) { default: function f() {} } } try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); })(); console.log(r.join());",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a sloppy block's function under a destructured `catch` parameter or a `switch`'s `let`",
+		"var r = []; (function () { try { throw {}; } catch ({ f }) { { function f() {} } } try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); })(); (function () { switch (0) { default: let f; { function f() {} } } try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); })(); console.log(r.join());",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a sloppy block's function under a `let` two blocks up, or later in its block",
+		"var r = []; (function () { { let f = 1; { { function f() {} } } } try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); })(); (function () { { { function f() {} } let f = 1; } try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); })(); console.log(r.join());",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a sloppy block's function named as a parameter",
+		"var r = []; (function (f) { { function f() {} } r.push(typeof f); })(1); (function ({ f }) { { function f() {} } r.push(typeof f); })({ f: 1 }); (function (f = 1) { { function f() {} } r.push(typeof f); })(); ((f) => { { function f() {} } r.push(typeof f); })(1); console.log(r.join());",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a sloppy block's function under a `let` of its name, at a script's top level",
+		"var r = []; try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); { let f = 1; { function f() {} } } try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); console.log(r.join());",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a sloppy block's function its block calls, under a `let` of its name, mangled only",
+		"var r = []; (function () { { let f = 1; { function f() { return 7; } r.push(f()); } r.push(f); } })(); console.log(r.join());",
+		{ compress: false, mangle: true }
+	],
+	[
+		"a sloppy block's function under a `let` of its name, mangled over two passes",
+		"var r = []; (function () { { let f = 1; { function f() { return 7; } r.push(f()); } r.push(f); } try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); })(); console.log(r.join());",
+		{ compress: { passes: 2 }, mangle: true }
+	],
+	[
+		"a sloppy block's function under an array or object pattern's name",
+		"var r = []; (function () { { let [, f] = [0, 1]; { function f() {} } } try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); })(); (function () { { let [...f] = []; { function f() {} } } try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); })(); (function () { { let { ...f } = {}; { function f() {} } } try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); })(); (function ([, f]) { { function f() {} } r.push(typeof f); })([0, 1]); console.log(r.join());",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a sloppy block's function under a `let` of its name in a `catch` body",
+		"var r = []; (function () { try { throw 1; } catch { let f = 1; { function f() {} } } try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); })(); (function () { try { throw 1; } catch (e) { let f = 1; { function f() {} } } try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); })(); (function () { try { throw {}; } catch ({ e }) { let f = 1; { function f() {} } } try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); })(); console.log(r.join());",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a sloppy block's function under a `let` of its name in a labeled block, a `while` or a `do` body",
+		"var r = []; (function () { L: { let f = 1; { function f() {} } } try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); })(); (function () { while (true) { let f = 1; { function f() {} } break; } try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); })(); (function () { do { let f = 1; { function f() {} } } while (false); try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); })(); console.log(r.join());",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a sloppy block's function under a `let` of its name in an arrow, a generator and an async function",
+		"var r = []; (() => { { let f = 1; { function f() {} } } try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); })(); function* g() { { let f = 1; { function f() {} } } try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); } g().next(); (async function () { { let f = 1; { function f() {} } } try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); })(); console.log(r.join());",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a sloppy block's function under a renamed, defaulted, nested or `for-of` pattern's name",
+		"var r = []; (function () { { let { a: f } = { a: 1 }; { function f() {} } } try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); })(); (function () { { let { f = 1 } = {}; { function f() {} } } try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); })(); (function () { { let { a: [{ f }] } = { a: [{ f: 1 }] }; { function f() {} } } try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); })(); (function () { for (let [f] of [[1]]) { { function f() {} } } try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); })(); console.log(r.join());",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a sloppy block's function under a `let` of its name, in a function inlined at its one call",
+		"var r = []; function h() { { let f = 1; { function f() { return 7; } r.push(f()); } r.push(f); } } h(); console.log(r.join());",
+		{ compress: { passes: 2 }, mangle: true }
+	],
+	[
+		"a sloppy block's function under a `let` of its name at a script's top level, with `toplevel`",
+		"var r = []; { let f = 1; { function f() {} } } try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); console.log(r.join());",
+		{ compress: {}, mangle: true, toplevel: true }
+	],
+	[
+		"a sloppy block's function under a `let` of its name in a `with` body",
+		"var r = []; (function () { with ({}) { let f = 1; { function f() {} } } try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); })(); console.log(r.join());",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a sloppy block's function a later function of its name declares, read after the block",
+		"var r = []; (function () { { function f() { return 1; } } r.push(f()); function f() { return 2; } })(); (function () { if (true) { function f() { return 1; } } r.push(f()); function f() { return 2; } })(); (function () { if (true) function f() { return 1; } r.push(f()); function f() { return 2; } })(); (function () { function f() { return 2; } { function f() { return 1; } } r.push(f()); function f() { return 3; } })(); console.log(r.join());",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a sloppy block's function a later function of its name declares, in a `switch` or a loop",
+		"var r = []; (function () { switch (1) { case 1: function f() { return 1; } } r.push(f()); function f() { return 2; } })(); (function () { switch (1) { default: function f() { return 1; } } r.push(f()); function f() { return 2; } })(); (function () { for (var i = 0; i < 1; i++) { function f() { return 1; } } r.push(f()); function f() { return 2; } })(); console.log(r.join());",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a sloppy block's function a later function of its name declares, read in its block, in a `try` or a label, or as a value",
+		"var r = []; (function () { { function f() { return 1; } r.push(f()); } function f() { return 2; } })(); (function () { try { function f() { return 1; } } finally {} r.push(f()); function f() { return 2; } })(); (function () { l: { function f() { return 1; } } r.push(f()); function f() { return 2; } })(); (function () { { function f() { return 1; } } var g = f; r.push(g()); function f() { return 2; } })(); console.log(r.join());",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a sloppy block's function a later function of its name declares, at a script's top level",
+		"var r = []; { function f() { return 1; } } r.push(f()); function f() { return 2; } console.log(r.join());",
+		{ compress: {}, mangle: false, toplevel: true }
+	],
+	[
+		"a sloppy block's function an earlier `var` of its name holds a value for",
+		"function g() { var f = function () { return 2; }; { function f() { return 1; } } return f(); } function h() { var f = 2; if (true) { function f() {} } return typeof f; } function k() { var f = 2; switch (1) { default: function f() {} } return typeof f; } console.log(g(), h(), k());",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a sloppy block's function a later function or an earlier `var` of its name holds, mangled over two passes",
+		"function g() { { function f() { return 1; } } return f(); function f() { return 2; } } function h() { var f = 2; { function f() {} } return typeof f; } console.log(g(), h());",
+		{ compress: { passes: 2 }, mangle: true }
 	]
 ];
 
@@ -6394,6 +6504,98 @@ describe("syntax-printer", () => {
 				]) {
 					const { code } = await minify(input, options);
 					expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+				}
+			}
+		});
+
+		it("should still fold a name no sloppy block's function of the same scope sets", async () => {
+			const { minify, corrections } = await load();
+			if (!corrections) throw new Error("the correct phase is not installed");
+			/** @type {[string, import("terser").MinifyOptions][]} */
+			const cases = [
+				["function g() { var f = 2; { function h() {} } return typeof f; } console.log(g());", { compress: {}, mangle: false }],
+				["function g() { \"use strict\"; var f = 2; { function f() {} } return typeof f; } console.log(g());", { compress: {}, mangle: false }],
+				["function g() { var f = 2; function k() { { function f() {} } } return typeof f; } console.log(g());", { compress: {}, mangle: false }],
+				["function g() { var f = 2; function f() {} return typeof f; } console.log(g());", { compress: { passes: 2 }, mangle: true }],
+				["function g() { return f(); function f() { return 2; } } console.log(g());", { compress: {}, mangle: false }],
+				["function g(h) { var x = h(f); function f() {} return [x, f, f]; } console.log(g(String).length);", { compress: {}, mangle: false }],
+				["function g(h) { \"use strict\"; var f = h(); var x; { function f() {} x = f; } return [f, x]; } console.log(typeof g(String)[1]);", { compress: {}, mangle: false }]
+			];
+			for (const [input, options] of cases) {
+				const { code } = await minify(input, { ...options });
+				corrections.enabled = false;
+				try {
+					const { code: uncorrected } = await minify(input, { ...options });
+					expect(code).toBe(uncorrected);
+				} finally {
+					corrections.enabled = true;
+				}
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			}
+		});
+
+		it("should still hoist a sloppy block's function where no lexical declaration of its name surrounds it", async () => {
+			const { minify } = await load();
+			for (const input of [
+				"var r = []; (function () { try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); { function f() {} } try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); })(); (function () { try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); if (true) function f() {} try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); })(); console.log(r.join());",
+				"var r = []; (function () { try { throw 1; } catch (f) { { function f() {} } } try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); })(); console.log(r.join());",
+				"var r = []; (function () { var f = 1; { function f() {} } try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); })(); console.log(r.join());",
+				"var r = []; (function () { function f() { return 1; } { function f() { return 2; } } r.push(f()); })(); console.log(r.join());",
+				"var r = []; (function () { { function f() { return 1; } function f() { return 2; } } r.push(f()); })(); console.log(r.join());",
+				"var r = []; (function () { { function f() { return 1; } { function f() { return 2; } } } r.push(f()); })(); console.log(r.join());",
+				"var r = []; (function () { { let g = 1; { function f() {} } r.push(g); } try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); })(); console.log(r.join());",
+				"var r = []; (function () { { let f = 1; r.push(f); } { function f() {} } try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); })(); console.log(r.join());",
+				"var r = []; (function () { { function f() { let f = 1; return f; } } r.push(f()); })(); console.log(r.join());",
+				"var r = []; try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); { function f() {} } try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); console.log(r.join());",
+				"var r = []; (function () { for (let g; ; ) { { function f() {} } break; } try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); })(); (function () { for (let g in { a: 1 }) { { function f() {} } } try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); })(); (function () { for (let g of [0]) { { function f() {} } } try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); })(); console.log(r.join());",
+				"var r = []; (function () { let f = 1; (function () { { function f() {} } r.push(typeof f); })(); r.push(typeof f); })(); console.log(r.join());",
+				"var r = []; (function () { { let { g } = { g: 1 }; { function f() {} } } try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); })(); console.log(r.join());"
+			]) {
+				for (const options of [
+					{ compress: {}, mangle: false },
+					{ compress: { passes: 2 }, mangle: true }
+				]) {
+					const { code } = await minify(input, options);
+					expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+				}
+			}
+		});
+
+		it("should keep a sloppy block's function in its block under a script's own `let` of its name", async () => {
+			const { minify } = await load();
+			const input = "var r = []; let f = 1; { function f() {} } r.push(typeof f); console.log(r.join());";
+			for (const options of [
+				{ compress: {}, mangle: false },
+				{ compress: { passes: 2 }, mangle: true },
+				{ compress: false, mangle: true }
+			]) {
+				const { code } = await minify(input, options);
+				expect(runProgram(/** @type {string} */ (code))).toBe("number");
+			}
+		});
+
+		it("should minify a sloppy block's function a later `let` or `const` of its name keeps in its block, where terser throws", async () => {
+			const { minify, corrections } = await load();
+			for (const input of [
+				"var r = []; (function () { { function f() { return 7; } r.push(f()); } let f = 1; r.push(f); })(); console.log(r.join());",
+				"var r = []; (function () { { function f() {} } const f = 1; r.push(f); })(); console.log(r.join());",
+				"var r = []; { function f() { return 7; } r.push(f()); } let f = 1; r.push(f); console.log(r.join());",
+				"var r = []; { function f() {} } const f = 1; r.push(f); console.log(r.join());"
+			]) {
+				for (const options of [
+					{ compress: {}, mangle: false },
+					{ compress: false, mangle: true }
+				]) {
+					const { code } = await minify(input, options);
+					expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+					if (!corrections) throw new Error("the correct phase is not installed");
+					corrections.enabled = false;
+					try {
+						await expect(minify(input, options)).rejects.toThrow("is redeclared");
+						await expect(terserReference().minify(input, options)).rejects.toThrow("is redeclared");
+					} finally {
+						corrections.enabled = true;
+					}
 				}
 			}
 		});
