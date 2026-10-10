@@ -200,7 +200,6 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: class-properties/mangle_class_properties_keep_quoted",
 			"terser compress: collapse_vars/collapse_rhs_conditional_2",
 			"terser compress: collapse_vars/collapse_vars_side_effects_2",
-			"terser compress: collapse_vars/collapse_vars_while",
 			"terser compress: concat-strings/concat_1",
 			"terser compress: conditionals/cond_9",
 			"terser compress: conditionals/ifs_6",
@@ -660,13 +659,11 @@ const OXC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/projects/next/archive-3/pages/dynamic/no-ssr-custom-loading-7f61b2e27708ca1854e0/input.js",
 			"swc minifier: fixture/projects/next/archive-3/pages/dynamic/ssr-994266264fb6ff57d32c/input.js",
 			"swc minifier: fixture/projects/next/archive-3/pages/dynamic/ssr-true-6d4aa8fc503b9d073aef/input.js",
-			"swc minifier: fixture/projects/react/.6/input.js",
 			"swc minifier: fixture/projects/wmr/archive-1/chunks/hoofd.module.6c5395cb/input.js",
 			"swc minifier: projects/files/backbone-1.1.0.js",
 			"swc minifier: projects/files/jquery-1.9.1.js",
 			"swc minifier: projects/files/jquery.mobile-1.4.2.js",
 			"swc minifier: projects/files/mootools-1.4.5.js",
-			"swc minifier: projects/files/react-17.0.1.js",
 			"swc minifier: projects/files/underscore-1.5.2.js"
 		]
 	],
