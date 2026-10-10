@@ -1656,6 +1656,22 @@ const LOWERING_FIXTURES = [
 		]
 	},
 	{
+		name: "a line height folded into the font before it",
+		css:
+			".a{font:italic 700 12px/1 serif;color:red;line-height:2}" +
+			".b{font:small serif;line-height:normal}.c{font-size:20px;font:menu;line-height:3}",
+		browsers: ["chrome 130"],
+		produces: [".a{color:red;font:italic 700 12px/2 serif}", ".b{font:small serif}"],
+		html: '<p class="a">x</p><p class="b">x</p><p class="c">x</p>',
+		probes: [
+			[".a", "line-height"],
+			[".a", "font-size"],
+			[".a", "font-weight"],
+			[".b", "line-height"],
+			[".c", "line-height"]
+		]
+	},
+	{
 		name: "a slot holding the value an unwritten one takes",
 		css:
 			"#b{background:0% 0% / auto repeat scroll padding-box border-box red;" +

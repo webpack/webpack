@@ -6599,6 +6599,11 @@ declare interface CssPrintOptions {
 	declareCharset?: boolean;
 
 	/**
+	 * with `declareCharset`, write a string's hex escape of every non-ASCII character as the character, not only one past U+FFFF: fewer bytes, which compress smaller only where many such escapes repeat, as in an icon font's stylesheet. Off by default, and only read while printing
+	 */
+	writeCharacters?: boolean;
+
+	/**
 	 * give a rule the selectors of a later one printing the same block, and an at-rule the block of a later one stating the same condition, past the rules between them; off by default, since it reorders the cascade and is sound only where nothing between declares what the block being moved does for an element it can match — a condition between counting for what its own rules declare
 	 */
 	mergeDistantRules?: boolean;
@@ -6648,6 +6653,11 @@ declare interface CssProcessOptions {
 	 * open the stylesheet with `@charset "UTF-8"` exactly when its output holds a non-ASCII character, so it is read as UTF-8 wherever it is served, and write a string's hex escape of a character past U+FFFF as the character, which costs fewer bytes once compressed; for a stylesheet that is a file of its own, as `@charset` is read only as one's opening bytes. Off by default, and only read while printing
 	 */
 	declareCharset?: boolean;
+
+	/**
+	 * with `declareCharset`, write a string's hex escape of every non-ASCII character as the character, not only one past U+FFFF: fewer bytes, which compress smaller only where many such escapes repeat, as in an icon font's stylesheet. Off by default, and only read while printing
+	 */
+	writeCharacters?: boolean;
 
 	/**
 	 * rewrite a length into a shorter unit it is exactly equal in (`16px` -> `1pc`); off by default because it earns nothing once the asset is compressed, and only read while printing. A time is always rewritten

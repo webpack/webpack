@@ -13504,6 +13504,19 @@ describe("CssSyntax minify — `declareCharset`", () => {
 		expect(declared(css)).toBe(printed);
 	});
 
+	it("writes every non-ASCII escape out with `writeCharacters`", () => {
+		expect(declared('a{content:"\\e900\\41"}', { writeCharacters: true })).toBe(
+			'@charset "UTF-8";a{content:"\\41"}'
+		);
+		// It reads only beside `declareCharset`, which says the file is UTF-8.
+		expect(
+			declared('a{content:"\\e900"}', {
+				declareCharset: false,
+				writeCharacters: true
+			})
+		).toBe('a{content:"\\e900"}');
+	});
+
 	it("declares it again when its own output is minified", () => {
 		const once = declared('a{content:"\\1F600"}');
 		expect(declared(once)).toBe(once);
@@ -13784,6 +13797,86 @@ describe("cssMinify export", () => {
 		const { code } = await cssMinify({ "a.css": "a {\n\tcolor: red;\n}\n" });
 
 		expect(code).toMatchInlineSnapshot('"a{color:red}"');
+	});
+
+	describe("writes an escape as its character where that compresses smaller", () => {
+		// Text in a script outside ASCII, spelled as escapes: each one costs five
+		// bytes and repeats nothing a compressor could share.
+		let seed = 7;
+		const text = Array.from({ length: 10 }, (_, i) => {
+			const escapes = Array.from({ length: 40 }, () => {
+				seed = (seed * 48271) % 2147483647;
+				return `\\${(0x4e00 + (seed % 20000)).toString(16)}`;
+			});
+			return `.t${i}:before{content:"${escapes.join("")}"}`;
+		}).join("");
+
+		it("keeps each escape where one is written once", async () => {
+			const cssMinify = require("../../lib/css/cssMinify");
+
+			const { code } = await cssMinify({ "a.css": 'a{content:"\\f101"}' });
+			expect(code).toBe('a{content:"\\f101"}');
+		});
+
+		it("writes the characters where they compress smaller", async () => {
+			const cssMinify = require("../../lib/css/cssMinify");
+
+			const { code } = await cssMinify({ "a.css": text });
+			expect(code.startsWith('@charset "UTF-8";.t0:before{content:"')).toBe(true);
+			expect(code).not.toContain("\\");
+		});
+
+		it("reports what it extracted and rendered once, from the print it keeps", async () => {
+			const cssMinify = require("../../lib/css/cssMinify");
+			const svg = 'b{background:url("data:image/svg+xml,<svg></svg>")}';
+			/**
+			 * @param {string} css the stylesheet
+			 * @returns {Promise<{ code: string, extractedComments?: string[], warnings?: EXPECTED_ANY[] }>} what the minifier answers
+			 */
+			const run = (css) =>
+				cssMinify(
+					{ "a.css": `/*! banner */${css}${svg}` },
+					undefined,
+					{
+						renderEmbeddedSource: () => ({
+							code: "<svg/>",
+							warnings: ["checked"]
+						})
+					},
+					true
+				);
+
+			const written = await run(text);
+			expect(written.code).not.toContain("\\");
+			expect(written.extractedComments).toEqual(["/*! banner */"]);
+			expect(written.warnings).toHaveLength(1);
+
+			const kept = await run('a{content:"\\f101"}');
+			expect(kept.code).toContain('"\\f101"');
+			expect(kept.extractedComments).toEqual(["/*! banner */"]);
+			expect(kept.warnings).toHaveLength(1);
+		});
+
+		it.each([
+			// Only a string's escapes count: one in a comment, of an ASCII
+			// character, of a quote and one past the BMP are not these.
+			'/*! "\\f101" */a{content:"\\41\\"\\1F600"}',
+			"a{content:'\\'\\f101'}",
+			// An unclosed comment, kept to the end, holds no string at all.
+			'a{content:"x"}/*! "\\f101"'
+		])("prints %s as the one print does", async (css) => {
+			const cssMinify = require("../../lib/css/cssMinify");
+
+			const { code } = await cssMinify({ "a.css": css }, undefined, {
+				extractComments: false
+			});
+			expect(code).toBe(
+				new SourceProcessor().process(css, {
+					mode: "minify",
+					declareCharset: true
+				}).code
+			);
+		});
 	});
 
 	it("reads a Buffer input as UTF-8", async () => {
