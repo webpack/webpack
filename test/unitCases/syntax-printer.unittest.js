@@ -784,6 +784,12 @@ const IMPROVED_CASES = [
 		{ compress: { side_effects: false, unused: false }, mangle: false },
 		'function f(o,p){for(;;){(function(){return"use strict"})();break}return null===this}console.log(f.call(null,1,2));'
 	],
+	[
+		"a function read once passed to a call `pure_funcs` names, which keeps its callee",
+		"function wrap(f) { return { f: f }; } function check(f) { return f(1); } function o() { var F = function (a) { return a + 1; }; var w = wrap(F); var G = function (a) { return a * 3; }; return [w.f(2), check(G)]; } console.log(o().join());",
+		{ compress: { pure_funcs: ["wrap", "check"] }, mangle: false },
+		"function wrap(f){return{f:f}}function check(f){return f(1)}function o(){return[wrap(function(a){return a+1}).f(2),check(function(a){return 3*a})]}console.log(o().join());"
+	],
 	...[
 		[
 			"an array of strings split on `.`",
@@ -912,6 +918,10 @@ const IMPROVED_CASES = [
 		[
 			"an arrow written in place passed the name of its parameter inside a generator, as the value it returns",
 			"function* g(o) { yield ((o) => [o.a, o.b, o])(o); } console.log([...g({ a: 1, b: 2 })][0].length);"
+		],
+		[
+			"a function, an arrow and a function declaration read once, as the argument of a `#__PURE__` call",
+			"function wrap(f) { return { f: f }; } function o() { var F = function (a) { return a + 1; }, A = (b) => b * 2; function D(c) { return c - 1; } return [/* @__PURE__ */ wrap(F), /* @__PURE__ */ wrap(A), /* @__PURE__ */ wrap(D)]; } console.log(o().map(function (w) { return w.f(3); }).join());"
 		]
 	].map(
 		([name, input]) =>
@@ -974,6 +984,7 @@ const KEPT_CASES = [
 	["a `Number` shadowed by a variable", "var Number = { NaN: 1 }; console.log(Number.NaN);"],
 	["a `#__PURE__` call of a function passed something, called optionally, async, running more than a `return`, or returning what has side effects", "function g(x) { return x; } var o = { p: { q: g } }; console.log(/* @__PURE__ */ ((a) => a)(1), /* @__PURE__ */ (() => 1)?.(), /* @__PURE__ */ (() => { g(); return 1; })(), /* @__PURE__ */ (() => g(g()))(), /* @__PURE__ */ (() => o.p.q(1))(), /* @__PURE__ */ (async () => 1)() instanceof Promise, /* @__PURE__ */ (() => o.p)());"],
 	["`Number.EPSILON`, longer as a number", "console.log(Number.EPSILON);"],
+	["a function read once kept out of a `#__PURE__` call in a loop or in a closure, and a class", "function wrap(f) { return { f: f }; } function o() { var F = function (a) { return a + 1; }, C = class { m() { return 4; } }, r = []; for (var i = 0; i < 2; i++) r.push(/* @__PURE__ */ wrap(F)); var G = function (a) { return a * 3; }; return [r, function () { return /* @__PURE__ */ wrap(G); }, /* @__PURE__ */ wrap(C)]; } var x = o(); console.log(x[0][0].f === x[0][1].f, x[1]().f(2), new x[2].f().m());"],
 	["safe-integer bounds, whose digits gzip worse", "console.log(Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER);"],
 	["a `RegExp` constructed from a regular expression", "var r = /a/g; console.log(new RegExp(r) === r, RegExp(r) === r);"],
 	["a `RegExp` constructed from what may be a regular expression, with flags that may be missing", "function f(a, b, g) { return [new RegExp(a + b).source, new RegExp(a, g) === a]; } var r = /a/; console.log(f(1, 2), f(r, void 0, void 0));"],
