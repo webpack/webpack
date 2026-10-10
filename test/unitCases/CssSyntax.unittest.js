@@ -15585,6 +15585,28 @@ describe("CssSyntax minify — declaration order", () => {
 	])("keeps %s apart past what may set a slot", (css) => {
 		expect(settled(css, modern)).toBe(css);
 	});
+
+	it.each([
+		["a{font:italic 700 12px/1 serif;line-height:2}", "a{font:italic 700 12px/2 serif}"],
+		["a{font:bold LARGE serif;line-height:1.5}", "a{font:700 LARGE/1.5 serif}"],
+		["a{font:small serif;line-height:normal}", "a{font:small serif}"],
+		["a{font:1.2em KaTeX_Main,Times New Roman;line-height:1.2}", "a{font:1.2em/1.2 KaTeX_Main,Times New Roman}"],
+		["a{font:0 serif!important;line-height:2!important}", "a{font:0/2 serif!important}"],
+		["a{font:oblique 10deg 12px/1 serif;line-height:2}", "a{font:oblique 10deg 12px/2 serif}"]
+	])("folds the line height of %s into the font", (css, expected) => {
+		expect(settled(css, modern)).toBe(expected);
+	});
+
+	it.each([
+		"a{font:12px serif;line-height:var(--x)}",
+		"a{font:var(--f);line-height:2}",
+		"a{font:12px serif;line-height:inherit}",
+		"a{font:12px serif;line-height:2 3}",
+		"a{font:menu;line-height:2}",
+		"a{font:bold serif;line-height:2}"
+	])("keeps %s apart", (css) => {
+		expect(settled(css, modern)).toBe(css);
+	});
 });
 
 describe("CssSyntax minify — the same rewrite in every context", () => {
