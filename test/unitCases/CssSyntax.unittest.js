@@ -849,7 +849,7 @@ describe("CssSyntax — substitution span searches", () => {
 });
 
 describe("CssSyntax — SourceProcessor", () => {
-	it("exposes range / unescaped / typeFlag / setEnd / setBlockEnd on the path", () => {
+	it("exposes range / unescaped / type flags / setEnd / setBlockEnd on the path", () => {
 		/** @type {Record<string, unknown>} */
 		const seen = {};
 		new SourceProcessor()
@@ -858,14 +858,14 @@ describe("CssSyntax — SourceProcessor", () => {
 					[NodeType.Hash]: (
 						/** @type {import("../../lib/css/syntax-parser").CssPath} */ path
 					) => {
-						seen.typeFlag = path.typeFlag();
+						seen.idFlag = path.flag(Flag.id);
 						// `A.value` on a hash drops the `#` (raw-value slice).
 						seen.hashValue = path.value();
 					},
 					[NodeType.Number]: (
 						/** @type {import("../../lib/css/syntax-parser").CssPath} */ path
 					) => {
-						seen.numFlag = path.typeFlag();
+						seen.integerFlag = path.flag(Flag.integer);
 					},
 					[NodeType.String]: (
 						/** @type {import("../../lib/css/syntax-parser").CssPath} */ path
@@ -888,8 +888,8 @@ describe("CssSyntax — SourceProcessor", () => {
 				})
 			)
 			.process('a { z-index: 5; content: "x"; color: #123 }');
-		expect(seen.typeFlag).toBe("unrestricted");
-		expect(seen.numFlag).toBe("integer");
+		expect(seen.idFlag).toBe(false);
+		expect(seen.integerFlag).toBe(true);
 		expect(seen.hashValue).toBe("123");
 		expect(seen.unescaped).toBe("x");
 		expect(Array.isArray(seen.range)).toBe(true);
@@ -2275,7 +2275,7 @@ describe("CssSyntax — minify value-safety edge cases", () => {
 			[NodeType.Ident]: (
 				/** @type {import("../../lib/css/syntax-parser").CssPath} */ path
 			) => {
-				if (path.inValue()) throw new Error("boom");
+				if (path.within(NodeType.Declaration)) throw new Error("boom");
 			}
 		});
 		expect(() => processor.process("a{color:red}")).toThrow("boom");
@@ -3820,7 +3820,7 @@ describe("CssSyntax — path accessors", () => {
 						);
 					},
 					[NodeType.SimpleBlock]: (/** @type {CssPath} */ path) => {
-						log.push(`blockToken:${path.blockToken()}`);
+						log.push(`blockToken:${path.value()}`);
 					},
 					[NodeType.Function]: {
 						enter: (/** @type {CssPath} */ path) => {

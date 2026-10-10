@@ -1214,7 +1214,7 @@ const opaqueDeclarationRanges = (css) => {
 					(name === "result" && atRules.includes("function")) ||
 					(first !== -1 &&
 						nodePath.type(first) === NodeType.SimpleBlock &&
-						nodePath.blockToken(first) === "{")
+						nodePath.value(first) === "{")
 				) {
 					ranges.push([nodePath.range()[0], nodePath.range()[1]]);
 				}

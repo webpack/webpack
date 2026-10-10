@@ -6,7 +6,9 @@ const {
 	NS_MATHML,
 	NS_SVG,
 	NodeType,
+	Part,
 	_attributeList,
+	_namespaceOf,
 	decodeEntities
 } = require("../../lib/html/syntax-parser");
 
@@ -36,8 +38,8 @@ const serializeHtmlTree = (root) => {
 		const type = A.type(node);
 		if (type === NodeType.Doctype) {
 			let s = `<!DOCTYPE ${A.name(node) || ""}`;
-			const publicId = A.publicId(node);
-			const systemId = A.systemId(node);
+			const publicId = A.textOf(Part.publicId, node);
+			const systemId = A.textOf(Part.systemId, node);
 			if (publicId !== null || systemId !== null) {
 				s += ` "${publicId || ""}" "${systemId || ""}"`;
 			}
@@ -57,7 +59,7 @@ const serializeHtmlTree = (root) => {
 			return;
 		}
 		const prefix =
-			/** @type {Record<number, string>} */ (NS_PREFIX)[A.namespace(node)] ||
+			/** @type {Record<number, string>} */ (NS_PREFIX)[_namespaceOf(node)] ||
 			"";
 		lines.push(`${indent}<${prefix}${A.name(node)}>`);
 		const attrs = _attributeList(node).sort((a, b) => {

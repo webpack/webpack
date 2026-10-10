@@ -41,6 +41,7 @@ const {
 	NodeType,
 	Part,
 	QUOTE_NONE,
+	_namespaceOf,
 	decodeEntities,
 	pickTransforms,
 	tokenize
@@ -1389,7 +1390,7 @@ const htmlSpans = (html) =>
  */
 const fragmentContextOf = (nodePath) => {
 	if (nodePath.type() !== NodeType.Element) return "";
-	const namespace = nodePath.namespace();
+	const namespace = _namespaceOf(nodePath.node);
 	if (namespace === NS_SVG) return `svg ${nodePath.name()}`;
 	if (namespace === NS_MATHML) return `math ${nodePath.name()}`;
 	return nodePath.name();
@@ -1590,7 +1591,7 @@ const htmlPurityDigest = (html, print) => {
 		const type = nodePath.type();
 		digest.update(`${NODE_TYPE_NAMES[type]}[${nodePath.range().join(",")})`);
 		if (type === NodeType.Element) {
-			digest.update(`|<${nodePath.name()}>|${nodePath.namespace()}`);
+			digest.update(`|<${nodePath.name()}>|${_namespaceOf(nodePath.node)}`);
 			const count = nodePath.fieldCount(Field.attributes);
 			for (let index = 0; index < count; index++) {
 				const attribute = nodePath.field(index, Field.attributes);

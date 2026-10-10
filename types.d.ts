@@ -418,9 +418,11 @@ declare interface AnyParts {
 	field: number;
 	flag: number;
 	part: number;
+	text: number;
 	fields: Record<number, number>;
 	flags: Record<number, number>;
 	parts: Record<number, number>;
+	texts: Record<number, number>;
 	items: Record<number, number>;
 	visitors: VisitorMap<any>;
 }
@@ -6453,7 +6455,11 @@ type CssNodePath<T = number> = Omit<
 		 * Stop the walk: no visitor fires after the current one returns.
 		 */
 		stop(): void;
-		inValue(): boolean;
+		/**
+		 * A top-level rule and a comment have none; a hash within a declaration is
+		 * a color, elsewhere an id.
+		 */
+		within(type: number): boolean;
 		type(n?: NodeSyntaxParser): number;
 		range(n?: NodeSyntaxParser): [number, number];
 		loc(n?: NodeSyntaxParser): [number, number, number, number];
@@ -6468,8 +6474,6 @@ type CssNodePath<T = number> = Omit<
 		 * comment's text); "" for a rule, declaration, function or block.
 		 */
 		value(n?: NodeSyntaxParser): string | number;
-		unit(n?: NodeSyntaxParser): string;
-		typeFlag(n?: NodeSyntaxParser): string;
 		name(n?: NodeSyntaxParser): string;
 		/**
 		 * A rule's children are its prelude; its block is read with {@link field }.
@@ -6488,15 +6492,27 @@ type CssNodePath<T = number> = Omit<
 			n?: NodeSyntaxParser
 		): NodeSyntaxParser;
 		/**
-		 * Only a container's flags are cleared when its id is reused, so a leaf has none.
+		 * `important` is a container's bit, cleared when its id is reused; a token's
+		 * type flags are read off its text.
 		 */
 		flag(flag: number, n?: NodeSyntaxParser): boolean;
 		rangeOf(part: number, n?: NodeSyntaxParser): null | [number, number];
-		blockToken(n?: NodeSyntaxParser): SimpleBlockToken;
+		/**
+		 * CSS has no text beyond a node's name and value, read with `name` and `value`.
+		 */
+		textOf(_part: number, _n?: NodeSyntaxParser): null;
 	},
-	"flag" | "node" | "field" | "fieldCount" | "fieldNamed" | "rangeOf"
+	| "flag"
+	| "node"
+	| "within"
+	| "field"
+	| "fieldCount"
+	| "fieldNamed"
+	| "rangeOf"
+	| "textOf"
 > & {
 	readonly node: TypedNode<NodeSyntaxParser, T>;
+	within(type: CssNodeType): boolean;
 	field<
 		R extends NodeSyntaxParser = TypedNode<NodeSyntaxParser, T>,
 		F extends number = number
@@ -6643,15 +6659,15 @@ type CssNodePath<T = number> = Omit<
 				"1": never;
 				"2": never;
 				"3": never;
-				"4": never;
+				"4": 4;
 				"5": never;
 				"6": never;
 				"7": never;
 				"8": never;
 				"9": never;
-				"10": never;
-				"11": never;
-				"12": never;
+				"10": 2;
+				"11": 2;
+				"12": 2;
 				"13": never;
 				"14": never;
 				"15": never;
@@ -6669,7 +6685,7 @@ type CssNodePath<T = number> = Omit<
 				"27": never;
 				"28": never;
 			},
-			1
+			1 | 2 | 4
 		>,
 		n?: R
 	): boolean;
@@ -6688,7 +6704,7 @@ type CssNodePath<T = number> = Omit<
 				"9": never;
 				"10": never;
 				"11": never;
-				"12": never;
+				"12": 1;
 				"13": never;
 				"14": never;
 				"15": never;
@@ -6710,6 +6726,43 @@ type CssNodePath<T = number> = Omit<
 		>,
 		n?: R
 	): null | [number, number];
+	textOf<R extends NodeSyntaxParser = TypedNode<NodeSyntaxParser, T>>(
+		part: PartOf<
+			R,
+			{
+				"1": never;
+				"2": never;
+				"3": never;
+				"4": never;
+				"5": never;
+				"6": never;
+				"7": never;
+				"8": never;
+				"9": never;
+				"10": never;
+				"11": never;
+				"12": never;
+				"13": never;
+				"14": never;
+				"15": never;
+				"16": never;
+				"17": never;
+				"18": never;
+				"19": never;
+				"20": never;
+				"21": never;
+				"22": never;
+				"23": never;
+				"24": never;
+				"25": never;
+				"26": never;
+				"27": never;
+				"28": never;
+			},
+			never
+		>,
+		n?: R
+	): null | string;
 };
 type CssNodeType =
 	| 1
@@ -6880,8 +6933,9 @@ declare interface CssParserOptions {
 declare interface CssParts {
 	types: CssNodeType;
 	field: CssListField;
-	flag: 1;
+	flag: 1 | 2 | 4;
 	part: 1 | 2 | 3;
+	text: never;
 	fields: {
 		"1": never;
 		"2": 2;
@@ -6916,15 +6970,15 @@ declare interface CssParts {
 		"1": never;
 		"2": never;
 		"3": never;
-		"4": never;
+		"4": 4;
 		"5": never;
 		"6": never;
 		"7": never;
 		"8": never;
 		"9": never;
-		"10": never;
-		"11": never;
-		"12": never;
+		"10": 2;
+		"11": 2;
+		"12": 2;
 		"13": never;
 		"14": never;
 		"15": never;
@@ -6954,7 +7008,7 @@ declare interface CssParts {
 		"9": never;
 		"10": never;
 		"11": never;
-		"12": never;
+		"12": 1;
 		"13": never;
 		"14": never;
 		"15": never;
@@ -6968,6 +7022,36 @@ declare interface CssParts {
 		"23": 1;
 		"24": 1 | 3;
 		"25": 3;
+		"26": never;
+		"27": never;
+		"28": never;
+	};
+	texts: {
+		"1": never;
+		"2": never;
+		"3": never;
+		"4": never;
+		"5": never;
+		"6": never;
+		"7": never;
+		"8": never;
+		"9": never;
+		"10": never;
+		"11": never;
+		"12": never;
+		"13": never;
+		"14": never;
+		"15": never;
+		"16": never;
+		"17": never;
+		"18": never;
+		"19": never;
+		"20": never;
+		"21": never;
+		"22": never;
+		"23": never;
+		"24": never;
+		"25": never;
 		"26": never;
 		"27": never;
 		"28": never;
@@ -7175,7 +7259,11 @@ declare class CssSourceProcessor extends SourceProcessor<
 		 * Stop the walk: no visitor fires after the current one returns.
 		 */
 		stop(): void;
-		inValue(): boolean;
+		/**
+		 * A top-level rule and a comment have none; a hash within a declaration is
+		 * a color, elsewhere an id.
+		 */
+		within(type: number): boolean;
 		type(n?: NodeSyntaxParser): number;
 		range(n?: NodeSyntaxParser): [number, number];
 		loc(n?: NodeSyntaxParser): [number, number, number, number];
@@ -7190,8 +7278,6 @@ declare class CssSourceProcessor extends SourceProcessor<
 		 * comment's text); "" for a rule, declaration, function or block.
 		 */
 		value(n?: NodeSyntaxParser): string | number;
-		unit(n?: NodeSyntaxParser): string;
-		typeFlag(n?: NodeSyntaxParser): string;
 		name(n?: NodeSyntaxParser): string;
 		/**
 		 * A rule's children are its prelude; its block is read with {@link field }.
@@ -7210,11 +7296,15 @@ declare class CssSourceProcessor extends SourceProcessor<
 			n?: NodeSyntaxParser
 		): NodeSyntaxParser;
 		/**
-		 * Only a container's flags are cleared when its id is reused, so a leaf has none.
+		 * `important` is a container's bit, cleared when its id is reused; a token's
+		 * type flags are read off its text.
 		 */
 		flag(flag: number, n?: NodeSyntaxParser): boolean;
 		rangeOf(part: number, n?: NodeSyntaxParser): null | [number, number];
-		blockToken(n?: NodeSyntaxParser): SimpleBlockToken;
+		/**
+		 * CSS has no text beyond a node's name and value, read with `name` and `value`.
+		 */
+		textOf(_part: number, _n?: NodeSyntaxParser): null;
 	},
 	NodeSyntaxParser,
 	CssProcessOptions,
@@ -11938,6 +12028,10 @@ type HtmlNodePath<T = number> = Omit<
 		 * Stop the walk: no visitor fires after the current one returns.
 		 */
 		stop(): void;
+		/**
+		 * Walks the parent links, so a `<template>`'s content ends at its fragment.
+		 */
+		within(type: number): boolean;
 		type(n?: number): number;
 		range(n?: number): [number, number];
 		/**
@@ -11954,7 +12048,6 @@ type HtmlNodePath<T = number> = Omit<
 		 * a doctype's name, a processing instruction's target; "" for other nodes.
 		 */
 		name(n?: number): string;
-		namespace(n?: number): number;
 		fieldCount(field: number, n?: number): number;
 		/**
 		 * An attribute item is a node the shared reads take.
@@ -11966,42 +12059,19 @@ type HtmlNodePath<T = number> = Omit<
 		fieldNamed(field: number, name: string, n?: number): number;
 		flag(flag: number, n?: number): boolean;
 		/**
-		 * A parser-inserted element has no name or content in the source.
+		 * A parser-inserted element has no name, tags or content in the source.
 		 */
 		rangeOf(part: number, n?: number): null | [number, number];
 		/**
-		 * Whether the source wrote this element's end tag rather than the parser
-		 * popping it for an implied close. Read back off the range instead of marked
-		 * during the parse: an element's end spans the token that closed it, so its
-		 * own end tag is the last thing in it — and only the few elements around a
-		 * region printed from source ever ask.
+		 * Name and value are read with `name` and `value`; this reads a node's
+		 * other text, such as a doctype's identifiers, which are stored decoded.
 		 */
-		sourceClosed(n?: number): boolean;
-		/**
-		 * Raw source of an element's opening tag, `[start, tagEnd)` — attribute quoting
-		 * / spacing / case preserved byte-for-byte (walk-window only) — or `""` for a
-		 * parser-inserted element (auto `html`/`head`/`body`/`tbody`, …), which has no
-		 * real source tag: its offsets are zero-width or borrow the triggering token,
-		 * so the sliced name doesn't match this element. The empty string lets a printer
-		 * treat such an element as transparent.
-		 */
-		openTag(n?: number): string;
-		/**
-		 * An element's end tag, generated as `</name>` from the opening tag's own name
-		 * (exact source casing, correct for foreign camelCase elements). Generated, not
-		 * sliced: element `end` offsets don't span the end tag, and an omitted optional
-		 * end tag (`<li>`, `<p>`, …) still serializes to the same DOM. `""` when the
-		 * parser inserted the element, as {@link openTag } does — it has no name in the
-		 * source to echo, and slicing one would spell `</>`.
-		 */
-		closeTag(n?: number): string;
+		textOf(part: number, n?: number): null | string;
 		/**
 		 * A text's, comment's, processing instruction's or attribute's data,
 		 * character references decoded; "" for other nodes.
 		 */
 		value(n?: number): string;
-		publicId(_n?: number): null | string;
-		systemId(_n?: number): null | string;
 		/**
 		 * Counted along the sibling links once per node and visitor call.
 		 */
@@ -12012,9 +12082,17 @@ type HtmlNodePath<T = number> = Omit<
 		 */
 		child(i: number, n?: number): number;
 	},
-	"flag" | "node" | "field" | "fieldCount" | "fieldNamed" | "rangeOf"
+	| "flag"
+	| "node"
+	| "within"
+	| "field"
+	| "fieldCount"
+	| "fieldNamed"
+	| "rangeOf"
+	| "textOf"
 > & {
 	readonly node: TypedNode<number, T>;
+	within(type: HtmlNodeType): boolean;
 	field<R extends number = TypedNode<number, T>, F extends number = number>(
 		i: number,
 		field: F &
@@ -12079,14 +12157,14 @@ type HtmlNodePath<T = number> = Omit<
 			{
 				"1": never;
 				"2": never;
-				"3": 4;
+				"3": 1 | 2 | 4;
 				"4": never;
 				"5": never;
 				"6": never;
 				"7": never;
 				"8": never;
 			},
-			4
+			1 | 2 | 4
 		>,
 		n?: R
 	): boolean;
@@ -12096,17 +12174,34 @@ type HtmlNodePath<T = number> = Omit<
 			{
 				"1": never;
 				"2": never;
-				"3": 1 | 3;
+				"3": 1 | 3 | 4 | 5;
 				"4": never;
 				"5": never;
-				"6": never;
+				"6": 6 | 7;
 				"7": never;
 				"8": 1 | 2;
 			},
-			1 | 2 | 3
+			1 | 2 | 3 | 4 | 5 | 6 | 7
 		>,
 		n?: R
 	): null | [number, number];
+	textOf<R extends number = TypedNode<number, T>>(
+		part: PartOf<
+			R,
+			{
+				"1": never;
+				"2": never;
+				"3": never;
+				"4": never;
+				"5": never;
+				"6": 6 | 7;
+				"7": never;
+				"8": never;
+			},
+			6 | 7
+		>,
+		n?: R
+	): null | string;
 };
 type HtmlNodeType = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
 declare interface HtmlParseOptions {
@@ -12216,8 +12311,9 @@ declare interface HtmlParserOptions {
 declare interface HtmlParts {
 	types: HtmlNodeType;
 	field: 1 | 2;
-	flag: 4;
-	part: 1 | 2 | 3;
+	flag: 1 | 2 | 4;
+	part: 1 | 2 | 3 | 4 | 5 | 6 | 7;
+	text: 6 | 7;
 	fields: {
 		"1": never;
 		"2": never;
@@ -12231,7 +12327,7 @@ declare interface HtmlParts {
 	flags: {
 		"1": never;
 		"2": never;
-		"3": 4;
+		"3": 1 | 2 | 4;
 		"4": never;
 		"5": never;
 		"6": never;
@@ -12241,12 +12337,22 @@ declare interface HtmlParts {
 	parts: {
 		"1": never;
 		"2": never;
-		"3": 1 | 3;
+		"3": 1 | 3 | 4 | 5;
 		"4": never;
 		"5": never;
-		"6": never;
+		"6": 6 | 7;
 		"7": never;
 		"8": 1 | 2;
+	};
+	texts: {
+		"1": never;
+		"2": never;
+		"3": never;
+		"4": never;
+		"5": never;
+		"6": 6 | 7;
+		"7": never;
+		"8": never;
 	};
 	items: { [index: number]: number; "1": 8; "2": 2 };
 	visitors: HtmlVisitorMap;
@@ -12510,6 +12616,10 @@ declare class HtmlSourceProcessor extends SourceProcessor<
 		 * Stop the walk: no visitor fires after the current one returns.
 		 */
 		stop(): void;
+		/**
+		 * Walks the parent links, so a `<template>`'s content ends at its fragment.
+		 */
+		within(type: number): boolean;
 		type(n?: number): number;
 		range(n?: number): [number, number];
 		/**
@@ -12526,7 +12636,6 @@ declare class HtmlSourceProcessor extends SourceProcessor<
 		 * a doctype's name, a processing instruction's target; "" for other nodes.
 		 */
 		name(n?: number): string;
-		namespace(n?: number): number;
 		fieldCount(field: number, n?: number): number;
 		/**
 		 * An attribute item is a node the shared reads take.
@@ -12538,42 +12647,19 @@ declare class HtmlSourceProcessor extends SourceProcessor<
 		fieldNamed(field: number, name: string, n?: number): number;
 		flag(flag: number, n?: number): boolean;
 		/**
-		 * A parser-inserted element has no name or content in the source.
+		 * A parser-inserted element has no name, tags or content in the source.
 		 */
 		rangeOf(part: number, n?: number): null | [number, number];
 		/**
-		 * Whether the source wrote this element's end tag rather than the parser
-		 * popping it for an implied close. Read back off the range instead of marked
-		 * during the parse: an element's end spans the token that closed it, so its
-		 * own end tag is the last thing in it — and only the few elements around a
-		 * region printed from source ever ask.
+		 * Name and value are read with `name` and `value`; this reads a node's
+		 * other text, such as a doctype's identifiers, which are stored decoded.
 		 */
-		sourceClosed(n?: number): boolean;
-		/**
-		 * Raw source of an element's opening tag, `[start, tagEnd)` — attribute quoting
-		 * / spacing / case preserved byte-for-byte (walk-window only) — or `""` for a
-		 * parser-inserted element (auto `html`/`head`/`body`/`tbody`, …), which has no
-		 * real source tag: its offsets are zero-width or borrow the triggering token,
-		 * so the sliced name doesn't match this element. The empty string lets a printer
-		 * treat such an element as transparent.
-		 */
-		openTag(n?: number): string;
-		/**
-		 * An element's end tag, generated as `</name>` from the opening tag's own name
-		 * (exact source casing, correct for foreign camelCase elements). Generated, not
-		 * sliced: element `end` offsets don't span the end tag, and an omitted optional
-		 * end tag (`<li>`, `<p>`, …) still serializes to the same DOM. `""` when the
-		 * parser inserted the element, as {@link openTag } does — it has no name in the
-		 * source to echo, and slicing one would spell `</>`.
-		 */
-		closeTag(n?: number): string;
+		textOf(part: number, n?: number): null | string;
 		/**
 		 * A text's, comment's, processing instruction's or attribute's data,
 		 * character references decoded; "" for other nodes.
 		 */
 		value(n?: number): string;
-		publicId(_n?: number): null | string;
-		systemId(_n?: number): null | string;
 		/**
 		 * Counted along the sibling links once per node and visitor call.
 		 */
@@ -21430,9 +21516,14 @@ declare interface NodeParts {
 	flag: number;
 
 	/**
-	 * every `Part`
+	 * every `Part` with a position
 	 */
 	part: number;
+
+	/**
+	 * every `Part` with text beyond the name and value
+	 */
+	text: number;
 
 	/**
 	 * the `Field`s of each node type
@@ -21445,9 +21536,14 @@ declare interface NodeParts {
 	flags: Record<number, number>;
 
 	/**
-	 * the `Part`s of each node type
+	 * the `Part`s with a position, by node type
 	 */
 	parts: Record<number, number>;
+
+	/**
+	 * the `Part`s with text, by node type
+	 */
+	texts: Record<number, number>;
 
 	/**
 	 * the node type of each `Field`'s items
@@ -21472,6 +21568,8 @@ declare interface NodePathFields<TNode> {
 	fieldNamed(field: number, name: string, n?: TNode): TNode;
 	flag(flag: number, n?: TNode): boolean;
 	rangeOf(part: number, n?: TNode): null | [number, number];
+	textOf(part: number, n?: TNode): null | string;
+	within(type: number): boolean;
 }
 declare interface NodePathReads<TNode, TValue = unknown> {
 	/**
@@ -32829,9 +32927,17 @@ declare class TypeScriptPlugin {
 type TypedNode<TNode, T> = TNode & { readonly __nodeType: T };
 type TypedNodePath<TPath, TNode, P extends NodeParts, T> = Omit<
 	TPath,
-	"flag" | "node" | "field" | "fieldCount" | "fieldNamed" | "rangeOf"
+	| "flag"
+	| "node"
+	| "within"
+	| "field"
+	| "fieldCount"
+	| "fieldNamed"
+	| "rangeOf"
+	| "textOf"
 > & {
 	readonly node: TypedNode<TNode, T>;
+	within(type: P["types"]): boolean;
 	field<R = TypedNode<TNode, T>, F extends number = number>(
 		i: number,
 		field: F & PartOf<R, P["fields"], P["field"]>,
@@ -32854,6 +32960,10 @@ type TypedNodePath<TPath, TNode, P extends NodeParts, T> = Omit<
 		part: PartOf<R, P["parts"], P["part"]>,
 		n?: R
 	): null | [number, number];
+	textOf<R = TypedNode<TNode, T>>(
+		part: PartOf<R, P["texts"], P["text"]>,
+		n?: R
+	): null | string;
 };
 declare const UNDEFINED_MARKER: unique symbol;
 type UnsafeCacheData = KnownUnsafeCacheData & Record<string, any>;
@@ -34731,7 +34841,11 @@ declare namespace exports {
 					 * Stop the walk: no visitor fires after the current one returns.
 					 */
 					stop(): void;
-					inValue(): boolean;
+					/**
+					 * A top-level rule and a comment have none; a hash within a declaration is
+					 * a color, elsewhere an id.
+					 */
+					within(type: number): boolean;
 					type(n?: NodeSyntaxParser): number;
 					range(n?: NodeSyntaxParser): [number, number];
 					loc(n?: NodeSyntaxParser): [number, number, number, number];
@@ -34746,8 +34860,6 @@ declare namespace exports {
 					 * comment's text); "" for a rule, declaration, function or block.
 					 */
 					value(n?: NodeSyntaxParser): string | number;
-					unit(n?: NodeSyntaxParser): string;
-					typeFlag(n?: NodeSyntaxParser): string;
 					name(n?: NodeSyntaxParser): string;
 					/**
 					 * A rule's children are its prelude; its block is read with {@link field }.
@@ -34770,11 +34882,15 @@ declare namespace exports {
 						n?: NodeSyntaxParser
 					): NodeSyntaxParser;
 					/**
-					 * Only a container's flags are cleared when its id is reused, so a leaf has none.
+					 * `important` is a container's bit, cleared when its id is reused; a token's
+					 * type flags are read off its text.
 					 */
 					flag(flag: number, n?: NodeSyntaxParser): boolean;
 					rangeOf(part: number, n?: NodeSyntaxParser): null | [number, number];
-					blockToken(n?: NodeSyntaxParser): SimpleBlockToken;
+					/**
+					 * CSS has no text beyond a node's name and value, read with `name` and `value`.
+					 */
+					textOf(_part: number, _n?: NodeSyntaxParser): null;
 				};
 				export let CC_0: number;
 				export let CC_APOSTROPHE: number;
@@ -34812,6 +34928,8 @@ declare namespace exports {
 				}
 				export namespace Flag {
 					export let important: 1;
+					export let integer: 2;
+					export let id: 4;
 				}
 				export namespace Part {
 					export let name: 1;
@@ -34919,7 +35037,11 @@ declare namespace exports {
 						 * Stop the walk: no visitor fires after the current one returns.
 						 */
 						stop(): void;
-						inValue(): boolean;
+						/**
+						 * A top-level rule and a comment have none; a hash within a declaration is
+						 * a color, elsewhere an id.
+						 */
+						within(type: number): boolean;
 						type(n?: NodeSyntaxParser): number;
 						range(n?: NodeSyntaxParser): [number, number];
 						loc(n?: NodeSyntaxParser): [number, number, number, number];
@@ -34934,8 +35056,6 @@ declare namespace exports {
 						 * comment's text); "" for a rule, declaration, function or block.
 						 */
 						value(n?: NodeSyntaxParser): string | number;
-						unit(n?: NodeSyntaxParser): string;
-						typeFlag(n?: NodeSyntaxParser): string;
 						name(n?: NodeSyntaxParser): string;
 						/**
 						 * A rule's children are its prelude; its block is read with {@link field }.
@@ -34958,14 +35078,18 @@ declare namespace exports {
 							n?: NodeSyntaxParser
 						): NodeSyntaxParser;
 						/**
-						 * Only a container's flags are cleared when its id is reused, so a leaf has none.
+						 * `important` is a container's bit, cleared when its id is reused; a token's
+						 * type flags are read off its text.
 						 */
 						flag(flag: number, n?: NodeSyntaxParser): boolean;
 						rangeOf(
 							part: number,
 							n?: NodeSyntaxParser
 						): null | [number, number];
-						blockToken(n?: NodeSyntaxParser): SimpleBlockToken;
+						/**
+						 * CSS has no text beyond a node's name and value, read with `name` and `value`.
+						 */
+						textOf(_part: number, _n?: NodeSyntaxParser): null;
 					}>[],
 					writer:
 						| undefined
@@ -34982,7 +35106,11 @@ declare namespace exports {
 									 * Stop the walk: no visitor fires after the current one returns.
 									 */
 									stop(): void;
-									inValue(): boolean;
+									/**
+									 * A top-level rule and a comment have none; a hash within a declaration is
+									 * a color, elsewhere an id.
+									 */
+									within(type: number): boolean;
 									type(n?: NodeSyntaxParser): number;
 									range(n?: NodeSyntaxParser): [number, number];
 									loc(n?: NodeSyntaxParser): [number, number, number, number];
@@ -34997,8 +35125,6 @@ declare namespace exports {
 									 * comment's text); "" for a rule, declaration, function or block.
 									 */
 									value(n?: NodeSyntaxParser): string | number;
-									unit(n?: NodeSyntaxParser): string;
-									typeFlag(n?: NodeSyntaxParser): string;
 									name(n?: NodeSyntaxParser): string;
 									/**
 									 * A rule's children are its prelude; its block is read with {@link field }.
@@ -35021,14 +35147,18 @@ declare namespace exports {
 										n?: NodeSyntaxParser
 									): NodeSyntaxParser;
 									/**
-									 * Only a container's flags are cleared when its id is reused, so a leaf has none.
+									 * `important` is a container's bit, cleared when its id is reused; a token's
+									 * type flags are read off its text.
 									 */
 									flag(flag: number, n?: NodeSyntaxParser): boolean;
 									rangeOf(
 										part: number,
 										n?: NodeSyntaxParser
 									): null | [number, number];
-									blockToken(n?: NodeSyntaxParser): SimpleBlockToken;
+									/**
+									 * CSS has no text beyond a node's name and value, read with `name` and `value`.
+									 */
+									textOf(_part: number, _n?: NodeSyntaxParser): null;
 								},
 								NodeSyntaxParser,
 								CssPrintOptions
@@ -35120,7 +35250,11 @@ declare namespace exports {
 						 * Stop the walk: no visitor fires after the current one returns.
 						 */
 						stop(): void;
-						inValue(): boolean;
+						/**
+						 * A top-level rule and a comment have none; a hash within a declaration is
+						 * a color, elsewhere an id.
+						 */
+						within(type: number): boolean;
 						type(n?: NodeSyntaxParser): number;
 						range(n?: NodeSyntaxParser): [number, number];
 						loc(n?: NodeSyntaxParser): [number, number, number, number];
@@ -35135,8 +35269,6 @@ declare namespace exports {
 						 * comment's text); "" for a rule, declaration, function or block.
 						 */
 						value(n?: NodeSyntaxParser): string | number;
-						unit(n?: NodeSyntaxParser): string;
-						typeFlag(n?: NodeSyntaxParser): string;
 						name(n?: NodeSyntaxParser): string;
 						/**
 						 * A rule's children are its prelude; its block is read with {@link field }.
@@ -35159,14 +35291,18 @@ declare namespace exports {
 							n?: NodeSyntaxParser
 						): NodeSyntaxParser;
 						/**
-						 * Only a container's flags are cleared when its id is reused, so a leaf has none.
+						 * `important` is a container's bit, cleared when its id is reused; a token's
+						 * type flags are read off its text.
 						 */
 						flag(flag: number, n?: NodeSyntaxParser): boolean;
 						rangeOf(
 							part: number,
 							n?: NodeSyntaxParser
 						): null | [number, number];
-						blockToken(n?: NodeSyntaxParser): SimpleBlockToken;
+						/**
+						 * CSS has no text beyond a node's name and value, read with `name` and `value`.
+						 */
+						textOf(_part: number, _n?: NodeSyntaxParser): null;
 					},
 					writer: PrintContext<
 						{
@@ -35181,7 +35317,11 @@ declare namespace exports {
 							 * Stop the walk: no visitor fires after the current one returns.
 							 */
 							stop(): void;
-							inValue(): boolean;
+							/**
+							 * A top-level rule and a comment have none; a hash within a declaration is
+							 * a color, elsewhere an id.
+							 */
+							within(type: number): boolean;
 							type(n?: NodeSyntaxParser): number;
 							range(n?: NodeSyntaxParser): [number, number];
 							loc(n?: NodeSyntaxParser): [number, number, number, number];
@@ -35196,8 +35336,6 @@ declare namespace exports {
 							 * comment's text); "" for a rule, declaration, function or block.
 							 */
 							value(n?: NodeSyntaxParser): string | number;
-							unit(n?: NodeSyntaxParser): string;
-							typeFlag(n?: NodeSyntaxParser): string;
 							name(n?: NodeSyntaxParser): string;
 							/**
 							 * A rule's children are its prelude; its block is read with {@link field }.
@@ -35220,14 +35358,18 @@ declare namespace exports {
 								n?: NodeSyntaxParser
 							): NodeSyntaxParser;
 							/**
-							 * Only a container's flags are cleared when its id is reused, so a leaf has none.
+							 * `important` is a container's bit, cleared when its id is reused; a token's
+							 * type flags are read off its text.
 							 */
 							flag(flag: number, n?: NodeSyntaxParser): boolean;
 							rangeOf(
 								part: number,
 								n?: NodeSyntaxParser
 							): null | [number, number];
-							blockToken(n?: NodeSyntaxParser): SimpleBlockToken;
+							/**
+							 * CSS has no text beyond a node's name and value, read with `name` and `value`.
+							 */
+							textOf(_part: number, _n?: NodeSyntaxParser): null;
 						},
 						NodeSyntaxParser,
 						CssPrintOptions
@@ -35320,6 +35462,10 @@ declare namespace exports {
 					 * Stop the walk: no visitor fires after the current one returns.
 					 */
 					stop(): void;
+					/**
+					 * Walks the parent links, so a `<template>`'s content ends at its fragment.
+					 */
+					within(type: number): boolean;
 					type(n?: number): number;
 					range(n?: number): [number, number];
 					/**
@@ -35336,7 +35482,6 @@ declare namespace exports {
 					 * a doctype's name, a processing instruction's target; "" for other nodes.
 					 */
 					name(n?: number): string;
-					namespace(n?: number): number;
 					fieldCount(field: number, n?: number): number;
 					/**
 					 * An attribute item is a node the shared reads take.
@@ -35348,42 +35493,19 @@ declare namespace exports {
 					fieldNamed(field: number, name: string, n?: number): number;
 					flag(flag: number, n?: number): boolean;
 					/**
-					 * A parser-inserted element has no name or content in the source.
+					 * A parser-inserted element has no name, tags or content in the source.
 					 */
 					rangeOf(part: number, n?: number): null | [number, number];
 					/**
-					 * Whether the source wrote this element's end tag rather than the parser
-					 * popping it for an implied close. Read back off the range instead of marked
-					 * during the parse: an element's end spans the token that closed it, so its
-					 * own end tag is the last thing in it — and only the few elements around a
-					 * region printed from source ever ask.
+					 * Name and value are read with `name` and `value`; this reads a node's
+					 * other text, such as a doctype's identifiers, which are stored decoded.
 					 */
-					sourceClosed(n?: number): boolean;
-					/**
-					 * Raw source of an element's opening tag, `[start, tagEnd)` — attribute quoting
-					 * / spacing / case preserved byte-for-byte (walk-window only) — or `""` for a
-					 * parser-inserted element (auto `html`/`head`/`body`/`tbody`, …), which has no
-					 * real source tag: its offsets are zero-width or borrow the triggering token,
-					 * so the sliced name doesn't match this element. The empty string lets a printer
-					 * treat such an element as transparent.
-					 */
-					openTag(n?: number): string;
-					/**
-					 * An element's end tag, generated as `</name>` from the opening tag's own name
-					 * (exact source casing, correct for foreign camelCase elements). Generated, not
-					 * sliced: element `end` offsets don't span the end tag, and an omitted optional
-					 * end tag (`<li>`, `<p>`, …) still serializes to the same DOM. `""` when the
-					 * parser inserted the element, as {@link openTag } does — it has no name in the
-					 * source to echo, and slicing one would spell `</>`.
-					 */
-					closeTag(n?: number): string;
+					textOf(part: number, n?: number): null | string;
 					/**
 					 * A text's, comment's, processing instruction's or attribute's data,
 					 * character references decoded; "" for other nodes.
 					 */
 					value(n?: number): string;
-					publicId(_n?: number): null | string;
-					systemId(_n?: number): null | string;
 					/**
 					 * Counted along the sibling links once per node and visitor call.
 					 */
@@ -35414,12 +35536,18 @@ declare namespace exports {
 					export let content: 2;
 				}
 				export namespace Flag {
+					export let mathml: 1;
+					export let svg: 2;
 					export let selfClosing: 4;
 				}
 				export namespace Part {
 					export let name: 1;
 					export let value: 2;
 					export let content: 3;
+					export let startTag: 4;
+					export let endTag: 5;
+					export let publicId: 6;
+					export let systemId: 7;
 				}
 				export namespace NodeType {
 					export let Document: 1;
@@ -35475,6 +35603,10 @@ declare namespace exports {
 						 * Stop the walk: no visitor fires after the current one returns.
 						 */
 						stop(): void;
+						/**
+						 * Walks the parent links, so a `<template>`'s content ends at its fragment.
+						 */
+						within(type: number): boolean;
 						type(n?: number): number;
 						range(n?: number): [number, number];
 						/**
@@ -35491,7 +35623,6 @@ declare namespace exports {
 						 * a doctype's name, a processing instruction's target; "" for other nodes.
 						 */
 						name(n?: number): string;
-						namespace(n?: number): number;
 						fieldCount(field: number, n?: number): number;
 						/**
 						 * An attribute item is a node the shared reads take.
@@ -35503,42 +35634,19 @@ declare namespace exports {
 						fieldNamed(field: number, name: string, n?: number): number;
 						flag(flag: number, n?: number): boolean;
 						/**
-						 * A parser-inserted element has no name or content in the source.
+						 * A parser-inserted element has no name, tags or content in the source.
 						 */
 						rangeOf(part: number, n?: number): null | [number, number];
 						/**
-						 * Whether the source wrote this element's end tag rather than the parser
-						 * popping it for an implied close. Read back off the range instead of marked
-						 * during the parse: an element's end spans the token that closed it, so its
-						 * own end tag is the last thing in it — and only the few elements around a
-						 * region printed from source ever ask.
+						 * Name and value are read with `name` and `value`; this reads a node's
+						 * other text, such as a doctype's identifiers, which are stored decoded.
 						 */
-						sourceClosed(n?: number): boolean;
-						/**
-						 * Raw source of an element's opening tag, `[start, tagEnd)` — attribute quoting
-						 * / spacing / case preserved byte-for-byte (walk-window only) — or `""` for a
-						 * parser-inserted element (auto `html`/`head`/`body`/`tbody`, …), which has no
-						 * real source tag: its offsets are zero-width or borrow the triggering token,
-						 * so the sliced name doesn't match this element. The empty string lets a printer
-						 * treat such an element as transparent.
-						 */
-						openTag(n?: number): string;
-						/**
-						 * An element's end tag, generated as `</name>` from the opening tag's own name
-						 * (exact source casing, correct for foreign camelCase elements). Generated, not
-						 * sliced: element `end` offsets don't span the end tag, and an omitted optional
-						 * end tag (`<li>`, `<p>`, …) still serializes to the same DOM. `""` when the
-						 * parser inserted the element, as {@link openTag } does — it has no name in the
-						 * source to echo, and slicing one would spell `</>`.
-						 */
-						closeTag(n?: number): string;
+						textOf(part: number, n?: number): null | string;
 						/**
 						 * A text's, comment's, processing instruction's or attribute's data,
 						 * character references decoded; "" for other nodes.
 						 */
 						value(n?: number): string;
-						publicId(_n?: number): null | string;
-						systemId(_n?: number): null | string;
 						/**
 						 * Counted along the sibling links once per node and visitor call.
 						 */
@@ -35567,6 +35675,10 @@ declare namespace exports {
 									 * Stop the walk: no visitor fires after the current one returns.
 									 */
 									stop(): void;
+									/**
+									 * Walks the parent links, so a `<template>`'s content ends at its fragment.
+									 */
+									within(type: number): boolean;
 									type(n?: number): number;
 									range(n?: number): [number, number];
 									/**
@@ -35583,7 +35695,6 @@ declare namespace exports {
 									 * a doctype's name, a processing instruction's target; "" for other nodes.
 									 */
 									name(n?: number): string;
-									namespace(n?: number): number;
 									fieldCount(field: number, n?: number): number;
 									/**
 									 * An attribute item is a node the shared reads take.
@@ -35595,42 +35706,19 @@ declare namespace exports {
 									fieldNamed(field: number, name: string, n?: number): number;
 									flag(flag: number, n?: number): boolean;
 									/**
-									 * A parser-inserted element has no name or content in the source.
+									 * A parser-inserted element has no name, tags or content in the source.
 									 */
 									rangeOf(part: number, n?: number): null | [number, number];
 									/**
-									 * Whether the source wrote this element's end tag rather than the parser
-									 * popping it for an implied close. Read back off the range instead of marked
-									 * during the parse: an element's end spans the token that closed it, so its
-									 * own end tag is the last thing in it — and only the few elements around a
-									 * region printed from source ever ask.
+									 * Name and value are read with `name` and `value`; this reads a node's
+									 * other text, such as a doctype's identifiers, which are stored decoded.
 									 */
-									sourceClosed(n?: number): boolean;
-									/**
-									 * Raw source of an element's opening tag, `[start, tagEnd)` — attribute quoting
-									 * / spacing / case preserved byte-for-byte (walk-window only) — or `""` for a
-									 * parser-inserted element (auto `html`/`head`/`body`/`tbody`, …), which has no
-									 * real source tag: its offsets are zero-width or borrow the triggering token,
-									 * so the sliced name doesn't match this element. The empty string lets a printer
-									 * treat such an element as transparent.
-									 */
-									openTag(n?: number): string;
-									/**
-									 * An element's end tag, generated as `</name>` from the opening tag's own name
-									 * (exact source casing, correct for foreign camelCase elements). Generated, not
-									 * sliced: element `end` offsets don't span the end tag, and an omitted optional
-									 * end tag (`<li>`, `<p>`, …) still serializes to the same DOM. `""` when the
-									 * parser inserted the element, as {@link openTag } does — it has no name in the
-									 * source to echo, and slicing one would spell `</>`.
-									 */
-									closeTag(n?: number): string;
+									textOf(part: number, n?: number): null | string;
 									/**
 									 * A text's, comment's, processing instruction's or attribute's data,
 									 * character references decoded; "" for other nodes.
 									 */
 									value(n?: number): string;
-									publicId(_n?: number): null | string;
-									systemId(_n?: number): null | string;
 									/**
 									 * Counted along the sibling links once per node and visitor call.
 									 */
@@ -35690,6 +35778,10 @@ declare namespace exports {
 						 * Stop the walk: no visitor fires after the current one returns.
 						 */
 						stop(): void;
+						/**
+						 * Walks the parent links, so a `<template>`'s content ends at its fragment.
+						 */
+						within(type: number): boolean;
 						type(n?: number): number;
 						range(n?: number): [number, number];
 						/**
@@ -35706,7 +35798,6 @@ declare namespace exports {
 						 * a doctype's name, a processing instruction's target; "" for other nodes.
 						 */
 						name(n?: number): string;
-						namespace(n?: number): number;
 						fieldCount(field: number, n?: number): number;
 						/**
 						 * An attribute item is a node the shared reads take.
@@ -35718,42 +35809,19 @@ declare namespace exports {
 						fieldNamed(field: number, name: string, n?: number): number;
 						flag(flag: number, n?: number): boolean;
 						/**
-						 * A parser-inserted element has no name or content in the source.
+						 * A parser-inserted element has no name, tags or content in the source.
 						 */
 						rangeOf(part: number, n?: number): null | [number, number];
 						/**
-						 * Whether the source wrote this element's end tag rather than the parser
-						 * popping it for an implied close. Read back off the range instead of marked
-						 * during the parse: an element's end spans the token that closed it, so its
-						 * own end tag is the last thing in it — and only the few elements around a
-						 * region printed from source ever ask.
+						 * Name and value are read with `name` and `value`; this reads a node's
+						 * other text, such as a doctype's identifiers, which are stored decoded.
 						 */
-						sourceClosed(n?: number): boolean;
-						/**
-						 * Raw source of an element's opening tag, `[start, tagEnd)` — attribute quoting
-						 * / spacing / case preserved byte-for-byte (walk-window only) — or `""` for a
-						 * parser-inserted element (auto `html`/`head`/`body`/`tbody`, …), which has no
-						 * real source tag: its offsets are zero-width or borrow the triggering token,
-						 * so the sliced name doesn't match this element. The empty string lets a printer
-						 * treat such an element as transparent.
-						 */
-						openTag(n?: number): string;
-						/**
-						 * An element's end tag, generated as `</name>` from the opening tag's own name
-						 * (exact source casing, correct for foreign camelCase elements). Generated, not
-						 * sliced: element `end` offsets don't span the end tag, and an omitted optional
-						 * end tag (`<li>`, `<p>`, …) still serializes to the same DOM. `""` when the
-						 * parser inserted the element, as {@link openTag } does — it has no name in the
-						 * source to echo, and slicing one would spell `</>`.
-						 */
-						closeTag(n?: number): string;
+						textOf(part: number, n?: number): null | string;
 						/**
 						 * A text's, comment's, processing instruction's or attribute's data,
 						 * character references decoded; "" for other nodes.
 						 */
 						value(n?: number): string;
-						publicId(_n?: number): null | string;
-						systemId(_n?: number): null | string;
 						/**
 						 * Counted along the sibling links once per node and visitor call.
 						 */
@@ -35780,6 +35848,10 @@ declare namespace exports {
 							 * Stop the walk: no visitor fires after the current one returns.
 							 */
 							stop(): void;
+							/**
+							 * Walks the parent links, so a `<template>`'s content ends at its fragment.
+							 */
+							within(type: number): boolean;
 							type(n?: number): number;
 							range(n?: number): [number, number];
 							/**
@@ -35796,7 +35868,6 @@ declare namespace exports {
 							 * a doctype's name, a processing instruction's target; "" for other nodes.
 							 */
 							name(n?: number): string;
-							namespace(n?: number): number;
 							fieldCount(field: number, n?: number): number;
 							/**
 							 * An attribute item is a node the shared reads take.
@@ -35808,42 +35879,19 @@ declare namespace exports {
 							fieldNamed(field: number, name: string, n?: number): number;
 							flag(flag: number, n?: number): boolean;
 							/**
-							 * A parser-inserted element has no name or content in the source.
+							 * A parser-inserted element has no name, tags or content in the source.
 							 */
 							rangeOf(part: number, n?: number): null | [number, number];
 							/**
-							 * Whether the source wrote this element's end tag rather than the parser
-							 * popping it for an implied close. Read back off the range instead of marked
-							 * during the parse: an element's end spans the token that closed it, so its
-							 * own end tag is the last thing in it — and only the few elements around a
-							 * region printed from source ever ask.
+							 * Name and value are read with `name` and `value`; this reads a node's
+							 * other text, such as a doctype's identifiers, which are stored decoded.
 							 */
-							sourceClosed(n?: number): boolean;
-							/**
-							 * Raw source of an element's opening tag, `[start, tagEnd)` — attribute quoting
-							 * / spacing / case preserved byte-for-byte (walk-window only) — or `""` for a
-							 * parser-inserted element (auto `html`/`head`/`body`/`tbody`, …), which has no
-							 * real source tag: its offsets are zero-width or borrow the triggering token,
-							 * so the sliced name doesn't match this element. The empty string lets a printer
-							 * treat such an element as transparent.
-							 */
-							openTag(n?: number): string;
-							/**
-							 * An element's end tag, generated as `</name>` from the opening tag's own name
-							 * (exact source casing, correct for foreign camelCase elements). Generated, not
-							 * sliced: element `end` offsets don't span the end tag, and an omitted optional
-							 * end tag (`<li>`, `<p>`, …) still serializes to the same DOM. `""` when the
-							 * parser inserted the element, as {@link openTag } does — it has no name in the
-							 * source to echo, and slicing one would spell `</>`.
-							 */
-							closeTag(n?: number): string;
+							textOf(part: number, n?: number): null | string;
 							/**
 							 * A text's, comment's, processing instruction's or attribute's data,
 							 * character references decoded; "" for other nodes.
 							 */
 							value(n?: number): string;
-							publicId(_n?: number): null | string;
-							systemId(_n?: number): null | string;
 							/**
 							 * Counted along the sibling links once per node and visitor call.
 							 */

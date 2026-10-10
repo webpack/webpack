@@ -521,7 +521,7 @@ describe("SourceProcessor", () => {
 						seen.push([
 							path.source(),
 							path.value(),
-							path.unit(),
+							path.type() === CssNodeType.Dimension ? path.name() : "",
 							path.source(path.range()[0], path.range()[1])
 						]);
 					}
@@ -619,7 +619,7 @@ describe("SourceProcessor", () => {
 			const seen = [];
 			new HtmlSourceProcessor()
 				.use([HtmlNodeType.Element], (path) => {
-					if (path.namespace() !== 0) seen.push(path.source());
+					if (path.flag(HtmlFlag.svg) || path.flag(HtmlFlag.mathml)) seen.push(path.source());
 				})
 				.process(html);
 			expect(seen).toEqual([
@@ -631,8 +631,8 @@ describe("SourceProcessor", () => {
 			]);
 		});
 
-		it("answers empty for a css node without a name, value or block token", () => {
-			/** @type {[number, string, [number, number] | null, string | number, string][]} */
+		it("answers empty for a css node without a name or value", () => {
+			/** @type {[number, string, [number, number] | null, string | number][]} */
 			const seen = [];
 			new CssSourceProcessor()
 				.use(
@@ -643,17 +643,17 @@ describe("SourceProcessor", () => {
 							path.name(),
 							// @ts-expect-error none of these has a name
 							path.rangeOf(CssPart.name),
-							path.value(),
-							path.blockToken()
+							path.value()
 						]);
 					}
 				)
 				.process("a[b]{}");
 			expect(seen).toEqual([
-				[CssNodeType.QualifiedRule, "", null, "", ""],
-				[CssNodeType.Ident, "", null, "a", ""],
-				[CssNodeType.SimpleBlock, "", null, "", "["],
-				[CssNodeType.Ident, "", null, "b", ""]
+				[CssNodeType.QualifiedRule, "", null, ""],
+				[CssNodeType.Ident, "", null, "a"],
+				// A simple block's value is its opening bracket.
+				[CssNodeType.SimpleBlock, "", null, "["],
+				[CssNodeType.Ident, "", null, "b"]
 			]);
 		});
 
@@ -866,6 +866,116 @@ describe("SourceProcessor", () => {
 				})
 				.process('<p a="1"><!--c-->');
 			expect(html).toEqual(["a", 0, false, null, 0, 0, null]);
+		});
+
+		it("reads what one grammar has through the generic members", () => {
+			/** @type {unknown[]} */
+			const css = [];
+			new CssSourceProcessor()
+				.use([CssNodeType.Dimension, CssNodeType.Number], (path) => {
+					css.push([
+						path.source(),
+						path.name(),
+						path.type() === CssNodeType.Dimension
+							? path.source(.../** @type {[number, number]} */ (path.rangeOf(CssPart.name)))
+							: null,
+						path.flag(CssFlag.integer)
+					]);
+				})
+				.use([CssNodeType.Hash], (path) => {
+					css.push([path.source(), path.flag(CssFlag.id), path.within(CssNodeType.Declaration)]);
+				})
+				.use([CssNodeType.SimpleBlock], (path) => {
+					css.push([path.source(), path.value()]);
+				})
+				.use([CssNodeType.Declaration], (path) => {
+					// @ts-expect-error CSS has no text beyond a name and value
+					css.push(path.textOf(CssPart.name));
+				})
+				.process("#a,a[b]{width:10px;margin:1.5em;z-index:2;color:#123}");
+			expect(css).toEqual([
+				["#a", true, false],
+				["[b]", "["],
+				null,
+				["10px", "px", "px", true],
+				null,
+				["1.5em", "em", "em", false],
+				null,
+				["2", "", null, true],
+				null,
+				["#123", false, true]
+			]);
+
+			/** @type {unknown[]} */
+			const html = [];
+			const page = `<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "about:legacy"><p>a</p><li>b<svg><path/></svg><math><mi/></math>`;
+			new HtmlSourceProcessor()
+				.use([HtmlNodeType.Doctype], (path) => {
+					html.push(
+						path.textOf(HtmlPart.publicId),
+						path.source(.../** @type {[number, number]} */ (path.rangeOf(HtmlPart.systemId))),
+						// @ts-expect-error a doctype has no start tag
+						path.rangeOf(HtmlPart.startTag)
+					);
+				})
+				.use([HtmlNodeType.Element], (path) => {
+					const start = path.rangeOf(HtmlPart.startTag);
+					const end = path.rangeOf(HtmlPart.endTag);
+					html.push([
+						path.name(),
+						start === null ? null : path.source(...start),
+						end === null ? null : path.source(...end),
+						path.flag(HtmlFlag.svg),
+						path.flag(HtmlFlag.mathml),
+						path.within(HtmlNodeType.Element)
+					]);
+				})
+				.use([HtmlNodeType.Text], (path) => {
+					// @ts-expect-error a text node has no identifiers
+					html.push(path.textOf(HtmlPart.publicId));
+				})
+				.process(page);
+			expect(html).toEqual([
+				"-//W3C//DTD HTML 4.01//EN",
+				"about:legacy",
+				null,
+				["html", null, null, false, false, false],
+				["head", null, null, false, false, true],
+				["body", null, null, false, false, true],
+				["p", "<p>", "</p>", false, false, true],
+				null,
+				["li", "<li>", null, false, false, true],
+				null,
+				["svg", "<svg>", "</svg>", true, false, true],
+				["path", "<path/>", null, true, false, true],
+				["math", "<math>", "</math>", false, true, true],
+				["mi", "<mi/>", null, false, true, true]
+			]);
+		});
+
+		it("knows a streamed block's ancestors until it closes", () => {
+			let rules = "";
+			for (let i = 0; i < 1800; i++) {
+				rules += `.c${i}>d${i}:hover{color:red;margin:${i + 1}px}`;
+			}
+			let inside = 0;
+			/** @type {boolean[]} */
+			const after = [];
+			new CssSourceProcessor()
+				.use([CssNodeType.Dimension], (path) => {
+					if (path.source() === "0px") {
+						after.push(path.within(CssNodeType.AtRule));
+					} else if (
+						path.within(CssNodeType.Declaration) &&
+						path.within(CssNodeType.QualifiedRule) &&
+						path.within(CssNodeType.AtRule)
+					) {
+						inside++;
+					}
+				})
+				.process(`@media screen{${rules}}x{y:0px}`);
+			expect(inside).toBe(1800);
+			expect(after).toEqual([false]);
 		});
 
 		it("reads html attributes as nodes through the shared members", () => {
