@@ -6353,6 +6353,15 @@ describe("syntax-printer", () => {
 			});
 		}
 
+		it("should still read a hole of an array literal as undefined under `unsafe`", async () => {
+			const { minify } = await load();
+			const { code } = await minify(
+				"console.log([1, , 3][1], [, 2][\"0\"], [1, , 3][5], [1, , 3].x);",
+				{ compress: { unsafe: true }, mangle: false }
+			);
+			expect(code).toBe("console.log(void 0,void 0,[1,,3][5],[1,,3].x);");
+		});
+
 		it("should keep a string's `charAt` of a BigInt, where terser throws", async () => {
 			const { minify, corrections } = await load();
 			const input =
