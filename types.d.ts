@@ -5329,14 +5329,14 @@ declare class ConstDependency extends NullDependency {
 	static LAZY_UNTIL_REQUEST: "@";
 	static ESM_CATEGORY: "esm";
 	static KINDS: Set<
+		| "css-import"
 		| "entry"
-		| "moduleDependency"
-		| "esmImport"
-		| "dynamicImport"
-		| "esmReexport"
-		| "esmSideEffectImport"
-		| "cssImport"
-		| "contextElement"
+		| "module-dependency"
+		| "esm-import"
+		| "dynamic-import"
+		| "esm-reexport"
+		| "esm-side-effect-import"
+		| "context-element"
 	>;
 }
 declare class ConstDependencyTemplate extends NullDependencyTemplate {
@@ -7143,14 +7143,14 @@ declare class Dependency {
 	 */
 	is<
 		K extends
+			| "css-import"
 			| "entry"
-			| "moduleDependency"
-			| "esmImport"
-			| "dynamicImport"
-			| "esmReexport"
-			| "esmSideEffectImport"
-			| "cssImport"
-			| "contextElement"
+			| "module-dependency"
+			| "esm-import"
+			| "dynamic-import"
+			| "esm-reexport"
+			| "esm-side-effect-import"
+			| "context-element"
 	>(kind: K): boolean;
 
 	/**
@@ -7302,14 +7302,14 @@ declare class Dependency {
 	static LAZY_UNTIL_REQUEST: "@";
 	static ESM_CATEGORY: "esm";
 	static KINDS: Set<
+		| "css-import"
 		| "entry"
-		| "moduleDependency"
-		| "esmImport"
-		| "dynamicImport"
-		| "esmReexport"
-		| "esmSideEffectImport"
-		| "cssImport"
-		| "contextElement"
+		| "module-dependency"
+		| "esm-import"
+		| "dynamic-import"
+		| "esm-reexport"
+		| "esm-side-effect-import"
+		| "context-element"
 	>;
 }
 declare interface DependencyConstructor {
@@ -8039,14 +8039,14 @@ declare class ESMImportDependency extends ModuleDependency {
 		membersOptionals: boolean[]
 	) => string[];
 	static KINDS: Set<
+		| "css-import"
 		| "entry"
-		| "moduleDependency"
-		| "esmImport"
-		| "dynamicImport"
-		| "esmReexport"
-		| "esmSideEffectImport"
-		| "cssImport"
-		| "contextElement"
+		| "module-dependency"
+		| "esm-import"
+		| "dynamic-import"
+		| "esm-reexport"
+		| "esm-side-effect-import"
+		| "context-element"
 	>;
 
 	/**
@@ -19139,14 +19139,14 @@ declare class ModuleDependency extends Dependency {
 	weak: boolean;
 	static Template: typeof DependencyTemplate;
 	static KINDS: Set<
+		| "css-import"
 		| "entry"
-		| "moduleDependency"
-		| "esmImport"
-		| "dynamicImport"
-		| "esmReexport"
-		| "esmSideEffectImport"
-		| "cssImport"
-		| "contextElement"
+		| "module-dependency"
+		| "esm-import"
+		| "dynamic-import"
+		| "esm-reexport"
+		| "esm-side-effect-import"
+		| "context-element"
 	>;
 
 	/**
@@ -21774,14 +21774,14 @@ declare class NullDependency extends Dependency {
 	static LAZY_UNTIL_REQUEST: "@";
 	static ESM_CATEGORY: "esm";
 	static KINDS: Set<
+		| "css-import"
 		| "entry"
-		| "moduleDependency"
-		| "esmImport"
-		| "dynamicImport"
-		| "esmReexport"
-		| "esmSideEffectImport"
-		| "cssImport"
-		| "contextElement"
+		| "module-dependency"
+		| "esm-import"
+		| "dynamic-import"
+		| "esm-reexport"
+		| "esm-side-effect-import"
+		| "context-element"
 	>;
 }
 declare class NullDependencyTemplate extends DependencyTemplate {
