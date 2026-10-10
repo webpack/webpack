@@ -1,4 +1,4 @@
-import { writeFile } from "fs";
+import callbackFs, { writeFile } from "fs";
 import fs from "fs/promises";
 import { Session } from "inspector";
 import { createRequire } from "module";
@@ -73,6 +73,47 @@ const codspeedRunnerMode = getCodspeedRunnerMode();
 // worker boots its own V8 in this process and races the main thread, so memory mode
 // runs the minimizer inline to measure webpack's allocations, not a thread's boot.
 if (codspeedRunnerMode === "memory") os.availableParallelism = () => 1;
+
+// Async fs completes on the libuv pool, so I/O timing reorders callbacks and moves
+// every later GC, which decides what is live at the peak. Memory mode runs these
+// synchronously and defers each callback a tick, keeping the call order intact.
+const SYNC_FS_METHODS = [
+	"access",
+	"lstat",
+	"mkdir",
+	"readdir",
+	"readFile",
+	"readlink",
+	"realpath",
+	"rename",
+	"rm",
+	"rmdir",
+	"stat",
+	"unlink",
+	"utimes",
+	"writeFile"
+];
+
+if (codspeedRunnerMode === "memory") {
+	/** @typedef {(...args: unknown[]) => unknown} FsMethod */
+	const fsMethods = /** @type {Record<string, FsMethod>} */ (
+		/** @type {unknown} */ (callbackFs)
+	);
+	for (const name of SYNC_FS_METHODS) {
+		const sync = fsMethods[`${name}Sync`];
+		/** @type {FsMethod & { native?: FsMethod }} */
+		const method = (...args) => {
+			const callback = /** @type {FsMethod} */ (args.pop());
+			try {
+				process.nextTick(callback, null, sync(...args));
+			} catch (err) {
+				process.nextTick(callback, err);
+			}
+		};
+		if (name === "realpath") method.native = method;
+		fsMethods[name] = method;
+	}
+}
 
 // Emitted entry of a `-runtime` benchmark; fixed so the bench can locate it.
 const RUNTIME_BUNDLE_FILENAME = "bundle.js";
