@@ -6884,6 +6884,8 @@ describe("syntax-printer", () => {
 				["var name = String(Math.PI).slice(0, 4); function read(suffix) { return name + suffix; } { let name = 'inner'; console.log(read('!'), name); } console.log(read('?'));", "function read("],
 				// The method read from the argument would be called with `this`.
 				["var o = { v: 1, m() { return this && this.v; } }; function invoke(fn) { return fn(); } console.log(invoke(o.m), invoke(o.m));", "function invoke("],
+				// An optional method read from the argument would be called with `this`.
+				["var o = { v: 1, m() { return this && this.v; } }; function invoke(fn) { return fn(); } console.log(invoke(o?.m), invoke(o?.m));", "function invoke("],
 				// A function expression's name is bound only inside it.
 				["var f = function g(n) { return typeof g + n; }; console.log(f(1), f(2));", "function g("],
 				// A read not calling it keeps it declared.
