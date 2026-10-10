@@ -29,7 +29,7 @@ module.exports = [
 		}
 	},
 	{
-		name: "add",
+		name: "keep-bare",
 		target: "web",
 		externals: { fs: "commonjs fs", path: "commonjs path" },
 		output: {
