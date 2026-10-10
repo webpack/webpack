@@ -15613,7 +15613,10 @@ describe("CssSyntax minify — declaration order", () => {
 		"a{font:12px serif;line-height:calc(1px + 1em)}",
 		// A `font` already void, whose family is a CSS-wide keyword: the longhand stands.
 		"a{font:12px inherit;line-height:2}",
-		"a{font:12px serif,initial;line-height:2}"
+		"a{font:12px serif,initial;line-height:2}",
+		// Nor one whose size is no length: the `font` is void already.
+		"a{font:12zz serif;line-height:2}",
+		"a{font:-1px serif;line-height:2}"
 	])("keeps %s apart", (css) => {
 		expect(settled(css, modern)).toBe(css);
 	});
