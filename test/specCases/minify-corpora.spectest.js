@@ -1302,6 +1302,8 @@ const IMPROVED_YET_BIGGER = {
 		"5 bytes fewer, 1 more gzipped: `{x();return}` breaks the `return x()` run the function before it repeats",
 	"fixture/issues/8173/input.js (the default minimizer's options)":
 		"7 bytes fewer, 2 more gzipped: `{x(n);return}` breaks the `return void` runs of the helpers around it",
+	"fixture/issues/8173/input.js (its own options)":
+		"7 bytes fewer, 2 more gzipped: `{x(n);return}` breaks the `return void` runs of the helpers around it",
 	"fixture/issues/vercel/006/input.js (its own options)":
 		"12 bytes fewer, 1 more gzipped: `{x();return}` breaks the `return void` runs of the branches around it",
 	"fixture/issues/d3-color/1/input.js (the default minimizer's options)":
