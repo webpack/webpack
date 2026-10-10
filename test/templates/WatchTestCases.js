@@ -513,6 +513,33 @@ const describeCases = (config) => {
 													throw new Error("No stats reported from Compiler");
 												}
 												if (waitMode) return;
+												lastFileDependencies = new Set();
+												lastContextDependencies = [];
+												lastMissingDependencies = new Set();
+												for (const { compilation } of /** @type {import("../../").Stats[]} */ (
+													"stats" in stats ? stats.stats : [stats]
+												)) {
+													// a missing directory is watched for existence, not content
+													for (const file of compilation.fileDependencies) {
+														lastFileDependencies.add(file);
+													}
+													for (const file of compilation.missingDependencies) {
+														lastFileDependencies.add(file);
+														lastMissingDependencies.add(file);
+													}
+													lastContextDependencies.push(
+														...compilation.contextDependencies
+													);
+												}
+												// A rebuild can stop watching an orphan before its removal is reported.
+												for (const file of unseenChanges) {
+													if (
+														!lastFileDependencies.has(file) &&
+														!isWithin(file, lastContextDependencies)
+													) {
+														unseenChanges.delete(file);
+													}
+												}
 												if (unseenChanges.size > 0) return;
 												clearTimeout(retouchTimer);
 												if (run.done && stats.hash === lastHash) return;
@@ -532,24 +559,6 @@ const describeCases = (config) => {
 												}
 												if (failed) return;
 												run.stats = stats;
-												lastFileDependencies = new Set();
-												lastContextDependencies = [];
-												lastMissingDependencies = new Set();
-												for (const { compilation } of /** @type {import("../../").Stats[]} */ (
-													"stats" in stats ? stats.stats : [stats]
-												)) {
-													// a missing directory is watched for existence, not content
-													for (const file of compilation.fileDependencies) {
-														lastFileDependencies.add(file);
-													}
-													for (const file of compilation.missingDependencies) {
-														lastFileDependencies.add(file);
-														lastMissingDependencies.add(file);
-													}
-													lastContextDependencies.push(
-														...compilation.contextDependencies
-													);
-												}
 												const statOptions = {
 													preset: "verbose",
 													cached: true,
