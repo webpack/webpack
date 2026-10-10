@@ -1,7 +1,9 @@
 "use strict";
 
 module.exports = {
-	findBundle() {
-		return ["collide-true.mjs", "test.js"];
+	findBundle(index, options) {
+		return options.name === "collide-false"
+			? "collide-true.mjs"
+			: options.output.filename;
 	}
 };
