@@ -13,7 +13,11 @@ const {
 	URL_ATTRIBUTES
 } = require("../../../../lib/html/data");
 const { SourceProcessor } = require("../../../../lib/html/syntax");
-const { NodeType, parseSrcset } = require("../../../../lib/html/syntax-parser");
+const {
+	Field,
+	NodeType,
+	parseSrcset
+} = require("../../../../lib/html/syntax-parser");
 
 /**
  * The HTML integer parse rules, spelled out here rather than reused from `lib/`
@@ -118,8 +122,8 @@ const tree = (html) => {
 				const tagName = nodePath.name();
 				/** @type {string[]} */
 				const attributes = [];
-				for (let i = 0; i < nodePath.attributeCount(); i++) {
-					const attribute = nodePath.attribute(i);
+				for (let i = 0; i < nodePath.fieldCount(Field.attributes); i++) {
+					const attribute = nodePath.field(i, Field.attributes);
 					const name = nodePath.name(attribute);
 					attributes.push(
 						`${name}=${canonicalValue(tagName, name, nodePath.value(attribute))}`

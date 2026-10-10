@@ -23,7 +23,7 @@ const {
 	REWRITABLE_ATTRIBUTES
 } = require("../../lib/html/data");
 const { SourceProcessor: HtmlSourceProcessor } = require("../../lib/html/syntax");
-const { A, NS_MATHML, NS_SVG, NodeType, _attributeList, decodeEntities, parseHtml } = require("../../lib/html/syntax-parser");
+const { A, Field, NS_MATHML, NS_SVG, NodeType, _attributeList, _namespaceOf, decodeEntities, parseHtml } = require("../../lib/html/syntax-parser");
 const expectNoDeprecations = require("../helpers/expectNoDeprecations");
 const launchBrowser = require("../helpers/launchBrowser");
 
@@ -1245,7 +1245,7 @@ const domShapeOf = (source) => {
 			if (A.type(child) !== NodeType.Element) continue;
 			const tag = A.name(child);
 			const namespace =
-				/** @type {Record<number, string>} */ (NS_PREFIX)[A.namespace(child)] ||
+				/** @type {Record<number, string>} */ (NS_PREFIX)[_namespaceOf(child)] ||
 				"";
 			const written = _attributeList(child)
 				.map((attribute) => {
@@ -1270,7 +1270,7 @@ const domShapeOf = (source) => {
 				}
 				text.push(own.replace(ASCII_WHITESPACE, " "));
 			}
-			const content = A.templateContent(child);
+			const content = A.field(0, Field.content, child);
 			if (content !== 0) walk(content, depth + 1, true);
 			walk(child, depth + 1, inPage);
 		}

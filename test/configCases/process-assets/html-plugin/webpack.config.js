@@ -6,7 +6,7 @@ const {
 	html: {
 		syntax: {
 			SourceProcessor,
-			parser: { NodeType }
+			parser: { Field, NodeType }
 		}
 	},
 	util: { createHash },
@@ -166,7 +166,7 @@ class HtmlInlinePlugin {
 								.use({
 									[NodeType.Element]: (path) => {
 										if (path.name() !== "script") return;
-										const src = path.findAttribute("src");
+										const src = path.fieldNamed(Field.attributes, "src");
 										if (src === 0) return;
 										let url = path.value(src);
 										if (url.startsWith(publicPath)) {
