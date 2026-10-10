@@ -587,6 +587,99 @@ describe("SourceProcessor", () => {
 			]);
 		});
 
+		it("reads every position as numbers too, and the children as an array", () => {
+			/** @type {string[]} */
+			const differ = [];
+			/** @type {Record<number, (path: import("../../lib/css/syntax-parser").CssPath) => void>} */
+			const css = {};
+			for (const type of Object.values(CssNodeType)) {
+				css[type] = (path) => {
+					const range = path.range();
+					const children = [];
+					for (let i = 0; i < path.childCount(); i++) children.push(path.child(i));
+					if (
+						path.start() !== range[0] ||
+						path.end() !== range[1] ||
+						JSON.stringify(path.children()) !== JSON.stringify(children)
+					) {
+						differ.push(path.source());
+					}
+					for (const part of Object.values(CssPart)) {
+						const r = path.rangeOf(part);
+						const start = path.startOf(part);
+						const end = path.endOf(part);
+						if (r === null ? start !== -1 || end !== -1 : start !== r[0] || end !== r[1]) {
+							differ.push(`${path.source()} ${part}`);
+						}
+					}
+				};
+			}
+			new CssSourceProcessor()
+				.use(css)
+				.process("@media x{a{b:url(c) 1px f(g)}}@import 'd';[h]{}");
+			/** @type {Record<number, (path: import("../../lib/html/syntax-parser").HtmlPath) => void>} */
+			const html = {};
+			for (const type of Object.values(HtmlNodeType)) {
+				html[type] = (path) => {
+					const range = path.range();
+					const children = [];
+					for (let i = 0; i < path.childCount(); i++) children.push(path.child(i));
+					if (
+						path.start() !== range[0] ||
+						path.end() !== range[1] ||
+						JSON.stringify(path.children()) !== JSON.stringify(children)
+					) {
+						differ.push(path.source());
+					}
+					const nodes = [path.node];
+					for (let i = 0; i < path.fieldCount(HtmlField.attributes); i++) {
+						nodes.push(path.field(i, HtmlField.attributes));
+					}
+					for (const n of nodes) {
+						for (const part of Object.values(HtmlPart)) {
+							const r = path.rangeOf(part, n);
+							const start = path.startOf(part, n);
+							const end = path.endOf(part, n);
+							if (r === null ? start !== -1 || end !== -1 : start !== r[0] || end !== r[1]) {
+								differ.push(`${path.source(n)} ${part}`);
+							}
+						}
+					}
+					expect(path.children(-1)).toEqual([]);
+				};
+			}
+			new HtmlSourceProcessor()
+				.use(html)
+				.process('<!DOCTYPE html PUBLIC "a" "b"><div id=a c>x</div><b>1<p>2</b>3</p>');
+			expect(differ).toEqual([]);
+		});
+
+		it("reads a streamed block's start in its rule's enter", () => {
+			let rules = "";
+			for (let i = 0; i < 1800; i++) rules += `.c${i}{color:red}`;
+			const css = `@media screen{${rules}}`;
+			/** @type {number[]} */
+			const starts = [];
+			new CssSourceProcessor()
+				.use([CssNodeType.AtRule], (path) => {
+					starts.push(path.startOf(CssPart.block));
+				})
+				.process(css);
+			expect(starts).toEqual([css.indexOf("{")]);
+		});
+
+		it("ends a raw-text body at its end tag, attributes and all, when text is skipped", () => {
+			/** @type {(string | null)[]} */
+			const bodies = [];
+			new HtmlSourceProcessor()
+				.use([HtmlNodeType.Element], (path) => {
+					if (path.name() !== "style") return;
+					bodies.push(path.source(path.startOf(HtmlPart.content), path.endOf(HtmlPart.content)));
+				})
+				.process("<style>a{}</style x><style></style><style>b{}", { skip: { text: true } });
+			expect(bodies).toEqual(["a{}", "", "b{}"]);
+		});
+
 		it("ends an html element with the end tag naming it, whichever path closes it", () => {
 			// `</b>` and `</a>` go through the adoption agency, `</span>` through the
 			// generic end tag, `</div>` and `</li>` through their own rules, and the

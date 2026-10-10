@@ -6462,6 +6462,8 @@ type CssNodePath<T = number, S = unknown> = Omit<
 		within(type: number): boolean;
 		type(n?: NodeSyntaxParser): number;
 		range(n?: NodeSyntaxParser): [number, number];
+		start(n?: NodeSyntaxParser): number;
+		end(n?: NodeSyntaxParser): number;
 		loc(n?: NodeSyntaxParser): [number, number, number, number];
 		/**
 		 * A node's text exactly as the input wrote it (`name` and `value` decode).
@@ -6481,6 +6483,10 @@ type CssNodePath<T = number, S = unknown> = Omit<
 		childCount(n?: NodeSyntaxParser): number;
 		child(i: number, n?: NodeSyntaxParser): ComponentValue;
 		/**
+		 * Every child as a new array, for a reader that keeps or searches them.
+		 */
+		children(n?: NodeSyntaxParser): ComponentValue[];
+		/**
 		 * A block big enough to stream hands its children to the visitors as each
 		 * one finishes rather than collecting them, so its lists read as empty here.
 		 */
@@ -6497,6 +6503,8 @@ type CssNodePath<T = number, S = unknown> = Omit<
 		 */
 		flag(flag: number, n?: NodeSyntaxParser): boolean;
 		rangeOf(part: number, n?: NodeSyntaxParser): null | [number, number];
+		startOf(part: number, n?: NodeSyntaxParser): number;
+		endOf(part: number, n?: NodeSyntaxParser): number;
 		/**
 		 * CSS has no text beyond a node's name and value, read with `name` and `value`.
 		 */
@@ -6510,6 +6518,8 @@ type CssNodePath<T = number, S = unknown> = Omit<
 	| "fieldCount"
 	| "fieldNamed"
 	| "rangeOf"
+	| "startOf"
+	| "endOf"
 	| "textOf"
 > & {
 	readonly node: TypedNode<NodeSyntaxParser, T>;
@@ -6728,6 +6738,80 @@ type CssNodePath<T = number, S = unknown> = Omit<
 		>,
 		n?: R
 	): null | [number, number];
+	startOf<R extends NodeSyntaxParser = TypedNode<NodeSyntaxParser, T>>(
+		part: PartOf<
+			R,
+			{
+				"1": never;
+				"2": 1;
+				"3": never;
+				"4": never;
+				"5": never;
+				"6": never;
+				"7": 2;
+				"8": never;
+				"9": never;
+				"10": never;
+				"11": never;
+				"12": 1;
+				"13": never;
+				"14": never;
+				"15": never;
+				"16": never;
+				"17": never;
+				"18": never;
+				"19": never;
+				"20": never;
+				"21": never;
+				"22": never;
+				"23": 1;
+				"24": 1 | 3;
+				"25": 3;
+				"26": never;
+				"27": never;
+				"28": never;
+			},
+			1 | 2 | 3
+		>,
+		n?: R
+	): number;
+	endOf<R extends NodeSyntaxParser = TypedNode<NodeSyntaxParser, T>>(
+		part: PartOf<
+			R,
+			{
+				"1": never;
+				"2": 1;
+				"3": never;
+				"4": never;
+				"5": never;
+				"6": never;
+				"7": 2;
+				"8": never;
+				"9": never;
+				"10": never;
+				"11": never;
+				"12": 1;
+				"13": never;
+				"14": never;
+				"15": never;
+				"16": never;
+				"17": never;
+				"18": never;
+				"19": never;
+				"20": never;
+				"21": never;
+				"22": never;
+				"23": 1;
+				"24": 1 | 3;
+				"25": 3;
+				"26": never;
+				"27": never;
+				"28": never;
+			},
+			1 | 2 | 3
+		>,
+		n?: R
+	): number;
 	textOf<R extends NodeSyntaxParser = TypedNode<NodeSyntaxParser, T>>(
 		part: PartOf<
 			R,
@@ -7268,6 +7352,8 @@ declare class CssSourceProcessor<TState = unknown> extends SourceProcessor<
 		within(type: number): boolean;
 		type(n?: NodeSyntaxParser): number;
 		range(n?: NodeSyntaxParser): [number, number];
+		start(n?: NodeSyntaxParser): number;
+		end(n?: NodeSyntaxParser): number;
 		loc(n?: NodeSyntaxParser): [number, number, number, number];
 		/**
 		 * A node's text exactly as the input wrote it (`name` and `value` decode).
@@ -7287,6 +7373,10 @@ declare class CssSourceProcessor<TState = unknown> extends SourceProcessor<
 		childCount(n?: NodeSyntaxParser): number;
 		child(i: number, n?: NodeSyntaxParser): ComponentValue;
 		/**
+		 * Every child as a new array, for a reader that keeps or searches them.
+		 */
+		children(n?: NodeSyntaxParser): ComponentValue[];
+		/**
 		 * A block big enough to stream hands its children to the visitors as each
 		 * one finishes rather than collecting them, so its lists read as empty here.
 		 */
@@ -7303,6 +7393,8 @@ declare class CssSourceProcessor<TState = unknown> extends SourceProcessor<
 		 */
 		flag(flag: number, n?: NodeSyntaxParser): boolean;
 		rangeOf(part: number, n?: NodeSyntaxParser): null | [number, number];
+		startOf(part: number, n?: NodeSyntaxParser): number;
+		endOf(part: number, n?: NodeSyntaxParser): number;
 		/**
 		 * CSS has no text beyond a node's name and value, read with `name` and `value`.
 		 */
@@ -12119,6 +12211,8 @@ type HtmlNodePath<T = number, S = unknown> = Omit<
 		within(type: number): boolean;
 		type(n?: number): number;
 		range(n?: number): [number, number];
+		start(n?: number): number;
+		end(n?: number): number;
 		/**
 		 * Line / column are converted only when asked, by a converter made on the
 		 * first call of a parse. Valid during the walk, as {@link source } is.
@@ -12147,6 +12241,8 @@ type HtmlNodePath<T = number, S = unknown> = Omit<
 		 * A parser-inserted element has no name, tags or content in the source.
 		 */
 		rangeOf(part: number, n?: number): null | [number, number];
+		startOf(part: number, n?: number): number;
+		endOf(part: number, n?: number): number;
 		/**
 		 * Name and value are read with `name` and `value`; this reads a node's
 		 * other text, such as a doctype's identifiers, which are stored decoded.
@@ -12166,6 +12262,10 @@ type HtmlNodePath<T = number, S = unknown> = Omit<
 		 * loop over a node's children takes one step per child.
 		 */
 		child(i: number, n?: number): number;
+		/**
+		 * Every child as a new array, for a reader that keeps or searches them.
+		 */
+		children(n?: number): number[];
 	},
 	| "flag"
 	| "node"
@@ -12175,6 +12275,8 @@ type HtmlNodePath<T = number, S = unknown> = Omit<
 	| "fieldCount"
 	| "fieldNamed"
 	| "rangeOf"
+	| "startOf"
+	| "endOf"
 	| "textOf"
 > & {
 	readonly node: TypedNode<number, T>;
@@ -12272,6 +12374,40 @@ type HtmlNodePath<T = number, S = unknown> = Omit<
 		>,
 		n?: R
 	): null | [number, number];
+	startOf<R extends number = TypedNode<number, T>>(
+		part: PartOf<
+			R,
+			{
+				"1": never;
+				"2": never;
+				"3": 1 | 3 | 4 | 5;
+				"4": never;
+				"5": never;
+				"6": 6 | 7;
+				"7": never;
+				"8": 1 | 2;
+			},
+			1 | 2 | 3 | 4 | 5 | 6 | 7
+		>,
+		n?: R
+	): number;
+	endOf<R extends number = TypedNode<number, T>>(
+		part: PartOf<
+			R,
+			{
+				"1": never;
+				"2": never;
+				"3": 1 | 3 | 4 | 5;
+				"4": never;
+				"5": never;
+				"6": 6 | 7;
+				"7": never;
+				"8": 1 | 2;
+			},
+			1 | 2 | 3 | 4 | 5 | 6 | 7
+		>,
+		n?: R
+	): number;
 	textOf<R extends number = TypedNode<number, T>>(
 		part: PartOf<
 			R,
@@ -12709,6 +12845,8 @@ declare class HtmlSourceProcessor<TState = unknown> extends SourceProcessor<
 		within(type: number): boolean;
 		type(n?: number): number;
 		range(n?: number): [number, number];
+		start(n?: number): number;
+		end(n?: number): number;
 		/**
 		 * Line / column are converted only when asked, by a converter made on the
 		 * first call of a parse. Valid during the walk, as {@link source } is.
@@ -12737,6 +12875,8 @@ declare class HtmlSourceProcessor<TState = unknown> extends SourceProcessor<
 		 * A parser-inserted element has no name, tags or content in the source.
 		 */
 		rangeOf(part: number, n?: number): null | [number, number];
+		startOf(part: number, n?: number): number;
+		endOf(part: number, n?: number): number;
 		/**
 		 * Name and value are read with `name` and `value`; this reads a node's
 		 * other text, such as a doctype's identifiers, which are stored decoded.
@@ -12756,6 +12896,10 @@ declare class HtmlSourceProcessor<TState = unknown> extends SourceProcessor<
 		 * loop over a node's children takes one step per child.
 		 */
 		child(i: number, n?: number): number;
+		/**
+		 * Every child as a new array, for a reader that keeps or searches them.
+		 */
+		children(n?: number): number[];
 	},
 	number,
 	HtmlProcessOptions,
@@ -21672,6 +21816,8 @@ declare interface NodePathFields<TNode> {
 	fieldNamed(field: number, name: string, n?: TNode): TNode;
 	flag(flag: number, n?: TNode): boolean;
 	rangeOf(part: number, n?: TNode): null | [number, number];
+	startOf(part: number, n?: TNode): number;
+	endOf(part: number, n?: TNode): number;
 	textOf(part: number, n?: TNode): null | string;
 	within(type: number): boolean;
 }
@@ -21717,6 +21863,16 @@ declare interface NodePathReads<TNode, TValue = unknown> {
 	range: (n?: TNode) => [number, number];
 
 	/**
+	 * where the node starts in the input
+	 */
+	start: (n?: TNode) => number;
+
+	/**
+	 * where the node ends in the input
+	 */
+	end: (n?: TNode) => number;
+
+	/**
 	 * start line and column, end line and column (lines from 1, columns from 0)
 	 */
 	loc: (n?: TNode) => [number, number, number, number];
@@ -21745,6 +21901,11 @@ declare interface NodePathReads<TNode, TValue = unknown> {
 	 * the i-th child
 	 */
 	child: (i: number, n?: TNode) => TNode;
+
+	/**
+	 * every child as a new array
+	 */
+	children: (n?: TNode) => TNode[];
 }
 
 /**
@@ -30486,7 +30647,7 @@ declare interface SourceBucket {
 declare interface SourceItem {
 	type: SourceTypeOrResolver;
 	filter?: (attributes: Map<string, string>, value: string) => boolean;
-	namespace?: number;
+	namespace?: 1 | 2;
 }
 declare interface SourceLike {
 	/**
@@ -33081,6 +33242,8 @@ type TypedNodePath<TPath, TNode, P extends NodeParts, T, S = unknown> = Omit<
 	| "fieldCount"
 	| "fieldNamed"
 	| "rangeOf"
+	| "startOf"
+	| "endOf"
 	| "textOf"
 > & {
 	readonly node: TypedNode<TNode, T>;
@@ -33108,6 +33271,14 @@ type TypedNodePath<TPath, TNode, P extends NodeParts, T, S = unknown> = Omit<
 		part: PartOf<R, P["parts"], P["part"]>,
 		n?: R
 	): null | [number, number];
+	startOf<R = TypedNode<TNode, T>>(
+		part: PartOf<R, P["parts"], P["part"]>,
+		n?: R
+	): number;
+	endOf<R = TypedNode<TNode, T>>(
+		part: PartOf<R, P["parts"], P["part"]>,
+		n?: R
+	): number;
 	textOf<R = TypedNode<TNode, T>>(
 		part: PartOf<R, P["texts"], P["text"]>,
 		n?: R
@@ -34997,6 +35168,8 @@ declare namespace exports {
 					within(type: number): boolean;
 					type(n?: NodeSyntaxParser): number;
 					range(n?: NodeSyntaxParser): [number, number];
+					start(n?: NodeSyntaxParser): number;
+					end(n?: NodeSyntaxParser): number;
 					loc(n?: NodeSyntaxParser): [number, number, number, number];
 					/**
 					 * A node's text exactly as the input wrote it (`name` and `value` decode).
@@ -35015,6 +35188,10 @@ declare namespace exports {
 					 */
 					childCount(n?: NodeSyntaxParser): number;
 					child(i: number, n?: NodeSyntaxParser): ComponentValue;
+					/**
+					 * Every child as a new array, for a reader that keeps or searches them.
+					 */
+					children(n?: NodeSyntaxParser): ComponentValue[];
 					/**
 					 * A block big enough to stream hands its children to the visitors as each
 					 * one finishes rather than collecting them, so its lists read as empty here.
@@ -35036,6 +35213,8 @@ declare namespace exports {
 					 */
 					flag(flag: number, n?: NodeSyntaxParser): boolean;
 					rangeOf(part: number, n?: NodeSyntaxParser): null | [number, number];
+					startOf(part: number, n?: NodeSyntaxParser): number;
+					endOf(part: number, n?: NodeSyntaxParser): number;
 					/**
 					 * CSS has no text beyond a node's name and value, read with `name` and `value`.
 					 */
@@ -35194,6 +35373,8 @@ declare namespace exports {
 						within(type: number): boolean;
 						type(n?: NodeSyntaxParser): number;
 						range(n?: NodeSyntaxParser): [number, number];
+						start(n?: NodeSyntaxParser): number;
+						end(n?: NodeSyntaxParser): number;
 						loc(n?: NodeSyntaxParser): [number, number, number, number];
 						/**
 						 * A node's text exactly as the input wrote it (`name` and `value` decode).
@@ -35212,6 +35393,10 @@ declare namespace exports {
 						 */
 						childCount(n?: NodeSyntaxParser): number;
 						child(i: number, n?: NodeSyntaxParser): ComponentValue;
+						/**
+						 * Every child as a new array, for a reader that keeps or searches them.
+						 */
+						children(n?: NodeSyntaxParser): ComponentValue[];
 						/**
 						 * A block big enough to stream hands its children to the visitors as each
 						 * one finishes rather than collecting them, so its lists read as empty here.
@@ -35236,6 +35421,8 @@ declare namespace exports {
 							part: number,
 							n?: NodeSyntaxParser
 						): null | [number, number];
+						startOf(part: number, n?: NodeSyntaxParser): number;
+						endOf(part: number, n?: NodeSyntaxParser): number;
 						/**
 						 * CSS has no text beyond a node's name and value, read with `name` and `value`.
 						 */
@@ -35264,6 +35451,8 @@ declare namespace exports {
 									within(type: number): boolean;
 									type(n?: NodeSyntaxParser): number;
 									range(n?: NodeSyntaxParser): [number, number];
+									start(n?: NodeSyntaxParser): number;
+									end(n?: NodeSyntaxParser): number;
 									loc(n?: NodeSyntaxParser): [number, number, number, number];
 									/**
 									 * A node's text exactly as the input wrote it (`name` and `value` decode).
@@ -35282,6 +35471,10 @@ declare namespace exports {
 									 */
 									childCount(n?: NodeSyntaxParser): number;
 									child(i: number, n?: NodeSyntaxParser): ComponentValue;
+									/**
+									 * Every child as a new array, for a reader that keeps or searches them.
+									 */
+									children(n?: NodeSyntaxParser): ComponentValue[];
 									/**
 									 * A block big enough to stream hands its children to the visitors as each
 									 * one finishes rather than collecting them, so its lists read as empty here.
@@ -35306,6 +35499,8 @@ declare namespace exports {
 										part: number,
 										n?: NodeSyntaxParser
 									): null | [number, number];
+									startOf(part: number, n?: NodeSyntaxParser): number;
+									endOf(part: number, n?: NodeSyntaxParser): number;
 									/**
 									 * CSS has no text beyond a node's name and value, read with `name` and `value`.
 									 */
@@ -35409,6 +35604,8 @@ declare namespace exports {
 						within(type: number): boolean;
 						type(n?: NodeSyntaxParser): number;
 						range(n?: NodeSyntaxParser): [number, number];
+						start(n?: NodeSyntaxParser): number;
+						end(n?: NodeSyntaxParser): number;
 						loc(n?: NodeSyntaxParser): [number, number, number, number];
 						/**
 						 * A node's text exactly as the input wrote it (`name` and `value` decode).
@@ -35427,6 +35624,10 @@ declare namespace exports {
 						 */
 						childCount(n?: NodeSyntaxParser): number;
 						child(i: number, n?: NodeSyntaxParser): ComponentValue;
+						/**
+						 * Every child as a new array, for a reader that keeps or searches them.
+						 */
+						children(n?: NodeSyntaxParser): ComponentValue[];
 						/**
 						 * A block big enough to stream hands its children to the visitors as each
 						 * one finishes rather than collecting them, so its lists read as empty here.
@@ -35451,6 +35652,8 @@ declare namespace exports {
 							part: number,
 							n?: NodeSyntaxParser
 						): null | [number, number];
+						startOf(part: number, n?: NodeSyntaxParser): number;
+						endOf(part: number, n?: NodeSyntaxParser): number;
 						/**
 						 * CSS has no text beyond a node's name and value, read with `name` and `value`.
 						 */
@@ -35477,6 +35680,8 @@ declare namespace exports {
 							within(type: number): boolean;
 							type(n?: NodeSyntaxParser): number;
 							range(n?: NodeSyntaxParser): [number, number];
+							start(n?: NodeSyntaxParser): number;
+							end(n?: NodeSyntaxParser): number;
 							loc(n?: NodeSyntaxParser): [number, number, number, number];
 							/**
 							 * A node's text exactly as the input wrote it (`name` and `value` decode).
@@ -35495,6 +35700,10 @@ declare namespace exports {
 							 */
 							childCount(n?: NodeSyntaxParser): number;
 							child(i: number, n?: NodeSyntaxParser): ComponentValue;
+							/**
+							 * Every child as a new array, for a reader that keeps or searches them.
+							 */
+							children(n?: NodeSyntaxParser): ComponentValue[];
 							/**
 							 * A block big enough to stream hands its children to the visitors as each
 							 * one finishes rather than collecting them, so its lists read as empty here.
@@ -35519,6 +35728,8 @@ declare namespace exports {
 								part: number,
 								n?: NodeSyntaxParser
 							): null | [number, number];
+							startOf(part: number, n?: NodeSyntaxParser): number;
+							endOf(part: number, n?: NodeSyntaxParser): number;
 							/**
 							 * CSS has no text beyond a node's name and value, read with `name` and `value`.
 							 */
@@ -35622,6 +35833,8 @@ declare namespace exports {
 					within(type: number): boolean;
 					type(n?: number): number;
 					range(n?: number): [number, number];
+					start(n?: number): number;
+					end(n?: number): number;
 					/**
 					 * Line / column are converted only when asked, by a converter made on the
 					 * first call of a parse. Valid during the walk, as {@link source } is.
@@ -35650,6 +35863,8 @@ declare namespace exports {
 					 * A parser-inserted element has no name, tags or content in the source.
 					 */
 					rangeOf(part: number, n?: number): null | [number, number];
+					startOf(part: number, n?: number): number;
+					endOf(part: number, n?: number): number;
 					/**
 					 * Name and value are read with `name` and `value`; this reads a node's
 					 * other text, such as a doctype's identifiers, which are stored decoded.
@@ -35669,6 +35884,10 @@ declare namespace exports {
 					 * loop over a node's children takes one step per child.
 					 */
 					child(i: number, n?: number): number;
+					/**
+					 * Every child as a new array, for a reader that keeps or searches them.
+					 */
+					children(n?: number): number[];
 				};
 				export let BLOCK_CONTENTS: "block-contents";
 				export let CC_APOSTROPHE: 39;
@@ -35764,6 +35983,8 @@ declare namespace exports {
 						within(type: number): boolean;
 						type(n?: number): number;
 						range(n?: number): [number, number];
+						start(n?: number): number;
+						end(n?: number): number;
 						/**
 						 * Line / column are converted only when asked, by a converter made on the
 						 * first call of a parse. Valid during the walk, as {@link source } is.
@@ -35792,6 +36013,8 @@ declare namespace exports {
 						 * A parser-inserted element has no name, tags or content in the source.
 						 */
 						rangeOf(part: number, n?: number): null | [number, number];
+						startOf(part: number, n?: number): number;
+						endOf(part: number, n?: number): number;
 						/**
 						 * Name and value are read with `name` and `value`; this reads a node's
 						 * other text, such as a doctype's identifiers, which are stored decoded.
@@ -35811,6 +36034,10 @@ declare namespace exports {
 						 * loop over a node's children takes one step per child.
 						 */
 						child(i: number, n?: number): number;
+						/**
+						 * Every child as a new array, for a reader that keeps or searches them.
+						 */
+						children(n?: number): number[];
 					}>[],
 					writer:
 						| undefined
@@ -35837,6 +36064,8 @@ declare namespace exports {
 									within(type: number): boolean;
 									type(n?: number): number;
 									range(n?: number): [number, number];
+									start(n?: number): number;
+									end(n?: number): number;
 									/**
 									 * Line / column are converted only when asked, by a converter made on the
 									 * first call of a parse. Valid during the walk, as {@link source } is.
@@ -35865,6 +36094,8 @@ declare namespace exports {
 									 * A parser-inserted element has no name, tags or content in the source.
 									 */
 									rangeOf(part: number, n?: number): null | [number, number];
+									startOf(part: number, n?: number): number;
+									endOf(part: number, n?: number): number;
 									/**
 									 * Name and value are read with `name` and `value`; this reads a node's
 									 * other text, such as a doctype's identifiers, which are stored decoded.
@@ -35884,6 +36115,10 @@ declare namespace exports {
 									 * loop over a node's children takes one step per child.
 									 */
 									child(i: number, n?: number): number;
+									/**
+									 * Every child as a new array, for a reader that keeps or searches them.
+									 */
+									children(n?: number): number[];
 								},
 								number,
 								HtmlPrintOptions
@@ -35941,6 +36176,8 @@ declare namespace exports {
 						within(type: number): boolean;
 						type(n?: number): number;
 						range(n?: number): [number, number];
+						start(n?: number): number;
+						end(n?: number): number;
 						/**
 						 * Line / column are converted only when asked, by a converter made on the
 						 * first call of a parse. Valid during the walk, as {@link source } is.
@@ -35969,6 +36206,8 @@ declare namespace exports {
 						 * A parser-inserted element has no name, tags or content in the source.
 						 */
 						rangeOf(part: number, n?: number): null | [number, number];
+						startOf(part: number, n?: number): number;
+						endOf(part: number, n?: number): number;
 						/**
 						 * Name and value are read with `name` and `value`; this reads a node's
 						 * other text, such as a doctype's identifiers, which are stored decoded.
@@ -35988,6 +36227,10 @@ declare namespace exports {
 						 * loop over a node's children takes one step per child.
 						 */
 						child(i: number, n?: number): number;
+						/**
+						 * Every child as a new array, for a reader that keeps or searches them.
+						 */
+						children(n?: number): number[];
 					},
 					writer: PrintContext<
 						{
@@ -36012,6 +36255,8 @@ declare namespace exports {
 							within(type: number): boolean;
 							type(n?: number): number;
 							range(n?: number): [number, number];
+							start(n?: number): number;
+							end(n?: number): number;
 							/**
 							 * Line / column are converted only when asked, by a converter made on the
 							 * first call of a parse. Valid during the walk, as {@link source } is.
@@ -36040,6 +36285,8 @@ declare namespace exports {
 							 * A parser-inserted element has no name, tags or content in the source.
 							 */
 							rangeOf(part: number, n?: number): null | [number, number];
+							startOf(part: number, n?: number): number;
+							endOf(part: number, n?: number): number;
 							/**
 							 * Name and value are read with `name` and `value`; this reads a node's
 							 * other text, such as a doctype's identifiers, which are stored decoded.
@@ -36059,6 +36306,10 @@ declare namespace exports {
 							 * loop over a node's children takes one step per child.
 							 */
 							child(i: number, n?: number): number;
+							/**
+							 * Every child as a new array, for a reader that keeps or searches them.
+							 */
+							children(n?: number): number[];
 						},
 						number,
 						HtmlPrintOptions

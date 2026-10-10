@@ -876,14 +876,6 @@ describe("CssSyntax — SourceProcessor", () => {
 						/** @type {import("../../lib/css/syntax-parser").CssPath} */ path
 					) => {
 						seen.range = [path.range()[0], path.range()[1]];
-					},
-					[NodeType.QualifiedRule]: (
-						/** @type {import("../../lib/css/syntax-parser").CssPath} */ path
-					) => {
-						// The writer stays off the path; round-trip it (set the end back to itself).
-						const { _setNodeEnd } = require("../../lib/css/syntax-parser");
-
-						_setNodeEnd(path.node, path.range()[1]);
 					}
 				})
 			)
