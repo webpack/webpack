@@ -11155,6 +11155,11 @@ declare interface HandleModuleCreationOptions {
 	 * check the cycle dependencies of the created module
 	 */
 	checkCycle?: boolean;
+
+	/**
+	 * dependencies are persisted from the previous compilation (incremental re-factorize), not freshly minted seeds
+	 */
+	reusedDependencies?: boolean;
 }
 declare class Hash {
 	constructor();

@@ -14,9 +14,11 @@ module.exports = {
 		(compiler) => {
 			// Applied before the cache and resolver read these options
 			const target = ["a", "b", "a"][step()];
-			/** @type {import("../../../../").FileCacheOptions} */ (
-				compiler.options.cache
-			).version = `alias-${target}`;
+			if (compiler.options.cache) {
+				/** @type {import("../../../../").FileCacheOptions} */ (
+					compiler.options.cache
+				).version = `alias-${target}`;
+			}
 			compiler.options.resolve.alias = {
 				"my-alias": path.resolve(compiler.context, `target-${target}.js`)
 			};

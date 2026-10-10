@@ -15,6 +15,11 @@ require("../helpers/warmup-webpack");
  * @property {((i: EXPECTED_ANY, options: EXPECTED_ANY) => string)=} findBundle
  * @property {boolean=} noTests
  * @property {boolean=} restartCompiler close the compiler after each step and start a new one
+ * @property {boolean=} strictWatchDependencies require identical dependency sets for history-independent fixtures
+ * @property {((error: Error, compiler: import("../../").Compiler | import("../../").MultiCompiler) => void | Promise<void>)=} watchError check a watch or comparison error and request recovery on the same compiler
+ * @property {string=} skipFreshAssetContent reason asset contents depend on build history
+ * @property {string=} skipFreshWarnings reason warnings depend on build history
+ * @property {string=} skipFreshCompilation reason an independent compilation cannot reproduce this case
  */
 
 const path = require("path");
@@ -25,8 +30,10 @@ const { parseResource } = require("../../lib/util/identifier");
 const { TestRunner } = require("../harness/runner");
 const assertModuleGraph = require("../helpers/assertModuleGraph");
 const checkArrayExpectation = require("../helpers/checkArrayExpectation");
+const compareWatchCompilation = require("../helpers/compareWatchCompilation");
 const createLazyTestEnv = require("../helpers/createLazyTestEnv");
 const deprecationTracking = require("../helpers/deprecationTracking");
+const loadWatchConfig = require("../helpers/loadWatchConfig");
 const prepareOptions = require("../helpers/prepareOptions");
 const { remove } = require("../helpers/remove");
 const supportsObjectHasOwn = require("../helpers/supportsObjectHasOwn");
@@ -174,7 +181,7 @@ const describeCases = (config) => {
 							}
 							return closing;
 						};
-						/** @type {{ name: string, done?: boolean, stats?: import("../../").Stats, it?: EXPECTED_ANY, getNumberOfTests?: () => number }[]} */
+						/** @type {{ name: string, done?: boolean, stats?: import("../../").Stats | import("../../").MultiStats, it?: EXPECTED_ANY, getNumberOfTests?: () => number }[]} */
 						const runs = fs
 							.readdirSync(testDirectory)
 							.sort()
@@ -207,7 +214,16 @@ const describeCases = (config) => {
 								testName
 							);
 
+							const freshOutputDirectory = path.join(
+								testRootDirectory,
+								"js",
+								`${config.name}-fresh`,
+								category.name,
+								testName
+							);
+
 							rimraf.sync(outputDirectory);
+							rimraf.sync(freshOutputDirectory);
 
 							let options = {};
 							const configPath = path.join(testDirectory, "webpack.config.js");
@@ -302,6 +318,22 @@ const describeCases = (config) => {
 							} else {
 								applyConfig(options, 0);
 							}
+							/** @returns {Promise<import("../../").Configuration[]>} independent configurations */
+							const createFreshOptions = async () => {
+								const freshOptions = fs.existsSync(configPath)
+									? await prepareOptions(loadWatchConfig(configPath), {
+											testPath: outputDirectory,
+											srcPath: tempDirectory
+										})
+									: {};
+								const configurations = Array.isArray(freshOptions)
+									? freshOptions
+									: [freshOptions];
+								for (const [index, options] of configurations.entries()) {
+									applyConfig(options, index);
+								}
+								return configurations;
+							};
 
 							const testConfigPath = path.join(testDirectory, "test.config.js");
 							// A fresh compiler per step reads the cache back from disk
@@ -317,14 +349,14 @@ const describeCases = (config) => {
 							let triggeringFilename;
 							let lastHash = "";
 							/** @type {Set<string>} */
-							let lastFileDependencies = new Set();
+							const lastFileDependencies = new Set();
 							/** @type {string[]} */
 							let lastContextDependencies = [];
 							/** @type {Set<string>} */
 							let lastMissingDependencies = new Set();
 							// watched files the current step changed which no build has reported yet
 							/** @type {Set<string>} */
-							let unseenChanges = new Set();
+							const unseenChanges = new Set();
 
 							const currentWatchStepModule = require("../helpers/currentWatchStep");
 
@@ -357,6 +389,25 @@ const describeCases = (config) => {
 								currentWatchStepModule
 							).step = run.name;
 							copyDiff(path.join(testDirectory, run.name), tempDirectory, true);
+
+							/** @type {WatchTestConfig} */
+							let testConfig = {
+								findBundle(_, options) {
+									const ext = path.extname(
+										parseResource(options.output.filename).path
+									);
+									return `./bundle${ext}`;
+								}
+							};
+							try {
+								// try to load a test file
+								testConfig = Object.assign(
+									testConfig,
+									require(path.join(testDirectory, "test.config.js"))
+								);
+							} catch (_err) {
+								// empty
+							}
 
 							/**
 							 * Gives the watcher a new mtime for each change no build reported while idle.
@@ -400,16 +451,52 @@ const describeCases = (config) => {
 
 									const compiler = webpack(options);
 									watchedCompiler = compiler;
+									const compare = compareWatchCompilation(
+										compiler,
+										createFreshOptions,
+										freshOutputDirectory,
+										testConfig
+									);
 									const compilers =
 										compiler instanceof webpack.MultiCompiler
 											? compiler.compilers
 											: [compiler];
+									/** @type {Map<import("../../").Compiler, import("../../").Stats>} */
+									const latestStats = new Map();
 									for (const child of compilers) {
+										// Count changes consumed by builds invalidated before their callback.
+										child.hooks.watchRun.tap("WatchTestCasesTest", () => {
+											// A directory event can arrive before an explicitly watched file's event.
+											const reported = [
+												...(child.modifiedFiles || []),
+												...(child.removedFiles || [])
+											];
+											for (const file of unseenChanges) {
+												if (
+													(!lastFileDependencies.has(file) && isWithin(file, reported)) ||
+													reported.some((item) => isWithin(item, [file]))
+												) {
+													unseenChanges.delete(file);
+												}
+											}
+										});
 										child.hooks.finishMake.tap(
 											{ name: "WatchTestCasesTest", stage: Infinity },
 											assertModuleGraph
 										);
 									}
+									/**
+									 * @param {Error} error watch or comparison failure
+									 * @returns {Promise<void>} error handling and optional recovery
+									 */
+									const handleWatchError = async (error) => {
+										try {
+											if (!testConfig.watchError) throw error;
+											await testConfig.watchError(error, compiler);
+										} catch (error) {
+											await fail(/** @type {Error} */ (error));
+										}
+									};
 									compiler.hooks.invalid.tap(
 										"WatchTestCasesTest",
 										(filename, _mtime) => {
@@ -420,45 +507,29 @@ const describeCases = (config) => {
 										{
 											aggregateTimeout: AGGREGATE_TIMEOUT
 										},
-										async (err, stats) => {
+										async (
+											err,
+											/** @type {import("../../").Stats | import("../../").MultiStats | undefined} */ stats
+										) => {
 											try {
 												if (failed) return;
-												if (err) throw err;
+												if (err) return handleWatchError(err);
 												if (!stats) {
 													throw new Error("No stats reported from Compiler");
 												}
-												if (waitMode) return;
-												// macOS can report one step's changes over more than the aggregate
-												// timeout; a build that missed some reuses the stale cached module,
-												// and the late change starts the build this step's tests wait for
-												for (const child of compilers) {
-													// a watched directory reports itself, not the file inside it
-													const reported = [
-														...(child.modifiedFiles || []),
-														...(child.removedFiles || [])
-													];
-													for (const file of unseenChanges) {
-														if (
-															isWithin(file, reported) ||
-															reported.some((item) => isWithin(item, [file]))
-														) {
-															unseenChanges.delete(file);
-														}
+												// MultiCompiler reports only rebuilt children; retain the others
+												// when comparing hashes, dependencies and executing every bundle.
+												if ("stats" in stats) {
+													for (const result of stats.stats) {
+														latestStats.set(result.compilation.compiler, result);
 													}
-												}
-												if (unseenChanges.size > 0) return;
-												clearTimeout(retouchTimer);
-												if (run.done && stats.hash === lastHash) return;
-												if (run.done && lastHash !== stats.hash) {
-													throw new Error(
-														`Compilation changed but no change was issued ${lastHash} != ${stats.hash} (run ${runIdx})\n` +
-															`Triggering change: ${triggeringFilename}`
+													stats.stats = compilers.map(
+														(child) =>
+															/** @type {import("../../").Stats} */ (latestStats.get(child))
 													);
 												}
-												lastHash = stats.hash;
-												run.done = true;
-												run.stats = stats;
-												lastFileDependencies = new Set();
+												if (waitMode) return;
+												lastFileDependencies.clear();
 												lastContextDependencies = [];
 												lastMissingDependencies = new Set();
 												for (const { compilation } of /** @type {import("../../").Stats[]} */ (
@@ -476,6 +547,34 @@ const describeCases = (config) => {
 														...compilation.contextDependencies
 													);
 												}
+												// A rebuild can stop watching an orphan before its removal is reported.
+												for (const file of unseenChanges) {
+													if (
+														!lastFileDependencies.has(file) &&
+														!isWithin(file, lastContextDependencies)
+													) {
+														unseenChanges.delete(file);
+													}
+												}
+												if (unseenChanges.size > 0) return;
+												clearTimeout(retouchTimer);
+												if (run.done && stats.hash === lastHash) return;
+												if (run.done && lastHash !== stats.hash) {
+													throw new Error(
+														`Compilation changed but no change was issued ${lastHash} != ${stats.hash} (run ${runIdx})\n` +
+															`Triggering change: ${triggeringFilename}`
+													);
+												}
+												lastHash = stats.hash;
+												run.done = true;
+												try {
+													await compare(stats);
+												} catch (error) {
+													run.done = false;
+													return handleWatchError(/** @type {Error} */ (error));
+												}
+												if (failed) return;
+												run.stats = stats;
 												const statOptions = {
 													preset: "verbose",
 													cached: true,
@@ -523,25 +622,6 @@ const describeCases = (config) => {
 													return;
 												}
 
-												/** @type {WatchTestConfig} */
-												let testConfig = {
-													findBundle(_, options) {
-														const ext = path.extname(
-															parseResource(options.output.filename).path
-														);
-														return `./bundle${ext}`;
-													}
-												};
-												try {
-													// try to load a test file
-													testConfig = Object.assign(
-														testConfig,
-														require(path.join(testDirectory, "test.config.js"))
-													);
-												} catch (_err) {
-													// empty
-												}
-
 												if (testConfig.noTests) {
 													return process.nextTick(finish);
 												}
@@ -556,12 +636,16 @@ const describeCases = (config) => {
 													},
 													category,
 													testName,
-													setupRunner: ({ runner }) => {
+													setupRunner: ({ runner, index }) => {
 														runner.mergeModuleScope({
 															it: run.it,
 															beforeEach: _beforeEach,
 															afterEach: _afterEach,
 															STATS_JSON: jsonStats,
+															FRESH_OUTPUT_DIRECTORY: path.join(
+																freshOutputDirectory,
+																String(index)
+															),
 															STATE: state,
 															WATCH_STEP: run.name
 														});
@@ -613,7 +697,7 @@ const describeCases = (config) => {
 																		false,
 																		changed
 																	);
-																	unseenChanges = new Set();
+																	unseenChanges.clear();
 																	if (!restartCompiler && watchedCompiler) {
 																		// only a file the last build watched reports its change
 																		for (const file of changed) {
