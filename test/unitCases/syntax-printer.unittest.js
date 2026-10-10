@@ -6888,6 +6888,8 @@ describe("syntax-printer", () => {
 				["var f = function g(n) { return typeof g + n; }; console.log(f(1), f(2));", "function g("],
 				// A read not calling it keeps it declared.
 				["function inc(n) { return n + 1; } var list = [inc]; console.log(inc(1), inc(2), list[0](3));", "function inc("],
+				// A `with` around the calls would read the name from its object.
+				["var x = 'outer'; function read(s) { return x + s; } var o = { x: 'inner' }; with (o) { console.log(read('!'), read('?')); } console.log(read('.'));", "function read("],
 				// `total += n` reads `total` before the argument writes it.
 				["let total = 1; function add(n) { total += n; } function next() { total = 10; return 5; } add(next()); add(next()); console.log(total);", "function add("]
 			]) {
