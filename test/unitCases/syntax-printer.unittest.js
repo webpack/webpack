@@ -1342,6 +1342,11 @@ const CORRECTED_CASES = [
 		{ compress: { arguments: true }, mangle: false }
 	],
 	[
+		"`arguments[0]` read before its parameter is reassigned, moved past that",
+		"function test(x, y) { var temp; if (typeof x === 'string') { temp = arguments[0]; x = {}; x[temp] = y; return x; } } console.log(JSON.stringify(test('a', 'b')));",
+		{ compress: {}, mangle: false }
+	],
+	[
 		"an empty arrow whose default has an effect",
 		"var r = []; ((v = r.push(1)) => {})(); console.log(r.length);",
 		{ compress: {}, mangle: false }
