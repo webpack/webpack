@@ -1189,6 +1189,37 @@ describe("WebpackParser", () => {
 			expect(atoms).toBe(4);
 		});
 
+		it("should parse as the eager class does when constructed directly without lazy nodes", () => {
+			const { WebpackParser } = require("../../lib/javascript/syntax-parser");
+
+			// Every method the eager class takes from acorn, reached here through
+			// WebpackParser's own forwarding instead.
+			const source = `import def, { a as b, "s" as c } from "m" with { type: "json" };
+import * as ns from "n";
+export * from "o";
+export * as p from "q";
+export { b as e, c };
+label: for (const [x = 1, ...rest] of list) if (x) { break label; } else continue;
+class K extends (def || Object) {
+	static #count = 0;
+	field = 1;
+	static { K.#count++; }
+	get value() { return #count in K ? super.value : null; }
+	async *gen({ a, b: [c] = [], ...more }, ...args) { yield* args; yield await a; }
+}
+const fn = async (y = 2, { z } = {}) => y ** z ?? (y ? z : -y);
+new K(...[1, 2]);
+tag\`a\${fn}b\`;
+({ [ns.key]: 1, async method() {}, get g() { return 0; }, ...ns, "q": /re/g, n: 1n });
+x?.y?.(z) || (w = typeof v, v++, v);
+export default function f() {}`;
+			/** @type {ParserOptions} */
+			const options = { ecmaVersion: "latest", sourceType: "module" };
+			expect(new WebpackParser(options, source).parse()).toEqual(
+				WebpackParser.parse(source, options)
+			);
+		});
+
 		it("should check identifier parameter lists like acorn", () => {
 			// sloppy simple functions allow duplicates; arrows and strict don't
 			expect(parse("function f(a, a) { return a; }").ast).toBeDefined();

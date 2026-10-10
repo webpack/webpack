@@ -2738,7 +2738,7 @@ describe("syntax-printer", () => {
 		const { WebpackParser } = require("../../lib/javascript/syntax-parser");
 
 		/**
-		 * @param {{ readWord: () => EXPECTED_ANY }} prototype where the probe reads names
+		 * @param {{ readWord: () => void }} prototype where the probe reads names
 		 * @param {(source: string) => unknown} parse reads a source through it
 		 * @returns {Promise<number>} the frames one more level of `a * (…)` takes
 		 */
@@ -2756,12 +2756,12 @@ describe("syntax-printer", () => {
 				let frames;
 				const { readWord } = prototype;
 				prototype.readWord = function readDeepest() {
+					const parser = /** @type {{ input: string, pos: number }} */ (
+						/** @type {unknown} */ (this)
+					);
 					if (
 						frames === undefined &&
-						/** @type {EXPECTED_ANY} */ (this).input.startsWith(
-							"deepest",
-							/** @type {EXPECTED_ANY} */ (this).pos
-						)
+						parser.input.startsWith("deepest", parser.pos)
 					) {
 						frames = /** @type {string} */ (new Error("probe").stack).split(
 							"\n"
@@ -2791,7 +2791,7 @@ describe("syntax-printer", () => {
 			)
 		).toBe(
 			await framesPerLevel(
-				/** @type {{ readWord: () => EXPECTED_ANY }} */ (
+				/** @type {{ readWord: () => void }} */ (
 					/** @type {unknown} */ (acorn.Parser.prototype)
 				),
 				(source) =>
