@@ -81,11 +81,16 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        shard: [1/4, 2/4, 3/4, 4/4]
+        shard: [1/2, 2/2]
     runs-on: ubuntu-latest
-    # The harness has no deadline of its own and a watch bench waits on a
-    # rebuild callback; main's slowest shard is ~55m, so this only trips on a hang.
+    # The harness has no deadline of its own, so this only trips on a hang.
     timeout-minutes: 120
+    env:
+      LAST_COMMIT: 1
+      NEGATIVE_FILTER: ${{ github.event_name != 'schedule' && 'on-schedule' || '' }}
+      # Single libuv thread → deterministic fs-completion order, removing the
+      # last I/O race that perturbs allocation counts between runs.
+      UV_THREADPOOL_SIZE: 1
     permissions:
       issues: write
       pull-requests: write
@@ -113,6 +118,8 @@ jobs:
           const toGb=b=>(b/1024**3).toFixed(2)+" GB";
           console.log(`--- Memory Status ---\nTotal: ${toGb(os.totalmem())}\nFree:  ${toGb(os.freemem())}\nUsed:  ${toGb(os.totalmem()-os.freemem())}`)'
 
+      # Each case is measured in its own fresh process, so its result does not
+      # depend on the shard. All cases in one job exceed CodSpeed's upload limit.
       - name: Run memory benchmarks
         uses: CodSpeedHQ/action@c4fd08a3a159bd0cc208da1e0edf32b8c47d75e5 # v5.4.0
         with:
@@ -120,9 +127,4 @@ jobs:
           mode: "memory"
           token: ${{ secrets.CODSPEED_TOKEN }}
         env:
-          LAST_COMMIT: 1
-          NEGATIVE_FILTER: ${{ github.event_name != 'schedule' && 'on-schedule' || '' }}
           SHARD: ${{ matrix.shard }}
-          # Single libuv thread → deterministic fs-completion order, removing the
-          # last I/O race that perturbs allocation counts between runs.
-          UV_THREADPOOL_SIZE: 1

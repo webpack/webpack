@@ -353,9 +353,12 @@ class BenchmarkRunner {
 			);
 		}
 
-		const shardBenchmarks = splitToNChunks([...benchmarks], shard[1])[
-			shard[0] - 1
-		];
+		// Memory mode measures each task in its own process, so its shard cannot
+		// change its counts: deal tasks round-robin to even out the shards' time.
+		const roundRobin = getCodspeedRunnerMode() === "memory";
+		const shardBenchmarks = roundRobin
+			? benchmarks
+			: splitToNChunks([...benchmarks], shard[1])[shard[0] - 1];
 
 		/** @type {BenchmarkTask[]} */
 		const benchmarkTasks = [];
@@ -380,7 +383,9 @@ class BenchmarkRunner {
 			}
 		}
 
-		return benchmarkTasks;
+		return roundRobin
+			? benchmarkTasks.filter((_, index) => index % shard[1] === shard[0] - 1)
+			: benchmarkTasks;
 	}
 
 	/**
@@ -499,33 +504,6 @@ class BenchmarkRunner {
 	}
 
 	/**
-	 * Run the whole shard in one shared bench in the main process. Used for
-	 * CodSpeed memory mode: a single `Bench` with one global prime pass and one
-	 * setup/teardown, exactly like the pre-parallel harness, so allocation counts
-	 * stay stable and comparable (per-benchmark benches shifted them by 2-4x).
-	 * @param {BenchmarkTask[]} benchmarkTasks benchmark tasks
-	 * @returns {Promise<void>}
-	 */
-	async runInMainThread(benchmarkTasks) {
-		console.log(
-			`\nRunning ${benchmarkTasks.length} benchmark task(s) in a single process (memory mode)\n`
-		);
-
-		const { runAll } = await import("./harness/benchmark/benchmark.worker.mjs");
-
-		// Any task error aborts the run (bench `throws: true`), matching the
-		// pre-parallel harness where one failure failed the whole shard.
-		const result = await runAll({
-			tasks: benchmarkTasks,
-			casesPath: this.casesPath,
-			baseOutputPath: this.baseOutputPath,
-			callingFile
-		});
-
-		this.processResults([result]);
-	}
-
-	/**
 	 * Run benchmark tasks across a pool of worker processes.
 	 * @param {BenchmarkTask[]} benchmarkTasks benchmark tasks
 	 * @returns {Promise<void>}
@@ -537,12 +515,15 @@ class BenchmarkRunner {
 				: os.cpus().length;
 		const cpuWorkers = Math.max(1, cpuCount - 1);
 
-		// Simulation is the only Valgrind mode here (memory mode runs in-process);
-		// its shadow memory is only freed on process exit.
+		// Simulation is the only Valgrind mode; its shadow memory is only freed
+		// on process exit.
 		const underValgrind = getCodspeedRunnerMode() === "simulation";
+		// Memory mode measures each task alone in a fresh process, so its counts
+		// don't depend on which tasks share a shard and match a filtered local run.
+		const isolated = getCodspeedRunnerMode() === "memory";
 
 		// Bound the pool by RAM, not just cores: a Valgrind build peaks near 11 GiB,
-		// so 16 GiB fits one worker; bigger runners auto-scale. memory mode never gets here.
+		// so 16 GiB fits one worker; bigger runners auto-scale.
 		const totalGiB = os.totalmem() / 1024 ** 3;
 		const reserveGiB = 3;
 		const perWorkerGiB = underValgrind ? 11 : 1.5;
@@ -551,7 +532,20 @@ class BenchmarkRunner {
 			Math.floor((totalGiB - reserveGiB) / perWorkerGiB)
 		);
 
-		const numWorkers = Math.min(cpuWorkers, memWorkers);
+		// CodSpeed's runner tracks one benchmark at a time: concurrent workers
+		// interleave start/stop markers and the run reports no results.
+		const numWorkers = isolated ? 1 : Math.min(cpuWorkers, memWorkers);
+		// Memory mode counts native allocations, so V8's own work must stay out of them:
+		// Maglev compiles despite `--no-opt`, helper threads split GC work, and a major
+		// GC starts on a timer or falls inside the sample by a few KB of live heap.
+		const memoryV8Flags = isolated
+			? [
+					"--no-maglev",
+					"--single-threaded",
+					"--no-incremental-marking",
+					"--initial-old-space-size=1024"
+				]
+			: [];
 
 		const workerPool = /** @type {BenchmarkWorker} */ (
 			new Worker(
@@ -562,10 +556,13 @@ class BenchmarkRunner {
 					// Valgrind memory accumulates across builds and frees only on exit, so
 					// recycle the worker after each task (`0` = always restart) to cap peak
 					// at one build's footprint; otherwise a shard OOMs mid-run (exit 143).
-					idleMemoryLimit: underValgrind ? 0 : undefined,
+					idleMemoryLimit: underValgrind || isolated ? 0 : undefined,
 					// Forward the V8 flags CodSpeed needs (seeds, --no-opt, …) so the
 					// child processes measure under the same deterministic conditions.
-					forkOptions: { silent: false, execArgv: getV8Flags() }
+					forkOptions: {
+						silent: false,
+						execArgv: [...getV8Flags(), ...memoryV8Flags]
+					}
 				}
 			)
 		);
@@ -632,9 +629,7 @@ class BenchmarkRunner {
 
 		await this.prepareBenchmarkTasks(benchmarkTasks);
 
-		await (getCodspeedRunnerMode() === "memory"
-			? this.runInMainThread(benchmarkTasks)
-			: this.runInWorkers(benchmarkTasks));
+		await this.runInWorkers(benchmarkTasks);
 	}
 }
 
