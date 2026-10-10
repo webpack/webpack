@@ -1,14 +1,19 @@
 "use strict";
 
+// cspell:ignore xaby
+
 // A seeded generator of JavaScript programs that print what they compute: the
 // sloppy-mode ES5 terser's ufuzz writes (canaries, `arguments`, `delete`,
-// labeled loops, IIFEs, setters) beside classes with private and static
-// members, generators, async functions, `?.`, `??`, destructuring and spread.
+// labeled loops, IIFEs, setters) beside classes with private, static, computed
+// and accessor members, generators, async functions and generators, `?.`, `??`,
+// destructuring and spread; rarer syntax (`with`, direct `eval`, `new.target`,
+// literal spellings, regular expressions, escaped names); modules importing and
+// re-exporting `DEPENDENCY`; and bundles shaped as webpack writes them.
 
 /**
  * @typedef {object} Binding
  * @property {string} name the name
- * @property {"var" | "let" | "const" | "param" | "function" | "class" | "generator" | "async"} kind how it is bound
+ * @property {"var" | "let" | "const" | "param" | "function" | "class" | "generator" | "async" | "namespace"} kind how it is bound
  */
 
 /**
@@ -23,6 +28,8 @@
  * @property {boolean} inClass whether `this` is an instance
  * @property {boolean} strict whether the code is strict, as a class body is
  * @property {boolean} hasArguments whether `arguments` is a function's own
+ * @property {boolean} hasNewTarget whether `new.target` may be read
+ * @property {boolean} module whether the program is a module, which imports `dep`
  * @property {boolean} scopeTop whether statements are a function's or the program's own
  * @property {string[]} labels the labels in scope
  * @property {string[]} loopLabels the labels `continue` may name
@@ -33,7 +40,7 @@
 // `a`, `b` and `c` are ufuzz's canaries, printed last.
 const PRELUDE = `var _calls_ = 60, a = 100, b = 10, c = 0;
 Function.prototype.toString = function () {
-	return "[function]";
+	return typeof _functionText === "string" ? _functionText : "[function]";
 };
 function _show(v, d) {
 	var t = typeof v;
@@ -65,9 +72,22 @@ function _print() {
 	}
 	console.log(parts.join(" "));
 }
+function _pure(v) {
+	return v;
+}
 function _tag(strings) {
 	return strings.raw.join("|") + "/" + strings.join("|") + "/" + (arguments.length - 1);
 }
+`;
+
+// The module every module program may import as `dep`: a live binding, a
+// function changing it, a default class and an alias.
+const DEPENDENCY = `export let counter = 0;
+export function bump() { return ++counter; }
+export default class Dep { m() { return counter; } }
+export const list = [1, 2];
+export const object = { a: 1, b: { c: 2 } };
+export { counter as alias };
 `;
 
 const NUMBERS = [
@@ -114,6 +134,68 @@ const OTHERS = [
 	"/[a2][^e]+$/",
 	"[,0][1]",
 	"([,0].length === 2)"
+];
+// Spellings the printer and `keep_numbers` must keep apart: radixes, separators,
+// exponents, the extremes and values that round.
+const MORE_NUMBERS = [
+	"0X1F",
+	"1e-7",
+	".5",
+	"5e-324",
+	"1.7976931348623157e308",
+	"0.000001",
+	"4294967296",
+	"9007199254740993",
+	"0b1_0",
+	"0xFF_FF",
+	"1_0.5_0",
+	"1E+3",
+	"123456789012345680000",
+	"-(2 ** 31)",
+	"0.1 + 0.2",
+	"-Infinity",
+	"1 / -0"
+];
+// Escapes, a line continuation, astral and lone surrogate characters, and text
+// an inline script must not end on.
+const MORE_STRINGS = [
+	'"\\u{1F600}"',
+	'"\\x41\\x42"',
+	'"\\0"',
+	'"a\\\nb"',
+	'"\\u2028\\u2029"',
+	'"</script>"',
+	'"\\r\\n\\t"',
+	"'\"\\''",
+	'"\\\\"',
+	'"😀"',
+	'"\\ud83d"',
+	'"é"',
+	'"\\v\\f\\b"',
+	// eslint-disable-next-line no-template-curly-in-string
+	'"$${a}"'
+];
+// What only sloppy code may write.
+const SLOPPY_LITERALS = ["017", "08", "019.5", '"\\101"', '"\\8"'];
+const REGEXPS = [
+	"/(?<y>\\d+)-\\k<y>/u",
+	"/./su",
+	"/\\p{L}+/u",
+	"/a(?=b)/g",
+	"/(?<!x)b/",
+	"/[/]\\//",
+	"/^$/m",
+	"/\\bfoo\\b/i",
+	"/a|/y",
+	"/(a)|(b)/d"
+];
+const REGEXP_SUBJECTS = [
+	'"12-12"',
+	'"ab\\nb"',
+	'"é1"',
+	'"xaby"',
+	'"foo bar"',
+	'"/"'
 ];
 const TYPEOF_OUTCOMES = ["function", "undefined", "string", "number", "object"];
 // BigInts meet only each other: the compressor, as terser's, drops arithmetic
@@ -297,6 +379,14 @@ const createProgramGenerator = (seed) => {
 	const fresh = (prefix) => `${prefix}${counter++}`;
 
 	/**
+	 * A namespace converts to no primitive, which `pure_conversions` takes as
+	 * free of effects, so it is read only through its members.
+	 * @param {Binding} binding a binding
+	 * @returns {boolean} whether it may be read as a value
+	 */
+	const isPlainValue = (binding) => binding.kind !== "namespace";
+
+	/**
 	 * @param {Context} context the context
 	 * @param {(binding: Binding) => boolean} filter which bindings qualify
 	 * @returns {Binding | undefined} a binding in scope that qualifies
@@ -332,6 +422,7 @@ const createProgramGenerator = (seed) => {
 			inSwitch: false,
 			inClass: false,
 			hasArguments: true,
+			hasNewTarget: true,
 			scopeTop: true,
 			labels: [],
 			loopLabels: []
@@ -343,7 +434,8 @@ const createProgramGenerator = (seed) => {
 	 */
 	const arrowContext = (context) => ({
 		...functionContext(context),
-		hasArguments: context.hasArguments
+		hasArguments: context.hasArguments,
+		hasNewTarget: context.hasNewTarget
 	});
 
 	/**
@@ -421,7 +513,7 @@ const createProgramGenerator = (seed) => {
 			} else if (kind === 2) {
 				properties.push(`...${expression(context, depth - 1)}`);
 			} else if (kind === 3) {
-				const binding = pickBinding(context, () => true);
+				const binding = pickBinding(context, isPlainValue);
 				properties.push(binding ? binding.name : `${key}: ${value}`);
 			} else if (kind === 4) {
 				const body = functionContext(context);
@@ -727,6 +819,101 @@ const createProgramGenerator = (seed) => {
 	};
 
 	/**
+	 * Syntax a program rarely holds: literal spellings, regular expressions,
+	 * sloppy-only forms, `new.target`, `super` in an object, `this` passed or
+	 * lost by a call's form, mapped `arguments`, direct `eval` and spread `new`.
+	 * @param {Context} context the context
+	 * @param {number} depth how much more an expression may nest
+	 * @returns {string} an expression
+	 */
+	const rareExpression = (context, depth) => {
+		switch (below(15)) {
+			case 12:
+				return context.module
+					? pick([
+							"import.meta.url",
+							"(typeof import.meta)",
+							"Object.keys(import.meta)"
+						])
+					: literal();
+			case 13: {
+				const namespace = pickBinding(context, (b) => b.kind === "namespace");
+				if (namespace === undefined) return literal();
+				return pick([
+					`${namespace.name}.counter`,
+					`${namespace.name}.bump()`,
+					`Object.keys(${namespace.name})`,
+					`${namespace.name}[Symbol.toStringTag]`,
+					`new ${namespace.name}.default().m()`,
+					`(${JSON.stringify(pick(KEYS))} in ${namespace.name})`
+				]);
+			}
+			case 0:
+				return pick(MORE_NUMBERS);
+			case 1:
+				return pick(MORE_STRINGS);
+			case 2:
+				return `${pick(REGEXPS)}.${pick(["test", "exec"])}(${pick(REGEXP_SUBJECTS)})`;
+			case 3:
+				return `${pick(REGEXP_SUBJECTS)}.${pick([
+					'replace(/(\\w)/g, "$1-")',
+					"split(/[b-]/)",
+					"match(/\\d+/g)",
+					"search(/b/)",
+					"replaceAll(/a/g, () => 1)"
+				])}`;
+			case 4:
+				return context.strict ? literal() : pick(SLOPPY_LITERALS);
+			case 5:
+				return context.hasNewTarget
+					? pick(["(typeof new.target)", "(new.target === undefined)"])
+					: literal();
+			case 6: {
+				const method = functionContext(context);
+				return `({ __proto__: { m() { return ${literal()}; } }, m() { ${guard()} return [super.m(), ${expression(
+					method,
+					depth - 1
+				)}]; } }).m()`;
+			}
+			case 7:
+				return pick([
+					"(0, { m() { return typeof this; } }.m)()",
+					"({ m() { return typeof this; } }).m()",
+					"({ m() { return typeof this; } })?.m()",
+					`({ k: 1, t(s, v) { return [s.raw[0], v, this.k]; } }).t\`a\${${expression(
+						context,
+						depth - 1
+					)}}b\``
+				]);
+			case 8:
+				// A sloppy function's `arguments` maps its simple parameters.
+				return context.hasArguments && !context.strict
+					? `(arguments[0] = ${expression(context, depth - 1)}, arguments[0])`
+					: literal();
+			case 9: {
+				// A direct `eval` reads names the minifier must then keep.
+				const binding = pickBinding(
+					context,
+					(b) => MUTABLE.has(b.kind) || b.kind === "const"
+				);
+				return binding === undefined
+					? 'eval("1 + 1")'
+					: `eval(${JSON.stringify(binding.name)})`;
+			}
+			case 10:
+				return `new (class { constructor(...r) { this.n = r.length; } })(...${array(
+					context,
+					depth - 1
+				)}).n`;
+			case 11:
+				return `(${expression(context, depth - 1)})?.a?.[${pick(KEYS.map((k) => JSON.stringify(k)))}]?.()`;
+			default:
+				// A call annotated pure may go unused, never its argument's effects.
+				return `/*#__PURE__*/ _pure(${expression(context, depth - 1)})`;
+		}
+	};
+
+	/**
 	 * @param {Context} context the context
 	 * @param {number} depth how much more an expression may nest
 	 * @returns {string} an expression
@@ -739,8 +926,15 @@ const createProgramGenerator = (seed) => {
 			);
 			return binding !== undefined && chance(0.5) ? binding.name : literal();
 		}
-		const kind = below(40);
+		const kind = below(46);
 		switch (kind) {
+			case 40:
+			case 41:
+			case 42:
+			case 43:
+			case 44:
+			case 45:
+				return rareExpression(context, depth);
 			case 36:
 			case 37:
 			case 38:
@@ -814,7 +1008,7 @@ const createProgramGenerator = (seed) => {
 				return literal();
 			case 2:
 			case 3: {
-				const binding = pickBinding(context, () => true);
+				const binding = pickBinding(context, isPlainValue);
 				return binding === undefined ? literal() : binding.name;
 			}
 			case 4:
@@ -976,13 +1170,165 @@ const createProgramGenerator = (seed) => {
 			: `${value};`;
 
 	/**
+	 * @param {string} name a name
+	 * @returns {string} it spelled with its first character escaped
+	 */
+	const escapedName = (name) =>
+		`\\u${name.charCodeAt(0).toString(16).padStart(4, "0")}${name.slice(1)}`;
+
+	/**
+	 * Statements a program rarely holds: `with`, `debugger`, a `finally` that
+	 * returns, async generators, patterns in `catch` and loop heads, a class of
+	 * accessors and computed members, labeled nested loops, escaped and
+	 * non-ASCII names, and a `switch` with blocks and a `default` in between.
+	 * @param {Context} context the context
+	 * @returns {string} a statement
+	 */
+	const rareStatement = (context) => {
+		switch (below(11)) {
+			case 10:
+				return context.module
+					? 'import("dep").then((m) => _print("dynamic", m.counter, m.bump(), typeof m.default));'
+					: `_print(${expression(context, 2)});`;
+			case 0: {
+				if (context.strict) return `_print(${expression(context, 2)});`;
+				// `a` reads the object's own while the `with` runs, `b` the outer one.
+				const name = fresh("w");
+				return `with ({ a: ${literal()}, ${name}: ${expression(context, 1)} }) { _print(a, b, typeof ${name}); a = ${expression(
+					context,
+					1
+				)}; ${block(inner(context, {}), 2)} _print(a); }`;
+			}
+			case 1:
+				return `debugger; _print(${expression(context, 2)});`;
+			case 2:
+				if (!context.inFunction) return `_print(${expression(context, 2)});`;
+				return `try { ${block(inner(context, {}), 2)} return ${expression(
+					context,
+					2
+				)}; } finally { _print("finally"); ${
+					chance(0.5) ? `return ${expression(context, 1)};` : ""
+				} }`;
+			case 3: {
+				const name = fresh("ag");
+				const body = {
+					...functionContext(context),
+					inGenerator: true,
+					inAsync: true
+				};
+				const declared = `const ${name} = async function* () { ${guard()} yield ${expression(
+					body,
+					2
+				)}; await null; yield* [${expression(body, 1)}]; ${block(body, 2)} };`;
+				if (context.inAsync) {
+					const item = fresh("v");
+					return `${declared} for await (const ${item} of ${name}()) _print("each", ${item});`;
+				}
+				return `${declared} ${name}().next().then((r) => _print("next", r.value, r.done), (e) => _print("rejected", _error(e)));`;
+			}
+			case 4: {
+				const name = fresh("e");
+				const message = fresh("e");
+				const handler = inner(context, {});
+				handler.bindings.push(
+					{ name, kind: "let" },
+					{ name: message, kind: "let" }
+				);
+				// Never a function: mangling may rename the `name` read off it.
+				return `try { throw ${pick([
+					'new TypeError("t")',
+					'{ name: "n", message: 1 }',
+					"[1, 2]",
+					literal()
+				])}; } catch ({ name: ${name}, message: ${message} = "none" }) { _print(${name}, ${message}); ${block(
+					handler,
+					1
+				)} }`;
+			}
+			case 5: {
+				const key = fresh("k");
+				const value = fresh("v");
+				const body = inner(context, { inLoop: true });
+				body.bindings.push(
+					{ name: key, kind: "const" },
+					{ name: value, kind: "const" }
+				);
+				return chance(0.5)
+					? `for (const [${key}, ${value}] of Object.entries(${object(context, 2)})) { ${block(body, 2)} }`
+					: `for (const { a: ${key} = ${literal()}, ...${value} } of [{}, ${object(context, 2)}]) { ${block(body, 2)} }`;
+			}
+			case 6: {
+				const name = fresh("K");
+				const key = JSON.stringify(pick(KEYS));
+				const fields = {
+					...functionContext(context),
+					inClass: true,
+					strict: true,
+					hasArguments: false
+				};
+				context.bindings.push({ name, kind: "class" });
+				return `class ${name} { static s = ${literal()}; static m() { return this.s; } get g() { return ${expression(
+					fields,
+					2
+				)}; } set g(v) { this._g = v; } [${key}]() { return ${literal()}; } static { this.t = this.s; } async am() { return await (${literal()}); } *gm() { yield ${literal()}; } static get [${key}]() { return 1; } }
+_print(${name}.m(), ${name}.t, ${name}[${key}], new ${name}().g, typeof new ${name}()[${key}], [...new ${name}().gm()]); new ${name}().am().then((v) => _print("am", v));`;
+			}
+			case 7: {
+				const outer = fresh("L");
+				const innerLabel = fresh("L");
+				const brake = fresh("brake");
+				const i = fresh("i");
+				const j = fresh("j");
+				const body = inner(context, {
+					inLoop: true,
+					labels: [...context.labels, outer, innerLabel],
+					loopLabels: [...context.loopLabels, outer, innerLabel]
+				});
+				body.bindings.push(
+					{ name: i, kind: "const" },
+					{ name: j, kind: "const" }
+				);
+				return `{ var ${brake} = 9; ${outer}: for (let ${i} = 0; ${i} < 3; ${i}++) { ${innerLabel}: for (let ${j} = 0; ${j} < 3; ${j}++) { if (--${brake} < 0) break ${outer}; if (${expression(
+					body,
+					1
+				)}) continue ${outer}; if (${expression(body, 1)}) break ${innerLabel}; ${block(body, 2)} _print(${i}, ${j}); } } }`;
+			}
+			case 8: {
+				const name = chance(0.5) ? fresh("ä") : fresh("v");
+				const value = expression(context, 2);
+				context.bindings.push({ name, kind: "var" });
+				return `var ${chance(0.5) ? escapedName(name) : name} = ${value};`;
+			}
+			default: {
+				const body = inner(context, { inSwitch: true });
+				const name = fresh("x");
+				const scoped = inner(body, {});
+				scoped.bindings.push({ name, kind: "let" });
+				return `switch (${expression(context, 1)}) { case ${literal()}: { let ${name} = ${expression(
+					body,
+					1
+				)}; ${block(scoped, 1)} _print(${name}); } default: _print("default"); case ${literal()}: ${block(
+					inner(body, {}),
+					1
+				)} break; case ${literal()}: _print("last"); }`;
+			}
+		}
+	};
+
+	/**
 	 * @param {Context} context the context
 	 * @returns {string} a statement
 	 */
 	const statement = (context) => {
 		const shallow = context.depth < 3;
-		const kind = below(shallow ? 33 : 8);
+		const kind = below(shallow ? 38 : 8);
 		switch (kind) {
+			case 33:
+			case 34:
+			case 35:
+			case 36:
+			case 37:
+				return rareStatement(context);
 			case 31:
 				// Read for no value: what the `improve` phase drops as unobservable.
 				return `${pick(["Math.PI", "JSON", "Object.prototype.toString", "new Set", "Object.keys([])", 'new RegExp("a", "i")', "[1].concat([2])", "Math.max(1, 2)"])};`;
@@ -1235,12 +1581,195 @@ const createProgramGenerator = (seed) => {
 		}
 	};
 
+	/**
+	 * Imports of `dep`'s exports in every form, joined to the context as what
+	 * they bind: read-only values, a function, a class and a namespace.
+	 * @param {Context} context the program's context
+	 * @returns {string} the declarations
+	 */
+	const imports = (context) => {
+		const declarations = [];
+		const named = [];
+		for (const [name, kind] of /** @type {[string, Binding["kind"]][]} */ ([
+			["counter", "const"],
+			["bump", "function"],
+			["list", "const"],
+			["alias", "const"],
+			["object", "const"]
+		])) {
+			if (!chance(0.5)) continue;
+			const local = chance(0.5) ? fresh("i") : name;
+			named.push(local === name ? name : `${name} as ${local}`);
+			context.bindings.push({ name: local, kind });
+		}
+		const dep = chance(0.5) ? fresh("Dep") : undefined;
+		if (dep !== undefined) context.bindings.push({ name: dep, kind: "class" });
+		if (dep !== undefined || named.length > 0) {
+			const clauses = [
+				...(dep === undefined ? [] : [dep]),
+				...(named.length === 0 ? [] : [`{ ${named.join(", ")} }`])
+			];
+			declarations.push(`import ${clauses.join(", ")} from "dep";`);
+		}
+		if (chance(0.5)) {
+			const namespace = fresh("ns");
+			context.bindings.push({ name: namespace, kind: "namespace" });
+			declarations.push(`import * as ${namespace} from "dep";`);
+		}
+		return declarations.join("\n");
+	};
+
+	/**
+	 * Exports, under new names, of what the program's top level still binds,
+	 * a default, and `dep`'s re-exported.
+	 * @param {Context} context the program's context
+	 * @returns {string[]} the declarations
+	 */
+	const exports = (context) => {
+		const declarations = [];
+		const local = context.bindings.filter(
+			(b) =>
+				b.kind !== "namespace" &&
+				!/^(?:counter|bump|list|alias|object)$/.test(b.name)
+		);
+		const specifiers = [];
+		for (let i = below(3); i > 0 && local.length > 0; i--) {
+			specifiers.push(`${pick(local).name} as ${fresh("x")}`);
+		}
+		if (specifiers.length > 0) {
+			declarations.push(`export { ${specifiers.join(", ")} };`);
+		}
+		if (chance(0.4)) {
+			declarations.push(`export default ${expression(context, 2)};`);
+		}
+		const reexport = below(4);
+		if (reexport === 0) {
+			declarations.push('export * from "dep";');
+		} else if (reexport === 1) {
+			declarations.push(`export * as ${fresh("re")} from "dep";`);
+		} else if (reexport === 2) {
+			declarations.push(
+				`export { bump as ${fresh("re")}, default as ${fresh("re")} } from "dep";`
+			);
+		}
+		return declarations;
+	};
+
+	/**
+	 * A program shaped as webpack writes a bundle: a module map, the
+	 * `__webpack_require__` runtime, ES modules exporting through getters,
+	 * CommonJS modules and an entry requiring them, bodies written at random.
+	 * @param {Context} root the program's context
+	 * @returns {string} the bundle
+	 */
+	const bundle = (root) => {
+		const strict = chance(0.5);
+		/** @type {string[]} */
+		const modules = [];
+		/** @type {{ id: number, esm: boolean }[]} */
+		const written = [];
+		for (let k = below(3) + 2; k > 0; k--) {
+			const id = 100 + written.length;
+			const esm = chance(0.6);
+			// A module is an arrow: no `arguments` or `new.target` of its own.
+			const body = {
+				...functionContext(root),
+				strict: root.strict || strict,
+				hasArguments: false,
+				hasNewTarget: false
+			};
+			/** @type {string[]} */
+			const lines = [];
+			for (const other of written) {
+				if (!chance(0.6)) continue;
+				const name = `_m${other.id}__WEBPACK_IMPORTED_MODULE_${lines.length}__`;
+				lines.push(`var ${name} = __webpack_require__(${other.id});`);
+				if (other.esm) {
+					lines.push(
+						`_print((0, ${name}.f)(${expression(body, 1)}), ${name}["default"], ${name}.__esModule);`
+					);
+				} else {
+					const interop = fresh("n");
+					lines.push(
+						`var ${interop} = __webpack_require__.n(${name});`,
+						`_print(${name}.a, typeof ${interop}(), ${interop}.a === ${interop}());`
+					);
+				}
+			}
+			const value = expression(body, 2);
+			const fn = fresh("f");
+			const fnBody = functionContext(body);
+			const parameter = fresh("p");
+			fnBody.bindings.push({ name: parameter, kind: "param" });
+			// A throw ends the module's own statements, not the bundle.
+			lines.push(
+				`try { ${block(inner(body, {}), 3)} } catch (e) { _print("module", _error(e)); }`
+			);
+			if (esm) {
+				const exported = fresh("d");
+				modules.push(
+					`${id}: ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+__webpack_require__.r(__webpack_exports__);
+__webpack_require__.d(__webpack_exports__, { f: () => (${fn}), "default": () => (${exported}) });
+${lines.join("\n")}
+function ${fn}(${parameter}) { ${guard()} return ${expression(fnBody, 2)}; }
+const ${exported} = (${value});
+})`
+				);
+			} else {
+				modules.push(
+					`${id}: ((module, __unused_webpack_exports, __webpack_require__) => {
+${lines.join("\n")}
+module.exports = { a: ${value}, f: function ${fn}(${parameter}) { ${guard()} return ${expression(fnBody, 2)}; } };
+})`
+				);
+			}
+			written.push({ id, esm });
+		}
+		const entry = {
+			...functionContext(root),
+			strict: root.strict || strict,
+			hasArguments: false,
+			hasNewTarget: false
+		};
+		const uses = written.map(
+			({ id, esm }) =>
+				`try { ${
+					esm
+						? `var e${id} = __webpack_require__(${id}); _print((0, e${id}.f)(${expression(entry, 1)}), e${id}["default"], Object.keys(e${id}));`
+						: `var e${id} = __webpack_require__(${id}); _print(e${id}.a, e${id}.f(${expression(entry, 1)}));`
+				} } catch (e) { _print("entry", _error(e)); }`
+		);
+		return `(() => { ${strict ? '"use strict"; ' : ""}
+var __webpack_modules__ = ({
+${modules.join(",\n")}
+});
+var __webpack_module_cache__ = {};
+function __webpack_require__(moduleId) {
+var cachedModule = __webpack_module_cache__[moduleId];
+if (cachedModule !== undefined) return cachedModule.exports;
+var module = __webpack_module_cache__[moduleId] = { exports: {} };
+__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+return module.exports;
+}
+(() => { __webpack_require__.d = (exports, definition) => { for (var key in definition) { if (__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) { Object.defineProperty(exports, key, { enumerable: true, get: definition[key] }); } } }; })();
+(() => { __webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop)); })();
+(() => { __webpack_require__.r = (exports) => { if (typeof Symbol !== "undefined" && Symbol.toStringTag) { Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" }); } Object.defineProperty(exports, "__esModule", { value: true }); }; })();
+(() => { __webpack_require__.n = (module) => { var getter = module && module.__esModule ? () => (module["default"]) : () => (module); __webpack_require__.d(getter, { a: getter }); return getter; }; })();
+var __webpack_exports__ = {};
+(() => {
+${uses.join("\n")}
+})();
+})();`;
+	};
+
 	return () => {
 		counter = 0;
 		// Half are modules. ufuzz runs every program inside a function, which gives
 		// it `arguments`; half the scripts are, the rest keep top-level names.
 		const isModule = chance(0.5);
-		const wrapped = !isModule && chance(0.5);
+		const isBundle = !isModule && chance(0.25);
+		const wrapped = !isModule && !isBundle && chance(0.5);
 		/** @type {Context} */
 		const context = {
 			bindings: [
@@ -1256,12 +1785,21 @@ const createProgramGenerator = (seed) => {
 			inClass: false,
 			strict: isModule,
 			hasArguments: wrapped,
+			hasNewTarget: wrapped,
+			module: isModule,
 			scopeTop: true,
 			labels: [],
 			loopLabels: []
 		};
+		if (isBundle) {
+			return {
+				code: `${PRELUDE}${bundle(context)}\n_print(null, a, b, c);\n`,
+				module: false
+			};
+		}
 		/** @type {string[]} */
 		const statements = [];
+		if (isModule && chance(0.7)) statements.push(imports(context));
 		const count = 6 + below(8);
 		for (let i = 0; i < count; i++) {
 			const declared = context.bindings.length;
@@ -1288,6 +1826,7 @@ const createProgramGenerator = (seed) => {
 				`try { ${written} } catch (e) { _print("top", _error(e)); }`
 			);
 		}
+		if (isModule) statements.push(...exports(context));
 		const body = `${statements.join("\n")}\n_print(null, a, b, c);`;
 		return {
 			code: `${PRELUDE}${wrapped ? `!function () {\n${body}\n}();` : body}\n`,
@@ -1296,4 +1835,4 @@ const createProgramGenerator = (seed) => {
 	};
 };
 
-module.exports = { createProgramGenerator, createRandom };
+module.exports = { DEPENDENCY, createProgramGenerator, createRandom };
