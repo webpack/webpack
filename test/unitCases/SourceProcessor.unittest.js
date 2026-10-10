@@ -5,7 +5,8 @@ const {
 	Field: CssField,
 	Flag: CssFlag,
 	NodeType: CssNodeType,
-	Part: CssPart
+	Part: CssPart,
+	_blockTokenOf
 } = require("../../lib/css/syntax-parser");
 const { SourceProcessor: HtmlSourceProcessor } = require("../../lib/html/syntax");
 const {
@@ -951,6 +952,42 @@ describe("SourceProcessor", () => {
 				["math", "<math>", "</math>", false, true, true],
 				["mi", "<mi/>", null, false, true, true]
 			]);
+		});
+
+		it("answers null for a part a node does not have", () => {
+			/** @type {unknown[]} */
+			const html = [];
+			new HtmlSourceProcessor()
+				.use([HtmlNodeType.Doctype], (path) => {
+					const id = path.rangeOf(HtmlPart.publicId);
+					html.push(
+						id === null ? null : path.source(...id),
+						// @ts-expect-error a doctype's name is read with `name`
+						path.textOf(HtmlPart.name)
+					);
+				})
+				.use([HtmlNodeType.Element], (path) => {
+					if (path.name() !== "b") return;
+					html.push(
+						path.rangeOf(HtmlPart.startTag),
+						// @ts-expect-error an element's value has no position
+						path.rangeOf(HtmlPart.value),
+						path.field(1, HtmlField.content)
+					);
+				})
+				// The second `b` is the adoption agency's clone, so no tag of its own.
+				.process('<!DOCTYPE html PUBLIC "a"><b>1<p>2</b>3</p>');
+			expect(html).toEqual(["a", null, [26, 29], null, 0, null, null, 0]);
+
+			/** @type {unknown[]} */
+			const css = [];
+			new CssSourceProcessor()
+				.use([CssNodeType.Dimension], (path) => {
+					css.push(path.name(), _blockTokenOf(path.node));
+				})
+				// An escape the input ends inside is U+FFFD (CSS Syntax §4.3.7).
+				.process("a{b:1p\\");
+			expect(css).toEqual(["p\uFFFD", ""]);
 		});
 
 		it("knows a streamed block's ancestors until it closes", () => {
