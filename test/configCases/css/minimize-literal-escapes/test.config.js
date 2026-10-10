@@ -15,8 +15,7 @@ module.exports = {
 			'@charset "UTF-8";' +
 				'.mdi-a:before{content:"\u{F01C9}"}' +
 				'.emoji:after{content:"\u{1F600}!"}' +
-				// The `@charset` the others need is paid for, so the character costs less.
-				'.bmp:before{content:"\uE900"}' +
+				'.bmp:before{content:"\\e900"}' +
 				// An identifier keeps its escape, terminator and all.
 				".\\1F600 {color:red}" +
 				"/*! For license information please see bundle0.css.LICENSE.txt */"

@@ -33822,6 +33822,8 @@ declare namespace exports {
 				| {
 						condition?:
 							string | boolean | RegExp | ((...args: any[]) => boolean);
+						filename?: string | ((data: object) => string);
+						banner?: string | boolean | ((commentsFilename: string) => string);
 				  }
 		): Promise<{
 			code: string;
@@ -34365,6 +34367,8 @@ declare namespace exports {
 				| {
 						condition?:
 							string | boolean | RegExp | ((...args: any[]) => boolean);
+						filename?: string | ((data: object) => string);
+						banner?: string | boolean | ((commentsFilename: string) => string);
 				  }
 		): Promise<{
 			code: string;
@@ -35192,6 +35196,9 @@ declare namespace exports {
 					| {
 							condition?:
 								string | boolean | RegExp | ((...args: any[]) => boolean);
+							filename?: string | ((data: object) => string);
+							banner?:
+								string | boolean | ((commentsFilename: string) => string);
 					  }
 					| ((comment: {
 							value: string;
