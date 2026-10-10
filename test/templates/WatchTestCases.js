@@ -15,6 +15,7 @@ require("../helpers/warmup-webpack");
  * @property {((i: EXPECTED_ANY, options: EXPECTED_ANY) => string)=} findBundle
  * @property {boolean=} noTests
  * @property {boolean=} restartCompiler close the compiler after each step and start a new one
+ * @property {boolean=} strictWatchDependencies require identical dependency sets for history-independent fixtures
  * @property {((error: Error, compiler: import("../../").Compiler | import("../../").MultiCompiler) => void | Promise<void>)=} watchError check a watch or comparison error and request recovery on the same compiler
  * @property {string=} skipFreshAssetContent reason asset contents depend on build history
  * @property {string=} skipFreshWarnings reason warnings depend on build history
@@ -355,7 +356,7 @@ const describeCases = (config) => {
 							let lastMissingDependencies = new Set();
 							// watched files the current step changed which no build has reported yet
 							/** @type {Set<string>} */
-							let unseenChanges = new Set();
+							const unseenChanges = new Set();
 
 							const currentWatchStepModule = require("../helpers/currentWatchStep");
 
@@ -461,6 +462,22 @@ const describeCases = (config) => {
 											? compiler.compilers
 											: [compiler];
 									for (const child of compilers) {
+										// Count changes consumed by builds invalidated before their callback.
+										child.hooks.watchRun.tap("WatchTestCasesTest", () => {
+											// a watched directory reports itself, not the file inside it
+											const reported = [
+												...(child.modifiedFiles || []),
+												...(child.removedFiles || [])
+											];
+											for (const file of unseenChanges) {
+												if (
+													isWithin(file, reported) ||
+													reported.some((item) => isWithin(item, [file]))
+												) {
+													unseenChanges.delete(file);
+												}
+											}
+										});
 										child.hooks.finishMake.tap(
 											{ name: "WatchTestCasesTest", stage: Infinity },
 											assertModuleGraph
@@ -496,24 +513,6 @@ const describeCases = (config) => {
 													throw new Error("No stats reported from Compiler");
 												}
 												if (waitMode) return;
-												// macOS can report one step's changes over more than the aggregate
-												// timeout; a build that missed some reuses the stale cached module,
-												// and the late change starts the build this step's tests wait for
-												for (const child of compilers) {
-													// a watched directory reports itself, not the file inside it
-													const reported = [
-														...(child.modifiedFiles || []),
-														...(child.removedFiles || [])
-													];
-													for (const file of unseenChanges) {
-														if (
-															isWithin(file, reported) ||
-															reported.some((item) => isWithin(item, [file]))
-														) {
-															unseenChanges.delete(file);
-														}
-													}
-												}
 												if (unseenChanges.size > 0) return;
 												clearTimeout(retouchTimer);
 												if (run.done && stats.hash === lastHash) return;
@@ -673,7 +672,7 @@ const describeCases = (config) => {
 																		false,
 																		changed
 																	);
-																	unseenChanges = new Set();
+																	unseenChanges.clear();
 																	if (!restartCompiler && watchedCompiler) {
 																		// only a file the last build watched reports its change
 																		for (const file of changed) {

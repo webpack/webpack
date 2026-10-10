@@ -159,8 +159,11 @@ Directories come first, in alphabetical order, then the individual files worth t
 
 **Behavior across rebuilds is a `watchCases/` case, never a unit test calling `compiler.run` in a loop** — `output.clean`, HMR update files, caches, anything one build leaves for the next. Each numbered step directory is one rebuild; its tests read `WATCH_STEP` and `STATS_JSON`, and the config can read the step from `test/helpers/currentWatchStep`. What the output can't show (which files a plugin touched) is recorded by a plugin in the config, which pushes a `compilation.errors` entry when it differs (`watchCases/clean/removed-assets`). A step needing time to pass waits in its own `it` with a longer timeout (`watchCases/clean/hot-update-slow-rebuild`).
 
-Watch tests compare assets, diagnostics and watched dependencies with a fresh,
-uncached build and check graph invariants. Keep runtime assertions; any `skipFreshAssetContent`,
+Watch tests compare assets and diagnostics with a fresh, uncached build, check
+graph invariants and verify that fresh dependencies remain watched. Cached builds
+may retain extra resolution probes, and a watched directory covers its contents.
+Set `strictWatchDependencies: true` to require identical dependency sets in a
+fixture whose dependencies do not depend on build history. Keep runtime assertions; any `skipFreshAssetContent`,
 `skipFreshWarnings` or `skipFreshCompilation` exception needs a reason in
 `test.config.js`. See [the incremental fixtures](test/watchCases/incremental/)
 for examples.

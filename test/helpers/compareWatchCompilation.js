@@ -1,6 +1,7 @@
 "use strict";
 
 const assert = require("assert");
+const fs = require("fs");
 const path = require("path");
 const webpack = require("../..");
 const assertModuleGraph = require("./assertModuleGraph");
@@ -78,11 +79,59 @@ const getWatchDependencies = (compilation, outputPath) => {
 };
 
 /**
+ * Cached builds can retain extra probes; every fresh dependency must still be watched.
+ * @param {ReturnType<typeof getWatchDependencies>} actualDependencies watched dependencies
+ * @param {ReturnType<typeof getWatchDependencies>} expectedDependencies fresh dependencies
+ * @param {boolean | undefined} strict require identical sets for history-independent fixtures
+ * @returns {void}
+ */
+const assertWatchDependencies = (
+	actualDependencies,
+	expectedDependencies,
+	strict
+) => {
+	if (strict) {
+		expect(actualDependencies).toEqual(expectedDependencies);
+		return;
+	}
+	for (const kind of /** @type {const} */ ([
+		"fileDependencies",
+		"contextDependencies",
+		"missingDependencies"
+	])) {
+		const actual = new Set(actualDependencies[kind]);
+		const missing = expectedDependencies[kind].filter((dependency) => {
+			if (actual.has(dependency)) return false;
+			if (
+				actualDependencies.contextDependencies.some(
+					(directory) =>
+						dependency === directory ||
+						dependency.startsWith(`${directory}${path.sep}`)
+				)
+			) {
+				return false;
+			}
+			if (
+				kind === "fileDependencies" &&
+				fs.existsSync(dependency) &&
+				fs.statSync(dependency).isDirectory()
+			) {
+				return !actualDependencies.fileDependencies.some((file) =>
+					file.startsWith(`${dependency}${path.sep}`)
+				);
+			}
+			return true;
+		});
+		expect(missing).toEqual([]);
+	}
+};
+
+/**
  * Runs an independent, cache-free compiler for every watch step.
  * @param {Compiler | MultiCompiler} compiler watched compiler
  * @param {() => Promise<Configuration[]>} createOptions independent configurations
  * @param {string} outputDirectory case output directory
- * @param {{ skipFreshAssetContent?: string, skipFreshWarnings?: string, skipFreshCompilation?: string }} comparison comparison exceptions
+ * @param {{ skipFreshAssetContent?: string, skipFreshWarnings?: string, skipFreshCompilation?: string, strictWatchDependencies?: boolean }} comparison comparison options
  * @returns {(stats: Stats | MultiStats) => Promise<void>} per-step comparison
  */
 const compareWatchCompilation = (
@@ -105,6 +154,11 @@ const compareWatchCompilation = (
 				...configuration,
 				cache: false,
 				watch: false,
+				// Disabling the compilation cache must not change module resolution defaults.
+				module: {
+					...configuration.module,
+					unsafeCache: compilers[index].options.module.unsafeCache
+				},
 				output: {
 					...configuration.output,
 					path: path.join(outputDirectory, String(index))
@@ -121,16 +175,18 @@ const compareWatchCompilation = (
 						if (error || closeError) return reject(error || closeError);
 						try {
 							assert(freshStats, "Fresh compiler did not return stats");
-							expect(
-								getWatchDependencies(
-									result.compilation,
-									compilers[index].outputPath
-								)
-							).toEqual(
-								getWatchDependencies(
-									freshStats.compilation,
-									compilers[index].outputPath
-								)
+							const actualDependencies = getWatchDependencies(
+								result.compilation,
+								compilers[index].outputPath
+							);
+							const expectedDependencies = getWatchDependencies(
+								freshStats.compilation,
+								compilers[index].outputPath
+							);
+							assertWatchDependencies(
+								actualDependencies,
+								expectedDependencies,
+								comparison.strictWatchDependencies
 							);
 							const actualDiagnostics = getDiagnostics(result);
 							const expectedDiagnostics = getDiagnostics(freshStats);

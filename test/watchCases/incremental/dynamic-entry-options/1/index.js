@@ -4,5 +4,6 @@ it("should honor changed entry options on rebuilds", () => {
 		expect(assets).toContain("first-other.js");
 	} else {
 		expect(assets).toContain("second-other.js");
+		expect(assets).not.toContain("first-other.js");
 	}
 });
