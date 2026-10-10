@@ -353,9 +353,12 @@ class BenchmarkRunner {
 			);
 		}
 
-		const shardBenchmarks = splitToNChunks([...benchmarks], shard[1])[
-			shard[0] - 1
-		];
+		// Memory mode measures each task in its own process, so its shard cannot
+		// change its counts: deal tasks round-robin to even out the shards' time.
+		const roundRobin = getCodspeedRunnerMode() === "memory";
+		const shardBenchmarks = roundRobin
+			? benchmarks
+			: splitToNChunks([...benchmarks], shard[1])[shard[0] - 1];
 
 		/** @type {BenchmarkTask[]} */
 		const benchmarkTasks = [];
@@ -380,7 +383,9 @@ class BenchmarkRunner {
 			}
 		}
 
-		return benchmarkTasks;
+		return roundRobin
+			? benchmarkTasks.filter((_, index) => index % shard[1] === shard[0] - 1)
+			: benchmarkTasks;
 	}
 
 	/**
