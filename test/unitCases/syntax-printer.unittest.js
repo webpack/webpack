@@ -6924,7 +6924,9 @@ describe("syntax-printer", () => {
 			const { minify } = await load();
 			for (const input of [
 				"var x = {}; !function () { function g() { console.log('g', x.y); return 1; } var C = { a: g() }; x.y = C; x.z = 2; }(); console.log(x.y.a);",
-				"var x = { set y(v) { console.log('set'); this.v = v; } }; !function () { var C = { get a() { return 1; } }; x.y = C; x.z = 2; }(); console.log(x.v.a);"
+				"var x = { set y(v) { console.log('set'); this.v = v; } }; !function () { var C = { get a() { return 1; } }; x.y = C; x.z = 2; }(); console.log(x.v.a);",
+				// A block's function is `undefined` until the block runs.
+				"var x = {}; !function () { var C = { f: f }; x.y = 1; { function f() {} } x.z = C; }(); console.log(typeof x.z.f);"
 			]) {
 				const { code } = await minify(input, { mangle: false });
 				expect(code).toContain("var C=");
