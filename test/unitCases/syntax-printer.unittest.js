@@ -148,7 +148,10 @@ const CASES = [
 			{ function blockScoped() { return 1; } sink(blockScoped()); }
 			return typeof blockScoped;
 		}
-		sink(host());`
+		sink(host());`,
+		// terser folds the read, as if the function were set from the scope's
+		// start; Annex B sets it where its statement runs, which webpack keeps.
+		{ compress: { passes: 2, reduce_vars: false } }
 	],
 	[
 		"reserved names, which stay as written",
@@ -2022,6 +2025,26 @@ const CORRECTED_CASES = [
 	[
 		"templates a tag of its own reads the raw text of",
 		'var t = function (s) { return s.raw.join("|"); }; function g(c) { if (c) return t`a${c}\\x62`; return t`\\x61${c}b`; } console.log(g(1), g(0));',
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a regular expression after a unary operator, before `in` or `instanceof`",
+		"var y = Object; console.log(!/a/ instanceof y, typeof /a/ in {}, -/a/ in [1]);",
+		{ compress: false, mangle: false }
+	],
+	[
+		"a function declared in a block a throw leaves before its statement runs",
+		"(function () { try { throw 0; { function g() {} } } catch (e) { console.log(typeof g); } })(); try { { 0(0); } function h() {} } catch (e) { console.log(typeof h); }",
+		{ compress: {}, mangle: false, toplevel: true }
+	],
+	[
+		"`arguments` read by index after a destructuring assigned the parameter",
+		"function f(p) { [p] = [2]; return arguments[0]; } function g(p) { ({ p } = { p: 3 }); return arguments[0]; } console.log(f(), g());",
+		{ compress: { arguments: true }, mangle: false }
+	],
+	[
+		"an assignment nobody reads to an unused name, converting a BigInt beside a Number",
+		"function f(...r) { r *= 1n; } function g(a) { var b = a; b -= 1n; } try { f(0); console.log('no'); } catch (e) { console.log(e.name); } try { g(1); console.log('no'); } catch (e) { console.log(e.name); }",
 		{ compress: {}, mangle: false }
 	]
 ];
@@ -5995,6 +6018,50 @@ describe("syntax-printer", () => {
 				}
 			});
 		}
+
+		it("should parenthesize a destructuring assignment V8 refuses bare after another argument", async () => {
+			const { minify, corrections } = await load();
+			const input =
+				"var a = 0, b, c = [1], d = []; function f() {} f((a += 1), ([b] = c)); f([...d, 1], ([b] = c)); console.log(a, b);";
+			const options = { compress: false, mangle: false };
+			const { code } = await minify(input, options);
+			expect(code).toContain("f(a+=1,([b]=c))");
+			expect(code).toContain("f([...d,1],([b]=c))");
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+
+			// Other engines read terser's bare output, so only its bytes are compared.
+			if (!corrections) throw new Error("the correct phase is not installed");
+			corrections.enabled = false;
+			try {
+				const uncorrected = await minify(input, options);
+				const reference = await terserReference().minify(input, options);
+				expect(uncorrected.code).toBe(reference.code);
+				expect(reference.code).toContain("f(a+=1,[b]=c)");
+			} finally {
+				corrections.enabled = true;
+			}
+		});
+
+		it("should fold a block's function in strict code, or read in its block, as terser does", async () => {
+			const { minify } = await load();
+			const body =
+				"{ function g() { return 1; } return typeof g + g(); }";
+			/** @type {[string, import("terser").MinifyOptions][]} */
+			const sources = [
+				[`"use strict"; function f() { ${body} } console.log(f());`, {}],
+				[`class C { m() { ${body} } } console.log(new C().m());`, {}],
+				[`function f() { ${body} } console.log(f());`, { module: true }],
+				[`function f() { ${body} } export { f };`, {}],
+				[`function f() { ${body} } console.log(f());`, {}]
+			];
+			for (const [input, options] of sources) {
+				const settings = { compress: {}, mangle: false, ...options };
+				const { code } = await minify(input, { ...settings });
+				const reference = await terserReference().minify(input, { ...settings });
+				expect(code).toBe(reference.code);
+				expect(code).toContain("typeof g+1");
+			}
+		});
 	});
 
 	describe("a relation whose value is read", () => {
@@ -6131,7 +6198,7 @@ describe("syntax-printer", () => {
 
 	describe("`pure_conversions`", () => {
 		const input =
-			"function t(f) { try { f(); console.log('no'); } catch (e) { console.log(e.name); } } var o = { valueOf() { throw { name: 'thrown' }; } }, bad = Object.create(null); t(function () { 0 == o; }); t(function () { o < 1; }); t(function () { (class { get [bad]() {} }); }); t(function () { ({ [bad]: 1 }); }); t(function () { o == null; o === 1; });";
+			"function t(f) { try { f(); console.log('no'); } catch (e) { console.log(e.name); } } var o = { valueOf() { throw { name: 'thrown' }; } }, bad = Object.create(null); t(function () { 0 == o; }); t(function () { o < 1; }); t(function () { (class { get [bad]() {} }); }); t(function () { ({ [bad]: 1 }); }); t(function () { o == null; o === 1; }); t(function () { 0[bad]; }); t(function () { (function () {})((0)[bad]); });";
 
 		it("should drop a conversion as terser does by default", async () => {
 			const { minify } = await load();

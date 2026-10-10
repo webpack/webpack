@@ -1418,6 +1418,10 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc's output is wrong: it renames a `#private` name a direct `eval` reads, so the `eval` throws a SyntaxError",
 		["oxc minifier: peephole/remove_unused_private_members.rs:27"]
+	],
+	[
+		"oxc drops the call of an empty function a sloppy block declares, which webpack keeps where the name is also read outside the block: Annex B leaves that read `undefined` until the block runs, so webpack does not take the function as known",
+		["terser compress: blocks/issue_1664"]
 	]
 ];
 
