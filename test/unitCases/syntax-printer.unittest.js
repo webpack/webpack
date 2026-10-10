@@ -2318,6 +2318,41 @@ const CORRECTED_CASES = [
 		"a sloppy block's function under an array or object pattern's name",
 		"var r = []; (function () { { let [, f] = [0, 1]; { function f() {} } } try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); })(); (function () { { let [...f] = []; { function f() {} } } try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); })(); (function () { { let { ...f } = {}; { function f() {} } } try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); })(); (function ([, f]) { { function f() {} } r.push(typeof f); })([0, 1]); console.log(r.join());",
 		{ compress: {}, mangle: false }
+	],
+	[
+		"a sloppy block's function under a `let` of its name in a `catch` body",
+		"var r = []; (function () { try { throw 1; } catch { let f = 1; { function f() {} } } try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); })(); (function () { try { throw 1; } catch (e) { let f = 1; { function f() {} } } try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); })(); (function () { try { throw {}; } catch ({ e }) { let f = 1; { function f() {} } } try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); })(); console.log(r.join());",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a sloppy block's function under a `let` of its name in a labeled block, a `while` or a `do` body",
+		"var r = []; (function () { L: { let f = 1; { function f() {} } } try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); })(); (function () { while (true) { let f = 1; { function f() {} } break; } try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); })(); (function () { do { let f = 1; { function f() {} } } while (false); try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); })(); console.log(r.join());",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a sloppy block's function under a `let` of its name in an arrow, a generator and an async function",
+		"var r = []; (() => { { let f = 1; { function f() {} } } try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); })(); function* g() { { let f = 1; { function f() {} } } try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); } g().next(); (async function () { { let f = 1; { function f() {} } } try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); })(); console.log(r.join());",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a sloppy block's function under a renamed, defaulted, nested or `for-of` pattern's name",
+		"var r = []; (function () { { let { a: f } = { a: 1 }; { function f() {} } } try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); })(); (function () { { let { f = 1 } = {}; { function f() {} } } try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); })(); (function () { { let { a: [{ f }] } = { a: [{ f: 1 }] }; { function f() {} } } try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); })(); (function () { for (let [f] of [[1]]) { { function f() {} } } try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); })(); console.log(r.join());",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a sloppy block's function under a `let` of its name, in a function inlined at its one call",
+		"var r = []; function h() { { let f = 1; { function f() { return 7; } r.push(f()); } r.push(f); } } h(); console.log(r.join());",
+		{ compress: { passes: 2 }, mangle: true }
+	],
+	[
+		"a sloppy block's function under a `let` of its name at a script's top level, with `toplevel`",
+		"var r = []; { let f = 1; { function f() {} } } try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); console.log(r.join());",
+		{ compress: {}, mangle: true, toplevel: true }
+	],
+	[
+		"a sloppy block's function under a `let` of its name in a `with` body",
+		"var r = []; (function () { with ({}) { let f = 1; { function f() {} } } try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); })(); console.log(r.join());",
+		{ compress: {}, mangle: false }
 	]
 ];
 
@@ -6387,7 +6422,9 @@ describe("syntax-printer", () => {
 				"var r = []; (function () { { let f = 1; r.push(f); } { function f() {} } try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); })(); console.log(r.join());",
 				"var r = []; (function () { { function f() { let f = 1; return f; } } r.push(f()); })(); console.log(r.join());",
 				"var r = []; try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); { function f() {} } try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); console.log(r.join());",
-				"var r = []; (function () { for (let g; ; ) { { function f() {} } break; } try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); })(); (function () { for (let g in { a: 1 }) { { function f() {} } } try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); })(); (function () { for (let g of [0]) { { function f() {} } } try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); })(); console.log(r.join());"
+				"var r = []; (function () { for (let g; ; ) { { function f() {} } break; } try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); })(); (function () { for (let g in { a: 1 }) { { function f() {} } } try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); })(); (function () { for (let g of [0]) { { function f() {} } } try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); })(); console.log(r.join());",
+				"var r = []; (function () { let f = 1; (function () { { function f() {} } r.push(typeof f); })(); r.push(typeof f); })(); console.log(r.join());",
+				"var r = []; (function () { { let { g } = { g: 1 }; { function f() {} } } try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); })(); console.log(r.join());"
 			]) {
 				for (const options of [
 					{ compress: {}, mangle: false },
