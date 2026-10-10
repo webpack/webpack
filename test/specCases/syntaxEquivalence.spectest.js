@@ -1656,6 +1656,37 @@ const LOWERING_FIXTURES = [
 		]
 	},
 	{
+		name: "a line height folded into the font before it",
+		css:
+			".a{font:italic 700 12px/1 serif;color:red;line-height:2}" +
+			".b{font:small serif;line-height:normal}.c{font-size:20px;font:menu;line-height:3}" +
+			".d{font:oblique 10deg 12px/1 serif;line-height:2}.e{font:0 serif!important;line-height:2!important}" +
+			".f{font:1.2em KaTeX_Main,Times New Roman,serif;line-height:1.2}",
+		browsers: ["chrome 130"],
+		produces: [
+			".a{color:red;font:italic 700 12px/2 serif}",
+			".b{font:small serif}",
+			".d{font:oblique 10deg 12px/2 serif}",
+			".e{font:0/2 serif!important}",
+			".f{font:1.2em/1.2 KaTeX_Main,Times New Roman,serif}"
+		],
+		html: '<p class="a">x</p><p class="b">x</p><p class="c">x</p><p class="d">x</p><p class="e">x</p><p class="f">x</p>',
+		probes: [
+			[".a", "line-height"],
+			[".a", "font-size"],
+			[".a", "font-weight"],
+			[".b", "line-height"],
+			[".c", "line-height"],
+			[".d", "line-height"],
+			[".d", "font-style"],
+			[".d", "font-size"],
+			[".e", "line-height"],
+			[".e", "font-size"],
+			[".f", "line-height"],
+			[".f", "font-family"]
+		]
+	},
+	{
 		name: "a slot holding the value an unwritten one takes",
 		css:
 			"#b{background:0% 0% / auto repeat scroll padding-box border-box red;" +
