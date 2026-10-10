@@ -1070,6 +1070,48 @@ const IMPROVED_CASES = [
 		"let total = Number(process.argv.length > 99); function add(n) { total += n; } add(1); add(2); console.log(total);",
 		{ compress: { toplevel: true }, mangle: false },
 		"let total=Number(process.argv.length>99);total+=1,console.log(total+=2);"
+	],
+	[
+		"a `catch` returning what the code after its `try` returns",
+		"function read(source) { try { return JSON.parse(source); } catch (e) { return null; } return null; } console.log(read('[1]'), read('{'));",
+		{ compress: {}, mangle: false },
+		'function read(source){try{return JSON.parse(source)}catch(e){}return null}console.log(read("[1]"),read("{"));'
+	],
+	[
+		"a `catch` in the last `switch` branch returning what follows the `switch`",
+		"function kind(value) { switch (typeof value) { case 'number': return 'n'; case 'string': try { return JSON.parse(value).k; } catch (e) { return null; } } return null; } console.log(kind(1), kind('{\"k\":2}'), kind('{'), kind(true));",
+		{ compress: {}, mangle: false },
+		"function kind(value){switch(typeof value){case\"number\":return\"n\";case\"string\":try{return JSON.parse(value).k}catch(e){}}return null}console.log(kind(1),kind('{\"k\":2}'),kind(\"{\"),kind(!0));"
+	],
+	[
+		"a function called in place within a returned sequence",
+		"var depth = 0; function enter(o) { o.prev = o.cur; o.cur = null; (function () { if (depth === 0) { var p = { v: 1 }; console.log('in', p.v); } depth++; })(); return depth; } console.log(enter({ cur: 1 }), enter({ cur: 2 }));",
+		{ compress: {}, mangle: false },
+		'var depth=0;function enter(o){o.prev=o.cur,o.cur=null;if(0===depth){console.log("in",1)}depth++;return depth}console.log(enter({cur:1}),enter({cur:2}));'
+	],
+	[
+		"a function called from several places, passed nothing or a constant for parameters it never reads",
+		"function frame(fn, source, owner) { return describe(fn, false); } function describe(fn, construct) { console.log(construct); return fn.id; } function a(t) { return frame(t.render); } function b(t) { return frame(t.inner, null); } console.log(a({ render: { id: 'r' } }), b({ inner: { id: 'i' } }), describe({ id: 'd' }, true));",
+		{ compress: { toplevel: true }, mangle: false },
+		'function describe(fn,construct){return console.log(construct),fn.id}console.log(describe({render:{id:"r"}}.render,!1),function(t){return describe(t.inner,!1)}({inner:{id:"i"}}),describe({id:"d"},!0));'
+	],
+	[
+		"an object of functions moved into a property write past a global",
+		"var exports = {}; !function () { function m(a) { return a + 1; } function only(a) { if (!a) throw Error('x'); return a; } var C = { map: m, only: function (c) { return only(c); } }; exports.Children = C; exports.isValid = only; exports.m = m; }(); console.log(exports.Children.map(1), exports.isValid(2));",
+		{ compress: {}, mangle: false },
+		'var exports={};!function(){function m(a){return a+1}function only(a){if(!a)throw Error("x");return a}exports.Children={map:m,only:function(c){return only(c)}},exports.isValid=only,exports.m=m}(),console.log(exports.Children.map(1),exports.isValid(2));'
+	],
+	[
+		"a `var` without a value moved into the first `var` of its function",
+		"function f(list) { var seen = []; console.log(seen); for (var i = 0; i < list.length; i++) { var item; for (item of list[i]) seen.push(item); } return seen; } console.log(f([[1, 2], [3]]));",
+		{ compress: {}, mangle: false },
+		"function f(list){var seen=[],item;console.log(seen);for(var i=0;i<list.length;i++)for(item of list[i])seen.push(item);return seen}console.log(f([[1,2],[3]]));"
+	],
+	[
+		"a function passed the variables of its parameters' names flattened into a function reading `arguments`, its `var` holding a function",
+		"function create(type, config) { var props = {}; if (config) props.a = config.a; var key = arguments.length > 2; var displayName = typeof type === 'object' ? type.id : type; key && define(props, displayName); return props; } function define(props, displayName) { var warn = function () { console.log('warn', displayName); }; warn.isWarning = true; Object.defineProperty(props, 'key', { get: warn }); } console.log(Object.keys(create('div', { a: 1 }, 1)), create({ id: 'f' }, null, 1).key);",
+		{ compress: { toplevel: true }, mangle: false },
+		'function create(type,config){var props={};config&&(props.a=config.a);var warn,key=arguments.length>2,displayName="object"==typeof type?type.id:type;return key&&((warn=function(){console.log("warn",displayName)}).isWarning=!0,Object.defineProperty(props,"key",{get:warn})),props}console.log(Object.keys(create("div",{a:1},1)),create({id:"f"},null,1).key);'
 	]
 ];
 
@@ -6854,6 +6896,34 @@ describe("syntax-printer", () => {
 					mangle: false
 				});
 				expect(code).toContain(declaration);
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			}
+		});
+
+		it("should keep a `catch`'s `return` where the code after its `try` returns otherwise", async () => {
+			const { minify } = await load();
+			for (const input of [
+				// The branch falls into the next one.
+				"function f(v) { switch (v) { case 1: try { return g(v); } catch (e) { return null; } case 2: return 2; } return null; } function g(v) { if (v) throw v; } console.log(f(1), f(2));",
+				// A loop runs the `try` again.
+				"function f(list) { for (var x of list) { try { return g(x); } catch (e) { return null; } } return null; } function g(v) { if (v) throw v; return v; } console.log(f([1]), f([0]), f([]));",
+				// The value differs.
+				"function f(v) { try { return g(v); } catch (e) { return 1; } return 2; } function g(v) { if (v) throw v; } console.log(f(1), f(0));"
+			]) {
+				const { code } = await minify(input, { mangle: false });
+				expect(code).toMatch(/catch\(e\)\{return/);
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			}
+		});
+
+		it("should keep an object whose making runs code before a property write", async () => {
+			const { minify } = await load();
+			for (const input of [
+				"var x = {}; !function () { function g() { console.log('g', x.y); return 1; } var C = { a: g() }; x.y = C; x.z = 2; }(); console.log(x.y.a);",
+				"var x = { set y(v) { console.log('set'); this.v = v; } }; !function () { var C = { get a() { return 1; } }; x.y = C; x.z = 2; }(); console.log(x.v.a);"
+			]) {
+				const { code } = await minify(input, { mangle: false });
+				expect(code).toContain("var C=");
 				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
 			}
 		});
