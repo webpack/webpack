@@ -2030,7 +2030,11 @@ class WithStatic { static { const inStaticBlock = 20; } }
 				"class K { static async *m() { yield /a/g; } }",
 				"({ *m() { yield /a/g; } });",
 				"({ async *m() { yield /a/g; } });",
-				"(async function* () { yield /a/g; });"
+				"(async function* () { yield /a/g; });",
+				// the token after a nested body is read before its scope exits
+				"function* g() { function f() {} yield /a/g; }",
+				"class K { *m() { function f() {} yield /a/g; } }",
+				"function* g() { var h = () => 1\nyield /a/g; }"
 			];
 			for (const read of [
 				parse,
@@ -2055,6 +2059,12 @@ class WithStatic { static { const inStaticBlock = 20; } }
 					method.body[0].body.body[0].expression.properties[0].value.body
 						.body[0].argument
 				).toMatchObject({ type: "BinaryExpression", operator: "/" });
+				// After a nested generator, a sloppy function's `yield` is a name.
+				const nested = read("function f() { function* g() {} yield / 2 / 1; }");
+				expect(nested.body[0].body.body[1].expression).toMatchObject({
+					type: "BinaryExpression",
+					operator: "/"
+				});
 			}
 		});
 

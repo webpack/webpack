@@ -31689,6 +31689,12 @@ declare class SyntaxParser {
 		isMethod?: boolean,
 		forInit?: string | boolean
 	): void;
+
+	/**
+	 * The token after a function body is read in the body's scope, so a `yield`
+	 * there is classified again in the enclosing one.
+	 */
+	rereadYieldContext(): void;
 	isSimpleParamList(params: any[]): boolean;
 	checkParams(node: any, allowDuplicates: boolean): void;
 	parseExprList(
