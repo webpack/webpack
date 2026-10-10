@@ -13858,41 +13858,43 @@ describe("cssMinify export", () => {
 		});
 
 		describe("measured with the banner the plugin appends", () => {
-			// The character is smaller alone, the escape once the banner follows.
-			const sheet =
+			// A win this narrow, one byte here, is the compressor's noise: escapes stay.
+			const narrow =
 				'/*! Icons */.a:before{content:"\\F01C9"}.b:after{content:"\\1F600 !"}' +
 				'.c:before{content:"\\e900"}.\\1F600 {color:red}';
 			/**
-			 * @param {EXPECTED_ANY} option the plugin's `extractComments`
+			 * @param {string} css the stylesheet
+			 * @param {import("../../lib/util/extractComments").PluginExtractComments} option the plugin's `extractComments`
 			 * @param {string=} name the asset's name
-			 * @returns {Promise<boolean>} whether the escape is kept
+			 * @returns {Promise<boolean>} whether every escape is kept
 			 */
-			const keepsEscape = async (option, name = "bundle0.css") => {
+			const keepsEscapes = async (css, option, name = "a.css") => {
 				const cssMinify = require("../../lib/css/cssMinify");
-				const { code } = await cssMinify({ [name]: sheet }, undefined, {}, option);
-				return code.includes("\\e900");
+				const { code } = await cssMinify({ [name]: `/*! x */${css}` }, undefined, {}, option);
+				return /\\[\da-f]{4} ?"/.test(code);
 			};
 
 			it.each([
-				["the default banner", true, "bundle0.css"],
-				["a name with a directory, query and fragment", true, "css/bundle0.css?v=1#x"],
-				["a banner of its own", { banner: "For license information please see bundle0.css.LICENSE.txt" }, "bundle0.css"]
-			])("keeps the escape under %s", async (_, option, name) => {
-				expect(await keepsEscape(option, name)).toBe(true);
-			});
-
-			it("writes the character where no banner follows", async () => {
-				expect(await keepsEscape({ banner: false })).toBe(false);
+				["the default banner", true, "a.css"],
+				["a name with a directory, query and fragment", true, "css/a.css?v=1#x"],
+				["a banner of its own", { banner: "See a.css.LICENSE.txt" }, "a.css"],
+				["no banner", { banner: false }, "a.css"]
+			])("writes the characters under %s", async (_, option, name) => {
+				expect(await keepsEscapes(text, option, name)).toBe(false);
 			});
 
 			it.each([
 				["a banner function", { banner: () => "x" }],
 				["a comments filename", { filename: "[file].txt" }]
 			])("prints once where %s decides the banner", async (_, option) => {
-				const cssMinify = require("../../lib/css/cssMinify");
+				expect(await keepsEscapes(text, option)).toBe(true);
+			});
 
-				const { code } = await cssMinify({ "a.css": `/*! x */${text}` }, undefined, {}, option);
-				expect(code).toContain("\\");
+			it.each([
+				["the default banner", true],
+				["no banner", { banner: false }]
+			])("keeps a narrow win's escapes under %s", async (_, option) => {
+				expect(await keepsEscapes(narrow, option)).toBe(true);
 			});
 		});
 
