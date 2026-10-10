@@ -62,6 +62,7 @@ const {
 	TT_SEMICOLON,
 	TT_STRING,
 	TT_WHITESPACE,
+	Part,
 	TokenStream,
 	pickTransforms,
 	unescapeIdentifier
@@ -877,10 +878,10 @@ const cssInnerRanges = (nodePath) => {
 	const type = nodePath.type();
 	/** @type {[string, number, number][]} */
 	const inner = [];
-	const name = NAMED.has(type) ? nodePath.nameRange() : null;
+	const name = NAMED.has(type) ? nodePath.rangeOf(Part.name) : null;
 	if (name !== null) inner.push(["name", name[0], name[1]]);
 	if (BLOCKED.has(type)) {
-		const block = nodePath.blockRange();
+		const block = nodePath.rangeOf(Part.block);
 		inner.push([
 			"block",
 			block === null ? -1 : block[0],
@@ -1093,7 +1094,7 @@ const cssPurityDigest = (css, print) => {
 		digest.update(`${NODE_TYPE_NAMES[type]}[${nodePath.range().join(",")})`);
 		if (NAMED.has(type)) {
 			const written = nodePath.source(
-				.../** @type {[number, number]} */ (nodePath.nameRange())
+				.../** @type {[number, number]} */ (nodePath.rangeOf(Part.name))
 			);
 			digest.update(`|${written}|${nodePath.name()}`);
 		}

@@ -10,7 +10,7 @@
 
 const fs = require("fs");
 const path = require("path");
-const { A, Field, Flag, NS_HTML, _attributeList, _contentEndOf, _contentStartOf, _endOf, _nameEndOf, _startOf, NS_MATHML, NS_SVG, NodeType, QUOTE_DOUBLE, QUOTE_NONE, QUOTE_SINGLE, decodeEntities, escapeAttribute, escapeText, parseCssUrls, parseHtml: parseHtmlRefs, parseMsapplicationTask, parseSrc, parseSrcset, tokenize } = require("../../lib/html/syntax-parser");
+const { A, Field, Flag, NS_HTML, Part, _attributeList, _contentEndOf, _contentStartOf, _endOf, _nameEndOf, _startOf, NS_MATHML, NS_SVG, NodeType, QUOTE_DOUBLE, QUOTE_NONE, QUOTE_SINGLE, decodeEntities, escapeAttribute, escapeText, parseCssUrls, parseHtml: parseHtmlRefs, parseMsapplicationTask, parseSrc, parseSrcset, tokenize } = require("../../lib/html/syntax-parser");
 const { builtinEmbeddedRenderer } = require("../../lib/html/builtinEmbeddedRenderer");
 const serializeHtmlTree = require("../helpers/serializeHtmlTree");
 
@@ -3103,7 +3103,7 @@ const materialize = (ref) => {
 	const type = A.type(ref);
 	switch (type) {
 		case NodeType.Element: {
-			const tc = A.field(Field.content, ref);
+			const tc = A.field(0, Field.content, ref);
 			return {
 				type,
 				tagName: A.name(ref),
@@ -8399,12 +8399,12 @@ describe("parseHtml — path accessor completeness", () => {
 						const id = path.fieldNamed(Field.attributes, "id");
 						log.push(`id:${path.name(id)}=${path.value(id)}`);
 						log.push(
-							`idName:${SRC.slice(.../** @type {[number, number]} */ (path.nameRange(id)))}`
+							`idName:${SRC.slice(.../** @type {[number, number]} */ (path.rangeOf(Part.name, id)))}`
 						);
 						log.push(
-							`idValue:${SRC.slice(.../** @type {[number, number]} */ (path.valueRange(id)))}`
+							`idValue:${SRC.slice(.../** @type {[number, number]} */ (path.rangeOf(Part.value, id)))}`
 						);
-						log.push(`checkedValue:${path.valueRange(path.fieldAt(1, Field.attributes))}`);
+						log.push(`checkedValue:${path.rangeOf(Part.value, path.field(1, Field.attributes))}`);
 						log.push(`firstChildType:${path.type(path.child(0))}`);
 						log.push(
 							`nextSibling:${path.child(

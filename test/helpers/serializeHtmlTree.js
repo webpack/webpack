@@ -72,7 +72,7 @@ const serializeHtmlTree = (root) => {
 				}="${decodeEntities(a.value, true)}"`
 			);
 		}
-		const tc = A.field(Field.content, node);
+		const tc = A.field(0, Field.content, node);
 		if (tc !== 0) {
 			lines.push(`| ${"  ".repeat(depth + 1)}content`);
 			for (

@@ -3,7 +3,7 @@
 const fs = require("fs");
 const path = require("path");
 const { SourceProcessor } = require("../../lib/css/syntax");
-const { Field, Flag, NodeType, TT_AT_KEYWORD, TT_BAD_STRING_TOKEN, TT_BAD_URL_TOKEN, TT_CDC, TT_CDO, TT_COLON, TT_COMMA, TT_COMMENT, TT_DELIM, TT_DIMENSION, TT_EOF, TT_FUNCTION, TT_HASH, TT_IDENTIFIER, TT_LEFT_CURLY_BRACKET, TT_LEFT_PARENTHESIS, TT_LEFT_SQUARE_BRACKET, TT_NUMBER, TT_PERCENTAGE, TT_RIGHT_CURLY_BRACKET, TT_RIGHT_PARENTHESIS, TT_RIGHT_SQUARE_BRACKET, TT_SEMICOLON, TT_STRING, TT_URL, TT_WHITESPACE, TokenStream, buildSkipSet, normalizeUrl, parseABlocksContents, parseACommaSeparatedListOfComponentValues, parseAComponentValue, parseADeclaration, parseAListOfComponentValues, parseARule, parseAStylesheet, parseAStylesheetsContents, readToken } = require("../../lib/css/syntax-parser");
+const { Field, Flag, NodeType, Part, TT_AT_KEYWORD, TT_BAD_STRING_TOKEN, TT_BAD_URL_TOKEN, TT_CDC, TT_CDO, TT_COLON, TT_COMMA, TT_COMMENT, TT_DELIM, TT_DIMENSION, TT_EOF, TT_FUNCTION, TT_HASH, TT_IDENTIFIER, TT_LEFT_CURLY_BRACKET, TT_LEFT_PARENTHESIS, TT_LEFT_SQUARE_BRACKET, TT_NUMBER, TT_PERCENTAGE, TT_RIGHT_CURLY_BRACKET, TT_RIGHT_PARENTHESIS, TT_RIGHT_SQUARE_BRACKET, TT_SEMICOLON, TT_STRING, TT_URL, TT_WHITESPACE, TokenStream, buildSkipSet, normalizeUrl, parseABlocksContents, parseACommaSeparatedListOfComponentValues, parseAComponentValue, parseADeclaration, parseAListOfComponentValues, parseARule, parseAStylesheet, parseAStylesheetsContents, readToken } = require("../../lib/css/syntax-parser");
 
 /**
  * @param {string} css a stylesheet
@@ -1113,7 +1113,7 @@ describe("CssSyntax — block streaming", () => {
 					if (seen) return;
 					seen = true;
 					count =
-						path.blockRange() === null ? null : path.fieldCount(Field.rules);
+						path.rangeOf(Part.block) === null ? null : path.fieldCount(Field.rules);
 				}
 			})
 			.process(src, { mode: "minify" });
@@ -1379,7 +1379,7 @@ describe("CssSyntax — block streaming", () => {
 					[NodeType.AtRule]: (
 						/** @type {import("../../lib/css/syntax-parser").CssPath} */ path
 					) => {
-						const block = path.blockRange() !== null;
+						const block = path.rangeOf(Part.block) !== null;
 						seen.push(block ? path.fieldCount(Field.declarations) : null);
 						seen.push(block ? path.fieldCount(Field.rules) : null);
 					}
@@ -1531,7 +1531,7 @@ describe("CssSyntax — block streaming", () => {
 					if (seen) return;
 					seen = true;
 					declared =
-						path.blockRange() === null
+						path.rangeOf(Part.block) === null
 							? null
 							: path.fieldCount(Field.declarations);
 				}
@@ -3782,7 +3782,7 @@ describe("CssSyntax — path accessors", () => {
 					[NodeType.AtRule]: (/** @type {CssPath} */ path) => {
 						log.push(`at:${path.name()}`);
 						log.push(
-							`atName:${path.source(.../** @type {[number, number]} */ (path.nameRange()))}`
+							`atName:${path.source(.../** @type {[number, number]} */ (path.rangeOf(Part.name)))}`
 						);
 						log.push(`prelude:${path.childCount() > 0}`);
 						log.push(
@@ -3792,8 +3792,8 @@ describe("CssSyntax — path accessors", () => {
 							`decls:${path.fieldCount(Field.declarations)
 							}`
 						);
-						log.push(`blockOpen:${SRC[/** @type {[number, number]} */ (path.blockRange())[0]]}`);
-						log.push(`blockClose:${SRC[/** @type {[number, number]} */ (path.blockRange())[1] - 1]}`);
+						log.push(`blockOpen:${SRC[/** @type {[number, number]} */ (path.rangeOf(Part.block))[0]]}`);
+						log.push(`blockClose:${SRC[/** @type {[number, number]} */ (path.rangeOf(Part.block))[1] - 1]}`);
 						log.push(`span:${SRC.slice(path.range()[0], path.range()[0] + 6)}`);
 						log.push(`node:${path.node !== null}`);
 						log.push(`parent:${path.parent}`);
@@ -3801,13 +3801,13 @@ describe("CssSyntax — path accessors", () => {
 					[NodeType.Declaration]: (/** @type {CssPath} */ path) => {
 						if (path.flag(Flag.important)) {
 							log.push(
-								`decl:${path.source(.../** @type {[number, number]} */ (path.nameRange()))}=${path.name()}`
+								`decl:${path.source(.../** @type {[number, number]} */ (path.rangeOf(Part.name)))}=${path.name()}`
 							);
 						}
 					},
 					[NodeType.Url]: (/** @type {CssPath} */ path) => {
 						log.push(
-							`url:${SRC.slice(/** @type {[number, number]} */ (path.valueRange())[0], /** @type {[number, number]} */ (path.valueRange())[1])}`
+							`url:${SRC.slice(/** @type {[number, number]} */ (path.rangeOf(Part.value))[0], /** @type {[number, number]} */ (path.rangeOf(Part.value))[1])}`
 						);
 					},
 					[NodeType.SimpleBlock]: (/** @type {CssPath} */ path) => {

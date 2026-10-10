@@ -1267,7 +1267,7 @@ const domShapeOf = (source) => {
 				}
 				text.push(own.replace(ASCII_WHITESPACE, " "));
 			}
-			const content = A.field(Field.content, child);
+			const content = A.field(0, Field.content, child);
 			if (content !== 0) walk(content, depth + 1, true);
 			walk(child, depth + 1, inPage);
 		}

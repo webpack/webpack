@@ -69,7 +69,7 @@ const parseFragment = (html) => {
 						attributes: Array.from(
 							{ length: path.fieldCount(Field.attributes) },
 							(_, i) => {
-								const attribute = path.fieldAt(i, Field.attributes);
+								const attribute = path.field(i, Field.attributes);
 								return {
 									name: path.name(attribute),
 									value: path.value(attribute)

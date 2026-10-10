@@ -123,7 +123,7 @@ const tree = (html) => {
 				/** @type {string[]} */
 				const attributes = [];
 				for (let i = 0; i < nodePath.fieldCount(Field.attributes); i++) {
-					const attribute = nodePath.fieldAt(i, Field.attributes);
+					const attribute = nodePath.field(i, Field.attributes);
 					const name = nodePath.name(attribute);
 					attributes.push(
 						`${name}=${canonicalValue(tagName, name, nodePath.value(attribute))}`

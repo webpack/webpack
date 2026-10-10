@@ -39,6 +39,7 @@ const {
 	NS_MATHML,
 	NS_SVG,
 	NodeType,
+	Part,
 	QUOTE_NONE,
 	decodeEntities,
 	pickTransforms,
@@ -1318,7 +1319,7 @@ for (const [name, type] of Object.entries(NodeType)) {
 const htmlInnerRanges = (nodePath) => {
 	if (nodePath.type() !== NodeType.Element) return undefined;
 	const start = nodePath.range()[0];
-	const content = nodePath.contentRange();
+	const content = nodePath.rangeOf(Part.content);
 	// The parser inserted this element, or the adoption agency cloned it: no tag
 	// was written, so it states no offsets to hold.
 	if (content === null || content[0] <= start) return undefined;
@@ -1327,13 +1328,13 @@ const htmlInnerRanges = (nodePath) => {
 	const inner = [["opening tag", start, tagEnd]];
 	const count = nodePath.fieldCount(Field.attributes);
 	for (let index = 0; index < count; index++) {
-		const attribute = nodePath.fieldAt(index, Field.attributes);
+		const attribute = nodePath.field(index, Field.attributes);
 		const [nameStart, nameEnd] = /** @type {[number, number]} */ (
-			nodePath.nameRange(attribute)
+			nodePath.rangeOf(Part.name, attribute)
 		);
 		if (nameStart < start || nameStart >= tagEnd) continue;
 		inner.push(["attribute name", nameStart, nameEnd]);
-		const value = nodePath.valueRange(attribute);
+		const value = nodePath.rangeOf(Part.value, attribute);
 		inner.push([
 			"attribute value",
 			value === null ? -1 : value[0],
@@ -1592,7 +1593,7 @@ const htmlPurityDigest = (html, print) => {
 			digest.update(`|<${nodePath.name()}>|${nodePath.namespace()}`);
 			const count = nodePath.fieldCount(Field.attributes);
 			for (let index = 0; index < count; index++) {
-				const attribute = nodePath.fieldAt(index, Field.attributes);
+				const attribute = nodePath.field(index, Field.attributes);
 				digest.update(
 					`|${nodePath.name(attribute)}=${nodePath.value(attribute)}`
 				);

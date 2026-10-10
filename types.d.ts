@@ -415,12 +415,12 @@ type AnyLoaderContext = NormalModuleLoaderContext<any> &
  */
 declare interface AnyParts {
 	types: number;
-	list: number;
-	single: number;
+	field: number;
 	flag: number;
-	lists: Record<number, number>;
-	singles: Record<number, number>;
+	part: number;
+	fields: Record<number, number>;
 	flags: Record<number, number>;
+	parts: Record<number, number>;
 	items: Record<number, number>;
 	visitors: VisitorMap<any>;
 }
@@ -6470,24 +6470,18 @@ type CssNodePath<T = number> = Omit<
 		value(n?: NodeSyntaxParser): string | number;
 		unit(n?: NodeSyntaxParser): string;
 		typeFlag(n?: NodeSyntaxParser): string;
-		valueRange(n?: NodeSyntaxParser): null | [number, number];
 		name(n?: NodeSyntaxParser): string;
-		nameRange(n?: NodeSyntaxParser): null | [number, number];
 		/**
-		 * A rule's children are its prelude; its block is read with {@link fieldAt }.
+		 * A rule's children are its prelude; its block is read with {@link field }.
 		 */
 		childCount(n?: NodeSyntaxParser): number;
 		child(i: number, n?: NodeSyntaxParser): ComponentValue;
-		/**
-		 * CSS has no single-node field; every `Field` is a list.
-		 */
-		field(_field: number, _n?: NodeSyntaxParser): NodeSyntaxParser;
 		/**
 		 * A block big enough to stream hands its children to the visitors as each
 		 * one finishes rather than collecting them, so its lists read as empty here.
 		 */
 		fieldCount(field: number, n?: NodeSyntaxParser): number;
-		fieldAt(i: number, field: number, n?: NodeSyntaxParser): NodeSyntaxParser;
+		field(i: number, field: number, n?: NodeSyntaxParser): NodeSyntaxParser;
 		fieldNamed(
 			field: number,
 			name: string,
@@ -6497,100 +6491,13 @@ type CssNodePath<T = number> = Omit<
 		 * Only a container's flags are cleared when its id is reused, so a leaf has none.
 		 */
 		flag(flag: number, n?: NodeSyntaxParser): boolean;
-		blockRange(n?: NodeSyntaxParser): null | [number, number];
+		rangeOf(part: number, n?: NodeSyntaxParser): null | [number, number];
 		blockToken(n?: NodeSyntaxParser): SimpleBlockToken;
 	},
-	"flag" | "node" | "field" | "fieldCount" | "fieldAt" | "fieldNamed"
+	"flag" | "node" | "field" | "fieldCount" | "fieldNamed" | "rangeOf"
 > & {
 	readonly node: TypedNode<NodeSyntaxParser, T>;
 	field<
-		R extends NodeSyntaxParser = TypedNode<NodeSyntaxParser, T>,
-		F extends number = number
-	>(
-		field: F &
-			PartOf<
-				R,
-				{
-					"1": never;
-					"2": never;
-					"3": never;
-					"4": never;
-					"5": never;
-					"6": never;
-					"7": never;
-					"8": never;
-					"9": never;
-					"10": never;
-					"11": never;
-					"12": never;
-					"13": never;
-					"14": never;
-					"15": never;
-					"16": never;
-					"17": never;
-					"18": never;
-					"19": never;
-					"20": never;
-					"21": never;
-					"22": never;
-					"23": never;
-					"24": never;
-					"25": never;
-					"26": never;
-					"27": never;
-					"28": never;
-				},
-				never
-			>,
-		n?: R
-	): TypedNode<
-		NodeSyntaxParser,
-		{
-			[index: number]: number;
-			"1": CssComponentValueType;
-			"2": CssComponentValueType;
-			"3": 23;
-			"4": 25 | 24;
-		}[F]
-	>;
-	fieldCount<R extends NodeSyntaxParser = TypedNode<NodeSyntaxParser, T>>(
-		field: PartOf<
-			R,
-			{
-				"1": never;
-				"2": 2;
-				"3": never;
-				"4": never;
-				"5": never;
-				"6": never;
-				"7": never;
-				"8": never;
-				"9": never;
-				"10": never;
-				"11": never;
-				"12": never;
-				"13": never;
-				"14": never;
-				"15": never;
-				"16": never;
-				"17": never;
-				"18": never;
-				"19": never;
-				"20": never;
-				"21": never;
-				"22": 2;
-				"23": 2;
-				"24": 1 | 3 | 4;
-				"25": 1 | 3 | 4;
-				"26": 4;
-				"27": never;
-				"28": never;
-			},
-			CssListField
-		>,
-		n?: R
-	): number;
-	fieldAt<
 		R extends NodeSyntaxParser = TypedNode<NodeSyntaxParser, T>,
 		F extends number = number
 	>(
@@ -6641,6 +6548,43 @@ type CssNodePath<T = number> = Omit<
 			"4": 25 | 24;
 		}[F]
 	>;
+	fieldCount<R extends NodeSyntaxParser = TypedNode<NodeSyntaxParser, T>>(
+		field: PartOf<
+			R,
+			{
+				"1": never;
+				"2": 2;
+				"3": never;
+				"4": never;
+				"5": never;
+				"6": never;
+				"7": never;
+				"8": never;
+				"9": never;
+				"10": never;
+				"11": never;
+				"12": never;
+				"13": never;
+				"14": never;
+				"15": never;
+				"16": never;
+				"17": never;
+				"18": never;
+				"19": never;
+				"20": never;
+				"21": never;
+				"22": 2;
+				"23": 2;
+				"24": 1 | 3 | 4;
+				"25": 1 | 3 | 4;
+				"26": 4;
+				"27": never;
+				"28": never;
+			},
+			CssListField
+		>,
+		n?: R
+	): number;
 	fieldNamed<
 		R extends NodeSyntaxParser = TypedNode<NodeSyntaxParser, T>,
 		F extends number = number
@@ -6729,6 +6673,43 @@ type CssNodePath<T = number> = Omit<
 		>,
 		n?: R
 	): boolean;
+	rangeOf<R extends NodeSyntaxParser = TypedNode<NodeSyntaxParser, T>>(
+		part: PartOf<
+			R,
+			{
+				"1": never;
+				"2": 1;
+				"3": never;
+				"4": never;
+				"5": never;
+				"6": never;
+				"7": 2;
+				"8": never;
+				"9": never;
+				"10": never;
+				"11": never;
+				"12": never;
+				"13": never;
+				"14": never;
+				"15": never;
+				"16": never;
+				"17": never;
+				"18": never;
+				"19": never;
+				"20": never;
+				"21": never;
+				"22": never;
+				"23": 1;
+				"24": 1 | 3;
+				"25": 3;
+				"26": never;
+				"27": never;
+				"28": never;
+			},
+			1 | 2 | 3
+		>,
+		n?: R
+	): null | [number, number];
 };
 type CssNodeType =
 	| 1
@@ -6893,15 +6874,15 @@ declare interface CssParserOptions {
 }
 
 /**
- * CSS's parts by node type, which type each visitor's path; CSS has no
- * single-node `Field`.
+ * CSS's parts by node type, which type each visitor's path; every CSS `Field`
+ * is a list.
  */
 declare interface CssParts {
 	types: CssNodeType;
-	list: CssListField;
-	single: never;
+	field: CssListField;
 	flag: 1;
-	lists: {
+	part: 1 | 2 | 3;
+	fields: {
 		"1": never;
 		"2": 2;
 		"3": never;
@@ -6931,36 +6912,6 @@ declare interface CssParts {
 		"27": never;
 		"28": never;
 	};
-	singles: {
-		"1": never;
-		"2": never;
-		"3": never;
-		"4": never;
-		"5": never;
-		"6": never;
-		"7": never;
-		"8": never;
-		"9": never;
-		"10": never;
-		"11": never;
-		"12": never;
-		"13": never;
-		"14": never;
-		"15": never;
-		"16": never;
-		"17": never;
-		"18": never;
-		"19": never;
-		"20": never;
-		"21": never;
-		"22": never;
-		"23": never;
-		"24": never;
-		"25": never;
-		"26": never;
-		"27": never;
-		"28": never;
-	};
 	flags: {
 		"1": never;
 		"2": never;
@@ -6987,6 +6938,36 @@ declare interface CssParts {
 		"23": 1;
 		"24": never;
 		"25": never;
+		"26": never;
+		"27": never;
+		"28": never;
+	};
+	parts: {
+		"1": never;
+		"2": 1;
+		"3": never;
+		"4": never;
+		"5": never;
+		"6": never;
+		"7": 2;
+		"8": never;
+		"9": never;
+		"10": never;
+		"11": never;
+		"12": never;
+		"13": never;
+		"14": never;
+		"15": never;
+		"16": never;
+		"17": never;
+		"18": never;
+		"19": never;
+		"20": never;
+		"21": never;
+		"22": never;
+		"23": 1;
+		"24": 1 | 3;
+		"25": 3;
 		"26": never;
 		"27": never;
 		"28": never;
@@ -7211,24 +7192,18 @@ declare class CssSourceProcessor extends SourceProcessor<
 		value(n?: NodeSyntaxParser): string | number;
 		unit(n?: NodeSyntaxParser): string;
 		typeFlag(n?: NodeSyntaxParser): string;
-		valueRange(n?: NodeSyntaxParser): null | [number, number];
 		name(n?: NodeSyntaxParser): string;
-		nameRange(n?: NodeSyntaxParser): null | [number, number];
 		/**
-		 * A rule's children are its prelude; its block is read with {@link fieldAt }.
+		 * A rule's children are its prelude; its block is read with {@link field }.
 		 */
 		childCount(n?: NodeSyntaxParser): number;
 		child(i: number, n?: NodeSyntaxParser): ComponentValue;
-		/**
-		 * CSS has no single-node field; every `Field` is a list.
-		 */
-		field(_field: number, _n?: NodeSyntaxParser): NodeSyntaxParser;
 		/**
 		 * A block big enough to stream hands its children to the visitors as each
 		 * one finishes rather than collecting them, so its lists read as empty here.
 		 */
 		fieldCount(field: number, n?: NodeSyntaxParser): number;
-		fieldAt(i: number, field: number, n?: NodeSyntaxParser): NodeSyntaxParser;
+		field(i: number, field: number, n?: NodeSyntaxParser): NodeSyntaxParser;
 		fieldNamed(
 			field: number,
 			name: string,
@@ -7238,7 +7213,7 @@ declare class CssSourceProcessor extends SourceProcessor<
 		 * Only a container's flags are cleared when its id is reused, so a leaf has none.
 		 */
 		flag(flag: number, n?: NodeSyntaxParser): boolean;
-		blockRange(n?: NodeSyntaxParser): null | [number, number];
+		rangeOf(part: number, n?: NodeSyntaxParser): null | [number, number];
 		blockToken(n?: NodeSyntaxParser): SimpleBlockToken;
 	},
 	NodeSyntaxParser,
@@ -11980,19 +11955,20 @@ type HtmlNodePath<T = number> = Omit<
 		 */
 		name(n?: number): string;
 		namespace(n?: number): number;
-		field(field: number, n?: number): number;
 		fieldCount(field: number, n?: number): number;
 		/**
 		 * An attribute item is a node the shared reads take.
 		 */
-		fieldAt(i: number, field: number, n?: number): number;
+		field(i: number, field: number, n?: number): number;
 		/**
 		 * Attribute names are stored lowercased, so `name` is compared as written.
 		 */
 		fieldNamed(field: number, name: string, n?: number): number;
 		flag(flag: number, n?: number): boolean;
-		valueRange(n?: number): null | [number, number];
-		nameRange(n?: number): null | [number, number];
+		/**
+		 * A parser-inserted element has no name or content in the source.
+		 */
+		rangeOf(part: number, n?: number): null | [number, number];
 		/**
 		 * Whether the source wrote this element's end tag rather than the parser
 		 * popping it for an implied close. Read back off the range instead of marked
@@ -12020,11 +11996,6 @@ type HtmlNodePath<T = number> = Omit<
 		 */
 		closeTag(n?: number): string;
 		/**
-		 * Between the opening tag and the end tag, or where the content ends when
-		 * the source left the end tag out.
-		 */
-		contentRange(n?: number): null | [number, number];
-		/**
 		 * A text's, comment's, processing instruction's or attribute's data,
 		 * character references decoded; "" for other nodes.
 		 */
@@ -12041,24 +12012,25 @@ type HtmlNodePath<T = number> = Omit<
 		 */
 		child(i: number, n?: number): number;
 	},
-	"flag" | "node" | "field" | "fieldCount" | "fieldAt" | "fieldNamed"
+	"flag" | "node" | "field" | "fieldCount" | "fieldNamed" | "rangeOf"
 > & {
 	readonly node: TypedNode<number, T>;
 	field<R extends number = TypedNode<number, T>, F extends number = number>(
+		i: number,
 		field: F &
 			PartOf<
 				R,
 				{
 					"1": never;
 					"2": never;
-					"3": 2;
+					"3": 1 | 2;
 					"4": never;
 					"5": never;
 					"6": never;
 					"7": never;
 					"8": never;
 				},
-				2
+				1 | 2
 			>,
 		n?: R
 	): TypedNode<number, { [index: number]: number; "1": 8; "2": 2 }[F]>;
@@ -12068,36 +12040,17 @@ type HtmlNodePath<T = number> = Omit<
 			{
 				"1": never;
 				"2": never;
-				"3": 1;
+				"3": 1 | 2;
 				"4": never;
 				"5": never;
 				"6": never;
 				"7": never;
 				"8": never;
 			},
-			1
+			1 | 2
 		>,
 		n?: R
 	): number;
-	fieldAt<R extends number = TypedNode<number, T>, F extends number = number>(
-		i: number,
-		field: F &
-			PartOf<
-				R,
-				{
-					"1": never;
-					"2": never;
-					"3": 1;
-					"4": never;
-					"5": never;
-					"6": never;
-					"7": never;
-					"8": never;
-				},
-				1
-			>,
-		n?: R
-	): TypedNode<number, { [index: number]: number; "1": 8; "2": 2 }[F]>;
 	fieldNamed<
 		R extends number = TypedNode<number, T>,
 		F extends number = number
@@ -12108,14 +12061,14 @@ type HtmlNodePath<T = number> = Omit<
 				{
 					"1": never;
 					"2": never;
-					"3": 1;
+					"3": 1 | 2;
 					"4": never;
 					"5": never;
 					"6": never;
 					"7": never;
 					"8": never;
 				},
-				1
+				1 | 2
 			>,
 		name: string,
 		n?: R
@@ -12137,6 +12090,23 @@ type HtmlNodePath<T = number> = Omit<
 		>,
 		n?: R
 	): boolean;
+	rangeOf<R extends number = TypedNode<number, T>>(
+		part: PartOf<
+			R,
+			{
+				"1": never;
+				"2": never;
+				"3": 1 | 3;
+				"4": never;
+				"5": never;
+				"6": never;
+				"7": never;
+				"8": 1 | 2;
+			},
+			1 | 2 | 3
+		>,
+		n?: R
+	): null | [number, number];
 };
 type HtmlNodeType = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
 declare interface HtmlParseOptions {
@@ -12245,23 +12215,13 @@ declare interface HtmlParserOptions {
  */
 declare interface HtmlParts {
 	types: HtmlNodeType;
-	list: 1;
-	single: 2;
+	field: 1 | 2;
 	flag: 4;
-	lists: {
+	part: 1 | 2 | 3;
+	fields: {
 		"1": never;
 		"2": never;
-		"3": 1;
-		"4": never;
-		"5": never;
-		"6": never;
-		"7": never;
-		"8": never;
-	};
-	singles: {
-		"1": never;
-		"2": never;
-		"3": 2;
+		"3": 1 | 2;
 		"4": never;
 		"5": never;
 		"6": never;
@@ -12277,6 +12237,16 @@ declare interface HtmlParts {
 		"6": never;
 		"7": never;
 		"8": never;
+	};
+	parts: {
+		"1": never;
+		"2": never;
+		"3": 1 | 3;
+		"4": never;
+		"5": never;
+		"6": never;
+		"7": never;
+		"8": 1 | 2;
 	};
 	items: { [index: number]: number; "1": 8; "2": 2 };
 	visitors: HtmlVisitorMap;
@@ -12557,19 +12527,20 @@ declare class HtmlSourceProcessor extends SourceProcessor<
 		 */
 		name(n?: number): string;
 		namespace(n?: number): number;
-		field(field: number, n?: number): number;
 		fieldCount(field: number, n?: number): number;
 		/**
 		 * An attribute item is a node the shared reads take.
 		 */
-		fieldAt(i: number, field: number, n?: number): number;
+		field(i: number, field: number, n?: number): number;
 		/**
 		 * Attribute names are stored lowercased, so `name` is compared as written.
 		 */
 		fieldNamed(field: number, name: string, n?: number): number;
 		flag(flag: number, n?: number): boolean;
-		valueRange(n?: number): null | [number, number];
-		nameRange(n?: number): null | [number, number];
+		/**
+		 * A parser-inserted element has no name or content in the source.
+		 */
+		rangeOf(part: number, n?: number): null | [number, number];
 		/**
 		 * Whether the source wrote this element's end tag rather than the parser
 		 * popping it for an implied close. Read back off the range instead of marked
@@ -12596,11 +12567,6 @@ declare class HtmlSourceProcessor extends SourceProcessor<
 		 * source to echo, and slicing one would spell `</>`.
 		 */
 		closeTag(n?: number): string;
-		/**
-		 * Between the opening tag and the end tag, or where the content ends when
-		 * the source left the end tag out.
-		 */
-		contentRange(n?: number): null | [number, number];
 		/**
 		 * A text's, comment's, processing instruction's or attribute's data,
 		 * character references decoded; "" for other nodes.
@@ -21454,14 +21420,9 @@ declare interface NodeParts {
 	types: number;
 
 	/**
-	 * every list `Field`
+	 * every `Field`
 	 */
-	list: number;
-
-	/**
-	 * every single-node `Field`
-	 */
-	single: number;
+	field: number;
 
 	/**
 	 * every `Flag`
@@ -21469,19 +21430,24 @@ declare interface NodeParts {
 	flag: number;
 
 	/**
-	 * the list `Field`s of each node type
+	 * every `Part`
 	 */
-	lists: Record<number, number>;
+	part: number;
 
 	/**
-	 * the single-node `Field`s of each node type
+	 * the `Field`s of each node type
 	 */
-	singles: Record<number, number>;
+	fields: Record<number, number>;
 
 	/**
 	 * the `Flag`s of each node type
 	 */
 	flags: Record<number, number>;
+
+	/**
+	 * the `Part`s of each node type
+	 */
+	parts: Record<number, number>;
 
 	/**
 	 * the node type of each `Field`'s items
@@ -21497,15 +21463,15 @@ type NodePath<TNode, TValue = unknown> = NodePathReads<TNode, TValue> &
 	NodePathFields<TNode>;
 
 /**
- * Structure read through a language's `Field` and `Flag`. Declared as methods so
- * a language's path may accept only the parts each node type has.
+ * Structure read through a language's `Field`, `Flag` and `Part`. Declared as
+ * methods so a language's path may accept only the parts each node type has.
  */
 declare interface NodePathFields<TNode> {
-	field(field: number, n?: TNode): TNode;
+	field(i: number, field: number, n?: TNode): TNode;
 	fieldCount(field: number, n?: TNode): number;
-	fieldAt(i: number, field: number, n?: TNode): TNode;
 	fieldNamed(field: number, name: string, n?: TNode): TNode;
 	flag(flag: number, n?: TNode): boolean;
+	rangeOf(part: number, n?: TNode): null | [number, number];
 }
 declare interface NodePathReads<TNode, TValue = unknown> {
 	/**
@@ -32863,24 +32829,20 @@ declare class TypeScriptPlugin {
 type TypedNode<TNode, T> = TNode & { readonly __nodeType: T };
 type TypedNodePath<TPath, TNode, P extends NodeParts, T> = Omit<
 	TPath,
-	"flag" | "node" | "field" | "fieldCount" | "fieldAt" | "fieldNamed"
+	"flag" | "node" | "field" | "fieldCount" | "fieldNamed" | "rangeOf"
 > & {
 	readonly node: TypedNode<TNode, T>;
 	field<R = TypedNode<TNode, T>, F extends number = number>(
-		field: F & PartOf<R, P["singles"], P["single"]>,
+		i: number,
+		field: F & PartOf<R, P["fields"], P["field"]>,
 		n?: R
 	): TypedNode<TNode, P["items"][F]>;
 	fieldCount<R = TypedNode<TNode, T>>(
-		field: PartOf<R, P["lists"], P["list"]>,
+		field: PartOf<R, P["fields"], P["field"]>,
 		n?: R
 	): number;
-	fieldAt<R = TypedNode<TNode, T>, F extends number = number>(
-		i: number,
-		field: F & PartOf<R, P["lists"], P["list"]>,
-		n?: R
-	): TypedNode<TNode, P["items"][F]>;
 	fieldNamed<R = TypedNode<TNode, T>, F extends number = number>(
-		field: F & PartOf<R, P["lists"], P["list"]>,
+		field: F & PartOf<R, P["fields"], P["field"]>,
 		name: string,
 		n?: R
 	): TypedNode<TNode, P["items"][F]>;
@@ -32888,6 +32850,10 @@ type TypedNodePath<TPath, TNode, P extends NodeParts, T> = Omit<
 		flag: PartOf<R, P["flags"], P["flag"]>,
 		n?: R
 	): boolean;
+	rangeOf<R = TypedNode<TNode, T>>(
+		part: PartOf<R, P["parts"], P["part"]>,
+		n?: R
+	): null | [number, number];
 };
 declare const UNDEFINED_MARKER: unique symbol;
 type UnsafeCacheData = KnownUnsafeCacheData & Record<string, any>;
@@ -34782,24 +34748,18 @@ declare namespace exports {
 					value(n?: NodeSyntaxParser): string | number;
 					unit(n?: NodeSyntaxParser): string;
 					typeFlag(n?: NodeSyntaxParser): string;
-					valueRange(n?: NodeSyntaxParser): null | [number, number];
 					name(n?: NodeSyntaxParser): string;
-					nameRange(n?: NodeSyntaxParser): null | [number, number];
 					/**
-					 * A rule's children are its prelude; its block is read with {@link fieldAt }.
+					 * A rule's children are its prelude; its block is read with {@link field }.
 					 */
 					childCount(n?: NodeSyntaxParser): number;
 					child(i: number, n?: NodeSyntaxParser): ComponentValue;
-					/**
-					 * CSS has no single-node field; every `Field` is a list.
-					 */
-					field(_field: number, _n?: NodeSyntaxParser): NodeSyntaxParser;
 					/**
 					 * A block big enough to stream hands its children to the visitors as each
 					 * one finishes rather than collecting them, so its lists read as empty here.
 					 */
 					fieldCount(field: number, n?: NodeSyntaxParser): number;
-					fieldAt(
+					field(
 						i: number,
 						field: number,
 						n?: NodeSyntaxParser
@@ -34813,7 +34773,7 @@ declare namespace exports {
 					 * Only a container's flags are cleared when its id is reused, so a leaf has none.
 					 */
 					flag(flag: number, n?: NodeSyntaxParser): boolean;
-					blockRange(n?: NodeSyntaxParser): null | [number, number];
+					rangeOf(part: number, n?: NodeSyntaxParser): null | [number, number];
 					blockToken(n?: NodeSyntaxParser): SimpleBlockToken;
 				};
 				export let CC_0: number;
@@ -34852,6 +34812,11 @@ declare namespace exports {
 				}
 				export namespace Flag {
 					export let important: 1;
+				}
+				export namespace Part {
+					export let name: 1;
+					export let value: 2;
+					export let block: 3;
 				}
 				export namespace NodeType {
 					export let Ident: 1;
@@ -34971,24 +34936,18 @@ declare namespace exports {
 						value(n?: NodeSyntaxParser): string | number;
 						unit(n?: NodeSyntaxParser): string;
 						typeFlag(n?: NodeSyntaxParser): string;
-						valueRange(n?: NodeSyntaxParser): null | [number, number];
 						name(n?: NodeSyntaxParser): string;
-						nameRange(n?: NodeSyntaxParser): null | [number, number];
 						/**
-						 * A rule's children are its prelude; its block is read with {@link fieldAt }.
+						 * A rule's children are its prelude; its block is read with {@link field }.
 						 */
 						childCount(n?: NodeSyntaxParser): number;
 						child(i: number, n?: NodeSyntaxParser): ComponentValue;
-						/**
-						 * CSS has no single-node field; every `Field` is a list.
-						 */
-						field(_field: number, _n?: NodeSyntaxParser): NodeSyntaxParser;
 						/**
 						 * A block big enough to stream hands its children to the visitors as each
 						 * one finishes rather than collecting them, so its lists read as empty here.
 						 */
 						fieldCount(field: number, n?: NodeSyntaxParser): number;
-						fieldAt(
+						field(
 							i: number,
 							field: number,
 							n?: NodeSyntaxParser
@@ -35002,7 +34961,10 @@ declare namespace exports {
 						 * Only a container's flags are cleared when its id is reused, so a leaf has none.
 						 */
 						flag(flag: number, n?: NodeSyntaxParser): boolean;
-						blockRange(n?: NodeSyntaxParser): null | [number, number];
+						rangeOf(
+							part: number,
+							n?: NodeSyntaxParser
+						): null | [number, number];
 						blockToken(n?: NodeSyntaxParser): SimpleBlockToken;
 					}>[],
 					writer:
@@ -35037,27 +34999,18 @@ declare namespace exports {
 									value(n?: NodeSyntaxParser): string | number;
 									unit(n?: NodeSyntaxParser): string;
 									typeFlag(n?: NodeSyntaxParser): string;
-									valueRange(n?: NodeSyntaxParser): null | [number, number];
 									name(n?: NodeSyntaxParser): string;
-									nameRange(n?: NodeSyntaxParser): null | [number, number];
 									/**
-									 * A rule's children are its prelude; its block is read with {@link fieldAt }.
+									 * A rule's children are its prelude; its block is read with {@link field }.
 									 */
 									childCount(n?: NodeSyntaxParser): number;
 									child(i: number, n?: NodeSyntaxParser): ComponentValue;
-									/**
-									 * CSS has no single-node field; every `Field` is a list.
-									 */
-									field(
-										_field: number,
-										_n?: NodeSyntaxParser
-									): NodeSyntaxParser;
 									/**
 									 * A block big enough to stream hands its children to the visitors as each
 									 * one finishes rather than collecting them, so its lists read as empty here.
 									 */
 									fieldCount(field: number, n?: NodeSyntaxParser): number;
-									fieldAt(
+									field(
 										i: number,
 										field: number,
 										n?: NodeSyntaxParser
@@ -35071,7 +35024,10 @@ declare namespace exports {
 									 * Only a container's flags are cleared when its id is reused, so a leaf has none.
 									 */
 									flag(flag: number, n?: NodeSyntaxParser): boolean;
-									blockRange(n?: NodeSyntaxParser): null | [number, number];
+									rangeOf(
+										part: number,
+										n?: NodeSyntaxParser
+									): null | [number, number];
 									blockToken(n?: NodeSyntaxParser): SimpleBlockToken;
 								},
 								NodeSyntaxParser,
@@ -35181,24 +35137,18 @@ declare namespace exports {
 						value(n?: NodeSyntaxParser): string | number;
 						unit(n?: NodeSyntaxParser): string;
 						typeFlag(n?: NodeSyntaxParser): string;
-						valueRange(n?: NodeSyntaxParser): null | [number, number];
 						name(n?: NodeSyntaxParser): string;
-						nameRange(n?: NodeSyntaxParser): null | [number, number];
 						/**
-						 * A rule's children are its prelude; its block is read with {@link fieldAt }.
+						 * A rule's children are its prelude; its block is read with {@link field }.
 						 */
 						childCount(n?: NodeSyntaxParser): number;
 						child(i: number, n?: NodeSyntaxParser): ComponentValue;
-						/**
-						 * CSS has no single-node field; every `Field` is a list.
-						 */
-						field(_field: number, _n?: NodeSyntaxParser): NodeSyntaxParser;
 						/**
 						 * A block big enough to stream hands its children to the visitors as each
 						 * one finishes rather than collecting them, so its lists read as empty here.
 						 */
 						fieldCount(field: number, n?: NodeSyntaxParser): number;
-						fieldAt(
+						field(
 							i: number,
 							field: number,
 							n?: NodeSyntaxParser
@@ -35212,7 +35162,10 @@ declare namespace exports {
 						 * Only a container's flags are cleared when its id is reused, so a leaf has none.
 						 */
 						flag(flag: number, n?: NodeSyntaxParser): boolean;
-						blockRange(n?: NodeSyntaxParser): null | [number, number];
+						rangeOf(
+							part: number,
+							n?: NodeSyntaxParser
+						): null | [number, number];
 						blockToken(n?: NodeSyntaxParser): SimpleBlockToken;
 					},
 					writer: PrintContext<
@@ -35245,24 +35198,18 @@ declare namespace exports {
 							value(n?: NodeSyntaxParser): string | number;
 							unit(n?: NodeSyntaxParser): string;
 							typeFlag(n?: NodeSyntaxParser): string;
-							valueRange(n?: NodeSyntaxParser): null | [number, number];
 							name(n?: NodeSyntaxParser): string;
-							nameRange(n?: NodeSyntaxParser): null | [number, number];
 							/**
-							 * A rule's children are its prelude; its block is read with {@link fieldAt }.
+							 * A rule's children are its prelude; its block is read with {@link field }.
 							 */
 							childCount(n?: NodeSyntaxParser): number;
 							child(i: number, n?: NodeSyntaxParser): ComponentValue;
-							/**
-							 * CSS has no single-node field; every `Field` is a list.
-							 */
-							field(_field: number, _n?: NodeSyntaxParser): NodeSyntaxParser;
 							/**
 							 * A block big enough to stream hands its children to the visitors as each
 							 * one finishes rather than collecting them, so its lists read as empty here.
 							 */
 							fieldCount(field: number, n?: NodeSyntaxParser): number;
-							fieldAt(
+							field(
 								i: number,
 								field: number,
 								n?: NodeSyntaxParser
@@ -35276,7 +35223,10 @@ declare namespace exports {
 							 * Only a container's flags are cleared when its id is reused, so a leaf has none.
 							 */
 							flag(flag: number, n?: NodeSyntaxParser): boolean;
-							blockRange(n?: NodeSyntaxParser): null | [number, number];
+							rangeOf(
+								part: number,
+								n?: NodeSyntaxParser
+							): null | [number, number];
 							blockToken(n?: NodeSyntaxParser): SimpleBlockToken;
 						},
 						NodeSyntaxParser,
@@ -35387,19 +35337,20 @@ declare namespace exports {
 					 */
 					name(n?: number): string;
 					namespace(n?: number): number;
-					field(field: number, n?: number): number;
 					fieldCount(field: number, n?: number): number;
 					/**
 					 * An attribute item is a node the shared reads take.
 					 */
-					fieldAt(i: number, field: number, n?: number): number;
+					field(i: number, field: number, n?: number): number;
 					/**
 					 * Attribute names are stored lowercased, so `name` is compared as written.
 					 */
 					fieldNamed(field: number, name: string, n?: number): number;
 					flag(flag: number, n?: number): boolean;
-					valueRange(n?: number): null | [number, number];
-					nameRange(n?: number): null | [number, number];
+					/**
+					 * A parser-inserted element has no name or content in the source.
+					 */
+					rangeOf(part: number, n?: number): null | [number, number];
 					/**
 					 * Whether the source wrote this element's end tag rather than the parser
 					 * popping it for an implied close. Read back off the range instead of marked
@@ -35426,11 +35377,6 @@ declare namespace exports {
 					 * source to echo, and slicing one would spell `</>`.
 					 */
 					closeTag(n?: number): string;
-					/**
-					 * Between the opening tag and the end tag, or where the content ends when
-					 * the source left the end tag out.
-					 */
-					contentRange(n?: number): null | [number, number];
 					/**
 					 * A text's, comment's, processing instruction's or attribute's data,
 					 * character references decoded; "" for other nodes.
@@ -35469,6 +35415,11 @@ declare namespace exports {
 				}
 				export namespace Flag {
 					export let selfClosing: 4;
+				}
+				export namespace Part {
+					export let name: 1;
+					export let value: 2;
+					export let content: 3;
 				}
 				export namespace NodeType {
 					export let Document: 1;
@@ -35541,19 +35492,20 @@ declare namespace exports {
 						 */
 						name(n?: number): string;
 						namespace(n?: number): number;
-						field(field: number, n?: number): number;
 						fieldCount(field: number, n?: number): number;
 						/**
 						 * An attribute item is a node the shared reads take.
 						 */
-						fieldAt(i: number, field: number, n?: number): number;
+						field(i: number, field: number, n?: number): number;
 						/**
 						 * Attribute names are stored lowercased, so `name` is compared as written.
 						 */
 						fieldNamed(field: number, name: string, n?: number): number;
 						flag(flag: number, n?: number): boolean;
-						valueRange(n?: number): null | [number, number];
-						nameRange(n?: number): null | [number, number];
+						/**
+						 * A parser-inserted element has no name or content in the source.
+						 */
+						rangeOf(part: number, n?: number): null | [number, number];
 						/**
 						 * Whether the source wrote this element's end tag rather than the parser
 						 * popping it for an implied close. Read back off the range instead of marked
@@ -35580,11 +35532,6 @@ declare namespace exports {
 						 * source to echo, and slicing one would spell `</>`.
 						 */
 						closeTag(n?: number): string;
-						/**
-						 * Between the opening tag and the end tag, or where the content ends when
-						 * the source left the end tag out.
-						 */
-						contentRange(n?: number): null | [number, number];
 						/**
 						 * A text's, comment's, processing instruction's or attribute's data,
 						 * character references decoded; "" for other nodes.
@@ -35637,19 +35584,20 @@ declare namespace exports {
 									 */
 									name(n?: number): string;
 									namespace(n?: number): number;
-									field(field: number, n?: number): number;
 									fieldCount(field: number, n?: number): number;
 									/**
 									 * An attribute item is a node the shared reads take.
 									 */
-									fieldAt(i: number, field: number, n?: number): number;
+									field(i: number, field: number, n?: number): number;
 									/**
 									 * Attribute names are stored lowercased, so `name` is compared as written.
 									 */
 									fieldNamed(field: number, name: string, n?: number): number;
 									flag(flag: number, n?: number): boolean;
-									valueRange(n?: number): null | [number, number];
-									nameRange(n?: number): null | [number, number];
+									/**
+									 * A parser-inserted element has no name or content in the source.
+									 */
+									rangeOf(part: number, n?: number): null | [number, number];
 									/**
 									 * Whether the source wrote this element's end tag rather than the parser
 									 * popping it for an implied close. Read back off the range instead of marked
@@ -35676,11 +35624,6 @@ declare namespace exports {
 									 * source to echo, and slicing one would spell `</>`.
 									 */
 									closeTag(n?: number): string;
-									/**
-									 * Between the opening tag and the end tag, or where the content ends when
-									 * the source left the end tag out.
-									 */
-									contentRange(n?: number): null | [number, number];
 									/**
 									 * A text's, comment's, processing instruction's or attribute's data,
 									 * character references decoded; "" for other nodes.
@@ -35764,19 +35707,20 @@ declare namespace exports {
 						 */
 						name(n?: number): string;
 						namespace(n?: number): number;
-						field(field: number, n?: number): number;
 						fieldCount(field: number, n?: number): number;
 						/**
 						 * An attribute item is a node the shared reads take.
 						 */
-						fieldAt(i: number, field: number, n?: number): number;
+						field(i: number, field: number, n?: number): number;
 						/**
 						 * Attribute names are stored lowercased, so `name` is compared as written.
 						 */
 						fieldNamed(field: number, name: string, n?: number): number;
 						flag(flag: number, n?: number): boolean;
-						valueRange(n?: number): null | [number, number];
-						nameRange(n?: number): null | [number, number];
+						/**
+						 * A parser-inserted element has no name or content in the source.
+						 */
+						rangeOf(part: number, n?: number): null | [number, number];
 						/**
 						 * Whether the source wrote this element's end tag rather than the parser
 						 * popping it for an implied close. Read back off the range instead of marked
@@ -35803,11 +35747,6 @@ declare namespace exports {
 						 * source to echo, and slicing one would spell `</>`.
 						 */
 						closeTag(n?: number): string;
-						/**
-						 * Between the opening tag and the end tag, or where the content ends when
-						 * the source left the end tag out.
-						 */
-						contentRange(n?: number): null | [number, number];
 						/**
 						 * A text's, comment's, processing instruction's or attribute's data,
 						 * character references decoded; "" for other nodes.
@@ -35858,19 +35797,20 @@ declare namespace exports {
 							 */
 							name(n?: number): string;
 							namespace(n?: number): number;
-							field(field: number, n?: number): number;
 							fieldCount(field: number, n?: number): number;
 							/**
 							 * An attribute item is a node the shared reads take.
 							 */
-							fieldAt(i: number, field: number, n?: number): number;
+							field(i: number, field: number, n?: number): number;
 							/**
 							 * Attribute names are stored lowercased, so `name` is compared as written.
 							 */
 							fieldNamed(field: number, name: string, n?: number): number;
 							flag(flag: number, n?: number): boolean;
-							valueRange(n?: number): null | [number, number];
-							nameRange(n?: number): null | [number, number];
+							/**
+							 * A parser-inserted element has no name or content in the source.
+							 */
+							rangeOf(part: number, n?: number): null | [number, number];
 							/**
 							 * Whether the source wrote this element's end tag rather than the parser
 							 * popping it for an implied close. Read back off the range instead of marked
@@ -35897,11 +35837,6 @@ declare namespace exports {
 							 * source to echo, and slicing one would spell `</>`.
 							 */
 							closeTag(n?: number): string;
-							/**
-							 * Between the opening tag and the end tag, or where the content ends when
-							 * the source left the end tag out.
-							 */
-							contentRange(n?: number): null | [number, number];
 							/**
 							 * A text's, comment's, processing instruction's or attribute's data,
 							 * character references decoded; "" for other nodes.
