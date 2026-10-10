@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Parse an `assert(...)` call on the line after an import with no semicolon.
+Parse an `assert(...)` call after an import with no semicolon, and a regular expression after `yield` in a generator method.
