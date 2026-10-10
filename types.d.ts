@@ -31507,6 +31507,11 @@ declare class SyntaxParser {
 	 * token before it decides.
 	 */
 	braceIsBlock(prevType: TokenType): boolean;
+
+	/**
+	 * Whether the enclosing function is a generator. A parse reads its scope: a
+	 * method's `*` pushes no `function` context, which only the tokenizer reads.
+	 */
 	inGeneratorContext(): boolean;
 	updateContext(prevType: TokenType): void;
 	overrideContext(tokenCtx: TokContextLike): void;
@@ -31684,6 +31689,12 @@ declare class SyntaxParser {
 		isMethod?: boolean,
 		forInit?: string | boolean
 	): void;
+
+	/**
+	 * The token after a function body is read in the body's scope, so a `yield`
+	 * there is classified again in the enclosing one.
+	 */
+	rereadYieldContext(): void;
 	isSimpleParamList(params: any[]): boolean;
 	checkParams(node: any, allowDuplicates: boolean): void;
 	parseExprList(

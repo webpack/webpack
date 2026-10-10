@@ -545,7 +545,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/projects/wmr/archive-1/chunks/index.5a544c41/input.js",
 			"swc minifier: fixture/pure-annotations-not-member-pattern/input.js",
 			"swc minifier: full/helpers/1/input.js",
-			"terser compress: classes/class_duplication",
 			"terser compress: export/issue_2126",
 			"terser compress: export/redirection"
 		]

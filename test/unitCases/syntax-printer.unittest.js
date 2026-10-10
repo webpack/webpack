@@ -2328,6 +2328,16 @@ const CORRECTED_CASES = [
 		"a top-level `var` in a `default` a strict script writes after the `switch`",
 		'"use strict"; function g() { return 1; } switch (0) { default: var b; case g(): } try { b = 2; console.log(b); } catch (e) { console.log(e.name); }',
 		{ compress: {}, mangle: false }
+	],
+	[
+		"an object `hoist_props` would split, read bare where the read stays",
+		"function f() { let o = { a: 1 }; o; return o.a; } try { console.log(f()); } catch (e) { console.log(e.name); }",
+		{ compress: { side_effects: false, unused: false }, mangle: false }
+	],
+	[
+		"a sloppy function writing an undeclared name or reading `this`, called in a class",
+		"function f() { undeclared_x = 1; } function g() { return this; } function h() { return 1; } class C { m() { try { f(); } catch (e) { console.log(e.name); } return [typeof g(), h()]; } } console.log(new C().m(), typeof undeclared_x);",
+		{ compress: { passes: 2 }, mangle: false, toplevel: true }
 	]
 ];
 
@@ -6333,6 +6343,94 @@ describe("syntax-printer", () => {
 				const reference = await terserReference().minify(input, options);
 				expect(uncorrected.code).toBe(reference.code);
 				expect(reference.code).toContain("f(a+=1,[b]=c)");
+			} finally {
+				corrections.enabled = true;
+			}
+		});
+
+		it("should keep a sloppy function out of a class wherever strict code would read it otherwise", async () => {
+			const { minify } = await load();
+			const bodies = [
+				"return arguments.length;",
+				"with (o) return a;",
+				"return delete o.b;",
+				"return o.a++;",
+				"[o.a] = [5]; return o.a;",
+				"o.c = 3; return o.c;"
+			];
+			for (const body of bodies) {
+				const input = `var o = { a: 1 }; function f() { ${body} } class C { m() { return f(); } } console.log(new C().m());`;
+				const { code } = await minify(input, {
+					compress: { passes: 2 },
+					mangle: false,
+					toplevel: true
+				});
+				expect(code).toContain("function f(");
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			}
+			// A function a directive already makes strict moves as terser moves it.
+			for (const input of [
+				'"use strict"; function f() { return arguments.length; } class C { m() { return f(); } } console.log(new C().m());',
+				'(function () { "use strict"; function f() { return arguments.length; } class C { m() { return f(); } } console.log(new C().m()); })();'
+			]) {
+				const { code } = await minify(input, {
+					compress: { passes: 2 },
+					mangle: false,
+					toplevel: true
+				});
+				expect(code).not.toContain("function f(");
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			}
+		});
+
+		it("should read `NaN` and `Infinity` in a catch clause with a pattern", async () => {
+			const { minify } = await load();
+			const input =
+				'try { throw { a: 1 }; } catch ({ a: NaN, b = 1 / 0 }) { console.log(parseFloat("ff", 0), NaN, b); }';
+			const { code } = await minify(input, {
+				compress: { keep_infinity: true },
+				mangle: false
+			});
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+		});
+
+		it("should parenthesize what `export default` would read as a declaration", async () => {
+			const { minify, corrections } = await load();
+			const acorn = require("acorn");
+			const input =
+				"console.log(typeof f); export default (function f() {}); export const n = (class {}).name;";
+			const named = "export default (class C {}).name;";
+			const options = { compress: false, mangle: false, module: true };
+			const { code } = await minify(input, options);
+			expect(code).toBe(
+				"console.log(typeof f);export default(function f(){});export const n=class{}.name;"
+			);
+			const { code: chained } = await minify(named, options);
+			expect(chained).toBe("export default(class C{}).name;");
+			acorn.parse(/** @type {string} */ (chained), {
+				ecmaVersion: "latest",
+				sourceType: "module"
+			});
+			// An anonymous one prints bare, as terser prints it.
+			expect((await minify("export default (class {});", options)).code).toBe(
+				"export default class{}"
+			);
+
+			if (!corrections) throw new Error("the correct phase is not installed");
+			corrections.enabled = false;
+			try {
+				for (const source of [input, named]) {
+					expect((await minify(source, options)).code).toBe(
+						(await terserReference().minify(source, options)).code
+					);
+				}
+				const reference = await terserReference().minify(named, options);
+				expect(() =>
+					acorn.parse(/** @type {string} */ (reference.code), {
+						ecmaVersion: "latest",
+						sourceType: "module"
+					})
+				).toThrow(SyntaxError);
 			} finally {
 				corrections.enabled = true;
 			}
