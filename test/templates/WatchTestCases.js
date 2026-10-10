@@ -320,6 +320,8 @@ const describeCases = (config) => {
 							let lastFileDependencies = new Set();
 							/** @type {string[]} */
 							let lastContextDependencies = [];
+							/** @type {Set<string>} */
+							let lastMissingDependencies = new Set();
 							// watched files the current step changed which no build has reported yet
 							/** @type {Set<string>} */
 							let unseenChanges = new Set();
@@ -436,7 +438,12 @@ const describeCases = (config) => {
 														...(child.removedFiles || [])
 													];
 													for (const file of unseenChanges) {
-														if (isWithin(file, reported)) unseenChanges.delete(file);
+														if (
+															isWithin(file, reported) ||
+															reported.some((item) => isWithin(item, [file]))
+														) {
+															unseenChanges.delete(file);
+														}
 													}
 												}
 												if (unseenChanges.size > 0) return;
@@ -453,6 +460,7 @@ const describeCases = (config) => {
 												run.stats = stats;
 												lastFileDependencies = new Set();
 												lastContextDependencies = [];
+												lastMissingDependencies = new Set();
 												for (const { compilation } of /** @type {import("../../").Stats[]} */ (
 													"stats" in stats ? stats.stats : [stats]
 												)) {
@@ -462,6 +470,7 @@ const describeCases = (config) => {
 													}
 													for (const file of compilation.missingDependencies) {
 														lastFileDependencies.add(file);
+														lastMissingDependencies.add(file);
 													}
 													lastContextDependencies.push(
 														...compilation.contextDependencies
@@ -613,6 +622,18 @@ const describeCases = (config) => {
 																				isWithin(file, lastContextDependencies)
 																			) {
 																				unseenChanges.add(file);
+																				continue;
+																			}
+																			// a file created in a missing directory reports that directory
+																			let directory = path.dirname(file);
+																			while (
+																				!lastMissingDependencies.has(directory) &&
+																				path.dirname(directory) !== directory
+																			) {
+																				directory = path.dirname(directory);
+																			}
+																			if (lastMissingDependencies.has(directory)) {
+																				unseenChanges.add(directory);
 																			}
 																		}
 																		// WatchIgnorePlugin marks what no build will report, and a managed
@@ -623,6 +644,8 @@ const describeCases = (config) => {
 																				: [watchedCompiler];
 																		for (const child of children) {
 																			for (const file of unseenChanges) {
+																				// even a managed path reports a directory appearing
+																				if (lastMissingDependencies.has(file)) continue;
 																				for (const item of [
 																					...child.managedPaths,
 																					...child.immutablePaths
