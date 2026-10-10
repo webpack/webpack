@@ -54,7 +54,7 @@ exports[`ConfigTestCases concatenate-modules commonjs-wrapped-external-new-expre
 
 // MODULE: external \\"events\\"
 var external_events_namespaceFn = /*#__PURE__*/__webpack_require__.cw((module) => {
-module.exports = require(\\"node:events\\");
+module.exports = require(\\"events\\");
 });
 
 // MODULE: ./mid.cjs

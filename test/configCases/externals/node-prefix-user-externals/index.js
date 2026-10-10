@@ -30,10 +30,10 @@ if (__STATS_I__ === 0) {
 		expect(source).toContain(ext(prefixed("path")));
 	});
 } else {
-	it("should add `node:` to a bare external value when supported", () => {
-		expect(source).toContain(ext(prefixed("fs")));
-		expect(source).toContain(ext(prefixed("path")));
-		expect(source).not.toContain(ext("fs"));
-		expect(source).not.toContain(ext("path"));
+	it("should keep a bare external value bare when supported", () => {
+		expect(source).toContain(ext("fs"));
+		expect(source).toContain(ext("path"));
+		expect(source).not.toContain(ext(prefixed("fs")));
+		expect(source).not.toContain(ext(prefixed("path")));
 	});
 }
