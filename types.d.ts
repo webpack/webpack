@@ -31507,6 +31507,11 @@ declare class SyntaxParser {
 	 * token before it decides.
 	 */
 	braceIsBlock(prevType: TokenType): boolean;
+
+	/**
+	 * Whether the enclosing function is a generator. A parse reads its scope: a
+	 * method's `*` pushes no `function` context, which only the tokenizer reads.
+	 */
 	inGeneratorContext(): boolean;
 	updateContext(prevType: TokenType): void;
 	overrideContext(tokenCtx: TokContextLike): void;
