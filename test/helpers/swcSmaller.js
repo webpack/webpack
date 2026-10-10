@@ -9,13 +9,6 @@
 /** @type {[string, string[]][]} */
 const SWC_SMALLER_BY_REASON = [
 	[
-		"webpack keeps a sloppy function out of a class or other strict code where it reads `this`, `arguments` or `with`, deletes, or writes a property or an undeclared name, which would run otherwise as strict",
-		[
-			"swc minifier: fixture/issues/emotion/react/1/input.js",
-			"swc minifier: fixture/next/syncfusion/933-e9f9a6bf671b96fc/input.js"
-		]
-	],
-	[
 		"swc drops what nothing reads or what has no effect: unused variables and destructuring, side-effect-free `new Map()` and pure calls, an empty constructor",
 		[
 			"swc minifier: fixture/issues/11303/input.js",
@@ -218,6 +211,7 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/7568/1/input.js",
 			"swc minifier: fixture/issues/7739/1/input.js",
 			"swc minifier: fixture/issues/7847/input.js",
+			"swc minifier: fixture/issues/8173/input.js",
 			"swc minifier: fixture/issues/9610-keep-fargs/input.js",
 			"swc minifier: fixture/issues/react-countup/2/input.js",
 			"swc minifier: fixture/issues/react/hooks/1/input.js",

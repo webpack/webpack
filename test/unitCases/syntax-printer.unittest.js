@@ -6368,6 +6368,19 @@ describe("syntax-printer", () => {
 				expect(code).toContain("function f(");
 				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
 			}
+			// A function a directive already makes strict moves as terser moves it.
+			for (const input of [
+				'"use strict"; function f() { return arguments.length; } class C { m() { return f(); } } console.log(new C().m());',
+				'(function () { "use strict"; function f() { return arguments.length; } class C { m() { return f(); } } console.log(new C().m()); })();'
+			]) {
+				const { code } = await minify(input, {
+					compress: { passes: 2 },
+					mangle: false,
+					toplevel: true
+				});
+				expect(code).not.toContain("function f(");
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			}
 		});
 
 		it("should read `NaN` and `Infinity` in a catch clause with a pattern", async () => {
