@@ -3,6 +3,7 @@
 const assert = require("assert");
 
 module.exports = {
+	strictWatchDependencies: true,
 	/**
 	 * @param {{ DETECTED?: Set<string> }} scope test scope
 	 * @param {{ plugins: { detected: Set<string> }[] }} options compiler options
