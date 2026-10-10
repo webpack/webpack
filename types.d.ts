@@ -5329,14 +5329,31 @@ declare class ConstDependency extends NullDependency {
 	static LAZY_UNTIL_REQUEST: "@";
 	static ESM_CATEGORY: "esm";
 	static KINDS: Set<
+		| "worker"
 		| "css-import"
+		| "css-url"
 		| "entry"
+		| "url"
 		| "module-dependency"
 		| "esm-import"
 		| "dynamic-import"
 		| "esm-reexport"
 		| "esm-side-effect-import"
 		| "context-element"
+		| "esm-bare-side-effect-import"
+		| "esm-import-specifier"
+		| "esm-compatibility"
+		| "commonjs-require"
+		| "html-source"
+		| "html-entry"
+		| "webassembly-import"
+		| "webassembly-export-imported"
+		| "sharing-request"
+		| "local-module"
+		| "static-exports"
+		| "loader-import"
+		| "css-icss-import"
+		| "css-icss-export"
 	>;
 }
 declare class ConstDependencyTemplate extends NullDependencyTemplate {
@@ -6123,7 +6140,9 @@ declare class CssLoadingRuntimeModule extends RuntimeModule {
 	 * Runtime modules which trigger actions on bootstrap
 	 */
 	static STAGE_TRIGGER: number;
-	static KINDS: Set<"runtime" | "normal" | "context" | "external">;
+	static KINDS: Set<
+		"runtime" | "normal" | "context" | "remote" | "consume-shared" | "external"
+	>;
 
 	/**
 	 * Gets source basic types.
@@ -7143,14 +7162,31 @@ declare class Dependency {
 	 */
 	is<
 		K extends
+			| "worker"
 			| "css-import"
+			| "css-url"
 			| "entry"
+			| "url"
 			| "module-dependency"
 			| "esm-import"
 			| "dynamic-import"
 			| "esm-reexport"
 			| "esm-side-effect-import"
 			| "context-element"
+			| "esm-bare-side-effect-import"
+			| "esm-import-specifier"
+			| "esm-compatibility"
+			| "commonjs-require"
+			| "html-source"
+			| "html-entry"
+			| "webassembly-import"
+			| "webassembly-export-imported"
+			| "sharing-request"
+			| "local-module"
+			| "static-exports"
+			| "loader-import"
+			| "css-icss-import"
+			| "css-icss-export"
 	>(kind: K): boolean;
 
 	/**
@@ -7302,14 +7338,31 @@ declare class Dependency {
 	static LAZY_UNTIL_REQUEST: "@";
 	static ESM_CATEGORY: "esm";
 	static KINDS: Set<
+		| "worker"
 		| "css-import"
+		| "css-url"
 		| "entry"
+		| "url"
 		| "module-dependency"
 		| "esm-import"
 		| "dynamic-import"
 		| "esm-reexport"
 		| "esm-side-effect-import"
 		| "context-element"
+		| "esm-bare-side-effect-import"
+		| "esm-import-specifier"
+		| "esm-compatibility"
+		| "commonjs-require"
+		| "html-source"
+		| "html-entry"
+		| "webassembly-import"
+		| "webassembly-export-imported"
+		| "sharing-request"
+		| "local-module"
+		| "static-exports"
+		| "loader-import"
+		| "css-icss-import"
+		| "css-icss-export"
 	>;
 }
 declare interface DependencyConstructor {
@@ -8039,14 +8092,31 @@ declare class ESMImportDependency extends ModuleDependency {
 		membersOptionals: boolean[]
 	) => string[];
 	static KINDS: Set<
+		| "worker"
 		| "css-import"
+		| "css-url"
 		| "entry"
+		| "url"
 		| "module-dependency"
 		| "esm-import"
 		| "dynamic-import"
 		| "esm-reexport"
 		| "esm-side-effect-import"
 		| "context-element"
+		| "esm-bare-side-effect-import"
+		| "esm-import-specifier"
+		| "esm-compatibility"
+		| "commonjs-require"
+		| "html-source"
+		| "html-entry"
+		| "webassembly-import"
+		| "webassembly-export-imported"
+		| "sharing-request"
+		| "local-module"
+		| "static-exports"
+		| "loader-import"
+		| "css-icss-import"
+		| "css-icss-export"
 	>;
 
 	/**
@@ -9950,7 +10020,9 @@ declare class ExternalModule extends Module {
 		runtimeTemplate: RuntimeTemplate,
 		universal?: boolean
 	) => InitFragment<ChunkRenderContextJavascriptModulesPlugin>;
-	static KINDS: Set<"runtime" | "normal" | "context" | "external">;
+	static KINDS: Set<
+		"runtime" | "normal" | "context" | "remote" | "consume-shared" | "external"
+	>;
 
 	/**
 	 * Gets source basic types.
@@ -10948,7 +11020,9 @@ declare class GetChunkFilenameRuntimeModule extends RuntimeModule {
 	 * Runtime modules which trigger actions on bootstrap
 	 */
 	static STAGE_TRIGGER: number;
-	static KINDS: Set<"runtime" | "normal" | "context" | "external">;
+	static KINDS: Set<
+		"runtime" | "normal" | "context" | "remote" | "consume-shared" | "external"
+	>;
 
 	/**
 	 * Gets source basic types.
@@ -16254,7 +16328,9 @@ declare class JsonpChunkLoadingRuntimeModule extends RuntimeModule {
 	 * Runtime modules which trigger actions on bootstrap
 	 */
 	static STAGE_TRIGGER: number;
-	static KINDS: Set<"runtime" | "normal" | "context" | "external">;
+	static KINDS: Set<
+		"runtime" | "normal" | "context" | "remote" | "consume-shared" | "external"
+	>;
 
 	/**
 	 * Gets source basic types.
@@ -17633,7 +17709,9 @@ declare class LoadScriptRuntimeModule extends HelperRuntimeModule {
 	 * Runtime modules which trigger actions on bootstrap
 	 */
 	static STAGE_TRIGGER: number;
-	static KINDS: Set<"runtime" | "normal" | "context" | "external">;
+	static KINDS: Set<
+		"runtime" | "normal" | "context" | "remote" | "consume-shared" | "external"
+	>;
 
 	/**
 	 * Gets source basic types.
@@ -18959,7 +19037,15 @@ declare class Module extends DependenciesBlock {
 	/**
 	 * Returns whether this module is of the given kind; a subclass is every kind its parent is.
 	 */
-	is<K extends "runtime" | "normal" | "context" | "external">(kind: K): boolean;
+	is<
+		K extends
+			| "runtime"
+			| "normal"
+			| "context"
+			| "remote"
+			| "consume-shared"
+			| "external"
+	>(kind: K): boolean;
 
 	/**
 	 * Basic source types are high-level categories like javascript, css, webassembly, etc.
@@ -19067,7 +19153,9 @@ declare class Module extends DependenciesBlock {
 	 * @deprecated In the next major release, call getSourceBasicTypes() directly on the module instance instead of using this static method.
 	 */
 	static getSourceBasicTypes(module: Module): ReadonlySet<string>;
-	static KINDS: Set<"runtime" | "normal" | "context" | "external">;
+	static KINDS: Set<
+		"runtime" | "normal" | "context" | "remote" | "consume-shared" | "external"
+	>;
 }
 declare class ModuleChunkLoadingRuntimeModule extends RuntimeModule {
 	/**
@@ -19109,7 +19197,9 @@ declare class ModuleChunkLoadingRuntimeModule extends RuntimeModule {
 	 * Runtime modules which trigger actions on bootstrap
 	 */
 	static STAGE_TRIGGER: number;
-	static KINDS: Set<"runtime" | "normal" | "context" | "external">;
+	static KINDS: Set<
+		"runtime" | "normal" | "context" | "remote" | "consume-shared" | "external"
+	>;
 
 	/**
 	 * Gets source basic types.
@@ -19139,14 +19229,31 @@ declare class ModuleDependency extends Dependency {
 	weak: boolean;
 	static Template: typeof DependencyTemplate;
 	static KINDS: Set<
+		| "worker"
 		| "css-import"
+		| "css-url"
 		| "entry"
+		| "url"
 		| "module-dependency"
 		| "esm-import"
 		| "dynamic-import"
 		| "esm-reexport"
 		| "esm-side-effect-import"
 		| "context-element"
+		| "esm-bare-side-effect-import"
+		| "esm-import-specifier"
+		| "esm-compatibility"
+		| "commonjs-require"
+		| "html-source"
+		| "html-entry"
+		| "webassembly-import"
+		| "webassembly-export-imported"
+		| "sharing-request"
+		| "local-module"
+		| "static-exports"
+		| "loader-import"
+		| "css-icss-import"
+		| "css-icss-export"
 	>;
 
 	/**
@@ -21042,7 +21149,9 @@ declare class NormalModule extends Module {
 	static deserialize(
 		context: ObjectDeserializerContextObjectMiddlewareObject_2
 	): NormalModule;
-	static KINDS: Set<"runtime" | "normal" | "context" | "external">;
+	static KINDS: Set<
+		"runtime" | "normal" | "context" | "remote" | "consume-shared" | "external"
+	>;
 
 	/**
 	 * Gets source basic types.
@@ -21774,14 +21883,31 @@ declare class NullDependency extends Dependency {
 	static LAZY_UNTIL_REQUEST: "@";
 	static ESM_CATEGORY: "esm";
 	static KINDS: Set<
+		| "worker"
 		| "css-import"
+		| "css-url"
 		| "entry"
+		| "url"
 		| "module-dependency"
 		| "esm-import"
 		| "dynamic-import"
 		| "esm-reexport"
 		| "esm-side-effect-import"
 		| "context-element"
+		| "esm-bare-side-effect-import"
+		| "esm-import-specifier"
+		| "esm-compatibility"
+		| "commonjs-require"
+		| "html-source"
+		| "html-entry"
+		| "webassembly-import"
+		| "webassembly-export-imported"
+		| "sharing-request"
+		| "local-module"
+		| "static-exports"
+		| "loader-import"
+		| "css-icss-import"
+		| "css-icss-export"
 	>;
 }
 declare class NullDependencyTemplate extends DependencyTemplate {
@@ -27822,7 +27948,9 @@ declare class RuntimeModule extends Module {
 	 * Runtime modules which trigger actions on bootstrap
 	 */
 	static STAGE_TRIGGER: number;
-	static KINDS: Set<"runtime" | "normal" | "context" | "external">;
+	static KINDS: Set<
+		"runtime" | "normal" | "context" | "remote" | "consume-shared" | "external"
+	>;
 
 	/**
 	 * Gets source basic types.
