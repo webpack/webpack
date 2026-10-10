@@ -9,13 +9,6 @@
 /** @type {[string, string[]][]} */
 const OXC_SMALLER_BY_REASON = [
 	[
-		"webpack keeps a sloppy function out of a class or other strict code where it reads `this`, `arguments` or `with`, deletes, or writes a property or an undeclared name, which would run otherwise as strict",
-		[
-			"swc minifier: fixture/issues/2257/full/input.js",
-			"swc minifier: fixture/issues/7568/1/input.js"
-		]
-	],
-	[
 		"oxc applies esbuild's shortenings, as oxc's `peephole/esbuild.rs` tests show",
 		[
 			"oxc minifier: peephole/esbuild.rs:1001",
