@@ -1238,6 +1238,20 @@ const KEPT_CASES = [
 	["a function passed a global of its parameter's name", "var name = \"g\"; !function () { function show(props, name) { props.seen = name; } function create(props, flag) { flag && show(props, name); return props; } console.log(create({}, 1).seen, create({}, 0).seen); }();"]
 ];
 
+// An `arguments` read terser already writes right: no parameter it aliases is
+// written past it, or the parameters alias nothing. The correct phase keeps it.
+/** @type {[string, string][]} */
+const ARGUMENTS_KEPT_CASES = [
+	["a parameter incremented after `arguments[0]` is read", "function f(x) { var t = arguments[0]; x++; return [t, x]; } console.log(f(1));"],
+	["a parameter added to after `arguments[0]` is read", "function f(x) { var t = arguments[0]; x += 10; return t + ':' + x; } console.log(f(1));"],
+	["a parameter destructured into after `arguments[0]` is read", "function f(x) { var t = arguments[0]; [x] = [9]; return t + ':' + x; } console.log(f(1));"],
+	["a strict function", "function f(x) { 'use strict'; var t = arguments[0]; x = {}; return t; } console.log(f(1));"],
+	["a parameter with a default", "function f(x = 0) { var t = arguments[0]; x = {}; return t; } console.log(f(1));"],
+	["a destructured parameter", "function f({ a }, x) { var t = arguments[1]; x = {}; return t; } console.log(f({}, 1));"],
+	["a class method", "class C { m(x) { var t = arguments[0]; x = {}; return t; } } console.log(new C().m(1));"],
+	["no parameter written", "function f(x) { var t = arguments[0]; var y = {}; return t + typeof y; } console.log(f(1));"]
+];
+
 // Each prints one thing and terser's output another, under the options named.
 /** @type {[string, string, import("terser").MinifyOptions][]} */
 const CORRECTED_CASES = [
@@ -1344,6 +1358,26 @@ const CORRECTED_CASES = [
 	[
 		"`arguments[0]` read before its parameter is reassigned, moved past that",
 		"function test(x, y) { var temp; if (typeof x === 'string') { temp = arguments[0]; x = {}; x[temp] = y; return x; } } console.log(JSON.stringify(test('a', 'b')));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"`arguments` read for several parameters before one is reassigned",
+		"function set(o, e) { var l, s; if (typeof o === 'string') { l = arguments[0]; s = arguments[1]; o = {}; o[l] = s; } console.log(l, s, JSON.stringify(o)); } set('foo', 'val');",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"`arguments[1]` read before the second parameter is reassigned",
+		"function f(a, b) { var t = arguments[1]; b = 0; return t; } console.log(f(1, 2));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"`arguments[i]` read before a parameter is reassigned",
+		"function f(x, i) { var t = arguments[i]; x = 5; return t; } console.log(f(1, 0));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"`arguments[0]` read in an arrow before the parameter is reassigned",
+		"function f(x) { var g = () => { var t = arguments[0]; x = 2; return t; }; return g(); } console.log(f(1));",
 		{ compress: {}, mangle: false }
 	],
 	[
@@ -6248,6 +6282,20 @@ describe("syntax-printer", () => {
 				} finally {
 					corrections.enabled = true;
 				}
+			});
+		}
+
+		for (const [name, input] of ARGUMENTS_KEPT_CASES) {
+			it(`should leave an \`arguments\` read where terser does: ${name}`, async () => {
+				const { minify } = await load();
+				const options = { compress: {}, mangle: false };
+				const { code } = await minify(input, options);
+				expect(code).toBe(
+					(await uncorrected(() => minify(input, options))).code
+				);
+				expect(runProgram(/** @type {string} */ (code))).toBe(
+					runProgram(input)
+				);
 			});
 		}
 
