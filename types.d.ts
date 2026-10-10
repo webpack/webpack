@@ -5328,6 +5328,16 @@ declare class ConstDependency extends NullDependency {
 	static LAZY_UNTIL_FALLBACK: "*";
 	static LAZY_UNTIL_REQUEST: "@";
 	static ESM_CATEGORY: "esm";
+	static KINDS: Set<
+		| "entry"
+		| "moduleDependency"
+		| "esmImport"
+		| "dynamicImport"
+		| "esmReexport"
+		| "esmSideEffectImport"
+		| "cssImport"
+		| "contextElement"
+	>;
 }
 declare class ConstDependencyTemplate extends NullDependencyTemplate {
 	constructor();
@@ -6113,6 +6123,7 @@ declare class CssLoadingRuntimeModule extends RuntimeModule {
 	 * Runtime modules which trigger actions on bootstrap
 	 */
 	static STAGE_TRIGGER: number;
+	static KINDS: Set<"runtime" | "normal" | "context" | "external">;
 
 	/**
 	 * Gets source basic types.
@@ -7128,44 +7139,19 @@ declare class Dependency {
 	getContext(): undefined | string;
 
 	/**
-	 * Returns whether this dependency is a CSS `@import`.
+	 * Returns whether this dependency is of the given kind; a subclass is every kind its parent is.
 	 */
-	isCssImport(): boolean;
-
-	/**
-	 * Returns whether this dependency is an entry, starting a module graph.
-	 */
-	isEntry(): boolean;
-
-	/**
-	 * Returns whether this dependency is a request resolved to a module.
-	 */
-	isModuleDependency(): boolean;
-
-	/**
-	 * Returns whether this dependency is one file matched by a context request.
-	 */
-	isContextElement(): boolean;
-
-	/**
-	 * Returns whether this dependency is an ESM import or re-export statement.
-	 */
-	isESMImport(): boolean;
-
-	/**
-	 * Returns whether this dependency is a dynamic `import()`.
-	 */
-	isDynamicImport(): boolean;
-
-	/**
-	 * Returns whether this dependency is an ESM re-export (`export … from`).
-	 */
-	isESMReexport(): boolean;
-
-	/**
-	 * Returns whether this dependency is the side-effect part of an ESM import, evaluating the imported module.
-	 */
-	isESMSideEffectImport(): boolean;
+	is<
+		K extends
+			| "entry"
+			| "moduleDependency"
+			| "esmImport"
+			| "dynamicImport"
+			| "esmReexport"
+			| "esmSideEffectImport"
+			| "cssImport"
+			| "contextElement"
+	>(kind: K): boolean;
 
 	/**
 	 * Returns an identifier to merge equal requests.
@@ -7315,6 +7301,16 @@ declare class Dependency {
 	static LAZY_UNTIL_FALLBACK: "*";
 	static LAZY_UNTIL_REQUEST: "@";
 	static ESM_CATEGORY: "esm";
+	static KINDS: Set<
+		| "entry"
+		| "moduleDependency"
+		| "esmImport"
+		| "dynamicImport"
+		| "esmReexport"
+		| "esmSideEffectImport"
+		| "cssImport"
+		| "contextElement"
+	>;
 }
 declare interface DependencyConstructor {
 	new (...args: any[]): Dependency;
@@ -8042,6 +8038,16 @@ declare class ESMImportDependency extends ModuleDependency {
 		members: string[],
 		membersOptionals: boolean[]
 	) => string[];
+	static KINDS: Set<
+		| "entry"
+		| "moduleDependency"
+		| "esmImport"
+		| "dynamicImport"
+		| "esmReexport"
+		| "esmSideEffectImport"
+		| "cssImport"
+		| "contextElement"
+	>;
 
 	/**
 	 * Compares two dependencies by source location for sorting a module's
@@ -9944,6 +9950,7 @@ declare class ExternalModule extends Module {
 		runtimeTemplate: RuntimeTemplate,
 		universal?: boolean
 	) => InitFragment<ChunkRenderContextJavascriptModulesPlugin>;
+	static KINDS: Set<"runtime" | "normal" | "context" | "external">;
 
 	/**
 	 * Gets source basic types.
@@ -10941,6 +10948,7 @@ declare class GetChunkFilenameRuntimeModule extends RuntimeModule {
 	 * Runtime modules which trigger actions on bootstrap
 	 */
 	static STAGE_TRIGGER: number;
+	static KINDS: Set<"runtime" | "normal" | "context" | "external">;
 
 	/**
 	 * Gets source basic types.
@@ -16246,6 +16254,7 @@ declare class JsonpChunkLoadingRuntimeModule extends RuntimeModule {
 	 * Runtime modules which trigger actions on bootstrap
 	 */
 	static STAGE_TRIGGER: number;
+	static KINDS: Set<"runtime" | "normal" | "context" | "external">;
 
 	/**
 	 * Gets source basic types.
@@ -17624,6 +17633,7 @@ declare class LoadScriptRuntimeModule extends HelperRuntimeModule {
 	 * Runtime modules which trigger actions on bootstrap
 	 */
 	static STAGE_TRIGGER: number;
+	static KINDS: Set<"runtime" | "normal" | "context" | "external">;
 
 	/**
 	 * Gets source basic types.
@@ -18947,6 +18957,11 @@ declare class Module extends DependenciesBlock {
 	getReferencedSourceTypes(): undefined | ReadonlySet<string>;
 
 	/**
+	 * Returns whether this module is of the given kind; a subclass is every kind its parent is.
+	 */
+	is<K extends "runtime" | "normal" | "context" | "external">(kind: K): boolean;
+
+	/**
 	 * Basic source types are high-level categories like javascript, css, webassembly, etc.
 	 * We only have built-in knowledge about the javascript basic type here; other basic types may be
 	 * added or changed over time by generators and do not need to be handled or detected here.
@@ -18954,26 +18969,6 @@ declare class Module extends DependenciesBlock {
 	 * from getSourceTypes(), but their generated output is still JavaScript, i.e. their basic type is JS.
 	 */
 	getSourceBasicTypes(): ReadonlySet<string>;
-
-	/**
-	 * Returns whether this module is an external, provided by the environment instead of bundled.
-	 */
-	isExternal(): boolean;
-
-	/**
-	 * Returns whether this module is a normal module, built from a resource through loaders.
-	 */
-	isNormalModule(): boolean;
-
-	/**
-	 * Returns whether this module is a runtime module, generated by webpack instead of read from a resource.
-	 */
-	isRuntimeModule(): boolean;
-
-	/**
-	 * Returns whether this module is a context module, resolving a request expression against a directory.
-	 */
-	isContextModule(): boolean;
 
 	/**
 	 * Returns generated source.
@@ -19072,6 +19067,7 @@ declare class Module extends DependenciesBlock {
 	 * @deprecated In the next major release, call getSourceBasicTypes() directly on the module instance instead of using this static method.
 	 */
 	static getSourceBasicTypes(module: Module): ReadonlySet<string>;
+	static KINDS: Set<"runtime" | "normal" | "context" | "external">;
 }
 declare class ModuleChunkLoadingRuntimeModule extends RuntimeModule {
 	/**
@@ -19113,6 +19109,7 @@ declare class ModuleChunkLoadingRuntimeModule extends RuntimeModule {
 	 * Runtime modules which trigger actions on bootstrap
 	 */
 	static STAGE_TRIGGER: number;
+	static KINDS: Set<"runtime" | "normal" | "context" | "external">;
 
 	/**
 	 * Gets source basic types.
@@ -19141,6 +19138,16 @@ declare class ModuleDependency extends Dependency {
 	range?: [number, number];
 	weak: boolean;
 	static Template: typeof DependencyTemplate;
+	static KINDS: Set<
+		| "entry"
+		| "moduleDependency"
+		| "esmImport"
+		| "dynamicImport"
+		| "esmReexport"
+		| "esmSideEffectImport"
+		| "cssImport"
+		| "contextElement"
+	>;
 
 	/**
 	 * Compares two dependencies by source location for sorting a module's
@@ -21035,6 +21042,7 @@ declare class NormalModule extends Module {
 	static deserialize(
 		context: ObjectDeserializerContextObjectMiddlewareObject_2
 	): NormalModule;
+	static KINDS: Set<"runtime" | "normal" | "context" | "external">;
 
 	/**
 	 * Gets source basic types.
@@ -21765,6 +21773,16 @@ declare class NullDependency extends Dependency {
 	static LAZY_UNTIL_FALLBACK: "*";
 	static LAZY_UNTIL_REQUEST: "@";
 	static ESM_CATEGORY: "esm";
+	static KINDS: Set<
+		| "entry"
+		| "moduleDependency"
+		| "esmImport"
+		| "dynamicImport"
+		| "esmReexport"
+		| "esmSideEffectImport"
+		| "cssImport"
+		| "contextElement"
+	>;
 }
 declare class NullDependencyTemplate extends DependencyTemplate {
 	constructor();
@@ -27804,6 +27822,7 @@ declare class RuntimeModule extends Module {
 	 * Runtime modules which trigger actions on bootstrap
 	 */
 	static STAGE_TRIGGER: number;
+	static KINDS: Set<"runtime" | "normal" | "context" | "external">;
 
 	/**
 	 * Gets source basic types.
