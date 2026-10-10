@@ -3,6 +3,7 @@
 // cspell:ignore binop, fnames, propmangle, fargs, domprops, argnames, nondeferred, loopcontrol, Defun, defun, NOINLINE, Funarg, unmangleable, Unmangleable, thedef, funs
 
 const vm = require("vm");
+const acorn = require("acorn");
 const {
 	FORMAT_DEFAULTS,
 	IGNORED_FORMAT_OPTIONS,
@@ -2273,6 +2274,26 @@ const CORRECTED_CASES = [
 		"a top-level `var` in a `default` a strict script writes after the `switch`",
 		'"use strict"; function g() { return 1; } switch (0) { default: var b; case g(): } try { b = 2; console.log(b); } catch (e) { console.log(e.name); }',
 		{ compress: {}, mangle: false }
+	],
+	[
+		"`charAt` of a string past its ends, which reads an empty string",
+		"function f(s, i) { return [s.charAt(1), ('' + s).charAt(1), 'abc'.charAt(i), 'abc'.charAt([1])]; } console.log(JSON.stringify(['abc'.charAt(5), 'abc'.charAt(-1), 'abc'.charAt(4294967296), 'abc'.charAt(1), 'abc'.charAt(1.5), 'abc'.charAt(), f('xyz', 2), f('', 9)]));",
+		{ compress: { unsafe: true }, mangle: false }
+	],
+	[
+		"`indexOf` and `lastIndexOf` of `undefined` in an array with holes",
+		"console.log([,].indexOf(), [, 1].indexOf(void 0), [1, , 3].lastIndexOf(undefined));",
+		{ compress: { unsafe: true }, mangle: false }
+	],
+	[
+		"a property of an object literal whose computed key is a variable",
+		"var a = 100; console.log(({ [a]: 0 }).a);",
+		{ compress: { unsafe: true }, mangle: false }
+	],
+	[
+		"`Array` called with a fractional length",
+		"try { Array(0.5); console.log('no'); } catch (e) { console.log(e.name); } try { new Array(1.5); console.log('no'); } catch (e) { console.log(e.name); }",
+		{ compress: { unsafe: true }, mangle: false }
 	]
 ];
 
@@ -6264,6 +6285,89 @@ describe("syntax-printer", () => {
 				const reference = await terserReference().minify(input, options);
 				expect(uncorrected.code).toBe(reference.code);
 				expect(reference.code).toContain("f(a+=1,[b]=c)");
+			} finally {
+				corrections.enabled = true;
+			}
+		});
+
+		/** @type {[string, string, import("terser").MinifyOptions, string][]} */
+		const UNPARSABLE_CASES = [
+			[
+				"an exported `var` beside others `hoist_vars` hoists",
+				"var a = 1; export var v = 0, w = 2; export function f() { return [a, v, w]; }",
+				{ compress: { hoist_vars: true, passes: 2 }, mangle: false, module: true },
+				"export var v=0,w=2"
+			],
+			[
+				"an async function or a generator alone in an `if`'s block",
+				"function f(x) { if (x) { async function g() {} } if (x) { function* h() {} } }",
+				{ compress: { unused: false }, mangle: false },
+				"if(x){async function g(){}}if(x){function*h(){}}"
+			],
+			[
+				"an octal number kept as written, before a property",
+				"console.log(0o17 .length, 017 .x, 0x1F .x, 15 .x);",
+				{ compress: false, mangle: false, format: { keep_numbers: true } },
+				"0o17.length,017.x,0x1F.x,15..x"
+			],
+			[
+				"a number kept with its trailing dot, before `in` or `instanceof`",
+				"console.log(25. in {}, 25. instanceof Object, 1.5 in {});",
+				{ compress: false, mangle: false, format: { keep_numbers: true } },
+				"25. in{},25. instanceof Object,1.5 in{}"
+			],
+			[
+				"a label on an empty statement, printed without semicolons",
+				"console.log(1); L: ;",
+				{ compress: false, mangle: false, format: { semicolons: false } },
+				"L:;"
+			]
+		];
+
+		for (const [name, input, options, printed] of UNPARSABLE_CASES) {
+			it(`should write what parses where terser's output does not: ${name}`, async () => {
+				const { minify, corrections } = await load();
+				const sourceType = options.module ? "module" : "script";
+				const { code } = await minify(input, options);
+				expect(code).toContain(printed);
+				acorn.parse(/** @type {string} */ (code), {
+					ecmaVersion: "latest",
+					sourceType
+				});
+
+				if (!corrections) throw new Error("the correct phase is not installed");
+				corrections.enabled = false;
+				try {
+					const uncorrected = await unimproved(() => minify(input, options));
+					const reference = await terserReference().minify(input, options);
+					expect(uncorrected.code).toBe(reference.code);
+					expect(() =>
+						acorn.parse(/** @type {string} */ (reference.code), {
+							ecmaVersion: "latest",
+							sourceType
+						})
+					).toThrow(SyntaxError);
+				} finally {
+					corrections.enabled = true;
+				}
+			});
+		}
+
+		it("should keep a string's `charAt` of a BigInt, where terser throws", async () => {
+			const { minify, corrections } = await load();
+			const input =
+				"try { console.log('abc'.charAt(1n)); } catch (e) { console.log(e.name); }";
+			const options = { compress: { unsafe: true }, mangle: false };
+			const { code } = await minify(input, options);
+			expect(code).toContain('"abc".charAt(1n)');
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+
+			if (!corrections) throw new Error("the correct phase is not installed");
+			corrections.enabled = false;
+			try {
+				await expect(
+					terserReference().minify(input, options)
+				).rejects.toThrow(TypeError);
 			} finally {
 				corrections.enabled = true;
 			}
