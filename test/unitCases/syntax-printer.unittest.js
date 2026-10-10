@@ -1040,7 +1040,25 @@ const IMPROVED_CASES = [
 				input,
 				{ compress: {}, mangle: false }
 			])
-	)
+	),
+	[
+		"a setter called from two places copied into each call",
+		"var frame = null; function setFrame(element) { frame = element; } function show(element) { if (element) setFrame(describe(element)); else setFrame(null); return frame; } function describe(v) { return '<' + v + '>'; } console.log(show('a'), show(''));",
+		{ compress: { toplevel: true }, mangle: false },
+		'var frame=null;function show(element){return element?frame="<"+element+">":frame=null,frame}console.log(show("a"),show(""));'
+	],
+	[
+		"a function returning another's call copied into each of its calls",
+		"function check(type) { return checkType(type, false); } function checkType(type, strict) { console.log(type, strict); return strict ? type : type + 1; } console.log(check(1), check(2), checkType(3, true));",
+		{ compress: { toplevel: true }, mangle: false },
+		"function checkType(type,strict){return console.log(type,strict),strict?type:type+1}console.log(checkType(1,!1),checkType(2,!1),checkType(3,!0));"
+	],
+	[
+		"a function adding its constant argument to a variable copied into each call",
+		"let total = Number(process.argv.length > 99); function add(n) { total += n; } add(1); add(2); console.log(total);",
+		{ compress: { toplevel: true }, mangle: false },
+		"let total=Number(process.argv.length>99);total+=1,console.log(total+=2);"
+	]
 ];
 
 // What the `improve` phase leaves as terser writes it: each body has something
@@ -6797,6 +6815,31 @@ describe("syntax-printer", () => {
 			const { code } = await minify(input, { mangle: false });
 			expect(code).toContain("x=1;let x");
 			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+		});
+
+		it("should keep a function called from several places where a copy would change what runs", async () => {
+			const { minify } = await load();
+			for (const [input, declaration] of [
+				// The argument `arg(2)` would run after `note(a)`.
+				["function pair(a, b) { return note(a) + b; } function note(v) { console.log('note', v); return v; } function arg(v) { console.log('arg', v); return v; } console.log(note(0), pair(arg(1), arg(2)), pair(arg(3), arg(4)));", "function pair("],
+				// The block around the first call declares the name the body reads.
+				["var name = String(Math.PI).slice(0, 4); function read(suffix) { return name + suffix; } { let name = 'inner'; console.log(read('!'), name); } console.log(read('?'));", "function read("],
+				// The method read from the argument would be called with `this`.
+				["var o = { v: 1, m() { return this && this.v; } }; function invoke(fn) { return fn(); } console.log(invoke(o.m), invoke(o.m));", "function invoke("],
+				// A function expression's name is bound only inside it.
+				["var f = function g(n) { return typeof g + n; }; console.log(f(1), f(2));", "function g("],
+				// A read not calling it keeps it declared.
+				["function inc(n) { return n + 1; } var list = [inc]; console.log(inc(1), inc(2), list[0](3));", "function inc("],
+				// `total += n` reads `total` before the argument writes it.
+				["let total = 1; function add(n) { total += n; } function next() { total = 10; return 5; } add(next()); add(next()); console.log(total);", "function add("]
+			]) {
+				const { code } = await minify(input, {
+					compress: { toplevel: true },
+					mangle: false
+				});
+				expect(code).toContain(declaration);
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			}
 		});
 
 		it("should keep an `Object.keys` call where the program assigns the global", async () => {
