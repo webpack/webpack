@@ -1302,8 +1302,6 @@ const IMPROVED_YET_BIGGER = {
 		"5 bytes fewer, 1 more gzipped: `{x();return}` breaks the `return x()` run the function before it repeats",
 	"fixture/issues/8173/input.js (the default minimizer's options)":
 		"7 bytes fewer, 2 more gzipped: `{x(n);return}` breaks the `return void` runs of the helpers around it",
-	"fixture/issues/vercel/006/input.js (its own options)":
-		"12 bytes fewer, 1 more gzipped: `{x();return}` breaks the `return void` runs of the branches around it",
 	"fixture/issues/d3-color/1/input.js (the default minimizer's options)":
 		"2 bytes fewer, 1 more gzipped: `p*e*h` breaks the `h*(` runs of the products beside it gzip reused",
 	"evaluate/string_case (the default minimizer's options)":
@@ -1653,7 +1651,6 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 	[
 		"a value read where a built-in read stood between, where the source repeats the declaration gzip matched",
 		[
-			"regress-1383630.js (the default minimizer's options)",
 			"reviver-forward-modifies-object.js (the default minimizer's options)"
 		]
 	],
@@ -1731,6 +1728,17 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 			"source.js (the default minimizer's options)",
 			"this-cross-realm-instance.js (the default minimizer's options)"
 		]
+	],
+	[
+		"an options object moved into the one call reading it, where the callbacks beside it repeat the declaration gzip matched",
+		[
+			"valid-increments.js (the default minimizer's options)",
+			"valid-rounding-increments.js (the default minimizer's options)"
+		]
+	],
+	[
+		"a catch's `return` dropped where the function returns anyway, in a source too short for gzip to gain",
+		["peephole/minimize_exit_points.rs:101 (the default minimizer's options)"]
 	],
 	[
 		"`Object.keys` or `entries` of a literal written as the array, where the source writes the call again",
