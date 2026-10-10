@@ -6665,6 +6665,15 @@ describe("syntax-printer", () => {
 			});
 		}
 
+		it("should keep an assignment to a `let` before the declaration in its block", async () => {
+			const { minify } = await load();
+			const input =
+				"function f() { { x = 1; let x; return x; } } function g() { { y = 2; let y; y += 1; return y; } } try { console.log(f()); } catch (e) { console.log(e.name); } try { console.log(g()); } catch (e) { console.log(e.name); }";
+			const { code } = await minify(input, { mangle: false });
+			expect(code).toContain("x=1;let x");
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+		});
+
 		it("should keep an `Object.keys` call where the program assigns the global", async () => {
 			const { minify } = await load();
 			const input =
