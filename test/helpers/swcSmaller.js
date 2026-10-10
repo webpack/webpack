@@ -357,8 +357,7 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: inline/issue_308",
 			"terser compress: issue-t292/no_flatten_with_arg_colliding_with_arg_value_inner_scope",
 			"terser compress: issue-t292/no_flatten_with_var_colliding_with_arg_value_inner_scope",
-			"terser compress: reduce_vars/variables_collision_in_immediately_invoked_func",
-			"swc minifier: fixture/object-factory-inline-cost/scalar/input.js"
+			"terser compress: reduce_vars/variables_collision_in_immediately_invoked_func"
 		]
 	],
 	[
@@ -701,9 +700,7 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/next/brotli-decompress/static/chunks/545-ff8f898b276d138f/input.js",
 			"swc minifier: fixture/next/chakra/input.js",
 			"swc minifier: fixture/next/cryptojs/input.js",
-			"swc minifier: fixture/next/feedback-2/codemirror/input.js",
 			"swc minifier: fixture/next/feedback-3/579-dcac359116b2707c/input.js",
-			"swc minifier: fixture/next/feedback-util-promisify/chunks/pages/_app-72ad41192608e93a/input.js",
 			"swc minifier: fixture/next/octokit/static/chunks/357-72bd409f1472b1b8/input.js",
 			"swc minifier: fixture/next/react-ace/chunks/8a28b14e.d8fbda268ed281a1/input.js",
 			"swc minifier: fixture/next/react-chartjs/input.js",
@@ -726,7 +723,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/projects/next/archive-1/pages/hmr/about7-9df961ea8fb5d2c5b7a2/input.js",
 			"swc minifier: fixture/projects/next/archive-1/pages/hmr/contact-e0ce31ea2cdf538f0cad/input.js",
 			"swc minifier: fixture/projects/next/archive-1/pages/hmr/style-752f74ed22a8a38573be/input.js",
-			"swc minifier: fixture/projects/next/archive-2/pages/._app-b4bcb0e52cac90b0d2d8/input.js",
 			"swc minifier: fixture/projects/next/archive-2/pages/.development-logs-2ac9e724502f3ba1f1de/input.js",
 			"swc minifier: fixture/projects/next/archive-2/pages/.dynamic-098d0d54bd014f190920/input.js",
 			"swc minifier: fixture/projects/next/archive-2/pages/.hmr-ce649615cbc9a3b4c1ce/input.js",
@@ -752,8 +748,7 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: full/vercel/ms/1/input.js",
 			"swc minifier: pass-1/seq/1/input.js",
 			"swc minifier: projects/files/backbone-1.1.0.js",
-			"swc minifier: projects/files/react-17.0.1.js",
-			"swc minifier: projects/files/react-dom-17.0.2.js"
+			"swc minifier: projects/files/react-17.0.1.js"
 		]
 	],
 	[
