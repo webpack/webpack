@@ -2353,6 +2353,36 @@ const CORRECTED_CASES = [
 		"a sloppy block's function under a `let` of its name in a `with` body",
 		"var r = []; (function () { with ({}) { let f = 1; { function f() {} } } try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); })(); console.log(r.join());",
 		{ compress: {}, mangle: false }
+	],
+	[
+		"a sloppy block's function a later function of its name declares, read after the block",
+		"var r = []; (function () { { function f() { return 1; } } r.push(f()); function f() { return 2; } })(); (function () { if (true) { function f() { return 1; } } r.push(f()); function f() { return 2; } })(); (function () { if (true) function f() { return 1; } r.push(f()); function f() { return 2; } })(); (function () { function f() { return 2; } { function f() { return 1; } } r.push(f()); function f() { return 3; } })(); console.log(r.join());",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a sloppy block's function a later function of its name declares, in a `switch` or a loop",
+		"var r = []; (function () { switch (1) { case 1: function f() { return 1; } } r.push(f()); function f() { return 2; } })(); (function () { switch (1) { default: function f() { return 1; } } r.push(f()); function f() { return 2; } })(); (function () { for (var i = 0; i < 1; i++) { function f() { return 1; } } r.push(f()); function f() { return 2; } })(); console.log(r.join());",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a sloppy block's function a later function of its name declares, read in its block, in a `try` or a label, or as a value",
+		"var r = []; (function () { { function f() { return 1; } r.push(f()); } function f() { return 2; } })(); (function () { try { function f() { return 1; } } finally {} r.push(f()); function f() { return 2; } })(); (function () { l: { function f() { return 1; } } r.push(f()); function f() { return 2; } })(); (function () { { function f() { return 1; } } var g = f; r.push(g()); function f() { return 2; } })(); console.log(r.join());",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a sloppy block's function a later function of its name declares, at a script's top level",
+		"var r = []; { function f() { return 1; } } r.push(f()); function f() { return 2; } console.log(r.join());",
+		{ compress: {}, mangle: false, toplevel: true }
+	],
+	[
+		"a sloppy block's function an earlier `var` of its name holds a value for",
+		"function g() { var f = function () { return 2; }; { function f() { return 1; } } return f(); } function h() { var f = 2; if (true) { function f() {} } return typeof f; } function k() { var f = 2; switch (1) { default: function f() {} } return typeof f; } console.log(g(), h(), k());",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a sloppy block's function a later function or an earlier `var` of its name holds, mangled over two passes",
+		"function g() { { function f() { return 1; } } return f(); function f() { return 2; } } function h() { var f = 2; { function f() {} } return typeof f; } console.log(g(), h());",
+		{ compress: { passes: 2 }, mangle: true }
 	]
 ];
 
@@ -6406,6 +6436,32 @@ describe("syntax-printer", () => {
 					const { code } = await minify(input, options);
 					expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
 				}
+			}
+		});
+
+		it("should still fold a name no sloppy block's function of the same scope sets", async () => {
+			const { minify, corrections } = await load();
+			if (!corrections) throw new Error("the correct phase is not installed");
+			/** @type {[string, import("terser").MinifyOptions][]} */
+			const cases = [
+				["function g() { var f = 2; { function h() {} } return typeof f; } console.log(g());", { compress: {}, mangle: false }],
+				["function g() { \"use strict\"; var f = 2; { function f() {} } return typeof f; } console.log(g());", { compress: {}, mangle: false }],
+				["function g() { var f = 2; function k() { { function f() {} } } return typeof f; } console.log(g());", { compress: {}, mangle: false }],
+				["function g() { var f = 2; function f() {} return typeof f; } console.log(g());", { compress: { passes: 2 }, mangle: true }],
+				["function g() { return f(); function f() { return 2; } } console.log(g());", { compress: {}, mangle: false }],
+				["function g(h) { var x = h(f); function f() {} return [x, f, f]; } console.log(g(String).length);", { compress: {}, mangle: false }],
+				["function g(h) { \"use strict\"; var f = h(); var x; { function f() {} x = f; } return [f, x]; } console.log(typeof g(String)[1]);", { compress: {}, mangle: false }]
+			];
+			for (const [input, options] of cases) {
+				const { code } = await minify(input, { ...options });
+				corrections.enabled = false;
+				try {
+					const { code: uncorrected } = await minify(input, { ...options });
+					expect(code).toBe(uncorrected);
+				} finally {
+					corrections.enabled = true;
+				}
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
 			}
 		});
 
