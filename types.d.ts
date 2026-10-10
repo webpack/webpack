@@ -9135,6 +9135,10 @@ declare interface ExperimentsNormalized {
 	 */
 	typescript?: boolean | "auto";
 }
+declare interface ExportBinding {
+	id: null | string | number;
+	name: string;
+}
 declare abstract class ExportInfo {
 	name: string;
 
@@ -13969,6 +13973,7 @@ declare class JavascriptParser extends Parser {
 		canRename: HookMap<SyncBailHook<[ExpressionEstreeIndex], boolean | void>>;
 		rename: HookMap<SyncBailHook<[ExpressionEstreeIndex], boolean | void>>;
 		assign: HookMap<SyncBailHook<[AssignmentExpression], boolean | void>>;
+		assignment: SyncHook<[AssignmentExpression]>;
 		write: HookMap<SyncBailHook<[WriteStatement], boolean | void>>;
 		writeMemberChain: HookMap<
 			SyncBailHook<[WriteStatement, string[]], boolean | void>
@@ -16609,6 +16614,16 @@ declare interface KnownJsonModuleBuildInfo {
 declare interface KnownMeta {
 	importVarMap?: Map<Module, string>;
 	deferredImportVarMap?: Map<Module, string>;
+
+	/**
+	 * library bindings requiring write notifications
+	 */
+	libraryExportBindings?: Map<string, ExportBinding>;
+
+	/**
+	 * native exports backed by write notifications
+	 */
+	libraryExportAliases?: Map<string, ExportBinding>;
 
 	/**
 	 * generate export definitions on demand
@@ -33319,6 +33334,7 @@ declare namespace exports {
 		export let uncaughtErrorHandler: "__webpack_require__.oe";
 		export let wasmInstances: "__webpack_require__.w";
 		export let worker: "__webpack_require__.wc";
+		export let exportBinding: "__webpack_require__.eb";
 	}
 	export const UsageState: Readonly<{
 		Unused: 0;
@@ -33709,6 +33725,7 @@ declare namespace exports {
 			export let uncaughtErrorHandler: "__webpack_require__.oe";
 			export let wasmInstances: "__webpack_require__.w";
 			export let worker: "__webpack_require__.wc";
+			export let exportBinding: "__webpack_require__.eb";
 		}
 		export {
 			RuntimeModule,
