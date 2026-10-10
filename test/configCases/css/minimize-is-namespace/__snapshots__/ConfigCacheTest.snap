@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases css minimize-is-namespace minimize-is-namespace should compile 1`] = `"@namespace url(http://www.w3.org/2000/svg);@namespace html url(http://www.w3.org/1999/xhtml);:is(*|*){color:red}:is(html|*){background-color:blue}:is(|*){opacity:.5}:is(*|rect){fill:green}*|*:not(:is(*|*)){border-width:1px}.safe{stroke:blue}[lang|=en]{stroke-width:2}"`;
