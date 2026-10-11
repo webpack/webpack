@@ -2588,6 +2588,10 @@ const RESERVED_NAME_CASES = [
 /** @type {[string, string][]} */
 const STILL_INLINED_CASES = [
 	[
+		"a constant read off an object literal and called, which throws whatever `this` is",
+		"try { ({ x: null }).x(); } catch (e) { sink(e.name); } try { ({ x: 1 })['x'](); } catch (e) { sink(e.name); }"
+	],
+	[
 		"a nested function keeping its own context",
 		"var await; async function f() { function g() { sink(function () { await = 1; }); } g(); } f();"
 	],
