@@ -517,24 +517,19 @@ const describeCases = (config) => {
 												if (!stats) {
 													throw new Error("No stats reported from Compiler");
 												}
-												// MultiCompiler reports only rebuilt children; retain the others
-												// when comparing hashes, dependencies and executing every bundle.
-												if ("stats" in stats) {
-													for (const result of stats.stats) {
-														latestStats.set(result.compilation.compiler, result);
-													}
-													stats.stats = compilers.map(
-														(child) =>
-															/** @type {import("../../").Stats} */ (latestStats.get(child))
-													);
+												// Retain every child's hash and dependencies without changing
+												// the partial results exposed by MultiCompiler to the tests.
+												for (const result of "stats" in stats ? stats.stats : [stats]) {
+													latestStats.set(result.compilation.compiler, result);
 												}
+												const hash = [...latestStats.values()]
+													.map((result) => result.hash)
+													.join("");
 												if (waitMode) return;
 												lastFileDependencies.clear();
 												lastContextDependencies = [];
 												lastMissingDependencies = new Set();
-												for (const { compilation } of /** @type {import("../../").Stats[]} */ (
-													"stats" in stats ? stats.stats : [stats]
-												)) {
+												for (const { compilation } of latestStats.values()) {
 													// a missing directory is watched for existence, not content
 													for (const file of compilation.fileDependencies) {
 														lastFileDependencies.add(file);
@@ -558,14 +553,14 @@ const describeCases = (config) => {
 												}
 												if (unseenChanges.size > 0) return;
 												clearTimeout(retouchTimer);
-												if (run.done && stats.hash === lastHash) return;
-												if (run.done && lastHash !== stats.hash) {
+												if (run.done && hash === lastHash) return;
+												if (run.done && lastHash !== hash) {
 													throw new Error(
-														`Compilation changed but no change was issued ${lastHash} != ${stats.hash} (run ${runIdx})\n` +
+														`Compilation changed but no change was issued ${lastHash} != ${hash} (run ${runIdx})\n` +
 															`Triggering change: ${triggeringFilename}`
 													);
 												}
-												lastHash = stats.hash;
+												lastHash = hash;
 												run.done = true;
 												try {
 													await compare(stats);
