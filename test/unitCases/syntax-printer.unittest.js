@@ -6639,7 +6639,10 @@ describe("syntax-printer", () => {
 				"return delete o.b;",
 				"return o.a++;",
 				"[o.a] = [5]; return o.a;",
-				"o.c = 3; return o.c;"
+				"o.c = 3; return o.c;",
+				"for (gx in o); return gx;",
+				"for ([gy] of [[1]]); return gy;",
+				"for (o.d of [1]); return o.d;"
 			];
 			for (const body of bodies) {
 				const input = `var o = { a: 1 }; function f() { ${body} } class C { m() { return f(); } } console.log(new C().m());`;
