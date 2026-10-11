@@ -578,7 +578,7 @@ body {
 ## production
 
 ```javascript
-@import url(https://fonts.googleapis.com/css?family=Open+Sans);.img{width:150px;height:150px;background:url(dist/89a353e9c515885abd8e.png)}body{font-family:Open Sans;background:red}:root{--QRIlVD:72px}.zI6JBT{font-size:var(--QRIlVD);color:#00008b}@media (width>=1024px){.zI6JBT{color:green}}@supports (display:grid){.zI6JBT{display:grid}}
+@import url(https://fonts.googleapis.com/css?family=Open+Sans);.img{background:url(dist/89a353e9c515885abd8e.png);width:150px;height:150px}body{background:red;font-family:Open Sans}:root{--QRIlVD:72px}.zI6JBT{color:#00008b;font-size:var(--QRIlVD)}@media (width>=1024px){.zI6JBT{color:green}}@supports (display:grid){.zI6JBT{display:grid}}
 ```
 
 # dist/1.output.css
