@@ -2564,6 +2564,11 @@ const CORRECTED_CASES = [
 		"a sloppy function writing an undeclared name or reading `this`, called in a class",
 		"function f() { undeclared_x = 1; } function g() { return this; } function h() { return 1; } class C { m() { try { f(); } catch (e) { console.log(e.name); } return [typeof g(), h()]; } } console.log(new C().m(), typeof undeclared_x);",
 		{ compress: { passes: 2 }, mangle: false, toplevel: true }
+	],
+	[
+		"a function an `if` keeps of a test known true, beside a dead function of its name",
+		"var r = []; (function () { if (1) { function f() { return 1; } } else { function f() { return 3; } } r.push(typeof f === \"function\" ? f() : typeof f); })(); (function () { if (1) function f() { return 1; } else function f() { return 3; } r.push(typeof f === \"function\" ? f() : typeof f); })(); console.log(r.join());",
+		{ compress: {}, mangle: false }
 	]
 ];
 
@@ -6863,6 +6868,25 @@ describe("syntax-printer", () => {
 				"var r = []; (function () { for (let g; ; ) { { function f() {} } break; } try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); })(); (function () { for (let g in { a: 1 }) { { function f() {} } } try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); })(); (function () { for (let g of [0]) { { function f() {} } } try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); })(); console.log(r.join());",
 				"var r = []; (function () { let f = 1; (function () { { function f() {} } r.push(typeof f); })(); r.push(typeof f); })(); console.log(r.join());",
 				"var r = []; (function () { { let { g } = { g: 1 }; { function f() {} } } try { f; r.push(\"set\"); } catch (e) { r.push(e.name); } r.push(typeof f); })(); console.log(r.join());"
+			]) {
+				for (const options of [
+					{ compress: {}, mangle: false },
+					{ compress: { passes: 2 }, mangle: true }
+				]) {
+					const { code } = await minify(input, options);
+					expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+				}
+			}
+		});
+
+		it("should keep a function an `if` keeps in a block of its own beside a dead function of its name", async () => {
+			const { minify } = await load();
+			for (const input of [
+				"var r = []; (function () { if (0) { function f() { return 1; } } else { function f() { return 3; } } r.push(typeof f === \"function\" ? f() : typeof f); })(); console.log(r.join());",
+				"var r = []; (function () { if (0) function f() { return 1; } else function f() { return 3; } r.push(typeof f === \"function\" ? f() : typeof f); })(); console.log(r.join());",
+				"var r = []; (function () { L: if (0) { function f() { return 1; } } else { function f() { return 3; } } r.push(typeof f === \"function\" ? f() : typeof f); })(); console.log(r.join());",
+				"var r = []; (function () { { if (0) { function f() { return 1; } } else { function f() { return 3; } } } r.push(typeof f === \"function\" ? f() : typeof f); })(); console.log(r.join());",
+				"var r = []; if (0) { function f() { return 1; } } else { function f() { return 3; } } r.push(typeof f === \"function\" ? f() : typeof f); console.log(r.join());"
 			]) {
 				for (const options of [
 					{ compress: {}, mangle: false },
