@@ -22,5 +22,5 @@ it("should keep unknown properties observable", () => {
 	import.meta.UNKNOWN_PROPERTY = "HELLO";
 	const own = import.meta;
 	expect(own.UNKNOWN_PROPERTY).toBe("HELLO");
-	expect(getMeta().UNKNOWN_PROPERTY).toBe("HELLO");
+	expect(getMeta().UNKNOWN_PROPERTY).toBeUndefined();
 });
