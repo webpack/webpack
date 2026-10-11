@@ -1390,6 +1390,11 @@ const CORRECTED_CASES = [
 		{ compress: { arguments: true }, mangle: false }
 	],
 	[
+		"a function a case never reached declares, which an earlier case calls",
+		"switch (0) { case 0: console.log(g()); break; case 1: function g() { return 'fn'; } }",
+		{ compress: {}, mangle: false }
+	],
+	[
 		"an assignment after an object literal whose computed accessor it runs",
 		"const k = 'x'; const o = { set [k](v) { console.log('setter', v); } }; o.x = 1; const g = { get [k]() { return 4; } }; g.x = 8; console.log(g.x);",
 		{ compress: {}, mangle: false }
