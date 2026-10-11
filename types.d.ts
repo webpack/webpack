@@ -5529,6 +5529,7 @@ type ContextDependencyOptions = ContextOptions & { request: string };
 declare abstract class ContextElementDependency extends ModuleDependency {
 	referencedExports?: null | string[][];
 	attributes?: ImportAttributes;
+	phase: ImportPhaseType;
 
 	/**
 	 * The request as the user wrote it, e.g. `#configs/file.mjs` where `request`
