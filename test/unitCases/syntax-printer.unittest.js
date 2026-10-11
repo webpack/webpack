@@ -1390,6 +1390,11 @@ const CORRECTED_CASES = [
 		{ compress: { arguments: true }, mangle: false }
 	],
 	[
+		"a method of an object literal read and called, which receives the literal as `this`",
+		"var o = { m: function () { console.log(this.data); } }; ({ f: o.m, data: 1 }).f(); ({ f: o.m, data: 2 })['f']();",
+		{ compress: {}, mangle: false }
+	],
+	[
 		"`arguments[0]` read before its parameter is reassigned, moved past that",
 		"function test(x, y) { var temp; if (typeof x === 'string') { temp = arguments[0]; x = {}; x[temp] = y; return x; } } console.log(JSON.stringify(test('a', 'b')));",
 		{ compress: {}, mangle: false }
