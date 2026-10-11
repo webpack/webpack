@@ -14,3 +14,12 @@ for (const [name, load] of [
 		expect(load().a).toBe(1);
 	});
 }
+
+it("should follow new URL() of a deleted and restored module", () => {
+	expect(require("./url-entry").a).toBe(1);
+	const source = __non_webpack_require__("fs").readFileSync(__filename, "utf-8");
+	// two targets, so only the count of inactive ones tells the steps apart
+	expect(source.includes(["Cannot find module", "'./url-dep.js'"].join(" "))).toBe(
+		WATCH_STEP === "1" || WATCH_STEP === "2"
+	);
+});
