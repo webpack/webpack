@@ -1390,6 +1390,11 @@ const CORRECTED_CASES = [
 		{ compress: { arguments: true }, mangle: false }
 	],
 	[
+		"a class's name read in its own computed key, before it is set",
+		"try { class x { [!{ x }]; } new x(); console.log('no error'); } catch (e) { console.log(e.name); }",
+		{ compress: {}, mangle: false }
+	],
+	[
 		"a `const` assigned itself, which throws",
 		"try { const x = 0; x = x; console.log('no error'); } catch (e) { console.log(e.name); }",
 		{ compress: {}, mangle: false }
