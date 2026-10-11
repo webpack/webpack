@@ -1390,6 +1390,11 @@ const CORRECTED_CASES = [
 		{ compress: { arguments: true }, mangle: false }
 	],
 	[
+		"a `const` assigned itself, which throws",
+		"try { const x = 0; x = x; console.log('no error'); } catch (e) { console.log(e.name); }",
+		{ compress: {}, mangle: false }
+	],
+	[
 		"a function a case never reached declares, which an earlier case calls",
 		"switch (0) { case 0: console.log(g()); break; case 1: function g() { return 'fn'; } }",
 		{ compress: {}, mangle: false }
