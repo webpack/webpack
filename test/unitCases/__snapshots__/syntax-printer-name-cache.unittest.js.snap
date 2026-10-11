@@ -1,0 +1,22 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`JavaScript minifier name cache should keep a module's globals when reusing names with compress=false 1`] = `
+Array [
+  "import o from\\"node:process\\";sink(o.pid);",
+  "sink(process.platform);",
+]
+`;
+
+exports[`JavaScript minifier name cache should keep a module's globals when reusing names with compress=true 1`] = `
+Array [
+  "import o from\\"node:process\\";sink(o.pid);",
+  "sink(process.platform);",
+]
+`;
+
+exports[`JavaScript minifier name cache should share cached globals between scripts 1`] = `
+Array [
+  "var a=\\"cached\\";sink(a);",
+  "sink(a);",
+]
+`;
