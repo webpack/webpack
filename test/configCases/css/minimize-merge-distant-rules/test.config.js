@@ -31,7 +31,9 @@ module.exports = {
 		expect(css).not.toContain(".shadowed-first{color:red}.shadowed-second");
 		expect(css).not.toContain(".wide-first{width:0}.wide-second");
 		expect(css).not.toContain(".framed-first{color:red}.framed-second");
-		expect(css).not.toContain(".layered-first{color:red}.layered-second");
+		expect(css).toContain(
+			"@layer named{.layered-first{color:red}.layered-second{color:blue}}"
+		);
 		expect(css).not.toContain(".anonymous-first{color:red}.anonymous-second");
 		expect(css).toContain(
 			"@keyframes fading{0%{opacity:0}}.between-frames{margin:2px}@keyframes fading{to{opacity:1}}"
