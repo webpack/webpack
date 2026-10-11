@@ -1390,6 +1390,16 @@ const CORRECTED_CASES = [
 		{ compress: { arguments: true }, mangle: false }
 	],
 	[
+		"an assignment after an object literal whose computed accessor it runs",
+		"const k = 'x'; const o = { set [k](v) { console.log('setter', v); } }; o.x = 1; const g = { get [k]() { return 4; } }; g.x = 8; console.log(g.x);",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an assignment after an object literal whose prototype holds a setter for it",
+		"var log = []; const x = { __proto__: { set p(v) { log.push(v); } } }; x.p = 1; console.log(Object.keys(x).join(), log.join());",
+		{ compress: {}, mangle: false }
+	],
+	[
 		"a method of an object literal read and called, which receives the literal as `this`",
 		"var o = { m: function () { console.log(this.data); } }; ({ f: o.m, data: 1 }).f(); ({ f: o.m, data: 2 })['f']();",
 		{ compress: {}, mangle: false }
