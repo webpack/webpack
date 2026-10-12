@@ -6794,7 +6794,9 @@ describe("syntax-printer", () => {
 					{ toplevel: true, format: { comments: "some" } },
 					"keep",
 					true
-				]
+				],
+				// Unset, `comments` keeps what "some" does.
+				["foo();\n/*! license */\nfunction unused() {}", { toplevel: true }, "license", true]
 			];
 			for (const [input, options, comment, terserDrops] of cases) {
 				const { code } = await minify(input, options);
