@@ -6,12 +6,18 @@
 const importMetaOptions = ["preserve-unknown", {}];
 
 /** @type {import("../../../../types").Configuration[]} */
-module.exports = ["node", "web", "webworker", "universal"].flatMap((target) =>
-	importMetaOptions.map((importMeta) => ({
-		target,
-		output: { module: true },
-		module: {
-			parser: { "javascript/auto": { importMeta } }
-		}
-	}))
-);
+const configurations = [];
+
+for (const target of ["node", "web", "webworker", "universal"]) {
+	for (const importMeta of importMetaOptions) {
+		configurations.push({
+			target,
+			output: { module: true },
+			module: {
+				parser: { "javascript/auto": { importMeta } }
+			}
+		});
+	}
+}
+
+module.exports = configurations;
