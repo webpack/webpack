@@ -199,6 +199,22 @@ describe("SyntaxTree", () => {
 		).toBe(false);
 	});
 
+	it("builds a tree nested deeper than the call stack", () => {
+		const tree = new SyntaxTree();
+		let node = tree.add("Identifier", 0, 1);
+		tree.set(node, "name", "a");
+		for (let i = 0; i < 100000; i++) {
+			const unary = tree.add("UnaryExpression", 0, 1);
+			tree.set(unary, "operator", "!");
+			tree.set(unary, "prefix", true);
+			tree.set(unary, "argument", node);
+			node = unary;
+		}
+		let object = /** @type {EXPECTED_ANY} */ (toEstreeObject(tree, node));
+		while (object.type === "UnaryExpression") object = object.argument;
+		expect(object.name).toBe("a");
+	});
+
 	it("refuses an unknown type or field", () => {
 		const tree = new SyntaxTree();
 		expect(() => tree.add("JSXElement", 0, 1)).toThrow(/Unknown node type/);
