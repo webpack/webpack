@@ -2210,6 +2210,18 @@ describe("CssSyntax — minify value-safety edge cases", () => {
 		);
 	});
 
+	it.each([
+		"a:nth-child(- n+1){b:c}",
+		"a:nth-child(+ n){b:c}",
+		"a:nth-child(- 2n+1){b:c}",
+		"a:nth-child(+ 5){b:c}",
+		"a:nth-child(- 5){b:c}",
+		"a:nth-child(+ odd){b:c}"
+	])("keeps %s, whose sign no engine reads apart from An", (css) => {
+		// CSS Syntax 3 §6 reads a leading sign only against what follows it.
+		expect(min(css)).toBe(css);
+	});
+
 	it("still normalizes numbers in declaration values", () => {
 		expect(min("a{margin:+1.50px}")).toBe("a{margin:1.5px}");
 		expect(min("a{margin:0.50px 1.0px 0}")).toBe("a{margin:.5px 1px 0}");
