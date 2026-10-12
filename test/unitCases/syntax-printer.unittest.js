@@ -1358,6 +1358,11 @@ const ARGUMENTS_KEPT_CASES = [
 /** @type {[string, string, import("terser").MinifyOptions][]} */
 const CORRECTED_CASES = [
 	[
+		"an optional read whose getter runs, where pure_getters is off",
+		"var o = { foo: { get bar() { console.log('getter'); return 1; } } }; (function () { this.foo?.bar; }).call(o);",
+		{ compress: { pure_getters: false }, mangle: false }
+	],
+	[
 		"a default calling out, in a declaration moved into its one use",
 		'function make() { return { pick }; function pick(node, type, initial = type, flow = cast(node)) {} } function cast(node) { console.log("cast", node); } make().pick(1);',
 		{ compress: { keep_fargs: false }, mangle: false }
