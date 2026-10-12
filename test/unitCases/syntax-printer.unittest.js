@@ -1372,6 +1372,41 @@ const ARGUMENTS_KEPT_CASES = [
 /** @type {[string, string, import("terser").MinifyOptions][]} */
 const CORRECTED_CASES = [
 	[
+		"a function declaration an inlined call returns, where keep_fnames is on",
+		"var X; function f() { X = (function () { function X() { this.a = 1; } return X; })(); } f(); console.log(new X().a);",
+		{ toplevel: true, keep_fnames: true, compress: {}, mangle: {} }
+	],
+	[
+		"an anonymous class named after a variable, where keep_classnames is on",
+		"class Foo {} var Bar = class {}; console.log(Foo.name, Bar.name);",
+		{ toplevel: true, keep_classnames: true, mangle: { keep_classnames: true } }
+	],
+	[
+		"an anonymous function named after its binding, where keep_fnames is on",
+		"function foo() { const bar = function () { return 'x'; }; console.log(bar.name); } foo(); let baz = () => {}; let qux = baz; console.log(qux.name);",
+		{ keep_fnames: true, toplevel: true, mangle: false }
+	],
+	[
+		"a function declaration read once that writes its own name, where toplevel is on",
+		"'use strict'; function log(x) { console.log(typeof x); } var a = f(); console.log(a); function f() { log(f); return (f = function () { return 'second'; })(); }",
+		{ toplevel: true, mangle: false }
+	],
+	[
+		"an arguments read in a function inlined as a copy, where keep_fargs is off",
+		"function a(f) { var o = {}; f(o); console.log(o.c(1, 2)); } a(function (b) { b.c = c; function c() { return arguments[1]; } });",
+		{ compress: { arguments: true, keep_fargs: false }, mangle: false }
+	],
+	[
+		"an array changed through a conditional that picks it, where unsafe is on",
+		"function f(r) { const t = []; (r < 0.5 ? t : []).push('x'); (t || []).push('y'); return t.length; } console.log(f(0.1), f(0.9));",
+		{ compress: { unsafe: true }, mangle: false }
+	],
+	[
+		"an optional read whose getter runs, where pure_getters is off",
+		"var o = { foo: { get bar() { console.log('getter'); return 1; } } }; (function () { this.foo?.bar; }).call(o);",
+		{ compress: { pure_getters: false }, mangle: false }
+	],
+	[
 		"a default calling out, in a declaration moved into its one use",
 		'function make() { return { pick }; function pick(node, type, initial = type, flow = cast(node)) {} } function cast(node) { console.log("cast", node); } make().pick(1);',
 		{ compress: { keep_fargs: false }, mangle: false }
@@ -6742,6 +6777,166 @@ describe("syntax-printer", () => {
 			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
 		});
 
+		it("should keep a comment whose code it drops, where comments are kept", async () => {
+			const { minify, corrections } = await load();
+			// The last entry says whether terser drops it too, not only webpack's inlining.
+			/** @type {[EXPECTED_ANY, EXPECTED_ANY, string, boolean][]} */
+			const cases = [
+				[
+					"var define = function (f) { console.log(f().length); }; define(function () { 'use strict'; var A = /A/;\n/*! license for B */\nvar B = /B/; return [A, B]; });",
+					{ format: { comments: "all" } },
+					"license for B",
+					true
+				],
+				[
+					"(function () {\n/** @license kept */\nfunction isRoot(node) { return node.nodeType === 9; }\nfunction getRoot(node) { return isRoot(node); }\nconsole.log(getRoot({ nodeType: 9 }), getRoot({ nodeType: 1 }));\n})();",
+					{ format: { comments: "some" } },
+					"@license kept",
+					false
+				],
+				[
+					{
+						"file-1.js": "// f1-before\nconst func = () => 'x';\n// f1-after\n",
+						"file-2.js": "// f2-before\nconsole.log(func());\n// f2-after\n"
+					},
+					{ toplevel: true, format: { comments: "all" } },
+					"f1-after",
+					true
+				],
+				[
+					"a((function (x) { return x; })());\n/*! keep */\nvar unused = 1;",
+					{ toplevel: true, format: { comments: "some" } },
+					"keep",
+					true
+				],
+				// Unset, `comments` keeps what "some" does.
+				["foo();\n/*! license */\nfunction unused() {}", { toplevel: true }, "license", true],
+				["foo(); /* keep me */ function unused() {} bar();", { toplevel: true, format: { comments: /keep/ } }, "keep me", true],
+				[
+					"foo(); /* keep me */ function unused() {} bar();",
+					{ toplevel: true, format: { comments: (/** @type {unknown} */ _node, /** @type {{ value: string }} */ comment) => /keep/.test(comment.value) } },
+					"keep me",
+					true
+				]
+			];
+			for (const [input, options, comment, terserDrops] of cases) {
+				const { code } = await minify(input, options);
+				expect(code).toContain(comment);
+				if (!terserDrops) continue;
+
+				if (!corrections) throw new Error("the correct phase is not installed");
+				corrections.enabled = false;
+				try {
+					const uncorrected = await unimproved(() => minify(input, options));
+					const reference = await terserReference().minify(input, options);
+					expect(uncorrected.code).toBe(reference.code);
+					expect(reference.code).not.toContain(comment);
+				} finally {
+					corrections.enabled = true;
+				}
+			}
+		});
+
+		it("should keep the comments of an empty statement it drops", async () => {
+			const { minify, corrections } = await load();
+			const input =
+				";// START_2;\nconsole.log(2);\n;// END_2;\n\n;// START_3;\nconsole.log(3);\n;// END_3;\n";
+			for (const compress of [{}, false]) {
+				const options = /** @type {EXPECTED_ANY} */ ({
+					compress,
+					mangle: false,
+					format: { comments: "all" }
+				});
+				const { code } = await minify(input, options);
+				for (const tag of ["START_2", "END_2", "START_3", "END_3"]) {
+					expect(code).toContain(tag);
+				}
+
+				if (!corrections) throw new Error("the correct phase is not installed");
+				corrections.enabled = false;
+				try {
+					const uncorrected = await unimproved(() => minify(input, options));
+					const reference = await terserReference().minify(input, options);
+					expect(uncorrected.code).toBe(reference.code);
+					expect(reference.code).not.toContain("END_2");
+				} finally {
+					corrections.enabled = true;
+				}
+			}
+		});
+
+		it("should keep only annotations where preserve_annotations is on, not prose naming one", async () => {
+			const { minify, corrections } = await load();
+			const input =
+				"function f() {\n// keep g() out of line, see the #__NOINLINE__ note\nconst value = /*#__NOINLINE__*/ g();\nreturn value ? value : 0;\n}\nfunction g() { return 1; }\nexport { f };";
+			const options = { module: true, mangle: false, format: { preserve_annotations: true } };
+			const { code } = await minify(input, options);
+			expect(code).toContain("/*#__NOINLINE__*/");
+			expect(code).not.toContain("keep g() out of line");
+
+			if (!corrections) throw new Error("the correct phase is not installed");
+			corrections.enabled = false;
+			try {
+				const uncorrected = await unimproved(() => minify(input, options));
+				const reference = await terserReference().minify(input, options);
+				expect(uncorrected.code).toBe(reference.code);
+				expect(reference.code).toContain("keep g() out of line");
+			} finally {
+				corrections.enabled = true;
+			}
+		});
+
+		it("should keep only the anonymous classes' variables keep_classnames names", async () => {
+			const { minify } = await load();
+			const { code } = await minify(
+				"var Bar = class {}, Baz = class {}; console.log(Bar.name, Baz.name);",
+				{ compress: false, mangle: { toplevel: true, keep_classnames: /^Bar$/ } }
+			);
+			expect(code).toContain("Bar.name");
+			expect(code).not.toContain("Baz");
+		});
+
+		it("should keep a number the compressor computes plain where keep_numbers is on", async () => {
+			const { minify, corrections } = await load();
+			const input = "var s = 1000; var m = s * 60; var h = m * 60; console.log(s, m, h, 0.5, 1e20 * 100);";
+			const options = { module: true, compress: {}, mangle: false, format: { keep_numbers: true } };
+			const { code } = await minify(input, options);
+			expect(code).toBe("console.log(1000,60000,3600000,0.5,1e22);");
+
+			if (!corrections) throw new Error("the correct phase is not installed");
+			corrections.enabled = false;
+			try {
+				const uncorrected = await unimproved(() => minify(input, options));
+				const reference = await terserReference().minify(input, options);
+				expect(uncorrected.code).toBe(reference.code);
+				expect(reference.code).toBe("console.log(1e3,6e4,36e5,0.5,1e22);");
+			} finally {
+				corrections.enabled = true;
+			}
+		});
+
+		it("should rename a property named as the name cache hands another", async () => {
+			const { minify, corrections } = await load();
+			const input = "var args = { sb: 'sb', o: 'o' }; console.log(args.sb, args.o);";
+			const options = () => ({
+				mangle: { properties: { keep_quoted: true } },
+				nameCache: { vars: { props: {} }, props: { props: { $o: "sb" } } }
+			});
+			const { code } = await minify(input, options());
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+
+			if (!corrections) throw new Error("the correct phase is not installed");
+			corrections.enabled = false;
+			try {
+				const uncorrected = await unimproved(() => minify(input, options()));
+				const reference = await terserReference().minify(input, options());
+				expect(uncorrected.code).toBe(reference.code);
+				expect(runProgram(/** @type {string} */ (reference.code))).not.toBe(runProgram(input));
+			} finally {
+				corrections.enabled = true;
+			}
+		});
+
 		for (const [name, input, options] of CORRECTED_CASES) {
 			it(`should print what the input prints: ${name}`, async () => {
 				const { minify, corrections } = await load();
@@ -9519,8 +9714,10 @@ describe("syntax-printer", () => {
 				"FunctionExpression",
 				"ClassExpression"
 			]);
-			// Declared in the function holding them, as the declarations were.
-			expect(inlined.map((/** @type {EXPECTED_ANY} */ node) => node.id.definition.scope.node)).toEqual([f, g]);
+			// The function's name is its own, the class's declared where the declaration was.
+			const owners = inlined.map((/** @type {EXPECTED_ANY} */ node) => node.id.definition.scope.node);
+			expect(owners[0] === inlined[0]).toBe(true);
+			expect(owners[1] === g).toBe(true);
 			expect(scopesOf(analysis).find((/** @type {EXPECTED_ANY} */ scope) => scope.node === inlined[0]).functionName).toBe(inlined[0].id.definition);
 		});
 
