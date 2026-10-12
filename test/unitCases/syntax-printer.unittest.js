@@ -6460,6 +6460,29 @@ describe("syntax-printer", () => {
 			).toBe(reference.code);
 		});
 
+		it("should spell a directive given without its raw text as one given with it", async () => {
+			const { minify } = await load();
+			/** @type {EXPECTED_ANY} */
+			const options = {
+				parse: { spidermonkey: true },
+				compress: false,
+				mangle: false
+			};
+			const code = '"a\\x20b"; \'c"d\'; f();';
+			/** @type {EXPECTED_ANY} */
+			const withRaw = acorn.parse(code, { ecmaVersion: "latest" });
+			/** @type {EXPECTED_ANY} */
+			const withoutRaw = acorn.parse(code, { ecmaVersion: "latest" });
+			for (const statement of withoutRaw.body) {
+				if (statement.directive !== undefined) delete statement.expression.raw;
+			}
+			const expected = (await minify(withRaw, options)).code;
+			expect((await minify(withoutRaw, options)).code).toBe(expected);
+			expect(expected).toBe(
+				(await minify(code, { compress: false, mangle: false })).code
+			);
+		});
+
 		it("should give back an untagged template's raw text written from its value, where terser keeps the source's", async () => {
 			const { minify } = await load();
 			const code = 'console.log(`a${"${`\\r\\\\"}${b}c`, tag`\\x${a}`);';
@@ -6473,7 +6496,8 @@ describe("syntax-printer", () => {
 				result.ast.body[0].expression.arguments.map(
 					(/** @type {EXPECTED_ANY} */ template) =>
 						(template.quasi || template).quasis.map(
-							(/** @type {EXPECTED_ANY} */ quasi) => quasi.value
+							(/** @type {import("estree").TemplateElement} */ quasi) =>
+								quasi.value
 						)
 				);
 			expect(values(await minify(code, options))).toEqual([
