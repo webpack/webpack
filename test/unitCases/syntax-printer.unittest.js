@@ -8115,6 +8115,16 @@ describe("syntax-printer", () => {
 			});
 		}
 
+		it("should keep a function expression whose name nothing reads a function where it reads `this`", async () => {
+			const { minify } = await load();
+			const input = "console.log([1].map(function foo() { return this.k; }, { k: 2 }).join());";
+			/** @type {import("terser").MinifyOptions} */
+			const options = { compress: { unsafe_arrows: true }, ecma: 2015, mangle: false };
+			const { code } = await minify(input, options);
+			expect(code).toBe((await terserReference().minify(input, options)).code);
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+		});
+
 		for (const [name, input] of KEPT_CASES) {
 			it(`should write what terser writes: ${name}`, async () => {
 				const { minify } = await load();
