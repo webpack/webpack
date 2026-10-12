@@ -1358,6 +1358,11 @@ const ARGUMENTS_KEPT_CASES = [
 /** @type {[string, string, import("terser").MinifyOptions][]} */
 const CORRECTED_CASES = [
 	[
+		"an anonymous function named after its binding, where keep_fnames is on",
+		"function foo() { const bar = function () { return 'x'; }; console.log(bar.name); } foo(); let baz = () => {}; let qux = baz; console.log(qux.name);",
+		{ keep_fnames: true, toplevel: true, mangle: false }
+	],
+	[
 		"a function declaration read once that writes its own name, where toplevel is on",
 		"'use strict'; function log(x) { console.log(typeof x); } var a = f(); console.log(a); function f() { log(f); return (f = function () { return 'second'; })(); }",
 		{ toplevel: true, mangle: false }
