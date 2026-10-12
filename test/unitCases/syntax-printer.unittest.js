@@ -246,6 +246,12 @@ const IMPROVED_CASES = [
 		"function n(r){var x=r.label;return g(r),[void 0===x?\"-\":x,r.n]}function g(r){r.n=1}console.log(n({}),n({label:\"a\"}));"
 	],
 	[
+		"an arrow reading `this` read out of the object literal holding it",
+		"const k = {}; function f() { return { t: () => this, x: 1 }.t(); } console.log(f.call(k) === k);",
+		{ compress: {}, mangle: false },
+		undefined
+	],
+	[
 		"a function written in place passed the parameter of its name, which it writes and nothing reads after",
 		"function f(a, b) { var h = (function (b) { [b] = [b + 1]; return [b, b]; })(b); return h; } console.log(f(1, 2));",
 		{ compress: {}, mangle: false },
