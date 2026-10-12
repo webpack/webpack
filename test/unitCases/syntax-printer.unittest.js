@@ -6195,6 +6195,107 @@ describe("syntax-printer", () => {
 		expect(ast.createWalker().webpackSkipsSqueezed).toBe(false);
 	});
 
+	describe("a tree given or given back as ESTree", () => {
+		/**
+		 * @param {string} code a module
+		 * @returns {EXPECTED_ANY} acorn's tree for it
+		 */
+		const estree = (code) =>
+			acorn.parse(code, { ecmaVersion: "latest", sourceType: "module" });
+
+		it("should keep an arrow's directive, as terser does only with corrections off", async () => {
+			const { minify } = await load();
+			const code = '(() => { "use strict"; x = 1; })();';
+			/** @type {EXPECTED_ANY} */
+			const options = { parse: { spidermonkey: true } };
+			expect((await minify(estree(code), options)).code).toBe(
+				'(()=>{"use strict";x=1})();'
+			);
+			const reference = await terserReference().minify(estree(code), options);
+			expect(reference.code).toBe("x=1;");
+			expect(
+				(await uncorrected(() => minify(estree(code), options))).code
+			).toBe(reference.code);
+		});
+
+		it("should give back a template inlined into another, which terser throws on", async () => {
+			const { minify } = await load();
+			const code = "console.log(`x${`y${a}`}z`, `p${`q`}r${b}`);";
+			/** @type {EXPECTED_ANY} */
+			const options = { format: { spidermonkey: true, code: true } };
+			const { code: printed, ast } = /** @type {EXPECTED_ANY} */ (
+				await minify(code, options)
+			);
+			expect(printed).toBe("console.log(`xy${a}z`,`pqr${b}`);");
+			const [first, second] = ast.body[0].expression.arguments;
+			expect(
+				[first, second].map((/** @type {EXPECTED_ANY} */ template) => [
+					template.quasis.map((/** @type {EXPECTED_ANY} */ quasi) => [
+						quasi.value.cooked,
+						quasi.tail
+					]),
+					template.expressions.length
+				])
+			).toEqual([
+				[
+					[
+						["xy", false],
+						["z", true]
+					],
+					1
+				],
+				[
+					[
+						["pqr", false],
+						["", true]
+					],
+					1
+				]
+			]);
+			const back = await minify(ast, {
+				compress: false,
+				mangle: false,
+				parse: { spidermonkey: true }
+			});
+			expect(back.code).toBe(printed);
+			await expect(terserReference().minify(code, options)).rejects.toThrow(
+				"to_mozilla_ast"
+			);
+		});
+
+		it("should read an anonymous default export, which terser throws on", async () => {
+			const { minify } = await load();
+			for (const code of [
+				"export default function (a) { return a; } console.log(1);",
+				"export default class { m() {} }",
+				"export default function* () {}",
+				"export default async function () {}"
+			]) {
+				for (const options of [
+					{ module: true },
+					{ module: true, compress: false, mangle: false },
+					{ module: true, toplevel: true, compress: { passes: 2 } }
+				]) {
+					const fromSource = await minify(code, options);
+					const fromTree = await minify(estree(code), {
+						...options,
+						parse: { spidermonkey: true }
+					});
+					expect(fromTree.code).toBe(fromSource.code);
+				}
+				await expect(
+					terserReference().minify(
+						estree(code),
+						/** @type {EXPECTED_ANY} */ ({
+							module: true,
+							parse: { spidermonkey: true }
+						})
+					)
+				).rejects.toThrow("definition");
+			}
+		});
+	});
+
 	describe("fields named as ESTree names them", () => {
 		// Each field the node classes take ESTree's name for, read and written
 		// by every phase: a loop, branch, call, generator, class, template, try.
