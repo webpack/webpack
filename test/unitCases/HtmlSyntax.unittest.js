@@ -4097,6 +4097,12 @@ describe("SourceProcessor — merging adjacent <style>", () => {
 		new SourceProcessor().process(html, { mode: "minify", mergeStyles: true })
 			.code;
 
+	it("writes a style attribute whose declarations all drop as bare", () => {
+		expect(minify('<p style=" ; ">x</p>')).toBe("<p style>x");
+		expect(minify('<p style="/* c */">x</p>')).toBe("<p style>x");
+		expect(minify('<p style="color:red">x</p>')).toBe("<p style=color:red>x");
+	});
+
 	it("folds a run into one element", () => {
 		expect(
 			minify("<style>a{color:red}</style><style>b{color:#00f}</style>")
