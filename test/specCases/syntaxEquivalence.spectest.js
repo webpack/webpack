@@ -1656,6 +1656,33 @@ const LOWERING_FIXTURES = [
 		]
 	},
 	{
+		name: "a rule beside one whose selector no engine parses",
+		// Each odd rule is one an engine drops, so joining it to the rule before
+		// would take that rule's color down with it.
+		css:
+			".a{color:green}.b:first{color:green}.c{color:green}.d:nth-child{color:green}" +
+			".e{color:green}.f::part{color:green}.g{color:green}.h:before.i{color:green}" +
+			".j{color:green}.k:hover(odd){color:green}.l{color:green}.m:playing{color:green}",
+		browsers: ["chrome 130", "firefox 130", "safari 18"],
+		produces: [
+			".a{color:green}.b:first{",
+			".c{color:green}.d:nth-child{",
+			".e{color:green}.f::part{",
+			".g{color:green}.h:before.i{",
+			".j{color:green}.k:hover(odd){",
+			".l{color:green}.m:playing{"
+		],
+		html: '<i class="a"></i><i class="c"></i><i class="e"></i><i class="g"></i><i class="j"></i><i class="l"></i>',
+		probes: [
+			[".a", "color"],
+			[".c", "color"],
+			[".e", "color"],
+			[".g", "color"],
+			[".j", "color"],
+			[".l", "color"]
+		]
+	},
+	{
 		name: "a layer block written where its layer is first named",
 		css:
 			"@layer a;@layer b;@layer c{.x{color:red;margin-left:3px!important}}" +
