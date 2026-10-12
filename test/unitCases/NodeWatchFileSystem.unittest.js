@@ -108,6 +108,43 @@ describe("NodeWatchFileSystem", () => {
 		expect(later.options.ignored).toEqual(["**/mutated"]);
 	});
 
+	it("purges what a later call stops watching", () => {
+		/** @type {string[]} */
+		const purged = [];
+		const wfs = new NodeWatchFileSystem(
+			/** @type {import("../../lib/fs/fs").InputFileSystem} */ ({
+				purge: (item) => {
+					purged.push(/** @type {string} */ (item));
+				}
+			})
+		);
+		const [kept, moved, dropped, missing] = [
+			"a.js",
+			"b.js",
+			"c.js",
+			"missing.js"
+		].map((name) => path.join(fixtures, name));
+		const start = (
+			/** @type {string[]} */ files,
+			/** @type {string[]} */ missingFiles
+		) =>
+			watchers.push(
+				wfs.watch(
+					files,
+					[],
+					missingFiles,
+					Date.now(),
+					{},
+					() => {},
+					() => {}
+				)
+			);
+		start([kept, moved, dropped], [missing]);
+		expect(purged).toEqual([]);
+		start([kept], [moved]);
+		expect(purged).toEqual([dropped, missing]);
+	});
+
 	it("leaves an unsupported ignored option to watchpack", () => {
 		expect(() =>
 			watch({
