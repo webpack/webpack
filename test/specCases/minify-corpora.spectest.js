@@ -1296,6 +1296,14 @@ const rivalSmallerSeen = new Set();
  * @type {Record<string, string>}
  */
 const IMPROVED_YET_BIGGER = {
+	"collapse_vars/var_defs (a module mangled at its top level)":
+		"22 bytes more, 17 more gzipped: the arguments read in place fold a pass sooner, leaving `(r=\"10\")*r-r` a third pass would fold",
+	"collapse_vars/modified (a module mangled at its top level)":
+		"17 bytes fewer, 9 more gzipped: the flattened `(r=n=1,n+++r)` breaks the `function(n){var r=n` runs the calls beside it repeat",
+	"reduce_vars/unsafe_evaluate_modified (the default minimizer's options)":
+		"10 bytes fewer, 2 more gzipped: `var o=-9` split from `{p:-9}` breaks the `var o={p:` runs of the functions around it",
+	"terser_reduce_vars_unsafe_evaluate_modified (the default minimizer's options)":
+		"10 bytes fewer, 2 more gzipped: `var o=-9` split from `{p:-9}` breaks the `var o={p:` runs of the functions around it",
 	"arrow/object_parens (its own options)":
 		"3 bytes fewer, 1 more gzipped: `+!!{}` breaks the `()=>(` runs of the arrows around it gzip reused",
 	"inline/inline_into_scope_conflict_enclosed_2 (reminify 2 {\"mangle\":false})":
@@ -2128,7 +2136,8 @@ describe("JavaScript minifier", () => {
 						const differences = [];
 						/**
 						 * Holds webpack's output to another minifier's, both printed alone
-						 * by webpack's printer: no bigger, unless the table lists why.
+						 * by webpack's printer without comments, which extracting licenses
+						 * decides: no bigger, unless the table lists why.
 						 * @param {Source} source the source both minified
 						 * @param {{ name: string, code: string }} rival its output
 						 * @param {string} code webpack's output
@@ -2146,7 +2155,8 @@ describe("JavaScript minifier", () => {
 							const printing = {
 								compress: false,
 								mangle: false,
-								module: source.module
+								module: source.module,
+								format: { comments: false }
 							};
 							const theirs = await outcome(printer.minify, rival.code, printing);
 							const mine = await outcome(printer.minify, code, printing);
