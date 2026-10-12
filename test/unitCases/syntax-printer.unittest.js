@@ -6763,6 +6763,34 @@ describe("syntax-printer", () => {
 			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
 		});
 
+		it("should keep the comments of an empty statement it drops", async () => {
+			const { minify, corrections } = await load();
+			const input =
+				";// START_2;\nconsole.log(2);\n;// END_2;\n\n;// START_3;\nconsole.log(3);\n;// END_3;\n";
+			for (const compress of [{}, false]) {
+				const options = /** @type {EXPECTED_ANY} */ ({
+					compress,
+					mangle: false,
+					format: { comments: "all" }
+				});
+				const { code } = await minify(input, options);
+				for (const tag of ["START_2", "END_2", "START_3", "END_3"]) {
+					expect(code).toContain(tag);
+				}
+
+				if (!corrections) throw new Error("the correct phase is not installed");
+				corrections.enabled = false;
+				try {
+					const uncorrected = await unimproved(() => minify(input, options));
+					const reference = await terserReference().minify(input, options);
+					expect(uncorrected.code).toBe(reference.code);
+					expect(reference.code).not.toContain("END_2");
+				} finally {
+					corrections.enabled = true;
+				}
+			}
+		});
+
 		it("should keep only annotations where preserve_annotations is on, not prose naming one", async () => {
 			const { minify, corrections } = await load();
 			const input =
