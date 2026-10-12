@@ -7226,6 +7226,29 @@ describe("syntax-printer", () => {
 			});
 		}
 
+		it("should leave the parse options it is given unwritten", async () => {
+			const { minify, corrections } = await load();
+			for (const input of ["var a = 1; console.log(a);", { "a.js": "console.log(1);" }]) {
+				const parse = { bare_returns: true };
+				const options = { parse, compress: {}, mangle: {} };
+				await minify(input, options);
+				expect(options.parse).toBe(parse);
+				expect(parse).toEqual({ bare_returns: true });
+			}
+
+			if (!corrections) throw new Error("the correct phase is not installed");
+			corrections.enabled = false;
+			try {
+				const parse = {};
+				await minify("console.log(1);", { parse });
+				const written = {};
+				await terserReference().minify("console.log(1);", { parse: written });
+				expect(Object.keys(parse)).toEqual(Object.keys(written));
+			} finally {
+				corrections.enabled = true;
+			}
+		});
+
 		for (const [name, input] of ARGUMENTS_KEPT_CASES) {
 			it(`should leave an \`arguments\` read where terser does: ${name}`, async () => {
 				const { minify } = await load();
