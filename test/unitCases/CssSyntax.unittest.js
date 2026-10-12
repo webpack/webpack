@@ -2785,6 +2785,11 @@ describe("CssSyntax — minify transforms, in-process", () => {
 				"a{clip-path:ellipse(at left)}"
 			],
 			["a{clip-path:inset(0 0 0 0 round 0)}", "a{clip-path:inset(0)}"],
+			// A substitution may stand for any of the parts, so none is dropped.
+			[
+				"a{clip-path:inset(0 0 0 0 round var(--r))}",
+				"a{clip-path:inset(0 0 0 0 round var(--r))}"
+			],
 			["a{clip-path:inset(1px 2px 1px 2px)}", "a{clip-path:inset(1px 2px)}"],
 			["a{clip-path:inset(1px round 0 0 0 0)}", "a{clip-path:inset(1px)}"],
 			["a{clip-path:inset(1px round 0px 0% / 0em)}", "a{clip-path:inset(1px)}"],
