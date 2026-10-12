@@ -2073,6 +2073,12 @@ describe("CssSyntax — minify token-boundary safety", () => {
 		expect(min(".\\31\r\nabc{color:red}")).toBe(".\\31\r\nabc{color:red}");
 	});
 
+	it("keeps a digit escaped after a leading dash", () => {
+		expect(min(".-\\31 x{a:b}")).toBe(".-\\31x{a:b}");
+		expect(min(".\\2d\\31 x{a:b}")).toBe(".\\2d 1x{a:b}");
+		expect(min(".\\41\\31 x{a:b}")).toBe(".A1x{a:b}");
+	});
+
 	it("parts a value the escape before it already ate the separator for", () => {
 		// The terminator belongs to the identifier, so a value written after it
 		// carries on that identifier instead of starting its own one.
