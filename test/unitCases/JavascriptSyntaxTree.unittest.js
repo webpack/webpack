@@ -2,6 +2,10 @@
 
 const { toEstreeObject } = require("../../lib/javascript/syntax");
 const {
+	Field,
+	Flag,
+	NodeType,
+	Part,
 	SyntaxTree,
 	WebpackParser
 } = require("../../lib/javascript/syntax-parser");
@@ -79,7 +83,11 @@ const SKIPPED = new Set(["type", "start", "end", "range", "regex", "bigint"]);
  */
 const write = (tree, node, seen) => {
 	seen.add(node.type);
-	const id = tree.add(node.type, node.start, node.end);
+	const id = tree.add(
+		/** @type {Record<string, number>} */ (NodeType)[node.type],
+		node.start,
+		node.end
+	);
 	for (const key of Object.keys(node)) {
 		if (SKIPPED.has(key)) continue;
 		const value = node[key];
@@ -167,7 +175,7 @@ describe("SyntaxTree", () => {
 
 	it("clears a flag and starts over after reset", () => {
 		const tree = new SyntaxTree();
-		const member = tree.add("MemberExpression", 0, 4);
+		const member = tree.add(NodeType.MemberExpression, 0, 4);
 		tree.set(member, "computed", true);
 		tree.set(member, "computed", false);
 		const before = /** @type {EXPECTED_ANY} */ (
@@ -175,18 +183,18 @@ describe("SyntaxTree", () => {
 		);
 		expect(before.computed).toBe(false);
 		tree.reset();
-		expect(tree.add("ThisExpression", 0, 4)).toBe(member);
-		expect(tree.typeOf(member)).toBe("ThisExpression");
+		expect(tree.add(NodeType.ThisExpression, 0, 4)).toBe(member);
+		expect(tree.type(member)).toBe(NodeType.ThisExpression);
 		expect(toEstreeObject(tree, member)).not.toBe(before);
 		expect(toEstreeObject(tree, 0)).toBeNull();
 	});
 
 	it("reads a field never set, or set to none, as empty", () => {
 		const tree = new SyntaxTree();
-		const block = tree.add("BlockStatement", 0, 2);
-		const name = tree.add("Identifier", 0, 1);
+		const block = tree.add(NodeType.BlockStatement, 0, 2);
+		const name = tree.add(NodeType.Identifier, 0, 1);
 		tree.set(name, "name", null);
-		const statement = tree.add("ExpressionStatement", 0, 2);
+		const statement = tree.add(NodeType.ExpressionStatement, 0, 2);
 		tree.set(statement, "directive", undefined);
 		expect(
 			/** @type {EXPECTED_ANY} */ (toEstreeObject(tree, block)).body
@@ -197,14 +205,19 @@ describe("SyntaxTree", () => {
 		expect(
 			"directive" in /** @type {EXPECTED_OBJECT} */ (toEstreeObject(tree, statement))
 		).toBe(false);
+		const literal = tree.add(NodeType.Literal, 0, 1);
+		expect(tree.name(name)).toBe("");
+		expect(tree.value(literal)).toBe("");
+		expect(tree.textOf(Part.directive, statement)).toBeNull();
+		expect(tree.fieldCount(Field.expression, statement)).toBe(0);
 	});
 
 	it("builds a tree nested deeper than the call stack", () => {
 		const tree = new SyntaxTree();
-		let node = tree.add("Identifier", 0, 1);
+		let node = tree.add(NodeType.Identifier, 0, 1);
 		tree.set(node, "name", "a");
 		for (let i = 0; i < 100000; i++) {
-			const unary = tree.add("UnaryExpression", 0, 1);
+			const unary = tree.add(NodeType.UnaryExpression, 0, 1);
 			tree.set(unary, "operator", "!");
 			tree.set(unary, "prefix", true);
 			tree.set(unary, "argument", node);
@@ -215,10 +228,38 @@ describe("SyntaxTree", () => {
 		expect(object.name).toBe("a");
 	});
 
+	it("reads a node as the CSS and HTML paths read theirs", () => {
+		const { tree, node } = writeExpression("a[b](1, /x/g, ...c);");
+		expect(tree.type(node)).toBe(NodeType.CallExpression);
+		expect(tree.range(node)).toEqual([0, 19]);
+		expect(tree.flag(Flag.optional, node)).toBe(false);
+		const callee = tree.field(0, Field.callee, node);
+		expect(tree.fieldCount(Field.callee, node)).toBe(1);
+		expect(tree.field(1, Field.callee, node)).toBe(0);
+		expect(tree.type(callee)).toBe(NodeType.MemberExpression);
+		expect(tree.flag(Flag.computed, callee)).toBe(true);
+		expect(tree.flag(Flag.optional, callee)).toBe(false);
+		expect(tree.name(tree.field(0, Field.object, callee))).toBe("a");
+		expect(tree.fieldCount(Field.arguments, node)).toBe(3);
+		const regex = tree.field(1, Field.arguments, node);
+		expect(tree.value(regex)).toEqual(/x/g);
+		expect(tree.textOf(Part.raw, regex)).toBe("/x/g");
+		expect(tree.start(regex)).toBe(8);
+		expect(tree.end(regex)).toBe(12);
+		expect(tree.field(3, Field.arguments, node)).toBe(0);
+		expect(tree.fieldCount(Field.body, node)).toBe(0);
+		expect(tree.field(0, Field.body, node)).toBe(0);
+		expect(tree.name(node)).toBe("");
+		expect(tree.value(node)).toBe("");
+		expect(tree.textOf(Part.operator, node)).toBeNull();
+		const spread = tree.field(2, Field.arguments, node);
+		expect(tree.name(tree.field(0, Field.argument, spread))).toBe("c");
+	});
+
 	it("refuses an unknown type or field", () => {
 		const tree = new SyntaxTree();
-		expect(() => tree.add("JSXElement", 0, 1)).toThrow(/Unknown node type/);
-		const node = tree.add("Identifier", 0, 1);
+		expect(() => tree.add(0, 0, 1)).toThrow(/Unknown node type/);
+		const node = tree.add(NodeType.Identifier, 0, 1);
 		expect(() => tree.set(node, "value", 1)).toThrow(/has no field value/);
 	});
 });
