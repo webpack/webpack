@@ -185,6 +185,8 @@ const firstDifference = (theirs, ours) => {
 				continue;
 			}
 			if (ESTREE_ADDED_FIELDS.has(key) && !(key in a)) continue;
+			// webpack's tagged template holds annotations terser's never reads.
+			if (key === "_annotations" && !(key in a) && b[key] === 0) continue;
 			// webpack's destructuring holds terser's `names` as an array pattern's
 			// `elements` or an object pattern's `properties`, the other null.
 			const isPattern = terserTypeOf(kindName(b)) === "Destructuring";

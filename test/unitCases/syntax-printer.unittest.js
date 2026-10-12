@@ -990,6 +990,12 @@ const IMPROVED_CASES = [
 			`var a = [${Array.from({ length: 100 }, (_, index) => (index % 2 ? '"\\ude00"' : '"\\ud83d"')).join(", ")}]; console.log(a.length, a[0].length, a[0].charCodeAt(0), a[1].charCodeAt(0));`
 		],
 		[
+		"an unused tagged template marked `#__PURE__`, its expressions' effects kept",
+		'function tag(s) { return s.raw.join("-"); } var x = /*#__PURE__*/ tag`a`; /*@__PURE__*/ tag`b ${console.log("kept")}`; /*#__PURE__*/ (0, tag)`c`; console.log(/*#__PURE__*/ tag`d${1}e`); function e() { return /*#__PURE__*/ tag`e`; } e();',
+		{ toplevel: true, compress: {}, mangle: false },
+		'function tag(s){return s.raw.join("-")}console.log("kept"),console.log(tag`d${1}e`);'
+	],
+	[
 			"an empty constructor of a class extending nothing, and a class constructed for nothing that runs nothing",
 			'class A { constructor() {} m() { return 1; } } console.log(new A().m(), A.length); new class { x = 1; foo() {} }(); new class {}(console.log("argument"));'
 		],
