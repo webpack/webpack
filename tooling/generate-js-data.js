@@ -1461,11 +1461,43 @@ const SLOT_ORDERS = {
 };
 
 /**
+ * The numbering the tree and its path read nodes by, as CSS and HTML number
+ * theirs: node types and fields from 1, flags as bits, and texts from 1.
+ * @returns {{ types: Record<string, number>, fields: Record<string, number>, flags: Record<string, number>, parts: Record<string, number> }} each table by member name
+ */
+const collectNodeTables = () => {
+	/** @type {Record<string, number>} */
+	const types = {};
+	/** @type {Record<string, number>} */
+	const fields = {};
+	/** @type {Record<string, number>} */
+	const flags = {};
+	/** @type {Record<string, number>} */
+	const parts = {};
+	let flagCount = 0;
+	for (const name of Object.keys(NODE_TYPES)) {
+		types[name] = Object.keys(types).length + 1;
+		for (const part of NODE_TYPES[name].split(" ").filter(Boolean)) {
+			const [field, kind] = part.split(":");
+			if (kind === "node" || kind === "list") {
+				if (!(field in fields)) fields[field] = Object.keys(fields).length + 1;
+			} else if (kind === "flag") {
+				if (!(field in flags)) flags[field] = 1 << flagCount++;
+			} else if (kind !== "value" && field !== "name" && !(field in parts)) {
+				parts[field] = Object.keys(parts).length + 1;
+			}
+		}
+	}
+	return { types, fields, flags, parts };
+};
+
+/**
  * Each node type's fields as `name:kind:slot`, in the order its objects hold
- * them; a flag's slot is its bit, any other field's its place in the record.
+ * them; a flag's slot is its `Flag` bit, any other field's its place in the record.
  * @returns {Record<string, string>} the fields by node type
  */
 const collectNodeFields = () => {
+	const { flags } = collectNodeTables();
 	/** @type {Record<string, string>} */
 	const result = {};
 	for (const name of Object.keys(NODE_TYPES)) {
@@ -1482,13 +1514,27 @@ const collectNodeFields = () => {
 			slotted.sort((a, b) => order.indexOf(a.field) - order.indexOf(b.field));
 		}
 		for (let i = 0; i < slotted.length; i++) slotted[i].slot = i;
-		let bit = 0;
-		for (const field of fields) if (field.kind === "flag") field.slot = bit++;
+		for (const field of fields) {
+			if (field.kind === "flag") field.slot = flags[field.field];
+		}
 		result[name] = fields
 			.map(({ field, kind, slot }) => `${field}:${kind}:${slot}`)
 			.join(" ");
 	}
 	return result;
+};
+
+/**
+ * One generated table as a constant whose JSDoc types each member literally,
+ * so `types.d.ts` reads `NodeType.Identifier` as `1`.
+ * @param {string} name the constant's name
+ * @param {string} description its comment
+ * @param {Record<string, number>} table the table
+ * @returns {string} its source
+ */
+const renderNumberTable = (name, description, table) => {
+	const entries = Object.keys(table).map((key) => `${key}: ${table[key]}`);
+	return `// ${description}\n/** @type {Readonly<{ ${entries.join(", ")} }>} */\nconst ${name} = {\n${entries.join(",\n")}\n};\n`;
 };
 
 /**
@@ -1498,6 +1544,7 @@ const collectNodeFields = () => {
  */
 const renderData = () => {
 	const tables = collectIdentifierTables();
+	const nodeTables = collectNodeTables();
 	const narrow = collectNarrowIdentifierTables();
 	return `${renderHeader(`acorn ${acorn.version}, ${TERSER_SOURCE}`)}
 ${renderTable(
@@ -1537,8 +1584,12 @@ ${renderTable(
 	0
 )}
 ${renderUnicodeProperties()}
-// Each node type the parser makes, its fields as \`name:kind:slot\` in the
-// order its objects hold them; a flag's slot is its bit in the flags column.
+${renderNumberTable("NodeType", "Every node type the parser makes, by its ESTree name.", nodeTables.types)}
+${renderNumberTable("Field", "The fields that hold a node or a list of them, by their ESTree name.", nodeTables.fields)}
+${renderNumberTable("Flag", "The boolean fields, as bits of a node's flags.", nodeTables.flags)}
+${renderNumberTable("Part", "The text fields beyond an identifier's name and a literal's value.", nodeTables.parts)}
+// Each node type's fields as \`name:kind:slot\`, in the order its objects hold
+// them; a flag's slot is its \`Flag\` bit, any other field's its place in the record.
 /** @type {Record<string, string>} */
 const NODE_FIELDS = ${JSON.stringify(collectNodeFields(), null, 1)};
 
@@ -1548,7 +1599,11 @@ module.exports.IDENTIFIER_PART_RANGES = IDENTIFIER_PART_RANGES;
 module.exports.IDENTIFIER_START_RANGES = IDENTIFIER_START_RANGES;
 module.exports.NARROW_IDENTIFIER_PART_RANGES = NARROW_IDENTIFIER_PART_RANGES;
 module.exports.NARROW_IDENTIFIER_START_RANGES = NARROW_IDENTIFIER_START_RANGES;
+module.exports.Field = Field;
+module.exports.Flag = Flag;
 module.exports.NODE_FIELDS = NODE_FIELDS;
+module.exports.NodeType = NodeType;
+module.exports.Part = Part;
 module.exports.UNICODE_BINARY_PROPERTIES = UNICODE_BINARY_PROPERTIES;
 module.exports.UNICODE_BINARY_PROPERTIES_OF_STRINGS =
 	UNICODE_BINARY_PROPERTIES_OF_STRINGS;
@@ -1660,6 +1715,7 @@ module.exports.collectIdentifierTables = collectIdentifierTables;
 module.exports.collectNarrowIdentifierTables = collectNarrowIdentifierTables;
 module.exports.collectNativeObjects = collectNativeObjects;
 module.exports.collectNodeFields = collectNodeFields;
+module.exports.collectNodeTables = collectNodeTables;
 module.exports.collectParserTables = collectParserTables;
 module.exports.collectUnicodeProperties = collectUnicodeProperties;
 module.exports.encodeRanges = encodeRanges;

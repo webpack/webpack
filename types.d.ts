@@ -33169,7 +33169,7 @@ declare class SyntaxParser {
 
 /**
  * A JavaScript syntax tree held as a struct of arrays: a node is an integer
- * id from 1, `0` is no node, and `toEstreeObject` builds the ESTree object.
+ * id from 1, `0` is no node, and it reads as the CSS and HTML paths do.
  */
 declare class SyntaxTree {
 	constructor();
@@ -33178,14 +33178,23 @@ declare class SyntaxTree {
 	 * Forgets every node, keeping the columns for the next tree.
 	 */
 	reset(): void;
-	add(type: string, start: number, end: number): number;
-	typeOf(node: number): string;
+	add(type: number, start: number, end: number): number;
 
 	/**
 	 * Sets one field of a node: a child node, an array of them for a list,
 	 * `0` or null where ESTree has null.
 	 */
 	set(node: number, name: string, value: unknown): void;
+	type(node: number): number;
+	start(node: number): number;
+	end(node: number): number;
+	range(node: number): [number, number];
+	name(node: number): string;
+	value(node: number): unknown;
+	fieldCount(field: number, node: number): number;
+	field(i: number, field: number, node: number): number;
+	flag(flag: number, node: number): boolean;
+	textOf(part: number, node: number): null | string;
 }
 
 /**
@@ -35059,6 +35068,64 @@ declare namespace exports {
 				export let BIND_OUTSIDE: 5;
 				export let BIND_SIMPLE_CATCH: 4;
 				export let BIND_VAR: 1;
+				export let Field: Readonly<{
+					object: 1;
+					property: 2;
+					callee: 3;
+					arguments: 4;
+					expression: 5;
+					id: 6;
+					init: 7;
+					declarations: 8;
+					key: 9;
+					value: 10;
+					left: 11;
+					right: 12;
+					body: 13;
+					argument: 14;
+					elements: 15;
+					properties: 16;
+					params: 17;
+					test: 18;
+					consequent: 19;
+					alternate: 20;
+					expressions: 21;
+					quasis: 22;
+					tag: 23;
+					quasi: 24;
+					discriminant: 25;
+					cases: 26;
+					update: 27;
+					label: 28;
+					block: 29;
+					handler: 30;
+					finalizer: 31;
+					param: 32;
+					superClass: 33;
+					specifiers: 34;
+					source: 35;
+					attributes: 36;
+					imported: 37;
+					local: 38;
+					options: 39;
+					declaration: 40;
+					exported: 41;
+					meta: 42;
+				}>;
+				export let Flag: Readonly<{
+					computed: 1;
+					optional: 2;
+					method: 4;
+					shorthand: 8;
+					delegate: 16;
+					prefix: 32;
+					expression: 64;
+					generator: 128;
+					async: 256;
+					static: 512;
+					tail: 1024;
+					await: 2048;
+				}>;
 				export let SCOPE_ARROW: 16;
 				export let SCOPE_ASYNC: 4;
 				export let SCOPE_CLASS_FIELD_INIT: 512;
@@ -35187,6 +35254,89 @@ declare namespace exports {
 				}
 				export let wordsRegexp: (words: string) => RegExp;
 				export let MAX_MASKED_INDEX: 30;
+				export let NodeType: Readonly<{
+					Identifier: 1;
+					PrivateIdentifier: 2;
+					Literal: 3;
+					MemberExpression: 4;
+					CallExpression: 5;
+					NewExpression: 6;
+					ExpressionStatement: 7;
+					VariableDeclarator: 8;
+					VariableDeclaration: 9;
+					Property: 10;
+					BinaryExpression: 11;
+					LogicalExpression: 12;
+					AssignmentExpression: 13;
+					AssignmentPattern: 14;
+					BlockStatement: 15;
+					StaticBlock: 16;
+					ClassBody: 17;
+					Program: 18;
+					ReturnStatement: 19;
+					ThrowStatement: 20;
+					AwaitExpression: 21;
+					SpreadElement: 22;
+					RestElement: 23;
+					YieldExpression: 24;
+					UnaryExpression: 25;
+					UpdateExpression: 26;
+					ArrayExpression: 27;
+					ArrayPattern: 28;
+					ObjectExpression: 29;
+					ObjectPattern: 30;
+					ThisExpression: 31;
+					Super: 32;
+					EmptyStatement: 33;
+					DebuggerStatement: 34;
+					FunctionExpression: 35;
+					FunctionDeclaration: 36;
+					ArrowFunctionExpression: 37;
+					IfStatement: 38;
+					ConditionalExpression: 39;
+					ParenthesizedExpression: 40;
+					PropertyDefinition: 41;
+					MethodDefinition: 42;
+					TemplateElement: 43;
+					TemplateLiteral: 44;
+					TaggedTemplateExpression: 45;
+					SequenceExpression: 46;
+					SwitchCase: 47;
+					SwitchStatement: 48;
+					ForStatement: 49;
+					ForInStatement: 50;
+					ForOfStatement: 51;
+					WhileStatement: 52;
+					DoWhileStatement: 53;
+					WithStatement: 54;
+					LabeledStatement: 55;
+					BreakStatement: 56;
+					ContinueStatement: 57;
+					TryStatement: 58;
+					CatchClause: 59;
+					ClassDeclaration: 60;
+					ClassExpression: 61;
+					ChainExpression: 62;
+					ImportDeclaration: 63;
+					ImportSpecifier: 64;
+					ImportDefaultSpecifier: 65;
+					ImportNamespaceSpecifier: 66;
+					ImportAttribute: 67;
+					ImportExpression: 68;
+					ExportNamedDeclaration: 69;
+					ExportDefaultDeclaration: 70;
+					ExportAllDeclaration: 71;
+					ExportSpecifier: 72;
+					MetaProperty: 73;
+				}>;
+				export let Part: Readonly<{
+					raw: 1;
+					directive: 2;
+					kind: 3;
+					operator: 4;
+					sourceType: 5;
+					phase: 6;
+				}>;
 				export let buildLineStarts: (source: string) => number[];
 				export let collectCjsRequireSpecifiers: (source: string) => Set<string>;
 				export let declaresIntoBlock: (statement?: any) => boolean;
