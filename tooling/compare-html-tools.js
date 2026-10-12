@@ -440,6 +440,7 @@ const fixtures = async () => {
 	return out;
 };
 /** @typedef {import("../lib/html/syntax-printer").HtmlPrintOptions} HtmlPrintOptions */
+/** @typedef {import("../lib/html/syntax-printer").HtmlTransformOptions} HtmlTransformOptions */
 
 /** @type {HtmlPrintOptions} */
 const DEFAULT_OPTIONS = {};
@@ -928,7 +929,7 @@ const wantedStage = filterFrom("STAGE");
 const SKIPPED_FIXTURE_DIRS = new Set(["js", "node_modules", "wpt"]);
 
 /**
- * @param {HtmlPrintOptions} options one preset's minimizer options
+ * @param {HtmlPrintOptions & HtmlTransformOptions} options one preset's minimizer options
  * @returns {(html: string) => string} the printer those options name
  */
 const printerFor = (options) => {

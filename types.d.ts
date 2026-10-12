@@ -142,6 +142,8 @@ import {
 	internString,
 	isDualStringBufferCachingEnabled
 } from "webpack-sources/types/helpers/stringBufferUtils";
+type SetSamplingIntervalParameterType =
+	import("inspector").Profiler.SetSamplingIntervalParameterType;
 
 declare interface Abortable {
 	signal?: AbortSignal;
@@ -26830,7 +26832,10 @@ declare class Profiler {
 	/**
 	 * Returns promise for the result.
 	 */
-	sendCommand(method: string, params?: Record<string, unknown>): Promise<any>;
+	sendCommand(
+		method: string,
+		params?: SetSamplingIntervalParameterType
+	): Promise<any>;
 	destroy(): Promise<void>;
 
 	/**
@@ -36469,7 +36474,7 @@ declare namespace exports {
 					options?: ParseOptionsSyntaxParser
 				) => RuleSyntaxParser[];
 				export let pickTransforms: (
-					options: Record<string, unknown>
+					options: CssTransformOptions
 				) => undefined | CssTransformOptions;
 				export let rangeEquals: (
 					input: string,
@@ -36679,7 +36684,7 @@ declare namespace exports {
 					rewriteCustomProperties?: boolean;
 					unusedSymbols?: string[];
 					pseudoClasses?: { [index: string]: string };
-				};
+				} & CssTransformOptions;
 				minifyConditionalComments?: boolean;
 				extractComments?:
 					| string
@@ -36698,7 +36703,7 @@ declare namespace exports {
 					| string
 					| EmbeddedSourceResult
 					| Promise<undefined | string | EmbeddedSourceResult>;
-			},
+			} & HtmlTransformOptions,
 			extractComments?:
 				| string
 				| boolean
@@ -37056,7 +37061,7 @@ declare namespace exports {
 				export let parseSrc: (input: string) => [string, number, number][];
 				export let parseSrcset: (input: string) => [string, number, number][];
 				export let pickTransforms: (
-					options: Record<string, unknown>
+					options: HtmlTransformOptions
 				) => undefined | HtmlTransformOptions;
 				export let startsWithWs: (s: string) => boolean;
 				export let tokenize: (
