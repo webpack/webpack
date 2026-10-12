@@ -74,6 +74,10 @@ Array [
 ]
 `;
 
+exports[`syntax-printer improve phase should keep a function called in place whose \`var\`, its name taken, a class in a block there also names 1`] = `"function f(x){var a=g();!function(){var x=typeof a;{class x{}console.log(x.name)}console.log(x)}(),console.log(x,a)}function g(){return 1}f(\\"o\\");"`;
+
+exports[`syntax-printer improve phase should keep a function called in place whose \`var\`s, more than one, take names already taken 1`] = `"function f(x){var a=g(),b=g();console.log(x),function(){if(x){var a=console.log.name,b=typeof x;console.log(a,a,b,b)}}(),console.log(a,b)}function g(){return\\"o\\"}f(1),f(0);"`;
+
 exports[`syntax-printer improve phase should write the \`const\` declarations of a body moved up in place as one \`let\` 1`] = `"export function f(a){let b=a.x(),c=a.y();return a.z(b,c),b+c}"`;
 
 exports[`syntax-printer printEstree should map as terser does: "a directive"; debugger; {} ;\\nlabel: for (;;) { break label; 1`] = `

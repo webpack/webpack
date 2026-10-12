@@ -7677,6 +7677,16 @@ describe("syntax-printer", () => {
 			const { code } = await minify(input, { compress: {}, mangle: false });
 			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
 			expect(code).toContain("function(){");
+			expect(code).toMatchSnapshot();
+		});
+
+		it("should keep a function called in place whose `var`, its name taken, a class in a block there also names", async () => {
+			const { minify } = await load();
+			const input =
+				"function f(x) { var a = g(); (function () { var x = typeof a; { class x {} console.log(x.name); } console.log(x); })(); console.log(x, a); } function g() { return 1; } f('o');";
+			const { code } = await minify(input, { compress: {}, mangle: false });
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			expect(code).toMatchSnapshot();
 		});
 
 		it("should keep an assignment to a `let` before the declaration in its block", async () => {
