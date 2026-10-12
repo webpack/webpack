@@ -282,6 +282,12 @@ const IMPROVED_CASES = [
 		"function f(g){return[void 0,1]}console.log(f(()=>console.log(\"called\")));"
 	],
 	[
+		"a function expression whose name nothing reads written as an arrow in one pass, where unsafe_arrows is on",
+		"console.log([1, 2].map(function foo(x) { return x + 1; }).join());",
+		{ compress: { unsafe_arrows: true }, ecma: 2015, mangle: false },
+		"console.log([1,2].map(x=>x+1).join());"
+	],
+	[
 		"an assignment to a `let` folded into the first read of it",
 		"function f(a) { let x, y; x = a * 2; y = g(x); return [x, y]; } function g(v) { return v + 1; } console.log(f(3));",
 		{ compress: {}, mangle: false },
