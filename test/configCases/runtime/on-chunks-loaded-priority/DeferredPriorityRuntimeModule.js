@@ -1,7 +1,7 @@
 "use strict";
 
 const RuntimeGlobals = require("../../../../lib/runtime/RuntimeGlobals");
-const RuntimeModule = require("../../../../lib/runtime/RuntimeModule");
+const { RuntimeModule } = require("../../../../");
 
 // Only an odd priority waits for lower ones, so the even handler must run while
 // the blocked priority-0 one stays deferred.
@@ -14,7 +14,7 @@ class DeferredPriorityRuntimeModule extends RuntimeModule {
 	 * @returns {string} runtime code
 	 */
 	generate() {
-		const chunk = /** @type {import("../../../../lib/graph/Chunk")} */ (this.chunk);
+		const chunk = /** @type {import("../../../../").Chunk} */ (this.chunk);
 		const order = `${RuntimeGlobals.global}.__onChunksLoadedOrder`;
 		return [
 			`${order} = [];`,

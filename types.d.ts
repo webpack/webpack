@@ -91,6 +91,7 @@ import {
 	WithStatement,
 	YieldExpression
 } from "estree";
+import { FileHandle } from "fs/promises";
 import {
 	Server as ServerImportHttp,
 	ServerOptions as ServerOptionsImportHttp
@@ -1155,7 +1156,7 @@ declare abstract class BasicEvaluatedExpression {
 	regExp?: RegExp;
 	string?: string;
 	templateStringKind?: "cooked" | "raw";
-	array?: any[];
+	array?: string[];
 	identifier?: string | VariableInfo;
 	rootInfo?: string | VariableInfo;
 	getMembers?: () => string[];
@@ -1190,7 +1191,7 @@ declare abstract class BasicEvaluatedExpression {
 	 * As compile time value.
 	 */
 	asCompileTimeValue():
-		undefined | null | string | number | bigint | boolean | RegExp | any[];
+		undefined | null | string | number | bigint | boolean | RegExp | string[];
 	isTruthy(): boolean;
 	isFalsy(): boolean;
 	isNullish(): undefined | boolean;
@@ -4206,10 +4207,10 @@ declare class Compilation {
 	 * the load itself; anything the tap reads off the requirement set must be
 	 * captured before queueing, since `create` runs later.
 	 */
-	addLazyRuntimeModule(
+	addLazyRuntimeModule<T>(
 		chunk: Chunk,
-		load: () => Promise<any>,
-		create: (loaded?: any) => RuntimeModule,
+		load: () => Promise<T>,
+		create: (loaded: T) => RuntimeModule,
 		chunkGraph?: ChunkGraph
 	): void;
 
@@ -4740,6 +4741,16 @@ declare class Compiler {
 		check?: (value: T) => boolean
 	): void;
 }
+type ComplexSerializableType =
+	| undefined
+	| null
+	| string
+	| number
+	| bigint
+	| boolean
+	| object
+	| Buffer
+	| (() => ComplexSerializableType[] | Promise<ComplexSerializableType[]>);
 type ComponentValue = TokenSyntaxParserObject | FunctionNode | SimpleBlock;
 
 /**
@@ -11987,6 +11998,9 @@ declare interface GroupConfig<T, R> {
 	getOptions?: (name: string, items: T[]) => GroupOptionsSmartGrouping;
 	createGroup: (key: string, children: T[], items: T[]) => R;
 }
+declare interface GroupNames {
+	[index: string]: true | BranchID[];
+}
 type GroupOptionsAsyncDependenciesBlock = RawChunkGroupOptions & {
 	name?: null | string;
 } & { entryOptions?: EntryOptions } & { circular?: boolean };
@@ -12241,7 +12255,10 @@ declare interface HashedModuleIdsPluginOptions {
 	 */
 	hashFunction?: string | typeof Hash;
 }
-type Head<T extends ReadonlyArray<any>> = T extends readonly [infer H, ...any[]]
+type Head<T extends ReadonlyArray<any>> = T extends readonly [
+	infer H,
+	...infer _Rest
+]
 	? H
 	: T extends readonly []
 		? any
@@ -17029,7 +17046,7 @@ declare class JavascriptParser extends Parser {
 	 * Parses comment options.
 	 */
 	parseCommentOptions(range: [number, number]): {
-		options: null | Record<string, any>;
+		options: null | MagicCommentOptions;
 		errors: null | (Error & { comment: CommentJavascriptParser })[];
 	};
 
@@ -18716,7 +18733,8 @@ type LazyFunction<
 > = (() => InputValue | Promise<InputValue>) &
 	Partial<{ options: InternalLazyOptions }>;
 declare interface LazyOptions {
-	[index: string]: any;
+	name?: string;
+	size?: number;
 }
 
 /**
@@ -19517,6 +19535,13 @@ declare abstract class Logger {
 declare const MEASURE_END_OPERATION: unique symbol;
 declare const MEASURE_START_OPERATION: unique symbol;
 declare const MODULE_DECLARATIONS: unique symbol;
+
+/**
+ * Magic comment options by name; each value is whatever the user's comment evaluates to.
+ */
+declare interface MagicCommentOptions {
+	[index: string]: any;
+}
 
 /**
  * Defines the main render context type used by this module.
@@ -23574,11 +23599,16 @@ declare interface ObjectSerializerContextObjectMiddlewareObject_1 {
 	setCircularReference: (value: ReferenceableItem) => void;
 	snapshot: () => ObjectSerializerSnapshot;
 	rollback: (snapshot: ObjectSerializerSnapshot) => void;
-	writeLazy?: (item?: any) => void;
+	writeLazy?: (item: ComplexSerializableType) => void;
 	writeSeparate?: (
-		item: any,
+		item: ComplexSerializableType,
 		obj?: LazyOptions
-	) => LazyFunction<any, any, any, LazyOptions>;
+	) => LazyFunction<
+		any,
+		any,
+		SerializerMiddleware<any, any, Record<string, any>>,
+		LazyOptions
+	>;
 }
 declare namespace ObjectSerializerContextObjectMiddlewareObject_2 {
 	export let write: (
@@ -23587,13 +23617,18 @@ declare namespace ObjectSerializerContextObjectMiddlewareObject_2 {
 	export let setCircularReference: (value: ReferenceableItem) => void;
 	export let snapshot: () => ObjectSerializerSnapshot;
 	export let rollback: (snapshot: ObjectSerializerSnapshot) => void;
-	export let writeLazy: undefined | ((item?: any) => void);
+	export let writeLazy: undefined | ((item: ComplexSerializableType) => void);
 	export let writeSeparate:
 		| undefined
 		| ((
-				item: any,
+				item: ComplexSerializableType,
 				obj?: LazyOptions
-		  ) => LazyFunction<any, any, any, LazyOptions>);
+		  ) => LazyFunction<
+				any,
+				any,
+				SerializerMiddleware<any, any, Record<string, any>>,
+				LazyOptions
+		  >);
 }
 
 /**
@@ -23609,11 +23644,16 @@ declare interface ObjectSerializerContextObjectMiddlewareObject_3<
 	setCircularReference: (value: ReferenceableItem) => void;
 	snapshot: () => ObjectSerializerSnapshot;
 	rollback: (snapshot: ObjectSerializerSnapshot) => void;
-	writeLazy?: (item?: any) => void;
+	writeLazy?: (item: ComplexSerializableType) => void;
 	writeSeparate?: (
-		item: any,
+		item: ComplexSerializableType,
 		obj?: LazyOptions
-	) => LazyFunction<any, any, any, LazyOptions>;
+	) => LazyFunction<
+		any,
+		any,
+		SerializerMiddleware<any, any, Record<string, any>>,
+		LazyOptions
+	>;
 }
 
 /**
@@ -23629,11 +23669,16 @@ declare interface ObjectSerializerContextObjectMiddlewareObject_4 {
 	setCircularReference: (value: ReferenceableItem) => void;
 	snapshot: () => ObjectSerializerSnapshot;
 	rollback: (snapshot: ObjectSerializerSnapshot) => void;
-	writeLazy?: (item?: any) => void;
+	writeLazy?: (item: ComplexSerializableType) => void;
 	writeSeparate?: (
-		item: any,
+		item: ComplexSerializableType,
 		obj?: LazyOptions
-	) => LazyFunction<any, any, any, LazyOptions>;
+	) => LazyFunction<
+		any,
+		any,
+		SerializerMiddleware<any, any, Record<string, any>>,
+		LazyOptions
+	>;
 }
 
 /**
@@ -27921,7 +27966,7 @@ declare interface ReferencedExport {
 declare abstract class RegExpValidationState {
 	parser: SyntaxParser;
 	validFlags: string;
-	unicodeProperties: any;
+	unicodeProperties: UnicodePropertyTables;
 	source: string;
 	flags: string;
 	start: number;
@@ -27934,7 +27979,7 @@ declare abstract class RegExpValidationState {
 	lastAssertionIsQuantifiable: boolean;
 	numCapturingParens: number;
 	maxBackReference: number;
-	groupNames: any;
+	groupNames: GroupNames;
 	backReferenceNames: string[];
 	branchID: null | BranchID;
 	reset(start: number, pattern: string, flags: string): void;
@@ -31460,7 +31505,7 @@ declare abstract class SourceProcessor<
 	TPrintOptions = object,
 	TParts extends NodeParts = AnyParts,
 	TState = unknown,
-	TVisitors = VisitorMap<any>
+	TVisitors = VisitorMap<TPath>
 > {
 	/**
 	 * Register one bucket for several node types, as a map naming each would;
@@ -31558,7 +31603,7 @@ declare abstract class SourceProcessor<
 				content?: string;
 				renderEmbeddedSource?: (
 					source: string,
-					hole?: any
+					hole: DeferredEmbeddedSource
 				) => undefined | string | Promise<undefined | string>;
 			}
 	): Promise<{ code: string; map?: SourceMap }>;
@@ -31820,11 +31865,16 @@ declare interface StarListSerializerContext {
 	setCircularReference: (value: ReferenceableItem) => void;
 	snapshot: () => ObjectSerializerSnapshot;
 	rollback: (snapshot: ObjectSerializerSnapshot) => void;
-	writeLazy?: (item?: any) => void;
+	writeLazy?: (item: ComplexSerializableType) => void;
 	writeSeparate?: (
-		item: any,
+		item: ComplexSerializableType,
 		obj?: LazyOptions
-	) => LazyFunction<any, any, any, LazyOptions>;
+	) => LazyFunction<
+		any,
+		any,
+		SerializerMiddleware<any, any, Record<string, any>>,
+		LazyOptions
+	>;
 }
 
 /**
@@ -32787,7 +32837,7 @@ declare interface StreamOptions {
 		| "latin1"
 		| "binary"
 		| "hex";
-	fd?: any;
+	fd?: number | FileHandle;
 	mode?: number;
 	autoClose?: boolean;
 	emitClose?: boolean;
@@ -33490,7 +33540,10 @@ declare interface TagInfo {
 		| CompatibilitySettings;
 	next?: TagInfo;
 }
-type Tail<T extends ReadonlyArray<any>> = T extends readonly [any, ...infer R]
+type Tail<T extends ReadonlyArray<any>> = T extends readonly [
+	infer _First,
+	...infer R
+]
 	? R
 	: T;
 declare interface TargetItemWithConnection {
@@ -33926,6 +33979,22 @@ type TypedNodePath<TPath, TNode, P extends NodeParts, T, S = unknown> = Omit<
 	): null | string;
 };
 declare const UNDEFINED_MARKER: unique symbol;
+declare interface UnicodePropertyTables {
+	/**
+	 * the binary property names and general category values
+	 */
+	binary: RegExp;
+
+	/**
+	 * the string-valued property names
+	 */
+	binaryOfStrings: RegExp;
+
+	/**
+	 * each non-binary property's values, by property name
+	 */
+	nonBinary: Record<string, RegExp>;
+}
 type UnsafeCacheData = KnownUnsafeCacheData & Record<string, any>;
 
 /**
@@ -34420,9 +34489,9 @@ declare abstract class WeakTupleMap<K extends any[], V> {
 	 * extra rest array) on every call — `ModuleGraph#cached` runs this on hot
 	 * paths where most calls hit the cache and the closure would be pure waste.
 	 */
-	cachedProvide(
-		compute: (thisArg: any, ...args: K) => V,
-		thisArg: any,
+	cachedProvide<This>(
+		compute: (thisArg: This, ...args: K) => V,
+		thisArg: This,
 		args: K
 	): V;
 
@@ -36071,10 +36140,10 @@ declare namespace exports {
 				| string
 				| boolean
 				| RegExp
-				| ((...args: any[]) => boolean)
+				| ((...args: never[]) => boolean)
 				| {
 						condition?:
-							string | boolean | RegExp | ((...args: any[]) => boolean);
+							string | boolean | RegExp | ((...args: never[]) => boolean);
 				  }
 		): Promise<{
 			code: string;
@@ -36699,10 +36768,10 @@ declare namespace exports {
 				| string
 				| boolean
 				| RegExp
-				| ((...args: any[]) => boolean)
+				| ((...args: never[]) => boolean)
 				| {
 						condition?:
-							string | boolean | RegExp | ((...args: any[]) => boolean);
+							string | boolean | RegExp | ((...args: never[]) => boolean);
 				  }
 		): Promise<{
 			code: string;
@@ -37468,10 +37537,10 @@ declare namespace exports {
 					| string
 					| boolean
 					| RegExp
-					| ((...args: any[]) => boolean)
+					| ((...args: never[]) => boolean)
 					| {
 							condition?:
-								string | boolean | RegExp | ((...args: any[]) => boolean);
+								string | boolean | RegExp | ((...args: never[]) => boolean);
 					  }
 					| ((comment: {
 							value: string;
