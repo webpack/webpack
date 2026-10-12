@@ -6316,6 +6316,14 @@ describe("syntax-printer", () => {
 		const async = await minify(code, { ...options });
 		expect(sync.code).toBe(async.code);
 		expect(sync.map).toBe(async.map);
+		// An input map is read where the minify yields.
+		const content = JSON.parse(/** @type {string} */ (async.map));
+		const printed = /** @type {string} */ (async.code);
+		const mapped = { module: true, sourceMap: { content } };
+		const syncMapped = modules.minifySync(printed, { ...mapped });
+		expect(syncMapped.map).toBe(
+			(await minify(printed, { ...mapped, sourceMap: { content } })).map
+		);
 	});
 
 	describe("printing its own output again", () => {
@@ -6338,15 +6346,24 @@ describe("syntax-printer", () => {
 
 		it("should keep the parentheses an import()'s arguments and callee need, which terser drops", async () => {
 			const { minify } = await load();
-			const code = 'import("a", (b, c)); new (import("a"));';
+			const code =
+				'import("a", (b, c)); new (import("a")); new A(import("a"));';
 			const [printed, again] = await twice(code);
-			expect(printed).toBe('import("a",(b,c));new(import("a"));');
+			expect(printed).toBe(
+				'import("a",(b,c));new(import("a"));new A(import("a"));'
+			);
 			expect(again).toBe(printed);
 			const reference = await terserReference().minify(code, formatOnly);
-			expect(reference.code).toBe('import("a",b,c);new import("a");');
+			expect(reference.code).toBe(
+				'import("a",b,c);new import("a");new A(import("a"));'
+			);
 			expect(
 				(await uncorrected(() => minify(code, formatOnly))).code
 			).toBe(reference.code);
+			// terser's tree, printed where a minify compresses.
+			expect((await minify(code, { mangle: false })).code).toBe(
+				'import("a",(b,c)),new(import("a")),new A(import("a"));'
+			);
 		});
 
 		it("should spell a directive's `</script` and `<!--` safe for an inline script, keeping its value", async () => {
@@ -6361,6 +6378,21 @@ describe("syntax-printer", () => {
 				expect(again).toBe(printed);
 				expect(vm.runInNewContext(printed.slice(0, printed.indexOf(";")))).toBe(
 					vm.runInNewContext(code.slice(0, code.indexOf(";")))
+				);
+			}
+		});
+
+		it("should print an escaped directive as written where the output is not inlined", async () => {
+			const { minify } = await load();
+			const code = '"x\\x20</script>"; f();';
+			const format = { inline_script: false };
+			// Printed from the SyntaxTree, then from terser's tree.
+			for (const options of [
+				{ ...formatOnly, format },
+				{ compress: { directives: false }, format }
+			]) {
+				expect((await minify(code, options)).code).toBe(
+					'"x\\x20</script>";f();'
 				);
 			}
 		});
@@ -6385,6 +6417,19 @@ describe("syntax-printer", () => {
 			expect((await minify(/** @type {string} */ (printed), formatOnly)).code).toBe(
 				printed
 			);
+		});
+
+		it("should break the line after a kept comment holding a break, as its print is read back", async () => {
+			const { minify } = await load();
+			const code = "f(\n/*! a\n b */\n/* dropped */ (m) => 1);";
+			const [printed, again] = await twice(code);
+			expect(printed).toBe("f(\n/*! a\n b */\nm=>1);");
+			expect(again).toBe(printed);
+			const reference = await terserReference().minify(code, formatOnly);
+			expect(reference.code).toBe("f(\n/*! a\n b */m=>1);");
+			expect(
+				(await uncorrected(() => minify(code, formatOnly))).code
+			).toBe(reference.code);
 		});
 
 		it("should print a directive as it is spelled, where an encoding doubled each backslash", async () => {

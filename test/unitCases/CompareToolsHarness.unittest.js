@@ -13,6 +13,7 @@ const {
 	findingGroups,
 	formatCost,
 	formatProfile,
+	idempotence,
 	installPackages,
 	kb,
 	legalNotices,
@@ -625,6 +626,49 @@ describe("compare-tools-harness", () => {
 				cpu: "-",
 				peak: "-"
 			});
+		});
+	});
+
+	describe("idempotence", () => {
+		/**
+		 * @param {string} text a text
+		 * @returns {string} what it says, ignoring case
+		 */
+		const says = (text) => text.toLowerCase();
+
+		it("reports nothing when printing the output again leaves it be", () => {
+			const minify = (/** @type {string} */ source) => source.trim();
+			expect(idempotence({ minify, source: " a ", says })).toEqual({
+				printed: "a",
+				reports: []
+			});
+		});
+
+		it("prints the output again with reprint where one is given", () => {
+			const minify = (/** @type {string} */ source) => `${source}!`;
+			const reprint = (/** @type {string} */ printed) => printed;
+			expect(idempotence({ minify, reprint, source: "a", says })).toEqual({
+				printed: "a!",
+				reports: []
+			});
+			expect(
+				idempotence({ minify, source: "a", says }).reports[0].what
+			).toBe("differs, +1 B");
+		});
+
+		it("reports a second print that throws", () => {
+			const reprint = () => {
+				throw new Error("cannot read it back");
+			};
+			const { printed, reports } = idempotence({
+				minify: (source) => source,
+				reprint,
+				source: "a",
+				says
+			});
+			expect(printed).toBe("a");
+			expect(reports[0].relation).toBe("idempotence");
+			expect(reports[0].what).toBe("threw");
 		});
 	});
 

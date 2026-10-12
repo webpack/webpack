@@ -43,7 +43,12 @@ const SOURCES = [
 	"#!/usr/bin/env node\n'use strict'; console.log(1)",
 	"({}).x; ({} = a); ({}) ? 1 : 2; if (a) function f(){} ; if (c) { let x = 1; }",
 	"o = { if: 1, class: 2, 'a-b': 3, 1: 4, '01': 5, ' ': 7 }; o.if; o['a-b']; o['1'];",
-	"x = /*@__PURE__*/ f(); y = (/* a */ (b, c) /* d */); z = (/* e */ g) /* f */ (h)"
+	"x = /*@__PURE__*/ f(); y = (/* a */ (b, c) /* d */); z = (/* e */ g) /* f */ (h)",
+	// What a print of the print kept as written: each fixed in both printers.
+	'import("a", (b, c)); new (import("a")); new A(import("a"));',
+	"'use\\x20strict'; \"a\\\\b\"; 'x\\x20</script>-->'; \"y\\\\<!--\"; f()",
+	";// START\nf();\n;// END\n\n;/*! kept */\ng();",
+	"f(\n/*! a\n b */\n/* dropped */ (m) => 1);"
 ];
 
 // What each source is printed with: the stream's options and a module.

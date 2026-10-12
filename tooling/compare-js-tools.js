@@ -1480,16 +1480,10 @@ const EXPECTED = [
 	},
 	{
 		relation: "idempotence",
-		contains: "=>",
-		source: "reuse-webpack-esm-library/lib.js",
-		why: "terser breaks the line after a kept comment where the next token began one, and a comment holding a break is read back as one"
-	},
-	{
-		relation: "idempotence",
 		contains: "var ",
 		source: "ECharts",
 		presets: ["default", "2 passes"],
-		why: "terser breaks the line after a kept comment where the next token began one, and a comment holding a break is read back as one"
+		why: "terser breaks the line after a statement's trailing comment only where it compresses, so a print-only reprint joins them"
 	}
 ];
 
