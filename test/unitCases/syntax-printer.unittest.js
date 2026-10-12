@@ -6526,6 +6526,15 @@ describe("syntax-printer", () => {
 			expect(expected).toBe(
 				(await minify(code, { compress: false, mangle: false })).code
 			);
+			// A tree built by hand may leave both quotes bare in a spelling.
+			const [built] = withoutRaw.body;
+			built.directive = "a\"b'c\\x41";
+			built.expression.value = "a\"b'cA";
+			const { code: printed } = await minify(withoutRaw, options);
+			expect(printed).toBe('\'a"b\\\'c\\x41\';\'c"d\';"e\\"f\'g";f();');
+			expect(vm.runInNewContext(/** @type {string} */ (printed).split(";")[0])).toBe(
+				"a\"b'cA"
+			);
 		});
 
 		it("should give back an untagged template's raw text written from its value, where terser keeps the source's", async () => {
