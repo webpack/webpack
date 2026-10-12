@@ -989,7 +989,13 @@ describe("JavaScript fuzzer", () => {
 						randomOptions(random),
 						randomOptions(random)
 					];
-					const failure = await checkProgram(program, optionSets, minify);
+					/** @type {string | undefined} */
+					let failure;
+					try {
+						failure = await checkProgram(program, optionSets, minify);
+					} catch (err) {
+						failure = `throws ${/** @type {Error} */ (err).stack}`;
+					}
 					// A failing program is the finding: the rest of the seed waits on it.
 					if (failure !== undefined) {
 						failures.push(
