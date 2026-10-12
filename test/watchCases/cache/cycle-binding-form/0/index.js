@@ -1,12 +1,17 @@
-// `export const` in a.js, `export default` in c.js
-for (const [file, load, names] of [
-	["a.js", () => require("./a.js"), ["keys", "value"]],
-	["c.js", () => require("./c.js"), ["default", "keys"]]
+// a.js has an `export const`, c.js an `export default`; the cycle is formed at
+// steps 0 and 2 and broken at step 1
+const cycle = WATCH_STEP !== "1";
+
+for (const [file, load, value] of [
+	["a.js", () => require("./a.js"), "alpha"],
+	["c.js", () => require("./c.js"), "default"]
 ]) {
-	it(`should define ${file}'s exports up front once a require() cycle reaches it`, () => {
+	it(`should define ${file}'s exports as the cycles around it ask`, () => {
 		const module = load();
-		// every export used as a whole object, so none is inlined or renamed
-		expect(Object.keys(module).sort()).toEqual(names);
-		expect(module.keys()).toEqual(WATCH_STEP === "1" ? names : null);
+		// getters are defined up front by name, values after the module ran
+		expect(Object.keys(module)).toEqual(
+			cycle ? [value, "keys"].sort() : ["keys", value]
+		);
+		expect(module.keys()).toEqual(cycle ? [value, "keys"].sort() : null);
 	});
 }
