@@ -1101,19 +1101,19 @@ declare abstract class BasicEvaluatedExpression {
 		| MethodDefinition
 		| PropertyDefinition
 		| VariableDeclarator
-		| SwitchCase
-		| CatchClause
-		| ObjectPattern
-		| ArrayPattern
-		| RestElement
-		| AssignmentPattern
-		| Property
 		| AssignmentProperty
+		| Property
+		| CatchClause
 		| ClassBody
 		| ImportSpecifier
 		| ImportDefaultSpecifier
 		| ImportNamespaceSpecifier
 		| ExportSpecifier
+		| ObjectPattern
+		| ArrayPattern
+		| RestElement
+		| AssignmentPattern
+		| SwitchCase
 		| TemplateElement;
 	quasis?: BasicEvaluatedExpression[];
 	parts?: BasicEvaluatedExpression[];
@@ -1360,19 +1360,19 @@ declare abstract class BasicEvaluatedExpression {
 			| MethodDefinition
 			| PropertyDefinition
 			| VariableDeclarator
-			| SwitchCase
-			| CatchClause
-			| ObjectPattern
-			| ArrayPattern
-			| RestElement
-			| AssignmentPattern
-			| Property
 			| AssignmentProperty
+			| Property
+			| CatchClause
 			| ClassBody
 			| ImportSpecifier
 			| ImportDefaultSpecifier
 			| ImportNamespaceSpecifier
 			| ExportSpecifier
+			| ObjectPattern
+			| ArrayPattern
+			| RestElement
+			| AssignmentPattern
+			| SwitchCase
 			| TemplateElement
 	): BasicEvaluatedExpression;
 }
@@ -16467,11 +16467,11 @@ declare class JavascriptParser extends Parser {
 			| string
 			| Identifier
 			| MemberExpression
+			| Property
 			| ObjectPattern
 			| ArrayPattern
 			| RestElement
 			| AssignmentPattern
-			| Property
 		)[],
 		fn: () => void
 	): void;
@@ -16582,11 +16582,11 @@ declare class JavascriptParser extends Parser {
 			| string
 			| Identifier
 			| MemberExpression
+			| Property
 			| ObjectPattern
 			| ArrayPattern
 			| RestElement
 			| AssignmentPattern
-			| Property
 		)[],
 		onIdent: (ident: string) => void
 	): void;
@@ -16598,11 +16598,11 @@ declare class JavascriptParser extends Parser {
 		pattern:
 			| Identifier
 			| MemberExpression
+			| Property
 			| ObjectPattern
 			| ArrayPattern
 			| RestElement
-			| AssignmentPattern
-			| Property,
+			| AssignmentPattern,
 		onIdent: (ident: string, identifier: Identifier) => void
 	): void;
 
@@ -33168,6 +33168,27 @@ declare class SyntaxParser {
 }
 
 /**
+ * A JavaScript syntax tree held as a struct of arrays: a node is an integer
+ * id from 1, `0` is no node, and `toEstreeObject` builds the ESTree object.
+ */
+declare class SyntaxTree {
+	constructor();
+
+	/**
+	 * Forgets every node, keeping the columns for the next tree.
+	 */
+	reset(): void;
+	add(type: string, start: number, end: number): number;
+	typeOf(node: number): string;
+
+	/**
+	 * Sets one field of a node: a child node, an array of them for a list,
+	 * `0` or null where ESTree has null.
+	 */
+	set(node: number, name: string, value: unknown): void;
+}
+
+/**
  * Defines the synthetic dependency location type used by this module.
  */
 declare interface SyntheticDependencyLocation {
@@ -35180,6 +35201,86 @@ declare namespace exports {
 					offset: number
 				) => SourcePosition;
 				export let releaseParserCaches: () => void;
+				export let toEstreeObject: (
+					tree: SyntaxTree,
+					node: number,
+					fields?: string[]
+				) =>
+					| null
+					| ProgramImport
+					| ImportDeclaration
+					| ExportNamedDeclaration
+					| ExportAllDeclaration
+					| ImportExpressionImport
+					| UnaryExpression
+					| ArrayExpression
+					| ArrowFunctionExpression
+					| AssignmentExpression
+					| AwaitExpression
+					| BinaryExpression
+					| SimpleCallExpression
+					| NewExpression
+					| ChainExpression
+					| ClassExpression
+					| ConditionalExpression
+					| FunctionExpression
+					| Identifier
+					| SimpleLiteral
+					| RegExpLiteral
+					| BigIntLiteral
+					| LogicalExpression
+					| MemberExpression
+					| MetaProperty
+					| ObjectExpression
+					| SequenceExpression
+					| TaggedTemplateExpression
+					| TemplateLiteral
+					| ThisExpression
+					| UpdateExpression
+					| YieldExpression
+					| SpreadElement
+					| PrivateIdentifier
+					| Super
+					| FunctionDeclaration
+					| VariableDeclaration
+					| ClassDeclaration
+					| ExpressionStatement
+					| BlockStatement
+					| StaticBlock
+					| EmptyStatement
+					| DebuggerStatement
+					| WithStatement
+					| ReturnStatement
+					| LabeledStatement
+					| BreakStatement
+					| ContinueStatement
+					| IfStatement
+					| SwitchStatement
+					| ThrowStatement
+					| TryStatement
+					| WhileStatement
+					| DoWhileStatement
+					| ForStatement
+					| ForInStatement
+					| ForOfStatement
+					| ExportDefaultDeclaration
+					| MethodDefinition
+					| PropertyDefinition
+					| VariableDeclarator
+					| AssignmentProperty
+					| Property
+					| CatchClause
+					| ClassBody
+					| ImportSpecifier
+					| ImportDefaultSpecifier
+					| ImportNamespaceSpecifier
+					| ExportSpecifier
+					| ObjectPattern
+					| ArrayPattern
+					| RestElement
+					| AssignmentPattern
+					| SwitchCase
+					| TemplateElement;
 				export {
 					DestructuringErrors,
 					Label,
@@ -35196,6 +35297,7 @@ declare namespace exports {
 					MODULE_DECLARATIONS,
 					LEGACY_ASSERT_ATTRIBUTES,
 					ParserPosition,
+					SyntaxTree,
 					WebpackParser
 				};
 			}
@@ -35226,6 +35328,86 @@ declare namespace exports {
 					) => boolean;
 				};
 			}
+			export const toEstreeObject: (
+				tree: SyntaxTree,
+				node: number,
+				fields?: string[]
+			) =>
+				| null
+				| ProgramImport
+				| ImportDeclaration
+				| ExportNamedDeclaration
+				| ExportAllDeclaration
+				| ImportExpressionImport
+				| UnaryExpression
+				| ArrayExpression
+				| ArrowFunctionExpression
+				| AssignmentExpression
+				| AwaitExpression
+				| BinaryExpression
+				| SimpleCallExpression
+				| NewExpression
+				| ChainExpression
+				| ClassExpression
+				| ConditionalExpression
+				| FunctionExpression
+				| Identifier
+				| SimpleLiteral
+				| RegExpLiteral
+				| BigIntLiteral
+				| LogicalExpression
+				| MemberExpression
+				| MetaProperty
+				| ObjectExpression
+				| SequenceExpression
+				| TaggedTemplateExpression
+				| TemplateLiteral
+				| ThisExpression
+				| UpdateExpression
+				| YieldExpression
+				| SpreadElement
+				| PrivateIdentifier
+				| Super
+				| FunctionDeclaration
+				| VariableDeclaration
+				| ClassDeclaration
+				| ExpressionStatement
+				| BlockStatement
+				| StaticBlock
+				| EmptyStatement
+				| DebuggerStatement
+				| WithStatement
+				| ReturnStatement
+				| LabeledStatement
+				| BreakStatement
+				| ContinueStatement
+				| IfStatement
+				| SwitchStatement
+				| ThrowStatement
+				| TryStatement
+				| WhileStatement
+				| DoWhileStatement
+				| ForStatement
+				| ForInStatement
+				| ForOfStatement
+				| ExportDefaultDeclaration
+				| MethodDefinition
+				| PropertyDefinition
+				| VariableDeclarator
+				| AssignmentProperty
+				| Property
+				| CatchClause
+				| ClassBody
+				| ImportSpecifier
+				| ImportDefaultSpecifier
+				| ImportNamespaceSpecifier
+				| ExportSpecifier
+				| ObjectPattern
+				| ArrayPattern
+				| RestElement
+				| AssignmentPattern
+				| SwitchCase
+				| TemplateElement;
 		}
 		export {
 			EnableChunkLoadingPlugin,
