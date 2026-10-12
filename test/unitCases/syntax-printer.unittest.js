@@ -1113,7 +1113,31 @@ const IMPROVED_CASES = [
 		"function create(type, config) { var props = {}; if (config) props.a = config.a; var key = arguments.length > 2; var displayName = typeof type === 'object' ? type.id : type; key && define(props, displayName); return props; } function define(props, displayName) { var warn = function () { console.log('warn', displayName); }; warn.isWarning = true; Object.defineProperty(props, 'key', { get: warn }); } console.log(Object.keys(create('div', { a: 1 }, 1)), create({ id: 'f' }, null, 1).key);",
 		{ compress: { toplevel: true }, mangle: false },
 		'function create(type,config){var props={};config&&(props.a=config.a);var warn,key=arguments.length>2,displayName="object"==typeof type?type.id:type;return key&&((warn=function(){console.log("warn",displayName)}).isWarning=!0,Object.defineProperty(props,"key",{get:warn})),props}console.log(Object.keys(create("div",{a:1},1)),create({id:"f"},null,1).key);'
-	]
+	],
+	[
+		"an object split into a variable a property, where a read passes a property's value on",
+		"function f(w) { var o = { a: 1, b: w, c: () => 3, d: 4 }; var x = o.b; console.log(o.a + x, o.c(), o.b); } f(2);",
+		{ compress: {}, mangle: false },
+		"function f(w){var o_b=w;console.log(1+o_b,(()=>3)(),o_b)}f(2);"
+	],
+	[
+		"a function called in place reading its arguments, constants, where a variable would hold each",
+		"({ log: function (value) { console.log(value, value); } }).log(\"direct\"); console.log(({ f: function (x) { return function () { return x; }; } }).f(void 0)());",
+		{ compress: {}, mangle: false },
+		"console.log(\"direct\",\"direct\"),console.log(void 0);"
+	],
+	[
+		"a function called in place passed constants, beside a variable of another name, or of its name but written",
+		"!function () { function show(props, name) { props.seen = name; } function other(props, value, name, flag) { flag && show(props, value); return [props, name]; } function written(props, name, flag) { flag && show(props, name); name = 2; return [props, name]; } console.log(other({}, \"a\", \"n\", 1)[0].seen, written({}, \"a\", 1)[0].seen); }();",
+		{ compress: {}, mangle: false },
+		"!function(){function show(props,name){props.seen=name}var props;console.log((props={},show(props,\"a\"),[props,\"n\"])[0].seen,function(props,name,flag){return flag&&show(props,name),[props,name=2]}({},\"a\",1)[0].seen)}();"
+	],
+	[
+		"a function called in place passed constants, beside variables of its parameters' names, which a pattern or a `for` head writes",
+		"!function () { function show(props, name) { props.get = function () { return name; }; } function pattern(props, name, flag) { flag && show(props, name); [name] = [\"later\"]; return props; } function head(props, name, flag) { flag && show(props, name); for (name in { later: 1 }); return props; } console.log(pattern({}, \"a\", 1).get(), head({}, \"a\", 1).get()); }();",
+		{ compress: {}, mangle: false },
+		"!function(){function show(props,name){props.get=function(){return name}}var props,name;console.log((props={},name=\"a\",show(props,name),[name]=[\"later\"],props).get(),function(props,name,flag){for(name in flag&&show(props,name),{later:1});return props}({},\"a\",1).get())}();"
+	],
 ];
 
 // What the `improve` phase leaves as terser writes it: each body has something
@@ -1307,8 +1331,8 @@ const KEPT_CASES = [
 	["functions calling themselves, chosen by a conditional that is called", "!function () { function fact(n) { return n < 2 ? 1 : n * fact(n - 1); } function sum(n) { return n < 1 ? 0 : n + sum(n - 1); } function make(b) { return function (x) { return (b ? fact : sum)(x); }; } console.log(make(1)(4), make(0)(4)); }();"],
 	["functions chosen by a conditional that is constructed or passed on", "!function () { function P(s) { this.s = s; } function Q(s) { this.s = -s; } function f1(s) { return s + 1; } function f2(s) { return s * 2; } function make(b) { return function (x) { return [new (b ? P : Q)(x).s, [x].map(b ? f1 : f2)]; }; } console.log(make(1)(3), make(0)(3)); }();"],
 	["a function passed variables of its parameters' names that a closure in it reads, set in a loop or after the call", "!function () { var fs = []; function show(props, name) { props.get = function () { return name; }; } function create(list) { for (var i = 0; i < list.length; i++) { var props = {}, name = list[i]; list[i] && show(props, name); fs.push(props); } } function late(props, flag) { flag && show(props, name); var name = \"late\"; return props; } create([\"a\", \"b\"]); console.log(fs.map(function (p) { return p.get(); }).join(), late({}, 1).get()); }();"],
-	["a function passed a variable of another name, or of its name but written", "!function () { function show(props, name) { props.seen = name; } function other(props, value, name, flag) { flag && show(props, value); return [props, name]; } function written(props, name, flag) { flag && show(props, name); name = 2; return [props, name]; } console.log(other({}, \"a\", \"n\", 1)[0].seen, written({}, \"a\", 1)[0].seen); }();"],
-	["a function passed variables of its parameters' names, which a pattern or a `for` head writes", "!function () { function show(props, name) { props.get = function () { return name; }; } function pattern(props, name, flag) { flag && show(props, name); [name] = [\"later\"]; return props; } function head(props, name, flag) { flag && show(props, name); for (name in { later: 1 }); return props; } console.log(pattern({}, \"a\", 1).get(), head({}, \"a\", 1).get()); }();"],
+	["a function passed a variable of another name, or of its name but written", "!function () { function show(props, name) { props.seen = name; } function other(props, value, name, flag) { flag && show(props, value); return [props, name]; } function written(props, name, flag) { flag && show(props, name); name = 2; return [props, name]; } console.log(other({}, [\"a\"], [\"n\"], [1])[0].seen, written({}, [\"a\"], [1])[0].seen); }();"],
+	["a function passed variables of its parameters' names, which a pattern or a `for` head writes", "!function () { function show(props, name) { props.get = function () { return name; }; } function pattern(props, name, flag) { flag && show(props, name); [name] = [\"later\"]; return props; } function head(props, name, flag) { flag && show(props, name); for (name in { later: 1 }); return props; } console.log(pattern({}, [\"a\"], [1]).get(), head({}, [\"a\"], [1]).get()); }();"],
 	["a function incrementing a parameter, passed the variable of its name", "!function () { function show(props, name) { props.seen = name++; props.next = name; } function create(props, name, flag) { flag && show(props, name); return [props, name]; } console.log(create({}, \"a\", 1)[0].next, create({}, 1, 1)[0].next); }();"],
 	["a function writing a parameter by a pattern, passed the variable of its name", "!function () { function show(props, name) { [name] = [name + \"!\"]; props.seen = name; } function create(props, name, flag) { flag && show(props, name); return [props, name]; } console.log(create({}, \"a\", 1)[0].seen, create({}, \"b\", 0)[0].seen); }();"],
 	["a function passed variables of its parameters' names, of a function reading `arguments` or `eval`", "!function () { function show(props, name) { props.seen = name; } function args(props, name, flag) { flag && show(props, name); return [props, name, arguments.length]; } function evaluates(props, name, flag) { flag && show(props, name); return [props, eval(\"name\")]; } console.log(args({}, \"a\", 1)[0].seen, evaluates({}, \"b\", 1)[0].seen); }();"],
@@ -7373,6 +7397,44 @@ describe("syntax-printer", () => {
 				expect(code).toBe(reference.code);
 			});
 		}
+
+		it("should keep an object whole where a method reads `this`, a property is deleted or missing, or the object is read itself", async () => {
+			const { minify } = await load();
+			const prelude =
+				"var h = [].concat(2); function f() { return this && this.b; } ";
+			for (const input of [
+				"var o = { a: 1, b: h, f: f }; console.log(o.b); console.log(o.f`x`);",
+				"var o = { a: f, b: 2 }; console.log(o.a`x`, o.b);",
+				"var o = { a: 1, b: h, f: f }; console.log(o.b); console.log(o.f());",
+				"var o = { a: 1, b: h }; console.log(o.b); console.log(o?.a);",
+				"var o = { a: 1, b: h }; console.log(o.b); console.log(o);",
+				"var o = { a: 1, b: h }; console.log(o.b); delete o.a; console.log(o.a);",
+				"var o = { a: 1, b: h }; console.log(o.b); console.log(o.c);",
+				"var o = { __proto__: { p: 1 }, b: h }; console.log(o.b, o.b, o.p);",
+			]) {
+				const { code } = await minify(prelude + input, {
+					compress: { toplevel: true },
+					mangle: false
+				});
+				expect(code).toContain("var o={");
+				expect(runProgram(/** @type {string} */ (code))).toBe(
+					runProgram(prelude + input)
+				);
+			}
+		});
+
+		it("should keep a function called in place whose parameter its body writes, or whose argument is a regular expression", async () => {
+			const { minify } = await load();
+			for (const [input, kept] of [
+				["console.log(({ f: function (x) { x += 1; return x * x; } }).f(3));", "function(x){"],
+				["console.log(({ f: function (x) { [x] = [x + 1]; return x * x; } }).f(3));", "function(x){"],
+				["console.log(({ f: function (r) { return r.test(\"a\") && r.test(\"a\"); } }).f(/a/g));", "function(r){"]
+			]) {
+				const { code } = await minify(input, { compress: {}, mangle: false });
+				expect(code).toContain(kept);
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			}
+		});
 
 		it("should keep an assignment to a `let` before the declaration in its block", async () => {
 			const { minify } = await load();
