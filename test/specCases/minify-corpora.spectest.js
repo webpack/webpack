@@ -1745,6 +1745,10 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 		]
 	],
 	[
+		"loops run in place, each counter taking a name of its own where the copies of one `for (var e = 0; e <` gzip matched",
+		["element-setting-converts-using-ToNumber.js (the default minimizer's options)"]
+	],
+	[
 		"a catch's `return` dropped where the function returns anyway, in a source too short for gzip to gain",
 		["peephole/minimize_exit_points.rs:101 (the default minimizer's options)"]
 	],

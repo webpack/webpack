@@ -730,8 +730,7 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/reduced/2/input.js",
 			"swc minifier: full/vercel/ms/1/input.js",
 			"swc minifier: pass-1/seq/1/input.js",
-			"swc minifier: projects/files/backbone-1.1.0.js",
-			"swc minifier: projects/files/react-17.0.1.js"
+			"swc minifier: projects/files/backbone-1.1.0.js"
 		]
 	],
 	[
