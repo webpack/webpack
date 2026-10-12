@@ -1358,6 +1358,11 @@ const ARGUMENTS_KEPT_CASES = [
 /** @type {[string, string, import("terser").MinifyOptions][]} */
 const CORRECTED_CASES = [
 	[
+		"a function declaration read once that writes its own name, where toplevel is on",
+		"'use strict'; function log(x) { console.log(typeof x); } var a = f(); console.log(a); function f() { log(f); return (f = function () { return 'second'; })(); }",
+		{ toplevel: true, mangle: false }
+	],
+	[
 		"an arguments read in a function inlined as a copy, where keep_fargs is off",
 		"function a(f) { var o = {}; f(o); console.log(o.c(1, 2)); } a(function (b) { b.c = c; function c() { return arguments[1]; } });",
 		{ compress: { arguments: true, keep_fargs: false }, mangle: false }
