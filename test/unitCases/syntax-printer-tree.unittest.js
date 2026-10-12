@@ -75,10 +75,10 @@ const OPTION_SETS = {
 
 /**
  * Minifies a source with `printTree` counted.
- * @param {EXPECTED_ANY} input the source, or the sources by name
- * @param {EXPECTED_ANY} options the options
+ * @param {import("../../lib/javascript/syntax-printer").MinifySources} input the source, or the sources by name
+ * @param {import("../../lib/javascript/syntax-printer").MinifyOptions} options the options
  * @param {boolean} fromTree whether the tree printer may print it
- * @returns {Promise<{ code: string | undefined, map: EXPECTED_ANY, printedFromTree: number }>} the code, its source map, and how often the tree printer printed
+ * @returns {Promise<{ code: string | undefined, map: import("../../lib/javascript/syntax-printer").MinifyOutput["map"], printedFromTree: number }>} the code, its source map, and how often the tree printer printed
  */
 const minifyCounted = async (input, options, fromTree) => {
 	const { minify, modules } = await load();
