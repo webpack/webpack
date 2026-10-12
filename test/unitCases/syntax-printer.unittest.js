@@ -6245,6 +6245,41 @@ describe("syntax-printer", () => {
 			).toBe(reference.code);
 		});
 
+		it("should give back an untagged template's raw text written from its value, where terser keeps the source's", async () => {
+			const { minify } = await load();
+			const code = 'console.log(`a${"${`\\r\\\\"}${b}c`, tag`\\x${a}`);';
+			/** @type {EXPECTED_ANY} */
+			const options = { format: { spidermonkey: true } };
+			/**
+			 * @param {EXPECTED_ANY} result a minify's result
+			 * @returns {EXPECTED_ANY[]} the values of both templates' text
+			 */
+			const values = (result) =>
+				result.ast.body[0].expression.arguments.map(
+					(/** @type {EXPECTED_ANY} */ template) =>
+						(template.quasi || template).quasis.map(
+							(/** @type {EXPECTED_ANY} */ quasi) => quasi.value
+						)
+				);
+			expect(values(await minify(code, options))).toEqual([
+				[
+					{ raw: "a\\${\\`\\r\\\\", cooked: "a${`\r\\" },
+					{ raw: "c", cooked: "c" }
+				],
+				[
+					{ raw: "\\x", cooked: null },
+					{ raw: "", cooked: "" }
+				]
+			]);
+			const reference = values(
+				await terserReference().minify(code, options)
+			);
+			expect(reference[0][0].raw).toBe("a");
+			expect(
+				values(await uncorrected(() => minify(code, options)))[0]
+			).toEqual(reference[0]);
+		});
+
 		it("should give back a template inlined into another, which terser throws on", async () => {
 			const { minify } = await load();
 			const code = "console.log(`x${`y${a}`}z`, `p${`q`}r${b}`);";
