@@ -707,12 +707,12 @@ declare interface Ast {
 			node: NodeShape,
 			descend: (node: NodeShape, walker: CompressorShape) => void,
 			inList?: boolean
-		) => void | NodeShape,
+		) => void | NodeShape | Splice | SkipMarker,
 		after?: (
 			this: CompressorShape,
 			node: NodeShape,
 			inList?: boolean
-		) => void | NodeShape
+		) => void | NodeShape | Splice | SkipMarker
 	): CompressorShape;
 	namesOf(node: NodeShape): (null | NodeShape)[];
 	wrapOptimizer(
@@ -30849,6 +30849,13 @@ declare class SizeOnlySource extends Source {
 }
 
 /**
+ * `MAP.skip`, which a transform returns to drop a node from its list
+ */
+declare interface SkipMarker {
+	[index: string]: never;
+}
+
+/**
  * `CssProcessOptions.skip`: two independent axes, so each reads unambiguously.
  */
 declare interface SkipOptions {
@@ -31591,6 +31598,13 @@ type SourceTypeOrResolver =
 	| "msapplication-task"
 	| ((attrs: Map<string, string>, css: boolean) => SourceType);
 type SourceValue = string | Buffer;
+
+/**
+ * terser's `Splice`: what a transform returns to put several nodes in its place.
+ */
+declare abstract class Splice {
+	v: NodeShape[];
+}
 
 /**
  * Defines the split chunks options type used by this module.
