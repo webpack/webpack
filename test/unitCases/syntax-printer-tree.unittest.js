@@ -2,7 +2,13 @@
 
 // cspell:ignore fnames
 
+const { analyzeMinifierTree } = require("../../lib/javascript/ScopeAnalyzer");
 const { load } = require("../../lib/javascript/syntax").printer;
+const {
+	Field,
+	SyntaxTree,
+	WebpackParser
+} = require("../../lib/javascript/syntax-parser");
 
 // Sources reaching each corner of the printer: parentheses it keeps or drops,
 // comments around them, directives, literals, modules and classes.
@@ -327,6 +333,20 @@ describe("JavaScript minifier mangling a SyntaxTree", () => {
 			}
 		});
 	}
+
+	it("should refuse a node its scope analysis cannot read", () => {
+		const tree = new SyntaxTree();
+		const program = tree.addEstree(
+			/** @type {EXPECTED_ANY} */ (WebpackParser.parse("a;", {}))
+		);
+		const types = Uint8Array.from(tree._types);
+		types[tree.field(0, Field.body, program)] = 255;
+		expect(() =>
+			analyzeMinifierTree(tree, program, types, {}, () => {
+				throw new Error("unreachable");
+			})
+		).toThrow("The minifier's scope analysis cannot read a node of type 255");
+	});
 
 	it("should count the letters of a source too long to hold whole", async () => {
 		const source = `/*! kept */\n${Array.from(
