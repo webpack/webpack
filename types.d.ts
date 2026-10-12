@@ -1381,6 +1381,7 @@ declare interface Bootstrap {
 	startup: string[];
 	afterStartup: string[];
 	allowInlineStartup: boolean;
+	exportsAwaited: boolean;
 }
 
 /**
@@ -30344,6 +30345,11 @@ declare interface StartupRenderContext {
 	 * the inlined entry's top-level declarations renamed to avoid a collision, original to new name
 	 */
 	renamedDeclarations?: Map<string, string>;
+
+	/**
+	 * the startup already awaited the last entry, so `__webpack_exports__` holds its settled exports
+	 */
+	exportsAwaited?: boolean;
 }
 
 /**
