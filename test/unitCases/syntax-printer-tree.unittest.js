@@ -210,6 +210,7 @@ const MANGLE_SOURCES = [
 	"for (;;) { { function g1() {} } } for (x in o) { { function g2() {} } } try {} catch (e) { { function g3() {} } }",
 	"{ class f7 {} { function f7() {} } } let f8; { function f8() {} } function p(a, { b, ...c }, [, d = 1], ...f9) { { function f9() {} } } function q() { var f10; let f11; { function f11() {} } }",
 	"var f = function () {}, g = () => 1, h = function named() {}, [i] = [function () {}], { j } = {}; { using r = null } label: function k() {}",
+	"function c() { var Apple = class {}, berry = class { m() {} }, Cat = class Named {}, [Dog] = [class {}]; { using Elk = class {} } return [Apple, berry, Cat, Dog] }",
 	"x = `${a}${b => b}`; tag`${c}`; new D(...e); f?.(g)?.[h]; import(i, { with: j }); k = { l, m: n = o, [p]: q, ...r }; ({ s = 1 } = t); [u, , ...v] = w; y = 1e999; ({ z }) => ({ z })",
 	"function f() { import z from 'w' }"
 ];
