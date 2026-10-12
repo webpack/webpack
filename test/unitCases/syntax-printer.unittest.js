@@ -6915,10 +6915,10 @@ describe("syntax-printer", () => {
 
 		it("should keep a number the compressor computes plain where keep_numbers is on", async () => {
 			const { minify, corrections } = await load();
-			const input = "var s = 1000; var m = s * 60; var h = m * 60; console.log(s, m, h, 0.5);";
+			const input = "var s = 1000; var m = s * 60; var h = m * 60; console.log(s, m, h, 0.5, 1e20 * 100);";
 			const options = { module: true, compress: {}, mangle: false, format: { keep_numbers: true } };
 			const { code } = await minify(input, options);
-			expect(code).toBe("console.log(1000,60000,3600000,0.5);");
+			expect(code).toBe("console.log(1000,60000,3600000,0.5,1e22);");
 
 			if (!corrections) throw new Error("the correct phase is not installed");
 			corrections.enabled = false;
@@ -6926,7 +6926,7 @@ describe("syntax-printer", () => {
 				const uncorrected = await unimproved(() => minify(input, options));
 				const reference = await terserReference().minify(input, options);
 				expect(uncorrected.code).toBe(reference.code);
-				expect(reference.code).toBe("console.log(1e3,6e4,36e5,0.5);");
+				expect(reference.code).toBe("console.log(1e3,6e4,36e5,0.5,1e22);");
 			} finally {
 				corrections.enabled = true;
 			}
