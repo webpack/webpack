@@ -234,6 +234,30 @@ const stringArray = (length, string = (index) => `w${index}`) =>
 /** @type {[string, string, import("terser").MinifyOptions, string?][]} */
 const IMPROVED_CASES = [
 	[
+		"a function written in place passed the parameter of its name, which it writes and nothing reads after",
+		"function f(a, b) { var h = (function (b) { [b] = [b + 1]; return [b, b]; })(b); return h; } console.log(f(1, 2));",
+		{ compress: {}, mangle: false },
+		"function f(a,b){return[b]=[b+1],[b,b]}console.log(f(1,2));"
+	],
+	[
+		"a function written in place passed an argument reading the variable of its parameter's name, which nothing reads after",
+		"function f(t) { return (function (t) { return t.a + t.b * t.a; })(g(t)); } function g(t) { return { a: t, b: 2 * t }; } console.log(f(1), f(2));",
+		{ compress: {}, mangle: false },
+		"function f(t){return(t=g(t)).a+t.b*t.a}function g(t){return{a:t,b:2*t}}console.log(f(1),f(2));"
+	],
+	[
+		"a function written in place writing a property and returning a closure, its parameter's name taken by a variable read only in the argument",
+		"function f(t) { return (function (t) { t.c = 3; return function () { return t.a + t.c; }; })(g(t)); } function g(t) { return { a: t }; } console.log(f(1)(), f(2)());",
+		{ compress: {}, mangle: false },
+		"function f(t){return(t=g(t)).c=3,function(){return t.a+t.c}}function g(t){return{a:t}}console.log(f(1)(),f(2)());"
+	],
+	[
+		"a function returning its parameter, called from several places",
+		"!function () { function q(t, e) { return t; } function a(t) { return q(t).x; } function b(t) { return q(t, 1).y; } function c(t) { return q(t).z + 1; } console.log(a({ x: 1 }), b({ y: 2 }), c({ z: 3 })); }();",
+		{ compress: {}, mangle: false },
+		"console.log(1,function(t){return t.y}({y:2}),function(t){return t.z+1}({z:3}));"
+	],
+	[
 		"an assignment to a `let` folded into the first read of it",
 		"function f(a) { let x, y; x = a * 2; y = g(x); return [x, y]; } function g(v) { return v + 1; } console.log(f(3));",
 		{ compress: {}, mangle: false },
@@ -1327,7 +1351,14 @@ const KEPT_CASES = [
 	["an assignment to a `var` declared before another's value, which runs first", "function f(o) { var a, b = o.y; a = o.x; console.log(a, b, a, b); } f({ x: 1, y: 2 });"],
 	["an assignment to a `var` assigned again by what follows, or before a function that would need parentheses", "function f(o) { var a; a = o.x; console.log(a); a = o.y; console.log(a); } function g() { var x; if (x = true, 0 !== (x ^= true)) throw 1; if (x = new Boolean(true), 0 !== (x ^= true)) throw 2; } function h(o) { var b; b = o.x, function () { console.log(b); }.call(o), console.log(b); } f({ x: 1, y: 2 }); g(); h({ x: 3 });"],
 	["an assignment whose property is then written, or that is compound, or calls `eval`", "function f(o) { var a; (a = o.x).p = 1; console.log(a, a); } function g(o) { var a = 1; a += o.x; console.log(a, a); } function h(o) { var eval; (eval = o.x)(\"1\"); return eval; } f({ x: {} }); g({ x: 1 }); console.log(h({ x: String }));"],
-	["a function written in place writing a parameter it is passed the name of, or passed a name written later", "function f(a, b) { var g = (function (a) { return function () { return a + a; }; })(a), h = (function (b) { [b] = [b + 1]; return [b, b]; })(b); [a] = [5]; return [g(), h]; } console.log(f(1, 2));"],
+	["a function written in place passed a name written later", "function f(a) { var g = (function (a) { return function () { return a + a; }; })(a); [a] = [5]; return g(); } console.log(f(1));"],
+	["a function written in place passed a variable of its parameter's name, read again after the call", "function f(t) { return (function (t) { return t.a + t.b; })(g(t)) + t.c; } function g(t) { return { a: t.a, b: 2 }; } console.log(f({ a: 1, c: 5 }));"],
+	["a function written in place passed a closure reading the variable of its parameter's name", "function f(t) { return (function (t) { return t.a + t.b; })(g(function () { return t; })); } function g(h) { return { a: h().c, b: 2 }; } console.log(f({ c: 1 }));"],
+	["a function written in place in a loop, passed a variable of its parameter's name", "function f(t) { var s = 0; for (var i = 0; i < 3; i++) s += (function (t) { return t.a + t.b; })(g(t)); return s; } function g(t) { return { a: t, b: 1 }; } console.log(f(1));"],
+	["a function written in place whose other argument reads the variable of its parameter's name", "function f(t) { return (function (t, e) { return t.a + t.b + e + e; })(g(t), h(t)); } function g(t) { return { a: t, b: 1 }; } function h(t) { return t * 2; } console.log(f(1));"],
+	["a function written in place passed a `let` of its parameter's name", "function f(n) { let t = k(n); return (function (t) { return t.a + t.b; })(g(t)); } function k(n) { return n + 1; } function g(t) { return { a: t, b: 1 }; } console.log(f(1));"],
+	["a function written in place passed a parameter of its parameter's name, of a function reading `arguments`", "function f(t) { var a = arguments; return (function (t) { return [t, a[0] = 5, t]; })(g(t)); } function g(t) { return t + 1; } console.log(f(1));"],
+	["a function returning its parameter, called as a method or read by `typeof`", "!function () { function q(t) { return t; } var o = { f: function () { return this === o; } }; console.log(q(o.f)(), q(o).f(), q(o).f(), typeof q(o)); }();"],
 	["a function written in place returning a function that reads a `var` or a function declared in a loop", "function f(xs) { var r = []; for (var i = 0; i < xs.length; i++) { var x = xs[i] * 2; function h() { return x; } r.push((function (x, h) { return function () { return x + h() + x + h(); }; })(x, h)); } return r.map(function (g) { return g(); }); } console.log(f([1, 2]));"],
 	["a function written in place reading its `arguments`", "function f(a) { return (function (a) { return [a, a, arguments.length]; })(a, 1); } console.log(f(1));"],
 	["a function written in place passed a parameter of a function reading its `arguments`", "function f(a) { var args = arguments; return (function (a) { return [a, (args[0] = 5), a]; })(a); } console.log(f(1));"],
