@@ -53,6 +53,12 @@ const OPTION_SETS = {
 			ascii_only: true
 		}
 	},
+	"a source map": { sourceMap: { asObject: true }, format: { comments: "all" } },
+	"a source map holding its source": {
+		module: true,
+		sourceMap: { includeSources: true, url: "inline", filename: "out.js" },
+		format: { preamble: "/* p */", quote_style: 3, keep_quoted_props: true }
+	},
 	"wrapping options": {
 		format: {
 			wrap_iife: true,
@@ -72,7 +78,7 @@ const OPTION_SETS = {
  * @param {EXPECTED_ANY} input the source, or the sources by name
  * @param {EXPECTED_ANY} options the options
  * @param {boolean} fromTree whether the tree printer may print it
- * @returns {Promise<{ code: string, printedFromTree: number }>} the code, and how often the tree printer printed
+ * @returns {Promise<{ code: string, map: EXPECTED_ANY, printedFromTree: number }>} the code, its source map, and how often the tree printer printed
  */
 const minifyCounted = async (input, options, fromTree) => {
 	const { minify, modules } = await load();
@@ -84,8 +90,8 @@ const minifyCounted = async (input, options, fromTree) => {
 	};
 	treePrinting.enabled = fromTree;
 	try {
-		const { code } = await minify(input, options);
-		return { code, printedFromTree };
+		const { code, map } = await minify(input, options);
+		return { code, map, printedFromTree };
 	} finally {
 		modules.printTree = printTree;
 		treePrinting.enabled = true;
@@ -115,6 +121,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				expect(reference.printedFromTree).toBe(0);
 				expect(printed.printedFromTree).toBe(1);
 				expect(printed.code).toBe(reference.code);
+				expect(printed.map).toEqual(reference.map);
 			}
 		});
 	}
@@ -140,7 +147,6 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		["mangled", { compress: false, mangle: true }],
 		["wrapped", { compress: false, mangle: false, wrap: "w" }],
 		["enclosed", { compress: false, mangle: false, enclose: true }],
-		["mapped", { compress: false, mangle: false, sourceMap: true }],
 		["handed back", { compress: false, mangle: false, format: { ast: true } }],
 		[
 			"handed back as ESTree",
