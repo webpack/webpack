@@ -305,6 +305,7 @@ const fixtures = () => [
 ];
 
 /** @typedef {import("../lib/css/syntax-parser").CssPrintOptions} CssPrintOptions */
+/** @typedef {import("../lib/css/syntax-parser").CssTransformOptions} CssTransformOptions */
 
 /** @type {CssPrintOptions} */
 const DEFAULT_OPTIONS = {};
@@ -707,7 +708,7 @@ const wantedStage = filterFrom("STAGE");
 const SKIPPED_FIXTURE_DIRS = new Set(["js", "node_modules", "wpt"]);
 
 /**
- * @param {CssPrintOptions} options one preset's minimizer options
+ * @param {CssPrintOptions & CssTransformOptions} options one preset's minimizer options
  * @returns {(css: string) => string} the printer those options name
  */
 const printerFor = (options) => {

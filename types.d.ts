@@ -142,6 +142,8 @@ import {
 	internString,
 	isDualStringBufferCachingEnabled
 } from "webpack-sources/types/helpers/stringBufferUtils";
+type SetSamplingIntervalParameterType =
+	import("inspector").Profiler.SetSamplingIntervalParameterType;
 
 declare interface Abortable {
 	signal?: AbortSignal;
@@ -261,7 +263,7 @@ declare interface AdditionalDataKnown {
 	/**
 	 * the AST webpack should parse instead of the source
 	 */
-	webpackAST: object;
+	webpackAST: PreparsedAst;
 }
 type AfterContextResolveData = ContextResolveData &
 	ContextOptions & {
@@ -699,7 +701,19 @@ declare interface AssetTimestamps {
 declare interface Ast {
 	[index: string]: any;
 	expressionOf(node: NodeShape): undefined | NodeShape;
-	createStackTransformer(before?: Function, after?: Function): CompressorShape;
+	createStackTransformer(
+		before?: (
+			this: CompressorShape,
+			node: NodeShape,
+			descend: (node: NodeShape, walker: CompressorShape) => void,
+			inList?: boolean
+		) => null | void | NodeShape | Splice | SkipMarker,
+		after?: (
+			this: CompressorShape,
+			node: NodeShape,
+			inList?: boolean
+		) => null | void | NodeShape | Splice | SkipMarker
+	): CompressorShape;
 	namesOf(node: NodeShape): (null | NodeShape)[];
 	wrapOptimizer(
 		name: string,
@@ -7463,7 +7477,7 @@ declare class CssSourceProcessor<TState = unknown> extends SourceProcessor<
 	},
 	NodeSyntaxParser,
 	CssProcessOptions,
-	object,
+	CssPrintOptions,
 	CssParts,
 	TState,
 	CssVisitorMap<TState>
@@ -8208,6 +8222,14 @@ declare class Dependency {
 declare interface DependencyConstructor {
 	new (...args: any[]): Dependency;
 }
+
+/**
+ * branch guard: the dependency is live only when the formula evaluates to `value`
+ */
+declare interface DependencyGuard {
+	formula: GuardFormula;
+	value: boolean;
+}
 type DependencyLocation = SyntheticDependencyLocation | RealDependencyLocation;
 
 /**
@@ -8814,6 +8836,14 @@ declare class DynamicEntryPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
+
+/**
+ * Dependency for static evaluating import specifier. e.g.
+ */
+declare abstract class ESMEvaluatedImportSpecifierDependency extends ESMImportSpecifierDependency {
+	get isHarmonyEvaluatedImportSpecifier(): boolean;
+	operator: string;
+}
 declare abstract class ESMExportImportedSpecifierDependency extends ESMImportDependency {
 	ids: string[];
 	name: null | string;
@@ -9007,6 +9037,50 @@ declare class ESMImportDependencyTemplate extends DependencyTemplate {
 declare abstract class ESMImportSideEffectDependency extends ESMImportDependency {
 	unusedSpecifiers?: UnusedSpecifiers;
 	namespaceSpecifiers?: string[];
+}
+declare abstract class ESMImportSpecifierDependency extends ESMImportDependency {
+	get isHarmonyImportSpecifier(): boolean;
+	ids: string[];
+	name: string;
+	idRanges?: [number, number][];
+	exportPresenceMode: ExportPresenceMode;
+	namespaceObjectAsContext?: boolean;
+	call?: boolean;
+	directImport?: boolean;
+	shorthand?: string | boolean;
+	asiSafe?: boolean;
+	usedByExports?: boolean | Set<string>;
+	referencedPropertiesInDestructuring?: Set<DestructuringAssignmentProperty>;
+	branchGuards?: DependencyGuard[];
+	assignment?: boolean;
+
+	/**
+	 * Returns id.
+	 * @deprecated
+	 */
+	get id(): void;
+
+	/**
+	 * Returns id.
+	 * @deprecated
+	 */
+	getId(): void;
+
+	/**
+	 * Updates id.
+	 * @deprecated
+	 */
+	setId(): void;
+
+	/**
+	 * Returns the imported ids.
+	 */
+	getIds(moduleGraph: ModuleGraph): string[];
+
+	/**
+	 * Updates ids using the provided module graph.
+	 */
+	setIds(moduleGraph: ModuleGraph, ids: string[]): void;
 }
 
 /**
@@ -11930,8 +12004,85 @@ declare interface GroupOptionsSmartGrouping {
  * per-branch guard frames pushed onto the parser state guard stack
  */
 declare interface GuardCollection {
-	consequent?: object;
-	alternate?: object;
+	consequent?: GuardFrame;
+	alternate?: GuardFrame;
+}
+type GuardFormula =
+	| ["v", Dependency]
+	| ["p", ESMEvaluatedImportSpecifierDependency]
+	| ["?"]
+	| ["!", GuardFormula]
+	| ["||" | "&&" | "??", GuardFormula, GuardFormula];
+
+/**
+ * A guard frame pushed onto `parser.state.guardStack` for the duration of one
+ * conditional branch body. Carries the `"x" in ns` presence guards and/or the
+ * dead-branch dependency guard for that branch.
+ */
+declare interface GuardFrame {
+	/**
+	 * the conditional test (for the lazily built formula)
+	 */
+	test?:
+		| ImportExpressionImport
+		| UnaryExpression
+		| ArrayExpression
+		| ArrowFunctionExpression
+		| AssignmentExpression
+		| AwaitExpression
+		| BinaryExpression
+		| SimpleCallExpression
+		| NewExpression
+		| ChainExpression
+		| ClassExpression
+		| ConditionalExpression
+		| FunctionExpression
+		| Identifier
+		| SimpleLiteral
+		| RegExpLiteral
+		| BigIntLiteral
+		| LogicalExpression
+		| MemberExpression
+		| MetaProperty
+		| ObjectExpression
+		| SequenceExpression
+		| TaggedTemplateExpression
+		| TemplateLiteral
+		| ThisExpression
+		| UpdateExpression
+		| YieldExpression;
+
+	/**
+	 * dependency count before the test was walked
+	 */
+	depStart?: number;
+
+	/**
+	 * branch truthiness the dependency guard is live for
+	 */
+	condition?: boolean;
+
+	/**
+	 * memoized dependency-guard formula (null = no knowable atom)
+	 */
+	formula?:
+		| null
+		| ["v", Dependency]
+		| ["p", ESMEvaluatedImportSpecifierDependency]
+		| ["?"]
+		| ["!", GuardFormula]
+		| ["||" | "&&" | "??", GuardFormula, GuardFormula];
+
+	/**
+	 * memoized presence formula (null = no presence atom)
+	 */
+	presenceFormula?:
+		| null
+		| ["v", Dependency]
+		| ["p", ESMEvaluatedImportSpecifierDependency]
+		| ["?"]
+		| ["!", GuardFormula]
+		| ["||" | "&&" | "??", GuardFormula, GuardFormula];
 }
 
 /**
@@ -13085,7 +13236,7 @@ declare class HtmlSourceProcessor<TState = unknown> extends SourceProcessor<
 	},
 	number,
 	HtmlProcessOptions,
-	object,
+	HtmlPrintOptions,
 	HtmlParts,
 	TState,
 	HtmlVisitorMap<TState>
@@ -15883,7 +16034,10 @@ declare class JavascriptParser extends Parser {
 	 * Walks a conditional branch with its guard frame (if any) pushed onto the
 	 * parser-state guard stack for the duration of the branch body.
 	 */
-	walkGuardedBranch(frame: undefined | null | object, walk: () => void): void;
+	walkGuardedBranch(
+		frame: undefined | null | GuardFrame,
+		walk: () => void
+	): void;
 
 	/**
 	 * Processes the provided statement.
@@ -18984,12 +19138,13 @@ declare interface LoaderEntry {
 	path: string;
 	query: string;
 	fragment: string;
-	options?: string | object;
+	options?: string | Record<string, any>;
 	ident: string;
-	normal?: Function;
-	pitch?: Function;
+	normal?:
+		LoaderDefinitionFunction<any, {}> | RawLoaderDefinitionFunction<any, {}>;
+	pitch?: PitchLoaderDefinitionFunction<any, {}>;
 	raw?: boolean;
-	data?: object;
+	data?: Record<string, any>;
 	pitchExecuted: boolean;
 	normalExecuted: boolean;
 	type?: "module" | "commonjs";
@@ -26268,7 +26423,7 @@ declare interface PitchLoaderDefinitionFunction<
 			ContextAdditions,
 		remainingRequest: string,
 		previousRequest: string,
-		data: object
+		data: Record<string, any>
 	): string | void | Buffer | Promise<string | Buffer>;
 }
 
@@ -26677,7 +26832,10 @@ declare class Profiler {
 	/**
 	 * Returns promise for the result.
 	 */
-	sendCommand(method: string, params?: object): Promise<any>;
+	sendCommand(
+		method: string,
+		params?: SetSamplingIntervalParameterType
+	): Promise<any>;
 	destroy(): Promise<void>;
 
 	/**
@@ -30691,6 +30849,13 @@ declare class SizeOnlySource extends Source {
 }
 
 /**
+ * `MAP.skip`, which a transform returns to drop a node from its list
+ */
+declare interface SkipMarker {
+	[index: string]: never;
+}
+
+/**
  * `CssProcessOptions.skip`: two independent axes, so each reads unambiguously.
  */
 declare interface SkipOptions {
@@ -31433,6 +31598,13 @@ type SourceTypeOrResolver =
 	| "msapplication-task"
 	| ((attrs: Map<string, string>, css: boolean) => SourceType);
 type SourceValue = string | Buffer;
+
+/**
+ * terser's `Splice`: what a transform returns to put several nodes in its place.
+ */
+declare abstract class Splice {
+	v: NodeShape[];
+}
 
 /**
  * Defines the split chunks options type used by this module.
@@ -36293,7 +36465,7 @@ declare namespace exports {
 					options?: ParseOptionsSyntaxParser
 				) => RuleSyntaxParser[];
 				export let pickTransforms: (
-					options: object
+					options: CssTransformOptions
 				) => undefined | CssTransformOptions;
 				export let rangeEquals: (
 					input: string,
@@ -36503,7 +36675,7 @@ declare namespace exports {
 					rewriteCustomProperties?: boolean;
 					unusedSymbols?: string[];
 					pseudoClasses?: { [index: string]: string };
-				};
+				} & CssTransformOptions;
 				minifyConditionalComments?: boolean;
 				extractComments?:
 					| string
@@ -36522,7 +36694,7 @@ declare namespace exports {
 					| string
 					| EmbeddedSourceResult
 					| Promise<undefined | string | EmbeddedSourceResult>;
-			},
+			} & HtmlTransformOptions,
 			extractComments?:
 				| string
 				| boolean
@@ -36877,7 +37049,7 @@ declare namespace exports {
 				export let parseSrc: (input: string) => [string, number, number][];
 				export let parseSrcset: (input: string) => [string, number, number][];
 				export let pickTransforms: (
-					options: object
+					options: HtmlTransformOptions
 				) => undefined | HtmlTransformOptions;
 				export let startsWithWs: (s: string) => boolean;
 				export let tokenize: (
