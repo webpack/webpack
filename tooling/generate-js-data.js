@@ -1365,6 +1365,132 @@ const renderHeader = (sources) => `/*
 
 const TERSER_SOURCE = `terser ${require("terser/package.json").version}`;
 
+const FUNCTION_FIELDS =
+	"id:node expression:flag generator:flag async:flag params:list body:node";
+const CLASS_FIELDS = "id:node superClass:node body:node";
+
+// Each node type the parser makes, its fields as `name:kind` in the order its
+// objects hold them: a child `node`, a `list` of them, a `string`, a `flag`, a
+// literal's `value`, or a string an `optional` node lacks while unset.
+/** @type {Record<string, string>} */
+const NODE_TYPES = {
+	Identifier: "name:string",
+	PrivateIdentifier: "name:string",
+	Literal: "value:value raw:string",
+	MemberExpression: "object:node property:node computed:flag optional:flag",
+	CallExpression: "callee:node arguments:list optional:flag",
+	NewExpression: "callee:node arguments:list",
+	ExpressionStatement: "expression:node directive:optional",
+	VariableDeclarator: "id:node init:node",
+	VariableDeclaration: "declarations:list kind:string",
+	Property:
+		"method:flag shorthand:flag computed:flag key:node value:node kind:string",
+	BinaryExpression: "left:node operator:string right:node",
+	LogicalExpression: "left:node operator:string right:node",
+	AssignmentExpression: "operator:string left:node right:node",
+	AssignmentPattern: "left:node right:node",
+	BlockStatement: "body:list",
+	StaticBlock: "body:list",
+	ClassBody: "body:list",
+	Program: "body:list sourceType:string",
+	ReturnStatement: "argument:node",
+	ThrowStatement: "argument:node",
+	AwaitExpression: "argument:node",
+	SpreadElement: "argument:node",
+	RestElement: "argument:node",
+	YieldExpression: "delegate:flag argument:node",
+	UnaryExpression: "operator:string prefix:flag argument:node",
+	UpdateExpression: "operator:string prefix:flag argument:node",
+	ArrayExpression: "elements:list",
+	ArrayPattern: "elements:list",
+	ObjectExpression: "properties:list",
+	ObjectPattern: "properties:list",
+	ThisExpression: "",
+	Super: "",
+	EmptyStatement: "",
+	DebuggerStatement: "",
+	FunctionExpression: FUNCTION_FIELDS,
+	FunctionDeclaration: FUNCTION_FIELDS,
+	ArrowFunctionExpression: FUNCTION_FIELDS,
+	IfStatement: "test:node consequent:node alternate:node",
+	ConditionalExpression: "test:node consequent:node alternate:node",
+	ParenthesizedExpression: "expression:node",
+	PropertyDefinition: "static:flag computed:flag key:node value:node",
+	MethodDefinition: "static:flag computed:flag key:node kind:string value:node",
+	TemplateElement: "value:value tail:flag",
+	TemplateLiteral: "expressions:list quasis:list",
+	TaggedTemplateExpression: "tag:node quasi:node",
+	SequenceExpression: "expressions:list",
+	SwitchCase: "consequent:list test:node",
+	SwitchStatement: "discriminant:node cases:list",
+	ForStatement: "init:node test:node update:node body:node",
+	ForInStatement: "left:node right:node body:node",
+	ForOfStatement: "await:flag left:node right:node body:node",
+	WhileStatement: "test:node body:node",
+	DoWhileStatement: "body:node test:node",
+	WithStatement: "object:node body:node",
+	LabeledStatement: "body:node label:node",
+	BreakStatement: "label:node",
+	ContinueStatement: "label:node",
+	TryStatement: "block:node handler:node finalizer:node",
+	CatchClause: "param:node body:node",
+	ClassDeclaration: CLASS_FIELDS,
+	ClassExpression: CLASS_FIELDS,
+	ChainExpression: "expression:node",
+	ImportDeclaration:
+		"specifiers:list source:node attributes:list phase:optional",
+	ImportSpecifier: "imported:node local:node",
+	ImportDefaultSpecifier: "local:node",
+	ImportNamespaceSpecifier: "local:node",
+	ImportAttribute: "key:node value:node",
+	ImportExpression: "source:node options:node phase:optional",
+	ExportNamedDeclaration:
+		"declaration:node specifiers:list source:node attributes:list",
+	ExportDefaultDeclaration: "declaration:node",
+	ExportAllDeclaration: "exported:node source:node attributes:list",
+	ExportSpecifier: "local:node exported:node",
+	MetaProperty: "meta:node property:node"
+};
+
+// WHY: the parser turns an expression into a pattern in place (`toAssignable`),
+// so a pattern's slots must be a prefix of its expression's: an assignment's
+// operator goes last, after the `left` and `right` an `AssignmentPattern` keeps.
+/** @type {Record<string, string[]>} */
+const SLOT_ORDERS = {
+	AssignmentExpression: ["left", "right", "operator"]
+};
+
+/**
+ * Each node type's fields as `name:kind:slot`, in the order its objects hold
+ * them; a flag's slot is its bit, any other field's its place in the record.
+ * @returns {Record<string, string>} the fields by node type
+ */
+const collectNodeFields = () => {
+	/** @type {Record<string, string>} */
+	const result = {};
+	for (const name of Object.keys(NODE_TYPES)) {
+		const fields = NODE_TYPES[name]
+			.split(" ")
+			.filter(Boolean)
+			.map((part) => {
+				const [field, kind] = part.split(":");
+				return { field, kind, slot: 0 };
+			});
+		const slotted = fields.filter((field) => field.kind !== "flag");
+		const order = SLOT_ORDERS[name];
+		if (order !== undefined) {
+			slotted.sort((a, b) => order.indexOf(a.field) - order.indexOf(b.field));
+		}
+		for (let i = 0; i < slotted.length; i++) slotted[i].slot = i;
+		let bit = 0;
+		for (const field of fields) if (field.kind === "flag") field.slot = bit++;
+		result[name] = fields
+			.map(({ field, kind, slot }) => `${field}:${kind}:${slot}`)
+			.join(" ");
+	}
+	return result;
+};
+
 /**
  * Build the module the parser classifies with: the identifier ranges the
  * tokenizer reads and the property names `\\p{...}` accepts.
@@ -1411,12 +1537,18 @@ ${renderTable(
 	0
 )}
 ${renderUnicodeProperties()}
+// Each node type the parser makes, its fields as \`name:kind:slot\` in the
+// order its objects hold them; a flag's slot is its bit in the flags column.
+/** @type {Record<string, string>} */
+const NODE_FIELDS = ${JSON.stringify(collectNodeFields(), null, 1)};
+
 module.exports.ASTRAL_IDENTIFIER_PART_RANGES = ASTRAL_IDENTIFIER_PART_RANGES;
 module.exports.ASTRAL_IDENTIFIER_START_RANGES = ASTRAL_IDENTIFIER_START_RANGES;
 module.exports.IDENTIFIER_PART_RANGES = IDENTIFIER_PART_RANGES;
 module.exports.IDENTIFIER_START_RANGES = IDENTIFIER_START_RANGES;
 module.exports.NARROW_IDENTIFIER_PART_RANGES = NARROW_IDENTIFIER_PART_RANGES;
 module.exports.NARROW_IDENTIFIER_START_RANGES = NARROW_IDENTIFIER_START_RANGES;
+module.exports.NODE_FIELDS = NODE_FIELDS;
 module.exports.UNICODE_BINARY_PROPERTIES = UNICODE_BINARY_PROPERTIES;
 module.exports.UNICODE_BINARY_PROPERTIES_OF_STRINGS =
 	UNICODE_BINARY_PROPERTIES_OF_STRINGS;
@@ -1527,6 +1659,7 @@ module.exports.collectDomProperties = collectDomProperties;
 module.exports.collectIdentifierTables = collectIdentifierTables;
 module.exports.collectNarrowIdentifierTables = collectNarrowIdentifierTables;
 module.exports.collectNativeObjects = collectNativeObjects;
+module.exports.collectNodeFields = collectNodeFields;
 module.exports.collectParserTables = collectParserTables;
 module.exports.collectUnicodeProperties = collectUnicodeProperties;
 module.exports.encodeRanges = encodeRanges;

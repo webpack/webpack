@@ -1,7 +1,10 @@
 "use strict";
 
-const JavascriptNodeStore = require("../../lib/javascript/JavascriptNodeStore");
-const { WebpackParser } = require("../../lib/javascript/syntax-parser");
+const { toEstreeObject } = require("../../lib/javascript/syntax");
+const {
+	SyntaxTree,
+	WebpackParser
+} = require("../../lib/javascript/syntax-parser");
 const { firstDifference } = require("../helpers/compareParserOutput");
 
 /** @typedef {import("estree").Node} EstreeNode */
@@ -68,118 +71,138 @@ import.defer("x");
 const SKIPPED = new Set(["type", "start", "end", "range", "regex", "bigint"]);
 
 /**
- * Writes a parsed tree into the store as a parser writing columns would.
- * @param {JavascriptNodeStore} store the store
+ * Writes a parsed tree into a `SyntaxTree` as a parser writing columns would.
+ * @param {SyntaxTree} tree the tree
  * @param {Record<string, EXPECTED_ANY>} node the parsed node
  * @param {Set<string>} seen the types written so far
- * @returns {number} the node's ref
+ * @returns {number} the node's id
  */
-const write = (store, node, seen) => {
+const write = (tree, node, seen) => {
 	seen.add(node.type);
-	const ref = store.add(node.type, node.start, node.end);
+	const id = tree.add(node.type, node.start, node.end);
 	for (const key of Object.keys(node)) {
 		if (SKIPPED.has(key)) continue;
 		const value = node[key];
 		if (Array.isArray(value)) {
-			store.set(
-				ref,
+			tree.set(
+				id,
 				key,
-				value.map((item) => (item === null ? null : write(store, item, seen)))
+				value.map((item) => (item === null ? null : write(tree, item, seen)))
 			);
 		} else if (value && typeof value === "object" && "type" in value) {
-			store.set(ref, key, write(store, value, seen));
+			tree.set(id, key, write(tree, value, seen));
 		} else {
-			store.set(ref, key, value);
+			tree.set(id, key, value);
 		}
 	}
-	return ref;
+	return id;
 };
 
 /**
  * @param {string} code the source
- * @returns {{ store: JavascriptNodeStore, ref: number }} the store and the call's ref
+ * @returns {{ tree: SyntaxTree, node: number }} the tree and its first expression
  */
-const storeCall = (code) => {
-	const store = new JavascriptNodeStore();
+const writeExpression = (code) => {
+	const tree = new SyntaxTree();
 	const statement = /** @type {EXPECTED_ANY} */ (
 		WebpackParser.parse(code, { ecmaVersion: "latest" })
 	).body[0];
-	return { store, ref: write(store, statement.expression, new Set()) };
+	return { tree, node: write(tree, statement.expression, new Set()) };
 };
 
-describe("JavascriptNodeStore", () => {
+describe("SyntaxTree", () => {
 	it("rebuilds every node type the parser makes", () => {
 		/** @type {Set<string>} */
 		const seen = new Set();
-		const store = new JavascriptNodeStore();
+		const tree = new SyntaxTree();
 		for (const options of OPTION_SETS) {
 			for (const [code, sourceType] of [
 				[SCRIPT, "script"],
 				[MODULE, "module"]
 			]) {
-				const tree = WebpackParser.parse(code, {
+				const program = WebpackParser.parse(code, {
 					...options,
 					sourceType: /** @type {"script" | "module"} */ (sourceType)
 				});
-				store.reset();
-				const rebuilt = store.toEstreeObject(write(store, tree, seen));
-				expect(firstDifference(rebuilt, tree, "Program")).toBeNull();
+				tree.reset();
+				const rebuilt = toEstreeObject(tree, write(tree, program, seen));
+				expect(firstDifference(rebuilt, program, "Program")).toBeNull();
 			}
 		}
-		// Every type the store knows, so a new one fails until a fixture has it.
+		// Every type the tree knows, so a new one fails until a fixture has it.
 		expect(seen.size).toBe(73);
 	});
 
 	it("builds only the fields asked for, then the rest on the same object", () => {
-		const { store, ref } = storeCall("f(a, b);");
+		const { tree, node } = writeExpression("f(a, b);");
 		const call = /** @type {EXPECTED_ANY} */ (
-			store.toEstreeObject(ref, ["callee"])
+			toEstreeObject(tree, node, ["callee"])
 		);
 		expect(call.callee.name).toBe("f");
 		expect("arguments" in call).toBe(false);
-		expect(store.toEstreeObject(ref)).toBe(call);
-		expect(call.arguments.map((/** @type {EXPECTED_ANY} */ arg) => arg.name)).toEqual(["a", "b"]);
+		expect(toEstreeObject(tree, node)).toBe(call);
+		expect(
+			call.arguments.map((/** @type {EXPECTED_ANY} */ arg) => arg.name)
+		).toEqual(["a", "b"]);
 		expect(call.optional).toBe(false);
-		expect(store.toEstreeObject(ref, ["callee"])).toBe(call);
+		expect(toEstreeObject(tree, node, ["callee"])).toBe(call);
 		expect(call.range).toEqual([0, 7]);
 		call.range = [1, 6];
 		expect(call.range).toEqual([1, 6]);
 	});
 
 	it("reads a literal's regex and bigint forms when asked for alone", () => {
-		const regex = storeCall("/a/g;");
+		const regex = writeExpression("/a/g;");
 		const literal = /** @type {EXPECTED_ANY} */ (
-			regex.store.toEstreeObject(regex.ref, ["regex"])
+			toEstreeObject(regex.tree, regex.node, ["regex"])
 		);
 		expect(literal.regex).toEqual({ pattern: "a", flags: "g" });
 		expect("value" in literal).toBe(false);
-		const bigint = storeCall("10n;");
+		const bigint = writeExpression("10n;");
 		expect(
-			/** @type {EXPECTED_ANY} */ (bigint.store.toEstreeObject(bigint.ref))
+			/** @type {EXPECTED_ANY} */ (toEstreeObject(bigint.tree, bigint.node))
 				.bigint
 		).toBe("10");
 	});
 
 	it("clears a flag and starts over after reset", () => {
-		const store = new JavascriptNodeStore();
-		const member = store.add("MemberExpression", 0, 4);
-		store.set(member, "computed", true);
-		store.set(member, "computed", false);
+		const tree = new SyntaxTree();
+		const member = tree.add("MemberExpression", 0, 4);
+		tree.set(member, "computed", true);
+		tree.set(member, "computed", false);
 		const before = /** @type {EXPECTED_ANY} */ (
-			store.toEstreeObject(member, ["computed"])
+			toEstreeObject(tree, member, ["computed"])
 		);
 		expect(before.computed).toBe(false);
-		store.reset();
-		expect(store.add("ThisExpression", 0, 4)).toBe(member);
-		expect(store.typeOf(member)).toBe("ThisExpression");
-		expect(store.toEstreeObject(member)).not.toBe(before);
-		expect(store.toEstreeObject(-1)).toBeNull();
+		tree.reset();
+		expect(tree.add("ThisExpression", 0, 4)).toBe(member);
+		expect(tree.typeOf(member)).toBe("ThisExpression");
+		expect(toEstreeObject(tree, member)).not.toBe(before);
+		expect(toEstreeObject(tree, 0)).toBeNull();
+	});
+
+	it("reads a field never set, or set to none, as empty", () => {
+		const tree = new SyntaxTree();
+		const block = tree.add("BlockStatement", 0, 2);
+		const name = tree.add("Identifier", 0, 1);
+		tree.set(name, "name", null);
+		const statement = tree.add("ExpressionStatement", 0, 2);
+		tree.set(statement, "directive", undefined);
+		expect(
+			/** @type {EXPECTED_ANY} */ (toEstreeObject(tree, block)).body
+		).toEqual([]);
+		expect(
+			/** @type {EXPECTED_ANY} */ (toEstreeObject(tree, name)).name
+		).toBeNull();
+		expect(
+			"directive" in /** @type {EXPECTED_OBJECT} */ (toEstreeObject(tree, statement))
+		).toBe(false);
 	});
 
 	it("refuses an unknown type or field", () => {
-		const store = new JavascriptNodeStore();
-		expect(() => store.add("JSXElement", 0, 1)).toThrow(/Unknown node type/);
-		const ref = store.add("Identifier", 0, 1);
-		expect(() => store.set(ref, "value", 1)).toThrow(/has no field value/);
+		const tree = new SyntaxTree();
+		expect(() => tree.add("JSXElement", 0, 1)).toThrow(/Unknown node type/);
+		const node = tree.add("Identifier", 0, 1);
+		expect(() => tree.set(node, "value", 1)).toThrow(/has no field value/);
 	});
 });
