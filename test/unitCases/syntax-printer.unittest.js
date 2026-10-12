@@ -6763,6 +6763,28 @@ describe("syntax-printer", () => {
 			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
 		});
 
+		it("should rename a property named as the name cache hands another", async () => {
+			const { minify, corrections } = await load();
+			const input = "var args = { sb: 'sb', o: 'o' }; console.log(args.sb, args.o);";
+			const options = () => ({
+				mangle: { properties: { keep_quoted: true } },
+				nameCache: { vars: { props: {} }, props: { props: { $o: "sb" } } }
+			});
+			const { code } = await minify(input, options());
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+
+			if (!corrections) throw new Error("the correct phase is not installed");
+			corrections.enabled = false;
+			try {
+				const uncorrected = await unimproved(() => minify(input, options()));
+				const reference = await terserReference().minify(input, options());
+				expect(uncorrected.code).toBe(reference.code);
+				expect(runProgram(/** @type {string} */ (reference.code))).not.toBe(runProgram(input));
+			} finally {
+				corrections.enabled = true;
+			}
+		});
+
 		for (const [name, input, options] of CORRECTED_CASES) {
 			it(`should print what the input prints: ${name}`, async () => {
 				const { minify, corrections } = await load();
