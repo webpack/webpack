@@ -89,4 +89,47 @@ describe("Profiling Plugin", () => {
 			});
 		});
 	});
+
+	itSkipBun("should profile the taps of hook maps", (done) => {
+		const webpack = require("../../");
+
+		const finalPath = path.join(testDirectory, "js/profilingHookMaps.json");
+		const compiler = webpack({
+			context: testDirectory,
+			entry: "./fixtures/a.js",
+			output: {
+				path: path.join(testDirectory, "js/profilingHookMapsOut")
+			},
+			plugins: [
+				new webpack.debug.ProfilingPlugin({ outputPath: finalPath }),
+				{
+					apply(compiler) {
+						compiler.resolverFactory.hooks.resolveOptions
+							.for("normal")
+							.tap("ResolverHookMapProbePlugin", (options) => options);
+						compiler.hooks.compilation.tap(
+							"ParserHookMapProbePlugin",
+							(compilation, { normalModuleFactory }) => {
+								normalModuleFactory.hooks.parser
+									.for("javascript/auto")
+									.tap("ParserHookMapProbePlugin", () => {});
+							}
+						);
+					}
+				}
+			]
+		});
+		compiler.run((err) => {
+			if (err) return done(err);
+			compiler.close((closeErr) => {
+				if (closeErr) return done(closeErr);
+				/** @type {{ name: string }[]} */
+				const data = JSON.parse(fs.readFileSync(finalPath, "utf8"));
+				const names = new Set(data.map((entry) => entry.name));
+				expect(names.has("ResolverHookMapProbePlugin")).toBe(true);
+				expect(names.has("ParserHookMapProbePlugin")).toBe(true);
+				done();
+			});
+		});
+	});
 });
