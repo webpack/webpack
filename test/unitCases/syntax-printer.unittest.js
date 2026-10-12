@@ -6796,7 +6796,14 @@ describe("syntax-printer", () => {
 					true
 				],
 				// Unset, `comments` keeps what "some" does.
-				["foo();\n/*! license */\nfunction unused() {}", { toplevel: true }, "license", true]
+				["foo();\n/*! license */\nfunction unused() {}", { toplevel: true }, "license", true],
+				["foo(); /* keep me */ function unused() {} bar();", { toplevel: true, format: { comments: /keep/ } }, "keep me", true],
+				[
+					"foo(); /* keep me */ function unused() {} bar();",
+					{ toplevel: true, format: { comments: (/** @type {unknown} */ _node, /** @type {{ value: string }} */ comment) => /keep/.test(comment.value) } },
+					"keep me",
+					true
+				]
 			];
 			for (const [input, options, comment, terserDrops] of cases) {
 				const { code } = await minify(input, options);
