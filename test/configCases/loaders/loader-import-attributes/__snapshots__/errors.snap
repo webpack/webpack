@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`errors 1`] = `
+Array [
+  "Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
+ - configuration.module.rules[0] should be one of these:
+   [\\"...\\" | false | 0 | \\"\\" | null | undefined | object { assert?, compiler?, dependency?, descriptionData?, descriptionRelativePath?, enforce?, exclude?, extractSourceMap?, generator?, glob?, include?, issuer?, issuerLayer?, layer?, loader?, mimetype?, oneOf?, options?, parser?, phase?, realResource?, resolve?, resource?, resourceFragment?, resourceQuery?, rules?, scheme?, sideEffects?, test?, type?, use?, with? }, ...]
+   -> A rule.
+   Details:
+    * configuration.module.rules[0].use[0].loader should be a non-empty string.
+      -> A loader request.",
+]
+`;
