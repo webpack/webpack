@@ -2023,6 +2023,51 @@ class WithStatic { static { const inStaticBlock = 20; } }
 			).not.toThrow();
 		});
 
+		it("reads a regular expression after `yield` in a generator method, as V8 does", () => {
+			const { Parser } = require("../../lib/javascript/syntax-parser");
+			const programs = [
+				"class K { *m() { yield /a/g; } }",
+				"class K { static async *m() { yield /a/g; } }",
+				"({ *m() { yield /a/g; } });",
+				"({ async *m() { yield /a/g; } });",
+				"(async function* () { yield /a/g; });",
+				// the token after a nested body is read before its scope exits
+				"function* g() { function f() {} yield /a/g; }",
+				"class K { *m() { function f() {} yield /a/g; } }",
+				"function* g() { var h = () => 1\nyield /a/g; }"
+			];
+			for (const read of [
+				parse,
+				(/** @type {string} */ source) =>
+					/** @type {EXPECTED_ANY} */ (Parser.parse(source, parseOptions))
+			]) {
+				for (const source of programs) {
+					let argument;
+					JSON.stringify(read(source), (key, value) => {
+						if (value && value.type === "YieldExpression") {
+							argument = value.argument;
+						}
+						return value;
+					});
+					expect(argument).toMatchObject({ regex: { pattern: "a" } });
+				}
+				// In a plain method inside a generator, `yield` is a name divided.
+				const method = read(
+					"function* g() { ({ m() { return yield / 2 / 1; } }); }"
+				);
+				expect(
+					method.body[0].body.body[0].expression.properties[0].value.body
+						.body[0].argument
+				).toMatchObject({ type: "BinaryExpression", operator: "/" });
+				// After a nested generator, a sloppy function's `yield` is a name.
+				const nested = read("function f() { function* g() {} yield / 2 / 1; }");
+				expect(nested.body[0].body.body[1].expression).toMatchObject({
+					type: "BinaryExpression",
+					operator: "/"
+				});
+			}
+		});
+
 		it("validates regexp flags from the precomputed whitelist", () => {
 			expect(parse("/a/gimsy;").body[0].expression.regex.flags).toBe("gimsy");
 			expect(() => parse("/a/q;")).toThrow(/Invalid regular expression flag/);
