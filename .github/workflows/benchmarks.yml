@@ -117,6 +117,11 @@ jobs:
           const toGb=b=>(b/1024**3).toFixed(2)+" GB";
           console.log(`--- Memory Status ---\nTotal: ${toGb(os.totalmem())}\nFree:  ${toGb(os.freemem())}\nUsed:  ${toGb(os.totalmem()-os.freemem())}`)'
 
+      # Runners differ by host CPU, and identical JS work can make a different number
+      # of native allocations on two runs; log the model to match outliers to hosts.
+      - name: Check CPU
+        run: lscpu | grep -E '^(Model name|CPU\(s\)):'
+
       # Each case is measured in its own fresh process, so its result does not
       # depend on the shard. All cases in one job exceed CodSpeed's upload limit.
       - name: Run memory benchmarks
