@@ -9,7 +9,7 @@ module.exports = {
 	},
 	optimization: {
 		minimize: {
-			css: { extractComments: false, assumeUtf8: true }
+			css: { extractComments: false, charset: false }
 		},
 		minimizer: ["..."]
 	},

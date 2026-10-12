@@ -11261,18 +11261,22 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
-  "optimization-minimize-css-assume-utf8": Object {
+  "optimization-minimize-css-charset": Object {
     "configs": Array [
       Object {
-        "description": "State that each \`.css\` asset is read as UTF-8 wherever it is served, so the minimizer writes no \`@charset \\"UTF-8\\"\` before one holding a non-ASCII character, and writes an escaped character past U+FFFF (an icon font's \`content: \\"\\\\F0A86\\"\`) as the character itself, as it does once that \`@charset\` is written. Off by default, because the statement must be true: a stylesheet with no \`@charset\` is read in the encoding the server's \`Content-Type\` names, else in the encoding of the page linking it, so it holds wherever the server names UTF-8 or the page is UTF-8 — and anywhere else every such character reads as other characters.",
+        "description": "How the minimizer states a \`.css\` asset's encoding. \`\\"auto\\"\` (the default) opens it with \`@charset \\"UTF-8\\"\` only when its output holds a non-ASCII character, so it is read as UTF-8 wherever it is served. \`false\` writes no \`@charset\` at all, and writes an escaped character past U+FFFF (an icon font's \`content: \\"\\\\F0A86\\"\`) as the character itself, as \`\\"auto\\"\` does once that \`@charset\` is written. Set \`false\` only where the asset is read as UTF-8 anyway: a stylesheet with no \`@charset\` is read in the encoding the server's \`Content-Type\` names, else in the encoding of the page linking it, so it holds wherever the server names UTF-8 or the page is UTF-8 — and anywhere else every such character reads as other characters.",
         "multiple": false,
-        "path": "optimization.minimize.css.assumeUtf8",
-        "type": "boolean",
+        "path": "optimization.minimize.css.charset",
+        "type": "enum",
+        "values": Array [
+          "auto",
+          false,
+        ],
       },
     ],
-    "description": "State that each \`.css\` asset is read as UTF-8 wherever it is served, so the minimizer writes no \`@charset \\"UTF-8\\"\` before one holding a non-ASCII character, and writes an escaped character past U+FFFF (an icon font's \`content: \\"\\\\F0A86\\"\`) as the character itself, as it does once that \`@charset\` is written. Off by default, because the statement must be true: a stylesheet with no \`@charset\` is read in the encoding the server's \`Content-Type\` names, else in the encoding of the page linking it, so it holds wherever the server names UTF-8 or the page is UTF-8 — and anywhere else every such character reads as other characters.",
+    "description": "How the minimizer states a \`.css\` asset's encoding. \`\\"auto\\"\` (the default) opens it with \`@charset \\"UTF-8\\"\` only when its output holds a non-ASCII character, so it is read as UTF-8 wherever it is served. \`false\` writes no \`@charset\` at all, and writes an escaped character past U+FFFF (an icon font's \`content: \\"\\\\F0A86\\"\`) as the character itself, as \`\\"auto\\"\` does once that \`@charset\` is written. Set \`false\` only where the asset is read as UTF-8 anyway: a stylesheet with no \`@charset\` is read in the encoding the server's \`Content-Type\` names, else in the encoding of the page linking it, so it holds wherever the server names UTF-8 or the page is UTF-8 — and anywhere else every such character reads as other characters.",
     "multiple": false,
-    "simpleType": "boolean",
+    "simpleType": "string",
   },
   "optimization-minimize-css-color-fallbacks": Object {
     "configs": Array [
@@ -12054,18 +12058,22 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
-  "optimization-minimize-options-css-assume-utf8": Object {
+  "optimization-minimize-options-css-charset": Object {
     "configs": Array [
       Object {
-        "description": "State that each \`.css\` asset is read as UTF-8 wherever it is served, so the minimizer writes no \`@charset \\"UTF-8\\"\` before one holding a non-ASCII character, and writes an escaped character past U+FFFF (an icon font's \`content: \\"\\\\F0A86\\"\`) as the character itself, as it does once that \`@charset\` is written. Off by default, because the statement must be true: a stylesheet with no \`@charset\` is read in the encoding the server's \`Content-Type\` names, else in the encoding of the page linking it, so it holds wherever the server names UTF-8 or the page is UTF-8 — and anywhere else every such character reads as other characters.",
+        "description": "How the minimizer states a \`.css\` asset's encoding. \`\\"auto\\"\` (the default) opens it with \`@charset \\"UTF-8\\"\` only when its output holds a non-ASCII character, so it is read as UTF-8 wherever it is served. \`false\` writes no \`@charset\` at all, and writes an escaped character past U+FFFF (an icon font's \`content: \\"\\\\F0A86\\"\`) as the character itself, as \`\\"auto\\"\` does once that \`@charset\` is written. Set \`false\` only where the asset is read as UTF-8 anyway: a stylesheet with no \`@charset\` is read in the encoding the server's \`Content-Type\` names, else in the encoding of the page linking it, so it holds wherever the server names UTF-8 or the page is UTF-8 — and anywhere else every such character reads as other characters.",
         "multiple": false,
-        "path": "optimization.minimizeOptions.css.assumeUtf8",
-        "type": "boolean",
+        "path": "optimization.minimizeOptions.css.charset",
+        "type": "enum",
+        "values": Array [
+          "auto",
+          false,
+        ],
       },
     ],
-    "description": "State that each \`.css\` asset is read as UTF-8 wherever it is served, so the minimizer writes no \`@charset \\"UTF-8\\"\` before one holding a non-ASCII character, and writes an escaped character past U+FFFF (an icon font's \`content: \\"\\\\F0A86\\"\`) as the character itself, as it does once that \`@charset\` is written. Off by default, because the statement must be true: a stylesheet with no \`@charset\` is read in the encoding the server's \`Content-Type\` names, else in the encoding of the page linking it, so it holds wherever the server names UTF-8 or the page is UTF-8 — and anywhere else every such character reads as other characters.",
+    "description": "How the minimizer states a \`.css\` asset's encoding. \`\\"auto\\"\` (the default) opens it with \`@charset \\"UTF-8\\"\` only when its output holds a non-ASCII character, so it is read as UTF-8 wherever it is served. \`false\` writes no \`@charset\` at all, and writes an escaped character past U+FFFF (an icon font's \`content: \\"\\\\F0A86\\"\`) as the character itself, as \`\\"auto\\"\` does once that \`@charset\` is written. Set \`false\` only where the asset is read as UTF-8 anyway: a stylesheet with no \`@charset\` is read in the encoding the server's \`Content-Type\` names, else in the encoding of the page linking it, so it holds wherever the server names UTF-8 or the page is UTF-8 — and anywhere else every such character reads as other characters.",
     "multiple": false,
-    "simpleType": "boolean",
+    "simpleType": "string",
   },
   "optimization-minimize-options-css-color-fallbacks": Object {
     "configs": Array [

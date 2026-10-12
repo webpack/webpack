@@ -7209,6 +7209,11 @@ declare interface CssParts {
  */
 declare interface CssPrintOptions {
 	/**
+	 * `false` when the stylesheet is read as UTF-8 wherever it is served, so no `@charset` is written for it and a string's hex escape of a character past U+FFFF is written as the character, as `declareCharset` writes it. `"auto"` by default, and only read while printing
+	 */
+	charset?: false | "auto";
+
+	/**
 	 * what the target can read (the CSS entries of `output.environment`), so a spelling it would not understand is never reached for; only read while printing, and an absent entry means the modern spelling is available
 	 */
 	environment?: CssEnvironment;
@@ -7267,11 +7272,6 @@ declare interface CssPrintOptions {
 	declareCharset?: boolean;
 
 	/**
-	 * the stylesheet is read as UTF-8 wherever it is served, so no `@charset` is written for it and a string's hex escape of a character past U+FFFF is written as the character, as `declareCharset` writes it. Off by default, and only read while printing
-	 */
-	assumeUtf8?: boolean;
-
-	/**
 	 * give a rule the selectors of a later one printing the same block, and an at-rule the block of a later one stating the same condition, past the rules between them; off by default, since it reorders the cascade and is sound only where nothing between declares what the block being moved does for an element it can match — a condition between counting for what its own rules declare
 	 */
 	mergeDistantRules?: boolean;
@@ -7323,9 +7323,9 @@ declare interface CssProcessOptions {
 	declareCharset?: boolean;
 
 	/**
-	 * the stylesheet is read as UTF-8 wherever it is served, so no `@charset` is written for it and a string's hex escape of a character past U+FFFF is written as the character, as `declareCharset` writes it. Off by default, and only read while printing
+	 * `false` when the stylesheet is read as UTF-8 wherever it is served, so no `@charset` is written for it and a string's hex escape of a character past U+FFFF is written as the character, as `declareCharset` writes it. `"auto"` by default, and only read while printing
 	 */
-	assumeUtf8?: boolean;
+	charset?: false | "auto";
 
 	/**
 	 * rewrite a length into a shorter unit it is exactly equal in (`16px` -> `1pc`); off by default because it earns nothing once the asset is compressed, and only read while printing. A time is always rewritten
@@ -23640,10 +23640,10 @@ declare interface Optimization {
  */
 declare interface OptimizationMinimizeCss {
 	/**
-	 * State that each `.css` asset is read as UTF-8 wherever it is served, so the minimizer writes no `@charset "UTF-8"` before one holding a non-ASCII character, and writes an escaped character past U+FFFF (an icon font's `content: "\F0A86"`) as the character itself, as it does once that `@charset` is written. Off by default, because the statement must be true: a stylesheet with no `@charset` is read in the encoding the server's `Content-Type` names, else in the encoding of the page linking it, so it holds wherever the server names UTF-8 or the page is UTF-8 — and anywhere else every such character reads as other characters.
+	 * How the minimizer states a `.css` asset's encoding. `"auto"` (the default) opens it with `@charset "UTF-8"` only when its output holds a non-ASCII character, so it is read as UTF-8 wherever it is served. `false` writes no `@charset` at all, and writes an escaped character past U+FFFF (an icon font's `content: "\F0A86"`) as the character itself, as `"auto"` does once that `@charset` is written. Set `false` only where the asset is read as UTF-8 anyway: a stylesheet with no `@charset` is read in the encoding the server's `Content-Type` names, else in the encoding of the page linking it, so it holds wherever the server names UTF-8 or the page is UTF-8 — and anywhere else every such character reads as other characters.
 	 * @since 5.112.0
 	 */
-	assumeUtf8?: boolean;
+	charset?: false | "auto";
 
 	/**
 	 * Write a color the `browserslist` target cannot read as an extra declaration before the one naming it, in a spelling it does read: `color: oklch(59.686% 0.15619 49.7694)` is written as `color: #c65d06` and then the `oklch()` itself, so an engine reading neither the Lab family nor `hwb()` is left with a color rather than with nothing. The fallback is that color clipped into the sRGB gamut and rounded, which the declaration standing after it corrects wherever it is read. Nothing is written where the author already set the property earlier in the same block, where the color holds a substitution or a relative reference this cannot fold, or where the fallback would still name a function the target cannot read. On by default, and only in effect for a `browserslist` target — any other target names no browsers to answer for.
@@ -35638,7 +35638,7 @@ declare namespace exports {
 			minimizerOptions?: {
 				as?: "stylesheet" | "block-contents";
 				environment?: CssEnvironment;
-				assumeUtf8?: boolean;
+				charset?: false | "auto";
 				convertLengthUnits?: boolean;
 				convertApproximateColors?: boolean;
 				dropOverriddenDeclarations?: boolean;
