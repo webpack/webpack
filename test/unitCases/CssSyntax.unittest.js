@@ -6644,7 +6644,9 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			],
 			// After the size, the shorthand reads only families.
 			['a{font:12px "Foo Bar"}', "a{font:12px Foo Bar}"],
-			['a{font:12px/1 "Foo Bar",serif}', "a{font:12px/1 Foo Bar,serif}"]
+			['a{font:12px/1 "Foo Bar",serif}', "a{font:12px/1 Foo Bar,serif}"],
+			// Inside a function the string is an argument, not a family.
+			['a{font-family:foo("Arial")}', 'a{font-family:foo("Arial")}']
 		])("%s", (css, expected) => {
 			expect(minify(css)).toBe(expected);
 		});
