@@ -10,7 +10,7 @@
 
 const fs = require("fs");
 const path = require("path");
-const { A, Field, Flag, NS_HTML, Part, _attributeList, _namespaceOf, _contentEndOf, _contentStartOf, _endOf, _nameEndOf, _startOf, NS_MATHML, NS_SVG, NodeType, QUOTE_DOUBLE, QUOTE_NONE, QUOTE_SINGLE, decodeEntities, escapeAttribute, escapeText, parseCssUrls, parseHtml: parseHtmlRefs, parseMsapplicationTask, parseSrc, parseSrcset, tokenize } = require("../../lib/html/syntax-parser");
+const { A, Field, Flag, NS_HTML, Part, _attributeList, _namespaceOf, NS_MATHML, NS_SVG, NodeType, QUOTE_DOUBLE, QUOTE_NONE, QUOTE_SINGLE, decodeEntities, escapeAttribute, escapeText, parseCssUrls, parseHtml: parseHtmlRefs, parseMsapplicationTask, parseSrc, parseSrcset, tokenize } = require("../../lib/html/syntax-parser");
 const { builtinEmbeddedRenderer } = require("../../lib/html/builtinEmbeddedRenderer");
 const serializeHtmlTree = require("../helpers/serializeHtmlTree");
 
@@ -3111,11 +3111,11 @@ const materialize = (ref) => {
 				attributes: _attributeList(ref),
 				children: childrenOf(ref).map(materialize),
 				selfClosing: A.flag(Flag.selfClosing, ref),
-				start: _startOf(ref),
-				end: _endOf(ref),
-				tagEnd: _contentStartOf(ref),
-				nameEnd: _nameEndOf(ref),
-				contentEnd: _contentEndOf(ref),
+				start: A.start(ref),
+				end: A.end(ref),
+				tagEnd: A.startOf(Part.content, ref),
+				nameEnd: A.endOf(Part.name, ref),
+				contentEnd: A.endOf(Part.content, ref),
 				templateContent:
 					tc !== 0
 						? {
@@ -7697,7 +7697,8 @@ describe("parseHtml — skip options preserve element structure", () => {
 			// No Text nodes are emitted under skip.text.
 			expect(n.type).not.toBe(NodeType.Text);
 			if (n.type === NodeType.Element) {
-				if (n.contentEnd > n.tagEnd) {
+				// A body read as raw text has no child nodes left to hold it.
+				if (n.children.length === 0 && n.contentEnd > n.tagEnd) {
 					bodies[n.tagName] = src.slice(n.tagEnd, n.contentEnd);
 				}
 				for (const c of n.children) walk(c);
@@ -7723,7 +7724,8 @@ describe("parseHtml — skip options preserve element structure", () => {
 		/** @param {MatNode} n node */
 		const walk = (n) => {
 			if (n.type === NodeType.Element) {
-				if (n.contentEnd > n.tagEnd) {
+				// A body read as raw text has no child nodes left to hold it.
+				if (n.children.length === 0 && n.contentEnd > n.tagEnd) {
 					bodies[n.tagName] = src.slice(n.tagEnd, n.contentEnd);
 				}
 				for (const c of n.children) walk(c);
@@ -11641,5 +11643,25 @@ describe("SourceProcessor — a byte order mark", () => {
 			.use({ [NodeType.Doctype]: () => log.push("doctype") })
 			.process(page);
 		expect(log).toEqual(["doctype"]);
+	});
+});
+
+describe("HtmlSyntax — Infra string helpers", () => {
+	const {
+		asciiLowercase,
+		stripAsciiWhitespace
+	} = require("../../lib/html/syntax-parser");
+
+	it("folds only ASCII letters", () => {
+		expect(asciiLowercase("DIV")).toBe("div");
+		// U+212A KELVIN SIGN is no ASCII letter, though `toLowerCase` maps it to `k`.
+		expect(asciiLowercase("K")).toBe("K");
+		const lower = "already lower";
+		expect(asciiLowercase(lower)).toBe(lower);
+	});
+
+	it("strips ASCII whitespace but keeps NBSP", () => {
+		expect(stripAsciiWhitespace(" \t\n x \f\r")).toBe("x");
+		expect(stripAsciiWhitespace(" x ")).toBe(" x ");
 	});
 });

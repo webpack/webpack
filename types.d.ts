@@ -35994,25 +35994,13 @@ declare namespace exports {
 				export let TT_STRING: 3;
 				export let TT_URL: 18;
 				export let TT_WHITESPACE: 2;
-				export let T_AT_RULE: 24;
-				export let T_BAD_STRING: 6;
-				export let T_COMMA: 16;
-				export let T_COMMENT: 27;
-				export let T_DECLARATION: 23;
-				export let T_DELIM: 9;
-				export let T_DIMENSION: 12;
-				export let T_FUNCTION: 2;
-				export let T_HASH: 4;
-				export let T_IDENT: 1;
-				export let T_NUMBER: 10;
-				export let T_PERCENTAGE: 11;
-				export let T_QUALIFIED_RULE: 25;
-				export let T_RAW: 28;
-				export let T_SIMPLE_BLOCK: 22;
-				export let T_STRING: 5;
-				export let T_URL: 7;
-				export let T_WHITESPACE: 13;
 				export let VENDOR_PREFIX: RegExp;
+				export let containsSubstitutionFunction: (text: string) => boolean;
+				export let isDigit: (cc: number) => boolean;
+				export let isHexDigit: (cc: number) => boolean;
+				export let isIdentCodePoint: (cc: number) => boolean;
+				export let isIdentStartCodePoint: (cc: number) => boolean;
+				export let isLetter: (cc: number) => boolean;
 				export let asciiLowerCaseName: (s: string) => string;
 				export let buildSkipSet: (nodeTypes: number[]) => Uint8Array;
 				export let consumeExtraNewline: (
@@ -36610,6 +36598,8 @@ declare namespace exports {
 				export let QUOTE_NONE: 0;
 				export let QUOTE_SINGLE: 2;
 				export let SVG_TYPE: "svg";
+				export let asciiLowercase: (value: string) => string;
+				export let stripAsciiWhitespace: (value: string) => string;
 				export let baseTag: (
 					base:
 						| string
