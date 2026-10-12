@@ -8,4 +8,7 @@ it("should report the warnings of a restored module's importers again", () => {
 	// the warning is conflict.js's, the missing module is star.js's, which
 	// conflict.js reaches through a re-export
 	expect(require("./conflict").value).toBe(undefined);
+	// walk-x.js is reached directly from one missing module and through a
+	// re-export from another, and only the second reaches walk.js
+	expect(require("./walk").value).toBe(undefined);
 });
