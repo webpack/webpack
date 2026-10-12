@@ -2,6 +2,7 @@
 
 require("../helpers/warmup-webpack");
 
+const fs = require("fs");
 const path = require("path");
 const testDirectory = path.resolve(__dirname, "..");
 const { Volume, createFsFromVolume } = require("memfs");
@@ -114,4 +115,44 @@ describe("Watch", () => {
 			/** @type {import("../../").Watching} */ (compiler.watching).invalidate();
 		}, 50);
 	});
+
+	it("should rebuild when a file is removed while a build is running", (done) => {
+		const context = path.join(testDirectory, "js", "Watch", "removed-while-building");
+		const removedFile = path.join(context, "b.js");
+		fs.rmSync(context, { recursive: true, force: true });
+		fs.mkdirSync(context, { recursive: true });
+		fs.writeFileSync(path.join(context, "index.js"), 'require("./a");require("./b");');
+		fs.writeFileSync(path.join(context, "a.js"), "module.exports = 1;");
+		fs.writeFileSync(removedFile, "module.exports = 2;");
+		let changed = false;
+		const compiler = webpack({
+			mode: "development",
+			context,
+			entry: "./index.js",
+			plugins: [
+				(c) => {
+					// the paused watcher sees the removal before the next build replaces it
+					c.hooks.afterCompile.tapAsync("RemoveWhileBuilding", (_, cb) => {
+						if (!changed || !fs.existsSync(removedFile)) return cb();
+						fs.unlinkSync(removedFile);
+						setTimeout(cb, 500);
+					});
+				}
+			]
+		});
+		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
+			/** @type {unknown} */ (createFsFromVolume(new Volume()))
+		);
+		compiler.watch({ aggregateTimeout: 50 }, (err) => {
+			if (err) return done(err);
+			if (!changed) {
+				changed = true;
+				setTimeout(() => {
+					fs.writeFileSync(path.join(context, "a.js"), "module.exports = 3;");
+				}, 300);
+			} else if (compiler.removedFiles && compiler.removedFiles.has(removedFile)) {
+				compiler.close(done);
+			}
+		});
+	}, 10000);
 });
