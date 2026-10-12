@@ -14,8 +14,9 @@ module.exports = {
 					preload: true,
 					as: "image"
 				},
-				{ test: [{ not: /\.png$/ }], prefetch: true },
-				{ include: { or: [/b\.png$/] }, prefetch: true }
+				{ include: { or: [/b\.png$/] }, prefetch: true },
+				{ test: [{ not: /\.png$/ }], prefetch: true, fetchPriority: "low" },
+				{ test: { glob: "*.woff2" }, preload: true, as: "font" }
 			]
 		}
 	},
