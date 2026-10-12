@@ -305,6 +305,21 @@ const IMPROVED_CASES = [
 		{ compress: {}, mangle: false }
 	],
 	[
+		"a `var` moving to the function around the call under a name of its own, where that name is taken",
+		"function f(x) { var a = g(); console.log(x); (function () { if (x) { var a = console.log.name; console.log(a, a); } })(); (function () { if (!x) { var a = typeof x; console.log(a, a); } })(); console.log(a); } function g() { return 'outer'; } f(1); f(0);",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a `var` moving to the function around the call under a name of its own, where that function names it elsewhere",
+		'var a = "g"; function f(x) { (function () { if (x) { var a = console.log.name; console.log(a, a); } })(); console.log(a); } f(1);',
+		{ compress: {}, mangle: false }
+	],
+	[
+		"two functions called in place each declaring one `var` a closure keeps, or reading a name the other declares, moving under names of their own",
+		'function h(x, r) { (function () { if (x) { var a = x.p; r.push(() => a + a); } })(); (function () { if (x) { var a = x.q; r.push(() => a + a); } })(); } function k(x) { (function () { if (x) { var b = x.q; console.log(a, b, b); } })(); (function () { if (x) { var a = x.p; console.log(a, a); } })(); } var a = "outer", r = []; h({ p: 1, q: 2 }, r); k({ p: 1, q: 2 }); console.log(r.map((f) => f()));',
+		{ compress: {}, mangle: false }
+	],
+	[
 		"a `var` moving into a function called in place, which then stays one",
 		"function f(x) { (function () { if (x) { var a = console.log.name; console.log(a, a); } (function () { if (x) { var b = console.log.name; console.log(b, b); } })(); })(); } f(1);",
 		{ compress: {}, mangle: false }
@@ -1220,8 +1235,7 @@ const KEPT_CASES = [
 	["a `var` copying a parameter, read in a block declaring the parameter's name, or in a class of that name", "function f(b) { var a = b; g(b); { let b = 9; g(b); return [a, b]; } } function h(b) { var a = b; g(b); return new (class b { m() { return a; } })().m(); } function g() {} console.log(f(1), h(1));"],
 	["a `var` copying a `var` a loop sets again, read by a function inside", "var fns = []; function f(n) { for (var i = 0; i < n; i++) { var b = i * 2; var a = b; g(b); fns.push(function () { return a; }); } } function g() {} f(2); console.log(fns.map(function (h) { return h(); }));"],
 	["a `var` copying a `let` a loop declares each time round, read by a function inside", "var fns = []; function f(list) { for (let b of list) { var a = b; g(b); fns.push(function () { return a; }); } } function g() {} f([1, 2]); console.log(fns.map(function (h) { return h(); }));"],
-	["a `var` the function around the call names elsewhere, or a call it repeats", 'var a = "g"; function f(x) { (function () { if (x) { var a = console.log.name; console.log(a, a); } })(); console.log(a); for (var i = 0; i < 2; i++) (function () { var b; if (i) b = i; console.log(b); })(); } f(1);'],
-	["two functions called in place declaring one `var` a closure keeps, or reading a name the other declares", 'function h(x, r) { (function () { if (x) { var a = x.p; r.push(() => a + a); } })(); (function () { if (x) { var a = x.q; r.push(() => a + a); } })(); } function k(x) { (function () { if (x) { var b = x.q; console.log(a, b, b); } })(); (function () { if (x) { var a = x.p; console.log(a, a); } })(); } var a = "outer", r = []; h({ p: 1, q: 2 }, r); k({ p: 1, q: 2 }); console.log(r.map((f) => f()));'],
+	["a call a loop repeats", "function f() { for (var i = 0; i < 2; i++) (function () { var b; if (i) b = i; console.log(b); })(); } f();"],
 	["a function called in place inside `with`, whose `var` the object could answer for", 'function f(o) { with (o) { (function () { if (o) { var a = r.length + 1; r.push(() => a + a); } })(); } return o.r.map((g) => g()); } console.log(f({ a: 2, r: [] }));'],
 	["a `return`", `!function () { for (let x of [1, 2]) { ${TRY} if (x) return; } console.log(2); }();`],
 	["`this`", `!function () { ${TRY} console.log(this); }();`],
@@ -7654,6 +7668,25 @@ describe("syntax-printer", () => {
 				expect(code).toContain(kept);
 				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
 			}
+		});
+
+		it("should keep a function called in place whose `var`s, more than one, take names already taken", async () => {
+			const { minify } = await load();
+			const input =
+				"function f(x) { var a = g(), b = g(); console.log(x); (function () { if (x) { var a = console.log.name, b = typeof x; console.log(a, a, b, b); } })(); console.log(a, b); } function g() { return \"o\"; } f(1); f(0);";
+			const { code } = await minify(input, { compress: {}, mangle: false });
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			expect(code).toContain("function(){");
+			expect(code).toMatchSnapshot();
+		});
+
+		it("should keep a function called in place whose `var`, its name taken, a class in a block there also names", async () => {
+			const { minify } = await load();
+			const input =
+				"function f(x) { var a = g(); (function () { var x = typeof a; { class x {} console.log(x.name); } console.log(x); })(); console.log(x, a); } function g() { return 1; } f('o');";
+			const { code } = await minify(input, { compress: {}, mangle: false });
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			expect(code).toMatchSnapshot();
 		});
 
 		it("should keep an assignment to a `let` before the declaration in its block", async () => {
