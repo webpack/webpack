@@ -34,6 +34,28 @@ describe("ModuleGraph", () => {
 		});
 	});
 
+	describe("_removeConnectionLoose", () => {
+		// getConnection caches a miss as null, and that null hides a connection
+		// later published through the lazy by-parent flush.
+		it("keeps a connection made afterwards resolvable", () => {
+			const moduleGraph = new ModuleGraph();
+			const origin = createModule();
+			const target = createModule();
+			const dependency = new Dependency();
+
+			moduleGraph.setParents(dependency, origin, origin);
+
+			moduleGraph._removeConnectionLoose(dependency);
+			moduleGraph.setResolvedModule(origin, dependency, target);
+
+			const connection = moduleGraph.getConnection(dependency);
+			expect(connection).toBeDefined();
+			expect(/** @type {{ module: Module }} */ (connection).module).toBe(
+				target
+			);
+		});
+	});
+
 	describe("_flushUnassignedConnections", () => {
 		it("makes connections resolvable by dependency without a parent module", () => {
 			const moduleGraph = new ModuleGraph();
