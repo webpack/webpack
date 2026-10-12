@@ -28,6 +28,7 @@
 const { spawn } = require("child_process");
 const fs = require("fs");
 const path = require("path");
+const { parse: acornParse, tokenizer: acornTokenizer } = require("acorn");
 const { parse: webpackParse } = require("../lib/javascript/syntax-parser");
 // Acorn's own suite, recorded case by case: what `WebpackParser.unittest.js`
 // replays, read here for the ranges rather than for the trees.
@@ -41,6 +42,7 @@ const {
 	formatCost,
 	formatProfile,
 	hasher,
+	idempotence,
 	installPackages,
 	kb,
 	loaderFor,
@@ -48,12 +50,16 @@ const {
 	measure,
 	measureInWorker,
 	missingReport,
+	oneLine,
 	pathSpanWalk,
 	purityRelation,
+	shrink,
+	signed,
 	sliceRelation,
 	spans,
 	sweepExitCode,
-	sweepMode
+	sweepMode,
+	thrownText
 } = require("./compare-tools-harness");
 
 const ROOT = path.resolve(__dirname, "..");
@@ -552,7 +558,7 @@ const scalar = (value) =>
  * @param {string} at the path walked so far
  * @returns {string | undefined} the first divergence
  */
-const firstDifference = (left, right, at) => {
+const keysDifference = (left, right, at) => {
 	if (Array.isArray(left) || Array.isArray(right)) {
 		if (!Array.isArray(left) || !Array.isArray(right)) {
 			return `${at}: acorn ${Array.isArray(left) ? "list" : "value"}, tool ${
@@ -563,7 +569,7 @@ const firstDifference = (left, right, at) => {
 			return `${at}: acorn ${left.length} items, tool ${right.length}`;
 		}
 		for (let i = 0; i < left.length; i++) {
-			const found = firstDifference(left[i], right[i], `${at}[${i}]`);
+			const found = keysDifference(left[i], right[i], `${at}[${i}]`);
 			if (found !== undefined) return found;
 		}
 		return undefined;
@@ -584,7 +590,7 @@ const firstDifference = (left, right, at) => {
 	for (const key of Object.keys(left)) {
 		if (IGNORED_NODE_KEYS.has(key)) continue;
 		if (typeof left[key] === "function") continue;
-		const found = firstDifference(
+		const found = keysDifference(
 			left[key],
 			right[key],
 			at === "" ? key : `${at}.${key}`
@@ -620,7 +626,7 @@ const compare = async () => {
 	try {
 		const reference = parserNamed("acorn")(source);
 		const tree = await parserNamed(name)(source);
-		answer = { difference: firstDifference(reference, tree, "") };
+		answer = { difference: keysDifference(reference, tree, "") };
 	} catch (error) {
 		answer = {
 			error: String(
@@ -1066,6 +1072,428 @@ const jsPurityDigest = (source, options) => {
 	return digest.hex();
 };
 
+// --- Holding the parser to acorn --------------------------------------------
+
+/**
+ * A value as it reads in a difference report, kept short enough to scan.
+ * @param {unknown} value either parser's value at the differing path
+ * @returns {string} how the value prints
+ */
+const show = (value) => {
+	if (typeof value === "bigint") return `${value}n`;
+	if (value instanceof RegExp) return String(value);
+	if (typeof value === "object" && value !== null) {
+		return Array.isArray(value)
+			? `[${value.length} items]`
+			: `{${Object.keys(value).sort().join(",")}}`;
+	}
+	return JSON.stringify(value) || String(value);
+};
+
+/**
+ * The first place two parse trees disagree, or null when they match: every key,
+ * positions included, unlike the comparison's agreement column. Key presence is
+ * asked with `in`, since the lazy path serves `range` from a prototype getter.
+ * @param {unknown} ours what webpack's parser built
+ * @param {unknown} theirs what acorn built
+ * @param {string} at the path walked so far
+ * @returns {{ at: string, ours: string, acorn: string } | null} the difference
+ */
+const firstDifference = (ours, theirs, at) => {
+	if (ours === theirs) return null;
+	const report = { at, ours: show(ours), acorn: show(theirs) };
+	if (typeof ours !== typeof theirs) return report;
+	if (typeof ours === "number") {
+		return Number.isNaN(ours) && Number.isNaN(/** @type {number} */ (theirs))
+			? null
+			: report;
+	}
+	if (typeof ours === "bigint") {
+		return String(ours) === String(theirs) ? null : report;
+	}
+	if (typeof ours !== "object" || ours === null || theirs === null) {
+		return report;
+	}
+	if (ours instanceof RegExp || theirs instanceof RegExp) {
+		return String(ours) === String(theirs) ? null : report;
+	}
+	if (Array.isArray(ours) !== Array.isArray(theirs)) return report;
+	if (Array.isArray(ours)) {
+		const other = /** @type {unknown[]} */ (theirs);
+		if (ours.length !== other.length) return report;
+		for (let i = 0; i < ours.length; i++) {
+			const difference = firstDifference(ours[i], other[i], `${at}[${i}]`);
+			if (difference) return difference;
+		}
+		return null;
+	}
+	const left = /** @type {Record<string, unknown>} */ (ours);
+	const right = /** @type {Record<string, unknown>} */ (theirs);
+	const ourKeys = Object.keys(left);
+	const theirKeys = Object.keys(right);
+	// Whichever side owns more keys covers the other: two same-sized key sets
+	// that differ must each hold a key the other lacks.
+	for (const key of ourKeys.length >= theirKeys.length ? ourKeys : theirKeys) {
+		if (!(key in left)) {
+			return { at: `${at}.${key}`, ours: "absent", acorn: show(right[key]) };
+		}
+		if (!(key in right)) {
+			return { at: `${at}.${key}`, ours: show(left[key]), acorn: "absent" };
+		}
+		const difference = firstDifference(left[key], right[key], `${at}.${key}`);
+		if (difference) return difference;
+	}
+	return null;
+};
+
+/**
+ * The first few differences, with a count when more were found.
+ * @template T
+ * @param {T[]} differences everything the run collected
+ * @param {number=} limit how many to keep
+ * @returns {(T | string)[]} what the assertion prints
+ */
+const reportable = (differences, limit = 10) =>
+	differences.length > limit
+		? [
+				...differences.slice(0, limit),
+				`…and ${differences.length - limit} more`
+			]
+		: differences;
+
+/**
+ * Where webpack's parser and acorn's read one source apart, under the options
+ * a build parses with, or null where they agree or acorn refuses it.
+ * @param {string} source a script or a module
+ * @param {EXPECTED_ANY} options what to parse it as
+ * @returns {import("./compare-tools-harness").Report[]} the difference, as a finding
+ */
+const acornDifference = (source, options) => {
+	/** @type {EXPECTED_ANY} */
+	let theirs;
+	try {
+		theirs = acornParse(source, options);
+	} catch (_error) {
+		// acorn's own defects are its suite's to answer for: what it refuses is
+		// held by the test262 suites, not by this one.
+		return [];
+	}
+	const difference = firstDifference(
+		webpackParse(source, options),
+		theirs,
+		"Program"
+	);
+	if (difference === null) return [];
+	return [
+		{
+			relation: "acorn",
+			what: difference.at.replace(/\[\d+\]/g, "[]"),
+			repro: `    ours ${oneLine(difference.ours, 60)}, acorn ${oneLine(difference.acorn, 60)}`
+		}
+	];
+};
+
+// --- The printer's invariants -----------------------------------------------
+
+// The option sets the printer is held over: what a production build minifies
+// with, a second compress pass, the printer alone, and the printer laying out.
+/** @type {[string, EXPECTED_ANY][]} */
+const PRESETS = [
+	["default", {}],
+	["2 passes", { compress: { passes: 2 } }],
+	["format", { compress: false, mangle: false }],
+	["beautify", { compress: false, mangle: false, format: { beautify: true } }]
+];
+
+/**
+ * The printer under one preset, and the same printer reading its output back:
+ * minified twice, an output shrinks again, which is the compressor's business
+ * rather than a printer moving, so the second pass prints and nothing else.
+ * @param {EXPECTED_ANY} minifySync the printer's synchronous minify
+ * @param {EXPECTED_ANY} options one preset's options
+ * @param {boolean} module whether the source is a module
+ * @returns {{ minify: (code: string) => string, reprint: (code: string) => string }} the two passes
+ */
+const printerFor = (minifySync, options, module) => {
+	// Fresh options each call: the minifier writes its defaults into them.
+	/**
+	 * @param {EXPECTED_ANY} given options
+	 * @returns {(code: string) => string} a pass under them
+	 */
+	const pass = (given) => (code) =>
+		minifySync(code, { ...JSON.parse(JSON.stringify(given)), module }).code;
+	return {
+		minify: pass(options),
+		reprint: pass({ compress: false, mangle: false, format: options.format })
+	};
+};
+
+/**
+ * @param {string} code a program
+ * @param {boolean} module whether it is a module
+ * @returns {{ label: string, value: string, start: number, end: number }[] | null} its tokens, or null where acorn refuses it
+ */
+const tokensOf = (code, module) => {
+	try {
+		return [
+			...acornTokenizer(code, {
+				ecmaVersion: "latest",
+				sourceType: module ? "module" : "script",
+				allowHashBang: true
+			})
+		].map((token) => ({
+			label: token.type.label,
+			// acorn's types leave out the `value` every token carries.
+			value: String(
+				/** @type {import("acorn").Token & { value: unknown }} */ (token).value
+			),
+			start: token.start,
+			end: token.end
+		}));
+	} catch (_error) {
+		return null;
+	}
+};
+
+/**
+ * What a program says, token by token, its spelling set aside: what an
+ * idempotence finding is told apart by, and what a respelling must keep.
+ * @param {string} code a program
+ * @param {boolean} module whether it is a module
+ * @returns {string} its tokens' kinds and values
+ */
+const tokenMeaning = (code, module) => {
+	const tokens = tokensOf(code, module);
+	return tokens === null
+		? code
+		: tokens.map((token) => `${token.label}:${token.value}`).join("\n");
+};
+
+/**
+ * @typedef {{ label: string, text: string, start: number, end: number }} Site
+ */
+
+/**
+ * @typedef {{ name: string, write: (site: Site) => string | null }} Respelling
+ */
+
+// Words a context reads as syntax when spelled plainly, which an escape would
+// make an error or another construct; every other name escapes freely.
+const CONTEXTUAL_NAMES = new Set([
+	"accessor",
+	"as",
+	"assert",
+	"async",
+	"await",
+	"defer",
+	"from",
+	"get",
+	"let",
+	"meta",
+	"of",
+	"set",
+	"source",
+	"static",
+	"target",
+	"using",
+	"yield"
+]);
+
+// Spellings the language reads alike: the printer owes them one output.
+/** @type {Respelling[]} */
+const JS_RESPELLINGS = [
+	{
+		name: "quote-double",
+		write: ({ label, text }) =>
+			label === "string" && text[0] === "'" && !/["\\]/.test(text)
+				? `"${text.slice(1, -1)}"`
+				: null
+	},
+	{
+		name: "quote-single",
+		write: ({ label, text }) =>
+			label === "string" && text[0] === '"' && !/['\\]/.test(text)
+				? `'${text.slice(1, -1)}'`
+				: null
+	},
+	{
+		name: "hex",
+		write: ({ label, text }) =>
+			label === "num" &&
+			/^(?:0|[1-9]\d{0,14})$/.test(text) &&
+			Number(text) <= Number.MAX_SAFE_INTEGER
+				? `0x${Number(text).toString(16)}`
+				: null
+	},
+	{
+		name: "name-escape",
+		write: ({ label, text }) =>
+			label === "name" &&
+			/^[A-Za-z_$]/.test(text) &&
+			!CONTEXTUAL_NAMES.has(text)
+				? `\\u${text.charCodeAt(0).toString(16).padStart(4, "0")}${text.slice(1)}`
+				: null
+	}
+];
+
+const wantedSpelling = filterFrom("SPELLING");
+
+/**
+ * @param {string} code a program
+ * @param {Site[]} sites where it is respelled
+ * @param {Respelling} respelling how
+ * @returns {string} the program respelled there
+ */
+const respell = (code, sites, respelling) => {
+	let out = "";
+	let read = 0;
+	for (const site of sites) {
+		const written = respelling.write(site);
+		if (written === null) continue;
+		out += code.slice(read, site.start) + written;
+		read = site.end;
+	}
+	return out + code.slice(read);
+};
+
+/**
+ * @typedef {{ kind: string, delta: number, note: string }} Finding
+ */
+
+/**
+ * What respelling some sites does to the output: nothing is owed, so any change
+ * is a finding, read by whether what the output says moved too.
+ * @param {(code: string) => string} minify the printer under one preset
+ * @param {string} code a program
+ * @param {boolean} module whether it is a module
+ * @param {string} minified what the printer made of it
+ * @param {Site[]} sites where it is respelled
+ * @param {Respelling} respelling how
+ * @returns {Finding | null} what moved
+ */
+const spellingFinding = (minify, code, module, minified, sites, respelling) => {
+	const mutated = respell(code, sites, respelling);
+	if (mutated === code) return null;
+	// Checked against the tokenizer rather than argued for: a respelling that
+	// moved what the program says is dropped rather than reported.
+	if (tokenMeaning(mutated, module) !== tokenMeaning(code, module)) return null;
+	/** @type {string} */
+	let answer;
+	try {
+		answer = minify(mutated);
+	} catch (error) {
+		return { kind: "throws", delta: 0, note: thrownText(error) };
+	}
+	if (answer === minified) return null;
+	return {
+		kind:
+			tokenMeaning(answer, module) === tokenMeaning(minified, module)
+				? "bytes"
+				: "differs",
+		delta: answer.length - minified.length,
+		note: ""
+	};
+};
+
+/**
+ * @param {Site[]} sites the sites a finding was narrowed to
+ * @param {Respelling} respelling how they were respelled
+ * @returns {string} the report's repro
+ */
+const reproOf = (sites, respelling) => {
+	const from = sites.map((site) => site.text).join(" ");
+	const to = sites.map((site) => respelling.write(site) || site.text).join(" ");
+	return `    ${oneLine(from, 76)}\n      -> ${oneLine(to, 76)}`;
+};
+
+/**
+ * Every respelling over one program: each that moves the output is bisected
+ * down to the sites carrying it.
+ * @param {(code: string) => string} minify the printer under one preset
+ * @param {string} code a program
+ * @param {boolean} module whether it is a module
+ * @param {string} minified what the printer made of it
+ * @returns {import("./compare-tools-harness").Report[]} what moved
+ */
+const sweepRespellings = (minify, code, module, minified) => {
+	/** @type {import("./compare-tools-harness").Report[]} */
+	const reports = [];
+	const tokens = tokensOf(code, module);
+	if (tokens === null) return reports;
+	/** @type {Site[]} */
+	const sites = tokens.map((token) => ({
+		label: token.label,
+		text: code.slice(token.start, token.end),
+		start: token.start,
+		end: token.end
+	}));
+	const respellings = JS_RESPELLINGS.filter((one) => wantedSpelling(one.name));
+	// No site is one two respellings write, so all of them at once cost one
+	// minify, and only a program that moves pays one per respelling.
+	/** @type {Respelling} */
+	const every = {
+		name: "every",
+		write: (site) => {
+			for (const respelling of respellings) {
+				const written = respelling.write(site);
+				if (written !== null) return written;
+			}
+			return null;
+		}
+	};
+	if (spellingFinding(minify, code, module, minified, sites, every) === null) {
+		return reports;
+	}
+	for (const respelling of respellings) {
+		const touched = sites.filter((site) => respelling.write(site) !== null);
+		if (touched.length === 0) continue;
+		/**
+		 * @param {Site[]} subset the sites to respell
+		 * @returns {Finding | null} what moved
+		 */
+		const holds = (subset) =>
+			spellingFinding(minify, code, module, minified, subset, respelling);
+		const found = holds(touched);
+		if (found === null) continue;
+		const carried = shrink(holds, touched, found.kind);
+		const blamed = (carried === touched ? found : holds(carried)) || found;
+		reports.push({
+			relation: `respelling ${respelling.name}`,
+			what:
+				blamed.kind === "throws"
+					? `threw: ${blamed.note}`
+					: `${blamed.kind}, ${signed(blamed.delta)}`,
+			repro: reproOf(carried, respelling)
+		});
+	}
+	return reports;
+};
+
+// Divergences already answered for, each with why it stands.
+/** @type {import("./compare-tools-harness").Expected[]} */
+const EXPECTED = [
+	{
+		relation: "respelling hex",
+		contains: "0x",
+		source: "asm-js/asm.js",
+		why: "asm.js reads a number's spelling, so the printer keeps it as written"
+	},
+	{
+		relation: "idempotence",
+		contains: "=>",
+		source: "reuse-webpack-esm-library/lib.js",
+		why: "terser breaks the line after a kept comment where the next token began one, and a comment holding a break is read back as one"
+	},
+	{
+		relation: "idempotence",
+		contains: "var ",
+		source: "ECharts",
+		why: "terser breaks the line after a kept comment where the next token began one, and a comment holding a break is read back as one"
+	}
+];
+
+const wantedPreset = filterFrom("PRESET");
+
 const wantedRelation = filterFrom("RELATION");
 
 // What the last sweep did not find, read by the report and by the gate.
@@ -1116,20 +1544,31 @@ const invariantFixtures = () => {
 };
 
 /**
- * Sweep mode: hold the parser to its own invariants and report what it breaks.
- * Nothing is installed and nothing is compared to, so this is the cheap half of
- * the script and the one a check can be gated on.
+ * Sweep mode: hold the parser and the printer to their own invariants and
+ * report what they break. Nothing is installed and nothing is compared to, so
+ * this is the cheap half of the script and the one a check can be gated on.
  * @param {(text: string) => void} write receives the report
- * @returns {number} how many distinct findings it named
+ * @returns {Promise<number>} how many distinct findings it named
  */
-const invariants = (write) => {
+const invariants = async (write) => {
 	const built = invariantFixtures();
 	// Filtered the same way the corpus is: a run narrowed to one fixture is not
 	// short of the ones it was never going to read, and the gate answers for the
 	// sweep that happened.
 	_missingFixtures = built.missing.filter((label) => wantedFixture(label));
 	const corpus = built.corpus.filter(([label]) => wantedFixture(label));
-	const groups = findingGroups();
+	const presets = PRESETS.filter(([name]) => wantedPreset(name));
+	// Filtered like the corpus is: an expectation for a relation this run was
+	// never going to reach matched nothing because nothing asked it to, which is
+	// not the divergence having gone away.
+	const groups = findingGroups(
+		EXPECTED.filter(
+			(entry) =>
+				wantedRelation(entry.relation) &&
+				(!entry.relation.startsWith("respelling ") ||
+					wantedSpelling(entry.relation.slice("respelling ".length)))
+		)
+	);
 	if (wantedRelation("spans")) {
 		let refused = 0;
 		for (const [label, source, options] of corpus) {
@@ -1193,17 +1632,110 @@ const invariants = (write) => {
 		}
 		log(`read ${read} sources twice over …`);
 	}
+	// What the parser is held to everywhere else, asked of every fixture: acorn's
+	// own corpus is left out, as the parser's unit tests replay its trees.
+	if (wantedRelation("acorn")) {
+		let read = 0;
+		for (const [label, source, options] of corpus) {
+			if (label.startsWith("acorn corpus: ")) continue;
+			const settled = options === undefined ? goalFor(source) : options;
+			if (settled === null) continue;
+			read++;
+			for (const report of acornDifference(source, settled)) {
+				groups.add(report, "parse", label);
+			}
+		}
+		log(`held ${read} trees to acorn's …`);
+	}
+	// The printer's two relations share a sweep: both need the output, and
+	// printing it twice to ask two questions of it would double the run.
+	const wantsIdempotence = wantedRelation("idempotence");
+	const wantsRespelling = JS_RESPELLINGS.some((respelling) =>
+		wantedRelation(`respelling ${respelling.name}`)
+	);
+	if (wantsIdempotence || wantsRespelling) {
+		const { minifySync } = (
+			await require("../lib/javascript/syntax").printer.load()
+		).modules;
+		// Respelling alone asks the first preset only.
+		const printing = wantsIdempotence ? presets : presets.slice(0, 1);
+		let read = 0;
+		for (const [label, source, options] of corpus) {
+			const settled = options === undefined ? goalFor(source) : options;
+			// Read as a build reads it, at the latest edition: a corpus case only
+			// an older edition parses is the parser's to hold, not the printer's.
+			if (
+				settled === null ||
+				!parsesAsLatest(source, settled.sourceType === "module")
+			) {
+				continue;
+			}
+			read++;
+			const module = settled.sourceType === "module";
+			/**
+			 * @param {string} text a program
+			 * @returns {string} what it says
+			 */
+			const says = (text) => tokenMeaning(text, module);
+			for (const [preset, presetOptions] of printing) {
+				const { minify, reprint } = printerFor(
+					minifySync,
+					presetOptions,
+					module
+				);
+				const { printed, reports } = wantsIdempotence
+					? idempotence({ minify, reprint, source, says })
+					: { printed: minify(source), reports: [] };
+				for (const report of reports) groups.add(report, preset, label);
+				// Under the first preset only: whether a spelling decides the
+				// output is the same question under every option set, and each
+				// asking of it is a full minify of the whole program.
+				if (printed === null || !wantsRespelling || preset !== presets[0][0]) {
+					continue;
+				}
+				for (const report of sweepRespellings(
+					minify,
+					source,
+					module,
+					printed
+				)) {
+					groups.add(report, preset, label);
+				}
+			}
+		}
+		log(`printed ${read} sources under ${printing.length} presets …`);
+	}
 	return groups.write(write);
+};
+
+/**
+ * @param {string} source a program
+ * @param {boolean} module whether it is a module
+ * @returns {boolean} whether the parser reads it at the latest edition
+ */
+const parsesAsLatest = (source, module) => {
+	try {
+		webpackParse(source, {
+			sourceType: module ? "module" : "script",
+			ecmaVersion: "latest",
+			allowHashBang: true
+		});
+		return true;
+	} catch (_error) {
+		return false;
+	}
 };
 
 /**
  * The sweep as a section of the comparison's own report, so a run that asks
  * what the parser costs is told what it owes as well.
- * @returns {number} how many distinct findings it named
+ * @returns {Promise<number>} how many distinct findings it named
  */
-const reportInvariants = () => {
-	process.stdout.write("\ninvariants — what the parser owes its own source\n");
-	const found = invariants((text) => process.stdout.write(text));
+const reportInvariants = async () => {
+	process.stdout.write(
+		"\ninvariants — what the parser owes its source and the printer its output\n"
+	);
+	const found = await invariants((text) => process.stdout.write(text));
 	process.stdout.write(missingReport(_missingFixtures));
 	process.stdout.write(`\n${found} finding${found === 1 ? "" : "s"}\n`);
 	return found;
@@ -1214,7 +1746,7 @@ const reportInvariants = () => {
  * @returns {Promise<void>} resolves once the exit code is set
  */
 const reportInvariantsOnly = async () => {
-	const found = reportInvariants();
+	const found = await reportInvariants();
 	process.exitCode = sweepExitCode(found, _missingFixtures, process.argv);
 };
 
@@ -1419,4 +1951,4 @@ started.catch((error) => {
 	process.exitCode = 1;
 });
 
-module.exports = { runMode };
+module.exports = { firstDifference, reportable, runMode, show };

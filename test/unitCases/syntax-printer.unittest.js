@@ -6289,6 +6289,17 @@ describe("syntax-printer", () => {
 		expect(ast.createWalker().webpackSkipsSqueezed).toBe(false);
 	});
 
+	it("should minify synchronously as it does asynchronously", async () => {
+		const { minify, modules } = await load();
+		/** @type {EXPECTED_ANY} */
+		const options = { module: true, sourceMap: true };
+		const code = "export const a = 1 + 2; console.log(a);";
+		const sync = modules.minifySync(code, { ...options });
+		const async = await minify(code, { ...options });
+		expect(sync.code).toBe(async.code);
+		expect(sync.map).toBe(async.map);
+	});
+
 	describe("printing its own output again", () => {
 		/** @type {EXPECTED_ANY} */
 		const formatOnly = { compress: false, mangle: false, module: true };

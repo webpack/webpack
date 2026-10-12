@@ -14,7 +14,7 @@ const {
 	parse
 } = require("../../lib/javascript/syntax").parser;
 const { decodeMappings } = require("../../lib/util/createMappings");
-const { firstDifference } = require("../helpers/compareParserOutput");
+const { firstDifference } = require("../../tooling/compare-js-tools");
 const {
 	DEPENDENCY,
 	createProgramGenerator,
