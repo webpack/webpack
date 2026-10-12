@@ -246,6 +246,12 @@ const IMPROVED_CASES = [
 		"function f(t){return(t=g(t)).a+t.b*t.a}function g(t){return{a:t,b:2*t}}console.log(f(1),f(2));"
 	],
 	[
+		"a function written in place passed two arguments, each reading the variable of its parameter's name",
+		"function f(t, u) { return (function (t, u) { return t.a + u.a * t.b + u.b * t.a; })(g(t), g(u)); } function g(t) { return { a: t, b: 2 * t }; } console.log(f(1, 2), f(2, 3));",
+		{ compress: {}, mangle: false },
+		"function f(t,u){return t=g(t),u=g(u),t.a+u.a*t.b+u.b*t.a}function g(t){return{a:t,b:2*t}}console.log(f(1,2),f(2,3));"
+	],
+	[
 		"a function written in place writing a property and returning a closure, its parameter's name taken by a variable read only in the argument",
 		"function f(t) { return (function (t) { t.c = 3; return function () { return t.a + t.c; }; })(g(t)); } function g(t) { return { a: t }; } console.log(f(1)(), f(2)());",
 		{ compress: {}, mangle: false },
