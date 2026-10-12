@@ -302,7 +302,7 @@ jobs:
             script: cover:test262-parser
             flags: test262-parser
           # Minifies every source of each JS corpus with the published minifier
-          # and with webpack's own, then runs terser's fuzzer on fixed seeds:
+          # and with webpack's own, then runs webpack's fuzzer on fixed seeds:
           # each output prints what its input prints. One leg saves a runner.
           - language: minify-corpora
             submodules: test/external/terser test/external/test262-cases test/external/swc test/external/oxc

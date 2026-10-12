@@ -532,6 +532,7 @@
     "typeof",
     "typeofs",
     "ufeff",
+    "ufuzz",
     "uncacheable",
     "undefine",
     "undelayed",
