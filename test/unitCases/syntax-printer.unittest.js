@@ -6763,6 +6763,30 @@ describe("syntax-printer", () => {
 			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
 		});
 
+		it("should compress an anonymous default export a foreign ESTree tree declares", async () => {
+			const { minify, corrections } = await load();
+			const tree = () =>
+				/** @type {EXPECTED_ANY} */ (
+					acorn.parse("export default function () { return 1; }", {
+						ecmaVersion: 2022,
+						sourceType: "module"
+					})
+				);
+			const options = () =>
+				/** @type {EXPECTED_ANY} */ ({ module: true, parse: { spidermonkey: true } });
+			const { code } = await minify(tree(), options());
+			expect(code).toBe("export default function(){return 1}");
+
+			if (!corrections) throw new Error("the correct phase is not installed");
+			corrections.enabled = false;
+			try {
+				await expect(unimproved(() => minify(tree(), options()))).rejects.toThrow("definition");
+				await expect(terserReference().minify(tree(), options())).rejects.toThrow("definition");
+			} finally {
+				corrections.enabled = true;
+			}
+		});
+
 		it("should keep a number the compressor computes plain where keep_numbers is on", async () => {
 			const { minify, corrections } = await load();
 			const input = "var s = 1000; var m = s * 60; var h = m * 60; console.log(s, m, h, 0.5);";
