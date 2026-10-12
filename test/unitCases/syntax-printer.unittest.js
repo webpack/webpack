@@ -1196,6 +1196,10 @@ const IMPROVED_CASES = [
 /** @type {[string, string][]} */
 const KEPT_CASES = [
 	[
+		"optional reads of a global `const` known `undefined`, which stays declared",
+		"const obj = void 0; function f(x) { console.log(x); } f(obj?.a); f(obj?.a);"
+	],
+	[
 		"a `RegExp` call where the program assigns the global",
 		'RegExp = function (pattern) { return "own " + pattern; }; console.log(RegExp("a"));'
 	],
