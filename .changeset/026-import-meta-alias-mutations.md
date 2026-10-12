@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Share unknown import.meta properties between aliases and direct accesses.
+Keep unknown `import.meta` properties per module, alike for aliases and direct use.

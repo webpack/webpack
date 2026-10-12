@@ -1,4 +1,4 @@
-import { meta as otherMeta, readCustom } from "./other";
+import { meta as otherMeta, readCustom, readDirect } from "./other";
 
 const meta = import.meta;
 
@@ -41,15 +41,19 @@ it("should keep alias mutations local to the module", () => {
 	expect(import.meta.custom).toBe(42);
 });
 
-it("should keep direct mutations visible through the shared prototype", () => {
-	import.meta.shared = "HELLO";
-	expect(meta.shared).toBe("HELLO");
-	expect(otherMeta.shared).toBe("HELLO");
-	const { shared } = import.meta;
-	expect(shared).toBe("HELLO");
-	import.meta.shared = "UPDATED";
-	expect(otherMeta.shared).toBe("UPDATED");
-	delete import.meta.shared;
-	expect(meta.shared).toBeUndefined();
-	expect(otherMeta.shared).toBeUndefined();
+it("should keep direct mutations local to the module", () => {
+	import.meta.direct = "HELLO";
+	expect(meta.direct).toBe("HELLO");
+	expect(Object.keys(import.meta)).toContain("direct");
+	expect(otherMeta.direct).toBeUndefined();
+	expect(readDirect()).toBeUndefined();
+	delete import.meta.direct;
+	expect(meta.direct).toBeUndefined();
+});
+
+it("should not bring back a value an alias deleted", () => {
+	import.meta.restored = "direct";
+	meta.restored = "alias";
+	delete meta.restored;
+	expect(import.meta.restored).toBeUndefined();
 });
