@@ -6025,6 +6025,20 @@ describe("syntax-printer", () => {
 		}
 	});
 
+	it("should leave the enclose wrapper's unnamed source out of the map", async () => {
+		const { minify } = await load();
+		const files = { "in.js": "console.log(b);" };
+		const options = () => ({ enclose: "a:b", compress: false, sourceMap: {} });
+		const map = JSON.parse(/** @type {string} */ ((await minify(files, options())).map));
+		expect(map.sources).toStrictEqual(["in.js"]);
+		// cspell:disable-next-line -- VLQ-encoded mappings
+		expect(map.mappings).toBe("aAAAA,QAAQC,IAAIC,E");
+
+		const reference = await terserReference().minify(files, options());
+		expect((await uncorrected(() => minify(files, options()))).map).toBe(reference.map);
+		expect(JSON.parse(/** @type {string} */ (reference.map)).sources).toStrictEqual([null, "in.js"]);
+	});
+
 	// cspell:disable -- VLQ-encoded source-map mappings strings below
 	it("should map through an input map as terser reads it, index maps and decoded mappings included", async () => {
 		const { minify } = await load();
