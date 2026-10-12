@@ -35200,6 +35200,7 @@ declare namespace exports {
 		export let currentRemoteGetScope: "__webpack_require__.R";
 		export let deferredModuleAsyncTransitiveDependencies: "__webpack_require__.zT";
 		export let deferredModuleAsyncTransitiveDependenciesSymbol: "__webpack_require__.zS";
+		export let deferredModuleNamespaceCache: "__webpack_require__.zC";
 		export let definePropertyGetters: "__webpack_require__.d";
 		export let definePropertyGettersFromArray: "__webpack_require__.d (array)";
 		export let ensureChunk: "__webpack_require__.e";
@@ -35892,6 +35893,7 @@ declare namespace exports {
 			export let currentRemoteGetScope: "__webpack_require__.R";
 			export let deferredModuleAsyncTransitiveDependencies: "__webpack_require__.zT";
 			export let deferredModuleAsyncTransitiveDependenciesSymbol: "__webpack_require__.zS";
+			export let deferredModuleNamespaceCache: "__webpack_require__.zC";
 			export let definePropertyGetters: "__webpack_require__.d";
 			export let definePropertyGettersFromArray: "__webpack_require__.d (array)";
 			export let ensureChunk: "__webpack_require__.e";
