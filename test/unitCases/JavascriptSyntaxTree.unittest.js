@@ -141,6 +141,49 @@ describe("SyntaxTree", () => {
 		expect(seen.size).toBe(73);
 	});
 
+	it("writes a parsed tree whose parts were written first", () => {
+		for (const options of OPTION_SETS) {
+			const tree = new SyntaxTree();
+			const program = /** @type {EXPECTED_ANY} */ (
+				WebpackParser.parse(SCRIPT, options)
+			);
+			/**
+			 * Writes each function body under a node first, innermost first, the
+			 * body standing as its id, as a parser writing as it goes leaves it.
+			 * @param {EXPECTED_ANY} node a parsed node
+			 * @returns {void}
+			 */
+			const writeBodies = (node) => {
+				for (const key of Object.keys(node)) {
+					const value = node[key];
+					const children = Array.isArray(value) ? value : [value];
+					for (const child of children) {
+						if (child && typeof child === "object" && "type" in child) {
+							writeBodies(child);
+						}
+					}
+				}
+				if (/Function/.test(node.type) && node.body.type === "BlockStatement") {
+					node.body = tree.addEstree(node.body);
+				}
+			};
+			writeBodies(program);
+			// A statement of a list written first stands as its id too.
+			program.body = program.body.map(
+				(/** @type {EXPECTED_ANY} */ statement, /** @type {number} */ index) =>
+					index % 2 === 0 ? tree.addEstree(statement) : statement
+			);
+			const rebuilt = toEstreeObject(tree, tree.addEstree(program));
+			expect(
+				firstDifference(
+					rebuilt,
+					WebpackParser.parse(SCRIPT, options),
+					"Program"
+				)
+			).toBeNull();
+		}
+	});
+
 	it("builds only the fields asked for, then the rest on the same object", () => {
 		const { tree, node } = writeExpression("f(a, b);");
 		const call = /** @type {EXPECTED_ANY} */ (

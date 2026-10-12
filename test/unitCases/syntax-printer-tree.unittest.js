@@ -78,7 +78,7 @@ const OPTION_SETS = {
  * @param {EXPECTED_ANY} input the source, or the sources by name
  * @param {EXPECTED_ANY} options the options
  * @param {boolean} fromTree whether the tree printer may print it
- * @returns {Promise<{ code: string, map: EXPECTED_ANY, printedFromTree: number }>} the code, its source map, and how often the tree printer printed
+ * @returns {Promise<{ code: string | undefined, map: EXPECTED_ANY, printedFromTree: number }>} the code, its source map, and how often the tree printer printed
  */
 const minifyCounted = async (input, options, fromTree) => {
 	const { minify, modules } = await load();
