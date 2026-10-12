@@ -14436,21 +14436,22 @@ describe("SourceProcessor — mergeDistantRules", () => {
 		);
 	});
 
-	it("leaves `@layer` alone however it is spelled", () => {
+	it("leaves `@layer` to the layer gather however it is spelled", () => {
+		// A named layer is one layer wherever its blocks stand, so they fold into
+		// the first; an anonymous one is a layer of its own each time.
 		const layer = escapedName("layer");
-		const named = "@layer L{.a{color:red}}.b{margin:0}@layer L{.c{color:blue}}";
-		for (const sheet of [
-			named,
-			"@layer{.a{color:red}}.b{margin:0}@layer{.c{color:blue}}"
-		]) {
-			expect(minify(sheet, true)).toBe(sheet);
-		}
+		const gathered = "@layer L{.a{color:red}.c{color:blue}}.b{margin:0}";
+		expect(
+			minify("@layer L{.a{color:red}}.b{margin:0}@layer L{.c{color:blue}}", true)
+		).toBe(gathered);
+		const anonymous = "@layer{.a{color:red}}.b{margin:0}@layer{.c{color:blue}}";
+		expect(minify(anonymous, true)).toBe(anonymous);
 		expect(
 			minify(
 				`${layer} L{.a{color:red}}.b{margin:0}${layer} L{.c{color:blue}}`,
 				true
 			)
-		).toBe(named);
+		).toBe(gathered);
 	});
 
 	// The same question asked of a block's own children, which are gathered as
@@ -15463,6 +15464,54 @@ describe("CssSyntax minify — what a comparison with other minifiers found", ()
 		['a{grid-template-areas:"a";-webkit-x:1;grid-template-rows:1fr;grid-template-columns:1fr}']
 	])("keeps %s apart", (css) => {
 		expect(settled(css)).not.toContain("grid-template:");
+	});
+});
+
+describe("CssSyntax minify — a layer statement takes the block", () => {
+	/**
+	 * @param {string} css source
+	 * @returns {string} its minified output
+	 */
+	const minify = (css) =>
+		new SourceProcessor().process(css, { mode: "minify" }).code;
+
+	it.each([
+		[
+			"@layer a;@layer b{.x{color:red}}@layer a{.y{color:blue}}",
+			"@layer a{.y{color:blue}}@layer b{.x{color:red}}"
+		],
+		[
+			"@layer a;@layer b{.x{color:red}}@layer a{.y{color:blue}}@layer a{.z{color:red}}",
+			"@layer a{.y{color:blue}.z{color:red}}@layer b{.x{color:red}}"
+		],
+		[
+			"@layer a;.u{color:red}@layer a{.y{color:blue}}",
+			"@layer a{.y{color:blue}}.u{color:red}"
+		],
+		[
+			"@layer a;@layer b;@layer c{.z{color:red}}@layer b{.y{color:blue}}@layer a{.x{color:red}}",
+			"@layer a{.x{color:red}}@layer b{.y{color:blue}}@layer c{.z{color:red}}"
+		],
+		[
+			// Naming a layer again changes nothing, so a later block still folds in.
+			"@layer a;@layer a{.p{top:0}}@layer a;@layer a{.q{left:0}}",
+			"@layer a{.p{top:0}.q{left:0}}@layer a;"
+		]
+	])("writes the block of %s where its layer is first named", (css, expected) => {
+		expect(minify(css)).toBe(expected);
+		expect(minify(expected)).toBe(expected);
+	});
+
+	it.each([
+		// A statement naming two layers is no place for one block.
+		"@layer a,b;@layer b{.x{color:red}}@layer a{.y{color:blue}}",
+		// An `@import` reads only after statements, never after a block.
+		'@layer a;@import "x.css";@layer a{.y{color:blue}}',
+		// The block's own sublayer would move ahead of `a.c`, named before it.
+		"@layer a;@layer a.c{.x{color:red}}@layer a{@layer d{.y{color:blue}}}",
+		"@layer a;@layer a.c;@layer a{@layer d{.y{color:blue}}}"
+	])("leaves %s where it stands", (css) => {
+		expect(minify(css)).toBe(css);
 	});
 });
 

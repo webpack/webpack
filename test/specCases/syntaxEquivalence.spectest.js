@@ -1656,6 +1656,26 @@ const LOWERING_FIXTURES = [
 		]
 	},
 	{
+		name: "a layer block written where its layer is first named",
+		css:
+			"@layer a;@layer b;@layer c{.x{color:red;margin-left:3px!important}}" +
+			".x{padding-left:1px}@layer b{.x{color:blue;padding-left:2px;margin-left:2px!important}}" +
+			"@layer a{.x{color:green;padding-left:3px;margin-left:1px!important;border-left:1px solid}}",
+		browsers: ["chrome 130"],
+		produces: [
+			"@layer a{.x{color:green;",
+			"}}@layer b{.x{color:blue;",
+			"}}@layer c{.x{color:red;"
+		],
+		html: '<div class="x">x</div>',
+		probes: [
+			[".x", "color"],
+			[".x", "padding-left"],
+			[".x", "margin-left"],
+			[".x", "border-left-width"]
+		]
+	},
+	{
 		name: "a line height folded into the font before it",
 		css:
 			".a{font:italic 700 12px/1 serif;color:red;line-height:2}" +
