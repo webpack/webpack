@@ -1,6 +1,6 @@
 "use strict";
 
-// cspell:ignore xaby
+// cspell:ignore aeiou gimsuyd NOINLINE xaby
 
 // A seeded generator of JavaScript programs that print what they compute: the
 // sloppy-mode ES5 terser's ufuzz writes (canaries, `arguments`, `delete`,
@@ -13,7 +13,7 @@
 /**
  * @typedef {object} Binding
  * @property {string} name the name
- * @property {"var" | "let" | "const" | "param" | "function" | "class" | "generator" | "async" | "namespace"} kind how it is bound
+ * @property {"var" | "let" | "const" | "param" | "function" | "class" | "generator" | "async" | "namespace" | "caught"} kind how it is bound
  */
 
 /**
@@ -380,11 +380,12 @@ const createProgramGenerator = (seed) => {
 
 	/**
 	 * A namespace converts to no primitive, which `pure_conversions` takes as
-	 * free of effects, so it is read only through its members.
+	 * free of effects, and a caught error's text names what mangling renames.
 	 * @param {Binding} binding a binding
 	 * @returns {boolean} whether it may be read as a value
 	 */
-	const isPlainValue = (binding) => binding.kind !== "namespace";
+	const isPlainValue = (binding) =>
+		binding.kind !== "namespace" && binding.kind !== "caught";
 
 	/**
 	 * @param {Context} context the context
@@ -1185,7 +1186,11 @@ const createProgramGenerator = (seed) => {
 	 * @returns {string} a statement
 	 */
 	const rareStatement = (context) => {
-		switch (below(11)) {
+		switch (below(13)) {
+			case 11:
+				return compiledStatement(context);
+			case 12:
+				return commentedStatement(context);
 			case 10:
 				return context.module
 					? 'import("dep").then((m) => _print("dynamic", m.counter, m.bump(), typeof m.default));'
@@ -1312,6 +1317,80 @@ _print(${name}.m(), ${name}.t, ${name}[${key}], new ${name}().g, typeof new ${na
 					1
 				)} break; case ${literal()}: _print("last"); }`;
 			}
+		}
+	};
+
+	/**
+	 * What compilers write: Babel's and TypeScript's rest parameters, `??` and
+	 * `?.` lowered, an enum, a run of assignments to a fresh object.
+	 * @param {Context} context the context
+	 * @returns {string} a statement
+	 */
+	const compiledStatement = (context) => {
+		const args = `${literal()}, ${literal()}, ${literal()}`;
+		const rest = fresh("r");
+		const n = fresh("n");
+		const k = fresh("k");
+		const temp = fresh("_a");
+		switch (below(9)) {
+			case 0: {
+				const from = below(2);
+				return `(function (p) { ${guard()} for (var ${n} = arguments.length, ${rest} = Array(${
+					from === 0 ? n : `${n} > 1 ? ${n} - 1 : 0`
+				}), ${k} = ${from}; ${k} < ${n}; ${k}++) ${rest}[${from === 0 ? k : `${k} - 1`}] = arguments[${k}]; _print(p, ${rest}.length, ${rest}.join("|")); })(${args});`;
+			}
+			case 1:
+				return `(function (p) { ${guard()} var ${rest} = []; for (var ${k} = 1; ${k} < arguments.length; ${k}++) { ${rest}[${k} - 1] = arguments[${k}]; } _print(p, ${rest}.length, ${rest}[0]); })(${args});`;
+			case 2:
+				return `(function (p) { ${guard()} var ${rest} = ${pick([
+					"[...arguments].slice(1)",
+					"Array.prototype.slice.call(arguments, 1)",
+					"[].slice.call(arguments)",
+					"Array.from(arguments)"
+				])}; _print(p, ${rest}.length, ${rest}.join("|")); })(${args});`;
+			case 3:
+				return `var ${temp}; _print((${temp} = ${expression(context, 2)}) !== null && ${temp} !== void 0 ? ${temp} : ${literal()});`;
+			case 4:
+				return `var ${temp}; _print((${temp} = ${expression(context, 2)}) === null || ${temp} === void 0 ? void 0 : ${temp}.${pick(METHODS)});`;
+			case 5: {
+				const name = fresh("o");
+				return `var ${name} = {}; ${name}.a = ${expression(context, 1)}; ${name}.b = ${literal()}; ${name}["c d"] = ${expression(context, 1)}; _print(${name}.a, ${name}.b, Object.keys(${name}).length);`;
+			}
+			case 6: {
+				const name = fresh("v");
+				const other = fresh("v");
+				return `var ${name}; ${name} = ${expression(context, 2)}; var ${other} = ${name}; ${other} = ${literal()}; _print(${name}, ${other});`;
+			}
+			case 7: {
+				const name = fresh("E");
+				return `var ${name}; (function (${name}) { ${name}[${name}["A"] = 0] = "A"; ${name}[${name}["B"] = ${literal()}] = "B"; })(${name} || (${name} = {})); _print(${name}.A, ${name}[0], ${name}.B);`;
+			}
+			default: {
+				const subject = fresh("s");
+				return `var ${subject} = ${expression(context, 2)}; _print(${subject} === null || ${subject} === undefined, ${subject} !== null && ${subject} !== void 0, ${subject} == null || ${subject} === 0, Object.keys(${object(context, 1)}).length, String.fromCharCode(65, 66), Array.of(1, ${literal()}).length, new Map([[1, ${literal()}]]).size); Object.freeze({}); new Set([1]);`;
+			}
+		}
+	};
+
+	/**
+	 * A statement behind a comment, or a call an annotation marks.
+	 * @param {Context} context the context
+	 * @returns {string} a statement
+	 */
+	const commentedStatement = (context) => {
+		switch (below(6)) {
+			case 0:
+				return `/* note */ ${statement(context)}`;
+			case 1:
+				return `// note\n${statement(context)}`;
+			case 2:
+				return `/*! kept */ ${statement(context)}`;
+			case 3:
+				return `_print(/*#__PURE__*/ _pure(${expression(context, 2)})); /*#__PURE__*/ _pure(${literal()});`;
+			case 4:
+				return `_print(/*@__NOINLINE__*/ (function () { ${guard()} return ${expression(functionContext(context), 1)}; })());`;
+			default:
+				return `_print(/*@__INLINE__*/ (function (x) { ${guard()} return x; })(${expression(context, 1)}));`;
 		}
 	};
 
@@ -1493,7 +1572,8 @@ _print(${name}.m(), ${name}.t, ${name}[${key}], new ${name}().g, typeof new ${na
 			case 13: {
 				const error = fresh("e");
 				const handler = inner(context, {});
-				handler.bindings.push({ name: error, kind: "let" });
+				// An error's message names what threw, as mangling renames it.
+				handler.bindings.push({ name: error, kind: "caught" });
 				const thrown = chance(0.4) ? `throw ${expression(context, 2)};` : "";
 				const binding = chance(0.7);
 				return `try { ${block(inner(context, {}), 2)} ${thrown} } catch${
@@ -1835,4 +1915,218 @@ ${uses.join("\n")}
 	};
 };
 
-module.exports = { DEPENDENCY, createProgramGenerator, createRandom };
+// Pieces of a pattern, valid and broken alike: escapes, classes, `v`-mode set
+// operations, groups and assertions, quantifiers and stray brackets.
+const REGEXP_ATOMS = [
+	"a",
+	"Z",
+	".",
+	"^",
+	"$",
+	"|",
+	"\\d",
+	"\\W",
+	"\\b",
+	"\\B",
+	"\\cJ",
+	"\\c1",
+	"\\x41",
+	"\\x4",
+	"\\u0041",
+	"\\u{1F600}",
+	"\\u{110000}",
+	"\\ud83d\\ude00",
+	"\\0",
+	"\\07",
+	"\\1",
+	"\\9",
+	"\\k<n>",
+	"\\k",
+	"\\p{L}",
+	"\\P{Script=Greek}",
+	"\\p{Script_Extensions=Latn}",
+	"\\p{RGI_Emoji}",
+	"\\p{Unknown}",
+	"\\-",
+	"\\/",
+	"\\q{ab|c}",
+	"[a-z]",
+	"[^\\d_]",
+	"[z-a]",
+	"[\\d-z]",
+	"[]",
+	"[^]",
+	"[[a-z]--[aeiou]]",
+	"[\\w&&\\d]",
+	"[a&&&b]",
+	"[\\q{abc|d}x]",
+	"[(]",
+	"(",
+	")",
+	"[",
+	"]",
+	"{",
+	"}",
+	"*",
+	"+",
+	"?",
+	"{2}",
+	"{2,}",
+	"{2,3}",
+	"{3,2}",
+	"{,2}",
+	"*?",
+	"+?",
+	"??",
+	"{1,2}?"
+];
+/** @type {[string, string][]} */
+const REGEXP_GROUPS = [
+	["(", ")"],
+	["(?:", ")"],
+	["(?<n>", ")"],
+	["(?<m>", ")"],
+	["(?=", ")"],
+	["(?!", ")"],
+	["(?<=", ")"],
+	["(?<!", ")"],
+	["(?i:", ")"],
+	["(?-s:", ")"],
+	["(?ii:", ")"],
+	["(?<n>", ")|(?<n>a)"]
+];
+const REGEXP_FLAGS = [
+	"",
+	"g",
+	"i",
+	"m",
+	"s",
+	"y",
+	"d",
+	"u",
+	"v",
+	"gimsuyd",
+	"uv",
+	"gg",
+	"x"
+];
+
+/**
+ * A generator of regular expression literals for a seed, about half of which
+ * no engine reads, for the parser to accept and refuse as the engine does.
+ * @param {number} seed the seed
+ * @returns {() => string} the next literal per call
+ */
+const createRegExpGenerator = (seed) => {
+	const random = createRandom(seed);
+	const pick = (/** @type {string[]} */ list) =>
+		list[Math.floor(random() * list.length)];
+	/**
+	 * @param {number} depth how deep groups may still nest
+	 * @returns {string} a pattern
+	 */
+	const pattern = (depth) => {
+		let text = "";
+		const length = 1 + Math.floor(random() * 4);
+		for (let i = 0; i < length; i++) {
+			if (depth > 0 && random() < 0.3) {
+				const [open, close] =
+					REGEXP_GROUPS[Math.floor(random() * REGEXP_GROUPS.length)];
+				text += `${open}${pattern(depth - 1)}${close}`;
+			} else {
+				text += pick(REGEXP_ATOMS);
+			}
+		}
+		return text;
+	};
+	return () => `/${pattern(2)}/${pick(REGEXP_FLAGS)}`;
+};
+
+/**
+ * A generator of CommonJS sources for a seed, mixing `require("…")` calls with
+ * what only looks like one: text in strings, comments, templates and regular
+ * expressions, member calls, other arguments. A `/` follows only what the scan
+ * reads as before an operand or before a value, never `)`, `]`, `}`, `++` or a
+ * comment, where its documented guess may go wrong.
+ * @param {number} seed the seed
+ * @returns {() => string} the next source per call
+ */
+const createRequireSourceGenerator = (seed) => {
+	const random = createRandom(seed);
+	let counter = 0;
+	const pick = (/** @type {(() => string)[]} */ list) =>
+		list[Math.floor(random() * list.length)]();
+	/** @returns {string} a specifier, sometimes spelled with escapes */
+	const specifier = () => {
+		const name = `m${counter++}`;
+		return random() < 0.2
+			? `"\\x2e/${name}"`
+			: random() < 0.5
+				? `"${name}"`
+				: `'${name}'`;
+	};
+	/**
+	 * @param {number} depth how deep it may still nest
+	 * @returns {string} an expression
+	 */
+	const expression = (depth) =>
+		pick([
+			() => `require(${specifier()})`,
+			() => `require ( ${specifier()} )`,
+			() => `require(/* c */ ${specifier()})`,
+			() => `require((${specifier()}))`,
+			() => `require\n(${specifier()})`,
+			() => `x.require(${specifier()})`,
+			() => `x?.require(${specifier()})`,
+			() => `require?.(${specifier()})`,
+			() => `[...require(${specifier()})]`,
+			() => `require(${specifier()}, 1)`,
+			() => "require(name)",
+			() => "require(`t`)",
+			() => `"require('s${counter++}')"`,
+			() => `'a\\'require("s${counter++}")'`,
+			() => '/require\\("x"\\)[/"]/g',
+			() => `4 / 2 / require(${specifier()})`,
+			() => `({ require: ${specifier()} }).require`,
+			() =>
+				depth > 0
+					? `\`a\${${expression(depth - 1)}}require("no")\${"}"}\\\${\``
+					: '"leaf"',
+			() => (depth > 0 ? `(() => { ${statement(depth - 1)} })` : '"leaf"'),
+			() =>
+				depth > 0 ? `[${expression(depth - 1)}, ${expression(depth - 1)}]` : "0"
+		]);
+	/**
+	 * @param {number} depth how deep it may still nest
+	 * @returns {string} a statement
+	 */
+	const statement = (depth) =>
+		pick([
+			() => `${expression(depth)};`,
+			() => `var v${counter++} = ${expression(depth)};`,
+			() => `// require(${specifier()})\n`,
+			() => `/* require(${specifier()}) */`,
+			() =>
+				depth > 0 ? `{ ${statement(depth - 1)} ${statement(depth - 1)} }` : ";",
+			() =>
+				depth > 0
+					? `function f${counter++}() { return ${expression(depth - 1)}; }`
+					: ";",
+			() => (depth > 0 ? `if (x) { ${statement(depth - 1)} }` : ";")
+		]);
+	return () => {
+		const statements = [];
+		for (let i = 1 + Math.floor(random() * 6); i > 0; i--) {
+			statements.push(statement(2));
+		}
+		return statements.join("\n");
+	};
+};
+
+module.exports = {
+	DEPENDENCY,
+	createProgramGenerator,
+	createRandom,
+	createRegExpGenerator,
+	createRequireSourceGenerator
+};
