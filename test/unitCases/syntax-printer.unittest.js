@@ -996,6 +996,12 @@ const IMPROVED_CASES = [
 		'function tag(s){return s.raw.join("-")}console.log("kept"),console.log(tag`d${1}e`);'
 	],
 	[
+		"unused variables holding tagged templates marked `#__PURE__`, their expressions' effects kept",
+		'function tag(s) { return s.raw.join("-"); } function g(n) { var u = /*#__PURE__*/ tag`a${n}`, v = /*#__PURE__*/ tag`b${console.log("kept")}`; return 1; } console.log(g(2));',
+		{ compress: {}, mangle: false },
+		'function tag(s){return s.raw.join("-")}function g(n){console.log("kept");return 1}console.log(g(2));'
+	],
+	[
 		"a function with an empty body constructed for nothing",
 		'new function () {}(); new function (a, b) {}(console.log("argument")); console.log(new function () {}() instanceof Object);'
 	],
