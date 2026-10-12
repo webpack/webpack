@@ -116,7 +116,7 @@ Before writing a path-shape regexp, read the top of that file and its `module.ex
 A list of module, source or dependency types in `lib/` claims those are all there will ever be; the day one is added it is silently wrong, and the new type takes whichever branch the list forgot. Instead:
 
 - **Ask the object.** `module.getSourceTypes()`, `chunkGraph.getModuleSourceTypes(module)`, `moduleGraph.getParentModule(dependency)` answer for whatever exists, plugin types included. Know `getParentModule`: concatenation re-points an incoming connection at the javascript module absorbing the referencing one, so `connection.originModule.type` reads `javascript` for a css `url()` or html `src`, while the dependency's own module still reads `css`/`html`.
-- **Match the class, not its name.** `dependency instanceof URLDependency` says what `dependency.type === "new URL()"` only approximates, and survives renames.
+- **Ask the kind, not the class.** `module.is("css")` and `isDependencyKind(dependency, "url")` say what `dependency.type === "new URL()"` only approximates, survive renames and need no `require` of the class; chunks, groups and blocks answer `isHotUpdate()`, `isEntrypoint()` and `isAsyncBlock()`. Keep `instanceof` for built-ins and for telling a class from a plain value. A new kind: [docs/architecture.md](docs/architecture.md#adding-a-dependency-type-or-runtime-requirement).
 
 **A feature flag is the same list in disguise**: gating on `options.experiments.<x>` to mean "which types can exist here" reads like configuration but goes stale the same way.
 
