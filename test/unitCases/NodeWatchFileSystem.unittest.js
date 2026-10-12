@@ -109,7 +109,7 @@ describe("NodeWatchFileSystem", () => {
 	});
 
 	it("purges what a later call stops watching", () => {
-		/** @type {unknown[][]} */
+		/** @type {Parameters<import("../../lib/fs/fs").Purge>[]} */
 		const purges = [];
 		const wfs = new NodeWatchFileSystem(
 			/** @type {import("../../lib/fs/fs").InputFileSystem} */ ({
@@ -145,6 +145,74 @@ describe("NodeWatchFileSystem", () => {
 		expect(purges).toEqual([[[dropped, missing], { exact: true }]]);
 		start([kept], [moved]);
 		expect(purges).toHaveLength(1);
+	});
+
+	it("purges what an array held when watched, though its caller changes it", () => {
+		/** @type {Parameters<import("../../lib/fs/fs").Purge>[]} */
+		const purges = [];
+		const wfs = new NodeWatchFileSystem(
+			/** @type {import("../../lib/fs/fs").InputFileSystem} */ ({
+				purge: (items, options) => {
+					purges.push([items, options]);
+				}
+			})
+		);
+		const dropped = path.join(fixtures, "c.js");
+		const files = [file, dropped];
+		watchers.push(
+			wfs.watch(
+				files,
+				[],
+				[],
+				Date.now(),
+				{},
+				() => {},
+				() => {}
+			)
+		);
+		files.pop();
+		watchers.push(
+			wfs.watch(
+				[file],
+				[],
+				[],
+				Date.now(),
+				{},
+				() => {},
+				() => {}
+			)
+		);
+		expect(purges).toEqual([[[dropped], { exact: true }]]);
+	});
+
+	it("hands watchpack a one-shot iterable it read itself", () => {
+		const wfs = new NodeWatchFileSystem(
+			/** @type {import("../../lib/fs/fs").InputFileSystem} */ ({
+				purge: () => {}
+			})
+		);
+		const start = (
+			/** @type {Iterable<string>} */ files,
+			/** @type {Iterable<string>} */ missing
+		) =>
+			watchers.push(
+				wfs.watch(
+					files,
+					[],
+					missing,
+					Date.now(),
+					{},
+					() => {},
+					() => {}
+				)
+			);
+		start([file], []);
+		// the second call compares against the first, reading these once
+		start([file].values(), [].values());
+		const watcher =
+			/** @type {InstanceType<import("watchpack")>} */
+			(wfs.watcher);
+		expect([...watcher.fileWatchers.keys()]).toEqual([file]);
 	});
 
 	it("leaves an unsupported ignored option to watchpack", () => {
