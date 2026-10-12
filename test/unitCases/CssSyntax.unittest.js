@@ -6067,6 +6067,12 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			["a pseudo-class belongs to `@page`", "a{top:0}b:first{top:0}"],
 			["a pseudo takes no argument", "a{top:0}b:hover(odd){top:0}"],
 			["a pseudo goes without the argument it needs", "a{top:0}b:nth-child{top:0}"],
+			// CSS Syntax 3 §6 reads `An+B` only with no space inside `An` or after a
+			// leading sign, and one sign before `B`.
+			["an `An+B` has a space inside `An`", "a{top:0}b:nth-child(3 n){top:0}"],
+			["...or no `n` to stand for", "a{top:0}b:nth-child(n2){top:0}"],
+			["...or two signs", "a{top:0}b:nth-child(+-n){top:0}"],
+			["...or two before `B`", "a{top:0}b:nth-child(2n++1){top:0}"],
 			["...as does a pseudo-element", "a{top:0}b::part{top:0}"],
 			["a pseudo-element is followed in its compound", "a{top:0}b:before.c{top:0}"],
 			["...or by another compound", "a{top:0}b:before c{top:0}"],
