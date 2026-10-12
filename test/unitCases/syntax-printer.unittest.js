@@ -6289,6 +6289,61 @@ describe("syntax-printer", () => {
 		expect(ast.createWalker().webpackSkipsSqueezed).toBe(false);
 	});
 
+	describe("printing its own output again", () => {
+		/** @type {EXPECTED_ANY} */
+		const formatOnly = { compress: false, mangle: false, module: true };
+
+		/**
+		 * @param {string} code a module
+		 * @returns {Promise<string[]>} its print, and the print of that print
+		 */
+		const twice = async (code) => {
+			const { minify } = await load();
+			const printed = /** @type {string} */ (
+				(await minify(code, formatOnly)).code
+			);
+			return [
+				printed,
+				/** @type {string} */ ((await minify(printed, formatOnly)).code)
+			];
+		};
+
+		it("should keep the parentheses an import()'s arguments and callee need, which terser drops", async () => {
+			const { minify } = await load();
+			const code = 'import("a", (b, c)); new (import("a"));';
+			const [printed, again] = await twice(code);
+			expect(printed).toBe('import("a",(b,c));new(import("a"));');
+			expect(again).toBe(printed);
+			const reference = await terserReference().minify(code, formatOnly);
+			expect(reference.code).toBe('import("a",b,c);new import("a");');
+			expect(
+				(await uncorrected(() => minify(code, formatOnly))).code
+			).toBe(reference.code);
+		});
+
+		it("should print a directive as it is spelled, where an encoding doubled each backslash", async () => {
+			/**
+			 * @param {string} code a program
+			 * @returns {string} the value of the first string literal it spells
+			 */
+			const firstString = (code) =>
+				vm.runInNewContext(
+					/** @type {RegExpMatchArray} */ (
+						code.match(/(["'])(?:\\.|(?!\1).)*\1/)
+					)[0]
+				);
+			for (const code of [
+				'"use\\x20strict"; x = 1;',
+				'"a\\\\b"; f();',
+				"function g() { 'use\\x20strict'; return this; }"
+			]) {
+				const [printed, again] = await twice(code);
+				expect(again).toBe(printed);
+				expect(firstString(printed)).toBe(firstString(code));
+			}
+		});
+	});
+
 	describe("a tree given or given back as ESTree", () => {
 		/**
 		 * @param {string} code a module
