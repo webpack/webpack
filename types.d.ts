@@ -21986,6 +21986,81 @@ declare interface NodeEnvironmentPluginOptions {
 	 */
 	infrastructureLogging: InfrastructureLogging;
 }
+type NodeEstreeIndex =
+	| ProgramImport
+	| ImportDeclaration
+	| ExportNamedDeclaration
+	| ExportAllDeclaration
+	| ImportExpressionImport
+	| UnaryExpression
+	| ArrayExpression
+	| ArrowFunctionExpression
+	| AssignmentExpression
+	| AwaitExpression
+	| BinaryExpression
+	| SimpleCallExpression
+	| NewExpression
+	| ChainExpression
+	| ClassExpression
+	| ConditionalExpression
+	| FunctionExpression
+	| Identifier
+	| SimpleLiteral
+	| RegExpLiteral
+	| BigIntLiteral
+	| LogicalExpression
+	| MemberExpression
+	| MetaProperty
+	| ObjectExpression
+	| SequenceExpression
+	| TaggedTemplateExpression
+	| TemplateLiteral
+	| ThisExpression
+	| UpdateExpression
+	| YieldExpression
+	| SpreadElement
+	| PrivateIdentifier
+	| Super
+	| FunctionDeclaration
+	| VariableDeclaration
+	| ClassDeclaration
+	| ExpressionStatement
+	| BlockStatement
+	| StaticBlock
+	| EmptyStatement
+	| DebuggerStatement
+	| WithStatement
+	| ReturnStatement
+	| LabeledStatement
+	| BreakStatement
+	| ContinueStatement
+	| IfStatement
+	| SwitchStatement
+	| ThrowStatement
+	| TryStatement
+	| WhileStatement
+	| DoWhileStatement
+	| ForStatement
+	| ForInStatement
+	| ForOfStatement
+	| ExportDefaultDeclaration
+	| MethodDefinition
+	| PropertyDefinition
+	| VariableDeclarator
+	| AssignmentProperty
+	| Property
+	| CatchClause
+	| ClassBody
+	| ImportSpecifier
+	| ImportDefaultSpecifier
+	| ImportNamespaceSpecifier
+	| ExportSpecifier
+	| ObjectPattern
+	| ArrayPattern
+	| RestElement
+	| AssignmentPattern
+	| SwitchCase
+	| TemplateElement;
 
 /**
  * a node as this parser builds one, whichever fields the options asked for
@@ -33185,6 +33260,12 @@ declare class SyntaxTree {
 	 * `0` or null where ESTree has null.
 	 */
 	set(node: number, name: string, value: unknown): void;
+
+	/**
+	 * Writes a parsed node and everything under it, its children taking ids
+	 * after it in source order; a child already written stands as its id.
+	 */
+	addEstree(root: NodeEstreeIndex): number;
 	type(node: number): number;
 	start(node: number): number;
 	end(node: number): number;
