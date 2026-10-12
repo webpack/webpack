@@ -1000,6 +1000,12 @@ const IMPROVED_CASES = [
 		'new function () {}(); new function (a, b) {}(console.log("argument")); console.log(new function () {}() instanceof Object);'
 	],
 	[
+		"a conditional tested for truth whose branch is `void 0`, as `&&`",
+		'function f(t) { (t == null ? void 0 : t.b) && console.log("b"); if (t == null ? void 0 : t.c) console.log("c"); if (t ? t.d : void 0) console.log("d"); return t == null ? void 0 : t.e; } console.log(f(), f({ b: 1, c: 1, d: 1, e: 2 }), f({}));',
+		{ compress: {}, mangle: false },
+		'function f(t){return null!=t&&t.b&&console.log("b"),null!=t&&t.c&&console.log("c"),t&&t.d&&console.log("d"),null==t?void 0:t.e}console.log(f(),f({b:1,c:1,d:1,e:2}),f({}));'
+	],
+	[
 			"an empty constructor of a class extending nothing, and a class constructed for nothing that runs nothing",
 			'class A { constructor() {} m() { return 1; } } console.log(new A().m(), A.length); new class { x = 1; foo() {} }(); new class {}(console.log("argument"));'
 		],
