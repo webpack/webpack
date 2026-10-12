@@ -707,12 +707,12 @@ declare interface Ast {
 			node: NodeShape,
 			descend: (node: NodeShape, walker: CompressorShape) => void,
 			inList?: boolean
-		) => void | NodeShape | Splice | SkipMarker,
+		) => null | void | NodeShape | Splice | SkipMarker,
 		after?: (
 			this: CompressorShape,
 			node: NodeShape,
 			inList?: boolean
-		) => void | NodeShape | Splice | SkipMarker
+		) => null | void | NodeShape | Splice | SkipMarker
 	): CompressorShape;
 	namesOf(node: NodeShape): (null | NodeShape)[];
 	wrapOptimizer(
