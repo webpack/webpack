@@ -44,24 +44,7 @@ const cssSyntaxParser = require("../lib/css/syntax-parser");
 
 const {
 	NodeType,
-	TT_AT_KEYWORD,
-	TT_COMMENT,
-	TT_DIMENSION,
-	TT_EOF,
-	TT_FUNCTION,
-	TT_HASH,
-	TT_IDENTIFIER,
-	TT_LEFT_CURLY_BRACKET,
-	TT_LEFT_PARENTHESIS,
-	TT_LEFT_SQUARE_BRACKET,
-	TT_NUMBER,
-	TT_PERCENTAGE,
-	TT_RIGHT_CURLY_BRACKET,
-	TT_RIGHT_PARENTHESIS,
-	TT_RIGHT_SQUARE_BRACKET,
-	TT_SEMICOLON,
-	TT_STRING,
-	TT_WHITESPACE,
+	TokenType,
 	Part,
 	TokenStream,
 	pickTransforms,
@@ -743,10 +726,11 @@ const printerFor = (options) => {
 // listed, so a type the tokenizer gains is named without editing this.
 /** @type {Map<number, string>} */
 const TOKEN_TYPE_NAMES = new Map();
-for (const [name, value] of Object.entries(cssSyntaxParser)) {
-	if (name.startsWith("TT_") && typeof value === "number") {
-		TOKEN_TYPE_NAMES.set(value, name.slice(3).toLowerCase().replace(/_/g, " "));
-	}
+for (const [name, value] of Object.entries(TokenType)) {
+	TOKEN_TYPE_NAMES.set(
+		value,
+		name.replace(/\B(?=[A-Z][a-z])/g, " ").toLowerCase()
+	);
 }
 
 // How much of a stylesheet one cut keeps at most, where the source offers a
@@ -785,30 +769,32 @@ const cssCuts = (css) => {
 	// The stream skips a comment rather than returning it, so its callback is
 	// the one place a comment is seen to cut inside.
 	const stream = new TokenStream(css, 0, undefined, (_input, start, end) => {
-		offer(TT_COMMENT, start, end);
+		offer(TokenType.Comment, start, end);
 		return end;
 	});
 	for (;;) {
 		const token = stream.consume();
 		const type = token.type;
-		if (type === TT_EOF) break;
+		if (type === TokenType.EOF) break;
 		offer(type, token.start, token.end);
 		if (
-			type === TT_FUNCTION ||
-			type === TT_LEFT_PARENTHESIS ||
-			type === TT_LEFT_SQUARE_BRACKET ||
-			type === TT_LEFT_CURLY_BRACKET
+			type === TokenType.Function ||
+			type === TokenType.LeftParenthesis ||
+			type === TokenType.LeftSquareBracket ||
+			type === TokenType.LeftCurlyBracket
 		) {
 			depth++;
 		} else if (
 			depth !== 0 &&
-			(type === TT_RIGHT_PARENTHESIS ||
-				type === TT_RIGHT_SQUARE_BRACKET ||
-				type === TT_RIGHT_CURLY_BRACKET)
+			(type === TokenType.RightParenthesis ||
+				type === TokenType.RightSquareBracket ||
+				type === TokenType.RightCurlyBracket)
 		) {
 			depth--;
-			if (depth === 0 && type === TT_RIGHT_CURLY_BRACKET) construct = token.end;
-		} else if (depth === 0 && type === TT_SEMICOLON) {
+			if (depth === 0 && type === TokenType.RightCurlyBracket) {
+				construct = token.end;
+			}
+		} else if (depth === 0 && type === TokenType.Semicolon) {
 			construct = token.end;
 		}
 	}
@@ -841,8 +827,8 @@ const tokenStream = (css) => {
 	const out = [];
 	for (;;) {
 		const token = stream.consume();
-		if (token.type === TT_EOF) break;
-		if (token.type === TT_WHITESPACE) {
+		if (token.type === TokenType.EOF) break;
+		if (token.type === TokenType.Whitespace) {
 			if (out[out.length - 1] !== " ") out.push(" ");
 			continue;
 		}
@@ -1130,7 +1116,7 @@ const tokenMeaning = (css) => {
 	const out = [];
 	for (;;) {
 		const token = stream.consume();
-		if (token.type === TT_EOF) break;
+		if (token.type === TokenType.EOF) break;
 		const text = css.slice(token.start, token.end);
 		out.push(`${token.type}:${canonicalToken(token.type, text, token)}`);
 	}
@@ -1145,23 +1131,25 @@ const tokenMeaning = (css) => {
  * @returns {string} its value
  */
 const canonicalToken = (type, text, token) => {
-	if (type === TT_IDENTIFIER) return unescapeIdentifier(text);
+	if (type === TokenType.Ident) return unescapeIdentifier(text);
 	// The sigil is not part of the name, and an at-rule name is matched
 	// case-insensitively where an identifier is not.
-	if (type === TT_AT_KEYWORD) {
+	if (type === TokenType.AtKeyword) {
 		return unescapeIdentifier(text.slice(1)).toLowerCase();
 	}
-	if (type === TT_HASH) return unescapeIdentifier(text.slice(1));
-	if (type === TT_FUNCTION) {
+	if (type === TokenType.Hash) return unescapeIdentifier(text.slice(1));
+	if (type === TokenType.Function) {
 		return unescapeIdentifier(text.slice(0, -1)).toLowerCase();
 	}
-	if (type === TT_STRING) return unescapeIdentifier(text.slice(1, -1));
-	if (type === TT_DIMENSION) {
+	if (type === TokenType.String) return unescapeIdentifier(text.slice(1, -1));
+	if (type === TokenType.Dimension) {
 		const at = token.unitStart - token.start;
 		return `${Number(text.slice(0, at))}${text.slice(at).toLowerCase()}`;
 	}
-	if (type === TT_NUMBER || type === TT_PERCENTAGE) {
-		return String(Number(type === TT_PERCENTAGE ? text.slice(0, -1) : text));
+	if (type === TokenType.Number || type === TokenType.Percentage) {
+		return String(
+			Number(type === TokenType.Percentage ? text.slice(0, -1) : text)
+		);
 	}
 	return text;
 };
@@ -1247,28 +1235,31 @@ const cssSites = (css) => {
 	let styleDepth = 0;
 	for (;;) {
 		const token = stream.consume();
-		if (token.type === TT_EOF) break;
+		if (token.type === TokenType.EOF) break;
 		if (styleDepth !== 0) {
-			if (token.type === TT_FUNCTION || token.type === TT_LEFT_PARENTHESIS) {
+			if (
+				token.type === TokenType.Function ||
+				token.type === TokenType.LeftParenthesis
+			) {
 				styleDepth++;
-			} else if (token.type === TT_RIGHT_PARENTHESIS) {
+			} else if (token.type === TokenType.RightParenthesis) {
 				styleDepth--;
 			}
 			continue;
 		}
-		if (token.type === TT_AT_KEYWORD) {
+		if (token.type === TokenType.AtKeyword) {
 			containerPrelude =
 				unescapeIdentifier(
 					css.slice(token.start + 1, token.end)
 				).toLowerCase() === "container";
 		} else if (
-			token.type === TT_LEFT_CURLY_BRACKET ||
-			token.type === TT_SEMICOLON
+			token.type === TokenType.LeftCurlyBracket ||
+			token.type === TokenType.Semicolon
 		) {
 			containerPrelude = false;
 		} else if (
 			containerPrelude &&
-			token.type === TT_FUNCTION &&
+			token.type === TokenType.Function &&
 			unescapeIdentifier(
 				css.slice(token.start, token.end - 1)
 			).toLowerCase() === "style"
@@ -1283,7 +1274,7 @@ const cssSites = (css) => {
 			end: token.end,
 			type: token.type,
 			text: css.slice(token.start, token.end),
-			unitStart: token.type === TT_DIMENSION ? token.unitStart : -1
+			unitStart: token.type === TokenType.Dimension ? token.unitStart : -1
 		});
 	}
 	return sites;
@@ -1342,20 +1333,25 @@ const asQuoted = (text, quote) => {
 const CSS_RESPELLINGS = [
 	{
 		name: "escape",
-		write: (site) => (site.type === TT_IDENTIFIER ? asEscaped(site.text) : null)
+		write: (site) =>
+			site.type === TokenType.Ident ? asEscaped(site.text) : null
 	},
 	{
 		name: "quote-double",
-		write: (site) => (site.type === TT_STRING ? asQuoted(site.text, '"') : null)
+		write: (site) =>
+			site.type === TokenType.String ? asQuoted(site.text, '"') : null
 	},
 	{
 		name: "quote-single",
-		write: (site) => (site.type === TT_STRING ? asQuoted(site.text, "'") : null)
+		write: (site) =>
+			site.type === TokenType.String ? asQuoted(site.text, "'") : null
 	},
 	{
 		name: "leading-zero",
 		write: (site) => {
-			if (site.type !== TT_NUMBER && site.type !== TT_DIMENSION) return null;
+			if (site.type !== TokenType.Number && site.type !== TokenType.Dimension) {
+				return null;
+			}
 			const written = site.text.replace(/^([+-]?)\./, "$10.");
 			return written === site.text ? null : written;
 		}
@@ -1374,7 +1370,7 @@ const CSS_RESPELLINGS = [
 	{
 		name: "at-keyword-case",
 		write: (site) => {
-			if (site.type !== TT_AT_KEYWORD) return null;
+			if (site.type !== TokenType.AtKeyword) return null;
 			const upper = site.text.toUpperCase();
 			return upper === site.text ? null : upper;
 		}

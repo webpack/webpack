@@ -10,7 +10,7 @@
 
 const fs = require("fs");
 const path = require("path");
-const { A, Field, Flag, NS_HTML, Part, _attributeList, _namespaceOf, NS_MATHML, NS_SVG, NodeType, QUOTE_DOUBLE, QUOTE_NONE, QUOTE_SINGLE, decodeEntities, escapeAttribute, escapeText, parseCssUrls, parseHtml: parseHtmlRefs, parseMsapplicationTask, parseSrc, parseSrcset, tokenize } = require("../../lib/html/syntax-parser");
+const { A, Field, Flag, Namespace, Part, _attributeList, _namespaceOf, NodeType, Quote, decodeEntities, escapeAttribute, escapeText, parseCssUrls, parseHtml: parseHtmlRefs, parseMsapplicationTask, parseSrc, parseSrcset, tokenize } = require("../../lib/html/syntax-parser");
 const { builtinEmbeddedRenderer } = require("../../lib/html/builtinEmbeddedRenderer");
 const serializeHtmlTree = require("../helpers/serializeHtmlTree");
 
@@ -61,10 +61,10 @@ describe("tokenize", () => {
 					results.push(["attribute", attrName, attrValue, quoteType]);
 					// Return position after the value (or after the name for boolean attrs)
 					if (valueStart === -1) return nameEnd;
-					if (quoteType === QUOTE_DOUBLE) {
+					if (quoteType === Quote.Double) {
 						return valueEnd + 1;
 					}
-					if (quoteType === QUOTE_SINGLE) {
+					if (quoteType === Quote.Single) {
 						return valueEnd + 1;
 					}
 					return valueEnd;
@@ -165,7 +165,7 @@ describe("tokenize", () => {
 					vs === -1 ? null : input.slice(vs, ve)
 				]);
 				if (vs === -1) return ne;
-				if (qt !== QUOTE_NONE) return ve + 1;
+				if (qt !== Quote.None) return ve + 1;
 				return ve;
 			}
 		});
@@ -182,14 +182,14 @@ describe("tokenize", () => {
 		tokenize("<div a=\"1\" b='2' c=3>", 0, {
 			attribute: (input, ns, ne, vs, ve, qt) => {
 				attrs.push([input.slice(ns, ne), input.slice(vs, ve), qt]);
-				if (qt !== QUOTE_NONE) return ve + 1;
+				if (qt !== Quote.None) return ve + 1;
 				return ve;
 			}
 		});
 		expect(attrs).toEqual([
-			["a", "1", QUOTE_DOUBLE],
-			["b", "2", QUOTE_SINGLE],
-			["c", "3", QUOTE_NONE]
+			["a", "1", Quote.Double],
+			["b", "2", Quote.Single],
+			["c", "3", Quote.None]
 		]);
 	});
 
@@ -735,7 +735,7 @@ describe("tokenize", () => {
 		tokenize('<a href="?a=1&amp;b=2">', 0, {
 			attribute: (input, ns, ne, vs, ve, qt) => {
 				attrs.push([input.slice(ns, ne), input.slice(vs, ve)]);
-				if (qt !== QUOTE_NONE) return ve + 1;
+				if (qt !== Quote.None) return ve + 1;
 				return ve;
 			}
 		});
@@ -748,7 +748,7 @@ describe("tokenize", () => {
 		tokenize("<a href='?x=1&lt;2'>", 0, {
 			attribute: (input, ns, ne, vs, ve, qt) => {
 				attrs.push([input.slice(ns, ne), input.slice(vs, ve)]);
-				if (qt !== QUOTE_NONE) return ve + 1;
+				if (qt !== Quote.None) return ve + 1;
 				return ve;
 			}
 		});
@@ -761,7 +761,7 @@ describe("tokenize", () => {
 		tokenize("<a href=foo&amp;bar>", 0, {
 			attribute: (input, ns, ne, vs, ve, qt) => {
 				attrs.push([input.slice(ns, ne), input.slice(vs, ve)]);
-				if (qt !== QUOTE_NONE) return ve + 1;
+				if (qt !== Quote.None) return ve + 1;
 				return ve;
 			}
 		});
@@ -898,7 +898,7 @@ describe("tokenize", () => {
 						qt
 					]);
 					if (vs === -1) return ne;
-					if (qt !== QUOTE_NONE) return ve + 1;
+					if (qt !== Quote.None) return ve + 1;
 					return ve;
 				},
 				comment: (input, start, end) => {
@@ -989,7 +989,7 @@ describe("tokenize", () => {
 
 		it("bEFORE_ATTR_NAME: `=` starts attribute name with `=` (per spec)", () => {
 			expect(walk("<a =foo>")).toEqual([
-				["attr", "=foo", null, QUOTE_NONE],
+				["attr", "=foo", null, Quote.None],
 				["open", "a", false]
 			]);
 		});
@@ -997,14 +997,14 @@ describe("tokenize", () => {
 		// --- STATE_AFTER_ATTRIBUTE_NAME ---
 		it("aFTER_ATTR_NAME: space then `/` self-closes", () => {
 			expect(walk("<br foo />")).toEqual([
-				["attr", "foo", null, QUOTE_NONE],
+				["attr", "foo", null, Quote.None],
 				["open", "br", true]
 			]);
 		});
 
 		it("aFTER_ATTR_NAME: space then `=` switches to BEFORE_ATTR_VALUE", () => {
 			expect(walk("<a foo = 'bar'>")).toEqual([
-				["attr", "foo", "bar", QUOTE_SINGLE],
+				["attr", "foo", "bar", Quote.Single],
 				["open", "a", false]
 			]);
 		});
@@ -1012,15 +1012,15 @@ describe("tokenize", () => {
 		it("aFTER_ATTR_NAME: `>` closing on a close tag form `</a foo >`", () => {
 			expect(walk("<a></a foo >")).toEqual([
 				["open", "a", false],
-				["attr", "foo", null, QUOTE_NONE],
+				["attr", "foo", null, Quote.None],
 				["close", "a"]
 			]);
 		});
 
 		it("aFTER_ATTR_NAME: new attribute begins after whitespace", () => {
 			expect(walk("<a foo bar>")).toEqual([
-				["attr", "foo", null, QUOTE_NONE],
-				["attr", "bar", null, QUOTE_NONE],
+				["attr", "foo", null, Quote.None],
+				["attr", "bar", null, Quote.None],
 				["open", "a", false]
 			]);
 		});
@@ -1028,7 +1028,7 @@ describe("tokenize", () => {
 		// --- STATE_BEFORE_ATTRIBUTE_VALUE ---
 		it("bEFORE_ATTR_VALUE: leading whitespace before value is ignored", () => {
 			expect(walk("<a foo=   'bar'>")).toEqual([
-				["attr", "foo", "bar", QUOTE_SINGLE],
+				["attr", "foo", "bar", Quote.Single],
 				["open", "a", false]
 			]);
 		});
@@ -1038,7 +1038,7 @@ describe("tokenize", () => {
 			// `foo` is created with the empty string. The walker reports an empty
 			// value range pointing at `>`.
 			expect(walk("<a foo=>")).toEqual([
-				["attr", "foo", "", QUOTE_NONE],
+				["attr", "foo", "", Quote.None],
 				["open", "a", false]
 			]);
 		});
@@ -1046,7 +1046,7 @@ describe("tokenize", () => {
 		it("bEFORE_ATTR_VALUE: `>` after `=` on close tag form", () => {
 			expect(walk("<a></a foo=>")).toEqual([
 				["open", "a", false],
-				["attr", "foo", "", QUOTE_NONE],
+				["attr", "foo", "", Quote.None],
 				["close", "a"]
 			]);
 		});
@@ -1054,8 +1054,8 @@ describe("tokenize", () => {
 		// --- STATE_ATTRIBUTE_VALUE_UNQUOTED ---
 		it("aTTR_VALUE_UNQUOTED: space terminates value", () => {
 			expect(walk("<a foo=bar baz>")).toEqual([
-				["attr", "foo", "bar", QUOTE_NONE],
-				["attr", "baz", null, QUOTE_NONE],
+				["attr", "foo", "bar", Quote.None],
+				["attr", "baz", null, Quote.None],
 				["open", "a", false]
 			]);
 		});
@@ -1063,7 +1063,7 @@ describe("tokenize", () => {
 		it("aTTR_VALUE_UNQUOTED: `>` on close tag form", () => {
 			expect(walk("<a></a foo=bar>")).toEqual([
 				["open", "a", false],
-				["attr", "foo", "bar", QUOTE_NONE],
+				["attr", "foo", "bar", Quote.None],
 				["close", "a"]
 			]);
 		});
@@ -1071,7 +1071,7 @@ describe("tokenize", () => {
 		// --- STATE_AFTER_ATTRIBUTE_VALUE_QUOTED ---
 		it("aFTER_ATTR_VALUE_QUOTED: `/` self-closes", () => {
 			expect(walk('<br foo="bar"/>')).toEqual([
-				["attr", "foo", "bar", QUOTE_DOUBLE],
+				["attr", "foo", "bar", Quote.Double],
 				["open", "br", true]
 			]);
 		});
@@ -1079,15 +1079,15 @@ describe("tokenize", () => {
 		it("aFTER_ATTR_VALUE_QUOTED: `>` on close tag form", () => {
 			expect(walk('<a></a foo="bar">')).toEqual([
 				["open", "a", false],
-				["attr", "foo", "bar", QUOTE_DOUBLE],
+				["attr", "foo", "bar", Quote.Double],
 				["close", "a"]
 			]);
 		});
 
 		it("aFTER_ATTR_VALUE_QUOTED: anything else reconsumes (missing-whitespace)", () => {
 			expect(walk('<a foo="x"bar>')).toEqual([
-				["attr", "foo", "x", QUOTE_DOUBLE],
-				["attr", "bar", null, QUOTE_NONE],
+				["attr", "foo", "x", Quote.Double],
+				["attr", "bar", null, Quote.None],
 				["open", "a", false]
 			]);
 		});
@@ -1102,7 +1102,7 @@ describe("tokenize", () => {
 
 		it("sELF_CLOSING: garbage char reconsumes in BEFORE_ATTR_NAME", () => {
 			expect(walk("<br /foo>")).toEqual([
-				["attr", "foo", null, QUOTE_NONE],
+				["attr", "foo", null, Quote.None],
 				["open", "br", false]
 			]);
 		});
@@ -1513,7 +1513,7 @@ describe("tokenize", () => {
 			expect(walk("<title>a</title foo>")).toEqual([
 				["open", "title", false],
 				["text", "a"],
-				["attr", "foo", null, QUOTE_NONE],
+				["attr", "foo", null, Quote.None],
 				["close", "title"]
 			]);
 		});
@@ -1571,7 +1571,7 @@ describe("tokenize", () => {
 			expect(walk("<style>a</style foo>")).toEqual([
 				["open", "style", false],
 				["text", "a"],
-				["attr", "foo", null, QUOTE_NONE],
+				["attr", "foo", null, Quote.None],
 				["close", "style"]
 			]);
 		});
@@ -1629,7 +1629,7 @@ describe("tokenize", () => {
 			expect(walk("<script>a</script foo>")).toEqual([
 				["open", "script", false],
 				["text", "a"],
-				["attr", "foo", null, QUOTE_NONE],
+				["attr", "foo", null, Quote.None],
 				["close", "script"]
 			]);
 		});
@@ -1735,7 +1735,7 @@ describe("tokenize", () => {
 			expect(walk("<script><!-- </script foo>")).toEqual([
 				["open", "script", false],
 				["text", "<!-- "],
-				["attr", "foo", null, QUOTE_NONE],
+				["attr", "foo", null, Quote.None],
 				["close", "script"]
 			]);
 		});
@@ -2075,7 +2075,7 @@ describe("tokenize", () => {
 					},
 					attribute: (input, ns, ne, vs, ve, qt) => {
 						if (vs === -1) return ne;
-						if (qt !== QUOTE_NONE) return ve + 1;
+						if (qt !== Quote.None) return ve + 1;
 						return ve;
 					},
 					text: (input, start, end) => {
@@ -2112,8 +2112,8 @@ describe("tokenize", () => {
 		describe("attribute spellings", () => {
 			it("reads the common shape", () => {
 				expect(walk('<div a="1" b="2">')).toEqual([
-					["attr", "a", "1", QUOTE_DOUBLE],
-					["attr", "b", "2", QUOTE_DOUBLE],
+					["attr", "a", "1", Quote.Double],
+					["attr", "b", "2", Quote.Double],
 					["open", "div", false]
 				]);
 				expect(roundtrip('<div a="1" b="2">')).toBe('<div a="1" b="2">');
@@ -2121,8 +2121,8 @@ describe("tokenize", () => {
 
 			it("reads a single-quoted value", () => {
 				expect(walk("<div a='1' b='2'>")).toEqual([
-					["attr", "a", "1", QUOTE_SINGLE],
-					["attr", "b", "2", QUOTE_SINGLE],
+					["attr", "a", "1", Quote.Single],
+					["attr", "b", "2", Quote.Single],
 					["open", "div", false]
 				]);
 				expect(roundtrip("<div a='1'>")).toBe("<div a='1'>");
@@ -2130,11 +2130,11 @@ describe("tokenize", () => {
 
 			it("reads whitespace around `=`", () => {
 				expect(walk('<div a = "1">')).toEqual([
-					["attr", "a", "1", QUOTE_DOUBLE],
+					["attr", "a", "1", Quote.Double],
 					["open", "div", false]
 				]);
 				expect(walk("<div a= '1'>")).toEqual([
-					["attr", "a", "1", QUOTE_SINGLE],
+					["attr", "a", "1", Quote.Single],
 					["open", "div", false]
 				]);
 				expect(roundtrip('<div a = "1">')).toBe('<div a = "1">');
@@ -2142,8 +2142,8 @@ describe("tokenize", () => {
 
 			it("reads an unquoted value", () => {
 				expect(walk("<div a=1 b=2>")).toEqual([
-					["attr", "a", "1", QUOTE_NONE],
-					["attr", "b", "2", QUOTE_NONE],
+					["attr", "a", "1", Quote.None],
+					["attr", "b", "2", Quote.None],
 					["open", "div", false]
 				]);
 				expect(roundtrip("<div a=1>")).toBe("<div a=1>");
@@ -2151,29 +2151,29 @@ describe("tokenize", () => {
 
 			it("an empty quoted value stops the scan on the closing quote", () => {
 				expect(walk("<div a=\"\" b=''>")).toEqual([
-					["attr", "a", "", QUOTE_DOUBLE],
-					["attr", "b", "", QUOTE_SINGLE],
+					["attr", "a", "", Quote.Double],
+					["attr", "b", "", Quote.Single],
 					["open", "div", false]
 				]);
 			});
 
 			it("reads a reference inside the value", () => {
 				expect(walk("<div a=\"x&amp;y\" b='x&amp;y'>")).toEqual([
-					["attr", "a", "x&amp;y", QUOTE_DOUBLE],
-					["attr", "b", "x&amp;y", QUOTE_SINGLE],
+					["attr", "a", "x&amp;y", Quote.Double],
+					["attr", "b", "x&amp;y", Quote.Single],
 					["open", "div", false]
 				]);
 				// A leading `&` keeps the scan at the opening quote.
 				expect(walk('<div a="&amp;">')).toEqual([
-					["attr", "a", "&amp;", QUOTE_DOUBLE],
+					["attr", "a", "&amp;", Quote.Double],
 					["open", "div", false]
 				]);
 			});
 
 			it("reads a NUL inside the value", () => {
 				expect(walk("<div a=\"x\0y\" b='x\0y'>")).toEqual([
-					["attr", "a", "x\0y", QUOTE_DOUBLE],
-					["attr", "b", "x\0y", QUOTE_SINGLE],
+					["attr", "a", "x\0y", Quote.Double],
+					["attr", "b", "x\0y", Quote.Single],
 					["open", "div", false]
 				]);
 			});
@@ -2182,26 +2182,26 @@ describe("tokenize", () => {
 				// No closing quote in the rest of the input, so the scan clamps to
 				// the end and the EOF handler emits what it has.
 				expect(walk('<div a="1')).toEqual([
-					["attr", "a", "1", QUOTE_DOUBLE],
+					["attr", "a", "1", Quote.Double],
 					["open", "div", false]
 				]);
 				expect(walk("<div a='1")).toEqual([
-					["attr", "a", "1", QUOTE_SINGLE],
+					["attr", "a", "1", Quote.Single],
 					["open", "div", false]
 				]);
 				expect(walk("<div a=")).toEqual([
-					["attr", "a", null, QUOTE_NONE],
+					["attr", "a", null, Quote.None],
 					["open", "div", false]
 				]);
 				expect(walk("<div a")).toEqual([
-					["attr", "a", null, QUOTE_NONE],
+					["attr", "a", null, Quote.None],
 					["open", "div", false]
 				]);
 			});
 
 			it("reads an error character in the name", () => {
 				expect(walk('<div a"b="1">')).toEqual([
-					["attr", 'a"b', "1", QUOTE_DOUBLE],
+					["attr", 'a"b', "1", Quote.Double],
 					["open", "div", false]
 				]);
 			});
@@ -2630,7 +2630,7 @@ describe("tokenize", () => {
 				},
 				attribute: (input, ns, ne, vs, ve, qt) => {
 					if (vs === -1) return ne;
-					if (qt !== QUOTE_NONE) return ve + 1;
+					if (qt !== Quote.None) return ve + 1;
 					return ve;
 				},
 				parseError: (input, code, start, end, severity) => {
@@ -2731,7 +2731,7 @@ describe("tokenize", () => {
 				},
 				attribute: (input, ns, ne, vs, ve, qt) => {
 					if (vs === -1) return ne;
-					if (qt !== QUOTE_NONE) return ve + 1;
+					if (qt !== Quote.None) return ve + 1;
 					return ve;
 				},
 				parseError: (input, code) => codes.push(code)
@@ -3365,12 +3365,12 @@ describe("parseHtml", () => {
 
 	it("should detect SVG namespace and adjust foreign tag names", () => {
 		const svg = body("<svg><lineargradient></lineargradient></svg>")[0];
-		expect(svg.namespace).toBe(NS_SVG);
+		expect(svg.namespace).toBe(Namespace.SVG);
 		// SVG tag-name case is corrected per the foreign adjustment table.
 		expect(/** @type {MatElement} */ (svg.children[0]).tagName).toBe(
 			"linearGradient"
 		);
-		expect(/** @type {MatElement} */ (svg.children[0]).namespace).toBe(NS_SVG);
+		expect(/** @type {MatElement} */ (svg.children[0]).namespace).toBe(Namespace.SVG);
 	});
 
 	it("should not resolve prototype-named SVG tags and attributes through the adjustment tables", () => {
@@ -3382,9 +3382,9 @@ describe("parseHtml", () => {
 
 	it("should detect MathML namespace", () => {
 		const math = body("<math><mi>x</mi></math>")[0];
-		expect(math.namespace).toBe(NS_MATHML);
+		expect(math.namespace).toBe(Namespace.MathML);
 		expect(/** @type {MatElement} */ (math.children[0]).namespace).toBe(
-			NS_MATHML
+			Namespace.MathML
 		);
 	});
 
@@ -3397,9 +3397,9 @@ describe("parseHtml", () => {
 	});
 
 	it("should export namespace constants", () => {
-		expect(NS_HTML).toBe(0);
-		expect(NS_MATHML).toBe(1);
-		expect(NS_SVG).toBe(2);
+		expect(Namespace.HTML).toBe(0);
+		expect(Namespace.MathML).toBe(1);
+		expect(Namespace.SVG).toBe(2);
 	});
 
 	it("should handle valueless attributes", () => {
@@ -3433,13 +3433,13 @@ describe("parseHtml", () => {
 			"<svg><foreignObject><div>html</div></foreignObject></svg>"
 		)[0];
 		const fo = /** @type {MatElement} */ (svg.children[0]);
-		expect(fo.namespace).toBe(NS_SVG);
-		expect(/** @type {MatElement} */ (fo.children[0]).namespace).toBe(NS_HTML);
+		expect(fo.namespace).toBe(Namespace.SVG);
+		expect(/** @type {MatElement} */ (fo.children[0]).namespace).toBe(Namespace.HTML);
 		const desc = /** @type {MatElement} */ (
 			body("<svg><desc><div>x</div></desc></svg>")[0].children[0]
 		);
 		expect(/** @type {MatElement} */ (desc.children[0]).namespace).toBe(
-			NS_HTML
+			Namespace.HTML
 		);
 	});
 
@@ -7952,7 +7952,7 @@ describe("parseHtml — tree-construction edge cases (SoA columns)", () => {
 			"annotation-xml"
 		);
 		const div = child(ax.children, "div");
-		expect(div.namespace).toBe(NS_HTML);
+		expect(div.namespace).toBe(Namespace.HTML);
 	});
 
 	it("adjusts SVG and MathML attribute names", () => {
@@ -7968,10 +7968,10 @@ describe("parseHtml — tree-construction edge cases (SoA columns)", () => {
 	it("breaks a <font> with a color attribute out of foreign content", () => {
 		const nodes = bodyOf('<svg><font color="red">x');
 		const font = child(nodes, "font");
-		expect(font.namespace).toBe(NS_HTML);
+		expect(font.namespace).toBe(Namespace.HTML);
 		// Without a breakout attribute the font stays inside the svg.
 		const svg = child(bodyOf("<svg><font other=1>x"), "svg");
-		expect(child(svg.children, "font").namespace).toBe(NS_SVG);
+		expect(child(svg.children, "font").namespace).toBe(Namespace.SVG);
 	});
 
 	it("merges attributes of a repeated <body> tag", () => {
@@ -8638,7 +8638,7 @@ describe("tokenize — fused state transitions", () => {
 					qt
 				]);
 				if (vs === -1) return ne;
-				if (qt !== QUOTE_NONE) return ve + 1;
+				if (qt !== Quote.None) return ve + 1;
 				return ve;
 			},
 			comment: (input, start, end) => {

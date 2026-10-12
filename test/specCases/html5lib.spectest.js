@@ -22,7 +22,7 @@ const fs = require("fs");
 const path = require("path");
 const { Volume, createFsFromVolume } = require("memfs");
 const webpack = require("../..");
-const { A, NodeType, QUOTE_NONE, decodeEntities, parseHtml, tokenize } = require("../../lib/html/syntax-parser");
+const { A, NodeType, Quote, decodeEntities, parseHtml, tokenize } = require("../../lib/html/syntax-parser");
 const expectNoDeprecations = require("../helpers/expectNoDeprecations");
 const serialize = require("../helpers/serializeHtmlTree");
 
@@ -506,7 +506,7 @@ const runTokenizerCase = (input, context) => {
 							);
 			}
 			if (valueStart === -1) return nameEnd;
-			return quoteType === QUOTE_NONE ? valueEnd : valueEnd + 1;
+			return quoteType === Quote.None ? valueEnd : valueEnd + 1;
 		},
 		openTag(source, start, end, nameStart, nameEnd, selfClosing) {
 			const name = replaceNull(

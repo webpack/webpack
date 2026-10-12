@@ -23,7 +23,7 @@ const {
 	REWRITABLE_ATTRIBUTES
 } = require("../../lib/html/data");
 const { SourceProcessor: HtmlSourceProcessor } = require("../../lib/html/syntax");
-const { A, Field, NS_MATHML, NS_SVG, NodeType, _attributeList, _namespaceOf, decodeEntities, parseHtml } = require("../../lib/html/syntax-parser");
+const { A, Field, Namespace, NodeType, _attributeList, _namespaceOf, decodeEntities, parseHtml } = require("../../lib/html/syntax-parser");
 const expectNoDeprecations = require("../helpers/expectNoDeprecations");
 const launchBrowser = require("../helpers/launchBrowser");
 
@@ -1191,7 +1191,7 @@ describe(`printer output in real ${ENGINE}`, () => {
 	}, 600000);
 });
 
-const NS_PREFIX = { [NS_SVG]: "svg ", [NS_MATHML]: "math " };
+const NS_PREFIX = { [Namespace.SVG]: "svg ", [Namespace.MathML]: "math " };
 // Whitespace inside these is data or is rendered verbatim, so it is not text to
 // collapse; a `<style>` body is CSS, held to the CSSOM comparison above instead.
 const VERBATIM_TEXT = new Set(["pre", "textarea", "script", "style"]);
