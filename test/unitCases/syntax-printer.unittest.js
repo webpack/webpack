@@ -1390,6 +1390,11 @@ const CORRECTED_CASES = [
 		{ compress: { arguments: true }, mangle: false }
 	],
 	[
+		"an unused class whose computed key reads its name, before it is set",
+		"(function () { try { class C { [typeof { x: C }]() {} } console.log('no error'); } catch (e) { console.log(e.name); } })();",
+		{ compress: {}, mangle: false }
+	],
+	[
 		"a class's name read in its own computed key, before it is set",
 		"try { class x { [!{ x }]; } new x(); console.log('no error'); } catch (e) { console.log(e.name); }",
 		{ compress: {}, mangle: false }
