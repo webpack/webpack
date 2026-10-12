@@ -2090,6 +2090,11 @@ const CORRECTED_CASES = [
 		{ compress: {}, mangle: false }
 	],
 	[
+		"an unused class extending new.target, undefined in a static block or field",
+		"for (var f of [function () { class y { static { var x = class extends new.target {}; } } }, function () { class y { static { (() => { var x = class extends new.target {}; })(); } } }, function () { new (class y { z = (() => { var x = class extends new.target {}; })(); })(); }, function () { class y { static #z = (() => { var x = class extends new.target {}; })(); } }, function () { class y { static z = (0, class extends new.target {}); } }, function () { class y { static z = (function () { var x = class extends new.target {}; }, 0); } }, function () { class y { static z = function () { return class extends new.target {}; }; } }]) { try { f(); console.log('no'); } catch (e) { console.log(e.name); } }",
+		{ compress: {}, mangle: false }
+	],
+	[
 		"an unused class declaration extending a number",
 		"try { (function () { class C extends 1 {} })(); console.log('no'); } catch (e) { console.log(e.name); }",
 		{ compress: {}, mangle: false }
