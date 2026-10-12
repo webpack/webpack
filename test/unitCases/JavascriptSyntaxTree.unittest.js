@@ -13,6 +13,17 @@ const { firstDifference } = require("../helpers/compareParserOutput");
 
 /** @typedef {import("estree").Node} EstreeNode */
 
+/**
+ * A parsed node whose children may already stand as the ids they were written as.
+ * @typedef {{ type: string, [key: string]: unknown }} WrittenNode
+ */
+
+/**
+ * @param {WrittenNode} node a parsed node, some children written already
+ * @returns {EstreeNode} the node as `addEstree` takes it
+ */
+const asEstree = (node) => /** @type {EstreeNode} */ (/** @type {unknown} */ (node));
+
 // The options a build parses with, and the ones the minifier does.
 const OPTION_SETS = [
 	{
@@ -139,6 +150,67 @@ describe("SyntaxTree", () => {
 		}
 		// Every type the tree knows, so a new one fails until a fixture has it.
 		expect(seen.size).toBe(73);
+	});
+
+	it("writes a parsed tree whose parts were written first", () => {
+		for (const options of OPTION_SETS) {
+			const tree = new SyntaxTree();
+			const program = /** @type {WrittenNode} */ (
+				/** @type {unknown} */ (WebpackParser.parse(SCRIPT, options))
+			);
+			/**
+			 * Writes each function body under a node first, innermost first, the
+			 * body standing as its id, as a parser writing as it goes leaves it.
+			 * @param {WrittenNode} node a parsed node
+			 * @returns {void}
+			 */
+			const writeBodies = (node) => {
+				for (const key of Object.keys(node)) {
+					const value = node[key];
+					const children = Array.isArray(value) ? value : [value];
+					for (const child of children) {
+						if (child && typeof child === "object" && "type" in child) {
+							writeBodies(/** @type {WrittenNode} */ (child));
+						}
+					}
+				}
+				const body = /** @type {WrittenNode} */ (node.body);
+				if (/Function/.test(node.type) && body.type === "BlockStatement") {
+					node.body = tree.addEstree(asEstree(body));
+				}
+			};
+			writeBodies(program);
+			// A statement of a list written first stands as its id too.
+			program.body = /** @type {WrittenNode[]} */ (program.body).map(
+				(statement, index) =>
+					index % 2 === 0 ? tree.addEstree(asEstree(statement)) : statement
+			);
+			const rebuilt = toEstreeObject(tree, tree.addEstree(asEstree(program)));
+			expect(
+				firstDifference(
+					rebuilt,
+					WebpackParser.parse(SCRIPT, options),
+					"Program"
+				)
+			).toBeNull();
+		}
+	});
+
+	it("writes an import or export an edition before attributes parsed", () => {
+		const source = 'import a from "x"; export * from "y"; export { a };';
+		const program = WebpackParser.parse(source, {
+			ecmaVersion: 2020,
+			sourceType: "module"
+		});
+		const tree = new SyntaxTree();
+		const root = tree.addEstree(program);
+		for (let i = 0; i < 3; i++) {
+			const statement = tree.field(i, Field.body, root);
+			expect(tree.fieldCount(Field.attributes, statement)).toBe(0);
+			expect(
+				/** @type {EXPECTED_ANY} */ (toEstreeObject(tree, statement)).attributes
+			).toEqual([]);
+		}
 	});
 
 	it("builds only the fields asked for, then the rest on the same object", () => {
