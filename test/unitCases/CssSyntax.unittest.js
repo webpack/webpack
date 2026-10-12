@@ -4626,10 +4626,10 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// `<position>`'s keyword pair is order-free, so both readings resolve.
 			["a{background-position:top left}", "a{background-position:0%0%}"],
 			["a{background-position:left bottom}", "a{background-position:0%100%}"],
-			[
-				"a{background-position:center bottom}",
-				"a{background-position:50%100%}"
-			],
+			// A centered edge is the one keyword naming it, shorter than both halves.
+			["a{background-position:center bottom}", "a{background-position:bottom}"],
+			["a{background-position:50% 0%}", "a{background-position:top}"],
+			["a{background-position:100% top}", "a{background-position:100%0%}"],
 			[
 				"a{background-position:right bottom}",
 				"a{background-position:100%100%}"
@@ -4641,7 +4641,8 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// `transform-origin` spells its axes out rather than naming a position,
 			// and a depth only follows a third component.
 			["a{transform-origin:left top}", "a{transform-origin:0%0%}"],
-			["a{transform-origin:center bottom}", "a{transform-origin:50%100%}"],
+			["a{transform-origin:center bottom}", "a{transform-origin:bottom}"],
+			["a{transform-origin:50% 100%}", "a{transform-origin:bottom}"],
 			["a{offset-anchor:left top}", "a{offset-anchor:0%0%}"]
 		])("%s", (css, expected) => {
 			expect(minify(css)).toBe(expected);
@@ -4654,6 +4655,9 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// An offset beside a keyword is the 3/4-value syntax, where the keyword
 			// names the edge to measure from rather than a place on the axis.
 			["an offset follows a keyword", "a{background-position:left 10px}"],
+			// A percentage is read by where it stands, so neither is a position.
+			["a vertical keyword precedes a percentage", "a{background-position:top 50%}"],
+			["a horizontal keyword follows one", "a{background-position:50%left}"],
 			[
 				"both axes carry an offset",
 				"a{background-position:left 10px top 20px}"
@@ -4948,7 +4952,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			["-webkit-animation:fade 3s ease", "-webkit-animation:fade 3s"],
 			[
 				"-webkit-transform-origin:center bottom",
-				"-webkit-transform-origin:50%100%"
+				"-webkit-transform-origin:bottom"
 			],
 			[
 				"-webkit-box-shadow:0 1px 5px 0 rgba(0,0,0,0.2)",
@@ -5257,11 +5261,25 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			).toBe("@media all{b{color:blue}a{color:#456!important}}");
 		});
 
+		it("takes out of it what the later rule writes again", () => {
+			expect(
+				minify("@media all{a{color:red;top:0}b{x:1}a{color:blue}}")
+			).toBe("@media all{a{top:0}b{x:1}a{color:blue}}");
+			// A custom property's value always parses, so the later one stands.
+			expect(minify("@media all{a{--x:1}b{x:1}a{--x:2}}")).toBe(
+				"@media all{b{x:1}a{--x:2}}"
+			);
+			// A kept comment parts what stands above it from what follows.
+			expect(minify("a{color:red}/*! keep */b{x:1}a{color:blue}")).toBe(
+				"a{color:red}/*! keep */b{x:1}a{color:blue}"
+			);
+			// Every earlier rule of the selector, not only the latest.
+			expect(
+				minify("a{color:red;top:2px}b{x:1}a{color:blue}c{y:1}a{top:1px}")
+			).toBe("b{x:1}a{color:blue}c{y:1}a{top:1px}");
+		});
+
 		it.each([
-			[
-				"a declaration the later rule does not write",
-				"@media all{a{color:red;top:0}b{x:1}a{color:blue}}"
-			],
 			// The earlier one wins wherever the later is plain.
 			[
 				"the earlier declaration is `!important`",
@@ -5276,9 +5294,15 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 				"the selectors differ",
 				"@media all{a{color:red}b{x:1}a:hover{color:blue}}"
 			],
+			// A rollback reads back past the later rule, to the earlier one.
 			[
-				"the earlier writes a custom property",
-				"@media all{a{--x:1}b{x:1}a{--x:2}}"
+				"the later one rolls a shorthand back",
+				"a{border-color:red}b{x:1}a{border-color:var(--x);border:revert}"
+			],
+			// A nested rule is no one cascade with the declarations beside it.
+			[
+				"the later one nests a rule",
+				"a{width:var(--a)}b{x:1}a{width:var(--b);& c{top:0}}"
 			],
 			[
 				"the earlier writes `all`",
@@ -7654,7 +7678,14 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 				["a component reads two ways", "a{animation:none;animation-duration:1s}"],
 				["the longhand reads two ways", "a{animation:x 1s;animation-fill-mode:none}"],
 				["the name is no slot a fold keeps", "a{animation:x 1s;animation-name:y}"],
-				["the shorthand has two layers", "a{transition:a.2s,b.3s;transition-delay:.1s}"],
+				[
+					"the longhand's one value computes as one, not one per layer",
+					"a{transition:a.2s,b.3s;transition-delay:.1s}"
+				],
+				[
+					"the longhand lists fewer values than layers",
+					"a{transition:a.2s,b.3s,c.4s;transition-delay:.1s,.2s}"
+				],
 				["one is `!important`", "a{outline:1px solid!important;outline-color:red}"],
 				["the longhand is a substitution", "a{border-left:1px solid;border-left-color:var(--a)}"],
 				["a declaration writing the same side stands between", "a{border-left:1px solid;border-inline-start-color:red;border-left-color:blue}"],
@@ -12532,11 +12563,14 @@ describe("CssSyntax minify — the declaration a lowered shorthand kills", () =>
 		).toBe("a{& b{top:0}text-decoration:underline;text-decoration-style:dotted}");
 	});
 
-	it("keeps the earlier one where the target reads the later whole", () => {
-		// Nothing is lowered, so the later value is the one a target may not read
-		// — and the earlier one is the fallback the author wrote.
-		const css = "a{text-decoration:overline;text-decoration:underline dotted}";
-		expect(minifyFor(css, ["chrome 130"])).toBe(css);
+	it("takes out the earlier one where the target reads the later whole", () => {
+		// Nothing is lowered, and every target reads the style the later one names.
+		expect(
+			minifyFor(
+				"a{text-decoration:overline;text-decoration:underline dotted}",
+				["chrome 130"]
+			)
+		).toBe("a{text-decoration:underline dotted}");
 	});
 
 	it("keeps it where the longhands the lowering writes are unread too", () => {
@@ -15848,5 +15882,90 @@ describe("CssSyntax — code point and substitution helpers", () => {
 		);
 		expect(containsSubstitutionFunction("calc(1px + 2px)")).toBe(false);
 		expect(containsSubstitutionFunction("red")).toBe(false);
+	});
+});
+
+describe("CssSyntax minify — what a modern target makes dead", () => {
+	const MODERN = ["chrome 140", "firefox 140", "safari 26.2"];
+
+	it("takes out a `text-decoration` fallback and its `-webkit-` twin", () => {
+		expect(
+			minifyFor(
+				"a{text-decoration:underline;-webkit-text-decoration:underline;text-decoration:underline dotted;-webkit-text-decoration:underline dotted}",
+				MODERN
+			)
+		).toBe("a{text-decoration:underline dotted}");
+		// Safari 15 reads a style only through the prefixed spelling.
+		expect(
+			minifyFor(
+				"a{text-decoration:underline dotted;-webkit-text-decoration:underline dotted}",
+				["safari 15"]
+			)
+		).toContain("-webkit-text-decoration:underline dotted");
+	});
+
+	it.each([
+		["a style but `auto`", "a{outline:2px solid currentColor}", MODERN, "a{outline:2px solid}"],
+		["`auto`, whose color is the accent", "a{outline:auto currentcolor}", MODERN, "a{outline:auto currentcolor}"],
+		["a target starting it at `invert`", "a{outline:2px solid currentColor}", ["ie 11", "chrome 140"], "a{outline:2px solid currentcolor}"],
+		["no target", "a{outline:2px solid currentColor}", undefined, "a{outline:2px solid currentcolor}"]
+	])("drops an outline's currentcolor only beside %s", (_name, css, browsers, expected) => {
+		expect(minifyFor(css, browsers)).toBe(expected);
+	});
+
+	it("takes out a hex fallback before one every target reads with its alpha", () => {
+		const css = "a{background-color:#73859f;background-color:#73859f80}";
+		expect(minifyFor(css, MODERN)).toBe("a{background-color:#73859f80}");
+		expect(minifyFor(css)).toBe(css);
+		expect(minifyFor("a{color:red}b{x:1}a{color:#ff000080}", MODERN)).toBe(
+			"b{x:1}a{color:#ff000080}"
+		);
+	});
+
+	it.each([
+		["the later one is `!important` too", "a{width:var(--a)!important}b{x:1}a{width:var(--b)!important}", "b{x:1}a{width:var(--b)!important}"],
+		["the later one holds what is no declaration", "a{color:var(--a)}b{x:1}a{foo;color:var(--b)}", "a{color:var(--a)}b{x:1}a{foo;color:var(--b)}"],
+		["a `text-decoration` names one slot twice", "a{text-decoration:none;text-decoration:underline overline dotted}", "a{text-decoration:none;text-decoration:underline overline dotted}"],
+		["a thickness's unit is unread", "a{text-decoration:underline;text-decoration:underline dotted 1cap}", "a{text-decoration:underline;text-decoration:underline dotted 1cap}"]
+	])("reads the later rule's values where %s", (_name, css, expected) => {
+		expect(
+			minifyFor(css, css.includes("cap}") ? ["chrome 100"] : MODERN)
+		).toBe(expected);
+	});
+
+	it("keeps a fallback whose thickness the target does not read", () => {
+		const css = "a{text-decoration:underline;text-decoration:underline dotted 2px}";
+		expect(minifyForWith(css, ["chrome 80"], { lowerUnsupported: false })).toBe(
+			css
+		);
+	});
+
+	it("takes out an earlier rule's declaration a substitution later writes again", () => {
+		const css = "a{width:var(--a)}b{x:1}a{width:var(--b)}";
+		expect(minifyFor(css, MODERN)).toBe("b{x:1}a{width:var(--b)}");
+		expect(minifyFor(css)).toBe(css);
+	});
+});
+
+describe("CssSyntax minify — layered and positional spellings", () => {
+	it.each([
+		["a{transition:a 1s,b 2s;transition-delay:.5s,1s}", "a{transition:a 1s.5s,b 2s 1s}"],
+		["a{animation:x 1s,y 2s;animation-delay:.5s,1s}", "a{animation:x 1s.5s,y 2s 1s}"],
+		["a{background:transparent}", "a{background:none}"],
+		["a{background:#0000!important}", "a{background:none!important}"],
+		// A type name leads its attribute variants.
+		["[type=button],button{x:1}", "button,[type=button]{x:1}"],
+		// An escaped `{` and a `[` meet at one place, and still sort apart.
+		[".a\\{,.a\\[{x:1}", ".a\\[,.a\\{{x:1}"],
+		// A layer the longhand cannot fold into keeps the longhand.
+		["a{transition:a 1s,none;transition-delay:1s,2s}", "a{transition:a 1s,none;transition-delay:1s,2s}"],
+		// Off every layout step, a scaled length rounds like any other.
+		["a{width:.12345678em}", "a{width:.123457em}"]
+	])("%s", (css, expected) => {
+		expect(minifyFor(css)).toBe(expected);
+	});
+
+	it("keeps a font-relative ratio that lands on a layout step", () => {
+		expect(minifyFor("a{width:.27777778em}")).toBe("a{width:.27777778em}");
 	});
 });

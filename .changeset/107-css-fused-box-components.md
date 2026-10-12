@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Fold and lower CSS box shorthands whose printed values touch; fold `overflow`.
+Fix fused CSS box sides; drop dead fallbacks and overridden same-selector rules.
