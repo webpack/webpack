@@ -6332,6 +6332,28 @@ describe("syntax-printer", () => {
 			).toBe(reference.code);
 		});
 
+		it("should keep the line break after a banner before a dropped `;`, as terser prints it", async () => {
+			const { minify } = await load();
+			const code = "/*! license\n */\n;(function () { f(); })();";
+			const { code: printed } = await minify(code, {});
+			expect(printed).toBe("/*! license\n */\nf();");
+			expect((await minify(/** @type {string} */ (printed), formatOnly)).code).toBe(
+				printed
+			);
+			expect((await terserReference().minify(code, {})).code).toBe(printed);
+		});
+
+		it("should keep the line break after a license whose code was dropped, wherever it moves", async () => {
+			const { minify } = await load();
+			const code =
+				"function g() {\n/*! license\n */\nvar n = 50; return h(0, n); }\ng();";
+			const { code: printed } = await minify(code, {});
+			expect(printed).toBe("function g(){return h(0,\n/*! license\n */\n50)}g();");
+			expect((await minify(/** @type {string} */ (printed), formatOnly)).code).toBe(
+				printed
+			);
+		});
+
 		it("should print a directive as it is spelled, where an encoding doubled each backslash", async () => {
 			/**
 			 * @param {string} code a program
