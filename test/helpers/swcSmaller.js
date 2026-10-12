@@ -277,7 +277,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/10876/1/input.js",
 			"swc minifier: fixture/issues/10876/2/input.js",
 			"swc minifier: fixture/issues/10876/3/input.js",
-			"swc minifier: fixture/issues/11007/input.js",
 			"swc minifier: fixture/issues/11103/input.js",
 			"swc minifier: fixture/issues/11158/input.js",
 			"swc minifier: fixture/issues/11512-exhaustive/fn-multi-use-default-side-effect/input.js",
