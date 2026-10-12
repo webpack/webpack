@@ -35,10 +35,13 @@ const {
 const htmlMinify = require("../lib/html/htmlMinify");
 const { SourceProcessor } = require("../lib/html/syntax");
 const {
+	Field,
 	NS_MATHML,
 	NS_SVG,
 	NodeType,
+	Part,
 	QUOTE_NONE,
+	_namespaceOf,
 	decodeEntities,
 	pickTransforms,
 	tokenize
@@ -1317,22 +1320,22 @@ for (const [name, type] of Object.entries(NodeType)) {
 const htmlInnerRanges = (nodePath) => {
 	if (nodePath.type() !== NodeType.Element) return undefined;
 	const start = nodePath.range()[0];
-	const content = nodePath.contentRange();
+	const content = nodePath.rangeOf(Part.content);
 	// The parser inserted this element, or the adoption agency cloned it: no tag
 	// was written, so it states no offsets to hold.
 	if (content === null || content[0] <= start) return undefined;
 	const tagEnd = content[0];
 	/** @type {[string, number, number][]} */
 	const inner = [["opening tag", start, tagEnd]];
-	const count = nodePath.attributeCount();
+	const count = nodePath.fieldCount(Field.attributes);
 	for (let index = 0; index < count; index++) {
-		const attribute = nodePath.attribute(index);
+		const attribute = nodePath.field(index, Field.attributes);
 		const [nameStart, nameEnd] = /** @type {[number, number]} */ (
-			nodePath.nameRange(attribute)
+			nodePath.rangeOf(Part.name, attribute)
 		);
 		if (nameStart < start || nameStart >= tagEnd) continue;
 		inner.push(["attribute name", nameStart, nameEnd]);
-		const value = nodePath.valueRange(attribute);
+		const value = nodePath.rangeOf(Part.value, attribute);
 		inner.push([
 			"attribute value",
 			value === null ? -1 : value[0],
@@ -1387,7 +1390,7 @@ const htmlSpans = (html) =>
  */
 const fragmentContextOf = (nodePath) => {
 	if (nodePath.type() !== NodeType.Element) return "";
-	const namespace = nodePath.namespace();
+	const namespace = _namespaceOf(nodePath.node);
 	if (namespace === NS_SVG) return `svg ${nodePath.name()}`;
 	if (namespace === NS_MATHML) return `math ${nodePath.name()}`;
 	return nodePath.name();
@@ -1588,10 +1591,10 @@ const htmlPurityDigest = (html, print) => {
 		const type = nodePath.type();
 		digest.update(`${NODE_TYPE_NAMES[type]}[${nodePath.range().join(",")})`);
 		if (type === NodeType.Element) {
-			digest.update(`|<${nodePath.name()}>|${nodePath.namespace()}`);
-			const count = nodePath.attributeCount();
+			digest.update(`|<${nodePath.name()}>|${_namespaceOf(nodePath.node)}`);
+			const count = nodePath.fieldCount(Field.attributes);
 			for (let index = 0; index < count; index++) {
-				const attribute = nodePath.attribute(index);
+				const attribute = nodePath.field(index, Field.attributes);
 				digest.update(
 					`|${nodePath.name(attribute)}=${nodePath.value(attribute)}`
 				);

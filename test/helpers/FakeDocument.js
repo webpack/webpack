@@ -50,7 +50,7 @@ const parseFragment = (html) => {
 	if (htmlSyntax === undefined) htmlSyntax = require("../../lib/html/syntax");
 	const { SourceProcessor } = htmlSyntax;
 
-	const { NodeType } = require("../../lib/html/syntax-parser");
+	const { Field, NodeType } = require("../../lib/html/syntax-parser");
 
 	/** @type {{ tag: string, attributes: { name: string, value: string }[], text: string }[]} */
 	const elements = [];
@@ -67,9 +67,9 @@ const parseFragment = (html) => {
 					open = {
 						tag: path.name(),
 						attributes: Array.from(
-							{ length: path.attributeCount() },
+							{ length: path.fieldCount(Field.attributes) },
 							(_, i) => {
-								const attribute = path.attribute(i);
+								const attribute = path.field(i, Field.attributes);
 								return {
 									name: path.name(attribute),
 									value: path.value(attribute)

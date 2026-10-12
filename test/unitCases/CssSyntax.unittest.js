@@ -3,7 +3,7 @@
 const fs = require("fs");
 const path = require("path");
 const { SourceProcessor } = require("../../lib/css/syntax");
-const { NodeType, TT_AT_KEYWORD, TT_BAD_STRING_TOKEN, TT_BAD_URL_TOKEN, TT_CDC, TT_CDO, TT_COLON, TT_COMMA, TT_COMMENT, TT_DELIM, TT_DIMENSION, TT_EOF, TT_FUNCTION, TT_HASH, TT_IDENTIFIER, TT_LEFT_CURLY_BRACKET, TT_LEFT_PARENTHESIS, TT_LEFT_SQUARE_BRACKET, TT_NUMBER, TT_PERCENTAGE, TT_RIGHT_CURLY_BRACKET, TT_RIGHT_PARENTHESIS, TT_RIGHT_SQUARE_BRACKET, TT_SEMICOLON, TT_STRING, TT_URL, TT_WHITESPACE, TokenStream, buildSkipSet, normalizeUrl, parseABlocksContents, parseACommaSeparatedListOfComponentValues, parseAComponentValue, parseADeclaration, parseAListOfComponentValues, parseARule, parseAStylesheet, parseAStylesheetsContents, readToken } = require("../../lib/css/syntax-parser");
+const { Field, Flag, NodeType, Part, TT_AT_KEYWORD, TT_BAD_STRING_TOKEN, TT_BAD_URL_TOKEN, TT_CDC, TT_CDO, TT_COLON, TT_COMMA, TT_COMMENT, TT_DELIM, TT_DIMENSION, TT_EOF, TT_FUNCTION, TT_HASH, TT_IDENTIFIER, TT_LEFT_CURLY_BRACKET, TT_LEFT_PARENTHESIS, TT_LEFT_SQUARE_BRACKET, TT_NUMBER, TT_PERCENTAGE, TT_RIGHT_CURLY_BRACKET, TT_RIGHT_PARENTHESIS, TT_RIGHT_SQUARE_BRACKET, TT_SEMICOLON, TT_STRING, TT_URL, TT_WHITESPACE, TokenStream, buildSkipSet, normalizeUrl, parseABlocksContents, parseACommaSeparatedListOfComponentValues, parseAComponentValue, parseADeclaration, parseAListOfComponentValues, parseARule, parseAStylesheet, parseAStylesheetsContents, readToken } = require("../../lib/css/syntax-parser");
 
 /**
  * @param {string} css a stylesheet
@@ -849,7 +849,7 @@ describe("CssSyntax — substitution span searches", () => {
 });
 
 describe("CssSyntax — SourceProcessor", () => {
-	it("exposes range / unescaped / typeFlag / setEnd / setBlockEnd on the path", () => {
+	it("exposes range / unescaped / type flags / setEnd / setBlockEnd on the path", () => {
 		/** @type {Record<string, unknown>} */
 		const seen = {};
 		new SourceProcessor()
@@ -858,14 +858,14 @@ describe("CssSyntax — SourceProcessor", () => {
 					[NodeType.Hash]: (
 						/** @type {import("../../lib/css/syntax-parser").CssPath} */ path
 					) => {
-						seen.typeFlag = path.typeFlag();
+						seen.idFlag = path.flag(Flag.id);
 						// `A.value` on a hash drops the `#` (raw-value slice).
 						seen.hashValue = path.value();
 					},
 					[NodeType.Number]: (
 						/** @type {import("../../lib/css/syntax-parser").CssPath} */ path
 					) => {
-						seen.numFlag = path.typeFlag();
+						seen.integerFlag = path.flag(Flag.integer);
 					},
 					[NodeType.String]: (
 						/** @type {import("../../lib/css/syntax-parser").CssPath} */ path
@@ -876,20 +876,12 @@ describe("CssSyntax — SourceProcessor", () => {
 						/** @type {import("../../lib/css/syntax-parser").CssPath} */ path
 					) => {
 						seen.range = [path.range()[0], path.range()[1]];
-					},
-					[NodeType.QualifiedRule]: (
-						/** @type {import("../../lib/css/syntax-parser").CssPath} */ path
-					) => {
-						// The writer stays off the path; round-trip it (set the end back to itself).
-						const { _setNodeEnd } = require("../../lib/css/syntax-parser");
-
-						_setNodeEnd(path.node, path.range()[1]);
 					}
 				})
 			)
 			.process('a { z-index: 5; content: "x"; color: #123 }');
-		expect(seen.typeFlag).toBe("unrestricted");
-		expect(seen.numFlag).toBe("integer");
+		expect(seen.idFlag).toBe(false);
+		expect(seen.integerFlag).toBe(true);
 		expect(seen.hashValue).toBe("123");
 		expect(seen.unescaped).toBe("x");
 		expect(Array.isArray(seen.range)).toBe(true);
@@ -1112,8 +1104,8 @@ describe("CssSyntax — block streaming", () => {
 				[type]: (/** @type {import("../../lib/css/syntax-parser").CssPath} */ path) => {
 					if (seen) return;
 					seen = true;
-					const rules = path.rules();
-					count = rules === null ? null : rules.length;
+					count =
+						path.rangeOf(Part.block) === null ? null : path.fieldCount(Field.rules);
 				}
 			})
 			.process(src, { mode: "minify" });
@@ -1379,10 +1371,9 @@ describe("CssSyntax — block streaming", () => {
 					[NodeType.AtRule]: (
 						/** @type {import("../../lib/css/syntax-parser").CssPath} */ path
 					) => {
-						const decls = path.declarations();
-						const rules = path.rules();
-						seen.push(decls === null ? null : decls.length);
-						seen.push(rules === null ? null : rules.length);
+						const block = path.rangeOf(Part.block) !== null;
+						seen.push(block ? path.fieldCount(Field.declarations) : null);
+						seen.push(block ? path.fieldCount(Field.rules) : null);
 					}
 				})
 				.process(src, { mode: "minify" });
@@ -1531,8 +1522,10 @@ describe("CssSyntax — block streaming", () => {
 				) => {
 					if (seen) return;
 					seen = true;
-					const decls = path.declarations();
-					declared = decls === null ? null : decls.length;
+					declared =
+						path.rangeOf(Part.block) === null
+							? null
+							: path.fieldCount(Field.declarations);
 				}
 			})
 			.process(src, { mode: "minify" });
@@ -2274,7 +2267,7 @@ describe("CssSyntax — minify value-safety edge cases", () => {
 			[NodeType.Ident]: (
 				/** @type {import("../../lib/css/syntax-parser").CssPath} */ path
 			) => {
-				if (path.inValue()) throw new Error("boom");
+				if (path.within(NodeType.Declaration)) throw new Error("boom");
 			}
 		});
 		expect(() => processor.process("a{color:red}")).toThrow("boom");
@@ -3142,6 +3135,15 @@ describe("CssSyntax — the per-transform switches", () => {
 		expect(min(css, { [name]: false })).toBe(off);
 	});
 
+	it("keeps `!important` on a longhand folded into its shorthand", () => {
+		expect(min("a{margin:1px !important;margin-top:2px !important}")).toBe(
+			"a{margin:2px 1px 1px!important}"
+		);
+		expect(min("a{grid-row:1 !important;grid-row-end:3 !important}")).toBe(
+			"a{grid-row:1/3!important}"
+		);
+	});
+
 	// A `url()` holds two rewrites, and each answers to its own switch: writing
 	// a data URI's percent-escapes as the bytes they name, and taking the quotes
 	// off a body that is a url-token without them.
@@ -3781,43 +3783,36 @@ describe("CssSyntax — path accessors", () => {
 					[NodeType.AtRule]: (/** @type {CssPath} */ path) => {
 						log.push(`at:${path.name()}`);
 						log.push(
-							`atName:${path.source(.../** @type {[number, number]} */ (path.nameRange()))}`
+							`atName:${path.source(.../** @type {[number, number]} */ (path.rangeOf(Part.name)))}`
 						);
 						log.push(`prelude:${path.childCount() > 0}`);
 						log.push(
-							`childRules:${
-								/** @type {import("../../lib/css/syntax-parser").Rule[]} */ (
-									path.rules()
-								).length
-							}`
+							`childRules:${path.fieldCount(Field.rules)}`
 						);
 						log.push(
-							`decls:${
-								/** @type {import("../../lib/css/syntax-parser").Declaration[]} */ (
-									path.declarations()
-								).length
+							`decls:${path.fieldCount(Field.declarations)
 							}`
 						);
-						log.push(`blockOpen:${SRC[/** @type {[number, number]} */ (path.blockRange())[0]]}`);
-						log.push(`blockClose:${SRC[/** @type {[number, number]} */ (path.blockRange())[1] - 1]}`);
+						log.push(`blockOpen:${SRC[/** @type {[number, number]} */ (path.rangeOf(Part.block))[0]]}`);
+						log.push(`blockClose:${SRC[/** @type {[number, number]} */ (path.rangeOf(Part.block))[1] - 1]}`);
 						log.push(`span:${SRC.slice(path.range()[0], path.range()[0] + 6)}`);
 						log.push(`node:${path.node !== null}`);
 						log.push(`parent:${path.parent}`);
 					},
 					[NodeType.Declaration]: (/** @type {CssPath} */ path) => {
-						if (path.important()) {
+						if (path.flag(Flag.important)) {
 							log.push(
-								`decl:${path.source(.../** @type {[number, number]} */ (path.nameRange()))}=${path.name()}`
+								`decl:${path.source(.../** @type {[number, number]} */ (path.rangeOf(Part.name)))}=${path.name()}`
 							);
 						}
 					},
 					[NodeType.Url]: (/** @type {CssPath} */ path) => {
 						log.push(
-							`url:${SRC.slice(/** @type {[number, number]} */ (path.valueRange())[0], /** @type {[number, number]} */ (path.valueRange())[1])}`
+							`url:${SRC.slice(/** @type {[number, number]} */ (path.rangeOf(Part.value))[0], /** @type {[number, number]} */ (path.rangeOf(Part.value))[1])}`
 						);
 					},
 					[NodeType.SimpleBlock]: (/** @type {CssPath} */ path) => {
-						log.push(`blockToken:${path.blockToken()}`);
+						log.push(`blockToken:${path.value()}`);
 					},
 					[NodeType.Function]: {
 						enter: (/** @type {CssPath} */ path) => {
@@ -3868,12 +3863,8 @@ describe("CssSyntax — path accessors", () => {
 					[NodeType.QualifiedRule]: (/** @type {CssPath} */ path) => {
 						out.push([
 							path.childCount() > 0,
-							/** @type {import("../../lib/css/syntax-parser").Declaration[]} */ (
-								path.declarations()
-							).length,
-							/** @type {import("../../lib/css/syntax-parser").Rule[]} */ (
-								path.rules()
-							).length
+							path.fieldCount(Field.declarations),
+							path.fieldCount(Field.rules)
 						]);
 					}
 				})
