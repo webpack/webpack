@@ -23640,7 +23640,7 @@ declare interface Optimization {
  */
 declare interface OptimizationMinimizeCss {
 	/**
-	 * How the minimizer states a `.css` asset's encoding. `"auto"` (the default) opens it with `@charset "UTF-8"` only when its output holds a non-ASCII character, so it is read as UTF-8 wherever it is served. `false` writes no `@charset` at all, and writes an escaped character past U+FFFF (an icon font's `content: "\F0A86"`) as the character itself, as `"auto"` does once that `@charset` is written. Set `false` only where the asset is read as UTF-8 anyway: a stylesheet with no `@charset` is read in the encoding the server's `Content-Type` names, else in the encoding of the page linking it, so it holds wherever the server names UTF-8 or the page is UTF-8 — and anywhere else every such character reads as other characters.
+	 * How the minimizer states a `.css` asset's encoding. `"auto"` (the default) opens it with `@charset "UTF-8"` only when its output holds a non-ASCII character, so it is read as UTF-8 wherever the server's `Content-Type` names no other charset, which `@charset` cannot override. `false` writes no `@charset` at all, and writes an escaped character past U+FFFF (an icon font's `content: "\F0A86"`) as the character itself, as `"auto"` does once that `@charset` is written. Set `false` only where the asset is read as UTF-8 anyway: a stylesheet with no `@charset` is read in the encoding the server's `Content-Type` names, else in the encoding of the page linking it, so it holds wherever the server names UTF-8 or the page is UTF-8 — and anywhere else every such character reads as other characters.
 	 * @since 5.112.0
 	 */
 	charset?: false | "auto";
