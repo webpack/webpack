@@ -35845,6 +35845,12 @@ declare namespace exports {
 				export let TT_URL: 18;
 				export let TT_WHITESPACE: 2;
 				export let VENDOR_PREFIX: RegExp;
+				export let containsSubstitutionFunction: (text: string) => boolean;
+				export let isDigit: (cc: number) => boolean;
+				export let isHexDigit: (cc: number) => boolean;
+				export let isIdentCodePoint: (cc: number) => boolean;
+				export let isIdentStartCodePoint: (cc: number) => boolean;
+				export let isLetter: (cc: number) => boolean;
 				export let asciiLowerCaseName: (s: string) => string;
 				export let buildSkipSet: (nodeTypes: number[]) => Uint8Array;
 				export let consumeExtraNewline: (
@@ -36442,6 +36448,8 @@ declare namespace exports {
 				export let QUOTE_NONE: 0;
 				export let QUOTE_SINGLE: 2;
 				export let SVG_TYPE: "svg";
+				export let asciiLowercase: (value: string) => string;
+				export let stripAsciiWhitespace: (value: string) => string;
 				export let baseTag: (
 					base:
 						| string

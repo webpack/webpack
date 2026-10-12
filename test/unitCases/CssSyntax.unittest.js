@@ -15745,3 +15745,54 @@ describe("CssSyntax minify — grid lines, `@scope` and substitutions", () => {
 		expect(minifyFor(css, modern)).toBe(expected);
 	});
 });
+
+describe("CssSyntax — code point and substitution helpers", () => {
+	const {
+		containsSubstitutionFunction,
+		isDigit,
+		isHexDigit,
+		isIdentCodePoint,
+		isIdentStartCodePoint,
+		isLetter
+	} = require("../../lib/css/syntax-parser");
+
+	/**
+	 * @param {string} s one character
+	 * @returns {number} its code point
+	 */
+	const cp = (s) => /** @type {number} */ (s.codePointAt(0));
+
+	it("classifies code points as CSS Syntax §4.2 defines them", () => {
+		expect(["0", "9"].map((s) => isDigit(cp(s)))).toEqual([true, true]);
+		expect(isDigit(cp("a"))).toBe(false);
+		expect(["a", "F"].map((s) => isHexDigit(cp(s)))).toEqual([true, true]);
+		expect(isHexDigit(cp("g"))).toBe(false);
+		expect(["a", "Z"].map((s) => isLetter(cp(s)))).toEqual([true, true]);
+		expect(isLetter(cp("_"))).toBe(false);
+		// Non-ASCII and `_` start an identifier; a digit or `-` only continues one.
+		expect(["é", "_", "a"].map((s) => isIdentStartCodePoint(cp(s)))).toEqual([
+			true,
+			true,
+			true
+		]);
+		expect(["1", "-"].map((s) => isIdentStartCodePoint(cp(s)))).toEqual([
+			false,
+			false
+		]);
+		expect(["1", "-", "é"].map((s) => isIdentCodePoint(cp(s)))).toEqual([
+			true,
+			true,
+			true
+		]);
+		expect(isIdentCodePoint(cp(" "))).toBe(false);
+	});
+
+	it("finds a substitution function in a value", () => {
+		expect(containsSubstitutionFunction("var(--x)")).toBe(true);
+		expect(containsSubstitutionFunction("calc(1px + env(safe-area-inset-top))")).toBe(
+			true
+		);
+		expect(containsSubstitutionFunction("calc(1px + 2px)")).toBe(false);
+		expect(containsSubstitutionFunction("red")).toBe(false);
+	});
+});

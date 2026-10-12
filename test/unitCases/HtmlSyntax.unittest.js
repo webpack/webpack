@@ -11645,3 +11645,23 @@ describe("SourceProcessor — a byte order mark", () => {
 		expect(log).toEqual(["doctype"]);
 	});
 });
+
+describe("HtmlSyntax — Infra string helpers", () => {
+	const {
+		asciiLowercase,
+		stripAsciiWhitespace
+	} = require("../../lib/html/syntax-parser");
+
+	it("folds only ASCII letters", () => {
+		expect(asciiLowercase("DIV")).toBe("div");
+		// U+212A KELVIN SIGN is no ASCII letter, though `toLowerCase` maps it to `k`.
+		expect(asciiLowercase("K")).toBe("K");
+		const lower = "already lower";
+		expect(asciiLowercase(lower)).toBe(lower);
+	});
+
+	it("strips ASCII whitespace but keeps NBSP", () => {
+		expect(stripAsciiWhitespace(" \t\n x \f\r")).toBe("x");
+		expect(stripAsciiWhitespace(" x ")).toBe(" x ");
+	});
+});
