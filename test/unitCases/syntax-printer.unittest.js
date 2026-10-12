@@ -1358,6 +1358,11 @@ const ARGUMENTS_KEPT_CASES = [
 /** @type {[string, string, import("terser").MinifyOptions][]} */
 const CORRECTED_CASES = [
 	[
+		"an anonymous class named after a variable, where keep_classnames is on",
+		"class Foo {} var Bar = class {}; console.log(Foo.name, Bar.name);",
+		{ toplevel: true, keep_classnames: true, mangle: { keep_classnames: true } }
+	],
+	[
 		"an anonymous function named after its binding, where keep_fnames is on",
 		"function foo() { const bar = function () { return 'x'; }; console.log(bar.name); } foo(); let baz = () => {}; let qux = baz; console.log(qux.name);",
 		{ keep_fnames: true, toplevel: true, mangle: false }
