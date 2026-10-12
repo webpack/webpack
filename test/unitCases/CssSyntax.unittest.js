@@ -6062,6 +6062,14 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// The `s` modifier is one an engine may not read, and one selector it
 			// drops invalidates the whole list it was joined into.
 			["a matcher carries a modifier past `i`", "[a=b s]{top:0}[c]{top:0}"],
+			// Each of these is a selector no engine parses, which a join would take
+			// the valid one down with.
+			["a pseudo-class belongs to `@page`", "a{top:0}b:first{top:0}"],
+			["a pseudo takes no argument", "a{top:0}b:hover(odd){top:0}"],
+			["a pseudo goes without the argument it needs", "a{top:0}b:nth-child{top:0}"],
+			["...as does a pseudo-element", "a{top:0}b::part{top:0}"],
+			["a pseudo-element is followed in its compound", "a{top:0}b:before.c{top:0}"],
+			["...or by another compound", "a{top:0}b:before c{top:0}"],
 			// CSS Cascade 5 §6.4.1: every `@layer {` opens a layer of its own, and the
 			// later one wins whatever the selectors say.
 			[
@@ -6083,6 +6091,10 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(minifyFor(css, ["chrome 130", "safari 15.4"])).toBe(joined);
 			// No selection names no browser to answer for, so it is assumed.
 			expect(minify(css)).toBe(joined);
+			// ...but only where every engine reads it in some release: one no
+			// Chromium reads yet would take the other selector down there.
+			const unshipped = "a:playing{top:0}b:playing{top:0}";
+			expect(minify(unshipped)).toBe(unshipped);
 			// A pseudo nothing states support for never joins, at any target.
 			const unknown = "a:totally-made-up{top:0}b:totally-made-up{top:0}";
 			expect(minifyFor(unknown, ["chrome 130"])).toBe(unknown);

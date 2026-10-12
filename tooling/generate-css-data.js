@@ -5936,27 +5936,30 @@ const collectSupportedFrom = (paths) => {
 };
 
 /**
- * When each browser first read every standard pseudo-class and pseudo-element,
- * keyed by the spelling a selector carries (`:hover`, `::before`, `:nth-child`).
- * Only a pseudo every target reads may be joined into a selector list, because
- * one selector an engine cannot parse invalidates the whole list.
+ * When each browser first read every standard pseudo-class and pseudo-element a
+ * style rule's selector may name, keyed by the shape it is written in: `:hover`
+ * bare, `:nth-child(` with its argument. Only a pseudo every target reads may be
+ * joined into a selector list, because one selector an engine cannot parse
+ * invalidates the whole list.
  * @returns {[string, [string, number][]][]} the versions, by spelling
  */
 const collectSelectorSupport = () => {
 	/** @type {[string, [string, number][]][]} */
 	const table = [];
-	// `::cue` and `::cue()` are two entries naming one pseudo, and the spelling
-	// is what the print looks up — so the second would shadow the first in the
-	// `Map` this becomes rather than say anything new.
 	/** @type {Set<string>} */
 	const spellings = new Set();
 	for (const entry of Object.values(selectors)) {
 		if (entry.status !== "standard") continue;
-		const match = /^(::?)([-\w]+)/.exec(entry.syntax || "");
+		// `:first`, `:left`, `:right` and `:blank` select pages, so a style rule
+		// naming one is a selector no engine parses.
+		if (entry.groups.includes("CSS Paged Media")) continue;
+		const match = /^(::?)([-\w]+)(\()?/.exec(entry.syntax || "");
 		if (match === null) continue;
-		const [, colons, name] = match;
+		const [, colons, name, call] = match;
 		if (!bcd.css.selectors[name]) continue;
-		const spelling = `${colons}${name}`;
+		// `::cue` and `::cue()` are two pseudos to a parser, each valid only in
+		// its own shape.
+		const spelling = `${colons}${name}${call || ""}`;
 		if (spellings.has(spelling)) continue;
 		spellings.add(spelling);
 		table.push([spelling, collectSupportedFrom([`css.selectors.${name}`])]);
