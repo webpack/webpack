@@ -5,7 +5,9 @@ const list = [
 	"extra-dep",
 	"imported",
 	"reexported",
-	"star-target"
+	"star-target",
+	"walk-direct-target",
+	"walk-transitive-target"
 ].map((request) => [
 	/Module not found/,
 	new RegExp(`Can't resolve '\\./${request.replace(".", "\\.")}'`)
