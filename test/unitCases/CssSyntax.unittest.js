@@ -7437,6 +7437,24 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(minify("a{gap:1px;column-gap:2px}")).toBe("a{gap:1px 2px}");
 			// One saying again what the shorthand already set leaves just the one.
 			expect(minify("a{margin:1px;margin-top:1px}")).toBe("a{margin:1px}");
+			// A shorthand printed with two numbers fused still holds four sides.
+			expect(minify("a{margin:.2em 0 .2em .4em;margin-right:2em}")).toBe(
+				"a{margin:.2em 2em.2em.4em}"
+			);
+		});
+
+		it("folds an `overflow` longhand where every target reads both keywords", () => {
+			expect(
+				minifyFor("a{overflow:auto;overflow-x:hidden}", ["chrome 130"])
+			).toBe("a{overflow:hidden auto}");
+			// Two values arrived after the property, and a keyword after both.
+			const twoValues = "a{overflow:auto;overflow-x:hidden}";
+			expect(minifyFor(twoValues, ["safari 13"])).toBe(twoValues);
+			const clip = "a{overflow:hidden;overflow-x:clip}";
+			expect(minifyFor(clip, ["chrome 89"])).toBe(clip);
+			// A keyword the tables do not name is one no engine is known to read.
+			const unknown = "a{overflow:hidden;overflow-x:sideways}";
+			expect(minifyFor(unknown, ["chrome 130"])).toBe(unknown);
 		});
 
 		it("declines a fold the two declarations do not allow", () => {
@@ -10787,6 +10805,13 @@ describe("CssSyntax minify — lowering a spelling the target cannot read", () =
 		);
 		expect(minifyFor("a{inset:1px 2px}", ["chrome 80"])).toBe(
 			"a{top:1px;right:2px;bottom:1px;left:2px}"
+		);
+		// The print fuses `.2em .4em` and `0 -2px`, which are still two sides.
+		expect(minifyFor("a{inset:.2em .4em}", ["chrome 80"])).toBe(
+			"a{top:.2em;right:.4em;bottom:.2em;left:.4em}"
+		);
+		expect(minifyFor("a{inset:0 -2px}", ["chrome 80"])).toBe(
+			"a{top:0;right:-2px;bottom:0;left:-2px}"
 		);
 		// The one-value spelling is as old as the property itself.
 		expect(minifyFor("a{overflow:hidden}", ["chrome 60"])).toBe(
