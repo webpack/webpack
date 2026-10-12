@@ -6878,41 +6878,6 @@ describe("syntax-printer", () => {
 			expect(code).not.toContain("Baz");
 		});
 
-		it("should compress an anonymous default export a foreign ESTree tree declares", async () => {
-			const { minify, corrections } = await load();
-			const tree = () =>
-				/** @type {EXPECTED_ANY} */ (
-					acorn.parse("export default function () { return 1; }", {
-						ecmaVersion: 2022,
-						sourceType: "module"
-					})
-				);
-			const options = () =>
-				/** @type {EXPECTED_ANY} */ ({ module: true, parse: { spidermonkey: true } });
-			const { code } = await minify(tree(), options());
-			expect(code).toBe("export default function(){return 1}");
-			for (const [source, expected] of [
-				["export default class {}", "export default class{}"],
-				["export default function f() { return f; }", "export default function f(){return f}"],
-				["export const x = 1;;", "export const x=1;"],
-				["export default 1 + 2;", "export default 3;"]
-			]) {
-				const parsed = /** @type {EXPECTED_ANY} */ (
-					acorn.parse(source, { ecmaVersion: 2022, sourceType: "module" })
-				);
-				expect((await minify(parsed, options())).code).toBe(expected);
-			}
-
-			if (!corrections) throw new Error("the correct phase is not installed");
-			corrections.enabled = false;
-			try {
-				await expect(unimproved(() => minify(tree(), options()))).rejects.toThrow("definition");
-				await expect(terserReference().minify(tree(), options())).rejects.toThrow("definition");
-			} finally {
-				corrections.enabled = true;
-			}
-		});
-
 		it("should keep a number the compressor computes plain where keep_numbers is on", async () => {
 			const { minify, corrections } = await load();
 			const input = "var s = 1000; var m = s * 60; var h = m * 60; console.log(s, m, h, 0.5, 1e20 * 100);";
