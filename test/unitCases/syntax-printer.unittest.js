@@ -6218,6 +6218,33 @@ describe("syntax-printer", () => {
 			).toBe(reference.code);
 		});
 
+		it("should read only ESTree's directives as directives, where terser reads any leading string", async () => {
+			const { minify } = await load();
+			/** @type {EXPECTED_ANY} */
+			const options = { parse: { spidermonkey: true } };
+			/**
+			 * @param {string} code a script
+			 * @returns {EXPECTED_ANY} acorn's tree for it
+			 */
+			const script = (code) => acorn.parse(code, { ecmaVersion: "latest" });
+			for (const code of [
+				'(() => { ("use strict"); x = 1; })();',
+				'(() => { "use\\x20strict"; x = 1; })();',
+				'(function () { ("use strict"); x = 1; })();'
+			]) {
+				expect((await minify(script(code), options)).code).toBe("x=1;");
+			}
+			const code = '("use strict"); x = 1; function f() {}';
+			expect((await minify(script(code), options)).code).toBe(
+				"function f(){}x=1;"
+			);
+			const reference = await terserReference().minify(script(code), options);
+			expect(reference.code).toBe('"use strict";function f(){}x=1;');
+			expect(
+				(await uncorrected(() => minify(script(code), options))).code
+			).toBe(reference.code);
+		});
+
 		it("should give back a template inlined into another, which terser throws on", async () => {
 			const { minify } = await load();
 			const code = "console.log(`x${`y${a}`}z`, `p${`q`}r${b}`);";
