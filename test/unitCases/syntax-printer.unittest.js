@@ -1433,6 +1433,41 @@ const CORRECTED_CASES = [
 		{ compress: { arguments: true }, mangle: false }
 	],
 	[
+		"an unused class whose computed key reads its name, before it is set",
+		"(function () { try { class C { [typeof { x: C }]() {} } console.log('no error'); } catch (e) { console.log(e.name); } })();",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a class's name read in its own computed key, before it is set",
+		"try { class x { [!{ x }]; } new x(); console.log('no error'); } catch (e) { console.log(e.name); }",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a `const` assigned itself, which throws",
+		"try { const x = 0; x = x; console.log('no error'); } catch (e) { console.log(e.name); }",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a function a case never reached declares, which an earlier case calls",
+		"switch (0) { case 0: console.log(g()); break; case 1: function g() { return 'fn'; } }",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an assignment after an object literal whose computed accessor it runs",
+		"const k = 'x'; const o = { set [k](v) { console.log('setter', v); } }; o.x = 1; const g = { get [k]() { return 4; } }; g.x = 8; console.log(g.x);",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an assignment after an object literal whose prototype holds a setter for it",
+		"var log = []; const x = { __proto__: { set p(v) { log.push(v); } } }; x.p = 1; console.log(Object.keys(x).join(), log.join());",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a method of an object literal read and called, which receives the literal as `this`",
+		"var o = { m: function () { console.log(this.data); } }; ({ f: o.m, data: 1 }).f(); ({ f: o.m, data: 2 })['f']();",
+		{ compress: {}, mangle: false }
+	],
+	[
 		"`arguments[0]` read before its parameter is reassigned, moved past that",
 		"function test(x, y) { var temp; if (typeof x === 'string') { temp = arguments[0]; x = {}; x[temp] = y; return x; } } console.log(JSON.stringify(test('a', 'b')));",
 		{ compress: {}, mangle: false }
@@ -2630,6 +2665,10 @@ const RESERVED_NAME_CASES = [
 // that would write it where it is a keyword.
 /** @type {[string, string][]} */
 const STILL_INLINED_CASES = [
+	[
+		"a constant read off an object literal and called, which throws whatever `this` is",
+		"try { ({ x: null }).x(); } catch (e) { sink(e.name); } try { ({ x: 1 })['x'](); } catch (e) { sink(e.name); }"
+	],
 	[
 		"a nested function keeping its own context",
 		"var await; async function f() { function g() { sink(function () { await = 1; }); } g(); } f();"
