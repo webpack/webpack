@@ -1,6 +1,14 @@
 "use strict";
 
+// cspell:ignore fnames
+
+const { analyzeMinifierTree } = require("../../lib/javascript/ScopeAnalyzer");
 const { load } = require("../../lib/javascript/syntax").printer;
+const {
+	Field,
+	SyntaxTree,
+	WebpackParser
+} = require("../../lib/javascript/syntax-parser");
 
 // Sources reaching each corner of the printer: parentheses it keeps or drops,
 // comments around them, directives, literals, modules and classes.
@@ -144,7 +152,17 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 
 	it.each([
 		["compressed", { compress: {}, mangle: false }],
-		["mangled", { compress: false, mangle: true }],
+		[
+			"mangling its properties",
+			{ compress: false, mangle: { properties: true } }
+		],
+		["mangled with a name cache", { compress: false, nameCache: {} }],
+		["mangled for IE8", { compress: false, mangle: { ie8: true } }],
+		["mangled for Safari 10", { compress: false, mangle: { safari10: true } }],
+		[
+			"keeping names a global regular expression matches",
+			{ compress: false, mangle: { keep_fnames: /a/g } }
+		],
 		["wrapped", { compress: false, mangle: false, wrap: "w" }],
 		["enclosed", { compress: false, mangle: false, enclose: true }],
 		["handed back", { compress: false, mangle: false, format: { ast: true } }],
@@ -179,5 +197,166 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				/** @type {{ enabled: boolean }} */ (phase).enabled = true;
 			}
 		}
+	});
+});
+
+// Sources reaching each corner of the mangler's scopes: parameters, hoisting
+// and Annex B, `eval` and `with`, labels, catch parameters and private names.
+const MANGLE_SOURCES = [
+	"function f(a, b = a, {c, d: [e = b] = []}, ...g) { var h = a + c; let i = () => h * e; return function j(k) { return i(k) + g.length + arguments.length } }",
+	"var x = 1; { let x = 2; { const y = x; function z() { return y } } } try { a() } catch (x) { var x = 3; let w = x } try {} catch ({ message: m, ...rest }) { m + rest } try {} catch { b }",
+	"function e(x) { eval(x); var b = 1; function c() { return b } } function n() { new eval(1); f(eval) } function w(o) { with (o) { var p = q } return p }",
+	"outer: for (var i in o) { inner: for (const [k, v] of i) { if (k) continue outer; break inner } } l1: { l2: { break l1 } }",
+	"class A { #a = 1; static #b; #m() { return this.#a } static s() { return #b in A } get [k]() { return this?.#a } static { var x = 1; } } new class B extends A {}",
+	"class C { #x; #y; e() { switch (this.#y) { case this.#x: eval('this.#x') } } }",
+	"class K { #a; m() { eval('') } } class L { #z; n() { return this.#z } }",
+	"switch (a) { case b: let c = 1; function d() { return c } default: { function d2() {} } } for (let i = 0, j; i < j; i++) { (() => i)() } for (var k of l) k; while (m) { let n = m-- } do { var o } while (0)",
+	"(function () { 'use strict'; { function f() {} } })(); { function h() {} } async function* gen() { yield await gen; { async function a() {} } }",
+	"{ let f1; { function f1() {} } } switch (a) { case 1: let f2; { function f2() {} } } for (let f3;;) { function f3() {} } for (const f4 in o) { function f4() {} } try {} catch ({ f5 }) { { function f5() {} } } try {} catch (e) { let f6; { function f6() {} } }",
+	"for (;;) { { function g1() {} } } for (x in o) { { function g2() {} } } try {} catch (e) { { function g3() {} } }",
+	"{ class f7 {} { function f7() {} } } let f8; { function f8() {} } function p(a, { b, ...c }, [, d = 1], ...f9) { { function f9() {} } } function q() { var f10; let f11; { function f11() {} } }",
+	"var f = function () {}, g = () => 1, h = function named() {}, [i] = [function () {}], { j } = {}; { using r = null } label: function k() {}",
+	"function c() { var Apple = class {}, berry = class { m() {} }, Cat = class Named {}, [Dog] = [class {}]; { using Elk = class {} } return [Apple, berry, Cat, Dog] }",
+	"x = `${a}${b => b}`; tag`${c}`; new D(...e); f?.(g)?.[h]; import(i, { with: j }); k = { l, m: n = o, [p]: q, ...r }; ({ s = 1 } = t); [u, , ...v] = w; y = 1e999; ({ z }) => ({ z })",
+	"function f() { import z from 'w' }"
+];
+
+// Modules: imports and exports, which the mangler keeps or renames by clause.
+const MANGLE_MODULES = [
+	"import a, { b as c, d, 'e f' as g } from 'x'; import * as ns from 'y'; export { c as h, d, a as 'i j', ns }; export * from 'z'; export * as k from 'w'; export { l as m } from 'v'; export { 'n' as o } from 'u'; console.log(g)",
+	"export default function () { { function f() {} } } export const p = 1, { q, r: [s] } = t; export function u() {} export class V {} let w = 1; export { w as x };",
+	"export default class W { static #x = 1; m() { return W.#x } } var y; export { y as z }",
+	"export default (function named() {}); var z = 1; export { z }",
+	"export default class {}"
+];
+
+/**
+ * @returns {{ get: (index: number) => string }} an identifier source handing out names in a fixed order, counting nothing
+ */
+const plainIdentifiers = () => ({
+	get: (index) =>
+		"abcdefghijklmnopqrstuvwxyz"[index % 26].repeat(1 + Math.floor(index / 26))
+});
+
+/**
+ * @returns {{ reset: () => void, consider: (text: string, delta: number) => void, sort: () => void, get: (index: number) => string }} an identifier source ordering its letters by how often they are counted
+ */
+const sortingIdentifiers = () => {
+	/** @type {Map<string, number>} */
+	let counts = new Map();
+	let letters = [..."abcdefghijklmnopqrstuvwxyz"];
+	return {
+		reset() {
+			counts = new Map();
+		},
+		consider(text, delta) {
+			for (const letter of text) {
+				counts.set(letter, (counts.get(letter) || 0) + delta);
+			}
+		},
+		sort() {
+			letters = [..."abcdefghijklmnopqrstuvwxyz"].sort(
+				(a, b) =>
+					(counts.get(b) || 0) - (counts.get(a) || 0) || (a < b ? -1 : 1)
+			);
+		},
+		get: (index) => letters[index % 26].repeat(1 + Math.floor(index / 26))
+	};
+};
+
+// What each source is mangled with, each set made afresh for each minify.
+/** @type {Record<string, () => EXPECTED_ANY>} */
+const MANGLE_SETS = {
+	"the default names": () => ({ mangle: true }),
+	"its toplevel named": () => ({ mangle: { toplevel: true } }),
+	"names kept": () => ({
+		mangle: { keep_fnames: true, keep_classnames: true }
+	}),
+	"names kept by a regular expression": () => ({
+		mangle: { keep_fnames: /^[a-m]/, keep_classnames: /^[A-M]/, toplevel: true }
+	}),
+	"names reserved and `eval` mangled": () => ({
+		toplevel: true,
+		mangle: { reserved: ["e", "t"], eval: true }
+	}),
+	"no comments and a source map": () => ({
+		mangle: { toplevel: true },
+		format: { comments: false },
+		sourceMap: { asObject: true }
+	}),
+	"every comment and a source map": () => ({
+		mangle: true,
+		format: { comments: "all" },
+		sourceMap: { asObject: true }
+	}),
+	"ECMAScript 2020 in ASCII": () => ({
+		ecma: 2020,
+		mangle: true,
+		format: { ascii_only: true }
+	}),
+	"names counted by a source of its own": () => ({
+		mangle: { nth_identifier: sortingIdentifiers(), toplevel: true }
+	}),
+	"names counting nothing": () => ({
+		mangle: { nth_identifier: plainIdentifiers() }
+	})
+};
+
+describe("JavaScript minifier mangling a SyntaxTree", () => {
+	for (const [name, set] of Object.entries(MANGLE_SETS)) {
+		it(`should mangle as terser's tree mangles, with ${name}`, async () => {
+			const cases = [
+				...[...SOURCES, ...MANGLE_SOURCES].map((source) => ({
+					source,
+					module: false
+				})),
+				...[...MANGLE_SOURCES, ...MANGLE_MODULES].map((source) => ({
+					source,
+					module: true
+				}))
+			];
+			for (const { source, module } of cases) {
+				const options = () => ({ ...set(), module, compress: false });
+				const reference = await minifyCounted(source, options(), false).catch(
+					(/** @type {Error} */ error) => error
+				);
+				if (reference instanceof Error) {
+					await expect(minifyCounted(source, options(), true)).rejects.toThrow(
+						reference.message
+					);
+					continue;
+				}
+				const printed = await minifyCounted(source, options(), true);
+				expect(printed.printedFromTree).toBe(1);
+				expect(printed.code).toBe(reference.code);
+				expect(printed.map).toEqual(reference.map);
+			}
+		});
+	}
+
+	it("should refuse a node its scope analysis cannot read", () => {
+		const tree = new SyntaxTree();
+		const program = tree.addEstree(
+			/** @type {EXPECTED_ANY} */ (WebpackParser.parse("a;", {}))
+		);
+		const types = Uint8Array.from(tree._types);
+		types[tree.field(0, Field.body, program)] = 255;
+		expect(() =>
+			analyzeMinifierTree(tree, program, types, {}, () => {
+				throw new Error("unreachable");
+			})
+		).toThrow("The minifier's scope analysis cannot read a node of type 255");
+	});
+
+	it("should count the letters of a source too long to hold whole", async () => {
+		const source = `/*! kept */\n${Array.from(
+			{ length: 20000 },
+			(_, i) => `function f${i}(a${i}) { return a${i} + ${i} }`
+		).join("\n")}`;
+		const options = { compress: false, mangle: true };
+		const reference = await minifyCounted(source, { ...options }, false);
+		const printed = await minifyCounted(source, { ...options }, true);
+		expect(printed.printedFromTree).toBe(1);
+		expect(printed.code).toBe(reference.code);
 	});
 });
