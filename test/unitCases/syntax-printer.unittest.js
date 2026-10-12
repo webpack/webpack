@@ -1358,6 +1358,11 @@ const ARGUMENTS_KEPT_CASES = [
 /** @type {[string, string, import("terser").MinifyOptions][]} */
 const CORRECTED_CASES = [
 	[
+		"an arguments read in a function inlined as a copy, where keep_fargs is off",
+		"function a(f) { var o = {}; f(o); console.log(o.c(1, 2)); } a(function (b) { b.c = c; function c() { return arguments[1]; } });",
+		{ compress: { arguments: true, keep_fargs: false }, mangle: false }
+	],
+	[
 		"an array changed through a conditional that picks it, where unsafe is on",
 		"function f(r) { const t = []; (r < 0.5 ? t : []).push('x'); (t || []).push('y'); return t.length; } console.log(f(0.1), f(0.9));",
 		{ compress: { unsafe: true }, mangle: false }
