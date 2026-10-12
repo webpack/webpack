@@ -6513,7 +6513,7 @@ describe("syntax-printer", () => {
 				compress: false,
 				mangle: false
 			};
-			const code = '"a\\x20b"; \'c"d\'; f();';
+			const code = '"a\\x20b"; \'c"d\'; "e\\"f\'g"; f();';
 			/** @type {EXPECTED_ANY} */
 			const withRaw = acorn.parse(code, { ecmaVersion: "latest" });
 			/** @type {EXPECTED_ANY} */
