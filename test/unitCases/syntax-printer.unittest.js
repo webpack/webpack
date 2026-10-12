@@ -996,6 +996,10 @@ const IMPROVED_CASES = [
 		'function tag(s){return s.raw.join("-")}console.log("kept"),console.log(tag`d${1}e`);'
 	],
 	[
+		"a function with an empty body constructed for nothing",
+		'new function () {}(); new function (a, b) {}(console.log("argument")); console.log(new function () {}() instanceof Object);'
+	],
+	[
 			"an empty constructor of a class extending nothing, and a class constructed for nothing that runs nothing",
 			'class A { constructor() {} m() { return 1; } } console.log(new A().m(), A.length); new class { x = 1; foo() {} }(); new class {}(console.log("argument"));'
 		],
@@ -1325,6 +1329,7 @@ const KEPT_CASES = [
 	["a `Math` the program declares", "var Math = { abs: () => 9 }; console.log(Math.abs(-1));"],
 	["a global a direct `eval` could rebind", 'function f() { eval(""); return Math.abs(-1); } console.log(f());'],
 	["a global a `with` could rebind", "with ({}) console.log(Math.abs(-1));"],
+	["a function constructed whose parameter, body or kind runs or throws something", 'new function ({ a }) {}({ get a() { console.log("g"); } }); new function () { console.log("b"); }(); try { new (async function () {})(); } catch (e) { console.log(1); } try { new (function* () {})(); } catch (e) { console.log(2); }'],
 	["a constructor with a parameter, in a derived class, computed or static, and a class constructed whose field, key, block or constructor runs something", 'class A { constructor(a) {} } class B extends A { constructor() { super(); } } class C { ["constructor"]() { return 1; } static constructor() { return 2; } } console.log(A.length, new B() instanceof A, new C().constructor === C, C.constructor()); new class { p = console.log("p"); }(); new class { [console.log("k")]() {} }(); new class { static { console.log("s"); } }(); new class { constructor() { console.log("c"); } }();'],
 	["case not in ASCII", 'console.log("\\u00c4B".toLowerCase());'],
 	["a call that throws", 'try { console.log(decodeURI("%")); } catch (e) { console.log(1); }'],
