@@ -6763,6 +6763,27 @@ describe("syntax-printer", () => {
 			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
 		});
 
+		it("should keep only annotations where preserve_annotations is on, not prose naming one", async () => {
+			const { minify, corrections } = await load();
+			const input =
+				"function f() {\n// keep g() out of line, see the #__NOINLINE__ note\nconst value = /*#__NOINLINE__*/ g();\nreturn value ? value : 0;\n}\nfunction g() { return 1; }\nexport { f };";
+			const options = { module: true, mangle: false, format: { preserve_annotations: true } };
+			const { code } = await minify(input, options);
+			expect(code).toContain("/*#__NOINLINE__*/");
+			expect(code).not.toContain("keep g() out of line");
+
+			if (!corrections) throw new Error("the correct phase is not installed");
+			corrections.enabled = false;
+			try {
+				const uncorrected = await unimproved(() => minify(input, options));
+				const reference = await terserReference().minify(input, options);
+				expect(uncorrected.code).toBe(reference.code);
+				expect(reference.code).toContain("keep g() out of line");
+			} finally {
+				corrections.enabled = true;
+			}
+		});
+
 		it("should compress an anonymous default export a foreign ESTree tree declares", async () => {
 			const { minify, corrections } = await load();
 			const tree = () =>
