@@ -6291,7 +6291,6 @@ describe("syntax-printer", () => {
 
 	it("should minify synchronously as it does asynchronously", async () => {
 		const { minify, modules } = await load();
-		/** @type {EXPECTED_ANY} */
 		const options = { module: true, sourceMap: true };
 		const code = "export const a = 1 + 2; console.log(a);";
 		const sync = modules.minifySync(code, { ...options });
@@ -6301,7 +6300,6 @@ describe("syntax-printer", () => {
 	});
 
 	describe("printing its own output again", () => {
-		/** @type {EXPECTED_ANY} */
 		const formatOnly = { compress: false, mangle: false, module: true };
 
 		/**
@@ -6330,6 +6328,22 @@ describe("syntax-printer", () => {
 			expect(
 				(await uncorrected(() => minify(code, formatOnly))).code
 			).toBe(reference.code);
+		});
+
+		it("should spell a directive's `</script` and `<!--` safe for an inline script, keeping its value", async () => {
+			for (const [code, expected] of [
+				['"x\\x20</script>"; f();', '"x\\x20<\\/script>";f();'],
+				['"x\\<!--\\x20"; f();', '"x\\x3c!--\\x20";f();'],
+				['"x\\\\<!--\\x20"; f();', '"x\\\\\\x3c!--\\x20";f();'],
+				['"a\\x20-->"; f();', '"a\\x20--\\x3e";f();']
+			]) {
+				const [printed, again] = await twice(code);
+				expect(printed).toBe(`${expected}`);
+				expect(again).toBe(printed);
+				expect(vm.runInNewContext(printed.slice(0, printed.indexOf(";")))).toBe(
+					vm.runInNewContext(code.slice(0, code.indexOf(";")))
+				);
+			}
 		});
 
 		it("should keep the line break after a banner before a dropped `;`, as terser prints it", async () => {

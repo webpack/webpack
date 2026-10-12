@@ -1488,6 +1488,7 @@ const EXPECTED = [
 		relation: "idempotence",
 		contains: "var ",
 		source: "ECharts",
+		presets: ["default", "2 passes"],
 		why: "terser breaks the line after a kept comment where the next token began one, and a comment holding a break is read back as one"
 	}
 ];
@@ -1558,13 +1559,21 @@ const invariants = async (write) => {
 	_missingFixtures = built.missing.filter((label) => wantedFixture(label));
 	const corpus = built.corpus.filter(([label]) => wantedFixture(label));
 	const presets = PRESETS.filter(([name]) => wantedPreset(name));
-	// Filtered like the corpus is: an expectation for a relation this run was
-	// never going to reach matched nothing because nothing asked it to, which is
-	// not the divergence having gone away.
+	// Filtered like the corpus is: an expectation for a relation, fixture or
+	// preset this run was never going to reach matched nothing because nothing
+	// asked it to, which is not the divergence having gone away.
 	const groups = findingGroups(
 		EXPECTED.filter(
 			(entry) =>
 				wantedRelation(entry.relation) &&
+				(entry.source === undefined ||
+					corpus.some(([label]) =>
+						label.includes(/** @type {string} */ (entry.source))
+					)) &&
+				(entry.presets === undefined ||
+					presets.some(([name]) =>
+						/** @type {string[]} */ (entry.presets).includes(name)
+					)) &&
 				(!entry.relation.startsWith("respelling ") ||
 					wantedSpelling(entry.relation.slice("respelling ".length)))
 		)

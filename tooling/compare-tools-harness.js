@@ -1016,8 +1016,9 @@ const purityRelation = (sources) => {
 /**
  * A finding the printer owes nothing for, with the reason it is owed nothing.
  * `relation` and `contains` together name it; `source` narrows it to one
- * fixture where the same repro is a defect elsewhere.
- * @typedef {{ relation: string, contains: string, source?: string, why: string }} Expected
+ * fixture where the same repro is a defect elsewhere, and `presets` to the
+ * option sets it shows under, so a run narrowed past them does not ask for it.
+ * @typedef {{ relation: string, contains: string, source?: string, presets?: string[], why: string }} Expected
  */
 
 /**
