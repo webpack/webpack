@@ -3,7 +3,7 @@
 const fs = require("fs");
 const path = require("path");
 const { SourceProcessor } = require("../../lib/css/syntax");
-const { Field, Flag, NodeType, Part, TT_AT_KEYWORD, TT_BAD_STRING_TOKEN, TT_BAD_URL_TOKEN, TT_CDC, TT_CDO, TT_COLON, TT_COMMA, TT_COMMENT, TT_DELIM, TT_DIMENSION, TT_EOF, TT_FUNCTION, TT_HASH, TT_IDENTIFIER, TT_LEFT_CURLY_BRACKET, TT_LEFT_PARENTHESIS, TT_LEFT_SQUARE_BRACKET, TT_NUMBER, TT_PERCENTAGE, TT_RIGHT_CURLY_BRACKET, TT_RIGHT_PARENTHESIS, TT_RIGHT_SQUARE_BRACKET, TT_SEMICOLON, TT_STRING, TT_URL, TT_WHITESPACE, TokenStream, buildSkipSet, normalizeUrl, parseABlocksContents, parseACommaSeparatedListOfComponentValues, parseAComponentValue, parseADeclaration, parseAListOfComponentValues, parseARule, parseAStylesheet, parseAStylesheetsContents, readToken } = require("../../lib/css/syntax-parser");
+const { Field, Flag, NodeType, Part, TokenType, TokenStream, buildSkipSet, normalizeUrl, parseABlocksContents, parseACommaSeparatedListOfComponentValues, parseAComponentValue, parseADeclaration, parseAListOfComponentValues, parseARule, parseAStylesheet, parseAStylesheetsContents, readToken } = require("../../lib/css/syntax-parser");
 
 /**
  * @param {string} css a stylesheet
@@ -32,35 +32,35 @@ const minifyForWith = (css, browsers, transforms) =>
 	}).code;
 
 // Snapshot uses the spec-style kebab-case names for multi-word token types;
-// the tokenizer emits numeric `TT_*` values. Map between them so the existing
+// the tokenizer emits numeric `TokenType` values. Map between them so the existing
 // snapshot files stay valid.
 /** @type {Record<number, string>} */
 const TYPE_TO_PRINTED = {
-	[TT_WHITESPACE]: "whitespace",
-	[TT_COMMENT]: "comment",
-	[TT_URL]: "url",
-	[TT_LEFT_CURLY_BRACKET]: "left-curly-bracket",
-	[TT_RIGHT_CURLY_BRACKET]: "right-curly-bracket",
-	[TT_LEFT_PARENTHESIS]: "left-parenthesis",
-	[TT_RIGHT_PARENTHESIS]: "right-parenthesis",
-	[TT_LEFT_SQUARE_BRACKET]: "left-square-bracket",
-	[TT_RIGHT_SQUARE_BRACKET]: "right-square-bracket",
-	[TT_SEMICOLON]: "semicolon",
-	[TT_COMMA]: "comma",
-	[TT_AT_KEYWORD]: "at-keyword",
-	[TT_COLON]: "colon",
-	[TT_DELIM]: "delim",
-	[TT_NUMBER]: "number",
-	[TT_PERCENTAGE]: "percentage",
-	[TT_DIMENSION]: "dimension",
-	[TT_IDENTIFIER]: "identifier",
-	[TT_HASH]: "hash",
-	[TT_STRING]: "string",
-	[TT_FUNCTION]: "function",
-	[TT_CDO]: "cdo",
-	[TT_CDC]: "cdc",
-	[TT_BAD_STRING_TOKEN]: "bad-string-token",
-	[TT_BAD_URL_TOKEN]: "bad-url-token"
+	[TokenType.Whitespace]: "whitespace",
+	[TokenType.Comment]: "comment",
+	[TokenType.Url]: "url",
+	[TokenType.LeftCurlyBracket]: "left-curly-bracket",
+	[TokenType.RightCurlyBracket]: "right-curly-bracket",
+	[TokenType.LeftParenthesis]: "left-parenthesis",
+	[TokenType.RightParenthesis]: "right-parenthesis",
+	[TokenType.LeftSquareBracket]: "left-square-bracket",
+	[TokenType.RightSquareBracket]: "right-square-bracket",
+	[TokenType.Semicolon]: "semicolon",
+	[TokenType.Comma]: "comma",
+	[TokenType.AtKeyword]: "at-keyword",
+	[TokenType.Colon]: "colon",
+	[TokenType.Delim]: "delim",
+	[TokenType.Number]: "number",
+	[TokenType.Percentage]: "percentage",
+	[TokenType.Dimension]: "dimension",
+	[TokenType.Ident]: "identifier",
+	[TokenType.Hash]: "hash",
+	[TokenType.String]: "string",
+	[TokenType.Function]: "function",
+	[TokenType.CDO]: "cdo",
+	[TokenType.CDC]: "cdc",
+	[TokenType.BadString]: "bad-string-token",
+	[TokenType.BadUrl]: "bad-url-token"
 };
 
 describe("readToken", () => {
@@ -87,13 +87,13 @@ describe("readToken", () => {
 				if (t === undefined) break;
 				pos = t.end;
 				const printed = TYPE_TO_PRINTED[t.type] || t.type;
-				if (t.type === TT_URL) {
+				if (t.type === TokenType.Url) {
 					results.push([
 						printed,
 						code.slice(t.start, t.end),
 						code.slice(t.contentStart, t.contentEnd)
 					]);
-				} else if (t.type === TT_HASH) {
+				} else if (t.type === TokenType.Hash) {
 					results.push([printed, code.slice(t.start, t.end), t.isId]);
 				} else {
 					results.push([printed, code.slice(t.start, t.end)]);
@@ -3365,19 +3365,19 @@ describe("CssSyntax — nesting and error recovery", () => {
 
 describe("CssSyntax — tokenizer edge cases", () => {
 	it("treats an unterminated string at EOF as a string token", () => {
-		expect(firstTokenType('"abc')).toBe(TT_STRING);
+		expect(firstTokenType('"abc')).toBe(TokenType.String);
 	});
 
 	it("treats an unterminated url at EOF as a url token", () => {
-		expect(firstTokenType("url(abc")).toBe(TT_URL);
-		expect(firstTokenType("url(abc   ")).toBe(TT_URL);
+		expect(firstTokenType("url(abc")).toBe(TokenType.Url);
+		expect(firstTokenType("url(abc   ")).toBe(TokenType.Url);
 	});
 
 	it("turns a malformed url into a bad-url token", () => {
-		expect(firstTokenType('url(a"b)')).toBe(TT_BAD_URL_TOKEN);
-		expect(firstTokenType("url(a\\26 z x)")).toBe(TT_BAD_URL_TOKEN);
+		expect(firstTokenType('url(a"b)')).toBe(TokenType.BadUrl);
+		expect(firstTokenType("url(a\\26 z x)")).toBe(TokenType.BadUrl);
 		// an escape encountered during bad-url recovery is consumed, not re-scanned
-		expect(firstTokenType("url(a b\\)c)")).toBe(TT_BAD_URL_TOKEN);
+		expect(firstTokenType("url(a b\\)c)")).toBe(TokenType.BadUrl);
 	});
 
 	it("readToken returns undefined once the input is fully consumed", () => {
@@ -3399,14 +3399,14 @@ describe("CssSyntax — tokenizer edge cases", () => {
 	});
 
 	it("turns a newline inside a string into a bad-string token", () => {
-		expect(firstTokenType('"a\nb')).toBe(TT_BAD_STRING_TOKEN);
+		expect(firstTokenType('"a\nb')).toBe(TokenType.BadString);
 	});
 
 	it("consumes CRLF as a single whitespace run and inside escapes", () => {
-		expect(firstTokenType("a\r\nb")).not.toBe(TT_EOF);
+		expect(firstTokenType("a\r\nb")).not.toBe(TokenType.EOF);
 		// escaped CR/LF line-continuation inside a string exercises the
 		// CRLF-collapsing escaped-newline path.
-		expect(firstTokenType('"a\\\r\nb"')).toBe(TT_STRING);
+		expect(firstTokenType('"a\\\r\nb"')).toBe(TokenType.String);
 	});
 });
 

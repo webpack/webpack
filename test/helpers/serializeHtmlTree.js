@@ -3,8 +3,7 @@
 const {
 	A,
 	Field,
-	NS_MATHML,
-	NS_SVG,
+	Namespace,
 	NodeType,
 	Part,
 	_attributeList,
@@ -15,8 +14,8 @@ const {
 /** @import { HtmlNodeRef } from "../../lib/html/syntax-parser" */
 
 const NS_PREFIX = {
-	[NS_SVG]: "svg ",
-	[NS_MATHML]: "math "
+	[Namespace.SVG]: "svg ",
+	[Namespace.MathML]: "math "
 };
 
 /**

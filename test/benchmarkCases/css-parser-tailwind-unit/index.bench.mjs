@@ -22,9 +22,7 @@ const {
 	parseAComponentValue,
 	parseAListOfComponentValues,
 	parseACommaSeparatedListOfComponentValues,
-	TT_LEFT_CURLY_BRACKET,
-	TT_RIGHT_CURLY_BRACKET,
-	TT_SEMICOLON
+	TokenType
 } = cssParser;
 
 // Real-world ~1.9 MiB minified stylesheet (Tailwind), shared with the
@@ -61,9 +59,9 @@ function expand(css) {
 		pos = t.end;
 		out += css.slice(t.start, t.end);
 		out +=
-			t.type === TT_LEFT_CURLY_BRACKET ||
-			t.type === TT_RIGHT_CURLY_BRACKET ||
-			t.type === TT_SEMICOLON
+			t.type === TokenType.LeftCurlyBracket ||
+			t.type === TokenType.RightCurlyBracket ||
+			t.type === TokenType.Semicolon
 				? "\n"
 				: " ";
 	}

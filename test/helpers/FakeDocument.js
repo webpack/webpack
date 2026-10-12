@@ -645,12 +645,7 @@ class FakeSheet {
 	get cssRules() {
 		if (this._cssRules) return this._cssRules;
 
-		const {
-			TT_LEFT_CURLY_BRACKET,
-			TT_RIGHT_CURLY_BRACKET,
-			TT_SEMICOLON,
-			readToken
-		} = require("../../lib/css/syntax-parser");
+		const { TokenType, readToken } = require("../../lib/css/syntax-parser");
 
 		/** @type {CssRule[]} */
 		const rules = [];
@@ -704,13 +699,13 @@ class FakeSheet {
 			const t = readToken(css, pos, /** @type {MutableToken} */ ({}));
 			if (t === undefined) break;
 			pos = t.end;
-			if (t.type === TT_LEFT_CURLY_BRACKET) {
+			if (t.type === TokenType.LeftCurlyBracket) {
 				if (selector === undefined) {
 					ruleStart = last; // Record the start of the rule (before the selector)
 					selector = css.slice(last, t.start).trim();
 					last = t.end;
 				}
-			} else if (t.type === TT_RIGHT_CURLY_BRACKET) {
+			} else if (t.type === TokenType.RightCurlyBracket) {
 				processDeclaration(css.slice(last, t.start));
 				rules.push({
 					selectorText: selector,
@@ -720,7 +715,7 @@ class FakeSheet {
 				selector = undefined;
 				currentRule = { getPropertyValue };
 				last = t.end;
-			} else if (t.type === TT_SEMICOLON) {
+			} else if (t.type === TokenType.Semicolon) {
 				processDeclaration(css.slice(last, t.start));
 				last = t.end;
 			}
@@ -774,12 +769,7 @@ class CSSStyleSheet {
 	 * @param {string} cssText CSS text to parse
 	 */
 	_parseCssRules(cssText) {
-		const {
-			TT_LEFT_CURLY_BRACKET,
-			TT_RIGHT_CURLY_BRACKET,
-			TT_SEMICOLON,
-			readToken
-		} = require("../../lib/css/syntax-parser");
+		const { TokenType, readToken } = require("../../lib/css/syntax-parser");
 
 		/** @type {CssRule[]} */
 		const rules = [];
@@ -809,13 +799,13 @@ class CSSStyleSheet {
 			const t = readToken(cleanCss, pos, /** @type {MutableToken} */ ({}));
 			if (t === undefined) break;
 			pos = t.end;
-			if (t.type === TT_LEFT_CURLY_BRACKET) {
+			if (t.type === TokenType.LeftCurlyBracket) {
 				if (selector === undefined) {
 					selector = cleanCss.slice(last, t.start).trim();
 					ruleStart = last;
 					last = t.end;
 				}
-			} else if (t.type === TT_RIGHT_CURLY_BRACKET) {
+			} else if (t.type === TokenType.RightCurlyBracket) {
 				processDeclaration(cleanCss.slice(last, t.start));
 				last = t.end;
 
@@ -830,7 +820,7 @@ class CSSStyleSheet {
 				});
 				selector = undefined;
 				currentRule = { getPropertyValue };
-			} else if (t.type === TT_SEMICOLON) {
+			} else if (t.type === TokenType.Semicolon) {
 				processDeclaration(cleanCss.slice(last, t.start));
 				last = t.end;
 			}

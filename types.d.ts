@@ -6624,7 +6624,7 @@ type CssNodePath<T = number, S = unknown> = Omit<
 			"1": CssComponentValueType;
 			"2": CssComponentValueType;
 			"3": 23;
-			"4": 25 | 24;
+			"4": 24 | 25;
 		}[F]
 	>;
 	fieldCount<R extends NodeSyntaxParser = TypedNode<NodeSyntaxParser, T>>(
@@ -6712,7 +6712,7 @@ type CssNodePath<T = number, S = unknown> = Omit<
 			"1": CssComponentValueType;
 			"2": CssComponentValueType;
 			"3": 23;
-			"4": 25 | 24;
+			"4": 24 | 25;
 		}[F]
 	>;
 	flag<R extends NodeSyntaxParser = TypedNode<NodeSyntaxParser, T>>(
@@ -6923,11 +6923,11 @@ type CssNodeType =
 	| 18
 	| 19
 	| 20
-	| 25
-	| 24
-	| 23
-	| 26
 	| 21
+	| 23
+	| 24
+	| 25
+	| 26
 	| 27
 	| 28;
 declare abstract class CssParser extends Parser {
@@ -7198,7 +7198,7 @@ declare interface CssParts {
 		"1": CssComponentValueType;
 		"2": CssComponentValueType;
 		"3": 23;
-		"4": 25 | 24;
+		"4": 24 | 25;
 	};
 }
 
@@ -21853,7 +21853,7 @@ declare abstract class MultiWatching {
  */
 declare interface MutableToken {
 	/**
-	 * one of the `TT_*` constants
+	 * a `TokenType`
 	 */
 	type: number;
 
@@ -33488,7 +33488,7 @@ type TokenSyntaxParserObject = NodeSyntaxParser & {
 	unescaped: string;
 	numericValue: number;
 	typeFlag: "number" | "id" | "integer" | "unrestricted";
-	sign: "" | "-" | "+";
+	sign: "" | "+" | "-";
 	unit: string;
 	contentStart: number;
 	contentEnd: number;
@@ -35894,34 +35894,9 @@ declare namespace exports {
 					 */
 					textOf(_part: number, _n?: NodeSyntaxParser): null;
 				};
-				export let CC_0: number;
-				export let CC_APOSTROPHE: number;
-				export let CC_COMMA: number;
-				export let CC_FULL_STOP: number;
-				export let CC_GREATER_THAN_SIGN: number;
-				export let CC_HYPHEN_MINUS: number;
-				export let CC_LEFT_PARENTHESIS: number;
-				export let CC_LEFT_SQUARE: number;
-				export let CC_LOWER_D: number;
-				export let CC_LOW_LINE: number;
-				export let CC_NUMBER_SIGN: number;
-				export let CC_PLUS_SIGN: number;
-				export let CC_QUOTATION_MARK: number;
-				export let CC_REVERSE_SOLIDUS: number;
-				export let CC_RIGHT_PARENTHESIS: number;
-				export let CC_RIGHT_SQUARE: number;
-				export let CC_SPACE: number;
-				export let CC_TILDE: number;
-				export let CC_UPPER_A: number;
-				export let CC_UPPER_Z: number;
 				export let DARK_PROPERTY: "--webpack-dark";
 				export let KEYFRAMES_AT_RULE_RE: RegExp;
 				export let LIGHT_PROPERTY: "--webpack-light";
-				export let LIST_KIND_KEYFRAME: 1;
-				export let LIST_KIND_NESTED: 2;
-				export let LIST_KIND_SELECTOR: 0;
-				export let LIST_NO: 2;
-				export let LIST_UNKNOWN: 0;
 				export namespace Field {
 					export let prelude: 1;
 					export let value: 2;
@@ -35968,32 +35943,34 @@ declare namespace exports {
 					export let Comment: 27;
 					export let Raw: 28;
 				}
-				export let TT_AT_KEYWORD: 16;
-				export let TT_BAD_STRING_TOKEN: 4;
-				export let TT_BAD_URL_TOKEN: 19;
-				export let TT_CDC: 25;
-				export let TT_CDO: 24;
-				export let TT_COLON: 14;
-				export let TT_COMMA: 13;
-				export let TT_COMMENT: 1;
-				export let TT_DELIM: 6;
-				export let TT_DIMENSION: 23;
-				export let TT_EOF: 26;
-				export let TT_FUNCTION: 17;
-				export let TT_HASH: 5;
-				export let TT_IDENTIFIER: 20;
-				export let TT_LEFT_CURLY_BRACKET: 9;
-				export let TT_LEFT_PARENTHESIS: 7;
-				export let TT_LEFT_SQUARE_BRACKET: 8;
-				export let TT_NUMBER: 21;
-				export let TT_PERCENTAGE: 22;
-				export let TT_RIGHT_CURLY_BRACKET: 12;
-				export let TT_RIGHT_PARENTHESIS: 10;
-				export let TT_RIGHT_SQUARE_BRACKET: 11;
-				export let TT_SEMICOLON: 15;
-				export let TT_STRING: 3;
-				export let TT_URL: 18;
-				export let TT_WHITESPACE: 2;
+				export namespace TokenType {
+					export let Comment: 1;
+					export let Whitespace: 2;
+					export let String: 3;
+					export let BadString: 4;
+					export let Hash: 5;
+					export let Delim: 6;
+					export let LeftParenthesis: 7;
+					export let LeftSquareBracket: 8;
+					export let LeftCurlyBracket: 9;
+					export let RightParenthesis: 10;
+					export let RightSquareBracket: 11;
+					export let RightCurlyBracket: 12;
+					export let Comma: 13;
+					export let Colon: 14;
+					export let Semicolon: 15;
+					export let AtKeyword: 16;
+					export let Function: 17;
+					export let Url: 18;
+					export let BadUrl: 19;
+					export let Ident: 20;
+					export let Number: 21;
+					export let Percentage: 22;
+					export let Dimension: 23;
+					export let CDO: 24;
+					export let CDC: 25;
+					export let EOF: 26;
+				}
 				export let VENDOR_PREFIX: RegExp;
 				export let containsSubstitutionFunction: (text: string) => boolean;
 				export let isDigit: (cc: number) => boolean;
@@ -36552,20 +36529,10 @@ declare namespace exports {
 					children(n?: number): number[];
 				};
 				export let BLOCK_CONTENTS: "block-contents";
-				export let CC_APOSTROPHE: 39;
-				export let CC_LEFT_SQUARE_BRACKET: 91;
-				export let CC_LF: 10;
-				export let CC_NUMBER_SIGN: 35;
-				export let CC_QUOTATION_MARK: 34;
-				export let CC_RIGHT_SQUARE_BRACKET: 93;
-				export let CC_SOLIDUS: 47;
 				export let EMBEDDED_LANGUAGES: string[];
 				export let EVENT_HANDLER: "event-handler";
 				export let FLAG_FOSTER_REGION: 128;
 				export let JSON_TYPE: "json";
-				export let NS_HTML: 0;
-				export let NS_MATHML: 1;
-				export let NS_SVG: 2;
 				export namespace Field {
 					export let attributes: 1;
 					export let content: 2;
@@ -36584,6 +36551,11 @@ declare namespace exports {
 					export let publicId: 6;
 					export let systemId: 7;
 				}
+				export namespace Namespace {
+					export let HTML: 0;
+					export let MathML: 1;
+					export let SVG: 2;
+				}
 				export namespace NodeType {
 					export let Document: 1;
 					export let DocumentFragment: 2;
@@ -36594,9 +36566,11 @@ declare namespace exports {
 					export let ProcessingInstruction: 7;
 					export let Attribute: 8;
 				}
-				export let QUOTE_DOUBLE: 1;
-				export let QUOTE_NONE: 0;
-				export let QUOTE_SINGLE: 2;
+				export namespace Quote {
+					export let None: 0;
+					export let Double: 1;
+					export let Single: 2;
+				}
 				export let SVG_TYPE: "svg";
 				export let asciiLowercase: (value: string) => string;
 				export let stripAsciiWhitespace: (value: string) => string;

@@ -36,11 +36,10 @@ const htmlMinify = require("../lib/html/htmlMinify");
 const { SourceProcessor } = require("../lib/html/syntax");
 const {
 	Field,
-	NS_MATHML,
-	NS_SVG,
+	Namespace,
 	NodeType,
 	Part,
-	QUOTE_NONE,
+	Quote,
 	_namespaceOf,
 	decodeEntities,
 	pickTransforms,
@@ -964,7 +963,7 @@ const printerFor = (options) => {
  */
 const afterAttribute = (valueStart, valueEnd, nameEnd, quoteType) => {
 	if (valueStart === -1) return nameEnd;
-	return quoteType === QUOTE_NONE ? valueEnd : valueEnd + 1;
+	return quoteType === Quote.None ? valueEnd : valueEnd + 1;
 };
 
 /**
@@ -1391,8 +1390,8 @@ const htmlSpans = (html) =>
 const fragmentContextOf = (nodePath) => {
 	if (nodePath.type() !== NodeType.Element) return "";
 	const namespace = _namespaceOf(nodePath.node);
-	if (namespace === NS_SVG) return `svg ${nodePath.name()}`;
-	if (namespace === NS_MATHML) return `math ${nodePath.name()}`;
+	if (namespace === Namespace.SVG) return `svg ${nodePath.name()}`;
+	if (namespace === Namespace.MathML) return `math ${nodePath.name()}`;
 	return nodePath.name();
 };
 
