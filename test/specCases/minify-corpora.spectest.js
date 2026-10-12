@@ -2128,7 +2128,8 @@ describe("JavaScript minifier", () => {
 						const differences = [];
 						/**
 						 * Holds webpack's output to another minifier's, both printed alone
-						 * by webpack's printer: no bigger, unless the table lists why.
+						 * by webpack's printer without comments, which extracting licenses
+						 * decides: no bigger, unless the table lists why.
 						 * @param {Source} source the source both minified
 						 * @param {{ name: string, code: string }} rival its output
 						 * @param {string} code webpack's output
@@ -2146,7 +2147,8 @@ describe("JavaScript minifier", () => {
 							const printing = {
 								compress: false,
 								mangle: false,
-								module: source.module
+								module: source.module,
+								format: { comments: false }
 							};
 							const theirs = await outcome(printer.minify, rival.code, printing);
 							const mine = await outcome(printer.minify, code, printing);
