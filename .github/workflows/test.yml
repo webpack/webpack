@@ -140,7 +140,7 @@ jobs:
         if: ${{ !cancelled() }}
         run: yarn test:invariants:html --require-corpus
 
-      - name: JavaScript parser invariants
+      - name: JavaScript parser and printer invariants
         if: ${{ !cancelled() }}
         run: yarn test:invariants:js --require-corpus
 

@@ -6308,6 +6308,108 @@ describe("syntax-printer", () => {
 		expect(ast.createWalker().webpackSkipsSqueezed).toBe(false);
 	});
 
+	it("should minify synchronously as it does asynchronously", async () => {
+		const { minify, modules } = await load();
+		const options = { module: true, sourceMap: true };
+		const code = "export const a = 1 + 2; console.log(a);";
+		const sync = modules.minifySync(code, { ...options });
+		const async = await minify(code, { ...options });
+		expect(sync.code).toBe(async.code);
+		expect(sync.map).toBe(async.map);
+	});
+
+	describe("printing its own output again", () => {
+		const formatOnly = { compress: false, mangle: false, module: true };
+
+		/**
+		 * @param {string} code a module
+		 * @returns {Promise<string[]>} its print, and the print of that print
+		 */
+		const twice = async (code) => {
+			const { minify } = await load();
+			const printed = /** @type {string} */ (
+				(await minify(code, formatOnly)).code
+			);
+			return [
+				printed,
+				/** @type {string} */ ((await minify(printed, formatOnly)).code)
+			];
+		};
+
+		it("should keep the parentheses an import()'s arguments and callee need, which terser drops", async () => {
+			const { minify } = await load();
+			const code = 'import("a", (b, c)); new (import("a"));';
+			const [printed, again] = await twice(code);
+			expect(printed).toBe('import("a",(b,c));new(import("a"));');
+			expect(again).toBe(printed);
+			const reference = await terserReference().minify(code, formatOnly);
+			expect(reference.code).toBe('import("a",b,c);new import("a");');
+			expect(
+				(await uncorrected(() => minify(code, formatOnly))).code
+			).toBe(reference.code);
+		});
+
+		it("should spell a directive's `</script` and `<!--` safe for an inline script, keeping its value", async () => {
+			for (const [code, expected] of [
+				['"x\\x20</script>"; f();', '"x\\x20<\\/script>";f();'],
+				['"x\\<!--\\x20"; f();', '"x\\x3c!--\\x20";f();'],
+				['"x\\\\<!--\\x20"; f();', '"x\\\\\\x3c!--\\x20";f();'],
+				['"a\\x20-->"; f();', '"a\\x20--\\x3e";f();']
+			]) {
+				const [printed, again] = await twice(code);
+				expect(printed).toBe(`${expected}`);
+				expect(again).toBe(printed);
+				expect(vm.runInNewContext(printed.slice(0, printed.indexOf(";")))).toBe(
+					vm.runInNewContext(code.slice(0, code.indexOf(";")))
+				);
+			}
+		});
+
+		it("should keep the line break after a banner before a dropped `;`, as terser prints it", async () => {
+			const { minify } = await load();
+			const code = "/*! license\n */\n;(function () { f(); })();";
+			const { code: printed } = await minify(code, {});
+			expect(printed).toBe("/*! license\n */\nf();");
+			expect((await minify(/** @type {string} */ (printed), formatOnly)).code).toBe(
+				printed
+			);
+			expect((await terserReference().minify(code, {})).code).toBe(printed);
+		});
+
+		it("should keep the line break after a license whose code was dropped, wherever it moves", async () => {
+			const { minify } = await load();
+			const code =
+				"function g() {\n/*! license\n */\nvar n = 50; return h(0, n); }\ng();";
+			const { code: printed } = await minify(code, {});
+			expect(printed).toBe("function g(){return h(0,\n/*! license\n */\n50)}g();");
+			expect((await minify(/** @type {string} */ (printed), formatOnly)).code).toBe(
+				printed
+			);
+		});
+
+		it("should print a directive as it is spelled, where an encoding doubled each backslash", async () => {
+			/**
+			 * @param {string} code a program
+			 * @returns {string} the value of the first string literal it spells
+			 */
+			const firstString = (code) =>
+				vm.runInNewContext(
+					/** @type {RegExpMatchArray} */ (
+						code.match(/(["'])(?:\\.|(?!\1).)*\1/)
+					)[0]
+				);
+			for (const code of [
+				'"use\\x20strict"; x = 1;',
+				'"a\\\\b"; f();',
+				"function g() { 'use\\x20strict'; return this; }"
+			]) {
+				const [printed, again] = await twice(code);
+				expect(again).toBe(printed);
+				expect(firstString(printed)).toBe(firstString(code));
+			}
+		});
+	});
+
 	describe("a tree given or given back as ESTree", () => {
 		/**
 		 * @param {string} code a module

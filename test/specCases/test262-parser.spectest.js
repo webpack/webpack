@@ -7,7 +7,7 @@ const { parse } = require("../../lib/javascript/syntax").parser;
 const {
 	firstDifference,
 	reportable
-} = require("../helpers/compareParserOutput");
+} = require("../../tooling/compare-js-tools");
 
 /** @typedef {{ file: string, at: string, ours: string, acorn: string }} TreeDifference */
 /** @typedef {{ file: string, webpack: string, acorn: string }} VerdictDifference */

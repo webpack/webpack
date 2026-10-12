@@ -16,7 +16,7 @@ const { Parser } = require("../../lib/javascript/syntax-parser");
 const {
 	firstDifference,
 	reportable
-} = require("../helpers/compareParserOutput");
+} = require("../../tooling/compare-js-tools");
 
 /**
  * @param {string} code source code the parser mapped

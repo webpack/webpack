@@ -9,7 +9,7 @@ const {
 	SyntaxTree,
 	WebpackParser
 } = require("../../lib/javascript/syntax-parser");
-const { firstDifference } = require("../helpers/compareParserOutput");
+const { firstDifference } = require("../../tooling/compare-js-tools");
 
 /** @typedef {import("estree").Node} EstreeNode */
 

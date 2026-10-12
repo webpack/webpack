@@ -5,8 +5,9 @@
 
 "use strict";
 
-// Shared machinery for `compare-css-tools.js` and `compare-html-tools.js`: the
-// package cache they install into, and the worker that measures one cell.
+// Shared machinery for `compare-css-tools.js`, `compare-html-tools.js` and
+// `compare-js-tools.js`: the package cache they install into, the worker that
+// measures one cell, and the relations their invariant sweeps hold.
 
 // The packages compared against are NOT webpack dependencies: each script
 // installs its own into `node_modules/.cache/`, never webpack's own tree.
@@ -664,12 +665,13 @@ const shrink = (holds, sites, kind) => {
  * is done, so a second pass that moves is work every build repeats.
  * @param {object} options what to hold to the relation
  * @param {(source: string) => string} options.minify the printer under test
+ * @param {((printed: string) => string)=} options.reprint how its output is printed again, where a second minify would change it rather than print it
  * @param {string} options.source the input
  * @param {(text: string) => string} options.says what a text says, as a digest
  * @param {((printed: string, at: number) => { source: string, again: string } | null)=} options.repro cuts the difference down to what reproduces it
  * @returns {{ printed: string | null, reports: Report[] }} what it printed, and what moved
  */
-const idempotence = ({ minify, source, says, repro }) => {
+const idempotence = ({ minify, reprint = minify, source, says, repro }) => {
 	/** @type {string} */
 	let printed;
 	try {
@@ -685,7 +687,7 @@ const idempotence = ({ minify, source, says, repro }) => {
 	/** @type {string} */
 	let again;
 	try {
-		again = minify(printed);
+		again = reprint(printed);
 	} catch (error) {
 		// A printer that reads its own output back and throws is the strongest
 		// finding there is, so it is reported rather than ending the sweep.
@@ -1014,8 +1016,9 @@ const purityRelation = (sources) => {
 /**
  * A finding the printer owes nothing for, with the reason it is owed nothing.
  * `relation` and `contains` together name it; `source` narrows it to one
- * fixture where the same repro is a defect elsewhere.
- * @typedef {{ relation: string, contains: string, source?: string, why: string }} Expected
+ * fixture where the same repro is a defect elsewhere, and `presets` to the
+ * option sets it shows under, so a run narrowed past them does not ask for it.
+ * @typedef {{ relation: string, contains: string, source?: string, presets?: string[], why: string }} Expected
  */
 
 /**
