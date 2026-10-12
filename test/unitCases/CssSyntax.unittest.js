@@ -6073,6 +6073,10 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			["...or no `n` to stand for", "a{top:0}b:nth-child(n2){top:0}"],
 			["...or two signs", "a{top:0}b:nth-child(+-n){top:0}"],
 			["...or two before `B`", "a{top:0}b:nth-child(2n++1){top:0}"],
+			// U+00A0 is no CSS whitespace but an identifier's character.
+			["...or U+00A0 for a space", "a{top:0}b:nth-child(n + 2){top:0}"],
+			["...or around a keyword", "a{top:0}b:nth-child( odd){top:0}"],
+			["U+00A0 stands for a combinator", "a{top:0}[c] b{top:0}"],
 			["...as does a pseudo-element", "a{top:0}b::part{top:0}"],
 			["a pseudo-element is followed in its compound", "a{top:0}b:before.c{top:0}"],
 			["...or by another compound", "a{top:0}b:before c{top:0}"],
