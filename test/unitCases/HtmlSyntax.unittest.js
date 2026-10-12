@@ -4100,6 +4100,8 @@ describe("SourceProcessor — merging adjacent <style>", () => {
 	it("writes a style attribute whose declarations all drop as bare", () => {
 		expect(minify('<p style=" ; ">x</p>')).toBe("<p style>x");
 		expect(minify('<p style="/* c */">x</p>')).toBe("<p style>x");
+		// Spelled with a reference, the list is minified from its decoded text.
+		expect(minify('<p style="&#59;">x</p>')).toBe("<p style>x");
 		expect(minify('<p style="color:red">x</p>')).toBe("<p style=color:red>x");
 	});
 
