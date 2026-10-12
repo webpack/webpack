@@ -6263,7 +6263,7 @@ describe("syntax-printer", () => {
 			);
 		});
 
-		it("should read an anonymous default export, which terser throws on", async () => {
+		it("should read an anonymous default export, which terser throws on as it does with corrections off", async () => {
 			const { minify } = await load();
 			for (const code of [
 				"export default function (a) { return a; } console.log(1);",
@@ -6283,14 +6283,13 @@ describe("syntax-printer", () => {
 					});
 					expect(fromTree.code).toBe(fromSource.code);
 				}
+				/** @type {EXPECTED_ANY} */
+				const options = { module: true, parse: { spidermonkey: true } };
 				await expect(
-					terserReference().minify(
-						estree(code),
-						/** @type {EXPECTED_ANY} */ ({
-							module: true,
-							parse: { spidermonkey: true }
-						})
-					)
+					terserReference().minify(estree(code), options)
+				).rejects.toThrow("definition");
+				await expect(
+					uncorrected(() => minify(estree(code), options))
 				).rejects.toThrow("definition");
 			}
 		});
