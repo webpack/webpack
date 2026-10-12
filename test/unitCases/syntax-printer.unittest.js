@@ -6790,6 +6790,17 @@ describe("syntax-printer", () => {
 					true
 				]
 			];
+			// One past every node kept is left where terser leaves it.
+			const trailing = "a((function (x) { return x; })());\n/*! keep */\nvar unused = 1;";
+			const trailingOptions = /** @type {EXPECTED_ANY} */ ({
+				toplevel: true,
+				format: { comments: "some" }
+			});
+			expect((await minify(trailing, trailingOptions)).code).toBe(
+				/** @type {string} */ (
+					(await terserReference().minify(trailing, trailingOptions)).code
+				)
+			);
 			for (const [input, options, comment, terserDrops] of cases) {
 				const { code } = await minify(input, options);
 				expect(code).toContain(comment);
@@ -6857,6 +6868,16 @@ describe("syntax-printer", () => {
 			}
 		});
 
+		it("should keep only the anonymous classes' variables keep_classnames names", async () => {
+			const { minify } = await load();
+			const { code } = await minify(
+				"var Bar = class {}, Baz = class {}; console.log(Bar.name, Baz.name);",
+				{ compress: false, mangle: { toplevel: true, keep_classnames: /^Bar$/ } }
+			);
+			expect(code).toContain("Bar.name");
+			expect(code).not.toContain("Baz");
+		});
+
 		it("should compress an anonymous default export a foreign ESTree tree declares", async () => {
 			const { minify, corrections } = await load();
 			const tree = () =>
@@ -6870,6 +6891,17 @@ describe("syntax-printer", () => {
 				/** @type {EXPECTED_ANY} */ ({ module: true, parse: { spidermonkey: true } });
 			const { code } = await minify(tree(), options());
 			expect(code).toBe("export default function(){return 1}");
+			for (const [source, expected] of [
+				["export default class {}", "export default class{}"],
+				["export default function f() { return f; }", "export default function f(){return f}"],
+				["export const x = 1;;", "export const x=1;"],
+				["export default 1 + 2;", "export default 3;"]
+			]) {
+				const parsed = /** @type {EXPECTED_ANY} */ (
+					acorn.parse(source, { ecmaVersion: 2022, sourceType: "module" })
+				);
+				expect((await minify(parsed, options())).code).toBe(expected);
+			}
 
 			if (!corrections) throw new Error("the correct phase is not installed");
 			corrections.enabled = false;
