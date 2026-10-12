@@ -511,6 +511,7 @@ const tokensOf = (code, isModule) => {
 		sourceType: isModule ? "module" : "script",
 		ecmaVersion: "latest",
 		onToken: (token) => {
+			if (token.type === acorn.tokTypes.eof) return;
 			tokens.push(code.slice(token.start, token.end));
 		}
 	});
