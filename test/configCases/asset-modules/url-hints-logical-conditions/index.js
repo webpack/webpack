@@ -1,5 +1,7 @@
 "use strict";
 
+import deep from "./nested/deep.js";
+
 const a = new URL("./a.png", import.meta.url);
 const b = new URL("./b.png", import.meta.url);
 const font = new URL("./font.woff2", import.meta.url);
@@ -15,5 +17,12 @@ it("should match urlHints rules written as logical conditions", () => {
 	expect(font.href).toContain("font.woff2");
 	expect(findLink("a.png").rel).toBe("preload");
 	expect(findLink("b.png").rel).toBe("prefetch");
-	expect(findLink("font.woff2").rel).toBe("prefetch");
+	expect(findLink("font.woff2").getAttribute("fetchpriority")).toBe("low");
+});
+
+it("should match a glob against relative requests", () => {
+	expect(deep.href).toContain("deep.woff2");
+	expect(findLink("font.woff2").rel).toBe("preload");
+	expect(findLink("font.woff2").as).toBe("font");
+	expect(findLink("deep.woff2").rel).toBe("preload");
 });
