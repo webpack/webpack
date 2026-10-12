@@ -1,3 +1,5 @@
 "use strict";
 
-module.exports = [[/Module not found/, /Can't resolve '\.\/later'/]];
+const error = [/Module not found/, /Can't resolve '\.\/later'/];
+
+module.exports = [error, error];

@@ -109,12 +109,12 @@ describe("NodeWatchFileSystem", () => {
 	});
 
 	it("purges what a later call stops watching", () => {
-		/** @type {string[]} */
-		const purged = [];
+		/** @type {unknown[][]} */
+		const purges = [];
 		const wfs = new NodeWatchFileSystem(
 			/** @type {import("../../lib/fs/fs").InputFileSystem} */ ({
-				purge: (item) => {
-					purged.push(/** @type {string} */ (item));
+				purge: (items, options) => {
+					purges.push([items, options]);
 				}
 			})
 		);
@@ -140,9 +140,11 @@ describe("NodeWatchFileSystem", () => {
 				)
 			);
 		start([kept, moved, dropped], [missing]);
-		expect(purged).toEqual([]);
+		expect(purges).toEqual([]);
 		start([kept], [moved]);
-		expect(purged).toEqual([dropped, missing]);
+		expect(purges).toEqual([[[dropped, missing], { exact: true }]]);
+		start([kept], [moved]);
+		expect(purges).toHaveLength(1);
 	});
 
 	it("leaves an unsupported ignored option to watchpack", () => {
