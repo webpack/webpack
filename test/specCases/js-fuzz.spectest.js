@@ -32,6 +32,9 @@ const PROGRAMS_PER_SEED = Number(process.env.JS_FUZZ_PROGRAMS) || 50;
 const SEED_TIMEOUT = 300000;
 const REGEXPS_PER_SEED = 400;
 const REQUIRE_SOURCES_PER_SEED = 200;
+// The minifier's other ways in and out minify each program ten times more, so
+// one program in this many meets them.
+const INTERFACE_EVERY = 5;
 // A program's synchronous part, bounded so an output that loops fails the case
 // instead of hanging the suite.
 const RUN_TIMEOUT = 5000;
@@ -719,9 +722,15 @@ const unsafeIn = (options) =>
  * @param {Program} program the program
  * @param {MinifyOptions[]} optionSets what it is minified under
  * @param {Minify} minify webpack's minifier
+ * @param {boolean} interfaces whether the minifier's other ways in and out are checked too
  * @returns {Promise<string | undefined>} the first failure
  */
-const checkProgram = async ({ code: source, module: isModule }, optionSets, minify) => {
+const checkProgram = async (
+	{ code: source, module: isModule },
+	optionSets,
+	minify,
+	interfaces
+) => {
 	const parsed = parserDifference(source, isModule);
 	if (parsed !== undefined) return `parser: ${parsed}`;
 
@@ -828,14 +837,16 @@ const checkProgram = async ({ code: source, module: isModule }, optionSets, mini
 			if (misfit !== undefined) {
 				return `minify ${label}: source map ${misfit}\n\toutput: ${code}`;
 			}
-			const differs = await interfaceDifference(
-				source,
-				isModule,
-				options,
-				code,
-				/** @type {string} */ (mapped.map),
-				minify
-			);
+			const differs = interfaces
+				? await interfaceDifference(
+						source,
+						isModule,
+						options,
+						code,
+						/** @type {string} */ (mapped.map),
+						minify
+					)
+				: undefined;
 			if (differs !== undefined) {
 				return `minify ${label}: ${differs}\n\toutput: ${code}`;
 			}
@@ -992,7 +1003,12 @@ describe("JavaScript fuzzer", () => {
 					/** @type {string | undefined} */
 					let failure;
 					try {
-						failure = await checkProgram(program, optionSets, minify);
+						failure = await checkProgram(
+							program,
+							optionSets,
+							minify,
+							round % INTERFACE_EVERY === 1
+						);
 					} catch (err) {
 						failure = `throws ${/** @type {Error} */ (err).stack}`;
 					}
