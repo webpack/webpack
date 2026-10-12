@@ -6788,19 +6788,14 @@ describe("syntax-printer", () => {
 					{ toplevel: true, format: { comments: "all" } },
 					"f1-after",
 					true
+				],
+				[
+					"a((function (x) { return x; })());\n/*! keep */\nvar unused = 1;",
+					{ toplevel: true, format: { comments: "some" } },
+					"keep",
+					true
 				]
 			];
-			// One past every node kept is left where terser leaves it.
-			const trailing = "a((function (x) { return x; })());\n/*! keep */\nvar unused = 1;";
-			const trailingOptions = /** @type {EXPECTED_ANY} */ ({
-				toplevel: true,
-				format: { comments: "some" }
-			});
-			expect((await minify(trailing, trailingOptions)).code).toBe(
-				/** @type {string} */ (
-					(await terserReference().minify(trailing, trailingOptions)).code
-				)
-			);
 			for (const [input, options, comment, terserDrops] of cases) {
 				const { code } = await minify(input, options);
 				expect(code).toContain(comment);
