@@ -210,7 +210,10 @@ describe("TemplatedPathPlugin.interpolate", () => {
 		expect(interpolate("[id]", data)).toBe("7");
 		expect(interpolate("[name]", data)).toBe("app");
 		expect(interpolate("[chunkhash]", data)).toBe("1122334455");
-		expect(interpolate("[contenthash:4]", data)).toBe("9988");
+		// truncating "9988776655" to 4 chars would be all-digit ("9988"); a
+		// truncated contenthash must stay non-numeric-only, same as the
+		// untruncated hash, so the first char is swapped (see nonNumericOnlyHash)
+		expect(interpolate("[contenthash:4]", data)).toBe("d988");
 		// chunk name falls back to id when unnamed
 		expect(
 			interpolate(
@@ -259,8 +262,9 @@ describe("TemplatedPathPlugin.interpolate", () => {
 		expect(interpolate("[contenthash:base64url:8]", data)).toBe(
 			"MAP(base64url,8)"
 		);
-		// length-only keeps using the plain stored value (no digest handler)
-		expect(interpolate("[contenthash:2]", data)).toBe("01");
+		// length-only keeps using the plain stored value (no digest handler),
+		// but still must not truncate into an all-digit result ("01" -> "a1")
+		expect(interpolate("[contenthash:2]", data)).toBe("a1");
 	});
 
 	it("throws for [fullhash:<digest>] in the runtime chunk-filename context", () => {
