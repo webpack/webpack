@@ -1358,6 +1358,11 @@ const ARGUMENTS_KEPT_CASES = [
 /** @type {[string, string, import("terser").MinifyOptions][]} */
 const CORRECTED_CASES = [
 	[
+		"a function declaration an inlined call returns, where keep_fnames is on",
+		"var X; function f() { X = (function () { function X() { this.a = 1; } return X; })(); } f(); console.log(new X().a);",
+		{ toplevel: true, keep_fnames: true, compress: {}, mangle: {} }
+	],
+	[
 		"an anonymous class named after a variable, where keep_classnames is on",
 		"class Foo {} var Bar = class {}; console.log(Foo.name, Bar.name);",
 		{ toplevel: true, keep_classnames: true, mangle: { keep_classnames: true } }
@@ -9516,8 +9521,10 @@ describe("syntax-printer", () => {
 				"FunctionExpression",
 				"ClassExpression"
 			]);
-			// Declared in the function holding them, as the declarations were.
-			expect(inlined.map((/** @type {EXPECTED_ANY} */ node) => node.id.definition.scope.node)).toEqual([f, g]);
+			// The function's name is its own, the class's declared where the declaration was.
+			const owners = inlined.map((/** @type {EXPECTED_ANY} */ node) => node.id.definition.scope.node);
+			expect(owners[0] === inlined[0]).toBe(true);
+			expect(owners[1] === g).toBe(true);
 			expect(scopesOf(analysis).find((/** @type {EXPECTED_ANY} */ scope) => scope.node === inlined[0]).functionName).toBe(inlined[0].id.definition);
 		});
 
