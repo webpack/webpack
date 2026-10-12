@@ -6763,6 +6763,25 @@ describe("syntax-printer", () => {
 			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
 		});
 
+		it("should keep a number the compressor computes plain where keep_numbers is on", async () => {
+			const { minify, corrections } = await load();
+			const input = "var s = 1000; var m = s * 60; var h = m * 60; console.log(s, m, h, 0.5);";
+			const options = { module: true, compress: {}, mangle: false, format: { keep_numbers: true } };
+			const { code } = await minify(input, options);
+			expect(code).toBe("console.log(1000,60000,3600000,0.5);");
+
+			if (!corrections) throw new Error("the correct phase is not installed");
+			corrections.enabled = false;
+			try {
+				const uncorrected = await unimproved(() => minify(input, options));
+				const reference = await terserReference().minify(input, options);
+				expect(uncorrected.code).toBe(reference.code);
+				expect(reference.code).toBe("console.log(1e3,6e4,36e5,0.5);");
+			} finally {
+				corrections.enabled = true;
+			}
+		});
+
 		it("should rename a property named as the name cache hands another", async () => {
 			const { minify, corrections } = await load();
 			const input = "var args = { sb: 'sb', o: 'o' }; console.log(args.sb, args.o);";
