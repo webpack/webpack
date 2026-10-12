@@ -6763,6 +6763,51 @@ describe("syntax-printer", () => {
 			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
 		});
 
+		it("should keep a comment whose code it drops, where comments are kept", async () => {
+			const { minify, corrections } = await load();
+			// The last entry says whether terser drops it too, not only webpack's inlining.
+			/** @type {[EXPECTED_ANY, EXPECTED_ANY, string, boolean][]} */
+			const cases = [
+				[
+					"var define = function (f) { console.log(f().length); }; define(function () { 'use strict'; var A = /A/;\n/*! license for B */\nvar B = /B/; return [A, B]; });",
+					{ format: { comments: "all" } },
+					"license for B",
+					true
+				],
+				[
+					"(function () {\n/** @license kept */\nfunction isRoot(node) { return node.nodeType === 9; }\nfunction getRoot(node) { return isRoot(node); }\nconsole.log(getRoot({ nodeType: 9 }), getRoot({ nodeType: 1 }));\n})();",
+					{ format: { comments: "some" } },
+					"@license kept",
+					false
+				],
+				[
+					{
+						"file-1.js": "// f1-before\nconst func = () => 'x';\n// f1-after\n",
+						"file-2.js": "// f2-before\nconsole.log(func());\n// f2-after\n"
+					},
+					{ toplevel: true, format: { comments: "all" } },
+					"f1-after",
+					true
+				]
+			];
+			for (const [input, options, comment, terserDrops] of cases) {
+				const { code } = await minify(input, options);
+				expect(code).toContain(comment);
+				if (!terserDrops) continue;
+
+				if (!corrections) throw new Error("the correct phase is not installed");
+				corrections.enabled = false;
+				try {
+					const uncorrected = await unimproved(() => minify(input, options));
+					const reference = await terserReference().minify(input, options);
+					expect(uncorrected.code).toBe(reference.code);
+					expect(reference.code).not.toContain(comment);
+				} finally {
+					corrections.enabled = true;
+				}
+			}
+		});
+
 		it("should keep the comments of an empty statement it drops", async () => {
 			const { minify, corrections } = await load();
 			const input =
