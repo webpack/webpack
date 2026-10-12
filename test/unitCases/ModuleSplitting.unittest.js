@@ -7,6 +7,9 @@ const { FacadeDependency } = NamespaceFacadeModule;
 
 /** @typedef {import("../../lib/serialization/ObjectMiddleware").ObjectDeserializerContext} ObjectDeserializerContext */
 /** @typedef {import("../../lib/serialization/ObjectMiddleware").ObjectSerializerContext} ObjectSerializerContext */
+/** @typedef {import("../../lib/module/Module")} Module */
+/** @typedef {import("../../lib/module/Module").NeedBuildContext} NeedBuildContext */
+/** @typedef {import("../../lib/graph/ModuleGraph")} ModuleGraph */
 
 const requestShortener = /** @type {import("../../lib/util/RequestShortener")} */ (
 	/** @type {unknown} */ ({ shorten: (/** @type {string} */ r) => r })
@@ -55,12 +58,12 @@ describe("SplitExportModule", () => {
 
 	it("needs a build only until built", () => {
 		const mod = make();
-		mod.needBuild(/** @type {EXPECTED_ANY} */ ({}), (err, need) => {
+		mod.needBuild(/** @type {NeedBuildContext} */ (/** @type {unknown} */ ({})), (err, need) => {
 			expect(err).toBeFalsy();
 			expect(need).toBe(true);
 		});
 		mod.buildMeta = {};
-		mod.needBuild(/** @type {EXPECTED_ANY} */ ({}), (err, need) => {
+		mod.needBuild(/** @type {NeedBuildContext} */ (/** @type {unknown} */ ({})), (err, need) => {
 			expect(need).toBe(false);
 		});
 	});
@@ -78,7 +81,7 @@ describe("NamespaceFacadeModule", () => {
 	const entries = () => [
 		{
 			exportName: "a",
-			sourceModule: /** @type {EXPECTED_ANY} */ ({}),
+			sourceModule: /** @type {Module} */ (/** @type {unknown} */ ({})),
 			sourceName: "a"
 		}
 	];
@@ -95,11 +98,11 @@ describe("NamespaceFacadeModule", () => {
 
 	it("needs a build only until built", () => {
 		const mod = make();
-		mod.needBuild(/** @type {EXPECTED_ANY} */ ({}), (err, need) => {
+		mod.needBuild(/** @type {NeedBuildContext} */ (/** @type {unknown} */ ({})), (err, need) => {
 			expect(need).toBe(true);
 		});
 		mod.buildMeta = {};
-		mod.needBuild(/** @type {EXPECTED_ANY} */ ({}), (err, need) => {
+		mod.needBuild(/** @type {NeedBuildContext} */ (/** @type {unknown} */ ({})), (err, need) => {
 			expect(need).toBe(false);
 		});
 	});
@@ -118,7 +121,7 @@ describe("FacadeDependency", () => {
 		expect(dep.type).toBe("namespace facade");
 		expect(
 			dep.getReferencedExports(
-				/** @type {EXPECTED_ANY} */ (undefined),
+				/** @type {ModuleGraph} */ (/** @type {unknown} */ (undefined)),
 				undefined
 			)
 		).toEqual([["lazy"]]);
