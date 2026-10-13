@@ -562,6 +562,7 @@ const describeCases = (config) => {
 															beforeEach: _beforeEach,
 															afterEach: _afterEach,
 															STATS_JSON: jsonStats,
+															COMPILER: compiler,
 															STATE: state,
 															WATCH_STEP: run.name
 														});
