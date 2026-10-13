@@ -246,6 +246,12 @@ const IMPROVED_CASES = [
 		"function n(r){var x=r.label;return g(r),[void 0===x?\"-\":x,r.n]}function g(r){r.n=1}console.log(n({}),n({label:\"a\"}));"
 	],
 	[
+		"an arrow reading `this` read out of the object literal holding it",
+		"const k = {}; function f() { return { t: () => this, x: 1 }.t(); } console.log(f.call(k) === k);",
+		{ compress: {}, mangle: false },
+		undefined
+	],
+	[
 		"a function written in place passed the parameter of its name, which it writes and nothing reads after",
 		"function f(a, b) { var h = (function (b) { [b] = [b + 1]; return [b, b]; })(b); return h; } console.log(f(1, 2));",
 		{ compress: {}, mangle: false },
@@ -280,6 +286,12 @@ const IMPROVED_CASES = [
 		"function f(g) { const d = void 0; d?.(g()); d?.(g()); d?.(g()); return [d?.x.y, d ?? 1]; } console.log(f(() => console.log(\"called\")));",
 		{ compress: {}, mangle: false },
 		"function f(g){return[void 0,1]}console.log(f(()=>console.log(\"called\")));"
+	],
+	[
+		"a function expression whose name nothing reads written as an arrow in one pass, where unsafe_arrows is on",
+		"console.log([1, 2].map(function foo(x) { return x + 1; }).join());",
+		{ compress: { unsafe_arrows: true }, ecma: 2015, mangle: false },
+		"console.log([1,2].map(x=>x+1).join());"
 	],
 	[
 		"an assignment to a `let` folded into the first read of it",
@@ -7220,6 +7232,29 @@ describe("syntax-printer", () => {
 			});
 		}
 
+		it("should leave the parse options it is given unwritten", async () => {
+			const { minify, corrections } = await load();
+			for (const input of ["var a = 1; console.log(a);", { "a.js": "console.log(1);" }]) {
+				const parse = { bare_returns: true };
+				const options = { parse, compress: {}, mangle: {} };
+				await minify(input, options);
+				expect(options.parse).toBe(parse);
+				expect(parse).toEqual({ bare_returns: true });
+			}
+
+			if (!corrections) throw new Error("the correct phase is not installed");
+			corrections.enabled = false;
+			try {
+				const parse = {};
+				await minify("console.log(1);", { parse });
+				const written = {};
+				await terserReference().minify("console.log(1);", { parse: written });
+				expect(Object.keys(parse)).toEqual(Object.keys(written));
+			} finally {
+				corrections.enabled = true;
+			}
+		});
+
 		for (const [name, input] of ARGUMENTS_KEPT_CASES) {
 			it(`should leave an \`arguments\` read where terser does: ${name}`, async () => {
 				const { minify } = await load();
@@ -8079,6 +8114,16 @@ describe("syntax-printer", () => {
 				}
 			});
 		}
+
+		it("should keep a function expression whose name nothing reads a function where it reads `this`", async () => {
+			const { minify } = await load();
+			const input = "console.log([1].map(function foo() { return this.k; }, { k: 2 }).join());";
+			/** @type {import("terser").MinifyOptions} */
+			const options = { compress: { unsafe_arrows: true }, ecma: 2015, mangle: false };
+			const { code } = await minify(input, options);
+			expect(code).toBe((await terserReference().minify(input, options)).code);
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+		});
 
 		for (const [name, input] of KEPT_CASES) {
 			it(`should write what terser writes: ${name}`, async () => {
