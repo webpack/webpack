@@ -36,7 +36,7 @@ const testRootDirectory = path.join(__dirname, "..");
 const STEP_DELAY = 200;
 const AGGREGATE_TIMEOUT = 50;
 const RETOUCH_DELAY = 1000;
-const RETOUCH_LIMIT = 5;
+const RETOUCH_LIMIT = 3;
 
 /**
  * @param {string} src src
@@ -381,17 +381,10 @@ const describeCases = (config) => {
 											)
 										);
 									}
-									// macOS can drop a change event entirely, and a timestamp-only
-									// touch can go unseen too for a re-created file, so rewrite it
+									// macOS can drop a change event entirely
 									const now = new Date();
 									for (const file of unseenChanges) {
-										if (!fs.existsSync(file)) continue;
-										// a directory stands for a file created in a missing one
-										if (fs.statSync(file).isDirectory()) {
-											fs.utimesSync(file, now, now);
-										} else {
-											fs.writeFileSync(file, fs.readFileSync(file));
-										}
+										if (fs.existsSync(file)) fs.utimesSync(file, now, now);
 									}
 									retouchUnseenChanges(compilers, retries - 1);
 								}, RETOUCH_DELAY);
