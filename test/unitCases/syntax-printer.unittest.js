@@ -1242,6 +1242,10 @@ const IMPROVED_CASES = [
 /** @type {[string, string][]} */
 const KEPT_CASES = [
 	[
+		"a function `__INLINE__` flattens into two callers, each passing a parameter of the name its own takes",
+		'!function () { function p(o, k, v) { if (o[k]) o[k] = 1; else o[k] = v; } function a(o, x) { return /*#__INLINE__*/ p(o, "a", x); } function b(o, x) { return /*#__INLINE__*/ p(o, "b", x); } var o = {}; a(o, 1); b(o, 2); console.log(JSON.stringify(o)); window.x = [a, b]; }();'
+	],
+	[
 		"optional reads of a global `const` known `undefined`, which stays declared",
 		"const obj = void 0; function f(x) { console.log(x); } f(obj?.a); f(obj?.a);"
 	],
