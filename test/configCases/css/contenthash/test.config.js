@@ -9,12 +9,12 @@ module.exports = {
 		const bundle = findOutputFiles(options, /^bundle.+.js/)[0];
 		return [async1, async2, bundle];
 	},
-	moduleScope(scope, options) {
+	setupDocument(document, { options }) {
 		// Anchor `.css$` so the unordered readdir doesn't pick `.css.map`.
 		const bundle = findOutputFiles(options, /^bundle\..+\.css$/)[0];
-		const link = scope.window.document.createElement("link");
+		const link = document.createElement("link");
 		link.rel = "stylesheet";
 		link.href = bundle;
-		scope.window.document.head.appendChild(link);
+		document.head.appendChild(link);
 	}
 };

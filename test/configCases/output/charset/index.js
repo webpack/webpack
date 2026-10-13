@@ -5,7 +5,7 @@ const doCssImport = () => import( /* webpackChunkName: "chunk1" */ "./chunk1.css
 
 it("should not add charset attribute", async () => {
 	const promise = doJsImport();
-	expect(document.head._children).toHaveLength(3);
+	expect(document.head._children).toHaveLength(2);
 
 	const link = document.head._children[0];
 
