@@ -264,6 +264,12 @@ const IMPROVED_CASES = [
 		"console.log(1,function(t){return t.y}({y:2}),function(t){return t.z+1}({z:3}));"
 	],
 	[
+		"optional calls of a `const` known `undefined`, read too often to inline",
+		"function f(g) { const d = void 0; d?.(g()); d?.(g()); d?.(g()); return [d?.x.y, d ?? 1]; } console.log(f(() => console.log(\"called\")));",
+		{ compress: {}, mangle: false },
+		"function f(g){return[void 0,1]}console.log(f(()=>console.log(\"called\")));"
+	],
+	[
 		"an assignment to a `let` folded into the first read of it",
 		"function f(a) { let x, y; x = a * 2; y = g(x); return [x, y]; } function g(v) { return v + 1; } console.log(f(3));",
 		{ compress: {}, mangle: false },
@@ -1189,6 +1195,10 @@ const IMPROVED_CASES = [
 // of its function's own, or the call passes, keeps or constructs something.
 /** @type {[string, string][]} */
 const KEPT_CASES = [
+	[
+		"optional reads of a global `const` known `undefined`, which stays declared",
+		"const obj = void 0; function f(x) { console.log(x); } f(obj?.a); f(obj?.a);"
+	],
 	[
 		"a `RegExp` call where the program assigns the global",
 		'RegExp = function (pattern) { return "own " + pattern; }; console.log(RegExp("a"));'
