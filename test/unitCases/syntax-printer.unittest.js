@@ -234,6 +234,18 @@ const stringArray = (length, string = (index) => `w${index}`) =>
 /** @type {[string, string, import("terser").MinifyOptions, string?][]} */
 const IMPROVED_CASES = [
 	[
+		"a function declared after the function calling it once, written with statements",
+		"!function () { function s(t, u) { for (var i = 0; i < u.length; i++) Object.keys(u[i]).forEach(function (k) { d(t, k, u[i][k]); }); return t; } function d(o, k, v) { if (k in o) { Object.defineProperty(o, k, { value: v, enumerable: true }); } else { o[k] = v; } return o; } console.log(JSON.stringify(s({ a: 1 }, [{ a: 2, b: 3 }]))); }();",
+		{ compress: {}, mangle: false },
+		"console.log(JSON.stringify(function(t,u){for(var i=0;i<u.length;i++)Object.keys(u[i]).forEach(function(k){var o=t,v=u[i][k];k in o?Object.defineProperty(o,k,{value:v,enumerable:!0}):o[k]=v});return t}({a:1},[{a:2,b:3}])));"
+	],
+	[
+		"a default read once, past a call, from a variable nothing writes again",
+		"function n(r) { var x = r.label, label = x === void 0 ? \"-\" : x; g(r); return [label, r.n]; } function g(r) { r.n = 1; } console.log(n({}), n({ label: \"a\" }));",
+		{ compress: {}, mangle: false },
+		"function n(r){var x=r.label;return g(r),[void 0===x?\"-\":x,r.n]}function g(r){r.n=1}console.log(n({}),n({label:\"a\"}));"
+	],
+	[
 		"a function written in place passed the parameter of its name, which it writes and nothing reads after",
 		"function f(a, b) { var h = (function (b) { [b] = [b + 1]; return [b, b]; })(b); return h; } console.log(f(1, 2));",
 		{ compress: {}, mangle: false },
