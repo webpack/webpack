@@ -76,6 +76,7 @@ Every schema is derived from the module declaring its options by `generate-schem
 - `declarations/WebpackOptions.ts` — **the source** for the configuration itself, and the only file left in `declarations/`. A definition of it that is also published as a schema of its own says `@publishes <path>`, and that schema is the reference.
 - `schemas/WebpackOptions.json` — top-level options.
 - `schemas/plugins/*.json` — per-plugin options (`BannerPlugin`, `IgnorePlugin`, `ProgressPlugin`, `SourceMapDevToolPlugin`, …).
+- `schemas/**/*.d.json.ts` — hand-written, beside a schema `lib/` passes on whole: TypeScript reads it in place of the JSON, typing the schema as `Schema`, whose literal JSON types it never matches.
 
 **Tests** — structure, naming and running one case: [TESTING_DOCS.md](../TESTING_DOCS.md).
 

@@ -91,6 +91,10 @@ import {
 	WithStatement,
 	YieldExpression
 } from "estree";
+import {
+	CreateReadStreamFSImplementation,
+	CreateWriteStreamFSImplementation
+} from "fs";
 import { FileHandle } from "fs/promises";
 import {
 	Server as ServerImportHttp,
@@ -5959,15 +5963,8 @@ declare interface CopyTransformCacheKeys {
 	[index: string]: any;
 }
 type CreateData = NormalModuleCreateData & { settings: ModuleSettings };
-type CreateReadStreamFSImplementation = FSImplementation & {
-	read: (...args: any[]) => any;
-};
 type CreateStatsOptionsContext = KnownCreateStatsOptionsContext &
 	Record<string, any>;
-type CreateWriteStreamFSImplementation = FSImplementation & {
-	write: (...args: any[]) => any;
-	close?: (...args: any[]) => any;
-};
 type CreatedObject<T, F> = T extends ChunkGroupInfoWithName[]
 	? Record<string, StatsChunkGroup>
 	: T extends (infer V)[]
@@ -11257,14 +11254,6 @@ type ExternalsType =
 	| "asset-url"
 	| "css-import"
 	| "css-url";
-
-/**
- * Defines the fs implementation type used by this module.
- */
-declare interface FSImplementation {
-	open?: (...args: any[]) => any;
-	close?: (...args: any[]) => any;
-}
 
 /**
  * Defines the factorize module options type used by this module.
