@@ -17237,6 +17237,11 @@ declare class JavascriptParser extends Parser {
 		  };
 
 	/**
+	 * Whether a definition is a variable rather than a free name or a scope.
+	 */
+	static isVariableInfo(value: unknown): boolean;
+
+	/**
 	 * Returns parser.
 	 */
 	static extend(
