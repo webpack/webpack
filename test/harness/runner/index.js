@@ -88,6 +88,7 @@ const resolveTargetProperties = (webpackOptions) => {
  * @typedef {object} TestConfig
  * @property {EXPECTED_FUNCTION=} resolveModule
  * @property {EXPECTED_FUNCTION=} moduleScope
+ * @property {((document: import("../../helpers/FakeDocument"), context: { options: EXPECTED_ANY, index: number, target: string }) => void)=} setupDocument prepare the page once per run, before any bundle executes (e.g. server-rendered `<link>` tags)
  * @property {EXPECTED_FUNCTION=} nonEsmThis
  * @property {boolean=} evaluateScriptOnAttached
  * @property {"jsdom"=} env
@@ -262,6 +263,13 @@ class TestRunner {
 					index: i,
 					target
 				});
+				if (testConfig.setupDocument && runner._moduleScope.document) {
+					testConfig.setupDocument(runner._moduleScope.document, {
+						options,
+						index: i,
+						target
+					});
+				}
 				if (testConfig.restrictEnvironment) runner.restrictEnvironment();
 				const bundlePaths = getBundlePaths(i, options, runner);
 				if (bundlePaths) {

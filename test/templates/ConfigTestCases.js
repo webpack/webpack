@@ -21,6 +21,7 @@ require("../helpers/warmup-webpack");
  * @property {(() => void)=} beforeExecute
  * @property {((options: import("../../").Configuration) => void)=} afterExecute
  * @property {((scope: EXPECTED_ANY, options: import("../../").Configuration, target: EXPECTED_ANY) => void)=} moduleScope
+ * @property {import("../harness/runner").TestConfig["setupDocument"]=} setupDocument prepare the page once per run, before any bundle executes
  */
 
 const path = require("path");

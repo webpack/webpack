@@ -3,7 +3,7 @@
 const path = require("path");
 
 module.exports = {
-	moduleScope(scope, options) {
+	setupDocument(document, { options }) {
 		// Only the "link" exportType emits a separate CSS chunk file. The other
 		// exportTypes (text/css-style-sheet/style) inline or inject CSS via JS,
 		// so attaching a <link> for them would point at a non-existent file.
@@ -15,9 +15,9 @@ module.exports = {
 		const jsFilename = options.output.filename;
 		const cssFilename = `${path.basename(jsFilename, path.extname(jsFilename))}.css`;
 
-		const link = scope.window.document.createElement("link");
+		const link = document.createElement("link");
 		link.rel = "stylesheet";
 		link.href = cssFilename;
-		scope.window.document.head.appendChild(link);
+		document.head.appendChild(link);
 	}
 };
