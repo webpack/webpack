@@ -28,6 +28,9 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          # A pull request checks out its merge ref, whose first parent is the
+          # `main` commit the baseline has to match; one commit deep has none.
+          fetch-depth: 2
 
       - name: Use Node.js
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
@@ -48,10 +51,16 @@ jobs:
         id: baseline
         env:
           GH_TOKEN: ${{ github.token }}
-          # The `main` commit this run measures against: a pull request's base,
-          # or the pushed commit itself, whose parent is then the nearest match.
-          REF_SHA: ${{ github.event.pull_request.base.sha || github.sha }}
         run: |
+          # The `main` commit this run measures against: the one a pull request's
+          # merge ref was built on, which the event's `base.sha` can lag behind,
+          # or the pushed commit itself, whose parent is then the nearest match.
+          if [ "$GITHUB_EVENT_NAME" = "pull_request" ]; then
+            REF_SHA=$(git rev-parse HEAD^1)
+            echo "base=$REF_SHA" >> "$GITHUB_OUTPUT"
+          else
+            REF_SHA=$GITHUB_SHA
+          fi
           runs="repos/$GITHUB_REPOSITORY/actions/workflows/code-size.yml/runs"
           # Any run of `main` that is not a pull request: a manually dispatched
           # one is a baseline too, while a pull request whose head branch is
@@ -138,7 +147,7 @@ jobs:
           CODE_SIZE_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
           # The `main` commit the checked-out merge ref carries, so the report can
           # tell whether the baseline it found is that same commit.
-          CODE_SIZE_BASE_COMMIT: ${{ github.event.pull_request.base.sha }}
+          CODE_SIZE_BASE_COMMIT: ${{ steps.baseline.outputs.base }}
 
       # On the pull request itself, not only in the job summary — a size change
       # nobody clicks through to see is a size change nobody sees. Updated in
