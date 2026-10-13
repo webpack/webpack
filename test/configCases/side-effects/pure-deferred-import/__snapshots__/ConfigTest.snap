@@ -3,6 +3,22 @@
 exports[`ConfigTestCases side-effects pure-deferred-import pure-deferred-import should compile: bundle0.mjs 1`] = `
 "/******/ var __webpack_modules__ = ({
 
+/***/ 237
+/*!******************!*\\\\
+  !*** ./index.js ***!
+  \\\\******************/
+(__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) {
+
+/* harmony import */ var _lib_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./lib.js */ 174);
+
+
+it(\\"should evaluate the deferred module on access\\", () => {
+	expect((0,_lib_js__WEBPACK_IMPORTED_MODULE_0__/* .readLazy */ .n)(6, 7)).toBe(43);
+});
+
+
+/***/ },
+
 /***/ 174
 /*!****************!*\\\\
   !*** ./lib.js ***!
@@ -94,6 +110,9 @@ function extra(a) {
 /******/ 	return module.exports;
 /******/ }
 /******/ 
+/******/ // expose the module cache
+/******/ __webpack_require__.c = __webpack_module_cache__;
+/******/ 
 /************************************************************************/
 /******/ /* webpack/runtime/define property getters */
 /******/ // define getter/value functions for harmony exports
@@ -114,10 +133,10 @@ function extra(a) {
 /******/ 
 /******/ 	const obj = {
 /******/ 		get a() {
-/******/ 			const cachedModule = __webpack_module_cache__[moduleId];
+/******/ 			const cachedModule = __webpack_require__.c[moduleId];
 /******/ 			if (cachedModule !== undefined && (cachedModule.evaluating || cachedModule.evaluatingAsync)) throw new TypeError(\\"Cannot access a deferred module namespace while the module is being evaluated\\");
 /******/ 			if (syncDeps) for (var i = 0; i < syncDeps.length; i++) {
-/******/ 				const depModule = __webpack_module_cache__[syncDeps[i]];
+/******/ 				const depModule = __webpack_require__.c[syncDeps[i]];
 /******/ 				if (depModule !== undefined && (depModule.evaluating || depModule.evaluatingAsync)) throw new TypeError(\\"Cannot access a deferred module namespace while a dependency is being evaluated\\");
 /******/ 			}
 /******/ 			let exports = r(moduleId);
@@ -131,21 +150,49 @@ function extra(a) {
 /******/ };
 /******/ 
 /************************************************************************/
-/*!******************!*\\\\
-  !*** ./index.js ***!
-  \\\\******************/
-/* harmony import */ var _lib_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./lib.js */ 174);
-
-
-it(\\"should evaluate the deferred module on access\\", () => {
-	expect((0,_lib_js__WEBPACK_IMPORTED_MODULE_0__/* .readLazy */ .n)(6, 7)).toBe(43);
-});
-
+/******/ 
+/******/ // module cache are used so entry inlining is disabled
+/******/ // startup
+/******/ // Load entry module and return exports
+/******/ let __webpack_exports__ = __webpack_require__(237);
+/******/ 
 "
 `;
 
 exports[`ConfigTestCases side-effects pure-deferred-import pure-deferred-import should compile: bundle1.mjs 1`] = `
 "/******/ var __webpack_modules__ = ({
+
+/***/ 568
+/*!******************************!*\\\\
+  !*** ./index.js + 2 modules ***!
+  \\\\******************************/
+(__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) {
+
+
+// DEFERRED EXTERNAL MODULE: ./pure-cjs.js
+var pure_cjs_deferred = /*#__PURE__*/__webpack_require__.zO(896, /* default-with-named */ 2);
+;// ./side.js
+function extra(a) {
+	return a + 1;
+}
+
+;// ./lib.js
+
+
+
+function readLazy(a, b) {
+	return pure_cjs_deferred.a/* mul */.l(a, b) + extra(0);
+}
+
+;// ./index.js
+
+
+it(\\"should evaluate the deferred module on access\\", () => {
+	expect(readLazy(6, 7)).toBe(43);
+});
+
+
+/***/ },
 
 /***/ 896
 /*!*********************!*\\\\
@@ -201,6 +248,9 @@ exports.l = function (a, b) {
 /******/ 	return module.exports;
 /******/ }
 /******/ 
+/******/ // expose the module cache
+/******/ __webpack_require__.c = __webpack_module_cache__;
+/******/ 
 /************************************************************************/
 /******/ /* webpack/runtime/make optimized deferred namespace object */
 /******/ __webpack_require__.zO = function(moduleId, mode, asyncDeps, syncDeps) {
@@ -208,10 +258,10 @@ exports.l = function (a, b) {
 /******/ 
 /******/ 	const obj = {
 /******/ 		get a() {
-/******/ 			const cachedModule = __webpack_module_cache__[moduleId];
+/******/ 			const cachedModule = __webpack_require__.c[moduleId];
 /******/ 			if (cachedModule !== undefined && (cachedModule.evaluating || cachedModule.evaluatingAsync)) throw new TypeError(\\"Cannot access a deferred module namespace while the module is being evaluated\\");
 /******/ 			if (syncDeps) for (var i = 0; i < syncDeps.length; i++) {
-/******/ 				const depModule = __webpack_module_cache__[syncDeps[i]];
+/******/ 				const depModule = __webpack_require__.c[syncDeps[i]];
 /******/ 				if (depModule !== undefined && (depModule.evaluating || depModule.evaluatingAsync)) throw new TypeError(\\"Cannot access a deferred module namespace while a dependency is being evaluated\\");
 /******/ 			}
 /******/ 			let exports = r(moduleId);
@@ -225,31 +275,11 @@ exports.l = function (a, b) {
 /******/ };
 /******/ 
 /************************************************************************/
-/*!******************************!*\\\\
-  !*** ./index.js + 2 modules ***!
-  \\\\******************************/
-
-// DEFERRED EXTERNAL MODULE: ./pure-cjs.js
-var pure_cjs_deferred = /*#__PURE__*/__webpack_require__.zO(896, /* default-with-named */ 2);
-;// ./side.js
-function extra(a) {
-	return a + 1;
-}
-
-;// ./lib.js
-
-
-
-function readLazy(a, b) {
-	return pure_cjs_deferred.a/* mul */.l(a, b) + extra(0);
-}
-
-;// ./index.js
-
-
-it(\\"should evaluate the deferred module on access\\", () => {
-	expect(readLazy(6, 7)).toBe(43);
-});
-
+/******/ 
+/******/ // module cache are used so entry inlining is disabled
+/******/ // startup
+/******/ // Load entry module and return exports
+/******/ let __webpack_exports__ = __webpack_require__(568);
+/******/ 
 "
 `;
