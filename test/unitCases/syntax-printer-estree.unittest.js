@@ -264,12 +264,14 @@ describe("syntax-printer's port of terser's ESTree conversion", () => {
 	beforeAll(async () => {
 		modules.theirs = await loadTerserSources(importTerserSource);
 		modules.ours = (await load()).modules;
-		// terser's conversion is the one with corrections off.
+		// terser's conversion is the one with corrections and improvements off.
 		modules.ours.corrections.enabled = false;
+		modules.ours.improvements.enabled = false;
 	});
 
 	afterAll(() => {
 		modules.ours.corrections.enabled = true;
+		modules.ours.improvements.enabled = true;
 	});
 
 	/**
