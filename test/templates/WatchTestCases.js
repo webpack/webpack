@@ -446,6 +446,23 @@ const describeCases = (config) => {
 														}
 													}
 												}
+												// a change this build no longer depends on cannot make it stale, and
+												// nothing watches it any more to report it (e.g. a deleted import)
+												const builds = /** @type {import("../../").Stats[]} */ (
+													"stats" in stats ? stats.stats : [stats]
+												);
+												for (const file of unseenChanges) {
+													if (
+														!builds.some(
+															({ compilation }) =>
+																compilation.fileDependencies.has(file) ||
+																compilation.missingDependencies.has(file) ||
+																isWithin(file, compilation.contextDependencies)
+														)
+													) {
+														unseenChanges.delete(file);
+													}
+												}
 												if (unseenChanges.size > 0) return;
 												clearTimeout(retouchTimer);
 												if (run.done && stats.hash === lastHash) return;
