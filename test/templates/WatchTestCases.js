@@ -383,8 +383,13 @@ const describeCases = (config) => {
 									}
 									// macOS can drop a change event entirely, and a timestamp-only
 									// touch can go unseen too for a re-created file, so rewrite it
+									const now = new Date();
 									for (const file of unseenChanges) {
-										if (fs.existsSync(file)) {
+										if (!fs.existsSync(file)) continue;
+										// a directory stands for a file created in a missing one
+										if (fs.statSync(file).isDirectory()) {
+											fs.utimesSync(file, now, now);
+										} else {
 											fs.writeFileSync(file, fs.readFileSync(file));
 										}
 									}
