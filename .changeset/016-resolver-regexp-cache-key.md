@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Keep regular expression restrictions distinct in the resolver cache.
+Keep regular expressions, functions and plugins distinct in resolver caches.
