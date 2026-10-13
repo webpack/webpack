@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Recompute re-exports and generated code when a module goes missing or returns.
+Recompute re-exports, code and warnings when a module goes missing or returns.
