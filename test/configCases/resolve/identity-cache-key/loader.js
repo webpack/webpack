@@ -43,6 +43,13 @@ class HiddenRedirect {
 	}
 }
 
+// serializes the same whatever its target
+class SerializableRedirect extends HiddenRedirect {
+	toJSON() {
+		return "redirect";
+	}
+}
+
 let applied = 0;
 const shared = {
 	/**
@@ -62,6 +69,8 @@ module.exports = async function () {
 		["closureB", { plugins: [redirect("./b.js")] }],
 		["hiddenA", { plugins: [new HiddenRedirect("./a.js")] }],
 		["hiddenB", { plugins: [new HiddenRedirect("./b.js")] }],
+		["serializableA", { plugins: [new SerializableRedirect("./a.js")] }],
+		["serializableB", { plugins: [new SerializableRedirect("./b.js")] }],
 		["shared1", { plugins: [shared] }],
 		["shared2", { plugins: [shared] }],
 		["fileSystem", { fileSystem: this.fs }]

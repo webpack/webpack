@@ -10,6 +10,11 @@ it("should distinguish plugin instances that differ only in hidden state", () =>
 	expect(results.hiddenB).toBe("b.js");
 });
 
+it("should distinguish plugin instances that serialize the same", () => {
+	expect(results.serializableA).toBe("a.js");
+	expect(results.serializableB).toBe("b.js");
+});
+
 it("should share a resolver when the same plugin is passed again", () => {
 	expect(results.shared1).toBe("a.js");
 	expect(results.shared2).toBe("a.js");
