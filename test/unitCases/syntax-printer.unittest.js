@@ -8235,6 +8235,26 @@ describe("syntax-printer", () => {
 			}
 		});
 
+		it("should not name a binding by a key or import name no binding may take", async () => {
+			const { minify, modules } = await load();
+			const input =
+				'import { eval as a, await as b, yield as c, arguments as d } from "m"; export function f({ eval: x, let: y }) { return [x, y]; }';
+			for (const fromTree of [true, false]) {
+				modules.treePrinting.enabled = fromTree;
+				try {
+					const { code } = await minify(input, {
+						module: true,
+						compress: false,
+						mangle: true
+					});
+					expect(code).not.toMatch(/[{,](eval|await|yield|arguments|let)[,}]/);
+					expect(code).not.toMatch(/[{,](eval|let):\1\b/);
+				} finally {
+					modules.treePrinting.enabled = true;
+				}
+			}
+		});
+
 		it("should keep a key's value named apart from the key where shorthand does not print", async () => {
 			const { minify } = await load();
 			const input =
