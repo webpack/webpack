@@ -12253,7 +12253,13 @@ type Head<T extends ReadonlyArray<any>> = T extends readonly [infer H, ...any[]]
  * Base class for runtime modules that only emit helper functions and do not
  * need special staging or attachment behavior beyond `RuntimeModule`.
  */
-declare abstract class HelperRuntimeModule extends RuntimeModule {}
+declare abstract class HelperRuntimeModule extends RuntimeModule {
+	/**
+	 * Whether a hot update can deliver this helper, which then runs outside the
+	 * bootstrap scope and reaches its state only through `__webpack_require__`.
+	 */
+	receivesHotUpdates(): boolean;
+}
 declare class HotModuleReplacementPlugin {
 	constructor();
 

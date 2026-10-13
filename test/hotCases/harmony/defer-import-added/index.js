@@ -26,6 +26,9 @@ it("should introduce deferred imports through a hot update", (done) => {
 					expect(getError).toThrow("deferred failure");
 					expect(getError).toThrow("deferred failure");
 					expect(evaluations).toEqual(["deferred", "pending", "error"]);
+					expect(require("./consumer").getCycleError().message).toMatch(
+						"being evaluated"
+					);
 					require("./consumer")
 						.loadAsync()
 						.then(({ value }) => {
