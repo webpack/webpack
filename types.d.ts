@@ -6219,6 +6219,11 @@ declare class CssLoadingRuntimeModule extends RuntimeModule {
 	>;
 
 	/**
+	 * Whether a value is a module rather than plain data standing in for one.
+	 */
+	static isModule(value: unknown): boolean;
+
+	/**
 	 * Gets source basic types.
 	 * @deprecated In the next major release, call getSourceBasicTypes() directly on the module instance instead of using this static method.
 	 */
@@ -10939,6 +10944,11 @@ declare class ExternalModule extends Module {
 	>;
 
 	/**
+	 * Whether a value is a module rather than plain data standing in for one.
+	 */
+	static isModule(value: unknown): boolean;
+
+	/**
 	 * Gets source basic types.
 	 * @deprecated In the next major release, call getSourceBasicTypes() directly on the module instance instead of using this static method.
 	 */
@@ -11937,6 +11947,11 @@ declare class GetChunkFilenameRuntimeModule extends RuntimeModule {
 		| "external"
 		| "concatenated"
 	>;
+
+	/**
+	 * Whether a value is a module rather than plain data standing in for one.
+	 */
+	static isModule(value: unknown): boolean;
 
 	/**
 	 * Gets source basic types.
@@ -17715,6 +17730,11 @@ declare class JsonpChunkLoadingRuntimeModule extends RuntimeModule {
 	>;
 
 	/**
+	 * Whether a value is a module rather than plain data standing in for one.
+	 */
+	static isModule(value: unknown): boolean;
+
+	/**
 	 * Gets source basic types.
 	 * @deprecated In the next major release, call getSourceBasicTypes() directly on the module instance instead of using this static method.
 	 */
@@ -19103,6 +19123,11 @@ declare class LoadScriptRuntimeModule extends HelperRuntimeModule {
 		| "external"
 		| "concatenated"
 	>;
+
+	/**
+	 * Whether a value is a module rather than plain data standing in for one.
+	 */
+	static isModule(value: unknown): boolean;
 
 	/**
 	 * Gets source basic types.
@@ -20565,6 +20590,11 @@ declare class Module extends DependenciesBlock {
 	used: any;
 
 	/**
+	 * Whether a value is a module rather than plain data standing in for one.
+	 */
+	static isModule(value: unknown): boolean;
+
+	/**
 	 * Gets source basic types.
 	 * @deprecated In the next major release, call getSourceBasicTypes() directly on the module instance instead of using this static method.
 	 */
@@ -20632,6 +20662,11 @@ declare class ModuleChunkLoadingRuntimeModule extends RuntimeModule {
 		| "external"
 		| "concatenated"
 	>;
+
+	/**
+	 * Whether a value is a module rather than plain data standing in for one.
+	 */
+	static isModule(value: unknown): boolean;
 
 	/**
 	 * Gets source basic types.
@@ -21975,6 +22010,11 @@ declare class MultiCompiler {
 	 * Processes the provided error callback.
 	 */
 	close(callback: (err: null | Error, result?: void) => void): void;
+
+	/**
+	 * Whether a compiler runs several compilers rather than one.
+	 */
+	static isMultiCompiler(value: unknown): boolean;
 }
 
 /**
@@ -22762,6 +22802,11 @@ declare class NormalModule extends Module {
 		| "external"
 		| "concatenated"
 	>;
+
+	/**
+	 * Whether a value is a module rather than plain data standing in for one.
+	 */
+	static isModule(value: unknown): boolean;
 
 	/**
 	 * Gets source basic types.
@@ -29646,6 +29691,11 @@ declare class RuntimeModule extends Module {
 	>;
 
 	/**
+	 * Whether a value is a module rather than plain data standing in for one.
+	 */
+	static isModule(value: unknown): boolean;
+
+	/**
 	 * Gets source basic types.
 	 * @deprecated In the next major release, call getSourceBasicTypes() directly on the module instance instead of using this static method.
 	 */
@@ -34633,6 +34683,11 @@ declare class WebpackError extends Error {
 	 * Restores this instance from the provided deserializer context.
 	 */
 	deserialize(__0: ObjectDeserializerContextObjectMiddlewareObject_2): void;
+
+	/**
+	 * Whether an error is a webpack error rather than any other thrown value.
+	 */
+	static isWebpackError(value: unknown): boolean;
 
 	/**
 	 * Creates a `.stack` property on `targetObject`, which when accessed returns
