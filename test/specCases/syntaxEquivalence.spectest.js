@@ -270,10 +270,6 @@ const FILED_WPT_VALUE_DEFECTS = new Map([
 	[
 		"background-image:paint(mypaint ",
 		"webkit only: the unimplemented `paint()` again \u2014 see `paint( mypaint`"
-	],
-	[
-		"font-family:\"New Century Schoolbook\", serif",
-		"firefox only: not a printer defect — Gecko carries the source's quoting into the computed family where Blink drops it, so unquoting a name neither engine reads differently still reads as a difference there"
 	]
 ]);
 
@@ -2689,20 +2685,6 @@ const ENGINE_QUIRKS = [
 				element.remove();
 				// What Chromium 141 reads, at six significant digits.
 				return read !== "38.7953px";
-			})
-	},
-	{
-		engines: ["firefox"],
-		quirk: "keeps a family name's quotes in its computed value",
-		workaround: "`unquoteFamilies` in the page helpers",
-		holds: (page) =>
-			page.evaluate(() => {
-				const element = document.createElement("div");
-				element.style.fontFamily = '"Manrope"';
-				document.body.append(element);
-				const read = getComputedStyle(element).fontFamily;
-				element.remove();
-				return read.startsWith('"');
 			})
 	}
 ];
