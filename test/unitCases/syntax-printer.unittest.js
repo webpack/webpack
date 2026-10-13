@@ -8221,6 +8221,20 @@ describe("syntax-printer", () => {
 			}
 		});
 
+		it("should name a binding by its key only where the key spells an identifier", async () => {
+			const { minify } = await load();
+			/** @type {[string, string][]} */
+			const cases = [
+				['function f({ "a-": r, "-": s, 1: t }) { return [r, s, t]; } console.log(f({ "a-": 1, "-": 2, 1: 3 }));', 'function f({"a-":n,"-":o,1:f}){return[n,o,f]}console.log(f({"a-":1,"-":2,1:3}));'],
+				['function f({ "q": r }) { return r; } console.log(f({ q: 1 }));', "function f({q}){return q}console.log(f({q:1}));"]
+			];
+			for (const [input, written] of cases) {
+				const { code } = await minify(input, { compress: false, mangle: true, ecma: 2015 });
+				expect(code).toBe(written);
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			}
+		});
+
 		it("should keep a key's value named apart from the key where shorthand does not print", async () => {
 			const { minify } = await load();
 			const input =
