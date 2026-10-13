@@ -1409,6 +1409,11 @@ const ARGUMENTS_KEPT_CASES = [
 /** @type {[string, string, import("terser").MinifyOptions][]} */
 const CORRECTED_CASES = [
 	[
+		"a call `delete` takes, inlined to the variable or property it returns",
+		"!function (o) { function q(t) { return t; } var b = { f: function () {} }; console.log(delete q(o.p), o.p, delete q(o?.r), o.r, delete q(b), typeof b); }({ p: 1, r: 2 });",
+		{ compress: {}, mangle: false }
+	],
+	[
 		"a function declaration an inlined call returns, where keep_fnames is on",
 		"var X; function f() { X = (function () { function X() { this.a = 1; } return X; })(); } f(); console.log(new X().a);",
 		{ toplevel: true, keep_fnames: true, compress: {}, mangle: {} }
