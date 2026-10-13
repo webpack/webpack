@@ -5364,10 +5364,11 @@ declare class ConstDependency extends NullDependency {
 		concatenateCommonJsModules: boolean
 	): boolean;
 	static TRANSITIVE: symbol;
-	static LAZY_UNTIL_LOCAL: "local";
-	static LAZY_UNTIL_ID: "id";
-	static LAZY_UNTIL_FALLBACK: "*";
-	static LAZY_UNTIL_REQUEST: "@";
+	static LAZY_LOCAL_EXPORT: "local";
+	static LAZY_NAMED_REEXPORT: "id";
+	static LAZY_STAR_REEXPORT: "*";
+	static LAZY_REEXPORT_SIDE_EFFECT: "@";
+	static LAZY_IMPORT_DECLARATION: "import";
 	static ESM_CATEGORY: "esm";
 	static KINDS: Set<
 		| "worker"
@@ -8055,27 +8056,17 @@ declare class Dependency {
 	/**
 	 * Returns the export name this dependency requests from its target module (lazy barrel optimization).
 	 */
-	getForwardId(): null | string | true;
+	get forwardId(): null | string | true;
 
 	/**
 	 * Returns how this dependency may be deferred when its parent module is side-effect-free (lazy barrel optimization).
 	 */
-	getLazyUntil(): null | "local" | "id" | "*" | "@";
+	get lazyRole(): null | "import" | "local" | "id" | "*" | "@";
 
 	/**
-	 * Returns the export name for a `LAZY_UNTIL_LOCAL`/`LAZY_UNTIL_ID` classification (lazy barrel optimization).
+	 * Returns the export name for a `LAZY_LOCAL_EXPORT`/`LAZY_NAMED_REEXPORT` classification (lazy barrel optimization).
 	 */
-	getLazyName(): null | string;
-
-	/**
-	 * Whether the lazy barrel currently defers creating this dependency's target module (lazy barrel optimization).
-	 */
-	isLazy(): boolean;
-
-	/**
-	 * Sets whether the lazy barrel defers creating this dependency's target module (lazy barrel optimization).
-	 */
-	setLazy(value: boolean): void;
+	get lazyName(): null | string;
 
 	/**
 	 * Returns the referenced module and export
@@ -8185,10 +8176,11 @@ declare class Dependency {
 		concatenateCommonJsModules: boolean
 	): boolean;
 	static TRANSITIVE: symbol;
-	static LAZY_UNTIL_LOCAL: "local";
-	static LAZY_UNTIL_ID: "id";
-	static LAZY_UNTIL_FALLBACK: "*";
-	static LAZY_UNTIL_REQUEST: "@";
+	static LAZY_LOCAL_EXPORT: "local";
+	static LAZY_NAMED_REEXPORT: "id";
+	static LAZY_STAR_REEXPORT: "*";
+	static LAZY_REEXPORT_SIDE_EFFECT: "@";
+	static LAZY_IMPORT_DECLARATION: "import";
 	static ESM_CATEGORY: "esm";
 	static KINDS: Set<
 		| "worker"
@@ -9017,10 +9009,11 @@ declare class ESMImportDependency extends ModuleDependency {
 		concatenateCommonJsModules: boolean
 	): boolean;
 	static TRANSITIVE: symbol;
-	static LAZY_UNTIL_LOCAL: "local";
-	static LAZY_UNTIL_ID: "id";
-	static LAZY_UNTIL_FALLBACK: "*";
-	static LAZY_UNTIL_REQUEST: "@";
+	static LAZY_LOCAL_EXPORT: "local";
+	static LAZY_NAMED_REEXPORT: "id";
+	static LAZY_STAR_REEXPORT: "*";
+	static LAZY_REEXPORT_SIDE_EFFECT: "@";
+	static LAZY_IMPORT_DECLARATION: "import";
 	static ESM_CATEGORY: "esm";
 }
 declare class ESMImportDependencyTemplate extends DependencyTemplate {
@@ -20671,10 +20664,11 @@ declare class ModuleDependency extends Dependency {
 		concatenateCommonJsModules: boolean
 	): boolean;
 	static TRANSITIVE: symbol;
-	static LAZY_UNTIL_LOCAL: "local";
-	static LAZY_UNTIL_ID: "id";
-	static LAZY_UNTIL_FALLBACK: "*";
-	static LAZY_UNTIL_REQUEST: "@";
+	static LAZY_LOCAL_EXPORT: "local";
+	static LAZY_NAMED_REEXPORT: "id";
+	static LAZY_STAR_REEXPORT: "*";
+	static LAZY_REEXPORT_SIDE_EFFECT: "@";
+	static LAZY_IMPORT_DECLARATION: "import";
 	static ESM_CATEGORY: "esm";
 }
 
@@ -23436,10 +23430,11 @@ declare class NullDependency extends Dependency {
 		concatenateCommonJsModules: boolean
 	): boolean;
 	static TRANSITIVE: symbol;
-	static LAZY_UNTIL_LOCAL: "local";
-	static LAZY_UNTIL_ID: "id";
-	static LAZY_UNTIL_FALLBACK: "*";
-	static LAZY_UNTIL_REQUEST: "@";
+	static LAZY_LOCAL_EXPORT: "local";
+	static LAZY_NAMED_REEXPORT: "id";
+	static LAZY_STAR_REEXPORT: "*";
+	static LAZY_REEXPORT_SIDE_EFFECT: "@";
+	static LAZY_IMPORT_DECLARATION: "import";
 	static ESM_CATEGORY: "esm";
 	static KINDS: Set<
 		| "worker"
