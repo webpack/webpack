@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Make lazy barrels defer their import declarations, not only re-exports.
+Make lazy barrels defer import declarations and keep no deferral across compilations.
