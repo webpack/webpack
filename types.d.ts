@@ -12253,7 +12253,13 @@ type Head<T extends ReadonlyArray<any>> = T extends readonly [infer H, ...any[]]
  * Base class for runtime modules that only emit helper functions and do not
  * need special staging or attachment behavior beyond `RuntimeModule`.
  */
-declare abstract class HelperRuntimeModule extends RuntimeModule {}
+declare abstract class HelperRuntimeModule extends RuntimeModule {
+	/**
+	 * Whether a hot update can deliver this helper, which then runs outside the
+	 * bootstrap scope and reaches its state only through `__webpack_require__`.
+	 */
+	receivesHotUpdates(): boolean;
+}
 declare class HotModuleReplacementPlugin {
 	constructor();
 
@@ -35200,6 +35206,7 @@ declare namespace exports {
 		export let currentRemoteGetScope: "__webpack_require__.R";
 		export let deferredModuleAsyncTransitiveDependencies: "__webpack_require__.zT";
 		export let deferredModuleAsyncTransitiveDependenciesSymbol: "__webpack_require__.zS";
+		export let deferredModuleNamespaceCache: "__webpack_require__.zC";
 		export let definePropertyGetters: "__webpack_require__.d";
 		export let definePropertyGettersFromArray: "__webpack_require__.d (array)";
 		export let ensureChunk: "__webpack_require__.e";
@@ -35892,6 +35899,7 @@ declare namespace exports {
 			export let currentRemoteGetScope: "__webpack_require__.R";
 			export let deferredModuleAsyncTransitiveDependencies: "__webpack_require__.zT";
 			export let deferredModuleAsyncTransitiveDependenciesSymbol: "__webpack_require__.zS";
+			export let deferredModuleNamespaceCache: "__webpack_require__.zC";
 			export let definePropertyGetters: "__webpack_require__.d";
 			export let definePropertyGettersFromArray: "__webpack_require__.d (array)";
 			export let ensureChunk: "__webpack_require__.e";
