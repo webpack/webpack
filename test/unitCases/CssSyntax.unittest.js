@@ -15965,6 +15965,16 @@ describe("CssSyntax minify — layered and positional spellings", () => {
 		expect(minifyFor(css)).toBe(expected);
 	});
 
+	it("names a centered edge only where every target reads the lone keyword", () => {
+		expect(minifyFor("a{transform-origin:50% 100%}", ["chrome 140"])).toBe(
+			"a{transform-origin:bottom}"
+		);
+		// Presto took `-o-transform-origin` keywords only as a pair.
+		expect(minifyFor("a{transform-origin:50% 100%}", ["opera 12"])).toBe(
+			"a{-o-transform-origin:50%100%;transform-origin:50%100%}"
+		);
+	});
+
 	it("keeps a font-relative ratio that lands on a layout step", () => {
 		expect(minifyFor("a{width:.27777778em}")).toBe("a{width:.27777778em}");
 	});
