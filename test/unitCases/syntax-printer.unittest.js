@@ -1002,6 +1002,28 @@ const IMPROVED_CASES = [
 			`var a = [${Array.from({ length: 100 }, (_, index) => (index % 2 ? '"\\ude00"' : '"\\ud83d"')).join(", ")}]; console.log(a.length, a[0].length, a[0].charCodeAt(0), a[1].charCodeAt(0));`
 		],
 		[
+		"an unused tagged template marked `#__PURE__`, its expressions' effects kept",
+		'function tag(s) { return s.raw.join("-"); } var x = /*#__PURE__*/ tag`a`; /*@__PURE__*/ tag`b ${console.log("kept")}`; /*#__PURE__*/ (0, tag)`c`; console.log(/*#__PURE__*/ tag`d${1}e`); function e() { return /*#__PURE__*/ tag`e`; } e();',
+		{ toplevel: true, compress: {}, mangle: false },
+		'function tag(s){return s.raw.join("-")}console.log("kept"),console.log(tag`d${1}e`);'
+	],
+	[
+		"unused variables holding tagged templates marked `#__PURE__`, their expressions' effects kept",
+		'function tag(s) { return s.raw.join("-"); } function g(n) { var u = /*#__PURE__*/ tag`a${n}`, v = /*#__PURE__*/ tag`b${console.log("kept")}`; return 1; } console.log(g(2));',
+		{ compress: {}, mangle: false },
+		'function tag(s){return s.raw.join("-")}function g(n){console.log("kept");return 1}console.log(g(2));'
+	],
+	[
+		"a function with an empty body constructed for nothing",
+		'new function () {}(); new function (a, b) {}(console.log("argument")); console.log(new function () {}() instanceof Object);'
+	],
+	[
+		"a conditional tested for truth whose branch is `void 0`, as `&&`",
+		'function f(t) { (t == null ? void 0 : t.b) && console.log("b"); if (t == null ? void 0 : t.c) console.log("c"); if (t ? t.d : void 0) console.log("d"); return t == null ? void 0 : t.e; } console.log(f(), f({ b: 1, c: 1, d: 1, e: 2 }), f({}));',
+		{ compress: {}, mangle: false },
+		'function f(t){return null!=t&&t.b&&console.log("b"),null!=t&&t.c&&console.log("c"),t&&t.d&&console.log("d"),null==t?void 0:t.e}console.log(f(),f({b:1,c:1,d:1,e:2}),f({}));'
+	],
+	[
 			"an empty constructor of a class extending nothing, and a class constructed for nothing that runs nothing",
 			'class A { constructor() {} m() { return 1; } } console.log(new A().m(), A.length); new class { x = 1; foo() {} }(); new class {}(console.log("argument"));'
 		],
@@ -1331,6 +1353,7 @@ const KEPT_CASES = [
 	["a `Math` the program declares", "var Math = { abs: () => 9 }; console.log(Math.abs(-1));"],
 	["a global a direct `eval` could rebind", 'function f() { eval(""); return Math.abs(-1); } console.log(f());'],
 	["a global a `with` could rebind", "with ({}) console.log(Math.abs(-1));"],
+	["a function constructed whose parameter, body or kind runs or throws something", 'new function ({ a }) {}({ get a() { console.log("g"); } }); new function () { console.log("b"); }(); try { new (async function () {})(); } catch (e) { console.log(1); } try { new (function* () {})(); } catch (e) { console.log(2); }'],
 	["a constructor with a parameter, in a derived class, computed or static, and a class constructed whose field, key, block or constructor runs something", 'class A { constructor(a) {} } class B extends A { constructor() { super(); } } class C { ["constructor"]() { return 1; } static constructor() { return 2; } } console.log(A.length, new B() instanceof A, new C().constructor === C, C.constructor()); new class { p = console.log("p"); }(); new class { [console.log("k")]() {} }(); new class { static { console.log("s"); } }(); new class { constructor() { console.log("c"); } }();'],
 	["case not in ASCII", 'console.log("\\u00c4B".toLowerCase());'],
 	["a call that throws", 'try { console.log(decodeURI("%")); } catch (e) { console.log(1); }'],
