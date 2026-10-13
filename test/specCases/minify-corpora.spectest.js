@@ -1712,7 +1712,6 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 			"reduce_vars/defun_assign (reminify 4 {\"toplevel\":true})",
 			"terser_insane_2 (its own options)",
 			"terser_insane_2 (the default minimizer's options)",
-			"fixture/check/1/input.js (the default minimizer's options)",
 			"catch-parameter-shadowing-catch-parameter.js (the default minimizer's options)",
 			"custom-separator-result-from-tostring-on-each-value.js (the default minimizer's options)",
 			"detached-buffer-zero-count-custom-ctor-other-targettype.js (the default minimizer's options)",

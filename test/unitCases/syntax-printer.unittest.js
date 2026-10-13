@@ -1235,12 +1235,68 @@ const IMPROVED_CASES = [
 		{ compress: {}, mangle: false },
 		"!function(){function show(props,name){props.get=function(){return name}}var props,name;console.log((props={},name=\"a\",show(props,name),[name]=[\"later\"],props).get(),function(props,name,flag){for(name in flag&&show(props,name),{later:1});return props}({},\"a\",1).get())}();"
 	],
+	[
+		"numbers written as the quotient they equal exactly",
+		"console.log(0.6666666666666666, 0.14285714285714285 * 3, 7 / 0.6666666666666666);",
+		{ compress: {}, mangle: false },
+		"console.log(2/3,3/7,10.5);"
+	],
+	[
+		"an unused class whose pure static value reads the class, run only for what it extends",
+		"(function () { function base() { console.log('base'); return class {}; } class A extends base() { static #h = /*@__PURE__*/ (() => () => A.#h)(); } console.log('ok'); })();",
+		{ compress: {}, mangle: false },
+		"console.log(\"base\");console.log(\"ok\");"
+	],
+	[
+		"a derived class's constructor passing every argument to `super`",
+		"class Bar { constructor(a, b) { this.s = a + b; } } var Foo = class extends Bar { constructor() { super(...arguments); } }; console.log(new Foo(1, 2).s, Foo.length);",
+		{ compress: {}, mangle: false },
+		"class Bar{constructor(a,b){this.s=a+b}}var Foo=class extends Bar{};console.log(new Foo(1,2).s,Foo.length);"
+	],
+	[
+		"private fields nothing in the class reads",
+		"console.log(new (class { #p = 0; #q; static #r = 1; m() { return ++this.#p; } })().m());",
+		{ compress: {}, mangle: false },
+		"console.log((new class{#p=0;m(){return++this.#p}}).m());"
+	],
+	[
+		"a derived class's unread private fields, whose instance ones throw on an object `super()` returns twice",
+		"class A { constructor(o) { return o; } } class C extends A { #x; static #y = 1; constructor(o) { super(o); } } var c = new C(); try { new C(c); console.log('none'); } catch (e) { console.log(e.name); }",
+		{ compress: {}, mangle: false },
+		"class A{constructor(o){return o}}class C extends A{#x;constructor(o){super(o)}}var c=new C;try{new C(c),console.log(\"none\")}catch(e){console.log(e.name)}"
+	],
+	[
+		"a copy of an array literal",
+		"var c = [1, 2].slice(); c.push(3); console.log(c);",
+		{ compress: {}, mangle: false },
+		"var c=[1,2];c.push(3),console.log(c);"
+	],
+	[
+		"a conditional choosing between calls spreading different arrays",
+		"function f(a, b, c) { return a ? b(...a) : b(...c); } console.log(f([1, 2], Math.max, [3]), f(null, Math.max, [3, 4]));",
+		{ compress: {}, mangle: false },
+		"function f(a,b,c){return b(...a||c)}console.log(f([1,2],Math.max,[3]),f(null,Math.max,[3,4]));"
+	],
+	[
+		"destructured names mangled to the keys they read, printed shorthand",
+		"function s(v) { var { a, b, c } = v; return a + b * c; } console.log(s({ a: 1, b: 2, c: 3 }), s({ a: 2, b: 3, c: 4 }));",
+		{ compress: {}, mangle: true, ecma: 2015 },
+		"function s(c){var{a,b,c:n}=c;return a+b*n}console.log(s({a:1,b:2,c:3}),s({a:2,b:3,c:4}));"
+	],
 ];
 
 // What the `improve` phase leaves as terser writes it: each body has something
 // of its function's own, or the call passes, keeps or constructs something.
 /** @type {[string, string][]} */
 const KEPT_CASES = [
+	[
+		"calls spreading the same iterable before the arrays they differ in, whose iteration the test reads after",
+		"var flag = true; var shared = { *[Symbol.iterator]() { flag = false; yield 0; } }; function f(m, a, b) { return flag ? m(...shared, ...a) : m(...shared, ...b); } console.log(f(Math.max, [1], [2]), flag);"
+	],
+	[
+		"a function `__INLINE__` flattens into two callers, each passing a parameter of the name its own takes",
+		'!function () { function p(o, k, v) { if (o[k]) o[k] = 1; else o[k] = v; } function a(o, x) { return /*#__INLINE__*/ p(o, "a", x); } function b(o, x) { return /*#__INLINE__*/ p(o, "b", x); } var o = {}; a(o, 1); b(o, 2); console.log(JSON.stringify(o)); window.x = [a, b]; }();'
+	],
 	[
 		"optional reads of a global `const` known `undefined`, which stays declared",
 		"const obj = void 0; function f(x) { console.log(x); } f(obj?.a); f(obj?.a);"
@@ -8137,6 +8193,94 @@ describe("syntax-printer", () => {
 				}
 			});
 		}
+
+		it("should name a module's imports and exports by the names they spell, where that writes less", async () => {
+			const { minify, improvements } = await load();
+			/** @type {[string, string][]} */
+			const cases = [
+				[
+					'import { a, b } from "m"; console.log(a, b);',
+					'import{a,b}from"m";console.log(a,b);'
+				],
+				[
+					'import { a } from "m"; export function f(b) { return a(b, b); }',
+					'import{a}from"m";export function f(r){return a(r,r)}'
+				],
+				[
+					"let x = 1, y = 2; export { x as y2, y as x };",
+					"let y2=1,x=2;export{y2,x};"
+				],
+				[
+					'import { useState } from "react"; export function C() { const [s, set] = useState(0); return useState(s) + useState(set); }',
+					'import{useState as r}from"react";export function C(){let[t,o]=r(0);return r(t)+r(o)}'
+				]
+			];
+			/** @type {import("terser").MinifyOptions} */
+			const options = { module: true, compress: {}, mangle: true };
+			for (const [input, written] of cases) {
+				expect((await minify(input, options)).code).toBe(written);
+				if (!improvements) throw new Error("the improve phase is not installed");
+				improvements.enabled = false;
+				try {
+					expect((await minify(input, options)).code).toBe(
+						(await terserReference().minify(input, options)).code
+					);
+				} finally {
+					improvements.enabled = true;
+				}
+			}
+		});
+
+		it("should name a binding by its key only where the key spells an identifier", async () => {
+			const { minify } = await load();
+			/** @type {[string, string][]} */
+			const cases = [
+				['function f({ "a-": r, "-": s, 1: t }) { return [r, s, t]; } console.log(f({ "a-": 1, "-": 2, 1: 3 }));', 'function f({"a-":n,"-":o,1:f}){return[n,o,f]}console.log(f({"a-":1,"-":2,1:3}));'],
+				['function f({ "q": r }) { return r; } console.log(f({ q: 1 }));', "function f({q}){return q}console.log(f({q:1}));"]
+			];
+			for (const [input, written] of cases) {
+				const { code } = await minify(input, { compress: false, mangle: true, ecma: 2015 });
+				expect(code).toBe(written);
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			}
+		});
+
+		it("should not name a binding by a key or import name no binding may take", async () => {
+			const { minify, modules } = await load();
+			const input =
+				'import { eval as a, await as b, yield as c, arguments as d } from "m"; export function f({ eval: x, let: y }) { return [x, y]; }';
+			for (const fromTree of [true, false]) {
+				modules.treePrinting.enabled = fromTree;
+				try {
+					const { code } = await minify(input, {
+						module: true,
+						compress: false,
+						mangle: true
+					});
+					expect(code).not.toMatch(/[{,](eval|await|yield|arguments|let)[,}]/);
+					expect(code).not.toMatch(/[{,](eval|let):\1\b/);
+					expect(() =>
+						acorn.parse(/** @type {string} */ (code), {
+							ecmaVersion: "latest",
+							sourceType: "module"
+						})
+					).not.toThrow();
+				} finally {
+					modules.treePrinting.enabled = true;
+				}
+			}
+		});
+
+		it("should keep a key's value named apart from the key where shorthand does not print", async () => {
+			const { minify } = await load();
+			const input =
+				"function s(v) { var { a, b, c } = v; return a + b * c; } console.log(s({ a: 1, b: 2, c: 3 }), s({ a: 2, b: 3, c: 4 }));";
+			/** @type {import("terser").MinifyOptions} */
+			const options = { compress: {}, mangle: true, ecma: 5 };
+			expect((await minify(input, options)).code).toBe(
+				(await terserReference().minify(input, options)).code
+			);
+		});
 
 		it("should keep a function expression whose name nothing reads a function where it reads `this`", async () => {
 			const { minify } = await load();
