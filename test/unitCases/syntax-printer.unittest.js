@@ -1260,6 +1260,12 @@ const IMPROVED_CASES = [
 		"console.log((new class{#p=0;m(){return++this.#p}}).m());"
 	],
 	[
+		"a derived class's unread private fields, whose instance ones throw on an object `super()` returns twice",
+		"class A { constructor(o) { return o; } } class C extends A { #x; static #y = 1; constructor(o) { super(o); } } var c = new C(); try { new C(c); console.log('none'); } catch (e) { console.log(e.name); }",
+		{ compress: {}, mangle: false },
+		"class A{constructor(o){return o}}class C extends A{#x;constructor(o){super(o)}}var c=new C;try{new C(c),console.log(\"none\")}catch(e){console.log(e.name)}"
+	],
+	[
 		"a copy of an array literal",
 		"var c = [1, 2].slice(); c.push(3); console.log(c);",
 		{ compress: {}, mangle: false },
@@ -8249,6 +8255,12 @@ describe("syntax-printer", () => {
 					});
 					expect(code).not.toMatch(/[{,](eval|await|yield|arguments|let)[,}]/);
 					expect(code).not.toMatch(/[{,](eval|let):\1\b/);
+					expect(() =>
+						acorn.parse(/** @type {string} */ (code), {
+							ecmaVersion: "latest",
+							sourceType: "module"
+						})
+					).not.toThrow();
 				} finally {
 					modules.treePrinting.enabled = true;
 				}
