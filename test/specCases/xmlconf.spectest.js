@@ -16,7 +16,7 @@
 const fs = require("fs");
 const path = require("path");
 const { SourceProcessor } = require("../../lib/html/syntax");
-const { A, NodeType, decodeXmlAttribute, parseHtml } = require("../../lib/html/syntax-parser");
+const { A, NodeType, _attributeList, decodeXmlAttribute, parseHtml } = require("../../lib/html/syntax-parser");
 
 const suiteDir = path.resolve(
 	__dirname,
@@ -44,7 +44,7 @@ const hasCorpus = fs.existsSync(path.join(suiteDir, "xmlconf.xml"));
 const attributesOf = (node) => {
 	/** @type {AttributeMap} */
 	const out = {};
-	for (const attribute of A.attributes(node)) {
+	for (const attribute of _attributeList(node)) {
 		out[attribute.name] = decodeXmlAttribute(attribute.value);
 	}
 	return out;
@@ -74,7 +74,7 @@ const readTests = () => {
 				if (attributes["xml:base"]) {
 					base = path.join(base, attributes["xml:base"]);
 				}
-				if (A.tagName(node) === "TEST") {
+				if (A.name(node) === "TEST") {
 					tests.push({
 						id: attributes.ID,
 						type: attributes.TYPE,
@@ -143,21 +143,21 @@ const canonical = (node) => {
 			const attributes = Object.entries(attributesOf(node)).sort(([a], [b]) =>
 				a < b ? -1 : a > b ? 1 : 0
 			);
-			let out = `<${A.tagName(node)}`;
+			let out = `<${A.name(node)}`;
 			for (const [name, value] of attributes) {
 				out += ` ${name}="${escapeCanonical(value)}"`;
 			}
 			out += ">";
 			for (const child of A.children(node)) out += canonical(child);
-			return `${out}</${A.tagName(node)}>`;
+			return `${out}</${A.name(node)}>`;
 		}
 		case NodeType.Text:
-			return escapeCanonical(A.data(node));
+			return escapeCanonical(A.value(node));
 		case NodeType.ProcessingInstruction:
 			// The XML declaration reaches the tree as an instruction targeting `xml`.
-			return A.piTarget(node) === "xml"
+			return A.name(node) === "xml"
 				? ""
-				: `<?${A.piTarget(node)} ${A.data(node)}?>`;
+				: `<?${A.name(node)} ${A.value(node)}?>`;
 		case NodeType.Document: {
 			let out = "";
 			for (const child of A.children(node)) out += canonical(child);

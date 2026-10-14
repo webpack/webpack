@@ -13,12 +13,6 @@ const path = require("path");
 const { A, Field, Flag, Namespace, Part, _attributeList, _namespaceOf, NodeType, Quote, decodeEntities, decodeXmlAttribute, tokenizeXml, escapeAttribute, escapeText, parseCssUrls, parseHtml: parseHtmlRefs, parseMsapplicationTask, parseSrc, parseSrcset, tokenize } = require("../../lib/html/syntax-parser");
 
 const { builtinEmbeddedRenderer } = require("../../lib/html/builtinEmbeddedRenderer");
-const NS_HTML = Namespace.HTML;
-const NS_MATHML = Namespace.MathML;
-const NS_SVG = Namespace.SVG;
-const QUOTE_DOUBLE = Quote.Double;
-const QUOTE_NONE = Quote.None;
-const QUOTE_SINGLE = Quote.Single;
 const serializeHtmlTree = require("../helpers/serializeHtmlTree");
 
 describe("tokenize", () => {
@@ -3337,6 +3331,57 @@ describe("parseHtml", () => {
 
 	describe("XML mode", () => {
 		const { SourceProcessor } = require("../../lib/html/syntax");
+
+		it("should expose XML attribute values through the shared path", () => {
+			const source = '<!DOCTYPE Root [<!ENTITY value "declared">]><Root value="&value;\t&amp;&#x80;&nbsp;"/>';
+			const document = parseHtmlRefs(source, 0, { xml: true });
+			const root = A.child(1, document);
+			const attribute = A.fieldNamed(Field.attributes, "value", root);
+			expect(A.value(attribute)).toBe("declared &\u0080&nbsp;");
+			expect(A.value(attribute)).toBe("declared &\u0080&nbsp;");
+		});
+
+		it("should expose case-sensitive XML content and end-tag ranges", () => {
+			const source = "<Root>x</Root>";
+			const document = parseHtmlRefs(source, 0, { xml: true });
+			const root = A.child(0, document);
+			expect(A.rangeOf(Part.content, root)).toEqual([6, 7]);
+			expect(A.rangeOf(Part.endTag, root)).toEqual([7, 14]);
+			const unclosed = parseHtmlRefs("<root>x</ROOT>", 0, { xml: true });
+			expect(A.rangeOf(Part.endTag, A.child(0, unclosed))).toBeNull();
+			const skipped = parseHtmlRefs("<style>x</style>", 0, {
+				xml: true,
+				skip: { text: true }
+			});
+			expect(A.rangeOf(Part.content, A.child(0, skipped))).toEqual([7, 8]);
+		});
+
+		it("should expose XML doctype identifier ranges", () => {
+			const source = '<!DOCTYPE Root PUBLIC "public" "system"><Root/>';
+			const document = parseHtmlRefs(source, 0, { xml: true });
+			const doctype = A.child(0, document);
+			expect(A.rangeOf(Part.publicId, doctype)).toEqual([23, 29]);
+			expect(A.rangeOf(Part.systemId, doctype)).toEqual([32, 38]);
+		});
+
+		it("should normalize XML comment line endings", () => {
+			const document = parseHtmlRefs("<root><!--a\r\nb\rc--></root>", 0, {
+				xml: true
+			});
+			const comment = A.child(0, A.child(0, document));
+			expect(A.value(comment)).toBe("a\nb\nc");
+		});
+
+		it("should bound markup detection in deeply nested XML entities", () => {
+			const declarations = [];
+			for (let i = 0; i < 10000; i++) {
+				declarations.push(`<!ENTITY e${i} "&e${i + 1};">`);
+			}
+			const source = `<!DOCTYPE root [${declarations.join("")}<!ENTITY e10000 "<child/>">]><root>&e0;<after/></root>`;
+			const document = parseHtmlRefs(source, 0, { xml: true });
+			const root = A.child(1, document);
+			expect(A.name(A.child(1, root))).toBe("after");
+		});
 
 		it("should not synthesize the HTML document scaffold", () => {
 			const document = parseXml("<root/>");

@@ -1538,51 +1538,23 @@ declare interface BuildDiagnostics {
 }
 type BuildInfo = KnownBuildInfo & Record<string, any>;
 type BuildMeta = KnownBuildMeta & Record<string, any>;
-
-/**
- * What this minifies inline CSS with: the CSS minifier's own options, so an
- * inline declaration is held to the rules a `.css` asset is.
- */
-declare interface BuiltinEmbeddedRendererOptions {
+type BuiltinEmbeddedRendererOptions = Pick<
+	CssProcessOptions,
+	| "environment"
+	| "convertLengthUnits"
+	| "convertApproximateColors"
+	| "dropOverriddenDeclarations"
+	| "rewriteCustomProperties"
+	| "transforms"
+	| "unusedSymbols"
+	| "pseudoClasses"
+> &
+	BuiltinSvgOptions;
+declare interface BuiltinSvgOptions {
 	/**
-	 * what the target can read (the CSS entries of `output.environment`), so a spelling it would not understand is never reached for; only read while printing, and an absent entry means the modern spelling is available
+	 * minify an SVG `data:` URL as the `.svg` assets are, wherever that is shorter (default false)
 	 */
-	environment?: CssEnvironment;
-
-	/**
-	 * rewrite a length into a shorter unit it is exactly equal in (`16px` -> `1pc`); off by default because it earns nothing once the asset is compressed, and only read while printing. A time is always rewritten
-	 */
-	convertLengthUnits?: boolean;
-
-	/**
-	 * write a polar or Lab color as the nearest hex even where that hex only approximates it: a channel too near a `.5` boundary for two engines to round it alike, and a color outside the sRGB gamut, which hex can only clip. Off by default, and only read while printing; a space engines read through transfers of their own (`a98-rgb`, `prophoto-rgb`) is left alone either way
-	 */
-	convertApproximateColors?: boolean;
-
-	/**
-	 * drop a declaration a later one in the same block overrides even where nothing states that the target can read the later value; off by default, and only read while printing. With a `browserslist` selection the drop is already made wherever every browser it names is known to read the later value, so this widens the case where no target is selected — a selection naming a browser the tables do not cover still answers for the whole of it
-	 */
-	dropOverriddenDeclarations?: boolean;
-
-	/**
-	 * shorten a custom property's value the way any other value is shortened (`--x:#ffffff` -> `#fff`); off by default because `getPropertyValue()` hands that text back, and only read while printing. What it may rewrite is what any other value's tokens may be, a color in a substitution's fallback included — that being the property's value rather than the function's own argument
-	 */
-	rewriteCustomProperties?: boolean;
-
-	/**
-	 * which of the meaning-preserving rewrites the minifying print makes; each is on unless it is `false`
-	 */
-	transforms?: CssTransformOptions;
-
-	/**
-	 * names a whole-project analysis found unused, which the print takes out: a bare name is a class, an id and an `@keyframes` name, and a `--`-prefixed one is a custom property. Only read while printing
-	 */
-	unusedSymbols?: string[];
-
-	/**
-	 * each pseudo-class to write as a class instead (`{ "focus-visible": "focus-visible" }`), so a script can apply it where the engine does not. Only read while printing
-	 */
-	pseudoClasses?: { [index: string]: string };
+	svg?: boolean;
 }
 declare class BunTargetPlugin {
 	constructor();
@@ -12801,6 +12773,11 @@ declare interface HtmlParseOptions {
 	fragmentContext?: string;
 
 	/**
+	 * parse as XML instead of applying the HTML tree-construction rules
+	 */
+	xml?: boolean;
+
+	/**
 	 * node kinds to omit from the AST (see `HtmlAstSkip`); omit to build the full tree
 	 */
 	skip?: HtmlAstSkip;
@@ -12973,12 +12950,23 @@ declare interface HtmlPrintOptions {
 		offer: Omit<DeferredEmbeddedSource, "build">
 	) => undefined | string;
 	deferSrcdoc?: boolean;
+	xmlQuote?: '"' | "'";
 }
 declare interface HtmlProcessOptions {
 	/**
 	 * context element tag name for fragment parsing (see `parseHtml`); the HTML analog of the CSS parser's `as` parse-mode option
 	 */
 	fragmentContext?: string;
+
+	/**
+	 * parse as XML instead of applying the HTML tree-construction rules
+	 */
+	xml?: boolean;
+
+	/**
+	 * the quote an XML minifying print gives an attribute whose value costs the same in either (default `"`); `'` for a document bound for a `"`-quoted string, such as a CSS `url("data:…")`
+	 */
+	xmlQuote?: '"' | "'";
 
 	/**
 	 * node kinds to omit from the AST for speed/memory (see `HtmlAstSkip`)
@@ -36205,6 +36193,7 @@ declare namespace exports {
 					| string
 					| EmbeddedSourceResult
 					| Promise<undefined | string | EmbeddedSourceResult>;
+				svg?: boolean;
 			} & CssTransformOptions,
 			extractComments?:
 				| string
@@ -36833,6 +36822,7 @@ declare namespace exports {
 					| string
 					| EmbeddedSourceResult
 					| Promise<undefined | string | EmbeddedSourceResult>;
+				svg?: boolean;
 			} & HtmlTransformOptions,
 			extractComments?:
 				| string
@@ -36940,6 +36930,7 @@ declare namespace exports {
 				export let BLOCK_CONTENTS: "block-contents";
 				export let EMBEDDED_LANGUAGES: string[];
 				export let EVENT_HANDLER: "event-handler";
+				export let FOREIGN_ELEMENT: "foreign-element";
 				export let FLAG_FOSTER_REGION: 128;
 				export let JSON_TYPE: "json";
 				export namespace Field {
@@ -36964,6 +36955,7 @@ declare namespace exports {
 					export let HTML: 0;
 					export let MathML: 1;
 					export let SVG: 2;
+					export let XML: 3;
 				}
 				export namespace NodeType {
 					export let Document: 1;
@@ -37386,7 +37378,7 @@ declare namespace exports {
 					rewriteCustomProperties?: boolean;
 					unusedSymbols?: string[];
 					pseudoClasses?: { [index: string]: string };
-				};
+				} & CssTransformOptions;
 			}
 		): Promise<{ code: string }>;
 		export namespace xmlMinify {

@@ -37,6 +37,8 @@ const {
 const { SourceProcessor } = require("../lib/html/syntax");
 const {
 	NodeType,
+	Part,
+	_attributeList,
 	decodeXmlAttribute,
 	parseHtml,
 	tokenizeXml
@@ -607,29 +609,28 @@ const canonical = (xml) => {
 	const visitors = {
 		[NodeType.Element]: {
 			enter: (nodePath) => {
-				const attributes = nodePath
-					.attributes()
+				const attributes = _attributeList(nodePath.node)
 					.map(({ name, value }) => [name, decodeXmlAttribute(value)])
 					.sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0));
 				out.push(
-					`<${nodePath.tagName()}${attributes
+					`<${nodePath.name()}${attributes
 						.map(([name, value]) => ` ${name}="${escapeCanonical(value)}"`)
 						.join("")}>`
 				);
 			},
 			exit: (nodePath) => {
-				out.push(`</${nodePath.tagName()}>`);
+				out.push(`</${nodePath.name()}>`);
 			}
 		},
 		[NodeType.Text]: {
 			enter: (nodePath) => {
-				out.push(escapeCanonical(nodePath.data()));
+				out.push(escapeCanonical(nodePath.value()));
 			},
 			exit: () => {}
 		},
 		[NodeType.ProcessingInstruction]: {
 			enter: (nodePath) => {
-				out.push(`<?${nodePath.piTarget()} ${nodePath.data()}?>`);
+				out.push(`<?${nodePath.name()} ${nodePath.value()}?>`);
 			},
 			exit: () => {}
 		}
@@ -855,8 +856,8 @@ const xmlInnerRanges = (nodePath) => {
 	if (nodePath.type() !== NodeType.Element) return undefined;
 	const start = nodePath.start();
 	/** @type {[string, number, number][]} */
-	const inner = [["opening tag", start, nodePath.tagEnd()]];
-	for (const attribute of nodePath.attributes()) {
+	const inner = [["opening tag", start, nodePath.endOf(Part.startTag)]];
+	for (const attribute of _attributeList(nodePath.node)) {
 		if (attribute.nameStart === -1) continue;
 		inner.push(["attribute name", attribute.nameStart, attribute.nameEnd]);
 		inner.push(["attribute value", attribute.valueStart, attribute.valueEnd]);
@@ -929,7 +930,7 @@ const xmlNodeRuns = (xml) => {
 				parent.held += size;
 				runs.push({
 					what: `${NODE_TYPE_NAMES[type]}${
-						type === NodeType.Element ? `:${nodePath.tagName()}` : ""
+						type === NodeType.Element ? `:${nodePath.name()}` : ""
 					}`,
 					start: nodePath.start(),
 					end: nodePath.end(),
@@ -1044,12 +1045,12 @@ const xmlPurityDigest = (xml) => {
 			`${NODE_TYPE_NAMES[type]}[${nodePath.start()},${nodePath.end()})`
 		);
 		if (type === NodeType.Element) {
-			digest.update(`|<${nodePath.tagName()}>`);
-			for (const { name, value } of nodePath.attributes()) {
+			digest.update(`|<${nodePath.name()}>`);
+			for (const { name, value } of _attributeList(nodePath.node)) {
 				digest.update(`|${name}=${decodeXmlAttribute(value)}`);
 			}
 		} else if (type !== NodeType.Document) {
-			digest.update(`|${nodePath.data()}`);
+			digest.update(`|${nodePath.value()}`);
 		}
 		digest.update("\n");
 	};
