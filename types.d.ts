@@ -1538,51 +1538,23 @@ declare interface BuildDiagnostics {
 }
 type BuildInfo = KnownBuildInfo & Record<string, any>;
 type BuildMeta = KnownBuildMeta & Record<string, any>;
-
-/**
- * What this minifies inline CSS with: the CSS minifier's own options, so an
- * inline declaration is held to the rules a `.css` asset is.
- */
-declare interface BuiltinEmbeddedRendererOptions {
+type BuiltinEmbeddedRendererOptions = Pick<
+	CssProcessOptions,
+	| "environment"
+	| "convertLengthUnits"
+	| "convertApproximateColors"
+	| "dropOverriddenDeclarations"
+	| "rewriteCustomProperties"
+	| "transforms"
+	| "unusedSymbols"
+	| "pseudoClasses"
+> &
+	BuiltinSvgOptions;
+declare interface BuiltinSvgOptions {
 	/**
-	 * what the target can read (the CSS entries of `output.environment`), so a spelling it would not understand is never reached for; only read while printing, and an absent entry means the modern spelling is available
+	 * minify an SVG `data:` URL as the `.svg` assets are, wherever that is shorter (default false)
 	 */
-	environment?: CssEnvironment;
-
-	/**
-	 * rewrite a length into a shorter unit it is exactly equal in (`16px` -> `1pc`); off by default because it earns nothing once the asset is compressed, and only read while printing. A time is always rewritten
-	 */
-	convertLengthUnits?: boolean;
-
-	/**
-	 * write a polar or Lab color as the nearest hex even where that hex only approximates it: a channel too near a `.5` boundary for two engines to round it alike, and a color outside the sRGB gamut, which hex can only clip. Off by default, and only read while printing; a space engines read through transfers of their own (`a98-rgb`, `prophoto-rgb`) is left alone either way
-	 */
-	convertApproximateColors?: boolean;
-
-	/**
-	 * drop a declaration a later one in the same block overrides even where nothing states that the target can read the later value; off by default, and only read while printing. With a `browserslist` selection the drop is already made wherever every browser it names is known to read the later value, so this widens the case where no target is selected — a selection naming a browser the tables do not cover still answers for the whole of it
-	 */
-	dropOverriddenDeclarations?: boolean;
-
-	/**
-	 * shorten a custom property's value the way any other value is shortened (`--x:#ffffff` -> `#fff`); off by default because `getPropertyValue()` hands that text back, and only read while printing. What it may rewrite is what any other value's tokens may be, a color in a substitution's fallback included — that being the property's value rather than the function's own argument
-	 */
-	rewriteCustomProperties?: boolean;
-
-	/**
-	 * which of the meaning-preserving rewrites the minifying print makes; each is on unless it is `false`
-	 */
-	transforms?: CssTransformOptions;
-
-	/**
-	 * names a whole-project analysis found unused, which the print takes out: a bare name is a class, an id and an `@keyframes` name, and a `--`-prefixed one is a custom property. Only read while printing
-	 */
-	unusedSymbols?: string[];
-
-	/**
-	 * each pseudo-class to write as a class instead (`{ "focus-visible": "focus-visible" }`), so a script can apply it where the engine does not. Only read while printing
-	 */
-	pseudoClasses?: { [index: string]: string };
+	svg?: boolean;
 }
 declare class BunTargetPlugin {
 	constructor();
@@ -12801,6 +12773,11 @@ declare interface HtmlParseOptions {
 	fragmentContext?: string;
 
 	/**
+	 * parse as XML instead of applying the HTML tree-construction rules
+	 */
+	xml?: boolean;
+
+	/**
 	 * node kinds to omit from the AST (see `HtmlAstSkip`); omit to build the full tree
 	 */
 	skip?: HtmlAstSkip;
@@ -12973,12 +12950,23 @@ declare interface HtmlPrintOptions {
 		offer: Omit<DeferredEmbeddedSource, "build">
 	) => undefined | string;
 	deferSrcdoc?: boolean;
+	xmlQuote?: '"' | "'";
 }
 declare interface HtmlProcessOptions {
 	/**
 	 * context element tag name for fragment parsing (see `parseHtml`); the HTML analog of the CSS parser's `as` parse-mode option
 	 */
 	fragmentContext?: string;
+
+	/**
+	 * parse as XML instead of applying the HTML tree-construction rules
+	 */
+	xml?: boolean;
+
+	/**
+	 * the quote an XML minifying print gives an attribute whose value costs the same in either (default `"`); `'` for a document bound for a `"`-quoted string, such as a CSS `url("data:…")`
+	 */
+	xmlQuote?: '"' | "'";
 
 	/**
 	 * node kinds to omit from the AST for speed/memory (see `HtmlAstSkip`)
@@ -13058,7 +13046,7 @@ declare interface HtmlProcessOptions {
 	deferEmbeddedSource?: DeferredEmbeddedSource[];
 
 	/**
-	 * renders each nested body this document embeds — an inline `<style>`, every `style=""` (as the block's contents it is, SVG's and MathML's included), a `<script>` holding JSON or JavaScript (with `as` naming which production of it the body is — `"module"` for a `<script type=module>`, `"script"` for a classic one), every event handler attribute, with `as: "event-handler"` saying it is a function body rather than a script — the production a `return` at its top level is in, which a renderer whose engine takes only whole scripts wraps before it reads — an `<svg>` subtree, and the document an `<iframe srcdoc>` holds (decoded, and written back escaped). The only way any of them is minified: webpack minifies nothing here itself, and `builtinEmbeddedRenderer` is its own CSS and JSON minifiers for a caller to pass; returning anything but text leaves a body as written
+	 * renders each nested body this document embeds — an inline `<style>`, every `style=""` (as the block's contents it is, SVG's and MathML's included), a `<script>` holding JSON or JavaScript (with `as` naming which production of it the body is — `"module"` for a `<script type=module>`, `"script"` for a classic one), every event handler attribute, with `as: "event-handler"` saying it is a function body rather than a script — the production a `return` at its top level is in, which a renderer whose engine takes only whole scripts wraps before it reads — an `<svg>` subtree, with `as: "foreign-element"` saying it is an element of this document rather than a standalone `.svg`, and the document an `<iframe srcdoc>` holds (decoded, and written back escaped). The only way any of them is minified: webpack minifies nothing here itself, and `builtinEmbeddedRenderer` is its own CSS and JSON minifiers for a caller to pass; returning anything but text leaves a body as written
 	 */
 	renderEmbeddedSource?: (
 		source: string,
@@ -13387,6 +13375,10 @@ declare interface HtmlTokenCallbacks {
 		dataStart: number,
 		dataEnd: number
 	) => number;
+
+	/**
+	 * `subsetStart` / `subsetEnd` delimit an XML internal subset (`tokenizeXml` only; -1 when absent)
+	 */
 	doctype?: (
 		input: string,
 		start: number,
@@ -13397,7 +13389,9 @@ declare interface HtmlTokenCallbacks {
 		publicEnd: number,
 		systemStart: number,
 		systemEnd: number,
-		forceQuirks: boolean
+		forceQuirks: boolean,
+		subsetStart?: number,
+		subsetEnd?: number
 	) => number;
 	parseError?: (
 		input: string,
@@ -24283,7 +24277,21 @@ declare interface OptimizationMinimizeOptions {
 	 * @since 5.112.0
 	 */
 	json?: boolean;
+
+	/**
+	 * Minimize `.svg` and `.xml` assets: `false` disables it, an object enables it. Absent means off unless `experiments.futureDefaults` is set.
+	 * @since 5.112.0
+	 * @experimental
+	 */
+	xml?: false | OptimizationMinimizeXml;
 }
+
+/**
+ * What the XML minimizer does. It has no switches of its own yet: the stylesheets an SVG or XHTML element holds are minified with `optimization.minimizeOptions.css` for the target's browsers.
+ * @since 5.112.0
+ * @experimental
+ */
+declare interface OptimizationMinimizeXml {}
 
 /**
  * Enables/Disables integrated optimizations.
@@ -36185,6 +36193,7 @@ declare namespace exports {
 					| string
 					| EmbeddedSourceResult
 					| Promise<undefined | string | EmbeddedSourceResult>;
+				svg?: boolean;
 			} & CssTransformOptions,
 			extractComments?:
 				| string
@@ -36813,6 +36822,7 @@ declare namespace exports {
 					| string
 					| EmbeddedSourceResult
 					| Promise<undefined | string | EmbeddedSourceResult>;
+				svg?: boolean;
 			} & HtmlTransformOptions,
 			extractComments?:
 				| string
@@ -36920,6 +36930,7 @@ declare namespace exports {
 				export let BLOCK_CONTENTS: "block-contents";
 				export let EMBEDDED_LANGUAGES: string[];
 				export let EVENT_HANDLER: "event-handler";
+				export let FOREIGN_ELEMENT: "foreign-element";
 				export let FLAG_FOSTER_REGION: 128;
 				export let JSON_TYPE: "json";
 				export namespace Field {
@@ -36944,6 +36955,7 @@ declare namespace exports {
 					export let HTML: 0;
 					export let MathML: 1;
 					export let SVG: 2;
+					export let XML: 3;
 				}
 				export namespace NodeType {
 					export let Document: 1;
@@ -36980,12 +36992,16 @@ declare namespace exports {
 				export let buildHeadTags: (opts: OutputHtmlOptions) => string;
 				export let collapseWhitespaceRuns: (s: string) => string;
 				export let decodeEntities: _functionSyntaxParser;
+				export let decodeXmlAttribute: (value: string) => string;
+				export let decodeXmlEntities: (value: string) => string;
 				export let escapeAttribute: (
 					s: string,
 					delimiter?: number,
 					minimal?: boolean
 				) => string;
 				export let escapeText: (s: string) => string;
+				export let escapeXmlAttribute: (value: string, quote: string) => string;
+				export let escapeXmlText: (data: string) => string;
 				export let grammar: (
 					input: string,
 					visitors: CompiledVisitorBucket<{
@@ -37176,6 +37192,11 @@ declare namespace exports {
 					pos?: number,
 					callbacks?: HtmlTokenCallbacks
 				) => number;
+				export let tokenizeXml: (
+					input: string,
+					pos?: number,
+					callbacks?: HtmlTokenCallbacks
+				) => number;
 			}
 			export namespace printer {
 				export let CLASSIC_SCRIPT: "script";
@@ -37344,6 +37365,26 @@ declare namespace exports {
 				) => string;
 			}
 			export { HtmlSourceProcessor as SourceProcessor };
+		}
+		export function xmlMinify(
+			input: { [index: string]: string | Buffer },
+			sourceMap?: RawSourceMap,
+			minimizerOptions?: {
+				environment?: CssEnvironment;
+				css?: {
+					convertLengthUnits?: boolean;
+					convertApproximateColors?: boolean;
+					dropOverriddenDeclarations?: boolean;
+					rewriteCustomProperties?: boolean;
+					unusedSymbols?: string[];
+					pseudoClasses?: { [index: string]: string };
+				} & CssTransformOptions;
+			}
+		): Promise<{ code: string }>;
+		export namespace xmlMinify {
+			export let supportsWorkerThreads: () => boolean;
+			export let getTypes: () => string[];
+			export let filter: (name: string) => boolean;
 		}
 		export { HtmlModulesPlugin };
 	}

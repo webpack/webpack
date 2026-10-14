@@ -19,3 +19,6 @@
 [submodule "test/external/oxc"]
 	path = test/external/oxc
 	url = https://github.com/oxc-project/oxc
+[submodule "test/external/xml-conformance-suite"]
+	path = test/external/xml-conformance-suite
+	url = https://github.com/lddubeau/xml-conformance-suite.git

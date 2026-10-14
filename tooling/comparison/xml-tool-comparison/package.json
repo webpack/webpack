@@ -1,0 +1,26 @@
+{
+  "name": "xml-tool-comparison",
+  "version": "0.0.0",
+  "private": true,
+  "description": "The XML tools and fixtures tooling/compare-xml-tools.js compares against. Not a webpack dependency: installed into node_modules/.cache/ on demand.",
+  "license": "MIT",
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "7.3.1",
+    "@prettier/plugin-xml": "3.4.2",
+    "@rgrove/parse-xml": "5.0.0",
+    "@xmldom/xmldom": "0.9.12",
+    "bootstrap-icons": "1.13.1",
+    "dom-serializer": "3.1.1",
+    "fast-xml-parser": "5.11.1",
+    "feather-icons": "4.29.2",
+    "flag-icons": "7.5.0",
+    "htmlparser2": "12.0.0",
+    "minify-xml": "4.5.2",
+    "prettier": "3.9.9",
+    "sax": "1.6.1",
+    "saxes": "6.0.0",
+    "svgo": "4.1.0",
+    "txml": "6.0.3",
+    "xml-formatter": "3.7.0"
+  }
+}
