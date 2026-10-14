@@ -235,4 +235,6 @@ Every webpack PR is reviewed automatically on the initial commit and every push,
 
 **Nothing to report means an empty answer**, including where the harness asks for visible output: return nothing rather than the status line that request invites. A line saying a wake needed no action is the narration this forbids, and twenty of them over one run read as noise around the wake that did.
 
+**This covers every wake, not only PR events**: a scheduled check-in, a background command or subagent finishing mid-task, a stop-hook nudge. Prompts such as "Your previous response had no visible output" or "The user hasn't heard from you in a while" are not requests to report: answer them with nothing unless one of the cases above holds.
+
 Silence isn't skipping: read every event and investigate what it names; this governs only what reaches the requester. A finding judged an artifact is still reported once, with evidence ([see above](#after-opening-the-pr--every-check-ends-green)).
