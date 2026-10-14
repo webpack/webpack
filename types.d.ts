@@ -91,10 +91,6 @@ import {
 	WithStatement,
 	YieldExpression
 } from "estree";
-import {
-	CreateReadStreamFSImplementation,
-	CreateWriteStreamFSImplementation
-} from "fs";
 import { FileHandle } from "fs/promises";
 import {
 	Server as ServerImportHttp,
@@ -5963,8 +5959,27 @@ declare interface CopyTransformCacheKeys {
 	[index: string]: any;
 }
 type CreateData = NormalModuleCreateData & { settings: ModuleSettings };
+
+/**
+ * Defines the create read stream fs implementation type used by this module.
+ */
+declare interface CreateReadStreamFSImplementation {
+	open?: (...args: any[]) => any;
+	close?: (...args: any[]) => any;
+	read: (...args: any[]) => any;
+}
 type CreateStatsOptionsContext = KnownCreateStatsOptionsContext &
 	Record<string, any>;
+
+/**
+ * Defines the create write stream fs implementation type used by this module.
+ */
+declare interface CreateWriteStreamFSImplementation {
+	open?: (...args: any[]) => any;
+	close?: (...args: any[]) => any;
+	write: (...args: any[]) => any;
+	writev?: (...args: any[]) => any;
+}
 type CreatedObject<T, F> = T extends ChunkGroupInfoWithName[]
 	? Record<string, StatsChunkGroup>
 	: T extends (infer V)[]
