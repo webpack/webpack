@@ -85,6 +85,7 @@ export default defineConfig([
 
 		// Ignore not supported files
 		"**/*.d.ts",
+		"**/*.d.json.ts",
 
 		// Ignore precompiled schemas
 		"schemas/**/*.check.js",
