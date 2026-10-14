@@ -167,6 +167,10 @@ Work waiting for the next breaking release uses one wording, in every file type:
 grep -rn "TODO in the next major release" codecov.yml bin hot lib setup test tooling
 ```
 
+### A dependency's bug is fixed in the dependency
+
+When the root cause is in a dependency (`watchpack`, `enhanced-resolve`, `webpack-sources`, …), **fix it there**: a PR to that repository with its own test, never a workaround in `lib/`, which hides the bug from every other user of the package. The webpack PR then only bumps the dependency to the release carrying the fix, plus a regression test showing webpack's symptom gone. Only if the requester asks for a stopgap, open its comment with `// WORKAROUND(<package>):` naming the gap, so `grep -rn "WORKAROUND(" lib` lists what to remove after the bump.
+
 ## Testing
 
 Directory structure, naming and running one case: [TESTING_DOCS.md](TESTING_DOCS.md).
