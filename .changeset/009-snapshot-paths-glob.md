@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Accept a glob such as `node_modules` in `snapshot.managedPaths`, `immutablePaths` and `unmanagedPaths`.
+Accept glob patterns in more path, module and file filter options.

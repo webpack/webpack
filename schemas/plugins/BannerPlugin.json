@@ -17,6 +17,33 @@
           "minLength": 1
         },
         {
+          "description": "Glob patterns matched against the file name, `!` in front of a pattern excludes it, and a relative pattern matches at any depth.",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "glob": {
+              "description": "Glob patterns to match.",
+              "anyOf": [
+                {
+                  "type": "array",
+                  "items": {
+                    "description": "A glob pattern.",
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "minItems": 1
+                },
+                {
+                  "type": "string",
+                  "minLength": 1
+                }
+              ]
+            }
+          },
+          "required": ["glob"],
+          "added": "5.112.0"
+        },
+        {
           "instanceof": "Function",
           "tsType": "import('../../lib/devtool/ModuleFilenameHelpers').MatcherFn"
         }
