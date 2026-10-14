@@ -56,7 +56,14 @@ module.exports = (_env, { srcPath }) =>
 						const reached = barrier.arm();
 						try {
 							replaceValue("update");
-							await reached;
+							// a write before the watcher is ready goes unseen (macOS), so
+							// repeat it, as the harness does, until the loader is reached
+							const retouch = setInterval(() => replaceValue("update"), 1000);
+							try {
+								await reached;
+							} finally {
+								clearInterval(retouch);
+							}
 							replaceValue("later");
 							watching.invalidate();
 							let callbacks = 0;

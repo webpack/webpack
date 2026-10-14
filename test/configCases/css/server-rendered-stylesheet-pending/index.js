@@ -8,7 +8,8 @@ it("waits for a server-rendered stylesheet that has not applied yet", async () =
 	printed.rel = "stylesheet";
 	printed.href = "https://test.cases/button.css";
 	printed.sheet = undefined;
-	document.head.appendChild(printed);
+	// parsed from the HTML, not inserted, so FakeDocument fires no load of its own
+	document.head._attach(printed);
 
 	let loaded = false;
 	const promise = import(/* webpackChunkName: "button" */ "./button.js").then(
