@@ -228,7 +228,7 @@ Every webpack PR is reviewed automatically on the initial commit and every push,
 
 - a review comment (human or bot, judged on the claim) needs an action or decision;
 - a check failed for this PR's reason, with the fix pushed or what blocks it;
-- a measuring report is **final** and moved: code size (read gzip), coverage once every uploader reported, a benchmark whose output doesn't disclaim itself;
+- a measuring report is **final** and moved in a way the diff doesn't explain: code size (read gzip), coverage once every uploader reported, a benchmark whose output doesn't disclaim itself;
 - the PR merged or closed, or the requester must choose something.
 
 **Never narrate the rest** — intermediate coverage recomputes, partial-upload percentages, bot echoes (changeset, preview publish, "review in progress"), a check turning green, lists of job states. That buries the one wake that matters.
