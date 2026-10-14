@@ -10,7 +10,7 @@ The full rules are in [docs/pull-requests.md](../../../docs/pull-requests.md); t
 **Act** — then report in one or two lines what changed or what blocks it — only when:
 
 - a review or review comment (human or bot) asks for a fix, a verification or a decision;
-- a check fails, or the PR conflicts with its base;
+- a check fails for this PR's reason, with the fix pushed or what blocks it, or the PR conflicts with its base;
 - a code-size, coverage or benchmark report is **final** and moved in a way the diff doesn't explain;
 - the PR merged or closed, or the requester must choose something.
 
