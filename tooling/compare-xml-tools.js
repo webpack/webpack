@@ -36,6 +36,7 @@ const {
 } = require("../lib/html/builtinEmbeddedRenderer");
 const { SourceProcessor } = require("../lib/html/syntax");
 const {
+	Field,
 	NodeType,
 	Part,
 	_attributeList,
@@ -438,6 +439,14 @@ const TOOLS = [
 		}
 	},
 	{
+		name: "svgo (multipass)",
+		stage: "minify",
+		create: () => {
+			const { optimize } = load("svgo");
+			return (xml) => optimize(xml, { multipass: true }).data;
+		}
+	},
+	{
 		name: "minify-xml",
 		stage: "minify",
 		create: () => {
@@ -469,8 +478,7 @@ const TOOLS = [
 
 // A tool built for one vocabulary, whose output for any other document says
 // nothing about how it reads XML: svgo drops what an SVG renderer ignores.
-const SVG_ONLY = new Set(["svgo"]);
-const SVG_ROOT = /<svg[\s>]/;
+const SVG_ONLY = new Set(["svgo", "svgo (multipass)"]);
 
 const STYLE_ELEMENT = /(?:^|:)style$/;
 
@@ -570,6 +578,29 @@ const wantedRelation = filterFrom("RELATION");
 const wantedSpelling = filterFrom("SPELLING");
 const wantedPreset = filterFrom("PRESET");
 
+/**
+ * Select tools for the document's root vocabulary, skipping SVG optimizers for other XML.
+ * @param {string} stage comparison stage
+ * @param {string} xml input document
+ * @returns {import("./compare-tools-harness").Tool[]} the eligible tools
+ */
+const toolsFor = (stage, xml) => {
+	/** @type {string | undefined} */
+	let root;
+	tokenizeXml(xml, 0, {
+		openTag(input, _start, end, nameStart, nameEnd) {
+			if (root === undefined) root = input.slice(nameStart, nameEnd);
+			return end;
+		}
+	});
+	return TOOLS.filter(
+		(tool) =>
+			tool.stage === stage &&
+			wantedTool(tool.name) &&
+			(!SVG_ONLY.has(tool.name) || root === "svg")
+	);
+};
+
 // --- Invariants -------------------------------------------------------------
 
 // `js` is where the test harness writes what a case built, and `external` holds
@@ -597,6 +628,20 @@ const escapeCanonical = (value) =>
 		.replace(/\r/g, "&#13;");
 
 /**
+ * @param {HtmlPath} nodePath an element's path
+ * @returns {[string, string][]} its normalized attribute names and values
+ */
+const decodedAttributes = (nodePath) => {
+	/** @type {[string, string][]} */
+	const attributes = [];
+	for (let i = 0; i < nodePath.fieldCount(Field.attributes); i++) {
+		const attribute = nodePath.field(i, Field.attributes);
+		attributes.push([nodePath.name(attribute), nodePath.value(attribute)]);
+	}
+	return attributes;
+};
+
+/**
  * What a document means, as webpack reads it: James Clark's canonical form,
  * attributes sorted and every value decoded, comments and the DTD left out.
  * @param {string} xml a document
@@ -609,9 +654,9 @@ const canonical = (xml) => {
 	const visitors = {
 		[NodeType.Element]: {
 			enter: (nodePath) => {
-				const attributes = _attributeList(nodePath.node)
-					.map(({ name, value }) => [name, decodeXmlAttribute(value)])
-					.sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0));
+				const attributes = decodedAttributes(nodePath).sort(([a], [b]) =>
+					a < b ? -1 : a > b ? 1 : 0
+				);
 				out.push(
 					`<${nodePath.name()}${attributes
 						.map(([name, value]) => ` ${name}="${escapeCanonical(value)}"`)
@@ -1046,8 +1091,8 @@ const xmlPurityDigest = (xml) => {
 		);
 		if (type === NodeType.Element) {
 			digest.update(`|<${nodePath.name()}>`);
-			for (const { name, value } of _attributeList(nodePath.node)) {
-				digest.update(`|${name}=${decodeXmlAttribute(value)}`);
+			for (const [name, value] of decodedAttributes(nodePath)) {
+				digest.update(`|${name}=${value}`);
 			}
 		} else if (type !== NodeType.Document) {
 			digest.update(`|${nodePath.value()}`);
@@ -1233,12 +1278,7 @@ const main = async () => {
 			}\n`
 		);
 		for (const stage of STAGES.filter(wantedStage)) {
-			const tools = TOOLS.filter(
-				(tool) =>
-					tool.stage === stage &&
-					wantedTool(tool.name) &&
-					(!SVG_ONLY.has(tool.name) || SVG_ROOT.test(xml))
-			);
+			const tools = toolsFor(stage, xml);
 			if (tools.length === 0) continue;
 			process.stdout.write(
 				stage === "parse"
@@ -1342,5 +1382,6 @@ module.exports = {
 	INSTALLED_DOCUMENTS,
 	MAVEN_POM,
 	XLIFF,
-	canonical
+	canonical,
+	toolsFor
 };

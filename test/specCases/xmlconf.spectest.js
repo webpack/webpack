@@ -16,7 +16,7 @@
 const fs = require("fs");
 const path = require("path");
 const { SourceProcessor } = require("../../lib/html/syntax");
-const { A, NodeType, _attributeList, decodeXmlAttribute, parseHtml } = require("../../lib/html/syntax-parser");
+const { A, Field, NodeType, parseHtml } = require("../../lib/html/syntax-parser");
 
 const suiteDir = path.resolve(
 	__dirname,
@@ -44,8 +44,9 @@ const hasCorpus = fs.existsSync(path.join(suiteDir, "xmlconf.xml"));
 const attributesOf = (node) => {
 	/** @type {AttributeMap} */
 	const out = {};
-	for (const attribute of _attributeList(node)) {
-		out[attribute.name] = decodeXmlAttribute(attribute.value);
+	for (let i = 0; i < A.fieldCount(Field.attributes, node); i++) {
+		const attribute = A.field(i, Field.attributes, node);
+		out[A.name(attribute)] = A.value(attribute);
 	}
 	return out;
 };

@@ -3341,6 +3341,34 @@ describe("parseHtml", () => {
 			expect(A.value(attribute)).toBe("declared &\u0080&nbsp;");
 		});
 
+		it("should decode an XML attribute only once per parse", () => {
+			const value = "x".repeat(400000);
+			const source = `<!DOCTYPE root [<!ENTITY value "${value}">]><root value="&value;"/>`;
+			const document = parseHtmlRefs(source, 0, { xml: true });
+			const attribute = A.fieldNamed(Field.attributes, "value", A.child(1, document));
+			for (let i = 0; i < 4; i++) expect(A.value(attribute) === value).toBe(true);
+			const next = parseHtmlRefs('<root value="next"/>', 0, { xml: true });
+			expect(A.value(A.fieldNamed(Field.attributes, "value", A.child(0, next)))).toBe("next");
+		});
+
+		it.each(["", "\r\n"])("should preserve referenced carriage returns in an XML markup entity after %j", (lineEnd) => {
+			const source = `<!DOCTYPE root [<!ENTITY value "a&#13;b<child/>">]>${lineEnd}<root>&value;</root>`;
+			const document = parseHtmlRefs(source, 0, { xml: true });
+			expect(A.value(A.child(0, A.child(1, document)))).toBe("a\rb");
+		});
+
+		it.each([
+			["<![CDATA[a&#13;b]]>", "a\rb"],
+			["<!--a&#13;b-->", "a\nb"],
+			["<?target a&#13;b?>", "a\nb"]
+		])("should normalize entity line endings according to the token in %s", (markup, expected) => {
+			for (const lineEnd of ["", "\r\n"]) {
+				const source = `<!DOCTYPE root [<!ENTITY value "${markup}<child/>">]>${lineEnd}<root>&value;</root>`;
+				const document = parseHtmlRefs(source, 0, { xml: true });
+				expect(A.value(A.child(0, A.child(1, document)))).toBe(expected);
+			}
+		});
+
 		it("should expose case-sensitive XML content and end-tag ranges", () => {
 			const source = "<Root>x</Root>";
 			const document = parseHtmlRefs(source, 0, { xml: true });
