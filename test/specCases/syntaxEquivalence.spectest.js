@@ -1523,6 +1523,19 @@ const LOWERING_FIXTURES = [
 		]
 	},
 	{
+		name: "nesting under a rule opening on a combinator",
+		// Swiper writes `.swiper-vertical{~.swiper-button-prev{.icon{…}}}`; the
+		// parent goes into `:is()` written out, which takes no relative argument.
+		produces: [":is(a b,a~b) c{"],
+		css: "a{b,~b{c{color:red}}}",
+		browsers: ["chrome 100"],
+		html: "<a><b><c id=t>t</c></b></a><b><c id=u>u</c></b>",
+		probes: [
+			["#t", "color"],
+			["#u", "color"]
+		]
+	},
+	{
 		name: "light-dark()",
 		// The pair the lowering writes, which a script enumerating the computed
 		// custom properties would see where the source has none.
