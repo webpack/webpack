@@ -116,6 +116,53 @@ describe("Watch", () => {
 		}, 50);
 	});
 
+	it("should keep earlier stats readable after their modules are cleaned up", (done) => {
+		const context = path.join(testDirectory, "js", "Watch", "stats-after-cleanup");
+		const entry = path.join(context, "index.js");
+		const changedFile = path.join(context, "a.js");
+		fs.rmSync(context, { recursive: true, force: true });
+		fs.mkdirSync(context, { recursive: true });
+		fs.writeFileSync(entry, 'require("./a");');
+		fs.writeFileSync(changedFile, "module.exports = 1;");
+		const compiler = webpack({
+			mode: "development",
+			context,
+			entry: "./index.js",
+			cache: { type: "memory" }
+		});
+		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
+			/** @type {unknown} */ (createFsFromVolume(new Volume()))
+		);
+		const later = new Date(Date.now() + 10000);
+		/** @type {import("../../").Stats[]} */
+		const builds = [];
+		const run = () =>
+			compiler.run((err, stats) => {
+				if (err) return done(err);
+				builds.push(/** @type {import("../../").Stats} */ (stats));
+				if (builds.length === 1) {
+					// the second build rebuilds the module instance the first stats hold
+					fs.writeFileSync(changedFile, "module.exports = 2;");
+					fs.utimesSync(changedFile, later, later);
+				} else if (builds.length === 2) {
+					// the third build no longer has the module, so it stays cleaned up
+					fs.writeFileSync(entry, "");
+					fs.utimesSync(entry, later, later);
+				}
+				if (builds.length < 3) return run();
+				compiler.close((closeErr) => {
+					if (closeErr) return done(closeErr);
+					try {
+						builds[0].toString({ all: true });
+					} catch (error) {
+						return done(error);
+					}
+					done();
+				});
+			});
+		run();
+	});
+
 	it("should rebuild when a file is removed while a build is running", (done) => {
 		const context = path.join(testDirectory, "js", "Watch", "removed-while-building");
 		const removedFile = path.join(context, "b.js");
