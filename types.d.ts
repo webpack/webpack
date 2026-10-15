@@ -13009,7 +13009,7 @@ declare interface HtmlProcessOptions {
 	mergeScripts?: boolean;
 
 	/**
-	 * print an element's attributes commonest name first, ties by name, which nothing in HTML reads (default false)
+	 * print an HTML or XML element's attributes commonest name first, ties by name (default false)
 	 */
 	sortAttributes?: boolean;
 
@@ -24287,11 +24287,17 @@ declare interface OptimizationMinimizeOptions {
 }
 
 /**
- * What the XML minimizer does. It has no switches of its own yet: the stylesheets an SVG or XHTML element holds are minified with `optimization.minimizeOptions.css` for the target's browsers.
+ * What the XML minimizer does. The stylesheets an SVG or XHTML element holds are minified with `optimization.minimizeOptions.css` for the target's browsers.
  * @since 5.112.0
  * @experimental
  */
-declare interface OptimizationMinimizeXml {}
+declare interface OptimizationMinimizeXml {
+	/**
+	 * Print attributes with the document's commonest names first, breaking ties by case-sensitive name. Off by default: consumers observing attribute order see the new order.
+	 * @since 5.112.0
+	 */
+	sortAttributes?: boolean;
+}
 
 /**
  * Enables/Disables integrated optimizations.
@@ -37369,7 +37375,7 @@ declare namespace exports {
 		export function xmlMinify(
 			input: { [index: string]: string | Buffer },
 			sourceMap?: RawSourceMap,
-			minimizerOptions?: {
+			minimizerOptions?: OptimizationMinimizeXml & {
 				environment?: CssEnvironment;
 				css?: {
 					convertLengthUnits?: boolean;

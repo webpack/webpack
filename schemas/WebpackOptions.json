@@ -4493,9 +4493,16 @@
       "added": "5.110.0"
     },
     "OptimizationMinimizeXml": {
-      "description": "What the XML minimizer does. It has no switches of its own yet: the stylesheets an SVG or XHTML element holds are minified with `optimization.minimizeOptions.css` for the target's browsers.",
+      "description": "What the XML minimizer does. The stylesheets an SVG or XHTML element holds are minified with `optimization.minimizeOptions.css` for the target's browsers.",
       "type": "object",
       "additionalProperties": false,
+      "properties": {
+        "sortAttributes": {
+          "description": "Print attributes with the document's commonest names first, breaking ties by case-sensitive name. Off by default: consumers observing attribute order see the new order.",
+          "type": "boolean",
+          "added": "5.112.0"
+        }
+      },
       "experimental": true,
       "added": "5.112.0"
     },

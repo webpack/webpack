@@ -272,13 +272,16 @@ const printXml = (xml, mode) =>
 		new SourceProcessor().process(xml, { xml: true, mode })
 	).code;
 
-// The option sets the invariants are held over, as the other comparisons name
-// theirs. XML printing takes no options yet, so there is the one.
-/** @type {[string, Record<string, never>][]} */
-const PRESETS = [["default", {}]];
+/** @typedef {Pick<import("../lib/html/syntax-printer").HtmlProcessOptions, "sortAttributes">} XmlPrintOptions */
+
+/** @type {[string, XmlPrintOptions][]} */
+const PRESETS = [
+	["default", {}],
+	["sorted", { sortAttributes: true }]
+];
 
 /**
- * @param {Record<string, never>} options one preset's printer options
+ * @param {XmlPrintOptions} options one preset's printer options
  * @returns {(xml: string) => string} the minifier those options name
  */
 const printerFor = (options) => (xml) =>
@@ -426,6 +429,20 @@ const TOOLS = [
 						renderEmbeddedSource
 					})
 				).code;
+		}
+	},
+	{
+		name: "webpack (sorted attributes)",
+		stage: "minify",
+		create: () => {
+			const renderEmbeddedSource = builtinEmbeddedRenderer();
+			return (xml) =>
+				new SourceProcessor().process(xml, {
+					xml: true,
+					mode: "minify",
+					sortAttributes: true,
+					renderEmbeddedSource
+				}).code;
 		}
 	},
 	{

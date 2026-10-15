@@ -3332,6 +3332,27 @@ describe("parseHtml", () => {
 	describe("XML mode", () => {
 		const { SourceProcessor } = require("../../lib/html/syntax");
 
+		it("should reuse attribute sorting without HTML normalization", () => {
+			const source = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:x="urn:test" viewBox="0 0 1 1"><g z="1" x:href="#shape" Z="2" class="b a"/><path z="3"/></svg>';
+			const processor = new SourceProcessor();
+			const options = { xml: true, mode: /** @type {const} */ ("minify"), sortAttributes: true };
+			const once = processor.process(source, options).code;
+			expect(once).toBe('<svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg" xmlns:x="urn:test"><g z="1" Z="2" class="b a" x:href="#shape"/><path z="3"/></svg>');
+			expect(processor.process(once, options).code).toBe(once);
+			expect(processor.process(source, { ...options, sortAttributes: false }).code).toBe(source);
+			expect(processor.process('<Root z="1" A="2"/>', options).code).toBe('<Root A="2" z="1"/>');
+			expect(processor.process('<Root z="1" A="2"/>', { xml: true, mode: "beautify", sortAttributes: true }).code).toBe('<Root z="1" A="2"/>');
+		});
+
+		it("should rank only explicit XML attributes and preserve DTD defaults", () => {
+			const source = '<!DOCTYPE root [<!ATTLIST item z CDATA "default" b CDATA "default">]><root><item z="explicit" a="1"/><item/><item/><other a="2"/></root>';
+			const options = { xml: true, mode: /** @type {const} */ ("minify"), sortAttributes: true };
+			const processor = new SourceProcessor();
+			const once = processor.process(source, options).code;
+			expect(once).toBe('<!DOCTYPE root [<!ATTLIST item z CDATA "default" b CDATA "default">]><root><item a="1" z="explicit"/><item/><item/><other a="2"/></root>');
+			expect(processor.process(once, options).code).toBe(once);
+		});
+
 		it("should expose XML attribute values through the shared path", () => {
 			const source = '<!DOCTYPE Root [<!ENTITY value "declared">]><Root value="&value;\t&amp;&#x80;&nbsp;"/>';
 			const document = parseHtmlRefs(source, 0, { xml: true });
