@@ -9857,6 +9857,16 @@ describe("CssSyntax minify — vendor prefixes (selectors)", () => {
 		);
 	});
 
+	it("copies an `:is()` whose arguments weigh one class each, however spelled", () => {
+		for (const args of ['.café,.b', '[data-value="a,b"],.b', ".a\\:b,.b"]) {
+			expect(
+				minifyFor(`:is(${args}) c{color:red}`, ["chrome 40", "firefox 40"])
+			).toBe(
+				`:-webkit-any(${args}) c{color:red}:-moz-any(${args}) c{color:red}:is(${args}) c{color:red}`
+			);
+		}
+	});
+
 	it("writes no `-any()` copy weighing other than the `:is()` it copies", () => {
 		// `:-webkit-any()` counts as one class; `:is()` as its weightiest argument.
 		for (const css of [":is(a,b) c{color:red}", ":is(.a,#b) c{color:red}"]) {
@@ -16014,6 +16024,14 @@ describe("CssSyntax minify — what an engine older than CSS Syntax 3 reads", ()
 		).toBe(
 			`a{x:1-a 2;content:"a\\"b'" x;border:1px solid #000;margin:0 -.5em;box-shadow:0 0 1px #777}`
 		);
+	});
+
+	it("leaves a `unicode-range` value's ranges as they are", () => {
+		expect(
+			minifyFor("@font-face{font-family:x;unicode-range:U+0131-0140}", [
+				"ie 11"
+			])
+		).toBe("@font-face{font-family:x;unicode-range:U+131-140}");
 	});
 
 	it("spaces the fallbacks and vendor copies it writes too", () => {
