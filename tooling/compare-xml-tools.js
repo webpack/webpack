@@ -272,12 +272,16 @@ const printXml = (xml, mode) =>
 		new SourceProcessor().process(xml, { xml: true, mode })
 	).code;
 
-/** @typedef {Pick<import("../lib/html/syntax-printer").HtmlProcessOptions, "sortAttributes">} XmlPrintOptions */
+/** @typedef {Pick<import("../lib/html/syntax-printer").HtmlProcessOptions, "sortAttributes" | "removeSvgMetadata" | "removeSvgEditorData">} XmlPrintOptions */
 
 /** @type {[string, XmlPrintOptions][]} */
 const PRESETS = [
 	["default", {}],
-	["sorted", { sortAttributes: true }]
+	["sorted", { sortAttributes: true }],
+	[
+		"svg-data",
+		{ sortAttributes: true, removeSvgMetadata: true, removeSvgEditorData: true }
+	]
 ];
 
 /**
@@ -441,6 +445,21 @@ const TOOLS = [
 					xml: true,
 					mode: "minify",
 					sortAttributes: true,
+					renderEmbeddedSource
+				}).code;
+		}
+	},
+	{
+		name: "webpack (SVG data removal)",
+		stage: "minify",
+		create: () => {
+			const renderEmbeddedSource = builtinEmbeddedRenderer();
+			return (xml) =>
+				new SourceProcessor().process(xml, {
+					xml: true,
+					mode: "minify",
+					removeSvgMetadata: true,
+					removeSvgEditorData: true,
 					renderEmbeddedSource
 				}).code;
 		}
@@ -1238,7 +1257,14 @@ const invariants = (write) => {
 			if (printed === null) continue;
 			// What minifying keeps is what the document says, which a reader other
 			// than the printer's own has to agree with.
-			if (wantedRelation("meaning") && canonical(printed) !== canonical(xml)) {
+			// Only presets retaining optional data owe equality to the whole input.
+			const retainsData =
+				!options.removeSvgMetadata && !options.removeSvgEditorData;
+			if (
+				retainsData &&
+				wantedRelation("meaning") &&
+				canonical(printed) !== canonical(xml)
+			) {
 				groups.add(
 					{
 						relation: "meaning",

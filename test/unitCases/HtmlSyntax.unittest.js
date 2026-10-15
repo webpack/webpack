@@ -3332,6 +3332,98 @@ describe("parseHtml", () => {
 	describe("XML mode", () => {
 		const { SourceProcessor } = require("../../lib/html/syntax");
 
+		it("should remove only SVG metadata when requested", () => {
+			const source = '<svg xmlns="http://www.w3.org/2000/svg"><title>Title</title><desc>Description</desc><g><metadata><record>editor</record></metadata></g><foreignObject><metadata xmlns="urn:data">keep</metadata></foreignObject><Metadata>case</Metadata></svg>';
+			const processor = new SourceProcessor();
+			const options = { xml: true, mode: /** @type {const} */ ("minify"), removeSvgMetadata: true };
+			const once = processor.process(source, options).code;
+			expect(once).toBe('<svg xmlns="http://www.w3.org/2000/svg"><title>Title</title><desc>Description</desc><g/><foreignObject><metadata xmlns="urn:data">keep</metadata></foreignObject><Metadata>case</Metadata></svg>');
+			expect(processor.process(once, options).code).toBe(once);
+			expect(processor.process(source, { ...options, removeSvgMetadata: false }).code).toBe(source);
+			expect(processor.process(source, { ...options, mode: "beautify" }).code).toBe(source);
+			expect(processor.process('<metadata xmlns="http://www.w3.org/2000/svg">root</metadata>', options).code).toBe('<metadata xmlns="http://www.w3.org/2000/svg">root</metadata>');
+		});
+
+		it("should resolve editor namespaces by URI and respect local declarations", () => {
+			const source = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:e="http://www.inkscape.org/namespaces/inkscape" xmlns:inkscape="urn:data" e:version="1" inkscape:version="keep"><e:view><g>drop subtree</g></e:view><g e:label="editor" label="keep"><e:view xmlns:e="urn:data">keep</e:view></g><e:view xmlns:e="urn:data" e:flag="keep"/><metadata>keep</metadata></svg>';
+			const options = { xml: true, mode: /** @type {const} */ ("minify"), removeSvgEditorData: true };
+			const processor = new SourceProcessor();
+			const once = processor.process(source, options).code;
+			expect(once).toBe('<svg xmlns="http://www.w3.org/2000/svg" xmlns:e="http://www.inkscape.org/namespaces/inkscape" xmlns:inkscape="urn:data" inkscape:version="keep"><g label="keep"><e:view xmlns:e="urn:data">keep</e:view></g><e:view xmlns:e="urn:data" e:flag="keep"/><metadata>keep</metadata></svg>');
+			expect(processor.process(once, options).code).toBe(once);
+			expect(processor.process(source, { ...options, removeSvgEditorData: false }).code).toBe(source);
+			const unrelated = '<root xmlns:e="http://www.inkscape.org/namespaces/inkscape" e:version="keep"><e:view/></root>';
+			expect(processor.process(unrelated, options).code).toBe(unrelated);
+		});
+
+		it("should remove default-namespace editor elements within SVG", () => {
+			const source = '<s:svg xmlns:s="http://www.w3.org/2000/svg"><view xmlns="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"><s:path/></view><s:metadata/><s:path/></s:svg>';
+			expect(new SourceProcessor().process(source, { xml: true, mode: "minify", removeSvgMetadata: true, removeSvgEditorData: true }).code).toBe('<s:svg xmlns:s="http://www.w3.org/2000/svg"><s:path/></s:svg>');
+		});
+
+		it("should resolve editor namespaces supplied by the DTD", () => {
+			const dtd = '<!DOCTYPE svg [<!ENTITY editor "http://www.inkscape.org/namespaces/inkscape"><!ATTLIST svg xmlns CDATA "http://www.w3.org/2000/svg" xmlns:e CDATA "&editor;">]>';
+			const options = { xml: true, mode: /** @type {const} */ ("minify"), removeSvgMetadata: true, removeSvgEditorData: true };
+			const processor = new SourceProcessor();
+			const once = processor.process(`${dtd}<svg e:version="1"><e:view/><metadata>data</metadata><g/></svg>`, options).code;
+			expect(once).toBe(`${dtd}<svg><g/></svg>`);
+			expect(processor.process(once, options).code).toBe(once);
+		});
+
+		it("should preserve licensing vocabularies when removing editor data", () => {
+			const source = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#"><metadata><dc:title>Credit</dc:title><cc:license>License</cc:license></metadata></svg>';
+			expect(new SourceProcessor().process(source, { xml: true, mode: "minify", removeSvgEditorData: true }).code).toBe(source);
+		});
+
+		it("should preserve comment options and render only surviving SVG styles", () => {
+			/** @type {string[]} */
+			const rendered = [];
+			const source = '<svg xmlns="http://www.w3.org/2000/svg"><metadata><style>drop{}</style></metadata><!--keep--><style>g { fill: red }</style></svg>';
+			const once = new SourceProcessor().process(source, { xml: true, mode: "minify", removeSvgMetadata: true, transforms: { comments: "all" }, renderEmbeddedSource: (css) => { rendered.push(css); return "g{fill:red}"; } }).code;
+			expect(once).toBe('<svg xmlns="http://www.w3.org/2000/svg"><!--keep--><style>g{fill:red}</style></svg>');
+			expect(rendered).toEqual(["g { fill: red }"]);
+		});
+
+		it("should remove data from deeply nested SVG without recursive traversal", () => {
+			const depth = 6000;
+			const prefix = '<svg xmlns="http://www.w3.org/2000/svg">';
+			const source = `${prefix}${"<g>".repeat(depth)}<metadata>data</metadata>${"</g>".repeat(depth)}</svg>`;
+			const options = { xml: true, mode: /** @type {const} */ ("minify"), removeSvgMetadata: true, removeSvgEditorData: true };
+			const processor = new SourceProcessor();
+			const once = processor.process(source, options).code;
+			expect(once).toBe(`${prefix}${"<g>".repeat(depth - 1)}<g/>${"</g>".repeat(depth - 1)}</svg>`);
+			expect(processor.process(once, options).code).toBe(once);
+		});
+
+		it("should preserve the verbatim fallback for XML markup entities", () => {
+			const source = '<!DOCTYPE svg [<!ENTITY markup "<g/>">]><svg xmlns="http://www.w3.org/2000/svg"><metadata>data</metadata>&markup;</svg>';
+			expect(new SourceProcessor().process(source, { xml: true, mode: "minify", removeSvgMetadata: true, removeSvgEditorData: true }).code).toBe(source);
+		});
+
+		it("should rank only surviving attributes when removing SVG data", () => {
+			const source = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:e="http://ns.adobe.com/AdobeIllustrator/10.0/"><metadata><g a="1"/><g a="1"/></metadata><e:view a="1"/><g a="1" e:label="editor" z="1"/><g z="2"/></svg>';
+			const options = { xml: true, mode: /** @type {const} */ ("minify"), sortAttributes: true, removeSvgMetadata: true, removeSvgEditorData: true };
+			const processor = new SourceProcessor();
+			const once = processor.process(source, options).code;
+			expect(once).toBe('<svg xmlns="http://www.w3.org/2000/svg" xmlns:e="http://ns.adobe.com/AdobeIllustrator/10.0/"><g z="1" a="1"/><g z="2"/></svg>');
+			expect(processor.process(once, options).code).toBe(once);
+		});
+
+		it("should keep joined XML character data well formed after removal", () => {
+			const options = { xml: true, mode: /** @type {const} */ ("minify"), removeSvgMetadata: true };
+			const processor = new SourceProcessor();
+			expect(processor.process('<svg xmlns="http://www.w3.org/2000/svg">]]<metadata/>></svg>', options).code).toBe('<svg xmlns="http://www.w3.org/2000/svg">]]&gt;</svg>');
+			for (const separator of ["<metadata/>", "<metadata/><!--note-->"]) {
+				for (const left of ["a", "&lt;".repeat(20), "]]", "<![CDATA[<&]]>"]) {
+					for (const right of ["b", "&amp;".repeat(20), ">", "<![CDATA[<&]]>"]) {
+						const source = `<svg xmlns="http://www.w3.org/2000/svg">${left}${separator}${right}</svg>`;
+						const once = processor.process(source, options).code;
+						expect(processor.process(once, options).code).toBe(once);
+					}
+				}
+			}
+		});
+
 		it("should reuse attribute sorting without HTML normalization", () => {
 			const source = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:x="urn:test" viewBox="0 0 1 1"><g z="1" x:href="#shape" Z="2" class="b a"/><path z="3"/></svg>';
 			const processor = new SourceProcessor();

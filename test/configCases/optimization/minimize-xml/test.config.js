@@ -10,7 +10,8 @@ const NAMES = [
 	"absent",
 	"none",
 	"claimed",
-	"sorted"
+	"sorted",
+	"cleaned"
 ];
 
 module.exports = {

@@ -59,5 +59,17 @@ module.exports = [
 	}),
 	config("sorted", {
 		optimization: { minimizeOptions: { xml: { sortAttributes: true } } }
+	}),
+	config("cleaned", {
+		entry: "./editor.js",
+		optimization: {
+			minimizeOptions: {
+				xml: {
+					removeMetadata: true,
+					removeEditorData: true,
+					sortAttributes: true
+				}
+			}
+		}
 	})
 ];
