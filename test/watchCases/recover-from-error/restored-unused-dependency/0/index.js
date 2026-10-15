@@ -23,3 +23,21 @@ it("should follow new URL() of a deleted and restored module", () => {
 		WATCH_STEP === "1" || WATCH_STEP === "2"
 	);
 });
+
+it("should follow new URL() targets that swap which one is missing", () => {
+	// separate entries, so concatenation does not put both pairs in one module
+	expect(require("./swap-entry").a).toBe(1);
+	expect(require("./swap-unnamed-entry").b).toBe(1);
+	const source = __non_webpack_require__("fs").readFileSync(__filename, "utf-8");
+	const missing = (file) =>
+		source.includes(["Cannot find module", `'./${file}'`].join(" "));
+	// one target of each pair is missing at every step but 3, so only which
+	// one tells the steps apart
+	const swapped = WATCH_STEP === "1" || WATCH_STEP === "2";
+	const both = WATCH_STEP === "3";
+	// a and b have module ids (other.js uses them), swap-unnamed's c and d none
+	expect(missing("swap-a.js")).toBe(swapped);
+	expect(missing("swap-b.js")).toBe(!swapped && !both);
+	expect(missing("swap-c.js")).toBe(swapped);
+	expect(missing("swap-d.js")).toBe(!swapped && !both);
+});
