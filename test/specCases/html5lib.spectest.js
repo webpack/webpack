@@ -292,7 +292,12 @@ const parseDat = (text) => {
 				i++;
 				const doc = [];
 				while (i < n) {
-					if (lines[i] === "" && (i + 1 >= n || lines[i + 1] === "#data")) {
+					if (
+						lines[i] === "" &&
+						(i + 1 >= n ||
+							lines[i + 1] === "#data" ||
+							lines[i + 1] === "#description")
+					) {
 						i++;
 						break;
 					}
