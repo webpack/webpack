@@ -552,6 +552,41 @@ describe("ProgressPlugin", () => {
 				expect(logs).toContain("[0]");
 			});
 		});
+
+		it("should not override a ProgressPlugin in a MultiCompiler's own plugins", () => {
+			const compiler = webpack(
+				/** @type {import("../../").MultiConfiguration} */ (
+					Object.assign(
+						[
+							{
+								context: path.join(testDirectory, "fixtures"),
+								entry: "./a.js",
+								infrastructureLogging: {
+								progress: true,
+								appendOnly: false,
+								colors: false
+							}
+						},
+						{
+							context: path.join(testDirectory, "fixtures"),
+							entry: "./b.js"
+						}
+					],
+					{ plugins: [new webpack.ProgressPlugin({ progressBar: false })] }
+				)
+				)
+			);
+			for (const c of compiler.compilers) {
+				c.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
+					/** @type {unknown} */ (createFsFromVolume(new Volume()))
+				);
+			}
+
+			process.stderr.columns = 200;
+			return runCompilerAsync(compiler).then(() => {
+				expect(stderr.toString()).not.toContain("━");
+			});
+		});
 	});
 
 	it("should display estimated time when estimatedTime is enabled", () => {

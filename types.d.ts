@@ -21985,6 +21985,29 @@ declare interface MultiCompilerOptions {
 	 * how many Compilers are allows to run at the same time in parallel
 	 */
 	parallelism?: number;
+
+	/**
+	 * plugins applied once to the MultiCompiler, after every child compiler is created
+	 */
+	plugins?: (
+		| undefined
+		| null
+		| false
+		| ""
+		| 0
+		| ((this: MultiCompiler, compiler: MultiCompiler) => void)
+		| MultiCompilerPluginInstance
+	)[];
+}
+
+/**
+ * A plugin applied to the MultiCompiler itself rather than to each child.
+ */
+declare interface MultiCompilerPluginInstance {
+	/**
+	 * called once with the MultiCompiler
+	 */
+	apply: (compiler: MultiCompiler) => void;
 }
 type MultiConfiguration = ReadonlyArray<Configuration> & MultiCompilerOptions;
 declare abstract class MultiStats {
@@ -37803,6 +37826,10 @@ declare namespace exports {
 	export type ExternalItemFunctionPromise = (
 		data: ExternalItemFunctionData
 	) => Promise<ExternalItemValue>;
+	export type MultiCompilerPluginFunction = (
+		this: MultiCompiler,
+		compiler: MultiCompiler
+	) => void;
 	export type ConfigurationFactory = (
 		env: Record<string, any>,
 		argv: Record<string, any>
@@ -37926,6 +37953,7 @@ declare namespace exports {
 		Entrypoint,
 		ExternalItemFunctionData,
 		MultiCompilerOptions,
+		MultiCompilerPluginInstance,
 		MultiConfiguration,
 		MultiStats,
 		StatsOptions as MultiStatsOptions,

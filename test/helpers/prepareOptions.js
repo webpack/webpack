@@ -54,22 +54,24 @@ const prepareOptions = (options, argv = {}) => {
 
 	if (Array.isArray(unwrapped)) {
 		const items = unwrapped.map((_options) => handleFunction(_options, argv));
+		const { parallelism, plugins } = /** @type {MultiConfiguration} */ (
+			unwrapped
+		);
 		/**
 		 * @param {Configuration[]} configs the prepared children
-		 * @returns {Configuration[]} them, with the array's own `parallelism`
+		 * @returns {Configuration[]} them, with the array's own `parallelism` and `plugins`
 		 */
-		const withParallelism = (configs) =>
-			/** @type {MultiConfiguration} */ (unwrapped).parallelism === undefined
-				? configs
-				: Object.assign(configs, {
-						parallelism: /** @type {MultiConfiguration} */ (unwrapped)
-							.parallelism
-					});
+		const withMultiOptions = (configs) =>
+			Object.assign(
+				configs,
+				parallelism === undefined ? {} : { parallelism },
+				plugins === undefined ? {} : { plugins }
+			);
 		return items.some((item) => isPromise(item))
 			? Promise.all(/** @type {Promise<Configuration>[]} */ (items)).then(
-					withParallelism
+					withMultiOptions
 				)
-			: withParallelism(/** @type {Configuration[]} */ (items));
+			: withMultiOptions(/** @type {Configuration[]} */ (items));
 	}
 
 	return handleFunction(unwrapped, argv);
