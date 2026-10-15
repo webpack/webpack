@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Speed up CSS, HTML and XML minifier startup in minimizer workers.
+Speed up minifier startup, sharing the compile cache with minimizer workers.
