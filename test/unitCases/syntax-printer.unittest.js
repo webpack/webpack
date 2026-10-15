@@ -246,15 +246,15 @@ const IMPROVED_CASES = [
 		"console.log(2),globalThis.g=function(){return 2},console.log(g());"
 	],
 	[
-		"stores to the next index of an array literal nothing reads",
+		"stores to the next index of an array literal nothing reads, where unsafe is on",
 		"function f() { var e = []; e[0] = 0; e[1] = 1; return 1; } console.log(f());",
-		{ compress: {}, mangle: false },
+		{ compress: { unsafe: true }, mangle: false },
 		"function f(){return 1}console.log(f());"
 	],
 	[
-		"stores to the next index of an array literal, up to the first not constant",
+		"stores to the next index of an array literal, up to the first not constant, where unsafe is on",
 		"function f(a) { var e = []; e[0] = 1; e[1] = \"b\"; e[2] = a; return e; } console.log(f(3).join());",
-		{ compress: {}, mangle: false },
+		{ compress: { unsafe: true }, mangle: false },
 		"function f(a){var e=[1,\"b\"];return e[2]=a,e}console.log(f(3).join());"
 	],
 	[
@@ -8286,6 +8286,15 @@ describe("syntax-printer", () => {
 				});
 				expect(code).toMatch(/x=[12]/);
 			}
+		});
+
+		it("should keep a store to an array index a setter on `Array.prototype` may take", async () => {
+			const { minify } = await load();
+			const input =
+				'Object.defineProperty(Array.prototype, 1, { set(v) { console.log("set", v); }, configurable: true }); function f() { var e = []; e[0] = 0; e[1] = 1; return e.length; } console.log(f());';
+			const { code } = await minify(input, { compress: {}, mangle: false });
+			expect(code).toContain("e[1]=1");
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
 		});
 
 		it("should not name a binding by a key or import name no binding may take", async () => {
