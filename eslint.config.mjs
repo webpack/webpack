@@ -354,9 +354,9 @@ export default defineConfig([
 		}
 	},
 	{
-		// Fetches a browser for the suites that compare against one, from a package
+		// Fetches the browsers for the suites that compare against one, from a package
 		// that is ESM-only — so it runs on modern Node rather than the baseline.
-		files: ["tooling/install-firefox.js"],
+		files: ["tooling/install-browsers.js"],
 		languageOptions: {
 			ecmaVersion: 2022
 		},
