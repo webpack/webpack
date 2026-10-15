@@ -4502,8 +4502,18 @@
           "type": "boolean",
           "added": "5.112.0"
         },
+        "removeEmptyAttributes": {
+          "description": "Remove empty `class`, `id` and `style` attributes on SVG elements unless the DTD declares them. Off by default because selectors and scripts can observe attribute presence.",
+          "type": "boolean",
+          "added": "5.112.0"
+        },
         "removeMetadata": {
           "description": "Remove SVG `metadata` elements and their contents, preserving `title`, `desc` and the document element. Off by default because metadata can carry licensing and application data.",
+          "type": "boolean",
+          "added": "5.112.0"
+        },
+        "removeUnusedNamespaces": {
+          "description": "Remove unused prefixed namespace declarations within SVG, preserving default namespaces and prefixes referenced in names or content. Off by default because scripts can observe namespace declarations.",
           "type": "boolean",
           "added": "5.112.0"
         },

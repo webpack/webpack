@@ -12906,6 +12906,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "optimization-minimize-options-xml-remove-empty-attributes": Object {
+    "configs": Array [
+      Object {
+        "description": "Remove empty \`class\`, \`id\` and \`style\` attributes on SVG elements unless the DTD declares them. Off by default because selectors and scripts can observe attribute presence.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.xml.removeEmptyAttributes",
+        "type": "boolean",
+      },
+    ],
+    "description": "Remove empty \`class\`, \`id\` and \`style\` attributes on SVG elements unless the DTD declares them. Off by default because selectors and scripts can observe attribute presence.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "optimization-minimize-options-xml-remove-metadata": Object {
     "configs": Array [
       Object {
@@ -12916,6 +12929,19 @@ Object {
       },
     ],
     "description": "Remove SVG \`metadata\` elements and their contents, preserving \`title\`, \`desc\` and the document element. Off by default because metadata can carry licensing and application data.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-options-xml-remove-unused-namespaces": Object {
+    "configs": Array [
+      Object {
+        "description": "Remove unused prefixed namespace declarations within SVG, preserving default namespaces and prefixes referenced in names or content. Off by default because scripts can observe namespace declarations.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.xml.removeUnusedNamespaces",
+        "type": "boolean",
+      },
+    ],
+    "description": "Remove unused prefixed namespace declarations within SVG, preserving default namespaces and prefixes referenced in names or content. Off by default because scripts can observe namespace declarations.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -12961,6 +12987,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "optimization-minimize-xml-remove-empty-attributes": Object {
+    "configs": Array [
+      Object {
+        "description": "Remove empty \`class\`, \`id\` and \`style\` attributes on SVG elements unless the DTD declares them. Off by default because selectors and scripts can observe attribute presence.",
+        "multiple": false,
+        "path": "optimization.minimize.xml.removeEmptyAttributes",
+        "type": "boolean",
+      },
+    ],
+    "description": "Remove empty \`class\`, \`id\` and \`style\` attributes on SVG elements unless the DTD declares them. Off by default because selectors and scripts can observe attribute presence.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "optimization-minimize-xml-remove-metadata": Object {
     "configs": Array [
       Object {
@@ -12971,6 +13010,19 @@ Object {
       },
     ],
     "description": "Remove SVG \`metadata\` elements and their contents, preserving \`title\`, \`desc\` and the document element. Off by default because metadata can carry licensing and application data.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-xml-remove-unused-namespaces": Object {
+    "configs": Array [
+      Object {
+        "description": "Remove unused prefixed namespace declarations within SVG, preserving default namespaces and prefixes referenced in names or content. Off by default because scripts can observe namespace declarations.",
+        "multiple": false,
+        "path": "optimization.minimize.xml.removeUnusedNamespaces",
+        "type": "boolean",
+      },
+    ],
+    "description": "Remove unused prefixed namespace declarations within SVG, preserving default namespaces and prefixes referenced in names or content. Off by default because scripts can observe namespace declarations.",
     "multiple": false,
     "simpleType": "boolean",
   },

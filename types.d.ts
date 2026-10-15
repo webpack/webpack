@@ -12941,6 +12941,7 @@ declare interface HtmlPrintOptions {
 	removeEmptyElements?: boolean;
 	removeSvgMetadata?: boolean;
 	removeSvgEditorData?: boolean;
+	removeUnusedSvgNamespaces?: boolean;
 	removeRedundantAttributes?: boolean | "all" | "smart";
 	sortAttributes?: boolean;
 	sortTokenLists?: boolean;
@@ -12976,6 +12977,11 @@ declare interface HtmlProcessOptions {
 	 * omit known editor elements and attributes within SVG when minifying XML (default false)
 	 */
 	removeSvgEditorData?: boolean;
+
+	/**
+	 * omit unused prefixed namespace declarations within SVG when minifying XML (default false)
+	 */
+	removeUnusedSvgNamespaces?: boolean;
 
 	/**
 	 * the quote an XML minifying print gives an attribute whose value costs the same in either (default `"`); `'` for a document bound for a `"`-quoted string, such as a CSS `url("data:…")`
@@ -24338,10 +24344,22 @@ declare interface OptimizationMinimizeXml {
 	removeEditorData?: boolean;
 
 	/**
+	 * Remove empty `class`, `id` and `style` attributes on SVG elements unless the DTD declares them. Off by default because selectors and scripts can observe attribute presence.
+	 * @since 5.112.0
+	 */
+	removeEmptyAttributes?: boolean;
+
+	/**
 	 * Remove SVG `metadata` elements and their contents, preserving `title`, `desc` and the document element. Off by default because metadata can carry licensing and application data.
 	 * @since 5.112.0
 	 */
 	removeMetadata?: boolean;
+
+	/**
+	 * Remove unused prefixed namespace declarations within SVG, preserving default namespaces and prefixes referenced in names or content. Off by default because scripts can observe namespace declarations.
+	 * @since 5.112.0
+	 */
+	removeUnusedNamespaces?: boolean;
 
 	/**
 	 * Print attributes with the document's commonest names first, breaking ties by case-sensitive name. Off by default: consumers observing attribute order see the new order.

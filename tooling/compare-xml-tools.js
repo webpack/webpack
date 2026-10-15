@@ -272,7 +272,7 @@ const printXml = (xml, mode) =>
 		new SourceProcessor().process(xml, { xml: true, mode })
 	).code;
 
-/** @typedef {Pick<import("../lib/html/syntax-printer").HtmlProcessOptions, "sortAttributes" | "removeSvgMetadata" | "removeSvgEditorData">} XmlPrintOptions */
+/** @typedef {Pick<import("../lib/html/syntax-printer").HtmlProcessOptions, "sortAttributes" | "removeSvgMetadata" | "removeSvgEditorData" | "removeUnusedSvgNamespaces" | "removeEmptyAttributes">} XmlPrintOptions */
 
 /** @type {[string, XmlPrintOptions][]} */
 const PRESETS = [
@@ -281,6 +281,16 @@ const PRESETS = [
 	[
 		"svg-data",
 		{ sortAttributes: true, removeSvgMetadata: true, removeSvgEditorData: true }
+	],
+	[
+		"svg-cleanup",
+		{
+			sortAttributes: true,
+			removeSvgMetadata: true,
+			removeSvgEditorData: true,
+			removeUnusedSvgNamespaces: true,
+			removeEmptyAttributes: true
+		}
 	]
 ];
 
@@ -464,6 +474,24 @@ const TOOLS = [
 				}).code;
 		}
 	},
+	{
+		name: "webpack (SVG attribute cleanup)",
+		stage: "minify",
+		create: () => {
+			const renderEmbeddedSource = builtinEmbeddedRenderer();
+			return (xml) =>
+				new SourceProcessor().process(xml, {
+					xml: true,
+					mode: "minify",
+					removeSvgMetadata: true,
+					removeSvgEditorData: true,
+					removeUnusedSvgNamespaces: true,
+					removeEmptyAttributes: true,
+					renderEmbeddedSource
+				}).code;
+		}
+	},
+
 	{
 		// SVG's own optimizer: it rewrites path data and drops what it deems
 		// editor noise, so it differs by design rather than by mistake.
@@ -1259,7 +1287,10 @@ const invariants = (write) => {
 			// than the printer's own has to agree with.
 			// Only presets retaining optional data owe equality to the whole input.
 			const retainsData =
-				!options.removeSvgMetadata && !options.removeSvgEditorData;
+				!options.removeSvgMetadata &&
+				!options.removeSvgEditorData &&
+				!options.removeUnusedSvgNamespaces &&
+				!options.removeEmptyAttributes;
 			if (
 				retainsData &&
 				wantedRelation("meaning") &&

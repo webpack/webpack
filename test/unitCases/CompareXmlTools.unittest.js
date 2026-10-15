@@ -59,6 +59,15 @@ describe("the XML tool comparison", () => {
 		expect(await minify(once)).toBe(once);
 	});
 
+	it("should compare namespace and empty-attribute cleanup with CSS rendering", async () => {
+		const source = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:e="http://www.inkscape.org/namespaces/inkscape" e:label="editor"><metadata>Optional</metadata><g class="" style="/* empty */"/></svg>';
+		const [tool] = toolsFor("minify", source).filter((tool) => tool.name === "webpack (SVG attribute cleanup)");
+		const minify = await tool.create();
+		const once = await minify(source);
+		expect(once).toBe('<svg xmlns="http://www.w3.org/2000/svg"><g/></svg>');
+		expect(await minify(once)).toBe(once);
+	});
+
 	it.each(["<svg/>", '<svg xmlns="http://www.w3.org/2000/svg"><path/></svg>', EDITOR_SVG])("should compare both SVGO passes for an SVG root", (xml) => {
 		expect(toolsFor("minify", xml).map((tool) => tool.name)).toEqual(expect.arrayContaining(["svgo", "svgo (multipass)"]));
 	});
