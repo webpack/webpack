@@ -234,6 +234,30 @@ const stringArray = (length, string = (index) => `w${index}`) =>
 /** @type {[string, string, import("terser").MinifyOptions, string?][]} */
 const IMPROVED_CASES = [
 	[
+		"a `let` written after its declaration and never read",
+		"function f(a) { let x; x = 1; if (a) x = 2; return a; } console.log(f(1));",
+		{ compress: {}, mangle: false },
+		"function f(a){return a&&2,a}console.log(f(1));"
+	],
+	[
+		"a `let` whose every read folds into its value, left with its write",
+		"(function () { let x; x = 2; console.log(x); globalThis.g = function () { return x; }; })(); console.log(g());",
+		{ compress: {}, mangle: false },
+		"console.log(2),globalThis.g=function(){return 2},console.log(g());"
+	],
+	[
+		"stores to the next index of an array literal nothing reads, where unsafe is on",
+		"function f() { var e = []; e[0] = 0; e[1] = 1; return 1; } console.log(f());",
+		{ compress: { unsafe: true }, mangle: false },
+		"function f(){return 1}console.log(f());"
+	],
+	[
+		"stores to the next index of an array literal, up to the first not constant, where unsafe is on",
+		"function f(a) { var e = []; e[0] = 1; e[1] = \"b\"; e[2] = a; return e; } console.log(f(3).join());",
+		{ compress: { unsafe: true }, mangle: false },
+		"function f(a){var e=[1,\"b\"];return e[2]=a,e}console.log(f(3).join());"
+	],
+	[
 		"a function declared after the function calling it once, written with statements",
 		"!function () { function s(t, u) { for (var i = 0; i < u.length; i++) Object.keys(u[i]).forEach(function (k) { d(t, k, u[i][k]); }); return t; } function d(o, k, v) { if (k in o) { Object.defineProperty(o, k, { value: v, enumerable: true }); } else { o[k] = v; } return o; } console.log(JSON.stringify(s({ a: 1 }, [{ a: 2, b: 3 }]))); }();",
 		{ compress: {}, mangle: false },
@@ -297,7 +321,7 @@ const IMPROVED_CASES = [
 		"an assignment to a `let` folded into the first read of it",
 		"function f(a) { let x, y; x = a * 2; y = g(x); return [x, y]; } function g(v) { return v + 1; } console.log(f(3));",
 		{ compress: {}, mangle: false },
-		"function f(a){let x,y;return[x=2*a,y=g(x)]}function g(v){return v+1}console.log(f(3));"
+		"function f(a){let x;return[x=2*a,g(x)]}function g(v){return v+1}console.log(f(3));"
 	],
 	[
 		"an increment of a name only its function sees folded past a global it calls",
@@ -309,7 +333,7 @@ const IMPROVED_CASES = [
 		"an assignment with effects folded past built-ins it reads and the `let`s they set",
 		"function k(start, stop, step) { let n, ticks; stop = Math.floor(stop / step); ticks = Array(n = Math.ceil(stop - start + 1)); return [ticks.length, n, stop]; } console.log(k(1, 10, 3));",
 		{ compress: {}, mangle: false },
-		"function k(start,stop,step){let n,ticks;return[(ticks=Array(n=Math.ceil((stop=Math.floor(stop/step))-start+1))).length,n,stop]}console.log(k(1,10,3));"
+		"function k(start,stop,step){let n;return[Array(n=Math.ceil((stop=Math.floor(stop/step))-start+1)).length,n,stop]}console.log(k(1,10,3));"
 	],
 	[
 		"an assignment moved past a built-in kept out of the object of the property it reads",
@@ -8243,6 +8267,34 @@ describe("syntax-printer", () => {
 				expect(code).toBe(written);
 				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
 			}
+		});
+
+		it("should keep a write to a `let` that may run before its declaration", async () => {
+			const { minify } = await load();
+			for (const input of [
+				"export function f(){x=2;let x}",
+				"export function f(a){switch(a){case 0:let x;break;case 1:x=1}}",
+				"export function f(){for(;;){x=1;let x}}",
+				"export function f(){let x;window.h=()=>x;x=2}",
+				"export function f(){g();let x;function g(){x=1}}",
+				"export function f(){class C{static{x=1}}let x}"
+			]) {
+				const { code } = await minify(input, {
+					module: true,
+					compress: {},
+					mangle: false
+				});
+				expect(code).toMatch(/x=[12]/);
+			}
+		});
+
+		it("should keep a store to an array index a setter on `Array.prototype` may take", async () => {
+			const { minify } = await load();
+			const input =
+				'Object.defineProperty(Array.prototype, 1, { set(v) { console.log("set", v); }, configurable: true }); function f() { var e = []; e[0] = 0; e[1] = 1; return e.length; } console.log(f());';
+			const { code } = await minify(input, { compress: {}, mangle: false });
+			expect(code).toContain("e[1]=1");
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
 		});
 
 		it("should not name a binding by a key or import name no binding may take", async () => {
