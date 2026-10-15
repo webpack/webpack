@@ -3454,6 +3454,11 @@ export interface OptimizationMinimizeOptions {
  */
 export interface OptimizationMinimizeXml {
 	/**
+	 * Remove whitespace-only text in known SVG containers, preserving text content, foreign content and `xml:space`. Off by default because scripts can observe whitespace nodes.
+	 * @since 5.112.0
+	 */
+	collapseWhitespace?: boolean;
+	/**
 	 * Remove elements and attributes in known editor namespaces within SVG, preserving namespace declarations and unrelated XML data. Off by default because editor data may be needed to edit the image.
 	 * @since 5.112.0
 	 */

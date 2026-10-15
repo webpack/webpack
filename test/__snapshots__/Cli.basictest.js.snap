@@ -12893,6 +12893,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "optimization-minimize-options-xml-collapse-whitespace": Object {
+    "configs": Array [
+      Object {
+        "description": "Remove whitespace-only text in known SVG containers, preserving text content, foreign content and \`xml:space\`. Off by default because scripts can observe whitespace nodes.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.xml.collapseWhitespace",
+        "type": "boolean",
+      },
+    ],
+    "description": "Remove whitespace-only text in known SVG containers, preserving text content, foreign content and \`xml:space\`. Off by default because scripts can observe whitespace nodes.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "optimization-minimize-options-xml-remove-editor-data": Object {
     "configs": Array [
       Object {
@@ -12971,6 +12984,19 @@ Object {
       },
     ],
     "description": "Minimize \`.svg\` and \`.xml\` assets: \`false\` disables it, an object enables it. Absent means off unless \`experiments.futureDefaults\` is set.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-xml-collapse-whitespace": Object {
+    "configs": Array [
+      Object {
+        "description": "Remove whitespace-only text in known SVG containers, preserving text content, foreign content and \`xml:space\`. Off by default because scripts can observe whitespace nodes.",
+        "multiple": false,
+        "path": "optimization.minimize.xml.collapseWhitespace",
+        "type": "boolean",
+      },
+    ],
+    "description": "Remove whitespace-only text in known SVG containers, preserving text content, foreign content and \`xml:space\`. Off by default because scripts can observe whitespace nodes.",
     "multiple": false,
     "simpleType": "boolean",
   },

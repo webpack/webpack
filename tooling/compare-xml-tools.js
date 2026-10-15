@@ -272,7 +272,7 @@ const printXml = (xml, mode) =>
 		new SourceProcessor().process(xml, { xml: true, mode })
 	).code;
 
-/** @typedef {Pick<import("../lib/html/syntax-printer").HtmlProcessOptions, "sortAttributes" | "removeSvgMetadata" | "removeSvgEditorData" | "removeUnusedSvgNamespaces" | "removeEmptyAttributes">} XmlPrintOptions */
+/** @typedef {Pick<import("../lib/html/syntax-printer").HtmlProcessOptions, "sortAttributes" | "removeSvgMetadata" | "removeSvgEditorData" | "removeUnusedSvgNamespaces" | "removeEmptyAttributes" | "collapseWhitespace">} XmlPrintOptions */
 
 /** @type {[string, XmlPrintOptions][]} */
 const PRESETS = [
@@ -290,6 +290,17 @@ const PRESETS = [
 			removeSvgEditorData: true,
 			removeUnusedSvgNamespaces: true,
 			removeEmptyAttributes: true
+		}
+	],
+	[
+		"svg-whitespace",
+		{
+			sortAttributes: true,
+			removeSvgMetadata: true,
+			removeSvgEditorData: true,
+			removeUnusedSvgNamespaces: true,
+			removeEmptyAttributes: true,
+			collapseWhitespace: true
 		}
 	]
 ];
@@ -474,23 +485,29 @@ const TOOLS = [
 				}).code;
 		}
 	},
-	{
-		name: "webpack (SVG attribute cleanup)",
-		stage: "minify",
-		create: () => {
-			const renderEmbeddedSource = builtinEmbeddedRenderer();
-			return (xml) =>
-				new SourceProcessor().process(xml, {
-					xml: true,
-					mode: "minify",
-					removeSvgMetadata: true,
-					removeSvgEditorData: true,
-					removeUnusedSvgNamespaces: true,
-					removeEmptyAttributes: true,
-					renderEmbeddedSource
-				}).code;
-		}
-	},
+	...[false, true].map(
+		(collapseWhitespace) =>
+			/** @type {import("./compare-tools-harness").Tool} */ ({
+				name: collapseWhitespace
+					? "webpack (SVG whitespace cleanup)"
+					: "webpack (SVG attribute cleanup)",
+				stage: "minify",
+				create: () => {
+					const renderEmbeddedSource = builtinEmbeddedRenderer();
+					return (xml) =>
+						new SourceProcessor().process(xml, {
+							xml: true,
+							mode: "minify",
+							collapseWhitespace,
+							removeSvgMetadata: true,
+							removeSvgEditorData: true,
+							removeUnusedSvgNamespaces: true,
+							removeEmptyAttributes: true,
+							renderEmbeddedSource
+						}).code;
+				}
+			})
+	),
 
 	{
 		// SVG's own optimizer: it rewrites path data and drops what it deems

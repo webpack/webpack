@@ -4497,6 +4497,11 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "collapseWhitespace": {
+          "description": "Remove whitespace-only text in known SVG containers, preserving text content, foreign content and `xml:space`. Off by default because scripts can observe whitespace nodes.",
+          "type": "boolean",
+          "added": "5.112.0"
+        },
         "removeEditorData": {
           "description": "Remove elements and attributes in known editor namespaces within SVG, preserving namespace declarations and unrelated XML data. Off by default because editor data may be needed to edit the image.",
           "type": "boolean",

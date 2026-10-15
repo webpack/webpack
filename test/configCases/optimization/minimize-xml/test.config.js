@@ -12,7 +12,8 @@ const NAMES = [
 	"claimed",
 	"sorted",
 	"cleaned",
-	"attributes"
+	"attributes",
+	"whitespace"
 ];
 
 module.exports = {

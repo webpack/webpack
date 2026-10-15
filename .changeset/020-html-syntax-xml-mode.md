@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Add XML parsing and minification with optional SVG data and attribute cleanup.
+Add XML parsing and minification with optional SVG data and whitespace cleanup.
