@@ -131,7 +131,7 @@ describe("css identifier utils", () => {
 	// failure is reproducible. Guards the string utils against crashes and
 	// escape/unescape round-trip violations.
 	describe("fuzzing (seeded)", () => {
-		const { escapeIdentifier, unescapeIdentifier, equalsLowerCase } = cssParser;
+		const { escapeIdentifier, unescapeIdentifier, asciiCaseInsensitiveMatch } = cssParser;
 		// mulberry32
 		const makeRng = (/** @type {number} */ seed) => {
 			let s = seed >>> 0;
@@ -174,7 +174,7 @@ describe("css identifier utils", () => {
 						failures.push(`round-trip: ${JSON.stringify(s)}`);
 					}
 					unescapeIdentifier(s);
-					equalsLowerCase(s, "button");
+					asciiCaseInsensitiveMatch(s, "button");
 				} catch (err) {
 					failures.push(
 						`throw on ${JSON.stringify(s)}: ${/** @type {Error} */ (err).message}`

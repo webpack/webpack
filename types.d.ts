@@ -36414,14 +36414,17 @@ declare namespace exports {
 				export let isIdentCodePoint: (cc: number) => boolean;
 				export let isIdentStartCodePoint: (cc: number) => boolean;
 				export let isLetter: (cc: number) => boolean;
-				export let asciiLowerCaseName: (s: string) => string;
+				export let asciiLowercaseName: (s: string) => string;
 				export let buildSkipSet: (nodeTypes: number[]) => Uint8Array;
 				export let consumeExtraNewline: (
 					cc: number,
 					input: string,
 					pos: number
 				) => number;
-				export let equalsLowerCase: (s: string, lit: string) => boolean;
+				export let asciiCaseInsensitiveMatch: (
+					s: string,
+					lit: string
+				) => boolean;
 				export let escapeIdentifier: MakeCacheableResult<string> & {
 					bindCache: BindCache<string>;
 				};
@@ -36588,7 +36591,7 @@ declare namespace exports {
 				) => void;
 				export let isDashedIdentifier: (identifier: string) => boolean;
 				export let isSimpleIdentifier: (value: string) => boolean;
-				export let isWhitespace: (cc: number) => boolean;
+				export let isAsciiWhitespace: (cc: number) => boolean;
 				export let normalizeUrl: (str: string, isString: boolean) => string;
 				export let parseABlocksContents: (
 					input: string | TokenStream,
@@ -36639,7 +36642,7 @@ declare namespace exports {
 					end: number,
 					lit: string
 				) => boolean;
-				export let rangeEqualsLowerCase: (
+				export let rangeAsciiCaseInsensitiveMatch: (
 					input: string,
 					start: number,
 					end: number,
@@ -37206,7 +37209,7 @@ declare namespace exports {
 						  >,
 					options: HtmlProcessOptions
 				) => void;
-				export let isAllWs: (s: string) => boolean;
+				export let isAllAsciiWhitespace: (s: string) => boolean;
 				export let isAsciiAlphanumeric: (cc: number) => boolean;
 				export let isAsciiWhitespace: (cc: number) => boolean;
 				export let metaTag: (name: string, content: string) => string;
@@ -37224,7 +37227,7 @@ declare namespace exports {
 				export let pickTransforms: (
 					options: HtmlTransformOptions
 				) => undefined | HtmlTransformOptions;
-				export let startsWithWs: (s: string) => boolean;
+				export let startsWithAsciiWhitespace: (s: string) => boolean;
 				export let tokenize: (
 					input: string,
 					pos?: number,
