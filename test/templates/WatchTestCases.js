@@ -384,7 +384,14 @@ const describeCases = (config) => {
 									// macOS can drop a change event entirely
 									const now = new Date();
 									for (const file of unseenChanges) {
-										if (fs.existsSync(file)) fs.utimesSync(file, now, now);
+										if (fs.existsSync(file)) {
+											fs.utimesSync(file, now, now);
+										} else if (fs.existsSync(path.dirname(file))) {
+											// a dropped deletion is re-sent by deleting again; no build
+											// runs between the two calls, so none sees the file
+											fs.writeFileSync(file, "");
+											fs.unlinkSync(file);
+										}
 									}
 									retouchUnseenChanges(compilers, retries - 1);
 								}, RETOUCH_DELAY);
@@ -447,7 +454,8 @@ const describeCases = (config) => {
 													}
 												}
 												// a change this build no longer depends on cannot make it stale, and
-												// nothing watches it any more to report it (e.g. a deleted import)
+												// nothing watches it any more to report it (e.g. a deleted import);
+												// a deleted file it resolved as missing is one it saw go
 												const builds = /** @type {import("../../").Stats[]} */ (
 													"stats" in stats ? stats.stats : [stats]
 												);
@@ -456,7 +464,8 @@ const describeCases = (config) => {
 														!builds.some(
 															({ compilation }) =>
 																compilation.fileDependencies.has(file) ||
-																compilation.missingDependencies.has(file) ||
+																(compilation.missingDependencies.has(file) &&
+																	fs.existsSync(file)) ||
 																isWithin(file, compilation.contextDependencies)
 														)
 													) {
