@@ -36818,6 +36818,11 @@ declare namespace exports {
 					>
 				) => string;
 			}
+			export namespace options {
+				export let pickTransforms: (
+					options: CssTransformOptions
+				) => undefined | CssTransformOptions;
+			}
 			export { CssSourceProcessor as SourceProcessor };
 		}
 		export { CssLoadingRuntimeModule, CssModulesPlugin };
