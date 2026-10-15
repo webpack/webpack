@@ -677,6 +677,22 @@ jobs:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         if: matrix.coverage || matrix.use_main_branches
 
+  # Codecov holds its statuses and comment (`manual_trigger` in codecov.yml)
+  # until this runs, so they are computed once, over every suite below. A new
+  # job uploading coverage joins `needs`, or Codecov reports before it does.
+  coverage-notify:
+    needs: [unit, test262, parser, syntax-equivalence, integration]
+    # A failed or skipped suite still gets a report from what did upload.
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Codecov
+        uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7.1.1
+        with:
+          run_command: send-notifications
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
   # The eight benchmark shards are around four runner-hours, so on a pull
   # request they come through here, behind the same three cheap jobs. A push to
   # `main` runs `benchmarks.yml` on its own trigger instead and is never gated:

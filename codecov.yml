@@ -1,5 +1,9 @@
 codecov:
   branch: main
+  notify:
+    # Statuses and the comment wait for `coverage-notify` in test.yml, which
+    # runs once every suite that uploads has finished, not after each upload.
+    manual_trigger: true
 coverage:
   precision: 2
   round: down
