@@ -18,7 +18,7 @@ Array [
   "/*! lightningcss custom_properties: whitespace around a lone token */.u03,.u04,.u05,.u06{--test:foo}",
   "/*! lightningcss custom_properties: a var() fallback carrying a length */.u07{--test:var(--foo,20px)}",
   "/*! lightningcss custom_properties: two of them across a comma */.u08{transition:var(--foo,20px),var(--bar,40px)}",
-  "/*! lightningcss custom_properties: substitutions side by side */.u09{background:var(--color) var(--image)}",
+  "/*! lightningcss custom_properties: substitutions side by side */.u09{background:var(--color)var(--image)}",
   "/*! lightningcss custom_properties: a color function in a fallback */.u10{color:var(--color,#ff0)}",
   "/*! lightningcss custom_properties: a hex in a fallback */.u11{color:var(--color,#ff0)}",
   "/*! lightningcss custom_properties: a fallback that is itself substituted */.u12{color:var(--color,rgb(var(--red),var(--green),0))}",

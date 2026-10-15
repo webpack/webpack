@@ -14,7 +14,7 @@ Array [
    same rule makes it dead even where the two blocks differ otherwise */.t09{width:1px}.between9{color:teal}.t09{height:2px}.t09 .inner{color:red}",
   "/*! and the same selector under another rule is another rule */.t10a .inner,.t10b .inner{color:red}",
   "/*! a raw passthrough the parser kept verbatim stands among the rules it
-   separates, and is counted among them */@media (width>=1px){*zoom: 1}.between11{color:teal}@media (width>=1px){.t11 .inner{color:red}}",
+   separates, and is counted among them */@media (min-width:1px){*zoom: 1}.between11{color:teal}@media (min-width:1px){.t11 .inner{color:red}}",
 ]
 `;
 
@@ -23,7 +23,7 @@ Array [
   "/*! the first statement of a layer is where it sits in the cascade, so a later
    copy of it never stands in for it */@layer first;.t01{color:red}@layer first;",
   "/*! a keyframe selector is read under the rule it is written in */@keyframes t02{0%{opacity:0}to{opacity:1}}",
-  "/*! a media feature in the prelude is read as a range */@media (width>=1px){.t03{color:red}}",
+  "/*! a media feature in the prelude is read as a range */@media (min-width:1px){.t03{color:red}}",
   "/*! a condition whose block is empty paints nothing */.t04{color:red}",
   "/*! ...but each anonymous layer is a layer of its own, so the pair stands */@layer{.t05{color:red}}@layer{.t05{color:blue}}",
   "/*! a name no table names takes no branch */@unknown-rule (color:red){.t06{color:red}}",
