@@ -11,7 +11,8 @@ const NAMES = [
 	"none",
 	"claimed",
 	"sorted",
-	"cleaned"
+	"cleaned",
+	"attributes"
 ];
 
 module.exports = {

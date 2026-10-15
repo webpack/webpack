@@ -15,14 +15,24 @@ exports[`ConfigCacheTestCases optimization minimize-xml minimize-xml should comp
 "
 `;
 
+exports[`ConfigCacheTestCases optimization minimize-xml minimize-xml should compile: attributes 1`] = `
+"<svg viewBox=\\"0 0 10 10\\" xmlns=\\"http://www.w3.org/2000/svg\\" xmlns:data=\\"urn:application\\">
+	<title>Accessible title</title>
+	<desc>Accessible description</desc>
+	<defs><path d=\\"M0 0h10v10z\\" id=\\"shape\\"/></defs>
+	<use data:flag=\\"keep\\" href=\\"#shape\\" style=\\"fill:red\\"/>
+	<text>]]&gt;</text>
+</svg>"
+`;
+
 exports[`ConfigCacheTestCases optimization minimize-xml minimize-xml should compile: claimed 1`] = `"<svg/>"`;
 
 exports[`ConfigCacheTestCases optimization minimize-xml minimize-xml should compile: cleaned 1`] = `
 "<svg viewBox=\\"0 0 10 10\\" xmlns=\\"http://www.w3.org/2000/svg\\" xmlns:data=\\"urn:application\\" xmlns:e=\\"http://www.inkscape.org/namespaces/inkscape\\">
 	<title>Accessible title</title>
 	<desc>Accessible description</desc>
-	<defs><path d=\\"M0 0h10v10z\\" id=\\"shape\\"/></defs>
-	<use data:flag=\\"keep\\" href=\\"#shape\\" style=\\"fill:red\\"/>
+	<defs><path id=\\"shape\\" d=\\"M0 0h10v10z\\"/></defs>
+	<use id=\\"\\" class=\\"\\" data:flag=\\"keep\\" href=\\"#shape\\" style=\\"fill:red\\"/>
 	<text>]]&gt;</text>
 </svg>"
 `;

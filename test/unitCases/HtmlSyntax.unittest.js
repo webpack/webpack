@@ -3396,6 +3396,115 @@ describe("parseHtml", () => {
 	describe("XML mode", () => {
 		const { SourceProcessor } = require("../../lib/html/syntax");
 
+		it("should remove only unused prefixed namespace declarations within SVG", () => {
+			const source = '<root xmlns:outer="urn:outer"><svg xmlns="http://www.w3.org/2000/svg" xmlns:x="urn:used" xmlns:unused="urn:unused"><x:item/><g xmlns:x="urn:shadow"/><g xmlns="" xmlns:local="urn:unused"/><use x:href="#shape"/></svg></root>';
+			const options = { xml: true, mode: /** @type {const} */ ("minify"), removeUnusedSvgNamespaces: true };
+			const processor = new SourceProcessor();
+			const once = processor.process(source, options).code;
+			expect(once).toBe('<root xmlns:outer="urn:outer"><svg xmlns="http://www.w3.org/2000/svg" xmlns:x="urn:used"><x:item/><g/><g xmlns=""/><use x:href="#shape"/></svg></root>');
+			expect(processor.process(once, options).code).toBe(once);
+			expect(processor.process(source, { ...options, removeUnusedSvgNamespaces: false }).code).toBe(source);
+			expect(processor.process(source, { ...options, mode: "beautify" }).code).toBe(source);
+		});
+
+		it.each([
+			'<g value="p:Thing"/>', '<g value="&#112;:Thing"/>', '<g>p:Thing</g>',
+			'<g><![CDATA[p:Thing]]></g>', '<?app p:Thing?>',
+			'<g>p<metadata/>:Thing</g>', '<g>p<!--ordinary-->:Thing</g>',
+			'<g xmlns:p="urn:local"><p:item/></g><p:item/>', '<g p:flag="yes"/>'
+		])("should retain namespace bindings referenced in %s", (content) => {
+			const source = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:p="urn:data" xmlns:unused="urn:unused">${content}</svg>`;
+			const processor = new SourceProcessor();
+			const options = { xml: true, mode: /** @type {const} */ ("minify"), removeUnusedSvgNamespaces: true, removeSvgMetadata: true };
+			const once = processor.process(source, options).code;
+			expect(once).toContain('xmlns:p="urn:data"');
+			expect(once).not.toContain('xmlns:unused');
+			expect(processor.process(once, options).code).toBe(once);
+		});
+
+		it("should retain prefixes in kept comments and scan long text without repeated suffix searches", () => {
+			const source = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:p="urn:data"><!--p:Thing-->${"a".repeat(30000)}</svg>`;
+			const options = { xml: true, mode: /** @type {const} */ ("minify"), removeUnusedSvgNamespaces: true, transforms: { comments: /** @type {const} */ ("all") } };
+			const processor = new SourceProcessor();
+			expect(processor.process(source, options).code).toBe(source);
+			expect(processor.process(source, { ...options, transforms: { comments: false } }).code).toBe(source.replace(' xmlns:p="urn:data"', "").replace("<!--p:Thing-->", ""));
+		});
+
+		it("should track namespace aliases, rebinding and Unicode prefixes", () => {
+			const source = '<s:svg xmlns:s="http://www.w3.org/2000/svg" xmlns:p="urn:outer" xmlns:é="urn:data"><s:g xmlns:p="urn:inner" value="p:Thing é:Thing"/><s:g xmlns:s="urn:data"><s:item/></s:g></s:svg>';
+			const options = { xml: true, mode: /** @type {const} */ ("minify"), removeUnusedSvgNamespaces: true };
+			const processor = new SourceProcessor();
+			const once = processor.process(source, options).code;
+			expect(once).toBe(source.replace(' xmlns:p="urn:outer"', ""));
+			expect(processor.process(once, options).code).toBe(once);
+		});
+
+		it("should remove namespace references only after removing optional SVG data", () => {
+			const source = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:e="http://www.inkscape.org/namespaces/inkscape" xmlns:data="urn:optional"><metadata><data:record/></metadata><e:view/><g e:label="data:Thing"/></svg>';
+			const options = { xml: true, mode: /** @type {const} */ ("minify"), sortAttributes: true, removeUnusedSvgNamespaces: true, removeSvgMetadata: true, removeSvgEditorData: true };
+			const processor = new SourceProcessor();
+			const once = processor.process(source, options).code;
+			expect(once).toBe('<svg xmlns="http://www.w3.org/2000/svg"><g/></svg>');
+			expect(processor.process(once, options).code).toBe(once);
+		});
+
+		it("should reuse empty-attribute removal without HTML entity decoding or SVG defaults", () => {
+			const source = '<svg xmlns="http://www.w3.org/2000/svg" class=" &#9;" id="" style=""><g fill="" stroke="" transform="" viewBox="" href="" dir="" data-x="" xml:space="preserve"/><g class="&amp;Tab;" id=" " style="&#160;"/><g CLASS=""/><foreignObject><div xmlns="http://www.w3.org/1999/xhtml" class="" style=""/></foreignObject></svg>';
+			const processor = new SourceProcessor();
+			const options = { xml: true, mode: /** @type {const} */ ("minify"), removeEmptyAttributes: true };
+			const once = processor.process(source, options).code;
+			expect(once).toBe(source.replace(' class=" &#9;" id="" style=""', "").replace('style="&#160;"', 'style="\u00a0"'));
+			expect(processor.process(once, options).code).toBe(once);
+			expect(processor.process('<root class="" id="" style=""/>', options).code).toBe('<root class="" id="" style=""/>');
+			expect(processor.process(source, { ...options, mode: "beautify" }).code).toBe(source);
+		});
+
+		it("should preserve attributes and namespace bindings declared by the DTD", () => {
+			const dtd = '<!DOCTYPE svg [<!ENTITY ns "http://www.w3.org/2000/svg"><!ATTLIST svg xmlns CDATA "&ns;" xmlns:p CDATA "urn:default" id CDATA "fallback" class CDATA #IMPLIED style CDATA "fill:red">]>';
+			const source = `${dtd}<svg xmlns:p="urn:override" id="" class="" style=""><g xmlns:q="urn:unused"/></svg>`;
+			const processor = new SourceProcessor();
+			const options = { xml: true, mode: /** @type {const} */ ("minify"), removeUnusedSvgNamespaces: true, removeEmptyAttributes: true };
+			const once = processor.process(source, options).code;
+			expect(once).toBe(source.replace(' xmlns:q="urn:unused"', ""));
+			expect(processor.process(once, options).code).toBe(once);
+		});
+
+		it.each([
+			'<!DOCTYPE svg SYSTEM "defaults.dtd">',
+			`<!DOCTYPE svg [<!ENTITY % attrs '<!ATTLIST svg id CDATA "fallback">'>%attrs;]>`
+		])("should retain attributes whose DTD defaults cannot be resolved in %s", (dtd) => {
+			const source = `${dtd}<svg xmlns="http://www.w3.org/2000/svg" xmlns:p="urn:data" id="" class="" style=""/>`;
+			expect(new SourceProcessor().process(source, { xml: true, mode: "minify", removeEmptyAttributes: true, removeUnusedSvgNamespaces: true }).code).toBe(source);
+		});
+
+		it.each([[false, false], [false, true], [true, false], [true, true]])("should resolve rendered CSS before cleanup with asynchronous=%s and namespaces=%s", async (asynchronous, removeUnusedSvgNamespaces) => {
+			const source = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:p="urn:unused"><g style="/* p:Thing */" class=""/><g style="fill: #ff0000"/><style>/* p:Thing */ g { fill: red }</style><g z="1"/></svg>';
+			const processor = new SourceProcessor();
+			const options = { xml: true, mode: /** @type {const} */ ("minify"), sortAttributes: true, removeUnusedSvgNamespaces, removeEmptyAttributes: true };
+			const render = require("../../lib/html/builtinEmbeddedRenderer").builtinEmbeddedRenderer();
+			/**
+			 * @param {string} xml document to print
+			 * @returns {Promise<string>} the minified document
+			 */
+			const print = async (xml) => (asynchronous
+				? await processor.processAsync(xml, { ...options, renderEmbeddedSource: async (css, offer) => render(css, offer) })
+				: processor.process(xml, { ...options, renderEmbeddedSource: render })).code;
+			const once = await print(source);
+			expect(once).toBe(`<svg xmlns="http://www.w3.org/2000/svg"${removeUnusedSvgNamespaces ? "" : ' xmlns:p="urn:unused"'}><g/><g style="fill:red"/><style>g{fill:red}</style><g z="1"/></svg>`);
+			expect(await print(once)).toBe(once);
+		});
+
+		it.each(["", " ", "\t\n"])("should remove asynchronous style answers containing only whitespace: %j", async (answer) => {
+			const source = '<svg xmlns="http://www.w3.org/2000/svg"><g style="/* empty */"/></svg>';
+			const { code } = await new SourceProcessor().processAsync(source, { xml: true, mode: "minify", removeEmptyAttributes: true, renderEmbeddedSource: async () => answer });
+			expect(code).toBe('<svg xmlns="http://www.w3.org/2000/svg"><g/></svg>');
+		});
+
+		it("should preserve QName-like data in non-CSS style bodies", () => {
+			const source = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:p="urn:data"><style type="application/data">p:Thing</style><style>p:<g/></style></svg>';
+			expect(new SourceProcessor().process(source, { xml: true, mode: "minify", removeUnusedSvgNamespaces: true, renderEmbeddedSource: () => "" }).code).toBe(source);
+		});
+
 		it("should remove only SVG metadata when requested", () => {
 			const source = '<svg xmlns="http://www.w3.org/2000/svg"><title>Title</title><desc>Description</desc><g><metadata><record>editor</record></metadata></g><foreignObject><metadata xmlns="urn:data">keep</metadata></foreignObject><Metadata>case</Metadata></svg>';
 			const processor = new SourceProcessor();
@@ -3461,7 +3570,7 @@ describe("parseHtml", () => {
 
 		it("should preserve the verbatim fallback for XML markup entities", () => {
 			const source = '<!DOCTYPE svg [<!ENTITY markup "<g/>">]><svg xmlns="http://www.w3.org/2000/svg"><metadata>data</metadata>&markup;</svg>';
-			expect(new SourceProcessor().process(source, { xml: true, mode: "minify", removeSvgMetadata: true, removeSvgEditorData: true }).code).toBe(source);
+			expect(new SourceProcessor().process(source, { xml: true, mode: "minify", removeSvgMetadata: true, removeSvgEditorData: true, removeEmptyAttributes: true, removeUnusedSvgNamespaces: true }).code).toBe(source);
 		});
 
 		it("should rank only surviving attributes when removing SVG data", () => {

@@ -3461,10 +3461,20 @@ export interface OptimizationMinimizeXml {
 	 */
 	removeEditorData?: boolean;
 	/**
+	 * Remove empty `class`, `id` and `style` attributes on SVG elements unless the DTD declares them. Off by default because selectors and scripts can observe attribute presence.
+	 * @since 5.112.0
+	 */
+	removeEmptyAttributes?: boolean;
+	/**
 	 * Remove SVG `metadata` elements and their contents, preserving `title`, `desc` and the document element. Off by default because metadata can carry licensing and application data.
 	 * @since 5.112.0
 	 */
 	removeMetadata?: boolean;
+	/**
+	 * Remove unused prefixed namespace declarations within SVG, preserving default namespaces and prefixes referenced in names or content. Off by default because scripts can observe namespace declarations.
+	 * @since 5.112.0
+	 */
+	removeUnusedNamespaces?: boolean;
 	/**
 	 * Print attributes with the document's commonest names first, breaking ties by case-sensitive name. Off by default: consumers observing attribute order see the new order.
 	 * @since 5.112.0

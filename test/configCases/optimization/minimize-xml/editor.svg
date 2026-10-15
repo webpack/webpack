@@ -2,6 +2,6 @@
 	<title>Accessible title</title>
 	<desc>Accessible description</desc><metadata><data:license>Optional metadata</data:license></metadata><e:view><g>Editor state</g></e:view>
 	<defs><path id="shape" d="M0 0h10v10z" e:label="Shape"/></defs>
-	<use href="#shape" style="fill: #ff0000" data:flag="keep"/>
+	<use class="" id="" href="#shape" style="fill: #ff0000" data:flag="keep"/>
 	<text>]]<metadata/>></text>
 </svg>

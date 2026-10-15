@@ -71,5 +71,19 @@ module.exports = [
 				}
 			}
 		}
+	}),
+	config("attributes", {
+		entry: "./editor.js",
+		optimization: {
+			minimizeOptions: {
+				xml: {
+					removeMetadata: true,
+					removeEditorData: true,
+					removeEmptyAttributes: true,
+					removeUnusedNamespaces: true,
+					sortAttributes: true
+				}
+			}
+		}
 	})
 ];

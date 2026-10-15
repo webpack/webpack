@@ -25,6 +25,17 @@ describe("xmlMinify", () => {
 		}
 	});
 
+	it("should forward independent namespace and empty-attribute options", async () => {
+		const source = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:unused="urn:unused"><g class="" id="" style="/* empty */"/></svg>';
+		for (const removeUnusedNamespaces of [false, true]) {
+			for (const removeEmptyAttributes of [false, true]) {
+				const { code } = await xmlMinify({ "image.svg": source }, undefined, { removeUnusedNamespaces, removeEmptyAttributes });
+				expect(code).toBe(`<svg xmlns="http://www.w3.org/2000/svg"${removeUnusedNamespaces ? "" : ' xmlns:unused="urn:unused"'}><g${removeEmptyAttributes ? "" : ' class="" id="" style=""'}/></svg>`);
+				expect((await xmlMinify({ "image.svg": code }, undefined, { removeUnusedNamespaces, removeEmptyAttributes })).code).toBe(code);
+			}
+		}
+	});
+
 	it("should minify the document and the stylesheets it holds", async () => {
 		const { code } = await xmlMinify({ "image.svg": SOURCE });
 		expect(code).toMatchSnapshot();
