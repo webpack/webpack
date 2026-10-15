@@ -12817,7 +12817,9 @@ describe("CssSyntax minify — a nested selector opening on a combinator", () =>
 		["a,e{>b{c{top:0}}}", ":is(:is(a,e)>b) c{top:0}"],
 		["a{d{~b{c{top:0}}}}", "a :is(d~b) c{top:0}"],
 		// A list where only some name `&`: the others keep the parent they imply.
-		["a{b,&~d{c{top:0}}}", ":is(a~d,a b) c{top:0}"]
+		["a{b,&~d{c{top:0}}}", ":is(a~d,a b) c{top:0}"],
+		// U+1680 is an identifier code point, which `String#trim` would take off.
+		["a{.b ,~b{c{top:0}}}", ":is(a .b ,a~b) c{top:0}"]
 	])(
 		"writes %s, a rule nested in one opening on a combinator, with no relative argument",
 		(css, out) => {
