@@ -4586,20 +4586,6 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(minify(css)).toBe(expected);
 		});
 
-		it("drops a shadow's currentcolor only where no target runs WebKit", () => {
-			// CSS Backgrounds 3 §7.1: an absent color is `currentcolor`.
-			const css = "a{text-shadow:CurrentColor 1px 1px}";
-			expect(minifyFor(css, ["chrome 140", "firefox 140"])).toBe(
-				"a{text-shadow:1px 1px}"
-			);
-			expect(minifyFor(css, ["android 140"])).toBe("a{text-shadow:1px 1px}");
-			for (const browsers of [["safari 26.2"], ["ios_saf 18"], ["android 4.4"]]) {
-				expect(minifyFor(css, browsers)).toBe(
-					"a{text-shadow:currentcolor 1px 1px}"
-				);
-			}
-		});
-
 		it.each([
 			["the two values differ", "a{background-repeat:repeat no-repeat}"],
 			["only one axis is centered", "a{background-position:center 10px}"],
@@ -6339,14 +6325,12 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 				"a{box-shadow:0px 0px 0px 1px red inset,0px 0em 0px 0px blue inset}",
 				"a{box-shadow:inset 0 0 0 1px red,inset 0 0 blue}"
 			],
-			// With no target, Safari may be one, and it takes an absent color as none.
-			[
-				"a{box-shadow:0 0 2px currentcolor}",
-				"a{box-shadow:0 0 2px currentcolor}"
-			],
+			// CSS Backgrounds 3 §7.1: an absent color is `currentcolor`.
+			["a{box-shadow:0 0 2px currentcolor}", "a{box-shadow:0 0 2px}"],
+			["a{text-shadow:CurrentColor 1px 1px}", "a{text-shadow:1px 1px}"],
 			[
 				"a{box-shadow:inset 0 0 0 0 currentcolor,0 0 red}",
-				"a{box-shadow:inset 0 0 currentcolor,0 0 red}"
+				"a{box-shadow:inset 0 0,0 0 red}"
 			],
 			// `inset` stands first, wherever the layer wrote it.
 			["a{box-shadow:red 1px 1px inset}", "a{box-shadow:inset red 1px 1px}"],
