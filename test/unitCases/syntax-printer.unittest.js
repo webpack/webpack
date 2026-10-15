@@ -1326,6 +1326,12 @@ const IMPROVED_CASES = [
 		'var cache={};function add(map,list){map.list?map.list.push(list):map.list=[list]}add(cache,1),add(cache,2),console.log(cache.list);'
 	],
 	[
+		"a function returning a literal keeps its calls where a value read keeps it",
+		"function make() { return { some: 'data', more: 'values' }; } var first = make(); var factory = make; console.log(first, factory());",
+		{ compress: { toplevel: true }, mangle: false },
+		'function make(){return{some:"data",more:"values"}}var first=make();console.log(first,make());'
+	],
+	[
 		"no `return` left before the `var` a function called in place declared",
 		"function f(o) { return (function (v) { console.log(v); console.log(v); })(String(o)); } f(1);",
 		{ compress: { passes: 2 }, mangle: false },
