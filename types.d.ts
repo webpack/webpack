@@ -34635,6 +34635,11 @@ declare class WebpackError extends Error {
 	deserialize(__0: ObjectDeserializerContextObjectMiddlewareObject_2): void;
 
 	/**
+	 * Whether an error is a webpack error rather than any other thrown value.
+	 */
+	static isWebpackError(value: unknown): boolean;
+
+	/**
 	 * Creates a `.stack` property on `targetObject`, which when accessed returns
 	 * a string representing the location in the code at which
 	 * `Error.captureStackTrace()` was called.
