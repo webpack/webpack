@@ -330,12 +330,6 @@ const IMPROVED_CASES = [
 		"function f(y,z){return[+y,y>>>z]}console.log(f(\"3\",1));"
 	],
 	[
-		"Babel's default parameters, testing `arguments.length` before reading the index",
-		"function f() { var a = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1; var b = arguments.length > 1 ? arguments[1] : void 0; return [a, b]; } console.log(f(), f(5), f(5, 6));",
-		{ compress: {}, mangle: false },
-		"function f(){return[void 0!==arguments[0]?arguments[0]:1,arguments[1]]}console.log(f(),f(5),f(5,6));"
-	],
-	[
 		"unread calls of an async function with no body and of a generator",
 		"var log = []; function f() { (async () => {})(); (function* () { log.push(1); })(); log.push(2); } f(); console.log(log.join());",
 		{ compress: {}, mangle: false },
@@ -8503,9 +8497,10 @@ describe("syntax-printer", () => {
 			}
 		});
 
-		it("should keep `arguments.length` tested where something else uses the object", async () => {
+		it("should keep `arguments.length` tested, as an index past it may read a getter `Object.prototype` holds", async () => {
 			const { minify } = await load();
 			for (const input of [
+				"export function f(){var a=arguments.length>0&&arguments[0]!==undefined?arguments[0]:1;var b=arguments.length>1?arguments[1]:void 0;return[a,b]}",
 				"export function f(){arguments[1]=5;return arguments.length>1?arguments[1]:void 0}",
 				"export function f(){g(arguments);return arguments.length>1&&void 0!==arguments[1]?arguments[1]:2}",
 				"export function f(){return arguments.length>2&&void 0!==arguments[1]?arguments[1]:2}"
