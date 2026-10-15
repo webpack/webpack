@@ -4441,7 +4441,10 @@ describe("snapshots", () => {
 		+     "allowCollectingMemory": false,
 		+     "buildDependencies": Object {
 		+       "defaultWebpack": Array [
-		+         "<cwd>/lib/",
+		+         Object {
+		+           "dependency": "<cwd>/lib/",
+		+           "optional": false,
+		+         },
 		+       ],
 		+     },
 		+     "cacheDirectory": "<cwd>/node_modules/.cache/webpack",
@@ -4487,7 +4490,10 @@ describe("snapshots", () => {
 			+     "allowCollectingMemory": true,
 			+     "buildDependencies": Object {
 			+       "defaultWebpack": Array [
-			+         "<cwd>/lib/",
+			+         Object {
+			+           "dependency": "<cwd>/lib/",
+			+           "optional": false,
+			+         },
 			+       ],
 			+     },
 			+     "cacheDirectory": "<cwd>/node_modules/.cache/webpack",
@@ -4589,7 +4595,10 @@ describe("snapshots", () => {
 			+     "allowCollectingMemory": false,
 			+     "buildDependencies": Object {
 			+       "defaultWebpack": Array [
-			+         "<cwd>/lib/",
+			+         Object {
+			+           "dependency": "<cwd>/lib/",
+			+           "optional": false,
+			+         },
 			+       ],
 			+     },
 			+     "cacheDirectory": "<cwd>/node_modules/.cache/webpack",
@@ -4645,7 +4654,7 @@ describe("snapshots", () => {
 			+           Object {
 			+             "resourceQuery": /(\\?|&)raw(&|$)/,
 			+             "type": "asset/source",
-			@@ ... @@
+			+           },
 			+           Object {
 			+             "resourceQuery": /(\\?|&)url(&|$)/,
 			+             "type": "asset/resource",
@@ -4653,7 +4662,7 @@ describe("snapshots", () => {
 			+           Object {
 			+             "resourceQuery": /(\\?|&)no-inline(&|$)/,
 			+             "type": "asset/resource",
-			+           },
+			@@ ... @@
 			+           Object {
 			+             "resourceQuery": /(\\?|&)inline(&|$)/,
 			+             "type": "asset/inline",
@@ -5061,7 +5070,10 @@ describe("snapshots", () => {
 			+     "allowCollectingMemory": false,
 			+     "buildDependencies": Object {
 			+       "defaultWebpack": Array [
-			+         "<cwd>/lib/",
+			+         Object {
+			+           "dependency": "<cwd>/lib/",
+			+           "optional": false,
+			+         },
 			+       ],
 			+     },
 			+     "cacheDirectory": "<cwd>/node_modules/.cache/webpack",
@@ -6697,7 +6709,10 @@ describe("cache.buildDependencies.defaultWebpack", () => {
 		const cache = /** @type {EXPECTED_ANY} */ (normalized.cache);
 
 		expect(cache.buildDependencies.defaultWebpack).toEqual([
-			path.join(__dirname, "..", "..", "lib") + path.sep
+			{
+				dependency: path.join(__dirname, "..", "..", "lib") + path.sep,
+				optional: false
+			}
 		]);
 	});
 });
