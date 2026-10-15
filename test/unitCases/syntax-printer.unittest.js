@@ -8461,6 +8461,27 @@ describe("syntax-printer", () => {
 					mangle: false
 				});
 				expect(code).toMatch(/switch|=>/);
+				// What the source runs for its effects still runs.
+				if (input.includes("g()")) expect(code).toContain("g()");
+			}
+		});
+
+		it("should count every name a rewrite reads again", async () => {
+			const { minify } = await load();
+			for (const input of [
+				"function f(){return 2}function g(a,b){var x=f();switch(x){case 1:return a;case 2:return b;default:return 0}}console.log(g(5,6))",
+				"var n=0;function f(){n++;return 7}function g(a){var x=f();switch(a){case 1:return 1;case 2:return 2}return x}console.log(g(1),g(3),n)",
+				'var c=1;function t(){c=0;return false}function f(a){return c?t()?"one":2===a?"two":"a much longer default string here":"a much longer default string here"}console.log(f(2))'
+			]) {
+				for (const passes of [1, 2]) {
+					const { code } = await minify(input, {
+						compress: { passes },
+						mangle: false
+					});
+					expect(runProgram(/** @type {string} */ (code))).toBe(
+						runProgram(input)
+					);
+				}
 			}
 		});
 
