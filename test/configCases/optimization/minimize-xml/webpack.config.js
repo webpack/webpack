@@ -72,18 +72,21 @@ module.exports = [
 			}
 		}
 	}),
-	config("attributes", {
-		entry: "./editor.js",
-		optimization: {
-			minimizeOptions: {
-				xml: {
-					removeMetadata: true,
-					removeEditorData: true,
-					removeEmptyAttributes: true,
-					removeUnusedNamespaces: true,
-					sortAttributes: true
+	...[false, true].map((collapseWhitespace) =>
+		config(collapseWhitespace ? "whitespace" : "attributes", {
+			entry: "./editor.js",
+			optimization: {
+				minimizeOptions: {
+					xml: {
+						collapseWhitespace,
+						removeMetadata: true,
+						removeEditorData: true,
+						removeEmptyAttributes: true,
+						removeUnusedNamespaces: true,
+						sortAttributes: true
+					}
 				}
 			}
-		}
-	})
+		})
+	)
 ];

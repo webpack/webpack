@@ -15,6 +15,13 @@ const SOURCE = `<?xml version="1.0" encoding="UTF-8"?>
 `;
 
 describe("xmlMinify", () => {
+	it.each([false, true])("should forward SVG whitespace cleanup with enabled=%s", async (collapseWhitespace) => {
+		const source = '<svg xmlns="http://www.w3.org/2000/svg">\n <g class="" id="" style=""> </g>\n <text> A  <tspan> B </tspan> C </text>\n</svg>';
+		const options = { collapseWhitespace };
+		const { code } = await xmlMinify({ "image.svg": Buffer.from(source) }, undefined, options);
+		expect(code).toBe(collapseWhitespace ? '<svg xmlns="http://www.w3.org/2000/svg"><g class="" id="" style=""/><text> A  <tspan> B </tspan> C </text></svg>' : source);
+		expect((await xmlMinify({ "image.svg": code }, undefined, options)).code).toBe(code);
+	});
 	it("should remove metadata and editor data independently", async () => {
 		const source = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:e="http://www.inkscape.org/namespaces/inkscape" e:version="1"><metadata>editor</metadata><e:view/><path/></svg>';
 		for (const removeMetadata of [false, true]) {

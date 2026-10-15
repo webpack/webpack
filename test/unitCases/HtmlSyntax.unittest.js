@@ -3396,6 +3396,64 @@ describe("parseHtml", () => {
 	describe("XML mode", () => {
 		const { SourceProcessor } = require("../../lib/html/syntax");
 
+		it.each(["svg", "g", "defs", "symbol", "clipPath", "mask", "marker", "pattern", "linearGradient", "radialGradient", "filter"])("should remove indentation in SVG %s containers only when enabled", (tag) => {
+			const source = `<svg xmlns="http://www.w3.org/2000/svg">\n <${tag}>\t<![CDATA[ \n]]><!-- drop --></${tag}>\n</svg>`;
+			const options = { xml: true, mode: /** @type {const} */ ("minify"), collapseWhitespace: true };
+			const processor = new SourceProcessor();
+			const once = processor.process(source, options).code;
+			expect(once).toBe(`<svg xmlns="http://www.w3.org/2000/svg"><${tag}/></svg>`);
+			expect(processor.process(once, options).code).toBe(once);
+			expect(processor.process(source, { ...options, collapseWhitespace: false }).code).toContain("\n ");
+			expect(processor.process(source, { ...options, mode: "beautify" }).code).toBe(source);
+		});
+
+		it.each(["text", "tspan", "textPath", "title", "desc", "metadata", "foreignObject", "style", "script", "unknown", "G"])("should preserve SVG %s text and its descendants", (tag) => {
+			const content = `<${tag}> \n<g> \t </g> A <tspan> B </tspan> C </${tag}>`;
+			const source = `<svg xmlns="http://www.w3.org/2000/svg">\n${content}\n</svg>`;
+			expect(new SourceProcessor().process(source, { xml: true, mode: "minify", collapseWhitespace: "all" }).code).toBe(`<svg xmlns="http://www.w3.org/2000/svg">${content}</svg>`);
+		});
+
+		it("should inherit xml:space and allow a default override without collapsing SVG text", () => {
+			const source = '<root xml:space="preserve"><svg xmlns="http://www.w3.org/2000/svg"> <g> </g><g xml:space="default"> <g> </g><text> A  <tspan xml:space="default"> B  </tspan> C </text> </g> </svg></root>';
+			const options = { xml: true, mode: /** @type {const} */ ("minify"), collapseWhitespace: true };
+			const once = new SourceProcessor().process(source, options).code;
+			expect(once).toBe('<root xml:space="preserve"><svg xmlns="http://www.w3.org/2000/svg"> <g> </g><g xml:space="default"><g/><text> A  <tspan xml:space="default"> B  </tspan> C </text></g> </svg></root>');
+			expect(new SourceProcessor().process(once, options).code).toBe(once);
+		});
+
+		it("should remove deeply nested SVG indentation without recursive traversal", () => {
+			const depth = 6000;
+			const prefix = '<svg xmlns="http://www.w3.org/2000/svg">';
+			const source = `${prefix}\n${"<g> \n".repeat(depth)}${"</g>\n".repeat(depth)}</svg>`;
+			const options = { xml: true, mode: /** @type {const} */ ("minify"), collapseWhitespace: true };
+			const once = new SourceProcessor().process(source, options).code;
+			expect(once).toBe(`${prefix}${"<g>".repeat(depth - 1)}<g/>${"</g>".repeat(depth - 1)}</svg>`);
+			expect(new SourceProcessor().process(once, options).code).toBe(once);
+		});
+
+		it("should resolve namespace aliases and preserve generic and foreign XML", () => {
+			const source = '<root xmlns:s="http://www.w3.org/2000/svg"> <s:svg> <s:g> </s:g><s:g xmlns:s="urn:foreign"> <svg xmlns="http://www.w3.org/2000/svg"> <g> </g> </svg> </s:g><g> </g><s:g>\u00a0</s:g> </s:svg> </root>';
+			expect(new SourceProcessor().process(source, { xml: true, mode: "minify", collapseWhitespace: true }).code).toBe('<root xmlns:s="http://www.w3.org/2000/svg"> <s:svg><s:g/><s:g xmlns:s="urn:foreign"> <svg xmlns="http://www.w3.org/2000/svg"> <g> </g> </svg> </s:g><g> </g><s:g>\u00a0</s:g></s:svg> </root>');
+		});
+
+		it("should preserve DTD-defaulted xml:space and unread DTD defaults", () => {
+			const options = { xml: true, mode: /** @type {const} */ ("minify"), collapseWhitespace: true };
+			const sources = [
+				'<!DOCTYPE svg [<!ATTLIST svg xml:space (default|preserve) "preserve">]><svg xmlns="http://www.w3.org/2000/svg"> <g> </g> </svg>',
+				'<!DOCTYPE svg SYSTEM "svg.dtd"><svg xmlns="http://www.w3.org/2000/svg"> <g> </g> </svg>',
+				'<!DOCTYPE svg [<!ENTITY % defaults SYSTEM "defaults.dtd">%defaults;]><svg xmlns="http://www.w3.org/2000/svg"> <g> </g> </svg>'
+			];
+			for (const source of sources) expect(new SourceProcessor().process(source, options).code).toBe(source);
+		});
+
+		it("should combine whitespace cleanup with data removal and retained comments", async () => {
+			const source = '<svg xmlns="http://www.w3.org/2000/svg"> \n<!--! keep --><metadata> data </metadata><g> \n</g><text>]]<metadata/>></text> </svg>';
+			const options = { xml: true, mode: /** @type {const} */ ("minify"), collapseWhitespace: true, removeSvgMetadata: true, transforms: { comments: /** @type {const} */ ("all") } };
+			const once = new SourceProcessor().process(source, options).code;
+			expect(once).toBe('<svg xmlns="http://www.w3.org/2000/svg"><!--! keep --><g/><text>]]&gt;</text></svg>');
+			expect(await new SourceProcessor().processAsync(once, options)).toMatchObject({ code: once });
+		});
+
 		it("should remove only unused prefixed namespace declarations within SVG", () => {
 			const source = '<root xmlns:outer="urn:outer"><svg xmlns="http://www.w3.org/2000/svg" xmlns:x="urn:used" xmlns:unused="urn:unused"><x:item/><g xmlns:x="urn:shadow"/><g xmlns="" xmlns:local="urn:unused"/><use x:href="#shape"/></svg></root>';
 			const options = { xml: true, mode: /** @type {const} */ ("minify"), removeUnusedSvgNamespaces: true };
@@ -3570,7 +3628,7 @@ describe("parseHtml", () => {
 
 		it("should preserve the verbatim fallback for XML markup entities", () => {
 			const source = '<!DOCTYPE svg [<!ENTITY markup "<g/>">]><svg xmlns="http://www.w3.org/2000/svg"><metadata>data</metadata>&markup;</svg>';
-			expect(new SourceProcessor().process(source, { xml: true, mode: "minify", removeSvgMetadata: true, removeSvgEditorData: true, removeEmptyAttributes: true, removeUnusedSvgNamespaces: true }).code).toBe(source);
+			expect(new SourceProcessor().process(source, { xml: true, mode: "minify", collapseWhitespace: true, removeSvgMetadata: true, removeSvgEditorData: true, removeEmptyAttributes: true, removeUnusedSvgNamespaces: true }).code).toBe(source);
 		});
 
 		it("should rank only surviving attributes when removing SVG data", () => {

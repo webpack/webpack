@@ -526,6 +526,24 @@ const IMPLIED_END_TAG_ELEMENTS = [
 /** @type {ParserTable[]} */
 const PARSER_TABLES = [
 	[
+		"SVG_WHITESPACE_CONTAINERS",
+		"set",
+		"SVG containers with no rendered character data. Text, descriptive, foreign and unknown elements remain opaque to whitespace cleanup.",
+		[
+			"svg",
+			"g",
+			"defs",
+			"symbol",
+			"clipPath",
+			"mask",
+			"marker",
+			"pattern",
+			"linearGradient",
+			"radialGradient",
+			"filter"
+		]
+	],
+	[
 		"SVG_EDITOR_NAMESPACES",
 		"set",
 		"Editor-specific SVG data namespaces, not described by webref. Generic RDF and licensing vocabularies are not editor data.",
