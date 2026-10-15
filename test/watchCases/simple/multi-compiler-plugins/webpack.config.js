@@ -2,8 +2,8 @@
 
 /** @type {string[]} */
 const events = [];
-/** @type {{ applied: number, thisIsCompiler: boolean }} */
-const state = { applied: 0, thisIsCompiler: false };
+/** @type {{ applied: number, thisIsCompiler: boolean, optionsPlugins: boolean }} */
+const state = { applied: 0, thisIsCompiler: false, optionsPlugins: false };
 
 class MultiCompilerRecorderPlugin {
 	/**
@@ -32,6 +32,7 @@ class MultiCompilerRecorderPlugin {
 /** @type {import("../../../../").MultiCompilerPluginFunction} */
 function recordThis(compiler) {
 	state.thisIsCompiler = this === compiler && compiler.compilers.length === 2;
+	state.optionsPlugins = compiler.options.plugins === plugins;
 }
 
 /** @type {import("../../../../").MultiCompilerOptions["plugins"]} */

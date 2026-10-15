@@ -7,7 +7,7 @@ module.exports = {
 	 */
 	findBundle: (index) => (index === 0 ? "./bundle.js" : null),
 	/**
-	 * @param {{ EVENTS?: string[], STATE?: { applied: number, thisIsCompiler: boolean } }} scope test scope
+	 * @param {{ EVENTS?: string[], STATE?: { applied: number, thisIsCompiler: boolean, optionsPlugins: boolean } }} scope test scope
 	 * @returns {void}
 	 */
 	moduleScope(scope) {

@@ -4,6 +4,7 @@ it("should apply plugins once to the MultiCompiler and fire its hooks", () => {
 	expect(value).toBe(`a${WATCH_STEP}`);
 	expect(STATE.applied).toBe(1);
 	expect(STATE.thisIsCompiler).toBe(true);
+	expect(STATE.optionsPlugins).toBe(true);
 	// Step 0 builds both children, step 1 only `a`, whose file changed.
 	const expected =
 		WATCH_STEP === "0"
