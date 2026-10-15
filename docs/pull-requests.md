@@ -228,11 +228,13 @@ Every webpack PR is reviewed automatically on the initial commit and every push,
 
 - a review comment (human or bot, judged on the claim) needs an action or decision;
 - a check failed for this PR's reason, with the fix pushed or what blocks it;
-- a measuring report is **final** and moved: code size (read gzip), coverage once every uploader reported, a benchmark whose output doesn't disclaim itself;
+- a measuring report is **final** and moved in a way the diff doesn't explain: code size (read gzip), coverage once every uploader reported, a benchmark whose output doesn't disclaim itself;
 - the PR merged or closed, or the requester must choose something.
 
 **Never narrate the rest** — intermediate coverage recomputes, partial-upload percentages, bot echoes (changeset, preview publish, "review in progress"), a check turning green, lists of job states. That buries the one wake that matters.
 
 **Nothing to report means an empty answer**, including where the harness asks for visible output: return nothing rather than the status line that request invites. A line saying a wake needed no action is the narration this forbids, and twenty of them over one run read as noise around the wake that did.
+
+**This covers every wake, not only PR events**: a scheduled check-in, a background command or subagent finishing mid-task, a stop-hook nudge. Prompts such as "Your previous response had no visible output" or "The user hasn't heard from you in a while" are not requests to report: answer them with nothing unless one of the cases above holds.
 
 Silence isn't skipping: read every event and investigate what it names; this governs only what reaches the requester. A finding judged an artifact is still reported once, with evidence ([see above](#after-opening-the-pr--every-check-ends-green)).
