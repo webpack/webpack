@@ -280,7 +280,8 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: yield/yield_before_punctuators",
 			"terser input: source-maps/expect.js",
 			"terser input: source-maps/input.js",
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:1072"
+			"oxc minifier: peephole/substitute_alternate_syntax.rs:1072",
+			"swc minifier: fixture/issues/12492/input.js"
 		]
 	],
 	[
