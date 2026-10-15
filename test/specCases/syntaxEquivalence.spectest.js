@@ -2686,10 +2686,34 @@ const RENDER_WIDTHS = [360, 1400];
 
 // WHY: Chrome 155 lays out no box for an iframe the adoption agency moved —
 // measured: `<b><p><iframe></iframe></b>` gives it 0x0, where Chromium 141
-// gives 304x154 — so a page doing so renders apart from its printed tree.
+// gives 304x154 — so a page doing so renders apart from its printed tree, and
+// is skipped only in an engine `dropsAdoptedIframeBox` finds doing it.
 const ADOPTED_IFRAME_PAGES = new Set([
 	"test/external/wpt/html/syntax/parsing/crashtests/adoption-agency-cycle-mutation.html"
 ]);
+
+/**
+ * Whether the engine lays out no box for an iframe the adoption agency moved.
+ * @param {import("puppeteer-core").Page} page a page to probe in
+ * @returns {Promise<boolean>} true when the moved iframe has no width
+ */
+const dropsAdoptedIframeBox = (page) =>
+	page.evaluate(async () => {
+		const frame = document.createElement("iframe");
+		frame.setAttribute("sandbox", "allow-same-origin");
+		const loaded = new Promise((resolve) => {
+			frame.addEventListener("load", resolve, { once: true });
+		});
+		frame.srcdoc = "<!doctype html><b><p><iframe></iframe></b>";
+		document.body.append(frame);
+		await loaded;
+		const moved = /** @type {HTMLIFrameElement} */ (
+			/** @type {Document} */ (frame.contentDocument).querySelector("iframe")
+		);
+		const { width } = moved.getBoundingClientRect();
+		frame.remove();
+		return width === 0;
+	});
 
 // Engine behaviors a workaround in this suite exists for, each probed in the
 // engines it was measured in: once one is fixed its test fails, naming the
@@ -2706,28 +2730,6 @@ const ENGINE_QUIRKS = [
 					new DOMParser().parseFromString("a<\u0000!", "text/html").body
 						.textContent === "a<\uFFFD!"
 			)
-	},
-	{
-		engines: ["chrome"],
-		quirk: "lays out no box for an iframe the adoption agency moved",
-		workaround: "the render tier skipping `ADOPTED_IFRAME_PAGES`",
-		holds: (page) =>
-			page.evaluate(async () => {
-				const frame = document.createElement("iframe");
-				frame.setAttribute("sandbox", "allow-same-origin");
-				const loaded = new Promise((resolve) => {
-					frame.addEventListener("load", resolve, { once: true });
-				});
-				frame.srcdoc = "<!doctype html><b><p><iframe></iframe></b>";
-				document.body.append(frame);
-				await loaded;
-				const moved = /** @type {HTMLIFrameElement} */ (
-					/** @type {Document} */ (frame.contentDocument).querySelector("iframe")
-				);
-				const { width } = moved.getBoundingClientRect();
-				frame.remove();
-				return width === 0;
-			})
 	},
 	{
 		engines: ["firefox"],
@@ -2876,6 +2878,7 @@ describe("a minified page renders as the page it came from", () => {
 	let page;
 	/** @type {Error | undefined} */
 	let unrecovered;
+	let skipAdoptedIframes = false;
 
 	// WHY: a WebKit run never returned from one wpt/css batch, and every later
 	// test then waited behind it on the same page. Past a deadline the batch is
@@ -2897,6 +2900,7 @@ describe("a minified page renders as the page it came from", () => {
 			protocolTimeout: FILE_TIMEOUT
 		});
 		page = await openPage();
+		skipAdoptedIframes = await dropsAdoptedIframeBox(page);
 	}, FILE_TIMEOUT);
 
 	afterAll(async () => {
@@ -2991,6 +2995,9 @@ describe("a minified page renders as the page it came from", () => {
 	 */
 	const renderPairs = (fixtures, options) =>
 		fixtures.flatMap((fixture) => {
+			if (skipAdoptedIframes && ADOPTED_IFRAME_PAGES.has(fixture.name)) {
+				return [];
+			}
 			const after = minifyHtml(fixture.raw, options);
 			return after === fixture.raw
 				? []
@@ -3010,7 +3017,6 @@ describe("a minified page renders as the page it came from", () => {
 		// the spec ignores it in body text, while Chromium turns one right after a
 		// `<` into U+FFFD — measured: `a<\0!` renders `a<\uFFFD!` in Chrome 141.
 		if (raw.includes("\u0000")) continue;
-		if (ENGINE === "chrome" && ADOPTED_IFRAME_PAGES.has(name)) continue;
 		const group = name.split("/").slice(2, 4).join("/");
 		const pages = wptPages.get(group);
 		const fixture = { name, raw, min: raw };
