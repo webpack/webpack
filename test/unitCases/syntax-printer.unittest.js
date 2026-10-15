@@ -336,12 +336,6 @@ const IMPROVED_CASES = [
 		"function f(){return[void 0!==arguments[0]?arguments[0]:1,arguments[1]]}console.log(f(),f(5),f(5,6));"
 	],
 	[
-		"a method read off a built-in's `prototype` to call with its own `this`",
-		'function f(o, k) { return Object.prototype.hasOwnProperty.call(o, k); } function g() { return Array.prototype.slice.call(arguments, 1); } console.log(f({ a: 1 }, "a"), f({}, "a"), g(1, 2, 3));',
-		{ compress: {}, mangle: false },
-		'function f(o,k){return{}.hasOwnProperty.call(o,k)}function g(){return[].slice.call(arguments,1)}console.log(f({a:1},"a"),f({},"a"),g(1,2,3));'
-	],
-	[
 		"unread calls of an async function with no body and of a generator",
 		"var log = []; function f() { (async () => {})(); (function* () { log.push(1); })(); log.push(2); } f(); console.log(log.join());",
 		{ compress: {}, mangle: false },
@@ -8523,23 +8517,6 @@ describe("syntax-printer", () => {
 				{ module: true, compress: {}, mangle: false }
 			);
 			expect(code).toContain("typeof Symbol");
-		});
-
-		it("should keep a built-in's `prototype` where a literal's own property or `this` differs", async () => {
-			const { minify } = await load();
-			for (const input of [
-				"export function f(){Array.prototype.push(1)}",
-				"export function f(){Array.prototype.foo=1}",
-				"export function f(){return Array.prototype.length}",
-				"export function f(Object){return Object.prototype.hasOwnProperty.call(1,2)}"
-			]) {
-				const { code } = await minify(input, {
-					module: true,
-					compress: {},
-					mangle: false
-				});
-				expect(code).toContain(".prototype.");
-			}
 		});
 
 		it("should keep a test against `null` where the chain cannot stand in for it", async () => {

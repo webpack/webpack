@@ -666,7 +666,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/react-instancesearch/003/input.js",
 			"swc minifier: fixture/issues/react-instancesearch/004/input.js",
 			"swc minifier: fixture/issues/vercel/005/input.js",
-			"swc minifier: fixture/issues/vercel/006/input.js",
 			"swc minifier: fixture/next/33265/static/chunks/pages/index-cb36c1bf7f830e3c/input.js",
 			"swc minifier: fixture/next/33458/static/chunks/pages/no-spread-2db60295b526e113/input.js",
 			"swc minifier: fixture/next/33458/static/chunks/pages/spread-be872e60d968a0f7/input.js",
