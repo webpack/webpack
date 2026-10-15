@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Recognize strict mode only from valid directives throughout the prologue.
+Match Acorn's strict directives, Unicode identifiers and expression validation.
