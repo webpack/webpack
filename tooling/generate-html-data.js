@@ -526,6 +526,23 @@ const IMPLIED_END_TAG_ELEMENTS = [
 /** @type {ParserTable[]} */
 const PARSER_TABLES = [
 	[
+		"SVG_EDITOR_NAMESPACES",
+		"set",
+		"Editor-specific SVG data namespaces, not described by webref. Generic RDF and licensing vocabularies are not editor data.",
+		[
+			"http://www.inkscape.org/namespaces/inkscape",
+			"http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd",
+			"http://inkscape.sourceforge.net/DTD/sodipodi-0.dtd",
+			"http://krita.org/namespaces/svg/krita",
+			"http://ns.adobe.com/AdobeIllustrator/10.0/",
+			"http://ns.adobe.com/Extensibility/1.0/",
+			"http://ns.adobe.com/SaveForWeb/1.0/",
+			"http://schemas.microsoft.com/visio/2003/SVGExtensions/",
+			"http://www.bohemiancoding.com/sketch/ns",
+			"http://www.figma.com/figma/ns"
+		]
+	],
+	[
 		"VOID",
 		"set",
 		"§13.1.2 void elements: no end tag, and no children to close one over.",

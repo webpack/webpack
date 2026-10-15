@@ -15,6 +15,16 @@ const SOURCE = `<?xml version="1.0" encoding="UTF-8"?>
 `;
 
 describe("xmlMinify", () => {
+	it("should remove metadata and editor data independently", async () => {
+		const source = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:e="http://www.inkscape.org/namespaces/inkscape" e:version="1"><metadata>editor</metadata><e:view/><path/></svg>';
+		for (const removeMetadata of [false, true]) {
+			for (const removeEditorData of [false, true]) {
+				const { code } = await xmlMinify({ "image.svg": source }, undefined, { removeMetadata, removeEditorData });
+				expect(code).toBe(`<svg xmlns="http://www.w3.org/2000/svg" xmlns:e="http://www.inkscape.org/namespaces/inkscape"${removeEditorData ? "" : ' e:version="1"'}>${removeMetadata ? "" : "<metadata>editor</metadata>"}${removeEditorData ? "" : "<e:view/>"}<path/></svg>`);
+			}
+		}
+	});
+
 	it("should minify the document and the stylesheets it holds", async () => {
 		const { code } = await xmlMinify({ "image.svg": SOURCE });
 		expect(code).toMatchSnapshot();

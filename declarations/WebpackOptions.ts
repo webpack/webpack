@@ -3456,6 +3456,16 @@ export interface OptimizationMinimizeOptions {
  */
 export interface OptimizationMinimizeXml {
 	/**
+	 * Remove elements and attributes in known editor namespaces within SVG, preserving namespace declarations and unrelated XML data. Off by default because editor data may be needed to edit the image.
+	 * @since 5.112.0
+	 */
+	removeEditorData?: boolean;
+	/**
+	 * Remove SVG `metadata` elements and their contents, preserving `title`, `desc` and the document element. Off by default because metadata can carry licensing and application data.
+	 * @since 5.112.0
+	 */
+	removeMetadata?: boolean;
+	/**
 	 * Print attributes with the document's commonest names first, breaking ties by case-sensitive name. Off by default: consumers observing attribute order see the new order.
 	 * @since 5.112.0
 	 */

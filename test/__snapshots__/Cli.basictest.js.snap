@@ -12893,6 +12893,32 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "optimization-minimize-options-xml-remove-editor-data": Object {
+    "configs": Array [
+      Object {
+        "description": "Remove elements and attributes in known editor namespaces within SVG, preserving namespace declarations and unrelated XML data. Off by default because editor data may be needed to edit the image.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.xml.removeEditorData",
+        "type": "boolean",
+      },
+    ],
+    "description": "Remove elements and attributes in known editor namespaces within SVG, preserving namespace declarations and unrelated XML data. Off by default because editor data may be needed to edit the image.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-options-xml-remove-metadata": Object {
+    "configs": Array [
+      Object {
+        "description": "Remove SVG \`metadata\` elements and their contents, preserving \`title\`, \`desc\` and the document element. Off by default because metadata can carry licensing and application data.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.xml.removeMetadata",
+        "type": "boolean",
+      },
+    ],
+    "description": "Remove SVG \`metadata\` elements and their contents, preserving \`title\`, \`desc\` and the document element. Off by default because metadata can carry licensing and application data.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "optimization-minimize-options-xml-sort-attributes": Object {
     "configs": Array [
       Object {
@@ -12919,6 +12945,32 @@ Object {
       },
     ],
     "description": "Minimize \`.svg\` and \`.xml\` assets: \`false\` disables it, an object enables it. Absent means off unless \`experiments.futureDefaults\` is set.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-xml-remove-editor-data": Object {
+    "configs": Array [
+      Object {
+        "description": "Remove elements and attributes in known editor namespaces within SVG, preserving namespace declarations and unrelated XML data. Off by default because editor data may be needed to edit the image.",
+        "multiple": false,
+        "path": "optimization.minimize.xml.removeEditorData",
+        "type": "boolean",
+      },
+    ],
+    "description": "Remove elements and attributes in known editor namespaces within SVG, preserving namespace declarations and unrelated XML data. Off by default because editor data may be needed to edit the image.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-xml-remove-metadata": Object {
+    "configs": Array [
+      Object {
+        "description": "Remove SVG \`metadata\` elements and their contents, preserving \`title\`, \`desc\` and the document element. Off by default because metadata can carry licensing and application data.",
+        "multiple": false,
+        "path": "optimization.minimize.xml.removeMetadata",
+        "type": "boolean",
+      },
+    ],
+    "description": "Remove SVG \`metadata\` elements and their contents, preserving \`title\`, \`desc\` and the document element. Off by default because metadata can carry licensing and application data.",
     "multiple": false,
     "simpleType": "boolean",
   },

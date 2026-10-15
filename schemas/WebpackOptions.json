@@ -4497,6 +4497,16 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "removeEditorData": {
+          "description": "Remove elements and attributes in known editor namespaces within SVG, preserving namespace declarations and unrelated XML data. Off by default because editor data may be needed to edit the image.",
+          "type": "boolean",
+          "added": "5.112.0"
+        },
+        "removeMetadata": {
+          "description": "Remove SVG `metadata` elements and their contents, preserving `title`, `desc` and the document element. Off by default because metadata can carry licensing and application data.",
+          "type": "boolean",
+          "added": "5.112.0"
+        },
         "sortAttributes": {
           "description": "Print attributes with the document's commonest names first, breaking ties by case-sensitive name. Off by default: consumers observing attribute order see the new order.",
           "type": "boolean",
