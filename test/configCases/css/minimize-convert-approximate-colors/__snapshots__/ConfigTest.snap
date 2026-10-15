@@ -13,8 +13,8 @@ Array [
   "/*! a mix is the color it computes to, so it converts on the same terms */.t08{background:#ef95ff}",
   "/*! ...as does a relative color */.t09{background:#ff826a}",
   "/*! declined still: an engine reads these two through a transfer of its own, so
-   the hex would name a color it never paints rather than a near one */.t10{background:color(a98-rgb .2 .4 .6)}",
-  "/*! ...both of them */.t11{background:color(prophoto-rgb .2 .4 .6)}",
+   the hex would name a color it never paints rather than a near one */.t10{background:#00669c;background:color(a98-rgb .2 .4 .6)}",
+  "/*! ...both of them */.t11{background:#0082b0;background:color(prophoto-rgb .2 .4 .6)}",
   "/*! a color the conversion is exact for needs no option and takes none */.t12{background:red}",
 ]
 `;

@@ -1444,6 +1444,47 @@ describe("wpt css token adjacency", () => {
 /** @type {LoweringFixture[]} */
 const LOWERING_FIXTURES = [
 	{
+		name: "what a modern target makes dead, and the shorter spellings",
+		produces: [
+			"outline:2px solid}",
+			"#b{background:none}",
+			"transform-origin:bottom",
+			"background-position:bottom",
+			"transition:color 1s.5s,opacity 2s 1s",
+			"#z{top:0}#e{width:var(--b,2px)}",
+			"#f{background-color:#73859f80}",
+			"#g{text-decoration:underline dotted}",
+			"button,[type=button]{"
+		],
+		css:
+			"#a{outline:2px solid currentColor;color:rgb(1,2,3)}" +
+			"#b{background:transparent}" +
+			"#c{transform-origin:50% 100%;background-position:center bottom}" +
+			"#d{transition:color 1s,opacity 2s;transition-delay:.5s,1s}" +
+			"#e{width:var(--a,1px)}#z{top:0}#e{width:var(--b,2px)}" +
+			"#f{background-color:#73859f;background-color:#73859f80}" +
+			"#g{text-decoration:underline;-webkit-text-decoration:underline;" +
+			"text-decoration:underline dotted;-webkit-text-decoration:underline dotted}" +
+			"[type=button],button{color:teal}",
+		browsers: ["chrome 140", "firefox 140", "safari 26.2"],
+		html:
+			"<div id=a>a</div><div id=b>b</div><div id=c>c</div><div id=d>d</div>" +
+			"<div id=e>e</div><div id=z>z</div><div id=f>f</div><div id=g>g</div>" +
+			"<button id=h>h</button><input id=i type=button>",
+		probes: [
+			["#a", "outline-color"],
+			["#b", "background-color"],
+			["#c", "transform-origin"],
+			["#c", "background-position"],
+			["#d", "transition-delay"],
+			["#e", "width"],
+			["#f", "background-color"],
+			["#g", "text-decoration-style"],
+			["#h", "color"],
+			["#i", "color"]
+		]
+	},
+	{
 		name: "nesting",
 		// The rules the lowering writes on their own, which the source states
 		// inside the one they were written in.

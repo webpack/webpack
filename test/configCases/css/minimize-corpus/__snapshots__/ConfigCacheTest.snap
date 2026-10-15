@@ -1056,7 +1056,7 @@ Array [
 
 exports[`ConfigCacheTestCases css minimize-corpus minimize-corpus should compile: minimize-omitted-values 1`] = `
 Array [
-  ".c1{--l:96%}.c2{--l:90%!important;--l:96%}.c3{--L:1;--l:2}.t1{translate:-3rem}.t2{translate:1px 2px}.t3{translate:10%0%}.t4{scale:2}.t5{scale:2 3}.p1{background-image:linear-gradient(red,red),linear-gradient(blue,blue);background-position:10%73%,90%}.p2{background-image:linear-gradient(red,red),linear-gradient(blue,blue);background-position:top,50%100%}.s1{stroke-dasharray:1,200}.s2{stroke-width:2}.s3{stroke-dashoffset:-124}.s4{stroke-width:2em}.g1{grid-area:2/1/4/3;display:grid}.g2{grid-area:a}.g3{grid-area:a/c/b}.g4{grid-area:span 2/1/auto/-1}.g5{grid-row:1/2!important;grid-column:3/4}.g6{grid-area:--x/1/auto}.g7{grid-area:span a/span 2/auto/3}.g8{grid-row:1 2;grid-column:1}",
+  ".c1{--l:96%}.c2{--l:90%!important;--l:96%}.c3{--L:1;--l:2}.t1{translate:-3rem}.t2{translate:1px 2px}.t3{translate:10%0%}.t4{scale:2}.t5{scale:2 3}.p1{background-image:linear-gradient(red,red),linear-gradient(blue,blue);background-position:10%73%,90%}.p2{background-image:linear-gradient(red,red),linear-gradient(blue,blue);background-position:top,bottom}.s1{stroke-dasharray:1,200}.s2{stroke-width:2}.s3{stroke-dashoffset:-124}.s4{stroke-width:2em}.g1{grid-area:2/1/4/3;display:grid}.g2{grid-area:a}.g3{grid-area:a/c/b}.g4{grid-area:span 2/1/auto/-1}.g5{grid-row:1/2!important;grid-column:3/4}.g6{grid-area:--x/1/auto}.g7{grid-area:span a/span 2/auto/3}.g8{grid-row:1 2;grid-column:1}",
 ]
 `;
 
@@ -1142,7 +1142,7 @@ Array [
   "/*! webpack: a selector list is a set, so one order lets equal lists compare */.t90a,.t90b{color:red}",
   "/*! webpack: ...and a repeat in it matches nothing the first did not */.t91,.t92{color:red}",
   "/*! webpack: ...which is what lets two rules naming one set become one rule */.t93,.t94{color:red;margin:0}",
-  "/*! declined: only the list's own commas split it */.t98,:is(.t96,.t95) .t97{color:red}.t99[title=\\"b,a\\"],.t99a{color:red}",
+  "/*! declined: only the list's own commas split it */.t98,:is(.t96,.t95) .t97{color:red}.t99a,.t99[title=\\"b,a\\"]{color:red}",
   "/*! webpack: \`An+B\` carries its own whitespace, signs and case */.t100:nth-child(odd),.t101:nth-child(3),.t102:nth-child(3){color:red}",
   "/*! webpack: ...an index under 1 matches nothing, so the step starts where it does */.t103:nth-child(odd),.t104:nth-child(3n+1),.t105:nth-child(2n){color:red}",
   "/*! webpack: ...\`even\` is longer than the step it names, \`odd\` shorter */.t106:nth-child(2n),.t107:nth-child(odd){color:red}",
@@ -1248,7 +1248,7 @@ Array [
   "/*! background-position: a second value naming the centre is what an omitted one means */.t64{background-position:50%}",
   "/*! background-position: ...and an offset keeps the pair out of the percentage rewrite */.t64b{background-position:10px}",
   "/*! declined: \`top\` is no x-position, so half the pair alone is a value the engine drops */.t64c{background-position:top 50%}",
-  "/*! transform-origin: the axes are spelled out rather than named, but still a position */.t65{transform-origin:50%100%}",
+  "/*! transform-origin: the axes are spelled out rather than named, but still a position */.t65{transform-origin:bottom}",
   "/*! declined: a third component is the z offset, which the collapse has no reading of */.t65b{transform-origin:left top 10px}",
   "/*! calls: grammar matching skips whitespace, so a prefixed spelling collapses too */.t66{-webkit-transform:translateY(-14px)scale(.8)}",
   "/*! calls: ...and so does any property whose components are all calls */.t66b{filter:brightness(0)invert()}",
