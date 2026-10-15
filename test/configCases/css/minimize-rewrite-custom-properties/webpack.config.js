@@ -2,7 +2,8 @@
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {
-	target: "web",
+	// A target every browser of is one the data states, so the color rewrites apply.
+	target: "browserslist:chrome 140, firefox 140, safari 26.2",
 	mode: "production",
 	output: {
 		pathinfo: false

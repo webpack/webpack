@@ -10093,13 +10093,13 @@ describe("CssSyntax minify — vendor prefixes (target selection)", () => {
 		).toBe("a{text-size-adjust:100%}");
 	});
 
-	it("skips a browser no dataset covers, as lightningcss's target mapping does", () => {
+	it("drops no prefix a browser no dataset covers may still read", () => {
 		expect(
 			minifyFor("a{-webkit-border-radius:5px;border-radius:5px}", [
 				"chrome 130",
 				"bb 10"
 			])
-		).toBe("a{border-radius:5px}");
+		).toBe("a{-webkit-border-radius:5px;border-radius:5px}");
 	});
 
 	it("still adds for the browsers it does resolve", () => {
@@ -14741,6 +14741,31 @@ describe("CssSyntax minify — a fallback the target reads past", () => {
 				"op_mini all"
 			])
 		).toBe("a{color:#c65d06;color:lab(50% 100 -100)}");
+	});
+
+	it.each([[["op_mini all"]], [["kaios 2.5"]], [[...MODERN, "op_mini all"]]])(
+		"reaches for no newer spelling for %j",
+		(browsers) => {
+			// Nothing states what `op_mini` or `kaios` reads, so no ability is known.
+			const css =
+				"a{color:rgba(0,0,0,.5);top:0;right:0;bottom:0;left:0}@media (min-width:100px){b{c:d}}";
+			expect(minifyFor(css, browsers)).toBe(css);
+		}
+	);
+
+	it("still lowers for the browsers it states, which leaves the rest no worse", () => {
+		expect(
+			minifyFor("a{color:red;.b{color:blue}}", ["chrome 100", "op_mini all"])
+		).toBe("a{color:red}a .b{color:blue}");
+	});
+
+	it("keeps a vendor spelling such a selection may be the one to read", () => {
+		const css =
+			"a{-webkit-box-shadow:0 0 1px red;box-shadow:0 0 1px red}e::-moz-selection{color:red}e::selection{color:red}";
+		expect(minifyFor(css, [...MODERN, "op_mini all"])).toBe(css);
+		expect(minifyFor(css, MODERN)).toBe(
+			"a{box-shadow:0 0 1px red}e::selection{color:red}"
+		);
 	});
 
 	it("leaves the prefixes such a selection asks for alone", () => {
