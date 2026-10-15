@@ -8,6 +8,7 @@
 // cspell:ignore DOCTYPEÐ DOCTYPEİ Silmaril basefont bgsound framesets isindex
 // cspell:ignore malignmark menuitem noembed noframes optgroup reparent spacer
 
+const { execFileSync } = require("child_process");
 const fs = require("fs");
 const path = require("path");
 const { A, Field, Flag, Namespace, Part, _attributeList, _namespaceOf, NodeType, Quote, decodeEntities, decodeXmlAttribute, tokenizeXml, escapeAttribute, escapeText, parseCssUrls, parseHtml: parseHtmlRefs, parseMsapplicationTask, parseSrc, parseSrcset, tokenize } = require("../../lib/html/syntax-parser");
@@ -3258,6 +3259,44 @@ describe("HtmlSyntax — the facade", () => {
 		expect(processor._printer).toBeUndefined();
 		expect(processor.process("<p>x</p>", { mode: "minify" }).code).toBe("<p>x");
 		expect(typeof processor._printer).toBe("function");
+	});
+});
+
+describe("builtinEmbeddedRenderer — what it loads", () => {
+	// Run in a fresh process, so `require.cache` holds only what this loaded.
+	it("loads neither parser until a body needs one", () => {
+		const script = `
+			const loaded = (file) => require.cache[file] !== undefined;
+			const cssParser = ${JSON.stringify(require.resolve("../../lib/css/syntax-parser"))};
+			const htmlParser = ${JSON.stringify(require.resolve("../../lib/html/syntax-parser"))};
+			const { builtinEmbeddedRenderer } = require(${JSON.stringify(
+				require.resolve("../../lib/html/builtinEmbeddedRenderer")
+			)});
+			let picked = 0;
+			const render = builtinEmbeddedRenderer({
+				svg: true,
+				get transforms() {
+					picked++;
+					return require(cssParser).pickTransforms({ shortenColors: false });
+				}
+			});
+			const states = [];
+			const state = (code) =>
+				states.push({ code, css: loaded(cssParser), html: loaded(htmlParser), picked });
+			state(render('{ "a" : 1 }', { type: "json", hostType: "html" }));
+			state(render("a { color : #ff0000 }", { type: "css", hostType: "html" }));
+			state(render("color : #ff0000", { type: "css", hostType: "html", as: "block-contents" }));
+			process.stdout.write(JSON.stringify(states));
+		`;
+		expect(
+			JSON.parse(
+				execFileSync(process.execPath, ["-e", script], { encoding: "utf8" })
+			)
+		).toEqual([
+			{ code: '{"a":1}', css: false, html: false, picked: 0 },
+			{ code: "a{color:#ff0000}", css: true, html: false, picked: 1 },
+			{ code: "color:#ff0000", css: true, html: false, picked: 1 }
+		]);
 	});
 });
 
