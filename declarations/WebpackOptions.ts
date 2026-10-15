@@ -3448,11 +3448,17 @@ export interface OptimizationMinimizeOptions {
 }
 
 /**
- * What the XML minimizer does. It has no switches of its own yet: the stylesheets an SVG or XHTML element holds are minified with `optimization.minimizeOptions.css` for the target's browsers.
+ * What the XML minimizer does. The stylesheets an SVG or XHTML element holds are minified with `optimization.minimizeOptions.css` for the target's browsers.
  * @since 5.112.0
  * @experimental
  */
-export interface OptimizationMinimizeXml {}
+export interface OptimizationMinimizeXml {
+	/**
+	 * Print attributes with the document's commonest names first, breaking ties by case-sensitive name. Off by default: consumers observing attribute order see the new order.
+	 * @since 5.112.0
+	 */
+	sortAttributes?: boolean;
+}
 
 /**
  * Enables/Disables integrated optimizations.

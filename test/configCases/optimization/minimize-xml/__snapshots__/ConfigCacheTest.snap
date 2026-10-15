@@ -60,3 +60,10 @@ exports[`ConfigCacheTestCases optimization minimize-xml minimize-xml should comp
 	<circle class=\\"dot\\" cx=\\"5\\" cy=\\"5\\" r=\\"4\\"/>
 </svg>"
 `;
+
+exports[`ConfigCacheTestCases optimization minimize-xml minimize-xml should compile: sorted 1`] = `
+"<?xml version=\\"1.0\\" encoding=\\"UTF-8\\"?><svg viewBox=\\"0 0 10 10\\" xmlns=\\"http://www.w3.org/2000/svg\\">
+	<style>.dot{fill:red;-webkit-user-select:none;user-select:none}</style>
+	<circle class=\\"dot\\" cx=\\"5\\" cy=\\"5\\" r=\\"4\\"/>
+</svg>"
+`;

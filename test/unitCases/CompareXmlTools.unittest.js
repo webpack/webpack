@@ -41,6 +41,15 @@ describe("the XML tool comparison", () => {
 		expect(canonical(minified)).toBe(canonical(xml));
 	});
 
+	it("should compare sorted attributes with embedded stylesheet minification", async () => {
+		const source = '<svg xmlns="http://www.w3.org/2000/svg" z="1" a="2"><style>path { fill: #ff0000 }</style></svg>';
+		const [tool] = toolsFor("minify", source).filter((tool) => tool.name === "webpack (sorted attributes)");
+		const minify = await tool.create();
+		const once = await minify(source);
+		expect(once).toBe('<svg a="2" xmlns="http://www.w3.org/2000/svg" z="1"><style>path{fill:red}</style></svg>');
+		expect(await minify(once)).toBe(once);
+	});
+
 	it.each(["<svg/>", '<svg xmlns="http://www.w3.org/2000/svg"><path/></svg>', EDITOR_SVG])("should compare both SVGO passes for an SVG root", (xml) => {
 		expect(toolsFor("minify", xml).map((tool) => tool.name)).toEqual(expect.arrayContaining(["svgo", "svgo (multipass)"]));
 	});

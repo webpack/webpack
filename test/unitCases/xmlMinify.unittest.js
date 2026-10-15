@@ -43,6 +43,16 @@ describe("xmlMinify", () => {
 		expect(code).toBe('<a title="café">x</a>');
 	});
 
+	it("should compact attribute spacing and optionally sort attributes", async () => {
+		const input = { "image.svg": '<svg  xmlns = "http://www.w3.org/2000/svg" viewBox = "0 0 1 1"><path z = "1" style = "fill: #ff0000" a = "2" /></svg>' };
+		for (const sortAttributes of [undefined, false, true]) {
+			const { code } = await xmlMinify(input, undefined, { sortAttributes });
+			expect(code).toBe(sortAttributes
+				? '<svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg"><path a="2" style="fill:red" z="1"/></svg>'
+				: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1"><path z="1" style="fill:red" a="2"/></svg>');
+		}
+	});
+
 	it("should describe itself to the minimizer plugin", () => {
 		expect(xmlMinify.supportsWorkerThreads()).toBe(true);
 		expect(xmlMinify.getTypes()).toEqual(["xml"]);

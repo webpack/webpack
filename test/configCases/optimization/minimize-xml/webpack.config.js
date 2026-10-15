@@ -56,5 +56,8 @@ module.exports = [
 				"..."
 			]
 		}
+	}),
+	config("sorted", {
+		optimization: { minimizeOptions: { xml: { sortAttributes: true } } }
 	})
 ];

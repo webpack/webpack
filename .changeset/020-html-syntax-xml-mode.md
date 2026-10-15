@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Add XML parsing and SVG/XML minification, including embedded SVG data URLs.
+Add XML parsing and SVG/XML minification with data URLs and attribute sorting.
