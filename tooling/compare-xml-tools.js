@@ -256,6 +256,13 @@ const fixtures = async () => {
 		]);
 	}
 	out.push(["Editor-exported SVG (DTD entities)", EDITOR_SVG]);
+	out.push([
+		"SVG geometry",
+		await fs.promises.readFile(
+			path.join(ROOT, "test/configCases/optimization/minimize-xml/numbers.svg"),
+			"utf8"
+		)
+	]);
 	out.push(["Atom feed (400 entries)", atomFeed(400)]);
 	out.push(["Maven POM", MAVEN_POM]);
 	out.push(["XLIFF translation", XLIFF]);
@@ -272,7 +279,7 @@ const printXml = (xml, mode) =>
 		new SourceProcessor().process(xml, { xml: true, mode })
 	).code;
 
-/** @typedef {Pick<import("../lib/html/syntax-printer").HtmlProcessOptions, "sortAttributes" | "removeSvgMetadata" | "removeSvgEditorData" | "removeUnusedSvgNamespaces" | "removeEmptyAttributes" | "collapseWhitespace">} XmlPrintOptions */
+/** @typedef {Pick<import("../lib/html/syntax-printer").HtmlProcessOptions, "sortAttributes" | "removeSvgMetadata" | "removeSvgEditorData" | "removeUnusedSvgNamespaces" | "removeEmptyAttributes" | "collapseWhitespace" | "shortenSvgNumbers">} XmlPrintOptions */
 
 /** @type {[string, XmlPrintOptions][]} */
 const PRESETS = [
@@ -301,6 +308,18 @@ const PRESETS = [
 			removeUnusedSvgNamespaces: true,
 			removeEmptyAttributes: true,
 			collapseWhitespace: true
+		}
+	],
+	[
+		"svg-numeric",
+		{
+			sortAttributes: true,
+			removeSvgMetadata: true,
+			removeSvgEditorData: true,
+			removeUnusedSvgNamespaces: true,
+			removeEmptyAttributes: true,
+			collapseWhitespace: true,
+			shortenSvgNumbers: true
 		}
 	]
 ];
@@ -509,6 +528,25 @@ const TOOLS = [
 			})
 	),
 
+	{
+		name: "webpack (SVG numeric cleanup)",
+		stage: "minify",
+		create: () => {
+			const renderEmbeddedSource = builtinEmbeddedRenderer();
+			return (xml) =>
+				new SourceProcessor().process(xml, {
+					xml: true,
+					mode: "minify",
+					shortenSvgNumbers: true,
+					collapseWhitespace: true,
+					removeSvgMetadata: true,
+					removeSvgEditorData: true,
+					removeUnusedSvgNamespaces: true,
+					removeEmptyAttributes: true,
+					renderEmbeddedSource
+				}).code;
+		}
+	},
 	{
 		// SVG's own optimizer: it rewrites path data and drops what it deems
 		// editor noise, so it differs by design rather than by mistake.
@@ -1307,7 +1345,8 @@ const invariants = (write) => {
 				!options.removeSvgMetadata &&
 				!options.removeSvgEditorData &&
 				!options.removeUnusedSvgNamespaces &&
-				!options.removeEmptyAttributes;
+				!options.removeEmptyAttributes &&
+				!options.shortenSvgNumbers;
 			if (
 				retainsData &&
 				wantedRelation("meaning") &&

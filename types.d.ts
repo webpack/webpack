@@ -12942,6 +12942,7 @@ declare interface HtmlPrintOptions {
 	removeSvgMetadata?: boolean;
 	removeSvgEditorData?: boolean;
 	removeUnusedSvgNamespaces?: boolean;
+	shortenSvgNumbers?: boolean;
 	removeRedundantAttributes?: boolean | "all" | "smart";
 	sortAttributes?: boolean;
 	sortTokenLists?: boolean;
@@ -12982,6 +12983,11 @@ declare interface HtmlProcessOptions {
 	 * omit unused prefixed namespace declarations within SVG when minifying XML (default false)
 	 */
 	removeUnusedSvgNamespaces?: boolean;
+
+	/**
+	 * shorten SVG geometry decimals and number-list separators without rounding, changing units or rewriting exponent notation when minifying XML (default false)
+	 */
+	shortenSvgNumbers?: boolean;
 
 	/**
 	 * the quote an XML minifying print gives an attribute whose value costs the same in either (default `"`); `'` for a document bound for a `"`-quoted string, such as a CSS `url("data:…")`
@@ -24339,33 +24345,39 @@ declare interface OptimizationMinimizeOptions {
 declare interface OptimizationMinimizeXml {
 	/**
 	 * Remove whitespace-only text in known SVG containers, preserving text content, foreign content and `xml:space`. Off by default because scripts can observe whitespace nodes.
-	 * @since 5.112.0
+	 * @since 5.113.0
 	 */
 	collapseWhitespace?: boolean;
 
 	/**
 	 * Remove elements and attributes in known editor namespaces within SVG, preserving namespace declarations and unrelated XML data. Off by default because editor data may be needed to edit the image.
-	 * @since 5.112.0
+	 * @since 5.113.0
 	 */
 	removeEditorData?: boolean;
 
 	/**
 	 * Remove empty `class`, `id` and `style` attributes on SVG elements unless the DTD declares them. Off by default because selectors and scripts can observe attribute presence.
-	 * @since 5.112.0
+	 * @since 5.113.0
 	 */
 	removeEmptyAttributes?: boolean;
 
 	/**
 	 * Remove SVG `metadata` elements and their contents, preserving `title`, `desc` and the document element. Off by default because metadata can carry licensing and application data.
-	 * @since 5.112.0
+	 * @since 5.113.0
 	 */
 	removeMetadata?: boolean;
 
 	/**
 	 * Remove unused prefixed namespace declarations within SVG, preserving default namespaces and prefixes referenced in names or content. Off by default because scripts can observe namespace declarations.
-	 * @since 5.112.0
+	 * @since 5.113.0
 	 */
 	removeUnusedNamespaces?: boolean;
+
+	/**
+	 * Shorten SVG geometry decimals and number-list separators without rounding, changing units or rewriting exponent notation. Preserve DTD-declared values; off by default because selectors and scripts can observe attribute spelling.
+	 * @since 5.113.0
+	 */
+	shortenNumbers?: boolean;
 
 	/**
 	 * Print attributes with the document's commonest names first, breaking ties by case-sensitive name. Off by default: consumers observing attribute order see the new order.

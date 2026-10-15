@@ -88,5 +88,17 @@ module.exports = [
 				}
 			}
 		})
-	)
+	),
+	config("numbers", {
+		entry: "./numbers.js",
+		optimization: {
+			minimizeOptions: {
+				xml: {
+					shortenNumbers: true,
+					sortAttributes: true,
+					collapseWhitespace: true
+				}
+			}
+		}
+	})
 ];
