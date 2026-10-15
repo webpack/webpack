@@ -234,6 +234,144 @@ const stringArray = (length, string = (index) => `w${index}`) =>
 /** @type {[string, string, import("terser").MinifyOptions, string?][]} */
 const IMPROVED_CASES = [
 	[
+		"a `#__PURE__` call of an arrow whose value a declaration read keeps",
+		"var obj = { b: 1 }; function f() { var b = /*#__PURE__*/ (() => obj.b)(); return b + 1; } console.log(f());",
+		{ compress: {}, mangle: false },
+		"var obj={b:1};function f(){return obj.b+1}console.log(f());"
+	],
+	[
+		"`#__PURE__` calls running more than a `return`, or returning what has side effects, passed on as arguments",
+		"function g(x) { return x; } var o = { p: { q: g } }; console.log(/* @__PURE__ */ (() => { g(); return 1; })(), /* @__PURE__ */ (() => g(g()))(), /* @__PURE__ */ (() => o.p.q(1))(), /* @__PURE__ */ (() => o.p)());",
+		{ compress: {}, mangle: false },
+		"function g(x){return x}var o={p:{q:g}};console.log((g(),1),g(g()),o.p.q(1),o.p);"
+	],
+	[
+		"a `switch` returning, with a `return` after it for the cases it misses",
+		'function f(a) { switch (a) { case 1: return "one"; case 2: return "two"; } return "x"; } console.log(f(1), f(2), f(3));',
+		{ compress: {}, mangle: false },
+		'function f(a){return 1===a?"one":2===a?"two":"x"}console.log(f(1),f(2),f(3));'
+	],
+	[
+		"a `switch` returning, its default before a case and a case falling into it",
+		'function f(a) { switch (a) { case 1: return "one"; case 3: default: return "x"; case 2: return "two"; } } console.log(f(1), f(2), f(3), f(4));',
+		{ compress: {}, mangle: false },
+		'function f(a){return 1===a?"one":2===a?"two":"x"}console.log(f(1),f(2),f(3),f(4));'
+	],
+	[
+		"a `switch` every branch of which assigns the same name and leaves",
+		'function f(a) { var x; switch (a) { case 1: x = "one"; break; case 2: x = "two"; break; default: x = "z"; } return x + x; } console.log(f(1), f(2), f(3));',
+		{ compress: {}, mangle: false },
+		'function f(a){var x=1===a?"one":2===a?"two":"z";return x+x}console.log(f(1),f(2),f(3));'
+	],
+	[
+		"a `#__PURE__` call passed arguments without side effects, its value returned",
+		"var obj = { b: 1 }; function f() { return /*#__PURE__*/ ((o, c) => o.b + c)(obj, 1); } console.log(f(), f());",
+		{ compress: {}, mangle: false },
+		"var obj={b:1};function f(){return obj.b+1}console.log(f(),f());"
+	],
+	[
+		"a `switch` every branch of which runs one expression and leaves",
+		'var log = []; function f(a) { switch (a) { case 1: log.push("one"); break; case 2: log.push("two"); break; default: log.push("x"); } } f(1); f(2); f(3); console.log(log.join());',
+		{ compress: {}, mangle: false },
+		'var log=[];function f(a){1===a?log.push("one"):2===a?log.push("two"):log.push("x")}f(1),f(2),f(3),console.log(log.join());'
+	],
+	[
+		"a `switch` running one expression per branch, with no default",
+		'var log = []; function f(a) { switch (a) { case 1: log.push("one"); break; case 2: log.push("two"); } } f(1); f(2); f(3); console.log(log.join());',
+		{ compress: {}, mangle: false },
+		'var log=[];function f(a){1===a?log.push("one"):2===a&&log.push("two")}f(1),f(2),f(3),console.log(log.join());'
+	],
+	[
+		"a `switch` whose branches assign different names",
+		"function f(a) { var x = 0, y = 0; switch (a) { case 1: x = 1; break; case 2: y = 2; break; default: x = 3; } return [x, y]; } console.log(f(1), f(2), f(3));",
+		{ compress: {}, mangle: false },
+		"function f(a){var x=0,y=0;return 1===a?x=1:2===a?y=2:x=3,[x,y]}console.log(f(1),f(2),f(3));"
+	],
+	[
+		"a `switch` returning, the last statement of its function, with no default",
+		'function f(a) { switch (a) { case 1: return "one"; case 2: return "two"; } } console.log(f(1), f(2), f(3));',
+		{ compress: {}, mangle: false },
+		'function f(a){return 1===a?"one":2===a?"two":void 0}console.log(f(1),f(2),f(3));'
+	],
+	[
+		"a `switch` whose branches run several expressions",
+		"var log = []; function f(a) { switch (a) { case 1: log.push(1); log.push(2); break; case 2: log.push(3); break; default: log.push(4); log.push(5); } } f(1); f(2); f(3); console.log(log.join());",
+		{ compress: {}, mangle: false },
+		"var log=[];function f(a){1===a?(log.push(1),log.push(2)):2===a?log.push(3):(log.push(4),log.push(5))}f(1),f(2),f(3),console.log(log.join());"
+	],
+	[
+		"a `switch` returning, one branch with a bare `return`",
+		"function f(a) { switch (a) { case 1: return 1; case 2: return; default: return 3; } } console.log(f(1), f(2), f(3));",
+		{ compress: {}, mangle: false },
+		"function f(a){return 1===a?1:2===a?void 0:3}console.log(f(1),f(2),f(3));"
+	],
+	[
+		"a `switch` returning inside an `if`, with a `return` after the `if`",
+		'function f(a, b) { if (b) switch (a) { case 1: return "one"; case 2: return "two"; } return "x"; } console.log(f(1, 1), f(2, 1), f(3, 1), f(1, 0));',
+		{ compress: {}, mangle: false },
+		'function f(a,b){return b?1===a?"one":2===a?"two":"x":"x"}console.log(f(1,1),f(2,1),f(3,1),f(1,0));'
+	],
+	[
+		"a call on a name tested against `null` first, whose value nothing reads",
+		"var log = []; function f(a) { if (a != null) a.push(1); } f(log); f(null); console.log(log.join());",
+		{ compress: { ecma: 2020 }, ecma: 2020, mangle: false },
+		"var log=[];function f(a){a?.push(1)}f(log),f(null),console.log(log.join());"
+	],
+	[
+		"a call on a name skipped where it is `null`, whose value nothing reads",
+		"var log = []; function f(a) { if (a == null); else a.push(2); } f(log); f(void 0); console.log(log.join());",
+		{ compress: { ecma: 2020 }, ecma: 2020, mangle: false },
+		"var log=[];function f(a){a?.push(2)}f(log),f(void 0),console.log(log.join());"
+	],
+	[
+		"`??` after an operator that never yields `null` or `undefined`",
+		'function f(y, z) { return [+y ?? 1, (y >>> z) ?? 2]; } console.log(f("3", 1));',
+		{ compress: { ecma: 2020 }, ecma: 2020, mangle: false },
+		"function f(y,z){return[+y,y>>>z]}console.log(f(\"3\",1));"
+	],
+	[
+		"Babel's default parameters, testing `arguments.length` before reading the index",
+		"function f() { var a = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1; var b = arguments.length > 1 ? arguments[1] : void 0; return [a, b]; } console.log(f(), f(5), f(5, 6));",
+		{ compress: {}, mangle: false },
+		"function f(){return[void 0!==arguments[0]?arguments[0]:1,arguments[1]]}console.log(f(),f(5),f(5,6));"
+	],
+	[
+		"unread calls of an async function with no body and of a generator",
+		"var log = []; function f() { (async () => {})(); (function* () { log.push(1); })(); log.push(2); } f(); console.log(log.join());",
+		{ compress: {}, mangle: false },
+		"var log=[];function f(){log.push(2)}f(),console.log(log.join());"
+	],
+	[
+		"Babel's `typeof` helper asking whether `Symbol` exists, from ECMAScript 2015 on",
+		'function t(e) { return t = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (e) { return typeof e; } : function (e) { return e && "function" == typeof Symbol && e.constructor === Symbol && e !== Symbol.prototype ? "symbol" : typeof e; }, t(e); } console.log(t(1), t(Symbol()));',
+		{ compress: { ecma: 2015 }, ecma: 2015, mangle: false },
+		"function t(e){return t=function(e){return typeof e},t(e)}console.log(t(1),t(Symbol()));"
+	],
+	[
+		"a conditional whose chain ends in its own alternate, spread where shorter",
+		'function f(a, b) { return b ? 1 === a ? "one" : 2 === a ? "two" : "a much longer default string" : "a much longer default string"; } console.log(f(1, 1), f(2, 1), f(3, 1), f(1, 0));',
+		{ compress: {}, mangle: false },
+		'function f(a,b){return b&&1===a?"one":b&&2===a?"two":"a much longer default string"}console.log(f(1,1),f(2,1),f(3,1),f(1,0));'
+	],
+	[
+		"a `#__PURE__` call of a function whose value is returned",
+		"var obj = { b: 1 }; function f() { return /*#__PURE__*/ (function () { return obj.b; })(); } console.log(f(), f());",
+		{ compress: {}, mangle: false },
+		"var obj={b:1};function f(){return obj.b}console.log(f(),f());"
+	],
+	[
+		"a `switch` every branch of which returns",
+		'function f(a) { switch (a) { case 1: return "one"; case 2: return "two"; default: return "x"; } } console.log(f(1), f(2), f(3));',
+		{ compress: {}, mangle: false },
+		'function f(a){return 1===a?"one":2===a?"two":"x"}console.log(f(1),f(2),f(3));'
+	],
+	[
+		"a `switch` returning, with cases falling into the next and into the default",
+		'function f(a) { switch (a) { case 1: case 3: return "odd"; case 2: return "two"; case 4: default: return "x"; } } console.log(f(1), f(2), f(3), f(4), f(5));',
+		{ compress: {}, mangle: false },
+		'function f(a){return 1===a||3===a?"odd":2===a?"two":"x"}console.log(f(1),f(2),f(3),f(4),f(5));'
+	],
+	[
 		"a `let` written after its declaration and never read",
 		"function f(a) { let x; x = 1; if (a) x = 2; return a; } console.log(f(1));",
 		{ compress: {}, mangle: false },
@@ -1380,7 +1518,7 @@ const KEPT_CASES = [
 	["a negated test whose value is read", "function f(a, b) { var x = !a || b; return [x, !a && b, (!a || b, !a && b)]; } console.log(f(0, 1), f(1, 0));"],
 	["a `concat` keeping a hole", "console.log([, 1].concat(2).length, 0 in [, 1].concat(2));"],
 	["a `Number` shadowed by a variable", "var Number = { NaN: 1 }; console.log(Number.NaN);"],
-	["a `#__PURE__` call of a function passed something, called optionally, async, running more than a `return`, or returning what has side effects", "function g(x) { return x; } var o = { p: { q: g } }; console.log(/* @__PURE__ */ ((a) => a)(1), /* @__PURE__ */ (() => 1)?.(), /* @__PURE__ */ (() => { g(); return 1; })(), /* @__PURE__ */ (() => g(g()))(), /* @__PURE__ */ (() => o.p.q(1))(), /* @__PURE__ */ (async () => 1)() instanceof Promise, /* @__PURE__ */ (() => o.p)());"],
+	["a `#__PURE__` call of a function called optionally, or async", "console.log(/* @__PURE__ */ (() => 1)?.(), /* @__PURE__ */ (async () => 1)() instanceof Promise);"],
 	["`Number.EPSILON`, longer as a number", "console.log(Number.EPSILON);"],
 	["a function read once kept out of a `#__PURE__` call in a loop or in a closure, and a class", "function wrap(f) { return { f: f }; } function o() { var F = function (a) { return a + 1; }, C = class { m() { return 4; } }, r = []; for (var i = 0; i < 2; i++) r.push(/* @__PURE__ */ wrap(F)); var G = function (a) { return a * 3; }; return [r, function () { return /* @__PURE__ */ wrap(G); }, /* @__PURE__ */ wrap(C)]; } var x = o(); console.log(x[0][0].f === x[0][1].f, x[1]().f(2), new x[2].f().m());"],
 	["safe-integer bounds, whose digits gzip worse", "console.log(Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER);"],
@@ -8287,6 +8425,125 @@ describe("syntax-printer", () => {
 				expect(code).toMatch(/x=[12]/);
 			}
 		});
+
+		it("should drop a `#__PURE__` call nothing reads rather than unwrap it", async () => {
+			const { minify } = await load();
+			const { code } = await minify(
+				"var obj = { b: 1 }; function f() { /*#__PURE__*/ (() => obj.b)(); var unused = /*#__PURE__*/ (() => obj.b)(); return 1; } console.log(f());",
+				{ compress: {}, mangle: false }
+			);
+			expect(code).toBe("var obj={b:1};function f(){return 1}console.log(f());");
+		});
+
+		it("should keep a `switch` whose cases a conditional cannot read in order, and a `#__PURE__` call passed effects", async () => {
+			const { minify } = await load();
+			for (const input of [
+				'export function f(a){switch(a.k){case 1:return"one";case 2:return"two";default:return"x"}}',
+				'export function f(a){if(a)switch(a){case 1:return"one";case 2:return"two"}g()}',
+				'export function f(a){for(;;){switch(a){case 1:return 1;case 2:return 2}g()}}',
+				'export function f(a){switch(a){case 1:g();h();case 2:k();break;default:m()}}',
+				'export function f(a){switch(a){case 1:return"one";case 2:return"two"}g()}',
+				'export const b=/*#__PURE__*/((a)=>(a.x=1,a.y=2,a))(o||{})',
+				'export function f(a){let x;switch(a){case 1:x="one";case 2:x="two";break;default:x="z"}g(x)}',
+				'export function f(a){let x;L:switch(a){case 1:x="one";break L;case 2:x="two";break;default:x="z"}g(x)}',
+				'export const b=/*#__PURE__*/((a,c)=>a.b+c)(obj,g())',
+				'export function f(a){switch(a){case 1:return"one";case g():return"two";default:return"x"}}'
+			]) {
+				const { code } = await minify(input, {
+					module: true,
+					compress: {},
+					mangle: false
+				});
+				expect(code).toMatch(/switch|=>/);
+				// What the source runs for its effects still runs.
+				if (input.includes("g()")) expect(code).toContain("g()");
+			}
+		});
+
+		it("should count every name a rewrite reads again", async () => {
+			const { minify } = await load();
+			for (const input of [
+				"function f(){return 2}function g(a,b){var x=f();switch(x){case 1:return a;case 2:return b;default:return 0}}console.log(g(5,6))",
+				"var n=0;function f(){n++;return 7}function g(a){var x=f();switch(a){case 1:return 1;case 2:return 2}return x}console.log(g(1),g(3),n)",
+				'var c=1;function t(){c=0;return false}function f(a){return c?t()?"one":2===a?"two":"a much longer default string here":"a much longer default string here"}console.log(f(2))'
+			]) {
+				for (const passes of [1, 2]) {
+					const { code } = await minify(input, {
+						compress: { passes },
+						mangle: false
+					});
+					expect(runProgram(/** @type {string} */ (code))).toBe(
+						runProgram(input)
+					);
+				}
+			}
+		});
+
+		it("should keep `arguments.length` tested where something else uses the object", async () => {
+			const { minify } = await load();
+			for (const input of [
+				"export function f(){arguments[1]=5;return arguments.length>1?arguments[1]:void 0}",
+				"export function f(){g(arguments);return arguments.length>1&&void 0!==arguments[1]?arguments[1]:2}",
+				"export function f(){return arguments.length>2&&void 0!==arguments[1]?arguments[1]:2}"
+			]) {
+				const { code } = await minify(input, {
+					module: true,
+					compress: {},
+					mangle: false
+				});
+				expect(code).toContain("arguments.length>");
+			}
+		});
+
+		it("should keep a call that runs code, a local `Symbol` and a conditional spread no shorter", async () => {
+			const { minify } = await load();
+			for (const [input, kept] of [
+				["export function f(){(async()=>{g()})();h()}", "g()"],
+				["export function f(){(function*(a=g()){})();h()}", "g()"],
+				["export function f(){(function*(){})(g());h()}", "g()"],
+				["export function f(Symbol){return typeof Symbol}", "typeof Symbol"],
+				['export function f(a,b){return b?1===a?"one":2===a?"two":"x":"x"}', 'b?1===a']
+			]) {
+				const { code } = await minify(input, {
+					module: true,
+					compress: { ecma: 2015 },
+					ecma: 2015,
+					mangle: false
+				});
+				expect(code).toContain(kept);
+			}
+			const { code } = await minify(
+				"export function f(){return typeof Symbol}",
+				{ module: true, compress: {}, mangle: false }
+			);
+			expect(code).toContain("typeof Symbol");
+		});
+
+		it("should keep a test against `null` where the chain cannot stand in for it", async () => {
+			const { minify } = await load();
+			for (const input of [
+				"export function f(a){return a!=null&&a.b()}",
+				"export function f(a){null!=a&&b.c()}",
+				"export function f(a){if(a!=null)a.b=1}",
+				"export function f(a){if(a!==null)a.b()}"
+			]) {
+				const { code } = await minify(input, {
+					module: true,
+					compress: { ecma: 2020 },
+					ecma: 2020,
+					mangle: false
+				});
+				expect(code).not.toContain("?.");
+			}
+			const { code } = await minify("export function f(a){if(a!=null)a.b()}", {
+				module: true,
+				compress: { ecma: 2019 },
+				ecma: 2019,
+				mangle: false
+			});
+			expect(code).not.toContain("?.");
+		});
+
 
 		it("should keep a store to an array index a setter on `Array.prototype` may take", async () => {
 			const { minify } = await load();
