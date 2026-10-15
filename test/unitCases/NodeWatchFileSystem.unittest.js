@@ -149,6 +149,44 @@ describe("NodeWatchFileSystem", () => {
 		expect(purges).toHaveLength(1);
 	});
 
+	it("purges an installed package whole when its package.json changes", () => {
+		/** @type {Parameters<import("../../lib/fs/fs").Purge>[]} */
+		const purges = [];
+		const wfs = new NodeWatchFileSystem(
+			/** @type {import("../../lib/fs/fs").InputFileSystem} */ ({
+				purge: (items, options) => {
+					purges.push([items, options]);
+				}
+			})
+		);
+		const pkg = path.join(fixtures, "node_modules", "package");
+		const manifest = path.join(pkg, "package.json");
+		const own = path.join(fixtures, "package.json");
+		watchers.push(
+			wfs.watch(
+				[manifest, own, file],
+				[],
+				[],
+				Date.now(),
+				{},
+				() => {},
+				() => {}
+			)
+		);
+		// A managed package is snapshotted by its version: the build that sees the
+		// new one must not read a file of it whose own change reports later.
+		/** @type {InstanceType<import("watchpack")>} */ (wfs.watcher).emit(
+			"aggregated",
+			new Set([manifest, own, file]),
+			new Set()
+		);
+		expect(purges).toEqual([
+			[pkg, undefined],
+			[own, undefined],
+			[file, undefined]
+		]);
+	});
+
 	it("purges what an array held when watched, though its caller changes it", () => {
 		/** @type {Parameters<import("../../lib/fs/fs").Purge>[]} */
 		const purges = [];

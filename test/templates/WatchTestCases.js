@@ -673,8 +673,10 @@ const describeCases = (config) => {
 																			for (const file of unseenChanges) {
 																				// even a managed path reports a directory appearing
 																				if (lastMissingDependencies.has(file)) continue;
+																				// but a managed package is versioned by its package.json: wait for it
+																				const isManifest = path.basename(file) === "package.json";
 																				for (const item of [
-																					...child.managedPaths,
+																					...(isManifest ? [] : child.managedPaths),
 																					...child.immutablePaths
 																				]) {
 																					if (
