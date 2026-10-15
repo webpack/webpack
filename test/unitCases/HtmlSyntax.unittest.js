@@ -3298,6 +3298,31 @@ describe("builtinEmbeddedRenderer — what it loads", () => {
 			{ code: "color:#ff0000", css: true, html: false, picked: 1 }
 		]);
 	});
+
+	it("keeps the CSS parser out of an HTML or XML minify with no CSS", () => {
+		const script = `
+			const cssParser = ${JSON.stringify(require.resolve("../../lib/css/syntax-parser"))};
+			const webpack = require(${JSON.stringify(require.resolve("../../lib/index"))});
+			(async () => {
+				const states = [];
+				const state = ({ code }) =>
+					states.push({ code, css: require.cache[cssParser] !== undefined });
+				state(await webpack.html.xmlMinify({ "a.svg": "<svg xmlns='http://www.w3.org/2000/svg'><rect/></svg>" }, undefined, { css: {} }));
+				state(await webpack.html.htmlMinify({ "a.html": "<p>hi</p>" }, undefined, { css: {} }));
+				state(await webpack.html.htmlMinify({ "a.html": "<style>a { color : #ff0000 }</style>" }, undefined, { css: { shortenColors: false } }));
+				process.stdout.write(JSON.stringify(states));
+			})();
+		`;
+		expect(
+			JSON.parse(
+				execFileSync(process.execPath, ["-e", script], { encoding: "utf8" })
+			)
+		).toEqual([
+			{ code: '<svg xmlns="http://www.w3.org/2000/svg"><rect/></svg>', css: false },
+			{ code: "<p>hi", css: false },
+			{ code: "<style>a{color:#ff0000}</style>", css: true }
+		]);
+	});
 });
 
 describe("parseHtml", () => {
