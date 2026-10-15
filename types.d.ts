@@ -21987,7 +21987,7 @@ declare interface MultiCompilerOptions {
 	parallelism?: number;
 
 	/**
-	 * plugins applied once to the MultiCompiler, after every child compiler is created
+	 * plugins applied once to the MultiCompiler when it is created
 	 */
 	plugins?: (
 		| undefined
