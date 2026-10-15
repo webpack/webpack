@@ -1467,7 +1467,7 @@ const IMPROVED_CASES = [
 		"destructured names mangled to the keys they read, printed shorthand",
 		"function s(v) { var { a, b, c } = v; return a + b * c; } console.log(s({ a: 1, b: 2, c: 3 }), s({ a: 2, b: 3, c: 4 }));",
 		{ compress: {}, mangle: true, ecma: 2015 },
-		"function s(c){var{a,b,c:n}=c;return a+b*n}console.log(s({a:1,b:2,c:3}),s({a:2,b:3,c:4}));"
+		"function s(n){var{a,b,c}=n;return a+b*c}console.log(s({a:1,b:2,c:3}),s({a:2,b:3,c:4}));"
 	],
 ];
 
