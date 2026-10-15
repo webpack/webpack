@@ -11,10 +11,10 @@ Array [
   "/*! a block a cut empties goes, as an empty one written here would */.between7{color:teal}@media (monochrome){.t07{color:red}}",
   "/*! a keyframe repeated at one offset is left to the printer */@keyframes t08{0%{opacity:0}to{opacity:1}}",
   "/*! a rule nested in another is read under it, so a copy elsewhere under the
-   same rule makes it dead even where the two blocks differ otherwise */.t09{width:1px}.between9{color:teal}.t09{height:2px;.inner{color:red}}",
-  "/*! and the same selector under another rule is another rule */.t10a{.inner{color:red}}.t10b{.inner{color:red}}",
+   same rule makes it dead even where the two blocks differ otherwise */.t09{width:1px}.between9{color:teal}.t09{height:2px}.t09 .inner{color:red}",
+  "/*! and the same selector under another rule is another rule */.t10a .inner,.t10b .inner{color:red}",
   "/*! a raw passthrough the parser kept verbatim stands among the rules it
-   separates, and is counted among them */@media (width>=1px){*zoom: 1}.between11{color:teal}@media (width>=1px){.t11{.inner{color:red}}}",
+   separates, and is counted among them */@media (width>=1px){*zoom: 1}.between11{color:teal}@media (width>=1px){.t11 .inner{color:red}}",
 ]
 `;
 
@@ -34,7 +34,7 @@ exports[`ConfigTestCases css minimize-web-corpus minimize-web-corpus should comp
 Array [
   "/*! at cannot follow a color stop; the earlier declaration must remain effective */.named{background-image:linear-gradient(red,blue);background-image:radial-gradient(red at center,blue)}",
   "/*! a hex color with a position is still a stop */.hex{background-image:repeating-radial-gradient(#123 10px at 50%,blue 20px)}",
-  "/*! a color function is also a stop */.function{background-image:conic-gradient(color(display-p3 1 0 0) at center center,blue)}",
+  "/*! a color function is also a stop */.function{background-image:conic-gradient(red at center center,blue);background-image:conic-gradient(color(display-p3 1 0 0) at center center,blue)}",
   "/*! a context-dependent color can carry a position */.current{background-image:repeating-conic-gradient(currentColor 10deg at 50% 50%,blue 20deg)}",
   "/*! a conic stop can put its angle before its color */.angle-first{background-image:conic-gradient(10deg red at center,blue)}",
   "/*! system colors are stops too */.system{background-image:radial-gradient(Canvas at center,blue)}",

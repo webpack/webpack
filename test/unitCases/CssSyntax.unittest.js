@@ -4586,6 +4586,20 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(minify(css)).toBe(expected);
 		});
 
+		it("drops a shadow's currentcolor only where no target runs WebKit", () => {
+			// CSS Backgrounds 3 §7.1: an absent color is `currentcolor`.
+			const css = "a{text-shadow:CurrentColor 1px 1px}";
+			expect(minifyFor(css, ["chrome 140", "firefox 140"])).toBe(
+				"a{text-shadow:1px 1px}"
+			);
+			expect(minifyFor(css, ["android 140"])).toBe("a{text-shadow:1px 1px}");
+			for (const browsers of [["safari 26.2"], ["ios_saf 18"], ["android 4.4"]]) {
+				expect(minifyFor(css, browsers)).toBe(
+					"a{text-shadow:currentcolor 1px 1px}"
+				);
+			}
+		});
+
 		it.each([
 			["the two values differ", "a{background-repeat:repeat no-repeat}"],
 			["only one axis is centered", "a{background-position:center 10px}"],
@@ -6325,12 +6339,14 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 				"a{box-shadow:0px 0px 0px 1px red inset,0px 0em 0px 0px blue inset}",
 				"a{box-shadow:inset 0 0 0 1px red,inset 0 0 blue}"
 			],
-			// CSS Backgrounds 3 §7.1: an absent color is `currentcolor`.
-			["a{box-shadow:0 0 2px currentcolor}", "a{box-shadow:0 0 2px}"],
-			["a{text-shadow:CurrentColor 1px 1px}", "a{text-shadow:1px 1px}"],
+			// With no target, Safari may be one, and it takes an absent color as none.
+			[
+				"a{box-shadow:0 0 2px currentcolor}",
+				"a{box-shadow:0 0 2px currentcolor}"
+			],
 			[
 				"a{box-shadow:inset 0 0 0 0 currentcolor,0 0 red}",
-				"a{box-shadow:inset 0 0,0 0 red}"
+				"a{box-shadow:inset 0 0 currentcolor,0 0 red}"
 			],
 			// `inset` stands first, wherever the layer wrote it.
 			["a{box-shadow:red 1px 1px inset}", "a{box-shadow:inset red 1px 1px}"],
@@ -9252,7 +9268,7 @@ describe("CssSyntax minify — vendor prefixes (properties)", () => {
 			"a{-webkit-logical-height:1px;block-size:1px}"
 		);
 		expect(minifyFor("a{mask-border:url(x) 30}", ["safari 9"])).toBe(
-			"a{-webkit-mask-box-image:url(x)30;mask-border:url(x)30}"
+			"a{-webkit-mask-box-image:url(x) 30;mask-border:url(x) 30}"
 		);
 	});
 
@@ -9847,10 +9863,17 @@ describe("CssSyntax minify — vendor prefixes (selectors)", () => {
 
 	it("spells a pseudo its engines renamed rather than prefixed", () => {
 		expect(
-			minifyFor(":is(a,b) c{color:red}", ["chrome 40", "firefox 40"])
+			minifyFor(":is(.a,.b) c{color:red}", ["chrome 40", "firefox 40"])
 		).toBe(
-			":-webkit-any(a,b) c{color:red}:-moz-any(a,b) c{color:red}:is(a,b) c{color:red}"
+			":-webkit-any(.a,.b) c{color:red}:-moz-any(.a,.b) c{color:red}:is(.a,.b) c{color:red}"
 		);
+	});
+
+	it("writes no `-any()` copy weighing other than the `:is()` it copies", () => {
+		// `:-webkit-any()` counts as one class; `:is()` as its weightiest argument.
+		for (const css of [":is(a,b) c{color:red}", ":is(.a,#b) c{color:red}"]) {
+			expect(minifyFor(css, ["chrome 40", "firefox 40"])).toBe(css);
+		}
 	});
 
 	it("drops a renamed pseudo no target needs", () => {
@@ -9990,13 +10013,13 @@ describe("CssSyntax minify — vendor prefixes (target selection)", () => {
 		// only dataset following Presto version by version, marks every version
 		// that has it at all as needing the prefix.
 		expect(minifyFor("a{border-image:url(x) 30}", ["opera 12.1"])).toBe(
-			"a{-o-border-image:url(x)30;border-image:url(x)30}"
+			"a{-o-border-image:url(x) 30;border-image:url(x) 30}"
 		);
 		expect(
-			minifyFor("a{-o-border-image:url(x)30;border-image:url(x)30}", [
+			minifyFor("a{-o-border-image:url(x) 30;border-image:url(x) 30}", [
 				"opera 12.1"
 			])
-		).toBe("a{-o-border-image:url(x)30;border-image:url(x)30}");
+		).toBe("a{-o-border-image:url(x) 30;border-image:url(x) 30}");
 		// Opera Mobile kept `text-overflow` prefixed four versions past desktop.
 		expect(minifyFor("a{text-overflow:ellipsis}", ["op_mob 12"])).toBe(
 			"a{-o-text-overflow:ellipsis;text-overflow:ellipsis}"
@@ -15971,11 +15994,59 @@ describe("CssSyntax minify — layered and positional spellings", () => {
 		);
 		// Presto took `-o-transform-origin` keywords only as a pair.
 		expect(minifyFor("a{transform-origin:50% 100%}", ["opera 12"])).toBe(
-			"a{-o-transform-origin:50%100%;transform-origin:50%100%}"
+			"a{-o-transform-origin:50% 100%;transform-origin:50% 100%}"
 		);
 	});
 
 	it("keeps a font-relative ratio that lands on a layout step", () => {
 		expect(minifyFor("a{width:.27777778em}")).toBe("a{width:.27777778em}");
+	});
+});
+
+describe("CssSyntax minify — what an engine older than CSS Syntax 3 reads", () => {
+	it("keeps the space between tokens a newer tokenizer parts on its own", () => {
+		const css =
+			"a{margin:.2em 0 .2em .4em;margin-right:2em}b{margin:0 -2px;padding:calc(1px + 1em) 0;background:url(x.png) no-repeat;content:\"(\" counter(x) \")\";font:12px/1.5 a;grid-area:h1-2;width:1.5px;--x:a)b}";
+		expect(minifyFor(css, ["ie 11"])).toBe(
+			'a{margin:.2em 2em .2em .4em}b{content:"(" counter(x) ")";--x:a)b;background:url(x.png) no-repeat;grid-area:h1-2;width:1.5px;margin:0 -2px;padding:calc(1px + 1em) 0;font:12px/1.5 a}'
+		);
+		expect(minifyFor(css, ["chrome 140"])).toBe(
+			'a{margin:.2em 2em.2em.4em}b{content:"("counter(x)")";--x:a)b;background:url(x.png)no-repeat;grid-area:h1-2;width:1.5px;margin:0-2px;padding:calc(1px + 1em)0;font:12px/1.5 a}'
+		);
+	});
+
+	it("reads a number's sign, a hash and a string as their own tokens", () => {
+		expect(
+			minifyFor(
+				`a{x:1-a 2;margin:0 -.5em;content:"a\\"b'" x;border:1px solid #000;box-shadow:0 0 1px #777}`,
+				["ie 11"]
+			)
+		).toBe(
+			`a{x:1-a 2;content:"a\\"b'" x;border:1px solid #000;margin:0 -.5em;box-shadow:0 0 1px #777}`
+		);
+	});
+
+	it("spaces the fallbacks and vendor copies it writes too", () => {
+		const css = "a{background:color-mix(in srgb,red,blue) url(x) no-repeat}";
+		expect(minifyFor(css, ["ie 11", "chrome 140"])).toBe(
+			"a{background:#7f007f url(x) no-repeat;background:color-mix(in srgb,red,blue) url(x) no-repeat}"
+		);
+		// A hash spliced before `url(` would read on into one token anywhere.
+		expect(minifyFor(css, ["firefox 100", "chrome 140"])).toBe(
+			"a{background:#7f007f url(x)no-repeat;background:color-mix(in srgb,red,blue)url(x)no-repeat}"
+		);
+		expect(minifyFor("a{transform:translate(1px) scale(2)}", ["ie 9"])).toBe(
+			"a{-ms-transform:translate(1px) scale(2);transform:translate(1px) scale(2)}"
+		);
+	});
+
+	it("keeps a `flex` value's parts where a target runs Trident", () => {
+		const css = "a{flex:1 1 0%}b{flex:1 1 0px}c{flex:0 0 auto}";
+		expect(minifyFor(css, ["ie 11"])).toBe(
+			"a{flex:1 1 0%}b{flex:1 1 0px}c{flex:none}"
+		);
+		expect(minifyFor(css, ["chrome 140"])).toBe(
+			"a{flex:1}b{flex:0px}c{flex:none}"
+		);
 	});
 });

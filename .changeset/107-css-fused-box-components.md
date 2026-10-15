@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Fix fused CSS box sides; drop dead fallbacks and overridden same-selector rules.
+Keep minified CSS safe for older browsers; drop dead fallbacks and overrides.
