@@ -89,7 +89,7 @@ const sourceType = () =>
 // reads from `node_modules` is in, and it is where a parser's hot loop lives.
 /** @type {[string, string, "module" | "script"][]} */
 const INSTALLED_FIXTURES = [
-	["Preact 10 (ESM)", "preact/dist/preact.module.js", "module"],
+	["Preact 11 (ESM)", "preact/dist/preact.mjs", "module"],
 	["jQuery 3", "jquery/dist/jquery.js", "script"],
 	["jQuery 3 (minified)", "jquery/dist/jquery.min.js", "script"],
 	["Moment 2", "moment/moment.js", "script"],
@@ -117,7 +117,7 @@ const INSTALLED_FIXTURES = [
 	["pdf.js 6 (ESM)", "pdfjs-dist/build/pdf.mjs", "module"],
 	["Swagger UI 5 (bundle)", "swagger-ui-dist/swagger-ui-bundle.js", "script"],
 	["ECharts 6", "echarts/dist/echarts.js", "script"],
-	["Babel 7 (standalone)", "@babel/standalone/babel.js", "script"]
+	["Babel 8 (standalone)", "@babel/standalone/babel.js", "script"]
 ];
 
 /**
