@@ -43,8 +43,9 @@ const RETOUCH_LIMIT = 3;
  * @param {string} dest dest
  * @param {boolean} initial is initial?
  * @param {Set<string>=} changed collects the files written or deleted
+ * @param {Set<string>=} deleted collects the files deleted
  */
-function copyDiff(src, dest, initial, changed) {
+function copyDiff(src, dest, initial, changed, deleted) {
 	if (!fs.existsSync(dest)) fs.mkdirSync(dest);
 	const files = fs.readdirSync(src);
 	for (const filename of files) {
@@ -52,12 +53,13 @@ function copyDiff(src, dest, initial, changed) {
 		const destFile = path.join(dest, filename);
 		const directory = fs.statSync(srcFile).isDirectory();
 		if (directory) {
-			copyDiff(srcFile, destFile, initial, changed);
+			copyDiff(srcFile, destFile, initial, changed, deleted);
 		} else {
 			const content = fs.readFileSync(srcFile);
 			if (changed) changed.add(destFile);
 			if (/^DELETE\s*$/.test(content.toString("utf8"))) {
 				fs.unlinkSync(destFile);
+				if (deleted) deleted.add(destFile);
 			} else if (/^DELETE_DIRECTORY\s*$/.test(content.toString("utf8"))) {
 				rimraf.sync(destFile);
 			} else {
@@ -325,6 +327,8 @@ const describeCases = (config) => {
 							// watched files the current step changed which no build has reported yet
 							/** @type {Set<string>} */
 							let unseenChanges = new Set();
+							/** @type {Set<string>} */
+							let deletedFiles = new Set();
 
 							const currentWatchStepModule = require("../helpers/currentWatchStep");
 
@@ -384,7 +388,15 @@ const describeCases = (config) => {
 									// macOS can drop a change event entirely
 									const now = new Date();
 									for (const file of unseenChanges) {
-										if (fs.existsSync(file)) fs.utimesSync(file, now, now);
+										if (deletedFiles.has(file)) {
+											// a lost deletion is replayed: the file comes back for a moment
+											// and is deleted again, so the watcher gets fresh events for it
+											if (fs.existsSync(file)) continue;
+											fs.writeFileSync(file, "");
+											setTimeout(() => fs.rmSync(file, { force: true }), RETOUCH_DELAY / 4);
+										} else if (fs.existsSync(file)) {
+											fs.utimesSync(file, now, now);
+										}
 									}
 									retouchUnseenChanges(compilers, retries - 1);
 								}, RETOUCH_DELAY);
@@ -438,6 +450,14 @@ const describeCases = (config) => {
 														...(child.removedFiles || [])
 													];
 													for (const file of unseenChanges) {
+														// a replayed deletion briefly recreates the file, so only a
+														// reported removal sees a deleted one; see also below
+														if (deletedFiles.has(file)) {
+															if (child.removedFiles && child.removedFiles.has(file)) {
+																unseenChanges.delete(file);
+															}
+															continue;
+														}
 														if (
 															isWithin(file, reported) ||
 															reported.some((item) => isWithin(item, [file]))
@@ -452,6 +472,19 @@ const describeCases = (config) => {
 													"stats" in stats ? stats.stats : [stats]
 												);
 												for (const file of unseenChanges) {
+													if (deletedFiles.has(file)) {
+														// a build that still reads a deleted file reused a stale module;
+														// one that only expects it missing has seen the deletion
+														if (
+															!fs.existsSync(file) &&
+															!builds.some(({ compilation }) =>
+																compilation.fileDependencies.has(file)
+															)
+														) {
+															unseenChanges.delete(file);
+														}
+														continue;
+													}
 													if (
 														!builds.some(
 															({ compilation }) =>
@@ -625,11 +658,13 @@ const describeCases = (config) => {
 																	).step = run.name;
 																	/** @type {Set<string>} */
 																	const changed = new Set();
+																	deletedFiles = new Set();
 																	copyDiff(
 																		path.join(testDirectory, run.name),
 																		tempDirectory,
 																		false,
-																		changed
+																		changed,
+																		deletedFiles
 																	);
 																	unseenChanges = new Set();
 																	if (!restartCompiler && watchedCompiler) {
