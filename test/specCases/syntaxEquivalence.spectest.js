@@ -1485,6 +1485,19 @@ const LOWERING_FIXTURES = [
 		]
 	},
 	{
+		name: "an An+B argument whose sign stands apart",
+		// Written as they stand: no engine reads either argument, so each rule is
+		// dropped, where `-n+1` and `2` would match.
+		produces: ["li:nth-child(- n+1){", "li:nth-child(+ 2){"],
+		css: "li{color:blue}li:nth-child(- n+1){color:red}li:nth-child(+ 2){color:green}",
+		browsers: ["chrome 130"],
+		html: "<ul><li id=a>a</li><li id=b>b</li></ul>",
+		probes: [
+			["#a", "color"],
+			["#b", "color"]
+		]
+	},
+	{
 		name: "nesting",
 		// The rules the lowering writes on their own, which the source states
 		// inside the one they were written in.
