@@ -37626,7 +37626,6 @@ declare namespace exports {
 			export let itemsToRegexp: (itemsArr: string[]) => string;
 		}
 		export namespace dataURL {
-			export let BLOCK_CONTENTS: "block-contents";
 			export let EMBEDDED_LANGUAGES: string[];
 			export let JSON_TYPE: "json";
 			export let SVG_TYPE: "svg";
