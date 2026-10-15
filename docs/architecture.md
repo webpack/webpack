@@ -101,7 +101,6 @@ Every schema is derived from the module declaring its options by `generate-schem
 - `tsconfig*.json` — one per surface: `lib`, `hot`, types tests, validation, benchmarks.
 - `eslint.config.mjs`, `cspell.json`, `jest.config.js`, `generate-types-config.js` — lint/spell/test/type-gen configs.
 - `.github/workflows/`, `.github/scripts/` — CI.
-- `.claude/` — Claude Code settings: the session-start hook, and `skills/steward/`, read on every event of a PR an agent opened.
 - `test/patches/` — test-only dependency patches (e.g. jest-worker), `git apply`'d in the CI Bun job.
 
 ## Adding a dependency type or runtime requirement
