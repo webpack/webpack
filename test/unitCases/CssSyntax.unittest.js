@@ -14757,6 +14757,10 @@ describe("CssSyntax minify — a fallback the target reads past", () => {
 		expect(
 			minifyFor("a{color:red;.b{color:blue}}", ["chrome 100", "op_mini all"])
 		).toBe("a{color:red}a .b{color:blue}");
+		// With no browser it states, nothing vouches for the `:is()` a list needs.
+		expect(minifyFor("a,b{.c{color:blue}}", ["op_mini all"])).toBe(
+			"a,b{.c{color:blue}}"
+		);
 	});
 
 	it("keeps a vendor spelling such a selection may be the one to read", () => {
