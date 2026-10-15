@@ -1317,7 +1317,25 @@ const IMPROVED_CASES = [
 		"a setter called from two places copied into each call",
 		"var frame = null; function setFrame(element) { frame = element; } function show(element) { if (element) setFrame(describe(element)); else setFrame(null); return frame; } function describe(v) { return '<' + v + '>'; } console.log(show('a'), show(''));",
 		{ compress: { toplevel: true }, mangle: false },
-		'var frame=null;function show(element){return element?frame="<"+element+">":frame=null,frame}console.log(show("a"),show(""));'
+		'function show(element){return element?"<"+element+">":null}console.log(show("a"),show(""));'
+	],
+	[
+		"a function called in place reading its argument's name for a parameter",
+		"var cache = {}; function add(map, list) { return (function (target, key, value) { target[key] ? target[key].push(value) : (target[key] = [value]); })(map, 'list', list); } add(cache, 1); add(cache, 2); console.log(cache.list);",
+		{ compress: { toplevel: true }, mangle: false },
+		'var cache={};function add(map,list){map.list?map.list.push(list):map.list=[list]}add(cache,1),add(cache,2),console.log(cache.list);'
+	],
+	[
+		"no `return` left before the `var` a function called in place declared",
+		"function f(o) { return (function (v) { console.log(v); console.log(v); })(String(o)); } f(1);",
+		{ compress: { passes: 2 }, mangle: false },
+		"function f(o){v=String(o),console.log(v),console.log(v);var v}f(1);"
+	],
+	[
+		"a function called in place declaring its argument's name keeps the copy",
+		"function add(map, list) { (function (value, list) { console.log(value, list); })(list, map); } add(1, 2);",
+		{ compress: { toplevel: true }, mangle: false },
+		undefined
 	],
 	[
 		"a function returning another's call copied into each of its calls",
