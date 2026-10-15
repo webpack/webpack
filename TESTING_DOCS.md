@@ -200,16 +200,17 @@ During the test run, webpack compiles this project and compares the result with 
 `WebpackDevServer.longtest.js` launch a browser through `test/helpers/launchBrowser.js`.
 **A browser that will not launch fails the suite — it is never skipped**, so no
 environment can report these checks as passing without having run them. The
-helper uses the installed Chrome channel; set `PUPPETEER_EXECUTABLE_PATH` to
-point at another binary.
+helper uses the Chrome build puppeteer-core pins when `yarn setup:browsers` has
+fetched it, and the installed Chrome channel otherwise; set
+`PUPPETEER_EXECUTABLE_PATH` to point at another binary.
 
 `syntaxEquivalence.spectest.js` is the one that reads more than one engine:
 `EQUIVALENCE_BROWSER` takes `chrome`, `firefox` or `webkit`, and CI runs all
 three as one matrix. Chrome and Firefox go through puppeteer; WebKit goes
 through playwright, which is what reaches it, under a shim in
 `test/helpers/launchBrowser.js` that answers to the puppeteer names the suites
-call. Fetch the browser first — `yarn setup:firefox`, `yarn setup:webkit` —
-which installs into puppeteer's own cache (`PUPPETEER_CACHE_DIR`, defaulting to
+call. Fetch the browser first — `yarn setup:browsers` (Chrome and Firefox, or
+name one), `yarn setup:webkit` — which installs into puppeteer's own cache (`PUPPETEER_CACHE_DIR`, defaulting to
 `~/.cache/puppeteer`) or playwright's; `FIREFOX_EXECUTABLE_PATH` and
 `WEBKIT_EXECUTABLE_PATH` point at one already on the machine. It compares
 effects, never CSSOM text: a stylesheet by the styles elements built from its
@@ -221,6 +222,12 @@ engine has is filed against it with a reason opening `<engine> only:` rather
 than tolerated in all three, and each list must match exactly, so a defect the
 engine fixes fails until its entry goes. A workaround in the suite's own code
 gets the same treatment through a probe in `ENGINE_QUIRKS`.
+
+Every engine is the build the lockfile pins: Chrome and Firefox are the ones
+`puppeteer-core` names in `PUPPETEER_REVISIONS`, WebKit the one `playwright-core`
+ships. Dependabot bumps the two packages in a `browsers` group of their own, so
+a new engine arrives in one pull request, and a defect or quirk it fixes fails
+there rather than under unrelated changes.
 
 They are excluded from `test:bun` / `test:deno` (see the `--testPathIgnorePatterns`
 in those scripts): under Jest on Bun, loading the ESM-only `puppeteer-core` fails

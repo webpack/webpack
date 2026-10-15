@@ -442,15 +442,28 @@ jobs:
         continue-on-error: true
         run: yarn benchmark:html-tools:setup
 
-      # Chrome comes with the runner. Firefox is fetched, and deliberately not
-      # cached: the build id resolves to whatever `stable` is today, so a cache
-      # key that never moves would pin the engine this suite exists to track.
-      - name: Install Firefox
-        if: matrix.browser == 'firefox'
-        run: node tooling/retry.js yarn setup:firefox
+      # Chrome and Firefox are the builds puppeteer-core pins, not the runner's
+      # Chrome or today's `stable`: an engine then moves only in the pull request
+      # bumping puppeteer-core, where an engine-quirk probe failing is the news,
+      # rather than under every pull request at once. Cached by that build id.
+      - name: Read the pinned browser build
+        id: browser-build
+        if: matrix.browser != 'webkit'
+        run: node --input-type=module -e "const { PUPPETEER_REVISIONS } = await import('puppeteer-core'); console.log('id=' + PUPPETEER_REVISIONS[process.argv[1]])" ${{ matrix.browser }} >> "$GITHUB_OUTPUT"
 
-      # `--with-deps` because a runner carries none of WebKit's shared
-      # libraries, where it already carries Chrome's.
+      - name: Cache the pinned browser
+        if: matrix.browser != 'webkit'
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.cache/puppeteer
+          key: puppeteer-${{ matrix.browser }}-${{ steps.browser-build.outputs.id }}-${{ runner.os }}
+
+      - name: Install the pinned browser
+        if: matrix.browser != 'webkit'
+        run: node tooling/retry.js yarn setup:browsers ${{ matrix.browser }}
+
+      # Pinned by playwright-core already. `--with-deps` because a runner carries
+      # none of WebKit's shared libraries, where it already carries Chrome's.
       - name: Install WebKit
         if: matrix.browser == 'webkit'
         run: node tooling/retry.js node node_modules/playwright-core/cli.js install --with-deps webkit

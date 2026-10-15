@@ -3,27 +3,41 @@
 const os = require("os");
 const path = require("path");
 
-// The same cache `yarn setup:firefox` installs into, and the one puppeteer's
+// The same cache `yarn setup:browsers` installs into, and the one puppeteer's
 // own tooling reads, so the two agree wherever it has been pointed elsewhere.
 const CACHE_DIR =
 	process.env.PUPPETEER_CACHE_DIR ||
 	path.join(os.homedir(), ".cache", "puppeteer");
 
 /**
- * Where an already-downloaded Firefox sits, or `undefined` when none is. The
+ * Where the build of `engine` puppeteer-core pins sits once downloaded, or
+ * `undefined` when it is not. Only that build counts: an older one left in the
+ * cache would hold the suites to an engine the lockfile no longer names. The
  * suites do not download one themselves: a cold fetch is tens of megabytes and
  * would expire the callers' hook budget rather than report a browser problem.
+ * @param {"chrome" | "firefox"} engine the engine
  * @returns {Promise<string | undefined>} the executable path
  */
-const installedFirefox = async () => {
+const installedBrowser = async (engine) => {
 	// ESM-only, like puppeteer-core itself, so it is loaded the same way.
 	const { Browser, detectBrowserPlatform, getInstalledBrowsers } =
 		await import("@puppeteer/browsers");
+	// Exported at runtime, but kept out of puppeteer-core's types as internal.
+	const { PUPPETEER_REVISIONS } =
+		/** @type {{ PUPPETEER_REVISIONS: Readonly<Record<"chrome" | "firefox", string>> }} */ (
+			/** @type {unknown} */ (await import("puppeteer-core"))
+		);
 
 	const platform = detectBrowserPlatform();
 	if (platform === undefined) return undefined;
+	const browser = engine === "chrome" ? Browser.CHROME : Browser.FIREFOX;
+	const buildId = PUPPETEER_REVISIONS[engine];
 	for (const one of await getInstalledBrowsers({ cacheDir: CACHE_DIR })) {
-		if (one.browser === Browser.FIREFOX && one.platform === platform) {
+		if (
+			one.browser === browser &&
+			one.platform === platform &&
+			one.buildId === buildId
+		) {
 			return one.executablePath;
 		}
 	}
@@ -143,17 +157,23 @@ module.exports = async (options) => {
 		const executablePath =
 			launchOptions.executablePath ||
 			process.env.FIREFOX_EXECUTABLE_PATH ||
-			(await installedFirefox());
+			(await installedBrowser("firefox"));
 		if (executablePath === undefined) {
 			throw new Error(
-				"no Firefox to launch: run `yarn setup:firefox`, or point FIREFOX_EXECUTABLE_PATH at one"
+				"no Firefox to launch: run `yarn setup:browsers firefox`, or point FIREFOX_EXECUTABLE_PATH at one"
 			);
 		}
 		launchOptions.executablePath = executablePath;
 	} else if (!launchOptions.executablePath) {
-		if (process.env.PUPPETEER_EXECUTABLE_PATH) {
-			launchOptions.executablePath = process.env.PUPPETEER_EXECUTABLE_PATH;
+		const executablePath =
+			process.env.PUPPETEER_EXECUTABLE_PATH ||
+			(await installedBrowser("chrome"));
+		if (executablePath !== undefined) {
+			launchOptions.executablePath = executablePath;
 		} else {
+			// The system Chrome moves with the machine rather than the lockfile,
+			// which is fine for a suite that only needs a Chrome, but not for one
+			// holding output to an engine: CI installs the pinned build for those.
 			launchOptions.channel = "chrome";
 		}
 	}
