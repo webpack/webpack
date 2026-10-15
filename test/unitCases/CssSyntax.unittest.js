@@ -5273,6 +5273,10 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(minify("a{color:red}/*! keep */b{x:1}a{color:blue}")).toBe(
 				"a{color:red}/*! keep */b{x:1}a{color:blue}"
 			);
+			// A later rule's own declarations shadow, whatever it nests.
+			expect(minify(".a{x:1;y:2}.b{c:d}.a{.c{z:3}x:4}")).toBe(
+				".a{y:2}.b{c:d}.a{.c{z:3}x:4}"
+			);
 			// Every earlier rule of the selector, not only the latest.
 			expect(
 				minify("a{color:red;top:2px}b{x:1}a{color:blue}c{y:1}a{top:1px}")
@@ -12718,7 +12722,7 @@ describe("CssSyntax minify — what a nesting lowering writes is minified once",
 					browsers
 				)
 			).toBe(
-				".z{top:1px}.y{--c:1;color:olive}.y{.y{color:olive}--c:1;color:olive}"
+				".z{top:1px}.y{.y{color:olive}--c:1;color:olive}"
 			);
 		}
 	);
@@ -15960,6 +15964,8 @@ describe("CssSyntax minify — layered and positional spellings", () => {
 		["a{animation:x 1s,y 2s;animation-delay:.5s,1s}", "a{animation:x 1s.5s,y 2s 1s}"],
 		["a{background:transparent}", "a{background:none}"],
 		["a{background:#0000!important}", "a{background:none!important}"],
+		// The same once the initial image beside it goes.
+		["a{background:transparent none}", "a{background:none}"],
 		// A type name leads its attribute variants.
 		["[type=button],button{x:1}", "button,[type=button]{x:1}"],
 		// An escaped `{` and a `[` meet at one place, and still sort apart.
