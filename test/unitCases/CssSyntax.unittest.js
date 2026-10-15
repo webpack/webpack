@@ -1044,24 +1044,19 @@ describe("CssSyntax — SourceProcessor", () => {
 describe("CssSyntax — the facade", () => {
 	const syntax = require("../../lib/css/syntax");
 
-	it("names its parser and printer the way `javascript` does", () => {
+	it("names its two halves the way `javascript` does", () => {
 		expect(typeof syntax.parser.grammar).toBe("function");
 		expect(typeof syntax.printer.printer).toBe("function");
 	});
 
-	it("publishes its syntax modules and processor", () => {
+	it("publishes only the two halves and the processor", () => {
 		expect(Object.keys(syntax).sort()).toEqual([
 			"SourceProcessor",
-			"options",
 			"parser",
 			"printer"
 		]);
 		expect(syntax.parser).toBe(require("../../lib/css/syntax-parser"));
 		expect(syntax.printer).toBe(require("../../lib/css/syntax-printer"));
-		expect(Object.keys(syntax.options).sort()).toEqual([
-			"_ALL_TRANSFORMS",
-			"pickTransforms"
-		]);
 	});
 
 	it("holds no printer until something prints", () => {
