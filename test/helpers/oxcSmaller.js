@@ -40,7 +40,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/esbuild.rs:1305",
 			"oxc minifier: peephole/esbuild.rs:145",
 			"oxc minifier: peephole/esbuild.rs:1489",
-			"oxc minifier: peephole/esbuild.rs:1778",
 			"oxc minifier: peephole/esbuild.rs:1798",
 			"oxc minifier: peephole/esbuild.rs:2309",
 			"oxc minifier: peephole/esbuild.rs:2333",
@@ -153,7 +152,6 @@ const OXC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/6957/exponential/input.js",
 			"swc minifier: fixture/issues/7770/1/input.js",
 			"swc minifier: fixture/issues/8826/input.js",
-			"swc minifier: fixture/issues/8924/input.js",
 			"swc minifier: fixture/issues/9186/1/input.js",
 			"swc minifier: fixture/issues/9460/safe-initializers/input.js",
 			"swc minifier: fixture/issues/9610-methods/input.js",
@@ -1087,9 +1085,7 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/merge_assignments_to_declarations.rs:106",
 			"oxc minifier: peephole/merge_assignments_to_declarations.rs:107",
 			"oxc minifier: peephole/merge_assignments_to_declarations.rs:27",
-			"oxc minifier: peephole/merge_assignments_to_declarations.rs:40",
-			"oxc minifier: peephole/merge_assignments_to_declarations.rs:52",
-			"oxc minifier: peephole/merge_assignments_to_declarations.rs:97"
+			"oxc minifier: peephole/merge_assignments_to_declarations.rs:40"
 		]
 	],
 	[
