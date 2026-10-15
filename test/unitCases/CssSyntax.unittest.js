@@ -12810,6 +12810,23 @@ describe("CssSyntax minify — a nested selector opening on a combinator", () =>
 	it("leaves a selector naming the parent to the `&` it spells", () => {
 		expect(minifyFor("a{&>b{top:0}}", T)).toBe("a>b{top:0}");
 	});
+
+	it.each([
+		["a{~b{c{top:0}}}", ":is(a~b) c{top:0}"],
+		["a{b,~b{c{top:0}}}", ":is(a b,a~b) c{top:0}"],
+		["a,e{>b{c{top:0}}}", ":is(:is(a,e)>b) c{top:0}"],
+		["a{d{~b{c{top:0}}}}", "a :is(d~b) c{top:0}"],
+		// A list where only some name `&`: the others keep the parent they imply.
+		["a{b,&~d{c{top:0}}}", ":is(a~d,a b) c{top:0}"],
+		// U+1680 is an identifier code point, which `String#trim` would take off.
+		["a{.b ,~b{c{top:0}}}", ":is(a .b ,a~b) c{top:0}"]
+	])(
+		"writes %s, a rule nested in one opening on a combinator, with no relative argument",
+		(css, out) => {
+			// `:is()` takes no relative selector, so `:is(~b)` would drop the rule.
+			expect(minifyFor(css, T)).toBe(out);
+		}
+	);
 });
 
 describe("CssSyntax minify — nesting the target cannot read", () => {
