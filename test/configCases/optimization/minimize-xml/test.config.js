@@ -13,7 +13,8 @@ const NAMES = [
 	"sorted",
 	"cleaned",
 	"attributes",
-	"whitespace"
+	"whitespace",
+	"numbers"
 ];
 
 module.exports = {

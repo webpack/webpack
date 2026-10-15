@@ -77,6 +77,15 @@ describe("the XML tool comparison", () => {
 		expect(await minify(once)).toBe(once);
 	});
 
+	it("should compare lossless geometry cleanup with embedded CSS rendering", async () => {
+		const source = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 0010.000 0020.000">\n<style>polygon { fill: #ff0000 }</style><polygon points="+001.00, 0002.000 003.000, 004.000"/>\n</svg>';
+		const [tool] = toolsFor("minify", source).filter((tool) => tool.name === "webpack (SVG numeric cleanup)");
+		const minify = await tool.create();
+		const once = await minify(source);
+		expect(once).toBe('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 20"><style>polygon{fill:red}</style><polygon points="1 2 3 4"/></svg>');
+		expect(await minify(once)).toBe(once);
+	});
+
 	it.each(["<svg/>", '<svg xmlns="http://www.w3.org/2000/svg"><path/></svg>', EDITOR_SVG])("should compare both SVGO passes for an SVG root", (xml) => {
 		expect(toolsFor("minify", xml).map((tool) => tool.name)).toEqual(expect.arrayContaining(["svgo", "svgo (multipass)"]));
 	});

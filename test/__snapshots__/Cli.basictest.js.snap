@@ -12958,6 +12958,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "optimization-minimize-options-xml-shorten-numbers": Object {
+    "configs": Array [
+      Object {
+        "description": "Shorten SVG geometry decimals and number-list separators without rounding, changing units or rewriting exponent notation. Preserve DTD-declared values; off by default because selectors and scripts can observe attribute spelling.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.xml.shortenNumbers",
+        "type": "boolean",
+      },
+    ],
+    "description": "Shorten SVG geometry decimals and number-list separators without rounding, changing units or rewriting exponent notation. Preserve DTD-declared values; off by default because selectors and scripts can observe attribute spelling.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "optimization-minimize-options-xml-sort-attributes": Object {
     "configs": Array [
       Object {
@@ -13049,6 +13062,19 @@ Object {
       },
     ],
     "description": "Remove unused prefixed namespace declarations within SVG, preserving default namespaces and prefixes referenced in names or content. Off by default because scripts can observe namespace declarations.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-xml-shorten-numbers": Object {
+    "configs": Array [
+      Object {
+        "description": "Shorten SVG geometry decimals and number-list separators without rounding, changing units or rewriting exponent notation. Preserve DTD-declared values; off by default because selectors and scripts can observe attribute spelling.",
+        "multiple": false,
+        "path": "optimization.minimize.xml.shortenNumbers",
+        "type": "boolean",
+      },
+    ],
+    "description": "Shorten SVG geometry decimals and number-list separators without rounding, changing units or rewriting exponent notation. Preserve DTD-declared values; off by default because selectors and scripts can observe attribute spelling.",
     "multiple": false,
     "simpleType": "boolean",
   },

@@ -526,6 +526,55 @@ const IMPLIED_END_TAG_ELEMENTS = [
 /** @type {ParserTable[]} */
 const PARSER_TABLES = [
 	[
+		"SVG_NUMERIC_ATTRIBUTES",
+		"byElement",
+		"Conservative SVG geometry attribute allowlist; IDL also exposes lengths with text and list semantics that these rewrites leave untouched.",
+		[
+			...[
+				["svg", "x y width height"],
+				["rect", "x y width height rx ry"],
+				["circle", "cx cy r"],
+				["ellipse", "cx cy rx ry"],
+				["line", "x1 y1 x2 y2"],
+				["image", "x y width height"],
+				["use", "x y width height"],
+				["linearGradient", "x1 y1 x2 y2"],
+				["radialGradient", "cx cy r fx fy"],
+				["mask", "x y width height"],
+				["pattern", "x y width height"],
+				["filter", "x y width height"]
+			].reduce((entries, [tag, names]) => {
+				for (const name of names.split(" ")) {
+					entries.push([`${tag} ${name}`, "length"]);
+				}
+				return entries;
+			}, /** @type {[string, string][]} */ ([])),
+			...[
+				"path",
+				"rect",
+				"circle",
+				"ellipse",
+				"line",
+				"polygon",
+				"polyline"
+			].map(
+				(tag) =>
+					/** @type {[string, string]} */ ([`${tag} pathLength`, "number"])
+			),
+			...["svg", "symbol", "marker", "pattern", "view"].map(
+				(tag) => /** @type {[string, string]} */ ([`${tag} viewBox`, "viewBox"])
+			),
+			["polygon points", "points"],
+			["polyline points", "points"]
+		]
+	],
+	[
+		"SVG_LENGTH_UNITS",
+		"set",
+		"SVG 1.1 length suffixes; unknown CSS extensions are preserved rather than interpreted as geometry.",
+		["", "%", "em", "ex", "px", "in", "cm", "mm", "pt", "pc"]
+	],
+	[
 		"SVG_WHITESPACE_CONTAINERS",
 		"set",
 		"SVG containers with no rendered character data. Text, descriptive, foreign and unknown elements remain opaque to whitespace cleanup.",

@@ -3395,6 +3395,98 @@ describe("parseHtml", () => {
 
 	describe("XML mode", () => {
 		const { SourceProcessor } = require("../../lib/html/syntax");
+		const { SVG_NUMERIC_ATTRIBUTES, SVG_LENGTH_UNITS } = require("../../lib/html/data");
+		/** @type {Record<string, [string, string]>} */
+		const numericExamples = {
+			length: ["+001.500px", "1.5px"],
+			number: ["+001.500", "1.5"],
+			points: ["+001.500, 0002.00 0003.0,+04.000", "1.5 2 3 4"],
+			viewBox: [" +000.00, 000.0, 0010.0, +0020.000 ", "0 0 10 20"]
+		};
+
+		it.each(Object.entries(SVG_NUMERIC_ATTRIBUTES).flatMap(([tag, attributes]) => Object.entries(attributes).map(([name, kind]) => [tag, name, ...numericExamples[kind]])))("should shorten SVG %s %s using its geometry grammar", (tag, name, value, expected) => {
+			const prefix = '<svg xmlns="http://www.w3.org/2000/svg">';
+			const source = `${prefix}<${tag} ${name}="${value}"/></svg>`;
+			const options = { xml: true, mode: /** @type {const} */ ("minify"), shortenSvgNumbers: true };
+			const processor = new SourceProcessor();
+			const once = processor.process(source, options).code;
+			expect(once).toBe(`${prefix}<${tag} ${name}="${expected}"/></svg>`);
+			expect(processor.process(once, options).code).toBe(once);
+			expect(processor.process(source, { ...options, shortenSvgNumbers: false }).code).toBe(source);
+			expect(processor.process(source, { ...options, mode: "beautify" }).code).toBe(source);
+		});
+
+		it.each([...SVG_LENGTH_UNITS])("should preserve the SVG length unit %s", (unit) => {
+			const source = `<svg xmlns="http://www.w3.org/2000/svg"><rect width="+000.500${unit}"/></svg>`;
+			expect(new SourceProcessor().process(source, { xml: true, mode: "minify", shortenSvgNumbers: true }).code).toBe(`<svg xmlns="http://www.w3.org/2000/svg"><rect width=".5${unit}"/></svg>`);
+		});
+
+		it.each(["", " ", "0", "0 1 2", "0,,1", ",0 1", "0 1,", "0 1 , ", "0-1", "0 1px", "0 1e", "0 1e+", "0 1.2.3", "0 \u00a01", "0 1;2 3"])("should preserve invalid SVG point-list syntax %s", (value) => {
+			const source = `<svg xmlns="http://www.w3.org/2000/svg"><polygon points="${value}"/></svg>`;
+			expect(new SourceProcessor().process(source, { xml: true, mode: "minify", shortenSvgNumbers: true }).code).toBe(source);
+		});
+
+		it.each(["1 2", "0 0 1 2 3", "0 0 1 2px", "0 0,,1 2", "0 0 1 2,"])("should preserve invalid SVG viewBox syntax %s", (value) => {
+			const source = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${value}"/>`;
+			expect(new SourceProcessor().process(source, { xml: true, mode: "minify", shortenSvgNumbers: true }).code).toBe(source);
+		});
+
+		it.each(["", "1 px", "1rem", "1PX", "1.2.3", "1e", "1e+", "NaN", "Infinity", "var(--x)", "\u00a001.00"])("should preserve unsupported SVG length syntax %s", (value) => {
+			const source = `<svg xmlns="http://www.w3.org/2000/svg"><rect width="${value}"/></svg>`;
+			expect(new SourceProcessor().process(source, { xml: true, mode: "minify", shortenSvgNumbers: true }).code).toBe(source);
+		});
+
+		it("should retain precision, negative zero, units and exponent spellings", () => {
+			const source = '<svg xmlns="http://www.w3.org/2000/svg"><rect x="+09007199254740993.000" y="-000.0000" width="000.12345678912345678900" height="+000.00e+03"/><path pathLength="001px" d="M000.00 000.00L001.00 002.00"/><polyline points="001e+02, +002.00E-02"/></svg>';
+			const options = { xml: true, mode: /** @type {const} */ ("minify"), shortenSvgNumbers: true };
+			const once = new SourceProcessor().process(source, options).code;
+			expect(once).toBe('<svg xmlns="http://www.w3.org/2000/svg"><rect x="9007199254740993" y="-0" width=".123456789123456789" height="+000.00e+03"/><path pathLength="001px" d="M000.00 000.00L001.00 002.00"/><polyline points="001e+02 +002.00E-02"/></svg>');
+			expect(new SourceProcessor().process(once, options).code).toBe(once);
+		});
+
+		it("should preserve foreign namespaces, unknown geometry and qualified attributes", () => {
+			const source = '<root xmlns:s="http://www.w3.org/2000/svg" xmlns:q="urn:data"><rect x="001.00"/><s:rect x="001.00" q:x="001.00"/><s:g x="001.00"/><s:unknown width="001.00"/><s:svg viewbox="0 0 001 002"/><s:rect xmlns:s="urn:foreign" x="001.00"/></root>';
+			expect(new SourceProcessor().process(source, { xml: true, mode: "minify", shortenSvgNumbers: true }).code).toBe(source.replace('<s:rect x="001.00"', '<s:rect x="1"'));
+		});
+
+		it("should preserve DTD constraints and reinitialize cleanup after unread DTDs", () => {
+			const options = { xml: true, mode: /** @type {const} */ ("minify"), shortenSvgNumbers: true };
+			const processor = new SourceProcessor();
+			const source = '<!DOCTYPE svg [<!ATTLIST rect width CDATA #FIXED "001.00">]><svg xmlns="http://www.w3.org/2000/svg"><rect width="001.00" x="001.00"/><rect/></svg>';
+			expect(processor.process(source, options).code).toBe(source.replace('x="001.00"', 'x="1"'));
+			for (const doctype of ['<!DOCTYPE svg SYSTEM "svg.dtd">', '<!DOCTYPE svg [<!ENTITY % defaults SYSTEM "defaults.dtd">%defaults;]>']) {
+				const document = `${doctype}<svg xmlns="http://www.w3.org/2000/svg" width="001.00"/>`;
+				expect(processor.process(document, options).code).toBe(document);
+			}
+			expect(processor.process('<svg xmlns="http://www.w3.org/2000/svg" width="001.00"/>', options).code).toBe('<svg xmlns="http://www.w3.org/2000/svg" width="1"/>');
+		});
+
+		it("should preserve shorter entity spellings and reuse decoded numeric values", async () => {
+			const source = '<!DOCTYPE svg [<!ENTITY n "000001.50"><!ENTITY p "0001.00 0002.00 0003.00 0004.00">]><svg xmlns="http://www.w3.org/2000/svg"><rect width="&n;"/><polygon points="&p;"/></svg>';
+			const options = { xml: true, mode: /** @type {const} */ ("minify"), shortenSvgNumbers: true };
+			const once = new SourceProcessor().process(source, options).code;
+			expect(once).toBe(source.replace('width="&n;"', 'width="1.5"'));
+			expect((await new SourceProcessor().processAsync(once, options)).code).toBe(once);
+		});
+
+		it("should combine numeric cleanup with synchronous and deferred CSS rendering", async () => {
+			const source = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:p="urn:unused" width="001.00"><style>rect { fill: #ff0000 }</style><rect x="000.500" style="fill: #ff0000"/></svg>';
+			const render = builtinEmbeddedRenderer();
+			const options = { xml: true, mode: /** @type {const} */ ("minify"), shortenSvgNumbers: true, removeUnusedSvgNamespaces: true, renderEmbeddedSource: render };
+			const expected = '<svg xmlns="http://www.w3.org/2000/svg" width="1"><style>rect{fill:red}</style><rect x=".5" style="fill:red"/></svg>';
+			expect(new SourceProcessor().process(source, options).code).toBe(expected);
+			expect((await new SourceProcessor().processAsync(source, { ...options, renderEmbeddedSource: async (css, offer) => render(css, offer) })).code).toBe(expected);
+			expect(new SourceProcessor().process(source, { ...options, xml: false }).code).toContain("width=001.00");
+		});
+
+		it("should preserve a long unsupported numeric value without changing later parses", () => {
+			const options = { xml: true, mode: /** @type {const} */ ("minify"), shortenSvgNumbers: true };
+			for (const value of [`${"9".repeat(30000)}e`, `1${" ".repeat(30000)}x`, `.${"0".repeat(30000)}1`]) {
+				const source = `<svg xmlns="http://www.w3.org/2000/svg"><rect width="${value}"/></svg>`;
+				expect(new SourceProcessor().process(source, options).code).toBe(source);
+			}
+			expect(new SourceProcessor().process('<svg xmlns="http://www.w3.org/2000/svg" width="0001."/>', options).code).toBe('<svg xmlns="http://www.w3.org/2000/svg" width="1"/>');
+		});
 
 		it.each(["svg", "g", "defs", "symbol", "clipPath", "mask", "marker", "pattern", "linearGradient", "radialGradient", "filter"])("should remove indentation in SVG %s containers only when enabled", (tag) => {
 			const source = `<svg xmlns="http://www.w3.org/2000/svg">\n <${tag}>\t<![CDATA[ \n]]><!-- drop --></${tag}>\n</svg>`;

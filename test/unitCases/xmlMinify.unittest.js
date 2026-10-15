@@ -15,6 +15,13 @@ const SOURCE = `<?xml version="1.0" encoding="UTF-8"?>
 `;
 
 describe("xmlMinify", () => {
+	it.each([false, true])("should forward numeric cleanup with enabled=%s and embedded CSS", async (shortenNumbers) => {
+		const source = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 0010.00 0010.00"><style>rect { fill: #ff0000 }</style><rect x="+001.00" style="stroke: #00ff00"/></svg>';
+		const options = { shortenNumbers };
+		const { code } = await xmlMinify({ "image.svg": source }, undefined, options);
+		expect(code).toBe(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="${shortenNumbers ? '0 0 10 10' : '0 0 0010.00 0010.00'}"><style>rect{fill:red}</style><rect x="${shortenNumbers ? '1' : '+001.00'}" style="stroke:#0f0"/></svg>`);
+		expect((await xmlMinify({ "image.svg": code }, undefined, options)).code).toBe(code);
+	});
 	it.each([false, true])("should forward SVG whitespace cleanup with enabled=%s", async (collapseWhitespace) => {
 		const source = '<svg xmlns="http://www.w3.org/2000/svg">\n <g class="" id="" style=""> </g>\n <text> A  <tspan> B </tspan> C </text>\n</svg>';
 		const options = { collapseWhitespace };
