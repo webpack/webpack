@@ -5810,6 +5810,20 @@ const NEVER = 1e9;
 // literal — which is what lets prettier pack the tables many to a line.
 const NEVER_LITERAL = "1e9";
 
+// WHY: browserslist names these, but no compat dataset states what they read, so
+// each is known only by its engine: Opera Mini renders with Presto, KaiOS with
+// Gecko, UC, QQ and Baidu with Blink and BlackBerry 10 with WebKit. Node renders
+// no CSS. The minifier keeps the one prefix such an engine reads and no other.
+const UNSTATED_BROWSER_PREFIXES = [
+	["and_qq", "-webkit-"],
+	["and_uc", "-webkit-"],
+	["baidu", "-webkit-"],
+	["bb", "-webkit-"],
+	["kaios", "-moz-"],
+	["node", null],
+	["op_mini", "-o-"]
+];
+
 /**
  * One version as the emitted tables spell it.
  * @param {number} version an encoded version
@@ -8442,6 +8456,11 @@ const NEVER = ${NEVER_LITERAL};
 /** @type {string[]} */
 const SUPPORT_BROWSERS = ${JSON.stringify(pooled.browsers)};
 
+// The vendor prefix each browserslist name no profile covers reads, by its
+// engine, and null for one reading no CSS. A name missing here reads them all.
+/** @type {Map<string, string | null>} */
+const UNSTATED_BROWSER_PREFIXES = new Map(${JSON.stringify(UNSTATED_BROWSER_PREFIXES)});
+
 // The versions themselves, rows of \`SUPPORT_BROWSERS.length\` laid end to end,
 // one row per distinct profile: a construct names the row it reads rather than
 // carrying its own copy of it. \`NEVER\` is a browser that never shipped it.
@@ -8559,7 +8578,7 @@ module.exports.QUARTER_TURN_ANGLE = QUARTER_TURN_ANGLE;
 module.exports.RATIO_PROPERTIES = RATIO_PROPERTIES;\nmodule.exports.REPEAT_STYLE_KEYWORDS = REPEAT_STYLE_KEYWORDS;\nmodule.exports.REPEAT_STYLE_PROPERTIES = REPEAT_STYLE_PROPERTIES;\nmodule.exports.RGB_TO_NAME = RGB_TO_NAME;
 module.exports.SELECTOR_FUNCTIONS = SELECTOR_FUNCTIONS;\nmodule.exports.getSelectorSupportedFrom = getSelectorSupportedFrom;\nmodule.exports.SHADOW_PROPERTIES = SHADOW_PROPERTIES;\nmodule.exports.getShorthandInitialKeywords = getShorthandInitialKeywords;\nmodule.exports.getShorthandLonghands = getShorthandLonghands;\nmodule.exports.SLASH_BOX_SHORTHANDS = SLASH_BOX_SHORTHANDS;\nmodule.exports.SLASH_LONGHANDS = SLASH_LONGHANDS;\nmodule.exports.SRGB_SPACE = SRGB_SPACE;
 module.exports.STEPPED_FUNCTIONS = STEPPED_FUNCTIONS;\nmodule.exports.STEP_POSITION_MINIMUM_COUNTS = STEP_POSITION_MINIMUM_COUNTS;
-module.exports.SUBSTITUTION_FUNCTIONS = SUBSTITUTION_FUNCTIONS;\nmodule.exports.SUPPORTED_FROM = SUPPORTED_FROM;\nmodule.exports.SUPPORT_BROWSERS = SUPPORT_BROWSERS;\nmodule.exports.getSupportProfiles = getSupportProfiles;\nmodule.exports.SVG_USER_UNIT_PROPERTIES = SVG_USER_UNIT_PROPERTIES;\nmodule.exports.SYSTEM_UI_STACK = SYSTEM_UI_STACK;\nmodule.exports.THROUGH_MATRIX = THROUGH_MATRIX;\nmodule.exports.THROUGH_TRANSFER = THROUGH_TRANSFER;\nmodule.exports.TRANSITION_BEHAVIORS = TRANSITION_BEHAVIORS;
+module.exports.SUBSTITUTION_FUNCTIONS = SUBSTITUTION_FUNCTIONS;\nmodule.exports.SUPPORTED_FROM = SUPPORTED_FROM;\nmodule.exports.SUPPORT_BROWSERS = SUPPORT_BROWSERS;\nmodule.exports.UNSTATED_BROWSER_PREFIXES = UNSTATED_BROWSER_PREFIXES;\nmodule.exports.getSupportProfiles = getSupportProfiles;\nmodule.exports.SVG_USER_UNIT_PROPERTIES = SVG_USER_UNIT_PROPERTIES;\nmodule.exports.SYSTEM_UI_STACK = SYSTEM_UI_STACK;\nmodule.exports.THROUGH_MATRIX = THROUGH_MATRIX;\nmodule.exports.THROUGH_TRANSFER = THROUGH_TRANSFER;\nmodule.exports.TRANSITION_BEHAVIORS = TRANSITION_BEHAVIORS;
 module.exports.UNIT_CONVERSION_TARGETS = UNIT_CONVERSION_TARGETS;
 module.exports.UNIT_GROUP_BASE = UNIT_GROUP_BASE;\nmodule.exports.UNSHARED_LONGHAND_KEYWORDS = UNSHARED_LONGHAND_KEYWORDS;\nmodule.exports.getValueSupportPacked = getValueSupportPacked;\nmodule.exports.X_AXIS_TRANSFORMS = X_AXIS_TRANSFORMS;
 module.exports.ZERO_ANGLE_FUNCTIONS = ZERO_ANGLE_FUNCTIONS;

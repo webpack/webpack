@@ -14763,13 +14763,30 @@ describe("CssSyntax minify — a fallback the target reads past", () => {
 		);
 	});
 
-	it("keeps a vendor spelling such a selection may be the one to read", () => {
+	it("keeps the vendor spellings such a browser's engine reads, and no other", () => {
 		const css =
-			"a{-webkit-box-shadow:0 0 1px red;box-shadow:0 0 1px red}e::-moz-selection{color:red}e::selection{color:red}";
-		expect(minifyFor(css, [...MODERN, "op_mini all"])).toBe(css);
-		expect(minifyFor(css, MODERN)).toBe(
-			"a{box-shadow:0 0 1px red}e::selection{color:red}"
+			"a{-webkit-box-shadow:0 0 1px red;box-shadow:0 0 1px red}e::-moz-selection{color:red}e::selection{color:red}e::-ms-input-placeholder{color:red}";
+		const modern = "a{box-shadow:0 0 1px red}e::selection{color:red}";
+		expect(minifyFor(css, MODERN)).toBe(modern);
+		// Opera Mini renders with Presto, which reads `-o-` alone.
+		expect(minifyFor(css, [...MODERN, "op_mini all"])).toBe(modern);
+		// KaiOS is Gecko, and UC Blink.
+		expect(minifyFor(css, [...MODERN, "kaios 2.5"])).toBe(
+			"a{box-shadow:0 0 1px red}e::-moz-selection{color:red}e::selection{color:red}"
 		);
+		expect(minifyFor(css, [...MODERN, "and_uc 15.5"])).toBe(
+			"a{-webkit-box-shadow:0 0 1px red;box-shadow:0 0 1px red}e::selection{color:red}"
+		);
+		// A name no table knows the engine of may read any of them.
+		expect(minifyFor(css, [...MODERN, "unknown 1"])).toBe(
+			"a{-webkit-box-shadow:0 0 1px red;box-shadow:0 0 1px red}e::-moz-selection{color:red}e::selection{color:red}e::-ms-input-placeholder{color:red}"
+		);
+	});
+
+	it("reads a Node entry as no target, which renders no CSS", () => {
+		expect(
+			minifyFor("a{color:rgba(0,0,0,.5)}", [...MODERN, "node 22.23.0"])
+		).toBe("a{color:#00000080}");
 	});
 
 	it("leaves the prefixes such a selection asks for alone", () => {
