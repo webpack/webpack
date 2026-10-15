@@ -63,6 +63,19 @@ const parse = (code, options) => {
 };
 
 describe("WebpackParser", () => {
+	it("keeps deferred destructuring errors in lazy nodes", () => {
+		expect(() => parse("({ a = 0, b: c });")).toThrow(
+			/Shorthand property assignments are valid only in destructuring patterns/
+		);
+		expect(() =>
+			parse("({ __proto__: a, __proto__: b, c: d });")
+		).toThrow(/Redefinition of __proto__ property/);
+		expect(() =>
+			parse("({ __proto__: a, __proto__: b, c: d = 0 } = source);")
+		).not.toThrow();
+		expect(() => parse("([...items,].length = 0);")).not.toThrow();
+	});
+
 	describe("lazy comments", () => {
 		it("should collect hashbang, line, block and html comments lazily", () => {
 			const { comments } = parse(
@@ -3037,6 +3050,18 @@ describe("acorn corpus", () => {
 
 	for (const [parserName, parse, engineValidates] of PARSERS) {
 		describe(parserName, () => {
+			it.each(["inside", "instanceofValue", "in𐐀", "instanceof𐐀"])(
+				"keeps strict mode before the identifier %s",
+				(identifier) => {
+					expect(() =>
+						parse(`function f() { "use strict"\n${identifier}: 00; }`, {
+							ecmaVersion: "latest",
+							sourceType: "script"
+						})
+					).toThrow(/Invalid number/);
+				}
+			);
+
 			for (const [modeName, mode] of MODES) {
 				it(
 					`builds acorn's tree ${modeName}`,

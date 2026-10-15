@@ -33019,7 +33019,7 @@ declare class SyntaxParser {
 
 	/**
 	 * Whether a directive prologue starting at `start` opens with `"use strict"`.
-	 * acorn source: https://github.com/acornjs/acorn/blob/8.18.0/acorn/src/parseutil.js
+	 * acorn source: https://github.com/acornjs/acorn/blob/8.19.0/acorn/src/parseutil.js
 	 */
 	strictDirective(start: number): boolean;
 	unexpected(pos?: number): never;
