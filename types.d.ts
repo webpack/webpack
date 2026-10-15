@@ -5370,6 +5370,7 @@ declare class ConstDependency extends NullDependency {
 		| "context-element"
 		| "esm-bare-side-effect-import"
 		| "esm-import-specifier"
+		| "esm-evaluated-import-specifier"
 		| "esm-compatibility"
 		| "commonjs-require"
 		| "commonjs-export-require"
@@ -8026,6 +8027,7 @@ declare class Dependency {
 			| "context-element"
 			| "esm-bare-side-effect-import"
 			| "esm-import-specifier"
+			| "esm-evaluated-import-specifier"
 			| "esm-compatibility"
 			| "commonjs-require"
 			| "commonjs-export-require"
@@ -8194,6 +8196,7 @@ declare class Dependency {
 		| "context-element"
 		| "esm-bare-side-effect-import"
 		| "esm-import-specifier"
+		| "esm-evaluated-import-specifier"
 		| "esm-compatibility"
 		| "commonjs-require"
 		| "commonjs-export-require"
@@ -8831,7 +8834,6 @@ declare class DynamicEntryPlugin {
  * Dependency for static evaluating import specifier. e.g.
  */
 declare abstract class ESMEvaluatedImportSpecifierDependency extends ESMImportSpecifierDependency {
-	get isHarmonyEvaluatedImportSpecifier(): boolean;
 	operator: string;
 }
 declare abstract class ESMExportImportedSpecifierDependency extends ESMImportDependency {
@@ -8965,6 +8967,7 @@ declare class ESMImportDependency extends ModuleDependency {
 		| "context-element"
 		| "esm-bare-side-effect-import"
 		| "esm-import-specifier"
+		| "esm-evaluated-import-specifier"
 		| "esm-compatibility"
 		| "commonjs-require"
 		| "commonjs-export-require"
@@ -9030,7 +9033,6 @@ declare abstract class ESMImportSideEffectDependency extends ESMImportDependency
 	namespaceSpecifiers?: string[];
 }
 declare abstract class ESMImportSpecifierDependency extends ESMImportDependency {
-	get isHarmonyImportSpecifier(): boolean;
 	ids: string[];
 	name: string;
 	idRanges?: [number, number][];
@@ -20674,6 +20676,7 @@ declare class ModuleDependency extends Dependency {
 		| "context-element"
 		| "esm-bare-side-effect-import"
 		| "esm-import-specifier"
+		| "esm-evaluated-import-specifier"
 		| "esm-compatibility"
 		| "commonjs-require"
 		| "commonjs-export-require"
@@ -23530,6 +23533,7 @@ declare class NullDependency extends Dependency {
 		| "context-element"
 		| "esm-bare-side-effect-import"
 		| "esm-import-specifier"
+		| "esm-evaluated-import-specifier"
 		| "esm-compatibility"
 		| "commonjs-require"
 		| "commonjs-export-require"
