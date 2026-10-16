@@ -69,6 +69,9 @@ describe("the behavior relation", () => {
 		).toHaveLength(1);
 		expect(behaviorDifference("throw 1;", "throw 2;")).toHaveLength(1);
 		expect(behaviorDifference("throw {};", "throw {};")).toEqual([]);
+		const unreadable =
+			'throw { get message() { throw new Error("getter"); } };';
+		expect(behaviorDifference(unreadable, unreadable)).toEqual([]);
 	});
 
 	it("should find nothing where the printed script runs the same", () => {

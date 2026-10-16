@@ -1778,19 +1778,24 @@ const behaviorOf = (code) => {
 	try {
 		vm.runInContext(code, context, { timeout: BEHAVIOR_TIMEOUT });
 	} catch (error) {
-		const isObject = error !== null && typeof error === "object";
-		const {
-			code: reason,
-			name,
-			message
-		} = /** @type {{ code?: unknown, name?: unknown, message?: unknown }} */ (
-			isObject ? error : {}
-		);
-		if (reason === "ERR_SCRIPT_EXECUTION_TIMEOUT") return null;
-		const kind = typeof name === "string" ? name : typeof error;
-		const value =
-			typeof message === "string" ? message : isObject ? "" : show(error);
-		lines.push(`threw <${kind}>${value ? ` ${value}` : ""}`);
+		try {
+			const isObject = error !== null && typeof error === "object";
+			const {
+				code: reason,
+				name,
+				message
+			} = /** @type {{ code?: unknown, name?: unknown, message?: unknown }} */ (
+				isObject ? error : {}
+			);
+			if (reason === "ERR_SCRIPT_EXECUTION_TIMEOUT") return null;
+			const kind = typeof name === "string" ? name : typeof error;
+			const value =
+				typeof message === "string" ? message : isObject ? "" : show(error);
+			lines.push(`threw <${kind}>${value ? ` ${value}` : ""}`);
+		} catch (_error) {
+			// A thrown object whose own properties throw when read.
+			lines.push("threw <unreadable>");
+		}
 	}
 	return lines.join("\n");
 };
