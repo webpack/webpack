@@ -4512,6 +4512,11 @@
           "type": "boolean",
           "added": "5.113.0"
         },
+        "removeEmptyElements": {
+          "description": "Remove empty SVG `g` and `defs` containers having only namespace declarations, preserving other attributes and DTD defaults. Off by default because selectors and scripts can observe document structure.",
+          "type": "boolean",
+          "added": "5.113.0"
+        },
         "removeMetadata": {
           "description": "Remove SVG `metadata` elements and their contents, preserving `title`, `desc` and the document element. Off by default because metadata can carry licensing and application data.",
           "type": "boolean",
@@ -4522,8 +4527,18 @@
           "type": "boolean",
           "added": "5.113.0"
         },
+        "shortenColors": {
+          "description": "Shorten opaque SVG presentation colors using the CSS minifier, preserving paint servers, contextual colors and DTD-declared values. Off by default because selectors and scripts can observe attribute spelling.",
+          "type": "boolean",
+          "added": "5.113.0"
+        },
         "shortenNumbers": {
-          "description": "Shorten SVG geometry decimals and number-list separators without rounding, changing units or rewriting exponent notation. Preserve DTD-declared values; off by default because selectors and scripts can observe attribute spelling.",
+          "description": "Shorten SVG geometry and transform decimals and separators without rounding, changing units or rewriting exponent notation. Preserve DTD-declared values; off by default because selectors and scripts can observe attribute spelling.",
+          "type": "boolean",
+          "added": "5.113.0"
+        },
+        "shortenPathData": {
+          "description": "Shorten SVG path numbers and separators without rounding or changing commands, preserving arc flags and DTD-declared values. Off by default because selectors and scripts can observe attribute spelling.",
           "type": "boolean",
           "added": "5.113.0"
         },

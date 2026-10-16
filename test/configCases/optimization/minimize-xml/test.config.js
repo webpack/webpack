@@ -14,7 +14,12 @@ const NAMES = [
 	"cleaned",
 	"attributes",
 	"whitespace",
-	"numbers"
+	"numbers",
+	"colors",
+	"paths",
+	"containers",
+	"compact",
+	"constraints"
 ];
 
 module.exports = {

@@ -24,6 +24,19 @@ const {
 const { SourceProcessor } = require("../../lib/html/syntax");
 
 describe("the XML tool comparison", () => {
+	it.each(['colors', 'paths', 'containers'])("should compare cumulative SVG %s cleanup through the shared XML printer", async (step) => {
+		const source = '<svg xmlns="http://www.w3.org/2000/svg"><style>path { stroke: #ffffff }</style><g/><g id="keep"/><path fill="#ff0000" d="M000.00,000.00L001.00,002.00"/></svg>';
+		const tool = toolsFor('minify', source).find((tool) => tool.name === `webpack (SVG ${step} cleanup)`);
+		expect(tool).toBeDefined();
+		const minify = await /** @type {NonNullable<typeof tool>} */ (tool).create();
+		const once = await minify(source);
+		expect(once).toContain('fill="red"');
+		expect(once).toContain(`d="${step === 'colors' ? 'M000.00,000.00L001.00,002.00' : 'M0 0L1 2'}"`);
+		expect(once.includes('<g/>')).toBe(step !== 'containers');
+		expect(once).toContain('id="keep"');
+		expect(once).toContain('<style>path{stroke:#fff}</style>');
+		expect(await minify(once)).toBe(once);
+	});
 	it("should start nothing when the script is required rather than run", () => {
 		expect(installed).toHaveBeenCalledTimes(0);
 	});

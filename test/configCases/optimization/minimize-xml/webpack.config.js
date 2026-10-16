@@ -100,5 +100,44 @@ module.exports = [
 				}
 			}
 		}
+	}),
+	...[
+		{ name: "colors", xml: { shortenColors: true } },
+		{ name: "paths", xml: { shortenPathData: true } },
+		{
+			name: "containers",
+			xml: { removeEmptyElements: true, collapseWhitespace: true }
+		},
+		{
+			name: "compact",
+			xml: {
+				shortenColors: true,
+				shortenNumbers: true,
+				shortenPathData: true,
+				removeEmptyElements: true,
+				collapseWhitespace: true,
+				removeEmptyAttributes: true,
+				removeUnusedNamespaces: true,
+				sortAttributes: true
+			}
+		}
+	].map(({ name, xml }) =>
+		config(name, {
+			entry: "./compact.js",
+			optimization: { minimizeOptions: { xml } }
+		})
+	),
+	config("constraints", {
+		entry: "./constraints.js",
+		optimization: {
+			minimizeOptions: {
+				xml: {
+					shortenColors: true,
+					shortenNumbers: true,
+					shortenPathData: true,
+					removeEmptyElements: true
+				}
+			}
+		}
 	})
 ];

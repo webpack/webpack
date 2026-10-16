@@ -526,6 +526,48 @@ const IMPLIED_END_TAG_ELEMENTS = [
 /** @type {ParserTable[]} */
 const PARSER_TABLES = [
 	[
+		"SVG_COLOR_ATTRIBUTES",
+		"set",
+		"SVG presentation attributes accepting a color; paint servers and context-dependent values are left untouched.",
+		["color", "fill", "stroke", "stop-color", "flood-color", "lighting-color"]
+	],
+	[
+		"SVG_EMPTY_CONTAINERS",
+		"set",
+		"Empty SVG containers with only namespace declarations can be omitted when structural cleanup is explicitly enabled.",
+		["g", "defs"]
+	],
+	[
+		"SVG_TRANSFORM_ARGUMENTS",
+		"object",
+		"SVG 1.1 transform functions and their allowed argument counts.",
+		[
+			["matrix", "6"],
+			["translate", "1 2"],
+			["scale", "1 2"],
+			["rotate", "1 3"],
+			["skewX", "1"],
+			["skewY", "1"]
+		]
+	],
+	[
+		"SVG_PATH_ARGUMENTS",
+		"object",
+		"SVG path commands and the number of arguments in each repeated segment.",
+		[
+			["M", "2"],
+			["L", "2"],
+			["H", "1"],
+			["V", "1"],
+			["C", "6"],
+			["S", "4"],
+			["Q", "4"],
+			["T", "2"],
+			["A", "7"],
+			["Z", "0"]
+		]
+	],
+	[
 		"SVG_NUMERIC_ATTRIBUTES",
 		"byElement",
 		"Conservative SVG geometry attribute allowlist; IDL also exposes lengths with text and list semantics that these rewrites leave untouched.",
@@ -565,7 +607,37 @@ const PARSER_TABLES = [
 				(tag) => /** @type {[string, string]} */ ([`${tag} viewBox`, "viewBox"])
 			),
 			["polygon points", "points"],
-			["polyline points", "points"]
+			["polyline points", "points"],
+			["path d", "path"],
+			...[
+				"svg",
+				"g",
+				"a",
+				"switch",
+				"defs",
+				"symbol",
+				"use",
+				"rect",
+				"circle",
+				"ellipse",
+				"line",
+				"path",
+				"polygon",
+				"polyline",
+				"text",
+				"image",
+				"foreignObject",
+				"clipPath",
+				"mask",
+				"marker",
+				"pattern"
+			].map(
+				(tag) =>
+					/** @type {[string, string]} */ ([`${tag} transform`, "transform"])
+			),
+			["linearGradient gradientTransform", "transform"],
+			["radialGradient gradientTransform", "transform"],
+			["pattern patternTransform", "transform"]
 		]
 	],
 	[
