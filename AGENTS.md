@@ -95,32 +95,24 @@ When a function's output type depends on its input, use a generic (`@template`) 
 
 ### Naming
 
-Spell names out in full (functions, variables, parameters, properties): `insertHtmlElement` not `insHtmlEl`, `attributeCount` not `attrCnt`, `current` not `cur`, `element` not `el`. Exceptions: abbreviations webpack already uses pervasively (`ast`, `ns`, `id`, `url`, `css`, `js`, `dir`, `env`, `fs`) or spec-defined ones (`afe` — the HTML spec's active formatting elements), and throwaway loop indices (`i`, `j`, `k`). Otherwise write the full word.
-
-**Name a class for what it does, and the file for the class.** The name says the idea, and ends in the suffix its kind uses — `*Plugin`, `*Dependency`, `*RuntimeModule`, `*Warning`, `*Error`, `*Module`, `*Factory`, `*Generator`, `*Parser`, `*Template` (546 of 668 PascalCase files in `lib/`). A file exporting one class takes that name; where the two disagree, rename whichever is wrong — often the file. Exempt: core nouns (`Compiler`, `Chunk`), helper and data-structure modules, and any module exporting several things.
-
-**A name never** invents a role suffix (`lib/` has no `*Controller`, `*Manager`, `*Service` or `*Util` — a class that controls a thing is the thing), carries a `Webpack` prefix where the bare word is free, or repeats another class in `lib/`, since a stack trace and `types.d.ts` show the name alone.
+Spell names out in full (`attributeCount`, not `attrCnt`), beyond the abbreviations webpack already uses pervasively. Name a class for what it does, with its kind's suffix (`*Plugin`, `*Dependency`, …), and the file for the class; a name never invents a role suffix (`*Manager`, `*Util`), takes a `Webpack` prefix or repeats another `lib/` class. Exceptions and reasons: [docs/code-style.md](docs/code-style.md#naming).
 
 ### Path regexps and helpers live in one file
 
 > [!REQUIRED]
 
-`lib/util/identifier.js` is the single home of path-shape regexps (`ABSOLUTE_PATH_REGEXP`, `WINDOWS_ABS_PATH_REGEXP`, `WINDOWS_PATH_SEPARATOR_REGEXP`, …) and the helpers built on them (`parseResource`, `makePathsRelative`, `contextify`, `absolutify`, `getUndoPath`, …). **Import from there — never re-declare a local copy**, even a one-liner like `/^[a-z]:[\\/]/i` or `/\\/g`; duplicates drift into subtly different definitions of "absolute path" or "separator".
-
-Before writing a path-shape regexp, read the top of that file and its `module.exports`. If what you need is defined but not exported, **export and import it**. Define one locally only when nothing fits, next to the single function using it.
+Path-shape regexps and their helpers live in `lib/util/identifier.js`: **import from there — never re-declare a local copy**, even a one-liner like `/\\/g`. Export one that is defined but not exported; define one locally only when nothing fits ([details](docs/code-style.md#path-regexps-and-helpers-live-in-one-file)).
 
 ### Don't enumerate module or source types
 
 > [!REQUIRED]
 
-A list of module, source or dependency types in `lib/` claims those are all there will ever be; the day one is added it is silently wrong, and the new type takes whichever branch the list forgot. Instead:
+A list of module, source or dependency types in `lib/` is silently wrong the day a type is added. Read [docs/code-style.md](docs/code-style.md#dont-enumerate-module-or-source-types) before writing one; the rules it enforces:
 
-- **Ask the object.** `module.getSourceTypes()`, `chunkGraph.getModuleSourceTypes(module)`, `moduleGraph.getParentModule(dependency)` answer for whatever exists, plugin types included. Know `getParentModule`: concatenation re-points an incoming connection at the javascript module absorbing the referencing one, so `connection.originModule.type` reads `javascript` for a css `url()` or html `src`, while the dependency's own module still reads `css`/`html`.
-- **Ask the kind, not the class.** `module.is("css")` and `isDependencyKind(dependency, "url")` say what `dependency.type === "new URL()"` only approximates, survive renames and need no `require` of the class; chunks, groups and blocks answer `isHotUpdate()`, `isEntrypoint()` and `isAsyncBlock()`. Keep `instanceof` for built-ins and for telling a class from a plain value. A new kind: [docs/architecture.md](docs/architecture.md#adding-a-dependency-type-or-runtime-requirement).
-
-**A feature flag is the same list in disguise**: gating on `options.experiments.<x>` to mean "which types can exist here" reads like configuration but goes stale the same way.
-
-When a branch must name types, **let an unknown type take the safe side**: name the special case and let the rest fall to the general answer (`typePrefixEquals(type, JAVASCRIPT_TYPE)` … `else` reads the asset url), or list what provably needs nothing and treat the rest as needing it (`TYPES_WITHOUT_CHUNK_HANDLER`). Avoid a list whose `else` does nothing.
+- **Ask the object** (`module.getSourceTypes()`, `chunkGraph.getModuleSourceTypes(module)`, `moduleGraph.getParentModule(dependency)`).
+- **Ask the kind, not the class** (`module.is("css")`, `isDependencyKind(dependency, "url")`); keep `instanceof` for built-ins and plain values.
+- **A feature flag is the same list in disguise.**
+- **Let an unknown type take the safe side**; avoid a list whose `else` does nothing.
 
 ### Source file headers
 
@@ -130,42 +122,19 @@ Every source file in `lib/`, `hot/` and `tooling/` opens with the MIT license he
 
 > [!REQUIRED]
 
-**A plain comment is at most three lines. Count them.** This binds every `//` and `/* … */` in `lib/`, `hot/`, `tooling/` and `test/`, and every comment a generator emits. A fourth line is over however short or true — split, cut or drop it. `webpack/comment-length` enforces it repo-wide (`lib/` included; `yarn lint:code` shows it, over whole files, reading comment tokens only, so comment-like text in strings doesn't count) and fails `lint`. Only `examples/` is exempt: a commented-out config there is what readers copy, and the prose is the example's documentation.
+Full rules, exemptions and the `WHY:` example: [docs/code-style.md](docs/code-style.md#code-comments). The rules it enforces:
 
-**Three things are exempt, none of them commentary**: JSDoc (a type contract); the block before a file's first statement (documents the file like the license header — a `"use strict"` between them doesn't end it); and a comment whose first line opens `// WHY:`, stating why code is shaped as it is — spec prose behind a `SUPPLEMENT` entry, a measured engine disagreement, a constraint another file depends on — which can't be shortened without loss:
-
-```js
-// WHY: Chromium reads an Oklch hue as missing well before the chroma reaches
-// zero — measured: kept at 0.02, dropped at 0.015 — where CSS Color 4 §4.4
-// makes it powerless only at zero. So a color in that band has no answer two
-// engines agree on, and a mix naming one is left as it stands.
-```
-
-`WHY:` is not a way to keep a long comment: use it only when every line carries something the code can't, and expect a reviewer to ask which line that is (`grep -rn "// WHY:"` shows how often it's used).
-
-Each surviving line must carry what code can't: a hidden invariant, an ordering constraint, a workaround, or the name of the concept implemented. **Never** restate the next line, narrate the diff, recap the PR, or quote your task.
-
-**JSDoc tags are exempt**, multi-line by construction. Every named function gets a block, module-scope helpers included: one `@param` per parameter, `@returns`, `@template`/`@typedef` where they apply. Never shorten, flatten or delete a tag, and never trade a JSDoc block for a `//` comment plus an inline `/** @type {T} */` cast (that loses parameter and return docs; such casts are for throwaway callback arguments only).
-
-**The description above the tags is prose, capped at two sentences**: what the function does when its name doesn't say, plus the one constraint a caller needs. An essay moved from `//` into JSDoc is the same essay; algorithm explanations, history and alternatives belong in neither. Prose about a documented symbol goes inside its JSDoc, never as a `//` comment above or instead of it.
+- **A plain comment is at most three lines. Count them.** Every `//` and `/* … */` in `lib/`, `hot/`, `tooling/` and `test/`, and every comment a generator emits; `webpack/comment-length` fails `lint`. Only `examples/` is exempt.
+- **Exempt, none of them commentary**: JSDoc, the block before a file's first statement, and a comment opening `// WHY:` — and `WHY:` only when every line carries something the code can't.
+- Each line carries what code can't (a hidden invariant, an ordering constraint, a workaround, the concept's name); **never** restate the next line, narrate the diff, recap the PR or quote your task.
+- **Every named function gets a JSDoc block** with every tag that applies; never shorten, flatten or delete a tag, or trade the block for a `//` comment plus an inline `/** @type {T} */` cast.
+- **The description above the tags is at most two sentences**; prose about a documented symbol goes inside its JSDoc.
 
 ### Marking work for the next major
 
 > [!REQUIRED]
 
-Work waiting for the next breaking release uses one wording, in every file type:
-
-```js
-// TODO in the next major release: remove, `css-url` is the old spelling of `asset-url`
-```
-
-**Never name a version**, in the marker or the prose beside it (`TODO webpack 6`, `TODO remove in webpack 6`, `TODO webpack6 - …`, `TODO webpack@6`, `TODO reconsider this for webpack 6` — one cleanup got written a dozen unsearchable ways). A number goes stale when that major ships and the work slips to the next; a `@deprecated` tag or description of what the next major does takes the same phrase.
-
-**Always say what to do** — a bare marker tells the branch doing the work nothing. It is a plain comment, so the [three-line limit](#code-comments) applies. The whole list is then one command, which is the point of the single wording:
-
-```sh
-grep -rn "TODO in the next major release" codecov.yml bin hot lib setup test tooling
-```
+Work waiting for the next breaking release is marked `// TODO in the next major release: <what to do>` in every file type — **never name a version** (in the marker, the prose beside it or a `@deprecated` tag) and **always say what to do**. Examples and the one-command list: [docs/code-style.md](docs/code-style.md#marking-work-for-the-next-major).
 
 ### A dependency's bug is fixed in the dependency
 
@@ -185,18 +154,11 @@ Directory structure, naming and running one case: [TESTING_DOCS.md](TESTING_DOCS
 
 Run targeted tests only — `yarn test:base --testPathPatterns="<pattern>"` or `-t "<name>"` — covering the touched code, and leave broad suites to CI. Never bare `yarn jest`/`npx jest` (see [Commands](#commands)); no `yarn test` unless asked; eyeball the diff before `yarn test:base -u`.
 
-> [!REQUIRED] > **Two kinds of change widen the blast radius.** Touching `schemas/**`, `lib/config/**`, or anything `yarn fix:special` generates moves the whole option surface. Still don't sweep suites locally: push, let CI sweep, and [read the failing job's log](#read-ci-rather-than-re-running-it). Locally run only the touched `configCases/`, `yarn lint:code` and `yarn fix:special` (whose output says whether a generated file is stale). `lint`, `basic` and `unit` gate the `integration` matrix in `.github/workflows/test.yml` (`integration: needs: [lint, basic, unit]`), so a red one — `lint` included — stops every integration upload, and coverage then computes patch coverage from whichever cheap suite did report: it reads like a coverage problem but isn't.
+> [!REQUIRED] > **Two kinds of change widen the blast radius** — touching `schemas/**`, `lib/config/**` or anything `yarn fix:special` generates. Still don't sweep suites locally: run only the touched `configCases/`, `yarn lint:code` and `yarn fix:special`, push, and let CI sweep. A red `lint`, `basic` or `unit` stops every integration upload, so a coverage drop then isn't one ([details](docs/verifying.md#changes-that-widen-the-blast-radius)).
 
-> [!REQUIRED] > **Run every stage of `lint` before every push — not a chosen few, not only your files.** `yarn lint:types` plus `npx eslint <files>` is **not** "lint passed": it skips `lint:special` (fails on stale generated files) and `lint:spellcheck` (reads every Markdown file). `yarn fix` isn't it either — it regenerates and formats but doesn't type check or spellcheck — so **run `yarn lint` after it** (or all ten stages by hand if an early one trips on sandbox drift). Read each stage's output whole: piping through `tail`/`grep` is how a finding just above the summary reaches CI instead of you.
->
-> **A generated file is stale as soon as any JSDoc it copies changes — prose included.** `types.d.ts` carries the comment above `process()`, not just its signature; a reworded comment, or a signature edited without its doc paragraph, fails `lint` with the same `types.d.ts need to be updated` a missing member gives. After splicing your hunks, diff your file against the generator's whole output for that symbol's **region**, not just the lines you meant to change.
+> [!REQUIRED] > **Run every stage of `lint` before every push — `yarn lint`, not a chosen few, not only your files**, and read each stage's output whole, never through `tail`/`grep`. A generated file is stale as soon as any JSDoc it copies changes, prose included ([details](docs/verifying.md#running-lint)).
 
-`yarn lint` is an `&&` chain, so the first stage tripping on sandbox drift hides the rest. If `lint:special` reports declarations "need to be updated" that `main` reports too, run the rest by hand: `lint:agents`, `lint:types`, `lint:types-test`, `lint:types-benchmark`, `lint:types-module-test`, `lint:types-hot`, `fmt:check`, `lint:spellcheck`. `lint:types-test` catches `tsc` errors in `test/`; skipping it is how a red `lint` survives "lint passed locally".
-
-A local failure is yours only if it doesn't reproduce on `main` — check in a worktree (`git worktree add <dir> origin/main`) first. Sandboxes routinely fail `Cli createColors`, `profiling-plugin` and the `many-replacements` cases for environment reasons, and the generated-declaration check flags files CI accepts. **Hard rule — no broad local sweeps**: never run the spec-conformance suites (`test:test262` alone takes tens of minutes, `test:html5lib`, `test:css-parsing`) or the full `test:integration` matrix as routine local verification — CI runs them on every push; locally, run the `configCases/` relevant to your change. Broad local sweeps cost minutes and, on a busy machine, manufacture timeouts that look like regressions. Narrow the pattern until a run takes seconds, and:
-
-- **Never read pass/fail through a pipe** — `yarn test:base … | grep …` discards jest's exit code. Check the exit status or read the `Tests:` line.
-- **Never attribute a failure without a base run** — re-run that exact case on unmodified files first; most surprises are pre-existing or contention flakes.
+A local failure is yours only if it doesn't reproduce on `main` (check in a worktree). **Hard rule — no broad local sweeps** (spec-conformance suites, the full `test:integration` matrix); **never read pass/fail through a pipe**; **never attribute a failure without a base run** of that exact case. Known sandbox failures and why: [docs/verifying.md](docs/verifying.md#local-failures-and-broad-sweeps).
 
 Running one integration case, and what a `configCases/` case contains: [TESTING_DOCS.md](TESTING_DOCS.md#running-one-integration-case).
 
@@ -208,9 +170,7 @@ Running one integration case, and what a `configCases/` case contains: [TESTING_
 
 > [!REQUIRED]
 
-**When CI is red, read its log instead of reproducing the whole job locally** — rediscovering one line by re-running `yarn lint` or a suite wastes minutes and tokens. Filter the run to failing jobs (`gh run view <run-id> --json jobs --jq '.jobs[] | select(.conclusion=="failure")'`, or `list_workflow_jobs`), read that job's log (`gh run view --job <id> --log-failed`, or `get_job_logs` with `return_content`, asking for enough lines to clear the trailing `Post job cleanup`), then reproduce **only the named case**: `yarn test:base --testPathPatterns="<file>"`, `yarn test:basic --testNamePattern="<category> <case>"`, or `npx eslint <file>`.
-
-Traps: a step is not a job — `Run yarn lint` sits inside the `lint` job, and a step's id fetches the wrong log, so select the object with a `steps` array. And `yarn lint` stops at its first failing stage, so a CI failure in `lint:code` says nothing about later stages — just as a local `lint:special` complaint `main` also makes says nothing about CI.
+**When CI is red, read its log instead of reproducing the whole job locally**, then reproduce **only the named case** — commands and traps (a step is not a job; `yarn lint` stops at its first failing stage): [docs/verifying.md](docs/verifying.md#read-ci-rather-than-re-running-it).
 
 ### Verifying a performance or memory change
 
@@ -267,20 +227,7 @@ CI's `lint` job verifies these are current; `yarn fix` (`fix:code` + `fix:specia
 
 `lib/` and `hot/` ship as raw source (no build step) and must run on **Node ≥ 10.13** (CI goes down to 10.x): no newer syntax or APIs, e.g. no `?.` or `??`, or it passes locally and fails the Node 10 job.
 
-**This covers what tests execute too.** The harness runs each `configCases/` bundle, and webpack doesn't transpile fixtures (`output.environment` constrains only generated code), so a fixture using newer syntax — class static fields/blocks, `??=`, `await using` — fails the Node 10 job with a bare `SyntaxError` in the emitted bundle. When the syntax _is_ the point, gate the case with a `test.filter.js` returning `false` below the first supporting version, naming the syntax in a comment:
-
-```js
-"use strict";
-
-// The fixture observes the name from a class static field, which Node 10
-// cannot parse when the harness executes the bundle.
-module.exports = function filter() {
-	const major = Number(process.versions.node.split(".")[0]);
-	return major >= 12;
-};
-```
-
-Otherwise write it in baseline syntax so it runs everywhere. This capability gate is unrelated to the cache-suite silencing forbidden [below](#the-persistent-cache-has-to-keep-working) — a filtered case still runs in both suites wherever it can execute.
+**This covers what tests execute too**: webpack doesn't transpile fixtures, so newer syntax in a `configCases/` fixture fails the Node 10 job. Write fixtures in baseline syntax; where the syntax _is_ the point, gate the case with a `test.filter.js` ([example](docs/code-style.md#target-the-node-baseline)) — unrelated to the cache-suite silencing forbidden [below](#the-persistent-cache-has-to-keep-working).
 
 ### Runtime code ships to every target
 
@@ -320,6 +267,6 @@ Every build, CLI run and minimizer worker starts cold, and most of that start is
 
 ### Keep instance shapes stable
 
-Initialize **every** instance field in the constructor — `undefined`/`null` for those first assigned later. A first assignment outside the constructor forces a V8 hidden-class (Shape) transition, splitting instances across shapes: inline caches go polymorphic/megamorphic (a hot read can cost ~2× at two shapes, more when megamorphic), and code optimized for the first shape deopts with `wrong map`. Never `delete` a field (dictionary mode); set it to `undefined`. One trailing field gains little, but the rule is uniform so reviewers needn't judge case by case — it's why `Dependency` sets all its `_loc*` slots up front. Deliberate symbol-keyed sparse slots are the documented exception.
+Initialize **every** instance field in the constructor (`undefined`/`null` for those first assigned later) and never `delete` one — set it to `undefined`; symbol-keyed sparse slots are the documented exception. Why (V8 shapes, inline caches, `wrong map` deopts): [docs/performance.md](docs/performance.md#keep-instance-shapes-stable).
 
 Adding a public (non-`_`) field to a class compiled into `types.d.ts` needs `yarn fix:special` — constructor order sets member order in the generated declarations.
