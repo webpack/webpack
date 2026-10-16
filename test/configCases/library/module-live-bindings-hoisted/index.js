@@ -1,5 +1,3 @@
-// The free `counter` other modules read is a global, set before the library runs
-globalThis.counter = "global";
 const loading = import("./library.mjs");
 
 it("should keep exported bindings live, whatever their name or position", async () => {
