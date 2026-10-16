@@ -8497,6 +8497,24 @@ describe("syntax-printer", () => {
 			}
 		});
 
+		it("should keep each closure a function called in place in a loop makes reading its own argument", async () => {
+			const { minify } = await load();
+			for (const input of [
+				"function g() { var out = []; for (var i = 0; i < 2; i++) { var b = [i]; console.log(b); (function (a) { out.push(function () { return a; }); })(b); } return out.map(function (f) { return f(); }); } console.log(g());",
+				"function g(n) { var out = []; while (n--) { var b = n * 2; console.log(b, b); (function (a) { out.push(() => a); })(b); } return out.map((f) => f()); } console.log(g(2));"
+			]) {
+				for (const options of [
+					{ compress: { passes: 2 }, mangle: false },
+					{ toplevel: true, compress: { passes: 2 } }
+				]) {
+					const { code } = await minify(input, options);
+					expect(runProgram(/** @type {string} */ (code))).toBe(
+						runProgram(input)
+					);
+				}
+			}
+		});
+
 		it("should keep `arguments.length` tested, as an index past it may read a getter `Object.prototype` holds", async () => {
 			const { minify } = await load();
 			for (const input of [
