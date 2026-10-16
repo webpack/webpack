@@ -1,6 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:e="http://www.inkscape.org/namespaces/inkscape" xmlns:data="urn:application" e:version="1" viewBox="0 0 10 10">
 	<title>Accessible title</title>
 	<desc>Accessible description</desc><metadata><data:license>Optional metadata</data:license></metadata><e:view><g>Editor state</g></e:view>
+	<metadata><path id="metadata-shape" d="M1 1H3V3Z"/></metadata><e:view><path id="editor-shape" d="M4 4H6V6Z"/></e:view><use href="#metadata-shape"/><use href="#editor-shape"/>
 	<defs><path id="shape" d="M0 0h10v10z" e:label="Shape"/></defs>
 	<use class="" id="" href="#shape" style="fill: #ff0000" data:flag="keep"/>
 	<text>]]<metadata/>></text>
