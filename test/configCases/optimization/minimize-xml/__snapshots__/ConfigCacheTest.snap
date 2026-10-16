@@ -37,6 +37,25 @@ exports[`ConfigCacheTestCases optimization minimize-xml minimize-xml should comp
 </svg>"
 `;
 
+exports[`ConfigCacheTestCases optimization minimize-xml minimize-xml should compile: colors 1`] = `
+"<svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 100 100\\">
+  <title>Geometry and colors</title>
+  <defs><linearGradient id=\\"paint\\" gradientTransform=\\"translate(+000.00, 000.00)\\"><stop stop-color=\\"red\\"/><stop offset=\\"1\\" stop-color=\\"#00f\\"/></linearGradient></defs>
+  <g><defs/><g xmlns:unused=\\"urn:unused\\"/></g>
+  <switch><g/><rect x=\\"90\\" y=\\"0\\" width=\\"10\\" height=\\"10\\" fill=\\"#00f\\"/></switch>
+  <g id=\\"sprite\\"><path fill=\\"red\\" stroke=\\"#00f\\" transform=\\"translate(+001.00, 0002.00) rotate(000.00)\\" d=\\"M +000.00, 000.00 L 0020.00, 000.00 A 0010.00, 0010.00, 000.00, 01, 0020.00, 0020.00 z\\"/></g>
+  <use href=\\"#sprite\\" transform=\\"translate(040.00, 000.00)\\"/>
+  <rect x=\\"060.00\\" y=\\"060.00\\" width=\\"030.00\\" height=\\"030.00\\" fill=\\"url(#paint)\\"/>
+  <text x=\\"001.00\\" y=\\"095.00\\"> A <tspan> B </tspan> C </text>
+</svg>"
+`;
+
+exports[`ConfigCacheTestCases optimization minimize-xml minimize-xml should compile: compact 1`] = `"<svg viewBox=\\"0 0 100 100\\" xmlns=\\"http://www.w3.org/2000/svg\\"><title>Geometry and colors</title><defs><linearGradient id=\\"paint\\" gradientTransform=\\"translate(0 0)\\"><stop stop-color=\\"red\\"/><stop stop-color=\\"#00f\\" offset=\\"1\\"/></linearGradient></defs><switch><g/><rect fill=\\"#00f\\" x=\\"90\\" y=\\"0\\" height=\\"10\\" width=\\"10\\"/></switch><g id=\\"sprite\\"><path fill=\\"red\\" transform=\\"translate(1 2) rotate(0)\\" d=\\"M0 0L20 0A10 10 0 0 1 20 20z\\" stroke=\\"#00f\\"/></g><use transform=\\"translate(40 0)\\" href=\\"#sprite\\"/><rect fill=\\"url(#paint)\\" x=\\"60\\" y=\\"60\\" height=\\"30\\" width=\\"30\\"/><text x=\\"001.00\\" y=\\"095.00\\"> A <tspan> B </tspan> C </text></svg>"`;
+
+exports[`ConfigCacheTestCases optimization minimize-xml minimize-xml should compile: constraints 1`] = `"<!DOCTYPE svg [<!ATTLIST g style CDATA #FIXED \\"fill: #ff0000\\"><!ATTLIST path d CDATA #FIXED \\"M000.00 000.00L001.00 002.00\\"><!ATTLIST rect fill CDATA #FIXED \\"#ff0000\\">]><svg xmlns=\\"http://www.w3.org/2000/svg\\"><g style=\\"fill: #ff0000\\"><path d=\\"M000.00 000.00L001.00 002.00\\"/></g><rect fill=\\"#ff0000\\" x=\\"1\\" y=\\"2\\" width=\\"3\\" height=\\"4\\" style=\\"stroke:red\\"/></svg>"`;
+
+exports[`ConfigCacheTestCases optimization minimize-xml minimize-xml should compile: containers 1`] = `"<svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 100 100\\"><title>Geometry and colors</title><defs><linearGradient id=\\"paint\\" gradientTransform=\\"translate(+000.00, 000.00)\\"><stop stop-color=\\"#ff0000\\"/><stop offset=\\"1\\" stop-color=\\"rgb(0, 0, 255)\\"/></linearGradient></defs><switch><g/><rect x=\\"90\\" y=\\"0\\" width=\\"10\\" height=\\"10\\" fill=\\"#0000ff\\"/></switch><g id=\\"sprite\\"><path fill=\\"#ff0000\\" stroke=\\"rgb(0, 0, 255)\\" transform=\\"translate(+001.00, 0002.00) rotate(000.00)\\" d=\\"M +000.00, 000.00 L 0020.00, 000.00 A 0010.00, 0010.00, 000.00, 01, 0020.00, 0020.00 z\\"/></g><use href=\\"#sprite\\" transform=\\"translate(040.00, 000.00)\\"/><rect x=\\"060.00\\" y=\\"060.00\\" width=\\"030.00\\" height=\\"030.00\\" fill=\\"url(#paint)\\"/><text x=\\"001.00\\" y=\\"095.00\\"> A <tspan> B </tspan> C </text></svg>"`;
+
 exports[`ConfigCacheTestCases optimization minimize-xml minimize-xml should compile: disabled 1`] = `
 "<?xml version=\\"1.0\\" encoding=\\"UTF-8\\"?>
 <!-- An editor's comment the minified output drops. -->
@@ -80,6 +99,19 @@ exports[`ConfigCacheTestCases optimization minimize-xml minimize-xml should comp
 "<?xml version=\\"1.0\\" encoding=\\"UTF-8\\"?><svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 10 10\\">
 	<style>.dot{fill:red;-webkit-user-select:none;user-select:none}</style>
 	<circle class=\\"dot\\" cx=\\"5\\" cy=\\"5\\" r=\\"4\\"/>
+</svg>"
+`;
+
+exports[`ConfigCacheTestCases optimization minimize-xml minimize-xml should compile: paths 1`] = `
+"<svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 100 100\\">
+  <title>Geometry and colors</title>
+  <defs><linearGradient id=\\"paint\\" gradientTransform=\\"translate(+000.00, 000.00)\\"><stop stop-color=\\"#ff0000\\"/><stop offset=\\"1\\" stop-color=\\"rgb(0, 0, 255)\\"/></linearGradient></defs>
+  <g><defs/><g xmlns:unused=\\"urn:unused\\"/></g>
+  <switch><g/><rect x=\\"90\\" y=\\"0\\" width=\\"10\\" height=\\"10\\" fill=\\"#0000ff\\"/></switch>
+  <g id=\\"sprite\\"><path fill=\\"#ff0000\\" stroke=\\"rgb(0, 0, 255)\\" transform=\\"translate(+001.00, 0002.00) rotate(000.00)\\" d=\\"M0 0L20 0A10 10 0 0 1 20 20z\\"/></g>
+  <use href=\\"#sprite\\" transform=\\"translate(040.00, 000.00)\\"/>
+  <rect x=\\"060.00\\" y=\\"060.00\\" width=\\"030.00\\" height=\\"030.00\\" fill=\\"url(#paint)\\"/>
+  <text x=\\"001.00\\" y=\\"095.00\\"> A <tspan> B </tspan> C </text>
 </svg>"
 `;
 

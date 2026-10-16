@@ -12932,6 +12932,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "optimization-minimize-options-xml-remove-empty-elements": Object {
+    "configs": Array [
+      Object {
+        "description": "Remove empty SVG \`g\` and \`defs\` containers having only namespace declarations, preserving other attributes and DTD defaults. Off by default because selectors and scripts can observe document structure.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.xml.removeEmptyElements",
+        "type": "boolean",
+      },
+    ],
+    "description": "Remove empty SVG \`g\` and \`defs\` containers having only namespace declarations, preserving other attributes and DTD defaults. Off by default because selectors and scripts can observe document structure.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "optimization-minimize-options-xml-remove-metadata": Object {
     "configs": Array [
       Object {
@@ -12958,16 +12971,42 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "optimization-minimize-options-xml-shorten-colors": Object {
+    "configs": Array [
+      Object {
+        "description": "Shorten opaque SVG presentation colors using the CSS minifier, preserving paint servers, contextual colors and DTD-declared values. Off by default because selectors and scripts can observe attribute spelling.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.xml.shortenColors",
+        "type": "boolean",
+      },
+    ],
+    "description": "Shorten opaque SVG presentation colors using the CSS minifier, preserving paint servers, contextual colors and DTD-declared values. Off by default because selectors and scripts can observe attribute spelling.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "optimization-minimize-options-xml-shorten-numbers": Object {
     "configs": Array [
       Object {
-        "description": "Shorten SVG geometry decimals and number-list separators without rounding, changing units or rewriting exponent notation. Preserve DTD-declared values; off by default because selectors and scripts can observe attribute spelling.",
+        "description": "Shorten SVG geometry and transform decimals and separators without rounding, changing units or rewriting exponent notation. Preserve DTD-declared values; off by default because selectors and scripts can observe attribute spelling.",
         "multiple": false,
         "path": "optimization.minimizeOptions.xml.shortenNumbers",
         "type": "boolean",
       },
     ],
-    "description": "Shorten SVG geometry decimals and number-list separators without rounding, changing units or rewriting exponent notation. Preserve DTD-declared values; off by default because selectors and scripts can observe attribute spelling.",
+    "description": "Shorten SVG geometry and transform decimals and separators without rounding, changing units or rewriting exponent notation. Preserve DTD-declared values; off by default because selectors and scripts can observe attribute spelling.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-options-xml-shorten-path-data": Object {
+    "configs": Array [
+      Object {
+        "description": "Shorten SVG path numbers and separators without rounding or changing commands, preserving arc flags and DTD-declared values. Off by default because selectors and scripts can observe attribute spelling.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.xml.shortenPathData",
+        "type": "boolean",
+      },
+    ],
+    "description": "Shorten SVG path numbers and separators without rounding or changing commands, preserving arc flags and DTD-declared values. Off by default because selectors and scripts can observe attribute spelling.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -13039,6 +13078,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "optimization-minimize-xml-remove-empty-elements": Object {
+    "configs": Array [
+      Object {
+        "description": "Remove empty SVG \`g\` and \`defs\` containers having only namespace declarations, preserving other attributes and DTD defaults. Off by default because selectors and scripts can observe document structure.",
+        "multiple": false,
+        "path": "optimization.minimize.xml.removeEmptyElements",
+        "type": "boolean",
+      },
+    ],
+    "description": "Remove empty SVG \`g\` and \`defs\` containers having only namespace declarations, preserving other attributes and DTD defaults. Off by default because selectors and scripts can observe document structure.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "optimization-minimize-xml-remove-metadata": Object {
     "configs": Array [
       Object {
@@ -13065,16 +13117,42 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "optimization-minimize-xml-shorten-colors": Object {
+    "configs": Array [
+      Object {
+        "description": "Shorten opaque SVG presentation colors using the CSS minifier, preserving paint servers, contextual colors and DTD-declared values. Off by default because selectors and scripts can observe attribute spelling.",
+        "multiple": false,
+        "path": "optimization.minimize.xml.shortenColors",
+        "type": "boolean",
+      },
+    ],
+    "description": "Shorten opaque SVG presentation colors using the CSS minifier, preserving paint servers, contextual colors and DTD-declared values. Off by default because selectors and scripts can observe attribute spelling.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "optimization-minimize-xml-shorten-numbers": Object {
     "configs": Array [
       Object {
-        "description": "Shorten SVG geometry decimals and number-list separators without rounding, changing units or rewriting exponent notation. Preserve DTD-declared values; off by default because selectors and scripts can observe attribute spelling.",
+        "description": "Shorten SVG geometry and transform decimals and separators without rounding, changing units or rewriting exponent notation. Preserve DTD-declared values; off by default because selectors and scripts can observe attribute spelling.",
         "multiple": false,
         "path": "optimization.minimize.xml.shortenNumbers",
         "type": "boolean",
       },
     ],
-    "description": "Shorten SVG geometry decimals and number-list separators without rounding, changing units or rewriting exponent notation. Preserve DTD-declared values; off by default because selectors and scripts can observe attribute spelling.",
+    "description": "Shorten SVG geometry and transform decimals and separators without rounding, changing units or rewriting exponent notation. Preserve DTD-declared values; off by default because selectors and scripts can observe attribute spelling.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-xml-shorten-path-data": Object {
+    "configs": Array [
+      Object {
+        "description": "Shorten SVG path numbers and separators without rounding or changing commands, preserving arc flags and DTD-declared values. Off by default because selectors and scripts can observe attribute spelling.",
+        "multiple": false,
+        "path": "optimization.minimize.xml.shortenPathData",
+        "type": "boolean",
+      },
+    ],
+    "description": "Shorten SVG path numbers and separators without rounding or changing commands, preserving arc flags and DTD-declared values. Off by default because selectors and scripts can observe attribute spelling.",
     "multiple": false,
     "simpleType": "boolean",
   },

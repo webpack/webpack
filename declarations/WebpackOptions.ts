@@ -3469,6 +3469,11 @@ export interface OptimizationMinimizeXml {
 	 */
 	removeEmptyAttributes?: boolean;
 	/**
+	 * Remove empty SVG `g` and `defs` containers having only namespace declarations, preserving other attributes and DTD defaults. Off by default because selectors and scripts can observe document structure.
+	 * @since 5.113.0
+	 */
+	removeEmptyElements?: boolean;
+	/**
 	 * Remove SVG `metadata` elements and their contents, preserving `title`, `desc` and the document element. Off by default because metadata can carry licensing and application data.
 	 * @since 5.113.0
 	 */
@@ -3479,10 +3484,20 @@ export interface OptimizationMinimizeXml {
 	 */
 	removeUnusedNamespaces?: boolean;
 	/**
-	 * Shorten SVG geometry decimals and number-list separators without rounding, changing units or rewriting exponent notation. Preserve DTD-declared values; off by default because selectors and scripts can observe attribute spelling.
+	 * Shorten opaque SVG presentation colors using the CSS minifier, preserving paint servers, contextual colors and DTD-declared values. Off by default because selectors and scripts can observe attribute spelling.
+	 * @since 5.113.0
+	 */
+	shortenColors?: boolean;
+	/**
+	 * Shorten SVG geometry and transform decimals and separators without rounding, changing units or rewriting exponent notation. Preserve DTD-declared values; off by default because selectors and scripts can observe attribute spelling.
 	 * @since 5.113.0
 	 */
 	shortenNumbers?: boolean;
+	/**
+	 * Shorten SVG path numbers and separators without rounding or changing commands, preserving arc flags and DTD-declared values. Off by default because selectors and scripts can observe attribute spelling.
+	 * @since 5.113.0
+	 */
+	shortenPathData?: boolean;
 	/**
 	 * Print attributes with the document's commonest names first, breaking ties by case-sensitive name. Off by default: consumers observing attribute order see the new order.
 	 * @since 5.112.0

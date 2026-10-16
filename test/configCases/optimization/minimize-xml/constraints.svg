@@ -1,0 +1,2 @@
+<!DOCTYPE svg [<!ATTLIST g style CDATA #FIXED "fill: #ff0000"><!ATTLIST path d CDATA #FIXED "M000.00 000.00L001.00 002.00"><!ATTLIST rect fill CDATA #FIXED "#ff0000">]>
+<svg xmlns="http://www.w3.org/2000/svg"><g style="fill: #ff0000"><path d="M000.00 000.00L001.00 002.00"/></g><rect fill="#ff0000" x="001.00" y="002.00" width="003.00" height="004.00" style="stroke: #ff0000"/></svg>

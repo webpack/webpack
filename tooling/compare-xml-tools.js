@@ -263,6 +263,13 @@ const fixtures = async () => {
 			"utf8"
 		)
 	]);
+	out.push([
+		"SVG presentation and paths",
+		await fs.promises.readFile(
+			path.join(ROOT, "test/configCases/optimization/minimize-xml/compact.svg"),
+			"utf8"
+		)
+	]);
 	out.push(["Atom feed (400 entries)", atomFeed(400)]);
 	out.push(["Maven POM", MAVEN_POM]);
 	out.push(["XLIFF translation", XLIFF]);
@@ -279,7 +286,7 @@ const printXml = (xml, mode) =>
 		new SourceProcessor().process(xml, { xml: true, mode })
 	).code;
 
-/** @typedef {Pick<import("../lib/html/syntax-printer").HtmlProcessOptions, "sortAttributes" | "removeSvgMetadata" | "removeSvgEditorData" | "removeUnusedSvgNamespaces" | "removeEmptyAttributes" | "collapseWhitespace" | "shortenSvgNumbers">} XmlPrintOptions */
+/** @typedef {Pick<import("../lib/html/syntax-printer").HtmlProcessOptions, "sortAttributes" | "removeSvgMetadata" | "removeSvgEditorData" | "removeUnusedSvgNamespaces" | "removeEmptyAttributes" | "removeEmptyElements" | "collapseWhitespace" | "shortenSvgNumbers" | "shortenSvgColors" | "shortenSvgPathData">} XmlPrintOptions */
 
 /** @type {[string, XmlPrintOptions][]} */
 const PRESETS = [
@@ -321,7 +328,25 @@ const PRESETS = [
 			collapseWhitespace: true,
 			shortenSvgNumbers: true
 		}
-	]
+	],
+	...["colors", "paths", "containers"].map(
+		(step, index) =>
+			/** @type {[string, XmlPrintOptions]} */ ([
+				`svg-${step}`,
+				{
+					sortAttributes: true,
+					removeSvgMetadata: true,
+					removeSvgEditorData: true,
+					removeUnusedSvgNamespaces: true,
+					removeEmptyAttributes: true,
+					collapseWhitespace: true,
+					shortenSvgNumbers: true,
+					shortenSvgColors: true,
+					shortenSvgPathData: index >= 1,
+					removeEmptyElements: index >= 2
+				}
+			])
+	)
 ];
 
 /**
@@ -547,6 +572,20 @@ const TOOLS = [
 				}).code;
 		}
 	},
+	...PRESETS.slice(-3).map(([name, options]) => ({
+		name: `webpack (SVG ${name.slice(4)} cleanup)`,
+		stage: /** @type {const} */ ("minify"),
+		create: () => {
+			const renderEmbeddedSource = builtinEmbeddedRenderer();
+			return (/** @type {string} */ xml) =>
+				new SourceProcessor().process(xml, {
+					xml: true,
+					mode: "minify",
+					...options,
+					renderEmbeddedSource
+				}).code;
+		}
+	})),
 	{
 		// SVG's own optimizer: it rewrites path data and drops what it deems
 		// editor noise, so it differs by design rather than by mistake.
@@ -1346,7 +1385,10 @@ const invariants = (write) => {
 				!options.removeSvgEditorData &&
 				!options.removeUnusedSvgNamespaces &&
 				!options.removeEmptyAttributes &&
-				!options.shortenSvgNumbers;
+				!options.shortenSvgNumbers &&
+				!options.shortenSvgColors &&
+				!options.shortenSvgPathData &&
+				!options.removeEmptyElements;
 			if (
 				retainsData &&
 				wantedRelation("meaning") &&
