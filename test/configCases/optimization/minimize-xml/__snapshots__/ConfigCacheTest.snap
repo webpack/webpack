@@ -15,7 +15,47 @@ exports[`ConfigCacheTestCases optimization minimize-xml minimize-xml should comp
 "
 `;
 
+exports[`ConfigCacheTestCases optimization minimize-xml minimize-xml should compile: attributes 1`] = `
+"<svg viewBox=\\"0 0 10 10\\" xmlns=\\"http://www.w3.org/2000/svg\\" xmlns:data=\\"urn:application\\">
+	<title>Accessible title</title>
+	<desc>Accessible description</desc>
+	<defs><path d=\\"M0 0h10v10z\\" id=\\"shape\\"/></defs>
+	<use data:flag=\\"keep\\" href=\\"#shape\\" style=\\"fill:red\\"/>
+	<text>]]&gt;</text>
+</svg>"
+`;
+
 exports[`ConfigCacheTestCases optimization minimize-xml minimize-xml should compile: claimed 1`] = `"<svg/>"`;
+
+exports[`ConfigCacheTestCases optimization minimize-xml minimize-xml should compile: cleaned 1`] = `
+"<svg viewBox=\\"0 0 10 10\\" xmlns=\\"http://www.w3.org/2000/svg\\" xmlns:data=\\"urn:application\\" xmlns:e=\\"http://www.inkscape.org/namespaces/inkscape\\">
+	<title>Accessible title</title>
+	<desc>Accessible description</desc>
+	<defs><path id=\\"shape\\" d=\\"M0 0h10v10z\\"/></defs>
+	<use id=\\"\\" class=\\"\\" data:flag=\\"keep\\" href=\\"#shape\\" style=\\"fill:red\\"/>
+	<text>]]&gt;</text>
+</svg>"
+`;
+
+exports[`ConfigCacheTestCases optimization minimize-xml minimize-xml should compile: colors 1`] = `
+"<svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 100 100\\">
+  <title>Geometry and colors</title>
+  <defs><linearGradient id=\\"paint\\" gradientTransform=\\"translate(+000.00, 000.00)\\"><stop stop-color=\\"red\\"/><stop offset=\\"1\\" stop-color=\\"#00f\\"/></linearGradient></defs>
+  <g><defs/><g xmlns:unused=\\"urn:unused\\"/></g>
+  <switch><g/><rect x=\\"90\\" y=\\"0\\" width=\\"10\\" height=\\"10\\" fill=\\"#00f\\"/></switch>
+  <g id=\\"sprite\\"><path fill=\\"red\\" stroke=\\"#00f\\" transform=\\"translate(+001.00, 0002.00) rotate(000.00)\\" d=\\"M +000.00, 000.00 L 0020.00, 000.00 A 0010.00, 0010.00, 000.00, 01, 0020.00, 0020.00 z\\"/></g>
+  <path id=\\"segments\\" fill=\\"none\\" stroke=\\"#000\\" d=\\"M 10 20 L 15 -25 L 20 -30 l .5 .5 l .5 .5 C 1 2 3 4 5 6 C 7 8 9 10 11 12 A 10 20 30 0 1 40 50 A 10 20 30 1 0 .5 -.5 Z M 30 40 L 50 60 Z\\"/>
+  <use href=\\"#sprite\\" transform=\\"translate(040.00, 000.00)\\"/>
+  <rect x=\\"060.00\\" y=\\"060.00\\" width=\\"030.00\\" height=\\"030.00\\" fill=\\"url(#paint)\\"/>
+  <text x=\\"001.00\\" y=\\"095.00\\"> A <tspan> B </tspan> C </text>
+</svg>"
+`;
+
+exports[`ConfigCacheTestCases optimization minimize-xml minimize-xml should compile: compact 1`] = `"<svg viewBox=\\"0 0 100 100\\" xmlns=\\"http://www.w3.org/2000/svg\\"><title>Geometry and colors</title><defs><linearGradient id=\\"paint\\" gradientTransform=\\"translate(0 0)\\"><stop stop-color=\\"red\\"/><stop stop-color=\\"#00f\\" offset=\\"1\\"/></linearGradient></defs><switch><g/><rect fill=\\"#00f\\" x=\\"90\\" y=\\"0\\" height=\\"10\\" width=\\"10\\"/></switch><g id=\\"sprite\\"><path fill=\\"red\\" d=\\"M0 0 20 0A10 10 0 0120 20z\\" stroke=\\"#00f\\" transform=\\"translate(1 2) rotate(0)\\"/></g><path fill=\\"none\\" id=\\"segments\\" d=\\"M10 20 15-25 20-30l.5.5.5.5C1 2 3 4 5 6 7 8 9 10 11 12A10 20 30 0140 50 10 20 30 10.5-.5ZM30 40 50 60Z\\" stroke=\\"#000\\"/><use transform=\\"translate(40 0)\\" href=\\"#sprite\\"/><rect fill=\\"url(#paint)\\" x=\\"60\\" y=\\"60\\" height=\\"30\\" width=\\"30\\"/><text x=\\"001.00\\" y=\\"095.00\\"> A <tspan> B </tspan> C </text></svg>"`;
+
+exports[`ConfigCacheTestCases optimization minimize-xml minimize-xml should compile: constraints 1`] = `"<!DOCTYPE svg [<!ATTLIST g style CDATA #FIXED \\"fill: #ff0000\\"><!ATTLIST path d CDATA #FIXED \\"M000.00 000.00L001.00 002.00\\"><!ATTLIST rect fill CDATA #FIXED \\"#ff0000\\">]><svg xmlns=\\"http://www.w3.org/2000/svg\\"><g style=\\"fill: #ff0000\\"><path d=\\"M000.00 000.00L001.00 002.00\\"/></g><rect fill=\\"#ff0000\\" x=\\"1\\" y=\\"2\\" width=\\"3\\" height=\\"4\\" style=\\"stroke:red\\"/></svg>"`;
+
+exports[`ConfigCacheTestCases optimization minimize-xml minimize-xml should compile: containers 1`] = `"<svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 100 100\\"><title>Geometry and colors</title><defs><linearGradient id=\\"paint\\" gradientTransform=\\"translate(+000.00, 000.00)\\"><stop stop-color=\\"#ff0000\\"/><stop offset=\\"1\\" stop-color=\\"rgb(0, 0, 255)\\"/></linearGradient></defs><switch><g/><rect x=\\"90\\" y=\\"0\\" width=\\"10\\" height=\\"10\\" fill=\\"#0000ff\\"/></switch><g id=\\"sprite\\"><path fill=\\"#ff0000\\" stroke=\\"rgb(0, 0, 255)\\" transform=\\"translate(+001.00, 0002.00) rotate(000.00)\\" d=\\"M +000.00, 000.00 L 0020.00, 000.00 A 0010.00, 0010.00, 000.00, 01, 0020.00, 0020.00 z\\"/></g><path id=\\"segments\\" fill=\\"none\\" stroke=\\"black\\" d=\\"M 10 20 L 15 -25 L 20 -30 l .5 .5 l .5 .5 C 1 2 3 4 5 6 C 7 8 9 10 11 12 A 10 20 30 0 1 40 50 A 10 20 30 1 0 .5 -.5 Z M 30 40 L 50 60 Z\\"/><use href=\\"#sprite\\" transform=\\"translate(040.00, 000.00)\\"/><rect x=\\"060.00\\" y=\\"060.00\\" width=\\"030.00\\" height=\\"030.00\\" fill=\\"url(#paint)\\"/><text x=\\"001.00\\" y=\\"095.00\\"> A <tspan> B </tspan> C </text></svg>"`;
 
 exports[`ConfigCacheTestCases optimization minimize-xml minimize-xml should compile: disabled 1`] = `
 "<?xml version=\\"1.0\\" encoding=\\"UTF-8\\"?>
@@ -54,10 +94,26 @@ exports[`ConfigCacheTestCases optimization minimize-xml minimize-xml should comp
 "
 `;
 
+exports[`ConfigCacheTestCases optimization minimize-xml minimize-xml should compile: numbers 1`] = `"<svg viewBox=\\"0 0 10 10\\" xmlns=\\"http://www.w3.org/2000/svg\\"><style>polygon{fill:red}</style><rect x=\\".5px\\" height=\\"7.5\\" width=\\"8\\" y=\\"1.25\\"/><polygon id=\\"shape\\" points=\\"1 2 3.5 4.5\\"/><text x=\\"001.00\\"> A <tspan> B </tspan> C </text></svg>"`;
+
 exports[`ConfigCacheTestCases optimization minimize-xml minimize-xml should compile: object 1`] = `
 "<?xml version=\\"1.0\\" encoding=\\"UTF-8\\"?><svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 10 10\\">
 	<style>.dot{fill:red;-webkit-user-select:none;user-select:none}</style>
 	<circle class=\\"dot\\" cx=\\"5\\" cy=\\"5\\" r=\\"4\\"/>
+</svg>"
+`;
+
+exports[`ConfigCacheTestCases optimization minimize-xml minimize-xml should compile: paths 1`] = `
+"<svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 100 100\\">
+  <title>Geometry and colors</title>
+  <defs><linearGradient id=\\"paint\\" gradientTransform=\\"translate(+000.00, 000.00)\\"><stop stop-color=\\"#ff0000\\"/><stop offset=\\"1\\" stop-color=\\"rgb(0, 0, 255)\\"/></linearGradient></defs>
+  <g><defs/><g xmlns:unused=\\"urn:unused\\"/></g>
+  <switch><g/><rect x=\\"90\\" y=\\"0\\" width=\\"10\\" height=\\"10\\" fill=\\"#0000ff\\"/></switch>
+  <g id=\\"sprite\\"><path fill=\\"#ff0000\\" stroke=\\"rgb(0, 0, 255)\\" transform=\\"translate(+001.00, 0002.00) rotate(000.00)\\" d=\\"M0 0 20 0A10 10 0 0120 20z\\"/></g>
+  <path id=\\"segments\\" fill=\\"none\\" stroke=\\"black\\" d=\\"M10 20 15-25 20-30l.5.5.5.5C1 2 3 4 5 6 7 8 9 10 11 12A10 20 30 0140 50 10 20 30 10.5-.5ZM30 40 50 60Z\\"/>
+  <use href=\\"#sprite\\" transform=\\"translate(040.00, 000.00)\\"/>
+  <rect x=\\"060.00\\" y=\\"060.00\\" width=\\"030.00\\" height=\\"030.00\\" fill=\\"url(#paint)\\"/>
+  <text x=\\"001.00\\" y=\\"095.00\\"> A <tspan> B </tspan> C </text>
 </svg>"
 `;
 
@@ -67,3 +123,5 @@ exports[`ConfigCacheTestCases optimization minimize-xml minimize-xml should comp
 	<circle class=\\"dot\\" cx=\\"5\\" cy=\\"5\\" r=\\"4\\"/>
 </svg>"
 `;
+
+exports[`ConfigCacheTestCases optimization minimize-xml minimize-xml should compile: whitespace 1`] = `"<svg viewBox=\\"0 0 10 10\\" xmlns=\\"http://www.w3.org/2000/svg\\" xmlns:data=\\"urn:application\\"><title>Accessible title</title><desc>Accessible description</desc><defs><path d=\\"M0 0h10v10z\\" id=\\"shape\\"/></defs><use data:flag=\\"keep\\" href=\\"#shape\\" style=\\"fill:red\\"/><text>]]&gt;</text></svg>"`;

@@ -526,6 +526,162 @@ const IMPLIED_END_TAG_ELEMENTS = [
 /** @type {ParserTable[]} */
 const PARSER_TABLES = [
 	[
+		"SVG_COLOR_ATTRIBUTES",
+		"set",
+		"SVG presentation attributes accepting a color; paint servers and context-dependent values are left untouched.",
+		["color", "fill", "stroke", "stop-color", "flood-color", "lighting-color"]
+	],
+	[
+		"SVG_EMPTY_CONTAINERS",
+		"set",
+		"Empty SVG containers with only namespace declarations can be omitted when structural cleanup is explicitly enabled.",
+		["g", "defs"]
+	],
+	[
+		"SVG_TRANSFORM_ARGUMENTS",
+		"object",
+		"SVG 1.1 transform functions and their allowed argument counts.",
+		[
+			["matrix", "6"],
+			["translate", "1 2"],
+			["scale", "1 2"],
+			["rotate", "1 3"],
+			["skewX", "1"],
+			["skewY", "1"]
+		]
+	],
+	[
+		"SVG_PATH_ARGUMENTS",
+		"object",
+		"SVG path commands and the number of arguments in each repeated segment.",
+		[
+			["M", "2"],
+			["L", "2"],
+			["H", "1"],
+			["V", "1"],
+			["C", "6"],
+			["S", "4"],
+			["Q", "4"],
+			["T", "2"],
+			["A", "7"],
+			["Z", "0"]
+		]
+	],
+	[
+		"SVG_NUMERIC_ATTRIBUTES",
+		"byElement",
+		"Conservative SVG geometry attribute allowlist; IDL also exposes lengths with text and list semantics that these rewrites leave untouched.",
+		[
+			...[
+				["svg", "x y width height"],
+				["rect", "x y width height rx ry"],
+				["circle", "cx cy r"],
+				["ellipse", "cx cy rx ry"],
+				["line", "x1 y1 x2 y2"],
+				["image", "x y width height"],
+				["use", "x y width height"],
+				["linearGradient", "x1 y1 x2 y2"],
+				["radialGradient", "cx cy r fx fy"],
+				["mask", "x y width height"],
+				["pattern", "x y width height"],
+				["filter", "x y width height"]
+			].reduce((entries, [tag, names]) => {
+				for (const name of names.split(" ")) {
+					entries.push([`${tag} ${name}`, "length"]);
+				}
+				return entries;
+			}, /** @type {[string, string][]} */ ([])),
+			...[
+				"path",
+				"rect",
+				"circle",
+				"ellipse",
+				"line",
+				"polygon",
+				"polyline"
+			].map(
+				(tag) =>
+					/** @type {[string, string]} */ ([`${tag} pathLength`, "number"])
+			),
+			...["svg", "symbol", "marker", "pattern", "view"].map(
+				(tag) => /** @type {[string, string]} */ ([`${tag} viewBox`, "viewBox"])
+			),
+			["polygon points", "points"],
+			["polyline points", "points"],
+			["path d", "path"],
+			...[
+				"svg",
+				"g",
+				"a",
+				"switch",
+				"defs",
+				"symbol",
+				"use",
+				"rect",
+				"circle",
+				"ellipse",
+				"line",
+				"path",
+				"polygon",
+				"polyline",
+				"text",
+				"image",
+				"foreignObject",
+				"clipPath",
+				"mask",
+				"marker",
+				"pattern"
+			].map(
+				(tag) =>
+					/** @type {[string, string]} */ ([`${tag} transform`, "transform"])
+			),
+			["linearGradient gradientTransform", "transform"],
+			["radialGradient gradientTransform", "transform"],
+			["pattern patternTransform", "transform"]
+		]
+	],
+	[
+		"SVG_LENGTH_UNITS",
+		"set",
+		"SVG 1.1 length suffixes; unknown CSS extensions are preserved rather than interpreted as geometry.",
+		["", "%", "em", "ex", "px", "in", "cm", "mm", "pt", "pc"]
+	],
+	[
+		"SVG_WHITESPACE_CONTAINERS",
+		"set",
+		"SVG containers with no rendered character data. Text, descriptive, foreign and unknown elements remain opaque to whitespace cleanup.",
+		[
+			"svg",
+			"g",
+			"defs",
+			"symbol",
+			"clipPath",
+			"mask",
+			"marker",
+			"pattern",
+			"linearGradient",
+			"radialGradient",
+			"filter"
+		]
+	],
+	[
+		"SVG_EDITOR_NAMESPACES",
+		"set",
+		"Editor-specific SVG data namespaces, not described by webref. Generic RDF and licensing vocabularies are not editor data.",
+		[
+			"http://www.inkscape.org/namespaces/inkscape",
+			"http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd",
+			"http://inkscape.sourceforge.net/DTD/sodipodi-0.dtd",
+			"http://krita.org/namespaces/svg/krita",
+			"http://ns.adobe.com/AdobeIllustrator/10.0/",
+			"http://ns.adobe.com/Extensibility/1.0/",
+			"http://ns.adobe.com/SaveForWeb/1.0/",
+			"http://schemas.microsoft.com/visio/2003/SVGExtensions/",
+			"http://www.bohemiancoding.com/sketch/ns",
+			"http://www.figma.com/figma/ns"
+		]
+	],
+	[
 		"VOID",
 		"set",
 		"§13.1.2 void elements: no end tag, and no children to close one over.",

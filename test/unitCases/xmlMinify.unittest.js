@@ -15,6 +15,52 @@ const SOURCE = `<?xml version="1.0" encoding="UTF-8"?>
 `;
 
 describe("xmlMinify", () => {
+	it.each([false, true])("should forward presentation, path, transform and container cleanup with enabled=%s", async (enabled) => {
+		const source = '<svg xmlns="http://www.w3.org/2000/svg"><g/><path fill="#ff0000" d="M000.00,000.00L001.00,002.00" transform="scale(001.00)"/><style>path { stroke: #ffffff }</style></svg>';
+		const options = { shortenColors: enabled, shortenNumbers: enabled, shortenPathData: enabled, removeEmptyElements: enabled };
+		const once = (await xmlMinify({ 'image.svg': source }, undefined, options)).code;
+		expect(once).toBe(`<svg xmlns="http://www.w3.org/2000/svg">${enabled ? '' : '<g/>'}<path fill="${enabled ? 'red' : '#ff0000'}" d="${enabled ? 'M0 0 1 2' : 'M000.00,000.00L001.00,002.00'}" transform="${enabled ? 'scale(1)' : 'scale(001.00)'}"/><style>path{stroke:#fff}</style></svg>`);
+		expect((await xmlMinify({ 'image.svg': once }, undefined, options)).code).toBe(once);
+	});
+	it("should preserve the CSS color transform option in SVG presentation attributes", async () => {
+		const source = '<svg xmlns="http://www.w3.org/2000/svg" fill="#ff0000"/>';
+		expect((await xmlMinify({ 'image.svg': source }, undefined, { shortenColors: true, css: { shortenColors: false } })).code).toBe(source);
+	});
+	it.each([false, true])("should forward numeric cleanup with enabled=%s and embedded CSS", async (shortenNumbers) => {
+		const source = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 0010.00 0010.00"><style>rect { fill: #ff0000 }</style><rect x="+001.00" style="stroke: #00ff00"/></svg>';
+		const options = { shortenNumbers };
+		const { code } = await xmlMinify({ "image.svg": source }, undefined, options);
+		expect(code).toBe(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="${shortenNumbers ? '0 0 10 10' : '0 0 0010.00 0010.00'}"><style>rect{fill:red}</style><rect x="${shortenNumbers ? '1' : '+001.00'}" style="stroke:#0f0"/></svg>`);
+		expect((await xmlMinify({ "image.svg": code }, undefined, options)).code).toBe(code);
+	});
+	it.each([false, true])("should forward SVG whitespace cleanup with enabled=%s", async (collapseWhitespace) => {
+		const source = '<svg xmlns="http://www.w3.org/2000/svg">\n <g class="" id="" style=""> </g>\n <text> A  <tspan> B </tspan> C </text>\n</svg>';
+		const options = { collapseWhitespace };
+		const { code } = await xmlMinify({ "image.svg": Buffer.from(source) }, undefined, options);
+		expect(code).toBe(collapseWhitespace ? '<svg xmlns="http://www.w3.org/2000/svg"><g class="" id="" style=""/><text> A  <tspan> B </tspan> C </text></svg>' : source);
+		expect((await xmlMinify({ "image.svg": code }, undefined, options)).code).toBe(code);
+	});
+	it("should remove metadata and editor data independently", async () => {
+		const source = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:e="http://www.inkscape.org/namespaces/inkscape" e:version="1"><metadata>editor</metadata><e:view/><path/></svg>';
+		for (const removeMetadata of [false, true]) {
+			for (const removeEditorData of [false, true]) {
+				const { code } = await xmlMinify({ "image.svg": source }, undefined, { removeMetadata, removeEditorData });
+				expect(code).toBe(`<svg xmlns="http://www.w3.org/2000/svg" xmlns:e="http://www.inkscape.org/namespaces/inkscape"${removeEditorData ? "" : ' e:version="1"'}>${removeMetadata ? "" : "<metadata>editor</metadata>"}${removeEditorData ? "" : "<e:view/>"}<path/></svg>`);
+			}
+		}
+	});
+
+	it("should forward independent namespace and empty-attribute options", async () => {
+		const source = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:unused="urn:unused"><g class="" id="" style="/* empty */"/></svg>';
+		for (const removeUnusedNamespaces of [false, true]) {
+			for (const removeEmptyAttributes of [false, true]) {
+				const { code } = await xmlMinify({ "image.svg": source }, undefined, { removeUnusedNamespaces, removeEmptyAttributes });
+				expect(code).toBe(`<svg xmlns="http://www.w3.org/2000/svg"${removeUnusedNamespaces ? "" : ' xmlns:unused="urn:unused"'}><g${removeEmptyAttributes ? "" : ' class="" id="" style=""'}/></svg>`);
+				expect((await xmlMinify({ "image.svg": code }, undefined, { removeUnusedNamespaces, removeEmptyAttributes })).code).toBe(code);
+			}
+		}
+	});
+
 	it("should minify the document and the stylesheets it holds", async () => {
 		const { code } = await xmlMinify({ "image.svg": SOURCE });
 		expect(code).toMatchSnapshot();

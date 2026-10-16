@@ -3454,6 +3454,51 @@ export interface OptimizationMinimizeOptions {
  */
 export interface OptimizationMinimizeXml {
 	/**
+	 * Remove whitespace-only text in known SVG containers, preserving text content, foreign content and `xml:space`. Off by default because scripts can observe whitespace nodes.
+	 * @since 5.113.0
+	 */
+	collapseWhitespace?: boolean;
+	/**
+	 * Remove elements and attributes in known editor namespaces within SVG, preserving namespace declarations and unrelated XML data. Off by default because editor data may be needed to edit the image.
+	 * @since 5.113.0
+	 */
+	removeEditorData?: boolean;
+	/**
+	 * Remove empty `class`, `id` and `style` attributes on SVG elements unless the DTD declares them. Off by default because selectors and scripts can observe attribute presence.
+	 * @since 5.113.0
+	 */
+	removeEmptyAttributes?: boolean;
+	/**
+	 * Remove empty SVG `g` and `defs` containers having only namespace declarations, preserving other attributes and DTD defaults. Off by default because selectors and scripts can observe document structure.
+	 * @since 5.113.0
+	 */
+	removeEmptyElements?: boolean;
+	/**
+	 * Remove SVG `metadata` elements and their contents, preserving `title`, `desc` and the document element. Off by default because metadata can carry licensing and application data.
+	 * @since 5.113.0
+	 */
+	removeMetadata?: boolean;
+	/**
+	 * Remove unused prefixed namespace declarations within SVG, preserving default namespaces and prefixes referenced in names or content. Off by default because scripts can observe namespace declarations.
+	 * @since 5.113.0
+	 */
+	removeUnusedNamespaces?: boolean;
+	/**
+	 * Shorten opaque SVG presentation colors using the CSS minifier, preserving paint servers, contextual colors and DTD-declared values. Off by default because selectors and scripts can observe attribute spelling.
+	 * @since 5.113.0
+	 */
+	shortenColors?: boolean;
+	/**
+	 * Shorten SVG geometry and transform decimals and separators without rounding, changing units or rewriting exponent notation. Preserve DTD-declared values; off by default because selectors and scripts can observe attribute spelling.
+	 * @since 5.113.0
+	 */
+	shortenNumbers?: boolean;
+	/**
+	 * Compact SVG path numbers, repeated commands and separators without rounding or changing segments, preserving arc flags and DTD-declared values. Off by default because selectors and scripts can observe attribute spelling.
+	 * @since 5.113.0
+	 */
+	shortenPathData?: boolean;
+	/**
 	 * Print attributes with the document's commonest names first, breaking ties by case-sensitive name. Off by default: consumers observing attribute order see the new order.
 	 * @since 5.112.0
 	 */

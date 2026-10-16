@@ -12893,6 +12893,123 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "optimization-minimize-options-xml-collapse-whitespace": Object {
+    "configs": Array [
+      Object {
+        "description": "Remove whitespace-only text in known SVG containers, preserving text content, foreign content and \`xml:space\`. Off by default because scripts can observe whitespace nodes.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.xml.collapseWhitespace",
+        "type": "boolean",
+      },
+    ],
+    "description": "Remove whitespace-only text in known SVG containers, preserving text content, foreign content and \`xml:space\`. Off by default because scripts can observe whitespace nodes.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-options-xml-remove-editor-data": Object {
+    "configs": Array [
+      Object {
+        "description": "Remove elements and attributes in known editor namespaces within SVG, preserving namespace declarations and unrelated XML data. Off by default because editor data may be needed to edit the image.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.xml.removeEditorData",
+        "type": "boolean",
+      },
+    ],
+    "description": "Remove elements and attributes in known editor namespaces within SVG, preserving namespace declarations and unrelated XML data. Off by default because editor data may be needed to edit the image.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-options-xml-remove-empty-attributes": Object {
+    "configs": Array [
+      Object {
+        "description": "Remove empty \`class\`, \`id\` and \`style\` attributes on SVG elements unless the DTD declares them. Off by default because selectors and scripts can observe attribute presence.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.xml.removeEmptyAttributes",
+        "type": "boolean",
+      },
+    ],
+    "description": "Remove empty \`class\`, \`id\` and \`style\` attributes on SVG elements unless the DTD declares them. Off by default because selectors and scripts can observe attribute presence.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-options-xml-remove-empty-elements": Object {
+    "configs": Array [
+      Object {
+        "description": "Remove empty SVG \`g\` and \`defs\` containers having only namespace declarations, preserving other attributes and DTD defaults. Off by default because selectors and scripts can observe document structure.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.xml.removeEmptyElements",
+        "type": "boolean",
+      },
+    ],
+    "description": "Remove empty SVG \`g\` and \`defs\` containers having only namespace declarations, preserving other attributes and DTD defaults. Off by default because selectors and scripts can observe document structure.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-options-xml-remove-metadata": Object {
+    "configs": Array [
+      Object {
+        "description": "Remove SVG \`metadata\` elements and their contents, preserving \`title\`, \`desc\` and the document element. Off by default because metadata can carry licensing and application data.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.xml.removeMetadata",
+        "type": "boolean",
+      },
+    ],
+    "description": "Remove SVG \`metadata\` elements and their contents, preserving \`title\`, \`desc\` and the document element. Off by default because metadata can carry licensing and application data.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-options-xml-remove-unused-namespaces": Object {
+    "configs": Array [
+      Object {
+        "description": "Remove unused prefixed namespace declarations within SVG, preserving default namespaces and prefixes referenced in names or content. Off by default because scripts can observe namespace declarations.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.xml.removeUnusedNamespaces",
+        "type": "boolean",
+      },
+    ],
+    "description": "Remove unused prefixed namespace declarations within SVG, preserving default namespaces and prefixes referenced in names or content. Off by default because scripts can observe namespace declarations.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-options-xml-shorten-colors": Object {
+    "configs": Array [
+      Object {
+        "description": "Shorten opaque SVG presentation colors using the CSS minifier, preserving paint servers, contextual colors and DTD-declared values. Off by default because selectors and scripts can observe attribute spelling.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.xml.shortenColors",
+        "type": "boolean",
+      },
+    ],
+    "description": "Shorten opaque SVG presentation colors using the CSS minifier, preserving paint servers, contextual colors and DTD-declared values. Off by default because selectors and scripts can observe attribute spelling.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-options-xml-shorten-numbers": Object {
+    "configs": Array [
+      Object {
+        "description": "Shorten SVG geometry and transform decimals and separators without rounding, changing units or rewriting exponent notation. Preserve DTD-declared values; off by default because selectors and scripts can observe attribute spelling.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.xml.shortenNumbers",
+        "type": "boolean",
+      },
+    ],
+    "description": "Shorten SVG geometry and transform decimals and separators without rounding, changing units or rewriting exponent notation. Preserve DTD-declared values; off by default because selectors and scripts can observe attribute spelling.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-options-xml-shorten-path-data": Object {
+    "configs": Array [
+      Object {
+        "description": "Compact SVG path numbers, repeated commands and separators without rounding or changing segments, preserving arc flags and DTD-declared values. Off by default because selectors and scripts can observe attribute spelling.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.xml.shortenPathData",
+        "type": "boolean",
+      },
+    ],
+    "description": "Compact SVG path numbers, repeated commands and separators without rounding or changing segments, preserving arc flags and DTD-declared values. Off by default because selectors and scripts can observe attribute spelling.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "optimization-minimize-options-xml-sort-attributes": Object {
     "configs": Array [
       Object {
@@ -12919,6 +13036,123 @@ Object {
       },
     ],
     "description": "Minimize \`.svg\` and \`.xml\` assets: \`false\` disables it, an object enables it. Absent means off unless \`experiments.futureDefaults\` is set.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-xml-collapse-whitespace": Object {
+    "configs": Array [
+      Object {
+        "description": "Remove whitespace-only text in known SVG containers, preserving text content, foreign content and \`xml:space\`. Off by default because scripts can observe whitespace nodes.",
+        "multiple": false,
+        "path": "optimization.minimize.xml.collapseWhitespace",
+        "type": "boolean",
+      },
+    ],
+    "description": "Remove whitespace-only text in known SVG containers, preserving text content, foreign content and \`xml:space\`. Off by default because scripts can observe whitespace nodes.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-xml-remove-editor-data": Object {
+    "configs": Array [
+      Object {
+        "description": "Remove elements and attributes in known editor namespaces within SVG, preserving namespace declarations and unrelated XML data. Off by default because editor data may be needed to edit the image.",
+        "multiple": false,
+        "path": "optimization.minimize.xml.removeEditorData",
+        "type": "boolean",
+      },
+    ],
+    "description": "Remove elements and attributes in known editor namespaces within SVG, preserving namespace declarations and unrelated XML data. Off by default because editor data may be needed to edit the image.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-xml-remove-empty-attributes": Object {
+    "configs": Array [
+      Object {
+        "description": "Remove empty \`class\`, \`id\` and \`style\` attributes on SVG elements unless the DTD declares them. Off by default because selectors and scripts can observe attribute presence.",
+        "multiple": false,
+        "path": "optimization.minimize.xml.removeEmptyAttributes",
+        "type": "boolean",
+      },
+    ],
+    "description": "Remove empty \`class\`, \`id\` and \`style\` attributes on SVG elements unless the DTD declares them. Off by default because selectors and scripts can observe attribute presence.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-xml-remove-empty-elements": Object {
+    "configs": Array [
+      Object {
+        "description": "Remove empty SVG \`g\` and \`defs\` containers having only namespace declarations, preserving other attributes and DTD defaults. Off by default because selectors and scripts can observe document structure.",
+        "multiple": false,
+        "path": "optimization.minimize.xml.removeEmptyElements",
+        "type": "boolean",
+      },
+    ],
+    "description": "Remove empty SVG \`g\` and \`defs\` containers having only namespace declarations, preserving other attributes and DTD defaults. Off by default because selectors and scripts can observe document structure.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-xml-remove-metadata": Object {
+    "configs": Array [
+      Object {
+        "description": "Remove SVG \`metadata\` elements and their contents, preserving \`title\`, \`desc\` and the document element. Off by default because metadata can carry licensing and application data.",
+        "multiple": false,
+        "path": "optimization.minimize.xml.removeMetadata",
+        "type": "boolean",
+      },
+    ],
+    "description": "Remove SVG \`metadata\` elements and their contents, preserving \`title\`, \`desc\` and the document element. Off by default because metadata can carry licensing and application data.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-xml-remove-unused-namespaces": Object {
+    "configs": Array [
+      Object {
+        "description": "Remove unused prefixed namespace declarations within SVG, preserving default namespaces and prefixes referenced in names or content. Off by default because scripts can observe namespace declarations.",
+        "multiple": false,
+        "path": "optimization.minimize.xml.removeUnusedNamespaces",
+        "type": "boolean",
+      },
+    ],
+    "description": "Remove unused prefixed namespace declarations within SVG, preserving default namespaces and prefixes referenced in names or content. Off by default because scripts can observe namespace declarations.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-xml-shorten-colors": Object {
+    "configs": Array [
+      Object {
+        "description": "Shorten opaque SVG presentation colors using the CSS minifier, preserving paint servers, contextual colors and DTD-declared values. Off by default because selectors and scripts can observe attribute spelling.",
+        "multiple": false,
+        "path": "optimization.minimize.xml.shortenColors",
+        "type": "boolean",
+      },
+    ],
+    "description": "Shorten opaque SVG presentation colors using the CSS minifier, preserving paint servers, contextual colors and DTD-declared values. Off by default because selectors and scripts can observe attribute spelling.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-xml-shorten-numbers": Object {
+    "configs": Array [
+      Object {
+        "description": "Shorten SVG geometry and transform decimals and separators without rounding, changing units or rewriting exponent notation. Preserve DTD-declared values; off by default because selectors and scripts can observe attribute spelling.",
+        "multiple": false,
+        "path": "optimization.minimize.xml.shortenNumbers",
+        "type": "boolean",
+      },
+    ],
+    "description": "Shorten SVG geometry and transform decimals and separators without rounding, changing units or rewriting exponent notation. Preserve DTD-declared values; off by default because selectors and scripts can observe attribute spelling.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-xml-shorten-path-data": Object {
+    "configs": Array [
+      Object {
+        "description": "Compact SVG path numbers, repeated commands and separators without rounding or changing segments, preserving arc flags and DTD-declared values. Off by default because selectors and scripts can observe attribute spelling.",
+        "multiple": false,
+        "path": "optimization.minimize.xml.shortenPathData",
+        "type": "boolean",
+      },
+    ],
+    "description": "Compact SVG path numbers, repeated commands and separators without rounding or changing segments, preserving arc flags and DTD-declared values. Off by default because selectors and scripts can observe attribute spelling.",
     "multiple": false,
     "simpleType": "boolean",
   },
