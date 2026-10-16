@@ -3513,8 +3513,24 @@ describe("parseHtml", () => {
 		it("should preserve packed arc flags, implicit segments and exact path precision", () => {
 			const source = `<svg xmlns="${svg}"><path d="M000.00,000.00 0001.00,0002.00L000.500.500A001.00 002.00 0 0110.00 20.00l+09007199254740993.00 -000.00e+03"/></svg>`;
 			const once = new SourceProcessor().process(source, compact).code;
-			expect(once).toBe(`<svg xmlns="${svg}"><path d="M0 0 1 2 .5.5A1 2 0 0110 20l9007199254740993-000.00e+03"/></svg>`);
+			expect(once).toBe(`<svg xmlns="${svg}"><path d="M0 0 1 2 .5.5A1 2 0 0110 20h9007199254740993"/></svg>`);
 			expect(new SourceProcessor().process(once, compact).code).toBe(once);
+		});
+
+		it.each([
+			['M0 0l0 80-112 0', 'M0 0v80h-112'],
+			['M0 0l1 2 0 3 4 0 5 6', 'M0 0l1 2v3h4l5 6'],
+			['m1 1 2 2l0 1', 'm1 1 2 2v1'],
+			['M0 0h1l0 2', 'M0 0h1v2'],
+			['M0 0l-0 5 .0e9 6', 'M0 0v5 6'],
+			['M0 0l1e-400 2', 'M0 0l1e-400 2'],
+			['M0 0 L0 5', 'M0 0 0 5']
+		])("should write a relative lineto with a zero offset as h or v in %s", (value, expected) => {
+			const source = `<svg xmlns="${svg}"><path d="${value}"/></svg>`;
+			const processor = new SourceProcessor();
+			const once = processor.process(source, compact).code;
+			expect(once).toBe(`<svg xmlns="${svg}"><path d="${expected}"/></svg>`);
+			expect(processor.process(once, compact).code).toBe(once);
 		});
 
 		it.each([
