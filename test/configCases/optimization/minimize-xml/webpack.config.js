@@ -13,6 +13,15 @@ const config = (name, options) => ({
 		filename: `${name}.js`,
 		assetModuleFilename: `${name}[ext]`
 	},
+	module: {
+		rules: [
+			{
+				test: /animated\.svg$/,
+				type: "asset/resource",
+				generator: { filename: "animated.svg" }
+			}
+		]
+	},
 	...options,
 	optimization: { minimize: true, minimizer: ["..."], ...options.optimization }
 });

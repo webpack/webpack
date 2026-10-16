@@ -3505,7 +3505,7 @@ describe("parseHtml", () => {
 			expect(new SourceProcessor().process(once, compact).code).toBe(once);
 		});
 
-		it.each(['L001 002', 'M', 'M0', 'M0,', 'M0 0,', 'M,0 0', 'M0 0,L1 2', 'M0 0L1', 'M0 0R1 2', 'M0 0Z1 2', 'M0 0L1e 2', 'M0 0A-1 1 0 0 1 2 3', 'M0 0A1 1 0 2 1 2 3', 'M0 0A1 1 0 1.0 1 2 3', 'M0 0A1 1 0 0 1 2', 'M0 0L1,,2', 'M0 0L1 2L', 'M0 0C1 2 3 4 5 6C7 8', 'M0 0A1 1 0 011 2A1 1 0 0', 'M0 0ZL', 'M000 000\u017f001 002 003 004'])('should preserve invalid or unsupported path syntax %s', (value) => {
+		it.each(['L001 002', 'M', 'M0', 'M0,', 'M0 0,', 'M,0 0', 'M0 0,L1 2', 'M0 0L1', 'M0 0R1 2', 'M0 0Z1 2', 'M0 0L1e 2', 'M0 0A-1 1 0 0 1 2 3', 'M0 0A1 1 0 2 1 2 3', 'M0 0A1 1 0 1.0 1 2 3', 'M0 0A1 1 0 0 1 2', 'M0 0L1,,2', 'M0 0L1 2L', 'M0 0C1 2 3 4 5 6C7 8', 'M0 0A1 1 0 011 2A1 1 0 0', 'M0 0ZL', 'M000 000\u017f001 002 003 004', 'M000 000L000 005L', 'M000 000L000 005\u017f001 002 003 004'])('should preserve invalid or unsupported path syntax %s', (value) => {
 			const source = `<svg xmlns="${svg}"><path d="${value}"/></svg>`;
 			expect(new SourceProcessor().process(source, compact).code).toBe(source);
 		});
@@ -3524,13 +3524,93 @@ describe("parseHtml", () => {
 			['M0 0h1l0 2', 'M0 0h1v2'],
 			['M0 0l-0 5 .0e9 6', 'M0 0v5 6'],
 			['M0 0l1e-400 2', 'M0 0l1e-400 2'],
-			['M0 0 L0 5', 'M0 0 0 5']
+			['M0 0 L0 5', 'M0 0V5']
 		])("should write a relative lineto with a zero offset as h or v in %s", (value, expected) => {
 			const source = `<svg xmlns="${svg}"><path d="${value}"/></svg>`;
 			const processor = new SourceProcessor();
 			const once = processor.process(source, compact).code;
 			expect(once).toBe(`<svg xmlns="${svg}"><path d="${expected}"/></svg>`);
 			expect(processor.process(once, compact).code).toBe(once);
+		});
+
+		it.each([
+			['M10 20 L10 30 L40 30 L40 50', 'M10 20V30H40V50'],
+			['M10 20 L10 30 10 40 50 40', 'M10 20V30 40H50'],
+			['M0 0 L0 0 L0 0', 'M0 0V0 0'],
+			['M1 2 H3 L3 4 V5 L6 5', 'M1 2H3V4 5H6'],
+			['M1 2 3 4 L3 5', 'M1 2 3 4V5'],
+			['M1 2 C3 4 5 6 7 8 L7 9', 'M1 2C3 4 5 6 7 8V9'],
+			['M1 2 S3 4 5 6 L7 6', 'M1 2S3 4 5 6H7'],
+			['M1 2 Q3 4 5 6 L5 7', 'M1 2Q3 4 5 6V7'],
+			['M1 2 T3 4 L5 4', 'M1 2T3 4H5'],
+			['M1 2 A3 4 0 0 1 5 6 L5 7', 'M1 2A3 4 0 015 6V7'],
+			['M1 2 L3 4 Z L1 5', 'M1 2 3 4ZV5'],
+			['M1 2 L3 4 z L6 2', 'M1 2 3 4zH6'],
+			['M1 2 M3 4 L3 5 Z L6 4', 'M1 2M3 4V5ZH6'],
+			['M1 2 l3 4 L1 5 L1 6', 'M1 2l3 4L1 5V6'],
+			['m1 2 3 4 L1 5 L1 6', 'm1 2 3 4L1 5V6'],
+			['M1 2 h3 L1 4', 'M1 2h3L1 4'],
+			['M1 2 v3 L4 2', 'M1 2v3L4 2'],
+			['M1 2 c3 4 5 6 7 8 L1 9', 'M1 2c3 4 5 6 7 8L1 9'],
+			['M1 2 l3 4 Z L1 5', 'M1 2l3 4ZV5'],
+			['m1 2 L3 4 Z L1 5', 'm1 2L3 4ZL1 5'],
+			['M+001.00 -002.000 L1 -003.00 L4 -3', 'M1-2V-3H4'],
+			['M9007199254740993 2 L9007199254740993 3', 'M9007199254740993 2V3'],
+			['M9007199254740992 2 L9007199254740993 3', 'M9007199254740992 2 9007199254740993 3'],
+			['M1e-400 2 L1e-400 3', 'M1e-400 2V3'],
+			['M0 1e-400 L2 0', 'M0 1e-400 2 0'],
+			['M1e2 2 L100 3', 'M1e2 2 100 3'],
+			['M-0 2 L0 3', 'M-0 2 0 3']
+		])("should write an absolute lineto with a matching coordinate as H or V in %s", (value, expected) => {
+			const source = `<svg xmlns="${svg}"><path d="${value}"/></svg>`;
+			const processor = new SourceProcessor();
+			const once = processor.process(source, compact).code;
+			expect(once).toBe(`<svg xmlns="${svg}"><path d="${expected}"/></svg>`);
+			expect(processor.process(once, compact).code).toBe(once);
+			expect(processor.process(source, { ...compact, shortenSvgPathData: false }).code).toBe(source);
+		});
+
+		it.each([true, false])("should preserve animated path data and reset cleanup afterward with xml=%s", async (xml) => {
+			const value = 'M010 020L010 030L040 030l000 010';
+			const path = `<path id="p" d="${value}"/>`;
+			const animation = '<animate attributeName="d" to="M10 20L20 50L40 50l0 10" dur="2s"/>';
+			const options = { ...compact, xml };
+			const processor = new SourceProcessor();
+			for (const body of [
+				path.replace('/>', `>${animation}</path>`),
+				animation.replace('<animate ', '<animate href="#p" ') + path,
+				path + animation.replace('<animate ', '<animate xlink:href="#p" '),
+				path + animation.replace('attributeName="d"', 'attributeName="&#100;"'),
+				path + animation.replace('<animate ', '<set '),
+				`<style>@keyframes morph { to { d: path("M10 20L20 50L40 50l0 10") } }</style>${path}`,
+				`${path}<style>@keyframes morph { to { \\64 : path("M10 20L20 50L40 50l0 10") } }</style>`,
+				path.replace('id="p"', `id="p" style="D:var(--shape)"`),
+				path.replace('id="p"', `id="p" style="\\64 :var(--shape)"`)
+			]) {
+				const source = `<svg xmlns="${svg}" xmlns:xlink="http://www.w3.org/1999/xlink">${body}</svg>`;
+				const once = processor.process(source, options).code;
+				expect(once).toContain(`d="${value}"`);
+				expect(processor.process(once, options).code).toBe(once);
+				expect((await processor.processAsync(source, options)).code).toBe(once);
+			}
+			const source = `<svg xmlns="${svg}"><style>/* d */.icon{fill:red;content:'d'}</style><path d="M010 020L010 030L040 030"/></svg>`;
+			expect(processor.process(source, options).code).toContain('d="M10 20V30H40"');
+		});
+
+
+		it("should preserve SVG styles without interrupting an enclosing CSS data URL", () => {
+			const source = `<svg xmlns="${svg}"><metadata>removed</metadata><style>@keyframes morph{to{d:path("M10 20L20 50L40 50")}}</style><path d="M010 020L010 030L040 030"/></svg>`;
+			const css = `.icon { background: url("data:image/svg+xml,${encodeURIComponent(source)}"); color: red }`;
+			const render = builtinEmbeddedRenderer({ svg: { shortenPathData: true, removeMetadata: true } });
+			const info = { type: "css", hostType: "html" };
+			const result = render(css, info);
+			expect(typeof result).toBe("string");
+			const decoded = decodeURIComponent(result || "");
+			expect(decoded).toContain("M010 020L010 030L040 030");
+			expect(decoded).toContain(String.raw`@keyframes morph{to{d:path(\"M10 20L20 50L40 50\")}}`);
+			expect(decoded).toContain("color:red");
+			expect(decoded).not.toContain("<metadata>");
+			expect(render(result || "", info)).toBe(result);
 		});
 
 		it.each([
@@ -3561,7 +3641,7 @@ describe("parseHtml", () => {
 			const args = command.toUpperCase() === 'A' ? '1 2 3 014-0' : Array(count).fill('1').join(' ');
 			const source = `<svg xmlns="${svg}"><path d="M0 0 ${command}${args} ${command}${args}"/></svg>`;
 			const next = command.toUpperCase() === 'M' || count === 0 ? command : ' ';
-			const expected = `M0 0${command === 'L' ? ' ' : command}${args}${next}${args}`;
+			const expected = command === 'L' ? 'M0 0 1 1V1' : `M0 0${command}${args}${next}${args}`;
 			const processor = new SourceProcessor();
 			const once = processor.process(source, compact).code;
 			expect(once).toBe(`<svg xmlns="${svg}"><path d="${expected}"/></svg>`);
