@@ -4157,6 +4157,8 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 	describe("rounding and unit conversion", () => {
 		it.each([
 			["33.33333333%", "33.333333%"],
+			// No nine digits reach its float, so it stays as written.
+			["0.00032022017693075414%", ".00032022017693075414%"],
 			["1.0000001px", "1px"],
 			["400ms", ".4s"],
 			[".005s", "5ms"],
