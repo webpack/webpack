@@ -4,14 +4,19 @@
 
 // Cache compiled module bytecode on disk (available since Node.js 22.8)
 // eslint-disable-next-line n/no-unsupported-features/node-builtins
-const { enableCompileCache } = require("module");
+const { constants, enableCompileCache } = require("module");
 
 if (enableCompileCache) {
 	try {
-		const { directory } = enableCompileCache();
+		const { status, directory } = enableCompileCache();
 		// Minimizer workers and other child processes start without the cache;
-		// the variable Node reads at startup hands them the same directory.
-		if (directory && process.env.NODE_COMPILE_CACHE === undefined) {
+		// the variable Node reads at startup hands them the same directory. Only a
+		// fresh start returns the base directory, which children tag by version.
+		if (
+			// eslint-disable-next-line n/no-unsupported-features/node-builtins
+			status === constants.compileCacheStatus.ENABLED &&
+			process.env.NODE_COMPILE_CACHE === undefined
+		) {
 			process.env.NODE_COMPILE_CACHE = directory;
 		}
 	} catch (_error) {
