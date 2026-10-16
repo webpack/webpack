@@ -826,6 +826,42 @@ const IMPROVED_CASES = [
 		'function f(r){return out=r.O(),1}console.log(f({O:function(){return 2}}),out),function(){"use strict";try{missing={O:function(){return console.log("called"),2}}.O()}catch(e){console.log(e.name)}}();'
 	],
 	[
+		"a `var` only ever set to falsy constants, read where only its truthiness counts, as `false`",
+		"function m(e, y) { function c(t) { if (!s) return t + 1; var r = t * 2; return function () { return r; }; } e.c = c; e.p = function () { return y || 3; }; var s = !1; } var o = {}; m(o, 0); console.log(o.c(1), o.p());",
+		{ mangle: false },
+		"function m(e,y){e.c=function(t){return t+1},e.p=function(){return y||3}}var o={};m(o,0),console.log(o.c(1),o.p());"
+	],
+	[
+		"a write nothing reads dropped from a function done with, its statement too",
+		"function m(e) { var s; e.f = function () { return s || 3; }; e.g = function () { s = void 0; }; } var o = {}; m(o); o.g(); console.log(o.f());",
+		{ mangle: false },
+		"function m(e){e.f=function(){return 3},e.g=function(){}}var o={};m(o),o.g(),console.log(o.f());"
+	],
+	[
+		"an `if` throwing and the `throw` after it as one `throw` of a conditional",
+		"function f(a, b, c) { if (a) throw b; throw c; } try { f(1, 2, 3); } catch (e) { console.log(e); } try { f(0, 2, 3); } catch (e) { console.log(e); }",
+		{ mangle: false },
+		"function f(a,b,c){throw a?b:c}try{f(1,2,3)}catch(e){console.log(e)}try{f(0,2,3)}catch(e){console.log(e)}"
+	],
+	[
+		"an object literal spread into another as its properties, a function's as nothing",
+		"var a = 1, c = 3; var x = { a: a, ...{ b() { return 2; } }, c: c, ...function () {}, ...{ d: 4, ...{ e: 5 } } }; console.log(Object.keys(x).join(), x.b());",
+		{ mangle: false },
+		"var a=1,c=3,x={a:a,b:()=>2,c:c,d:4,e:5};console.log(Object.keys(x).join(),x.b());"
+	],
+	[
+		"`this` in a derived constructor past its `super()`, where it no longer throws",
+		"class A {} class B extends A { constructor(x) { super(); x ? this.b = 0 : this.b = 1; } } console.log(new B(1).b, new B(0).b);",
+		{ mangle: false },
+		"class A{}class B extends A{constructor(x){super(),this.b=+!x}}console.log(new B(1).b,new B(0).b);"
+	],
+	[
+		"a boolean compared loosely with a constant as itself or its negation",
+		"var a = 0, b = 1; console.log(!a === !0, !a === !1, !a != 1, !b == 0, !a == 2);",
+		{ mangle: false },
+		"var a=0,b=1;console.log(!a,!!a,!!a,!!b,2==!a);"
+	],
+	[
 		"a name read once, at the head of an optional chain, as its value",
 		"function f(o) { let n = o.g(); return n?.b; } function k(o) { var n = o.g; return n?.(1); } console.log(f({ g: () => ({ b: 1 }) }), f({ g: () => null }), k({ g: (x) => x }), k({}));",
 		{ mangle: false },
@@ -1607,7 +1643,7 @@ const KEPT_CASES = [
 	["a `let` copying a parameter a `var`, a pattern or a loop head writes later", "function g(...a) { return a.join(); } function f(a) { let x = a; var a = 2; return g(x); } function h(a) { let x = a; [a] = [2]; return g(x); } function k(a) { let x = a; for (a of [2]); return g(x, a); } console.log(f(1), h(1), k(1));"],
 	["a `let` copying a binding declared after it", "function f() { let b = c; let c = 1; return b; } try { console.log(f()); } catch (e) { console.log(e.name); }"],
 	["a `let` copying a longer name read more than once, where names keep their length", "function f(longBinding) { let x = longBinding; g(); return x + x + x; } function g() {} console.log(f(1));"],
-	["a `var` read once copying a parameter of a function called in place, whose argument terser writes in its place", "function* gen() { yield { ...(function (arg) { var y = arg; return { ...y }; })(yield) }; } var it = gen(); it.next(); console.log(it.next({ a: 1 }).value);"],
+	["a `var` read once copying a parameter of a function called in place, whose argument terser writes in its place", "function* gen() { yield { k: (function (arg) { var y = arg; return { ...y }; })(yield) }; } var it = gen(); it.next(); console.log(it.next({ a: 1 }).value.k);"],
 	["a `var` copying a parameter, read in a block declaring the parameter's name, or in a class of that name", "function f(b) { var a = b; g(b); { let b = 9; g(b); return [a, b]; } } function h(b) { var a = b; g(b); return new (class b { m() { return a; } })().m(); } function g() {} console.log(f(1), h(1));"],
 	["a `var` copying a `var` a loop sets again, read by a function inside", "var fns = []; function f(n) { for (var i = 0; i < n; i++) { var b = i * 2; var a = b; g(b); fns.push(function () { return a; }); } } function g() {} f(2); console.log(fns.map(function (h) { return h(); }));"],
 	["a `var` copying a `let` a loop declares each time round, read by a function inside", "var fns = []; function f(list) { for (let b of list) { var a = b; g(b); fns.push(function () { return a; }); } } function g() {} f([1, 2]); console.log(fns.map(function (h) { return h(); }));"],
@@ -4239,7 +4275,7 @@ describe("syntax-printer", () => {
 				corrections.enabled = false;
 				let ours;
 				try {
-					ours = await outcome(minify, settings());
+					ours = await unimproved(() => outcome(minify, settings()));
 				} finally {
 					corrections.enabled = true;
 				}
@@ -6388,7 +6424,8 @@ describe("syntax-printer", () => {
 		for (const [source, options] of variants) {
 			const ourOptions = /** @type {EXPECTED_ANY} */ (options());
 			const theirOptions = /** @type {EXPECTED_ANY} */ (options());
-			const ours = await minify(source, ourOptions);
+			// The improve phase reads an export no module writes as its value.
+			const ours = await unimproved(() => minify(source, ourOptions));
 			const theirs = await reference.minify(source, theirOptions);
 			expect([ourOptions.mangle, ours.code]).toEqual([
 				theirOptions.mangle,
@@ -8506,6 +8543,14 @@ describe("syntax-printer", () => {
 					'import"a";import{c}from"b";import"n";import defer*as r from"d";c();'
 				],
 				['import a from "a"; eval("a");', 'import a from"a";eval("a");'],
+				[
+					'import { a, b } from "x"; var u = { m: function () { return a; } }; function k() { return b; } export function f() { return 1; }',
+					'import"x";export function f(){return 1}'
+				],
+				[
+					'export var flag = true; export let n = 1; export function set() { n = 2; } export function f() { return [flag ? "a" : "b", n]; }',
+					'export var flag=!0;export let n=1;export function set(){n=2}export function f(){return["a",n]}'
+				],
 				["var a = 1; console.log(a);", "var a=1;console.log(a);"]
 			];
 			/** @type {import("terser").MinifyOptions} */
