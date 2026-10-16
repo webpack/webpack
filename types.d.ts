@@ -17222,7 +17222,7 @@ declare class JavascriptParser extends Parser {
 	/**
 	 * Whether a definition is a variable rather than a free name or a scope.
 	 */
-	static isVariableInfo(value: unknown): boolean;
+	static isVariableInfo(value?: string | VariableInfo | ScopeInfo): boolean;
 
 	/**
 	 * Returns parser.
@@ -22285,7 +22285,7 @@ declare interface NodeLike {
 	type: string;
 	start: number;
 	end: number;
-	loc?: any;
+	loc?: null | SourceLocation;
 	sourceFile?: string;
 	range?: [number, number];
 }
@@ -24924,18 +24924,18 @@ declare interface OptionsSyntaxParser {
 	/**
 	 * where tokens are reported
 	 */
-	onToken?: any[] | ((token?: any) => void);
+	onToken?:
+		((token: TokenSyntaxParserClass) => void) | TokenSyntaxParserClass[];
 
 	/**
 	 * the parser itself at each token, for a reader that copies what it needs rather than taking a token of its own
 	 */
-	onTokenRead?: (parser?: any) => void;
+	onTokenRead?: (parser: SyntaxParser) => void;
 
 	/**
 	 * where comments are reported
 	 */
 	onComment?:
-		| any[]
 		| ((
 				isBlock: boolean,
 				text: string,
@@ -24943,7 +24943,8 @@ declare interface OptionsSyntaxParser {
 				end: number,
 				startLoc?: null | Position,
 				endLoc?: null | Position
-		  ) => void);
+		  ) => void)
+		| CollectedComment[];
 
 	/**
 	 * whether nodes carry `range`
@@ -26208,10 +26209,14 @@ declare class ParserScope {
  * The `loc` a node carries when `options.locations` is on.
  */
 declare class ParserSourceLocation {
-	constructor(p: any, start?: null | PositionLike, end?: null | PositionLike);
+	constructor(
+		p: { sourceFile: null | string },
+		start?: null | PositionLike,
+		end?: null | PositionLike
+	);
 	start?: null | PositionLike;
 	end?: null | PositionLike;
-	source: any;
+	source?: string;
 }
 type ParserState = ParserStateBase & Record<string, any>;
 
@@ -26226,10 +26231,10 @@ declare interface ParserStateBase {
 	options: WebpackOptionsNormalizedWithDefaults;
 }
 type PartOf<R, M extends Record<number, number>, D> = number extends (R & {
-	readonly __nodeType: unknown;
+	readonly __nodeType: number;
 })["__nodeType"]
 	? D
-	: M[(R & { readonly __nodeType: unknown })["__nodeType"] & number];
+	: M[(R & { readonly __nodeType: number })["__nodeType"]];
 declare interface PathCacheFunctions {
 	/**
 	 * cached join
@@ -28763,12 +28768,12 @@ declare interface ResolvedOptionsSyntaxParser {
 	/**
 	 * where tokens are reported
 	 */
-	onToken: null | ((token?: any) => void);
+	onToken: null | ((token: TokenSyntaxParserClass) => void);
 
 	/**
 	 * the parser itself at each token
 	 */
-	onTokenRead: null | ((parser?: any) => void);
+	onTokenRead: null | ((parser: SyntaxParser) => void);
 
 	/**
 	 * where comments are reported
@@ -31741,8 +31746,8 @@ type SourceValue = string | Buffer;
 /**
  * terser's `Splice`: what a transform returns to put several nodes in its place.
  */
-declare abstract class Splice {
-	v: NodeShape[];
+declare abstract class Splice<T = NodeShape> {
+	v: T[];
 }
 
 /**
@@ -33599,7 +33604,19 @@ declare class SyntaxTree {
 	 * Sets one field of a node: a child node, an array of them for a list,
 	 * `0` or null where ESTree has null.
 	 */
-	set(node: number, name: string, value: unknown): void;
+	set(
+		node: number,
+		name: string,
+		value?:
+			| null
+			| string
+			| number
+			| bigint
+			| boolean
+			| RegExp
+			| (null | number)[]
+			| { cooked?: null | string; raw: string }
+	): void;
 
 	/**
 	 * Writes a parsed node and everything under it, its children taking ids
@@ -33611,7 +33628,17 @@ declare class SyntaxTree {
 	end(node: number): number;
 	range(node: number): [number, number];
 	name(node: number): string;
-	value(node: number): unknown;
+	value(
+		node: number
+	):
+		| undefined
+		| null
+		| string
+		| number
+		| bigint
+		| boolean
+		| RegExp
+		| { cooked?: null | string; raw: string };
 	fieldCount(field: number, node: number): number;
 	field(i: number, field: number, node: number): number;
 	flag(flag: number, node: number): boolean;
@@ -33783,7 +33810,7 @@ declare interface TokContextLike {
 	token: string;
 	isExpr: boolean;
 	preserveSpace?: boolean;
-	override?: any;
+	override?: (parser: SyntaxParser) => void;
 	generator?: boolean;
 }
 
@@ -33894,13 +33921,13 @@ declare class TokenStream {
  * A token as `options.onToken` receives one.
  */
 declare class TokenSyntaxParserClass {
-	constructor(p?: any);
-	type: any;
+	constructor(p: SyntaxParser);
+	type: TokenType;
 	value: any;
-	start: any;
-	end: any;
+	start: number;
+	end: number;
 	loc?: ParserSourceLocation;
-	range?: any[];
+	range?: number[];
 }
 type TokenSyntaxParserObject = NodeSyntaxParser & {
 	value: string;
