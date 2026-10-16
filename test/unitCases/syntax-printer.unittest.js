@@ -234,6 +234,24 @@ const stringArray = (length, string = (index) => `w${index}`) =>
 /** @type {[string, string, import("terser").MinifyOptions, string?][]} */
 const IMPROVED_CASES = [
 	[
+		"a new object compared with a primitive, another new object or `null`, which it never equals (terser#1335)",
+		'console.log({ a: 7 } === null, [] !== 1, (() => 1) == null, {} != null, {} == "[object Object]");',
+		{ compress: {}, mangle: false },
+		'console.log(!1,!0,!1,!0,"[object Object]"=={});'
+	],
+	[
+		"a boolean a binding holds, read twice, which prints shorter than the binding (terser#1352)",
+		"function f(g) { let x = true; g(x, x); } f(console.log);",
+		{ compress: {}, mangle: false },
+		"function f(g){g(!0,!0)}f(console.log);"
+	],
+	[
+		"a `const` declared in a block, read as the constant it holds (terser#1363, terser#1556)",
+		"function f(c) { if (c) { const k = 32767; console.log(k, k); } } f(1);",
+		{ compress: {}, mangle: false },
+		"function f(c){if(c){console.log(32767,32767)}}f(1);"
+	],
+	[
 		"a `#__PURE__` call of an arrow whose value a declaration read keeps",
 		"var obj = { b: 1 }; function f() { var b = /*#__PURE__*/ (() => obj.b)(); return b + 1; } console.log(f());",
 		{ compress: {}, mangle: false },
@@ -758,6 +776,12 @@ const IMPROVED_CASES = [
 		'var r = [RegExp("ab+c", "y"), RegExp("(?<=a)b"), RegExp("a", "s"), RegExp("(?<n>a)", "u")]; console.log(r.map(String).join());',
 		{ compress: { ecma: 2015 }, ecma: 2015, mangle: false },
 		'var r=[/ab+c/y,RegExp("(?<=a)b"),RegExp("a","s"),RegExp("(?<n>a)","u")];console.log(r.map(String).join());'
+	],
+	[
+		"a `RegExp` holding a NUL as a string, which a literal would spell `\\0`",
+		'console.log(new RegExp("a\\0b").source.length, RegExp("\\0", "g").source.length);',
+		{ compress: { ecma: 2020 }, ecma: 2020, mangle: false },
+		'console.log(RegExp("a\\0b").source.length,RegExp("\\0","g").source.length);'
 	],
 	[
 		"a `+` dropped where `-`, `*`, `/`, `%` or `**` converts, with `unsafe_math`",
@@ -1547,7 +1571,7 @@ const KEPT_CASES = [
 	["a call of a function returning a short constant or none, called once, marked `@__INLINE__`, or read by a test or an operator", '!function () { function f() { return "a string long enough that a copy costs more than a call"; } function g() { return "ab"; } function k() { return "a string long enough that a copy costs more than a call"; } function n() {} function r() { return; } var id = (x) => x; f(); console.log(/* @__INLINE__ */ f(), f() ? 1 : 2, typeof f(), f().length, f() || 1, !f(), g(), g(), k(), n(), n(), r(), r(), id(), id(void 0)); }();'],
 	["a `+` beside no number literal", 'var s = Math.random() < 2 ? "5" : ""; console.log("2" - +s, +s - +s, 1 + +s);'],
 	["a `var`", "!function () { var a = Math.random(); console.log(a, a); }();"],
-	["a `let` copying a parameter, written through, then written by a pattern or read in a function inside", "function f(p, q) { let a = p; a.s = 1; [a] = [q]; return a; } function h(p) { let a = p; a.s = 1; g(); return function () { return a.s; }; } function k(p) { var r = m(); let a = p; a.s = 1; return [r, a.s]; function m() { try { return a; } catch (e) { return e.name; } } } function g() {} console.log(f({}, 2), h({})(), k({}));"],
+	["a `let` copying a parameter, written through, then written by a pattern or read before it is set", "function f(p, q) { let a = p; a.s = 1; [a] = [q]; return a; } function k(p) { var r = m(); let a = p; a.s = 1; return [r, a.s]; function m() { try { return a; } catch (e) { return e.name; } } } console.log(f({}, 2), k({}));"],
 	["a `var` copying a parameter, written through, read past the branch setting it or before a loop sets it", "function f(p, c) { if (c) { var a = p; a.s = 1; } return a; } function h(p, n) { var r = []; for (var i = 0; i < n; i++) { if (i) r.push(a === p); var a = p; a.s = i; g(); } return r; } function g() {} console.log(f({}, 1), f({}, 0), h({}, 3));"],
 	["a `let` copying a parameter written later, or through `arguments` or `eval`", 'function f(a, c) { let b = a; let d = c; a = 3; arguments[1] = 4; return [b, d]; } function g(a) { let b = a; eval("a = 5"); return b; } console.log(f(1, 2), g(1));'],
 	["a `let` copying a parameter a `var`, a pattern or a loop head writes later", "function g(...a) { return a.join(); } function f(a) { let x = a; var a = 2; return g(x); } function h(a) { let x = a; [a] = [2]; return g(x); } function k(a) { let x = a; for (a of [2]); return g(x, a); } console.log(f(1), h(1), k(1));"],
@@ -2998,6 +3022,31 @@ const CORRECTED_CASES = [
 		"a function an `if` of a test known true keeps at a script's top level",
 		"var r = []; if (1) function f() { return 1; } else function f() { return 3; } r.push(typeof f === \"function\" ? f() : typeof f); console.log(r.join());",
 		{ compress: {}, mangle: false }
+	],
+	[
+		"a `let` assigned in a later declarator's initializer, which may not move above the declaration",
+		'function test(read, props) { let local, unused = (local = read()), { value } = props; return [local, value]; } console.log(JSON.stringify(test(() => "CN", { value: 1 })));',
+		{ compress: { passes: 2 }, mangle: true }
+	],
+	[
+		"`undefined` as a destructuring target, which `void 0` cannot be",
+		"try { [undefined] = 1; } catch (e) { console.log(e.name); } ({ x: undefined } = { x: 1 }); console.log(2);",
+		{ compress: { passes: 2 }, mangle: true }
+	],
+	[
+		"a negative BigInt folded as the base of `**`",
+		"x = (0n + -1n) ** 2n; console.log(String(x));",
+		{ compress: { passes: 2 }, mangle: true }
+	],
+	[
+		"a conditional assigning one global either way, whose getter runs after the test",
+		'let x = 0, a_ = 1; Object.defineProperty(globalThis, "a", { get: () => (x++, a_), set: (v) => { a_ = v; } }); x ? (a += 1) : (a += 2); console.log(x, a_);',
+		{ compress: { passes: 2 }, mangle: true }
+	],
+	[
+		"a test of a block's function in a loop, which outside the block reads Annex B's `var`",
+		'let n = 0; for (; n < 2; n++) { if (typeof f === "function") break; function f() {} } console.log(n);',
+		{ compress: { passes: 2 }, mangle: true }
 	]
 ];
 
@@ -8530,6 +8579,66 @@ describe("syntax-printer", () => {
 				});
 				expect(code).toContain("arguments.length>");
 			}
+			const program =
+				'Object.defineProperty(Object.prototype, "1", { get() { console.log("getter"); return 7; } }); function f() { var a = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1; var b = arguments.length > 1 ? arguments[1] : void 0; return [a, b]; } console.log(f(3).join(), f(3, 4).join());';
+			const { code } = await minify(program, { compress: {}, mangle: false });
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(program));
+		});
+
+		it("should keep a block's `const` where `with` keeps every declaration of its function", async () => {
+			const { minify } = await load();
+			const program =
+				"{ const g = function* () { yield 3; }; console.log(g().next().value); } with ({}) {}";
+			const { code } = await minify(program, { mangle: false });
+			expect(code).toContain("console.log(g().next().value)");
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(program));
+		});
+
+		it("should keep the value an async function returns, as resolving it calls a `then`", async () => {
+			const { minify } = await load();
+			/**
+			 * @param {string} source a program
+			 * @returns {Promise<string>} what it prints, promise callbacks included
+			 */
+			const runSettled = async (source) => {
+				/** @type {string[]} */
+				const lines = [];
+				vm.runInNewContext(source, {
+					console: { log: (/** @type {string} */ line) => lines.push(line) }
+				});
+				// The context shares this process's promise queue, empty by `setImmediate`.
+				await new Promise((resolve) => setImmediate(resolve));
+				return lines.join("\n");
+			};
+			const program =
+				'(async function () { return { then(resolve) { console.log("function"); resolve(); } }; })(); (async () => ({ then(resolve) { console.log("arrow"); resolve(); } }))();';
+			const { code } = await minify(program, { compress: { passes: 2 }, mangle: true });
+			expect(await runSettled(program)).toBe("function\narrow");
+			expect(await runSettled(/** @type {string} */ (code))).toBe(
+				"function\narrow"
+			);
+		});
+
+		it("should read the name a `let` copies, so its constant call folds (terser#1637)", async () => {
+			const { minify } = await load();
+			for (const [input, expected] of [
+				['let a = () => "Hi", b = a; window.x = (n) => (n ? a() : b());', 'window.x=i=>"Hi";'],
+				['export function f() { let a = () => "Hi", b = a; return (n) => (n ? a() : b()); }', 'export function f(){return n=>"Hi"}'],
+				["let a = g(), b = a; export const x = () => b.y + a.z;", "let t=g();export const x=()=>t.y+t.z;"]
+			]) {
+				const { code } = await minify(input, {
+					module: true,
+					compress: { passes: 2 },
+					mangle: true
+				});
+				expect(code).toBe(expected);
+			}
+			// A function made after the copy is set reads the name it copies.
+			const program =
+				"function h(p) { let a = p; a.s = 1; g(); return function () { return a.s; }; } function g() {} console.log(h({})());";
+			const { code } = await minify(program, { compress: {}, mangle: false });
+			expect(code).toContain("return p.s");
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(program));
 		});
 
 		it("should keep a call that runs code, a local `Symbol` and a conditional spread no shorter", async () => {

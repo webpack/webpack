@@ -32,7 +32,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/esbuild.rs:1262",
 			"oxc minifier: peephole/esbuild.rs:1263",
 			"oxc minifier: peephole/esbuild.rs:1281",
-			"oxc minifier: peephole/esbuild.rs:1301",
 			"oxc minifier: peephole/esbuild.rs:145",
 			"oxc minifier: peephole/esbuild.rs:1489",
 			"oxc minifier: peephole/esbuild.rs:1798",
@@ -44,8 +43,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/esbuild.rs:255",
 			"oxc minifier: peephole/esbuild.rs:494",
 			"oxc minifier: peephole/esbuild.rs:520",
-			"oxc minifier: peephole/esbuild.rs:598",
-			"oxc minifier: peephole/esbuild.rs:600",
 			"oxc minifier: peephole/esbuild.rs:628",
 			"oxc minifier: peephole/esbuild.rs:629",
 			"oxc minifier: peephole/esbuild.rs:632",
@@ -275,6 +272,7 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: yield/yield_before_punctuators",
 			"terser input: source-maps/expect.js",
 			"terser input: source-maps/input.js",
+			"oxc minifier: peephole/minimize_statements.rs:32",
 			"oxc minifier: peephole/substitute_alternate_syntax.rs:1072",
 			"swc minifier: fixture/issues/12492/input.js"
 		]
@@ -535,7 +533,6 @@ const OXC_SMALLER_BY_REASON = [
 		[
 			"oxc minifier: peephole/minimize_conditions.rs:1055",
 			"oxc minifier: peephole/minimize_conditions.rs:1068",
-			"oxc minifier: peephole/minimize_conditions.rs:1120",
 			"oxc minifier: peephole/minimize_conditions.rs:113",
 			"oxc minifier: peephole/minimize_conditions.rs:1130",
 			"oxc minifier: peephole/minimize_conditions.rs:1206",
@@ -717,9 +714,7 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/dead_code_elimination.rs:802",
 			"oxc minifier: peephole/dead_code_elimination.rs:847",
 			"oxc minifier: peephole/dead_code_elimination.rs:871",
-			"oxc minifier: peephole/dead_code_elimination.rs:947",
-			"oxc minifier: peephole/dead_code_elimination.rs:953",
-			"oxc minifier: peephole/dead_code_elimination.rs:959"
+			"oxc minifier: peephole/dead_code_elimination.rs:947"
 		]
 	],
 	[
@@ -876,7 +871,6 @@ const OXC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/7770/2/input.js",
 			"swc minifier: fixture/issues/next-97517/input.js",
 			"swc minifier: fixture/member_expr/callee/input.js",
-			"swc minifier: mangle/issue-5766/for-in/2/input.js",
 			"terser compress: collapse_vars/collapse_vars_object",
 			"terser compress: collapse_vars/shadowed_variable",
 			"terser compress: collapse_vars/unsafe_builtin",
@@ -910,7 +904,6 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc restructures conditionals: an `if` as `&&` or `?:`, a shared tail factored out, a redundant branch or jump dropped",
 		[
-			"swc exec: issue_11517_closure",
 			"swc minifier: fixture/issues/12299/input.js",
 			"swc minifier: fixture/issues/do-while-false-terminal-jump/completion/assignment-break/input.js",
 			"swc minifier: fixture/issues/do-while-false-terminal-jump/completion/conditional-parent/input.js",
@@ -1101,8 +1094,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/inline.rs:642",
 			"oxc minifier: peephole/inline.rs:658",
 			"oxc minifier: peephole/inline.rs:698",
-			"oxc minifier: peephole/inline.rs:701",
-			"oxc minifier: peephole/inline.rs:702",
 			"oxc minifier: peephole/inline.rs:703",
 			"oxc minifier: peephole/inline.rs:704",
 			"oxc minifier: peephole/inline.rs:706",
