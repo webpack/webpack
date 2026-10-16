@@ -257,7 +257,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: reduce_vars/defun_inline_2",
 			"terser compress: reduce_vars/issue_1606",
 			"terser compress: reduce_vars/issue_1850_4",
-			"terser compress: reduce_vars/issue_294",
 			"terser compress: reduce_vars/issue_3110_3",
 			"terser compress: reduce_vars/regex_loop",
 			"terser compress: reduce_vars/unsafe_evaluate_array_1",
@@ -345,8 +344,7 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: identity/inline_identity_higher_order",
 			"terser compress: inline/issue_308",
 			"terser compress: issue-t292/no_flatten_with_arg_colliding_with_arg_value_inner_scope",
-			"terser compress: issue-t292/no_flatten_with_var_colliding_with_arg_value_inner_scope",
-			"terser compress: reduce_vars/variables_collision_in_immediately_invoked_func"
+			"terser compress: issue-t292/no_flatten_with_var_colliding_with_arg_value_inner_scope"
 		]
 	],
 	[
@@ -682,7 +680,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/next/66237/input.js",
 			"swc minifier: fixture/next/66378/input.js",
 			"swc minifier: fixture/next/brotli-decompress/static/chunks/545-ff8f898b276d138f/input.js",
-			"swc minifier: fixture/next/chakra/input.js",
 			"swc minifier: fixture/next/cryptojs/input.js",
 			"swc minifier: fixture/next/feedback-3/579-dcac359116b2707c/input.js",
 			"swc minifier: fixture/next/octokit/static/chunks/357-72bd409f1472b1b8/input.js",
