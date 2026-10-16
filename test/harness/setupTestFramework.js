@@ -148,12 +148,18 @@ process.removeAllListeners("unhandledRejection");
 
 // The runner's `vm.runInThisContext` writes to the worker's own global, which
 // outlives this file: drop what the file added so it can't keep it alive.
-const outerGlobal = vm.runInThisContext("globalThis");
+const outerGlobal = vm.runInThisContext("this");
 const outerGlobalKeys = new Set(Object.getOwnPropertyNames(outerGlobal));
 
 // eslint-disable-next-line jest/require-top-level-describe
 afterAll(() => {
 	for (const key of Object.getOwnPropertyNames(outerGlobal)) {
-		if (!outerGlobalKeys.has(key)) delete outerGlobal[key];
+		if (outerGlobalKeys.has(key)) continue;
+		const descriptor =
+			/** @type {PropertyDescriptor} */
+			(Object.getOwnPropertyDescriptor(outerGlobal, key));
+		// a bundle's top-level `var` or function can't be deleted, only cleared
+		if (descriptor.configurable) delete outerGlobal[key];
+		else if (descriptor.writable) outerGlobal[key] = undefined;
 	}
 });
