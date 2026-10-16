@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Replace `any` with precise types in stats, serializer and dependency typings.
+Replace `any` and `unknown` with precise types in stats, serializer, parser and runtime typings.
