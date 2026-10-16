@@ -3603,7 +3603,8 @@ describe("parseHtml", () => {
 			expect(new SourceProcessor().process(source, options).code).toBe(source);
 			const svgSource = `<svg xmlns="${svg}">${body}</svg>`;
 			expect(new SourceProcessor().process(svgSource, { ...options, mode: 'beautify' }).code).toBe(svgSource);
-			expect(new SourceProcessor().process(svgSource, { ...options, xml: false }).code).toContain('M000 000');
+			// Inline in HTML the same switches reach SVG's own geometry.
+			expect(new SourceProcessor().process(svgSource, { ...options, xml: false }).code).toContain('d="M0 0"');
 		});
 
 		const { SVG_NUMERIC_ATTRIBUTES, SVG_LENGTH_UNITS } = require("../../lib/html/data");
@@ -3689,7 +3690,20 @@ describe("parseHtml", () => {
 			const expected = '<svg xmlns="http://www.w3.org/2000/svg" width="1"><style>rect{fill:red}</style><rect x=".5" style="fill:red"/></svg>';
 			expect(new SourceProcessor().process(source, options).code).toBe(expected);
 			expect((await new SourceProcessor().processAsync(source, { ...options, renderEmbeddedSource: async (css, offer) => render(css, offer) })).code).toBe(expected);
-			expect(new SourceProcessor().process(source, { ...options, xml: false }).code).toContain("width=001.00");
+			expect(new SourceProcessor().process(source, { ...options, xml: false }).code).toContain("width=1>");
+		});
+
+		it("should shorten inline SVG geometry in HTML and leave other namespaces alone", () => {
+			const svgPart = '<svg viewBox="000 000 0024.0 24"><metadata><rdf:RDF/></metadata><path d="M000,000 l0 80-112 0" transform="translate(+001.00, 002.00)"/><rect width=+001.500px height="&#48;02"></rect></svg>';
+			const source = `<!doctype html><p>${svgPart}<math><mi width="001.00">x</mi></math><div d="M000,000" width="001.00"></div>`;
+			const options = { mode: /** @type {const} */ ("minify"), shortenSvgNumbers: true, shortenSvgPathData: true, removeSvgMetadata: true };
+			const processor = new SourceProcessor();
+			const once = processor.process(source, options).code;
+			expect(once).toBe('<!doctype html><p><svg viewBox="0 0 24 24"><path d="M0 0v80h-112" transform="translate(1 2)"/><rect width=1.5px height=2></rect></svg><math><mi width=001.00>x</mi></math><div d=M000,000 width=001.00></div>');
+			expect(processor.process(once, options).code).toBe(once);
+			const plain = processor.process(source, { mode: "minify" }).code;
+			expect(plain).toContain('<metadata><rdf:RDF/></metadata><path d="M000,000 l0 80-112 0"');
+			expect(processor.process(source, { ...options, removeSvgMetadata: false }).code).toContain("<metadata>");
 		});
 
 		it("should preserve a long unsupported numeric value without changing later parses", () => {

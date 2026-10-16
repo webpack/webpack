@@ -1598,9 +1598,9 @@ type BuiltinEmbeddedRendererOptions = Pick<
 	BuiltinSvgOptions;
 declare interface BuiltinSvgOptions {
 	/**
-	 * minify an SVG `data:` URL as the `.svg` assets are, wherever that is shorter (default false)
+	 * minify an SVG `data:` URL as the `.svg` assets are, with their `optimization.minimize.xml` switches when given, wherever that is shorter (default false)
 	 */
-	svg?: boolean;
+	svg?: boolean | OptimizationMinimizeXml;
 }
 declare class BunTargetPlugin {
 	constructor();
@@ -24908,7 +24908,7 @@ declare interface OptimizationMinimizeOptions {
 }
 
 /**
- * What the XML minimizer does. The stylesheets an SVG or XHTML element holds are minified with `optimization.minimizeOptions.css` for the target's browsers.
+ * What the XML minimizer does. The stylesheets an SVG or XHTML element holds are minified with `optimization.minimizeOptions.css` for the target's browsers. An SVG `data:` URL takes these switches too, and an `<svg>` inline in HTML takes `removeMetadata`, `shortenNumbers` and `shortenPathData`.
  * @since 5.112.0
  * @experimental
  */
@@ -37406,7 +37406,7 @@ declare namespace exports {
 					| string
 					| EmbeddedSourceResult
 					| Promise<undefined | string | EmbeddedSourceResult>;
-				svg?: boolean;
+				svg?: boolean | OptimizationMinimizeXml;
 			} & CssTransformOptions,
 			extractComments?:
 				| string
@@ -38038,7 +38038,7 @@ declare namespace exports {
 					| string
 					| EmbeddedSourceResult
 					| Promise<undefined | string | EmbeddedSourceResult>;
-				svg?: boolean;
+				svg?: boolean | OptimizationMinimizeXml;
 			} & HtmlTransformOptions,
 			extractComments?:
 				| string
