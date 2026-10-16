@@ -37628,6 +37628,8 @@ declare namespace exports {
 		}
 		export namespace dataURL {
 			export let EMBEDDED_LANGUAGES: string[];
+			export let JSON_TYPE: "json";
+			export let SVG_TYPE: "svg";
 			export let URIRegEx: RegExp;
 			export let askEmbeddedRenderer: (
 				render: (
