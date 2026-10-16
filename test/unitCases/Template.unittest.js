@@ -23,6 +23,9 @@ describe("Template", () => {
 		expect(Template.toPath("path/to-sdfas/sadfome$$.js")).toBe(
 			"path-to-sdfas-sadfome$$-js"
 		);
+		expect(Template.toPath("Path/To/Some°§File.JS")).toBe(
+			"Path-To-Some°§File-JS"
+		);
 	});
 
 	it("should strip JSDoc types from runtime function content but keep other comments", () => {
