@@ -2206,6 +2206,9 @@ describe("JavaScript minifier", () => {
 							corpus.read(file, reader)
 						);
 						const oxcSet = "the default minimizer's options";
+						// webpack's minimizer reads `ecma` off `output.environment`, 2020 for a
+						// modern target, which oxc's output assumes too.
+						const oxcEcma = 2020;
 						/** @type {Map<Source, string | null | Error>} */
 						const oxcOutputs = new Map();
 						if (!corpus.withoutOxc && corpus.optionSets.includes(oxcSet)) {
@@ -2463,10 +2466,31 @@ describe("JavaScript minifier", () => {
 									// A smaller output that prints wrong is no lead to follow.
 									!(expected !== undefined && runs && misprint(oxc))
 								) {
+									const plain = /** @type {MinifyOptions} */ (optionsFor(source));
+									// As webpack's minimizer passes it, to the compressor too.
+									const modern = await outcome(printer.minify, source.input, {
+										...plain,
+										ecma: oxcEcma,
+										compress: plain.compress && {
+											...plain.compress,
+											ecma: oxcEcma
+										}
+									});
+									const modernCode =
+										modern.code === undefined ? ours.code : modern.code;
+									const wrong =
+										runs && modernCode !== ours.code
+											? misprint(modernCode)
+											: undefined;
+									if (wrong !== undefined) {
+										differences.push(
+											`${source.name} (${setName}, ecma ${oxcEcma}) prints differently${wrong}`
+										);
+									}
 									await compareWithRival(
 										source,
 										{ name: "oxc", code: oxc },
-										ours.code,
+										modernCode,
 										OXC_SMALLER,
 										"OXC_SMALLER"
 									);

@@ -799,7 +799,37 @@ const IMPROVED_CASES = [
 		"`Math.pow` of no number literal as `**` from ECMAScript 2016, with `unsafe_math`",
 		'function f(a, b) { return [Math.pow(a, b), Math.pow(-a, b), Math.pow(a + 1, b * 2), Math.pow(a, -b), Math.pow(typeof a, b), Math.pow(2, 3)]; } console.log(f(2, 3).join());',
 		{ compress: { ecma: 2016, unsafe_math: true }, ecma: 2016, mangle: false },
-		'function f(a,b){return[a**b,(-a)**b,(a+1)**(2*b),a**-b,(typeof a)**b,Math.pow(2,3)]}console.log(f(2,3).join());'
+		'function f(a,b){return[a**b,(-a)**b,(a+1)**(2*b),a**-b,(typeof a)**b,8]}console.log(f(2,3).join());'
+	],
+	[
+		"`Math.pow` of whole numbers as the power, where a safe integer holds it",
+		"function f() { return [Math.pow(2, 3), Math.pow(-3, 3), Math.pow(2, 0.5), Math.pow(2, -1), Math.pow(10, 20), Math.pow(-0, 3)]; } console.log(f().join());",
+		{ mangle: false },
+		"function f(){return[8,-27,Math.pow(2,.5),Math.pow(2,-1),Math.pow(10,20),Math.pow(-0,3)]}console.log(f().join());"
+	],
+	[
+		"a `break` a `do … while (0)` ends with, or one its last `if` ends with, dropped",
+		"var v; function g() { v = 1; } do { g(); if (v) { console.log(1); break; } } while (0); do { v = 2; break; } while (0); console.log(v);",
+		{ mangle: false },
+		"var v;function g(){v=1}if(g(),v){console.log(1)}v=2,console.log(v);"
+	],
+	[
+		"a sequence `await` or `yield` takes, its leading expressions before it in a statement",
+		"function* g() { yield (console.log(1), 2); yield* (console.log(3), [4]); } async function h() { await (console.log(5), 6); } console.log([...g()].join()); h();",
+		{ mangle: false },
+		"function*g(){console.log(1),yield 2,console.log(3),yield*[4]}async function h(){console.log(5),await 6}console.log([...g()].join()),h();"
+	],
+	[
+		"a value moved into the `=` writing a global, which throws, where it does, only after it",
+		'function f(r) { var e = r.O(); out = e; return 1; } console.log(f({ O: function () { return 2; } }), out); (function () { "use strict"; function g(r) { var e = r.O(); missing = e; } try { g({ O: function () { console.log("called"); return 2; } }); } catch (e) { console.log(e.name); } })();',
+		{ mangle: false },
+		'function f(r){return out=r.O(),1}console.log(f({O:function(){return 2}}),out),function(){"use strict";try{missing={O:function(){return console.log("called"),2}}.O()}catch(e){console.log(e.name)}}();'
+	],
+	[
+		"a name read once, at the head of an optional chain, as its value",
+		"function f(o) { let n = o.g(); return n?.b; } function k(o) { var n = o.g; return n?.(1); } console.log(f({ g: () => ({ b: 1 }) }), f({ g: () => null }), k({ g: (x) => x }), k({}));",
+		{ mangle: false },
+		"function f(o){return o.g()?.b}function k(o){return(0,o.g)?.(1)}console.log(f({g:()=>({b:1})}),f({g:()=>null}),k({g:x=>x}),k({}));"
 	],
 	[
 		"`Object.keys`, `values` and `entries` of an object literal as an array literal",
@@ -3848,7 +3878,10 @@ describe("syntax-printer", () => {
 		const theirCache = {};
 		for (const input of [source, "var counter = 2; export { counter };"]) {
 			const options = () => ({ mangle: { toplevel: true } });
-			const ours = await minify(input, { ...options(), nameCache: ourCache });
+			// A module's names are its own, which the improve phase reads off its exports.
+			const ours = await unimproved(() =>
+				minify(input, { ...options(), nameCache: ourCache })
+			);
 			const theirs = await reference.minify(input, {
 				...options(),
 				nameCache: theirCache
@@ -8460,6 +8493,37 @@ describe("syntax-printer", () => {
 			}
 		});
 
+		it("should read a program that imports or exports as a module, dropping the names it leaves unread", async () => {
+			const { minify, improvements } = await load();
+			/** @type {[string, string][]} */
+			const cases = [
+				[
+					"const A = 1, B = 0; export function f() { return A * (B + 2); }",
+					"export function f(){return 2}"
+				],
+				[
+					'import a from "a"; import { b, c } from "b"; import * as n from "n"; import defer * as d from "d"; c();',
+					'import"a";import{c}from"b";import"n";import defer*as r from"d";c();'
+				],
+				['import a from "a"; eval("a");', 'import a from"a";eval("a");'],
+				["var a = 1; console.log(a);", "var a=1;console.log(a);"]
+			];
+			/** @type {import("terser").MinifyOptions} */
+			const options = { compress: {}, mangle: true };
+			for (const [input, written] of cases) {
+				expect((await minify(input, options)).code).toBe(written);
+				if (!improvements) throw new Error("the improve phase is not installed");
+				improvements.enabled = false;
+				try {
+					expect((await minify(input, options)).code).toBe(
+						(await terserReference().minify(input, options)).code
+					);
+				} finally {
+					improvements.enabled = true;
+				}
+			}
+		});
+
 		it("should name a binding by its key only where the key spells an identifier", async () => {
 			const { minify } = await load();
 			/** @type {[string, string][]} */
@@ -9027,7 +9091,7 @@ describe("syntax-printer", () => {
 				["function f(a) { try { return \"x`\".concat(a)`y`; } catch (e) { return e.name; } } console.log(f(1));", target(2015)],
 				["var log = []; function o(n) { return { toString() { log.push(n); return n; } }; } function f(a, b) { return [\"\".concat(a, b), \"\".concat(a, \"-\", b), \"\".concat(...a)]; } console.log(f(o(\"a\"), o(\"b\")), f([1], 2), log.join());", target(2015)],
 				["function f(a, b) { return Math.pow(a, 3); } console.log(f(2));", target(2015)],
-				["function f(a, b) { return [Math.pow(a, b), Math.pow(2, 3)]; } console.log(f(2, 3));", target(2016)],
+				["function f(a, b) { return [Math.pow(a, b), Math.pow(2, 0.5)]; } console.log(f(2, 3));", target(2016)],
 				["function f(Math, a) { return Math.pow(a, 3); } console.log(f({ pow: (a, b) => a + b }, 2));", target(2016)],
 				["console.log(Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER, Number.EPSILON);", target(2015)],
 				["function f(Number) { return Number.MAX_SAFE_INTEGER; } console.log(f({ MAX_SAFE_INTEGER: 1 }));", target(2016)],
