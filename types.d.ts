@@ -5368,6 +5368,7 @@ declare class ConstDependency extends NullDependency {
 		| "dynamic-import"
 		| "esm-reexport"
 		| "esm-export-specifier"
+		| "esm-live-export"
 		| "esm-side-effect-import"
 		| "context-element"
 		| "esm-bare-side-effect-import"
@@ -8027,6 +8028,7 @@ declare class Dependency {
 			| "dynamic-import"
 			| "esm-reexport"
 			| "esm-export-specifier"
+			| "esm-live-export"
 			| "esm-side-effect-import"
 			| "context-element"
 			| "esm-bare-side-effect-import"
@@ -8198,6 +8200,7 @@ declare class Dependency {
 		| "dynamic-import"
 		| "esm-reexport"
 		| "esm-export-specifier"
+		| "esm-live-export"
 		| "esm-side-effect-import"
 		| "context-element"
 		| "esm-bare-side-effect-import"
@@ -8971,6 +8974,7 @@ declare class ESMImportDependency extends ModuleDependency {
 		| "dynamic-import"
 		| "esm-reexport"
 		| "esm-export-specifier"
+		| "esm-live-export"
 		| "esm-side-effect-import"
 		| "context-element"
 		| "esm-bare-side-effect-import"
@@ -18089,9 +18093,9 @@ declare interface KnownMeta {
 	onDemandExports?: boolean;
 
 	/**
-	 * module-level `let` names a module library declares in the chunk's scope instead, with the keys of the runtimes doing so
+	 * module-level `let` names a module library declares in the chunk's scope instead
 	 */
-	hoistedBindings?: Map<string, Set<string>>;
+	liveBindings?: Map<string, LiveBinding>;
 }
 
 /**
@@ -19024,6 +19028,21 @@ declare interface LimitChunkCountPluginOptions {
 	 * Limit the maximum number of chunks using a value greater than or equal to 1.
 	 */
 	maxChunks: number;
+}
+
+/**
+ * A module-level `let` a module library declares in the chunk's scope instead.
+ */
+declare interface LiveBinding {
+	/**
+	 * the name the chunk's scope declares
+	 */
+	name: string;
+
+	/**
+	 * the keys of the runtimes declaring it
+	 */
+	runtimes: Set<string>;
 }
 declare interface LoadScriptCompilationHooks {
 	createScript: SyncWaterfallHook<[string, Chunk], string>;
@@ -20638,6 +20657,7 @@ declare class ModuleDependency extends Dependency {
 		| "dynamic-import"
 		| "esm-reexport"
 		| "esm-export-specifier"
+		| "esm-live-export"
 		| "esm-side-effect-import"
 		| "context-element"
 		| "esm-bare-side-effect-import"
@@ -23498,6 +23518,7 @@ declare class NullDependency extends Dependency {
 		| "dynamic-import"
 		| "esm-reexport"
 		| "esm-export-specifier"
+		| "esm-live-export"
 		| "esm-side-effect-import"
 		| "context-element"
 		| "esm-bare-side-effect-import"

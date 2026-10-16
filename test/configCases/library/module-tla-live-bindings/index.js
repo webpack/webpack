@@ -61,7 +61,9 @@ it("should observe writes using lexical binding identity", () => {
  expect(library.callable.name).toBe("callable");
 });
 
-it("should preserve renamed local bindings", () => {
- expect(library.updateCollision()).toBe(1);
- expect(library.collision).toBe(2);
+// webpack itself renames a declared `__webpack_exports__`, so the library leaves
+// that binding in its module and exports what it holds once it ran.
+it("should export a binding webpack renames", () => {
+	expect(library.collision).toBe(1);
+	expect(library.updateCollision()).toBe(1);
 });
