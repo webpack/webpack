@@ -35760,6 +35760,10 @@ declare namespace exports {
 					offset: number
 				) => SourcePosition;
 				export let releaseParserCaches: () => void;
+				export let toEstreeBody: (
+					tree: SyntaxTree,
+					node: number
+				) => BlockStatement;
 				export let toEstreeObject: (
 					tree: SyntaxTree,
 					node: number,
