@@ -21455,6 +21455,7 @@ type ModuleInfo = ConcatenatedModuleInfo | ExternalModuleInfo;
 declare interface ModuleMemCachesItem {
 	buildInfo: BuildInfo;
 	references?: WeakMap<Dependency, Module>;
+	lazyRequests?: string;
 	memCache: WeakTupleMap<any[], any>;
 }
 
