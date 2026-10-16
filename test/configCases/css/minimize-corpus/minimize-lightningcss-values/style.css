@@ -294,3 +294,19 @@ var(--bar, 40px); }
 .foo { scale: 95% }
 /*! corpora: .foo { transition-duration: 416.667ms } */
 .foo { transition-duration: 416.667ms }
+/* Where lightningcss 1.33.0 changes what the browser computes, measured in
+   Chrome over the comparison stylesheets: each stays as written here. */
+/*! corpora: @keyframes w { 50% { width: 6px; @supports (x: y) { color: red } } } */
+@keyframes w { 50% { width: 6px; @supports (x: y) { color: red } } }
+/*! corpora: @supports (-webkit-touch-callout: none) or (-moz-appearance: none) { .foo { color: red } } */
+@supports (-webkit-touch-callout: none) or (-moz-appearance: none) { .foo { color: red } }
+/*! corpora: .foo { transition: transform .15s linear, -webkit-transform .15s linear } */
+.foo { transition: transform .15s linear, -webkit-transform .15s linear }
+/*! corpora: .foo { background-position: 0% 0% } */
+.foo { background-position: 0% 0% }
+/*! corpora: .foo { -webkit-mask-position: 0% 0% } */
+.foo { -webkit-mask-position: 0% 0% }
+/*! corpora: pre { font-family: monospace, monospace } */
+pre { font-family: monospace, monospace }
+/*! corpora: @property --a { syntax: "<length>"; inherits: false; initial-value: 0px } */
+@property --a { syntax: "<length>"; inherits: false; initial-value: 0px }
