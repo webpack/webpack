@@ -13000,13 +13000,13 @@ Object {
   "optimization-minimize-options-xml-shorten-path-data": Object {
     "configs": Array [
       Object {
-        "description": "Shorten SVG path numbers and separators without rounding or changing commands, preserving arc flags and DTD-declared values. Off by default because selectors and scripts can observe attribute spelling.",
+        "description": "Compact SVG path numbers, repeated commands and separators without rounding or changing segments, preserving arc flags and DTD-declared values. Off by default because selectors and scripts can observe attribute spelling.",
         "multiple": false,
         "path": "optimization.minimizeOptions.xml.shortenPathData",
         "type": "boolean",
       },
     ],
-    "description": "Shorten SVG path numbers and separators without rounding or changing commands, preserving arc flags and DTD-declared values. Off by default because selectors and scripts can observe attribute spelling.",
+    "description": "Compact SVG path numbers, repeated commands and separators without rounding or changing segments, preserving arc flags and DTD-declared values. Off by default because selectors and scripts can observe attribute spelling.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -13146,13 +13146,13 @@ Object {
   "optimization-minimize-xml-shorten-path-data": Object {
     "configs": Array [
       Object {
-        "description": "Shorten SVG path numbers and separators without rounding or changing commands, preserving arc flags and DTD-declared values. Off by default because selectors and scripts can observe attribute spelling.",
+        "description": "Compact SVG path numbers, repeated commands and separators without rounding or changing segments, preserving arc flags and DTD-declared values. Off by default because selectors and scripts can observe attribute spelling.",
         "multiple": false,
         "path": "optimization.minimize.xml.shortenPathData",
         "type": "boolean",
       },
     ],
-    "description": "Shorten SVG path numbers and separators without rounding or changing commands, preserving arc flags and DTD-declared values. Off by default because selectors and scripts can observe attribute spelling.",
+    "description": "Compact SVG path numbers, repeated commands and separators without rounding or changing segments, preserving arc flags and DTD-declared values. Off by default because selectors and scripts can observe attribute spelling.",
     "multiple": false,
     "simpleType": "boolean",
   },

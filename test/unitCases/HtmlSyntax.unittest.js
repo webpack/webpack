@@ -3496,16 +3496,16 @@ describe("parseHtml", () => {
 			expect(new SourceProcessor().process(once, compact).code).toBe(once);
 		});
 
-		it.each(Object.entries(require('../../lib/html/data').SVG_PATH_ARGUMENTS).flatMap(([command, count]) => [command, command.toLowerCase()].map((name) => /** @type {[string, number]} */ ([name, Number(count)]))))("should preserve SVG path command %s while shortening its %s arguments", (command, count) => {
+		it.each(Object.entries(require('../../lib/html/data').SVG_PATH_ARGUMENTS).flatMap(([command, count]) => [command, command.toLowerCase()].map((name) => /** @type {[string, number]} */ ([name, Number(count)]))))("should preserve SVG path segments for command %s with %s arguments", (command, count) => {
 			const args = command.toUpperCase() === 'A' ? ['001.00', '002.00', '+003.00', '0', '1', '004.00', '-000.00'] : Array(count).fill('001.00');
 			const source = `<svg xmlns="${svg}"><path d="M000.00,000.00 ${command} ${args.join(', ')}"/></svg>`;
-			const expected = `<svg xmlns="${svg}"><path d="M0 0${command}${command.toUpperCase() === 'A' ? '1 2 3 0 1 4 -0' : Array(count).fill('1').join(' ')}"/></svg>`;
+			const expected = `<svg xmlns="${svg}"><path d="M0 0${command === "L" ? " " : command}${command.toUpperCase() === 'A' ? '1 2 3 014-0' : Array(count).fill('1').join(' ')}"/></svg>`;
 			const once = new SourceProcessor().process(source, compact).code;
 			expect(once).toBe(expected);
 			expect(new SourceProcessor().process(once, compact).code).toBe(once);
 		});
 
-		it.each(['L001 002', 'M', 'M0', 'M0,', 'M0 0,', 'M,0 0', 'M0 0,L1 2', 'M0 0L1', 'M0 0R1 2', 'M0 0Z1 2', 'M0 0L1e 2', 'M0 0A-1 1 0 0 1 2 3', 'M0 0A1 1 0 2 1 2 3', 'M0 0A1 1 0 1.0 1 2 3', 'M0 0A1 1 0 0 1 2', 'M0 0L1,,2'])('should preserve invalid or unsupported path syntax %s', (value) => {
+		it.each(['L001 002', 'M', 'M0', 'M0,', 'M0 0,', 'M,0 0', 'M0 0,L1 2', 'M0 0L1', 'M0 0R1 2', 'M0 0Z1 2', 'M0 0L1e 2', 'M0 0A-1 1 0 0 1 2 3', 'M0 0A1 1 0 2 1 2 3', 'M0 0A1 1 0 1.0 1 2 3', 'M0 0A1 1 0 0 1 2', 'M0 0L1,,2', 'M0 0L1 2L', 'M0 0C1 2 3 4 5 6C7 8', 'M0 0A1 1 0 011 2A1 1 0 0', 'M0 0ZL'])('should preserve invalid or unsupported path syntax %s', (value) => {
 			const source = `<svg xmlns="${svg}"><path d="${value}"/></svg>`;
 			expect(new SourceProcessor().process(source, compact).code).toBe(source);
 		});
@@ -3513,8 +3513,43 @@ describe("parseHtml", () => {
 		it("should preserve packed arc flags, implicit segments and exact path precision", () => {
 			const source = `<svg xmlns="${svg}"><path d="M000.00,000.00 0001.00,0002.00L000.500.500A001.00 002.00 0 0110.00 20.00l+09007199254740993.00 -000.00e+03"/></svg>`;
 			const once = new SourceProcessor().process(source, compact).code;
-			expect(once).toBe(`<svg xmlns="${svg}"><path d="M0 0 1 2L.5 .5A1 2 0 0 1 10 20l9007199254740993 -000.00e+03"/></svg>`);
+			expect(once).toBe(`<svg xmlns="${svg}"><path d="M0 0 1 2 .5.5A1 2 0 0110 20l9007199254740993-000.00e+03"/></svg>`);
 			expect(new SourceProcessor().process(once, compact).code).toBe(once);
+		});
+
+		it.each([
+			['M 1 -2', 'M1-2'],
+			['M 1 +2', 'M1 2'],
+			['M 1e+2 +3e-4', 'M1e+2+3e-4'],
+			['M .1 .2', 'M.1.2'],
+			['M 1 .2', 'M1 .2'],
+			['M 1e2 .2', 'M1e2.2'],
+			['M 1.e2 .2', 'M1.e2.2'],
+			['M -0 -0', 'M-0-0'],
+			['M0 0 L1 2 l3 4 L5 6', 'M0 0 1 2l3 4L5 6'],
+			['M0 0M1 2m3 4m5 6', 'M0 0M1 2m3 4m5 6'],
+			['M0 0 ZL1 2 L3 4 ZZL5 6', 'M0 0ZL1 2 3 4ZZL5 6'],
+			['M0 0H-1 H-2 H-3', 'M0 0H-1-2-3'],
+			['M0 0A10 20 30 0 1 40 50 A10 20 30 1 0 .5 -.5', 'M0 0A10 20 30 0140 50 10 20 30 10.5-.5'],
+			['M0 0A1 2 .3 0 1 .4 .5', 'M0 0A1 2 .3 01.4.5']
+		])("should compact path delimiters without merging arguments in %s", (value, expected) => {
+			const source = `<svg xmlns="${svg}"><path d="${value}"/></svg>`;
+			const processor = new SourceProcessor();
+			const once = processor.process(source, compact).code;
+			expect(once).toBe(`<svg xmlns="${svg}"><path d="${expected}"/></svg>`);
+			expect(processor.process(once, compact).code).toBe(once);
+			expect(processor.process(source, { ...compact, shortenSvgPathData: false }).code).toBe(source);
+		});
+
+		it.each(Object.entries(require('../../lib/html/data').SVG_PATH_ARGUMENTS).flatMap(([command, count]) => [command, command.toLowerCase()].map((name) => /** @type {[string, number]} */ ([name, Number(count)]))))("should compact repeated path command %s without losing segments", (command, count) => {
+			const args = command.toUpperCase() === 'A' ? '1 2 3 014-0' : Array(count).fill('1').join(' ');
+			const source = `<svg xmlns="${svg}"><path d="M0 0 ${command}${args} ${command}${args}"/></svg>`;
+			const next = command.toUpperCase() === 'M' || count === 0 ? command : ' ';
+			const expected = `M0 0${command === 'L' ? ' ' : command}${args}${next}${args}`;
+			const processor = new SourceProcessor();
+			const once = processor.process(source, compact).code;
+			expect(once).toBe(`<svg xmlns="${svg}"><path d="${expected}"/></svg>`);
+			expect(processor.process(once, compact).code).toBe(once);
 		});
 
 		it("should remove empty SVG containers while preserving referenced, styled and foreign content", () => {
@@ -3542,7 +3577,7 @@ describe("parseHtml", () => {
 			const options = { ...compact, renderEmbeddedSource: builtinEmbeddedRenderer() };
 			expect(processor.process(dtd + body, options).code).toBe(dtd + body);
 			for (const prefix of ['<!DOCTYPE svg SYSTEM "svg.dtd">', '<!DOCTYPE svg [<!ENTITY % defaults SYSTEM "defaults.dtd">%defaults;]>']) expect(processor.process(prefix + body, options).code).toBe(prefix + body);
-			expect(processor.process(body, options).code).toBe(`<svg xmlns="${svg}" fill="red"><path d="M0 0L1 2" transform="scale(1)"/></svg>`);
+			expect(processor.process(body, options).code).toBe(`<svg xmlns="${svg}" fill="red"><path d="M0 0 1 2" transform="scale(1)"/></svg>`);
 		});
 
 		it("should leave foreign XML, HTML and beautified attributes unchanged", () => {
@@ -3563,7 +3598,7 @@ describe("parseHtml", () => {
 			points: ["+001.500, 0002.00 0003.0,+04.000", "1.5 2 3 4"],
 			viewBox: [" +000.00, 000.0, 0010.0, +0020.000 ", "0 0 10 20"],
 			transform: ["translate(+001.00, 002.00)", "translate(1 2)"],
-			path: ["M000.00,000.00 L001.00,002.00", "M0 0L1 2"]
+			path: ["M000.00,000.00 L001.00,002.00", "M0 0 1 2"]
 		};
 
 		it.each(Object.entries(SVG_NUMERIC_ATTRIBUTES).flatMap(([tag, attributes]) => Object.entries(attributes).map(([name, kind]) => [tag, name, ...numericExamples[kind]])))("should shorten SVG %s %s using its geometry grammar", (tag, name, value, expected) => {

@@ -31,7 +31,7 @@ describe("the XML tool comparison", () => {
 		const minify = await /** @type {NonNullable<typeof tool>} */ (tool).create();
 		const once = await minify(source);
 		expect(once).toContain('fill="red"');
-		expect(once).toContain(`d="${step === 'colors' ? 'M000.00,000.00L001.00,002.00' : 'M0 0L1 2'}"`);
+		expect(once).toContain(`d="${step === 'colors' ? 'M000.00,000.00L001.00,002.00' : 'M0 0 1 2'}"`);
 		expect(once.includes('<g/>')).toBe(step !== 'containers');
 		expect(once).toContain('id="keep"');
 		expect(once).toContain('<style>path{stroke:#fff}</style>');
