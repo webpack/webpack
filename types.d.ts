@@ -5367,6 +5367,7 @@ declare class ConstDependency extends NullDependency {
 		| "provided"
 		| "dynamic-import"
 		| "esm-reexport"
+		| "esm-export-specifier"
 		| "esm-side-effect-import"
 		| "context-element"
 		| "esm-bare-side-effect-import"
@@ -8025,6 +8026,7 @@ declare class Dependency {
 			| "provided"
 			| "dynamic-import"
 			| "esm-reexport"
+			| "esm-export-specifier"
 			| "esm-side-effect-import"
 			| "context-element"
 			| "esm-bare-side-effect-import"
@@ -8195,6 +8197,7 @@ declare class Dependency {
 		| "provided"
 		| "dynamic-import"
 		| "esm-reexport"
+		| "esm-export-specifier"
 		| "esm-side-effect-import"
 		| "context-element"
 		| "esm-bare-side-effect-import"
@@ -8967,6 +8970,7 @@ declare class ESMImportDependency extends ModuleDependency {
 		| "provided"
 		| "dynamic-import"
 		| "esm-reexport"
+		| "esm-export-specifier"
 		| "esm-side-effect-import"
 		| "context-element"
 		| "esm-bare-side-effect-import"
@@ -18083,6 +18087,11 @@ declare interface KnownMeta {
 	 * generate export definitions on demand
 	 */
 	onDemandExports?: boolean;
+
+	/**
+	 * module-level `let` names a module library declares in the chunk's scope instead, with the keys of the runtimes doing so
+	 */
+	hoistedBindings?: Map<string, Set<string>>;
 }
 
 /**
@@ -20628,6 +20637,7 @@ declare class ModuleDependency extends Dependency {
 		| "provided"
 		| "dynamic-import"
 		| "esm-reexport"
+		| "esm-export-specifier"
 		| "esm-side-effect-import"
 		| "context-element"
 		| "esm-bare-side-effect-import"
@@ -23487,6 +23497,7 @@ declare class NullDependency extends Dependency {
 		| "provided"
 		| "dynamic-import"
 		| "esm-reexport"
+		| "esm-export-specifier"
 		| "esm-side-effect-import"
 		| "context-element"
 		| "esm-bare-side-effect-import"
