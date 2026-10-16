@@ -1444,6 +1444,18 @@ const IMPROVED_YET_BIGGER = {
 		"11 to 14 bytes fewer, 2 to 3 more gzipped: each folded call repeats the string the test asserts it equals",
 	"return-values.js (the default minimizer's options)":
 		"392 bytes fewer, 18 more gzipped: each folded call repeats the string the test asserts it equals",
+	"15.2.3.6-4-314.js (the default minimizer's options)":
+		"13 to 17 bytes fewer, 4 to 10 more gzipped: the getter kept for `get` is called where terser repeats the string it returns, which gzip reused",
+	"15.2.3.6-4-314-1.js (the default minimizer's options)":
+		"13 to 17 bytes fewer, 4 to 10 more gzipped: the getter kept for `get` is called where terser repeats the string it returns, which gzip reused",
+	"15.2.3.6-4-315.js (the default minimizer's options)":
+		"13 to 17 bytes fewer, 4 to 10 more gzipped: the getter kept for `get` is called where terser repeats the string it returns, which gzip reused",
+	"15.2.3.6-4-315-1.js (the default minimizer's options)":
+		"13 to 17 bytes fewer, 4 to 10 more gzipped: the getter kept for `get` is called where terser repeats the string it returns, which gzip reused",
+	"15.2.3.6-4-321.js (the default minimizer's options)":
+		"13 to 17 bytes fewer, 4 to 10 more gzipped: the getter kept for `get` is called where terser repeats the string it returns, which gzip reused",
+	"15.2.3.6-4-321-1.js (the default minimizer's options)":
+		"13 to 17 bytes fewer, 4 to 10 more gzipped: the getter kept for `get` is called where terser repeats the string it returns, which gzip reused",
 };
 
 // Sources whose shorter spelling no longer repeats text gzip matched, by the

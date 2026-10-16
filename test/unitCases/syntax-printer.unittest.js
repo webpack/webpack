@@ -330,12 +330,6 @@ const IMPROVED_CASES = [
 		"function f(y,z){return[+y,y>>>z]}console.log(f(\"3\",1));"
 	],
 	[
-		"Babel's default parameters, testing `arguments.length` before reading the index",
-		"function f() { var a = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1; var b = arguments.length > 1 ? arguments[1] : void 0; return [a, b]; } console.log(f(), f(5), f(5, 6));",
-		{ compress: {}, mangle: false },
-		"function f(){return[void 0!==arguments[0]?arguments[0]:1,arguments[1]]}console.log(f(),f(5),f(5,6));"
-	],
-	[
 		"unread calls of an async function with no body and of a generator",
 		"var log = []; function f() { (async () => {})(); (function* () { log.push(1); })(); log.push(2); } f(); console.log(log.join());",
 		{ compress: {}, mangle: false },
@@ -1317,7 +1311,31 @@ const IMPROVED_CASES = [
 		"a setter called from two places copied into each call",
 		"var frame = null; function setFrame(element) { frame = element; } function show(element) { if (element) setFrame(describe(element)); else setFrame(null); return frame; } function describe(v) { return '<' + v + '>'; } console.log(show('a'), show(''));",
 		{ compress: { toplevel: true }, mangle: false },
-		'var frame=null;function show(element){return element?frame="<"+element+">":frame=null,frame}console.log(show("a"),show(""));'
+		'function show(element){return element?"<"+element+">":null}console.log(show("a"),show(""));'
+	],
+	[
+		"a function called in place reading its argument's name for a parameter",
+		"var cache = {}; function add(map, list) { return (function (target, key, value) { target[key] ? target[key].push(value) : (target[key] = [value]); })(map, 'list', list); } add(cache, 1); add(cache, 2); console.log(cache.list);",
+		{ compress: { toplevel: true }, mangle: false },
+		'var cache={};function add(map,list){map.list?map.list.push(list):map.list=[list]}add(cache,1),add(cache,2),console.log(cache.list);'
+	],
+	[
+		"a function returning a literal keeps its calls where a value read keeps it",
+		"function make() { return { some: 'data', more: 'values' }; } var first = make(); var factory = make; console.log(first, factory());",
+		{ compress: { toplevel: true }, mangle: false },
+		'function make(){return{some:"data",more:"values"}}var first=make();console.log(first,make());'
+	],
+	[
+		"no `return` left before the `var` a function called in place declared",
+		"function f(o) { return (function (v) { console.log(v); console.log(v); })(String(o)); } f(1);",
+		{ compress: { passes: 2 }, mangle: false },
+		"function f(o){v=String(o),console.log(v),console.log(v);var v}f(1);"
+	],
+	[
+		"a function called in place declaring its argument's name keeps the copy",
+		"function add(map, list) { (function (value, list) { console.log(value, list); })(list, map); } add(1, 2);",
+		{ compress: { toplevel: true }, mangle: false },
+		undefined
 	],
 	[
 		"a function returning another's call copied into each of its calls",
@@ -1443,7 +1461,7 @@ const IMPROVED_CASES = [
 		"destructured names mangled to the keys they read, printed shorthand",
 		"function s(v) { var { a, b, c } = v; return a + b * c; } console.log(s({ a: 1, b: 2, c: 3 }), s({ a: 2, b: 3, c: 4 }));",
 		{ compress: {}, mangle: true, ecma: 2015 },
-		"function s(c){var{a,b,c:n}=c;return a+b*n}console.log(s({a:1,b:2,c:3}),s({a:2,b:3,c:4}));"
+		"function s(n){var{a,b,c}=n;return a+b*c}console.log(s({a:1,b:2,c:3}),s({a:2,b:3,c:4}));"
 	],
 ];
 
@@ -8479,9 +8497,28 @@ describe("syntax-printer", () => {
 			}
 		});
 
-		it("should keep `arguments.length` tested where something else uses the object", async () => {
+		it("should keep each closure a function called in place in a loop makes reading its own argument", async () => {
 			const { minify } = await load();
 			for (const input of [
+				"function g() { var out = []; for (var i = 0; i < 2; i++) { var b = [i]; console.log(b); (function (a) { out.push(function () { return a; }); })(b); } return out.map(function (f) { return f(); }); } console.log(g());",
+				"function g(n) { var out = []; while (n--) { var b = n * 2; console.log(b, b); (function (a) { out.push(() => a); })(b); } return out.map((f) => f()); } console.log(g(2));"
+			]) {
+				for (const options of [
+					{ compress: { passes: 2 }, mangle: false },
+					{ toplevel: true, compress: { passes: 2 } }
+				]) {
+					const { code } = await minify(input, options);
+					expect(runProgram(/** @type {string} */ (code))).toBe(
+						runProgram(input)
+					);
+				}
+			}
+		});
+
+		it("should keep `arguments.length` tested, as an index past it may read a getter `Object.prototype` holds", async () => {
+			const { minify } = await load();
+			for (const input of [
+				"export function f(){var a=arguments.length>0&&arguments[0]!==undefined?arguments[0]:1;var b=arguments.length>1?arguments[1]:void 0;return[a,b]}",
 				"export function f(){arguments[1]=5;return arguments.length>1?arguments[1]:void 0}",
 				"export function f(){g(arguments);return arguments.length>1&&void 0!==arguments[1]?arguments[1]:2}",
 				"export function f(){return arguments.length>2&&void 0!==arguments[1]?arguments[1]:2}"
