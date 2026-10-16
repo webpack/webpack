@@ -15,8 +15,7 @@ export function bump() {
 }
 
 export function replace() {
-	callable = null;
-	callable ??= function () {};
+	callable = function () {};
 }
 
 export function snapshot() {
