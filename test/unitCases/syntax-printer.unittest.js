@@ -8598,23 +8598,25 @@ describe("syntax-printer", () => {
 			const { minify } = await load();
 			/**
 			 * @param {string} source a program
-			 * @returns {string} what it prints, promise callbacks included
+			 * @returns {Promise<string>} what it prints, promise callbacks included
 			 */
-			const runSettled = (source) => {
+			const runSettled = async (source) => {
 				/** @type {string[]} */
 				const lines = [];
-				vm.runInNewContext(
-					source,
-					{ console: { log: (/** @type {string} */ line) => lines.push(line) } },
-					{ microtaskMode: "afterEvaluate" }
-				);
+				vm.runInNewContext(source, {
+					console: { log: (/** @type {string} */ line) => lines.push(line) }
+				});
+				// The context shares this process's promise queue, empty by `setImmediate`.
+				await new Promise((resolve) => setImmediate(resolve));
 				return lines.join("\n");
 			};
 			const program =
 				'(async function () { return { then(resolve) { console.log("function"); resolve(); } }; })(); (async () => ({ then(resolve) { console.log("arrow"); resolve(); } }))();';
 			const { code } = await minify(program, { compress: { passes: 2 }, mangle: true });
-			expect(runSettled(program)).toBe("function\narrow");
-			expect(runSettled(/** @type {string} */ (code))).toBe("function\narrow");
+			expect(await runSettled(program)).toBe("function\narrow");
+			expect(await runSettled(/** @type {string} */ (code))).toBe(
+				"function\narrow"
+			);
 		});
 
 		it("should read the name a `let` copies, so its constant call folds (terser#1637)", async () => {
