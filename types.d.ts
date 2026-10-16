@@ -12997,7 +12997,7 @@ declare interface HtmlProcessOptions {
 	shortenSvgNumbers?: boolean;
 
 	/**
-	 * shorten SVG path numbers and separators without rounding or changing commands when minifying XML (default false)
+	 * compact SVG path numbers, repeated commands and separators without rounding or changing segments when minifying XML (default false)
 	 */
 	shortenSvgPathData?: boolean;
 
@@ -24404,7 +24404,7 @@ declare interface OptimizationMinimizeXml {
 	shortenNumbers?: boolean;
 
 	/**
-	 * Shorten SVG path numbers and separators without rounding or changing commands, preserving arc flags and DTD-declared values. Off by default because selectors and scripts can observe attribute spelling.
+	 * Compact SVG path numbers, repeated commands and separators without rounding or changing segments, preserving arc flags and DTD-declared values. Off by default because selectors and scripts can observe attribute spelling.
 	 * @since 5.113.0
 	 */
 	shortenPathData?: boolean;
