@@ -223,7 +223,7 @@ class TupleMap {
 }
 
 /** @typedef {{ name: string, optional: boolean, spread: boolean, documentation: string, type: ts.Type }} ParsedParameter */
-/** @typedef {{ documentation: string, typeParameters?: readonly ts.Type[], args: ParsedParameter[], thisType?: ts.Type, returnType: ts.Type }} ParsedSignature */
+/** @typedef {{ documentation: string, typeParameters?: readonly ts.Type[], args: ParsedParameter[], thisType?: ts.Type, returnType: ts.Type, abstract: boolean }} ParsedSignature */
 /** @typedef {string[]} SymbolName */
 /** @typedef {Map<string, { type: ts.Type, method: boolean, optional: boolean, readonly: boolean, getter: boolean, documentation: string }>} PropertiesMap */
 
@@ -364,6 +364,20 @@ const isSimpleFunction = (parsed) =>
 	parsed.constructors.length === 0 &&
 	parsed.calls.length === 1 &&
 	(!parsed.typeParameters || parsed.typeParameters.length === 0);
+
+/**
+ * @param {MergedType} parsed the parsed type
+ * @returns {boolean} true when it is one abstract construct signature, which only a type alias can express
+ */
+const isAbstractConstructor = (parsed) =>
+	parsed.type === "interface" &&
+	parsed.properties.size === 0 &&
+	parsed.calls.length === 0 &&
+	parsed.constructors.length === 1 &&
+	parsed.constructors[0].abstract &&
+	!parsed.numberIndex &&
+	!parsed.stringIndex &&
+	parsed.baseTypes.length === 0;
 
 /**
  * @param {string} prefix what kind of signature it is
@@ -1266,7 +1280,15 @@ const collectTypes = ({ program, checker, options }) => {
 			returnType,
 			thisType: signature.thisParameter
 				? getTypeOfSymbol(signature.thisParameter, false)
-				: undefined
+				: undefined,
+			abstract: Boolean(
+				declaration &&
+				ts.isConstructorTypeNode(declaration) &&
+				declaration.modifiers &&
+				declaration.modifiers.some(
+					(modifier) => modifier.kind === ts.SyntaxKind.AbstractKeyword
+				)
+			)
 		};
 	};
 
@@ -2981,6 +3003,15 @@ const generateDeclarations = ({
 				if (variable !== undefined) {
 					queueDeclaration(type, variable, () => {
 						const typeArgs = new Set(parsed.typeParameters);
+						if (isAbstractConstructor(parsed)) {
+							return `${parsed.documentation}type ${variable}${
+								parsed.typeParameters
+									? `<${parsed.typeParameters
+											.map((t) => getCode(t, new Set(), "in type args"))
+											.join(", ")}>`
+									: ""
+							} = abstract new ${sigToString(parsed.constructors[0], typeArgs, "arrow")};`;
+						}
 						return `${parsed.documentation}declare interface ${variable}${
 							parsed.typeParameters
 								? `<${parsed.typeParameters
@@ -3010,6 +3041,9 @@ const generateDeclarations = ({
 				}
 				if (isSimpleFunction(parsed)) {
 					return `(${sigToString(parsed.calls[0], typeArgs, "arrow")})`;
+				}
+				if (isAbstractConstructor(parsed)) {
+					return `(abstract new ${sigToString(parsed.constructors[0], typeArgs, "arrow")})`;
 				}
 				return `{ ${getInterfaceItems(type, parsed, typeArgs).join("; ")} }`;
 			}

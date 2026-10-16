@@ -145,6 +145,7 @@ import {
 } from "webpack-sources/types/helpers/stringBufferUtils";
 type SetSamplingIntervalParameterType =
 	import("inspector").Profiler.SetSamplingIntervalParameterType;
+type StopReturnType = import("inspector").Profiler.StopReturnType;
 
 declare interface Abortable {
 	signal?: AbortSignal;
@@ -734,7 +735,7 @@ declare class AsyncDependenciesBlock extends DependenciesBlock {
 	request?: null | string;
 	chunkName?: null | string;
 	get circular(): boolean;
-	module: any;
+	module: void;
 }
 
 /**
@@ -1453,6 +1454,8 @@ declare interface BufferEntry {
 	bufferedMap?: null | BufferedMap;
 	scopes?: ScopesReplay;
 }
+type BufferSerializableType =
+	Buffer | (() => BufferSerializableType[] | Promise<BufferSerializableType[]>);
 declare interface BufferedMap {
 	/**
 	 * version
@@ -5390,9 +5393,7 @@ declare class ConstDependency extends NullDependency {
 declare class ConstDependencyTemplate extends NullDependencyTemplate {
 	constructor();
 }
-declare interface Constructor {
-	new (...params: any[]): any;
-}
+type Constructor = abstract new (...params: never[]) => object;
 declare class ConsumeSharedPlugin {
 	/**
 	 * Creates an instance of ConsumeSharedPlugin.
@@ -8148,8 +8149,8 @@ declare class Dependency {
 	 * Restores this instance from the provided deserializer context.
 	 */
 	deserialize(__0: ObjectDeserializerContextObjectMiddlewareObject_2): void;
-	module: any;
-	get disconnect(): any;
+	module: void;
+	get disconnect(): void;
 
 	/**
 	 * Compares two dependencies by source location for sorting a module's
@@ -8215,9 +8216,7 @@ declare class Dependency {
 		| "css-icss-export"
 	>;
 }
-declare interface DependencyConstructor {
-	new (...args: any[]): Dependency;
-}
+type DependencyConstructor = abstract new (...args: never[]) => Dependency;
 
 /**
  * branch guard: the dependency is live only when the formula evaluates to `value`
@@ -9186,7 +9185,7 @@ declare interface EffectUse {
 	type: EffectUseType;
 	value: {
 		loader: string;
-		options?: null | string | Record<string, any>;
+		options?: null | string | { [index: string]: any };
 		ident?: string;
 	};
 }
@@ -12212,10 +12211,7 @@ declare interface HashedModuleIdsPluginOptions {
 	 */
 	hashFunction?: string | typeof Hash;
 }
-type Head<T extends ReadonlyArray<any>> = T extends readonly [
-	infer H,
-	...infer _Rest
-]
+type Head<T> = T extends readonly [infer H, ...infer _Rest]
 	? H
 	: T extends readonly []
 		? any
@@ -18249,7 +18245,7 @@ declare interface KnownStatsChunkOrigin {
  * Defines the known stats compilation type used by this module.
  */
 declare interface KnownStatsCompilation {
-	env?: any;
+	env?: StatsJsonValue;
 	name?: string;
 	hash?: string;
 	version?: string;
@@ -18697,11 +18693,7 @@ declare interface LazyCompilationOptions {
 type LazyFunction<
 	InputValue,
 	OutputValue,
-	InternalLazyTarget extends SerializerMiddleware<
-		any,
-		any,
-		Record<string, any>
-	>,
+	InternalLazyTarget extends SerializerMiddleware,
 	InternalLazyOptions extends undefined | LazyOptions
 > = (() => InputValue | Promise<InputValue>) &
 	Partial<{ options: InternalLazyOptions }>;
@@ -23530,7 +23522,7 @@ declare namespace ObjectDeserializerContextObjectMiddlewareObject_1 {
  * re-types the same context to `Tail<T>` so successive reads stay positional.
  */
 declare interface ObjectDeserializerContextObjectMiddlewareObject_2<
-	T extends ReadonlyArray<any> = ReadonlyArray<any>
+	T = ReadonlyArray<any>
 > {
 	read: () => Head<T>;
 	rest: ObjectDeserializerContextObjectMiddlewareObject_2<Tail<T>>;
@@ -23589,15 +23581,18 @@ declare interface ObjectEncodingOptionsResolver {
 
 /**
  * Defines the object serializer type used by this module.
+ * Methods, so a serializer may narrow `value` to the class it is registered for.
  */
-declare interface ObjectSerializer {
-	serialize: (
-		value: any,
-		context: ObjectSerializerContextObjectMiddlewareObject_3<any>
-	) => void;
-	deserialize: (
-		context: ObjectDeserializerContextObjectMiddlewareObject_2<any>
-	) => any;
+declare interface ObjectSerializer<T extends object = object> {
+	serialize(
+		value: T,
+		context: ObjectSerializerContextObjectMiddlewareObject_3<ReadonlyArray<any>>
+	): void;
+	deserialize(
+		context: ObjectDeserializerContextObjectMiddlewareObject_2<
+			ReadonlyArray<any>
+		>
+	): object;
 }
 
 /**
@@ -23615,12 +23610,7 @@ declare interface ObjectSerializerContextObjectMiddlewareObject_1 {
 	writeSeparate?: (
 		item: ComplexSerializableType,
 		obj?: LazyOptions
-	) => LazyFunction<
-		any,
-		any,
-		SerializerMiddleware<any, any, Record<string, any>>,
-		LazyOptions
-	>;
+	) => LazyFunction<any, any, SerializerMiddleware, LazyOptions>;
 }
 declare namespace ObjectSerializerContextObjectMiddlewareObject_2 {
 	export let write: (
@@ -23635,12 +23625,7 @@ declare namespace ObjectSerializerContextObjectMiddlewareObject_2 {
 		| ((
 				item: ComplexSerializableType,
 				obj?: LazyOptions
-		  ) => LazyFunction<
-				any,
-				any,
-				SerializerMiddleware<any, any, Record<string, any>>,
-				LazyOptions
-		  >);
+		  ) => LazyFunction<any, any, SerializerMiddleware, LazyOptions>);
 }
 
 /**
@@ -23648,7 +23633,7 @@ declare namespace ObjectSerializerContextObjectMiddlewareObject_2 {
  * `T` is the tuple of values written in order; each `write` consumes the head.
  */
 declare interface ObjectSerializerContextObjectMiddlewareObject_3<
-	T extends ReadonlyArray<any> = ReadonlyArray<any>
+	T = ReadonlyArray<any>
 > {
 	write: (
 		value: Head<T>
@@ -23660,12 +23645,7 @@ declare interface ObjectSerializerContextObjectMiddlewareObject_3<
 	writeSeparate?: (
 		item: ComplexSerializableType,
 		obj?: LazyOptions
-	) => LazyFunction<
-		any,
-		any,
-		SerializerMiddleware<any, any, Record<string, any>>,
-		LazyOptions
-	>;
+	) => LazyFunction<any, any, SerializerMiddleware, LazyOptions>;
 }
 
 /**
@@ -23685,12 +23665,7 @@ declare interface ObjectSerializerContextObjectMiddlewareObject_4 {
 	writeSeparate?: (
 		item: ComplexSerializableType,
 		obj?: LazyOptions
-	) => LazyFunction<
-		any,
-		any,
-		SerializerMiddleware<any, any, Record<string, any>>,
-		LazyOptions
-	>;
+	) => LazyFunction<any, any, SerializerMiddleware, LazyOptions>;
 }
 
 /**
@@ -26938,7 +26913,15 @@ declare class Profiler {
 	session?: SessionImportInspectorClass_2;
 	inspector: Inspector;
 	hasSession(): boolean;
-	startProfiling(): Promise<void> | Promise<[any, any, any]>;
+	startProfiling():
+		| Promise<void>
+		| Promise<
+				[
+					void | Partial<StopReturnType>,
+					void | Partial<StopReturnType>,
+					void | Partial<StopReturnType>
+				]
+		  >;
 
 	/**
 	 * Returns promise for the result.
@@ -26946,7 +26929,7 @@ declare class Profiler {
 	sendCommand(
 		method: string,
 		params?: SetSamplingIntervalParameterType
-	): Promise<any>;
+	): Promise<void | Partial<StopReturnType>>;
 	destroy(): Promise<void>;
 
 	/**
@@ -30788,8 +30771,8 @@ declare interface Selector<A, B> {
  * Represents Serializer.
  */
 declare abstract class Serializer<DeserializedValue, SerializedValue, Context> {
-	serializeMiddlewares: SerializerMiddleware<any, any, any>[];
-	deserializeMiddlewares: SerializerMiddleware<any, any, any>[];
+	serializeMiddlewares: SerializerMiddleware[];
+	deserializeMiddlewares: SerializerMiddleware[];
 	context?: Context;
 
 	/**
@@ -30813,9 +30796,9 @@ declare abstract class Serializer<DeserializedValue, SerializedValue, Context> {
  * Represents SerializerMiddleware.
  */
 declare abstract class SerializerMiddleware<
-	DeserializedType,
-	SerializedType,
-	Context
+	DeserializedType = ComplexSerializableType,
+	SerializedType = ComplexSerializableType,
+	Context = object
 > {
 	/**
 	 * Serializes this instance into the provided serializer context.
@@ -31948,12 +31931,7 @@ declare interface StarListSerializerContext {
 	writeSeparate?: (
 		item: ComplexSerializableType,
 		obj?: LazyOptions
-	) => LazyFunction<
-		any,
-		any,
-		SerializerMiddleware<any, any, Record<string, any>>,
-		LazyOptions
-	>;
+	) => LazyFunction<any, any, SerializerMiddleware, LazyOptions>;
 }
 
 /**
@@ -32269,12 +32247,12 @@ declare class Stats {
 			| "verbose"
 	): string;
 }
-type StatsAsset = KnownStatsAsset & Record<string, any>;
-type StatsChunk = KnownStatsChunk & Record<string, any>;
-type StatsChunkGroup = KnownStatsChunkGroup & Record<string, any>;
-type StatsChunkOrigin = KnownStatsChunkOrigin & Record<string, any>;
-type StatsCompilation = KnownStatsCompilation & Record<string, any>;
-type StatsError = KnownStatsError & Record<string, any>;
+type StatsAsset = KnownStatsAsset & Record<string, StatsJsonValue>;
+type StatsChunk = KnownStatsChunk & Record<string, StatsJsonValue>;
+type StatsChunkGroup = KnownStatsChunkGroup & Record<string, StatsJsonValue>;
+type StatsChunkOrigin = KnownStatsChunkOrigin & Record<string, StatsJsonValue>;
+type StatsCompilation = KnownStatsCompilation & Record<string, StatsJsonValue>;
+type StatsError = KnownStatsError & Record<string, StatsJsonValue>;
 declare abstract class StatsFactory {
 	hooks: StatsFactoryHooks;
 
@@ -32325,14 +32303,27 @@ declare interface StatsFactoryHooks {
 		SyncBailHook<[any, StatsFactoryContext], void | StatsFactory>
 	>;
 }
-type StatsLogging = KnownStatsLogging & Record<string, any>;
-type StatsLoggingEntry = KnownStatsLoggingEntry & Record<string, any>;
-type StatsModule = KnownStatsModule & Record<string, any>;
-type StatsModuleIssuer = KnownStatsModuleIssuer & Record<string, any>;
-type StatsModuleReason = KnownStatsModuleReason & Record<string, any>;
+type StatsJsonValue =
+	| undefined
+	| null
+	| string
+	| number
+	| boolean
+	| Buffer
+	| StatsJsonValue[]
+	| { [index: string]: StatsJsonValue };
+type StatsLogging = KnownStatsLogging & Record<string, StatsJsonValue>;
+type StatsLoggingEntry = KnownStatsLoggingEntry &
+	Record<string, StatsJsonValue>;
+type StatsModule = KnownStatsModule & Record<string, StatsJsonValue>;
+type StatsModuleIssuer = KnownStatsModuleIssuer &
+	Record<string, StatsJsonValue>;
+type StatsModuleReason = KnownStatsModuleReason &
+	Record<string, StatsJsonValue>;
 type StatsModuleTraceDependency = KnownStatsModuleTraceDependency &
-	Record<string, any>;
-type StatsModuleTraceItem = KnownStatsModuleTraceItem & Record<string, any>;
+	Record<string, StatsJsonValue>;
+type StatsModuleTraceItem = KnownStatsModuleTraceItem &
+	Record<string, StatsJsonValue>;
 type StatsObject<T, F> = T extends Compilation
 	? StatsCompilation
 	: T extends ChunkGroupInfoWithName
@@ -32885,7 +32876,7 @@ type StatsPrinterContext = KnownStatsPrinterColorFunctions &
 	KnownStatsPrinterFormatters &
 	KnownStatsPrinterContext &
 	Record<string, any>;
-type StatsProfile = KnownStatsProfile & Record<string, any>;
+type StatsProfile = KnownStatsProfile & Record<string, StatsJsonValue>;
 type StatsValue =
 	| boolean
 	| StatsOptions
@@ -33619,12 +33610,7 @@ declare interface TagInfo {
 		| CompatibilitySettings;
 	next?: TagInfo;
 }
-type Tail<T extends ReadonlyArray<any>> = T extends readonly [
-	infer _First,
-	...infer R
-]
-	? R
-	: T;
+type Tail<T> = T extends readonly [infer _First, ...infer R] ? R : T;
 declare interface TargetItemWithConnection {
 	module: Module;
 	connection: ModuleGraphConnection;
@@ -37572,11 +37558,11 @@ declare namespace exports {
 			export { RuntimeSpecMap, RuntimeSpecSet };
 		}
 		export namespace serialization {
-			export const register: (
-				Constructor: Constructor,
+			export const register: <C extends Constructor>(
+				Constructor: C,
 				request: string,
 				name: null | string,
-				serializer: ObjectSerializer
+				serializer: ObjectSerializer<InstanceType<C>>
 			) => void;
 			export const registerLegacyRequest: (
 				Constructor: Constructor,
@@ -37589,14 +37575,20 @@ declare namespace exports {
 			) => void;
 			export const registerNotSerializable: (Constructor: Constructor) => void;
 			export const NOT_SERIALIZABLE: object;
-			export const buffersSerializer: Serializer<any, any, any>;
+			export const buffersSerializer: Serializer<
+				ComplexSerializableType,
+				BufferSerializableType[],
+				object
+			>;
 			export let createFileSerializer: <D, S, C>(
 				fs: IntermediateFileSystem,
 				hashFunction: HashFunction
 			) => Serializer<D, S, C>;
 			export { MEASURE_START_OPERATION, MEASURE_END_OPERATION };
 		}
-		export const makeSerializable: <T extends Constructor>(
+		export const makeSerializable: <
+			T extends { new (...params: never[]): object }
+		>(
 			Constructor: T,
 			request: string | (string | [string, null | string])[],
 			name?: null | string
