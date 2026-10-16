@@ -7,10 +7,15 @@ const path = require("path");
 
 const BIN = path.resolve(__dirname, "../../bin/webpack.js");
 
-// `module.enableCompileCache` exists only from Node.js 22.8.
+// Node's compile cache exists from Node.js 22.8; Bun and Deno expose the
+// function without the cache behind it.
 const { enableCompileCache } = /** @type {{ enableCompileCache?: () => void }} */ (
 	require("module")
 );
+const hasCompileCache =
+	typeof enableCompileCache === "function" &&
+	!process.versions.bun &&
+	!process.versions.deno;
 
 /**
  * Runs `bin/webpack.js` on a configuration that reports, and then exits, what a
@@ -54,7 +59,7 @@ process.exit(0);
 	}
 };
 
-(enableCompileCache ? describe : describe.skip)("bin/webpack.js compile cache", () => {
+(hasCompileCache ? describe : describe.skip)("bin/webpack.js compile cache", () => {
 	it("hands the compile cache to the child processes it starts", () => {
 		const { variable, childDirectory } = runBin({});
 		expect(typeof variable).toBe("string");
