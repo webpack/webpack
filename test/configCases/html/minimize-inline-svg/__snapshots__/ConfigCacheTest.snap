@@ -1,0 +1,29 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases html minimize-inline-svg minimize-inline-svg should compile: default 1`] = `
+"<!doctype html><html lang=en><head><title>Inline SVG</title><style>.icon{background:url(\\"data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'><path d='M000,000 l0 80-112 0'/></svg>\\")}</style></head><body>
+<svg viewBox=\\"000 000 0024.0 24\\" xmlns=http://www.w3.org/2000/svg>
+	<metadata><rdf:RDF><cc:Work/></rdf:RDF></metadata>
+	<path d=\\"M000,000 l0 80-112 0\\" transform=\\"translate(+001.00, 002.00)\\"/>
+	<rect width=+001.500px height=002></rect>
+</svg>
+<img alt src=\\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cmetadata%3Em%3C/metadata%3E%3Crect width='+001.500'/%3E%3C/svg%3E\\">
+<div data-d=M000,000></div>
+
+
+</body></html>"
+`;
+
+exports[`ConfigCacheTestCases html minimize-inline-svg minimize-inline-svg should compile: svg 1`] = `
+"<!doctype html><html lang=en><head><title>Inline SVG</title><style>.icon{background:url(\\"data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'><path d='M0 0v80h-112'/></svg>\\")}</style></head><body>
+<svg viewBox=\\"0 0 24 24\\" xmlns=http://www.w3.org/2000/svg>
+	
+	<path d=\\"M0 0v80h-112\\" transform=\\"translate(1 2)\\"/>
+	<rect width=1.5px height=2></rect>
+</svg>
+<img alt src=\\"data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'><rect width='1.5'/></svg>\\">
+<div data-d=M000,000></div>
+
+
+</body></html>"
+`;

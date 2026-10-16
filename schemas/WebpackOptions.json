@@ -4493,7 +4493,7 @@
       "added": "5.110.0"
     },
     "OptimizationMinimizeXml": {
-      "description": "What the XML minimizer does. The stylesheets an SVG or XHTML element holds are minified with `optimization.minimizeOptions.css` for the target's browsers.",
+      "description": "What the XML minimizer does. The stylesheets an SVG or XHTML element holds are minified with `optimization.minimizeOptions.css` for the target's browsers. An SVG `data:` URL takes these switches too, and an `<svg>` inline in HTML takes `removeMetadata`, `shortenNumbers` and `shortenPathData`.",
       "type": "object",
       "additionalProperties": false,
       "properties": {
