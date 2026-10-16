@@ -664,8 +664,8 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc drops more unused expressions, as oxc's `peephole/remove_unused_expression.rs` tests show",
 		[
-			"oxc minifier: peephole/remove_unused_expression.rs:1053",
-			"oxc minifier: peephole/remove_unused_expression.rs:1153",
+			"oxc minifier: peephole/remove_unused_expression.rs:1057",
+			"oxc minifier: peephole/remove_unused_expression.rs:1157",
 			"oxc minifier: peephole/remove_unused_expression.rs:135",
 			"oxc minifier: peephole/remove_unused_expression.rs:136",
 			"oxc minifier: peephole/remove_unused_expression.rs:22",
@@ -695,8 +695,8 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/remove_unused_expression.rs:560",
 			"oxc minifier: peephole/remove_unused_expression.rs:587",
 			"oxc minifier: peephole/remove_unused_expression.rs:589",
-			"oxc minifier: peephole/remove_unused_expression.rs:688",
-			"oxc minifier: peephole/remove_unused_expression.rs:914",
+			"oxc minifier: peephole/remove_unused_expression.rs:692",
+			"oxc minifier: peephole/remove_unused_expression.rs:918",
 			"oxc minifier: peephole/remove_unused_expression.rs:92"
 		]
 	],
@@ -1049,7 +1049,7 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/inline_single_use_variable.rs:348",
 			"oxc minifier: peephole/inline_single_use_variable.rs:400",
 			"oxc minifier: peephole/inline_single_use_variable.rs:47",
-			"oxc minifier: peephole/inline_single_use_variable.rs:533",
+			"oxc minifier: peephole/inline_single_use_variable.rs:546",
 			"oxc minifier: peephole/inline_single_use_variable.rs:80"
 		]
 	],
@@ -1095,20 +1095,25 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc inlines more constants and functions, as oxc's `peephole/inline.rs` tests show",
 		[
-			"oxc minifier: peephole/inline.rs:115",
-			"oxc minifier: peephole/inline.rs:154",
-			"oxc minifier: peephole/inline.rs:404",
-			"oxc minifier: peephole/inline.rs:405",
-			"oxc minifier: peephole/inline.rs:436",
-			"oxc minifier: peephole/inline.rs:443",
-			"oxc minifier: peephole/inline.rs:459",
-			"oxc minifier: peephole/inline.rs:499",
-			"oxc minifier: peephole/inline.rs:502",
-			"oxc minifier: peephole/inline.rs:503",
-			"oxc minifier: peephole/inline.rs:504",
-			"oxc minifier: peephole/inline.rs:505",
-			"oxc minifier: peephole/inline.rs:507",
-			"oxc minifier: peephole/inline.rs:52"
+			"oxc minifier: peephole/inline.rs:314",
+			"oxc minifier: peephole/inline.rs:353",
+			"oxc minifier: peephole/inline.rs:603",
+			"oxc minifier: peephole/inline.rs:604",
+			"oxc minifier: peephole/inline.rs:635",
+			"oxc minifier: peephole/inline.rs:642",
+			"oxc minifier: peephole/inline.rs:658",
+			"oxc minifier: peephole/inline.rs:698",
+			"oxc minifier: peephole/inline.rs:701",
+			"oxc minifier: peephole/inline.rs:702",
+			"oxc minifier: peephole/inline.rs:703",
+			"oxc minifier: peephole/inline.rs:704",
+			"oxc minifier: peephole/inline.rs:706",
+			"oxc minifier: peephole/inline.rs:251",
+			"oxc minifier: peephole/inline.rs:33",
+			"oxc minifier: peephole/inline.rs:183",
+			"oxc minifier: peephole/inline.rs:726",
+			"oxc minifier: peephole/inline.rs:733",
+			"oxc minifier: peephole/inline.rs:740"
 		]
 	],
 	[
@@ -1291,9 +1296,9 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc folds more constant expressions, as oxc's `peephole/fold_constants.rs` tests show",
 		[
-			"oxc minifier: peephole/fold_constants.rs:437",
-			"oxc minifier: peephole/fold_constants.rs:522",
-			"oxc minifier: peephole/fold_constants.rs:716"
+			"oxc minifier: peephole/fold_constants.rs:436",
+			"oxc minifier: peephole/fold_constants.rs:521",
+			"oxc minifier: peephole/fold_constants.rs:715"
 		]
 	],
 	[
@@ -1329,8 +1334,8 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: ecmascript/may_have_side_effects.rs:445",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:451",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:816",
-			"oxc minifier: peephole/remove_unused_expression.rs:734",
-			"oxc minifier: peephole/remove_unused_expression.rs:749"
+			"oxc minifier: peephole/remove_unused_expression.rs:738",
+			"oxc minifier: peephole/remove_unused_expression.rs:753"
 		]
 	],
 	[

@@ -36,7 +36,7 @@
     "react-dom": "19.3.0",
     "react": "19.3.0",
     "rxjs": "7.8.2",
-    "swagger-ui-dist": "5.33.1",
+    "swagger-ui-dist": "5.33.2",
     "terser": "5.51.2",
     "three": "0.186.1",
     "typescript": "7.0.2",
