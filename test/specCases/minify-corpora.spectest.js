@@ -1456,6 +1456,12 @@ const IMPROVED_YET_BIGGER = {
 		"13 to 17 bytes fewer, 4 to 10 more gzipped: the getter kept for `get` is called where terser repeats the string it returns, which gzip reused",
 	"15.2.3.6-4-321-1.js (the default minimizer's options)":
 		"13 to 17 bytes fewer, 4 to 10 more gzipped: the getter kept for `get` is called where terser repeats the string it returns, which gzip reused",
+	"precision-exact-in-balance-time-duration.js (the default minimizer's options)":
+		"15 bytes fewer, 13 more gzipped: the first block's `const e=513` inlined as `513n` breaks the `BigInt(e)` runs the blocks after it repeat",
+	"precision-exact-mathematical-values-5.js (the default minimizer's options)":
+		"34 bytes fewer, 1 more gzipped: the first block's `const e=513` inlined as `513n` breaks the `BigInt(e)` runs the blocks after it repeat",
+	"replaceAll.js (the default minimizer's options)":
+		"11 bytes fewer, 8 more gzipped: a block's `a=\"\"` inlined shifts the names its loops mangle, breaking the runs the blocks around it repeat",
 };
 
 // Sources whose shorter spelling no longer repeats text gzip matched, by the
