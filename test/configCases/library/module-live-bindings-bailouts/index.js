@@ -9,4 +9,7 @@ it("should keep exporting what a module in another chunk holds", () => {
 it("should leave a module reading its bindings through eval as it is", () => {
 	expect(library.readEvaluated()).toBe(1);
 	expect(library.evaluated).toBe(1);
+	library.setEvaluated(2);
+	expect(library.readEvaluated()).toBe(2);
+	expect(library.evaluated).toBe(1);
 });

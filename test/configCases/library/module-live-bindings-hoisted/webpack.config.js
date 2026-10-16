@@ -34,7 +34,32 @@ module.exports = [
 		new webpack.DefinePlugin({
 			GLOBAL_COUNTER: "counter",
 			MINIFIED: JSON.stringify(Boolean(optimization.minimize))
-		})
+		}),
+		/**
+		 * Fails the build when a module whose bindings are live reports them as copies.
+		 * @this {import("../../../../").Compiler} the compiler
+		 */
+		function noCopyBailouts() {
+			this.hooks.compilation.tap("test", (compilation) => {
+				compilation.hooks.afterSeal.tap("test", () => {
+					for (const module of compilation.modules) {
+						for (const source of module.getSourceModules()) {
+							for (const reason of compilation.moduleGraph.getOptimizationBailout(
+								source
+							)) {
+								if (typeof reason === "string" && reason.includes("copies")) {
+									compilation.errors.push(
+										new webpack.WebpackError(
+											`${source.identifier()}: ${reason}`
+										)
+									);
+								}
+							}
+						}
+					}
+				});
+			});
+		}
 	],
 	optimization
 }));

@@ -1,2 +1,2 @@
 export { shared, bumpShared } from "./shared.js";
-export { evaluated, readEvaluated } from "./evaluated.js";
+export { evaluated, readEvaluated, setEvaluated } from "./evaluated.js";
