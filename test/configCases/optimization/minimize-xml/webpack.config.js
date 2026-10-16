@@ -144,6 +144,8 @@ module.exports = [
 					shortenColors: true,
 					shortenNumbers: true,
 					shortenPathData: true,
+					removeMetadata: true,
+					removeEditorData: true,
 					removeEmptyElements: true
 				}
 			}
