@@ -30,6 +30,11 @@ module.exports = [
 		"./library.mjs": `./library-${index}.mjs`,
 		"external-counter": "var counter"
 	},
-	plugins: [new webpack.DefinePlugin({ GLOBAL_COUNTER: "counter" })],
+	plugins: [
+		new webpack.DefinePlugin({
+			GLOBAL_COUNTER: "counter",
+			MINIFIED: JSON.stringify(Boolean(optimization.minimize))
+		})
+	],
 	optimization
 }));
