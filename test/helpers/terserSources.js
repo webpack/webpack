@@ -151,7 +151,7 @@ let ownAst;
 /**
  * The class of a node of terser's tree, or the kind, terser's class, of a
  * node of webpack's, which holds it as data read by `kindOf`.
- * @param {import("../../lib/javascript/syntax-printer").Node} node a node of either tree
+ * @param {import("../../lib/javascript/syntax-printer").NodeShape} node a node of either tree
  * @returns {string} the class
  */
 const kindName = (node) => {

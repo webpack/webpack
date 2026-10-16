@@ -5867,14 +5867,14 @@ describe("syntax-printer", () => {
 			modules.ast.walk(
 				toplevel,
 				(
-					/** @type {import("../../lib/javascript/syntax-printer").Node} */ node
+					/** @type {import("../../lib/javascript/syntax-printer").NodeShape} */ node
 				) => {
 					if (node instanceof modules.ast.AST_Dot) {
 						// terser's dot holds its property as a string.
 						const name = /** @type {string} */ (
 							/** @type {unknown} */ (node.property)
 						);
-						node.property = /** @type {import("../../lib/javascript/syntax-printer").Node} */ ({
+						node.property = /** @type {import("../../lib/javascript/syntax-printer").NodeShape} */ ({
 							name
 						});
 					}
