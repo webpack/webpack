@@ -28,6 +28,7 @@
 const { spawn } = require("child_process");
 const fs = require("fs");
 const path = require("path");
+const vm = require("vm");
 const { parse: acornParse, tokenizer: acornTokenizer } = require("acorn");
 const { parse: webpackParse } = require("../lib/javascript/syntax-parser");
 // Acorn's own suite, recorded case by case: what `WebpackParser.unittest.js`
@@ -1656,12 +1657,24 @@ const invariants = async (write) => {
 	const wantsRespelling = JS_RESPELLINGS.some((respelling) =>
 		wantedRelation(`respelling ${respelling.name}`)
 	);
-	if (wantsIdempotence || wantsRespelling) {
+	const wantsBehavior = wantedRelation("behavior");
+	if (wantsIdempotence || wantsRespelling || wantsBehavior) {
 		const { minifySync } = (
 			await require("../lib/javascript/syntax").printer.load()
 		).modules;
-		// Respelling alone asks the first preset only.
-		const printing = wantsIdempotence ? presets : presets.slice(0, 1);
+		// Only what a script does before it returns is compared: a promise it
+		// leaves rejected, such as an `import()` with no loader, is ignored, and
+		// for the rest of the run, as one may settle after the sweep.
+		const ignore = () => {};
+		if (wantsBehavior) process.on("unhandledRejection", ignore);
+		let ran = 0;
+		// Respelling asks the first preset, behavior the ones printing alone.
+		const printing = presets.filter(
+			([name, presetOptions], i) =>
+				wantsIdempotence ||
+				(wantsRespelling && i === 0) ||
+				(wantsBehavior && presetOptions.compress === false)
+		);
 		let read = 0;
 		for (const [label, source, options] of corpus) {
 			const settled = options === undefined ? goalFor(source) : options;
@@ -1690,6 +1703,20 @@ const invariants = async (write) => {
 					? idempotence({ minify, reprint, source, says })
 					: { printed: minify(source), reports: [] };
 				for (const report of reports) groups.add(report, preset, label);
+				// Compressed or renamed, what a script observes may change by
+				// contract; printed alone, nothing it does may.
+				if (
+					printed !== null &&
+					wantsBehavior &&
+					!module &&
+					presetOptions.compress === false
+				) {
+					const reports = behaviorDifference(source, printed);
+					if (reports !== null) ran++;
+					for (const report of reports || []) {
+						groups.add(report, preset, label);
+					}
+				}
 				// Under the first preset only: whether a spelling decides the
 				// output is the same question under every option set, and each
 				// asking of it is a full minify of the whole program.
@@ -1707,8 +1734,72 @@ const invariants = async (write) => {
 			}
 		}
 		log(`printed ${read} sources under ${printing.length} presets …`);
+		if (wantsBehavior) {
+			log(`ran ${ran} printed scripts against their sources …`);
+		}
 	}
 	return groups.write(write);
+};
+
+// The scripts `behavior` runs: short enough that a run costs little, and
+// bounded so one that loops is skipped rather than hanging the sweep.
+const BEHAVIOR_MAX_LENGTH = 20000;
+const BEHAVIOR_TIMEOUT = 200;
+
+/**
+ * What a script prints and, where it throws, the kind of error, run in a fresh
+ * context: a function prints as `[function]`, as its text is the printer's.
+ * @param {string} code the script
+ * @returns {string | null} its transcript, null where it timed out
+ */
+const behaviorOf = (code) => {
+	/** @type {string[]} */
+	const lines = [];
+	/**
+	 * @param {unknown} value a logged value
+	 * @returns {string} it, as the transcript holds it
+	 */
+	const show = (value) =>
+		typeof value === "function" ? "[function]" : String(value);
+	const context = vm.createContext({
+		console: {
+			log: (/** @type {unknown[]} */ ...values) =>
+				lines.push(values.map(show).join(" "))
+		}
+	});
+	try {
+		vm.runInContext(code, context, { timeout: BEHAVIOR_TIMEOUT });
+	} catch (error) {
+		const { code: reason, name } =
+			/** @type {{ code?: unknown, name?: unknown }} */ (
+				error !== null && typeof error === "object" ? error : {}
+			);
+		if (reason === "ERR_SCRIPT_EXECUTION_TIMEOUT") return null;
+		lines.push(`threw <${typeof name === "string" ? name : typeof error}>`);
+	}
+	return lines.join("\n");
+};
+
+/**
+ * Whether a printed script still prints and throws what its source does.
+ * @param {string} source the script
+ * @param {string} printed what the printer wrote of it
+ * @returns {import("./compare-tools-harness").Report[] | null} what differs, empty where it runs the same, null where it was not run
+ */
+const behaviorDifference = (source, printed) => {
+	if (source.length > BEHAVIOR_MAX_LENGTH) return null;
+	const expected = behaviorOf(source);
+	// A script reading the clock or a random number answers for nothing.
+	if (expected === null || behaviorOf(source) !== expected) return null;
+	const got = behaviorOf(printed);
+	if (got === null || got === expected) return [];
+	return [
+		{
+			relation: "behavior",
+			what: "runs otherwise",
+			repro: `    ${oneLine(expected, 80)}\n      -> ${oneLine(got, 80)}`
+		}
+	];
 };
 
 /**
@@ -1954,4 +2045,10 @@ started.catch((error) => {
 	process.exitCode = 1;
 });
 
-module.exports = { firstDifference, reportable, runMode, show };
+module.exports = {
+	behaviorDifference,
+	firstDifference,
+	reportable,
+	runMode,
+	show
+};

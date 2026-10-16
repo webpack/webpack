@@ -724,13 +724,15 @@ const unsafeIn = (options) =>
  * @param {MinifyOptions[]} optionSets what it is minified under
  * @param {Minify} minify webpack's minifier
  * @param {boolean} interfaces whether the minifier's other ways in and out are checked too
+ * @param {{ enabled: boolean }} treePrinting the switch printing a source from its SyntaxTree
  * @returns {Promise<string | undefined>} the first failure
  */
 const checkProgram = async (
 	{ code: source, module: isModule },
 	optionSets,
 	minify,
-	interfaces
+	interfaces,
+	treePrinting
 ) => {
 	const parsed = parserDifference(source, isModule);
 	if (parsed !== undefined) return `parser: ${parsed}`;
@@ -779,6 +781,19 @@ const checkProgram = async (
 		}
 		if (seen.has(code) && set !== DEFAULTS && set !== STRONGEST) continue;
 		seen.add(code);
+		// Uncompressed, the SyntaxTree printer writes what terser's tree prints.
+		if (options.compress === false) {
+			treePrinting.enabled = false;
+			let fromTerser;
+			try {
+				fromTerser = await write(source, options);
+			} finally {
+				treePrinting.enabled = true;
+			}
+			if (fromTerser !== code) {
+				return `minify ${label}: the SyntaxTree printer writes otherwise than terser's tree\n\toutput: ${code}\n\tterser's tree: ${fromTerser}`;
+			}
+		}
 		const parsedOutput = parserDifference(code, isModule);
 		if (parsedOutput !== undefined) {
 			return `minify ${label}: parser on the output: ${parsedOutput}\n\toutput: ${code}`;
@@ -934,13 +949,14 @@ const requiredSpecifiers = (code) => {
 };
 
 describe("JavaScript fuzzer", () => {
-	/** @type {{ minify?: Minify }} */
+	/** @type {{ minify?: Minify, treePrinting?: { enabled: boolean } }} */
 	const loaded = {};
 
 	beforeAll(async () => {
-		loaded.minify = (
-			await require("../../lib/javascript/syntax").printer.load()
-		).minify;
+		const { minify, modules } =
+			await require("../../lib/javascript/syntax").printer.load();
+		loaded.minify = minify;
+		loaded.treePrinting = modules.treePrinting;
 	});
 
 	it("should write the same programs for the same seed", () => {
@@ -1008,7 +1024,8 @@ describe("JavaScript fuzzer", () => {
 							program,
 							optionSets,
 							minify,
-							round % INTERFACE_EVERY === 1
+							round % INTERFACE_EVERY === 1,
+							/** @type {{ enabled: boolean }} */ (loaded.treePrinting)
 						);
 					} catch (err) {
 						failure = `throws ${/** @type {Error} */ (err).stack}`;
