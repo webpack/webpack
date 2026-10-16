@@ -1,5 +1,6 @@
 "use strict";
 
+const vm = require("vm");
 const { toMatchSnapshot } = require("jest-snapshot");
 const { getActiveSnapshotState } = require("./snapshot");
 
@@ -144,3 +145,15 @@ if (process.env.DEBUG_INFO) {
 require("wast-loader");
 process.removeAllListeners("uncaughtException");
 process.removeAllListeners("unhandledRejection");
+
+// The runner's `vm.runInThisContext` writes to the worker's own global, which
+// outlives this file: drop what the file added so it can't keep it alive.
+const outerGlobal = vm.runInThisContext("globalThis");
+const outerGlobalKeys = new Set(Object.getOwnPropertyNames(outerGlobal));
+
+// eslint-disable-next-line jest/require-top-level-describe
+afterAll(() => {
+	for (const key of Object.getOwnPropertyNames(outerGlobal)) {
+		if (!outerGlobalKeys.has(key)) delete outerGlobal[key];
+	}
+});
