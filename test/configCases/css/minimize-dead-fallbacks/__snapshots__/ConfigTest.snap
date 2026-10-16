@@ -22,5 +22,7 @@ Array [
    kind this reads */.t11{color:red;color:oklch(from red l c h)}",
   "/*! declined: a mix names its space and its colors as keywords, and the space is
    one of the unknown ones */.t12{color:red;color:color-mix(in oklch,red,blue)}",
+  "/*! declined: a transition list keeps its dead prefixed entry, since dropping
+   it shortens every list \`getComputedStyle\` reads off the shorthand */.t13{transition:transform.15s linear,-webkit-transform.15s linear}",
 ]
 `;
