@@ -14,21 +14,21 @@
 .k005 { width: calc(10px / 4) }
 /*! width: calc(10px / 3) — same as lightningcss: 3.33333px */
 .k006 { width: calc(10px / 3) }
-/*! width: calc(100% / 3) — same as lightningcss: 33.3333% */
+/*! width: calc(100% / 3) — lightningcss: 33.3333% — ours keeps the digits Firefox lays a percentage out with */
 .k007 { width: calc(100% / 3) }
 /*! width: calc(100% / 4) — same as lightningcss: 25% */
 .k008 { width: calc(100% / 4) }
-/*! width: calc(100% / 6) — same as lightningcss: 16.6667% */
+/*! width: calc(100% / 6) — lightningcss: 16.6667% — ours keeps the digits Firefox lays a percentage out with */
 .k009 { width: calc(100% / 6) }
-/*! width: calc(100% / 7) — same as lightningcss: 14.2857% */
+/*! width: calc(100% / 7) — lightningcss: 14.2857% — ours keeps the digits Firefox lays a percentage out with */
 .k010 { width: calc(100% / 7) }
 /*! width: calc(100% / 8) — same as lightningcss: 12.5% */
 .k011 { width: calc(100% / 8) }
-/*! width: calc(100% / 9) — same as lightningcss: 11.1111% */
+/*! width: calc(100% / 9) — lightningcss: 11.1111% — ours keeps the digits Firefox lays a percentage out with */
 .k012 { width: calc(100% / 9) }
-/*! width: calc(100% / 12) — same as lightningcss: 8.33333% */
+/*! width: calc(100% / 12) — lightningcss: 8.33333% — ours keeps the digits Firefox lays a percentage out with */
 .k013 { width: calc(100% / 12) }
-/*! width: calc(100% * 2 / 3) — same as lightningcss: 66.6667% */
+/*! width: calc(100% * 2 / 3) — lightningcss: 66.6667% — ours keeps the digits Firefox lays a percentage out with */
 .k014 { width: calc(100% * 2 / 3) }
 /*! width: calc(200px / 3) — same as lightningcss: 66.6667px */
 .k015 { width: calc(200px / 3) }
@@ -106,7 +106,7 @@
 .k051 { width: calc(-1 * (100% - 10px)) }
 /*! width: calc(100% / 3 - 10px) — lightningcss: calc(33.3333% - 10px) — ours is shorter */
 .k052 { width: calc(100% / 3 - 10px) }
-/*! width: calc(100% / 3 + 100% / 3) — same as lightningcss: 66.6667% */
+/*! width: calc(100% / 3 + 100% / 3) — lightningcss: 66.6667% — ours keeps the digits Firefox lays a percentage out with */
 .k053 { width: calc(100% / 3 + 100% / 3) }
 /*! opacity: calc(1 / 3) — same as lightningcss: .333333 */
 .k054 { opacity: calc(1 / 3) }
@@ -274,17 +274,17 @@
 .k135 { margin: calc(1px + 1px) calc(2px * 2) }
 /*! margin: calc(10px / 3) 0 — same as lightningcss: 3.33333px 0 */
 .k136 { margin: calc(10px / 3) 0 }
-/*! transform: translateX(calc(100% / 3)) — same as lightningcss: translate(33.3333%) */
+/*! transform: translateX(calc(100% / 3)) — lightningcss: translate(33.3333%) — ours keeps the digits Firefox lays a percentage out with */
 .k137 { transform: translateX(calc(100% / 3)) }
-/*! transform: translate(calc(10px + 5px), calc(100% / 3)) — same as lightningcss: translate(15px,33.3333%) */
+/*! transform: translate(calc(10px + 5px), calc(100% / 3)) — lightningcss: translate(15px,33.3333%) — ours keeps the digits Firefox lays a percentage out with */
 .k138 { transform: translate(calc(10px + 5px), calc(100% / 3)) }
 /*! transform: rotate(calc(45deg * 2)) — same as lightningcss: rotate(90deg) */
 .k139 { transform: rotate(calc(45deg * 2)) }
 /*! transform: scale(calc(1 / 3)) — same as lightningcss: scale(.333333) */
 .k140 { transform: scale(calc(1 / 3)) }
-/*! background-position: calc(100% / 3) calc(50% + 10px) — lightningcss: 33.3333% calc(50% + 10px) — the same value, ours dropping a space the tokens do not need */
+/*! background-position: calc(100% / 3) calc(50% + 10px) — lightningcss: 33.3333% calc(50% + 10px) — ours keeps the digits Firefox lays a percentage out with */
 .k141 { background-position: calc(100% / 3) calc(50% + 10px) }
-/*! grid-template-columns: repeat(3, calc(100% / 3)) — same as lightningcss: repeat(3,33.3333%) */
+/*! grid-template-columns: repeat(3, calc(100% / 3)) — lightningcss: repeat(3,33.3333%) — ours keeps the digits Firefox lays a percentage out with */
 .k142 { grid-template-columns: repeat(3, calc(100% / 3)) }
 /*! box-shadow: calc(1px + 1px) 0 calc(4px / 3) #000 — lightningcss: 2px 0 1.33333px #000 — the same value, ours dropping a space the tokens do not need */
 .k143 { box-shadow: calc(1px + 1px) 0 calc(4px / 3) #000 }
@@ -298,9 +298,9 @@
 .k147 { color: rgb(0 0 0 / calc(1 / 3)) }
 /*! font: calc(10px + 2px)/1.5 serif — same as lightningcss: 12px/1.5 serif */
 .k148 { font: calc(10px + 2px)/1.5 serif }
-/*! border-radius: calc(100% / 3) — same as lightningcss: 33.3333% */
+/*! border-radius: calc(100% / 3) — lightningcss: 33.3333% — ours keeps the digits Firefox lays a percentage out with */
 .k149 { border-radius: calc(100% / 3) }
-/*! inset: calc(100% / 3) 0 0 0 — lightningcss: 33.3333% 0 0 — the same value, ours dropping a space the tokens do not need */
+/*! inset: calc(100% / 3) 0 0 0 — lightningcss: 33.3333% 0 0 — ours keeps the digits Firefox lays a percentage out with */
 .k150 { inset: calc(100% / 3) 0 0 0 }
 /*! width: calc(100% / 3 * 3) — same as lightningcss: 100% */
 .k151 { width: calc(100% / 3 * 3) }
@@ -352,5 +352,5 @@
 .k174 { aspect-ratio: 16 / 9 }
 /*! aspect-ratio: auto 16 / 9 — same as lightningcss: auto 16/9 */
 .k175 { aspect-ratio: auto 16 / 9 }
-/*! background: linear-gradient(red calc(100% / 3), blue) — lightningcss: linear-gradient(red 33.3333%,#00f) — the same length either way */
+/*! background: linear-gradient(red calc(100% / 3), blue) — lightningcss: linear-gradient(red 33.3333%,#00f) — ours keeps the digits Firefox lays a percentage out with */
 .k176 { background: linear-gradient(red calc(100% / 3), blue) }

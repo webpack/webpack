@@ -4156,7 +4156,9 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 
 	describe("rounding and unit conversion", () => {
 		it.each([
-			["33.33333333%", "33.3333%"],
+			["33.33333333%", "33.333333%"],
+			// No nine digits reach its float, so it stays as written.
+			["10.1885002107%", "10.1885002107%"],
 			["1.0000001px", "1px"],
 			["400ms", ".4s"],
 			[".005s", "5ms"],
@@ -5013,9 +5015,9 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(settled("a{width:.12499999em}")).toBe("a{width:.12499999em}");
 			// 13/252em at 63px: `.0515873em` is 3.25px only until parsed to a float.
 			expect(settled("a{width:.05158730159em}")).toBe("a{width:.051587302em}");
-			// A pixel, a percentage and a bare number round as before.
+			// A pixel and a bare number round as before, a percentage to its float.
 			expect(settled("a{width:1.0526315789px}")).toBe("a{width:1.05263px}");
-			expect(settled("a{width:33.33333333%}")).toBe("a{width:33.3333%}");
+			expect(settled("a{width:33.33333333%}")).toBe("a{width:33.333333%}");
 			expect(settled("a{opacity:.3333333333}")).toBe("a{opacity:.333333}");
 		});
 
@@ -5191,10 +5193,11 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 				settled("a{color:r\\67 b(67.2549019608%, 66.862745098%, 91.9607843137%)}")
 			).toBe("a{color:rgb(67.2549019608%,66.862745098%,91.9607843137%)}");
 			// Only a channel reads the percentage as a byte: a length still rounds.
-			expect(settled("a{width:66.862745098%}")).toBe("a{width:66.8627%}");
+			expect(settled("a{width:66.862745098%}")).toBe("a{width:66.862745%}");
 			expect(settled(".a{flex:0 0 16.66666667%;opacity:16.66666667%}")).toBe(
-				".a{opacity:.166667;flex:0 0 16.6667%}"
+				".a{opacity:.166667;flex:0 0 16.666667%}"
 			);
+			expect(settled("a{scale:16.66666667%}")).toBe("a{scale:.166667}");
 			// An exact half rounds up in every engine.
 			expect(settled("a{color:rgba(50%,50%,50%,.5)}")).toBe(
 				"a{color:#80808080}"
@@ -8578,7 +8581,10 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// The fold prints a double back, so its result is rounded the way an
 			// authored number is — six significant digits.
 			["calc(3px/1.1)", "2.72727px"],
-			["calc(100%/3)", "33.3333%"],
+			// ...and a percentage up to the single-precision float Gecko parses.
+			["calc(100%/3)", "33.333333%"],
+			// Gecko keeps the fraction, which `14.285714%` misses by one float step.
+			["calc(100%/7)", "14.2857143%"],
 			["calc(1/3*1px)", ".333333px"],
 			["calc((6/10 - .375)*1em)", ".225em"],
 			// ...and up to nine where the engine scales the length by a font size.

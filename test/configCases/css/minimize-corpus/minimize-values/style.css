@@ -233,7 +233,7 @@
 /* Rounding and unit conversion, each verified against headless Chromium: the
    computed style of the authored form and of the emitted one are identical. */
 
-/*! webpack: 6 significant digits is below what the engine reports */
+/*! webpack: a percentage keeps the digits of the float Firefox parses */
 .t72 { width: 33.33333333% }
 /*! webpack: ...and below the 1/64px it lays a length out in */
 .t73 { width: 1.0000001px }

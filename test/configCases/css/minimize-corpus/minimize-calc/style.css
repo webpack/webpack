@@ -67,7 +67,7 @@
 /*! declined: past the range the rounding covers every digit carries, and all of
    them are longer than the expression */
 .d06 { width: calc(123456px/1.1) }
-/*! the fold prints a double back, so its result is rounded to six digits */
+/*! the fold prints a double back, so its result is rounded to six digits, a percentage to the float Firefox parses */
 .f20 { width: calc(100%/3) }
 /*! an angle rounds to six digits too, as lightningcss rounds it */
 .f21 { rotate: calc(1turn/3) }
