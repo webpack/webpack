@@ -3441,7 +3441,7 @@ describe("parseHtml", () => {
 			expect(new SourceProcessor().process(once, compact).code).toBe(once);
 		});
 
-		it.each(['L001 002', 'M', 'M0', 'M0,', 'M0 0,', 'M,0 0', 'M0 0,L1 2', 'M0 0L1', 'M0 0R1 2', 'M0 0Z1 2', 'M0 0L1e 2', 'M0 0A-1 1 0 0 1 2 3', 'M0 0A1 1 0 2 1 2 3', 'M0 0A1 1 0 1.0 1 2 3', 'M0 0A1 1 0 0 1 2', 'M0 0L1,,2', 'M0 0L1 2L', 'M0 0C1 2 3 4 5 6C7 8', 'M0 0A1 1 0 011 2A1 1 0 0', 'M0 0ZL'])('should preserve invalid or unsupported path syntax %s', (value) => {
+		it.each(['L001 002', 'M', 'M0', 'M0,', 'M0 0,', 'M,0 0', 'M0 0,L1 2', 'M0 0L1', 'M0 0R1 2', 'M0 0Z1 2', 'M0 0L1e 2', 'M0 0A-1 1 0 0 1 2 3', 'M0 0A1 1 0 2 1 2 3', 'M0 0A1 1 0 1.0 1 2 3', 'M0 0A1 1 0 0 1 2', 'M0 0L1,,2', 'M0 0L1 2L', 'M0 0C1 2 3 4 5 6C7 8', 'M0 0A1 1 0 011 2A1 1 0 0', 'M0 0ZL', 'M000 000\u017f001 002 003 004'])('should preserve invalid or unsupported path syntax %s', (value) => {
 			const source = `<svg xmlns="${svg}"><path d="${value}"/></svg>`;
 			expect(new SourceProcessor().process(source, compact).code).toBe(source);
 		});
