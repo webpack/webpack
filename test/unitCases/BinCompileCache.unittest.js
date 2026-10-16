@@ -78,6 +78,25 @@ process.exit(0);
 		}
 	});
 
+	it("hands nothing on when a preload already enabled the cache", () => {
+		const own = fs.mkdtempSync(path.join(os.tmpdir(), "wp-preload-"));
+		const preload = path.join(own, "preload.js");
+		fs.writeFileSync(preload, 'require("module").enableCompileCache();\n');
+		try {
+			const { variable, childDirectory } = runBin({
+				NODE_OPTIONS: `--require ${JSON.stringify(preload)}`
+			});
+			// The preload's directory is already version-tagged, so handing it on
+			// would make children tag it twice.
+			expect(variable).toBeNull();
+			expect(
+				/** @type {string} */ (childDirectory).match(/v\d+\.\d+\.\d+-/g)
+			).toHaveLength(1);
+		} finally {
+			fs.rmSync(own, { recursive: true, force: true });
+		}
+	});
+
 	it("hands nothing on where the cache is disabled", () => {
 		expect(runBin({ NODE_DISABLE_COMPILE_CACHE: "1" })).toEqual({
 			variable: null,
