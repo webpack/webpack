@@ -28,3 +28,12 @@ it("should name an anonymous function after the binding it is assigned to", asyn
 	library.replace();
 	expect(library.callable.name).toBe("callable");
 });
+
+it("should keep a `var` live wherever the module declares it again", async () => {
+	const library = await loading;
+	// declared again beside another name, `mixed` stays a copy of what that assigned
+	expect(library.mixed).toBe(4);
+	expect([library.tally, library.first, library.second]).toEqual([2, 1, 2]);
+	library.bumpVariables();
+	expect([library.tally, library.first, library.second]).toEqual([3, 5, 2]);
+});
