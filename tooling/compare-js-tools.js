@@ -1753,8 +1753,9 @@ const BEHAVIOR_PRELUDE =
 	"Date.now = () => 0;";
 
 /**
- * What a script prints and, where it throws, the kind of error, run in a fresh
- * context: a function prints as `[function]`, as its text is the printer's.
+ * What a script prints and, where it throws, the error's kind and message or the
+ * thrown value, run in a fresh context: a function prints as `[function]`, as
+ * its text is the printer's.
  * @param {string} code the script
  * @returns {string | null} its transcript, null where it timed out
  */
@@ -1777,12 +1778,19 @@ const behaviorOf = (code) => {
 	try {
 		vm.runInContext(code, context, { timeout: BEHAVIOR_TIMEOUT });
 	} catch (error) {
-		const { code: reason, name } =
-			/** @type {{ code?: unknown, name?: unknown }} */ (
-				error !== null && typeof error === "object" ? error : {}
-			);
+		const isObject = error !== null && typeof error === "object";
+		const {
+			code: reason,
+			name,
+			message
+		} = /** @type {{ code?: unknown, name?: unknown, message?: unknown }} */ (
+			isObject ? error : {}
+		);
 		if (reason === "ERR_SCRIPT_EXECUTION_TIMEOUT") return null;
-		lines.push(`threw <${typeof name === "string" ? name : typeof error}>`);
+		const kind = typeof name === "string" ? name : typeof error;
+		const value =
+			typeof message === "string" ? message : isObject ? "" : show(error);
+		lines.push(`threw <${kind}>${value ? ` ${value}` : ""}`);
 	}
 	return lines.join("\n");
 };
