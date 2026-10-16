@@ -1094,8 +1094,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/inline.rs:642",
 			"oxc minifier: peephole/inline.rs:658",
 			"oxc minifier: peephole/inline.rs:698",
-			"oxc minifier: peephole/inline.rs:701",
-			"oxc minifier: peephole/inline.rs:702",
 			"oxc minifier: peephole/inline.rs:703",
 			"oxc minifier: peephole/inline.rs:704",
 			"oxc minifier: peephole/inline.rs:706",

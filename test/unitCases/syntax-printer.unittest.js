@@ -8585,6 +8585,15 @@ describe("syntax-printer", () => {
 			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(program));
 		});
 
+		it("should keep a block's `const` where `with` keeps every declaration of its function", async () => {
+			const { minify } = await load();
+			const program =
+				"{ const g = function* () { yield 3; }; console.log(g().next().value); } with ({}) {}";
+			const { code } = await minify(program, { mangle: false });
+			expect(code).toContain("console.log(g().next().value)");
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(program));
+		});
+
 		it("should keep the value an async function returns, as resolving it calls a `then`", async () => {
 			const { minify } = await load();
 			/**

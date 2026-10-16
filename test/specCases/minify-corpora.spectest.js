@@ -1533,9 +1533,7 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 			"S11.8.3_A2.1_T1.js (the default minimizer's options)",
 			"S11.8.6_A7_T3.js (the default minimizer's options)",
 			"S11.9.4_A2.1_T1.js (the default minimizer's options)",
-			"S11.9.4_A7.js (the default minimizer's options)",
 			"S11.9.5_A2.1_T1.js (the default minimizer's options)",
-			"S11.9.5_A7.js (the default minimizer's options)",
 			"S15.10.1_A1_T14.js (the default minimizer's options)",
 			"S15.10.1_A1_T16.js (the default minimizer's options)",
 			"S15.10.2.11_A1_T1.js (the default minimizer's options)",
@@ -1672,12 +1670,6 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 			"evaluate/unsafe_array (the default minimizer's options)",
 			"fixture/issues/string-index-utf16/input.js (its own options)",
 			"fixture/issues/string-index-utf16/input.js (the default minimizer's options)"
-		]
-	],
-	[
-		"a value read where a built-in read stood between, where the source repeats the declaration gzip matched",
-		[
-			"reviver-forward-modifies-object.js (the default minimizer's options)"
 		]
 	],
 	[
