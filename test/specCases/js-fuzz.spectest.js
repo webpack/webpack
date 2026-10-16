@@ -779,8 +779,6 @@ const checkProgram = async (
 		} catch (err) {
 			return `minify ${label}: throws ${/** @type {Error} */ (err).message}`;
 		}
-		if (seen.has(code) && set !== DEFAULTS && set !== STRONGEST) continue;
-		seen.add(code);
 		// Uncompressed, the SyntaxTree printer writes what terser's tree prints.
 		if (options.compress === false) {
 			treePrinting.enabled = false;
@@ -794,6 +792,8 @@ const checkProgram = async (
 				return `minify ${label}: the SyntaxTree printer writes otherwise than terser's tree\n\toutput: ${code}\n\tterser's tree: ${fromTerser}`;
 			}
 		}
+		if (seen.has(code) && set !== DEFAULTS && set !== STRONGEST) continue;
+		seen.add(code);
 		const parsedOutput = parserDifference(code, isModule);
 		if (parsedOutput !== undefined) {
 			return `minify ${label}: parser on the output: ${parsedOutput}\n\toutput: ${code}`;

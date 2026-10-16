@@ -1745,6 +1745,12 @@ const invariants = async (write) => {
 // bounded so one that loops is skipped rather than hanging the sweep.
 const BEHAVIOR_MAX_LENGTH = 20000;
 const BEHAVIOR_TIMEOUT = 200;
+// Every run reads the same clock and random numbers, so a script reading them
+// still answers for its printed form.
+const BEHAVIOR_PRELUDE =
+	"Math.random = () => 0.5;" +
+	"Date = new Proxy(Date, { construct: (D, a) => new D(...(a.length ? a : [0])), apply: (D) => String(new D(0)) });" +
+	"Date.now = () => 0;";
 
 /**
  * What a script prints and, where it throws, the kind of error, run in a fresh
@@ -1767,6 +1773,7 @@ const behaviorOf = (code) => {
 				lines.push(values.map(show).join(" "))
 		}
 	});
+	vm.runInContext(BEHAVIOR_PRELUDE, context);
 	try {
 		vm.runInContext(code, context, { timeout: BEHAVIOR_TIMEOUT });
 	} catch (error) {
@@ -1789,15 +1796,15 @@ const behaviorOf = (code) => {
 const behaviorDifference = (source, printed) => {
 	if (source.length > BEHAVIOR_MAX_LENGTH) return null;
 	const expected = behaviorOf(source);
-	// A script reading the clock or a random number answers for nothing.
+	// A script whose two runs differ answers for nothing.
 	if (expected === null || behaviorOf(source) !== expected) return null;
 	const got = behaviorOf(printed);
-	if (got === null || got === expected) return [];
+	if (got === expected) return [];
 	return [
 		{
 			relation: "behavior",
-			what: "runs otherwise",
-			repro: `    ${oneLine(expected, 80)}\n      -> ${oneLine(got, 80)}`
+			what: got === null ? "times out" : "runs otherwise",
+			repro: `    ${oneLine(expected, 80)}\n      -> ${got === null ? "<timeout>" : oneLine(got, 80)}`
 		}
 	];
 };

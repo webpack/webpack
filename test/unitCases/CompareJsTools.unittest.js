@@ -72,9 +72,27 @@ describe("the behavior relation", () => {
 		).toEqual([]);
 	});
 
-	it("should not run a script that loops, reads the clock or is too long", () => {
+	it("should run a script reading the clock or a random number on fixed ones", () => {
+		const source =
+			"console.log(Math.random(), Date.now(), new Date().getTime(), Date());";
+
+		expect(behaviorDifference(source, source)).toEqual([]);
+		expect(
+			behaviorDifference(source, "console.log(Math.random());")
+		).toHaveLength(1);
+	});
+
+	it("should report a printed script that times out", () => {
+		const [report] = /** @type {import("../../tooling/compare-tools-harness").Report[]} */ (
+			behaviorDifference("console.log(1);", "for (;;) {}")
+		);
+
+		expect(report.what).toBe("times out");
+		expect(report.repro).toContain("<timeout>");
+	});
+
+	it("should not run a script that loops or is too long", () => {
 		expect(behaviorDifference("for (;;) {}", "")).toBeNull();
-		expect(behaviorDifference("console.log(Math.random());", "")).toBeNull();
 		expect(behaviorDifference(`/*${" ".repeat(20000)}*/`, "")).toBeNull();
 	});
 });
