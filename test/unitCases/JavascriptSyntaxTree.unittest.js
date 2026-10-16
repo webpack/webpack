@@ -11,7 +11,7 @@ const {
 } = require("../../lib/javascript/syntax-parser");
 const { firstDifference } = require("../../tooling/compare-js-tools");
 
-/** @typedef {import("estree").Node} EstreeNode */
+/** @typedef {import("../../lib/javascript/syntax-parser").Node} EstreeNode */
 
 /**
  * A parsed node whose children may already stand as the ids they were written as.

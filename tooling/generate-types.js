@@ -589,6 +589,130 @@ const getDeclaration = (symbol) => {
 };
 
 /**
+ * An alias whose typedef carries `@internal` is written as `any`, so a module
+ * can type its internals precisely without publishing those types.
+ * @param {ts.Symbol} symbol the alias symbol
+ * @returns {boolean} whether its declaration is tagged `@internal`
+ */
+const isInternalAlias = (symbol) => {
+	const decl = getDeclaration(symbol);
+	if (!decl) return false;
+	const tags =
+		ts.isJSDocTypedefTag(decl) && ts.isJSDoc(decl.parent)
+			? decl.parent.tags || []
+			: ts.getJSDocTags(decl);
+	return tags.some((tag) => tag.tagName.text === "internal");
+};
+
+/**
+ * @param {ts.TypeChecker} checker the type checker
+ * @param {readonly ts.Type[] | undefined} typeParameters a signature's type parameters
+ * @returns {readonly ts.Type[] | undefined} those a declaration still names, the internal ones being erased
+ */
+const publicTypeParameters = (checker, typeParameters) => {
+	if (!typeParameters) return undefined;
+	const kept = typeParameters.filter(
+		(type) => !isInternalTypeParameter(checker, type)
+	);
+	return kept.length > 0 ? kept : undefined;
+};
+
+/**
+ * @param {ts.TypeChecker} checker the type checker
+ * @param {ts.TypeNode | undefined} node a written type
+ * @returns {boolean} whether it names only `@internal` aliases, `null`, `undefined` and arrays of them
+ */
+const isInternalTypeNode = (checker, node) => {
+	if (!node) return false;
+	if (
+		ts.isParenthesizedTypeNode(node) ||
+		ts.isJSDocOptionalType(node) ||
+		ts.isJSDocNullableType(node)
+	) {
+		return isInternalTypeNode(checker, node.type);
+	}
+	if (ts.isArrayTypeNode(node)) {
+		return isInternalTypeNode(checker, node.elementType);
+	}
+	if (ts.isUnionTypeNode(node)) {
+		const named = node.types.filter(
+			(member) =>
+				!(
+					ts.isLiteralTypeNode(member) &&
+					member.literal.kind === ts.SyntaxKind.NullKeyword
+				) && member.kind !== ts.SyntaxKind.UndefinedKeyword
+		);
+		return (
+			named.length > 0 &&
+			named.every((member) => isInternalTypeNode(checker, member))
+		);
+	}
+	if (ts.isTypeReferenceNode(node)) {
+		const symbol = checker.getSymbolAtLocation(node.typeName);
+		return Boolean(symbol && isInternalAlias(symbol));
+	}
+	return false;
+};
+
+/**
+ * @param {ts.TypeChecker} checker the type checker
+ * @param {ts.Type} type a type
+ * @returns {boolean} whether it is a type parameter bound by an `@internal` type, which declarations drop
+ */
+const isInternalTypeParameter = (checker, type) => {
+	if (!(/** @type {any} */ (type).isTypeParameter())) return false;
+	const constraint = type.getConstraint();
+	if (constraint && isInternalType(checker, constraint)) return true;
+	const decl = getDeclaration(type.symbol);
+	if (!decl || !ts.isTypeParameterDeclaration(decl)) return false;
+	const tag = decl.parent;
+	return isInternalTypeNode(
+		checker,
+		ts.isJSDocTemplateTag(tag) && tag.constraint
+			? tag.constraint.type
+			: decl.constraint
+	);
+};
+
+/**
+ * A dropped type parameter is written as its constraint, widened from
+ * literals, so `T extends "a" | "b"` reads `string`.
+ * @param {ts.TypeChecker} checker the type checker
+ * @param {ts.Type} type a type parameter `isInternalTypeParameter` accepts
+ * @returns {ts.Type} the type written in its place
+ */
+const eraseTypeParameter = (checker, type) =>
+	checker.getBaseTypeOfLiteralType(
+		/** @type {ts.Type} */ (type.getConstraint())
+	);
+
+/**
+ * @param {ts.TypeChecker} checker the type checker
+ * @param {ts.Type} type a type
+ * @returns {boolean} whether it is written as `any` for being internal: an `@internal` alias, a union of them with `null` or `undefined`, or a dropped type parameter whose constraint is one
+ */
+const isInternalType = (checker, type) => {
+	if (type.aliasSymbol && isInternalAlias(type.aliasSymbol)) return true;
+	if (/** @type {any} */ (type).isTypeParameter()) {
+		return (
+			isInternalTypeParameter(checker, type) &&
+			isInternalType(checker, eraseTypeParameter(checker, type))
+		);
+	}
+	if (type.isUnion()) {
+		const named = type.types.filter(
+			(member) =>
+				(member.getFlags() & (ts.TypeFlags.Null | ts.TypeFlags.Undefined)) === 0
+		);
+		return (
+			named.length > 0 &&
+			named.every((member) => isInternalType(checker, member))
+		);
+	}
+	return false;
+};
+
+/**
  * @returns {GeneratorOptions} what `generate-types-config.js` says, defaulted
  */
 const readGeneratorOptions = () => {
@@ -727,6 +851,8 @@ const collectTypes = ({ program, checker, options }) => {
 
 			if (symbolType) return symbolType;
 			const decls = symbol.getDeclarations();
+			// A mapped type's property has no declaration to read a type at.
+			if (!decls || decls.length === 0) return checker.getTypeOfSymbol(symbol);
 			decl = decls && decls[0];
 			if (decl) {
 				type = checker.getTypeOfSymbolAtLocation(symbol, decl);
@@ -1067,10 +1193,24 @@ const collectTypes = ({ program, checker, options }) => {
 					);
 				}
 			}
-			const type = /** @type {ts.Type} */ (getTypeOfSymbol(p, false));
+			const writtenType = paramDeclaration
+				? paramDeclaration.type || ts.getJSDocType(paramDeclaration)
+				: jsdocParamDeclaration && jsdocParamDeclaration === decl
+					? jsdocParamDeclaration.typeExpression &&
+						jsdocParamDeclaration.typeExpression.type
+					: undefined;
+			let type = /** @type {ts.Type} */ (getTypeOfSymbol(p, false));
+			// An array keeps its brackets: its `@internal` elements print as `any`.
+			if (
+				!checker.isArrayType(type) &&
+				isInternalTypeNode(checker, writtenType)
+			) {
+				type = checker.getAnyType();
+			}
 			const optional = Boolean(
 				canBeOptional &&
 				((type.getFlags() & ts.TypeFlags.Any) !== 0 ||
+					isInternalType(checker, type) ||
 					(p.getFlags() & ts.SymbolFlags.Optional) !== 0 ||
 					(paramDeclaration &&
 						(Boolean(paramDeclaration.initializer) ||
@@ -1108,14 +1248,22 @@ const collectTypes = ({ program, checker, options }) => {
 				rest = false;
 			}
 		}
+		const declaration = signature.getDeclaration();
+		let returnType = signature.getReturnType();
+		if (
+			!checker.isArrayType(returnType) &&
+			isInternalTypeNode(
+				checker,
+				declaration && (declaration.type || ts.getJSDocReturnType(declaration))
+			)
+		) {
+			returnType = checker.getAnyType();
+		}
 		return {
 			documentation: getDocumentation(signature),
-			typeParameters:
-				signature.typeParameters && signature.typeParameters.length > 0
-					? signature.typeParameters
-					: undefined,
+			typeParameters: publicTypeParameters(checker, signature.typeParameters),
 			args: params.reverse().map(parseParameter).reverse(),
-			returnType: signature.getReturnType(),
+			returnType,
 			thisType: signature.thisParameter
 				? getTypeOfSymbol(signature.thisParameter, false)
 				: undefined
@@ -1243,6 +1391,13 @@ const collectTypes = ({ program, checker, options }) => {
 		};
 
 		const symbol = type.aliasSymbol || type.getSymbol();
+
+		if (isInternalTypeParameter(checker, type)) {
+			return parseType(eraseTypeParameter(checker, type));
+		}
+		if (isInternalType(checker, type)) {
+			return { type: "primitive", name: "any" };
+		}
 
 		if (/** @type {any} */ (type).isTypeParameter()) {
 			return {

@@ -62,7 +62,7 @@ import {
 	ObjectExpression,
 	ObjectPattern,
 	PrivateIdentifier,
-	Program as ProgramImport,
+	Program,
 	Property,
 	PropertyDefinition,
 	RegExpLiteral,
@@ -1058,7 +1058,7 @@ declare interface BasenameCacheEntry {
  */
 declare abstract class BasicEvaluatedExpression {
 	expression?:
-		| ProgramImport
+		| Program
 		| ImportDeclaration
 		| ExportNamedDeclaration
 		| ExportAllDeclaration
@@ -1118,10 +1118,12 @@ declare abstract class BasicEvaluatedExpression {
 		| MethodDefinition
 		| PropertyDefinition
 		| VariableDeclarator
-		| AssignmentProperty
 		| Property
 		| CatchClause
 		| ClassBody
+		| SwitchCase
+		| TemplateElement
+		| AssignmentProperty
 		| ImportSpecifier
 		| ImportDefaultSpecifier
 		| ImportNamespaceSpecifier
@@ -1129,9 +1131,7 @@ declare abstract class BasicEvaluatedExpression {
 		| ObjectPattern
 		| ArrayPattern
 		| RestElement
-		| AssignmentPattern
-		| SwitchCase
-		| TemplateElement;
+		| AssignmentPattern;
 	quasis?: BasicEvaluatedExpression[];
 	parts?: BasicEvaluatedExpression[];
 	items?: BasicEvaluatedExpression[];
@@ -1317,7 +1317,7 @@ declare abstract class BasicEvaluatedExpression {
 	 */
 	setExpression(
 		expression?:
-			| ProgramImport
+			| Program
 			| ImportDeclaration
 			| ExportNamedDeclaration
 			| ExportAllDeclaration
@@ -1377,10 +1377,12 @@ declare abstract class BasicEvaluatedExpression {
 			| MethodDefinition
 			| PropertyDefinition
 			| VariableDeclarator
-			| AssignmentProperty
 			| Property
 			| CatchClause
 			| ClassBody
+			| SwitchCase
+			| TemplateElement
+			| AssignmentProperty
 			| ImportSpecifier
 			| ImportDefaultSpecifier
 			| ImportNamespaceSpecifier
@@ -1389,8 +1391,6 @@ declare abstract class BasicEvaluatedExpression {
 			| ArrayPattern
 			| RestElement
 			| AssignmentPattern
-			| SwitchCase
-			| TemplateElement
 	): BasicEvaluatedExpression;
 }
 type BeforeContextResolveData = ContextResolveData & ContextOptions;
@@ -10672,7 +10672,7 @@ declare interface ExposesObject {
 	[index: string]: ExposesObjectValue;
 }
 type ExposesObjectValue = string | ExposesConfig | string[];
-type ExpressionEstreeIndex =
+type Expression =
 	| ImportExpressionImport
 	| UnaryExpression
 	| ArrayExpression
@@ -10708,38 +10708,6 @@ declare interface ExpressionExpressionInfo {
 	getMembersOptionals: () => boolean[];
 	getMemberRanges: () => [number, number][];
 }
-type ExpressionSyntaxParser =
-	| (ImportExpressionImport & NodeLike)
-	| (UnaryExpression & NodeLike)
-	| (ArrayExpression & NodeLike)
-	| (ArrowFunctionExpression & NodeLike)
-	| (AssignmentExpression & NodeLike)
-	| (AwaitExpression & NodeLike)
-	| (BinaryExpression & NodeLike)
-	| (SimpleCallExpression & NodeLike)
-	| (NewExpression & NodeLike)
-	| (ChainExpression & NodeLike)
-	| (ClassExpression & NodeLike)
-	| (ConditionalExpression & NodeLike)
-	| (FunctionExpression & NodeLike)
-	| (Identifier & NodeLike)
-	| (SimpleLiteral & NodeLike)
-	| (RegExpLiteral & NodeLike)
-	| (BigIntLiteral & NodeLike)
-	| (LogicalExpression & NodeLike)
-	| (MemberExpression & NodeLike)
-	| (MetaProperty & NodeLike)
-	| (ObjectExpression & NodeLike)
-	| (SequenceExpression & NodeLike)
-	| (TaggedTemplateExpression & NodeLike)
-	| (TemplateLiteral & NodeLike)
-	| (ThisExpression & NodeLike)
-	| (UpdateExpression & NodeLike)
-	| (YieldExpression & NodeLike)
-	| (NodeLike & {
-			type: "ParenthesizedExpression";
-			expression: ExpressionSyntaxParser;
-	  });
 type ExternalItem =
 	| string
 	| RegExp
@@ -15326,13 +15294,10 @@ declare class JavascriptParser extends Parser {
 		/**
 		 * @since 5.105.0
 		 */
-		collectGuards: SyncBailHook<
-			[ExpressionEstreeIndex],
-			void | GuardCollection
-		>;
+		collectGuards: SyncBailHook<[Expression], void | GuardCollection>;
 		classExtendsExpression: SyncBailHook<
 			[
-				ExpressionEstreeIndex,
+				Expression,
 				ClassExpression | ClassDeclaration | MaybeNamedClassDeclaration
 			],
 			boolean | void
@@ -15349,7 +15314,7 @@ declare class JavascriptParser extends Parser {
 		 */
 		classBodyValue: SyncBailHook<
 			[
-				ExpressionEstreeIndex,
+				Expression,
 				MethodDefinition | PropertyDefinition,
 				ClassExpression | ClassDeclaration | MaybeNamedClassDeclaration
 			],
@@ -15458,11 +15423,11 @@ declare class JavascriptParser extends Parser {
 		 * @since 5.101.3
 		 */
 		collectDestructuringAssignmentProperties: SyncBailHook<
-			[ExpressionEstreeIndex],
+			[Expression],
 			boolean | void
 		>;
-		canRename: HookMap<SyncBailHook<[ExpressionEstreeIndex], boolean | void>>;
-		rename: HookMap<SyncBailHook<[ExpressionEstreeIndex], boolean | void>>;
+		canRename: HookMap<SyncBailHook<[Expression], boolean | void>>;
+		rename: HookMap<SyncBailHook<[Expression], boolean | void>>;
 		assign: HookMap<SyncBailHook<[AssignmentExpression], boolean | void>>;
 		write: HookMap<SyncBailHook<[WriteStatement], boolean | void>>;
 		writeMemberChain: HookMap<
@@ -15471,7 +15436,7 @@ declare class JavascriptParser extends Parser {
 		assignMemberChain: HookMap<
 			SyncBailHook<[AssignmentExpression, string[]], boolean | void>
 		>;
-		typeof: HookMap<SyncBailHook<[ExpressionEstreeIndex], boolean | void>>;
+		typeof: HookMap<SyncBailHook<[Expression], boolean | void>>;
 		importCall: SyncBailHook<
 			[
 				ImportExpressionJavascriptParser,
@@ -15522,13 +15487,7 @@ declare class JavascriptParser extends Parser {
 		>;
 		memberChainOfCallMemberChain: HookMap<
 			SyncBailHook<
-				[
-					ExpressionEstreeIndex,
-					string[],
-					CallExpression,
-					string[],
-					[number, number][]
-				],
+				[Expression, string[], CallExpression, string[], [number, number][]],
 				boolean | void
 			>
 		>;
@@ -15550,7 +15509,7 @@ declare class JavascriptParser extends Parser {
 		 * @since 5.71.0
 		 */
 		binaryExpression: SyncBailHook<[BinaryExpression], boolean | void>;
-		expression: HookMap<SyncBailHook<[ExpressionEstreeIndex], boolean | void>>;
+		expression: HookMap<SyncBailHook<[Expression], boolean | void>>;
 		expressionMemberChain: HookMap<
 			SyncBailHook<
 				[MemberExpression, string[], boolean[], [number, number][]],
@@ -15568,18 +15527,12 @@ declare class JavascriptParser extends Parser {
 			[LogicalExpression],
 			boolean | void
 		>;
-		program: SyncBailHook<
-			[ProgramImport, CommentJavascriptParser[]],
-			boolean | void
-		>;
+		program: SyncBailHook<[Program, CommentJavascriptParser[]], boolean | void>;
 		/**
 		 * @since 5.99.0
 		 */
 		terminate: SyncBailHook<[ReturnStatement | ThrowStatement], boolean | void>;
-		finish: SyncBailHook<
-			[ProgramImport, CommentJavascriptParser[]],
-			boolean | void
-		>;
+		finish: SyncBailHook<[Program, CommentJavascriptParser[]], boolean | void>;
 		/**
 		 * @since 5.99.9
 		 */
@@ -15657,7 +15610,7 @@ declare class JavascriptParser extends Parser {
 		| ForOfStatement
 		| ExportDefaultDeclaration;
 	destructuringAssignmentProperties?: WeakMap<
-		ExpressionEstreeIndex,
+		Expression,
 		Set<DestructuringAssignmentProperty>
 	>;
 	currentTagData?:
@@ -15673,7 +15626,7 @@ declare class JavascriptParser extends Parser {
 	 * Destructuring assignment properties for.
 	 */
 	destructuringAssignmentPropertiesFor(
-		node: ExpressionEstreeIndex
+		node: Expression
 	): undefined | Set<DestructuringAssignmentProperty>;
 
 	/**
@@ -16163,7 +16116,7 @@ declare class JavascriptParser extends Parser {
 	 */
 	enterDestructuringAssignment(
 		pattern: Pattern,
-		expression: ExpressionEstreeIndex
+		expression: Expression
 	):
 		| undefined
 		| ImportExpressionImport
@@ -16880,14 +16833,12 @@ declare class JavascriptParser extends Parser {
 	/**
 	 * Returns parsed string.
 	 */
-	parseString(expression: ExpressionEstreeIndex): string;
+	parseString(expression: Expression): string;
 
 	/**
 	 * Parses calculated string.
 	 */
-	parseCalculatedString(
-		expression: ExpressionEstreeIndex
-	): CalculatedStringResult;
+	parseCalculatedString(expression: Expression): CalculatedStringResult;
 
 	/**
 	 * Returns evaluation result.
@@ -16992,7 +16943,7 @@ declare class JavascriptParser extends Parser {
 	/**
 	 * Checks whether this javascript parser is statement level expression.
 	 */
-	isStatementLevelExpression(expr: ExpressionEstreeIndex): boolean;
+	isStatementLevelExpression(expr: Expression): boolean;
 
 	/**
 	 * Returns tag data.
@@ -17251,7 +17202,7 @@ declare class JavascriptParser extends Parser {
 	 * Gets name for expression.
 	 */
 	getNameForExpression(
-		expression: ExpressionEstreeIndex
+		expression: Expression
 	):
 		| undefined
 		| {
@@ -22225,7 +22176,7 @@ declare interface NodeEnvironmentPluginOptions {
 	infrastructureLogging: InfrastructureLogging;
 }
 type NodeEstreeIndex =
-	| ProgramImport
+	| Program
 	| ImportDeclaration
 	| ExportNamedDeclaration
 	| ExportAllDeclaration
@@ -22285,10 +22236,12 @@ type NodeEstreeIndex =
 	| MethodDefinition
 	| PropertyDefinition
 	| VariableDeclarator
-	| AssignmentProperty
 	| Property
 	| CatchClause
 	| ClassBody
+	| SwitchCase
+	| TemplateElement
+	| AssignmentProperty
 	| ImportSpecifier
 	| ImportDefaultSpecifier
 	| ImportNamespaceSpecifier
@@ -22296,9 +22249,7 @@ type NodeEstreeIndex =
 	| ObjectPattern
 	| ArrayPattern
 	| RestElement
-	| AssignmentPattern
-	| SwitchCase
-	| TemplateElement;
+	| AssignmentPattern;
 
 /**
  * a node as this parser builds one, whichever fields the options asked for
@@ -26004,7 +25955,7 @@ declare interface ParseOptionsSyntaxParser {
  * Defines the parse result type used by this module.
  */
 declare interface ParseResult {
-	ast: ProgramImport;
+	ast: Program;
 	comments: CommentJavascriptParser[];
 }
 
@@ -26019,6 +25970,38 @@ declare interface ParsedDataURI {
 	base64: boolean;
 	payload: string;
 }
+type ParsedExpression =
+	| (ImportExpressionImport & NodeLike)
+	| (UnaryExpression & NodeLike)
+	| (ArrayExpression & NodeLike)
+	| (ArrowFunctionExpression & NodeLike)
+	| (AssignmentExpression & NodeLike)
+	| (AwaitExpression & NodeLike)
+	| (BinaryExpression & NodeLike)
+	| (SimpleCallExpression & NodeLike)
+	| (NewExpression & NodeLike)
+	| (ChainExpression & NodeLike)
+	| (ClassExpression & NodeLike)
+	| (ConditionalExpression & NodeLike)
+	| (FunctionExpression & NodeLike)
+	| (Identifier & NodeLike)
+	| (SimpleLiteral & NodeLike)
+	| (RegExpLiteral & NodeLike)
+	| (BigIntLiteral & NodeLike)
+	| (LogicalExpression & NodeLike)
+	| (MemberExpression & NodeLike)
+	| (MetaProperty & NodeLike)
+	| (ObjectExpression & NodeLike)
+	| (SequenceExpression & NodeLike)
+	| (TaggedTemplateExpression & NodeLike)
+	| (TemplateLiteral & NodeLike)
+	| (ThisExpression & NodeLike)
+	| (UpdateExpression & NodeLike)
+	| (YieldExpression & NodeLike)
+	| (NodeLike & {
+			type: "ParenthesizedExpression";
+			expression: ParsedExpression;
+	  });
 declare interface ParsedIdentifier {
 	/**
 	 * request
@@ -26055,6 +26038,7 @@ declare interface ParsedIdentifier {
 	 */
 	internal: boolean;
 }
+type ParsedProgram = Program & NodeLike;
 declare class Parser {
 	constructor();
 
@@ -26983,7 +26967,6 @@ declare interface ProfilingPluginOptions {
 	 */
 	outputPath?: string;
 }
-type ProgramSyntaxParser = ProgramImport & NodeLike;
 declare class ProgressPlugin {
 	/**
 	 * Creates an instance of ProgressPlugin.
@@ -29069,16 +29052,16 @@ declare interface RuleCondition {
 			| "dependency"
 			| "resource"
 			| "scheme"
+			| "phase"
+			| "attributes"
 			| "realResource"
 			| "resourceQuery"
 			| "resourceFragment"
-			| "attributes"
 			| "mimetype"
 			| "descriptionData"
 			| "descriptionRelativePath"
 			| "issuer"
-			| "issuerLayer"
-			| "phase"]
+			| "issuerLayer"]
 	) => boolean;
 }
 
@@ -33558,12 +33541,12 @@ declare class SyntaxParser {
 	static parse(
 		input: string,
 		options?: Partial<OptionsSyntaxParser>
-	): ProgramSyntaxParser;
+	): ParsedProgram;
 	static parseExpressionAt(
 		input: string,
 		pos: number,
 		options?: Partial<OptionsSyntaxParser>
-	): ExpressionSyntaxParser;
+	): ParsedExpression;
 	static tokenizer(
 		input: string,
 		options?: Partial<OptionsSyntaxParser>
@@ -35066,12 +35049,12 @@ declare class WebpackParser extends SyntaxParser {
 	static parse(
 		input: string,
 		options?: Partial<OptionsSyntaxParser>
-	): ProgramSyntaxParser;
+	): ParsedProgram;
 	static parseExpressionAt(
 		input: string,
 		pos: number,
 		options?: Partial<OptionsSyntaxParser>
-	): ExpressionSyntaxParser;
+	): ParsedExpression;
 	static tokenizer(
 		input: string,
 		options?: Partial<OptionsSyntaxParser>
@@ -35779,7 +35762,7 @@ declare namespace exports {
 				export let parse: (
 					input: string,
 					options: ParserOptionsSyntaxParser
-				) => ProgramImport;
+				) => Program;
 				export let positionAt: (
 					lineStarts: number[],
 					offset: number
@@ -35791,7 +35774,7 @@ declare namespace exports {
 					fields?: string[]
 				) =>
 					| null
-					| ProgramImport
+					| Program
 					| ImportDeclaration
 					| ExportNamedDeclaration
 					| ExportAllDeclaration
@@ -35851,10 +35834,12 @@ declare namespace exports {
 					| MethodDefinition
 					| PropertyDefinition
 					| VariableDeclarator
-					| AssignmentProperty
 					| Property
 					| CatchClause
 					| ClassBody
+					| SwitchCase
+					| TemplateElement
+					| AssignmentProperty
 					| ImportSpecifier
 					| ImportDefaultSpecifier
 					| ImportNamespaceSpecifier
@@ -35862,9 +35847,7 @@ declare namespace exports {
 					| ObjectPattern
 					| ArrayPattern
 					| RestElement
-					| AssignmentPattern
-					| SwitchCase
-					| TemplateElement;
+					| AssignmentPattern;
 				export {
 					DestructuringErrors,
 					Label,
@@ -35918,7 +35901,7 @@ declare namespace exports {
 				fields?: string[]
 			) =>
 				| null
-				| ProgramImport
+				| Program
 				| ImportDeclaration
 				| ExportNamedDeclaration
 				| ExportAllDeclaration
@@ -35978,10 +35961,12 @@ declare namespace exports {
 				| MethodDefinition
 				| PropertyDefinition
 				| VariableDeclarator
-				| AssignmentProperty
 				| Property
 				| CatchClause
 				| ClassBody
+				| SwitchCase
+				| TemplateElement
+				| AssignmentProperty
 				| ImportSpecifier
 				| ImportDefaultSpecifier
 				| ImportNamespaceSpecifier
@@ -35989,9 +35974,7 @@ declare namespace exports {
 				| ObjectPattern
 				| ArrayPattern
 				| RestElement
-				| AssignmentPattern
-				| SwitchCase
-				| TemplateElement;
+				| AssignmentPattern;
 		}
 		export {
 			EnableChunkLoadingPlugin,

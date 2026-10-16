@@ -875,8 +875,8 @@ describe("WebpackParser", () => {
 			let calls = 0;
 			class Plugin extends WebpackParser {
 				/**
-				 * @param {import("../../lib/javascript/syntax-parser").NodeLike} node started statement node
-				 * @returns {import("../../lib/javascript/syntax-parser").NodeLike} if statement
+				 * @param {import("../../lib/javascript/syntax-parser").UnfinishedNode} node started statement node
+				 * @returns {import("../../lib/javascript/syntax-parser").NodeOf<"IfStatement">} if statement
 				 */
 				parseIfStatement(node) {
 					calls++;
@@ -884,8 +884,8 @@ describe("WebpackParser", () => {
 				}
 
 				/**
-				 * @param {import("../../lib/javascript/syntax-parser").NodeLike} node started statement node
-				 * @returns {import("../../lib/javascript/syntax-parser").NodeLike} return statement
+				 * @param {import("../../lib/javascript/syntax-parser").UnfinishedNode} node started statement node
+				 * @returns {import("../../lib/javascript/syntax-parser").NodeOf<"ReturnStatement">} return statement
 				 */
 				parseReturnStatement(node) {
 					calls++;
@@ -1992,7 +1992,7 @@ describe("WebpackParser acorn-override fast-path gates", () => {
 		let calls = 0;
 		class Plugin extends WebpackParser {
 			/**
-			 * @param {import("../../lib/javascript/syntax-parser").NodeLike} node function node
+			 * @param {import("../../lib/javascript/syntax-parser").UnfinishedNode} node function node
 			 * @returns {void}
 			 */
 			initFunction(node) {
@@ -2001,7 +2001,7 @@ describe("WebpackParser acorn-override fast-path gates", () => {
 			}
 
 			/**
-			 * @param {import("../../lib/javascript/syntax-parser").NodeLike[]} params parameter nodes
+			 * @param {import("../../lib/javascript/syntax-parser").Pattern[]} params parameter nodes
 			 * @returns {boolean} whether all params are plain identifiers
 			 */
 			isSimpleParamList(params) {
@@ -2025,7 +2025,7 @@ describe("WebpackParser acorn-override fast-path gates", () => {
 		let calls = 0;
 		class Plugin extends WebpackParser {
 			/**
-			 * @param {import("../../lib/javascript/syntax-parser").NodeLike} node function node
+			 * @param {import("../../lib/javascript/syntax-parser").UnfinishedNode} node function node
 			 * @param {boolean} allowDuplicates whether duplicate params are allowed
 			 * @returns {void}
 			 */
@@ -2042,8 +2042,8 @@ describe("WebpackParser acorn-override fast-path gates", () => {
 		let calls = 0;
 		class Plugin extends WebpackParser {
 			/**
-			 * @param {import("../../lib/javascript/syntax-parser").NodeLike} node started statement node
-			 * @returns {import("../../lib/javascript/syntax-parser").NodeLike} for statement
+			 * @param {import("../../lib/javascript/syntax-parser").UnfinishedNode} node started statement node
+			 * @returns {import("../../lib/javascript/syntax-parser").NodeOf<"ForStatement" | "ForInStatement" | "ForOfStatement">} for statement
 			 */
 			parseForStatement(node) {
 				calls++;
@@ -2133,8 +2133,9 @@ describe("WebpackParser acorn-override fast-path gates", () => {
 		let calls = 0;
 		class Plugin extends WebpackParser {
 			/**
-			 * @param {import("../../lib/javascript/syntax-parser").NodeLike} item paren item
-			 * @returns {import("../../lib/javascript/syntax-parser").NodeLike} paren item
+			 * @template T
+			 * @param {T} item paren item
+			 * @returns {T} paren item
 			 */
 			parseParenItem(item) {
 				calls++;
@@ -2222,11 +2223,11 @@ describe("WebpackParser acorn-override fast-path gates", () => {
 		});
 
 		it("gives arrow hooks independent lists that survive pool reuse", () => {
-			/** @type {import("estree").Expression[][]} */
+			/** @type {(import("../../lib/javascript/syntax-parser").Expression | import("../../lib/javascript/syntax-parser").Pattern)[][]} */
 			const lists = [];
 			class Plugin extends WebpackParser {
 				/**
-				 * @param {import("estree").Expression[]} expressions parenthesized expressions
+				 * @param {(import("../../lib/javascript/syntax-parser").Expression | import("../../lib/javascript/syntax-parser").Pattern)[]} expressions parenthesized expressions
 				 * @returns {boolean} whether an arrow body may follow
 				 */
 				shouldParseArrow(expressions) {
@@ -2254,7 +2255,7 @@ describe("WebpackParser acorn-override fast-path gates", () => {
 		it("honors changes to a list made by an arrow hook", () => {
 			class Plugin extends WebpackParser {
 				/**
-				 * @param {import("estree").Expression[]} expressions parenthesized expressions
+				 * @param {(import("../../lib/javascript/syntax-parser").Expression | import("../../lib/javascript/syntax-parser").Pattern)[]} expressions parenthesized expressions
 				 * @returns {boolean} whether an arrow body may follow
 				 */
 				shouldParseArrow(expressions) {
@@ -2498,7 +2499,7 @@ describe("WebpackParser acorn-override fast-path gates", () => {
 		let calls = 0;
 		class Plugin extends WebpackParser {
 			/**
-			 * @param {import("../../lib/javascript/syntax-parser").NodeLike} element class element node
+			 * @param {import("../../lib/javascript/syntax-parser").UnfinishedNode} element class element node
 			 * @returns {void}
 			 */
 			parseClassElementName(element) {
@@ -2519,7 +2520,7 @@ describe("WebpackParser acorn-override fast-path gates", () => {
 		let calls = 0;
 		class Plugin extends WebpackParser {
 			/**
-			 * @returns {import("../../lib/javascript/syntax-parser").NodeLike} import specifier
+			 * @returns {import("../../lib/javascript/syntax-parser").ImportSpecifier} import specifier
 			 */
 			parseImportSpecifier() {
 				calls++;
