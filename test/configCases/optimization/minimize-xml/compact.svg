@@ -3,7 +3,7 @@
   <defs><linearGradient id="paint" gradientTransform="translate(+000.00, 000.00)"><stop stop-color="#ff0000"/><stop offset="1" stop-color="rgb(0, 0, 255)"/></linearGradient></defs>
   <g><defs/><g xmlns:unused="urn:unused"/></g>
   <switch><g/><rect x="90" y="0" width="10" height="10" fill="#0000ff"/></switch>
-  <g id="sprite"><path fill="#ff0000" stroke="rgb(0, 0, 255)" transform="translate(+001.00, 0002.00) rotate(000.00)" d="M +000.00, 000.00 L 0020.00, 000.00 A 0010.00, 0010.00, 000.00, 01, 0020.00, 0020.00 z"/></g>
+  <g id="sprite"><path fill="#ff0000" stroke="rgb(0, 0, 255)" transform="translate(+001.00, 0002.00) rotate(000.00, 000.00, -000.00) scale(001.00, +001.00)" d="M +000.00, 000.00 L 0020.00, 000.00 A 0010.00, 0010.00, 000.00, 01, 0020.00, 0020.00 z"/></g>
   <path id="segments" fill="none" stroke="black" d="M 10 20 L 15 -25 L 20 -30 l .5 .5 l .5 .5 C 1 2 3 4 5 6 C 7 8 9 10 11 12 A 10 20 30 0 1 40 50 A 10 20 30 1 0 .5 -.5 Z M 30 40 L 50 60 Z"/>
   <path id="axes" fill="none" stroke="black" d="M 10 20 10 30 10 40 50 40 Z L 60 20 C 1 2 3 4 70 80 L 70 90"/>
   <use href="#sprite" transform="translate(040.00, 000.00)"/>

@@ -3428,7 +3428,7 @@ describe("parseHtml", () => {
 			const value = ' matrix(+001.00, 000.00, 000.00, 001.00, 010.00, -000.00), translate(+001.00e+02, 002.00) scale(001.00) rotate(090.00, 000, 000) skewX(001.00)skewY(-001.00) ';
 			const source = `<svg xmlns="${svg}"><g transform="${value}"/></svg>`;
 			const once = new SourceProcessor().process(source, compact).code;
-			expect(once).toBe(`<svg xmlns="${svg}"><g transform="matrix(1 0 0 1 10 -0) translate(+001.00e+02 2) scale(1) rotate(90 0 0) skewX(1) skewY(-1)"/></svg>`);
+			expect(once).toBe(`<svg xmlns="${svg}"><g transform="matrix(1 0 0 1 10 -0) translate(+001.00e+02 2) scale(1) rotate(90) skewX(1) skewY(-1)"/></svg>`);
 			expect(new SourceProcessor().process(once, compact).code).toBe(once);
 		});
 
@@ -3626,7 +3626,7 @@ describe("parseHtml", () => {
 		});
 
 		it("should preserve DTD constraints and reset every optimization after unread DTDs", () => {
-			const body = `<svg xmlns="${svg}" fill="#ff0000"><path d="M000 000L001 002" transform="scale(001)"/><g/></svg>`;
+			const body = `<svg xmlns="${svg}" fill="#ff0000"><path d="M000 000L001 002" transform="scale(001 001)"/><g/></svg>`;
 			const dtd = '<!DOCTYPE svg [<!ATTLIST svg fill CDATA #FIXED "#ff0000"><!ATTLIST path d CDATA #IMPLIED transform CDATA #IMPLIED><!ATTLIST g id CDATA "kept">]>';
 			const processor = new SourceProcessor();
 			const options = { ...compact, renderEmbeddedSource: builtinEmbeddedRenderer() };
@@ -3653,7 +3653,7 @@ describe("parseHtml", () => {
 			number: ["+001.500", "1.5"],
 			points: ["+001.500, 0002.00 0003.0,+04.000", "1.5 2 3 4"],
 			viewBox: [" +000.00, 000.0, 0010.0, +0020.000 ", "0 0 10 20"],
-			transform: ["translate(+001.00, 002.00)", "translate(1 2)"],
+			transform: ["translate(+001.00, -000.00) scale(002.00, +002.00) rotate(030.00 000.00 -000.00)", "translate(1) scale(2) rotate(30)"],
 			path: ["M000.00,000.00 L001.00,002.00", "M0 0 1 2"]
 		};
 
@@ -3667,6 +3667,55 @@ describe("parseHtml", () => {
 			expect(processor.process(once, options).code).toBe(once);
 			expect(processor.process(source, { ...options, shortenSvgNumbers: false, shortenSvgPathData: false }).code).toBe(source);
 			expect(processor.process(source, { ...options, mode: "beautify" }).code).toBe(source);
+		});
+
+		it.each([
+			["translate(1,0)", "translate(1)"],
+			["translate(1 -0e+20)", "translate(1)"],
+			["translate(1 .000)", "translate(1)"],
+			["translate(1)", "translate(1)"],
+			["translate(1 2)", "translate(1 2)"],
+			["translate(1 1e-400)", "translate(1 1e-400)"],
+			["scale(2,2)", "scale(2)"],
+			["scale(+002.00 2)", "scale(2)"],
+			["scale(-0 -0)", "scale(-0)"],
+			["scale(1e+2 1e+2)", "scale(1e+2)"],
+			["scale(9007199254740993 9007199254740993)", "scale(9007199254740993)"],
+			["scale(9007199254740992 9007199254740993)", "scale(9007199254740992 9007199254740993)"],
+			["scale(.123456789123456789 .123456789123456788)", "scale(.123456789123456789 .123456789123456788)"],
+			["scale(2)", "scale(2)"],
+			["scale(2 3)", "scale(2 3)"],
+			["scale(0 -0)", "scale(0 -0)"],
+			["scale(1e2 100)", "scale(1e2 100)"],
+			["rotate(30,0,0)", "rotate(30)"],
+			["rotate(30 -0e-400 .000)", "rotate(30)"],
+			["rotate(30)", "rotate(30)"],
+			["rotate(30 1 0)", "rotate(30 1 0)"],
+			["rotate(30 0 1)", "rotate(30 0 1)"],
+			["rotate(30 0 1e-400)", "rotate(30 0 1e-400)"],
+			["matrix(1 0 0 1 0 0)", "matrix(1 0 0 1 0 0)"],
+			["skewX(0) skewY(0)", "skewX(0) skewY(0)"],
+			[" translate(1,0),scale(2,2) rotate(30 0 0) ", "translate(1) scale(2) rotate(30)"],
+			["translate(1,0) scale(2,2) rotate(30 0 0) scale(1,)", "translate(1,0) scale(2,2) rotate(30 0 0) scale(1,)"],
+			["translate(1,0) rotate(30 0)", "translate(1,0) rotate(30 0)"]
+		])("should compact only redundant SVG transform arguments in %s", (value, expected) => {
+			const source = `<svg xmlns="http://www.w3.org/2000/svg"><g transform="${value}"/></svg>`;
+			const options = { xml: true, mode: /** @type {const} */ ("minify"), shortenSvgNumbers: true };
+			const processor = new SourceProcessor();
+			const once = processor.process(source, options).code;
+			expect(once).toBe(source.replace(`transform="${value}"`, `transform="${expected}"`));
+			expect(processor.process(once, options).code).toBe(once);
+			expect(processor.process(source, { ...options, shortenSvgNumbers: false }).code).toBe(source);
+			expect(processor.process(source, { ...options, mode: "beautify" }).code).toBe(source);
+		});
+
+		it("should compact redundant inline SVG transform arguments using the HTML printer", async () => {
+			const source = '<svg><g transform="translate(5 0) scale(2 2) rotate(30 0 0)"><animateTransform attributeName="transform" type="scale" by="3" dur="2s" additive="sum"/></g></svg>';
+			const options = { mode: /** @type {const} */ ("minify"), shortenSvgNumbers: true };
+			const expected = 'transform="translate(5) scale(2) rotate(30)"';
+			expect(new SourceProcessor().process(source, options).code).toContain(expected);
+			expect((await new SourceProcessor().processAsync(source, options)).code).toContain(expected);
+			expect(new SourceProcessor().process(source, { ...options, shortenSvgNumbers: false }).code).toContain('transform="translate(5 0) scale(2 2) rotate(30 0 0)"');
 		});
 
 		it.each([...SVG_LENGTH_UNITS])("should preserve the SVG length unit %s", (unit) => {
