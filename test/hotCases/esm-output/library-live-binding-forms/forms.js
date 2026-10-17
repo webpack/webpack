@@ -8,12 +8,14 @@ for (looped of [1, 2]) {
 export var each;
 for (var each in { a: 1, b: 2 }) void each;
 export var start;
+export var stale;
 for (var [start] = [7]; false; );
 // renaming `URL`, the walk reports no declarator, so the export stays a copy
 export const Url = URL;
 export class Shape {}
 export function swap() {
 	plain = "set";
+	stale = "set";
 	[left, right] = [right, left];
 	Shape = class Square {};
 }
@@ -30,6 +32,8 @@ for (var each in { c: 1 }) {
 	// the loop's last key stays
 }
 export var start;
+// a fresh instance starts it undefined again
+export var stale;
 for (var [start] = [8]; false; );
 export const Url = URL;
 export class Shape {}

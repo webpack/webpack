@@ -8,6 +8,7 @@ export {
 	looped,
 	each,
 	start,
+	stale,
 	Url,
 	Shape,
 	swap
@@ -32,6 +33,7 @@ it("should keep every form of exported binding live across a hot update", (done)
 		]);
 		expect(library.Shape.name).toBe("Square");
 		expect(library.Url).toBe(URL);
+		expect(library.stale).toBe("set");
 		NEXT(
 			update(done, true, () => {
 				expect([library.plain, library.named.name, library.named()]).toEqual([
@@ -46,6 +48,7 @@ it("should keep every form of exported binding live across a hot update", (done)
 					8
 				]);
 				expect(library.Shape.name).toBe("Shape");
+				expect(library.stale).toBe(undefined);
 				done();
 			})
 		);
