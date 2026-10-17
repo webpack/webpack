@@ -1,5 +1,29 @@
 # webpack
 
+## 5.112.1
+
+### Patch Changes
+
+- Rebuild and recheck a lazy barrel in watch when what it defers changes. (by [@aryanraj45](https://github.com/aryanraj45) in [#22699](https://github.com/webpack/webpack/pull/22699))
+
+- Keep module library exports live without shadowing other modules' globals. (by [@alexander-akait](https://github.com/alexander-akait) in [#22733](https://github.com/webpack/webpack/pull/22733))
+
+- Await asynchronous modules that `ProvidePlugin` injects into ES modules. (by [@alexander-akait](https://github.com/alexander-akait) in [#22728](https://github.com/webpack/webpack/pull/22728))
+
+- Keep the digits Firefox lays out a minified CSS percentage with. (by [@alexander-akait](https://github.com/alexander-akait) in [#22718](https://github.com/webpack/webpack/pull/22718))
+
+- Reject a second `srcset` descriptor after a `0x` density descriptor. (by [@alexander-akait](https://github.com/alexander-akait) in [#22741](https://github.com/webpack/webpack/pull/22741))
+
+- Keep minified JavaScript from growing, or from running unlike its source. (by [@alexander-akait](https://github.com/alexander-akait) in [#22717](https://github.com/webpack/webpack/pull/22717))
+
+- Update watchpack to 2.6.2 for watcher-limit and missing-directory fixes. (by [@alexander-akait](https://github.com/alexander-akait) in [#22743](https://github.com/webpack/webpack/pull/22743))
+
+- Reject `concatenateModules` with `cacheUnaffected` instead of a broken bundle. (by [@alexander-akait](https://github.com/alexander-akait) in [#22744](https://github.com/webpack/webpack/pull/22744))
+
+- Speed up startup, sharing the compile cache with minimizer workers. (by [@xiaoxiaojx](https://github.com/xiaoxiaojx) in [#22706](https://github.com/webpack/webpack/pull/22706))
+
+- Replace `any` and `unknown` in stats, serializer, parser and runtime types. (by [@alexander-akait](https://github.com/alexander-akait) in [#22731](https://github.com/webpack/webpack/pull/22731))
+
 ## 5.112.0
 
 ### Minor Changes
