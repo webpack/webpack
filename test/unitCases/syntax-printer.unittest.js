@@ -976,6 +976,18 @@ const IMPROVED_CASES = [
 		'try{console.log(1)}catch(e){}console.log(2);console.log("abc".charAt(1));'
 	],
 	[
+		"an assignment after a bare `let` that reads it, or runs a function that does, left out of its declaration",
+		"function f(b) { if (b) { let a; a = a || b; return a; } } function k(n) { if (n) { let t; const h = () => t; t = g(h); g(t); g(h()); } } function g(x) { console.log(typeof x == \"function\" ? x() : x); return 1; } console.log(f(1)); k(1);",
+		{ mangle: false },
+		"function f(b){if(b){let a;return a=a||b}}function k(n){if(n){let t,h=()=>t;t=g(h),g(t),g(h())}}function g(x){return console.log(\"function\"==typeof x?x():x),1}console.log(f(1)),k(1);"
+	],
+	[
+		"a `let` of a `switch` case a later case reads, kept",
+		"function f(x) { switch (x) { case 1: let a; a = [x]; case 2: return a; } } console.log(f(1));",
+		{ mangle: false },
+		"function f(x){switch(x){case 1:let a=[x];case 2:return a}}console.log(f(1));"
+	],
+	[
 		"a name read once, at the head of an optional chain, as its value",
 		"function f(o) { let n = o.g(); return n?.b; } function k(o) { var n = o.g; return n?.(1); } console.log(f({ g: () => ({ b: 1 }) }), f({ g: () => null }), k({ g: (x) => x }), k({}));",
 		{ mangle: false },

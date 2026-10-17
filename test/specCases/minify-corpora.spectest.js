@@ -1847,7 +1847,8 @@ const oxcOptionsOf = (options) => {
 		filename: module ? "input.mjs" : "input.js",
 		options: {
 			module,
-			compress: { keepNames },
+			// As webpack's output is compared at ECMAScript 2020, so is oxc's.
+			compress: { target: "es2020", keepNames },
 			mangle: { toplevel: module, keepNames },
 			codegen: { removeWhitespace: true }
 		}
@@ -2482,6 +2483,11 @@ describe("JavaScript minifier", () => {
 											ecma: oxcEcma
 										}
 									});
+									if (modern.code === undefined) {
+										differences.push(
+											`${source.name} (${setName}, ecma ${oxcEcma}) failed: ${modern.error}`
+										);
+									}
 									const modernCode =
 										modern.code === undefined ? ours.code : modern.code;
 									const wrong =
