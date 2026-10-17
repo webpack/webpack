@@ -916,6 +916,24 @@ const IMPROVED_CASES = [
 		"function f(a,b,c,d){return a==b||c==d}console.log(f(1,1,2,3),f(1,2,3,3),f(1,2,3,4));"
 	],
 	[
+		"a `var` next to one an assignment moved into, joined to it",
+		"var x; x = g(); var z = g(); console.log(x, z); function g() { return 1; }",
+		{ mangle: false },
+		"var x=g(),z=g();function g(){return 1}console.log(x,z);"
+	],
+	[
+		"an assignment after a bare `let`, moved into it, but never into a loop's head",
+		"function f(n) { if (n) { let t; t = g(n); g(t); g(t); } } function h(n) { if (n) { let t; t = g(n); for (; t < 4; t++) setTimeout(() => console.log(t)); } } function g(x) { console.log(x); return x + 1; } f(1); h(1);",
+		{ mangle: false },
+		"function f(n){if(n){let t=g(n);g(t),g(t)}}function h(n){if(n){let t;for(t=g(n);t<4;t++)setTimeout(()=>console.log(t))}}function g(x){return console.log(x),x+1}f(1),h(1);"
+	],
+	[
+		"a constant read once in a computed key, as the key",
+		"function f() { let p = \"_foo\"; return { [p]: 1 }; } console.log(f()._foo);",
+		{ mangle: false },
+		"function f(){return{_foo:1}}console.log(f()._foo);"
+	],
+	[
 		"a name read once, at the head of an optional chain, as its value",
 		"function f(o) { let n = o.g(); return n?.b; } function k(o) { var n = o.g; return n?.(1); } console.log(f({ g: () => ({ b: 1 }) }), f({ g: () => null }), k({ g: (x) => x }), k({}));",
 		{ mangle: false },
