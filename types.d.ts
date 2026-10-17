@@ -1541,6 +1541,20 @@ declare interface BuildDiagnostics {
 }
 type BuildInfo = KnownBuildInfo & Record<string, any>;
 type BuildMeta = KnownBuildMeta & Record<string, any>;
+
+/**
+ * The map a minify writes, its mappings decoded, less the keys that say nothing.
+ */
+declare interface BuiltSourceMap {
+	version: number;
+	file?: string;
+	names: string[];
+	sourceRoot?: string;
+	sources: string[];
+	sourcesContent?: (undefined | null | string)[];
+	mappings: DecodedSegment[][];
+	ignoreList: number[];
+}
 type BuiltinEmbeddedRendererOptions = Pick<
 	CssProcessOptions,
 	| "environment"
@@ -4762,10 +4776,75 @@ declare interface CompressHelpers {
  */
 declare interface CompressorShape {
 	[index: string]: any;
-	options: Record<string, any>;
+	options: Partial<any>;
 	stack: NodeShape[];
-	option(name: string): any;
-	has_directive(directive: string): any;
+	option<
+		K extends
+			| "module"
+			| "warnings"
+			| "inline"
+			| "arguments"
+			| "expression"
+			| "evaluate"
+			| "unused"
+			| "properties"
+			| "arrows"
+			| "booleans"
+			| "booleans_as_integers"
+			| "collapse_vars"
+			| "comparisons"
+			| "computed_props"
+			| "conditionals"
+			| "dead_code"
+			| "defaults"
+			| "directives"
+			| "drop_console"
+			| "drop_debugger"
+			| "ecma"
+			| "builtins_ecma"
+			| "builtins_pure"
+			| "global_defs"
+			| "hoist_funs"
+			| "hoist_props"
+			| "hoist_vars"
+			| "ie8"
+			| "if_return"
+			| "join_vars"
+			| "keep_classnames"
+			| "keep_fargs"
+			| "keep_fnames"
+			| "keep_infinity"
+			| "lhs_constants"
+			| "loops"
+			| "negate_iife"
+			| "passes"
+			| "pure_getters"
+			| "pure_funcs"
+			| "pure_conversions"
+			| "pure_heritage"
+			| "pure_new"
+			| "reduce_funcs"
+			| "reduce_vars"
+			| "sequences"
+			| "side_effects"
+			| "switches"
+			| "top_retain"
+			| "toplevel"
+			| "typeofs"
+			| "unsafe"
+			| "unsafe_arrows"
+			| "unsafe_comps"
+			| "unsafe_Function"
+			| "unsafe_math"
+			| "unsafe_symbols"
+			| "unsafe_methods"
+			| "unsafe_proto"
+			| "unsafe_regexp"
+			| "unsafe_undefined"
+	>(
+		name: K
+	): any[K];
+	has_directive(directive: string): undefined | true | NodeShape;
 	parent(level?: number): NodeShape;
 	self(): NodeShape;
 	find_parent(test: (value: unknown) => boolean): undefined | NodeShape;
@@ -5873,12 +5952,11 @@ declare interface CopyObjectPattern {
 							 * Everything beside the content of the file the transform depends on, serialized into the cache key as JSON.
 							 */
 							keys?:
-								| CopyTransformCacheKeys
+								| JsonObjectFs
 								| ((
-										defaultKeys: CopyTransformCacheKeys,
+										defaultKeys: JsonObjectFs,
 										absoluteFilename: string
-								  ) =>
-										CopyTransformCacheKeys | Promise<CopyTransformCacheKeys>);
+								  ) => JsonObjectFs | Promise<JsonObjectFs>);
 					  };
 				/**
 				 * Modifies the content of a copied file.
@@ -5931,9 +6009,6 @@ declare class CopyPlugin {
 		 */
 		ignore: SyncBailHook<[string], boolean | void>;
 	};
-}
-declare interface CopyTransformCacheKeys {
-	[index: string]: any;
 }
 type CreateData = NormalModuleCreateData & { settings: ModuleSettings };
 
@@ -7778,6 +7853,10 @@ declare interface DecodedEntitiesWithMap {
 	text: string;
 	map?: number[];
 }
+type DecodedSegment =
+	| [number, number, number, number]
+	| [number]
+	| [number, number, number, number, number];
 declare interface DefaultHandlerOptions {
 	progressBar?: false | Required<ProgressPluginOptionsProgressBarBranch3Object>;
 	estimatedTime?: boolean;
@@ -9369,6 +9448,7 @@ declare class EnableWasmLoadingPlugin {
 	 */
 	static checkEnabled(compiler: Compiler, type: string): void;
 }
+type EncodedSourceMap = Omit<BuiltSourceMap, "mappings"> & { mappings: string };
 type EncodingOptionFs =
 	| undefined
 	| null
@@ -9835,9 +9915,9 @@ declare class EnvironmentPlugin {
 	/**
 	 * Creates an instance of EnvironmentPlugin.
 	 */
-	constructor(...keys: (string | Record<string, any> | string[])[]);
+	constructor(...keys: (string | string[] | JsonObjectFs)[]);
 	keys: string[];
-	defaultValues: Record<string, any>;
+	defaultValues: JsonObjectFs;
 
 	/**
 	 * Applies the plugin by registering its hooks on the compiler.
@@ -11606,13 +11686,6 @@ type FilterItemTypes = string | RegExp | ((value: string) => boolean);
 declare interface Flags {
 	[index: string]: Argument;
 }
-
-/**
- * terser's `format` options, defaulted
- */
-declare interface FormatOptions {
-	[index: string]: any;
-}
 declare interface FoundTargetItem {
 	module: Module;
 	connection: ModuleGraphConnection;
@@ -12222,7 +12295,7 @@ declare interface HashedModuleIdsPluginOptions {
 type Head<T> = T extends readonly [infer H, ...infer _Rest]
 	? H
 	: T extends readonly []
-		? any
+		? never
 		: T extends readonly (infer E)[]
 			? E
 			: never;
@@ -15622,7 +15695,7 @@ declare class JavascriptParser extends Parser {
 		Set<DestructuringAssignmentProperty>
 	>;
 	currentTagData?:
-		| Record<string, any>
+		| object
 		| TopLevelSymbol
 		| ESMSettings
 		| ImportSettings
@@ -16961,7 +17034,7 @@ declare class JavascriptParser extends Parser {
 		tag: symbol
 	):
 		| undefined
-		| Record<string, any>
+		| object
 		| TopLevelSymbol
 		| ESMSettings
 		| ImportSettings
@@ -16975,7 +17048,7 @@ declare class JavascriptParser extends Parser {
 		name: string,
 		tag: symbol,
 		data?:
-			| Record<string, any>
+			| object
 			| TopLevelSymbol
 			| ESMSettings
 			| ImportSettings
@@ -17222,7 +17295,7 @@ declare class JavascriptParser extends Parser {
 	/**
 	 * Whether a definition is a variable rather than a free name or a scope.
 	 */
-	static isVariableInfo(value: unknown): boolean;
+	static isVariableInfo(value?: string | VariableInfo | ScopeInfo): boolean;
 
 	/**
 	 * Returns parser.
@@ -19149,11 +19222,12 @@ declare interface LoaderEntry {
 	path: string;
 	query: string;
 	fragment: string;
-	options?: string | Record<string, any>;
+	options?: null | string | Record<string, any>;
 	ident: string;
 	normal?:
-		LoaderDefinitionFunction<any, {}> | RawLoaderDefinitionFunction<any, {}>;
-	pitch?: PitchLoaderDefinitionFunction<any, {}>;
+		| LoaderDefinitionFunction<Record<string, any>, {}>
+		| RawLoaderDefinitionFunction<Record<string, any>, {}>;
+	pitch?: PitchLoaderDefinitionFunction<Record<string, any>, {}>;
 	raw?: boolean;
 	data?: Record<string, any>;
 	pitchExecuted: boolean;
@@ -19351,7 +19425,7 @@ declare interface LoaderRunnerMutableContext<OptionsType> {
  */
 declare interface LoaderRunnerReadonlyContext<OptionsType> {
 	readonly currentRequest: string;
-	readonly data: any;
+	readonly data: Record<string, any>;
 	readonly previousRequest: string;
 	readonly query: string | OptionsType;
 	readonly remainingRequest: string;
@@ -20002,7 +20076,16 @@ declare interface MinifyOptions {
 	/**
 	 * how the source is read
 	 */
-	parse?: Record<string, any>;
+	parse?: {
+		bare_returns?: boolean;
+		ecma?: null | number;
+		filename?: null | string;
+		html5_comments?: boolean;
+		module?: boolean;
+		shebang?: boolean;
+		toplevel?: any;
+		spidermonkey?: boolean;
+	};
 
 	/**
 	 * whether a source map is written, and how
@@ -20027,7 +20110,7 @@ declare interface MinifyOptions {
 	/**
 	 * names held across assets, which this writes into
 	 */
-	nameCache?: null | Record<string, any>;
+	nameCache?: null | { vars?: any; props?: any };
 
 	/**
 	 * which class names survive
@@ -20063,12 +20146,12 @@ declare interface MinifyOutput {
 	/**
 	 * the source map, as a string or an object
 	 */
-	map?: string | Record<string, any>;
+	map?: string | EncodedSourceMap;
 
 	/**
 	 * the map with its mappings read
 	 */
-	decoded_map?: null | Record<string, any>;
+	decoded_map?: null | BuiltSourceMap;
 
 	/**
 	 * the tree, where `format.ast` asked for it
@@ -22285,7 +22368,7 @@ declare interface NodeLike {
 	type: string;
 	start: number;
 	end: number;
-	loc?: any;
+	loc?: null | SourceLocation;
 	sourceFile?: string;
 	range?: [number, number];
 }
@@ -22498,8 +22581,8 @@ declare interface NodeShape {
 	label: NodeShape;
 	property: NodeShape;
 	flags: number;
-	startToken: TokenEs5;
-	endToken: TokenEs5;
+	startToken: any;
+	endToken: any;
 	expression: NodeShape;
 	callee: NodeShape;
 	object: NodeShape;
@@ -22524,10 +22607,10 @@ declare interface NodeShape {
 	superClass: NodeShape;
 	scope: NodeShape;
 	definition: SymbolDefinition;
-	fixed_value(): any;
+	fixed_value(): undefined | null | false | NodeShape;
 	tail_node(): NodeShape;
 	clone(deep?: boolean): NodeShape;
-	transform(walker?: any, inList?: boolean): NodeShape;
+	transform(walker: CompressorShape, inList?: boolean): NodeShape;
 	optimize(compressor: CompressorShape): NodeShape;
 	has_side_effects(compressor: CompressorShape): boolean;
 	may_throw(compressor: CompressorShape): boolean;
@@ -22536,9 +22619,23 @@ declare interface NodeShape {
 		firstInStatement?: boolean
 	): null | NodeShape;
 	is_constant_expression(scope?: NodeShape): boolean | "f";
-	evaluate(compressor: CompressorShape): any;
+	evaluate(
+		compressor: CompressorShape
+	):
+		| undefined
+		| null
+		| string
+		| number
+		| bigint
+		| boolean
+		| symbol
+		| RegExp
+		| NodeShape
+		| any
+		| { [index: string]: any }
+		| ((...args: any[]) => any);
 	negate(compressor: CompressorShape, firstInStatement?: boolean): NodeShape;
-	size(compressor?: CompressorShape, stack?: any): number;
+	size(compressor?: CompressorShape, stack?: NodeShape[]): number;
 }
 declare class NodeSourcePlugin {
 	constructor();
@@ -24924,18 +25021,18 @@ declare interface OptionsSyntaxParser {
 	/**
 	 * where tokens are reported
 	 */
-	onToken?: any[] | ((token?: any) => void);
+	onToken?:
+		((token: TokenSyntaxParserClass) => void) | TokenSyntaxParserClass[];
 
 	/**
 	 * the parser itself at each token, for a reader that copies what it needs rather than taking a token of its own
 	 */
-	onTokenRead?: (parser?: any) => void;
+	onTokenRead?: (parser: SyntaxParser) => void;
 
 	/**
 	 * where comments are reported
 	 */
 	onComment?:
-		| any[]
 		| ((
 				isBlock: boolean,
 				text: string,
@@ -24943,7 +25040,8 @@ declare interface OptionsSyntaxParser {
 				end: number,
 				startLoc?: null | Position,
 				endLoc?: null | Position
-		  ) => void);
+		  ) => void)
+		| CollectedComment[];
 
 	/**
 	 * whether nodes carry `range`
@@ -26208,10 +26306,14 @@ declare class ParserScope {
  * The `loc` a node carries when `options.locations` is on.
  */
 declare class ParserSourceLocation {
-	constructor(p: any, start?: null | PositionLike, end?: null | PositionLike);
+	constructor(
+		p: { sourceFile: null | string },
+		start?: null | PositionLike,
+		end?: null | PositionLike
+	);
 	start?: null | PositionLike;
 	end?: null | PositionLike;
-	source: any;
+	source?: string;
 }
 type ParserState = ParserStateBase & Record<string, any>;
 
@@ -26226,10 +26328,10 @@ declare interface ParserStateBase {
 	options: WebpackOptionsNormalizedWithDefaults;
 }
 type PartOf<R, M extends Record<number, number>, D> = number extends (R & {
-	readonly __nodeType: unknown;
+	readonly __nodeType: number;
 })["__nodeType"]
 	? D
-	: M[(R & { readonly __nodeType: unknown })["__nodeType"] & number];
+	: M[(R & { readonly __nodeType: number })["__nodeType"]];
 declare interface PathCacheFunctions {
 	/**
 	 * cached join
@@ -28763,12 +28865,12 @@ declare interface ResolvedOptionsSyntaxParser {
 	/**
 	 * where tokens are reported
 	 */
-	onToken: null | ((token?: any) => void);
+	onToken: null | ((token: TokenSyntaxParserClass) => void);
 
 	/**
 	 * the parser itself at each token
 	 */
-	onTokenRead: null | ((parser?: any) => void);
+	onTokenRead: null | ((parser: SyntaxParser) => void);
 
 	/**
 	 * where comments are reported
@@ -31741,8 +31843,8 @@ type SourceValue = string | Buffer;
 /**
  * terser's `Splice`: what a transform returns to put several nodes in its place.
  */
-declare abstract class Splice {
-	v: NodeShape[];
+declare abstract class Splice<T = NodeShape> {
+	v: T[];
 }
 
 /**
@@ -33599,7 +33701,19 @@ declare class SyntaxTree {
 	 * Sets one field of a node: a child node, an array of them for a list,
 	 * `0` or null where ESTree has null.
 	 */
-	set(node: number, name: string, value: unknown): void;
+	set(
+		node: number,
+		name: string,
+		value?:
+			| null
+			| string
+			| number
+			| bigint
+			| boolean
+			| RegExp
+			| (null | number)[]
+			| { cooked?: null | string; raw: string }
+	): void;
 
 	/**
 	 * Writes a parsed node and everything under it, its children taking ids
@@ -33611,7 +33725,17 @@ declare class SyntaxTree {
 	end(node: number): number;
 	range(node: number): [number, number];
 	name(node: number): string;
-	value(node: number): unknown;
+	value(
+		node: number
+	):
+		| undefined
+		| null
+		| string
+		| number
+		| bigint
+		| boolean
+		| RegExp
+		| { cooked?: null | string; raw: string };
 	fieldCount(field: number, node: number): number;
 	field(i: number, field: number, node: number): number;
 	flag(flag: number, node: number): boolean;
@@ -33634,7 +33758,7 @@ declare const TRANSITIVE_ONLY: unique symbol;
 declare interface TagInfo {
 	tag: symbol;
 	data?:
-		| Record<string, any>
+		| object
 		| TopLevelSymbol
 		| ESMSettings
 		| ImportSettings
@@ -33783,16 +33907,8 @@ declare interface TokContextLike {
 	token: string;
 	isExpr: boolean;
 	preserveSpace?: boolean;
-	override?: any;
+	override?: (parser: SyntaxParser) => void;
 	generator?: boolean;
-}
-
-/**
- * one of terser's tokens
- */
-declare interface TokenEs5 {
-	[index: number]: any;
-	[index: string]: any;
 }
 
 /**
@@ -33894,13 +34010,13 @@ declare class TokenStream {
  * A token as `options.onToken` receives one.
  */
 declare class TokenSyntaxParserClass {
-	constructor(p?: any);
-	type: any;
+	constructor(p: SyntaxParser);
+	type: TokenType;
 	value: any;
-	start: any;
-	end: any;
+	start: number;
+	end: number;
 	loc?: ParserSourceLocation;
-	range?: any[];
+	range?: number[];
 }
 type TokenSyntaxParserObject = NodeSyntaxParser & {
 	value: string;
@@ -34249,7 +34365,7 @@ declare interface VirtualModule {
 	 * The source function that provides the virtual content.
 	 */
 	source: (
-		loaderContext: LoaderContextNormalModule<any>
+		loaderContext: LoaderContextNormalModule<Record<string, any>>
 	) => string | Buffer | Promise<string | Buffer>;
 
 	/**
@@ -34265,7 +34381,7 @@ declare interface VirtualModule {
 type VirtualModuleContent =
 	| string
 	| ((
-			loaderContext: LoaderContextNormalModule<any>
+			loaderContext: LoaderContextNormalModule<Record<string, any>>
 	  ) => string | Buffer | Promise<string | Buffer>)
 	| VirtualModule;
 declare interface VirtualModules {
@@ -34672,7 +34788,7 @@ declare class WebpackError extends Error {
 	/**
 	 * Whether an error is a webpack error rather than any other thrown value.
 	 */
-	static isWebpackError(value: unknown): boolean;
+	static isWebpackError<T>(value: T): boolean;
 
 	/**
 	 * Creates a `.stack` property on `targetObject`, which when accessed returns
@@ -35897,7 +36013,7 @@ declare namespace exports {
 				export let plainIdentifier: (name: string) => string;
 				export let load: () => Promise<Minifier>;
 				export let PHASES: Phase[];
-				export let FORMAT_DEFAULTS: FormatOptions;
+				export let FORMAT_DEFAULTS: any;
 				export let IGNORED_FORMAT_OPTIONS: string[];
 				export let createAst: () => Ast;
 				export let createModules: () => MinifierModules;
