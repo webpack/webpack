@@ -900,6 +900,15 @@ const OXC_SMALLER_BY_REASON = [
 			"swc exec: terser_reduce_vars_unsafe_evaluate_modified",
 			"swc minifier: fixture/issues/11103/input.js"
 		]
+	],
+	[
+		"oxc drops an unread deferred or source-phase import, assuming its load cannot fail, where webpack keeps it as oxc's `invalid_import_side_effects` does, since it still fetches and links its module",
+		[
+			"oxc minifier: peephole/remove_unused_declaration.rs:1086",
+			"oxc minifier: peephole/remove_unused_declaration.rs:1087",
+			"oxc minifier: peephole/remove_unused_declaration.rs:1105",
+			"oxc minifier: peephole/remove_unused_declaration.rs:1106"
+		]
 	]
 ];
 

@@ -1494,6 +1494,8 @@ const IMPROVED_YET_BIGGER = {
 		"4 bytes fewer, 8 more gzipped: `typeof class{}` folded to `\"function\"` breaks the `console.log(typeof` runs",
 	"fixture/member_expr/callee/input.js (its own options)":
 		"3 bytes more, 6 more gzipped: the object read once at the head of the optional chain inlines, while the case's options keep its declaration",
+	"drop-unused/issue_t1447_export_const (a module mangled at its top level)":
+		"5 bytes fewer, 6 more gzipped: the exported `const` kept out of its reader, where terser's copy repeats the `console.log(\"PASS\")` gzip matched",
 };
 
 // Sources whose shorter spelling no longer repeats text gzip matched, by the
