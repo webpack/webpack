@@ -8655,14 +8655,14 @@ describe("syntax-printer", () => {
 			}
 		});
 
-		it("should merge a module's imports of one module into the first, and drop deferred or source-phase ones nothing reads", async () => {
+		it("should merge a module's imports of one module into the first, keeping deferred or source-phase ones nothing reads", async () => {
 			const { minify, improvements } = await load();
 			const input =
 				"import A from 'm'; import B from 'm'; import { foo } from 'm'; import * as X from 'p'; import Y from 'p'; import * as Z from 'p'; import 'm'; import j from 'j' with { type: 'json' }; import k from 'j'; import source s from 's'; import defer * as d from 'd'; import defer * as e from 'e'; sink(A, B, foo, X, Y, Z, j, k, e);";
 			/** @type {import("terser").MinifyOptions} */
 			const options = { module: true, compress: {}, mangle: false };
 			expect((await minify(input, options)).code).toBe(
-				'import A,{default as B,foo}from"m";import Y,*as X from"p";import*as Z from"p";import j from"j"with{type:"json"};import k from"j";import defer*as e from"e";sink(A,B,foo,X,Y,Z,j,k,e);'
+				'import A,{default as B,foo}from"m";import Y,*as X from"p";import*as Z from"p";import j from"j"with{type:"json"};import k from"j";import source s from"s";import defer*as d from"d";import defer*as e from"e";sink(A,B,foo,X,Y,Z,j,k,e);'
 			);
 			if (!improvements) throw new Error("the improve phase is not installed");
 			improvements.enabled = false;
@@ -8702,7 +8702,7 @@ describe("syntax-printer", () => {
 				],
 				[
 					'import a from "a"; import { b, c } from "b"; import * as n from "n"; import defer * as d from "d"; c();',
-					'import"a";import{c}from"b";import"n";c();'
+					'import"a";import{c}from"b";import"n";import defer*as r from"d";c();'
 				],
 				['import a from "a"; eval("a");', 'import a from"a";eval("a");'],
 				[
