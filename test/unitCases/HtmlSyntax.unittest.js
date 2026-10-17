@@ -3428,7 +3428,7 @@ describe("parseHtml", () => {
 			const value = ' matrix(+001.00, 000.00, 000.00, 001.00, 010.00, -000.00), translate(+001.00e+02, 002.00) scale(001.00) rotate(090.00, 000, 000) skewX(001.00)skewY(-001.00) ';
 			const source = `<svg xmlns="${svg}"><g transform="${value}"/></svg>`;
 			const once = new SourceProcessor().process(source, compact).code;
-			expect(once).toBe(`<svg xmlns="${svg}"><g transform="matrix(1 0 0 1 10 -0) translate(+001.00e+02 2) scale(1) rotate(90) skewX(1) skewY(-1)"/></svg>`);
+			expect(once).toBe(`<svg xmlns="${svg}"><g transform="translate(10) translate(+001.00e+02 2) scale(1) rotate(90) skewX(1) skewY(-1)"/></svg>`);
 			expect(new SourceProcessor().process(once, compact).code).toBe(once);
 		});
 
@@ -3439,6 +3439,42 @@ describe("parseHtml", () => {
 			const once = new SourceProcessor().process(source, compact).code;
 			expect(once).toBe(expected);
 			expect(new SourceProcessor().process(once, compact).code).toBe(once);
+		});
+
+		it.each([
+			['M0 0C0 0 10 10 20 20', 'M0 0S10 10 20 20'],
+			['m10 10c0 0 10 10 20 20', 'm10 10s10 10 20 20'],
+			['M0 0Q0 0 10 10', 'M0 0T10 10'],
+			['m10 10q0 0 20 20', 'm10 10t20 20'],
+			['M10 20L10 30C10 30 20 40 50 60', 'M10 20V30S20 40 50 60'],
+			['M0 0C0 0 10 10 20 20C20 20 30 30 40 40', 'M0 0S10 10 20 20C20 20 30 30 40 40'],
+			['M0 0C1 1 10 10 10 10C10 10 20 20 30 30', 'M0 0C1 1 10 10 10 10C10 10 20 20 30 30'],
+			['M0 0Q0 0 10 10Q10 10 20 20', 'M0 0T10 10Q10 10 20 20'],
+			['M0 0Q10 10 10 10Q10 10 20 20', 'M0 0Q10 10 10 10Q10 10 20 20'],
+			['M0 0C0 0 0 0 0 0C0 0 0 0 1 2', 'M0 0S0 0 0 0C0 0 0 0 1 2'],
+			['M0 0Q0 0 0 0Q0 0 1 2', 'M0 0T0 0Q0 0 1 2'],
+			['M0 0S1 1 2 2C2 2 3 3 4 4', 'M0 0S1 1 2 2C2 2 3 3 4 4'],
+			['M0 0S2 2 2 2C2 2 3 3 4 4', 'M0 0S2 2 2 2C2 2 3 3 4 4'],
+			['M0 0c1 1 2 2 2 2c0 0 3 3 4 4', 'M0 0c1 1 2 2 2 2c0 0 3 3 4 4'],
+			['M0 0s1 1 2 2c0 0 3 3 4 4', 'M0 0s1 1 2 2c0 0 3 3 4 4'],
+			['M0 0T0 0Q0 0 1 2', 'M0 0T0 0Q0 0 1 2'],
+			['M0 0C0 0 1 2 3 4Q3 4 5 6C5 6 7 8 9 10', 'M0 0S1 2 3 4T5 6S7 8 9 10'],
+			['M10 20Q10 20 30 40ZC10 20 50 60 70 80', 'M10 20T30 40ZS50 60 70 80'],
+			['M0 0h1Q1 0 2 2', 'M0 0h1Q1 0 2 2'],
+			['M0 0c-0 .00e-400 1 2 3 4', 'M0 0c-0 .00e-400 1 2 3 4'],
+			['M0 0c1e-400 0 1 2 3 4', 'M0 0c1e-400 0 1 2 3 4'],
+			['M9007199254740993 0C9007199254740993 0 1 2 3 4', 'M9007199254740993 0S1 2 3 4'],
+			['M9007199254740992 0C9007199254740993 0 1 2 3 4', 'M9007199254740992 0C9007199254740993 0 1 2 3 4'],
+			['M2e38 2e38C2e38 2e38 2e38 2e38 2e38 2e38C2e38 2e38 0 0 10 20', 'M2e38 2e38S2e38 2e38 2e38 2e38C2e38 2e38 0 0 10 20'],
+			['M0 0C0 0 1', 'M0 0C0 0 1'],
+			['M0 0Q0 0 1 2Q', 'M0 0Q0 0 1 2Q']
+		])('should shorten only exactly implied curve controls in %s', (value, expected) => {
+			const source = `<svg xmlns="${svg}"><path d="${value}"/></svg>`;
+			const processor = new SourceProcessor();
+			const once = processor.process(source, compact).code;
+			expect(once).toBe(`<svg xmlns="${svg}"><path d="${expected}"/></svg>`);
+			expect(processor.process(once, compact).code).toBe(once);
+			expect(processor.process(source, { ...compact, shortenSvgPathData: false }).code).toBe(source);
 		});
 
 		it.each(['L001 002', 'M', 'M0', 'M0,', 'M0 0,', 'M,0 0', 'M0 0,L1 2', 'M0 0L1', 'M0 0R1 2', 'M0 0Z1 2', 'M0 0L1e 2', 'M0 0A-1 1 0 0 1 2 3', 'M0 0A1 1 0 2 1 2 3', 'M0 0A1 1 0 1.0 1 2 3', 'M0 0A1 1 0 0 1 2', 'M0 0L1,,2', 'M0 0L1 2L', 'M0 0C1 2 3 4 5 6C7 8', 'M0 0A1 1 0 011 2A1 1 0 0', 'M0 0ZL', 'M000 000\u017f001 002 003 004', 'M000 000L000 005L', 'M000 000L000 005\u017f001 002 003 004'])('should preserve invalid or unsupported path syntax %s', (value) => {
@@ -3617,6 +3653,34 @@ describe("parseHtml", () => {
 			expect(new SourceProcessor().process(source, { ...compact, removeEmptyElements: false }).code).toBe(source.replace('<!--empty-->', ''));
 		});
 
+		it.each(['symbol', 'marker', 'pattern', 'mask', 'clipPath'])("should remove empty unreferenced SVG %s containers only", (tag) => {
+			const source = `<svg xmlns="${svg}"><defs><${tag}/></defs><${tag} id="keep"/><use href="#keep"/><${tag} class="keep"/><${tag}><path d="M0 0"/></${tag}><switch><${tag}/><rect width="10" height="10"/></switch><text>A<${tag}/>B</text><foreignObject><${tag}/></foreignObject></svg>`;
+			const options = { xml: true, mode: /** @type {const} */ ('minify'), removeEmptyElements: true };
+			const processor = new SourceProcessor();
+			const once = processor.process(source, options).code;
+			expect(once).toBe(source.replace(`<defs><${tag}/></defs>`, ''));
+			expect(processor.process(once, options).code).toBe(once);
+			expect(processor.process(source, { ...options, removeEmptyElements: false }).code).toBe(source);
+			expect(processor.process(source, { ...options, mode: 'beautify' }).code).toBe(source);
+			const root = `<${tag} xmlns="${svg}"/>`;
+			expect(processor.process(root, options).code).toBe(root);
+			for (const prefix of [`<!DOCTYPE svg [<!ELEMENT svg (${tag})><!ELEMENT ${tag} EMPTY>]>`, '<!DOCTYPE svg SYSTEM "svg.dtd">', `<!DOCTYPE svg [<!ATTLIST ${tag} id CDATA "keep">]>`]) {
+				const constrained = `${prefix}<svg xmlns="${svg}"><${tag}/></svg>`;
+				expect(processor.process(constrained, options).code).toBe(constrained);
+			}
+			const prefixed = `<s:svg xmlns:s="${svg}"><s:${tag}/></s:svg>`;
+			expect(processor.process(prefixed, options).code).toBe(`<s:svg xmlns:s="${svg}"/>`);
+		});
+
+		it.each([
+			'<animate href="#p" attributeName="d" to="M0 0C1 1 3 4 5 6" dur="2s"/>',
+			'<style>@keyframes morph{to{d:path("M0 0C1 1 3 4 5 6")}}</style>',
+			'<style>@keyframes morph{to{\\64 :path("M0 0C1 1 3 4 5 6")}}</style>'
+		])("should preserve animated curve command compatibility with %s", (animation) => {
+			const source = `<svg xmlns="${svg}"><path id="p" d="M0 0C0 0 3 4 5 6"/>${animation}</svg>`;
+			expect(new SourceProcessor().process(source, compact).code).toBe(source);
+		});
+
 		it("should merge text exposed by empty containers before scanning namespace references", () => {
 			const source = `<svg xmlns="${svg}" xmlns:p="urn:used" xmlns:q="urn:unused">p<g/>:Thing<g class=""/><g xml:space="preserve"> </g></svg>`;
 			const options = { ...compact, removeEmptyAttributes: true, collapseWhitespace: true, removeUnusedSvgNamespaces: true };
@@ -3673,6 +3737,8 @@ describe("parseHtml", () => {
 			["translate(1,0)", "translate(1)"],
 			["translate(1 -0e+20)", "translate(1)"],
 			["translate(1 .000)", "translate(1)"],
+			["translate(1 0e38)", "translate(1)"],
+			["translate(1 0e000038)", "translate(1)"],
 			["translate(1)", "translate(1)"],
 			["translate(1 2)", "translate(1 2)"],
 			["translate(1 1e-400)", "translate(1 1e-400)"],
@@ -3688,12 +3754,12 @@ describe("parseHtml", () => {
 			["scale(0 -0)", "scale(0 -0)"],
 			["scale(1e2 100)", "scale(1e2 100)"],
 			["rotate(30,0,0)", "rotate(30)"],
-			["rotate(30 -0e-400 .000)", "rotate(30)"],
+			["rotate(30 -0e-400 .000)", "rotate(30 -0e-400 0)"],
 			["rotate(30)", "rotate(30)"],
 			["rotate(30 1 0)", "rotate(30 1 0)"],
 			["rotate(30 0 1)", "rotate(30 0 1)"],
 			["rotate(30 0 1e-400)", "rotate(30 0 1e-400)"],
-			["matrix(1 0 0 1 0 0)", "matrix(1 0 0 1 0 0)"],
+			["matrix(1 0 0 1 0 0)", "translate(0)"],
 			["skewX(0) skewY(0)", "skewX(0) skewY(0)"],
 			[" translate(1,0),scale(2,2) rotate(30 0 0) ", "translate(1) scale(2) rotate(30)"],
 			["translate(1,0) scale(2,2) rotate(30 0 0) scale(1,)", "translate(1,0) scale(2,2) rotate(30 0 0) scale(1,)"],
@@ -3707,6 +3773,68 @@ describe("parseHtml", () => {
 			expect(processor.process(once, options).code).toBe(once);
 			expect(processor.process(source, { ...options, shortenSvgNumbers: false }).code).toBe(source);
 			expect(processor.process(source, { ...options, mode: "beautify" }).code).toBe(source);
+		});
+
+		it.each([
+			['matrix(1 0 0 1 10 20)', 'translate(10 20)'],
+			['matrix(1 0 0 1 10 0)', 'translate(10)'],
+			['matrix(2 0 0 2 0 0)', 'scale(2)'],
+			['matrix(1 0 0 2 0 0)', 'scale(1 2)'],
+			['matrix(2 0 0 3 0 0)', 'scale(2 3)'],
+			['matrix(-2 -0 .0 -2 -0 0e20)', 'scale(-2)'],
+			['matrix(1 0 0 1 9007199254740993 .123456789123456789)', 'translate(9007199254740993 .123456789123456789)'],
+			['matrix(1 1e-400 0 1 10 20)', 'matrix(1 1e-400 0 1 10 20)'],
+			['matrix(1 0 1e-400 1 10 20)', 'matrix(1 0 1e-400 1 10 20)'],
+			['matrix(1e0 0 0 1 10 20)', 'matrix(1e0 0 0 1 10 20)'],
+			['matrix(2 0 0 3 10 0)', 'matrix(2 0 0 3 10 0)'],
+			['matrix(2 0 0 3 0 10)', 'matrix(2 0 0 3 0 10)'],
+			['matrix(2 0 0 3 0 1e-400)', 'matrix(2 0 0 3 0 1e-400)'],
+			['matrix(1 0 0 1 10 20) scale(1,)', 'matrix(1 0 0 1 10 20) scale(1,)']
+		])('should shorten exact diagonal matrix aliases in %s', (value, expected) => {
+			const processor = new SourceProcessor();
+			const source = `<svg xmlns="${svg}"><g transform="${value}"/><linearGradient gradientTransform="${value}"/><pattern patternTransform="${value}"/></svg>`;
+			const options = { ...compact, removeEmptyElements: false };
+			const once = processor.process(source, options).code;
+			expect(once).toBe(source.split(`="${value}"`).join(`="${expected}"`));
+			expect(processor.process(once, options).code).toBe(once);
+			expect(processor.process(source, { ...options, shortenSvgNumbers: false }).code).toBe(source);
+		});
+
+		it.each([
+			'<animate href="#p" attributeName="transform" to="matrix(1 0 0 1 30 40)" dur="2s"/>',
+			'<animate attributeName="gradientTransform" to="rotate(30)" dur="2s"/>',
+			'<animate attributeName="patternTransform" to="rotate(30)" dur="2s"/>',
+			'<animateTransform type="rotate" to="30" dur="2s"/>',
+			'<animateMotion path="M0 0L30 30" dur="2s"/>',
+			'<style>@keyframes turn{to{transform:rotate(30deg)}}</style>',
+			// cspell:ignore ransform
+			'<style>@keyframes turn{to{\\74 ransform:rotate(30deg)}}</style>',
+			'<g style="transform:rotate(30deg)"/>'
+		])('should preserve matrix transform types with local animation %s', (animation) => {
+			const source = `<svg xmlns="${svg}"><path id="p" transform="matrix(1 0 0 1 10 20)"/>${animation}</svg>`;
+			const processor = new SourceProcessor();
+			expect(processor.process(source, compact).code).toBe(source);
+			const plain = `<svg xmlns="${svg}"><path transform="matrix(1 0 0 1 10 20)"/></svg>`;
+			expect(processor.process(plain, compact).code).toContain('transform="translate(10 20)"');
+		});
+
+		it("should preserve DTD-declared matrix types and default animation attributes", () => {
+			const body = `<svg xmlns="${svg}"><path transform="matrix(1 0 0 1 10 20)"/></svg>`;
+			for (const dtd of ['<!DOCTYPE svg [<!ATTLIST path transform CDATA #IMPLIED>]>', '<!DOCTYPE svg SYSTEM "svg.dtd">']) {
+				expect(new SourceProcessor().process(dtd + body, compact).code).toBe(dtd + body);
+			}
+			const animated = '<!DOCTYPE svg [<!ATTLIST animate attributeName CDATA "transform">]>' + body.replace('</svg>', '<animate to="matrix(1 0 0 1 30 40)" dur="2s"/></svg>');
+			expect(new SourceProcessor().process(animated, compact).code).toBe(animated);
+		});
+
+		it.each(['0e39', '-0e400', '0e-400', '0e000039', '0e999999999999'])("should preserve zero exponents outside SVG's finite float range in %s", (zero) => {
+			const source = `<svg xmlns="${svg}"><rect transform="translate(5 ${zero})"/><g transform="rotate(30 0 ${zero})"/><linearGradient gradientTransform="matrix(1 ${zero} 0 1 5 0)"/><path d="M0 0l5 ${zero}"/><path d="M0 0c${zero} 0 1 2 3 4"/></svg>`;
+			const line = `M0 0l5${zero.startsWith("-") ? "" : " "}${zero}`;
+			expect(new SourceProcessor().process(source, compact).code).toBe(source.replace(`M0 0l5 ${zero}`, line));
+			const html = new SourceProcessor().process(source, { ...compact, xml: false }).code;
+			expect(html).toContain(`translate(5 ${zero})`);
+			expect(html).toContain(line);
+			expect(html).toContain(`M0 0c${zero} 0 1 2 3 4`);
 		});
 
 		it("should compact redundant inline SVG transform arguments using the HTML printer", async () => {

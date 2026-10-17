@@ -535,7 +535,7 @@ const PARSER_TABLES = [
 		"SVG_EMPTY_CONTAINERS",
 		"set",
 		"Empty SVG containers with only namespace declarations can be omitted when structural cleanup is explicitly enabled.",
-		["g", "defs"]
+		["g", "defs", "symbol", "marker", "pattern", "mask", "clipPath"]
 	],
 	[
 		"SVG_TRANSFORM_ARGUMENTS",

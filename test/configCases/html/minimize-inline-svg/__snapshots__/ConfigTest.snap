@@ -1,14 +1,14 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`ConfigTestCases html minimize-inline-svg minimize-inline-svg should compile: default 1`] = `
-"<!doctype html><html lang=en><head><title>Inline SVG</title><style>.icon{background:url(\\"data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'><path d='m000,000 0 80-112 0 M10 20 10 30 40 30'/></svg>\\")}.animated{color:red;background:url(data:image/svg+xml,<svg%20xmlns=%22http://www.w3.org/2000/svg%22><metadata>removed</metadata><style>@keyframes%20morph{to{d:path%28%22M10%2020L20%2050L40%2050%22%29}}</style><path%20d=%22M010%20020L010%20030L040%20030%22/></svg>)}</style></head><body>
+"<!doctype html><html lang=en><head><title>Inline SVG</title><style>.icon{background:url(\\"data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'><path d='m000,000 0 80-112 0 M10 20 10 30 40 30q0 0 20 20'/></svg>\\")}.animated{color:red;background:url(data:image/svg+xml,<svg%20xmlns=%22http://www.w3.org/2000/svg%22><metadata>removed</metadata><style>@keyframes%20morph{to{d:path%28%22M10%2020L20%2050L40%2050%22%29}}</style><path%20d=%22M010%20020L010%20030L040%20030%22/></svg>)}</style></head><body>
 <svg viewBox=\\"000 000 0024.0 24\\" xmlns=http://www.w3.org/2000/svg>
 	<metadata><rdf:RDF><cc:Work/></rdf:RDF></metadata>
-	<path d=\\"m000,000 0 80-112 0 M10 20 10 30 40 30\\" transform=\\"translate(+001.00, 002.00) scale(001.00, +001.00) rotate(000.00, 000.00, 000.00)\\"/>
+	<path d=\\"m000,000 0 80-112 0 M10 20 10 30 40 30c0 0 10 10 20 20\\" transform=\\"matrix(1 0 0 1 0 0) translate(+001.00, 002.00) scale(001.00, +001.00) rotate(000.00, 000.00, 000.00)\\"/>
 	<metadata><path id=metadata-shape d=\\"M1 1H3V3Z\\"/></metadata><use href=#metadata-shape />
 	<rect width=+001.500px height=002></rect>
 </svg>
-<img alt src=\\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cmetadata%3Em%3C/metadata%3E%3Crect width='+001.500' transform='translate(5,0) scale(2,2) rotate(30,0,0)'/%3E%3C/svg%3E\\">
+<img alt src=\\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cmetadata%3Em%3C/metadata%3E%3Crect width='+001.500' transform='matrix(1,0,0,1,5,0) matrix(2,0,0,2,0,0) rotate(30,0,0)'/%3E%3C/svg%3E\\">
 <div data-d=M000,000></div>
 
 
@@ -16,10 +16,10 @@ exports[`ConfigTestCases html minimize-inline-svg minimize-inline-svg should com
 `;
 
 exports[`ConfigTestCases html minimize-inline-svg minimize-inline-svg should compile: svg 1`] = `
-"<!doctype html><html lang=en><head><title>Inline SVG</title><style>.icon{background:url(\\"data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'><path d='m0 0v80h-112M10 20V30H40'/></svg>\\")}.animated{color:red;background:url(\\"data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'><style>@keyframes morph{to{d:path(\\\\\\"M10 20L20 50L40 50\\\\\\")}}</style><path d='M010 020L010 030L040 030'/></svg>\\")}</style></head><body>
+"<!doctype html><html lang=en><head><title>Inline SVG</title><style>.icon{background:url(\\"data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'><path d='m0 0v80h-112M10 20V30H40t20 20'/></svg>\\")}.animated{color:red;background:url(\\"data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'><style>@keyframes morph{to{d:path(\\\\\\"M10 20L20 50L40 50\\\\\\")}}</style><path d='M010 020L010 030L040 030'/></svg>\\")}</style></head><body>
 <svg viewBox=\\"0 0 24 24\\" xmlns=http://www.w3.org/2000/svg>
 	
-	<path d=\\"m0 0v80h-112M10 20V30H40\\" transform=\\"translate(1 2) scale(1) rotate(0)\\"/>
+	<path d=\\"m0 0v80h-112M10 20V30H40s10 10 20 20\\" transform=\\"translate(0) translate(1 2) scale(1) rotate(0)\\"/>
 	<metadata><path id=metadata-shape d=\\"M1 1H3V3Z\\"/></metadata><use href=#metadata-shape />
 	<rect width=1.5px height=2></rect>
 </svg>
