@@ -16,10 +16,10 @@ const SOURCE = `<?xml version="1.0" encoding="UTF-8"?>
 
 describe("xmlMinify", () => {
 	it.each([false, true])("should forward presentation, path, transform and container cleanup with enabled=%s", async (enabled) => {
-		const source = '<svg xmlns="http://www.w3.org/2000/svg"><g/><path fill="#ff0000" d="M000.00,000.00L001.00,002.00" transform="scale(001.00)"/><style>path { stroke: #ffffff }</style></svg>';
+		const source = '<svg xmlns="http://www.w3.org/2000/svg"><g/><path fill="#ff0000" d="M000.00,000.00L001.00,002.00" transform="scale(001.00, +001.00)"/><style>path { stroke: #ffffff }</style></svg>';
 		const options = { shortenColors: enabled, shortenNumbers: enabled, shortenPathData: enabled, removeEmptyElements: enabled };
 		const once = (await xmlMinify({ 'image.svg': source }, undefined, options)).code;
-		expect(once).toBe(`<svg xmlns="http://www.w3.org/2000/svg">${enabled ? '' : '<g/>'}<path fill="${enabled ? 'red' : '#ff0000'}" d="${enabled ? 'M0 0 1 2' : 'M000.00,000.00L001.00,002.00'}" transform="${enabled ? 'scale(1)' : 'scale(001.00)'}"/><style>path{stroke:#fff}</style></svg>`);
+		expect(once).toBe(`<svg xmlns="http://www.w3.org/2000/svg">${enabled ? '' : '<g/>'}<path fill="${enabled ? 'red' : '#ff0000'}" d="${enabled ? 'M0 0 1 2' : 'M000.00,000.00L001.00,002.00'}" transform="${enabled ? 'scale(1)' : 'scale(001.00, +001.00)'}"/><style>path{stroke:#fff}</style></svg>`);
 		expect((await xmlMinify({ 'image.svg': once }, undefined, options)).code).toBe(once);
 	});
 	it("should preserve the CSS color transform option in SVG presentation attributes", async () => {

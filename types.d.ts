@@ -13225,7 +13225,7 @@ declare interface HtmlProcessOptions {
 	shortenSvgColors?: boolean;
 
 	/**
-	 * shorten SVG geometry and transform decimals and separators without rounding, changing units or rewriting exponent notation when minifying XML (default false)
+	 * shorten SVG geometry and transform decimals, separators and redundant transform arguments without rounding, changing units or rewriting exponent notation when minifying XML (default false)
 	 */
 	shortenSvgNumbers?: boolean;
 
