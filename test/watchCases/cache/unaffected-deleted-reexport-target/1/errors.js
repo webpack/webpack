@@ -1,6 +1,8 @@
 "use strict";
 
-module.exports = [
-	[/Module not found/, /Can't resolve '\.\/target'/],
-	[/Module not found/, /Can't resolve '\.\/target'/]
-];
+const errors = [1, 2, 3].map(() => [
+	/Module not found/,
+	/Can't resolve '\.\/target'/
+]);
+
+module.exports = [...errors, ...errors];
