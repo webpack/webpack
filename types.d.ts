@@ -33570,6 +33570,34 @@ declare class SyntaxTree {
 	set(node: number, name: string, value: unknown): void;
 
 	/**
+	 * Writes a node from its record, each slot a child node, a list from
+	 * `addList` or a value from `addValue`, `0` or left out for none.
+	 */
+	addNode(
+		type: number,
+		start: number,
+		end: number,
+		flags: number,
+		slot0?: number,
+		slot1?: number,
+		slot2?: number,
+		slot3?: number
+	): number;
+	addValue(value: unknown): number;
+	addList(items: number[], count: number): number;
+
+	/**
+	 * Retypes a node whose record the new type reads the same, as an
+	 * expression the parser then reads as a pattern.
+	 */
+	setType(node: number, type: number): void;
+
+	/**
+	 * Sets the slot a node's record holds a part in.
+	 */
+	setPart(part: number, node: number, text: string): void;
+
+	/**
 	 * Writes a parsed node and everything under it, its children taking ids
 	 * after it in source order; a child already written stands as its id.
 	 */
@@ -35026,6 +35054,7 @@ declare class WebpackParser extends SyntaxParser {
 			lazyComments?: CollectedComment[];
 			importPhases?: boolean;
 			moduleFallback?: boolean;
+			syntaxTree?: SyntaxTree;
 		},
 		input: string,
 		startPos?: number
