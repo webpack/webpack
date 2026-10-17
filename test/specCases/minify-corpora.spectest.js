@@ -434,6 +434,9 @@ const readsAsModule = (input) => {
 	}
 };
 
+// What stands for swc's `passes: 0`, which it runs until nothing changes.
+const SWC_UNBOUNDED_PASSES = 10;
+
 /**
  * One of swc's minifier tests, as swc's own harness reads it: the compress
  * options of the nearest `config.json` up the tree, and a `mangle.json` beside
@@ -464,6 +467,9 @@ const readSwcTest = (file, { knows }) => {
 	const compress = dir.startsWith(swcTestsDir)
 		? { defaults: true, ...readJson(path.join(dir, "config.json")) }
 		: undefined;
+	// swc repeats its passes until one changes nothing where `passes` is 0 or
+	// unset; terser, given more, stops once a pass leaves the tree no smaller.
+	if (compress && !compress.passes) compress.passes = SWC_UNBOUNDED_PASSES;
 	const [area] = path.relative(swcTestsDir, file).split(path.sep);
 	const mangle = readJson(path.join(path.dirname(file), "mangle.json"));
 	// swc also reads its Rust field's camelCase spelling, which terser does not.

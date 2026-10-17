@@ -862,6 +862,42 @@ const IMPROVED_CASES = [
 		"var a=0,b=1;console.log(!a,!!a,!!a,!!b,2==!a);"
 	],
 	[
+		"a function read once where a call marked pure passes its value on",
+		"function g() { function h() { return s(); } console.log(/*#__PURE__*/ h()); } function s() { return 1; } g();",
+		{ mangle: false },
+		"function g(){console.log(s())}function s(){return 1}g();"
+	],
+	[
+		"a sequence on the right of a constant's comparison, lifted for the comparison to fold",
+		"function a() { console.log(\"a\"); } var x = (a(), 2) == 1, z = 1 + (a(), 2); console.log(x, z);",
+		{ mangle: false },
+		"function a(){console.log(\"a\")}var x=(a(),!1),z=(a(),3);console.log(x,z);"
+	],
+	[
+		"a trailing parameter nothing reads, whose default has no effect or which gathers the rest, as `length` counts neither",
+		"function identity(x, y = 42) { return x; } function h(a, ...r) { return a; } function k(a, b = 1) { return arguments.length; } function f(a, b, c = g()) { return a; } function g() {} console.log(identity(1), identity.length, h(1, 2), h.length, k(1, 2), f(1));",
+		{ mangle: false },
+		"function identity(x){return x}function h(a){return a}function k(a,b=1){return arguments.length}function f(a,b,c=g()){return a}function g(){}console.log(identity(1),identity.length,h(1,2),h.length,k(1,2),f(1));"
+	],
+	[
+		"a call of a known one-`return` function with constant arguments, as the constant it returns",
+		"function g() { let f = (a) => 75 <= a; return [f(0), f(50), f(100)]; } function h(x, y) { return x * y + k; } var k = 1; console.log(g(), h(2, 3)); k = 2; console.log(h(2, 3));",
+		{ mangle: false },
+		"function g(){return[!1,!1,!0]}function h(x,y){return x*y+k}var k=1;console.log(g(),h(2,3)),k=2,console.log(h(2,3));"
+	],
+	[
+		"a block's `let` read as a function's is, where nothing writes it before",
+		"{ let o = 3; console.log(o, o > 4); } { let p = 1; console.log(p, p); p = 2; console.log(p, p); } { try { console.log(w); } catch (e) { console.log(\"tdz\"); } let w = 1; console.log(w, w); }",
+		{ mangle: false },
+		"console.log(3,!1);{let p=1;console.log(p,p),console.log(p=2,p)}{try{console.log(w)}catch(e){console.log(\"tdz\")}let w=1;console.log(w,w)}"
+	],
+	[
+		"a read of `globalThis` nothing uses, which ECMAScript 2020 defines",
+		"(function () { \"use strict\"; globalThis, console.log(typeof globalThis); })();",
+		{ mangle: false, ecma: 2020 },
+		"!function(){\"use strict\";console.log(typeof globalThis)}();"
+	],
+	[
 		"a name read once, at the head of an optional chain, as its value",
 		"function f(o) { let n = o.g(); return n?.b; } function k(o) { var n = o.g; return n?.(1); } console.log(f({ g: () => ({ b: 1 }) }), f({ g: () => null }), k({ g: (x) => x }), k({}));",
 		{ mangle: false },
@@ -1586,7 +1622,7 @@ const KEPT_CASES = [
 	["a conditional whose branches end in one chain made optional at different links", "function f(flag, obj, t) { return flag ? (t(), obj?.b.c) : obj.b?.c; } console.log(f(1, { b: { c: 1 } }, () => 0), f(0, {}, () => 0));"],
 	["a `return` of `undefined` in an async generator, which awaits the value a bare `return` does not", "var r = []; async function* f(a) { for (;;) { if (a()) return void r.push(1); yield r.push(2); } } var o = { async *m(a) { if (a) return void r.push(3); yield 4; } }; f(() => 1).next().then(() => o.m(1).next()).then(() => console.log(r.join()));"],
 	["a conditional whose other branch reads a global getter again", 'var n = 0; Object.defineProperty(globalThis, "g", { get: function () { return n++; }, configurable: true }); function f(b) { return g ? b : g; } console.log(f(1), f(2));'],
-	["a conditional whose other branch reads a getter twice or a different binding", "var n = 0, o = { get x() { return ++n; } }; function f(b) { var a = 1; { let a = 0; var r = a ? b : o.x ? b : o.x; } return [r, a, n]; } console.log(f(2));"],
+	["a conditional whose other branch reads a getter twice or a different binding", "var n = 0, o = { get x() { return ++n; } }; function f(b) { var a = 1; { let a = b - 2; var r = a ? b : o.x ? b : o.x; } return [r, a, n]; } console.log(f(2));"],
 	["a bigint and a number concatenated, which throws", "try { console.log(1n + 2); } catch (e) { console.log(e.name); }"],
 	["a `return` of `undefined` in an `if` an async generator ends with, or in a loop, a `try` or an `if` something follows", "async function* a(c) { if (c) { await 0; return c.x ? 1 : void 0; } } function b(c) { for (var i of c) { g(); return i ? 1 : void 0; } } function d(c) { try { g(); return c ? 1 : void 0; } finally { g(); } } function e(c, x) { if (c) { g(); return x ? 1 : void 0; } g(); } function g() {} console.log(b([1]), d(1), e(1, 0)); a({ x: 1 }).next().then((r) => console.log(r.value));"],
 	["consecutive `if`s leaving with different values or to different labels", 'function f(a, b) { if (a) return 1; if (b) return 2; x: for (;;) { for (;;) { if (a) break x; if (b) break; console.log(3); break x; } console.log(4); break; } for (var i = 0; i < 2; i++) console.log(i); } f(1, 0); f(0, 1); f(0, 0);'],
@@ -1644,7 +1680,7 @@ const KEPT_CASES = [
 	["a `let` copying a binding declared after it", "function f() { let b = c; let c = 1; return b; } try { console.log(f()); } catch (e) { console.log(e.name); }"],
 	["a `let` copying a longer name read more than once, where names keep their length", "function f(longBinding) { let x = longBinding; g(); return x + x + x; } function g() {} console.log(f(1));"],
 	["a `var` read once copying a parameter of a function called in place, whose argument terser writes in its place", "function* gen() { yield { k: (function (arg) { var y = arg; return { ...y }; })(yield) }; } var it = gen(); it.next(); console.log(it.next({ a: 1 }).value.k);"],
-	["a `var` copying a parameter, read in a block declaring the parameter's name, or in a class of that name", "function f(b) { var a = b; g(b); { let b = 9; g(b); return [a, b]; } } function h(b) { var a = b; g(b); return new (class b { m() { return a; } })().m(); } function g() {} console.log(f(1), h(1));"],
+	["a `var` copying a parameter, read in a block declaring the parameter's name, or in a class of that name", "function f(b) { var a = b; g(b); { let b = g(9); g(b); return [a, b]; } } function h(b) { var a = b; g(b); return new (class b { m() { return a; } })().m(); } function g() {} console.log(f(1), h(1));"],
 	["a `var` copying a `var` a loop sets again, read by a function inside", "var fns = []; function f(n) { for (var i = 0; i < n; i++) { var b = i * 2; var a = b; g(b); fns.push(function () { return a; }); } } function g() {} f(2); console.log(fns.map(function (h) { return h(); }));"],
 	["a `var` copying a `let` a loop declares each time round, read by a function inside", "var fns = []; function f(list) { for (let b of list) { var a = b; g(b); fns.push(function () { return a; }); } } function g() {} f([1, 2]); console.log(fns.map(function (h) { return h(); }));"],
 	["a call a loop repeats", "function f() { for (var i = 0; i < 2; i++) (function () { var b; if (i) b = i; console.log(b); })(); } f();"],
@@ -8528,6 +8564,23 @@ describe("syntax-printer", () => {
 					improvements.enabled = true;
 				}
 			}
+		});
+
+		it("should run as the last pass the one after which more passes stop, as one asked for", async () => {
+			const { minify } = await load();
+			const input = "const receiver = { value: \"variable receiver\", read: function () { return this.value; }, }; console.log(receiver.read()); console.log( { value: \"direct receiver\", read: function () { return this.value; }, }.read() ); function read() { return this.value; } const shorthandReceiver = { value: \"shorthand receiver\", read, }; console.log(shorthandReceiver.read()); function readExplicit() { return this.value; }";
+			/**
+			 * @param {number} passes how many passes are asked for
+			 * @returns {Promise<string | undefined>} the code written
+			 */
+			const write = async (passes) =>
+				(
+					await minify(input, {
+						compress: { hoist_props: true, reduce_funcs: false, reduce_vars: false, toplevel: true, passes },
+						mangle: false
+					})
+				).code;
+			expect(await write(10)).toBe(await write(3));
 		});
 
 		it("should read a program that imports or exports as a module, dropping the names it leaves unread", async () => {
