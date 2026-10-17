@@ -9357,6 +9357,19 @@ describe("parseSrcset", () => {
 		expect(() => parseSrcset("a.png -1x")).toThrow(/Invalid srcset descriptor/);
 	});
 
+	it("should reject a descriptor after a zero density descriptor", () => {
+		expect(parseSrcset("a.png 0x")).toEqual([["a.png", 0, 5]]);
+		expect(() => parseSrcset("a.png 0x 1x")).toThrow(
+			/Invalid srcset descriptor/
+		);
+		expect(() => parseSrcset("a.png 0x 1w")).toThrow(
+			/Invalid srcset descriptor/
+		);
+		expect(() => parseSrcset("a.png 0x 1h")).toThrow(
+			/Invalid srcset descriptor/
+		);
+	});
+
 	it("should throw on conflicting descriptors", () => {
 		expect(() => parseSrcset("a.png 480w 2x")).toThrow(
 			/Invalid srcset descriptor/
