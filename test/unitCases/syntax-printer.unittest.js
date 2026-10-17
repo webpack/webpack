@@ -934,6 +934,36 @@ const IMPROVED_CASES = [
 		"function f(){return{_foo:1}}console.log(f()._foo);"
 	],
 	[
+		"a block's `let` nothing reads, given its value by the assignment after it, dropped",
+		"function f(c) { for (const k in c) { let t; t = [\"e\"]; g(k); } } function g(k) { console.log(k); } f({ a: 1 });",
+		{ mangle: false },
+		"function f(c){for(let k in c){g(k)}}function g(k){console.log(k)}f({a:1});"
+	],
+	[
+		"an optional chain whose base is a sequence ending in `null` or `undefined`, as the sequence's effects",
+		"function g() { console.log(\"g\"); } let i = 0; console.log((g(), null)?.[g()], (i++, null)?.a.b, (g(), void 0)?.(1), (i++, null)?.m?.(2), i);",
+		{ mangle: false },
+		"function g(){console.log(\"g\")}let i=0;console.log(void g(),void i++,void g(),void i++,i);"
+	],
+	[
+		"a change of case of Latin, Greek or Cyrillic, folded, but not of later scripts",
+		"console.log(\"ß\".toUpperCase(), \"ΣΣ\".toLowerCase(), \"Ü\".toLowerCase(), \"ա\".toUpperCase());",
+		{ mangle: false },
+		"console.log(\"SS\",\"σς\",\"ü\",\"ա\".toUpperCase());"
+	],
+	[
+		"`replaceAll` of a string by a string, folded, but not with a `$` pattern",
+		"console.log(\"ab\".replaceAll(\"\", \"-\"), \"c_c\".replaceAll(\"c\", \"x\"), \"aa\".replaceAll(\"a\", \"$&$&\"));",
+		{ mangle: false },
+		"console.log(\"-a-b-\",\"x_x\",\"aa\".replaceAll(\"a\",\"$&$&\"));"
+	],
+	[
+		"a binding fixed to an object compared with `null` or `undefined`, as the answer",
+		"function f(a) { const o = { v: a }; g(o); return o === null || o === void 0 ? void 0 : o.v; } function g() {} console.log(f(1));",
+		{ mangle: false },
+		"function f(a){let o={v:a};return g(o),o.v}function g(){}console.log(f(1));"
+	],
+	[
 		"a name read once, at the head of an optional chain, as its value",
 		"function f(o) { let n = o.g(); return n?.b; } function k(o) { var n = o.g; return n?.(1); } console.log(f({ g: () => ({ b: 1 }) }), f({ g: () => null }), k({ g: (x) => x }), k({}));",
 		{ mangle: false },
@@ -1753,7 +1783,7 @@ const KEPT_CASES = [
 	["a global a `with` could rebind", "with ({}) console.log(Math.abs(-1));"],
 	["a function constructed whose parameter, body or kind runs or throws something", 'new function ({ a }) {}({ get a() { console.log("g"); } }); new function () { console.log("b"); }(); try { new (async function () {})(); } catch (e) { console.log(1); } try { new (function* () {})(); } catch (e) { console.log(2); }'],
 	["a constructor with a parameter, in a derived class, computed or static, and a class constructed whose field, key, block or constructor runs something", 'class A { constructor(a) {} } class B extends A { constructor() { super(); } } class C { ["constructor"]() { return 1; } static constructor() { return 2; } } console.log(A.length, new B() instanceof A, new C().constructor === C, C.constructor()); new class { p = console.log("p"); }(); new class { [console.log("k")]() {} }(); new class { static { console.log("s"); } }(); new class { constructor() { console.log("c"); } }();'],
-	["case not in ASCII", 'console.log("\\u00c4B".toLowerCase());'],
+	["case past the scripts Unicode settled", 'console.log("\\u0531B".toLowerCase());'],
 	["a call that throws", 'try { console.log(decodeURI("%")); } catch (e) { console.log(1); }'],
 	["a result longer than the call", 'console.log("ab".repeat(100));'],
 	["a built-in call that throws", 'try { new Set(1); } catch (e) { console.log(1); } try { Object.keys(null); } catch (e) { console.log(2); }'],
@@ -1797,7 +1827,7 @@ const KEPT_CASES = [
 	["an array joined, longer as a concatenation", 'function f(a, b, c) { return [a * 1, b * 1, c * 1].join("------"); } console.log(f(1, 2, 3));'],
 	["a number method throwing for its argument", "try { console.log((1).toFixed(101)); } catch (e) { console.log(e.name); }"],
 	["a function left out", 'console.log(Math.sin(1), "a,b".split(","));'],
-	["a method the oldest Node lacks", 'console.log("abc".at(-1), "abc".replaceAll("b", "x"));'],
+	["a method the oldest Node lacks, or `replaceAll` with a `$` pattern", 'console.log("abc".at(-1), "abc".replaceAll("b", "$&x"));'],
 	["an optional call", 'console.log("abc"?.charAt(1));'],
 	["an array of 99 strings, too short to split", `var a = ${stringArray(99)}; console.log(a.length);`],
 	["an array of strings holding every delimiter", `var a = ${stringArray(100, (index) => `w${index}. ,()`)}; console.log(a.length);`],
