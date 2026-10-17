@@ -918,4 +918,31 @@ describe("Compiler", () => {
 			})
 		]);
 	});
+
+	it("should refuse optimization.concatenateModules with cacheUnaffected", (done) => {
+		const webpack = require("../..");
+
+		compiler = webpack({
+			context: path.join(testDirectory, "fixtures"),
+			mode: "development",
+			entry: "./c",
+			cache: { type: "memory" },
+			experiments: { cacheUnaffected: true },
+			optimization: { concatenateModules: true },
+			output: {
+				path: "/directory",
+				filename: "bundle.js"
+			}
+		});
+		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
+			/** @type {unknown} */ (createFsFromVolume(new Volume()))
+		);
+		compiler.run((err) => {
+			expect(err).toBeInstanceOf(Error);
+			expect(/** @type {Error} */ (err).message).toBe(
+				"optimization.concatenateModules can't be used with cacheUnaffected as module concatenation is a global effect"
+			);
+			done();
+		});
+	});
 });
