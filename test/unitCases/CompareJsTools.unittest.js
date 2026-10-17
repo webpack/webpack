@@ -60,7 +60,18 @@ describe("the behavior relation", () => {
 			/** @type {import("../../tooling/compare-tools-harness").Report[]} */ (
 				behaviorDifference("var a;", "throw 1;")
 			)[0].repro
-		).toContain("threw <number>");
+		).toContain("threw <number> 1");
+	});
+
+	it("should report a printed script throwing another message or value", () => {
+		expect(
+			behaviorDifference('throw new Error("a");', 'throw new Error("b");')
+		).toHaveLength(1);
+		expect(behaviorDifference("throw 1;", "throw 2;")).toHaveLength(1);
+		expect(behaviorDifference("throw {};", "throw {};")).toEqual([]);
+		const unreadable =
+			'throw { get message() { throw new Error("getter"); } };';
+		expect(behaviorDifference(unreadable, unreadable)).toEqual([]);
 	});
 
 	it("should find nothing where the printed script runs the same", () => {
