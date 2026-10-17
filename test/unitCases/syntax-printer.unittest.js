@@ -898,6 +898,24 @@ const IMPROVED_CASES = [
 		"!function(){\"use strict\";console.log(typeof globalThis)}();"
 	],
 	[
+		"statements after a `try` whose block and handler both leave",
+		"function f(a) { try { if (a) return 1; return g(); } catch (e) { return 2; } console.log(\"dead\"); } function g() { throw 0; } console.log(f(0), f(1));",
+		{ mangle: false },
+		"function f(a){try{return a?1:g()}catch(e){return 2}}function g(){throw 0}console.log(f(0),f(1));"
+	],
+	[
+		"`typeof` of a comparison or a negation, as `\"boolean\"`",
+		"function f(a, b, c) { console.log(typeof (a === b), typeof (a + 1 - c), typeof !c); } f(1, 2, 3);",
+		{ mangle: false },
+		"function f(a,b,c){console.log(\"boolean\",typeof(a+1-c),\"boolean\")}f(1,2,3);"
+	],
+	[
+		"a negated `&&` of inequalities, as the `||` of equalities",
+		"function f(a, b, c, d) { return !(a != b && c != d); } console.log(f(1, 1, 2, 3), f(1, 2, 3, 3), f(1, 2, 3, 4));",
+		{ mangle: false },
+		"function f(a,b,c,d){return a==b||c==d}console.log(f(1,1,2,3),f(1,2,3,3),f(1,2,3,4));"
+	],
+	[
 		"a name read once, at the head of an optional chain, as its value",
 		"function f(o) { let n = o.g(); return n?.b; } function k(o) { var n = o.g; return n?.(1); } console.log(f({ g: () => ({ b: 1 }) }), f({ g: () => null }), k({ g: (x) => x }), k({}));",
 		{ mangle: false },
@@ -1477,9 +1495,9 @@ const IMPROVED_CASES = [
 	],
 	[
 		"a `catch` returning what the code after its `try` returns",
-		"function read(source) { try { return JSON.parse(source); } catch (e) { return null; } return null; } console.log(read('[1]'), read('{'));",
+		"function read(source) { try { if (source) return JSON.parse(source); } catch (e) { return null; } return null; } console.log(read('[1]'), read('{'), read(''));",
 		{ compress: {}, mangle: false },
-		'function read(source){try{return JSON.parse(source)}catch(e){}return null}console.log(read("[1]"),read("{"));'
+		'function read(source){try{if(source)return JSON.parse(source)}catch(e){}return null}console.log(read("[1]"),read("{"),read(""));'
 	],
 	[
 		"a `catch` in the last `switch` branch returning what follows the `switch`",
