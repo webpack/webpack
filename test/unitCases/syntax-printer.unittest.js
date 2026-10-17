@@ -964,6 +964,18 @@ const IMPROVED_CASES = [
 		"function f(a){let o={v:a};return g(o),o.v}function g(){}console.log(f(1));"
 	],
 	[
+		"a function where only its truth is read, as `true`; an optional link on a value never nullish, as a plain one; `typeof` of a class, as `\"function\"`; and `delete` of a declared binding, or of `undefined` or `NaN`, as `false`",
+		"console.log((() => {}) ? \"a\" : \"b\", function () {} ? 1 : 2, 42?.toString(), \"ab\"?.length, typeof class {}, delete undefined, delete NaN, f()); function f() { var local = 1; return delete local; }",
+		{ mangle: false },
+		"function f(){return!1}console.log(\"a\",1,42..toString(),2,\"function\",!1,!1,f());"
+	],
+	[
+		"an optional call of a function or a string literal, as a plain call",
+		"(() => { try { console.log(1); } catch (e) {} console.log(2); })?.(); console.log(\"abc\"?.charAt(1));",
+		{ mangle: false },
+		'try{console.log(1)}catch(e){}console.log(2);console.log("abc".charAt(1));'
+	],
+	[
 		"a name read once, at the head of an optional chain, as its value",
 		"function f(o) { let n = o.g(); return n?.b; } function k(o) { var n = o.g; return n?.(1); } console.log(f({ g: () => ({ b: 1 }) }), f({ g: () => null }), k({ g: (x) => x }), k({}));",
 		{ mangle: false },
@@ -1661,6 +1673,7 @@ const IMPROVED_CASES = [
 // of its function's own, or the call passes, keeps or constructs something.
 /** @type {[string, string][]} */
 const KEPT_CASES = [
+	["`delete` of `undefined` inside `with`, which may delete a property", "function e(o) { with (o) return delete undefined; } console.log(e({ undefined: 1 }), delete (1 / 0));"],
 	[
 		"calls spreading the same iterable before the arrays they differ in, whose iteration the test reads after",
 		"var flag = true; var shared = { *[Symbol.iterator]() { flag = false; yield 0; } }; function f(m, a, b) { return flag ? m(...shared, ...a) : m(...shared, ...b); } console.log(f(Math.max, [1], [2]), flag);"
@@ -1728,7 +1741,7 @@ const KEPT_CASES = [
 	["a negated test whose value is read", "function f(a, b) { var x = !a || b; return [x, !a && b, (!a || b, !a && b)]; } console.log(f(0, 1), f(1, 0));"],
 	["a `concat` keeping a hole", "console.log([, 1].concat(2).length, 0 in [, 1].concat(2));"],
 	["a `Number` shadowed by a variable", "var Number = { NaN: 1 }; console.log(Number.NaN);"],
-	["a `#__PURE__` call of a function called optionally, or async", "console.log(/* @__PURE__ */ (() => 1)?.(), /* @__PURE__ */ (async () => 1)() instanceof Promise);"],
+	["a `#__PURE__` call of a function called optionally, or async", "var f = Math.random() < 2 ? () => 1 : null; console.log(/* @__PURE__ */ f?.(), /* @__PURE__ */ (async () => 1)() instanceof Promise);"],
 	["`Number.EPSILON`, longer as a number", "console.log(Number.EPSILON);"],
 	["a function read once kept out of a `#__PURE__` call in a loop or in a closure, and a class", "function wrap(f) { return { f: f }; } function o() { var F = function (a) { return a + 1; }, C = class { m() { return 4; } }, r = []; for (var i = 0; i < 2; i++) r.push(/* @__PURE__ */ wrap(F)); var G = function (a) { return a * 3; }; return [r, function () { return /* @__PURE__ */ wrap(G); }, /* @__PURE__ */ wrap(C)]; } var x = o(); console.log(x[0][0].f === x[0][1].f, x[1]().f(2), new x[2].f().m());"],
 	["safe-integer bounds, whose digits gzip worse", "console.log(Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER);"],
@@ -1772,7 +1785,6 @@ const KEPT_CASES = [
 	["`eval`", `!function () { ${TRY} eval("1"); }();`],
 	["`with`", "!function () { with (Math) console.log(PI); console.log(2); }();"],
 	["`new`", `new function () { ${TRY} console.log(2); }();`],
-	["an optional call", `(() => { ${TRY} console.log(2); })?.();`],
 	["its value used", `console.log(function () { ${TRY} console.log(2); }());`],
 	["a sequence calling nothing in place", "console.log(1); console.log(2);"],
 	["`@__NOINLINE__`", `/*@__NOINLINE__*/(function () { ${TRY} console.log(2); })();`],
@@ -1828,7 +1840,6 @@ const KEPT_CASES = [
 	["a number method throwing for its argument", "try { console.log((1).toFixed(101)); } catch (e) { console.log(e.name); }"],
 	["a function left out", 'console.log(Math.sin(1), "a,b".split(","));'],
 	["a method the oldest Node lacks, or `replaceAll` with a `$` pattern", 'console.log("abc".at(-1), "abc".replaceAll("b", "$&x"));'],
-	["an optional call", 'console.log("abc"?.charAt(1));'],
 	["an array of 99 strings, too short to split", `var a = ${stringArray(99)}; console.log(a.length);`],
 	["an array of strings holding every delimiter", `var a = ${stringArray(100, (index) => `w${index}. ,()`)}; console.log(a.length);`],
 	["an array of strings and a number", `var a = ${stringArray(100).slice(0, -1)}, 1]; console.log(a.length, typeof a[100]);`],
@@ -8632,6 +8643,26 @@ describe("syntax-printer", () => {
 			}
 		});
 
+		it("should merge a module's imports of one module into the first, and drop deferred or source-phase ones nothing reads", async () => {
+			const { minify, improvements } = await load();
+			const input =
+				"import A from 'm'; import B from 'm'; import { foo } from 'm'; import * as X from 'p'; import Y from 'p'; import * as Z from 'p'; import 'm'; import j from 'j' with { type: 'json' }; import k from 'j'; import source s from 's'; import defer * as d from 'd'; import defer * as e from 'e'; sink(A, B, foo, X, Y, Z, j, k, e);";
+			/** @type {import("terser").MinifyOptions} */
+			const options = { module: true, compress: {}, mangle: false };
+			expect((await minify(input, options)).code).toBe(
+				'import A,{default as B,foo}from"m";import Y,*as X from"p";import*as Z from"p";import j from"j"with{type:"json"};import k from"j";import defer*as e from"e";sink(A,B,foo,X,Y,Z,j,k,e);'
+			);
+			if (!improvements) throw new Error("the improve phase is not installed");
+			improvements.enabled = false;
+			try {
+				expect((await minify(input, options)).code).toBe(
+					(await terserReference().minify(input, options)).code
+				);
+			} finally {
+				improvements.enabled = true;
+			}
+		});
+
 		it("should run as the last pass the one after which more passes stop, as one asked for", async () => {
 			const { minify } = await load();
 			const input = "const receiver = { value: \"variable receiver\", read: function () { return this.value; }, }; console.log(receiver.read()); console.log( { value: \"direct receiver\", read: function () { return this.value; }, }.read() ); function read() { return this.value; } const shorthandReceiver = { value: \"shorthand receiver\", read, }; console.log(shorthandReceiver.read()); function readExplicit() { return this.value; }";
@@ -8659,7 +8690,7 @@ describe("syntax-printer", () => {
 				],
 				[
 					'import a from "a"; import { b, c } from "b"; import * as n from "n"; import defer * as d from "d"; c();',
-					'import"a";import{c}from"b";import"n";import defer*as r from"d";c();'
+					'import"a";import{c}from"b";import"n";c();'
 				],
 				['import a from "a"; eval("a");', 'import a from"a";eval("a");'],
 				[
