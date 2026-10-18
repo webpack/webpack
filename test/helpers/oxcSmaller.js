@@ -346,7 +346,6 @@ const OXC_SMALLER_BY_REASON = [
 			"swc minifier: benches-full/three.js",
 			"swc minifier: fixture/issues/d3-color/1/input.js",
 			"swc minifier: fixture/next/41527/1/input.js",
-			"swc minifier: fixture/next/47005/input.js",
 			"swc minifier: fixture/next/66237/input.js",
 			"swc minifier: fixture/next/66378/input.js",
 			"swc minifier: fixture/next/asmjs/1/input.js",
