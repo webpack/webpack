@@ -288,6 +288,12 @@ const IMPROVED_CASES = [
 		"function c(ctl,e){return u(ctl,ctl.t(e))}function u(a,b){return[typeof a,b]}console.log(c({t:function(x){return x+1}},1));"
 	],
 	[
+		"a conditional whose nested alternative ends where it begins, as one test",
+		"function f(v, d) { return v == null ? d.p : (g(v), (v = h(v)) ? v : d.p); } function g() {} function h(v) { return v - 1; } console.log(f(null, { p: 1 }), f(1, { p: 2 }), f(3, { p: 3 }));",
+		{ compress: {}, mangle: false },
+		"function f(v,d){return null!=v&&(g(v),v=h(v))?v:d.p}function g(){}function h(v){return v-1}console.log(f(null,{p:1}),f(1,{p:2}),f(3,{p:3}));"
+	],
+	[
 		"a call in a loop of a local function with an empty body, as its arguments",
 		"function g(x) { function f(a) {} for (var i = 0; i < 2; i++) f(x.y); while (f()) x.z(); return f; } console.log(g({ y: 1 })());",
 		{ compress: {}, mangle: false },
