@@ -24215,7 +24215,12 @@ declare interface ObjectSerializerContextObjectMiddlewareObject_1 {
 	writeSeparate?: (
 		item: ComplexSerializableType,
 		obj?: LazyOptions
-	) => LazyFunction<any, any, SerializerMiddleware, LazyOptions>;
+	) => LazyFunction<
+		any,
+		PrimitiveSerializableType[],
+		SerializerMiddleware,
+		LazyOptions
+	>;
 }
 declare namespace ObjectSerializerContextObjectMiddlewareObject_2 {
 	export let write: (
@@ -24230,7 +24235,12 @@ declare namespace ObjectSerializerContextObjectMiddlewareObject_2 {
 		| ((
 				item: ComplexSerializableType,
 				obj?: LazyOptions
-		  ) => LazyFunction<any, any, SerializerMiddleware, LazyOptions>);
+		  ) => LazyFunction<
+				any,
+				PrimitiveSerializableType[],
+				SerializerMiddleware,
+				LazyOptions
+		  >);
 }
 
 /**
@@ -24250,7 +24260,12 @@ declare interface ObjectSerializerContextObjectMiddlewareObject_3<
 	writeSeparate?: (
 		item: ComplexSerializableType,
 		obj?: LazyOptions
-	) => LazyFunction<any, any, SerializerMiddleware, LazyOptions>;
+	) => LazyFunction<
+		any,
+		PrimitiveSerializableType[],
+		SerializerMiddleware,
+		LazyOptions
+	>;
 }
 
 /**
@@ -24270,7 +24285,12 @@ declare interface ObjectSerializerContextObjectMiddlewareObject_4 {
 	writeSeparate?: (
 		item: ComplexSerializableType,
 		obj?: LazyOptions
-	) => LazyFunction<any, any, SerializerMiddleware, LazyOptions>;
+	) => LazyFunction<
+		any,
+		PrimitiveSerializableType[],
+		SerializerMiddleware,
+		LazyOptions
+	>;
 }
 
 /**
@@ -27256,6 +27276,15 @@ type PreprocessedAsset = Asset & {
 	type: string;
 	related?: PreprocessedAsset[];
 };
+type PrimitiveSerializableType =
+	| undefined
+	| null
+	| string
+	| number
+	| bigint
+	| boolean
+	| Buffer
+	| (() => PrimitiveSerializableType[] | Promise<PrimitiveSerializableType[]>);
 
 /**
  * The per-node output store handed to a language node printer as its `writer`. It
@@ -32553,7 +32582,12 @@ declare interface StarListSerializerContext {
 	writeSeparate?: (
 		item: ComplexSerializableType,
 		obj?: LazyOptions
-	) => LazyFunction<any, any, SerializerMiddleware, LazyOptions>;
+	) => LazyFunction<
+		any,
+		PrimitiveSerializableType[],
+		SerializerMiddleware,
+		LazyOptions
+	>;
 }
 
 /**
