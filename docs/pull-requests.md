@@ -179,7 +179,7 @@ Don't, unasked, **rebase or merge the base branch into the PR** — maintainers 
 
 > [!REQUIRED]
 
-**Never post to GitHub on your own initiative.** Pushing to your own branch is fine; publishing text others read is not — PR comments, review replies, issue comments, PR body edits after opening (except installing the template over an auto-created body, [below](#after-push--verify-pr-body)), and every reply to any bot.
+**Never post to GitHub on your own initiative.** Pushing to your own branch is fine; publishing text others read is not — PR comments, review replies, issue comments, PR body edits after opening (except installing the template over an auto-created body, [below](#after-push--verify-pr-body)), and every reply to any bot. The one exception is CodeRabbit: resolve its threads yourself ([below](#after-opening-the-pr--wait-for-the-automated-reviews)).
 
 Reading is never banned. Bot noise may be skipped: status checks, a benchmark that swings on re-run, a coverage report still waiting on uploads, changeset/preview echoes — replying to those costs maintainers more attention than the finding.
 
@@ -216,7 +216,7 @@ Once the uploaders are in, read the report; only then is a genuine patch gap wor
 Every webpack PR is reviewed automatically on the initial commit and every push, by whichever automated reviewers the repo enables. Always wait for them and address every comment; judge a bot's finding on the claim and reproduce it before deciding.
 
 1. After `create_pull_request`, `subscribe_pr_activity` ([see above](#watching-a-pr-and-updating-its-branch)); reviews then wake the session — do **not** poll.
-2. For each review comment: if correct, push a fix in a new commit — **including for bugs your own PR introduced**, the common case. If wrong, draft a reply and ask the requester before posting ([Writing on GitHub](#writing-on-github--ask-first)) — never ignore it silently.
+2. For each review comment: if correct, push a fix in a new commit — **including for bugs your own PR introduced**, the common case. If wrong, draft a reply and ask the requester before posting ([Writing on GitHub](#writing-on-github--ask-first)) — never ignore it silently. **CodeRabbit threads skip the asking**: after the fix is pushed, reply with the commit and resolve the thread; when the finding is wrong, reply with what you found and resolve it.
 3. Every push re-runs the reviewers; repeat step 2 until each one's latest review has zero outstanding threads.
 4. `unsubscribe_pr_activity` only once every comment is handled and CI is green, or when the user says stop.
 
