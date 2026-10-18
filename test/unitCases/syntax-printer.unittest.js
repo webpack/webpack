@@ -258,6 +258,18 @@ const IMPROVED_CASES = [
 		"function f(i,n){return Math.abs(0!==i?i:n)}function g(t,x){var set=function(){t=0};return t?x.m(1,set):x.m(2,set)}var o={m:function(v){return v}};console.log(f(-1,-2),f(0,-3),g(1,o),g(0,o));"
 	],
 	[
+		"`var` names declared bare, then written first by the statement after, as declared with those values",
+		"function f(e, n, t) { var a, b; a = e, b = n[t], console.log(t in a, b); } function g(c) { var x; x = c, x += 1, x *= 3; return x; } function h(c) { var y, z = c + 1; y = z * 2; return [y, z]; } f({ p: 1 }, { p: 2 }, \"p\"); console.log(g(2), h(3));",
+		{ compress: {}, mangle: false },
+		'function f(e,n,t){var b=n[t];console.log(t in e,b)}function g(c){var x=c;return x+=1,x*=3}function h(c){var z=c+1;return[2*z,z]}f({p:1},{p:2},"p"),console.log(g(2),h(3));'
+	],
+	[
+		"an assignment to a `var` declared before another's value, or assigned again by what follows, as declared with it",
+		"function f(o) { var a, b = o.y; a = o.x; console.log(a, b, a, b); } function g(o) { var a; a = o.x; console.log(a); a = o.y; console.log(a); } f({ x: 1, y: 2 }); g({ x: 1, y: 2 });",
+		{ compress: {}, mangle: false },
+		"function f(o){var b=o.y,a=o.x;console.log(a,b,a,b)}function g(o){var a=o.x;console.log(a),a=o.y,console.log(a)}f({x:1,y:2}),g({x:1,y:2});"
+	],
+	[
 		"two calls spreading a string or another iterable, merged in a statement that reads no truth",
 		'function f(c, b) { c ? g(..."ab") : g(...b); } function g(v, w) { console.log(v, w); } f(1, ["y"]); f(0, ["y"]);',
 		{ compress: {}, mangle: false },
@@ -1898,8 +1910,7 @@ const KEPT_CASES = [
 	["a computed `__proto__` an object can write as an arrow", 'var o = { ["__proto__"]() { return 1; }, a() { return 2; } }; console.log(Object.keys(o).join(), o.__proto__(), o.a());'],
 	["a value read once kept from a store that reads first what it may change", 'function g(n) { console.log(n); return n; } function f(o, k) { let l = {}; var a = g(1); o[k] = a; var b = g(2); o.p.q = b; var c = g(3); o.r += c; var d = g(4); l.x = d; var e = g(5); o.s = o.p.t; console.log(e); return function () { var a = g(6); o.u = a; }; } function h(args) { args[0] = {}; return 1; } function m(o) { var a = h(arguments); o.x = a; } class A {} class B extends A { constructor() { var a = (super(), 1); this.v = a; } } var p = { p: {}, r: 1 }; f(p, "s")(); m(p); var q = g(7); p.y = q; console.log(JSON.stringify(p), new B().v);'],
 	["a computed key an object can write as it is", 'var o = { ["#constructor"]() { return 1; }, ["prototype"]: 2 }, p = { get ["#" + "constructor"]() { return 3; } }; console.log(o["#constructor"](), o.prototype, p["#constructor"]);'],
-	["an assignment to a `var` declared before another's value, which runs first", "function f(o) { var a, b = o.y; a = o.x; console.log(a, b, a, b); } f({ x: 1, y: 2 });"],
-	["an assignment to a `var` assigned again by what follows, or before a function that would need parentheses", "function f(o) { var a; a = o.x; console.log(a); a = o.y; console.log(a); } function g() { var x; if (x = true, 0 !== (x ^= true)) throw 1; if (x = new Boolean(true), 0 !== (x ^= true)) throw 2; } function h(o) { var b; b = o.x, function () { console.log(b); }.call(o), console.log(b); } f({ x: 1, y: 2 }); g(); h({ x: 3 });"],
+	["an assignment to a `var` before a function that would need parentheses", "function g() { var x; if (x = true, 0 !== (x ^= true)) throw 1; if (x = new Boolean(true), 0 !== (x ^= true)) throw 2; } function h(o) { var b; b = o.x, function () { console.log(b); }.call(o), console.log(b); } g(); h({ x: 3 });"],
 	["an assignment whose property is then written, or that is compound, or calls `eval`", "function f(o) { var a; (a = o.x).p = 1; console.log(a, a); } function g(o) { var a = 1; a += o.x; console.log(a, a); } function h(o) { var eval; (eval = o.x)(\"1\"); return eval; } f({ x: {} }); g({ x: 1 }); console.log(h({ x: String }));"],
 	["a function written in place passed a name written later", "function f(a) { var g = (function (a) { return function () { return a + a; }; })(a); [a] = [5]; return g(); } console.log(f(1));"],
 	["a function written in place passed a variable of its parameter's name, read again after the call", "function f(t) { return (function (t) { return t.a + t.b; })(g(t)) + t.c; } function g(t) { return { a: t.a, b: 2 }; } console.log(f({ a: 1, c: 5 }));"],
@@ -3073,6 +3084,11 @@ const CORRECTED_CASES = [
 	[
 		"a `let` of a case a constant `switch` drops, which an earlier case's label reads in its dead zone",
 		'var x = 1; function f() { switch (1) { case x: console.log("x"); case 1: console.log("one"); break; case 2: let x = 2; console.log(x); } } try { f(); } catch (e) { console.log(e.name); }',
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a `let` a case declares, which its own label reads in its dead zone while an outer name shares it",
+		'var x = 1; function f() { switch (1) { case x: let x = 2; console.log("in", x); } console.log("after"); } try { f(); } catch (e) { console.log(e.name); }',
 		{ compress: {}, mangle: false }
 	],
 	[
