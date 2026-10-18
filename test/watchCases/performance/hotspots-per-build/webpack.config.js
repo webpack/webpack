@@ -1,5 +1,7 @@
 "use strict";
 
+const holdMainThread = require("../../../helpers/holdMainThread");
+
 /**
  * Holds the main thread for the same stretch on every build, keeping how long it really took.
  * @type {import("../../../../").WebpackPluginInstance}
@@ -10,11 +12,7 @@ const burn = {
 		compiler.hooks.compilation.tap("BurnPlugin", (compilation) => {
 			compilation.hooks.afterSeal.tap("BurnPlugin", () => {
 				const start = process.hrtime();
-				const until = Date.now() + 130;
-
-				while (Date.now() < until) {
-					// Spinning on purpose.
-				}
+				holdMainThread(130);
 
 				const [seconds, nanoseconds] = process.hrtime(start);
 

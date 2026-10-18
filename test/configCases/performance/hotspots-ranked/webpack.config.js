@@ -1,5 +1,7 @@
 "use strict";
 
+const holdMainThread = require("../../../helpers/holdMainThread");
+
 /**
  * Holds the main thread for a known stretch under one compilation hook.
  * @param {string} name the plugin name the report should carry
@@ -11,11 +13,7 @@ const burn = (name, hook, ms) => ({
 	apply(compiler) {
 		compiler.hooks.compilation.tap(name, (compilation) => {
 			compilation.hooks[hook].tap(name, () => {
-				const until = Date.now() + ms;
-
-				while (Date.now() < until) {
-					// Spinning on purpose.
-				}
+				holdMainThread(ms);
 			});
 		});
 	}
@@ -29,7 +27,7 @@ module.exports = {
 		hotspots: true
 	},
 	plugins: [
-		burn("SlowSealPlugin", "afterSeal", 200),
+		burn("SlowSealPlugin", "afterSeal", 300),
 		burn("SlowModulesPlugin", "optimizeModules", 120)
 	]
 };
