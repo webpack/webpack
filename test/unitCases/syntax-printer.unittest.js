@@ -246,6 +246,30 @@ const IMPROVED_CASES = [
 		'function y(){console.log("y")}var z=2;console.log((y(),1),z,(y(),y(),3));'
 	],
 	[
+		"`null != a && a.b` where only its truth is read, as `a?.b`, which is `undefined` where `a` is nullish",
+		'function f(n) { if (null != n && n.length) return "x"; return !(null != n && n.a) ? "y" : "z"; } console.log(f(), f(null), f([1]), f({ a: 1 }), f({}));',
+		{ compress: { ecma: 2020 }, mangle: false },
+		'function f(n){return n?.length?"x":n?.a?"z":"y"}console.log(f(),f(null),f([1]),f({a:1}),f({}));'
+	],
+	[
+		"two calls through one member path differing in one argument, where the test reads only names nothing else can see",
+		"function f(i, n) { return 0 !== i ? Math.abs(i) : Math.abs(n); } function g(t, x) { var set = function () { t = 0; }; return t ? x.m(1, set) : x.m(2, set); } var o = { m: function (v) { return v; } }; console.log(f(-1, -2), f(0, -3), g(1, o), g(0, o));",
+		{ compress: {}, mangle: false },
+		"function f(i,n){return Math.abs(0!==i?i:n)}function g(t,x){var set=function(){t=0};return t?x.m(1,set):x.m(2,set)}var o={m:function(v){return v}};console.log(f(-1,-2),f(0,-3),g(1,o),g(0,o));"
+	],
+	[
+		"two calls spreading a string or another iterable, merged in a statement that reads no truth",
+		'function f(c, b) { c ? g(..."ab") : g(...b); } function g(v, w) { console.log(v, w); } f(1, ["y"]); f(0, ["y"]);',
+		{ compress: {}, mangle: false },
+		'function f(c,b){g(...c?"ab":b)}function g(v,w){console.log(v,w)}f(1,["y"]),f(0,["y"]);'
+	],
+	[
+		"two calls through one member path, merged in a statement that reads no truth",
+		'function g(n) { if (!(n < 0)) console.log(typeof []); else console.log("y"); } g(-1); g(1);',
+		{ compress: {}, mangle: false },
+		'function g(n){console.log(n<0?"y":"object")}g(-1),g(1);'
+	],
+	[
 		"a new object compared with a primitive, another new object or `null`, which it never equals (terser#1335)",
 		'console.log({ a: 7 } === null, [] !== 1, (() => 1) == null, {} != null, {} == "[object Object]");',
 		{ compress: {}, mangle: false },
@@ -303,7 +327,7 @@ const IMPROVED_CASES = [
 		"a `switch` every branch of which runs one expression and leaves",
 		'var log = []; function f(a) { switch (a) { case 1: log.push("one"); break; case 2: log.push("two"); break; default: log.push("x"); } } f(1); f(2); f(3); console.log(log.join());',
 		{ compress: {}, mangle: false },
-		'var log=[];function f(a){1===a?log.push("one"):2===a?log.push("two"):log.push("x")}f(1),f(2),f(3),console.log(log.join());'
+		'var log=[];function f(a){log.push(1===a?"one":2===a?"two":"x")}f(1),f(2),f(3),console.log(log.join());'
 	],
 	[
 		"a `switch` running one expression per branch, with no default",
@@ -8644,6 +8668,17 @@ describe("syntax-printer", () => {
 				}
 			});
 		}
+
+		it("should keep a module's exported `const` while writing its private ones as `let`", async () => {
+			const { minify } = await load();
+			const { code } = await minify(
+				"const x = { a: 1 }; console.log(x); const z = { b: 2 }; console.log(z, z); export { x };",
+				{ module: true, mangle: false }
+			);
+			expect(code).toBe(
+				"const x={a:1};console.log(x);let z={b:2};console.log(z,z);export{x};"
+			);
+		});
 
 		it("should name a module's imports and exports by the names they spell, where that writes less", async () => {
 			const { minify, improvements } = await load();
