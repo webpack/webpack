@@ -387,11 +387,11 @@ assets by path *.js 1.13 KiB
 asset favicon.ico 14.6 KiB [emitted]
 asset index.html 712 bytes [emitted] [minimized] (auxiliary name: page)
 asset manifest.webmanifest 208 bytes [emitted]
-asset styles.css 39 bytes [emitted] [minimized] (name: src-index-0)
+asset styles.css 40 bytes [emitted] [minimized] (name: src-index-0)
 Entrypoint page (34.9 KiB) = 3 auxiliary assets
 Entrypoint src-index-1 1020 bytes (14.6 KiB) = app.js 1 auxiliary asset
 Entrypoint src-index-2 139 bytes = index.js
-Entrypoint src-index-0 39 bytes = styles.css
+Entrypoint src-index-0 40 bytes = styles.css
 chunk (runtime: src-index-0) styles.css (src-index-0) 64 bytes (css) 0 bytes (runtime) [entry] [rendered]
   > ./styles.css src-index-0
   runtime modules 0 bytes 1 module
