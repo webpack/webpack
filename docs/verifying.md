@@ -27,6 +27,12 @@ A local failure is yours only if it doesn't reproduce on `main` — check in a w
 
 > [!REQUIRED]
 
-**When CI is red, read its log instead of reproducing the whole job locally** — rediscovering one line by re-running `yarn lint` or a suite wastes minutes and tokens. Filter the run to failing jobs (`gh run view <run-id> --json jobs --jq '.jobs[] | select(.conclusion=="failure")'`, or `list_workflow_jobs`), read that job's log (`gh run view --job <id> --log-failed`, or `get_job_logs` with `return_content`, asking for enough lines to clear the trailing `Post job cleanup`), then reproduce **only the named case**: `yarn test:base --testPathPatterns="<file>"`, `yarn test:basic --testNamePattern="<category> <case>"`, or `npx eslint <file>`.
+**When CI is red, read its log instead of reproducing the whole job locally** — rediscovering one line by re-running `yarn lint` or a suite wastes minutes and tokens. Filter the run to failing jobs (`gh run view <run-id> --json jobs --jq '.jobs[] | select(.conclusion=="failure" or .conclusion=="timed_out")'`, or `list_workflow_jobs`), read that job's log, then reproduce **only the named case**: `yarn test:base --testPathPatterns="<file>"`, `yarn test:basic --testNamePattern="<category> <case>"`, or `npx eslint <file>`.
+
+**Read CI output through a file, not the context.** Every character a tool returns is re-read on every later turn of the session, so one 50k-character log costs far more than its first read. So:
+
+- **Save the log and search it**: `gh run view --job <id> --log > <scratchpad>/job.log` (the whole log, since it only lands on disk; `--log-failed` can come back empty for a timed-out job), then `grep -n -A20 -E "FAIL|Error|✕" <scratchpad>/job.log`. With `get_job_logs`, pass `failed_only` (it skips `timed_out` jobs, so fetch those by `job_id`) and start at `tail_lines: 150` (enough to clear the trailing `Post job cleanup`), widening only when the error isn't in it.
+- **Fetch check runs only when something changed them** since the last read (a push, a re-run, a CI-completed event), and read only the failing ones; a review or bot-comment wake needs no fresh listing.
+- **The same goes for other large reports** (benchmark comparisons, coverage, bot review bodies): save or filter them before reading.
 
 Traps: a step is not a job — `Run yarn lint` sits inside the `lint` job, and a step's id fetches the wrong log, so select the object with a `steps` array. And `yarn lint` stops at its first failing stage, so a CI failure in `lint:code` says nothing about later stages — just as a local `lint:special` complaint `main` also makes says nothing about CI.
