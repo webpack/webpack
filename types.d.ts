@@ -18167,7 +18167,7 @@ declare interface KnownMeta {
 	liveBindings?: Map<string, LiveBinding>;
 
 	/**
-	 * module-level names of a hot module a module library mirrors in the chunk's scope through setters
+	 * module-level names a module keeps declared and mirrors to the chunk's scope on each write
 	 */
 	liveSetters?: Map<string, LiveBinding>;
 }
@@ -19113,6 +19113,11 @@ declare interface LiveBinding {
 	 * the keys of the runtimes declaring it
 	 */
 	runtimes: Set<string>;
+
+	/**
+	 * whether a module mirrors it through the setters a module library registers, not by name
+	 */
+	registered: boolean;
 }
 declare interface LoadScriptCompilationHooks {
 	createScript: SyncWaterfallHook<[string, Chunk], string>;
