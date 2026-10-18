@@ -90,14 +90,22 @@ const SWC_SMALLER_BY_REASON = [
 	[
 		"swc runs a transform the case's own options leave off (`evaluate`, `side_effects`, `unused`, `inline` levels, or any when the case sets none), so the gap is the options, not a missing transform",
 		[
+			"swc minifier: fixture/issues/4234/input.js",
+			"terser compress: array-constructor/array_constructor",
 			"terser compress: collapse_vars/collapse_vars_repeated",
 			"terser compress: collapse_vars/collapse_vars_self_reference",
+			"terser compress: collapse_vars/issue_1605_1",
 			"terser compress: collapse_vars/issue_1631_3",
+			"terser compress: collapse_vars/issue_2954_2",
+			"terser compress: collapse_vars/issue_2954_3",
 			"terser compress: conditionals/cond_8c",
 			"terser compress: conditionals/no_evaluate",
 			"terser compress: defaults/defaults_false",
 			"terser compress: defaults/defaults_true_conditionals_false",
 			"terser compress: defaults/defaults_true_evaluate_false",
+			"terser compress: destructuring/unused_destructuring_decl_2",
+			"terser compress: destructuring/unused_destructuring_decl_4",
+			"terser compress: destructuring/unused_destructuring_decl_5",
 			"terser compress: evaluate/Infinity_NaN_undefined_LHS",
 			"terser compress: evaluate/pow_sequence_with_parens_exact",
 			"terser compress: export/export_default_seq",
@@ -140,6 +148,7 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: numbers/hex_numbers_in_parentheses_for_prototype_functions",
 			"terser compress: object/computed_property_names",
 			"terser compress: parameters/default_arguments",
+			"terser compress: pure_funcs/babel",
 			"terser compress: reduce_vars/duplicate_lambda_defun_name_1",
 			"terser compress: reduce_vars/iife_assign",
 			"terser compress: reduce_vars/inner_var_for_in_1",
@@ -167,6 +176,7 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: reduce_vars/var_assign_5",
 			"terser compress: sequences/iife",
 			"terser compress: sequences/issue_1758",
+			"terser compress: sequences/make_sequences_3",
 			"terser compress: sequences/negate_iife_for",
 			"terser compress: sequences/unsafe_undefined",
 			"terser compress: switch/if_else7",
@@ -177,7 +187,8 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: template-string/template_strings_ascii_only",
 			"terser compress: transform/if_else_empty",
 			"terser compress: try-catch/catch_destructuring_with_sequence",
-			"terser compress: typeof/issue_2728_4"
+			"terser compress: typeof/issue_2728_4",
+			"terser compress: unicode/issue_2569"
 		]
 	],
 	[

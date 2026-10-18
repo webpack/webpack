@@ -1758,6 +1758,14 @@ const KEPT_CASES = [
 	["a function read once kept out of a `#__PURE__` call in a loop or in a closure, and a class", "function wrap(f) { return { f: f }; } function o() { var F = function (a) { return a + 1; }, C = class { m() { return 4; } }, r = []; for (var i = 0; i < 2; i++) r.push(/* @__PURE__ */ wrap(F)); var G = function (a) { return a * 3; }; return [r, function () { return /* @__PURE__ */ wrap(G); }, /* @__PURE__ */ wrap(C)]; } var x = o(); console.log(x[0][0].f === x[0][1].f, x[1]().f(2), new x[2].f().m());"],
 	["safe-integer bounds, whose digits gzip worse", "console.log(Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER);"],
 	["a `RegExp` constructed from a regular expression", "var r = /a/g; console.log(new RegExp(r) === r, RegExp(r) === r);"],
+	[
+		"a `new` of built-ins the program assigns, here and in a function",
+		'Error = function (m) { this.m = m; }; function f() { Array = function (n) { this.n = n; }; } f(); console.log(new Error("x").m, new Array(3).n);'
+	],
+	[
+		"`Array` and `Object` called after a destructuring assigns them",
+		"[Array, Object] = [function (n) { return { n: n }; }, function (v) { return { v: v }; }]; console.log(Array(3).n, Object(1).v);"
+	],
 	["a `RegExp` constructed from what may be a regular expression, with flags that may be missing", "function f(a, b, g) { return [new RegExp(a + b).source, new RegExp(a, g) === a]; } var r = /a/; console.log(f(1, 2), f(r, void 0, void 0));"],
 	["a spread `Array` call", "var a = [3]; console.log(Array(...a).length);"],
 	["a shadowed `Array`", "function f(Array) { return new Array(1, 2); } console.log(f(function (a, b) { this.s = a + b; }).s, f(function () { this.s = 0; }).s);"],
@@ -9016,6 +9024,49 @@ describe("syntax-printer", () => {
 			const { code } = await minify(input, options);
 			expect(code).toBe((await terserReference().minify(input, options)).code);
 			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+		});
+
+		it("should keep a built-in the program assigns, however it assigns it", async () => {
+			const { minify } = await load();
+			const replacement = "function (m) { this.m = m; }";
+			/** @type {((name: string) => string)[]} */
+			const assignments = [
+				(name) => `${name} = ${replacement};`,
+				(name) => `function f() { ${name} = ${replacement}; } f();`,
+				(name) => `[${name}] = [${replacement}];`,
+				(name) => `({ ${name} } = { ${name}: ${replacement} });`,
+				(name) => `for (${name} of [${replacement}]);`,
+				(name) => `${name}++; ${name} = ${replacement};`
+			];
+			for (const [name, argument] of [
+				["Error", '"x"'],
+				["TypeError", '"x"'],
+				["Array", "3"],
+				["Object", "1"],
+				["Function", '"return 1"']
+			]) {
+				for (const assign of assignments) {
+					for (const call of [`new ${name}(${argument})`, `${name}(${argument})`]) {
+						const input = `${assign(name)} var v = ${call}; console.log(typeof v, v && v.m);`;
+						const { code } = await minify(input, {
+							compress: { passes: 2 },
+							mangle: true
+						});
+						expect(runProgram(/** @type {string} */ (code))).toBe(
+							runProgram(input)
+						);
+					}
+				}
+			}
+			// Babel's rest parameter, read as a spread of `arguments` at ES2015
+			const rest =
+				"Array = function (n) { return { fake: n }; }; function g() { for (var n = arguments.length, a = Array(n), i = 0; i < n; i++) a[i] = arguments[i]; return a; } console.log(JSON.stringify(g(1, 2)));";
+			const { code } = await minify(rest, {
+				ecma: 2020,
+				compress: { passes: 2 },
+				mangle: true
+			});
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(rest));
 		});
 
 		for (const [name, input] of KEPT_CASES) {
