@@ -5,6 +5,12 @@ on:
   schedule:
     - cron: "0 0 * * 0"
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  # Each run regenerates every example from the current branch, so a newer
+  # run makes an older one redundant.
+  cancel-in-progress: true
+
 jobs:
   examples:
     runs-on: ubuntu-latest
