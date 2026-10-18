@@ -16174,7 +16174,10 @@ describe("CssSyntax minify — a later value no engine reads keeps the one befor
 		["a unit no engine reads", "linear-gradient(red 10px,blue 2foo)"],
 		["a word naming no color", "linear-gradient(bogus,blue)"],
 		["two keyword colors in one stop", "linear-gradient(transparent currentcolor,blue)"],
-		["an empty argument", "linear-gradient(red,blue,)"]
+		["an empty argument", "linear-gradient(red,blue,)"],
+		["no color stop", "linear-gradient(to right)"],
+		["amounts with no color", "linear-gradient(10px,20px)"],
+		["a single stop", "linear-gradient(to right,red)"]
 	])("keeps the fallback behind %s", (_, later) => {
 		const css = `${FALLBACK}background-image:${later}}`;
 		expect(minifyFor(css, MODERN)).toContain("linear-gradient(red,blue)");
