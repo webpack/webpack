@@ -265,7 +265,7 @@ declare interface AdditionalDataKnown {
 	/**
 	 * the AST webpack should parse instead of the source
 	 */
-	webpackAST: PreparsedAst;
+	webpackAST?: PreparsedAst;
 }
 type AfterContextResolveData = ContextResolveData &
 	ContextOptions & {
@@ -359,7 +359,7 @@ declare interface AllCodeGenerationSchemas {
 	/**
 	 * chunk init fragments for javascript modules
 	 */
-	chunkInitFragments: InitFragment<any>[];
+	chunkInitFragments: InitFragment<ChunkRenderContextJavascriptModulesPlugin>[];
 
 	/**
 	 * native external reexport source and attributes
@@ -410,7 +410,7 @@ type AnalyzableForm =
 	"import" | "url" | "url-runtime" | "url-inline" | "wasm" | "wasm-relative";
 type AnyLoaderContext = NormalModuleLoaderContext<any> &
 	LoaderRunnerMutableContext<any> &
-	LoaderRunnerReadonlyContext<any> &
+	LoaderRunnerReadonlyContext<any, LoaderData> &
 	LoaderPluginLoaderContext &
 	HotModuleReplacementPluginLoaderContext;
 
@@ -4230,7 +4230,7 @@ declare class Compilation {
 	 * the load itself; anything the tap reads off the requirement set must be
 	 * captured before queueing, since `create` runs later.
 	 */
-	addLazyRuntimeModule<T>(
+	addLazyRuntimeModule<T extends object>(
 		chunk: Chunk,
 		load: () => Promise<T>,
 		create: (loaded: T) => RuntimeModule,
@@ -7892,6 +7892,9 @@ type DecodedSegment =
 	| [number, number, number, number]
 	| [number]
 	| [number, number, number, number, number];
+type DecodedSourceMap = Omit<RawSourceMap, "mappings"> & {
+	mappings: DecodedSegment[][];
+};
 declare interface DefaultHandlerOptions {
 	progressBar?: false | Required<ProgressPluginOptionsProgressBarBranch3Object>;
 	estimatedTime?: boolean;
@@ -8429,9 +8432,9 @@ declare interface DependencyTemplateContext {
 	codeGenerationResults: CodeGenerationResults;
 
 	/**
-	 * chunkInitFragments
+	 * init fragments for the chunk, rendered with its render context
 	 */
-	chunkInitFragments: InitFragment<GenerateContext>[];
+	chunkInitFragments: InitFragment<ChunkRenderContextJavascriptModulesPlugin>[];
 
 	/**
 	 * get access to the code generation data
@@ -12038,6 +12041,148 @@ declare interface GetOptionsMethod<OptionsType> {
 	(): OptionsType;
 	(schema: Parameters<typeof validateFunction>[0]): OptionsType;
 }
+type GivenCompressOptions = Omit<Partial<any>, "global_defs" | "pure_funcs"> & {
+	global_defs?: false | object;
+	pure_funcs?: null | string[] | ((node: PureCallView) => boolean);
+};
+
+/**
+ * terser's `format` options as a caller gives them; `source_map` is left out,
+ * as the minify writes it from `sourceMap`.
+ */
+declare interface GivenFormatOptions {
+	code?: boolean;
+	ast?: boolean;
+
+	/**
+	 * which comments are kept
+	 */
+	comments?:
+		string | boolean | RegExp | ((node: any, comment: KeptComment) => boolean);
+
+	/**
+	 * whether the output is laid out to read, always false here
+	 */
+	beautify?: boolean;
+
+	/**
+	 * whether every body is braced, always false here
+	 */
+	braces?: boolean;
+
+	/**
+	 * how far a level indents, unread here
+	 */
+	indent_level?: number;
+
+	/**
+	 * how far the output indents, unread here
+	 */
+	indent_start?: number;
+
+	/**
+	 * how long a line may be, unread here
+	 */
+	max_line_len?: number | false;
+
+	/**
+	 * how wide a line may be, unread here
+	 */
+	width?: number;
+
+	/**
+	 * whether properties are written in shorthand, undefined until read from `ecma`
+	 */
+	shorthand?: boolean;
+
+	/**
+	 * which edition the output may use
+	 */
+	ecma?: number;
+
+	/**
+	 * whether the output works around that engine
+	 */
+	ie8?: boolean;
+
+	/**
+	 * whether the output works around that engine
+	 */
+	safari10?: boolean;
+
+	/**
+	 * whether only ASCII is written
+	 */
+	ascii_only?: boolean;
+
+	/**
+	 * whether `</script` is escaped
+	 */
+	inline_script?: boolean;
+
+	/**
+	 * whether numbers are written as read
+	 */
+	keep_numbers?: boolean;
+
+	/**
+	 * whether quoted keys stay quoted
+	 */
+	keep_quoted_props?: boolean;
+
+	/**
+	 * text written first
+	 */
+	preamble?: null | string;
+
+	/**
+	 * whether annotation comments are kept
+	 */
+	preserve_annotations?: boolean;
+
+	/**
+	 * whether every key is quoted
+	 */
+	quote_keys?: boolean;
+
+	/**
+	 * which quote strings are written with
+	 */
+	quote_style?: number;
+
+	/**
+	 * whether statements end in semicolons rather than line breaks
+	 */
+	semicolons?: boolean;
+
+	/**
+	 * whether a shebang is kept
+	 */
+	shebang?: boolean;
+
+	/**
+	 * whether the output works around that engine
+	 */
+	webkit?: boolean;
+
+	/**
+	 * whether an immediately called function is parenthesized
+	 */
+	wrap_iife?: boolean;
+
+	/**
+	 * whether a function passed as an argument is parenthesized
+	 */
+	wrap_func_args?: boolean;
+	spidermonkey?: boolean;
+}
+type GivenMangleOptions = Omit<Partial<any>, "properties"> & {
+	properties?: boolean | any;
+};
+type GivenSourceMapOptions = Omit<Partial<any>, "content"> & {
+	content?:
+		null | string | object | RawSourceMap | DecodedSourceMap | IndexSourceMap;
+};
 
 /**
  * Match glob patterns against the value, `!` in front of a pattern excludes it. Path separators are normalized to `/` on every OS, and a relative pattern matches at any depth.
@@ -14138,6 +14283,18 @@ declare interface ImportSettings {
 type ImportSource =
 	undefined | null | string | SimpleLiteral | RegExpLiteral | BigIntLiteral;
 type Imported = true | [string, string][];
+
+/**
+ * a map made of sections, each a map of its own, or its JSON
+ */
+declare interface IndexSourceMap {
+	version: number;
+	file?: string;
+	sections: {
+		offset: { line: number; column: number };
+		map: string | RawSourceMap | DecodedSourceMap | IndexSourceMap;
+	}[];
+}
 
 /**
  * Options for infrastructure level logging.
@@ -17820,6 +17977,17 @@ declare class JsonpTemplatePlugin {
 }
 
 /**
+ * a comment as a `comments` callback is handed it: terser's comment token, its offset, line from 1 and column from 0
+ */
+declare interface KeptComment {
+	type: "comment1" | "comment2" | "comment3" | "comment4";
+	value: string;
+	pos: number;
+	line: number;
+	col: number;
+}
+
+/**
  * Defines the known asset info type used by this module.
  */
 declare interface KnownAssetInfo {
@@ -18447,6 +18615,161 @@ declare interface KnownStatsFactoryContext {
 }
 
 /**
+ * The `[object, data]` each `extract` key webpack registers receives.
+ */
+declare interface KnownStatsFactoryExtract {
+	compilation: [StatsCompilation, Compilation];
+	asset: [StatsAsset, PreprocessedAsset];
+	asset$visible: [StatsAsset, PreprocessedAsset];
+	chunkGroup: [StatsChunkGroup, ChunkGroupInfoWithName];
+	module: [StatsModule, Module];
+	module$visible: [StatsModule, Module];
+	moduleIssuer: [StatsModuleIssuer, Module];
+	profile: [StatsProfile, ModuleProfile];
+	moduleReason: [StatsModuleReason, ModuleGraphConnection];
+	chunk: [StatsChunk, Chunk];
+	chunkOrigin: [StatsChunkOrigin, OriginRecord];
+	error: [StatsError, WebpackError];
+	warning: [StatsError, WebpackError];
+	cause: [StatsError, WebpackError];
+	moduleTraceItem: [StatsModuleTraceItem, ModuleTrace];
+	moduleTraceDependency: [StatsModuleTraceDependency, Dependency];
+}
+
+declare interface KnownStatsFactoryItemFactories {
+	compilation: Compilation;
+	asset: PreprocessedAsset;
+	asset$visible: PreprocessedAsset;
+	chunkGroup: ChunkGroupInfoWithName;
+	module: Module;
+	module$visible: Module;
+	moduleIssuer: Module;
+	profile: ModuleProfile;
+	moduleReason: ModuleGraphConnection;
+	chunk: Chunk;
+	chunkOrigin: OriginRecord;
+	error: WebpackError;
+	warning: WebpackError;
+	cause: WebpackError;
+	moduleTraceItem: ModuleTrace;
+	moduleTraceDependency: Dependency;
+	"compilation.children[].compilation": Compilation;
+}
+
+/**
+ * The item `getItemName` receives for each `<array path>[]` key webpack registers.
+ */
+declare interface KnownStatsFactoryItemNames {
+	"compilation.assets[]": PreprocessedAsset;
+	"compilation.chunks[]": Chunk;
+	"compilation.modules[]": Module;
+	"compilation.entrypoints[]": ChunkGroupInfoWithName;
+	"compilation.namedChunkGroups[]": ChunkGroupInfoWithName;
+	"compilation.errors[]": Error;
+	"compilation.warnings[]": Error;
+	"compilation.hints[]": Error;
+	"compilation.children[]": Compilation;
+	"asset.related[]": PreprocessedAsset;
+	"error.errors[]": Error;
+	"warning.errors[]": Error;
+	"chunk.modules[]": Module;
+	"chunk.rootModules[]": Module;
+	"chunk.origins[]": OriginRecord;
+	"module.issuerPath[]": Module;
+	"module.reasons[]": ModuleGraphConnection;
+	"module.modules[]": Module;
+	"module.children[]": Module;
+	"moduleTrace[]": ModuleTrace;
+	"moduleTraceItem.dependencies[]": Dependency;
+}
+declare interface KnownStatsFactoryRawItems {
+	"compilation.assets": PreprocessedAsset;
+	"compilation.chunks": Chunk;
+	"compilation.modules": Module;
+	"compilation.entrypoints": ChunkGroupInfoWithName;
+	"compilation.namedChunkGroups": ChunkGroupInfoWithName;
+	"compilation.errors": Error;
+	"compilation.warnings": Error;
+	"compilation.hints": Error;
+	"compilation.children": Compilation;
+	"asset.related": PreprocessedAsset;
+	"error.errors": Error;
+	"warning.errors": Error;
+	"chunk.modules": Module;
+	"chunk.rootModules": Module;
+	"chunk.origins": OriginRecord;
+	"module.issuerPath": Module;
+	"module.reasons": ModuleGraphConnection;
+	"module.modules": Module;
+	"module.children": Module;
+	moduleTrace: ModuleTrace;
+	"moduleTraceItem.dependencies": Dependency;
+}
+declare interface KnownStatsFactoryResultItems {
+	"compilation.assets": StatsAsset;
+	"compilation.chunks": StatsChunk;
+	"compilation.modules": StatsModule;
+	"compilation.entrypoints": StatsChunkGroup;
+	"compilation.namedChunkGroups": StatsChunkGroup;
+	"compilation.errors": StatsError;
+	"compilation.warnings": StatsError;
+	"compilation.hints": StatsError;
+	"compilation.children": StatsCompilation;
+	"asset.related": StatsAsset;
+	"error.errors": StatsError;
+	"warning.errors": StatsError;
+	"chunk.modules": StatsModule;
+	"chunk.rootModules": StatsModule;
+	"chunk.origins": StatsChunkOrigin;
+	"module.issuerPath": StatsModuleIssuer;
+	"module.reasons": StatsModuleReason;
+	"module.modules": StatsModule;
+	"module.children": StatsModule;
+	moduleTrace: StatsModuleTraceItem;
+	"moduleTraceItem.dependencies": StatsModuleTraceDependency;
+}
+
+declare interface KnownStatsFactoryResults {
+	compilation: StatsCompilation;
+	asset: StatsAsset;
+	asset$visible: StatsAsset;
+	chunkGroup: StatsChunkGroup;
+	module: StatsModule;
+	module$visible: StatsModule;
+	moduleIssuer: StatsModuleIssuer;
+	profile: StatsProfile;
+	moduleReason: StatsModuleReason;
+	chunk: StatsChunk;
+	chunkOrigin: StatsChunkOrigin;
+	error: StatsError;
+	warning: StatsError;
+	cause: StatsError;
+	moduleTraceItem: StatsModuleTraceItem;
+	moduleTraceDependency: StatsModuleTraceDependency;
+	moduleTrace: StatsModuleTraceItem[];
+	"compilation.assets": StatsAsset[];
+	"compilation.chunks": StatsChunk[];
+	"compilation.modules": StatsModule[];
+	"compilation.errors": StatsError[];
+	"compilation.warnings": StatsError[];
+	"compilation.hints": StatsError[];
+	"compilation.children": StatsCompilation[];
+	"asset.related": StatsAsset[];
+	"error.errors": StatsError[];
+	"warning.errors": StatsError[];
+	"chunk.modules": StatsModule[];
+	"chunk.rootModules": StatsModule[];
+	"chunk.origins": StatsChunkOrigin[];
+	"module.issuerPath": StatsModuleIssuer[];
+	"module.reasons": StatsModuleReason[];
+	"module.modules": StatsModule[];
+	"module.children": StatsModule[];
+	"moduleTraceItem.dependencies": StatsModuleTraceDependency[];
+	"compilation.entrypoints": Record<string, StatsChunkGroup>;
+	"compilation.namedChunkGroups": Record<string, StatsChunkGroup>;
+}
+
+/**
  * Defines the known stats logging type used by this module.
  */
 declare interface KnownStatsLogging {
@@ -18559,6 +18882,88 @@ declare interface KnownStatsModuleTraceItem {
 	dependencies?: StatsModuleTraceDependency[];
 	originId?: string | number;
 	moduleId?: string | number;
+}
+
+/**
+ * The item `getItemName` receives for each `<array path>[]` key of `KnownStatsPrintItems`.
+ */
+declare interface KnownStatsPrintItemNames {
+	"compilation.assets[]": StatsAsset;
+	"compilation.modules[]": StatsModule;
+	"compilation.chunks[]": StatsChunk;
+	"compilation.entrypoints[]": StatsChunkGroup;
+	"compilation.namedChunkGroups[]": StatsChunkGroup;
+	"compilation.errors[]": StatsError;
+	"compilation.warnings[]": StatsError;
+	"compilation.hints[]": StatsError;
+	"compilation.logging[]": KnownStatsLogging &
+		Record<string, StatsJsonValue> & { name: string };
+	"compilation.children[]": StatsCompilation;
+	"asset.related[]": StatsAsset;
+	"asset.children[]": StatsAsset;
+	"module.modules[]": StatsModule;
+	"module.children[]": StatsModule;
+	"module.reasons[]": StatsModuleReason;
+	"moduleReason.children[]": StatsModuleReason;
+	"module.issuerPath[]": StatsModuleIssuer;
+	"chunk.origins[]": StatsChunkOrigin;
+	"chunk.modules[]": StatsModule;
+	"loggingGroup.entries[]": StatsLoggingEntry;
+	"loggingEntry.children[]": StatsLoggingEntry;
+	"error.moduleTrace[]": StatsModuleTraceItem;
+	"error.errors[]": StatsError;
+	"moduleTraceItem.dependencies[]": StatsModuleTraceDependency;
+}
+
+/**
+ * The item of each array path webpack prints stats objects for.
+ */
+declare interface KnownStatsPrintItems {
+	"compilation.assets": StatsAsset;
+	"compilation.modules": StatsModule;
+	"compilation.chunks": StatsChunk;
+	"compilation.entrypoints": StatsChunkGroup;
+	"compilation.namedChunkGroups": StatsChunkGroup;
+	"compilation.errors": StatsError;
+	"compilation.warnings": StatsError;
+	"compilation.hints": StatsError;
+	"compilation.logging": KnownStatsLogging &
+		Record<string, StatsJsonValue> & { name: string };
+	"compilation.children": StatsCompilation;
+	"asset.related": StatsAsset;
+	"asset.children": StatsAsset;
+	"module.modules": StatsModule;
+	"module.children": StatsModule;
+	"module.reasons": StatsModuleReason;
+	"moduleReason.children": StatsModuleReason;
+	"module.issuerPath": StatsModuleIssuer;
+	"chunk.origins": StatsChunkOrigin;
+	"chunk.modules": StatsModule;
+	"loggingGroup.entries": StatsLoggingEntry;
+	"loggingEntry.children": StatsLoggingEntry;
+	"error.moduleTrace": StatsModuleTraceItem;
+	"error.errors": StatsError;
+	"moduleTraceItem.dependencies": StatsModuleTraceDependency;
+}
+
+/**
+ * The value `print` receives for each object key webpack prints; the key also matches same-named fields.
+ */
+declare interface KnownStatsPrintObjects {
+	compilation: StatsCompilation;
+	asset: StatsAsset;
+	chunk: StatsChunk;
+	chunkGroup: StatsChunkGroup;
+	module: null | string | StatsModule;
+	moduleReason: StatsModuleReason;
+	moduleIssuer: StatsModuleIssuer;
+	chunkOrigin: StatsChunkOrigin;
+	error: StatsError;
+	profile: StatsProfile;
+	loggingGroup: KnownStatsLogging &
+		Record<string, StatsJsonValue> & { name: string };
+	moduleTraceItem: StatsModuleTraceItem;
+	moduleTraceDependency: StatsModuleTraceDependency;
 }
 
 /**
@@ -19224,12 +19629,15 @@ declare interface Loader {
 type LoaderContextLibIndex<OptionsType> =
 	NormalModuleLoaderContext<OptionsType> &
 		LoaderRunnerMutableContext<OptionsType> &
-		LoaderRunnerReadonlyContext<OptionsType> &
+		LoaderRunnerReadonlyContext<OptionsType, LoaderData> &
 		LoaderPluginLoaderContext &
 		HotModuleReplacementPluginLoaderContext;
-type LoaderContextNormalModule<T> = NormalModuleLoaderContext<T> &
+type LoaderContextNormalModule<
+	T,
+	DataType = LoaderData
+> = NormalModuleLoaderContext<T> &
 	LoaderRunnerMutableContext<T> &
-	LoaderRunnerReadonlyContext<T> &
+	LoaderRunnerReadonlyContext<T, DataType> &
 	LoaderPluginLoaderContext &
 	HotModuleReplacementPluginLoaderContext;
 declare interface LoaderContextUtils {
@@ -19248,6 +19656,14 @@ declare interface LoaderContextUtils {
 	 */
 	createHash: (algorithm?: string | typeof Hash) => Hash;
 }
+
+/**
+ * What a loader keeps between its pitch and normal phase. Open by default: a
+ * loader stores whatever it likes, and reads it back without narrowing.
+ */
+declare interface LoaderData {
+	[index: string]: any;
+}
 type LoaderDefinition<
 	OptionsType = {},
 	ContextAdditions = {}
@@ -19262,7 +19678,7 @@ declare interface LoaderDefinitionFunction<
 	(
 		this: NormalModuleLoaderContext<OptionsType> &
 			LoaderRunnerMutableContext<OptionsType> &
-			LoaderRunnerReadonlyContext<OptionsType> &
+			LoaderRunnerReadonlyContext<OptionsType, LoaderData> &
 			LoaderPluginLoaderContext &
 			HotModuleReplacementPluginLoaderContext &
 			ContextAdditions,
@@ -19271,19 +19687,22 @@ declare interface LoaderDefinitionFunction<
 		additionalData?: AdditionalData
 	): string | void | Buffer | Promise<string | Buffer>;
 }
-declare interface LoaderEntry {
+declare interface LoaderEntry<
+	OptionsType = Record<string, any>,
+	DataType = LoaderData
+> {
 	request: string;
 	path: string;
 	query: string;
 	fragment: string;
-	options?: null | string | Record<string, any>;
+	options?: null | string | OptionsType;
 	ident: string;
 	normal?:
-		| LoaderDefinitionFunction<Record<string, any>, {}>
-		| RawLoaderDefinitionFunction<Record<string, any>, {}>;
-	pitch?: PitchLoaderDefinitionFunction<Record<string, any>, {}>;
+		| LoaderDefinitionFunction<OptionsType, {}>
+		| RawLoaderDefinitionFunction<OptionsType, {}>;
+	pitch?: PitchLoaderDefinitionFunction<OptionsType, {}>;
 	raw?: boolean;
-	data?: Record<string, any>;
+	data?: DataType;
 	pitchExecuted: boolean;
 	normalExecuted: boolean;
 	type?: "module" | "commonjs";
@@ -19434,7 +19853,7 @@ declare interface LoaderRunnerMutableContext<OptionsType> {
 	 * An array of all the loaders. It is writeable in the pitch phase.
 	 * loaders = [{request: string, path: string, query: string, module: function}]
 	 */
-	loaders: LoaderEntry[];
+	loaders: LoaderEntry<Record<string, any>, LoaderData>[];
 
 	/**
 	 * The resource path.
@@ -19477,9 +19896,12 @@ declare interface LoaderRunnerMutableContext<OptionsType> {
  * The members the runner never lets a loader assign. They carry no
  * documentation, so a type literal loses nothing and keeps `readonly`
  */
-declare interface LoaderRunnerReadonlyContext<OptionsType> {
+declare interface LoaderRunnerReadonlyContext<
+	OptionsType,
+	DataType = LoaderData
+> {
 	readonly currentRequest: string;
-	readonly data: Record<string, any>;
+	readonly data: DataType;
 	readonly previousRequest: string;
 	readonly query: string | OptionsType;
 	readonly remainingRequest: string;
@@ -20110,22 +20532,22 @@ declare interface MinifyOptions {
 	/**
 	 * what the compressor does, or false to leave the tree as read
 	 */
-	compress?: boolean | Record<string, any>;
+	compress?: boolean | GivenCompressOptions;
 
 	/**
 	 * which names are renamed, or false to keep them
 	 */
-	mangle?: boolean | Record<string, any>;
+	mangle?: boolean | GivenMangleOptions;
 
 	/**
 	 * how the output is written
 	 */
-	format?: Record<string, any>;
+	format?: GivenFormatOptions;
 
 	/**
 	 * the older spelling of `format`, which may not be named beside it
 	 */
-	output?: Record<string, any>;
+	output?: GivenFormatOptions;
 
 	/**
 	 * how the source is read
@@ -20144,7 +20566,7 @@ declare interface MinifyOptions {
 	/**
 	 * whether a source map is written, and how
 	 */
-	sourceMap?: boolean | Record<string, any>;
+	sourceMap?: boolean | GivenSourceMapOptions;
 
 	/**
 	 * whether the source is a module
@@ -20845,7 +21267,7 @@ declare class ModuleDependency extends Dependency {
 /**
  * Represents ModuleExternalInitFragment.
  */
-declare class ModuleExternalInitFragment extends InitFragment<GenerateContext> {
+declare class ModuleExternalInitFragment extends InitFragment<ChunkRenderContextJavascriptModulesPlugin> {
 	/**
 	 * Creates an instance of ModuleExternalInitFragment.
 	 */
@@ -21439,7 +21861,7 @@ declare class ModuleGraph {
 	/**
 	 * Returns computed value or cached.
 	 */
-	cached<T extends any[], R>(
+	cached<T extends TupleElement[], R>(
 		fn: (moduleGraph: ModuleGraph, ...args: T) => R,
 		...args: T
 	): R;
@@ -21454,7 +21876,7 @@ declare class ModuleGraph {
 	/**
 	 * Dependency cache provide.
 	 */
-	dependencyCacheProvide<D extends Dependency, ARGS extends any[], R>(
+	dependencyCacheProvide<D extends Dependency, ARGS extends TupleElement[], R>(
 		dependency: D,
 		...args: [
 			ARGS,
@@ -23793,7 +24215,12 @@ declare interface ObjectSerializerContextObjectMiddlewareObject_1 {
 	writeSeparate?: (
 		item: ComplexSerializableType,
 		obj?: LazyOptions
-	) => LazyFunction<any, any, SerializerMiddleware, LazyOptions>;
+	) => LazyFunction<
+		any,
+		PrimitiveSerializableType[],
+		SerializerMiddleware,
+		LazyOptions
+	>;
 }
 declare namespace ObjectSerializerContextObjectMiddlewareObject_2 {
 	export let write: (
@@ -23808,7 +24235,12 @@ declare namespace ObjectSerializerContextObjectMiddlewareObject_2 {
 		| ((
 				item: ComplexSerializableType,
 				obj?: LazyOptions
-		  ) => LazyFunction<any, any, SerializerMiddleware, LazyOptions>);
+		  ) => LazyFunction<
+				any,
+				PrimitiveSerializableType[],
+				SerializerMiddleware,
+				LazyOptions
+		  >);
 }
 
 /**
@@ -23828,7 +24260,12 @@ declare interface ObjectSerializerContextObjectMiddlewareObject_3<
 	writeSeparate?: (
 		item: ComplexSerializableType,
 		obj?: LazyOptions
-	) => LazyFunction<any, any, SerializerMiddleware, LazyOptions>;
+	) => LazyFunction<
+		any,
+		PrimitiveSerializableType[],
+		SerializerMiddleware,
+		LazyOptions
+	>;
 }
 
 /**
@@ -23848,7 +24285,12 @@ declare interface ObjectSerializerContextObjectMiddlewareObject_4 {
 	writeSeparate?: (
 		item: ComplexSerializableType,
 		obj?: LazyOptions
-	) => LazyFunction<any, any, SerializerMiddleware, LazyOptions>;
+	) => LazyFunction<
+		any,
+		PrimitiveSerializableType[],
+		SerializerMiddleware,
+		LazyOptions
+	>;
 }
 
 /**
@@ -26696,13 +27138,13 @@ declare interface PitchLoaderDefinitionFunction<
 	(
 		this: NormalModuleLoaderContext<OptionsType> &
 			LoaderRunnerMutableContext<OptionsType> &
-			LoaderRunnerReadonlyContext<OptionsType> &
+			LoaderRunnerReadonlyContext<OptionsType, LoaderData> &
 			LoaderPluginLoaderContext &
 			HotModuleReplacementPluginLoaderContext &
 			ContextAdditions,
 		remainingRequest: string,
 		previousRequest: string,
-		data: Record<string, any>
+		data: LoaderData
 	): string | void | Buffer | Promise<string | Buffer>;
 }
 
@@ -26830,6 +27272,19 @@ declare class PrefixSource extends Source {
 declare interface PreparsedAst {
 	[index: string]: any;
 }
+type PreprocessedAsset = Asset & {
+	type: string;
+	related?: PreprocessedAsset[];
+};
+type PrimitiveSerializableType =
+	| undefined
+	| null
+	| string
+	| number
+	| bigint
+	| boolean
+	| Buffer
+	| (() => PrimitiveSerializableType[] | Promise<PrimitiveSerializableType[]>);
 
 /**
  * The per-node output store handed to a language node printer as its `writer`. It
@@ -27337,6 +27792,9 @@ declare interface ProvidesObject {
 	[index: string]: ProvidesObjectValue;
 }
 type ProvidesObjectValue = string | ProvidesConfig;
+type PureCallView = NodeShape & {
+	print_to_string(given?: Partial<any>): string;
+};
 type PureCondition =
 	boolean | ((compilation: Compilation, module: Module) => boolean);
 type QualifiedRule = NodeSyntaxParser & {
@@ -27377,7 +27835,7 @@ declare interface RawLoaderDefinitionFunction<
 	(
 		this: NormalModuleLoaderContext<OptionsType> &
 			LoaderRunnerMutableContext<OptionsType> &
-			LoaderRunnerReadonlyContext<OptionsType> &
+			LoaderRunnerReadonlyContext<OptionsType, LoaderData> &
 			LoaderPluginLoaderContext &
 			HotModuleReplacementPluginLoaderContext &
 			ContextAdditions,
@@ -32124,7 +32582,12 @@ declare interface StarListSerializerContext {
 	writeSeparate?: (
 		item: ComplexSerializableType,
 		obj?: LazyOptions
-	) => LazyFunction<any, any, SerializerMiddleware, LazyOptions>;
+	) => LazyFunction<
+		any,
+		PrimitiveSerializableType[],
+		SerializerMiddleware,
+		LazyOptions
+	>;
 }
 
 /**
@@ -32459,43 +32922,378 @@ declare abstract class StatsFactory {
 	): CreatedObject<FactoryData, FallbackCreatedObject>;
 }
 type StatsFactoryContext = KnownStatsFactoryContext & Record<string, any>;
+type StatsFactoryExtractHookMap = {
+	for<
+		K extends
+			| "module"
+			| "error"
+			| "asset"
+			| "compilation"
+			| "chunk"
+			| "profile"
+			| "warning"
+			| "asset$visible"
+			| "chunkGroup"
+			| "module$visible"
+			| "moduleIssuer"
+			| "moduleReason"
+			| "chunkOrigin"
+			| "cause"
+			| "moduleTraceItem"
+			| "moduleTraceDependency"
+	>(
+		key: K
+	): SyncBailHook<
+		[
+			KnownStatsFactoryExtract[K][0],
+			KnownStatsFactoryExtract[K][1],
+			StatsFactoryContext
+		],
+		void
+	>;
+	for<O = any, D = any>(
+		key: string
+	): SyncBailHook<[O, D, StatsFactoryContext], void>;
+} & HookMap<SyncBailHook<[any, any, StatsFactoryContext], void>>;
+type StatsFactoryGetItemFactoryHookMap = {
+	for<
+		K extends
+			| "module"
+			| "error"
+			| "asset"
+			| "compilation"
+			| "chunk"
+			| "profile"
+			| "warning"
+			| "asset$visible"
+			| "chunkGroup"
+			| "module$visible"
+			| "moduleIssuer"
+			| "moduleReason"
+			| "chunkOrigin"
+			| "cause"
+			| "moduleTraceItem"
+			| "moduleTraceDependency"
+			| "compilation.children[].compilation"
+	>(
+		key: K
+	): SyncBailHook<
+		[KnownStatsFactoryItemFactories[K], StatsFactoryContext],
+		void | StatsFactory
+	>;
+	for<I = any>(
+		key: string
+	): SyncBailHook<[I, StatsFactoryContext], void | StatsFactory>;
+} & HookMap<SyncBailHook<[any, StatsFactoryContext], void | StatsFactory>>;
+type StatsFactoryGetItemNameHookMap = {
+	for<
+		K extends
+			| "compilation.assets[]"
+			| "compilation.chunks[]"
+			| "compilation.modules[]"
+			| "compilation.entrypoints[]"
+			| "compilation.namedChunkGroups[]"
+			| "compilation.errors[]"
+			| "compilation.warnings[]"
+			| "compilation.hints[]"
+			| "compilation.children[]"
+			| "asset.related[]"
+			| "error.errors[]"
+			| "warning.errors[]"
+			| "chunk.modules[]"
+			| "chunk.rootModules[]"
+			| "chunk.origins[]"
+			| "module.issuerPath[]"
+			| "module.reasons[]"
+			| "module.modules[]"
+			| "module.children[]"
+			| "moduleTrace[]"
+			| "moduleTraceItem.dependencies[]"
+	>(
+		key: K
+	): SyncBailHook<
+		[KnownStatsFactoryItemNames[K], StatsFactoryContext],
+		string | void
+	>;
+	for<I = any>(
+		key: string
+	): SyncBailHook<[I, StatsFactoryContext], string | void>;
+} & HookMap<SyncBailHook<[any, StatsFactoryContext], string | void>>;
+type StatsFactoryGroupResultsHookMap = {
+	for<
+		K extends
+			| "moduleTrace"
+			| "compilation.assets"
+			| "compilation.chunks"
+			| "compilation.modules"
+			| "compilation.entrypoints"
+			| "compilation.namedChunkGroups"
+			| "compilation.errors"
+			| "compilation.warnings"
+			| "compilation.hints"
+			| "compilation.children"
+			| "asset.related"
+			| "error.errors"
+			| "warning.errors"
+			| "chunk.modules"
+			| "chunk.rootModules"
+			| "chunk.origins"
+			| "module.issuerPath"
+			| "module.reasons"
+			| "module.modules"
+			| "module.children"
+			| "moduleTraceItem.dependencies",
+		G = object
+	>(
+		key: K
+	): SyncBailHook<
+		[GroupConfig<KnownStatsFactoryResultItems[K], G>[], StatsFactoryContext],
+		void
+	>;
+	for<I = any, G = any>(
+		key: string
+	): SyncBailHook<[GroupConfig<I, G>[], StatsFactoryContext], void>;
+} & HookMap<SyncBailHook<[GroupConfig<any, any>[], StatsFactoryContext], void>>;
 
 /**
  * Defines the stats factory hooks type used by this module.
  */
 declare interface StatsFactoryHooks {
-	extract: HookMap<SyncBailHook<[any, any, StatsFactoryContext], void>>;
-	filter: HookMap<
-		SyncBailHook<[any, StatsFactoryContext, number, number], boolean | void>
-	>;
-	sort: HookMap<
-		SyncBailHook<
-			[((a?: any, b?: any) => 0 | 1 | -1)[], StatsFactoryContext],
-			void
-		>
-	>;
-	filterSorted: HookMap<
-		SyncBailHook<[any, StatsFactoryContext, number, number], boolean | void>
-	>;
-	groupResults: HookMap<
-		SyncBailHook<[GroupConfig<any, any>[], StatsFactoryContext], void>
-	>;
-	sortResults: HookMap<
-		SyncBailHook<
-			[((a?: any, b?: any) => 0 | 1 | -1)[], StatsFactoryContext],
-			void
-		>
-	>;
-	filterResults: HookMap<
-		SyncBailHook<[any, StatsFactoryContext, number, number], boolean | void>
-	>;
-	merge: HookMap<SyncBailHook<[any[], StatsFactoryContext], any>>;
-	result: HookMap<SyncBailHook<[any, StatsFactoryContext], any>>;
-	getItemName: HookMap<SyncBailHook<[any, StatsFactoryContext], string | void>>;
-	getItemFactory: HookMap<
-		SyncBailHook<[any, StatsFactoryContext], void | StatsFactory>
-	>;
+	extract: StatsFactoryExtractHookMap;
+	filter: StatsFactoryItemFilterHookMap;
+	sort: StatsFactoryItemSortHookMap;
+	filterSorted: StatsFactoryItemFilterHookMap;
+	groupResults: StatsFactoryGroupResultsHookMap;
+	sortResults: StatsFactoryResultSortHookMap;
+	filterResults: StatsFactoryResultFilterHookMap;
+	merge: StatsFactoryMergeHookMap;
+	result: StatsFactoryResultHookMap;
+	getItemName: StatsFactoryGetItemNameHookMap;
+	getItemFactory: StatsFactoryGetItemFactoryHookMap;
 }
+type StatsFactoryItemFilterHookMap = {
+	for<
+		K extends
+			| "moduleTrace"
+			| "compilation.assets"
+			| "compilation.chunks"
+			| "compilation.modules"
+			| "compilation.entrypoints"
+			| "compilation.namedChunkGroups"
+			| "compilation.errors"
+			| "compilation.warnings"
+			| "compilation.hints"
+			| "compilation.children"
+			| "asset.related"
+			| "error.errors"
+			| "warning.errors"
+			| "chunk.modules"
+			| "chunk.rootModules"
+			| "chunk.origins"
+			| "module.issuerPath"
+			| "module.reasons"
+			| "module.modules"
+			| "module.children"
+			| "moduleTraceItem.dependencies"
+	>(
+		key: K
+	): SyncBailHook<
+		[KnownStatsFactoryRawItems[K], StatsFactoryContext, number, number],
+		boolean | void
+	>;
+	for<I = any>(
+		key: string
+	): SyncBailHook<[I, StatsFactoryContext, number, number], boolean | void>;
+} & HookMap<
+	SyncBailHook<[any, StatsFactoryContext, number, number], boolean | void>
+>;
+type StatsFactoryItemSortHookMap = {
+	for<
+		K extends
+			| "moduleTrace"
+			| "compilation.assets"
+			| "compilation.chunks"
+			| "compilation.modules"
+			| "compilation.entrypoints"
+			| "compilation.namedChunkGroups"
+			| "compilation.errors"
+			| "compilation.warnings"
+			| "compilation.hints"
+			| "compilation.children"
+			| "asset.related"
+			| "error.errors"
+			| "warning.errors"
+			| "chunk.modules"
+			| "chunk.rootModules"
+			| "chunk.origins"
+			| "module.issuerPath"
+			| "module.reasons"
+			| "module.modules"
+			| "module.children"
+			| "moduleTraceItem.dependencies"
+	>(
+		key: K
+	): SyncBailHook<
+		[Comparator<KnownStatsFactoryRawItems[K]>[], StatsFactoryContext],
+		void
+	>;
+	for<I = any>(
+		key: string
+	): SyncBailHook<[Comparator<I>[], StatsFactoryContext], void>;
+} & HookMap<SyncBailHook<[Comparator<any>[], StatsFactoryContext], void>>;
+type StatsFactoryMergeHookMap = {
+	for<
+		K extends
+			| "moduleTrace"
+			| "compilation.assets"
+			| "compilation.chunks"
+			| "compilation.modules"
+			| "compilation.entrypoints"
+			| "compilation.namedChunkGroups"
+			| "compilation.errors"
+			| "compilation.warnings"
+			| "compilation.hints"
+			| "compilation.children"
+			| "asset.related"
+			| "error.errors"
+			| "warning.errors"
+			| "chunk.modules"
+			| "chunk.rootModules"
+			| "chunk.origins"
+			| "module.issuerPath"
+			| "module.reasons"
+			| "module.modules"
+			| "module.children"
+			| "moduleTraceItem.dependencies",
+		R = Record<string, KnownStatsFactoryResultItems[K]>
+	>(
+		key: K
+	): SyncBailHook<
+		[KnownStatsFactoryResultItems[K][], StatsFactoryContext],
+		void | R
+	>;
+	for<I = any, R = any>(
+		key: string
+	): SyncBailHook<[I[], StatsFactoryContext], void | R>;
+} & HookMap<SyncBailHook<[any[], StatsFactoryContext], any>>;
+type StatsFactoryResultFilterHookMap = {
+	for<
+		K extends
+			| "moduleTrace"
+			| "compilation.assets"
+			| "compilation.chunks"
+			| "compilation.modules"
+			| "compilation.entrypoints"
+			| "compilation.namedChunkGroups"
+			| "compilation.errors"
+			| "compilation.warnings"
+			| "compilation.hints"
+			| "compilation.children"
+			| "asset.related"
+			| "error.errors"
+			| "warning.errors"
+			| "chunk.modules"
+			| "chunk.rootModules"
+			| "chunk.origins"
+			| "module.issuerPath"
+			| "module.reasons"
+			| "module.modules"
+			| "module.children"
+			| "moduleTraceItem.dependencies"
+	>(
+		key: K
+	): SyncBailHook<
+		[KnownStatsFactoryResultItems[K], StatsFactoryContext, number, number],
+		boolean | void
+	>;
+	for<I = any>(
+		key: string
+	): SyncBailHook<[I, StatsFactoryContext, number, number], boolean | void>;
+} & HookMap<
+	SyncBailHook<[any, StatsFactoryContext, number, number], boolean | void>
+>;
+type StatsFactoryResultHookMap = {
+	for<
+		K extends
+			| "module"
+			| "error"
+			| "asset"
+			| "compilation"
+			| "chunk"
+			| "moduleTrace"
+			| "profile"
+			| "warning"
+			| "asset$visible"
+			| "chunkGroup"
+			| "module$visible"
+			| "moduleIssuer"
+			| "moduleReason"
+			| "chunkOrigin"
+			| "cause"
+			| "moduleTraceItem"
+			| "moduleTraceDependency"
+			| "compilation.assets"
+			| "compilation.chunks"
+			| "compilation.modules"
+			| "compilation.entrypoints"
+			| "compilation.namedChunkGroups"
+			| "compilation.errors"
+			| "compilation.warnings"
+			| "compilation.hints"
+			| "compilation.children"
+			| "asset.related"
+			| "error.errors"
+			| "warning.errors"
+			| "chunk.modules"
+			| "chunk.rootModules"
+			| "chunk.origins"
+			| "module.issuerPath"
+			| "module.reasons"
+			| "module.modules"
+			| "module.children"
+			| "moduleTraceItem.dependencies"
+	>(
+		key: K
+	): SyncBailHook<
+		[KnownStatsFactoryResults[K], StatsFactoryContext],
+		KnownStatsFactoryResults[K]
+	>;
+	for<R = any>(key: string): SyncBailHook<[R, StatsFactoryContext], R>;
+} & HookMap<SyncBailHook<[any, StatsFactoryContext], any>>;
+type StatsFactoryResultSortHookMap = {
+	for<
+		K extends
+			| "moduleTrace"
+			| "compilation.assets"
+			| "compilation.chunks"
+			| "compilation.modules"
+			| "compilation.entrypoints"
+			| "compilation.namedChunkGroups"
+			| "compilation.errors"
+			| "compilation.warnings"
+			| "compilation.hints"
+			| "compilation.children"
+			| "asset.related"
+			| "error.errors"
+			| "warning.errors"
+			| "chunk.modules"
+			| "chunk.rootModules"
+			| "chunk.origins"
+			| "module.issuerPath"
+			| "module.reasons"
+			| "module.modules"
+			| "module.children"
+			| "moduleTraceItem.dependencies"
+	>(
+		key: K
+	): SyncBailHook<
+		[Comparator<KnownStatsFactoryResultItems[K]>[], StatsFactoryContext],
+		void
+	>;
+	for<I = any>(
+		key: string
+	): SyncBailHook<[Comparator<I>[], StatsFactoryContext], void>;
+} & HookMap<SyncBailHook<[Comparator<any>[], StatsFactoryContext], void>>;
 type StatsJsonValue =
 	| undefined
 	| null
@@ -33041,16 +33839,12 @@ declare interface StatsPrintHooks {
 			undefined | string | void
 		>
 	>;
-	sortItems: HookMap<
-		SyncBailHook<[any[], StatsPrinterContext], boolean | void>
-	>;
-	getItemName: HookMap<SyncBailHook<[any, StatsPrinterContext], string | void>>;
+	sortItems: StatsPrinterSortItemsHookMap;
+	getItemName: StatsPrinterGetItemNameHookMap;
 	printItems: HookMap<
 		SyncBailHook<[string[], StatsPrinterContext], undefined | string>
 	>;
-	print: HookMap<
-		SyncBailHook<[any, StatsPrinterContext], undefined | string | void>
-	>;
+	print: StatsPrinterPrintHookMap;
 	result: HookMap<SyncWaterfallHook<[string, StatsPrinterContext], string>>;
 }
 declare abstract class StatsPrinter {
@@ -33059,9 +33853,9 @@ declare abstract class StatsPrinter {
 	/**
 	 * Returns printed result.
 	 */
-	print(
+	print<T>(
 		type: string,
-		object?: any,
+		object: T,
 		baseContext?: StatsPrinterContext
 	): undefined | string;
 }
@@ -33069,6 +33863,108 @@ type StatsPrinterContext = KnownStatsPrinterColorFunctions &
 	KnownStatsPrinterFormatters &
 	KnownStatsPrinterContext &
 	Record<string, any>;
+type StatsPrinterGetItemNameHookMap = {
+	for<
+		K extends
+			| "compilation.assets[]"
+			| "compilation.chunks[]"
+			| "compilation.modules[]"
+			| "compilation.entrypoints[]"
+			| "compilation.namedChunkGroups[]"
+			| "compilation.errors[]"
+			| "compilation.warnings[]"
+			| "compilation.hints[]"
+			| "compilation.children[]"
+			| "asset.related[]"
+			| "error.errors[]"
+			| "chunk.modules[]"
+			| "chunk.origins[]"
+			| "module.issuerPath[]"
+			| "module.reasons[]"
+			| "module.modules[]"
+			| "module.children[]"
+			| "moduleTraceItem.dependencies[]"
+			| "compilation.logging[]"
+			| "asset.children[]"
+			| "moduleReason.children[]"
+			| "loggingGroup.entries[]"
+			| "loggingEntry.children[]"
+			| "error.moduleTrace[]"
+	>(
+		key: K
+	): SyncBailHook<
+		[KnownStatsPrintItemNames[K], StatsPrinterContext],
+		string | void
+	>;
+	for<I = any>(
+		key: string
+	): SyncBailHook<[I, StatsPrinterContext], string | void>;
+} & HookMap<SyncBailHook<[any, StatsPrinterContext], string | void>>;
+type StatsPrinterPrintHookMap = {
+	for<
+		K extends
+			| "module"
+			| "error"
+			| "asset"
+			| "compilation"
+			| "chunk"
+			| "profile"
+			| "chunkGroup"
+			| "moduleIssuer"
+			| "moduleReason"
+			| "chunkOrigin"
+			| "moduleTraceItem"
+			| "moduleTraceDependency"
+			| "loggingGroup"
+	>(
+		key: K
+	): SyncBailHook<
+		[KnownStatsPrintObjects[K], StatsPrinterContext],
+		undefined | string | void
+	>;
+	for<T = any>(
+		key: string
+	): SyncBailHook<[T, StatsPrinterContext], undefined | string | void>;
+} & HookMap<
+	SyncBailHook<[any, StatsPrinterContext], undefined | string | void>
+>;
+type StatsPrinterSortItemsHookMap = {
+	for<
+		K extends
+			| "compilation.assets"
+			| "compilation.chunks"
+			| "compilation.modules"
+			| "compilation.entrypoints"
+			| "compilation.namedChunkGroups"
+			| "compilation.errors"
+			| "compilation.warnings"
+			| "compilation.hints"
+			| "compilation.children"
+			| "asset.related"
+			| "error.errors"
+			| "chunk.modules"
+			| "chunk.origins"
+			| "module.issuerPath"
+			| "module.reasons"
+			| "module.modules"
+			| "module.children"
+			| "moduleTraceItem.dependencies"
+			| "compilation.logging"
+			| "asset.children"
+			| "moduleReason.children"
+			| "loggingGroup.entries"
+			| "loggingEntry.children"
+			| "error.moduleTrace"
+	>(
+		key: K
+	): SyncBailHook<
+		[KnownStatsPrintItems[K][], StatsPrinterContext],
+		boolean | void
+	>;
+	for<I = any>(
+		key: string
+	): SyncBailHook<[I[], StatsPrinterContext], boolean | void>;
+} & HookMap<SyncBailHook<[any[], StatsPrinterContext], boolean | void>>;
 type StatsProfile = KnownStatsProfile & Record<string, StatsJsonValue>;
 type StatsValue =
 	| boolean
@@ -34193,6 +35089,8 @@ declare interface TsconfigPathsMap {
 	 */
 	fileDependencies: Set<string>;
 }
+type TupleElement =
+	undefined | null | string | number | bigint | boolean | symbol | object;
 declare class TypeScriptPlugin {
 	constructor();
 	apply(compiler: Compiler): void;
@@ -34426,7 +35324,7 @@ declare interface VirtualModule {
 	 * The source function that provides the virtual content.
 	 */
 	source: (
-		loaderContext: LoaderContextNormalModule<Record<string, any>>
+		loaderContext: LoaderContextNormalModule<Record<string, any>, LoaderData>
 	) => string | Buffer | Promise<string | Buffer>;
 
 	/**
@@ -34442,7 +35340,7 @@ declare interface VirtualModule {
 type VirtualModuleContent =
 	| string
 	| ((
-			loaderContext: LoaderContextNormalModule<Record<string, any>>
+			loaderContext: LoaderContextNormalModule<Record<string, any>, LoaderData>
 	  ) => string | Buffer | Promise<string | Buffer>)
 	| VirtualModule;
 declare interface VirtualModules {
@@ -34734,7 +35632,7 @@ declare abstract class Watching {
  * Stores values by tuple keys while using `WeakMap` for object elements so the
  * cache can release entries when those objects are collected.
  */
-declare abstract class WeakTupleMap<K extends any[], V> {
+declare abstract class WeakTupleMap<K extends TupleElement[], V> {
 	/**
 	 * Stores a value at the node identified by the provided tuple key.
 	 */
