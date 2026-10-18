@@ -197,14 +197,6 @@ const FILED_CONFIG_HTML_DEFECTS = new Map([
 	[
 		"test/configCases/html/attribute-tables/page.html",
 		"firefox, webkit only: not a printer defect — an IDL attribute the engine does not implement falls back to the attribute as written, so a normalization reads as a difference. Measured in Firefox 156: `writingSuggestions` and `blocking` both read `undefined` where Chrome 147 reflects `false` and `render`; WebKit reads `autofocus`, `enterkeyhint` and `inputmode` apart from Blink the same way"
-	],
-	[
-		"test/configCases/html/minimize-round-trip/cases/reflected.html",
-		"firefox only: the unimplemented `blocking` IDL again — see `attribute-tables`"
-	],
-	[
-		"test/configCases/html/minimize-transforms/page.html",
-		"firefox only: the unimplemented `blocking` IDL again — see `attribute-tables`"
 	]
 ]);
 
@@ -224,10 +216,25 @@ const FILED_WPT_HTML_DEFECTS = new Map([
 const FILED_WPT_CSS_DEFECTS = new Map();
 
 // The same, for each corpus printed with every option that is off by default.
-const FILED_CONFIG_HTML_OPT_IN_DEFECTS = new Map();
-const FILED_CONFIG_CSS_OPT_IN_DEFECTS = new Map();
+const FILED_CONFIG_HTML_OPT_IN_DEFECTS = new Map([
+	[
+		"test/configCases/html/attribute-tables/page.html",
+		"firefox, webkit only: the unimplemented IDL attributes again — see `attribute-tables` above"
+	]
+]);
+const FILED_CONFIG_CSS_OPT_IN_DEFECTS = new Map([
+	[
+		"test/configCases/css/minimize-corpus/minimize-values/style.css",
+		"webkit only: the percentage `shape-image-threshold` again — see `minimize-values` above"
+	]
+]);
 const FILED_BENCHMARK_HTML_OPT_IN_DEFECTS = new Map();
-const FILED_BENCHMARK_CSS_OPT_IN_DEFECTS = new Map();
+const FILED_BENCHMARK_CSS_OPT_IN_DEFECTS = new Map([
+	[
+		"Tailwind 4 + daisyUI 5",
+		"webkit only: not a printer defect — `convertApproximateColors` clips `oklch(71% .194 13.428)`, outside sRGB, before `color-mix(in oklab, … 80%, #000)` reads it, which is what the option documents; WebKit paints the mix of the clipped color two bytes from the clipped mix (190,71,91 against 192,71,92)"
+	]
+]);
 
 // The same, for what webpack's own parser sees over the whole corpus.
 // Keyed `"<mode> <document>"`, so filing one print mode leaves the other held.

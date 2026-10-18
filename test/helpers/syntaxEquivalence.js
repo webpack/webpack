@@ -531,6 +531,7 @@ const installHelpers = (generics) => {
 	// the whitespace between its tokens is read here rather than by the engine.
 	const TOKEN_LIST_ATTRIBUTES = new Set([
 		"accesskey",
+		"blocking",
 		"headers",
 		"itemprop",
 		"itemref",
@@ -540,6 +541,7 @@ const installHelpers = (generics) => {
 	// Of those, the ones the spec reflects as a `DOMTokenList` — a set, so a
 	// repeat names nothing — which this engine implements no IDL member for.
 	const UNIQUE_TOKEN_LIST_ATTRIBUTES = new Set([
+		"blocking",
 		"itemprop",
 		"itemref",
 		"itemtype"
@@ -708,8 +710,12 @@ const installHelpers = (generics) => {
 			fresh = document.createElement(local);
 			pristine.set(local, fresh);
 		}
+		// Read off a copy holding the value as `value()` reads it, so two spellings
+		// of one value, `TRUE` and `true` or `"  "` and `""`, get one verdict.
+		const probe = document.createElement(local);
+		probe.setAttribute(name, raw);
 		const read = /** @type {Record<string, unknown>} */ (
-			/** @type {unknown} */ (node)
+			/** @type {unknown} */ (probe)
 		)[property];
 		const unset = /** @type {Record<string, unknown>} */ (
 			/** @type {unknown} */ (fresh)
@@ -2308,6 +2314,17 @@ const compareStyles = async ({ pairs, types }) => {
 	};
 
 	/**
+	 * @param {string} value a computed value or a rule's text
+	 * @returns {string} it with every absolute length in pixels
+	 */
+	const inPixels = (value) =>
+		value.replace(
+			ABSOLUTE_LENGTH,
+			(_, amount, unit) =>
+				`${Math.round(Number(amount) * PX_PER_UNIT[unit.toLowerCase()] * 1e4) / 1e4}px`
+		);
+
+	/**
 	 * Whether two computed values differ only where an opt-in rewrites on purpose:
 	 * a custom property's own text, a length's unit, a color's exact
 	 * coordinates, or a vendor-prefixed property a target adds or drops.
@@ -2329,30 +2346,21 @@ const compareStyles = async ({ pairs, types }) => {
 		let x = a;
 		let y = b;
 		if (relax.has("length-units")) {
-			/**
-			 * @param {string} value a computed value
-			 * @returns {string} it with every absolute length in pixels
-			 */
-			const inPixels = (value) =>
-				value.replace(
-					ABSOLUTE_LENGTH,
-					(_, amount, unit) =>
-						`${Math.round(Number(amount) * PX_PER_UNIT[unit.toLowerCase()] * 1e4) / 1e4}px`
-				);
 			x = inPixels(x);
 			y = inPixels(y);
 		}
 		if (relax.has("approximate-colors") && x !== y) {
 			// A color is read as the pixel it paints: within one step of each 8-bit
 			// channel, or of the source clipped into sRGB where it lies outside it.
-			const [xs, ys] = [x, y].map((text) => text.split(/(\d+)/));
+
+			// Only a painted color's channels take the step, never a length.
+			const PAINT = /paints \d+,\d+,\d+,\d+/g;
+			const [xp, yp] = [x, y].map((text) => text.match(PAINT) || []);
 			if (
-				xs.length === ys.length &&
-				xs.every((part, i) =>
-					i % 2 === 0
-						? part === ys[i]
-						: Math.abs(Number(part) - Number(ys[i])) <= 1
-				)
+				xp.length > 0 &&
+				xp.length === yp.length &&
+				x.replace(PAINT, "paints") === y.replace(PAINT, "paints") &&
+				xp.every((one, i) => withinOneStep(one, yp[i]))
 			) {
 				return true;
 			}
@@ -2362,14 +2370,14 @@ const compareStyles = async ({ pairs, types }) => {
 			}
 			// A value holding several colors, each read on its own and the rest as is.
 			const parted = new RegExp(`(${COLOR_LITERAL.source})`, "gi");
-			const [xp, yp] = [x, y].map((text) => text.split(parted));
+			const [xs, ys] = [x, y].map((text) => text.split(parted));
 			return (
-				xp.length > 1 &&
-				xp.length === yp.length &&
-				xp.every((part, i) =>
+				xs.length > 1 &&
+				xs.length === ys.length &&
+				xs.every((part, i) =>
 					i % 2 === 0
-						? part === yp[i]
-						: withinOneStep(clippedAs(part), paintedAs(yp[i]))
+						? part === ys[i]
+						: withinOneStep(clippedAs(part), paintedAs(ys[i]))
 				)
 			);
 		}
@@ -2422,7 +2430,13 @@ const compareStyles = async ({ pairs, types }) => {
 			...other.unobserved.keys()
 		])) {
 			const [a, b] = [one.unobserved.get(key), other.unobserved.get(key)];
-			if (a !== b && moved.length < KEPT) {
+			const [x, y] = [String(a), String(b)];
+			const property = key.slice(key.lastIndexOf(" ") + 1);
+			if (
+				a !== b &&
+				!relaxedEqual(relax, property, x, y, x, y) &&
+				moved.length < KEPT
+			) {
 				moved.push({
 					at: key,
 					moved: [["", String(a), String(b), String(a), String(b)]]
@@ -2433,11 +2447,12 @@ const compareStyles = async ({ pairs, types }) => {
 		// the initial value every element computes.
 		const registeredAlike =
 			relax.has("custom-properties") && sameRegistrations(one, other);
-		const [oneDescribed, otherDescribed] = [one, other].map((reading) =>
-			registeredAlike
+		const [oneDescribed, otherDescribed] = [one, other].map((reading) => {
+			const described = registeredAlike
 				? reading.described.filter((text) => !/@property\b/.test(text))
-				: reading.described
-		);
+				: reading.described;
+			return relax.has("length-units") ? described.map(inPixels) : described;
+		});
 		if (oneDescribed.join("\n") !== otherDescribed.join("\n")) {
 			const at = oneDescribed.findIndex(
 				(text, i) => text !== otherDescribed[i]

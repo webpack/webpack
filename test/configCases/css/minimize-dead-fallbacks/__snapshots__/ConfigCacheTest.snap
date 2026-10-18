@@ -28,5 +28,9 @@ Array [
    and the earlier one is what every engine reads */.t14{background-image:linear-gradient(red,blue);background-image:radial-gradient(red at center,blue)}",
   "/*! declined: a trailing comma leaves an empty argument, which makes the later
    gradient invalid, so the earlier one stays */.t15{background-image:linear-gradient(red,blue);background-image:linear-gradient(red,blue,)}",
+  "/*! a vendor spelling written before its standard twin is dead behind it */.t16{transform:scale(1)}",
+  "/*! declined: one written after it, and important, is what Firefox reads,
+   since it still takes the vendor name as an alias of the standard one */.t17{transform:scale(1);-moz-transform:scale(1.0001)!important}",
+  "/*! ...though one after it saying the same thing is dead all the same */.t18{transform:scale(1)}",
 ]
 `;

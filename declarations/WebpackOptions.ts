@@ -3379,7 +3379,7 @@ export interface OptimizationMinimizeHtml {
 	 */
 	removeEmptyAttributes?: boolean;
 	/**
-	 * Drop an element that has no children and no attributes, where its bare form renders nothing and nothing reads it: a generic container such as `div`, `span` or `section`, an inline phrase element, an empty `title`, `script` or `style`, or an attribute-less `meta`, `link` or `base`. Every other element is kept, a widget, a list item, an element with margins and a custom element included. Off by default: CSS can give an empty element a size or a `::before`, and the minifier cannot see the stylesheet. Emptiness is read off the output rather than the source, so a run of nested empties goes together and an element left empty only by a dropped comment or by whitespace `collapseWhitespace` deletes goes with them.
+	 * Drop an element that has no children and no attributes, where its bare form renders nothing and nothing reads it: a generic container such as `div`, `span` or `section`, an inline phrase element, an empty `title`, `script` or `style`, or an attribute-less `meta`, `link` or `base`. Every other element is kept, including widgets, list items, elements with margins and custom elements. Off by default: CSS can give an empty element a size or a `::before`, and the minifier cannot see the stylesheet. Emptiness is read off the output rather than the source, so a run of nested empties goes together and an element left empty only by a dropped comment or by whitespace `collapseWhitespace` deletes goes with them.
 	 * @since 5.110.0
 	 */
 	removeEmptyElements?: boolean;
