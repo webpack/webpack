@@ -9,6 +9,10 @@ on:
   pull_request_target:
     types: [opened, reopened]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
 jobs:
   anti-slop:
     uses: webpack/.github/.github/workflows/pr-quality.yml@438fc377cc376d2074ab1c6aaf4c35250b905670
