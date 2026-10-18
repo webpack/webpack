@@ -7892,6 +7892,9 @@ type DecodedSegment =
 	| [number, number, number, number]
 	| [number]
 	| [number, number, number, number, number];
+type DecodedSourceMap = Omit<RawSourceMap, "mappings"> & {
+	mappings: DecodedSegment[][];
+};
 declare interface DefaultHandlerOptions {
 	progressBar?: false | Required<ProgressPluginOptionsProgressBarBranch3Object>;
 	estimatedTime?: boolean;
@@ -12038,6 +12041,148 @@ declare interface GetOptionsMethod<OptionsType> {
 	(): OptionsType;
 	(schema: Parameters<typeof validateFunction>[0]): OptionsType;
 }
+type GivenCompressOptions = Omit<Partial<any>, "global_defs" | "pure_funcs"> & {
+	global_defs?: false | object;
+	pure_funcs?: null | string[] | ((node: PureCallView) => boolean);
+};
+
+/**
+ * terser's `format` options as a caller gives them; `source_map` is left out,
+ * as the minify writes it from `sourceMap`.
+ */
+declare interface GivenFormatOptions {
+	code?: boolean;
+	ast?: boolean;
+
+	/**
+	 * which comments are kept
+	 */
+	comments?:
+		string | boolean | RegExp | ((node: any, comment: KeptComment) => boolean);
+
+	/**
+	 * whether the output is laid out to read, always false here
+	 */
+	beautify?: boolean;
+
+	/**
+	 * whether every body is braced, always false here
+	 */
+	braces?: boolean;
+
+	/**
+	 * how far a level indents, unread here
+	 */
+	indent_level?: number;
+
+	/**
+	 * how far the output indents, unread here
+	 */
+	indent_start?: number;
+
+	/**
+	 * how long a line may be, unread here
+	 */
+	max_line_len?: number | false;
+
+	/**
+	 * how wide a line may be, unread here
+	 */
+	width?: number;
+
+	/**
+	 * whether properties are written in shorthand, undefined until read from `ecma`
+	 */
+	shorthand?: boolean;
+
+	/**
+	 * which edition the output may use
+	 */
+	ecma?: number;
+
+	/**
+	 * whether the output works around that engine
+	 */
+	ie8?: boolean;
+
+	/**
+	 * whether the output works around that engine
+	 */
+	safari10?: boolean;
+
+	/**
+	 * whether only ASCII is written
+	 */
+	ascii_only?: boolean;
+
+	/**
+	 * whether `</script` is escaped
+	 */
+	inline_script?: boolean;
+
+	/**
+	 * whether numbers are written as read
+	 */
+	keep_numbers?: boolean;
+
+	/**
+	 * whether quoted keys stay quoted
+	 */
+	keep_quoted_props?: boolean;
+
+	/**
+	 * text written first
+	 */
+	preamble?: null | string;
+
+	/**
+	 * whether annotation comments are kept
+	 */
+	preserve_annotations?: boolean;
+
+	/**
+	 * whether every key is quoted
+	 */
+	quote_keys?: boolean;
+
+	/**
+	 * which quote strings are written with
+	 */
+	quote_style?: number;
+
+	/**
+	 * whether statements end in semicolons rather than line breaks
+	 */
+	semicolons?: boolean;
+
+	/**
+	 * whether a shebang is kept
+	 */
+	shebang?: boolean;
+
+	/**
+	 * whether the output works around that engine
+	 */
+	webkit?: boolean;
+
+	/**
+	 * whether an immediately called function is parenthesized
+	 */
+	wrap_iife?: boolean;
+
+	/**
+	 * whether a function passed as an argument is parenthesized
+	 */
+	wrap_func_args?: boolean;
+	spidermonkey?: boolean;
+}
+type GivenMangleOptions = Omit<Partial<any>, "properties"> & {
+	properties?: boolean | any;
+};
+type GivenSourceMapOptions = Omit<Partial<any>, "content"> & {
+	content?:
+		null | string | object | RawSourceMap | DecodedSourceMap | IndexSourceMap;
+};
 
 /**
  * Match glob patterns against the value, `!` in front of a pattern excludes it. Path separators are normalized to `/` on every OS, and a relative pattern matches at any depth.
@@ -14138,6 +14283,18 @@ declare interface ImportSettings {
 type ImportSource =
 	undefined | null | string | SimpleLiteral | RegExpLiteral | BigIntLiteral;
 type Imported = true | [string, string][];
+
+/**
+ * a map made of sections, each a map of its own, or its JSON
+ */
+declare interface IndexSourceMap {
+	version: number;
+	file?: string;
+	sections: {
+		offset: { line: number; column: number };
+		map: string | RawSourceMap | DecodedSourceMap | IndexSourceMap;
+	}[];
+}
 
 /**
  * Options for infrastructure level logging.
@@ -17820,6 +17977,17 @@ declare class JsonpTemplatePlugin {
 }
 
 /**
+ * a comment as a `comments` callback is handed it: terser's comment token, its offset, line from 1 and column from 0
+ */
+declare interface KeptComment {
+	type: "comment1" | "comment2" | "comment3" | "comment4";
+	value: string;
+	pos: number;
+	line: number;
+	col: number;
+}
+
+/**
  * Defines the known asset info type used by this module.
  */
 declare interface KnownAssetInfo {
@@ -20364,22 +20532,22 @@ declare interface MinifyOptions {
 	/**
 	 * what the compressor does, or false to leave the tree as read
 	 */
-	compress?: boolean | Record<string, any>;
+	compress?: boolean | GivenCompressOptions;
 
 	/**
 	 * which names are renamed, or false to keep them
 	 */
-	mangle?: boolean | Record<string, any>;
+	mangle?: boolean | GivenMangleOptions;
 
 	/**
 	 * how the output is written
 	 */
-	format?: Record<string, any>;
+	format?: GivenFormatOptions;
 
 	/**
 	 * the older spelling of `format`, which may not be named beside it
 	 */
-	output?: Record<string, any>;
+	output?: GivenFormatOptions;
 
 	/**
 	 * how the source is read
@@ -20398,7 +20566,7 @@ declare interface MinifyOptions {
 	/**
 	 * whether a source map is written, and how
 	 */
-	sourceMap?: boolean | Record<string, any>;
+	sourceMap?: boolean | GivenSourceMapOptions;
 
 	/**
 	 * whether the source is a module
@@ -27595,6 +27763,9 @@ declare interface ProvidesObject {
 	[index: string]: ProvidesObjectValue;
 }
 type ProvidesObjectValue = string | ProvidesConfig;
+type PureCallView = NodeShape & {
+	print_to_string(given?: Partial<any>): string;
+};
 type PureCondition =
 	boolean | ((compilation: Compilation, module: Module) => boolean);
 type QualifiedRule = NodeSyntaxParser & {
