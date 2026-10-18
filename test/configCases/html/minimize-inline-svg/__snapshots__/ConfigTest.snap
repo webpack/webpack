@@ -19,7 +19,7 @@ exports[`ConfigTestCases html minimize-inline-svg minimize-inline-svg should com
 "<!doctype html><html lang=en><head><title>Inline SVG</title><style>.icon{background:url(\\"data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'><path d='m0 0v80h-112M10 20V30H40t20 20'/></svg>\\")}.animated{color:red;background:url(\\"data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'><style>@keyframes morph{to{d:path(\\\\\\"M10 20L20 50L40 50\\\\\\")}}</style><path d='M010 020L010 030L040 030'/></svg>\\")}</style></head><body>
 <svg viewBox=\\"0 0 24 24\\" xmlns=http://www.w3.org/2000/svg>
 	
-	<path d=\\"m0 0v80h-112M10 20V30H40s10 10 20 20\\" transform=\\"translate(0) translate(1 2) scale(1) rotate(0)\\"/>
+	<path d=\\"m0 0v80h-112M10 20V30H40s10 10 20 20\\" transform=\\"translate(1 2)\\"/>
 	<metadata><path id=metadata-shape d=\\"M1 1H3V3Z\\"/></metadata><use href=#metadata-shape />
 	<rect width=1.5px height=2></rect>
 </svg>

@@ -3492,7 +3492,7 @@ describe("parseHtml", () => {
 			const value = ' matrix(+001.00, 000.00, 000.00, 001.00, 010.00, -000.00), translate(+001.00e+02, 002.00) scale(001.00) rotate(090.00, 000, 000) skewX(001.00)skewY(-001.00) ';
 			const source = `<svg xmlns="${svg}"><g transform="${value}"/></svg>`;
 			const once = new SourceProcessor().process(source, compact).code;
-			expect(once).toBe(`<svg xmlns="${svg}"><g transform="translate(10) translate(+001.00e+02 2) scale(1) rotate(90) skewX(1) skewY(-1)"/></svg>`);
+			expect(once).toBe(`<svg xmlns="${svg}"><g transform="translate(10) translate(+001.00e+02 2) rotate(90) skewX(1) skewY(-1)"/></svg>`);
 			expect(new SourceProcessor().process(once, compact).code).toBe(once);
 		});
 
@@ -3657,6 +3657,44 @@ describe("parseHtml", () => {
 		});
 
 
+		it.each([true, false])("should preserve geometry command compatibility with external CSS and xml=%s", (xml) => {
+			const processor = new SourceProcessor();
+			const path = '<path d="M0 0L0 10L10 10" transform="scale(1) matrix(1 0 0 1 10 20)"/>';
+			const styles = [
+				'<style>@import "animation.css";</style>',
+				// cspell:ignore mport
+				String.raw`<style>@\69mport url(animation.css);</style>`,
+				'<foreignObject><link xmlns="http://www.w3.org/1999/xhtml" rel="alternate Stylesheet" href="animation.css"/></foreignObject>'
+			];
+			if (xml) styles.push('<?xml-stylesheet type="text/css" href="animation.css"?>');
+			for (const style of styles) {
+				const source = `<svg xmlns="${svg}">${style}${path}</svg>`;
+				const once = processor.process(source, { ...compact, xml }).code;
+				expect(once).toContain(path);
+				expect(processor.process(once, { ...compact, xml }).code).toBe(once);
+			}
+			const source = `<svg xmlns="${svg}"><?other data?><style>@supports(display:grid){path{fill:red}}</style><foreignObject><link xmlns="http://www.w3.org/1999/xhtml" rel="preload"/></foreignObject>${path}</svg>`;
+			const once = processor.process(source, { ...compact, xml }).code;
+				expect(once).toContain('d="M0 0V10H10" transform="translate(10 20)"');
+		});
+
+		it.each([true, false])("should preserve numeric and color attribute selectors with xml=%s", (xml) => {
+			const processor = new SourceProcessor();
+			const options = { ...compact, xml, renderEmbeddedSource: builtinEmbeddedRenderer() };
+			const path = '<path d="M0 0L10 10" stroke-width="0002.00" stroke="#ff0000"/>';
+			// cspell:ignore troke
+			for (const style of ['[stroke-width="0002.00"]{stroke:blue}', String.raw`[\73troke-width="0002.00"]{stroke:blue}`, '[stroke="#ff0000"]{stroke:blue}', '@import "animation.css";']) {
+				const source = `<svg xmlns="${svg}"><style>${style}</style>${path}</svg>`;
+				const once = processor.process(source, options).code;
+				const normalized = once.replace(/="([^" ]*)"/g, "=$1");
+				expect(normalized).toContain('stroke-width=0002.00');
+				expect(normalized).toContain('stroke=#ff0000');
+			}
+			const source = `<svg xmlns="${svg}"><style>/* [width] */path{fill:red;content:'[width]'}</style>${path}</svg>`;
+			const once = processor.process(source, options).code;
+			expect(once.replace(/="([^" ]*)"/g, "=$1")).toContain('stroke-width=2');
+		});
+
 		it("should preserve SVG styles without interrupting an enclosing CSS data URL", () => {
 			const source = `<svg xmlns="${svg}"><metadata>removed</metadata><style>@keyframes morph{to{d:path("M10 20L20 50L40 50")}}</style><path d="M010 020L010 030L040 030"/></svg>`;
 			const css = `.icon { background: url("data:image/svg+xml,${encodeURIComponent(source)}"); color: red }`;
@@ -3774,11 +3812,15 @@ describe("parseHtml", () => {
 			expect(new SourceProcessor().process(svgSource, { ...options, xml: false }).code).toContain('d="M0 0"');
 		});
 
-		const { SVG_NUMERIC_ATTRIBUTES, SVG_LENGTH_UNITS } = require("../../lib/html/data");
+		const { SVG_NUMERIC_ATTRIBUTES, SVG_PRESENTATION_NUMERIC_ATTRIBUTES, SVG_LENGTH_UNITS } = require("../../lib/html/data");
 		/** @type {Record<string, [string, string]>} */
 		const numericExamples = {
 			length: ["+001.500px", "1.5px"],
 			number: ["+001.500", "1.5"],
+			percentage: ["+001.500%", "1.5%"],
+			lengths: ["+001.500px, 0002.00em 0003.0%", "1.5px 2em 3%"],
+			numbers: ["+001.500, 0002.00 0003.0", "1.5 2 3"],
+			pair: ["+001.500, 0002.00", "1.5 2"],
 			points: ["+001.500, 0002.00 0003.0,+04.000", "1.5 2 3 4"],
 			viewBox: [" +000.00, 000.0, 0010.0, +0020.000 ", "0 0 10 20"],
 			transform: ["translate(+001.00, -000.00) scale(002.00, +002.00) rotate(030.00 000.00 -000.00)", "translate(1) scale(2) rotate(30)"],
@@ -3795,6 +3837,17 @@ describe("parseHtml", () => {
 			expect(processor.process(once, options).code).toBe(once);
 			expect(processor.process(source, { ...options, shortenSvgNumbers: false, shortenSvgPathData: false }).code).toBe(source);
 			expect(processor.process(source, { ...options, mode: "beautify" }).code).toBe(source);
+		});
+
+		it.each(Object.entries(SVG_PRESENTATION_NUMERIC_ATTRIBUTES).map(([name, kind]) => [name, ...numericExamples[kind]]))("should shorten the SVG presentation attribute %s using its grammar", (name, value, expected) => {
+			const source = `<svg xmlns="${svg}"><g ${name}="${value}"/></svg>`;
+			const processor = new SourceProcessor();
+			const once = processor.process(source, compact).code;
+			expect(once).toContain(`${name}="${expected}"`);
+			expect(processor.process(once, compact).code).toBe(once);
+			expect(processor.process(source, { ...compact, shortenSvgNumbers: false }).code).toBe(source);
+			const dtd = `<!DOCTYPE svg [<!ATTLIST g ${name} CDATA #IMPLIED>]>`;
+			expect(processor.process(dtd + source, compact).code).toBe(dtd + source);
 		});
 
 		it.each([
@@ -3824,7 +3877,7 @@ describe("parseHtml", () => {
 			["rotate(30 0 1)", "rotate(30 0 1)"],
 			["rotate(30 0 1e-400)", "rotate(30 0 1e-400)"],
 			["matrix(1 0 0 1 0 0)", "translate(0)"],
-			["skewX(0) skewY(0)", "skewX(0) skewY(0)"],
+			["skewX(0) skewY(0)", "skewX(0)"],
 			[" translate(1,0),scale(2,2) rotate(30 0 0) ", "translate(1) scale(2) rotate(30)"],
 			["translate(1,0) scale(2,2) rotate(30 0 0) scale(1,)", "translate(1,0) scale(2,2) rotate(30 0 0) scale(1,)"],
 			["translate(1,0) rotate(30 0)", "translate(1,0) rotate(30 0)"]
@@ -3837,6 +3890,60 @@ describe("parseHtml", () => {
 			expect(processor.process(once, options).code).toBe(once);
 			expect(processor.process(source, { ...options, shortenSvgNumbers: false }).code).toBe(source);
 			expect(processor.process(source, { ...options, mode: "beautify" }).code).toBe(source);
+		});
+
+		it.each([
+			['translate(0) scale(2) rotate(0) skewX(0) skewY(0)', 'scale(2)'],
+			['scale(1) translate(10 20) matrix(1 0 0 1 0 0)', 'translate(10 20)'],
+			['translate(0) rotate(0) scale(1)', 'scale(1)'],
+			['scale(1) translate(-0 0) scale(+001.00)', 'scale(1)'],
+			['translate(0e38) scale(2)', 'scale(2)'],
+			['translate(0e39) scale(2)', 'translate(0e39) scale(2)'],
+			['translate(1e-400) scale(2)', 'translate(1e-400) scale(2)'],
+			['scale(1e0) translate(2)', 'scale(1e0) translate(2)'],
+			['rotate(0 10 20) scale(2)', 'rotate(0 10 20) scale(2)'],
+			['rotate(0) scale(2) scale(1,)', 'rotate(0) scale(2) scale(1,)']
+		])('should omit exact identity functions while retaining a transform in %s', (value, expected) => {
+			const source = `<svg xmlns="${svg}"><g transform="${value}"/><linearGradient gradientTransform="${value}"/><pattern patternTransform="${value}"/></svg>`;
+			const options = { ...compact, removeEmptyElements: false };
+			const processor = new SourceProcessor();
+			const once = processor.process(source, options).code;
+			expect(once).toBe(source.split(`="${value}"`).join(`="${expected}"`));
+			expect(processor.process(once, options).code).toBe(once);
+			expect(processor.process(source, { ...options, shortenSvgNumbers: false }).code).toBe(source);
+			for (const animation of ['<animateTransform type="scale" to="3" dur="2s"/>', '<style>@keyframes turn{to{transform:scale(3)}}</style>']) {
+				const animated = source.replace('</svg>', animation + '</svg>');
+				expect(processor.process(animated, options).code).toContain('transform="' + value.replace('translate(-0 0)', 'translate(-0)').replace('scale(+001.00)', 'scale(1)') + '"');
+			}
+		});
+
+		it.each(['', ' ', '1,', ',1', '1,,2', '1\u00a02', '1 2 3', '1px 2', '1e 2', 'none'])("should preserve unsupported filter pair syntax %s", (value) => {
+			const source = `<svg xmlns="${svg}"><filter><feGaussianBlur stdDeviation="${value}"/></filter></svg>`;
+			expect(new SourceProcessor().process(source, compact).code).toBe(source);
+		});
+
+		it.each(['', ' ', '1,', ',1', '1,,2', '1\u00a02', '1PX 2', '1rem 2', '1px2', '1e 2', '1%;2', '1%px 2', 'none'])("should preserve unsupported SVG text length lists %s", (value) => {
+			const source = `<svg xmlns="${svg}"><text x="${value}">A</text></svg>`;
+			expect(new SourceProcessor().process(source, compact).code).toBe(source);
+		});
+
+		it("should retain text-list positions, units and precision with DTD constraints", () => {
+			const source = `<svg xmlns="${svg}"><text x="+001.500px, 0002.00em 0003.0%" dy="+000.50" rotate="000.0,090.0, -000.00">A<tspan dx="9007199254740993 .123456789123456789 1e-400">BC</tspan></text><filter><feGaussianBlur stdDeviation="+002.00"/><feColorMatrix values="+001.00,000.00, -000.00"/></filter><stop offset="+0050.00%"/></svg>`;
+			const expected = `<svg xmlns="${svg}"><text x="1.5px 2em 3%" dy=".5" rotate="0 90 -0">A<tspan dx="9007199254740993 .123456789123456789 1e-400">BC</tspan></text><filter><feGaussianBlur stdDeviation="2"/><feColorMatrix values="1 0 -0"/></filter><stop offset="50%"/></svg>`;
+			const processor = new SourceProcessor();
+			expect(processor.process(source, compact).code).toBe(expected);
+			expect(processor.process(expected, compact).code).toBe(expected);
+			const constrained = '<!DOCTYPE svg [<!ATTLIST text x CDATA #IMPLIED><!ATTLIST feGaussianBlur stdDeviation CDATA #IMPLIED>]>' + source;
+			expect(processor.process(constrained, compact).code).toContain('x="+001.500px, 0002.00em 0003.0%"');
+			expect(processor.process(constrained, compact).code).toContain('stdDeviation="+002.00"');
+			expect(processor.process('<!DOCTYPE svg SYSTEM "svg.dtd">' + source, compact).code).toBe('<!DOCTYPE svg SYSTEM "svg.dtd">' + source);
+			const html = processor.process(source, { ...compact, xml: false }).code;
+			expect(html).toContain('x="1.5px 2em 3%"');
+			expect(html).toContain('stdDeviation=2');
+			for (const offset of ['01px', '01em', '01%%', '01 02']) {
+				const invalid = `<svg xmlns="${svg}"><stop offset="${offset}"/></svg>`;
+				expect(processor.process(invalid, compact).code).toBe(invalid);
+			}
 		});
 
 		it.each([
@@ -3913,6 +4020,35 @@ describe("parseHtml", () => {
 		it.each([...SVG_LENGTH_UNITS])("should preserve the SVG length unit %s", (unit) => {
 			const source = `<svg xmlns="http://www.w3.org/2000/svg"><rect width="+000.500${unit}"/></svg>`;
 			expect(new SourceProcessor().process(source, { xml: true, mode: "minify", shortenSvgNumbers: true }).code).toBe(`<svg xmlns="http://www.w3.org/2000/svg"><rect width=".5${unit}"/></svg>`);
+		});
+
+		it.each([true, false])("should shorten numeric presentation attributes with xml=%s", (xml) => {
+			const source = `<svg xmlns="${svg}" opacity="+000.50"><g stroke-width="0002.00px" stroke-dasharray="+000.50px, 0002.00em 0003.00%" stroke-dashoffset="-000.50" stroke-miterlimit="0004.00" fill-opacity="+0050.00%" font-size="00012.00px" letter-spacing="000.50px" word-spacing="0002.00px"><path d="M0 0L10 10"/></g></svg>`;
+			const options = { ...compact, xml };
+			const processor = new SourceProcessor();
+			const once = processor.process(source, options).code;
+			for (const value of ['opacity=.5', 'stroke-width=2px', 'stroke-dasharray=".5px 2em 3%"', 'stroke-dashoffset=-.5', 'stroke-miterlimit=4', 'fill-opacity=50%', 'font-size=12px', 'letter-spacing=.5px', 'word-spacing=2px']) {
+				expect(once.replace(/="([^" ]*)"/g, "=$1")).toContain(value);
+			}
+			expect(processor.process(once, options).code).toBe(once);
+			const unchanged = processor.process(source, { ...options, shortenSvgNumbers: false }).code;
+			expect(unchanged).toContain('stroke-dasharray="+000.50px, 0002.00em 0003.00%"');
+		});
+
+		it("should preserve unsupported presentation values, namespaces and DTD defaults", () => {
+			const processor = new SourceProcessor();
+			for (const value of ["var(--width)", "calc(001px + 002px)", "inherit", "context-stroke", "01rem", "01px02", "01,,02", "01px,", "01\u00a002"]) {
+				const source = `<svg xmlns="${svg}"><path stroke-width="${value}" stroke-dasharray="${value}"/></svg>`;
+				expect(processor.process(source, compact).code).toBe(source);
+			}
+			const source = `<svg xmlns="${svg}" xmlns:p="urn:foreign"><custom opacity="+000.50"/><g xmlns="urn:foreign" opacity="+000.50"/><path p:stroke-width="0002.00"/></svg>`;
+			expect(processor.process(source, compact).code).toBe(source.replace('<custom opacity="+000.50"', '<custom opacity=".5"'));
+			expect(processor.process(`<svg><custom opacity="+000.50"/></svg>`, { ...compact, xml: false }).code).toContain('opacity=.5');
+			const body = `<svg xmlns="${svg}"><g/><path stroke-width="0002.00"/></svg>`;
+			const dtd = '<!DOCTYPE svg [<!ATTLIST g stroke-width CDATA "0002.00">]>';
+			expect(processor.process(dtd + body, compact).code).toBe(dtd + body.replace('stroke-width="0002.00"', 'stroke-width="2"'));
+			expect(processor.process('<!DOCTYPE svg SYSTEM "svg.dtd">' + body, compact).code).toBe('<!DOCTYPE svg SYSTEM "svg.dtd">' + body);
+			expect(processor.process('<div opacity="+000.50"></div>', { ...compact, xml: false }).code).toContain('opacity=+000.50');
 		});
 
 		it.each(["", " ", "0", "0 1 2", "0,,1", ",0 1", "0 1,", "0 1 , ", "0-1", "0 1px", "0 1e", "0 1e+", "0 1.2.3", "0 \u00a01", "0 1;2 3"])("should preserve invalid SVG point-list syntax %s", (value) => {

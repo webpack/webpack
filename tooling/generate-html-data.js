@@ -570,7 +570,7 @@ const PARSER_TABLES = [
 	[
 		"SVG_NUMERIC_ATTRIBUTES",
 		"byElement",
-		"Conservative SVG geometry attribute allowlist; IDL also exposes lengths with text and list semantics that these rewrites leave untouched.",
+		"Conservative SVG numeric attribute grammars; unknown attributes and unsupported whole values stay untouched.",
 		[
 			...[
 				["svg", "x y width height"],
@@ -579,9 +579,14 @@ const PARSER_TABLES = [
 				["ellipse", "cx cy rx ry"],
 				["line", "x1 y1 x2 y2"],
 				["image", "x y width height"],
+				["foreignObject", "x y width height"],
+				["text", "textLength"],
+				["tspan", "textLength"],
+				["textPath", "textLength startOffset"],
 				["use", "x y width height"],
+				["marker", "markerWidth markerHeight refX refY"],
 				["linearGradient", "x1 y1 x2 y2"],
-				["radialGradient", "cx cy r fx fy"],
+				["radialGradient", "cx cy r fx fy fr"],
 				["mask", "x y width height"],
 				["pattern", "x y width height"],
 				["filter", "x y width height"]
@@ -591,6 +596,54 @@ const PARSER_TABLES = [
 				}
 				return entries;
 			}, /** @type {[string, string][]} */ ([])),
+			...[
+				["feOffset", "dx dy"],
+				["feDropShadow", "dx dy"],
+				["feComposite", "k1 k2 k3 k4"],
+				["feConvolveMatrix", "divisor bias"],
+				["feDisplacementMap", "scale"],
+				["feDiffuseLighting", "surfaceScale diffuseConstant"],
+				[
+					"feSpecularLighting",
+					"surfaceScale specularConstant specularExponent"
+				],
+				["feDistantLight", "azimuth elevation"],
+				["fePointLight", "x y z"],
+				[
+					"feSpotLight",
+					"x y z pointsAtX pointsAtY pointsAtZ specularExponent limitingConeAngle"
+				],
+				...["feFuncR", "feFuncG", "feFuncB", "feFuncA"].map((tag) => [
+					tag,
+					"slope intercept amplitude exponent offset"
+				])
+			].reduce((entries, [tag, names]) => {
+				for (const name of names.split(" ")) {
+					entries.push([`${tag} ${name}`, "number"]);
+				}
+				return entries;
+			}, /** @type {[string, string][]} */ ([])),
+			...["text", "tspan", "tref", "altGlyph"].reduce((entries, tag) => {
+				for (const name of ["x", "y", "dx", "dy"]) {
+					entries.push([`${tag} ${name}`, "lengths"]);
+				}
+				entries.push([`${tag} rotate`, "numbers"]);
+				return entries;
+			}, /** @type {[string, string][]} */ ([])),
+			["stop offset", "percentage"],
+			["feGaussianBlur stdDeviation", "pair"],
+			["feDropShadow stdDeviation", "pair"],
+			["feTurbulence baseFrequency", "pair"],
+			...["feConvolveMatrix", "feDiffuseLighting", "feSpecularLighting"].map(
+				(tag) =>
+					/** @type {[string, string]} */ ([`${tag} kernelUnitLength`, "pair"])
+			),
+			["feConvolveMatrix kernelMatrix", "numbers"],
+			["feColorMatrix values", "numbers"],
+			...["feFuncR", "feFuncG", "feFuncB", "feFuncA"].map(
+				(tag) =>
+					/** @type {[string, string]} */ ([`${tag} tableValues`, "numbers"])
+			),
 			...[
 				"path",
 				"rect",
@@ -638,6 +691,30 @@ const PARSER_TABLES = [
 			["linearGradient gradientTransform", "transform"],
 			["radialGradient gradientTransform", "transform"],
 			["pattern patternTransform", "transform"]
+		]
+	],
+	[
+		"SVG_PRESENTATION_NUMERIC_ATTRIBUTES",
+		"object",
+		"Numeric SVG presentation attribute grammars; CSS keywords, functions and unsupported whole values stay untouched.",
+		[
+			...[
+				"opacity",
+				"fill-opacity",
+				"stroke-opacity",
+				"stop-opacity",
+				"flood-opacity"
+			].map((name) => /** @type {[string, string]} */ ([name, "percentage"])),
+			...[
+				"stroke-width",
+				"stroke-dashoffset",
+				"font-size",
+				"letter-spacing",
+				"word-spacing",
+				"baseline-shift"
+			].map((name) => /** @type {[string, string]} */ ([name, "length"])),
+			["stroke-miterlimit", "number"],
+			["stroke-dasharray", "lengths"]
 		]
 	],
 	[
