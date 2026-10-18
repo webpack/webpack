@@ -10155,10 +10155,10 @@ wast-loader@^1.12.1:
   dependencies:
     wabt "1.0.0-nightly.20180421"
 
-watchpack@^2.6.2:
-  version "2.6.2"
-  resolved "https://registry.yarnpkg.com/watchpack/-/watchpack-2.6.2.tgz#19c9887dd2d1e3746584693ac6f4a0af49657814"
-  integrity sha512-67nxRd7I5uAyn+KamYsCqU30iVgCgZ4aj8ZOGzmxs7zNPuvlnoYltm6+6JkOjEcD6WVXdu1BfH+gVQs3FUuW7Q==
+watchpack@^2.6.3:
+  version "2.6.3"
+  resolved "https://registry.yarnpkg.com/watchpack/-/watchpack-2.6.3.tgz#880d8c437c425104b2da58bee6bd8fbc33bf78d3"
+  integrity sha512-s3NZy0QpTY9qGqzc0wtz4qI28z3+5qKbbAec4MV4G9N3CfgZ9wgvQRr0cl2jh/tqkWG1NWHkmVMHZpCamev5Wg==
   dependencies:
     graceful-fs "^4.1.2"
 
