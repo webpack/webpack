@@ -3071,6 +3071,11 @@ const CORRECTED_CASES = [
 		{ compress: {}, mangle: false }
 	],
 	[
+		"a `let` of a case a constant `switch` drops, which an earlier case's label reads in its dead zone",
+		'var x = 1; function f() { switch (1) { case x: console.log("x"); case 1: console.log("one"); break; case 2: let x = 2; console.log(x); } } try { f(); } catch (e) { console.log(e.name); }',
+		{ compress: {}, mangle: false }
+	],
+	[
 		"a class of a case a constant `switch` skips, which a reached case reads in its dead zone",
 		'try { switch (1) { case 0: class C {} console.log("no"); case 1: console.log(typeof C); } } catch (e) { console.log(e.name); }',
 		{ compress: {}, mangle: false }
