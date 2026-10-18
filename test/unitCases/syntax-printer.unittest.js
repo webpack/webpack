@@ -9036,15 +9036,31 @@ describe("syntax-printer", () => {
 				(name) => `[${name}] = [${replacement}];`,
 				(name) => `({ ${name} } = { ${name}: ${replacement} });`,
 				(name) => `for (${name} of [${replacement}]);`,
-				(name) => `${name}++; ${name} = ${replacement};`
+				(name) => `${name}++; ${name} = ${replacement};`,
+				(name) => `for (${name} in { k: 1 }); ${name} = ${replacement};`,
+				(name) => `${name} += ""; ${name} = ${replacement};`,
+				(name) => `${name} = 0; ${name} ||= ${replacement};`,
+				(name) => `[...${name}] = [${replacement}]; ${name} = ${name}[0];`,
+				(name) => `[{ ${name} }] = [{ ${name}: ${replacement} }];`,
+				(name) => `({ x: ${name} } = { x: ${replacement} });`,
+				(name) => `[${name} = ${replacement}] = [];`
 			];
-			for (const [name, argument] of [
-				["Error", '"x"'],
-				["TypeError", '"x"'],
+			/** @type {[string, string][]} */
+			const builtIns = [
+				["AggregateError", "[]"],
 				["Array", "3"],
+				["Error", '"x"'],
+				["EvalError", '"x"'],
+				["Function", '"return 1"'],
 				["Object", "1"],
-				["Function", '"return 1"']
-			]) {
+				["RangeError", '"x"'],
+				["ReferenceError", '"x"'],
+				["RegExp", '"a"'],
+				["SyntaxError", '"x"'],
+				["TypeError", '"x"'],
+				["URIError", '"x"']
+			];
+			for (const [name, argument] of builtIns) {
 				for (const assign of assignments) {
 					for (const call of [`new ${name}(${argument})`, `${name}(${argument})`]) {
 						const input = `${assign(name)} var v = ${call}; console.log(typeof v, v && v.m);`;
@@ -9056,6 +9072,23 @@ describe("syntax-printer", () => {
 							runProgram(input)
 						);
 					}
+				}
+			}
+			// a local of the name leaves the global the built-in it was
+			for (const [name, argument] of builtIns) {
+				for (const local of [
+					`function f() { var ${name} = 1; ${name} = 2; return ${name}; } f();`,
+					`function f(${name}) { [${name}] = [1]; return ${name}; } f();`
+				]) {
+					const input = `${local} var v = new ${name}(${argument}); console.log(String(v).slice(0, 9));`;
+					const { code } = await minify(input, {
+						compress: { passes: 2 },
+						mangle: true
+					});
+					expect(code).not.toContain(`new ${name}(`);
+					expect(runProgram(/** @type {string} */ (code))).toBe(
+						runProgram(input)
+					);
 				}
 			}
 			// Babel's rest parameter, read as a spread of `arguments` at ES2015
