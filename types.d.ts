@@ -106,12 +106,12 @@ import {
 } from "inspector";
 import { JSONSchema4, JSONSchema6, JSONSchema7 } from "json-schema";
 import { ListenOptions } from "net";
+import { default as ValidationError } from "schema-utils/declarations/ValidationError";
 import {
 	ExtendedSchema,
 	ValidationErrorConfiguration,
 	validate as validateFunction
-} from "schema-utils";
-import { default as ValidationError } from "schema-utils/declarations/ValidationError";
+} from "schema-utils/declarations/validate";
 import {
 	AsArray,
 	AsyncParallelHook,
