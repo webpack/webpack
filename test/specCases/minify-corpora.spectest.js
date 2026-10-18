@@ -1,6 +1,6 @@
 "use strict";
 
-// cspell:ignore defun destructurings fnames fromindex napi reminify reminifies targettype tointeger ufuzz
+// cspell:ignore defun destructurings feeback fnames fromindex napi plotly reminify reminifies rtrn targettype tointeger trlg ufuzz
 
 // Holds webpack's JavaScript minifier to every test terser, swc and oxc write
 // for theirs. Each source of each corpus below is minified by webpack and by the
@@ -1787,6 +1787,27 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 		[
 			"valid-increments.js (the default minimizer's options)",
 			"valid-rounding-increments.js (the default minimizer's options)"
+		]
+	],
+	[
+		"a `var`'s first write moved into its declaration, where the writes beside it repeat the `x = …` gzip matched",
+		[
+			"fixture/next/feeback-plotly/1/input.js (its own options)",
+			"expected-return-value.js (the default minimizer's options)",
+			"set-values-return-undefined.js (the default minimizer's options)",
+			"array-elem-put-unresolvable-no-strict.js (the default minimizer's options)",
+			"array-elem-trlg-iter-rest-rtrn-close-null.js (the default minimizer's options)",
+			"array-rest-put-unresolvable-no-strict.js (the default minimizer's options)",
+			"obj-id-init-fn-name-fn.js (the default minimizer's options)",
+			"obj-id-put-unresolvable-no-strict.js (the default minimizer's options)",
+			"obj-id-simple-no-strict.js (the default minimizer's options)",
+			"obj-prop-nested-array-yield-expr.js (the default minimizer's options)",
+			"obj-prop-nested-obj-yield-expr.js (the default minimizer's options)",
+			"obj-prop-put-unresolvable-no-strict.js (the default minimizer's options)",
+			"obj-rest-computed-property.js (the default minimizer's options)",
+			"obj-rest-non-string-computed-property-string-1.js (the default minimizer's options)",
+			"obj-rest-str-val.js (the default minimizer's options)",
+			"fn-name-accessor-get.js (the default minimizer's options)"
 		]
 	],
 	[

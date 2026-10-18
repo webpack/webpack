@@ -421,9 +421,6 @@ const SWC_SMALLER_BY_REASON = [
 	[
 		"swc writes `const` as `let`, a byte shorter and mergeable with its neighbors, and moves leading `var`s into a later declaration",
 		[
-			"swc minifier: fixture/issues/8907/input.js",
-			"swc minifier: fixture/issues/vercel/002/input.js",
-			"swc minifier: fixture/issues/vercel/003/input.js",
 			"swc minifier: fixture/issues/vercel/004/input.js",
 			"swc minifier: fixture/projects/mootools/6/input.js",
 			"swc minifier: fixture/projects/mootools/7/input.js",
