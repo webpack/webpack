@@ -471,17 +471,17 @@ declare interface Asset {
 	 */
 	info: AssetInfo;
 }
-declare abstract class AssetBytesGenerator extends Generator {
+declare abstract class AssetBytesGenerator extends Generator<AssetNormalModule> {
 	/**
 	 * Generates fallback output for the provided error condition.
 	 */
 	generateError(
 		error: Error,
-		module: NormalModule,
+		module: AssetNormalModule,
 		generateContext: GenerateContext
 	): null | Source;
 }
-declare abstract class AssetBytesParser extends Parser {}
+declare abstract class AssetBytesParser extends Parser<BuiltAssetModule> {}
 declare interface AssetDependencyMeta {
 	sourceType: "asset-url" | "css-url";
 }
@@ -498,7 +498,7 @@ declare interface AssetEmittedInfo {
 }
 type AssetFilterItemTypes =
 	string | RegExp | ((name: string, asset: StatsAsset) => boolean);
-declare abstract class AssetGenerator extends Generator {
+declare abstract class AssetGenerator extends Generator<AssetNormalModule> {
 	dataUrlOptions?:
 		| AssetGeneratorDataUrlOptions
 		| ((
@@ -513,19 +513,19 @@ declare abstract class AssetGenerator extends Generator {
 	/**
 	 * Returns mime type.
 	 */
-	getMimeType(module: NormalModule): string;
+	getMimeType(module: AssetNormalModule): string;
 
 	/**
 	 * Generates data uri.
 	 */
-	generateDataUri(module: NormalModule, renderedSource?: Source): string;
+	generateDataUri(module: AssetNormalModule, renderedSource?: Source): string;
 
 	/**
 	 * Generates fallback output for the provided error condition.
 	 */
 	generateError(
 		error: Error,
-		module: NormalModule,
+		module: AssetNormalModule,
 		generateContext: GenerateContext
 	): null | Source;
 }
@@ -590,7 +590,8 @@ declare class AssetModulesPlugin {
 declare interface AssetModulesPluginOptions {
 	sideEffectFree?: boolean;
 }
-declare abstract class AssetParser extends Parser {
+type AssetNormalModule = NormalModule & { buildInfo?: AssetModuleBuildInfo };
+declare abstract class AssetParser extends Parser<BuiltAssetModule> {
 	dataUrlCondition?:
 		| boolean
 		| AssetParserDataUrlOptions
@@ -654,17 +655,17 @@ declare interface AssetResourceGeneratorOptions {
 	 */
 	publicPath?: string | TemplatePathFn<PathData>;
 }
-declare abstract class AssetSourceGenerator extends Generator {
+declare abstract class AssetSourceGenerator extends Generator<AssetNormalModule> {
 	/**
 	 * Generates fallback output for the provided error condition.
 	 */
 	generateError(
 		error: Error,
-		module: NormalModule,
+		module: AssetNormalModule,
 		generateContext: GenerateContext
 	): null | Source;
 }
-declare abstract class AssetSourceParser extends Parser {}
+declare abstract class AssetSourceParser extends Parser<BuiltAssetModule> {}
 
 /**
  * Where an asset which is a symbolic link points, as the link itself spells it.
@@ -840,7 +841,7 @@ declare interface AsyncWebAssemblyModulesPluginOptions {
 	 */
 	mangleImports?: boolean;
 }
-declare abstract class AsyncWebAssemblyParser extends Parser {}
+declare abstract class AsyncWebAssemblyParser extends Parser<BuiltAsyncWasmModule> {}
 type AtRule = NodeSyntaxParser & {
 	name: string;
 	nameStart: number;
@@ -1541,6 +1542,30 @@ declare interface BuildDiagnostics {
 }
 type BuildInfo = KnownBuildInfo & Record<string, any>;
 type BuildMeta = KnownBuildMeta & Record<string, any>;
+type BuiltAssetModule = NormalModule & {
+	buildInfo: AssetModuleBuildInfo;
+	buildMeta: BuildMeta;
+};
+type BuiltAsyncWasmModule = NormalModule & {
+	buildInfo: NormalModuleBuildInfo;
+	buildMeta: BuildMeta;
+};
+type BuiltCssModule = NormalModule & {
+	buildInfo: CssModuleBuildInfo;
+	buildMeta: CssModuleBuildMeta;
+};
+type BuiltHtmlModule = NormalModule & {
+	buildInfo: HtmlModuleBuildInfo;
+	buildMeta: BuildMeta;
+};
+type BuiltJavascriptModule = NormalModule & {
+	buildInfo: JavascriptModuleBuildInfo;
+	buildMeta: JavascriptModuleBuildMeta;
+};
+type BuiltJsonModule = NormalModule & {
+	buildInfo: JsonModuleBuildInfo;
+	buildMeta: BuildMeta;
+};
 
 /**
  * The map a minify writes, its mappings decoded, less the keys that say nothing.
@@ -1555,6 +1580,10 @@ declare interface BuiltSourceMap {
 	mappings: DecodedSegment[][];
 	ignoreList: number[];
 }
+type BuiltSyncWasmModule = NormalModule & {
+	buildInfo: NormalModuleBuildInfo;
+	buildMeta: SyncWasmModuleBuildMeta;
+};
 type BuiltinEmbeddedRendererOptions = Pick<
 	CssProcessOptions,
 	| "environment"
@@ -1581,7 +1610,9 @@ declare class BunTargetPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
-declare abstract class ByTypeGenerator extends Generator {
+declare abstract class ByTypeGenerator<
+	TModule extends NormalModule = NormalModule
+> extends Generator<TModule> {
 	map: { [index: string]: undefined | Generator };
 	generateError?: (
 		error: Error,
@@ -6185,7 +6216,7 @@ declare interface CssEnvironment {
 	 */
 	vendorPrefixes?: boolean;
 }
-declare abstract class CssGenerator extends Generator {
+declare abstract class CssGenerator extends Generator<CssNormalModule> {
 	options: CssModuleGeneratorOptions;
 
 	/**
@@ -6204,7 +6235,7 @@ declare abstract class CssGenerator extends Generator {
 	 * Processes the provided module.
 	 */
 	sourceModule(
-		module: NormalModule,
+		module: CssNormalModule,
 		initFragments: InitFragment<GenerateContext>[],
 		source: ReplaceSource,
 		generateContext: GenerateContext & { cssData: CssData }
@@ -6215,7 +6246,7 @@ declare abstract class CssGenerator extends Generator {
 	 */
 	generateError(
 		error: Error,
-		module: NormalModule,
+		module: CssNormalModule,
 		generateContext: GenerateContext
 	): null | Source;
 }
@@ -7023,7 +7054,11 @@ type CssNodeType =
 	| 26
 	| 27
 	| 28;
-declare abstract class CssParser extends Parser {
+type CssNormalModule = NormalModule & {
+	buildInfo?: CssModuleBuildInfo;
+	buildMeta?: CssModuleBuildMeta;
+};
+declare abstract class CssParser extends Parser<BuiltCssModule> {
 	defaultMode: "global" | "auto" | "local" | "pure";
 	options: {
 		/**
@@ -11782,37 +11817,37 @@ type GeneratedValue =
 	| Function
 	| RegExp
 	| PromiseLike<CodeValuePrimitive>;
-declare class Generator {
+declare class Generator<TModule extends NormalModule = NormalModule> {
 	constructor();
 
 	/**
 	 * Returns the source types available for this module.
 	 */
-	getTypes(module: NormalModule): ReadonlySet<string>;
+	getTypes(module: TModule): ReadonlySet<string>;
 	getTypesDependOnIncomingConnections(): boolean;
 
 	/**
 	 * Returns the estimated size for the requested source type.
 	 */
-	getSize(module: NormalModule, type?: string): number;
+	getSize(module: TModule, type?: string): number;
 
 	/**
 	 * Generates generated code for this runtime module.
 	 */
-	generate(module: NormalModule, __1: GenerateContext): null | Source;
+	generate(module: TModule, __1: GenerateContext): null | Source;
 
 	/**
 	 * Returns the reason this module cannot be concatenated, when one exists.
 	 */
 	getConcatenationBailoutReason(
-		module: NormalModule,
+		module: TModule,
 		context: ConcatenationBailoutReasonContext
 	): undefined | string;
 
 	/**
 	 * Updates the hash with the data contributed by this instance.
 	 */
-	updateHash(hash: Hash, __1: UpdateHashContextGenerator): void;
+	updateHash(hash: Hash, __1: UpdateHashContextGenerator<TModule>): void;
 
 	/**
 	 * Returns generator by type.
@@ -12426,7 +12461,7 @@ type HtmlFaviconIcon =
 			 */
 			type?: string;
 	  };
-declare abstract class HtmlGenerator extends Generator {
+declare abstract class HtmlGenerator extends Generator<HtmlNormalModule> {
 	options: HtmlGeneratorOptions;
 
 	/**
@@ -12451,7 +12486,7 @@ declare abstract class HtmlGenerator extends Generator {
 	 * Processes the provided module.
 	 */
 	sourceModule(
-		module: NormalModule,
+		module: HtmlNormalModule,
 		initFragments: InitFragment<GenerateContext>[],
 		source: ReplaceSource,
 		generateContext: GenerateContext
@@ -12462,7 +12497,7 @@ declare abstract class HtmlGenerator extends Generator {
 	 */
 	generateError(
 		error: Error,
-		module: NormalModule,
+		module: HtmlNormalModule,
 		generateContext: GenerateContext
 	): null | Source;
 }
@@ -12817,6 +12852,7 @@ type HtmlNodePath<T = number, S = unknown> = Omit<
 	): null | string;
 };
 type HtmlNodeType = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
+type HtmlNormalModule = NormalModule & { buildInfo?: HtmlModuleBuildInfo };
 declare interface HtmlParseOptions {
 	/**
 	 * context element name for fragment parsing (e.g. `td`, `svg path`); omit for a full document
@@ -12838,7 +12874,7 @@ declare interface HtmlParseOptions {
 	 */
 	scripting?: boolean;
 }
-declare abstract class HtmlParser extends Parser {
+declare abstract class HtmlParser extends Parser<BuiltHtmlModule> {
 	magicCommentContext: ContextImport;
 	template?: (source: string, context: HtmlTemplateContext) => string;
 	fragmentContext?: string;
@@ -12851,7 +12887,10 @@ declare abstract class HtmlParser extends Parser {
 	 * dependency offsets against it) and the generator (which renders from
 	 * `module.originalSource()`) stay in agreement.
 	 */
-	applyTemplate(source: string | Buffer, module: NormalModule): string | Buffer;
+	applyTemplate(
+		source: string | Buffer,
+		module: HtmlNormalModule
+	): string | Buffer;
 }
 
 /**
@@ -14425,7 +14464,7 @@ declare interface IteratorObject<T, TReturn = unknown, TNext = unknown>
 	[Symbol.iterator](): IteratorObject<T, TReturn, TNext>;
 	[Symbol.dispose](): void;
 }
-declare abstract class JavascriptGenerator extends Generator {
+declare abstract class JavascriptGenerator extends Generator<JavascriptNormalModule> {
 	/**
 	 * Processes the provided dependency.
 	 */
@@ -14462,7 +14501,7 @@ declare abstract class JavascriptGenerator extends Generator {
 	 */
 	generateError(
 		error: Error,
-		module: NormalModule,
+		module: JavascriptNormalModule,
 		generateContext: GenerateContext
 	): null | Source;
 }
@@ -15044,7 +15083,11 @@ declare class JavascriptModulesPlugin {
 	};
 	static chunkHasJs: (chunk: Chunk, chunkGraph: ChunkGraph) => boolean;
 }
-declare class JavascriptParser extends Parser {
+type JavascriptNormalModule = NormalModule & {
+	buildInfo?: JavascriptModuleBuildInfo;
+	buildMeta?: JavascriptModuleBuildMeta;
+};
+declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 	/**
 	 * Creates an instance of JavascriptParser.
 	 */
@@ -17598,7 +17641,7 @@ declare interface JavascriptParserOptions {
 	 */
 	wrappedContextRegExp?: RegExp;
 }
-type JavascriptParserState = ParserStateBase &
+type JavascriptParserState = ParserStateBase<BuiltJavascriptModule> &
 	Record<string, any> &
 	KnownJavascriptParserState;
 declare interface JoinCacheEntry {
@@ -17624,7 +17667,7 @@ declare abstract class JsonData {
 	 */
 	updateHash(hash: Hash): void;
 }
-declare abstract class JsonGenerator extends Generator {
+declare abstract class JsonGenerator extends Generator<JsonNormalModule> {
 	options: JsonGeneratorOptions;
 
 	/**
@@ -17632,7 +17675,7 @@ declare abstract class JsonGenerator extends Generator {
 	 */
 	generateError(
 		error: Error,
-		module: NormalModule,
+		module: JsonNormalModule,
 		generateContext: GenerateContext
 	): null | Source;
 }
@@ -17663,6 +17706,7 @@ declare class JsonModulesPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
+type JsonNormalModule = NormalModule & { buildInfo?: JsonModuleBuildInfo };
 declare interface JsonObjectFs {
 	[index: string]:
 		undefined | null | string | number | boolean | JsonObjectFs | JsonValueFs[];
@@ -17677,7 +17721,7 @@ declare interface JsonObjectResolver {
 		| JsonObjectResolver
 		| JsonValueResolver[];
 }
-declare abstract class JsonParser extends Parser {
+declare abstract class JsonParser extends Parser<BuiltJsonModule> {
 	options: JsonParserOptions;
 }
 
@@ -26160,7 +26204,7 @@ declare interface ParsedIdentifier {
 	internal: boolean;
 }
 type ParsedProgram = Program & NodeLike;
-declare class Parser {
+declare class Parser<TModule extends NormalModule = NormalModule> {
 	constructor();
 
 	/**
@@ -26168,8 +26212,8 @@ declare class Parser {
 	 */
 	parse(
 		source: string | Buffer | PreparsedAst,
-		state: ParserState
-	): ParserState;
+		state: ParserState<NormalModule>
+	): ParserState<NormalModule>;
 }
 
 /**
@@ -26325,15 +26369,20 @@ declare class ParserSourceLocation {
 	end?: null | PositionLike;
 	source?: string;
 }
-type ParserState = ParserStateBase & Record<string, any>;
+type ParserState<TModule extends NormalModule = NormalModule> =
+	ParserStateBase<TModule> & Record<string, any>;
 
 /**
  * Defines the parser state base type used by this module.
  */
-declare interface ParserStateBase {
+declare interface ParserStateBase<TModule extends NormalModule = NormalModule> {
 	source: string | Buffer;
 	current: NormalModule;
-	module: NormalModule;
+
+	/**
+	 * the module being parsed
+	 */
+	module: TModule;
 	compilation: Compilation;
 	options: WebpackOptionsNormalizedWithDefaults;
 }
@@ -34242,11 +34291,13 @@ declare interface UpdateHashContextDependency {
 /**
  * Represents the generator runtime component.
  */
-declare interface UpdateHashContextGenerator {
+declare interface UpdateHashContextGenerator<
+	TModule extends NormalModule = NormalModule
+> {
 	/**
 	 * the module
 	 */
-	module: NormalModule;
+	module: TModule;
 	chunkGraph: ChunkGraph;
 	runtime: RuntimeSpec;
 	runtimeTemplate?: RuntimeTemplate;
@@ -34728,7 +34779,7 @@ declare abstract class WeakTupleMap<K extends any[], V> {
 	 */
 	clear(): void;
 }
-declare abstract class WebAssemblyParser extends Parser {}
+declare abstract class WebAssemblyParser extends Parser<BuiltSyncWasmModule> {}
 
 /**
  * Defines the web assembly render context type used by this module.

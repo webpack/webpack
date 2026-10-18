@@ -1400,8 +1400,16 @@ const collectTypes = ({ program, checker, options }) => {
 					continue;
 				}
 				const defaultValue = parameter.getDefault();
+				// An alias default can come back as a fresh instantiation of the alias
+				const sameAlias =
+					defaultValue !== undefined &&
+					defaultValue.aliasSymbol !== undefined &&
+					args[i].aliasSymbol === defaultValue.aliasSymbol &&
+					!defaultValue.aliasTypeArguments &&
+					!args[i].aliasTypeArguments;
 				if (
 					args[i] === defaultValue ||
+					sameAlias ||
 					(defaultValue !== undefined && args[i] === parameter)
 				) {
 					argsWithoutDefaults.length--;
@@ -1491,7 +1499,13 @@ const collectTypes = ({ program, checker, options }) => {
 						checker.getSymbolAtLocation(typeName)
 					);
 					const targetType = getTypeOfSymbol(targetSymbol, false);
+					// WHY: a generic class named without type arguments resolves to its
+					// defaults; the declared type would print its own type parameters.
+					const bareGenericReference =
+						typeArgumentsTypes.length === 0 &&
+						/** @type {ts.TypeReference} */ (type).target === targetType;
 					if (
+						!bareGenericReference &&
 						typeArgumentsTypes.every(Boolean) &&
 						targetType &&
 						targetType !== type
