@@ -264,6 +264,12 @@ const IMPROVED_CASES = [
 		'function f(e,n,t){var b=n[t];console.log(t in e,b)}function g(c){var x=c;return x+=1,x*=3}function h(c){var z=c+1;return[2*z,z]}f({p:1},{p:2},"p"),console.log(g(2),h(3));'
 	],
 	[
+		"a call in a loop of a local function with an empty body, as its arguments",
+		"function g(x) { function f(a) {} for (var i = 0; i < 2; i++) f(x.y); while (f()) x.z(); return f; } console.log(g({ y: 1 })());",
+		{ compress: {}, mangle: false },
+		"function g(x){function f(a){}for(var i=0;i<2;i++)x.y;return f}console.log(g({y:1})());"
+	],
+	[
 		"an assignment to a `var` declared before another's value, as declared with it",
 		"function f(o) { var a, b = o.y; a = o.x; console.log(a, b, a, b); } f({ x: 1, y: 2 });",
 		{ compress: {}, mangle: false },
@@ -1964,6 +1970,11 @@ const ARGUMENTS_KEPT_CASES = [
 // Each prints one thing and terser's output another, under the options named.
 /** @type {[string, string, import("terser").MinifyOptions][]} */
 const CORRECTED_CASES = [
+	[
+		"a call of a function with an empty body whose parameters run a default or destructure",
+		'function g(x) { function f(a = console.log("D")) {} function h({ a }) {} f(); f(); try { h(null); } catch (e) { console.log("T"); } try { h(); } catch (e) { console.log("U"); } return 1; } console.log(g());',
+		{ compress: {}, mangle: false }
+	],
 	[
 		"a call `delete` takes, inlined to the variable or property it returns",
 		"!function (o) { function q(t) { return t; } var b = { f: function () {} }; console.log(delete q(o.p), o.p, delete q(o?.r), o.r, delete q(b), typeof b); }({ p: 1, r: 2 });",
