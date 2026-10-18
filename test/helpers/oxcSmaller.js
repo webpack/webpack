@@ -517,8 +517,6 @@ const OXC_SMALLER_BY_REASON = [
 		[
 			"oxc minifier: peephole/esbuild.rs:2274",
 			"swc exec: indirect_eval_1",
-			"swc exec: terser_destructuring_mangle_destructuring_decl",
-			"swc exec: terser_destructuring_mangle_destructuring_decl_collapse_vars",
 			"swc exec: terser_issue_1466_different_variable_in_multiple_for_of",
 			"swc exec: terser_issue_1466_same_variable_in_multiple_for_of",
 			"swc exec: terser_issue_1466_same_variable_in_multiple_for_of_sequences_const",
@@ -529,8 +527,6 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: collapse_vars/collapse_vars_object",
 			"terser compress: collapse_vars/shadowed_variable",
 			"terser compress: destructuring/destructuring_remove_unused_2",
-			"terser compress: destructuring/mangle_destructuring_decl",
-			"terser compress: destructuring/mangle_destructuring_decl_collapse_vars",
 			"terser compress: harmony/module_enabled",
 			"terser compress: issue-1466/different_variable_in_multiple_forOf",
 			"terser compress: issue-1466/same_variable_in_multiple_forOf",
