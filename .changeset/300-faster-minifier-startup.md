@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Speed up startup, sharing the compile cache with minimizer workers.
+Speed up startup and CSS minification, sharing the compile cache with workers.
