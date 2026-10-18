@@ -37,6 +37,17 @@ describe("the XML tool comparison", () => {
 		expect(once).toContain('<style>path{stroke:#fff}</style>');
 		expect(await minify(once)).toBe(once);
 	});
+	it.each(["symbols", "shapes"])("should compare SVG %s through the XML printer", async (step) => {
+		const source = '<svg xmlns="http://www.w3.org/2000/svg"><symbol id="z"><line x1="10" y1="20" x2="10" y2="30"/></symbol><symbol id="a"/></svg>';
+		const tool = toolsFor("minify", source).find((tool) => tool.name === `webpack (SVG ${step} cleanup)`);
+		expect(tool).toBeDefined();
+		const minify = await /** @type {NonNullable<typeof tool>} */ (tool).create();
+		const once = await minify(source);
+		expect(once.indexOf('id="a"')).toBeLessThan(once.indexOf('id="z"'));
+		expect(once).toContain(step === "shapes" ? '<path d="M10 20V30"/>' : '<line x1="10" x2="10" y1="20" y2="30"/>');
+		expect(await minify(once)).toBe(once);
+	});
+
 	it("should start nothing when the script is required rather than run", () => {
 		expect(installed).toHaveBeenCalledTimes(0);
 	});
@@ -110,7 +121,7 @@ describe("the XML tool comparison", () => {
 	it("should invoke SVGO with the row's pass count and return its data", async () => {
 		mockOptimize.mockClear();
 		mockLoad.mockClear();
-		const tools = toolsFor("minify", "<svg/>").filter((tool) => tool.name.startsWith("svgo"));
+		const tools = toolsFor("minify", "<svg/>").filter((tool) => tool.name === "svgo" || tool.name === "svgo (multipass)");
 		for (const tool of tools) {
 			const minify = await tool.create();
 			expect(await minify("<svg/>")).toBe("<svg/>");
@@ -120,6 +131,15 @@ describe("the XML tool comparison", () => {
 			["<svg/>", { multipass: true }]
 		]);
 		expect(mockLoad.mock.calls).toEqual([["svgo"], ["svgo"]]);
+	});
+
+	 it("should preserve externally referenced sprite IDs in the separate comparison row", async () => {
+		mockOptimize.mockClear();
+		const tool = toolsFor("minify", "<svg/>").find((tool) => tool.name === "svgo (preserve IDs)");
+		const minify = await /** @type {NonNullable<typeof tool>} */ (tool).create();
+		expect(await minify("<svg/>")).toBe("<svg/>");
+		expect(mockOptimize).toHaveBeenCalledWith("<svg/>", { multipass: true, plugins: [{ name: "preset-default", params: { overrides: { cleanupIds: false, removeHiddenElems: false } } }] });
+		expect(toolsFor("minify", "<root/>").some((tool) => tool.name === "svgo (preserve IDs)")).toBe(false);
 	});
 
 	it("should reuse parsed entity-backed attribute values in its canonical form", () => {

@@ -3461,6 +3461,11 @@ export interface OptimizationMinimizeXml {
 	 */
 	collapseWhitespace?: boolean;
 	/**
+	 * Convert leaf SVG lines, polylines and polygons to shorter paths with identical coordinates and vertices. Off by default because consumers can observe element types; skip documents with stylesheets, scripts, animations or DTDs.
+	 * @since 5.113.0
+	 */
+	convertShapes?: boolean;
+	/**
 	 * Remove elements and attributes in known editor namespaces within SVG, preserving namespace declarations and unrelated XML data. Off by default because editor data may be needed to edit the image.
 	 * @since 5.113.0
 	 */
@@ -3505,6 +3510,11 @@ export interface OptimizationMinimizeXml {
 	 * @since 5.112.0
 	 */
 	sortAttributes?: boolean;
+	/**
+	 * Sort adjacent SVG symbol definitions by ID, preserving IDs and references. Off by default because consumers can observe definition order; skip documents with stylesheets, scripts, animations, duplicate IDs or DTDs.
+	 * @since 5.113.0
+	 */
+	sortSymbols?: boolean;
 }
 
 /**

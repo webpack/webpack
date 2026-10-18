@@ -19,6 +19,7 @@ const NAMES = [
 	"paths",
 	"containers",
 	"compact",
+	"symbols",
 	"constraints"
 ];
 

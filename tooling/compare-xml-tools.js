@@ -286,7 +286,7 @@ const printXml = (xml, mode) =>
 		new SourceProcessor().process(xml, { xml: true, mode })
 	).code;
 
-/** @typedef {Pick<import("../lib/html/syntax-printer").HtmlProcessOptions, "sortAttributes" | "removeSvgMetadata" | "removeSvgEditorData" | "removeUnusedSvgNamespaces" | "removeEmptyAttributes" | "removeEmptyElements" | "collapseWhitespace" | "shortenSvgNumbers" | "shortenSvgColors" | "shortenSvgPathData">} XmlPrintOptions */
+/** @typedef {Pick<import("../lib/html/syntax-printer").HtmlProcessOptions, "sortAttributes" | "sortSvgSymbols" | "convertSvgShapes" | "removeSvgMetadata" | "removeSvgEditorData" | "removeUnusedSvgNamespaces" | "removeEmptyAttributes" | "removeEmptyElements" | "collapseWhitespace" | "shortenSvgNumbers" | "shortenSvgColors" | "shortenSvgPathData">} XmlPrintOptions */
 
 /** @type {[string, XmlPrintOptions][]} */
 const PRESETS = [
@@ -329,7 +329,7 @@ const PRESETS = [
 			shortenSvgNumbers: true
 		}
 	],
-	...["colors", "paths", "containers"].map(
+	...["colors", "paths", "containers", "symbols", "shapes"].map(
 		(step, index) =>
 			/** @type {[string, XmlPrintOptions]} */ ([
 				`svg-${step}`,
@@ -343,7 +343,9 @@ const PRESETS = [
 					shortenSvgNumbers: true,
 					shortenSvgColors: true,
 					shortenSvgPathData: index >= 1,
-					removeEmptyElements: index >= 2
+					removeEmptyElements: index >= 2,
+					sortSvgSymbols: index >= 3,
+					convertSvgShapes: index >= 4
 				}
 			])
 	)
@@ -572,7 +574,7 @@ const TOOLS = [
 				}).code;
 		}
 	},
-	...PRESETS.slice(-3).map(([name, options]) => ({
+	...PRESETS.slice(6).map(([name, options]) => ({
 		name: `webpack (SVG ${name.slice(4)} cleanup)`,
 		stage: /** @type {const} */ ("minify"),
 		create: () => {
@@ -602,6 +604,25 @@ const TOOLS = [
 		create: () => {
 			const { optimize } = load("svgo");
 			return (xml) => optimize(xml, { multipass: true }).data;
+		}
+	},
+	{
+		name: "svgo (preserve IDs)",
+		stage: "minify",
+		create: () => {
+			const { optimize } = load("svgo");
+			return (xml) =>
+				optimize(xml, {
+					multipass: true,
+					plugins: [
+						{
+							name: "preset-default",
+							params: {
+								overrides: { cleanupIds: false, removeHiddenElems: false }
+							}
+						}
+					]
+				}).data;
 		}
 	},
 	{
@@ -636,7 +657,7 @@ const TOOLS = [
 
 // A tool built for one vocabulary, whose output for any other document says
 // nothing about how it reads XML: svgo drops what an SVG renderer ignores.
-const SVG_ONLY = new Set(["svgo", "svgo (multipass)"]);
+const SVG_ONLY = new Set(["svgo", "svgo (multipass)", "svgo (preserve IDs)"]);
 
 const STYLE_ELEMENT = /(?:^|:)style$/;
 

@@ -12906,6 +12906,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "optimization-minimize-options-xml-convert-shapes": Object {
+    "configs": Array [
+      Object {
+        "description": "Convert leaf SVG lines, polylines and polygons to shorter paths with identical coordinates and vertices. Off by default because consumers can observe element types; skip documents with stylesheets, scripts, animations or DTDs.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.xml.convertShapes",
+        "type": "boolean",
+      },
+    ],
+    "description": "Convert leaf SVG lines, polylines and polygons to shorter paths with identical coordinates and vertices. Off by default because consumers can observe element types; skip documents with stylesheets, scripts, animations or DTDs.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "optimization-minimize-options-xml-remove-editor-data": Object {
     "configs": Array [
       Object {
@@ -13023,6 +13036,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "optimization-minimize-options-xml-sort-symbols": Object {
+    "configs": Array [
+      Object {
+        "description": "Sort adjacent SVG symbol definitions by ID, preserving IDs and references. Off by default because consumers can observe definition order; skip documents with stylesheets, scripts, animations, duplicate IDs or DTDs.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.xml.sortSymbols",
+        "type": "boolean",
+      },
+    ],
+    "description": "Sort adjacent SVG symbol definitions by ID, preserving IDs and references. Off by default because consumers can observe definition order; skip documents with stylesheets, scripts, animations, duplicate IDs or DTDs.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "optimization-minimize-xml": Object {
     "configs": Array [
       Object {
@@ -13049,6 +13075,19 @@ Object {
       },
     ],
     "description": "Remove whitespace-only text in known SVG containers, preserving text content, foreign content and \`xml:space\`. Off by default because scripts can observe whitespace nodes.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-xml-convert-shapes": Object {
+    "configs": Array [
+      Object {
+        "description": "Convert leaf SVG lines, polylines and polygons to shorter paths with identical coordinates and vertices. Off by default because consumers can observe element types; skip documents with stylesheets, scripts, animations or DTDs.",
+        "multiple": false,
+        "path": "optimization.minimize.xml.convertShapes",
+        "type": "boolean",
+      },
+    ],
+    "description": "Convert leaf SVG lines, polylines and polygons to shorter paths with identical coordinates and vertices. Off by default because consumers can observe element types; skip documents with stylesheets, scripts, animations or DTDs.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -13166,6 +13205,19 @@ Object {
       },
     ],
     "description": "Print attributes with the document's commonest names first, breaking ties by case-sensitive name. Off by default: consumers observing attribute order see the new order.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-xml-sort-symbols": Object {
+    "configs": Array [
+      Object {
+        "description": "Sort adjacent SVG symbol definitions by ID, preserving IDs and references. Off by default because consumers can observe definition order; skip documents with stylesheets, scripts, animations, duplicate IDs or DTDs.",
+        "multiple": false,
+        "path": "optimization.minimize.xml.sortSymbols",
+        "type": "boolean",
+      },
+    ],
+    "description": "Sort adjacent SVG symbol definitions by ID, preserving IDs and references. Off by default because consumers can observe definition order; skip documents with stylesheets, scripts, animations, duplicate IDs or DTDs.",
     "multiple": false,
     "simpleType": "boolean",
   },

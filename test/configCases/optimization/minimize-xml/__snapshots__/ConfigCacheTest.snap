@@ -132,4 +132,6 @@ exports[`ConfigCacheTestCases optimization minimize-xml minimize-xml should comp
 </svg>"
 `;
 
+exports[`ConfigCacheTestCases optimization minimize-xml minimize-xml should compile: symbols 1`] = `"<svg viewBox=\\"0 0 40 40\\" height=\\"40\\" width=\\"40\\" xmlns=\\"http://www.w3.org/2000/svg\\"><defs><symbol viewBox=\\"0 0 40 40\\" id=\\"a\\"><path d=\\"M5 5H35V35H5z\\" fill=\\"red\\"/></symbol><symbol viewBox=\\"0 0 40 40\\" id=\\"z\\"><path d=\\"M10 10L30 30\\" stroke=\\"black\\" stroke-width=\\"2\\"/></symbol></defs><use href=\\"#a\\"/><use href=\\"#z\\"/></svg>"`;
+
 exports[`ConfigCacheTestCases optimization minimize-xml minimize-xml should compile: whitespace 1`] = `"<svg viewBox=\\"0 0 10 10\\" xmlns=\\"http://www.w3.org/2000/svg\\" xmlns:data=\\"urn:application\\" xmlns:e=\\"http://www.inkscape.org/namespaces/inkscape\\"><title>Accessible title</title><desc>Accessible description</desc><metadata><path d=\\"M1 1H3V3Z\\" id=\\"metadata-shape\\"/></metadata><e:view><path d=\\"M4 4H6V6Z\\" id=\\"editor-shape\\"/></e:view><use href=\\"#metadata-shape\\"/><use href=\\"#editor-shape\\"/><defs><path d=\\"M0 0h10v10z\\" id=\\"shape\\"/></defs><use href=\\"#shape\\" data:flag=\\"keep\\" style=\\"fill:red\\"/><text>]]&gt;</text></svg>"`;

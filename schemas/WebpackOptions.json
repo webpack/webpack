@@ -4502,6 +4502,11 @@
           "type": "boolean",
           "added": "5.113.0"
         },
+        "convertShapes": {
+          "description": "Convert leaf SVG lines, polylines and polygons to shorter paths with identical coordinates and vertices. Off by default because consumers can observe element types; skip documents with stylesheets, scripts, animations or DTDs.",
+          "type": "boolean",
+          "added": "5.113.0"
+        },
         "removeEditorData": {
           "description": "Remove elements and attributes in known editor namespaces within SVG, preserving namespace declarations and unrelated XML data. Off by default because editor data may be needed to edit the image.",
           "type": "boolean",
@@ -4546,6 +4551,11 @@
           "description": "Print attributes with the document's commonest names first, breaking ties by case-sensitive name. Off by default: consumers observing attribute order see the new order.",
           "type": "boolean",
           "added": "5.112.0"
+        },
+        "sortSymbols": {
+          "description": "Sort adjacent SVG symbol definitions by ID, preserving IDs and references. Off by default because consumers can observe definition order; skip documents with stylesheets, scripts, animations, duplicate IDs or DTDs.",
+          "type": "boolean",
+          "added": "5.113.0"
         }
       },
       "experimental": true,

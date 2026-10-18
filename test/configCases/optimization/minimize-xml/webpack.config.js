@@ -136,6 +136,14 @@ module.exports = [
 			optimization: { minimizeOptions: { xml } }
 		})
 	),
+	config("symbols", {
+		entry: "./symbols.js",
+		optimization: {
+			minimizeOptions: {
+				xml: { sortSymbols: true, convertShapes: true, sortAttributes: true }
+			}
+		}
+	}),
 	config("constraints", {
 		entry: "./constraints.js",
 		optimization: {
@@ -146,6 +154,8 @@ module.exports = [
 					shortenPathData: true,
 					removeMetadata: true,
 					removeEditorData: true,
+					sortSymbols: true,
+					convertShapes: true,
 					removeEmptyElements: true
 				}
 			}

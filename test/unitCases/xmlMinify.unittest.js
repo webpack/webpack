@@ -15,6 +15,18 @@ const SOURCE = `<?xml version="1.0" encoding="UTF-8"?>
 `;
 
 describe("xmlMinify", () => {
+	it.each([false, true])("should forward SVG shape conversion with enabled=%s", async (convertShapes) => {
+		const source = '<svg xmlns="http://www.w3.org/2000/svg"><line x1="10" y1="20" x2="10" y2="30"/></svg>';
+		const { code } = await xmlMinify({ 'shape.svg': source }, undefined, { convertShapes });
+		expect(code).toBe(convertShapes ? source.replace('<line x1="10" y1="20" x2="10" y2="30"/>', '<path d="M10 20V30"/>') : source);
+		expect((await xmlMinify({ 'shape.svg': code }, undefined, { convertShapes })).code).toBe(code);
+	});
+	 it.each([false, true])("should forward SVG symbol sorting with enabled=%s", async (sortSymbols) => {
+		const source = '<svg xmlns="http://www.w3.org/2000/svg"><symbol id="z"/><symbol id="a"/><use href="#z"/></svg>';
+		const { code } = await xmlMinify({ 'sprite.svg': source }, undefined, { sortSymbols });
+		expect(code).toBe(sortSymbols ? source.replace('<symbol id="z"/><symbol id="a"/>', '<symbol id="a"/><symbol id="z"/>') : source);
+		expect((await xmlMinify({ 'sprite.svg': code }, undefined, { sortSymbols })).code).toBe(code);
+	});
 	it.each([false, true])("should forward presentation, path, transform and container cleanup with enabled=%s", async (enabled) => {
 		const source = '<svg xmlns="http://www.w3.org/2000/svg"><g/><path fill="#ff0000" d="M000.00,000.00L001.00,002.00" transform="scale(001.00, +001.00)"/><style>path { stroke: #ffffff }</style></svg>';
 		const options = { shortenColors: enabled, shortenNumbers: enabled, shortenPathData: enabled, removeEmptyElements: enabled };

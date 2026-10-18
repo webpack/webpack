@@ -13181,6 +13181,8 @@ declare interface HtmlPrintOptions {
 	removeRedundantAttributes?: boolean | "all" | "smart";
 	sortAttributes?: boolean;
 	sortTokenLists?: boolean;
+	sortSvgSymbols?: boolean;
+	convertSvgShapes?: boolean;
 	removeImpliedTags?: boolean | "all" | "smart";
 	renderEmbeddedSource?: (
 		source: string,
@@ -13288,6 +13290,16 @@ declare interface HtmlProcessOptions {
 	 * print every token list the DOM reads as a set (`class`, `rel`, `part`, …) in token order (default false)
 	 */
 	sortTokenLists?: boolean;
+
+	/**
+	 * when minifying XML, convert leaf SVG lines, polylines and polygons to shorter paths without changing coordinates or vertices (default false)
+	 */
+	convertSvgShapes?: boolean;
+
+	/**
+	 * when minifying XML, sort adjacent SVG symbol definitions by ID, preserving IDs and references unless document dependencies can observe order (default false)
+	 */
+	sortSvgSymbols?: boolean;
 
 	/**
 	 * drop an attribute whose value is the element's own default; `true` is `"smart"`, and `"all"` also drops the spec defaults a selector can match, and with them a value naming no keyword where that says the same (default false)
@@ -24920,6 +24932,12 @@ declare interface OptimizationMinimizeXml {
 	collapseWhitespace?: boolean;
 
 	/**
+	 * Convert leaf SVG lines, polylines and polygons to shorter paths with identical coordinates and vertices. Off by default because consumers can observe element types; skip documents with stylesheets, scripts, animations or DTDs.
+	 * @since 5.113.0
+	 */
+	convertShapes?: boolean;
+
+	/**
 	 * Remove elements and attributes in known editor namespaces within SVG, preserving namespace declarations and unrelated XML data. Off by default because editor data may be needed to edit the image.
 	 * @since 5.113.0
 	 */
@@ -24972,6 +24990,12 @@ declare interface OptimizationMinimizeXml {
 	 * @since 5.112.0
 	 */
 	sortAttributes?: boolean;
+
+	/**
+	 * Sort adjacent SVG symbol definitions by ID, preserving IDs and references. Off by default because consumers can observe definition order; skip documents with stylesheets, scripts, animations, duplicate IDs or DTDs.
+	 * @since 5.113.0
+	 */
+	sortSymbols?: boolean;
 }
 
 /**
