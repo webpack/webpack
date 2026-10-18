@@ -516,7 +516,14 @@ jobs:
       # The version comes from .github/runtimes/Dockerfile, which Dependabot bumps.
       - name: Read the ${{ matrix.runtime }} version
         id: runtime
-        run: echo "version=$(sed -n 's/^FROM [^:]*:\(.*\) AS ${{ matrix.runtime }}$/\1/p' .github/runtimes/Dockerfile)" >> "$GITHUB_OUTPUT"
+        # An empty version would let setup-bun fall back to the latest release.
+        run: |
+          version="$(sed -n 's/^FROM [^:]*:\(.*\) AS ${{ matrix.runtime }}$/\1/p' .github/runtimes/Dockerfile)"
+          if [ -z "$version" ]; then
+            echo "No ${{ matrix.runtime }} stage in .github/runtimes/Dockerfile" >&2
+            exit 1
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
 
       - name: Use Deno
         if: matrix.runtime == 'deno'
