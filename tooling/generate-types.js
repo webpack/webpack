@@ -1763,9 +1763,7 @@ const collectTypes = ({ program, checker, options }) => {
 					// the same declaration sat in the package's entry file.
 					if (verbose) {
 						console.log(
-							`${parseName(type).join(
-								" "
-							)} is exported with \`export =\` from ${
+							`${parseName(type).join(" ")} is exported with \`export =\` from ${
 								/** @type {ts.SourceFile} */ (externalSource).fileName
 							}, inlining it`
 						);
@@ -3026,11 +3024,7 @@ const generateDeclarations = ({
 											.map((t) => getCode(t, new Set(), "in type args"))
 											.join(", ")}>`
 									: ""
-							} = abstract new ${sigToString(
-								parsed.constructors[0],
-								typeArgs,
-								"arrow"
-							)};`;
+							} = abstract new ${sigToString(parsed.constructors[0], typeArgs, "arrow")};`;
 						}
 						return `${parsed.documentation}declare interface ${variable}${
 							parsed.typeParameters
@@ -3063,11 +3057,7 @@ const generateDeclarations = ({
 					return `(${sigToString(parsed.calls[0], typeArgs, "arrow")})`;
 				}
 				if (isAbstractConstructor(parsed)) {
-					return `(abstract new ${sigToString(
-						parsed.constructors[0],
-						typeArgs,
-						"arrow"
-					)})`;
+					return `(abstract new ${sigToString(parsed.constructors[0], typeArgs, "arrow")})`;
 				}
 				return `{ ${getInterfaceItems(type, parsed, typeArgs).join("; ")} }`;
 			}
