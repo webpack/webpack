@@ -6373,6 +6373,15 @@ describe("SourceProcessor — removeEmptyElements reads the output", () => {
 		expect(minify("<div><!--c--></div>")).toBe("");
 	});
 
+	it.each([
+		["<p>x</p><span></span><form></form>", "<p>x<form></form>"],
+		["<p>a<hr></p><div>x</div>", "<p>a<hr><p><div>x</div>"],
+		["<p>a<hr></p> <div>x</div>", "<p>a<hr><p></p> <div>x</div>"]
+	])("omits the end tags in %s that its own output would", (body, printed) => {
+		expect(minify(body)).toBe(printed);
+		expect(minify(printed)).toBe(printed);
+	});
+
 	it("keeps one that spells an attribute, whatever it holds", () => {
 		expect(minify("<div><span></span><span id=k></span></div>")).toBe(
 			"<div><span id=k></span></div>"
@@ -7410,7 +7419,7 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 		});
 
 		expect(now.code).toBe(
-			"<p>x<style>.a{--x:f(</style><style>.b{color:red}</style><script>1</script>"
+			"<p>x</p><style>.a{--x:f(</style><style>.b{color:red}</style><script>1</script>"
 		);
 		expect(later.code).toBe(now.code);
 		// The second print reads the first one's answers rather than asking again.
