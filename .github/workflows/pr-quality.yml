@@ -10,6 +10,8 @@ on:
     types: [opened, reopened]
 
 concurrency:
+  # Keyed on the pull request: under `pull_request_target` the ref is the base
+  # branch, which every pull request shares.
   group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
   cancel-in-progress: true
 

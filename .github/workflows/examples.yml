@@ -7,6 +7,8 @@ on:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
+  # Each run regenerates every example from the current branch, so a newer
+  # run makes an older one redundant.
   cancel-in-progress: true
 
 jobs:
