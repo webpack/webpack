@@ -655,7 +655,7 @@ const installHelpers = (generics) => {
 	// Elements whose empty, attribute-less form renders nothing and is read by
 	// nothing: no box, marker, margin, widget or generated text of their own.
 	const RENDERS_NOTHING_EMPTY = new Set(
-		"a abbr address article aside b bdi bdo cite code data del dfn div em footer header i ins kbd label main mark nav s samp section small span strong sub sup time title u var base link meta".split(
+		"a abbr address article aside b bdi bdo cite code data del dfn div em footer header i ins kbd label main mark nav s samp script section small span strong style sub sup time title u var base link meta".split(
 			" "
 		)
 	);
@@ -809,13 +809,17 @@ const installHelpers = (generics) => {
 			if (element.namespaceURI !== NS_HTML || element.localName !== "style") {
 				return false;
 			}
-			// Only whitespace and comments may stand between two sheets a merge joins.
+			// Only whitespace, comments and what prints nothing stand between two
+			// sheets a merge joins.
 			let previous = element.previousSibling;
 			while (
 				previous !== null &&
 				(previous.nodeType === Node.COMMENT_NODE ||
 					(previous.nodeType === Node.TEXT_NODE &&
-						/^[\t\n\f\r ]*$/.test(previous.nodeValue || "")))
+						/^[\t\n\f\r ]*$/.test(previous.nodeValue || "")) ||
+					(previous.nodeType === Node.ELEMENT_NODE &&
+						relaxedSet.has("empty-elements") &&
+						isEmptyElement(/** @type {Element} */ (previous))))
 			) {
 				previous = previous.previousSibling;
 			}
