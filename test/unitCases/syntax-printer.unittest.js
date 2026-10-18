@@ -270,6 +270,12 @@ const IMPROVED_CASES = [
 		'function o(p,req){var sl=req();for(var t in{a:1});return[function(k){return sl(h(k))},function(k){return p[h(k)]},function(k){return t[h(k)]}]}function h(k){return k}console.log(o({a:4},function(){return function(x){return x+1}}).map(f=>f("a")).join());'
 	],
 	[
+		"a name read only as the value of the pattern declared after it, unpacked in its place",
+		"function f(o) { let a = o.a || {}; let { x, y } = a; return x + y; } function g(o) { var b = o.b, [p, q] = b; return p * q; } console.log(f({ a: { x: 1, y: 2 } }), g({ b: [3, 4] }));",
+		{ compress: {}, mangle: false },
+		"function f(o){let{x:x,y:y}=o.a||{};return x+y}function g(o){var[p,q]=o.b;return p*q}console.log(f({a:{x:1,y:2}}),g({b:[3,4]}));"
+	],
+	[
 		"a call in a loop of a local function with an empty body, as its arguments",
 		"function g(x) { function f(a) {} for (var i = 0; i < 2; i++) f(x.y); while (f()) x.z(); return f; } console.log(g({ y: 1 })());",
 		{ compress: {}, mangle: false },
