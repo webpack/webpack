@@ -1302,6 +1302,14 @@ const rivalSmallerSeen = new Set();
  * @type {Record<string, string>}
  */
 const IMPROVED_YET_BIGGER = {
+	"pure_getters/set_immutable_5 (its own options)":
+		"13 bytes fewer, 1 more gzipped: `console.log(c?\"FAIL\":\"PASS\")` merges two calls a file this small compresses alike",
+	"fixture/issues/11755/input.js (its own options)":
+		"5 bytes more, 11 more gzipped: the calls merged into `console.log(100===r?…)` keep `collapse_vars` from folding `r` into the test",
+	"fixture/issues/11755/input.js (the default minimizer's options)":
+		"13 bytes fewer, 2 more gzipped: the calls merged into `console.log(100===n?…)` keep `collapse_vars` from folding `n` into the test",
+	"fixture/issues/12298/input.js (the default minimizer's options)":
+		"13 bytes fewer, 5 more gzipped: `console.log(1===o?\"A\":\"C\")` breaks the `console.log(\"` runs of the functions around it",
 	"collapse_vars/var_defs (a module mangled at its top level)":
 		"22 bytes more, 17 more gzipped: the arguments read in place fold a pass sooner, leaving `(r=\"10\")*r-r` a third pass would fold",
 	"collapse_vars/modified (a module mangled at its top level)":
@@ -1470,8 +1478,6 @@ const IMPROVED_YET_BIGGER = {
 		"1 byte fewer, 3 more gzipped: `\"\u2026\"+(x,1)` folded to `(x,\"\u20261\")` moves the sequence ahead of the string gzip matched",
 	"11.4.1-4.a-16.js (the default minimizer's options)":
 		"14 bytes fewer, 1 more gzipped: `delete arguments` folded to `!1`, which the code around it repeats less",
-	"scope-lex-close-dflt.js (the default minimizer's options)":
-		"23 bytes fewer, 1 more gzipped: the block's `let` read into the function returning it breaks the `probeDefault` runs gzip matched",
 	"S12.14_A11_T2.js (the default minimizer's options)":
 		"34 bytes fewer, 3 more gzipped: code after a `try` that always leaves dropped, breaking the loop bodies' repeated runs",
 	"S12.14_A7_T1.js (the default minimizer's options)":

@@ -19,7 +19,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/12301/input.js",
 			"swc minifier: fixture/issues/2262/1/input.js",
 			"swc minifier: fixture/issues/6175/1/input.js",
-			"swc minifier: fixture/issues/8974/input.js",
 			"swc minifier: fixture/issues/9610-nested-defaults/input.js",
 			"swc minifier: fixture/issues/do-while-false-terminal-jump/completion/unused-prefix-break/input.js",
 			"swc minifier: fixture/issues/do-while-false-terminal-jump/completion/unused-prefix-continue/input.js",
@@ -264,7 +263,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/11512-exhaustive/iife-default-side-effect/input.js",
 			"swc minifier: fixture/issues/11512/input.js",
 			"swc minifier: fixture/issues/11871/input.js",
-			"swc minifier: fixture/issues/11983/input.js",
 			"swc minifier: fixture/issues/12128/input.js",
 			"swc minifier: fixture/issues/12177/input.js",
 			"swc minifier: fixture/issues/12219/iife_rest_control_primitive/input.js",
@@ -327,7 +325,9 @@ const SWC_SMALLER_BY_REASON = [
 		"webpack writes the same program in a spelling longer or compressing worse than swc's: `,` where swc keeps `;` between statements, operand order, `{0}` for an empty body",
 		[
 			"swc minifier: fixture/issues/11084/input.js",
+			"swc minifier: fixture/issues/11368/input.js",
 			"swc minifier: fixture/issues/11684/identifier-aliases/input.js",
+			"swc minifier: fixture/issues/11755/input.js",
 			"swc minifier: fixture/issues/12282/call/input.js",
 			"swc minifier: fixture/issues/3256/1/input.js",
 			"swc minifier: fixture/issues/5588/input.js",
@@ -368,6 +368,8 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: loops/issue_186_beautify_braces",
 			"terser compress: loops/issue_186_braces",
 			"terser compress: properties/join_object_assignments_NaN_1",
+			"terser compress: pure_getters/set_immutable_5",
+			"terser compress: reduce_vars/issue_2670",
 			"terser compress: reduce_vars/multi_def_2",
 			"terser compress: rename/function_iife_catch"
 		]
@@ -419,15 +421,12 @@ const SWC_SMALLER_BY_REASON = [
 	[
 		"swc writes `const` as `let`, a byte shorter and mergeable with its neighbors, and moves leading `var`s into a later declaration",
 		[
-			"swc minifier: fixture/issues/10824/input.js",
-			"swc minifier: fixture/issues/7783/1/input.js",
 			"swc minifier: fixture/issues/8907/input.js",
 			"swc minifier: fixture/issues/vercel/002/input.js",
 			"swc minifier: fixture/issues/vercel/003/input.js",
 			"swc minifier: fixture/issues/vercel/004/input.js",
 			"swc minifier: fixture/projects/mootools/6/input.js",
 			"swc minifier: fixture/projects/mootools/7/input.js",
-			"swc minifier: fixture/projects/wmr/archive-1/chunks/json.5609c5fa/input.js",
 			"terser compress: block-scope/do_not_hoist_let",
 			"terser compress: collapse_vars/switch_case_2",
 			"terser compress: collapse_vars/switch_case_3",
@@ -492,7 +491,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/8465/input.js",
 			"swc minifier: fixture/projects/wmr/archive-1/chunks/alias-outside.6e8773c7/input.js",
 			"swc minifier: fixture/projects/wmr/archive-1/chunks/index.5a544c41/input.js",
-			"swc minifier: fixture/pure-annotations-not-member-pattern/input.js",
 			"swc minifier: full/helpers/1/input.js",
 			"terser compress: export/issue_2126",
 			"terser compress: export/redirection"
@@ -510,7 +508,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/8737/input.js",
 			"swc minifier: fixture/issues/9610-methods/input.js",
 			"swc minifier: fixture/member_expr/callee/input.js",
-			"swc minifier: fixture/projects/wmr/archive-1/chunks/index.bf24abaa/input.js",
 			"swc minifier: fixture/projects/wmr/archive-1/chunks/index.ddc4110d/input.js",
 			"terser compress: hoist_props/direct_access_2"
 		]
@@ -607,7 +604,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/next/33265/static/chunks/pages/index-cb36c1bf7f830e3c/input.js",
 			"swc minifier: fixture/next/33458/static/chunks/pages/spread-be872e60d968a0f7/input.js",
 			"swc minifier: fixture/next/36127/2/3/input.js",
-			"swc minifier: fixture/next/41527/1/input.js",
 			"swc minifier: fixture/next/46887/input.js",
 			"swc minifier: fixture/next/56408/input.js",
 			"swc minifier: fixture/next/66237/input.js",
