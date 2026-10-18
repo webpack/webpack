@@ -1521,7 +1521,6 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 			"S15.4.1_A1.1_T1.js (the default minimizer's options)",
 			"S15.4.1_A1.1_T3.js (the default minimizer's options)",
 			"S15.4.1_A3.1_T1.js (the default minimizer's options)",
-			"array-constructor/array_constructor_unsafe (its own options)",
 			"fixture/issues/12201/input.js (its own options)",
 			"fixture/issues/12201/input.js (the default minimizer's options)",
 			"terser_array_constructor_unsafe (its own options)"

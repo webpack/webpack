@@ -8,11 +8,17 @@ import { fileURLToPath, pathToFileURL } from "url";
 import vm from "vm";
 import {
 	InstrumentHooks,
+	MARKER_TYPE_BENCHMARK_END,
+	MARKER_TYPE_BENCHMARK_START,
+	calculateQuantiles,
 	getCodspeedRunnerMode,
 	getGitDir,
 	mongoMeasurement,
+	msToNs,
+	msToS,
 	setupCore,
-	teardownCore
+	teardownCore,
+	writeWalltimeResults
 } from "@codspeed/core";
 import { Bench, hrtimeNow } from "tinybench";
 
@@ -25,6 +31,7 @@ import { Bench, hrtimeNow } from "tinybench";
  * } from "tinybench"
  */
 /** @typedef {TinybenchTask & { collectBy?: string }} Task */
+/** @import { Benchmark } from "@codspeed/core" */
 
 /** @import Webpack, { Configuration, Stats, Watching } from "../../.." */
 /**
@@ -263,6 +270,23 @@ function getTaskUri(bench, taskName, callingFile) {
 }
 
 /**
+ * @param {Fn} fn function
+ * @param {boolean} isAsync true if async function, otherwise false
+ * @returns {() => void} function wrapped in codspeed root frame
+ */
+const wrapFunctionWithFrame = (fn, isAsync) => {
+	if (isAsync) {
+		return async function __codspeed_root_frame__() {
+			await fn();
+		};
+	}
+
+	return function __codspeed_root_frame__() {
+		fn();
+	};
+};
+
+/**
  * @param {Bench} bench bench
  * @returns {Promise<Bench>} modifier bench
  */
@@ -288,6 +312,15 @@ const withCodSpeed = async (bench) => {
 		if (releaseClosuresAfterMeasure) {
 			return rawAdd.bind(bench)(name, NO_OP_FN, {});
 		}
+		if (codspeedRunnerMode === "walltime") {
+			// Walltime samples outside this frame are not attributed to the bench.
+			const isAsync = fn.constructor.name === "AsyncFunction";
+			return rawAdd.bind(bench)(
+				name,
+				wrapFunctionWithFrame(fn, isAsync),
+				options
+			);
+		}
 		return rawAdd.bind(bench)(name, fn, options);
 	};
 	const callingFile = getCallingFile();
@@ -309,23 +342,6 @@ const withCodSpeed = async (bench) => {
 			teardownCore();
 			console.log(`[CodSpeed] Done running ${bench.tasks.length} benches.`);
 			return bench.tasks;
-		};
-
-		/**
-		 * @param {Fn} fn function
-		 * @param {boolean} isAsync true if async function, otherwise false
-		 * @returns {() => void} function wrapped in codspeed root frame
-		 */
-		const wrapFunctionWithFrame = (fn, isAsync) => {
-			if (isAsync) {
-				return async function __codspeed_root_frame__() {
-					await fn();
-				};
-			}
-
-			return function __codspeed_root_frame__() {
-				fn();
-			};
 		};
 
 		/**
@@ -653,11 +669,94 @@ const withCodSpeed = async (bench) => {
 			return finalizeSyncRun();
 		};
 	} else if (codspeedRunnerMode === "walltime") {
-		// We don't need it
+		/** @type {Benchmark[]} */
+		const codspeedBenchmarks = [];
+
+		bench.run = async () => {
+			setupCore();
+			console.log(
+				`[CodSpeed] running with @codspeed/tinybench (walltime mode, ${bench.warmupIterations} warmup iterations)`
+			);
+
+			for (const task of bench.tasks) {
+				const uri = getTaskUri(bench, task.name, callingFile);
+
+				await task.warmup();
+				InstrumentHooks.startBenchmark();
+				const runStart = InstrumentHooks.currentTimestamp();
+				await task.run();
+				const runEnd = InstrumentHooks.currentTimestamp();
+				InstrumentHooks.stopBenchmark();
+				InstrumentHooks.setExecutedBenchmark(process.pid, uri);
+				InstrumentHooks.addMarker(
+					process.pid,
+					MARKER_TYPE_BENCHMARK_START,
+					runStart
+				);
+				InstrumentHooks.addMarker(
+					process.pid,
+					MARKER_TYPE_BENCHMARK_END,
+					runEnd
+				);
+
+				codspeedBenchmarks.push(toWalltimeBenchmark(bench, task, uri));
+				console.log(`[CodSpeed] Collected walltime data for ${uri}`);
+			}
+
+			writeWalltimeResults(codspeedBenchmarks, true);
+			teardownCore();
+			console.log(`[CodSpeed] Done running ${bench.tasks.length} benches.`);
+			return bench.tasks;
+		};
 	}
 
 	return bench;
 };
+
+/**
+ * Convert a finished tinybench task into CodSpeed's walltime result entry.
+ * Tinybench runs one round, reported as one round of one iteration per sample.
+ * @param {Bench} bench bench
+ * @param {TinybenchTask} task finished task, run with `retainSamples`
+ * @param {string} uri task URI
+ * @returns {Benchmark} walltime result entry
+ */
+function toWalltimeBenchmark(bench, task, uri) {
+	const result = task.result;
+
+	if (!result || result.state !== "completed") {
+		throw new Error(`No walltime result for ${uri}`);
+	}
+
+	const { min, max, mean, sd, samples } = result.latency;
+	const sortedTimesNs = /** @type {number[]} */ (samples)
+		.map(msToNs)
+		.sort((a, b) => a - b);
+	const meanNs = msToNs(mean);
+	const stdevNs = msToNs(sd);
+
+	return {
+		name: task.name,
+		uri,
+		config: {
+			max_rounds: bench.iterations,
+			max_time_ns: msToNs(bench.time),
+			min_round_time_ns: null,
+			warmup_time_ns: msToNs(bench.warmupTime)
+		},
+		stats: {
+			min_ns: msToNs(min),
+			max_ns: msToNs(max),
+			mean_ns: meanNs,
+			stdev_ns: stdevNs,
+			...calculateQuantiles({ sortedTimesNs, stdevNs, meanNs }),
+			total_time: msToS(result.totalTime),
+			iter_per_round: 1,
+			rounds: sortedTimesNs.length,
+			warmup_iters: bench.warmupIterations
+		}
+	};
+}
 
 /**
  * @param {number} n number of runs
@@ -1237,6 +1336,8 @@ function createBenchInstance() {
 			warmup: true,
 			warmupIterations: 2,
 			iterations: 8,
+			// Walltime reports quantiles, computed from the raw samples.
+			retainSamples: codspeedRunnerMode === "walltime",
 			setup(task, mode) {
 				if (!task) {
 					return;

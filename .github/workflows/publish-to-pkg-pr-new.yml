@@ -25,6 +25,7 @@ jobs:
       github.event.pull_request.head.repo.full_name == github.repository)
     name: Publish to pkg.pr.new
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     outputs:
       sha: ${{ steps.publish.outputs.sha }}
       urls: ${{ steps.publish.outputs.urls }}

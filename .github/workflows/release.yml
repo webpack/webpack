@@ -17,6 +17,7 @@ jobs:
     if: github.repository == 'webpack/webpack'
     name: Release
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     outputs:
       published: ${{ steps.changesets.outputs.published }}
       publishedPackages: ${{ steps.changesets.outputs.published-packages }}
@@ -60,6 +61,7 @@ jobs:
     needs: release
     if: needs.release.outputs.published == 'true'
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Generate Token
         uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0

@@ -146,7 +146,7 @@
     "minimizer-webpack-plugin": "^5.13.0",
     "schema-utils": "^4.5.0",
     "tapable": "^2.3.0",
-    "watchpack": "^2.6.2",
+    "watchpack": "^2.6.3",
     "webpack-sources": "^3.6.0"
   },
   "devDependencies": {

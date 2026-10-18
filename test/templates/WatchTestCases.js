@@ -384,7 +384,13 @@ const describeCases = (config) => {
 									// macOS can drop a change event entirely
 									const now = new Date();
 									for (const file of unseenChanges) {
-										if (fs.existsSync(file)) {
+										if (fs.existsSync(file) && fs.statSync(file).isDirectory()) {
+											// a created directory is re-sent by creating it again, which
+											// a new mtime on it is not to the parent watching for it
+											const away = `${file}.retouch`;
+											fs.renameSync(file, away);
+											fs.renameSync(away, file);
+										} else if (fs.existsSync(file)) {
 											fs.utimesSync(file, now, now);
 										} else if (fs.existsSync(path.dirname(file))) {
 											// a dropped deletion is re-sent by deleting again; no build

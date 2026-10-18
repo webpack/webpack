@@ -34,7 +34,9 @@ jobs:
       fail-fast: false
       matrix:
         shard: [1/4, 2/4, 3/4, 4/4]
-    runs-on: ubuntu-latest
+    # Walltime measures real time, system calls included, so it needs CodSpeed's
+    # dedicated runners: a shared GitHub runner is too noisy to compare against.
+    runs-on: codspeed-macro
     # The harness has no deadline of its own and a watch bench waits on a
     # rebuild callback; main's slowest shard is ~55m, so this only trips on a hang.
     timeout-minutes: 120
@@ -69,14 +71,11 @@ jobs:
         uses: CodSpeedHQ/action@f842b9a3ffe213dbb81768fd7f7eeb4dfcf1c369 # v5.4.2
         with:
           run: yarn benchmark --ci
-          mode: "simulation"
+          mode: "walltime"
         env:
           LAST_COMMIT: 1
           NEGATIVE_FILTER: ${{ github.event_name != 'schedule' && 'on-schedule' || '' }}
           SHARD: ${{ matrix.shard }}
-          # Single libuv thread → deterministic fs-completion order, removing the
-          # last I/O race that perturbs allocation counts between runs.
-          UV_THREADPOOL_SIZE: 1
   benchmark-memory:
     strategy:
       fail-fast: false

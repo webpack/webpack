@@ -16139,3 +16139,71 @@ describe("CssSyntax minify — what an engine older than CSS Syntax 3 reads", ()
 		);
 	});
 });
+
+describe("CssSyntax minify — a later value no engine reads keeps the one before it", () => {
+	const MODERN = ["chrome 140", "firefox 140", "safari 26.2"];
+	const FALLBACK = "a{background-image:linear-gradient(red,blue);";
+
+	/**
+	 * @param {string} css input stylesheet
+	 * @returns {string} what `dropOverriddenDeclarations` prints with no target
+	 */
+	const dropOverridden = (css) =>
+		new SourceProcessor().process(css, {
+			mode: "minify",
+			dropOverriddenDeclarations: true
+		}).code;
+
+	it.each([
+		["a line opening the list", "linear-gradient(to right,red,blue)", "linear-gradient(90deg,red,blue)"],
+		["two keyword colors", "linear-gradient(transparent,currentcolor)", "linear-gradient(#0000,currentcolor)"],
+		["a unit every engine reads", "linear-gradient(red 10px,blue 2cqw)", "linear-gradient(red 10px,blue 2cqw)"],
+		["a hex alpha", "linear-gradient(#f00a,blue)", "linear-gradient(#f00a,blue)"],
+		["a named color", "linear-gradient(red,rebeccapurple)", "linear-gradient(red,#639)"]
+	])("drops the fallback behind %s", (_, later, printed) => {
+		const css = `${FALLBACK}background-image:${later}}`;
+		const out = `a{background-image:${printed}}`;
+		expect(minifyFor(css, MODERN)).toBe(out);
+		expect(dropOverridden(css)).toBe(out);
+	});
+
+	it.each([
+		["a line after a stop", "linear-gradient(red,to right,blue)"],
+		["two colors in one stop", "linear-gradient(red transparent,blue)"],
+		["a keyword after a color", "linear-gradient(red to,blue)"],
+		["a unit no engine reads", "linear-gradient(red 10px,blue 2foo)"],
+		["a word naming no color", "linear-gradient(bogus,blue)"],
+		["two keyword colors in one stop", "linear-gradient(transparent currentcolor,blue)"],
+		["an empty argument", "linear-gradient(red,blue,)"],
+		["no color stop", "linear-gradient(to right)"],
+		["amounts with no color", "linear-gradient(10px,20px)"],
+		["a single stop", "linear-gradient(to right,red)"]
+	])("keeps the fallback behind %s", (_, later) => {
+		const css = `${FALLBACK}background-image:${later}}`;
+		expect(minifyFor(css, MODERN)).toContain("linear-gradient(red,blue)");
+		expect(dropOverridden(css)).toContain("linear-gradient(red,blue)");
+	});
+
+	it("drops a `text-decoration` behind one naming another color", () => {
+		expect(
+			minifyFor(
+				"a{text-decoration:underline blue;text-decoration:underline red}",
+				MODERN
+			)
+		).toBe("a{text-decoration:underline red}");
+	});
+
+	it("converts an `oklch()` gray, which states no hue to lose", () => {
+		expect(minifyFor("a{color:oklch(50% 0 0)}", MODERN)).toBe(
+			"a{color:#636363}"
+		);
+	});
+
+	it.each([
+		["an important twin after it", "a{-moz-transform:scale(1)!important;transform:scale(1)!important}"],
+		["an important twin saying the same", "a{transform:scale(1)!important;-moz-transform:scale(1)!important}"],
+		["an important twin before a plain one", "a{transform:scale(2)!important;-moz-transform:scale(1)}"]
+	])("drops a vendor spelling behind %s", (_, css) => {
+		expect(minifyFor(css, MODERN)).not.toContain("-moz-transform");
+	});
+});

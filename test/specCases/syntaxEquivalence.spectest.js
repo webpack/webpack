@@ -117,7 +117,7 @@ const {
 	readDocument
 } = require("../helpers/wptCorpus");
 
-/** @import { Fixture, PageHelpers, StylePair } from "../helpers/syntaxEquivalence" */
+/** @import { Fixture, PageHelpers, Relaxation, StylePair } from "../helpers/syntaxEquivalence" */
 
 /**
  * Every pair whose stylesheets style some element differently, on a page with
@@ -197,14 +197,6 @@ const FILED_CONFIG_HTML_DEFECTS = new Map([
 	[
 		"test/configCases/html/attribute-tables/page.html",
 		"firefox, webkit only: not a printer defect — an IDL attribute the engine does not implement falls back to the attribute as written, so a normalization reads as a difference. Measured in Firefox 156: `writingSuggestions` and `blocking` both read `undefined` where Chrome 147 reflects `false` and `render`; WebKit reads `autofocus`, `enterkeyhint` and `inputmode` apart from Blink the same way"
-	],
-	[
-		"test/configCases/html/minimize-round-trip/cases/reflected.html",
-		"firefox only: the unimplemented `blocking` IDL again — see `attribute-tables`"
-	],
-	[
-		"test/configCases/html/minimize-transforms/page.html",
-		"firefox only: the unimplemented `blocking` IDL again — see `attribute-tables`"
 	]
 ]);
 
@@ -222,6 +214,27 @@ const FILED_WPT_HTML_DEFECTS = new Map([
 ]);
 
 const FILED_WPT_CSS_DEFECTS = new Map();
+
+// The same, for each corpus printed with every option that is off by default.
+const FILED_CONFIG_HTML_OPT_IN_DEFECTS = new Map([
+	[
+		"test/configCases/html/attribute-tables/page.html",
+		"firefox, webkit only: the unimplemented IDL attributes again — see `attribute-tables` above"
+	]
+]);
+const FILED_CONFIG_CSS_OPT_IN_DEFECTS = new Map([
+	[
+		"test/configCases/css/minimize-corpus/minimize-values/style.css",
+		"webkit only: the percentage `shape-image-threshold` again — see `minimize-values` above"
+	]
+]);
+const FILED_BENCHMARK_HTML_OPT_IN_DEFECTS = new Map();
+const FILED_BENCHMARK_CSS_OPT_IN_DEFECTS = new Map([
+	[
+		"Tailwind 4 + daisyUI 5",
+		"webkit only: not a printer defect — `convertApproximateColors` clips `oklch(71% .194 13.428)`, outside sRGB, before `color-mix(in oklab, … 80%, #000)` reads it, which is what the option documents; WebKit paints the mix of the clipped color two bytes from the clipped mix (190,71,91 against 192,71,92)"
+	]
+]);
 
 // The same, for what webpack's own parser sees over the whole corpus.
 // Keyed `"<mode> <document>"`, so filing one print mode leaves the other held.
@@ -299,6 +312,7 @@ const PRINT_MODES = [
 
 /**
  * @param {string} source a stylesheet
+ * @param {object=} extra print options beyond the defaults
  * @returns {string} the same stylesheet, minified
  */
 // A fixture names the minimizer options its own claim is about, so the engine
@@ -353,10 +367,10 @@ const cssomDirective = (source) => {
 	return [];
 };
 
-const minifyCss = (source) => {
+const minifyCss = (source, extra = {}) => {
 	// The merge too, which is off by default: every corpus is then held to it.
 	/** @type {{ mode: string, [k: string]: EXPECTED_ANY }} */
-	const options = { mode: "minify", mergeDistantRules: true };
+	const options = { mode: "minify", mergeDistantRules: true, ...extra };
 	for (const name of cssomDirective(source)) options[name] = true;
 	return /** @type {{ code: string }} */ (
 		new CssSourceProcessor().process(source, options)
@@ -378,24 +392,71 @@ const minifyDeclaration = (property, value) => {
 	return colon === -1 ? "" : body.slice(colon + 1);
 };
 
+// Every option off by default, with a target current engines meet. What each
+// rewrites on purpose is set aside where it would read as a difference.
+const CSS_OPT_INS = {
+	convertLengthUnits: true,
+	convertApproximateColors: true,
+	dropOverriddenDeclarations: true,
+	rewriteCustomProperties: true,
+	environment: { browsers: ["chrome 140", "firefox 140", "safari 26.2"] }
+};
+/** @type {Relaxation[]} */
+const CSS_OPT_IN_RELAX = [
+	"custom-properties",
+	"length-units",
+	"approximate-colors",
+	"prefixes"
+];
+
+// The same for HTML; `removeImpliedTags` has variants of its own.
+const HTML_OPT_INS = {
+	collapseWhitespace: "conservative",
+	mergeStyles: true,
+	removeEmptyAttributes: true,
+	removeEmptyElements: true,
+	removeRedundantAttributes: "all",
+	sortAttributes: true,
+	sortTokenLists: true
+};
+/** @type {Relaxation[]} */
+const HTML_OPT_IN_RELAX = [
+	"whitespace",
+	"redundant-attributes",
+	"empty-elements",
+	"merged-styles"
+];
+
 /**
  * @typedef {object} Corpus
  * @property {string} label what to call it in a test name
  * @property {Fixture[]} html every page
  * @property {Fixture[]} htmlAllImpliedTags the same, printed with `removeImpliedTags: true`
  * @property {Fixture[]} htmlSmartTags the same, printed with `removeImpliedTags: "smart"`
+ * @property {Fixture[]} htmlOptIns the same, printed with `HTML_OPT_INS`; empty for wpt
  * @property {Fixture[]} css every stylesheet
+ * @property {Fixture[]} cssOptIns the same, printed with `CSS_OPT_INS`; empty for wpt
  * @property {Map<string, string>} filedHtml its filed DOM defects
  * @property {Map<string, string>} filedCss its filed stylesheet defects
+ * @property {Map<string, string>} filedHtmlOptIns its filed DOM defects under `HTML_OPT_INS`
+ * @property {Map<string, string>} filedCssOptIns its filed stylesheet defects under `CSS_OPT_INS`
  */
 
 /**
  * @param {Fixture[]} sources pages, read once
  * @param {object} options extra print options
+ * @param {Relaxation[]=} relax what those options rewrite on purpose
  * @returns {Fixture[]} the same pages, printed with them
  */
-const variant = (sources, options) =>
-	sources.map((one) => ({ ...one, min: minifyHtml(one.raw, options) }));
+const variant = (sources, options, relax) =>
+	sources.map((one) => ({ ...one, min: minifyHtml(one.raw, options), relax }));
+
+/**
+ * @param {Fixture[]} sheets stylesheets, printed with `CSS_OPT_INS`
+ * @returns {Fixture[]} the same, compared with what those rewrite set aside
+ */
+const cssOptIns = (sheets) =>
+	sheets.map((one) => ({ ...one, relax: CSS_OPT_IN_RELAX }));
 
 /**
  * Every corpus, built while jest collects — one test per fixture means the
@@ -405,6 +466,9 @@ const variant = (sources, options) =>
 const buildCorpora = () => {
 	const configHtml = buildCorpus(CONFIG_CASES, ".html", (source) => source);
 	const configCss = buildCorpus(CONFIG_CASES, ".css", minifyCss);
+	const configCssOptIns = buildCorpus(CONFIG_CASES, ".css", (source) =>
+		minifyCss(source, CSS_OPT_INS)
+	);
 	/** @type {Corpus[]} */
 	const built = [
 		{
@@ -414,9 +478,13 @@ const buildCorpora = () => {
 			// the one option whose whole claim is that the DOM does not notice.
 			htmlAllImpliedTags: variant(configHtml, { removeImpliedTags: true }),
 			htmlSmartTags: variant(configHtml, { removeImpliedTags: "smart" }),
+			htmlOptIns: variant(configHtml, HTML_OPT_INS, HTML_OPT_IN_RELAX),
 			css: configCss,
+			cssOptIns: cssOptIns(configCssOptIns),
 			filedHtml: forEngine(FILED_CONFIG_HTML_DEFECTS),
-			filedCss: forEngine(FILED_CONFIG_CSS_DEFECTS)
+			filedCss: forEngine(FILED_CONFIG_CSS_DEFECTS),
+			filedHtmlOptIns: forEngine(FILED_CONFIG_HTML_OPT_IN_DEFECTS),
+			filedCssOptIns: forEngine(FILED_CONFIG_CSS_OPT_IN_DEFECTS)
 		}
 	];
 	// Real projects, where `configCases` and wpt are both written to exercise a
@@ -429,9 +497,15 @@ const buildCorpora = () => {
 			html: variant(benchHtml, {}),
 			htmlAllImpliedTags: variant(benchHtml, { removeImpliedTags: true }),
 			htmlSmartTags: variant(benchHtml, { removeImpliedTags: "smart" }),
+			htmlOptIns: variant(benchHtml, HTML_OPT_INS, HTML_OPT_IN_RELAX),
 			css: benchCss,
+			cssOptIns: cssOptIns(
+				benchmarkStylesheets((source) => minifyCss(source, CSS_OPT_INS))
+			),
 			filedHtml: forEngine(FILED_BENCHMARK_HTML_DEFECTS),
-			filedCss: forEngine(FILED_BENCHMARK_CSS_DEFECTS)
+			filedCss: forEngine(FILED_BENCHMARK_CSS_DEFECTS),
+			filedHtmlOptIns: forEngine(FILED_BENCHMARK_HTML_OPT_IN_DEFECTS),
+			filedCssOptIns: forEngine(FILED_BENCHMARK_CSS_OPT_IN_DEFECTS)
 		});
 	}
 	if (!hasCorpus()) return built;
@@ -454,9 +528,15 @@ const buildCorpora = () => {
 		html: variant(wptHtml, {}),
 		htmlAllImpliedTags: variant(wptHtml, { removeImpliedTags: true }),
 		htmlSmartTags: variant(wptHtml, { removeImpliedTags: "smart" }),
+		// The opt-ins stay on the real-project corpora: wpt is far larger, and
+		// written to exercise one rule rather than to ship.
+		htmlOptIns: [],
 		css: wptCss,
+		cssOptIns: [],
 		filedHtml: forEngine(FILED_WPT_HTML_DEFECTS),
-		filedCss: forEngine(FILED_WPT_CSS_DEFECTS)
+		filedCss: forEngine(FILED_WPT_CSS_DEFECTS),
+		filedHtmlOptIns: new Map(),
+		filedCssOptIns: new Map()
 	});
 	return built;
 };
@@ -631,13 +711,14 @@ describe(`printer output in real ${ENGINE}`, () => {
 					).__eq;
 					return batch.map((fixture) => ({
 						name: fixture.name,
-						before: htmlFacets(fixture.raw),
-						after: htmlFacets(fixture.min)
+						relax: fixture.relax,
+						before: htmlFacets(fixture.raw, fixture.relax),
+						after: htmlFacets(fixture.min, fixture.relax)
 					}));
 				},
 				cases.slice(at, at + BATCH)
 			);
-			for (const { name, before, after } of collected) {
+			for (const { name, relax, before, after } of collected) {
 				let why = "";
 				for (const facet of Object.keys(before.facets)) {
 					const a = before.facets[facet];
@@ -676,7 +757,12 @@ describe(`printer output in real ${ENGINE}`, () => {
 					if (before.styles.length === after.styles.length) {
 						for (const [i, sheet] of before.styles.entries()) {
 							if (sheet !== after.styles[i]) {
-								sheets.push({ name, before: sheet, after: after.styles[i] });
+								sheets.push({
+									name,
+									before: sheet,
+									after: after.styles[i],
+									relax
+								});
 							}
 						}
 					} else {
@@ -698,7 +784,12 @@ describe(`printer output in real ${ENGINE}`, () => {
 	const compareStylesheets = async (cases) =>
 		styleDifferences(
 			await pageFor(cases.length * 2),
-			cases.map(({ name, raw, min }) => ({ name, before: raw, after: min }))
+			cases.map(({ name, raw, min, relax }) => ({
+				name,
+				before: raw,
+				after: min,
+				relax
+			}))
 		);
 
 	/**
@@ -763,6 +854,33 @@ describe(`printer output in real ${ENGINE}`, () => {
 				},
 				1800000
 			);
+
+			// The rewrites only an option asks for, held to the same DOM and CSSOM.
+			for (const fixture of one.htmlOptIns) {
+				it(
+					`should build the same DOM and CSSOM from ${fixture.name} with the HTML opt-ins`,
+					async () => {
+						const differences = await comparePages([fixture], true);
+						expect(named(differences, one.filedHtmlOptIns)).toEqual(
+							expected(one.filedHtmlOptIns, fixture.name)
+						);
+					},
+					FILE_TIMEOUT
+				);
+			}
+
+			for (const fixture of one.cssOptIns) {
+				it(
+					`should build the same CSSOM from ${fixture.name} with the CSS opt-ins`,
+					async () => {
+						const differences = await compareStylesheets([fixture]);
+						expect(named(differences, one.filedCssOptIns)).toEqual(
+							expected(one.filedCssOptIns, fixture.name)
+						);
+					},
+					FILE_TIMEOUT
+				);
+			}
 
 			// The same rules, in the same cascade order, under conditions the engine
 			// answers alike, each computing to the same style.
@@ -838,7 +956,9 @@ describe(`printer output in real ${ENGINE}`, () => {
 				const css = new Set(one.css.map((each) => each.name));
 				expect([
 					...[...one.filedHtml.keys()].filter((name) => !html.has(name)),
-					...[...one.filedCss.keys()].filter((name) => !css.has(name))
+					...[...one.filedCss.keys()].filter((name) => !css.has(name)),
+					...[...one.filedHtmlOptIns.keys()].filter((name) => !html.has(name)),
+					...[...one.filedCssOptIns.keys()].filter((name) => !css.has(name))
 				]).toEqual([]);
 			});
 		});
