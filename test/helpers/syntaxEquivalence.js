@@ -799,6 +799,34 @@ const installHelpers = (generics) => {
 				: text;
 		// HTML §13.2.3.1: the decoder consumes a leading byte order mark, which a
 		// string handed to the parser would keep as text.
+		/**
+		 * @param {Element} element an element
+		 * @param {number} depth how deep it sits
+		 * @param {Set<Relaxation>} relaxedSet the relaxations in force
+		 * @returns {boolean} true for a `<style>` a merge may join to the one before it
+		 */
+		const joinsStyleBefore = (element, depth, relaxedSet) => {
+			if (element.namespaceURI !== NS_HTML || element.localName !== "style") {
+				return false;
+			}
+			// Only whitespace and comments may stand between two sheets a merge joins.
+			let previous = element.previousSibling;
+			while (
+				previous !== null &&
+				(previous.nodeType === Node.COMMENT_NODE ||
+					(previous.nodeType === Node.TEXT_NODE &&
+						/^[\t\n\f\r ]*$/.test(previous.nodeValue || "")))
+			) {
+				previous = previous.previousSibling;
+			}
+			return (
+				previous !== null &&
+				previous.nodeType === Node.ELEMENT_NODE &&
+				/** @type {Element} */ (previous).localName === "style" &&
+				shapeOf(/** @type {Element} */ (previous), depth, relaxedSet) ===
+					shapeOf(element, depth, relaxedSet)
+			);
+		};
 		const html = source.charCodeAt(0) === 0xfeff ? source.slice(1) : source;
 		// `parseHTMLUnsafe` attaches a declarative shadow root where `DOMParser`
 		// leaves an inert `<template>`, so the tree below is the one a page gets.
@@ -837,8 +865,7 @@ const installHelpers = (generics) => {
 				const dropped =
 					(relaxed.has("empty-elements") && isEmptyElement(element)) ||
 					(relaxed.has("merged-styles") &&
-						element.namespaceURI === NS_HTML &&
-						element.localName === "style");
+						joinsStyleBefore(element, depth, relaxed));
 				if (!dropped) facets.elements.push(shapeOf(element, depth, relaxed));
 				// SVG carries `<style>` and `<script>` too, and an engine reads both
 				// the same way — so their bodies are data there as well, not the page
