@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Keep module library exports live without shadowing other modules' globals.
+Keep module library exports live, under HMR too, without shadowing globals.

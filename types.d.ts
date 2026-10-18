@@ -18165,6 +18165,11 @@ declare interface KnownMeta {
 	 * module-level `let` names a module library declares in the chunk's scope instead
 	 */
 	liveBindings?: Map<string, LiveBinding>;
+
+	/**
+	 * module-level names of a hot module a module library mirrors in the chunk's scope through setters
+	 */
+	liveSetters?: Map<string, LiveBinding>;
 }
 
 /**
@@ -35526,6 +35531,7 @@ declare namespace exports {
 		export let initializeSharing: "__webpack_require__.I";
 		export let instantiateWasm: "__webpack_require__.v";
 		export let interceptModuleExecution: "__webpack_require__.i";
+		export let liveExportSetters: "__webpack_require__.lE";
 		export let loadScript: "__webpack_require__.l";
 		export let makeDeferredNamespaceObject: "__webpack_require__.z";
 		export let makeNamespaceObject: "__webpack_require__.r";
@@ -36219,6 +36225,7 @@ declare namespace exports {
 			export let initializeSharing: "__webpack_require__.I";
 			export let instantiateWasm: "__webpack_require__.v";
 			export let interceptModuleExecution: "__webpack_require__.i";
+			export let liveExportSetters: "__webpack_require__.lE";
 			export let loadScript: "__webpack_require__.l";
 			export let makeDeferredNamespaceObject: "__webpack_require__.z";
 			export let makeNamespaceObject: "__webpack_require__.r";
