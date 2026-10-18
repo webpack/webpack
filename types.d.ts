@@ -19115,9 +19115,9 @@ declare interface LiveBinding {
 	runtimes: Set<string>;
 
 	/**
-	 * whether a module mirrors it through the setters a module library registers, not by name
+	 * the keys of the runtimes where a module mirrors it through the setters a module library registers, not by name
 	 */
-	registered: boolean;
+	registered: Set<string>;
 }
 declare interface LoadScriptCompilationHooks {
 	createScript: SyncWaterfallHook<[string, Chunk], string>;
