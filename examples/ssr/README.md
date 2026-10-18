@@ -489,10 +489,10 @@ client:
   assets by path *.json 2.07 KiB
     asset ssr-manifest.json 1.57 KiB [emitted]
     asset manifest.json 510 bytes [emitted]
-  assets by path *.css 337 bytes
-    asset page_js-page_css.css 197 bytes [emitted] [minimized]
-    asset main.css 140 bytes [emitted] [minimized] (name: main)
-  Entrypoint main 217 KiB = main.js 217 KiB main.css 140 bytes
+  assets by path *.css 440 bytes
+    asset main.css 231 bytes [emitted] [minimized] (name: main)
+    asset page_js-page_css.css 209 bytes [emitted] [minimized]
+  Entrypoint main 217 KiB = main.js 217 KiB main.css 231 bytes
   chunk (runtime: main) main.js, main.css (main) 650 KiB (javascript) 176 bytes (css) 9.27 KiB (runtime) [entry] [rendered]
     > ./example.js main
     runtime modules 9.27 KiB 11 modules
@@ -518,7 +518,7 @@ client:
 server:
   asset main.mjs 4.69 KiB [emitted] [javascript module] [minimized] (name: main)
   asset page_js-page_css.mjs 647 bytes [emitted] [javascript module] [minimized]
-  asset page_js-page_css.css 197 bytes [emitted] [minimized]
+  asset page_js-page_css.css 209 bytes [emitted] [minimized]
   chunk (runtime: main) main.mjs (main) 5.07 KiB (javascript) 6.05 KiB (runtime) [entry] [rendered]
     > ./server.js main
     runtime modules 6.05 KiB 8 modules

@@ -46,7 +46,7 @@ export function square(n) {
 # dist/vendor.js
 
 ```javascript
-var vendor_lib_33d63e473c68d46c4363;
+var vendor_lib_f71d3858e491f0e9b448;
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ([
 /* 0 */
@@ -144,7 +144,7 @@ function square(n) {
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module doesn't tell about it's top-level declarations so it can't be inlined
 /******/ 	let __webpack_exports__ = __webpack_require__(0);
-/******/ 	vendor_lib_33d63e473c68d46c4363 = __webpack_exports__;
+/******/ 	vendor_lib_f71d3858e491f0e9b448 = __webpack_exports__;
 /******/ 	
 /******/ })()
 ;
@@ -153,7 +153,7 @@ function square(n) {
 # dist/vendor-manifest.json
 
 ```javascript
-{"name":"vendor_lib_33d63e473c68d46c4363","content":{"../node_modules/example-vendor.js":{"id":1,"buildMeta":{"exportsType":"namespace"},"exports":["square"]}}}
+{"name":"vendor_lib_f71d3858e491f0e9b448","content":{"../node_modules/example-vendor.js":{"id":1,"buildMeta":{"exportsType":"namespace"},"exports":["square"]}}}
 ```
 
 # Info
