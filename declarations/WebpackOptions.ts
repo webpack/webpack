@@ -300,6 +300,7 @@ export type Clean = boolean | CleanOptions;
 
 /**
  * Advanced options for cleaning assets.
+ * @publishes plugins/output/CleanOptions
  */
 export interface CleanOptions {
 	/**
@@ -904,6 +905,7 @@ export type Dotenv =
 
 /**
  * Options for Dotenv plugin.
+ * @publishes plugins/define/DotenvPluginOptions
  */
 export interface DotenvPluginOptions {
 	/**
