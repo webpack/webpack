@@ -7,6 +7,7 @@
   <path id="segments" fill="none" stroke="black" d="M 10 20 L 15 -25 L 20 -30 l .5 .5 l .5 .5 C 1 2 3 4 5 6 C 7 8 9 10 11 12 A 10 20 30 0 1 40 50 A 10 20 30 1 0 .5 -.5 Z M 30 40 L 50 60 Z"/>
   <path id="axes" fill="none" stroke="black" d="M 10 20 10 30 10 40 50 40 Z L 60 20 C 1 2 3 4 70 80 L 70 90"/>
   <path id="curves" fill="none" stroke="black" d="M10 60C10 60 20 50 30 60L40 60Q40 60 60 60m10 0c0 0 10 -10 20 0l0 10q0 0 10 -10"/>
+  <path id="relative" fill="none" stroke="black" d="M60 60L61 62 62 64H63 64V65 66C65 67 66 68 67 69S68 70 69 71Q70 72 71 73T72 74A2 3 45 0 1 73 75M74 76 75 77ZL74 78"/>
   <use href="#sprite" transform="translate(040.00, 000.00)"/>
   <rect x="060.00" y="060.00" width="030.00" height="030.00" fill="url(#paint)"/>
   <rect id="overflow" width="10" height="10" fill="purple" transform="translate(5 0e39)"/>

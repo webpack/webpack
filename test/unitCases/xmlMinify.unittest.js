@@ -15,6 +15,17 @@ const SOURCE = `<?xml version="1.0" encoding="UTF-8"?>
 `;
 
 describe("xmlMinify", () => {
+	it.each([false, true])("should keep shape coordinates absolute unless path cleanup is enabled=%s", async (shortenPathData) => {
+		const source = '<svg xmlns="http://www.w3.org/2000/svg"><line x1="100" y1="100" x2="101" y2="102"/></svg>';
+		const { code } = await xmlMinify({ 'shape.svg': source }, undefined, { convertShapes: true, shortenPathData });
+		expect(code).toBe(`<svg xmlns="http://www.w3.org/2000/svg"><path d="${shortenPathData ? 'M100 100l1 2' : 'M100 100L101 102'}"/></svg>`);
+	});
+	it.each([false, true])("should forward exact relative path cleanup with enabled=%s", async (shortenPathData) => {
+		const source = '<svg xmlns="http://www.w3.org/2000/svg"><path d="M100 100L101 102L102 104"/></svg>';
+		const { code } = await xmlMinify({ 'path.svg': source }, undefined, { shortenPathData });
+		expect(code).toBe(shortenPathData ? source.replace('M100 100L101 102L102 104', 'M100 100l1 2 1 2') : source);
+		expect((await xmlMinify({ 'path.svg': code }, undefined, { shortenPathData })).code).toBe(code);
+	});
 	it.each([false, true])("should forward SVG shape conversion with enabled=%s", async (convertShapes) => {
 		const source = '<svg xmlns="http://www.w3.org/2000/svg"><line x1="10" y1="20" x2="10" y2="30"/></svg>';
 		const { code } = await xmlMinify({ 'shape.svg': source }, undefined, { convertShapes });
