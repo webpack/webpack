@@ -10,8 +10,6 @@ exports[`getSourceMappingURL should work with "/*  #sourceMappingURL=absolute-so
 
 exports[`getSourceMappingURL should work with "/*#sourceMappingURL=absolute-sourceRoot-source-map.map*/" url: result 1`] = `"absolute-sourceRoot-source-map.map"`;
 
-exports[`getSourceMappingURL should work with "// # sourceMappingURL=data:application/json;base64,"+btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap))))+"" url: result 1`] = `"data:application/json;base64,"`;
-
 exports[`getSourceMappingURL should work with "// #sourceMappingURL = //hello.com/external-source-map2.map" url: result 1`] = `"//hello.com/external-source-map2.map"`;
 
 exports[`getSourceMappingURL should work with "// #sourceMappingURL = http://hello.com/external-source-map2.map" url: result 1`] = `"http://hello.com/external-source-map2.map"`;
