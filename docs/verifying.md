@@ -31,7 +31,7 @@ A local failure is yours only if it doesn't reproduce on `main` — check in a w
 
 **Read CI output through a file, not the context.** Every character a tool returns is re-read on every later turn of the session, so one 50k-character log costs far more than its first read. So:
 
-- **Save the log and search it**: `gh run view --job <id> --log-failed > <scratchpad>/job.log`, then `grep -n -A20 -E "FAIL|Error|✕" <scratchpad>/job.log`. With `get_job_logs`, pass `failed_only` and start at `tail_lines: 150` (enough to clear the trailing `Post job cleanup`), widening only when the error isn't in it.
+- **Save the log and search it**: `gh run view --job <id> --log-failed > <scratchpad>/job.log`, then `grep -n -A20 -E "FAIL|Error|✕" <scratchpad>/job.log`. With `get_job_logs`, pass `failed_only` (it skips `timed_out` jobs, so fetch those by `job_id`) and start at `tail_lines: 150` (enough to clear the trailing `Post job cleanup`), widening only when the error isn't in it.
 - **Fetch check runs only when something changed them** since the last read (a push, a re-run, a CI-completed event), and read only the failing ones; a review or bot-comment wake needs no fresh listing.
 - **The same goes for other large reports** (benchmark comparisons, coverage, bot review bodies): save or filter them before reading.
 
