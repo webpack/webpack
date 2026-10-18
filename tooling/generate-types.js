@@ -1400,8 +1400,16 @@ const collectTypes = ({ program, checker, options }) => {
 					continue;
 				}
 				const defaultValue = parameter.getDefault();
+				// An alias default can come back as a fresh instantiation of the alias
+				const sameAlias =
+					defaultValue !== undefined &&
+					defaultValue.aliasSymbol !== undefined &&
+					args[i].aliasSymbol === defaultValue.aliasSymbol &&
+					!defaultValue.aliasTypeArguments &&
+					!args[i].aliasTypeArguments;
 				if (
 					args[i] === defaultValue ||
+					sameAlias ||
 					(defaultValue !== undefined && args[i] === parameter)
 				) {
 					argsWithoutDefaults.length--;
@@ -1491,7 +1499,13 @@ const collectTypes = ({ program, checker, options }) => {
 						checker.getSymbolAtLocation(typeName)
 					);
 					const targetType = getTypeOfSymbol(targetSymbol, false);
+					// WHY: a generic class named without type arguments resolves to its
+					// defaults; the declared type would print its own type parameters.
+					const bareGenericReference =
+						typeArgumentsTypes.length === 0 &&
+						/** @type {ts.TypeReference} */ (type).target === targetType;
 					if (
+						!bareGenericReference &&
 						typeArgumentsTypes.every(Boolean) &&
 						targetType &&
 						targetType !== type
@@ -1749,7 +1763,9 @@ const collectTypes = ({ program, checker, options }) => {
 					// the same declaration sat in the package's entry file.
 					if (verbose) {
 						console.log(
-							`${parseName(type).join(" ")} is exported with \`export =\` from ${
+							`${parseName(type).join(
+								" "
+							)} is exported with \`export =\` from ${
 								/** @type {ts.SourceFile} */ (externalSource).fileName
 							}, inlining it`
 						);
@@ -3010,7 +3026,11 @@ const generateDeclarations = ({
 											.map((t) => getCode(t, new Set(), "in type args"))
 											.join(", ")}>`
 									: ""
-							} = abstract new ${sigToString(parsed.constructors[0], typeArgs, "arrow")};`;
+							} = abstract new ${sigToString(
+								parsed.constructors[0],
+								typeArgs,
+								"arrow"
+							)};`;
 						}
 						return `${parsed.documentation}declare interface ${variable}${
 							parsed.typeParameters
@@ -3043,7 +3063,11 @@ const generateDeclarations = ({
 					return `(${sigToString(parsed.calls[0], typeArgs, "arrow")})`;
 				}
 				if (isAbstractConstructor(parsed)) {
-					return `(abstract new ${sigToString(parsed.constructors[0], typeArgs, "arrow")})`;
+					return `(abstract new ${sigToString(
+						parsed.constructors[0],
+						typeArgs,
+						"arrow"
+					)})`;
 				}
 				return `{ ${getInterfaceItems(type, parsed, typeArgs).join("; ")} }`;
 			}

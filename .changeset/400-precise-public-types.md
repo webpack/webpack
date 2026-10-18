@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Replace `any` and `unknown` in stats, serializer, parser and runtime types.
+Use precise and generic types for modules, parsers, generators and stats.
