@@ -21439,7 +21439,7 @@ declare class ModuleGraph {
 	/**
 	 * Returns computed value or cached.
 	 */
-	cached<T extends any[], R>(
+	cached<T extends TupleElement[], R>(
 		fn: (moduleGraph: ModuleGraph, ...args: T) => R,
 		...args: T
 	): R;
@@ -21454,7 +21454,7 @@ declare class ModuleGraph {
 	/**
 	 * Dependency cache provide.
 	 */
-	dependencyCacheProvide<D extends Dependency, ARGS extends any[], R>(
+	dependencyCacheProvide<D extends Dependency, ARGS extends TupleElement[], R>(
 		dependency: D,
 		...args: [
 			ARGS,
@@ -34193,6 +34193,8 @@ declare interface TsconfigPathsMap {
 	 */
 	fileDependencies: Set<string>;
 }
+type TupleElement =
+	undefined | null | string | number | bigint | boolean | symbol | object;
 declare class TypeScriptPlugin {
 	constructor();
 	apply(compiler: Compiler): void;
@@ -34734,7 +34736,7 @@ declare abstract class Watching {
  * Stores values by tuple keys while using `WeakMap` for object elements so the
  * cache can release entries when those objects are collected.
  */
-declare abstract class WeakTupleMap<K extends any[], V> {
+declare abstract class WeakTupleMap<K extends TupleElement[], V> {
 	/**
 	 * Stores a value at the node identified by the provided tuple key.
 	 */
