@@ -276,6 +276,12 @@ const IMPROVED_CASES = [
 		"function f(o){let{x:x,y:y}=o.a||{};return x+y}function g(o){var[p,q]=o.b;return p*q}console.log(f({a:{x:1,y:2}}),g({b:[3,4]}));"
 	],
 	[
+		"a function written in place passed a variable of its parameter's name, which its own function's statements write again",
+		"function f(fn, o) { o = { ...o, b: 2 }; return (function (g, o) { delete o.a; return g(o); })(fn, o); } console.log(f(JSON.stringify, { a: 1 }));",
+		{ compress: {}, mangle: false },
+		"function f(fn,o){return delete(o={...o,b:2}).a,fn(o)}console.log(f(JSON.stringify,{a:1}));"
+	],
+	[
 		"a call in a loop of a local function with an empty body, as its arguments",
 		"function g(x) { function f(a) {} for (var i = 0; i < 2; i++) f(x.y); while (f()) x.z(); return f; } console.log(g({ y: 1 })());",
 		{ compress: {}, mangle: false },
@@ -1931,6 +1937,7 @@ const KEPT_CASES = [
 	["an assignment to a `var` before a function that would need parentheses", "function g() { var x; if (x = true, 0 !== (x ^= true)) throw 1; if (x = new Boolean(true), 0 !== (x ^= true)) throw 2; } function h(o) { var b; b = o.x, function () { console.log(b); }.call(o), console.log(b); } g(); h({ x: 3 });"],
 	["an assignment to a `var` written with `=` again, which gzips as one more repeat", "function g(o) { var a; a = o.x; console.log(a); a = o.y; console.log(a); } g({ x: 1, y: 2 });"],
 	["an assignment whose property is then written, or that is compound, or calls `eval`", "function f(o) { var a; (a = o.x).p = 1; console.log(a, a); } function g(o) { var a = 1; a += o.x; console.log(a, a); } function h(o) { var eval; (eval = o.x)(\"1\"); return eval; } f({ x: {} }); g({ x: 1 }); console.log(h({ x: String }));"],
+	["a function written in place passed a variable a closure writes again", "function f(o) { var a = o; function s() { a = 9; } a = a + 1; return [(function (b) { s(); return b; })(a), a]; } console.log(f(1));"],
 	["a function written in place passed a name written later", "function f(a) { var g = (function (a) { return function () { return a + a; }; })(a); [a] = [5]; return g(); } console.log(f(1));"],
 	["a function written in place passed a variable of its parameter's name, read again after the call", "function f(t) { return (function (t) { return t.a + t.b; })(g(t)) + t.c; } function g(t) { return { a: t.a, b: 2 }; } console.log(f({ a: 1, c: 5 }));"],
 	["a function written in place passed a closure reading the variable of its parameter's name", "function f(t) { return (function (t) { return t.a + t.b; })(g(function () { return t; })); } function g(h) { return { a: h().c, b: 2 }; } console.log(f({ c: 1 }));"],
