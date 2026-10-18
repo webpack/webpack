@@ -16,7 +16,9 @@ it("should leave source map directives inside literals unchanged", () => {
 	expect(escaped).toBe("`\n//# sourceMappingURL=missing.map\n");
 	expect(regex.test("#")).toBe(true);
 	expect(escapedSlash.source).toBe("\\/*# sourceMappingURL=missing.map *");
-	expect(characterClass.source).toBe("[/*#sourceMappingURL=missing.map]*");
+	expect(characterClass.source).toBe(
+		new RegExp("[/*#sourceMappingURL=missing.map]*").source
+	);
 });
 
 it("should remove the real directive without changing an identical string", () => {
