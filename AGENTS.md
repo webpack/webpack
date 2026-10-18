@@ -182,14 +182,14 @@ Read [docs/performance.md](docs/performance.md) before claiming or measuring a p
 
 > [!REQUIRED]
 
-**Read [docs/pull-requests.md](docs/pull-requests.md) in full before branching, committing or opening a PR, and on every event of a PR you opened** — it holds the changeset format, branch and commit conventions, the PR body template and how to drive the PR to green. The rules it enforces:
+**Read [docs/pull-requests.md](docs/pull-requests.md) in full once per session, before branching, committing or opening a PR**; PR events don't need a re-read — it holds the changeset format, branch and commit conventions, the PR body template and how to drive the PR to green. The rules it enforces:
 
 - **Changeset**: every user-facing change needs one in `.changeset/` — one sentence, one per PR.
 - **Branch** `<type>/<short-description>`, the type picked from the diff and matching the PR's "What kind of change…" answer; never a `claude/`, `bot/`, `ai/` or other tool prefix. Rename before the first push; a task leaves one branch on `origin` and ends with a `Branches on origin:` line.
 - **Commit author** is the requester's GitHub account, never a bot; no `Co-authored-by` trailers; ask when the identity is unknown.
 - **Open from a branch not behind `main`**: rebase, never merge `main` in.
 - **PR body**: paste the org template yourself with every section, bold labels spelled exactly and `n/a` where one doesn't apply, including **Use of AI** and a **What kind of change…** answer matching the branch prefix. Write it briefly and simply; for a fix or improvement, show a real before/after (code, output, size, memory or CPU) under **Summary**.
-- **Subscribe to every PR you open** and stay subscribed until it is merged or closed, or the requester says stop.
+- **Subscribe to every PR you open** and unsubscribe once CI is green and every automated review is handled, or the requester says stop; a PR waiting only on human review needs no live session.
 - **Never post to GitHub on your own initiative** — comments, review replies, PR body edits after opening (except installing the template over an auto-created body), replies to bots. Bring the finding and your draft reply into the session.
 - **Don't rebase or merge the base branch into an open PR unasked.**
 - **A question is not a go-ahead**: asked what happened, why, or whether you changed something, answer and propose the change, then push only once the requester agrees, even to fix your own mistake. A request phrased as a question ("could you…?") is still a request.
