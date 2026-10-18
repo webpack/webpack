@@ -410,7 +410,7 @@ type AnalyzableForm =
 	"import" | "url" | "url-runtime" | "url-inline" | "wasm" | "wasm-relative";
 type AnyLoaderContext = NormalModuleLoaderContext<any> &
 	LoaderRunnerMutableContext<any> &
-	LoaderRunnerReadonlyContext<any> &
+	LoaderRunnerReadonlyContext<any, LoaderData> &
 	LoaderPluginLoaderContext &
 	HotModuleReplacementPluginLoaderContext;
 
@@ -19461,12 +19461,15 @@ declare interface Loader {
 type LoaderContextLibIndex<OptionsType> =
 	NormalModuleLoaderContext<OptionsType> &
 		LoaderRunnerMutableContext<OptionsType> &
-		LoaderRunnerReadonlyContext<OptionsType> &
+		LoaderRunnerReadonlyContext<OptionsType, LoaderData> &
 		LoaderPluginLoaderContext &
 		HotModuleReplacementPluginLoaderContext;
-type LoaderContextNormalModule<T> = NormalModuleLoaderContext<T> &
+type LoaderContextNormalModule<
+	T,
+	DataType = LoaderData
+> = NormalModuleLoaderContext<T> &
 	LoaderRunnerMutableContext<T> &
-	LoaderRunnerReadonlyContext<T> &
+	LoaderRunnerReadonlyContext<T, DataType> &
 	LoaderPluginLoaderContext &
 	HotModuleReplacementPluginLoaderContext;
 declare interface LoaderContextUtils {
@@ -19485,6 +19488,14 @@ declare interface LoaderContextUtils {
 	 */
 	createHash: (algorithm?: string | typeof Hash) => Hash;
 }
+
+/**
+ * What a loader keeps between its pitch and normal phase. Open by default: a
+ * loader stores whatever it likes, and reads it back without narrowing.
+ */
+declare interface LoaderData {
+	[index: string]: any;
+}
 type LoaderDefinition<
 	OptionsType = {},
 	ContextAdditions = {}
@@ -19499,7 +19510,7 @@ declare interface LoaderDefinitionFunction<
 	(
 		this: NormalModuleLoaderContext<OptionsType> &
 			LoaderRunnerMutableContext<OptionsType> &
-			LoaderRunnerReadonlyContext<OptionsType> &
+			LoaderRunnerReadonlyContext<OptionsType, LoaderData> &
 			LoaderPluginLoaderContext &
 			HotModuleReplacementPluginLoaderContext &
 			ContextAdditions,
@@ -19508,19 +19519,22 @@ declare interface LoaderDefinitionFunction<
 		additionalData?: AdditionalData
 	): string | void | Buffer | Promise<string | Buffer>;
 }
-declare interface LoaderEntry {
+declare interface LoaderEntry<
+	OptionsType = Record<string, any>,
+	DataType = LoaderData
+> {
 	request: string;
 	path: string;
 	query: string;
 	fragment: string;
-	options?: null | string | Record<string, any>;
+	options?: null | string | OptionsType;
 	ident: string;
 	normal?:
-		| LoaderDefinitionFunction<Record<string, any>, {}>
-		| RawLoaderDefinitionFunction<Record<string, any>, {}>;
-	pitch?: PitchLoaderDefinitionFunction<Record<string, any>, {}>;
+		| LoaderDefinitionFunction<OptionsType, {}>
+		| RawLoaderDefinitionFunction<OptionsType, {}>;
+	pitch?: PitchLoaderDefinitionFunction<OptionsType, {}>;
 	raw?: boolean;
-	data?: Record<string, any>;
+	data?: DataType;
 	pitchExecuted: boolean;
 	normalExecuted: boolean;
 	type?: "module" | "commonjs";
@@ -19671,7 +19685,7 @@ declare interface LoaderRunnerMutableContext<OptionsType> {
 	 * An array of all the loaders. It is writeable in the pitch phase.
 	 * loaders = [{request: string, path: string, query: string, module: function}]
 	 */
-	loaders: LoaderEntry[];
+	loaders: LoaderEntry<Record<string, any>, LoaderData>[];
 
 	/**
 	 * The resource path.
@@ -19714,9 +19728,12 @@ declare interface LoaderRunnerMutableContext<OptionsType> {
  * The members the runner never lets a loader assign. They carry no
  * documentation, so a type literal loses nothing and keeps `readonly`
  */
-declare interface LoaderRunnerReadonlyContext<OptionsType> {
+declare interface LoaderRunnerReadonlyContext<
+	OptionsType,
+	DataType = LoaderData
+> {
 	readonly currentRequest: string;
-	readonly data: Record<string, any>;
+	readonly data: DataType;
 	readonly previousRequest: string;
 	readonly query: string | OptionsType;
 	readonly remainingRequest: string;
@@ -26933,13 +26950,13 @@ declare interface PitchLoaderDefinitionFunction<
 	(
 		this: NormalModuleLoaderContext<OptionsType> &
 			LoaderRunnerMutableContext<OptionsType> &
-			LoaderRunnerReadonlyContext<OptionsType> &
+			LoaderRunnerReadonlyContext<OptionsType, LoaderData> &
 			LoaderPluginLoaderContext &
 			HotModuleReplacementPluginLoaderContext &
 			ContextAdditions,
 		remainingRequest: string,
 		previousRequest: string,
-		data: Record<string, any>
+		data: LoaderData
 	): string | void | Buffer | Promise<string | Buffer>;
 }
 
@@ -27618,7 +27635,7 @@ declare interface RawLoaderDefinitionFunction<
 	(
 		this: NormalModuleLoaderContext<OptionsType> &
 			LoaderRunnerMutableContext<OptionsType> &
-			LoaderRunnerReadonlyContext<OptionsType> &
+			LoaderRunnerReadonlyContext<OptionsType, LoaderData> &
 			LoaderPluginLoaderContext &
 			HotModuleReplacementPluginLoaderContext &
 			ContextAdditions,
@@ -35102,7 +35119,7 @@ declare interface VirtualModule {
 	 * The source function that provides the virtual content.
 	 */
 	source: (
-		loaderContext: LoaderContextNormalModule<Record<string, any>>
+		loaderContext: LoaderContextNormalModule<Record<string, any>, LoaderData>
 	) => string | Buffer | Promise<string | Buffer>;
 
 	/**
@@ -35118,7 +35135,7 @@ declare interface VirtualModule {
 type VirtualModuleContent =
 	| string
 	| ((
-			loaderContext: LoaderContextNormalModule<Record<string, any>>
+			loaderContext: LoaderContextNormalModule<Record<string, any>, LoaderData>
 	  ) => string | Buffer | Promise<string | Buffer>)
 	| VirtualModule;
 declare interface VirtualModules {
