@@ -2226,18 +2226,10 @@
   resolved "https://registry.yarnpkg.com/@pnpm/deps.graph-sequencer/-/deps.graph-sequencer-1100.0.1.tgz#8a2aeed98855391404ad808494f0230ff5f33139"
   integrity sha512-pOr5+q1fLYKwFN3LAJuGZEnfXDcQ73zqgDHMtGy+K+uIoUqyY+6MeDCWFwfu+4EFuq76I5EPFofoNAI+Bmmq4A==
 
-"@puppeteer/browsers@3.2.5":
+"@puppeteer/browsers@3.2.5", "@puppeteer/browsers@^3.2.2":
   version "3.2.5"
   resolved "https://registry.yarnpkg.com/@puppeteer/browsers/-/browsers-3.2.5.tgz#4216501d96daf99079a26c7e14a1d6baacaf043e"
   integrity sha512-UoCo3Pynbm37aLEEoydSiG+t24ui7sLD40+07CKxzxNy4PpSowJMkvlLIiV67XjP1lMVynhQVnuwlTABqBH8LQ==
-  dependencies:
-    modern-tar "^0.8.5"
-    yargs "^18.0.0"
-
-"@puppeteer/browsers@^3.2.2":
-  version "3.2.4"
-  resolved "https://registry.yarnpkg.com/@puppeteer/browsers/-/browsers-3.2.4.tgz#9cc2f094db0dc8e09ddae5b33bc68c950e0a443d"
-  integrity sha512-okJ6yQMc0SBexOKxMi966omwAV1uAPwgF/YMZdb04gZQPXVjWHl9bmXjZYtIcsN1+PN3Bz4iFfGK3g+c6lZJ0Q==
   dependencies:
     modern-tar "^0.8.5"
     yargs "^18.0.0"
@@ -8389,9 +8381,9 @@ pkijs@^3.3.3:
     tslib "^2.8.1"
 
 playwright-core@^1.63.0:
-  version "1.64.0"
-  resolved "https://registry.yarnpkg.com/playwright-core/-/playwright-core-1.64.0.tgz#a765f91dabd2b2cadd67e87439842c1d6c72c652"
-  integrity sha512-T9r+MZkTECl2+oUcZ26YgZzTrYidTsIhYYkJix+6iDOymOb1FB2RLLSOxRGnZGv5DStt+aduIVbt+E8WygXYpg==
+  version "1.64.1"
+  resolved "https://registry.yarnpkg.com/playwright-core/-/playwright-core-1.64.1.tgz#ca9ec82d7da6ced1b2326ec59ef097aaa9a29f94"
+  integrity sha512-BC4s8y6SEVA6Q1rSxZTto8hI1KUI3xXlHGZgvGqP4IqPdI/a6FX9H29IDNz7vKo9l21b6LfYosScPL6M3xxyDQ==
 
 pluralize@^8.0.0:
   version "8.0.0"
