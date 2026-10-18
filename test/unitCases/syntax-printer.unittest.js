@@ -234,6 +234,12 @@ const stringArray = (length, string = (index) => `w${index}`) =>
 /** @type {[string, string, import("terser").MinifyOptions, string?][]} */
 const IMPROVED_CASES = [
 	[
+		"`void x ?? y`, which runs `x` and reads `y` whatever `x` holds",
+		'function y() { console.log("y"); } var z = 2; console.log(void y() ?? 1, void 0 ?? z, void y() ?? (y(), 3));',
+		{ compress: {}, mangle: false },
+		'function y(){console.log("y")}var z=2;console.log((y(),1),z,(y(),y(),3));'
+	],
+	[
 		"a new object compared with a primitive, another new object or `null`, which it never equals (terser#1335)",
 		'console.log({ a: 7 } === null, [] !== 1, (() => 1) == null, {} != null, {} == "[object Object]");',
 		{ compress: {}, mangle: false },
@@ -3022,6 +3028,16 @@ const CORRECTED_CASES = [
 	[
 		"a `var` under a `switch`, a loop and a `catch` of its name in `default`s before a calling case",
 		'var b = "outer", c = "outer", d = "outer", e = "outer"; function f(x) { switch (0) { default: switch (1) { case 2: var b; } case x(): } switch (0) { default: while (0) var c; case x(): } switch (0) { default: do var d; while (0); case x(): } switch (0) { default: try {} catch (e) { var e; } case x(): } for (var i = 0; i < 2; i++) (b = x(b)), (c = x(c)), (d = x(d)), (e = x(e)); return [b, c, d, e].join(); } console.log(f(function (v) { return v + 1; }), b, c, d, e);',
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a string with a constant other than a string after it, then a number, which adds as numbers",
+		'var u; function f() { return "a"; } console.log("bar" + u + 0, "x" + true + 2, f() + "" + void 0 + 1);',
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a `let` of a case a constant `switch` skips, which a reached case reads in its dead zone",
+		'function f() { switch (1) { case 0: let s = 1; console.log(s); break; case 1: console.log(typeof s); default: console.log("d"); } } try { f(); } catch (e) { console.log(e.name); }',
 		{ compress: {}, mangle: false }
 	],
 	[
