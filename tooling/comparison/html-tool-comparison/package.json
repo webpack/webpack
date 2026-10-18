@@ -11,9 +11,9 @@
     "@swc/html": "1.16.18",
     "angular-html-parser": "10.13.0",
     "bootstrap": "5.3.8",
-    "cssnano": "9.7.0",
+    "cssnano": "9.8.0",
     "dom-serializer": "3.1.1",
-    "html-minifier-next": "8.10.7",
+    "html-minifier-next": "8.10.8",
     "html-minifier-terser": "7.2.0",
     "html5-boilerplate": "9.0.1",
     "htmlnano": "3.6.1",
@@ -23,10 +23,10 @@
     "marked": "18.1.1",
     "node-html-parser": "9.0.4",
     "parse5": "8.0.1",
-    "postcss": "8.5.29",
+    "postcss": "8.5.30",
     "prettier": "3.9.10",
     "svgo": "4.1.0",
-    "swagger-ui-dist": "5.33.2",
+    "swagger-ui-dist": "5.33.3",
     "water.css": "2.1.1"
   }
 }
