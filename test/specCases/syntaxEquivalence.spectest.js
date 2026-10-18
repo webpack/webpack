@@ -117,7 +117,7 @@ const {
 	readDocument
 } = require("../helpers/wptCorpus");
 
-/** @import { Fixture, PageHelpers, StylePair } from "../helpers/syntaxEquivalence" */
+/** @import { Fixture, PageHelpers, Relaxation, StylePair } from "../helpers/syntaxEquivalence" */
 
 /**
  * Every pair whose stylesheets style some element differently, on a page with
@@ -385,12 +385,40 @@ const minifyDeclaration = (property, value) => {
 	return colon === -1 ? "" : body.slice(colon + 1);
 };
 
-// The options off by default whose whole claim is the same CSSOM or DOM. The
-// rest change what one reports on purpose (custom-property text, whitespace,
-// attribute presence), so each needs a check of its own.
-const CSS_OPT_INS = { dropOverriddenDeclarations: true };
+// Every option off by default, with a target current engines meet. What each
+// rewrites on purpose is set aside where it would read as a difference.
+const CSS_OPT_INS = {
+	convertLengthUnits: true,
+	convertApproximateColors: true,
+	dropOverriddenDeclarations: true,
+	rewriteCustomProperties: true,
+	environment: { browsers: ["chrome 140", "firefox 140", "safari 26.2"] }
+};
+/** @type {Relaxation[]} */
+const CSS_OPT_IN_RELAX = [
+	"custom-properties",
+	"length-units",
+	"approximate-colors",
+	"prefixes"
+];
 
-const HTML_OPT_INS = { sortAttributes: true, sortTokenLists: true };
+// The same for HTML; `removeImpliedTags` has variants of its own.
+const HTML_OPT_INS = {
+	collapseWhitespace: "conservative",
+	mergeStyles: true,
+	removeEmptyAttributes: true,
+	removeEmptyElements: true,
+	removeRedundantAttributes: "all",
+	sortAttributes: true,
+	sortTokenLists: true
+};
+/** @type {Relaxation[]} */
+const HTML_OPT_IN_RELAX = [
+	"whitespace",
+	"redundant-attributes",
+	"empty-elements",
+	"merged-styles"
+];
 
 /**
  * @typedef {object} Corpus
@@ -410,10 +438,18 @@ const HTML_OPT_INS = { sortAttributes: true, sortTokenLists: true };
 /**
  * @param {Fixture[]} sources pages, read once
  * @param {object} options extra print options
+ * @param {Relaxation[]=} relax what those options rewrite on purpose
  * @returns {Fixture[]} the same pages, printed with them
  */
-const variant = (sources, options) =>
-	sources.map((one) => ({ ...one, min: minifyHtml(one.raw, options) }));
+const variant = (sources, options, relax) =>
+	sources.map((one) => ({ ...one, min: minifyHtml(one.raw, options), relax }));
+
+/**
+ * @param {Fixture[]} sheets stylesheets, printed with `CSS_OPT_INS`
+ * @returns {Fixture[]} the same, compared with what those rewrite set aside
+ */
+const cssOptIns = (sheets) =>
+	sheets.map((one) => ({ ...one, relax: CSS_OPT_IN_RELAX }));
 
 /**
  * Every corpus, built while jest collects — one test per fixture means the
@@ -435,9 +471,9 @@ const buildCorpora = () => {
 			// the one option whose whole claim is that the DOM does not notice.
 			htmlAllImpliedTags: variant(configHtml, { removeImpliedTags: true }),
 			htmlSmartTags: variant(configHtml, { removeImpliedTags: "smart" }),
-			htmlOptIns: variant(configHtml, HTML_OPT_INS),
+			htmlOptIns: variant(configHtml, HTML_OPT_INS, HTML_OPT_IN_RELAX),
 			css: configCss,
-			cssOptIns: configCssOptIns,
+			cssOptIns: cssOptIns(configCssOptIns),
 			filedHtml: forEngine(FILED_CONFIG_HTML_DEFECTS),
 			filedCss: forEngine(FILED_CONFIG_CSS_DEFECTS),
 			filedHtmlOptIns: forEngine(FILED_CONFIG_HTML_OPT_IN_DEFECTS),
@@ -454,10 +490,10 @@ const buildCorpora = () => {
 			html: variant(benchHtml, {}),
 			htmlAllImpliedTags: variant(benchHtml, { removeImpliedTags: true }),
 			htmlSmartTags: variant(benchHtml, { removeImpliedTags: "smart" }),
-			htmlOptIns: variant(benchHtml, HTML_OPT_INS),
+			htmlOptIns: variant(benchHtml, HTML_OPT_INS, HTML_OPT_IN_RELAX),
 			css: benchCss,
-			cssOptIns: benchmarkStylesheets((source) =>
-				minifyCss(source, CSS_OPT_INS)
+			cssOptIns: cssOptIns(
+				benchmarkStylesheets((source) => minifyCss(source, CSS_OPT_INS))
 			),
 			filedHtml: forEngine(FILED_BENCHMARK_HTML_DEFECTS),
 			filedCss: forEngine(FILED_BENCHMARK_CSS_DEFECTS),
@@ -668,13 +704,14 @@ describe(`printer output in real ${ENGINE}`, () => {
 					).__eq;
 					return batch.map((fixture) => ({
 						name: fixture.name,
-						before: htmlFacets(fixture.raw),
-						after: htmlFacets(fixture.min)
+						relax: fixture.relax,
+						before: htmlFacets(fixture.raw, fixture.relax),
+						after: htmlFacets(fixture.min, fixture.relax)
 					}));
 				},
 				cases.slice(at, at + BATCH)
 			);
-			for (const { name, before, after } of collected) {
+			for (const { name, relax, before, after } of collected) {
 				let why = "";
 				for (const facet of Object.keys(before.facets)) {
 					const a = before.facets[facet];
@@ -713,7 +750,12 @@ describe(`printer output in real ${ENGINE}`, () => {
 					if (before.styles.length === after.styles.length) {
 						for (const [i, sheet] of before.styles.entries()) {
 							if (sheet !== after.styles[i]) {
-								sheets.push({ name, before: sheet, after: after.styles[i] });
+								sheets.push({
+									name,
+									before: sheet,
+									after: after.styles[i],
+									relax
+								});
 							}
 						}
 					} else {
@@ -735,7 +777,12 @@ describe(`printer output in real ${ENGINE}`, () => {
 	const compareStylesheets = async (cases) =>
 		styleDifferences(
 			await pageFor(cases.length * 2),
-			cases.map(({ name, raw, min }) => ({ name, before: raw, after: min }))
+			cases.map(({ name, raw, min, relax }) => ({
+				name,
+				before: raw,
+				after: min,
+				relax
+			}))
 		);
 
 	/**
