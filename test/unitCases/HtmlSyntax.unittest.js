@@ -6342,11 +6342,44 @@ describe("SourceProcessor — removeEmptyElements reads the output", () => {
 
 	it("drops a run of nested empties together", () => {
 		expect(minify("<div><div><div></div></div></div>")).toBe("");
-		expect(minify("<div><span></span></div><p><em></em></p>")).toBe("");
+		// An empty `<p>` still has its margins, so only what is inside it goes.
+		expect(minify("<div><span></span></div><p><em></em></p>")).toBe("<p>");
+	});
+
+	it.each([
+		["<button></button>", "<button></button>"],
+		["<select></select>", "<select></select>"],
+		[
+			"<select><option></option><option>a</option></select>",
+			"<select><option><option>a</select>"
+		],
+		[
+			"<select><button><selectedcontent></selectedcontent></button><option>a</option></select>",
+			"<select><button><selectedcontent></selectedcontent></button><option>a</select>"
+		],
+		["<ul><li></li></ul>", "<ul><li></ul>"],
+		["<iframe></iframe>", "<iframe></iframe>"],
+		["<video></video>", "<video></video>"],
+		["<details></details>", "<details></details>"],
+		["<fieldset></fieldset>", "<fieldset></fieldset>"],
+		["<q></q>", "<q></q>"],
+		["<app-root></app-root>", "<app-root></app-root>"],
+		["<x-widget></x-widget>", "<x-widget></x-widget>"]
+	])("keeps %s, which renders or is read without children", (body, printed) => {
+		expect(minify(body)).toBe(printed);
 	});
 
 	it("drops one left empty by a comment going", () => {
 		expect(minify("<div><!--c--></div>")).toBe("");
+	});
+
+	it.each([
+		["<p>x</p><span></span><form></form>", "<p>x<form></form>"],
+		["<p>a<hr></p><div>x</div>", "<p>a<hr><p><div>x</div>"],
+		["<p>a<hr></p> <div>x</div>", "<p>a<hr><p></p> <div>x</div>"]
+	])("omits the end tags in %s that its own output would", (body, printed) => {
+		expect(minify(body)).toBe(printed);
+		expect(minify(printed)).toBe(printed);
 	});
 
 	it("keeps one that spells an attribute, whatever it holds", () => {
@@ -7386,7 +7419,7 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 		});
 
 		expect(now.code).toBe(
-			"<p>x<style>.a{--x:f(</style><style>.b{color:red}</style><script>1</script>"
+			"<p>x</p><style>.a{--x:f(</style><style>.b{color:red}</style><script>1</script>"
 		);
 		expect(later.code).toBe(now.code);
 		// The second print reads the first one's answers rather than asking again.

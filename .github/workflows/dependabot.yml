@@ -2,6 +2,11 @@ name: Dependabot
 
 on: pull_request
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  # Pull requests only: a run for a replaced commit is one nobody waits on.
+  cancel-in-progress: true
+
 permissions:
   contents: write
   pull-requests: write
@@ -9,6 +14,7 @@ permissions:
 jobs:
   dependabot-auto-merge:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     if: github.actor == 'dependabot[bot]'
     steps:
       - name: Generate Token

@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Keep async module exports live across chunks and HMR without shadowing globals.
+Keep module exports live across chunks, HMR and eval without shadowing globals.

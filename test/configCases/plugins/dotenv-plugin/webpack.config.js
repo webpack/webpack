@@ -1,6 +1,7 @@
 "use strict";
 
 const path = require("path");
+const { DotenvPlugin } = require("../../../../");
 
 /** @type {import("../../../../").Configuration[]} */
 module.exports = [
@@ -61,5 +62,12 @@ module.exports = [
 		dotenv: {
 			template: [".env", ".env.myLocal", ".env.[mode]", ".env.[mode].myLocal"]
 		}
+	},
+	// Test 8: Plugin instance - validates its own options, unlike `dotenv`
+	{
+		name: "plugin-instance",
+		mode: "development",
+		entry: "./basic.js",
+		plugins: [new DotenvPlugin({ prefix: ["WEBPACK_"] })]
 	}
 ];

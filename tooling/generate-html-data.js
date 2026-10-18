@@ -1563,44 +1563,56 @@ const PARSER_TABLES = [
 		"`<element> <attribute>` for each enumerated attribute whose invalid value default names a different state from its missing value default, so a value matching no keyword may not be dropped as redundant.",
 		["track kind"]
 	],
-	// WHY: Elements `removeEmptyElements` keeps even with no children and no
-	// attributes, because that is their ordinary form rather than a leftover.
-	// The option's other guards are rules, not names: a void element is always
-	// childless, a foreign one is not ours to judge, and an element carrying any
-	// attribute at all was written for a reason (which is what covers
-	// `<script src>`, `<iframe src>`, `<div id=mount>` and `<div class=spacer>`,
-	// each of which html-minifier-terser drops).
+	// WHY: Elements `removeEmptyElements` may drop when they hold nothing and
+	// carry no attribute: an empty one has no box, margin, marker, widget or
+	// generated text of its own, and nothing finds it by name. Every other name
+	// stays — a widget, a margin, a custom element a script upgrades, or one
+	// added to HTML after this list — so an unknown element takes the safe side.
 	[
-		"EMPTY_ELEMENT_KEPT",
+		"EMPTY_ELEMENT_DROPPED",
 		"set",
-		"Elements `removeEmptyElements` never drops: with no children and no attributes each is still doing its job, so an empty one is not a leftover.",
+		"Elements `removeEmptyElements` may drop: with no children and no attributes each renders nothing and is read by nothing; every other element, a custom one included, is kept.",
 		[
-			// Drawn into by script, and found by tag name.
-			"canvas",
-			// Filled and opened by script.
-			"dialog",
-			// A gauge reads its value off an attribute; bare, it is still a gauge.
-			"meter",
-			// Form-associated and written to by script.
-			"output",
-			"progress",
-			// The default slot, which is exactly the one with no name.
-			"slot",
-			// Its children hang off a content fragment, not off it.
-			"template",
-			// Empty is a valid value, and its own end tag is what delimits it.
-			"textarea",
-			// Table shape: dropping a cell or a row shifts every one after it.
-			"caption",
-			"col",
-			"colgroup",
-			"table",
-			"tbody",
-			"td",
-			"tfoot",
-			"th",
-			"thead",
-			"tr"
+			"a",
+			"abbr",
+			"address",
+			"article",
+			"aside",
+			"b",
+			"bdi",
+			"bdo",
+			"cite",
+			"code",
+			"data",
+			"del",
+			"dfn",
+			"div",
+			"em",
+			"footer",
+			// The parser puts one back wherever it is left out.
+			"head",
+			"header",
+			"i",
+			"ins",
+			"kbd",
+			"label",
+			"main",
+			"mark",
+			"nav",
+			"s",
+			"samp",
+			"script",
+			"section",
+			"small",
+			"span",
+			"strong",
+			"style",
+			"sub",
+			"sup",
+			"time",
+			"title",
+			"u",
+			"var"
 		]
 	],
 	// WHY: Global attributes whose empty value is the state the spec gives their

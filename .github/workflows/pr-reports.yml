@@ -9,6 +9,13 @@ on:
     workflows: [Code Size, Types Coverage]
     types: [completed]
 
+concurrency:
+  # One report per source workflow and branch; a newer report replaces the
+  # comment an older one would post. The numeric repository id keeps the
+  # repository and branch apart, as both names can contain hyphens.
+  group: ${{ github.workflow }}-${{ github.event.workflow_run.name }}-${{ github.event.workflow_run.head_repository.id }}-${{ github.event.workflow_run.head_branch }}
+  cancel-in-progress: true
+
 permissions: {}
 
 jobs:
@@ -17,6 +24,7 @@ jobs:
       github.repository == 'webpack/webpack' &&
       github.event.workflow_run.event == 'pull_request'
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     permissions:
       actions: read
       pull-requests: write
