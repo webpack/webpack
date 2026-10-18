@@ -359,7 +359,7 @@ declare interface AllCodeGenerationSchemas {
 	/**
 	 * chunk init fragments for javascript modules
 	 */
-	chunkInitFragments: InitFragment<any>[];
+	chunkInitFragments: InitFragment<ChunkRenderContextJavascriptModulesPlugin>[];
 
 	/**
 	 * native external reexport source and attributes
@@ -8432,9 +8432,9 @@ declare interface DependencyTemplateContext {
 	codeGenerationResults: CodeGenerationResults;
 
 	/**
-	 * chunkInitFragments
+	 * init fragments for the chunk, rendered with its render context
 	 */
-	chunkInitFragments: InitFragment<GenerateContext>[];
+	chunkInitFragments: InitFragment<ChunkRenderContextJavascriptModulesPlugin>[];
 
 	/**
 	 * get access to the code generation data
@@ -21267,7 +21267,7 @@ declare class ModuleDependency extends Dependency {
 /**
  * Represents ModuleExternalInitFragment.
  */
-declare class ModuleExternalInitFragment extends InitFragment<GenerateContext> {
+declare class ModuleExternalInitFragment extends InitFragment<ChunkRenderContextJavascriptModulesPlugin> {
 	/**
 	 * Creates an instance of ModuleExternalInitFragment.
 	 */
