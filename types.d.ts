@@ -7365,7 +7365,7 @@ declare interface CssPrintOptions {
 	convertApproximateColors?: boolean;
 
 	/**
-	 * drop a declaration a later one in the same block overrides even where nothing states that the target can read the later value; off by default, and only read while printing. With a `browserslist` selection the drop is already made wherever every browser it names is known to read the later value, so this widens the case where no target is selected — a selection naming a browser the tables do not cover still answers for the whole of it
+	 * drop a declaration a later one in the same block overrides even where no target is selected, wherever Chromium, Gecko and WebKit each read the later value; off by default, and only read while printing. With a `browserslist` selection the drop is already made wherever every browser it names is known to read the later value, so this widens the case where no target is selected — a selection naming a browser the tables do not cover still answers for the whole of it
 	 */
 	dropOverriddenDeclarations?: boolean;
 
@@ -7471,7 +7471,7 @@ declare interface CssProcessOptions {
 	mergeDistantRules?: boolean;
 
 	/**
-	 * drop a declaration a later one in the same block overrides even where nothing states that the target can read the later value; off by default, and only read while printing. With a `browserslist` selection the drop is already made wherever every browser it names is known to read the later value, so this widens the case where no target is selected — a selection naming a browser the tables do not cover still answers for the whole of it
+	 * drop a declaration a later one in the same block overrides even where no target is selected, wherever Chromium, Gecko and WebKit each read the later value; off by default, and only read while printing. With a `browserslist` selection the drop is already made wherever every browser it names is known to read the later value, so this widens the case where no target is selected — a selection naming a browser the tables do not cover still answers for the whole of it
 	 */
 	dropOverriddenDeclarations?: boolean;
 
@@ -13084,7 +13084,7 @@ declare interface HtmlProcessOptions {
 	removeEmptyAttributes?: boolean;
 
 	/**
-	 * drop an element with no children and no attributes, unless its bare form is meaningful (default false)
+	 * drop an element with no children and no attributes where its bare form renders nothing and nothing reads it (default false)
 	 */
 	removeEmptyElements?: boolean;
 
@@ -24127,7 +24127,7 @@ declare interface OptimizationMinimizeCss {
 	customSelectors?: boolean;
 
 	/**
-	 * Drop a declaration a later one in the same block overrides even where nothing states that the target can read the later value. Off by default. With a `browserslist` target this is already done wherever every browser it names is known to read the later value, so the option only widens the case where no target is selected and there are no engines to name — which is what csso and cssnano do unconditionally. What it gives up is the fallback pair: `color:#c65d06;color:lab(50% 100 -100)` loses the hex, so an engine that cannot read `lab()` is left with nothing. A selection naming a browser the compat tables do not cover is still answered for the whole of it rather than by this option, since naming a browser states a target the option does not override.
+	 * Drop a declaration a later one in the same block overrides even where no target is selected, assuming the engines shipping today: wherever Chromium, Gecko and WebKit each read the later value. Off by default. With a `browserslist` target this is already done wherever every browser it names is known to read the later value, so the option only widens the case where no target is selected and there are no engines to name — which is what csso and cssnano do unconditionally. What it gives up is the fallback pair: `color:#c65d06;color:lab(50% 100 -100)` loses the hex, so an engine that cannot read `lab()` is left with nothing. A selection naming a browser the compat tables do not cover is still answered for the whole of it rather than by this option, since naming a browser states a target the option does not override.
 	 * @since 5.112.0
 	 */
 	dropOverriddenDeclarations?: boolean;
@@ -24351,7 +24351,7 @@ declare interface OptimizationMinimizeHtml {
 	removeEmptyAttributes?: boolean;
 
 	/**
-	 * Drop an element that has no children and no attributes. Kept anyway when its bare form is still doing a job (`canvas`, `slot`, `template`, `textarea`, `progress`, `meter`, `output`, `dialog`, and the table structure), when it is a void element, or when it is foreign content. Off by default: CSS can give an empty element a size or a `::before`, and the minifier cannot see the stylesheet. Emptiness is read off the output rather than the source, so a run of nested empties goes together and an element left empty only by a dropped comment or by whitespace `collapseWhitespace` deletes goes with them.
+	 * Drop an element that has no children and no attributes, where its bare form renders nothing and nothing reads it: a generic container such as `div`, `span` or `section`, an inline phrase element, an empty `title`, `script` or `style`, or an attribute-less `meta`, `link` or `base`. Every other element is kept, including widgets, list items, elements with margins and custom elements. Off by default: CSS can give an empty element a size or a `::before`, and the minifier cannot see the stylesheet. Emptiness is read off the output rather than the source, so a run of nested empties goes together and an element left empty only by a dropped comment or by whitespace `collapseWhitespace` deletes goes with them.
 	 * @since 5.110.0
 	 */
 	removeEmptyElements?: boolean;
