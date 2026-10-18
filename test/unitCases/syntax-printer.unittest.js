@@ -8669,6 +8669,15 @@ describe("syntax-printer", () => {
 			});
 		}
 
+		it("should keep two calls apart where a getter may write the parameter the test reads through `arguments`", async () => {
+			const { minify } = await load();
+			const input =
+				'var x = { m: function (v) { return v; } }; function f(t) { x.args = arguments; return t ? x.m(1) : x.m(2); } Object.defineProperty(x, "m", { get: function () { x.args[0] = 0; return function (v) { return v; }; } }); console.log(f(1), f(0));';
+			const { code } = await minify(input, { compress: {}, mangle: false });
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			expect(code).toContain("t?x.m(1):x.m(2)");
+		});
+
 		it("should keep a module's exported `const` while writing its private ones as `let`", async () => {
 			const { minify } = await load();
 			const { code } = await minify(
