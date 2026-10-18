@@ -170,7 +170,7 @@ Running one integration case, and what a `configCases/` case contains: [TESTING_
 
 > [!REQUIRED]
 
-**When CI is red, read its log instead of reproducing the whole job locally**, then reproduce **only the named case**. Save logs and large reports to a file and grep them rather than reading them inline, and re-fetch check runs only after a new push. Commands and traps (a step is not a job; `yarn lint` stops at its first failing stage): [docs/verifying.md](docs/verifying.md#read-ci-rather-than-re-running-it).
+**When CI is red, read its log instead of reproducing the whole job locally**, then reproduce **only the named case**. Save logs and large reports to a file and grep them rather than reading them inline, and re-fetch check runs only when a push, re-run or CI event changed them. Commands and traps (a step is not a job; `yarn lint` stops at its first failing stage): [docs/verifying.md](docs/verifying.md#read-ci-rather-than-re-running-it).
 
 ### Verifying a performance or memory change
 
