@@ -40,3 +40,6 @@
 /*! declined: a transition list keeps its dead prefixed entry, since dropping
    it shortens every list `getComputedStyle` reads off the shorthand */
 .t13 { transition: transform .15s linear, -webkit-transform .15s linear }
+/*! declined: `at` cannot follow a color stop, so the later gradient is invalid
+   and the earlier one is what every engine reads */
+.t14 { background-image: linear-gradient(red, blue); background-image: radial-gradient(red at center, blue) }

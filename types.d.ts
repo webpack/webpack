@@ -7330,7 +7330,7 @@ declare interface CssPrintOptions {
 	convertApproximateColors?: boolean;
 
 	/**
-	 * drop a declaration a later one in the same block overrides even where nothing states that the target can read the later value; off by default, and only read while printing. With a `browserslist` selection the drop is already made wherever every browser it names is known to read the later value, so this widens the case where no target is selected — a selection naming a browser the tables do not cover still answers for the whole of it
+	 * drop a declaration a later one in the same block overrides even where no target is selected, wherever Chromium, Gecko and WebKit each read the later value; off by default, and only read while printing. With a `browserslist` selection the drop is already made wherever every browser it names is known to read the later value, so this widens the case where no target is selected — a selection naming a browser the tables do not cover still answers for the whole of it
 	 */
 	dropOverriddenDeclarations?: boolean;
 
@@ -7436,7 +7436,7 @@ declare interface CssProcessOptions {
 	mergeDistantRules?: boolean;
 
 	/**
-	 * drop a declaration a later one in the same block overrides even where nothing states that the target can read the later value; off by default, and only read while printing. With a `browserslist` selection the drop is already made wherever every browser it names is known to read the later value, so this widens the case where no target is selected — a selection naming a browser the tables do not cover still answers for the whole of it
+	 * drop a declaration a later one in the same block overrides even where no target is selected, wherever Chromium, Gecko and WebKit each read the later value; off by default, and only read while printing. With a `browserslist` selection the drop is already made wherever every browser it names is known to read the later value, so this widens the case where no target is selected — a selection naming a browser the tables do not cover still answers for the whole of it
 	 */
 	dropOverriddenDeclarations?: boolean;
 
@@ -24078,7 +24078,7 @@ declare interface OptimizationMinimizeCss {
 	customSelectors?: boolean;
 
 	/**
-	 * Drop a declaration a later one in the same block overrides even where nothing states that the target can read the later value. Off by default. With a `browserslist` target this is already done wherever every browser it names is known to read the later value, so the option only widens the case where no target is selected and there are no engines to name — which is what csso and cssnano do unconditionally. What it gives up is the fallback pair: `color:#c65d06;color:lab(50% 100 -100)` loses the hex, so an engine that cannot read `lab()` is left with nothing. A selection naming a browser the compat tables do not cover is still answered for the whole of it rather than by this option, since naming a browser states a target the option does not override.
+	 * Drop a declaration a later one in the same block overrides even where no target is selected, assuming the engines shipping today: wherever Chromium, Gecko and WebKit each read the later value. Off by default. With a `browserslist` target this is already done wherever every browser it names is known to read the later value, so the option only widens the case where no target is selected and there are no engines to name — which is what csso and cssnano do unconditionally. What it gives up is the fallback pair: `color:#c65d06;color:lab(50% 100 -100)` loses the hex, so an engine that cannot read `lab()` is left with nothing. A selection naming a browser the compat tables do not cover is still answered for the whole of it rather than by this option, since naming a browser states a target the option does not override.
 	 * @since 5.112.0
 	 */
 	dropOverriddenDeclarations?: boolean;

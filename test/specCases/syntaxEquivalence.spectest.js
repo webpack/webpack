@@ -223,6 +223,12 @@ const FILED_WPT_HTML_DEFECTS = new Map([
 
 const FILED_WPT_CSS_DEFECTS = new Map();
 
+// The same, for each corpus printed with every option that is off by default.
+const FILED_CONFIG_HTML_OPT_IN_DEFECTS = new Map();
+const FILED_CONFIG_CSS_OPT_IN_DEFECTS = new Map();
+const FILED_BENCHMARK_HTML_OPT_IN_DEFECTS = new Map();
+const FILED_BENCHMARK_CSS_OPT_IN_DEFECTS = new Map();
+
 // The same, for what webpack's own parser sees over the whole corpus.
 // Keyed `"<mode> <document>"`, so filing one print mode leaves the other held.
 const FILED_WPT_TREE_DEFECTS = new Map();
@@ -299,6 +305,7 @@ const PRINT_MODES = [
 
 /**
  * @param {string} source a stylesheet
+ * @param {object=} extra print options beyond the defaults
  * @returns {string} the same stylesheet, minified
  */
 // A fixture names the minimizer options its own claim is about, so the engine
@@ -353,10 +360,10 @@ const cssomDirective = (source) => {
 	return [];
 };
 
-const minifyCss = (source) => {
+const minifyCss = (source, extra = {}) => {
 	// The merge too, which is off by default: every corpus is then held to it.
 	/** @type {{ mode: string, [k: string]: EXPECTED_ANY }} */
-	const options = { mode: "minify", mergeDistantRules: true };
+	const options = { mode: "minify", mergeDistantRules: true, ...extra };
 	for (const name of cssomDirective(source)) options[name] = true;
 	return /** @type {{ code: string }} */ (
 		new CssSourceProcessor().process(source, options)
@@ -378,15 +385,26 @@ const minifyDeclaration = (property, value) => {
 	return colon === -1 ? "" : body.slice(colon + 1);
 };
 
+// The options off by default whose whole claim is the same CSSOM or DOM. The
+// rest change what one reports on purpose (custom-property text, whitespace,
+// attribute presence), so each needs a check of its own.
+const CSS_OPT_INS = { dropOverriddenDeclarations: true };
+
+const HTML_OPT_INS = { sortAttributes: true, sortTokenLists: true };
+
 /**
  * @typedef {object} Corpus
  * @property {string} label what to call it in a test name
  * @property {Fixture[]} html every page
  * @property {Fixture[]} htmlAllImpliedTags the same, printed with `removeImpliedTags: true`
  * @property {Fixture[]} htmlSmartTags the same, printed with `removeImpliedTags: "smart"`
+ * @property {Fixture[]} htmlOptIns the same, printed with `HTML_OPT_INS`; empty for wpt
  * @property {Fixture[]} css every stylesheet
+ * @property {Fixture[]} cssOptIns the same, printed with `CSS_OPT_INS`; empty for wpt
  * @property {Map<string, string>} filedHtml its filed DOM defects
  * @property {Map<string, string>} filedCss its filed stylesheet defects
+ * @property {Map<string, string>} filedHtmlOptIns its filed DOM defects under `HTML_OPT_INS`
+ * @property {Map<string, string>} filedCssOptIns its filed stylesheet defects under `CSS_OPT_INS`
  */
 
 /**
@@ -405,6 +423,9 @@ const variant = (sources, options) =>
 const buildCorpora = () => {
 	const configHtml = buildCorpus(CONFIG_CASES, ".html", (source) => source);
 	const configCss = buildCorpus(CONFIG_CASES, ".css", minifyCss);
+	const configCssOptIns = buildCorpus(CONFIG_CASES, ".css", (source) =>
+		minifyCss(source, CSS_OPT_INS)
+	);
 	/** @type {Corpus[]} */
 	const built = [
 		{
@@ -414,9 +435,13 @@ const buildCorpora = () => {
 			// the one option whose whole claim is that the DOM does not notice.
 			htmlAllImpliedTags: variant(configHtml, { removeImpliedTags: true }),
 			htmlSmartTags: variant(configHtml, { removeImpliedTags: "smart" }),
+			htmlOptIns: variant(configHtml, HTML_OPT_INS),
 			css: configCss,
+			cssOptIns: configCssOptIns,
 			filedHtml: forEngine(FILED_CONFIG_HTML_DEFECTS),
-			filedCss: forEngine(FILED_CONFIG_CSS_DEFECTS)
+			filedCss: forEngine(FILED_CONFIG_CSS_DEFECTS),
+			filedHtmlOptIns: forEngine(FILED_CONFIG_HTML_OPT_IN_DEFECTS),
+			filedCssOptIns: forEngine(FILED_CONFIG_CSS_OPT_IN_DEFECTS)
 		}
 	];
 	// Real projects, where `configCases` and wpt are both written to exercise a
@@ -429,9 +454,15 @@ const buildCorpora = () => {
 			html: variant(benchHtml, {}),
 			htmlAllImpliedTags: variant(benchHtml, { removeImpliedTags: true }),
 			htmlSmartTags: variant(benchHtml, { removeImpliedTags: "smart" }),
+			htmlOptIns: variant(benchHtml, HTML_OPT_INS),
 			css: benchCss,
+			cssOptIns: benchmarkStylesheets((source) =>
+				minifyCss(source, CSS_OPT_INS)
+			),
 			filedHtml: forEngine(FILED_BENCHMARK_HTML_DEFECTS),
-			filedCss: forEngine(FILED_BENCHMARK_CSS_DEFECTS)
+			filedCss: forEngine(FILED_BENCHMARK_CSS_DEFECTS),
+			filedHtmlOptIns: forEngine(FILED_BENCHMARK_HTML_OPT_IN_DEFECTS),
+			filedCssOptIns: forEngine(FILED_BENCHMARK_CSS_OPT_IN_DEFECTS)
 		});
 	}
 	if (!hasCorpus()) return built;
@@ -454,9 +485,15 @@ const buildCorpora = () => {
 		html: variant(wptHtml, {}),
 		htmlAllImpliedTags: variant(wptHtml, { removeImpliedTags: true }),
 		htmlSmartTags: variant(wptHtml, { removeImpliedTags: "smart" }),
+		// The opt-ins stay on the real-project corpora: wpt is far larger, and
+		// written to exercise one rule rather than to ship.
+		htmlOptIns: [],
 		css: wptCss,
+		cssOptIns: [],
 		filedHtml: forEngine(FILED_WPT_HTML_DEFECTS),
-		filedCss: forEngine(FILED_WPT_CSS_DEFECTS)
+		filedCss: forEngine(FILED_WPT_CSS_DEFECTS),
+		filedHtmlOptIns: new Map(),
+		filedCssOptIns: new Map()
 	});
 	return built;
 };
@@ -764,6 +801,33 @@ describe(`printer output in real ${ENGINE}`, () => {
 				1800000
 			);
 
+			// The rewrites only an option asks for, held to the same DOM and CSSOM.
+			for (const fixture of one.htmlOptIns) {
+				it(
+					`should build the same DOM and CSSOM from ${fixture.name} with the HTML opt-ins`,
+					async () => {
+						const differences = await comparePages([fixture], true);
+						expect(named(differences, one.filedHtmlOptIns)).toEqual(
+							expected(one.filedHtmlOptIns, fixture.name)
+						);
+					},
+					FILE_TIMEOUT
+				);
+			}
+
+			for (const fixture of one.cssOptIns) {
+				it(
+					`should build the same CSSOM from ${fixture.name} with the CSS opt-ins`,
+					async () => {
+						const differences = await compareStylesheets([fixture]);
+						expect(named(differences, one.filedCssOptIns)).toEqual(
+							expected(one.filedCssOptIns, fixture.name)
+						);
+					},
+					FILE_TIMEOUT
+				);
+			}
+
 			// The same rules, in the same cascade order, under conditions the engine
 			// answers alike, each computing to the same style.
 			for (const fixture of one.css) {
@@ -838,7 +902,9 @@ describe(`printer output in real ${ENGINE}`, () => {
 				const css = new Set(one.css.map((each) => each.name));
 				expect([
 					...[...one.filedHtml.keys()].filter((name) => !html.has(name)),
-					...[...one.filedCss.keys()].filter((name) => !css.has(name))
+					...[...one.filedCss.keys()].filter((name) => !css.has(name)),
+					...[...one.filedHtmlOptIns.keys()].filter((name) => !html.has(name)),
+					...[...one.filedCssOptIns.keys()].filter((name) => !css.has(name))
 				]).toEqual([]);
 			});
 		});
