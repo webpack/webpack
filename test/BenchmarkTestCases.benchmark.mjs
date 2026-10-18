@@ -55,6 +55,8 @@ const REV_LIST_REGEXP = /^([a-f0-9]+)\s*([a-f0-9]+)\s*([a-f0-9]+)?\s*$/;
 const LAST_COMMIT = typeof process.env.LAST_COMMIT !== "undefined";
 
 const checkV8Flags = () => {
+	// Walltime measures only in the workers, which get its flags at fork.
+	if (getCodspeedRunnerMode() === "walltime") return;
 	const requiredFlags = getV8Flags().filter(
 		(flag) => !flag.startsWith("--max-old-space-size")
 	);
@@ -521,6 +523,9 @@ class BenchmarkRunner {
 		// Memory mode measures each task alone in a fresh process, so its counts
 		// don't depend on which tasks share a shard and match a filtered local run.
 		const isolated = getCodspeedRunnerMode() === "memory";
+		// Walltime times every task alone, so no other build competes for the CPU,
+		// and in a fresh process, so earlier tasks leave no JIT or heap state.
+		const walltime = getCodspeedRunnerMode() === "walltime";
 
 		// Bound the pool by RAM, not just cores: a Valgrind build peaks near 11 GiB,
 		// so 16 GiB fits one worker; bigger runners auto-scale.
@@ -534,7 +539,8 @@ class BenchmarkRunner {
 
 		// CodSpeed's runner tracks one benchmark at a time: concurrent workers
 		// interleave start/stop markers and the run reports no results.
-		const numWorkers = isolated ? 1 : Math.min(cpuWorkers, memWorkers);
+		const numWorkers =
+			isolated || walltime ? 1 : Math.min(cpuWorkers, memWorkers);
 		// Memory mode counts native allocations, so V8's own work must stay out of them:
 		// Maglev compiles despite `--no-opt`, helper threads split GC work, and a major
 		// GC starts on a timer or falls inside the sample by a few KB of live heap.
@@ -556,7 +562,8 @@ class BenchmarkRunner {
 					// Valgrind memory accumulates across builds and frees only on exit, so
 					// recycle the worker after each task (`0` = always restart) to cap peak
 					// at one build's footprint; otherwise a shard OOMs mid-run (exit 143).
-					idleMemoryLimit: underValgrind || isolated ? 0 : undefined,
+					idleMemoryLimit:
+						underValgrind || isolated || walltime ? 0 : undefined,
 					// Forward the V8 flags CodSpeed needs (seeds, --no-opt, …) so the
 					// child processes measure under the same deterministic conditions.
 					forkOptions: {
