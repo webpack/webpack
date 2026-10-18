@@ -6,6 +6,7 @@ it("should keep eval results when initializing several exports", () => {
 	expect(library.assigned).toBe(43);
 	expect(library.fromAssignment).toBe(43);
 	expect(library.fromNestedEval).toBe(44);
+	expect(library.fromSequence).toBe(47);
 	expect(library.destructured).toBe(5);
 	expect(library.last).toBe(46);
 	expect(library.loopPattern).toBe(1);

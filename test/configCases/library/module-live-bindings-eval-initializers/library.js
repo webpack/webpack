@@ -6,6 +6,7 @@ export let nested = () => () => eval("other");
 export let assigned = 0;
 export let fromAssignment = (assigned = eval("43"));
 export let fromNestedEval = eval('eval("44")');
+export let fromSequence = (eval("40"), eval("47"));
 export let update = (next) => eval("value = next; other = next + 1");
 
 // prettier-ignore
