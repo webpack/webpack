@@ -434,6 +434,9 @@ const readsAsModule = (input) => {
 	}
 };
 
+// What stands for swc's `passes: 0`, which it runs until nothing changes.
+const SWC_UNBOUNDED_PASSES = 10;
+
 /**
  * One of swc's minifier tests, as swc's own harness reads it: the compress
  * options of the nearest `config.json` up the tree, and a `mangle.json` beside
@@ -464,6 +467,9 @@ const readSwcTest = (file, { knows }) => {
 	const compress = dir.startsWith(swcTestsDir)
 		? { defaults: true, ...readJson(path.join(dir, "config.json")) }
 		: undefined;
+	// swc repeats its passes until one changes nothing where `passes` is 0 or
+	// unset; terser, given more, stops once a pass leaves the tree no smaller.
+	if (compress && !compress.passes) compress.passes = SWC_UNBOUNDED_PASSES;
 	const [area] = path.relative(swcTestsDir, file).split(path.sep);
 	const mangle = readJson(path.join(path.dirname(file), "mangle.json"));
 	// swc also reads its Rust field's camelCase spelling, which terser does not.
@@ -1312,20 +1318,6 @@ const IMPROVED_YET_BIGGER = {
 		"7 bytes fewer, 2 more gzipped: `{x(n);return}` breaks the `return void` runs of the helpers around it",
 	"fixture/issues/d3-color/1/input.js (the default minimizer's options)":
 		"2 bytes fewer, 1 more gzipped: `p*e*h` breaks the `h*(` runs of the products beside it gzip reused",
-	"evaluate/string_case (the default minimizer's options)":
-		"57 bytes fewer, 5 more gzipped: `\"I\".toLowerCase().charCodeAt(0)` matched the calls around it",
-	"evaluate/string_case (a module mangled at its top level)":
-		"57 bytes fewer, 5 more gzipped: `\"I\".toLowerCase().charCodeAt(0)` matched the calls around it",
-	"evaluate/string_case (reminify 2 {\"mangle\":false})":
-		"57 bytes fewer, 5 more gzipped: `\"I\".toLowerCase().charCodeAt(0)` matched the calls around it",
-	"evaluate/string_case (reminify 3 {})":
-		"57 bytes fewer, 5 more gzipped: `\"I\".toLowerCase().charCodeAt(0)` matched the calls around it",
-	"evaluate/string_case (reminify 4 {\"toplevel\":true})":
-		"57 bytes fewer, 5 more gzipped: `\"I\".toLowerCase().charCodeAt(0)` matched the calls around it",
-	"evaluate/string_case (reminify 7 {\"safari10\":true})":
-		"57 bytes fewer, 5 more gzipped: `\"I\".toLowerCase().charCodeAt(0)` matched the calls around it",
-	"evaluate/string_case (reminify 8 {\"compress\":{\"reduce_funcs\":false}})":
-		"57 bytes fewer, 5 more gzipped: `\"I\".toLowerCase().charCodeAt(0)` matched the calls around it",
 	"harmony/issue_2345 (the default minimizer's options)":
 		"10 bytes fewer, 7 more gzipped: the folded `[3,2,1].join(\"-\")` matched the one left after it",
 	"harmony/issue_2345 (reminify 2 {\"mangle\":false})":
@@ -1462,6 +1454,48 @@ const IMPROVED_YET_BIGGER = {
 		"34 bytes fewer, 1 more gzipped: the first block's `const e=513` inlined as `513n` breaks the `BigInt(e)` runs the blocks after it repeat",
 	"replaceAll.js (the default minimizer's options)":
 		"11 bytes fewer, 8 more gzipped: a block's `a=\"\"` inlined shifts the names its loops mangle, breaking the runs the blocks around it repeat",
+	"export/issue_2038_2 (the default minimizer's options)":
+		"1 byte more, 4 more gzipped: read as a module, the exported `const` mangles to `t` and exports as `t as CONST`, as terser names it",
+	"export/name_cache_import_star_as_name_from_module (the default minimizer's options)":
+		"3 bytes fewer, 1 more gzipped: read as a module, the namespace mangles to `e` and exports as `e as stuff`",
+	"harmony/module_enabled (the default minimizer's options)":
+		"11 bytes fewer, 1 more gzipped: read as a module, the binding mangles to `o` and exports as `o as apple`",
+	"set-like-class-mutation.js (the default minimizer's options)":
+		"10 bytes fewer, 5 more gzipped: two `throw new Test262Error(` merged into one `throw` lose the run gzip matched",
+	"special_casing_conditional.js (the default minimizer's options)":
+		"154 bytes fewer, 4 more gzipped: Greek case changes folded to their letters, which gzip matches less than the repeated `.toLowerCase()`",
+	"special_casing.js (the default minimizer's options)":
+		"74 bytes fewer, 2 more gzipped: case changes folded to their letters, which gzip matches less than the repeated `.toUpperCase()`",
+	"S11.14_A2.1_T2.js (the default minimizer's options)":
+		"1 byte fewer, 3 more gzipped: `\"\u2026\"+(x,1)` folded to `(x,\"\u20261\")` moves the sequence ahead of the string gzip matched",
+	"11.4.1-4.a-16.js (the default minimizer's options)":
+		"14 bytes fewer, 1 more gzipped: `delete arguments` folded to `!1`, which the code around it repeats less",
+	"scope-lex-close-dflt.js (the default minimizer's options)":
+		"23 bytes fewer, 1 more gzipped: the block's `let` read into the function returning it breaks the `probeDefault` runs gzip matched",
+	"S12.14_A11_T2.js (the default minimizer's options)":
+		"34 bytes fewer, 3 more gzipped: code after a `try` that always leaves dropped, breaking the loop bodies' repeated runs",
+	"S12.14_A7_T1.js (the default minimizer's options)":
+		"9 bytes fewer, 5 more gzipped: `if(a)throw b;throw c` merged into `throw a?b:c`, losing the repeated `throw new Test262Error(` run",
+	"S12.14_A7_T3.js (the default minimizer's options)":
+		"9 bytes fewer, 8 more gzipped: `if(a)throw b;throw c` merged into `throw a?b:c`, losing the repeated `throw new Test262Error(` run",
+	"15.7.4.2.js (the default minimizer's options)":
+		"19 bytes fewer, 1 more gzipped: `Math.pow(2,16)` folded to `65536` breaks the `Math.pow(2,` runs beside it",
+	"constructor-buffer-sequence.js (the default minimizer's options)":
+		"55 bytes fewer, 6 more gzipped: `new` dropped before `Error` breaks the `new Error(` runs the rest repeat",
+	"fixture/issues/11103/input.js (its own options)":
+		"3 bytes more, as much gzipped: the block's `let` read as a function's folds `url` to `\"api/\"`, while the `url+=\"/\"` it no longer collapses into stays",
+	"fixture/issues/11103/input.js (the default minimizer's options)":
+		"5 bytes more, 1 more gzipped: the block's `let` read as a function's folds `url` to `\"api/\"`, while the `url+=\"/\"` it no longer collapses into stays",
+	"fixture/issues/12299/input.js (its own options)":
+		"8 bytes fewer, 2 more gzipped: the `return 2` after a `try` whose `finally` leaves dropped, breaking the `return 2}` runs",
+	"fixture/issues/8622/input.js (its own options)":
+		"4 bytes fewer, 2 more gzipped: read as a module, `bar` mangles to `t`, breaking the parameter names' runs",
+	"fixture/issues/9453/input.js (the default minimizer's options)":
+		"4 bytes fewer, 8 more gzipped: `typeof class{}` folded to `\"function\"` breaks the `console.log(typeof` runs",
+	"fixture/member_expr/callee/input.js (its own options)":
+		"3 bytes more, 6 more gzipped: the object read once at the head of the optional chain inlines, while the case's options keep its declaration",
+	"drop-unused/issue_t1447_export_const (a module mangled at its top level)":
+		"5 bytes fewer, 6 more gzipped: the exported `const` kept out of its reader, where terser's copy repeats the `console.log(\"PASS\")` gzip matched",
 };
 
 // Sources whose shorter spelling no longer repeats text gzip matched, by the
@@ -1478,8 +1512,7 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 		"`c ? x : c` written as `c && x` where the source repeats the conditional gzip matched",
 		[
 			"bound-to-collator-instance.js (the default minimizer's options)",
-			"returns-same-results-as-NumberFormat.js (the default minimizer's options)",
-			"short-circuit-compound-assignment.js (the default minimizer's options)"
+			"returns-same-results-as-NumberFormat.js (the default minimizer's options)"
 		]
 	],
 	[
@@ -1522,7 +1555,6 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 			"S11.14_A2.1_T1.js (the default minimizer's options)",
 			"S11.3.1_A2.1_T1.js (the default minimizer's options)",
 			"S11.3.2_A2.1_T1.js (the default minimizer's options)",
-			"S11.4.1_A4.js (the default minimizer's options)",
 			"S11.4.4_A2.1_T1.js (the default minimizer's options)",
 			"S11.4.5_A2.1_T1.js (the default minimizer's options)",
 			"S11.5.1_A2.1_T1.js (the default minimizer's options)",
@@ -1579,7 +1611,6 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 			"S8.12.8_A1.js (the default minimizer's options)",
 			"S8.12.8_A2.js (the default minimizer's options)",
 			"S8.6.2_A6.js (the default minimizer's options)",
-			"S8.7_A5_T1.js (the default minimizer's options)",
 			"argument-is-new-reg-exp-and-instance-is-string-hello.js (the default minimizer's options)",
 			"arguments-are-new-reg-exp-and-4-and-instance-is-string-hello.js (the default minimizer's options)",
 			"arguments-are-new-reg-exp-and-hi-and-instance-is-string-hello.js (the default minimizer's options)",
@@ -1676,7 +1707,6 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 		"a value read once moved into the property it is stored to, where the declaration or arguments it leaves matched the ones around it",
 		[
 			"fixture/issues/11684/preserved/input.js (its own options)",
-			"fixture/issues/11684/preserved/input.js (the default minimizer's options)",
 			"fixture/projects/jquery/24/input.js (its own options)"
 		]
 	],
@@ -1841,7 +1871,8 @@ const oxcOptionsOf = (options) => {
 		filename: module ? "input.mjs" : "input.js",
 		options: {
 			module,
-			compress: { keepNames },
+			// As webpack's output is compared at ECMAScript 2020, so is oxc's.
+			compress: { target: "es2020", keepNames },
 			mangle: { toplevel: module, keepNames },
 			codegen: { removeWhitespace: true }
 		}
@@ -2206,6 +2237,9 @@ describe("JavaScript minifier", () => {
 							corpus.read(file, reader)
 						);
 						const oxcSet = "the default minimizer's options";
+						// webpack's minimizer reads `ecma` off `output.environment`, 2020 for a
+						// modern target, which oxc's output assumes too.
+						const oxcEcma = 2020;
 						/** @type {Map<Source, string | null | Error>} */
 						const oxcOutputs = new Map();
 						if (!corpus.withoutOxc && corpus.optionSets.includes(oxcSet)) {
@@ -2463,10 +2497,36 @@ describe("JavaScript minifier", () => {
 									// A smaller output that prints wrong is no lead to follow.
 									!(expected !== undefined && runs && misprint(oxc))
 								) {
+									const plain = /** @type {MinifyOptions} */ (optionsFor(source));
+									// As webpack's minimizer passes it, to the compressor too.
+									const modern = await outcome(printer.minify, source.input, {
+										...plain,
+										ecma: oxcEcma,
+										compress: plain.compress && {
+											...plain.compress,
+											ecma: oxcEcma
+										}
+									});
+									if (modern.code === undefined) {
+										differences.push(
+											`${source.name} (${setName}, ecma ${oxcEcma}) failed: ${modern.error}`
+										);
+									}
+									const modernCode =
+										modern.code === undefined ? ours.code : modern.code;
+									const wrong =
+										runs && modernCode !== ours.code
+											? misprint(modernCode)
+											: undefined;
+									if (wrong !== undefined) {
+										differences.push(
+											`${source.name} (${setName}, ecma ${oxcEcma}) prints differently${wrong}`
+										);
+									}
 									await compareWithRival(
 										source,
 										{ name: "oxc", code: oxc },
-										ours.code,
+										modernCode,
 										OXC_SMALLER,
 										"OXC_SMALLER"
 									);

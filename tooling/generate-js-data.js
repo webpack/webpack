@@ -1240,19 +1240,12 @@ const collectPureBuiltIns = () => {
 	const globals = [];
 	/** @type {Record<string, string[]>} */
 	const statics = {};
-	for (const name of Object.keys(builtins).sort()) {
+	/**
+	 * @param {string} name a built-in BCD lists
+	 * @returns {string[]} its static members the oldest Node webpack builds on has
+	 */
+	const staticMembers = (name) => {
 		const entry = builtins[name];
-		// A constructor's own entry dates the global; a namespace's dates itself.
-		const compat = (entry[name] || entry).__compat;
-		if (
-			unread.has(name) ||
-			!isInOldestNode(compat, oldestNode) ||
-			!Object.prototype.hasOwnProperty.call(global, name)
-		) {
-			continue;
-		}
-		globals.push(name);
-		if (!/^[A-Z]/.test(name)) continue;
 		/** @type {string[]} */
 		const members = [];
 		for (const key of Object.keys(entry).sort()) {
@@ -1280,6 +1273,34 @@ const collectPureBuiltIns = () => {
 			if (/\.prototype[.-]|-instances-/i.test(spec)) continue;
 			if (impure.has(`${name}.${key}`)) continue;
 			if (isInOldestNode(memberCompat, oldestNode)) members.push(key);
+		}
+		return members;
+	};
+	// BCD lists `of` and `from` once, on `%TypedArray%`, which each typed array inherits.
+	const typedArrayStatics = staticMembers("TypedArray");
+	const TypedArray = Object.getPrototypeOf(Int8Array);
+	for (const name of Object.keys(builtins).sort()) {
+		const entry = builtins[name];
+		// A constructor's own entry dates the global; a namespace's dates itself.
+		const compat = (entry[name] || entry).__compat;
+		if (
+			unread.has(name) ||
+			!isInOldestNode(compat, oldestNode) ||
+			!Object.prototype.hasOwnProperty.call(global, name)
+		) {
+			continue;
+		}
+		globals.push(name);
+		if (!/^[A-Z]/.test(name)) continue;
+		const members = staticMembers(name);
+		if (
+			Object.getPrototypeOf(/** @type {EXPECTED_ANY} */ (global)[name]) ===
+			TypedArray
+		) {
+			for (const member of typedArrayStatics) {
+				if (!members.includes(member)) members.push(member);
+			}
+			members.sort();
 		}
 		if (members.length > 0) statics[name] = members;
 	}
