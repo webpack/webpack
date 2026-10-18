@@ -265,7 +265,7 @@ declare interface AdditionalDataKnown {
 	/**
 	 * the AST webpack should parse instead of the source
 	 */
-	webpackAST: PreparsedAst;
+	webpackAST?: PreparsedAst;
 }
 type AfterContextResolveData = ContextResolveData &
 	ContextOptions & {
