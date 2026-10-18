@@ -2,6 +2,6 @@
 
 module.exports = [
 	[
-		/a module library exports its bindings as copies read once, since the module calls eval\(\), which reads a binding by the name it was declared with\n {4}\.\/evaluated\.js/
+		/a module library may export a stale binding, since the module calls eval\(\), and a write made inside it is not seen\n {4}\.\/evaluated\.js/
 	]
 ];
