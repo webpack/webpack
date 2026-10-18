@@ -4230,7 +4230,7 @@ declare class Compilation {
 	 * the load itself; anything the tap reads off the requirement set must be
 	 * captured before queueing, since `create` runs later.
 	 */
-	addLazyRuntimeModule<T>(
+	addLazyRuntimeModule<T extends object>(
 		chunk: Chunk,
 		load: () => Promise<T>,
 		create: (loaded: T) => RuntimeModule,
