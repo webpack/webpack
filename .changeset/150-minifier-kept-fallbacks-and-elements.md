@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Keep CSS fallbacks and elements the minifier wrongly took as having no effect.
+Keep CSS fallbacks, HTML elements and near-gray `oklch()` hues the minifier wrongly dropped.

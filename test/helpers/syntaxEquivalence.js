@@ -890,7 +890,9 @@ const installHelpers = (generics) => {
 				// to the same standard as the light tree. A closed one is reachable
 				// from neither, and the round-trip case compares it as a template.
 				if (element.shadowRoot !== null) {
-					facets.shadows.push(renderedTextOf(element.shadowRoot));
+					facets.shadows.push(
+						spaced(element, renderedTextOf(element.shadowRoot))
+					);
 					collect(element.shadowRoot, depth + 1, inPage);
 				}
 				collect(element, depth + 1, inPage);
@@ -906,7 +908,7 @@ const installHelpers = (generics) => {
 				'template[shadowrootmode="closed" i]'
 			)) {
 				const content = /** @type {HTMLTemplateElement} */ (closed).content;
-				facets.shadows.push(renderedTextOf(content));
+				facets.shadows.push(spaced(closed, renderedTextOf(content)));
 				collect(content, 0, true);
 			}
 		}
@@ -2355,10 +2357,20 @@ const compareStyles = async ({ pairs, types }) => {
 				return true;
 			}
 			const whole = new RegExp(`^(?:${COLOR_LITERAL.source})$`, "i");
+			if (whole.test(rawA) && whole.test(rawB)) {
+				return withinOneStep(clippedAs(rawA), paintedAs(rawB));
+			}
+			// A value holding several colors, each read on its own and the rest as is.
+			const parted = new RegExp(`(${COLOR_LITERAL.source})`, "gi");
+			const [xp, yp] = [x, y].map((text) => text.split(parted));
 			return (
-				whole.test(rawA) &&
-				whole.test(rawB) &&
-				withinOneStep(clippedAs(rawA), paintedAs(rawB))
+				xp.length > 1 &&
+				xp.length === yp.length &&
+				xp.every((part, i) =>
+					i % 2 === 0
+						? part === yp[i]
+						: withinOneStep(clippedAs(part), paintedAs(yp[i]))
+				)
 			);
 		}
 		return x === y;
