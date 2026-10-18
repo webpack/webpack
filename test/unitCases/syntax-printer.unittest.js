@@ -3047,6 +3047,11 @@ const CORRECTED_CASES = [
 		{ compress: {}, mangle: false }
 	],
 	[
+		"a class of a case a constant `switch` skips, which a reached case reads in its dead zone",
+		'try { switch (1) { case 0: class C {} console.log("no"); case 1: console.log(typeof C); } } catch (e) { console.log(e.name); }',
+		{ compress: {}, mangle: false }
+	],
+	[
 		"a `var` of two names in a `default` before a calling case",
 		'var b = "outer"; function f(x) { switch (0) { default: var c, b; case x(): } for (var i = 0; i < 2; i++) b = x(b); return b; } console.log(f(function (v) { return v + 1; }), b);',
 		{ compress: {}, mangle: false }
