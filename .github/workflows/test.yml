@@ -513,17 +513,29 @@ jobs:
           node-version: lts/*
           cache: yarn
 
+      # The version comes from .github/runtimes/Dockerfile, which Dependabot bumps.
+      - name: Read the ${{ matrix.runtime }} version
+        id: runtime
+        # An empty version would let setup-bun fall back to the latest release.
+        run: |
+          version="$(sed -n 's/^FROM [^:]*:\(.*\) AS ${{ matrix.runtime }}$/\1/p' .github/runtimes/Dockerfile)"
+          if [ -z "$version" ]; then
+            echo "No ${{ matrix.runtime }} stage in .github/runtimes/Dockerfile" >&2
+            exit 1
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
       - name: Use Deno
         if: matrix.runtime == 'deno'
         uses: denoland/setup-deno@22d081ff2d3a40755e97629de92e3bcbfa7cf2ed # v2.0.5
         with:
-          deno-version: v2.x
+          deno-version: v${{ steps.runtime.outputs.version }}
 
       - name: Use Bun
         if: matrix.runtime == 'bun'
         uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
         with:
-          bun-version: latest
+          bun-version: ${{ steps.runtime.outputs.version }}
 
       - run: node tooling/retry.js yarn --frozen-lockfile
 
