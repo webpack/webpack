@@ -16184,6 +16184,15 @@ describe("CssSyntax minify — a later value no engine reads keeps the one befor
 		expect(dropOverridden(css)).toContain("linear-gradient(red,blue)");
 	});
 
+	it("drops a `text-decoration` behind one naming another color", () => {
+		expect(
+			minifyFor(
+				"a{text-decoration:underline blue;text-decoration:underline red}",
+				MODERN
+			)
+		).toBe("a{text-decoration:underline red}");
+	});
+
 	it("converts an `oklch()` gray, which states no hue to lose", () => {
 		expect(minifyFor("a{color:oklch(50% 0 0)}", MODERN)).toBe(
 			"a{color:#636363}"
