@@ -264,6 +264,12 @@ const IMPROVED_CASES = [
 		'function f(e,n,t){var b=n[t];console.log(t in e,b)}function g(c){var x=c;return x+=1,x*=3}function h(c){var z=c+1;return[2*z,z]}f({p:1},{p:2},"p"),console.log(g(2),h(3));'
 	],
 	[
+		"a value with effects moved past an outer `var` it then calls, a parameter, and a `var` a loop head writes",
+		'function o(p, req) { var sl = req(); for (var t in { a: 1 }); return [function (k) { var x = h(k); return sl(x); }, function (k) { var x = h(k); return p[x]; }, function (k) { var x = h(k); return t[x]; }]; } function h(k) { return k; } console.log(o({ a: 4 }, function () { return function (x) { return x + 1; }; }).map((f) => f("a")).join());',
+		{ compress: {}, mangle: false },
+		'function o(p,req){var sl=req();for(var t in{a:1});return[function(k){return sl(h(k))},function(k){return p[h(k)]},function(k){return t[h(k)]}]}function h(k){return k}console.log(o({a:4},function(){return function(x){return x+1}}).map(f=>f("a")).join());'
+	],
+	[
 		"a call in a loop of a local function with an empty body, as its arguments",
 		"function g(x) { function f(a) {} for (var i = 0; i < 2; i++) f(x.y); while (f()) x.z(); return f; } console.log(g({ y: 1 })());",
 		{ compress: {}, mangle: false },
@@ -1362,7 +1368,7 @@ const IMPROVED_CASES = [
 		"a function written in place passed the names of its parameters, which it reads instead, its value called, tagged, typed or read past a chain",
 		'function f(o, k) { var a = (function (o, k) { return o.k ? o.m : o[k]; })(o, k)(), c = typeof (function (o, k) { return o[k] || o.p; })(o, k), d = (function (o, k) { return o?.[o.k]?.[k]; })(o, k).length, e = (function (o, k) { return o[k] ? o.u : o.t; })(o, k)`x`; return [a === o, c, d, e]; } console.log(f({ k: "p", p: { q: "ab" }, m() { return this; }, t(s) { return s[0]; } }, "q"));',
 		{ compress: {}, mangle: false },
-		'function f(o,k){var a=(o.k?o.m:o[k])(),c=typeof(o[k]||o.p),d=(o?.[o.k]?.[k]).length,e=(o[k]?o.u:o.t)`x`;return[a===o,c,d,e]}console.log(f({k:"p",p:{q:"ab"},m(){return this},t:s=>s[0]},"q"));'
+		'function f(o,k){return[(o.k?o.m:o[k])()===o,typeof(o[k]||o.p),(o?.[o.k]?.[k]).length,(o[k]?o.u:o.t)`x`]}console.log(f({k:"p",p:{q:"ab"},m(){return this},t:s=>s[0]},"q"));'
 	],
 	[
 		"an arrow written in place passed the names of its parameters, naming `yield` inside a generator",
@@ -1838,8 +1844,8 @@ const KEPT_CASES = [
 	["an arrow calling `eval`", `!function () { ${TRY} [1].map(() => eval("this")); }();`],
 	["a value with effects kept before a read of `console`, which it may patch", 'var log = console.log; function g() { console.log = function (x) { log("patched", x); }; return 1; } function f() { var v = g(); console.log(v); console.log = log; } f(); f();'],
 	["a value kept before a global no built-in names, a member a built-in computes, a shadowed built-in, or a built-in the value writes", 'function f(Math) { var v = g(); h(v); var w = g(); console.log(RegExp.$1, w); var x = g(); console.log(Math.max(x)); } function k() { var o = console; var u = (console = { log: function () { o.log("new"); } }, 1); console.log(u); console = o; } var h = console.log; function g() { return 2; } f({ max: String }); k();'],
-	["a value with effects kept before a `var` written again, declared in a generator, or a parameter", 'function o(p) { var s = { a: 1 }; function* gen() { var t = { a: 2 }; yield function (k) { var x = h(k); return t[x]; }; } function h(k) { s = { a: 3 }; return k; } return [function (k) { var x = h(k); return s[x]; }, function (k) { var x = h(k); return p[x]; }, gen().next().value]; } var r = o({ a: 4 }); console.log(r[0]("a"), r[1]("a"), r[2]("a"));'],
-	["a value with effects kept before a `let`, a `var` a loop or a pattern writes, or behind an `await`", 'function o() { let s = { a: 1 }; for (var t in { a: 1 }); var u = {}; [u] = [{ a: 2 }]; var v = { a: 3 }; return [function (k) { var x = h(k); return s[x]; }, function (k) { var x = h(k); return t[x]; }, function (k) { var x = h(k); return u[x]; }, async function (k) { var x = await h(k); return v[x]; }]; } function h(k) { return k; } console.log(o().map((f) => f("a")).join());'],
+	["a value with effects kept before a `var` written again, declared in a generator, or a parameter `arguments` writes", 'function o(p) { var s = { a: 1 }, args = arguments; function* gen() { var t = { a: 2 }; yield function (k) { var x = h(k); return t[x]; }; } function h(k) { s = { a: 3 }; args[0] = { a: 5 }; return k; } return [function (k) { var x = h(k); return s[x]; }, function (k) { var x = h(k); return p[x]; }, gen().next().value]; } var r = o({ a: 4 }); console.log(r[0]("a"), r[1]("a"), r[2]("a"));'],
+	["a value with effects kept before a `let`, a `var` a pattern writes, or behind an `await`", 'function o() { let s = { a: 1 }; var u = {}; [u] = [{ a: 2 }]; var v = { a: 3 }; return [function (k) { var x = h(k); return s[x]; }, function (k) { var x = h(k); return u[x]; }, async function (k) { var x = await h(k); return v[x]; }]; } function h(k) { return k; } console.log(o().map((f) => f("a")).join());'],
 	["a parameter given an argument", `!function (a) { ${TRY} console.log(a); }(Math.random());`],
 	["a parameter given nothing", `!function (a) { ${TRY} console.log(a, a = Math.random()); }();`],
 	["a name", `!function f() { ${TRY} console.log(f); }();`],
