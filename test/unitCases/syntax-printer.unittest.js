@@ -234,6 +234,12 @@ const stringArray = (length, string = (index) => `w${index}`) =>
 /** @type {[string, string, import("terser").MinifyOptions, string?][]} */
 const IMPROVED_CASES = [
 	[
+		"a top-level `const` nothing writes, as `let` where `toplevel` keeps other code from seeing it",
+		"const one = { k: 1 }; const two = [one]; console.log(two, one);",
+		{ compress: {}, mangle: false, toplevel: true },
+		"let one={k:1};console.log([one],one);"
+	],
+	[
 		"`void x ?? y`, which runs `x` and reads `y` whatever `x` holds",
 		'function y() { console.log("y"); } var z = 2; console.log(void y() ?? 1, void 0 ?? z, void y() ?? (y(), 3));',
 		{ compress: {}, mangle: false },
