@@ -8776,6 +8776,17 @@ describe("syntax-printer", () => {
 			});
 		}
 
+		it("should keep an extra constructor argument reading a `let` in its dead zone, and an optional call of a `let` written again", async () => {
+			const { minify } = await load();
+			for (const input of [
+				"function g() { try { return new function (v) { this.v = v; }(1, x).v; } catch (e) { return e.name; } let x; } console.log(g());",
+				"function f() { let d = void 0; d ||= function () { console.log(\"called\"); }; d?.(console.log(\"effect\")); return 1; } console.log(f());"
+			]) {
+				const { code } = await minify(input, { compress: {}, mangle: false });
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			}
+		});
+
 		it("should keep two calls apart where a getter may write the parameter the test reads through `arguments`", async () => {
 			const { minify } = await load();
 			const input =
