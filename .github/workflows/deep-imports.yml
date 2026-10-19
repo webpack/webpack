@@ -8,7 +8,10 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  # Only pull request runs share a group. A group holds one pending run, so
+  # with a shared group a third push to `main` would evict the one queued
+  # behind the run in progress; every other run keys on its own run id.
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.ref || github.run_id }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 permissions:

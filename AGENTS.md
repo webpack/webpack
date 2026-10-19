@@ -24,6 +24,8 @@ Five habits that counter the usual coding-agent failures (assuming silently, ove
 
 These habits are working when diffs carry only requested changes, code is simple the first time, and clarifying questions come before implementation rather than after mistakes.
 
+**One task per session.** Every call re-reads the whole session, so a call at 500k tokens of context costs several times one in a fresh session. Once a task's PR is open or merged, end with a short handoff brief instead of starting the next task here, and never drive several PRs from one session. Hand read-heavy investigation (transcripts, large logs, wide searches) to a subagent, so the reading stays out of this context. A run longer than about ten minutes goes in the background once, without progress polls ([how](docs/verifying.md#long-runs)).
+
 ## Commands
 
 Use **yarn**, not npm. A fresh checkout has no `node_modules`: if a script fails on a missing module, run `yarn --frozen-lockfile` first, the same command CI uses. Every command is a `package.json` script; these are the ones whose use isn't obvious from the name:
@@ -170,7 +172,7 @@ Running one integration case, and what a `configCases/` case contains: [TESTING_
 
 > [!REQUIRED]
 
-**When CI is red, read its log instead of reproducing the whole job locally**, then reproduce **only the named case** — commands and traps (a step is not a job; `yarn lint` stops at its first failing stage): [docs/verifying.md](docs/verifying.md#read-ci-rather-than-re-running-it).
+**When CI is red, read its log instead of reproducing the whole job locally**, then reproduce **only the named case**. Save logs and large reports to a file and grep them rather than reading them inline, and re-fetch check runs only when a push, re-run or CI event changed them. Commands and traps (a step is not a job; `yarn lint` stops at its first failing stage): [docs/verifying.md](docs/verifying.md#read-ci-rather-than-re-running-it).
 
 ### Verifying a performance or memory change
 
@@ -182,15 +184,16 @@ Read [docs/performance.md](docs/performance.md) before claiming or measuring a p
 
 > [!REQUIRED]
 
-**Read [docs/pull-requests.md](docs/pull-requests.md) in full before branching, committing or opening a PR, and on every event of a PR you opened** — it holds the changeset format, branch and commit conventions, the PR body template and how to drive the PR to green. The rules it enforces:
+**Read [docs/pull-requests.md](docs/pull-requests.md) in full once per session, before branching, committing or opening a PR**; PR events don't need a re-read — it holds the changeset format, branch and commit conventions, the PR body template and how to drive the PR to green. The rules it enforces:
 
 - **Changeset**: every user-facing change needs one in `.changeset/` — one sentence, one per PR.
 - **Branch** `<type>/<short-description>`, the type picked from the diff and matching the PR's "What kind of change…" answer; never a `claude/`, `bot/`, `ai/` or other tool prefix. Rename before the first push; a task leaves one branch on `origin` and ends with a `Branches on origin:` line.
 - **Commit author** is the requester's GitHub account, never a bot; no `Co-authored-by` trailers; ask when the identity is unknown.
 - **Open from a branch not behind `main`**: rebase, never merge `main` in.
 - **PR body**: paste the org template yourself with every section, bold labels spelled exactly and `n/a` where one doesn't apply, including **Use of AI** and a **What kind of change…** answer matching the branch prefix. Write it briefly and simply; for a fix or improvement, show a real before/after (code, output, size, memory or CPU) under **Summary**.
-- **Subscribe to every PR you open** and stay subscribed until it is merged or closed, or the requester says stop.
-- **Never post to GitHub on your own initiative** — comments, review replies, PR body edits after opening (except installing the template over an auto-created body), replies to bots. Bring the finding and your draft reply into the session.
+- **Subscribe to every PR you open** and unsubscribe once CI is green and every automated review is handled, or the requester says stop; a PR waiting only on human review needs no live session.
+- **Never post to GitHub on your own initiative** — comments, review replies, PR body edits after opening (except installing the template over an auto-created body), replies to bots other than CodeRabbit. Bring the finding and your draft reply into the session.
+- **Resolve CodeRabbit threads yourself** as described in [docs/pull-requests.md](docs/pull-requests.md#after-opening-the-pr--wait-for-the-automated-reviews).
 - **Don't rebase or merge the base branch into an open PR unasked.**
 - **A question is not a go-ahead**: asked what happened, why, or whether you changed something, answer and propose the change, then push only once the requester agrees, even to fix your own mistake. A request phrased as a question ("could you…?") is still a request.
 - **Every check ends green**; read coverage only once every uploading suite has reported.

@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Rebuild a module under `cacheUnaffected` when a module it re-exports is deleted.
+Rebuild under `cacheUnaffected` a module whose re-export target goes or returns.

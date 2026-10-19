@@ -72,6 +72,15 @@ updates:
       dependencies:
         patterns:
           - "*"
+  # The Bun and Deno versions the `runtimes` job runs (see the Dockerfile). One
+  # pull request per release, so a new runtime reds only the bump that brought it.
+  - package-ecosystem: "docker"
+    directory: "/.github/runtimes"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 2
+    labels:
+      - dependencies
   - package-ecosystem: "gitsubmodule"
     directory: "/"
     schedule:

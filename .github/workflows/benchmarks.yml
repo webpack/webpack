@@ -17,8 +17,11 @@ on:
 concurrency:
   # Named rather than `github.workflow`, which reads as the caller's name when
   # `test.yml` calls this — sharing that group would have the run cancel itself.
-  group: Benchmarks-${{ github.ref }}
-  # Every push to `main` shares one group, so cancelling leaves that commit with
+  # Only pull request runs share a group. A group holds one pending run, so
+  # with a shared group a third push to `main` would evict the one queued
+  # behind the run in progress; every other run keys on its own run id.
+  group: Benchmarks-${{ github.event_name == 'pull_request' && github.ref || github.run_id }}
+  # Cancelling a push to `main` would leave that commit with
   # no run for CodSpeed to compare against — it then falls back to an older
   # `main`, attributing the commits in between to the pull request. Only a
   # superseded pull request run is dropped.
@@ -68,7 +71,7 @@ jobs:
           console.log(`--- Memory Status ---\nTotal: ${toGb(os.totalmem())}\nFree:  ${toGb(os.freemem())}\nUsed:  ${toGb(os.totalmem()-os.freemem())}`)'
 
       - name: Run benchmarks
-        uses: CodSpeedHQ/action@f842b9a3ffe213dbb81768fd7f7eeb4dfcf1c369 # v5.4.2
+        uses: CodSpeedHQ/action@821a40cd6c80e3cfe387caf55668287addd808da # v5.5.0
         with:
           run: yarn benchmark --ci
           mode: "walltime"
@@ -120,7 +123,7 @@ jobs:
       # Each case is measured in its own fresh process, so its result does not
       # depend on the shard. All cases in one job exceed CodSpeed's upload limit.
       - name: Run memory benchmarks
-        uses: CodSpeedHQ/action@f842b9a3ffe213dbb81768fd7f7eeb4dfcf1c369 # v5.4.2
+        uses: CodSpeedHQ/action@821a40cd6c80e3cfe387caf55668287addd808da # v5.5.0
         with:
           run: yarn benchmark --ci
           mode: "memory"

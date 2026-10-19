@@ -2226,18 +2226,10 @@
   resolved "https://registry.yarnpkg.com/@pnpm/deps.graph-sequencer/-/deps.graph-sequencer-1100.0.1.tgz#8a2aeed98855391404ad808494f0230ff5f33139"
   integrity sha512-pOr5+q1fLYKwFN3LAJuGZEnfXDcQ73zqgDHMtGy+K+uIoUqyY+6MeDCWFwfu+4EFuq76I5EPFofoNAI+Bmmq4A==
 
-"@puppeteer/browsers@3.2.5":
+"@puppeteer/browsers@3.2.5", "@puppeteer/browsers@^3.2.2":
   version "3.2.5"
   resolved "https://registry.yarnpkg.com/@puppeteer/browsers/-/browsers-3.2.5.tgz#4216501d96daf99079a26c7e14a1d6baacaf043e"
   integrity sha512-UoCo3Pynbm37aLEEoydSiG+t24ui7sLD40+07CKxzxNy4PpSowJMkvlLIiV67XjP1lMVynhQVnuwlTABqBH8LQ==
-  dependencies:
-    modern-tar "^0.8.5"
-    yargs "^18.0.0"
-
-"@puppeteer/browsers@^3.2.2":
-  version "3.2.4"
-  resolved "https://registry.yarnpkg.com/@puppeteer/browsers/-/browsers-3.2.4.tgz#9cc2f094db0dc8e09ddae5b33bc68c950e0a443d"
-  integrity sha512-okJ6yQMc0SBexOKxMi966omwAV1uAPwgF/YMZdb04gZQPXVjWHl9bmXjZYtIcsN1+PN3Bz4iFfGK3g+c6lZJ0Q==
   dependencies:
     modern-tar "^0.8.5"
     yargs "^18.0.0"
@@ -8389,9 +8381,9 @@ pkijs@^3.3.3:
     tslib "^2.8.1"
 
 playwright-core@^1.63.0:
-  version "1.64.0"
-  resolved "https://registry.yarnpkg.com/playwright-core/-/playwright-core-1.64.0.tgz#a765f91dabd2b2cadd67e87439842c1d6c72c652"
-  integrity sha512-T9r+MZkTECl2+oUcZ26YgZzTrYidTsIhYYkJix+6iDOymOb1FB2RLLSOxRGnZGv5DStt+aduIVbt+E8WygXYpg==
+  version "1.64.1"
+  resolved "https://registry.yarnpkg.com/playwright-core/-/playwright-core-1.64.1.tgz#ca9ec82d7da6ced1b2326ec59ef097aaa9a29f94"
+  integrity sha512-BC4s8y6SEVA6Q1rSxZTto8hI1KUI3xXlHGZgvGqP4IqPdI/a6FX9H29IDNz7vKo9l21b6LfYosScPL6M3xxyDQ==
 
 pluralize@^8.0.0:
   version "8.0.0"
@@ -9048,10 +9040,10 @@ schema-utils@^3.0.0, schema-utils@^3.1.1:
     ajv "^6.12.5"
     ajv-keywords "^3.5.2"
 
-schema-utils@^4.0.0, schema-utils@^4.3.3, schema-utils@^4.5.0:
-  version "4.5.0"
-  resolved "https://registry.yarnpkg.com/schema-utils/-/schema-utils-4.5.0.tgz#aaf8d588bd2b19511175175a5222baef648c009c"
-  integrity sha512-zJlMCZ0cAR5p/Y4oVpRoqioDMJcGxaXRrQ/4rP4WyR84vc5z/DolXdbvXeDpTwbtocDFr2rhPqHPErDCUtz2kA==
+schema-utils@^4.0.0, schema-utils@^4.3.3, schema-utils@^4.8.1:
+  version "4.8.1"
+  resolved "https://registry.yarnpkg.com/schema-utils/-/schema-utils-4.8.1.tgz#d005632a0ca18522d903d82e1dcccbddcd57e7bb"
+  integrity sha512-x39pYlJPyH7Uge5QO64B9XGP9zLDc9WNmiQZc+CE3IzZPvMu3lHOuAMGpYNoPixEL7MSWlGhYTg5UlLSL8G6iw==
   dependencies:
     "@types/json-schema" "^7.0.15"
     ajv "^8.20.0"

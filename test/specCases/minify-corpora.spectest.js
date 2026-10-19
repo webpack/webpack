@@ -1,6 +1,6 @@
 "use strict";
 
-// cspell:ignore defun destructurings fnames fromindex napi reminify reminifies targettype tointeger ufuzz
+// cspell:ignore defun destructurings feeback fnames fromindex napi plotly reminify reminifies rtrn targettype tointeger trlg ufuzz
 
 // Holds webpack's JavaScript minifier to every test terser, swc and oxc write
 // for theirs. Each source of each corpus below is minified by webpack and by the
@@ -1302,6 +1302,14 @@ const rivalSmallerSeen = new Set();
  * @type {Record<string, string>}
  */
 const IMPROVED_YET_BIGGER = {
+	"pure_getters/set_immutable_5 (its own options)":
+		"13 bytes fewer, 1 more gzipped: `console.log(c?\"FAIL\":\"PASS\")` merges two calls a file this small compresses alike",
+	"fixture/issues/11755/input.js (its own options)":
+		"5 bytes more, 11 more gzipped: the calls merged into `console.log(100===r?…)` keep `collapse_vars` from folding `r` into the test",
+	"fixture/issues/11755/input.js (the default minimizer's options)":
+		"13 bytes fewer, 2 more gzipped: the calls merged into `console.log(100===n?…)` keep `collapse_vars` from folding `n` into the test",
+	"fixture/issues/12298/input.js (the default minimizer's options)":
+		"13 bytes fewer, 5 more gzipped: `console.log(1===o?\"A\":\"C\")` breaks the `console.log(\"` runs of the functions around it",
 	"collapse_vars/var_defs (a module mangled at its top level)":
 		"22 bytes more, 17 more gzipped: the arguments read in place fold a pass sooner, leaving `(r=\"10\")*r-r` a third pass would fold",
 	"collapse_vars/modified (a module mangled at its top level)":
@@ -1470,8 +1478,6 @@ const IMPROVED_YET_BIGGER = {
 		"1 byte fewer, 3 more gzipped: `\"\u2026\"+(x,1)` folded to `(x,\"\u20261\")` moves the sequence ahead of the string gzip matched",
 	"11.4.1-4.a-16.js (the default minimizer's options)":
 		"14 bytes fewer, 1 more gzipped: `delete arguments` folded to `!1`, which the code around it repeats less",
-	"scope-lex-close-dflt.js (the default minimizer's options)":
-		"23 bytes fewer, 1 more gzipped: the block's `let` read into the function returning it breaks the `probeDefault` runs gzip matched",
 	"S12.14_A11_T2.js (the default minimizer's options)":
 		"34 bytes fewer, 3 more gzipped: code after a `try` that always leaves dropped, breaking the loop bodies' repeated runs",
 	"S12.14_A7_T1.js (the default minimizer's options)":
@@ -1780,6 +1786,27 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 		[
 			"valid-increments.js (the default minimizer's options)",
 			"valid-rounding-increments.js (the default minimizer's options)"
+		]
+	],
+	[
+		"a `var`'s first write moved into its declaration, where the writes beside it repeat the `x = …` gzip matched",
+		[
+			"fixture/next/feeback-plotly/1/input.js (its own options)",
+			"expected-return-value.js (the default minimizer's options)",
+			"set-values-return-undefined.js (the default minimizer's options)",
+			"array-elem-put-unresolvable-no-strict.js (the default minimizer's options)",
+			"array-elem-trlg-iter-rest-rtrn-close-null.js (the default minimizer's options)",
+			"array-rest-put-unresolvable-no-strict.js (the default minimizer's options)",
+			"obj-id-init-fn-name-fn.js (the default minimizer's options)",
+			"obj-id-put-unresolvable-no-strict.js (the default minimizer's options)",
+			"obj-id-simple-no-strict.js (the default minimizer's options)",
+			"obj-prop-nested-array-yield-expr.js (the default minimizer's options)",
+			"obj-prop-nested-obj-yield-expr.js (the default minimizer's options)",
+			"obj-prop-put-unresolvable-no-strict.js (the default minimizer's options)",
+			"obj-rest-computed-property.js (the default minimizer's options)",
+			"obj-rest-non-string-computed-property-string-1.js (the default minimizer's options)",
+			"obj-rest-str-val.js (the default minimizer's options)",
+			"fn-name-accessor-get.js (the default minimizer's options)"
 		]
 	],
 	[

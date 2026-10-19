@@ -1,4 +1,4 @@
-const deleted = WATCH_STEP === "1";
+const deleted = WATCH_STEP === "1" || WATCH_STEP === "3";
 
 for (const [name, load, keys, deletedKeys] of [
 	["export { a as r } from", () => require("./named"), ["own", "r"], ["own"]],
