@@ -182,6 +182,43 @@ describe("SourceProcessor", () => {
 		});
 	});
 
+	describe("deferred retractable pieces", () => {
+		/**
+		 * @returns {InstanceType<typeof PrintContext>} a context holding pieces `a`, `b` and `c`
+		 */
+		const pieces = () => {
+			const context = new PrintContext({ mode: "minify" }, () => "");
+			for (const text of ["a", "b", "c"]) context.emitRetractable(text);
+			return context;
+		};
+
+		it("reads a deferred piece's text once the output is read", () => {
+			const context = pieces();
+			const source = { text: "x" };
+			context.deferRetractable(1, source);
+			source.text = "y";
+			// A pass over the pieces reads it first, as the output would.
+			context.substitute(() => undefined, "\u0000");
+			source.text = "z";
+			expect(context.result()).toBe("ayc");
+		});
+
+		it("lets a later retract, rewrite or replacement of the piece win", () => {
+			const retracted = pieces();
+			retracted.deferRetractable(1, { text: "x" });
+			retracted.retract(1);
+			expect(retracted.result()).toBe("ac");
+			const rewritten = pieces();
+			rewritten.deferRetractable(1, { text: "x" });
+			rewritten.rewriteRetractable(1, "z");
+			expect(rewritten.result()).toBe("azc");
+			const replaced = pieces();
+			replaced.deferRetractable(1, { text: "x" });
+			replaced.replaceAll("all");
+			expect(replaced.result()).toBe("all");
+		});
+	});
+
 	// `mode` is the only thing that names the output, and it resolves in the
 	// shared processor — so both languages bound to it must agree.
 	describe("mode", () => {
