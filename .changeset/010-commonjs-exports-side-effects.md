@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Treat pure top-level CommonJS export assignments as side-effect free.
+Treat top-level `exports.x = …` and `module.exports = …` writes of pure values as side-effect free.
