@@ -420,7 +420,8 @@ const describeCases = (config) => {
 									compiler.run((err, _stats) => {
 										const stats = /** @type {import("../../").Stats} */ (_stats);
 										const deprecations = deprecationTracker();
-										if (err) return done(err);
+										// closed so its cache does not store after the test, see ConfigTestCases
+										if (err) return compiler.close(() => done(err));
 										const infrastructureLogErrors = [
 											...filterInfraStructureErrors(infraStructureLog, {
 												run: 3,
@@ -509,7 +510,7 @@ const describeCases = (config) => {
 									const deprecationTracker = deprecationTracking.start();
 									compiler.run((err) => {
 										deprecationTracker();
-										if (err) return done(err);
+										if (err) return compiler.close(() => done(err));
 										run();
 									});
 								} else {

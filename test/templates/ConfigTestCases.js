@@ -320,6 +320,19 @@ const describeCases = (config) => {
 						};
 
 						/**
+						 * Closes the compiler before reporting a failed build. Left open, its
+						 * filesystem cache still stores the pack once idle, after the test is
+						 * over and at the same time as the next compiler on the same cache
+						 * directory, and one store then renames a file away from the other.
+						 * @param {import("../../").Compiler} compiler compiler that failed
+						 * @param {Error} err the fatal error
+						 * @param {(err?: Error) => void} done done callback
+						 */
+						const closeAfterFatalError = (compiler, err, done) => {
+							compiler.close(() => handleFatalError(err, done));
+						};
+
+						/**
 						 * Runs the compiler, reporting a synchronous throw from a hook
 						 * (e.g. a `compilation` tap) to the callback like a failed run.
 						 * @param {import("../../").Compiler} compiler compiler
@@ -350,7 +363,7 @@ const describeCases = (config) => {
 
 								runCompiler(compiler, (err) => {
 									deprecationTracker();
-									if (err) return handleFatalError(err, done);
+									if (err) return closeAfterFatalError(compiler, err, done);
 									// Check after close: the disk cache is stored during close,
 									// so store failures (warnings) only surface afterwards.
 									compiler.close((closeErr) => {
@@ -401,7 +414,11 @@ const describeCases = (config) => {
 								runCompiler(compiler, (err, stats) => {
 									deprecationTracker();
 									if (err) {
-										return handleFatalError(/** @type {Error} */ (err), done);
+										return closeAfterFatalError(
+											compiler,
+											/** @type {Error} */ (err),
+											done
+										);
 									}
 									const { modules, children, errorsCount } =
 										/** @type {import("../../").Stats} */ (stats).toJson({
@@ -690,7 +707,11 @@ const describeCases = (config) => {
 
 									compiler.run((err) => {
 										if (err) {
-											return handleFatalError(/** @type {Error} */ (err), done);
+											return closeAfterFatalError(
+												compiler,
+												/** @type {Error} */ (err),
+												done
+											);
 										}
 										compiler.run((error, stats) => {
 											compiler.close((err) => {
