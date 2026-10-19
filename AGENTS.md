@@ -190,8 +190,8 @@ Read [docs/performance.md](docs/performance.md) before claiming or measuring a p
 - **Open from a branch not behind `main`**: rebase, never merge `main` in.
 - **PR body**: paste the org template yourself with every section, bold labels spelled exactly and `n/a` where one doesn't apply, including **Use of AI** and a **What kind of change…** answer matching the branch prefix. Write it briefly and simply; for a fix or improvement, show a real before/after (code, output, size, memory or CPU) under **Summary**.
 - **Subscribe to every PR you open** and unsubscribe once CI is green and every automated review is handled, or the requester says stop; a PR waiting only on human review needs no live session.
-- **Never post to GitHub on your own initiative** — comments, review replies, PR body edits after opening (except installing the template over an auto-created body), replies to bots. Bring the finding and your draft reply into the session.
-- **Resolve every CodeRabbit thread yourself**, no asking: fix the code, reply with the commit and resolve; or, when the finding is wrong, reply why and resolve.
+- **Never post to GitHub on your own initiative** — comments, review replies, PR body edits after opening (except installing the template over an auto-created body), replies to bots other than CodeRabbit. Bring the finding and your draft reply into the session.
+- **Resolve CodeRabbit threads yourself** as described in [docs/pull-requests.md](docs/pull-requests.md#after-opening-the-pr--wait-for-the-automated-reviews).
 - **Don't rebase or merge the base branch into an open PR unasked.**
 - **A question is not a go-ahead**: asked what happened, why, or whether you changed something, answer and propose the change, then push only once the requester agrees, even to fix your own mistake. A request phrased as a question ("could you…?") is still a request.
 - **Every check ends green**; read coverage only once every uploading suite has reported.
