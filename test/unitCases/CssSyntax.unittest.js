@@ -12770,7 +12770,8 @@ describe("CssSyntax minify — what a nesting lowering writes is minified once",
 		// cut down to meets the earlier rule only once it is keyed again.
 		expect(
 			settled(
-				".t{.t{top:0}}.t{.t{top:0}top:0}.t{.t{top:0}.t{top:0}}.t{.t{top:0}top:0;.t{top:0}}"
+				".t{.t{top:0}}.t{.t{top:0}top:0}.t{.t{top:0}.t{top:0}}.t{.t{top:0}top:0;.t{top:0}}",
+				undefined
 			)
 		).toBe(".t{top:0;.t{top:0}}");
 	});
