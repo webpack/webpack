@@ -58,19 +58,19 @@ export default (bench) => {
 	// ---- scope analysis over a pre-parsed AST ----
 	// The regression gate for analyzer changes: no parse noise.
 	bench.add(
-		"unit benchmark \"scope-analyzer-unit\", analyze 'typescript.js'",
+		"unit benchmark \"js-scope-analyzer-unit\", analyze 'typescript.js'",
 		() => {
 			analyzeScope(typescriptAst);
 		}
 	);
 	bench.add(
-		"unit benchmark \"scope-analyzer-unit\", analyze 'three.module.js'",
+		"unit benchmark \"js-scope-analyzer-unit\", analyze 'three.module.js'",
 		() => {
 			analyzeScope(threeEsmAst);
 		}
 	);
 	bench.add(
-		"unit benchmark \"scope-analyzer-unit\", analyze 'lodash.js'",
+		"unit benchmark \"js-scope-analyzer-unit\", analyze 'lodash.js'",
 		() => {
 			analyzeScope(lodashAst);
 		}
@@ -78,36 +78,39 @@ export default (bench) => {
 
 	// ---- parse only, for the parse-vs-analyze split ----
 	bench.add(
-		"unit benchmark \"scope-analyzer-unit\", parse 'typescript.js'",
+		"unit benchmark \"js-scope-analyzer-unit\", parse 'typescript.js'",
 		() => {
 			parse(typescriptSource, "auto");
 		}
 	);
 	bench.add(
-		"unit benchmark \"scope-analyzer-unit\", parse 'three.module.js'",
+		"unit benchmark \"js-scope-analyzer-unit\", parse 'three.module.js'",
 		() => {
 			parse(threeEsmSource, "module");
 		}
 	);
-	bench.add("unit benchmark \"scope-analyzer-unit\", parse 'lodash.js'", () => {
-		parse(lodashSource, "auto");
-	});
+	bench.add(
+		"unit benchmark \"js-scope-analyzer-unit\", parse 'lodash.js'",
+		() => {
+			parse(lodashSource, "auto");
+		}
+	);
 
 	// ---- end to end, the shape the concatenation path actually pays ----
 	bench.add(
-		"unit benchmark \"scope-analyzer-unit\", parse+analyze 'typescript.js'",
+		"unit benchmark \"js-scope-analyzer-unit\", parse+analyze 'typescript.js'",
 		() => {
 			analyzeScope(parse(typescriptSource, "auto"));
 		}
 	);
 	bench.add(
-		"unit benchmark \"scope-analyzer-unit\", parse+analyze 'three.module.js'",
+		"unit benchmark \"js-scope-analyzer-unit\", parse+analyze 'three.module.js'",
 		() => {
 			analyzeScope(parse(threeEsmSource, "module"));
 		}
 	);
 	bench.add(
-		"unit benchmark \"scope-analyzer-unit\", parse+analyze 'lodash.js'",
+		"unit benchmark \"js-scope-analyzer-unit\", parse+analyze 'lodash.js'",
 		() => {
 			analyzeScope(parse(lodashSource, "auto"));
 		}

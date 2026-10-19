@@ -119,20 +119,17 @@ const tokenizeCss = (css) => {
  */
 export default (bench) => {
 	// Whole-stylesheet parse — the main entry (CSS analog of JavascriptParser.parse).
+	bench.add('unit benchmark "css-parser-unit", parseAStylesheet (min)', () => {
+		parseAStylesheet(cssMin);
+	});
 	bench.add(
-		'unit benchmark "css-parser-tailwind-unit", parseAStylesheet (min)',
-		() => {
-			parseAStylesheet(cssMin);
-		}
-	);
-	bench.add(
-		'unit benchmark "css-parser-tailwind-unit", parseAStylesheet (expanded)',
+		'unit benchmark "css-parser-unit", parseAStylesheet (expanded)',
 		() => {
 			parseAStylesheet(cssExpanded);
 		}
 	);
 	bench.add(
-		'unit benchmark "css-parser-tailwind-unit", parseAStylesheetsContents (min)',
+		'unit benchmark "css-parser-unit", parseAStylesheetsContents (min)',
 		() => {
 			parseAStylesheetsContents(cssMin);
 		}
@@ -140,19 +137,19 @@ export default (bench) => {
 
 	// Grammar: streaming parse + visitor walk (SourceProcessor).
 	bench.add(
-		'unit benchmark "css-parser-tailwind-unit", process (min, no visitors)',
+		'unit benchmark "css-parser-unit", process (min, no visitors)',
 		() => {
 			new SourceProcessor().use({}).process(cssMin);
 		}
 	);
 	bench.add(
-		'unit benchmark "css-parser-tailwind-unit", process (expanded, no visitors)',
+		'unit benchmark "css-parser-unit", process (expanded, no visitors)',
 		() => {
 			new SourceProcessor().use({}).process(cssExpanded);
 		}
 	);
 	bench.add(
-		'unit benchmark "css-parser-tailwind-unit", process (min, Decl+Url visitors)',
+		'unit benchmark "css-parser-unit", process (min, Decl+Url visitors)',
 		() => {
 			new SourceProcessor()
 				.use({ [NodeType.Declaration]: NOOP, [NodeType.Url]: NOOP })
@@ -162,52 +159,40 @@ export default (bench) => {
 
 	// Tokenizer throughput (readToken) — min vs expanded shows the
 	// whitespace-tokenizing cost.
-	bench.add(
-		'unit benchmark "css-parser-tailwind-unit", readToken (min)',
-		() => {
-			tokenizeCss(cssMin);
-		}
-	);
-	bench.add(
-		'unit benchmark "css-parser-tailwind-unit", readToken (expanded)',
-		() => {
-			tokenizeCss(cssExpanded);
-		}
-	);
+	bench.add('unit benchmark "css-parser-unit", readToken (min)', () => {
+		tokenizeCss(cssMin);
+	});
+	bench.add('unit benchmark "css-parser-unit", readToken (expanded)', () => {
+		tokenizeCss(cssExpanded);
+	});
 
 	// Granular grammar entry points on big single-construct inputs.
+	bench.add('unit benchmark "css-parser-unit", parseARule (big)', () => {
+		parseARule(BIG_RULE);
+	});
+	bench.add('unit benchmark "css-parser-unit", parseADeclaration (big)', () => {
+		parseADeclaration(BIG_DECLARATION);
+	});
 	bench.add(
-		'unit benchmark "css-parser-tailwind-unit", parseARule (big)',
-		() => {
-			parseARule(BIG_RULE);
-		}
-	);
-	bench.add(
-		'unit benchmark "css-parser-tailwind-unit", parseADeclaration (big)',
-		() => {
-			parseADeclaration(BIG_DECLARATION);
-		}
-	);
-	bench.add(
-		'unit benchmark "css-parser-tailwind-unit", parseAComponentValue (big)',
+		'unit benchmark "css-parser-unit", parseAComponentValue (big)',
 		() => {
 			parseAComponentValue(BIG_COMPONENT_VALUE);
 		}
 	);
 	bench.add(
-		'unit benchmark "css-parser-tailwind-unit", parseAListOfComponentValues (big)',
+		'unit benchmark "css-parser-unit", parseAListOfComponentValues (big)',
 		() => {
 			parseAListOfComponentValues(BIG_VALUE_LIST);
 		}
 	);
 	bench.add(
-		'unit benchmark "css-parser-tailwind-unit", parseACommaSeparatedListOfComponentValues (big)',
+		'unit benchmark "css-parser-unit", parseACommaSeparatedListOfComponentValues (big)',
 		() => {
 			parseACommaSeparatedListOfComponentValues(BIG_COMMA_LIST);
 		}
 	);
 	bench.add(
-		'unit benchmark "css-parser-tailwind-unit", parseABlocksContents (big)',
+		'unit benchmark "css-parser-unit", parseABlocksContents (big)',
 		() => {
 			parseABlocksContents(BIG_BLOCK_CONTENTS, 0);
 		}

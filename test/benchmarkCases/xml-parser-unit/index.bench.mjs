@@ -1,6 +1,6 @@
 // XML is the HTML module's second grammar: the same tree and the same
 // `SourceProcessor`, but well-formed XML instead of HTML tree construction, as
-// an SVG or XHTML asset is read. Printing is `xml-printer-svg-unit`'s.
+// an SVG or XHTML asset is read. Printing is `xml-printer-unit`'s.
 
 import { createRequire } from "module";
 
@@ -59,27 +59,21 @@ const RET_END = (
  */
 export default (bench) => {
 	// Whole-document parse — the main entry.
-	bench.add('unit benchmark "xml-parser-svg-unit", parseHtml', () => {
+	bench.add('unit benchmark "xml-parser-unit", parseHtml', () => {
 		parseHtml(svg, 0, { xml: true });
 	});
 
 	// AST-skip fast path (drop text nodes).
-	bench.add(
-		'unit benchmark "xml-parser-svg-unit", parseHtml (skip text)',
-		() => {
-			parseHtml(svg, 0, { xml: true, skip: { text: true } });
-		}
-	);
+	bench.add('unit benchmark "xml-parser-unit", parseHtml (skip text)', () => {
+		parseHtml(svg, 0, { xml: true, skip: { text: true } });
+	});
 
 	// Grammar: parse + visitor walk (SourceProcessor).
+	bench.add('unit benchmark "xml-parser-unit", process (no visitors)', () => {
+		new SourceProcessor().use({}).process(svg, { xml: true });
+	});
 	bench.add(
-		'unit benchmark "xml-parser-svg-unit", process (no visitors)',
-		() => {
-			new SourceProcessor().use({}).process(svg, { xml: true });
-		}
-	);
-	bench.add(
-		'unit benchmark "xml-parser-svg-unit", process (Element+Comment visitors)',
+		'unit benchmark "xml-parser-unit", process (Element+Comment visitors)',
 		() => {
 			new SourceProcessor()
 				.use({ [NodeType.Element]: NOOP, [NodeType.Comment]: NOOP })
@@ -88,7 +82,7 @@ export default (bench) => {
 	);
 
 	// Tokenizer throughput (push interface).
-	bench.add('unit benchmark "xml-parser-svg-unit", tokenize', () => {
+	bench.add('unit benchmark "xml-parser-unit", tokenize', () => {
 		tokenizeXml(svg, 0, {
 			openTag: RET_END,
 			closeTag: RET_END,
