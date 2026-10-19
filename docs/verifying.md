@@ -18,7 +18,7 @@ How to prove a change before pushing it and how to read CI when it is red, behin
 
 ## Long runs
 
-**Start a run longer than about ten minutes once, in the background, with its output in a file** (benchmarks, parity corpora, a callgrind count), then wait for the completion notification: no progress polls and no re-armed waiters, since each one re-reads the whole session. Keep any scheduled wake under 55 minutes; past the 1-hour prompt cache a wake rewrites the whole context.
+**When a long run can't be avoided locally, start it once, in the background, with its output in a file** (benchmarks, parity corpora, a callgrind count), then wait for the completion notification: no progress polls and no re-armed waiters, since each one re-reads the whole session. Keep any scheduled wake under 55 minutes; past the 1-hour prompt cache a wake rewrites the whole context.
 
 ## Local failures and broad sweeps
 
@@ -26,6 +26,15 @@ A local failure is yours only if it doesn't reproduce on `main` — check in a w
 
 - **Never read pass/fail through a pipe** — `yarn test:base … | grep …` discards jest's exit code. Check the exit status or read the `Tests:` line.
 - **Never attribute a failure without a base run** — re-run that exact case on unmodified files first; most surprises are pre-existing or contention flakes.
+
+## Long checks belong to CI
+
+When the only proof a change works is a check that takes longer than a few minutes, CI runs it, not the session. Examples: `yarn test:minify-corpora` and the other spec-conformance suites, `test:integration`, benchmarks.
+
+- **Push, then wait for the result**: run the fast checks first (`yarn lint`, the touched unit tests and `configCases/`). Then push and subscribe to the PR, and let its CI completion wake the session. Never poll, and never run the same check locally while CI runs it.
+- **On red, reproduce only the named case** from the failing job's log ([below](#read-ci-rather-than-re-running-it)).
+- **Narrow before running locally**: when you must see a result before pushing, filter a long suite to the one table or case at issue (`-t "<name>"`).
+- **A long local run can mislead**: a submodule or installed dependency that differs from the lockfile gives results CI won't reproduce. Check what CI ran against before trusting a local result.
 
 ## Read CI rather than re-running it
 
