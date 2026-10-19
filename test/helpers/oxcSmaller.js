@@ -352,7 +352,6 @@ const OXC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/next/regression-1/framework-798bab57daac3897/input.js",
 			"swc minifier: fixture/projects/jquery/11/input.js",
 			"swc minifier: fixture/projects/next/extra/if_return/.4/input.js",
-			"swc minifier: fixture/projects/next/.archive-4/framework-054ead69ea8124b4cb27/input.js",
 			"swc minifier: projects/files/backbone-1.1.0.js",
 			"swc minifier: projects/files/underscore-1.5.2.js"
 		]
