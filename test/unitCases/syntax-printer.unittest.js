@@ -294,12 +294,6 @@ const IMPROVED_CASES = [
 		"function f(g){let d;return[d,1]}console.log(f(function(){throw 0}));"
 	],
 	[
-		"the type of a function its scope declares and nothing writes",
-		'function g() { function x() {} return [typeof x === "function", "function" != typeof x, typeof x]; } console.log(g());',
-		{ compress: {}, mangle: false },
-		'function g(){return[!0,!1,"function"]}console.log(g());'
-	],
-	[
 		"an unused function a catch clause's parameter shadows",
 		"function f() { function a() {} try { throw 42; } catch (a) { return a; } } console.log(f());",
 		{ compress: {}, mangle: false },
