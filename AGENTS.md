@@ -24,7 +24,7 @@ Five habits that counter the usual coding-agent failures (assuming silently, ove
 
 These habits are working when diffs carry only requested changes, code is simple the first time, and clarifying questions come before implementation rather than after mistakes.
 
-**One task per session.** Every call re-reads the whole session, so a call at 500k tokens of context costs several times one in a fresh session. Once a task's PR is open or merged, end with a short handoff brief instead of starting the next task here, and never drive several PRs from one session. Hand read-heavy investigation (transcripts, large logs, wide searches) to a subagent, so the reading stays out of this context. A run longer than about ten minutes goes in the background once, without progress polls ([how](docs/verifying.md#long-runs)). Never Read a generated or giant file whole (`types.d.ts`, `lib/*/syntax-*.js`, `lib/*/data.js`, snapshots): grep for the symbol, then Read that range.
+**Recommend a fresh session when it pays.** Every call re-reads the whole session, so a call at 500k tokens of context costs several times one in a fresh session. When a task is done and the next one needs little of this context, suggest starting a new session with a short handoff brief; it is only a recommendation, and staying is right when the context saves explaining everything again. Hand read-heavy investigation (transcripts, large logs, wide searches) to a subagent, so the reading stays out of this context. A run longer than about ten minutes goes in the background once, without progress polls ([how](docs/verifying.md#long-runs)). Never read a generated or very large file whole (type declarations, generated tables, snapshots): search for the symbol, then read that range.
 
 ## Commands
 
@@ -258,7 +258,12 @@ Users measure webpack by build time and peak heap. Much of `lib/` sits on per-mo
 
 ### Startup cost
 
-Every build, CLI run and worker starts cold, and loading code is most of that start. Load a module only when the input or options need it, through a facade getter or `memoize(() => require(…))` rather than a top-level `require`, and build tables and regexes on first use ([details](docs/performance.md#startup-cost)).
+Every process starts cold, and loading code is most of that start, so pay only for what this input and these options use:
+
+- **Load on first use**: reach a module that some inputs or options never need through one lazy accessor, not an import at the top of the file.
+- **Keep cheap things light**: constants and option helpers callers need live apart from the heavy code that uses them.
+- **Turned-off work costs nothing**: build tables, regexes and closures on first use, not at load or construction.
+- **Prove it by counting** which modules a fresh process loads, not by timing it.
 
 ### Keep instance shapes stable
 
