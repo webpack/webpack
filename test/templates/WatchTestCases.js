@@ -37,7 +37,7 @@ const testRootDirectory = path.join(__dirname, "..");
 const STEP_DELAY = 200;
 const AGGREGATE_TIMEOUT = 50;
 const RETOUCH_DELAY = 1000;
-const RETOUCH_LIMIT = 3;
+const RETOUCH_LIMIT = 5;
 
 /**
  * @param {string} src src
@@ -394,7 +394,12 @@ const describeCases = (config) => {
 											fs.renameSync(file, away);
 											fs.renameSync(away, file);
 										} else if (fs.existsSync(file)) {
-											fs.utimesSync(file, now, now);
+											// a new mtime alone went unreported on macOS once (#22801), so the
+											// file is replaced by a copy, which arrives as a fresh file
+											const copy = `${file}.retouch`;
+											fs.copyFileSync(file, copy);
+											fs.utimesSync(copy, now, now);
+											fs.renameSync(copy, file);
 										} else if (fs.existsSync(path.dirname(file))) {
 											// a dropped deletion is re-sent by deleting again; no build
 											// runs between the two calls, so none sees the file
