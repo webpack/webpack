@@ -24,7 +24,7 @@ Five habits that counter the usual coding-agent failures (assuming silently, ove
 
 These habits are working when diffs carry only requested changes, code is simple the first time, and clarifying questions come before implementation rather than after mistakes.
 
-**One task per session.** Every call re-reads the whole session, so a call at 500k tokens of context costs several times one in a fresh session. Once a task's PR is open or merged, end with a short handoff brief instead of starting the next task here, and never drive several PRs from one session. Hand read-heavy investigation (transcripts, large logs, wide searches) to a subagent, so the reading stays out of this context. A run longer than about ten minutes goes in the background once, without progress polls ([how](docs/verifying.md#long-runs)).
+**One task per session.** Every call re-reads the whole session, so a call at 500k tokens of context costs several times one in a fresh session. Once a task's PR is open or merged, end with a short handoff brief instead of starting the next task here, and never drive several PRs from one session. Hand read-heavy investigation (transcripts, large logs, wide searches) to a subagent, so the reading stays out of this context. A run longer than about ten minutes goes in the background once, without progress polls ([how](docs/verifying.md#long-runs)). Never Read a generated or giant file whole (`types.d.ts`, `lib/*/syntax-*.js`, `lib/*/data.js`, snapshots): grep for the symbol, then Read that range.
 
 ## Commands
 
@@ -46,7 +46,7 @@ Never run `yarn jest`/`npx jest`: the required `--experimental-vm-modules` flag 
 
 > [!REQUIRED]
 
-The canonical repository map is [docs/architecture.md](docs/architecture.md) — read it before placing, moving or looking for a file. **When you add, rename or remove a top-level directory** (under the repo root, `lib/`, `test/` or `schemas/`), update its bullet there in the same commit — CI doesn't check it, only humans catch drift. If a directory fits no group, add a group rather than dropping the entry.
+The canonical repository map is [docs/architecture.md](docs/architecture.md) — read it before placing or moving a file; to find one, search (`rg`, glob) rather than reading the map. **When you add, rename or remove a top-level directory** (under the repo root, `lib/`, `test/` or `schemas/`), update its bullet there in the same commit — CI doesn't check it, only humans catch drift. If a directory fits no group, add a group rather than dropping the entry.
 
 Rules the map carries that apply everywhere:
 
@@ -59,7 +59,7 @@ Rules the map carries that apply everywhere:
 
 > [!REQUIRED] > **Never hand-edit what `yarn fix:special` generates**, even when it also reformats files you didn't touch. That churn means your toolchain resolved differently from CI's: commit only your own hunks, then **verify them against the generator** (re-run and diff) — never hand-write what you think it would emit. A hand-written JSDoc block missing the `@since` line the schema's `added` keyword produces, or a `types.d.ts` member the JSDoc implies, fails `lint` with only `… need to be updated`.
 
-**A nested minifier needs the outer one's options.** `lib/html/htmlMinify.js` runs the CSS minifier over inline `<style>` and every `style=""`, so `output.environment` must reach both, or a `.css` asset and the same declaration inline disagree about what the target reads. Any future HTML-minifies-JS hook has the same obligation.
+**A nested minifier needs the outer one's options**, such as `output.environment` reaching the CSS minifier inside `lib/html/htmlMinify.js` ([why](docs/syntax.md#html)).
 
 **Adding a dependency type or runtime requirement** needs three pieces wired together (a `makeSerializable` registration among them): read [docs/architecture.md](docs/architecture.md#adding-a-dependency-type-or-runtime-requirement) first.
 
@@ -258,15 +258,7 @@ Users measure webpack by build time and peak heap. Much of `lib/` sits on per-mo
 
 ### Startup cost
 
-Every build, CLI run and minimizer worker starts cold, and most of that start is V8 compiling the code it loads (each parser or printer costs 10–30 ms and 1.4–3 MB to load). So pay only for what this input and these options use:
-
-- **Load on first use.** A module some inputs, languages or options never need is reached through a facade getter (`syntax.js`) or `memoize(() => require(…))` at the point of use, never a top-level `require`; HTML without CSS never loads the CSS parser, and CSS without an SVG `data:` URL never loads the HTML parser.
-- **Keep what callers need without parsing in a light module** (`util/dataURL`, `ModuleSourceTypeConstants`): constants, option pickers and language lists, never read off a parser, printer or plugin.
-- **An option that turns work off turns its cost off too**: build its tables, regexes and closures on first use, not at load or construction.
-- **Keep laziness in one place** — the facade or memoize helper — not ad-hoc `require()` inside function bodies, so the move to ES modules stays mechanical.
-- **No `i` flag on a regex with a non-ASCII range**: V8 case-folds the whole range at compile time (8–16 ms measured); spell keywords in both ASCII cases instead.
-- **Workers and child processes inherit nothing**: hand them what the parent set up, as `bin/webpack.js` does with the compile cache through `NODE_COMPILE_CACHE`.
-- **Prove it by counting**: run the entry point in a fresh process and assert which `lib/` files `require.cache` holds, as `HtmlSyntax.unittest.js` "what it loads" does; gate Node-only APIs on `!process.versions.bun && !process.versions.deno`, not on the function existing.
+Every build, CLI run and minimizer worker starts cold, so pay only for what this input and these options use: load on first use through a facade getter or `memoize(() => require(…))`, never a top-level `require`; keep constants and option pickers in light modules; build an option's tables on first use; keep laziness in one place; no `i` flag on a regex with a non-ASCII range; hand workers what the parent set up; prove it by counting `require.cache` ([details](docs/performance.md#startup-cost)).
 
 ### Keep instance shapes stable
 

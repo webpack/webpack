@@ -111,6 +111,8 @@ Conventions every language keeps, and a new member follows:
 
 ## HTML
 
+**A nested minifier needs the outer one's options.** `lib/html/htmlMinify.js` runs the CSS minifier over inline `<style>` and every `style=""`, so `output.environment` must reach both, or a `.css` asset and the same declaration inline disagree about what the target reads. Any future HTML-minifies-JS hook has the same obligation.
+
 - `syntax.js` mirrors `css`, publishing the parser, the printer and `SourceProcessor` only. `syntax-parser.js` holds the tokenizer, §13.2 tree construction and the entity table.
 
 ## XML
