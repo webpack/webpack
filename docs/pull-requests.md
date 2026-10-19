@@ -169,7 +169,7 @@ After every `git push` of a new branch, check whether a PR was auto-created (web
 
 > [!REQUIRED]
 
-**Subscribe to every PR you open** (`subscribe_pr_activity`) as the last step of opening it — not a question for the requester. You own it until it lands, and [every check ends green](#after-opening-the-pr--every-check-ends-green) and [the automated reviews](#after-opening-the-pr--wait-for-the-automated-reviews) need the session awake. Stay subscribed until merged or closed, or the requester says stop.
+**Subscribe to every PR you open** (`subscribe_pr_activity`) as the last step of opening it — not a question for the requester. [Every check ends green](#after-opening-the-pr--every-check-ends-green) and [the automated reviews](#after-opening-the-pr--wait-for-the-automated-reviews) need the session awake. Unsubscribe once both are done, or the requester says stop: a PR waiting only on human review needs no live session, because every wake re-reads the whole session and a message from the requester brings it back.
 
 Don't, unasked, **rebase or merge the base branch into the PR** — maintainers usually land PRs through their own pipeline. Merely being behind `main` isn't a defect; doing it unasked rewrites history their pipeline was about to handle, restarts every check, and can drop an approval. Do it when the requester asks or the PR is reported genuinely un-mergeable, and say which applies before pushing. Pushing your own commits to your own branch is free for work the requester asked for; anything changing how the PR gets landed needs asking.
 
@@ -179,7 +179,7 @@ Don't, unasked, **rebase or merge the base branch into the PR** — maintainers 
 
 > [!REQUIRED]
 
-**Never post to GitHub on your own initiative.** Pushing to your own branch is fine; publishing text others read is not — PR comments, review replies, issue comments, PR body edits after opening (except installing the template over an auto-created body, [below](#after-push--verify-pr-body)), and every reply to any bot.
+**Never post to GitHub on your own initiative.** Pushing to your own branch is fine; publishing text others read is not — PR comments, review replies, issue comments, PR body edits after opening (except installing the template over an auto-created body, [below](#after-push--verify-pr-body)), and every reply to any bot. The one exception is CodeRabbit: resolve its threads yourself ([below](#after-opening-the-pr--wait-for-the-automated-reviews)).
 
 Reading is never banned. Bot noise may be skipped: status checks, a benchmark that swings on re-run, a coverage report still waiting on uploads, changeset/preview echoes — replying to those costs maintainers more attention than the finding.
 
@@ -216,7 +216,7 @@ Once the uploaders are in, read the report; only then is a genuine patch gap wor
 Every webpack PR is reviewed automatically on the initial commit and every push, by whichever automated reviewers the repo enables. Always wait for them and address every comment; judge a bot's finding on the claim and reproduce it before deciding.
 
 1. After `create_pull_request`, `subscribe_pr_activity` ([see above](#watching-a-pr-and-updating-its-branch)); reviews then wake the session — do **not** poll.
-2. For each review comment: if correct, push a fix in a new commit — **including for bugs your own PR introduced**, the common case. If wrong, draft a reply and ask the requester before posting ([Writing on GitHub](#writing-on-github--ask-first)) — never ignore it silently.
+2. For each review comment: if correct, push a fix in a new commit — **including for bugs your own PR introduced**, the common case. If wrong, draft a reply and ask the requester before posting ([Writing on GitHub](#writing-on-github--ask-first)) — never ignore it silently. **CodeRabbit threads skip the asking**: after the fix is pushed, reply with the commit and resolve the thread; when the finding is wrong, reply with what you found and resolve it.
 3. Every push re-runs the reviewers; repeat step 2 until each one's latest review has zero outstanding threads.
 4. `unsubscribe_pr_activity` only once every comment is handled and CI is green, or when the user says stop.
 
