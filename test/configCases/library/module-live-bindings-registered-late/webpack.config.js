@@ -12,5 +12,10 @@ module.exports = {
 		filename: "[name].mjs",
 		chunkFilename: "[name].chunk.mjs"
 	},
-	optimization: { concatenateModules: false, runtimeChunk: "single" }
+	optimization: {
+		concatenateModules: false,
+		runtimeChunk: "single",
+		usedExports: true,
+		mangleExports: "size"
+	}
 };

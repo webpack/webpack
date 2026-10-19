@@ -1,1 +1,1 @@
-export { shared, bump } from "./shared.js";
+export { firstAlias as shared, secondAlias as alias, bump } from "./shared.js";
