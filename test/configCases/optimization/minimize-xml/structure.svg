@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="120" height="100">
+<defs><marker id="marker" markerWidth="2" markerHeight="2"><path d="M0 0L2 1 0 2z"/></marker><linearGradient id="gradient"><stop stop-color="red"/><stop offset="1" stop-color="blue"/></linearGradient><clipPath id="clip"><circle r="20" cx="20" cy="20"/></clipPath></defs>
+<g><ellipse id="ellipse" cx="20" cy="20" rx="10" ry="10"/><text/></g>
+<g fill="red"><path d="M0 0L5 10L10 5z" fill="red" opacity="1"/><g><path style="fill:blue" d="M10 10L20 30L30 20z"/></g></g>
+<g transform="translate(10 20) translate(20 10) scale(2) scale(.5)"><path id="prototype" d="M0 0L10 20L20 10z" fill="red"/><path id="copy" d="M0 0L10 20L20 10z" fill="red"/><path d="M0 0L10 20L20 10z" fill="red"/></g>
+<path d="M10 70L20 70" fill="none" stroke="red" stroke-width="1" stroke-dasharray="none" shape-rendering="crispEdges" marker-start="none" marker-mid="none" marker-end="none"/><path d="M50 70L60 70" fill="none" stroke="red" stroke-width="1" stroke-dasharray="none" shape-rendering="crispEdges" marker-start="none" marker-mid="none" marker-end="none"/>
+<path d="M0 0Q2 2 4 4Q6 6 8 8" stroke="blue" fill="none"/>
+<path d="M0 0S2 2 4 4C6 6 8 2 10 4M0 0Q2 2 4 4T8 8Q10 10 12 4" stroke="blue" fill="none"/>
+<rect x="80" y="50" width="30" height="10" rx="2" ry="2" fill="red"/>
+<g><rect x="0" y="0" width="5" height="5" style="fill:red;stroke:blue;stroke-width:1"/><circle cx="0" cy="0" r="2" style="fill:red;stroke:blue;stroke-width:1"/></g>
+<path d="M10000 10000c-9999-9999-9998-9998-9997-9997" stroke="green" fill="none"/>
+<use href="#copy" x="20"/>
+<text x="10" y="95" style="font-size:12px;font-size:-1px">Fallback</text>
+</svg>

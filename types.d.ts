@@ -1598,9 +1598,9 @@ type BuiltinEmbeddedRendererOptions = Pick<
 	BuiltinSvgOptions;
 declare interface BuiltinSvgOptions {
 	/**
-	 * minify an SVG `data:` URL as the `.svg` assets are, wherever that is shorter (default false)
+	 * minify an SVG `data:` URL as the `.svg` assets are, with their `optimization.minimize.xml` switches when given, wherever that is shorter (default false)
 	 */
-	svg?: boolean;
+	svg?: boolean | OptimizationMinimizeXml;
 }
 declare class BunTargetPlugin {
 	constructor();
@@ -13172,9 +13172,21 @@ declare interface HtmlPrintOptions {
 	mergeScripts?: boolean;
 	removeEmptyAttributes?: boolean;
 	removeEmptyElements?: boolean;
+	removeSvgMetadata?: boolean;
+	removeSvgEditorData?: boolean;
+	removeUnusedSvgNamespaces?: boolean;
+	shortenSvgNumbers?: boolean;
+	shortenSvgColors?: boolean;
+	shortenSvgPathData?: boolean;
 	removeRedundantAttributes?: boolean | "all" | "smart";
 	sortAttributes?: boolean;
 	sortTokenLists?: boolean;
+	sortSvgSymbols?: boolean;
+	cleanupSvgStructure?: boolean;
+	mergeSvgPaths?: boolean;
+	reuseSvgPaths?: boolean;
+	sortSvgDefinitions?: boolean;
+	convertSvgShapes?: boolean;
 	removeImpliedTags?: boolean | "all" | "smart";
 	renderEmbeddedSource?: (
 		source: string,
@@ -13199,6 +13211,36 @@ declare interface HtmlProcessOptions {
 	xml?: boolean;
 
 	/**
+	 * omit SVG metadata elements and their contents when minifying XML (default false)
+	 */
+	removeSvgMetadata?: boolean;
+
+	/**
+	 * omit known editor elements and attributes within SVG when minifying XML (default false)
+	 */
+	removeSvgEditorData?: boolean;
+
+	/**
+	 * omit unused prefixed namespace declarations within SVG when minifying XML (default false)
+	 */
+	removeUnusedSvgNamespaces?: boolean;
+
+	/**
+	 * offer opaque SVG presentation colors to the inline CSS renderer when minifying XML (default false)
+	 */
+	shortenSvgColors?: boolean;
+
+	/**
+	 * shorten SVG geometry and transform decimals, separators and redundant transform arguments without rounding, changing units or rewriting exponent notation when minifying XML (default false)
+	 */
+	shortenSvgNumbers?: boolean;
+
+	/**
+	 * compact SVG path numbers, repeated commands and separators without rounding or changing segments when minifying XML (default false)
+	 */
+	shortenSvgPathData?: boolean;
+
+	/**
 	 * the quote an XML minifying print gives an attribute whose value costs the same in either (default `"`); `'` for a document bound for a `"`-quoted string, such as a CSS `url("data:…")`
 	 */
 	xmlQuote?: '"' | "'";
@@ -13219,7 +13261,7 @@ declare interface HtmlProcessOptions {
 	transforms?: HtmlTransformOptions;
 
 	/**
-	 * collapse each run of whitespace in text to a single space, except where an ancestor renders it verbatim; `"smart"` also drops what sits against a block edge and `"all"` drops every edge (default false)
+	 * collapse each run of HTML whitespace in text to a single space, except where an ancestor renders it verbatim; `"smart"` also drops what sits against a block edge and `"all"` drops every edge. In XML, remove only whitespace-only text in known SVG containers, preserving text, foreign content and `xml:space` (default false)
 	 */
 	collapseWhitespace?: boolean | "all" | "conservative" | "smart";
 
@@ -13229,7 +13271,7 @@ declare interface HtmlProcessOptions {
 	removeEmptyAttributes?: boolean;
 
 	/**
-	 * drop an element with no children and no attributes where its bare form renders nothing and nothing reads it (default false)
+	 * drop an element with no children and no attributes where its bare form renders nothing and nothing reads it; in XML, only SVG g/defs containers with no non-namespace attributes or DTD constraints (default false)
 	 */
 	removeEmptyElements?: boolean;
 
@@ -13252,6 +13294,36 @@ declare interface HtmlProcessOptions {
 	 * print every token list the DOM reads as a set (`class`, `rel`, `part`, …) in token order (default false)
 	 */
 	sortTokenLists?: boolean;
+
+	/**
+	 * when minifying XML, reuse unidentified duplicate leaf paths through existing IDs, preserving target element types (default false)
+	 */
+	reuseSvgPaths?: boolean;
+
+	/**
+	 * when minifying XML, merge disjoint crisp axis-aligned paths with explicit opaque paint and disabled dashes and markers (default false)
+	 */
+	mergeSvgPaths?: boolean;
+
+	/**
+	 * when minifying XML, remove safe wrappers and redundant presentation values without IDs or document dependencies (default false)
+	 */
+	cleanupSvgStructure?: boolean;
+
+	/**
+	 * when minifying XML, sort adjacent resources inside defs by type and ID (default false)
+	 */
+	sortSvgDefinitions?: boolean;
+
+	/**
+	 * when minifying XML, convert leaf SVG lines, polylines and polygons to shorter paths, or equal-radius ellipses to circles, without rounding (default false)
+	 */
+	convertSvgShapes?: boolean;
+
+	/**
+	 * when minifying XML, sort adjacent SVG symbol definitions by ID, preserving IDs and references unless document dependencies can observe order (default false)
+	 */
+	sortSvgSymbols?: boolean;
 
 	/**
 	 * drop an attribute whose value is the element's own default; `true` is `"smart"`, and `"all"` also drops the spec defaults a selector can match, and with them a value naming no keyword where that says the same (default false)
@@ -24880,16 +24952,106 @@ declare interface OptimizationMinimizeOptions {
 }
 
 /**
- * What the XML minimizer does. The stylesheets an SVG or XHTML element holds are minified with `optimization.minimizeOptions.css` for the target's browsers.
+ * What the XML minimizer does. The stylesheets an SVG or XHTML element holds are minified with `optimization.minimizeOptions.css` for the target's browsers. An SVG `data:` URL takes these switches too, and an `<svg>` inline in HTML takes `removeMetadata`, `shortenNumbers` and `shortenPathData`.
  * @since 5.112.0
  * @experimental
  */
 declare interface OptimizationMinimizeXml {
 	/**
+	 * Collapse SVG groups, hoist identical context-free inherited attributes or move them to sole graphics children, inline validated presentation declarations and remove empty text, unnamed definitions and exact redundant attributes. Off by default because consumers can observe structure and attribute presence; preserve IDs and skip stylesheets, scripts, animations and DTDs.
+	 * @since 5.113.0
+	 */
+	cleanupStructure?: boolean;
+
+	/**
+	 * Remove whitespace-only text in known SVG containers, preserving text content, foreign content and `xml:space`. Off by default because scripts can observe whitespace nodes.
+	 * @since 5.113.0
+	 */
+	collapseWhitespace?: boolean;
+
+	/**
+	 * Convert leaf SVG lines, polylines and polygons to shorter paths with identical coordinates and vertices, and equal-radius ellipses to circles. Off by default because consumers can observe element types; skip documents with stylesheets, scripts, animations or DTDs.
+	 * @since 5.113.0
+	 */
+	convertShapes?: boolean;
+
+	/**
+	 * Merge adjacent disjoint axis-aligned SVG lines with explicit opaque crisp-edge strokes, no fill, dashes or markers. Skip compositing, transformed or ID-bearing ancestors and color cleanup. Off by default because consumers can observe element boundaries; skip stylesheets, scripts, animations and DTDs.
+	 * @since 5.113.0
+	 */
+	mergePaths?: boolean;
+
+	/**
+	 * Remove elements and attributes in known editor namespaces within SVG, preserving namespace declarations and unrelated XML data. Off by default because editor data may be needed to edit the image.
+	 * @since 5.113.0
+	 */
+	removeEditorData?: boolean;
+
+	/**
+	 * Remove empty `class`, `id` and `style` attributes on SVG elements unless the DTD declares them. Off by default because selectors and scripts can observe attribute presence.
+	 * @since 5.113.0
+	 */
+	removeEmptyAttributes?: boolean;
+
+	/**
+	 * Remove empty SVG `g` and `defs` containers having only namespace declarations, preserving other attributes and DTD defaults. Off by default because selectors and scripts can observe document structure.
+	 * @since 5.113.0
+	 */
+	removeEmptyElements?: boolean;
+
+	/**
+	 * Remove SVG `metadata` elements and their contents, preserving `title`, `desc` and the document element. Off by default because metadata can carry licensing and application data.
+	 * @since 5.113.0
+	 */
+	removeMetadata?: boolean;
+
+	/**
+	 * Remove unused prefixed namespace declarations within SVG, preserving default namespaces and prefixes referenced in names or content. Off by default because scripts can observe namespace declarations.
+	 * @since 5.113.0
+	 */
+	removeUnusedNamespaces?: boolean;
+
+	/**
+	 * Reuse unidentified duplicate leaf SVG paths without transforms through existing IDs and SVG 2 href references, preserving IDs and target element types. Skip color-bearing candidates during color cleanup. Off by default because consumers can observe element types; skip stylesheets, scripts, animations, duplicate IDs and DTDs.
+	 * @since 5.113.0
+	 */
+	reusePaths?: boolean;
+
+	/**
+	 * Shorten opaque SVG presentation colors using the CSS minifier, preserving paint servers, contextual colors and DTD-declared values. Off by default because selectors and scripts can observe attribute spelling.
+	 * @since 5.113.0
+	 */
+	shortenColors?: boolean;
+
+	/**
+	 * Shorten SVG geometry and transform decimals and separators without rounding, changing units or rewriting exponent notation. Preserve DTD-declared values; off by default because selectors and scripts can observe attribute spelling.
+	 * @since 5.113.0
+	 */
+	shortenNumbers?: boolean;
+
+	/**
+	 * Compact SVG path numbers, repeated commands and separators without rounding or changing segments, preserving arc flags and DTD-declared values. Off by default because selectors and scripts can observe attribute spelling.
+	 * @since 5.113.0
+	 */
+	shortenPathData?: boolean;
+
+	/**
 	 * Print attributes with the document's commonest names first, breaking ties by case-sensitive name. Off by default: consumers observing attribute order see the new order.
 	 * @since 5.112.0
 	 */
 	sortAttributes?: boolean;
+
+	/**
+	 * Sort adjacent SVG resource definitions within defs by type and ID, preserving IDs and references. Off by default because consumers can observe order; skip stylesheets, scripts, animations, duplicate IDs and DTDs.
+	 * @since 5.113.0
+	 */
+	sortDefinitions?: boolean;
+
+	/**
+	 * Sort adjacent SVG symbol definitions by ID, preserving IDs and references. Off by default because consumers can observe definition order; skip documents with stylesheets, scripts, animations, duplicate IDs or DTDs.
+	 * @since 5.113.0
+	 */
+	sortSymbols?: boolean;
 }
 
 /**
@@ -37336,7 +37498,7 @@ declare namespace exports {
 					| string
 					| EmbeddedSourceResult
 					| Promise<undefined | string | EmbeddedSourceResult>;
-				svg?: boolean;
+				svg?: boolean | OptimizationMinimizeXml;
 			} & CssTransformOptions,
 			extractComments?:
 				| string
@@ -37968,7 +38130,7 @@ declare namespace exports {
 					| string
 					| EmbeddedSourceResult
 					| Promise<undefined | string | EmbeddedSourceResult>;
-				svg?: boolean;
+				svg?: boolean | OptimizationMinimizeXml;
 			} & HtmlTransformOptions,
 			extractComments?:
 				| string

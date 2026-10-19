@@ -3395,6 +3395,1592 @@ describe("parseHtml", () => {
 
 	describe("XML mode", () => {
 		const { SourceProcessor } = require("../../lib/html/syntax");
+		const svg = 'http://www.w3.org/2000/svg';
+		it('should preserve namespace uses inside unnamed definitions', () => {
+			const source = `<svg xmlns="${svg}" xmlns:p="${svg}"><defs><p:linearGradient><p:stop/></p:linearGradient></defs></svg>`;
+			const options = { xml: true, mode: /** @type {const} */ ('minify'), cleanupSvgStructure: true, removeUnusedSvgNamespaces: true };
+			const once = new SourceProcessor().process(source, options).code;
+			expect(once).toBe(source);
+			expect(new SourceProcessor().process(once, options).code).toBe(once);
+		});
+		it.each([
+			['translate(1 2) translate(3 4)', 'translate(4 6)'],
+			['translate(1 0) translate(2 0) translate(3 0)', 'translate(6)'],
+			['scale(2 4) scale(.5 .25)', 'scale(1)'],
+			['scale(.5) scale(.5)', 'scale(.25)'],
+			['scale(-1) scale(2)', 'scale(-2)'],
+			['translate(1) scale(2) translate(2)', 'translate(1) scale(2) translate(2)'],
+			['translate(1e2) translate(2)', 'translate(1e2) translate(2)'],
+			['translate(-0) translate(2)', 'translate(2)'],
+			['translate(1000000) translate(1)', 'translate(1000000) translate(1)'],
+			['scale(1000000) scale(1000000)', 'scale(1000000) scale(1000000)'],
+			['translate(.1) translate(.2)', 'translate(.1) translate(.2)'],
+			['scale(.125) scale(.125)', 'scale(.015625)']
+		])('should fold exact adjacent transform functions in %s', (value, expected) => {
+			const source = `<svg xmlns="${svg}"><path transform="${value}"/></svg>`;
+			const once = new SourceProcessor().process(source, compact).code;
+			expect(once).toBe(`<svg xmlns="${svg}"><path transform="${expected}"/></svg>`);
+			expect(new SourceProcessor().process(once, compact).code).toBe(once);
+		});
+
+		it.each([
+			['<ellipse rx="10" ry="10"/>', '<circle r="10"/>'],
+			['<ellipse rx="010.0" ry="10.00"/>', '<circle r="010.0"/>'],
+			['<ellipse rx="10px" ry="10px"/>', '<circle r="10px"/>'],
+			...['rx="10"', 'rx="10" ry="11"', 'rx="0" ry="0"', 'rx="-1" ry="-1"', 'rx="1e2" ry="1e2"', 'rx="10%" ry="10%"', 'rx="1000001" ry="1000001"', 'rx="10" ry="10" r="4"', 'rx="10" ry="10" style="fill:red"'].map(attributes => [`<ellipse ${attributes}/>`, `<ellipse ${attributes}/>`]),
+			['<ellipse rx="10" ry="10"><title>Keep</title></ellipse>', '<ellipse rx="10" ry="10"><title>Keep</title></ellipse>']
+		])('should convert only supported equal-radius ellipses in %s', (before, after) => {
+			const source = `<svg xmlns="${svg}">${before}</svg>`;
+			const options = { xml: true, mode: /** @type {const} */ ('minify'), convertSvgShapes: true };
+			const once = new SourceProcessor().process(source, options).code;
+			expect(once).toBe(`<svg xmlns="${svg}">${after}</svg>`);
+			expect(new SourceProcessor().process(once, options).code).toBe(once);
+		});
+
+		const structure = { xml: true, mode: /** @type {const} */ ('minify'), cleanupSvgStructure: true, reuseSvgPaths: true, mergeSvgPaths: true, sortSvgDefinitions: true };
+		it.each([false, true])('should preserve a valid CSS fallback before an invalid negative SVG font size in stylesheet=%s', sheet => {
+			const body = sheet ? '<style>text{font-size:12px;font-size:-1px}</style><text>Fallback</text>' : '<text style="font-size:12px;font-size:-1px">Fallback</text>';
+			const source = `<svg xmlns="${svg}">${body}</svg>`;
+			const options = { ...structure, renderEmbeddedSource: builtinEmbeddedRenderer() };
+			const once = new SourceProcessor().process(source, options).code;
+			expect(once).toContain('font-size:12px;font-size:-1px');
+			expect(new SourceProcessor().process(once, options).code).toBe(once);
+		});
+		it.each([
+			['fill: red; stroke: blue', 'fill="red" stroke="blue"'],
+			['fill:blue;fill:red;stroke:blue;', 'fill="red" stroke="blue"'],
+			['stroke-width:002.00;stroke-linecap:round;stroke-linejoin:bevel', 'stroke-width="002.00" stroke-linecap="round" stroke-linejoin="bevel"'],
+			['font-size:12px;letter-spacing:2px;word-spacing:3px', 'font-size="12px" letter-spacing="2px" word-spacing="3px"'],
+			['fill:currentColor;stroke:none', 'fill="currentColor" stroke="none"'],
+			['fill:rgb(255,0,0);fill-opacity:50%', 'fill="rgb(255,0,0)" fill-opacity="50%"']
+		])('should convert complete validated presentation declarations in %s', (style, expected) => {
+			const source = `<svg xmlns="${svg}"><path style="${style}"/></svg>`;
+			const once = new SourceProcessor().process(source, structure).code;
+			expect(once).toBe(`<svg xmlns="${svg}"><path ${expected}/></svg>`);
+			expect(new SourceProcessor().process(once, structure).code).toBe(once);
+			expect(new SourceProcessor().process(source, { ...structure, cleanupSvgStructure: false }).code).toBe(source);
+		});
+		it.each([
+			'fill:red;stroke:var(--paint)', 'fill:red;stroke:blue!important', 'fill:red;stroke:invalid',
+			'fill:red;stroke-width:calc(1px + 2px)', 'fill:red;--paint:blue', 'fill:red;;stroke:blue',
+			'fill:red;stroke:url(#paint)', 'fill:red;stroke-linecap:inherit', 'fill:red;stroke-linejoin:wrong',
+			'fill:red;stroke-width:2junk', 'fill:red;bad', 'Fill:red;stroke:blue', 'color:none;stroke:blue',
+			'fill:red;stroke:blue;stroke-width:1;stroke-linecap:round;stroke-linejoin:round',
+			 'stroke-width:2;stroke-width:-1', 'stroke-miterlimit:2;stroke-miterlimit:.5',
+			'font-size:12px;font-size:-1px', 'stroke-width:2;stroke-width:0e39',
+			'letter-spacing:2px;letter-spacing:10%', 'word-spacing:2px;word-spacing:10%',
+			`stroke-width:2;stroke-width:${'9'.repeat(400)}`
+		])('should retain an entire unsupported declaration list in %s', style => {
+			const source = `<svg xmlns="${svg}"><path style="${style}"/></svg>`;
+			expect(new SourceProcessor().process(source, structure).code).toBe(source);
+		});
+		it.each([
+			['<g><path fill="red"/><rect fill="red"/></g>', '<g fill="red"><path/><rect/></g>'],
+			['<g fill="blue"><path fill="red"/><rect fill="red"/></g>', '<g fill="red"><path/><rect/></g>'],
+			['<g stroke-width="2"><path fill="red"/><rect fill="red"/></g>', '<g stroke-width="2" fill="red"><path/><rect/></g>'],
+			['<g stroke-width="2"><path style="fill:var(--paint)" fill="red"/><rect fill="red"/></g>', '<g stroke-width="2"><path style="fill:var(--paint)" fill="red"/><rect fill="red"/></g>'],
+			['<g stroke-width="2"><path stroke-width="-1"/><rect stroke-width="-1"/></g>', '<g stroke-width="2"><path stroke-width="-1"/><rect stroke-width="-1"/></g>'],
+			['<g stroke-miterlimit="2"><path stroke-miterlimit=".5"/><rect stroke-miterlimit=".5"/></g>', '<g stroke-miterlimit="2"><path stroke-miterlimit=".5"/><rect stroke-miterlimit=".5"/></g>'],
+			['<g><g fill="red"><path/><path/></g><path fill="red"/></g>', '<g fill="red"><path/><path/><path/></g>'],
+			['<g><path style="fill:red;stroke:blue"/><rect style="fill:red;stroke:blue"/></g>', '<g fill="red" stroke="blue"><path/><rect/></g>'],
+			['<g><path fill="red"/><rect/></g>', '<path fill="red"/><rect/>'],
+			['<g><path fill="red"/><rect fill="blue"/></g>', '<path fill="red"/><rect fill="blue"/>'],
+			...['id="paint"', 'style="opacity:.5"', 'transform="scale(2)"', 'filter="url(#f)"'].map(attribute => [`<g ${attribute}><path fill="red"/><rect fill="red"/></g>`, `<g ${attribute}><path fill="red"/><rect fill="red"/></g>`]),
+			['<g><path id="p" fill="red"/><rect fill="red"/></g>', '<path id="p" fill="red"/><rect fill="red"/>'],
+			['<g><path fill="red"/><text fill="red">Text</text></g>', '<path fill="red"/><text fill="red">Text</text>'],
+			['<g><title>Keep</title><path fill="red"/><rect fill="red"/></g>', '<title>Keep</title><path fill="red"/><rect fill="red"/>'],
+			...['currentColor', 'url(#paint)', 'inherit', 'var(--paint)', 'invalid'].map(value => [`<g><path fill="${value}"/><rect fill="${value}"/></g>`, `<path fill="${value}"/><rect fill="${value}"/>`])
+		])('should hoist only context-free values shared by every graphics child in %s', (before, after) => {
+			const source = `<svg xmlns="${svg}">${before}</svg>`;
+			const once = new SourceProcessor().process(source, structure).code;
+			expect(once).toBe(`<svg xmlns="${svg}">${after}</svg>`);
+			expect(new SourceProcessor().process(once, structure).code).toBe(once);
+		});
+		it.each([
+			['rect x="0" y="0" width="2" height="3"', 'rect width="2" height="3"'],
+			['circle cx="+0.00e38" cy="0" r="2"', 'circle r="2"'],
+			['ellipse cx="0" cy="0" rx="2" ry="3"', 'ellipse rx="2" ry="3"'],
+			['line x1="0" y1="0" x2="0" y2="0"', 'line'],
+			...['rect x="-0"', 'line y2="-0.0"', 'rect x="0e39"', 'rect x="1e-39"', 'rect x="0px"', 'rect x="0%"', 'text x="0"', 'tspan x="0"', 'svg x="0"', 'rect id="p" x="0"', 'rect xml:id="p" x="0"'].map(value => [value, value])
+		])('should remove only exact local shape zero defaults in %s', (before, after) => {
+			const source = `<svg xmlns="${svg}"><${before}/></svg>`;
+			const once = new SourceProcessor().process(source, { ...structure, reuseSvgPaths: false, mergeSvgPaths: false }).code;
+			expect(once).toBe(`<svg xmlns="${svg}"><${after}/></svg>`);
+			expect(new SourceProcessor().process(once, structure).code).toBe(once);
+		});
+		it.each([
+			['M10000 10000l-9999-9999', 'M10000 10000 1 1'],
+			['M10000 10000m-9999-9999', 'M10000 10000M1 1'],
+			['M10000 10000c-9999-9999-9998-9998-9997-9997', 'M10000 10000C1 1 2 2 3 3'],
+			['M10000 10000s-9999-9999-9998-9998', 'M10000 10000S1 1 2 2'],
+			['M10000 10000q-9999-9999-9998-9998', 'M10000 10000Q1 1 2 2'],
+			['M10000 10000t-9999-9999', 'M10000 10000T1 1'],
+			['M10000 10000a1 1 0 0 1-9999-9999', 'M10000 10000A1 1 0 011 1'],
+			['M10000 10000a2 2 0 0 1 0-9999', 'M10000 10000a2 2 0 010-9999'],
+			['M10000 10000h-9999v-9999', 'M10000 10000H1V1'],
+			['M10000 10000l-9999-9999z m-9999-9999', 'M10000 10000 1 1zM1 1']
+		])('should choose substantially shorter exact absolute coordinates in %s', (value, expected) => {
+			const source = `<svg xmlns="${svg}"><path d="${value}"/></svg>`;
+			const options = { xml: true, mode: /** @type {const} */ ('minify'), shortenSvgPathData: true };
+			const processor = new SourceProcessor();
+			const once = processor.process(source, options).code;
+			expect(once).toBe(source.replace(value, expected));
+			expect(processor.process(once, options).code).toBe(once);
+			expect(processor.process(source, { ...options, shortenSvgPathData: false }).code).toBe(source);
+		});
+
+		it.each([
+			['rx="2" ry="2"', 'rx="2"'],
+			['rx="02.500" ry="2.5"', 'rx="02.500"'],
+			['rx=".1" ry=".1"', 'rx=".1"'],
+			...['rx="2"', 'ry="2"', 'rx="2" ry="3"', 'rx="0" ry="0"', 'rx="-0" ry="-0"', 'rx="-2" ry="-2"', 'rx="2px" ry="2px"', 'rx="2%" ry="2%"', 'rx="1e2" ry="1e2"', 'rx="1000001" ry="1000001"', 'rx="2" ry="2" id="round"'].map(value => [value, value])
+		])('should remove only an exactly redundant rectangle radius in %s', (attributes, expected) => {
+			const source = `<svg xmlns="${svg}"><rect width="20" height="10" ${attributes}/></svg>`;
+			const processor = new SourceProcessor();
+			const once = processor.process(source, structure).code;
+			expect(once).toBe(source.replace(attributes, expected));
+			expect(processor.process(once, structure).code).toBe(once);
+			expect(processor.process(source, { ...structure, cleanupSvgStructure: false }).code).toBe(source);
+		});
+		it.each([
+			['M0 0S2 2 4 4C6 6 8 2 10 4', 'M0 0S2 2 4 4s4-2 6 0'],
+			['M0 0s2 2 4 4c2 2 4 -2 6 0', 'M0 0s2 2 4 4 4-2 6 0'],
+			['M0 0Q2 2 4 4T8 8Q10 10 12 4', 'M0 0Q2 2 4 4T8 8t4-4'],
+			['M0 0q2 2 4 4t4 4q2 2 4 -4', 'M0 0q2 2 4 4t4 4 4-4'],
+			['M0 0T4 4Q8 8 12 12', 'M0 0T4 4t8 8'],
+			['M0 0t4 4q4 4 8 8', 'M0 0t4 4 8 8']
+		])('should retain exact reflected controls after authored shorthand in %s', (value, expected) => {
+			const source = `<svg xmlns="${svg}"><path d="${value}"/></svg>`;
+			const options = { xml: true, mode: /** @type {const} */ ('minify'), shortenSvgPathData: true };
+			const processor = new SourceProcessor();
+			const once = processor.process(source, options).code;
+			expect(once).toBe(source.replace(value, expected));
+			expect(processor.process(once, options).code).toBe(once);
+			expect(processor.process(source, { ...options, shortenSvgPathData: false }).code).toBe(source);
+		});
+		it.each([
+			'M.1 0Q.1 1 .1 2T.1 3Q.1 4 .1 5',
+			'M0 0Q1e39 0 1 1T2 2Q1e39 0 3 3',
+			'M1000000 0Q-1000000 0 1000000 0T0 0Q-3000000 0 1 1',
+			'M0 0S.1 2 4 4C7.9 6 8 2 10 4',
+			'M0 0s2 2 .1 .1c.1 .1 2 2 3 3'
+		])('should retain explicit controls outside the exact shorthand domain in %s', value => {
+			const source = `<svg xmlns="${svg}"><path d="${value}"/></svg>`;
+			const options = { xml: true, mode: /** @type {const} */ ('minify'), shortenSvgPathData: true };
+			const once = new SourceProcessor().process(source, options).code;
+			expect(once.replace(/\s/g, '')).toContain(value.slice(value.search(/[CcQq][^CcQq]*$/)).replace(/\s/g, ''));
+			expect(new SourceProcessor().process(once, options).code).toBe(once);
+		});
+		it.each([
+			'<style>rect{rx:4}</style>', '<animate attributeName="rx"/>',
+			'<?xml-stylesheet href="radii.css"?>', '<script/>',
+			'<g xml:space="preserve"/>', '<g xml:base="other.svg"/>',
+			'<path id="duplicate"/><path id="duplicate"/>'
+		])('should preserve rectangle radius attributes with structural dependencies: %s', dependency => {
+			const source = `<svg xmlns="${svg}"><rect width="20" height="10" rx="2" ry="2"/>${dependency}</svg>`;
+			expect(new SourceProcessor().process(source, structure).code).toContain('rx="2" ry="2"');
+		});
+		it.each(['rx:4', 'ry:auto', 'rx:var(--radius)'])('should preserve a rectangle radius with local geometry style %s', style => {
+			const source = `<svg xmlns="${svg}"><rect width="20" height="10" rx="2" ry="2" style="${style}"/></svg>`;
+			expect(new SourceProcessor().process(source, structure).code).toBe(source);
+		});
+		it('should preserve rectangle radii with a DTD, foreign namespace or direct HTML', () => {
+			const body = '<rect width="20" height="10" rx="2" ry="2"/>';
+			for (const source of [
+				`<!DOCTYPE svg [<!ATTLIST rect ry CDATA #IMPLIED>]><svg xmlns="${svg}">${body}</svg>`,
+				`<svg xmlns="urn:foreign">${body}</svg>`
+			]) expect(new SourceProcessor().process(source, structure).code).toBe(source);
+			expect(new SourceProcessor().process(`<svg>${body}</svg>`, { ...structure, xml: false }).code).toContain('ry=2');
+		});
+		it.each([
+			['M0 0Z', 'M0 0z'],
+			['M0 0ZZ', 'M0 0zz'],
+			['M0 0ZL1 2Z', 'M0 0zL1 2z'],
+			['M1e39 -0Z', 'M1e39-0z'],
+			['m1 2zM3 4Z', 'm1 2zM3 4z'],
+			['M0 0z', 'M0 0z'],
+			['M0 0ZQ', 'M0 0ZQ']
+		])('should normalize only valid closepath spelling in %s', (value, expected) => {
+			const source = `<svg xmlns="${svg}"><path d="${value}"/></svg>`;
+			const options = { xml: true, mode: /** @type {const} */ ('minify'), shortenSvgPathData: true };
+			const once = new SourceProcessor().process(source, options).code;
+			expect(once).toBe(source.replace(value, expected));
+			expect(new SourceProcessor().process(once, options).code).toBe(once);
+			expect(new SourceProcessor().process(source, { ...options, shortenSvgPathData: false }).code).toBe(source);
+		});
+		it('should apply guarded radius and shorthand cleanup inside SVG data URLs', () => {
+			const source = `<svg xmlns="${svg}"><rect width="20" height="10" rx="2" ry="2"/><path d="M0 0S2 2 4 4C6 6 8 2 10 4"/></svg>`;
+			const render = builtinEmbeddedRenderer({ svg: { cleanupStructure: true, shortenPathData: true } });
+			const css = `.x{background:url("data:image/svg+xml,${encodeURIComponent(source)}")}`;
+			const result = render(css, { type: 'css', hostType: 'css' });
+			expect(typeof result).toBe('string');
+			const decoded = decodeURIComponent(result || '');
+			expect(decoded).toContain("rx='2'");
+			expect(decoded).not.toContain('ry=');
+			expect(decoded).toContain('M0 0S2 2 4 4s4-2 6 0');
+		});
+		it('should remove containers made empty by definition cleanup', () => {
+			const source = `<svg xmlns="${svg}"><defs><g><rect/></g></defs><g fill="red"/></svg>`;
+			const options = { ...structure, removeEmptyElements: true };
+			const once = new SourceProcessor().process(source, options).code;
+			expect(once).toBe(`<svg xmlns="${svg}"><g fill="red"/></svg>`);
+			expect(new SourceProcessor().process(once, options).code).toBe(once);
+		});
+		it('should render newly inlined colors without other presentation attributes', () => {
+			const source = `<svg xmlns="${svg}"><path style="fill:#ff0000"/></svg>`;
+			const options = { ...structure, shortenSvgColors: true, renderEmbeddedSource: builtinEmbeddedRenderer() };
+			const once = new SourceProcessor().process(source, options).code;
+			expect(once).toBe(`<svg xmlns="${svg}"><path fill="red"/></svg>`);
+			expect(new SourceProcessor().process(once, options).code).toBe(once);
+		});
+		it('should preserve reflected controls after unsupported relative endpoints', () => {
+			const source = `<svg xmlns="${svg}"><path d="M0.1 0c0 0 1 1 2 2c1 1 2 2 3 3"/></svg>`;
+			const options = { ...structure, shortenSvgPathData: true };
+			const once = new SourceProcessor().process(source, options).code;
+			expect(once).toContain('c1 1 2 2 3 3');
+			expect(new SourceProcessor().process(once, options).code).toBe(once);
+		});
+		it.each([
+			['<path/><g/><path/>', '<path/><path/>'],
+			['<path/><g/>', '<path/>'],
+			['<defs><g> </g></defs>', '<defs/>'],
+			['<defs><g>license</g></defs>', '<defs>license</defs>'],
+			['<defs><g><?license retained?></g></defs>', '<defs><?license retained?></defs>'],
+			['<defs><g data-editor="keep"/></defs>', '<defs><g data-editor="keep"/></defs>'],
+			['<g fill="none"><path/></g>', '<path fill="none"/>'],
+			['<g stroke-linecap="round"><path/></g>', '<path stroke-linecap="round"/>'],
+			['<g stroke-linecap="invalid"><path/></g>', '<g stroke-linecap="invalid"><path/></g>'],
+			['<g fill="red"><path stroke="inherit"/></g>', '<g fill="red"><path stroke="inherit"/></g>'],
+			['<g fill="red"><path style="stroke:blue;fill:green"/></g>', '<path stroke="blue" fill="green"/>'],
+			['<symbol fill="red"><path fill="red"/><circle/></symbol>', '<symbol fill="red"><path/><circle/></symbol>']
+		])('should preserve contextual values and descriptive definitions in %s', (before, after) => {
+			const once = new SourceProcessor().process(`<svg xmlns="${svg}">${before}</svg>`, structure).code;
+			expect(once).toBe(`<svg xmlns="${svg}">${after}</svg>`);
+			expect(new SourceProcessor().process(once, structure).code).toBe(once);
+		});
+		it.each([false, true])('should coordinate structural cleanup with numeric and color rendering=%s', enabled => {
+			const source = `<svg xmlns="${svg}"><g fill="#ff0000"><path style="stroke:#0000ff"/><circle/></g><path style="stroke-width:002.00"/><path stroke-width="2" style="stroke-width:003.00"/><path style="fill:currentColor"/><path style="color:none"/><path id="p" d="M0 0L10 20L20 10z" fill="#ff0000"/><path d="M0 0L10 20L20 10z" fill="#ff0000"/></svg>`;
+			const options = { ...structure, shortenSvgNumbers: enabled, shortenSvgColors: enabled, renderEmbeddedSource: builtinEmbeddedRenderer() };
+			const once = new SourceProcessor().process(source, options).code;
+			expect(once).toContain(enabled ? 'stroke="#00f"' : 'stroke="#0000ff"');
+			expect(once).toContain(enabled ? 'stroke-width="3"' : 'stroke-width="003.00"');
+			expect(once).toContain('style="color:none"');
+			expect(new SourceProcessor().process(once, options).code).toBe(once);
+		});
+		it('should preserve pending colors while moving inherited attributes', () => {
+			const source = `<svg xmlns="${svg}"><g fill="#ff0000"><path style="stroke:#0000ff"/></g><g fill="#ff0000"><path fill="blue"/></g></svg>`;
+			const options = { ...structure, shortenSvgColors: true, renderEmbeddedSource: builtinEmbeddedRenderer() };
+			const once = new SourceProcessor().process(source, options).code;
+			expect(once).toBe(`<svg xmlns="${svg}"><path stroke="#00f" fill="red"/><path fill="blue"/></svg>`);
+			expect(new SourceProcessor().process(once, options).code).toBe(once);
+		});
+		it('should reuse numeric path spelling and preserve path lengths', () => {
+			const source = `<svg xmlns="${svg}"><path id="p" d="M000 000L010 020L020 010z" pathLength="0010"/><path d="M000 000L010 020L020 010z" pathLength="0010"/></svg>`;
+			const options = { ...structure, shortenSvgNumbers: true, shortenSvgPathData: true };
+			const once = new SourceProcessor().process(source, options).code;
+			expect(once).toContain('<use href="#p"/>');
+			expect(once).toContain('pathLength="10"');
+			expect(new SourceProcessor().process(once, options).code).toBe(once);
+		});
+		it.each([
+			['<g font-size="2em"><path stroke-width="1em" font-size="2em"/></g>', '<g font-size="2em"><path stroke-width="1em" font-size="2em"/></g>'],
+			['<g fill="red"><path fill="invalid"/></g>', '<g fill="red"><path fill="invalid"/></g>'],
+			['<g fill="red"><path fill="inherit"/></g>', '<g fill="red"><path fill="inherit"/></g>'],
+			['<g fill="red"><path fill="var(--paint)"/></g>', '<g fill="red"><path fill="var(--paint)"/></g>'],
+			['<g stroke-width="1em"><path stroke-width="1em" font-size="2em"/></g>', '<g stroke-width="1em"><path stroke-width="1em" font-size="2em"/></g>'],
+			['<g fill="red"><g stroke="blue"><path d="M0 0"/></g><text/></g>', '<path d="M0 0" stroke="blue" fill="red"/>'],
+			['<defs><linearGradient><stop offset="0"/></linearGradient><pattern><rect width="1" height="1"/></pattern></defs>', '<defs/>'],
+			['<defs><linearGradient id="kept"><stop/></linearGradient><pattern><title>License</title></pattern></defs>', '<defs><linearGradient id="kept"><stop/></linearGradient><pattern><title>License</title></pattern></defs>'],
+			['<g><g><path d="M0 0"/></g></g><text/>', '<path d="M0 0"/>'],
+			['<g/><path d="M0 0"/><g><circle r="2"/></g>', '<path d="M0 0"/><circle r="2"/>'],
+			['<g fill="red"><path fill="red" d="M0 0"/><path fill="blue" d="M0 0"/></g>', '<g fill="red"><path d="M0 0"/><path fill="blue" d="M0 0"/></g>'],
+			['<g fill="red"><path id="p" fill="red" d="M0 0"/></g>', '<g fill="red"><path id="p" fill="red" d="M0 0"/></g>'],
+			['<path d="M0 0" opacity="1" filter="none"/>', '<path d="M0 0"/>'],
+			['<path d="M0 0" style="fill: red"/>', '<path d="M0 0" fill="red"/>'],
+			['<path fill="blue" style="fill:red;"/>', '<path fill="red"/>'],
+			['<g style="fill:red"><path fill="red"/></g>', '<path fill="red"/>'],
+			['<path stroke-width="2" style="stroke-width:none"/>', '<path stroke-width="2" style="stroke-width:none"/>'],
+			['<path style="fill:var(--paint)"/>', '<path style="fill:var(--paint)"/>'],
+			['<path style="fill:red!important"/>', '<path style="fill:red!important"/>'],
+			['<path style="fill:red;stroke:blue"/>', '<path fill="red" stroke="blue"/>'],
+			['<text id="label"/><text x="10"/><text> </text>', '<text id="label"/><text x="10"/><text> </text>'],
+			['<switch><g/><rect width="2" height="2"/></switch>', '<switch><g/><rect width="2" height="2"/></switch>'],
+			['<g xmlns:p="urn:data"><p:g/></g>', '<g xmlns:p="urn:data"><p:g/></g>'],
+			['<foreignObject><g xmlns="urn:data"><text/></g></foreignObject>', '<foreignObject><g xmlns="urn:data"><text/></g></foreignObject>']
+		])('should apply guarded structural cleanup to %s', (before, after) => {
+			const source = `<svg xmlns="${svg}">${before}</svg>`;
+			const once = new SourceProcessor().process(source, structure).code;
+			expect(once).toBe(`<svg xmlns="${svg}">${after}</svg>`);
+			expect(new SourceProcessor().process(once, structure).code).toBe(once);
+		});
+
+		it.each([
+			'<style/>', '<script/>', '<link/>', '<handler/>', '<animate/>', '<set/>', '<discard/>',
+			'<path onclick="x()"/>', '<g xml:space="preserve"/>', '<g xml:base="other.svg"/>', '<path id="dup"/><g id="dup"/>'
+		])('should skip structural changes with document dependency %s', dependency => {
+			const source = `<svg xmlns="${svg}">${dependency}<g><text/></g><ellipse rx="10" ry="10"/></svg>`;
+			expect(new SourceProcessor().process(source, { ...structure, convertSvgShapes: true }).code).toBe(source);
+		});
+		it.each(['<!DOCTYPE svg>', '<?xml-stylesheet href="a.css"?>'])('should skip structure changes after %s', prefix => {
+			const source = `${prefix}<svg xmlns="${svg}"><g><text/></g></svg>`;
+			expect(new SourceProcessor().process(source, structure).code).toBe(source);
+		});
+		it('should sort resource definitions only within defs, retaining drawing order', () => {
+			const source = `<svg xmlns="${svg}"><symbol id="z"/><symbol id="a"/><defs><marker id="z"/><linearGradient id="b"/><clipPath id="a"/></defs><path d="M0 0"/></svg>`;
+			// Duplicate IDs preserve the whole structure.
+			expect(new SourceProcessor().process(source, structure).code).toBe(source);
+			const unique = source.replace('marker id="z"', 'marker id="m"').replace('clipPath id="a"', 'clipPath id="c"');
+			expect(new SourceProcessor().process(unique, structure).code).toBe(unique.replace('<marker id="m"/><linearGradient id="b"/><clipPath id="c"/>', '<clipPath id="c"/><linearGradient id="b"/><marker id="m"/>'));
+		});
+		it.each([true, false])('should reuse identical leaf paths with existing IDs and path cleanup=%s', shortenSvgPathData => {
+			const body = '<path id="p" d="M0 0L10 20L20 10z" fill="red"/><path id="q" d="M0 0L10 20L20 10z" fill="red"/><path d="M0 0L10 20L20 10z" fill="red"/>';
+			const source = `<svg xmlns="${svg}">${body}</svg>`;
+			const once = new SourceProcessor().process(source, { ...structure, shortenSvgPathData }).code;
+			expect(once).toContain('<path id="q"');
+			expect(once).toContain('<use href="#p"/>');
+			expect(new SourceProcessor().process(once, { ...structure, shortenSvgPathData }).code).toBe(once);
+		});
+		it.each(['d="M0 0"', 'd="M0 0L"', 'fill="red"', 'd="M0 0L10 20L20 10z" opacity="inherit"', 'd="M0 0L10 20L20 10z" stroke-width="invalid"', 'd="M0 0L10 20L20 10z" style="fill:red;stroke:blue"', 'd="M0 0L10 20L20 10z" href="#x"', 'd="M0 0L10 20L20 10z" aria-label="shape"'])('should decline unsupported path reuse with %s', attributes => {
+			const source = `<svg xmlns="${svg}"><path id="p" ${attributes}/><path ${attributes}/></svg>`;
+			expect(new SourceProcessor().process(source, { ...structure, cleanupSvgStructure: false }).code).toBe(source);
+		});
+		const paint = 'fill="none" stroke="red" stroke-width="1" stroke-dasharray="none" shape-rendering="crispEdges" marker-start="none" marker-mid="none" marker-end="none"';
+		it.each([['M10 10L11 10', 'M0 0L1 0'], ['M0 0L1 0', 'M0 10L1 10'], ['M0 10L1 10', 'M0 0L1 0']])('should merge separated bounds for %s and %s', (first, second) => {
+			for (const shortenSvgPathData of [true, false]) {
+				const source = `<svg xmlns="${svg}"><path d="${first}" ${paint}/><path d="${second}" ${paint}/></svg>`;
+				const options = { ...structure, cleanupSvgStructure: false, shortenSvgPathData };
+				const once = new SourceProcessor().process(source, options).code;
+				expect(once.match(/<path /g)).toHaveLength(1);
+				expect(new SourceProcessor().process(once, options).code).toBe(once);
+			}
+		});
+		it.each(['auto', 'geometricPrecision', ''])('should preserve separate paths with rendering=%s', rendering => {
+			const attributes = rendering ? paint.replace('crispEdges', rendering) : paint.replace(' shape-rendering="crispEdges"', '');
+			const source = `<svg xmlns="${svg}"><path d="M0 0L1 0" ${attributes}/><path d="M10 10L11 10" ${attributes}/></svg>`;
+			expect(new SourceProcessor().process(source, { ...structure, cleanupSvgStructure: false }).code).toBe(source);
+		});
+		it('should merge only disjoint explicitly painted straight paths', () => {
+			const source = `<svg xmlns="${svg}"><path d="M0 0L1 0" ${paint}/><path d="M10 10L11 10" ${paint}/><path d="M30 30L31 30" ${paint}/></svg>`;
+			const once = new SourceProcessor().process(source, { ...structure, cleanupSvgStructure: false }).code;
+			expect(once).toBe(`<svg xmlns="${svg}"><path d="M0 0L1 0M10 10L11 10M30 30L31 30" ${paint}/></svg>`);
+			expect(new SourceProcessor().process(once, structure).code).toBe(once);
+		});
+		it.each(['id="keep"', 'fill="blue"', 'stroke="url(#paint)"', 'stroke-width="0"', 'stroke-width="1px"', 'stroke-dasharray="1 2"', 'marker-end="url(#marker)"'])('should decline path merging for %s', change => {
+			const key = change.slice(0, change.indexOf('='));
+			const attributes = paint.replace(new RegExp(`(?:^| )${key}="[^"]*"`), '') + ' ' + change;
+			const source = `<svg xmlns="${svg}"><path d="M0 0L1 1" ${attributes}/><path d="M10 10L11 11" ${attributes}/></svg>`;
+			expect(new SourceProcessor().process(source, { ...structure, cleanupSvgStructure: false }).code).toBe(source.replace(/  /g, ' '));
+		});
+		it.each(['M0 0L1 1', 'M1e2 0L101 1', 'M.1 .2L.3 .4', 'M0 0Q1 1 2 2', 'M0 0L1 1\u00a0', 'M0 0L1..1 2'])('should preserve overlapping or unsupported merged path data %s', data => {
+			const source = `<svg xmlns="${svg}"><path d="${data}" ${paint}/><path d="${data}" ${paint}/></svg>`;
+			expect(new SourceProcessor().process(source, { ...structure, cleanupSvgStructure: false }).code).toBe(source);
+		});
+
+		const compact = { xml: true, mode: /** @type {const} */ ("minify"), shortenSvgNumbers: true, shortenSvgColors: true, shortenSvgPathData: true, removeEmptyElements: true };
+		it("should preserve DTD-declared style values instead of violating fixed defaults", () => {
+			const source = `<!DOCTYPE svg [<!ATTLIST g style CDATA #FIXED "fill: #ff0000">]><svg xmlns="${svg}"><g style="fill: #ff0000"/></svg>`;
+			for (const options of [{ xml: true, mode: /** @type {const} */ ('minify') }, compact]) expect(new SourceProcessor().process(source, { ...options, renderEmbeddedSource: builtinEmbeddedRenderer() }).code).toBe(source);
+		});
+		it("should build complete deferred style attributes and omit an empty answer", () => {
+			/** @type {import('../../lib/html/syntax-parser').DeferredEmbeddedSource[]} */
+			const holes = [];
+			new SourceProcessor().process(`<svg xmlns="${svg}"><g style="/* empty */"/></svg>`, { xml: true, mode: 'minify', removeEmptyAttributes: true, deferEmbeddedSource: holes });
+			expect(holes).toHaveLength(1);
+			expect(holes[0].source).toBe('/* empty */');
+			expect(holes[0].build('')).toBe('');
+			expect(holes[0].build('fill:red')).toBe(' style="fill:red"');
+		});
+		it("should resolve deferred CSS before removing empty SVG containers", async () => {
+			const source = `<svg xmlns="${svg}" xmlns:p="urn:unused"><g style="/* p:Thing */"/><g id="keep" style="/* empty */"/><path fill="#ff0000" style="stroke: #ff0000" d="M000 000" transform="scale(001)"/></svg>`;
+			const render = builtinEmbeddedRenderer();
+			const options = { ...compact, removeEmptyAttributes: true, removeUnusedSvgNamespaces: true, renderEmbeddedSource: render };
+			const expected = `<svg xmlns="${svg}"><g id="keep"/><path fill="red" style="stroke:red" d="M0 0" transform="scale(1)"/></svg>`;
+			expect(new SourceProcessor().process(source, options).code).toBe(expected);
+			expect((await new SourceProcessor().processAsync(source, { ...options, renderEmbeddedSource: async (source, info) => render(source, info) })).code).toBe(expected);
+		});
+		it("should preserve XML document roots and DTD-declared namespace attributes", () => {
+			const root = `<g xmlns="${svg}"/>`;
+			expect(new SourceProcessor().process(root, compact).code).toBe(root);
+			const source = `<!DOCTYPE svg [<!ATTLIST g xmlns:p CDATA #IMPLIED>]><svg xmlns="${svg}"><g xmlns:p="urn:kept"/></svg>`;
+			expect(new SourceProcessor().process(source, { ...compact, removeUnusedSvgNamespaces: true }).code).toBe(source);
+		});
+		it("should preserve empty switch alternatives that suppress visible fallback children", () => {
+			const source = `<svg xmlns="${svg}" xmlns:s="${svg}"><switch><g/><rect width="10" height="10"/></switch><s:switch><s:defs/><s:rect width="10" height="10"/></s:switch></svg>`;
+			expect(new SourceProcessor().process(source, compact).code).toBe(source);
+		});
+		it.each([
+			`<svg xmlns="${svg}"><text>A<g/>B</text><style>p<g/>{fill:red}</style><foreignObject><root xmlns="urn:data"><s:g xmlns:s="${svg}"/></root></foreignObject></svg>`,
+			`<root><g><s:g xmlns:s="${svg}"/></g></root>`,
+			`<g xmlns="urn:data"><s:g xmlns:s="${svg}"/></g>`
+		])("should keep empty SVG elements inside text, styles and foreign XML parents", (source) => {
+			expect(new SourceProcessor().process(source, compact).code).toBe(source);
+		});
+		it("should remove empty containers under a prefixed SVG parent", () => {
+			const source = `<s:svg xmlns:s="${svg}"><s:g/><s:defs/></s:svg>`;
+			expect(new SourceProcessor().process(source, compact).code).toBe(`<s:svg xmlns:s="${svg}"/>`);
+		});
+		it("should preserve empty children required by a DTD content model", () => {
+			const source = `<!DOCTYPE svg [<!ELEMENT svg (g)><!ELEMENT g EMPTY><!ATTLIST svg xmlns CDATA #FIXED "${svg}">]><svg xmlns="${svg}"><g/></svg>`;
+			expect(new SourceProcessor().process(source, compact).code).toBe(source);
+		});
+		it.each(['translate(001', 'rotate(000,'])('should preserve an unterminated transform %s', (value) => {
+			const source = `<svg xmlns="${svg}" transform="${value}"/>`;
+			expect(new SourceProcessor().process(source, compact).code).toBe(source);
+		});
+
+		it.each([['#ff0000', 'red'], ['#ffffff', '#fff'], ['WHITE', '#fff'], ['rgb(255, 0, 0)', 'red'], ['rgb(0%, 0%, 100%)', '#00f'], ['Blue', 'Blue']])("should shorten the SVG color %s with the inline CSS renderer", async (value, expected) => {
+			const source = `<svg xmlns="${svg}"><rect fill="${value}" stroke="${value}" color="${value}" stop-color="${value}" flood-color="${value}" lighting-color="${value}"/></svg>`;
+			const render = builtinEmbeddedRenderer();
+			const options = { ...compact, renderEmbeddedSource: render };
+			const once = new SourceProcessor().process(source, options).code;
+			expect(once).toBe(source.split(`="${value}"`).join(`="${expected}"`));
+			expect(new SourceProcessor().process(once, options).code).toBe(once);
+			expect((await new SourceProcessor().processAsync(source, { ...options, renderEmbeddedSource: async (source, info) => render(source, info) })).code).toBe(once);
+			expect(new SourceProcessor().process(source, { ...options, shortenSvgColors: false }).code).toBe(source);
+		});
+
+		it.each(['none', 'currentColor', 'context-fill', 'inherit', 'transparent', 'rebeccapurple', 'url(#paint) #ff0000', 'var(--paint)', '#ff000080', '#ffff', 'rgb(0%,0,0)', 'rgb(0,0)', 'rgb(0,0,0);stroke:red', '\u00a0#ff0000', 'rgb(1e2,0,0)', 'rgba(255,0,0,.5)', 'hsl(0,100%,50%)'])('should preserve contextual and unsupported SVG colors %s', (value) => {
+			const source = `<svg xmlns="${svg}"><path fill="${value}"/></svg>`;
+			expect(new SourceProcessor().process(source, { ...compact, renderEmbeddedSource: builtinEmbeddedRenderer() }).code).toBe(source);
+		});
+
+		it("should decline missing, failing and malformed color renderer answers", () => {
+			const source = `<svg xmlns="${svg}" fill="#ff0000"/>`;
+			const processor = new SourceProcessor();
+			for (const renderEmbeddedSource of [undefined, () => undefined, () => '', () => 'stroke:red', () => 'fill:red;stroke:blue', () => { throw new Error('declined'); }]) {
+				expect(processor.process(source, { ...compact, renderEmbeddedSource }).code).toBe(source);
+			}
+			expect(processor.process(source, { ...compact, renderEmbeddedSource: builtinEmbeddedRenderer({ transforms: { shortenColors: false } }) }).code).toBe(source);
+		});
+
+		it("should preserve DTD color references when they are shorter and honor XML quotes asynchronously", async () => {
+			const source = `<!DOCTYPE svg [<!ENTITY c "lightgoldenrodyellow">]><svg xmlns="${svg}" fill="&c;"><path stroke="#ff0000"/></svg>`;
+			const render = builtinEmbeddedRenderer();
+			const options = { ...compact, xmlQuote: /** @type {const} */ ("'"), renderEmbeddedSource: render };
+			const once = new SourceProcessor().process(source, options).code;
+			expect(once).toContain('fill="&c;"');
+			expect(once).toContain("stroke='red'");
+			expect((await new SourceProcessor().processAsync(source, { ...options, renderEmbeddedSource: async (source, info) => render(source, info) })).code).toBe(once);
+		});
+
+		it.each(['translate()', 'translate(1px)', 'matrix(1 0 0 1 0)', 'rotate(1 2)', 'scale(1,,2)', 'scale(1,)', 'scale(1),', ',scale(1)', 'SCALE(001)', 'constructor(001)', 'translate(calc(1))', 'scale(1) nope(2)', 'scale(1)\u00a0scale(2)'])('should preserve unsupported SVG transforms %s', (value) => {
+			const source = `<svg xmlns="${svg}"><g transform="${value}"/></svg>`;
+			expect(new SourceProcessor().process(source, compact).code).toBe(source);
+		});
+
+		it("should shorten full transform lists without folding or changing exponent notation", () => {
+			const value = ' matrix(+001.00, 000.00, 000.00, 001.00, 010.00, -000.00), translate(+001.00e+02, 002.00) scale(001.00) rotate(090.00, 000, 000) skewX(001.00)skewY(-001.00) ';
+			const source = `<svg xmlns="${svg}"><g transform="${value}"/></svg>`;
+			const once = new SourceProcessor().process(source, compact).code;
+			expect(once).toBe(`<svg xmlns="${svg}"><g transform="translate(10) translate(+001.00e+02 2) rotate(90) skewX(1) skewY(-1)"/></svg>`);
+			expect(new SourceProcessor().process(once, compact).code).toBe(once);
+		});
+
+		it.each(Object.entries(require('../../lib/html/data').SVG_PATH_ARGUMENTS).flatMap(([command, count]) => [command, command.toLowerCase()].map((name) => /** @type {[string, number]} */ ([name, Number(count)]))))("should preserve SVG path segments for command %s with %s arguments", (command, count) => {
+			const args = command.toUpperCase() === 'A' ? ['001.00', '002.00', '+003.00', '0', '1', '004.00', '-000.00'] : Array(count).fill('001.00');
+			const source = `<svg xmlns="${svg}"><path d="M000.00,000.00 ${command} ${args.join(', ')}"/></svg>`;
+			const expected = `<svg xmlns="${svg}"><path d="M0 0${command === "L" ? " " : command === "Z" ? "z" : command}${command.toUpperCase() === 'A' ? '1 2 3 014-0' : Array(count).fill('1').join(' ')}"/></svg>`;
+			const once = new SourceProcessor().process(source, compact).code;
+			expect(once).toBe(expected);
+			expect(new SourceProcessor().process(once, compact).code).toBe(once);
+		});
+
+		it.each([
+			['M0 0C0 0 10 10 20 20', 'M0 0S10 10 20 20'],
+			['m10 10c0 0 10 10 20 20', 'm10 10s10 10 20 20'],
+			['M0 0Q0 0 10 10', 'M0 0T10 10'],
+			['m10 10q0 0 20 20', 'm10 10t20 20'],
+			['M10 20L10 30C10 30 20 40 50 60', 'M10 20V30S20 40 50 60'],
+			['M0 0C0 0 10 10 20 20C20 20 30 30 40 40', 'M0 0S10 10 20 20c0 0 10 10 20 20'],
+			['M0 0C1 1 10 10 10 10C10 10 20 20 30 30', 'M0 0C1 1 10 10 10 10S20 20 30 30'],
+			['M0 0Q0 0 10 10Q10 10 20 20', 'M0 0T10 10q0 0 10 10'],
+			['M0 0Q10 10 10 10Q10 10 20 20', 'M0 0Q10 10 10 10T20 20'],
+			['M0 0C0 0 0 0 0 0C0 0 0 0 1 2', 'M0 0S0 0 0 0 0 0 1 2'],
+			['M0 0Q0 0 0 0Q0 0 1 2', 'M0 0T0 0 1 2'],
+			['M0 0S1 1 2 2C2 2 3 3 4 4', 'M0 0S1 1 2 2C2 2 3 3 4 4'],
+			['M0 0S2 2 2 2C2 2 3 3 4 4', 'M0 0S2 2 2 2 3 3 4 4'],
+			['M0 0c1 1 2 2 2 2c0 0 3 3 4 4', 'M0 0c1 1 2 2 2 2s3 3 4 4'],
+			['M0 0s1 1 2 2c0 0 3 3 4 4', 'M0 0s1 1 2 2c0 0 3 3 4 4'],
+			['M0 0T0 0Q0 0 1 2', 'M0 0T0 0 1 2'],
+			['M0 0C0 0 1 2 3 4Q3 4 5 6C5 6 7 8 9 10', 'M0 0S1 2 3 4T5 6s2 2 4 4'],
+			['M10 20Q10 20 30 40ZC10 20 50 60 70 80', 'M10 20T30 40zS50 60 70 80'],
+			['M0 0h1Q1 0 2 2', 'M0 0h1T2 2'],
+			['M0 0c-0 .00e-400 1 2 3 4', 'M0 0c-0 .00e-400 1 2 3 4'],
+			['M0 0c1e-400 0 1 2 3 4', 'M0 0c1e-400 0 1 2 3 4'],
+			['M9007199254740993 0C9007199254740993 0 1 2 3 4', 'M9007199254740993 0S1 2 3 4'],
+			['M9007199254740992 0C9007199254740993 0 1 2 3 4', 'M9007199254740992 0C9007199254740993 0 1 2 3 4'],
+			['M2e38 2e38C2e38 2e38 2e38 2e38 2e38 2e38C2e38 2e38 0 0 10 20', 'M2e38 2e38S2e38 2e38 2e38 2e38C2e38 2e38 0 0 10 20'],
+			['M0 0C0 0 1', 'M0 0C0 0 1'],
+			['M0 0Q0 0 1 2Q', 'M0 0Q0 0 1 2Q']
+		])('should shorten only exactly implied curve controls in %s', (value, expected) => {
+			const source = `<svg xmlns="${svg}"><path d="${value}"/></svg>`;
+			const processor = new SourceProcessor();
+			const once = processor.process(source, compact).code;
+			expect(once).toBe(`<svg xmlns="${svg}"><path d="${expected}"/></svg>`);
+			expect(processor.process(once, compact).code).toBe(once);
+			expect(processor.process(source, { ...compact, shortenSvgPathData: false }).code).toBe(source);
+		});
+
+		it.each([
+			['M100 100L101 102L102 104', 'M100 100l1 2 1 2'],
+			['M100 100H101 102 103', 'M100 100h1 1 1'],
+			['M100 100V101 102 103', 'M100 100v1 1 1'],
+			['M100 100C101 102 103 104 105 106 106 107 108 109 110 111', 'M100 100c1 2 3 4 5 6 1 1 3 3 5 5'],
+			['M100 100S101 102 103 104 104 105 106 107', 'M100 100s1 2 3 4 1 1 3 3'],
+			['M100 100Q101 102 103 104 104 105 106 107', 'M100 100q1 2 3 4 1 1 3 3'],
+			['M100 100T101 102 103 104', 'M100 100t1 2 2 2'],
+			['M100 100A2 3 45 0 1 101 102 4 5 90 1 0 103 104', 'M100 100a2 3 45 011 2 4 5 90 102 2'],
+			['M100 100M101 102 103 104ZL101 104', 'M100 100m1 2 2 2zv2'],
+			['M100 100L100 101 102 101 102 103', 'M100 100v1h2v2'],
+			['m100 100l1 2H102V103', 'm100 100 1 2h1v1'],
+			['M100 100L100.125 100.25L100.5 100.875', 'M100 100l.125.25.375.625'],
+			['m999999.875 999999.875l.125 .125L999999.875 999999.875', 'm999999.875 999999.875.125.125-.125-.125'],
+			['m1000000 1000000l.125 .125L1000000 1000000', 'm1000000 1000000 .125.125L1000000 1000000'],
+			['M-1000000-1000000L1000000 1000000', 'M-1000000-1000000L1000000 1000000'],
+			['M100 100A2e39 3e-40 45 0 1 101 102', 'M100 100a2e39 3e-40 45 011 2'],
+			['M100 100A2 3 45 0 1 1e2 102', 'M100 100A2 3 45 011e2 102'],
+			['M100 100A2 3 45 0 1 100 100', 'M100 100A2 3 45 01100 100'],
+			['m0 1.2H10L10 1.2', 'm0 1.2H10V1.2'],
+			['M100 100H101 1000001 102', 'M100 100h1H1000001 102'],
+			['M100 100V101 1e2 102', 'M100 100v1V1e2 102'],
+			['M-0 100L0 101', 'M-0 100L0 101'],
+			['M100 100L100.1 101.1', 'M100 100L100.1 101.1'],
+			['M100 100L1000001 1000002', 'M100 100L1000001 1000002']
+		])('should choose exact relative coordinates only within bounded eighths in %s', (value, expected) => {
+			const source = `<svg xmlns="${svg}"><path d="${value}"/></svg>`;
+			const processor = new SourceProcessor();
+			const once = processor.process(source, compact).code;
+			expect(once).toBe(`<svg xmlns="${svg}"><path d="${expected}"/></svg>`);
+			expect(processor.process(once, compact).code).toBe(once);
+			expect(processor.process(source, { ...compact, shortenSvgPathData: false }).code).toBe(source);
+		});
+
+		it.each(['L001 002', 'M', 'M0', 'M0,', 'M0 0,', 'M,0 0', 'M0 0,L1 2', 'M0 0L1', 'M0 0R1 2', 'M0 0Z1 2', 'M0 0L1e 2', 'M0 0A-1 1 0 0 1 2 3', 'M0 0A1 1 0 2 1 2 3', 'M0 0A1 1 0 1.0 1 2 3', 'M0 0A1 1 0 0 1 2', 'M0 0L1,,2', 'M0 0L1 2L', 'M0 0C1 2 3 4 5 6C7 8', 'M0 0A1 1 0 011 2A1 1 0 0', 'M0 0ZL', 'M000 000\u017f001 002 003 004', 'M000 000L000 005L', 'M000 000L000 005\u017f001 002 003 004'])('should preserve invalid or unsupported path syntax %s', (value) => {
+			const source = `<svg xmlns="${svg}"><path d="${value}"/></svg>`;
+			expect(new SourceProcessor().process(source, compact).code).toBe(source);
+		});
+
+		it("should preserve packed arc flags, implicit segments and exact path precision", () => {
+			const source = `<svg xmlns="${svg}"><path d="M000.00,000.00 0001.00,0002.00L000.500.500A001.00 002.00 0 0110.00 20.00l+09007199254740993.00 -000.00e+03"/></svg>`;
+			const once = new SourceProcessor().process(source, compact).code;
+			expect(once).toBe(`<svg xmlns="${svg}"><path d="M0 0 1 2 .5.5A1 2 0 0110 20h9007199254740993"/></svg>`);
+			expect(new SourceProcessor().process(once, compact).code).toBe(once);
+		});
+
+		it.each([
+			['M0 0l0 80-112 0', 'M0 0v80h-112'],
+			['M0 0l1 2 0 3 4 0 5 6', 'M0 0l1 2v3h4l5 6'],
+			['m1 1 2 2l0 1', 'm1 1 2 2v1'],
+			['M0 0h1l0 2', 'M0 0h1v2'],
+			['M0 0l-0 5 .0e9 6', 'M0 0v5 6'],
+			['M0 0l1e-400 2', 'M0 0l1e-400 2'],
+			['M0 0 L0 5', 'M0 0V5']
+		])("should write a relative lineto with a zero offset as h or v in %s", (value, expected) => {
+			const source = `<svg xmlns="${svg}"><path d="${value}"/></svg>`;
+			const processor = new SourceProcessor();
+			const once = processor.process(source, compact).code;
+			expect(once).toBe(`<svg xmlns="${svg}"><path d="${expected}"/></svg>`);
+			expect(processor.process(once, compact).code).toBe(once);
+		});
+
+		it.each([
+			['M10 20 L10 30 L40 30 L40 50', 'M10 20V30H40V50'],
+			['M10 20 L10 30 10 40 50 40', 'M10 20V30 40H50'],
+			['M0 0 L0 0 L0 0', 'M0 0V0 0'],
+			['M1 2 H3 L3 4 V5 L6 5', 'M1 2H3V4 5H6'],
+			['M1 2 3 4 L3 5', 'M1 2 3 4V5'],
+			['M1 2 C3 4 5 6 7 8 L7 9', 'M1 2C3 4 5 6 7 8V9'],
+			['M1 2 S3 4 5 6 L7 6', 'M1 2S3 4 5 6H7'],
+			['M1 2 Q3 4 5 6 L5 7', 'M1 2Q3 4 5 6V7'],
+			['M1 2 T3 4 L5 4', 'M1 2T3 4H5'],
+			['M1 2 A3 4 0 0 1 5 6 L5 7', 'M1 2A3 4 0 015 6V7'],
+			['M1 2 L3 4 Z L1 5', 'M1 2 3 4zV5'],
+			['M1 2 L3 4 z L6 2', 'M1 2 3 4zH6'],
+			['M1 2 M3 4 L3 5 Z L6 4', 'M1 2M3 4V5zH6'],
+			['M1 2 l3 4 L1 5 L1 6', 'M1 2l3 4L1 5V6'],
+			['m1 2 3 4 L1 5 L1 6', 'm1 2 3 4L1 5V6'],
+			['M1 2 h3 L1 4', 'M1 2h3L1 4'],
+			['M1 2 v3 L4 2', 'M1 2v3L4 2'],
+			['M1 2 c3 4 5 6 7 8 L1 9', 'M1 2c3 4 5 6 7 8L1 9'],
+			['M1 2 l3 4 Z L1 5', 'M1 2l3 4zV5'],
+			['m1 2 L3 4 Z L1 5', 'm1 2L3 4zV5'],
+			['M+001.00 -002.000 L1 -003.00 L4 -3', 'M1-2V-3H4'],
+			['M9007199254740993 2 L9007199254740993 3', 'M9007199254740993 2V3'],
+			['M9007199254740992 2 L9007199254740993 3', 'M9007199254740992 2 9007199254740993 3'],
+			['M1e-400 2 L1e-400 3', 'M1e-400 2V3'],
+			['M0 1e-400 L2 0', 'M0 1e-400 2 0'],
+			['M1e2 2 L100 3', 'M1e2 2 100 3'],
+			['M-0 2 L0 3', 'M-0 2 0 3']
+		])("should write an absolute lineto with a matching coordinate as H or V in %s", (value, expected) => {
+			const source = `<svg xmlns="${svg}"><path d="${value}"/></svg>`;
+			const processor = new SourceProcessor();
+			const once = processor.process(source, compact).code;
+			expect(once).toBe(`<svg xmlns="${svg}"><path d="${expected}"/></svg>`);
+			expect(processor.process(once, compact).code).toBe(once);
+			expect(processor.process(source, { ...compact, shortenSvgPathData: false }).code).toBe(source);
+		});
+
+
+		it.each([
+			['M0 0 0 10 20 10 20 30', 'M0 0V10H20V30'],
+			['m0 0 0 10 20 0 0 30', 'm0 0v10h20v30'],
+			['M1 2 3 4 3 5 6 7', 'M1 2 3 4V5L6 7'],
+			['m1 2 3 4 0 5 6 7', 'm1 2 3 4v5l6 7'],
+			['M1 2 1 3 Z L1 4', 'M1 2V3zV4'],
+			['m1 2 0 3 Z L1 4', 'm1 2v3zV4'],
+			['M1 2 1 3 M4 5 4 6', 'M1 2V3M4 5V6'],
+			['m1 2 0 3 m4 5 6 0', 'm1 2v3m4 5h6'],
+			['M9007199254740993 2 9007199254740993 3', 'M9007199254740993 2V3'],
+			['M9007199254740992 2 9007199254740993 3', 'M9007199254740992 2 9007199254740993 3'],
+			['m0 0 1e-400 2', 'm0 0 1e-400 2'],
+			['m0 0 -0 5 .0e9 6', 'm0 0v5 6']
+		])("should shorten implicit line segments after moveto in %s", (value, expected) => {
+			const source = `<svg xmlns="${svg}"><path d="${value}"/></svg>`;
+			const processor = new SourceProcessor();
+			const once = processor.process(source, compact).code;
+			expect(once).toBe(`<svg xmlns="${svg}"><path d="${expected}"/></svg>`);
+			expect(processor.process(once, compact).code).toBe(once);
+			expect(processor.process(source, { ...compact, shortenSvgPathData: false }).code).toBe(source);
+		});
+
+		it.each([true, false])("should preserve animated path data and reset cleanup afterward with xml=%s", async (xml) => {
+			const value = 'M010 020L010 030L040 030l000 010';
+			const path = `<path id="p" d="${value}"/>`;
+			const animation = '<animate attributeName="d" to="M10 20L20 50L40 50l0 10" dur="2s"/>';
+			const options = { ...compact, xml };
+			const processor = new SourceProcessor();
+			for (const body of [
+				path.replace('/>', `>${animation}</path>`),
+				animation.replace('<animate ', '<animate href="#p" ') + path,
+				path + animation.replace('<animate ', '<animate xlink:href="#p" '),
+				path + animation.replace('attributeName="d"', 'attributeName="&#100;"'),
+				path + animation.replace('<animate ', '<set '),
+				`<style>@keyframes morph { to { d: path("M10 20L20 50L40 50l0 10") } }</style>${path}`,
+				`${path}<style>@keyframes morph { to { \\64 : path("M10 20L20 50L40 50l0 10") } }</style>`,
+				path.replace('id="p"', `id="p" style="D:var(--shape)"`),
+				path.replace('id="p"', `id="p" style="\\64 :var(--shape)"`)
+			]) {
+				const source = `<svg xmlns="${svg}" xmlns:xlink="http://www.w3.org/1999/xlink">${body}</svg>`;
+				const once = processor.process(source, options).code;
+				expect(once).toContain(`d="${value}"`);
+				expect(processor.process(once, options).code).toBe(once);
+				expect((await processor.processAsync(source, options)).code).toBe(once);
+			}
+			const source = `<svg xmlns="${svg}"><style>/* d */.icon{fill:red;content:'d'}</style><path d="M010 020L010 030L040 030"/></svg>`;
+			expect(processor.process(source, options).code).toContain('d="M10 20V30H40"');
+		});
+
+
+		it.each([true, false])("should preserve geometry command compatibility with external CSS and xml=%s", (xml) => {
+			const processor = new SourceProcessor();
+			const path = '<path d="M0 0L0 10L10 10" transform="scale(1) matrix(1 0 0 1 10 20)"/>';
+			const styles = [
+				'<style>@import "animation.css";</style>',
+				// cspell:ignore mport
+				String.raw`<style>@\69mport url(animation.css);</style>`,
+				'<foreignObject><link xmlns="http://www.w3.org/1999/xhtml" rel="alternate Stylesheet" href="animation.css"/></foreignObject>'
+			];
+			if (xml) styles.push('<?xml-stylesheet type="text/css" href="animation.css"?>');
+			for (const style of styles) {
+				const source = `<svg xmlns="${svg}">${style}${path}</svg>`;
+				const once = processor.process(source, { ...compact, xml }).code;
+				expect(once).toContain(path);
+				expect(processor.process(once, { ...compact, xml }).code).toBe(once);
+			}
+			const source = `<svg xmlns="${svg}"><?other data?><style>@supports(display:grid){path{fill:red}}</style><foreignObject><link xmlns="http://www.w3.org/1999/xhtml" rel="preload"/></foreignObject>${path}</svg>`;
+			const once = processor.process(source, { ...compact, xml }).code;
+				expect(once).toContain('d="M0 0V10H10" transform="translate(10 20)"');
+		});
+
+		it.each([true, false])("should preserve numeric and color attribute selectors with xml=%s", (xml) => {
+			const processor = new SourceProcessor();
+			const options = { ...compact, xml, renderEmbeddedSource: builtinEmbeddedRenderer() };
+			const path = '<path d="M0 0L10 10" stroke-width="0002.00" stroke="#ff0000"/>';
+			// cspell:ignore troke
+			for (const style of ['[stroke-width="0002.00"]{stroke:blue}', String.raw`[\73troke-width="0002.00"]{stroke:blue}`, '[stroke="#ff0000"]{stroke:blue}', '@import "animation.css";']) {
+				const source = `<svg xmlns="${svg}"><style>${style}</style>${path}</svg>`;
+				const once = processor.process(source, options).code;
+				const normalized = once.replace(/="([^" ]*)"/g, "=$1");
+				expect(normalized).toContain('stroke-width=0002.00');
+				expect(normalized).toContain('stroke=#ff0000');
+			}
+			const source = `<svg xmlns="${svg}"><style>/* [width] */path{fill:red;content:'[width]'}</style>${path}</svg>`;
+			const once = processor.process(source, options).code;
+			expect(once.replace(/="([^" ]*)"/g, "=$1")).toContain('stroke-width=2');
+		});
+
+		it("should preserve SVG styles without interrupting an enclosing CSS data URL", () => {
+			const source = `<svg xmlns="${svg}"><metadata>removed</metadata><style>@keyframes morph{to{d:path("M10 20L20 50L40 50")}}</style><path d="M010 020L010 030L040 030"/></svg>`;
+			const css = `.icon { background: url("data:image/svg+xml,${encodeURIComponent(source)}"); color: red }`;
+			const render = builtinEmbeddedRenderer({ svg: { shortenPathData: true, removeMetadata: true } });
+			const info = { type: "css", hostType: "css" };
+			const result = render(css, info);
+			expect(typeof result).toBe("string");
+			const decoded = decodeURIComponent(result || "");
+			expect(decoded).toContain("M010 020L010 030L040 030");
+			expect(decoded).toContain(String.raw`@keyframes morph{to{d:path(\"M10 20L20 50L40 50\")}}`);
+			expect(decoded).toContain("color:red");
+			expect(decoded).not.toContain("<metadata>");
+			expect(render(result || "", info)).toBe(result);
+		});
+
+		it("should keep SVG style end tags inside an HTML stylesheet data URL", () => {
+			const source = `<svg xmlns="${svg}"><style>a{fill:red}</style><path d="M010 020L010 030L040 030"/></svg>`;
+			const css = `.icon { background: url("data:image/svg+xml,${encodeURIComponent(source)}") }`;
+			for (const svg of [false, true, { shortenPathData: true }]) {
+				const options = { mode: /** @type {"minify"} */ ("minify"), renderEmbeddedSource: builtinEmbeddedRenderer({ svg }) };
+				const once = new SourceProcessor().process(`<style>${css}</style><p>tail</p>`, options).code;
+				expect(once).toContain(css);
+				expect((once.match(/<\/style>/g) || []).length).toBe(1);
+				expect(new SourceProcessor().process(once, options).code).toBe(once);
+			}
+		});
+
+		it.each(["style>", "STYLE/>", "StYlE x='v'>"])("should decline an HTML stylesheet that exposes </%s", (ending) => {
+			const css = `.icon { background: url("data:image/svg+xml,${encodeURIComponent(`<svg><style>a{fill:red}</${ending}</svg>`)}") }`;
+			const render = builtinEmbeddedRenderer();
+			expect(render(css, { type: "css", hostType: "html" })).toBeUndefined();
+			expect(typeof render(css, { type: "css", hostType: "css" })).toBe("string");
+			expect(typeof render(css, { type: "css", hostType: "html", as: "block-contents" })).toBe("string");
+		});
+
+		it.each([
+			['M 1 -2', 'M1-2'],
+			['M 1 +2', 'M1 2'],
+			['M 1e+2 +3e-4', 'M1e+2+3e-4'],
+			['M .1 .2', 'M.1.2'],
+			['M 1 .2', 'M1 .2'],
+			['M 1e2 .2', 'M1e2.2'],
+			['M 1.e2 .2', 'M1.e2.2'],
+			['M -0 -0', 'M-0-0'],
+			['M0 0 L1 2 l3 4 L5 6', 'M0 0 1 2l3 4H5'],
+			['M0 0M1 2m3 4m5 6', 'M0 0M1 2m3 4m5 6'],
+			['M0 0 ZL1 2 L3 4 ZZL5 6', 'M0 0zL1 2 3 4zzL5 6'],
+			['M0 0H-1 H-2 H-3', 'M0 0H-1-2-3'],
+			['M0 0A10 20 30 0 1 40 50 A10 20 30 1 0 .5 -.5', 'M0 0A10 20 30 0140 50 10 20 30 10.5-.5'],
+			['M0 0A1 2 .3 0 1 .4 .5', 'M0 0A1 2 .3 01.4.5']
+		])("should compact path delimiters without merging arguments in %s", (value, expected) => {
+			const source = `<svg xmlns="${svg}"><path d="${value}"/></svg>`;
+			const processor = new SourceProcessor();
+			const once = processor.process(source, compact).code;
+			expect(once).toBe(`<svg xmlns="${svg}"><path d="${expected}"/></svg>`);
+			expect(processor.process(once, compact).code).toBe(once);
+			expect(processor.process(source, { ...compact, shortenSvgPathData: false }).code).toBe(source);
+		});
+
+		it.each(Object.entries(require('../../lib/html/data').SVG_PATH_ARGUMENTS).flatMap(([command, count]) => [command, command.toLowerCase()].map((name) => /** @type {[string, number]} */ ([name, Number(count)]))))("should compact repeated path command %s without losing segments", (command, count) => {
+			const args = command.toUpperCase() === 'A' ? '1 2 3 014-0' : Array(count).fill('1').join(' ');
+			const source = `<svg xmlns="${svg}"><path d="M0 0 ${command}${args} ${command}${args}"/></svg>`;
+			const written = command === 'Z' ? 'z' : command;
+			const next = command.toUpperCase() === 'M' || count === 0 ? written : ' ';
+			const expected = command === 'C' ? 'M0 0C1 1 1 1 1 1S1 1 1 1' : command === 'Q' ? 'M0 0Q1 1 1 1T1 1' : command === 'L' ? 'M0 0 1 1V1' : `M0 0${written}${args}${next}${args}`;
+			const processor = new SourceProcessor();
+			const once = processor.process(source, compact).code;
+			expect(once).toBe(`<svg xmlns="${svg}"><path d="${expected}"/></svg>`);
+			expect(processor.process(once, compact).code).toBe(once);
+		});
+
+		it("should remove empty SVG containers while preserving referenced, styled and foreign content", () => {
+			const source = `<svg xmlns="${svg}"><g><g/><!--empty--><defs/></g><g xmlns:p="urn:unused"/><g id="keep"/><use href="#keep"/><g class="keep"/><defs><title>keep</title></defs><g> </g><foreignObject><g xmlns="urn:foreign"/></foreignObject></svg>`;
+			const expected = source.replace('<g><g/><!--empty--><defs/></g>', '').replace('<g xmlns:p="urn:unused"/>', '');
+			const once = new SourceProcessor().process(source, compact).code;
+			expect(once).toBe(expected);
+			expect(new SourceProcessor().process(once, compact).code).toBe(once);
+			expect(new SourceProcessor().process(source, { ...compact, collapseWhitespace: true }).code).toBe(expected.replace('<g> </g>', ''));
+			expect(new SourceProcessor().process(source, { ...compact, removeEmptyElements: false }).code).toBe(source.replace('<!--empty-->', ''));
+		});
+
+		it.each(['symbol', 'marker', 'pattern', 'mask', 'clipPath'])("should remove empty unreferenced SVG %s containers only", (tag) => {
+			const source = `<svg xmlns="${svg}"><defs><${tag}/></defs><${tag} id="keep"/><use href="#keep"/><${tag} class="keep"/><${tag}><path d="M0 0"/></${tag}><switch><${tag}/><rect width="10" height="10"/></switch><text>A<${tag}/>B</text><foreignObject><${tag}/></foreignObject></svg>`;
+			const options = { xml: true, mode: /** @type {const} */ ('minify'), removeEmptyElements: true };
+			const processor = new SourceProcessor();
+			const once = processor.process(source, options).code;
+			expect(once).toBe(source.replace(`<defs><${tag}/></defs>`, ''));
+			expect(processor.process(once, options).code).toBe(once);
+			expect(processor.process(source, { ...options, removeEmptyElements: false }).code).toBe(source);
+			expect(processor.process(source, { ...options, mode: 'beautify' }).code).toBe(source);
+			const root = `<${tag} xmlns="${svg}"/>`;
+			expect(processor.process(root, options).code).toBe(root);
+			for (const prefix of [`<!DOCTYPE svg [<!ELEMENT svg (${tag})><!ELEMENT ${tag} EMPTY>]>`, '<!DOCTYPE svg SYSTEM "svg.dtd">', `<!DOCTYPE svg [<!ATTLIST ${tag} id CDATA "keep">]>`]) {
+				const constrained = `${prefix}<svg xmlns="${svg}"><${tag}/></svg>`;
+				expect(processor.process(constrained, options).code).toBe(constrained);
+			}
+			const prefixed = `<s:svg xmlns:s="${svg}"><s:${tag}/></s:svg>`;
+			expect(processor.process(prefixed, options).code).toBe(`<s:svg xmlns:s="${svg}"/>`);
+		});
+
+		it.each([
+			'<animate href="#p" attributeName="d" to="M0 0C1 1 3 4 5 6" dur="2s"/>',
+			'<style>@keyframes morph{to{d:path("M0 0C1 1 3 4 5 6")}}</style>',
+			'<style>@keyframes morph{to{\\64 :path("M0 0C1 1 3 4 5 6")}}</style>'
+		])("should preserve animated curve command compatibility with %s", (animation) => {
+			const source = `<svg xmlns="${svg}"><path id="p" d="M0 0C0 0 3 4 5 6"/>${animation}</svg>`;
+			expect(new SourceProcessor().process(source, compact).code).toBe(source);
+		});
+
+		it("should sort SVG symbol runs by ID while preserving whitespace, boundaries and references", async () => {
+			const source = `<svg xmlns="${svg}"><defs><symbol id="z"><path d="M0 0L1 1"/></symbol> \n<symbol id="a"><circle r="2"/></symbol><symbol id="m"/></defs><use href="#z"/><symbol id="c"/><!-- inert --><symbol id="b"/><text>keep</text><symbol id="e"/><symbol id="d"/></svg>`;
+			const expected = `<svg xmlns="${svg}"><defs><symbol id="a"><circle r="2"/></symbol> \n<symbol id="m"/><symbol id="z"><path d="M0 0L1 1"/></symbol></defs><use href="#z"/><symbol id="b"/><symbol id="c"/><text>keep</text><symbol id="d"/><symbol id="e"/></svg>`;
+			const processor = new SourceProcessor();
+			const options = { xml: true, mode: /** @type {const} */ ("minify"), sortSvgSymbols: true };
+			expect(processor.process(source, options).code).toBe(expected);
+			expect(processor.process(expected, options).code).toBe(expected);
+			expect((await processor.processAsync(source, options)).code).toBe(expected);
+			expect(processor.process(source, { ...options, sortSvgSymbols: false }).code).toBe(source.replace('<!-- inert -->', ''));
+			expect(processor.process(source, { ...options, mode: "beautify" }).code.indexOf('id="z"')).toBeLessThan(processor.process(source, { ...options, mode: "beautify" }).code.indexOf('id="a"'));
+		});
+
+		it.each([
+			'<style>symbol:nth-child(1){fill:red}</style>', '<script/>', '<link rel="stylesheet" href="style.css"/>', '<handler/>',
+			'<animate attributeName="x"/>', '<animateMotion/>', '<animateTransform/>', '<set/>', '<discard/>', '<g onload="run()"/>',
+			'<g xml:space="preserve"/>', '<g id="a"/>', '<?xml-stylesheet href="style.css"?>'
+		])("should preserve SVG symbol order with an order dependency %s", (dependency) => {
+			const source = `<svg xmlns="${svg}"><symbol id="z"/><symbol id="a"/>${dependency}</svg>`;
+			expect(new SourceProcessor().process(source, { xml: true, mode: "minify", sortSvgSymbols: true }).code).toBe(source);
+		});
+
+		it("should preserve DTDs, duplicate XML IDs and non-SVG symbol order", () => {
+			const processor = new SourceProcessor();
+			const options = { xml: true, mode: /** @type {const} */ ("minify"), sortSvgSymbols: true };
+			for (const source of [
+				`<!DOCTYPE svg [<!ATTLIST symbol id ID #IMPLIED>]><svg xmlns="${svg}"><symbol id="z"/><symbol id="a"/></svg>`,
+				`<svg xmlns="${svg}"><symbol id="z"/><symbol xml:id="z"/><symbol id="a"/></svg>`,
+				'<svg xmlns="urn:foreign"><symbol id="z"/><symbol id="a"/></svg>',
+				`<svg xmlns="urn:foreign" xmlns:s="${svg}"><s:symbol id="z"/><s:symbol id="a"/></svg>`,
+				`<svg xmlns="${svg}"><g><symbol id="z"/><symbol id="a"/></g><symbol id="alone"/></svg>`,
+				`<svg xmlns="${svg}"><symbol id="z"/><symbol id=""/><Symbol id="upper"/><symbol id="a"/></svg>`,
+				`<svg xmlns="${svg}"><symbol id="alone"/></svg>`
+			]) expect(processor.process(source, options).code).toBe(source);
+			const source = `<s:svg xmlns:s="${svg}" xml:space="default"><?other data?><s:symbol xml:id="z" id="b"/><s:symbol xml:id="a"/></s:svg>`;
+			expect(processor.process(source, options).code).toBe(source.replace('<s:symbol xml:id="z" id="b"/><s:symbol xml:id="a"/>', '<s:symbol xml:id="a"/><s:symbol xml:id="z" id="b"/>'));
+		});
+
+		it("should preserve primary IDs, kept comment barriers and HTML structure", () => {
+			const source = `<svg xmlns="${svg}"><symbol id="z" xml:id="secondary"/><!-- keep --><symbol id="a"/><line x1="10" y1="20" x2="10" y2="30"/></svg>`;
+			const processor = new SourceProcessor();
+			expect(processor.process(source, { xml: true, mode: "minify", sortSvgSymbols: true, transforms: { comments: "all" } }).code).toBe(source);
+			expect(processor.process(source, { mode: "minify", sortSvgSymbols: true, convertSvgShapes: true, transforms: { comments: "all" } }).code).toBe(processor.process(source, { mode: "minify", transforms: { comments: "all" } }).code);
+			const shapes = `<svg xmlns="${svg}"><line x1="10" y1="20" x2="10" y2="30"/><line x1="20" y1="30" x2="20" y2="40"/></svg>`;
+			expect(processor.process(shapes, { xml: true, mode: "minify", convertSvgShapes: true }).code).toBe(`<svg xmlns="${svg}"><path d="M10 20V30"/><path d="M20 30V40"/></svg>`);
+		});
+
+		it("should sort after XML subtree cleanup and keep the SVG data URL path shared", () => {
+			const source = `<svg xmlns="${svg}"><symbol id="z"/><metadata><style>symbol{fill:red}</style></metadata><symbol id="a"/><defs/></svg>`;
+			const options = { xml: true, mode: /** @type {const} */ ("minify"), sortSvgSymbols: true, removeSvgMetadata: true, removeEmptyElements: true };
+			const processor = new SourceProcessor();
+			const once = processor.process(source, options).code;
+			expect(once).toBe(`<svg xmlns="${svg}"><symbol id="a"/><symbol id="z"/></svg>`);
+			expect(processor.process(once, options).code).toBe(once);
+			const render = builtinEmbeddedRenderer({ svg: { sortSymbols: true, removeMetadata: true, removeEmptyElements: true } });
+			const rendered = render(`.x{background:url("data:image/svg+xml,${encodeURIComponent(source)}")}`, { type: "css", hostType: "html" });
+			expect(typeof rendered).toBe('string');
+			expect(decodeURIComponent(rendered || '').indexOf("id='a'")).toBeLessThan(decodeURIComponent(rendered || '').indexOf("id='z'"));
+		});
+
+		it.each([
+			['<line x1="0010" y1="0020" x2="0010" y2="0030"/>', '<path d="M10 20V30"/>'],
+			['<line y2="20" x2="10" id="line"/>', '<path d="M0 0L10 20" id="line"/>'],
+			['<polyline points="01,02 03,04 03,05"/>', '<path d="M1 2 3 4V5"/>'],
+			['<polygon points="01,02 03,04 03,05 01,02"/>', '<path d="M1 2 3 4V5L1 2z"/>'],
+			['<line x1="-0" y1=".125000" x2="-.250000" y2=".125000"/>', '<path d="M-0 .125H-.25"/>'],
+			['<s:polyline xmlns:s="http://www.w3.org/2000/svg" points="10 20 10 30"/>', '<s:path xmlns:s="http://www.w3.org/2000/svg" d="M10 20V30"/>'],
+			['<line x1="&#49;000" y1="&#49;000" x2="&#50;000" y2="&#50;000"/>', '<path d="M1000 1000L2000 2000"/>']
+		])("should convert SVG shapes with exact vertices: %s", async (body, expected) => {
+			const source = `<svg xmlns="${svg}">${body}</svg>`;
+			const output = `<svg xmlns="${svg}">${expected}</svg>`;
+			const options = { xml: true, mode: /** @type {const} */ ("minify"), convertSvgShapes: true };
+			const processor = new SourceProcessor();
+			expect(processor.process(source, options).code).toBe(output);
+			expect(processor.process(output, options).code).toBe(output);
+			expect((await processor.processAsync(source, options)).code).toBe(output);
+			expect(processor.process(source, { ...options, convertSvgShapes: false }).code).toContain(body.replace(/&#49;/g, '1').replace(/&#50;/g, '2'));
+		});
+
+		it.each([
+			'<line/>', '<line x1="0"/>', '<polyline/>', '<polyline points="1 2"/>',
+			'<polygon points="1 2 3"/>', '<line x1="1px" x2="20"/>', '<line x1="1e2" x2="20"/>',
+			'<line x1="1000001" x2="20"/>', '<line x1="2.8319844" y1="2.8319844" x2="20" y2="30"/>', '<line x1=".000001" x2="20"/>', '<line x1=".000000000000000000000000000000000000000000001" x2="1"/>', '<line x1="NaN"/>', '<line x1="1" style="stroke:red"/>',
+			'<line x1="1" d="M0 0 5 5"/>', '<line x1="1"><title>line</title></line>',
+			'<rect width="10" height="20"/>', '<circle r="10"/>', '<Line x1="1"/>',
+			'<line xmlns="urn:foreign" x1="1"/>', '<line x1="1" onload="run()"/>',
+			'<line x1="1"/><style>line{stroke:red}</style>', '<line x1="1"/><script/>',
+			'<line x1="1"/><animate href="#line" attributeName="x1"/>',
+			'<line x1="1"/><?xml-stylesheet href="style.css"?>'
+		])("should preserve unsupported or observable SVG shapes: %s", (body) => {
+			const source = `<svg xmlns="${svg}">${body}</svg>`;
+			const processor = new SourceProcessor();
+			expect(processor.process(source, { xml: true, mode: "minify", convertSvgShapes: true }).code).toBe(source);
+			expect(processor.process(source, { xml: true, mode: "beautify", convertSvgShapes: true }).code).toContain(body);
+		});
+
+		it("should preserve constrained shape types and convert shapes through the SVG renderer", () => {
+			const source = `<svg xmlns="${svg}"><line x1="10" y1="20" x2="10" y2="30"/></svg>`;
+			const processor = new SourceProcessor();
+			const options = { xml: true, mode: /** @type {const} */ ("minify"), convertSvgShapes: true, sortAttributes: true };
+			for (const dtd of ['<!DOCTYPE svg SYSTEM "svg.dtd">', '<!DOCTYPE svg [<!ATTLIST line x1 CDATA "10">]>', '<!DOCTYPE svg [<!ELEMENT svg (line)>]>']) expect(processor.process(dtd + source, { ...options, sortAttributes: false }).code).toBe(dtd + source);
+			const render = builtinEmbeddedRenderer({ svg: { convertShapes: true } });
+			expect(render(source, { type: "svg", hostType: "css" })).toBe(`<svg xmlns='${svg}'><path d='M10 20V30'/></svg>`);
+			const removed = `<svg xmlns="${svg}"><metadata><line x1="10" y1="20" x2="10" y2="30"/></metadata><polyline points="10 20 10 30"/></svg>`;
+			const once = processor.process(removed, { ...options, removeSvgMetadata: true }).code;
+			expect(once).toBe(`<svg xmlns="${svg}"><path d="M10 20V30"/></svg>`);
+			expect(processor.process(once, options).code).toBe(once);
+		});
+
+		it("should merge text exposed by empty containers before scanning namespace references", () => {
+			const source = `<svg xmlns="${svg}" xmlns:p="urn:used" xmlns:q="urn:unused">p<g/>:Thing<g class=""/><g xml:space="preserve"> </g></svg>`;
+			const options = { ...compact, removeEmptyAttributes: true, collapseWhitespace: true, removeUnusedSvgNamespaces: true };
+			const once = new SourceProcessor().process(source, options).code;
+			expect(once).toBe(`<svg xmlns="${svg}" xmlns:p="urn:used">p:Thing<g xml:space="preserve"> </g></svg>`);
+			expect(new SourceProcessor().process(once, options).code).toBe(once);
+		});
+
+		it("should preserve DTD constraints and reset every optimization after unread DTDs", () => {
+			const body = `<svg xmlns="${svg}" fill="#ff0000"><path d="M000 000L001 002" transform="scale(001 001)"/><g/></svg>`;
+			const dtd = '<!DOCTYPE svg [<!ATTLIST svg fill CDATA #FIXED "#ff0000"><!ATTLIST path d CDATA #IMPLIED transform CDATA #IMPLIED><!ATTLIST g id CDATA "kept">]>';
+			const processor = new SourceProcessor();
+			const options = { ...compact, renderEmbeddedSource: builtinEmbeddedRenderer() };
+			expect(processor.process(dtd + body, options).code).toBe(dtd + body);
+			for (const prefix of ['<!DOCTYPE svg SYSTEM "svg.dtd">', '<!DOCTYPE svg [<!ENTITY % defaults SYSTEM "defaults.dtd">%defaults;]>']) expect(processor.process(prefix + body, options).code).toBe(prefix + body);
+			expect(processor.process(body, options).code).toBe(`<svg xmlns="${svg}" fill="red"><path d="M0 0 1 2" transform="scale(1)"/></svg>`);
+		});
+
+		it("should leave foreign XML, HTML and beautified attributes unchanged", () => {
+			const body = '<path fill="#ff0000" d="M000 000" transform="scale(001)"/>';
+			const source = `<svg xmlns="urn:foreign">${body}<g/></svg>`;
+			const options = { ...compact, renderEmbeddedSource: builtinEmbeddedRenderer() };
+			expect(new SourceProcessor().process(source, options).code).toBe(source);
+			const svgSource = `<svg xmlns="${svg}">${body}</svg>`;
+			expect(new SourceProcessor().process(svgSource, { ...options, mode: 'beautify' }).code).toBe(svgSource);
+			// Inline in HTML the same switches reach SVG's own geometry.
+			expect(new SourceProcessor().process(svgSource, { ...options, xml: false }).code).toContain('d="M0 0"');
+		});
+
+		const { SVG_NUMERIC_ATTRIBUTES, SVG_PRESENTATION_NUMERIC_ATTRIBUTES, SVG_LENGTH_UNITS } = require("../../lib/html/data");
+		/** @type {Record<string, [string, string]>} */
+		const numericExamples = {
+			length: ["+001.500px", "1.5px"],
+			number: ["+001.500", "1.5"],
+			integer: ["+001", "1"],
+			integerPair: ["+001, 002", "1 2"],
+			percentage: ["+001.500%", "1.5%"],
+			lengths: ["+001.500px, 0002.00em 0003.0%", "1.5px 2em 3%"],
+			numbers: ["+001.500, 0002.00 0003.0", "1.5 2 3"],
+			pair: ["+001.500, 0002.00", "1.5 2"],
+			points: ["+001.500, 0002.00 0003.0,+04.000", "1.5 2 3 4"],
+			viewBox: [" +000.00, 000.0, 0010.0, +0020.000 ", "0 0 10 20"],
+			transform: ["translate(+001.00, -000.00) scale(002.00, +002.00) rotate(030.00 000.00 -000.00)", "translate(1) scale(2) rotate(30)"],
+			path: ["M000.00,000.00 L001.00,002.00", "M0 0 1 2"]
+		};
+
+		it.each(Object.entries(SVG_NUMERIC_ATTRIBUTES).flatMap(([tag, attributes]) => Object.entries(attributes).map(([name, kind]) => [tag, name, ...numericExamples[kind]])))("should shorten SVG %s %s using its geometry grammar", (tag, name, value, expected) => {
+			const prefix = '<svg xmlns="http://www.w3.org/2000/svg">';
+			const source = `${prefix}<${tag} ${name}="${value}"/></svg>`;
+			const options = { xml: true, mode: /** @type {const} */ ("minify"), shortenSvgNumbers: true, shortenSvgPathData: true };
+			const processor = new SourceProcessor();
+			const once = processor.process(source, options).code;
+			expect(once).toBe(`${prefix}<${tag} ${name}="${expected}"/></svg>`);
+			expect(processor.process(once, options).code).toBe(once);
+			expect(processor.process(source, { ...options, shortenSvgNumbers: false, shortenSvgPathData: false }).code).toBe(source);
+			expect(processor.process(source, { ...options, mode: "beautify" }).code).toBe(source);
+		});
+
+		it.each(Object.entries(SVG_PRESENTATION_NUMERIC_ATTRIBUTES).map(([name, kind]) => [name, ...numericExamples[kind]]))("should shorten the SVG presentation attribute %s using its grammar", (name, value, expected) => {
+			const source = `<svg xmlns="${svg}"><g ${name}="${value}"/></svg>`;
+			const processor = new SourceProcessor();
+			const once = processor.process(source, compact).code;
+			expect(once).toContain(`${name}="${expected}"`);
+			expect(processor.process(once, compact).code).toBe(once);
+			expect(processor.process(source, { ...compact, shortenSvgNumbers: false }).code).toBe(source);
+			const dtd = `<!DOCTYPE svg [<!ATTLIST g ${name} CDATA #IMPLIED>]>`;
+			expect(processor.process(dtd + source, compact).code).toBe(dtd + source);
+		});
+
+		it.each([
+			["translate(1,0)", "translate(1)"],
+			["translate(1 -0e+20)", "translate(1)"],
+			["translate(1 .000)", "translate(1)"],
+			["translate(1 0e38)", "translate(1)"],
+			["translate(1 0e000038)", "translate(1)"],
+			["translate(1)", "translate(1)"],
+			["translate(1 2)", "translate(1 2)"],
+			["translate(1 1e-400)", "translate(1 1e-400)"],
+			["scale(2,2)", "scale(2)"],
+			["scale(+002.00 2)", "scale(2)"],
+			["scale(-0 -0)", "scale(-0)"],
+			["scale(1e+2 1e+2)", "scale(1e+2)"],
+			["scale(9007199254740993 9007199254740993)", "scale(9007199254740993)"],
+			["scale(9007199254740992 9007199254740993)", "scale(9007199254740992 9007199254740993)"],
+			["scale(.123456789123456789 .123456789123456788)", "scale(.123456789123456789 .123456789123456788)"],
+			["scale(2)", "scale(2)"],
+			["scale(2 3)", "scale(2 3)"],
+			["scale(0 -0)", "scale(0 -0)"],
+			["scale(1e2 100)", "scale(1e2 100)"],
+			["rotate(30,0,0)", "rotate(30)"],
+			["rotate(30 -0e-400 .000)", "rotate(30 -0e-400 0)"],
+			["rotate(30)", "rotate(30)"],
+			["rotate(30 1 0)", "rotate(30 1 0)"],
+			["rotate(30 0 1)", "rotate(30 0 1)"],
+			["rotate(30 0 1e-400)", "rotate(30 0 1e-400)"],
+			["matrix(1 0 0 1 0 0)", "translate(0)"],
+			["skewX(0) skewY(0)", "skewX(0)"],
+			[" translate(1,0),scale(2,2) rotate(30 0 0) ", "translate(1) scale(2) rotate(30)"],
+			["translate(1,0) scale(2,2) rotate(30 0 0) scale(1,)", "translate(1,0) scale(2,2) rotate(30 0 0) scale(1,)"],
+			["translate(1,0) rotate(30 0)", "translate(1,0) rotate(30 0)"]
+		])("should compact only redundant SVG transform arguments in %s", (value, expected) => {
+			const source = `<svg xmlns="http://www.w3.org/2000/svg"><g transform="${value}"/></svg>`;
+			const options = { xml: true, mode: /** @type {const} */ ("minify"), shortenSvgNumbers: true };
+			const processor = new SourceProcessor();
+			const once = processor.process(source, options).code;
+			expect(once).toBe(source.replace(`transform="${value}"`, `transform="${expected}"`));
+			expect(processor.process(once, options).code).toBe(once);
+			expect(processor.process(source, { ...options, shortenSvgNumbers: false }).code).toBe(source);
+			expect(processor.process(source, { ...options, mode: "beautify" }).code).toBe(source);
+		});
+
+		it.each([
+			['translate(0) scale(2) rotate(0) skewX(0) skewY(0)', 'scale(2)'],
+			['scale(1) translate(10 20) matrix(1 0 0 1 0 0)', 'translate(10 20)'],
+			['translate(0) rotate(0) scale(1)', 'scale(1)'],
+			['scale(1) translate(-0 0) scale(+001.00)', 'scale(1)'],
+			['translate(0e38) scale(2)', 'scale(2)'],
+			['translate(0e39) scale(2)', 'translate(0e39) scale(2)'],
+			['translate(1e-400) scale(2)', 'translate(1e-400) scale(2)'],
+			['scale(1e0) translate(2)', 'scale(1e0) translate(2)'],
+			['rotate(0 10 20) scale(2)', 'rotate(0 10 20) scale(2)'],
+			['rotate(0) scale(2) scale(1,)', 'rotate(0) scale(2) scale(1,)']
+		])('should omit exact identity functions while retaining a transform in %s', (value, expected) => {
+			const source = `<svg xmlns="${svg}"><g transform="${value}"/><linearGradient gradientTransform="${value}"/><pattern patternTransform="${value}"/></svg>`;
+			const options = { ...compact, removeEmptyElements: false };
+			const processor = new SourceProcessor();
+			const once = processor.process(source, options).code;
+			expect(once).toBe(source.split(`="${value}"`).join(`="${expected}"`));
+			expect(processor.process(once, options).code).toBe(once);
+			expect(processor.process(source, { ...options, shortenSvgNumbers: false }).code).toBe(source);
+			for (const animation of ['<animateTransform type="scale" to="3" dur="2s"/>', '<style>@keyframes turn{to{transform:scale(3)}}</style>']) {
+				const animated = source.replace('</svg>', animation + '</svg>');
+				expect(processor.process(animated, options).code).toContain('transform="' + value.replace('translate(-0 0)', 'translate(-0)').replace('scale(+001.00)', 'scale(1)') + '"');
+			}
+		});
+
+		it.each(['', ' ', '1,', ',1', '1,,2', '1\u00a02', '1 2 3', '1px 2', '1e 2', 'none'])("should preserve unsupported filter pair syntax %s", (value) => {
+			const source = `<svg xmlns="${svg}"><filter><feGaussianBlur stdDeviation="${value}"/></filter></svg>`;
+			expect(new SourceProcessor().process(source, compact).code).toBe(source);
+		});
+
+		it.each(['', ' ', '1,', ',1', '1,,2', '1\u00a02', '1PX 2', '1rem 2', '1px2', '1e 2', '1%;2', '1%px 2', 'none'])("should preserve unsupported SVG text length lists %s", (value) => {
+			const source = `<svg xmlns="${svg}"><text x="${value}">A</text></svg>`;
+			expect(new SourceProcessor().process(source, compact).code).toBe(source);
+		});
+
+		it("should retain text-list positions, units and precision with DTD constraints", () => {
+			const source = `<svg xmlns="${svg}"><text x="+001.500px, 0002.00em 0003.0%" dy="+000.50" rotate="000.0,090.0, -000.00">A<tspan dx="9007199254740993 .123456789123456789 1e-400">BC</tspan></text><filter><feGaussianBlur stdDeviation="+002.00"/><feColorMatrix values="+001.00,000.00, -000.00"/></filter><stop offset="+0050.00%"/></svg>`;
+			const expected = `<svg xmlns="${svg}"><text x="1.5px 2em 3%" dy=".5" rotate="0 90 -0">A<tspan dx="9007199254740993 .123456789123456789 1e-400">BC</tspan></text><filter><feGaussianBlur stdDeviation="2"/><feColorMatrix values="1 0 -0"/></filter><stop offset="50%"/></svg>`;
+			const processor = new SourceProcessor();
+			expect(processor.process(source, compact).code).toBe(expected);
+			expect(processor.process(expected, compact).code).toBe(expected);
+			const constrained = '<!DOCTYPE svg [<!ATTLIST text x CDATA #IMPLIED><!ATTLIST feGaussianBlur stdDeviation CDATA #IMPLIED>]>' + source;
+			expect(processor.process(constrained, compact).code).toContain('x="+001.500px, 0002.00em 0003.0%"');
+			expect(processor.process(constrained, compact).code).toContain('stdDeviation="+002.00"');
+			expect(processor.process('<!DOCTYPE svg SYSTEM "svg.dtd">' + source, compact).code).toBe('<!DOCTYPE svg SYSTEM "svg.dtd">' + source);
+			const html = processor.process(source, { ...compact, xml: false }).code;
+			expect(html).toContain('x="1.5px 2em 3%"');
+			expect(html).toContain('stdDeviation=2');
+			for (const offset of ['01px', '01em', '01%%', '01 02']) {
+				const invalid = `<svg xmlns="${svg}"><stop offset="${offset}"/></svg>`;
+				expect(processor.process(invalid, compact).code).toBe(invalid);
+			}
+		});
+
+		it.each([
+			['matrix(1 0 0 1 10 20)', 'translate(10 20)'],
+			['matrix(1 0 0 1 10 0)', 'translate(10)'],
+			['matrix(2 0 0 2 0 0)', 'scale(2)'],
+			['matrix(1 0 0 2 0 0)', 'scale(1 2)'],
+			['matrix(2 0 0 3 0 0)', 'scale(2 3)'],
+			['matrix(-2 -0 .0 -2 -0 0e20)', 'scale(-2)'],
+			['matrix(1 0 0 1 9007199254740993 .123456789123456789)', 'translate(9007199254740993 .123456789123456789)'],
+			['matrix(1 1e-400 0 1 10 20)', 'matrix(1 1e-400 0 1 10 20)'],
+			['matrix(1 0 1e-400 1 10 20)', 'matrix(1 0 1e-400 1 10 20)'],
+			['matrix(1e0 0 0 1 10 20)', 'matrix(1e0 0 0 1 10 20)'],
+			['matrix(2 0 0 3 10 0)', 'matrix(2 0 0 3 10 0)'],
+			['matrix(2 0 0 3 0 10)', 'matrix(2 0 0 3 0 10)'],
+			['matrix(2 0 0 3 0 1e-400)', 'matrix(2 0 0 3 0 1e-400)'],
+			['matrix(1 0 0 1 10 20) scale(1,)', 'matrix(1 0 0 1 10 20) scale(1,)']
+		])('should shorten exact diagonal matrix aliases in %s', (value, expected) => {
+			const processor = new SourceProcessor();
+			const source = `<svg xmlns="${svg}"><g transform="${value}"/><linearGradient gradientTransform="${value}"/><pattern patternTransform="${value}"/></svg>`;
+			const options = { ...compact, removeEmptyElements: false };
+			const once = processor.process(source, options).code;
+			expect(once).toBe(source.split(`="${value}"`).join(`="${expected}"`));
+			expect(processor.process(once, options).code).toBe(once);
+			expect(processor.process(source, { ...options, shortenSvgNumbers: false }).code).toBe(source);
+		});
+
+		it.each([
+			'<animate href="#p" attributeName="transform" to="matrix(1 0 0 1 30 40)" dur="2s"/>',
+			'<animate attributeName="gradientTransform" to="rotate(30)" dur="2s"/>',
+			'<animate attributeName="patternTransform" to="rotate(30)" dur="2s"/>',
+			'<animateTransform type="rotate" to="30" dur="2s"/>',
+			'<animateMotion path="M0 0L30 30" dur="2s"/>',
+			'<style>@keyframes turn{to{transform:rotate(30deg)}}</style>',
+			// cspell:ignore ransform
+			'<style>@keyframes turn{to{\\74 ransform:rotate(30deg)}}</style>',
+			'<g style="transform:rotate(30deg)"/>'
+		])('should preserve matrix transform types with local animation %s', (animation) => {
+			const source = `<svg xmlns="${svg}"><path id="p" transform="matrix(1 0 0 1 10 20)"/>${animation}</svg>`;
+			const processor = new SourceProcessor();
+			expect(processor.process(source, compact).code).toBe(source);
+			const plain = `<svg xmlns="${svg}"><path transform="matrix(1 0 0 1 10 20)"/></svg>`;
+			expect(processor.process(plain, compact).code).toContain('transform="translate(10 20)"');
+		});
+
+		it("should preserve DTD-declared matrix types and default animation attributes", () => {
+			const body = `<svg xmlns="${svg}"><path transform="matrix(1 0 0 1 10 20)"/></svg>`;
+			for (const dtd of ['<!DOCTYPE svg [<!ATTLIST path transform CDATA #IMPLIED>]>', '<!DOCTYPE svg SYSTEM "svg.dtd">']) {
+				expect(new SourceProcessor().process(dtd + body, compact).code).toBe(dtd + body);
+			}
+			const animated = '<!DOCTYPE svg [<!ATTLIST animate attributeName CDATA "transform">]>' + body.replace('</svg>', '<animate to="matrix(1 0 0 1 30 40)" dur="2s"/></svg>');
+			expect(new SourceProcessor().process(animated, compact).code).toBe(animated);
+		});
+
+		it.each(['0e39', '-0e400', '0e-400', '0e000039', '0e999999999999'])("should preserve zero exponents outside SVG's finite float range in %s", (zero) => {
+			const source = `<svg xmlns="${svg}"><rect transform="translate(5 ${zero})"/><g transform="rotate(30 0 ${zero})"/><linearGradient gradientTransform="matrix(1 ${zero} 0 1 5 0)"/><path d="M0 0l5 ${zero}"/><path d="M0 0c${zero} 0 1 2 3 4"/></svg>`;
+			const line = `M0 0l5${zero.startsWith("-") ? "" : " "}${zero}`;
+			expect(new SourceProcessor().process(source, compact).code).toBe(source.replace(`M0 0l5 ${zero}`, line));
+			const html = new SourceProcessor().process(source, { ...compact, xml: false }).code;
+			expect(html).toContain(`translate(5 ${zero})`);
+			expect(html).toContain(line);
+			expect(html).toContain(`M0 0c${zero} 0 1 2 3 4`);
+		});
+
+		it("should compact redundant inline SVG transform arguments using the HTML printer", async () => {
+			const source = '<svg><g transform="translate(5 0) scale(2 2) rotate(30 0 0)"><animateTransform attributeName="transform" type="scale" by="3" dur="2s" additive="sum"/></g></svg>';
+			const options = { mode: /** @type {const} */ ("minify"), shortenSvgNumbers: true };
+			const expected = 'transform="translate(5) scale(2) rotate(30)"';
+			expect(new SourceProcessor().process(source, options).code).toContain(expected);
+			expect((await new SourceProcessor().processAsync(source, options)).code).toContain(expected);
+			expect(new SourceProcessor().process(source, { ...options, shortenSvgNumbers: false }).code).toContain('transform="translate(5 0) scale(2 2) rotate(30 0 0)"');
+		});
+
+		it.each([...SVG_LENGTH_UNITS])("should preserve the SVG length unit %s", (unit) => {
+			const source = `<svg xmlns="http://www.w3.org/2000/svg"><rect width="+000.500${unit}"/></svg>`;
+			expect(new SourceProcessor().process(source, { xml: true, mode: "minify", shortenSvgNumbers: true }).code).toBe(`<svg xmlns="http://www.w3.org/2000/svg"><rect width=".5${unit}"/></svg>`);
+		});
+
+		it.each([true, false])("should shorten numeric presentation attributes with xml=%s", (xml) => {
+			const source = `<svg xmlns="${svg}" opacity="+000.50"><g stroke-width="0002.00px" stroke-dasharray="+000.50px, 0002.00em 0003.00%" stroke-dashoffset="-000.50" stroke-miterlimit="0004.00" fill-opacity="+0050.00%" font-size="00012.00px" letter-spacing="000.50px" word-spacing="0002.00px"><path d="M0 0L10 10"/></g></svg>`;
+			const options = { ...compact, xml };
+			const processor = new SourceProcessor();
+			const once = processor.process(source, options).code;
+			for (const value of ['opacity=.5', 'stroke-width=2px', 'stroke-dasharray=".5px 2em 3%"', 'stroke-dashoffset=-.5', 'stroke-miterlimit=4', 'fill-opacity=50%', 'font-size=12px', 'letter-spacing=.5px', 'word-spacing=2px']) {
+				expect(once.replace(/="([^" ]*)"/g, "=$1")).toContain(value);
+			}
+			expect(processor.process(once, options).code).toBe(once);
+			const unchanged = processor.process(source, { ...options, shortenSvgNumbers: false }).code;
+			expect(unchanged).toContain('stroke-dasharray="+000.50px, 0002.00em 0003.00%"');
+		});
+
+		it("should preserve unsupported presentation values, namespaces and DTD defaults", () => {
+			const processor = new SourceProcessor();
+			for (const value of ["var(--width)", "calc(001px + 002px)", "inherit", "context-stroke", "01rem", "01px02", "01,,02", "01px,", "01\u00a002"]) {
+				const source = `<svg xmlns="${svg}"><path stroke-width="${value}" stroke-dasharray="${value}"/></svg>`;
+				expect(processor.process(source, compact).code).toBe(source);
+			}
+			const source = `<svg xmlns="${svg}" xmlns:p="urn:foreign"><custom opacity="+000.50"/><g xmlns="urn:foreign" opacity="+000.50"/><path p:stroke-width="0002.00"/></svg>`;
+			expect(processor.process(source, compact).code).toBe(source.replace('<custom opacity="+000.50"', '<custom opacity=".5"'));
+			expect(processor.process(`<svg><custom opacity="+000.50"/></svg>`, { ...compact, xml: false }).code).toContain('opacity=.5');
+			const body = `<svg xmlns="${svg}"><g/><path stroke-width="0002.00"/></svg>`;
+			const dtd = '<!DOCTYPE svg [<!ATTLIST g stroke-width CDATA "0002.00">]>';
+			expect(processor.process(dtd + body, compact).code).toBe(dtd + body.replace('stroke-width="0002.00"', 'stroke-width="2"'));
+			expect(processor.process('<!DOCTYPE svg SYSTEM "svg.dtd">' + body, compact).code).toBe('<!DOCTYPE svg SYSTEM "svg.dtd">' + body);
+			expect(processor.process('<div opacity="+000.50"></div>', { ...compact, xml: false }).code).toContain('opacity=+000.50');
+		});
+
+		it.each(["", " ", "0", "0 1 2", "0,,1", ",0 1", "0 1,", "0 1 , ", "0-1", "0 1px", "0 1e", "0 1e+", "0 1.2.3", "0 \u00a01", "0 1;2 3"])("should preserve invalid SVG point-list syntax %s", (value) => {
+			const source = `<svg xmlns="http://www.w3.org/2000/svg"><polygon points="${value}"/></svg>`;
+			expect(new SourceProcessor().process(source, { xml: true, mode: "minify", shortenSvgNumbers: true }).code).toBe(source);
+		});
+
+		it.each(["1 2", "0 0 1 2 3", "0 0 1 2px", "0 0,,1 2", "0 0 1 2,"])("should preserve invalid SVG viewBox syntax %s", (value) => {
+			const source = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${value}"/>`;
+			expect(new SourceProcessor().process(source, { xml: true, mode: "minify", shortenSvgNumbers: true }).code).toBe(source);
+		});
+
+		it.each(["", "1 px", "1rem", "1PX", "1.2.3", "1e", "1e+", "NaN", "Infinity", "var(--x)", "\u00a001.00"])("should preserve unsupported SVG length syntax %s", (value) => {
+			const source = `<svg xmlns="http://www.w3.org/2000/svg"><rect width="${value}"/></svg>`;
+			expect(new SourceProcessor().process(source, { xml: true, mode: "minify", shortenSvgNumbers: true }).code).toBe(source);
+		});
+
+		it("should retain precision, negative zero, units and exponent spellings", () => {
+			const source = '<svg xmlns="http://www.w3.org/2000/svg"><rect x="+09007199254740993.000" y="-000.0000" width="000.12345678912345678900" height="+000.00e+03"/><path pathLength="001px" d="M000.00 000.00L001.00 002.00"/><polyline points="001e+02, +002.00E-02"/></svg>';
+			const options = { xml: true, mode: /** @type {const} */ ("minify"), shortenSvgNumbers: true };
+			const once = new SourceProcessor().process(source, options).code;
+			expect(once).toBe('<svg xmlns="http://www.w3.org/2000/svg"><rect x="9007199254740993" y="-0" width=".123456789123456789" height="+000.00e+03"/><path pathLength="001px" d="M000.00 000.00L001.00 002.00"/><polyline points="001e+02 +002.00E-02"/></svg>');
+			expect(new SourceProcessor().process(once, options).code).toBe(once);
+		});
+
+		it("should preserve foreign namespaces, unknown geometry and qualified attributes", () => {
+			const source = '<root xmlns:s="http://www.w3.org/2000/svg" xmlns:q="urn:data"><rect x="001.00"/><s:rect x="001.00" q:x="001.00"/><s:g x="001.00"/><s:unknown width="001.00"/><s:svg viewbox="0 0 001 002"/><s:rect xmlns:s="urn:foreign" x="001.00"/></root>';
+			expect(new SourceProcessor().process(source, { xml: true, mode: "minify", shortenSvgNumbers: true }).code).toBe(source.replace('<s:rect x="001.00"', '<s:rect x="1"'));
+		});
+
+		it("should preserve DTD constraints and reinitialize cleanup after unread DTDs", () => {
+			const options = { xml: true, mode: /** @type {const} */ ("minify"), shortenSvgNumbers: true };
+			const processor = new SourceProcessor();
+			const source = '<!DOCTYPE svg [<!ATTLIST rect width CDATA #FIXED "001.00">]><svg xmlns="http://www.w3.org/2000/svg"><rect width="001.00" x="001.00"/><rect/></svg>';
+			expect(processor.process(source, options).code).toBe(source.replace('x="001.00"', 'x="1"'));
+			for (const doctype of ['<!DOCTYPE svg SYSTEM "svg.dtd">', '<!DOCTYPE svg [<!ENTITY % defaults SYSTEM "defaults.dtd">%defaults;]>']) {
+				const document = `${doctype}<svg xmlns="http://www.w3.org/2000/svg" width="001.00"/>`;
+				expect(processor.process(document, options).code).toBe(document);
+			}
+			expect(processor.process('<svg xmlns="http://www.w3.org/2000/svg" width="001.00"/>', options).code).toBe('<svg xmlns="http://www.w3.org/2000/svg" width="1"/>');
+		});
+
+		it("should preserve shorter entity spellings and reuse decoded numeric values", async () => {
+			const source = '<!DOCTYPE svg [<!ENTITY n "000001.50"><!ENTITY p "0001.00 0002.00 0003.00 0004.00">]><svg xmlns="http://www.w3.org/2000/svg"><rect width="&n;"/><polygon points="&p;"/></svg>';
+			const options = { xml: true, mode: /** @type {const} */ ("minify"), shortenSvgNumbers: true };
+			const once = new SourceProcessor().process(source, options).code;
+			expect(once).toBe(source.replace('width="&n;"', 'width="1.5"'));
+			expect((await new SourceProcessor().processAsync(once, options)).code).toBe(once);
+		});
+
+		it("should combine numeric cleanup with synchronous and deferred CSS rendering", async () => {
+			const source = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:p="urn:unused" width="001.00"><style>rect { fill: #ff0000 }</style><rect x="000.500" style="fill: #ff0000"/></svg>';
+			const render = builtinEmbeddedRenderer();
+			const options = { xml: true, mode: /** @type {const} */ ("minify"), shortenSvgNumbers: true, removeUnusedSvgNamespaces: true, renderEmbeddedSource: render };
+			const expected = '<svg xmlns="http://www.w3.org/2000/svg" width="1"><style>rect{fill:red}</style><rect x=".5" style="fill:red"/></svg>';
+			expect(new SourceProcessor().process(source, options).code).toBe(expected);
+			expect((await new SourceProcessor().processAsync(source, { ...options, renderEmbeddedSource: async (css, offer) => render(css, offer) })).code).toBe(expected);
+			expect(new SourceProcessor().process(source, { ...options, xml: false }).code).toContain("width=1>");
+		});
+
+		it("should shorten inline SVG geometry in HTML and leave other namespaces alone", () => {
+			const svgPart = '<svg viewBox="000 000 0024.0 24"><metadata><rdf:RDF/></metadata><path d="M000,000 l0 80-112 0" transform="translate(+001.00, 002.00)"/><rect width=+001.500px height="&#48;02"></rect></svg>';
+			const source = `<!doctype html><p>${svgPart}<math><mi width="001.00">x</mi></math><div d="M000,000" width="001.00"></div>`;
+			const options = { mode: /** @type {const} */ ("minify"), shortenSvgNumbers: true, shortenSvgPathData: true, removeSvgMetadata: true };
+			const processor = new SourceProcessor();
+			const once = processor.process(source, options).code;
+			expect(once).toBe('<!doctype html><p><svg viewBox="0 0 24 24"><path d="M0 0v80h-112" transform="translate(1 2)"/><rect width=1.5px height=2></rect></svg><math><mi width=001.00>x</mi></math><div d=M000,000 width=001.00></div>');
+			expect(processor.process(once, options).code).toBe(once);
+			const plain = processor.process(source, { mode: "minify" }).code;
+			expect(plain).toContain('<metadata><rdf:RDF/></metadata><path d="M000,000 l0 80-112 0"');
+			expect(processor.process(source, { ...options, removeSvgMetadata: false }).code).toContain("<metadata>");
+		});
+
+		it("should preserve a long unsupported numeric value without changing later parses", () => {
+			const options = { xml: true, mode: /** @type {const} */ ("minify"), shortenSvgNumbers: true };
+			for (const value of [`${"9".repeat(30000)}e`, `1${" ".repeat(30000)}x`, `.${"0".repeat(30000)}1`]) {
+				const source = `<svg xmlns="http://www.w3.org/2000/svg"><rect width="${value}"/></svg>`;
+				expect(new SourceProcessor().process(source, options).code).toBe(source);
+			}
+			expect(new SourceProcessor().process('<svg xmlns="http://www.w3.org/2000/svg" width="0001."/>', options).code).toBe('<svg xmlns="http://www.w3.org/2000/svg" width="1"/>');
+		});
+
+		it.each(["svg", "g", "defs", "symbol", "clipPath", "mask", "marker", "pattern", "linearGradient", "radialGradient", "filter"])("should remove indentation in SVG %s containers only when enabled", (tag) => {
+			const source = `<svg xmlns="http://www.w3.org/2000/svg">\n <${tag}>\t<![CDATA[ \n]]><!-- drop --></${tag}>\n</svg>`;
+			const options = { xml: true, mode: /** @type {const} */ ("minify"), collapseWhitespace: true };
+			const processor = new SourceProcessor();
+			const once = processor.process(source, options).code;
+			expect(once).toBe(`<svg xmlns="http://www.w3.org/2000/svg"><${tag}/></svg>`);
+			expect(processor.process(once, options).code).toBe(once);
+			expect(processor.process(source, { ...options, collapseWhitespace: false }).code).toContain("\n ");
+			expect(processor.process(source, { ...options, mode: "beautify" }).code).toBe(source);
+		});
+
+		it.each(["text", "tspan", "textPath", "title", "desc", "metadata", "foreignObject", "style", "script", "unknown", "G"])("should preserve SVG %s text and its descendants", (tag) => {
+			const content = `<${tag}> \n<g> \t </g> A <tspan> B </tspan> C </${tag}>`;
+			const source = `<svg xmlns="http://www.w3.org/2000/svg">\n${content}\n</svg>`;
+			expect(new SourceProcessor().process(source, { xml: true, mode: "minify", collapseWhitespace: "all" }).code).toBe(`<svg xmlns="http://www.w3.org/2000/svg">${content}</svg>`);
+		});
+
+		it("should inherit xml:space and allow a default override without collapsing SVG text", () => {
+			const source = '<root xml:space="preserve"><svg xmlns="http://www.w3.org/2000/svg"> <g> </g><g xml:space="default"> <g> </g><text> A  <tspan xml:space="default"> B  </tspan> C </text> </g> </svg></root>';
+			const options = { xml: true, mode: /** @type {const} */ ("minify"), collapseWhitespace: true };
+			const once = new SourceProcessor().process(source, options).code;
+			expect(once).toBe('<root xml:space="preserve"><svg xmlns="http://www.w3.org/2000/svg"> <g> </g><g xml:space="default"><g/><text> A  <tspan xml:space="default"> B  </tspan> C </text></g> </svg></root>');
+			expect(new SourceProcessor().process(once, options).code).toBe(once);
+		});
+
+		it("should remove deeply nested SVG indentation without recursive traversal", () => {
+			const depth = 6000;
+			const prefix = '<svg xmlns="http://www.w3.org/2000/svg">';
+			const source = `${prefix}\n${"<g> \n".repeat(depth)}${"</g>\n".repeat(depth)}</svg>`;
+			const options = { xml: true, mode: /** @type {const} */ ("minify"), collapseWhitespace: true };
+			const once = new SourceProcessor().process(source, options).code;
+			expect(once).toBe(`${prefix}${"<g>".repeat(depth - 1)}<g/>${"</g>".repeat(depth - 1)}</svg>`);
+			expect(new SourceProcessor().process(once, options).code).toBe(once);
+		});
+
+		it("should resolve namespace aliases and preserve generic and foreign XML", () => {
+			const source = '<root xmlns:s="http://www.w3.org/2000/svg"> <s:svg> <s:g> </s:g><s:g xmlns:s="urn:foreign"> <svg xmlns="http://www.w3.org/2000/svg"> <g> </g> </svg> </s:g><g> </g><s:g>\u00a0</s:g> </s:svg> </root>';
+			expect(new SourceProcessor().process(source, { xml: true, mode: "minify", collapseWhitespace: true }).code).toBe('<root xmlns:s="http://www.w3.org/2000/svg"> <s:svg><s:g/><s:g xmlns:s="urn:foreign"> <svg xmlns="http://www.w3.org/2000/svg"> <g> </g> </svg> </s:g><g> </g><s:g>\u00a0</s:g></s:svg> </root>');
+		});
+
+		it("should preserve DTD-defaulted xml:space and unread DTD defaults", () => {
+			const options = { xml: true, mode: /** @type {const} */ ("minify"), collapseWhitespace: true };
+			const sources = [
+				'<!DOCTYPE svg [<!ATTLIST svg xml:space (default|preserve) "preserve">]><svg xmlns="http://www.w3.org/2000/svg"> <g> </g> </svg>',
+				'<!DOCTYPE svg SYSTEM "svg.dtd"><svg xmlns="http://www.w3.org/2000/svg"> <g> </g> </svg>',
+				'<!DOCTYPE svg [<!ENTITY % defaults SYSTEM "defaults.dtd">%defaults;]><svg xmlns="http://www.w3.org/2000/svg"> <g> </g> </svg>'
+			];
+			for (const source of sources) expect(new SourceProcessor().process(source, options).code).toBe(source);
+		});
+
+		it("should combine whitespace cleanup with data removal and retained comments", async () => {
+			const source = '<svg xmlns="http://www.w3.org/2000/svg"> \n<!--! keep --><metadata> data </metadata><g> \n</g><text>]]<metadata/>></text> </svg>';
+			const options = { xml: true, mode: /** @type {const} */ ("minify"), collapseWhitespace: true, removeSvgMetadata: true, transforms: { comments: /** @type {const} */ ("all") } };
+			const once = new SourceProcessor().process(source, options).code;
+			expect(once).toBe('<svg xmlns="http://www.w3.org/2000/svg"><!--! keep --><g/><text>]]&gt;</text></svg>');
+			expect(await new SourceProcessor().processAsync(once, options)).toMatchObject({ code: once });
+		});
+
+		it("should remove only unused prefixed namespace declarations within SVG", () => {
+			const source = '<root xmlns:outer="urn:outer"><svg xmlns="http://www.w3.org/2000/svg" xmlns:x="urn:used" xmlns:unused="urn:unused"><x:item/><g xmlns:x="urn:shadow"/><g xmlns="" xmlns:local="urn:unused"/><use x:href="#shape"/></svg></root>';
+			const options = { xml: true, mode: /** @type {const} */ ("minify"), removeUnusedSvgNamespaces: true };
+			const processor = new SourceProcessor();
+			const once = processor.process(source, options).code;
+			expect(once).toBe('<root xmlns:outer="urn:outer"><svg xmlns="http://www.w3.org/2000/svg" xmlns:x="urn:used"><x:item/><g/><g xmlns=""/><use x:href="#shape"/></svg></root>');
+			expect(processor.process(once, options).code).toBe(once);
+			expect(processor.process(source, { ...options, removeUnusedSvgNamespaces: false }).code).toBe(source);
+			expect(processor.process(source, { ...options, mode: "beautify" }).code).toBe(source);
+		});
+
+		it.each([
+			'<g value="p:Thing"/>', '<g value="&#112;:Thing"/>', '<g>p:Thing</g>',
+			'<g><![CDATA[p:Thing]]></g>', '<?app p:Thing?>',
+			'<g>p<metadata/>:Thing</g>', '<g>p<!--ordinary-->:Thing</g>',
+			'<g xmlns:p="urn:local"><p:item/></g><p:item/>', '<g p:flag="yes"/>'
+		])("should retain namespace bindings referenced in %s", (content) => {
+			const source = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:p="urn:data" xmlns:unused="urn:unused">${content}</svg>`;
+			const processor = new SourceProcessor();
+			const options = { xml: true, mode: /** @type {const} */ ("minify"), removeUnusedSvgNamespaces: true, removeSvgMetadata: true };
+			const once = processor.process(source, options).code;
+			expect(once).toContain('xmlns:p="urn:data"');
+			expect(once).not.toContain('xmlns:unused');
+			expect(processor.process(once, options).code).toBe(once);
+		});
+
+		it("should retain prefixes in kept comments and scan long text without repeated suffix searches", () => {
+			const source = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:p="urn:data"><!--p:Thing-->${"a".repeat(30000)}</svg>`;
+			const options = { xml: true, mode: /** @type {const} */ ("minify"), removeUnusedSvgNamespaces: true, transforms: { comments: /** @type {const} */ ("all") } };
+			const processor = new SourceProcessor();
+			expect(processor.process(source, options).code).toBe(source);
+			expect(processor.process(source, { ...options, transforms: { comments: false } }).code).toBe(source.replace(' xmlns:p="urn:data"', "").replace("<!--p:Thing-->", ""));
+		});
+
+		it("should track namespace aliases, rebinding and Unicode prefixes", () => {
+			const source = '<s:svg xmlns:s="http://www.w3.org/2000/svg" xmlns:p="urn:outer" xmlns:é="urn:data"><s:g xmlns:p="urn:inner" value="p:Thing é:Thing"/><s:g xmlns:s="urn:data"><s:item/></s:g></s:svg>';
+			const options = { xml: true, mode: /** @type {const} */ ("minify"), removeUnusedSvgNamespaces: true };
+			const processor = new SourceProcessor();
+			const once = processor.process(source, options).code;
+			expect(once).toBe(source.replace(' xmlns:p="urn:outer"', ""));
+			expect(processor.process(once, options).code).toBe(once);
+		});
+
+		it("should remove namespace references only after removing optional SVG data", () => {
+			const source = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:e="http://www.inkscape.org/namespaces/inkscape" xmlns:data="urn:optional"><metadata><data:record/></metadata><e:view/><g e:label="data:Thing"/></svg>';
+			const options = { xml: true, mode: /** @type {const} */ ("minify"), sortAttributes: true, removeUnusedSvgNamespaces: true, removeSvgMetadata: true, removeSvgEditorData: true };
+			const processor = new SourceProcessor();
+			const once = processor.process(source, options).code;
+			expect(once).toBe('<svg xmlns="http://www.w3.org/2000/svg"><g/></svg>');
+			expect(processor.process(once, options).code).toBe(once);
+		});
+
+		it("should reuse empty-attribute removal without HTML entity decoding or SVG defaults", () => {
+			const source = '<svg xmlns="http://www.w3.org/2000/svg" class=" &#9;" id="" style=""><g fill="" stroke="" transform="" viewBox="" href="" dir="" data-x="" xml:space="preserve"/><g class="&amp;Tab;" id=" " style="&#160;"/><g CLASS=""/><foreignObject><div xmlns="http://www.w3.org/1999/xhtml" class="" style=""/></foreignObject></svg>';
+			const processor = new SourceProcessor();
+			const options = { xml: true, mode: /** @type {const} */ ("minify"), removeEmptyAttributes: true };
+			const once = processor.process(source, options).code;
+			expect(once).toBe(source.replace(' class=" &#9;" id="" style=""', "").replace('style="&#160;"', 'style="\u00a0"'));
+			expect(processor.process(once, options).code).toBe(once);
+			expect(processor.process('<root class="" id="" style=""/>', options).code).toBe('<root class="" id="" style=""/>');
+			expect(processor.process(source, { ...options, mode: "beautify" }).code).toBe(source);
+		});
+
+		it("should preserve attributes and namespace bindings declared by the DTD", () => {
+			const dtd = '<!DOCTYPE svg [<!ENTITY ns "http://www.w3.org/2000/svg"><!ATTLIST svg xmlns CDATA "&ns;" xmlns:p CDATA "urn:default" id CDATA "fallback" class CDATA #IMPLIED style CDATA "fill:red">]>';
+			const source = `${dtd}<svg xmlns:p="urn:override" id="" class="" style=""><g xmlns:q="urn:unused"/></svg>`;
+			const processor = new SourceProcessor();
+			const options = { xml: true, mode: /** @type {const} */ ("minify"), removeUnusedSvgNamespaces: true, removeEmptyAttributes: true };
+			const once = processor.process(source, options).code;
+			expect(once).toBe(source.replace(' xmlns:q="urn:unused"', ""));
+			expect(processor.process(once, options).code).toBe(once);
+		});
+
+		it.each([
+			'<!DOCTYPE svg SYSTEM "defaults.dtd">',
+			`<!DOCTYPE svg [<!ENTITY % attrs '<!ATTLIST svg id CDATA "fallback">'>%attrs;]>`
+		])("should retain attributes whose DTD defaults cannot be resolved in %s", (dtd) => {
+			const source = `${dtd}<svg xmlns="http://www.w3.org/2000/svg" xmlns:p="urn:data" id="" class="" style=""/>`;
+			expect(new SourceProcessor().process(source, { xml: true, mode: "minify", removeEmptyAttributes: true, removeUnusedSvgNamespaces: true }).code).toBe(source);
+		});
+
+		it.each([[false, false], [false, true], [true, false], [true, true]])("should resolve rendered CSS before cleanup with asynchronous=%s and namespaces=%s", async (asynchronous, removeUnusedSvgNamespaces) => {
+			const source = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:p="urn:unused"><g style="/* p:Thing */" class=""/><g style="fill: #ff0000"/><style>/* p:Thing */ g { fill: red }</style><g z="1"/></svg>';
+			const processor = new SourceProcessor();
+			const options = { xml: true, mode: /** @type {const} */ ("minify"), sortAttributes: true, removeUnusedSvgNamespaces, removeEmptyAttributes: true };
+			const render = require("../../lib/html/builtinEmbeddedRenderer").builtinEmbeddedRenderer();
+			/**
+			 * @param {string} xml document to print
+			 * @returns {Promise<string>} the minified document
+			 */
+			const print = async (xml) => (asynchronous
+				? await processor.processAsync(xml, { ...options, renderEmbeddedSource: async (css, offer) => render(css, offer) })
+				: processor.process(xml, { ...options, renderEmbeddedSource: render })).code;
+			const once = await print(source);
+			expect(once).toBe(`<svg xmlns="http://www.w3.org/2000/svg"${removeUnusedSvgNamespaces ? "" : ' xmlns:p="urn:unused"'}><g/><g style="fill:red"/><style>g{fill:red}</style><g z="1"/></svg>`);
+			expect(await print(once)).toBe(once);
+		});
+
+		it.each(["", " ", "\t\n"])("should remove asynchronous style answers containing only whitespace: %j", async (answer) => {
+			const source = '<svg xmlns="http://www.w3.org/2000/svg"><g style="/* empty */"/></svg>';
+			const { code } = await new SourceProcessor().processAsync(source, { xml: true, mode: "minify", removeEmptyAttributes: true, renderEmbeddedSource: async () => answer });
+			expect(code).toBe('<svg xmlns="http://www.w3.org/2000/svg"><g/></svg>');
+		});
+
+		it("should preserve QName-like data in non-CSS style bodies", () => {
+			const source = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:p="urn:data"><style type="application/data">p:Thing</style><style>p:<g/></style></svg>';
+			expect(new SourceProcessor().process(source, { xml: true, mode: "minify", removeUnusedSvgNamespaces: true, renderEmbeddedSource: () => "" }).code).toBe(source);
+		});
+
+		it("should remove only SVG metadata when requested", () => {
+			const source = '<svg xmlns="http://www.w3.org/2000/svg"><title>Title</title><desc>Description</desc><g><metadata><record>editor</record></metadata></g><foreignObject><metadata xmlns="urn:data">keep</metadata></foreignObject><Metadata>case</Metadata></svg>';
+			const processor = new SourceProcessor();
+			const options = { xml: true, mode: /** @type {const} */ ("minify"), removeSvgMetadata: true };
+			const once = processor.process(source, options).code;
+			expect(once).toBe('<svg xmlns="http://www.w3.org/2000/svg"><title>Title</title><desc>Description</desc><g/><foreignObject><metadata xmlns="urn:data">keep</metadata></foreignObject><Metadata>case</Metadata></svg>');
+			expect(processor.process(once, options).code).toBe(once);
+			expect(processor.process(source, { ...options, removeSvgMetadata: false }).code).toBe(source);
+			expect(processor.process(source, { ...options, mode: "beautify" }).code).toBe(source);
+			expect(processor.process('<metadata xmlns="http://www.w3.org/2000/svg">root</metadata>', options).code).toBe('<metadata xmlns="http://www.w3.org/2000/svg">root</metadata>');
+		});
+
+
+		it.each([true, false])("should preserve metadata subtrees containing IDs with xml=%s", (xml) => {
+			const source = '<svg xmlns="http://www.w3.org/2000/svg"><metadata id="m"><record>keep</record></metadata><metadata><path id="p" d="M10 10L10 70L70 70Z"/></metadata><metadata>drop</metadata><use href="#p"/></svg>';
+			const options = { xml, mode: /** @type {const} */ ("minify"), removeSvgMetadata: true };
+			const processor = new SourceProcessor();
+			const once = processor.process(source, options).code;
+			expect(once).toContain('<metadata id=');
+			expect(once).toContain(xml ? 'id="p"' : 'id=p');
+			expect(once).not.toContain('<metadata>drop</metadata>');
+			expect(processor.process(once, options).code).toBe(once);
+			expect(processor.process(`<svg xmlns="http://www.w3.org/2000/svg"><metadata>drop</metadata></svg>`, options).code).not.toContain('metadata');
+		});
+
+
+		it("should remove empty-ID metadata and preserve IDs supplied by the DTD", () => {
+			const options = { xml: true, mode: /** @type {const} */ ("minify"), removeSvgMetadata: true, removeEmptyAttributes: true };
+			const processor = new SourceProcessor();
+			const empty = '<svg xmlns="http://www.w3.org/2000/svg"><metadata id=""/><metadata><g xml:id=""/></metadata></svg>';
+			expect(processor.process(empty, options).code).toBe('<svg xmlns="http://www.w3.org/2000/svg"/>');
+			const dtd = '<!DOCTYPE svg [<!ATTLIST metadata id CDATA "record">]>';
+			const source = dtd + '<svg xmlns="http://www.w3.org/2000/svg"><metadata>kept</metadata></svg>';
+			expect(processor.process(source, options).code).toBe(source);
+		});
+
+		it("should preserve editor subtrees containing IDs and inherited xml:id values", () => {
+			const source = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:e="http://www.inkscape.org/namespaces/inkscape"><e:view><g><path id="p"/></g></e:view><metadata xml:id="record">keep</metadata><e:view>drop</e:view><use href="#p"/></svg>';
+			const options = { xml: true, mode: /** @type {const} */ ("minify"), removeSvgMetadata: true, removeSvgEditorData: true };
+			const processor = new SourceProcessor();
+			const once = processor.process(source, options).code;
+			expect(once).toBe(source.replace('<e:view>drop</e:view>', ''));
+			expect(processor.process(once, options).code).toBe(once);
+		});
+
+		it("should preserve DTD content models and declared editor attributes", () => {
+			const svg = 'http://www.w3.org/2000/svg';
+			const options = { xml: true, mode: /** @type {const} */ ("minify"), removeSvgMetadata: true, removeSvgEditorData: true };
+			const processor = new SourceProcessor();
+			const body = `<svg xmlns="${svg}" xmlns:e="http://www.inkscape.org/namespaces/inkscape"><metadata>required</metadata><e:view/></svg>`;
+			for (const dtd of ['<!DOCTYPE svg [<!ELEMENT svg (metadata,e:view)><!ELEMENT metadata ANY><!ELEMENT e:view EMPTY>]>', '<!DOCTYPE svg SYSTEM "svg.dtd">', '<!DOCTYPE svg [<!ENTITY % defaults SYSTEM "defaults.dtd">%defaults;]>']) {
+				expect(processor.process(dtd + body, options).code).toBe(dtd + body);
+			}
+			const dtd = '<!DOCTYPE svg [<!ATTLIST g e:label CDATA #FIXED "kept">]>';
+			const declared = `<svg xmlns="${svg}" xmlns:e="http://www.inkscape.org/namespaces/inkscape"><g e:label="kept" e:unused="drop"/></svg>`;
+			expect(processor.process(dtd + declared, options).code).toBe(dtd + declared.replace(' e:unused="drop"', ''));
+			expect(processor.process(body, options).code).toBe(`<svg xmlns="${svg}" xmlns:e="http://www.inkscape.org/namespaces/inkscape"/>`);
+		});
+
+		it("should resolve editor namespaces by URI and respect local declarations", () => {
+			const source = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:e="http://www.inkscape.org/namespaces/inkscape" xmlns:inkscape="urn:data" e:version="1" inkscape:version="keep"><e:view><g>drop subtree</g></e:view><g e:label="editor" label="keep"><e:view xmlns:e="urn:data">keep</e:view></g><e:view xmlns:e="urn:data" e:flag="keep"/><metadata>keep</metadata></svg>';
+			const options = { xml: true, mode: /** @type {const} */ ("minify"), removeSvgEditorData: true };
+			const processor = new SourceProcessor();
+			const once = processor.process(source, options).code;
+			expect(once).toBe('<svg xmlns="http://www.w3.org/2000/svg" xmlns:e="http://www.inkscape.org/namespaces/inkscape" xmlns:inkscape="urn:data" inkscape:version="keep"><g label="keep"><e:view xmlns:e="urn:data">keep</e:view></g><e:view xmlns:e="urn:data" e:flag="keep"/><metadata>keep</metadata></svg>');
+			expect(processor.process(once, options).code).toBe(once);
+			expect(processor.process(source, { ...options, removeSvgEditorData: false }).code).toBe(source);
+			const unrelated = '<root xmlns:e="http://www.inkscape.org/namespaces/inkscape" e:version="keep"><e:view/></root>';
+			expect(processor.process(unrelated, options).code).toBe(unrelated);
+		});
+
+		it("should remove default-namespace editor elements within SVG", () => {
+			const source = '<s:svg xmlns:s="http://www.w3.org/2000/svg"><view xmlns="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"><s:path/></view><s:metadata/><s:path/></s:svg>';
+			expect(new SourceProcessor().process(source, { xml: true, mode: "minify", removeSvgMetadata: true, removeSvgEditorData: true }).code).toBe('<s:svg xmlns:s="http://www.w3.org/2000/svg"><s:path/></s:svg>');
+		});
+
+		it("should resolve editor namespaces supplied by the DTD", () => {
+			const dtd = '<!DOCTYPE svg [<!ENTITY editor "http://www.inkscape.org/namespaces/inkscape"><!ATTLIST svg xmlns CDATA "http://www.w3.org/2000/svg" xmlns:e CDATA "&editor;">]>';
+			const options = { xml: true, mode: /** @type {const} */ ("minify"), removeSvgMetadata: true, removeSvgEditorData: true };
+			const processor = new SourceProcessor();
+			const once = processor.process(`${dtd}<svg e:version="1"><e:view/><metadata>data</metadata><g/></svg>`, options).code;
+			expect(once).toBe(`${dtd}<svg><g/></svg>`);
+			expect(processor.process(once, options).code).toBe(once);
+		});
+
+		it("should preserve licensing vocabularies when removing editor data", () => {
+			const source = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#"><metadata><dc:title>Credit</dc:title><cc:license>License</cc:license></metadata></svg>';
+			expect(new SourceProcessor().process(source, { xml: true, mode: "minify", removeSvgEditorData: true }).code).toBe(source);
+		});
+
+		it("should preserve comment options and render only surviving SVG styles", () => {
+			/** @type {string[]} */
+			const rendered = [];
+			const source = '<svg xmlns="http://www.w3.org/2000/svg"><metadata><style>drop{}</style></metadata><!--keep--><style>g { fill: red }</style></svg>';
+			const once = new SourceProcessor().process(source, { xml: true, mode: "minify", removeSvgMetadata: true, transforms: { comments: "all" }, renderEmbeddedSource: (css) => { rendered.push(css); return "g{fill:red}"; } }).code;
+			expect(once).toBe('<svg xmlns="http://www.w3.org/2000/svg"><!--keep--><style>g{fill:red}</style></svg>');
+			expect(rendered).toEqual(["g { fill: red }"]);
+		});
+
+		it("should remove data from deeply nested SVG without recursive traversal", () => {
+			const depth = 6000;
+			const prefix = '<svg xmlns="http://www.w3.org/2000/svg">';
+			const source = `${prefix}${"<g>".repeat(depth)}<metadata>data</metadata>${"</g>".repeat(depth)}</svg>`;
+			const options = { xml: true, mode: /** @type {const} */ ("minify"), removeSvgMetadata: true, removeSvgEditorData: true };
+			const processor = new SourceProcessor();
+			const once = processor.process(source, options).code;
+			expect(once).toBe(`${prefix}${"<g>".repeat(depth - 1)}<g/>${"</g>".repeat(depth - 1)}</svg>`);
+			expect(processor.process(once, options).code).toBe(once);
+		});
+
+		it("should preserve the verbatim fallback for XML markup entities", () => {
+			const source = '<!DOCTYPE svg [<!ENTITY markup "<g/>">]><svg xmlns="http://www.w3.org/2000/svg"><metadata>data</metadata>&markup;</svg>';
+			expect(new SourceProcessor().process(source, { xml: true, mode: "minify", collapseWhitespace: true, removeSvgMetadata: true, removeSvgEditorData: true, removeEmptyAttributes: true, removeUnusedSvgNamespaces: true }).code).toBe(source);
+		});
+
+		it("should rank only surviving attributes when removing SVG data", () => {
+			const source = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:e="http://ns.adobe.com/AdobeIllustrator/10.0/"><metadata><g a="1"/><g a="1"/></metadata><e:view a="1"/><g a="1" e:label="editor" z="1"/><g z="2"/></svg>';
+			const options = { xml: true, mode: /** @type {const} */ ("minify"), sortAttributes: true, removeSvgMetadata: true, removeSvgEditorData: true };
+			const processor = new SourceProcessor();
+			const once = processor.process(source, options).code;
+			expect(once).toBe('<svg xmlns="http://www.w3.org/2000/svg" xmlns:e="http://ns.adobe.com/AdobeIllustrator/10.0/"><g z="1" a="1"/><g z="2"/></svg>');
+			expect(processor.process(once, options).code).toBe(once);
+		});
+
+		it("should keep joined XML character data well formed after removal", () => {
+			const options = { xml: true, mode: /** @type {const} */ ("minify"), removeSvgMetadata: true };
+			const processor = new SourceProcessor();
+			expect(processor.process('<svg xmlns="http://www.w3.org/2000/svg">]]<metadata/>></svg>', options).code).toBe('<svg xmlns="http://www.w3.org/2000/svg">]]&gt;</svg>');
+			for (const separator of ["<metadata/>", "<metadata/><!--note-->"]) {
+				for (const left of ["a", "&lt;".repeat(20), "]]", "<![CDATA[<&]]>"]) {
+					for (const right of ["b", "&amp;".repeat(20), ">", "<![CDATA[<&]]>"]) {
+						const source = `<svg xmlns="http://www.w3.org/2000/svg">${left}${separator}${right}</svg>`;
+						const once = processor.process(source, options).code;
+						expect(processor.process(once, options).code).toBe(once);
+					}
+				}
+			}
+		});
 
 		it("should reuse attribute sorting without HTML normalization", () => {
 			const source = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:x="urn:test" viewBox="0 0 1 1"><g z="1" x:href="#shape" Z="2" class="b a"/><path z="3"/></svg>';

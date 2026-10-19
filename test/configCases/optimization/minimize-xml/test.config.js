@@ -10,7 +10,18 @@ const NAMES = [
 	"absent",
 	"none",
 	"claimed",
-	"sorted"
+	"sorted",
+	"cleaned",
+	"attributes",
+	"whitespace",
+	"numbers",
+	"colors",
+	"paths",
+	"containers",
+	"compact",
+	"symbols",
+	"constraints",
+	"structure"
 ];
 
 module.exports = {
@@ -25,6 +36,15 @@ module.exports = {
 					"utf8"
 				)
 			).toMatchSnapshot(name);
+			if (["colors", "paths", "containers", "compact"].includes(name)) {
+				const animated = fs.readFileSync(
+					path.join(options[i].output.path, "animated.svg"),
+					"utf8"
+				);
+				expect(animated).toContain('d="M010 020L010 030L040 030l000 010"');
+				expect(animated).toContain('id="animated"');
+				expect(animated).toContain('href="#animated"');
+			}
 		}
 	}
 };

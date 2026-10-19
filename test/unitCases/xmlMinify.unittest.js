@@ -15,6 +15,95 @@ const SOURCE = `<?xml version="1.0" encoding="UTF-8"?>
 `;
 
 describe("xmlMinify", () => {
+	it.each([false, true])("should forward structural SVG cleanup with enabled=%s", async enabled => {
+		const source = '<svg xmlns="http://www.w3.org/2000/svg"><g><path style="fill:red"/></g><text/></svg>';
+		const options = { cleanupStructure: enabled };
+		const { code } = await xmlMinify({ 'structure.svg': source }, undefined, options);
+		expect(code).toBe(enabled ? '<svg xmlns="http://www.w3.org/2000/svg"><path fill="red"/></svg>' : source);
+		expect((await xmlMinify({ 'structure.svg': code }, undefined, options)).code).toBe(code);
+	});
+	it("should combine structural cleanup with equal-radius ellipse conversion", async () => {
+		const source = '<svg xmlns="http://www.w3.org/2000/svg"><g><ellipse id="shape" rx="10" ry="10"/></g><ellipse rx="5" ry="5"/></svg>';
+		const options = { cleanupStructure: true, convertShapes: true, sortDefinitions: true, reusePaths: true, mergePaths: true };
+		const { code } = await xmlMinify({ 'structure.svg': source }, undefined, options);
+		expect(code).toBe('<svg xmlns="http://www.w3.org/2000/svg"><circle id="shape" r="10"/><circle r="5"/></svg>');
+		expect((await xmlMinify({ 'structure.svg': code }, undefined, options)).code).toBe(code);
+	});
+	it("should forward sorting and path reuse to SVG data URLs", async () => {
+		const source = '<svg xmlns="http://www.w3.org/2000/svg"><g><path id="p" d="M0 0L10 20L20 10z"/><path d="M0 0L10 20L20 10z"/></g></svg>';
+		const { code } = await webpack.html.htmlMinify({ 'a.html': `<img src='data:image/svg+xml,${source}'>` }, undefined, { svg: { cleanupStructure: true, reusePaths: true, sortDefinitions: true, mergePaths: true } });
+		expect(decodeURIComponent(code)).toContain("use href='#p'");
+		expect(code).not.toContain('<g>');
+	});
+	it.each([false, true])("should keep shape coordinates absolute unless path cleanup is enabled=%s", async (shortenPathData) => {
+		const source = '<svg xmlns="http://www.w3.org/2000/svg"><line x1="100" y1="100" x2="101" y2="102"/></svg>';
+		const { code } = await xmlMinify({ 'shape.svg': source }, undefined, { convertShapes: true, shortenPathData });
+		expect(code).toBe(`<svg xmlns="http://www.w3.org/2000/svg"><path d="${shortenPathData ? 'M100 100l1 2' : 'M100 100L101 102'}"/></svg>`);
+	});
+	it.each([false, true])("should forward exact relative path cleanup with enabled=%s", async (shortenPathData) => {
+		const source = '<svg xmlns="http://www.w3.org/2000/svg"><path d="M100 100L101 102L102 104"/></svg>';
+		const { code } = await xmlMinify({ 'path.svg': source }, undefined, { shortenPathData });
+		expect(code).toBe(shortenPathData ? source.replace('M100 100L101 102L102 104', 'M100 100l1 2 1 2') : source);
+		expect((await xmlMinify({ 'path.svg': code }, undefined, { shortenPathData })).code).toBe(code);
+	});
+	it.each([false, true])("should forward SVG shape conversion with enabled=%s", async (convertShapes) => {
+		const source = '<svg xmlns="http://www.w3.org/2000/svg"><line x1="10" y1="20" x2="10" y2="30"/></svg>';
+		const { code } = await xmlMinify({ 'shape.svg': source }, undefined, { convertShapes });
+		expect(code).toBe(convertShapes ? source.replace('<line x1="10" y1="20" x2="10" y2="30"/>', '<path d="M10 20V30"/>') : source);
+		expect((await xmlMinify({ 'shape.svg': code }, undefined, { convertShapes })).code).toBe(code);
+	});
+	 it.each([false, true])("should forward SVG symbol sorting with enabled=%s", async (sortSymbols) => {
+		const source = '<svg xmlns="http://www.w3.org/2000/svg"><symbol id="z"/><symbol id="a"/><use href="#z"/></svg>';
+		const { code } = await xmlMinify({ 'sprite.svg': source }, undefined, { sortSymbols });
+		expect(code).toBe(sortSymbols ? source.replace('<symbol id="z"/><symbol id="a"/>', '<symbol id="a"/><symbol id="z"/>') : source);
+		expect((await xmlMinify({ 'sprite.svg': code }, undefined, { sortSymbols })).code).toBe(code);
+	});
+	it.each([false, true])("should forward presentation, path, transform and container cleanup with enabled=%s", async (enabled) => {
+		const source = '<svg xmlns="http://www.w3.org/2000/svg"><g/><path fill="#ff0000" d="M000.00,000.00L001.00,002.00" transform="scale(001.00, +001.00)"/><style>path { stroke: #ffffff }</style></svg>';
+		const options = { shortenColors: enabled, shortenNumbers: enabled, shortenPathData: enabled, removeEmptyElements: enabled };
+		const once = (await xmlMinify({ 'image.svg': source }, undefined, options)).code;
+		expect(once).toBe(`<svg xmlns="http://www.w3.org/2000/svg">${enabled ? '' : '<g/>'}<path fill="${enabled ? 'red' : '#ff0000'}" d="${enabled ? 'M0 0 1 2' : 'M000.00,000.00L001.00,002.00'}" transform="${enabled ? 'scale(1)' : 'scale(001.00, +001.00)'}"/><style>path{stroke:#fff}</style></svg>`);
+		expect((await xmlMinify({ 'image.svg': once }, undefined, options)).code).toBe(once);
+	});
+	it("should preserve the CSS color transform option in SVG presentation attributes", async () => {
+		const source = '<svg xmlns="http://www.w3.org/2000/svg" fill="#ff0000"/>';
+		expect((await xmlMinify({ 'image.svg': source }, undefined, { shortenColors: true, css: { shortenColors: false } })).code).toBe(source);
+	});
+	it.each([false, true])("should forward numeric cleanup with enabled=%s and embedded CSS", async (shortenNumbers) => {
+		const source = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 0010.00 0010.00"><style>rect { fill: #ff0000 }</style><rect x="+001.00" style="stroke: #00ff00"/></svg>';
+		const options = { shortenNumbers };
+		const { code } = await xmlMinify({ "image.svg": source }, undefined, options);
+		expect(code).toBe(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="${shortenNumbers ? '0 0 10 10' : '0 0 0010.00 0010.00'}"><style>rect{fill:red}</style><rect x="${shortenNumbers ? '1' : '+001.00'}" style="stroke:#0f0"/></svg>`);
+		expect((await xmlMinify({ "image.svg": code }, undefined, options)).code).toBe(code);
+	});
+	it.each([false, true])("should forward SVG whitespace cleanup with enabled=%s", async (collapseWhitespace) => {
+		const source = '<svg xmlns="http://www.w3.org/2000/svg">\n <g class="" id="" style=""> </g>\n <text> A  <tspan> B </tspan> C </text>\n</svg>';
+		const options = { collapseWhitespace };
+		const { code } = await xmlMinify({ "image.svg": Buffer.from(source) }, undefined, options);
+		expect(code).toBe(collapseWhitespace ? '<svg xmlns="http://www.w3.org/2000/svg"><g class="" id="" style=""/><text> A  <tspan> B </tspan> C </text></svg>' : source);
+		expect((await xmlMinify({ "image.svg": code }, undefined, options)).code).toBe(code);
+	});
+	it("should remove metadata and editor data independently", async () => {
+		const source = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:e="http://www.inkscape.org/namespaces/inkscape" e:version="1"><metadata>editor</metadata><e:view/><path/></svg>';
+		for (const removeMetadata of [false, true]) {
+			for (const removeEditorData of [false, true]) {
+				const { code } = await xmlMinify({ "image.svg": source }, undefined, { removeMetadata, removeEditorData });
+				expect(code).toBe(`<svg xmlns="http://www.w3.org/2000/svg" xmlns:e="http://www.inkscape.org/namespaces/inkscape"${removeEditorData ? "" : ' e:version="1"'}>${removeMetadata ? "" : "<metadata>editor</metadata>"}${removeEditorData ? "" : "<e:view/>"}<path/></svg>`);
+			}
+		}
+	});
+
+	it("should forward independent namespace and empty-attribute options", async () => {
+		const source = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:unused="urn:unused"><g class="" id="" style="/* empty */"/></svg>';
+		for (const removeUnusedNamespaces of [false, true]) {
+			for (const removeEmptyAttributes of [false, true]) {
+				const { code } = await xmlMinify({ "image.svg": source }, undefined, { removeUnusedNamespaces, removeEmptyAttributes });
+				expect(code).toBe(`<svg xmlns="http://www.w3.org/2000/svg"${removeUnusedNamespaces ? "" : ' xmlns:unused="urn:unused"'}><g${removeEmptyAttributes ? "" : ' class="" id="" style=""'}/></svg>`);
+				expect((await xmlMinify({ "image.svg": code }, undefined, { removeUnusedNamespaces, removeEmptyAttributes })).code).toBe(code);
+			}
+		}
+	});
+
 	it("should minify the document and the stylesheets it holds", async () => {
 		const { code } = await xmlMinify({ "image.svg": SOURCE });
 		expect(code).toMatchSnapshot();

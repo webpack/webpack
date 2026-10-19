@@ -418,6 +418,7 @@
     "referencer",
     "referrerpolicy",
     "rels",
+    "removeHiddenElems",
     "reparsed",
     "reparsing",
     "repo",

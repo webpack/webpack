@@ -256,6 +256,20 @@ const fixtures = async () => {
 		]);
 	}
 	out.push(["Editor-exported SVG (DTD entities)", EDITOR_SVG]);
+	out.push([
+		"SVG geometry",
+		await fs.promises.readFile(
+			path.join(ROOT, "test/configCases/optimization/minimize-xml/numbers.svg"),
+			"utf8"
+		)
+	]);
+	out.push([
+		"SVG presentation and paths",
+		await fs.promises.readFile(
+			path.join(ROOT, "test/configCases/optimization/minimize-xml/compact.svg"),
+			"utf8"
+		)
+	]);
 	out.push(["Atom feed (400 entries)", atomFeed(400)]);
 	out.push(["Maven POM", MAVEN_POM]);
 	out.push(["XLIFF translation", XLIFF]);
@@ -272,12 +286,73 @@ const printXml = (xml, mode) =>
 		new SourceProcessor().process(xml, { xml: true, mode })
 	).code;
 
-/** @typedef {Pick<import("../lib/html/syntax-printer").HtmlProcessOptions, "sortAttributes">} XmlPrintOptions */
+/** @typedef {Pick<import("../lib/html/syntax-printer").HtmlProcessOptions, "sortAttributes" | "sortSvgSymbols" | "cleanupSvgStructure" | "mergeSvgPaths" | "reuseSvgPaths" | "sortSvgDefinitions" | "convertSvgShapes" | "removeSvgMetadata" | "removeSvgEditorData" | "removeUnusedSvgNamespaces" | "removeEmptyAttributes" | "removeEmptyElements" | "collapseWhitespace" | "shortenSvgNumbers" | "shortenSvgColors" | "shortenSvgPathData">} XmlPrintOptions */
 
 /** @type {[string, XmlPrintOptions][]} */
 const PRESETS = [
 	["default", {}],
-	["sorted", { sortAttributes: true }]
+	["sorted", { sortAttributes: true }],
+	[
+		"svg-data",
+		{ sortAttributes: true, removeSvgMetadata: true, removeSvgEditorData: true }
+	],
+	[
+		"svg-cleanup",
+		{
+			sortAttributes: true,
+			removeSvgMetadata: true,
+			removeSvgEditorData: true,
+			removeUnusedSvgNamespaces: true,
+			removeEmptyAttributes: true
+		}
+	],
+	[
+		"svg-whitespace",
+		{
+			sortAttributes: true,
+			removeSvgMetadata: true,
+			removeSvgEditorData: true,
+			removeUnusedSvgNamespaces: true,
+			removeEmptyAttributes: true,
+			collapseWhitespace: true
+		}
+	],
+	[
+		"svg-numeric",
+		{
+			sortAttributes: true,
+			removeSvgMetadata: true,
+			removeSvgEditorData: true,
+			removeUnusedSvgNamespaces: true,
+			removeEmptyAttributes: true,
+			collapseWhitespace: true,
+			shortenSvgNumbers: true
+		}
+	],
+	...["colors", "paths", "containers", "symbols", "shapes", "structure"].map(
+		(step, index) =>
+			/** @type {[string, XmlPrintOptions]} */ ([
+				`svg-${step}`,
+				{
+					sortAttributes: true,
+					removeSvgMetadata: true,
+					removeSvgEditorData: true,
+					removeUnusedSvgNamespaces: true,
+					removeEmptyAttributes: true,
+					collapseWhitespace: true,
+					shortenSvgNumbers: true,
+					shortenSvgColors: true,
+					shortenSvgPathData: index >= 1,
+					removeEmptyElements: index >= 2,
+					sortSvgSymbols: index >= 3,
+					convertSvgShapes: index >= 4,
+					cleanupSvgStructure: index >= 5,
+					mergeSvgPaths: index >= 5,
+					reuseSvgPaths: index >= 5,
+					sortSvgDefinitions: index >= 5
+				}
+			])
+	)
 ];
 
 /**
@@ -446,6 +521,78 @@ const TOOLS = [
 		}
 	},
 	{
+		name: "webpack (SVG data removal)",
+		stage: "minify",
+		create: () => {
+			const renderEmbeddedSource = builtinEmbeddedRenderer();
+			return (xml) =>
+				new SourceProcessor().process(xml, {
+					xml: true,
+					mode: "minify",
+					removeSvgMetadata: true,
+					removeSvgEditorData: true,
+					renderEmbeddedSource
+				}).code;
+		}
+	},
+	...[false, true].map(
+		(collapseWhitespace) =>
+			/** @type {import("./compare-tools-harness").Tool} */ ({
+				name: collapseWhitespace
+					? "webpack (SVG whitespace cleanup)"
+					: "webpack (SVG attribute cleanup)",
+				stage: "minify",
+				create: () => {
+					const renderEmbeddedSource = builtinEmbeddedRenderer();
+					return (xml) =>
+						new SourceProcessor().process(xml, {
+							xml: true,
+							mode: "minify",
+							collapseWhitespace,
+							removeSvgMetadata: true,
+							removeSvgEditorData: true,
+							removeUnusedSvgNamespaces: true,
+							removeEmptyAttributes: true,
+							renderEmbeddedSource
+						}).code;
+				}
+			})
+	),
+
+	{
+		name: "webpack (SVG numeric cleanup)",
+		stage: "minify",
+		create: () => {
+			const renderEmbeddedSource = builtinEmbeddedRenderer();
+			return (xml) =>
+				new SourceProcessor().process(xml, {
+					xml: true,
+					mode: "minify",
+					shortenSvgNumbers: true,
+					collapseWhitespace: true,
+					removeSvgMetadata: true,
+					removeSvgEditorData: true,
+					removeUnusedSvgNamespaces: true,
+					removeEmptyAttributes: true,
+					renderEmbeddedSource
+				}).code;
+		}
+	},
+	...PRESETS.slice(6).map(([name, options]) => ({
+		name: `webpack (SVG ${name.slice(4)} cleanup)`,
+		stage: /** @type {const} */ ("minify"),
+		create: () => {
+			const renderEmbeddedSource = builtinEmbeddedRenderer();
+			return (/** @type {string} */ xml) =>
+				new SourceProcessor().process(xml, {
+					xml: true,
+					mode: "minify",
+					...options,
+					renderEmbeddedSource
+				}).code;
+		}
+	})),
+	{
 		// SVG's own optimizer: it rewrites path data and drops what it deems
 		// editor noise, so it differs by design rather than by mistake.
 		name: "svgo",
@@ -461,6 +608,25 @@ const TOOLS = [
 		create: () => {
 			const { optimize } = load("svgo");
 			return (xml) => optimize(xml, { multipass: true }).data;
+		}
+	},
+	{
+		name: "svgo (preserve IDs)",
+		stage: "minify",
+		create: () => {
+			const { optimize } = load("svgo");
+			return (xml) =>
+				optimize(xml, {
+					multipass: true,
+					plugins: [
+						{
+							name: "preset-default",
+							params: {
+								overrides: { cleanupIds: false, removeHiddenElems: false }
+							}
+						}
+					]
+				}).data;
 		}
 	},
 	{
@@ -495,7 +661,7 @@ const TOOLS = [
 
 // A tool built for one vocabulary, whose output for any other document says
 // nothing about how it reads XML: svgo drops what an SVG renderer ignores.
-const SVG_ONLY = new Set(["svgo", "svgo (multipass)"]);
+const SVG_ONLY = new Set(["svgo", "svgo (multipass)", "svgo (preserve IDs)"]);
 
 const STYLE_ELEMENT = /(?:^|:)style$/;
 
@@ -1238,7 +1404,21 @@ const invariants = (write) => {
 			if (printed === null) continue;
 			// What minifying keeps is what the document says, which a reader other
 			// than the printer's own has to agree with.
-			if (wantedRelation("meaning") && canonical(printed) !== canonical(xml)) {
+			// Only presets retaining optional data owe equality to the whole input.
+			const retainsData =
+				!options.removeSvgMetadata &&
+				!options.removeSvgEditorData &&
+				!options.removeUnusedSvgNamespaces &&
+				!options.removeEmptyAttributes &&
+				!options.shortenSvgNumbers &&
+				!options.shortenSvgColors &&
+				!options.shortenSvgPathData &&
+				!options.removeEmptyElements;
+			if (
+				retainsData &&
+				wantedRelation("meaning") &&
+				canonical(printed) !== canonical(xml)
+			) {
 				groups.add(
 					{
 						relation: "meaning",

@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases html minimize-inline-svg minimize-inline-svg should compile: default 1`] = `
+"<!doctype html><html lang=en><head><title>Inline SVG</title><style>.icon { background: url(\\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='m000,000 0 80-112 0 M10 20 10 30 40 30q0 0 20 20'/%3E%3C/svg%3E\\") }.animated { background: url(data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cmetadata%3Eremoved%3C%2Fmetadata%3E%3Cstyle%3E%40keyframes%20morph%7Bto%7Bd%3Apath%28%22M10%2020L20%2050L40%2050%22%29%7D%7D%3C%2Fstyle%3E%3Cpath%20d%3D%22M010%20020L010%20030L040%20030%22%2F%3E%3C%2Fsvg%3E); color: red }</style></head><body>
+<svg viewBox=\\"000 000 0024.0 24\\" xmlns=http://www.w3.org/2000/svg>
+	<metadata><rdf:RDF><cc:Work/></rdf:RDF></metadata>
+	<path d=\\"m000,000 0 80-112 0 M10 20 10 30 40 30c0 0 10 10 20 20\\" transform=\\"matrix(1 0 0 1 0 0) translate(+001.00, 002.00) scale(001.00, +001.00) rotate(000.00, 000.00, 000.00)\\"/>
+	<metadata><path id=metadata-shape d=\\"M1 1H3V3Z\\"/></metadata><use href=#metadata-shape />
+	<rect width=+001.500px height=002></rect>
+</svg>
+<img alt src=\\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cmetadata%3Em%3C/metadata%3E%3Crect width='+001.500' transform='matrix(1,0,0,1,5,0) matrix(2,0,0,2,0,0) rotate(30,0,0)'/%3E%3C/svg%3E\\">
+<div data-d=M000,000></div>
+
+
+</body></html>"
+`;
+
+exports[`ConfigCacheTestCases html minimize-inline-svg minimize-inline-svg should compile: svg 1`] = `
+"<!doctype html><html lang=en><head><title>Inline SVG</title><style>.icon { background: url(\\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='m000,000 0 80-112 0 M10 20 10 30 40 30q0 0 20 20'/%3E%3C/svg%3E\\") }.animated { background: url(data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cmetadata%3Eremoved%3C%2Fmetadata%3E%3Cstyle%3E%40keyframes%20morph%7Bto%7Bd%3Apath%28%22M10%2020L20%2050L40%2050%22%29%7D%7D%3C%2Fstyle%3E%3Cpath%20d%3D%22M010%20020L010%20030L040%20030%22%2F%3E%3C%2Fsvg%3E); color: red }</style></head><body>
+<svg viewBox=\\"0 0 24 24\\" xmlns=http://www.w3.org/2000/svg>
+	
+	<path d=\\"m0 0v80h-112M10 20V30H40s10 10 20 20\\" transform=\\"translate(1 2)\\"/>
+	<metadata><path id=metadata-shape d=\\"M1 1H3V3z\\"/></metadata><use href=#metadata-shape />
+	<rect width=1.5px height=2></rect>
+</svg>
+<img alt src=\\"data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'><rect width='1.5' transform='translate(5) scale(2) rotate(30)'/></svg>\\">
+<div data-d=M000,000></div>
+
+
+</body></html>"
+`;

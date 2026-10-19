@@ -15,7 +15,53 @@ exports[`ConfigTestCases optimization minimize-xml minimize-xml should compile: 
 "
 `;
 
+exports[`ConfigTestCases optimization minimize-xml minimize-xml should compile: attributes 1`] = `
+"<svg viewBox=\\"0 0 10 10\\" xmlns=\\"http://www.w3.org/2000/svg\\" xmlns:data=\\"urn:application\\" xmlns:e=\\"http://www.inkscape.org/namespaces/inkscape\\">
+	<title>Accessible title</title>
+	<desc>Accessible description</desc>
+	<metadata><path d=\\"M1 1H3V3Z\\" id=\\"metadata-shape\\"/></metadata><e:view><path d=\\"M4 4H6V6Z\\" id=\\"editor-shape\\"/></e:view><use href=\\"#metadata-shape\\"/><use href=\\"#editor-shape\\"/>
+	<defs><path d=\\"M0 0h10v10z\\" id=\\"shape\\"/></defs>
+	<use href=\\"#shape\\" data:flag=\\"keep\\" style=\\"fill:red\\"/>
+	<text>]]&gt;</text>
+</svg>"
+`;
+
 exports[`ConfigTestCases optimization minimize-xml minimize-xml should compile: claimed 1`] = `"<svg/>"`;
+
+exports[`ConfigTestCases optimization minimize-xml minimize-xml should compile: cleaned 1`] = `
+"<svg viewBox=\\"0 0 10 10\\" xmlns=\\"http://www.w3.org/2000/svg\\" xmlns:data=\\"urn:application\\" xmlns:e=\\"http://www.inkscape.org/namespaces/inkscape\\">
+	<title>Accessible title</title>
+	<desc>Accessible description</desc>
+	<metadata><path id=\\"metadata-shape\\" d=\\"M1 1H3V3Z\\"/></metadata><e:view><path id=\\"editor-shape\\" d=\\"M4 4H6V6Z\\"/></e:view><use href=\\"#metadata-shape\\"/><use href=\\"#editor-shape\\"/>
+	<defs><path id=\\"shape\\" d=\\"M0 0h10v10z\\"/></defs>
+	<use id=\\"\\" href=\\"#shape\\" class=\\"\\" data:flag=\\"keep\\" style=\\"fill:red\\"/>
+	<text>]]&gt;</text>
+</svg>"
+`;
+
+exports[`ConfigTestCases optimization minimize-xml minimize-xml should compile: colors 1`] = `
+"<svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 100 100\\">
+  <title>Geometry and colors</title>
+  <defs><linearGradient id=\\"paint\\" gradientTransform=\\"matrix(+001.00, 000.00, 000.00, 001.00, +000.00, 000.00)\\"><stop offset=\\"+000.00%\\" stop-color=\\"red\\"/><stop offset=\\"+001.00\\" stop-color=\\"#00f\\"/></linearGradient><filter id=\\"soft\\"><feGaussianBlur stdDeviation=\\"000.500, +000.250\\"/><feOffset dx=\\"+000.50\\" dy=\\"000.250\\"/></filter></defs>
+  <g><defs/><g xmlns:unused=\\"urn:unused\\"/><symbol/><marker/><pattern/><mask/><clipPath/></g>
+  <switch><g/><rect x=\\"90\\" y=\\"0\\" width=\\"10\\" height=\\"10\\" fill=\\"#00f\\"/></switch>
+  <g id=\\"sprite\\"><path fill=\\"red\\" stroke=\\"#00f\\" transform=\\"translate(+001.00, 0002.00) rotate(000.00, 000.00, -000.00) scale(001.00, +001.00)\\" d=\\"M +000.00, 000.00 L 0020.00, 000.00 A 0010.00, 0010.00, 000.00, 01, 0020.00, 0020.00 z\\"/></g>
+  <path id=\\"segments\\" fill=\\"none\\" stroke=\\"#000\\" d=\\"M 10 20 L 15 -25 L 20 -30 l .5 .5 l .5 .5 C 1 2 3 4 5 6 C 7 8 9 10 11 12 A 10 20 30 0 1 40 50 A 10 20 30 1 0 .5 -.5 Z M 30 40 L 50 60 Z\\"/>
+  <path id=\\"axes\\" fill=\\"none\\" stroke=\\"#000\\" d=\\"M 10 20 10 30 10 40 50 40 Z L 60 20 C 1 2 3 4 70 80 L 70 90\\"/>
+  <path id=\\"curves\\" fill=\\"none\\" stroke=\\"#000\\" d=\\"M10 60C10 60 20 50 30 60L40 60Q40 60 60 60m10 0c0 0 10 -10 20 0l0 10q0 0 10 -10\\"/>
+  <path id=\\"relative\\" fill=\\"none\\" stroke=\\"#000\\" d=\\"M60 60L61 62 62 64H63 64V65 66C65 67 66 68 67 69S68 70 69 71Q70 72 71 73T72 74A2 3 45 0 1 73 75M74 76 75 77ZL74 78\\"/>
+  <use href=\\"#sprite\\" transform=\\"translate(040.00, 000.00)\\"/>
+  <rect x=\\"060.00\\" y=\\"060.00\\" width=\\"030.00\\" height=\\"030.00\\" fill=\\"url(#paint)\\"/>
+  <rect id=\\"overflow\\" width=\\"10\\" height=\\"10\\" fill=\\"purple\\" transform=\\"translate(5 0e39)\\"/>
+  <text x=\\"001.00\\" y=\\"095.00\\" rotate=\\"000.0, +000.00\\"> A <tspan dx=\\"000.0px, +000.00em\\"> B </tspan> C </text>
+</svg>"
+`;
+
+exports[`ConfigTestCases optimization minimize-xml minimize-xml should compile: compact 1`] = `"<svg viewBox=\\"0 0 100 100\\" xmlns=\\"http://www.w3.org/2000/svg\\"><title>Geometry and colors</title><defs><linearGradient id=\\"paint\\" gradientTransform=\\"translate(0)\\"><stop offset=\\"0%\\" stop-color=\\"red\\"/><stop offset=\\"1\\" stop-color=\\"#00f\\"/></linearGradient><filter id=\\"soft\\"><feGaussianBlur stdDeviation=\\".5 .25\\"/><feOffset dx=\\".5\\" dy=\\".25\\"/></filter></defs><switch><g/><rect fill=\\"#00f\\" height=\\"10\\" width=\\"10\\" x=\\"90\\" y=\\"0\\"/></switch><g id=\\"sprite\\"><path fill=\\"red\\" d=\\"M0 0H20a10 10 0 010 20z\\" stroke=\\"#00f\\" transform=\\"translate(1 2)\\"/></g><path fill=\\"none\\" id=\\"segments\\" d=\\"M10 20l5-45 5-5 .5.5.5.5C1 2 3 4 5 6s4 4 6 6A10 20 30 0140 50 10 20 30 10.5-.5zM30 40 50 60z\\" stroke=\\"#000\\"/><path fill=\\"none\\" id=\\"axes\\" d=\\"M10 20V30 40H50zH60C1 2 3 4 70 80V90\\" stroke=\\"#000\\"/><path fill=\\"none\\" id=\\"curves\\" d=\\"M10 60s10-10 20 0H40t20 0m10 0s10-10 20 0v10t10-10\\" stroke=\\"#000\\"/><path fill=\\"none\\" id=\\"relative\\" d=\\"M60 60l1 2 1 2h1 1v1 1c1 1 2 2 3 3s1 1 2 2q1 1 2 2t1 1a2 3 45 011 1m1 1 1 1zv2\\" stroke=\\"#000\\"/><use transform=\\"translate(40)\\" href=\\"#sprite\\"/><rect fill=\\"url(#paint)\\" height=\\"30\\" width=\\"30\\" x=\\"60\\" y=\\"60\\"/><rect fill=\\"purple\\" id=\\"overflow\\" height=\\"10\\" transform=\\"translate(5 0e39)\\" width=\\"10\\"/><text x=\\"1\\" y=\\"95\\" rotate=\\"0 0\\"> A <tspan dx=\\"0px 0em\\"> B </tspan> C </text></svg>"`;
+
+exports[`ConfigTestCases optimization minimize-xml minimize-xml should compile: constraints 1`] = `"<!DOCTYPE svg [<!ATTLIST g e:label CDATA #FIXED \\"kept\\"><!ATTLIST g style CDATA #FIXED \\"fill: #ff0000\\"><!ATTLIST path d CDATA #FIXED \\"M000.00 000.00L001.00 002.00\\"><!ATTLIST rect fill CDATA #FIXED \\"#ff0000\\">]><svg xmlns=\\"http://www.w3.org/2000/svg\\" xmlns:e=\\"http://www.inkscape.org/namespaces/inkscape\\"><g e:label=\\"kept\\" style=\\"fill: #ff0000\\"><path d=\\"M000.00 000.00L001.00 002.00\\"/></g><rect fill=\\"#ff0000\\" x=\\"1\\" y=\\"2\\" width=\\"3\\" height=\\"4\\" style=\\"stroke:red\\"/></svg>"`;
+
+exports[`ConfigTestCases optimization minimize-xml minimize-xml should compile: containers 1`] = `"<svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 100 100\\"><title>Geometry and colors</title><defs><linearGradient id=\\"paint\\" gradientTransform=\\"matrix(+001.00, 000.00, 000.00, 001.00, +000.00, 000.00)\\"><stop offset=\\"+000.00%\\" stop-color=\\"#ff0000\\"/><stop offset=\\"+001.00\\" stop-color=\\"rgb(0, 0, 255)\\"/></linearGradient><filter id=\\"soft\\"><feGaussianBlur stdDeviation=\\"000.500, +000.250\\"/><feOffset dx=\\"+000.50\\" dy=\\"000.250\\"/></filter></defs><switch><g/><rect x=\\"90\\" y=\\"0\\" width=\\"10\\" height=\\"10\\" fill=\\"#0000ff\\"/></switch><g id=\\"sprite\\"><path fill=\\"#ff0000\\" stroke=\\"rgb(0, 0, 255)\\" transform=\\"translate(+001.00, 0002.00) rotate(000.00, 000.00, -000.00) scale(001.00, +001.00)\\" d=\\"M +000.00, 000.00 L 0020.00, 000.00 A 0010.00, 0010.00, 000.00, 01, 0020.00, 0020.00 z\\"/></g><path id=\\"segments\\" fill=\\"none\\" stroke=\\"black\\" d=\\"M 10 20 L 15 -25 L 20 -30 l .5 .5 l .5 .5 C 1 2 3 4 5 6 C 7 8 9 10 11 12 A 10 20 30 0 1 40 50 A 10 20 30 1 0 .5 -.5 Z M 30 40 L 50 60 Z\\"/><path id=\\"axes\\" fill=\\"none\\" stroke=\\"black\\" d=\\"M 10 20 10 30 10 40 50 40 Z L 60 20 C 1 2 3 4 70 80 L 70 90\\"/><path id=\\"curves\\" fill=\\"none\\" stroke=\\"black\\" d=\\"M10 60C10 60 20 50 30 60L40 60Q40 60 60 60m10 0c0 0 10 -10 20 0l0 10q0 0 10 -10\\"/><path id=\\"relative\\" fill=\\"none\\" stroke=\\"black\\" d=\\"M60 60L61 62 62 64H63 64V65 66C65 67 66 68 67 69S68 70 69 71Q70 72 71 73T72 74A2 3 45 0 1 73 75M74 76 75 77ZL74 78\\"/><use href=\\"#sprite\\" transform=\\"translate(040.00, 000.00)\\"/><rect x=\\"060.00\\" y=\\"060.00\\" width=\\"030.00\\" height=\\"030.00\\" fill=\\"url(#paint)\\"/><rect id=\\"overflow\\" width=\\"10\\" height=\\"10\\" fill=\\"purple\\" transform=\\"translate(5 0e39)\\"/><text x=\\"001.00\\" y=\\"095.00\\" rotate=\\"000.0, +000.00\\"> A <tspan dx=\\"000.0px, +000.00em\\"> B </tspan> C </text></svg>"`;
 
 exports[`ConfigTestCases optimization minimize-xml minimize-xml should compile: disabled 1`] = `
 "<?xml version=\\"1.0\\" encoding=\\"UTF-8\\"?>
@@ -54,10 +100,30 @@ exports[`ConfigTestCases optimization minimize-xml minimize-xml should compile: 
 "
 `;
 
+exports[`ConfigTestCases optimization minimize-xml minimize-xml should compile: numbers 1`] = `"<svg viewBox=\\"0 0 10 10\\" xmlns=\\"http://www.w3.org/2000/svg\\"><style>polygon{fill:red}</style><rect x=\\".5px\\" height=\\"7.5\\" width=\\"8\\" y=\\"1.25\\"/><polygon id=\\"shape\\" points=\\"1 2 3.5 4.5\\"/><text x=\\"1\\"> A <tspan> B </tspan> C </text></svg>"`;
+
 exports[`ConfigTestCases optimization minimize-xml minimize-xml should compile: object 1`] = `
 "<?xml version=\\"1.0\\" encoding=\\"UTF-8\\"?><svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 10 10\\">
 	<style>.dot{fill:red;-webkit-user-select:none;user-select:none}</style>
 	<circle class=\\"dot\\" cx=\\"5\\" cy=\\"5\\" r=\\"4\\"/>
+</svg>"
+`;
+
+exports[`ConfigTestCases optimization minimize-xml minimize-xml should compile: paths 1`] = `
+"<svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 100 100\\">
+  <title>Geometry and colors</title>
+  <defs><linearGradient id=\\"paint\\" gradientTransform=\\"matrix(+001.00, 000.00, 000.00, 001.00, +000.00, 000.00)\\"><stop offset=\\"+000.00%\\" stop-color=\\"#ff0000\\"/><stop offset=\\"+001.00\\" stop-color=\\"rgb(0, 0, 255)\\"/></linearGradient><filter id=\\"soft\\"><feGaussianBlur stdDeviation=\\"000.500, +000.250\\"/><feOffset dx=\\"+000.50\\" dy=\\"000.250\\"/></filter></defs>
+  <g><defs/><g xmlns:unused=\\"urn:unused\\"/><symbol/><marker/><pattern/><mask/><clipPath/></g>
+  <switch><g/><rect x=\\"90\\" y=\\"0\\" width=\\"10\\" height=\\"10\\" fill=\\"#0000ff\\"/></switch>
+  <g id=\\"sprite\\"><path fill=\\"#ff0000\\" stroke=\\"rgb(0, 0, 255)\\" transform=\\"translate(+001.00, 0002.00) rotate(000.00, 000.00, -000.00) scale(001.00, +001.00)\\" d=\\"M0 0H20a10 10 0 010 20z\\"/></g>
+  <path id=\\"segments\\" fill=\\"none\\" stroke=\\"black\\" d=\\"M10 20l5-45 5-5 .5.5.5.5C1 2 3 4 5 6s4 4 6 6A10 20 30 0140 50 10 20 30 10.5-.5zM30 40 50 60z\\"/>
+  <path id=\\"axes\\" fill=\\"none\\" stroke=\\"black\\" d=\\"M10 20V30 40H50zH60C1 2 3 4 70 80V90\\"/>
+  <path id=\\"curves\\" fill=\\"none\\" stroke=\\"black\\" d=\\"M10 60s10-10 20 0H40t20 0m10 0s10-10 20 0v10t10-10\\"/>
+  <path id=\\"relative\\" fill=\\"none\\" stroke=\\"black\\" d=\\"M60 60l1 2 1 2h1 1v1 1c1 1 2 2 3 3s1 1 2 2q1 1 2 2t1 1a2 3 45 011 1m1 1 1 1zv2\\"/>
+  <use href=\\"#sprite\\" transform=\\"translate(040.00, 000.00)\\"/>
+  <rect x=\\"060.00\\" y=\\"060.00\\" width=\\"030.00\\" height=\\"030.00\\" fill=\\"url(#paint)\\"/>
+  <rect id=\\"overflow\\" width=\\"10\\" height=\\"10\\" fill=\\"purple\\" transform=\\"translate(5 0e39)\\"/>
+  <text x=\\"001.00\\" y=\\"095.00\\" rotate=\\"000.0, +000.00\\"> A <tspan dx=\\"000.0px, +000.00em\\"> B </tspan> C </text>
 </svg>"
 `;
 
@@ -67,3 +133,24 @@ exports[`ConfigTestCases optimization minimize-xml minimize-xml should compile: 
 	<circle class=\\"dot\\" cx=\\"5\\" cy=\\"5\\" r=\\"4\\"/>
 </svg>"
 `;
+
+exports[`ConfigTestCases optimization minimize-xml minimize-xml should compile: structure 1`] = `
+"<svg xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"120\\" height=\\"100\\">
+<defs><clipPath id=\\"clip\\"><circle r=\\"20\\" cx=\\"20\\" cy=\\"20\\"/></clipPath><linearGradient id=\\"gradient\\"><stop stop-color=\\"red\\"/><stop offset=\\"1\\" stop-color=\\"blue\\"/></linearGradient><marker id=\\"marker\\" markerWidth=\\"2\\" markerHeight=\\"2\\"><path d=\\"M0 0L2 1 0 2z\\"/></marker></defs>
+<circle id=\\"ellipse\\" cx=\\"20\\" cy=\\"20\\" r=\\"10\\"/>
+<g fill=\\"red\\"><path d=\\"M0 0 5 10l5-5z\\"/><path d=\\"M10 10L20 30L30 20z\\" fill=\\"blue\\"/></g>
+<g transform=\\"translate(30 30) scale(2) scale(.5)\\"><path id=\\"prototype\\" d=\\"M0 0L10 20L20 10z\\" fill=\\"red\\"/><path id=\\"copy\\" d=\\"M0 0L10 20L20 10z\\" fill=\\"red\\"/><use href=\\"#prototype\\"/></g>
+<path d=\\"M10 70H20m30 0H60\\" fill=\\"none\\" stroke=\\"red\\" stroke-width=\\"1\\" stroke-dasharray=\\"none\\" shape-rendering=\\"crispEdges\\" marker-start=\\"none\\" marker-mid=\\"none\\" marker-end=\\"none\\"/>
+<path d=\\"M0 0Q2 2 4 4T8 8\\" stroke=\\"blue\\" fill=\\"none\\"/>
+<path d=\\"M0 0S2 2 4 4s4-2 6 0M0 0Q2 2 4 4T8 8t4-4\\" stroke=\\"blue\\" fill=\\"none\\"/>
+<rect x=\\"80\\" y=\\"50\\" width=\\"30\\" height=\\"10\\" rx=\\"2\\" fill=\\"red\\"/>
+<g fill=\\"red\\" stroke=\\"blue\\" stroke-width=\\"1\\"><rect width=\\"5\\" height=\\"5\\"/><circle r=\\"2\\"/></g>
+<path d=\\"M10000 10000C1 1 2 2 3 3\\" stroke=\\"green\\" fill=\\"none\\"/>
+<use href=\\"#copy\\" x=\\"20\\"/>
+<text x=\\"10\\" y=\\"95\\" style=\\"font-size:12px;font-size:-1px\\">Fallback</text>
+</svg>"
+`;
+
+exports[`ConfigTestCases optimization minimize-xml minimize-xml should compile: symbols 1`] = `"<svg viewBox=\\"0 0 40 40\\" height=\\"40\\" width=\\"40\\" xmlns=\\"http://www.w3.org/2000/svg\\"><defs><symbol viewBox=\\"0 0 40 40\\" id=\\"a\\"><path d=\\"M5 5H35V35H5z\\" fill=\\"red\\"/></symbol><symbol viewBox=\\"0 0 40 40\\" id=\\"z\\"><path d=\\"M10 10L30 30\\" stroke=\\"black\\" stroke-width=\\"2\\"/></symbol></defs><use href=\\"#a\\"/><use href=\\"#z\\"/></svg>"`;
+
+exports[`ConfigTestCases optimization minimize-xml minimize-xml should compile: whitespace 1`] = `"<svg viewBox=\\"0 0 10 10\\" xmlns=\\"http://www.w3.org/2000/svg\\" xmlns:data=\\"urn:application\\" xmlns:e=\\"http://www.inkscape.org/namespaces/inkscape\\"><title>Accessible title</title><desc>Accessible description</desc><metadata><path d=\\"M1 1H3V3Z\\" id=\\"metadata-shape\\"/></metadata><e:view><path d=\\"M4 4H6V6Z\\" id=\\"editor-shape\\"/></e:view><use href=\\"#metadata-shape\\"/><use href=\\"#editor-shape\\"/><defs><path d=\\"M0 0h10v10z\\" id=\\"shape\\"/></defs><use href=\\"#shape\\" data:flag=\\"keep\\" style=\\"fill:red\\"/><text>]]&gt;</text></svg>"`;

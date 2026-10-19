@@ -16181,6 +16181,24 @@ describe("CssSyntax minify — a later value no engine reads keeps the one befor
 		}).code;
 
 	it.each([
+		'a{font-size:12px;font-size:-1px}',
+		'a{width:12px;width:-1px}',
+		'a{stroke-width:2;stroke-width:-1}',
+		'a{font-size:12px}a{font-size:-1px}',
+		'a{font-size:12px}b{color:red}a{font-size:-1px}',
+		`a{font-size:12px;${Array.from({length:33},(_,i)=>`--p${i}:${i}`).join(';')};font-size:-1px}`
+	])('should preserve valid fallback before an unsupported negative amount in %s', css => {
+		const output = minifyFor(css);
+		expect(output).toContain(css.includes('font-size') ? 'font-size:12px' : css.includes('stroke-width') ? 'stroke-width:2' : 'width:12px');
+		expect(output).toContain(css.includes('font-size') ? 'font-size:-1px' : css.includes('stroke-width') ? 'stroke-width:-1' : 'width:-1px');
+		expect(minifyFor(output)).toBe(output);
+	});
+	it('should still drop a positive fallback when the property accepts negative amounts', () => {
+		expect(minifyFor('a{margin-left:12px;margin-left:-1px}')).toBe('a{margin-left:-1px}');
+		expect(minifyFor('a{margin-left:-12px;margin-left:-1px}')).toBe('a{margin-left:-1px}');
+	});
+
+	it.each([
 		["a line opening the list", "linear-gradient(to right,red,blue)", "linear-gradient(90deg,red,blue)"],
 		["two keyword colors", "linear-gradient(transparent,currentcolor)", "linear-gradient(#0000,currentcolor)"],
 		["a unit every engine reads", "linear-gradient(red 10px,blue 2cqw)", "linear-gradient(red 10px,blue 2cqw)"],

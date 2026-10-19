@@ -13,6 +13,15 @@ const config = (name, options) => ({
 		filename: `${name}.js`,
 		assetModuleFilename: `${name}[ext]`
 	},
+	module: {
+		rules: [
+			{
+				test: /animated\.svg$/,
+				type: "asset/resource",
+				generator: { filename: "animated.svg" }
+			}
+		]
+	},
 	...options,
 	optimization: { minimize: true, minimizer: ["..."], ...options.optimization }
 });
@@ -59,5 +68,113 @@ module.exports = [
 	}),
 	config("sorted", {
 		optimization: { minimizeOptions: { xml: { sortAttributes: true } } }
+	}),
+	config("cleaned", {
+		entry: "./editor.js",
+		optimization: {
+			minimizeOptions: {
+				xml: {
+					removeMetadata: true,
+					removeEditorData: true,
+					sortAttributes: true
+				}
+			}
+		}
+	}),
+	...[false, true].map((collapseWhitespace) =>
+		config(collapseWhitespace ? "whitespace" : "attributes", {
+			entry: "./editor.js",
+			optimization: {
+				minimizeOptions: {
+					xml: {
+						collapseWhitespace,
+						removeMetadata: true,
+						removeEditorData: true,
+						removeEmptyAttributes: true,
+						removeUnusedNamespaces: true,
+						sortAttributes: true
+					}
+				}
+			}
+		})
+	),
+	config("numbers", {
+		entry: "./numbers.js",
+		optimization: {
+			minimizeOptions: {
+				xml: {
+					shortenNumbers: true,
+					sortAttributes: true,
+					collapseWhitespace: true
+				}
+			}
+		}
+	}),
+	...[
+		{ name: "colors", xml: { shortenColors: true } },
+		{ name: "paths", xml: { shortenPathData: true } },
+		{
+			name: "containers",
+			xml: { removeEmptyElements: true, collapseWhitespace: true }
+		},
+		{
+			name: "compact",
+			xml: {
+				shortenColors: true,
+				shortenNumbers: true,
+				shortenPathData: true,
+				removeEmptyElements: true,
+				collapseWhitespace: true,
+				removeEmptyAttributes: true,
+				removeUnusedNamespaces: true,
+				sortAttributes: true
+			}
+		}
+	].map(({ name, xml }) =>
+		config(name, {
+			entry: "./compact.js",
+			optimization: { minimizeOptions: { xml } }
+		})
+	),
+	config("symbols", {
+		entry: "./symbols.js",
+		optimization: {
+			minimizeOptions: {
+				xml: { sortSymbols: true, convertShapes: true, sortAttributes: true }
+			}
+		}
+	}),
+	config("constraints", {
+		entry: "./constraints.js",
+		optimization: {
+			minimizeOptions: {
+				xml: {
+					shortenColors: true,
+					shortenNumbers: true,
+					shortenPathData: true,
+					removeMetadata: true,
+					removeEditorData: true,
+					sortSymbols: true,
+					convertShapes: true,
+					removeEmptyElements: true
+				}
+			}
+		}
+	}),
+	config("structure", {
+		entry: "./structure.js",
+		optimization: {
+			minimizeOptions: {
+				xml: {
+					cleanupStructure: true,
+					reusePaths: true,
+					mergePaths: true,
+					sortDefinitions: true,
+					convertShapes: true,
+					shortenPathData: true,
+					shortenNumbers: true
+				}
+			}
+		}
 	})
 ];

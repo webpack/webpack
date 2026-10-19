@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <title>Geometry and colors</title>
+  <defs><linearGradient id="paint" gradientTransform="matrix(+001.00, 000.00, 000.00, 001.00, +000.00, 000.00)"><stop offset="+000.00%" stop-color="#ff0000"/><stop offset="+001.00" stop-color="rgb(0, 0, 255)"/></linearGradient><filter id="soft"><feGaussianBlur stdDeviation="000.500, +000.250"/><feOffset dx="+000.50" dy="000.250"/></filter></defs>
+  <g><defs/><g xmlns:unused="urn:unused"/><symbol/><marker/><pattern/><mask/><clipPath/></g>
+  <switch><g/><rect x="90" y="0" width="10" height="10" fill="#0000ff"/></switch>
+  <g id="sprite"><path fill="#ff0000" stroke="rgb(0, 0, 255)" transform="translate(+001.00, 0002.00) rotate(000.00, 000.00, -000.00) scale(001.00, +001.00)" d="M +000.00, 000.00 L 0020.00, 000.00 A 0010.00, 0010.00, 000.00, 01, 0020.00, 0020.00 z"/></g>
+  <path id="segments" fill="none" stroke="black" d="M 10 20 L 15 -25 L 20 -30 l .5 .5 l .5 .5 C 1 2 3 4 5 6 C 7 8 9 10 11 12 A 10 20 30 0 1 40 50 A 10 20 30 1 0 .5 -.5 Z M 30 40 L 50 60 Z"/>
+  <path id="axes" fill="none" stroke="black" d="M 10 20 10 30 10 40 50 40 Z L 60 20 C 1 2 3 4 70 80 L 70 90"/>
+  <path id="curves" fill="none" stroke="black" d="M10 60C10 60 20 50 30 60L40 60Q40 60 60 60m10 0c0 0 10 -10 20 0l0 10q0 0 10 -10"/>
+  <path id="relative" fill="none" stroke="black" d="M60 60L61 62 62 64H63 64V65 66C65 67 66 68 67 69S68 70 69 71Q70 72 71 73T72 74A2 3 45 0 1 73 75M74 76 75 77ZL74 78"/>
+  <use href="#sprite" transform="translate(040.00, 000.00)"/>
+  <rect x="060.00" y="060.00" width="030.00" height="030.00" fill="url(#paint)"/>
+  <rect id="overflow" width="10" height="10" fill="purple" transform="translate(5 0e39)"/>
+  <text x="001.00" y="095.00" rotate="000.0, +000.00"> A <tspan dx="000.0px, +000.00em"> B </tspan> C </text>
+</svg>

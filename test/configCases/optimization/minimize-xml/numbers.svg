@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="+000.00, 000.00, 0010.000, 0010.000">
+	<style>polygon { fill: #ff0000 }</style>
+	<rect x="+000.500px" y="001.2500" width="0008.00" height="0007.500"/>
+	<polygon id="shape" points="+001.000, 0002.000 0003.500, 0004.500"/>
+	<text x="001.00"> A <tspan> B </tspan> C </text>
+</svg>
