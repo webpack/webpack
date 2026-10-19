@@ -229,6 +229,21 @@ jobs:
 
       - run: yarn link webpack --frozen-lockfile
 
+      # The Chrome `ProfilingPlugin.unittest.js` launches is the build
+      # playwright-core pins, never the runner's own, which moves with the image.
+      - name: Read the pinned browser build
+        id: browser-build
+        run: echo "id=$(node -p "require('playwright-core/package.json').version")" >> "$GITHUB_OUTPUT"
+
+      - name: Cache the pinned browser
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-chrome-${{ steps.browser-build.outputs.id }}-${{ runner.os }}
+
+      - name: Install the pinned browser
+        run: node tooling/retry.js yarn setup:browsers chrome
+
       - name: Cache jest result
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
@@ -460,31 +475,25 @@ jobs:
         continue-on-error: true
         run: yarn benchmark:html-tools:setup
 
-      # Chrome and Firefox are the builds puppeteer-core pins, not the runner's
-      # Chrome or today's `stable`: an engine then moves only in the pull request
-      # bumping puppeteer-core, where an engine-quirk probe failing is the news,
-      # rather than under every pull request at once. Cached by that build id.
+      # Every engine is the build playwright-core pins, not the runner's Chrome
+      # or today's `stable`: an engine then moves only in the pull request bumping
+      # playwright-core, where an engine-quirk probe failing is the news, rather
+      # than under every pull request at once. Cached by that version.
       - name: Read the pinned browser build
         id: browser-build
-        if: matrix.browser != 'webkit'
-        run: node --input-type=module -e "const { PUPPETEER_REVISIONS } = await import('puppeteer-core'); console.log('id=' + PUPPETEER_REVISIONS[process.argv[1]])" ${{ matrix.browser }} >> "$GITHUB_OUTPUT"
+        run: echo "id=$(node -p "require('playwright-core/package.json').version")" >> "$GITHUB_OUTPUT"
 
       - name: Cache the pinned browser
-        if: matrix.browser != 'webkit'
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
-          path: ~/.cache/puppeteer
-          key: puppeteer-${{ matrix.browser }}-${{ steps.browser-build.outputs.id }}-${{ runner.os }}
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ matrix.browser }}-${{ steps.browser-build.outputs.id }}-${{ runner.os }}
 
+      # `--with-deps` for Firefox and WebKit, whose shared libraries a runner does
+      # not carry where it already carries Chrome's; it runs on a cache hit too,
+      # since the cache holds the browser and not the system packages.
       - name: Install the pinned browser
-        if: matrix.browser != 'webkit'
-        run: node tooling/retry.js yarn setup:browsers ${{ matrix.browser }}
-
-      # Pinned by playwright-core already. `--with-deps` because a runner carries
-      # none of WebKit's shared libraries, where it already carries Chrome's.
-      - name: Install WebKit
-        if: matrix.browser == 'webkit'
-        run: node tooling/retry.js node node_modules/playwright-core/cli.js install --with-deps webkit
+        run: node tooling/retry.js yarn setup:browsers ${{ matrix.browser }} ${{ matrix.browser != 'chrome' && '--with-deps' || '' }}
 
       - name: Cache jest result
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
@@ -573,8 +582,9 @@ jobs:
 
       # Both runtimes run the same suites with jest's parallel workers, the
       # HotTestCases ones included. Only the Chrome-driven suites are dropped
-      # (see the testPathIgnorePatterns in test:deno / test:bun), because
-      # puppeteer-core does not load under either.
+      # (see the testPathIgnorePatterns in test:deno / test:bun): they were left
+      # out while puppeteer-core could not load under either, and playwright-core
+      # has not been tried there yet.
       - run: yarn test:${{ matrix.runtime }} --ci
 
   integration:
@@ -677,6 +687,26 @@ jobs:
       - run: yarn link --frozen-lockfile || true
 
       - run: yarn link webpack --frozen-lockfile
+
+      # The Chrome `WebpackDevServer.longtest.js` launches, pinned like every
+      # browser the suites drive; it runs in part b, from Node.js 22.15 up.
+      - name: Read the pinned browser build
+        id: browser-build
+        if: matrix.part == 'b' && !contains(fromJSON('["10.x", "12.x", "14.x", "16.x", "18.x", "20.x"]'), matrix.node-version)
+        shell: bash
+        run: echo "id=$(node -p "require('playwright-core/package.json').version")" >> "$GITHUB_OUTPUT"
+
+      - name: Cache the pinned browser
+        if: steps.browser-build.outputs.id
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          # playwright's own cache, which sits in a different place per OS
+          path: ${{ runner.os == 'Windows' && '~\AppData\Local\ms-playwright' || runner.os == 'macOS' && '~/Library/Caches/ms-playwright' || '~/.cache/ms-playwright' }}
+          key: playwright-chrome-${{ steps.browser-build.outputs.id }}-${{ runner.os }}
+
+      - name: Install the pinned browser
+        if: steps.browser-build.outputs.id
+        run: node tooling/retry.js yarn setup:browsers chrome
 
       - name: Cache jest result
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0

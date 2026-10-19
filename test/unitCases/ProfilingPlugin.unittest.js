@@ -62,7 +62,7 @@ describe("Profiling Plugin", () => {
  */
 
 describe("ProfilingPlugin in real Chrome", () => {
-	/** @type {import("puppeteer-core").Browser} */
+	/** @type {import("playwright-core").Browser} */
 	let browser;
 
 	beforeAll(async () => {

@@ -9,21 +9,17 @@ updates:
       - dependencies
     versioning-strategy: widen
     groups:
-      # The engines the browser suites compare against: puppeteer-core pins the
-      # Chrome and Firefox builds CI installs, playwright-core the WebKit one.
+      # The engines the browser suites compare against: playwright-core pins the
+      # Chrome, Firefox and WebKit builds CI installs.
       # Their own pull request, so a new engine reds only the bump that brought
       # it, and an engine-quirk probe failing there says which workaround can go.
       browsers:
         patterns:
-          - "puppeteer-core"
-          - "@puppeteer/browsers"
           - "playwright-core"
       dependencies:
         patterns:
           - "*"
         exclude-patterns:
-          - "puppeteer-core"
-          - "@puppeteer/browsers"
           - "playwright-core"
         update-types:
           - "minor"
@@ -35,8 +31,6 @@ updates:
           - "major"
         exclude-patterns:
           - "rimraf"
-          - "puppeteer-core"
-          - "@puppeteer/browsers"
           - "playwright-core"
   # The corpora the comparison scripts measure against, one manifest each. They
   # reach no webpack build, so a bump is only ever a wider corpus to sweep — and
