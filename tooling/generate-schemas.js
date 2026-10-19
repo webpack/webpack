@@ -1678,7 +1678,8 @@ const main = async () => {
 	console.log(
 		`${matching} of ${referenced.size + sourceOf.size} schemas derive from their sources, ${identical} byte for byte.`
 	);
-	if (reordered.length > 0) {
+	// Informational only: it reads like a failure, so only `--verbose` lists them.
+	if (verbose && reordered.length > 0) {
 		console.log(
 			`\n${reordered.length} round-trip but are written differently:`
 		);
