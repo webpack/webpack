@@ -27437,6 +27437,12 @@ declare class PrintContext<TPath, TNode, TPrintOptions = object> {
 	rewriteRetractable(index: number, text: string): void;
 
 	/**
+	 * {@link rewriteRetractable} with text that is asked for only once the output
+	 * is read: a piece rewritten many times over is then built once, not each time.
+	 */
+	deferRetractable(index: number, source: { readonly text: string }): void;
+
+	/**
 	 * {@link take} for a top-level node a later sibling may still make dead — the
 	 * unprefixed twin of a vendor-prefixed rule, which can stand anywhere after
 	 * it. The node is emitted as a piece of its own, with its mapping recorded
