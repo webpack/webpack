@@ -74,6 +74,7 @@
     "find-deep-imports": "node tooling/find-deep-webpack-imports.js",
     "find-deep-imports:check": "node tooling/find-deep-webpack-imports.js --check",
     "measure:color-agreement": "node tooling/measure-color-agreement.js",
+    "hash:css-outputs": "node tooling/hash-css-outputs.js",
     "setup:browsers": "node tooling/install-browsers.js",
     "pretest": "yarn lint",
     "test": "yarn test:base",
