@@ -6,12 +6,17 @@ const readStyles = () =>
 		"utf-8"
 	);
 
+const log = console.log;
+// restored even when the test fails or times out before it finishes
+afterEach(() => {
+	console.log = log;
+});
+
 it("should apply a hot update to the extracted stylesheet", function (done) {
 	expect(readStyles()).toContain("color: red;");
 
 	// mini-css-extract-plugin reports the reload on the console: check it there
 	// rather than let it reach the test output
-	const log = console.log;
 	const logs = [];
 	console.log = (...args) => {
 		logs.push(args.join(" "));
