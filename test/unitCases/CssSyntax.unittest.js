@@ -6159,6 +6159,16 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(minify(unknown)).toBe(unknown);
 		});
 
+		it("keeps apart neighbors printing one block where either selector cannot join", () => {
+			// The two later rules join first, and the pair is then offered to the
+			// rule written out before it: the blocks match, the selector shape not.
+			const block = "{color:var(--e)}";
+			expect(minify(`a${block}b${block}c${block}`)).toBe(`a,b,c${block}`);
+			expect(minify(`a:not(.x)${block}b${block}c${block}`)).toBe(
+				`a:not(.x)${block}b,c${block}`
+			);
+		});
+
 		it("answers a pseudo again when the selection changes under it", () => {
 			// Cached per spelling while the selection holds, so a different one has
 			// to throw that away rather than read the first's answer.
@@ -12754,6 +12764,17 @@ describe("CssSyntax minify — what a nesting lowering writes is minified once",
 			);
 		}
 	);
+
+	it("drops the earlier rule a nested cut shrank a later one into", () => {
+		// A rule holding a nested one is no flat rule to shadow, so the copy it is
+		// cut down to meets the earlier rule only once it is keyed again.
+		expect(
+			settled(
+				".t{.t{top:0}}.t{.t{top:0}top:0}.t{.t{top:0}.t{top:0}}.t{.t{top:0}top:0;.t{top:0}}",
+				undefined
+			)
+		).toBe(".t{top:0;.t{top:0}}");
+	});
 
 	it.each([T, undefined])(
 		"joins the rules a dropped block stood between (%p)",
