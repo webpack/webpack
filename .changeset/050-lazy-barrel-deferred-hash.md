@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Rebuild and recheck a lazy barrel in watch when what it defers changes.
+Rebuild a lazy barrel in watch when what it defers changes, and keep the imports and re-exports it still runs.
