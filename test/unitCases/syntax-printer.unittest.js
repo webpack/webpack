@@ -994,6 +994,12 @@ const IMPROVED_CASES = [
 		"var fs=[],parser={p:1,q:2},other={p:1,q:2};console.log(fs.length&&fs[2]());var other$1=other;fs.push(function(){return parser.p+parser.q},function(){return parser.p},function(){return other$1&&other$1.p},function(){return other.q}),console.log(fs.map(function(f){return f()}));"
 	],
 	[
+		"a `&&` holding another on its right once an `if` folds into it, associated to the left, which takes no parentheses",
+		"function Vb(a) { if (13 === a.tag) { var b = a.memoizedState; null === b && (a = a.alternate, null !== a && (b = a.memoizedState)); if (null !== b) return b.dehydrated; } return null; } console.log(Vb({ tag: 13, memoizedState: null, alternate: { memoizedState: { dehydrated: 1 } } }));",
+		{ mangle: false },
+		"function Vb(a){if(13===a.tag){var b=a.memoizedState;if(null===b&&null!==(a=a.alternate)&&(b=a.memoizedState),null!==b)return b.dehydrated}return null}console.log(Vb({tag:13,memoizedState:null,alternate:{memoizedState:{dehydrated:1}}}));"
+	],
+	[
 		"a function read only by `export default`, exported as it is, unless it calls itself",
 		"function render() { return 1; } function count(n) { return n ? count(n - 1) : 0; } export { count }; export default render;",
 		{ mangle: false, module: true },
