@@ -46,6 +46,9 @@ jobs:
     # rebuild callback; main's slowest shard is ~55m, so this only trips on a hang.
     timeout-minutes: 120
     permissions:
+      # A job's own block replaces the workflow's, so CodSpeed's OIDC upload
+      # needs it granted again here.
+      id-token: write
       issues: write
       pull-requests: write
     steps:
