@@ -5095,12 +5095,15 @@ describe("SyntaxTree", () => {
 		const tree = new SyntaxTree();
 		parseInto(tree, "x = { a: [b, c], [d]: `e${f}` };");
 		const types = tree._types;
+		const values = tree._values;
 		tree.release();
 		expect([tree._types.length, tree._values.length, tree._listCount]).toEqual([
 			0, 0, 0
 		]);
+		expect(values.every((value) => value === undefined)).toBe(true);
 		const next = new SyntaxTree();
 		expect(next._types).toBe(types);
+		expect(next._values).toBe(values);
 		const source = "a(b, [c]);";
 		const program = parseInto(next, source);
 		const fresh = new SyntaxTree();
