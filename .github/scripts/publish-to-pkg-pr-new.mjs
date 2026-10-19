@@ -17,29 +17,41 @@ export async function run({ github, context }) {
 	const commitUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/commit/${sha}`;
 
 	const botCommentIdentifier = "<!-- posted by pkg.pr.new -->";
-	const body = `${botCommentIdentifier}
-This PR is packaged and the instant preview is available (${commitUrl}).
+
+	/**
+	 * @param {number} issueNumber PR number
+	 * @returns {string} comment body, the same for every push to the PR
+	 */
+	const commentBody = (issueNumber) => {
+		// WHY: a URL naming the PR instead of the commit installs its latest
+		// build, so later pushes leave the comment as it is and notify nobody.
+		const urls = output.packages
+			.map((p) => p.url.replace(/@[^@/]+$/, `@${issueNumber}`))
+			.join(" ");
+		return `${botCommentIdentifier}
+This PR is packaged and the instant preview of its latest commit is available.
 
 Install it locally:
 
 - npm
 
 \`\`\`shell
-npm i -D webpack@${output.packages.map((p) => p.url).join(" ")}
+npm i -D webpack@${urls}
 \`\`\`
 
 - yarn
 
 \`\`\`shell
-yarn add -D webpack@${output.packages.map((p) => p.url).join(" ")}
+yarn add -D webpack@${urls}
 \`\`\`
 
 - pnpm
 
 \`\`\`shell
-pnpm add -D webpack@${output.packages.map((p) => p.url).join(" ")}
+pnpm add -D webpack@${urls}
 \`\`\`
 `;
+	};
 
 	/**
 	 * @param {number=} issueNumber PR number
@@ -72,8 +84,10 @@ pnpm add -D webpack@${output.packages.map((p) => p.url).join(" ")}
 		}
 
 		const existingComment = await findBotComment(issueNumber);
+		const body = commentBody(issueNumber);
 
 		if (existingComment) {
+			if (existingComment.body === body) return;
 			await github.rest.issues.updateComment({
 				owner: context.repo.owner,
 				repo: context.repo.repo,
