@@ -8,13 +8,13 @@ const PLUGIN_NAME = "ChunkHashOrderPlugin";
 // records the order `createHash` hashes chunks in.
 class ChunkHashOrderPlugin {
 	/**
-	 * @param {import("../../../../").Compiler} compiler compiler
+	 * @param {import("../../../../lib/Compiler")} compiler compiler
 	 */
 	apply(compiler) {
 		/** @type {Record<string, string>} */
 		const declared = { a: "c", c: "b", "runtime~a": "runtime~c" };
 		compiler.hooks.thisCompilation.tap(PLUGIN_NAME, (compilation) => {
-			/** @type {import("../../../../").Chunk[]} */
+			/** @type {import("../../../../lib/graph/Chunk")[]} */
 			const hashed = [];
 			compilation.hooks.chunkHashDependencies.tap(
 				PLUGIN_NAME,
@@ -22,7 +22,7 @@ class ChunkHashOrderPlugin {
 					const name = chunk.name && declared[chunk.name];
 					if (name) {
 						dependencies.add(
-							/** @type {import("../../../../").Chunk} */ (
+							/** @type {import("../../../../lib/graph/Chunk")} */ (
 								compilation.namedChunks.get(name)
 							)
 						);
@@ -42,8 +42,9 @@ class ChunkHashOrderPlugin {
 						if (chunk === target || chunk.hasRuntime() || target.hasRuntime()) {
 							continue;
 						}
-						const round = (/** @type {import("../../../../").Chunk} */ c) =>
-							chunkGraph.getNumberOfEntryModules(c) > 0;
+						const round = (
+							/** @type {import("../../../../lib/graph/Chunk")} */ c
+						) => chunkGraph.getNumberOfEntryModules(c) > 0;
 						if (round(chunk) !== round(target)) continue;
 						compared++;
 						const before = hashed.indexOf(chunk) < hashed.indexOf(target);
@@ -52,7 +53,7 @@ class ChunkHashOrderPlugin {
 						}
 					}
 				}
-				const a = /** @type {import("../../../../").Chunk} */ (
+				const a = /** @type {import("../../../../lib/graph/Chunk")} */ (
 					compilation.namedChunks.get("a")
 				);
 				const order = {
