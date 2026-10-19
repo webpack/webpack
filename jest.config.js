@@ -1,15 +1,13 @@
 "use strict";
 
-// read by test/helpers/testTimeout.js in the workers, which inherit it
-if (process.argv.some((arg) => /^--coverage(=true)?$/.test(arg))) {
-	process.env.WEBPACK_TEST_COVERAGE = "1";
-}
-
-const testTimeout = require("./test/helpers/testTimeout");
+// coverage instrumentation slows every build; test/helpers/testTimeout.js
+// reads this as a global, not from the environment the builds can expose
+const coverage = process.argv.some((arg) => /^--coverage(=true)?$/.test(arg));
 
 /** @type {import("jest").Config} */
 const config = {
-	testTimeout: testTimeout(30000),
+	testTimeout: coverage ? 90000 : 30000,
+	globals: { __WEBPACK_TEST_COVERAGE__: coverage },
 	prettierPath: require.resolve("prettier-2"),
 	forceExit: true,
 	globalSetup: "<rootDir>/test/harness/globalSetup.js",
