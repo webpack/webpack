@@ -26,7 +26,7 @@ exports[`ConfigTestCases concatenate-modules commonjs-wrapped-strict-esm-new-exp
 /******/ 	
 /************************************************************************/
 /*!******************************!*\\\\
-  !*** ./index.js + 4 modules ***!
+  !*** ./index.js + 3 modules ***!
   \\\\******************************/
 
 // MODULE: ./identity.cjs
@@ -52,15 +52,6 @@ class Thing {
 module.exports = Thing;
 
 });
-
-;// ./thing.cjs
-thing_namespaceFn();
-
-;// ./identity.cjs
-identity_namespaceFn();
-
-;// ./reexport.mjs
-
 
 ;// ./entry.mjs
 // strict ESM: the default import of a CommonJS module resolves straight to the
