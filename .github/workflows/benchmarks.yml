@@ -37,9 +37,11 @@ jobs:
       fail-fast: false
       matrix:
         shard: [1/4, 2/4, 3/4, 4/4]
-    # Walltime measures real time, system calls included, so it needs CodSpeed's
-    # dedicated runners: a shared GitHub runner is too noisy to compare against.
-    runs-on: codspeed-macro
+    # Simulation counts instructions rather than time, so a shared GitHub runner
+    # measures it as steadily as a dedicated one and costs nothing. It leaves
+    # system calls out of the measure, which walltime would need CodSpeed's paid
+    # macro runners for.
+    runs-on: ubuntu-latest
     # The harness has no deadline of its own and a watch bench waits on a
     # rebuild callback; main's slowest shard is ~55m, so this only trips on a hang.
     timeout-minutes: 120
@@ -74,19 +76,23 @@ jobs:
         uses: CodSpeedHQ/action@821a40cd6c80e3cfe387caf55668287addd808da # v5.5.0
         with:
           run: yarn benchmark --ci
-          mode: "walltime"
+          mode: "simulation"
         env:
           LAST_COMMIT: 1
           NEGATIVE_FILTER: ${{ github.event_name != 'schedule' && 'on-schedule' || '' }}
           SHARD: ${{ matrix.shard }}
+          # Single libuv thread → deterministic fs-completion order, removing the
+          # last I/O race that perturbs allocation counts between runs.
+          UV_THREADPOOL_SIZE: 1
   benchmark-memory:
     strategy:
       fail-fast: false
       matrix:
         shard: [1/2, 2/2]
-    # Hosted runners mix Intel and AMD hosts, and the same JS makes a different
-    # number of native allocations on each; CodSpeed's macro runners are one type.
-    runs-on: codspeed-macro
+    # Hosted runners mix Intel and AMD hosts, and the same JS can make a different
+    # number of native allocations on each; the CPU step below names the host, and
+    # the sequential file systems keep the rest of a build's order fixed.
+    runs-on: ubuntu-latest
     # The harness has no deadline of its own, so this only trips on a hang.
     timeout-minutes: 120
     env:
