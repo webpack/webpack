@@ -232,7 +232,7 @@ const FILED_BENCHMARK_HTML_OPT_IN_DEFECTS = new Map();
 const FILED_BENCHMARK_CSS_OPT_IN_DEFECTS = new Map([
 	[
 		"Tailwind 4 + daisyUI 5",
-		"webkit only: not a printer defect — `convertApproximateColors` clips `oklch(71% .194 13.428)`, outside sRGB, before `color-mix(in oklab, … 80%, #000)` reads it, which is what the option documents; WebKit paints the mix of the clipped color two bytes from the clipped mix (190,71,91 against 192,71,92)"
+		"chrome, firefox, webkit only: not a printer defect — `convertApproximateColors` clips `oklch(71% .194 13.428)`, outside sRGB, before `color-mix(in oklab, … 80%, #000)` reads it, which is what the option documents; every engine pinned paints the mix of the clipped color a byte or two from the clipped mix (WebKit 190,71,91 against 192,71,92; Chrome 156 and Firefox 157 the same `.link-error` under hover)"
 	]
 ]);
 
@@ -1044,7 +1044,7 @@ describe(`printer output in real ${ENGINE}`, () => {
 		inBatches(probePage, cases, (batch) =>
 			// playwright hands a page function one argument
 			probePage.evaluate(([each, custom]) => {
-				const { canonical, paintedColors } =
+				const { canonical, paintedColors, unquoteFamilies } =
 					/** @type {{ __eq: PageHelpers }} */ (/** @type {unknown} */ (window))
 						.__eq;
 				const probe = document.createElement("div");
@@ -1086,8 +1086,13 @@ describe(`printer output in real ${ENGINE}`, () => {
 						// Under the one name the spec gives the value, its colors painted: the engine
 						// echoes the spelling it was handed — `jump-start` beside `start` — so without
 						// this the tier reads a synonym as a change of meaning.
+						const value = computed.getPropertyValue(name);
+						// a family name quoted or bare is one family, which the engines echo
+						// in either spelling, as the cascade tier already reads it
 						out += `${name}:${paintedColors(
-							canonical(computed.getPropertyValue(name))
+							canonical(
+								name === "font-family" ? unquoteFamilies(value) : value
+							)
 						)}\u0000`;
 					}
 					return out;

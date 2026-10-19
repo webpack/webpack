@@ -182,6 +182,7 @@ const benchmarkDocuments = (minify) => {
  * @property {(tagName: string, attribute: string, value: string | null) => [string | undefined, unknown]} probeReflection the IDL member an attribute reflects, and its value
  * @property {(value: string) => string} canonical a value under the one name the spec gives it
  * @property {(value: string) => string} paintedColors a value with every color it holds painted
+ * @property {(list: string) => string} unquoteFamilies a font family list with every name the bare spelling also names left unquoted
  * @property {(text: string) => string} spacedOnce text as its tokens, spaced one way
  * @property {(element: Element) => string} whereIs an element and its nearest ancestors, for a report
  * @property {(property: string, value: string) => string} cascadeValue a computed value in the one spelling rules are compared in
@@ -1172,6 +1173,7 @@ const installHelpers = (generics) => {
 			probeReflection,
 			canonical,
 			paintedColors,
+			unquoteFamilies,
 			cascadeValue,
 			spacedOnce,
 			whereIs
