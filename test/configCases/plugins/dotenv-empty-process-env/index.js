@@ -1,22 +1,22 @@
 "use strict";
 
 it("should preserve empty process variables without a file default", () => {
-	expect(process.env.WEBPACK_DOTENV_EMPTY_PROCESS_ONLY).toBe("");
-	expect(import.meta.env.WEBPACK_DOTENV_EMPTY_PROCESS_ONLY).toBe("");
+	expect(process.env.DOTENV_EMPTY_PROCESS_ONLY).toBe("");
+	expect(import.meta.env.DOTENV_EMPTY_PROCESS_ONLY).toBe("");
 	expect(
 		Object.prototype.hasOwnProperty.call(
 			import.meta.env,
-			"WEBPACK_DOTENV_EMPTY_PROCESS_ONLY"
+			"DOTENV_EMPTY_PROCESS_ONLY"
 		)
 	).toBe(true);
 });
 
 it("should prefer empty process variables over file values", () => {
-	expect(process.env.WEBPACK_DOTENV_EMPTY_OVERRIDE).toBe("");
-	expect(import.meta.env.WEBPACK_DOTENV_EMPTY_OVERRIDE).toBe("");
+	expect(process.env.DOTENV_EMPTY_OVERRIDE).toBe("");
+	expect(import.meta.env.DOTENV_EMPTY_OVERRIDE).toBe("");
 });
 
 it("should preserve nonempty process variables", () => {
-	expect(process.env.WEBPACK_DOTENV_NONEMPTY).toBe("from-process");
-	expect(import.meta.env.WEBPACK_DOTENV_NONEMPTY).toBe("from-process");
+	expect(process.env.DOTENV_NONEMPTY).toBe("from-process");
+	expect(import.meta.env.DOTENV_NONEMPTY).toBe("from-process");
 });
