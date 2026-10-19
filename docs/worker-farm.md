@@ -23,7 +23,7 @@ This file is the spec. When code and spec disagree, fix one of them in the same 
 | Term             | Meaning                                                                                             |
 | ---------------- | --------------------------------------------------------------------------------------------------- |
 | farm             | A `WorkerFarm`, on the main thread. Owns the queue and up to `max` threads.                         |
-| thread           | One `worker_threads.Worker` running `child.js`. The farm's record of it is a `FarmWorker`.          |
+| thread           | One `worker_threads.Worker` running `WorkerChild.js`. The farm's record of it is a `FarmWorker`.    |
 | child            | The `WorkerChild` inside a thread. Loads modules and answers calls.                                 |
 | target           | What a call runs: `{ module, method }` (absolute path and export name) or `{ handle }`.             |
 | call             | One request with arguments; settled by one response.                                                |
@@ -35,12 +35,12 @@ This file is the spec. When code and spec disagree, fix one of them in the same 
 
 ## Files
 
-| File          | Holds                                                                                           |
-| ------------- | ----------------------------------------------------------------------------------------------- |
-| `farm.js`     | `WorkerFarm`, `getWorkerFarm(compiler)`, the queue, scheduling, lifecycle, the inline path.     |
-| `child.js`    | `WorkerChild` and the thread entry. Never loaded on the main thread except for its JSDoc types. |
-| `protocol.js` | Message typedefs, `MESSAGE_TYPE`, `TransferResult`, `encodeError` / `decodeError`.              |
-| `handle.js`   | `Handle`.                                                                                       |
+| File             | Holds                                                                                             |
+| ---------------- | ------------------------------------------------------------------------------------------------- |
+| `WorkerFarm.js`  | `WorkerFarm`, `getWorkerFarm(compiler, pass)`, the queue, scheduling, lifecycle, the inline path. |
+| `WorkerChild.js` | `WorkerChild` and the thread entry. Never loaded on the main thread except for its JSDoc types.   |
+| `protocol.js`    | Message typedefs, `MESSAGE_TYPE`, `TransferResult`, `encodeError` / `decodeError`.                |
+| `Handle.js`      | `Handle`.                                                                                         |
 
 ## Worker module contract
 
@@ -68,16 +68,18 @@ Same shape on a thread and inline:
 
 `getSharedReference` throws for an unknown or disposed reference.
 
-## Public API (`farm.js`)
+## Public API (`WorkerFarm.js`)
 
 ```js
-const farm = getWorkerFarm(compiler);
+// `undefined` when threads or this pass are off: run as before then.
+const farm = compiler.webpack.experiments.getWorkerFarm(compiler, "minimize");
 const minify = farm.bind(
 	{ module: require.resolve("./minify"), method: "minify" },
 	{ concurrency: 1, retries: 0, workerKey: undefined, inline: false }
 );
 const options = farm.share(minifyOptions);
 const result = await minify([asset, options.ref], { transfer, signal });
+compilation.updateAsset(name, result);
 await options.dispose();
 ```
 
@@ -97,12 +99,13 @@ await options.dispose();
 | `hooks.log`                         | `(name, type, args)` for each log entry, from threads and inline.                                                                                                            |
 | `WorkerFarm.isThreadingAvailable()` | Whether `require("worker_threads")` succeeds.                                                                                                                                |
 
-### `getWorkerFarm(compiler)`
+### `getWorkerFarm(compiler, pass)`
 
-Factory lookup, not constructor injection: a consumer calls it where it needs the farm.
+Factory lookup, not constructor injection: a consumer calls it where it needs the farm. Public as `webpack.experiments.getWorkerFarm`, so a plugin reaches it through `compiler.webpack.experiments.getWorkerFarm` and the copy of webpack running the build.
 
 - Keyed by `compiler.root` in a module-level `WeakMap`, so child compilers share the root's farm.
-- Created on first call with options from the `threads` option (see [Configuration](#configuration)).
+- Returns `undefined` when `experiments.threads` is off or `passes[pass]` is `false`; the caller then runs the way it did before the farm.
+- Created on first call with options from `experiments.threads` (see [Configuration](#configuration)).
 - On creation it taps `compiler.root.hooks.shutdown` to `end()` the farm and delete the entry, and taps `farm.hooks.log` into the root's `infrastructureLog` hook and `infrastructureLogger`, the way `getInfrastructureLogger` does.
 
 ## Protocol (`protocol.js`)
@@ -157,7 +160,7 @@ A call with `signal`:
 
 ## Lifecycle
 
-**Spawn.** Lazily, from dispatch or `warmup`. `new Worker(child.js, { workerData: { kind, workerId }, resourceLimits })`. `execArgv` is left to Node, which passes on the parent's flags a thread accepts; an explicit list containing a per-process flag such as `--max-old-space-size` makes `new Worker` throw. Then `init` is posted. A thread with nothing in flight idles once it is `ready`.
+**Spawn.** Lazily, from dispatch or `warmup`. `new Worker(WorkerChild.js, { workerData: { kind, workerId } })`. `execArgv` is left to Node, which passes on the parent's flags a thread accepts; an explicit list containing a per-process flag such as `--max-old-space-size` makes `new Worker` throw. Then `init` is posted. A thread with nothing in flight idles once it is `ready`.
 
 **Idle.** A thread with nothing in flight is released with `unref()` at once, so an idle farm never keeps the process alive, and starts an `idleTimeout` timer (itself released with `unref()`) unless the farm is at `min` threads. When the timer fires and the thread is still idle, it is terminated. Posting a call clears the timer and `ref()`s the thread.
 
@@ -200,26 +203,38 @@ The farm replays each entry on `hooks.log`; `getWorkerFarm` forwards it to the c
 
 ## Configuration
 
-A top-level `threads` option (`parallelism` is taken: it limits concurrent module builds).
+`experiments.threads`, off by default. `parallelism` is a different option: it limits concurrent module builds.
 
-| Value                | Farm options                                        |
-| -------------------- | --------------------------------------------------- |
-| `undefined` / `true` | `max: cores - 1`                                    |
-| `false` / `0`        | `max: 0`, everything inline                         |
-| number `n`           | `max: n`                                            |
-| object               | `{ max, min, idleTimeout }` with the above defaults |
+```js
+module.exports = {
+	experiments: {
+		threads: {
+			max: 4, // threads; default: CPUs - 1, `0` runs the passes inline
+			passes: { minimize: true } // each pass defaults to `true`
+		}
+	}
+};
+```
 
-Defaults: `min: 0`, `idleTimeout: 30000`, `strictClone: false`. `cores` is `os.cpus().length`, as in `minimizer-webpack-plugin`.
+| Value                  | Effect                                                                                 |
+| ---------------------- | -------------------------------------------------------------------------------------- |
+| `false` (default)      | No farm; every pass runs as it did before the farm.                                    |
+| `true`                 | `{ max: cores - 1, passes: { minimize: true } }`.                                      |
+| `max: n`               | `max: Math.floor(n)`.                                                                  |
+| `passes.<pass>: false` | That pass gets no farm and keeps its own way of running (the minimizer: its own pool). |
+
+The rest is fixed: `min: 0`, `idleTimeout: 30000`, `strictClone: false`. `cores` is `os.cpus().length`, as in `minimizer-webpack-plugin`. Nothing reads `min` or `idleTimeout` from the configuration until a build needs them.
 
 ## First consumer
 
 `minimizer-webpack-plugin` (webpack org) today builds a `jest-worker` pool per compilation and ends it after the assets are minified. With the farm it binds `dist/minify.js` once per compiler, shares the minimizer options once per compilation, and never ends the farm itself. That change lands in the plugin's repository; webpack only exposes `getWorkerFarm`.
+
+Source maps were measured and rejected: shipping an asset's `Source` tree to a thread costs more on the main thread (41–45 ms to serialize a 1.5 MB chunk) than composing its map in place (15–37 ms), and the thread then composes it slower, without the main thread's caches. Work fits the farm when its compute per byte of input is high.
 
 Loaders on threads come later: they need `callMain` and handles for the loader context.
 
 ## Open questions
 
 1. `encoding: "webpack"`: make `share` return `Promise<SharedReference>`, or keep `share` synchronous and encode on first push?
-2. Expose `getWorkerFarm` as `compiler.webpack.util.getWorkerFarm`, or as a `Compiler` method?
-3. `idleTimeout` default: 30 s keeps threads warm across typical watch rebuilds; shorter frees memory sooner.
-4. Handles live until `end`. A long watch session that exposes per compilation needs a `release`; add it with the first such consumer.
+2. `idleTimeout` default: 30 s keeps threads warm across typical watch rebuilds; shorter frees memory sooner.
+3. Handles live until `end`. A long watch session that exposes per compilation needs a `release`; add it with the first such consumer.

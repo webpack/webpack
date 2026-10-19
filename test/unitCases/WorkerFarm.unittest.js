@@ -1,8 +1,8 @@
 "use strict";
 
 const path = require("path");
-const WorkerFarm = require("../../lib/util/worker/farm");
-const Handle = require("../../lib/util/worker/handle");
+const WorkerFarm = require("../../lib/util/worker/WorkerFarm");
+const Handle = require("../../lib/util/worker/Handle");
 const { TransferResult } = require("../../lib/util/worker/protocol");
 
 const TARGET = path.resolve(__dirname, "../fixtures/worker-farm/target.js");
@@ -14,7 +14,7 @@ const BROKEN = path.resolve(__dirname, "../fixtures/worker-farm/broken.js");
  */
 const target = (method) => ({ module: TARGET, method });
 
-/** @typedef {import("../../lib/util/worker/farm").FarmOptions} FarmOptions */
+/** @typedef {import("../../lib/util/worker/WorkerFarm").FarmOptions} FarmOptions */
 /** @typedef {[string, string, unknown[] | undefined]} LogCall */
 
 /**
@@ -129,6 +129,46 @@ describe("WorkerFarm", () => {
 			const farm = createFarm({ max: 0, strictClone: false });
 			const fn = () => 1;
 			expect(await farm.run(target("add"), [fn, ""])).toBe(`${fn}`);
+		});
+	});
+
+	describe("experiments.threads", () => {
+		it("gives a pass the farm only when threads and that pass are on", async () => {
+			const os = require("os");
+			const webpack = require("../../lib/webpack");
+			const { getWorkerFarm } = require("../../lib/index").experiments;
+			const cores = Math.max(os.cpus().length - 1, 0);
+
+			/**
+			 * @param {import("../../declarations/WebpackOptions").Experiments["threads"]} threads the option
+			 * @returns {WorkerFarm | undefined} what the minimize pass gets
+			 */
+			const farmFor = (threads) =>
+				getWorkerFarm(
+					webpack({ entry: "data:text/javascript,1", experiments: { threads } }),
+					"minimize"
+				);
+
+			expect(farmFor(undefined)).toBeUndefined();
+			expect(farmFor(false)).toBeUndefined();
+			expect(farmFor({ passes: { minimize: false } })).toBeUndefined();
+
+			for (const [threads, max] of /** @type {[import("../../declarations/WebpackOptions").Experiments["threads"], number][]} */ ([
+				[true, cores],
+				[{}, cores],
+				[{ max: 3 }, 3],
+				[{ max: 2.5, passes: { minimize: true } }, 2],
+				[{ max: 0 }, 0]
+			])) {
+				const farm = /** @type {WorkerFarm} */ (farmFor(threads));
+				expect(farm.options.max).toBe(max);
+				await farm.end();
+			}
+
+			const inline = /** @type {WorkerFarm} */ (farmFor({ max: 0 }));
+			const info = /** @type {Info} */ (await inline.run(target("info"), []));
+			expect(info.isWorker).toBe(false);
+			await inline.end();
 		});
 	});
 
@@ -369,7 +409,10 @@ describe("WorkerFarm", () => {
 		it("gives each compiler one farm, logs through it and ends it on close", async () => {
 			const webpack = require("../../lib/webpack");
 			const { getWorkerFarm } = WorkerFarm;
-			const compiler = webpack({ entry: "data:text/javascript,1" });
+			const compiler = webpack({
+				entry: "data:text/javascript,1",
+				experiments: { threads: true }
+			});
 			/** @type {LogCall[]} */
 			const logs = [];
 			compiler.hooks.infrastructureLog.tap("test", (name, type, args) => {
@@ -377,8 +420,10 @@ describe("WorkerFarm", () => {
 				return true;
 			});
 
-			const farm = getWorkerFarm(compiler);
-			expect(getWorkerFarm(compiler)).toBe(farm);
+			const farm = /** @type {WorkerFarm} */ (
+				getWorkerFarm(compiler, "minimize")
+			);
+			expect(getWorkerFarm(compiler, "minimize")).toBe(farm);
 			expect(await farm.run(target("log"), ["from thread"])).toBe("logged");
 			expect(logs).toEqual([["worker-farm/test", "info", ["from thread"]]]);
 
@@ -388,15 +433,18 @@ describe("WorkerFarm", () => {
 			})
 			);
 			expect(farm.stats.workers).toBe(0);
-			expect(getWorkerFarm(compiler)).not.toBe(farm);
-			await getWorkerFarm(compiler).end();
+			const next = /** @type {WorkerFarm} */ (
+				getWorkerFarm(compiler, "minimize")
+			);
+			expect(next).not.toBe(farm);
+			await next.end();
 		});
 	});
 
 	describeThreads("WorkerChild", () => {
 		it("answers the farm's messages over a port", async () => {
 			const { MessageChannel } = require("worker_threads");
-			const WorkerChild = require("../../lib/util/worker/child");
+			const WorkerChild = require("../../lib/util/worker/WorkerChild");
 
 			const { port1, port2 } = new MessageChannel();
 			/** @type {EXPECTED_ANY[]} */
