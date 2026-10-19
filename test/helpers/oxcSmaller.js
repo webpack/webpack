@@ -222,6 +222,7 @@ const OXC_SMALLER_BY_REASON = [
 			"swc exec: issue_6750_2",
 			"swc exec: try_catch_2",
 			"swc exec: try_catch_5",
+			"swc minifier: fixture/collapse-vars/trivial-literal-chain/input.js",
 			"swc minifier: fixture/issues/6751/1/input.js",
 			"swc minifier: fixture/issues/9785/input.js",
 			"swc minifier: fixture/no-side-effect/input.js",
