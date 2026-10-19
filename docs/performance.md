@@ -57,15 +57,3 @@ Read the "emitted nothing" note first: a case whose build now errors contributes
 ## Keep instance shapes stable
 
 Initialize **every** instance field in the constructor — `undefined`/`null` for those first assigned later. A first assignment outside the constructor forces a V8 hidden-class (Shape) transition, splitting instances across shapes: inline caches go polymorphic/megamorphic (a hot read can cost ~2× at two shapes, more when megamorphic), and code optimized for the first shape deopts with `wrong map`. Never `delete` a field (dictionary mode); set it to `undefined`. One trailing field gains little, but the rule is uniform so reviewers needn't judge case by case — it's why `Dependency` sets all its `_loc*` slots up front. Deliberate symbol-keyed sparse slots are the documented exception.
-
-## Startup cost
-
-Every build, CLI run and minimizer worker starts cold, and most of that start is V8 compiling the code it loads (each parser or printer costs 10–30 ms and 1.4–3 MB to load). So pay only for what this input and these options use:
-
-- **Load on first use.** A module some inputs, languages or options never need is reached through a facade getter (`syntax.js`) or `memoize(() => require(…))` at the point of use, never a top-level `require`; HTML without CSS never loads the CSS parser, and CSS without an SVG `data:` URL never loads the HTML parser.
-- **Keep what callers need without parsing in a light module** (`util/dataURL`, `ModuleSourceTypeConstants`): constants, option pickers and language lists, never read off a parser, printer or plugin.
-- **An option that turns work off turns its cost off too**: build its tables, regexes and closures on first use, not at load or construction.
-- **Keep laziness in one place** — the facade or memoize helper — not ad-hoc `require()` inside function bodies, so the move to ES modules stays mechanical.
-- **No `i` flag on a regex with a non-ASCII range**: V8 case-folds the whole range at compile time (8–16 ms measured); spell keywords in both ASCII cases instead.
-- **Workers and child processes share none of the parent's in-process state** (only `process.env` is inherited): hand them what the parent set up through the environment, as `bin/webpack.js` does with the compile cache through `NODE_COMPILE_CACHE`.
-- **Prove it by counting**: run the entry point in a fresh process and assert which `lib/` files `require.cache` holds, as `HtmlSyntax.unittest.js` "what it loads" does; gate Node-only APIs on `!process.versions.bun && !process.versions.deno`, not on the function existing.
