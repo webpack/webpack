@@ -1,7 +1,7 @@
 "use strict";
 
-/** @type {import("../../../../").Configuration[]} */
-module.exports = [false, true].map((concatenateModules) => ({
+/** @type {import("../../../../").Configuration} */
+module.exports = {
 	mode: "production",
 	module: {
 		rules: [
@@ -13,7 +13,6 @@ module.exports = [false, true].map((concatenateModules) => ({
 		]
 	},
 	optimization: {
-		minimize: false,
-		concatenateModules
+		minimize: false
 	}
-}));
+};
