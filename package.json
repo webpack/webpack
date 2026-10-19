@@ -144,7 +144,7 @@
     "graceful-fs": "^4.2.11",
     "mime-db": "^1.54.0",
     "minimizer-webpack-plugin": "^5.13.0",
-    "schema-utils": "^4.8.0",
+    "schema-utils": "^4.8.1",
     "tapable": "^2.3.0",
     "watchpack": "^2.6.3",
     "webpack-sources": "^3.6.0"
