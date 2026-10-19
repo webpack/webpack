@@ -24,7 +24,7 @@ Five habits that counter the usual coding-agent failures (assuming silently, ove
 
 These habits are working when diffs carry only requested changes, code is simple the first time, and clarifying questions come before implementation rather than after mistakes.
 
-**Recommend a fresh session when it pays.** Every call re-reads the whole session, so a call at 500k tokens of context costs several times one in a fresh session. When a task is done and the next one needs little of this context, suggest starting a new session with a short handoff brief; it is only a recommendation, and staying is right when the context saves explaining everything again. Hand read-heavy investigation (transcripts, large logs, wide searches) to a subagent, so the reading stays out of this context. A run longer than about ten minutes goes in the background once, without progress polls ([how](docs/verifying.md#long-runs)). Never read a generated or very large file whole (type declarations, generated tables, snapshots): search for the symbol, then read that range.
+**Recommend a fresh session when it pays.** Every call re-reads the whole session, so a call at 500k tokens of context costs several times one in a fresh session. When a task is done and the next one needs little of this context, suggest starting a new session with a short handoff brief; it is only a recommendation, and staying is right when the context saves explaining everything again. Hand read-heavy investigation (transcripts, large logs, wide searches) to a subagent, so the reading stays out of this context. A run longer than about ten minutes goes in the background once, with its output in a file and no progress polls. Never read a generated or very large file whole (type declarations, generated tables, snapshots): search for the symbol, then read that range.
 
 ## Commands
 
@@ -59,7 +59,7 @@ Rules the map carries that apply everywhere:
 
 > [!REQUIRED] > **Never hand-edit what `yarn fix:special` generates**, even when it also reformats files you didn't touch. That churn means your toolchain resolved differently from CI's: commit only your own hunks, then **verify them against the generator** (re-run and diff) — never hand-write what you think it would emit. A hand-written JSDoc block missing the `@since` line the schema's `added` keyword produces, or a `types.d.ts` member the JSDoc implies, fails `lint` with only `… need to be updated`.
 
-**A nested minifier needs the outer one's options**, such as `output.environment` reaching the CSS minifier inside `lib/html/htmlMinify.js` ([why](docs/syntax.md#html)).
+**A nested minifier gets the outer one's options.** When one language is minified inside another (CSS or SVG inside HTML, SVG inside CSS), pass the inner minifier every option the outer one received, or the same code minifies differently inline and on its own.
 
 **Adding a dependency type or runtime requirement** needs three pieces wired together (a `makeSerializable` registration among them): read [docs/architecture.md](docs/architecture.md#adding-a-dependency-type-or-runtime-requirement) first.
 
