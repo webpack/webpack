@@ -5,17 +5,17 @@ const order = JSON.parse(
 	fs.readFileSync(path.join(__dirname, "order.json"), "utf8")
 );
 
-it("should hash a chunk after the chunks it declares as hash dependencies", () => {
-	const position = (name) => order.hashed.indexOf(name);
-	expect(position("b")).toBeLessThan(position("c"));
-	expect(position("c")).toBeLessThan(position("a"));
-	expect(position("runtime~c")).toBeLessThan(position("runtime~a"));
+const hashedOf = (names) => order.hashed.filter((name) => names.includes(name));
+
+it("should hash entry chunks after their declared dependencies, by id otherwise", () => {
+	// a -> c -> b pulls c and b ahead of a; bundle keeps its place by id.
+	expect(hashedOf(["a", "b", "bundle", "c"])).toEqual(["b", "c", "a", "bundle"]);
 });
 
-it("should keep id order between chunks no declaration relates", () => {
-	expect(order.hashed.indexOf("bundle")).toBeLessThan(
-		order.hashed.indexOf("c")
-	);
+it("should hash runtime chunks after their declared dependencies", () => {
+	expect(
+		hashedOf(["runtime~a", "runtime~b", "runtime~bundle", "runtime~c"])
+	).toEqual(["runtime~b", "runtime~bundle", "runtime~c", "runtime~a"]);
 });
 
 it("should give the runtime template the order createHash uses", () => {
@@ -24,5 +24,6 @@ it("should give the runtime template the order createHash uses", () => {
 });
 
 it("should expose the declared dependencies of a chunk", () => {
-	expect(order.dependenciesOfA).toEqual(["c"]);
+	// The CommonJS chunk format declares the runtime chunk its startup requires.
+	expect(order.dependenciesOfA.sort()).toEqual(["c", "runtime~a"]);
 });
