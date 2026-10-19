@@ -24,6 +24,8 @@ Five habits that counter the usual coding-agent failures (assuming silently, ove
 
 These habits are working when diffs carry only requested changes, code is simple the first time, and clarifying questions come before implementation rather than after mistakes.
 
+**One task per session.** Every call re-reads the whole session, so a call at 500k tokens of context costs several times one in a fresh session. Once a task's PR is open or merged, end with a short handoff brief instead of starting the next task here, and never drive several PRs from one session. Hand read-heavy investigation (transcripts, large logs, wide searches) to a subagent, so the reading stays out of this context. A run longer than about ten minutes goes in the background once, without progress polls ([how](docs/verifying.md#long-runs)).
+
 ## Commands
 
 Use **yarn**, not npm. A fresh checkout has no `node_modules`: if a script fails on a missing module, run `yarn --frozen-lockfile` first, the same command CI uses. Every command is a `package.json` script; these are the ones whose use isn't obvious from the name:
