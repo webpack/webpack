@@ -47,8 +47,10 @@ module.exports = async (options) => {
 		// headless shell, so it renders the way the browser people run does
 		if (engine === "chrome") launchOptions.channel = "chromium";
 	} else {
+		// playwright drives Firefox and WebKit through its own patches, so only
+		// its builds of those launch, where any Chrome does
 		throw new Error(
-			`no ${engine} to launch: run \`yarn setup:browsers ${engine}\`, or point ${engine.toUpperCase()}_EXECUTABLE_PATH at one`
+			`no ${engine} to launch: run \`yarn setup:browsers ${engine}\`, or point ${engine.toUpperCase()}_EXECUTABLE_PATH at ${engine === "chrome" ? "a Chrome" : `playwright's build of ${engine}`}`
 		);
 	}
 	const browser = await type.launch(launchOptions);

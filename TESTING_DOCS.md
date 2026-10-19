@@ -211,10 +211,11 @@ the lockfile: run `yarn setup:browsers chrome` first, or set
 three as one matrix. Fetch the browser first — `yarn setup:browsers` (all three,
 or name one; `--with-deps` also installs the system libraries Firefox and WebKit
 need) — which installs into playwright's own cache (`PLAYWRIGHT_BROWSERS_PATH`,
-defaulting to `~/.cache/ms-playwright` on Linux); `FIREFOX_EXECUTABLE_PATH` and
-`WEBKIT_EXECUTABLE_PATH` point at one already on the machine. Firefox and WebKit
-are playwright's own builds of those engines, patched for automation; Chrome is
-the stock Chrome for Testing. It compares
+defaulting to `~/.cache/ms-playwright` on Linux). Firefox and WebKit are
+playwright's own builds of those engines, patched for automation, so
+`FIREFOX_EXECUTABLE_PATH` and `WEBKIT_EXECUTABLE_PATH` must point at such a
+build, never a stock browser; Chrome is the stock Chrome for Testing, and
+`CHROME_EXECUTABLE_PATH` takes any Chrome. It compares
 effects, never CSSOM text: a stylesheet by the styles elements built from its
 selectors compute, at the widths its queries switch on; a page by its DOM and
 its render, with the dark color scheme read through each frame's own. Media is
