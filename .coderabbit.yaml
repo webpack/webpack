@@ -22,7 +22,8 @@ reviews:
   related_issues: true
   related_prs: true
   poem: false
-  review_status: true
+  # Off: each status edit wakes every agent session watching the PR.
+  review_status: false
   commit_status: false
   fail_commit_status: false
 
