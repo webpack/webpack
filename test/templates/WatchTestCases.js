@@ -452,7 +452,11 @@ const describeCases = (config) => {
 													];
 													for (const file of unseenChanges) {
 														if (
-															isWithin(file, reported) ||
+															// a file watched itself is not seen through its directory, which
+															// reports a sibling added next to it before the file's own change
+															(lastFileDependencies.has(file)
+																? reported.includes(file)
+																: isWithin(file, reported)) ||
 															reported.some((item) => isWithin(item, [file]))
 														) {
 															unseenChanges.delete(file);
