@@ -16376,8 +16376,8 @@ declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 	): void;
 
 	/**
-	 * Bind a function declaration in the block holding it, where it is lexical
-	 * even when sloppy-mode Annex B also hoists it.
+	 * Bind a function declaration in the block holding it, when it does not
+	 * hoist to the enclosing scope.
 	 */
 	blockPreWalkFunctionDeclaration(
 		statement: FunctionDeclaration | MaybeNamedFunctionDeclaration
