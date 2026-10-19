@@ -329,7 +329,10 @@ const describeCases = (config) => {
 						 * @param {(err?: Error) => void} done done callback
 						 */
 						const closeAfterFatalError = (compiler, err, done) => {
-							compiler.close(() => handleFatalError(err, done));
+							compiler.close((closeErr) => {
+								if (closeErr) return done(closeErr);
+								handleFatalError(err, done);
+							});
 						};
 
 						/**
