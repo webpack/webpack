@@ -84,7 +84,9 @@ jobs:
       fail-fast: false
       matrix:
         shard: [1/2, 2/2]
-    runs-on: ubuntu-latest
+    # Hosted runners mix Intel and AMD hosts, and the same JS makes a different
+    # number of native allocations on each; CodSpeed's macro runners are one type.
+    runs-on: codspeed-macro
     # The harness has no deadline of its own, so this only trips on a hang.
     timeout-minutes: 120
     env:
@@ -119,6 +121,11 @@ jobs:
           node -e 'const os=require("os");
           const toGb=b=>(b/1024**3).toFixed(2)+" GB";
           console.log(`--- Memory Status ---\nTotal: ${toGb(os.totalmem())}\nFree:  ${toGb(os.freemem())}\nUsed:  ${toGb(os.totalmem()-os.freemem())}`)'
+
+      # Runners differ by host CPU, and identical JS work can make a different number
+      # of native allocations on two runs; log the model to match outliers to hosts.
+      - name: Check CPU
+        run: lscpu | grep -E '^(Model name|CPU\(s\)|Thread\(s\) per core|Core\(s\) per socket|Socket\(s\)):'
 
       # Each case is measured in its own fresh process, so its result does not
       # depend on the shard. All cases in one job exceed CodSpeed's upload limit.
