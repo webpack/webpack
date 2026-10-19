@@ -2,7 +2,9 @@
 
 // coverage instrumentation slows every build; test/helpers/testTimeout.js
 // reads this as a global, not from the environment the builds can expose
-const coverage = process.argv.some((arg) => /^--coverage(=true)?$/.test(arg));
+const coverage = process.argv.some((arg) =>
+	/^--(coverage|collectCoverage|collect-coverage)(=true)?$/.test(arg)
+);
 
 /** @type {import("jest").Config} */
 const config = {
