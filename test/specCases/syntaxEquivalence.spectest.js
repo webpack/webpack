@@ -680,10 +680,8 @@ describe(`printer output in real ${ENGINE}`, () => {
 	}, 300000);
 
 	afterAll(async () => {
-		if (page) await page.close();
-		if (probePage) await probePage.close();
 		if (browser) await browser.close();
-	});
+	}, FILE_TIMEOUT);
 
 	/**
 	 * Every page in `cases`, compared as the engine builds it: the facets it
@@ -2104,7 +2102,7 @@ describe("a lowering computes as the spelling it replaces", () => {
 
 	afterAll(async () => {
 		if (browser) await browser.close();
-	});
+	}, FILE_TIMEOUT);
 
 	/**
 	 * Every probe's computed value under one stylesheet.
@@ -2320,7 +2318,7 @@ describe("a color rewrite paints as the color it replaced", () => {
 
 	afterAll(async () => {
 		if (browser !== undefined) await browser.close();
-	});
+	}, FILE_TIMEOUT);
 
 	/**
 	 * One color, in a spelling drawn from the seeded sequence.
@@ -2774,9 +2772,8 @@ describe("a distant merge keeps every element's cascade", () => {
 	}, FILE_TIMEOUT);
 
 	afterAll(async () => {
-		if (page !== undefined) await page.close();
 		if (browser !== undefined) await browser.close();
-	});
+	}, FILE_TIMEOUT);
 
 	/**
 	 * @param {StylePair[]} pairs the pairs
@@ -2913,9 +2910,8 @@ describe(`engine quirks a workaround depends on in real ${ENGINE}`, () => {
 	}, FILE_TIMEOUT);
 
 	afterAll(async () => {
-		if (page !== undefined) await page.close();
 		if (browser !== undefined) await browser.close();
-	});
+	}, FILE_TIMEOUT);
 
 	const quirks = ENGINE_QUIRKS.filter(({ engines }) => engines.includes(ENGINE));
 	if (quirks.length === 0) {
@@ -2945,9 +2941,8 @@ describe(`declaration order in real ${ENGINE}`, () => {
 	}, FILE_TIMEOUT);
 
 	afterAll(async () => {
-		if (page !== undefined) await page.close();
 		if (browser !== undefined) await browser.close();
-	});
+	}, FILE_TIMEOUT);
 
 	// The engine, not the data, says which longhands each property sets, so a
 	// spec relating two properties before `mdn-data` does fails here first.
@@ -3020,10 +3015,11 @@ describe("a minified page renders as the page it came from", () => {
 		skipAdoptedIframes = await dropsAdoptedIframeBox(page);
 	}, FILE_TIMEOUT);
 
+	// WHY: closing WebKit outlasted Jest's 30s hook default once every test had
+	// passed; closing the browser closes its pages, so none is closed first
 	afterAll(async () => {
-		if (page !== undefined) await page.close();
 		if (browser !== undefined) await browser.close();
-	});
+	}, FILE_TIMEOUT);
 
 	/**
 	 * @template T
