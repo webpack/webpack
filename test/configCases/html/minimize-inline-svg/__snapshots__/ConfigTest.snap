@@ -20,7 +20,7 @@ exports[`ConfigTestCases html minimize-inline-svg minimize-inline-svg should com
 <svg viewBox=\\"0 0 24 24\\" xmlns=http://www.w3.org/2000/svg>
 	
 	<path d=\\"m0 0v80h-112M10 20V30H40s10 10 20 20\\" transform=\\"translate(1 2)\\"/>
-	<metadata><path id=metadata-shape d=\\"M1 1H3V3Z\\"/></metadata><use href=#metadata-shape />
+	<metadata><path id=metadata-shape d=\\"M1 1H3V3z\\"/></metadata><use href=#metadata-shape />
 	<rect width=1.5px height=2></rect>
 </svg>
 <img alt src=\\"data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'><rect width='1.5' transform='translate(5) scale(2) rotate(30)'/></svg>\\">

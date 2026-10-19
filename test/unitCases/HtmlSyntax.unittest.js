@@ -3438,6 +3438,96 @@ describe("parseHtml", () => {
 		});
 
 		const structure = { xml: true, mode: /** @type {const} */ ('minify'), cleanupSvgStructure: true, reuseSvgPaths: true, mergeSvgPaths: true, sortSvgDefinitions: true };
+		it.each([
+			['rx="2" ry="2"', 'rx="2"'],
+			['rx="02.500" ry="2.5"', 'rx="02.500"'],
+			['rx=".1" ry=".1"', 'rx=".1"'],
+			...['rx="2"', 'ry="2"', 'rx="2" ry="3"', 'rx="0" ry="0"', 'rx="-0" ry="-0"', 'rx="-2" ry="-2"', 'rx="2px" ry="2px"', 'rx="2%" ry="2%"', 'rx="1e2" ry="1e2"', 'rx="1000001" ry="1000001"', 'rx="2" ry="2" id="round"'].map(value => [value, value])
+		])('should remove only an exactly redundant rectangle radius in %s', (attributes, expected) => {
+			const source = `<svg xmlns="${svg}"><rect width="20" height="10" ${attributes}/></svg>`;
+			const processor = new SourceProcessor();
+			const once = processor.process(source, structure).code;
+			expect(once).toBe(source.replace(attributes, expected));
+			expect(processor.process(once, structure).code).toBe(once);
+			expect(processor.process(source, { ...structure, cleanupSvgStructure: false }).code).toBe(source);
+		});
+		it.each([
+			['M0 0S2 2 4 4C6 6 8 2 10 4', 'M0 0S2 2 4 4s4-2 6 0'],
+			['M0 0s2 2 4 4c2 2 4 -2 6 0', 'M0 0s2 2 4 4 4-2 6 0'],
+			['M0 0Q2 2 4 4T8 8Q10 10 12 4', 'M0 0Q2 2 4 4T8 8t4-4'],
+			['M0 0q2 2 4 4t4 4q2 2 4 -4', 'M0 0q2 2 4 4t4 4 4-4'],
+			['M0 0T4 4Q8 8 12 12', 'M0 0T4 4t8 8'],
+			['M0 0t4 4q4 4 8 8', 'M0 0t4 4 8 8']
+		])('should retain exact reflected controls after authored shorthand in %s', (value, expected) => {
+			const source = `<svg xmlns="${svg}"><path d="${value}"/></svg>`;
+			const options = { xml: true, mode: /** @type {const} */ ('minify'), shortenSvgPathData: true };
+			const processor = new SourceProcessor();
+			const once = processor.process(source, options).code;
+			expect(once).toBe(source.replace(value, expected));
+			expect(processor.process(once, options).code).toBe(once);
+			expect(processor.process(source, { ...options, shortenSvgPathData: false }).code).toBe(source);
+		});
+		it.each([
+			'M.1 0Q.1 1 .1 2T.1 3Q.1 4 .1 5',
+			'M0 0Q1e39 0 1 1T2 2Q1e39 0 3 3',
+			'M1000000 0Q-1000000 0 1000000 0T0 0Q-3000000 0 1 1',
+			'M0 0S.1 2 4 4C7.9 6 8 2 10 4',
+			'M0 0s2 2 .1 .1c.1 .1 2 2 3 3'
+		])('should retain explicit controls outside the exact shorthand domain in %s', value => {
+			const source = `<svg xmlns="${svg}"><path d="${value}"/></svg>`;
+			const options = { xml: true, mode: /** @type {const} */ ('minify'), shortenSvgPathData: true };
+			const once = new SourceProcessor().process(source, options).code;
+			expect(once.replace(/\s/g, '')).toContain(value.slice(value.search(/[CcQq][^CcQq]*$/)).replace(/\s/g, ''));
+			expect(new SourceProcessor().process(once, options).code).toBe(once);
+		});
+		it.each([
+			'<style>rect{rx:4}</style>', '<animate attributeName="rx"/>',
+			'<?xml-stylesheet href="radii.css"?>', '<script/>',
+			'<g xml:space="preserve"/>', '<g xml:base="other.svg"/>',
+			'<path id="duplicate"/><path id="duplicate"/>'
+		])('should preserve rectangle radius attributes with structural dependencies: %s', dependency => {
+			const source = `<svg xmlns="${svg}"><rect width="20" height="10" rx="2" ry="2"/>${dependency}</svg>`;
+			expect(new SourceProcessor().process(source, structure).code).toContain('rx="2" ry="2"');
+		});
+		it.each(['rx:4', 'ry:auto', 'rx:var(--radius)'])('should preserve a rectangle radius with local geometry style %s', style => {
+			const source = `<svg xmlns="${svg}"><rect width="20" height="10" rx="2" ry="2" style="${style}"/></svg>`;
+			expect(new SourceProcessor().process(source, structure).code).toBe(source);
+		});
+		it('should preserve rectangle radii with a DTD, foreign namespace or direct HTML', () => {
+			const body = '<rect width="20" height="10" rx="2" ry="2"/>';
+			for (const source of [
+				`<!DOCTYPE svg [<!ATTLIST rect ry CDATA #IMPLIED>]><svg xmlns="${svg}">${body}</svg>`,
+				`<svg xmlns="urn:foreign">${body}</svg>`
+			]) expect(new SourceProcessor().process(source, structure).code).toBe(source);
+			expect(new SourceProcessor().process(`<svg>${body}</svg>`, { ...structure, xml: false }).code).toContain('ry=2');
+		});
+		it.each([
+			['M0 0Z', 'M0 0z'],
+			['M0 0ZZ', 'M0 0zz'],
+			['M0 0ZL1 2Z', 'M0 0zL1 2z'],
+			['M1e39 -0Z', 'M1e39-0z'],
+			['m1 2zM3 4Z', 'm1 2zM3 4z'],
+			['M0 0z', 'M0 0z'],
+			['M0 0ZQ', 'M0 0ZQ']
+		])('should normalize only valid closepath spelling in %s', (value, expected) => {
+			const source = `<svg xmlns="${svg}"><path d="${value}"/></svg>`;
+			const options = { xml: true, mode: /** @type {const} */ ('minify'), shortenSvgPathData: true };
+			const once = new SourceProcessor().process(source, options).code;
+			expect(once).toBe(source.replace(value, expected));
+			expect(new SourceProcessor().process(once, options).code).toBe(once);
+			expect(new SourceProcessor().process(source, { ...options, shortenSvgPathData: false }).code).toBe(source);
+		});
+		it('should apply guarded radius and shorthand cleanup inside SVG data URLs', () => {
+			const source = `<svg xmlns="${svg}"><rect width="20" height="10" rx="2" ry="2"/><path d="M0 0S2 2 4 4C6 6 8 2 10 4"/></svg>`;
+			const render = builtinEmbeddedRenderer({ svg: { cleanupStructure: true, shortenPathData: true } });
+			const css = `.x{background:url("data:image/svg+xml,${encodeURIComponent(source)}")}`;
+			const result = render(css, { type: 'css', hostType: 'css' });
+			expect(typeof result).toBe('string');
+			const decoded = decodeURIComponent(result || '');
+			expect(decoded).toContain("rx='2'");
+			expect(decoded).not.toContain('ry=');
+			expect(decoded).toContain('M0 0S2 2 4 4s4-2 6 0');
+		});
 		it('should remove containers made empty by definition cleanup', () => {
 			const source = `<svg xmlns="${svg}"><defs><g><rect/></g></defs><g fill="red"/></svg>`;
 			const options = { ...structure, removeEmptyElements: true };
@@ -3698,7 +3788,7 @@ describe("parseHtml", () => {
 		it.each(Object.entries(require('../../lib/html/data').SVG_PATH_ARGUMENTS).flatMap(([command, count]) => [command, command.toLowerCase()].map((name) => /** @type {[string, number]} */ ([name, Number(count)]))))("should preserve SVG path segments for command %s with %s arguments", (command, count) => {
 			const args = command.toUpperCase() === 'A' ? ['001.00', '002.00', '+003.00', '0', '1', '004.00', '-000.00'] : Array(count).fill('001.00');
 			const source = `<svg xmlns="${svg}"><path d="M000.00,000.00 ${command} ${args.join(', ')}"/></svg>`;
-			const expected = `<svg xmlns="${svg}"><path d="M0 0${command === "L" ? " " : command}${command.toUpperCase() === 'A' ? '1 2 3 014-0' : Array(count).fill('1').join(' ')}"/></svg>`;
+			const expected = `<svg xmlns="${svg}"><path d="M0 0${command === "L" ? " " : command === "Z" ? "z" : command}${command.toUpperCase() === 'A' ? '1 2 3 014-0' : Array(count).fill('1').join(' ')}"/></svg>`;
 			const once = new SourceProcessor().process(source, compact).code;
 			expect(once).toBe(expected);
 			expect(new SourceProcessor().process(once, compact).code).toBe(once);
@@ -3717,12 +3807,12 @@ describe("parseHtml", () => {
 			['M0 0C0 0 0 0 0 0C0 0 0 0 1 2', 'M0 0S0 0 0 0 0 0 1 2'],
 			['M0 0Q0 0 0 0Q0 0 1 2', 'M0 0T0 0 1 2'],
 			['M0 0S1 1 2 2C2 2 3 3 4 4', 'M0 0S1 1 2 2C2 2 3 3 4 4'],
-			['M0 0S2 2 2 2C2 2 3 3 4 4', 'M0 0S2 2 2 2C2 2 3 3 4 4'],
+			['M0 0S2 2 2 2C2 2 3 3 4 4', 'M0 0S2 2 2 2 3 3 4 4'],
 			['M0 0c1 1 2 2 2 2c0 0 3 3 4 4', 'M0 0c1 1 2 2 2 2s3 3 4 4'],
 			['M0 0s1 1 2 2c0 0 3 3 4 4', 'M0 0s1 1 2 2c0 0 3 3 4 4'],
-			['M0 0T0 0Q0 0 1 2', 'M0 0T0 0Q0 0 1 2'],
+			['M0 0T0 0Q0 0 1 2', 'M0 0T0 0 1 2'],
 			['M0 0C0 0 1 2 3 4Q3 4 5 6C5 6 7 8 9 10', 'M0 0S1 2 3 4T5 6s2 2 4 4'],
-			['M10 20Q10 20 30 40ZC10 20 50 60 70 80', 'M10 20T30 40ZS50 60 70 80'],
+			['M10 20Q10 20 30 40ZC10 20 50 60 70 80', 'M10 20T30 40zS50 60 70 80'],
 			['M0 0h1Q1 0 2 2', 'M0 0h1T2 2'],
 			['M0 0c-0 .00e-400 1 2 3 4', 'M0 0c-0 .00e-400 1 2 3 4'],
 			['M0 0c1e-400 0 1 2 3 4', 'M0 0c1e-400 0 1 2 3 4'],
@@ -3749,7 +3839,7 @@ describe("parseHtml", () => {
 			['M100 100Q101 102 103 104 104 105 106 107', 'M100 100q1 2 3 4 1 1 3 3'],
 			['M100 100T101 102 103 104', 'M100 100t1 2 2 2'],
 			['M100 100A2 3 45 0 1 101 102 4 5 90 1 0 103 104', 'M100 100a2 3 45 011 2 4 5 90 102 2'],
-			['M100 100M101 102 103 104ZL101 104', 'M100 100m1 2 2 2Zv2'],
+			['M100 100M101 102 103 104ZL101 104', 'M100 100m1 2 2 2zv2'],
 			['M100 100L100 101 102 101 102 103', 'M100 100v1h2v2'],
 			['m100 100l1 2H102V103', 'm100 100 1 2h1v1'],
 			['M100 100L100.125 100.25L100.5 100.875', 'M100 100l.125.25.375.625'],
@@ -3813,16 +3903,16 @@ describe("parseHtml", () => {
 			['M1 2 Q3 4 5 6 L5 7', 'M1 2Q3 4 5 6V7'],
 			['M1 2 T3 4 L5 4', 'M1 2T3 4H5'],
 			['M1 2 A3 4 0 0 1 5 6 L5 7', 'M1 2A3 4 0 015 6V7'],
-			['M1 2 L3 4 Z L1 5', 'M1 2 3 4ZV5'],
+			['M1 2 L3 4 Z L1 5', 'M1 2 3 4zV5'],
 			['M1 2 L3 4 z L6 2', 'M1 2 3 4zH6'],
-			['M1 2 M3 4 L3 5 Z L6 4', 'M1 2M3 4V5ZH6'],
+			['M1 2 M3 4 L3 5 Z L6 4', 'M1 2M3 4V5zH6'],
 			['M1 2 l3 4 L1 5 L1 6', 'M1 2l3 4L1 5V6'],
 			['m1 2 3 4 L1 5 L1 6', 'm1 2 3 4L1 5V6'],
 			['M1 2 h3 L1 4', 'M1 2h3L1 4'],
 			['M1 2 v3 L4 2', 'M1 2v3L4 2'],
 			['M1 2 c3 4 5 6 7 8 L1 9', 'M1 2c3 4 5 6 7 8L1 9'],
-			['M1 2 l3 4 Z L1 5', 'M1 2l3 4ZV5'],
-			['m1 2 L3 4 Z L1 5', 'm1 2L3 4ZV5'],
+			['M1 2 l3 4 Z L1 5', 'M1 2l3 4zV5'],
+			['m1 2 L3 4 Z L1 5', 'm1 2L3 4zV5'],
 			['M+001.00 -002.000 L1 -003.00 L4 -3', 'M1-2V-3H4'],
 			['M9007199254740993 2 L9007199254740993 3', 'M9007199254740993 2V3'],
 			['M9007199254740992 2 L9007199254740993 3', 'M9007199254740992 2 9007199254740993 3'],
@@ -3845,8 +3935,8 @@ describe("parseHtml", () => {
 			['m0 0 0 10 20 0 0 30', 'm0 0v10h20v30'],
 			['M1 2 3 4 3 5 6 7', 'M1 2 3 4V5L6 7'],
 			['m1 2 3 4 0 5 6 7', 'm1 2 3 4v5l6 7'],
-			['M1 2 1 3 Z L1 4', 'M1 2V3ZV4'],
-			['m1 2 0 3 Z L1 4', 'm1 2v3ZV4'],
+			['M1 2 1 3 Z L1 4', 'M1 2V3zV4'],
+			['m1 2 0 3 Z L1 4', 'm1 2v3zV4'],
 			['M1 2 1 3 M4 5 4 6', 'M1 2V3M4 5V6'],
 			['m1 2 0 3 m4 5 6 0', 'm1 2v3m4 5h6'],
 			['M9007199254740993 2 9007199254740993 3', 'M9007199254740993 2V3'],
@@ -3974,7 +4064,7 @@ describe("parseHtml", () => {
 			['M -0 -0', 'M-0-0'],
 			['M0 0 L1 2 l3 4 L5 6', 'M0 0 1 2l3 4H5'],
 			['M0 0M1 2m3 4m5 6', 'M0 0M1 2m3 4m5 6'],
-			['M0 0 ZL1 2 L3 4 ZZL5 6', 'M0 0ZL1 2 3 4ZZL5 6'],
+			['M0 0 ZL1 2 L3 4 ZZL5 6', 'M0 0zL1 2 3 4zzL5 6'],
 			['M0 0H-1 H-2 H-3', 'M0 0H-1-2-3'],
 			['M0 0A10 20 30 0 1 40 50 A10 20 30 1 0 .5 -.5', 'M0 0A10 20 30 0140 50 10 20 30 10.5-.5'],
 			['M0 0A1 2 .3 0 1 .4 .5', 'M0 0A1 2 .3 01.4.5']
@@ -3990,8 +4080,9 @@ describe("parseHtml", () => {
 		it.each(Object.entries(require('../../lib/html/data').SVG_PATH_ARGUMENTS).flatMap(([command, count]) => [command, command.toLowerCase()].map((name) => /** @type {[string, number]} */ ([name, Number(count)]))))("should compact repeated path command %s without losing segments", (command, count) => {
 			const args = command.toUpperCase() === 'A' ? '1 2 3 014-0' : Array(count).fill('1').join(' ');
 			const source = `<svg xmlns="${svg}"><path d="M0 0 ${command}${args} ${command}${args}"/></svg>`;
-			const next = command.toUpperCase() === 'M' || count === 0 ? command : ' ';
-			const expected = command === 'C' ? 'M0 0C1 1 1 1 1 1S1 1 1 1' : command === 'Q' ? 'M0 0Q1 1 1 1T1 1' : command === 'L' ? 'M0 0 1 1V1' : `M0 0${command}${args}${next}${args}`;
+			const written = command === 'Z' ? 'z' : command;
+			const next = command.toUpperCase() === 'M' || count === 0 ? written : ' ';
+			const expected = command === 'C' ? 'M0 0C1 1 1 1 1 1S1 1 1 1' : command === 'Q' ? 'M0 0Q1 1 1 1T1 1' : command === 'L' ? 'M0 0 1 1V1' : `M0 0${written}${args}${next}${args}`;
 			const processor = new SourceProcessor();
 			const once = processor.process(source, compact).code;
 			expect(once).toBe(`<svg xmlns="${svg}"><path d="${expected}"/></svg>`);
