@@ -11,12 +11,13 @@ module.exports = {
 	},
 	afterExecute(options) {
 		for (const [i, name] of NAMES.entries()) {
-			expect(
-				fs.readFileSync(
-					path.join(options[i].output.path, name, "page.html"),
-					"utf8"
-				)
-			).toMatchSnapshot(name);
+			const html = fs.readFileSync(
+				path.join(options[i].output.path, name, "page.html"),
+				"utf8"
+			);
+			expect(html.match(/<\/style>/g)).toHaveLength(1);
+			expect(html).toContain("%3C%2Fstyle%3E");
+			expect(html).toMatchSnapshot(name);
 		}
 	}
 };

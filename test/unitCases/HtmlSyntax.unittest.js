@@ -3932,7 +3932,7 @@ describe("parseHtml", () => {
 			const source = `<svg xmlns="${svg}"><metadata>removed</metadata><style>@keyframes morph{to{d:path("M10 20L20 50L40 50")}}</style><path d="M010 020L010 030L040 030"/></svg>`;
 			const css = `.icon { background: url("data:image/svg+xml,${encodeURIComponent(source)}"); color: red }`;
 			const render = builtinEmbeddedRenderer({ svg: { shortenPathData: true, removeMetadata: true } });
-			const info = { type: "css", hostType: "html" };
+			const info = { type: "css", hostType: "css" };
 			const result = render(css, info);
 			expect(typeof result).toBe("string");
 			const decoded = decodeURIComponent(result || "");
@@ -3941,6 +3941,26 @@ describe("parseHtml", () => {
 			expect(decoded).toContain("color:red");
 			expect(decoded).not.toContain("<metadata>");
 			expect(render(result || "", info)).toBe(result);
+		});
+
+		it("should keep SVG style end tags inside an HTML stylesheet data URL", () => {
+			const source = `<svg xmlns="${svg}"><style>a{fill:red}</style><path d="M010 020L010 030L040 030"/></svg>`;
+			const css = `.icon { background: url("data:image/svg+xml,${encodeURIComponent(source)}") }`;
+			for (const svg of [false, true, { shortenPathData: true }]) {
+				const options = { mode: /** @type {"minify"} */ ("minify"), renderEmbeddedSource: builtinEmbeddedRenderer({ svg }) };
+				const once = new SourceProcessor().process(`<style>${css}</style><p>tail</p>`, options).code;
+				expect(once).toContain(css);
+				expect((once.match(/<\/style>/g) || []).length).toBe(1);
+				expect(new SourceProcessor().process(once, options).code).toBe(once);
+			}
+		});
+
+		it.each(["style>", "STYLE/>", "StYlE x='v'>"])("should decline an HTML stylesheet that exposes </%s", (ending) => {
+			const css = `.icon { background: url("data:image/svg+xml,${encodeURIComponent(`<svg><style>a{fill:red}</${ending}</svg>`)}") }`;
+			const render = builtinEmbeddedRenderer();
+			expect(render(css, { type: "css", hostType: "html" })).toBeUndefined();
+			expect(typeof render(css, { type: "css", hostType: "css" })).toBe("string");
+			expect(typeof render(css, { type: "css", hostType: "html", as: "block-contents" })).toBe("string");
 		});
 
 		it.each([
