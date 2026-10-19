@@ -14,6 +14,7 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/esbuild.rs:1181",
 			"oxc minifier: peephole/esbuild.rs:1215",
 			"oxc minifier: peephole/esbuild.rs:1222",
+			"oxc minifier: peephole/esbuild.rs:1598",
 			"oxc minifier: peephole/esbuild.rs:1798",
 			"oxc minifier: peephole/esbuild.rs:2309",
 			"oxc minifier: peephole/esbuild.rs:2368",
@@ -62,6 +63,7 @@ const OXC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/10281/input.js",
 			"swc minifier: fixture/issues/10412/input.js",
 			"swc minifier: fixture/issues/10824/input.js",
+			"swc minifier: fixture/issues/10859/input.js",
 			"swc minifier: fixture/issues/10885/input.js",
 			"swc minifier: fixture/issues/11368/input.js",
 			"swc minifier: fixture/issues/11684/identifier-preserved/input.js",
@@ -127,7 +129,6 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: drop-unused/class_used_within_itself_3_classname",
 			"terser compress: drop-unused/drop_var",
 			"terser compress: drop-unused/issue_2768",
-			"terser compress: drop-unused/issue_3192",
 			"terser compress: drop-unused/issue_t183",
 			"terser compress: drop-unused/variable_refs_outside_unused_class",
 			"terser compress: evaluate/in_boolean_context",
@@ -691,11 +692,7 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/inline.rs:703",
 			"oxc minifier: peephole/inline.rs:704",
 			"oxc minifier: peephole/inline.rs:706",
-			"oxc minifier: peephole/inline.rs:33",
-			"oxc minifier: peephole/inline.rs:183",
-			"oxc minifier: peephole/inline.rs:726",
-			"oxc minifier: peephole/inline.rs:733",
-			"oxc minifier: peephole/inline.rs:740"
+			"oxc minifier: peephole/inline.rs:33"
 		]
 	],
 	[
