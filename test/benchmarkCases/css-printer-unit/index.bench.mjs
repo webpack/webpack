@@ -1,5 +1,5 @@
 // cspell:ignore tailwind rgba
-// Printing is the other half of `css-parser-tailwind-unit`: the same walk, but
+// Printing is the other half of `css-parser-unit`: the same walk, but
 // every node also serializes and the input->output source map is resolved.
 // A nested block that grows past the streaming threshold hands its children back
 // as they finish and prints them into the output there; one that stays small is
@@ -15,7 +15,7 @@
 // registered, so `walk` is the floor all three share: `minify - walk` is what
 // printing and the map cost on that shape and `minify - beautify` is what the
 // transforms cost on top of serializing. Visitor cost is
-// `css-parser-tailwind-unit`'s.
+// `css-parser-unit`'s.
 
 import fs from "fs";
 import { createRequire } from "module";
@@ -124,29 +124,20 @@ const FIXTURES = [
  */
 export default (bench) => {
 	for (const [name, source] of FIXTURES) {
-		bench.add(
-			`unit benchmark "css-printer-tailwind-unit", walk (${name})`,
-			() => {
-				new SourceProcessor().process(source);
-			}
-		);
-		bench.add(
-			`unit benchmark "css-printer-tailwind-unit", beautify (${name})`,
-			() => {
-				new SourceProcessor().process(source, {
-					mode: "beautify",
-					source: "in.css"
-				});
-			}
-		);
-		bench.add(
-			`unit benchmark "css-printer-tailwind-unit", minify (${name})`,
-			() => {
-				new SourceProcessor().process(source, {
-					mode: "minify",
-					source: "in.css"
-				});
-			}
-		);
+		bench.add(`unit benchmark "css-printer-unit", walk (${name})`, () => {
+			new SourceProcessor().process(source);
+		});
+		bench.add(`unit benchmark "css-printer-unit", beautify (${name})`, () => {
+			new SourceProcessor().process(source, {
+				mode: "beautify",
+				source: "in.css"
+			});
+		});
+		bench.add(`unit benchmark "css-printer-unit", minify (${name})`, () => {
+			new SourceProcessor().process(source, {
+				mode: "minify",
+				source: "in.css"
+			});
+		});
 	}
 };

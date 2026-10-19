@@ -1,5 +1,5 @@
 // cspell:ignore mdash
-// Printing is the other half of `html-parser-document-unit`: the same walk, but
+// Printing is the other half of `html-parser-unit`: the same walk, but
 // every node also serializes. A node whose text is `open + children + close`
 // emits its pieces as the walk reaches them; anything else is composed from its
 // children's text and read back whole. Both paths are covered here, and so are
@@ -13,7 +13,7 @@
 // visitors are registered, so `walk` is the floor all three share: `minify -
 // walk` is what printing costs on that shape and `minify - beautify` is what the
 // rewrites cost on top of serializing. Visitor cost is
-// `html-parser-document-unit`'s.
+// `html-parser-unit`'s.
 
 import { createRequire } from "module";
 
@@ -158,26 +158,17 @@ const FIXTURES = [
  */
 export default (bench) => {
 	for (const [name, source, options] of FIXTURES) {
-		bench.add(
-			`unit benchmark "html-printer-document-unit", walk (${name})`,
-			() => {
-				new SourceProcessor().process(source, options);
-			}
-		);
-		bench.add(
-			`unit benchmark "html-printer-document-unit", beautify (${name})`,
-			() => {
-				new SourceProcessor().process(source, {
-					...options,
-					mode: "beautify"
-				});
-			}
-		);
-		bench.add(
-			`unit benchmark "html-printer-document-unit", minify (${name})`,
-			() => {
-				new SourceProcessor().process(source, { ...options, mode: "minify" });
-			}
-		);
+		bench.add(`unit benchmark "html-printer-unit", walk (${name})`, () => {
+			new SourceProcessor().process(source, options);
+		});
+		bench.add(`unit benchmark "html-printer-unit", beautify (${name})`, () => {
+			new SourceProcessor().process(source, {
+				...options,
+				mode: "beautify"
+			});
+		});
+		bench.add(`unit benchmark "html-printer-unit", minify (${name})`, () => {
+			new SourceProcessor().process(source, { ...options, mode: "minify" });
+		});
 	}
 };

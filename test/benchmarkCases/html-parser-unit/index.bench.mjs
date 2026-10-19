@@ -58,35 +58,29 @@ const RET_END = (
  */
 export default (bench) => {
 	// Whole-document parse — the main entry (HTML analog of JavascriptParser.parse).
-	bench.add('unit benchmark "html-parser-document-unit", parseHtml', () => {
+	bench.add('unit benchmark "html-parser-unit", parseHtml', () => {
 		parseHtml(html);
 	});
 
 	// Big fragment parse — the context element seeds the tokenizer content mode.
 	bench.add(
-		'unit benchmark "html-parser-document-unit", parseHtml (fragment, tr context)',
+		'unit benchmark "html-parser-unit", parseHtml (fragment, tr context)',
 		() => {
 			parseHtml(FRAGMENT, 0, { fragmentContext: "tr" });
 		}
 	);
 
 	// AST-skip fast path (drop text nodes).
-	bench.add(
-		'unit benchmark "html-parser-document-unit", parseHtml (skip text)',
-		() => {
-			parseHtml(html, 0, { skip: { text: true } });
-		}
-	);
+	bench.add('unit benchmark "html-parser-unit", parseHtml (skip text)', () => {
+		parseHtml(html, 0, { skip: { text: true } });
+	});
 
 	// Grammar: parse + visitor walk (SourceProcessor).
+	bench.add('unit benchmark "html-parser-unit", process (no visitors)', () => {
+		new SourceProcessor().use({}).process(html);
+	});
 	bench.add(
-		'unit benchmark "html-parser-document-unit", process (no visitors)',
-		() => {
-			new SourceProcessor().use({}).process(html);
-		}
-	);
-	bench.add(
-		'unit benchmark "html-parser-document-unit", process (Element+Comment visitors)',
+		'unit benchmark "html-parser-unit", process (Element+Comment visitors)',
 		() => {
 			new SourceProcessor()
 				.use({ [NodeType.Element]: NOOP, [NodeType.Comment]: NOOP })
@@ -95,7 +89,7 @@ export default (bench) => {
 	);
 
 	// Tokenizer throughput (push interface).
-	bench.add('unit benchmark "html-parser-document-unit", tokenize', () => {
+	bench.add('unit benchmark "html-parser-unit", tokenize', () => {
 		tokenize(html, 0, {
 			openTag: RET_END,
 			closeTag: RET_END,
