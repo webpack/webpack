@@ -34815,9 +34815,9 @@ declare class SyntaxTree {
 	constructor();
 
 	/**
-	 * Lets go of every column now, rather than when a collection reaches the
-	 * tree: an ArrayBuffer that can be transferred frees its memory at once,
-	 * where it would otherwise outlast the parse into the work after it.
+	 * Hands the columns back once nothing reads the tree: the next tree reuses
+	 * small ones, and a large one's ArrayBuffers are freed at once, where they
+	 * would otherwise outlast the parse into the work after it.
 	 */
 	release(): void;
 

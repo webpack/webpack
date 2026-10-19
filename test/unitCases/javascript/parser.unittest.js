@@ -5076,23 +5076,46 @@ describe("SyntaxTree", () => {
 		expect(tree.name(tree.field(0, Field.argument, spread))).toBe("c");
 	});
 
-	it("lets go of its columns once released", () => {
-		const tree = new SyntaxTree();
-		const program = /** @type {number} */ (
+	/**
+	 * @param {SyntaxTree} tree the tree to write
+	 * @param {string} source the source
+	 * @returns {number} its program
+	 */
+	const parseInto = (tree, source) =>
+		/** @type {number} */ (
 			/** @type {unknown} */ (
 				new WebpackParser(
 					{ ecmaVersion: "latest", lazyNodes: true, syntaxTree: tree },
-					"a(b, [c]);"
+					source
 				).parse()
 			)
 		);
-		expect(tree.type(program)).toBe(NodeType.Program);
+
+	it("hands a small tree's columns to the next tree, cleared", () => {
+		const tree = new SyntaxTree();
+		parseInto(tree, "x = { a: [b, c], [d]: `e${f}` };");
 		const types = tree._types;
-		const items = tree._listItems;
 		tree.release();
 		expect([tree._types.length, tree._values.length, tree._listCount]).toEqual([
 			0, 0, 0
 		]);
+		const next = new SyntaxTree();
+		expect(next._types).toBe(types);
+		const source = "a(b, [c]);";
+		const program = parseInto(next, source);
+		const fresh = new SyntaxTree();
+		expect(toEstreeObject(next, program)).toEqual(
+			toEstreeObject(fresh, parseInto(fresh, source))
+		);
+		next.release();
+	});
+
+	it("lets go of a large tree's columns, and the next grows to its size", () => {
+		const tree = new SyntaxTree();
+		parseInto(tree, "a;".repeat(40000));
+		const types = tree._types;
+		const nodes = tree._count;
+		tree.release();
 		// A runtime that transfers an ArrayBuffer frees the old one at once.
 		const detached =
 			typeof (
@@ -5100,7 +5123,11 @@ describe("SyntaxTree", () => {
 					new ArrayBuffer(0)
 				).transfer
 			) === "function";
-		expect(types.byteLength === 0 && items.byteLength === 0).toBe(detached);
+		expect(types.byteLength === 0).toBe(detached);
+		const next = new SyntaxTree();
+		expect(next._types).not.toBe(types);
+		next.add(NodeType.Identifier, 0, 1);
+		expect(next._types.length).toBe(nodes + 1);
 	});
 
 	it("refuses an unknown type or field", () => {
