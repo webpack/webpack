@@ -12896,13 +12896,13 @@ Object {
   "optimization-minimize-options-xml-cleanup-structure": Object {
     "configs": Array [
       Object {
-        "description": "Collapse SVG groups, move inherited presentation attributes to sole graphics children, inline single presentation declarations and remove empty text, unnamed definitions and exact redundant attributes. Off by default because consumers can observe structure and attribute presence; preserve IDs and skip stylesheets, scripts, animations and DTDs.",
+        "description": "Collapse SVG groups, hoist identical context-free inherited attributes or move them to sole graphics children, inline validated presentation declarations and remove empty text, unnamed definitions and exact redundant attributes. Off by default because consumers can observe structure and attribute presence; preserve IDs and skip stylesheets, scripts, animations and DTDs.",
         "multiple": false,
         "path": "optimization.minimizeOptions.xml.cleanupStructure",
         "type": "boolean",
       },
     ],
-    "description": "Collapse SVG groups, move inherited presentation attributes to sole graphics children, inline single presentation declarations and remove empty text, unnamed definitions and exact redundant attributes. Off by default because consumers can observe structure and attribute presence; preserve IDs and skip stylesheets, scripts, animations and DTDs.",
+    "description": "Collapse SVG groups, hoist identical context-free inherited attributes or move them to sole graphics children, inline validated presentation declarations and remove empty text, unnamed definitions and exact redundant attributes. Off by default because consumers can observe structure and attribute presence; preserve IDs and skip stylesheets, scripts, animations and DTDs.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -13120,13 +13120,13 @@ Object {
   "optimization-minimize-xml-cleanup-structure": Object {
     "configs": Array [
       Object {
-        "description": "Collapse SVG groups, move inherited presentation attributes to sole graphics children, inline single presentation declarations and remove empty text, unnamed definitions and exact redundant attributes. Off by default because consumers can observe structure and attribute presence; preserve IDs and skip stylesheets, scripts, animations and DTDs.",
+        "description": "Collapse SVG groups, hoist identical context-free inherited attributes or move them to sole graphics children, inline validated presentation declarations and remove empty text, unnamed definitions and exact redundant attributes. Off by default because consumers can observe structure and attribute presence; preserve IDs and skip stylesheets, scripts, animations and DTDs.",
         "multiple": false,
         "path": "optimization.minimize.xml.cleanupStructure",
         "type": "boolean",
       },
     ],
-    "description": "Collapse SVG groups, move inherited presentation attributes to sole graphics children, inline single presentation declarations and remove empty text, unnamed definitions and exact redundant attributes. Off by default because consumers can observe structure and attribute presence; preserve IDs and skip stylesheets, scripts, animations and DTDs.",
+    "description": "Collapse SVG groups, hoist identical context-free inherited attributes or move them to sole graphics children, inline validated presentation declarations and remove empty text, unnamed definitions and exact redundant attributes. Off by default because consumers can observe structure and attribute presence; preserve IDs and skip stylesheets, scripts, animations and DTDs.",
     "multiple": false,
     "simpleType": "boolean",
   },

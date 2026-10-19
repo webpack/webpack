@@ -7,5 +7,8 @@
 <path d="M0 0Q2 2 4 4Q6 6 8 8" stroke="blue" fill="none"/>
 <path d="M0 0S2 2 4 4C6 6 8 2 10 4M0 0Q2 2 4 4T8 8Q10 10 12 4" stroke="blue" fill="none"/>
 <rect x="80" y="50" width="30" height="10" rx="2" ry="2" fill="red"/>
+<g><rect x="0" y="0" width="5" height="5" style="fill:red;stroke:blue;stroke-width:1"/><circle cx="0" cy="0" r="2" style="fill:red;stroke:blue;stroke-width:1"/></g>
+<path d="M10000 10000c-9999-9999-9998-9998-9997-9997" stroke="green" fill="none"/>
 <use href="#copy" x="20"/>
+<text x="10" y="95" style="font-size:12px;font-size:-1px">Fallback</text>
 </svg>

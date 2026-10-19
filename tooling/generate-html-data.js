@@ -571,6 +571,17 @@ const PARSER_TABLES = [
 		]
 	],
 	[
+		"SVG_SHAPE_ZERO_ATTRIBUTES",
+		"object",
+		"Shape coordinates whose omitted value is a local zero rather than a text position or inherited value.",
+		[
+			["rect", "x y"],
+			["circle", "cx cy"],
+			["ellipse", "cx cy"],
+			["line", "x1 y1 x2 y2"]
+		]
+	],
+	[
 		"SVG_STRUCTURAL_PRESENTATION_VALUES",
 		"object",
 		"Context-free presentation values eligible for inherited attribute cleanup.",

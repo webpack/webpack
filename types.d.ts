@@ -24950,7 +24950,7 @@ declare interface OptimizationMinimizeOptions {
  */
 declare interface OptimizationMinimizeXml {
 	/**
-	 * Collapse SVG groups, move inherited presentation attributes to sole graphics children, inline single presentation declarations and remove empty text, unnamed definitions and exact redundant attributes. Off by default because consumers can observe structure and attribute presence; preserve IDs and skip stylesheets, scripts, animations and DTDs.
+	 * Collapse SVG groups, hoist identical context-free inherited attributes or move them to sole graphics children, inline validated presentation declarations and remove empty text, unnamed definitions and exact redundant attributes. Off by default because consumers can observe structure and attribute presence; preserve IDs and skip stylesheets, scripts, animations and DTDs.
 	 * @since 5.113.0
 	 */
 	cleanupStructure?: boolean;

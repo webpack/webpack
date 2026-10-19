@@ -3438,6 +3438,97 @@ describe("parseHtml", () => {
 		});
 
 		const structure = { xml: true, mode: /** @type {const} */ ('minify'), cleanupSvgStructure: true, reuseSvgPaths: true, mergeSvgPaths: true, sortSvgDefinitions: true };
+		it.each([false, true])('should preserve a valid CSS fallback before an invalid negative SVG font size in stylesheet=%s', sheet => {
+			const body = sheet ? '<style>text{font-size:12px;font-size:-1px}</style><text>Fallback</text>' : '<text style="font-size:12px;font-size:-1px">Fallback</text>';
+			const source = `<svg xmlns="${svg}">${body}</svg>`;
+			const options = { ...structure, renderEmbeddedSource: builtinEmbeddedRenderer() };
+			const once = new SourceProcessor().process(source, options).code;
+			expect(once).toContain('font-size:12px;font-size:-1px');
+			expect(new SourceProcessor().process(once, options).code).toBe(once);
+		});
+		it.each([
+			['fill: red; stroke: blue', 'fill="red" stroke="blue"'],
+			['fill:blue;fill:red;stroke:blue;', 'fill="red" stroke="blue"'],
+			['stroke-width:002.00;stroke-linecap:round;stroke-linejoin:bevel', 'stroke-width="002.00" stroke-linecap="round" stroke-linejoin="bevel"'],
+			['font-size:12px;letter-spacing:2px;word-spacing:3px', 'font-size="12px" letter-spacing="2px" word-spacing="3px"'],
+			['fill:currentColor;stroke:none', 'fill="currentColor" stroke="none"'],
+			['fill:rgb(255,0,0);fill-opacity:50%', 'fill="rgb(255,0,0)" fill-opacity="50%"']
+		])('should convert complete validated presentation declarations in %s', (style, expected) => {
+			const source = `<svg xmlns="${svg}"><path style="${style}"/></svg>`;
+			const once = new SourceProcessor().process(source, structure).code;
+			expect(once).toBe(`<svg xmlns="${svg}"><path ${expected}/></svg>`);
+			expect(new SourceProcessor().process(once, structure).code).toBe(once);
+			expect(new SourceProcessor().process(source, { ...structure, cleanupSvgStructure: false }).code).toBe(source);
+		});
+		it.each([
+			'fill:red;stroke:var(--paint)', 'fill:red;stroke:blue!important', 'fill:red;stroke:invalid',
+			'fill:red;stroke-width:calc(1px + 2px)', 'fill:red;--paint:blue', 'fill:red;;stroke:blue',
+			'fill:red;stroke:url(#paint)', 'fill:red;stroke-linecap:inherit', 'fill:red;stroke-linejoin:wrong',
+			'fill:red;stroke-width:2junk', 'fill:red;bad', 'Fill:red;stroke:blue', 'color:none;stroke:blue',
+			'fill:red;stroke:blue;stroke-width:1;stroke-linecap:round;stroke-linejoin:round',
+			 'stroke-width:2;stroke-width:-1', 'stroke-miterlimit:2;stroke-miterlimit:.5',
+			'font-size:12px;font-size:-1px', 'stroke-width:2;stroke-width:0e39',
+			'letter-spacing:2px;letter-spacing:10%', 'word-spacing:2px;word-spacing:10%',
+			`stroke-width:2;stroke-width:${'9'.repeat(400)}`
+		])('should retain an entire unsupported declaration list in %s', style => {
+			const source = `<svg xmlns="${svg}"><path style="${style}"/></svg>`;
+			expect(new SourceProcessor().process(source, structure).code).toBe(source);
+		});
+		it.each([
+			['<g><path fill="red"/><rect fill="red"/></g>', '<g fill="red"><path/><rect/></g>'],
+			['<g fill="blue"><path fill="red"/><rect fill="red"/></g>', '<g fill="red"><path/><rect/></g>'],
+			['<g stroke-width="2"><path fill="red"/><rect fill="red"/></g>', '<g stroke-width="2" fill="red"><path/><rect/></g>'],
+			['<g stroke-width="2"><path style="fill:var(--paint)" fill="red"/><rect fill="red"/></g>', '<g stroke-width="2"><path style="fill:var(--paint)" fill="red"/><rect fill="red"/></g>'],
+			['<g stroke-width="2"><path stroke-width="-1"/><rect stroke-width="-1"/></g>', '<g stroke-width="2"><path stroke-width="-1"/><rect stroke-width="-1"/></g>'],
+			['<g stroke-miterlimit="2"><path stroke-miterlimit=".5"/><rect stroke-miterlimit=".5"/></g>', '<g stroke-miterlimit="2"><path stroke-miterlimit=".5"/><rect stroke-miterlimit=".5"/></g>'],
+			['<g><g fill="red"><path/><path/></g><path fill="red"/></g>', '<g fill="red"><path/><path/><path/></g>'],
+			['<g><path style="fill:red;stroke:blue"/><rect style="fill:red;stroke:blue"/></g>', '<g fill="red" stroke="blue"><path/><rect/></g>'],
+			['<g><path fill="red"/><rect/></g>', '<path fill="red"/><rect/>'],
+			['<g><path fill="red"/><rect fill="blue"/></g>', '<path fill="red"/><rect fill="blue"/>'],
+			...['id="paint"', 'style="opacity:.5"', 'transform="scale(2)"', 'filter="url(#f)"'].map(attribute => [`<g ${attribute}><path fill="red"/><rect fill="red"/></g>`, `<g ${attribute}><path fill="red"/><rect fill="red"/></g>`]),
+			['<g><path id="p" fill="red"/><rect fill="red"/></g>', '<path id="p" fill="red"/><rect fill="red"/>'],
+			['<g><path fill="red"/><text fill="red">Text</text></g>', '<path fill="red"/><text fill="red">Text</text>'],
+			['<g><title>Keep</title><path fill="red"/><rect fill="red"/></g>', '<title>Keep</title><path fill="red"/><rect fill="red"/>'],
+			...['currentColor', 'url(#paint)', 'inherit', 'var(--paint)', 'invalid'].map(value => [`<g><path fill="${value}"/><rect fill="${value}"/></g>`, `<path fill="${value}"/><rect fill="${value}"/>`])
+		])('should hoist only context-free values shared by every graphics child in %s', (before, after) => {
+			const source = `<svg xmlns="${svg}">${before}</svg>`;
+			const once = new SourceProcessor().process(source, structure).code;
+			expect(once).toBe(`<svg xmlns="${svg}">${after}</svg>`);
+			expect(new SourceProcessor().process(once, structure).code).toBe(once);
+		});
+		it.each([
+			['rect x="0" y="0" width="2" height="3"', 'rect width="2" height="3"'],
+			['circle cx="+0.00e38" cy="0" r="2"', 'circle r="2"'],
+			['ellipse cx="0" cy="0" rx="2" ry="3"', 'ellipse rx="2" ry="3"'],
+			['line x1="0" y1="0" x2="0" y2="0"', 'line'],
+			...['rect x="-0"', 'line y2="-0.0"', 'rect x="0e39"', 'rect x="1e-39"', 'rect x="0px"', 'rect x="0%"', 'text x="0"', 'tspan x="0"', 'svg x="0"', 'rect id="p" x="0"', 'rect xml:id="p" x="0"'].map(value => [value, value])
+		])('should remove only exact local shape zero defaults in %s', (before, after) => {
+			const source = `<svg xmlns="${svg}"><${before}/></svg>`;
+			const once = new SourceProcessor().process(source, { ...structure, reuseSvgPaths: false, mergeSvgPaths: false }).code;
+			expect(once).toBe(`<svg xmlns="${svg}"><${after}/></svg>`);
+			expect(new SourceProcessor().process(once, structure).code).toBe(once);
+		});
+		it.each([
+			['M10000 10000l-9999-9999', 'M10000 10000 1 1'],
+			['M10000 10000m-9999-9999', 'M10000 10000M1 1'],
+			['M10000 10000c-9999-9999-9998-9998-9997-9997', 'M10000 10000C1 1 2 2 3 3'],
+			['M10000 10000s-9999-9999-9998-9998', 'M10000 10000S1 1 2 2'],
+			['M10000 10000q-9999-9999-9998-9998', 'M10000 10000Q1 1 2 2'],
+			['M10000 10000t-9999-9999', 'M10000 10000T1 1'],
+			['M10000 10000a1 1 0 0 1-9999-9999', 'M10000 10000A1 1 0 011 1'],
+			['M10000 10000a2 2 0 0 1 0-9999', 'M10000 10000a2 2 0 010-9999'],
+			['M10000 10000h-9999v-9999', 'M10000 10000H1V1'],
+			['M10000 10000l-9999-9999z m-9999-9999', 'M10000 10000 1 1zM1 1']
+		])('should choose substantially shorter exact absolute coordinates in %s', (value, expected) => {
+			const source = `<svg xmlns="${svg}"><path d="${value}"/></svg>`;
+			const options = { xml: true, mode: /** @type {const} */ ('minify'), shortenSvgPathData: true };
+			const processor = new SourceProcessor();
+			const once = processor.process(source, options).code;
+			expect(once).toBe(source.replace(value, expected));
+			expect(processor.process(once, options).code).toBe(once);
+			expect(processor.process(source, { ...options, shortenSvgPathData: false }).code).toBe(source);
+		});
+
 		it.each([
 			['rx="2" ry="2"', 'rx="2"'],
 			['rx="02.500" ry="2.5"', 'rx="02.500"'],
@@ -3560,7 +3651,7 @@ describe("parseHtml", () => {
 			['<g stroke-linecap="round"><path/></g>', '<path stroke-linecap="round"/>'],
 			['<g stroke-linecap="invalid"><path/></g>', '<g stroke-linecap="invalid"><path/></g>'],
 			['<g fill="red"><path stroke="inherit"/></g>', '<g fill="red"><path stroke="inherit"/></g>'],
-			['<g fill="red"><path style="stroke:blue;fill:green"/></g>', '<g fill="red"><path style="stroke:blue;fill:green"/></g>'],
+			['<g fill="red"><path style="stroke:blue;fill:green"/></g>', '<path stroke="blue" fill="green"/>'],
 			['<symbol fill="red"><path fill="red"/><circle/></symbol>', '<symbol fill="red"><path/><circle/></symbol>']
 		])('should preserve contextual values and descriptive definitions in %s', (before, after) => {
 			const once = new SourceProcessor().process(`<svg xmlns="${svg}">${before}</svg>`, structure).code;
@@ -3611,7 +3702,7 @@ describe("parseHtml", () => {
 			['<path stroke-width="2" style="stroke-width:none"/>', '<path stroke-width="2" style="stroke-width:none"/>'],
 			['<path style="fill:var(--paint)"/>', '<path style="fill:var(--paint)"/>'],
 			['<path style="fill:red!important"/>', '<path style="fill:red!important"/>'],
-			['<path style="fill:red;stroke:blue"/>', '<path style="fill:red;stroke:blue"/>'],
+			['<path style="fill:red;stroke:blue"/>', '<path fill="red" stroke="blue"/>'],
 			['<text id="label"/><text x="10"/><text> </text>', '<text id="label"/><text x="10"/><text> </text>'],
 			['<switch><g/><rect width="2" height="2"/></switch>', '<switch><g/><rect width="2" height="2"/></switch>'],
 			['<g xmlns:p="urn:data"><p:g/></g>', '<g xmlns:p="urn:data"><p:g/></g>'],
