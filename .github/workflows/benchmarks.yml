@@ -122,7 +122,7 @@ jobs:
       # Runners differ by host CPU, and identical JS work can make a different number
       # of native allocations on two runs; log the model to match outliers to hosts.
       - name: Check CPU
-        run: lscpu | grep -E '^(Model name|CPU\(s\)):'
+        run: lscpu | grep -E '^(Model name|CPU\(s\)|Thread\(s\) per core|Core\(s\) per socket|Socket\(s\)):'
 
       # Each case is measured in its own fresh process, so its result does not
       # depend on the shard. All cases in one job exceed CodSpeed's upload limit.

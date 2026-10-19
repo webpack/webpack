@@ -8,6 +8,29 @@ import fs from "fs";
 const RETURNS_BUFFER = new Set(["read", "write", "readv", "writev"]);
 
 /**
+ * Spell out the buffer `fs.read(fd[, options], callback)` leaves implicit, as
+ * `fs.readSync` has no form without one.
+ * @param {unknown[]} args `read` arguments without the callback
+ * @returns {unknown[]} arguments with an explicit buffer, offset, length and position
+ */
+const withReadBuffer = (args) => {
+	if (ArrayBuffer.isView(args[1])) return args;
+	const options =
+		/** @type {{ buffer?: NodeJS.ArrayBufferView, offset?: number, length?: number, position?: number | bigint | null }} */ (
+			args[1] || {}
+		);
+	const buffer = options.buffer || Buffer.alloc(16384);
+	const offset = options.offset || 0;
+	return [
+		args[0],
+		buffer,
+		offset,
+		options.length ?? buffer.byteLength - offset,
+		options.position ?? null
+	];
+};
+
+/**
  * Run `syncMethod` now and hand its outcome to `callback` on the next tick.
  * @param {FsMethod} syncMethod synchronous twin of the called method
  * @param {unknown[]} args arguments without the callback
@@ -54,11 +77,12 @@ export default function createSequentialFileSystem() {
 			continue;
 		}
 
-		sequential[name] = (/** @type {unknown[]} */ ...args) => {
-			const callback = args.pop();
+		sequential[name] = (/** @type {unknown[]} */ ...rawArgs) => {
+			const callback = rawArgs.pop();
 			if (typeof callback !== "function") {
-				return /** @type {FsMethod} */ (syncMethod)(...args, callback);
+				return /** @type {FsMethod} */ (syncMethod)(...rawArgs, callback);
 			}
+			const args = name === "read" ? withReadBuffer(rawArgs) : rawArgs;
 			callBackInOrder(
 				/** @type {FsMethod} */ (syncMethod),
 				args,
