@@ -59,7 +59,7 @@ Rules the map carries that apply everywhere:
 
 > [!REQUIRED] > **Never hand-edit what `yarn fix:special` generates**, even when it also reformats files you didn't touch. That churn means your toolchain resolved differently from CI's: commit only your own hunks, then **verify them against the generator** (re-run and diff) — never hand-write what you think it would emit. A hand-written JSDoc block missing the `@since` line the schema's `added` keyword produces, or a `types.d.ts` member the JSDoc implies, fails `lint` with only `… need to be updated`.
 
-**A nested minifier gets the outer one's options.** When one language is minified inside another (CSS or SVG inside HTML, SVG inside CSS), pass the inner minifier every option the outer one received, or the same code minifies differently inline and on its own.
+**A nested minifier gets the outer one's options.** When one language is minified inside another (CSS or SVG inside HTML, SVG inside CSS), pass the inner minifier every outer option it supports that affects its output, or the same code minifies differently inline and on its own.
 
 **Adding a dependency type or runtime requirement** needs three pieces wired together (a `makeSerializable` registration among them): read [docs/architecture.md](docs/architecture.md#adding-a-dependency-type-or-runtime-requirement) first.
 
