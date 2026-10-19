@@ -258,7 +258,7 @@ Users measure webpack by build time and peak heap. Much of `lib/` sits on per-mo
 
 ### Startup cost
 
-Every build, CLI run and minimizer worker starts cold, so pay only for what this input and these options use: load on first use through a facade getter or `memoize(() => require(…))`, never a top-level `require`; keep constants and option pickers in light modules; build an option's tables on first use; keep laziness in one place; no `i` flag on a regex with a non-ASCII range; hand workers what the parent set up; prove it by counting `require.cache` ([details](docs/performance.md#startup-cost)).
+Every build, CLI run and worker starts cold, and loading code is most of that start. Load a module only when the input or options need it, through a facade getter or `memoize(() => require(…))` rather than a top-level `require`, and build tables and regexes on first use ([details](docs/performance.md#startup-cost)).
 
 ### Keep instance shapes stable
 
