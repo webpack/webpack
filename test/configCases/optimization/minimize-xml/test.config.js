@@ -20,7 +20,8 @@ const NAMES = [
 	"containers",
 	"compact",
 	"symbols",
-	"constraints"
+	"constraints",
+	"structure"
 ];
 
 module.exports = {

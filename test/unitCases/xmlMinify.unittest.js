@@ -15,6 +15,26 @@ const SOURCE = `<?xml version="1.0" encoding="UTF-8"?>
 `;
 
 describe("xmlMinify", () => {
+	it.each([false, true])("should forward structural SVG cleanup with enabled=%s", async enabled => {
+		const source = '<svg xmlns="http://www.w3.org/2000/svg"><g><path style="fill:red"/></g><text/></svg>';
+		const options = { cleanupStructure: enabled };
+		const { code } = await xmlMinify({ 'structure.svg': source }, undefined, options);
+		expect(code).toBe(enabled ? '<svg xmlns="http://www.w3.org/2000/svg"><path fill="red"/></svg>' : source);
+		expect((await xmlMinify({ 'structure.svg': code }, undefined, options)).code).toBe(code);
+	});
+	it("should combine structural cleanup with equal-radius ellipse conversion", async () => {
+		const source = '<svg xmlns="http://www.w3.org/2000/svg"><g><ellipse id="shape" rx="10" ry="10"/></g><ellipse rx="5" ry="5"/></svg>';
+		const options = { cleanupStructure: true, convertShapes: true, sortDefinitions: true, reusePaths: true, mergePaths: true };
+		const { code } = await xmlMinify({ 'structure.svg': source }, undefined, options);
+		expect(code).toBe('<svg xmlns="http://www.w3.org/2000/svg"><circle id="shape" r="10"/><circle r="5"/></svg>');
+		expect((await xmlMinify({ 'structure.svg': code }, undefined, options)).code).toBe(code);
+	});
+	it("should forward sorting and path reuse to SVG data URLs", async () => {
+		const source = '<svg xmlns="http://www.w3.org/2000/svg"><g><path id="p" d="M0 0L10 20L20 10z"/><path d="M0 0L10 20L20 10z"/></g></svg>';
+		const { code } = await webpack.html.htmlMinify({ 'a.html': `<img src='data:image/svg+xml,${source}'>` }, undefined, { svg: { cleanupStructure: true, reusePaths: true, sortDefinitions: true, mergePaths: true } });
+		expect(decodeURIComponent(code)).toContain("use href='#p'");
+		expect(code).not.toContain('<g>');
+	});
 	it.each([false, true])("should keep shape coordinates absolute unless path cleanup is enabled=%s", async (shortenPathData) => {
 		const source = '<svg xmlns="http://www.w3.org/2000/svg"><line x1="100" y1="100" x2="101" y2="102"/></svg>';
 		const { code } = await xmlMinify({ 'shape.svg': source }, undefined, { convertShapes: true, shortenPathData });

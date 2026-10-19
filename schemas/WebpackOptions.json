@@ -4497,13 +4497,23 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "cleanupStructure": {
+          "description": "Collapse SVG groups, move inherited presentation attributes to sole graphics children, inline single presentation declarations and remove empty text, unnamed definitions and exact redundant attributes. Off by default because consumers can observe structure and attribute presence; preserve IDs and skip stylesheets, scripts, animations and DTDs.",
+          "type": "boolean",
+          "added": "5.113.0"
+        },
         "collapseWhitespace": {
           "description": "Remove whitespace-only text in known SVG containers, preserving text content, foreign content and `xml:space`. Off by default because scripts can observe whitespace nodes.",
           "type": "boolean",
           "added": "5.113.0"
         },
         "convertShapes": {
-          "description": "Convert leaf SVG lines, polylines and polygons to shorter paths with identical coordinates and vertices. Off by default because consumers can observe element types; skip documents with stylesheets, scripts, animations or DTDs.",
+          "description": "Convert leaf SVG lines, polylines and polygons to shorter paths with identical coordinates and vertices, and equal-radius ellipses to circles. Off by default because consumers can observe element types; skip documents with stylesheets, scripts, animations or DTDs.",
+          "type": "boolean",
+          "added": "5.113.0"
+        },
+        "mergePaths": {
+          "description": "Merge adjacent disjoint axis-aligned SVG lines with explicit opaque crisp-edge strokes, no fill, dashes or markers. Skip compositing, transformed or ID-bearing ancestors and color cleanup. Off by default because consumers can observe element boundaries; skip stylesheets, scripts, animations and DTDs.",
           "type": "boolean",
           "added": "5.113.0"
         },
@@ -4532,6 +4542,11 @@
           "type": "boolean",
           "added": "5.113.0"
         },
+        "reusePaths": {
+          "description": "Reuse unidentified duplicate leaf SVG paths without transforms through existing IDs and SVG 2 href references, preserving IDs and target element types. Skip color-bearing candidates during color cleanup. Off by default because consumers can observe element types; skip stylesheets, scripts, animations, duplicate IDs and DTDs.",
+          "type": "boolean",
+          "added": "5.113.0"
+        },
         "shortenColors": {
           "description": "Shorten opaque SVG presentation colors using the CSS minifier, preserving paint servers, contextual colors and DTD-declared values. Off by default because selectors and scripts can observe attribute spelling.",
           "type": "boolean",
@@ -4551,6 +4566,11 @@
           "description": "Print attributes with the document's commonest names first, breaking ties by case-sensitive name. Off by default: consumers observing attribute order see the new order.",
           "type": "boolean",
           "added": "5.112.0"
+        },
+        "sortDefinitions": {
+          "description": "Sort adjacent SVG resource definitions within defs by type and ID, preserving IDs and references. Off by default because consumers can observe order; skip stylesheets, scripts, animations, duplicate IDs and DTDs.",
+          "type": "boolean",
+          "added": "5.113.0"
         },
         "sortSymbols": {
           "description": "Sort adjacent SVG symbol definitions by ID, preserving IDs and references. Off by default because consumers can observe definition order; skip documents with stylesheets, scripts, animations, duplicate IDs or DTDs.",

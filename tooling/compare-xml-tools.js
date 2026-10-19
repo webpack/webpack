@@ -286,7 +286,7 @@ const printXml = (xml, mode) =>
 		new SourceProcessor().process(xml, { xml: true, mode })
 	).code;
 
-/** @typedef {Pick<import("../lib/html/syntax-printer").HtmlProcessOptions, "sortAttributes" | "sortSvgSymbols" | "convertSvgShapes" | "removeSvgMetadata" | "removeSvgEditorData" | "removeUnusedSvgNamespaces" | "removeEmptyAttributes" | "removeEmptyElements" | "collapseWhitespace" | "shortenSvgNumbers" | "shortenSvgColors" | "shortenSvgPathData">} XmlPrintOptions */
+/** @typedef {Pick<import("../lib/html/syntax-printer").HtmlProcessOptions, "sortAttributes" | "sortSvgSymbols" | "cleanupSvgStructure" | "mergeSvgPaths" | "reuseSvgPaths" | "sortSvgDefinitions" | "convertSvgShapes" | "removeSvgMetadata" | "removeSvgEditorData" | "removeUnusedSvgNamespaces" | "removeEmptyAttributes" | "removeEmptyElements" | "collapseWhitespace" | "shortenSvgNumbers" | "shortenSvgColors" | "shortenSvgPathData">} XmlPrintOptions */
 
 /** @type {[string, XmlPrintOptions][]} */
 const PRESETS = [
@@ -329,7 +329,7 @@ const PRESETS = [
 			shortenSvgNumbers: true
 		}
 	],
-	...["colors", "paths", "containers", "symbols", "shapes"].map(
+	...["colors", "paths", "containers", "symbols", "shapes", "structure"].map(
 		(step, index) =>
 			/** @type {[string, XmlPrintOptions]} */ ([
 				`svg-${step}`,
@@ -345,7 +345,11 @@ const PRESETS = [
 					shortenSvgPathData: index >= 1,
 					removeEmptyElements: index >= 2,
 					sortSvgSymbols: index >= 3,
-					convertSvgShapes: index >= 4
+					convertSvgShapes: index >= 4,
+					cleanupSvgStructure: index >= 5,
+					mergeSvgPaths: index >= 5,
+					reuseSvgPaths: index >= 5,
+					sortSvgDefinitions: index >= 5
 				}
 			])
 	)

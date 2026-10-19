@@ -160,5 +160,21 @@ module.exports = [
 				}
 			}
 		}
+	}),
+	config("structure", {
+		entry: "./structure.js",
+		optimization: {
+			minimizeOptions: {
+				xml: {
+					cleanupStructure: true,
+					reusePaths: true,
+					mergePaths: true,
+					sortDefinitions: true,
+					convertShapes: true,
+					shortenPathData: true,
+					shortenNumbers: true
+				}
+			}
+		}
 	})
 ];

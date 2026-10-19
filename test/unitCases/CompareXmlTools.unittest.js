@@ -37,14 +37,14 @@ describe("the XML tool comparison", () => {
 		expect(once).toContain('<style>path{stroke:#fff}</style>');
 		expect(await minify(once)).toBe(once);
 	});
-	it.each(["symbols", "shapes"])("should compare SVG %s through the XML printer", async (step) => {
+	it.each(["symbols", "shapes", "structure"])("should compare SVG %s through the XML printer", async (step) => {
 		const source = '<svg xmlns="http://www.w3.org/2000/svg"><symbol id="z"><line x1="10" y1="20" x2="10" y2="30"/></symbol><symbol id="a"/></svg>';
 		const tool = toolsFor("minify", source).find((tool) => tool.name === `webpack (SVG ${step} cleanup)`);
 		expect(tool).toBeDefined();
 		const minify = await /** @type {NonNullable<typeof tool>} */ (tool).create();
 		const once = await minify(source);
 		expect(once.indexOf('id="a"')).toBeLessThan(once.indexOf('id="z"'));
-		expect(once).toContain(step === "shapes" ? '<path d="M10 20V30"/>' : '<line x1="10" x2="10" y1="20" y2="30"/>');
+		expect(once).toContain(step !== "symbols" ? '<path d="M10 20V30"/>' : '<line x1="10" x2="10" y1="20" y2="30"/>');
 		expect(await minify(once)).toBe(once);
 	});
 

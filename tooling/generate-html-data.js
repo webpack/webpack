@@ -532,6 +532,102 @@ const PARSER_TABLES = [
 		["color", "fill", "stroke", "stop-color", "flood-color", "lighting-color"]
 	],
 	[
+		"SVG_INHERITED_CLEANUP_ATTRIBUTES",
+		"set",
+		"Inherited presentation values that structural cleanup can compare without resolving CSS.",
+		[
+			"fill",
+			"stroke",
+			"stroke-width",
+			"stroke-linecap",
+			"stroke-linejoin",
+			"stroke-miterlimit",
+			"color",
+			"fill-rule",
+			"fill-opacity",
+			"stroke-opacity",
+			"text-anchor",
+			"font-family",
+			"font-size",
+			"font-style",
+			"font-weight",
+			"letter-spacing",
+			"word-spacing"
+		]
+	],
+	[
+		"SVG_LOCAL_DEFAULTS",
+		"object",
+		"Non-inherited presentation defaults removable in dependency-free SVG documents.",
+		[
+			["opacity", "1"],
+			["display", "inline"],
+			["vector-effect", "none"],
+			["clip-path", "none"],
+			["filter", "none"],
+			["mask", "none"],
+			["isolation", "auto"],
+			["mix-blend-mode", "normal"]
+		]
+	],
+	[
+		"SVG_STRUCTURAL_PRESENTATION_VALUES",
+		"object",
+		"Context-free presentation values eligible for inherited attribute cleanup.",
+		[
+			["stroke-width", "number"],
+			["stroke-miterlimit", "number"],
+			["fill-opacity", "number"],
+			["stroke-opacity", "number"],
+			["stroke-linecap", "butt round square"],
+			["stroke-linejoin", "miter round bevel"],
+			["fill-rule", "nonzero evenodd"]
+		]
+	],
+	[
+		"SVG_GROUP_ATTRIBUTE_TARGETS",
+		"set",
+		"Graphics children eligible to receive a removed group's inherited attributes.",
+		["g", "path", "rect", "circle", "ellipse", "line", "polyline", "polygon"]
+	],
+	[
+		"SVG_UNUSED_DEFINITION_CONTENT",
+		"set",
+		"Known non-textual SVG content removable from an unnamed, unreferenced definition.",
+		[
+			"g",
+			"path",
+			"rect",
+			"circle",
+			"ellipse",
+			"line",
+			"polyline",
+			"polygon",
+			"linearGradient",
+			"radialGradient",
+			"stop",
+			"pattern",
+			"marker",
+			"mask",
+			"clipPath",
+			"symbol"
+		]
+	],
+	[
+		"SVG_DEFINITION_ELEMENTS",
+		"set",
+		"Resource definitions whose order within defs does not affect painting.",
+		[
+			"linearGradient",
+			"radialGradient",
+			"pattern",
+			"marker",
+			"mask",
+			"clipPath",
+			"symbol"
+		]
+	],
+	[
 		"SVG_EMPTY_CONTAINERS",
 		"set",
 		"Empty SVG containers with only namespace declarations can be omitted when structural cleanup is explicitly enabled.",
@@ -631,6 +727,11 @@ const PARSER_TABLES = [
 				return entries;
 			}, /** @type {[string, string][]} */ ([])),
 			["stop offset", "percentage"],
+			["feConvolveMatrix order", "integerPair"],
+			["feConvolveMatrix targetX", "integer"],
+			["feConvolveMatrix targetY", "integer"],
+			["feTurbulence numOctaves", "integer"],
+			["feTurbulence seed", "number"],
 			["feGaussianBlur stdDeviation", "pair"],
 			["feDropShadow stdDeviation", "pair"],
 			["feTurbulence baseFrequency", "pair"],
