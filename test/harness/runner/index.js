@@ -252,7 +252,9 @@ class TestRunner {
 					outputDirectory,
 					testMeta: {
 						category: category.name,
-						name: testName,
+						// Distinct realms need distinct module identifiers so V8 does not
+						// reuse another target's dynamic import callback.
+						name: targets.length > 1 ? `${testName}-${target}` : testName,
 						round: i
 					},
 					testConfig,
