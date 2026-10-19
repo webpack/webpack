@@ -415,7 +415,9 @@ const SUPPLEMENT = {
 		href: ["a", "area", "base"],
 		action: ["form"],
 		formaction: ["button", "input"],
-		manifest: ["html"]
+		manifest: ["html"],
+		// Typed `(TrustedScriptURL or USVString)` for Trusted Types, so no marker.
+		src: ["script"]
 	},
 	// Not pure reflections on these elements — the IDL member resizes a bitmap or
 	// drives a plugin — so they carry no marker.
