@@ -27376,6 +27376,12 @@ declare class PrintContext<TPath, TNode, TPrintOptions = object> {
 	printNode(node: TNode, path: TPath): void;
 
 	/**
+	 * Store `text` as what `node` printed, where the grammar already knows what
+	 * the node printer would return and so does not call it.
+	 */
+	printedAs(node: TNode, text: string): void;
+
+	/**
 	 * Print one node and hand its text straight back — for a node inside one being
 	 * printed in pieces, whose text is emitted as it is printed, so the store
 	 * would only ever be written and read once.
