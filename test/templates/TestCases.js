@@ -39,6 +39,7 @@ const deprecationTracking = require("../helpers/deprecationTracking");
 const filterInfraStructureErrors = require("../helpers/infrastructureLogErrors");
 const supportsObjectHasOwn = require("../helpers/supportsObjectHasOwn");
 const supportsOptionalChaining = require("../helpers/supportsOptionalChaining");
+const testTimeout = require("../helpers/testTimeout");
 
 const testRootDirectory = path.join(__dirname, "..");
 
@@ -101,7 +102,7 @@ const describeCases = (config) => {
 		for (const category of categories) {
 			// eslint-disable-next-line no-loop-func
 			describe(category.name, () => {
-				jest.setTimeout(30000);
+				jest.setTimeout(testTimeout(30000));
 
 				for (const testName of category.tests.filter((test) => {
 					const testDirectory = path.join(casesPath, category.name, test);
@@ -357,7 +358,7 @@ const describeCases = (config) => {
 										done();
 									});
 								},
-								testConfig.timeout || 60000
+								testTimeout(testConfig.timeout || 60000)
 							);
 
 							it(
@@ -403,7 +404,9 @@ const describeCases = (config) => {
 										done();
 									});
 								},
-								testConfig.cachedTimeout || testConfig.timeout || 10000
+								testTimeout(
+									testConfig.cachedTimeout || testConfig.timeout || 10000
+								)
 							);
 						}
 
@@ -522,8 +525,9 @@ const describeCases = (config) => {
 								}
 							},
 							testConfig.cachedTimeout ||
-								testConfig.timeout ||
-								(config.cache ? 20000 : 60000)
+								testTimeout(
+									testConfig.timeout || (config.cache ? 20000 : 60000)
+								)
 						);
 
 						it(`${testName} should load the compiled tests`, (done) => {
@@ -556,10 +560,10 @@ const describeCases = (config) => {
 								}
 								done();
 							}, done);
-						}, 10000);
+						}, testTimeout(10000));
 
 						const { it: _it, getNumberOfTests } = createLazyTestEnv(
-							testConfig.timeout || 10000
+							testTimeout(testConfig.timeout || 10000)
 						);
 					});
 				}

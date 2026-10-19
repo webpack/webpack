@@ -46,6 +46,7 @@ const filterInfraStructureErrors = require("../helpers/infrastructureLogErrors")
 const prepareOptions = require("../helpers/prepareOptions");
 const supportsObjectHasOwn = require("../helpers/supportsObjectHasOwn");
 const supportsOptionalChaining = require("../helpers/supportsOptionalChaining");
+const testTimeout = require("../helpers/testTimeout");
 
 const testRootDirectory = path.join(__dirname, "..");
 
@@ -105,7 +106,7 @@ const describeCases = (config) => {
 			stderr.restore();
 		});
 
-		jest.setTimeout(20000);
+		jest.setTimeout(testTimeout(20000));
 
 		for (const category of categories) {
 			// eslint-disable-next-line no-loop-func
@@ -271,7 +272,9 @@ const describeCases = (config) => {
 							} catch (_err) {
 								// ignored
 							}
-							if (testConfig.timeout) setDefaultTimeout(testConfig.timeout);
+							if (testConfig.timeout) {
+								setDefaultTimeout(testTimeout(testConfig.timeout));
+							}
 							generatedCode = collectGeneratedCode(optionsArr, {
 								assets: testConfig.ecmaConformance === true
 							});
@@ -403,7 +406,7 @@ const describeCases = (config) => {
 										done();
 									});
 								});
-							}, 60000);
+							}, testTimeout(60000));
 
 							it(`${testName} should pre-compile to fill disk cache (2nd)`, (done) => {
 								rimraf.sync(outputDirectory);
@@ -501,7 +504,7 @@ const describeCases = (config) => {
 										done();
 									});
 								});
-							}, 40000);
+							}, testTimeout(40000));
 						}
 
 						it(`${testName} should compile`, (done) => {
@@ -514,6 +517,8 @@ const describeCases = (config) => {
 								/** @type {import("../../").Stats} */ stats
 							) => {
 								const deprecations = deprecationTracker();
+								// a build that ends after its test timed out finds the suite cleaned up
+								if (generatedCode === undefined) return;
 								if (err) return handleFatalError(err, done);
 								const statOptions = {
 									preset: "verbose",
@@ -740,7 +745,7 @@ const describeCases = (config) => {
 									/** @type {EXPECTED_ANY} */ (onCompiled)
 								);
 							}
-						}, 30000);
+						}, testTimeout(30000));
 
 						const {
 							it: _it,
@@ -748,7 +753,7 @@ const describeCases = (config) => {
 							afterEach: _afterEach,
 							setDefaultTimeout,
 							getNumberOfTests
-						} = createLazyTestEnv(10000);
+						} = createLazyTestEnv(testTimeout(10000));
 					});
 				}
 			});

@@ -31,13 +31,13 @@ const pathOptions = {
 /** @param {import("tinybench").Bench} bench benchmark suite */
 export default (bench) => {
 	bench.add(
-		'unit benchmark "minimizer-module-path-unit", minify entry by module path',
+		'unit benchmark "js-minimizer-plugin-unit", minify entry by module path',
 		async () => {
 			await minify(pathOptions);
 		}
 	);
 	bench.add(
-		'unit benchmark "minimizer-module-path-unit", transform entry by function source',
+		'unit benchmark "js-minimizer-plugin-unit", transform entry by function source',
 		async () => {
 			await transform(serialize(options));
 		}
