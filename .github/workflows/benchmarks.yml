@@ -17,8 +17,11 @@ on:
 concurrency:
   # Named rather than `github.workflow`, which reads as the caller's name when
   # `test.yml` calls this — sharing that group would have the run cancel itself.
-  group: Benchmarks-${{ github.ref }}
-  # Every push to `main` shares one group, so cancelling leaves that commit with
+  # Only pull request runs share a group. A group holds one pending run, so
+  # with a shared group a third push to `main` would evict the one queued
+  # behind the run in progress; every other run keys on its own run id.
+  group: Benchmarks-${{ github.event_name == 'pull_request' && github.ref || github.run_id }}
+  # Cancelling a push to `main` would leave that commit with
   # no run for CodSpeed to compare against — it then falls back to an older
   # `main`, attributing the commits in between to the pull request. Only a
   # superseded pull request run is dropped.

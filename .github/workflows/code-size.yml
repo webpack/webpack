@@ -8,8 +8,11 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  # Every push to `main` shares one group, so cancelling would leave the commits
+  # Only pull request runs share a group. A group holds one pending run, so
+  # with a shared group a third push to `main` would evict the one queued
+  # behind the run in progress; every other run keys on its own run id.
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.ref || github.run_id }}
+  # Cancelling a push to `main` would leave the commits
   # in a burst of merges with no uploaded report — and a pull request based on
   # one of them with no baseline. Only a superseded pull request run is dropped.
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
