@@ -15739,6 +15739,11 @@ describe("CssSyntax minify — declaration order", () => {
 			"a{transition-delay:1s;transition-property:opacity;height:0;width:0}",
 			"a{height:0;width:0;transition-delay:1s;transition-property:opacity}"
 		],
+		// WebKit's `max-size` sets `max-height`, so it stays after it.
+		[
+			"a{display:block;max-height:var(--a);max-size:var(--b)}",
+			"a{max-height:var(--a);max-size:var(--b);display:block}"
+		],
 		// A property only a member's name starts is in that member's family.
 		[
 			"a{overflow-wrap:anywhere;display:block;overflow-x:hidden}",
