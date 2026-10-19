@@ -5084,6 +5084,158 @@ describe("SyntaxTree", () => {
 	});
 });
 
+describe("JavaScript SourceProcessor", () => {
+	const { SourceProcessor } = require("../../../lib/javascript/syntax");
+
+	/** @typedef {import("../../../lib/javascript/syntax-parser").JavascriptPath} JavascriptPath */
+
+	it("fires enter and exit in source order, a template's parts taking turns", () => {
+		/** @type {string[]} */
+		const events = [];
+		/**
+		 * @param {string} name what the event is named
+		 * @returns {{ enter: (path: JavascriptPath) => void, exit: (path: JavascriptPath) => void }} visitors recording it
+		 */
+		const record = (name) => ({
+			enter: (path) => {
+				events.push(`${name}>${path.source()}@${path.index}`);
+			},
+			exit: () => {
+				events.push(`${name}<`);
+			}
+		});
+		new SourceProcessor()
+			.use({
+				[NodeType.CallExpression]: record("call"),
+				[NodeType.TemplateLiteral]: record("template")
+			})
+			.use([NodeType.Identifier, NodeType.TemplateElement], (path) => {
+				events.push(path.source());
+			})
+			.process("f(`a${b}c`, d);");
+		expect(events).toEqual([
+			"call>f(`a${b}c`, d)@0",
+			"f",
+			"template>`a${b}c`@1",
+			"a",
+			"b",
+			"c",
+			"template<",
+			"d",
+			"call<"
+		]);
+	});
+
+	it("reads a node as the CSS and HTML paths read theirs", () => {
+		const source =
+			'import x from "y";\nlabel: for (const k of o) a?.[k];\u2028function f(z, y = 1) { return `t${z}`; }';
+		/** @type {Record<string, unknown>} */
+		const read = {};
+		new SourceProcessor()
+			.use({
+				[NodeType.Program]: (path) => {
+					read.programParent = path.parent;
+					read.childTypes = path.children().map((child) => path.type(child));
+					read.childCount = path.childCount();
+					read.secondChild = path.type(path.child(1));
+					read.pastLastChild = path.child(9);
+					read.sourceType = path.textOf(Part.sourceType);
+				},
+				[NodeType.ImportDeclaration]: (path) => {
+					read.importSource = path.value(path.field(0, Field.source));
+					read.specifiers = path.fieldCount(Field.specifiers);
+					read.withoutPart = [
+						path.rangeOf(Part.raw),
+						path.startOf(Part.raw),
+						path.endOf(Part.raw)
+					];
+				},
+				[NodeType.MemberExpression]: (path) => {
+					read.member = [
+						path.flag(Flag.computed),
+						path.flag(Flag.optional),
+						path.within(NodeType.ForOfStatement),
+						path.within(NodeType.FunctionDeclaration),
+						path.type(path.parent === null ? 0 : path.parent)
+					];
+				},
+				[NodeType.FunctionDeclaration]: (path) => {
+					read.functionRange = path.range();
+					read.functionStart = path.start();
+					read.functionEnd = path.end();
+					read.functionLoc = path.loc();
+					read.functionName = path.name(path.field(0, Field.id));
+					read.functionNoName = path.name();
+					read.functionNoValue = path.value();
+					read.param = path.type(path.fieldNamed(Field.params, "z"));
+					read.noParam = path.fieldNamed(Field.params, "w");
+					read.between = path.source(path.start(), path.start() + 8);
+				},
+				[NodeType.Identifier]: (path) => {
+					if (path.name() === "z") read.state = path.state;
+				}
+			})
+			.process(source, { state: "run" });
+		expect(read).toEqual({
+			programParent: null,
+			childTypes: [
+				NodeType.ImportDeclaration,
+				NodeType.LabeledStatement,
+				NodeType.FunctionDeclaration
+			],
+			childCount: 3,
+			secondChild: NodeType.LabeledStatement,
+			pastLastChild: 0,
+			sourceType: "module",
+			importSource: "y",
+			specifiers: 1,
+			withoutPart: [null, -1, -1],
+			member: [true, true, true, false, NodeType.ChainExpression],
+			functionRange: [53, 93],
+			functionStart: 53,
+			functionEnd: 93,
+			functionLoc: [3, 0, 3, 40],
+			functionName: "f",
+			functionNoName: "",
+			functionNoValue: "",
+			param: NodeType.Identifier,
+			noParam: 0,
+			between: "function",
+			state: "run"
+		});
+	});
+
+	it("skips a node's children, stops, and fires every visitor on the next run", () => {
+		/** @type {string[]} */
+		const names = [];
+		const processor = new SourceProcessor().use({
+			[NodeType.FunctionDeclaration]: (path) => path.skipChildren(),
+			[NodeType.Identifier]: (path) => {
+				names.push(path.name());
+				if (path.name() === "stop") path.stop();
+			}
+		});
+		processor.process("function f(a) { b; } c; stop; d;");
+		processor.process("e;");
+		expect(names).toEqual(["c", "stop", "e"]);
+	});
+
+	it("reads a script as a script, and refuses a walk inside a walk", () => {
+		/** @type {number[]} */
+		const types = [];
+		const processor = new SourceProcessor().use({
+			[NodeType.WithStatement]: (path) => {
+				types.push(path.type());
+				expect(() => processor.process("x;")).toThrow(/already running/);
+			}
+		});
+		processor.process("with (o) x;", { sourceType: "script" });
+		expect(types).toEqual([NodeType.WithStatement]);
+		expect(() => processor.process("with (o) x;")).toThrow(SyntaxError);
+		expect(() => processor.process("x;")).not.toThrow();
+	});
+});
+
 describe("WebpackParser writing a SyntaxTree", () => {
 	const {
 		SyntaxTree,
