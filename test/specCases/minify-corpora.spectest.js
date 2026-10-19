@@ -1862,8 +1862,6 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 			"evaluate/unsafe_array (reminify 7 {\"safari10\":true})",
 			"evaluate/unsafe_array (reminify 8 {\"compress\":{\"reduce_funcs\":false}})",
 			"evaluate/unsafe_array (the default minimizer's options)",
-			"fixture/issues/string-index-utf16/input.js (its own options)",
-			"fixture/issues/string-index-utf16/input.js (the default minimizer's options)"
 		]
 	]
 ])) {

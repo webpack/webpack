@@ -211,8 +211,7 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/substitute_alternate_syntax.rs:168",
 			"oxc minifier: peephole/substitute_alternate_syntax.rs:169",
 			"oxc minifier: peephole/substitute_alternate_syntax.rs:715",
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:865",
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:887"
+			"oxc minifier: peephole/substitute_alternate_syntax.rs:865"
 		]
 	],
 	[
@@ -220,6 +219,7 @@ const OXC_SMALLER_BY_REASON = [
 		[
 			"swc exec: issue_6750_1",
 			"swc exec: issue_6750_2",
+			"swc minifier: fixture/collapse-vars/trivial-literal-chain/input.js",
 			"swc minifier: fixture/issues/6751/1/input.js",
 			"swc minifier: fixture/issues/9785/input.js",
 			"terser compress: asm/asm_function_expression",
@@ -628,7 +628,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/inline_single_use_variable.rs:282",
 			"oxc minifier: peephole/inline_single_use_variable.rs:286",
 			"oxc minifier: peephole/inline_single_use_variable.rs:324",
-			"oxc minifier: peephole/inline_single_use_variable.rs:349",
 			"oxc minifier: peephole/inline_single_use_variable.rs:359",
 			"oxc minifier: peephole/inline_single_use_variable.rs:411",
 			"oxc minifier: peephole/inline_single_use_variable.rs:47",
