@@ -5083,3 +5083,99 @@ describe("SyntaxTree", () => {
 		expect(() => tree.set(node, "value", 1)).toThrow(/has no field value/);
 	});
 });
+
+describe("WebpackParser writing a SyntaxTree", () => {
+	const {
+		SyntaxTree,
+		WebpackParser,
+		toEstreeObject
+	} = require("../../../lib/javascript/syntax-parser");
+
+	/** @type {ParserOptions} */
+	const options = {
+		ecmaVersion: "latest",
+		sourceType: "module",
+		lazyNodes: true,
+		preserveParens: true
+	};
+
+	/**
+	 * @param {string} source the source
+	 * @returns {{ tree: InstanceType<typeof SyntaxTree>, program: number }} the tree and its program
+	 */
+	const parseIntoTree = (source) => {
+		const tree = new SyntaxTree();
+		const program = /** @type {number} */ (
+			/** @type {unknown} */ (
+				new WebpackParser({ ...options, syntaxTree: tree }, source).parse()
+			)
+		);
+		return { tree, program };
+	};
+
+	/**
+	 * @param {unknown} node a node and everything under it
+	 * @returns {unknown} the same as JSON, a bigint and a regular expression as text
+	 */
+	const plain = (node) =>
+		JSON.parse(
+			JSON.stringify(node, (key, value) =>
+				typeof value === "bigint"
+					? `${value}n`
+					: value instanceof RegExp
+						? String(value)
+						: value
+			)
+		);
+
+	it.each([
+		'"use strict"; let { a, b: [c = 1, ...d], ...e } = f; (g) = h, i += 2;',
+		"class A extends B { static #x = 1; get y() { return super.y } static { var z } }",
+		"for (const [k, v] of m) label: for (x in y) continue label;",
+		"x = a ? b?.c(...d) : new E(`t${f}u`, /re/g, 10n);",
+		"async function* g(p = 1, { q }) { yield* await r; }",
+		"switch (s) { case 1: t(); default: }",
+		"try { u() } catch ({ v }) {} finally { w() }",
+		'import a, { b as c } from "d"; export { c }; export default (e) => e;',
+		"export const { f, g: [h] } = i; import.meta;",
+		"({ ...j, k, [l]: m, n() {}, get o() { return 1 } }); [, p, ...q] = r;"
+	])("writes %s as the objects it would build otherwise", (source) => {
+		const { tree, program } = parseIntoTree(source);
+		expect(plain(toEstreeObject(tree, program))).toEqual(
+			plain(new WebpackParser(options, source).parse())
+		);
+	});
+
+	it.each([
+		"({ ...{ a } } = b);",
+		"({ get a() {} } = b);",
+		"[...a = 1] = b;",
+		"[a += 1] = b;",
+		"[a?.b] = c;",
+		"[f()] = b;",
+		"(a, a) => 1;",
+		"async function f() { ({ await } = x); }",
+		"({ a: b.c }) => 1;",
+		"for ((a?.b) of c);"
+	])("refuses %s as it does otherwise", (source) => {
+		/** @type {string | undefined} */
+		let message;
+		try {
+			new WebpackParser(options, source).parse();
+		} catch (err) {
+			message = /** @type {Error} */ (err).message;
+		}
+		expect(message).toBeDefined();
+		expect(() => parseIntoTree(source)).toThrow(/** @type {string} */ (message));
+	});
+
+	it("refuses a tree where its productions would be acorn's", () => {
+		expect(
+			() =>
+				new WebpackParser(
+					{ ...options, ecmaVersion: 2015, syntaxTree: new SyntaxTree() },
+					"x"
+				)
+		).toThrow(/latest edition only/);
+	});
+});
