@@ -162,6 +162,8 @@ Run targeted tests only — `yarn test:base --testPathPatterns="<pattern>"` or `
 
 A local failure is yours only if it doesn't reproduce on `main` (check in a worktree). **Hard rule — no broad local sweeps** (spec-conformance suites, the full `test:integration` matrix); **never read pass/fail through a pipe**; **never attribute a failure without a base run** of that exact case. Known sandbox failures and why: [docs/verifying.md](docs/verifying.md#local-failures-and-broad-sweeps).
 
+**When a check takes longer than a few minutes, let CI run it**: the minify corpora, a spec-conformance suite, a benchmark. Run the fast checks, push, then wait for CI's result rather than running the long check locally in parallel ([details](docs/verifying.md#long-checks-belong-to-ci)).
+
 Running one integration case, and what a `configCases/` case contains: [TESTING_DOCS.md](TESTING_DOCS.md#running-one-integration-case).
 
 **Cover every line you add or change** — a commit must not lower coverage (CI enforces patch coverage, target 90%+). Every new branch, fast path and fallback needs a test: `configCases/` when a real build reaches it, a focused `*.unittest.js` only when a config case can't reasonably drive it or adds nothing (e.g. tokenizer cold-path fallbacks, where fast and delegated branches each still need exercising). Check with `yarn cover:unit` or the PR's "patch" report until no changed line is missing.
