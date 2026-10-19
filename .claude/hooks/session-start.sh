@@ -7,4 +7,10 @@ if [ "${CLAUDE_CODE_REMOTE:-}" != "true" ]; then
 fi
 
 cd "$CLAUDE_PROJECT_DIR"
-node tooling/retry.js yarn --frozen-lockfile
+# Everything this prints lands in the agent's context on every start and
+# resume, so the install log is shown only when the install fails.
+log="$(mktemp)"
+if ! node tooling/retry.js yarn --frozen-lockfile >"$log" 2>&1; then
+	cat "$log" >&2
+	exit 1
+fi
