@@ -16376,6 +16376,14 @@ declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 	): void;
 
 	/**
+	 * Bind a function declaration in the block holding it, when it does not
+	 * hoist to the enclosing scope.
+	 */
+	blockPreWalkFunctionDeclaration(
+		statement: FunctionDeclaration | MaybeNamedFunctionDeclaration
+	): void;
+
+	/**
 	 * Walk function declaration.
 	 */
 	walkFunctionDeclaration(
