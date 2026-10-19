@@ -16,6 +16,10 @@ How to prove a change before pushing it and how to read CI when it is red, behin
 
 `yarn lint` runs `lint:agents` and `lint:special` in sequence and the rest in parallel, so `lint:special` tripping on sandbox drift hides every later stage. If it reports declarations "need to be updated" that `main` reports too, run the rest by hand: `lint:agents`, `lint:code`, `lint:class-names`, `lint:types`, `lint:types-test`, `lint:types-benchmark`, `lint:types-module-test`, `lint:types-hot`, `fmt:check`, `lint:spellcheck`. `lint:types-test` catches `tsc` errors in `test/`; skipping it is how a red `lint` survives "lint passed locally".
 
+## Long runs
+
+**Start a run longer than about ten minutes once, in the background, with its output in a file** (benchmarks, parity corpora, a callgrind count), then wait for the completion notification: no progress polls and no re-armed waiters, since each one re-reads the whole session. Keep any scheduled wake under 55 minutes; past the 1-hour prompt cache a wake rewrites the whole context.
+
 ## Local failures and broad sweeps
 
 A local failure is yours only if it doesn't reproduce on `main` — check in a worktree (`git worktree add <dir> origin/main`) first. Sandboxes routinely fail `Cli createColors`, `profiling-plugin` and the `many-replacements` cases for environment reasons, and the generated-declaration check flags files CI accepts. **Hard rule — no broad local sweeps**: never run the spec-conformance suites (`test:test262` alone takes tens of minutes, `test:html5lib`, `test:css-parsing`) or the full `test:integration` matrix as routine local verification — CI runs them on every push; locally, run the `configCases/` relevant to your change. Broad local sweeps cost minutes and, on a busy machine, manufacture timeouts that look like regressions. Narrow the pattern until a run takes seconds, and:
