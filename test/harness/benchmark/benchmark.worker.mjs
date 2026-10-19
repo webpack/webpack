@@ -20,7 +20,9 @@ import {
 	teardownCore,
 	writeWalltimeResults
 } from "@codspeed/core";
+import enhancedResolve from "enhanced-resolve";
 import { Bench, hrtimeNow } from "tinybench";
+import createSequentialFileSystem from "./sequential-fs.mjs";
 
 /**
  * @import {
@@ -33,7 +35,7 @@ import { Bench, hrtimeNow } from "tinybench";
 /** @typedef {TinybenchTask & { collectBy?: string }} Task */
 /** @import { Benchmark } from "@codspeed/core" */
 
-/** @import Webpack, { Configuration, Stats, Watching } from "../../.." */
+/** @import Webpack, { Compiler, Configuration, Stats, Watching } from "../../.." */
 /**
  * @import {
  * 	Scenario,
@@ -72,6 +74,8 @@ import { Bench, hrtimeNow } from "tinybench";
  * @property {(() => Promise<void>)=} setup one-time fixture generation, run once by the orchestrator
  * @property {((config: Configuration) => Promise<void> | void)=} beforeEachIteration reset run before every iteration, outside the measured region
  */
+
+const { CachedInputFileSystem } = enhancedResolve;
 
 const GENERATE_PROFILE = typeof process.env.PROFILE !== "undefined";
 const codspeedRunnerMode = getCodspeedRunnerMode();
@@ -162,6 +166,27 @@ async function withProfiling(name, fn) {
 }
 
 /**
+ * Give a memory-mode build file systems whose callbacks complete in call order
+ * and whose cache never expires on a timer, so the same build allocates the
+ * same way on every run and the garbage collector runs at the same points.
+ * @param {Compiler} compiler compiler
+ * @returns {void}
+ */
+function useSequentialFileSystems(compiler) {
+	const fs = createSequentialFileSystem();
+	// The default 60s cache drops a level every 500ms of wall time, so how long the
+	// build takes decides which lookups hit; an unbounded cache sets no timer.
+	// @ts-expect-error need to fix on enhanced-resolve side
+	compiler.inputFileSystem = new CachedInputFileSystem(fs, Infinity);
+	compiler.outputFileSystem = fs;
+	compiler.intermediateFileSystem = fs;
+	// A rebuild purges the changed files through this reference.
+	/** @type {{ inputFileSystem: Compiler["inputFileSystem"] }} */
+	(/** @type {unknown} */ (compiler.watchFileSystem)).inputFileSystem =
+		compiler.inputFileSystem;
+}
+
+/**
  * @param {Webpack} webpack webpack
  * @param {Configuration} config configuration
  * @returns {Promise<void>} watching
@@ -174,6 +199,7 @@ function runWebpack(webpack, config) {
 		 */
 		(resolve, reject) => {
 			const compiler = webpack(config);
+			if (codspeedRunnerMode === "memory") useSequentialFileSystems(compiler);
 			compiler.run((err, stats) => {
 				if (err) return reject(err);
 				if (stats && (stats.hasWarnings() || stats.hasErrors())) {
@@ -198,6 +224,7 @@ function runWebpack(webpack, config) {
  */
 async function runWatch(webpack, config, callback) {
 	const compiler = webpack(config);
+	if (codspeedRunnerMode === "memory") useSequentialFileSystems(compiler);
 	return /** @type {Watching} */ (compiler.watch({}, callback));
 }
 
