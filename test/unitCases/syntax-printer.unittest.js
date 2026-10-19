@@ -282,6 +282,24 @@ const IMPROVED_CASES = [
 		"function f(fn,o){return delete(o={...o,b:2}).a,fn(o)}console.log(f(JSON.stringify,{a:1}));"
 	],
 	[
+		"arguments without effects among others past a constructor's parameters",
+		"function e(v) { console.log(v); return v; } console.log(new function (v) { this.v = v; }(e(1), 1, e(2), 2).v);",
+		{ compress: {}, mangle: false },
+		"function e(v){return console.log(v),v}console.log(new function(v){this.v=v}(e(1),e(2)).v);"
+	],
+	[
+		"an optional call of a `let` set to `void 0`, read again after",
+		"function f(g) { let d = void 0; d?.(g()); return [d, 1]; } console.log(f(function () { throw 0; }));",
+		{ compress: {}, mangle: false },
+		"function f(g){let d;return[d,1]}console.log(f(function(){throw 0}));"
+	],
+	[
+		"an unused function a catch clause's parameter shadows",
+		"function f() { function a() {} try { throw 42; } catch (a) { return a; } } console.log(f());",
+		{ compress: {}, mangle: false },
+		"function f(){try{throw 42}catch(a){return a}}console.log(f());"
+	],
+	[
 		"a value calling a method on a name, moved past a bare read of the name",
 		"function c(ctl, e) { var p = ctl.t(e); return u(ctl, p); } function u(a, b) { return [typeof a, b]; } console.log(c({ t: function (x) { return x + 1; } }, 1));",
 		{ compress: {}, mangle: false },
@@ -8751,6 +8769,17 @@ describe("syntax-printer", () => {
 				}
 			});
 		}
+
+		it("should keep an extra constructor argument reading a `let` in its dead zone, and an optional call of a `let` written again", async () => {
+			const { minify } = await load();
+			for (const input of [
+				"function g() { try { return new function (v) { this.v = v; }(1, x).v; } catch (e) { return e.name; } let x; } console.log(g());",
+				"function f() { let d = void 0; d ||= function () { console.log(\"called\"); }; d?.(console.log(\"effect\")); return 1; } console.log(f());"
+			]) {
+				const { code } = await minify(input, { compress: {}, mangle: false });
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			}
+		});
 
 		it("should keep two calls apart where a getter may write the parameter the test reads through `arguments`", async () => {
 			const { minify } = await load();
