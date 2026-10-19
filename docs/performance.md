@@ -67,5 +67,5 @@ Every build, CLI run and minimizer worker starts cold, and most of that start is
 - **An option that turns work off turns its cost off too**: build its tables, regexes and closures on first use, not at load or construction.
 - **Keep laziness in one place** — the facade or memoize helper — not ad-hoc `require()` inside function bodies, so the move to ES modules stays mechanical.
 - **No `i` flag on a regex with a non-ASCII range**: V8 case-folds the whole range at compile time (8–16 ms measured); spell keywords in both ASCII cases instead.
-- **Workers and child processes inherit nothing**: hand them what the parent set up, as `bin/webpack.js` does with the compile cache through `NODE_COMPILE_CACHE`.
+- **Workers and child processes share none of the parent's in-process state** (only `process.env` is inherited): hand them what the parent set up through the environment, as `bin/webpack.js` does with the compile cache through `NODE_COMPILE_CACHE`.
 - **Prove it by counting**: run the entry point in a fresh process and assert which `lib/` files `require.cache` holds, as `HtmlSyntax.unittest.js` "what it loads" does; gate Node-only APIs on `!process.versions.bun && !process.versions.deno`, not on the function existing.
