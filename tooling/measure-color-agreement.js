@@ -29,8 +29,8 @@
 // sweeping each space's own range. No margin bridges those, so a color written
 // in one is left as it stands.
 //
-// Set `PUPPETEER_EXECUTABLE_PATH` to measure a browser other than the installed
-// Chrome channel. The constants the run prints are the measured maxima; the ones
+// Set `CHROME_EXECUTABLE_PATH` to measure a browser other than the pinned
+// Chrome. The constants the run prints are the measured maxima; the ones
 // in `lib/css/syntax.js` carry a safety factor above them, since only the engines
 // that can be run here have been measured.
 
@@ -86,7 +86,7 @@ const decode = (c) => {
 
 /**
  * Ask the browser for its own conversion of each color into sRGB.
- * @param {import("puppeteer-core").Page} page the page to read from
+ * @param {import("playwright-core").Page} page the page to read from
  * @param {string[]} colors the colors as written
  * @returns {Promise<(number[] | null)[]>} each color's sRGB components, or null where it read none
  */
@@ -194,7 +194,7 @@ const polarSample = (space, random) => {
  * disagreement does is scale every value by about one factor; what a different
  * transfer does is bend the bottom of the range away from the top, so the spread
  * of the ratio is what names them.
- * @param {import("puppeteer-core").Page} page the page to read from
+ * @param {import("playwright-core").Page} page the page to read from
  * @param {string[]} spaces the spaces to sweep
  * @returns {Promise<string[]>} the spaces whose transfer the engine reads differently
  */
@@ -205,7 +205,8 @@ const readTransfers = async (page, spaces) => {
 	console.log("space          transfer read as the spec's, over its own range");
 	for (const space of spaces) {
 		const read = await page.evaluate(
-			(values, name) => {
+			// playwright hands a page function one argument
+			([values, name]) => {
 				const element = /** @type {HTMLElement} */ (
 					document.getElementById("probe")
 				);
@@ -215,8 +216,7 @@ const readTransfers = async (page, spaces) => {
 					return getComputedStyle(element).color;
 				});
 			},
-			ramp,
-			space
+			/** @type {const} */ ([ramp, space])
 		);
 		const transfer =
 			/** @type {NonNullable<ReturnType<typeof PREDEFINED_COLOR_SPACES.get>>} */ (
@@ -247,7 +247,7 @@ const readTransfers = async (page, spaces) => {
 	return out.sort();
 };
 
-/** @type {import("puppeteer-core").Browser | undefined} the run's browser */
+/** @type {import("playwright-core").Browser | undefined} the run's browser */
 let browser;
 
 const main = async () => {
@@ -283,7 +283,7 @@ const main = async () => {
 		}
 	}
 
-	browser = await launchBrowser({ protocolTimeout: 600000 });
+	browser = await launchBrowser();
 	const page = await browser.newPage();
 	await page.setContent('<div id="probe">probe</div>');
 	const theirs = await readSrgb(

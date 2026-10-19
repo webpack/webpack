@@ -50,7 +50,7 @@ Directories come first, in alphabetical order, then the individual files worth t
 #### `wpt/`
 
 - **Purpose**: web-platform-tests, read two ways. `html/syntax/parsing/resources/*.dat` is the HTML tree-construction conformance corpus for `parseHtml` (html5lib-tests dropped its copy in `224991e`). The `.html` documents under `html/`, `conformance-checkers/` and `dom/nodes`, plus the declarations the `css/**/parsing/` tests state a verdict for, are the printers' corpus: minifying must not change the DOM webpack's parser builds, the DOM Chrome builds, or the style Chrome computes.
-- **Usage**: Git submodule — initialize with `git submodule update --init --depth 1 test/external/wpt` (the repository is ~161k files, so keep it shallow). Test runners: `test/specCases/html5lib.spectest.js` (`yarn test:html5lib`), which also reads `test/external/html5lib-tests` — initialize both to run the whole suite — and `test/specCases/syntaxEquivalence.spectest.js` (`yarn test:syntax-equivalence`), whose browser tiers need a Chrome (`PUPPETEER_EXECUTABLE_PATH` picks a binary other than the installed channel). A document that is not UTF-8 is skipped: the encoding fixtures are UTF-16, which no string API can read as source.
+- **Usage**: Git submodule — initialize with `git submodule update --init --depth 1 test/external/wpt` (the repository is ~161k files, so keep it shallow). Test runners: `test/specCases/html5lib.spectest.js` (`yarn test:html5lib`), which also reads `test/external/html5lib-tests` — initialize both to run the whole suite — and `test/specCases/syntaxEquivalence.spectest.js` (`yarn test:syntax-equivalence`), whose browser tiers need a Chrome (`CHROME_EXECUTABLE_PATH` picks a binary other than the pinned build). A document that is not UTF-8 is skipped: the encoding fixtures are UTF-16, which no string API can read as source.
 
 #### `css-parsing-tests/`
 
@@ -197,43 +197,44 @@ During the test run, webpack compiles this project and compares the result with 
 ### Suites that drive a real browser
 
 `unitCases/ProfilingPlugin.unittest.js`, `specCases/syntaxEquivalence.spectest.js` and
-`WebpackDevServer.longtest.js` launch a browser through `test/helpers/launchBrowser.js`.
+`WebpackDevServer.longtest.js` launch a browser through `test/helpers/launchBrowser.js`,
+which drives all three engines with `playwright-core`.
 **A browser that will not launch fails the suite — it is never skipped**, so no
 environment can report these checks as passing without having run them. The
-helper uses the Chrome build puppeteer-core pins when `yarn setup:browsers` has
-fetched it, and the installed Chrome channel otherwise; set
-`PUPPETEER_EXECUTABLE_PATH` to point at another binary.
+helper only launches the builds playwright-core pins (Chrome for Testing for
+Chrome), never the machine's own Chrome, which moves with the machine rather than
+the lockfile: run `yarn setup:browsers chrome` first, or set
+`CHROME_EXECUTABLE_PATH` to point at another binary.
 
 `syntaxEquivalence.spectest.js` is the one that reads more than one engine:
 `EQUIVALENCE_BROWSER` takes `chrome`, `firefox` or `webkit`, and CI runs all
-three as one matrix. Chrome and Firefox go through puppeteer; WebKit goes
-through playwright, which is what reaches it, under a shim in
-`test/helpers/launchBrowser.js` that answers to the puppeteer names the suites
-call. Fetch the browser first — `yarn setup:browsers` (Chrome and Firefox, or
-name one), `yarn setup:webkit` — which installs into puppeteer's own cache (`PUPPETEER_CACHE_DIR`, defaulting to
-`~/.cache/puppeteer`) or playwright's; `FIREFOX_EXECUTABLE_PATH` and
-`WEBKIT_EXECUTABLE_PATH` point at one already on the machine. It compares
+three as one matrix. Fetch the browser first — `yarn setup:browsers` (all three,
+or name one; `--with-deps` also installs the system libraries Firefox and WebKit
+need) — which installs into playwright's own cache (`PLAYWRIGHT_BROWSERS_PATH`,
+defaulting to `~/.cache/ms-playwright` on Linux). Firefox and WebKit are
+playwright's own builds of those engines, patched for automation, so
+`FIREFOX_EXECUTABLE_PATH` and `WEBKIT_EXECUTABLE_PATH` must point at such a
+build, never a stock browser; Chrome is the stock Chrome for Testing, and
+`CHROME_EXECUTABLE_PATH` takes any Chrome. It compares
 effects, never CSSOM text: a stylesheet by the styles elements built from its
 selectors compute, at the widths its queries switch on; a page by its DOM and
-its render, with the dark color scheme read through each frame's own. Only
-Chromium answers the media-emulation calls, so only there is a stylesheet naming
-print also read under it. A defect only one
+its render, with the dark color scheme read through each frame's own. Media is
+emulated on Chromium only, the engine the filed defects were measured on, so only
+there is a stylesheet naming print also read under it. A defect only one
 engine has is filed against it with a reason opening `<engine> only:` rather
 than tolerated in all three, and each list must match exactly, so a defect the
 engine fixes fails until its entry goes. A workaround in the suite's own code
 gets the same treatment through a probe in `ENGINE_QUIRKS`.
 
-Every engine is the build the lockfile pins: Chrome and Firefox are the ones
-`puppeteer-core` names in `PUPPETEER_REVISIONS`, WebKit the one `playwright-core`
-ships. Dependabot bumps the two packages in a `browsers` group of their own, so
+Every engine is the build the lockfile pins: the ones the installed
+`playwright-core` ships. Dependabot bumps it in a `browsers` group of its own, so
 a new engine arrives in one pull request, and a defect or quirk it fixes fails
 there rather than under unrelated changes.
 
 They are excluded from `test:bun` / `test:deno` (see the `--testPathIgnorePatterns`
-in those scripts): under Jest on Bun, loading the ESM-only `puppeteer-core` fails
-outright with "Provided module is not an instance of Module", and Jest's
-`require(ESM)` fallback needs Node >= 24.9. Drop the exclusion once those
-runtimes can load it.
+in those scripts). They were left out while `puppeteer-core`, which these suites
+used before, could not load under either runtime; `playwright-core` has not been
+tried there yet.
 
 ### Generated code is held to `output.environment`
 

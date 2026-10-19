@@ -298,14 +298,6 @@ export default defineConfig([
 		}
 	},
 	{
-		// puppeteer-core and @puppeteer/browsers are ESM-only and are loaded via
-		// dynamic import here
-		files: ["test/helpers/launchBrowser.js"],
-		languageOptions: {
-			ecmaVersion: 2020
-		}
-	},
-	{
 		// The equivalence helpers are installed into the page, so they run in the
 		// browser rather than in Node. So does what the color measurement hands to
 		// `page.evaluate`.

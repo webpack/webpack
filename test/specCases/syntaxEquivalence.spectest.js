@@ -34,9 +34,9 @@ const ENGINE = ENGINES.has(String(process.env.EQUIVALENCE_BROWSER))
 	? String(process.env.EQUIVALENCE_BROWSER)
 	: "chrome";
 
-// Only Chromium answers the media-emulation calls: they are CDP, and playwright
-// offers no `color-gamut` either. Elsewhere the signature carries what no
-// viewport varies as text.
+// Media is emulated on Chromium only, the engine the filed defects were
+// measured on; elsewhere the signature carries what no viewport varies as text,
+// though playwright could emulate print and the color scheme there too.
 const EMULATES_MEDIA = ENGINE === "chrome";
 
 // WHY: The printer caps a number at six significant digits, so a computed value
@@ -85,13 +85,13 @@ const POLICED_PAGE = `<!doctype html><html><head><meta http-equiv="Content-Secur
 
 // What neither a width nor a frame's color scheme reaches, set by media
 // emulation where the engine offers it; each runs only over the pairs naming it.
-/** @type {{ label: string, named: RegExp, apply: (page: import("puppeteer-core").Page, on: boolean) => Promise<void> }[]} */
+/** @type {{ label: string, named: RegExp, apply: (page: import("playwright-core").Page, on: boolean) => Promise<void> }[]} */
 const EMULATIONS = EMULATES_MEDIA
 	? [
 			{
 				label: "print",
 				named: /@media[^{]*\bprint\b/i,
-				apply: (page, on) => page.emulateMediaType(on ? "print" : undefined)
+				apply: (page, on) => page.emulateMedia({ media: on ? "print" : null })
 			}
 		]
 	: [];
@@ -122,7 +122,7 @@ const {
 /**
  * Every pair whose stylesheets style some element differently, on a page with
  * the helpers installed — at the default media, then under each emulation.
- * @param {import("puppeteer-core").Page} page the page
+ * @param {import("playwright-core").Page} page the page
  * @param {StylePair[]} pairs the pairs
  * @param {string[]=} types element types every pair nests in each other
  * @returns {Promise<{ name: string, why: string }[]>} what moved, per pair
@@ -232,7 +232,7 @@ const FILED_BENCHMARK_HTML_OPT_IN_DEFECTS = new Map();
 const FILED_BENCHMARK_CSS_OPT_IN_DEFECTS = new Map([
 	[
 		"Tailwind 4 + daisyUI 5",
-		"webkit only: not a printer defect — `convertApproximateColors` clips `oklch(71% .194 13.428)`, outside sRGB, before `color-mix(in oklab, … 80%, #000)` reads it, which is what the option documents; WebKit paints the mix of the clipped color two bytes from the clipped mix (190,71,91 against 192,71,92)"
+		"chrome, firefox, webkit only: not a printer defect — `convertApproximateColors` clips `oklch(71% .194 13.428)`, outside sRGB, before `color-mix(in oklab, … 80%, #000)` reads it, which is what the option documents; every engine pinned paints the mix of the clipped color a byte or two from the clipped mix (WebKit 190,71,91 against 192,71,92; Chrome 156 and Firefox 157 the same `.link-error` under hover)"
 	]
 ]);
 
@@ -610,7 +610,7 @@ const STYLE_CONTROLS = new Map([
  * Run `evaluate` over `items` in batches the page can hold.
  * @template TIn
  * @template TOut
- * @param {import("puppeteer-core").Page} page the page
+ * @param {import("playwright-core").Page} page the page
  * @param {TIn[]} items everything to send
  * @param {(batch: TIn[]) => Promise<TOut[]>} evaluate what to run per batch
  * @returns {Promise<TOut[]>} every batch's results, in order
@@ -635,17 +635,17 @@ const NO_BENCHMARK_CORPUS =
 expectNoDeprecations();
 
 describe(`printer output in real ${ENGINE}`, () => {
-	/** @type {import("puppeteer-core").Browser} */
+	/** @type {import("playwright-core").Browser} */
 	let browser;
-	/** @type {import("puppeteer-core").Page | undefined} the corpus tiers' page */
+	/** @type {import("playwright-core").Page | undefined} the corpus tiers' page */
 	let page;
 	/** @type {number} documents the current page has been asked to parse */
 	let parsed = 0;
 
-	/** @type {import("puppeteer-core").Page} the page the probing tiers share */
+	/** @type {import("playwright-core").Page} the page the probing tiers share */
 	let probePage;
 
-	/** @returns {Promise<import("puppeteer-core").Page>} a page with the helpers */
+	/** @returns {Promise<import("playwright-core").Page>} a page with the helpers */
 	const freshPage = async () => {
 		const opened = await browser.newPage();
 		await opened.setContent(POLICED_PAGE);
@@ -659,7 +659,7 @@ describe(`printer output in real ${ENGINE}`, () => {
 	 * than the tests do: opening one takes 58ms, comparing one document takes far
 	 * less.
 	 * @param {number} documents how many it is about to parse
-	 * @returns {Promise<import("puppeteer-core").Page>} the page to compare on
+	 * @returns {Promise<import("playwright-core").Page>} the page to compare on
 	 */
 	const pageFor = async (documents) => {
 		if (page === undefined || parsed + documents > PAGE_DOCUMENTS) {
@@ -672,10 +672,7 @@ describe(`printer output in real ${ENGINE}`, () => {
 	};
 
 	beforeAll(async () => {
-		browser = await launchBrowser({
-			browser: ENGINE,
-			protocolTimeout: FILE_TIMEOUT
-		});
+		browser = await launchBrowser({ browser: ENGINE });
 		// The probing tiers set a property on one element and read it back, leaving
 		// nothing behind, so they share a page — at 58ms to open one and 1ms to
 		// call into it, a page per test would cost more than the tests do.
@@ -683,10 +680,8 @@ describe(`printer output in real ${ENGINE}`, () => {
 	}, 300000);
 
 	afterAll(async () => {
-		if (page) await page.close();
-		if (probePage) await probePage.close();
 		if (browser) await browser.close();
-	});
+	}, FILE_TIMEOUT);
 
 	/**
 	 * Every page in `cases`, compared as the engine builds it: the facets it
@@ -1045,8 +1040,9 @@ describe(`printer output in real ${ENGINE}`, () => {
 
 	const compareValues = (cases) =>
 		inBatches(probePage, cases, (batch) =>
-			probePage.evaluate((each, custom) => {
-				const { canonical, paintedColors } =
+			// playwright hands a page function one argument
+			probePage.evaluate(([each, custom]) => {
+				const { canonical, paintedColors, unquoteFamilies } =
 					/** @type {{ __eq: PageHelpers }} */ (/** @type {unknown} */ (window))
 						.__eq;
 				const probe = document.createElement("div");
@@ -1088,8 +1084,13 @@ describe(`printer output in real ${ENGINE}`, () => {
 						// Under the one name the spec gives the value, its colors painted: the engine
 						// echoes the spelling it was handed — `jump-start` beside `start` — so without
 						// this the tier reads a synonym as a change of meaning.
+						const value = computed.getPropertyValue(name);
+						// a family name quoted or bare is one family, which the engines echo
+						// in either spelling, as the cascade tier already reads it
 						out += `${name}:${paintedColors(
-							canonical(computed.getPropertyValue(name))
+							canonical(
+								name === "font-family" ? unquoteFamilies(value) : value
+							)
 						)}\u0000`;
 					}
 					return out;
@@ -1121,7 +1122,7 @@ describe(`printer output in real ${ENGINE}`, () => {
 				// The page is shared, so what this tier appends it takes back out.
 				probe.remove();
 				return out;
-			}, batch, CUSTOM_PROPERTY)
+			}, /** @type {const} */ ([batch, CUSTOM_PROPERTY]))
 		);
 
 	/**
@@ -2092,23 +2093,20 @@ const LOWERING_FIXTURES = [
 ];
 
 describe("a lowering computes as the spelling it replaces", () => {
-	/** @type {import("puppeteer-core").Browser} */
+	/** @type {import("playwright-core").Browser} */
 	let browser;
 
 	beforeAll(async () => {
-		browser = await launchBrowser({
-			browser: ENGINE,
-			protocolTimeout: FILE_TIMEOUT
-		});
+		browser = await launchBrowser({ browser: ENGINE });
 	}, 300000);
 
 	afterAll(async () => {
 		if (browser) await browser.close();
-	});
+	}, FILE_TIMEOUT);
 
 	/**
 	 * Every probe's computed value under one stylesheet.
-	 * @param {import("puppeteer-core").Page} page the page to read from
+	 * @param {import("playwright-core").Page} page the page to read from
 	 * @param {string} css the stylesheet
 	 * @param {string} html the document
 	 * @param {[string, string][]} probes selector and property
@@ -2146,7 +2144,7 @@ describe("a lowering computes as the spelling it replaces", () => {
 	 * stylesheet — the whole of what the CSSOM reports rather than the handful of
 	 * properties the fixture names, so a rewrite reaching a property nobody
 	 * thought to probe is one this still sees.
-	 * @param {import("puppeteer-core").Page} page the page to read from
+	 * @param {import("playwright-core").Page} page the page to read from
 	 * @param {string} css the stylesheet
 	 * @param {string} html the document
 	 * @param {string[]} selectors the elements to read
@@ -2207,9 +2205,9 @@ describe("a lowering computes as the spelling it replaces", () => {
 					// An engine with no media emulation takes the scheme from its own
 					// launch settings, so a run there is held to the default one.
 					if (EMULATES_MEDIA) {
-						await page.emulateMediaFeatures([
-							{ name: "prefers-color-scheme", value: scheme }
-						]);
+						await page.emulateMedia({
+							colorScheme: /** @type {"light" | "dark"} */ (scheme)
+						});
 					} else if (scheme !== "light") {
 						continue;
 					}
@@ -2311,19 +2309,16 @@ const RELATIVE_CHANNELS = {
 const COLOR_SAMPLES = 20000;
 
 describe("a color rewrite paints as the color it replaced", () => {
-	/** @type {import("puppeteer-core").Browser} */
+	/** @type {import("playwright-core").Browser} */
 	let browser;
 
 	beforeAll(async () => {
-		browser = await launchBrowser({
-			browser: ENGINE,
-			protocolTimeout: FILE_TIMEOUT
-		});
+		browser = await launchBrowser({ browser: ENGINE });
 	}, FILE_TIMEOUT);
 
 	afterAll(async () => {
 		if (browser !== undefined) await browser.close();
-	});
+	}, FILE_TIMEOUT);
 
 	/**
 	 * One color, in a spelling drawn from the seeded sequence.
@@ -2764,25 +2759,21 @@ const mergePair = (name, source) => {
 };
 
 describe("a distant merge keeps every element's cascade", () => {
-	/** @type {import("puppeteer-core").Browser} */
+	/** @type {import("playwright-core").Browser} */
 	let browser;
-	/** @type {import("puppeteer-core").Page} */
+	/** @type {import("playwright-core").Page} */
 	let page;
 
 	beforeAll(async () => {
-		browser = await launchBrowser({
-			browser: ENGINE,
-			protocolTimeout: FILE_TIMEOUT
-		});
+		browser = await launchBrowser({ browser: ENGINE });
 		page = await browser.newPage();
 		await page.setContent(POLICED_PAGE);
 		await page.evaluate(installHelpers, [...GENERIC_FONT_FAMILIES]);
 	}, FILE_TIMEOUT);
 
 	afterAll(async () => {
-		if (page !== undefined) await page.close();
 		if (browser !== undefined) await browser.close();
-	});
+	}, FILE_TIMEOUT);
 
 	/**
 	 * @param {StylePair[]} pairs the pairs
@@ -2826,7 +2817,7 @@ const ADOPTED_IFRAME_PAGES = new Set([
 
 /**
  * Whether the engine lays out no box for an iframe the adoption agency moved.
- * @param {import("puppeteer-core").Page} page a page to probe in
+ * @param {import("playwright-core").Page} page a page to probe in
  * @returns {Promise<boolean>} true when the moved iframe has no width
  */
 const dropsAdoptedIframeBox = (page) =>
@@ -2850,7 +2841,7 @@ const dropsAdoptedIframeBox = (page) =>
 // Engine behaviors a workaround in this suite exists for, each probed in the
 // engines it was measured in: once one is fixed its test fails, naming the
 // workaround to take back out.
-/** @type {{ engines: string[], quirk: string, workaround: string, holds: (page: import("puppeteer-core").Page) => Promise<boolean> }[]} */
+/** @type {{ engines: string[], quirk: string, workaround: string, holds: (page: import("playwright-core").Page) => Promise<boolean> }[]} */
 const ENGINE_QUIRKS = [
 	{
 		engines: ["chrome"],
@@ -2907,24 +2898,20 @@ const ENGINE_QUIRKS = [
 ];
 
 describe(`engine quirks a workaround depends on in real ${ENGINE}`, () => {
-	/** @type {import("puppeteer-core").Browser} */
+	/** @type {import("playwright-core").Browser} */
 	let browser;
-	/** @type {import("puppeteer-core").Page} */
+	/** @type {import("playwright-core").Page} */
 	let page;
 
 	beforeAll(async () => {
-		browser = await launchBrowser({
-			browser: ENGINE,
-			protocolTimeout: FILE_TIMEOUT
-		});
+		browser = await launchBrowser({ browser: ENGINE });
 		page = await browser.newPage();
 		await page.setContent(POLICED_PAGE);
 	}, FILE_TIMEOUT);
 
 	afterAll(async () => {
-		if (page !== undefined) await page.close();
 		if (browser !== undefined) await browser.close();
-	});
+	}, FILE_TIMEOUT);
 
 	const quirks = ENGINE_QUIRKS.filter(({ engines }) => engines.includes(ENGINE));
 	if (quirks.length === 0) {
@@ -2942,24 +2929,20 @@ describe(`engine quirks a workaround depends on in real ${ENGINE}`, () => {
 });
 
 describe(`declaration order in real ${ENGINE}`, () => {
-	/** @type {import("puppeteer-core").Browser} */
+	/** @type {import("playwright-core").Browser} */
 	let browser;
-	/** @type {import("puppeteer-core").Page} */
+	/** @type {import("playwright-core").Page} */
 	let page;
 
 	beforeAll(async () => {
-		browser = await launchBrowser({
-			browser: ENGINE,
-			protocolTimeout: FILE_TIMEOUT
-		});
+		browser = await launchBrowser({ browser: ENGINE });
 		page = await browser.newPage();
 		await page.setContent(POLICED_PAGE);
 	}, FILE_TIMEOUT);
 
 	afterAll(async () => {
-		if (page !== undefined) await page.close();
 		if (browser !== undefined) await browser.close();
-	});
+	}, FILE_TIMEOUT);
 
 	// The engine, not the data, says which longhands each property sets, so a
 	// spec relating two properties before `mdn-data` does fails here first.
@@ -3004,9 +2987,9 @@ describe(`declaration order in real ${ENGINE}`, () => {
 });
 
 describe("a minified page renders as the page it came from", () => {
-	/** @type {import("puppeteer-core").Browser} */
+	/** @type {import("playwright-core").Browser} */
 	let browser;
-	/** @type {import("puppeteer-core").Page} */
+	/** @type {import("playwright-core").Page} */
 	let page;
 	/** @type {Error | undefined} */
 	let unrecovered;
@@ -3018,7 +3001,7 @@ describe("a minified page renders as the page it came from", () => {
 	const BATCH_DEADLINE = 40000;
 	const PAIR_DEADLINE = 20000;
 
-	/** @returns {Promise<import("puppeteer-core").Page>} a page ready to render in */
+	/** @returns {Promise<import("playwright-core").Page>} a page ready to render in */
 	const openPage = async () => {
 		const opened = await browser.newPage();
 		await opened.setContent(POLICED_PAGE);
@@ -3027,18 +3010,16 @@ describe("a minified page renders as the page it came from", () => {
 	};
 
 	beforeAll(async () => {
-		browser = await launchBrowser({
-			browser: ENGINE,
-			protocolTimeout: FILE_TIMEOUT
-		});
+		browser = await launchBrowser({ browser: ENGINE });
 		page = await openPage();
 		skipAdoptedIframes = await dropsAdoptedIframeBox(page);
 	}, FILE_TIMEOUT);
 
+	// WHY: closing WebKit outlasted Jest's 30s hook default once every test had
+	// passed; closing the browser closes its pages, so none is closed first
 	afterAll(async () => {
-		if (page !== undefined) await page.close();
 		if (browser !== undefined) await browser.close();
-	});
+	}, FILE_TIMEOUT);
 
 	/**
 	 * @template T
