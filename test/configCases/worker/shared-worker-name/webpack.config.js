@@ -15,5 +15,9 @@ module.exports = [
 		environment: { spread: modern, arrowFunction: modern }
 	},
 	optimization: { minimize: false },
-	module: { parser: { javascript: { worker: ["...", "CustomWorker"] } } }
+	module: {
+		parser: {
+			javascript: { worker: ["...", "CustomWorker", "workers.SharedWorker"] }
+		}
+	}
 }));

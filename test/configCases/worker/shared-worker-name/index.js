@@ -94,6 +94,16 @@ it("should handle null and undefined SharedWorker options", () => {
 	expect(undefinedOptions.options).toEqual({ type: expectedWorkerType });
 });
 
+it("should preserve a SharedWorker name through a qualified syntax", () => {
+	const worker = new workers.SharedWorker(
+		new URL("./worker.js", import.meta.url),
+		"chat"
+	);
+	expect(worker.options).toEqual(
+		expectedWorkerType ? { name: "chat", type: "module" } : "chat"
+	);
+});
+
 it("should keep ordinary and custom worker option handling", () => {
 	const worker = new Worker(new URL("./worker.js", import.meta.url), "chat");
 	const custom = new CustomWorker(new URL("./worker.js", import.meta.url), "chat");

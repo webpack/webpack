@@ -21,5 +21,6 @@ module.exports = {
 						this.options = options;
 					}
 				};
+		scope.workers = { SharedWorker: scope.SharedWorker };
 	}
 };
