@@ -12765,6 +12765,16 @@ describe("CssSyntax minify — what a nesting lowering writes is minified once",
 		}
 	);
 
+	it("drops the earlier rule a nested cut shrank a later one into", () => {
+		// A rule holding a nested one is no flat rule to shadow, so the copy it is
+		// cut down to meets the earlier rule only once it is keyed again.
+		expect(
+			settled(
+				".t{.t{top:0}}.t{.t{top:0}top:0}.t{.t{top:0}.t{top:0}}.t{.t{top:0}top:0;.t{top:0}}"
+			)
+		).toBe(".t{top:0;.t{top:0}}");
+	});
+
 	it.each([T, undefined])(
 		"joins the rules a dropped block stood between (%p)",
 		(browsers) => {
