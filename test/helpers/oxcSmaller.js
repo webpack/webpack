@@ -220,40 +220,21 @@ const OXC_SMALLER_BY_REASON = [
 		[
 			"swc exec: issue_6750_1",
 			"swc exec: issue_6750_2",
-			"swc exec: try_catch_2",
-			"swc exec: try_catch_5",
-			"swc minifier: fixture/collapse-vars/trivial-literal-chain/input.js",
 			"swc minifier: fixture/issues/6751/1/input.js",
 			"swc minifier: fixture/issues/9785/input.js",
-			"swc minifier: fixture/no-side-effect/input.js",
-			"swc minifier: full/size/24ba4747cd0b1c8200a359bc28b0040cc47a3f09/input.js",
 			"terser compress: asm/asm_function_expression",
 			"terser compress: asm/asm_nested_functions",
 			"terser compress: asm/asm_toplevel",
-			"terser compress: dead-code/global_timeout_and_interval_symbols",
 			"terser compress: dead-code/try_catch_finally",
 			"terser compress: drop-unused/issue_1715_3",
 			"terser compress: functions/issue_2898",
-			"terser compress: issue-1052/deeply_nested",
-			"terser compress: issue-1052/defun_else_if_return",
-			"terser compress: issue-1052/defun_hoist_funs",
-			"terser compress: issue-1052/defun_if_return",
-			"terser compress: issue-1052/single_function",
 			"terser compress: issue-1105/check_drop_unused_in_peer_function",
 			"terser compress: issue-1105/compress_with_with_in_other_scope",
 			"terser compress: issue-1105/with_in_function_scope",
 			"terser compress: issue-1105/with_using_existing_variable_outside_scope",
-			"terser compress: issue-1704/mangle_catch_redef_1",
-			"terser compress: issue-1704/mangle_catch_redef_1_ie8",
-			"terser compress: issue-1704/mangle_catch_redef_1_ie8_toplevel",
-			"terser compress: issue-1704/mangle_catch_redef_1_toplevel",
 			"terser compress: reduce_vars/issue_t1382",
 			"terser compress: reduce_vars/try_abort",
 			"terser compress: rename/function_catch_catch_ie8",
-			"terser compress: rename/mangle_catch_redef_1",
-			"terser compress: rename/mangle_catch_redef_1_ie8",
-			"terser compress: rename/mangle_catch_redef_1_ie8_toplevel",
-			"terser compress: rename/mangle_catch_redef_1_toplevel",
 			"terser compress: template-string/tagged_template_with_comment",
 			"terser compress: typescript/typescript_disabled_interface"
 		]
@@ -302,13 +283,7 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: ecmascript/may_have_side_effects.rs:302",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:783",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:825",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:904",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:905",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:906",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:907",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:963",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:964",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:965"
+			"oxc minifier: ecmascript/may_have_side_effects.rs:907"
 		]
 	],
 	[
@@ -369,7 +344,6 @@ const OXC_SMALLER_BY_REASON = [
 		"oxc writes `const` as `let` and joins neighboring declarations",
 		[
 			"swc minifier: fixture/issues/11684/bindings/input.js",
-			"swc minifier: fixture/issues/7004/input.js",
 			"swc minifier: fixture/issues/8324/input.js",
 			"swc minifier: fixture/issues/9460/strict-mode/input.js",
 			"swc minifier: fixture/issues/framer-motion/1/input.js",
@@ -537,7 +511,6 @@ const OXC_SMALLER_BY_REASON = [
 			"swc exec: terser_issue_1466_same_variable_in_multiple_for_of",
 			"swc exec: terser_issue_1466_same_variable_in_multiple_for_of_sequences_const",
 			"swc exec: terser_issue_1466_same_variable_in_multiple_for_of_sequences_let",
-			"swc minifier: fixture/issues/5846/input.js",
 			"swc minifier: fixture/issues/7770/2/input.js",
 			"swc minifier: fixture/issues/next-97517/input.js",
 			"terser compress: collapse_vars/collapse_vars_object",
@@ -603,7 +576,6 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: conditionals/issue_ternary_and_nullish_coalescing_operator",
 			"terser compress: evaluate/issue_2535_3",
 			"terser compress: inline/dont_inline_funcs_into_default_param_2",
-			"terser compress: inline/inline_func_with_name_existing_in_block_scope",
 			"terser compress: issue-1446/typeof_eq_undefined",
 			"terser compress: issue-1446/typeof_eq_undefined_ie8",
 			"terser compress: nullish/conditional_to_nullish_coalescing_2"
@@ -861,10 +833,6 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc's mangler picks shorter or better-compressing names, as oxc's `mangler/property_mangler.rs` tests show",
 		["oxc minifier: mangler/property_mangler.rs:99"]
-	],
-	[
-		"oxc's output differs where `window` is undefined: it drops the `window` read, which throws a ReferenceError there",
-		["terser compress: issue-1052/multiple_functions"]
 	],
 	[
 		"oxc's output differs: it drops a class whose static member's computed key may be `\"prototype\"`, which throws a TypeError as the class is defined",
