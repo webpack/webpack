@@ -31,6 +31,7 @@ const prepareOptions = require("../helpers/prepareOptions");
 const { remove } = require("../helpers/remove");
 const supportsObjectHasOwn = require("../helpers/supportsObjectHasOwn");
 const supportsOptionalChaining = require("../helpers/supportsOptionalChaining");
+const testTimeout = require("../helpers/testTimeout");
 
 const testRootDirectory = path.join(__dirname, "..");
 const STEP_DELAY = 200;
@@ -325,6 +326,8 @@ const describeCases = (config) => {
 							// watched files the current step changed which no build has reported yet
 							/** @type {Set<string>} */
 							let unseenChanges = new Set();
+							// builds started so far, and how many had started when the step was written
+							const buildCount = { started: 0, beforeStep: 0 };
 
 							const currentWatchStepModule = require("../helpers/currentWatchStep");
 
@@ -418,6 +421,9 @@ const describeCases = (config) => {
 											? compiler.compilers
 											: [compiler];
 									for (const child of compilers) {
+										child.hooks.watchRun.tap("WatchTestCasesTest", () => {
+											buildCount.started++;
+										});
 										child.hooks.finishMake.tap(
 											{ name: "WatchTestCasesTest", stage: Infinity },
 											assertModuleGraph
@@ -441,6 +447,9 @@ const describeCases = (config) => {
 													throw new Error("No stats reported from Compiler");
 												}
 												if (waitMode) return;
+												// a late event of the last step can start a build just before this
+												// step is written; it read the old files, and the new ones start the next
+												if (buildCount.started <= buildCount.beforeStep) return;
 												// macOS can report one step's changes over more than the aggregate
 												// timeout; a build that missed some reuses the stale cached module,
 												// and the late change starts the build this step's tests wait for
@@ -650,6 +659,7 @@ const describeCases = (config) => {
 																		false,
 																		changed
 																	);
+																	buildCount.beforeStep = buildCount.started;
 																	unseenChanges = new Set();
 																	if (!restartCompiler && watchedCompiler) {
 																		// only a file the last build watched reports its change
@@ -741,7 +751,7 @@ const describeCases = (config) => {
 															closeCompiler().then(finish);
 														}
 													},
-													45000
+													testTimeout(45000)
 												);
 
 												finish();
@@ -755,11 +765,11 @@ const describeCases = (config) => {
 								}
 							};
 							timer = setTimeout(startCompiler, 300);
-						}, 45000);
+						}, testTimeout(45000));
 
 						for (const run of runs) {
 							const { it: _it, getNumberOfTests } = createLazyTestEnv(
-								10000,
+								testTimeout(10000),
 								run.name
 							);
 							run.it = _it;
@@ -787,7 +797,7 @@ const describeCases = (config) => {
 							it: _it,
 							beforeEach: _beforeEach,
 							afterEach: _afterEach
-						} = createLazyTestEnv(10000);
+						} = createLazyTestEnv(testTimeout(10000));
 					});
 				}
 			});

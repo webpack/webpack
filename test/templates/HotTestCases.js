@@ -24,6 +24,7 @@ const createLazyTestEnv = require("../helpers/createLazyTestEnv");
 const deprecationTracking = require("../helpers/deprecationTracking");
 const supportsObjectHasOwn = require("../helpers/supportsObjectHasOwn");
 const supportsOptionalChaining = require("../helpers/supportsOptionalChaining");
+const testTimeout = require("../helpers/testTimeout");
 
 const testRootDirectory = path.join(__dirname, "..");
 
@@ -390,14 +391,14 @@ const describeCases = (config) => {
 								}
 							);
 							compiler.run(/** @type {EXPECTED_ANY} */ (onCompiled));
-						}, 20000);
+						}, testTimeout(20000));
 
 						const {
 							it: _it,
 							beforeEach: _beforeEach,
 							afterEach: _afterEach,
 							getNumberOfTests
-						} = createLazyTestEnv(20000);
+						} = createLazyTestEnv(testTimeout(20000));
 					});
 				}
 			});

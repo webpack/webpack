@@ -1,8 +1,15 @@
 "use strict";
 
+// read by test/helpers/testTimeout.js in the workers, which inherit it
+if (process.argv.some((arg) => /^--coverage(=true)?$/.test(arg))) {
+	process.env.WEBPACK_TEST_COVERAGE = "1";
+}
+
+const testTimeout = require("./test/helpers/testTimeout");
+
 /** @type {import("jest").Config} */
 const config = {
-	testTimeout: 30000,
+	testTimeout: testTimeout(30000),
 	prettierPath: require.resolve("prettier-2"),
 	forceExit: true,
 	globalSetup: "<rootDir>/test/harness/globalSetup.js",
