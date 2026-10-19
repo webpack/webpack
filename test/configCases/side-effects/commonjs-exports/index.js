@@ -32,6 +32,17 @@ import "./pure-call-then-write";
 import "./getter-then-read";
 import "./module-other-property";
 import "./define-property";
+import "./define-property-module-exports";
+import "./define-property-getter";
+import "./define-property-fresh-object";
+import "./define-property-babel";
+import "./define-property-setter-then-write";
+import "./define-property-computed-descriptor-key";
+import "./define-property-replaced";
+import "./define-property-value-getter";
+import "./define-property-computed-key";
+import "./define-property-foreign";
+import "./define-property-impure-value";
 import "./var-chain";
 import "./var-chain-impure";
 import "./var-pattern";
@@ -52,7 +63,12 @@ it("should drop a CommonJS module that only assigns pure values to its exports",
 		"global-as-value",
 		"self-alias-value",
 		"var-chain",
-		"babel-default"
+		"babel-default",
+		"define-property",
+		"define-property-module-exports",
+		"define-property-getter",
+		"define-property-fresh-object",
+		"define-property-babel"
 	];
 	expect(dropped.filter(bundled)).toEqual([]);
 });
@@ -76,7 +92,6 @@ it("should keep a CommonJS module whose export assignment has other effects", ()
 		"pure-call-then-write",
 		"getter-then-read",
 		"module-other-property",
-		"define-property",
 		"module-exports-property",
 		"this-property",
 		"two-target",
@@ -85,7 +100,14 @@ it("should keep a CommonJS module whose export assignment has other effects", ()
 		"left-resolved-first",
 		"var-chain-impure",
 		"var-pattern",
-		"harmony"
+		"harmony",
+		"define-property-setter-then-write",
+		"define-property-computed-descriptor-key",
+		"define-property-replaced",
+		"define-property-value-getter",
+		"define-property-computed-key",
+		"define-property-foreign",
+		"define-property-impure-value"
 	];
 	expect(kept.filter((name) => !bundled(name))).toEqual([]);
 	expect(global.cjsForeignMarker).toBe(1);
