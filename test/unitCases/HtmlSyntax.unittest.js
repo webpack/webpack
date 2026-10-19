@@ -12374,6 +12374,12 @@ describe("SourceProcessor — attribute rewrites as switches", () => {
 		);
 	});
 
+	it("trims the whitespace around a `<script src>`", () => {
+		expect(minify('<script src="  /a.js  "></script>')).toBe(
+			"<script src=/a.js></script>"
+		);
+	});
+
 	it.each([
 		['<img src="  a.png  " alt=a>', '<img src="  a.png  " alt=a>'],
 		['<form action="  /post  "></form>', '<form action="  /post  "></form>'],
