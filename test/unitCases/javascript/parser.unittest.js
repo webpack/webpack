@@ -5076,6 +5076,33 @@ describe("SyntaxTree", () => {
 		expect(tree.name(tree.field(0, Field.argument, spread))).toBe("c");
 	});
 
+	it("lets go of its columns once released", () => {
+		const tree = new SyntaxTree();
+		const program = /** @type {number} */ (
+			/** @type {unknown} */ (
+				new WebpackParser(
+					{ ecmaVersion: "latest", lazyNodes: true, syntaxTree: tree },
+					"a(b, [c]);"
+				).parse()
+			)
+		);
+		expect(tree.type(program)).toBe(NodeType.Program);
+		const types = tree._types;
+		const items = tree._listItems;
+		tree.release();
+		expect([tree._types.length, tree._values.length, tree._listCount]).toEqual([
+			0, 0, 0
+		]);
+		// A runtime that transfers an ArrayBuffer frees the old one at once.
+		const detached =
+			typeof (
+				/** @type {ArrayBuffer & { transfer?: unknown }} */ (
+					new ArrayBuffer(0)
+				).transfer
+			) === "function";
+		expect(types.byteLength === 0 && items.byteLength === 0).toBe(detached);
+	});
+
 	it("refuses an unknown type or field", () => {
 		const tree = new SyntaxTree();
 		expect(() => tree.add(0, 0, 1)).toThrow(/Unknown node type/);
