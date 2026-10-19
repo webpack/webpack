@@ -1,11 +1,11 @@
-// Printing is the other half of `xml-parser-svg-unit`: the same walk, but every
+// Printing is the other half of `xml-parser-unit`: the same walk, but every
 // node also serializes, as XML. Every fixture runs in all three modes the
 // processor has. `walk` is what a build that is not printing pays — parse and
 // walk, no output; `minify` and `beautify` are the same pass with the printer
 // on, the first dropping what re-parses the same and the second only
 // re-serializing. So `minify - walk` is what printing costs on that shape and
 // `minify - beautify` what the rewrites cost on top of serializing. Visitor
-// cost is `xml-parser-svg-unit`'s.
+// cost is `xml-parser-unit`'s.
 
 import { createRequire } from "module";
 
@@ -82,16 +82,13 @@ const FIXTURES = [
  */
 export default (bench) => {
 	for (const [name, source] of FIXTURES) {
-		bench.add(`unit benchmark "xml-printer-svg-unit", walk (${name})`, () => {
+		bench.add(`unit benchmark "xml-printer-unit", walk (${name})`, () => {
 			new SourceProcessor().process(source, { xml: true });
 		});
-		bench.add(
-			`unit benchmark "xml-printer-svg-unit", beautify (${name})`,
-			() => {
-				new SourceProcessor().process(source, { xml: true, mode: "beautify" });
-			}
-		);
-		bench.add(`unit benchmark "xml-printer-svg-unit", minify (${name})`, () => {
+		bench.add(`unit benchmark "xml-printer-unit", beautify (${name})`, () => {
+			new SourceProcessor().process(source, { xml: true, mode: "beautify" });
+		});
+		bench.add(`unit benchmark "xml-printer-unit", minify (${name})`, () => {
 			new SourceProcessor().process(source, { xml: true, mode: "minify" });
 		});
 	}
