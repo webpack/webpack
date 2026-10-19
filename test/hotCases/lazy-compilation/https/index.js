@@ -1,5 +1,8 @@
-// Avoid errors because of self-signed certificate
-process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
+// Node.js trusts the self-signed certificate through NODE_EXTRA_CA_CERTS (see
+// test/harness/globalSetup.js); Bun and Deno need verification turned off
+if (process.versions.bun || process.versions.deno) {
+	process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
+}
 
 it("should compile to lazy imported module", (done) => {
 	let resolved;
