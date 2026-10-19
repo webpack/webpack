@@ -43,6 +43,6 @@ module.exports = [
 			}
 		}
 	},
-	externalsType: "node-commonjs",
+	externalsType: "module",
 	externals: ["fs", "path"]
 }));
