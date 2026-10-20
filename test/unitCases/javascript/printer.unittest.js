@@ -1027,6 +1027,12 @@ const IMPROVED_CASES = [
 		'const node_env="production";console.log(!0,"PRODUCTION");'
 	],
 	[
+		"two `var`s declared bare and set once to one constructor, read through it inside functions called with `new`",
+		"!function () { var C = function () { this.v = 1; }; var a, b; a = C; b = C; console.log([function () { return new a().v; }, function () { return new b().v; }].map(function (f) { return f(); })); }();",
+		{ mangle: false, compress: { passes: 2 } },
+		"!function(){var C=function(){this.v=1};console.log([function(){return(new C).v},function(){return(new C).v}].map(function(f){return f()}))}();"
+	],
+	[
 		"a `var` declared bare, then set once to a parameter before every read, read through the parameter",
 		"function f(x) { var a; a = x; return a.foo + a.bar + a.baz; } function g(x) { var a, b; a = x; b = a; return [b.p, b.p, a.p]; } console.log(f({ foo: 1, bar: 2, baz: 3 }), g({ p: 1 }));",
 		{ mangle: false },
@@ -9019,6 +9025,18 @@ describe("syntax-printer", () => {
 			expect((await minify(input, { compress: {}, mangle: true })).code).toBe(
 				"function f(c){console.log(c.a,c.b,c.c)}f({a:1,b:2,c:3}),f({});"
 			);
+		});
+
+		it("should keep reading a `var` declared with a value through itself once it is set to another name", async () => {
+			const { minify } = await load();
+			const input =
+				"!function () { var C = function () { this.v = 1; }; var a = 5; console.log(a); a = C; console.log(new a().v, new a().v); }();";
+			const { code } = await minify(input, {
+				compress: { passes: 2 },
+				mangle: false
+			});
+			expect(code).toContain(".v,(new a).v");
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
 		});
 
 		it("should name a module's imports and exports by the names they spell, where that writes less", async () => {
