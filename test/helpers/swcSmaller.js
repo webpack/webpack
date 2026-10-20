@@ -311,14 +311,11 @@ const SWC_SMALLER_BY_REASON = [
 		"webpack writes the same program in a spelling longer or compressing worse than swc's: `,` where swc keeps `;` between statements, operand order, `{0}` for an empty body",
 		[
 			"swc minifier: fixture/issues/11084/input.js",
-			"swc minifier: fixture/issues/11368/input.js",
 			"swc minifier: fixture/issues/11684/identifier-aliases/input.js",
-			"swc minifier: fixture/issues/12282/call/input.js",
 			"swc minifier: fixture/issues/3256/1/input.js",
 			"swc minifier: fixture/issues/5588/input.js",
 			"swc minifier: fixture/issues/6791/1/input.js",
 			"swc minifier: fixture/issues/8119/input.js",
-			"swc minifier: fixture/issues/9460/strict-mode/input.js",
 			"swc minifier: fixture/issues/do-while-false-terminal-jump/guarded-jump/input.js",
 			"swc minifier: fixture/issues/drop-console-es2015/input.js",
 			"swc minifier: fixture/next/43052/input.js",
@@ -353,7 +350,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: loops/issue_186_braces",
 			"terser compress: properties/join_object_assignments_NaN_1",
 			"terser compress: pure_getters/set_immutable_5",
-			"terser compress: reduce_vars/issue_2670",
 			"terser compress: reduce_vars/multi_def_2",
 			"terser compress: rename/function_iife_catch"
 		]
@@ -565,7 +561,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/react-instancesearch/002/input.js",
 			"swc minifier: fixture/issues/vercel/005/input.js",
 			"swc minifier: fixture/next/33458/static/chunks/pages/spread-be872e60d968a0f7/input.js",
-			"swc minifier: fixture/next/36127/2/3/input.js",
 			"swc minifier: fixture/next/46887/input.js",
 			"swc minifier: fixture/next/56408/input.js",
 			"swc minifier: fixture/next/66237/input.js",
@@ -660,25 +655,6 @@ const SWC_SMALLER_BY_REASON = [
 	[
 		"swc's output gzips a byte smaller where webpack's is shorter raw: a value collapsed into the key it is written under, where swc keeps the `name=` statement gzip matched",
 		["swc minifier: fixture/projects/jquery/20/input.js"]
-	],
-	[
-		"webpack writes `x===null` where swc's output, as the source, writes `null===x`: shorter or as long, this small program gzips a byte or three bigger, where larger ones gzip smaller",
-		[
-			"swc minifier: fixture/issues/stylis/1/input.js",
-			"swc minifier: fixture/issues/stylis/2/input.js",
-			"swc minifier: fixture/projects/backbone/14/input.js",
-			"swc minifier: fixture/projects/jquery/11/input.js",
-			"swc minifier: fixture/projects/jquery/2/input.js",
-			"swc minifier: fixture/projects/next/.archive-4/webpack-eb940a9a97802b481f9b/input.js",
-			"swc minifier: fixture/projects/next/extra/if_return/.4/input.js",
-			"swc minifier: fixture/projects/react/15/input.js",
-			"swc minifier: fixture/projects/react/9/input.js",
-			"swc minifier: pass-1/4/input.js",
-			"swc minifier: pass-1/5/input.js",
-			"terser compress: comparing/issue_2857_2",
-			"terser compress: comparing/issue_2857_3",
-			"terser compress: if_return/if_return_8"
-		]
 	]
 ];
 
