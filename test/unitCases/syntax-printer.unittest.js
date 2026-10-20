@@ -1000,6 +1000,12 @@ const IMPROVED_CASES = [
 		'let prop="foo_",n=5,o={foo_:1};function f(){return 6}console.log(o.foo_,f());'
 	],
 	[
+		"a call of a function returning a closure, passed a parameter of the same name nothing writes, flattened with the closure reading that parameter",
+		"function g(o) { return function (l, d) { return (function (o) { return function (l, d) { return d.toFixed(l) + o; }; })(o)(l, d * 2); }; } console.log(g(\"!\")(1, 3));",
+		{ mangle: false, compress: { passes: 2 } },
+		'function g(o){return function(l,d){return(d*=2).toFixed(l)+o}}console.log(g("!")(1,3));'
+	],
+	[
 		"a `var` declared bare, then set once to a parameter before every read, read through the parameter",
 		"function f(x) { var a; a = x; return a.foo + a.bar + a.baz; } function g(x) { var a, b; a = x; b = a; return [b.p, b.p, a.p]; } console.log(f({ foo: 1, bar: 2, baz: 3 }), g({ p: 1 }));",
 		{ mangle: false },
@@ -1895,6 +1901,10 @@ const IMPROVED_CASES = [
 // of its function's own, or the call passes, keeps or constructs something.
 /** @type {[string, string][]} */
 const KEPT_CASES = [
+	[
+		"a call of a function returning a closure, passed a parameter written after the call",
+		"function g(o) { var r = (function (o) { return function () { return o; }; })(o); h(); o = 2; return [r, o]; } function h() {} console.log(g(1)[0]());"
+	],
 	[
 		"a `var` copying another, read by a function created before the copy and called before it is set, or by one a loop creates",
 		"!function () { function g() { return { a: 1 }; } var o = g(), k = function () { return L; }, p = k(), L = o; var r = []; for (var i = 0; i < 2; i++) { var M = o; r.push(function () { return M.a; }); } console.log([1, 2].map(function () { return L.a; }), p, r[0](), r[1]()); }();"
