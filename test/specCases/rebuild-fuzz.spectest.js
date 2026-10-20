@@ -25,7 +25,7 @@ const {
 /** @typedef {import("../../").Compilation} Compilation */
 /** @typedef {import("../../").Stats} Stats */
 /** @typedef {import("../../").InputFileSystem} InputFileSystem */
-/** @typedef {{ mode: "production" | "development", splitChunks?: boolean, watchCache?: "filesystem", cacheUnaffected?: boolean }} Variant */
+/** @typedef {{ mode: "production" | "development", splitChunks?: boolean, watchCache?: "filesystem", cacheUnaffected?: boolean, concatenateModules?: boolean }} Variant */
 /** @typedef {{ assets: Record<string, string>, errors: string[], warnings: string[] }} Result */
 /** @typedef {{ step: number, check: string, detail: string }} Failure */
 /** @typedef {{ files: Set<string>, directories: Set<string>, missing: Set<string>, callback: (...args: EXPECTED_ANY[]) => void, undelayed?: (...args: EXPECTED_ANY[]) => void }} PendingWatch */
@@ -45,7 +45,13 @@ const VARIANTS = [
 	{ mode: "production", watchCache: "filesystem" },
 	{ mode: "development", watchCache: "filesystem" },
 	{ mode: "production", cacheUnaffected: true },
-	{ mode: "development", cacheUnaffected: true }
+	{ mode: "development", cacheUnaffected: true },
+	// production already defaults concatenateModules on; these force it with
+	// cacheUnaffected, a combination webpack only recently started allowing
+	{ mode: "production", concatenateModules: true, cacheUnaffected: true },
+	{ mode: "development", concatenateModules: true, cacheUnaffected: true },
+	// splitChunks and cacheUnaffected have never been fuzzed together either
+	{ mode: "production", splitChunks: true, cacheUnaffected: true }
 ];
 
 /** @type {number[]} */
@@ -213,6 +219,7 @@ const createConfig = (dir, variant, cache, logs) => ({
 		emitOnErrors: true,
 		moduleIds: "deterministic",
 		chunkIds: "deterministic",
+		concatenateModules: variant.concatenateModules,
 		splitChunks: variant.splitChunks
 			? { chunks: "all", minSize: 0, cacheGroups: { defaultVendors: false } }
 			: undefined
