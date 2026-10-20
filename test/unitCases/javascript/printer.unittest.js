@@ -9165,7 +9165,22 @@ describe("syntax-printer", () => {
 						(await minify(input, { mangle: false })).code
 					)
 				);
-				// A source past the limit is minified once, however small its output.
+				// A callback keeping a license the first time it is asked keeps it.
+				let asked = false;
+				const { code: licensed } = await minify(`/*! @license L */${input}`, {
+					format: {
+						comments: (
+							/** @type {unknown} */ _node,
+							/** @type {{ value: string }} */ comment
+						) => {
+							if (asked || !comment.value.includes("@license")) return false;
+							asked = true;
+							return true;
+						}
+					}
+				});
+				expect(licensed).toBe(`/*! @license L */${byUse}`);
+								// A source past the limit is minified once, however small its output.
 				const padded = `/* ${"x".repeat(40000)} */${input}`;
 				expect((await minify(padded)).code).toBe(counted);
 			} finally {
