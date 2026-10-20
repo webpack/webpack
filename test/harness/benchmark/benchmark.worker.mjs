@@ -94,6 +94,8 @@ const RUNTIME_SEED = 7;
 let baseOutputPath;
 /** @type {string | undefined} */
 let rootCallingFile;
+/** @type {string | undefined} */
+let onlyUnitTask;
 
 /**
  * @param {string} filename filename
@@ -329,6 +331,9 @@ const withCodSpeed = async (bench) => {
 	const NO_OP_FN = () => {};
 
 	bench.add = (name, fn, options) => {
+		// Skipped before tinybench's `add`, which calls `fn` once to tell whether
+		// it is async: every unit process would otherwise run each sibling bench.
+		if (onlyUnitTask !== undefined && name !== onlyUnitTask) return bench;
 		const callingFile = getCallingFile();
 		let uri = callingFile;
 		if (bench.name !== undefined) {
@@ -1476,14 +1481,6 @@ async function registerBenchmark(bench, task, casesPath) {
 		const registerBenchmarks = await import(`${pathToFileURL(benchmarkPath)}`);
 
 		registerBenchmarks.default(bench);
-
-		// Removed after registration, not filtered in `add`: CodSpeed reads the
-		// caller's frame to build the URI, and a wrapper would replace it.
-		if (task.unitTask !== undefined) {
-			for (const { name } of bench.tasks) {
-				if (name !== task.unitTask) bench.remove(name);
-			}
-		}
 		return;
 	}
 
@@ -1584,6 +1581,7 @@ export async function run({
 
 	baseOutputPath = baseOutputPathArg;
 	rootCallingFile = callingFile;
+	onlyUnitTask = task.unitTask;
 
 	const bench = await createBenchInstance();
 

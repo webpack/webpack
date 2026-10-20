@@ -438,6 +438,9 @@ class BenchmarkRunner {
 	 * @returns {Promise<BenchmarkTask[]>} benchmark tasks, one per unit bench
 	 */
 	async splitUnitTasks(benchmarkTasks) {
+		// Without CodSpeed the pool reuses its workers, so splitting isolates nothing.
+		if (getCodspeedRunnerMode() === "disabled") return benchmarkTasks;
+
 		/** @type {BenchmarkTask[]} */
 		const result = [];
 
