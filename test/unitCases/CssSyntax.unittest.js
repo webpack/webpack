@@ -2406,6 +2406,29 @@ describe("CssSyntax — a block of declarations written again", () => {
 		expect(min(".a{color:red}\n.b{color:red")).toBe(".a,.b{color:red}");
 	});
 
+	it("joins rules under one selector as their text reads back", () => {
+		expect(
+			min(
+				".a{margin-top:1px}\n.a{margin-right:2px;margin-bottom:3px;margin-left:4px;z:url(a\\'b)}"
+			)
+		).toBe(".a{margin:1px 2px 3px 4px;z:url(a\\'b)}");
+		expect(
+			min(
+				".a{margin-top:1px;margin-right:2px}\n.a{margin-bottom:3px;margin-left:4px;background:url(./x\\'y.png)}"
+			)
+		).toBe(
+			".a{background:url(./x\\'y.png);margin-bottom:3px;margin-left:4px;margin-top:1px;margin-right:2px}"
+		);
+		expect(min('.b{color:red}\n.b{content:"\\"\'"}\n.b{top:0}')).toBe(
+			'.b{color:red;content:"\\"\'";top:0}'
+		);
+	});
+
+	it("prints a value the input ends inside", () => {
+		expect(min(".a{grid-area:a/")).toBe(".a{grid-area:a/}");
+		expect(min(".a{b:c,")).toBe(".a{b:c,}");
+	});
+
 	it("keeps a block whose earlier copy no target reads", () => {
 		expect(
 			min(".b{display:none}\n.a::-ms-clear{display:none}\n.c{display:none}", {
