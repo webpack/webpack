@@ -9064,7 +9064,8 @@ describe("syntax-printer", () => {
 			const input =
 				"function f(a, p) { a === undefined || a === null || p; a === undefined || a !== null || p; a !== undefined || a === null || p; a !== undefined || a !== null || p; a === undefined && a === null || p; a === undefined && a !== null || p; a !== undefined && a === null || p; a !== undefined && a !== null || p; } f(); const c = 1; console.log(c);";
 			/** @type {import("terser").MinifyOptions} */
-			const options = { compress: { passes: 2 }, mangle: true };
+			// Unmangled, so the names stay out of the choice this measures.
+			const options = { compress: { passes: 2 }, mangle: false };
 			/**
 			 * @param {boolean} literalsLast whether the literal is written last
 			 * @param {boolean} lets whether `const` is written as `let`
@@ -9101,6 +9102,49 @@ describe("syntax-printer", () => {
 			expect(gzipSize(chosen)).toBeLessThanOrEqual(gzipSize(variants[0]));
 			expect(gzipSize(chosen)).toBeLessThanOrEqual(gzipSize(variants[1]));
 			expect(runProgram(chosen)).toBe(runProgram(input));
+		});
+
+		it("should keep, of a small program's names ordered by counted characters and by their use in English, the one gzip writes smaller", async () => {
+			const { minify, improvements } = await load();
+			if (!improvements) throw new Error("the improve phase is not installed");
+			const zlib = require("zlib");
+			/**
+			 * @param {string} code a program
+			 * @returns {number} its gzipped size
+			 */
+			const gzipSize = (code) => zlib.gzipSync(code, { level: 9 }).length;
+			const input =
+				"function f1(x, y) { return [x + y]; } function f2(x, y) { var z = x + y; return [x, side_effect(), z]; } function f3(x, y) { return [[3], [f(x + y), x, y], [g()]]; }";
+			/**
+			 * @param {boolean} counted whether names are ordered by counted characters
+			 * @returns {Promise<string>} the program minified so, in one run
+			 */
+			const once = async (counted) => {
+				if (!improvements) throw new Error("the improve phase is not installed");
+				improvements.namesByCount.enabled = counted;
+				try {
+					return /** @type {string} */ ((await minify(input)).code);
+				} finally {
+					improvements.namesByCount.enabled = true;
+				}
+			};
+			const counted = await once(true);
+			const byUse = await once(false);
+			expect(counted).toBe(
+				"function f1(f,n){return[f+n]}function f2(f,n){var r=f+n;return[f,side_effect(),r]}function f3(n,r){return[[3],[f(n+r),n,r],[g()]]}"
+			);
+			expect(byUse).toBe(
+				"function f1(e,t){return[e+t]}function f2(e,t){var n=e+t;return[e,side_effect(),n]}function f3(e,t){return[[3],[f(e+t),e,t],[g()]]}"
+			);
+			improvements.choosesBySize.enabled = true;
+			let chosen;
+			try {
+				chosen = /** @type {string} */ ((await minify(input)).code);
+			} finally {
+				improvements.choosesBySize.enabled = false;
+			}
+			expect(chosen).toBe(gzipSize(byUse) < gzipSize(counted) ? byUse : counted);
+			expect(gzipSize(byUse)).toBeLessThan(gzipSize(counted));
 		});
 
 		it("should name a module's imports and exports by the names they spell, where that writes less", async () => {
