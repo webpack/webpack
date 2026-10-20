@@ -4,6 +4,10 @@ codecov:
     # Statuses and the comment wait for `coverage-notify` in test.yml, which
     # runs once every suite that uploads has finished, not after each upload.
     manual_trigger: true
+# Create the comment only once coverage drops, so a pull request that never
+# lowers it (docs, CI config) gets none; a comment once made is kept updated.
+comment:
+  require_changes: "coverage_drop"
 coverage:
   precision: 2
   round: down
@@ -25,6 +29,9 @@ coverage:
           - test262-parser
           - xmlconf
         target: auto
+        # Timing-dependent lines flip between runs, so a PR that changes no
+        # code still moves the total by about 0.01%.
+        threshold: 0.05%
     patch:
       default:
         flags:
