@@ -20525,6 +20525,8 @@ declare interface Minifier {
 		lets: { enabled: boolean; applied: boolean };
 		literalsLast: { enabled: boolean; applied: boolean };
 		namesByCount: { enabled: boolean; applied: boolean };
+		updates: { enabled: boolean; applied: boolean };
+		namesAtSites: { enabled: boolean; applied: boolean; measured: boolean };
 		choosesBySize: { enabled: boolean };
 	};
 	modules: MinifierModules;

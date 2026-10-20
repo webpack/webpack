@@ -4371,7 +4371,8 @@ describe("syntax-printer", () => {
 					? { mangle: { ...variant.mangle } }
 					: {})
 			});
-			const ours = await minify(source, settings());
+			// The improve phase names an export as it is spelled, where terser renames it.
+			const ours = await unimproved(() => minify(source, settings()));
 			const theirs = await reference.minify(source, settings());
 			expect([variant, ours.code]).toEqual([variant, theirs.code]);
 		}
@@ -9190,12 +9191,77 @@ describe("syntax-printer", () => {
 					}
 				});
 				expect(licensed).toBe(`/*! @license L */${byUse}`);
+				// A source map written into the code is no part of what is measured.
+				const { code: mapped } = await minify(input, {
+					sourceMap: { url: "inline" }
+				});
+				expect(
+					/** @type {string} */ (mapped).split("\n//# sourceMappingURL=")[0]
+				).toBe(byUse);
 								// A source past the limit is minified once, however small its output.
 				const padded = `/* ${"x".repeat(40000)} */${input}`;
 				expect((await minify(padded)).code).toBe(counted);
 			} finally {
 				improvements.choosesBySize.enabled = false;
 			}
+		});
+
+		it("should keep a name a destructuring declares in shorthand and nothing reads, where the output is measured", async () => {
+			const { minify, improvements } = await load();
+			if (!improvements) throw new Error("the improve phase is not installed");
+			const input =
+				"function f(o) { var { unused } = o; return 1; } console.log(f({}));";
+			/** @type {import("terser").MinifyOptions} */
+			const options = { ecma: 2015 };
+			expect((await minify(input, options)).code).toBe(
+				"function f(n){var{unused:o}=n;return 1}console.log(f({}));"
+			);
+			improvements.choosesBySize.enabled = true;
+			try {
+				expect((await minify(input, options)).code).toBe(
+					"function f(n){var{unused}=n;return 1}console.log(f({}));"
+				);
+				// Past the size measured, the name is mangled as written unmeasured.
+				const padded = `${input}/* ${"x".repeat(9000)} */`;
+				expect((await minify(padded, { ...options, format: { comments: "all" } })).code).toContain(
+					"{unused:o}"
+				);
+			} finally {
+				improvements.choosesBySize.enabled = false;
+			}
+		});
+
+		it("should try the measured spellings off together, where each off alone gzips no smaller", async () => {
+			const { minify, improvements } = await load();
+			if (!improvements) throw new Error("the improve phase is not installed");
+			const zlib = require("zlib");
+			/**
+			 * @param {string} code a program
+			 * @returns {number} its gzipped size
+			 */
+			const gzipSize = (code) => zlib.gzipSync(code, { level: 9 }).length;
+			const input =
+				"var x = 1; var z = (x -= 1); if (z !== 0) { throw new Test262Error('#1: var x = 1; var z = (x -= 1); z === 0. Actual: ' + (z)); } var x = 1; var y = 1; var z = (x -= y); if (z !== 0) { throw new Test262Error('#2: var x = 1; var y = 1; var z = (x -= y); z === 0. Actual: ' + (z)); }";
+			/** @type {import("terser").MinifyOptions} */
+			const options = { compress: { passes: 2 }, mangle: true };
+			improvements.enabled = false;
+			let unimproved;
+			try {
+				unimproved = /** @type {string} */ ((await minify(input, options)).code);
+			} finally {
+				improvements.enabled = true;
+			}
+			improvements.literalsLast.enabled = true;
+			improvements.choosesBySize.enabled = true;
+			let chosen;
+			try {
+				chosen = /** @type {string} */ ((await minify(input, options)).code);
+			} finally {
+				improvements.literalsLast.enabled = false;
+				improvements.choosesBySize.enabled = false;
+			}
+			expect(gzipSize(chosen)).toBeLessThanOrEqual(gzipSize(unimproved));
+			expect(runProgram(chosen)).toBe(runProgram(input));
 		});
 
 		it("should name a module's imports and exports by the names they spell, where that writes less", async () => {
