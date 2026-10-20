@@ -61,7 +61,7 @@ jobs:
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           # Pinned: `lts/*` resolves per runner image, and a base and head on two
-          # V8 builds differ in time and native allocations alike. Bump both jobs.
+          # V8 builds differ in time and native allocations alike. Bump every job.
           node-version: "24.22.0"
           cache: yarn
 
@@ -84,7 +84,51 @@ jobs:
           mode: "walltime"
         env:
           LAST_COMMIT: 1
-          NEGATIVE_FILTER: ${{ github.event_name != 'schedule' && 'on-schedule' || '' }}
+          # The `-unit` cases run in `benchmark-unit`, where the host CPU cannot move them.
+          NEGATIVE_FILTER: ${{ github.event_name != 'schedule' && 'on-schedule|-unit$' || '-unit$' }}
+          SHARD: ${{ matrix.shard }}
+  benchmark-unit:
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1/2, 2/2]
+    # Hosted runners mix CPU generations (EPYC 7763, 9V74, 9V45) that time the same
+    # parser up to ~35% apart. Simulation counts instructions instead, and the unit
+    # cases make no system calls it would leave out.
+    runs-on: ubuntu-latest
+    # The harness has no deadline of its own, so this only trips on a hang.
+    timeout-minutes: 120
+    permissions:
+      contents: read
+      id-token: write
+      issues: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-tags: true
+          fetch-depth: 0
+
+      - name: Use Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "24.22.0"
+          cache: yarn
+
+      - run: node tooling/retry.js yarn --frozen-lockfile
+
+      - run: yarn link --frozen-lockfile || true
+
+      - run: yarn link webpack --frozen-lockfile
+
+      - name: Run unit benchmarks
+        uses: CodSpeedHQ/action@821a40cd6c80e3cfe387caf55668287addd808da # v5.5.0
+        with:
+          run: yarn benchmark --ci
+          mode: "simulation"
+        env:
+          LAST_COMMIT: 1
+          FILTER: "-unit$"
           SHARD: ${{ matrix.shard }}
   benchmark-memory:
     strategy:
@@ -99,7 +143,9 @@ jobs:
     timeout-minutes: 120
     env:
       LAST_COMMIT: 1
-      NEGATIVE_FILTER: ${{ github.event_name != 'schedule' && 'on-schedule' || '' }}
+      # A unit case's JS heap does not show in this count (parsing typescript.js
+      # reports ~450 KB), so it holds V8's own native allocations, which move run to run.
+      NEGATIVE_FILTER: ${{ github.event_name != 'schedule' && 'on-schedule|-unit$' || '-unit$' }}
       # Single libuv thread → deterministic fs-completion order, removing the
       # last I/O race that perturbs allocation counts between runs.
       UV_THREADPOOL_SIZE: 1
@@ -116,7 +162,7 @@ jobs:
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           # Pinned: `lts/*` resolves per runner image, and a base and head on two
-          # V8 builds differ in time and native allocations alike. Bump both jobs.
+          # V8 builds differ in time and native allocations alike. Bump every job.
           node-version: "24.22.0"
           cache: yarn
 

@@ -1477,6 +1477,14 @@ async function registerBenchmark(bench, task, casesPath) {
 		const registerBenchmarks = await import(`${pathToFileURL(benchmarkPath)}`);
 
 		registerBenchmarks.default(bench);
+
+		// Removed after registration, not filtered in `add`: CodSpeed reads the
+		// caller's frame to build the URI, and a wrapper would replace it.
+		if (task.unitTask !== undefined) {
+			for (const { name } of bench.tasks) {
+				if (name !== task.unitTask) bench.remove(name);
+			}
+		}
 		return;
 	}
 

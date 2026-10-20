@@ -35,6 +35,7 @@ import { simpleGit } from "simple-git";
  * @property {string} id task id (benchmark + scenario)
  * @property {string} benchmark benchmark name
  * @property {Scenario=} scenario scenario (omitted for `-unit` benchmarks)
+ * @property {string=} unitTask the one task of a `-unit` benchmark to run
  * @property {Baseline[]} baselines baselines measured in one task
  */
 
@@ -430,6 +431,55 @@ class BenchmarkRunner {
 	}
 
 	/**
+	 * Expand each `-unit` benchmark into one task per bench it registers, so each
+	 * runs in a fresh worker: an earlier bench's inline caches and heap would
+	 * otherwise change a later one's result. Runs after the cases' `setup()`.
+	 * @param {BenchmarkTask[]} benchmarkTasks benchmark tasks
+	 * @returns {Promise<BenchmarkTask[]>} benchmark tasks, one per unit bench
+	 */
+	async splitUnitTasks(benchmarkTasks) {
+		/** @type {BenchmarkTask[]} */
+		const result = [];
+
+		for (const task of benchmarkTasks) {
+			if (!task.benchmark.includes("-unit")) {
+				result.push(task);
+				continue;
+			}
+
+			const benchmarkPath = path.resolve(
+				this.casesPath,
+				task.benchmark,
+				"index.bench.mjs"
+			);
+			const registerBenchmarks = await import(
+				`${pathToFileURL(benchmarkPath)}`
+			);
+			/** @type {string[]} */
+			const names = [];
+
+			registerBenchmarks.default({
+				/**
+				 * @param {string} name bench name
+				 */
+				add(name) {
+					names.push(name);
+				}
+			});
+
+			for (const name of names) {
+				result.push({
+					...task,
+					id: `${task.benchmark}: ${name}`,
+					unitTask: name
+				});
+			}
+		}
+
+		return result;
+	}
+
+	/**
 	 * Compare HEAD vs BASE for each grouped result (walltime / local runs only;
 	 * CodSpeed analysis modes report through their own instrumentation).
 	 * @param {BenchmarkResult[]} benchmarkResults benchmark results
@@ -636,7 +686,7 @@ class BenchmarkRunner {
 
 		await this.prepareBenchmarkTasks(benchmarkTasks);
 
-		await this.runInWorkers(benchmarkTasks);
+		await this.runInWorkers(await this.splitUnitTasks(benchmarkTasks));
 	}
 }
 
