@@ -1863,6 +1863,15 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 			"evaluate/unsafe_array (reminify 8 {\"compress\":{\"reduce_funcs\":false}})",
 			"evaluate/unsafe_array (the default minimizer's options)",
 		]
+	],
+	[
+		"an assignment collapsed into its first read, where the statements beside it repeat the assignment or the call gzip matched",
+		[
+			"key-is-canonical-invalid-index-reflect-set.js (the default minimizer's options)",
+			"key-is-valid-index-reflect-set.js (the default minimizer's options)",
+			"resizable-buffer-shrink-mid-iteration.js (the default minimizer's options)",
+			"temporal-objects-no-time-clip.js (the default minimizer's options)"
+		]
 	]
 ])) {
 	for (const key of keys) IMPROVED_YET_BIGGER[key] = reason;

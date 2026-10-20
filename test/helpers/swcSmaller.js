@@ -387,7 +387,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/do-while-false-terminal-jump/rejected/input.js",
 			"swc minifier: fixture/issues/do-while-false-terminal-jump/scope-directives/input.js",
 			"swc minifier: fixture/projects/mootools/8/input.js",
-			"swc minifier: pass-1/4/input.js",
 			"terser compress: collapse_vars/boolean_binary_1",
 			"terser compress: collapse_vars/boolean_binary_2",
 			"terser compress: conditionals/issue_2535_1",
