@@ -22,7 +22,9 @@ reviews:
   related_issues: true
   related_prs: true
   poem: false
-  review_status: true
+  # Status notes ("processing", "paused") are extra summary-comment edits,
+  # each a notification to the PR's watchers; findings still arrive as reviews.
+  review_status: false
   commit_status: false
   fail_commit_status: false
 
