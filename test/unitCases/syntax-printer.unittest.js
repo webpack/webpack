@@ -9384,6 +9384,19 @@ describe("syntax-printer", () => {
 			}
 		});
 
+		it("should keep a literal's missing key a built-in's prototype the program writes may hold", async () => {
+			const { minify } = await load();
+			for (const input of [
+				"String.prototype.test262 = 'string prototype'; console.log('abc'.test262);",
+				"Object.prototype.test262 = 1; console.log([1, 2, 3].test262, 'abc'.test262);",
+				"Object.defineProperty(Array.prototype, 'test262', { value: 2 }); console.log([1, 2, 3].test262);"
+			]) {
+				const { code } = await minify(input, { compress: {}, mangle: false });
+				expect(code).not.toContain("void 0");
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			}
+		});
+
 		it("should keep a literal's missing key a logical assignment or a pattern writes", async () => {
 			const { minify } = await load();
 			for (const input of [
