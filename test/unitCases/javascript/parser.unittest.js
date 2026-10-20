@@ -5146,7 +5146,13 @@ describe("SyntaxTree", () => {
 			program
 		);
 		expect(tree.type(last)).toBe(NodeType.ExportNamedDeclaration);
-		expect(tree.fieldCount(Field.specifiers, last)).toBe(2);
+		/** @type {string[]} */
+		const names = [];
+		for (let i = 0; i < tree.fieldCount(Field.specifiers, last); i++) {
+			const specifier = tree.field(i, Field.specifiers, last);
+			names.push(tree.name(tree.field(0, Field.local, specifier)));
+		}
+		expect(names).toEqual(["a", "b"]);
 		tree.release();
 	});
 
