@@ -571,7 +571,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/next/66237/input.js",
 			"swc minifier: fixture/next/brotli-decompress/static/chunks/545-ff8f898b276d138f/input.js",
 			"swc minifier: fixture/next/cryptojs/input.js",
-			"swc minifier: fixture/next/octokit/static/chunks/357-72bd409f1472b1b8/input.js",
 			"swc minifier: fixture/next/react-chartjs/input.js",
 			"swc minifier: fixture/projects/backbone/20/input.js",
 			"swc minifier: fixture/projects/jquery/12/input.js",

@@ -244,7 +244,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/replace_known_methods.rs:1045",
 			"oxc minifier: peephole/replace_known_methods.rs:1071",
 			"oxc minifier: peephole/replace_known_methods.rs:1073",
-			"oxc minifier: peephole/replace_known_methods.rs:1175",
 			"oxc minifier: peephole/replace_known_methods.rs:178",
 			"oxc minifier: peephole/replace_known_methods.rs:48",
 			"oxc minifier: peephole/replace_known_methods.rs:49",

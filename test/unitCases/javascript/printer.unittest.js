@@ -1935,6 +1935,10 @@ const IMPROVED_CASES = [
 /** @type {[string, string][]} */
 const KEPT_CASES = [
 	[
+		"`+= 1` on a name a `for-in` or `for-of` head declares, which holds a string",
+		'function f(o) { for (var x in o) console.log(x += 1); for (var y of ["2"]) console.log(y += 1); } f({ 2: 0 });'
+	],
+	[
 		"a string method called on a variable written after it holds the string",
 		'let s = "abc"; function h() { s = "q"; } h(); console.log(s.toUpperCase());'
 	],
@@ -9082,12 +9086,13 @@ describe("syntax-printer", () => {
 					improvements.lets.enabled = true;
 				}
 			};
-			const variants = await Promise.all([
-				once(true, true),
-				once(false, true),
-				once(true, false),
-				once(false, false)
-			]);
+			// One after another, as each run reads the switches the last one set.
+			const variants = [
+				await once(true, true),
+				await once(false, true),
+				await once(true, false),
+				await once(false, false)
+			];
 			improvements.literalsLast.enabled = true;
 			improvements.choosesBySize.enabled = true;
 			let chosen;
