@@ -455,20 +455,27 @@ class BenchmarkRunner {
 				task.benchmark,
 				"index.bench.mjs"
 			);
-			const registerBenchmarks = await import(
-				`${pathToFileURL(benchmarkPath)}`
-			);
 			/** @type {string[]} */
 			const names = [];
 
-			registerBenchmarks.default({
-				/**
-				 * @param {string} name bench name
-				 */
-				add(name) {
-					names.push(name);
-				}
-			});
+			try {
+				const registerBenchmarks = await import(
+					`${pathToFileURL(benchmarkPath)}`
+				);
+
+				registerBenchmarks.default({
+					/**
+					 * @param {string} name bench name
+					 */
+					add(name) {
+						names.push(name);
+					}
+				});
+			} catch (_err) {
+				// Left whole, so its worker fails and reports it beside the other cases.
+				result.push(task);
+				continue;
+			}
 
 			for (const name of names) {
 				result.push({
