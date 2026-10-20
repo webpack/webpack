@@ -1012,6 +1012,12 @@ const IMPROVED_CASES = [
 		'let fm=function(){return 1};var t,c,f,u;console.log((c=function(a,b){return a+b},f=(t={o:3}).fm,u=t.g,c(void 0===u?2:u,(void 0===f?fm:f)(t.o))));'
 	],
 	[
+		"a name assigned and then called, the call made on the assignment, as Babel's prototype helpers write",
+		"function sp(o, p) { sp = Object.setPrototypeOf || function (o, p) { o.__proto__ = p; return o; }; return sp(o, p); } var a; function t() { return a = function (x) { return x + 1; }, a(a(1)); } console.log(Object.getPrototypeOf(sp({}, null)), t());",
+		{ mangle: false, module: true, compress: { passes: 2 } },
+		"function sp(o,p){return(sp=Object.setPrototypeOf||function(o,p){return o.__proto__=p,o})(o,p)}console.log(Object.getPrototypeOf(sp({},null)),function(x){return x+1}(2));"
+	],
+	[
 		"a `var` declared bare, then set once to a parameter before every read, read through the parameter",
 		"function f(x) { var a; a = x; return a.foo + a.bar + a.baz; } function g(x) { var a, b; a = x; b = a; return [b.p, b.p, a.p]; } console.log(f({ foo: 1, bar: 2, baz: 3 }), g({ p: 1 }));",
 		{ mangle: false },
