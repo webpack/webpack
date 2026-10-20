@@ -1914,6 +1914,10 @@ const IMPROVED_CASES = [
 /** @type {[string, string][]} */
 const KEPT_CASES = [
 	[
+		"a script's top-level `let` declared without a value, which reads no shorter as `void 0`",
+		"let Number; console.log(Number.NaN);"
+	],
+	[
 		"a call of a function returning a closure, passed a parameter written after the call",
 		"function g(o) { var r = (function (o) { return function () { return o; }; })(o); h(); o = 2; return [r, o]; } function h() {} console.log(g(1)[0]());"
 	],
@@ -8990,6 +8994,18 @@ describe("syntax-printer", () => {
 			} finally {
 				improvements.literalsLast.enabled = false;
 			}
+		});
+
+		it("should keep a parameter read often in place of a longer name passed to it, unless names are mangled", async () => {
+			const { minify } = await load();
+			const input =
+				"function f(jQuery) { (function ($) { console.log($.a, $.b, $.c); })(jQuery); } f({ a: 1, b: 2, c: 3 }); f({});";
+			expect((await minify(input, { compress: {}, mangle: false })).code).toBe(
+				"function f(jQuery){var $=jQuery;console.log($.a,$.b,$.c)}f({a:1,b:2,c:3}),f({});"
+			);
+			expect((await minify(input, { compress: {}, mangle: true })).code).toBe(
+				"function f(c){console.log(c.a,c.b,c.c)}f({a:1,b:2,c:3}),f({});"
+			);
 		});
 
 		it("should name a module's imports and exports by the names they spell, where that writes less", async () => {

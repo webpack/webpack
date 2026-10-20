@@ -1663,8 +1663,7 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 			"S15.5.4.12_A1_T7.js (the default minimizer's options)",
 			"S15.6.1.1_A1_T5.js (the default minimizer's options)",
 			"S15.6.1.1_A2.js (the default minimizer's options)",
-			"symbol-coercion.js (the default minimizer's options)",
-			"symbol-tag-non-str-bigint.js (the default minimizer's options)"
+			"symbol-coercion.js (the default minimizer's options)"
 		]
 	],
 	[
@@ -1871,6 +1870,13 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 			"key-is-valid-index-reflect-set.js (the default minimizer's options)",
 			"resizable-buffer-shrink-mid-iteration.js (the default minimizer's options)",
 			"temporal-objects-no-time-clip.js (the default minimizer's options)"
+		]
+	],
+	[
+		"a script's top-level `let` read for its value, where the name it replaces repeated in a run gzip matched",
+		[
+			"byteOffset-validated-against-initial-buffer-length.js (the default minimizer's options)",
+			"fromEpochMilliseconds.js (the default minimizer's options)"
 		]
 	]
 ])) {

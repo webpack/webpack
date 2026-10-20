@@ -331,7 +331,6 @@ const OXC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/d3-color/1/input.js",
 			"swc minifier: fixture/next/41527/1/input.js",
 			"swc minifier: fixture/next/66237/input.js",
-			"swc minifier: fixture/next/66378/input.js",
 			"swc minifier: fixture/next/asmjs/1/input.js",
 			"swc minifier: fixture/next/regression-1/framework-798bab57daac3897/input.js",
 			"swc minifier: fixture/projects/jquery/11/input.js",
@@ -672,8 +671,6 @@ const OXC_SMALLER_BY_REASON = [
 		"oxc inlines more constants and functions, as oxc's `peephole/inline.rs` tests show",
 		[
 			"oxc minifier: peephole/inline.rs:314",
-			"oxc minifier: peephole/inline.rs:603",
-			"oxc minifier: peephole/inline.rs:635",
 			"oxc minifier: peephole/inline.rs:642",
 			"oxc minifier: peephole/inline.rs:658",
 			"oxc minifier: peephole/inline.rs:698",
