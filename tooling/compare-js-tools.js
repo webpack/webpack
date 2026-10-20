@@ -31,7 +31,7 @@ const path = require("path");
 const vm = require("vm");
 const { parse: acornParse, tokenizer: acornTokenizer } = require("acorn");
 const { parse: webpackParse } = require("../lib/javascript/syntax-parser");
-// Acorn's own suite, recorded case by case: what `WebpackParser.unittest.js`
+// Acorn's own suite, recorded case by case: what `javascript/parser.unittest.js`
 // replays, read here for the ranges rather than for the trees.
 const ACORN_CORPUS = require("../test/fixtures/acorn-corpus.json");
 const {
