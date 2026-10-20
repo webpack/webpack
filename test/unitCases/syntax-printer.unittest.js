@@ -8906,6 +8906,39 @@ describe("syntax-printer", () => {
 			);
 		});
 
+		it("should split an object of imports called through it into the imports, unless a method reads `this`", async () => {
+			const { minify, improvements } = await load();
+			/** @type {[string, string][]} */
+			const cases = [
+				[
+					'import { h, F } from "x"; const R = { c: h, F: F }; export function A() { return R.c(R.F); } export function B() { return R.c(1); }',
+					'import{h,F}from"x";export function A(){return h(F)}export function B(){return h(1)}'
+				],
+				[
+					'import { h } from "x"; var a = h; export function A() { return [a, a, a]; }',
+					'import{h}from"x";export function A(){return[h,h,h]}'
+				],
+				[
+					'import { h, F } from "x"; const R = { c: h, F: F, g() { return this.F; } }; export function A() { return R.c(R.g()); }',
+					'import{h,F}from"x";let r={c:h,F:F,g(){return this.F}};export function A(){return r.c(r.g())}'
+				]
+			];
+			/** @type {import("terser").MinifyOptions} */
+			const options = { module: true, compress: { passes: 2 }, mangle: true };
+			for (const [input, written] of cases) {
+				expect((await minify(input, options)).code).toBe(written);
+				if (!improvements) throw new Error("the improve phase is not installed");
+				improvements.enabled = false;
+				try {
+					expect((await minify(input, options)).code).toBe(
+						(await terserReference().minify(input, options)).code
+					);
+				} finally {
+					improvements.enabled = true;
+				}
+			}
+		});
+
 		it("should name a module's imports and exports by the names they spell, where that writes less", async () => {
 			const { minify, improvements } = await load();
 			/** @type {[string, string][]} */
