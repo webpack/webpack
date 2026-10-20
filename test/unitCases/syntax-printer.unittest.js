@@ -1006,6 +1006,12 @@ const IMPROVED_CASES = [
 		'function g(o){return function(l,d){return(d*=2).toFixed(l)+o}}console.log(g("!")(1,3));'
 	],
 	[
+		"a value reading a name nothing writes again, moved past a property read that may run a getter",
+		"const fm = function () { return 1; }; function M(t, c) { var f = t.fm, r = void 0 === f ? fm : f, u = t.g; return c(void 0 === u ? 2 : u, r(t.o)); } console.log(M({ o: 3 }, function (a, b) { return a + b; }));",
+		{ mangle: false, module: true },
+		'let fm=function(){return 1};var t,c,f,u;console.log((c=function(a,b){return a+b},f=(t={o:3}).fm,u=t.g,c(void 0===u?2:u,(void 0===f?fm:f)(t.o))));'
+	],
+	[
 		"a `var` declared bare, then set once to a parameter before every read, read through the parameter",
 		"function f(x) { var a; a = x; return a.foo + a.bar + a.baz; } function g(x) { var a, b; a = x; b = a; return [b.p, b.p, a.p]; } console.log(f({ foo: 1, bar: 2, baz: 3 }), g({ p: 1 }));",
 		{ mangle: false },
