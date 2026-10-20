@@ -2209,6 +2209,11 @@ const ARGUMENTS_KEPT_CASES = [
 /** @type {[string, string, import("terser").MinifyOptions][]} */
 const CORRECTED_CASES = [
 	[
+		"a function's `length`, which counts the parameters before its first default or rest",
+		"console.log(function (a = 1, b) {}.length, function (a, b = 1, c) {}.length, function (a, ...b) {}.length, function ([a], b) {}.length);",
+		{ compress: { unsafe: true }, mangle: false }
+	],
+	[
 		"a call of a function with an empty body whose parameters run a default or destructure",
 		'function g(x) { function f(a = console.log("D")) {} function h({ a }) {} f(); f(); try { h(null); } catch (e) { console.log("T"); } try { h(); } catch (e) { console.log("U"); } return 1; } console.log(g());',
 		{ compress: {}, mangle: false }
