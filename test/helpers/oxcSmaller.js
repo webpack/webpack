@@ -35,6 +35,7 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/minimize_statements.rs:32",
 			"swc exec: concat_tpl_keeps_delimiter_after_interpolation",
 			"swc exec: issue_11517_http_status",
+			"swc exec: issue_11684_named_constructor_arguments",
 			"swc exec: issue_4788_1",
 			"swc exec: issue_6899_1",
 			"swc exec: issue_6899_2",
@@ -316,7 +317,6 @@ const OXC_SMALLER_BY_REASON = [
 		"oxc writes `const` as `let` and joins neighboring declarations",
 		[
 			"swc minifier: fixture/issues/11684/bindings/input.js",
-			"swc minifier: fixture/issues/9460/strict-mode/input.js",
 			"swc minifier: fixture/issues/framer-motion/1/input.js",
 			"swc minifier: fixture/projects/backbone/12/input.js",
 			"terser compress: arguments/modified",
