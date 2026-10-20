@@ -1033,6 +1033,12 @@ const IMPROVED_CASES = [
 		"!function(){var C=function(){this.v=1};console.log([function(){return(new C).v},function(){return(new C).v}].map(function(f){return f()}))}();"
 	],
 	[
+		"`-= 1` as `--`, and `+= 1` as `++` on a counter holding only numbers, but on a parameter that may hold a string",
+		'function f(o, s) { o.a -= 1; s += 1; for (var i = 0; i < 3; i += 1) console.log(i, o.a, s); } f({ a: 5 }, "s");',
+		{ mangle: false },
+		'function f(o,s){--o.a,s+=1;for(var i=0;i<3;++i)console.log(i,o.a,s)}f({a:5},"s");'
+	],
+	[
 		"a `var` declared bare, then set once to a parameter before every read, read through the parameter",
 		"function f(x) { var a; a = x; return a.foo + a.bar + a.baz; } function g(x) { var a, b; a = x; b = a; return [b.p, b.p, a.p]; } console.log(f({ foo: 1, bar: 2, baz: 3 }), g({ p: 1 }));",
 		{ mangle: false },
@@ -10022,7 +10028,6 @@ describe("syntax-printer", () => {
 				["function f(b) { for (var a = [], i = 0; i < b.length; i++) a[i] = arguments[i]; return a; } console.log(f(1, 2));", modern],
 				["function f() { for (var a = [], i = 1; i < arguments.length; i++) a[i] = arguments[i]; return a; } console.log(f(1, 2));", unsafe],
 				["function f() { for (var a = [], i = 1; i < arguments.length; i++) a[i - 2] = arguments[i]; return a; } console.log(f(1, 2));", unsafe],
-				["function f() { for (var a = [], i = 0; i < arguments.length; i += 1) a[i] = arguments[i]; return a; } console.log(f(1, 2));", modern],
 				["function f() { for (var a = [], i = 0; i <= arguments.length; i++) a[i] = arguments[i]; return a; } console.log(f(1, 2));", modern],
 				["function f() { for (var a = [], i = 0; i < arguments.length; i++) a[i] += arguments[i]; return a; } console.log(f(1, 2));", modern],
 				["function f() { for (var a = [], i = 0; i < arguments.length; i++) a[i] = arguments[i + 1]; return a; } console.log(f(1, 2));", modern],
@@ -10042,6 +10047,14 @@ describe("syntax-printer", () => {
 				const reference = await terserReference().minify(input, options);
 				expect(code).toBe(reference.code);
 			}
+			// `i += 1` on a counter holding only numbers steps as `++i` does.
+			const stepped =
+				"function f() { for (var a = [], i = 0; i < arguments.length; i += 1) a[i] = arguments[i]; return a; } console.log(f(1, 2));";
+			const { code } = await minify(stepped, modern);
+			expect(code).toBe(
+				"function f(){var a=[...arguments];return a}console.log(f(1,2));"
+			);
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(stepped));
 		});
 
 		it("should keep a pattern's names and a `catch` binding where dropping them changes what runs", async () => {
