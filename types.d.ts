@@ -34859,6 +34859,16 @@ declare class SyntaxTree {
 		slot2?: null | number,
 		slot3?: null | number
 	): number;
+
+	/**
+	 * `addNode` for a node whose record is one value, as an identifier's name.
+	 */
+	addValueNode(
+		type: number,
+		start: number,
+		end: number,
+		value: TreeValue
+	): number;
 	addValue(
 		value?:
 			| null
@@ -35244,6 +35254,14 @@ declare class TopLevelSymbol {
 	setPure(pure: PureCondition): void;
 	isPure(compilation: Compilation, module: Module): boolean;
 }
+type TreeValue =
+	| null
+	| string
+	| number
+	| bigint
+	| boolean
+	| RegExp
+	| { cooked?: null | string; raw: string };
 
 /**
  * Use a Trusted Types policy to create urls for chunks.
