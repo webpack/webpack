@@ -9150,6 +9150,27 @@ describe("syntax-printer", () => {
 			}
 			expect(chosen).toBe(gzipSize(byUse) < gzipSize(counted) ? byUse : counted);
 			expect(gzipSize(byUse)).toBeLessThan(gzipSize(counted));
+			improvements.choosesBySize.enabled = true;
+			try {
+				// Calls at once each keep their own choice.
+				const [first, second, third] = await Promise.all([
+					minify(input),
+					minify(input, { mangle: false }),
+					minify(input)
+				]);
+				expect(first.code).toBe(byUse);
+				expect(third.code).toBe(byUse);
+				expect(second.code).toBe(
+					/** @type {string} */ (
+						(await minify(input, { mangle: false })).code
+					)
+				);
+				// A source past the limit is minified once, however small its output.
+				const padded = `/* ${"x".repeat(40000)} */${input}`;
+				expect((await minify(padded)).code).toBe(counted);
+			} finally {
+				improvements.choosesBySize.enabled = false;
+			}
 		});
 
 		it("should name a module's imports and exports by the names they spell, where that writes less", async () => {
