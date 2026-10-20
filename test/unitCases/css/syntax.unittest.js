@@ -2449,6 +2449,10 @@ describe("CssSyntax — the memo of which properties' order matters", () => {
 		const names = [];
 		for (let i = 0; i < 33000; i++) names.push(`x${i}:1`);
 		const css = `a{margin:0;${names.join(";")};margin-top:1px}`;
+		/**
+		 * @param {string} src css source
+		 * @returns {string} the minified serialization
+		 */
 		const min = (src) =>
 			new SourceProcessor().process(src, { mode: "minify" }).code;
 		const first = min(css);
