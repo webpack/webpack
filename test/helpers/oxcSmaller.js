@@ -190,7 +190,6 @@ const OXC_SMALLER_BY_REASON = [
 		"oxc substitutes shorter syntax, as oxc's `peephole/substitute_alternate_syntax.rs` tests show",
 		[
 			"oxc minifier: peephole/substitute_alternate_syntax.rs:135",
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:150",
 			"oxc minifier: peephole/substitute_alternate_syntax.rs:164",
 			"oxc minifier: peephole/substitute_alternate_syntax.rs:165",
 			"oxc minifier: peephole/substitute_alternate_syntax.rs:168",
@@ -768,6 +767,20 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc's output is wrong: it reads a `let` that a skipped `case` declares as its value, where the input throws a ReferenceError in the binding's dead zone",
 		["oxc minifier: peephole/minimize_switch_statements.rs:65"]
+	],
+	[
+		"oxc's output is wrong: it writes `x -= 1` as `--x` and `x -= -1` as `++x` on a name or property that may hold a BigInt, where the input throws a TypeError and the update does not; webpack, like swc, rewrites only a name holding only numbers",
+		[
+			"oxc minifier: ecmascript/may_have_side_effects.rs:1638",
+			"oxc minifier: ecmascript/value_type.rs:192",
+			"oxc minifier: peephole/minimize_conditions.rs:158",
+			"oxc minifier: peephole/minimize_conditions.rs:163",
+			"oxc minifier: peephole/minimize_conditions.rs:166",
+			"oxc minifier: peephole/obscure_edge_cases.rs:222",
+			"oxc minifier: peephole/real_world_patterns.rs:79",
+			"oxc minifier: peephole/substitute_alternate_syntax.rs:149",
+			"oxc minifier: peephole/substitute_alternate_syntax.rs:150"
+		]
 	]
 ];
 
