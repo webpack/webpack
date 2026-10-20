@@ -982,7 +982,7 @@ const IMPROVED_CASES = [
 		"a function read once, called in a loop, flattened into its call there, unless a closure keeps its parameter",
 		"function f(a) { function g(x) { return x * 2; } var s = 0; for (var i = 0; i < a.length; i++) s += g(a[i]); return s; } function k(a) { var fs = []; function g(x) { fs.push(function () { return x; }); } for (var i = 0; i < a.length; i++) g(a[i]); return fs.map(function (h) { return h(); }); } (function () { var i; function fn(j) { return function () { console.log(j); }(); } for (i in { a: 1, b: 2 }) fn(i); })(); console.log(f([1, 2]), k([3, 4]));",
 		{ mangle: false },
-		"function f(a){for(var s=0,i=0;i<a.length;i++)s+=2*a[i];return s}function k(a){var fs=[];function g(x){fs.push(function(){return x})}for(var i=0;i<a.length;i++)g(a[i]);return fs.map(function(h){return h()})}!function(){var i;for(i in{a:1,b:2})console.log(i)}(),console.log(f([1,2]),k([3,4]));"
+		"function f(a){for(var s=0,i=0;i<a.length;i++)s+=2*a[i];return s}function k(a){var fs=[];function g(x){fs.push(function(){return x})}for(var i=0;i<a.length;i++)g(a[i]);return fs.map(function(h){return h()})}!function(){for(var i in{a:1,b:2})console.log(i)}(),console.log(f([1,2]),k([3,4]));"
 	],
 	[
 		"a `var` copying one of the function around it, set once per call, read through the name it copies",
@@ -2030,12 +2030,51 @@ const IMPROVED_CASES = [
 		{ compress: {}, mangle: false },
 		"function f(){for(let t of[1,2])console.log(t)}function g(t){var e=[t];for(let t of e)console.log(t)}f(),g(3);"
 	],
+	[
+		"`concat` of array literals and primitives, and one `concat` after another",
+		"function f(n, x, y) { return [[n].concat([2], 3, [4]), [].concat(1, x).concat(y)]; } console.log(f(1, [5], 6));",
+		{ compress: {}, mangle: false },
+		"function f(n,x,y){return[[n,2,3,4],[1].concat(x,y)]}console.log(f(1,[5],6));"
+	],
+	[
+		"a `concat` keeping a hole",
+		"console.log([, 1].concat(2).length, 0 in [, 1].concat(2));",
+		{ compress: {}, mangle: false },
+		"console.log(3,0 in[,1,2]);"
+	],
+	[
+		"an element of an array literal read by its index",
+		"function f(o) { return [[o][0].p, [1, o][1].p]; } console.log(f({ p: 2 }));",
+		{ compress: {}, mangle: false },
+		"function f(o){return[o.p,o.p]}console.log(f({p:2}));"
+	],
+	[
+		"a bare `var` declared by the `for…in` after it",
+		"function f(b) { var a; for (a in b) console.log(a); } f({ k: 1 });",
+		{ compress: {}, mangle: false },
+		"function f(b){for(var a in b)console.log(a)}f({k:1});"
+	],
+	[
+		"a `break` leaving a `do … while` that runs once, as a guard on what follows",
+		"function f(a, b) { do { if (a) break; console.log(1); if (b) break; console.log(2); } while (0); } f(0, 1); f(0, 0);",
+		{ compress: {}, mangle: false },
+		"function f(a,b){a||(console.log(1),b||console.log(2))}f(0,1),f(0,0);"
+	],
+	[
+		"a computed key of a pattern, read as the constant it holds",
+		'function f(o) { const k = 4, p = "a"; let { [7 - k]: x, [p]: y } = o; for (const { [k]: z } of [o]) console.log(z); return [x, y]; } console.log(f({ 3: 1, a: 2, 4: 3 }));',
+		{ compress: {}, mangle: false },
+		"function f(o){let{3:x,a:y}=o;for(let{4:z}of[o])console.log(z);return[x,y]}console.log(f({3:1,a:2,4:3}));"
+	],
 ];
 
 // What the `improve` phase leaves as terser writes it: each body has something
 // of its function's own, or the call passes, keeps or constructs something.
 /** @type {[string, string][]} */
 const KEPT_CASES = [
+	["a computed key of a loop head's pattern, which the body writes", 'function f(o) { let k = 1; for ({ [k]: x } of o) { console.log(x); k = 2; } } var x; f([{ 1: "a", 2: "b" }, { 1: "c", 2: "d" }]);'],
+	["an element of an array literal called, read as a place, or beside one with effects", "function f(o, g) { [o][0] = 1; [o][0]++; delete [o][0]; return [[o][0](), [g(), o][1], [, o][0]]; } console.log(f(function () { return this.length; }, () => 1));"],
+	["a `break` in a `do … while` that runs once, before a declaration or a labeled `break`", "function f(a) { do { if (a) break; class C {} console.log(C.name); } while (0); x: do { if (a) break x; console.log(2); } while (0); } f(0); f(1);"],
 	["a `Map` given what is no entry, or a collection given a spread or an argument more", "function f(a, s) { try { new Map([a]); } catch (e) { console.log(e.name); } try { new Map([, [1]]); } catch (e) { console.log(e.name); } new Set([...s]); new Map([[...s]]); new Set([1], a); } f(1, [2]);"],
 	[
 		"`-= 1` on a property that may hold a BigInt, which throws where `--` would not",
@@ -2134,7 +2173,6 @@ const KEPT_CASES = [
 	["a conditional adding to its target", "var a = 0; Math.random() < 2 ? a += 1 : a += 2; console.log(a);"],
 	["a strict test for null and undefined of a global", "console.log(globalThis.g === null || globalThis.g === void 0, typeof g);"],
 	["a negated test whose value is read", "function f(a, b) { var x = !a || b; return [x, !a && b, (!a || b, !a && b)]; } console.log(f(0, 1), f(1, 0));"],
-	["a `concat` keeping a hole", "console.log([, 1].concat(2).length, 0 in [, 1].concat(2));"],
 	["a `Number` shadowed by a variable", "var Number = { NaN: 1 }; console.log(Number.NaN);"],
 	["a `#__PURE__` call of a function called optionally, or async", "var f = Math.random() < 2 ? () => 1 : null; console.log(/* @__PURE__ */ f?.(), /* @__PURE__ */ (async () => 1)() instanceof Promise);"],
 	["`Number.EPSILON`, longer as a number", "console.log(Number.EPSILON);"],

@@ -97,10 +97,6 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: asm/asm_toplevel",
 			"terser compress: dead-code/try_catch_finally",
 			"terser compress: drop-unused/issue_1715_3",
-			"terser compress: issue-1105/check_drop_unused_in_peer_function",
-			"terser compress: issue-1105/compress_with_with_in_other_scope",
-			"terser compress: issue-1105/with_in_function_scope",
-			"terser compress: issue-1105/with_using_existing_variable_outside_scope",
 			"terser compress: reduce_vars/issue_t1382",
 			"terser compress: template-string/tagged_template_with_comment",
 			"terser compress: typescript/typescript_disabled_interface"
@@ -113,12 +109,7 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/replace_known_methods.rs:1073",
 			"oxc minifier: peephole/replace_known_methods.rs:178",
 			"oxc minifier: peephole/replace_known_methods.rs:48",
-			"oxc minifier: peephole/replace_known_methods.rs:49",
-			"oxc minifier: peephole/replace_known_methods.rs:905",
-			"oxc minifier: peephole/replace_known_methods.rs:906",
-			"oxc minifier: peephole/replace_known_methods.rs:907",
-			"oxc minifier: peephole/replace_known_methods.rs:956",
-			"oxc minifier: peephole/replace_known_methods.rs:957"
+			"oxc minifier: peephole/replace_known_methods.rs:49"
 		]
 	],
 	[
@@ -218,14 +209,7 @@ const OXC_SMALLER_BY_REASON = [
 	],
 	[
 		"oxc follows a variable's value through its reassignments and folds the result",
-		[
-			"swc exec: terser_destructuring_destructuring_assign_of_computed_key",
-			"terser compress: destructuring/destructuring_assign_of_computed_key",
-			"terser compress: destructuring/destructuring_decl_of_computed_key",
-			"terser compress: drop-unused/issue_t161_top_retain_15",
-			"terser compress: mangleprops-computed/computed_props_keep_quoted_inlined_sub_10",
-			"terser compress: mangleprops-strict-computed/computed_props_keep_quoted_inlined_sub_10"
-		]
+		["terser compress: drop-unused/issue_t161_top_retain_15"]
 	],
 	[
 		"oxc normalizes the syntax before compressing it, as oxc's `peephole/normalize.rs` tests show",
@@ -239,7 +223,6 @@ const OXC_SMALLER_BY_REASON = [
 		"oxc writes a variable's value at its one read and drops the variable, or an alias of another binding",
 		[
 			"oxc minifier: peephole/esbuild.rs:2274",
-			"swc exec: indirect_eval_1",
 			"swc exec: terser_issue_1466_different_variable_in_multiple_for_of",
 			"swc minifier: fixture/issues/7770/2/input.js",
 			"swc minifier: fixture/issues/next-97517/input.js",
@@ -258,12 +241,9 @@ const OXC_SMALLER_BY_REASON = [
 		"oxc restructures conditionals: an `if` as `&&` or `?:`, a shared tail factored out, a redundant branch or jump dropped",
 		[
 			"swc minifier: fixture/issues/12299/input.js",
-			"swc minifier: fixture/issues/do-while-false-terminal-jump/rejected/input.js",
 			"swc minifier: fixture/projects/backbone/5/input.js",
 			"swc minifier: fixture/projects/react/16/input.js",
-			"terser compress: collapse_vars/issue_2873_1",
-			"terser compress: conditionals/issue_1674_false_equivalency_of_props",
-			"terser compress: loops/issue_1532"
+			"terser compress: conditionals/issue_1674_false_equivalency_of_props"
 		]
 	],
 	[
@@ -292,22 +272,15 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc evaluates built-in calls and reads on literals at build time",
 		[
-			"swc exec: update_object_3",
 			"swc minifier: fixture/issues/7714/1/input.js",
 			"terser compress: evaluate/regexp_property_eval",
-			"terser compress: issue-126/concatenate_rhs_strings",
-			"terser compress: reduce_vars/reduce_funcs_in_array_1",
-			"terser compress: reduce_vars/reduce_funcs_in_array_2",
-			"terser compress: reduce_vars/reduce_funcs_in_object_literal_2",
-			"terser compress: reduce_vars/single_use_class_referenced_in_array"
+			"terser compress: issue-126/concatenate_rhs_strings"
 		]
 	],
 	[
 		"oxc writes classes, methods and object literals shorter",
 		[
 			"swc exec: object_spread_proto_key_is_not_flattened",
-			"terser compress: mangleprops-computed/no_computed_props_keep_quoted_inlined_sub_10",
-			"terser compress: mangleprops-strict-computed/no_computed_props_keep_quoted_inlined_sub_10",
 			"terser compress: object/convert_computed_props_to_regular_ones"
 		]
 	],
@@ -363,9 +336,7 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc joins more neighboring declarations, as oxc's `peephole/collapse_variable_declarations.rs` tests show",
 		[
-			"oxc minifier: peephole/collapse_variable_declarations.rs:202",
 			"oxc minifier: peephole/collapse_variable_declarations.rs:211",
-			"oxc minifier: peephole/collapse_variable_declarations.rs:225",
 			"oxc minifier: peephole/collapse_variable_declarations.rs:234",
 			"oxc minifier: peephole/collapse_variable_declarations.rs:99"
 		]
@@ -456,13 +427,6 @@ const OXC_SMALLER_BY_REASON = [
 		["oxc minifier: peephole/remove_unused_private_members.rs:27"]
 	],
 	[
-		"webpack folds a value into its read where gzip then compresses the folded constant worse than the read oxc keeps",
-		[
-			"terser compress: reduce_vars/unsafe_evaluate_modified",
-			"swc exec: terser_reduce_vars_unsafe_evaluate_modified"
-		]
-	],
-	[
 		"oxc drops an unread deferred or source-phase import, assuming its load cannot fail, where webpack keeps it as oxc's `invalid_import_side_effects` does, since it still fetches and links its module",
 		[
 			"oxc minifier: peephole/remove_unused_declaration.rs:1086",
@@ -478,6 +442,7 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc's output is wrong: it calls a method read through `(0, o.f)`, `(t = o.f)` or an arrow returning it as a method of `o`, and an `eval` so read as a direct `eval`",
 		[
+			"swc exec: indirect_eval_1",
 			"oxc minifier: peephole/oxc.rs:100",
 			"oxc minifier: peephole/oxc.rs:101",
 			"oxc minifier: peephole/oxc.rs:102",
@@ -549,6 +514,15 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/replace_known_methods.rs:629",
 			"oxc minifier: peephole/replace_known_methods.rs:630",
 			"oxc minifier: peephole/replace_known_methods.rs:631"
+		]
+	],
+	[
+		"oxc drops a `var` written in a `with` body, where the write may set a property of the `with` object instead",
+		[
+			"terser compress: issue-1105/check_drop_unused_in_peer_function",
+			"terser compress: issue-1105/compress_with_with_in_other_scope",
+			"terser compress: issue-1105/with_in_function_scope",
+			"terser compress: issue-1105/with_using_existing_variable_outside_scope"
 		]
 	],
 	[
