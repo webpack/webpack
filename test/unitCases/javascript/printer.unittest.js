@@ -1033,6 +1033,12 @@ const IMPROVED_CASES = [
 		"!function(){var C=function(){this.v=1};console.log([function(){return(new C).v},function(){return(new C).v}].map(function(f){return f()}))}();"
 	],
 	[
+		"`+= 1` as `++` on each write of a counter two loops share",
+		"function f(a) { for (var i = 0; i < a.length; i += 1) console.log(i); for (i = 0; i < a.length; i += 1) console.log(i); } f([1, 2]);",
+		{ mangle: false },
+		"function f(a){for(var i=0;i<a.length;++i)console.log(i);for(i=0;i<a.length;++i)console.log(i)}f([1,2]);"
+	],
+	[
 		"`-= 1` as `--`, and `+= 1` as `++` on a counter holding only numbers, but on a parameter that may hold a string",
 		'function f(o, s) { o.a -= 1; s += 1; for (var i = 0; i < 3; i += 1) console.log(i, o.a, s); } f({ a: 5 }, "s");',
 		{ mangle: false },
@@ -1934,6 +1940,10 @@ const IMPROVED_CASES = [
 // of its function's own, or the call passes, keeps or constructs something.
 /** @type {[string, string][]} */
 const KEPT_CASES = [
+	[
+		"`+= 1` on a name a `for-in` head assigns, which holds a string",
+		"function f(o) { var x = 0; for (x in o) console.log(x += 1); } f({ 2: 0 });"
+	],
 	[
 		"`+= 1` on a name a `for-in` or `for-of` head declares, which holds a string",
 		'function f(o) { for (var x in o) console.log(x += 1); for (var y of ["2"]) console.log(y += 1); } f({ 2: 0 });'
