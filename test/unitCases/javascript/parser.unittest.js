@@ -5113,6 +5113,43 @@ describe("SyntaxTree", () => {
 		next.release();
 	});
 
+	it("keeps a list's items while an item written into it grows the column", () => {
+		/**
+		 * @param {string} source a module
+		 * @returns {[SyntaxTree, number]} its tree and program
+		 */
+		const parseModule = (source) => {
+			const tree = new SyntaxTree();
+			const program = /** @type {number} */ (
+				/** @type {unknown} */ (
+					new WebpackParser(
+						{
+							ecmaVersion: "latest",
+							sourceType: "module",
+							lazyNodes: true,
+							syntaxTree: tree
+						},
+						source
+					).parse()
+				)
+			);
+			return [tree, program];
+		};
+		const body = `var a, b;${"a;".repeat(40000)}`;
+		// Large enough to be let go, it leaves the next tree its list room exactly:
+		// the body's list fits, and the export's one more name does not.
+		parseModule(`${body}export { a };`)[0].release();
+		const [tree, program] = parseModule(`${body}export { a, b };`);
+		const last = tree.field(
+			tree.fieldCount(Field.body, program) - 1,
+			Field.body,
+			program
+		);
+		expect(tree.type(last)).toBe(NodeType.ExportNamedDeclaration);
+		expect(tree.fieldCount(Field.specifiers, last)).toBe(2);
+		tree.release();
+	});
+
 	it("lets go of a large tree's columns, and the next grows to its size", () => {
 		const tree = new SyntaxTree();
 		parseInto(tree, "a;".repeat(40000));
