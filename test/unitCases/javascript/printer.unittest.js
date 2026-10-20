@@ -2024,6 +2024,12 @@ const IMPROVED_CASES = [
 		{ compress: {}, mangle: false, ecma: 2020 },
 		"function f(o){return o?.a}console.log(f({a:1}),f(null));"
 	],
+	[
+		"an assignment moved into a `for…of` head declaring its own names, unless it reads one",
+		"function f() { var d; d = [1, 2]; for (let t of d) console.log(t); } function g(t) { var e; e = [t]; for (let t of e) console.log(t); } f(); g(3);",
+		{ compress: {}, mangle: false },
+		"function f(){for(let t of[1,2])console.log(t)}function g(t){var e=[t];for(let t of e)console.log(t)}f(),g(3);"
+	],
 ];
 
 // What the `improve` phase leaves as terser writes it: each body has something

@@ -271,7 +271,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/9785/input.js",
 			"swc minifier: fixture/issues/cycle-1/input.js",
 			"swc minifier: fixture/issues/cycle-2/input.js",
-			"swc minifier: fixture/issues/pure-callee-call/input.js",
 			"swc minifier: fixture/pr/7690/input.js",
 			"swc minifier: fixture/simple/inline/4/input.js",
 			"swc minifier: full/issues/8288/input.js",
@@ -314,7 +313,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: conditionals/equality_conditionals_false",
 			"terser compress: conditionals/ifs_3_should_warn",
 			"terser compress: const/issue_1396",
-			"terser compress: drop-unused/issue_3192",
 			"terser compress: evaluate/and",
 			"terser compress: evaluate/issue_2207_3",
 			"terser compress: evaluate/or",
@@ -447,7 +445,6 @@ const SWC_SMALLER_BY_REASON = [
 		"swc resolves a `switch` on a known value at build time, and writes a one-case `switch` as an `if`",
 		[
 			"swc minifier: fixture/issues/4412/input.js",
-			"swc minifier: fixture/issues/8813/input.js",
 			"swc minifier: fixture/issues/9619/input.js",
 			"terser compress: issue-1750/case_2",
 			"terser compress: switch/if_else5",
