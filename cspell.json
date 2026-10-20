@@ -642,7 +642,7 @@
     "types.d.ts",
     "**/**/*.snap",
     "test/cases/json/weird-properties/globals.json",
-    "test/unitCases/javascript/webpack-parser.unittest.js",
+    "test/unitCases/javascript/module-parser.unittest.js",
     "lib/javascript/data.js",
     "lib/javascript/syntax-printer-data.js",
     "tooling/html-entities.json",
