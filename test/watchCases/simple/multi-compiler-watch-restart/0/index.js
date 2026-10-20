@@ -43,7 +43,7 @@ it("should wait for a restarted compiler before reporting done", async () => {
 	});
 	const finished = new Promise((resolve) => {
 		first.hooks.afterDone.tap("WatchRestartTest", () => {
-			if (runs === 2) resolve();
+			if (runs >= 2) resolve();
 		});
 	});
 	first.watching.invalidate();
@@ -52,7 +52,8 @@ it("should wait for a restarted compiler before reporting done", async () => {
 	finishSecond();
 	try {
 		expect(runs).toBe(2);
-		expect(invalidations).toBe(2);
+		// A file event from the step's own writes, late on Windows, may add one.
+		expect(invalidations).toBeGreaterThanOrEqual(2);
 		expect(results).toHaveLength(0);
 	} finally {
 		resumeFirst();

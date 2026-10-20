@@ -1508,7 +1508,6 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 	[
 		"`c ? x : c` written as `c && x` where the source repeats the conditional gzip matched",
 		[
-			"bound-to-collator-instance.js (the default minimizer's options)",
 			"returns-same-results-as-NumberFormat.js (the default minimizer's options)"
 		]
 	],
@@ -1566,7 +1565,6 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 			"S15.10.1_A1_T16.js (the default minimizer's options)",
 			"S15.10.3.1_A2_T1.js (the default minimizer's options)",
 			"S15.10.4.1_A1_T4.js (the default minimizer's options)",
-			"S15.10.4.1_A8_T12.js (the default minimizer's options)",
 			"S15.10.7_A2_T2.js (the default minimizer's options)",
 			"S15.3.5.3_A2_T2.js (the default minimizer's options)",
 			"S15.3.5_A1_T1.js (the default minimizer's options)",
@@ -1580,7 +1578,6 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 			"S15.4.4.5_A1.2_T2.js (the default minimizer's options)",
 			"S15.4.4.5_A3.1_T1.js (the default minimizer's options)",
 			"S15.4.4.5_A3.2_T1.js (the default minimizer's options)",
-			"S15.4.4.5_A3.2_T2.js (the default minimizer's options)",
 			"S15.4.4.6_A1.1_T1.js (the default minimizer's options)",
 			"S15.4.4.9_A1.1_T1.js (the default minimizer's options)",
 			"S15.4.4.9_A1.2_T1.js (the default minimizer's options)",
@@ -1663,7 +1660,6 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 		"an empty constructor dropped where the source repeats it gzip matched",
 		[
 			"classConstructorNoCall.js (the default minimizer's options)",
-			"harmony/classes (the default minimizer's options)",
 			"staticConstructor.js (the default minimizer's options)",
 			"superElemDelete.js (the default minimizer's options)",
 			"superPropChains.js (the default minimizer's options)",
@@ -1709,8 +1705,7 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 			"search-not-found-returns-minus-one.js (the default minimizer's options)",
 			"sequences/lift_sequences_4 (the default minimizer's options)",
 			"that-arg-coerced-to-string.js (the default minimizer's options)",
-			"this-value-coerced-to-string.js (the default minimizer's options)",
-			"tointeger-fromindex.js (the default minimizer's options)"
+			"this-value-coerced-to-string.js (the default minimizer's options)"
 		]
 	],
 	[
@@ -1723,7 +1718,6 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 			"terser_insane_2 (the default minimizer's options)",
 			"catch-parameter-shadowing-catch-parameter.js (the default minimizer's options)",
 			"custom-separator-result-from-tostring-on-each-value.js (the default minimizer's options)",
-			"detached-buffer-zero-count-custom-ctor-other-targettype.js (the default minimizer's options)",
 			"length-property-ignored.js (the default minimizer's options)",
 			"test-option-currency.js (the default minimizer's options)"
 		]
@@ -1829,7 +1823,6 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 	[
 		"a read of a global dropped, or a value moved past it, where the source repeats the text around it gzip matched",
 		[
-			"collapse_vars/collapse_vars_side_effects_2 (the default minimizer's options)",
 			"fixture/projects/jquery/20/input.js (its own options)",
 			"template-string/side_effects (the default minimizer's options)",
 		]
@@ -1871,10 +1864,6 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 			"fromEpochMilliseconds.js (the default minimizer's options)",
 			"true-for-timeout.js (the default minimizer's options)"
 		]
-	],
-	[
-		"`this===void 0` and `let` written where the source's `void 0===this` and `const` repeated in a run gzip matched",
-		["fixture/issues/9460/strict-mode/input.js (its own options)"]
 	]
 ])) {
 	for (const key of keys) IMPROVED_YET_BIGGER[key] = reason;
@@ -2279,7 +2268,8 @@ describe("JavaScript minifier", () => {
 						/**
 						 * Holds webpack's output to another minifier's, both printed alone
 						 * by webpack's printer without comments, which extracting licenses
-						 * decides: no bigger, unless the table lists why.
+						 * decides, and with shorthand properties, which ECMAScript 5 lacks:
+						 * no bigger, unless the table lists why.
 						 * @param {Source} source the source both minified
 						 * @param {{ name: string, code: string }} rival its output
 						 * @param {string} code webpack's output
@@ -2298,7 +2288,7 @@ describe("JavaScript minifier", () => {
 								compress: false,
 								mangle: false,
 								module: source.module,
-								format: { comments: false }
+								format: { comments: false, shorthand: true }
 							};
 							const theirs = await outcome(printer.minify, rival.code, printing);
 							const mine = await outcome(printer.minify, code, printing);
