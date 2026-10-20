@@ -988,10 +988,16 @@ const IMPROVED_CASES = [
 		"function g(){return{a:1,b:2}}function f(){var S=g();return function(){return S.a+S.b}}console.log(f()());"
 	],
 	[
-		"a `var` copying the one declared right before it, read by functions, read through the name it copies, unless a call runs between",
+		"a `var` copying another, read by functions created after it, read through the name it copies",
 		"function g() { return { p: 1, q: 2 }; } var fs = []; function h() { console.log(fs.length && fs[2]()); } var parser = g(), parser$1 = parser; var other = g(); h(); var other$1 = other; fs.push(function () { return parser$1.p + parser$1.q; }, function () { return parser.p; }, function () { return other$1 && other$1.p; }, function () { return other.q; }); console.log(fs.map(function (f) { return f(); }));",
 		{ mangle: false, module: true },
-		"var fs=[],parser={p:1,q:2},other={p:1,q:2};console.log(fs.length&&fs[2]());var other$1=other;fs.push(function(){return parser.p+parser.q},function(){return parser.p},function(){return other$1&&other$1.p},function(){return other.q}),console.log(fs.map(function(f){return f()}));"
+		"var fs=[],parser={p:1,q:2},other={p:1,q:2};console.log(fs.length&&fs[2]());fs.push(function(){return parser.p+parser.q},function(){return parser.p},function(){return other&&other.p},function(){return other.q}),console.log(fs.map(function(f){return f()}));"
+	],
+	[
+		"a `var` declared bare, then set once to a parameter before every read, read through the parameter",
+		"function f(x) { var a; a = x; return a.foo + a.bar + a.baz; } function g(x) { var a, b; a = x; b = a; return [b.p, b.p, a.p]; } console.log(f({ foo: 1, bar: 2, baz: 3 }), g({ p: 1 }));",
+		{ mangle: false },
+		"function f(x){return x.foo+x.bar+x.baz}function g(x){return[x.p,x.p,x.p]}console.log(f({foo:1,bar:2,baz:3}),g({p:1}));"
 	],
 	[
 		"a `&&` holding another on its right once an `if` folds into it, associated to the left, which takes no parentheses",
@@ -1883,6 +1889,14 @@ const IMPROVED_CASES = [
 // of its function's own, or the call passes, keeps or constructs something.
 /** @type {[string, string][]} */
 const KEPT_CASES = [
+	[
+		"a `var` copying another, read by a function created before the copy and called before it is set, or by one a loop creates",
+		"!function () { function g() { return { a: 1 }; } var o = g(), k = function () { return L; }, p = k(), L = o; var r = []; for (var i = 0; i < 2; i++) { var M = o; r.push(function () { return M.a; }); } console.log([1, 2].map(function () { return L.a; }), p, r[0](), r[1]()); }();"
+	],
+	[
+		"a `var` declared bare and set once to a parameter, read where it may still be unset: in a branch, a loop, a hoisted function or a closure called first",
+		"function f(x, c) { var a; if (c) a = x; return a && a.foo; } function g(x) { var a, r = []; for (var i = 0; i < 2; i++) { r.push(a); a = x; } return [r, a, a]; } function h(x) { var a; k(); a = x; return [a.p, a.p]; function k() { console.log(a); } } function l(x) { var a, m = () => a; console.log(m()); a = x; return [a.p, a.p, m()]; } console.log(f({ foo: 1 }, 1), f({ foo: 2 }, 0), g(1), h({ p: 1 }), l({ p: 1 }));"
+	],
 	["`delete` of `undefined` inside `with`, which may delete a property", "function e(o) { with (o) return delete undefined; } console.log(e({ undefined: 1 }), delete (1 / 0));"],
 	[
 		"calls spreading the same iterable before the arrays they differ in, whose iteration the test reads after",

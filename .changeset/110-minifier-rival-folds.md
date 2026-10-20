@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Drop more unused functions, arguments, calls and global reads when minifying JavaScript.
+Drop more unused functions, arguments, calls, global reads and variable copies when minifying JavaScript.

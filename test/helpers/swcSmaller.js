@@ -581,7 +581,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/projects/next/.archive-4/266-aee26c928109d49d6151/input.js",
 			"swc minifier: fixture/projects/next/.archive-4/pages/development-logs/link-with-no-prefetch-53313deb99cf94686856/input.js",
 			"swc minifier: fixture/projects/next/.archive-4/pages/development-logs/link-with-prefetch-false-13db3186d6589f014e19/input.js",
-			"swc minifier: fixture/projects/next/.archive-4/polyfills-6437a4964f697e5b0b3e/input.js",
 			"swc minifier: fixture/projects/next/archive-2/pages/.development-logs-2ac9e724502f3ba1f1de/input.js",
 			"swc minifier: fixture/projects/next/archive-2/pages/.dynamic-098d0d54bd014f190920/input.js",
 			"swc minifier: fixture/projects/next/archive-2/pages/.hmr-ce649615cbc9a3b4c1ce/input.js",
