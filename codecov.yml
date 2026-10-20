@@ -4,6 +4,10 @@ codecov:
     # Statuses and the comment wait for `coverage-notify` in test.yml, which
     # runs once every suite that uploads has finished, not after each upload.
     manual_trigger: true
+# Comment only when coverage moved, so a pull request that cannot change it
+# (docs, CI config) gets no comment and its watchers no notification.
+comment:
+  require_changes: true
 coverage:
   precision: 2
   round: down

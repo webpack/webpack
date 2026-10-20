@@ -71,11 +71,12 @@ reviews:
   path_filters:
     # Generated output - never review by hand (see CLAUDE.md "Do not touch")
     - "!types.d.ts"
-    - "!declarations/**"
     - "!schemas/**/*.check.js"
     - "!schemas/**/*.check.d.ts"
     - "!lib/css/data.js"
     - "!lib/html/data.js"
+    - "!lib/javascript/data.js"
+    - "!lib/javascript/syntax-printer-data.js"
     - "!test/**/__snapshots__/**"
     - "!yarn.lock"
     - "!test/external/**"
