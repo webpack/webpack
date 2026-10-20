@@ -9018,6 +9018,19 @@ describe("syntax-printer", () => {
 			expect(code).toContain("t?x.m(1):x.m(2)");
 		});
 
+		it("should keep a function called in place whose parameters a block of `let`s could not declare", async () => {
+			const { minify } = await load();
+			for (const input of [
+				"var a = 8; (function (b, b) { b.toString(); })(--a, a |= 10); console.log(a);",
+				'var c = "FAIL"; (function (a, NaN) { switch (a) { case a: break; case (c = "PASS"), NaN: break; } })(NaN); console.log(c);',
+				"var values = [2, 3]; (function (large, e) { console.log(large, e); })({ large: 1 }, ...values);"
+			]) {
+				const { code } = await minify(input, { compress: { passes: 2 }, mangle: false });
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+				expect(code).not.toContain("{let");
+			}
+		});
+
 		it("should keep a module's exported `const` while writing its private ones as `let`", async () => {
 			const { minify } = await load();
 			const { code } = await minify(
