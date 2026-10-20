@@ -994,6 +994,12 @@ const IMPROVED_CASES = [
 		"var fs=[],parser={p:1,q:2},other={p:1,q:2};console.log(fs.length&&fs[2]());fs.push(function(){return parser.p+parser.q},function(){return parser.p},function(){return other&&other.p},function(){return other.q}),console.log(fs.map(function(f){return f()}));"
 	],
 	[
+		"a top-level `let` of a script nothing in it writes, read for its value as swc and oxc assume no other script writes it",
+		'let prop = "foo_", n = 5; let o = { [prop]: 1 }; function f() { return n + 1; } console.log(o[prop], f());',
+		{ mangle: false },
+		'let prop="foo_",n=5,o={foo_:1};function f(){return 6}console.log(o.foo_,f());'
+	],
+	[
 		"a `var` declared bare, then set once to a parameter before every read, read through the parameter",
 		"function f(x) { var a; a = x; return a.foo + a.bar + a.baz; } function g(x) { var a, b; a = x; b = a; return [b.p, b.p, a.p]; } console.log(f({ foo: 1, bar: 2, baz: 3 }), g({ p: 1 }));",
 		{ mangle: false },
@@ -1147,7 +1153,7 @@ const IMPROVED_CASES = [
 		"an optional chain whose base is a sequence ending in `null` or `undefined`, as the sequence's effects",
 		"function g() { console.log(\"g\"); } let i = 0; console.log((g(), null)?.[g()], (i++, null)?.a.b, (g(), void 0)?.(1), (i++, null)?.m?.(2), i);",
 		{ mangle: false },
-		"function g(){console.log(\"g\")}let i=0;console.log(void g(),void i++,void g(),void i++,i);"
+		"function g(){console.log(\"g\")}let i=0;console.log(void g(),void i++,void g(),void i++,2);"
 	],
 	[
 		"a change of case of Latin, Greek or Cyrillic, folded, but not of later scripts",
