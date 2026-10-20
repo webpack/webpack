@@ -4,8 +4,8 @@ codecov:
     # Statuses and the comment wait for `coverage-notify` in test.yml, which
     # runs once every suite that uploads has finished, not after each upload.
     manual_trigger: true
-# Comment only when coverage dropped, so a pull request that leaves it as it
-# was (docs, CI config) gets no comment and its watchers no notification.
+# Create the comment only once coverage drops, so a pull request that never
+# lowers it (docs, CI config) gets none; a comment once made is kept updated.
 comment:
   require_changes: "coverage_drop"
 coverage:
