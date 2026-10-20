@@ -1075,10 +1075,10 @@ const IMPROVED_CASES = [
 		"function f(a){for(var i=0;i<a.length;++i)console.log(i);for(i=0;i<a.length;++i)console.log(i)}f([1,2]);"
 	],
 	[
-		"`-= 1` as `--`, and `+= 1` as `++` on a counter holding only numbers, but on a parameter that may hold a string",
+		"`+= 1` as `++` on a counter holding only numbers, but not on a property or a parameter that may hold a BigInt or a string",
 		'function f(o, s) { o.a -= 1; s += 1; for (var i = 0; i < 3; i += 1) console.log(i, o.a, s); } f({ a: 5 }, "s");',
 		{ mangle: false },
-		'function f(o,s){--o.a,s+=1;for(var i=0;i<3;++i)console.log(i,o.a,s)}f({a:5},"s");'
+		'function f(o,s){o.a-=1,s+=1;for(var i=0;i<3;++i)console.log(i,o.a,s)}f({a:5},"s");'
 	],
 	[
 		"a `var` declared bare, then set once to a parameter before every read, read through the parameter",
@@ -1976,6 +1976,10 @@ const IMPROVED_CASES = [
 // of its function's own, or the call passes, keeps or constructs something.
 /** @type {[string, string][]} */
 const KEPT_CASES = [
+	[
+		"`-= 1` on a property that may hold a BigInt, which throws where `--` would not",
+		'const o = { x: 1n }; try { o.x -= 1; } catch { console.log("caught"); }'
+	],
 	[
 		"`+= 1` on a name a `for-in` head assigns, which holds a string",
 		"function f(o) { var x = 0; for (x in o) console.log(x += 1); } f({ 2: 0 });"
