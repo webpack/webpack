@@ -172,7 +172,6 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: rename/function_catch_catch",
 			"terser compress: sequences/call",
 			"terser compress: sequences/hoist_decl",
-			"terser compress: sequences/lift_sequences_2",
 			"terser compress: template-string/do_not_optimize_tagged_template_1",
 			"terser compress: template-string/respect_inline_script",
 			"terser compress: template-string/side_effects",
@@ -560,8 +559,6 @@ const OXC_SMALLER_BY_REASON = [
 		"oxc folds arithmetic, comparisons and concatenation of constants",
 		[
 			"swc exec: terser_drop_unused_issue_t161_top_retain_15",
-			"terser compress: collapse_vars/boolean_binary_1",
-			"terser compress: collapse_vars/boolean_binary_2",
 			"terser compress: comparing/bigint_vs_number",
 			"terser compress: const/issue_1396",
 			"terser compress: destructuring/empty_object_destructuring_misc",
@@ -664,7 +661,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/oxc.rs:106",
 			"oxc minifier: peephole/oxc.rs:107",
 			"oxc minifier: peephole/oxc.rs:108",
-			"oxc minifier: peephole/oxc.rs:109",
 			"oxc minifier: peephole/oxc.rs:23",
 			"oxc minifier: peephole/oxc.rs:32"
 		]
