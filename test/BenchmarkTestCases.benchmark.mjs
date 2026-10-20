@@ -202,6 +202,16 @@ function splitToNChunks(array, n) {
 	return result;
 }
 
+/**
+ * Memory and simulation measure each task in its own process, so its shard
+ * cannot change its result: deal tasks round-robin to even out the shards' time.
+ * @returns {boolean} whether tasks are dealt round-robin across shards
+ */
+const isRoundRobinMode = () => {
+	const mode = getCodspeedRunnerMode();
+	return mode === "memory" || mode === "simulation";
+};
+
 class BenchmarkRunner {
 	constructor() {
 		/** @type {Scenario[]} */
@@ -356,9 +366,8 @@ class BenchmarkRunner {
 			);
 		}
 
-		// Memory mode measures each task in its own process, so its shard cannot
-		// change its counts: deal tasks round-robin to even out the shards' time.
-		const roundRobin = getCodspeedRunnerMode() === "memory";
+		// Dealt round-robin in `run()` once unit benchmarks are split per bench.
+		const roundRobin = isRoundRobinMode();
 		const shardBenchmarks = roundRobin
 			? benchmarks
 			: splitToNChunks([...benchmarks], shard[1])[shard[0] - 1];
@@ -386,9 +395,7 @@ class BenchmarkRunner {
 			}
 		}
 
-		return roundRobin
-			? benchmarkTasks.filter((_, index) => index % shard[1] === shard[0] - 1)
-			: benchmarkTasks;
+		return benchmarkTasks;
 	}
 
 	/**
@@ -696,7 +703,13 @@ class BenchmarkRunner {
 
 		await this.prepareBenchmarkTasks(benchmarkTasks);
 
-		await this.runInWorkers(await this.splitUnitTasks(benchmarkTasks));
+		const splitTasks = await this.splitUnitTasks(benchmarkTasks);
+
+		await this.runInWorkers(
+			isRoundRobinMode()
+				? splitTasks.filter((_, index) => index % shard[1] === shard[0] - 1)
+				: splitTasks
+		);
 	}
 }
 
