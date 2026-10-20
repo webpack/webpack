@@ -4096,15 +4096,22 @@ const ESTREE_PRINT_PROGRAM_FORMATS = [
 
 describe("syntax-printer", () => {
 	// Every case compares spellings with terser's, which writes an equality's
-	// literal first; one test below covers writing it last.
+	// literal first, for one run; tests below cover the literal last and the
+	// choice among runs.
 	beforeAll(async () => {
 		const { improvements } = await load();
-		if (improvements) improvements.literalsLast.enabled = false;
+		if (improvements) {
+			improvements.literalsLast.enabled = false;
+			improvements.choosesBySize.enabled = false;
+		}
 	});
 
 	afterAll(async () => {
 		const { improvements } = await load();
-		if (improvements) improvements.literalsLast.enabled = true;
+		if (improvements) {
+			improvements.literalsLast.enabled = true;
+			improvements.choosesBySize.enabled = true;
+		}
 	});
 
 	it("should install every phase", async () => {
@@ -9043,6 +9050,57 @@ describe("syntax-printer", () => {
 			});
 			expect(code).toContain(".v,(new a).v");
 			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+		});
+
+		it("should keep, of a small program minified with each measured spelling and without, the one gzip writes smallest", async () => {
+			const { minify, improvements } = await load();
+			if (!improvements) throw new Error("the improve phase is not installed");
+			const zlib = require("zlib");
+			/**
+			 * @param {string} code a program
+			 * @returns {number} its gzipped size
+			 */
+			const gzipSize = (code) => zlib.gzipSync(code, { level: 9 }).length;
+			const input =
+				"function f(a, p) { a === undefined || a === null || p; a === undefined || a !== null || p; a !== undefined || a === null || p; a !== undefined || a !== null || p; a === undefined && a === null || p; a === undefined && a !== null || p; a !== undefined && a === null || p; a !== undefined && a !== null || p; } f(); const c = 1; console.log(c);";
+			/** @type {import("terser").MinifyOptions} */
+			const options = { compress: { passes: 2 }, mangle: true };
+			/**
+			 * @param {boolean} literalsLast whether the literal is written last
+			 * @param {boolean} lets whether `const` is written as `let`
+			 * @returns {Promise<string>} the program minified so, in one run
+			 */
+			const once = async (literalsLast, lets) => {
+				if (!improvements) throw new Error("the improve phase is not installed");
+				improvements.literalsLast.enabled = literalsLast;
+				improvements.lets.enabled = lets;
+				try {
+					return /** @type {string} */ ((await minify(input, options)).code);
+				} finally {
+					improvements.literalsLast.enabled = false;
+					improvements.lets.enabled = true;
+				}
+			};
+			const variants = await Promise.all([
+				once(true, true),
+				once(false, true),
+				once(true, false),
+				once(false, false)
+			]);
+			improvements.literalsLast.enabled = true;
+			improvements.choosesBySize.enabled = true;
+			let chosen;
+			try {
+				chosen = /** @type {string} */ ((await minify(input, options)).code);
+			} finally {
+				improvements.literalsLast.enabled = false;
+				improvements.choosesBySize.enabled = false;
+			}
+			expect(variants).toContain(chosen);
+			// Greedy: at most the first variant, and the best of its single steps.
+			expect(gzipSize(chosen)).toBeLessThanOrEqual(gzipSize(variants[0]));
+			expect(gzipSize(chosen)).toBeLessThanOrEqual(gzipSize(variants[1]));
+			expect(runProgram(chosen)).toBe(runProgram(input));
 		});
 
 		it("should name a module's imports and exports by the names they spell, where that writes less", async () => {

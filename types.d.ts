@@ -20522,8 +20522,9 @@ declare interface Minifier {
 	corrections?: { enabled: boolean };
 	improvements?: {
 		enabled: boolean;
-		lets: { enabled: boolean };
-		literalsLast: { enabled: boolean };
+		lets: { enabled: boolean; applied: boolean };
+		literalsLast: { enabled: boolean; applied: boolean };
+		choosesBySize: { enabled: boolean };
 	};
 	modules: MinifierModules;
 }
