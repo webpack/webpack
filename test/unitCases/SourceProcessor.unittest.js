@@ -124,7 +124,8 @@ describe("SourceProcessor", () => {
 		const held = (context) => {
 			let chars = 0;
 			for (let i = 0; i < context._storeText.length; i++) {
-				chars += context._storeText[i].length;
+				const text = context._storeText[i];
+				if (text !== null) chars += text.length;
 			}
 			return chars;
 		};
@@ -179,6 +180,27 @@ describe("SourceProcessor", () => {
 			context.printNode(2, null);
 			expect(context.get(2)).toBe("z");
 			expect(context.get(1)).toBeUndefined();
+		});
+
+		it("reads a node printed as its source once, and only when asked", () => {
+			const context = new PrintContext({ mode: "minify" }, () => "");
+			let reads = 0;
+			/**
+			 * @param {number} node node
+			 * @returns {string} its source
+			 */
+			const sourceText = (node) => {
+				reads++;
+				return `s${node}`;
+			};
+			context.printedSource(1, sourceText);
+			expect(reads).toBe(0);
+			expect(context.get(1)).toBe("s1");
+			expect(context.get(1)).toBe("s1");
+			expect(reads).toBe(1);
+			context.dropStore();
+			expect(context.get(1)).toBeUndefined();
+			expect(reads).toBe(1);
 		});
 	});
 

@@ -2368,6 +2368,81 @@ describe("CssSyntax — every rewrite has a switch", () => {
 	});
 });
 
+describe("CssSyntax — a block of declarations written again", () => {
+	/**
+	 * @param {string} src css source
+	 * @param {object=} options more print options
+	 * @returns {string} the minified serialization
+	 */
+	const min = (src, options = {}) =>
+		new SourceProcessor().process(src, { mode: "minify", ...options }).code;
+	const modern = {
+		browsers: ["chrome 120", "firefox 120", "safari 17"],
+		vendorPrefixes: false
+	};
+
+	it("prints a repeated block as it printed the first time, in every context", () => {
+		expect(
+			min(
+				".a{margin:0px auto;color:#ff0000}\n.b{margin:0px auto;color:#ff0000}\n@media print{.c{margin:0px auto;color:#ff0000}}"
+			)
+		).toBe(".a,.b{color:red;margin:0 auto}@media print{.c{color:red;margin:0 auto}}");
+		expect(
+			min(
+				"@keyframes k{from{opacity:0!important;opacity:1}}\n.a{opacity:0!important;opacity:1}"
+			)
+		).toBe(
+			"@keyframes k{0%{opacity:0!important;opacity:1}}.a{opacity:0!important;opacity:1}"
+		);
+	});
+
+	it("writes a kept comment in each copy of its block", () => {
+		expect(min(".a{color:red/*!kept*/}\n.b{color:red/*!kept*/}")).toBe(
+			".a{color:red}/*!kept*/.b{color:red}/*!kept*/"
+		);
+	});
+
+	it("closes a copy the input ran out in", () => {
+		expect(min(".a{color:red}\n.b{color:red")).toBe(".a,.b{color:red}");
+	});
+
+	it("joins rules under one selector as their text reads back", () => {
+		expect(
+			min(
+				".a{margin-top:1px}\n.a{margin-right:2px;margin-bottom:3px;margin-left:4px;z:url(a\\'b)}"
+			)
+		).toBe(".a{margin:1px 2px 3px 4px;z:url(a\\'b)}");
+		expect(
+			min(
+				".a{margin-top:1px;margin-right:2px}\n.a{margin-bottom:3px;margin-left:4px;background:url(./x\\'y.png)}"
+			)
+		).toBe(
+			".a{background:url(./x\\'y.png);margin-bottom:3px;margin-left:4px;margin-top:1px;margin-right:2px}"
+		);
+		expect(min('.b{color:red}\n.b{content:"\\"\'"}\n.b{top:0}')).toBe(
+			'.b{color:red;content:"\\"\'";top:0}'
+		);
+	});
+
+	it("prints a value the input ends inside", () => {
+		expect(min(".a{grid-area:a/")).toBe(".a{grid-area:a/}");
+		expect(min(".a{b:c,")).toBe(".a{b:c,}");
+	});
+
+	it("keeps a block whose earlier copy no target reads", () => {
+		expect(
+			min(".b{display:none}\n.a::-ms-clear{display:none}\n.c{display:none}", {
+				environment: modern
+			})
+		).toBe(".b,.c{display:none}");
+		expect(
+			min(".a::-ms-clear{display:none}\n.b{display:none}", {
+				environment: modern
+			})
+		).toBe(".b{display:none}");
+	});
+});
+
 describe("CssSyntax — minify transforms, in-process", () => {
 	/**
 	 * @param {string} src css source
