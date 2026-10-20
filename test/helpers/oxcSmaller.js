@@ -47,7 +47,6 @@ const OXC_SMALLER_BY_REASON = [
 			"swc exec: object_freeze_spread_computed_registration",
 			"swc exec: terser_arguments_modified",
 			"swc exec: terser_async_async_inline",
-			"swc exec: terser_class_properties_static_means_execution",
 			"swc exec: terser_drop_unused_drop_var",
 			"swc exec: terser_drop_unused_issue_t183",
 			"swc exec: terser_issue_1321_issue_1321_debug",
@@ -62,7 +61,6 @@ const OXC_SMALLER_BY_REASON = [
 			"swc exec: terser_reduce_vars_unsafe_evaluate_side_effect_free_1",
 			"swc minifier: fixture/issues/10281/input.js",
 			"swc minifier: fixture/issues/10412/input.js",
-			"swc minifier: fixture/issues/10824/input.js",
 			"swc minifier: fixture/issues/10859/input.js",
 			"swc minifier: fixture/issues/10885/input.js",
 			"swc minifier: fixture/issues/11368/input.js",
@@ -93,7 +91,6 @@ const OXC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/9186/1/input.js",
 			"swc minifier: fixture/issues/9460/safe-initializers/input.js",
 			"swc minifier: fixture/issues/arguments-canonical-index/input.js",
-			"swc minifier: fixture/issues/drop-console-value-refs/input.js",
 			"swc minifier: fixture/issues/number-radix-conversion/input.js",
 			"swc minifier: fixture/projects/backbone/16/input.js",
 			"swc minifier: fixture/projects/backbone/6/input.js",
@@ -163,7 +160,6 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: mangleprops-mangleprop-annotation/mangleprop_annotation",
 			"terser compress: mangleprops-mangleprop-annotation/mangleprop_annotation_partial",
 			"terser compress: new/new_statements_3",
-			"terser compress: numbers/comparisons",
 			"terser compress: numbers/evaluate_1",
 			"terser compress: numbers/evaluate_2",
 			"terser compress: object/getter_setter",
@@ -211,8 +207,7 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/substitute_alternate_syntax.rs:168",
 			"oxc minifier: peephole/substitute_alternate_syntax.rs:169",
 			"oxc minifier: peephole/substitute_alternate_syntax.rs:715",
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:865",
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:887"
+			"oxc minifier: peephole/substitute_alternate_syntax.rs:865"
 		]
 	],
 	[
@@ -220,40 +215,22 @@ const OXC_SMALLER_BY_REASON = [
 		[
 			"swc exec: issue_6750_1",
 			"swc exec: issue_6750_2",
-			"swc exec: try_catch_2",
-			"swc exec: try_catch_5",
 			"swc minifier: fixture/collapse-vars/trivial-literal-chain/input.js",
 			"swc minifier: fixture/issues/6751/1/input.js",
 			"swc minifier: fixture/issues/9785/input.js",
-			"swc minifier: fixture/no-side-effect/input.js",
-			"swc minifier: full/size/24ba4747cd0b1c8200a359bc28b0040cc47a3f09/input.js",
 			"terser compress: asm/asm_function_expression",
 			"terser compress: asm/asm_nested_functions",
 			"terser compress: asm/asm_toplevel",
-			"terser compress: dead-code/global_timeout_and_interval_symbols",
 			"terser compress: dead-code/try_catch_finally",
 			"terser compress: drop-unused/issue_1715_3",
 			"terser compress: functions/issue_2898",
-			"terser compress: issue-1052/deeply_nested",
-			"terser compress: issue-1052/defun_else_if_return",
-			"terser compress: issue-1052/defun_hoist_funs",
-			"terser compress: issue-1052/defun_if_return",
-			"terser compress: issue-1052/single_function",
 			"terser compress: issue-1105/check_drop_unused_in_peer_function",
 			"terser compress: issue-1105/compress_with_with_in_other_scope",
 			"terser compress: issue-1105/with_in_function_scope",
 			"terser compress: issue-1105/with_using_existing_variable_outside_scope",
-			"terser compress: issue-1704/mangle_catch_redef_1",
-			"terser compress: issue-1704/mangle_catch_redef_1_ie8",
-			"terser compress: issue-1704/mangle_catch_redef_1_ie8_toplevel",
-			"terser compress: issue-1704/mangle_catch_redef_1_toplevel",
 			"terser compress: reduce_vars/issue_t1382",
 			"terser compress: reduce_vars/try_abort",
 			"terser compress: rename/function_catch_catch_ie8",
-			"terser compress: rename/mangle_catch_redef_1",
-			"terser compress: rename/mangle_catch_redef_1_ie8",
-			"terser compress: rename/mangle_catch_redef_1_ie8_toplevel",
-			"terser compress: rename/mangle_catch_redef_1_toplevel",
 			"terser compress: template-string/tagged_template_with_comment",
 			"terser compress: typescript/typescript_disabled_interface"
 		]
@@ -302,13 +279,7 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: ecmascript/may_have_side_effects.rs:302",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:783",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:825",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:904",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:905",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:906",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:907",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:963",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:964",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:965"
+			"oxc minifier: ecmascript/may_have_side_effects.rs:907"
 		]
 	],
 	[
@@ -326,7 +297,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/minimize_conditions.rs:1294",
 			"oxc minifier: peephole/minimize_conditions.rs:1295",
 			"oxc minifier: peephole/minimize_conditions.rs:1296",
-			"oxc minifier: peephole/minimize_conditions.rs:1298",
 			"oxc minifier: peephole/minimize_conditions.rs:1305",
 			"oxc minifier: peephole/minimize_conditions.rs:1306",
 			"oxc minifier: peephole/minimize_conditions.rs:1307",
@@ -352,13 +322,9 @@ const OXC_SMALLER_BY_REASON = [
 		"real-world code, where the gap sums several of the transforms above; split it once those land",
 		[
 			"swc exec: emotion_react_1",
-			"swc minifier: benches-full/three.js",
 			"swc minifier: fixture/issues/d3-color/1/input.js",
-			"swc minifier: fixture/next/41527/1/input.js",
 			"swc minifier: fixture/next/66237/input.js",
-			"swc minifier: fixture/next/66378/input.js",
 			"swc minifier: fixture/next/asmjs/1/input.js",
-			"swc minifier: fixture/next/regression-1/framework-798bab57daac3897/input.js",
 			"swc minifier: fixture/projects/jquery/11/input.js",
 			"swc minifier: fixture/projects/next/extra/if_return/.4/input.js",
 			"swc minifier: projects/files/backbone-1.1.0.js",
@@ -369,7 +335,6 @@ const OXC_SMALLER_BY_REASON = [
 		"oxc writes `const` as `let` and joins neighboring declarations",
 		[
 			"swc minifier: fixture/issues/11684/bindings/input.js",
-			"swc minifier: fixture/issues/7004/input.js",
 			"swc minifier: fixture/issues/8324/input.js",
 			"swc minifier: fixture/issues/9460/strict-mode/input.js",
 			"swc minifier: fixture/issues/framer-motion/1/input.js",
@@ -486,38 +451,10 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: destructuring/destructuring_decl_of_computed_key",
 			"terser compress: drop-unused/issue_1968",
 			"terser compress: drop-unused/issue_t161_top_retain_15",
-			"terser compress: mangleprops-computed/computed_props_keep_quoted_inlined_sub_1",
 			"terser compress: mangleprops-computed/computed_props_keep_quoted_inlined_sub_10",
-			"terser compress: mangleprops-computed/computed_props_keep_quoted_inlined_sub_4",
-			"terser compress: mangleprops-computed/computed_props_keep_quoted_inlined_sub_5",
 			"terser compress: mangleprops-computed/computed_props_keep_quoted_inlined_sub_6",
-			"terser compress: mangleprops-computed/computed_props_keep_quoted_inlined_sub_8",
-			"terser compress: mangleprops-computed/computed_props_keep_quoted_inlined_sub_9",
-			"terser compress: mangleprops-computed/computed_props_keep_quoted_property_access_sub",
-			"terser compress: mangleprops-computed/no_computed_props_keep_quoted_inlined_sub_3",
-			"terser compress: mangleprops-computed/no_computed_props_keep_quoted_inlined_sub_4",
-			"terser compress: mangleprops-computed/no_computed_props_keep_quoted_inlined_sub_5",
-			"terser compress: mangleprops-computed/no_computed_props_keep_quoted_inlined_sub_7",
-			"terser compress: mangleprops-computed/no_computed_props_keep_quoted_inlined_sub_8",
-			"terser compress: mangleprops-computed/no_computed_props_keep_quoted_inlined_sub_9",
-			"terser compress: mangleprops-computed/no_computed_props_keep_quoted_optional_property_access_sub",
-			"terser compress: mangleprops-computed/no_computed_props_keep_quoted_property_access_sub",
-			"terser compress: mangleprops-strict-computed/computed_props_keep_quoted_inlined_sub_1",
 			"terser compress: mangleprops-strict-computed/computed_props_keep_quoted_inlined_sub_10",
-			"terser compress: mangleprops-strict-computed/computed_props_keep_quoted_inlined_sub_4",
-			"terser compress: mangleprops-strict-computed/computed_props_keep_quoted_inlined_sub_5",
-			"terser compress: mangleprops-strict-computed/computed_props_keep_quoted_inlined_sub_6",
-			"terser compress: mangleprops-strict-computed/computed_props_keep_quoted_inlined_sub_8",
-			"terser compress: mangleprops-strict-computed/computed_props_keep_quoted_inlined_sub_9",
-			"terser compress: mangleprops-strict-computed/computed_props_keep_quoted_property_access_sub",
-			"terser compress: mangleprops-strict-computed/no_computed_props_keep_quoted_inlined_sub_3",
-			"terser compress: mangleprops-strict-computed/no_computed_props_keep_quoted_inlined_sub_4",
-			"terser compress: mangleprops-strict-computed/no_computed_props_keep_quoted_inlined_sub_5",
-			"terser compress: mangleprops-strict-computed/no_computed_props_keep_quoted_inlined_sub_7",
-			"terser compress: mangleprops-strict-computed/no_computed_props_keep_quoted_inlined_sub_8",
-			"terser compress: mangleprops-strict-computed/no_computed_props_keep_quoted_inlined_sub_9",
-			"terser compress: mangleprops-strict-computed/no_computed_props_keep_quoted_optional_property_access_sub",
-			"terser compress: mangleprops-strict-computed/no_computed_props_keep_quoted_property_access_sub"
+			"terser compress: mangleprops-strict-computed/computed_props_keep_quoted_inlined_sub_6"
 		]
 	],
 	[
@@ -537,7 +474,6 @@ const OXC_SMALLER_BY_REASON = [
 			"swc exec: terser_issue_1466_same_variable_in_multiple_for_of",
 			"swc exec: terser_issue_1466_same_variable_in_multiple_for_of_sequences_const",
 			"swc exec: terser_issue_1466_same_variable_in_multiple_for_of_sequences_let",
-			"swc minifier: fixture/issues/5846/input.js",
 			"swc minifier: fixture/issues/7770/2/input.js",
 			"swc minifier: fixture/issues/next-97517/input.js",
 			"terser compress: collapse_vars/collapse_vars_object",
@@ -566,7 +502,6 @@ const OXC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/12299/input.js",
 			"swc minifier: fixture/issues/do-while-false-terminal-jump/rejected/input.js",
 			"swc minifier: fixture/projects/backbone/5/input.js",
-			"swc minifier: fixture/projects/jquery/.17/input.js",
 			"swc minifier: fixture/projects/react/16/input.js",
 			"terser compress: collapse_vars/issue_2873_1",
 			"terser compress: conditionals/issue_1674_false_equivalency_of_props",
@@ -599,13 +534,7 @@ const OXC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/array-constructor-length/input.js",
 			"swc minifier: fixture/projects/backbone/15/input.js",
 			"swc minifier: fixture/projects/backbone/2/input.js",
-			"terser compress: class-properties/static_means_execution",
-			"terser compress: conditionals/issue_ternary_and_nullish_coalescing_operator",
-			"terser compress: evaluate/issue_2535_3",
 			"terser compress: inline/dont_inline_funcs_into_default_param_2",
-			"terser compress: inline/inline_func_with_name_existing_in_block_scope",
-			"terser compress: issue-1446/typeof_eq_undefined",
-			"terser compress: issue-1446/typeof_eq_undefined_ie8",
 			"terser compress: nullish/conditional_to_nullish_coalescing_2"
 		]
 	],
@@ -631,16 +560,8 @@ const OXC_SMALLER_BY_REASON = [
 			"swc exec: terser_properties_join_object_assignments_2",
 			"terser compress: arrow/async_object_literal",
 			"terser compress: arrow/issue_3092b",
-			"terser compress: mangleprops-computed/computed_props_keep_quoted_inlined_sub_3",
-			"terser compress: mangleprops-computed/computed_props_keep_quoted_inlined_sub_7",
-			"terser compress: mangleprops-computed/computed_props_keep_quoted_optional_property_access_sub",
-			"terser compress: mangleprops-computed/no_computed_props_keep_quoted_inlined_sub_1",
 			"terser compress: mangleprops-computed/no_computed_props_keep_quoted_inlined_sub_10",
 			"terser compress: mangleprops-computed/no_computed_props_keep_quoted_inlined_sub_6",
-			"terser compress: mangleprops-strict-computed/computed_props_keep_quoted_inlined_sub_3",
-			"terser compress: mangleprops-strict-computed/computed_props_keep_quoted_inlined_sub_7",
-			"terser compress: mangleprops-strict-computed/computed_props_keep_quoted_optional_property_access_sub",
-			"terser compress: mangleprops-strict-computed/no_computed_props_keep_quoted_inlined_sub_1",
 			"terser compress: mangleprops-strict-computed/no_computed_props_keep_quoted_inlined_sub_10",
 			"terser compress: mangleprops-strict-computed/no_computed_props_keep_quoted_inlined_sub_6",
 			"terser compress: object/concise_methods_with_various_property_names",
@@ -656,7 +577,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/inline_single_use_variable.rs:282",
 			"oxc minifier: peephole/inline_single_use_variable.rs:286",
 			"oxc minifier: peephole/inline_single_use_variable.rs:324",
-			"oxc minifier: peephole/inline_single_use_variable.rs:349",
 			"oxc minifier: peephole/inline_single_use_variable.rs:359",
 			"oxc minifier: peephole/inline_single_use_variable.rs:411",
 			"oxc minifier: peephole/inline_single_use_variable.rs:47",
@@ -701,8 +621,6 @@ const OXC_SMALLER_BY_REASON = [
 		"oxc inlines more constants and functions, as oxc's `peephole/inline.rs` tests show",
 		[
 			"oxc minifier: peephole/inline.rs:314",
-			"oxc minifier: peephole/inline.rs:603",
-			"oxc minifier: peephole/inline.rs:635",
 			"oxc minifier: peephole/inline.rs:642",
 			"oxc minifier: peephole/inline.rs:658",
 			"oxc minifier: peephole/inline.rs:698",
@@ -776,8 +694,7 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/minimize_statements.rs:137",
 			"oxc minifier: peephole/minimize_statements.rs:141",
 			"oxc minifier: peephole/minimize_statements.rs:188",
-			"oxc minifier: peephole/minimize_statements.rs:195",
-			"oxc minifier: peephole/minimize_statements.rs:374"
+			"oxc minifier: peephole/minimize_statements.rs:195"
 		]
 	],
 	[
@@ -825,11 +742,7 @@ const OXC_SMALLER_BY_REASON = [
 	],
 	[
 		"oxc resolves a `switch` on a known value, or writes a `switch` shorter",
-		[
-			"swc minifier: fixture/issues/10918/input.js",
-			"terser compress: switch/collapse_same_branches_not_in_a_row_ensure_no_evaluate_elad",
-			"terser compress: switch/issue_445"
-		]
+		["swc minifier: fixture/issues/10918/input.js"]
 	],
 	[
 		"oxc writes `if` statements shorter, as oxc's `peephole/minimize_if_statement.rs` tests show",
@@ -861,10 +774,6 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc's mangler picks shorter or better-compressing names, as oxc's `mangler/property_mangler.rs` tests show",
 		["oxc minifier: mangler/property_mangler.rs:99"]
-	],
-	[
-		"oxc's output differs where `window` is undefined: it drops the `window` read, which throws a ReferenceError there",
-		["terser compress: issue-1052/multiple_functions"]
 	],
 	[
 		"oxc's output differs: it drops a class whose static member's computed key may be `\"prototype\"`, which throws a TypeError as the class is defined",
@@ -920,6 +829,14 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc's output is wrong: it reads a `let` that a skipped `case` declares as its value, where the input throws a ReferenceError in the binding's dead zone",
 		["oxc minifier: peephole/minimize_switch_statements.rs:65"]
+	],
+	[
+		"webpack's output is as long as oxc's or shorter, yet gzips a byte or two bigger once an equality's literal is written last",
+		[
+			"swc exec: issue_11517_continue",
+			"swc minifier: fixture/projects/jquery/2/input.js",
+			"terser compress: if_return/if_return_8"
+		]
 	]
 ];
 

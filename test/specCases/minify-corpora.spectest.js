@@ -1,6 +1,6 @@
 "use strict";
 
-// cspell:ignore defun destructurings feeback fnames fromindex napi plotly reminify reminifies rtrn targettype tointeger trlg ufuzz
+// cspell:ignore defun destructurings fargs feeback fnames fromindex napi plotly reminify reminifies rtrn targettype tointeger trlg ufuzz
 
 // Holds webpack's JavaScript minifier to every test terser, swc and oxc write
 // for theirs. Each source of each corpus below is minified by webpack and by the
@@ -1305,10 +1305,6 @@ const rivalSmallerSeen = new Set();
 const IMPROVED_YET_BIGGER = {
 	"pure_getters/set_immutable_5 (its own options)":
 		"13 bytes fewer, 1 more gzipped: `console.log(c?\"FAIL\":\"PASS\")` merges two calls a file this small compresses alike",
-	"fixture/issues/11755/input.js (its own options)":
-		"5 bytes more, 11 more gzipped: the calls merged into `console.log(100===r?…)` keep `collapse_vars` from folding `r` into the test",
-	"fixture/issues/11755/input.js (the default minimizer's options)":
-		"13 bytes fewer, 2 more gzipped: the calls merged into `console.log(100===n?…)` keep `collapse_vars` from folding `n` into the test",
 	"fixture/issues/12298/input.js (the default minimizer's options)":
 		"13 bytes fewer, 5 more gzipped: `console.log(1===o?\"A\":\"C\")` breaks the `console.log(\"` runs of the functions around it",
 	"collapse_vars/var_defs (a module mangled at its top level)":
@@ -1321,12 +1317,6 @@ const IMPROVED_YET_BIGGER = {
 		"10 bytes fewer, 2 more gzipped: `var o=-9` split from `{p:-9}` breaks the `var o={p:` runs of the functions around it",
 	"arrow/object_parens (its own options)":
 		"3 bytes fewer, 1 more gzipped: `+!!{}` breaks the `()=>(` runs of the arrows around it gzip reused",
-	"inline/inline_into_scope_conflict_enclosed_2 (reminify 2 {\"mangle\":false})":
-		"5 bytes fewer, 1 more gzipped: `{x();return}` breaks the `return x()` run the function before it repeats",
-	"fixture/issues/8173/input.js (the default minimizer's options)":
-		"7 bytes fewer, 2 more gzipped: `{x(n);return}` breaks the `return void` runs of the helpers around it",
-	"fixture/issues/d3-color/1/input.js (the default minimizer's options)":
-		"2 bytes fewer, 1 more gzipped: `p*e*h` breaks the `h*(` runs of the products beside it gzip reused",
 	"harmony/issue_2345 (the default minimizer's options)":
 		"10 bytes fewer, 7 more gzipped: the folded `[3,2,1].join(\"-\")` matched the one left after it",
 	"harmony/issue_2345 (reminify 2 {\"mangle\":false})":
@@ -1536,8 +1526,8 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 	[
 		"`if(c)return x` written where `return c?x:void 0` matched the returns around it",
 		[
-			"if_return/if_return_same_value (its own options)",
 			"if_return/if_return_same_value (the default minimizer's options)",
+			"if_return/if_return_same_value (its own options)",
 			"replacer-function-result-undefined.js (the default minimizer's options)",
 			"stringify-replacer.js (the default minimizer's options)"
 		]
@@ -1574,7 +1564,6 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 			"S11.9.5_A2.1_T1.js (the default minimizer's options)",
 			"S15.10.1_A1_T14.js (the default minimizer's options)",
 			"S15.10.1_A1_T16.js (the default minimizer's options)",
-			"S15.10.2.11_A1_T1.js (the default minimizer's options)",
 			"S15.10.3.1_A2_T1.js (the default minimizer's options)",
 			"S15.10.4.1_A1_T4.js (the default minimizer's options)",
 			"S15.10.4.1_A8_T12.js (the default minimizer's options)",
@@ -1593,7 +1582,6 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 			"S15.4.4.5_A3.2_T1.js (the default minimizer's options)",
 			"S15.4.4.5_A3.2_T2.js (the default minimizer's options)",
 			"S15.4.4.6_A1.1_T1.js (the default minimizer's options)",
-			"S15.4.4.6_A1.2_T1.js (the default minimizer's options)",
 			"S15.4.4.9_A1.1_T1.js (the default minimizer's options)",
 			"S15.4.4.9_A1.2_T1.js (the default minimizer's options)",
 			"S15.5.1.1_A1_T19.js (the default minimizer's options)",
@@ -1648,7 +1636,6 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 			"S11.1.6_A3_T7.js (the default minimizer's options)",
 			"S12.6.2_A2.js (the default minimizer's options)",
 			"S13.2.2_A15_T1.js (the default minimizer's options)",
-			"S13.2.2_A16_T2.js (the default minimizer's options)",
 			"S13.2.2_A16_T3.js (the default minimizer's options)",
 			"S13_A1.js (the default minimizer's options)",
 			"S14_A3.js (the default minimizer's options)",
@@ -1669,8 +1656,7 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 			"S15.5.4.12_A1_T7.js (the default minimizer's options)",
 			"S15.6.1.1_A1_T5.js (the default minimizer's options)",
 			"S15.6.1.1_A2.js (the default minimizer's options)",
-			"symbol-coercion.js (the default minimizer's options)",
-			"symbol-tag-non-str-bigint.js (the default minimizer's options)"
+			"symbol-coercion.js (the default minimizer's options)"
 		]
 	],
 	[
@@ -1687,33 +1673,18 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 	[
 		"consecutive `if`s leaving the same way merged, where the source repeats the `if` gzip matched",
 		[
+			"if_return/if_return_same_value (the default minimizer's options)",
 			"S7.9_A5.8_T1.js (the default minimizer's options)",
 			"S7.9_A5.9_T1.js (the default minimizer's options)",
 			"fixture/issues/12229/input.js (its own options)",
 			"if_return/if_return_same_value (its own options)",
-			"if_return/if_return_same_value (the default minimizer's options)",
 			"symbol-logical-not-evaluation.js (the default minimizer's options)"
-		]
-	],
-	[
-		"a literal folded into the string it makes where the source repeats the literal gzip matched",
-		[
-			"evaluate/unsafe_array (a module mangled at its top level)",
-			"evaluate/unsafe_array (reminify 2 {\"mangle\":false})",
-			"evaluate/unsafe_array (reminify 3 {})",
-			"evaluate/unsafe_array (reminify 4 {\"toplevel\":true})",
-			"evaluate/unsafe_array (reminify 7 {\"safari10\":true})",
-			"evaluate/unsafe_array (reminify 8 {\"compress\":{\"reduce_funcs\":false}})",
-			"evaluate/unsafe_array (the default minimizer's options)",
-			"fixture/issues/string-index-utf16/input.js (its own options)",
-			"fixture/issues/string-index-utf16/input.js (the default minimizer's options)"
 		]
 	],
 	[
 		"a value read once moved into the property it is stored to, where the declaration or arguments it leaves matched the ones around it",
 		[
 			"fixture/issues/11684/preserved/input.js (its own options)",
-			"fixture/projects/jquery/24/input.js (its own options)"
 		]
 	],
 	[
@@ -1726,7 +1697,6 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 	[
 		"an assignment moved into the `var` before it, where the source repeats the assignment gzip matched",
 		[
-			"S11.4.7_A2.2_T1.js (the default minimizer's options)",
 			"S11.4.8_A2.2_T1.js (the default minimizer's options)",
 			"S11.8.4_A2.1_T1.js (the default minimizer's options)",
 			"S11.8.6_A2.1_T1.js (the default minimizer's options)",
@@ -1735,7 +1705,6 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 			"S12.6.3_A12_T2.js (the default minimizer's options)",
 			"S9.5_A3.1_T4.js (the default minimizer's options)",
 			"S9.6_A3.1_T4.js (the default minimizer's options)",
-			"fixture/collapse-vars/cascade-statement/execution/input.js (its own options)",
 			"fromIndex-minus-zero.js (the default minimizer's options)",
 			"search-not-found-returns-minus-one.js (the default minimizer's options)",
 			"sequences/lift_sequences_4 (the default minimizer's options)",
@@ -1747,12 +1716,6 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 	[
 		"an assignment or update folded into the read after it, where the source repeats the `x = y, f(x)` gzip matched",
 		[
-			"dead-code/return_assignment (the default minimizer's options)",
-			"dead-code/return_assignment (a module mangled at its top level)",
-			"dead-code/return_assignment (reminify 2 {\"mangle\":false})",
-			"dead-code/return_assignment (reminify 3 {})",
-			"dead-code/return_assignment (reminify 7 {\"safari10\":true})",
-			"dead-code/return_assignment (reminify 8 {\"compress\":{\"reduce_funcs\":false}})",
 			"reduce_vars/modified (reminify 2 {\"mangle\":false})",
 			"reduce_vars/defun_assign (a module mangled at its top level)",
 			"reduce_vars/defun_assign (reminify 4 {\"toplevel\":true})",
@@ -1824,6 +1787,94 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 			"fixture/issues/12214/input.js (the default minimizer's options)",
 			"transitions-close-together.js (the default minimizer's options)"
 		]
+	],
+	[
+		"a read of a key the literal does not hold written `void 0` and folded on, where the source repeats the literal gzip matched",
+		[
+			"evaluate/unsafe_integer_key (reminify 2 {\"mangle\":false})",
+			"evaluate/unsafe_integer_key (reminify 4 {\"toplevel\":true})",
+			"evaluate/unsafe_integer_key (reminify 5 {\"compress\":{\"passes\":1000000,\"unsafe\":true},\"toplevel\":true})",
+			"evaluate/unsafe_integer_key (reminify 6 {\"compress\":{\"arguments\":true,\"keep_fargs\":false,\"passes\":1000000,\"sequences\":1000000,\"unsafe\":true,\"unsafe_Function\":true,\"unsafe_math\":true,\"unsafe_proto\":true,\"unsafe_regexp\":true}})",
+			"evaluate/unsafe_integer_key (reminify 7 {\"safari10\":true})",
+			"evaluate/unsafe_integer_key (reminify 8 {\"compress\":{\"reduce_funcs\":false}})",
+			"evaluate/unsafe_float_key (reminify 2 {\"mangle\":false})",
+			"evaluate/unsafe_float_key (reminify 4 {\"toplevel\":true})",
+			"evaluate/unsafe_float_key (reminify 5 {\"compress\":{\"passes\":1000000,\"unsafe\":true},\"toplevel\":true})",
+			"evaluate/unsafe_float_key (reminify 6 {\"compress\":{\"arguments\":true,\"keep_fargs\":false,\"passes\":1000000,\"sequences\":1000000,\"unsafe\":true,\"unsafe_Function\":true,\"unsafe_math\":true,\"unsafe_proto\":true,\"unsafe_regexp\":true}})",
+			"evaluate/unsafe_float_key (reminify 7 {\"safari10\":true})",
+			"evaluate/unsafe_float_key (reminify 8 {\"compress\":{\"reduce_funcs\":false}})",
+			"harmony/array_literal_with_spread_3b (reminify 2 {\"mangle\":false})",
+			"harmony/array_literal_with_spread_3b (reminify 4 {\"toplevel\":true})",
+			"harmony/array_literal_with_spread_3b (reminify 5 {\"compress\":{\"passes\":1000000,\"unsafe\":true},\"toplevel\":true})",
+			"harmony/array_literal_with_spread_3b (reminify 6 {\"compress\":{\"arguments\":true,\"keep_fargs\":false,\"passes\":1000000,\"sequences\":1000000,\"unsafe\":true,\"unsafe_Function\":true,\"unsafe_math\":true,\"unsafe_proto\":true,\"unsafe_regexp\":true}})",
+			"harmony/array_literal_with_spread_3b (reminify 7 {\"safari10\":true})",
+			"harmony/array_literal_with_spread_3b (reminify 8 {\"compress\":{\"reduce_funcs\":false}})",
+			"evaluate/unsafe_float_key (a module mangled at its top level)",
+			"evaluate/unsafe_float_key (its own options)",
+			"evaluate/unsafe_float_key (reminify 3 {})",
+			"evaluate/unsafe_float_key (the default minimizer's options)",
+			"evaluate/unsafe_integer_key (a module mangled at its top level)",
+			"evaluate/unsafe_integer_key (its own options)",
+			"evaluate/unsafe_integer_key (reminify 3 {})",
+			"evaluate/unsafe_integer_key (the default minimizer's options)",
+			"harmony/array_literal_with_spread_2a (its own options)",
+			"harmony/array_literal_with_spread_3b (a module mangled at its top level)",
+			"harmony/array_literal_with_spread_3b (its own options)",
+			"harmony/array_literal_with_spread_3b (reminify 3 {})",
+			"harmony/array_literal_with_spread_3b (the default minimizer's options)",
+			"terser_evaluate_unsafe_float_key (its own options)",
+			"terser_evaluate_unsafe_float_key (the default minimizer's options)"
+		]
+	],
+	[
+		"a read of a global dropped, or a value moved past it, where the source repeats the text around it gzip matched",
+		[
+			"collapse_vars/collapse_vars_side_effects_2 (the default minimizer's options)",
+			"fixture/projects/jquery/20/input.js (its own options)",
+			"template-string/side_effects (the default minimizer's options)",
+		]
+	],
+	[
+		"a function inlined into a call terser flattens first, where a rest parameter then keeps the call of a method from flattening",
+		[
+			"arrow/issue_2136_2 (reminify 4 {\"toplevel\":true})",
+			"arrow/issue_2136_3 (reminify 4 {\"toplevel\":true})",
+			"drop-unused/issue_2136_2 (reminify 4 {\"toplevel\":true})",
+			"drop-unused/issue_2136_3 (reminify 4 {\"toplevel\":true})"
+		]
+	],
+	[
+		"a literal folded into the string it makes where the source repeats the literal gzip matched",
+		[
+			"evaluate/unsafe_array (a module mangled at its top level)",
+			"evaluate/unsafe_array (reminify 2 {\"mangle\":false})",
+			"evaluate/unsafe_array (reminify 3 {})",
+			"evaluate/unsafe_array (reminify 4 {\"toplevel\":true})",
+			"evaluate/unsafe_array (reminify 7 {\"safari10\":true})",
+			"evaluate/unsafe_array (reminify 8 {\"compress\":{\"reduce_funcs\":false}})",
+			"evaluate/unsafe_array (the default minimizer's options)",
+		]
+	],
+	[
+		"an assignment collapsed into its first read, where the statements beside it repeat the assignment or the call gzip matched",
+		[
+			"key-is-canonical-invalid-index-reflect-set.js (the default minimizer's options)",
+			"key-is-valid-index-reflect-set.js (the default minimizer's options)",
+			"resizable-buffer-shrink-mid-iteration.js (the default minimizer's options)",
+			"temporal-objects-no-time-clip.js (the default minimizer's options)"
+		]
+	],
+	[
+		"a script's top-level `let` read for its value, where the name it replaces repeated in a run gzip matched",
+		[
+			"byteOffset-validated-against-initial-buffer-length.js (the default minimizer's options)",
+			"fromEpochMilliseconds.js (the default minimizer's options)",
+			"true-for-timeout.js (the default minimizer's options)"
+		]
+	],
+	[
+		"`this===void 0` and `let` written where the source's `void 0===this` and `const` repeated in a run gzip matched",
+		["fixture/issues/9460/strict-mode/input.js (its own options)"]
 	]
 ])) {
 	for (const key of keys) IMPROVED_YET_BIGGER[key] = reason;
@@ -1879,6 +1930,26 @@ const onlyLetsGzipWorse = async (withSize, withoutSize, run, improvements) => {
 	if (withoutLets.code === undefined) return false;
 	const size = sizeOf(withoutLets.code);
 	return size.raw > withSize.raw && size.gzip <= withoutSize.gzip;
+};
+
+/**
+ * Whether only writing an equality's literal last makes a program gzip bigger:
+ * with that alone switched off the improvements are no bigger, raw or gzipped.
+ * It is measured on real programs, where it gzips smaller.
+ * @param {{ raw: number, gzip: number }} withoutSize the size without the improvements
+ * @param {() => Promise<{ code?: string, error?: string }>} run minifies the program
+ * @param {{ literalsLast: { enabled: boolean } } | undefined} improvements the improvements' switches
+ * @returns {Promise<boolean>} true when it does
+ */
+const onlyLiteralsLastGzipWorse = async (withoutSize, run, improvements) => {
+	if (!improvements) return false;
+	const withoutLiteralsLast = await outcomeWithout(
+		[improvements.literalsLast],
+		run
+	);
+	if (withoutLiteralsLast.code === undefined) return false;
+	const size = sizeOf(withoutLiteralsLast.code);
+	return size.raw <= withoutSize.raw && size.gzip <= withoutSize.gzip;
 };
 
 /** @typedef {{ filename: string, input: string, options: EXPECTED_OBJECT }} OxcJob */
@@ -2462,6 +2533,19 @@ describe("JavaScript minifier", () => {
 												)
 											) {
 												// `let` gzips worse than the `const` it replaced in a small program.
+											} else if (
+												await onlyLiteralsLastGzipWorse(
+													withoutSize,
+													() =>
+														outcome(
+															printer.minify,
+															source.input,
+															optionsFor(source)
+														),
+													improvements
+												)
+											) {
+												// `x===null` gzips worse than `null===x` in a small program.
 											} else {
 												differences.push(
 												`${key} is bigger with the improvements: ${withSize.raw} raw, ${withSize.gzip} gzip, against ${withoutSize.raw} raw, ${withoutSize.gzip} gzip\n\twith:    ${ours.code}\n\twithout: ${unimproved.code}`

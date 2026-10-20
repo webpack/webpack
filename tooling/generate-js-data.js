@@ -10,7 +10,7 @@
 const fs = require("fs");
 const path = require("path");
 const bcd =
-	/** @type {{ javascript: { builtins: { [name: string]: { __compat: BcdCompat } & BcdMembers } }, __meta: { version: string } }} */ (
+	/** @type {{ javascript: { builtins: { [name: string]: { __compat: BcdCompat } & BcdMembers } }, api: { Window: BcdMembers }, __meta: { version: string } }} */ (
 		/** @type {unknown} */ (require("@mdn/browser-compat-data"))
 	);
 const acorn = require("acorn");
@@ -1191,6 +1191,22 @@ const UNREAD_BUILT_INS = {
 	]
 };
 
+// The globals a browser page defines whose read `improve` takes to have no
+// effect, as swc and oxc do; each a property of `Window`, as BCD lists it. A
+// storage, whose read throws where a page may not use it, is left out.
+const HOST_GLOBALS = [
+	"document",
+	"frames",
+	"history",
+	"location",
+	"navigator",
+	"parent",
+	"screen",
+	"self",
+	"top",
+	"window"
+];
+
 /**
  * Whether BCD says a feature is in every Node webpack builds on.
  * @param {BcdCompat} compat the feature's compat entry
@@ -1210,7 +1226,7 @@ const isInOldestNode = (compat, oldestNode) => {
 /**
  * The built-ins `improve` drops when nothing reads what they answer: the
  * globals it may read, those it may call, and each one's static members.
- * @returns {{ globals: string[], callableGlobals: string[], statics: Record<string, string[]> }} the tables
+ * @returns {{ globals: string[], callableGlobals: string[], statics: Record<string, string[]>, hostGlobals: string[], knownMembers: Record<string, string[]> }} the tables
  */
 const collectPureBuiltIns = () => {
 	const builtins = bcd.javascript.builtins;
@@ -1304,10 +1320,32 @@ const collectPureBuiltIns = () => {
 		}
 		if (members.length > 0) statics[name] = members;
 	}
+	for (const name of HOST_GLOBALS) {
+		const compat = bcd.api.Window[name] && bcd.api.Window[name].__compat;
+		if (!compat || !compat.status || !compat.status.standard_track) {
+			throw new Error(
+				`@mdn/browser-compat-data lists no standard Window property ${name}`
+			);
+		}
+	}
+	// Every member BCD knows on each, whichever edition added it, so a key the
+	// build's Node lacks yet the target's has is never read as missing.
+	/** @type {Record<string, string[]>} */
+	const knownMembers = {};
+	for (const owner of ["Array", "Object", "String"]) {
+		knownMembers[owner] = Object.keys(builtins[owner])
+			.filter(
+				(key) =>
+					key !== "__compat" && key !== owner && /^[a-z$_][\w$]*$/i.test(key)
+			)
+			.sort();
+	}
 	return {
 		globals,
 		callableGlobals: globals.filter((name) => !impure.has(name)),
-		statics
+		statics,
+		hostGlobals: HOST_GLOBALS,
+		knownMembers
 	};
 };
 
@@ -1321,6 +1359,8 @@ const renderPureBuiltIns = () => `
  * @property {string[]} globals the globals a read of which has no effect
  * @property {string[]} callableGlobals the globals a call of which on literals has none but a throw
  * @property {Record<string, string[]>} statics the functions of each global a call of which on literals has none but a throw
+ * @property {string[]} hostGlobals the globals a browser page defines, a read of which is taken to have no effect
+ * @property {Record<string, string[]>} knownMembers every member any edition gives \`Array\`, \`Object\` and \`String\` or their prototypes
  */
 
 // The built-ins the \`improve\` phase drops where nothing reads them, each in
