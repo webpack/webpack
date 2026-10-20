@@ -477,20 +477,25 @@ const describeCases = (config) => {
 														}
 													}
 												}
-												// a change this build no longer depends on cannot make it stale, and
-												// nothing watches it any more to report it (e.g. a deleted import);
-												// a deleted file it resolved as missing is one it saw go
+												// a change the build no longer depends on (a deleted import, a context
+												// entry gone when it read the directory) cannot make it stale; a file
+												// created in a context or once missing is seen only through its report
 												const builds = /** @type {import("../../").Stats[]} */ (
 													"stats" in stats ? stats.stats : [stats]
 												);
 												for (const file of unseenChanges) {
+													const exists = fs.existsSync(file);
 													if (
 														!builds.some(
 															({ compilation }) =>
 																compilation.fileDependencies.has(file) ||
-																(compilation.missingDependencies.has(file) &&
-																	fs.existsSync(file)) ||
-																isWithin(file, compilation.contextDependencies)
+																(exists
+																	? compilation.missingDependencies.has(file) ||
+																		isWithin(file, compilation.contextDependencies)
+																	: [
+																			...compilation.fileDependencies,
+																			...compilation.contextDependencies
+																		].some((item) => isWithin(item, [file])))
 														)
 													) {
 														unseenChanges.delete(file);
