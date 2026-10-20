@@ -12285,20 +12285,26 @@ const OPTION_SETS = {
  * @returns {Promise<{ code: string | undefined, map: import("../../../lib/javascript/syntax-printer").MinifyOutput["map"], printedFromTree: number }>} the code, its source map, and how often the tree printer printed
  */
 const minifyCounted = async (input, options, fromTree) => {
-	const { minify, modules } = await load();
+	const { minify, modules, improvements } = await load();
 	const { printTree, treePrinting } = modules;
+	const choosesBySize = /** @type {NonNullable<typeof improvements>} */ (
+		improvements
+	).choosesBySize;
 	let printedFromTree = 0;
 	modules.printTree = (/** @type {EXPECTED_ANY[]} */ ...args) => {
 		printedFromTree++;
 		return printTree(...args);
 	};
 	treePrinting.enabled = fromTree;
+	// One run, as choosing a spelling by size prints the program again.
+	choosesBySize.enabled = false;
 	try {
 		const { code, map } = await minify(input, options);
 		return { code, map, printedFromTree };
 	} finally {
 		modules.printTree = printTree;
 		treePrinting.enabled = true;
+		choosesBySize.enabled = true;
 	}
 };
 
