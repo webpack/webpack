@@ -2443,6 +2443,21 @@ describe("CssSyntax — a block of declarations written again", () => {
 	});
 });
 
+describe("CssSyntax — the memo of which properties' order matters", () => {
+	it("starts again once a sheet of made-up names fills it, and still folds", () => {
+		// One longhand walked back past more names than the memo holds.
+		const names = [];
+		for (let i = 0; i < 33000; i++) names.push(`x${i}:1`);
+		const css = `a{margin:0;${names.join(";")};margin-top:1px}`;
+		const min = (src) =>
+			new SourceProcessor().process(src, { mode: "minify" }).code;
+		const first = min(css);
+		expect(first.startsWith("a{margin:1px 0 0;x0:1;")).toBe(true);
+		expect(first.endsWith(";x32999:1}")).toBe(true);
+		expect(min(css)).toBe(first);
+	});
+});
+
 describe("CssSyntax — minify transforms, in-process", () => {
 	/**
 	 * @param {string} src css source
