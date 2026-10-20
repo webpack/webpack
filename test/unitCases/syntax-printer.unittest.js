@@ -4066,6 +4066,18 @@ const ESTREE_PRINT_PROGRAM_FORMATS = [
 ];
 
 describe("syntax-printer", () => {
+	// Every case compares spellings with terser's, which writes an equality's
+	// literal first; one test below covers writing it last.
+	beforeAll(async () => {
+		const { improvements } = await load();
+		if (improvements) improvements.literalsLast.enabled = false;
+	});
+
+	afterAll(async () => {
+		const { improvements } = await load();
+		if (improvements) improvements.literalsLast.enabled = true;
+	});
+
 	it("should install every phase", async () => {
 		const printer = await load();
 		expect(typeof printer.minify).toBe("function");
@@ -8958,6 +8970,25 @@ describe("syntax-printer", () => {
 				} finally {
 					improvements.enabled = true;
 				}
+			}
+		});
+
+		it("should write `null`, `void 0` or a number after what an equality compares it with, but a string or `typeof`", async () => {
+			const { minify, improvements } = await load();
+			if (!improvements) throw new Error("the improve phase is not installed");
+			const input =
+				'function f(a, b) { if (null !== a && 5 === b.tag && void 0 !== b.x) return [null == a, "s" === b.t, "u" == typeof b.y]; } console.log(f(1, { tag: 5, x: 1 }));';
+			improvements.literalsLast.enabled = true;
+			try {
+				const { code } = await minify(input, { compress: {}, mangle: false });
+				expect(code).toBe(
+					'function f(a,b){if(a!==null&&b.tag===5&&b.x!==void 0)return[a==null,"s"===b.t,"u"==typeof b.y]}console.log(f(1,{tag:5,x:1}));'
+				);
+				expect(runProgram(/** @type {string} */ (code))).toBe(
+					runProgram(input)
+				);
+			} finally {
+				improvements.literalsLast.enabled = false;
 			}
 		});
 

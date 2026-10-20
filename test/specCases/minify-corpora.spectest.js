@@ -1929,6 +1929,26 @@ const onlyLetsGzipWorse = async (withSize, withoutSize, run, improvements) => {
 	return size.raw > withSize.raw && size.gzip <= withoutSize.gzip;
 };
 
+/**
+ * Whether only writing an equality's literal last makes a program gzip bigger:
+ * with that alone switched off the improvements are no bigger, raw or gzipped.
+ * It is measured on real programs, where it gzips smaller.
+ * @param {{ raw: number, gzip: number }} withoutSize the size without the improvements
+ * @param {() => Promise<{ code?: string, error?: string }>} run minifies the program
+ * @param {{ literalsLast: { enabled: boolean } } | undefined} improvements the improvements' switches
+ * @returns {Promise<boolean>} true when it does
+ */
+const onlyLiteralsLastGzipWorse = async (withoutSize, run, improvements) => {
+	if (!improvements) return false;
+	const withoutLiteralsLast = await outcomeWithout(
+		[improvements.literalsLast],
+		run
+	);
+	if (withoutLiteralsLast.code === undefined) return false;
+	const size = sizeOf(withoutLiteralsLast.code);
+	return size.raw <= withoutSize.raw && size.gzip <= withoutSize.gzip;
+};
+
 /** @typedef {{ filename: string, input: string, options: EXPECTED_OBJECT }} OxcJob */
 
 /**
@@ -2510,6 +2530,19 @@ describe("JavaScript minifier", () => {
 												)
 											) {
 												// `let` gzips worse than the `const` it replaced in a small program.
+											} else if (
+												await onlyLiteralsLastGzipWorse(
+													withoutSize,
+													() =>
+														outcome(
+															printer.minify,
+															source.input,
+															optionsFor(source)
+														),
+													improvements
+												)
+											) {
+												// `x===null` gzips worse than `null===x` in a small program.
 											} else {
 												differences.push(
 												`${key} is bigger with the improvements: ${withSize.raw} raw, ${withSize.gzip} gzip, against ${withoutSize.raw} raw, ${withoutSize.gzip} gzip\n\twith:    ${ours.code}\n\twithout: ${unimproved.code}`
