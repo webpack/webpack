@@ -33,7 +33,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: asm/asm_function_expression",
 			"terser compress: asm/asm_nested_functions",
 			"terser compress: comparing/issue_2857_1",
-			"terser compress: conditionals/cond_9",
 			"terser compress: conditionals/equality_conditionals_true",
 			"terser compress: conditionals/issue_1645_1",
 			"terser compress: dead-code/dead_code_1",
@@ -190,13 +189,10 @@ const SWC_SMALLER_BY_REASON = [
 	[
 		"swc writes a variable's value at its one read and drops the variable, an alias of another binding or an assignment folded into its next read included",
 		[
-			"swc minifier: fixture/issues/12118/input.js",
-			"swc minifier: fixture/issues/12188/input.js",
 			"swc minifier: fixture/issues/7402/input.js",
 			"swc minifier: fixture/issues/7500/input.js",
 			"swc minifier: fixture/issues/7568/1/input.js",
 			"swc minifier: fixture/issues/react-countup/2/input.js",
-			"swc minifier: fixture/issues/react/hooks/1/input.js",
 			"swc minifier: fixture/next/feedback-1/reduced/1/input.js",
 			"swc minifier: fixture/pr/11446/input.js",
 			"swc minifier: fixture/projects/yui/11/input.js",
@@ -253,7 +249,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/10876/1/input.js",
 			"swc minifier: fixture/issues/10876/2/input.js",
 			"swc minifier: fixture/issues/10876/3/input.js",
-			"swc minifier: fixture/issues/11103/input.js",
 			"swc minifier: fixture/issues/11512-exhaustive/fn-multi-use-default-side-effect/input.js",
 			"swc minifier: fixture/issues/11512-exhaustive/fn-multi-use-default-unused/input.js",
 			"swc minifier: fixture/issues/11512-exhaustive/iife-default-side-effect/input.js",
@@ -299,7 +294,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: hoist_props/issue_2377_1",
 			"terser compress: identity/inline_identity_extra_params",
 			"terser compress: identity/inline_identity_higher_order",
-			"terser compress: inline/issue_308",
 			"terser compress: issue-t292/no_flatten_with_arg_colliding_with_arg_value_inner_scope",
 			"terser compress: issue-t292/no_flatten_with_var_colliding_with_arg_value_inner_scope"
 		]
@@ -307,25 +301,12 @@ const SWC_SMALLER_BY_REASON = [
 	[
 		"webpack writes the same program in a spelling longer or compressing worse than swc's: `,` where swc keeps `;` between statements, operand order, `{0}` for an empty body",
 		[
-			"swc minifier: fixture/issues/11084/input.js",
-			"swc minifier: fixture/issues/11684/identifier-aliases/input.js",
-			"swc minifier: fixture/issues/3256/1/input.js",
-			"swc minifier: fixture/issues/5588/input.js",
-			"swc minifier: fixture/issues/6791/1/input.js",
-			"swc minifier: fixture/issues/8119/input.js",
 			"swc minifier: fixture/issues/do-while-false-terminal-jump/guarded-jump/input.js",
-			"swc minifier: fixture/issues/drop-console-es2015/input.js",
 			"swc minifier: fixture/next/43052/input.js",
 			"swc minifier: fixture/projects/mootools/3/input.js",
-			"swc minifier: fixture/projects/react/13/input.js",
 			"swc minifier: fixture/projects/yui/12/input.js",
 			"swc minifier: fixture/projects/yui/9/input.js",
-			"swc minifier: fixture/terser/issue-2435-1/2/input.js",
-			"swc minifier: fixture/terser/issue-2535-2/1/input.js",
-			"swc minifier: fixture/terser/issue-2535-2/2-1/input.js",
 			"swc minifier: fixture/terser/issue-2535-2/2/input.js",
-			"swc minifier: fixture/terser/issue-2535-2/4/input.js",
-			"swc minifier: full/size/54531ba076299b43c00a0d234240369f93371a41/input.js",
 			"swc minifier: projects/files/underscore-1.5.2.js",
 			"terser compress: collapse_vars/collapse_rhs_conditional_2",
 			"terser compress: comparing/self_comparison_2",
@@ -338,7 +319,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: evaluate/issue_2207_3",
 			"terser compress: evaluate/or",
 			"terser compress: harmony/shorthand_keywords",
-			"terser compress: if_return/issue_1437_conditionals",
 			"terser compress: issue-1704/mangle_catch_redef_3",
 			"terser compress: issue-1733/function_iife_catch",
 			"terser compress: issue-640/negate_iife_1",
@@ -359,7 +339,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/12213/numeric-order/input.js",
 			"swc minifier: fixture/issues/12214/input.js",
 			"swc minifier: fixture/issues/12224/input.js",
-			"swc minifier: fixture/issues/6957/2/input.js",
 			"swc minifier: fixture/issues/7714/1/input.js",
 			"swc minifier: fixture/next/swc-4559/input.js",
 			"swc minifier: pass-1/compute/1/input.js",
@@ -375,7 +354,6 @@ const SWC_SMALLER_BY_REASON = [
 		"swc restructures conditionals: an `if` as `&&` or `?:`, a shared tail or call factored out, `continue` and `break` folded into the condition",
 		[
 			"swc minifier: fixture/issues/2926/1/input.js",
-			"swc minifier: fixture/issues/do-while-false-control-flow/input.js",
 			"swc minifier: fixture/issues/do-while-false-terminal-jump/rejected/input.js",
 			"swc minifier: fixture/issues/do-while-false-terminal-jump/scope-directives/input.js",
 			"swc minifier: fixture/projects/mootools/8/input.js",
@@ -397,8 +375,6 @@ const SWC_SMALLER_BY_REASON = [
 		"swc writes `const` as `let`, a byte shorter and mergeable with its neighbors, and moves leading `var`s into a later declaration",
 		[
 			"swc minifier: fixture/issues/vercel/004/input.js",
-			"swc minifier: fixture/projects/mootools/6/input.js",
-			"swc minifier: fixture/projects/mootools/7/input.js",
 			"terser compress: block-scope/do_not_hoist_let",
 			"terser compress: collapse_vars/switch_case_2",
 			"terser compress: collapse_vars/switch_case_3",
@@ -425,10 +401,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: template-string/simple_string",
 			"terser compress: typeof/issue_2728_3"
 		]
-	],
-	[
-		"swc drops `new` before a built-in that constructs the same when called (`Error`, `RegExp`, `Array`)",
-		["swc minifier: fixture/issues/12187/input.js"]
 	],
 	[
 		"swc drops call and `new` arguments past the parameters of a callee it can see, and an unused parameter whose default is pure",
@@ -642,10 +614,6 @@ const SWC_SMALLER_BY_REASON = [
 	[
 		"webpack, as terser, collapses a variable into its one read in a first pass only: from a second pass on, which swc's `passes: 0` asks for, the variable stays",
 		["swc minifier: fixture/issues/5910/1/input.js"]
-	],
-	[
-		"swc's output gzips a byte smaller where webpack's is shorter raw: a value collapsed into the key it is written under, where swc keeps the `name=` statement gzip matched",
-		["swc minifier: fixture/projects/jquery/20/input.js"]
 	]
 ];
 
