@@ -9023,11 +9023,14 @@ describe("syntax-printer", () => {
 			for (const input of [
 				"var a = 8; (function (b, b) { b.toString(); })(--a, a |= 10); console.log(a);",
 				'var c = "FAIL"; (function (a, NaN) { switch (a) { case a: break; case (c = "PASS"), NaN: break; } })(NaN); console.log(c);',
-				"var values = [2, 3]; (function (large, e) { console.log(large, e); })({ large: 1 }, ...values);"
+				"var values = [2, 3]; (function (large, e) { console.log(large, e); })({ large: 1 }, ...values);",
+				"var x = 3; (function (a) { let x = String(a); console.log(a, x, x); })(x);",
+				"var g = 3; (function (a) { function g() {} console.log(a, typeof g, g.name); })(g);"
 			]) {
 				const { code } = await minify(input, { compress: { passes: 2 }, mangle: false });
 				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
-				expect(code).not.toContain("{let");
+				// A block of `let`s opens a statement, where the function's body follows `)`.
+				expect(code).not.toMatch(/(^|[;}])\{let /);
 			}
 		});
 
@@ -12479,6 +12482,7 @@ const minifyCounted = async (input, options, fromTree) => {
 	};
 	treePrinting.enabled = fromTree;
 	// One run, as choosing a spelling by size prints the program again.
+	const choseBySize = choosesBySize.enabled;
 	choosesBySize.enabled = false;
 	try {
 		const { code, map } = await minify(input, options);
@@ -12486,7 +12490,7 @@ const minifyCounted = async (input, options, fromTree) => {
 	} finally {
 		modules.printTree = printTree;
 		treePrinting.enabled = true;
-		choosesBySize.enabled = true;
+		choosesBySize.enabled = choseBySize;
 	}
 };
 
