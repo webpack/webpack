@@ -48,6 +48,14 @@ import "./var-chain-impure";
 import "./var-pattern";
 import "./babel-default";
 import "./harmony";
+import "./define-property-proto-descriptor";
+import "./define-property-string-proto-descriptor";
+import "./define-property-shadowed-object";
+import "./commonjs-disabled";
+import "./commonjs-disabled-declaration";
+import "./conditional";
+
+require("./required-bare");
 
 const bundled = (name) => `./${name}.js` in __webpack_modules__;
 
@@ -68,7 +76,9 @@ it("should drop a CommonJS module that only assigns pure values to its exports",
 		"define-property-module-exports",
 		"define-property-getter",
 		"define-property-fresh-object",
-		"define-property-babel"
+		"define-property-babel",
+		"conditional",
+		"required-bare"
 	];
 	expect(dropped.filter(bundled)).toEqual([]);
 });
@@ -107,7 +117,12 @@ it("should keep a CommonJS module whose export assignment has other effects", ()
 		"define-property-value-getter",
 		"define-property-computed-key",
 		"define-property-foreign",
-		"define-property-impure-value"
+		"define-property-impure-value",
+		"define-property-proto-descriptor",
+		"define-property-string-proto-descriptor",
+		"define-property-shadowed-object",
+		"commonjs-disabled",
+		"commonjs-disabled-declaration"
 	];
 	expect(kept.filter((name) => !bundled(name))).toEqual([]);
 	expect(global.cjsForeignMarker).toBe(1);
