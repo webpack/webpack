@@ -271,11 +271,7 @@ const OXC_SMALLER_BY_REASON = [
 	],
 	[
 		"oxc evaluates built-in calls and reads on literals at build time",
-		[
-			"swc minifier: fixture/issues/7714/1/input.js",
-			"terser compress: evaluate/regexp_property_eval",
-			"terser compress: issue-126/concatenate_rhs_strings"
-		]
+		["terser compress: issue-126/concatenate_rhs_strings"]
 	],
 	[
 		"oxc writes classes, methods and object literals shorter",

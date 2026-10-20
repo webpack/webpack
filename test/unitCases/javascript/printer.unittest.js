@@ -2066,6 +2066,12 @@ const IMPROVED_CASES = [
 		{ compress: {}, mangle: false },
 		"function f(o){let{3:x,a:y}=o;for(let{4:z}of[o])console.log(z);return[x,y]}console.log(f({3:1,a:2,4:3}));"
 	],
+	[
+		"an array literal of primitives in a template, and a regular expression's `source`",
+		'function f(a) { return [`${[1, 1]}`, `a${[1, , null, "x"]}b`, `${[a]}`, /a\\/b/i.source]; } console.log(f(2));',
+		{ compress: {}, mangle: false },
+		'function f(a){return["1,1","a1,,,xb",`${[a]}`,"a\\\\/b"]}console.log(f(2));'
+	],
 ];
 
 // What the `improve` phase leaves as terser writes it: each body has something
@@ -3913,7 +3919,7 @@ const PARSED_DIFFERENTLY = {
 const OUTPUT_CASES = [
 	[
 		"operators that would merge without a space",
-		"a = b + +c; d = e - -f; g = h / /re/g.source; i = j++ + ++k; l = !--m; n = o-- > p; q = r < !--s;"
+		"a = b + +c; d = e - -f; g = h / /re/g.flags; i = j++ + ++k; l = !--m; n = o-- > p; q = r < !--s;"
 	],
 	[
 		"strings needing each escape and each quote",
