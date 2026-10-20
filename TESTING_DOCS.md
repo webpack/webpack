@@ -142,6 +142,7 @@ Directories come first, in alphabetical order, then the individual files worth t
 
 - **Purpose**: Contains `*.unittest.js` unit tests for various functionalities.
 - **Usage**: Ensures individual modules and functions work as expected.
+- **Layout**: the syntax tests sit in one folder per language — `javascript/` (`parser`, `webpack-parser`, `scope`, `printer`, `minify`, `no-acorn`), `css/`, `html/`, `xml/` and `json/` — and the tests of the `tooling/` scripts in `tooling/`. The rest stay at the top level.
 
 ### `watchCases/`
 
@@ -303,7 +304,7 @@ Keep `--depth 1` (`wpt` alone is ~161k files). `--remote` changes the recorded c
 
 One upstream corpus is vendored rather than pinned as a submodule:
 
-- `test/fixtures/acorn-corpus.json` — acorn's test suite — the one upstream corpus vendored rather than pinned, because acorn's npm tarball ships no tests. `unitCases/WebpackParser.unittest.js` holds both webpack parser entry points to it and owns recording it (no generator script or `package.json` entry): it replays acorn's `test/tests*.js` against a recording driver, keeping sources and options but never expected trees, which come from acorn itself. Bumping the `acorn` devDependency moves the corpus; to refresh, clone acorn at the new version into `node_modules/.cache/acorn-<version>` and re-run with `WEBPACK_UPDATE_ACORN_CORPUS=1`. With that checkout present the run checks the vendored corpus against it; without it (CI, most machines) the corpus stands on the version it names, which the run pins to the installed acorn.
+- `test/fixtures/acorn-corpus.json` — acorn's test suite — the one upstream corpus vendored rather than pinned, because acorn's npm tarball ships no tests. `unitCases/javascript/parser.unittest.js` holds both webpack parser entry points to it and owns recording it (no generator script or `package.json` entry): it replays acorn's `test/tests*.js` against a recording driver, keeping sources and options but never expected trees, which come from acorn itself. Bumping the `acorn` devDependency moves the corpus; to refresh, clone acorn at the new version into `node_modules/.cache/acorn-<version>` and re-run with `WEBPACK_UPDATE_ACORN_CORPUS=1`. With that checkout present the run checks the vendored corpus against it; without it (CI, most machines) the corpus stands on the version it names, which the run pins to the installed acorn.
 
 ### Running one integration case
 
@@ -346,7 +347,7 @@ yarn test
 
 | Modified directory/file                | Command                                                                                                                                                      |
 | -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `test/unitCases/*.unittest.js`         | `yarn test:base --testPathPatterns="<filename>"`                                                                                                             |
+| `test/unitCases/**/*.unittest.js`      | `yarn test:base --testPathPatterns="<filename>"`                                                                                                             |
 | `test/specCases/`                      | Run the matching `yarn test:<suite>` command                                                                                                                 |
 | `test/cases/`                          | `yarn test:basic`                                                                                                                                            |
 | `test/configCases/`                    | `yarn test:basic --testPathPatterns="ConfigTestCases"`                                                                                                       |

@@ -23,7 +23,7 @@ const config = {
 		"<rootDir>/test/*.test.js",
 		"<rootDir>/test/*.basictest.js",
 		"<rootDir>/test/*.longtest.js",
-		"<rootDir>/test/unitCases/*.unittest.js",
+		"<rootDir>/test/unitCases/**/*.unittest.js",
 		"<rootDir>/test/specCases/*.spectest.js"
 	],
 	watchPathIgnorePatterns: [
