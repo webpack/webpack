@@ -35,6 +35,7 @@ import { simpleGit } from "simple-git";
  * @property {string} id task id (benchmark + scenario)
  * @property {string} benchmark benchmark name
  * @property {Scenario=} scenario scenario (omitted for `-unit` benchmarks)
+ * @property {string=} unitTask the one task of a `-unit` benchmark to run
  * @property {Baseline[]} baselines baselines measured in one task
  */
 
@@ -201,6 +202,16 @@ function splitToNChunks(array, n) {
 	return result;
 }
 
+/**
+ * Memory and simulation measure each task in its own process, so its shard
+ * cannot change its result: deal tasks round-robin to even out the shards' time.
+ * @returns {boolean} whether tasks are dealt round-robin across shards
+ */
+const isRoundRobinMode = () => {
+	const mode = getCodspeedRunnerMode();
+	return mode === "memory" || mode === "simulation";
+};
+
 class BenchmarkRunner {
 	constructor() {
 		/** @type {Scenario[]} */
@@ -355,9 +366,8 @@ class BenchmarkRunner {
 			);
 		}
 
-		// Memory mode measures each task in its own process, so its shard cannot
-		// change its counts: deal tasks round-robin to even out the shards' time.
-		const roundRobin = getCodspeedRunnerMode() === "memory";
+		// Dealt round-robin in `run()` once unit benchmarks are split per bench.
+		const roundRobin = isRoundRobinMode();
 		const shardBenchmarks = roundRobin
 			? benchmarks
 			: splitToNChunks([...benchmarks], shard[1])[shard[0] - 1];
@@ -385,9 +395,7 @@ class BenchmarkRunner {
 			}
 		}
 
-		return roundRobin
-			? benchmarkTasks.filter((_, index) => index % shard[1] === shard[0] - 1)
-			: benchmarkTasks;
+		return benchmarkTasks;
 	}
 
 	/**
@@ -427,6 +435,65 @@ class BenchmarkRunner {
 				await options.setup();
 			}
 		}
+	}
+
+	/**
+	 * Expand each `-unit` benchmark into one task per bench it registers, so each
+	 * runs in a fresh worker: an earlier bench's inline caches and heap would
+	 * otherwise change a later one's result. Runs after the cases' `setup()`.
+	 * @param {BenchmarkTask[]} benchmarkTasks benchmark tasks
+	 * @returns {Promise<BenchmarkTask[]>} benchmark tasks, one per unit bench
+	 */
+	async splitUnitTasks(benchmarkTasks) {
+		// Without CodSpeed the pool reuses its workers, so splitting isolates nothing.
+		if (getCodspeedRunnerMode() === "disabled") return benchmarkTasks;
+
+		/** @type {BenchmarkTask[]} */
+		const result = [];
+
+		for (const task of benchmarkTasks) {
+			if (!task.benchmark.includes("-unit")) {
+				result.push(task);
+				continue;
+			}
+
+			const benchmarkPath = path.resolve(
+				this.casesPath,
+				task.benchmark,
+				"index.bench.mjs"
+			);
+			/** @type {string[]} */
+			const names = [];
+
+			try {
+				const registerBenchmarks = await import(
+					`${pathToFileURL(benchmarkPath)}`
+				);
+
+				registerBenchmarks.default({
+					/**
+					 * @param {string} name bench name
+					 */
+					add(name) {
+						names.push(name);
+					}
+				});
+			} catch (_err) {
+				// Left whole, so its worker fails and reports it beside the other cases.
+				result.push(task);
+				continue;
+			}
+
+			for (const name of names) {
+				result.push({
+					...task,
+					id: `${task.benchmark}: ${name}`,
+					unitTask: name
+				});
+			}
+		}
+
+		return result;
 	}
 
 	/**
@@ -636,7 +703,13 @@ class BenchmarkRunner {
 
 		await this.prepareBenchmarkTasks(benchmarkTasks);
 
-		await this.runInWorkers(benchmarkTasks);
+		const splitTasks = await this.splitUnitTasks(benchmarkTasks);
+
+		await this.runInWorkers(
+			isRoundRobinMode()
+				? splitTasks.filter((_, index) => index % shard[1] === shard[0] - 1)
+				: splitTasks
+		);
 	}
 }
 

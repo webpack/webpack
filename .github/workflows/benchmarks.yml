@@ -36,13 +36,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        shard: [1/4, 2/4, 3/4, 4/4]
-    # Walltime measures real time, system calls included. A shared GitHub runner
-    # is noisier than CodSpeed's macro runners but costs nothing against their
-    # monthly budget.
+        shard: [1/6, 2/6, 3/6, 4/6, 5/6, 6/6]
+    # Hosted runners mix CPU generations (EPYC 7763, 9V74, 9V45) that time the same
+    # build up to ~35% apart. Simulation counts instructions instead, at the cost of
+    # leaving system calls out. To measure walltime again, see `mode` below.
     runs-on: ubuntu-latest
     # The harness has no deadline of its own and a watch bench waits on a
-    # rebuild callback; main's slowest shard is ~55m, so this only trips on a hang.
+    # rebuild callback, so this only trips on a hang.
     timeout-minutes: 120
     permissions:
       # A job's own block replaces the workflow's, so checkout's read and
@@ -56,11 +56,14 @@ jobs:
         with:
           fetch-tags: true
           fetch-depth: 0
+          persist-credentials: false
 
       - name: Use Node.js
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
-          node-version: lts/*
+          # Pinned: `lts/*` resolves per runner image, and a base and head on two
+          # V8 builds differ in time and native allocations alike. Bump every job.
+          node-version: "24.22.0"
           cache: yarn
 
       - run: node tooling/retry.js yarn --frozen-lockfile
@@ -79,11 +82,17 @@ jobs:
         uses: CodSpeedHQ/action@821a40cd6c80e3cfe387caf55668287addd808da # v5.5.0
         with:
           run: yarn benchmark --ci
-          mode: "walltime"
+          mode: "simulation"
+          # Walltime, for a runner whose CPU is fixed (`runs-on: codspeed-macro`);
+          # the harness still supports it:
+          # mode: "walltime"
         env:
           LAST_COMMIT: 1
           NEGATIVE_FILTER: ${{ github.event_name != 'schedule' && 'on-schedule' || '' }}
           SHARD: ${{ matrix.shard }}
+          # Single libuv thread → deterministic fs-completion order, so a build
+          # runs the same instructions every time.
+          UV_THREADPOOL_SIZE: 1
   benchmark-memory:
     strategy:
       fail-fast: false
@@ -97,7 +106,9 @@ jobs:
     timeout-minutes: 120
     env:
       LAST_COMMIT: 1
-      NEGATIVE_FILTER: ${{ github.event_name != 'schedule' && 'on-schedule' || '' }}
+      # A unit case's JS heap does not show in this count (parsing typescript.js
+      # reports ~450 KB), so it holds V8's own native allocations, which move run to run.
+      NEGATIVE_FILTER: ${{ github.event_name != 'schedule' && 'on-schedule|-unit$' || '-unit$' }}
       # Single libuv thread → deterministic fs-completion order, removing the
       # last I/O race that perturbs allocation counts between runs.
       UV_THREADPOOL_SIZE: 1
@@ -113,7 +124,9 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
-          node-version: lts/*
+          # Pinned: `lts/*` resolves per runner image, and a base and head on two
+          # V8 builds differ in time and native allocations alike. Bump every job.
+          node-version: "24.22.0"
           cache: yarn
 
       - run: node tooling/retry.js yarn --frozen-lockfile
