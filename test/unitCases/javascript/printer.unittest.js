@@ -1021,6 +1021,12 @@ const IMPROVED_CASES = [
 		"function sp(o,p){return(sp=Object.setPrototypeOf||function(o,p){return o.__proto__=p,o})(o,p)}console.log(Object.getPrototypeOf(sp({},null)),function(x){return x+1}(2));"
 	],
 	[
+		"a string method called on a constant holding a string, folded where the constant stays",
+		'const node_env = "production"; console.log(node_env.toLowerCase().startsWith("prod"), node_env.toUpperCase());',
+		{ mangle: false },
+		'const node_env="production";console.log(!0,"PRODUCTION");'
+	],
+	[
 		"a `var` declared bare, then set once to a parameter before every read, read through the parameter",
 		"function f(x) { var a; a = x; return a.foo + a.bar + a.baz; } function g(x) { var a, b; a = x; b = a; return [b.p, b.p, a.p]; } console.log(f({ foo: 1, bar: 2, baz: 3 }), g({ p: 1 }));",
 		{ mangle: false },
@@ -1916,6 +1922,10 @@ const IMPROVED_CASES = [
 // of its function's own, or the call passes, keeps or constructs something.
 /** @type {[string, string][]} */
 const KEPT_CASES = [
+	[
+		"a string method called on a variable written after it holds the string",
+		'let s = "abc"; function h() { s = "q"; } h(); console.log(s.toUpperCase());'
+	],
 	[
 		"a script's top-level `let` declared without a value, which reads no shorter as `void 0`",
 		"let Number; console.log(Number.NaN);"
