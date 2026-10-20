@@ -1317,10 +1317,6 @@ const IMPROVED_YET_BIGGER = {
 		"10 bytes fewer, 2 more gzipped: `var o=-9` split from `{p:-9}` breaks the `var o={p:` runs of the functions around it",
 	"arrow/object_parens (its own options)":
 		"3 bytes fewer, 1 more gzipped: `+!!{}` breaks the `()=>(` runs of the arrows around it gzip reused",
-	"inline/inline_into_scope_conflict_enclosed_2 (reminify 2 {\"mangle\":false})":
-		"5 bytes fewer, 1 more gzipped: `{x();return}` breaks the `return x()` run the function before it repeats",
-	"fixture/issues/d3-color/1/input.js (the default minimizer's options)":
-		"2 bytes fewer, 1 more gzipped: `p*e*h` breaks the `h*(` runs of the products beside it gzip reused",
 	"harmony/issue_2345 (the default minimizer's options)":
 		"10 bytes fewer, 7 more gzipped: the folded `[3,2,1].join(\"-\")` matched the one left after it",
 	"harmony/issue_2345 (reminify 2 {\"mangle\":false})":
@@ -1568,7 +1564,6 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 			"S11.9.5_A2.1_T1.js (the default minimizer's options)",
 			"S15.10.1_A1_T14.js (the default minimizer's options)",
 			"S15.10.1_A1_T16.js (the default minimizer's options)",
-			"S15.10.2.11_A1_T1.js (the default minimizer's options)",
 			"S15.10.3.1_A2_T1.js (the default minimizer's options)",
 			"S15.10.4.1_A1_T4.js (the default minimizer's options)",
 			"S15.10.4.1_A8_T12.js (the default minimizer's options)",
@@ -1587,7 +1582,6 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 			"S15.4.4.5_A3.2_T1.js (the default minimizer's options)",
 			"S15.4.4.5_A3.2_T2.js (the default minimizer's options)",
 			"S15.4.4.6_A1.1_T1.js (the default minimizer's options)",
-			"S15.4.4.6_A1.2_T1.js (the default minimizer's options)",
 			"S15.4.4.9_A1.1_T1.js (the default minimizer's options)",
 			"S15.4.4.9_A1.2_T1.js (the default minimizer's options)",
 			"S15.5.1.1_A1_T19.js (the default minimizer's options)",
@@ -1642,7 +1636,6 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 			"S11.1.6_A3_T7.js (the default minimizer's options)",
 			"S12.6.2_A2.js (the default minimizer's options)",
 			"S13.2.2_A15_T1.js (the default minimizer's options)",
-			"S13.2.2_A16_T2.js (the default minimizer's options)",
 			"S13.2.2_A16_T3.js (the default minimizer's options)",
 			"S13_A1.js (the default minimizer's options)",
 			"S14_A3.js (the default minimizer's options)",
@@ -1704,7 +1697,6 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 	[
 		"an assignment moved into the `var` before it, where the source repeats the assignment gzip matched",
 		[
-			"S11.4.7_A2.2_T1.js (the default minimizer's options)",
 			"S11.4.8_A2.2_T1.js (the default minimizer's options)",
 			"S11.8.4_A2.1_T1.js (the default minimizer's options)",
 			"S11.8.6_A2.1_T1.js (the default minimizer's options)",
@@ -1876,8 +1868,13 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 		"a script's top-level `let` read for its value, where the name it replaces repeated in a run gzip matched",
 		[
 			"byteOffset-validated-against-initial-buffer-length.js (the default minimizer's options)",
-			"fromEpochMilliseconds.js (the default minimizer's options)"
+			"fromEpochMilliseconds.js (the default minimizer's options)",
+			"true-for-timeout.js (the default minimizer's options)"
 		]
+	],
+	[
+		"`this===void 0` and `let` written where the source's `void 0===this` and `const` repeated in a run gzip matched",
+		["fixture/issues/9460/strict-mode/input.js (its own options)"]
 	]
 ])) {
 	for (const key of keys) IMPROVED_YET_BIGGER[key] = reason;

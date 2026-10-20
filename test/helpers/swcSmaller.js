@@ -279,7 +279,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/cycle-1/input.js",
 			"swc minifier: fixture/issues/cycle-2/input.js",
 			"swc minifier: fixture/issues/pure-callee-call/input.js",
-			"swc minifier: fixture/next/47005/input.js",
 			"swc minifier: fixture/pr/7690/input.js",
 			"swc minifier: fixture/simple/inline/4/input.js",
 			"swc minifier: full/issues/8288/input.js",
@@ -563,7 +562,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/quagga2/1.4.2/1/input.js",
 			"swc minifier: fixture/issues/react-autosuggest/1/input.js",
 			"swc minifier: fixture/issues/react-autowhatever/1/input.js",
-			"swc minifier: fixture/issues/react-countup/1/input.js",
 			"swc minifier: fixture/issues/react-instancesearch/002/input.js",
 			"swc minifier: fixture/issues/vercel/005/input.js",
 			"swc minifier: fixture/next/33458/static/chunks/pages/spread-be872e60d968a0f7/input.js",
@@ -580,9 +578,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/projects/next/.archive-4/266-aee26c928109d49d6151/input.js",
 			"swc minifier: fixture/projects/next/.archive-4/pages/development-logs/link-with-no-prefetch-53313deb99cf94686856/input.js",
 			"swc minifier: fixture/projects/next/.archive-4/pages/development-logs/link-with-prefetch-false-13db3186d6589f014e19/input.js",
-			"swc minifier: fixture/projects/next/archive-2/pages/.development-logs-2ac9e724502f3ba1f1de/input.js",
-			"swc minifier: fixture/projects/next/archive-2/pages/.dynamic-098d0d54bd014f190920/input.js",
-			"swc minifier: fixture/projects/next/archive-2/pages/.hmr-ce649615cbc9a3b4c1ce/input.js",
 			"swc minifier: fixture/projects/next/archive-2/pages/hmr/.counter-c6a48518c4a56e4d9ce5/input.js",
 			"swc minifier: fixture/projects/next/archive-2/pages/hmr/.error-in-gip-bd210c03b443f903b86d/input.js",
 			"swc minifier: fixture/projects/next/archive-2/pages/hmr/.style-stateful-component-6cd7bdfa37b75acb9d04/input.js",
@@ -666,6 +661,25 @@ const SWC_SMALLER_BY_REASON = [
 	[
 		"swc's output gzips a byte smaller where webpack's is shorter raw: a value collapsed into the key it is written under, where swc keeps the `name=` statement gzip matched",
 		["swc minifier: fixture/projects/jquery/20/input.js"]
+	],
+	[
+		"webpack writes `x===null` where swc's output, as the source, writes `null===x`: shorter or as long, this small program gzips a byte or three bigger, where larger ones gzip smaller",
+		[
+			"swc minifier: fixture/issues/stylis/1/input.js",
+			"swc minifier: fixture/issues/stylis/2/input.js",
+			"swc minifier: fixture/projects/backbone/14/input.js",
+			"swc minifier: fixture/projects/jquery/11/input.js",
+			"swc minifier: fixture/projects/jquery/2/input.js",
+			"swc minifier: fixture/projects/next/.archive-4/webpack-eb940a9a97802b481f9b/input.js",
+			"swc minifier: fixture/projects/next/extra/if_return/.4/input.js",
+			"swc minifier: fixture/projects/react/15/input.js",
+			"swc minifier: fixture/projects/react/9/input.js",
+			"swc minifier: pass-1/4/input.js",
+			"swc minifier: pass-1/5/input.js",
+			"terser compress: comparing/issue_2857_2",
+			"terser compress: comparing/issue_2857_3",
+			"terser compress: if_return/if_return_8"
+		]
 	]
 ];
 
