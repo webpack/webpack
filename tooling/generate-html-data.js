@@ -552,7 +552,13 @@ const PARSER_TABLES = [
 			"font-style",
 			"font-weight",
 			"letter-spacing",
-			"word-spacing"
+			"word-spacing",
+			"clip-rule",
+			"shape-rendering",
+			"color-rendering",
+			"pointer-events",
+			"visibility",
+			"paint-order"
 		]
 	],
 	[
@@ -573,13 +579,23 @@ const PARSER_TABLES = [
 	[
 		"SVG_SHAPE_ZERO_ATTRIBUTES",
 		"object",
-		"Shape coordinates whose omitted value is a local zero rather than a text position or inherited value.",
+		"Coordinates whose omitted value is a local zero rather than a text position or inherited value.",
 		[
 			["rect", "x y"],
 			["circle", "cx cy"],
 			["ellipse", "cx cy"],
-			["line", "x1 y1 x2 y2"]
+			["line", "x1 y1 x2 y2"],
+			["image", "x y"],
+			["use", "x y"],
+			["foreignObject", "x y"],
+			["svg", "x y"]
 		]
+	],
+	[
+		"SVG_ASPECT_RATIO_ELEMENTS",
+		"set",
+		"Elements whose omitted aspect ratio is the non-inherited xMidYMid meet default.",
+		["svg", "image", "feImage", "symbol", "marker"]
 	],
 	[
 		"SVG_STRUCTURAL_PRESENTATION_VALUES",
@@ -592,7 +608,16 @@ const PARSER_TABLES = [
 			["stroke-opacity", "number"],
 			["stroke-linecap", "butt round square"],
 			["stroke-linejoin", "miter round bevel"],
-			["fill-rule", "nonzero evenodd"]
+			["fill-rule", "nonzero evenodd"],
+			["clip-rule", "nonzero evenodd"],
+			["shape-rendering", "auto optimizeSpeed crispEdges geometricPrecision"],
+			["color-rendering", "auto optimizeSpeed optimizeQuality"],
+			[
+				"pointer-events",
+				"bounding-box visiblePainted visibleFill visibleStroke visible painted fill stroke all none"
+			],
+			["visibility", "visible hidden collapse"],
+			["paint-order", "normal"]
 		]
 	],
 	[

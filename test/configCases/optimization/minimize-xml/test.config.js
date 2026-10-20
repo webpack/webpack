@@ -36,6 +36,16 @@ module.exports = {
 					"utf8"
 				)
 			).toMatchSnapshot(name);
+			if (name === "structure") {
+				const dependent = fs.readFileSync(
+					path.join(options[i].output.path, "attribute-dependency.svg"),
+					"utf8"
+				);
+				expect(dependent).toContain('x="0"');
+				expect(dependent).toContain('opacity="1"');
+				expect(dependent).toContain('d="M000.00 000.00L010.00 000.00"');
+				expect(dependent).toContain('transform="translate(00 00)"');
+			}
 			if (["colors", "paths", "containers", "compact"].includes(name)) {
 				const animated = fs.readFileSync(
 					path.join(options[i].output.path, "animated.svg"),

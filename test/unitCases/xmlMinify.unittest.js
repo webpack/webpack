@@ -15,6 +15,18 @@ const SOURCE = `<?xml version="1.0" encoding="UTF-8"?>
 `;
 
 describe("xmlMinify", () => {
+	it.each([false, true])("should forward resource-wrapper and local default cleanup with enabled=%s", async enabled => {
+		const source = '<svg xmlns="http://www.w3.org/2000/svg"><defs><symbol id="s" viewBox="0 0 10 10"><rect width="10" height="10"/></symbol></defs><use href="#s" x="0" y="0"/><svg preserveAspectRatio="xMidYMid meet"/></svg>';
+		const { code } = await xmlMinify({ 'structure.svg': source }, undefined, { cleanupStructure: enabled });
+		expect(code).toBe(enabled ? source.replace('<defs>', '').replace('</defs>', '').replace(' x="0" y="0"', '').replace(' preserveAspectRatio="xMidYMid meet"', '') : source);
+		expect((await xmlMinify({ 'structure.svg': code }, undefined, { cleanupStructure: enabled })).code).toBe(code);
+	});
+	it("should forward resource-wrapper cleanup through SVG data URLs", async () => {
+		const source = '<svg xmlns="http://www.w3.org/2000/svg"><defs><symbol id="s"><path/></symbol></defs><use href="#s" x="0"/></svg>';
+		const { code } = await webpack.html.htmlMinify({ 'a.html': `<img src="data:image/svg+xml,${encodeURIComponent(source)}">` }, undefined, { svg: { cleanupStructure: true } });
+		expect(decodeURIComponent(code)).not.toContain('<defs>');
+		expect(decodeURIComponent(code)).toMatch(/href=["']#s["']/);
+	});
 	it.each([false, true])("should forward structural SVG cleanup with enabled=%s", async enabled => {
 		const source = '<svg xmlns="http://www.w3.org/2000/svg"><g><path style="fill:red"/></g><text/></svg>';
 		const options = { cleanupStructure: enabled };

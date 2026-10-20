@@ -16,6 +16,11 @@ const config = (name, options) => ({
 	module: {
 		rules: [
 			{
+				test: /attribute-dependency\.svg$/,
+				type: "asset/resource",
+				generator: { filename: "attribute-dependency.svg" }
+			},
+			{
 				test: /animated\.svg$/,
 				type: "asset/resource",
 				generator: { filename: "animated.svg" }

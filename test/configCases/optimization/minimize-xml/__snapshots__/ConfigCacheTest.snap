@@ -136,7 +136,7 @@ exports[`ConfigCacheTestCases optimization minimize-xml minimize-xml should comp
 
 exports[`ConfigCacheTestCases optimization minimize-xml minimize-xml should compile: structure 1`] = `
 "<svg xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"120\\" height=\\"100\\">
-<defs><clipPath id=\\"clip\\"><circle r=\\"20\\" cx=\\"20\\" cy=\\"20\\"/></clipPath><linearGradient id=\\"gradient\\"><stop stop-color=\\"red\\"/><stop offset=\\"1\\" stop-color=\\"blue\\"/></linearGradient><marker id=\\"marker\\" markerWidth=\\"2\\" markerHeight=\\"2\\"><path d=\\"M0 0L2 1 0 2z\\"/></marker></defs>
+<clipPath id=\\"clip\\"><circle r=\\"20\\" cx=\\"20\\" cy=\\"20\\"/></clipPath><linearGradient id=\\"gradient\\"><stop stop-color=\\"red\\"/><stop offset=\\"1\\" stop-color=\\"blue\\"/></linearGradient><marker id=\\"marker\\" markerWidth=\\"2\\" markerHeight=\\"2\\"><path d=\\"M0 0L2 1 0 2z\\"/></marker>
 <circle id=\\"ellipse\\" cx=\\"20\\" cy=\\"20\\" r=\\"10\\"/>
 <g fill=\\"red\\"><path d=\\"M0 0 5 10l5-5z\\"/><path d=\\"M10 10L20 30L30 20z\\" fill=\\"blue\\"/></g>
 <g transform=\\"translate(30 30) scale(2) scale(.5)\\"><path id=\\"prototype\\" d=\\"M0 0L10 20L20 10z\\" fill=\\"red\\"/><path id=\\"copy\\" d=\\"M0 0L10 20L20 10z\\" fill=\\"red\\"/><use href=\\"#prototype\\"/></g>
@@ -147,6 +147,8 @@ exports[`ConfigCacheTestCases optimization minimize-xml minimize-xml should comp
 <g fill=\\"red\\" stroke=\\"blue\\" stroke-width=\\"1\\"><rect width=\\"5\\" height=\\"5\\"/><circle r=\\"2\\"/></g>
 <path d=\\"M10000 10000C1 1 2 2 3 3\\" stroke=\\"green\\" fill=\\"none\\"/>
 <use href=\\"#copy\\" x=\\"20\\"/>
+<svg width=\\"15\\" height=\\"15\\"><use href=\\"#copy\\"/></svg>
+<g shape-rendering=\\"crispEdges\\"><path d=\\"M1 2 3 4\\"/><rect width=\\"2\\" height=\\"3\\"/></g>
 <text x=\\"10\\" y=\\"95\\" style=\\"font-size:12px;font-size:-1px\\">Fallback</text>
 </svg>"
 `;

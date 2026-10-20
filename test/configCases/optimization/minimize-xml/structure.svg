@@ -10,5 +10,7 @@
 <g><rect x="0" y="0" width="5" height="5" style="fill:red;stroke:blue;stroke-width:1"/><circle cx="0" cy="0" r="2" style="fill:red;stroke:blue;stroke-width:1"/></g>
 <path d="M10000 10000c-9999-9999-9998-9998-9997-9997" stroke="green" fill="none"/>
 <use href="#copy" x="20"/>
+<svg x="0" y="0" width="15" height="15" preserveAspectRatio="xMidYMid meet"><use href="#copy" x="0" y="0"/></svg>
+<g><path shape-rendering="crispEdges" d="M1 2 3 4"/><rect shape-rendering="crispEdges" width="2" height="3"/></g>
 <text x="10" y="95" style="font-size:12px;font-size:-1px">Fallback</text>
 </svg>
