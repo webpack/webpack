@@ -124,7 +124,8 @@ describe("SourceProcessor", () => {
 		const held = (context) => {
 			let chars = 0;
 			for (let i = 0; i < context._storeText.length; i++) {
-				chars += context._storeText[i].length;
+				const text = context._storeText[i];
+				if (text !== null) chars += text.length;
 			}
 			return chars;
 		};

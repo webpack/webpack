@@ -27390,10 +27390,10 @@ declare class PrintContext<TPath, TNode, TPrintOptions = object> {
 	printedAs(node: TNode, text: string): void;
 
 	/**
-	 * Store `input` between two offsets as what `node` printed, read only once
+	 * Store that `node` printed as its source, which `sourceText` reads only once
 	 * something asks for its text.
 	 */
-	printedRange(node: TNode, input: string, start: number, end: number): void;
+	printedSource(node: TNode, sourceText: (node: TNode) => string): void;
 
 	/**
 	 * Print one node and hand its text straight back — for a node inside one being
