@@ -9231,6 +9231,25 @@ describe("syntax-printer", () => {
 			}
 		});
 
+		it("should fold a write of a global the program shares into its read past a built-in's, where the output is measured", async () => {
+			const { minify, improvements } = await load();
+			if (!improvements) throw new Error("the improve phase is not installed");
+			const input = 'var a = "FAIL"; a = "PASS"; console.log(a);';
+			/** @type {import("terser").MinifyOptions} */
+			const options = { compress: { passes: 2 } };
+			expect((await minify(input, options)).code).toBe(
+				'var a="FAIL";a="PASS",console.log(a);'
+			);
+			improvements.choosesBySize.enabled = true;
+			try {
+				const { code } = await minify(input, options);
+				expect(code).toBe('var a="FAIL";console.log(a="PASS");');
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			} finally {
+				improvements.choosesBySize.enabled = false;
+			}
+		});
+
 		it("should try the measured spellings off together, where each off alone gzips no smaller", async () => {
 			const { minify, improvements } = await load();
 			if (!improvements) throw new Error("the improve phase is not installed");
