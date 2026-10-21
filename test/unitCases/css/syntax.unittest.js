@@ -2443,6 +2443,58 @@ describe("CssSyntax — a block of declarations written again", () => {
 	});
 });
 
+describe("CssSyntax — the memo of which properties' order matters", () => {
+	it("starts again once a sheet of made-up names fills it, and still folds", () => {
+		// One longhand walked back past more names than the memo holds.
+		const names = [];
+		for (let i = 0; i < 33000; i++) names.push(`x${i}:1`);
+		const css = `a{margin:0;${names.join(";")};margin-top:1px}`;
+		/**
+		 * @param {string} src css source
+		 * @returns {string} the minified serialization
+		 */
+		const min = (src) =>
+			new SourceProcessor().process(src, { mode: "minify" }).code;
+		const first = min(css);
+		expect(first.startsWith("a{margin:1px 0 0;x0:1;")).toBe(true);
+		expect(first.endsWith(";x32999:1}")).toBe(true);
+		expect(min(css)).toBe(first);
+	});
+});
+
+describe("CssSyntax — a box longhand printed from the memo", () => {
+	/**
+	 * @param {string} src css source
+	 * @returns {string} the minified serialization
+	 */
+	const min = (src) =>
+		new SourceProcessor().process(src, { mode: "minify" }).code;
+
+	it("still merges where its value is one component", () => {
+		expect(
+			min(
+				"a{margin-top:1px}b{margin-top:1px;margin-right:2px;margin-bottom:3px;margin-left:4px}"
+			)
+		).toBe("a{margin-top:1px}b{margin:1px 2px 3px 4px}");
+	});
+
+	it("still refuses where it is more", () => {
+		expect(
+			min(
+				"a{margin-top:1px 2px}b{margin-top:1px 2px;margin-right:2px;margin-bottom:3px;margin-left:4px}"
+			)
+		).toBe(
+			"a{margin-top:1px 2px}b{margin-top:1px 2px;margin-right:2px;margin-bottom:3px;margin-left:4px}"
+		);
+	});
+
+	it("is not kept where it prints nothing", () => {
+		expect(min("a{margin-top:;color:red}b{margin-top:;color:blue}")).toBe(
+			"a{color:red}b{color:blue}"
+		);
+	});
+});
+
 describe("CssSyntax — minify transforms, in-process", () => {
 	/**
 	 * @param {string} src css source
