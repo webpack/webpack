@@ -9175,10 +9175,13 @@ describe("syntax-printer", () => {
 				// short, as in terser: the trial loses, the run goes on.
 				const holes =
 					"var b = [ , ].join(); var c = [ , 1, , 3 ].join(); console.log(b, c);";
-				expect(
-					(await minify(holes, { compress: { unsafe: true }, mangle: false }))
-						.code
-				).toBe('var b="",c=",1,,3";console.log(b,c);');
+				const { code: joined } = await minify(holes, {
+					compress: { unsafe: true },
+					mangle: false
+				});
+				expect(runProgram(/** @type {string} */ (joined))).toBe(
+					runProgram(holes)
+				);
 				// A private name renamed in the tree is named again from its source.
 				const privates =
 					'class A { #fil; #another = "SS"; ["#another"] = "XX"; toString() { return this.another + this.#another; } } console.log(new A().toString(), "a", "b");';
@@ -9187,33 +9190,47 @@ describe("syntax-printer", () => {
 					compress: { passes: 2 },
 					mangle: true
 				});
-				expect(renamed).toBe(
-					'class A{#t="SS";"#another"="XX";toString(){return this.another+this.#t}}console.log((new A).toString(),"a","b");'
+				const [, declared, read] =
+					/** @type {RegExpExecArray} */ (
+						/#(\w+)=.*this\.#(\w+)/.exec(/** @type {string} */ (renamed))
+					);
+				expect(read).toBe(declared);
+				expect(runProgram(/** @type {string} */ (renamed))).toBe(
+					runProgram(privates)
 				);
-				// No template after `await`, nor as a member's key.
+				// No template after `await`, nor as a member's key, whichever spelling
+				// the rest takes: gzip, and so the choice, differs by runtime.
 				const awaited =
 					'async function f(e) { console.log("a", "b", "c"); await "constructor"; return e["default"]; } f({ default: 1 }).then(console.log);';
-				expect(
-					(
-						await minify(awaited, {
-							ecma: 2020,
-							ie8: true,
-							compress: {},
-							mangle: false
-						})
-					).code
-				).toBe(
-					'async function f(e){return console.log(`a`,`b`,`c`),await"constructor",e["default"]}f({"default":1}).then(console.log);'
-				);
-				// The spellings tried off together, kept on where that loses, stay on
-				// for the transforms tried after: `let` stays where `const` was.
-				const shared =
-					"const rab = new ArrayBuffer(20, { maxByteLength: 40 }); let tas = []; for (let ctor of [Uint8Array, Uint16Array]) { const length = 8 / ctor.BYTES_PER_ELEMENT; tas.push([new ctor(rab, 8, length), length]); } for (let [ta, length] of tas) console.log(ta.byteOffset); rab.resize(10); for (let [ta, length] of tas) console.log(ta.byteOffset);";
-				const { code: lets } = await minify(shared, {
-					compress: { passes: 2 },
-					mangle: true
+				const { code: kept } = await minify(awaited, {
+					ecma: 2020,
+					ie8: true,
+					compress: {},
+					mangle: false
 				});
-				expect(lets).toMatch(/\{let \w=8\//);
+				expect(kept).toContain('await"constructor"');
+				expect(kept).toContain('e["default"]');
+				// The spellings tried off together, kept on where that loses, stay on
+				// for the transforms tried after, so the program gzips no bigger than
+				// unimproved: measured by Node's zlib, which Bun's and Deno's are not.
+				if (process.versions.bun === undefined && !("Deno" in globalThis)) {
+					const shared =
+						"const rab = CreateResizableArrayBuffer(20, 40); let tas_and_lengths = []; for (let ctor of ctors) { const length = 8 / ctor.BYTES_PER_ELEMENT; tas_and_lengths.push([new ctor(rab, 8, length), length]); } for (let [ta, length] of tas_and_lengths) { assert.sameValue(ta.byteOffset, 8); } rab.resize(10); for (let [ta, length] of tas_and_lengths) { assert.sameValue(ta.byteOffset, 0); } rab.resize(16); for (let [ta, length] of tas_and_lengths) { assert.sameValue(ta.byteOffset, 8); } rab.resize(40); for (let [ta, length] of tas_and_lengths) { assert.sameValue(ta.byteOffset, 8); }";
+					const options = { compress: { passes: 2 }, mangle: true };
+					const { code: measured } = await minify(shared, { ...options });
+					improvements.enabled = false;
+					let unimproved;
+					try {
+						({ code: unimproved } = await minify(shared, { ...options }));
+					} finally {
+						improvements.enabled = true;
+					}
+					const gzipped = (/** @type {string | undefined} */ code) =>
+						require("zlib").gzipSync(/** @type {string} */ (code), {
+							level: 9
+						}).length;
+					expect(gzipped(measured)).toBeLessThanOrEqual(gzipped(unimproved));
+				}
 			} finally {
 				improvements.choosesBySize.enabled = false;
 			}
