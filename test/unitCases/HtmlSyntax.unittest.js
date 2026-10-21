@@ -3739,7 +3739,7 @@ describe("parseHtml", () => {
 			expect(new SourceProcessor().process(once, options).code).toBe(once);
 		});
 		it('should reuse numeric path spelling and preserve path lengths', () => {
-			const source = `<svg xmlns="${svg}"><path id="p" d="M000 000L010 020L020 010z" pathLength="0010"/><path d="M000 000L010 020L020 010z" pathLength="0010"/></svg>`;
+			const source = `<svg xmlns="${svg}"><path id="p" d="M000 000L010 020L020 010z" pathLength="0010" fill="black" stroke="none"/><path d="M000 000L010 020L020 010z" pathLength="0010" fill="black" stroke="none"/></svg>`;
 			const options = { ...structure, shortenSvgNumbers: true, shortenSvgPathData: true };
 			const once = new SourceProcessor().process(source, options).code;
 			expect(once).toContain('<use href="#p"/>');
@@ -3797,18 +3797,66 @@ describe("parseHtml", () => {
 			expect(new SourceProcessor().process(unique, structure).code).toBe(unique.replace('<marker id="m"/><linearGradient id="b"/><clipPath id="c"/>', '<clipPath id="c"/><linearGradient id="b"/><marker id="m"/>').replace('<defs>', '').replace('</defs>', ''));
 		});
 		it.each([true, false])('should reuse identical leaf paths with existing IDs and path cleanup=%s', shortenSvgPathData => {
-			const body = '<path id="p" d="M0 0L10 20L20 10z" fill="red"/><path id="q" d="M0 0L10 20L20 10z" fill="red"/><path d="M0 0L10 20L20 10z" fill="red"/>';
+			const body = '<path id="p" d="M0 0L10 20L20 10z" fill="red" stroke="none"/><path id="q" d="M0 0L10 20L20 10z" fill="red" stroke="none"/><path d="M0 0L10 20L20 10z" fill="red" stroke="none"/>';
 			const source = `<svg xmlns="${svg}">${body}</svg>`;
 			const once = new SourceProcessor().process(source, { ...structure, shortenSvgPathData }).code;
 			expect(once).toContain('<path id="q"');
 			expect(once).toContain('<use href="#p"/>');
 			expect(new SourceProcessor().process(once, { ...structure, shortenSvgPathData }).code).toBe(once);
 		});
-		it.each(['d="M0 0"', 'd="M0 0L"', 'fill="red"', 'd="M0 0L10 20L20 10z" opacity="inherit"', 'd="M0 0L10 20L20 10z" stroke-width="invalid"', 'd="M0 0L10 20L20 10z" style="fill:red;stroke:blue"', 'd="M0 0L10 20L20 10z" href="#x"', 'd="M0 0L10 20L20 10z" aria-label="shape"'])('should decline unsupported path reuse with %s', attributes => {
-			const source = `<svg xmlns="${svg}"><path id="p" ${attributes}/><path ${attributes}/></svg>`;
+		it.each(['d="M0 0"', 'd="M0 0L"', 'fill-rule="nonzero"', 'd="M0 0L10 20L20 10z" opacity="inherit"', 'd="M0 0L10 20L20 10z" stroke-linecap=" INHERIT "', 'd="M0 0L10 20L20 10z" fill-rule="VAR(--rule)"', 'd="M0 0L10 20L20 10z" stroke-width="invalid"', 'd="M0 0L10 20L20 10z" style="fill:red;stroke:blue"', 'd="M0 0L10 20L20 10z" href="#x"', 'd="M0 0L10 20L20 10z" aria-label="shape"'])('should decline unsupported path reuse with %s', attributes => {
+			const source = `<svg xmlns="${svg}"><path id="p" fill="black" stroke="none" ${attributes}/><path fill="black" stroke="none" ${attributes}/></svg>`;
 			expect(new SourceProcessor().process(source, { ...structure, cleanupSvgStructure: false }).code).toBe(source);
 		});
 		const paint = 'fill="none" stroke="red" stroke-width="1" stroke-dasharray="none" shape-rendering="crispEdges" marker-start="none" marker-mid="none" marker-end="none"';
+		it.each([' fill="red"', ' stroke="blue"', ''])('should preserve duplicate paths without both explicit paints: %s', attributes => {
+			const body = `<path id="p"${attributes} d="M0 0L10 20L20 10z"/><path${attributes} d="M0 0L10 20L20 10z"/>`;
+			const source = `<svg xmlns="${svg}" fill="red" stroke="blue">${body}</svg>`;
+			for (const shortenSvgColors of [false, true]) {
+				expect(new SourceProcessor().process(source, { ...structure, cleanupSvgStructure: false, shortenSvgColors }).code).toBe(source);
+			}
+		});
+		it.each(['fill="context-stroke"', 'style="fill:context-stroke"', 'style="fill:var(--paint)"', 'fill="inherit"', 'fill="context\\2d stroke"'])('should preserve inherited marker context with %s', attributes => {
+			const source = `<svg xmlns="${svg}"><defs><path id="p" d="M0 0L10 20L20 10z"/></defs><marker id="m" ${attributes}><path d="M0 0L10 20L20 10z"/></marker><path d="M0 0L20 20" fill="red" stroke="blue" marker-end="url(#m)"/></svg>`;
+			for (const shortenSvgColors of [false, true]) {
+				expect(new SourceProcessor().process(source, { ...structure, cleanupSvgStructure: false, shortenSvgColors }).code).toBe(source);
+			}
+		});
+		it.each(['context-fill', 'context-stroke', 'url(#missing) context-fill', 'url(#missing) context-stroke', 'CONTEXT-FILL', 'context\\2d fill', 'INHERIT', 'VAR(--paint)', 'currentColor', 'url(#paint)'])('should preserve context-dependent duplicate paths with %s', fill => {
+			const body = `<path id="p" fill="${fill}" stroke="none" d="M0 0L10 20L20 10z"/><path fill="${fill}" stroke="none" d="M0 0L10 20L20 10z"/>`;
+			const source = `<svg xmlns="${svg}" fill="green" stroke="purple">${body}</svg>`;
+			for (const shortenSvgColors of [true, false]) {
+				expect(new SourceProcessor().process(source, { ...structure, cleanupSvgStructure: false, shortenSvgColors }).code).toBe(source);
+			}
+		});
+		it('should remove identical inherited colors before color cleanup', async () => {
+			const source = `<svg xmlns="${svg}" fill="#ffffff"><path fill="#ffffff"/><rect fill="#ffffff"/></svg>`;
+			const render = builtinEmbeddedRenderer();
+			const options = { ...structure, shortenSvgColors: true, renderEmbeddedSource: render };
+			const once = new SourceProcessor().process(source, options).code;
+			expect(once).toBe(`<svg xmlns="${svg}" fill="#fff"><path/><rect/></svg>`);
+			expect((await new SourceProcessor().processAsync(source, { ...options, renderEmbeddedSource: async (source, info) => render(source, info) })).code).toBe(once);
+		});
+		it.each(['#ffffff', '#ff0000', 'none'])('should compose colored path reuse with color cleanup for %s', async color => {
+			const body = `<path id="p" fill="${color}" stroke="none" d="M0 0L10 20L20 10z"/><path fill="${color}" stroke="none" d="M0 0L10 20L20 10z"/>`;
+			const source = `<svg xmlns="${svg}">${body}</svg>`;
+			const render = builtinEmbeddedRenderer();
+			const options = { ...structure, cleanupSvgStructure: false, shortenSvgColors: true, renderEmbeddedSource: render };
+			const once = new SourceProcessor().process(source, options).code;
+			expect(once).toContain('<use href="#p"/>');
+			expect(once).toContain(`fill="${color === '#ffffff' ? '#fff' : color === '#ff0000' ? 'red' : color}"`);
+			expect((await new SourceProcessor().processAsync(source, { ...options, renderEmbeddedSource: async (source, info) => render(source, info) })).code).toBe(once);
+			expect(new SourceProcessor().process(once, options).code).toBe(once);
+		});
+		it.each([undefined, builtinEmbeddedRenderer(), () => undefined, () => 'stroke:rgba(0,0,0,.5)'])('should compose disjoint merging with color cleanup and renderer %s', async renderEmbeddedSource => {
+			const attributes = paint.replace('stroke="red"', 'stroke="#ffffff"');
+			const source = `<svg xmlns="${svg}"><path d="M0 0L1 0" ${attributes}/><path d="M10 10L11 10" ${attributes}/></svg>`;
+			const options = { ...structure, cleanupSvgStructure: false, shortenSvgColors: true, renderEmbeddedSource };
+			const once = new SourceProcessor().process(source, options).code;
+			expect(once.match(/<path /g)).toHaveLength(1);
+			expect(once).toContain('d="M0 0L1 0M10 10L11 10"');
+			expect((await new SourceProcessor().processAsync(source, { ...options, renderEmbeddedSource: async (source, info) => renderEmbeddedSource && renderEmbeddedSource(source, info) })).code).toBe(once);
+		});
 		it.each([['M10 10L11 10', 'M0 0L1 0'], ['M0 0L1 0', 'M0 10L1 10'], ['M0 10L1 10', 'M0 0L1 0']])('should merge separated bounds for %s and %s', (first, second) => {
 			for (const shortenSvgPathData of [true, false]) {
 				const source = `<svg xmlns="${svg}"><path d="${first}" ${paint}/><path d="${second}" ${paint}/></svg>`;

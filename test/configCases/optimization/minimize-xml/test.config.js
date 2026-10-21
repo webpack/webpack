@@ -37,6 +37,12 @@ module.exports = {
 				)
 			).toMatchSnapshot(name);
 			if (name === "structure") {
+				const structure = fs.readFileSync(
+					path.join(options[i].output.path, "structure.svg"),
+					"utf8"
+				);
+				expect(structure.match(/fill="context-fill"/g)).toHaveLength(2);
+				expect(structure).not.toContain('href="#context"');
 				const dependent = fs.readFileSync(
 					path.join(options[i].output.path, "attribute-dependency.svg"),
 					"utf8"

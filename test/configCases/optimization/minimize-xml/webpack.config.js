@@ -177,7 +177,8 @@ module.exports = [
 					sortDefinitions: true,
 					convertShapes: true,
 					shortenPathData: true,
-					shortenNumbers: true
+					shortenNumbers: true,
+					shortenColors: true
 				}
 			}
 		}

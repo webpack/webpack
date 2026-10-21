@@ -139,7 +139,7 @@ exports[`ConfigCacheTestCases optimization minimize-xml minimize-xml should comp
 <clipPath id=\\"clip\\"><circle r=\\"20\\" cx=\\"20\\" cy=\\"20\\"/></clipPath><linearGradient id=\\"gradient\\"><stop stop-color=\\"red\\"/><stop offset=\\"1\\" stop-color=\\"blue\\"/></linearGradient><marker id=\\"marker\\" markerWidth=\\"2\\" markerHeight=\\"2\\"><path d=\\"M0 0L2 1 0 2z\\"/></marker>
 <circle id=\\"ellipse\\" cx=\\"20\\" cy=\\"20\\" r=\\"10\\"/>
 <g fill=\\"red\\"><path d=\\"M0 0 5 10l5-5z\\"/><path d=\\"M10 10L20 30L30 20z\\" fill=\\"blue\\"/></g>
-<g transform=\\"translate(30 30) scale(2) scale(.5)\\"><path id=\\"prototype\\" d=\\"M0 0L10 20L20 10z\\" fill=\\"red\\"/><path id=\\"copy\\" d=\\"M0 0L10 20L20 10z\\" fill=\\"red\\"/><use href=\\"#prototype\\"/></g>
+<g transform=\\"translate(30 30) scale(2) scale(.5)\\"><path id=\\"prototype\\" d=\\"M0 0L10 20L20 10z\\" fill=\\"#fff\\" stroke=\\"none\\"/><path id=\\"copy\\" d=\\"M0 0L10 20L20 10z\\" fill=\\"#fff\\" stroke=\\"none\\"/><use href=\\"#prototype\\"/></g>
 <path d=\\"M10 70H20m30 0H60\\" fill=\\"none\\" stroke=\\"red\\" stroke-width=\\"1\\" stroke-dasharray=\\"none\\" shape-rendering=\\"crispEdges\\" marker-start=\\"none\\" marker-mid=\\"none\\" marker-end=\\"none\\"/>
 <path d=\\"M0 0Q2 2 4 4T8 8\\" stroke=\\"blue\\" fill=\\"none\\"/>
 <path d=\\"M0 0S2 2 4 4s4-2 6 0M0 0Q2 2 4 4T8 8t4-4\\" stroke=\\"blue\\" fill=\\"none\\"/>
@@ -150,6 +150,7 @@ exports[`ConfigCacheTestCases optimization minimize-xml minimize-xml should comp
 <svg width=\\"15\\" height=\\"15\\"><use href=\\"#copy\\"/></svg>
 <g shape-rendering=\\"crispEdges\\"><path d=\\"M1 2 3 4\\"/><rect width=\\"2\\" height=\\"3\\"/></g>
 <text x=\\"10\\" y=\\"95\\" style=\\"font-size:12px;font-size:-1px\\">Fallback</text>
+<path id=\\"context\\" fill=\\"context-fill\\" d=\\"M0 0L10 20L20 10z\\"/><path fill=\\"context-fill\\" d=\\"M0 0L10 20L20 10z\\"/>
 </svg>"
 `;
 

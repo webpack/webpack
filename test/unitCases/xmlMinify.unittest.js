@@ -15,6 +15,18 @@ const SOURCE = `<?xml version="1.0" encoding="UTF-8"?>
 `;
 
 describe("xmlMinify", () => {
+	it('should compose path reuse, disjoint merging and color cleanup in assets and data URLs', async () => {
+		const paint = 'fill="none" stroke="#ffffff" stroke-width="1" stroke-dasharray="none" shape-rendering="crispEdges" marker-start="none" marker-mid="none" marker-end="none"';
+		const source = `<svg xmlns="http://www.w3.org/2000/svg"><path id="p" fill="#ffffff" stroke="none" d="M0 0L10 20L20 10z"/><path fill="#ffffff" stroke="none" d="M0 0L10 20L20 10z"/><path d="M0 0L1 0" ${paint}/><path d="M10 10L11 10" ${paint}/></svg>`;
+		const options = { reusePaths: true, mergePaths: true, shortenColors: true };
+		const asset = (await xmlMinify({ 'image.svg': source }, undefined, options)).code;
+		const data = decodeURIComponent((await webpack.html.htmlMinify({ 'a.html': `<img src="data:image/svg+xml,${encodeURIComponent(source)}">` }, undefined, { svg: options })).code);
+		for (const output of [asset, data]) {
+			expect(output.match(/<path /g)).toHaveLength(2);
+			expect(output).toMatch(/<use href=["']#p["']/);
+			expect(output).toContain('#fff');
+		}
+	});
 	it.each([false, true])("should forward resource-wrapper and local default cleanup with enabled=%s", async enabled => {
 		const source = '<svg xmlns="http://www.w3.org/2000/svg"><defs><symbol id="s" viewBox="0 0 10 10"><rect width="10" height="10"/></symbol></defs><use href="#s" x="0" y="0"/><svg preserveAspectRatio="xMidYMid meet"/></svg>';
 		const { code } = await xmlMinify({ 'structure.svg': source }, undefined, { cleanupStructure: enabled });
@@ -42,7 +54,7 @@ describe("xmlMinify", () => {
 		expect((await xmlMinify({ 'structure.svg': code }, undefined, options)).code).toBe(code);
 	});
 	it("should forward sorting and path reuse to SVG data URLs", async () => {
-		const source = '<svg xmlns="http://www.w3.org/2000/svg"><g><path id="p" d="M0 0L10 20L20 10z"/><path d="M0 0L10 20L20 10z"/></g></svg>';
+		const source = '<svg xmlns="http://www.w3.org/2000/svg"><g><path id="p" d="M0 0L10 20L20 10z" fill="black" stroke="none"/><path d="M0 0L10 20L20 10z" fill="black" stroke="none"/></g></svg>';
 		const { code } = await webpack.html.htmlMinify({ 'a.html': `<img src='data:image/svg+xml,${source}'>` }, undefined, { svg: { cleanupStructure: true, reusePaths: true, sortDefinitions: true, mergePaths: true } });
 		expect(decodeURIComponent(code)).toContain("use href='#p'");
 		expect(code).not.toContain('<g>');
