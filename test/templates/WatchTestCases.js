@@ -701,8 +701,9 @@ const describeCases = (config) => {
 																				: [watchedCompiler];
 																		for (const child of children) {
 																			for (const file of unseenChanges) {
-																				// even a managed path reports a directory appearing
-																				if (lastMissingDependencies.has(file)) continue;
+																				// even a managed path reports a directory appearing, and a watched file
+																				// itself: a build seeing `index.js` before `package.json` reads the old version
+																				if (lastFileDependencies.has(file)) continue;
 																				for (const item of [
 																					...child.managedPaths,
 																					...child.immutablePaths
