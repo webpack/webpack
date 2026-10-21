@@ -2075,6 +2075,7 @@ const KEPT_CASES = [
 	["a computed key of a loop head's pattern, which the body writes", 'function f(o) { let k = 1; for ({ [k]: x } of o) { console.log(x); k = 2; } } var x; f([{ 1: "a", 2: "b" }, { 1: "c", 2: "d" }]);'],
 	["a `concat` of an array literal with a hole, which reads its index through `Array.prototype`", "console.log([, 1].concat(2).length, 0 in [, 1].concat(2), [1].concat([, 2]).length);"],
 	["a `Map` entry missing its value, which reads index 1 through `Array.prototype`", "function a() { console.log(1); return 1; } new Map([[a()]]);"],
+	["an assignment kept out of a `for…of` head declaring a `let`, where the sequence would need parens", "x = 1; for (let a of [x, 2]) console.log(a);"],
 	["a `Set` built from an array literal where a direct `eval` may rebind `Set`", 'function f() { eval("var Set = function () { console.log(1); }"); new Set([1]); } f();'],
 	["a `Set` built from an array literal where a `with` object may rebind `Set`", "with ({ Set: function () { console.log(1); } }) { new Set([1]); }"],
 	["an element of an array literal written through as a property of a destructuring assignment", "var a = 1, value = { x: 5 }; ({ x: [a][0] } = value); console.log(a);"],
@@ -9165,6 +9166,59 @@ describe("syntax-printer", () => {
 		});
 
 
+		it("should keep what each measured trial changes from changing the program", async () => {
+			const { minify, improvements } = await load();
+			if (!improvements) throw new Error("the improve phase is not installed");
+			improvements.choosesBySize.enabled = true;
+			try {
+				// `evaluate` tried off with `unsafe` on leaves `[,].join()` an operand
+				// short, as in terser: the trial loses, the run goes on.
+				const holes =
+					"var b = [ , ].join(); var c = [ , 1, , 3 ].join(); console.log(b, c);";
+				expect(
+					(await minify(holes, { compress: { unsafe: true }, mangle: false }))
+						.code
+				).toBe('var b="",c=",1,,3";console.log(b,c);');
+				// A private name renamed in the tree is named again from its source.
+				const privates =
+					'class A { #fil; #another = "SS"; ["#another"] = "XX"; toString() { return this.another + this.#another; } } console.log(new A().toString(), "a", "b");';
+				const { code: renamed } = await minify(privates, {
+					ecma: 2020,
+					compress: { passes: 2 },
+					mangle: true
+				});
+				expect(renamed).toBe(
+					'class A{#t="SS";"#another"="XX";toString(){return this.another+this.#t}}console.log((new A).toString(),"a","b");'
+				);
+				// No template after `await`, nor as a member's key.
+				const awaited =
+					'async function f(e) { console.log("a", "b", "c"); await "constructor"; return e["default"]; } f({ default: 1 }).then(console.log);';
+				expect(
+					(
+						await minify(awaited, {
+							ecma: 2020,
+							ie8: true,
+							compress: {},
+							mangle: false
+						})
+					).code
+				).toBe(
+					'async function f(e){return console.log(`a`,`b`,`c`),await"constructor",e["default"]}f({"default":1}).then(console.log);'
+				);
+				// The spellings tried off together, kept on where that loses, stay on
+				// for the transforms tried after: `let` stays where `const` was.
+				const shared =
+					"const rab = new ArrayBuffer(20, { maxByteLength: 40 }); let tas = []; for (let ctor of [Uint8Array, Uint16Array]) { const length = 8 / ctor.BYTES_PER_ELEMENT; tas.push([new ctor(rab, 8, length), length]); } for (let [ta, length] of tas) console.log(ta.byteOffset); rab.resize(10); for (let [ta, length] of tas) console.log(ta.byteOffset);";
+				const { code: lets } = await minify(shared, {
+					compress: { passes: 2 },
+					mangle: true
+				});
+				expect(lets).toMatch(/\{let \w=8\//);
+			} finally {
+				improvements.choosesBySize.enabled = false;
+			}
+		});
+
 		it("should try a tiny program without each of terser's transforms gzip may find worse", async () => {
 			const { minify, improvements } = await load();
 			if (!improvements) throw new Error("the improve phase is not installed");
@@ -9578,7 +9632,7 @@ describe("syntax-printer", () => {
 				mangle: false
 			};
 			expect((await minify(input, options)).code).toBe(
-				'export{default as A,b as e}from"m";import{d}from"m";import"side";export*as"n"from"n"with{type:"json"};import*as P from"p";export{r}from"r";import defer*as D from"d";export{d,P as p1,P as p2,D};export{};sink(d);'
+				'import A,{b as c,d}from"m";import"side";export*as"n"from"n"with{type:"json"};import*as P from"p";export{r}from"r";import defer*as D from"d";export{A,c as e,d,P as p1,P as p2,D};export{};sink(d);'
 			);
 			// `export * as` is ES2020.
 			expect(
@@ -9607,6 +9661,17 @@ describe("syntax-printer", () => {
 					)
 				).code
 			).toBe('import{v}from"m";export default v;export{v};');
+			// All of an import moves, or none: what stays would repeat the source.
+			expect(
+				(
+					await minify(
+						"import foo, * as bar from 'foo'; export { foo, bar }; import { a, b } from 'm'; export { a }; sink(b);",
+						options
+					)
+				).code
+			).toBe(
+				'import foo,*as bar from"foo";export{foo,bar};import{a,b}from"m";export{a};sink(b);'
+			);
 			expect(
 				(
 					await minify("import { a } from 'm'; export { a }; eval('a');", options)
