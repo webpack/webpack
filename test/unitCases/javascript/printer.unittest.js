@@ -9146,6 +9146,16 @@ describe("syntax-printer", () => {
 					{ ecma: 2020, module: true }
 				);
 				expect(kept).toBe('import("a");export*from"b";x({k:`v`}),String.raw`x`;');
+				// A bigint's digits print as a bigint, never a template.
+				const bigints =
+					"console.log('say \"a\"', 'say \"b\"', 'say \"c\"', -1n + \"\", \"\" + -123456789000000000000000n);";
+				const { code: digits } = await minify(bigints, { ecma: 2020 });
+				expect(digits).toBe(
+					'console.log(`say "a"`,`say "b"`,`say "c"`,-1n+``,``+-123456789000000000000000n);'
+				);
+				expect(runProgram(/** @type {string} */ (digits))).toBe(
+					runProgram(bigints)
+				);
 				improvements.backticks.enabled = false;
 				expect((await minify(input, { ecma: 2020 })).code).not.toContain("`");
 			} finally {
