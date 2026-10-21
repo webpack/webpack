@@ -2037,12 +2037,6 @@ const IMPROVED_CASES = [
 		"function f(n,x,y){return[[n,2,3,4],[1].concat(x,y)]}console.log(f(1,[5],6));"
 	],
 	[
-		"a `concat` keeping a hole",
-		"console.log([, 1].concat(2).length, 0 in [, 1].concat(2));",
-		{ compress: {}, mangle: false },
-		"console.log(3,0 in[,1,2]);"
-	],
-	[
 		"an element of an array literal read by its index",
 		"function f(o) { return [[o][0].p, [1, o][1].p]; } console.log(f({ p: 2 }));",
 		{ compress: {}, mangle: false },
@@ -2079,6 +2073,7 @@ const IMPROVED_CASES = [
 /** @type {[string, string][]} */
 const KEPT_CASES = [
 	["a computed key of a loop head's pattern, which the body writes", 'function f(o) { let k = 1; for ({ [k]: x } of o) { console.log(x); k = 2; } } var x; f([{ 1: "a", 2: "b" }, { 1: "c", 2: "d" }]);'],
+	["a `concat` of an array literal with a hole, which reads its index through `Array.prototype`", "console.log([, 1].concat(2).length, 0 in [, 1].concat(2), [1].concat([, 2]).length);"],
 	["a `Set` built from an array literal where a direct `eval` may rebind `Set`", 'function f() { eval("var Set = function () { console.log(1); }"); new Set([1]); } f();'],
 	["a `Set` built from an array literal where a `with` object may rebind `Set`", "with ({ Set: function () { console.log(1); } }) { new Set([1]); }"],
 	["an element of an array literal written through as a property of a destructuring assignment", "var a = 1, value = { x: 5 }; ({ x: [a][0] } = value); console.log(a);"],
