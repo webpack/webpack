@@ -1527,8 +1527,7 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 		[
 			"if_return/if_return_same_value (the default minimizer's options)",
 			"if_return/if_return_same_value (its own options)",
-			"replacer-function-result-undefined.js (the default minimizer's options)",
-			"stringify-replacer.js (the default minimizer's options)"
+			"replacer-function-result-undefined.js (the default minimizer's options)"
 		]
 	],
 	[
@@ -1763,8 +1762,7 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 			"obj-prop-put-unresolvable-no-strict.js (the default minimizer's options)",
 			"obj-rest-computed-property.js (the default minimizer's options)",
 			"obj-rest-non-string-computed-property-string-1.js (the default minimizer's options)",
-			"obj-rest-str-val.js (the default minimizer's options)",
-			"fn-name-accessor-get.js (the default minimizer's options)"
+			"obj-rest-str-val.js (the default minimizer's options)"
 		]
 	],
 	[
@@ -1864,6 +1862,10 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 			"fromEpochMilliseconds.js (the default minimizer's options)",
 			"true-for-timeout.js (the default minimizer's options)"
 		]
+	],
+	[
+		"functions called in place written as blocks of `let`s, where the calls of the generator each passed gzip matched",
+		["iteration.js (the default minimizer's options)"]
 	]
 ])) {
 	for (const key of keys) IMPROVED_YET_BIGGER[key] = reason;

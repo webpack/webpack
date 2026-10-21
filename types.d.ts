@@ -17985,7 +17985,7 @@ declare class JsonpTemplatePlugin {
 }
 
 /**
- * a comment as a `comments` callback is handed it: terser's comment token, its offset, line from 1 and column from 0
+ * a comment as a `comments` callback is handed it: terser's comment token, its offset, line from 1 and column from 0, and the file it was read from
  */
 declare interface KeptComment {
 	type: "comment1" | "comment2" | "comment3" | "comment4";
@@ -17993,6 +17993,7 @@ declare interface KeptComment {
 	pos: number;
 	line: number;
 	col: number;
+	file?: string;
 }
 
 /**
@@ -20526,7 +20527,10 @@ declare interface Minifier {
 		literalsLast: { enabled: boolean; applied: boolean };
 		namesByCount: { enabled: boolean; applied: boolean };
 		updates: { enabled: boolean; applied: boolean };
-		namesAtSites: { enabled: boolean; applied: boolean; measured: boolean };
+		namesAtSites: { enabled: boolean; applied: boolean };
+		sharedGlobals: { enabled: boolean; applied: boolean };
+		letArguments: { enabled: boolean; applied: boolean };
+		measured: boolean;
 		choosesBySize: { enabled: boolean };
 	};
 	modules: MinifierModules;

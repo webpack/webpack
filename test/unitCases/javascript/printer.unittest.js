@@ -1033,16 +1033,52 @@ const IMPROVED_CASES = [
 		"!function(){var C=function(){this.v=1};console.log([function(){return(new C).v},function(){return(new C).v}].map(function(f){return f()}))}();"
 	],
 	[
+		"`||` and `&&` after a function, class, object or array literal, or an assignment of one, which is always truthy",
+		"var x, y = 1; console.log(typeof (function () {} || x), typeof ({} || x), ([x] = [y]) && x, (x = []) && 2, class {} && 3);",
+		{ mangle: false },
+		'var x,y=1;console.log("function","object",([x]=[y],x),(x=[],2),3);'
+	],
+	[
+		"a function called in place, its parameter given an argument, as a block declaring it as a `let`",
+		`!function (a) { ${TRY} console.log(a); }(new Date(0).getTime());`,
+		{ compress: {}, mangle: false },
+		'{let a=new Date(0).getTime();try{console.log(1)}catch(e){}console.log(a)}'
+	],
+	[
+		"a function called in place, its parameter given nothing, as a block declaring it as a `let`",
+		`!function (a) { ${TRY} console.log(a, a = new Date(0).getTime()); }();`,
+		{ compress: {}, mangle: false },
+		'{let a;try{console.log(1)}catch(e){}console.log(a,a=new Date(0).getTime())}'
+	],
+	[
+		"a function called in place with statements, passed a variable written later, as a block declaring its parameter as a `let`",
+		'function foo(x) { (function (y) { if (y === 1) throw Error("one"); })(x); x = 2; return x; } console.log(foo(3));',
+		{ compress: {}, mangle: false },
+		'function foo(x){{let y=x;if(1===y)throw Error("one")}return x=2}console.log(foo(3));'
+	],
+	[
+		"a function called in place, passed values other than variables, as a block declaring each as a `let`",
+		"var a = [1, 2]; (function (x, y, z) { let s = 0; for (const v of x) s += v; console.log(s, y, z); })(a.slice(), a.length); !function (o, c) { let e; for (; (e = c.exec(\"aa\")); ) console.log(e[0]); }(0, /a/g);",
+		{ mangle: false },
+		'var a=[1,2];{let x=a.slice(),y=a.length,s=0;for(let v of x)s+=v;console.log(s,y,void 0)}{let c=/a/g,e;for(;e=c.exec("aa");)console.log(e[0])}'
+	],
+	[
+		"a key an array or object literal ending a sequence lacks, read as `void` the rest",
+		"var n = 0; function g() { n++; } console.log((g(), [2, 4])[5], (g(), { b: 2 }).a, n);",
+		{ mangle: false },
+		"var n=0;function g(){n++}console.log(void g(),void g(),n);"
+	],
+	[
 		"`+= 1` as `++` on each write of a counter two loops share",
 		"function f(a) { for (var i = 0; i < a.length; i += 1) console.log(i); for (i = 0; i < a.length; i += 1) console.log(i); } f([1, 2]);",
 		{ mangle: false },
 		"function f(a){for(var i=0;i<a.length;++i)console.log(i);for(i=0;i<a.length;++i)console.log(i)}f([1,2]);"
 	],
 	[
-		"`-= 1` as `--`, and `+= 1` as `++` on a counter holding only numbers, but on a parameter that may hold a string",
+		"`+= 1` as `++` on a counter holding only numbers, but not on a property or a parameter that may hold a BigInt or a string",
 		'function f(o, s) { o.a -= 1; s += 1; for (var i = 0; i < 3; i += 1) console.log(i, o.a, s); } f({ a: 5 }, "s");',
 		{ mangle: false },
-		'function f(o,s){--o.a,s+=1;for(var i=0;i<3;++i)console.log(i,o.a,s)}f({a:5},"s");'
+		'function f(o,s){o.a-=1,s+=1;for(var i=0;i<3;++i)console.log(i,o.a,s)}f({a:5},"s");'
 	],
 	[
 		"a `var` declared bare, then set once to a parameter before every read, read through the parameter",
@@ -1941,6 +1977,10 @@ const IMPROVED_CASES = [
 /** @type {[string, string][]} */
 const KEPT_CASES = [
 	[
+		"`-= 1` on a property that may hold a BigInt, which throws where `--` would not",
+		'const o = { x: 1n }; try { o.x -= 1; } catch { console.log("caught"); }'
+	],
+	[
 		"`+= 1` on a name a `for-in` head assigns, which holds a string",
 		"function f(o) { var x = 0; for (x in o) console.log(x += 1); } f({ 2: 0 });"
 	],
@@ -2074,8 +2114,6 @@ const KEPT_CASES = [
 	["an arrow calling `eval`", `!function () { ${TRY} [1].map(() => eval("this")); }();`],
 	["a value with effects kept before a `var` written again, declared in a generator, or a parameter `arguments` writes", 'function o(p) { var s = { a: 1 }, args = arguments; function* gen() { var t = { a: 2 }; yield function (k) { var x = h(k); return t[x]; }; } function h(k) { s = { a: 3 }; args[0] = { a: 5 }; return k; } return [function (k) { var x = h(k); return s[x]; }, function (k) { var x = h(k); return p[x]; }, gen().next().value]; } var r = o({ a: 4 }); console.log(r[0]("a"), r[1]("a"), r[2]("a"));'],
 	["a value with effects kept before a `let`, a `var` a pattern writes, or behind an `await`", 'function o() { let s = { a: 1 }; var u = {}; [u] = [{ a: 2 }]; var v = { a: 3 }; return [function (k) { var x = h(k); return s[x]; }, function (k) { var x = h(k); return u[x]; }, async function (k) { var x = await h(k); return v[x]; }]; } function h(k) { return k; } console.log(o().map((f) => f("a")).join());'],
-	["a parameter given an argument", `!function (a) { ${TRY} console.log(a); }(Math.random());`],
-	["a parameter given nothing", `!function (a) { ${TRY} console.log(a, a = Math.random()); }();`],
 	["a name", `!function f() { ${TRY} console.log(f); }();`],
 	["`async`", `!async function () { ${TRY} console.log(2); }();`],
 	["a generator", `!function* () { ${TRY} console.log(2); }().next();`],
@@ -2152,7 +2190,6 @@ const KEPT_CASES = [
 	["a computed key an object can write as it is", 'var o = { ["#constructor"]() { return 1; }, ["prototype"]: 2 }, p = { get ["#" + "constructor"]() { return 3; } }; console.log(o["#constructor"](), o.prototype, p["#constructor"]);'],
 	["an assignment to a `var` before a function that would need parentheses", "function g() { var x; if (x = true, 0 !== (x ^= true)) throw 1; if (x = new Boolean(true), 0 !== (x ^= true)) throw 2; } function h(o) { var b; b = o.x, function () { console.log(b); }.call(o), console.log(b); } g(); h({ x: 3 });"],
 	["a `switch` of grouped cases on a long name the conditional would repeat", 'var discriminantName = 3; function p() { switch (discriminantName) { case 1: case 2: case 3: case 4: case 5: case 6: case 7: case 8: return "a"; default: return "b"; } } console.log(p());'],
-	["a function called in place with statements, passed a variable written later", 'function foo(x) { (function (y) { if (y === 1) throw Error("one"); })(x); x = 2; return x; } console.log(foo(3));'],
 	["functions called in place with statements, written alike, which gzip as one repeat", "function f(a, b) { (function (s, p) { if (p) throw s; })(a, b); (function (s, p) { if (p) throw s; })(b, a); return 1; } console.log(f(0, 0));"],
 	["a value calling a method on a name, kept before a read that converts the name", 'function f(o) { var p = o.pop(); return o + "" + p; } function g(o) { var p = o.pop(); return `${o}${p}`; } console.log(f(["a", "b"]), g([1, 2]));'],
 	["a value calling a method on a name, kept before a read of the name's property", "function c(ctl) { var p = ctl.t(); return [ctl.v, p]; } console.log(c({ v: 1, t: function () { this.v = 9; return 2; } }));"],
@@ -2208,6 +2245,11 @@ const ARGUMENTS_KEPT_CASES = [
 // Each prints one thing and terser's output another, under the options named.
 /** @type {[string, string, import("terser").MinifyOptions][]} */
 const CORRECTED_CASES = [
+	[
+		"a function's `length`, which counts the parameters before its first default or rest",
+		"console.log(function (a = 1, b) {}.length, function (a, b = 1, c) {}.length, function (a, ...b) {}.length, function ([a], b) {}.length);",
+		{ compress: { unsafe: true }, mangle: false }
+	],
 	[
 		"a call of a function with an empty body whose parameters run a default or destructure",
 		'function g(x) { function f(a = console.log("D")) {} function h({ a }) {} f(); f(); try { h(null); } catch (e) { console.log("T"); } try { h(); } catch (e) { console.log("U"); } return 1; } console.log(g());',
@@ -8980,6 +9022,22 @@ describe("syntax-printer", () => {
 			expect(code).toContain("t?x.m(1):x.m(2)");
 		});
 
+		it("should keep a function called in place whose parameters a block of `let`s could not declare", async () => {
+			const { minify } = await load();
+			for (const input of [
+				"var a = 8; (function (b, b) { b.toString(); })(--a, a |= 10); console.log(a);",
+				'var c = "FAIL"; (function (a, NaN) { switch (a) { case a: break; case (c = "PASS"), NaN: break; } })(NaN); console.log(c);',
+				"var values = [2, 3]; (function (large, e) { console.log(large, e); })({ large: 1 }, ...values);",
+				"var x = 3; (function (a) { let x = String(a); console.log(a, x, x); })(x);",
+				"var g = 3; (function (a) { function g() {} console.log(a, typeof g, g.name); })(g);"
+			]) {
+				const { code } = await minify(input, { compress: { passes: 2 }, mangle: false });
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+				// A block of `let`s opens a statement, where the function's body follows `)`.
+				expect(code).not.toMatch(/(^|[;}])\{let /);
+			}
+		});
+
 		it("should keep a module's exported `const` while writing its private ones as `let`", async () => {
 			const { minify } = await load();
 			const { code } = await minify(
@@ -9226,6 +9284,25 @@ describe("syntax-printer", () => {
 				expect((await minify(padded, { ...options, format: { comments: "all" } })).code).toContain(
 					"{unused:o}"
 				);
+			} finally {
+				improvements.choosesBySize.enabled = false;
+			}
+		});
+
+		it("should fold a write of a global the program shares into its read past a built-in's, where the output is measured", async () => {
+			const { minify, improvements } = await load();
+			if (!improvements) throw new Error("the improve phase is not installed");
+			const input = 'var a = "FAIL"; a = "PASS"; console.log(a);';
+			/** @type {import("terser").MinifyOptions} */
+			const options = { compress: { passes: 2 } };
+			expect((await minify(input, options)).code).toBe(
+				'var a="FAIL";a="PASS",console.log(a);'
+			);
+			improvements.choosesBySize.enabled = true;
+			try {
+				const { code } = await minify(input, options);
+				expect(code).toBe('var a="FAIL";console.log(a="PASS");');
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
 			} finally {
 				improvements.choosesBySize.enabled = false;
 			}
@@ -12409,6 +12486,7 @@ const minifyCounted = async (input, options, fromTree) => {
 	};
 	treePrinting.enabled = fromTree;
 	// One run, as choosing a spelling by size prints the program again.
+	const choseBySize = choosesBySize.enabled;
 	choosesBySize.enabled = false;
 	try {
 		const { code, map } = await minify(input, options);
@@ -12416,7 +12494,7 @@ const minifyCounted = async (input, options, fromTree) => {
 	} finally {
 		modules.printTree = printTree;
 		treePrinting.enabled = true;
-		choosesBySize.enabled = true;
+		choosesBySize.enabled = choseBySize;
 	}
 };
 

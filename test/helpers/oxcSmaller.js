@@ -172,7 +172,6 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: rename/function_catch_catch",
 			"terser compress: sequences/call",
 			"terser compress: sequences/hoist_decl",
-			"terser compress: sequences/lift_sequences_2",
 			"terser compress: template-string/do_not_optimize_tagged_template_1",
 			"terser compress: template-string/respect_inline_script",
 			"terser compress: template-string/side_effects",
@@ -191,7 +190,6 @@ const OXC_SMALLER_BY_REASON = [
 		"oxc substitutes shorter syntax, as oxc's `peephole/substitute_alternate_syntax.rs` tests show",
 		[
 			"oxc minifier: peephole/substitute_alternate_syntax.rs:135",
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:150",
 			"oxc minifier: peephole/substitute_alternate_syntax.rs:164",
 			"oxc minifier: peephole/substitute_alternate_syntax.rs:165",
 			"oxc minifier: peephole/substitute_alternate_syntax.rs:168",
@@ -560,8 +558,6 @@ const OXC_SMALLER_BY_REASON = [
 		"oxc folds arithmetic, comparisons and concatenation of constants",
 		[
 			"swc exec: terser_drop_unused_issue_t161_top_retain_15",
-			"terser compress: collapse_vars/boolean_binary_1",
-			"terser compress: collapse_vars/boolean_binary_2",
 			"terser compress: comparing/bigint_vs_number",
 			"terser compress: const/issue_1396",
 			"terser compress: destructuring/empty_object_destructuring_misc",
@@ -664,7 +660,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/oxc.rs:106",
 			"oxc minifier: peephole/oxc.rs:107",
 			"oxc minifier: peephole/oxc.rs:108",
-			"oxc minifier: peephole/oxc.rs:109",
 			"oxc minifier: peephole/oxc.rs:23",
 			"oxc minifier: peephole/oxc.rs:32"
 		]
@@ -772,6 +767,20 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc's output is wrong: it reads a `let` that a skipped `case` declares as its value, where the input throws a ReferenceError in the binding's dead zone",
 		["oxc minifier: peephole/minimize_switch_statements.rs:65"]
+	],
+	[
+		"oxc's output is wrong: it writes `x -= 1` as `--x` and `x -= -1` as `++x` on a name or property that may hold a BigInt, where the input throws a TypeError and the update does not; webpack, like swc, rewrites only a name holding only numbers",
+		[
+			"oxc minifier: ecmascript/may_have_side_effects.rs:1638",
+			"oxc minifier: ecmascript/value_type.rs:192",
+			"oxc minifier: peephole/minimize_conditions.rs:158",
+			"oxc minifier: peephole/minimize_conditions.rs:163",
+			"oxc minifier: peephole/minimize_conditions.rs:166",
+			"oxc minifier: peephole/obscure_edge_cases.rs:222",
+			"oxc minifier: peephole/real_world_patterns.rs:79",
+			"oxc minifier: peephole/substitute_alternate_syntax.rs:149",
+			"oxc minifier: peephole/substitute_alternate_syntax.rs:150"
+		]
 	]
 ];
 
