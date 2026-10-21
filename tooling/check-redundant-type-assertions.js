@@ -56,10 +56,16 @@ const isContextFree = (node) => {
 		// A generic signature can infer its type arguments from the cast
 		const signature = checker.getResolvedSignature(node);
 		const declaration = signature && signature.getDeclaration();
-		return Boolean(
-			declaration &&
-			!ts.isJSDocSignature(declaration) &&
-			ts.getEffectiveTypeParameterDeclarations(declaration).length === 0
+		if (
+			!declaration ||
+			ts.isJSDocSignature(declaration) ||
+			ts.getEffectiveTypeParameterDeclarations(declaration).length > 0
+		) {
+			return false;
+		}
+		return (
+			!ts.isConstructorDeclaration(declaration) ||
+			ts.getEffectiveTypeParameterDeclarations(declaration.parent).length === 0
 		);
 	}
 	return false;
