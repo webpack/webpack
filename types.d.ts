@@ -20530,6 +20530,7 @@ declare interface Minifier {
 		namesAtSites: { enabled: boolean; applied: boolean };
 		sharedGlobals: { enabled: boolean; applied: boolean };
 		letArguments: { enabled: boolean; applied: boolean };
+		backticks: { enabled: boolean; applied: boolean };
 		measured: boolean;
 		choosesBySize: { enabled: boolean };
 	};

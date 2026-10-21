@@ -982,7 +982,7 @@ const IMPROVED_CASES = [
 		"a function read once, called in a loop, flattened into its call there, unless a closure keeps its parameter",
 		"function f(a) { function g(x) { return x * 2; } var s = 0; for (var i = 0; i < a.length; i++) s += g(a[i]); return s; } function k(a) { var fs = []; function g(x) { fs.push(function () { return x; }); } for (var i = 0; i < a.length; i++) g(a[i]); return fs.map(function (h) { return h(); }); } (function () { var i; function fn(j) { return function () { console.log(j); }(); } for (i in { a: 1, b: 2 }) fn(i); })(); console.log(f([1, 2]), k([3, 4]));",
 		{ mangle: false },
-		"function f(a){for(var s=0,i=0;i<a.length;i++)s+=2*a[i];return s}function k(a){var fs=[];function g(x){fs.push(function(){return x})}for(var i=0;i<a.length;i++)g(a[i]);return fs.map(function(h){return h()})}!function(){var i;for(i in{a:1,b:2})console.log(i)}(),console.log(f([1,2]),k([3,4]));"
+		"function f(a){for(var s=0,i=0;i<a.length;i++)s+=2*a[i];return s}function k(a){var fs=[];function g(x){fs.push(function(){return x})}for(var i=0;i<a.length;i++)g(a[i]);return fs.map(function(h){return h()})}!function(){for(var i in{a:1,b:2})console.log(i)}(),console.log(f([1,2]),k([3,4]));"
 	],
 	[
 		"a `var` copying one of the function around it, set once per call, read through the name it copies",
@@ -1970,12 +1970,119 @@ const IMPROVED_CASES = [
 		{ compress: {}, mangle: true, ecma: 2015 },
 		"function s(n){var{a,b,c}=n;return a+b*c}console.log(s({a:1,b:2,c:3}),s({a:2,b:3,c:4}));"
 	],
+	[
+		"a value compared with `null` and then, read back, with `undefined`",
+		"function f(o) { var t; return (t = o.a) === null || t === void 0; } console.log(f({ a: null }), f({}), f({ a: 1 }));",
+		{ compress: {}, mangle: false },
+		"function f(o){return null==o.a}console.log(f({a:null}),f({}),f({a:1}));"
+	],
+	[
+		"a negated `||` of comparisons, its value read",
+		"function f(a, b, c, d) { return !(a == b || c == d); } console.log(f(1, 1, 2, 3), f(1, 2, 3, 4));",
+		{ compress: {}, mangle: false },
+		"function f(a,b,c,d){return a!=b&&c!=d}console.log(f(1,1,2,3),f(1,2,3,4));"
+	],
+	[
+		"a constant array a `for…of` declaring its own name iterates",
+		"function f() { let t = [1, 2]; for (let e of t) console.log(e); } f();",
+		{ compress: {}, mangle: false },
+		"function f(){for(let e of[1,2])console.log(e)}f();"
+	],
+	[
+		"a `||` and an `&&` of a name holding a string longer than the name",
+		'function f(g) { var x = "keep this", y = "remove that"; g(x || y); g(y && x); } f(console.log);',
+		{ compress: {}, mangle: false },
+		'function f(g){var x="keep this";g(x),g(x)}f(console.log);'
+	],
+	[
+		"a `Set` or a `Map` built from an array literal and never read",
+		"function f(a, b) { new Set([a(), b()]); new Map([[a(), 1], [2, b()]]); new Set(); } f(() => console.log(1), () => console.log(2));",
+		{ compress: {}, mangle: false },
+		"function f(a,b){a(),b(),a(),b()}f(()=>console.log(1),()=>console.log(2));"
+	],
+	[
+		"a name `void` wrote, read as `undefined`",
+		"var c = 0; function f() { var o = void (c = 1 + (c = 1 + c)); return o && o[0]; } console.log(f(), c);",
+		{ compress: {}, mangle: false },
+		"var c=0;function f(){var o=void(c=1+(c=1+c));return o}console.log(f(),c);"
+	],
+	[
+		"literals of different types compared strictly",
+		'function f(a) { if (-1 !== -1n) console.log(a === 1, 1 === 1n, "1" !== 1); } f(1);',
+		{ compress: {}, mangle: false },
+		"function f(a){console.log(1===a,false,true)}f(1);"
+	],
+	[
+		"a write to a block's `let` nothing reads",
+		"function f(c) { var a; if (c) { let b; return (a = 2) + (b = 3); } } console.log(f(1));",
+		{ compress: {}, mangle: false },
+		"function f(c){if(c){return 2+3}}console.log(f(1));"
+	],
+	[
+		"a name tested for `null` before an optional chain reading it",
+		"function f(o) { return o != null ? o?.a : void 0; } console.log(f({ a: 1 }), f(null));",
+		{ compress: {}, mangle: false, ecma: 2020 },
+		"function f(o){return o?.a}console.log(f({a:1}),f(null));"
+	],
+	[
+		"an assignment moved into a `for…of` head declaring its own names, unless it reads one",
+		"function f() { var d; d = [1, 2]; for (let t of d) console.log(t); } function g(t) { var e; e = [t]; for (let t of e) console.log(t); } f(); g(3);",
+		{ compress: {}, mangle: false },
+		"function f(){for(let t of[1,2])console.log(t)}function g(t){var e=[t];for(let t of e)console.log(t)}f(),g(3);"
+	],
+	[
+		"`concat` of array literals and primitives, and one `concat` after another",
+		"function f(n, x, y) { return [[n].concat([2], 3, [4]), [].concat(1, x).concat(y)]; } console.log(f(1, [5], 6));",
+		{ compress: {}, mangle: false },
+		"function f(n,x,y){return[[n,2,3,4],[1].concat(x,y)]}console.log(f(1,[5],6));"
+	],
+	[
+		"an element of an array literal read by its index",
+		"function f(o) { return [[o][0].p, [1, o][1].p]; } console.log(f({ p: 2 }));",
+		{ compress: {}, mangle: false },
+		"function f(o){return[o.p,o.p]}console.log(f({p:2}));"
+	],
+	[
+		"a bare `var` declared by the `for…in` after it",
+		"function f(b) { var a; for (a in b) console.log(a); } f({ k: 1 });",
+		{ compress: {}, mangle: false },
+		"function f(b){for(var a in b)console.log(a)}f({k:1});"
+	],
+	[
+		"a `break` leaving a `do … while` that runs once, as a guard on what follows",
+		"function f(a, b) { do { if (a) break; console.log(1); if (b) break; console.log(2); } while (0); } f(0, 1); f(0, 0);",
+		{ compress: {}, mangle: false },
+		"function f(a,b){a||(console.log(1),b||console.log(2))}f(0,1),f(0,0);"
+	],
+	[
+		"a computed key of a pattern, read as the constant it holds",
+		'function f(o) { const k = 4, p = "a"; let { [7 - k]: x, [p]: y } = o; for (const { [k]: z } of [o]) console.log(z); return [x, y]; } console.log(f({ 3: 1, a: 2, 4: 3 }));',
+		{ compress: {}, mangle: false },
+		"function f(o){let{3:x,a:y}=o;for(let{4:z}of[o])console.log(z);return[x,y]}console.log(f({3:1,a:2,4:3}));"
+	],
+	[
+		"an array literal of primitives in a template, and a regular expression's `source`",
+		'function f(a) { return [`${[1, 1]}`, `a${[1, , null, "x"]}b`, `${[a]}`, /a\\/b/i.source]; } console.log(f(2));',
+		{ compress: {}, mangle: false },
+		'function f(a){return["1,1","a1,,,xb",`${[a]}`,"a\\\\/b"]}console.log(f(2));'
+	],
 ];
 
 // What the `improve` phase leaves as terser writes it: each body has something
 // of its function's own, or the call passes, keeps or constructs something.
 /** @type {[string, string][]} */
 const KEPT_CASES = [
+	["a computed key of a loop head's pattern, which the body writes", 'function f(o) { let k = 1; for ({ [k]: x } of o) { console.log(x); k = 2; } } var x; f([{ 1: "a", 2: "b" }, { 1: "c", 2: "d" }]);'],
+	["a `concat` of an array literal with a hole, which reads its index through `Array.prototype`", "console.log([, 1].concat(2).length, 0 in [, 1].concat(2), [1].concat([, 2]).length);"],
+	["a `Map` entry missing its value, which reads index 1 through `Array.prototype`", "function a() { console.log(1); return 1; } new Map([[a()]]);"],
+	["an assignment kept out of a `for…of` head declaring a `let`, where the sequence would need parens", "x = 1; for (let a of [x, 2]) console.log(a);"],
+	["a `Set` built from an array literal where a direct `eval` may rebind `Set`", 'function f() { eval("var Set = function () { console.log(1); }"); new Set([1]); } f();'],
+	["a `Set` built from an array literal where a `with` object may rebind `Set`", "with ({ Set: function () { console.log(1); } }) { new Set([1]); }"],
+	["an element of an array literal written through as a property of a destructuring assignment", "var a = 1, value = { x: 5 }; ({ x: [a][0] } = value); console.log(a);"],
+	["a direct `eval` kept out of a `for…in` head whose `let` it may read in its dead zone", "function f(o) { let x = 1; eval('console.log(x)'); for (let x in o) console.log(x); } f({ a: 1 });"],
+	["an element of an array literal called, read as a place, or beside one with effects", "function f(o, g) { [o][0] = 1; [o][0]++; delete [o][0]; return [[o][0](), [g(), o][1], [, o][0]]; } console.log(f(function () { return this.length; }, () => 1));"],
+	["a `break` in a `do … while` that runs once, before a declaration or a labeled `break`", "function f(a) { do { if (a) break; class C {} console.log(C.name); } while (0); x: do { if (a) break x; console.log(2); } while (0); } f(0); f(1);"],
+	["a `Map` given what is no entry, or a collection given a spread or an argument more", "function f(a, s) { try { new Map([a]); } catch (e) { console.log(e.name); } try { new Map([, [1]]); } catch (e) { console.log(e.name); } new Set([...s]); new Map([[...s]]); new Set([1], a); } f(1, [2]);"],
 	[
 		"`-= 1` on a property that may hold a BigInt, which throws where `--` would not",
 		'const o = { x: 1n }; try { o.x -= 1; } catch { console.log("caught"); }'
@@ -2073,7 +2180,6 @@ const KEPT_CASES = [
 	["a conditional adding to its target", "var a = 0; Math.random() < 2 ? a += 1 : a += 2; console.log(a);"],
 	["a strict test for null and undefined of a global", "console.log(globalThis.g === null || globalThis.g === void 0, typeof g);"],
 	["a negated test whose value is read", "function f(a, b) { var x = !a || b; return [x, !a && b, (!a || b, !a && b)]; } console.log(f(0, 1), f(1, 0));"],
-	["a `concat` keeping a hole", "console.log([, 1].concat(2).length, 0 in [, 1].concat(2));"],
 	["a `Number` shadowed by a variable", "var Number = { NaN: 1 }; console.log(Number.NaN);"],
 	["a `#__PURE__` call of a function called optionally, or async", "var f = Math.random() < 2 ? () => 1 : null; console.log(/* @__PURE__ */ f?.(), /* @__PURE__ */ (async () => 1)() instanceof Promise);"],
 	["`Number.EPSILON`, longer as a number", "console.log(Number.EPSILON);"],
@@ -3814,7 +3920,7 @@ const PARSED_DIFFERENTLY = {
 const OUTPUT_CASES = [
 	[
 		"operators that would merge without a space",
-		"a = b + +c; d = e - -f; g = h / /re/g.source; i = j++ + ++k; l = !--m; n = o-- > p; q = r < !--s;"
+		"a = b + +c; d = e - -f; g = h / /re/g.flags; i = j++ + ++k; l = !--m; n = o-- > p; q = r < !--s;"
 	],
 	[
 		"strings needing each escape and each quote",
@@ -9022,6 +9128,164 @@ describe("syntax-printer", () => {
 			expect(code).toContain("t?x.m(1):x.m(2)");
 		});
 
+		it("should write strings as templates where a measured program gzips smaller so", async () => {
+			const { minify, improvements } = await load();
+			if (!improvements) throw new Error("the improve phase is not installed");
+			const input =
+				'class Foo { bar = "bar"; static zzz = "zzz"; toString() { return this.bar + Foo.zzz; } } console.log(String(new Foo()));';
+			improvements.choosesBySize.enabled = true;
+			try {
+				const { code } = await minify(input, { ecma: 2020 });
+				expect(code).toBe(
+					"class Foo{bar=`bar`;static zzz=`zzz`;toString(){return this.bar+Foo.zzz}}console.log(String(new Foo));"
+				);
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+				// Not before ES2015, nor where a string must stay one.
+				expect((await minify(input, { ecma: 5 })).code).not.toContain("`");
+				const { code: kept } = await minify(
+					'"use strict"; import("a"); export * from "b"; x({ "k": "v" }); String.raw`x`;',
+					{ ecma: 2020, module: true }
+				);
+				expect(kept).toBe('import("a");export*from"b";x({k:`v`}),String.raw`x`;');
+				// A bigint's digits print as a bigint, never a template.
+				const bigints =
+					"console.log('say \"a\"', 'say \"b\"', 'say \"c\"', -1n + \"\", \"\" + -123456789000000000000000n);";
+				const { code: digits } = await minify(bigints, { ecma: 2020 });
+				expect(digits).toBe(
+					'console.log(`say "a"`,`say "b"`,`say "c"`,-1n+``,``+-123456789000000000000000n);'
+				);
+				expect(runProgram(/** @type {string} */ (digits))).toBe(
+					runProgram(bigints)
+				);
+				improvements.backticks.enabled = false;
+				expect((await minify(input, { ecma: 2020 })).code).not.toContain("`");
+			} finally {
+				improvements.backticks.enabled = true;
+				improvements.choosesBySize.enabled = false;
+			}
+		});
+
+
+		it("should run a built-in where the program leaves it, and keep what reads through a prototype", async () => {
+			const { minify } = await load();
+			for (const input of [
+				// A global the program assigns is no longer the built-in.
+				'Set = function () { console.log("side"); }; new Set([1]); console.log(2);',
+				'Math = { max() { console.log("m"); return 0; } }; console.log(Math.max(1, 2));',
+				// A hole or a short entry reads its index through `Array.prototype`.
+				'Object.defineProperty(Array.prototype, 0, { get() { console.log("got"); return 1; }, configurable: true }); new Set([, 1]); new Map([[]]); console.log(2);'
+			]) {
+				const { code } = await minify(input, { toplevel: true });
+				expect(runProgram(/** @type {string} */ (code))).toBe(
+					runProgram(input)
+				);
+			}
+			// Unassigned, the built-in still runs here.
+			expect(
+				(
+					await minify(
+						'console.log(Math.max(1, 2), String.fromCharCode(65)); new Set([1]); new Map([[1, 2]]);',
+						{ toplevel: true }
+					)
+				).code
+			).toBe('console.log(2,"A");');
+		});
+
+		it("should keep what each measured trial changes from changing the program", async () => {
+			const { minify, improvements } = await load();
+			if (!improvements) throw new Error("the improve phase is not installed");
+			improvements.choosesBySize.enabled = true;
+			try {
+				// `evaluate` tried off with `unsafe` on leaves `[,].join()` an operand
+				// short, as in terser: the trial loses, the run goes on.
+				const holes =
+					"var b = [ , ].join(); var c = [ , 1, , 3 ].join(); console.log(b, c);";
+				const { code: joined } = await minify(holes, {
+					compress: { unsafe: true },
+					mangle: false
+				});
+				expect(runProgram(/** @type {string} */ (joined))).toBe(
+					runProgram(holes)
+				);
+				// A private name renamed in the tree is named again from its source.
+				const privates =
+					'class A { #fil; #another = "SS"; ["#another"] = "XX"; toString() { return this.another + this.#another; } } console.log(new A().toString(), "a", "b");';
+				const { code: renamed } = await minify(privates, {
+					ecma: 2020,
+					compress: { passes: 2 },
+					mangle: true
+				});
+				const [, declared, read] =
+					/** @type {RegExpExecArray} */ (
+						/#(\w+)=.*this\.#(\w+)/.exec(/** @type {string} */ (renamed))
+					);
+				expect(read).toBe(declared);
+				expect(runProgram(/** @type {string} */ (renamed))).toBe(
+					runProgram(privates)
+				);
+				// No template after `await`, nor as a member's key, whichever spelling
+				// the rest takes: gzip, and so the choice, differs by runtime.
+				const awaited =
+					'async function f(e) { console.log("a", "b", "c"); await "constructor"; return e["default"]; } f({ default: 1 }).then(console.log);';
+				const { code: kept } = await minify(awaited, {
+					ecma: 2020,
+					ie8: true,
+					compress: {},
+					mangle: false
+				});
+				expect(kept).toContain('await"constructor"');
+				expect(kept).toContain('e["default"]');
+				// The spellings tried off together, kept on where that loses, stay on
+				// for the transforms tried after, so the program gzips no bigger than
+				// unimproved: measured by Node's zlib, which Bun's and Deno's are not.
+				if (process.versions.bun === undefined && !("Deno" in globalThis)) {
+					const shared =
+						"const rab = CreateResizableArrayBuffer(20, 40); let tas_and_lengths = []; for (let ctor of ctors) { const length = 8 / ctor.BYTES_PER_ELEMENT; tas_and_lengths.push([new ctor(rab, 8, length), length]); } for (let [ta, length] of tas_and_lengths) { assert.sameValue(ta.byteOffset, 8); } rab.resize(10); for (let [ta, length] of tas_and_lengths) { assert.sameValue(ta.byteOffset, 0); } rab.resize(16); for (let [ta, length] of tas_and_lengths) { assert.sameValue(ta.byteOffset, 8); } rab.resize(40); for (let [ta, length] of tas_and_lengths) { assert.sameValue(ta.byteOffset, 8); }";
+					const options = { compress: { passes: 2 }, mangle: true };
+					const { code: measured } = await minify(shared, { ...options });
+					improvements.enabled = false;
+					let unimproved;
+					try {
+						({ code: unimproved } = await minify(shared, { ...options }));
+					} finally {
+						improvements.enabled = true;
+					}
+					const gzipped = (/** @type {string | undefined} */ code) =>
+						require("zlib").gzipSync(/** @type {string} */ (code), {
+							level: 9
+						}).length;
+					expect(gzipped(measured)).toBeLessThanOrEqual(gzipped(unimproved));
+				}
+			} finally {
+				improvements.choosesBySize.enabled = false;
+			}
+		});
+
+		it("should try a tiny program without each of terser's transforms gzip may find worse", async () => {
+			const { minify, improvements } = await load();
+			if (!improvements) throw new Error("the improve phase is not installed");
+			const input =
+				"var obj = { async a() { return await foo(1 + 0); }, anon: async function () { return await foo(2 + 0); } }; console.log(obj);";
+			const methods =
+				"var obj={async a(){return await foo(1)},anon:async function(){return await foo(2)}};console.log(obj);";
+			expect((await minify(input, { ecma: 2020 })).code).toBe(
+				"var obj={a:async()=>await foo(1),anon:async function(){return await foo(2)}};console.log(obj);"
+			);
+			improvements.choosesBySize.enabled = true;
+			try {
+				expect((await minify(input, { ecma: 2020 })).code).toBe(methods);
+				// One the caller turns off stays off, and none runs without compressing.
+				expect(
+					(await minify(input, { ecma: 2020, compress: { arrows: false } })).code
+				).toBe(methods);
+				expect(
+					(await minify(input, { ecma: 2020, compress: false })).code
+				).toContain("async a(){return await foo(1+0)}");
+			} finally {
+				improvements.choosesBySize.enabled = false;
+			}
+		});
+
 		it("should keep a function called in place whose parameters a block of `let`s could not declare", async () => {
 			const { minify } = await load();
 			for (const input of [
@@ -9387,6 +9651,74 @@ describe("syntax-printer", () => {
 			expect((await minify(input, options)).code).toBe(
 				'import A,{default as B,foo}from"m";import Y,*as X from"p";import*as Z from"p";import j from"j"with{type:"json"};import k from"j";import source s from"s";import defer*as d from"d";import defer*as e from"e";sink(A,B,foo,X,Y,Z,j,k,e);'
 			);
+			if (!improvements) throw new Error("the improve phase is not installed");
+			improvements.enabled = false;
+			try {
+				expect((await minify(input, options)).code).toBe(
+					(await terserReference().minify(input, options)).code
+				);
+			} finally {
+				improvements.enabled = true;
+			}
+		});
+
+		it("should export from its module what a module imports only to export, in the import's place", async () => {
+			const { minify, improvements } = await load();
+			const input =
+				"import A, { b as c, d } from 'm'; import 'side'; import * as N from 'n' with { type: 'json' }; import * as P from 'p'; import { r } from 'r'; import defer * as D from 'd'; export { A, c as e, d, N as \"n\", P as p1, P as p2, r, D }; export {}; sink(d);";
+			/** @type {import("terser").MinifyOptions} */
+			const options = {
+				module: true,
+				ecma: /** @type {const} */ (2020),
+				compress: {},
+				mangle: false
+			};
+			expect((await minify(input, options)).code).toBe(
+				'import A,{b as c,d}from"m";import"side";export*as"n"from"n"with{type:"json"};import*as P from"p";export{r}from"r";import defer*as D from"d";export{A,c as e,d,P as p1,P as p2,D};export{};sink(d);'
+			);
+			// `export * as` is ES2020.
+			expect(
+				(
+					await minify("import * as N from 'n'; export { N };", {
+						...options,
+						ecma: 2015,
+						compress: {}
+					})
+				).code
+			).toBe('import*as N from"n";export{N};');
+			expect(
+				(
+					await minify(
+						"import { 'foo-bar' as v } from 'm'; export { v };",
+						options
+					)
+				).code
+			).toBe('export{"foo-bar"as v}from"m";');
+			// `export default` reads the name it exports.
+			expect(
+				(
+					await minify(
+						"import { v } from 'm'; export default v; export { v };",
+						options
+					)
+				).code
+			).toBe('import{v}from"m";export default v;export{v};');
+			// All of an import moves, or none: what stays would repeat the source.
+			expect(
+				(
+					await minify(
+						"import foo, * as bar from 'foo'; export { foo, bar }; import { a, b } from 'm'; export { a }; sink(b);",
+						options
+					)
+				).code
+			).toBe(
+				'import foo,*as bar from"foo";export{foo,bar};import{a,b}from"m";export{a};sink(b);'
+			);
+			expect(
+				(
+					await minify("import { a } from 'm'; export { a }; eval('a');", options)
+				).code
+			).toBe('import{a}from"m";export{a};eval("a");');
 			if (!improvements) throw new Error("the improve phase is not installed");
 			improvements.enabled = false;
 			try {
@@ -10261,7 +10593,6 @@ describe("syntax-printer", () => {
 				["function f(c) { return [null == c.d ? void 0 : c.d.e]; } console.log(f({}), f({ d: { e: 1 } }));", target(2021)],
 				["function f(c) { return [null == c ? void 0 : g(c)]; } function g(c) { return c; } console.log(f(null), f(1), g(2));", target(2021)],
 				["function f(c) { return [null == c ? void 0 : (c || g).a]; } function g() {} console.log(f(null), f({ a: 1 }));", target(2021)],
-				["function f(c) { return [null == c ? void 0 : c?.a]; } console.log(f(null), f({ a: 1 }));", target(2021)],
 				["var o = { p: 0, q: 1 }; function f(k) { o[k + 1] || (o[k + 1] = 2); return o; } console.log(f(\"p\"), f(\"q\"));", target(2021)],
 				["var g = function f() { \"use strict\"; try { f = f || 1; } catch (e) { return e.name; } return typeof f; }; console.log(g());", target(2021)],
 				["x = x || 1; var x; print(x); function print(v) { console.log(v); }", target(2021)],
