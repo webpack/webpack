@@ -26,6 +26,7 @@ const OXC_SMALLER_BY_REASON = [
 		"webpack writes the same program in a spelling longer or compressing worse than oxc's",
 		[
 			"oxc minifier: peephole/minimize_statements.rs:32",
+			"swc exec: terser_arguments_modified",
 			"swc minifier: fixture/issues/10281/input.js",
 			"swc minifier: fixture/issues/10412/input.js",
 			"swc minifier: fixture/issues/10885/input.js",
@@ -33,24 +34,19 @@ const OXC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/11684/identifier-preserved/input.js",
 			"swc minifier: fixture/issues/11684/identifier-side-effects/input.js",
 			"swc minifier: fixture/issues/11684/scopes-and-mutations/input.js",
-			"swc minifier: fixture/issues/12188/input.js",
 			"swc minifier: fixture/issues/12206/preserve-nonmatching-test-before-dynamic-case/input.js",
+			"swc minifier: fixture/issues/12228/disabled/input.js",
 			"swc minifier: fixture/issues/12298/input.js",
 			"swc minifier: fixture/issues/12313/input.js",
 			"swc minifier: fixture/issues/4249/input.js",
-			"swc minifier: fixture/issues/6864/input.js",
 			"swc minifier: fixture/issues/6957/exponential/input.js",
 			"swc minifier: fixture/issues/arguments-canonical-index/input.js",
-			"swc minifier: fixture/issues/number-radix-conversion/input.js",
-			"swc minifier: fixture/projects/backbone/16/input.js",
 			"swc minifier: fixture/projects/jquery/25/input.js",
 			"swc minifier: fixture/projects/jquery/27/input.js",
-			"swc minifier: fixture/projects/mootools/4/input.js",
 			"swc minifier: fixture/projects/yui/12/input.js",
 			"swc minifier: fixture/projects/yui/13/input.js",
 			"swc minifier: fixture/terser/issue-2535-2/2/input.js",
 			"swc minifier: pass-1/7/input.js",
-			"terser compress: arrow/arrow_binding_pattern",
 			"terser compress: asm/asm_mixed",
 			"terser compress: assignment/op_equals_right_global_var",
 			"terser compress: assignment/op_equals_right_local_var",
@@ -63,15 +59,11 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: evaluate/unsafe_integer_key",
 			"terser compress: export/issue_2038_2",
 			"terser compress: export/name_cache_import_star_as_name_from_module",
-			"terser compress: functions/unsafe_apply_2",
-			"terser compress: inline/inline_into_scope_conflict_enclosed_2",
 			"terser compress: issue-973/this_binding_sequences",
 			"terser compress: lhs_constants/lhs_constants",
-			"terser compress: mangleprops-mangleprop-annotation/mangleprop_annotation",
 			"terser compress: new/new_statements_3",
 			"terser compress: numbers/evaluate_1",
 			"terser compress: numbers/evaluate_2",
-			"terser compress: object/getter_setter",
 			"terser compress: reduce_vars/multi_def_2",
 			"terser compress: sequences/hoist_decl"
 		]
@@ -147,7 +139,6 @@ const OXC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/next/66237/input.js",
 			"swc minifier: fixture/next/asmjs/1/input.js",
 			"swc minifier: fixture/projects/jquery/11/input.js",
-			"swc minifier: fixture/projects/next/extra/if_return/.4/input.js",
 			"swc minifier: projects/files/backbone-1.1.0.js",
 			"swc minifier: projects/files/underscore-1.5.2.js"
 		]
@@ -157,6 +148,7 @@ const OXC_SMALLER_BY_REASON = [
 		[
 			"swc minifier: fixture/issues/11684/bindings/input.js",
 			"swc minifier: fixture/issues/framer-motion/1/input.js",
+			"terser compress: arguments/modified",
 			"terser compress: collapse_vars/collapse_rhs_loop",
 			"terser compress: sequences/lift_sequences_3"
 		]
@@ -201,7 +193,6 @@ const OXC_SMALLER_BY_REASON = [
 			"swc exec: issue_8964",
 			"swc minifier: fixture/issues/11645/with-parent-scope-nested-block/input.js",
 			"swc minifier: fixture/issues/12212/with-scope/input.js",
-			"swc minifier: fixture/projects/jquery/18/input.js",
 			"swc minifier: fixture/projects/mootools/8/input.js",
 			"swc minifier: fixture/projects/react/15/input.js",
 			"swc minifier: fixture/projects/yui/1/input.js"
@@ -223,13 +214,11 @@ const OXC_SMALLER_BY_REASON = [
 		"oxc writes a variable's value at its one read and drops the variable, or an alias of another binding",
 		[
 			"oxc minifier: peephole/esbuild.rs:2274",
-			"swc exec: terser_issue_1466_different_variable_in_multiple_for_of",
 			"swc minifier: fixture/issues/7770/2/input.js",
 			"swc minifier: fixture/issues/next-97517/input.js",
 			"terser compress: collapse_vars/shadowed_variable",
 			"terser compress: destructuring/destructuring_remove_unused_2",
 			"terser compress: harmony/module_enabled",
-			"terser compress: issue-1466/different_variable_in_multiple_forOf",
 			"terser compress: reduce_vars/unsafe_evaluate_side_effect_free_2"
 		]
 	],
@@ -265,8 +254,7 @@ const OXC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/11082/input.js",
 			"swc minifier: fixture/issues/12194/input.js",
 			"swc minifier: fixture/issues/array-constructor-length/input.js",
-			"swc minifier: fixture/projects/backbone/2/input.js",
-			"terser compress: nullish/conditional_to_nullish_coalescing_2"
+			"swc minifier: fixture/projects/backbone/2/input.js"
 		]
 	],
 	[

@@ -1305,42 +1305,18 @@ const rivalSmallerSeen = new Set();
 const IMPROVED_YET_BIGGER = {
 	"pure_getters/set_immutable_5 (its own options)":
 		"13 bytes fewer, 1 more gzipped: `console.log(c?\"FAIL\":\"PASS\")` merges two calls a file this small compresses alike",
-	"fixture/issues/12298/input.js (the default minimizer's options)":
-		"13 bytes fewer, 5 more gzipped: `console.log(1===o?\"A\":\"C\")` breaks the `console.log(\"` runs of the functions around it",
-	"collapse_vars/var_defs (a module mangled at its top level)":
-		"22 bytes more, 17 more gzipped: the arguments read in place fold a pass sooner, leaving `(r=\"10\")*r-r` a third pass would fold",
 	"collapse_vars/modified (a module mangled at its top level)":
 		"17 bytes fewer, 9 more gzipped: the flattened `(r=n=1,n+++r)` breaks the `function(n){var r=n` runs the calls beside it repeat",
-	"reduce_vars/unsafe_evaluate_modified (the default minimizer's options)":
-		"10 bytes fewer, 2 more gzipped: `var o=-9` split from `{p:-9}` breaks the `var o={p:` runs of the functions around it",
-	"terser_reduce_vars_unsafe_evaluate_modified (the default minimizer's options)":
-		"10 bytes fewer, 2 more gzipped: `var o=-9` split from `{p:-9}` breaks the `var o={p:` runs of the functions around it",
 	"arrow/object_parens (its own options)":
 		"3 bytes fewer, 1 more gzipped: `+!!{}` breaks the `()=>(` runs of the arrows around it gzip reused",
-	"harmony/issue_2345 (the default minimizer's options)":
-		"10 bytes fewer, 7 more gzipped: the folded `[3,2,1].join(\"-\")` matched the one left after it",
-	"harmony/issue_2345 (reminify 2 {\"mangle\":false})":
-		"10 bytes fewer, 7 more gzipped: the folded `[3,2,1].join(\"-\")` matched the one left after it",
-	"harmony/issue_2345 (reminify 3 {})":
-		"10 bytes fewer, 7 more gzipped: the folded `[3,2,1].join(\"-\")` matched the one left after it",
-	"harmony/issue_2345 (reminify 7 {\"safari10\":true})":
-		"10 bytes fewer, 7 more gzipped: the folded `[3,2,1].join(\"-\")` matched the one left after it",
-	"harmony/issue_2345 (reminify 8 {\"compress\":{\"reduce_funcs\":false}})":
-		"10 bytes fewer, 7 more gzipped: the folded `[3,2,1].join(\"-\")` matched the one left after it",
 	"functions/issue_3054 (its own options)":
 		"2 bytes fewer, 2 more gzipped: the call `return f()` kept breaks the `return{a:!0}` the function beside it repeats",
-	"issue_8864_1 (its own options)":
-		"19 bytes fewer, 1 more gzipped: the folded `toUpperCase()` matched the one left in the template",
 	"S15.1.3.3_A4_T2.js (the default minimizer's options)":
 		"51 bytes fewer, 19 more gzipped: each folded lower-cased URL no longer repeats the upper-cased one",
 	"S15.1.3.4_A4_T2.js (the default minimizer's options)":
 		"51 bytes fewer, 19 more gzipped: each folded lower-cased URL no longer repeats the upper-cased one",
-	"S15.1.2.3_A1_T6.js (the default minimizer's options)":
-		"52 bytes fewer, 2 more gzipped: each folded `parseFloat` call matched the one in its message",
 	"S15.1.2.2_A7.2_T3.js (the default minimizer's options)":
 		"323 bytes fewer, 2 more gzipped: each folded `parseInt` call matched the one in its message",
-	"parseInt-default-to-decimal.js (the default minimizer's options)":
-		"60 bytes fewer, 1 more gzipped: each folded `parseInt` call matched the one in the strict function",
 	"issue-597/beautify_off_1 (its own options)":
 		"17 bytes fewer, 6 more gzipped: `\"Infinity\"` and `\"NaN\"` broke the run of `.toString()` calls gzip reused",
 	"issue-597/beautify_off_1 (the default minimizer's options)":
@@ -1373,14 +1349,8 @@ const IMPROVED_YET_BIGGER = {
 		"17 bytes fewer, 6 more gzipped: `\"Infinity\"` and `\"NaN\"` broke the run of `.toString()` calls gzip reused",
 	"issue-597/beautify_on_1 (reminify 8 {\"compress\":{\"reduce_funcs\":false}})":
 		"17 bytes fewer, 6 more gzipped: `\"Infinity\"` and `\"NaN\"` broke the run of `.toString()` calls gzip reused",
-	"does-not-use-prototype-properties.js (the default minimizer's options)":
-		"8 bytes fewer, 2 more gzipped: the folded `Array.of` matched the `Array.of.call` left after it",
-	"return-a-new-array-object.js (the default minimizer's options)":
-		"8 bytes fewer, 1 more gzipped: the folded `Array.of` matched the `Array.of.call` left after it",
 	"coerced-indexes.js (the default minimizer's options)":
 		"40 bytes fewer, 2 more gzipped: the folded `Number` constant stays quoted in the messages, which gzip had matched",
-	"positive-infinity.js (the default minimizer's options)":
-		"21 bytes fewer, 2 more gzipped: the folded `Number` constant stays quoted in the messages, which gzip had matched",
 	"S15.4.4.5_A2_T2.js (the default minimizer's options)":
 		"61 bytes fewer, 4 more gzipped: the folded `Number` constant stays quoted in the messages, which gzip had matched",
 	"S15.4.4.10_A2.1_T3.js (the default minimizer's options)":
@@ -1407,14 +1377,6 @@ const IMPROVED_YET_BIGGER = {
 		"20 bytes fewer, 2 more gzipped: the folded `Number` constant stays quoted in the messages, which gzip had matched",
 	"S15.7.4.5_A1.4_T01.js (the default minimizer's options)":
 		"28 bytes fewer, 2 more gzipped: the folded `Number` constant stays quoted in the messages, which gzip had matched",
-	"S15.5.4.19_A1_T6.js (the default minimizer's options)":
-		"36 bytes fewer, 1 more gzipped: the folded `Number` constant stays quoted in the messages, which gzip had matched",
-	"S15.5.4.18_A1_T6.js (the default minimizer's options)":
-		"36 bytes fewer, 1 more gzipped: the folded `Number` constant stays quoted in the messages, which gzip had matched",
-	"fixture/issues/number-radix-conversion/input.js (its own options)":
-		"6 bytes fewer, 9 more gzipped: the folded base-36 digits are a string gzip finds no run in",
-	"fixture/issues/number-radix-conversion/input.js (the default minimizer's options)":
-		"6 bytes fewer, 9 more gzipped: the folded base-36 digits are a string gzip finds no run in",
 	"RGI_Emoji_Flag_Sequence.js (the default minimizer's options)":
 		"507 bytes fewer, 8 more gzipped: each emoji sequence split out of the array loses the quotes gzip matched around the same code points",
 	"RGI_Emoji_Modifier_Sequence.js (the default minimizer's options)":
@@ -1431,8 +1393,6 @@ const IMPROVED_YET_BIGGER = {
 		"421 bytes fewer, 14 more gzipped: each folded call repeats the string the test asserts it equals",
 	"fixture/issues/6957/exponential/input.js (the default minimizer's options)":
 		"421 bytes fewer, 15 more gzipped: each folded call repeats the string the test asserts it equals",
-	"range.js (the default minimizer's options)":
-		"11 to 14 bytes fewer, 2 to 3 more gzipped: each folded call repeats the string the test asserts it equals",
 	"return-values.js (the default minimizer's options)":
 		"392 bytes fewer, 18 more gzipped: each folded call repeats the string the test asserts it equals",
 	"15.2.3.6-4-314.js (the default minimizer's options)":
@@ -1465,8 +1425,6 @@ const IMPROVED_YET_BIGGER = {
 		"154 bytes fewer, 4 more gzipped: Greek case changes folded to their letters, which gzip matches less than the repeated `.toLowerCase()`",
 	"special_casing.js (the default minimizer's options)":
 		"74 bytes fewer, 2 more gzipped: case changes folded to their letters, which gzip matches less than the repeated `.toUpperCase()`",
-	"S11.14_A2.1_T2.js (the default minimizer's options)":
-		"1 byte fewer, 3 more gzipped: `\"\u2026\"+(x,1)` folded to `(x,\"\u20261\")` moves the sequence ahead of the string gzip matched",
 	"11.4.1-4.a-16.js (the default minimizer's options)":
 		"14 bytes fewer, 1 more gzipped: `delete arguments` folded to `!1`, which the code around it repeats less",
 	"S12.14_A11_T2.js (the default minimizer's options)":
@@ -1475,22 +1433,12 @@ const IMPROVED_YET_BIGGER = {
 		"9 bytes fewer, 5 more gzipped: `if(a)throw b;throw c` merged into `throw a?b:c`, losing the repeated `throw new Test262Error(` run",
 	"S12.14_A7_T3.js (the default minimizer's options)":
 		"9 bytes fewer, 8 more gzipped: `if(a)throw b;throw c` merged into `throw a?b:c`, losing the repeated `throw new Test262Error(` run",
-	"15.7.4.2.js (the default minimizer's options)":
-		"19 bytes fewer, 1 more gzipped: `Math.pow(2,16)` folded to `65536` breaks the `Math.pow(2,` runs beside it",
 	"constructor-buffer-sequence.js (the default minimizer's options)":
 		"55 bytes fewer, 6 more gzipped: `new` dropped before `Error` breaks the `new Error(` runs the rest repeat",
-	"fixture/issues/11103/input.js (its own options)":
-		"3 bytes more, as much gzipped: the block's `let` read as a function's folds `url` to `\"api/\"`, while the `url+=\"/\"` it no longer collapses into stays",
-	"fixture/issues/11103/input.js (the default minimizer's options)":
-		"5 bytes more, 1 more gzipped: the block's `let` read as a function's folds `url` to `\"api/\"`, while the `url+=\"/\"` it no longer collapses into stays",
-	"fixture/issues/12299/input.js (its own options)":
-		"8 bytes fewer, 2 more gzipped: the `return 2` after a `try` whose `finally` leaves dropped, breaking the `return 2}` runs",
 	"fixture/issues/8622/input.js (its own options)":
 		"4 bytes fewer, 2 more gzipped: read as a module, `bar` mangles to `t`, breaking the parameter names' runs",
 	"fixture/issues/9453/input.js (the default minimizer's options)":
 		"4 bytes fewer, 8 more gzipped: `typeof class{}` folded to `\"function\"` breaks the `console.log(typeof` runs",
-	"fixture/member_expr/callee/input.js (its own options)":
-		"3 bytes more, 6 more gzipped: the object read once at the head of the optional chain inlines, while the case's options keep its declaration",
 	"drop-unused/issue_t1447_export_const (a module mangled at its top level)":
 		"5 bytes fewer, 6 more gzipped: the exported `const` kept out of its reader, where terser's copy repeats the `console.log(\"PASS\")` gzip matched",
 };
@@ -1499,131 +1447,28 @@ const IMPROVED_YET_BIGGER = {
 // spelling written; an entry that stops compressing worse fails until retired.
 for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 	[
-		"`new` arguments its constructor no longer reads dropped, where a twin `new` beside it keeps them",
-		[
-			"new/new_statements_3 (a module mangled at its top level)",
-			"new/new_statements_3 (the default minimizer's options)"
-		]
-	],
-	[
 		"`c ? x : c` written as `c && x` where the source repeats the conditional gzip matched",
 		[
 			"returns-same-results-as-NumberFormat.js (the default minimizer's options)"
 		]
 	],
 	[
-		"`Array` written as a literal where the source writes the call again",
-		[
-			"S15.4.1_A1.1_T1.js (the default minimizer's options)",
-			"S15.4.1_A1.1_T3.js (the default minimizer's options)",
-			"S15.4.1_A3.1_T1.js (the default minimizer's options)",
-			"fixture/issues/12201/input.js (its own options)",
-			"fixture/issues/12201/input.js (the default minimizer's options)",
-			"terser_array_constructor_unsafe (its own options)"
-		]
-	],
-	[
-		"`if(c)return x` written where `return c?x:void 0` matched the returns around it",
-		[
-			"if_return/if_return_same_value (the default minimizer's options)",
-			"if_return/if_return_same_value (its own options)",
-			"replacer-function-result-undefined.js (the default minimizer's options)"
-		]
-	],
-	[
 		"`new` dropped before a constructor the source quotes or writes again beside it",
 		[
-			"15.2.3.5-4-12.js (the default minimizer's options)",
-			"15.2.3.5-4-174.js (the default minimizer's options)",
-			"15.4.3.2-0-6.js (the default minimizer's options)",
-			"15.4.3.2-1-10.js (the default minimizer's options)",
-			"15.4.3.2-1-12.js (the default minimizer's options)",
-			"15.4.4.20-6-7.js (the default minimizer's options)",
-			"15.4.4.20-9-c-iii-23.js (the default minimizer's options)",
-			"S11.1.2_A1_T1.js (the default minimizer's options)",
 			"S11.10.1_A2.1_T1.js (the default minimizer's options)",
-			"S11.10.2_A2.1_T1.js (the default minimizer's options)",
-			"S11.11.1_A2.1_T1.js (the default minimizer's options)",
 			"S11.11.2_A2.1_T1.js (the default minimizer's options)",
-			"S11.13.1_A2.1_T1.js (the default minimizer's options)",
-			"S11.14_A2.1_T1.js (the default minimizer's options)",
-			"S11.3.1_A2.1_T1.js (the default minimizer's options)",
-			"S11.3.2_A2.1_T1.js (the default minimizer's options)",
-			"S11.4.4_A2.1_T1.js (the default minimizer's options)",
-			"S11.4.5_A2.1_T1.js (the default minimizer's options)",
-			"S11.5.1_A2.1_T1.js (the default minimizer's options)",
 			"S11.5.2_A2.1_T1.js (the default minimizer's options)",
 			"S11.5.3_A2.1_T1.js (the default minimizer's options)",
-			"S11.6.1_A2.1_T1.js (the default minimizer's options)",
-			"S11.6.1_A2.2_T2.js (the default minimizer's options)",
-			"S11.8.3_A2.1_T1.js (the default minimizer's options)",
-			"S11.8.6_A7_T3.js (the default minimizer's options)",
-			"S11.9.4_A2.1_T1.js (the default minimizer's options)",
-			"S11.9.5_A2.1_T1.js (the default minimizer's options)",
-			"S15.10.1_A1_T14.js (the default minimizer's options)",
-			"S15.10.1_A1_T16.js (the default minimizer's options)",
-			"S15.10.3.1_A2_T1.js (the default minimizer's options)",
-			"S15.10.4.1_A1_T4.js (the default minimizer's options)",
-			"S15.10.7_A2_T2.js (the default minimizer's options)",
-			"S15.3.5.3_A2_T2.js (the default minimizer's options)",
-			"S15.3.5_A1_T1.js (the default minimizer's options)",
-			"S15.4.2.1_A1.1_T3.js (the default minimizer's options)",
-			"S15.4.2.2_A1.1_T3.js (the default minimizer's options)",
-			"S15.4.2.2_A2.2_T3.js (the default minimizer's options)",
-			"S15.4.4.11_A1.1_T1.js (the default minimizer's options)",
-			"S15.4.4.11_A1.5_T1.js (the default minimizer's options)",
 			"S15.4.4.2_A1_T3.js (the default minimizer's options)",
-			"S15.4.4.5_A1.2_T1.js (the default minimizer's options)",
-			"S15.4.4.5_A1.2_T2.js (the default minimizer's options)",
 			"S15.4.4.5_A3.1_T1.js (the default minimizer's options)",
 			"S15.4.4.5_A3.2_T1.js (the default minimizer's options)",
-			"S15.4.4.6_A1.1_T1.js (the default minimizer's options)",
-			"S15.4.4.9_A1.1_T1.js (the default minimizer's options)",
 			"S15.4.4.9_A1.2_T1.js (the default minimizer's options)",
-			"S15.5.1.1_A1_T19.js (the default minimizer's options)",
-			"S15.5.1.1_A1_T8.js (the default minimizer's options)",
-			"S15.5.2.1_A1_T19.js (the default minimizer's options)",
-			"S15.5.4.13_A3_T1.js (the default minimizer's options)",
-			"S15.5.4.15_A3_T1.js (the default minimizer's options)",
-			"S15.5.4.15_A3_T11.js (the default minimizer's options)",
-			"S15.5.4.15_A3_T2.js (the default minimizer's options)",
-			"S15.5.4.15_A3_T3.js (the default minimizer's options)",
-			"S15.5.4.15_A3_T4.js (the default minimizer's options)",
-			"S15.5.4.15_A3_T5.js (the default minimizer's options)",
-			"S15.5.4.15_A3_T6.js (the default minimizer's options)",
-			"S15.5.4.17_A1_T14.js (the default minimizer's options)",
-			"S15.5.4.19_A1_T14.js (the default minimizer's options)",
-			"S15.5.4.7_A1_T12.js (the default minimizer's options)",
-			"S15.5.4.8_A1_T12.js (the default minimizer's options)",
-			"S15.6.4.2_A1_T1.js (the default minimizer's options)",
-			"S15.6.4.2_A1_T2.js (the default minimizer's options)",
-			"S15.6.4.3_A1_T1.js (the default minimizer's options)",
-			"S8.12.8_A1.js (the default minimizer's options)",
-			"S8.12.8_A2.js (the default minimizer's options)",
-			"S8.6.2_A6.js (the default minimizer's options)",
-			"argument-is-new-reg-exp-and-instance-is-string-hello.js (the default minimizer's options)",
-			"arguments-are-new-reg-exp-and-4-and-instance-is-string-hello.js (the default minimizer's options)",
-			"arguments-are-new-reg-exp-and-hi-and-instance-is-string-hello.js (the default minimizer's options)",
-			"arguments-are-new-reg-exp-and-undefined-and-instance-is-string-hello.js (the default minimizer's options)",
-			"arguments-are-new-reg-exp-and-void-0-and-instance-is-string-hello.js (the default minimizer's options)",
-			"built-in-exotic-objects-no-call.js (the default minimizer's options)",
 			"constructor-ArrayBuffer-species-wrap.js (the default minimizer's options)",
-			"get-next-method-throws.js (the default minimizer's options)",
-			"next-method-returns-throwing-done.js (the default minimizer's options)",
-			"next-method-returns-throwing-value-done.js (the default minimizer's options)",
-			"next-method-returns-throwing-value.js (the default minimizer's options)",
-			"next-method-throws.js (the default minimizer's options)",
-			"next-throws.js (the default minimizer's options)",
 			"non-callable-join-string-tag.js (the default minimizer's options)",
-			"optional-catch-binding-throws.js (the default minimizer's options)",
-			"predicate-throws-then-closing-iterator-also-throws.js (the default minimizer's options)",
-			"sorting_buffer_access.js (the default minimizer's options)",
 			"symbol-tag-override-instances.js (the default minimizer's options)",
 			"this-val-regexp.js (the default minimizer's options)",
 			"try-finally-nested-try-catch-within-catch.js (the default minimizer's options)",
 			"try-finally-nested-try-catch-within-outer-try-after-nested.js (the default minimizer's options)",
-			"yield-promise-reject-next-for-await-of-sync-iterator.js (the default minimizer's options)",
-			"yield-promise-reject-next-yield-star-async-iterator.js (the default minimizer's options)"
 		]
 	],
 	[
@@ -1632,7 +1477,6 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 			"S11.1.6_A3_T7.js (the default minimizer's options)",
 			"S12.6.2_A2.js (the default minimizer's options)",
 			"S13.2.2_A15_T1.js (the default minimizer's options)",
-			"S13.2.2_A16_T3.js (the default minimizer's options)",
 			"S13_A1.js (the default minimizer's options)",
 			"S14_A3.js (the default minimizer's options)",
 			"S8.7_A5_T2.js (the default minimizer's options)"
@@ -1641,10 +1485,7 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 	[
 		"a conversion or a `!!` written shorter where the source's own messages quote it, which gzip matched",
 		[
-			"S15.2.4.3_A9.js (the default minimizer's options)",
-			"S15.5.1.1_A1_T10.js (the default minimizer's options)",
 			"S15.5.1.1_A1_T16.js (the default minimizer's options)",
-			"S15.5.1.1_A1_T17.js (the default minimizer's options)",
 			"S15.5.1.1_A1_T2.js (the default minimizer's options)",
 			"S15.5.1.1_A1_T3.js (the default minimizer's options)",
 			"S15.5.1.1_A2_T1.js (the default minimizer's options)",
@@ -1660,20 +1501,14 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 		[
 			"classConstructorNoCall.js (the default minimizer's options)",
 			"staticConstructor.js (the default minimizer's options)",
-			"superElemDelete.js (the default minimizer's options)",
-			"superPropChains.js (the default minimizer's options)",
-			"superPropStatics.js (the default minimizer's options)"
 		]
 	],
 	[
 		"consecutive `if`s leaving the same way merged, where the source repeats the `if` gzip matched",
 		[
-			"if_return/if_return_same_value (the default minimizer's options)",
 			"S7.9_A5.8_T1.js (the default minimizer's options)",
 			"S7.9_A5.9_T1.js (the default minimizer's options)",
 			"fixture/issues/12229/input.js (its own options)",
-			"if_return/if_return_same_value (its own options)",
-			"symbol-logical-not-evaluation.js (the default minimizer's options)"
 		]
 	],
 	[
@@ -1683,86 +1518,31 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 		]
 	],
 	[
-		"a pattern's unused names dropped where the source repeats the pattern gzip matched",
-		[
-			"array-elements-without-initializer.js (the default minimizer's options)",
-			"parameters/default_values_in_destructurings (a module mangled at its top level)"
-		]
-	],
-	[
 		"an assignment moved into the `var` before it, where the source repeats the assignment gzip matched",
 		[
 			"S11.4.8_A2.2_T1.js (the default minimizer's options)",
-			"S11.8.4_A2.1_T1.js (the default minimizer's options)",
-			"S11.8.6_A2.1_T1.js (the default minimizer's options)",
 			"S11.8.7_A2.1_T1.js (the default minimizer's options)",
-			"S12.6.3_A11_T2.js (the default minimizer's options)",
-			"S12.6.3_A12_T2.js (the default minimizer's options)",
 			"S9.5_A3.1_T4.js (the default minimizer's options)",
 			"S9.6_A3.1_T4.js (the default minimizer's options)",
-			"fromIndex-minus-zero.js (the default minimizer's options)",
-			"search-not-found-returns-minus-one.js (the default minimizer's options)",
-			"sequences/lift_sequences_4 (the default minimizer's options)",
-			"that-arg-coerced-to-string.js (the default minimizer's options)",
-			"this-value-coerced-to-string.js (the default minimizer's options)"
 		]
 	],
 	[
 		"an assignment or update folded into the read after it, where the source repeats the `x = y, f(x)` gzip matched",
 		[
-			"reduce_vars/modified (reminify 2 {\"mangle\":false})",
-			"reduce_vars/defun_assign (a module mangled at its top level)",
-			"reduce_vars/defun_assign (reminify 4 {\"toplevel\":true})",
-			"terser_insane_2 (its own options)",
-			"terser_insane_2 (the default minimizer's options)",
-			"catch-parameter-shadowing-catch-parameter.js (the default minimizer's options)",
 			"custom-separator-result-from-tostring-on-each-value.js (the default minimizer's options)",
-			"length-property-ignored.js (the default minimizer's options)",
 			"test-option-currency.js (the default minimizer's options)"
-		]
-	],
-	[
-		"`RegExp` of literals written as a literal, where the source writes the call again or has no other `/` for gzip to code cheaply",
-		[
-			"fixture/issues/4234/input.js (the default minimizer's options)",
-			"flag-accessors.js (the default minimizer's options)",
-			"null.js (the default minimizer's options)",
-			"S7.8.1_A1_T2.js (the default minimizer's options)",
-			"S15.5.4.10_A1_T14.js (the default minimizer's options)",
-			"S15.5.4.11_A1_T14.js (the default minimizer's options)",
-			"S15.5.4.12_A1_T14.js (the default minimizer's options)",
-			"S15.5.4.16_A1_T14.js (the default minimizer's options)",
-			"S15.5.4.18_A1_T14.js (the default minimizer's options)",
-			"S15.10.7_A1_T2.js (the default minimizer's options)",
-			"source.js (the default minimizer's options)",
-			"this-cross-realm-instance.js (the default minimizer's options)"
 		]
 	],
 	[
 		"an options object moved into the one call reading it, where the callbacks beside it repeat the declaration gzip matched",
 		[
-			"valid-increments.js (the default minimizer's options)",
 			"valid-rounding-increments.js (the default minimizer's options)"
 		]
 	],
 	[
 		"a `var`'s first write moved into its declaration, where the writes beside it repeat the `x = …` gzip matched",
 		[
-			"fixture/next/feeback-plotly/1/input.js (its own options)",
 			"expected-return-value.js (the default minimizer's options)",
-			"set-values-return-undefined.js (the default minimizer's options)",
-			"array-elem-put-unresolvable-no-strict.js (the default minimizer's options)",
-			"array-elem-trlg-iter-rest-rtrn-close-null.js (the default minimizer's options)",
-			"array-rest-put-unresolvable-no-strict.js (the default minimizer's options)",
-			"obj-id-init-fn-name-fn.js (the default minimizer's options)",
-			"obj-id-put-unresolvable-no-strict.js (the default minimizer's options)",
-			"obj-id-simple-no-strict.js (the default minimizer's options)",
-			"obj-prop-nested-array-yield-expr.js (the default minimizer's options)",
-			"obj-prop-nested-obj-yield-expr.js (the default minimizer's options)",
-			"obj-prop-put-unresolvable-no-strict.js (the default minimizer's options)",
-			"obj-rest-computed-property.js (the default minimizer's options)",
-			"obj-rest-non-string-computed-property-string-1.js (the default minimizer's options)",
-			"obj-rest-str-val.js (the default minimizer's options)"
 		]
 	],
 	[
@@ -1776,7 +1556,6 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 	[
 		"`Object.keys` or `entries` of a literal written as the array, where the source writes the call again",
 		[
-			"fixture/issues/12214/input.js (the default minimizer's options)",
 			"transitions-close-together.js (the default minimizer's options)"
 		]
 	],
@@ -1819,13 +1598,6 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 		]
 	],
 	[
-		"a read of a global dropped, or a value moved past it, where the source repeats the text around it gzip matched",
-		[
-			"fixture/projects/jquery/20/input.js (its own options)",
-			"template-string/side_effects (the default minimizer's options)",
-		]
-	],
-	[
 		"a function inlined into a call terser flattens first, where a rest parameter then keeps the call of a method from flattening",
 		[
 			"arrow/issue_2136_2 (reminify 4 {\"toplevel\":true})",
@@ -1851,16 +1623,7 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 		[
 			"key-is-canonical-invalid-index-reflect-set.js (the default minimizer's options)",
 			"key-is-valid-index-reflect-set.js (the default minimizer's options)",
-			"resizable-buffer-shrink-mid-iteration.js (the default minimizer's options)",
 			"temporal-objects-no-time-clip.js (the default minimizer's options)"
-		]
-	],
-	[
-		"a script's top-level `let` read for its value, where the name it replaces repeated in a run gzip matched",
-		[
-			"byteOffset-validated-against-initial-buffer-length.js (the default minimizer's options)",
-			"fromEpochMilliseconds.js (the default minimizer's options)",
-			"true-for-timeout.js (the default minimizer's options)"
 		]
 	],
 	[
