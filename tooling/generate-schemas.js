@@ -708,7 +708,7 @@ const declaredTypeIn = (source, name, depth = 0) => {
 					tag.typeExpression &&
 					"type" in tag.typeExpression
 				) {
-					written = /** @type {ts.TypeNode} */ (tag.typeExpression.type);
+					written = tag.typeExpression.type;
 				}
 			}
 		}
@@ -1157,9 +1157,7 @@ const fromPropertyTags = (propertyTags, known, head) => {
 	for (const tag of propertyTags) {
 		const held = /** @type {ts.JSDocTypeExpression} */ (tag.typeExpression);
 		const optional = ts.isJSDocOptionalType(held.type);
-		const node = optional
-			? /** @type {ts.JSDocOptionalType} */ (held.type).type
-			: held.type;
+		const node = optional ? held.type.type : held.type;
 		const name = tag.name.getText();
 		const written =
 			typeof tag.comment === "string"

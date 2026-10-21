@@ -1885,15 +1885,11 @@ const main = async () => {
 	await installPackages(CACHE_NAME);
 	const acorn = load("acorn");
 	for (const [label, file, goal] of fixtures().filter(([name]) =>
-		wantedFixture(/** @type {string} */ (name))
+		wantedFixture(name)
 	)) {
 		const code = await fs.promises.readFile(file, "utf8");
 		process.env[SOURCE_TYPE_VARIABLE] = goal;
-		const before = propertyNames(
-			acorn,
-			code,
-			/** @type {"module" | "script"} */ (goal)
-		);
+		const before = propertyNames(acorn, code, goal);
 		const input = await compress(Buffer.from(code));
 		process.stdout.write(
 			`\n${label} — ${kb(input.raw)} (${kb(input.gzip)} gzip, ${kb(
@@ -1948,12 +1944,7 @@ const main = async () => {
 						cost.wall.padStart(7) +
 						cost.cpu.padStart(6) +
 						cost.peak.padStart(8)
-					}   ${roundTrip(
-						acorn,
-						before,
-						printed,
-						/** @type {"module" | "script"} */ (goal)
-					)}\n`
+					}   ${roundTrip(acorn, before, printed, goal)}\n`
 				);
 				process.stdout.write(formatProfile(result));
 			}

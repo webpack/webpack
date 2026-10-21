@@ -1968,7 +1968,7 @@ const collectTypes = ({ program, checker, options }) => {
 					captureType(type, prop);
 				}
 				for (const prop of parsed.properties.values()) {
-					captureType(type, /** @type {ts.Type} */ (prop.type));
+					captureType(type, prop.type);
 				}
 				for (const call of parsed.calls) {
 					for (const arg of call.args) {
@@ -2323,9 +2323,7 @@ const mergeIdenticalTypes = ({ parsedCollectedTypes }) => {
 			const hash = getTypeHash(parsed);
 			if (!hash) continue;
 			const mappedHash = hash.map((item) => {
-				let parsed = /** @type {MergedType | undefined} */ (
-					parsedCollectedTypes.get(item)
-				);
+				let parsed = parsedCollectedTypes.get(item);
 				if (!parsed) return item;
 				while (
 					parsed.type === "reference" &&
@@ -3116,8 +3114,7 @@ const generateDeclarations = ({
 						{ type: exportedType, readonly, getter, documentation }
 					] of parsed.exports) {
 						const code = getCode(
-							/** @type {ts.Type} */
-							(exportedType),
+							exportedType,
 							new Set(),
 							`in namespace ${name}`
 						);
