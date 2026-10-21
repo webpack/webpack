@@ -1995,6 +1995,12 @@ const IMPROVED_CASES = [
 		'function f(g){var x="keep this";g(x),g(x)}f(console.log);'
 	],
 	[
+		"an `if` with an empty branch and an `else` block, as an `if` of the negated test, but a chain's",
+		"function f(a, b) { if (a) {} else { if (b) { console.log(1); return; } console.log(2); } console.log(3); } function g(a, b) { if (a && b) {} else { if (b) { console.log(4); return; } console.log(5); } } f(0, 0); f(0, 1); f(1, 0); g(0, 1); g(1, 1);",
+		{ compress: {}, mangle: false },
+		"function f(a,b){if(!a){if(b){console.log(1);return}console.log(2)}console.log(3)}function g(a,b){if(a&&b);else{if(b){console.log(4);return}console.log(5)}}f(0,0),f(0,1),f(1,0),g(0,1),g(1,1);"
+	],
+	[
 		"a `Set` or a `Map` given `null`, `undefined` or an argument it ignores, and never read",
 		"function f(a, b) { new Set(null, a()); new Map(void b(), a()); new Set([a()], b()); } f(() => console.log(1), () => console.log(2));",
 		{ compress: {}, mangle: false },
