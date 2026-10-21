@@ -25,9 +25,7 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"webpack writes the same program in a spelling longer or compressing worse than oxc's",
 		[
-			"oxc minifier: peephole/minimize_statements.rs:32",
 			"swc exec: terser_arguments_modified",
-			"swc minifier: fixture/issues/10281/input.js",
 			"swc minifier: fixture/issues/10412/input.js",
 			"swc minifier: fixture/issues/10885/input.js",
 			"swc minifier: fixture/issues/11368/input.js",
@@ -44,13 +42,11 @@ const OXC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/projects/jquery/25/input.js",
 			"swc minifier: fixture/projects/jquery/27/input.js",
 			"swc minifier: fixture/projects/yui/12/input.js",
-			"swc minifier: fixture/projects/yui/13/input.js",
 			"swc minifier: fixture/terser/issue-2535-2/2/input.js",
 			"swc minifier: pass-1/7/input.js",
 			"terser compress: asm/asm_mixed",
 			"terser compress: assignment/op_equals_right_global_var",
 			"terser compress: assignment/op_equals_right_local_var",
-			"terser compress: collapse_vars/collapse_rhs_conditional_2",
 			"terser compress: collapse_vars/collapse_vars_side_effects_2",
 			"terser compress: concat-strings/concat_1",
 			"terser compress: conditionals/ifs_6",
@@ -147,7 +143,6 @@ const OXC_SMALLER_BY_REASON = [
 		"oxc writes `const` as `let` and joins neighboring declarations",
 		[
 			"swc minifier: fixture/issues/11684/bindings/input.js",
-			"swc minifier: fixture/issues/framer-motion/1/input.js",
 			"terser compress: arguments/modified",
 			"terser compress: collapse_vars/collapse_rhs_loop",
 			"terser compress: sequences/lift_sequences_3"
@@ -193,9 +188,7 @@ const OXC_SMALLER_BY_REASON = [
 			"swc exec: issue_8964",
 			"swc minifier: fixture/issues/11645/with-parent-scope-nested-block/input.js",
 			"swc minifier: fixture/issues/12212/with-scope/input.js",
-			"swc minifier: fixture/projects/mootools/8/input.js",
-			"swc minifier: fixture/projects/react/15/input.js",
-			"swc minifier: fixture/projects/yui/1/input.js"
+			"swc minifier: fixture/projects/react/15/input.js"
 		]
 	],
 	[
@@ -250,9 +243,7 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc picks shorter spellings for comparisons, coercions and literals",
 		[
-			"swc minifier: fixture/issues/10720/input.js",
 			"swc minifier: fixture/issues/11082/input.js",
-			"swc minifier: fixture/issues/12194/input.js",
 			"swc minifier: fixture/issues/array-constructor-length/input.js",
 			"swc minifier: fixture/projects/backbone/2/input.js"
 		]
@@ -294,7 +285,6 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc inlines more constants and functions, as oxc's `peephole/inline.rs` tests show",
 		[
-			"oxc minifier: peephole/inline.rs:642",
 			"oxc minifier: peephole/inline.rs:698",
 			"oxc minifier: peephole/inline.rs:703",
 			"oxc minifier: peephole/inline.rs:704",
