@@ -2079,6 +2079,8 @@ const IMPROVED_CASES = [
 /** @type {[string, string][]} */
 const KEPT_CASES = [
 	["a computed key of a loop head's pattern, which the body writes", 'function f(o) { let k = 1; for ({ [k]: x } of o) { console.log(x); k = 2; } } var x; f([{ 1: "a", 2: "b" }, { 1: "c", 2: "d" }]);'],
+	["an element of an array literal written through as a property of a destructuring assignment", "var a = 1, value = { x: 5 }; ({ x: [a][0] } = value); console.log(a);"],
+	["a direct `eval` kept out of a `for…in` head whose `let` it may read in its dead zone", "function f(o) { let x = 1; eval('console.log(x)'); for (let x in o) console.log(x); } f({ a: 1 });"],
 	["an element of an array literal called, read as a place, or beside one with effects", "function f(o, g) { [o][0] = 1; [o][0]++; delete [o][0]; return [[o][0](), [g(), o][1], [, o][0]]; } console.log(f(function () { return this.length; }, () => 1));"],
 	["a `break` in a `do … while` that runs once, before a declaration or a labeled `break`", "function f(a) { do { if (a) break; class C {} console.log(C.name); } while (0); x: do { if (a) break x; console.log(2); } while (0); } f(0); f(1);"],
 	["a `Map` given what is no entry, or a collection given a spread or an argument more", "function f(a, s) { try { new Map([a]); } catch (e) { console.log(e.name); } try { new Map([, [1]]); } catch (e) { console.log(e.name); } new Set([...s]); new Map([[...s]]); new Set([1], a); } f(1, [2]);"],
@@ -9561,10 +9563,42 @@ describe("syntax-printer", () => {
 			const input =
 				"import A, { b as c, d } from 'm'; import 'side'; import * as N from 'n' with { type: 'json' }; import * as P from 'p'; import { r } from 'r'; import defer * as D from 'd'; export { A, c as e, d, N as \"n\", P as p1, P as p2, r, D }; export {}; sink(d);";
 			/** @type {import("terser").MinifyOptions} */
-			const options = { module: true, compress: {}, mangle: false };
+			const options = {
+				module: true,
+				ecma: /** @type {const} */ (2020),
+				compress: {},
+				mangle: false
+			};
 			expect((await minify(input, options)).code).toBe(
 				'export{default as A,b as e}from"m";import{d}from"m";import"side";export*as"n"from"n"with{type:"json"};import*as P from"p";export{r}from"r";import defer*as D from"d";export{d,P as p1,P as p2,D};export{};sink(d);'
 			);
+			// `export * as` is ES2020.
+			expect(
+				(
+					await minify("import * as N from 'n'; export { N };", {
+						...options,
+						ecma: 2015,
+						compress: {}
+					})
+				).code
+			).toBe('import*as N from"n";export{N};');
+			expect(
+				(
+					await minify(
+						"import { 'foo-bar' as v } from 'm'; export { v };",
+						options
+					)
+				).code
+			).toBe('export{"foo-bar"as v}from"m";');
+			// `export default` reads the name it exports.
+			expect(
+				(
+					await minify(
+						"import { v } from 'm'; export default v; export { v };",
+						options
+					)
+				).code
+			).toBe('import{v}from"m";export default v;export{v};');
 			expect(
 				(
 					await minify("import { a } from 'm'; export { a }; eval('a');", options)
