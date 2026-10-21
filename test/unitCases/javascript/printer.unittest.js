@@ -2079,6 +2079,8 @@ const IMPROVED_CASES = [
 /** @type {[string, string][]} */
 const KEPT_CASES = [
 	["a computed key of a loop head's pattern, which the body writes", 'function f(o) { let k = 1; for ({ [k]: x } of o) { console.log(x); k = 2; } } var x; f([{ 1: "a", 2: "b" }, { 1: "c", 2: "d" }]);'],
+	["a `Set` built from an array literal where a direct `eval` may rebind `Set`", 'function f() { eval("var Set = function () { console.log(1); }"); new Set([1]); } f();'],
+	["a `Set` built from an array literal where a `with` object may rebind `Set`", "with ({ Set: function () { console.log(1); } }) { new Set([1]); }"],
 	["an element of an array literal written through as a property of a destructuring assignment", "var a = 1, value = { x: 5 }; ({ x: [a][0] } = value); console.log(a);"],
 	["a direct `eval` kept out of a `for…in` head whose `let` it may read in its dead zone", "function f(o) { let x = 1; eval('console.log(x)'); for (let x in o) console.log(x); } f({ a: 1 });"],
 	["an element of an array literal called, read as a place, or beside one with effects", "function f(o, g) { [o][0] = 1; [o][0]++; delete [o][0]; return [[o][0](), [g(), o][1], [, o][0]]; } console.log(f(function () { return this.length; }, () => 1));"],
