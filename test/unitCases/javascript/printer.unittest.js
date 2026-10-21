@@ -9166,6 +9166,31 @@ describe("syntax-printer", () => {
 		});
 
 
+		it("should run a built-in where the program leaves it, and keep what reads through a prototype", async () => {
+			const { minify } = await load();
+			for (const input of [
+				// A global the program assigns is no longer the built-in.
+				'Set = function () { console.log("side"); }; new Set([1]); console.log(2);',
+				'Math = { max() { console.log("m"); return 0; } }; console.log(Math.max(1, 2));',
+				// A hole or a short entry reads its index through `Array.prototype`.
+				'Object.defineProperty(Array.prototype, 0, { get() { console.log("got"); return 1; }, configurable: true }); new Set([, 1]); new Map([[]]); console.log(2);'
+			]) {
+				const { code } = await minify(input, { toplevel: true });
+				expect(runProgram(/** @type {string} */ (code))).toBe(
+					runProgram(input)
+				);
+			}
+			// Unassigned, the built-in still runs here.
+			expect(
+				(
+					await minify(
+						'console.log(Math.max(1, 2), String.fromCharCode(65)); new Set([1]); new Map([[1, 2]]);',
+						{ toplevel: true }
+					)
+				).code
+			).toBe('console.log(2,"A");');
+		});
+
 		it("should keep what each measured trial changes from changing the program", async () => {
 			const { minify, improvements } = await load();
 			if (!improvements) throw new Error("the improve phase is not installed");
