@@ -1,7 +1,7 @@
 "use strict";
 
 module.exports = {
-	findBundle() {
-		return ["runtime.js", "main.js"];
+	findBundle(index) {
+		return [`runtime.${index}.js`, `main.${index}.js`];
 	}
 };

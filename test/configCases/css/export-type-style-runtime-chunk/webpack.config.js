@@ -1,12 +1,12 @@
 "use strict";
 
-/** @type {import("../../../../").Configuration} */
-module.exports = {
+/** @type {import("../../../../").Configuration[]} */
+module.exports = ["development", "production"].map((mode, index) => ({
 	target: "web",
-	mode: "development",
+	mode,
 	devtool: false,
 	output: {
-		filename: "[name].js"
+		filename: `[name].${index}.js`
 	},
 	module: {
 		rules: [
@@ -25,4 +25,4 @@ module.exports = {
 	optimization: {
 		runtimeChunk: "single"
 	}
-};
+}));
