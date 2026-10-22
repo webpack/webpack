@@ -8934,7 +8934,10 @@ describe("syntax-printer", () => {
 				"function f() { let d = void 0; d ||= function () { console.log(\"called\"); }; d?.(console.log(\"effect\")); return 1; } console.log(f());",
 				"function f(c) { var d = void 0; if (c) d = function () { console.log(\"called\"); }; d?.(console.log(\"effect\")); } f(0); f(1);",
 				"function f() { switch (1) { case x: let x = 2; console.log(x); } } try { f(); } catch (e) { console.log(e.name); }",
-				'Array.prototype[Symbol.iterator] = function* () { console.log("iterated"); yield 1; }; function f(x) { Math.max(...[1]); [...[1]]; [x(), ...[1]]; console.log(Math.max(...[2, 3])); } f(() => 1);'
+				'Array.prototype[Symbol.iterator] = function* () { console.log("iterated"); yield 1; }; function f(x) { Math.max(...[1]); [...[1]]; [x(), ...[1]]; console.log(Math.max(...[2, 3])); } f(() => 1);',
+				'Array.prototype.join = function () { return "patched"; }; console.log([1].join(), [1, 2].join("-"));',
+				'Array.prototype[Symbol.iterator] = function* () { yield 5; }; console.log(new Date(...[1]).getTime());',
+				'Array["prototype"][Symbol.iterator] = function* () { yield 5; }; console.log(Math.max(...[1]));'
 			]) {
 				const { code } = await minify(input, { compress: {}, mangle: false });
 				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
