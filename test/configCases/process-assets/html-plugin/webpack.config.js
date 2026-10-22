@@ -4,7 +4,10 @@ const {
 	sources: { RawSource, OriginalSource, ReplaceSource },
 	Compilation,
 	html: {
-		syntax: { NodeType, SourceProcessor }
+		syntax: {
+			SourceProcessor,
+			parser: { Field, NodeType }
+		}
 	},
 	util: { createHash },
 	optimize: { RealContentHashPlugin }
@@ -162,19 +165,17 @@ class HtmlInlinePlugin {
 							new SourceProcessor()
 								.use({
 									[NodeType.Element]: (path) => {
-										if (path.tagName() !== "script") return;
-										let url;
-										for (const attribute of path.attributes()) {
-											if (attribute.name === "src") url = attribute.value;
-										}
-										if (url === undefined) return;
+										if (path.name() !== "script") return;
+										const src = path.fieldNamed(Field.attributes, "src");
+										if (src === 0) return;
+										let url = path.value(src);
 										if (url.startsWith(publicPath)) {
 											url = url.slice(publicPath.length);
 										}
 										if (!this.inline.test(url)) return;
 										matches.push({
-											start: path.start(),
-											length: path.end() - path.start(),
+											start: path.range()[0],
+											length: path.range()[1] - path.range()[0],
 											asset: /** @type {Asset} */ (compilation.getAsset(url))
 										});
 									}

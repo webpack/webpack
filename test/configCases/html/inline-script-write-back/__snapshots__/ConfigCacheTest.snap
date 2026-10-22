@@ -1,0 +1,8 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases html inline-script-write-back exported tests should leave an unmarked page fetching its chunk 1`] = `
+"<!DOCTYPE html>
+<title>Plain</title>
+<script src=\\"plain.mjs\\" type=\\"module\\"></script>
+"
+`;

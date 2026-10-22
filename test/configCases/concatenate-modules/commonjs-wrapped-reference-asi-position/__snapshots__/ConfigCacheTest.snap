@@ -53,7 +53,7 @@ exports[`ConfigCacheTestCases concatenate-modules commonjs-wrapped-reference-asi
   \\\\******************************/
 
 // MODULE: ./log.js
-var log_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var log_namespaceFn = /*#__PURE__*/__webpack_require__.cw((module) => {
 
 
 module.exports = [];
@@ -61,7 +61,7 @@ module.exports = [];
 });
 
 // MODULE: ./thing.cjs
-var thing_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var thing_namespaceFn = /*#__PURE__*/__webpack_require__.cw((__unused_webpack_module, exports) => {
 
 
 const log = (log_namespaceFn());
@@ -165,7 +165,7 @@ exports[`ConfigCacheTestCases concatenate-modules commonjs-wrapped-reference-asi
   \\\\******************************/
 
 // MODULE: ./log.js
-var log_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var log_namespaceFn = /*#__PURE__*/__webpack_require__.cw((module) => {
 
 
 module.exports = [];
@@ -173,7 +173,7 @@ module.exports = [];
 });
 
 // MODULE: ./thing.cjs
-var thing_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var thing_namespaceFn = /*#__PURE__*/__webpack_require__.cw((__unused_webpack_module, exports) => {
 
 
 const log = (log_namespaceFn());
@@ -277,7 +277,7 @@ exports[`ConfigCacheTestCases concatenate-modules commonjs-wrapped-reference-asi
   \\\\******************************/
 
 // MODULE: ./log.js
-var log_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var log_namespaceFn = /*#__PURE__*/__webpack_require__.cw((module) => {
 
 
 module.exports = [];
@@ -285,7 +285,7 @@ module.exports = [];
 });
 
 // MODULE: ./thing.cjs
-var thing_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var thing_namespaceFn = /*#__PURE__*/__webpack_require__.cw((__unused_webpack_module, exports) => {
 
 
 const log = (log_namespaceFn());
@@ -389,7 +389,7 @@ exports[`ConfigCacheTestCases concatenate-modules commonjs-wrapped-reference-asi
   \\\\******************************/
 
 // MODULE: ./log.js
-var log_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var log_namespaceFn = /*#__PURE__*/__webpack_require__.cw((module) => {
 
 
 module.exports = [];
@@ -397,7 +397,7 @@ module.exports = [];
 });
 
 // MODULE: ./thing.cjs
-var thing_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var thing_namespaceFn = /*#__PURE__*/__webpack_require__.cw((__unused_webpack_module, exports) => {
 
 
 const log = (log_namespaceFn());

@@ -1,0 +1,14 @@
+/* One layer, written twice. The second block is big enough to stream its own
+   body, which is where the gather used to lose it — the two then printed as two
+   blocks of one layer, which a second pass wrote as one. */
+@layer app {
+	@layer a { .first { top: 0 } }
+	@layer a { /* FILLER */ .last { bottom: 0 } }
+}
+
+/* An anonymous block is a layer of its own, so a second one gathers with
+   nothing however big it is. */
+@layer solo { .kept { left: 0 } }
+
+/* A block naming another layer is left where it was written. */
+@layer other { .elsewhere { right: 0 } }

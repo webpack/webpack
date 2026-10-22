@@ -1,0 +1,37 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases html chunk-name-option exported tests should name a chunk with what the function returned 1`] = `
+"<!DOCTYPE html>
+<title>Named by a function</title>
+<script src=\\"fn.inline.0.script-module.mjs\\" type=\\"module\\"></script>
+<script type=\\"module\\" src=\\"fn.external.1.script-module.mjs\\"></script>
+"
+`;
+
+exports[`ConfigCacheTestCases html chunk-name-option exported tests should name a chunk with what the function returned 2`] = `
+"<!DOCTYPE html>
+<title>Named by a function</title>
+<script src=\\"fn.inline.0.script-module.mjs\\" type=\\"module\\"></script>
+<script type=\\"module\\" src=\\"fn.external.1.script-module.mjs\\"></script>
+"
+`;
+
+exports[`ConfigCacheTestCases html chunk-name-option exported tests should name every extracted chunk from the template 1`] = `
+"<!DOCTYPE html>
+<title>Named by the option</title>
+<script src=\\"page__script-module_0.mjs\\" type=\\"module\\"></script>
+
+<script src=\\"page__script-module_2.mjs\\" async type=\\"module\\"></script>
+<script type=\\"module\\" src=\\"page_external_script-module_3.mjs\\"></script>
+"
+`;
+
+exports[`ConfigCacheTestCases html chunk-name-option exported tests should name every extracted chunk from the template 2`] = `
+"<!DOCTYPE html>
+<title>Named by the option</title>
+<script src=\\"page__script-module_0.mjs\\" type=\\"module\\"></script>
+
+<script src=\\"page__script-module_2.mjs\\" async type=\\"module\\"></script>
+<script type=\\"module\\" src=\\"page_external_script-module_3.mjs\\"></script>
+"
+`;

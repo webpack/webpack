@@ -55,12 +55,9 @@ module.exports = [
 	// A separate runtime chunk means the entry script gets a cloned sibling
 	// `<script>` — exercises integrity on cloned tags, not just the entry tag.
 	{ ...config("split", true), optimization: { runtimeChunk: "single" } },
-	// An authored `.html` entry whose native `<script>` already carries an
-	// `integrity` attribute — the content-specific author value must be
-	// replaced by the per-chunk one, not left beside it as a duplicate. A
-	// single runtime chunk means that authored `<script>` is also cloned for
-	// the runtime sibling, so both the rewritten entry tag and the cloned tag
-	// are exercised.
+	// An authored `.html` entry whose native `<script>` already carries `integrity` —
+	// the author value must be replaced by the per-chunk one, not left beside it. One
+	// runtime chunk clones that tag, so rewritten and cloned are both exercised.
 	{
 		name: "authored",
 		target: "web",

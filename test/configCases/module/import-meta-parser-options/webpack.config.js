@@ -1,6 +1,7 @@
 "use strict";
 
-const { EnvironmentPlugin } = require("../../../../");
+const { DefinePlugin, EnvironmentPlugin } = require("../../../../");
+const { version } = require("../../../../package.json");
 
 /** @type {import("../../../../types").Configuration} */
 module.exports = {
@@ -40,6 +41,11 @@ module.exports = {
 	plugins: [
 		new EnvironmentPlugin({
 			AAA: "aaa"
+		}),
+		// Requiring package.json from the case would bundle every dependency
+		// line, so an edit to any of them moves this asset in the size report.
+		new DefinePlugin({
+			WEBPACK_MAJOR: JSON.stringify(Number.parseInt(version, 10))
 		})
 	]
 };

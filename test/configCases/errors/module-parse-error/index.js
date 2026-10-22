@@ -11,7 +11,17 @@ it("should build every failing module without crashing", () => {
 });
 
 it("should throw a SyntaxError when a module that failed to parse is executed", () => {
-	expect(() => require("./broken.js")).toThrow(SyntaxError);
+	let error;
+	try {
+		require("./broken.js");
+	} catch (thrown) {
+		error = thrown;
+	}
+	expect(error).toBeInstanceOf(SyntaxError);
+	// the thrown message is the build error's, code frame included
+	expect(error.message).toMatch(
+		/^Module parse failed: Unexpected token[\s\S]*\n> 1 \| const = 1;/
+	);
 	expect(() => require("./broken.json")).toThrow(SyntaxError);
 });
 
@@ -23,12 +33,16 @@ it("should throw a WebAssembly.CompileError for a malformed wasm module", async 
 });
 
 it("should throw a plain Error for a build failure that is not a parse error", () => {
-	let message = "";
+	let thrown;
 	try {
 		require("./built.js");
 	} catch (error) {
-		message = error.message;
+		thrown = error;
 	}
+	// a failed module stays cached, so only the first require throws at all
+	expect(thrown).toBeInstanceOf(Error);
+	expect(thrown.constructor).toBe(Error);
+	const message = thrown.message;
 
 	// the loader's own frame is kept and written relative to the context, while
 	// the frames webpack and the engine own are cut off
@@ -37,5 +51,4 @@ it("should throw a plain Error for a build failure that is not a parse error", (
 	);
 	expect(message).toMatch(/\.\/loader\.js:\d+:\d+/);
 	expect(message).not.toMatch(/[\s(](?:\/|[A-Za-z]:[\\/])/);
-	expect(() => require("./built.js")).not.toThrow(SyntaxError);
 });

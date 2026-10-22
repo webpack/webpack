@@ -28,9 +28,9 @@ module.exports = {
 		expect(html).toContain("href='/b'");
 		// A value carrying no reference is rewritten under its own delimiter too.
 		expect(html).toContain("href='/c'");
-		// Spelling the rewrite back costs bytes here, and is still what runs: the
-		// source spelling would leave the padding a plain value loses.
-		expect(html).toContain('href="&amp;x&amp;y"');
+		// The rewrite is spelled back under the frozen delimiter, and neither `&x`
+		// nor `&y` names a reference, so neither costs an escape.
+		expect(html).toContain('href="&x&y"');
 		// What the value itself holds outranks the delimiter the source chose:
 		// each lands under the quote it needs no reference for.
 		expect(html).toContain('title="it\'s"');

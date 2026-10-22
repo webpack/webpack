@@ -18,7 +18,7 @@ Array [
   "/*! lightningcss custom_properties: whitespace around a lone token */.u03,.u04,.u05,.u06{--test:foo}",
   "/*! lightningcss custom_properties: a var() fallback carrying a length */.u07{--test:var(--foo,20px)}",
   "/*! lightningcss custom_properties: two of them across a comma */.u08{transition:var(--foo,20px),var(--bar,40px)}",
-  "/*! lightningcss custom_properties: substitutions side by side */.u09{background:var(--color) var(--image)}",
+  "/*! lightningcss custom_properties: substitutions side by side */.u09{background:var(--color)var(--image)}",
   "/*! lightningcss custom_properties: a color function in a fallback */.u10{color:var(--color,#ff0)}",
   "/*! lightningcss custom_properties: a hex in a fallback */.u11{color:var(--color,#ff0)}",
   "/*! lightningcss custom_properties: a fallback that is itself substituted */.u12{color:var(--color,rgb(var(--red),var(--green),0))}",
@@ -30,5 +30,8 @@ Array [
   "/*! and the same name in a real color property does shorten */.v04{color:#fff}",
   "/*! a fragment keeps every digit it was written with */.w01{--u:url(#fff)}.w02{--u:url(#ffffff)}",
   "/*! a quoted value is text, hex-shaped or not */.w03{--s:\\"#fff\\"}.w04{--s:\\"0.50\\"}",
+  "/*! a math operator between two substitutions */.x01{--inner:calc(var(--radius) - var(--width))}",
+  "/*! ...with the right operand parenthesised */.x02{--inner-parens:calc(var(--radius) - (var(--width)))}",
+  "/*! ...and outside a math function, where a substitution can still carry it in */.x03{--tail:(10px) - (4px)}",
 ]
 `;

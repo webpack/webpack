@@ -1,5 +1,13 @@
 codecov:
   branch: main
+  notify:
+    # Statuses and the comment wait for `coverage-notify` in test.yml, which
+    # runs once every suite that uploads has finished, not after each upload.
+    manual_trigger: true
+# Create the comment only once coverage drops, so a pull request that never
+# lowers it (docs, CI config) gets none; a comment once made is kept updated.
+comment:
+  require_changes: "coverage_drop"
 coverage:
   precision: 2
   round: down
@@ -17,7 +25,13 @@ coverage:
           - css-parsing
           - html5lib
           - test262
+          - minify-corpora
+          - test262-parser
+          - xmlconf
         target: auto
+        # Timing-dependent lines flip between runs, so a PR that changes no
+        # code still moves the total by about 0.01%.
+        threshold: 0.05%
     patch:
       default:
         flags:
@@ -35,7 +49,14 @@ ignore:
   - "**/*.runtime.js"
   - "schemas/**/*"
   - "examples/**/*"
-  # TODO webpack 6 remove
-  - "lib/ChunkTemplate.js"
-  - "lib/MainTemplate.js"
-  - "lib/ModuleTemplate.js"
+  # Benchmark harnesses, not code webpack ships: what they measure is another
+  # tool, and most of each one is only reachable from a ten-minute sweep or a
+  # spawned worker. A test that loads one entered its whole file in the metric.
+  - "tooling/compare-css-tools.js"
+  - "tooling/compare-html-tools.js"
+  - "tooling/compare-js-tools.js"
+  - "tooling/compare-xml-tools.js"
+  # TODO in the next major release: remove
+  - "lib/template/ChunkTemplate.js"
+  - "lib/template/MainTemplate.js"
+  - "lib/template/ModuleTemplate.js"

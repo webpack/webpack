@@ -10,11 +10,9 @@ it("should change PNG asset filename when its bytes change", () => {
 });
 
 it("should change CSS [contenthash] when a referenced asset's URL changes", () => {
-	// The rendered CSS chunk contains the asset's filename inside `url(...)`.
-	// When the asset bytes change, its [contenthash] filename changes, so the
-	// rendered CSS bytes also change. The CSS chunk's [contenthash] must
-	// reflect that — otherwise the CSS file is served at a stale URL with
-	// fresh contents, breaking long-term caching.
+	// The rendered CSS chunk holds the asset's filename inside `url(...)`, so changed
+	// asset bytes change its `[contenthash]` filename and the CSS bytes with it. The
+	// CSS chunk's own `[contenthash]` must follow, or it is served stale.
 	const cssAsset = STATS_JSON.assets.find(a => /\.css$/.test(a.name));
 	expect(cssAsset).toBeDefined();
 	expect(cssAsset.name).not.toBe(STATE.cssName);

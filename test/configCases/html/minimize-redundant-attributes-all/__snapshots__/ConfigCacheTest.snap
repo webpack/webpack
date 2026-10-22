@@ -7,6 +7,11 @@ exports[`ConfigCacheTestCases html minimize-redundant-attributes-all minimize-re
 <form><button>b</button></form>
 <table><tr><td>c<td colspan=2>d</table>
 <textarea></textarea>
+<input name=c>
+<form><button>b</button></form>
+<video><track src=a.vtt><track kind=zzz src=b.vtt></video>
+<map name=m><area shape=zzz coords=0,0,1,1 href=#a></map>
+<img decoding=zzz src=i.png alt=i>
 
 
 </body></html>"

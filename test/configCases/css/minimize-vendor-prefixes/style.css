@@ -55,3 +55,7 @@ input.t07::placeholder, textarea.t07::placeholder { color: #999 }
 .t10 { width: max-content }
 /*! and a value spelling no target needs is dropped, like a property's */
 .t11 { display: -ms-flexbox; display: flex }
+/*! the 2009 flexbox draft's names, dead once the standard ones are written */
+.t15 { display: -webkit-box; display: flex; -webkit-box-align: center; align-items: center; -webkit-box-orient: vertical; -webkit-box-direction: normal; flex-direction: column }
+/*! but not where the block writes none: a line clamp reads the draft's box */
+.t16 { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden }

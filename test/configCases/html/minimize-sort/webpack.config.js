@@ -10,7 +10,13 @@ module.exports = {
 		parser: { html: { sources: false } }
 	},
 	optimization: {
-		minimize: { html: { sortAttributes: true, sortTokenLists: true } },
+		minimize: {
+			html: {
+				sortAttributes: true,
+				sortTokenLists: true,
+				removeRedundantAttributes: true
+			}
+		},
 		minimizer: ["..."]
 	},
 	experiments: { html: true }

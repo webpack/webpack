@@ -18,7 +18,7 @@ module.exports = {
 		chunkIds: "named",
 		runtimeChunk: {
 			name: (entrypoint) =>
-				entrypoint.name.startsWith("__html_")
+				entrypoint.name.startsWith("page-")
 					? `${entrypoint.name}-runtime`
 					: undefined
 		}

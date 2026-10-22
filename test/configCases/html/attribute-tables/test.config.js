@@ -14,5 +14,14 @@ module.exports = {
 			"utf8"
 		);
 		expect(html).toMatchSnapshot();
+
+		// The attributes limited to only known values fold to the keyword.
+		expect(html).toContain("<dialog closedby=any>");
+		expect(html).toContain("<template shadowrootmode=open>");
+		expect(html).toContain("<button popovertargetaction=show");
+		expect(html).toContain("<input popovertargetaction=hide");
+		// An input's `autocomplete` names autofill rather than a keyword set,
+		// so it is not in the table and keeps the case it was written in.
+		expect(html).toContain("autocomplete=EMAIL");
 	}
 };

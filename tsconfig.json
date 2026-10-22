@@ -12,7 +12,7 @@
   },
   "include": [
     "declarations.d.ts",
-    "declarations/*.d.ts",
+    "declarations/**/*.ts",
     "schemas/**/*.json",
     "bin/*.js",
     "lib/**/*.js",

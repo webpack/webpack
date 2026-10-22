@@ -5,7 +5,7 @@ exports[`ConfigTestCases html minimize-spell-back-referenced-value minimize-spel
 <a href=\\"/a\\">a</a>
 <a href='/b'>b</a>
 <a href='/c'>c</a>
-<a href=\\"&amp;x&amp;y\\">d</a>
+<a href=\\"&x&y\\">d</a>
 <a title=\\"it's\\">e</a>
 <a title='say \\"hi\\"'>f</a>
 <form action=\\"/post\\"><input type=\\"text\\"><input type=\\"search\\"></form>

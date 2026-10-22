@@ -1,0 +1,930 @@
+"use strict";
+
+const { createHash } = require("crypto");
+const fs = require("fs");
+const os = require("os");
+const path = require("path");
+const { Readable } = require("stream");
+const { pathToFileURL } = require("url");
+const {
+	compress,
+	exists,
+	filterFrom,
+	findingGroups,
+	formatCost,
+	formatProfile,
+	idempotence,
+	installPackages,
+	kb,
+	legalNotices,
+	loaderFor,
+	log,
+	lossColumn,
+	measure,
+	measureInWorker,
+	missingReport,
+	profileShares,
+	run,
+	sweepExitCode,
+	sweepMode
+} = require("../../../tooling/compare-tools-harness");
+
+/** @type {string} */
+let directory;
+
+let made = 0;
+
+/** @type {import("../../../tooling/compare-tools-harness").Tool[]} */
+const TOOLS = [
+	{
+		name: "counts",
+		stage: "parse",
+		create: () => (source) => ({ of: source.length })
+	},
+	{ name: "trims", stage: "minify", create: () => (source) => source.trim() },
+	{
+		name: "refuses",
+		stage: "minify",
+		create: () => () => {
+			throw new Error("nope\nand more");
+		}
+	},
+	{
+		// Warms up, then fails once the timed runs start.
+		name: "tires",
+		stage: "minify",
+		create: () => {
+			let calls = 0;
+			return (/** @type {string} */ source) => {
+				if (++calls > 8) throw new Error("tired");
+				return source;
+			};
+		}
+	}
+];
+
+/**
+ * A stand-in worker: it drains the source it is handed as the real one does,
+ * then writes what the test asks for instead of a measurement.
+ * @param {string} output what it writes to stdout
+ * @param {number=} code what it exits with
+ * @returns {string} the script's path
+ */
+const workerWriting = (output, code) => {
+	const file = path.join(directory, `worker${made++}.js`);
+	fs.writeFileSync(
+		file,
+		`"use strict";
+(async () => {
+	for await (const chunk of process.stdin) String(chunk);
+	process.stdout.write(${JSON.stringify(output)});
+	process.exitCode = ${code || 0};
+})();
+`
+	);
+	return file;
+};
+
+/**
+ * @param {string} entry the stand-in worker
+ * @returns {Promise<Error>} what measuring it rejected with
+ */
+const rejection = async (entry) => {
+	try {
+		await measureInWorker(entry, "parse", "stylis", "a{}");
+	} catch (error) {
+		return /** @type {Error} */ (error);
+	}
+	throw new Error("expected the measurement to reject");
+};
+
+describe("compare-tools-harness", () => {
+	beforeAll(() => {
+		directory = fs.mkdtempSync(path.join(os.tmpdir(), "compare-tools-"));
+	});
+
+	afterAll(() => {
+		fs.rmSync(directory, { recursive: true, force: true });
+	});
+
+	describe("measureInWorker", () => {
+		it("reads back the measurement a worker wrote", async () => {
+			const entry = workerWriting(
+				JSON.stringify({ code: "a{}", wall: 1, cpu: 2, peak: 3 })
+			);
+			await expect(
+				measureInWorker(entry, "minify", "webpack", "a { }")
+			).resolves.toEqual({ code: "a{}", wall: 1, cpu: 2, peak: 3 });
+		});
+
+		// A tool writing to stdout of its own lands here, and the parse used to
+		// throw inside the close listener, where nothing named the tool.
+		it("names the tool when the output will not parse", async () => {
+			const entry = workerWriting("a native warning nobody asked for");
+			expect((await rejection(entry)).message).toBe(
+				"measuring stylis wrote unreadable output: a native warning nobody asked for"
+			);
+		});
+
+		// Asserted whole rather than by substring: 200 characters are a substring
+		// of 500, so a truncation that never happened would pass either way.
+		it("keeps at most the first 200 characters of it", async () => {
+			const entry = workerWriting("x".repeat(500));
+			expect((await rejection(entry)).message).toBe(
+				`measuring stylis wrote unreadable output: ${"x".repeat(200)}`
+			);
+		});
+
+		it("reports the code a failing worker exited with", async () => {
+			const entry = workerWriting("{}", 3);
+			expect((await rejection(entry)).message).toBe(
+				"measuring stylis exited with 3"
+			);
+		});
+	});
+
+	// Driven in this process rather than in a worker: coverage does not follow a
+	// child, and these are the branches that decide what a row reports.
+	describe("measure", () => {
+		/**
+		 * @param {string} stage which table the row belongs to
+		 * @param {string} name the tool to run
+		 * @param {string} source what to hand it on stdin
+		 * @returns {Promise<EXPECTED_ANY>} the report it wrote
+		 */
+		const measureHere = async (stage, name, source) => {
+			const argv = process.argv;
+			const stdin = /** @type {PropertyDescriptor} */ (
+				Object.getOwnPropertyDescriptor(process, "stdin")
+			);
+			/** @type {string[]} */
+			const written = [];
+			const write = jest
+				.spyOn(process.stdout, "write")
+				.mockImplementation((chunk) => {
+					written.push(String(chunk));
+					return true;
+				});
+
+			process.argv = ["node", "entry.js", "--measure", stage, name];
+			Object.defineProperty(process, "stdin", {
+				value: Readable.from([Buffer.from(source)]),
+				configurable: true
+			});
+			try {
+				await measure(TOOLS);
+			} finally {
+				write.mockRestore();
+				process.argv = argv;
+				Object.defineProperty(process, "stdin", stdin);
+			}
+			return JSON.parse(written.join(""));
+		};
+
+		it("reports the text a printing tool wrote, and what it cost", async () => {
+			const result = await measureHere("minify", "trims", "  a{}  ");
+			expect(result.code).toBe("a{}");
+			expect(result.wall).toBeGreaterThanOrEqual(0);
+			expect(result.cpu).toBeGreaterThanOrEqual(0);
+			expect(result.peak).toBeGreaterThan(0);
+		});
+
+		// A parse hands back a tree, which is measured but never reported.
+		it("reports no text for a parse", async () => {
+			const result = await measureHere("parse", "counts", "abcd");
+			expect(result.code).toBeUndefined();
+			expect(result.peak).toBeGreaterThan(0);
+		});
+
+		describe("with PROFILE set", () => {
+			const previous = process.env.PROFILE;
+			beforeEach(() => {
+				process.env.PROFILE = "1";
+			});
+			afterEach(() => {
+				if (previous === undefined) delete process.env.PROFILE;
+				else process.env.PROFILE = previous;
+			});
+
+			it("reports where the timed runs spent the CPU", async () => {
+				const result = await measureHere("minify", "trims", "  a{}  ");
+				expect(result.code).toBe("a{}");
+				expect(Array.isArray(result.profile)).toBe(true);
+				let total = 0;
+				for (const [bucket, share] of result.profile) {
+					expect(typeof bucket).toBe("string");
+					total += share;
+				}
+				expect(total).toBeLessThanOrEqual(1.0001);
+				expect(formatProfile(result)).toBe(
+					result.profile
+						.map(
+							(/** @type {[string, number]} */ [bucket, share]) =>
+								`${`${(share * 100).toFixed(1)}%`.padStart(12)}  ${bucket}\n`
+						)
+						.join("")
+				);
+			});
+
+			it("reports the error of a run failing while sampled", async () => {
+				expect(await measureHere("minify", "tires", "a")).toEqual({
+					error: "tired"
+				});
+			});
+		});
+
+		it("prints no profile for a row that has none", () => {
+			expect(
+				formatProfile({ code: "", second: undefined, wall: 1, cpu: 1, peak: 1 })
+			).toBe("");
+			expect(formatProfile({ error: "nope" })).toBe("");
+		});
+
+		/**
+		 * @param {() => string} answer what `/proc/self/status` reads as
+		 * @param {() => Promise<EXPECTED_ANY>} what to run meanwhile
+		 * @returns {Promise<EXPECTED_ANY>} whatever it answered
+		 */
+		const withStatusFile = async (answer, what) => {
+			const real = fs.readFileSync;
+			const read = jest
+				.spyOn(fs, "readFileSync")
+				.mockImplementation(
+					/** @type {EXPECTED_ANY} */ (
+						(
+							/** @type {string} */ file,
+							/** @type {EXPECTED_ANY} */ options
+						) =>
+							file === "/proc/self/status"
+								? answer()
+								: real.call(fs, file, options)
+					)
+				);
+			try {
+				return await what();
+			} finally {
+				read.mockRestore();
+			}
+		};
+
+		// Where the file is not there to read, and where it is but names no
+		// high-water mark: the peak is what the platform itself accounts for.
+		it("reports a peak without the status file to read it from", async () => {
+			const thrown = await withStatusFile(
+				() => {
+					throw new Error("ENOENT");
+				},
+				() => measureHere("parse", "counts", "abcd")
+			);
+			expect(thrown.peak).toBeGreaterThan(0);
+			const unnamed = await withStatusFile(
+				() => "Name:\tnode\n",
+				() => measureHere("parse", "counts", "abcd")
+			);
+			expect(unnamed.peak).toBeGreaterThan(0);
+		});
+
+		// Only the first line: a native tool's panic carries a whole backtrace.
+		it("reports the first line of what a tool threw", async () => {
+			expect(await measureHere("minify", "refuses", "a{}")).toEqual({
+				error: "nope"
+			});
+		});
+
+		it("refuses a name no tool answers to", async () => {
+			await expect(measureHere("minify", "nothing", "a{}")).rejects.toThrow(
+				"unknown minify tool nothing"
+			);
+		});
+	});
+
+	describe("sizes", () => {
+		it("weighs a buffer under each encoding a CDN serves", async () => {
+			const sizes = await compress(Buffer.from("a{color:red}".repeat(200)));
+			expect(sizes.raw).toBe(2400);
+			expect(sizes.gzip).toBeLessThan(sizes.raw);
+			expect(sizes.brotli).toBeLessThan(sizes.raw);
+			// zlib carries zstd only from Node 22.15, where the column reads "-".
+			expect(sizes.zstd === undefined || sizes.zstd < sizes.raw).toBe(true);
+		});
+
+		it("prints a count in KB, and a dash for one it cannot have", () => {
+			expect(kb(1536)).toBe("1.5 KB");
+			expect(kb(undefined)).toBe("-");
+		});
+	});
+
+	describe("running a command", () => {
+		it("resolves when it exits cleanly", async () => {
+			await expect(run(process.execPath, ["-e", ""])).resolves.toBeUndefined();
+		});
+
+		it("rejects with the code it exited with", async () => {
+			await expect(
+				run(process.execPath, ["-e", "process.exitCode = 2"])
+			).rejects.toThrow("exited with 2");
+		});
+
+		// Matched on the name rather than on `ENOENT`: bun says "Executable not
+		// found in $PATH" where node spells the errno out.
+		it("rejects when it cannot be run at all", async () => {
+			await expect(run("no-such-command-anywhere", [])).rejects.toThrow(
+				"no-such-command-anywhere"
+			);
+		});
+	});
+
+	describe("loaderFor", () => {
+		/** @type {string} */
+		let cache;
+
+		beforeAll(() => {
+			cache = path.join(directory, "cache");
+			const plain = path.join(cache, "node_modules", "plain-package");
+			fs.mkdirSync(plain, { recursive: true });
+			fs.writeFileSync(
+				path.join(plain, "package.json"),
+				'{ "name": "plain-package", "main": "index.js" }'
+			);
+			fs.writeFileSync(
+				path.join(plain, "index.js"),
+				'module.exports = { named: "plain" };'
+			);
+			const mapped = path.join(cache, "node_modules", "mapped-package");
+			fs.mkdirSync(mapped, { recursive: true });
+			// No `main`, so only the `exports` map can resolve it — the shape that
+			// a joined path reads as missing.
+			fs.writeFileSync(
+				path.join(mapped, "package.json"),
+				'{ "name": "mapped-package", "exports": { ".": "./entry.js" } }'
+			);
+			fs.writeFileSync(
+				path.join(mapped, "entry.js"),
+				'module.exports = { named: "mapped" };'
+			);
+		});
+
+		it("loads a package that names a main", () => {
+			expect(loaderFor(cache)("plain-package")).toEqual({ named: "plain" });
+		});
+
+		it("loads one that ships only an exports map", () => {
+			expect(loaderFor(cache)("mapped-package")).toEqual({ named: "mapped" });
+		});
+
+		// The map does not list `./package.json`, so resolving it as a specifier
+		// throws and the joined path is what answers.
+		it("falls back to the joined path for a subpath the map withholds", () => {
+			expect(loaderFor(cache)("mapped-package/package.json").name).toBe(
+				"mapped-package"
+			);
+		});
+	});
+
+	// The installer is reached through `PATH`, so a stand-in on it exercises the
+	// real orchestration without standing in for any of this repo's own code.
+	describe("installPackages", () => {
+		const NAMES = [
+			"compare-tools-harness-unittest-warm",
+			"compare-tools-harness-unittest-cold",
+			"compare-tools-harness-unittest-failed",
+			"compare-tools-harness-unittest-moved",
+			"compare-tools-harness-unittest-derived",
+			"compare-tools-harness-unittest-manifest"
+		];
+
+		/**
+		 * @param {string} name which cache
+		 * @returns {string} where it lives
+		 */
+		const cacheFor = (name) =>
+			path.resolve(__dirname, "../../..", "node_modules/.cache", name);
+
+		const RAN = "stand-in-npm-ran";
+
+		/**
+		 * @param {string} name which cache
+		 * @returns {boolean} whether the stand-in npm ran for it
+		 */
+		const npmRan = (name) => fs.existsSync(path.join(cacheFor(name), RAN));
+
+		/**
+		 * @param {string} name which corpus
+		 * @returns {string} where its committed manifest lives
+		 */
+		const corpusFor = (name) =>
+			path.resolve(__dirname, "../../..", "tooling/comparison", name);
+
+		/**
+		 * Write a corpus of the shape `installPackages` reads: the manifest and the
+		 * lockfile, whose contents together decide whether an install is owed.
+		 * @param {string} name which corpus
+		 * @param {string} lock what its lockfile says
+		 * @param {string=} manifest what its package.json says
+		 * @returns {string} the hash a matching stamp would carry
+		 */
+		const writeCorpus = (name, lock, manifest) => {
+			const written = manifest || JSON.stringify({ name, private: true });
+			fs.mkdirSync(corpusFor(name), { recursive: true });
+			fs.writeFileSync(path.join(corpusFor(name), "package.json"), written);
+			fs.writeFileSync(path.join(corpusFor(name), "package-lock.json"), lock);
+			const identity = createHash("sha256");
+			for (const part of [written, lock]) identity.update(part).update("\0");
+			return identity.digest("hex");
+		};
+
+		/**
+		 * @param {string} name which cache
+		 * @returns {string | undefined} the lockfile hash it was installed from
+		 */
+		const stampOf = (name) => {
+			const stamp = path.join(cacheFor(name), ".corpus-lock");
+			return fs.existsSync(stamp) ? fs.readFileSync(stamp, "utf8") : undefined;
+		};
+
+		/**
+		 * Run with an `npm` of our own first on `PATH`, so nothing is fetched.
+		 * @param {number} code what that npm exits with
+		 * @param {() => Promise<EXPECTED_ANY>} what to run meanwhile
+		 * @returns {Promise<EXPECTED_ANY>} whatever it answered
+		 */
+		const withStandInNpm = async (code, what) => {
+			const bin = fs.mkdtempSync(path.join(os.tmpdir(), "stand-in-npm-"));
+			const npm = path.join(bin, "npm");
+			// It leaves the mark in its working directory, which is the cache the
+			// install was for, so a test can tell a real install from a skipped one.
+			fs.writeFileSync(npm, `#!/bin/sh\n: > ${RAN}\nexit ${code}\n`);
+			fs.chmodSync(npm, 0o755);
+			const before = process.env.PATH;
+			const quiet = jest.spyOn(process.stderr, "write").mockReturnValue(true);
+
+			process.env.PATH = `${bin}${path.delimiter}${before}`;
+			try {
+				return await what();
+			} finally {
+				quiet.mockRestore();
+				process.env.PATH = before;
+				fs.rmSync(bin, { recursive: true, force: true });
+			}
+		};
+
+		// The stand-in is a shell script, which Windows would pass over in favour
+		// of the real npm — and then a test would install over the network.
+		const posixOnly = process.platform === "win32" ? it.skip : it;
+
+		/**
+		 * @returns {void}
+		 */
+		const clearCaches = () => {
+			for (const name of NAMES) {
+				fs.rmSync(cacheFor(name), { recursive: true, force: true });
+				fs.rmSync(corpusFor(name), { recursive: true, force: true });
+			}
+		};
+
+		// A run interrupted before its `afterAll` leaves a cache behind, and a
+		// warm one would send the cold case down the path it exists to cover.
+		beforeAll(clearCaches);
+
+		afterAll(clearCaches);
+
+		// Nothing is installed here: the cache was installed from this very
+		// lockfile, which is the branch a restored CI cache takes.
+		posixOnly("reuses a cache whose stamp matches the lockfile", async () => {
+			const [name] = NAMES;
+			const hash = writeCorpus(name, '{"lockfileVersion":3,"warm":true}');
+			fs.mkdirSync(path.join(cacheFor(name), "node_modules"), {
+				recursive: true
+			});
+			fs.writeFileSync(path.join(cacheFor(name), ".corpus-lock"), hash);
+			// The stand-in fails, so taking the install path would fail the case
+			// rather than reach the real npm and the network behind it.
+			await withStandInNpm(1, () =>
+				expect(installPackages(name)).resolves.toBe(cacheFor(name))
+			);
+			expect(npmRan(name)).toBe(false);
+		});
+
+		posixOnly("installs into a cache that has none of it yet", async () => {
+			const name = NAMES[1];
+			const hash = writeCorpus(name, '{"lockfileVersion":3,"cold":true}');
+			await withStandInNpm(0, () => installPackages(name));
+			expect(npmRan(name)).toBe(true);
+			expect(stampOf(name)).toBe(hash);
+			// Both are what `npm ci` reads, so the install ran against the corpus
+			// as committed rather than against whatever the cache last held.
+			expect(
+				fs.existsSync(path.join(cacheFor(name), "package-lock.json"))
+			).toBe(true);
+		});
+
+		// The stamp is what a later run compares against, so writing it before
+		// the install succeeded would let a broken cache pass for a warm one.
+		posixOnly("records nothing when the install fails", async () => {
+			const name = NAMES[2];
+			writeCorpus(name, '{"lockfileVersion":3,"failed":true}');
+			await expect(
+				withStandInNpm(1, () => installPackages(name))
+			).rejects.toThrow("exited with 1");
+			expect(npmRan(name)).toBe(true);
+			expect(stampOf(name)).toBeUndefined();
+		});
+
+		// The manifest decides as much as the lockfile does: one edited without
+		// regenerating the other is what `npm ci` refuses, and a warm cache that
+		// read the lockfile alone would skip the install that would refuse it.
+		posixOnly("reinstalls when only the manifest moved", async () => {
+			const name = NAMES[5];
+			const lock = '{"lockfileVersion":3,"pinned":"1.0.0"}';
+			writeCorpus(name, lock, JSON.stringify({ name, asked: "1.0.0" }));
+			await withStandInNpm(0, () => installPackages(name));
+			const before = stampOf(name);
+			fs.mkdirSync(path.join(cacheFor(name), "node_modules"), {
+				recursive: true
+			});
+			// The lockfile is byte-identical; only what the manifest asks for moved.
+			const after = writeCorpus(
+				name,
+				lock,
+				JSON.stringify({ name, asked: "1.0.1" })
+			);
+			expect(after).not.toBe(before);
+			fs.rmSync(path.join(cacheFor(name), RAN), { force: true });
+			await withStandInNpm(0, () => installPackages(name));
+			expect(npmRan(name)).toBe(true);
+			expect(stampOf(name)).toBe(after);
+		});
+
+		// A fixture the caller generated with the packages it installed is as
+		// stale as they are, and nothing else would clear it: `npm ci` rewrites
+		// `node_modules` alone, and the builder skips an output already there.
+		posixOnly("clears what the last corpus derived", async () => {
+			const name = NAMES[4];
+			writeCorpus(name, '{"lockfileVersion":3,"pinned":"1.0.0"}');
+			fs.mkdirSync(cacheFor(name), { recursive: true });
+			const derived = path.join(cacheFor(name), "tailwind-app.css");
+			fs.writeFileSync(derived, ".from-the-old-tailwind{}");
+			writeCorpus(name, '{"lockfileVersion":3,"pinned":"1.0.1"}');
+			await withStandInNpm(0, () => installPackages(name));
+			expect(fs.existsSync(derived)).toBe(false);
+		});
+
+		// The case the lockfile exists for: Dependabot moves a pin, and a cache
+		// installed from the version before it is stale rather than warm.
+		posixOnly("reinstalls when the lockfile has moved", async () => {
+			const name = NAMES[3];
+			writeCorpus(name, '{"lockfileVersion":3,"pinned":"1.0.0"}');
+			await withStandInNpm(0, () => installPackages(name));
+			const before = stampOf(name);
+			// The stand-in installs nothing, so the tree it would have written is
+			// what makes this cache warm — without it the stamp is never consulted.
+			fs.mkdirSync(path.join(cacheFor(name), "node_modules"), {
+				recursive: true
+			});
+			const after = writeCorpus(name, '{"lockfileVersion":3,"pinned":"1.0.1"}');
+			expect(after).not.toBe(before);
+			fs.rmSync(path.join(cacheFor(name), RAN), { force: true });
+			await withStandInNpm(0, () => installPackages(name));
+			expect(npmRan(name)).toBe(true);
+			expect(stampOf(name)).toBe(after);
+		});
+	});
+
+	describe("log", () => {
+		it("writes the line to stderr", () => {
+			const written = jest.spyOn(process.stderr, "write").mockReturnValue(true);
+			try {
+				log("installing …");
+				expect(written).toHaveBeenCalledWith("installing …\n");
+			} finally {
+				written.mockRestore();
+			}
+		});
+	});
+
+	describe("exists", () => {
+		it("answers for a file that is there and one that is not", async () => {
+			await expect(exists(__filename)).resolves.toBe(true);
+			await expect(exists(`${__filename}.absent`)).resolves.toBe(false);
+		});
+	});
+
+	describe("formatCost", () => {
+		it("rounds the three cells", () => {
+			expect(formatCost({ wall: 12.4, cpu: 30.6, peak: 71024 })).toEqual({
+				wall: "12",
+				cpu: "31",
+				peak: "69 MB"
+			});
+		});
+
+		// A tool working in a service process of its own spends both where this
+		// worker cannot see them, so neither is reported as a number.
+		it("withholds cpu and peak from a tool that works out of process", () => {
+			expect(formatCost({ wall: 22.2, cpu: 1.6, peak: 71024 }, true)).toEqual({
+				wall: "22",
+				cpu: "-",
+				peak: "-"
+			});
+		});
+	});
+
+	describe("idempotence", () => {
+		/**
+		 * @param {string} text a text
+		 * @returns {string} what it says, ignoring case
+		 */
+		const says = (text) => text.toLowerCase();
+
+		it("reports nothing when printing the output again leaves it be", () => {
+			const minify = (/** @type {string} */ source) => source.trim();
+			expect(idempotence({ minify, source: " a ", says })).toEqual({
+				printed: "a",
+				reports: []
+			});
+		});
+
+		it("prints the output again with reprint where one is given", () => {
+			const minify = (/** @type {string} */ source) => `${source}!`;
+			const reprint = (/** @type {string} */ printed) => printed;
+			expect(idempotence({ minify, reprint, source: "a", says })).toEqual({
+				printed: "a!",
+				reports: []
+			});
+			expect(
+				idempotence({ minify, source: "a", says }).reports[0].what
+			).toBe("differs, +1 B");
+		});
+
+		it("reports a second print that throws", () => {
+			const reprint = () => {
+				throw new Error("cannot read it back");
+			};
+			const { printed, reports } = idempotence({
+				minify: (source) => source,
+				reprint,
+				source: "a",
+				says
+			});
+			expect(printed).toBe("a");
+			expect(reports[0].relation).toBe("idempotence");
+			expect(reports[0].what).toBe("threw");
+		});
+	});
+
+	describe("legalNotices", () => {
+		it("counts the `/*!` comments a source carries, over any number of lines", () => {
+			expect(legalNotices("a{color:red}")).toBe(0);
+			expect(legalNotices("/*! one */a{color:red}/* not one */")).toBe(1);
+			expect(legalNotices("/*!\n one\n*/a{}/*!two*/")).toBe(2);
+		});
+
+		it("does not read one comment's end as the next one's", () => {
+			expect(legalNotices("/*! a */b{}/*! c */")).toBe(2);
+		});
+
+		it("counts only openers, not the same text inside something else", () => {
+			expect(legalNotices("/* ordinary /*! text */")).toBe(0);
+			expect(legalNotices('a{content:"/*! not one */"}')).toBe(0);
+			expect(legalNotices("a{content:'/*! nor this */'}")).toBe(0);
+		});
+
+		it("reads a quote inside a comment as that comment's text", () => {
+			expect(legalNotices("/* it's fine */a{}/*! real */")).toBe(1);
+		});
+
+		it("does not count a notice the source never closes", () => {
+			expect(legalNotices("/*! unterminated")).toBe(0);
+		});
+	});
+
+	describe("lossColumn", () => {
+		it("reads as a dash when the output lost nothing", () => {
+			expect(lossColumn(0, [], 0)).toBe("-");
+			expect(lossColumn(0, [], -1)).toBe("-");
+		});
+
+		it("counts the classes and names the examples it was given", () => {
+			expect(lossColumn(2, ["a", "b"], 0)).toBe("2 classes! e.g. a, b");
+			expect(lossColumn(9, ["a", "b", "c"], 0)).toBe("9 classes! e.g. a, b, c");
+		});
+
+		it("says class and notice in the singular", () => {
+			expect(lossColumn(1, ["a"], 0)).toBe("1 class! e.g. a");
+			expect(lossColumn(0, [], 1)).toBe("1 legal notice!");
+			expect(lossColumn(0, [], 3)).toBe("3 legal notices!");
+		});
+
+		it("says both when the output lost both", () => {
+			expect(lossColumn(1, ["a"], 2)).toBe("1 class! e.g. a, 2 legal notices!");
+		});
+	});
+
+	describe("filterFrom", () => {
+		const VARIABLE = "COMPARE_TOOLS_HARNESS_TEST_FILTER";
+
+		afterEach(() => {
+			delete process.env[VARIABLE];
+		});
+
+		it("wants every row when the variable is unset", () => {
+			expect(filterFrom(VARIABLE)("anything at all")).toBe(true);
+		});
+
+		it("wants the rows whose name contains it, whatever the case", () => {
+			process.env[VARIABLE] = "LIGHTNING";
+			const wanted = filterFrom(VARIABLE);
+			expect(wanted("lightningcss+target")).toBe(true);
+			expect(wanted("csso")).toBe(false);
+		});
+	});
+
+	describe("findingGroups", () => {
+		/**
+		 * @param {string} relation what the finding is about
+		 * @param {string} repro the lines reproducing it
+		 * @returns {import("../../../tooling/compare-tools-harness").Report} the finding
+		 */
+		const finding = (relation, repro) => ({ relation, what: "bytes", repro });
+
+		/**
+		 * @param {ReturnType<typeof findingGroups>} groups the collector
+		 * @returns {{ text: string, count: number }} what it wrote and counted
+		 */
+		const written = (groups) => {
+			let text = "";
+			const count = groups.write((line) => {
+				text += line;
+			});
+			return { text, count };
+		};
+
+		it("names a finding no entry expects, and counts it", () => {
+			const groups = findingGroups();
+			groups.add(finding("idempotence", "    a -> b"), "default", "one.html");
+			const { text, count } = written(groups);
+			expect(count).toBe(1);
+			expect(text).toContain("idempotence — bytes");
+			expect(text).toContain("one.html");
+		});
+
+		it("gathers one repro found in several sources into one finding", () => {
+			const groups = findingGroups();
+			groups.add(finding("idempotence", "    a -> b"), "default", "one.html");
+			groups.add(finding("idempotence", "    a -> b"), "aggressive", "two.html");
+			const { text, count } = written(groups);
+			expect(count).toBe(1);
+			expect(text).toContain("2 sources, from one.html");
+			expect(text).toContain("[default, aggressive]");
+		});
+
+		it("counts an expected finding apart, and says why it is owed nothing", () => {
+			const groups = findingGroups([
+				{ relation: "idempotence", contains: "a ->", why: "the spec says so" }
+			]);
+			groups.add(finding("idempotence", "    a -> b"), "default", "one.html");
+			const { text, count } = written(groups);
+			expect(count).toBe(0);
+			expect(text).toContain("expected, and why — 1 of 1");
+			expect(text).toContain("the spec says so");
+		});
+
+		it("expects nothing on a relation or a repro the entry does not name", () => {
+			const groups = findingGroups([
+				{ relation: "idempotence", contains: "a ->", why: "…" }
+			]);
+			groups.add(finding("respelling", "    a -> b"), "default", "one.html");
+			groups.add(finding("idempotence", "    c -> d"), "default", "two.html");
+			expect(written(groups).count).toBe(3);
+		});
+
+		it("reports an entry that matched nothing as stale", () => {
+			const groups = findingGroups([
+				{ relation: "idempotence", contains: "gone", why: "…" }
+			]);
+			const { text, count } = written(groups);
+			expect(count).toBe(1);
+			expect(text).toContain("stale — 1 expectation(s) matched nothing");
+			expect(text).toContain("idempotence: gone");
+		});
+
+		it("lets a source-scoped entry cover the fixture it names", () => {
+			const groups = findingGroups([
+				{
+					relation: "idempotence",
+					contains: "a ->",
+					source: "one",
+					why: "that fixture writes it"
+				}
+			]);
+			groups.add(finding("idempotence", "    a -> b"), "default", "one.html");
+			expect(written(groups).count).toBe(0);
+		});
+
+		it("leaves a group unexpected where it reaches a fixture the entry omits", () => {
+			const groups = findingGroups([
+				{ relation: "idempotence", contains: "a ->", source: "one", why: "…" }
+			]);
+			groups.add(finding("idempotence", "    a -> b"), "default", "one.html");
+			groups.add(finding("idempotence", "    a -> b"), "default", "other.html");
+			const { text, count } = written(groups);
+			// The finding itself, and the entry that then covers nothing.
+			expect(count).toBe(2);
+			expect(text).toContain("idempotence — bytes");
+			expect(text).toContain("stale — 1 expectation(s) matched nothing");
+		});
+	});
+});
+
+describe("missingReport", () => {
+	it("says nothing where the corpus was whole", () => {
+		expect(missingReport([])).toBe("");
+	});
+
+	it("names every fixture the sweep did not find", () => {
+		expect(missingReport(["Tailwind 4 + daisyUI 5", "Bootstrap 5"])).toBe(
+			"\nnot built — 2\n    Tailwind 4 + daisyUI 5\n    Bootstrap 5\n"
+		);
+	});
+});
+
+describe("sweepExitCode", () => {
+	it("passes a whole corpus with nothing found", () => {
+		expect(sweepExitCode(0, [], [])).toBe(0);
+		expect(sweepExitCode(0, [], ["--require-corpus"])).toBe(0);
+	});
+
+	it("fails on a finding whether or not the corpus is required", () => {
+		expect(sweepExitCode(1, [], [])).toBe(1);
+		expect(sweepExitCode(2, [], ["--require-corpus"])).toBe(1);
+	});
+
+	// The silent pass this flag exists to remove: the sweep reports the findings
+	// of the fixtures it kept, and says nothing about the one it lost.
+	it("passes a short corpus only where it is not required", () => {
+		expect(sweepExitCode(0, ["Tailwind 4 + daisyUI 5"], [])).toBe(0);
+		expect(
+			sweepExitCode(0, ["Tailwind 4 + daisyUI 5"], ["--require-corpus"])
+		).toBe(1);
+	});
+
+	it("reads the flag out of the whole command line", () => {
+		expect(
+			sweepExitCode(0, ["A"], ["node", "x.js", "--invariants", "--require-corpus"])
+		).toBe(1);
+		expect(sweepExitCode(0, ["A"], ["node", "x.js", "--invariants"])).toBe(0);
+	});
+});
+
+describe("sweepMode", () => {
+	it("reads the mode whichever side of the modifier it stands", () => {
+		expect(sweepMode(["node", "x.js", "--invariants", "--require-corpus"])).toBe(
+			"--invariants"
+		);
+		expect(sweepMode(["node", "x.js", "--require-corpus", "--invariants"])).toBe(
+			"--invariants"
+		);
+	});
+
+	it("reads the other modes unchanged", () => {
+		expect(sweepMode(["node", "x.js", "--setup"])).toBe("--setup");
+		expect(sweepMode(["node", "x.js", "--measure"])).toBe("--measure");
+	});
+
+	// The comparison, which is what no mode has always meant.
+	it("names no mode where only the modifier was given", () => {
+		expect(sweepMode(["node", "x.js"])).toBeUndefined();
+		expect(sweepMode(["node", "x.js", "--require-corpus"])).toBeUndefined();
+	});
+});
+
+describe("profileShares", () => {
+	it("counts each sample toward its file, the engine's work by name", () => {
+		const frame = (/** @type {string} */ functionName, /** @type {string} */ url) => ({
+			callFrame: { functionName, url }
+		});
+		const nodes = [
+			{ id: 1, ...frame("minify", "file:///x/node_modules/terser/lib/minify.js") },
+			{ id: 2, ...frame("print", pathToFileURL(path.join(__dirname, "../../../lib/javascript/syntax-printer.js")).href) },
+			{ id: 3, ...frame("(garbage collector)", "") },
+			{ id: 4, ...frame("anonymous", "") },
+			{ id: 5, ...frame("helper", "file:///x/node_modules/other/index.js") }
+		];
+		const shares = profileShares({
+			nodes,
+			samples: [1, 1, 2, 3, 4, 5, 1, 5],
+			timeDeltas: [10, 10, 20, 5, 5, 10, 20]
+		});
+		expect(shares).toEqual([
+			["terser minify.js", 40 / 80],
+			["webpack javascript/syntax-printer.js", 20 / 80],
+			["other", 10 / 80],
+			["(garbage collector)", 5 / 80],
+			["(generated)", 5 / 80]
+		]);
+		expect(profileShares({ nodes, samples: [], timeDeltas: [] })).toEqual([]);
+		expect(
+			profileShares({ nodes, samples: [1], timeDeltas: [0] })
+		).toEqual([["terser minify.js", 0]]);
+	});
+});

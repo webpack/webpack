@@ -1,0 +1,1 @@
+STATE.effect = WATCH_STEP;

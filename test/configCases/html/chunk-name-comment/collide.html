@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<title>Names that would collide</title>
+<!-- webpackChunkName: "dup-2" -->
+<script async type="module">
+import { push } from "./shared.js";
+push("first-dup");
+</script>
+<!-- webpackChunkName: "dup" -->
+<script async type="module">
+import { push } from "./shared.js";
+push("second-dup");
+</script>
+<!-- webpackChunkName: "dup" -->
+<script async type="module">
+import { push } from "./shared.js";
+push("third-dup");
+</script>

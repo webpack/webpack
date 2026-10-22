@@ -1,0 +1,101 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases side-effects pure-harmony-import pure-harmony-import should compile 1`] = `
+"/******/ var __webpack_modules__ = ({
+
+/***/ 351
+/*!***********************!*\\\\
+  !*** ./impure-esm.js ***!
+  \\\\***********************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   y: () => (/* binding */ div)
+/* harmony export */ });
+global.PURE_HARMONY_IMPORT_SIDE_EFFECT = true;
+
+function div(a, b) {
+	return a / b;
+}
+
+
+/***/ },
+
+/***/ 217
+/*!*********************!*\\\\
+  !*** ./pure-esm.js ***!
+  \\\\*********************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   l: () => (/* binding */ mul)
+/* harmony export */ });
+function mul(a, b) {
+	return a * b;
+}
+
+
+/***/ }
+
+/******/ });
+/************************************************************************/
+/******/ // The module cache
+/******/ const __webpack_module_cache__ = {};
+/******/ 
+/******/ // The require function
+/******/ function __webpack_require__(moduleId) {
+/******/ 	// Check if module is in cache
+/******/ 	const cachedModule = __webpack_module_cache__[moduleId];
+/******/ 	if (cachedModule !== undefined) {
+/******/ 		return cachedModule.exports;
+/******/ 	}
+/******/ 	// Create a new module (and put it into the cache)
+/******/ 	const module = __webpack_module_cache__[moduleId] = {
+/******/ 		// no module.id needed
+/******/ 		// no module.loaded needed
+/******/ 		exports: {}
+/******/ 	};
+/******/ 
+/******/ 	// Execute the module function
+/******/ 	if (!(moduleId in __webpack_modules__)) {
+/******/ 		delete __webpack_module_cache__[moduleId];
+/******/ 		const e = new Error(\\"Cannot find module '\\" + moduleId + \\"'\\");
+/******/ 		e.code = 'MODULE_NOT_FOUND';
+/******/ 		throw e;
+/******/ 	}
+/******/ 	__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 
+/******/ 	// Return the exports of the module
+/******/ 	return module.exports;
+/******/ }
+/******/ 
+/************************************************************************/
+/******/ /* webpack/runtime/define property getters */
+/******/ // define getter/value functions for harmony exports
+/******/ __webpack_require__.d = (exports, definition) => {
+/******/ 	for(var key in definition) {
+/******/ 		if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 			Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 		}
+/******/ 	}
+/******/ };
+/******/ 
+/******/ /* webpack/runtime/hasOwnProperty shorthand */
+/******/ __webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop));
+/******/ 
+/************************************************************************/
+/*!******************!*\\\\
+  !*** ./index.js ***!
+  \\\\******************/
+/* harmony import */ var _pure_esm__WEBPACK_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__(/*! ./pure-esm */ 217);
+/* harmony import */ var _impure_esm__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./impure-esm */ 351);
+
+
+
+it(\\"should compute\\", () => {
+	expect((0,_pure_esm__WEBPACK_IMPORTED_MODULE_0__/* .mul */ .l)(6, 7)).toBe(42);
+	expect((0,_impure_esm__WEBPACK_IMPORTED_MODULE_1__/* .div */ .y)(84, 2)).toBe(42);
+});
+
+"
+`;

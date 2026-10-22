@@ -1,4 +1,4 @@
-@import url("data:text/css,.imported {  color : #ff0000  }") ;
+@import url("data:text/css,.imported {  color : rgb( 255 , 0 , 0 )  }") ;
 
 /* One payload per language a media type can name, plain and base64. */
 .svg { background : url("data:image/svg+xml,<svg>   <rect  fill='red' />   </svg>") ; }

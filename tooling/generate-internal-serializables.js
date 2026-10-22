@@ -22,27 +22,6 @@ const REQUEST_PREFIX = "webpack/lib/";
 /** @typedef {{ requirePath: string | null, source: string }} SerializableEntry */
 
 /**
- * Filesystem-cache aliases for renamed / mistyped historical request strings.
- * @type {Record<string, string>}
- */
-const LEGACY_ALIASES = {
-	NodeStuffInWebError: "../errors/NodeStuffInWebError",
-	RawDataUrlModule: "../asset/RawDataUrlModule",
-	"dependencies/ExternalModuleConstDependency":
-		"../dependencies/ExternalModuleInitFragmentDependency"
-};
-
-/**
- * Prefer these require targets over the defining file (still loads the registrar).
- * @type {Record<string, string>}
- */
-const REQUIRE_OVERRIDES = {
-	// RestoreProvidedData is registered in ExportsInfo under this request;
-	// ModuleGraph requires ExportsInfo, matching the historical map entry.
-	ModuleGraph: "../ModuleGraph"
-};
-
-/**
  * @param {string} dir directory
  * @param {string[]} out accumulator
  * @returns {string[]} absolute paths
@@ -105,6 +84,17 @@ const extractWebpackLibRequest = (call) => {
 };
 
 /**
+ * Reads every request a call names, since `makeSerializable` takes the
+ * current one plus the legacy ones a moved class stays readable under.
+ * @param {string} call call source
+ * @returns {string[]} requests, current one first
+ */
+const extractWebpackLibRequests = (call) =>
+	[...call.matchAll(/["'`](webpack\/lib\/[^"'`]+)["'`]/g)].map(
+		(match) => match[1]
+	);
+
+/**
  * @param {string} absoluteFile file under lib/
  * @returns {string} require path relative to lib/util/
  */
@@ -132,10 +122,7 @@ const collectEntries = () => {
 	const add = (request, requirePath, source) => {
 		if (!request.startsWith(REQUEST_PREFIX)) return;
 		const key = request.slice(REQUEST_PREFIX.length);
-		const resolved =
-			requirePath !== null && REQUIRE_OVERRIDES[key]
-				? REQUIRE_OVERRIDES[key]
-				: requirePath;
+		const resolved = requirePath;
 		const existing = entries.get(key);
 		if (existing && existing.requirePath !== resolved) {
 			throw new Error(
@@ -161,8 +148,9 @@ const collectEntries = () => {
 			: undefined;
 
 		forEachCall(source, "makeSerializable", (call) => {
-			const request = extractWebpackLibRequest(call);
-			if (request) add(request, requirePath, relative);
+			for (const request of extractWebpackLibRequests(call)) {
+				add(request, requirePath, relative);
+			}
 		});
 
 		forEachCall(source, "register", (call) => {
@@ -178,15 +166,11 @@ const collectEntries = () => {
 			}
 			add(request, requirePath, relative);
 		});
-	}
 
-	for (const [key, requirePath] of Object.entries(LEGACY_ALIASES)) {
-		if (!entries.has(key)) {
-			entries.set(key, {
-				requirePath,
-				source: "(legacy alias)"
-			});
-		}
+		forEachCall(source, "registerLegacyRequest", (call) => {
+			const request = extractWebpackLibRequest(call);
+			if (request) add(request, requirePath, relative);
+		});
 	}
 
 	return entries;

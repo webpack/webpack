@@ -16,6 +16,7 @@ const ConcatenatedModule = require("../lib/optimize/ConcatenatedModule");
 const { makePathsRelative } = require("../lib/util/identifier");
 const browserslistConfigPackages = require("./helpers/browserslistConfigPackages");
 const codeSizeBaselineDrift = require("./helpers/codeSizeBaselineDrift");
+const codeSizeCommitLink = require("./helpers/codeSizeCommitLink");
 const codeSizeInputChanges = require("./helpers/codeSizeInputChanges");
 const codeSizeReportPrefixes = require("./helpers/codeSizeReportPrefixes");
 const prepareOptions = require("./helpers/prepareOptions");
@@ -33,7 +34,7 @@ const prepareOptions = require("./helpers/prepareOptions");
  */
 
 /** @import LibCompilation from "../lib/Compilation" */
-/** @import LibModule from "../lib/Module" */
+/** @import LibModule from "../lib/module/Module" */
 
 /** @typedef {"raw" | "gzip" | "brotli" | "zstd"} Metric */
 /** @typedef {Record<Metric, number>} Metrics */
@@ -241,12 +242,14 @@ const measureAsset = (content) => ({
 	}).length
 });
 
-// ~60 config cases assert on the generated code from inside a compiler hook,
-// which only resolves under jest. Those assertions belong to `ConfigTestCases`
-// — and most of them read a bundle this harness deliberately minifies — so the
-// global is stubbed out rather than evaluated: every access and call returns the
-// stub again, which swallows `expect(x).not.toBe(y)` and friends alike.
-/** @type {EXPECTED_ANY} */
+/**
+ * ~60 config cases assert on generated code from inside a compiler hook, which
+ * only resolves under jest; those assertions belong to `ConfigTestCases`, and
+ * most read a bundle this harness deliberately minifies. The global is stubbed
+ * rather than evaluated, so every access and call returns the stub again and
+ * swallows `expect(x).not.toBe(y)` and friends alike.
+ * @type {EXPECTED_ANY}
+ */
 const expectStub = new Proxy(() => {}, {
 	get: (target, property) => (property === "then" ? undefined : expectStub),
 	apply: () => expectStub
@@ -307,11 +310,9 @@ const collectRuntimes = (compilations, prefix) => {
 	for (const compilation of compilations) {
 		const { chunkGraph } = compilation;
 		for (const chunk of compilation.chunks) {
-			// A worker or `runtimeChunk` runtime is named by a hash, which would
-			// rename the row on every content change — same reason asset names are
-			// normalized. Several hashed runtimes in one case then share a row and
-			// report the union of what they carry, which is stable where their
-			// names are not.
+			// A worker or `runtimeChunk` runtime is named by a hash, which would rename the
+			// row on every content change — the same reason asset names are normalized.
+			// Several hashed runtimes then share a row and report the union they carry.
 			const runtime = (
 				typeof chunk.runtime === "string"
 					? chunk.runtime
@@ -408,10 +409,9 @@ const measureCase = async ({ category, name }) => {
 	// webpack itself has created it.
 	fs.mkdirSync(outputDirectory, { recursive: true });
 
-	// `experiments.futureDefaults` flips this process-wide default
-	// (`lib/config/defaults.js`), so every later case in the same worker hashes
-	// its module ids with a different function and changes size for no reason.
-	// Restored after the build so a case is measured as if built on its own.
+	// `experiments.futureDefaults` flips this process-wide default, so every later
+	// case in the same worker hashes its module ids differently and changes size for
+	// no reason. Restored after the build, so a case is measured as if built alone.
 	const hashFunction = DEFAULTS.HASH_FUNCTION;
 
 	/** @type {CaseResult} */
@@ -474,10 +474,9 @@ const measureCase = async ({ category, name }) => {
 		const prefixes = codeSizeReportPrefixes(
 			compilers.map((child) => child.name)
 		);
-		// Measured on `emit`, per compiler: the output directory holds what the
-		// compilers of one case wrote over each other (and `compareBeforeEmit`
-		// skips a file another one already wrote), and once the build is over the
-		// asset sources have been replaced by `SizeOnlySource`.
+		// Measured on `emit`, per compiler: the output directory holds what the compilers
+		// of one case wrote over each other, and once the build is over the asset sources
+		// have been replaced by `SizeOnlySource`.
 		for (const [index, child] of compilers.entries()) {
 			const prefix = prefixes[index];
 			child.hooks.emit.tap("CodeSizeMeasure", (compilation) => {
@@ -603,6 +602,12 @@ const changeMarker = (delta) =>
 	delta > 0 ? "🔴 ↑" : delta < 0 ? "🟢 ↓" : "🔀";
 
 /**
+ * A new asset did not grow, it was created: there is no before to be red about,
+ * so it reads gray and says so, apart from the assets that changed.
+ */
+const ADDED_MARKER = "⚪ added";
+
+/**
  * @param {string[]} parts sentence fragments
  * @returns {string} them read as a list
  */
@@ -636,9 +641,8 @@ const compareMetrics = (before, after) => {
 		});
 	}
 	// Bytes first, then share of the asset: a fixed addition moves every bundle by
-	// the same amount, and the small ones are the ones it actually costs. Ranked
-	// on whichever of raw and gzip moved further, so the row budget cannot drop a
-	// re-encoding that barely moved raw and cost real bytes on the wire.
+	// the same amount, and the small ones are where it costs. Ranked on whichever of
+	// raw and gzip moved further, so a re-encoding cheap in raw is not dropped.
 	const moved = (/** @type {Change} */ change) =>
 		Math.max(Math.abs(change.delta.raw), Math.abs(change.delta.gzip));
 	return changes.sort(
@@ -902,7 +906,7 @@ const formatChangedAssets = (changes, summary, inputDeltas) => {
 		header: [
 			`| | Asset | Before | After | Change | ${COMPRESSED.map(
 				(metric) => METRIC_LABELS[metric]
-			).join(" | ")} |${withInput ? " Case source (per case) |" : ""}`,
+			).join(" | ")} |${withInput ? " Test edit (per test) |" : ""}`,
 			`| :-: | :-- | --: | --: | --: |${COMPRESSED.map(() => " --: |").join(
 				""
 			)}${withInput ? " --: |" : ""}`
@@ -932,7 +936,7 @@ const formatIntroducedAssets = (changes, status) => {
 		.sort((a, b) => metricsOf(b).raw - metricsOf(a).raw)
 		.map((change) => {
 			const metrics = metricsOf(change);
-			return `| ${added ? "➕" : "➖"} | \`${change.name}\` | ${formatBytes(
+			return `| ${added ? ADDED_MARKER : "➖"} | \`${change.name}\` | ${formatBytes(
 				metrics.raw
 			)} | ${COMPRESSED.map((metric) => formatBytes(metrics[metric])).join(
 				" | "
@@ -1076,13 +1080,11 @@ const formatVerdict = ({ generated, rebuilt, added, removed }) => {
 	const parts = [];
 	if (generated.length > 0) {
 		parts.push(
-			`**changes the size of ${generated.length} asset(s) built from unchanged case source**`
+			`**changes the size of ${generated.length} asset(s) whose tests it leaves untouched**`
 		);
 	}
 	if (rebuilt.length > 0) {
-		parts.push(
-			`moves ${rebuilt.length} asset(s) whose case source it changes too`
-		);
+		parts.push(`moves ${rebuilt.length} asset(s) whose tests it edits too`);
 	}
 	if (added.length > 0) parts.push(`adds ${added.length} new asset(s)`);
 	if (removed.length > 0) parts.push(`deletes ${removed.length} asset(s)`);
@@ -1109,7 +1111,7 @@ const formatMarkdown = (report, baseline, noBaselineReason) => {
 
 	const built = `Built \`test/configCases\` with the defaults a user gets: ${
 		report.meta.cases
-	} case(s), ${report.meta.assets} asset(s)${
+	} test(s), ${report.meta.assets} asset(s)${
 		report.meta.withoutOutput > 0
 			? `, ${report.meta.withoutOutput} emitted nothing`
 			: ""
@@ -1155,22 +1157,24 @@ const formatMarkdown = (report, baseline, noBaselineReason) => {
 
 	const rows = [
 		{
-			label: "Changed, same case source",
+			label: "Changed, test untouched",
 			cases: casesOf(generated, assetCase).length,
 			assets: generated.length,
 			gzip: sumDelta(generated, "gzip"),
 			raw: sumDelta(generated, "raw"),
 			input: 0,
-			delta: true
+			delta: true,
+			added: false
 		},
 		{
-			label: "Changed, case source moved",
+			label: "Changed, test edited",
 			cases: casesOf(rebuilt, assetCase).length,
 			assets: rebuilt.length,
 			gzip: sumDelta(rebuilt, "gzip"),
 			raw: sumDelta(rebuilt, "raw"),
 			input: rebuiltInput,
-			delta: true
+			delta: true,
+			added: false
 		},
 		{
 			label: "New",
@@ -1179,7 +1183,8 @@ const formatMarkdown = (report, baseline, noBaselineReason) => {
 			gzip: sumDelta(added, "gzip"),
 			raw: sumDelta(added, "raw"),
 			input: 0,
-			delta: false
+			delta: false,
+			added: true
 		},
 		{
 			label: "Deleted",
@@ -1188,7 +1193,8 @@ const formatMarkdown = (report, baseline, noBaselineReason) => {
 			gzip: sumDelta(removed, "gzip"),
 			raw: sumDelta(removed, "raw"),
 			input: 0,
-			delta: false
+			delta: false,
+			added: false
 		},
 		{
 			label: "Unchanged",
@@ -1197,32 +1203,53 @@ const formatMarkdown = (report, baseline, noBaselineReason) => {
 			gzip: 0,
 			raw: 0,
 			input: 0,
-			delta: false
+			delta: false,
+			added: false
 		}
 	];
-	const short = (/** @type {Report} */ report) =>
-		report.meta.commit ? `\`${report.meta.commit.slice(0, 7)}\`` : "unknown";
-	// A pull request is built from its merge ref, so name both halves of what
-	// was measured rather than the head alone.
-	const measured = report.meta.base
-		? `${short(report)} merged into \`${report.meta.base.slice(0, 7)}\``
-		: short(report);
-	const drift = codeSizeBaselineDrift(baseline.meta.commit, report.meta.base);
+	const repositoryUrl = readRepositoryUrl();
+	// The base is the commit the baseline report was produced at, which is what
+	// the numbers below are a delta against — the `main` commit the measured
+	// merge ref carries is named only when the two differ, by the drift note.
+	const named = (/** @type {Report} */ report) =>
+		codeSizeCommitLink(report.meta.commit, repositoryUrl);
+	const drift = codeSizeBaselineDrift(
+		baseline.meta.commit,
+		report.meta.base,
+		repositoryUrl
+	);
 
 	// How many moved and by how much, then the biggest movers — before any
 	// collapsed section, so the whole verdict is readable without unfolding one.
 	lines.push(
-		`Comparing ${measured} against ${short(baseline)}. ${formatVerdict(buckets)}`,
+		`Comparing base (${named(baseline)}) to head (${named(report)}). ${formatVerdict(
+			buckets
+		)}`,
 		"",
 		...(drift ? [drift, ""] : []),
-		"| What moved | Cases | Assets | Gzip | Raw | Case source |",
+		"| What moved | Tests | Assets | Gzip | Raw | Test edit |",
 		"| :-- | --: | --: | --: | --: | --: |"
 	);
-	for (const { label, cases, assets, gzip, raw, input, delta } of rows) {
+	for (const {
+		label,
+		cases,
+		assets,
+		gzip,
+		raw,
+		input,
+		delta,
+		added: created
+	} of rows) {
 		const bytes = (/** @type {number} */ value) =>
 			value === 0
 				? "—"
-				: `${delta ? `${changeMarker(value)} ` : ""}${formatDelta(value)}`;
+				: `${
+						delta
+							? `${changeMarker(value)} `
+							: created
+								? `${ADDED_MARKER} `
+								: ""
+					}${formatDelta(value)}`;
 		lines.push(
 			`| ${label} | ${cases === undefined ? "—" : cases} | ${assets} | ${bytes(
 				gzip
@@ -1231,7 +1258,7 @@ const formatMarkdown = (report, baseline, noBaselineReason) => {
 	}
 	lines.push(
 		"",
-		"**`Changed, same case source` is the row that is webpack's doing** — those assets are built from byte-identical module source, so what moved is what webpack generates. `Changed, case source moved` is mostly a case this pull request edited: `Case source` is how many bytes of module source those cases gained, which is what their output delta has to be read against, and a bundle that grew by less than its case did is not a regression. `New` and `Deleted` are whole assets rather than deltas, so a pull request adding cases cannot bury a real change. Gzip decides — it is what a user downloads, and a re-encoding can cut raw bytes while costing wire bytes; raw is the tiebreak, and brotli and zstd are per asset below.",
+		"**Read `Changed, test untouched` first**: the test is byte-identical on both sides, so webpack generated the difference. `Changed, test edited` moved partly because the test did — `Test edit` is how many bytes the test gained, and a bundle that grew by less is not a regression. `New` and `Deleted` are whole files, not deltas — a new asset was created, not grown, so it reads gray (⚪ added) — and adding tests cannot bury a real change. Gzip decides, because that is what users download; raw is the tiebreak, and brotli and zstd are per asset below.",
 		""
 	);
 
@@ -1247,18 +1274,18 @@ const formatMarkdown = (report, baseline, noBaselineReason) => {
 			);
 		} else if (generated.length === 0) {
 			lines.push(
-				"No asset built from unchanged case source changed size — every change below comes with a case whose own source moved too.",
+				"No asset with an untouched test changed size — every change below comes with a test this pull request edited.",
 				""
 			);
 		}
 		lines.push(
 			...formatChangedAssets(
 				generated,
-				`${generated.length} asset(s) changed size with their case source unchanged`
+				`${generated.length} asset(s) changed size, test untouched`
 			),
 			...formatChangedAssets(
 				rebuilt,
-				`${rebuilt.length} asset(s) changed size, and so did their case's source`,
+				`${rebuilt.length} asset(s) changed size, test edited`,
 				rebuiltInputDeltas
 			),
 			...formatIntroducedAssets(added, "added"),
@@ -1279,7 +1306,7 @@ const formatMarkdown = (report, baseline, noBaselineReason) => {
 			"> [!NOTE]",
 			`> ${
 				stopped.length
-			} case(s) emitted in the baseline and emit nothing here, so part of the delta is theirs: ${stopped
+			} test(s) emitted in the baseline and emit nothing here, so part of the delta is theirs: ${stopped
 				.map((name) => `\`${name}\``)
 				.join(", ")}`,
 			""
@@ -1407,9 +1434,8 @@ const run = async () => {
 	const started = Date.now();
 
 	// One process, one case at a time. Cases within a category run in order, so a
-	// `1-use-*` case still consumes what its `0-create-*` sibling wrote, and a
-	// worker pool was measured to be worth about a third of the wall clock — not
-	// enough to buy the machinery.
+	// `1-use-*` case still consumes what its `0-create-*` sibling wrote, and a worker
+	// pool measured at about a third of the wall clock — not enough to buy it.
 	for (const [index, testCase] of cases.entries()) {
 		try {
 			results[testCase.id] = await measureCase(testCase);
@@ -1486,6 +1512,15 @@ const run = async () => {
 	if (args.summary) {
 		fs.appendFileSync(path.resolve(rootPath, args.summary), summary);
 	}
+};
+
+/**
+ * @returns {string | undefined} repository the run measured, when CI names one
+ */
+const readRepositoryUrl = () => {
+	const repository = process.env.GITHUB_REPOSITORY;
+	if (!repository) return undefined;
+	return `${process.env.GITHUB_SERVER_URL || "https://github.com"}/${repository}`;
 };
 
 /**

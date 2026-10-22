@@ -3,7 +3,7 @@
 const fs = require("fs");
 const path = require("path");
 
-/** @import { MutableToken } from "../../lib/css/syntax" */
+/** @import { MutableToken } from "../../lib/css/syntax-parser" */
 /** @typedef {Record<string, unknown> & { getPropertyValue: (property: string) => unknown }} StyleDeclaration */
 /** @typedef {{ selectorText: string | undefined, style: StyleDeclaration, cssText: string }} CssRule */
 /** @typedef {{ type: string, target?: FakeElement }} FakeEvent */
@@ -48,7 +48,10 @@ const VOID_ELEMENTS = new Set([
  */
 const parseFragment = (html) => {
 	if (htmlSyntax === undefined) htmlSyntax = require("../../lib/html/syntax");
-	const { SourceProcessor, NodeType } = htmlSyntax;
+	const { SourceProcessor } = htmlSyntax;
+
+	const { Field, NodeType } = require("../../lib/html/syntax-parser");
+
 	/** @type {{ tag: string, attributes: { name: string, value: string }[], text: string }[]} */
 	const elements = [];
 	let lastEnd = 0;
@@ -58,15 +61,21 @@ const parseFragment = (html) => {
 		.use({
 			[NodeType.Element]: {
 				enter: (path) => {
-					const end = path.end();
-					if (end === 0 || path.start() < lastEnd) return;
+					const end = path.range()[1];
+					if (end === 0 || path.range()[0] < lastEnd) return;
 					lastEnd = end;
 					open = {
-						tag: path.tagName(),
-						attributes: path.attributes().map((attribute) => ({
-							name: attribute.name,
-							value: attribute.value
-						})),
+						tag: path.name(),
+						attributes: Array.from(
+							{ length: path.fieldCount(Field.attributes) },
+							(_, i) => {
+								const attribute = path.field(i, Field.attributes);
+								return {
+									name: path.name(attribute),
+									value: path.value(attribute)
+								};
+							}
+						),
 						text: ""
 					};
 					elements.push(open);
@@ -76,7 +85,7 @@ const parseFragment = (html) => {
 				}
 			},
 			[NodeType.Text]: (path) => {
-				if (open !== undefined) open.text += path.data();
+				if (open !== undefined) open.text += path.value();
 			}
 		})
 		.process(html, {});
@@ -278,10 +287,9 @@ class FakeElement {
 	set innerHTML(value) {
 		this._innerHTML =
 			value === undefined || value === null ? "" : String(value);
-		// Kept verbatim above (tests read the raw string back), and parsed into
-		// children here — the HMR head reconciliation walks them. Parsing alone
-		// registers nothing document-wide: a container built by `createElement` is
-		// detached, so `getElementsByTagName` must not start finding what is in it.
+		// Kept verbatim above, since tests read the raw string back, and parsed into
+		// children here for the HMR head reconciliation. Parsing registers nothing
+		// document-wide: a `createElement` container is detached.
 		for (const child of this._children) {
 			this._document._onElementRemoved(child);
 			child.parentNode = undefined;
@@ -339,7 +347,7 @@ class FakeElement {
 				const loadEvent = { type: "load", target: node };
 				if (node.onload) node.onload(loadEvent);
 				node._dispatchEvent(loadEvent);
-			}, 100);
+			}, 10);
 			// Don't let this cosmetic load timer keep the worker's event loop alive
 			// past teardown (Deno's setTimeout returns a number, hence the guard).
 			if (typeof timer.unref === "function") timer.unref();
@@ -637,12 +645,7 @@ class FakeSheet {
 	get cssRules() {
 		if (this._cssRules) return this._cssRules;
 
-		const {
-			TT_LEFT_CURLY_BRACKET,
-			TT_RIGHT_CURLY_BRACKET,
-			TT_SEMICOLON,
-			readToken
-		} = require("../../lib/css/syntax");
+		const { TokenType, readToken } = require("../../lib/css/syntax-parser");
 
 		/** @type {CssRule[]} */
 		const rules = [];
@@ -696,13 +699,13 @@ class FakeSheet {
 			const t = readToken(css, pos, /** @type {MutableToken} */ ({}));
 			if (t === undefined) break;
 			pos = t.end;
-			if (t.type === TT_LEFT_CURLY_BRACKET) {
+			if (t.type === TokenType.LeftCurlyBracket) {
 				if (selector === undefined) {
 					ruleStart = last; // Record the start of the rule (before the selector)
 					selector = css.slice(last, t.start).trim();
 					last = t.end;
 				}
-			} else if (t.type === TT_RIGHT_CURLY_BRACKET) {
+			} else if (t.type === TokenType.RightCurlyBracket) {
 				processDeclaration(css.slice(last, t.start));
 				rules.push({
 					selectorText: selector,
@@ -712,7 +715,7 @@ class FakeSheet {
 				selector = undefined;
 				currentRule = { getPropertyValue };
 				last = t.end;
-			} else if (t.type === TT_SEMICOLON) {
+			} else if (t.type === TokenType.Semicolon) {
 				processDeclaration(css.slice(last, t.start));
 				last = t.end;
 			}
@@ -766,12 +769,7 @@ class CSSStyleSheet {
 	 * @param {string} cssText CSS text to parse
 	 */
 	_parseCssRules(cssText) {
-		const {
-			TT_LEFT_CURLY_BRACKET,
-			TT_RIGHT_CURLY_BRACKET,
-			TT_SEMICOLON,
-			readToken
-		} = require("../../lib/css/syntax");
+		const { TokenType, readToken } = require("../../lib/css/syntax-parser");
 
 		/** @type {CssRule[]} */
 		const rules = [];
@@ -801,13 +799,13 @@ class CSSStyleSheet {
 			const t = readToken(cleanCss, pos, /** @type {MutableToken} */ ({}));
 			if (t === undefined) break;
 			pos = t.end;
-			if (t.type === TT_LEFT_CURLY_BRACKET) {
+			if (t.type === TokenType.LeftCurlyBracket) {
 				if (selector === undefined) {
 					selector = cleanCss.slice(last, t.start).trim();
 					ruleStart = last;
 					last = t.end;
 				}
-			} else if (t.type === TT_RIGHT_CURLY_BRACKET) {
+			} else if (t.type === TokenType.RightCurlyBracket) {
 				processDeclaration(cleanCss.slice(last, t.start));
 				last = t.end;
 
@@ -822,7 +820,7 @@ class CSSStyleSheet {
 				});
 				selector = undefined;
 				currentRule = { getPropertyValue };
-			} else if (t.type === TT_SEMICOLON) {
+			} else if (t.type === TokenType.Semicolon) {
 				processDeclaration(cleanCss.slice(last, t.start));
 				last = t.end;
 			}

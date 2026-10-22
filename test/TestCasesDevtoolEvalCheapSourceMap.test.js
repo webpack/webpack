@@ -1,10 +1,7 @@
 "use strict";
 
-const { describeCases } = require("./TestCases.template");
+const { describeCases, variants } = require("./templates/TestCases");
 
 describe("TestCases", () => {
-	describeCases({
-		name: "devtool-eval-cheap-source-map",
-		devtool: "eval-cheap-source-map"
-	});
+	describeCases(variants["devtool-eval-cheap-source-map"]);
 });

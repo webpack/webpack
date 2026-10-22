@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases asset-modules minimize-fragment-names minimize-fragment-names should compile 1`] = `"export const answer=function(){return 3};"`;
+
+exports[`ConfigCacheTestCases asset-modules minimize-fragment-names minimize-fragment-names should compile 2`] = `"export const answer=function(){return 3};"`;
+
+exports[`ConfigCacheTestCases asset-modules minimize-fragment-names minimize-fragment-names should compile 3`] = `".fragment{color:red}"`;
+
+exports[`ConfigCacheTestCases asset-modules minimize-fragment-names minimize-fragment-names should compile 4`] = `
+"<!doctype html><head><title>Fragment</title></head><body><p class=a>hi</p>
+
+</body></html>"
+`;

@@ -11,12 +11,6 @@ const arr = [1, 2, 3];
 const sum = arr.reduce((a, b) => a + b, 0);
 window.__inlineModuleSum = sum;
 </script>
-<script type="text/javascript">
-// `<` characters inside JS must NOT be reparsed as HTML
-var counter = 0;
-function lt(a, b) { return a < b; }
-counter++;
-</script>
 <!-- Non-JS type stays untouched -->
 <script type="application/ld+json">
 {"@context": "https://schema.org"}
@@ -24,5 +18,11 @@ counter++;
 </head>
 <body>
 <p>Hi</p>
+<script type="text/javascript">
+// `<` characters inside JS must NOT be reparsed as HTML
+var counter = 0;
+function lt(a, b) { return a < b; }
+counter++;
+</script>
 </body>
 </html>

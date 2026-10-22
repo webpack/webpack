@@ -3,7 +3,7 @@
 const MinimizerPlugin = require("minimizer-webpack-plugin");
 const webpack = require("../../../../");
 
-const { htmlMinify } = webpack.html.syntax;
+const { htmlMinify } = webpack.html;
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {
@@ -23,10 +23,9 @@ module.exports = {
 	},
 	optimization: {
 		minimize: true,
-		// The default minimizer is replaced by the test harness, so wire the HTML
-		// minify function into one minimizer plugin the same way the production
-		// default does (lib/config/defaults.js): an array of minify functions, each
-		// routed by its own `filter`, in a single instance / worker pool.
+		// The default minimizer is replaced by the harness, so wire the HTML minify
+		// function in the same way `lib/config/defaults.js` does: an array of minify
+		// functions, each routed by its own `filter`, in one instance.
 		minimizer: [
 			{
 				apply: (compiler) => {

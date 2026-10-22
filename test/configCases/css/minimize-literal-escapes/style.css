@@ -1,0 +1,9 @@
+/* cssom: declareCharset */
+/* A string's escape of a character past U+FFFF is written as the character,
+   and the stylesheet then opens with `@charset` so it is read as UTF-8. */
+
+/*! Icons 1.0 | MIT */
+.mdi-a:before { content: "\F01C9" }
+.emoji:after { content: "\1F600 !" }
+.bmp:before { content: "\e900" }
+.\1F600 { color: red }

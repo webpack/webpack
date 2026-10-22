@@ -1,0 +1,37 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases lazy-barrel star-all-after-named star-all-after-named should compile 1`] = `
+"./index.js [barrel]
+├─ (named) ./barrel.js [barrel]
+│  ├─ (helper) ./helper.js
+│  └─ (*) ./named.js
+└─ (*) ./all.js [barrel]
+   └─ (*) ./barrel.js [barrel] (deduped)"
+`;
+
+exports[`ConfigCacheTestCases lazy-barrel star-all-after-named star-all-after-named should compile 2`] = `
+"./index.js [barrel]
+├─ (named) ./barrel.js [barrel]
+│  ├─ (helper) ./helper.js
+│  └─ (*) ./named.js
+└─ (*) ./all.js [barrel]
+   └─ (*) ./barrel.js [barrel] (deduped)"
+`;
+
+exports[`ConfigCacheTestCases lazy-barrel star-all-after-named star-all-after-named should pre-compile to fill disk cache (1st) 1`] = `
+"./index.js [barrel]
+├─ (named) ./barrel.js [barrel]
+│  ├─ (helper) ./helper.js
+│  └─ (*) ./named.js
+└─ (*) ./all.js [barrel]
+   └─ (*) ./barrel.js [barrel] (deduped)"
+`;
+
+exports[`ConfigCacheTestCases lazy-barrel star-all-after-named star-all-after-named should pre-compile to fill disk cache (2nd) 1`] = `
+"./index.js [barrel]
+├─ (named) ./barrel.js [barrel]
+│  ├─ (helper) ./helper.js
+│  └─ (*) ./named.js
+└─ (*) ./all.js [barrel]
+   └─ (*) ./barrel.js [barrel] (deduped)"
+`;

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Inline Module Merge</title>
+<script type="module">
+import { push } from "./shared.js";
+push("module-1");
+</script>
+<script type="module">
+import { push } from "./shared.js";
+push("module-2");
+</script>
+</head>
+<body>
+<script type="module" async>
+import { push } from "./shared.js";
+push("async-module");
+</script>
+<script type="module">
+import { push } from "./shared.js";
+push("module-3");
+</script>
+<script>
+var classic = "classic-body";
+</script>
+<script type="module">
+import { push } from "./shared.js";
+push("module-4");
+</script>
+</body>
+</html>

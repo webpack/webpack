@@ -1,0 +1,153 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases lazy-barrel resolved-group-resend resolved-group-resend should compile: 0 1`] = `
+"./index.js
+├─ (fromOther) ./lib/barrel.js [barrel]
+│  ├─ (*) ./lib/mod.js [barrel]
+│  │  └─ (x) ./lib/dep-barrel.js [barrel]
+│  │     └─ (x) ./lib/x.js
+│  └─ (*) ./lib/other.js
+├─ (useLocal) ./a1.js
+│  └─ (useLocal) ./a2.js
+│     └─ (useLocal) ./a3.js
+│        └─ (local) ./lib/barrel.js [barrel] (deduped)
+└─ (useThird) ./b1.js
+   └─ (useThird) ./b2.js
+      └─ (useThird) ./b3.js
+         └─ (useThird) ./b4.js
+            └─ (useThird) ./b5.js
+               └─ (local, third) ./lib/barrel.js [barrel] (deduped)"
+`;
+
+exports[`ConfigCacheTestCases lazy-barrel resolved-group-resend resolved-group-resend should compile: 0 2`] = `
+"./index.js
+├─ (fromOther) ./lib/barrel.js [barrel]
+│  ├─ (*) ./lib/mod.js [barrel]
+│  │  └─ (x) ./lib/dep-barrel.js [barrel]
+│  │     └─ (x) ./lib/x.js
+│  └─ (*) ./lib/other.js
+├─ (useLocal) ./a1.js
+│  └─ (useLocal) ./a2.js
+│     └─ (useLocal) ./a3.js
+│        └─ (local) ./lib/barrel.js [barrel] (deduped)
+└─ (useThird) ./b1.js
+   └─ (useThird) ./b2.js
+      └─ (useThird) ./b3.js
+         └─ (useThird) ./b4.js
+            └─ (useThird) ./b5.js
+               └─ (local, third) ./lib/barrel.js [barrel] (deduped)"
+`;
+
+exports[`ConfigCacheTestCases lazy-barrel resolved-group-resend resolved-group-resend should compile: 1 1`] = `
+"./index.js
+├─ (fromOther) ./lib/barrel.js [barrel]
+│  ├─ (*) ./lib/mod.js [barrel]
+│  │  └─ (x) ./lib/dep-barrel.js [barrel]
+│  │     └─ (x) ./lib/x.js
+│  └─ (*) ./lib/other.js
+├─ (useLocal) ./a1.js
+│  └─ (useLocal) ./a2.js
+│     └─ (useLocal) ./a3.js
+│        └─ (local) ./lib/barrel.js [barrel] (deduped)
+└─ (useThird) ./b1.js
+   └─ (useThird) ./b2.js
+      └─ (useThird) ./b3.js
+         └─ (useThird) ./b4.js
+            └─ (useThird) ./b5.js
+               └─ (local, third) ./lib/barrel.js [barrel] (deduped)"
+`;
+
+exports[`ConfigCacheTestCases lazy-barrel resolved-group-resend resolved-group-resend should compile: 1 2`] = `
+"./index.js
+├─ (fromOther) ./lib/barrel.js [barrel]
+│  ├─ (*) ./lib/mod.js [barrel]
+│  │  └─ (x) ./lib/dep-barrel.js [barrel]
+│  │     └─ (x) ./lib/x.js
+│  └─ (*) ./lib/other.js
+├─ (useLocal) ./a1.js
+│  └─ (useLocal) ./a2.js
+│     └─ (useLocal) ./a3.js
+│        └─ (local) ./lib/barrel.js [barrel] (deduped)
+└─ (useThird) ./b1.js
+   └─ (useThird) ./b2.js
+      └─ (useThird) ./b3.js
+         └─ (useThird) ./b4.js
+            └─ (useThird) ./b5.js
+               └─ (local, third) ./lib/barrel.js [barrel] (deduped)"
+`;
+
+exports[`ConfigCacheTestCases lazy-barrel resolved-group-resend resolved-group-resend should pre-compile to fill disk cache (1st): 0 1`] = `
+"./index.js
+├─ (fromOther) ./lib/barrel.js [barrel]
+│  ├─ (*) ./lib/mod.js [barrel]
+│  │  └─ (x) ./lib/dep-barrel.js [barrel]
+│  │     └─ (x) ./lib/x.js
+│  └─ (*) ./lib/other.js
+├─ (useLocal) ./a1.js
+│  └─ (useLocal) ./a2.js
+│     └─ (useLocal) ./a3.js
+│        └─ (local) ./lib/barrel.js [barrel] (deduped)
+└─ (useThird) ./b1.js
+   └─ (useThird) ./b2.js
+      └─ (useThird) ./b3.js
+         └─ (useThird) ./b4.js
+            └─ (useThird) ./b5.js
+               └─ (local, third) ./lib/barrel.js [barrel] (deduped)"
+`;
+
+exports[`ConfigCacheTestCases lazy-barrel resolved-group-resend resolved-group-resend should pre-compile to fill disk cache (1st): 1 1`] = `
+"./index.js
+├─ (fromOther) ./lib/barrel.js [barrel]
+│  ├─ (*) ./lib/mod.js [barrel]
+│  │  └─ (x) ./lib/dep-barrel.js [barrel]
+│  │     └─ (x) ./lib/x.js
+│  └─ (*) ./lib/other.js
+├─ (useLocal) ./a1.js
+│  └─ (useLocal) ./a2.js
+│     └─ (useLocal) ./a3.js
+│        └─ (local) ./lib/barrel.js [barrel] (deduped)
+└─ (useThird) ./b1.js
+   └─ (useThird) ./b2.js
+      └─ (useThird) ./b3.js
+         └─ (useThird) ./b4.js
+            └─ (useThird) ./b5.js
+               └─ (local, third) ./lib/barrel.js [barrel] (deduped)"
+`;
+
+exports[`ConfigCacheTestCases lazy-barrel resolved-group-resend resolved-group-resend should pre-compile to fill disk cache (2nd): 0 1`] = `
+"./index.js
+├─ (fromOther) ./lib/barrel.js [barrel]
+│  ├─ (*) ./lib/mod.js [barrel]
+│  │  └─ (x) ./lib/dep-barrel.js [barrel]
+│  │     └─ (x) ./lib/x.js
+│  └─ (*) ./lib/other.js
+├─ (useLocal) ./a1.js
+│  └─ (useLocal) ./a2.js
+│     └─ (useLocal) ./a3.js
+│        └─ (local) ./lib/barrel.js [barrel] (deduped)
+└─ (useThird) ./b1.js
+   └─ (useThird) ./b2.js
+      └─ (useThird) ./b3.js
+         └─ (useThird) ./b4.js
+            └─ (useThird) ./b5.js
+               └─ (local, third) ./lib/barrel.js [barrel] (deduped)"
+`;
+
+exports[`ConfigCacheTestCases lazy-barrel resolved-group-resend resolved-group-resend should pre-compile to fill disk cache (2nd): 1 1`] = `
+"./index.js
+├─ (fromOther) ./lib/barrel.js [barrel]
+│  ├─ (*) ./lib/mod.js [barrel]
+│  │  └─ (x) ./lib/dep-barrel.js [barrel]
+│  │     └─ (x) ./lib/x.js
+│  └─ (*) ./lib/other.js
+├─ (useLocal) ./a1.js
+│  └─ (useLocal) ./a2.js
+│     └─ (useLocal) ./a3.js
+│        └─ (local) ./lib/barrel.js [barrel] (deduped)
+└─ (useThird) ./b1.js
+   └─ (useThird) ./b2.js
+      └─ (useThird) ./b3.js
+         └─ (useThird) ./b4.js
+            └─ (useThird) ./b5.js
+               └─ (local, third) ./lib/barrel.js [barrel] (deduped)"
+`;

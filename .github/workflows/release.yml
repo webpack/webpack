@@ -17,6 +17,7 @@ jobs:
     if: github.repository == 'webpack/webpack'
     name: Release
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     outputs:
       published: ${{ steps.changesets.outputs.published }}
       publishedPackages: ${{ steps.changesets.outputs.published-packages }}
@@ -24,18 +25,21 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Use Node.js
-        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: lts/*
           cache: yarn
 
-      - run: yarn --frozen-lockfile
+      - run: node tooling/retry.js yarn --frozen-lockfile
 
       - name: Create Release Pull Request or Publish to npm
         id: changesets
         uses: changesets/action@ae32849d5ba541f9ae29e40e22a623bc13562f51 # v2.1.2
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          # Formats what `changeset version` wrote before the action commits
+          # it, so the release pull request is not born failing fmt:check.
+          version-script: yarn version:release
           # `changeset publish` refuses to run under Yarn Classic, so npm
           # publishes instead. The action runs this on every push that leaves no
           # changeset behind, hence the skip when npm already carries the
@@ -57,9 +61,10 @@ jobs:
     needs: release
     if: needs.release.outputs.published == 'true'
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Generate Token
-        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
         id: app-token
         with:
           app-id: ${{ secrets.BOT_APP_ID }}

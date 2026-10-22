@@ -1,0 +1,21 @@
+/*!
+ * Kit 1.0 - Reset
+ * Released under the MIT license
+ */
+.reset {
+	margin: 0;
+}
+
+/*!
+ * Kit 1.0 - Button
+ * Released under the MIT license
+ */
+.button {
+	color: red;
+}
+
+/* An ordinary comment goes with the rest of the minification. */
+/** @license Apache-2.0 */
+.icon {
+	color: blue;
+}

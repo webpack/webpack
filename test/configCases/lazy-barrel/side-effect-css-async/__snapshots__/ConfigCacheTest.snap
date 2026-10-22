@@ -1,0 +1,37 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases lazy-barrel side-effect-css-async side-effect-css-async should compile 1`] = `
+"./index.js [barrel]
+└─ (*) ./page.js [barrel]
+   └─ (Used) ./lib/index.js [barrel]
+      ├─ (default) ./lib/Used.js [barrel]
+      │  └─ css ./lib/used.css
+      └─ (default) ./Unused [raw] [lazy]"
+`;
+
+exports[`ConfigCacheTestCases lazy-barrel side-effect-css-async side-effect-css-async should compile 2`] = `
+"./index.js [barrel]
+└─ (*) ./page.js [barrel]
+   └─ (Used) ./lib/index.js [barrel]
+      ├─ (default) ./lib/Used.js [barrel]
+      │  └─ css ./lib/used.css
+      └─ (default) ./Unused [raw] [lazy]"
+`;
+
+exports[`ConfigCacheTestCases lazy-barrel side-effect-css-async side-effect-css-async should pre-compile to fill disk cache (1st) 1`] = `
+"./index.js [barrel]
+└─ (*) ./page.js [barrel]
+   └─ (Used) ./lib/index.js [barrel]
+      ├─ (default) ./lib/Used.js [barrel]
+      │  └─ css ./lib/used.css
+      └─ (default) ./Unused [raw] [lazy]"
+`;
+
+exports[`ConfigCacheTestCases lazy-barrel side-effect-css-async side-effect-css-async should pre-compile to fill disk cache (2nd) 1`] = `
+"./index.js [barrel]
+└─ (*) ./page.js [barrel]
+   └─ (Used) ./lib/index.js [barrel]
+      ├─ (default) ./lib/Used.js [barrel]
+      │  └─ css ./lib/used.css
+      └─ (default) ./Unused [raw] [lazy]"
+`;

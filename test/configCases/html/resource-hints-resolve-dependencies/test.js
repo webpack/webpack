@@ -6,7 +6,7 @@ it("resolveDependencies rewrites and filters the entrypoint's stats.resourceHint
 		fs.readFileSync(path.resolve(__dirname, "stats.json"), "utf-8")
 	);
 	const [entryName, entry] = Object.entries(stats.entrypoints).find(
-		([name]) => name.startsWith("__html_")
+		([name]) => name.startsWith("page-")
 	);
 	const hints = entry.resourceHints;
 

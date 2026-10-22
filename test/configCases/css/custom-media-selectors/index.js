@@ -93,3 +93,47 @@ it("should drop the @custom-media and @custom-selector at-rules", () => {
 	expect(css).not.toContain(":--heading");
 	expect(css).not.toContain(":--btn");
 });
+
+it("should resolve a @custom-media reading another in any order", () => {
+	expect(readBundle()).toContain("@media (min-width: 1px) and (hover)");
+});
+
+it("should group a value of several terms where it joins another operator", () => {
+	const css = readBundle();
+	expect(css).toContain("@media not ((min-width: 1px) and (max-width: 2px))");
+	expect(css).toContain(
+		"@media ((min-width: 1px) and (max-width: 2px)) or (hover)"
+	);
+	expect(css).toContain("@media ((min-width: 1px) or (hover)) and (color)");
+	expect(css).toContain(
+		"@media ((color) or (not ((min-width: 1px) and (max-width: 2px))))"
+	);
+});
+
+it("should resolve a @custom-selector reading another", () => {
+	const css = readBundle();
+	expect(css).toContain(
+		":is(:is(h1, h2, h3) .title, :is(h1, h2, h3):hover)"
+	);
+	expect(css).toContain(".cycle:--cycle-a");
+});
+
+it("should keep a value of `and` terms as written inside another `and`", () => {
+	const css = readBundle();
+	expect(css).toContain("@media (min-width: 1px) and (max-width: 2px) and (hover)");
+	expect(css).toMatch(/@media all\s*\{\s*\.always-or/);
+	expect(css).toContain("@media screen and (hover)");
+	expect(css).toContain("@media print, (max-width: 30em)");
+	expect(css).toMatch(/@media not all\s*\{\s*\.never-and/);
+	expect(css).toContain(".cycle-again:--cycle-a");
+});
+
+it("should read no name in a string or after an escape", () => {
+	const css = readBundle();
+	expect(css).toContain(
+		':is([title="a\\" :--nested-heading"] .x\\:--nested-heading, :--undefined-name)'
+	);
+	expect(css).toContain(
+		".again:is(:is(h1, h2, h3) .title, :is(h1, h2, h3):hover)"
+	);
+});

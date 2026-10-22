@@ -3,10 +3,9 @@ const path = require("path");
 const vm = require("vm");
 
 const read = (file) => fs.readFileSync(path.resolve(__dirname, file), "utf-8");
-// Match the `src` attribute rather than the whole tag — the page only puts
-// `src` on `<script>` (links use `href`), and an attribute regexp avoids
-// CodeQL's bad-HTML-tag-filter rule. `RegExp.exec` keeps this Node 10 safe
-// (no `String.prototype.matchAll`).
+// Match the `src` attribute rather than the whole tag: the page only puts `src` on
+// `<script>`, and an attribute regexp avoids CodeQL's bad-HTML-tag-filter rule.
+// `RegExp.exec` keeps this Node 10 safe.
 const scriptSrcs = (html) => {
 	const re = /src="([^"]+)"/g;
 	const srcs = [];

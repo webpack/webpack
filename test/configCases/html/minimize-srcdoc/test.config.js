@@ -32,9 +32,9 @@ module.exports = {
 		expect(page).toContain('srcdoc="<em>up</em>"');
 		// A `"` in the body is dropped with the quotes around the value it sat in.
 		expect(page).toContain('srcdoc="<p title=q>quoted"');
-		// `&lt;` keeps an escape so it still reads as one; a `&` that opens no
-		// reference needs none, and renders as itself either way.
-		expect(page).toContain('srcdoc="<p>a & b &amp;lt; c"');
+		// Neither the `<` before a space nor the `&` opens anything in the nested
+		// document, so the attribute carries both as themselves.
+		expect(page).toContain('srcdoc="<p>a & b < c"');
 
 		// Both nested languages reach a srcdoc: a conditional comment in there is
 		// minified as one, not left as the text of an attribute.

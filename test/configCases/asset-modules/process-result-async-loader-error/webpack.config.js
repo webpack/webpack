@@ -1,6 +1,6 @@
 "use strict";
 
-const NormalModule = require("../../../../lib/NormalModule");
+const NormalModule = require("../../../../lib/module/NormalModule");
 
 // A loader failure arrives with a result object beside it, so the async hook
 // must not run and must not replace the error with its own result.

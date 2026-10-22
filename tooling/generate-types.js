@@ -5,16 +5,17 @@
 
 "use strict";
 
+// Print `types.d.ts`, webpack's public type surface, from the types the sources
+// under `lib/` declare, reading what `lib/index.js` exports.
+//
+//   node tooling/generate-types.js          # report whether it is stale
+//   node tooling/generate-types.js --write  # write it
+//
+// WHY: the published types are one flat file, which `tsc` alone does not emit.
+
 const fs = require("fs");
 const path = require("path");
-const { fileURLToPath, pathToFileURL } = require("url");
-const { Name, _, default: Ajv } = require("ajv");
-const standaloneCode = require("ajv/dist/standalone").default;
-const findCommonDir = require("commondir");
-const { globSync } = require("glob");
-const { compile } = require("json-schema-to-typescript");
 const prettier = require("prettier");
-const terser = require("terser");
 const ts = require("typescript");
 const argv = require("./argv");
 const createTypeScriptProgram = require("./typescript-program");
@@ -23,595 +24,49 @@ const {
 	write: doWrite,
 	verbose,
 	root,
-	schemas: schemasGlob,
 	declarations,
 	types: outputFile,
 	templateLiterals
 } = argv;
 
-/**
- * A schema node holds arbitrary JSON, so its values have no narrower type.
- * @typedef {{ [key: string]: EXPECTED_ANY }} Schema
- */
+const ROOT_PATH = path.resolve(root);
 
-const NESTED_WITH_NAME = ["definitions", "properties"];
+// Where the hand-written option types that are not a plugin's own live.
+const DECLARATIONS_DIRECTORY = path.resolve(root, declarations);
 
-const NESTED_DIRECT = ["items", "additionalProperties", "not"];
-
-const NESTED_ARRAY = ["oneOf", "anyOf", "allOf"];
+/** @type {Map<string, string> | undefined} */
+let declaring;
 
 /**
- * @typedef {object} Visitor
- * @property {((json: Schema, context: EXPECTED_ANY) => Schema)=} schema visits every schema node
- * @property {((json: Schema, context: EXPECTED_ANY) => Schema)=} object visits every keyed group of schemas
- * @property {((json: Schema[], context: EXPECTED_ANY) => void)=} array visits every combinator array
+ * @returns {Map<string, string>} the module under `lib/` declaring each schema
  */
-
-/**
- * Walks a schema depth-first, handing each node to the visitor.
- * @param {Visitor} visitor the visitor to apply
- * @param {Schema} json the schema node to process
- * @param {EXPECTED_ANY=} context carried through to every visitor call
- * @returns {Schema} the processed node
- */
-const processSchema = (visitor, json, context) => {
-	json = { ...json };
-	if (visitor.schema) json = visitor.schema(json, context);
-
-	for (const name of NESTED_WITH_NAME) {
-		if (name in json && json[name] && typeof json[name] === "object") {
-			if (visitor.object) json[name] = visitor.object(json[name], context);
-			for (const key in json[name]) {
-				json[name][key] = processSchema(visitor, json[name][key], context);
-			}
-		}
-	}
-	for (const name of NESTED_DIRECT) {
-		if (name in json && json[name] && typeof json[name] === "object") {
-			json[name] = processSchema(visitor, json[name], context);
-		}
-	}
-	for (const name of NESTED_ARRAY) {
-		if (name in json && Array.isArray(json[name])) {
-			json[name] = [...json[name]];
-			for (let i = 0; i < json[name].length; i++) {
-				json[name][i] = processSchema(visitor, json[name][i], context);
-			}
-			if (visitor.array) visitor.array(json[name], context);
-		}
-	}
-
-	return json;
-};
-
-/**
- * @typedef {object} SchemaFile
- * @property {string} absPath absolute path of the schema
- * @property {string} relPath path relative to the directory every schema shares
- * @property {string} basename the schema's name without its extension
- * @property {() => Schema} parse the file's own copy of the parsed schema
- */
-
-/**
- * Reads every schema from disk once; each consumer parses its own copy, because
- * the declaration pass rewrites the tree the validator pass reads.
- * @returns {SchemaFile[]} every schema, ordered by path
- */
-const loadSchemas = () => {
-	const absPaths = globSync(schemasGlob, { cwd: root, absolute: true }).sort();
-	// Over the paths themselves a lone match is its own common directory, which
-	// leaves every path below relative to nothing
-	const commonDir = path.resolve(findCommonDir(absPaths.map(path.dirname)));
-	return absPaths.map((absPath) => {
-		const content = fs.readFileSync(absPath, "utf8");
-		return {
-			absPath,
-			relPath: path.relative(commonDir, absPath),
-			basename: path.basename(absPath, path.extname(absPath)),
-			parse: () => JSON.parse(content)
-		};
-	});
-};
-
-/**
- * Compiles every schema into the declaration file its options are read from.
- * These are build output rather than a tracked artifact, so they are written
- * whatever the mode: a checkout that has never generated them has none
- * @param {SchemaFile[]} schemas every schema, already read
- * @returns {Promise<boolean>} whether every declaration could be written
- */
-const makeDeclarations = async (schemas) => {
-	const results = await Promise.all(schemas.map(makeDefinitionsForSchema));
-	return results.every(Boolean);
-};
-
-/**
- * @param {SchemaFile} schemaFile the schema to compile
- * @returns {Promise<boolean>} whether the declaration is up to date
- */
-const makeDefinitionsForSchema = async (schemaFile) => {
-	const { relPath, basename } = schemaFile;
-	if (path.basename(relPath).startsWith("_")) return true;
-	const directory = path.dirname(relPath);
-	const filename = path.resolve(
-		root,
-		declarations,
-		`${path.join(directory, basename)}.d.ts`
-	);
-	const schema = schemaFile.parse();
-	const keys = Object.keys(schema);
-	if (keys.length === 1 && keys[0] === "$ref") return true;
-
-	const prettierConfig = await prettier.resolveConfig(
-		path.resolve(root, declarations, "result.d.ts")
-	);
-	if (!prettierConfig) {
-		throw new Error("Prettier options not found");
-	}
-
-	const style = {
-		printWidth: prettierConfig.printWidth,
-		useTabs: prettierConfig.useTabs,
-		tabWidth: prettierConfig.tabWidth
-	};
-
-	preprocessSchema(schema);
-	return compile(schema, basename, {
-		bannerComment:
-			"/*\n * This file was automatically generated.\n * DO NOT MODIFY BY HAND.\n * Run `yarn fix:special` to update\n */",
-		unreachableDefinitions: true,
-		unknownAny: false,
-		style
-	}).then(
-		(ts) => {
-			ts = ts.replace(
-				/\s+\*\s+\* This interface was referenced by `.+`'s JSON-Schema\s+\* via the `definition` ".+"\./g,
-				""
-			);
-			let normalizedContent = "";
-			try {
-				const content = fs.readFileSync(filename, "utf8");
-				normalizedContent = content.replace(/\r\n?/g, "\n");
-			} catch (_err) {
-				// ignore
-			}
-			if (normalizedContent.trim() === ts.trim()) return true;
-			fs.mkdirSync(path.dirname(filename), { recursive: true });
-			fs.writeFileSync(filename, ts, "utf8");
-			if (verbose) {
-				console.error(
-					`declarations/${relPath.replace(/\\/g, "/")}.d.ts updated`
-				);
-			}
-			return true;
-		},
-		(err) => {
-			console.error(err);
-			return false;
-		}
-	);
-};
-
-/**
- * @param {Schema} root the schema the reference is relative to
- * @param {string} ref a `#/`-prefixed JSON pointer
- * @returns {Schema} the referenced schema
- */
-const resolvePath = (root, ref) => {
-	const parts = ref.split("/");
-	if (parts[0] !== "#") throw new Error("Unexpected ref");
-	let current = root;
-	for (const p of parts.slice(1)) {
-		current = current[p];
-	}
-	return current;
-};
-
-/**
- * Folds the documentation-only keywords into descriptions and splits the shapes
- * `json-schema-to-typescript` cannot express into named definitions.
- * @param {Schema} schema the schema node to process
- * @param {Schema=} root the schema the node belongs to
- * @param {string[]=} path the property names walked to reach the node
- * @returns {void}
- */
-const preprocessSchema = (schema, root = schema, path = []) => {
-	if (schema.added) {
-		const added =
-			typeof schema.added === "string" ? `@since ${schema.added}` : "@since";
-		schema.description = schema.description
-			? `${schema.description}\n${added}`
-			: added;
-		delete schema.added;
-	}
-	if (schema.experimental) {
-		const experimental =
-			typeof schema.experimental === "string"
-				? `@experimental ${schema.experimental}`
-				: "@experimental";
-		schema.description = schema.description
-			? `${schema.description}\n${experimental}`
-			: experimental;
-		delete schema.experimental;
-	}
-	if ("definitions" in schema) {
-		for (const key of Object.keys(schema.definitions)) {
-			preprocessSchema(schema.definitions[key], root, [key]);
-		}
-	}
-	if ("properties" in schema) {
-		for (const key of Object.keys(schema.properties)) {
-			const property = schema.properties[key];
-			if ("$ref" in property) {
-				const result = resolvePath(root, property.$ref);
-				if (!result) {
-					throw new Error(
-						`Unable to resolve "$ref": "${property.$ref}" in ${path.join("/")}`
-					);
-				}
-				schema.properties[key] = {
-					description: result.description,
-					deprecated: result.deprecated,
-					experimental: result.experimental,
-					added: result.added,
-					anyOf: [property]
-				};
-			} else if (
-				"oneOf" in property &&
-				property.oneOf.length === 1 &&
-				"$ref" in property.oneOf[0]
-			) {
-				const result = resolvePath(root, property.oneOf[0].$ref);
-				schema.properties[key] = {
-					description: property.description || result.description,
-					deprecated: property.deprecated || result.deprecated,
-					experimental: property.experimental || result.experimental,
-					added: property.added || result.added,
-					anyOf: property.oneOf
-				};
-				preprocessSchema(schema.properties[key], root, [...path, key]);
-			} else {
-				preprocessSchema(property, root, [...path, key]);
-			}
-		}
-	}
-	if ("items" in schema) {
-		preprocessSchema(schema.items, root, [...path, "item"]);
-	}
-	if (typeof schema.additionalProperties === "object") {
-		preprocessSchema(schema.additionalProperties, root, [...path, "property"]);
-	}
-	const arrayProperties = ["oneOf", "anyOf", "allOf"];
-	for (const prop of arrayProperties) {
-		if (Array.isArray(schema[prop])) {
-			let i = 0;
-			for (const item of schema[prop]) {
-				preprocessSchema(item, root, [...path, item.type || i++]);
-			}
-		}
-	}
-	if ("type" in schema && schema.type === "array") {
-		// Workaround for a typescript bug that
-		// string[] is not assignable to [string, ...string]
-		delete schema.minItems;
-	}
-	if ("implements" in schema) {
-		const implementedProps = new Set();
-		const implementedNames = [];
-		for (const impl of [schema.implements].flat()) {
-			const referencedSchema = resolvePath(root, impl);
-			for (const prop of Object.keys(referencedSchema.properties)) {
-				implementedProps.add(prop);
-			}
-			implementedNames.push(
-				/** @type {RegExpExecArray} */ (/\/([^/]+)$/.exec(impl))[1]
-			);
-		}
-		const propEntries = Object.entries(schema.properties).filter(
-			([name]) => !implementedProps.has(name)
-		);
-		if (propEntries.length > 0) {
-			const key = `${path
-				.map((x) => x[0].toUpperCase() + x.slice(1))
-				.join("")}Extra`;
-			implementedNames.push(key);
-			// `implements` is a reserved word under strict mode, so it is dropped
-			// from the copy rather than destructured out of it
-			const remainingSchema = { ...schema };
-			delete remainingSchema.implements;
-			root.definitions[key] = {
-				...remainingSchema,
-				properties: Object.fromEntries(propEntries)
-			};
-			preprocessSchema(root.definitions[key], root, [key]);
-		}
-		schema.tsType = implementedNames.join(" & ");
-		return;
-	}
-	if (
-		"properties" in schema &&
-		typeof schema.additionalProperties === "object" &&
-		!schema.tsType
-	) {
-		const { properties, additionalProperties, ...remaining } = schema;
-		const key1 = `${path
-			.map((x) => x[0].toUpperCase() + x.slice(1))
-			.join("")}Known`;
-		const key2 = `${path
-			.map((x) => x[0].toUpperCase() + x.slice(1))
-			.join("")}Unknown`;
-		root.definitions[key1] = {
-			...remaining,
-			properties,
-			additionalProperties: false
-		};
-		preprocessSchema(root.definitions[key1], root, [key1]);
-		root.definitions[key2] = {
-			...remaining,
-			additionalProperties
-		};
-		preprocessSchema(root.definitions[key2], root, [key2]);
-		schema.tsType = `${key1} & ${key2}`;
-	}
-};
-
-const ajv = new Ajv({
-	code: { source: true, optimize: true },
-	messages: false,
-	strictNumbers: false,
-	logger: false,
+const declaringModules = () => {
+	if (declaring) return declaring;
+	/** @type {Map<string, string>} */
+	const found = new Map();
 	/**
-	 * @param {string} uri the `$ref` being resolved
-	 * @returns {Promise<import("ajv").AnySchemaObject>} the referenced schema
+	 * @param {string} directory the directory to read
+	 * @returns {void}
 	 */
-	loadSchema: async (uri) => {
-		const schemaPath = fileURLToPath(uri);
-
-		const schema = require(schemaPath);
-
-		const processedSchema = processJson(schema);
-		processedSchema.$id = uri;
-		return processedSchema;
-	}
-});
-
-ajv.addKeyword({
-	keyword: "instanceof",
-	schemaType: "string",
-	code(ctx) {
-		const { data, schema } = ctx;
-		ctx.fail(_`!(${data} instanceof ${new Name(schema)})`);
-	}
-});
-
-ajv.addKeyword({
-	keyword: "absolutePath",
-	type: "string",
-	schemaType: "boolean",
-
-	code(ctx) {
-		const { data, schema } = ctx;
-		ctx.fail(
-			_`${data}.includes("!") || (absolutePathRegExp.test(${data}) !== ${schema})`
-		);
-	}
-});
-
-ajv.removeKeyword("minLength");
-ajv.addKeyword({
-	keyword: "minLength",
-	type: "string",
-	schemaType: "number",
-
-	code(ctx) {
-		const { data } = ctx;
-		ctx.fail(_`${data}.length < 1`);
-	}
-});
-
-ajv.addKeyword({
-	keyword: "undefinedAsNull",
-	schemaType: "boolean",
-
-	code(ctx) {
-		// Nothing, just to avoid failing
-	}
-});
-ajv.removeKeyword("enum");
-ajv.addKeyword({
-	keyword: "enum",
-	schemaType: "array",
-	$data: true,
-
-	code(ctx) {
-		const { data, schema, parentSchema } = ctx;
-		ctx.fail(
-			schema
-				.map(
-					/**
-					 * @param {EXPECTED_ANY} x one allowed value
-					 * @returns {import("ajv").Code} the check rejecting it
-					 */
-					(x) => {
-						if (x === null && parentSchema.undefinedAsNull) {
-							return _`${data} !== null && ${data} !== undefined`;
-						}
-
-						return _`${data} !== ${x}`;
-					}
-				)
-				.reduce(
-					/**
-					 * @param {import("ajv").Code} a the checks so far
-					 * @param {import("ajv").Code} b the next check
-					 * @returns {import("ajv").Code} both checks joined
-					 */
-					(a, b) => _`${a} && ${b}`
-				)
-		);
-	}
-});
-
-const EXCLUDED_PROPERTIES = [
-	"title",
-	"description",
-	"deprecated",
-	"experimental",
-	"added",
-	"cli",
-	"implements",
-	"tsType"
-];
-
-const processJson = processSchema.bind(null, {
-	schema: (json) => {
-		for (const p of EXCLUDED_PROPERTIES) {
-			delete json[p];
+	const walk = (directory) => {
+		for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
+			const absolute = path.resolve(directory, entry.name);
+			if (entry.isDirectory()) {
+				walk(absolute);
+			} else if (entry.name.endsWith(".js")) {
+				const text = fs.readFileSync(absolute, "utf8");
+				if (!text.includes("@schema ")) continue;
+				for (const [, named] of text.matchAll(/@schema[ \t]+([\w/-]+)/g)) {
+					found.set(named, absolute.replace(/\.js$/, ""));
+				}
+			}
 		}
-		return json;
-	}
-});
-
-/**
- * @param {string} code the generated validator source
- * @returns {Promise<string>} the source with hoisted values and minified
- */
-const postprocess = async (code) => {
-	// Keep in sync with the `absolutePath` keyword of `schema-utils`, the
-	// pre-compiled schema has to accept exactly what the real one accepts
-	if (/absolutePathRegExp/.test(code)) {
-		code = `const absolutePathRegExp = /^(?:file:(?=\\/))?(?:[A-Za-z]:[\\\\/]|\\\\\\\\|\\/)/i;${code}`;
-	}
-
-	// remove unnecessary error code:
-	code = code
-		.replace(/\{instancePath[^{}]+,keyword:[^{}]+,/g, "{")
-		// remove extra "$id" property
-		.replace(/"\$id":".+?"/, "");
-
-	// minimize
-	const minified = await terser.minify(code, {
-		compress: {
-			passes: 3
-		},
-		mangle: true,
-		ecma: 2015,
-		toplevel: true
-	});
-
-	code = /** @type {string} */ (minified.code);
-
-	// banner
-	code = `/*
- * This file was automatically generated.
- * DO NOT MODIFY BY HAND.
- * Run \`yarn fix:special\` to update
- */
-${code}`;
-	return code;
+	};
+	walk(path.resolve(root, "lib"));
+	declaring = found;
+	return found;
 };
 
-/**
- * @param {string} schemaPath absolute path of the schema
- * @param {string} title the schema's title
- * @param {string} relPath the schema's path relative to the schemas directory
- * @returns {string} the declaration file's content
- */
-const createDeclaration = (schemaPath, title, relPath) => {
-	const directory = path.dirname(relPath);
-	const basename = path.basename(relPath, path.extname(relPath));
-	const filename = path.resolve(
-		root,
-		declarations,
-		`${path.join(directory, basename)}`
-	);
-	const fromSchemaToDeclaration = path
-		.relative(path.dirname(schemaPath), filename)
-		.replace(/\\/g, "/");
-	return `/*
- * This file was automatically generated.
- * DO NOT MODIFY BY HAND.
- * Run \`yarn fix:special\` to update
- */
-declare const check: (options: ${
-		title
-			? `import(${JSON.stringify(fromSchemaToDeclaration)}).${title}`
-			: "any"
-	}) => boolean;
-export = check;
-`;
-};
-
-/**
- * @param {string} path the file to compare against
- * @param {string} expected the content the file must hold
- * @returns {boolean} whether the file already holds it
- */
-const updateFile = (path, expected) => {
-	let normalizedContent = "";
-	try {
-		const content = fs.readFileSync(path, "utf8");
-		normalizedContent = content.replace(/\r\n?/g, "\n");
-	} catch (_err) {
-		// ignore
-	}
-	if (normalizedContent.trim() === expected.trim()) return true;
-	if (doWrite) {
-		fs.writeFileSync(path, expected, "utf8");
-		console.error(`${path} updated`);
-		return true;
-	}
-	console.error(`${path} need to be updated\nExpected:\n${expected}`);
-	return false;
-};
-
-/**
- * @param {SchemaFile} schemaFile the schema to precompile
- * @returns {Promise<boolean>} whether the validator is up to date
- */
-const precompileSchema = async (schemaFile) => {
-	const { absPath: schemaPath, relPath } = schemaFile;
-	if (path.basename(schemaPath).startsWith("_")) return true;
-	try {
-		const schema = schemaFile.parse();
-
-		const title = schema.title;
-		const processedSchema = processJson(schema);
-		processedSchema.$id = pathToFileURL(schemaPath).href;
-		const validate = await ajv.compileAsync(processedSchema);
-		const code = await postprocess(standaloneCode(ajv, validate));
-		const precompiledSchemaPath = schemaPath.replace(/\.json$/, ".check.js");
-		const precompiledSchemaDeclarationPath = schemaPath.replace(
-			/\.json$/,
-			".check.d.ts"
-		);
-		const codeIsCurrent = updateFile(precompiledSchemaPath, code);
-		const declarationIsCurrent = updateFile(
-			precompiledSchemaDeclarationPath,
-			createDeclaration(schemaPath, title, relPath)
-		);
-		return codeIsCurrent && declarationIsCurrent;
-	} catch (err) {
-		const error = /** @type {Error} */ (err);
-
-		error.message += `\nduring precompilation of ${schemaPath}`;
-		throw error;
-	}
-};
-
-/**
- * Compiles every schema into the standalone validator webpack validates with.
- * @param {SchemaFile[]} schemas every schema, already read
- * @returns {Promise<boolean>} whether every validator is up to date
- */
-const precompileSchemas = async (schemas) => {
-	// One `ajv` instance holds them all, and a `$ref` adds the schema it names,
-	// so a schema must not be compiled after another compile has loaded it
-	const results = await Promise.all(schemas.map(precompileSchema));
-	return results.every(Boolean);
-};
-
-process.exitCode = 1;
 let exitCode = 0;
 let hasUnresolvableTypes = false;
 
@@ -693,191 +148,588 @@ const flatten = (iterable) => {
  */
 const quoteMeta = (str) => str.replace(/[-[\]\\/{}()*+?.^$|]/g, "\\$&");
 
+/**
+ * Every distinct tuple element, numbered, so a tuple can be a string key: a
+ * `Map` compares an array key by identity, not by what the array holds.
+ * @type {Map<EXPECTED_ANY, number>}
+ */
+const tupleElements = new Map();
+
+/**
+ * @param {EXPECTED_ANY[]} tuple the key tuple
+ * @returns {string} a key equal for equal elements in equal order
+ */
+const tupleKey = (tuple) => {
+	let key = "";
+	for (const element of tuple) {
+		let id = tupleElements.get(element);
+		if (id === undefined) {
+			id = tupleElements.size;
+			tupleElements.set(element, id);
+		}
+		// An id holds no comma, so no two tuples share a key
+		key += `${id},`;
+	}
+	return key;
+};
+
+/** A `Map` taking a tuple of anything as its key. */
 class TupleMap {
 	constructor() {
-		/** @type {Map<any, { map: TupleMap | undefined, hasValue: boolean, value: any }>} */
+		/** @type {Map<string, EXPECTED_ANY>} */
 		this.map = new Map();
 	}
 
 	/**
-	 * @param {any[]} tuple tuple
-	 * @returns {any} value or undefined
+	 * @param {EXPECTED_ANY[]} tuple the key tuple
+	 * @returns {EXPECTED_ANY} the value held for it, or `undefined`
 	 */
 	get(tuple) {
-		return this._get(tuple, 0);
+		return this.map.get(tupleKey(tuple));
 	}
 
 	/**
 	 * @param {EXPECTED_ANY[]} tuple the key tuple
-	 * @param {number} index how far into the tuple this level is
-	 * @returns {EXPECTED_ANY} the value at that tuple
-	 */
-	_get(tuple, index) {
-		const entry = this.map.get(tuple[index]);
-		if (entry === undefined) return undefined;
-		if (tuple.length === index + 1) return entry.value;
-		if (entry.map === undefined) return undefined;
-		return entry.map._get(tuple, index + 1);
-	}
-
-	/**
-	 * @param {any[]} tuple tuple
-	 * @returns {boolean} true, if it's in the map
+	 * @returns {boolean} whether the tuple is present
 	 */
 	has(tuple) {
-		return this._has(tuple, 0);
+		return this.map.has(tupleKey(tuple));
 	}
 
 	/**
 	 * @param {EXPECTED_ANY[]} tuple the key tuple
-	 * @param {number} index how far into the tuple this level is
-	 * @returns {boolean} true when the tuple is present
-	 */
-	_has(tuple, index) {
-		const entry = this.map.get(tuple[index]);
-		if (entry === undefined) return false;
-		if (tuple.length === index + 1) return entry.hasValue;
-		if (entry.map === undefined) return false;
-		return entry.map._has(tuple, index + 1);
-	}
-
-	/**
-	 * @param {any[]} tuple tuple
-	 * @param {any} value the new value
+	 * @param {EXPECTED_ANY} value the value to hold for it
 	 * @returns {void}
 	 */
 	set(tuple, value) {
-		return this._set(tuple, 0, value);
+		this.map.set(tupleKey(tuple), value);
 	}
 
 	/**
 	 * @param {EXPECTED_ANY[]} tuple the key tuple
-	 * @param {number} index how far into the tuple this level is
-	 * @param {EXPECTED_ANY} value the new value
-	 * @returns {void} nothing
-	 */
-	_set(tuple, index, value) {
-		let entry = this.map.get(tuple[index]);
-		if (entry === undefined) {
-			entry = { map: undefined, hasValue: false, value: undefined };
-			this.map.set(tuple[index], entry);
-		}
-		if (tuple.length === index + 1) {
-			entry.hasValue = true;
-			entry.value = value;
-			return;
-		}
-		if (entry.map === undefined) {
-			entry.map = new TupleMap();
-		}
-		entry.map._set(tuple, index + 1, value);
-	}
-
-	/**
-	 * @param {any[]} tuple tuple
 	 * @returns {void}
 	 */
 	add(tuple) {
-		return this._add(tuple, 0);
+		this.map.set(tupleKey(tuple), undefined);
 	}
 
 	/**
 	 * @param {EXPECTED_ANY[]} tuple the key tuple
-	 * @param {number} index how far into the tuple this level is
-	 * @returns {void} nothing
-	 */
-	_add(tuple, index) {
-		let entry = this.map.get(tuple[index]);
-		if (entry === undefined) {
-			entry = { map: undefined, hasValue: false, value: undefined };
-			this.map.set(tuple[index], entry);
-		}
-		if (tuple.length === index + 1) {
-			entry.hasValue = true;
-			entry.value = undefined;
-			return;
-		}
-		if (entry.map === undefined) {
-			entry.map = new TupleMap();
-		}
-		entry.map._add(tuple, index + 1);
-	}
-
-	/**
-	 * @param {any[]} tuple tuple
 	 * @returns {void}
 	 */
 	delete(tuple) {
-		return this._delete(tuple, 0);
-	}
-
-	/**
-	 * @param {EXPECTED_ANY[]} tuple the key tuple
-	 * @param {number} index how far into the tuple this level is
-	 * @returns {void} nothing
-	 */
-	_delete(tuple, index) {
-		const entry = this.map.get(tuple[index]);
-		if (entry === undefined) {
-			return;
-		}
-		if (tuple.length === index + 1) {
-			entry.hasValue = false;
-			entry.value = undefined;
-			if (entry.map === undefined) {
-				this.map.delete(tuple[index]);
-			}
-			return;
-		}
-		if (entry.map === undefined) {
-			return;
-		}
-		entry.map._delete(tuple, index + 1);
-		if (entry.map.map.size === 0) {
-			entry.map = undefined;
-			if (!entry.hasValue) {
-				this.map.delete(tuple[index]);
-			}
-		}
-	}
-
-	/**
-	 * @returns {EXPECTED_ANY[]} every value in the map, at any depth
-	 */
-	values() {
-		/** @type {EXPECTED_ANY[]} */
-		const values = [];
-		for (const entry of this.map.values()) {
-			if (entry.hasValue) values.push(entry.value);
-			if (entry.map !== undefined) {
-				values.push(...entry.map.values());
-			}
-		}
-		return values;
+		this.map.delete(tupleKey(tuple));
 	}
 }
 
-(async () => {
-	const rootPath = path.resolve(root);
+/** @typedef {{ name: string, optional: boolean, spread: boolean, documentation: string, type: ts.Type }} ParsedParameter */
+/** @typedef {{ documentation: string, typeParameters?: readonly ts.Type[], args: ParsedParameter[], thisType?: ts.Type, returnType: ts.Type, abstract: boolean }} ParsedSignature */
+/** @typedef {string[]} SymbolName */
+/** @typedef {Map<string, { type: ts.Type, method: boolean, optional: boolean, readonly: boolean, getter: boolean, documentation: string }>} PropertiesMap */
 
-	// The declarations have to be on disk before the program below reads them,
-	// and both passes run before any report so one run names every stale output
-	const schemas = loadSchemas();
-	const declarationsAreCurrent = await makeDeclarations(schemas);
-	const validatorsAreCurrent = await precompileSchemas(schemas);
-	if (!declarationsAreCurrent || !validatorsAreCurrent) {
-		exitCode = 1;
+/** @typedef {{ type: "primitive", name: string }} ParsedPrimitiveType */
+/** @typedef {{ type: "typeParameter", name: string, constraint?: ts.Type, defaultValue?: ts.Type }} ParsedTypeParameterType */
+/** @typedef {{ type: "tuple", typeArguments: readonly ts.Type[] }} ParsedTupleType */
+/** @typedef {{ type: "interface", symbolName: SymbolName, subtype: "class" | "module" | "literal" | undefined, properties: PropertiesMap, constructors: ParsedSignature[], calls: ParsedSignature[], numberIndex?: ts.Type, stringIndex?: ts.Type, typeParameters?: readonly ts.Type[], baseTypes: readonly ts.Type[], documentation: string }} ParsedInterfaceType */
+/** @typedef {{ type: "class" | "typeof class", symbolName: SymbolName, properties: PropertiesMap, staticProperties: PropertiesMap, constructors: ParsedSignature[], numberIndex?: ts.Type, stringIndex?: ts.Type, typeParameters?: readonly ts.Type[], baseType: ts.Type, correspondingType: ts.Type | undefined, documentation: string }} MergedClassType */
+/** @typedef {{ type: "namespace", symbolName: SymbolName, calls: ParsedSignature[], exports: PropertiesMap }} MergedNamespaceType */
+/** @typedef {{ type: "reference", target: ts.Type, typeArguments: readonly ts.Type[], typeArgumentsWithoutDefaults: readonly ts.Type[] }} ParsedReferenceType */
+/** @typedef {{ type: "union", symbolName: SymbolName, types: ts.Type[], typeParameters?: readonly ts.Type[] }} ParsedUnionType */
+/** @typedef {{ type: "intersection", symbolName: SymbolName, types: ts.Type[], typeParameters?: readonly ts.Type[] }} ParsedIntersectionType */
+/** @typedef {{ type: "index", symbolName: SymbolName, objectType: ts.Type, indexType: ts.Type }} ParsedIndexType */
+/** @typedef {{ type: "template", texts: readonly string[], types: readonly ts.Type[] }} ParsedTemplateType */
+/** @typedef {{ type: "import", symbolName: SymbolName, exportName: string, from: string, isValue: boolean }} ParsedImportType */
+/** @typedef {{ type: "symbol", symbolName: SymbolName }} ParsedSymbolType */
+/** @typedef {{ type: "conditional", symbolName: SymbolName, checkType: ts.Type, extendsType: ts.Type, trueType: ts.Type, falseType: ts.Type, typeParameters?: readonly ts.Type[] }} ParsedConditionalType */
+/** @typedef {ParsedPrimitiveType | ParsedTypeParameterType | ParsedTupleType | ParsedInterfaceType | ParsedReferenceType | ParsedUnionType | ParsedIntersectionType | ParsedIndexType | ParsedTemplateType | ParsedImportType | ParsedSymbolType | ParsedConditionalType} ParsedType */
+/** @typedef {ParsedType | MergedClassType | MergedNamespaceType} MergedType */
+
+/**
+ * @param {ts.SourceFile | undefined} source the file to test
+ * @returns {boolean} true when the file is a module
+ */
+const isSourceFileModule = (source) => {
+	const sourceAsAny = /** @type {any} */ (source);
+	return Boolean(
+		sourceAsAny &&
+		(sourceAsAny.externalModuleIndicator || sourceAsAny.commonJsModuleIndicator)
+	);
+};
+
+/**
+ * @param {SymbolWithParent} symbol the symbol to name
+ * @returns {string} the symbol's name, prefixed by every enclosing one
+ */
+const getFullEscapedName = (symbol) => {
+	let current = symbol;
+	let name = current.escapedName.toString();
+	while (current.parent) {
+		current = current.parent;
+		if (
+			current.escapedName === undefined ||
+			current.escapedName.toString() === "__global"
+		) {
+			break;
+		}
+		name = `${current.escapedName.toString()}.${name}`;
+	}
+	return name;
+};
+
+/**
+ * @param {ts.Symbol} symbol symbol
+ * @returns {string} location of the symbol for error messages
+ */
+const getSymbolLocation = (symbol) => {
+	const decls = symbol.getDeclarations();
+	const decl = decls && decls[0];
+	if (!decl) return "<unknown location>";
+	const source = decl.getSourceFile();
+	const { line, character } = ts.getLineAndCharacterOfPosition(
+		source,
+		decl.getStart()
+	);
+	return `${source.fileName} (${line + 1},${character + 1})`;
+};
+
+/**
+ * Renders a documentation block onto one line, for a place that has no
+ * line of its own — an export specifier inside `export { … }`.
+ * @param {string} documentation a block from `getDocumentation`
+ * @returns {string} the same content as a one-line block comment
+ */
+const toInlineDocumentation = (documentation) => {
+	const content = documentation
+		.split("\n")
+		.map((line) => line.replace(/^\s*\/?\*+\/?/, "").trim())
+		.filter(Boolean)
+		.join(" ");
+	return `/** ${content} */ `;
+};
+
+/**
+ * @param {ts.SourceFile} sourceFile the file to test
+ * @returns {boolean} true when it comes from node_modules
+ */
+const isNodeModulesSource = (sourceFile) =>
+	sourceFile.isDeclarationFile &&
+	sourceFile.fileName.slice(ROOT_PATH.length + 1).startsWith("node_modules/");
+
+/**
+ * @param {ts.Program} program the program the file was read into
+ * @param {ts.SourceFile} sourceFile the file to look up
+ * @returns {ts.SourceFile | undefined} the package's own type declarations
+ */
+const getRootPackage = (program, sourceFile) => {
+	const match = /^(node_modules\/(@[^/]+\/)?[^/]+)/.exec(
+		sourceFile.fileName.slice(ROOT_PATH.length + 1)
+	);
+	if (!match) return undefined;
+
+	const pkg = require(`${ROOT_PATH}/${match[1]}/package.json`);
+
+	const types = pkg.types || "index.d.ts";
+	return program.getSourceFile(`${ROOT_PATH}/${match[1]}/${types}`);
+};
+
+/**
+ * @param {string} name the type name to test
+ * @returns {boolean} true when it is one of the typed array types
+ */
+const isArrayBufferLike = (name) =>
+	[
+		"Uint8Array",
+		"Uint8ClampedArray",
+		"Uint16Array",
+		"Uint32Array",
+		"Int8Array",
+		"Int16Array",
+		"Int32Array",
+		"BigUint64Array",
+		"BigInt64Array",
+		"Float16Array",
+		"Float32Array",
+		"Float64Array",
+		"DataView",
+		"Buffer"
+	].includes(name);
+
+/**
+ * @param {MergedType} parsed the parsed type
+ * @returns {boolean} true when it is a bare call signature
+ */
+const isSimpleFunction = (parsed) =>
+	parsed.type === "interface" &&
+	parsed.properties.size === 0 &&
+	parsed.constructors.length === 0 &&
+	parsed.calls.length === 1 &&
+	(!parsed.typeParameters || parsed.typeParameters.length === 0);
+
+/**
+ * @param {MergedType} parsed the parsed type
+ * @returns {boolean} true when it is one abstract construct signature, which only a type alias can express
+ */
+const isAbstractConstructor = (parsed) =>
+	parsed.type === "interface" &&
+	parsed.properties.size === 0 &&
+	parsed.calls.length === 0 &&
+	parsed.constructors.length === 1 &&
+	parsed.constructors[0].abstract &&
+	!parsed.numberIndex &&
+	!parsed.stringIndex &&
+	parsed.baseTypes.length === 0;
+
+/**
+ * @param {string} prefix what kind of signature it is
+ * @param {ParsedSignature} signature the signature to hash
+ * @param {number} index its position among the type's signatures
+ * @returns {EXPECTED_ANY[]} the hash parts
+ */
+const getSigHash = (prefix, signature, index) => {
+	const { args, returnType, typeParameters, documentation } = signature;
+	const typeParametersMap = new Map(
+		typeParameters && typeParameters.map((t, i) => [t, i])
+	);
+	return [
+		"args",
+		...flatten(
+			args.map((arg) => [
+				arg.name,
+				arg.optional,
+				arg.spread,
+				arg.type,
+				arg.documentation
+			])
+		),
+		"return",
+		returnType,
+		"typeParameters",
+		typeParameters ? typeParameters.length : 0,
+		"documentation",
+		documentation
+	].map((item) => {
+		const x = typeParametersMap.get(item);
+		return x === undefined ? item : `${prefix}${index}_${x}`;
+	});
+};
+
+/**
+ * @param {MergedType} parsed type
+ * @returns {any[] | undefined} hash
+ */
+const getTypeHash = (parsed) => {
+	switch (parsed.type) {
+		case "primitive": {
+			return [parsed.type, parsed.name];
+		}
+		case "typeParameter": {
+			return [parsed.type, parsed.name, parsed.constraint, parsed.defaultValue];
+		}
+		case "template": {
+			return [parsed.type, ...parsed.texts, ...parsed.types];
+		}
+		case "reference": {
+			const { target, typeArgumentsWithoutDefaults } = parsed;
+			if (typeArgumentsWithoutDefaults.length === 0) return undefined;
+			return [parsed.type, target, ...typeArgumentsWithoutDefaults];
+		}
+		case "index": {
+			const { objectType, indexType } = parsed;
+			return [parsed.type, objectType, indexType];
+		}
+		case "union":
+		case "intersection": {
+			const { symbolName, types, typeParameters } = parsed;
+			const typeParametersMap = new Map(
+				typeParameters && typeParameters.map((t, i) => [t, i])
+			);
+			return [
+				parsed.type,
+				symbolName[0],
+				typeParameters ? typeParameters.length : 0,
+				...types
+			].map((item) => {
+				const x = typeParametersMap.get(/** @type {ts.Type} */ (item));
+				return x === undefined ? item : x;
+			});
+		}
+		case "conditional": {
+			const { symbolName, checkType, extendsType, trueType, falseType } =
+				parsed;
+			return [
+				parsed.type,
+				symbolName[0],
+				checkType,
+				extendsType,
+				trueType,
+				falseType
+			];
+		}
+		case "interface": {
+			const {
+				symbolName,
+				baseTypes,
+				calls,
+				constructors,
+				properties,
+				numberIndex,
+				stringIndex,
+				typeParameters,
+				documentation
+			} = parsed;
+			if (
+				calls.length === 0 &&
+				constructors.length === 0 &&
+				properties.size === 0 &&
+				!numberIndex &&
+				!stringIndex
+			) {
+				// need to have something unique
+				return undefined;
+			}
+			const callHashes = calls.map(getSigHash.bind(null, "call"));
+			if (callHashes.some((x) => !x)) return undefined;
+			const constructorHashes = constructors.map(
+				getSigHash.bind(null, "constructor")
+			);
+			if (constructorHashes.some((x) => !x)) return undefined;
+			const typeParametersMap = new Map(
+				typeParameters && typeParameters.map((t, i) => [t, i])
+			);
+			return [
+				parsed.type,
+				symbolName[0],
+				"base",
+				...baseTypes,
+				"calls",
+				...flatten(callHashes),
+				"constructors",
+				...flatten(constructorHashes),
+				"properties",
+				...flatten(
+					Array.from(properties, ([name, { type, optional }]) => [
+						name,
+						type,
+						optional
+					])
+				),
+				"numberIndex",
+				numberIndex,
+				"stringIndex",
+				stringIndex,
+				"typeParameters",
+				typeParameters ? typeParameters.length : 0,
+				"documentation",
+				documentation
+			].map((item) => {
+				const x = typeParametersMap.get(item);
+				return x === undefined ? item : x;
+			});
+		}
+	}
+	return undefined;
+};
+
+/**
+ * @param {string} code the rendered type
+ * @param {boolean=} optional whether it is already known to be optional
+ * @returns {{ code: string, optional: boolean }} the type without its `undefined`
+ */
+const extractOptional = (code, optional = false) => {
+	if (code.startsWith("(undefined | ")) {
+		return {
+			code: `(${code.slice("(undefined | ".length)}`,
+			optional: true
+		};
+	} else if (code.endsWith(" | undefined)")) {
+		return {
+			code: `${code.slice(0, -" | undefined)".length)})`,
+			optional: true
+		};
+	}
+	return {
+		code,
+		optional
+	};
+};
+
+/**
+ * @typedef {object} GeneratorOptions
+ * @property {Record<string, RegExp>} nameMapping preferred name per matching key
+ * @property {Record<string, string>} typeMapping replacement type per matching name
+ * @property {RegExp[]} exclude names to leave out
+ * @property {RegExp[]} include names to keep
+ */
+
+// The tags a consumer acts on, so they are carried into the declarations
+// rather than left behind in the source.
+const FORWARDED_TAG_NAMES = ["since", "deprecated", "experimental"];
+const FORWARDED_TAG_REGEXP = new RegExp(
+	`@(?:${FORWARDED_TAG_NAMES.join("|")})\\b`
+);
+
+/**
+ * @param {ts.Symbol | undefined} symbol the symbol to look up
+ * @returns {ts.Declaration | undefined} the declaration it was declared by
+ */
+const getDeclaration = (symbol) => {
+	if (!symbol) return undefined;
+	/** @type {ts.Declaration | undefined} */
+	let decl;
+	if (symbol.valueDeclaration) {
+		decl = symbol.valueDeclaration;
+	} else {
+		const decls = symbol.getDeclarations();
+		if (decls) decl = decls[0];
+	}
+	if (decl) {
+		const symbol = /** @type {any} */ (decl).symbol;
+		if (symbol && symbol.name === ts.InternalSymbolName.Type && decl.parent) {
+			const parent = decl.parent;
+			if (parent.kind === ts.SyntaxKind.TypeAliasDeclaration) {
+				decl = /** @type {ts.Declaration} */ (parent);
+			}
+			if (
+				parent.kind === ts.SyntaxKind.JSDocTypeExpression &&
+				parent.parent &&
+				parent.parent.kind === ts.SyntaxKind.JSDocTypedefTag
+			) {
+				decl = /** @type {ts.Declaration} */ (parent.parent);
+			}
+		}
 	}
 
-	const ownConfigPath = path.resolve(rootPath, "generate-types-config.js");
-	/**
-	 * @typedef {object} GeneratorOptions
-	 * @property {Record<string, RegExp>} nameMapping preferred name per matching key
-	 * @property {Record<string, string>} typeMapping replacement type per matching name
-	 * @property {RegExp[]} exclude names to leave out
-	 * @property {RegExp[]} include names to keep
-	 */
+	return decl;
+};
 
+/**
+ * An alias whose typedef carries `@internal` is written as `any`, so a module
+ * can type its internals precisely without publishing those types.
+ * @param {ts.Symbol} symbol the alias symbol
+ * @returns {boolean} whether its declaration is tagged `@internal`
+ */
+const isInternalAlias = (symbol) => {
+	const decl = getDeclaration(symbol);
+	if (!decl) return false;
+	const tags =
+		ts.isJSDocTypedefTag(decl) && ts.isJSDoc(decl.parent)
+			? decl.parent.tags || []
+			: ts.getJSDocTags(decl);
+	return tags.some((tag) => tag.tagName.text === "internal");
+};
+
+/**
+ * @param {ts.TypeChecker} checker the type checker
+ * @param {readonly ts.Type[] | undefined} typeParameters a signature's type parameters
+ * @returns {readonly ts.Type[] | undefined} those a declaration still names, the internal ones being erased
+ */
+const publicTypeParameters = (checker, typeParameters) => {
+	if (!typeParameters) return undefined;
+	const kept = typeParameters.filter(
+		(type) => !isInternalTypeParameter(checker, type)
+	);
+	return kept.length > 0 ? kept : undefined;
+};
+
+/**
+ * @param {ts.TypeChecker} checker the type checker
+ * @param {ts.TypeNode | undefined} node a written type
+ * @returns {boolean} whether it names only `@internal` aliases, `null`, `undefined` and arrays of them
+ */
+const isInternalTypeNode = (checker, node) => {
+	if (!node) return false;
+	if (
+		ts.isParenthesizedTypeNode(node) ||
+		ts.isJSDocOptionalType(node) ||
+		ts.isJSDocNullableType(node)
+	) {
+		return isInternalTypeNode(checker, node.type);
+	}
+	if (ts.isArrayTypeNode(node)) {
+		return isInternalTypeNode(checker, node.elementType);
+	}
+	if (ts.isUnionTypeNode(node)) {
+		const named = node.types.filter(
+			(member) =>
+				!(
+					ts.isLiteralTypeNode(member) &&
+					member.literal.kind === ts.SyntaxKind.NullKeyword
+				) && member.kind !== ts.SyntaxKind.UndefinedKeyword
+		);
+		return (
+			named.length > 0 &&
+			named.every((member) => isInternalTypeNode(checker, member))
+		);
+	}
+	if (ts.isTypeReferenceNode(node)) {
+		const symbol = checker.getSymbolAtLocation(node.typeName);
+		return Boolean(symbol && isInternalAlias(symbol));
+	}
+	return false;
+};
+
+/**
+ * @param {ts.TypeChecker} checker the type checker
+ * @param {ts.Type} type a type
+ * @returns {boolean} whether it is a type parameter bound by an `@internal` type, which declarations drop
+ */
+const isInternalTypeParameter = (checker, type) => {
+	if (!(/** @type {any} */ (type).isTypeParameter())) return false;
+	const constraint = type.getConstraint();
+	if (constraint && isInternalType(checker, constraint)) return true;
+	const decl = getDeclaration(type.symbol);
+	if (!decl || !ts.isTypeParameterDeclaration(decl)) return false;
+	const tag = decl.parent;
+	return isInternalTypeNode(
+		checker,
+		ts.isJSDocTemplateTag(tag) && tag.constraint
+			? tag.constraint.type
+			: decl.constraint
+	);
+};
+
+/**
+ * A dropped type parameter is written as its constraint, widened from
+ * literals, so `T extends "a" | "b"` reads `string`.
+ * @param {ts.TypeChecker} checker the type checker
+ * @param {ts.Type} type a type parameter `isInternalTypeParameter` accepts
+ * @returns {ts.Type} the type written in its place
+ */
+const eraseTypeParameter = (checker, type) =>
+	checker.getBaseTypeOfLiteralType(
+		/** @type {ts.Type} */ (type.getConstraint())
+	);
+
+/**
+ * @param {ts.TypeChecker} checker the type checker
+ * @param {ts.Type} type a type
+ * @returns {boolean} whether it is written as `any` for being internal: an `@internal` alias, a union of them with `null` or `undefined`, or a dropped type parameter whose constraint is one
+ */
+const isInternalType = (checker, type) => {
+	if (type.aliasSymbol && isInternalAlias(type.aliasSymbol)) return true;
+	if (/** @type {any} */ (type).isTypeParameter()) {
+		return (
+			isInternalTypeParameter(checker, type) &&
+			isInternalType(checker, eraseTypeParameter(checker, type))
+		);
+	}
+	if (type.isUnion()) {
+		const named = type.types.filter(
+			(member) =>
+				(member.getFlags() & (ts.TypeFlags.Null | ts.TypeFlags.Undefined)) === 0
+		);
+		return (
+			named.length > 0 &&
+			named.every((member) => isInternalType(checker, member))
+		);
+	}
+	return false;
+};
+
+/**
+ * @returns {GeneratorOptions} what `generate-types-config.js` says, defaulted
+ */
+const readGeneratorOptions = () => {
 	/** @type {GeneratorOptions} */
 	const options = {
 		nameMapping: {},
@@ -886,17 +738,28 @@ class TupleMap {
 		include: []
 	};
 	try {
-		Object.assign(options, require(ownConfigPath));
+		Object.assign(
+			options,
+			require(path.resolve(ROOT_PATH, "generate-types-config.js"))
+		);
 	} catch (err) {
 		if (verbose) {
 			console.log(`Can't read config file: ${err}`);
 		}
 	}
+	return options;
+};
 
-	const program = createTypeScriptProgram("tsconfig.types.json");
-
-	const checker = program.getTypeChecker();
-
+/**
+ * Reads every type the entry file exposes, and everything those reach, into the
+ * shape the passes after this one work on.
+ * @param {object} context the program to read
+ * @param {ts.Program} context.program the program holding the sources
+ * @param {ts.TypeChecker} context.checker the program's type checker
+ * @param {GeneratorOptions} context.options the generator's own options
+ * @returns {{ typeReferencedBy: Map<ts.Type, Set<ts.Type>>, exposedType: ts.Type | undefined, typeExports: Map<EXPECTED_ANY, EXPECTED_ANY>, parsedCollectedTypes: Map<ts.Type, MergedType>, typeUsedAsArgument: Set<ts.Type>, typeUsedAsBaseType: Set<ts.Type>, typeUsedAsConstructedValue: Set<ts.Type>, typeUsedAsReturnValue: Set<ts.Type>, typeUsedAsTypeArgument: Set<ts.Type> }} every type, parsed, and how each is used
+ */
+const collectTypes = ({ program, checker, options }) => {
 	const exposedFiles = ["lib/index.js"];
 
 	/** @type {Set<ts.Type>} */
@@ -976,63 +839,6 @@ class TupleMap {
 	};
 
 	/**
-	 * @param {ts.SourceFile} source source file
-	 * @returns {boolean} true when it's a module
-	 */
-	/**
-	 * @param {ts.SourceFile | undefined} source the file to test
-	 * @returns {boolean} true when the file is a module
-	 */
-	const isSourceFileModule = (source) => {
-		const sourceAsAny = /** @type {any} */ (source);
-		return Boolean(
-			sourceAsAny &&
-			(sourceAsAny.externalModuleIndicator ||
-				sourceAsAny.commonJsModuleIndicator)
-		);
-	};
-
-	/**
-	 * @param {ts.Symbol} current current
-	 * @returns {string} full escaped name
-	 */
-	/**
-	 * @param {SymbolWithParent} symbol the symbol to name
-	 * @returns {string} the symbol's name, prefixed by every enclosing one
-	 */
-	const getFullEscapedName = (symbol) => {
-		let current = symbol;
-		let name = current.escapedName.toString();
-		while (current.parent) {
-			current = current.parent;
-			if (
-				current.escapedName === undefined ||
-				current.escapedName.toString() === "__global"
-			) {
-				break;
-			}
-			name = `${current.escapedName.toString()}.${name}`;
-		}
-		return name;
-	};
-
-	/**
-	 * @param {ts.Symbol} symbol symbol
-	 * @returns {string} location of the symbol for error messages
-	 */
-	const getSymbolLocation = (symbol) => {
-		const decls = symbol.getDeclarations();
-		const decl = decls && decls[0];
-		if (!decl) return "<unknown location>";
-		const source = decl.getSourceFile();
-		const { line, character } = ts.getLineAndCharacterOfPosition(
-			source,
-			decl.getStart()
-		);
-		return `${source.fileName} (${line + 1},${character + 1})`;
-	};
-
-	/**
 	 * @param {ts.Symbol} symbol the symbol to resolve
 	 * @param {boolean} isValue whether the value side is wanted
 	 * @param {boolean=} reportUnresolvable whether to report a failure
@@ -1059,6 +865,8 @@ class TupleMap {
 
 			if (symbolType) return symbolType;
 			const decls = symbol.getDeclarations();
+			// A mapped type's property has no declaration to read a type at.
+			if (!decls || decls.length === 0) return checker.getTypeOfSymbol(symbol);
 			decl = decls && decls[0];
 			if (decl) {
 				type = checker.getTypeOfSymbolAtLocation(symbol, decl);
@@ -1114,40 +922,6 @@ class TupleMap {
 			}
 		}
 		return type;
-	};
-
-	/**
-	 * @param {ts.Symbol | undefined} symbol the symbol to look up
-	 * @returns {ts.Declaration | undefined} the declaration it was declared by
-	 */
-	const getDeclaration = (symbol) => {
-		if (!symbol) return undefined;
-		/** @type {ts.Declaration | undefined} */
-		let decl;
-		if (symbol.valueDeclaration) {
-			decl = symbol.valueDeclaration;
-		} else {
-			const decls = symbol.getDeclarations();
-			if (decls) decl = decls[0];
-		}
-		if (decl) {
-			const symbol = /** @type {any} */ (decl).symbol;
-			if (symbol && symbol.name === ts.InternalSymbolName.Type && decl.parent) {
-				const parent = decl.parent;
-				if (parent.kind === ts.SyntaxKind.TypeAliasDeclaration) {
-					decl = /** @type {ts.Declaration} */ (parent);
-				}
-				if (
-					parent.kind === ts.SyntaxKind.JSDocTypeExpression &&
-					parent.parent &&
-					parent.parent.kind === ts.SyntaxKind.JSDocTypedefTag
-				) {
-					decl = /** @type {ts.Declaration} */ (parent.parent);
-				}
-			}
-		}
-
-		return decl;
 	};
 
 	/**
@@ -1208,7 +982,7 @@ class TupleMap {
 
 	for (const exposedFile of exposedFiles) {
 		const exposedSource = program.getSourceFile(
-			path.resolve(rootPath, exposedFile)
+			path.resolve(ROOT_PATH, exposedFile)
 		);
 		if (!exposedSource) {
 			console.error(
@@ -1231,28 +1005,6 @@ class TupleMap {
 			typeExports.set(name, type);
 		}
 	}
-
-	/** @typedef {{ name: string, optional: boolean, spread: boolean, documentation: string, type: ts.Type }} ParsedParameter */
-	/** @typedef {{ documentation: string, typeParameters?: readonly ts.Type[], args: ParsedParameter[], thisType?: ts.Type, returnType: ts.Type }} ParsedSignature */
-	/** @typedef {string[]} SymbolName */
-	/** @typedef {Map<string, { type: ts.Type, method: boolean, optional: boolean, readonly: boolean, getter: boolean, documentation: string }>} PropertiesMap */
-
-	/** @typedef {{ type: "primitive", name: string }} ParsedPrimitiveType */
-	/** @typedef {{ type: "typeParameter", name: string, constraint?: ts.Type, defaultValue?: ts.Type }} ParsedTypeParameterType */
-	/** @typedef {{ type: "tuple", typeArguments: readonly ts.Type[] }} ParsedTupleType */
-	/** @typedef {{ type: "interface", symbolName: SymbolName, subtype: "class" | "module" | "literal" | undefined, properties: PropertiesMap, constructors: ParsedSignature[], calls: ParsedSignature[], numberIndex?: ts.Type, stringIndex?: ts.Type, typeParameters?: readonly ts.Type[], baseTypes: readonly ts.Type[], documentation: string }} ParsedInterfaceType */
-	/** @typedef {{ type: "class" | "typeof class", symbolName: SymbolName, properties: PropertiesMap, staticProperties: PropertiesMap, constructors: ParsedSignature[], numberIndex?: ts.Type, stringIndex?: ts.Type, typeParameters?: readonly ts.Type[], baseType: ts.Type, correspondingType: ts.Type | undefined, documentation: string }} MergedClassType */
-	/** @typedef {{ type: "namespace", symbolName: SymbolName, calls: ParsedSignature[], exports: PropertiesMap }} MergedNamespaceType */
-	/** @typedef {{ type: "reference", target: ts.Type, typeArguments: readonly ts.Type[], typeArgumentsWithoutDefaults: readonly ts.Type[] }} ParsedReferenceType */
-	/** @typedef {{ type: "union", symbolName: SymbolName, types: ts.Type[], typeParameters?: readonly ts.Type[] }} ParsedUnionType */
-	/** @typedef {{ type: "intersection", symbolName: SymbolName, types: ts.Type[], typeParameters?: readonly ts.Type[] }} ParsedIntersectionType */
-	/** @typedef {{ type: "index", symbolName: SymbolName, objectType: ts.Type, indexType: ts.Type }} ParsedIndexType */
-	/** @typedef {{ type: "template", texts: readonly string[], types: readonly ts.Type[] }} ParsedTemplateType */
-	/** @typedef {{ type: "import", symbolName: SymbolName, exportName: string, from: string, isValue: boolean }} ParsedImportType */
-	/** @typedef {{ type: "symbol", symbolName: SymbolName }} ParsedSymbolType */
-	/** @typedef {{ type: "conditional", symbolName: SymbolName, checkType: ts.Type, extendsType: ts.Type, trueType: ts.Type, falseType: ts.Type, typeParameters?: readonly ts.Type[] }} ParsedConditionalType */
-	/** @typedef {ParsedPrimitiveType | ParsedTypeParameterType | ParsedTupleType | ParsedInterfaceType | ParsedReferenceType | ParsedUnionType | ParsedIntersectionType | ParsedIndexType | ParsedTemplateType | ParsedImportType | ParsedSymbolType | ParsedConditionalType} ParsedType */
-	/** @typedef {ParsedType | MergedClassType | MergedNamespaceType} MergedType */
 
 	/**
 	 * @param {string} name the name to test
@@ -1299,7 +1051,7 @@ class TupleMap {
 			toIdentifier(
 				valueDeclaration
 					.getSourceFile()
-					.fileName.slice(rootPath.length + 1)
+					.fileName.slice(ROOT_PATH.length + 1)
 					.replace(/^.*\/(?!index)/, "")
 					.replace(/^lib\./, "")
 					.replace(/\.(js|(d\.)?ts)$/, "")
@@ -1315,6 +1067,52 @@ class TupleMap {
 			result.unshift(AnonymousType);
 		}
 		return [...new Set(result.filter((x) => x !== undefined))];
+	};
+
+	// WHY: a schema property written as a bare `$ref` says what its target says,
+	// so a property named by a schema type shows that type's description where it
+	// has none of its own. Only the schema sources count: elsewhere a property
+	// named by a type says something else than the type does.
+	const schemaSources = new Set([
+		DECLARATIONS_DIRECTORY,
+		...[...declaringModules().values()].map((one) => `${one}.js`)
+	]);
+
+	/**
+	 * @param {ts.Symbol} prop the property to read the written type of
+	 * @returns {ts.Symbol | undefined} the schema type it names, when it names one
+	 */
+	const schemaAlias = (prop) => {
+		const declaration = (prop.declarations || [])[0];
+		const written =
+			declaration &&
+			(ts.isPropertySignature(declaration) ||
+				ts.isPropertyDeclaration(declaration)) &&
+			declaration.type;
+		if (!written || !ts.isTypeReferenceNode(written)) return undefined;
+		const alias = checker.getSymbolAtLocation(written.typeName);
+		const declared = alias && (alias.declarations || [])[0];
+		if (!declared) return undefined;
+		const file = declared.getSourceFile().fileName;
+		const fromSchemaSource = [...schemaSources].some(
+			(source) => file === source || file.startsWith(`${source}${path.sep}`)
+		);
+		return fromSchemaSource ? alias : undefined;
+	};
+
+	/**
+	 * A `@typedef {object}` declares its type as a `JSDocTypeLiteral`, and a JSDoc
+	 * block attaches to the statement after it — so TypeScript documents that
+	 * symbol with the next statement's comment, which says nothing about the type.
+	 * The block the typedef is written in is the one that describes it.
+	 * @param {ts.Symbol | ts.Signature} symbol the symbol a type was read from
+	 * @returns {ts.JSDoc | undefined} the block it was declared in, when it is one
+	 */
+	const declaringJsDoc = (symbol) => {
+		const declarations = /** @type {ts.Symbol} */ (symbol).declarations;
+		const declaration = declarations && declarations[0];
+		if (!declaration || !ts.isJSDocTypeLiteral(declaration)) return undefined;
+		return ts.findAncestor(declaration, ts.isJSDoc);
 	};
 
 	/**
@@ -1334,10 +1132,24 @@ class TupleMap {
 				.replace(/\n+/g, "\n")
 				.trim();
 
-		const commentText = normalizeText(symbol.getDocumentationComment(checker));
-		const jsDocTags = symbol.getJsDocTags(checker);
-		const forwardedTagNames = ["since", "deprecated", "experimental"];
-		const forwardedTags = forwardedTagNames.flatMap((name) =>
+		const block = declaringJsDoc(symbol);
+		const commentText = block
+			? normalizeText([
+					{ kind: "text", text: ts.getTextOfJSDocComment(block.comment) || "" }
+				])
+			: normalizeText(symbol.getDocumentationComment(checker));
+		const jsDocTags = block
+			? (block.tags || []).map((tag) => ({
+					name: tag.tagName.text,
+					text: [
+						{
+							kind: "text",
+							text: ts.getTextOfJSDocComment(tag.comment) || ""
+						}
+					]
+				}))
+			: symbol.getJsDocTags(checker);
+		const forwardedTags = FORWARDED_TAG_NAMES.flatMap((name) =>
 			jsDocTags.filter((tag) => tag.name === name)
 		);
 
@@ -1395,10 +1207,24 @@ class TupleMap {
 					);
 				}
 			}
-			const type = /** @type {ts.Type} */ (getTypeOfSymbol(p, false));
+			const writtenType = paramDeclaration
+				? paramDeclaration.type || ts.getJSDocType(paramDeclaration)
+				: jsdocParamDeclaration && jsdocParamDeclaration === decl
+					? jsdocParamDeclaration.typeExpression &&
+						jsdocParamDeclaration.typeExpression.type
+					: undefined;
+			let type = /** @type {ts.Type} */ (getTypeOfSymbol(p, false));
+			// An array keeps its brackets: its `@internal` elements print as `any`.
+			if (
+				!checker.isArrayType(type) &&
+				isInternalTypeNode(checker, writtenType)
+			) {
+				type = checker.getAnyType();
+			}
 			const optional = Boolean(
 				canBeOptional &&
 				((type.getFlags() & ts.TypeFlags.Any) !== 0 ||
+					isInternalType(checker, type) ||
 					(p.getFlags() & ts.SymbolFlags.Optional) !== 0 ||
 					(paramDeclaration &&
 						(Boolean(paramDeclaration.initializer) ||
@@ -1436,66 +1262,37 @@ class TupleMap {
 				rest = false;
 			}
 		}
+		const declaration = signature.getDeclaration();
+		let returnType = signature.getReturnType();
+		if (
+			!checker.isArrayType(returnType) &&
+			isInternalTypeNode(
+				checker,
+				declaration && (declaration.type || ts.getJSDocReturnType(declaration))
+			)
+		) {
+			returnType = checker.getAnyType();
+		}
 		return {
 			documentation: getDocumentation(signature),
-			typeParameters:
-				signature.typeParameters && signature.typeParameters.length > 0
-					? signature.typeParameters
-					: undefined,
+			typeParameters: publicTypeParameters(checker, signature.typeParameters),
 			args: params.reverse().map(parseParameter).reverse(),
-			returnType: signature.getReturnType(),
+			returnType,
 			thisType: signature.thisParameter
 				? getTypeOfSymbol(signature.thisParameter, false)
-				: undefined
+				: undefined,
+			abstract: Boolean(
+				declaration &&
+				ts.isConstructorTypeNode(declaration) &&
+				declaration.modifiers &&
+				declaration.modifiers.some(
+					(modifier) => modifier.kind === ts.SyntaxKind.AbstractKeyword
+				)
+			)
 		};
 	};
 
-	/**
-	 * @param {ts.SourceFile} sourceFile the file to test
-	 * @returns {boolean} true when it comes from node_modules
-	 */
-	const isNodeModulesSource = (sourceFile) =>
-		sourceFile.isDeclarationFile &&
-		sourceFile.fileName.slice(rootPath.length + 1).startsWith("node_modules/");
-	/**
-	 * @param {ts.SourceFile} sourceFile the file to look up
-	 * @returns {ts.SourceFile | undefined} the package's own type declarations
-	 */
-	const getRootPackage = (sourceFile) => {
-		const match = /^(node_modules\/(@[^/]+\/)?[^/]+)/.exec(
-			sourceFile.fileName.slice(rootPath.length + 1)
-		);
-		if (!match) return undefined;
-
-		const pkg = require(`${rootPath}/${match[1]}/package.json`);
-
-		const types = pkg.types || "index.d.ts";
-		return program.getSourceFile(`${rootPath}/${match[1]}/${types}`);
-	};
-
 	const { typeMapping } = options;
-
-	/**
-	 * @param {string} name the type name to test
-	 * @returns {boolean} true when it is one of the typed array types
-	 */
-	const isArrayBufferLike = (name) =>
-		[
-			"Uint8Array",
-			"Uint8ClampedArray",
-			"Uint16Array",
-			"Uint32Array",
-			"Int8Array",
-			"Int16Array",
-			"Int32Array",
-			"BigUint64Array",
-			"BigInt64Array",
-			"Float16Array",
-			"Float32Array",
-			"Float64Array",
-			"DataView",
-			"Buffer"
-		].includes(name);
 
 	/**
 	 * @param {ts.Type} type type
@@ -1581,7 +1378,8 @@ class TupleMap {
 					getter:
 						(flags & ts.SymbolFlags.GetAccessor) !== 0 &&
 						(flags & ts.SymbolFlags.SetAccessor) === 0,
-					documentation: getDocumentation(prop)
+					documentation:
+						getDocumentation(prop) || getDocumentation(schemaAlias(prop))
 				});
 			}
 			return properties;
@@ -1602,8 +1400,16 @@ class TupleMap {
 					continue;
 				}
 				const defaultValue = parameter.getDefault();
+				// An alias default can come back as a fresh instantiation of the alias
+				const sameAlias =
+					defaultValue !== undefined &&
+					defaultValue.aliasSymbol !== undefined &&
+					args[i].aliasSymbol === defaultValue.aliasSymbol &&
+					!defaultValue.aliasTypeArguments &&
+					!args[i].aliasTypeArguments;
 				if (
 					args[i] === defaultValue ||
+					sameAlias ||
 					(defaultValue !== undefined && args[i] === parameter)
 				) {
 					argsWithoutDefaults.length--;
@@ -1615,6 +1421,13 @@ class TupleMap {
 		};
 
 		const symbol = type.aliasSymbol || type.getSymbol();
+
+		if (isInternalTypeParameter(checker, type)) {
+			return parseType(eraseTypeParameter(checker, type));
+		}
+		if (isInternalType(checker, type)) {
+			return { type: "primitive", name: "any" };
+		}
 
 		if (/** @type {any} */ (type).isTypeParameter()) {
 			return {
@@ -1686,7 +1499,13 @@ class TupleMap {
 						checker.getSymbolAtLocation(typeName)
 					);
 					const targetType = getTypeOfSymbol(targetSymbol, false);
+					// WHY: a generic class named without type arguments resolves to its
+					// defaults; the declared type would print its own type parameters.
+					const bareGenericReference =
+						typeArgumentsTypes.length === 0 &&
+						/** @type {ts.TypeReference} */ (type).target === targetType;
 					if (
+						!bareGenericReference &&
 						typeArgumentsTypes.every(Boolean) &&
 						targetType &&
 						targetType !== type
@@ -1829,7 +1648,11 @@ class TupleMap {
 				constructors: [],
 				calls: [],
 				baseTypes: [],
-				documentation: getDocumentation(type.getSymbol())
+				// WHY: a type alias to an anonymous object holds the description, where
+				// the type it names has none of its own.
+				documentation:
+					getDocumentation(type.getSymbol()) ||
+					getDocumentation(type.aliasSymbol)
 			};
 		}
 
@@ -1879,9 +1702,10 @@ class TupleMap {
 						symbol.flags & ts.SymbolFlags.Class)
 				);
 				const potentialSources = /** @type {ts.SourceFile[]} */ (
-					[getRootPackage(decl.getSourceFile()), decl.getSourceFile()].filter(
-						Boolean
-					)
+					[
+						getRootPackage(program, decl.getSourceFile()),
+						decl.getSourceFile()
+					].filter(Boolean)
 				);
 				/** @type {ts.SourceFile | undefined} */
 				let externalSource;
@@ -1931,6 +1755,17 @@ class TupleMap {
 										.join(", ")})`;
 								}
 							)}`
+						);
+					}
+				} else if (exportName === ts.InternalSymbolName.ExportEquals) {
+					// A module written as `export = X` exports no name an import can
+					// carry, so the type it declares is inlined below, as it was while
+					// the same declaration sat in the package's entry file.
+					if (verbose) {
+						console.log(
+							`${parseName(type).join(" ")} is exported with \`export =\` from ${
+								/** @type {ts.SourceFile} */ (externalSource).fileName
+							}, inlining it`
 						);
 					}
 				} else if (isSourceFileModule(externalSource)) {
@@ -2057,7 +1892,10 @@ class TupleMap {
 						  type.aliasTypeArguments.length > 0
 						? type.aliasTypeArguments
 						: undefined,
-			documentation: getDocumentation(type.getSymbol())
+			// WHY: a type alias to an anonymous object holds the description, where
+			// the type it names has none of its own.
+			documentation:
+				getDocumentation(type.getSymbol()) || getDocumentation(type.aliasSymbol)
 		};
 	};
 
@@ -2161,18 +1999,27 @@ class TupleMap {
 		}
 	}
 
-	/**
-	 * @param {MergedType} parsed the parsed type
-	 * @returns {boolean} true when it is a bare call signature
-	 */
-	const isSimpleFunction = (parsed) =>
-		parsed.type === "interface" &&
-		parsed.properties.size === 0 &&
-		parsed.constructors.length === 0 &&
-		parsed.calls.length === 1 &&
-		(!parsed.typeParameters || parsed.typeParameters.length === 0);
+	return {
+		typeReferencedBy,
+		exposedType,
+		typeExports,
+		parsedCollectedTypes,
+		typeUsedAsArgument,
+		typeUsedAsBaseType,
+		typeUsedAsConstructedValue,
+		typeUsedAsReturnValue,
+		typeUsedAsTypeArgument
+	};
+};
 
-	// / Convert interfaces to classes ///
+/**
+ * Writes as a class every interface that is only ever used as one.
+ * @param {object} context what the passes before this one worked out
+ * @param {ts.TypeChecker} context.checker the program's type checker
+ * @param {Map<ts.Type, MergedType>} context.parsedCollectedTypes every type, parsed
+ * @returns {void}
+ */
+const classifyInterfaces = ({ checker, parsedCollectedTypes }) => {
 	/**
 	 * @param {ts.Type} type the type
 	 * @param {ParsedType | MergedType} parsed the parsed variant
@@ -2293,9 +2140,25 @@ class TupleMap {
 		};
 		parsedCollectedTypes.set(type, newParsed);
 	}
+};
 
-	// / Analyse unions and intersections ///
-
+/**
+ * Reads what each union and intersection is made of.
+ * @param {object} context what the passes before this one worked out
+ * @param {Map<ts.Type, MergedType>} context.parsedCollectedTypes every type, parsed
+ * @param {Map<ts.Type, Set<ts.Type>>} context.typeReferencedBy what refers to each type
+ * @param {Set<ts.Type>} context.typeUsedAsConstructedValue the types a constructor returns
+ * @param {Set<ts.Type>} context.typeUsedAsReturnValue the types a call returns
+ * @param {Set<ts.Type>} context.typeUsedAsTypeArgument the types passed as a type argument
+ * @returns {void}
+ */
+const analyseUnionsAndIntersections = ({
+	parsedCollectedTypes,
+	typeReferencedBy,
+	typeUsedAsConstructedValue,
+	typeUsedAsReturnValue,
+	typeUsedAsTypeArgument
+}) => {
 	for (const [type, parsed] of parsedCollectedTypes) {
 		if (parsed.type === "union" || parsed.type === "intersection") {
 			if (typeUsedAsTypeArgument.has(type)) {
@@ -2373,9 +2236,31 @@ class TupleMap {
 			}
 		}
 	}
+};
 
-	// / Convert interfaces to namespaces ///
-
+/**
+ * Writes as a namespace every interface only ever used to reach its members.
+ * @param {object} context what the passes before this one worked out
+ * @param {ts.Type | undefined} context.exposedType the type the entry file exports
+ * @param {Map<ts.Type, MergedType>} context.parsedCollectedTypes every type, parsed
+ * @param {Map<ts.Type, Set<ts.Type>>} context.typeReferencedBy what refers to each type
+ * @param {Set<ts.Type>} context.typeUsedAsArgument the types taken by a parameter
+ * @param {Set<ts.Type>} context.typeUsedAsBaseType the types something extends
+ * @param {Set<ts.Type>} context.typeUsedAsConstructedValue the types a constructor returns
+ * @param {Set<ts.Type>} context.typeUsedAsReturnValue the types a call returns
+ * @param {Set<ts.Type>} context.typeUsedAsTypeArgument the types passed as a type argument
+ * @returns {void}
+ */
+const convertInterfacesToNamespaces = ({
+	exposedType,
+	parsedCollectedTypes,
+	typeReferencedBy,
+	typeUsedAsArgument,
+	typeUsedAsBaseType,
+	typeUsedAsConstructedValue,
+	typeUsedAsReturnValue,
+	typeUsedAsTypeArgument
+}) => {
 	for (const [type, parsed] of parsedCollectedTypes) {
 		if (parsed.type !== "interface") continue;
 		if (
@@ -2421,171 +2306,15 @@ class TupleMap {
 		};
 		parsedCollectedTypes.set(type, newParsed);
 	}
+};
 
-	// / Merge identical types ///
-
-	/**
-	 * @param {string} prefix type parameter prefix
-	 * @param {ParsedSignature} signature signature
-	 * @param {number} index signature index
-	 * @returns {any[] | undefined} hash
-	 */
-	/**
-	 * @param {string} prefix what kind of signature it is
-	 * @param {ParsedSignature} signature the signature to hash
-	 * @param {number} index its position among the type's signatures
-	 * @returns {EXPECTED_ANY[]} the hash parts
-	 */
-	const getSigHash = (prefix, signature, index) => {
-		const { args, returnType, typeParameters, documentation } = signature;
-		const typeParametersMap = new Map(
-			typeParameters && typeParameters.map((t, i) => [t, i])
-		);
-		return [
-			"args",
-			...flatten(
-				args.map((arg) => [
-					arg.name,
-					arg.optional,
-					arg.spread,
-					arg.type,
-					arg.documentation
-				])
-			),
-			"return",
-			returnType,
-			"typeParameters",
-			typeParameters ? typeParameters.length : 0,
-			"documentation",
-			documentation
-		].map((item) => {
-			const x = typeParametersMap.get(item);
-			return x === undefined ? item : `${prefix}${index}_${x}`;
-		});
-	};
-
-	/**
-	 * @param {MergedType} parsed type
-	 * @returns {any[] | undefined} hash
-	 */
-	const getTypeHash = (parsed) => {
-		switch (parsed.type) {
-			case "primitive": {
-				return [parsed.type, parsed.name];
-			}
-			case "typeParameter": {
-				return [
-					parsed.type,
-					parsed.name,
-					parsed.constraint,
-					parsed.defaultValue
-				];
-			}
-			case "template": {
-				return [parsed.type, ...parsed.texts, ...parsed.types];
-			}
-			case "reference": {
-				const { target, typeArgumentsWithoutDefaults } = parsed;
-				if (typeArgumentsWithoutDefaults.length === 0) return undefined;
-				return [parsed.type, target, ...typeArgumentsWithoutDefaults];
-			}
-			case "index": {
-				const { objectType, indexType } = parsed;
-				return [parsed.type, objectType, indexType];
-			}
-			case "union":
-			case "intersection": {
-				const { symbolName, types, typeParameters } = parsed;
-				const typeParametersMap = new Map(
-					typeParameters && typeParameters.map((t, i) => [t, i])
-				);
-				return [
-					parsed.type,
-					symbolName[0],
-					typeParameters ? typeParameters.length : 0,
-					...types
-				].map((item) => {
-					const x = typeParametersMap.get(/** @type {ts.Type} */ (item));
-					return x === undefined ? item : x;
-				});
-			}
-			case "conditional": {
-				const { symbolName, checkType, extendsType, trueType, falseType } =
-					parsed;
-				return [
-					parsed.type,
-					symbolName[0],
-					checkType,
-					extendsType,
-					trueType,
-					falseType
-				];
-			}
-			case "interface": {
-				const {
-					symbolName,
-					baseTypes,
-					calls,
-					constructors,
-					properties,
-					numberIndex,
-					stringIndex,
-					typeParameters,
-					documentation
-				} = parsed;
-				if (
-					calls.length === 0 &&
-					constructors.length === 0 &&
-					properties.size === 0 &&
-					!numberIndex &&
-					!stringIndex
-				) {
-					// need to have something unique
-					return undefined;
-				}
-				const callHashes = calls.map(getSigHash.bind(null, "call"));
-				if (callHashes.some((x) => !x)) return undefined;
-				const constructorHashes = constructors.map(
-					getSigHash.bind(null, "constructor")
-				);
-				if (constructorHashes.some((x) => !x)) return undefined;
-				const typeParametersMap = new Map(
-					typeParameters && typeParameters.map((t, i) => [t, i])
-				);
-				return [
-					parsed.type,
-					symbolName[0],
-					"base",
-					...baseTypes,
-					"calls",
-					...flatten(callHashes),
-					"constructors",
-					...flatten(constructorHashes),
-					"properties",
-					...flatten(
-						Array.from(properties, ([name, { type, optional }]) => [
-							name,
-							type,
-							optional
-						])
-					),
-					"numberIndex",
-					numberIndex,
-					"stringIndex",
-					stringIndex,
-					"typeParameters",
-					typeParameters ? typeParameters.length : 0,
-					"documentation",
-					documentation
-				].map((item) => {
-					const x = typeParametersMap.get(item);
-					return x === undefined ? item : x;
-				});
-			}
-		}
-		return undefined;
-	};
-
+/**
+ * Points every type that says what another says at that one.
+ * @param {object} context what the passes before this one worked out
+ * @param {Map<ts.Type, MergedType>} context.parsedCollectedTypes every type, parsed
+ * @returns {void}
+ */
+const mergeIdenticalTypes = ({ parsedCollectedTypes }) => {
 	const knownTypes = new TupleMap();
 	let updates = true;
 	while (updates) {
@@ -2637,9 +2366,16 @@ class TupleMap {
 			}
 		}
 	}
-
-	// / Determine names for types ///
-
+};
+/**
+ * Gives every type that needs one a name no other type has taken.
+ * @param {object} context what the passes before this one worked out
+ * @param {GeneratorOptions} context.options the generator's own options
+ * @param {Map<ts.Type, MergedType>} context.parsedCollectedTypes every type, parsed
+ * @param {ts.Type | undefined} context.exposedType the type the entry file exports
+ * @returns {{ usedNames: Set<string>, findName: (symbolName: string[], requeueOnConflict?: boolean) => string | undefined, typeToVariable: Map<ts.Type, string | undefined> }} the names given
+ */
+const nameTypes = ({ options, parsedCollectedTypes, exposedType }) => {
 	const usedNames = new Set([AnonymousType]);
 
 	/** @type {[ts.Type, { symbolName: SymbolName }][]} */
@@ -2734,11 +2470,34 @@ class TupleMap {
 		nameToQueueEntry.set(name, entry);
 	}
 
-	// / Determine code for types
+	return { usedNames, findName, typeToVariable };
+};
 
+/**
+ * Writes each collected type as TypeScript, naming what it references.
+ * @param {object} context what the passes before this one worked out
+ * @param {GeneratorOptions} context.options the generator's own options
+ * @param {ts.TypeChecker} context.checker the program's type checker
+ * @param {Map<ts.Type, MergedType>} context.parsedCollectedTypes every type, parsed
+ * @param {Map<ts.Type, string | undefined>} context.typeToVariable the name given to each type
+ * @param {Set<string>} context.usedNames every name already taken
+ * @param {(symbolName: string[], requeueOnConflict?: boolean) => string | undefined} context.findName takes the next free name
+ * @param {ts.Type | undefined} context.exposedType the type the entry file exports
+ * @param {Map<EXPECTED_ANY, EXPECTED_ANY>} context.typeExports what each exposed file exports
+ * @returns {{ declarations: Set<string>, declarationKeys: Map<string, string | string[]>, imports: Map<string, Set<string>>, importDeclarations: Set<string>, exports: string[] }} the file's parts
+ */
+const generateDeclarations = ({
+	options,
+	checker,
+	parsedCollectedTypes,
+	typeToVariable,
+	usedNames,
+	findName,
+	exposedType,
+	typeExports
+}) => {
 	/** @type {Set<string>} */
 	const declarations = new Set();
-	/** @type {Map<string, string>} */
 	/** @type {Map<string, string | string[]>} */
 	const declarationKeys = new Map();
 	/** @type {Map<string, Set<string>>} */
@@ -2751,11 +2510,6 @@ class TupleMap {
 	const exports = [];
 	const typeToCode = new TupleMap();
 
-	/**
-	 * @param {string} key key for sorting
-	 * @param {string} text content
-	 * @returns {void}
-	 */
 	/**
 	 * @param {string | string[]} key what the declaration is keyed by
 	 * @param {string} text the declaration source
@@ -2807,29 +2561,6 @@ class TupleMap {
 				`type ${name} = import(${JSON.stringify(from)}).${exportName};`
 			);
 		}
-	};
-
-	/**
-	 * @param {string} code the rendered type
-	 * @param {boolean=} optional whether it is already known to be optional
-	 * @returns {{ code: string, optional: boolean }} the type without its `undefined`
-	 */
-	const extractOptional = (code, optional = false) => {
-		if (code.startsWith("(undefined | ")) {
-			return {
-				code: `(${code.slice("(undefined | ".length)}`,
-				optional: true
-			};
-		} else if (code.endsWith(" | undefined)")) {
-			return {
-				code: `${code.slice(0, -" | undefined)".length)})`,
-				optional: true
-			};
-		}
-		return {
-			code,
-			optional
-		};
 	};
 
 	/**
@@ -3286,6 +3017,15 @@ class TupleMap {
 				if (variable !== undefined) {
 					queueDeclaration(type, variable, () => {
 						const typeArgs = new Set(parsed.typeParameters);
+						if (isAbstractConstructor(parsed)) {
+							return `${parsed.documentation}type ${variable}${
+								parsed.typeParameters
+									? `<${parsed.typeParameters
+											.map((t) => getCode(t, new Set(), "in type args"))
+											.join(", ")}>`
+									: ""
+							} = abstract new ${sigToString(parsed.constructors[0], typeArgs, "arrow")};`;
+						}
 						return `${parsed.documentation}declare interface ${variable}${
 							parsed.typeParameters
 								? `<${parsed.typeParameters
@@ -3316,13 +3056,16 @@ class TupleMap {
 				if (isSimpleFunction(parsed)) {
 					return `(${sigToString(parsed.calls[0], typeArgs, "arrow")})`;
 				}
+				if (isAbstractConstructor(parsed)) {
+					return `(abstract new ${sigToString(parsed.constructors[0], typeArgs, "arrow")})`;
+				}
 				return `{ ${getInterfaceItems(type, parsed, typeArgs).join("; ")} }`;
 			}
 			case "typeof class":
 			case "class": {
 				const classType =
 					parsed.type === "typeof class" ? parsed.correspondingType : type;
-				const variable = typeToVariable.get(classType);
+				const variable = typeToVariable.get(/** @type {ts.Type} */ (classType));
 				queueDeclaration(/** @type {ts.Type} */ (classType), variable, () => {
 					const parsed = /** @type {MergedClassType} */ (
 						parsedCollectedTypes.get(/** @type {ts.Type} */ (classType))
@@ -3370,7 +3113,7 @@ class TupleMap {
 					const exposedNames = new Set();
 					for (const [
 						name,
-						{ type: exportedType, readonly, getter }
+						{ type: exportedType, readonly, getter, documentation }
 					] of parsed.exports) {
 						const code = getCode(
 							/** @type {ts.Type} */
@@ -3378,13 +3121,23 @@ class TupleMap {
 							new Set(),
 							`in namespace ${name}`
 						);
+						// Only a tag a consumer has to act on earns a comment here.
+						// These positions hold no line of their own, so a description
+						// would render as one very long one.
+						const inlineDocumentation =
+							documentation && FORWARDED_TAG_REGEXP.test(documentation)
+								? toInlineDocumentation(documentation)
+								: "";
 						if (code.startsWith("export ")) {
-							declarations.push(code);
+							declarations.push(`${inlineDocumentation}${code}`);
 						} else if (/^typeof [A-Za-z_0-9]+$/.test(code)) {
 							const exportName = code.slice("typeof ".length);
-							exports.push(
-								exportName === name ? name : `${exportName} as ${name}`
-							);
+							const specifier =
+								exportName === name ? name : `${exportName} as ${name}`;
+							// The comment goes inside the braces, on the specifier:
+							// TypeScript reads an `@deprecated` there, and ignores one
+							// written on the `export { … }` statement itself.
+							exports.push(`${inlineDocumentation}${specifier}`);
 						} else if (name === "default") {
 							declarations.push(
 								`${readonly || getter ? "const" : "let"} _default: ${code};\n`
@@ -3392,7 +3145,7 @@ class TupleMap {
 							exports.push("_default as default");
 						} else {
 							declarations.push(
-								`export ${
+								`${inlineDocumentation}export ${
 									readonly || getter ? "const" : "let"
 								} ${name}: ${code};\n`
 							);
@@ -3436,7 +3189,9 @@ class TupleMap {
 					return ns(state.slice("in namespace ".length), true);
 				}
 				const variable = typeToVariable.get(type);
-				queueDeclaration(type, variable, () => ns(variable));
+				queueDeclaration(type, variable, () =>
+					ns(/** @type {string} */ (variable))
+				);
 				return `typeof ${variable}`;
 			}
 			case "symbol": {
@@ -3450,7 +3205,11 @@ class TupleMap {
 			}
 			case "import": {
 				const variable = typeToVariable.get(type);
-				addImport(parsed.exportName, variable, parsed.from);
+				addImport(
+					parsed.exportName,
+					/** @type {string} */ (variable),
+					parsed.from
+				);
 				return (
 					(parsed.isValue && !type.isClass() && state !== "with type args"
 						? "typeof "
@@ -3515,6 +3274,88 @@ class TupleMap {
 	for (const [, fn] of emitDeclarations) {
 		fn();
 	}
+
+	return {
+		declarations,
+		declarationKeys,
+		imports,
+		importDeclarations,
+		exports
+	};
+};
+
+(async () => {
+	// Failing until the run says otherwise, so a throw on the way is a failure too
+	process.exitCode = 1;
+
+	const options = readGeneratorOptions();
+
+	const program = createTypeScriptProgram("tsconfig.types.json");
+
+	const checker = program.getTypeChecker();
+
+	const {
+		typeReferencedBy,
+		exposedType,
+		typeExports,
+		parsedCollectedTypes,
+		typeUsedAsArgument,
+		typeUsedAsBaseType,
+		typeUsedAsConstructedValue,
+		typeUsedAsReturnValue,
+		typeUsedAsTypeArgument
+	} = collectTypes({ program, checker, options });
+
+	classifyInterfaces({
+		checker,
+		parsedCollectedTypes
+	});
+
+	analyseUnionsAndIntersections({
+		parsedCollectedTypes,
+		typeReferencedBy,
+		typeUsedAsConstructedValue,
+		typeUsedAsReturnValue,
+		typeUsedAsTypeArgument
+	});
+
+	convertInterfacesToNamespaces({
+		exposedType,
+		parsedCollectedTypes,
+		typeReferencedBy,
+		typeUsedAsArgument,
+		typeUsedAsBaseType,
+		typeUsedAsConstructedValue,
+		typeUsedAsReturnValue,
+		typeUsedAsTypeArgument
+	});
+
+	mergeIdenticalTypes({
+		parsedCollectedTypes
+	});
+
+	const { usedNames, findName, typeToVariable } = nameTypes({
+		options,
+		parsedCollectedTypes,
+		exposedType
+	});
+
+	const {
+		declarations,
+		declarationKeys,
+		imports,
+		importDeclarations,
+		exports
+	} = generateDeclarations({
+		options,
+		checker,
+		parsedCollectedTypes,
+		typeToVariable,
+		usedNames,
+		findName,
+		exposedType,
+		typeExports
+	});
 
 	if (hasUnresolvableTypes) {
 		console.error(

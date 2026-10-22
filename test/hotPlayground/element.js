@@ -1,8 +1,12 @@
-// This file can update, because 'index.js' accept it.
+// This file can update, because 'index.js' accepts it.
 
-var element = document.createElement("h4");
+const element = document.createElement("h4");
+
 element.innerText = "This is 'element.js'.";
-var x = document.createElement("b");
-x.innerHTML = require("./element-dependency");
-element.appendChild(x);
+
+const bold = document.createElement("b");
+
+bold.innerHTML = require("./element-dependency");
+element.appendChild(bold);
+
 module.exports = element;

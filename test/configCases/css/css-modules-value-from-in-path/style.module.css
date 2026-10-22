@@ -1,0 +1,7 @@
+@value primary from "./from-colors.module.css";
+@value theme-from-base from "./from-colors.module.css";
+
+.a {
+	color: primary;
+	padding: theme-from-base;
+}

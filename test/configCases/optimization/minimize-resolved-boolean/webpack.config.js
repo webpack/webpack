@@ -40,7 +40,8 @@ module.exports = {
 				expect(observed.minimizeOptions).toEqual({
 					css: {},
 					html: {},
-					javascript: { compress: { passes: 1 } }
+					javascript: { compress: { passes: 1 } },
+					json: false
 				});
 			});
 		}

@@ -2,6 +2,46 @@ import { defineConfig, globalIgnores } from "eslint/config";
 import config from "eslint-config-webpack";
 import configs from "eslint-config-webpack/configs.js";
 import globals from "globals";
+import tseslint from "typescript-eslint";
+
+/**
+ * Reads one config out of `eslint-config-webpack`, failing with the reason when
+ * it has none under that name. Otherwise `defineConfig` reports the `undefined`
+ * without naming what produced it.
+ * @param {string} name name of a config `eslint-config-webpack` publishes
+ * @returns {import("eslint").Linter.Config} the config published under that name
+ */
+function getSharedConfig(name) {
+	const sharedConfig = configs[name];
+
+	if (!sharedConfig) {
+		throw new Error(
+			`eslint-config-webpack publishes no "${name}" config. The installed one is older than the version package.json asks for — run \`yarn setup\`.`
+		);
+	}
+
+	return sharedConfig;
+}
+
+/**
+ * The `jsdoc` plugin as `eslint-config-webpack` already registers it: a rule set
+ * to anything but "off" needs the plugin resolved, and taking it from the shared
+ * config keeps the version webpack lints with in one place.
+ * @returns {import("eslint").ESLint.Plugin} the plugin object
+ */
+function getJsdocPlugin() {
+	const shared = getSharedConfig("typescript/jsdoc");
+	const flat = Array.isArray(shared) ? shared : [shared];
+	const holder = flat.find((one) => one && one.plugins && one.plugins.jsdoc);
+
+	if (!holder) {
+		throw new Error(
+			'eslint-config-webpack\'s "typescript/jsdoc" config registers no `jsdoc` plugin. The installed one is older than the version package.json asks for — run `yarn setup`.'
+		);
+	}
+
+	return holder.plugins.jsdoc;
+}
 
 export default defineConfig([
 	globalIgnores([
@@ -19,17 +59,23 @@ export default defineConfig([
 		"!test/**/deprecations.js",
 		"!test/**/infrastructure-log.js",
 		"!test/helpers/*.*",
+		"!test/templates/*.js",
+		"!test/specCases/*.js",
 		"!test/benchmarkCases/**/*.mjs",
+		// Only what these two directories hold directly: `runner/` and `snapshot/`
+		// carry lint errors of their own, which are not this list's to unblock.
+		"!test/harness/*.js",
+		"!test/harness/runtimes/*.js",
 		"!test/harness/benchmark/**/*.mjs",
 		"!test/_helpers/**/*.mjs",
 		"!test/runner/*.js",
 		"test/js/**/*.*",
-		"test/test262-cases/**/*.*",
-		"test/wpt/**/*.*",
-
-		// TODO fix me
-		// This is not exactly typescript
-		"assembly/**/*.ts",
+		"test/external/test262-cases/**/*.*",
+		"test/external/wpt/**/*.*",
+		"test/external/terser/**",
+		"test/external/swc/**",
+		"test/external/oxc/**",
+		"test/external/xml-conformance-suite/**/*.*",
 
 		// Ignore some folders
 		"benchmark",
@@ -39,13 +85,14 @@ export default defineConfig([
 		"*.check.js",
 
 		// Ignore not supported files
-		"*.d.ts",
+		"**/*.d.ts",
+		"**/*.d.json.ts",
 
 		// Ignore precompiled schemas
 		"schemas/**/*.check.js",
 
 		// Auto generation
-		"lib/util/semver.js",
+		"lib/sharing/semver.js",
 
 		// Ignore some examples files
 		"examples/**/*.{js,cjs,mjs,jsx,ts,cts,mts,tsx,md}",
@@ -97,10 +144,72 @@ export default defineConfig([
 	},
 	{
 		files: ["lib/**/*.js"],
-		extends: [configs["webpack/special"]]
+		extends: [getSharedConfig("webpack/special")]
 	},
-	configs["webpack/schemas"],
-	configs["webpack/types"],
+	getSharedConfig("webpack/schemas"),
+	getSharedConfig("webpack/types"),
+	{
+		files: ["lib/**/*.js"],
+		plugins: { jsdoc: getJsdocPlugin() },
+		rules: {
+			// The keywords an option type states for `tooling/generate-schemas.js`,
+			// which JSON Schema has and JSDoc does not
+			"jsdoc/check-tag-names": [
+				"error",
+				{
+					definedTags: [
+						"schema",
+						"publishes",
+						"required",
+						"definition",
+						"inline",
+						"title",
+						"minLength",
+						"minItems",
+						"minProperties",
+						"minimum",
+						"uniqueItems",
+						"absolutePath",
+						"pattern",
+						"additionalProperties",
+						"emptyProperties",
+						"undefinedAsNull",
+						"cliHelper",
+						"cliExclude",
+						"jsonType",
+						"tsType",
+						"typeOnly",
+						"properties",
+						"not"
+					]
+				}
+			]
+		}
+	},
+	getSharedConfig("webpack/comments"),
+	{
+		// The option sources `tooling/generate-schemas.js` derives the schemas from
+		// are modules, and their comments are what a schema says rather than prose.
+		files: ["declarations/**/*.ts"],
+		languageOptions: { parser: tseslint.parser, sourceType: "module" },
+		rules: {
+			"webpack/comment-length": "off",
+			// They declare types and emit nothing, so the runtime baseline is moot
+			"n/no-unsupported-features/es-syntax": "off",
+			// TypeScript resolves the names here, including the ambient ones
+			"no-undef": "off",
+			// The spellings are the ones the option takes, not ones to choose from
+			"unicorn/text-encoding-identifier-case": "off"
+		}
+	},
+	{
+		// An example's commented-out config is what a reader copies, and its prose
+		// is the example's own documentation — neither is commentary to shorten.
+		files: ["examples/**/*.{js,cjs,mjs}"],
+		rules: {
+			"webpack/comment-length": "off"
+		}
+	},
 	{
 		files: ["lib/**/*.js"],
 		rules: {
@@ -138,7 +247,7 @@ export default defineConfig([
 	{
 		files: ["lib/**/*.runtime.js", "hot/*.js"],
 		ignores: ["hot/load-http.js"],
-		extends: [configs["javascript/es5"]],
+		extends: [getSharedConfig("javascript/es5")],
 		languageOptions: {
 			sourceType: "commonjs",
 			globals: {
@@ -186,13 +295,6 @@ export default defineConfig([
 
 			// We have a lot of custom tests
 			"jest/no-confusing-set-timeout": "off"
-		}
-	},
-	{
-		// puppeteer-core is ESM-only (v25+) and is loaded via dynamic import here
-		files: ["test/helpers/launchChrome.js"],
-		languageOptions: {
-			ecmaVersion: 2020
 		}
 	},
 	{
@@ -244,13 +346,30 @@ export default defineConfig([
 		}
 	},
 	{
+		// Fetches the browsers for the suites that compare against one, from a package
+		// that is ESM-only — so it runs on modern Node rather than the baseline.
+		files: ["tooling/install-browsers.js"],
+		languageOptions: {
+			ecmaVersion: 2022
+		},
+		rules: {
+			"n/no-unsupported-features/es-syntax": [
+				"error",
+				{
+					ignores: ["dynamic-import"]
+				}
+			]
+		}
+	},
+	{
 		// The tool comparisons run on modern Node, not webpack's runtime baseline:
 		// they measure with post-10 APIs (fs.promises, zstd, resourceUsage).
 		files: [
 			"tooling/compare-css-tools.js",
 			"tooling/compare-html-tools.js",
 			"tooling/compare-js-tools.js",
-			"tooling/compare-tools-harness.js"
+			"tooling/compare-tools-harness.js",
+			"tooling/compare-xml-tools.js"
 		],
 		rules: {
 			"n/no-unsupported-features/node-builtins": "off"
@@ -259,7 +378,11 @@ export default defineConfig([
 	{
 		// The code generators run under the repo's own Node, not the baseline the
 		// code they emit has to meet.
-		files: ["tooling/generate-types.js", "tooling/type-coverage.js"],
+		files: [
+			"tooling/generate-types.js",
+			"tooling/precompile-schemas.js",
+			"tooling/type-coverage.js"
+		],
 		rules: {
 			"n/no-unsupported-features/es-builtins": "off",
 			"n/no-unsupported-features/es-syntax": "off",
@@ -275,11 +398,14 @@ export default defineConfig([
 		}
 	},
 	{
-		// `color-name` is ESM, so the CSS data generator reaches its table
-		// through a dynamic import rather than a `require` no jest `vm` supports.
-		// `html-minifier-next` is ESM only, and the HTML comparison imports it the
-		// same way.
-		files: ["tooling/generate-css-data.js", "tooling/compare-html-tools.js"],
+		// `color-name` is ESM, so the CSS data generator reaches its table through a
+		// dynamic import rather than a `require` no jest `vm` supports; the HTML and
+		// XML comparisons import their ESM-only tools the same way.
+		files: [
+			"tooling/generate-css-data.js",
+			"tooling/compare-html-tools.js",
+			"tooling/compare-xml-tools.js"
+		],
 		rules: {
 			"n/no-unsupported-features/es-syntax": [
 				"error",
@@ -290,7 +416,7 @@ export default defineConfig([
 		}
 	},
 	{
-		files: ["test/Compiler-filesystem-caching.test.js"],
+		files: ["test/unitCases/Compiler-filesystem-caching.unittest.js"],
 		languageOptions: {
 			ecmaVersion: 2022
 		}
@@ -298,12 +424,24 @@ export default defineConfig([
 	{
 		files: [
 			"test/configCases/{dll-plugin-entry,dll-plugin-side-effects,dll-plugin}/**/webpack.config.js",
-			"test/NodeTemplatePlugin.test.js",
-			"test/PersistentCaching.test.js"
+			"test/unitCases/NodeTemplatePlugin.unittest.js",
+			"test/unitCases/PersistentCaching.unittest.js"
 		],
 		rules: {
 			"import/extensions": "off",
 			"import/no-unresolved": "off"
+		}
+	},
+	{
+		files: ["assembly/**/*.ts"],
+		languageOptions: { parser: tseslint.parser, sourceType: "module" },
+		rules: {
+			eqeqeq: "off",
+			"no-undef": "off",
+			"no-loss-of-precision": "off",
+			"new-cap": ["error", { capIsNew: false }],
+			strict: "off",
+			"n/no-unsupported-features/es-syntax": "off"
 		}
 	},
 	{
@@ -323,13 +461,9 @@ export default defineConfig([
 		}
 	},
 	{
-		// The parser keeps acorn's method and property names, since
-		// `lib/javascript/syntax.js` and any acorn plugin call them by those names.
-		files: [
-			"lib/javascript/grammar.js",
-			"lib/javascript/parser.js",
-			"lib/javascript/regexp.js"
-		],
+		// The parser keeps acorn's method and property names, since any acorn
+		// plugin calls them by those names.
+		files: ["lib/javascript/regexp.js", "lib/javascript/syntax-parser.js"],
 		rules: {
 			camelcase: "off"
 		}

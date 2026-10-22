@@ -10,12 +10,8 @@ it("should generate runtime code for source-phase imports of externals", () => {
 	);
 
 	// The init-fragment key for source-phase imports is `source harmony import`,
-	// distinct from the regular `harmony import` key. The dependency template
-	// itself currently emits the same import statement as a regular harmony
-	// import (the source phase is not specially materialised for non-WASM
-	// externals at the static import site), but the keying ensures the import
-	// is still tracked separately from any eager namespace import of the same
-	// module.
+	// distinct from `harmony import`. The template emits the same statement today, but
+	// the keying keeps it tracked apart from an eager namespace import of the module.
 	expect(content).toContain(
 		"/* harmony import */ var ext_var_sync__WEBPACK_IMPORTED_MODULE"
 	);

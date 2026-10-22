@@ -40,7 +40,7 @@ import * as styles33 from "./composes-circular.module.css";
 
 const EXPORT_TYPE = process.env.EXPORT_TYPE;
 
-// Read `default` via Reflect.get so webpack's HarmonyImportSpecifier analysis
+// Read `default` via Reflect.get so webpack's ESMImportSpecifier analysis
 // does not flag a "missing export 'default'" warning for exportTypes that
 // legitimately have no default export (link/style).
 const DEFAULT_KEY = "default";
@@ -113,8 +113,7 @@ if (EXPORT_TYPE === "link") {
 		const links = document.getElementsByTagName("link");
 		const css = [];
 
-		// Skip first because import it by default
-		for (const link of links.slice(1)) {
+		for (const link of links) {
 			css.push(link.sheet.css);
 		}
 

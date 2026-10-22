@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases css minimize-dead-fallbacks-legacy minimize-dead-fallbacks-legacy should compile 1`] = `
+Array [
+  "/*! kept: chrome 60 reads no \`lab()\`, so the hex is the only color it gets */.t01{color:#c65d06;color:lab(50% 100 -100)}",
+  "/*! ...nor \`oklch()\` */.t02{color:#7d2181;color:oklch(90% .3 140)}",
+  "/*! ...nor \`lch()\` */.t03{color:red;color:lch(50% 130 20)}",
+  "/*! ...and an \`!important\` later one it cannot read is still unreadable */.t04{color:red;color:oklch(90% .3 140)!important}",
+  "/*! ...nor \`light-dark()\`, whose arguments this can name either way */.t04a{color:red;color:light-dark(#fff,#000)}",
+  "/*! a keyword every selected engine does read is dropped here as well, the
+   question being the target rather than the age of the spelling */.t05{display:flex}",
+  "/*! ...where one of them does not, the fallback stands (and the spelling it
+   reads is written beside it) */.t06{overflow:hidden;overflow:-moz-hidden-unscrollable;overflow:clip}",
+  "/*! ...same */.t07{width:auto;width:-moz-fit-content;width:fit-content}",
+]
+`;

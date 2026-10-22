@@ -25,7 +25,7 @@ module.exports = {
 			external: "asset-url https://example.test/free-css-url.png",
 			sideEffects: false
 		},
-		// TODO webpack 6 remove, `css-url` is the old spelling of `asset-url`
+		// TODO in the next major release: remove, `css-url` is the old spelling of `asset-url`
 		"free-css-url-alias": {
 			external: "css-url https://example.test/free-css-url-alias.png",
 			sideEffects: false

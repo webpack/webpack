@@ -20,11 +20,9 @@ it("should mix a <link rel=stylesheet> entry with CSS imported from a <script sr
 	for (let m; (m = scriptSrcRe.exec(extracted)); ) scriptSrcs.push(m[1]);
 	expect(scriptSrcs).toHaveLength(1);
 
-	// One `<link>` for the `<link rel="stylesheet">` entry, plus one
-	// for the entry chunk's CSS (containing both JS-imported `.css`
-	// files merged in import order). The CSS `@import` of `shared.css`
-	// is followed by the CSS pipeline and lands in the same chunk, so
-	// no third `<link>` shows up for it.
+	// One `<link>` for the `<link rel="stylesheet">` entry, plus one for the entry
+	// chunk's CSS holding both JS-imported files. `shared.css` is `@import`ed through
+	// the CSS pipeline into that same chunk, so no third `<link>` appears.
 	expect(linkHrefs).toHaveLength(2);
 	for (const href of linkHrefs) {
 		expect(href).toMatch(/\.css$/);
@@ -52,23 +50,16 @@ it("should mix a <link rel=stylesheet> entry with CSS imported from a <script sr
 	expect(linkedCss).not.toContain('content: "imports-shared"');
 	expect(linkedCss).not.toContain('content: "shared"');
 
-	// The JS-side bundle contains everything entry.js pulled in —
-	// `imported.css`, `imports-shared.css`, and `shared.css` via the
-	// CSS `@import` inside `imports-shared.css`. The order of the
-	// modules inside that single chunk follows the source's import
-	// order (CssModulesPlugin's per-chunk ordering): shared.css is
-	// pulled in BEFORE the `imports-shared.css` rule that triggered
-	// it, then `imported.css` and `imports-shared.css` themselves.
+	// The JS-side bundle holds everything entry.js pulled in, including `shared.css`
+	// through the `@import` inside `imports-shared.css`. Module order within the chunk
+	// follows source import order, so `shared.css` precedes the rule that pulled it.
 	expect(jsBundleCss).toContain('content: "imported"');
 	expect(jsBundleCss).toContain('content: "imports-shared"');
 	expect(jsBundleCss).toContain('content: "shared"');
 
-	// `.hero` cascade in the final document: linked.css declares it
-	// red, imported.css redeclares it green. linked.css loads first
-	// (link before script), imported.css loads second — so green
-	// wins. Easiest to verify by checking that linked.css holds the
-	// red declaration and the JS-side bundle holds the green one,
-	// and that linked precedes imported in the HTML (already done).
+	// `.hero` cascade: linked.css declares it red and imported.css green. linked.css
+	// loads first, so green wins — checked by linked.css holding the red declaration
+	// and the JS-side bundle the green one.
 	expect(linkedCss).toContain("color: red");
 	expect(jsBundleCss).toContain("color: green");
 });

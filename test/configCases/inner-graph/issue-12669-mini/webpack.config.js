@@ -3,22 +3,14 @@
 const createTestCases = require("../_helpers/createTestCases");
 
 module.exports = createTestCases({
-	// nothing: {
-	// 	usedExports: [],
-	// 	expect: {
-	// 		"./dependency": []
-	// 	}
-	// },
+	// The `nothing` variant — `usedExports: []`, expecting `./dependency: []` — is not
+	// covered here.
 	a: {
 		usedExports: ["a"],
 		expect: {
 			"./dependency": ["x"]
 		}
 	}
-	// b: {
-	// 	usedExports: ["b"],
-	// 	expect: {
-	// 		"./dependency": ["y"]
-	// 	}
-	// }
+	// The `b` variant — `usedExports: ["b"]`, expecting `./dependency: ["y"]` — is not
+	// covered here.
 });

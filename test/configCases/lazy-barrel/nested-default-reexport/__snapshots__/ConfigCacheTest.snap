@@ -1,0 +1,89 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases lazy-barrel nested-default-reexport nested-default-reexport should compile: 0 1`] = `
+"./index.js [barrel]
+└─ (Button, getButtonUtilityClass) ./lib/index.mjs [barrel]
+   ├─ (*) ./lib/Button/index.mjs [barrel]
+   │  ├─ (default) ./lib/Button/Button.mjs
+   │  └─ (*) ./lib/Button/buttonClasses.mjs
+   └─ (*) ./lib/Table/index.mjs [barrel]
+      ├─ (default) ./lib/Table/Table.mjs
+      └─ (*) ./lib/Table/tableClasses.mjs"
+`;
+
+exports[`ConfigCacheTestCases lazy-barrel nested-default-reexport nested-default-reexport should compile: 0 2`] = `
+"./index.js [barrel]
+└─ (Button, getButtonUtilityClass) ./lib/index.mjs [barrel]
+   ├─ (*) ./lib/Button/index.mjs [barrel]
+   │  ├─ (default) ./lib/Button/Button.mjs
+   │  └─ (*) ./lib/Button/buttonClasses.mjs
+   └─ (*) ./lib/Table/index.mjs [barrel]
+      ├─ (default) ./lib/Table/Table.mjs
+      └─ (*) ./lib/Table/tableClasses.mjs"
+`;
+
+exports[`ConfigCacheTestCases lazy-barrel nested-default-reexport nested-default-reexport should compile: 1 1`] = `
+"./index.js [barrel]
+└─ (Button, getButtonUtilityClass) ./lib/index.mjs [barrel]
+   ├─ (*) ./lib/Button/index.mjs [barrel]
+   │  ├─ (default) ./lib/Button/Button.mjs
+   │  └─ (*) ./lib/Button/buttonClasses.mjs
+   └─ (*) ./lib/Table/index.mjs [barrel]
+      ├─ (default) ./lib/Table/Table.mjs
+      └─ (*) ./lib/Table/tableClasses.mjs"
+`;
+
+exports[`ConfigCacheTestCases lazy-barrel nested-default-reexport nested-default-reexport should compile: 1 2`] = `
+"./index.js [barrel]
+└─ (Button, getButtonUtilityClass) ./lib/index.mjs [barrel]
+   ├─ (*) ./lib/Button/index.mjs [barrel]
+   │  ├─ (default) ./lib/Button/Button.mjs
+   │  └─ (*) ./lib/Button/buttonClasses.mjs
+   └─ (*) ./lib/Table/index.mjs [barrel]
+      ├─ (default) ./lib/Table/Table.mjs
+      └─ (*) ./lib/Table/tableClasses.mjs"
+`;
+
+exports[`ConfigCacheTestCases lazy-barrel nested-default-reexport nested-default-reexport should pre-compile to fill disk cache (1st): 0 1`] = `
+"./index.js [barrel]
+└─ (Button, getButtonUtilityClass) ./lib/index.mjs [barrel]
+   ├─ (*) ./lib/Button/index.mjs [barrel]
+   │  ├─ (default) ./lib/Button/Button.mjs
+   │  └─ (*) ./lib/Button/buttonClasses.mjs
+   └─ (*) ./lib/Table/index.mjs [barrel]
+      ├─ (default) ./lib/Table/Table.mjs
+      └─ (*) ./lib/Table/tableClasses.mjs"
+`;
+
+exports[`ConfigCacheTestCases lazy-barrel nested-default-reexport nested-default-reexport should pre-compile to fill disk cache (1st): 1 1`] = `
+"./index.js [barrel]
+└─ (Button, getButtonUtilityClass) ./lib/index.mjs [barrel]
+   ├─ (*) ./lib/Button/index.mjs [barrel]
+   │  ├─ (default) ./lib/Button/Button.mjs
+   │  └─ (*) ./lib/Button/buttonClasses.mjs
+   └─ (*) ./lib/Table/index.mjs [barrel]
+      ├─ (default) ./lib/Table/Table.mjs
+      └─ (*) ./lib/Table/tableClasses.mjs"
+`;
+
+exports[`ConfigCacheTestCases lazy-barrel nested-default-reexport nested-default-reexport should pre-compile to fill disk cache (2nd): 0 1`] = `
+"./index.js [barrel]
+└─ (Button, getButtonUtilityClass) ./lib/index.mjs [barrel]
+   ├─ (*) ./lib/Button/index.mjs [barrel]
+   │  ├─ (default) ./lib/Button/Button.mjs
+   │  └─ (*) ./lib/Button/buttonClasses.mjs
+   └─ (*) ./lib/Table/index.mjs [barrel]
+      ├─ (default) ./lib/Table/Table.mjs
+      └─ (*) ./lib/Table/tableClasses.mjs"
+`;
+
+exports[`ConfigCacheTestCases lazy-barrel nested-default-reexport nested-default-reexport should pre-compile to fill disk cache (2nd): 1 1`] = `
+"./index.js [barrel]
+└─ (Button, getButtonUtilityClass) ./lib/index.mjs [barrel]
+   ├─ (*) ./lib/Button/index.mjs [barrel]
+   │  ├─ (default) ./lib/Button/Button.mjs
+   │  └─ (*) ./lib/Button/buttonClasses.mjs
+   └─ (*) ./lib/Table/index.mjs [barrel]
+      ├─ (default) ./lib/Table/Table.mjs
+      └─ (*) ./lib/Table/tableClasses.mjs"
+`;

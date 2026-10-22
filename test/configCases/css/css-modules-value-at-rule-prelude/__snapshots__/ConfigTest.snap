@@ -12,6 +12,20 @@ exports[`ConfigTestCases css css-modules-value-at-rule-prelude exported tests sh
 	from { opacity: 0; }
 }
 
+
+
+
+
+
+
+@keyframes value-at-rule-prelude-values_module_css-definedAnim {
+	from { opacity: 0; }
+}
+
+.value-at-rule-prelude-values_module_css-linear {
+	color: black;
+}
+
 /*!******************************!*\\\\
   !*** css ./style.module.css ***!
   \\\\******************************/
@@ -70,10 +84,10 @@ exports[`ConfigTestCases css css-modules-value-at-rule-prelude exported tests sh
 }
 
 .value-at-rule-prelude-style_module_css-imported-anim {
-	animation-name: importedAnim;
+	animation-name: value-at-rule-prelude-style_module_css-importedAnim;
 }
 
-@keyframes importedAnim {
+@keyframes value-at-rule-prelude-style_module_css-importedAnim {
 	from { opacity: 0; }
 }
 
@@ -88,10 +102,10 @@ exports[`ConfigTestCases css css-modules-value-at-rule-prelude exported tests sh
 }
 
 .value-at-rule-prelude-style_module_css-imported-counter {
-	list-style: importedCounter;
+	list-style: value-at-rule-prelude-style_module_css-importedCounter;
 }
 
-@counter-style importedCounter {
+@counter-style value-at-rule-prelude-style_module_css-importedCounter {
 	system: cyclic;
 	symbols: \\"+\\";
 	suffix: \\" \\";
@@ -184,8 +198,57 @@ article {
 
 
 
-.importedCls {
+.value-at-rule-prelude-style_module_css-importedCls {
 	color: silver;
+}
+
+
+
+
+.value-at-rule-prelude-style_module_css-spaced-anim {
+	animation-name: value-at-rule-prelude-style_module_css-spacedAnim;
+}
+
+@keyframes value-at-rule-prelude-style_module_css-spacedAnim {
+	from { opacity: 0; }
+}
+
+@keyframes value-at-rule-prelude-style_module_css-rich\\\\ anim {
+	from { opacity: 0; }
+}
+
+
+
+@keyframes value-at-rule-prelude-style_module_css-imported\\\\ rich {
+	from { opacity: 0; }
+}
+
+
+
+.outer .inner {
+	color: white;
+}
+
+
+
+
+
+.value-at-rule-prelude-style_module_css-timing-anim {
+	animation: value-at-rule-prelude-style_module_css-pulseAnim 1s linear;
+}
+
+.value-at-rule-prelude-style_module_css-imported-timing-anim {
+	animation: value-at-rule-prelude-style_module_css-importedAnim 2s linear;
+}
+
+.value-at-rule-prelude-style_module_css-imported-local-anim {
+	animation-name: value-at-rule-prelude-style_module_css-importedLocalAnim;
+}
+
+
+
+.value-at-rule-prelude-style_module_css-defined-anim {
+	animation-name: value-at-rule-prelude-values_module_css-definedAnim;
 }
 
 /*!***********************************!*\\\\

@@ -58,13 +58,9 @@ it("should use/preserve accessor form for import object and namespaces", functio
 
 	/************ DO NOT MATCH BELOW THIS LINE ************/
 
-	// Imported objects and import namespaces should use dot notation.  Any references to the properties of exports
-	// should be preserved as either quotes or dot notation, depending on the original source.
-	// `obj1` is mangled here (its namespace escapes via `const x1 = m_1`, which is rendered as a decoupled
-	// namespace object that keeps the original names); the mangled accessor name is matched as `\w+` below, but
-	// the accessor *form* (dot vs. quotes) is still pinned.
-	// The wrapper accessor call is parenthesized so `new`/call positions keep binding to the export rather than
-	// to the accessor; the original source's own parens are preserved around it.
+	// Imported objects and namespaces use dot notation; a reference to an export's
+	// property keeps the source's own form, quoted or dotted. `obj1` is mangled, so
+	// its accessor name is matched as `\w+` while the accessor form is still pinned.
 
 	expectSourceToContain(source, 'const x1 = module1_namespaceObject;');
 	expectSourceToMatch(source, re('const x2 = (module1_namespaceFn().@);'));

@@ -1,6 +1,6 @@
 {
   "definitions": {
-    "rule": {
+    "Rule": {
       "description": "Condition used to match resource (string, RegExp or Function).",
       "anyOf": [
         {
@@ -12,12 +12,39 @@
           "minLength": 1
         },
         {
+          "description": "Glob patterns matched against the file name, `!` in front of a pattern excludes it, and a relative pattern matches at any depth.",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "glob": {
+              "description": "Glob patterns to match.",
+              "anyOf": [
+                {
+                  "type": "array",
+                  "items": {
+                    "description": "A glob pattern.",
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "minItems": 1
+                },
+                {
+                  "type": "string",
+                  "minLength": 1
+                }
+              ]
+            }
+          },
+          "required": ["glob"],
+          "added": "5.112.0"
+        },
+        {
           "instanceof": "Function",
-          "tsType": "import('../../lib/ModuleFilenameHelpers').MatcherFn"
+          "tsType": "import('../../lib/devtool/ModuleFilenameHelpers').MatcherFn"
         }
       ]
     },
-    "rules": {
+    "Rules": {
       "description": "One or multiple conditions used to match resource.",
       "anyOf": [
         {
@@ -26,13 +53,13 @@
             "description": "A rule condition.",
             "oneOf": [
               {
-                "$ref": "#/definitions/rule"
+                "$ref": "#/definitions/Rule"
               }
             ]
           }
         },
         {
-          "$ref": "#/definitions/rule"
+          "$ref": "#/definitions/Rule"
         }
       ]
     }
@@ -54,7 +81,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "import('../../lib/TemplatedPathPlugin').TemplatePathFn"
+          "tsType": "import('../../lib/template/TemplatedPathPlugin').TemplatePathFn"
         }
       ]
     },
@@ -70,7 +97,7 @@
       "description": "Exclude modules that match the given value from source map generation.",
       "oneOf": [
         {
-          "$ref": "#/definitions/rules"
+          "$ref": "#/definitions/Rules"
         }
       ]
     },
@@ -84,7 +111,7 @@
         {
           "description": "Custom function generating the identifier.",
           "instanceof": "Function",
-          "tsType": "import('../../lib/ModuleFilenameHelpers').ModuleFilenameTemplateFunction"
+          "tsType": "import('../../lib/devtool/ModuleFilenameHelpers').ModuleFilenameTemplateFunction"
         }
       ]
     },
@@ -110,7 +137,7 @@
       "description": "Decide whether to ignore source files that match the specified value in the SourceMap.",
       "oneOf": [
         {
-          "$ref": "#/definitions/rules"
+          "$ref": "#/definitions/Rules"
         }
       ]
     },
@@ -118,7 +145,7 @@
       "description": "Include source maps for module paths that match the given value.",
       "oneOf": [
         {
-          "$ref": "#/definitions/rules"
+          "$ref": "#/definitions/Rules"
         }
       ]
     },
@@ -136,7 +163,7 @@
         {
           "description": "Custom function generating the identifier.",
           "instanceof": "Function",
-          "tsType": "import('../../lib/ModuleFilenameHelpers').ModuleFilenameTemplateFunction"
+          "tsType": "import('../../lib/devtool/ModuleFilenameHelpers').ModuleFilenameTemplateFunction"
         }
       ]
     },
@@ -152,6 +179,11 @@
       "description": "Provide a custom public path for the SourceMapping comment.",
       "type": "string"
     },
+    "scopes": {
+      "description": "Emit the 'scopes' field, which tells a debugger the generated expression each imported ESM binding reads, so it resolves under the name the source uses.",
+      "type": "boolean",
+      "added": "5.112.0"
+    },
     "sourceRoot": {
       "description": "Provide a custom value for the 'sourceRoot' property in the SourceMap.",
       "type": "string"
@@ -160,7 +192,7 @@
       "description": "Include source maps for modules based on their extension (defaults to .js and .css).",
       "oneOf": [
         {
-          "$ref": "#/definitions/rules"
+          "$ref": "#/definitions/Rules"
         }
       ]
     }

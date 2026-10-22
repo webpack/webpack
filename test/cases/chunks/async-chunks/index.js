@@ -1,0 +1,15 @@
+import "./circular-correctness/index.js";
+import "./context/index.js";
+import "./context-weak/index.js";
+import "./import/index.js";
+import "./import-circle/index.js";
+import "./import-context/index.js";
+import "./import-context-exist-chunk/index.js";
+import "./issue-2443/index.js";
+import "./issue-5153/index.js";
+import "./mixing-async-apis/index.js";
+import "./named-chunks/index.js";
+import "./nested-blocks-with-available-parent-modules/index.js";
+import "./nested-in-empty/index.js";
+import "./parsing/index.js";
+import "./var-inject-error-handler/index.js";

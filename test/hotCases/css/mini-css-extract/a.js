@@ -6,14 +6,38 @@ const readStyles = () =>
 		"utf-8"
 	);
 
+const log = console.log;
+// restored even when the test fails or times out before it finishes
+afterEach(() => {
+	console.log = log;
+});
+
 it("should apply a hot update to the extracted stylesheet", function (done) {
 	expect(readStyles()).toContain("color: red;");
 
-	NEXT(
-		require("../../update")(done, true, () => {
-			expect(readStyles()).toContain("color: blue;");
+	// mini-css-extract-plugin reports the reload on the console: check it there
+	// rather than let it reach the test output
+	const logs = [];
+	console.log = (...args) => {
+		logs.push(args.join(" "));
+	};
+	const finish = (err) => {
+		console.log = log;
+		done(err);
+	};
 
-			done();
+	NEXT(
+		require("../../update")(finish, true, () => {
+			expect(readStyles()).toContain("color: blue;");
+			// the plugin debounces the reload by 50ms
+			setTimeout(() => {
+				try {
+					expect(logs.join("\n")).toContain("Reload all css");
+				} catch (err) {
+					return finish(err);
+				}
+				finish();
+			}, 100);
 		})
 	);
 });

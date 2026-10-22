@@ -1,0 +1,1 @@
+{"version":3,"sources":["mapped-original.js"],"sourcesContent":["export function mapped() { return 'mapped'; }"],"names":[],"mappings":"AAAA"}

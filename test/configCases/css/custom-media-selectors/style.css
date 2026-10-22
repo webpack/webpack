@@ -153,3 +153,112 @@ a:--heading {
 		color: red;
 	}
 }
+
+/* A value reading another name, in whichever order the rules are written. */
+@media (--chain) {
+	.chain {
+		color: red;
+	}
+}
+
+@custom-media --chain (--chain-base) and (hover);
+@custom-media --chain-base (min-width: 1px);
+
+/* A value of several terms is one group after `not` and beside `or`. */
+@custom-media --pair (min-width: 1px) and (max-width: 2px);
+
+@media not (--pair) {
+	.not-pair {
+		color: red;
+	}
+}
+
+@media (--pair) or (hover) {
+	.or-pair {
+		color: red;
+	}
+}
+
+@custom-media --either (min-width: 1px) or (hover);
+
+@media (--either) and (color) {
+	.and-either {
+		color: red;
+	}
+}
+
+/* A reference inside one alternative of a list. */
+@custom-media --list-ref (color), not (--pair);
+
+@media (--list-ref) {
+	.list-ref {
+		color: red;
+	}
+}
+
+/* A custom selector reading another, defined before or after it. */
+:--nested-heading {
+	color: red;
+}
+
+@custom-selector :--nested-heading :--heading .title, :--heading:hover;
+
+@custom-selector :--cycle-a :--cycle-b;
+@custom-selector :--cycle-b :--cycle-a;
+
+/* Names on a cycle stand for nothing, and are left as written. */
+.cycle:--cycle-a {
+	color: red;
+}
+
+/* A value of `and` terms stays as written inside another `and`. */
+@media (--pair) and (hover) {
+	.and-pair {
+		color: red;
+	}
+}
+
+/* A value reading `true` folds, and one led by a media type stays a type. */
+@custom-media --always-or (--always) or (hover);
+@custom-media --typed-chain (--tv) and (hover);
+
+@media (--always-or) {
+	.always-or {
+		color: red;
+	}
+}
+
+@media (--typed-chain) {
+	.typed-chain {
+		color: red;
+	}
+}
+
+@media print, (--narrow) {
+	.print-or-narrow {
+		color: red;
+	}
+}
+
+/* A name in a string or after an escape is no name; an unknown one is kept. */
+@custom-selector :--quoted [title="a\" :--nested-heading"] .x\:--nested-heading, :--undefined-name;
+
+:--quoted {
+	color: red;
+}
+
+.again:--nested-heading {
+	color: red;
+}
+
+@custom-media --never-and (--never) and (hover);
+
+@media (--never-and) {
+	.never-and {
+		color: red;
+	}
+}
+
+.cycle-again:--cycle-a {
+	color: red;
+}

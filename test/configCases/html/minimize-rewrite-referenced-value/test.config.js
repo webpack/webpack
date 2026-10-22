@@ -28,5 +28,8 @@ module.exports = {
 		// to reach one spelled with references too.
 		expect(html).toMatch(/href=["']?\.\/a\.png/);
 		expect(html).not.toContain("&#x20;&#x2e;&#x2f;");
+		// A rewritten value is written at its shortest: trimmed, unquoted, and
+		// with no escape on an `&` that starts no reference.
+		expect(html).toContain("<a href=&x&y>");
 	}
 };

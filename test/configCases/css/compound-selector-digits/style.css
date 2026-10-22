@@ -6,7 +6,7 @@ div.parent1.child1 {
 	color: green;
 }
 
-:is(div.a1.b2) {
+:is(div.a1.b2, .x) {
 	color: blue;
 }
 

@@ -5,3 +5,17 @@
 @keyframes importedKeyframes {
 	from { opacity: 0; }
 }
+@value importedRichName: imported rich;
+@value importedRichSelValue: .outer .inner;
+@value importedDuration: 2s;
+@value importedEasing: linear;
+@value importedLocalAnimName: importedLocalAnim;
+@value definedAnimName: definedAnim;
+
+@keyframes definedAnimName {
+	from { opacity: 0; }
+}
+
+.linear {
+	color: black;
+}

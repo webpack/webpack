@@ -6,7 +6,7 @@
 "use strict";
 
 // Generate every table the HTML parser and minifier look a name up in:
-// `lib/html/data.js`, and the entity region inside `lib/html/syntax.js`.
+// `lib/html/data.js`, and the entity region inside `lib/html/syntax-parser.js`.
 //
 //   node tooling/generate-html-data.js --write
 //
@@ -20,9 +20,10 @@ const prettier = require("prettier");
 const { toJsStringLiteral } = require("../lib/util/identifier");
 
 const TARGET = path.resolve(__dirname, "../lib/html/data.js");
-const SYNTAX_TARGET = path.resolve(__dirname, "../lib/html/syntax.js");
-// Vendored because no package carries WHATWG's table faithfully: the ones that
-// exist drop the semicolon, losing the 106 names that match without one.
+const SYNTAX_TARGET = path.resolve(__dirname, "../lib/html/syntax-parser.js");
+// Vendored because the table is frozen — the spec says it "will not be expanded
+// or changed in the future" — and no package carries it faithfully: the ones
+// that exist drop the semicolon, losing the 106 names that match without one.
 const ENTITIES_PATH = path.resolve(__dirname, "html-entities.json");
 const write = process.argv.includes("--write");
 const fetchSource = process.argv.includes("--fetch");
@@ -414,7 +415,9 @@ const SUPPLEMENT = {
 		href: ["a", "area", "base"],
 		action: ["form"],
 		formaction: ["button", "input"],
-		manifest: ["html"]
+		manifest: ["html"],
+		// Typed `(TrustedScriptURL or USVString)` for Trusted Types, so no marker.
+		src: ["script"]
 	},
 	// Not pure reflections on these elements — the IDL member resizes a bitmap or
 	// drives a plugin — so they carry no marker.
@@ -1355,8 +1358,17 @@ const PARSER_TABLES = [
 	[
 		"LITERAL_TEXT_PARENTS",
 		"set",
-		"Elements whose text children serialize literally, no escaping. `textarea` / `title` are escapable, so they are not here.",
-		["script", "style", "xmp", "iframe", "noembed", "noframes", "plaintext"]
+		"Elements whose text children serialize literally, no escaping. `textarea` / `title` are escapable, so they are not here. `noscript` holds text only as a printed document is parsed, with scripting on.",
+		[
+			"script",
+			"style",
+			"xmp",
+			"iframe",
+			"noembed",
+			"noframes",
+			"noscript",
+			"plaintext"
+		]
 	],
 	[
 		"TRANSPARENT_IMPLIED_ELEMENTS",
@@ -1502,7 +1514,9 @@ const PARSER_TABLES = [
 				"application/x-www-form-urlencoded multipart/form-data text/plain"
 			],
 			["button formmethod", "get post dialog"],
+			["button popovertargetaction", "toggle show hide"],
 			["button type", "submit reset button"],
+			["dialog closedby", "any closerequest none"],
 			["form autocomplete", "on off"],
 			[
 				"form enctype",
@@ -1519,6 +1533,7 @@ const PARSER_TABLES = [
 				"application/x-www-form-urlencoded multipart/form-data text/plain"
 			],
 			["input formmethod", "get post dialog"],
+			["input popovertargetaction", "toggle show hide"],
 			[
 				"input type",
 				"hidden text search tel url email password date month week time datetime-local number range color checkbox radio file submit image reset button"
@@ -1528,50 +1543,78 @@ const PARSER_TABLES = [
 			["script crossorigin", "anonymous use-credentials"],
 			["script fetchpriority", "high low auto"],
 			["td scope", "row col rowgroup colgroup"],
+			["template shadowrootmode", "open closed"],
 			["th scope", "row col rowgroup colgroup"],
 			["track kind", "subtitles captions descriptions chapters metadata"],
 			["video crossorigin", "anonymous use-credentials"],
 			["video preload", "none metadata auto"]
 		]
 	],
-	// WHY: Elements `removeEmptyElements` keeps even with no children and no
-	// attributes, because that is their ordinary form rather than a leftover.
-	// The option's other guards are rules, not names: a void element is always
-	// childless, a foreign one is not ours to judge, and an element carrying any
-	// attribute at all was written for a reason (which is what covers
-	// `<script src>`, `<iframe src>`, `<div id=mount>` and `<div class=spacer>`,
-	// each of which html-minifier-terser drops).
+	// WHY: An enumerated attribute names two defaults — the state a missing
+	// attribute takes, and the state a value matching no keyword takes — and
+	// `REDUNDANT_DEFAULT_ATTRIBUTES` states only the first. For every attribute
+	// both tables name they are the same state but one, so `<input type=zzz>`
+	// says what no `type` at all says and may go with it, while `<track
+	// kind=zzz>` is the metadata state where a missing `kind` is subtitles.
+	// Measured rather than read off the prose, since the IDL states neither:
+	// an engine hands `track.kind` back as metadata for a value it does not
+	// know and as subtitles for no attribute at all.
 	[
-		"EMPTY_ELEMENT_KEPT",
+		"INVALID_VALUE_DEFAULT_DIFFERS",
 		"set",
-		"Elements `removeEmptyElements` never drops: with no children and no attributes each is still doing its job, so an empty one is not a leftover.",
+		"`<element> <attribute>` for each enumerated attribute whose invalid value default names a different state from its missing value default, so a value matching no keyword may not be dropped as redundant.",
+		["track kind"]
+	],
+	// WHY: Elements `removeEmptyElements` may drop when they hold nothing and
+	// carry no attribute: an empty one has no box, margin, marker, widget or
+	// generated text of its own, and nothing finds it by name. Every other name
+	// stays — a widget, a margin, a custom element a script upgrades, or one
+	// added to HTML after this list — so an unknown element takes the safe side.
+	[
+		"EMPTY_ELEMENT_DROPPED",
+		"set",
+		"Elements `removeEmptyElements` may drop: with no children and no attributes each renders nothing and is read by nothing; every other element, a custom one included, is kept.",
 		[
-			// Drawn into by script, and found by tag name.
-			"canvas",
-			// Filled and opened by script.
-			"dialog",
-			// A gauge reads its value off an attribute; bare, it is still a gauge.
-			"meter",
-			// Form-associated and written to by script.
-			"output",
-			"progress",
-			// The default slot, which is exactly the one with no name.
-			"slot",
-			// Its children hang off a content fragment, not off it.
-			"template",
-			// Empty is a valid value, and its own end tag is what delimits it.
-			"textarea",
-			// Table shape: dropping a cell or a row shifts every one after it.
-			"caption",
-			"col",
-			"colgroup",
-			"table",
-			"tbody",
-			"td",
-			"tfoot",
-			"th",
-			"thead",
-			"tr"
+			"a",
+			"abbr",
+			"address",
+			"article",
+			"aside",
+			"b",
+			"bdi",
+			"bdo",
+			"cite",
+			"code",
+			"data",
+			"del",
+			"dfn",
+			"div",
+			"em",
+			"footer",
+			// The parser puts one back wherever it is left out.
+			"head",
+			"header",
+			"i",
+			"ins",
+			"kbd",
+			"label",
+			"main",
+			"mark",
+			"nav",
+			"s",
+			"samp",
+			"script",
+			"section",
+			"small",
+			"span",
+			"strong",
+			"style",
+			"sub",
+			"sup",
+			"time",
+			"title",
+			"u",
+			"var"
 		]
 	],
 	// WHY: Global attributes whose empty value is the state the spec gives their
@@ -2202,7 +2245,7 @@ const main = async () => {
 		settle(
 			SYNTAX_TARGET,
 			nextSyntax,
-			"lib/html/syntax.js entities",
+			"lib/html/syntax-parser.js entities",
 			`${Object.keys(entities).length} entities`
 		)
 	];

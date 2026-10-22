@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases infrastructure-logging-debug-colors should print correct stats for infrastructure-logging-debug-colors 1`] = `
+"<-> <CLR=36,BOLD>[Debugged] Group</CLR>
+  <e> <CLR=31,BOLD>[Debugged] Error</CLR>
+  <w> <CLR=33,BOLD>[Debugged] Warning</CLR>
+  <i> <CLR=32,BOLD>[Debugged] Info</CLR>
+      <CLR=BOLD>[Debugged] Log<CLR=22>
+      [Debugged] Debug
+  <-> <CLR=36,BOLD>[Debugged] Collapsed group</CLR>
+        <CLR=BOLD>[Debugged] Log inside collapsed group<CLR=22>
+<t> <CLR=35,BOLD>[Debugged] Time: X ms</CLR>
+<e> <CLR=31,BOLD>[Other] Error</CLR>
+"
+`;

@@ -5,7 +5,7 @@ const SampleEmbeddedMinifyPlugin = require("../../../helpers/SampleEmbeddedMinif
 // Stands in for an SVG minifier: collapsing runs of whitespace is enough to
 // show the payload was reached and put back in the form it was written in.
 // Every other language is declined, which is what leaves it to webpack's own.
-/** @type {import("../../../../lib/html/syntax").EmbeddedSourceRenderer} */
+/** @type {import("../../../../lib/html/syntax-printer").EmbeddedSourceRenderer} */
 const renderEmbeddedSource = (source, { type }) =>
 	type === "svg" ? source.replace(/\s+/g, " ").trim() : undefined;
 

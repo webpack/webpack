@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases html minify-data-url-attributes exported tests should minify the payload of every data: URL a URL attribute holds 1`] = `
+"<!doctype html><head><title>data: URLs in attributes</title></head><body>
+<object data='data:application/json,{\\"a\\":1}'></object>
+<a href='data:application/json,{\\"b\\":\\"&#39;\\"}'>json</a>
+<iframe src=\\"data:text/html,<p>a\\"></iframe>
+<img src=data:image/png;base64,AAAA alt>
+<p title='data:application/json,{ \\"kept\\" : 1 }'>text</p>
+
+
+</body></html>"
+`;

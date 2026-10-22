@@ -30,6 +30,7 @@ b">newline in a value</p>
 	<p data-dq="a&quot;b">double quote in a value</p>
 	<p data-sq='a"b'>the other quote wins</p>
 	<p data-amp="a?b&c" data-ref="a&amp;b">raw value bytes</p>
+	<p data-keep="&amp;copy x" data-num="&amp;#38;" data-bare="&amp;zz" data-query="x?a=1&amp;b=2">ampersands</p>
 	<input type="text" value="" disabled="disabled" checked>
 	<!-- an enumerated attribute names a keyword, so the space is not spare: this
 	     input is a `text` one, and trimming would make it a `time` one -->
@@ -46,9 +47,13 @@ b">newline in a value</p>
 	<DIV CLASS="a">source casing</DIV>
 	<p a=1 a=2>duplicate attribute</p>
 	<p class="a b a">repeated class token, folded</p>
-	<!-- `{%` / `%}` tokenize as attribute names and repeat, so this tag is
-	     echoed whole rather than rebuilt without them (#22013) -->
-	<input type="text"{% if required %} required{% endif %}>
+	<!-- `{%` / `%}` tokenize as attribute names and repeat, so the bytes between
+	     the names kept are copied from the source rather than rebuilt (#22013) -->
+	<input type="text"{% if isRequired %} required{% endif %}>
+	<input type="checkbox"{% if on %} checked="checked"{% endif %}>
+	<li class="row"{% for x in y %} data-x="1"{% endfor %}>a block over a list</li>
+	<input type="text"{%- if isRequired -%} required{%- endif -%}>
+	<input type="text"{% if on %} a{% endif %}="">
 	<p class="btn{% if active %} btn-active{% endif %}">the same list, as text</p>
 	<p data-slash="/end/">value ending in a slash</p>
 	<a href=x/>unquoted value ending in a slash</a>

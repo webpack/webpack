@@ -10,7 +10,7 @@ module.exports = {
 		pathinfo: false
 	},
 	optimization: {
-		minimize: true,
+		minimize: { css: { extractComments: false } },
 		// `"..."` keeps the default minimizer, which resolves the target.
 		minimizer: ["..."]
 	},

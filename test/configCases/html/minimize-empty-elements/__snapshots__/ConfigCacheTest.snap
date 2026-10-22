@@ -14,5 +14,9 @@ exports[`ConfigCacheTestCases html minimize-empty-elements minimize-empty-elemen
 <div> </div>
 
 
+<span id=k></span>
+<iframe srcdoc></iframe>
+
+
 </body></html>"
 `;

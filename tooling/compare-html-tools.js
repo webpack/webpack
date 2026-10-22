@@ -29,14 +29,22 @@ const fs = require("fs");
 const path = require("path");
 const { pathToFileURL } = require("url");
 
-const htmlMinify = require("../lib/html/htmlMinify");
 const {
-	QUOTE_NONE,
-	SourceProcessor,
+	builtinEmbeddedRenderer
+} = require("../lib/html/builtinEmbeddedRenderer");
+const htmlMinify = require("../lib/html/htmlMinify");
+const { SourceProcessor } = require("../lib/html/syntax");
+const {
+	Field,
+	Namespace,
+	NodeType,
+	Part,
+	Quote,
+	_namespaceOf,
 	decodeEntities,
 	pickTransforms,
 	tokenize
-} = require("../lib/html/syntax");
+} = require("../lib/html/syntax-parser");
 const {
 	STAGES,
 	collectFiles,
@@ -44,7 +52,9 @@ const {
 	filterFrom,
 	findingGroups,
 	formatCost,
+	formatProfile,
 	formatSecond,
+	hasher,
 	idempotence,
 	installPackages,
 	kb,
@@ -52,9 +62,16 @@ const {
 	log,
 	measure,
 	measureInWorker,
+	missingReport,
 	oneLine,
+	pathSpanWalk,
+	purityRelation,
 	shrink,
 	signed,
+	sliceRelation,
+	spans,
+	sweepExitCode,
+	sweepMode,
 	thrownText
 } = require("./compare-tools-harness");
 
@@ -64,33 +81,7 @@ const CACHE = path.join(ROOT, "node_modules/.cache", CACHE_NAME);
 const MODULES = path.join(CACHE, "node_modules");
 const load = loaderFor(CACHE);
 
-const PACKAGES = [
-	"angular-html-parser@9",
-	"bootstrap@5",
-	"dom-serializer@2",
-	"@fortawesome/fontawesome-free@6",
-	"htmlparser2@10",
-	"js-beautify@1",
-	"@minify-html/node@0.15",
-	"node-html-parser@7",
-	"@picocss/pico@2",
-	"@swc/html@1",
-	"cssnano@7",
-	"html-minifier-next@8",
-	"html-minifier-terser@7",
-	"html5-boilerplate@9",
-	"htmlnano@2",
-	"linkedom@0.18",
-	"marked@15",
-	"parse5@7",
-	"postcss@8",
-	"prettier@3",
-	"svgo@3",
-	"swagger-ui-dist@5",
-	"water.css@2"
-];
-
-const setup = () => installPackages(CACHE_NAME, PACKAGES);
+const setup = () => installPackages(CACHE_NAME);
 /**
  * The parse5 node shape this walk reads. parse5 ships its own types, but it is
  * installed outside the repo (see `setup`), so tsc cannot resolve them.
@@ -346,6 +337,43 @@ const WEB_COMPONENTS = `<!DOCTYPE html>
 </body>
 </html>`;
 
+// cspell:ignore popovertarget popovertargetaction contenteditable exportparts
+// cspell:ignore autocapitalize referrerpolicy accesskey writingsuggestions
+
+// What the corpus barely reaches: every element and attribute here is in two of
+// its documents or fewer, and fourteen of them in none. Its `<style>` is the
+// only one carrying CSS a target has to be lowered for.
+const COLD_CONSTRUCTS = `<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="utf-8"><title>Cold constructs</title>
+<style>.a{color:red;.b{color:blue}}.c{color:light-dark(#fff,#000)}@layer x{.d{top:0}}@layer x{.e{top:0}}.f{text-decoration:underline;text-decoration:underline dotted}.g{inset:1px 2px}.h{>.i{top:0}}</style>
+</head>
+<body>
+<search><form><fieldset><legend>Legend</legend>
+	<label>Number <input name=n inputmode=numeric enterkeyhint=done autocapitalize=none spellcheck=false writingsuggestions=false list=opts></label>
+	<datalist id=opts><option value=a><option value=b></datalist>
+	<select><optgroup label=g><option>x</option></optgroup></select>
+	<output name=o for=n>0</output>
+	<progress value=1 max=2></progress><meter value=1 min=0 max=2></meter>
+</fieldset></form></search>
+<hgroup><h1>Title</h1><p>Subhead</p></hgroup>
+<menu><li><button popovertarget=p popovertargetaction=toggle>open</button></li></menu>
+<div id=p popover=auto>popped</div>
+<dialog open><p>dialog</p></dialog>
+<details open><summary>Summary</summary><p>body</p></details>
+<picture><source srcset="a.avif" type="image/avif"><img src=a.png alt="" loading=lazy decoding=async fetchpriority=low referrerpolicy=no-referrer></picture>
+<p><bdi>\u05E2\u05D1\u05E8\u05D9\u05EA</bdi> <bdo dir=rtl>rtl</bdo> long<wbr>word <ruby>\u6F22<rt>kan</rt></ruby></p>
+<p draggable=true translate=no accesskey=k contenteditable=true inert>attributes</p>
+<table><caption>Caption</caption><colgroup><col span=2></colgroup><thead><tr><th>a<th>b<tbody><tr><td>1<td>2<tfoot><tr><td>3<td>4</table>
+<noscript><p>no script</p></noscript>
+<template id=t><slot name=s></slot></template>
+<span is=my-el slot=s part=label exportparts="label: outer">slotted</span>
+<script nomodule type="application/ld+json">{ "a" : 1 }</script>
+<script type="importmap">{ "imports" : { "a" : "./a.js" } }</script>
+<script type="speculationrules">{ "prerender" : [ { "where" : { "href_matches" : "/x" } } ] }</script>
+</body>
+</html>`;
+
 /**
  * @param {string} sprite an SVG document
  * @returns {string} it inlined into a page, as an icon sprite is used
@@ -410,7 +438,8 @@ const fixtures = async () => {
 	]);
 	return out;
 };
-/** @typedef {import("../lib/html/syntax").HtmlPrintOptions} HtmlPrintOptions */
+/** @typedef {import("../lib/html/syntax-printer").HtmlPrintOptions} HtmlPrintOptions */
+/** @typedef {import("../lib/html/syntax-printer").HtmlTransformOptions} HtmlTransformOptions */
 
 /** @type {HtmlPrintOptions} */
 const DEFAULT_OPTIONS = {};
@@ -427,12 +456,31 @@ const AGGRESSIVE_OPTIONS = {
 	removeImpliedTags: true
 };
 
-// The option sets the invariants are held over, which are the ones the
-// comparison's own webpack rows are measured with.
+/** @type {HtmlPrintOptions} */
+const EMBEDDED_OPTIONS = {
+	...AGGRESSIVE_OPTIONS,
+	renderEmbeddedSource: builtinEmbeddedRenderer()
+};
+
+// `embedded` minifies a `<style>` with no target named, so no lowering inside a
+// document ever runs. This names one they all run for.
+/** @type {HtmlPrintOptions} */
+const EMBEDDED_LEGACY_OPTIONS = {
+	...AGGRESSIVE_OPTIONS,
+	renderEmbeddedSource: builtinEmbeddedRenderer({
+		environment: { browsers: ["chrome 100", "firefox 100", "safari 15.4"] }
+	})
+};
+
+// The option sets the invariants are held over. The first two are the ones the
+// comparison's own webpack rows are measured with; the last two are what a
+// build runs, where a `<style>` and every `style=""` reach the CSS minifier.
 /** @type {[string, HtmlPrintOptions][]} */
 const PRESETS = [
 	["default", DEFAULT_OPTIONS],
-	["aggressive", AGGRESSIVE_OPTIONS]
+	["aggressive", AGGRESSIVE_OPTIONS],
+	["embedded", EMBEDDED_OPTIONS],
+	["embedded+legacy", EMBEDDED_LEGACY_OPTIONS]
 ];
 
 // Each entry builds its callable on demand, so the measuring worker loads only
@@ -880,7 +928,7 @@ const wantedStage = filterFrom("STAGE");
 const SKIPPED_FIXTURE_DIRS = new Set(["js", "node_modules", "wpt"]);
 
 /**
- * @param {HtmlPrintOptions} options one preset's minimizer options
+ * @param {HtmlPrintOptions & HtmlTransformOptions} options one preset's minimizer options
  * @returns {(html: string) => string} the printer those options name
  */
 const printerFor = (options) => {
@@ -916,12 +964,22 @@ const printerFor = (options) => {
  */
 const afterAttribute = (valueStart, valueEnd, nameEnd, quoteType) => {
 	if (valueStart === -1) return nameEnd;
-	return quoteType === QUOTE_NONE ? valueEnd : valueEnd + 1;
+	return quoteType === Quote.None ? valueEnd : valueEnd + 1;
 };
 
 /**
+ * Whether a name reads as HTML vocabulary rather than as another language's
+ * text, which is the printer's own `_isWordSpan` asked of an attribute name.
+ * Stated here rather than imported so the sweep keeps a reading of its own.
+ * @param {string} name an attribute name as written
+ * @returns {boolean} true when the name is a word
+ */
+const isWordName = (name) => /^[A-Za-z_-][^{}<>]*$/.test(name);
+
+/**
  * Every attribute the tokenizer reports, with the open tag holding it. A close
- * tag's attributes are dropped by the tree builder, so they are dropped here.
+ * tag's attributes are dropped by the tree builder, so they are dropped here,
+ * as is every attribute of a tag carrying template syntax.
  * @param {string} html a document
  * @returns {Site[]} the sites, in source order
  */
@@ -947,7 +1005,12 @@ const attributeSites = (html) => {
 			return end;
 		},
 		openTag: (input, start, end) => {
+			// One name that is not a word makes the whole tag another language's:
+			// `{% endif %}` tokenizes as three attributes, of which `if` is a word
+			// and would otherwise be respelled into the statement holding it.
+			const templated = pending.some((site) => !isWordName(site.name));
 			for (const site of pending) {
+				if (templated) continue;
 				site.tagStart = start;
 				site.tagEnd = end;
 				sites.push(site);
@@ -1239,6 +1302,318 @@ const idempotenceRepro = (minify, minified, at) => {
 	}
 };
 
+/** @type {Record<number, string>} */
+const NODE_TYPE_NAMES = {};
+for (const [name, type] of Object.entries(NodeType)) {
+	NODE_TYPE_NAMES[type] = name;
+}
+
+/**
+ * The sub-ranges an element states: its own opening tag, and the name and value
+ * of every attribute the source wrote into that tag. §13.2 merges a second
+ * `<html>` or `<body>` tag's attributes onto the element already open, so an
+ * attribute can be written outside the tag holding it and is left to the tag it
+ * was written in.
+ * @param {import("../lib/html/syntax-parser").HtmlPath} nodePath the accessor
+ * @returns {readonly [string, number, number][] | undefined} each `[name, start, end]`
+ */
+const htmlInnerRanges = (nodePath) => {
+	if (nodePath.type() !== NodeType.Element) return undefined;
+	const start = nodePath.range()[0];
+	const content = nodePath.rangeOf(Part.content);
+	// The parser inserted this element, or the adoption agency cloned it: no tag
+	// was written, so it states no offsets to hold.
+	if (content === null || content[0] <= start) return undefined;
+	const tagEnd = content[0];
+	/** @type {[string, number, number][]} */
+	const inner = [["opening tag", start, tagEnd]];
+	const count = nodePath.fieldCount(Field.attributes);
+	for (let index = 0; index < count; index++) {
+		const attribute = nodePath.field(index, Field.attributes);
+		const [nameStart, nameEnd] = /** @type {[number, number]} */ (
+			nodePath.rangeOf(Part.name, attribute)
+		);
+		if (nameStart < start || nameStart >= tagEnd) continue;
+		inner.push(["attribute name", nameStart, nameEnd]);
+		const value = nodePath.rangeOf(Part.value, attribute);
+		inner.push([
+			"attribute value",
+			value === null ? -1 : value[0],
+			value === null ? -1 : value[1]
+		]);
+	}
+	return inner;
+};
+
+/**
+ * Hold the parser's ranges to what they claim about the document they came
+ * from. HTML owes less here than CSS does, and the two exclusions are §13.2
+ * rather than slack — turning them on reports 4031 and 22 findings over the
+ * fixtures. An element's end is its start tag's until an end tag is read, so
+ * `<html>` in a document omitting `</html>` ends before the `<body>` it holds;
+ * and an element left open is closed by the next tag, so `<p>a<p>b` gives two
+ * paragraphs whose ranges share those bytes.
+ * @param {string} html a document
+ * @returns {import("./compare-tools-harness").Report[]} what the ranges broke
+ */
+const htmlSpans = (html) =>
+	spans({
+		length: html.length,
+		contains: false,
+		siblings: false,
+		walk: pathSpanWalk({
+			length: html.length,
+			run: (enter, exit) => {
+				/** @type {Record<number, { enter: typeof enter, exit: typeof exit }>} */
+				const visitors = {};
+				for (const type of Object.values(NodeType)) {
+					visitors[type] = { enter, exit };
+				}
+				new SourceProcessor().use(visitors).process(html, {});
+			},
+			start: (nodePath) => nodePath.range()[0],
+			end: (nodePath) => nodePath.range()[1],
+			name: (nodePath) => NODE_TYPE_NAMES[nodePath.type()],
+			inner: htmlInnerRanges
+		})
+	});
+
+/**
+ * @typedef {{ what: string, type: number, tag: string, start: number, end: number, size: number, lo: number, hi: number, context: string }} NodeRun
+ */
+
+/**
+ * The fragment context a node's children are read back in: its tag, prefixed
+ * with the namespace a foreign one lives in.
+ * @param {EXPECTED_ANY} nodePath the node
+ * @returns {string} the context, or `""` for a node that is not an element
+ */
+const fragmentContextOf = (nodePath) => {
+	if (nodePath.type() !== NodeType.Element) return "";
+	const namespace = _namespaceOf(nodePath.node);
+	if (namespace === Namespace.SVG) return `svg ${nodePath.name()}`;
+	if (namespace === Namespace.MathML) return `math ${nodePath.name()}`;
+	return nodePath.name();
+};
+
+// Reparsing every node costs a parse of its own, so a document would cost its
+// size times its depth. Each one is capped at this many times its own bytes.
+const SLICE_BUDGET_FACTOR = 4;
+
+/**
+ * Every node in one document, in post-order with the size of its subtree —
+ * which is what lets a subtree be read as a run rather than walked again. `lo`
+ * and `hi` are how far that subtree reaches, and `context` the tag the node sat
+ * in, which is what the fragment parsing algorithm needs to read it back.
+ * @param {string} html a document
+ * @param {string=} fragmentContext the element to parse it as the contents of
+ * @returns {NodeRun[]} each node, children before parents
+ */
+const htmlNodeRuns = (html, fragmentContext) => {
+	/** @type {NodeRun[]} */
+	const runs = [];
+	/** @type {{ held: number, lo: number, hi: number, context: string }[]} */
+	const stack = [{ held: 0, lo: html.length, hi: 0, context: "" }];
+	/** @type {Record<number, { enter: (nodePath: EXPECTED_ANY) => void, exit: (nodePath: EXPECTED_ANY) => void }>} */
+	const visitors = {};
+	for (const type of Object.values(NodeType)) {
+		visitors[type] = {
+			enter: (nodePath) => {
+				stack.push({
+					held: 0,
+					lo: html.length,
+					hi: 0,
+					context: fragmentContextOf(nodePath)
+				});
+			},
+			exit: (nodePath) => {
+				const frame = /** @type {EXPECTED_ANY} */ (stack.pop());
+				const type = nodePath.type();
+				const tag = type === NodeType.Element ? nodePath.name() : "";
+				const start = nodePath.range()[0];
+				const end = nodePath.range()[1];
+				const size = frame.held + 1;
+				const lo = Math.min(frame.lo, start);
+				const hi = Math.max(frame.hi, end);
+				const parent = stack[stack.length - 1];
+				parent.held += size;
+				parent.lo = Math.min(parent.lo, lo);
+				parent.hi = Math.max(parent.hi, hi);
+				runs.push({
+					what: `${NODE_TYPE_NAMES[type]}${tag === "" ? "" : `:${tag}`}`,
+					type,
+					tag,
+					start,
+					end,
+					size,
+					lo,
+					hi,
+					context: parent.context
+				});
+			}
+		};
+	}
+	new SourceProcessor()
+		.use(visitors)
+		.process(html, fragmentContext === undefined ? {} : { fragmentContext });
+	return runs;
+};
+
+/**
+ * What one node's subtree says: its shape and the offsets inside it, read
+ * against the node's own start so the same construct digests the same wherever
+ * it was found.
+ * @param {readonly NodeRun[]} runs every node in post-order
+ * @param {number} at which one to digest
+ * @returns {string} its digest
+ */
+const runDigest = (runs, at) => {
+	const node = runs[at];
+	/** @type {string[]} */
+	const out = [];
+	for (let index = at - node.size + 1; index <= at; index++) {
+		const one = runs[index];
+		out.push(`${one.what}[${one.start - node.start},${one.end - node.start})`);
+	}
+	return out.join(" ");
+};
+
+/**
+ * Whether a node's subtree has a `table` directly inside a `p`, which only quirks
+ * mode builds; a fragment parse is never in quirks mode, so it can't read it back.
+ * @param {readonly NodeRun[]} runs every node in post-order
+ * @param {number} at the node
+ * @returns {boolean} whether the subtree depends on the document's mode
+ */
+const holdsQuirksTable = (runs, at) => {
+	for (let index = at - runs[at].size + 1; index <= at; index++) {
+		if (runs[index].tag === "table" && runs[index].context === "p") return true;
+	}
+	return false;
+};
+
+/**
+ * Hold each node's own source to the node it came from: the bytes between its
+ * offsets, read back as the contents of the element they sat in, give that node
+ * back.
+ *
+ * The context is the whole point here. §13.2 decides what a tag means from the
+ * insertion mode it is read in, so `<td>x</td>` on its own is not a cell at all
+ * — the parser drops it and foster-parents the text. Handing the enclosing tag
+ * to the fragment parsing algorithm is the spec's own answer to that, and it is
+ * what the browser does for `innerHTML`.
+ *
+ * Two shapes are left out rather than normalized: an element the parser
+ * inserted or cloned wrote no tag to slice, and an element whose end is its
+ * start tag's — §13.2 leaves it there until an end tag is read — has a range
+ * that does not hold its own children, so there is no slice to reparse.
+ * @param {string} html a document
+ * @returns {{ reports: import("./compare-tools-harness").Report[], read: number, skipped: number, capped: number, repeats: number }} what broke, how many answered, and what was left out
+ */
+const htmlSlices = (html) => {
+	const runs = htmlNodeRuns(html);
+	/** @type {import("./compare-tools-harness").SliceCandidate[]} */
+	const candidates = [];
+	let budget = html.length * SLICE_BUDGET_FACTOR;
+	let capped = 0;
+	let repeats = 0;
+	let skipped = 0;
+	/** @type {Set<string>} */
+	const seen = new Set();
+	for (let at = 0; at < runs.length; at++) {
+		const node = runs[at];
+		// No tag to slice, no range holding its own subtree, or nothing to be the
+		// contents of: each is the document saying where the node came from.
+		if (
+			node.end <= node.start ||
+			node.start > node.lo ||
+			node.end < node.hi ||
+			node.context === "" ||
+			holdsQuirksTable(runs, at)
+		) {
+			skipped++;
+			continue;
+		}
+		const said = runDigest(runs, at);
+		if (seen.has(said)) {
+			repeats++;
+			continue;
+		}
+		seen.add(said);
+		const text = html.slice(node.start, node.end);
+		if (text.length > budget) {
+			capped++;
+			continue;
+		}
+		budget -= text.length;
+		candidates.push({
+			what: node.what,
+			said,
+			reparse: () => {
+				/** @type {NodeRun[]} */
+				let again;
+				try {
+					again = htmlNodeRuns(text, node.context);
+				} catch (_error) {
+					return null;
+				}
+				const want = again.findIndex(
+					(one) =>
+						one.what === node.what && one.start === 0 && one.end === text.length
+				);
+				return want === -1 ? null : runDigest(again, want);
+			}
+		});
+	}
+	const answered = sliceRelation(candidates);
+	return { ...answered, skipped: answered.skipped + skipped, capped, repeats };
+};
+
+/**
+ * What one parse of a document amounts to: every node's type and range, every
+ * tag and attribute name and value it derived, and the bytes the printer makes
+ * of it.
+ *
+ * WHY: the names are the point, not the offsets. `parseHtml` interns a tag or
+ * attribute name a document spells for the first time as a slice of that
+ * document, and drops those entries on the next parse — so a name from the
+ * previous document would come back with every offset still right. Reading the
+ * names back is what would catch that, and printing reads the rest.
+ * @param {string} html a document
+ * @param {(html: string) => string} print the printer to read it back out with
+ * @returns {string} the digest
+ */
+const htmlPurityDigest = (html, print) => {
+	const digest = hasher();
+	/** @type {Record<number, { enter: () => void, exit: (nodePath: EXPECTED_ANY) => void }>} */
+	const visitors = {};
+	const read = (/** @type {EXPECTED_ANY} */ nodePath) => {
+		const type = nodePath.type();
+		digest.update(`${NODE_TYPE_NAMES[type]}[${nodePath.range().join(",")})`);
+		if (type === NodeType.Element) {
+			digest.update(`|<${nodePath.name()}>|${_namespaceOf(nodePath.node)}`);
+			const count = nodePath.fieldCount(Field.attributes);
+			for (let index = 0; index < count; index++) {
+				const attribute = nodePath.field(index, Field.attributes);
+				digest.update(
+					`|${nodePath.name(attribute)}=${nodePath.value(attribute)}`
+				);
+			}
+		}
+		digest.update("\n");
+	};
+	for (const type of Object.values(NodeType)) {
+		visitors[type] = { enter: () => {}, exit: read };
+	}
+	try {
+		new SourceProcessor().use(visitors).process(html, {});
+		digest.update(print(html));
+	} catch (error) {
+		return `refused: ${/** @type {Error} */ (error).message}`;
+	}
+	return digest.hex();
+};
+
 const wantedRelation = filterFrom("RELATION");
 const wantedSpelling = filterFrom("SPELLING");
 const wantedPreset = filterFrom("PRESET");
@@ -1291,6 +1666,54 @@ const sweepRespellings = (minify, html, minified) => {
 	return reports;
 };
 
+// Where a cut lands, by the construct it interrupts: each pattern ends where the
+// document is cut, just inside what the end of the input then has to close.
+/** @type {[string, RegExp][]} */
+const HTML_CUTS = [
+	["in a start tag's name", /<[a-z]/gi],
+	["in an end tag's name", /<\/[a-z]/gi],
+	["in an attribute's name", /<[a-z][^\s<>]*\s+[a-z]/gi],
+	["after an attribute's =", /<[a-z][^\s<>]*\s+[a-z-]+=/gi],
+	["in a double-quoted value", /[=]"[^"]/g],
+	["in a single-quoted value", /[=]'[^']/g],
+	["in an unquoted value", /[=][a-z0-9]/gi],
+	["before a tag's >", /<[a-z][^<>]*(?=>)/gi],
+	["between a tag's / and >", /<[a-z][^<>]*\/(?=>)/gi],
+	["in a comment", /<!--./g],
+	["in a doctype", /<!doctype/gi],
+	["in a character reference", /&[a-z#]/gi],
+	["in a <style> body", /<style[^>]*>[^<]/gi],
+	["in a <script> body", /<script[^>]*>[^<]/gi],
+	["in escapable raw text", /<(?:textarea|title)[^>]*>[^<]/gi],
+	["in foreign content", /<(?:svg|math)[^>]*>/gi],
+	["in a CDATA section", /<!\[CDATA\[./g],
+	["in a style attribute", /style="[^"]/gi]
+];
+
+/**
+ * The document cut short just inside the first of each construct past its
+ * midpoint, or the first anywhere when none lies past it: the end of the input
+ * is where the tokenizer closes what the source left open.
+ * @param {string} html a document
+ * @returns {[string, string][]} `[where, cut]` for each construct it holds
+ */
+const htmlCuts = (html) => {
+	/** @type {[string, string][]} */
+	const cuts = [];
+	for (const [where, pattern] of HTML_CUTS) {
+		pattern.lastIndex = html.length >> 1;
+		let match = pattern.exec(html);
+		if (match === null) {
+			pattern.lastIndex = 0;
+			match = pattern.exec(html);
+		}
+		if (match === null) continue;
+		const at = match.index + match[0].length;
+		if (at < html.length) cuts.push([where, html.slice(0, at)]);
+	}
+	return cuts;
+};
+
 /**
  * Every invariant this document breaks under one preset.
  * @param {(html: string) => string} minify the printer under test
@@ -1315,6 +1738,10 @@ const sweepDocument = (minify, html) => {
  * are the shapes the printer exists for, plus whatever the comparison installed.
  * @returns {[string, string][]} `[label, html]` for every document
  */
+// What the last sweep did not find, read by the report and by the gate.
+/** @type {string[]} */
+let _missingFixtures = [];
+
 const invariantFixtures = () => {
 	/** @type {[string, string][]} */
 	const out = [];
@@ -1335,18 +1762,39 @@ const invariantFixtures = () => {
 	out.push(["Table report", tablePage(10)]);
 	out.push(["Tag soup", TAG_SOUP]);
 	out.push(["Web components", WEB_COMPONENTS]);
+	out.push(["cold constructs", COLD_CONSTRUCTS]);
+	/** @type {string[]} */
+	const missing = [];
 	for (const [label, file] of INSTALLED_DOCUMENTS) {
 		const full = path.join(MODULES, file);
 		if (fs.existsSync(full)) out.push([label, fs.readFileSync(full, "utf8")]);
+		else missing.push(label);
 	}
 	for (const [label, file] of INLINED_STYLESHEETS) {
 		const full = path.join(MODULES, file);
 		if (fs.existsSync(full)) {
 			out.push([label, inlineCssPage(label, fs.readFileSync(full, "utf8"))]);
+		} else {
+			missing.push(label);
 		}
 	}
-	return out;
+	return { corpus: out, missing };
 };
+
+/**
+ * What the sweep reports that the printer owes nothing for. Each entry states
+ * the reason, since a divergence with no reason beside it is one nobody can
+ * tell from a defect later.
+ * @type {readonly import("./compare-tools-harness").Expected[]}
+ */
+const EXPECTED = [
+	{
+		relation: "respelling quote-double",
+		contains: "&#34;",
+		source: "style-attribute",
+		why: "the value carries both quotes, so one stays a character reference whichever delimiter is picked, and the printer echoes the spelling the source wrote rather than normalizing it — `&#34;` is a byte under `&quot;`, which is the difference reported. Writing `&#34;` everywhere was measured and refused: over the fixtures and wpt's `html/` documents it saves 5 raw bytes and costs 5 gzip, and a re-encoding has to win compressed. No build reads this: `htmlMinify` hands every `style` to the CSS minifier, and that round trip writes `&quot;` for either spelling"
+	}
+];
 
 /**
  * Sweep mode: hold the printer to its own invariants and report what it breaks.
@@ -1356,16 +1804,88 @@ const invariantFixtures = () => {
  * @returns {number} how many distinct findings it named
  */
 const invariants = (write) => {
-	const corpus = invariantFixtures().filter(([label]) => wantedFixture(label));
+	const built = invariantFixtures();
+	// Filtered the same way the corpus is: a run narrowed to one fixture is not
+	// short of the ones it was never going to read, and the gate answers for the
+	// sweep that happened.
+	_missingFixtures = built.missing.filter((label) => wantedFixture(label));
+	const corpus = built.corpus.filter(([label]) => wantedFixture(label));
 	const presets = PRESETS.filter(([name]) => wantedPreset(name));
+	// Filtered like the corpus is: an expectation for a relation this run was
+	// never going to reach matched nothing because nothing asked it to, which is
+	// not the divergence having gone away.
+	const groups = findingGroups(
+		EXPECTED.filter((entry) => wantedRelation(entry.relation))
+	);
+	// Nothing is printed to reach this one, so it is read under no preset: what
+	// the parser said about the document it was handed.
+	if (wantedRelation("spans")) {
+		log(`reading ranges over ${corpus.length} documents …`);
+		for (const [label, html] of corpus) {
+			for (const report of htmlSpans(html)) groups.add(report, "parse", label);
+		}
+	}
+	if (wantedRelation("slices")) {
+		let read = 0;
+		let skipped = 0;
+		let capped = 0;
+		let repeats = 0;
+		for (const [label, html] of corpus) {
+			const answered = htmlSlices(html);
+			read += answered.read;
+			skipped += answered.skipped;
+			capped += answered.capped;
+			repeats += answered.repeats;
+			for (const report of answered.reports) groups.add(report, "parse", label);
+		}
+		log(
+			`reparsed ${read} shapes in their own context (${skipped} out of context, ${repeats} repeats, ${capped} past the budget) …`
+		);
+	}
+	if (wantedRelation("purity")) {
+		// Under one preset: what is asked is whether reading the same bytes again
+		// gives the same answer, which every option set would ask the same way.
+		const [, options] = presets[0] || PRESETS[0];
+		const print = printerFor(options);
+		const { reports, read } = purityRelation(
+			corpus.map(([label, html]) => ({
+				what: label,
+				digest: () => htmlPurityDigest(html, print)
+			}))
+		);
+		for (const report of reports) {
+			groups.add(report, "parse", report.repro.trim());
+		}
+		log(`read ${read} documents twice over …`);
+	}
 	log(`sweeping ${corpus.length} documents under ${presets.length} presets …`);
-	const groups = findingGroups();
 	for (const [label, html] of corpus) {
 		for (const [preset, options] of presets) {
 			for (const report of sweepDocument(printerFor(options), html)) {
 				groups.add(report, preset, label);
 			}
 		}
+	}
+	if (wantedRelation("idempotence")) {
+		let cut = 0;
+		for (const [label, html] of corpus) {
+			for (const [where, source] of htmlCuts(html)) {
+				cut++;
+				for (const [preset, options] of presets) {
+					const minify = printerFor(options);
+					const { reports } = idempotence({
+						minify,
+						source,
+						says: tokenStream,
+						repro: (minified, at) => idempotenceRepro(minify, minified, at)
+					});
+					for (const report of reports) {
+						groups.add(report, preset, `${label}, cut ${where}`);
+					}
+				}
+			}
+		}
+		log(`… and ${cut} of them cut short inside a construct …`);
 	}
 	return groups.write(write);
 };
@@ -1378,6 +1898,7 @@ const invariants = (write) => {
 const reportInvariants = () => {
 	process.stdout.write("\ninvariants — what the printer owes its own output\n");
 	const found = invariants((text) => process.stdout.write(text));
+	process.stdout.write(missingReport(_missingFixtures));
 	process.stdout.write(`\n${found} finding${found === 1 ? "" : "s"}\n`);
 	return found;
 };
@@ -1441,6 +1962,7 @@ const main = async () => {
 							cost.peak.padStart(9)
 						}\n`
 					);
+					process.stdout.write(formatProfile(result));
 					continue;
 				}
 				const code = /** @type {string} */ (result.code);
@@ -1467,6 +1989,7 @@ const main = async () => {
 						formatSecond(result.second).padStart(7)
 					}   ${notes.length === 0 ? "-" : notes.slice(0, 4).join(", ")}\n`
 				);
+				process.stdout.write(formatProfile(result));
 			}
 		}
 	}
@@ -1477,13 +2000,15 @@ const main = async () => {
 if (require.main === module) {
 	// `--setup` installs the fixtures and builds nothing else, so a consumer
 	// that only reads them does not run the comparison to get them.
-	const mode = process.argv[2];
+	const mode = sweepMode(process.argv);
 	// The sweep alone, for a caller that wants the relations without the ten
 	// minutes the comparison costs; a full run prints the same section.
 	if (mode === "--invariants") {
-		// Non-zero while any finding stands, and findings stand today: read it
-		// rather than gating on it until they are gone.
-		process.exitCode = reportInvariants() > 0 ? 1 : 0;
+		process.exitCode = sweepExitCode(
+			reportInvariants(),
+			_missingFixtures,
+			process.argv
+		);
 	} else {
 		const started =
 			mode === "--measure"
@@ -1503,6 +2028,9 @@ if (require.main === module) {
 module.exports = {
 	APP_SHELL,
 	CACHE,
+	COLD_CONSTRUCTS,
+	EMBEDDED_LEGACY_OPTIONS,
+	EMBEDDED_OPTIONS,
 	INLINED_STYLESHEETS,
 	INSTALLED_DOCUMENTS,
 	SPRITE_WITHIN,

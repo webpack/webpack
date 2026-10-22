@@ -13,14 +13,14 @@ module.exports = {
 	},
 	optimization: {
 		minimize: true,
-		// The default minimizer is replaced by the test harness, so wire the CSS
-		// minify function into one minimizer plugin the same way the production
-		// default does (lib/config/defaults.js): an array of minify functions, each
-		// routed by its own `filter`, in a single instance / worker pool.
+		// The default minimizer is replaced by the harness, so wire the CSS minify
+		// function in the same way `lib/config/defaults.js` does: an array of minify
+		// functions, each routed by its own `filter`, in one instance.
 		minimizer: [
 			{
 				apply: (compiler) => {
 					new MinimizerPlugin({
+						extractComments: false,
 						test: /\.(?:[cm]?js|css)(\?.*)?$/i,
 						minify: [MinimizerPlugin.terserMinify, cssMinify],
 						minimizerOptions: [{ compress: { passes: 2 } }, {}]

@@ -1,2 +1,0 @@
-require("./file");
-require("./FILE");

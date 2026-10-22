@@ -4,7 +4,7 @@ exports[`ConfigTestCases html bom-strip exported tests should strip a UTF-8 BOM 
 "<!DOCTYPE html>
 <html>
 <head><title>bom-strip</title></head>
-<body><p>Hello</p></body>
+<body><p>Hello</p><img src=\\"0e15be1ea86afc9b4529.svg\\" alt=\\"after-bom\\"></body>
 </html>
 "
 `;

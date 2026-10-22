@@ -6,10 +6,9 @@ it("should hot-update an HTML module whose inline <style> body changed", (done) 
 
 	NEXT(
 		require("../../update")(done, true, () => {
-			// The inline <style> body is reparsed at HTML parse time; the
-			// new CSS text is inlined into the rewritten HTML the JS shim
-			// exports. The HTML module is self-accepting, so re-requiring
-			// returns the updated string.
+			// The inline `<style>` body is reparsed at HTML parse time and the new CSS text is
+			// inlined into the rewritten HTML the JS shim exports. The HTML module
+			// self-accepts, so re-requiring returns the updated string.
 			const updated = require("./page.html");
 			expect(updated).toContain("color: blue");
 			expect(updated).not.toContain("color: red");

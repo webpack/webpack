@@ -713,19 +713,19 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 	/* webpack/runtime/consumes */
 /******/ 	(() => {
 /******/ 		var parseVersion = (str) => {
-/******/ 			// see webpack/lib/util/semver.js for original code
+/******/ 			// see webpack/lib/sharing/semver.js for original code
 /******/ 			var p=p=>{return p.split(".").map(p=>{return+p==p?+p:p})},n=/^([^-+]+)?(?:-([^+]+))?(?:\+(.+))?$/.exec(str),r=n[1]?p(n[1]):[];return n[2]&&(r.length++,r.push.apply(r,p(n[2]))),n[3]&&(r.push([]),r.push.apply(r,p(n[3]))),r;
 /******/ 		}
 /******/ 		var versionLt = (a, b) => {
-/******/ 			// see webpack/lib/util/semver.js for original code
+/******/ 			// see webpack/lib/sharing/semver.js for original code
 /******/ 			a=parseVersion(a),b=parseVersion(b);for(var r=0;;){if(r>=a.length)return r<b.length&&"u"!=(typeof b[r])[0];var e=a[r],n=(typeof e)[0];if(r>=b.length)return"u"==n;var t=b[r],f=(typeof t)[0];if(n!=f)return"o"==n&&"n"==f||("s"==f||"u"==n);if("o"!=n&&"u"!=n&&e!=t)return e<t;r++}
 /******/ 		}
 /******/ 		var rangeToString = (range) => {
-/******/ 			// see webpack/lib/util/semver.js for original code
+/******/ 			// see webpack/lib/sharing/semver.js for original code
 /******/ 			var r=range[0],n="";if(1===range.length)return"*";if(r+.5){n+=0==r?">=":-1==r?"<":1==r?"^":2==r?"~":r>0?"=":"!=";for(var e=1,a=1;a<range.length;a++){e--,n+="u"==(typeof(t=range[a]))[0]?"-":(e>0?".":"")+(e=2,t)}return n}var g=[];for(a=1;a<range.length;a++){var t=range[a];g.push(0===t?"not("+o()+")":1===t?"("+o()+" || "+o()+")":2===t?g.pop()+" "+g.pop():rangeToString(t))}return o();function o(){return g.pop().replace(/^\((.+)\)$/,"$1")}
 /******/ 		}
 /******/ 		var satisfy = (range, version) => {
-/******/ 			// see webpack/lib/util/semver.js for original code
+/******/ 			// see webpack/lib/sharing/semver.js for original code
 /******/ 			if(0 in range){version=parseVersion(version);var e=range[0],r=e<0;r&&(e=-e-1);for(var n=0,i=1,a=!0;;i++,n++){var f,s,g=i<range.length?(typeof range[i])[0]:"";if(n>=version.length||"o"==(s=(typeof(f=version[n]))[0]))return!a||("u"==g?i>e&&!r:""==g!=r);if("u"==s){if(!a||"u"!=g)return!1}else if(a)if(g==s)if(i<=e){if(f!=range[i])return!1}else{if(r?f>range[i]:f<range[i])return!1;f!=range[i]&&(a=!1)}else if("s"!=g&&"n"!=g){if(r||i<=e)return!1;a=!1,i--}else{if(i<=e||s<g!=r)return!1;a=!1}else"s"!=g&&"n"!=g&&(a=!1,i--)}}var t=[],o=t.pop.bind(t);for(n=1;n<range.length;n++){var u=range[n];t.push(1==u?o()|o():2==u?o()&o():u?satisfy(u,version):!o())}return!!o();
 /******/ 		}
 /******/ 		const exists = (scope, key) => {
@@ -1209,19 +1209,19 @@ __webpack_require__.d(exports, {
 /******/ 	/* webpack/runtime/consumes */
 /******/ 	(() => {
 /******/ 		var parseVersion = (str) => {
-/******/ 			// see webpack/lib/util/semver.js for original code
+/******/ 			// see webpack/lib/sharing/semver.js for original code
 /******/ 			var p=p=>{return p.split(".").map(p=>{return+p==p?+p:p})},n=/^([^-+]+)?(?:-([^+]+))?(?:\+(.+))?$/.exec(str),r=n[1]?p(n[1]):[];return n[2]&&(r.length++,r.push.apply(r,p(n[2]))),n[3]&&(r.push([]),r.push.apply(r,p(n[3]))),r;
 /******/ 		}
 /******/ 		var versionLt = (a, b) => {
-/******/ 			// see webpack/lib/util/semver.js for original code
+/******/ 			// see webpack/lib/sharing/semver.js for original code
 /******/ 			a=parseVersion(a),b=parseVersion(b);for(var r=0;;){if(r>=a.length)return r<b.length&&"u"!=(typeof b[r])[0];var e=a[r],n=(typeof e)[0];if(r>=b.length)return"u"==n;var t=b[r],f=(typeof t)[0];if(n!=f)return"o"==n&&"n"==f||("s"==f||"u"==n);if("o"!=n&&"u"!=n&&e!=t)return e<t;r++}
 /******/ 		}
 /******/ 		var rangeToString = (range) => {
-/******/ 			// see webpack/lib/util/semver.js for original code
+/******/ 			// see webpack/lib/sharing/semver.js for original code
 /******/ 			var r=range[0],n="";if(1===range.length)return"*";if(r+.5){n+=0==r?">=":-1==r?"<":1==r?"^":2==r?"~":r>0?"=":"!=";for(var e=1,a=1;a<range.length;a++){e--,n+="u"==(typeof(t=range[a]))[0]?"-":(e>0?".":"")+(e=2,t)}return n}var g=[];for(a=1;a<range.length;a++){var t=range[a];g.push(0===t?"not("+o()+")":1===t?"("+o()+" || "+o()+")":2===t?g.pop()+" "+g.pop():rangeToString(t))}return o();function o(){return g.pop().replace(/^\((.+)\)$/,"$1")}
 /******/ 		}
 /******/ 		var satisfy = (range, version) => {
-/******/ 			// see webpack/lib/util/semver.js for original code
+/******/ 			// see webpack/lib/sharing/semver.js for original code
 /******/ 			if(0 in range){version=parseVersion(version);var e=range[0],r=e<0;r&&(e=-e-1);for(var n=0,i=1,a=!0;;i++,n++){var f,s,g=i<range.length?(typeof range[i])[0]:"";if(n>=version.length||"o"==(s=(typeof(f=version[n]))[0]))return!a||("u"==g?i>e&&!r:""==g!=r);if("u"==s){if(!a||"u"!=g)return!1}else if(a)if(g==s)if(i<=e){if(f!=range[i])return!1}else{if(r?f>range[i]:f<range[i])return!1;f!=range[i]&&(a=!1)}else if("s"!=g&&"n"!=g){if(r||i<=e)return!1;a=!1,i--}else{if(i<=e||s<g!=r)return!1;a=!1}else"s"!=g&&"n"!=g&&(a=!1,i--)}}var t=[],o=t.pop.bind(t);for(n=1;n<range.length;n++){var u=range[n];t.push(1==u?o()|o():2==u?o()&o():u?satisfy(u,version):!o())}return!!o();
 /******/ 		}
 /******/ 		const exists = (scope, key) => {
@@ -1729,19 +1729,19 @@ __webpack_require__.d(exports, {
 /******/ 	/* webpack/runtime/consumes */
 /******/ 	(() => {
 /******/ 		var parseVersion = (str) => {
-/******/ 			// see webpack/lib/util/semver.js for original code
+/******/ 			// see webpack/lib/sharing/semver.js for original code
 /******/ 			var p=p=>{return p.split(".").map(p=>{return+p==p?+p:p})},n=/^([^-+]+)?(?:-([^+]+))?(?:\+(.+))?$/.exec(str),r=n[1]?p(n[1]):[];return n[2]&&(r.length++,r.push.apply(r,p(n[2]))),n[3]&&(r.push([]),r.push.apply(r,p(n[3]))),r;
 /******/ 		}
 /******/ 		var versionLt = (a, b) => {
-/******/ 			// see webpack/lib/util/semver.js for original code
+/******/ 			// see webpack/lib/sharing/semver.js for original code
 /******/ 			a=parseVersion(a),b=parseVersion(b);for(var r=0;;){if(r>=a.length)return r<b.length&&"u"!=(typeof b[r])[0];var e=a[r],n=(typeof e)[0];if(r>=b.length)return"u"==n;var t=b[r],f=(typeof t)[0];if(n!=f)return"o"==n&&"n"==f||("s"==f||"u"==n);if("o"!=n&&"u"!=n&&e!=t)return e<t;r++}
 /******/ 		}
 /******/ 		var rangeToString = (range) => {
-/******/ 			// see webpack/lib/util/semver.js for original code
+/******/ 			// see webpack/lib/sharing/semver.js for original code
 /******/ 			var r=range[0],n="";if(1===range.length)return"*";if(r+.5){n+=0==r?">=":-1==r?"<":1==r?"^":2==r?"~":r>0?"=":"!=";for(var e=1,a=1;a<range.length;a++){e--,n+="u"==(typeof(t=range[a]))[0]?"-":(e>0?".":"")+(e=2,t)}return n}var g=[];for(a=1;a<range.length;a++){var t=range[a];g.push(0===t?"not("+o()+")":1===t?"("+o()+" || "+o()+")":2===t?g.pop()+" "+g.pop():rangeToString(t))}return o();function o(){return g.pop().replace(/^\((.+)\)$/,"$1")}
 /******/ 		}
 /******/ 		var satisfy = (range, version) => {
-/******/ 			// see webpack/lib/util/semver.js for original code
+/******/ 			// see webpack/lib/sharing/semver.js for original code
 /******/ 			if(0 in range){version=parseVersion(version);var e=range[0],r=e<0;r&&(e=-e-1);for(var n=0,i=1,a=!0;;i++,n++){var f,s,g=i<range.length?(typeof range[i])[0]:"";if(n>=version.length||"o"==(s=(typeof(f=version[n]))[0]))return!a||("u"==g?i>e&&!r:""==g!=r);if("u"==s){if(!a||"u"!=g)return!1}else if(a)if(g==s)if(i<=e){if(f!=range[i])return!1}else{if(r?f>range[i]:f<range[i])return!1;f!=range[i]&&(a=!1)}else if("s"!=g&&"n"!=g){if(r||i<=e)return!1;a=!1,i--}else{if(i<=e||s<g!=r)return!1;a=!1}else"s"!=g&&"n"!=g&&(a=!1,i--)}}var t=[],o=t.pop.bind(t);for(n=1;n<range.length;n++){var u=range[n];t.push(1==u?o()|o():2==u?o()&o():u?satisfy(u,version):!o())}return!!o();
 /******/ 		}
 /******/ 		const exists = (scope, key) => {
@@ -2013,8 +2013,8 @@ __webpack_require__.d(exports, {
 ```
 app:
   asset src_bootstrap_js.js 46.9 KiB [emitted]
-  asset vendors-node_modules_react_index_js.js 29.7 KiB [emitted] (id hint: vendors)
   asset app.js 29.7 KiB [emitted] (name: app)
+  asset vendors-node_modules_react_index_js.js 29.7 KiB [emitted] (id hint: vendors)
   chunk (runtime: app) app.js (app) 672 bytes (javascript) 42 bytes (share-init) 18.9 KiB (runtime) [entry] [rendered]
     > ./src/index.js app
     runtime modules 18.9 KiB 13 modules
@@ -2140,7 +2140,7 @@ mfe-b:
   asset vendors-node_modules_date-fns_index_js.js 70.3 KiB [emitted] [minimized] (id hint: vendors)
   asset node_modules_react_index_js.js 7.79 KiB [emitted] [minimized] 1 related asset
   asset mfeBBB.js 6.33 KiB [emitted] [minimized] (name: mfeBBB)
-  asset src-b_Component_js.js 632 bytes [emitted] [minimized]
+  asset src-b_Component_js.js 616 bytes [emitted] [minimized]
   chunk (runtime: mfeBBB) mfeBBB.js (mfeBBB) 42 bytes (javascript) 84 bytes (share-init) 16.1 KiB (runtime) [entry] [rendered]
     > mfeBBB
     runtime modules 16.1 KiB 11 modules

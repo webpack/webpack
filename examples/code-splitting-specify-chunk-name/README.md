@@ -144,10 +144,9 @@ module.exports = webpackAsyncContext;
 /******/ 	// This file contains only the entry chunk.
 /******/ 	// The chunk loading function for additional chunks
 /******/ 	__webpack_require__.e = (chunkId) => {
-/******/ 		return Promise.all(Object.keys(__webpack_require__.f).reduce((promises, key) => {
-/******/ 			__webpack_require__.f[key](chunkId, promises);
-/******/ 			return promises;
-/******/ 		}, []));
+/******/ 		const promises = [];
+/******/ 		__webpack_require__.f.j(chunkId, promises);
+/******/ 		return Promise.all(promises);
 /******/ 	};
 /******/ 	
 /******/ 	/* webpack/runtime/get javascript chunk filename */
@@ -342,7 +341,7 @@ __webpack_require__(1)("./ba" + createContextVar).then(function(bar) {
 ## Unoptimized
 
 ```
-asset output.js 11 KiB [emitted] (name: main)
+asset output.js 10.9 KiB [emitted] (name: main)
 asset 792.output.js 846 bytes [emitted] (name: chunk-bar-baz2)
 asset 994.output.js 846 bytes [emitted] (name: chunk-bar-baz0)
 asset 45.output.js 845 bytes [emitted] (name: chunk-foo)
@@ -354,9 +353,9 @@ chunk (runtime: main) 45.output.js (chunk-foo) 38 bytes [rendered]
     [used exports unknown]
     import() ./templates/foo ./example.js 1:0-62
     cjs require ./templates/foo ./example.js 6:11-37
-chunk (runtime: main) output.js (main) 565 bytes (javascript) 5.34 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 565 bytes (javascript) 5.28 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.34 KiB 8 modules
+  runtime modules 5.28 KiB 8 modules
   dependent modules 160 bytes [dependent] 1 module
   ./example.js 405 bytes [built] [code generated]
     [used exports unknown]
@@ -383,7 +382,7 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 2.63 KiB [emitted] [minimized] (name: main)
+asset output.js 2.61 KiB [emitted] [minimized] (name: main)
 asset 994.output.js 117 bytes [emitted] [minimized] (name: chunk-bar-baz0)
 asset 45.output.js 116 bytes [emitted] [minimized] (name: chunk-foo)
 asset 792.output.js 116 bytes [emitted] [minimized] (name: chunk-bar-baz2)
@@ -394,9 +393,9 @@ chunk (runtime: main) 45.output.js (chunk-foo) 38 bytes [rendered]
     [exports: default]
     import() ./templates/foo ./example.js 1:0-62
     cjs require ./templates/foo ./example.js 6:11-37
-chunk (runtime: main) output.js (main) 565 bytes (javascript) 5.71 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 565 bytes (javascript) 5.65 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.71 KiB 8 modules
+  runtime modules 5.65 KiB 8 modules
   dependent modules 160 bytes [dependent] 1 module
   ./example.js 405 bytes [built] [code generated]
     [no exports used]

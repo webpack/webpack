@@ -10,6 +10,7 @@ module.exports = {
 	optimization: {
 		minimize: {
 			css: {
+				extractComments: false,
 				// One option says which comments survive: this pattern stands in for
 				// the banner rule, so a `/*!` banner it does not name goes with the
 				// rest — which is what terser's `format.comments` does.

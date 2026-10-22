@@ -1,0 +1,194 @@
+"use strict";
+
+const vm = require("vm");
+const { toMatchSnapshot } = require("jest-snapshot");
+const { getActiveSnapshotState } = require("./snapshot");
+
+expect.extend({
+	toBeTypeOf(received, expected) {
+		const objType = typeof received;
+		const pass = objType === expected;
+
+		const message = pass
+			? () =>
+					`${this.utils.matcherHint(".not.toBeTypeOf")}\n\n` +
+					"Expected value to not be (using typeof):\n" +
+					`  ${this.utils.printExpected(expected)}\n` +
+					"Received:\n" +
+					`  ${this.utils.printReceived(objType)}`
+			: () =>
+					`${this.utils.matcherHint(".toBeTypeOf")}\n\n` +
+					"Expected value to be (using typeof):\n" +
+					`  ${this.utils.printExpected(expected)}\n` +
+					"Received:\n" +
+					`  ${this.utils.printReceived(objType)}`;
+
+		return { message, pass };
+	},
+	toEndWith(received, expected) {
+		const pass = typeof received === "string" && received.endsWith(expected);
+
+		const message = pass
+			? () =>
+					`${this.utils.matcherHint(".not.toEndWith")}\n\n` +
+					"Expected value to not end with:\n" +
+					`  ${this.utils.printExpected(expected)}\n` +
+					"Received:\n" +
+					`  ${this.utils.printReceived(received)}`
+			: () =>
+					`${this.utils.matcherHint(".toEndWith")}\n\n` +
+					"Expected value to end with:\n" +
+					`  ${this.utils.printExpected(expected)}\n` +
+					"Received:\n" +
+					`  ${this.utils.printReceived(received)}`;
+
+		return { message, pass };
+	},
+	toMatchSnapshot(...args) {
+		const snapshotState = getActiveSnapshotState();
+
+		if (!snapshotState) {
+			return toMatchSnapshot.apply(this, args);
+		}
+
+		const snapshotContext = Object.create(this);
+		snapshotContext.snapshotState = snapshotState;
+		return toMatchSnapshot.apply(snapshotContext, args);
+	}
+});
+
+if (process.env.ALTERNATIVE_SORT) {
+	const oldSort = Array.prototype.sort;
+
+	// eslint-disable-next-line no-extend-native
+	Array.prototype.sort = function sort(cmp) {
+		oldSort.call(this, cmp);
+		if (cmp) {
+			for (let i = 1; i < this.length; i++) {
+				if (cmp(this[i - 1], this[i]) === 0) {
+					let j = i + 1;
+					for (; j < this.length; j++) {
+						if (cmp(this[j - 1], this[j]) !== 0) {
+							break;
+						}
+					}
+					for (let x = i - 1, y = j - 1; x < y; x++, y--) {
+						const temp = this[x];
+						this[x] = this[y];
+						this[y] = temp;
+					}
+					i = j;
+				}
+			}
+		}
+		return this;
+	};
+}
+
+// Setup debugging info for tests
+if (process.env.DEBUG_INFO) {
+	const addDebugInfo = (it) => (name, fn, timeout) => {
+		if (fn.length === 0) {
+			it(
+				name,
+				() => {
+					process.stdout.write(`START1 ${name}\n`);
+					try {
+						const promise = fn();
+						if (promise && promise.then) {
+							return promise.then(
+								(r) => {
+									process.stdout.write(`DONE OK ${name}\n`);
+									return r;
+								},
+								(err) => {
+									process.stdout.write(`DONE FAIL ${name}\n`);
+									throw err;
+								}
+							);
+						}
+
+						process.stdout.write(`DONE OK ${name}\n`);
+					} catch (err) {
+						process.stdout.write(`DONE FAIL ${name}\n`);
+						throw err;
+					}
+				},
+				timeout
+			);
+		} else {
+			it(
+				name,
+				(done) => {
+					process.stdout.write(`START2 ${name}\n`);
+					return fn((err) => {
+						if (err) {
+							process.stdout.write(`DONE FAIL ${name}\n`);
+						} else {
+							process.stdout.write(`DONE OK ${name}\n`);
+						}
+						return done(err);
+					});
+				},
+				timeout
+			);
+		}
+	};
+
+	// eslint-disable-next-line no-global-assign
+	it = addDebugInfo(it);
+}
+
+// parsing/asm-js holds "use asm" functions that are not valid asm.js on
+// purpose, and V8 reports each one it rejects on stderr. Run them as plain
+// JavaScript, as V8 does once it has rejected them.
+try {
+	require("v8").setFlagsFromString("--no-validate-asm");
+} catch (_err) {
+	// a runtime without V8 flags has no asm.js validation to report either
+}
+
+// Experimental features the test runner enables on purpose; their warning on
+// every worker says nothing about the change under test.
+const realProcess = vm.runInThisContext("process");
+const originalEmitWarning = realProcess.emitWarning;
+// this file runs once per test file, while the process outlives them
+if (!originalEmitWarning.skipsKnownWarnings) {
+	realProcess.emitWarning = function emitWarning(warning, ...args) {
+		const type =
+			typeof args[0] === "string" ? args[0] : args[0] && args[0].type;
+		if (
+			type === "ExperimentalWarning" &&
+			/^(VM Modules|stripTypeScriptTypes) /.test(String(warning))
+		) {
+			return;
+		}
+		return originalEmitWarning.call(this, warning, ...args);
+	};
+	realProcess.emitWarning.skipsKnownWarnings = true;
+}
+
+// cspell:word wabt
+// Workaround for a memory leak in wabt: it leaks an Error object on construction,
+// so it leaks the whole stack trace.
+require("wast-loader");
+process.removeAllListeners("uncaughtException");
+process.removeAllListeners("unhandledRejection");
+
+// The runner's `vm.runInThisContext` writes to the worker's own global, which
+// outlives this file: drop what the file added so it can't keep it alive.
+const outerGlobal = vm.runInThisContext("this");
+const outerGlobalKeys = new Set(Object.getOwnPropertyNames(outerGlobal));
+
+// eslint-disable-next-line jest/require-top-level-describe
+afterAll(() => {
+	for (const key of Object.getOwnPropertyNames(outerGlobal)) {
+		if (outerGlobalKeys.has(key)) continue;
+		const descriptor =
+			/** @type {PropertyDescriptor} */
+			(Object.getOwnPropertyDescriptor(outerGlobal, key));
+		// a bundle's top-level `var` or function can't be deleted, only cleared
+		if (descriptor.configurable) delete outerGlobal[key];
+		else if (descriptor.writable) outerGlobal[key] = undefined;
+	}
+});

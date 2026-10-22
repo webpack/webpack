@@ -185,6 +185,16 @@ function platform() {
 /******/ 	}
 /******/ };
 /******/ 
+/******/ /* webpack/runtime/ensure chunk */
+/******/ __webpack_require__.f = {};
+/******/ // This file contains only the entry chunk.
+/******/ // The chunk loading function for additional chunks
+/******/ __webpack_require__.e = (chunkId) => {
+/******/ 	const promises = [];
+/******/ 	__webpack_require__.f.j(chunkId, promises);
+/******/ 	return Promise.all(promises);
+/******/ };
+/******/ 
 /******/ /* webpack/runtime/hasOwnProperty shorthand */
 /******/ __webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop));
 /******/ 
@@ -198,6 +208,10 @@ function platform() {
 /******/ /* webpack/runtime/import chunk loading */
 /******/ (() => {
 /******/ 	// no baseURI
+/******/ 	
+/******/ 	const chunkImports = {
+/******/ 		"render_js": () => (import("./render_js.mjs"))
+/******/ 	};
 /******/ 	
 /******/ 	// object to store loaded and loading chunks
 /******/ 	// undefined = chunk not loaded, null = chunk preloaded/prefetched
@@ -227,33 +241,33 @@ function platform() {
 /******/ 	
 /******/ 	}
 /******/ 	
-/******/ 	// no chunk on demand loading
+/******/ 	__webpack_require__.f.j = (chunkId, promises) => {
+/******/ 			// import() chunk loading for javascript
+/******/ 			let installedChunkData = __webpack_require__.o(installedChunks, chunkId) ? installedChunks[chunkId] : undefined;
+/******/ 			if(installedChunkData !== 0) { // 0 means "already installed".
+/******/ 	
+/******/ 				// a Promise means "currently loading".
+/******/ 				if(installedChunkData) {
+/******/ 					promises.push(installedChunkData[1]);
+/******/ 				} else {
+/******/ 					if(true) { // all chunks have JS
+/******/ 						// setup Promise in chunk cache
+/******/ 						let promise = chunkImports[chunkId]().then(installChunk, (e) => {
+/******/ 							if(installedChunks[chunkId] !== 0) installedChunks[chunkId] = undefined;
+/******/ 							throw e;
+/******/ 						});
+/******/ 						promise = Promise.race([promise, new Promise((resolve) => (installedChunkData = installedChunks[chunkId] = [resolve]))])
+/******/ 						promises.push(installedChunkData[1] = promise);
+/******/ 					}
+/******/ 				}
+/******/ 			}
+/******/ 	};
 /******/ 	
 /******/ 	// no prefetching
 /******/ 	
 /******/ 	// no preloaded
 /******/ 	
 /******/ 	// no external install chunk
-/******/ 	
-/******/ 	__webpack_require__.ei = (chunkId, importFn) => {
-/******/ 		let promises = [];
-/******/ 		let installedChunkData = __webpack_require__.o(installedChunks, chunkId) ? installedChunks[chunkId] : undefined;
-/******/ 		if(installedChunkData !== 0) { // 0 means "already installed".
-/******/ 			// a Promise means "currently loading".
-/******/ 			if(installedChunkData) {
-/******/ 				promises.push(installedChunkData[1]);
-/******/ 			} else {
-/******/ 				let promise = importFn().then(installChunk, (e) => {
-/******/ 					if(installedChunks[chunkId] !== 0) installedChunks[chunkId] = undefined;
-/******/ 					throw e;
-/******/ 				});
-/******/ 				promise = Promise.race([promise, new Promise((resolve) => (installedChunkData = installedChunks[chunkId] = [resolve]))]);
-/******/ 				promises.push((installedChunkData[1] = promise));
-/******/ 			}
-/******/ 		}
-/******/ 		// no other chunk loading handlers
-/******/ 		return Promise.all(promises);
-/******/ 	};
 /******/ 	
 /******/ 	// no on chunks loaded
 /******/ 	// no HMR
@@ -275,7 +289,7 @@ let __webpack_exports__ = {};
   \********************/
 /*! namespace exports */
 /*! exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__, __webpack_require__.r, __webpack_exports__, __webpack_require__.ei, __webpack_require__.* */
+/*! runtime requirements: __webpack_require__, __webpack_require__.r, __webpack_exports__, __webpack_require__.e, __webpack_require__.* */
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _env__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./env */ 1);
 // One source file, one ESM bundle, every runtime. `target: "universal"` tells
@@ -289,7 +303,7 @@ async function main() {
 	// Code-split into its own chunk. The universal chunk loader knows how to
 	// fetch it on either platform (native `import()` in the browser, dynamic
 	// `import()` of the emitted `.mjs` in Node).
-	const { render } = await __webpack_require__.ei("render_js", () => (import(/*! import() */ "./render_js.mjs"))).then(() => (__webpack_require__(/*! ./render */ 2)));
+	const { render } = await __webpack_require__.e(/*! import() */ "render_js").then(() => (__webpack_require__(/*! ./render */ 2)));
 
 	render(banner);
 }
@@ -340,11 +354,11 @@ function render(message) {
 ## Unoptimized
 
 ```
-asset output.mjs 7.19 KiB [emitted] [javascript module] (name: main)
+asset output.mjs 7.68 KiB [emitted] [javascript module] (name: main)
 asset render_js.mjs 998 bytes [emitted] [javascript module]
-chunk (runtime: main) output.mjs (main) 1.16 KiB (javascript) 2.45 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.mjs (main) 1.16 KiB (javascript) 2.82 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 2.45 KiB 4 modules
+  runtime modules 2.82 KiB 5 modules
   dependent modules 562 bytes [dependent] 1 module
   ./example.js 629 bytes [built] [code generated]
     [no exports]
@@ -362,11 +376,11 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.mjs 1.07 KiB [emitted] [javascript module] [minimized] (name: main)
+asset output.mjs 1.12 KiB [emitted] [javascript module] [minimized] (name: main)
 asset render_js.mjs 206 bytes [emitted] [javascript module] [minimized]
-chunk (runtime: main) output.mjs (main) 1.16 KiB (javascript) 2.25 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.mjs (main) 1.16 KiB (javascript) 2.61 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 2.25 KiB 3 modules
+  runtime modules 2.61 KiB 4 modules
   ./example.js + 1 modules 1.16 KiB [built] [code generated]
     [no exports]
     [no exports used]

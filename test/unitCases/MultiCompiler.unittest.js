@@ -1,0 +1,941 @@
+"use strict";
+
+require("../helpers/warmup-webpack");
+
+const path = require("path");
+const testDirectory = path.resolve(__dirname, "..");
+const { Volume, createFsFromVolume } = require("memfs");
+const webpack = require("../..");
+const expectNoDeprecations = require("../helpers/expectNoDeprecations");
+
+// Not exported by name; it is the type `MultiCompiler.watching` carries.
+/** @typedef {NonNullable<import("../../").MultiCompiler["watching"]>} MultiWatching */
+
+/**
+ * @param {import("../../").MultiCompilerOptions=} options options
+ * @returns {import("../../").MultiCompiler} compiler
+ */
+const createMultiCompiler = (options) => {
+	const compiler = /** @type {import("../../").MultiCompiler} */ (
+		webpack(
+			/** @type {import("../../").MultiConfiguration} */ (
+				Object.assign(
+					[
+						{
+							name: "a",
+							context: path.join(testDirectory, "fixtures"),
+							entry: "./a.js"
+						},
+						{
+							name: "b",
+							context: path.join(testDirectory, "fixtures"),
+							entry: "./b.js"
+						}
+					],
+					options
+				)
+			)
+		)
+	);
+	compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
+		/** @type {unknown} */ (createFsFromVolume(new Volume()))
+	);
+	compiler.watchFileSystem =
+		/** @type {import("../../lib/fs/fs").WatchFileSystem} */ ({
+			watch: (_a, _b, _c, _d, _e, _f, _g) =>
+				/** @type {import("../../lib/fs/fs").Watcher} */ (
+					/** @type {unknown} */ (undefined)
+				)
+		});
+	return compiler;
+};
+
+describe("MultiCompiler", () => {
+	expectNoDeprecations();
+
+	it("should trigger 'run' for each child compiler", (done) => {
+		const compiler = createMultiCompiler();
+		let called = 0;
+
+		compiler.hooks.run.tap("MultiCompiler test", () => called++);
+		compiler.run((err) => {
+			if (err) {
+				throw err;
+			}
+			expect(called).toBe(2);
+			compiler.close(done);
+		});
+	});
+
+	it("should trigger 'watchRun' for each child compiler", (done) => {
+		const compiler = createMultiCompiler();
+		let called = 0;
+
+		compiler.hooks.watchRun.tap("MultiCompiler test", () => called++);
+		compiler.watch(
+			/** @type {import("../../declarations/WebpackOptions").WatchOptions} */ (
+				/** @type {unknown} */ (1000)
+			),
+			(err) => {
+				if (err) {
+					throw err;
+				}
+				expect(called).toBe(2);
+				compiler.close(done);
+			}
+		);
+	});
+
+	it("should not be running twice at a time (run)", (done) => {
+		const compiler = createMultiCompiler();
+		compiler.run((err, _stats) => {
+			if (err) return done(err);
+		});
+		compiler.run((err, _stats) => {
+			if (err) {
+				compiler.close(done);
+			}
+		});
+	});
+
+	it("should not be running twice at a time (watch)", (done) => {
+		const compiler = createMultiCompiler();
+		compiler.watch({}, (err, _stats) => {
+			if (err) return done(err);
+		});
+		compiler.watch({}, (err, _stats) => {
+			if (err) {
+				compiler.close(done);
+			}
+		});
+	});
+
+	it("should not be running twice at a time (run - watch)", (done) => {
+		const compiler = createMultiCompiler();
+		compiler.run((err, _stats) => {
+			if (err) return done(err);
+		});
+		compiler.watch({}, (err, _stats) => {
+			if (err) {
+				compiler.close(done);
+			}
+		});
+	});
+
+	it("should not be running twice at a time (watch - run)", (done) => {
+		const compiler = createMultiCompiler();
+		compiler.watch({}, (err, _stats) => {
+			if (err) return done(err);
+		});
+		compiler.run((err, _stats) => {
+			if (err) {
+				compiler.close(done);
+			}
+		});
+	});
+
+	it("should not be running twice at a time (instance cb)", (done) => {
+		const compiler = /** @type {import("../../").Compiler} */ (
+			webpack(
+				{
+					context: testDirectory,
+					mode: "production",
+					entry: "./c",
+					output: {
+						path: "/",
+						filename: "bundle.js"
+					}
+				},
+				() => {}
+			)
+		);
+		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
+			/** @type {unknown} */ (createFsFromVolume(new Volume()))
+		);
+		compiler.run((err, _stats) => {
+			if (err) {
+				compiler.close(done);
+			}
+		});
+	});
+
+	it("should run again correctly after first compilation", (done) => {
+		const compiler = createMultiCompiler();
+		compiler.run((err, _stats) => {
+			if (err) return done(err);
+
+			compiler.run((err, _stats) => {
+				if (err) return done(err);
+				compiler.close(done);
+			});
+		});
+	});
+
+	it("should release per-child compilation memory as each child finishes (#15521)", (done) => {
+		const compiler = createMultiCompiler();
+		compiler.run((err, stats) => {
+			if (err) return done(err);
+			for (const childStats of /** @type {import("../../").MultiStats} */ (stats)
+				.stats) {
+				const compilation = childStats.compilation;
+				// codeGenerationResults: only used during seal/emit, dropped.
+				expect(
+					/** @type {import("../../").CodeGenerationResults} */ (
+						compilation.codeGenerationResults
+					).map.size
+				).toBe(0);
+				// Stats must still be usable on the slimmed compilation.
+				expect(typeof childStats.toJson().hash).toBe("string");
+			}
+			compiler.close(done);
+		});
+	});
+
+	it("should release a finished child's codeGenerationResults before a dependent sibling runs (#15521)", (done) => {
+		const compiler = /** @type {import("../../").MultiCompiler} */ (
+			webpack(
+				/** @type {import("../../").MultiConfiguration} */ (
+					Object.assign(
+						[
+							{
+								name: "a",
+								context: path.join(testDirectory, "fixtures"),
+								entry: "./a.js"
+							},
+							{
+								name: "b",
+								context: path.join(testDirectory, "fixtures"),
+								entry: "./b.js",
+								dependencies: ["a"]
+							}
+						],
+						{ parallelism: 1 }
+					)
+				)
+			)
+		);
+		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
+			/** @type {unknown} */ (createFsFromVolume(new Volume()))
+		);
+		compiler.watchFileSystem =
+			/** @type {import("../../lib/fs/fs").WatchFileSystem} */ ({
+				watch: (_a, _b, _c, _d, _e, _f, _g) =>
+					/** @type {import("../../lib/fs/fs").Watcher} */ (
+						/** @type {unknown} */ (undefined)
+					)
+			});
+		const [a, b] = compiler.compilers;
+		/** @type {import("../../").Compilation | undefined} */
+		let aCompilation;
+		a.hooks.done.tap("test", (stats) => {
+			aCompilation = stats.compilation;
+		});
+		// With dependencies + parallelism 1, b only starts after a is fully
+		// done (including a's afterDone release tap). Capture a's map size at
+		// that point: it must already be cleared while b is about to build.
+		/** @type {number | undefined} */
+		let aMapSizeWhenBStarts;
+		b.hooks.run.tap("test", () => {
+			aMapSizeWhenBStarts = /** @type {import("../../").CodeGenerationResults} */ (
+				/** @type {import("../../").Compilation} */ (aCompilation)
+					.codeGenerationResults
+			).map.size;
+		});
+		compiler.run((err) => {
+			if (err) return done(err);
+			expect(aMapSizeWhenBStarts).toBe(0);
+			compiler.close(done);
+		});
+	});
+
+	it("should compute the common outputPath by path segments", (done) => {
+		/**
+		 * @param {string} pathA output path for a
+		 * @param {string} pathB output path for b
+		 * @returns {import("../../").MultiCompiler} compiler
+		 */
+		const createWithOutputPaths = (pathA, pathB) =>
+			/** @type {import("../../").MultiCompiler} */ (
+				webpack(
+					/** @type {import("../../").MultiConfiguration} */ ([
+						{
+							name: "a",
+							context: path.join(testDirectory, "fixtures"),
+							entry: "./a.js",
+							output: { path: pathA }
+						},
+						{
+							name: "b",
+							context: path.join(testDirectory, "fixtures"),
+							entry: "./b.js",
+							output: { path: pathB }
+						}
+					])
+				)
+			);
+		const base = path.join(testDirectory, "js", "output-path");
+		// A sibling directory sharing a name prefix is not a common ancestor.
+		const prefixed = createWithOutputPaths(
+			path.join(base, "dist"),
+			path.join(base, "dist-modern")
+		);
+		expect(prefixed.outputPath).toBe(base);
+		const nested = createWithOutputPaths(
+			path.join(base, "dist", "a"),
+			path.join(base, "dist", "b")
+		);
+		expect(nested.outputPath).toBe(path.join(base, "dist"));
+		const same = createWithOutputPaths(
+			path.join(base, "dist"),
+			path.join(base, "dist")
+		);
+		expect(same.outputPath).toBe(path.join(base, "dist"));
+		// Root ancestor: keeps the trailing-separator parent working.
+		const root = createWithOutputPaths("/", "/foo");
+		expect(root.outputPath).toBe("/");
+		prefixed.close((err) => {
+			if (err) return done(err);
+			nested.close((err2) => {
+				if (err2) return done(err2);
+				same.close((err3) => {
+					if (err3) return done(err3);
+					root.close(done);
+				});
+			});
+		});
+	});
+
+	it("should watch again correctly after first compilation", (done) => {
+		const compiler = createMultiCompiler();
+		compiler.run((err, _stats) => {
+			if (err) return done(err);
+
+			compiler.watch({}, (err, _stats) => {
+				if (err) return done(err);
+				compiler.close(done);
+			});
+		});
+	});
+
+	it("should run again correctly after first closed watch", (done) => {
+		const compiler = createMultiCompiler();
+		const watching = /** @type {import("../../lib/watch/MultiWatching")} */ (
+			/** @type {unknown} */ (
+				compiler.watch({}, (err, _stats) => {
+					if (err) return done(err);
+				})
+			)
+		);
+		watching.close(() => {
+			compiler.run((err, _stats) => {
+				if (err) return done(err);
+				compiler.close(done);
+			});
+		});
+	});
+
+	it("should watch again correctly after first closed watch", (done) => {
+		const compiler = createMultiCompiler();
+		const watching = /** @type {import("../../lib/watch/MultiWatching")} */ (
+			/** @type {unknown} */ (
+				compiler.watch({}, (err, _stats) => {
+					if (err) return done(err);
+				})
+			)
+		);
+		watching.close(() => {
+			compiler.watch({}, (err, _stats) => {
+				if (err) return done(err);
+				compiler.close(done);
+			});
+		});
+	});
+
+	it("should expose the active MultiWatching on `watching`", (done) => {
+		const compiler = createMultiCompiler();
+		expect(compiler.watching).toBeUndefined();
+		const watching = /** @type {import("../../lib/watch/MultiWatching")} */ (
+			/** @type {unknown} */ (
+				compiler.watch({}, (err, _stats) => {
+					if (err) return done(err);
+				})
+			)
+		);
+		expect(compiler.watching).toBe(watching);
+		watching.close(() => {
+			expect(compiler.watching).toBeUndefined();
+			compiler.close(done);
+		});
+	});
+
+	it("should close the active watching and clear `watching` when the compiler is closed directly", (done) => {
+		const compiler = createMultiCompiler();
+		let watchCloseCalled = 0;
+		compiler.hooks.watchClose.tap("MultiCompiler test", () => {
+			watchCloseCalled++;
+		});
+		compiler.watch({}, (err, _stats) => {
+			if (err) return done(err);
+		});
+		expect(compiler.watching).toBeDefined();
+		compiler.close(() => {
+			expect(compiler.watching).toBeUndefined();
+			expect(watchCloseCalled).toBe(1);
+			done();
+		});
+	});
+
+	it("should trigger the aggregated 'shutdown' hook once per child compiler on close", (done) => {
+		const compiler = createMultiCompiler();
+		let shutdownCalled = 0;
+		compiler.hooks.shutdown.tapPromise("MultiCompiler test", async () => {
+			shutdownCalled++;
+		});
+		compiler.watch({}, (err, _stats) => {
+			if (err) return done(err);
+		});
+		compiler.close((err) => {
+			if (err) return done(err);
+			expect(shutdownCalled).toBe(2);
+			done();
+		});
+	});
+
+	it("should report which compilers changed on the aggregated 'done' hook", (done) => {
+		const compiler = createMultiCompiler();
+		/** @type {string[][]} */
+		const changedNames = [];
+		compiler.hooks.done.tap(
+			"MultiCompiler test",
+			(_stats, changedCompilers) => {
+				changedNames.push(
+					changedCompilers.map((c) => /** @type {string} */ (c.name))
+				);
+			}
+		);
+		let phase = 0;
+		compiler.watch({}, (err) => {
+			if (err) return done(err);
+			if (phase === 0) {
+				phase = 1;
+				expect(changedNames).toEqual([["a", "b"]]);
+				/** @type {NonNullable<import("../../").Compiler["watching"]>} */
+				(compiler.compilers[1].watching).invalidate();
+			} else if (phase === 1) {
+				phase = 2;
+				expect(changedNames).toEqual([["a", "b"], ["b"]]);
+				compiler.close(done);
+			}
+		});
+	});
+
+	it("should not stay running after dependency validation fails", (done) => {
+		const compiler = /** @type {import("../../").MultiCompiler} */ (
+			webpack(
+				/** @type {import("../../").MultiConfiguration} */ ([
+					{
+						name: "a",
+						context: path.join(testDirectory, "fixtures"),
+						entry: "./a.js",
+						dependencies: ["missing"]
+					},
+					{
+						name: "b",
+						context: path.join(testDirectory, "fixtures"),
+						entry: "./b.js"
+					}
+				])
+			)
+		);
+		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
+			/** @type {unknown} */ (createFsFromVolume(new Volume()))
+		);
+		compiler.run((err) => {
+			expect(/** @type {Error} */ (err).message).toMatch(
+				/Compiler dependency `missing` not found/
+			);
+			// A retry must report the real error again, not a ConcurrentCompilationError
+			compiler.run((err2) => {
+				expect(/** @type {Error} */ (err2).message).toMatch(
+					/Compiler dependency `missing` not found/
+				);
+				compiler.watch({}, (err3) => {
+					expect(/** @type {Error} */ (err3).message).toMatch(
+						/Compiler dependency `missing` not found/
+					);
+					compiler.close(done);
+				});
+			});
+		});
+	});
+
+	it("should allow watching again after a fatal error in a child compiler", (done) => {
+		const compiler = createMultiCompiler();
+		compiler.compilers[1].hooks.watchRun.tapAsync(
+			"MultiCompiler test",
+			(_compiler, callback) => {
+				callback(new Error("fatal child error"));
+			}
+		);
+		compiler.watch({}, (err) => {
+			expect(/** @type {Error} */ (err).message).toBe("fatal child error");
+			expect(compiler.running).toBe(false);
+			// A retry must report the real error again, not a ConcurrentCompilationError
+			compiler.watch({}, (err2) => {
+				expect(/** @type {Error} */ (err2).message).toBe("fatal child error");
+				compiler.close(done);
+			});
+		});
+	});
+
+	it("should close every child watching when the watch setup fails synchronously", (done) => {
+		const compiler = createMultiCompiler();
+		// A child already watching makes its setup fail synchronously
+		compiler.compilers[0].watch({}, () => {});
+		compiler.watch({}, (err) => {
+			expect(/** @type {Error} */ (err).message).toMatch(
+				/You ran Webpack twice/
+			);
+			// No child watching may leak, including ones created after the error
+			for (const child of compiler.compilers) {
+				expect(child.watching).toBeUndefined();
+			}
+			expect(compiler.running).toBe(false);
+			compiler.close(done);
+		});
+	});
+
+	it("should expose `watching` when dependency validation fails", (done) => {
+		const compiler = /** @type {import("../../").MultiCompiler} */ (
+			webpack(
+				/** @type {import("../../").MultiConfiguration} */ ([
+					{
+						name: "a",
+						context: path.join(testDirectory, "fixtures"),
+						entry: "./a.js",
+						dependencies: ["missing"]
+					},
+					{
+						name: "b",
+						context: path.join(testDirectory, "fixtures"),
+						entry: "./b.js"
+					}
+				])
+			)
+		);
+		/** @type {Error | null | undefined} */
+		let error;
+		const watching = /** @type {import("../../lib/watch/MultiWatching")} */ (
+			/** @type {unknown} */ (
+				compiler.watch({}, (err) => {
+					error = err;
+				})
+			)
+		);
+		expect(error).toBeInstanceOf(Error);
+		expect(compiler.watching).toBe(watching);
+		watching.close(() => {
+			expect(compiler.watching).toBeUndefined();
+			compiler.close(done);
+		});
+	});
+
+	it("should respect parallelism and dependencies for running", (done) => {
+		const compiler = createMultiCompiler(
+			/** @type {import("../../").MultiCompilerOptions} */ ({
+				parallelism: 1,
+				2: {
+					name: "c",
+					context: path.join(testDirectory, "fixtures"),
+					entry: "./a.js",
+					dependencies: ["d", "e"]
+				},
+				3: {
+					name: "d",
+					context: path.join(testDirectory, "fixtures"),
+					entry: "./a.js"
+				},
+				4: {
+					name: "e",
+					context: path.join(testDirectory, "fixtures"),
+					entry: "./a.js"
+				}
+			})
+		);
+		/** @type {string[]} */
+		const events = [];
+		for (const c of compiler.compilers) {
+			c.hooks.run.tap("test", () => {
+				events.push(`${c.name} run`);
+			});
+			c.hooks.done.tap("test", () => {
+				events.push(`${c.name} done`);
+			});
+		}
+		compiler.run((_err, _stats) => {
+			expect(events.join(" ")).toBe(
+				"a run a done b run b done d run d done e run e done c run c done"
+			);
+			compiler.close(done);
+		});
+	});
+
+	it("should report a child as blocked only while it waits for its parent", (done) => {
+		const compiler = /** @type {import("../../").MultiCompiler} */ (
+			webpack(
+				/** @type {import("../../").MultiConfiguration} */ ([
+					{
+						name: "a",
+						mode: "development",
+						context: path.join(testDirectory, "fixtures"),
+						entry: "./a.js"
+					},
+					{
+						name: "b",
+						mode: "development",
+						context: path.join(testDirectory, "fixtures"),
+						entry: "./b.js",
+						dependencies: ["a"]
+					}
+				])
+			)
+		);
+		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
+			/** @type {unknown} */ (createFsFromVolume(new Volume()))
+		);
+		compiler.watchFileSystem =
+			/** @type {import("../../lib/fs/fs").WatchFileSystem} */ ({
+				watch: (_a, _b, _c, _d, _e, _f, _g) =>
+					/** @type {import("../../lib/fs/fs").Watcher} */ (
+						/** @type {unknown} */ (undefined)
+					)
+			});
+		/** @type {boolean | undefined} */
+		let blockedWhileParentBuilds;
+		compiler.compilers[0].hooks.done.tap("test", () => {
+			// `a` is done but has not handed `b` over yet, so `b` is still waiting.
+			if (blockedWhileParentBuilds === undefined) {
+				blockedWhileParentBuilds = /** @type {MultiWatching} */ (
+					compiler.watching
+				).watchings[1].blocked;
+			}
+		});
+		const watching = /** @type {MultiWatching} */ (
+			compiler.watch({}, (err) => {
+				if (err) return done(err);
+				expect(blockedWhileParentBuilds).toBe(true);
+				// Both have built, so neither waits on anything any more.
+				for (const child of watching.watchings) {
+					expect(child.blocked).toBe(false);
+				}
+				compiler.close(done);
+			})
+		);
+	});
+
+	it("should respect parallelism when using invalidate", (done) => {
+		const compiler = /** @type {import("../../").MultiCompiler} */ (
+			webpack(
+				/** @type {import("../../").MultiConfiguration} */ (
+					/** @type {unknown} */ (
+						Object.assign(
+							[
+								{
+									name: "a",
+									mode: "development",
+									entry: { a: "./a.js" },
+									context: path.join(testDirectory, "fixtures")
+								},
+								{
+									name: "b",
+									mode: "development",
+									entry: { b: "./b.js" },
+									context: path.join(testDirectory, "fixtures")
+								}
+							],
+							{ parallelism: 1 }
+						)
+					)
+				)
+			)
+		);
+
+		/** @type {string[]} */
+		const events = [];
+		for (const c of compiler.compilers) {
+			c.hooks.invalid.tap("test", () => {
+				events.push(`${c.name} invalid`);
+			});
+			c.hooks.watchRun.tap("test", () => {
+				events.push(`${c.name} run`);
+			});
+			c.hooks.done.tap("test", () => {
+				events.push(`${c.name} done`);
+			});
+		}
+
+		compiler.watchFileSystem = {
+			watch: /** @type {import("../../lib/fs/fs").WatchMethod} */ (
+				/** @type {unknown} */ (/** @type {() => void} */ (() => {}))
+			)
+		};
+		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
+			/** @type {unknown} */ (createFsFromVolume(new Volume()))
+		);
+
+		let state = 0;
+		const watching = /** @type {import("../../lib/watch/MultiWatching")} */ (
+			/** @type {unknown} */ (
+				compiler.watch({}, (error) => {
+					if (error) {
+						done(error);
+						return;
+					}
+					if (state !== 0) return;
+					state++;
+
+					expect(events).toMatchInlineSnapshot(`
+			Array [
+			  "a run",
+			  "a done",
+			  "b run",
+			  "b done",
+			]
+		`);
+					events.length = 0;
+
+					watching.invalidate((err) => {
+						try {
+							if (err) return done(err);
+
+							expect(events).toMatchInlineSnapshot(`
+				Array [
+				  "a invalid",
+				  "b invalid",
+				  "a run",
+				  "a done",
+				  "b run",
+				  "b done",
+				]
+			`);
+							events.length = 0;
+							expect(state).toBe(1);
+							setTimeout(() => {
+								compiler.close(done);
+							}, 1000);
+						} catch (err) {
+							console.error(err);
+							done(err);
+						}
+					});
+				})
+			)
+		);
+	}, 2000);
+
+	it("should respect dependencies when using invalidate", (done) => {
+		const compiler = /** @type {import("../../").MultiCompiler} */ (
+			webpack([
+				{
+					name: "a",
+					mode: "development",
+					entry: { a: "./a.js" },
+					context: path.join(testDirectory, "fixtures"),
+					dependencies: ["b"]
+				},
+				{
+					name: "b",
+					mode: "development",
+					entry: { b: "./b.js" },
+					context: path.join(testDirectory, "fixtures")
+				}
+			])
+		);
+
+		/** @type {string[]} */
+		const events = [];
+		for (const c of compiler.compilers) {
+			c.hooks.invalid.tap("test", () => {
+				events.push(`${c.name} invalid`);
+			});
+			c.hooks.watchRun.tap("test", () => {
+				events.push(`${c.name} run`);
+			});
+			c.hooks.done.tap("test", () => {
+				events.push(`${c.name} done`);
+			});
+		}
+
+		compiler.watchFileSystem = {
+			watch: /** @type {import("../../lib/fs/fs").WatchMethod} */ (
+				/** @type {unknown} */ (/** @type {() => void} */ (() => {}))
+			)
+		};
+		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
+			/** @type {unknown} */ (createFsFromVolume(new Volume()))
+		);
+
+		let state = 0;
+		const watching = /** @type {import("../../lib/watch/MultiWatching")} */ (
+			/** @type {unknown} */ (
+				compiler.watch({}, (error) => {
+					if (error) {
+						done(error);
+						return;
+					}
+					if (state !== 0) return;
+					state++;
+
+					expect(events).toMatchInlineSnapshot(`
+			Array [
+			  "b run",
+			  "b done",
+			  "a run",
+			  "a done",
+			]
+		`);
+					events.length = 0;
+
+					watching.invalidate((err) => {
+						try {
+							if (err) return done(err);
+
+							expect(events).toMatchInlineSnapshot(`
+				Array [
+				  "a invalid",
+				  "b invalid",
+				  "b run",
+				  "b done",
+				  "a run",
+				  "a done",
+				]
+			`);
+							events.length = 0;
+							expect(state).toBe(1);
+							setTimeout(() => {
+								compiler.close(done);
+							}, 1000);
+						} catch (err) {
+							console.error(err);
+							done(err);
+						}
+					});
+				})
+			)
+		);
+	}, 2000);
+
+	it("shouldn't hang when invalidating watchers", (done) => {
+		const entriesA = /** @type {Record<string, string>} */ ({ a: "./a.js" });
+		const entriesB = /** @type {Record<string, string>} */ ({ b: "./b.js" });
+		const compiler = /** @type {import("../../").MultiCompiler} */ (
+			webpack([
+				{
+					name: "a",
+					mode: "development",
+					entry: () => entriesA,
+					context: path.join(testDirectory, "fixtures")
+				},
+				{
+					name: "b",
+					mode: "development",
+					entry: () => entriesB,
+					context: path.join(testDirectory, "fixtures")
+				}
+			])
+		);
+
+		compiler.watchFileSystem = {
+			watch: /** @type {import("../../lib/fs/fs").WatchMethod} */ (
+				/** @type {unknown} */ (/** @type {() => void} */ (() => {}))
+			)
+		};
+		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
+			/** @type {unknown} */ (createFsFromVolume(new Volume()))
+		);
+
+		const watching = /** @type {import("../../lib/watch/MultiWatching")} */ (
+			/** @type {unknown} */ (
+				compiler.watch({}, (error) => {
+					if (error) {
+						done(error);
+						return;
+					}
+
+					entriesA.b = "./b.js";
+					entriesB.a = "./a.js";
+
+					watching.invalidate((err) => {
+						if (err) return done(err);
+						compiler.close(done);
+					});
+				})
+			)
+		);
+	}, 2000);
+
+	it("shouldn't hang when invalidating during build", (done) => {
+		const compiler = /** @type {import("../../").MultiCompiler} */ (
+			webpack(
+				/** @type {import("../../").MultiConfiguration} */ (
+					Object.assign([
+						{
+							name: "a",
+							mode: "development",
+							context: path.join(testDirectory, "fixtures"),
+							entry: "./a.js"
+						},
+						{
+							name: "b",
+							mode: "development",
+							context: path.join(testDirectory, "fixtures"),
+							entry: "./b.js",
+							dependencies: ["a"]
+						}
+					])
+				)
+			)
+		);
+		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
+			/** @type {unknown} */ (createFsFromVolume(new Volume()))
+		);
+		/** @type {((...args: EXPECTED_ANY[]) => void)[]} */
+		const watchCallbacks = [];
+		/** @type {((...args: EXPECTED_ANY[]) => void)[]} */
+		const watchCallbacksUndelayed = [];
+		let firstRun = true;
+		compiler.watchFileSystem =
+			/** @type {import("../../lib/fs/fs").WatchFileSystem} */ ({
+				watch(
+					files,
+					directories,
+					missing,
+					startTime,
+					options,
+					callback,
+					callbackUndelayed
+				) {
+					watchCallbacks.push(callback);
+					watchCallbacksUndelayed.push(callbackUndelayed);
+					if (
+						firstRun &&
+						/** @type {Set<string>} */ (files).has(
+							path.join(testDirectory, "fixtures", "a.js")
+						)
+					) {
+						process.nextTick(() => {
+							callback(null, new Map(), new Map(), new Set(), new Set());
+						});
+						firstRun = false;
+					}
+					return /** @type {import("../../lib/fs/fs").Watcher} */ (
+						/** @type {unknown} */ (undefined)
+					);
+				}
+			});
+		compiler.watch({}, (err, _stats) => {
+			if (err) return done(err);
+			compiler.close(done);
+		});
+	});
+});

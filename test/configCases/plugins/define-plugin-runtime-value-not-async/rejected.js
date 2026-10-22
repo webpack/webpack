@@ -1,0 +1,1 @@
+console.log(REJECTED_NOT_DECLARED_ASYNC);

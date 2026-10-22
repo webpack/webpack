@@ -73,3 +73,9 @@ it("should skip a directory 'ignore' names whole", () => {
 	expect(exists("no-hidden/.hidden/inside.txt")).toBe(false);
 	expect(exists("no-hidden/.hidden/deeper/ignored.txt")).toBe(false);
 });
+
+it("should read a glob 'from' as a glob when not following symlinks", () => {
+	expect(read("glob-no-follow/keep.txt")).toBe("keep");
+	expect(exists("glob-no-follow/sub/deep.txt")).toBe(false);
+	expect(__STATS__.errors).toHaveLength(0);
+});

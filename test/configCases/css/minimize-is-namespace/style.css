@@ -1,0 +1,30 @@
+@namespace url(http://www.w3.org/2000/svg);
+@namespace html url(http://www.w3.org/1999/xhtml);
+
+:is(*|*) {
+	color: red;
+}
+
+:is(html|*) {
+	background-color: blue;
+}
+
+:is(|*) {
+	opacity: 0.5;
+}
+
+:is(*|rect) {
+	fill: green;
+}
+
+*|*:not(:is(*|*)) {
+	border-width: 1px;
+}
+
+:is(.safe) {
+	stroke: blue;
+}
+
+:is([lang|=en]) {
+	stroke-width: 2px;
+}

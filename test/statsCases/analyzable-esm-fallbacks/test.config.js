@@ -36,12 +36,19 @@ const CASES = {
 	"eval-devtool": {
 		file: "main.mjs",
 		expect: "fallback",
-		bailout: "wraps the module in eval()"
+		bailout: "wraps the module in eval()",
+		// `index-eval.js` writes two urls that bail for that one reason
+		count: 1
 	},
 	"worker-chunk-loading": {
 		file: "main.mjs",
 		expect: "fallback",
-		bailout: 'not "import"'
+		bailout: 'this worker loads its chunks with "async-node", not "import"'
+	},
+	"runtime-chunk-loading": {
+		file: "main.mjs",
+		expect: "fallback",
+		bailout: 'this runtime loads its chunks with "jsonp", not "import"'
 	},
 	"chunk-format": {
 		file: "main.mjs",
@@ -149,9 +156,15 @@ module.exports = {
 				runtimeModules: true,
 				optimizationBailout: true
 			}).modules || []) {
-				for (const bailout of module.optimizationBailout || []) {
-					if (bailout.startsWith(BAILOUT)) bailouts.push(bailout);
-				}
+				const own = (module.optimizationBailout || []).filter((bailout) =>
+					bailout.startsWith(BAILOUT)
+				);
+				// A module writing many references that bail alike reports it once.
+				expect(own).toEqual([...new Set(own)]);
+				bailouts.push(...own);
+			}
+			if (testCase.count !== undefined) {
+				expect(bailouts).toHaveLength(testCase.count);
 			}
 			if (testCase.contains) {
 				expect(output).toMatch(testCase.contains);

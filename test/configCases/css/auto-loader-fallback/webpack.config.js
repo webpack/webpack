@@ -4,11 +4,13 @@ const path = require("path");
 
 const PLUGIN_NAME = "InjectLoaderPlugin";
 
-// `experiments.css` stays at its "auto" default (no `.css` rule in `module.rules`),
-// but loaders still reach `.css` modules — via an inline request or injected by a
-// plugin hook. Those modules must fall back to javascript so the loader result is
-// not misparsed by the built-in CSS type.
-/** @type {import("../../../../").Configuration} */
+/**
+ * `experiments.css` stays at its "auto" default, with no `.css` rule in
+ * `module.rules`, yet loaders still reach `.css` modules through an inline
+ * request or a plugin hook. Those modules must fall back to javascript, so the
+ * loader result is not misparsed by the built-in CSS type.
+ * @type {import("../../../../").Configuration}
+ */
 module.exports = {
 	target: "web",
 	mode: "development",

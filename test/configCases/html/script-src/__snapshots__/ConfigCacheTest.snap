@@ -75,7 +75,7 @@ module.exports = \\"first entry\\";
 /******/ 	// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 	// [resolve, Promise] = chunk loading, 0 = chunk loaded
 /******/ 	const installedChunks = {
-/******/ 		\\"__html_cbe5b59d_0\\": 0
+/******/ 		\\"page-0\\": 0
 /******/ 	};
 /******/ 	
 /******/ 	const installChunk = (data) => {
@@ -137,8 +137,8 @@ exports[`ConfigCacheTestCases html script-src exported tests should bundle class
 <script type=\\"module\\" src=\\"other.mjs\\"></script>
 <script type=\\"module\\" src=\\"module-entry.mjs\\"></script>
 <script type=\\"module\\" src=\\"classic-typed.mjs\\"></script>
-<script type=\\"module\\" src=\\"__html_cbe5b59d_4.mjs\\"></script>
-<script type=\\"module\\" src=\\"__html_cbe5b59d_5.mjs\\"></script>
+<script type=\\"module\\" src=\\"page.mjs\\"></script>
+<script type=\\"module\\" src=\\"page1.mjs\\"></script>
 <!-- Non-JS script types must NOT be bundled as JS entries. They flow
      through the regular HtmlSourceDependency path: rewritten as an
      asset URL, the attribute stays as-is. -->

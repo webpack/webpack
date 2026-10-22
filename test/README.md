@@ -15,14 +15,17 @@ yarn test
 Run an individual suite:
 
 ```sh
-yarn jest ConfigTestCases
+yarn test:base --testPathPatterns="ConfigTestCases"
 ```
 
 Watch mode:
 
 ```sh
-yarn jest --watch ConfigTestCases
+yarn test:base --watch --testPathPatterns="ConfigTestCases"
 ```
+
+Always go through the `test:base` wrapper rather than calling `jest` directly: it carries the
+`--experimental-vm-modules` node flag the ESM and test262 suites need.
 
 See also: [Jest CLI docs](https://jestjs.io/docs/cli)
 
@@ -39,7 +42,7 @@ If the feature you are contributing involves one of those classes, then best to 
 
 In addition to Class specific tests, there are also directories that end in "Cases". The suites for these cases also have corresponding \*.test.js files.
 
-#### cases (`TestCases.test.js`) <sup>1</sup>
+#### cases (`TestCasesNormal.basictest.js` and the other `TestCases*` suites) <sup>1</sup>
 
 Cases are a set of general purpose tests that will run against a variety of permutations of webpack configurations. When you are making a general purpose change that doesn't require you to have a special configuration, you would likely add your tests here. Inside of the `./test/cases` directory you will find tests are broken into thematic sub directories. Take a moment to explore the different options.
 
@@ -71,7 +74,7 @@ import("./someModule");
 
 - don't forget the `webpack.config.js`
 - run the test
-- jest will automatically add the output from your test code to `StatsTestCases.test.js.snap` and you can always check your results there
+- jest will automatically write the output from your test code to `statsCases/<your-case>/__snapshots__/StatsTest.snap` and you can always check your results there
 - Next time test will run -> runner will compare results against your output written to snapshot previously
 
 You can read more about SnapShot testing [right here](https://jestjs.io/docs/snapshot-testing)

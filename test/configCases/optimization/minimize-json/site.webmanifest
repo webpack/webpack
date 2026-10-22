@@ -1,0 +1,4 @@
+{
+	"name": "webpack",
+	"icons": [{ "src": "icon.png", "sizes": "48x48" }]
+}

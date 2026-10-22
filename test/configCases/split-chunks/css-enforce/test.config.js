@@ -4,14 +4,14 @@ module.exports = {
 	findBundle() {
 		return ["main.js"];
 	},
-	moduleScope(scope) {
-		const link1 = scope.window.document.createElement("link");
+	setupDocument(document) {
+		const link1 = document.createElement("link");
 		link1.rel = "stylesheet";
 		link1.href = "main.css";
-		scope.window.document.head.appendChild(link1);
-		const link2 = scope.window.document.createElement("link");
+		document.head.appendChild(link1);
+		const link2 = document.createElement("link");
 		link2.rel = "stylesheet";
 		link2.href = "vendors.css";
-		scope.window.document.head.appendChild(link2);
+		document.head.appendChild(link2);
 	}
 };

@@ -7,6 +7,15 @@ on:
     branches: [main]
     tags: ["!**"]
 
+concurrency:
+  # Only pull request runs share a group. A group holds one pending run, so
+  # with a shared group a third push to `main` would evict the one queued
+  # behind the run in progress; every other run keys on its own run id.
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.ref || github.run_id }}
+  # A preview of a commit that has been replaced is one nobody will install.
+  # Every push to `main` publishes its own preview, so those are not dropped.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 permissions:
   issues: write
   pull-requests: write
@@ -19,6 +28,7 @@ jobs:
       github.event.pull_request.head.repo.full_name == github.repository)
     name: Publish to pkg.pr.new
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     outputs:
       sha: ${{ steps.publish.outputs.sha }}
       urls: ${{ steps.publish.outputs.urls }}
@@ -26,11 +36,11 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - run: corepack enable
       - name: Use Node.js
-        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: lts/*
           cache: yarn
-      - run: yarn --frozen-lockfile
+      - run: node tooling/retry.js yarn --frozen-lockfile
       - run: npx pkg-pr-new publish --compact --json output.json --comment=off
       - name: Add metadata to output
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0

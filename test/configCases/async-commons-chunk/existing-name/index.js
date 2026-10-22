@@ -41,10 +41,7 @@ it("should not have duplicate chunks in blocks", function (done) {
 		"a+b+c"
 	);
 
-	// Each of the require.ensures above should end up resolving chunks:
-	// - a
-	// - a, a+b
-	// - a, a+b, a+b+c
+	// The `require.ensure`s above resolve chunks `a`; `a, a+b`; and `a, a+b, a+b+c`.
 	expect(chunkLoadingSpy.mock.calls.length).toBe(6);
 	expect(chunkLoadingSpy.mock.calls).toEqual([
 		["a"],

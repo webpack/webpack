@@ -38,6 +38,19 @@ module.exports = [
 		}
 	},
 	{
+		...base,
+		name: "module-avoidEntryIife-wrapped",
+		entry: "./wrapped-entry.js",
+		output: {
+			...base.output,
+			filename: "module-avoidEntryIife-wrapped.mjs"
+		},
+		optimization: {
+			...base.optimization,
+			avoidEntryIife: true
+		}
+	},
+	{
 		name: "test-output",
 		entry: "./test.js",
 		output: {

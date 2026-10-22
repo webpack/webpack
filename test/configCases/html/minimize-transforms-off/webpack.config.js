@@ -11,6 +11,7 @@ module.exports = {
 	},
 	optimization: {
 		minimize: {
+			css: { extractComments: false },
 			html: {
 				collapseBooleanAttributes: false,
 				// `false` here would drop every comment; `"all"` is the level that

@@ -4,7 +4,7 @@ const { RawSource } = require("webpack-sources");
 const { Generator, Parser } = require("../../../../");
 
 /** @import { ParserState } from "../../../../" */
-/** @import { PreparsedAst } from "../../../../lib/Parser" */
+/** @import { PreparsedAst } from "../../../../lib/module/Parser" */
 
 class PlainParser extends Parser {
 	/**

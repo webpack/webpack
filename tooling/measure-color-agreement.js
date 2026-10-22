@@ -29,16 +29,16 @@
 // sweeping each space's own range. No margin bridges those, so a color written
 // in one is left as it stands.
 //
-// Set `PUPPETEER_EXECUTABLE_PATH` to measure a browser other than the installed
-// Chrome channel. The constants the run prints are the measured maxima; the ones
+// Set `CHROME_EXECUTABLE_PATH` to measure a browser other than the pinned
+// Chrome. The constants the run prints are the measured maxima; the ones
 // in `lib/css/syntax.js` carry a safety factor above them, since only the engines
 // that can be run here have been measured.
 
 const {
-	COLOR_SPACE_MODEL,
-	PREDEFINED_COLOR_SPACES
+	PREDEFINED_COLOR_SPACES,
+	getColorSpaceModel
 } = require("../lib/css/data");
-const launchChrome = require("../test/helpers/launchChrome");
+const launchBrowser = require("../test/helpers/launchBrowser");
 
 /**
  * @param {string} name the flag
@@ -86,7 +86,7 @@ const decode = (c) => {
 
 /**
  * Ask the browser for its own conversion of each color into sRGB.
- * @param {import("puppeteer-core").Page} page the page to read from
+ * @param {import("playwright-core").Page} page the page to read from
  * @param {string[]} colors the colors as written
  * @returns {Promise<(number[] | null)[]>} each color's sRGB components, or null where it read none
  */
@@ -181,7 +181,9 @@ const polarSample = (space, random) => {
 		Number(value.toFixed(6))
 	);
 	return {
-		text: `${space}(${components[0]}${wide ? "%" : ""} ${components[1]} ${components[2]})`,
+		text: `${space}(${components[0]}${wide ? "%" : ""} ${components[1]} ${
+			components[2]
+		})`,
 		components
 	};
 };
@@ -192,7 +194,7 @@ const polarSample = (space, random) => {
  * disagreement does is scale every value by about one factor; what a different
  * transfer does is bend the bottom of the range away from the top, so the spread
  * of the ratio is what names them.
- * @param {import("puppeteer-core").Page} page the page to read from
+ * @param {import("playwright-core").Page} page the page to read from
  * @param {string[]} spaces the spaces to sweep
  * @returns {Promise<string[]>} the spaces whose transfer the engine reads differently
  */
@@ -203,7 +205,8 @@ const readTransfers = async (page, spaces) => {
 	console.log("space          transfer read as the spec's, over its own range");
 	for (const space of spaces) {
 		const read = await page.evaluate(
-			(values, name) => {
+			// playwright hands a page function one argument
+			([values, name]) => {
 				const element = /** @type {HTMLElement} */ (
 					document.getElementById("probe")
 				);
@@ -213,8 +216,7 @@ const readTransfers = async (page, spaces) => {
 					return getComputedStyle(element).color;
 				});
 			},
-			ramp,
-			space
+			/** @type {const} */ ([ramp, space])
 		);
 		const transfer =
 			/** @type {NonNullable<ReturnType<typeof PREDEFINED_COLOR_SPACES.get>>} */ (
@@ -236,14 +238,16 @@ const readTransfers = async (page, spaces) => {
 		// shows — never mind the 3e-2 of a missing linear segment.
 		const differs = spread > 1.002;
 		console.log(
-			`${space.padEnd(14)} spread ${spread.toFixed(5)}${differs ? "   <- another transfer" : ""}`
+			`${space.padEnd(14)} spread ${spread.toFixed(5)}${
+				differs ? "   <- another transfer" : ""
+			}`
 		);
 		if (differs) out.push(space);
 	}
 	return out.sort();
 };
 
-/** @type {import("puppeteer-core").Browser | undefined} the run's browser */
+/** @type {import("playwright-core").Browser | undefined} the run's browser */
 let browser;
 
 const main = async () => {
@@ -268,8 +272,8 @@ const main = async () => {
 	}
 	for (const space of POLAR_SPACES) {
 		const model =
-			/** @type {NonNullable<ReturnType<typeof COLOR_SPACE_MODEL.get>>} */ (
-				COLOR_SPACE_MODEL.get(space)
+			/** @type {NonNullable<ReturnType<ReturnType<typeof getColorSpaceModel>["get"]>>} */ (
+				getColorSpaceModel().get(space)
 			);
 		for (let at = 0; at < SAMPLES; at++) {
 			const { text, components } = polarSample(space, random);
@@ -279,7 +283,7 @@ const main = async () => {
 		}
 	}
 
-	browser = await launchChrome({ protocolTimeout: 600000 });
+	browser = await launchBrowser();
 	const page = await browser.newPage();
 	await page.setContent('<div id="probe">probe</div>');
 	const theirs = await readSrgb(
@@ -331,7 +335,7 @@ const main = async () => {
 	);
 	for (const [space, entry] of stats) {
 		const differs = suspect.includes(space);
-		const model = COLOR_SPACE_MODEL.get(space);
+		const model = getColorSpaceModel().get(space);
 		if (!differs) {
 			worstRelative = Math.max(worstRelative, entry.relative);
 			// Only a space needing no matrix bounds the transfer on its own.
@@ -356,7 +360,7 @@ const main = async () => {
 			`  _TRANSFER_ERROR   = ${(worstEncoded * HEDGE).toExponential(2)}\n` +
 			`  _CONVERSION_ERROR = ${(worstRelative * HEDGE).toExponential(2)}`
 	);
-	const stated = [...COLOR_SPACE_MODEL]
+	const stated = [...getColorSpaceModel()]
 		.filter(([, space]) => space.conversion === 3)
 		.map(([name]) => name)
 		.sort();

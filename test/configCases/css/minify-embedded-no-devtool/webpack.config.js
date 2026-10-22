@@ -1,8 +1,10 @@
 "use strict";
 
 const { SourceMapSource } = require("webpack-sources");
-const { CSS_TYPE } = require("../../../../lib/ModuleSourceTypeConstants");
 const cssSyntax = require("../../../../lib/css/syntax");
+const {
+	CSS_TYPE
+} = require("../../../../lib/module/ModuleSourceTypeConstants");
 
 // A tap that always maps, whatever `devtool` says — webpack must not ship the
 // map (and the original sources with it) into a bundle that asked for none.

@@ -3,7 +3,7 @@
 // The machinery both equivalence suites share: the helpers installed into the
 // page (an engine is the only thing that can say two spellings mean the same),
 // and the comparisons built on what they report. Nothing here knows which
-// corpus it is reading — `configCases` and `test/wpt` go through one path, so
+// corpus it is reading — `configCases` and `test/external/wpt` go through one path, so
 // an inline `<style>` is held to exactly the same standard as a `.css` file.
 
 const fs = require("fs");
@@ -12,7 +12,8 @@ const path = require("path");
 const {
 	CACHE: CSS_CACHE,
 	GENERATED_FIXTURES,
-	INSTALLED_FIXTURES
+	INSTALLED_FIXTURES,
+	PACKED_FIXTURES
 } = require("../../tooling/compare-css-tools");
 const {
 	APP_SHELL,
@@ -26,10 +27,12 @@ const {
 	spritePage
 } = require("../../tooling/compare-html-tools");
 
-/** @typedef {{ name: string, raw: string, min: string }} Fixture */
-
-// How many viewport sizes any one condition set is sampled at.
-const MAX_SAMPLED_SIZES = 64;
+/**
+ * The rewrites an opt-in makes on purpose, each set aside in the comparison
+ * that would otherwise read it as a difference.
+ * @typedef {"custom-properties" | "length-units" | "approximate-colors" | "prefixes" | "whitespace" | "redundant-attributes" | "empty-elements" | "merged-styles"} Relaxation
+ */
+/** @typedef {{ name: string, raw: string, min: string, relax?: Relaxation[] }} Fixture */
 
 /**
  * Every fixture of one extension under a directory. Synchronous: jest needs one
@@ -111,7 +114,8 @@ const benchmarkStylesheets = (minify) =>
 				(/** @type {[string, string]} */ [label, file]) =>
 					/** @type {[string, string]} */ ([label, `node_modules/${file}`])
 			),
-			...GENERATED_FIXTURES
+			...GENERATED_FIXTURES,
+			...PACKED_FIXTURES
 		],
 		minify
 	);
@@ -170,29 +174,27 @@ const benchmarkDocuments = (minify) => {
 	return out;
 };
 
-/**
- * @typedef {{ kind: string, condition: string }} Condition
- * @typedef {{ chain: Condition[], text: string, label?: string, list?: string[], block?: string }} Rule
- * @typedef {{ facets: Record<string, string[]>, styles: Rule[][] }} Facets
- */
+/** @typedef {{ facets: Record<string, string[]>, styles: string[] }} Facets */
 
 /**
  * @typedef {object} PageHelpers
- * @property {(source: string) => Rule[] | null} cssRules the rules of a stylesheet, in cascade order
- * @property {(html: string) => Facets} htmlFacets everything a page's DOM is made of
- * @property {(conditions: string[], sizes: number[]) => string[]} containerSignatures which sizes each container query holds at
- * @property {(conditions: string[]) => string[]} supportsSignatures whether each support condition holds
+ * @property {(html: string, relax?: Relaxation[]) => Facets} htmlFacets everything a page's DOM is made of, with the rewrites `relax` names set aside
  * @property {(tagName: string, attribute: string, value: string | null) => [string | undefined, unknown]} probeReflection the IDL member an attribute reflects, and its value
  * @property {(value: string) => string} canonical a value under the one name the spec gives it
  * @property {(value: string) => string} paintedColors a value with every color it holds painted
+ * @property {(list: string) => string} unquoteFamilies a font family list with every name the bare spelling also names left unquoted
+ * @property {(text: string) => string} spacedOnce text as its tokens, spaced one way
+ * @property {(element: Element) => string} whereIs an element and its nearest ancestors, for a report
+ * @property {(property: string, value: string) => string} cascadeValue a computed value in the one spelling rules are compared in
  */
 
 /**
  * Installed once into the page. Everything both suites need lives here so an
  * inline `<style>` is held to exactly the same standard as a `.css` file.
+ * @param {string[]} generics the generic font families, from `lib/css/data.js`
  * @returns {void}
  */
-const installHelpers = () => {
+const installHelpers = (generics) => {
 	const NS_HTML = "http://www.w3.org/1999/xhtml";
 	const NS_SVG = "http://www.w3.org/2000/svg";
 	const probe = document.createElement("div");
@@ -203,25 +205,6 @@ const installHelpers = () => {
 		canvas.getContext("2d", { willReadFrequently: true })
 	);
 	document.body.append(probe);
-
-	// Every absolute unit is a fixed multiple of another, so one spelling stands
-	// for all of them: 1in is 96px, 1pt is 96/72px, 1turn is 360deg, 1s is 1000ms.
-	/** @type {Map<string, [number, string]>} */
-	const UNITS = new Map([
-		["px", [1, "px"]],
-		["pt", [96 / 72, "px"]],
-		["pc", [16, "px"]],
-		["in", [96, "px"]],
-		["cm", [96 / 2.54, "px"]],
-		["mm", [96 / 25.4, "px"]],
-		["q", [96 / 101.6, "px"]],
-		["deg", [1, "deg"]],
-		["grad", [0.9, "deg"]],
-		["rad", [180 / Math.PI, "deg"]],
-		["turn", [360, "deg"]],
-		["s", [1000, "ms"]],
-		["ms", [1, "ms"]]
-	]);
 
 	/**
 	 * The pixel a color paints as. A color carried in one space and the same
@@ -347,216 +330,6 @@ const installHelpers = () => {
 			return out;
 		});
 
-	// The three code points CSS Syntax §3.3 calls a newline, `\r\n` included.
-	const NEWLINE = /[\n\r\f]/;
-
-	/**
-	 * The escape starting at `text[at]` — a backslash — decoded, with the index
-	 * just past it. A hex escape takes up to six digits and swallows one
-	 * whitespace after them; anything else names the next character itself.
-	 * @param {string} text the text being read
-	 * @param {number} at the index of the backslash
-	 * @returns {[string, number]} the character it names, and where it ends
-	 */
-	const readEscape = (text, at) => {
-		const hex = /^[\da-f]{1,6}/i.exec(text.slice(at + 1, at + 7));
-		if (hex === null) {
-			const next = text[at + 1];
-			return next === undefined ? ["\uFFFD", at + 1] : [next, at + 2];
-		}
-		let end = at + 1 + hex[0].length;
-		if (/[\t\n\f\r ]/.test(text[end])) end++;
-		const code = Number.parseInt(hex[0], 16);
-		// §4.3.7: zero, a surrogate and anything past the maximum all name U+FFFD.
-		const named =
-			code === 0 || code > 0x10ffff || (code >= 0xd800 && code <= 0xdfff)
-				? "\uFFFD"
-				: String.fromCodePoint(code);
-		return [named, end];
-	};
-
-	// cspell:ignore rlh rcap cqmin cqmax vmin vmax dvmin dvmax lvmin lvmax svmin svmax
-	// Every length unit CSS Values 4 states, longest first so `vmin` is not read
-	// as `vm` — a zero is the same zero in any of them.
-	const LENGTH_UNITS = [
-		"cqmin",
-		"cqmax",
-		"svmin",
-		"svmax",
-		"lvmin",
-		"lvmax",
-		"dvmin",
-		"dvmax",
-		"rcap",
-		"vmin",
-		"vmax",
-		"cap",
-		"rlh",
-		"rem",
-		"rex",
-		"rch",
-		"ric",
-		"svw",
-		"svh",
-		"svi",
-		"svb",
-		"lvw",
-		"lvh",
-		"lvi",
-		"lvb",
-		"dvw",
-		"dvh",
-		"dvi",
-		"dvb",
-		"cqw",
-		"cqh",
-		"cqi",
-		"cqb",
-		"px",
-		"cm",
-		"mm",
-		"in",
-		"pt",
-		"pc",
-		"em",
-		"ex",
-		"ch",
-		"ic",
-		"lh",
-		"vw",
-		"vh",
-		"vi",
-		"vb",
-		"q"
-	];
-	// A unit runs on through `-`, an escape and any non-ASCII name character, so
-	// `\b` would read `0rcap-foo` as `0rcap` and hand back a value nothing wrote.
-	const ZERO_LENGTH_RE = new RegExp(
-		`(^|[^\\w.#%-])0(?:\\.0*)?(?:${LENGTH_UNITS.join("|")})(?![\\w\\u00a0-\\uffff\\\\-])`,
-		"gi"
-	);
-
-	// A character an escape can be dropped from without the value reading
-	// differently — everything a name is spelled out of.
-	const BARE_ESCAPED = /[\w\u00A0-\uFFFF-]/;
-
-	/**
-	 * A value spelled one way, for the values that have to be compared as written
-	 * rather than as computed. CSS does not need the whitespace around a `,`, a
-	 * bracket, a `*` or a `/`, and a string means the same in either quote —
-	 * `calc()` does need the space around `+` and `-`, and a string's own
-	 * whitespace is its content.
-	 * @param {string} text a specified value
-	 * @returns {string} the same value, spelled one way
-	 */
-	const normalizeValue = (text) => {
-		let out = "";
-		let quote = "";
-		let string = "";
-		/** @type {string[]} */
-		const open = [];
-		for (let at = 0; at < text.length; at++) {
-			const ch = text[at];
-			// A comment separates tokens and says nothing else, so it reads as the
-			// whitespace it stands in for.
-			if (quote === "" && ch === "/" && text[at + 1] === "*") {
-				const end = text.indexOf("*/", at + 2);
-				at = end === -1 ? text.length : end + 1;
-				if (!out.endsWith(" ")) out += " ";
-				continue;
-			}
-			// A CSS escape is resolved before a name is matched, so `\2d-two` and
-			// `\2d\2d two` are the one identifier — decoded here, and written back
-			// escaped in a single spelling where the character it names would
-			// otherwise read as punctuation.
-			if (ch === "\\") {
-				// §4.3.4: a `\` before a newline continues the string's line — the pair
-				// names nothing, unlike every other escape.
-				if (quote !== "" && NEWLINE.test(text[at + 1] || "")) {
-					if (text[at + 1] === "\r" && text[at + 2] === "\n") at++;
-					at++;
-					continue;
-				}
-				const [named, end] = readEscape(text, at);
-				// §4.3.4: a `\` a string runs out after names nothing, unlike the
-				// U+FFFD the same escape names anywhere else.
-				const ranOut = end === at + 1;
-				at = end - 1;
-				const code = /** @type {number} */ (named.codePointAt(0));
-				const written = BARE_ESCAPED.test(named)
-					? named
-					: `\\${code.toString(16).padStart(6, "0")}`;
-				if (quote === "") out += written;
-				else if (!ranOut) string += named;
-				continue;
-			}
-			if (quote !== "") {
-				if (ch === quote) {
-					out += JSON.stringify(string);
-					quote = "";
-				} else {
-					string += ch;
-				}
-			} else if (ch === '"' || ch === "'") {
-				quote = ch;
-				string = "";
-			} else if (/[\t\n\f\r ]/.test(ch)) {
-				if (!out.endsWith(" ")) out += " ";
-			} else {
-				if (ch === "(") open.push(")");
-				else if (ch === "[") open.push("]");
-				else if (ch === "{") open.push("}");
-				else if (open[open.length - 1] === ch) open.pop();
-				out += ch;
-			}
-		}
-		if (quote !== "") out += JSON.stringify(string);
-		// CSS Syntax §4.3.1 and §5.4.9: a string, a function and a block left open
-		// at the end of the input are closed there, so an engine echoing the value
-		// back without those closers means the same as a printer writing them.
-		while (open.length > 0) out += /** @type {string} */ (open.pop());
-		// Arithmetic nothing has to substitute into is arithmetic the engine can
-		// do now, and both spellings reach the same answer.
-		out = out.replace(/calc\([^()]*\)/g, (call) => {
-			try {
-				const folded = CSSNumericValue.parse(call).toString();
-				// A `calc()` left holding one term is that term.
-				const single = /^calc\((-?[\d.]+[a-z%]*)\)$/i.exec(folded);
-				return single === null ? folded : single[1];
-			} catch (_err) {
-				return call;
-			}
-		});
-		// CSS Color 4 §5: `transparent` is that color written as a keyword, and an
-		// engine echoing a descriptor hands back whichever spelling it was given.
-		out = out.replace(/(^|[^\w-])transparent(?![\w-])/gi, "$1rgba(0, 0, 0, 0)");
-		// A string is text and a `url()` body names something, so neither holds a
-		// color: `url(#fff)` and `url(#ffffff)` are two different elements.
-		out = paintedColors(out);
-		return (
-			out
-				// Nothing fuses with a comma or a block's delimiters, so the whitespace
-				// beside one says only what the delimiter already does.
-				.replace(/ ?([,()[\]{}*/]) ?/g, "$1")
-				// `.25` and `0.25` are one number, and an absolute unit converts to px,
-				// degrees or seconds exactly — the spec fixes every ratio.
-				.replace(
-					/(^|[^\w.%-])(\d*\.?\d+)(px|pt|pc|in|cm|mm|q|deg|grad|rad|turn|s|ms)\b/gi,
-					(all, before, number, unit) => {
-						const scale = UNITS.get(unit.toLowerCase());
-						if (scale === undefined) return all;
-						const size = Number(number) * scale[0];
-						return `${before}${Number(size.toFixed(6))}${scale[1]}`;
-					}
-				)
-				.replace(/(^|[^\w.%-])0*(\.\d)/g, "$10$2")
-				// A zero length is the same zero however it is spelled, and a value
-				// held as written is the one place the printer's `0px` → `0` shows.
-				.replace(ZERO_LENGTH_RE, "$10")
-				.trim()
-		);
-	};
-
 	// The spec defines each easing keyword as the function it stands for, so the
 	// two spellings are one value however the engine echoes them back.
 	const EASINGS = new Map([
@@ -569,12 +342,88 @@ const installHelpers = () => {
 		["step-end", "steps(1, end)"]
 	]);
 
+	// A generic family is a keyword, so quoting one names a font of that name
+	// instead, and the quoting is what tells the two apart. `css/syntax.unittest`
+	// holds the printer to the same rule.
+	const GENERIC_FAMILIES = new Set(generics);
+
+	/**
+	 * A font family list with every name the bare spelling would also name left
+	 * unquoted. CSS Fonts 4 §2.2 makes the two the same family, and the engines
+	 * disagree about which to echo.
+	 * @param {string} list a `font-family` or `font` value
+	 * @returns {string} the same list, quoted once
+	 */
+	const unquoteFamilies = (list) =>
+		list.replace(
+			/"((?:[A-Za-z_-][\w-]*)(?: [A-Za-z_-][\w-]*)*)"/g,
+			(quoted, name) =>
+				GENERIC_FAMILIES.has(name.toLowerCase()) ? quoted : name
+		);
+
+	// CSS Images 3 §3.1: a side is the angle pointing at it, and a gradient run
+	// bottom to top is its stops read in reverse.
+	const SIDE_ANGLES = new Map([
+		["to right", "90deg"],
+		["to left", "270deg"],
+		["to top", "0deg"]
+	]);
+
+	/**
+	 * Every unprefixed linear gradient with its direction named once: a side as
+	 * its angle, and `0deg` over bare color stops as those stops reversed.
+	 * @param {string} value a value
+	 * @returns {string} the same value, each gradient's direction named once
+	 */
+	const directGradients = (value) => {
+		const opening = /(^|[^\w-])(?:repeating-)?linear-gradient\(/gi;
+		let out = "";
+		let from = 0;
+		let match;
+		while ((match = opening.exec(value)) !== null) {
+			const open = match.index + match[0].length - 1;
+			/** @type {string[]} */
+			const args = [];
+			let depth = 0;
+			let start = open + 1;
+			let close = -1;
+			for (let i = open; i < value.length; i++) {
+				const ch = value[i];
+				if (ch === "(") {
+					depth++;
+				} else if (ch === ")" && --depth === 0) {
+					close = i;
+					break;
+				} else if (ch === "," && depth === 1) {
+					args.push(value.slice(start, i).trim());
+					start = i + 1;
+				}
+			}
+			if (close === -1) break;
+			args.push(value.slice(start, close).trim());
+			const angle = SIDE_ANGLES.get(args[0].toLowerCase());
+			if (angle !== undefined) args[0] = angle;
+			// A stop with a position has a space outside its color's parentheses.
+			const bare = args
+				.slice(1)
+				.every((stop) => !/^[\d.]/.test(stop) && !/\s(?![^(]*\))/.test(stop));
+			if (args[0] === "0deg" && bare) {
+				args.shift();
+				args.reverse();
+			}
+			out += `${value.slice(from, open + 1)}${args.join(", ")})`;
+			from = close + 1;
+			opening.lastIndex = from;
+		}
+		return out + value.slice(from);
+	};
+
 	/**
 	 * The one spelling of a value the spec gives several names: an easing keyword
 	 * is the curve it stands for, `jump-start` names the step position `start`
-	 * does, and a gradient's last color stop is at the end of the gradient line
-	 * whether or not it says so (CSS Images 3 §3.4.3). A two-position stop needs
-	 * nothing here: the engine expands it into the two stops itself.
+	 * does, a gradient's last color stop is at the end of the gradient line
+	 * whether or not it says so (CSS Images 3 §3.4.3), and a direction is one
+	 * flow. A two-position stop needs nothing here: the engine expands it itself.
 	 * @param {string} value a value
 	 * @returns {string} the same value, named once
 	 */
@@ -588,378 +437,13 @@ const installHelpers = () => {
 		}
 		// Anchored left: a prefixed gradient folds under its own rules, so
 		// canonicalizing one would hide a fold the printer must not make.
-		return named.replace(
-			/(^|[^\w-])((?:repeating-)?(?:linear|radial|conic)-gradient\([^()]*(?:\([^()]*\)[^()]*)*)\s(?:100%|360deg)\)/gi,
-			"$1$2)"
+		return outsideText(
+			named.replace(
+				/(^|[^\w-])((?:repeating-)?(?:linear|radial|conic)-gradient\([^()]*(?:\([^()]*\)[^()]*)*)\s(?:100%|360deg)\)/gi,
+				"$1$2)"
+			),
+			directGradients
 		);
-	};
-
-	/**
-	 * The engine's computed value for every property a declaration sets, so an
-	 * equivalent respelling (`bold` / `700`, `300ms` / `0.3s`, `rgb(255, 0, 0)` /
-	 * `red`) compares equal and an unsafe one does not. Importance rides along
-	 * because it decides the cascade without moving the computed value, and a
-	 * substitution is compared as parsed because `var(--a)` and `var(--b)` both
-	 * compute to nothing on a probe with no ancestor to resolve them.
-	 * @param {string} declaration the declaration block
-	 * @param {CSSStyleDeclaration[]=} own the blocks' own declarations, later
-	 * winning: a round trip through `cssText` is lossy, so the probe alone would
-	 * lose an unterminated `var(--a` (serialized as `var(--a;`) and every
-	 * longhand of a shorthand awaiting substitution (serialized with no value)
-	 * @returns {string[]} one entry per property it sets, unordered
-	 */
-	const computed = (declaration, own) => {
-		probe.style.cssText = "";
-		probe.style.cssText = declaration;
-		// A declaration carrying `transition-*` animates the shared probe away from
-		// the previous rule's value, and the computed style would be read in flight.
-		for (const animation of probe.getAnimations()) animation.cancel();
-		const style = getComputedStyle(probe);
-		/** @type {Map<string, [string, string]>} */
-		const stated = new Map();
-		// Indexed rather than iterated: a `@function` body's `result` descriptor is
-		// counted and named by `item()`, but Chrome's iterator hands back nothing.
-		for (const source of own || [probe.style]) {
-			for (let at = 0; at < source.length; at++) {
-				const property = source.item(at);
-				// CSS Cascade 4 §6.2: an important declaration is not overridden by a
-				// normal one written after it, so the later block does not take it.
-				const priority = source.getPropertyPriority(property);
-				const earlier = stated.get(property);
-				if (earlier === undefined || priority !== "" || earlier[1] === "") {
-					stated.set(property, [source.getPropertyValue(property), priority]);
-				}
-			}
-		}
-		/** @type {string[]} */
-		const out = [];
-		for (const [property, [specified, priority]] of stated) {
-			const bang = priority === "" ? "" : "!";
-			// A custom property is a token stream the engine keeps verbatim, so it is
-			// compared as written too — the whitespace and comments between its
-			// tokens say nothing once it is substituted.
-			const written =
-				property.startsWith("--") ||
-				/(^|[^\w-])(?:var|env|attr)\(/.test(specified);
-			// One the probe never received has no computed value to read.
-			const lost = probe.style.getPropertyValue(property) === "";
-			const resolved =
-				written || lost
-					? normalizeValue(specified)
-					: style.getPropertyValue(property);
-			// A value that is not itself a color still carries them: `box-shadow`
-			// keeps the space its color was written in, so each one is painted.
-			const named = canonical(resolved);
-			const whole = painted(named);
-			out.push(
-				`${property}${bang}:${whole === named ? paintedColors(named) : whole}`
-			);
-		}
-		return out;
-	};
-
-	/**
-	 * Every rule of a stylesheet in cascade order, each carrying the chain of
-	 * at-rules it sits under — so a rule that moves between two `@media` blocks
-	 * cannot compare equal. Order is kept because two rules of equal specificity
-	 * are resolved by it. A condition is returned as written; the caller replaces
-	 * it with what the engine makes of it.
-	 * @param {string} source the stylesheet
-	 * @returns {Rule[] | null} its rules, or null when it does not parse
-	 */
-	const cssRules = (source) => {
-		const sheet = new CSSStyleSheet();
-		try {
-			sheet.replaceSync(source);
-		} catch (_err) {
-			return null;
-		}
-		/** @type {Rule[]} */
-		const out = [];
-		// What each selector has been told so far, under each chain of conditions.
-		/** @type {Map<string, { css: string, styles: CSSStyleDeclaration[] }>} */
-		const carried = new Map();
-		// A nested declaration block is its own interface, so it can be recognized
-		// rather than guessed at from the shape of its text.
-		const nestedDeclarations =
-			/** @type {{ CSSNestedDeclarations?: typeof CSSRule }} */ (
-				/** @type {unknown} */ (window)
-			).CSSNestedDeclarations;
-		/**
-		 * @param {CSSRule} rule any rule
-		 * @returns {string} the text before its block
-		 */
-		const prelude = (rule) => {
-			const text = rule.cssText;
-			const brace = text.indexOf("{");
-			return (brace === -1 ? text : text.slice(0, brace)).trim();
-		};
-		// The engine folds `even` / `odd` but hands `0n+3` back as written, so each
-		// An+B is read as the sequence it selects — which one it is still matters.
-		const NTH_CALL = /:(nth-(?:last-)?(?:child|of-type|col))\(([^)]*)\)/gi;
-		const AN_PLUS_B =
-			/^\s*(?:([+-]?)\s*(\d*)[nN]\s*(?:([+-])\s*(\d+))?|([+-]?)\s*(\d+))\s*$/;
-		/** @type {Record<string, string>} */
-		const FIRST_LAST = {
-			"nth-child": "first-child",
-			"nth-last-child": "last-child",
-			"nth-of-type": "first-of-type",
-			"nth-last-of-type": "last-of-type"
-		};
-		/**
-		 * @param {string} selector one selector
-		 * @returns {boolean[]} which indices are inside a string or an `[…]`
-		 */
-		const literalMask = (selector) => {
-			const mask = [];
-			let quote = "";
-			let brackets = 0;
-			for (let i = 0; i < selector.length; i++) {
-				const c = selector[i];
-				mask[i] = quote !== "" || brackets > 0;
-				if (c === "\\") {
-					mask[++i] = true;
-				} else if (quote !== "") {
-					if (c === quote) quote = "";
-				} else if (c === '"' || c === "'") {
-					quote = c;
-				} else if (c === "[") {
-					brackets++;
-				} else if (c === "]" && brackets > 0) {
-					brackets--;
-				}
-			}
-			return mask;
-		};
-		/**
-		 * @param {string} selector one selector
-		 * @returns {string} it, with every `An+B` written one way
-		 */
-		const oneSpelling = (selector) => {
-			const literal = literalMask(selector);
-			return selector.replace(NTH_CALL, (all, name, argument, offset) => {
-				// An attribute value or a string spelling one is text, not a selector.
-				if (literal[offset]) return all;
-				// `An+B of S` selects among S, which this does not read.
-				if (/\bof\b/i.test(argument)) return all;
-				const lower = argument.trim().toLowerCase();
-				const parts = AN_PLUS_B.exec(argument);
-				let a;
-				let b;
-				if (lower === "even") {
-					a = 2;
-					b = 0;
-				} else if (lower === "odd") {
-					a = 2;
-					b = 1;
-				} else if (parts === null) {
-					return all;
-				} else if (parts[6] !== undefined) {
-					a = 0;
-					b = Number(`${parts[5]}${parts[6]}`);
-				} else {
-					a = Number(`${parts[1]}${parts[2] === "" ? "1" : parts[2]}`);
-					b = parts[4] === undefined ? 0 : Number(`${parts[3]}${parts[4]}`);
-				}
-				// Past the safe range the arithmetic would name another sequence.
-				if (!Number.isSafeInteger(a) || !Number.isSafeInteger(b)) return all;
-				const named = FIRST_LAST[name.toLowerCase()];
-				if (a === 0) {
-					return b === 1 && named !== undefined
-						? `:${named}`
-						: `:${name}(${b})`;
-				}
-				// An index under 1 matches nothing, so a step forward starts at the
-				// first one that does; landing on the step itself is the bare `An`.
-				if (a > 0) {
-					if (b < 1) b = ((((b - 1) % a) + a) % a) + 1;
-					if (b === a) b = 0;
-				}
-				return `:${name}(${a}n${b === 0 ? "" : b > 0 ? `+${b}` : b})`;
-			});
-		};
-		/**
-		 * A comma-separated list split on its own commas — not the ones inside
-		 * `:is(…)`, an attribute value or a string. Spelled out again because this
-		 * function is serialized into the page.
-		 * @param {string} list a selector list
-		 * @returns {string[]} its entries
-		 */
-		const splitList = (list) => {
-			const out = [];
-			let depth = 0;
-			let quote = "";
-			let from = 0;
-			for (let i = 0; i < list.length; i++) {
-				const c = list[i];
-				if (c === "\\") {
-					i++;
-				} else if (quote !== "") {
-					if (c === quote) quote = "";
-				} else if (c === '"' || c === "'") {
-					quote = c;
-				} else if (c === "(" || c === "[") {
-					depth++;
-				} else if (c === ")" || c === "]") {
-					depth--;
-				} else if (c === "," && depth === 0) {
-					out.push(list.slice(from, i).trim());
-					from = i + 1;
-				}
-			}
-			out.push(list.slice(from).trim());
-			return out;
-		};
-		/**
-		 * A selector list in one order, a repeat dropped — it is a set.
-		 * @param {string} list a selector list
-		 * @returns {string} its canonical spelling
-		 */
-		const selectorSet = (list) =>
-			[...new Set(splitList(list).map(oneSpelling))].sort().join(", ");
-		/**
-		 * A grouping rule as the kind of at-rule it is and the condition it holds
-		 * under, read through the API that normalizes it where one exists.
-		 * @param {CSSRule} rule a grouping rule
-		 * @returns {Condition} its kind and condition
-		 */
-		const conditionOf = (rule) => {
-			const at = /^@([a-zA-Z-]+)/.exec(rule.cssText);
-			const kind = at === null ? "" : at[1].toLowerCase();
-			if (kind === "media") {
-				return {
-					kind,
-					condition: /** @type {CSSMediaRule} */ (rule).media.mediaText
-				};
-			}
-			if (kind === "container") {
-				const container = /** @type {CSSContainerRule} */ (rule);
-				return {
-					kind,
-					condition: `${container.containerName || ""}|${
-						container.containerQuery
-					}`
-				};
-			}
-			if (kind === "supports") {
-				return {
-					kind,
-					condition: /** @type {CSSSupportsRule} */ (rule).conditionText
-				};
-			}
-			const selector = /** @type {CSSStyleRule} */ (rule).selectorText;
-			// A nested rule holds under a selector list, which is a set like any other.
-			if (selector !== undefined) {
-				return { kind: "style", condition: selectorSet(selector) };
-			}
-			// A `@layer`, `@keyframes` or `@scope` prelude names or selects; there is
-			// nothing to evaluate, so it stands as written.
-			return { kind, condition: prelude(rule) };
-		};
-		// `conditionText` is the one prelude the engine hands back verbatim, so a
-		// query's own insignificant whitespace has to be dropped here. Only inside
-		// `(` `)` and around `:`, where no two tokens can join — a `@scope` prelude
-		// or a nested selector spells a combinator with the same space.
-		const QUERY_KINDS = new Set(["container", "media", "supports"]);
-		/**
-		 * @param {Condition} condition a chain entry
-		 * @returns {string} it as the one spelling its equals share
-		 */
-		const conditionKey = ({ kind, condition }) =>
-			QUERY_KINDS.has(kind)
-				? condition
-						.replace(/\(\s+/g, "(")
-						.replace(/\s+\)/g, ")")
-						.replace(/\s*:\s*/g, ":")
-				: condition;
-		/**
-		 * @param {CSSRuleList} list rules to walk
-		 * @param {Condition[]} chain the enclosing at-rules
-		 */
-		const walk = (list, chain) => {
-			for (const rule of list) {
-				// Since CSS nesting, a plain style rule carries a `cssRules` list too,
-				// so a rule both declares and groups — never one or the other.
-				const nested = /** @type {CSSGroupingRule} */ (rule).cssRules;
-				const style = /** @type {CSSStyleRule} */ (rule).style;
-				// An empty rule renders nothing, so dropping it is safe.
-				if (style && style.length > 0) {
-					// A bare declaration block nested in a rule stands for `& { … }`.
-					const selector = /** @type {CSSStyleRule} */ (rule).selectorText;
-					let label =
-						(selector ? selectorSet(selector) : selector) ||
-						/** @type {CSSKeyframeRule} */ (rule).keyText ||
-						// Asked by interface rather than by shape: a nested declaration
-						// whose value holds a `{` — `--x:hover { }` — is not a rule with a
-						// prelude, however much its text reads like one.
-						(nestedDeclarations !== undefined &&
-						rule instanceof nestedDeclarations
-							? "&"
-							: rule.cssText.includes("{")
-								? prelude(rule)
-								: "&");
-					// `&` alone is the rule it sits in, so the block is read as that
-					// rule's own — which is what it becomes once an empty rule ahead of
-					// it stops splitting the two apart. Only under a style rule: under
-					// an at-rule the declarations cannot fold into the parent either.
-					let held = chain;
-					const inner = chain[chain.length - 1];
-					if (label === "&" && inner !== undefined && inner.kind === "style") {
-						label = inner.condition;
-						held = chain.slice(0, -1);
-					}
-					// One entry per selector, each carrying what the cascade has said
-					// about that selector so far: a printer is free to move a selector
-					// between two adjacent lists, so only the per-selector sequence is
-					// the thing both sides have to agree on.
-					const own = computed(style.cssText, [style]);
-					const block = ` { ${[...own].sort().join(";")} }`;
-					const where = held
-						.map((one) => `${one.kind}\u0001${conditionKey(one)}`)
-						.join("\u0002");
-					for (const one of splitList(label)) {
-						const key = `${where}\u0003${one}`;
-						const earlier = carried.get(key);
-						const css =
-							earlier === undefined
-								? style.cssText
-								: `${earlier.css};${style.cssText}`;
-						const styles =
-							earlier === undefined ? [style] : [...earlier.styles, style];
-						carried.set(key, { css, styles });
-						// Read as one block, which is what the cascade reads: a
-						// percentage or a `min()` here resolves against the earlier
-						// declarations, so the two lists cannot simply be added. The
-						// declarations themselves still say which properties are set.
-						const list = earlier === undefined ? own : computed(css, styles);
-						out.push({
-							chain: held,
-							label: one,
-							list,
-							block,
-							text: `${one} { ${[...list].sort().join(";")} }`
-						});
-					}
-				}
-				if (nested) {
-					const inner = conditionOf(rule);
-					// A layer block says where its layer is read even when it holds
-					// nothing, so it is what fixes that layer's place (see `byLayer`).
-					if (inner.kind === "layer") {
-						out.push({ chain: [...chain, inner], text: "" });
-					}
-					walk(nested, [...chain, inner]);
-				} else if (!style) {
-					// `@import`, `@namespace` and `@property` neither declare nor group,
-					// so they are compared as written — under the one spelling a value
-					// has, since the engine echoes a descriptor rather than computing
-					// it and `3 red` is the `3 rgb(255, 0, 0)` it was handed.
-					out.push({ chain, text: canonical(normalizeValue(rule.cssText)) });
-				}
-			}
-		};
-		walk(sheet.cssRules, []);
-		return out;
 	};
 
 	/** @type {Map<string, string | undefined>} */
@@ -1011,12 +495,9 @@ const installHelpers = () => {
 		return found;
 	};
 
-	// Written from the HTML spec's value grammars rather than from
-	// `lib/html/data.js`, so the minifier is checked against the spec and not
-	// against its own idea of it.
-	//
-	// "Strip leading and trailing ASCII whitespace", then the URL parser removes
-	// every remaining tab and newline.
+	// Written from the HTML spec's value grammars rather than from `lib/html/data.js`,
+	// so the minifier is checked against the spec and not against its own idea of it.
+	// Leading and trailing ASCII whitespace goes, then every tab and newline.
 	const URL_ATTRIBUTES = new Set([
 		"action",
 		"background",
@@ -1051,6 +532,7 @@ const installHelpers = () => {
 	// the whitespace between its tokens is read here rather than by the engine.
 	const TOKEN_LIST_ATTRIBUTES = new Set([
 		"accesskey",
+		"blocking",
 		"headers",
 		"itemprop",
 		"itemref",
@@ -1060,6 +542,7 @@ const installHelpers = () => {
 	// Of those, the ones the spec reflects as a `DOMTokenList` — a set, so a
 	// repeat names nothing — which this engine implements no IDL member for.
 	const UNIQUE_TOKEN_LIST_ATTRIBUTES = new Set([
+		"blocking",
 		"itemprop",
 		"itemref",
 		"itemtype"
@@ -1088,7 +571,8 @@ const installHelpers = () => {
 		const name = attribute.name;
 		const raw = attribute.value;
 		if (attribute.namespaceURI !== null) return raw;
-		if (name === "style") return computed(raw).sort().join(";");
+		// What it does is the render tier's to compare, in the page it styles.
+		if (name === "style") return "";
 		const property = reflectionOf(node, name);
 		const properties = /** @type {Record<string, unknown>} */ (
 			/** @type {unknown} */ (node)
@@ -1133,10 +617,9 @@ const installHelpers = () => {
 				.filter(Boolean)
 				.join(",");
 		}
-		// Last: what the engine itself reads the attribute as. An ordinary
-		// reflection hands the raw value straight back, so this changes nothing;
-		// one "limited to only known values" hands back its canonical keyword,
-		// which is the whole of what folding an enumerated value can alter.
+		// Last: what the engine itself reads the attribute as. An ordinary reflection
+		// hands the raw value back unchanged; one limited to known values hands back its
+		// canonical keyword, which is all that folding an enumerated value can alter.
 		if (typeof reflected === "string") return reflected;
 		return raw;
 	};
@@ -1149,13 +632,126 @@ const installHelpers = () => {
 	 * tree, so re-parenting cannot pass unseen.
 	 * @param {Element} node an element
 	 * @param {number} depth how deep it sits
+	 * @param {Set<Relaxation>=} relax the rewrites set aside
 	 * @returns {string} its shape
 	 */
-	const shapeOf = (node, depth) =>
+	const shapeOf = (node, depth, relax = EMPTY_RELAX) =>
 		`${depth}|${node.namespaceURI}|${node.localName}[${[...node.attributes]
+			.filter(
+				(one) =>
+					!relax.has("redundant-attributes") || !isRedundantAttribute(node, one)
+			)
 			.map((one) => `${one.name}=${value(node, one)}`)
 			.sort()
 			.join(",")}]`;
+
+	/** @type {Set<Relaxation>} */
+	const EMPTY_RELAX = new Set();
+	// HTML §4.12.1.1: every JavaScript MIME type essence runs a classic script.
+	const JAVASCRIPT_TYPES = new Set(
+		"application/ecmascript application/javascript application/x-ecmascript application/x-javascript text/ecmascript text/javascript text/javascript1.0 text/javascript1.1 text/javascript1.2 text/javascript1.3 text/javascript1.4 text/javascript1.5 text/jscript text/livescript text/x-ecmascript text/x-javascript".split(
+			" "
+		)
+	);
+	// Elements whose empty, attribute-less form renders nothing and is read by
+	// nothing: no box, marker, margin, widget or generated text of their own.
+	const RENDERS_NOTHING_EMPTY = new Set(
+		"a abbr address article aside b bdi bdo cite code data del dfn div em footer header i ins kbd label main mark nav s samp script section small span strong style sub sup time title u var base link meta".split(
+			" "
+		)
+	);
+	/** @type {Map<string, Element>} */
+	const pristine = new Map();
+	const SPEC_DEFAULTS = new Map([
+		["area shape", "rect"],
+		["link media", "all"],
+		["style media", "all"],
+		["textarea wrap", "soft"]
+	]);
+
+	/**
+	 * Whether an attribute says only what its absence would: an empty `class`,
+	 * `id` or `style`, a script or style type naming the default, or an IDL
+	 * attribute reading the same on an element of the same kind without it.
+	 * @param {Element} node an element
+	 * @param {Attr} attribute one of its attributes
+	 * @returns {boolean} true when leaving it out changes nothing the page reads
+	 */
+	const isRedundantAttribute = (node, attribute) => {
+		const name = attribute.name;
+		const raw = attribute.value.trim().toLowerCase();
+		if ((name === "class" || name === "id" || name === "style") && raw === "") {
+			return true;
+		}
+		// An empty token list names no token, as no attribute does.
+		if (raw === "" && TOKEN_LIST_ATTRIBUTES.has(name)) return true;
+		// An enumerated value a reflection hands back as written, though it is the
+		// state the attribute's absence gives (HTML §4.8.14 for `shape`).
+		if (SPEC_DEFAULTS.get(`${node.localName} ${name}`) === raw) return true;
+		if (node.namespaceURI !== NS_HTML || attribute.namespaceURI !== null) {
+			return false;
+		}
+		const local = node.localName;
+		if (name === "type" && local === "script") return JAVASCRIPT_TYPES.has(raw);
+		// HTML §4.12.1.1: with no `type`, `language` names one as `text/` it.
+		if (name === "language" && local === "script") {
+			return JAVASCRIPT_TYPES.has(`text/${raw}`) && !node.hasAttribute("type");
+		}
+		// A classic script decodes in the document's encoding when no charset names one.
+		if (name === "charset" && local === "script") {
+			return raw === (node.ownerDocument.characterSet || "").toLowerCase();
+		}
+		if (name === "type" && (local === "style" || local === "link")) {
+			return raw === "text/css" || raw === "";
+		}
+		const property = reflectionOf(node, name);
+		if (property === undefined) return false;
+		let fresh = pristine.get(local);
+		if (fresh === undefined) {
+			fresh = document.createElement(local);
+			pristine.set(local, fresh);
+		}
+		// Read off a copy holding the value as `value()` reads it, so two spellings
+		// of one value, `TRUE` and `true` or `"  "` and `""`, get one verdict.
+		const probe = document.createElement(local);
+		probe.setAttribute(name, raw);
+		const read = /** @type {Record<string, unknown>} */ (
+			/** @type {unknown} */ (probe)
+		)[property];
+		const unset = /** @type {Record<string, unknown>} */ (
+			/** @type {unknown} */ (fresh)
+		)[property];
+		// A boolean's empty value is its presence, whatever list a reflection names.
+		if (
+			raw === "" &&
+			!BOOLEAN_ATTRIBUTES.has(name) &&
+			read instanceof DOMTokenList
+		) {
+			return true;
+		}
+		return typeof read !== "object" && read === unset;
+	};
+
+	/**
+	 * Whether an element states nothing: an HTML element with only redundant
+	 * attributes, holding only whitespace, comments and elements like it.
+	 * @param {Element} element an element
+	 * @returns {boolean} true when leaving it out changes nothing the page reads
+	 */
+	const isEmptyElement = (element) =>
+		element.namespaceURI === NS_HTML &&
+		RENDERS_NOTHING_EMPTY.has(element.localName) &&
+		[...element.attributes].every((one) =>
+			isRedundantAttribute(element, one)
+		) &&
+		[...element.childNodes].every(
+			(child) =>
+				child.nodeType === Node.COMMENT_NODE ||
+				(child.nodeType === Node.TEXT_NODE &&
+					/^[\t\n\f\r ]*$/.test(child.nodeValue || "")) ||
+				(child.nodeType === Node.ELEMENT_NODE &&
+					isEmptyElement(/** @type {Element} */ (child)))
+		);
 
 	/**
 	 * The text a subtree renders. A `<script>` / `<style>` body is data, compared
@@ -1186,10 +782,57 @@ const installHelpers = () => {
 	 * `<style>` body is read as CSS and a JSON `<script>` as JSON, because both
 	 * are minified in their own right; every other script body is data and must
 	 * survive byte for byte.
-	 * @param {string} html the page
+	 * @param {string} source the page
+	 * @param {Relaxation[]=} relax the rewrites an opt-in makes on purpose
 	 * @returns {Facets} its facets
 	 */
-	const htmlFacets = (html) => {
+	const htmlFacets = (source, relax = []) => {
+		const relaxed = new Set(relax);
+		/**
+		 * @param {Element} element where the text stands
+		 * @param {string} text what it holds
+		 * @returns {string} it, with runs of whitespace one space where those render alike
+		 */
+		const spaced = (element, text) =>
+			relaxed.has("whitespace") &&
+			element.closest("pre, textarea, listing, plaintext") === null
+				? text.replace(/[\t\n\f\r ]+/g, " ")
+				: text;
+		// HTML §13.2.3.1: the decoder consumes a leading byte order mark, which a
+		// string handed to the parser would keep as text.
+		/**
+		 * @param {Element} element an element
+		 * @param {number} depth how deep it sits
+		 * @param {Set<Relaxation>} relaxedSet the relaxations in force
+		 * @returns {boolean} true for a `<style>` a merge may join to the one before it
+		 */
+		const joinsStyleBefore = (element, depth, relaxedSet) => {
+			if (element.namespaceURI !== NS_HTML || element.localName !== "style") {
+				return false;
+			}
+			// Only whitespace, comments and what prints nothing stand between two
+			// sheets a merge joins.
+			let previous = element.previousSibling;
+			while (
+				previous !== null &&
+				(previous.nodeType === Node.COMMENT_NODE ||
+					(previous.nodeType === Node.TEXT_NODE &&
+						/^[\t\n\f\r ]*$/.test(previous.nodeValue || "")) ||
+					(previous.nodeType === Node.ELEMENT_NODE &&
+						relaxedSet.has("empty-elements") &&
+						isEmptyElement(/** @type {Element} */ (previous))))
+			) {
+				previous = previous.previousSibling;
+			}
+			return (
+				previous !== null &&
+				previous.nodeType === Node.ELEMENT_NODE &&
+				/** @type {Element} */ (previous).localName === "style" &&
+				shapeOf(/** @type {Element} */ (previous), depth, relaxedSet) ===
+					shapeOf(element, depth, relaxedSet)
+			);
+		};
+		const html = source.charCodeAt(0) === 0xfeff ? source.slice(1) : source;
 		// `parseHTMLUnsafe` attaches a declarative shadow root where `DOMParser`
 		// leaves an inert `<template>`, so the tree below is the one a page gets.
 		const attached =
@@ -1209,7 +852,7 @@ const installHelpers = () => {
 			templates: [],
 			shadows: []
 		};
-		/** @type {Rule[][]} */
+		/** @type {string[]} */
 		const styles = [];
 		/**
 		 * @param {ParentNode} root the subtree root
@@ -1224,7 +867,11 @@ const installHelpers = () => {
 				}
 				if (node.nodeType !== Node.ELEMENT_NODE) continue;
 				const element = /** @type {Element} */ (node);
-				facets.elements.push(shapeOf(element, depth));
+				const dropped =
+					(relaxed.has("empty-elements") && isEmptyElement(element)) ||
+					(relaxed.has("merged-styles") &&
+						joinsStyleBefore(element, depth, relaxed));
+				if (!dropped) facets.elements.push(shapeOf(element, depth, relaxed));
 				// SVG carries `<style>` and `<script>` too, and an engine reads both
 				// the same way — so their bodies are data there as well, not the page
 				// text a minified stylesheet would look like a change to.
@@ -1235,25 +882,28 @@ const installHelpers = () => {
 						(local === "style" || local === "script"))
 						? local
 						: null;
-				// The text this element holds itself, so text moved to a neighbor
-				// cannot hide in the document-wide concatenation. Only where it
-				// reaches the page: whitespace between two `<head>` children, or
-				// between `</head>` and `<body>`, renders nothing, and a `<style>` or
-				// `<script>` body is data — read as CSS or JSON just below.
+				// The text this element holds itself, so text moved to a neighbor cannot hide in
+				// the document-wide concatenation. Only where it reaches the page: whitespace
+				// between `<head>` children renders nothing, and a `<style>` body is data.
 				const inPage = renders || name === "body";
 				if (inPage && name !== "style" && name !== "script") {
-					facets.ownText.push(
-						[...element.childNodes]
-							.filter((child) => child.nodeType === Node.TEXT_NODE)
-							.map((child) => child.nodeValue || "")
-							.join("")
-					);
+					const own = [...element.childNodes]
+						.filter((child) => child.nodeType === Node.TEXT_NODE)
+						.map((child) => child.nodeValue || "")
+						.join("");
+					if (!dropped) facets.ownText.push(spaced(element, own));
 				}
 				const text = element.textContent || "";
 				if (name === "style") {
-					styles.push(cssRules(text) || [{ chain: [], text }]);
+					styles.push(text);
 				} else if (name === "script") {
-					const type = (element.getAttribute("type") || "").toLowerCase();
+					const written = (element.getAttribute("type") || "").toLowerCase();
+					// Every JavaScript type runs the same classic script as none.
+					const type =
+						relaxed.has("redundant-attributes") &&
+						JAVASCRIPT_TYPES.has(written.trim())
+							? ""
+							: written;
 					let body = text;
 					// An import map and speculation rules are JSON too, though the type
 					// does not say so.
@@ -1271,14 +921,16 @@ const installHelpers = () => {
 					facets.scripts.push(`${type}:${body}`);
 				} else if (name === "template") {
 					const content = /** @type {HTMLTemplateElement} */ (element).content;
-					facets.templates.push(renderedTextOf(content));
+					facets.templates.push(spaced(element, renderedTextOf(content)));
 					collect(content, depth + 1, true);
 				}
 				// An open shadow root renders and is script-reachable, so it is held
 				// to the same standard as the light tree. A closed one is reachable
 				// from neither, and the round-trip case compares it as a template.
 				if (element.shadowRoot !== null) {
-					facets.shadows.push(renderedTextOf(element.shadowRoot));
+					facets.shadows.push(
+						spaced(element, renderedTextOf(element.shadowRoot))
+					);
 					collect(element.shadowRoot, depth + 1, inPage);
 				}
 				collect(element, depth + 1, inPage);
@@ -1294,71 +946,75 @@ const installHelpers = () => {
 				'template[shadowrootmode="closed" i]'
 			)) {
 				const content = /** @type {HTMLTemplateElement} */ (closed).content;
-				facets.shadows.push(renderedTextOf(content));
+				facets.shadows.push(spaced(closed, renderedTextOf(content)));
 				collect(content, 0, true);
 			}
 		}
 		const doctype = doc.doctype;
-		// Quirks mode changes layout, so the doctype has to survive as one.
-		facets.document = [
-			doc.compatMode,
+		// WHY: Quirks mode changes layout, so a doctype has to survive as one —
+		// but `compatMode` is a function of the doctype alone, so with none it
+		// reports what the engine defaults a parsed document to rather than
+		// anything the printer wrote, and WebKit answers that unlike Blink.
+		facets.document =
 			doctype === null
-				? "no doctype"
-				: `${doctype.name}|${doctype.publicId}|${doctype.systemId}`
-		];
-		// What the page renders: the title (whose getter strips and collapses ASCII
-		// whitespace, as the spec says a title is read) and the body's text. A
-		// `<script>` / `<style>` body is data, compared above; a `<template>`'s
-		// content does not render; and the whitespace between two `<head>`
-		// children renders nothing either.
+				? ["no doctype"]
+				: [
+						`${doctype.name}|${doctype.publicId}|${doctype.systemId}`,
+						doc.compatMode
+					];
+		// What the page renders: the title, whose getter strips and collapses ASCII
+		// whitespace as the spec says a title is read, and the body's text. A `<script>`
+		// or `<style>` body is data, and a `<template>`'s content does not render.
 		facets.text = [
 			doc.title,
 			doc.body === null ? "" : renderedTextOf(doc.body)
 		];
-		return { facets, styles };
+		if (relaxed.has("whitespace") && doc.body !== null) {
+			facets.text[1] = spaced(doc.body, facets.text[1]);
+		}
+		// One sheet holding every run, in order, which is what merging writes. Each
+		// is read on its own first: a block one leaves open ends with its sheet.
+		return {
+			facets,
+			styles: relaxed.has("merged-styles")
+				? [
+						styles
+							.map((text) => {
+								const sheet = new CSSStyleSheet();
+								sheet.replaceSync(text);
+								return [...sheet.cssRules]
+									.map((rule) => rule.cssText)
+									.join("\n");
+							})
+							.join("\n")
+					]
+				: styles
+		};
 	};
 
 	/**
-	 * Which of a set of container sizes each query holds at, asked of the engine
-	 * by building the container and reading a sentinel back out of it.
-	 * @param {string[]} conditions `name|query` pairs
-	 * @param {number[]} sizes container edge lengths in px
-	 * @returns {string[]} one bit per size, per condition
+	 * An element as its tag, and its nearest ancestors as their names and classes.
+	 * @param {Element} element an element
+	 * @returns {string} where it stands, for a report
 	 */
-	const containerSignatures = (conditions, sizes) => {
-		const holder = document.createElement("div");
-		const inner = document.createElement("div");
-		inner.className = "eq-probe";
-		holder.append(inner);
-		document.body.append(holder);
-		const sheet = document.createElement("style");
-		document.head.append(sheet);
-		const out = conditions.map((condition) => {
-			const split = condition.indexOf("|");
-			const named = condition.slice(0, split) || "eq";
-			const query = condition.slice(split + 1);
-			holder.style.cssText = `container-type: size; container-name: ${named}`;
-			sheet.textContent = `@container ${named} ${query} { .eq-probe { --eq-hit: 1 } }`;
-			return sizes
-				.map((size) => {
-					holder.style.width = `${size}px`;
-					holder.style.height = `${size}px`;
-					const hit = getComputedStyle(inner).getPropertyValue("--eq-hit");
-					return hit.trim() === "1" ? "1" : "0";
-				})
-				.join("");
-		});
-		holder.remove();
-		sheet.remove();
-		return out;
+	const whereIs = (element) => {
+		const tag = element.outerHTML;
+		/** @type {string[]} */
+		const path = [tag.slice(0, Math.min(tag.indexOf(">") + 1, 160))];
+		for (
+			let current = element.parentElement;
+			current !== null && path.length < 4 && current.id !== "eq-holder";
+			current = current.parentElement
+		) {
+			const classes = current.getAttribute("class");
+			path.unshift(
+				`${current.localName}${current.id ? `#${current.id}` : ""}${
+					classes ? `.${classes.trim().split(/\s+/).join(".")}` : ""
+				}`
+			);
+		}
+		return path.join(" > ");
 	};
-
-	/**
-	 * @param {string[]} conditions support conditions
-	 * @returns {string[]} whether the engine supports each
-	 */
-	const supportsSignatures = (conditions) =>
-		conditions.map((condition) => (CSS.supports(condition) ? "1" : "0"));
 
 	/**
 	 * The IDL member an attribute reflects, and what it reads back. Probed on an
@@ -1384,261 +1040,152 @@ const installHelpers = () => {
 		return [property, reflected];
 	};
 
-	/** @type {{ __eq: PageHelpers }} */ (/** @type {unknown} */ (window)).__eq =
-		{
-			cssRules,
-			htmlFacets,
-			containerSignatures,
-			supportsSignatures,
-			probeReflection,
-			canonical,
-			paintedColors
-		};
-};
-
-/**
- * What the engine makes of every at-rule condition in a set of rules. A
- * condition is not compared as text: `(min-width: 200px)` and
- * `(width >= 200px)` are one query written two ways, and the spec says so, so
- * the engine is asked instead — a media query at every viewport that could
- * tell two of them apart, a container query at every container size, a
- * support condition outright. Two conditions that answer alike everywhere are
- * the same condition.
- * @param {import("puppeteer-core").Page} page the page to ask
- * @param {Rule[][]} groups every rule list to be compared
- * @returns {Promise<Map<string, string>>} condition to what the engine answers
- */
-const conditionSignatures = async (page, groups) => {
-	/** @type {Map<string, Set<string>>} */
-	const byKind = new Map();
-	for (const rules of groups) {
-		for (const rule of rules) {
-			for (const { kind, condition } of rule.chain) {
-				if (!byKind.has(kind)) byKind.set(kind, new Set());
-				/** @type {Set<string>} */ (byKind.get(kind)).add(condition);
-			}
-		}
-	}
-	/** @type {Map<string, string>} */
-	const signatures = new Map();
-	// Sample either side of every length any condition names, so a threshold
-	// that moved by one pixel separates them.
-	const edges = new Set([1, 200, 400, 600, 800, 1024]);
-	for (const conditions of byKind.values()) {
-		for (const condition of conditions) {
-			for (const [number] of condition.matchAll(/\d+(?:\.\d+)?/g)) {
-				const value = Math.round(Number(number));
-				// Bounded: each size costs two round trips per condition, and past a
-				// point the trips cost more than the separation they buy. Clamped: a
-				// viewport of width 0 is not a sample point.
-				// Room for the whole triplet, so the cap is never stepped over.
-				if (value > 0 && value < 10000 && edges.size <= MAX_SAMPLED_SIZES - 3) {
-					edges
-						.add(Math.max(1, value - 1))
-						.add(value)
-						.add(value + 1);
+	/**
+	 * Every data URL's payload decoded, as `decodeDataUrls` does outside the page:
+	 * the URL parser decodes `%3D` and `=` to one byte before anything reads it.
+	 * @param {string} text a value
+	 * @returns {string} it, each data URL's payload decoded
+	 */
+	const decodeDataUrls = (text) =>
+		text.replace(
+			/url\("(data:[^,"]*,)((?:[^"\\]|\\.)*)"\)/gi,
+			(whole, metadata, payload) => {
+				try {
+					return `url("${metadata}${decodeURIComponent(payload)}")`;
+				} catch (_err) {
+					return whole;
 				}
 			}
-		}
-	}
-	const sizes = [...edges].sort((a, b) => a - b);
-
-	const supports = [...(byKind.get("supports") || [])];
-	if (supports.length > 0) {
-		const answers = await page.evaluate(
-			(conditions) =>
-				/** @type {{ __eq: PageHelpers }} */ (
-					/** @type {unknown} */ (window)
-				).__eq.supportsSignatures(conditions),
-			supports
 		);
-		for (const [i, condition] of supports.entries()) {
-			signatures.set(`supports ${condition}`, answers[i]);
-		}
-	}
 
-	const containers = [...(byKind.get("container") || [])];
-	if (containers.length > 0) {
-		const answers = await page.evaluate(
-			(conditions, at) =>
-				/** @type {{ __eq: PageHelpers }} */ (
-					/** @type {unknown} */ (window)
-				).__eq.containerSignatures(conditions, at),
-			containers,
-			sizes
-		);
-		for (const [i, condition] of containers.entries()) {
-			signatures.set(`container ${condition}`, answers[i]);
-		}
-	}
+	// Readers taking between them every token a value holds — a name, string, url,
+	// color, number, dimension, function, `[name]`, `/`, any list — and in `calc()`
+	// the arithmetic a value leaves for its reader to finish.
+	/** @type {[string, string][]} */
+	const READERS = [
+		["font-family", ""],
+		["font", ""],
+		["content", ""],
+		["background-image", ""],
+		["color", ""],
+		["border-color", ""],
+		["width", ""],
+		["scale", ""],
+		["transform", ""],
+		["box-shadow", ""],
+		["transition", ""],
+		["grid-template-areas", ""],
+		["grid-template-columns", ""],
+		["counter-reset", ""],
+		["margin-left", "calc"],
+		["scale", "calc"]
+	];
+	// One element per reader, since two shorthands on one would set each other's longhands.
+	const readers = READERS.map(() => document.createElement("div"));
+	probe.append(...readers);
+	/** @type {Map<string, string>} */
+	const readCache = new Map();
 
-	const media = [...(byKind.get("media") || [])];
-	if (media.length > 0) {
-		/** @type {string[]} */
-		const bits = media.map(() => "");
-		/** @type {{ width: number, height: number }[]} */
-		const viewports = [];
-		for (const size of sizes) {
-			viewports.push({ width: size, height: 600 });
-			viewports.push({ width: 600, height: size });
-		}
-		for (const viewport of viewports) {
-			await page.setViewport(viewport);
-			const answers = await page.evaluate(
-				(conditions) =>
-					conditions.map((condition) =>
-						matchMedia(condition).matches ? "1" : "0"
-					),
-				media
+	/**
+	 * @param {string} text a value, or "" to leave the property unset
+	 * @returns {string} each reader's computed value, joined
+	 */
+	const readEach = (text) => {
+		for (const [at, [name, wrap]] of READERS.entries()) {
+			readers[at].style.cssText = "";
+			readers[at].style.setProperty("--eq-read", text);
+			readers[at].style.setProperty(
+				name,
+				wrap === "" ? "var(--eq-read)" : `${wrap}(var(--eq-read))`
 			);
-			for (const [i, bit] of answers.entries()) bits[i] += bit;
 		}
-		// Dimensions no viewport can vary: the media type and the user's stated
-		// preferences.
-		await page.setViewport({ width: 800, height: 600 });
-		/** @type {import("puppeteer-core").MediaFeature[][]} */
-		const featureSets = [
-			[{ name: "prefers-color-scheme", value: "dark" }],
-			[{ name: "prefers-color-scheme", value: "light" }],
-			[{ name: "prefers-reduced-motion", value: "reduce" }],
-			[{ name: "color-gamut", value: "p3" }]
-		];
-		for (const type of ["screen", "print"]) {
-			for (const features of [[], ...featureSets]) {
-				await page.emulateMediaType(type);
-				await page.emulateMediaFeatures(features);
-				const answers = await page.evaluate(
-					(conditions) =>
-						conditions.map((condition) =>
-							matchMedia(condition).matches ? "1" : "0"
-						),
-					media
-				);
-				for (const [i, bit] of answers.entries()) bits[i] += bit;
-			}
-		}
-		await page.emulateMediaType(undefined);
-		await page.emulateMediaFeatures([]);
-		for (const [i, condition] of media.entries()) {
-			signatures.set(`media ${condition}`, bits[i]);
-		}
-	}
-	return signatures;
+		return READERS.map(([name], at) =>
+			cascadeValue(name, getComputedStyle(readers[at]).getPropertyValue(name))
+		).join("\u0001");
+	};
+
+	/**
+	 * Text as its tokens, which comments and the spaces beside a delimiter do not change.
+	 * @param {string} text text the engine echoes as written
+	 * @returns {string} it, spaced one way
+	 */
+	const spacedOnce = (text) =>
+		text
+			.replace(/\/\*[\s\S]*?\*\//g, " ")
+			.trim()
+			.replace(/\s+/g, " ")
+			.replace(/ ?([{}()[\],:;/*]) ?/g, "$1");
+
+	/**
+	 * A custom property as what substituting it computes in each reader, since
+	 * only a reader gives its tokens a meaning. One no reader takes is read as
+	 * its text, comments and every space beside a delimiter dropped.
+	 * @param {string} value a custom property's computed value
+	 * @returns {string} what the readers compute from it
+	 */
+	const readThrough = (value) => {
+		const known = readCache.get(value);
+		if (known !== undefined) return known;
+		if (!readCache.has("")) readCache.set("", readEach(""));
+		// A reader resolves a relative url against the probe's document, where Gecko
+		// reads `./a.png` and `.z/a.png` alike, so each address is compared as
+		// written too, its quotes and padding dropped.
+		const addresses = [
+			...value.matchAll(
+				/url\([\t\n\f\r ]*(?:"((?:[^"\\]|\\.)*)"|'((?:[^'\\]|\\.)*)'|([^)]*?))[\t\n\f\r ]*\)/gi
+			)
+		]
+			.map(([, double, single, bare]) =>
+				double !== undefined ? double : single !== undefined ? single : bare
+			)
+			.join("\u0002");
+		const through = `${readEach(value)}\u0003${addresses}`;
+		const read =
+			through === `${readCache.get("")}\u0003${addresses}`
+				? spacedOnce(value)
+				: through;
+		readCache.set(value, read);
+		return read;
+	};
+
+	/**
+	 * A value an element computes, in the one spelling rules are compared in: a
+	 * custom property as what reading it computes, anything else named once, its
+	 * colors painted and its data URLs decoded.
+	 * @param {string} property the property
+	 * @param {string} value its computed value
+	 * @returns {string} the value, spelled once
+	 */
+	const cascadeValue = (property, value) => {
+		if (property.startsWith("--")) return readThrough(value);
+		const named = canonical(
+			property === "font-family" || property === "font"
+				? unquoteFamilies(value)
+				: value
+		);
+		const whole = painted(named);
+		return decodeDataUrls(whole === named ? paintedColors(named) : whole);
+	};
+
+	/** @type {{ __eq: PageHelpers }} */ (/** @type {unknown} */ (window)).__eq =
+		{
+			htmlFacets,
+			probeReflection,
+			canonical,
+			paintedColors,
+			unquoteFamilies,
+			cascadeValue,
+			spacedOnce,
+			whereIs
+		};
 };
-
-// A `data:` URL as serialized by the CSSOM: its metadata, then the payload.
-const DATA_URL_REGEXP = /url\("(data:[^,"]*,)((?:[^"\\]|\\.)*)"\)/gi;
-
-/**
- * Two spellings of one data URI are the same URL — the parser decodes the
- * payload's escapes before anything reads it, so `%3D` and `=` name the same
- * byte. Read both sides decoded so the difference is not a difference.
- * @param {string} text a rule's text
- * @returns {string} it, with every data URI's payload decoded
- */
-const decodeDataUrls = (text) =>
-	text.replace(DATA_URL_REGEXP, (whole, metadata, payload) => {
-		try {
-			return `url("${metadata}${decodeURIComponent(payload)}")`;
-		} catch (_err) {
-			return whole;
-		}
-	});
-
-/**
- * A rule as the conditions it really holds under and the style it really
- * computes to.
- * @param {Rule} rule a rule
- * @param {Map<string, string>} signatures what the engine answers per condition
- * @returns {string} its key
- */
-const keyOf = (rule, signatures) =>
-	`${rule.chain
-		.map(({ kind, condition }) => {
-			const answer = signatures.get(`${kind} ${condition}`);
-			if (answer !== undefined) return `@${kind}<${answer}>`;
-			// A nested rule holds under its parent's selector list, which is a set
-			// like its own — the printer may have sorted it.
-			return `@${kind}<${
-				kind === "style" ? sortedSelectorList(condition) : condition
-			}>`;
-		})
-		.join(" >> ")} ${decodeDataUrls(rule.text)}`;
-
-/**
- * @param {string} list a selector list
- * @returns {string} it in one order, a repeat dropped
- */
-const sortedSelectorList = (list) =>
-	[...new Set(splitSelectorList(list))].sort().join(", ");
-
-/**
- * Split a selector list on its own commas — not the ones inside `:is(…)`, an
- * attribute value or a string.
- * @param {string} list a selector list
- * @returns {string[]} its selectors
- */
-const splitSelectorList = (list) => {
-	const out = [];
-	let depth = 0;
-	let quote = "";
-	let from = 0;
-	for (let i = 0; i < list.length; i++) {
-		const c = list[i];
-		// An escape carries its next code point whatever it is — `.\:\)` ends in
-		// a `)` that closes nothing.
-		if (c === "\\") {
-			i++;
-		} else if (quote !== "") {
-			if (c === quote) quote = "";
-		} else if (c === '"' || c === "'") {
-			quote = c;
-		} else if (c === "(" || c === "[") {
-			depth++;
-		} else if (c === ")" || c === "]") {
-			depth--;
-		} else if (c === "," && depth === 0) {
-			out.push(list.slice(from, i).trim());
-			from = i + 1;
-		}
-	}
-	out.push(list.slice(from).trim());
-	return out;
-};
-
-/**
- * One entry per selector, because the printer joins adjacent rules computing
- * the same style into one list. Each still carries its own computed style and
- * its place in the cascade, so a lost or reordered selector fails.
- * @param {Rule[]} rules rules in cascade order
- * @returns {Rule[]} the same, one selector each
- */
-const perSelector = (rules) =>
-	rules.flatMap((rule) => {
-		// `@import` and friends are compared as written, with no `label { … }`.
-		const at = rule.text.indexOf(" { ");
-		if (at === -1) return [rule];
-		const selectors = splitSelectorList(rule.text.slice(0, at));
-		if (selectors.length < 2) return [rule];
-		const block = rule.text.slice(at);
-		return selectors.map((one) => ({
-			chain: rule.chain,
-			block: rule.block,
-			text: one + block
-		}));
-	});
-
-// An `@layer a, b;` statement, which names layers without holding any rule.
-const LAYER_STATEMENT_RE = /^@layer\s+([^{;]+);$/i;
 
 // One number wherever it stands in a value.
 const NUMBER_RUN = /-?\d*\.?\d+(?:e[+-]?\d+)?/gi;
 
-// The printer rounds a number to six significant digits, so anything derived
-// from one — a matrix entry, a resolved font size — lands within a relative
-// 1e-5 of what the unrounded input gives. That is under Chromium's own 1/64px
-// layout grid at every length a stylesheet uses, which is the bound the
-// rounding itself rests on. Wider than that is a difference, not a spelling.
+// The printer rounds to six significant digits, so anything derived from one lands
+// within a relative 1e-5 of the unrounded input. That is under Chromium's own
+// 1/64px layout grid at every length a stylesheet uses, which is the bound.
 const NUMERIC_TOLERANCE = 1e-5;
 
 /**
@@ -1677,195 +1224,1782 @@ const numericallyEqual = (one, other) => {
 };
 
 /**
- * @param {Rule[]} before the source's rules
- * @param {Rule[]} after the minified rules
- * @param {Map<string, string>} signatures what the engine answers per condition
- * @returns {string} why they differ, or "" when they do not
+ * One page printed two ways that must render alike.
+ * @typedef {{ name: string, before: string, after: string }} RenderPair
  */
-const compareRules = (before, after, signatures) => {
+
+/**
+ * What one pair rendered differently, and how many elements were compared.
+ * @typedef {{ name: string, elements: number, differences: string[] }} RenderReport
+ */
+
+/**
+ * Runs in the page (after `installHelpers`): renders both documents of each pair
+ * at one width in a sandboxed frame, comparing every element's boxes and what its
+ * `style` attribute computes, and the text a reader sees.
+ * @param {{ pairs: RenderPair[], width: number }} input the pairs, and the frame's width
+ * @returns {Promise<RenderReport[]>} one report per pair, in order
+ */
+const compareRenders = async ({ pairs, width }) => {
+	const REPORTED = 5;
+	// Under Chromium's 1/64px layout grid, where the same line laid out from
+	// text split differently can land.
+	const TOLERANCE = 0.05;
+	// WHY: WebKit can leave a frame's `load` or `document.fonts.ready` pending
+	// for good on a page whose subresource the policy blocks, so each wait is
+	// bounded; what is read then is the page as far as it got.
+	const PATIENCE = 3000;
+	/** @type {HTMLIFrameElement} */
+	let frame = document.createElement("iframe");
+
 	/**
-	 * @param {string} text a rule's `selector { … }`
-	 * @returns {string} the block alone, or the whole text when it has none
+	 * @param {Promise<unknown>} pending what to wait for
+	 * @returns {Promise<boolean>} whether it settled within the patience
 	 */
-	const blockOf = (text) => {
-		const at = text.indexOf(" { ");
-		return at === -1 ? text : text.slice(at);
+	const settled = (pending) =>
+		Promise.race([
+			pending.then(() => true),
+			new Promise((resolve) => {
+				setTimeout(() => resolve(false), PATIENCE);
+			})
+		]);
+
+	/**
+	 * A fresh frame per document, so a late event of one cannot be the next one's.
+	 * @param {string} html a document
+	 * @returns {Promise<boolean>} whether the frame finished loading it
+	 */
+	const render = (html) => {
+		frame.remove();
+		frame = document.createElement("iframe");
+		frame.setAttribute("sandbox", "allow-same-origin");
+		frame.style.cssText = `width:${width}px;height:800px;border:0`;
+		const loaded = settled(
+			new Promise((resolve) => {
+				frame.addEventListener("load", () => resolve(undefined), {
+					once: true
+				});
+			})
+		);
+		frame.srcdoc = html;
+		document.body.append(frame);
+		return loaded;
 	};
+
 	/**
-	 * @param {string} text a rule's `selector { … }`
-	 * @returns {string} the selector alone, or the whole text when it has none
+	 * The boxes an element's fragments take, those touching on one line joined:
+	 * a text node split by a comment the printer drops ends a fragment there.
+	 * @param {Element} element an element
+	 * @returns {number[][]} its boxes as `[x, y, width, height]`
 	 */
-	const selectorOf = (text) => {
-		const at = text.indexOf(" { ");
-		return at === -1 ? text : text.slice(0, at);
-	};
-	/**
-	 * Read the rules layer by layer, each layer where it is first named. A named
-	 * layer's blocks are one layer however far apart they stand, and what lies
-	 * between them is in another layer or in none — ordered against them by the
-	 * cascade rather than by where it sits, so only the order within a layer is
-	 * one the cascade can see. An anonymous `@layer` is a layer of its own, so
-	 * each block of one keeps its place.
-	 * @param {Rule[]} rules rules in cascade order
-	 * @returns {Rule[]} the same rules, gathered by layer
-	 */
-	const byLayer = (rules) => {
-		/** @type {Map<string, Rule[]>} */
-		const layers = new Map();
-		let anonymous = 0;
-		/** @type {Map<EXPECTED_OBJECT, string>} */
-		const ids = new Map();
-		/**
-		 * @param {EXPECTED_OBJECT} each an anonymous layer's chain entry
-		 * @returns {string} the identity of the block it opened
-		 */
-		const idOf = (each) => {
-			let id = ids.get(each);
-			if (id === undefined) {
-				id = ` ${anonymous++}`;
-				ids.set(each, id);
-			}
-			return id;
-		};
-		// An `@layer a, b;` statement is what names those layers first, whatever
-		// order their blocks then stand in, so it opens their buckets.
-		for (const rule of rules) {
-			const statement = LAYER_STATEMENT_RE.exec(rule.text);
-			if (statement === null) continue;
-			const outer = rule.chain
-				.filter((each) => each.kind === "layer")
-				.map((each) => each.condition);
-			for (const name of statement[1].split(",")) {
-				const key = [...outer, `@layer ${name.trim()}`].join(" ");
-				if (!layers.has(key)) layers.set(key, []);
+	const boxesOf = (element) => {
+		/** @type {number[][]} */
+		const out = [];
+		for (const box of element.getClientRects()) {
+			const last = out[out.length - 1];
+			if (
+				last !== undefined &&
+				last[1] === box.y &&
+				last[3] === box.height &&
+				Math.abs(last[0] + last[2] - box.x) < TOLERANCE
+			) {
+				last[2] = box.x + box.width - last[0];
+			} else {
+				out.push([box.x, box.y, box.width, box.height]);
 			}
 		}
-		for (const rule of rules) {
-			const chain = rule.chain.filter((each) => each.kind === "layer");
-			const anon = chain.some((each) => each.condition.trim() === "@layer");
-			const key = anon
-				? chain
-						.map((each) =>
-							each.condition.trim() === "@layer" ? idOf(each) : each.condition
-						)
-						.join(" ")
-				: chain.map((each) => each.condition).join(" ");
-			// Every block of one is its own layer, so the key says which block a rule
-			// stood in — two of them hold two rules, not one said twice.
-			const one = anon
-				? {
-						...rule,
-						chain: rule.chain.map((each) =>
-							each.kind === "layer" && each.condition.trim() === "@layer"
-								? { ...each, condition: `@layer${idOf(each)}` }
-								: each
-						)
-					}
-				: rule;
-			const layer = layers.get(key);
-			if (layer === undefined) layers.set(key, [one]);
-			else layer.push(one);
-		}
-		// The place-holding entry a layer block left behind has done its work.
-		return [...layers.values()].flat().filter((rule) => rule.text !== "");
+		return out;
 	};
-	// The same selector twice in a row computing the same style is the one rule
-	// it resolves to, which is what joining them into a list leaves.
+
 	/**
-	 * @param {Rule[]} rules rules in cascade order
-	 * @returns {string[]} their keys, an adjacent repeat collapsed
+	 * @param {number[][]} one boxes
+	 * @param {number[][]} other boxes
+	 * @returns {boolean} whether they stand in the same place, to within the tolerance
 	 */
-	const keys = (rules) => {
-		const flat = perSelector(byLayer(rules)).map((rule) => ({
-			key: keyOf(rule, signatures),
-			// Everything but the selector: two entries sharing it are one rule's
-			// worth of cascade, whichever of them is written first. A page entry
-			// carries its own block, which is what it says before the earlier
-			// declarations it is read on top of are folded in.
-			group: keyOf(
-				{
-					chain: rule.chain,
-					text: rule.block === undefined ? blockOf(rule.text) : rule.block
-				},
-				signatures
-			),
-			// Everything but the block: the one selector under the one condition, so
-			// two runs sharing a set of these are one rule's worth of cascade.
-			where: keyOf(
-				{ chain: rule.chain, text: selectorOf(rule.text) },
-				signatures
+	const sameBoxes = (one, other) =>
+		one.length === other.length &&
+		one.every((box, at) =>
+			box.every((edge, side) => Math.abs(edge - other[at][side]) < TOLERANCE)
+		);
+
+	/**
+	 * @param {number[][]} boxes boxes
+	 * @returns {string} them, readable
+	 */
+	const showBoxes = (boxes) =>
+		boxes.length === 0
+			? "no box"
+			: boxes
+					.map(
+						([x, y, boxWidth, height]) =>
+							`${x.toFixed(2)},${y.toFixed(2)} ${boxWidth.toFixed(2)}x${height.toFixed(2)}`
+					)
+					.join(" ");
+
+	/**
+	 * What a `style` attribute does: every longhand it sets, as the element computes it.
+	 * @param {Element} element an element
+	 * @returns {string} its declared properties and their computed values
+	 */
+	const styledBy = (element) => {
+		const own = /** @type {HTMLElement} */ (element).style;
+		if (own === undefined || own.length === 0) return "";
+		const view = /** @type {Window} */ (element.ownerDocument.defaultView);
+		const style = view.getComputedStyle(element);
+		/** @type {string[]} */
+		const out = [];
+		for (let at = 0; at < own.length; at++) out.push(own.item(at));
+		return out
+			.sort()
+			.map(
+				(name) =>
+					`${name}:${
+						/** @type {{ __eq: PageHelpers }} */ (
+							/** @type {unknown} */ (window)
+						).__eq.cascadeValue(name, style.getPropertyValue(name))
+					}`
 			)
-		}));
-		// A run of selectors reaching one block under one condition is the set a
-		// join may write in any order, so it is compared in one order.
-		/** @type {(typeof flat)[]} */
-		const runs = [];
-		for (let from = 0; from < flat.length;) {
-			let to = from + 1;
-			while (to < flat.length && flat[to].group === flat[from].group) to++;
-			// One selector written twice inside a run says the same thing twice, and
-			// the later entry already carries the earlier one — so it stands in for
-			// both, which is what a printer joining the two blocks leaves.
-			/** @type {Map<string, typeof flat[0]>} */
-			const last = new Map();
-			for (let i = from; i < to; i++) last.set(flat[i].where, flat[i]);
-			const entries = [...last.values()].sort((one, other) =>
-				one.key < other.key ? -1 : 1
+			.join(";");
+	};
+
+	/**
+	 * @returns {Promise<{ tags: string[], where: string[], boxes: number[][][], styled: string[], withoutAlt: string, text: string, title: string, size: string }>} what the frame renders
+	 */
+	const measure = async () => {
+		const doc = /** @type {Document} */ (frame.contentDocument);
+		await settled(doc.fonts.ready);
+		// WHY: how Chrome boxes a broken `<img>` with no `alt` follows how far its
+		// fetch got — 0x0 where none was made, a 16x16 icon where one came back
+		// undecodable — so on a page whose images cannot load it is timing, not the
+		// printer, that decides; measured in CI on srcset.html, both orders at once.
+		// An empty `alt` makes one represent nothing, but only where it is there as
+		// the element breaks: setting it afterwards leaves the icon, so each image
+		// is loaded again under it. Which had one is compared on its own, so a
+		// dropped `alt=""` still shows.
+		/** @type {number[]} */
+		const withoutAlt = [];
+		/** @type {Promise<unknown>[]} */
+		const breaking = [];
+		for (const [at, image] of [...doc.images].entries()) {
+			if (image.hasAttribute("alt")) continue;
+			withoutAlt.push(at);
+			// A clone runs the image update algorithm again, whatever names the
+			// source — an `src`, a `srcset` or a `<source>` beside it.
+			const under = /** @type {HTMLImageElement} */ (image.cloneNode(true));
+			under.setAttribute("alt", "");
+			image.replaceWith(under);
+			if (under.complete) continue;
+			breaking.push(
+				new Promise((resolve) => {
+					under.addEventListener("load", resolve, { once: true });
+					under.addEventListener("error", resolve, { once: true });
+				})
 			);
-			runs.push(entries);
-			from = to;
 		}
-		// A selector carried into the very next run is one rule's declarations
-		// split across two blocks — nothing stands between them, so the cascade
-		// reads them as one, and the later entry already carries what the earlier
-		// one said. Read from the back so a run emptied this way stops standing
-		// between its neighbors, whether a printer joined the blocks or not.
-		const ahead = new Set();
-		for (let i = runs.length - 1; i >= 0; i--) {
-			runs[i] = runs[i].filter((one) => !ahead.has(one.where));
-			for (const one of runs[i]) ahead.add(one.where);
+		if (breaking.length > 0) await settled(Promise.all(breaking));
+		// A transition or animation would be read part way through.
+		for (const running of doc.getAnimations()) running.cancel();
+		const root = /** @type {HTMLElement} */ (doc.documentElement);
+		const elements = [...doc.querySelectorAll("*")];
+		return {
+			tags: elements.map((element) => element.localName),
+			where: elements.map(
+				/** @type {{ __eq: PageHelpers }} */ (/** @type {unknown} */ (window))
+					.__eq.whereIs
+			),
+			// What a `<marquee>` holds moves as it scrolls, whenever it is read.
+			boxes: elements.map((element) =>
+				element.closest("marquee") === null ? boxesOf(element) : []
+			),
+			styled: elements.map(styledBy),
+			withoutAlt: withoutAlt.join(" "),
+			text: root.innerText,
+			title: doc.title,
+			size: `${root.scrollWidth}x${root.scrollHeight}`
+		};
+	};
+
+	/**
+	 * @param {RenderPair} pair a page and its minified copy
+	 * @returns {Promise<{ loaded: boolean[], before: Awaited<ReturnType<typeof measure>>, after: Awaited<ReturnType<typeof measure>> }>} whether each loaded, and what each renders
+	 */
+	const renderBoth = async (pair) => {
+		const loaded = [await render(pair.before)];
+		const before = await measure();
+		loaded.push(await render(pair.after));
+		return { loaded, before, after: await measure() };
+	};
+
+	/** @type {RenderReport[]} */
+	const reports = [];
+	for (const pair of pairs) {
+		let rendered = await renderBoth(pair);
+		// WHY: on a busy machine one copy can miss the patience and be read unloaded
+		// — measured locally on wpt/css layer-media-query.html — so a pair where
+		// only one loaded renders again; a copy that truly never loads still differs.
+		if (rendered.loaded[0] !== rendered.loaded[1]) {
+			rendered = await renderBoth(pair);
 		}
-		// A key written twice is one rule said twice, and the later copy restates it
-		// all — so keeping the last is what dropping the dead earlier one leaves.
-		// Emptying a run can leave two that reach one block standing next to each
-		// other, which is one run's worth of cascade however the printer wrote it.
-		/** @type {(typeof flat)[]} */
-		const joined = [];
-		for (const run of runs) {
-			if (run.length === 0) continue;
-			const last = joined[joined.length - 1];
-			if (last !== undefined && last[0].group === run[0].group) {
-				last.push(...run);
-				last.sort((one, other) => (one.key < other.key ? -1 : 1));
+		const { loaded, before, after } = rendered;
+		/** @type {string[]} */
+		const differences = [];
+		if (before.title !== after.title) {
+			differences.push(`title: ${before.title} -> ${after.title}`);
+		}
+		if (before.text !== after.text) {
+			let at = 0;
+			while (before.text[at] === after.text[at]) at++;
+			const from = Math.max(0, at - 30);
+			differences.push(
+				`text at ${at}: ${JSON.stringify(
+					before.text.slice(from, at + 30)
+				)} -> ${JSON.stringify(after.text.slice(from, at + 30))}`
+			);
+		}
+		if (before.tags.join(" ") !== after.tags.join(" ")) {
+			differences.push(
+				`elements: ${before.tags.length} -> ${after.tags.length}`
+			);
+		} else {
+			for (
+				let at = 0;
+				at < before.boxes.length && differences.length < REPORTED;
+				at++
+			) {
+				if (before.styled[at] !== after.styled[at]) {
+					differences.push(
+						`${before.where[at]}: style ${before.styled[at]} -> ${after.styled[at]}`
+					);
+				} else if (!sameBoxes(before.boxes[at], after.boxes[at])) {
+					differences.push(
+						`${before.where[at]}: ${showBoxes(before.boxes[at])} -> ${showBoxes(
+							after.boxes[at]
+						)}`
+					);
+				}
+			}
+		}
+		if (before.withoutAlt !== after.withoutAlt) {
+			differences.push(
+				`images without alt: ${before.withoutAlt} -> ${after.withoutAlt}`
+			);
+		}
+		if (loaded[0] !== loaded[1]) {
+			differences.push(`loaded: ${loaded[0]} -> ${loaded[1]}`);
+		}
+		if (differences.length === 0 && before.size !== after.size) {
+			differences.push(`size: ${before.size} -> ${after.size}`);
+		}
+		reports.push({
+			name: pair.name,
+			elements: before.tags.length,
+			differences
+		});
+	}
+	frame.remove();
+	return reports;
+};
+
+/**
+ * One stylesheet printed two ways that must style every element alike.
+ * @typedef {{ name: string, before: string, after: string, relax?: Relaxation[] }} StylePair
+ */
+
+/**
+ * One element or pseudo-element a pair styles differently: where it stands and
+ * under which sample, and per property the two values as computed and as spelled once.
+ * @typedef {{ at: string, moved: [string, string, string, string, string][] }} StyleDifference
+ */
+
+/**
+ * What one pair styled differently, and how much was compared.
+ * @typedef {{ name: string, elements: number, properties: number, samples: number, differences: StyleDifference[] }} StyleReport
+ */
+
+/**
+ * Runs in the page: builds the elements each pair's selectors reach, one set
+ * in each of two frames, adopts one sheet per frame, and compares every element's
+ * computed style at each viewport and container size a query of either sheet
+ * names. What no element can show — a font face, a counter style — is compared as
+ * the engine serializes it.
+ * @param {{ pairs: StylePair[], types: string[] }} input the pairs, and element types every pair nests in each other
+ * @returns {Promise<StyleReport[]>} one report per pair, in order
+ */
+const compareStyles = async ({ pairs, types }) => {
+	// Enough to leave several once rounding is set aside outside the page.
+	const KEPT = 200;
+	// Each breakpoint builds and reads its elements again, so a sheet naming many is
+	// sampled at the first ones.
+	const MAX_SAMPLES = 48;
+	const DOCUMENT_ELEMENTS = new Set(["html", "head", "body"]);
+	// WHY: a state only input puts an element in would leave its rules applying in
+	// neither frame, so a printer's defect there would compare equal. Both sheets
+	// read each as an attribute instead — rewritten in what the engine serialized,
+	// so the two spellings of one selector are rewritten alike.
+	const STATES =
+		/(^|[^:\\]):(hover|active|focus|focus-visible|focus-within|visited|link|any-link|local-link|target|target-within|checked|indeterminate|default|disabled|enabled|required|optional|valid|invalid|user-valid|user-invalid|in-range|out-of-range|placeholder-shown|autofill|-webkit-autofill|read-only|read-write|open|closed|popover-open|modal|fullscreen|picture-in-picture|playing|paused|seeking|buffering|stalled|muted|volume-locked|current|past|future|blank|defined)(?![\w-])/gi;
+	// WHY: a theme is a class on `html` or `body`, and a document has one of
+	// each — so both sheets also let a built `div` stand for one, at the same
+	// specificity, which is what reaches `body.dark` beside `body.light`.
+	const DOCUMENT_TYPES = /(^|[\s>+~(,])(html|body)(?![\w-])/gi;
+	// The pseudo-elements `getComputedStyle` reads, beyond the two every element has.
+	const PSEUDOS =
+		/::(marker|placeholder|first-line|first-letter|selection|backdrop|file-selector-button)(?![\w-])/gi;
+	// What `content` computes to on a pseudo-element that renders nothing.
+	const NO_CONTENT = /^(?:none|normal)$/;
+	const { cascadeValue, spacedOnce, whereIs } =
+		/** @type {{ __eq: PageHelpers }} */ (/** @type {unknown} */ (window)).__eq;
+
+	/**
+	 * @param {string} text an identifier as the CSSOM serializes it
+	 * @returns {string} the name it spells
+	 */
+	const unescapeIdentifier = (text) =>
+		text.replace(/\\(?:([0-9a-fA-F]{1,6}) ?|([\s\S]))/g, (_, hex, other) =>
+			hex === undefined ? other : String.fromCodePoint(Number.parseInt(hex, 16))
+		);
+
+	/**
+	 * @param {string} list a selector list
+	 * @returns {string[]} its selectors
+	 */
+	const splitList = (list) => {
+		/** @type {string[]} */
+		const out = [];
+		let depth = 0;
+		let quote = "";
+		let start = 0;
+		for (let i = 0; i < list.length; i++) {
+			const char = list[i];
+			if (char === "\\") {
+				i++;
+			} else if (quote !== "") {
+				if (char === quote) quote = "";
+			} else if (char === '"' || char === "'") {
+				quote = char;
+			} else if (char === "(" || char === "[") {
+				depth++;
+			} else if (char === ")" || char === "]") {
+				depth--;
+			} else if (char === "," && depth === 0) {
+				out.push(list.slice(start, i).trim());
+				start = i + 1;
+			}
+		}
+		out.push(list.slice(start).trim());
+		return out;
+	};
+
+	/** @typedef {{ combinator: string, type: string, classes: string[], id: string, attributes: [string, string][], before: number, after: number, typed: boolean, counted: string, has: { combinator: string, chain: Compound[] }[] }} Compound */
+
+	/**
+	 * The position among its siblings an `An+B` argument picks for an element to
+	 * stand at: the second it matches, so `odd` is not also `:first-child`.
+	 * @param {string} argument the argument, an `of S` part included
+	 * @returns {number} the position, counted from 1, or 0 where none is built
+	 */
+	const nthPosition = (argument) => {
+		const text = argument
+			.replace(/\s+of\s[\s\S]*$/i, "")
+			.replace(/\s+/g, "")
+			.toLowerCase();
+		const spelled = text === "odd" ? "2n+1" : text === "even" ? "2n" : text;
+		const match = /^(?:([+-]?\d*)n)?([+-]?\d+)?$/.exec(spelled);
+		if (match === null || spelled === "") return 0;
+		const step =
+			match[1] === undefined
+				? 0
+				: match[1] === "" || match[1] === "+"
+					? 1
+					: match[1] === "-"
+						? -1
+						: Number(match[1]);
+		const offset = match[2] === undefined ? 0 : Number(match[2]);
+		let position = offset;
+		if (step > 0) {
+			const first =
+				offset >= 1 ? offset : offset + step * Math.ceil((1 - offset) / step);
+			position = first + step;
+		}
+		// A sibling list is built for it, so a far position is left unbuilt.
+		return position >= 1 && position <= 12 ? position : 0;
+	};
+
+	/**
+	 * A selector as the compounds an element chain has to carry. A pseudo-class is
+	 * left out, and so is what it holds — but the first selector of an `:is()` or
+	 * `:where()` is taken in, since the element has to be one of those.
+	 * @param {string} selector one selector
+	 * @returns {Compound[] | null} the chain, or null for a shape not read here
+	 */
+	const parseSelector = (selector) => {
+		const IDENTIFIER =
+			/^(?:[-\w\u00A0-\uFFFF]|\\(?:[0-9a-fA-F]{1,6} ?|[\s\S]))+/;
+		const ATTRIBUTE =
+			/^\[\s*([-\w]+)\s*(?:[~|^$*]?=\s*("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|[^\s\]]+)\s*[iIsS]?\s*)?\]/;
+		/**
+		 * @param {string} combinator how it joins the compound before it
+		 * @returns {Compound} an empty compound
+		 */
+		const fresh = (combinator) => ({
+			combinator,
+			type: "",
+			classes: [],
+			id: "",
+			attributes: [],
+			before: 0,
+			after: 0,
+			typed: false,
+			counted: "",
+			has: []
+		});
+		/**
+		 * Takes in the first selector of a list when it is one compound, since the
+		 * element has to match it too.
+		 * @param {Compound} into the compound to take it into
+		 * @param {string} list the selector list
+		 * @returns {void}
+		 */
+		const absorb = (into, list) => {
+			const [first] = splitList(list);
+			const inner = parseSelector(first);
+			if (inner === null || inner.length !== 1) return;
+			const [one] = inner;
+			if (one.type !== "") into.type = one.type;
+			if (one.id !== "") into.id = one.id;
+			into.classes.push(...one.classes);
+			into.attributes.push(...one.attributes);
+			into.before = Math.max(into.before, one.before);
+			into.after = Math.max(into.after, one.after);
+			into.typed = into.typed || one.typed;
+			if (one.counted !== "") into.counted = one.counted;
+			into.has.push(...one.has);
+		};
+		/** @type {Compound[]} */
+		const chain = [];
+		let current = fresh("");
+		let started = false;
+		let at = 0;
+		while (at < selector.length) {
+			const rest = selector.slice(at);
+			const combinator = /^[\s>+~]+/.exec(rest);
+			if (combinator !== null) {
+				if (started) {
+					chain.push(current);
+					const named = combinator[0].replace(/\s/g, "");
+					current = fresh(named === "" ? " " : named);
+					started = false;
+				}
+				at += combinator[0].length;
 				continue;
 			}
-			joined.push([...run]);
+			started = true;
+			const char = rest[0];
+			if (char === "*") {
+				at++;
+			} else if (char === "." || char === "#") {
+				const name = IDENTIFIER.exec(rest.slice(1));
+				if (name === null) return null;
+				if (char === ".") current.classes.push(unescapeIdentifier(name[0]));
+				else current.id = unescapeIdentifier(name[0]);
+				at += 1 + name[0].length;
+			} else if (char === "[") {
+				const attribute = ATTRIBUTE.exec(rest);
+				if (attribute === null) return null;
+				const value = attribute[2] === undefined ? "" : attribute[2];
+				current.attributes.push([
+					attribute[1],
+					unescapeIdentifier(/^["']/.test(value) ? value.slice(1, -1) : value)
+				]);
+				at += attribute[0].length;
+			} else if (char === ":") {
+				const name = /^::?[-\w]+/.exec(rest);
+				if (name === null) return null;
+				at += name[0].length;
+				if (selector[at] === "(") {
+					const open = at;
+					for (let depth = 0; at < selector.length; at++) {
+						if (selector[at] === "(") depth++;
+						else if (selector[at] === ")" && --depth === 0) break;
+					}
+					at++;
+					const argument = selector.slice(open + 1, at - 1);
+					const pseudo = name[0].toLowerCase();
+					if (/^:nth-(?:last-)?(?:child|of-type)$/.test(pseudo)) {
+						const position = nthPosition(argument) - 1;
+						if (pseudo.startsWith(":nth-last")) {
+							current.after = Math.max(current.after, position);
+						} else {
+							current.before = Math.max(current.before, position);
+						}
+						if (pseudo.endsWith("of-type")) current.typed = true;
+						// `of S` counts only siblings matching S, which it matches too.
+						const of = /\sof\s([\s\S]*)$/i.exec(argument);
+						if (of !== null) {
+							current.counted = of[1].trim();
+							absorb(current, of[1]);
+						}
+					} else if (pseudo === ":has") {
+						const [relative] = splitList(argument);
+						const leading = /^\s*([>+~]?)\s*/.exec(relative);
+						const combinator = leading === null ? "" : leading[1];
+						const inner = parseSelector(
+							relative.slice(leading === null ? 0 : leading[0].length)
+						);
+						if (inner !== null) {
+							current.has.push({ combinator: combinator || " ", chain: inner });
+						}
+					}
+					if (/^:(?:is|where)$/i.test(name[0])) absorb(current, argument);
+				}
+			} else {
+				const name = IDENTIFIER.exec(rest);
+				// A namespace or a nesting selector: the chain would not say what it matches.
+				if (name === null) return null;
+				current.type = unescapeIdentifier(name[0]).toLowerCase();
+				at += name[0].length;
+			}
 		}
-		const all = joined.flat().map(({ key }) => key);
-		/** @type {Map<string, number>} */
-		const lastAt = new Map();
-		for (const [i, key] of all.entries()) lastAt.set(key, i);
-		return all.filter((key, i) => lastAt.get(key) === i);
+		chain.push(current);
+		return chain;
 	};
-	const a = keys(before);
-	const b = keys(after);
-	const shorter = Math.min(a.length, b.length);
-	const at = a
-		.slice(0, shorter)
-		.findIndex((key, i) => !numericallyEqual(key, b[i]));
-	if (at !== -1) return `rule ${at}: ${a[at]} vs ${b[at]}`;
-	if (a.length > b.length) return `rule dropped: ${a[shorter]}`;
-	if (b.length > a.length) return `rule added: ${b[shorter]}`;
-	return "";
+
+	/**
+	 * @param {Document} doc the document to build in
+	 * @param {Compound} compound what the element carries
+	 * @returns {Element} the element
+	 */
+	const build = (doc, compound) => {
+		/** @type {Element} */
+		let element;
+		try {
+			element = doc.createElement(compound.type || "div");
+		} catch (_err) {
+			element = doc.createElement("div");
+		}
+		if (compound.classes.length > 0) {
+			element.setAttribute("class", compound.classes.join(" "));
+		}
+		if (compound.id !== "") element.id = compound.id;
+		for (const [name, value] of compound.attributes) {
+			try {
+				element.setAttribute(name, value);
+			} catch (_err) {
+				// A name the DOM will not take is one no element carries either.
+			}
+		}
+		return element;
+	};
+
+	/**
+	 * Counts the siblings on one side of an element that its `:nth-*()` counts.
+	 * @param {Element} element the element
+	 * @param {Compound} compound what it carries
+	 * @param {boolean} following whether the ones after it, not before
+	 * @returns {number} how many there are
+	 */
+	const countSiblings = (element, compound, following) => {
+		let count = 0;
+		for (
+			let at = following
+				? element.nextElementSibling
+				: element.previousElementSibling;
+			at !== null;
+			at = following ? at.nextElementSibling : at.previousElementSibling
+		) {
+			if (compound.typed && at.localName !== element.localName) continue;
+			if (compound.counted !== "") {
+				try {
+					if (!at.matches(compound.counted)) continue;
+				} catch (_err) {
+					// A selector the engine will not read counts no sibling.
+					continue;
+				}
+			}
+			count++;
+		}
+		return count;
+	};
+
+	/**
+	 * Builds a chain where its selector reaches its last element: each compound
+	 * at the position among its siblings it names, holding what its `:has()` asks.
+	 * @param {Document} doc the document to build in
+	 * @param {Compound[]} chain the compounds
+	 * @param {Element} anchor what the first compound joins
+	 * @param {string} combinator how it joins it — a relative selector's own
+	 * @returns {Element | null} the last element, or null where none was built
+	 */
+	const buildChain = (doc, chain, anchor, combinator) => {
+		/** @type {Element | null} */
+		let last = null;
+		for (const compound of chain) {
+			// A document has one of each, and the root already stands inside them.
+			if (DOCUMENT_ELEMENTS.has(compound.type)) {
+				if (last === null) continue;
+				break;
+			}
+			const element = build(doc, compound);
+			const joined = last === null ? combinator : compound.combinator;
+			const target = last === null ? anchor : last;
+			if (joined === "+" || joined === "~") target.after(element);
+			else target.append(element);
+			const sibling = () =>
+				build(doc, { ...compound, id: "", before: 0, after: 0, has: [] });
+			// In front of the pair `+` joins, which cannot be parted.
+			const front = joined === "+" ? target : element;
+			for (
+				let i = compound.before - countSiblings(element, compound, false);
+				i > 0;
+				i--
+			) {
+				front.before(sibling());
+			}
+			for (
+				let i = compound.after - countSiblings(element, compound, true);
+				i > 0;
+				i--
+			) {
+				element.after(sibling());
+			}
+			for (const held of compound.has) {
+				buildChain(doc, held.chain, element, held.combinator);
+			}
+			last = element;
+		}
+		return last;
+	};
+
+	/**
+	 * @returns {Promise<HTMLIFrameElement>} a frame holding an empty standards-mode document
+	 */
+	const openFrame = () =>
+		new Promise((resolve) => {
+			const frame = document.createElement("iframe");
+			// WHY: WebKit stops rendering an iframe wholly outside the viewport, and
+			// then resolves a box-less element's style with nothing inherited — so
+			// both frames stand at the corner, where neither is ever below the fold.
+			frame.style.cssText =
+				"border:0;display:block;position:absolute;top:0;left:0;width:1400px;height:800px";
+			frame.addEventListener("load", () => resolve(frame), { once: true });
+			frame.srcdoc =
+				"<!doctype html><html data-eq-html data-eq-root><head></head><body data-eq-body></body></html>";
+			document.body.append(frame);
+		});
+
+	// The page waits on its own frames, bounded by a timer, as a page an engine
+	// reads as hidden gets none.
+	/**
+	 * @returns {Promise<void>} once the page has rendered twice, or 100ms passed
+	 */
+	const settle = () =>
+		new Promise((resolve) => {
+			const timer = setTimeout(resolve, 100);
+			requestAnimationFrame(() =>
+				requestAnimationFrame(() => {
+					clearTimeout(timer);
+					resolve(undefined);
+				})
+			);
+		});
+
+	const LENGTH = /-?\d*\.?\d+(?:e[+-]?\d+)?px/gi;
+	const NUMBER = /-?\d*\.?\d+(?:e[+-]?\d+)?/gi;
+
+	/**
+	 * @param {string} one a value
+	 * @param {string} other another
+	 * @returns {boolean} whether they differ in pixel lengths alone
+	 */
+	const sameButLengths = (one, other) =>
+		one.replace(LENGTH, "px") === other.replace(LENGTH, "px");
+
+	/**
+	 * @param {string} one a value
+	 * @param {string} other another
+	 * @returns {boolean} whether they differ past the printer's six digits nowhere
+	 */
+	const numericallyAlike = (one, other) => {
+		if (one.replace(NUMBER, "0") !== other.replace(NUMBER, "0")) return false;
+		const theirs = other.match(NUMBER) || [];
+		return (one.match(NUMBER) || []).every((number, at) => {
+			const [a, b] = [Number(number), Number(theirs[at])];
+			return Math.abs(a - b) <= Math.max(Math.abs(a), Math.abs(b), 1) * 1e-5;
+		});
+	};
+
+	/**
+	 * The lengths a condition names, in pixels, by the dimension each is of.
+	 * @param {string} condition a media or container condition
+	 * @returns {{ width: number[], height: number[] }} its lengths
+	 */
+	const lengthsIn = (condition) => {
+		/** @type {{ width: number[], height: number[] }} */
+		const out = { width: [], height: [] };
+		for (const [, feature, rest] of condition.matchAll(
+			/\(([^():]*?)(?:[:<>=]+)([^()]*)\)/g
+		)) {
+			const dimension = /height|block-size/.test(feature) ? "height" : "width";
+			for (const [, number, unit] of `${feature} ${rest}`.matchAll(
+				/(\d*\.?\d+)(px|r?em)\b/gi
+			)) {
+				const size = Number(number) * (unit.toLowerCase() === "px" ? 1 : 16);
+				if (size > 0 && size < 10000) out[dimension].push(Math.round(size));
+			}
+		}
+		return out;
+	};
+
+	const probe = document.createElement("div");
+	// A transition or animation is read on its own element: WebKit would start
+	// one on the probe, and every property read after came back mid-transition.
+	const motionProbe = document.createElement("div");
+	document.body.append(probe, motionProbe);
+
+	/**
+	 * A declaration no element computes as it stands, read as the property it is
+	 * where the engine takes it as one: `font-weight: normal` is `400` either way.
+	 * @param {string} name the property or descriptor
+	 * @param {string} value its value as written
+	 * @returns {string} the value, spelled once
+	 */
+	const computedAs = (name, value) => {
+		const target = /^(?:-[a-z]+-)?(?:transition|animation)/.test(name)
+			? motionProbe
+			: probe;
+		// Sized, so a percentage resolves to a length rather than to zero.
+		target.style.cssText = "width:97px;height:89px";
+		target.style.setProperty(name, value);
+		return target.style.getPropertyValue(name) === ""
+			? value
+			: cascadeValue(name, getComputedStyle(target).getPropertyValue(name));
+	};
+
+	/**
+	 * @param {CSSStyleDeclaration} style a block no element computes
+	 * @returns {string} its declarations, spelled once
+	 */
+	const described = (style) => {
+		/** @type {string[]} */
+		const out = [];
+		for (let i = 0; i < style.length; i++) {
+			const name = style.item(i);
+			out.push(`${name}:${computedAs(name, style.getPropertyValue(name))}`);
+		}
+		return `{${out.join(";")}}`;
+	};
+
+	/**
+	 * @typedef {object} SheetReading
+	 * @property {Map<string, string[]>} sequences per property, every declaration of it in cascade order
+	 * @property {Map<string, Set<string>>} selectors per property, every selector a rule declaring it applies under, nesting resolved
+	 * @property {Map<string, Set<string>>} atLength per `<dimension><px>` a query names, the selectors of the rules under it
+	 * @property {Set<string>} conditioned every property a rule under a media or container query declares
+	 * @property {Map<string, Set<string>>} reads per custom property, the properties that substitute it
+	 * @property {Set<string>} referenced every custom property a `var()` names with no fallback
+	 * @property {Set<string>} defaulted every custom property a `var()` names with a fallback
+	 * @property {Set<string>} registered every custom property an `@property` rule registers
+	 * @property {string[]} layers every layer in the order the cascade ranks them, which is where each is first named
+	 * @property {Set<string>} containerNames every container a query names
+	 * @property {boolean} queried whether any container query is written
+	 * @property {string[]} described what no element shows, as the engine serializes it
+	 * @property {Map<string, string>} unobserved per selector or keyframe and property under `@starting-style` or `@keyframes`, the declaration that wins
+	 */
+
+	/**
+	 * Every rule of a sheet, each state it names rewritten into an attribute.
+	 * @param {CSSStyleSheet} sheet the sheet, adopted
+	 * @returns {SheetReading} what the comparison needs of it
+	 */
+	const readSheet = (sheet) => {
+		/** @type {SheetReading} */
+		const out = {
+			sequences: new Map(),
+			selectors: new Map(),
+			atLength: new Map(),
+			conditioned: new Set(),
+			reads: new Map(),
+			referenced: new Set(),
+			defaulted: new Set(),
+			registered: new Set(),
+			layers: [],
+			containerNames: new Set(),
+			queried: false,
+			described: [],
+			unobserved: new Map()
+		};
+		/**
+		 * @template T
+		 * @param {Map<string, Set<T>>} map the map
+		 * @param {string} key where to add
+		 * @param {Iterable<T>} values what to add
+		 */
+		const addAll = (map, key, values) => {
+			const set = map.get(key);
+			if (set === undefined) map.set(key, new Set(values));
+			else for (const value of values) set.add(value);
+		};
+		/**
+		 * @param {CSSRuleList} rules the rules
+		 * @param {string} context the conditions around them
+		 * @param {string[] | null} parents the selectors of the style rule they nest in
+		 * @param {string} scope the scope root's selector, or ""
+		 * @param {string[]} lengths the `<dimension><px>` keys the queries around them name
+		 */
+		const walk = (rules, context, parents, scope, lengths) => {
+			for (const rule of rules) {
+				const kind = rule.constructor.name;
+				const any = /** @type {EXPECTED_ANY} */ (rule);
+				if (kind === "CSSStyleRule" || kind === "CSSNestedDeclarations") {
+					let own = parents || [""];
+					if (kind === "CSSStyleRule") {
+						const mapped = any.selectorText
+							.replace(STATES, "$1[data-eq-$2]")
+							.replace(
+								/:(dir|lang)\(\s*["']?([\w-]+)["']?\s*\)/gi,
+								"[data-eq-$1-$2]"
+							)
+							.replace(DOCUMENT_TYPES, "$1:is(div, $2):where([data-eq-$2])")
+							.replace(/:root(?![\w-])/gi, ":is([data-eq-root], :root)");
+						if (mapped !== any.selectorText) any.selectorText = mapped;
+						own = [];
+						for (const one of splitList(any.selectorText)) {
+							for (const parent of parents || [scope]) {
+								if (parent === "") {
+									own.push(one.replace(/:scope|&/g, "").trim() || "*");
+								} else if (/&|:scope/.test(one)) {
+									own.push(one.replace(/&|:scope/g, parent));
+								} else {
+									own.push(`${parent} ${one}`);
+								}
+							}
+						}
+					}
+					for (const key of lengths) addAll(out.atLength, key, own);
+					const style = /** @type {CSSStyleDeclaration} */ (any.style);
+					const where = `${context}\u0001${
+						kind === "CSSStyleRule" ? any.selectorText : "&"
+					}`;
+					// A shorthand holding a `var()` leaves each longhand empty until it is
+					// substituted, so what the rule says there is its whole text.
+					const text = style.cssText;
+					/** @type {string[]} */
+					const substitutes = [];
+					for (const [, name, comma] of text.matchAll(
+						/var\(\s*(--[\w-]+)\s*(,?)/g
+					)) {
+						substitutes.push(name);
+						(comma === "" ? out.referenced : out.defaulted).add(name);
+					}
+					// `light-dark()` shows its second color only under a dark color scheme.
+					const darkened = /light-dark\(/i.test(text);
+					if (darkened) addAll(out.atLength, "dark", own);
+					for (let i = 0; i < style.length; i++) {
+						const property = style.item(i);
+						const entry = `${where}\u0001${
+							style.getPropertyValue(property) || text
+						}\u0001${style.getPropertyPriority(property)}`;
+						const sequence = out.sequences.get(property);
+						if (sequence === undefined) out.sequences.set(property, [entry]);
+						else sequence.push(entry);
+						addAll(out.selectors, property, own);
+						if (lengths.length > 0 || darkened) out.conditioned.add(property);
+						for (const name of substitutes) addAll(out.reads, name, [property]);
+					}
+					if (any.cssRules !== undefined) {
+						walk(any.cssRules, where, own, scope, lengths);
+					}
+				} else if (kind === "CSSMediaRule" || kind === "CSSContainerRule") {
+					const condition =
+						kind === "CSSMediaRule" ? any.media.mediaText : any.containerQuery;
+					if (kind === "CSSContainerRule") {
+						out.queried = true;
+						if (any.containerName) out.containerNames.add(any.containerName);
+					}
+					const named = lengthsIn(condition);
+					const prefix = kind === "CSSMediaRule" ? "" : "box";
+					walk(
+						any.cssRules,
+						`${context}@${kind === "CSSMediaRule" ? "media" : `container ${any.containerName}`} ${spacedOnce(condition)}`,
+						parents,
+						scope,
+						[
+							...lengths,
+							...named.width.map((px) => `${prefix}width${px}`),
+							...named.height.map((px) => `${prefix}height${px}`),
+							...(/prefers-color-scheme/i.test(condition) ? ["dark"] : []),
+							// A query naming no length still holds at some sizes and not others.
+							`${prefix}any`
+						]
+					);
+				} else if (
+					kind === "CSSSupportsRule" ||
+					// Gecko's `@-moz-document`, a condition over its rules as `@supports` is.
+					kind === "CSSMozDocumentRule"
+				) {
+					walk(
+						any.cssRules,
+						`${context}@${kind === "CSSSupportsRule" ? "supports" : "-moz-document"} ${spacedOnce(any.conditionText)}`,
+						parents,
+						scope,
+						lengths
+					);
+				} else if (kind === "CSSLayerBlockRule") {
+					const name = `${context}@layer ${any.name}`;
+					if (!out.layers.includes(name)) out.layers.push(name);
+					walk(any.cssRules, name, parents, scope, lengths);
+				} else if (kind === "CSSLayerStatementRule") {
+					for (const one of any.nameList) {
+						const name = `${context}@layer ${one}`;
+						if (!out.layers.includes(name)) out.layers.push(name);
+					}
+				} else if (kind === "CSSScopeRule") {
+					walk(
+						any.cssRules,
+						`${context}@scope ${any.start}`,
+						parents,
+						any.start || "",
+						lengths
+					);
+				} else if (kind === "CSSKeyframesRule") {
+					// Read per offset and property, the one that wins there, since a
+					// printer may join or split the keyframes declaring it.
+					for (const frame of any.cssRules) {
+						const style = /** @type {CSSStyleDeclaration} */ (frame.style);
+						for (const offset of frame.keyText.split(",")) {
+							for (let i = 0; i < style.length; i++) {
+								const name = style.item(i);
+								out.unobserved.set(
+									`${context}@keyframes ${any.name} ${offset.trim()} ${name}`,
+									computedAs(name, style.getPropertyValue(name))
+								);
+							}
+						}
+					}
+				} else if (kind === "CSSStartingStyleRule") {
+					// What no element computes until it transitions, read per selector and
+					// property since a printer may join or merge the blocks declaring it.
+					const flat = (
+						/** @type {CSSRuleList} */ list,
+						/** @type {string} */ where
+					) => {
+						for (const inner of list) {
+							const held = /** @type {EXPECTED_ANY} */ (inner);
+							if (held.selectorText === undefined) {
+								if (held.cssRules !== undefined) {
+									flat(
+										held.cssRules,
+										`${where}${held.cssText.slice(0, held.cssText.indexOf("{"))}`
+									);
+								}
+								continue;
+							}
+							const style = /** @type {CSSStyleDeclaration} */ (held.style);
+							for (const selector of splitList(held.selectorText)) {
+								for (let i = 0; i < style.length; i++) {
+									const name = style.item(i);
+									const key = `${where}${selector} ${name}`;
+									// CSS Cascade 4 §6.2: a later normal declaration loses to an important one.
+									const important = style.getPropertyPriority(name) !== "";
+									if (
+										!important &&
+										(out.unobserved.get(key) || "").endsWith("!")
+									) {
+										continue;
+									}
+									out.unobserved.set(
+										key,
+										`${computedAs(name, style.getPropertyValue(name))}${important ? "!" : ""}`
+									);
+								}
+							}
+						}
+					};
+					flat(any.cssRules, `${context}@starting-style `);
+				} else if (kind !== "CSSImportRule") {
+					if (kind === "CSSPropertyRule") out.registered.add(any.name);
+					// A font face, a counter style, a page or a registered property. An
+					// adopted sheet holds no import.
+					const text = rule.cssText;
+					out.described.push(
+						`${context}${
+							any.style === undefined
+								? spacedOnce(text)
+								: `${text.slice(0, text.indexOf("{")).trim()}${described(any.style)}`
+						}`
+					);
+				}
+			}
+		};
+		walk(sheet.cssRules, "", null, "", []);
+		return out;
+	};
+
+	/** @type {StyleReport[]} */
+	const reports = [];
+	const frames = [await openFrame(), await openFrame()];
+	const windows = frames.map(
+		(frame) => /** @type {Window & typeof globalThis} */ (frame.contentWindow)
+	);
+	const docs = frames.map(
+		(frame) => /** @type {Document} */ (frame.contentDocument)
+	);
+
+	/**
+	 * Renders both compared frames and lays them out, so the next read sees
+	 * styles each frame has resolved in full.
+	 * @returns {Promise<void>} once the page and each frame have rendered, or 100ms passed
+	 */
+	const settleFrames = async () => {
+		await settle();
+		await Promise.all(
+			windows.map(
+				(view) =>
+					new Promise((resolve) => {
+						const timer = setTimeout(resolve, 100);
+						view.requestAnimationFrame(() => {
+							clearTimeout(timer);
+							resolve(undefined);
+						});
+					})
+			)
+		);
+		for (const doc of docs) {
+			/** @type {HTMLElement} */ (doc.documentElement).getBoundingClientRect();
+			for (const running of doc.getAnimations()) running.cancel();
+		}
+	};
+
+	// What an absolute length unit is in CSS pixels (CSS Values 4 §6.2).
+	const PX_PER_UNIT = /** @type {Record<string, number>} */ ({
+		px: 1,
+		pt: 4 / 3,
+		pc: 16,
+		in: 96,
+		cm: 96 / 2.54,
+		mm: 96 / 25.4,
+		q: 96 / 101.6
+	});
+	const ABSOLUTE_LENGTH =
+		/(-?\d*\.?\d+(?:e[+-]?\d+)?)(px|pt|pc|in|cm|mm|q)\b/gi;
+	const COLOR_LITERAL =
+		/\b(?:rgba?|hsla?|hwb|lab|lch|oklab|oklch|color)\([^()]*\)|#[\da-f]{3,8}\b/gi;
+	/** @type {CanvasRenderingContext2D | null} */
+	let painter = null;
+
+	/**
+	 * @param {string} color a color the engine serialized
+	 * @returns {string} the 8-bit sRGB pixel it paints
+	 */
+	const paintedAs = (color) => {
+		if (painter === null) {
+			const canvas = document.createElement("canvas");
+			canvas.width = 1;
+			canvas.height = 1;
+			painter = /** @type {CanvasRenderingContext2D} */ (
+				canvas.getContext("2d", { willReadFrequently: true })
+			);
+		}
+		painter.clearRect(0, 0, 1, 1);
+		painter.fillStyle = "#000";
+		painter.fillStyle = color;
+		painter.fillRect(0, 0, 1, 1);
+		return `rgba(${painter.getImageData(0, 0, 1, 1).data.join(",")})`;
+	};
+
+	/** @type {HTMLElement | null} */
+	let clipProbe = null;
+
+	/**
+	 * @param {string} color a color the engine serialized
+	 * @returns {string} its sRGB coordinates clipped into the gamut, as 8-bit channels
+	 */
+	const clippedAs = (color) => {
+		if (clipProbe === null) {
+			clipProbe = document.createElement("div");
+			/** @type {HTMLElement} */ (document.body).append(clipProbe);
+		}
+		clipProbe.style.color = "";
+		clipProbe.style.color = `color(from ${color} srgb r g b / alpha)`;
+		const numbers = (
+			getComputedStyle(clipProbe).color.match(/-?\d*\.?\d+(?:e[+-]?\d+)?/gi) ||
+			[]
+		).map(Number);
+		const [r = 0, g = 0, b = 0, a = 1] = numbers;
+		return `rgba(${[r, g, b, a]
+			.map((channel) => Math.round(Math.min(1, Math.max(0, channel)) * 255))
+			.join(",")})`;
+	};
+
+	/**
+	 * @param {string} one channels as `rgba(…)`
+	 * @param {string} other the same for another color
+	 * @returns {boolean} true when every channel is within one step
+	 */
+	const withinOneStep = (one, other) => {
+		const [a, b] = [one, other].map((text) =>
+			(text.match(/\d+/g) || []).map(Number)
+		);
+		return (
+			a.length === b.length &&
+			a.every((channel, i) => Math.abs(channel - b[i]) <= 1)
+		);
+	};
+
+	/**
+	 * @param {string} value a computed value or a rule's text
+	 * @returns {string} it with every absolute length in pixels
+	 */
+	const inPixels = (value) =>
+		value.replace(
+			ABSOLUTE_LENGTH,
+			(_, amount, unit) =>
+				`${Math.round(Number(amount) * PX_PER_UNIT[unit.toLowerCase()] * 1e4) / 1e4}px`
+		);
+
+	/**
+	 * Whether two computed values differ only where an opt-in rewrites on purpose:
+	 * a custom property's own text, a length's unit, a color's exact
+	 * coordinates, or a vendor-prefixed property a target adds or drops.
+	 * @param {Set<Relaxation>} relax the rewrites set aside
+	 * @param {string} name the property
+	 * @param {string} a one value, as the cascade reads it
+	 * @param {string} b the other
+	 * @param {string} rawA the first as the engine serialized it
+	 * @param {string} rawB the other
+	 * @returns {boolean} true when both read the same once those are set aside
+	 */
+	const relaxedEqual = (relax, name, a, b, rawA, rawB) => {
+		if (relax.size === 0) return false;
+		// Read where it is substituted instead: every property reading one is tracked.
+		if (relax.has("custom-properties") && name.startsWith("--")) return true;
+		if (relax.has("prefixes") && /^-(?:webkit|moz|ms|o)-/.test(name)) {
+			return true;
+		}
+		let x = a;
+		let y = b;
+		if (relax.has("length-units")) {
+			x = inPixels(x);
+			y = inPixels(y);
+		}
+		if (relax.has("approximate-colors") && x !== y) {
+			// A color is read as the pixel it paints: within one step of each 8-bit
+			// channel, or of the source clipped into sRGB where it lies outside it.
+
+			// Only a painted color's channels take the step, never a length.
+			const PAINT = /paints \d+,\d+,\d+,\d+/g;
+			const [xp, yp] = [x, y].map((text) => text.match(PAINT) || []);
+			if (
+				xp.length > 0 &&
+				xp.length === yp.length &&
+				x.replace(PAINT, "paints") === y.replace(PAINT, "paints") &&
+				xp.every((one, i) => withinOneStep(one, yp[i]))
+			) {
+				return true;
+			}
+			const whole = new RegExp(`^(?:${COLOR_LITERAL.source})$`, "i");
+			if (whole.test(rawA) && whole.test(rawB)) {
+				return withinOneStep(clippedAs(rawA), paintedAs(rawB));
+			}
+			// A value holding several colors, each read on its own and the rest as is.
+			const parted = new RegExp(`(${COLOR_LITERAL.source})`, "gi");
+			const [xs, ys] = [x, y].map((text) => text.split(parted));
+			return (
+				xs.length > 1 &&
+				xs.length === ys.length &&
+				xs.every((part, i) =>
+					i % 2 === 0
+						? part === ys[i]
+						: withinOneStep(clippedAs(part), paintedAs(ys[i]))
+				)
+			);
+		}
+		return x === y;
+	};
+
+	/**
+	 * Whether every registered property computes alike in both frames, which is
+	 * what `@property` rules spelled apart still have to agree on.
+	 * @param {{ registered: Set<string> }} one a sheet's reading
+	 * @param {{ registered: Set<string> }} other the other's
+	 * @returns {boolean} true when each initial value computes the same
+	 */
+	const sameRegistrations = (one, other) => {
+		const names = new Set([...one.registered, ...other.registered]);
+		if (names.size !== one.registered.size) return false;
+		const probes = docs.map((doc) => {
+			const probe = doc.createElement("div");
+			/** @type {HTMLElement} */ (doc.body).append(probe);
+			return probe;
+		});
+		try {
+			for (const name of names) {
+				const [a, b] = probes.map((probe, at) =>
+					windows[at].getComputedStyle(probe).getPropertyValue(name)
+				);
+				if (a !== b) return false;
+			}
+			return true;
+		} finally {
+			for (const probe of probes) probe.remove();
+		}
+	};
+
+	for (const pair of pairs) {
+		const relax = new Set(pair.relax || []);
+		const readings = [pair.before, pair.after].map((text, at) => {
+			const sheet = new windows[at].CSSStyleSheet();
+			// CSS Syntax §3.2: decoding drops a leading byte order mark, which
+			// `replaceSync` would read as part of the first selector.
+			sheet.replaceSync(text.charCodeAt(0) === 0xfeff ? text.slice(1) : text);
+			docs[at].adoptedStyleSheets = [sheet];
+			return readSheet(sheet);
+		});
+		const [one, other] = readings;
+		/** @type {StyleDifference[]} */
+		const moved = [];
+		for (const key of new Set([
+			...one.unobserved.keys(),
+			...other.unobserved.keys()
+		])) {
+			const [a, b] = [one.unobserved.get(key), other.unobserved.get(key)];
+			const [x, y] = [String(a), String(b)];
+			const property = key.slice(key.lastIndexOf(" ") + 1);
+			if (
+				a !== b &&
+				!relaxedEqual(relax, property, x, y, x, y) &&
+				moved.length < KEPT
+			) {
+				moved.push({
+					at: key,
+					moved: [["", String(a), String(b), String(a), String(b)]]
+				});
+			}
+		}
+		// A registered property's rule is spelled as rewritten; what it must keep is
+		// the initial value every element computes.
+		const registeredAlike =
+			relax.has("custom-properties") && sameRegistrations(one, other);
+		const [oneDescribed, otherDescribed] = [one, other].map((reading) => {
+			const described = registeredAlike
+				? reading.described.filter((text) => !/@property\b/.test(text))
+				: reading.described;
+			return relax.has("length-units") ? described.map(inPixels) : described;
+		});
+		if (oneDescribed.join("\n") !== otherDescribed.join("\n")) {
+			const at = oneDescribed.findIndex(
+				(text, i) => text !== otherDescribed[i]
+			);
+			const [a, b] = [String(oneDescribed[at]), String(otherDescribed[at])];
+			moved.push({
+				at: "rules no element computes",
+				moved: [["", a, b, a, b]]
+			});
+		}
+
+		// A property is read wherever the two sheets declare it apart — a value, a
+		// selector, a condition or an order — or rank the layers it sits in apart,
+		// and so is one reading a custom property that is.
+		/** @type {Set<string>} */
+		const tracked = new Set();
+		const layered = one.layers.join("\u0002") !== other.layers.join("\u0002");
+		for (const property of new Set([
+			...one.sequences.keys(),
+			...other.sequences.keys()
+		])) {
+			const a = one.sequences.get(property) || [];
+			const b = other.sequences.get(property) || [];
+			if (layered || a.join("\u0002") !== b.join("\u0002")) {
+				tracked.add(property);
+			}
+		}
+		for (const property of tracked) {
+			if (!property.startsWith("--")) continue;
+			for (const reading of readings) {
+				for (const reader of reading.reads.get(property) || []) {
+					tracked.add(reader);
+				}
+			}
+		}
+		const properties = [...tracked];
+		const conditioned = properties.filter(
+			(name) => one.conditioned.has(name) || other.conditioned.has(name)
+		);
+
+		// Each chain a selector of a rule declaring a read property needs, and per
+		// selector what those rules declare.
+		/** @type {Map<string, Compound[]>} */
+		const chains = new Map();
+		/** @type {Map<string, string[]>} */
+		const declaredBy = new Map();
+		/** @type {Set<string>} */
+		const pseudos = new Set(["", "::before", "::after"]);
+		for (const property of properties) {
+			for (const reading of readings) {
+				for (const selector of reading.selectors.get(property) || []) {
+					const declared = declaredBy.get(selector);
+					if (declared === undefined) declaredBy.set(selector, [property]);
+					else if (!declared.includes(property)) declared.push(property);
+					if (chains.has(selector)) continue;
+					for (const [, pseudo] of selector.matchAll(PSEUDOS)) {
+						pseudos.add(`::${pseudo.toLowerCase()}`);
+					}
+					const chain = parseSelector(selector);
+					if (chain !== null) chains.set(selector, chain);
+				}
+			}
+		}
+		const containerNames = [
+			...new Set([...one.containerNames, ...other.containerNames])
+		];
+		const queried = one.queried || other.queried;
+		// A custom property means something only where it is substituted, and that
+		// property is read in its own right, so an element carrying every class
+		// leaves them to the document and the rules that declare them.
+		const substituted = properties.filter((name) => !name.startsWith("--"));
+
+		/**
+		 * Builds the same elements in both frames: the chain each selector needs, and
+		 * each type carrying every class and attribute those name. Each stands in a box
+		 * of its own, so no size read sums the layout of the rest.
+		 * @param {string[]} selectors the selectors to build for
+		 * @returns {{ elements: Element[][], asked: string[][], through: string[][] }} per frame what is read, and per element which properties on which pseudo-elements
+		 */
+		const populate = (selectors) => {
+			/** @type {Set<string>} */
+			// A `span` too: a value dropped can leave a `div` as it was and not a `span`.
+			const named = new Set(["div", "span", ...types]);
+			/** @type {Set<string>} */
+			const classes = new Set();
+			/** @type {Map<string, string>} */
+			const attributes = new Map();
+			for (const selector of selectors) {
+				for (const compound of chains.get(selector) || []) {
+					if (compound.type !== "" && !DOCUMENT_ELEMENTS.has(compound.type)) {
+						named.add(compound.type);
+					}
+					for (const name of compound.classes) classes.add(name);
+					for (const [name, value] of compound.attributes) {
+						attributes.set(name, value);
+					}
+				}
+			}
+			/** @type {string[][]} */
+			const asked = [properties, properties, properties];
+			const every = [...pseudos];
+			/** @type {string[][]} */
+			const through = [every, every, every];
+			const elements = docs.map((doc, at) => {
+				const holder = doc.createElement("div");
+				holder.id = "eq-holder";
+				const root = doc.createElement("div");
+				holder.append(root);
+				/** @type {Element[]} */
+				const list = [doc.documentElement, doc.body, root];
+				/** @returns {Element} a box of its own */
+				const box = () => {
+					const one = doc.createElement("div");
+					one.setAttribute("style", "contain:layout size;height:400px");
+					root.append(one);
+					return one;
+				};
+				for (const selector of selectors) {
+					const chain = chains.get(selector);
+					if (chain === undefined) continue;
+					const last = buildChain(doc, chain, box(), "");
+					// The element the selector reaches; the ones on the way are reached by
+					// selectors of their own.
+					if (last !== null) {
+						list.push(last);
+						if (at === 0) {
+							asked.push(declaredBy.get(selector) || []);
+							// Only a pseudo-element the selector names is one it styles.
+							through.push([
+								"",
+								...[
+									...selector.matchAll(
+										/::?(before|after)(?![\w-])|::([-\w]+)/gi
+									)
+								]
+									.map(
+										([, old, pseudo]) => `::${(old || pseudo).toLowerCase()}`
+									)
+									.filter((pseudo) => pseudos.has(pseudo))
+							]);
+						}
+					}
+				}
+				/** @type {Compound} */
+				const everything = {
+					combinator: "",
+					type: "",
+					classes: [...classes],
+					id: "",
+					attributes: [...attributes],
+					before: 0,
+					after: 0,
+					typed: false,
+					counted: "",
+					has: []
+				};
+				for (const type of named) {
+					const outer = build(doc, { ...everything, type });
+					const inner = build(doc, { ...everything, type: "div" });
+					outer.append(inner);
+					box().append(outer);
+					// The same type carrying nothing, which is what a negated state reaches.
+					const bare = build(doc, {
+						...everything,
+						type,
+						classes: [],
+						attributes: []
+					});
+					box().append(bare);
+					const pieces = [outer, inner, bare];
+					for (const child of types) {
+						const parent = build(doc, { ...everything, type, classes: [] });
+						const plain = build(doc, {
+							...everything,
+							type: child,
+							classes: []
+						});
+						const full = build(doc, { ...everything, type: child });
+						parent.append(plain, full);
+						box().append(parent);
+						pieces.push(parent, plain, full);
+					}
+					list.push(...pieces);
+					if (at === 0) {
+						for (const _piece of pieces) {
+							asked.push(substituted);
+							through.push(every);
+						}
+					}
+				}
+				doc.body.append(holder);
+				return list;
+			});
+			return { elements, asked, through };
+		};
+
+		/**
+		 * Reads both frames at each sample and records what the two compute apart.
+		 * @param {{ elements: Element[][], asked: string[][], through: string[][] }} built what was built
+		 * @param {{ width: number, height: number, box: number, dark?: boolean }[]} samples where to read
+		 * @param {Set<string> | null} only the properties these samples can move, or null for any
+		 */
+		const measure = async (built, samples, only) => {
+			await settle();
+			for (const sample of samples) {
+				if (moved.length >= KEPT) return;
+				for (const [at, frame] of frames.entries()) {
+					frame.style.width = `${sample.width}px`;
+					frame.style.height = `${sample.height}px`;
+					// CSS Color Adjust 1 §2.3: a frame's `prefers-color-scheme` follows
+					// the color scheme its embedding element is used with, and an
+					// element's `light-dark()` the color scheme it is used with itself.
+					frame.style.colorScheme = sample.dark ? "dark" : "";
+					/** @type {HTMLElement} */ (
+						docs[at].documentElement
+					).style.setProperty("color-scheme", sample.dark ? "dark" : "");
+					const holder = /** @type {HTMLElement} */ (
+						docs[at].getElementById("eq-holder")
+					);
+					holder.style.cssText = queried
+						? `container-type:size;container-name:${containerNames.join(" ") || "none"};width:${
+								sample.box || sample.width
+							}px;height:${sample.box || sample.height}px`
+						: "";
+				}
+				const read = built.elements;
+				// Layout first: an `<object>` settles what it renders as only once one runs.
+				/** @returns {boolean[][]} per frame, whether each element has a box */
+				const boxes = () =>
+					read.map((list) =>
+						list.map((element) => element.getClientRects().length !== 0)
+					);
+				let rendered = boxes();
+				// A box in one frame alone is read after a render, so a frame the engine
+				// has yet to lay out is not taken for a sheet hiding the element.
+				if (rendered[0].some((one, i) => one !== rendered[1][i])) {
+					await settle();
+					rendered = boxes();
+				}
+				// Cancelled before any value is read, so none is part way through one.
+				for (const doc of docs) {
+					for (const running of doc.getAnimations()) running.cancel();
+				}
+				/**
+				 * @param {number} i the element
+				 * @param {string} pseudo the pseudo-element, or "" for the element itself
+				 * @param {string[]} names the properties to read
+				 * @returns {[string, string, string, string, string][] | null} what the two compute apart, or null when the pseudo-element renders nothing
+				 */
+				const differ = (i, pseudo, names) => {
+					const styles = [0, 1].map((at) =>
+						windows[at].getComputedStyle(read[at][i], pseudo || null)
+					);
+					// Nothing renders a `::before` or `::after` with no content.
+					if (
+						(pseudo === "::before" || pseudo === "::after") &&
+						NO_CONTENT.test(styles[0].content) &&
+						NO_CONTENT.test(styles[1].content)
+					) {
+						return null;
+					}
+					/** @type {[string, string, string, string, string][]} */
+					const changed = [];
+					for (const name of names) {
+						const a = styles[0].getPropertyValue(name);
+						const b = styles[1].getPropertyValue(name);
+						if (a === b) continue;
+						const x = cascadeValue(name, a);
+						const y = cascadeValue(name, b);
+						if (x !== y && !relaxedEqual(relax, name, x, y, a, b)) {
+							changed.push([name, a, b, x, y]);
+						}
+					}
+					return changed;
+				};
+				/** @type {{ i: number, pseudo: string, at: string, changed: [string, string, string, string, string][] }[]} */
+				let found = [];
+				for (let i = 0; i < read[0].length && found.length < KEPT; i++) {
+					// Without a box in either frame nothing shows the value, and WebKit
+					// resolves such an element's style apart from the tree it stands in.
+					if (!(rendered[0][i] || rendered[1][i])) continue;
+					const asked =
+						only === null
+							? built.asked[i]
+							: built.asked[i].filter((name) => only.has(name));
+					for (const pseudo of built.through[i]) {
+						const changed = differ(i, pseudo, asked);
+						if (changed === null || changed.length === 0) continue;
+						found.push({
+							i,
+							pseudo,
+							at: `${sample.width}x${sample.height}${sample.dark ? " dark" : ""}${sample.box ? ` in ${sample.box}px` : ""}: ${whereIs(read[0][i])}${pseudo}`,
+							changed
+						});
+					}
+				}
+				// WHY: WebKit can hand back one element's style resolved with nothing
+				// inherited — Beer CSS's root `<div>` read every default in one frame
+				// once, with a box in both and its own children inheriting fine. That is
+				// a stale read, not the cascade, and renders alone keep it (seen in CI):
+				// nothing marks the element dirty. So each re-read first dirties it by
+				// setting a custom property and restoring its exact `style` attribute,
+				// leaving `[style]` selectors as they were; a sheet's difference survives.
+				for (let retry = 0; retry < 2 && found.length > 0; retry++) {
+					for (const { i } of found) {
+						for (const list of read) {
+							const element = /** @type {HTMLElement} */ (list[i]);
+							const original = element.getAttribute("style");
+							element.style.setProperty("--eq-dirty", String(retry));
+							if (original === null) element.removeAttribute("style");
+							else element.setAttribute("style", original);
+						}
+					}
+					await settleFrames();
+					found = found.filter((entry) => {
+						const changed = differ(
+							entry.i,
+							entry.pseudo,
+							entry.changed.map(([name]) => name)
+						);
+						if (changed === null || changed.length === 0) return false;
+						entry.changed = changed;
+						return true;
+					});
+				}
+				// WHY: a used length is floored to the layout grid, and a percentage
+				// table multiplies that step — Semantic UI's `td{width:18.75%}` moved
+				// 6/64px over an 11px padding printed at six digits. Layout follows from
+				// computed values, so a length is read again with no box to lay out.
+				const rereading = found.some(({ changed }) =>
+					changed.some(([, , , x, y]) => sameButLengths(x, y))
+				);
+				if (rereading) {
+					for (const list of read) {
+						/** @type {HTMLElement} */ (list[2]).style.setProperty(
+							"display",
+							"none",
+							"important"
+						);
+					}
+				}
+				for (const { i, pseudo, at, changed } of found) {
+					const kept = rereading
+						? changed.filter(([name, , , x, y]) => {
+								if (!sameButLengths(x, y)) return true;
+								const [a, b] = [0, 1].map((side) =>
+									cascadeValue(
+										name,
+										windows[side]
+											.getComputedStyle(read[side][i], pseudo || null)
+											.getPropertyValue(name)
+									)
+								);
+								return !numericallyAlike(a, b);
+							})
+						: changed;
+					if (kept.length > 0 && moved.length < KEPT) {
+						moved.push({ at, moved: kept });
+					}
+				}
+				if (rereading) {
+					for (const list of read) {
+						/** @type {HTMLElement} */ (list[2]).style.removeProperty(
+							"display"
+						);
+					}
+				}
+			}
+		};
+
+		const clear = () => {
+			for (const doc of docs) {
+				const holder = doc.getElementById("eq-holder");
+				if (holder !== null) holder.remove();
+			}
+		};
+
+		// WHY: a value naming a custom property no sheet defines computes to
+		// nothing, which hides a broken `calc()` around it — so each such name holds
+		// a length. One also named with a fallback is left unset, or that would hide.
+		/** @type {string[]} */
+		const unset = [];
+		for (const reading of readings) {
+			for (const name of reading.referenced) {
+				if (
+					readings.every(
+						(each) =>
+							!each.sequences.has(name) &&
+							!each.registered.has(name) &&
+							!each.defaulted.has(name)
+					) &&
+					!unset.includes(name)
+				) {
+					unset.push(name);
+				}
+			}
+		}
+		for (const doc of docs) {
+			/** @type {HTMLElement} */ (doc.documentElement).style.cssText = unset
+				.map((name) => `${name}:1px`)
+				.join(";");
+		}
+
+		let elementCount = 0;
+		let sampled = 0;
+		if (properties.length > 0) {
+			// Everything at two widths, then the dark color scheme and a pixel under,
+			// at and over every length a query names, reading only what the rules
+			// under such a query reach.
+			const whole = populate([...chains.keys()]);
+			elementCount = whole.elements[0].length;
+			await measure(
+				whole,
+				[
+					{ width: 360, height: 800, box: 0 },
+					{ width: 1400, height: 800, box: 0 }
+				],
+				null
+			);
+			clear();
+			sampled = 2;
+			const onlyConditioned = new Set(conditioned);
+			/** @type {Set<string>} */
+			const keys = new Set();
+			for (const reading of readings) {
+				for (const key of reading.atLength.keys()) keys.add(key);
+			}
+			for (const key of [...keys].sort()) {
+				const found = /^(box)?(width|height)(\d+)$/.exec(key);
+				if ((found === null && key !== "dark") || conditioned.length === 0) {
+					continue;
+				}
+				if (sampled + 3 > MAX_SAMPLES || moved.length >= KEPT) break;
+				/** @type {Set<string>} */
+				const reached = new Set();
+				for (const reading of readings) {
+					for (const selector of reading.atLength.get(key) || []) {
+						if (chains.has(selector)) reached.add(selector);
+					}
+				}
+				const part = populate([...reached]);
+				await measure(
+					part,
+					found === null
+						? [360, 1400].map((width) => ({
+								width,
+								height: 800,
+								box: 0,
+								dark: true
+							}))
+						: [
+								Math.max(1, Number(found[3]) - 1),
+								Number(found[3]),
+								Number(found[3]) + 1
+							].map((size) => ({
+								width:
+									found[1] === "box" || found[2] === "height" ? 1400 : size,
+								height:
+									found[1] !== "box" && found[2] === "height" ? size : 800,
+								box: found[1] === "box" ? size : 0
+							})),
+					onlyConditioned
+				);
+				clear();
+				sampled += 3;
+			}
+		}
+		for (const doc of docs) doc.adoptedStyleSheets = [];
+		reports.push({
+			name: pair.name,
+			elements: elementCount,
+			properties: properties.length,
+			samples: sampled,
+			differences: moved
+		});
+	}
+	for (const frame of frames) frame.remove();
+	probe.remove();
+	motionProbe.remove();
+	return reports;
+};
+
+/**
+ * The elements a report names once the printer's own rounding is set aside,
+ * one line each and a few at most.
+ * @param {StyleReport} report what the page found for one pair
+ * @returns {string[]} one line per element that differs
+ */
+const cascadeLines = (report) => {
+	/** @type {string[]} */
+	const out = [];
+	for (const { at, moved } of report.differences) {
+		const real = moved.filter(
+			([, , , one, other]) => !numericallyEqual(one, other)
+		);
+		if (real.length === 0) continue;
+		out.push(
+			`${at} ${real
+				.map(([property, one, other]) => `${property}: ${one} -> ${other}`)
+				.join("; ")}`
+		);
+		if (out.length === 5) break;
+	}
+	return out;
 };
 
 module.exports = {
 	benchmarkDocuments,
 	benchmarkStylesheets,
 	buildCorpus,
+	cascadeLines,
 	collectFixtures,
-	compareRules,
-	conditionSignatures,
+	compareRenders,
+	compareStyles,
 	installHelpers,
 	numericallyEqual
 };

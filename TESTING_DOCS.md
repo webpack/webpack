@@ -4,12 +4,14 @@ This document explains the structure of the `test/` directory in the Webpack pro
 
 ## Folder and File Breakdown
 
-### 1. `__snapshots__/`
+Directories come first, in alphabetical order, then the individual files worth their own note. Add a new entry where the alphabet puts it — the sections are deliberately unnumbered, so nothing has to be renumbered around it.
+
+### `__snapshots__/`
 
 - **Purpose**: Stores Jest snapshot files for comparing output consistency over time.
 - **Usage**: Used for testing UI components, serialized data, or expected module outputs.
 
-### 2. `benchmarkCases/`
+### `benchmarkCases/`
 
 - **Purpose**: Contains test cases for benchmarking Webpack's performance.
 - **Usage**: Measures build times, memory usage, and optimization impact.
@@ -21,82 +23,133 @@ This document explains the structure of the `test/` directory in the Webpack pro
 
 `exec` is reported per scenario, so a `development`/`production` pair shows what scope hoisting and minification are worth at runtime.
 
-### 3. `cases/`
+### `cases/`
 
 - **Purpose**: General test cases covering core functionalities.
 - **Usage**: Includes unit and integration tests for various modules and features.
 
-### 4. `configCases/`
+### `configCases/`
 
 - **Purpose**: Tests related to Webpack configurations.
 - **Usage**: Ensures that Webpack’s configuration (e.g., loaders, plugins) functions correctly.
 
-### 5. `fixtures/`
+### `external/`
+
+- **Purpose**: Every git submodule webpack checks out for testing — today the four spec corpora below and terser's, swc's and oxc's own tests. Nothing here is webpack's to edit: each directory belongs to its upstream project, and this repository only pins a commit.
+
+#### `test262-cases/`
+
+- **Purpose**: ECMAScript test262 conformance test cases.
+- **Usage**: Git submodule — initialize with `git submodule update --init test/external/test262-cases`. Test runners: `test/specCases/test262.spectest.js`, which builds and runs each test in development, in production unminified (a failure there is webpack's own, not a minimizer's), and in production once per JavaScript minimizer: terser, and webpack's printer as `experiments.futureDefaults` switches it. The minified modes skip the `fn-name` cases a renamed binding changes and keep function and class names and turn `pure_getters` off, as test262 reads names and properties that throw; the printer also runs with `pure_conversions` and `pure_heritage` off, as test262 converts and extends values that run code or throw on purpose. What each minimizer still fails is listed by reason in its `MINIFIED_FAILURES` table, and a listed case that passes fails the suite until removed. And `test/specCases/minify-corpora.spectest.js`, which minifies each test with webpack's printer and with terser.
+
+#### `html5lib-tests/`
+
+- **Purpose**: WHATWG html5lib-tests tokenizer conformance cases for `lib/html/syntax`.
+- **Usage**: Git submodule — initialize with `git submodule update --init --depth 1 test/external/html5lib-tests test/external/wpt`: the runner reads both corpora. Test runner: `test/specCases/html5lib.spectest.js` (`yarn test:html5lib`) compiles every input as a webpack HTML entry to confirm the full pipeline handles it without crashing.
+
+#### `wpt/`
+
+- **Purpose**: web-platform-tests, read two ways. `html/syntax/parsing/resources/*.dat` is the HTML tree-construction conformance corpus for `parseHtml` (html5lib-tests dropped its copy in `224991e`). The `.html` documents under `html/`, `conformance-checkers/` and `dom/nodes`, plus the declarations the `css/**/parsing/` tests state a verdict for, are the printers' corpus: minifying must not change the DOM webpack's parser builds, the DOM Chrome builds, or the style Chrome computes.
+- **Usage**: Git submodule — initialize with `git submodule update --init --depth 1 test/external/wpt` (the repository is ~161k files, so keep it shallow). Test runners: `test/specCases/html5lib.spectest.js` (`yarn test:html5lib`), which also reads `test/external/html5lib-tests` — initialize both to run the whole suite — and `test/specCases/syntaxEquivalence.spectest.js` (`yarn test:syntax-equivalence`), whose browser tiers need a Chrome (`CHROME_EXECUTABLE_PATH` picks a binary other than the pinned build). A document that is not UTF-8 is skipped: the encoding fixtures are UTF-16, which no string API can read as source.
+
+#### `css-parsing-tests/`
+
+- **Purpose**: CSS Syntax Level 3 conformance corpus for `lib/css/syntax`.
+- **Usage**: Git submodule — initialize with `git submodule update --init test/external/css-parsing-tests`. Test runner: `test/specCases/cssParsing-webpack.spectest.js` (`yarn test:css-parsing`) compiles every input as a webpack CSS entry to confirm the full pipeline handles it without crashing.
+
+#### `xml-conformance-suite/`
+
+- **Purpose**: the W3C XML Conformance Test Suite (lddubeau's packaging) for `parseHtml(…, { xml: true })` and the XML printer.
+- **Usage**: Git submodule — initialize with `git submodule update --init --depth 1 test/external/xml-conformance-suite`. Test runner: `test/specCases/xmlconf.spectest.js` (`yarn test:xmlconf`) compares every document the suite gives an expected output for to James Clark's canonical form, and checks that every document, minified or beautified, reads back to the canonical form of its source. Documents needing an external entity or DTD, and XML 1.1 ones, are counted rather than run. Without the submodule the suite registers a no-op and passes, so a green run then says nothing.
+
+#### `swc/`
+
+- **Purpose**: swc's repository, read only under `crates/swc_ecma_minifier/tests`: its fixtures with their configs, the tests `exec.rs` and `mangle.rs` write inline, and the libraries it measures itself on. Each is held to terser's bytes like the terser corpora; a test with an `expected.stdout`, and every `exec.rs` test, also has its outputs run, and webpack's output may be no bigger than each fixture's recorded `output.js`, nor than what swc's port of a terser case records when its `passing.txt` lists it, unless `SWC_SMALLER` lists why.
+- **Usage**: Git submodule — initialize with `git submodule update --init --depth 1 test/external/swc`. Test runner: `test/specCases/minify-corpora.spectest.js` (`yarn test:minify-corpora`).
+
+#### `oxc/`
+
+- **Purpose**: oxc's repository, pinned to the commit that released webpack's `oxc-minify` devDependency and read only under `crates/oxc_minifier/tests`: the source each `test…(` helper call in its Rust tests passes first, but TypeScript. Each is held to terser's bytes like the other corpora, and under the default minimizer's options every source of every corpus but test262 is also minified by `oxc-minify`: webpack's output may be no bigger than oxc's unless `OXC_SMALLER` lists why, and an oxc output that misprints is no lead.
+- **Usage**: Git submodule — initialize with `git submodule update --init --depth 1 test/external/oxc`. Test runner: `test/specCases/minify-corpora.spectest.js` (`yarn test:minify-corpora`), which also fails when the pin and the installed `oxc-minify` disagree.
+
+#### `terser/`
+
+- **Purpose**: terser's own repository, pinned to webpack's `terser` devDependency. Its `test/compress` cases and `test/input` files are two of the seven corpora `lib/javascript/syntax-printer.js` is held to (test262, swc's fixtures, `exec.rs` and `mangle.rs` tests, and oxc's tests are the other five): each source is minified by terser as published and by webpack's printer under several option sets, and the outputs, or the errors, must be byte-for-byte the same, but for what webpack's `correct` phase fixes. A case stating its `expect_stdout` also has each output run in terser's sandbox, which must print it — or, for `expect_stdout: true`, do whatever its input does, a throw or silence included.
+- **Usage**: Git submodule — initialize with `git submodule update --init --depth 1 test/external/terser`. Test runner: `test/specCases/minify-corpora.spectest.js` (`yarn test:minify-corpora`), which also fails when the pin and the installed `terser` disagree, so bumping the dependency means moving the pin with it. A new corpus is one entry in its `CORPORA` list.
+
+### `fixtures/`
 
 - **Purpose**: Stores sample/mock data used in tests.
 - **Usage**: Helps in creating consistent test cases with predefined inputs.
 
-### 6. `helpers/`
+### `harness/`
+
+- **Purpose**: What runs the suites, as opposed to what they test. Jest's lifecycle (`globalSetup.js`, `globalTeardown.js`, `setupTestFramework.js`), the `patch-node-env.js` test environment, `runtimeCrashReporter.js`, the case `runner/`, the `snapshot/` resolver and matchers, `benchmark/`, and `runtimes/`.
+- **`runtimes/`**: The preload and setup files that let jest run under a non-Node runtime — `bun-preload.js` and `bun-sandbox-setup.js` for `yarn test:bun`, `deno-worker-setup.js` and `deno-import-map.json` for `yarn test:deno`. Wired in through `jest.config.js` and the `test:base:bun` / `test:base:deno` scripts.
+- **Not helpers**: a reusable assertion or fixture belongs in `helpers/`; `harness/` is only for machinery the test runner itself loads.
+
+### `helpers/`
 
 - **Purpose**: Utility functions and scripts to assist in testing.
 - **Usage**: Provides reusable functions for mock data generation, cleanup, and assertions.
 
-### 7. `hotCases/`
+### `hotCases/`
 
 - **Purpose**: Focuses on Webpack’s Hot Module Replacement (HMR) functionality.
 - **Usage**: Ensures live reloading and hot updates work correctly.
 
-### 8. `hotPlayground/`
+### `hotPlayground/`
 
-- **Purpose**: An experimental space for testing HMR features.
-- **Usage**: Allows exploration of new HMR implementations.
+- **Purpose**: A hand-driven counterpart to `hotCases/` — those assert what an update does, this one lets you watch it happen in a browser. One panel per module type and ECMAScript form: an html entry, CommonJS, CSS, CSS modules, JSON via an import attribute, all three asset types, async and source-phase WebAssembly, `import defer` and an async chunk, plus a panel driving the HMR API itself (`data`/`dispose`, `addStatusHandler`, `check`, `invalidate`). Nothing here runs in CI.
+- **Usage**: `yarn playground` serves it on `http://localhost:8080` with hot reloading on; edit any file and watch the page. See `test/hotPlayground/README.md` for what each file demonstrates.
 
-### 9. `memoryLimitCases/json`
+### `memoryLimitCases/`
 
 - **Purpose**: Contains test cases related to memory limits.
 - **Usage**: Ensures Webpack doesn’t exceed memory constraints.
 
-### 10. `statsCases/`
+### `specCases/`
+
+- **Purpose**: Holds the runners for specification-conformance suites.
+- **Files**:
+  - `test262.spectest.js` — `yarn test:test262`
+  - `test262-parser.spectest.js` — `yarn test:test262-parser`
+  - `html5lib.spectest.js` — `yarn test:html5lib`
+  - `syntaxEquivalence.spectest.js` — `yarn test:syntax-equivalence`
+  - `cssParsing-webpack.spectest.js` — `yarn test:css-parsing`
+  - `xmlconf.spectest.js` — `yarn test:xmlconf`
+  - `minify-corpora.spectest.js` — `yarn test:minify-corpora`
+  - `js-fuzz.spectest.js` — `yarn test:js-fuzz`: programs from `test/helpers/jsFuzzProgram.js`, in the sloppy ES5 terser's ufuzz writes, in modern syntax, as modules importing a fixed `dep` and as webpack-shaped bundles, minified under ufuzz's option sets, webpack's and random ones; the parser is held to acorn's tree on each program and output, the printer to the tree it read and to its own output, each output to what its program prints and exports, the default set's source map to its output and source, and the output to what it prints minified again. Needs no submodule; `JS_FUZZ_SEED=<n>` replays one seed, `JS_FUZZ_SEED=random` runs a new one named in the test's title, and `JS_FUZZ_PROGRAMS` sets the programs per seed.
+
+### `statsCases/`
 
 - **Purpose**: Tests focused on Webpack’s statistical outputs.
 - **Usage**: Verifies correct bundle sizes, dependencies, and optimizations.
 
-### 11. `typesCases/`
+### `templates/`
+
+- **Purpose**: The suite drivers — `TestCases.js`, `ConfigTestCases.js`, `HotTestCases.js`, `WatchTestCases.js` — each exporting `describeCases(config)`.
+- **Usage**: The `*.test.js` / `*.basictest.js` / `*.longtest.js` files at the top of `test/` are thin shims that call `describeCases` with one suite's options, so one driver serves every variant (targets, devtools, cache modes). Jest parallelizes per file, which is why the variants stay separate files rather than being folded into one.
+- **Variants**: `variants.js` holds the option sets the `TestCases*` and `HotTestCases*` shims run under, re-exported from each driver as `variants`. Add a variant by adding an entry there and one shim naming it — the shims stay separate files because jest parallelizes per file.
+- **Note**: `templates/` is a sibling of the case directories it runs (`cases/`, `configCases/`, `hotCases/`, `watchCases/`), so a driver resolves paths from the shared `test/` root via `testRootDirectory` (`path.join(__dirname, "..")`), never against `__dirname`.
+
+### `typesCases/`
 
 - **Purpose**: Type-checking tests, likely for TypeScript integration.
 - **Usage**: Ensures proper type definitions and compliance.
 
-### 12. `test262-cases/`
+### `unitCases/`
 
-- **Purpose**: ECMAScript test262 conformance test cases.
-- **Usage**: Git submodule — initialize with `git submodule update --init test/test262-cases`. Test runner: `test/test262.spectest.js`.
+- **Purpose**: Contains `*.unittest.js` unit tests for various functionalities.
+- **Usage**: Ensures individual modules and functions work as expected.
+- **Layout**: the syntax tests sit in one folder per language — `javascript/` (`parser`, `webpack-parser`, `scope`, `printer`, `minify`, `no-acorn`), `css/`, `html/`, `xml/` and `json/` — and the tests of the `tooling/` scripts in `tooling/`. The rest stay at the top level.
 
-### 12b. `html5lib-tests/`
-
-- **Purpose**: WHATWG html5lib-tests tokenizer conformance cases for `lib/html/syntax`.
-- **Usage**: Git submodule — initialize with `git submodule update --init test/html5lib-tests`. Test runner: `test/html5lib-webpack.spectest.js` (`yarn test:html5lib`) compiles every input as a webpack HTML entry to confirm the full pipeline handles it without crashing.
-
-### 12c. `wpt/`
-
-- **Purpose**: web-platform-tests, read two ways. `html/syntax/parsing/resources/*.dat` is the HTML tree-construction conformance corpus for `parseHtml` (html5lib-tests dropped its copy in `224991e`). The `.html` documents under `html/`, `conformance-checkers/` and `dom/nodes`, plus the declarations the `css/**/parsing/` tests state a verdict for, are the printers' corpus: minifying must not change the DOM webpack's parser builds, the DOM Chrome builds, or the style Chrome computes.
-- **Usage**: Git submodule — initialize with `git submodule update --init --depth 1 test/wpt` (the repository is ~161k files, so keep it shallow). Test runners: `test/html5lib.spectest.js` (`yarn test:html5lib`), which also reads `test/html5lib-tests` — initialize both to run the whole suite — and `test/syntaxEquivalence.spectest.js` (`yarn test:syntax-equivalence`), whose browser tiers need a Chrome (`PUPPETEER_EXECUTABLE_PATH` picks a binary other than the installed channel). A document that is not UTF-8 is skipped: the encoding fixtures are UTF-16, which no string API can read as source.
-
-### 12d. `css-parsing-tests/`
-
-- **Purpose**: CSS Syntax Level 3 conformance corpus for `lib/css/syntax`.
-- **Usage**: Git submodule — initialize with `git submodule update --init test/css-parsing-tests`. Test runner: `test/cssParsing-webpack.spectest.js` (`yarn test:css-parsing`) compiles every input as a webpack CSS entry to confirm the full pipeline handles it without crashing.
-
-### 13. `watchCases/`
+### `watchCases/`
 
 - **Purpose**: Tests for Webpack’s watch mode functionality.
 - **Usage**: Ensures file changes trigger correct rebuild behavior.
 
-### 14. `*.unittest.js`
-
-- **Purpose**: Contains unit tests for various functionalities.
-- **Usage**: Ensures individual modules and functions work as expected.
-
-### 15. `CodeSizeTestCases.size.js`
+### `CodeSizeTestCases.size.js`
 
 - **Purpose**: Measures how large the code webpack generates is, so a change to `lib/` that grows (or shrinks) every bundle is visible.
 - **Usage**: `yarn test:size` builds every `configCases/` case — one plain Node.js process, outside jest, no worker pool — and writes a JSON report of what each case emitted: the raw, gzip, brotli and zstd size of every asset, plus a per-runtime-module breakdown (total bytes over the suite, how many cases emit it, the biggest single instance) — which is what shows _which_ runtime grew, which is no longer emitted at all, and which one is simply large. The CI job (`.github/workflows/code-size.yml`) compares the report against the one `main` last uploaded, posts it as a pull request comment (updated in place on every push) and repeats it in the job summary.
@@ -105,10 +158,16 @@ This document explains the structure of the `test/` directory in the Webpack pro
 - **Options**: `--output <file>` (report path), `--baseline <file>` (report to compare against), `--summary <file>` (append the markdown comparison, e.g. `$GITHUB_STEP_SUMMARY`), `--filter` / `--negative-filter` (regexps matched against `<category>/<case>`, also read from `FILTER` / `NEGATIVE_FILTER`).
 - **Note**: the cases are built with the defaults a user gets — minification on, no `output.pathinfo` — not with the `ConfigTestCases` ones. Needs Node.js >= 22.15 for zstd.
 
-### 16. `BannerPlugin.test.js`
+### `unitCases/BannerPlugin.unittest.js`
 
 - **Purpose**: Tests Webpack’s `BannerPlugin` functionality.
 - **Usage**: Ensures that the plugin correctly adds banners to the bundled files.
+
+## Writing a test
+
+**Behavior across rebuilds is a `watchCases/` case, never a unit test calling `compiler.run` in a loop** — `output.clean`, HMR update files, caches, anything one build leaves for the next. Each numbered step directory is one rebuild; its tests read `WATCH_STEP`, `STATS_JSON` and `COMPILER`, and the config can read the step from `test/helpers/currentWatchStep`. What the output can't show (which files a plugin touched) is recorded by a plugin in the config, which pushes a `compilation.errors` entry when it differs (`watchCases/clean/removed-assets`). A step needing time to pass waits in its own `it` with a longer timeout (`watchCases/clean/hot-update-slow-rebuild`).
+
+**Snapshot printed code; assert everything else.** When the thing tested _is_ generated output — bundles, minified CSS/HTML, serialized ASTs, stats text — use `toMatchSnapshot()`, not `expect(...).toBe(...)` on fragments (which pins one substring and ignores every other byte). For behavior, invariants, equivalences and error paths use explicit `expect`s; a snapshot there only records what happened to be true. Never snapshot a value some machine can't produce (a snapshot skipped without an optional browser or native binary is reported obsolete and fails the run there), and keep control characters out of snapshots (one NUL makes git treat the file as binary and hide its diff).
 
 ## Example Test Case Structure
 
@@ -138,18 +197,45 @@ During the test run, webpack compiles this project and compares the result with 
 
 ### Suites that drive a real browser
 
-`ProfilingPlugin.unittest.js`, `syntaxEquivalence.spectest.js` and
-`WebpackDevServer.longtest.js` launch Chrome through `test/helpers/launchChrome.js`.
+`unitCases/ProfilingPlugin.unittest.js`, `specCases/syntaxEquivalence.spectest.js` and
+`WebpackDevServer.longtest.js` launch a browser through `test/helpers/launchBrowser.js`,
+which drives all three engines with `playwright-core`.
 **A browser that will not launch fails the suite — it is never skipped**, so no
 environment can report these checks as passing without having run them. The
-helper uses the installed Chrome channel; set `PUPPETEER_EXECUTABLE_PATH` to
-point at another binary.
+helper only launches the builds playwright-core pins (Chrome for Testing for
+Chrome), never the machine's own Chrome, which moves with the machine rather than
+the lockfile: run `yarn setup:browsers chrome` first, or set
+`CHROME_EXECUTABLE_PATH` to point at another binary.
+
+`syntaxEquivalence.spectest.js` is the one that reads more than one engine:
+`EQUIVALENCE_BROWSER` takes `chrome`, `firefox` or `webkit`, and CI runs all
+three as one matrix. Fetch the browser first — `yarn setup:browsers` (all three,
+or name one; `--with-deps` also installs the system libraries Firefox and WebKit
+need) — which installs into playwright's own cache (`PLAYWRIGHT_BROWSERS_PATH`,
+defaulting to `~/.cache/ms-playwright` on Linux). Firefox and WebKit are
+playwright's own builds of those engines, patched for automation, so
+`FIREFOX_EXECUTABLE_PATH` and `WEBKIT_EXECUTABLE_PATH` must point at such a
+build, never a stock browser; Chrome is the stock Chrome for Testing, and
+`CHROME_EXECUTABLE_PATH` takes any Chrome. It compares
+effects, never CSSOM text: a stylesheet by the styles elements built from its
+selectors compute, at the widths its queries switch on; a page by its DOM and
+its render, with the dark color scheme read through each frame's own. Media is
+emulated on Chromium only, the engine the filed defects were measured on, so only
+there is a stylesheet naming print also read under it. A defect only one
+engine has is filed against it with a reason opening `<engine> only:` rather
+than tolerated in all three, and each list must match exactly, so a defect the
+engine fixes fails until its entry goes. A workaround in the suite's own code
+gets the same treatment through a probe in `ENGINE_QUIRKS`.
+
+Every engine is the build the lockfile pins: the ones the installed
+`playwright-core` ships. Dependabot bumps it in a `browsers` group of its own, so
+a new engine arrives in one pull request, and a defect or quirk it fixes fails
+there rather than under unrelated changes.
 
 They are excluded from `test:bun` / `test:deno` (see the `--testPathIgnorePatterns`
-in those scripts): under Jest on Bun, loading the ESM-only `puppeteer-core` fails
-outright with "Provided module is not an instance of Module", and Jest's
-`require(ESM)` fallback needs Node >= 24.9. Drop the exclusion once those
-runtimes can load it.
+in those scripts). They were left out while `puppeteer-core`, which these suites
+used before, could not load under either runtime; `playwright-core` has not been
+tried there yet.
 
 ### Generated code is held to `output.environment`
 
@@ -194,7 +280,62 @@ the neutral platform);
 each flag off on its own against an otherwise current target, which a version
 sweep cannot do; and `esm-environment` repeats both over ESM output.
 
+### External test corpora
+
+Upstream test suites webpack runs against but doesn't maintain — upstream's to change, ours only to pin.
+
+Git submodules, all under `test/external/`, checked out on demand: `yarn setup` doesn't fetch them, and each CI job fetches only its own, one commit deep.
+
+- `test/external/test262-cases` — [tc39/test262](https://github.com/tc39/test262); fetched by `test262`, `parser (js)`, `parser (minify-corpora)`
+- `test/external/html5lib-tests` — [html5lib/html5lib-tests](https://github.com/html5lib/html5lib-tests); fetched by `parser (html)`
+- `test/external/wpt` — [web-platform-tests/wpt](https://github.com/web-platform-tests/wpt); fetched by `parser (html)`, `syntax-equivalence` (browsers)
+- `test/external/css-parsing-tests` — [CourtBouillon/css-parsing-tests](https://github.com/CourtBouillon/css-parsing-tests); fetched by `parser (css)`
+- `test/external/xml-conformance-suite` — [lddubeau/xml-conformance-suite](https://github.com/lddubeau/xml-conformance-suite) (the W3C XML Conformance Test Suite); fetched by `parser (xml)`
+- `test/external/terser` — [terser/terser](https://github.com/terser/terser), pinned to the installed `terser`'s version; fetched by `parser (minify-corpora)`
+- `test/external/swc` — [swc-project/swc](https://github.com/swc-project/swc), read only under `crates/swc_ecma_minifier/tests`; fetched by `parser (minify-corpora)`
+- `test/external/oxc` — [oxc-project/oxc](https://github.com/oxc-project/oxc), pinned to the installed `oxc-minify`'s release and read only under `crates/oxc_minifier/tests`; fetched by `parser (minify-corpora)`
+
+```sh
+git submodule update --init --recursive --depth 1   # check out the commits the repo pins
+git submodule update --init --recursive --remote --depth 1 # move every pin to its upstream tip
+```
+
+Keep `--depth 1` (`wpt` alone is ~161k files). `--remote` changes the recorded commits, so `git status` shows the paths modified — commit that only once CI is green on them, or `git submodule update` back to the pins.
+
+One upstream corpus is vendored rather than pinned as a submodule:
+
+- `test/fixtures/acorn-corpus.json` — acorn's test suite — the one upstream corpus vendored rather than pinned, because acorn's npm tarball ships no tests. `unitCases/javascript/parser.unittest.js` holds both webpack parser entry points to it and owns recording it (no generator script or `package.json` entry): it replays acorn's `test/tests*.js` against a recording driver, keeping sources and options but never expected trees, which come from acorn itself. Bumping the `acorn` devDependency moves the corpus; to refresh, clone acorn at the new version into `node_modules/.cache/acorn-<version>` and re-run with `WEBPACK_UPDATE_ACORN_CORPUS=1`. With that checkout present the run checks the vendored corpus against it; without it (CI, most machines) the corpus stands on the version it names, which the run pins to the installed acorn.
+
+### Running one integration case
+
+**Run one integration case** by name (`<category> <case-name>`, e.g. `css basic`):
+
+```sh
+yarn test:basic --testPathPatterns="ConfigTestCases" --testNamePattern="<category> <case>"
+```
+
+Swap in `StatsTestCases`, `HotTestCases`, `WatchTestCases`, … (full matrix in [below](#how-to-run-tests)). Prefix `WEBPACK_TEST_STATS=1` to also write each build's verbose `stats.txt` (`stats.<step>.txt` for watch cases) next to its output under `test/js/`; it's off by default because it costs about as much as the build. The `test262`, `html5lib`, `syntax-equivalence` and `css-parsing` suites need submodules — run `git submodule update --init --depth 1 test/external/test262-cases test/external/html5lib-tests test/external/wpt test/external/css-parsing-tests` first, or they fail confusingly.
+
+**A `configCases/` case** is a mini project: `index.js` (assertions; a throw fails) plus `webpack.config.js`; the emitted bundle is executed, so it must run. Optional: `errors.js` / `warnings.js` export matcher arrays for expected diagnostics (otherwise any error/warning fails the case); `test.filter.js` returns `false` to skip (e.g. by Node version when the fixture itself needs newer syntax — see [Target the Node baseline](AGENTS.md#target-the-node-baseline)); `test.config.js` customizes the run (e.g. `findBundle`). Put DOM changes such as a server-rendered `<link>` in `setupDocument(document, { options, index, target })`, which runs once per run before any bundle executes, never in `moduleScope`, which runs again for every module and so repeats them.
+
 ## How to Run Tests
+
+### More scripts
+
+Every command is a `package.json` script; `AGENTS.md` lists the few whose use isn't obvious. The rest:
+
+- `yarn setup` — Install dependencies and link the checkout as `webpack`; non-interactive off a TTY.
+- `yarn tsc` — Type check the `lib/` JSDoc.
+- `yarn validate:changeset` — Validate pending `.changeset/` files.
+- `yarn test:unit` — All `*.unittest.js`.
+- `yarn test:integration` — Integration suites (`basictest`/`longtest`/`test`).
+- `yarn test:test262` / `test:html5lib` / `test:css-parsing` / `test:xmlconf` — Spec-conformance suites.
+- `yarn test:minify-corpora` — webpack's JS minifier vs the published one it replaces, byte for byte, over every JS corpus ([details](docs/syntax.md#javascript)).
+- `yarn test:syntax-equivalence` — HTML/CSS printers vs a real browser's reading of their output (`configCases`, `wpt`).
+- `yarn test:size` — Generated-code size over all `configCases/` (per asset, plus runtime modules per runtime).
+- `yarn cover:unit` — Unit-test coverage.
+- `yarn types:cover` — Share of `lib/` that is precisely typed.
+- `yarn build:examples` — Build `examples/` (verify after changing options).
 
 To execute all tests:
 
@@ -204,20 +345,22 @@ yarn test
 
 **Choose test command based on modified directory:**
 
-| Modified directory/file   | Command                                                                                                                                    |
-| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| `test/*.unittest.js`      | `yarn test:base --testPathPatterns="<filename>"`                                                                                           |
-| `test/cases/`             | `yarn test:basic`                                                                                                                          |
-| `test/configCases/`       | `yarn test:basic --testPathPatterns="ConfigTestCases"`                                                                                     |
-| `test/statsCases/`        | `yarn test:basic --testPathPatterns="StatsTestCases"`                                                                                      |
-| `test/watchCases/`        | `yarn test:base --testPathPatterns="WatchTestCases"`                                                                                       |
-| `test/hotCases/`          | `yarn test:base --testPathPatterns="HotTestCases"`                                                                                         |
-| `test/benchmarkCases/`    | `FILTER="<case-name>" yarn benchmark`                                                                                                      |
-| `lib/runtime/`            | `yarn test:size` (size of the generated code; `--filter "<category>/"` narrows it)                                                         |
-| `test/test262-cases/`     | `yarn test:test262` (requires `git submodule update --init test/test262-cases` first)                                                      |
-| `test/html5lib-tests/`    | `yarn test:html5lib` (requires `git submodule update --init test/html5lib-tests` first)                                                    |
-| `test/wpt/`               | `yarn test:html5lib` + `yarn test:syntax-equivalence` (require `git submodule update --init --depth 1 test/html5lib-tests test/wpt` first) |
-| `test/css-parsing-tests/` | `yarn test:css-parsing` (requires `git submodule update --init test/css-parsing-tests` first)                                              |
+| Modified directory/file                | Command                                                                                                                                                      |
+| -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `test/unitCases/**/*.unittest.js`      | `yarn test:base --testPathPatterns="<filename>"`                                                                                                             |
+| `test/specCases/`                      | Run the matching `yarn test:<suite>` command                                                                                                                 |
+| `test/cases/`                          | `yarn test:basic`                                                                                                                                            |
+| `test/configCases/`                    | `yarn test:basic --testPathPatterns="ConfigTestCases"`                                                                                                       |
+| `test/statsCases/`                     | `yarn test:basic --testPathPatterns="StatsTestCases"`                                                                                                        |
+| `test/watchCases/`                     | `yarn test:base --testPathPatterns="WatchTestCases"`                                                                                                         |
+| `test/hotCases/`                       | `yarn test:base --testPathPatterns="HotTestCases"`                                                                                                           |
+| `test/benchmarkCases/`                 | `FILTER="<case-name>" yarn benchmark`                                                                                                                        |
+| `lib/runtime/`                         | `yarn test:size` (size of the generated code; `--filter "<category>/"` narrows it)                                                                           |
+| `test/external/test262-cases/`         | `yarn test:test262` (requires `git submodule update --init test/external/test262-cases` first)                                                               |
+| `test/external/html5lib-tests/`        | `yarn test:html5lib` (requires `git submodule update --init --depth 1 test/external/html5lib-tests test/external/wpt` first)                                 |
+| `test/external/wpt/`                   | `yarn test:html5lib` + `yarn test:syntax-equivalence` (require `git submodule update --init --depth 1 test/external/html5lib-tests test/external/wpt` first) |
+| `test/external/css-parsing-tests/`     | `yarn test:css-parsing` (requires `git submodule update --init test/external/css-parsing-tests` first)                                                       |
+| `test/external/xml-conformance-suite/` | `yarn test:xmlconf` (requires `git submodule update --init --depth 1 test/external/xml-conformance-suite` first; without it the suite passes as a no-op)     |
 
 **Running a single test case** with `--testNamePattern`. The test name format is `<category> <case-name>` (e.g., `css basic`, `asset url`):
 

@@ -1053,6 +1053,32 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "experiments-lazy-compilation-test-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS; a \`!\` prefix excludes what it matches.",
+        "multiple": true,
+        "path": "experiments.lazyCompilation.test.glob[]",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS; a \`!\` prefix excludes what it matches.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "experiments-lazy-compilation-test-glob-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in 'experiments.lazyCompilation.test.glob' configuration. A list of glob patterns.",
+        "multiple": false,
+        "path": "experiments.lazyCompilation.test.glob",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in 'experiments.lazyCompilation.test.glob' configuration. A list of glob patterns.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "experiments-source-import": Object {
     "configs": Array [
       Object {
@@ -1392,13 +1418,19 @@ Object {
   "ignore-warnings-file": Object {
     "configs": Array [
       Object {
-        "description": "A RegExp to select the origin file for the warning.",
+        "description": "A RegExp or a glob to select the origin file for the warning.",
         "multiple": true,
         "path": "ignoreWarnings[].file",
         "type": "RegExp",
       },
+      Object {
+        "description": "A glob matching the origin file for the warning at any depth.",
+        "multiple": true,
+        "path": "ignoreWarnings[].file",
+        "type": "string",
+      },
     ],
-    "description": "A RegExp to select the origin file for the warning.",
+    "description": "A RegExp or a glob to select the origin file for the warning. A glob matching the origin file for the warning at any depth.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -2292,8 +2324,14 @@ Object {
         "path": "module.noParse[]",
         "type": "path",
       },
+      Object {
+        "description": "A glob, when it matches the module's resource path at any depth the module is not parsed.",
+        "multiple": true,
+        "path": "module.noParse[]",
+        "type": "string",
+      },
     ],
-    "description": "A regular expression, when matched the module is not parsed. An absolute path, when the module starts with this path it is not parsed.",
+    "description": "A regular expression, when matched the module is not parsed. An absolute path, when the module starts with this path it is not parsed. A glob, when it matches the module's resource path at any depth the module is not parsed.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -4217,6 +4255,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "module-parser-html-chunk-name": Object {
+    "configs": Array [
+      Object {
+        "description": "Name the chunk an extracted \`<script>\`/\`<link>\` tag becomes, in place of the page and the tag's position. A string may carry \`[page]\` (the page's path, escaped for a name), \`[name]\` (the tag's own basename, empty for an inline body), \`[index]\` (the tag's position in the page) and \`[type]\`; a function is called with the same values and returns the name. A \`<!-- webpackChunkName: \\"...\\" -->\` comment before a tag wins over it, and either way the name is also the stem the chunk's file is emitted under.",
+        "multiple": false,
+        "path": "module.parser.html.chunkName",
+        "type": "string",
+      },
+    ],
+    "description": "Name the chunk an extracted \`<script>\`/\`<link>\` tag becomes, in place of the page and the tag's position. A string may carry \`[page]\` (the page's path, escaped for a name), \`[name]\` (the tag's own basename, empty for an inline body), \`[index]\` (the tag's position in the page) and \`[type]\`; a function is called with the same values and returns the name. A \`<!-- webpackChunkName: \\"...\\" -->\` comment before a tag wins over it, and either way the name is also the stem the chunk's file is emitted under.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "module-parser-html-sources": Object {
     "configs": Array [
       Object {
@@ -4838,6 +4889,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-javascript-auto-esm": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of EcmaScript Modules syntax.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.esm",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of EcmaScript Modules syntax.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-parser-javascript-auto-exports-presence": Object {
     "configs": Array [
       Object {
@@ -4918,13 +4982,13 @@ Object {
   "module-parser-javascript-auto-harmony": Object {
     "configs": Array [
       Object {
-        "description": "Enable/disable parsing of EcmaScript Modules syntax.",
+        "description": "Deprecated in favor of \\"esm\\". Enable/disable parsing of EcmaScript Modules syntax.",
         "multiple": false,
         "path": "module.parser.javascript/auto.harmony",
         "type": "boolean",
       },
     ],
-    "description": "Enable/disable parsing of EcmaScript Modules syntax.",
+    "description": "Deprecated in favor of \\"esm\\". Enable/disable parsing of EcmaScript Modules syntax.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -5384,6 +5448,23 @@ Object {
     "description": "Enable/disable parsing of System.js special syntax like System.import, System.get, System.set and System.register.",
     "multiple": false,
     "simpleType": "boolean",
+  },
+  "module-parser-javascript-auto-top-level-this": Object {
+    "configs": Array [
+      Object {
+        "description": "Set what top-level \\"this\\" refers to in a non-ES module: \\"exports\\" (the exports object, as in Node.js) or \\"global\\" (the global object, as in a classic script).",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.topLevelThis",
+        "type": "enum",
+        "values": Array [
+          "exports",
+          "global",
+        ],
+      },
+    ],
+    "description": "Set what top-level \\"this\\" refers to in a non-ES module: \\"exports\\" (the exports object, as in Node.js) or \\"global\\" (the global object, as in a classic script).",
+    "multiple": false,
+    "simpleType": "string",
   },
   "module-parser-javascript-auto-typescript": Object {
     "configs": Array [
@@ -6149,6 +6230,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-javascript-dynamic-esm": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of EcmaScript Modules syntax.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.esm",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of EcmaScript Modules syntax.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-parser-javascript-dynamic-exports-presence": Object {
     "configs": Array [
       Object {
@@ -6229,13 +6323,13 @@ Object {
   "module-parser-javascript-dynamic-harmony": Object {
     "configs": Array [
       Object {
-        "description": "Enable/disable parsing of EcmaScript Modules syntax.",
+        "description": "Deprecated in favor of \\"esm\\". Enable/disable parsing of EcmaScript Modules syntax.",
         "multiple": false,
         "path": "module.parser.javascript/dynamic.harmony",
         "type": "boolean",
       },
     ],
-    "description": "Enable/disable parsing of EcmaScript Modules syntax.",
+    "description": "Deprecated in favor of \\"esm\\". Enable/disable parsing of EcmaScript Modules syntax.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -6791,6 +6885,23 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-javascript-dynamic-top-level-this": Object {
+    "configs": Array [
+      Object {
+        "description": "Set what top-level \\"this\\" refers to in a non-ES module: \\"exports\\" (the exports object, as in Node.js) or \\"global\\" (the global object, as in a classic script).",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.topLevelThis",
+        "type": "enum",
+        "values": Array [
+          "exports",
+          "global",
+        ],
+      },
+    ],
+    "description": "Set what top-level \\"this\\" refers to in a non-ES module: \\"exports\\" (the exports object, as in Node.js) or \\"global\\" (the global object, as in a classic script).",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "module-parser-javascript-dynamic-typescript": Object {
     "configs": Array [
       Object {
@@ -7282,6 +7393,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "module-parser-javascript-esm": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of EcmaScript Modules syntax.",
+        "multiple": false,
+        "path": "module.parser.javascript.esm",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of EcmaScript Modules syntax.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-parser-javascript-esm-amd": Object {
     "configs": Array [
       Object {
@@ -7490,6 +7614,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-javascript-esm-esm": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of EcmaScript Modules syntax.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.esm",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of EcmaScript Modules syntax.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-parser-javascript-esm-exports-presence": Object {
     "configs": Array [
       Object {
@@ -7570,13 +7707,13 @@ Object {
   "module-parser-javascript-esm-harmony": Object {
     "configs": Array [
       Object {
-        "description": "Enable/disable parsing of EcmaScript Modules syntax.",
+        "description": "Deprecated in favor of \\"esm\\". Enable/disable parsing of EcmaScript Modules syntax.",
         "multiple": false,
         "path": "module.parser.javascript/esm.harmony",
         "type": "boolean",
       },
     ],
-    "description": "Enable/disable parsing of EcmaScript Modules syntax.",
+    "description": "Deprecated in favor of \\"esm\\". Enable/disable parsing of EcmaScript Modules syntax.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -8036,6 +8173,23 @@ Object {
     "description": "Enable/disable parsing of System.js special syntax like System.import, System.get, System.set and System.register.",
     "multiple": false,
     "simpleType": "boolean",
+  },
+  "module-parser-javascript-esm-top-level-this": Object {
+    "configs": Array [
+      Object {
+        "description": "Set what top-level \\"this\\" refers to in a non-ES module: \\"exports\\" (the exports object, as in Node.js) or \\"global\\" (the global object, as in a classic script).",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.topLevelThis",
+        "type": "enum",
+        "values": Array [
+          "exports",
+          "global",
+        ],
+      },
+    ],
+    "description": "Set what top-level \\"this\\" refers to in a non-ES module: \\"exports\\" (the exports object, as in Node.js) or \\"global\\" (the global object, as in a classic script).",
+    "multiple": false,
+    "simpleType": "string",
   },
   "module-parser-javascript-esm-typescript": Object {
     "configs": Array [
@@ -8602,13 +8756,13 @@ Object {
   "module-parser-javascript-harmony": Object {
     "configs": Array [
       Object {
-        "description": "Enable/disable parsing of EcmaScript Modules syntax.",
+        "description": "Deprecated in favor of \\"esm\\". Enable/disable parsing of EcmaScript Modules syntax.",
         "multiple": false,
         "path": "module.parser.javascript.harmony",
         "type": "boolean",
       },
     ],
-    "description": "Enable/disable parsing of EcmaScript Modules syntax.",
+    "description": "Deprecated in favor of \\"esm\\". Enable/disable parsing of EcmaScript Modules syntax.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -9068,6 +9222,23 @@ Object {
     "description": "Enable/disable parsing of System.js special syntax like System.import, System.get, System.set and System.register.",
     "multiple": false,
     "simpleType": "boolean",
+  },
+  "module-parser-javascript-top-level-this": Object {
+    "configs": Array [
+      Object {
+        "description": "Set what top-level \\"this\\" refers to in a non-ES module: \\"exports\\" (the exports object, as in Node.js) or \\"global\\" (the global object, as in a classic script).",
+        "multiple": false,
+        "path": "module.parser.javascript.topLevelThis",
+        "type": "enum",
+        "values": Array [
+          "exports",
+          "global",
+        ],
+      },
+    ],
+    "description": "Set what top-level \\"this\\" refers to in a non-ES module: \\"exports\\" (the exports object, as in Node.js) or \\"global\\" (the global object, as in a classic script).",
+    "multiple": false,
+    "simpleType": "string",
   },
   "module-parser-javascript-typescript": Object {
     "configs": Array [
@@ -11128,6 +11299,23 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "optimization-minimize-css-charset": Object {
+    "configs": Array [
+      Object {
+        "description": "How the minimizer states a \`.css\` asset's encoding. \`\\"auto\\"\` (the default) opens it with \`@charset \\"UTF-8\\"\` only when its output holds a non-ASCII character, so it is read as UTF-8 wherever the server's \`Content-Type\` names no other charset, which \`@charset\` cannot override. \`false\` writes no \`@charset\` at all, and writes an escaped character past U+FFFF (an icon font's \`content: \\"\\\\F0A86\\"\`) as the character itself, as \`\\"auto\\"\` does once that \`@charset\` is written. Set \`false\` only where the asset is read as UTF-8 anyway: a stylesheet with no \`@charset\` is read in the encoding the server's \`Content-Type\` names, else in the encoding of the page linking it, so it holds wherever the server names UTF-8 or the page is UTF-8 — and anywhere else every such character reads as other characters.",
+        "multiple": false,
+        "path": "optimization.minimize.css.charset",
+        "type": "enum",
+        "values": Array [
+          "auto",
+          false,
+        ],
+      },
+    ],
+    "description": "How the minimizer states a \`.css\` asset's encoding. \`\\"auto\\"\` (the default) opens it with \`@charset \\"UTF-8\\"\` only when its output holds a non-ASCII character, so it is read as UTF-8 wherever the server's \`Content-Type\` names no other charset, which \`@charset\` cannot override. \`false\` writes no \`@charset\` at all, and writes an escaped character past U+FFFF (an icon font's \`content: \\"\\\\F0A86\\"\`) as the character itself, as \`\\"auto\\"\` does once that \`@charset\` is written. Set \`false\` only where the asset is read as UTF-8 anyway: a stylesheet with no \`@charset\` is read in the encoding the server's \`Content-Type\` names, else in the encoding of the page linking it, so it holds wherever the server names UTF-8 or the page is UTF-8 — and anywhere else every such character reads as other characters.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "optimization-minimize-css-color-fallbacks": Object {
     "configs": Array [
       Object {
@@ -11176,6 +11364,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "optimization-minimize-css-convert-approximate-colors": Object {
+    "configs": Array [
+      Object {
+        "description": "Write a polar or Lab color as the nearest hex even where that hex only approximates it. \`shortenColors\` converts one only where webpack can prove an engine's own conversion lands on the same bytes, and keeps the function in the two places it cannot: a channel sitting too near a \`.5\` boundary for two implementations to round it alike (it is why esbuild and lightningcss emit different bytes for \`hwb(194 0% 0%)\`), and a color outside the sRGB gamut, which hex can only clip to a different color. Off by default, for those two reasons, and the two are not the same trade: on the boundary this writes the byte esbuild, lightningcss and cssnano write anyway, while outside the gamut it goes further than any of them — lightningcss keeps the function there and writes a fallback before it, which is what \`colorFallbacks\` does. A space engines read through transfers of their own (\`a98-rgb\`, \`prophoto-rgb\`) is left alone either way, the hex there naming a color no engine paints rather than a near one. This is about replacing the function: a fallback stands before it rather than in its place, so it already clips and rounds this way.",
+        "multiple": false,
+        "path": "optimization.minimize.css.convertApproximateColors",
+        "type": "boolean",
+      },
+    ],
+    "description": "Write a polar or Lab color as the nearest hex even where that hex only approximates it. \`shortenColors\` converts one only where webpack can prove an engine's own conversion lands on the same bytes, and keeps the function in the two places it cannot: a channel sitting too near a \`.5\` boundary for two implementations to round it alike (it is why esbuild and lightningcss emit different bytes for \`hwb(194 0% 0%)\`), and a color outside the sRGB gamut, which hex can only clip to a different color. Off by default, for those two reasons, and the two are not the same trade: on the boundary this writes the byte esbuild, lightningcss and cssnano write anyway, while outside the gamut it goes further than any of them — lightningcss keeps the function there and writes a fallback before it, which is what \`colorFallbacks\` does. A space engines read through transfers of their own (\`a98-rgb\`, \`prophoto-rgb\`) is left alone either way, the hex there naming a color no engine paints rather than a near one. This is about replacing the function: a fallback stands before it rather than in its place, so it already clips and rounds this way.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "optimization-minimize-css-convert-length-units": Object {
     "configs": Array [
       Object {
@@ -11188,6 +11389,70 @@ Object {
     "description": "Rewrite a length into a shorter unit it is exactly equal in (\`16px\` -> \`1pc\`). Off by default: the authored unit is lost, and once the asset is compressed the rewrite rarely earns anything.",
     "multiple": false,
     "simpleType": "boolean",
+  },
+  "optimization-minimize-css-custom-media": Object {
+    "configs": Array [
+      Object {
+        "description": "Resolve the \`@custom-media\` at-rule: write the query a name stands for wherever a condition asks for it, and drop the rule that named it. \`@custom-media --wide (width>400px)\` with \`@media (--wide)\` becomes \`@media (width>400px)\`. Off by default: \`module.parser.css.customMedia\` already resolves it in every stylesheet webpack parses, so this is for a \`.css\` asset that reached the minimizer without being parsed — one emitted by \`asset/resource\` or copied in. Every rule is read first, so a name resolves wherever its rule stands, the last rule stating it holds, and one name may be read through another; names that read each other in a cycle stand for nothing and are left as written.",
+        "multiple": false,
+        "path": "optimization.minimize.css.customMedia",
+        "type": "boolean",
+      },
+    ],
+    "description": "Resolve the \`@custom-media\` at-rule: write the query a name stands for wherever a condition asks for it, and drop the rule that named it. \`@custom-media --wide (width>400px)\` with \`@media (--wide)\` becomes \`@media (width>400px)\`. Off by default: \`module.parser.css.customMedia\` already resolves it in every stylesheet webpack parses, so this is for a \`.css\` asset that reached the minimizer without being parsed — one emitted by \`asset/resource\` or copied in. Every rule is read first, so a name resolves wherever its rule stands, the last rule stating it holds, and one name may be read through another; names that read each other in a cycle stand for nothing and are left as written.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-css-custom-selectors": Object {
+    "configs": Array [
+      Object {
+        "description": "Resolve the \`@custom-selector\` at-rule: write the selector list a name stands for as \`:is(…)\` wherever a selector asks for it, and drop the rule that named it. \`@custom-selector :--heading h1, h2\` with \`:--heading\` becomes \`:is(h1, h2)\`. Off by default, for the reason \`customMedia\` is: \`module.parser.css.customSelectors\` already resolves it in every stylesheet webpack parses. Rules are read as \`customMedia\` reads them, and a name is written out only where the target reads \`:is()\`.",
+        "multiple": false,
+        "path": "optimization.minimize.css.customSelectors",
+        "type": "boolean",
+      },
+    ],
+    "description": "Resolve the \`@custom-selector\` at-rule: write the selector list a name stands for as \`:is(…)\` wherever a selector asks for it, and drop the rule that named it. \`@custom-selector :--heading h1, h2\` with \`:--heading\` becomes \`:is(h1, h2)\`. Off by default, for the reason \`customMedia\` is: \`module.parser.css.customSelectors\` already resolves it in every stylesheet webpack parses. Rules are read as \`customMedia\` reads them, and a name is written out only where the target reads \`:is()\`.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-css-drop-overridden-declarations": Object {
+    "configs": Array [
+      Object {
+        "description": "Drop a declaration a later one in the same block overrides even where no target is selected, assuming the engines shipping today: wherever Chromium, Gecko and WebKit each read the later value. Off by default. With a \`browserslist\` target this is already done wherever every browser it names is known to read the later value, so the option only widens the case where no target is selected and there are no engines to name — which is what csso and cssnano do unconditionally. What it gives up is the fallback pair: \`color:#c65d06;color:lab(50% 100 -100)\` loses the hex, so an engine that cannot read \`lab()\` is left with nothing. A selection naming a browser the compat tables do not cover is still answered for the whole of it rather than by this option, since naming a browser states a target the option does not override.",
+        "multiple": false,
+        "path": "optimization.minimize.css.dropOverriddenDeclarations",
+        "type": "boolean",
+      },
+    ],
+    "description": "Drop a declaration a later one in the same block overrides even where no target is selected, assuming the engines shipping today: wherever Chromium, Gecko and WebKit each read the later value. Off by default. With a \`browserslist\` target this is already done wherever every browser it names is known to read the later value, so the option only widens the case where no target is selected and there are no engines to name — which is what csso and cssnano do unconditionally. What it gives up is the fallback pair: \`color:#c65d06;color:lab(50% 100 -100)\` loses the hex, so an engine that cannot read \`lab()\` is left with nothing. A selection naming a browser the compat tables do not cover is still answered for the whole of it rather than by this option, since naming a browser states a target the option does not override.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-css-extract-comments": Object {
+    "configs": Array [
+      Object {
+        "description": "Which comments a minimized asset gives up to its \`[file].LICENSE.txt\`.",
+        "multiple": false,
+        "path": "optimization.minimize.css.extractComments",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Which comments a minimized asset gives up to its \`[file].LICENSE.txt\`.",
+        "multiple": false,
+        "path": "optimization.minimize.css.extractComments",
+        "type": "boolean",
+      },
+      Object {
+        "description": "Which comments a minimized asset gives up to its \`[file].LICENSE.txt\`.",
+        "multiple": false,
+        "path": "optimization.minimize.css.extractComments",
+        "type": "string",
+      },
+    ],
+    "description": "Which comments a minimized asset gives up to its \`[file].LICENSE.txt\`.",
+    "multiple": false,
+    "simpleType": "string",
   },
   "optimization-minimize-css-fold-case": Object {
     "configs": Array [
@@ -11218,13 +11483,13 @@ Object {
   "optimization-minimize-css-merge-distant-rules": Object {
     "configs": Array [
       Object {
-        "description": "Give a rule the selectors of a later one printing the same block, past the rules standing between them. Off by default because it reorders the cascade, so it holds only where nothing between the two declares a property the shared block does. A block repeated at a distance already compresses on its own, so the join is taken only where the copy of the block it drops is worth more than twice the selector it writes instead. \`mergeRules\` is the safe half of this, joining only what nothing stands between.",
+        "description": "Give a rule the selectors of a later one printing the same block, and an at-rule the block of a later one stating the same condition, past the rules standing between them. Off by default because it reorders the cascade, so it holds only where nothing between the two declares a property the block being moved does for an element its selectors can match (a rule whose selectors all name other element types, \`h3\` between two rules for \`h1\` and \`h2\`, never can) — a condition between counts for what its own rules declare, while \`@layer\` and anything else whose declarations cannot be read stands in the way whatever it says. A block repeated at a distance already compresses on its own, so a selector join is taken only where the copy of the block it drops is worth more than twice the selector it writes instead; an at-rule join writes no selector and drops the repeated prelude outright. A named \`@layer\` is not joined this way — its place in the cascade is where its name is first written, not what its prelude states. \`mergeRules\` is the safe half of this, joining only what nothing stands between.",
         "multiple": false,
         "path": "optimization.minimize.css.mergeDistantRules",
         "type": "boolean",
       },
     ],
-    "description": "Give a rule the selectors of a later one printing the same block, past the rules standing between them. Off by default because it reorders the cascade, so it holds only where nothing between the two declares a property the shared block does. A block repeated at a distance already compresses on its own, so the join is taken only where the copy of the block it drops is worth more than twice the selector it writes instead. \`mergeRules\` is the safe half of this, joining only what nothing stands between.",
+    "description": "Give a rule the selectors of a later one printing the same block, and an at-rule the block of a later one stating the same condition, past the rules standing between them. Off by default because it reorders the cascade, so it holds only where nothing between the two declares a property the block being moved does for an element its selectors can match (a rule whose selectors all name other element types, \`h3\` between two rules for \`h1\` and \`h2\`, never can) — a condition between counts for what its own rules declare, while \`@layer\` and anything else whose declarations cannot be read stands in the way whatever it says. A block repeated at a distance already compresses on its own, so a selector join is taken only where the copy of the block it drops is worth more than twice the selector it writes instead; an at-rule join writes no selector and drops the repeated prelude outright. A named \`@layer\` is not joined this way — its place in the cascade is where its name is first written, not what its prelude states. \`mergeRules\` is the safe half of this, joining only what nothing stands between.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -11293,16 +11558,16 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
-  "optimization-minimize-css-resolve-custom-at-rules": Object {
+  "optimization-minimize-css-reorder-declarations": Object {
     "configs": Array [
       Object {
-        "description": "Resolve the \`@custom-media\` and \`@custom-selector\` at-rules: write the query or the selector list a name stands for wherever one asks for it, and drop the rule that named it. \`@custom-media --wide (width>400px)\` with \`@media (--wide)\` becomes \`@media (width>400px)\`, and \`@custom-selector :--heading h1, h2\` with \`:--heading\` becomes \`:is(h1, h2)\`. Off until asked for: \`module.parser.css.customMedia\` and \`module.parser.css.customSelectors\` already resolve both in every stylesheet webpack parses, so this is for a \`.css\` asset that reached the minimizer without being parsed — one emitted by \`asset/resource\` or copied in. Only a name stated before the rule asking for it is written out — the rules are read in the order they are written — and a rule naming one this has not come to is left as the author had it. A selector list is written as \`:is(…)\`, so a name is substituted only where the target reads \`:is()\`.",
+        "description": "Print a style rule's declarations in one order by property family, the properties no family names first where they were written, so blocks setting the same things read alike and compress smaller. Only declarations whose order nothing can see move: two spellings of one property, a shorthand and what it sets, two shorthands sharing a longhand, and a flow-relative side and a physical one keep theirs, and a block holding a property no dataset names or a nested rule is printed as written. On by default.",
         "multiple": false,
-        "path": "optimization.minimize.css.resolveCustomAtRules",
+        "path": "optimization.minimize.css.reorderDeclarations",
         "type": "boolean",
       },
     ],
-    "description": "Resolve the \`@custom-media\` and \`@custom-selector\` at-rules: write the query or the selector list a name stands for wherever one asks for it, and drop the rule that named it. \`@custom-media --wide (width>400px)\` with \`@media (--wide)\` becomes \`@media (width>400px)\`, and \`@custom-selector :--heading h1, h2\` with \`:--heading\` becomes \`:is(h1, h2)\`. Off until asked for: \`module.parser.css.customMedia\` and \`module.parser.css.customSelectors\` already resolve both in every stylesheet webpack parses, so this is for a \`.css\` asset that reached the minimizer without being parsed — one emitted by \`asset/resource\` or copied in. Only a name stated before the rule asking for it is written out — the rules are read in the order they are written — and a rule naming one this has not come to is left as the author had it. A selector list is written as \`:is(…)\`, so a name is substituted only where the target reads \`:is()\`.",
+    "description": "Print a style rule's declarations in one order by property family, the properties no family names first where they were written, so blocks setting the same things read alike and compress smaller. Only declarations whose order nothing can see move: two spellings of one property, a shorthand and what it sets, two shorthands sharing a longhand, and a flow-relative side and a physical one keep theirs, and a block holding a property no dataset names or a nested rule is printed as written. On by default.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -11335,13 +11600,13 @@ Object {
   "optimization-minimize-css-rewrite-escapes": Object {
     "configs": Array [
       Object {
-        "description": "Write an escaped identifier the shortest way that names the same thing, in a value or an id: \`grid-area:\\\\66oot\` becomes \`grid-area:foot\` and \`#\\\\41 x\` becomes \`#Ax\`. On by default, and exact: the escape and what replaces it are the same identifier. Off leaves every escape as the author wrote it, which is what a consumer comparing the text rather than reading the identifier needs.",
+        "description": "Write an escaped identifier the shortest way that names the same thing, wherever it stands — a selector, a property, at-rule or function name, or a value: \`grid-area:\\\\66oot\` becomes \`grid-area:foot\`, \`#\\\\41 x\` becomes \`#Ax\`, \`col\\\\6f r:red\` becomes \`color:red\` and \`c\\\\61 lc(\` becomes \`calc(\`. On by default, and exact: the escape and what replaces it are the same identifier. Off leaves every escape as the author wrote it, which is what a consumer comparing the text rather than reading the identifier needs.",
         "multiple": false,
         "path": "optimization.minimize.css.rewriteEscapes",
         "type": "boolean",
       },
     ],
-    "description": "Write an escaped identifier the shortest way that names the same thing, in a value or an id: \`grid-area:\\\\66oot\` becomes \`grid-area:foot\` and \`#\\\\41 x\` becomes \`#Ax\`. On by default, and exact: the escape and what replaces it are the same identifier. Off leaves every escape as the author wrote it, which is what a consumer comparing the text rather than reading the identifier needs.",
+    "description": "Write an escaped identifier the shortest way that names the same thing, wherever it stands — a selector, a property, at-rule or function name, or a value: \`grid-area:\\\\66oot\` becomes \`grid-area:foot\`, \`#\\\\41 x\` becomes \`#Ax\`, \`col\\\\6f r:red\` becomes \`color:red\` and \`c\\\\61 lc(\` becomes \`calc(\`. On by default, and exact: the escape and what replaces it are the same identifier. Off leaves every escape as the author wrote it, which is what a consumer comparing the text rather than reading the identifier needs.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -11546,6 +11811,31 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "optimization-minimize-html-extract-comments": Object {
+    "configs": Array [
+      Object {
+        "description": "Which comments a minimized asset gives up to its \`[file].LICENSE.txt\`.",
+        "multiple": false,
+        "path": "optimization.minimize.html.extractComments",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Which comments a minimized asset gives up to its \`[file].LICENSE.txt\`.",
+        "multiple": false,
+        "path": "optimization.minimize.html.extractComments",
+        "type": "boolean",
+      },
+      Object {
+        "description": "Which comments a minimized asset gives up to its \`[file].LICENSE.txt\`.",
+        "multiple": false,
+        "path": "optimization.minimize.html.extractComments",
+        "type": "string",
+      },
+    ],
+    "description": "Which comments a minimized asset gives up to its \`[file].LICENSE.txt\`.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "optimization-minimize-html-merge-scripts": Object {
     "configs": Array [
       Object {
@@ -11666,13 +11956,13 @@ Object {
   "optimization-minimize-html-remove-empty-elements": Object {
     "configs": Array [
       Object {
-        "description": "Drop an element that has no children and no attributes. Kept anyway when its bare form is still doing a job (\`canvas\`, \`slot\`, \`template\`, \`textarea\`, \`progress\`, \`meter\`, \`output\`, \`dialog\`, and the table structure), when it is a void element, or when it is foreign content. Off by default: CSS can give an empty element a size or a \`::before\`, and the minifier cannot see the stylesheet. Emptiness is read off the output rather than the source, so a run of nested empties goes together and an element left empty only by a dropped comment or by whitespace \`collapseWhitespace\` deletes goes with them.",
+        "description": "Drop an element that has no children and no attributes, where its bare form renders nothing and nothing reads it: a generic container such as \`div\`, \`span\` or \`section\`, an inline phrase element, an empty \`title\`, \`script\` or \`style\`, or an attribute-less \`meta\`, \`link\` or \`base\`. Every other element is kept, including widgets, list items, elements with margins and custom elements. Off by default: CSS can give an empty element a size or a \`::before\`, and the minifier cannot see the stylesheet. Emptiness is read off the output rather than the source, so a run of nested empties goes together and an element left empty only by a dropped comment or by whitespace \`collapseWhitespace\` deletes goes with them.",
         "multiple": false,
         "path": "optimization.minimize.html.removeEmptyElements",
         "type": "boolean",
       },
     ],
-    "description": "Drop an element that has no children and no attributes. Kept anyway when its bare form is still doing a job (\`canvas\`, \`slot\`, \`template\`, \`textarea\`, \`progress\`, \`meter\`, \`output\`, \`dialog\`, and the table structure), when it is a void element, or when it is foreign content. Off by default: CSS can give an empty element a size or a \`::before\`, and the minifier cannot see the stylesheet. Emptiness is read off the output rather than the source, so a run of nested empties goes together and an element left empty only by a dropped comment or by whitespace \`collapseWhitespace\` deletes goes with them.",
+    "description": "Drop an element that has no children and no attributes, where its bare form renders nothing and nothing reads it: a generic container such as \`div\`, \`span\` or \`section\`, an inline phrase element, an empty \`title\`, \`script\` or \`style\`, or an attribute-less \`meta\`, \`link\` or \`base\`. Every other element is kept, including widgets, list items, elements with margins and custom elements. Off by default: CSS can give an empty element a size or a \`::before\`, and the minifier cannot see the stylesheet. Emptiness is read off the output rather than the source, so a run of nested empties goes together and an element left empty only by a dropped comment or by whitespace \`collapseWhitespace\` deletes goes with them.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -11777,6 +12067,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "optimization-minimize-json": Object {
+    "configs": Array [
+      Object {
+        "description": "Minimize JSON assets by re-serializing them without whitespace (defaults to \`true\` with \`experiments.futureDefaults\`, otherwise \`false\`).",
+        "multiple": false,
+        "path": "optimization.minimize.json",
+        "type": "boolean",
+      },
+    ],
+    "description": "Minimize JSON assets by re-serializing them without whitespace (defaults to \`true\` with \`experiments.futureDefaults\`, otherwise \`false\`).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "optimization-minimize-options-css": Object {
     "configs": Array [
       Object {
@@ -11792,6 +12095,23 @@ Object {
     "description": "Minimize CSS assets: \`false\` disables it, an object configures what the built-in minimizer may do beyond the transforms that always apply.",
     "multiple": false,
     "simpleType": "boolean",
+  },
+  "optimization-minimize-options-css-charset": Object {
+    "configs": Array [
+      Object {
+        "description": "How the minimizer states a \`.css\` asset's encoding. \`\\"auto\\"\` (the default) opens it with \`@charset \\"UTF-8\\"\` only when its output holds a non-ASCII character, so it is read as UTF-8 wherever the server's \`Content-Type\` names no other charset, which \`@charset\` cannot override. \`false\` writes no \`@charset\` at all, and writes an escaped character past U+FFFF (an icon font's \`content: \\"\\\\F0A86\\"\`) as the character itself, as \`\\"auto\\"\` does once that \`@charset\` is written. Set \`false\` only where the asset is read as UTF-8 anyway: a stylesheet with no \`@charset\` is read in the encoding the server's \`Content-Type\` names, else in the encoding of the page linking it, so it holds wherever the server names UTF-8 or the page is UTF-8 — and anywhere else every such character reads as other characters.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.css.charset",
+        "type": "enum",
+        "values": Array [
+          "auto",
+          false,
+        ],
+      },
+    ],
+    "description": "How the minimizer states a \`.css\` asset's encoding. \`\\"auto\\"\` (the default) opens it with \`@charset \\"UTF-8\\"\` only when its output holds a non-ASCII character, so it is read as UTF-8 wherever the server's \`Content-Type\` names no other charset, which \`@charset\` cannot override. \`false\` writes no \`@charset\` at all, and writes an escaped character past U+FFFF (an icon font's \`content: \\"\\\\F0A86\\"\`) as the character itself, as \`\\"auto\\"\` does once that \`@charset\` is written. Set \`false\` only where the asset is read as UTF-8 anyway: a stylesheet with no \`@charset\` is read in the encoding the server's \`Content-Type\` names, else in the encoding of the page linking it, so it holds wherever the server names UTF-8 or the page is UTF-8 — and anywhere else every such character reads as other characters.",
+    "multiple": false,
+    "simpleType": "string",
   },
   "optimization-minimize-options-css-color-fallbacks": Object {
     "configs": Array [
@@ -11841,6 +12161,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "optimization-minimize-options-css-convert-approximate-colors": Object {
+    "configs": Array [
+      Object {
+        "description": "Write a polar or Lab color as the nearest hex even where that hex only approximates it. \`shortenColors\` converts one only where webpack can prove an engine's own conversion lands on the same bytes, and keeps the function in the two places it cannot: a channel sitting too near a \`.5\` boundary for two implementations to round it alike (it is why esbuild and lightningcss emit different bytes for \`hwb(194 0% 0%)\`), and a color outside the sRGB gamut, which hex can only clip to a different color. Off by default, for those two reasons, and the two are not the same trade: on the boundary this writes the byte esbuild, lightningcss and cssnano write anyway, while outside the gamut it goes further than any of them — lightningcss keeps the function there and writes a fallback before it, which is what \`colorFallbacks\` does. A space engines read through transfers of their own (\`a98-rgb\`, \`prophoto-rgb\`) is left alone either way, the hex there naming a color no engine paints rather than a near one. This is about replacing the function: a fallback stands before it rather than in its place, so it already clips and rounds this way.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.css.convertApproximateColors",
+        "type": "boolean",
+      },
+    ],
+    "description": "Write a polar or Lab color as the nearest hex even where that hex only approximates it. \`shortenColors\` converts one only where webpack can prove an engine's own conversion lands on the same bytes, and keeps the function in the two places it cannot: a channel sitting too near a \`.5\` boundary for two implementations to round it alike (it is why esbuild and lightningcss emit different bytes for \`hwb(194 0% 0%)\`), and a color outside the sRGB gamut, which hex can only clip to a different color. Off by default, for those two reasons, and the two are not the same trade: on the boundary this writes the byte esbuild, lightningcss and cssnano write anyway, while outside the gamut it goes further than any of them — lightningcss keeps the function there and writes a fallback before it, which is what \`colorFallbacks\` does. A space engines read through transfers of their own (\`a98-rgb\`, \`prophoto-rgb\`) is left alone either way, the hex there naming a color no engine paints rather than a near one. This is about replacing the function: a fallback stands before it rather than in its place, so it already clips and rounds this way.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "optimization-minimize-options-css-convert-length-units": Object {
     "configs": Array [
       Object {
@@ -11853,6 +12186,70 @@ Object {
     "description": "Rewrite a length into a shorter unit it is exactly equal in (\`16px\` -> \`1pc\`). Off by default: the authored unit is lost, and once the asset is compressed the rewrite rarely earns anything.",
     "multiple": false,
     "simpleType": "boolean",
+  },
+  "optimization-minimize-options-css-custom-media": Object {
+    "configs": Array [
+      Object {
+        "description": "Resolve the \`@custom-media\` at-rule: write the query a name stands for wherever a condition asks for it, and drop the rule that named it. \`@custom-media --wide (width>400px)\` with \`@media (--wide)\` becomes \`@media (width>400px)\`. Off by default: \`module.parser.css.customMedia\` already resolves it in every stylesheet webpack parses, so this is for a \`.css\` asset that reached the minimizer without being parsed — one emitted by \`asset/resource\` or copied in. Every rule is read first, so a name resolves wherever its rule stands, the last rule stating it holds, and one name may be read through another; names that read each other in a cycle stand for nothing and are left as written.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.css.customMedia",
+        "type": "boolean",
+      },
+    ],
+    "description": "Resolve the \`@custom-media\` at-rule: write the query a name stands for wherever a condition asks for it, and drop the rule that named it. \`@custom-media --wide (width>400px)\` with \`@media (--wide)\` becomes \`@media (width>400px)\`. Off by default: \`module.parser.css.customMedia\` already resolves it in every stylesheet webpack parses, so this is for a \`.css\` asset that reached the minimizer without being parsed — one emitted by \`asset/resource\` or copied in. Every rule is read first, so a name resolves wherever its rule stands, the last rule stating it holds, and one name may be read through another; names that read each other in a cycle stand for nothing and are left as written.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-options-css-custom-selectors": Object {
+    "configs": Array [
+      Object {
+        "description": "Resolve the \`@custom-selector\` at-rule: write the selector list a name stands for as \`:is(…)\` wherever a selector asks for it, and drop the rule that named it. \`@custom-selector :--heading h1, h2\` with \`:--heading\` becomes \`:is(h1, h2)\`. Off by default, for the reason \`customMedia\` is: \`module.parser.css.customSelectors\` already resolves it in every stylesheet webpack parses. Rules are read as \`customMedia\` reads them, and a name is written out only where the target reads \`:is()\`.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.css.customSelectors",
+        "type": "boolean",
+      },
+    ],
+    "description": "Resolve the \`@custom-selector\` at-rule: write the selector list a name stands for as \`:is(…)\` wherever a selector asks for it, and drop the rule that named it. \`@custom-selector :--heading h1, h2\` with \`:--heading\` becomes \`:is(h1, h2)\`. Off by default, for the reason \`customMedia\` is: \`module.parser.css.customSelectors\` already resolves it in every stylesheet webpack parses. Rules are read as \`customMedia\` reads them, and a name is written out only where the target reads \`:is()\`.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-options-css-drop-overridden-declarations": Object {
+    "configs": Array [
+      Object {
+        "description": "Drop a declaration a later one in the same block overrides even where no target is selected, assuming the engines shipping today: wherever Chromium, Gecko and WebKit each read the later value. Off by default. With a \`browserslist\` target this is already done wherever every browser it names is known to read the later value, so the option only widens the case where no target is selected and there are no engines to name — which is what csso and cssnano do unconditionally. What it gives up is the fallback pair: \`color:#c65d06;color:lab(50% 100 -100)\` loses the hex, so an engine that cannot read \`lab()\` is left with nothing. A selection naming a browser the compat tables do not cover is still answered for the whole of it rather than by this option, since naming a browser states a target the option does not override.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.css.dropOverriddenDeclarations",
+        "type": "boolean",
+      },
+    ],
+    "description": "Drop a declaration a later one in the same block overrides even where no target is selected, assuming the engines shipping today: wherever Chromium, Gecko and WebKit each read the later value. Off by default. With a \`browserslist\` target this is already done wherever every browser it names is known to read the later value, so the option only widens the case where no target is selected and there are no engines to name — which is what csso and cssnano do unconditionally. What it gives up is the fallback pair: \`color:#c65d06;color:lab(50% 100 -100)\` loses the hex, so an engine that cannot read \`lab()\` is left with nothing. A selection naming a browser the compat tables do not cover is still answered for the whole of it rather than by this option, since naming a browser states a target the option does not override.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-options-css-extract-comments": Object {
+    "configs": Array [
+      Object {
+        "description": "Which comments a minimized asset gives up to its \`[file].LICENSE.txt\`.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.css.extractComments",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Which comments a minimized asset gives up to its \`[file].LICENSE.txt\`.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.css.extractComments",
+        "type": "boolean",
+      },
+      Object {
+        "description": "Which comments a minimized asset gives up to its \`[file].LICENSE.txt\`.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.css.extractComments",
+        "type": "string",
+      },
+    ],
+    "description": "Which comments a minimized asset gives up to its \`[file].LICENSE.txt\`.",
+    "multiple": false,
+    "simpleType": "string",
   },
   "optimization-minimize-options-css-fold-case": Object {
     "configs": Array [
@@ -11883,13 +12280,13 @@ Object {
   "optimization-minimize-options-css-merge-distant-rules": Object {
     "configs": Array [
       Object {
-        "description": "Give a rule the selectors of a later one printing the same block, past the rules standing between them. Off by default because it reorders the cascade, so it holds only where nothing between the two declares a property the shared block does. A block repeated at a distance already compresses on its own, so the join is taken only where the copy of the block it drops is worth more than twice the selector it writes instead. \`mergeRules\` is the safe half of this, joining only what nothing stands between.",
+        "description": "Give a rule the selectors of a later one printing the same block, and an at-rule the block of a later one stating the same condition, past the rules standing between them. Off by default because it reorders the cascade, so it holds only where nothing between the two declares a property the block being moved does for an element its selectors can match (a rule whose selectors all name other element types, \`h3\` between two rules for \`h1\` and \`h2\`, never can) — a condition between counts for what its own rules declare, while \`@layer\` and anything else whose declarations cannot be read stands in the way whatever it says. A block repeated at a distance already compresses on its own, so a selector join is taken only where the copy of the block it drops is worth more than twice the selector it writes instead; an at-rule join writes no selector and drops the repeated prelude outright. A named \`@layer\` is not joined this way — its place in the cascade is where its name is first written, not what its prelude states. \`mergeRules\` is the safe half of this, joining only what nothing stands between.",
         "multiple": false,
         "path": "optimization.minimizeOptions.css.mergeDistantRules",
         "type": "boolean",
       },
     ],
-    "description": "Give a rule the selectors of a later one printing the same block, past the rules standing between them. Off by default because it reorders the cascade, so it holds only where nothing between the two declares a property the shared block does. A block repeated at a distance already compresses on its own, so the join is taken only where the copy of the block it drops is worth more than twice the selector it writes instead. \`mergeRules\` is the safe half of this, joining only what nothing stands between.",
+    "description": "Give a rule the selectors of a later one printing the same block, and an at-rule the block of a later one stating the same condition, past the rules standing between them. Off by default because it reorders the cascade, so it holds only where nothing between the two declares a property the block being moved does for an element its selectors can match (a rule whose selectors all name other element types, \`h3\` between two rules for \`h1\` and \`h2\`, never can) — a condition between counts for what its own rules declare, while \`@layer\` and anything else whose declarations cannot be read stands in the way whatever it says. A block repeated at a distance already compresses on its own, so a selector join is taken only where the copy of the block it drops is worth more than twice the selector it writes instead; an at-rule join writes no selector and drops the repeated prelude outright. A named \`@layer\` is not joined this way — its place in the cascade is where its name is first written, not what its prelude states. \`mergeRules\` is the safe half of this, joining only what nothing stands between.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -11958,16 +12355,16 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
-  "optimization-minimize-options-css-resolve-custom-at-rules": Object {
+  "optimization-minimize-options-css-reorder-declarations": Object {
     "configs": Array [
       Object {
-        "description": "Resolve the \`@custom-media\` and \`@custom-selector\` at-rules: write the query or the selector list a name stands for wherever one asks for it, and drop the rule that named it. \`@custom-media --wide (width>400px)\` with \`@media (--wide)\` becomes \`@media (width>400px)\`, and \`@custom-selector :--heading h1, h2\` with \`:--heading\` becomes \`:is(h1, h2)\`. Off until asked for: \`module.parser.css.customMedia\` and \`module.parser.css.customSelectors\` already resolve both in every stylesheet webpack parses, so this is for a \`.css\` asset that reached the minimizer without being parsed — one emitted by \`asset/resource\` or copied in. Only a name stated before the rule asking for it is written out — the rules are read in the order they are written — and a rule naming one this has not come to is left as the author had it. A selector list is written as \`:is(…)\`, so a name is substituted only where the target reads \`:is()\`.",
+        "description": "Print a style rule's declarations in one order by property family, the properties no family names first where they were written, so blocks setting the same things read alike and compress smaller. Only declarations whose order nothing can see move: two spellings of one property, a shorthand and what it sets, two shorthands sharing a longhand, and a flow-relative side and a physical one keep theirs, and a block holding a property no dataset names or a nested rule is printed as written. On by default.",
         "multiple": false,
-        "path": "optimization.minimizeOptions.css.resolveCustomAtRules",
+        "path": "optimization.minimizeOptions.css.reorderDeclarations",
         "type": "boolean",
       },
     ],
-    "description": "Resolve the \`@custom-media\` and \`@custom-selector\` at-rules: write the query or the selector list a name stands for wherever one asks for it, and drop the rule that named it. \`@custom-media --wide (width>400px)\` with \`@media (--wide)\` becomes \`@media (width>400px)\`, and \`@custom-selector :--heading h1, h2\` with \`:--heading\` becomes \`:is(h1, h2)\`. Off until asked for: \`module.parser.css.customMedia\` and \`module.parser.css.customSelectors\` already resolve both in every stylesheet webpack parses, so this is for a \`.css\` asset that reached the minimizer without being parsed — one emitted by \`asset/resource\` or copied in. Only a name stated before the rule asking for it is written out — the rules are read in the order they are written — and a rule naming one this has not come to is left as the author had it. A selector list is written as \`:is(…)\`, so a name is substituted only where the target reads \`:is()\`.",
+    "description": "Print a style rule's declarations in one order by property family, the properties no family names first where they were written, so blocks setting the same things read alike and compress smaller. Only declarations whose order nothing can see move: two spellings of one property, a shorthand and what it sets, two shorthands sharing a longhand, and a flow-relative side and a physical one keep theirs, and a block holding a property no dataset names or a nested rule is printed as written. On by default.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -12000,13 +12397,13 @@ Object {
   "optimization-minimize-options-css-rewrite-escapes": Object {
     "configs": Array [
       Object {
-        "description": "Write an escaped identifier the shortest way that names the same thing, in a value or an id: \`grid-area:\\\\66oot\` becomes \`grid-area:foot\` and \`#\\\\41 x\` becomes \`#Ax\`. On by default, and exact: the escape and what replaces it are the same identifier. Off leaves every escape as the author wrote it, which is what a consumer comparing the text rather than reading the identifier needs.",
+        "description": "Write an escaped identifier the shortest way that names the same thing, wherever it stands — a selector, a property, at-rule or function name, or a value: \`grid-area:\\\\66oot\` becomes \`grid-area:foot\`, \`#\\\\41 x\` becomes \`#Ax\`, \`col\\\\6f r:red\` becomes \`color:red\` and \`c\\\\61 lc(\` becomes \`calc(\`. On by default, and exact: the escape and what replaces it are the same identifier. Off leaves every escape as the author wrote it, which is what a consumer comparing the text rather than reading the identifier needs.",
         "multiple": false,
         "path": "optimization.minimizeOptions.css.rewriteEscapes",
         "type": "boolean",
       },
     ],
-    "description": "Write an escaped identifier the shortest way that names the same thing, in a value or an id: \`grid-area:\\\\66oot\` becomes \`grid-area:foot\` and \`#\\\\41 x\` becomes \`#Ax\`. On by default, and exact: the escape and what replaces it are the same identifier. Off leaves every escape as the author wrote it, which is what a consumer comparing the text rather than reading the identifier needs.",
+    "description": "Write an escaped identifier the shortest way that names the same thing, wherever it stands — a selector, a property, at-rule or function name, or a value: \`grid-area:\\\\66oot\` becomes \`grid-area:foot\`, \`#\\\\41 x\` becomes \`#Ax\`, \`col\\\\6f r:red\` becomes \`color:red\` and \`c\\\\61 lc(\` becomes \`calc(\`. On by default, and exact: the escape and what replaces it are the same identifier. Off leaves every escape as the author wrote it, which is what a consumer comparing the text rather than reading the identifier needs.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -12211,6 +12608,31 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "optimization-minimize-options-html-extract-comments": Object {
+    "configs": Array [
+      Object {
+        "description": "Which comments a minimized asset gives up to its \`[file].LICENSE.txt\`.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.html.extractComments",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Which comments a minimized asset gives up to its \`[file].LICENSE.txt\`.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.html.extractComments",
+        "type": "boolean",
+      },
+      Object {
+        "description": "Which comments a minimized asset gives up to its \`[file].LICENSE.txt\`.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.html.extractComments",
+        "type": "string",
+      },
+    ],
+    "description": "Which comments a minimized asset gives up to its \`[file].LICENSE.txt\`.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "optimization-minimize-options-html-merge-scripts": Object {
     "configs": Array [
       Object {
@@ -12331,13 +12753,13 @@ Object {
   "optimization-minimize-options-html-remove-empty-elements": Object {
     "configs": Array [
       Object {
-        "description": "Drop an element that has no children and no attributes. Kept anyway when its bare form is still doing a job (\`canvas\`, \`slot\`, \`template\`, \`textarea\`, \`progress\`, \`meter\`, \`output\`, \`dialog\`, and the table structure), when it is a void element, or when it is foreign content. Off by default: CSS can give an empty element a size or a \`::before\`, and the minifier cannot see the stylesheet. Emptiness is read off the output rather than the source, so a run of nested empties goes together and an element left empty only by a dropped comment or by whitespace \`collapseWhitespace\` deletes goes with them.",
+        "description": "Drop an element that has no children and no attributes, where its bare form renders nothing and nothing reads it: a generic container such as \`div\`, \`span\` or \`section\`, an inline phrase element, an empty \`title\`, \`script\` or \`style\`, or an attribute-less \`meta\`, \`link\` or \`base\`. Every other element is kept, including widgets, list items, elements with margins and custom elements. Off by default: CSS can give an empty element a size or a \`::before\`, and the minifier cannot see the stylesheet. Emptiness is read off the output rather than the source, so a run of nested empties goes together and an element left empty only by a dropped comment or by whitespace \`collapseWhitespace\` deletes goes with them.",
         "multiple": false,
         "path": "optimization.minimizeOptions.html.removeEmptyElements",
         "type": "boolean",
       },
     ],
-    "description": "Drop an element that has no children and no attributes. Kept anyway when its bare form is still doing a job (\`canvas\`, \`slot\`, \`template\`, \`textarea\`, \`progress\`, \`meter\`, \`output\`, \`dialog\`, and the table structure), when it is a void element, or when it is foreign content. Off by default: CSS can give an empty element a size or a \`::before\`, and the minifier cannot see the stylesheet. Emptiness is read off the output rather than the source, so a run of nested empties goes together and an element left empty only by a dropped comment or by whitespace \`collapseWhitespace\` deletes goes with them.",
+    "description": "Drop an element that has no children and no attributes, where its bare form renders nothing and nothing reads it: a generic container such as \`div\`, \`span\` or \`section\`, an inline phrase element, an empty \`title\`, \`script\` or \`style\`, or an attribute-less \`meta\`, \`link\` or \`base\`. Every other element is kept, including widgets, list items, elements with margins and custom elements. Off by default: CSS can give an empty element a size or a \`::before\`, and the minifier cannot see the stylesheet. Emptiness is read off the output rather than the source, so a run of nested empties goes together and an element left empty only by a dropped comment or by whitespace \`collapseWhitespace\` deletes goes with them.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -12439,6 +12861,77 @@ Object {
       },
     ],
     "description": "Minimize JavaScript assets: \`false\` disables it, an object is handed as-is to the JavaScript minimizer.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-options-json": Object {
+    "configs": Array [
+      Object {
+        "description": "Minimize JSON assets by re-serializing them without whitespace (defaults to \`true\` with \`experiments.futureDefaults\`, otherwise \`false\`).",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.json",
+        "type": "boolean",
+      },
+    ],
+    "description": "Minimize JSON assets by re-serializing them without whitespace (defaults to \`true\` with \`experiments.futureDefaults\`, otherwise \`false\`).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-options-xml": Object {
+    "configs": Array [
+      Object {
+        "description": "Minimize \`.svg\` and \`.xml\` assets: \`false\` disables it, an object enables it. Absent means off unless \`experiments.futureDefaults\` is set.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.xml",
+        "type": "enum",
+        "values": Array [
+          false,
+        ],
+      },
+    ],
+    "description": "Minimize \`.svg\` and \`.xml\` assets: \`false\` disables it, an object enables it. Absent means off unless \`experiments.futureDefaults\` is set.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-options-xml-sort-attributes": Object {
+    "configs": Array [
+      Object {
+        "description": "Print attributes with the document's commonest names first, breaking ties by case-sensitive name. Off by default: consumers observing attribute order see the new order.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.xml.sortAttributes",
+        "type": "boolean",
+      },
+    ],
+    "description": "Print attributes with the document's commonest names first, breaking ties by case-sensitive name. Off by default: consumers observing attribute order see the new order.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-xml": Object {
+    "configs": Array [
+      Object {
+        "description": "Minimize \`.svg\` and \`.xml\` assets: \`false\` disables it, an object enables it. Absent means off unless \`experiments.futureDefaults\` is set.",
+        "multiple": false,
+        "path": "optimization.minimize.xml",
+        "type": "enum",
+        "values": Array [
+          false,
+        ],
+      },
+    ],
+    "description": "Minimize \`.svg\` and \`.xml\` assets: \`false\` disables it, an object enables it. Absent means off unless \`experiments.futureDefaults\` is set.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-xml-sort-attributes": Object {
+    "configs": Array [
+      Object {
+        "description": "Print attributes with the document's commonest names first, breaking ties by case-sensitive name. Off by default: consumers observing attribute order see the new order.",
+        "multiple": false,
+        "path": "optimization.minimize.xml.sortAttributes",
+        "type": "boolean",
+      },
+    ],
+    "description": "Print attributes with the document's commonest names first, breaking ties by case-sensitive name. Off by default: consumers observing attribute order see the new order.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -12660,6 +13153,19 @@ Object {
     "description": "Select chunks for determining shared modules (defaults to \\"async\\", \\"initial\\" and \\"all\\" requires adding these chunks to the HTML).",
     "multiple": false,
     "simpleType": "string",
+  },
+  "optimization-split-chunks-dedup-depth": Object {
+    "configs": Array [
+      Object {
+        "description": "Rounds of intersections of the chunk sets to look through for modules shared by chunks no single chunk set holds together (0 looks through the chunk sets alone; every round costs more computation).",
+        "multiple": false,
+        "path": "optimization.splitChunks.dedupDepth",
+        "type": "number",
+      },
+    ],
+    "description": "Rounds of intersections of the chunk sets to look through for modules shared by chunks no single chunk set holds together (0 looks through the chunk sets alone; every round costs more computation).",
+    "multiple": false,
+    "simpleType": "number",
   },
   "optimization-split-chunks-default-size-types": Object {
     "configs": Array [
@@ -13184,6 +13690,32 @@ Object {
     "description": "Keep these assets.",
     "multiple": false,
     "simpleType": "string",
+  },
+  "output-clean-keep-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS; a \`!\` prefix excludes what it matches.",
+        "multiple": true,
+        "path": "output.clean.keep.glob[]",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS; a \`!\` prefix excludes what it matches.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "output-clean-keep-glob-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in 'output.clean.keep.glob' configuration. A list of glob patterns.",
+        "multiple": false,
+        "path": "output.clean.keep.glob",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in 'output.clean.keep.glob' configuration. A list of glob patterns.",
+    "multiple": false,
+    "simpleType": "boolean",
   },
   "output-compare-before-emit": Object {
     "configs": Array [
@@ -14221,7 +14753,7 @@ Object {
         "type": "RegExp",
       },
       Object {
-        "description": "Inline the content of matching chunks directly into the HTML instead of emitting a separate \`<script>\`/\`<link>\` tag. \`true\` inlines every chunk; \`\\"script\\"\` inlines only JavaScript, \`\\"style\\"\` only CSS; an array of \`RegExp\` patterns matches against the chunk name.",
+        "description": "Inline the content of matching chunks directly into the HTML instead of emitting a separate \`<script>\`/\`<link>\` tag. \`true\` inlines every chunk; \`\\"script\\"\` inlines only JavaScript, \`\\"style\\"\` only CSS; an array of \`RegExp\` patterns matches against the chunk name and the filename template it is emitted under. A chunk another entry loads its runtime from by url stays a separate file.",
         "multiple": false,
         "path": "output.html.inline",
         "type": "enum",
@@ -14231,26 +14763,26 @@ Object {
         ],
       },
       Object {
-        "description": "Inline the content of matching chunks directly into the HTML instead of emitting a separate \`<script>\`/\`<link>\` tag. \`true\` inlines every chunk; \`\\"script\\"\` inlines only JavaScript, \`\\"style\\"\` only CSS; an array of \`RegExp\` patterns matches against the chunk name.",
+        "description": "Inline the content of matching chunks directly into the HTML instead of emitting a separate \`<script>\`/\`<link>\` tag. \`true\` inlines every chunk; \`\\"script\\"\` inlines only JavaScript, \`\\"style\\"\` only CSS; an array of \`RegExp\` patterns matches against the chunk name and the filename template it is emitted under. A chunk another entry loads its runtime from by url stays a separate file.",
         "multiple": false,
         "path": "output.html.inline",
         "type": "boolean",
       },
     ],
-    "description": "A regular expression matched against the chunk name; matching chunks are inlined. Inline the content of matching chunks directly into the HTML instead of emitting a separate \`<script>\`/\`<link>\` tag. \`true\` inlines every chunk; \`\\"script\\"\` inlines only JavaScript, \`\\"style\\"\` only CSS; an array of \`RegExp\` patterns matches against the chunk name.",
+    "description": "A regular expression matched against the chunk name; matching chunks are inlined. Inline the content of matching chunks directly into the HTML instead of emitting a separate \`<script>\`/\`<link>\` tag. \`true\` inlines every chunk; \`\\"script\\"\` inlines only JavaScript, \`\\"style\\"\` only CSS; an array of \`RegExp\` patterns matches against the chunk name and the filename template it is emitted under. A chunk another entry loads its runtime from by url stays a separate file.",
     "multiple": true,
     "simpleType": "string",
   },
   "output-html-inline-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in 'output.html.inline' configuration. Inline the content of matching chunks directly into the HTML instead of emitting a separate \`<script>\`/\`<link>\` tag. \`true\` inlines every chunk; \`\\"script\\"\` inlines only JavaScript, \`\\"style\\"\` only CSS; an array of \`RegExp\` patterns matches against the chunk name.",
+        "description": "Clear all items provided in 'output.html.inline' configuration. Inline the content of matching chunks directly into the HTML instead of emitting a separate \`<script>\`/\`<link>\` tag. \`true\` inlines every chunk; \`\\"script\\"\` inlines only JavaScript, \`\\"style\\"\` only CSS; an array of \`RegExp\` patterns matches against the chunk name and the filename template it is emitted under. A chunk another entry loads its runtime from by url stays a separate file.",
         "multiple": false,
         "path": "output.html.inline",
         "type": "reset",
       },
     ],
-    "description": "Clear all items provided in 'output.html.inline' configuration. Inline the content of matching chunks directly into the HTML instead of emitting a separate \`<script>\`/\`<link>\` tag. \`true\` inlines every chunk; \`\\"script\\"\` inlines only JavaScript, \`\\"style\\"\` only CSS; an array of \`RegExp\` patterns matches against the chunk name.",
+    "description": "Clear all items provided in 'output.html.inline' configuration. Inline the content of matching chunks directly into the HTML instead of emitting a separate \`<script>\`/\`<link>\` tag. \`true\` inlines every chunk; \`\\"script\\"\` inlines only JavaScript, \`\\"style\\"\` only CSS; an array of \`RegExp\` patterns matches against the chunk name and the filename template it is emitted under. A chunk another entry loads its runtime from by url stays a separate file.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -14505,6 +15037,23 @@ Object {
       },
     ],
     "description": "Name of the exposed commonjs export in the UMD.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "output-library-entry-exports": Object {
+    "configs": Array [
+      Object {
+        "description": "Which modules of an entry the library exposes the exports of: only the last one, or all of them, where a name more than one module binds differently is left out, as 'export *' does.",
+        "multiple": false,
+        "path": "output.library.entryExports",
+        "type": "enum",
+        "values": Array [
+          "last",
+          "all",
+        ],
+      },
+    ],
+    "description": "Which modules of an entry the library exposes the exports of: only the last one, or all of them, where a name more than one module binds differently is left out, as 'export *' does.",
     "multiple": false,
     "simpleType": "string",
   },
@@ -17112,8 +17661,14 @@ Object {
         "path": "resolveLoader.restrictions[]",
         "type": "path",
       },
+      Object {
+        "description": "A glob the resolve result must match at any depth.",
+        "multiple": true,
+        "path": "resolveLoader.restrictions[]",
+        "type": "string",
+      },
     ],
-    "description": "Resolve restriction. Resolve result must fulfill this restriction.",
+    "description": "Resolve restriction. Resolve result must fulfill this restriction. A glob the resolve result must match at any depth.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -17367,8 +17922,14 @@ Object {
         "path": "resolve.restrictions[]",
         "type": "path",
       },
+      Object {
+        "description": "A glob the resolve result must match at any depth.",
+        "multiple": true,
+        "path": "resolve.restrictions[]",
+        "type": "string",
+      },
     ],
-    "description": "Resolve restriction. Resolve result must fulfill this restriction.",
+    "description": "Resolve restriction. Resolve result must fulfill this restriction. A glob the resolve result must match at any depth.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -17570,8 +18131,14 @@ Object {
         "path": "snapshot.immutablePaths[]",
         "type": "path",
       },
+      Object {
+        "description": "A glob matching an immutable directory at any depth, or relative to the context when it starts with \`./\` or \`../\`; a path under several matches takes the outermost.",
+        "multiple": true,
+        "path": "snapshot.immutablePaths[]",
+        "type": "string",
+      },
     ],
-    "description": "A RegExp matching an immutable directory (usually a package manager cache directory, including the tailing slash) A path to an immutable directory (usually a package manager cache directory).",
+    "description": "A RegExp matching an immutable directory (usually a package manager cache directory, including the tailing slash) A path to an immutable directory (usually a package manager cache directory). A glob matching an immutable directory at any depth, or relative to the context when it starts with \`./\` or \`../\`; a path under several matches takes the outermost.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -17602,8 +18169,14 @@ Object {
         "path": "snapshot.managedPaths[]",
         "type": "path",
       },
+      Object {
+        "description": "A glob matching a managed directory at any depth (e.g. \`node_modules\`), or relative to the context when it starts with \`./\` or \`../\`; a path under several matches takes the outermost.",
+        "multiple": true,
+        "path": "snapshot.managedPaths[]",
+        "type": "string",
+      },
     ],
-    "description": "A RegExp matching a managed directory (usually a node_modules directory, including the tailing slash) A path to a managed directory (usually a node_modules directory).",
+    "description": "A RegExp matching a managed directory (usually a node_modules directory, including the tailing slash) A path to a managed directory (usually a node_modules directory). A glob matching a managed directory at any depth (e.g. \`node_modules\`), or relative to the context when it starts with \`./\` or \`../\`; a path under several matches takes the outermost.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -17712,8 +18285,14 @@ Object {
         "path": "snapshot.unmanagedPaths[]",
         "type": "path",
       },
+      Object {
+        "description": "A glob matching an unmanaged directory at any depth, or relative to the context when it starts with \`./\` or \`../\`; a path under several matches takes the outermost.",
+        "multiple": true,
+        "path": "snapshot.unmanagedPaths[]",
+        "type": "string",
+      },
     ],
-    "description": "A RegExp matching an unmanaged directory. A path to an unmanaged directory.",
+    "description": "A RegExp matching an unmanaged directory. A path to an unmanaged directory. A glob matching an unmanaged directory at any depth, or relative to the context when it starts with \`./\` or \`../\`; a path under several matches takes the outermost.",
     "multiple": true,
     "simpleType": "string",
   },

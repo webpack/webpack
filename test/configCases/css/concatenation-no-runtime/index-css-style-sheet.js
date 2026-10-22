@@ -25,10 +25,9 @@ it("should not include the require runtime in the css-style-sheet bundle", () =>
 		"utf-8"
 	);
 
-	// The webpack require runtime template defines a private cache
-	// variable; checking for that name detects whether the runtime was
-	// pulled in. Assembled at runtime so the literal in this file's
-	// source doesn't match itself once inlined into the bundle.
+	// The webpack require runtime template defines a private cache variable, so that
+	// name detects whether the runtime was pulled in. Assembled at runtime so this
+	// file's own source does not match itself once inlined.
 	const marker = `__webpack_${"module"}_cache__`;
 	expect(source).not.toContain(marker);
 });

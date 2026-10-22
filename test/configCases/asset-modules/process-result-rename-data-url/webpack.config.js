@@ -1,6 +1,6 @@
 "use strict";
 
-const NormalModule = require("../../../../lib/NormalModule");
+const NormalModule = require("../../../../lib/module/NormalModule");
 
 // A module read from a `data:` URI carries its own media type. Once a tap
 // re-encodes it, that type describes what was read, not what is emitted.

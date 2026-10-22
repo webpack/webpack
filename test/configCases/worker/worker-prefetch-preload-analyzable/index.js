@@ -20,8 +20,7 @@ it("should emit the analyzable worker form even with a resource hint", () => {
 
 it("should skip workers and blocks without a hint", async () => {
 	// Exercises the startup-hint pass's skip paths: a block dependency that is not a
-	// worker, a worker carrying no hint, and a second reference to an already-seen
-	// worker chunk. Only the hinted chunk may produce a `<link>`.
+	// worker, a worker with no hint, and a second reference to a seen worker chunk.
 	// eslint-disable-next-line no-new
 	new Worker(new URL("./plain.worker.js", import.meta.url));
 	// eslint-disable-next-line no-new

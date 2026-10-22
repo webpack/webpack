@@ -3,16 +3,9 @@ import "./page.html";
 it("should report the HTML module + the removed inline data-URI modules when inline <style> / <script> change", (done) => {
 	NEXT((err) => {
 		if (err) return done(err);
-		// Drive `module.hot.check` directly so we can inspect the updated
-		// modules list. Inline `<style>` and `<script>` bodies are encoded
-		// as base64 `data:text/css;base64,…` / `data:text/javascript;base64,…`
-		// virtual modules; when the body changes the data-URI identifier changes
-		// too, so the OLD data-URI module is *removed* from the graph and
-		// a NEW one (with the new identifier) takes its place. `hot.check`
-		// reports both the HTML module (updated) and the OLD data-URI
-		// modules (removed) as part of the changeset — the NEW data-URI
-		// modules aren't in the changeset because they hadn't been loaded
-		// yet at the previous evaluation.
+		// Drive `module.hot.check` directly to inspect the updated modules list. Inline
+		// bodies are base64 data-URI virtual modules, so a changed body changes the
+		// identifier: the old module is removed and a new one takes its place.
 		module.hot
 			.check(true)
 			.then((updatedModules) => {
@@ -29,10 +22,9 @@ it("should report the HTML module + the removed inline data-URI modules when inl
 				expect(
 					ids.some((id) => id.startsWith("data:text/css;base64,"))
 				).toBe(true);
-				// Exactly those three modules: HTML + old-inline-script +
-				// old-inline-style. Nothing else is in the changeset because
-				// the new data-URI modules hadn't been loaded at the previous
-				// evaluation — they're added on demand.
+				// Exactly those three: HTML plus the old inline script and style. The new data-URI
+				// modules are not in the changeset because they had not been loaded at the
+				// previous evaluation.
 				expect(ids).toHaveLength(3);
 				done();
 			})

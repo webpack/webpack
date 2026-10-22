@@ -107,10 +107,9 @@ it("should defer CSS imported with `{ type: 'css' }` (static `import defer`)", (
 
 it("should defer CSS exportType: 'text' (dynamic `import.defer`)", async () => {
 	reset();
-	// `webpackMode: "eager"` keeps the wrapper inlined in the main bundle —
-	// the test harness doesn't run a chunk loader for `target: "web"`, but
-	// the deferral guarantee is purely about evaluation timing, not chunk
-	// fetching, so the assertion is unchanged.
+	// `webpackMode: "eager"` keeps the wrapper inlined in the main bundle, since the
+	// harness runs no chunk loader for `target: "web"`. The deferral guarantee is
+	// about evaluation timing, not chunk fetching, so the assertion is unchanged.
 	const dyn = await import.defer(
 		/* webpackMode: "eager" */ "./wrapper-dyn-text.js"
 	);

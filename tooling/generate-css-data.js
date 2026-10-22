@@ -571,6 +571,78 @@ const collectShorthandLonghands = () => {
 	return out;
 };
 
+/**
+ * Every spelling a dataset gives a property under another name — a vendor
+ * prefix, an alternative name, a legacy shorthand — mapped to that property, so
+ * two declarations of one property are known as one wherever they are spelled.
+ * @param {[string, [string, [string, number, number][]][]][]} prefixedProperties each property's vendor spellings
+ * @returns {[string, string][]} `[spelling, property]`, sorted by spelling
+ */
+const collectPropertyAliases = (prefixedProperties) => {
+	/** @type {Map<string, string>} */
+	const out = new Map();
+	for (const [name, node] of Object.entries(bcd.css.properties)) {
+		const compat = /** @type {BcdCompat | undefined} */ (node.__compat);
+		if (compat === undefined) continue;
+		for (const support of Object.values(compat.support)) {
+			for (const entry of Array.isArray(support) ? support : [support]) {
+				const spelling = entry.prefix
+					? entry.prefix + name
+					: entry.alternative_name;
+				if (spelling !== undefined && spelling !== name) {
+					out.set(spelling.toLowerCase(), name);
+				}
+			}
+		}
+	}
+	for (const [name, spelled] of prefixedProperties) {
+		for (const [spelling] of spelled) {
+			if (spelling !== name) out.set(spelling, name);
+		}
+	}
+	for (const [spelling, name] of SUPPLEMENT.legacyShorthandAliases) {
+		out.set(spelling, name);
+	}
+	return [...out].sort((a, b) => (a[0] < b[0] ? -1 : 1));
+};
+
+/**
+ * Each property's place in the printed order of a block's declarations: its
+ * `SUPPLEMENT.declarationFamilies` family's place, shared by every property a
+ * member's name starts, and -1 for one no family names, which keeps its place.
+ * Another spelling of a property takes that property's place, so the two never part.
+ * @param {string[]} names every property a dataset names
+ * @param {[string, string][]} aliases `[spelling, property]` for every other spelling
+ * @returns {[string, number][]} `[property, rank]`, sorted by property
+ */
+const collectDeclarationRanks = (names, aliases) => {
+	const aliasOf = new Map(aliases);
+	/** @type {Map<string, number>} */
+	const members = new Map();
+	/** @type {[string, number][]} */
+	const words = [];
+	let rank = 0;
+	for (const family of SUPPLEMENT.declarationFamilies) {
+		for (const member of family) {
+			members.set(member, rank);
+			words.push([`${member}-`, rank]);
+		}
+		rank++;
+	}
+	/** @type {[string, number][]} */
+	const out = [];
+	for (const name of [...new Set(names)].sort()) {
+		const bare = (aliasOf.get(name) || name).replace(/^-[a-z]+-/, "");
+		const member = members.get(bare);
+		const word = words.find(([prefix]) => bare.startsWith(prefix));
+		out.push([
+			name,
+			member !== undefined ? member : word !== undefined ? word[1] : -1
+		]);
+	}
+	return out;
+};
+
 const collectPairLonghands = () => {
 	/** @type {[string, string[]][]} */
 	const out = [];
@@ -703,7 +775,7 @@ const collectSlashLonghands = () => {
 		const tree = grammarOf(property.syntax);
 		if (tree.type !== "sequence" || tree.items.length !== 2) continue;
 		const [first, rest] = tree.items;
-		if (first.type !== "type" || rest.type !== "multiplier") continue;
+		if (rest.type !== "multiplier") continue;
 		if (rest.comma || rest.min !== 0) continue;
 		if (rest.max !== longhands.length - 1) continue;
 		const body = rest.body.type === "group" ? rest.body.body : rest.body;
@@ -711,8 +783,19 @@ const collectSlashLonghands = () => {
 		const [slash, repeated] = body.items;
 		if (slash.type !== "literal" || slash.value !== "/") continue;
 		// The same production on both sides, so every slot takes the same values
-		// and the order `computed` states is the order they are written in.
-		if (repeated.type !== "type" || repeated.name !== first.name) continue;
+		// and the order `computed` states is the order they are written in — or a
+		// pair naming its own two longhands, in that order (`container`).
+		const sameProduction =
+			first.type === "type" &&
+			repeated.type === "type" &&
+			repeated.name === first.name;
+		const ownPair =
+			longhands.length === 2 &&
+			first.type === "property" &&
+			repeated.type === "property" &&
+			first.name === longhands[0] &&
+			repeated.name === longhands[1];
+		if (!sameProduction && !ownPair) continue;
 		out.push([name, longhands]);
 	}
 	return out.sort((a, b) => (a[0] < b[0] ? -1 : 1));
@@ -1033,6 +1116,28 @@ const longhandType = (name, depth, propertyTable = properties) => {
  * @param {string[]} verifiedShorthands the shorthands a merge may emit
  * @returns {[string, string[]][]} `[shorthand, longhands]` in grammar order
  */
+/**
+ * The `animation` longhands whose every value is a keyword, with the keywords,
+ * so one of them is told apart from the other slots in a written layer.
+ * @returns {[string, string[]][]} `[longhand, keywords]`, in the shorthand's order
+ */
+const collectAnimationKeywordSlots = () => {
+	/** @type {[string, string[]][]} */
+	const out = [];
+	for (const longhand of /** @type {string[]} */ (
+		properties.animation.computed
+	)) {
+		const syntax = properties[longhand] && properties[longhand].syntax;
+		if (typeof syntax !== "string") continue;
+		// The layer's own grammar, a comma list of the single value.
+		const single = syntax.replace(/#$/, "");
+		const { keywords, classes } = acceptedValues(single);
+		if (classes.size !== 0 || keywords.size === 0) continue;
+		out.push([longhand, lowerSorted(keywords)]);
+	}
+	return out;
+};
+
 const collectFamilyLonghands = (
 	propertyTable = properties,
 	verifiedShorthands = SUPPLEMENT.familyShorthands
@@ -1473,9 +1578,10 @@ const collectIntegerProperties = () => {
  * could have been written as.
  * @param {string} syntax a value definition
  * @param {PartialSyntaxTable} propertyTable where a `<'property'>` is read
+ * @param {(node: TypeNode) => void=} onType called with each numeric type reached
  * @returns {Set<string>} the numeric type names reachable at the value's level
  */
-const valueLevelNumericTypes = (syntax, propertyTable = properties) => {
+const valueLevelNumericTypes = (syntax, propertyTable, onType) => {
 	/** @type {Set<string>} */
 	const found = new Set();
 	/** @type {Set<string>} */
@@ -1516,6 +1622,7 @@ const valueLevelNumericTypes = (syntax, propertyTable = properties) => {
 			case "type": {
 				if (NUMERIC_TYPES.has(node.name)) {
 					found.add(node.name);
+					if (onType !== undefined) onType(node);
 					return;
 				}
 				if (node.name === "length-percentage") {
@@ -1554,6 +1661,43 @@ const collectZeroUnitAmbiguousProperties = (propertyTable = properties) => {
 		if (kinds.has("length") && (kinds.has("number") || kinds.has("integer"))) {
 			out.push(name);
 		}
+	}
+	return out.sort();
+};
+
+/**
+ * The properties whose grammar offers a `<number>` or an `<integer>`, so a
+ * unitless zero is that number there, as `calc(0)` is, and never a length.
+ * @param {{ [name: string]: { syntax?: string, computed?: string | string[] } }} propertyTable the `properties.json` to read
+ * @returns {string[]} the property names, sorted
+ */
+const collectNumberZeroProperties = (propertyTable = properties) => {
+	const out = [];
+	for (const [name, entry] of Object.entries(propertyTable)) {
+		if (typeof entry.syntax !== "string") continue;
+		// WHY: A range leaving zero out drops a bare zero where `calc(0)` is clamped
+		// into it (`font-weight:0`), and `mdn-data` states no range for several that
+		// do (`column-count`, `widows`), so only a range naming zero counts.
+		let zeroNumber = false;
+		const kinds = valueLevelNumericTypes(
+			entry.syntax,
+			propertyTable,
+			(node) => {
+				if (node.name !== "number" && node.name !== "integer") return;
+				if (
+					node.min !== null &&
+					node.min <= 0 &&
+					(node.max === null || node.max >= 0)
+				) {
+					zeroNumber = true;
+				}
+			}
+		);
+		if (!zeroNumber) continue;
+		// A shorthand with a length slot may give the bare zero to that slot
+		// (`columns:0` is a `column-width`), where `calc(0)` fills the number one.
+		if (Array.isArray(entry.computed) && kinds.has("length")) continue;
+		out.push(name);
 	}
 	return out.sort();
 };
@@ -1899,7 +2043,9 @@ const collectColorSpaceModel = () => {
 		for (const name of spellings) {
 			names.push(name);
 			entries.push(
-				`\t["${name}", { to: ${to}, from: ${from}, hue: ${hue}, conversion: ${conversion}, written: ${written(name)}, uncertainHue: ${uncertainHue} }]`
+				`\t["${name}", { to: ${to}, from: ${from}, hue: ${hue}, conversion: ${conversion}, written: ${written(
+					name
+				)}, uncertainHue: ${uncertainHue} }]`
 			);
 		}
 	};
@@ -1916,7 +2062,9 @@ const collectColorSpaceModel = () => {
 		/** @type {boolean[]} */ percent,
 		/** @type {string} */ feature
 	) =>
-		`{ open: "${open}", scale: [${scale.join(", ")}], percent: [${percent.join(", ")}], feature: "${feature}" }`;
+		`{ open: "${open}", scale: [${scale.join(", ")}], percent: [${percent.join(
+			", "
+		)}], feature: "${feature}" }`;
 	const plain = [1, 1, 1];
 	const numbers = [false, false, false];
 	const percentPair = [false, true, true];
@@ -1953,7 +2101,10 @@ const collectColorSpaceModel = () => {
 			`const ${upper}_M = ${flat(invertMatrix(toSrgb))};`,
 			`const ${upper}_I = ${flat(toSrgb)};`,
 			typedConverter(
-				`const to${title} = (c) => applyModel(${upper}_M, c).map(${transfer.replace("Transfer", "Encode")});`
+				`const to${title} = (c) => applyModel(${upper}_M, c).map(${transfer.replace(
+					"Transfer",
+					"Encode"
+				)});`
 			),
 			typedConverter(
 				`const from${title} = (c) => applyModel(${upper}_I, c.map(${transfer}));`
@@ -1975,7 +2126,9 @@ const collectColorSpaceModel = () => {
 		`const XYZ_M = ${flat(linearSrgbToXyz)};`,
 		`const XYZ_I = ${flat(XYZ_TO_LINEAR_SRGB)};`,
 		`const XYZ_D50_M = ${flat(multiplyMatrix(d65ToD50, linearSrgbToXyz))};`,
-		`const XYZ_D50_I = ${flat(multiplyMatrix(XYZ_TO_LINEAR_SRGB, D50_TO_D65))};`,
+		`const XYZ_D50_I = ${flat(
+			multiplyMatrix(XYZ_TO_LINEAR_SRGB, D50_TO_D65)
+		)};`,
 		typedConverter("const toXyz = (c) => applyModel(XYZ_M, c);"),
 		typedConverter("const fromXyz = (c) => applyModel(XYZ_I, c);"),
 		typedConverter("const toXyzD50 = (c) => applyModel(XYZ_D50_M, c);"),
@@ -2036,7 +2189,11 @@ const ${UNCERTAIN_OKLCH_HUE} = (c) => Math.abs(c[1]) < 0.03;`
 		throw new Error("no predefined space states the sRGB byte itself");
 	}
 	return {
-		text: `${sources.join("\n")}\n\n// The space a hex and an \`rgb()\` state their components in.\nconst SRGB_SPACE = "${encodedSpace}";\n\n/** @typedef {{ to: (c: number[]) => number[], from: (c: number[]) => number[], hue: number, conversion: number, written: { open: string, scale: number[], percent: boolean[], feature: string }, uncertainHue: ((c: number[]) => boolean) | null }} ColorSpaceModel */\n\n/** @type {Map<string, ColorSpaceModel>} */\nconst COLOR_SPACE_MODEL = new Map([\n${entries.join(",\n")}\n]);`,
+		text: `${sources.join(
+			"\n"
+		)}\n\n// The space a hex and an \`rgb()\` state their components in.\nconst SRGB_SPACE = "${encodedSpace}";\n\n/** @typedef {{ to: (c: number[]) => number[], from: (c: number[]) => number[], hue: number, conversion: number, written: { open: string, scale: number[], percent: boolean[], feature: string }, uncertainHue: ((c: number[]) => boolean) | null }} ColorSpaceModel */\n\n/** @type {() => Map<string, ColorSpaceModel>} */\nconst getColorSpaceModel = memoize(() => new Map([\n${entries.join(
+			",\n"
+		)}\n]));`,
 		names
 	};
 };
@@ -2213,32 +2370,40 @@ const collectPositionProperties = () => {
 };
 
 // A shadow states its offsets as `<length>{MIN,MAX}`; MIN of them are the two
-// offsets every shadow needs.
+// offsets every shadow needs, and one past MAX is no shadow.
 const SHADOW_LENGTHS_REGEXP = /<length>\{(\d+),(\d+)\}/;
 
 /**
- * Each property whose value is a list of shadows -> how many lengths a shadow
- * cannot go below. The grammar states the range itself (`<length>{2,4}` on
+ * Each property whose value is a list of shadows -> the fewest and most lengths a
+ * shadow takes. The grammar states the range itself (`<length>{2,4}` on
  * `box-shadow`, `{2,3}` on `text-shadow`), so a trailing zero past the minimum
  * is a value the notation already implies.
- * @returns {[string, number][]} the entries, sorted by property
+ * @returns {[string, [number, number]][]} the entries, sorted by property
  */
 const collectShadowProperties = () => {
-	/** @type {[string, number][]} */
+	/** @type {[string, [number, number]][]} */
 	const out = [];
 	for (const [name, entry] of Object.entries(properties)) {
 		if (typeof entry.syntax !== "string") continue;
-		let minimum = null;
+		/** @type {[number, number] | null} */
+		let lengths = null;
 		for (const raw of references(entry.syntax)) {
 			const definition = definitions.get(raw);
 			if (definition === undefined) continue;
 			const range = SHADOW_LENGTHS_REGEXP.exec(definition);
 			if (range === null) continue;
+			const minimum = Number(range[1]);
+			const maximum = Number(range[2]);
 			// Two productions naming different ranges is no single shadow shape.
-			if (minimum !== null && minimum !== Number(range[1])) return [];
-			minimum = Number(range[1]);
+			if (
+				lengths !== null &&
+				(lengths[0] !== minimum || lengths[1] !== maximum)
+			) {
+				return [];
+			}
+			lengths = [minimum, maximum];
 		}
-		if (minimum !== null) out.push([name, minimum]);
+		if (lengths !== null) out.push([name, lengths]);
 	}
 	return out.sort(([a], [b]) => (a < b ? -1 : 1));
 };
@@ -3238,6 +3403,30 @@ const collectLengthOnlyFunctions = () => {
 };
 
 /**
+ * The transform functions a negative argument is valid in: the alternatives of
+ * `<transform-function>` whose own grammar bounds no number from below, which
+ * leaves `perspective()` out.
+ * @returns {string[]} the function names, lowercased, sorted
+ */
+const collectNegativeAcceptingFunctions = () => {
+	const transform = definitions.get("transform-function");
+	if (transform === undefined) {
+		throw new Error("`<transform-function>` is gone: the grammar moved");
+	}
+	const names = [];
+	for (const reference of references(transform)) {
+		const syntax = definitions.get(reference);
+		if (syntax === undefined || !reference.endsWith("()")) {
+			throw new Error(`\`<transform-function>\` names ${reference}, unread`);
+		}
+		if (!/\[\s*0\s*,/.test(syntax)) {
+			names.push(reference.slice(0, -2).toLowerCase());
+		}
+	}
+	return names.sort();
+};
+
+/**
  * The functions that are a color, out of `<color>`'s own grammar — so a value
  * spelled as one fills a color slot. A gradient is an `<image>`, not one.
  * @param {Iterable<string>} spellings what `<color>` is spelled by
@@ -3291,6 +3480,29 @@ const collectZeroAngleFunctions = () => {
 		if (!name.endsWith("()")) continue;
 		const types = entry.syntax.match(/<[a-z-]+>/g) || [];
 		if (types.some((one) => one !== "<angle>" && one !== "<zero>")) continue;
+		// Function names match ASCII case-insensitively; the printer lowercases.
+		names.push(name.slice(0, -2).toLowerCase());
+	}
+	return names.sort();
+};
+
+/**
+ * The functions every argument of which is a `<number>` or a `<percentage>`, so a
+ * folded `calc()` holding one needs no parentheses there.
+ * @param {PartialSyntaxTable} functionTable the `functions.json` to read
+ * @returns {string[]} the function names, sorted
+ */
+const collectNumberArgumentFunctions = (functionTable = functions) => {
+	const names = [];
+	for (const [name, entry] of Object.entries(functionTable)) {
+		if (typeof entry.syntax !== "string" || !name.endsWith("()")) continue;
+		// A bounded type such as `<number [0,1]>` is one a `calc()` clamps into and
+		// a bare number outside it is not, so only the unbounded two count.
+		const types = entry.syntax.match(/<[^>]+>/g) || [];
+		if (types.length === 0) continue;
+		if (types.some((one) => one !== "<number>" && one !== "<percentage>")) {
+			continue;
+		}
 		// Function names match ASCII case-insensitively; the printer lowercases.
 		names.push(name.slice(0, -2).toLowerCase());
 	}
@@ -3694,15 +3906,6 @@ const mapLiteral = (entries) =>
 		.join(", ")}])`;
 
 /**
- * @param {[string, number][]} entries string-keyed, number-valued pairs
- * @returns {string} the `Map` literal
- */
-const countMapLiteral = (entries) =>
-	`new Map([${entries
-		.map(([key, value]) => `["${key}", ${value}]`)
-		.join(", ")}])`;
-
-/**
  * A prefix table's `new Map([…])` literal: `name -> [prefix, [browser, from,
  * to][]][]`. `Infinity` prints as a bare identifier the runtime reads back.
  * @param {[string, [string, [string, number, number][]][]][]} table the axis table
@@ -3777,11 +3980,267 @@ const eighthTurnEntries = (values) => {
 // Spec prose no dataset states: an equivalence between two spellings, or a
 // judgement about what a construct still does. Each carries the reason it has to
 // be written out rather than derived.
-/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], fontStretchPercentages: [string, string][], filterFunctionOmitted: [string, string][], positionKeywordPercentages: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], featurelessPseudoClasses: string[], initialValueKeywords: [string, string][], initialKeywordsAnEngineReadsApart: string[], unmergeableSlotKeywords: [string, string][], zeroUnitKeepingProperties: string[], calcRejectingProperties: string[], clampedValueRanges: [string, string, number, number][], autoSecondValueProperties: string[], defaultGradientDirections: string[], xAxisTransforms: [string, string][], negativeAcceptingProperties: string[], placeShorthands: string[], oneValuePairShorthands: string[], familyShorthands: string[], orderedShorthands: string[], omittableInitialKeywords: string[], pairLonghandOverrides: [string, string[]][], droppableWhenEmptyAtRules: string[], replacedByNameAtRules: string[], classSpellings: [string, string[]][], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[], colorSpacePrimitives: [string, string][], oklabMatrices: number[][], systemUiStack: string[], colorTransfers: [string, string][], predefinedColorSpaces: [string, string, string, string][], colorPrimaries: [string, number[]][], colorWhitePoints: [string, number[]][], enginesDisagreeOnTransfer: string[], calcConstantValues: [string, string][], quarterTurnAngle: [string, number][], eighthTurnSine: (number | null)[], eighthTurnTangent: (number | null)[], mathFunctionFold: [string, string, string, string, string | null, boolean][], mathPrimitives: [string, string][], predefinedCounterStyles: string[], predefinedCounterNames: string[], cssModulesKeywordSupplement: [string, string, number][] }} */
+/** @type {{ cssWideKeywords: string[], declarationFamilies: string[][], legacyShorthandAliases: [string, string][], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], fontStretchPercentages: [string, string][], filterFunctionOmitted: [string, string][], positionKeywordPercentages: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], featurelessPseudoClasses: string[], initialValueKeywords: [string, string][], initialKeywordsAnEngineReadsApart: string[], unmergeableSlotKeywords: [string, string][], zeroUnitKeepingProperties: string[], calcRejectingProperties: string[], numberOnlyOutsideCalcProperties: string[], clampedValueRanges: [string, string, number, number][], stepPositionMinimumCounts: [string, number][], autoSecondValueProperties: string[], defaultGradientDirections: string[], defaultGradientPositions: string[], reversedGradientDirections: string[], gradientSideAngles: [string, string][], xAxisTransforms: [string, string][], negativeAcceptingProperties: string[], placeShorthands: string[], svgUserUnitProperties: string[], legacyBoxProperties: string[], legacyBoxDisplays: string[], oneValuePairShorthands: string[], familyShorthands: string[], orderedShorthands: string[], omittableInitialKeywords: string[], pairLonghandOverrides: [string, string[]][], droppableWhenEmptyAtRules: string[], replacedByNameAtRules: string[], classSpellings: [string, string[]][], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[], colorSpacePrimitives: [string, string][], oklabMatrices: number[][], systemUiStack: string[], colorTransfers: [string, string][], predefinedColorSpaces: [string, string, string, string][], colorPrimaries: [string, number[]][], colorWhitePoints: [string, number[]][], enginesDisagreeOnTransfer: string[], calcConstantValues: [string, string][], quarterTurnAngle: [string, number][], eighthTurnSine: (number | null)[], eighthTurnTangent: (number | null)[], mathFunctionFold: [string, string, string, string, string | null, boolean][], mathPrimitives: [string, string][], predefinedCounterStyles: string[], predefinedCounterNames: string[], cssModulesKeywordSupplement: [string, string, number][] }} */
 
 const SUPPLEMENT = {
 	// CSS Values 4's list. `mdn-data` has no `css-wide-keyword` production.
 	cssWideKeywords: ["inherit", "initial", "revert", "revert-layer", "unset"],
+	// WHY: the order a block's declarations print in, by family, everything no
+	// family names keeping its place before them. It is the order lightningcss
+	// prints its property handlers in: one order every rule shares lets deflate
+	// match longer runs — measured 3.4 KB smaller over the corpus with a target.
+	// Within a family declarations keep the order they were written in, as in
+	// lightningcss: a spec relating two members moves nothing before data knows.
+	declarationFamilies: [
+		["direction"],
+		[
+			"background",
+			"background-color",
+			"background-image",
+			"background-position",
+			"background-position-x",
+			"background-position-y",
+			"background-repeat",
+			"background-size",
+			"background-attachment",
+			"background-origin",
+			"background-clip"
+		],
+		[
+			"border",
+			"border-style",
+			"border-width",
+			"border-color",
+			"border-top",
+			"border-top-style",
+			"border-top-width",
+			"border-top-color",
+			"border-block-start",
+			"border-block-start-style",
+			"border-block-start-width",
+			"border-block-start-color",
+			"border-block",
+			"border-block-style",
+			"border-block-width",
+			"border-block-color",
+			"border-block-end",
+			"border-block-end-style",
+			"border-block-end-width",
+			"border-block-end-color",
+			"border-bottom",
+			"border-bottom-style",
+			"border-bottom-width",
+			"border-bottom-color",
+			"border-left",
+			"border-left-style",
+			"border-left-width",
+			"border-left-color",
+			"border-inline-start",
+			"border-inline-start-style",
+			"border-inline-start-width",
+			"border-inline-start-color",
+			"border-inline",
+			"border-inline-style",
+			"border-inline-width",
+			"border-inline-color",
+			"border-inline-end",
+			"border-inline-end-style",
+			"border-inline-end-width",
+			"border-inline-end-color",
+			"border-right",
+			"border-right-style",
+			"border-right-width",
+			"border-right-color",
+			"border-image",
+			"border-image-source",
+			"border-image-slice",
+			"border-image-width",
+			"border-image-outset",
+			"border-image-repeat",
+			"border-radius",
+			"border-top-left-radius",
+			"border-start-start-radius",
+			"border-top-right-radius",
+			"border-start-end-radius",
+			"border-bottom-right-radius",
+			"border-end-end-radius",
+			"border-bottom-left-radius",
+			"border-end-start-radius"
+		],
+		["outline", "outline-width", "outline-style", "outline-color"],
+		[
+			"box-orient",
+			"flex-flow",
+			"flex-wrap",
+			"flex-direction",
+			"flex",
+			"flex-grow",
+			"flex-shrink",
+			"flex-basis",
+			"order",
+			"box-pack"
+		],
+		[
+			"grid",
+			"grid-template",
+			"grid-template-rows",
+			"grid-template-columns",
+			"grid-template-areas",
+			"grid-auto-rows",
+			"grid-auto-columns",
+			"grid-auto-flow",
+			"grid-area",
+			"grid-row",
+			"grid-row-start",
+			"grid-row-end",
+			"grid-column",
+			"grid-column-start",
+			"grid-column-end"
+		],
+		[
+			"justify-content",
+			"align-content",
+			"place-content",
+			"align-self",
+			"justify-self",
+			"place-self",
+			"align-items",
+			"place-items",
+			"justify-items",
+			"gap",
+			"row-gap",
+			"column-gap"
+		],
+		[
+			"width",
+			"height",
+			"min-width",
+			"min-height",
+			"max-width",
+			"max-height",
+			"inline-size",
+			"block-size",
+			"min-inline-size",
+			"min-block-size",
+			"max-inline-size",
+			"max-block-size",
+			// WebKit reads `size` outside `@page` as `width` and `height`, and
+			// `min-size` / `max-size` as the `min-` and `max-` pairs.
+			"size",
+			"min-size",
+			"max-size"
+		],
+		[
+			"margin",
+			"margin-top",
+			"margin-block-start",
+			"margin-block",
+			"margin-block-end",
+			"margin-bottom",
+			"margin-left",
+			"margin-inline-start",
+			"margin-inline",
+			"margin-inline-end",
+			"margin-right"
+		],
+		[
+			"padding",
+			"padding-top",
+			"padding-block-start",
+			"padding-block",
+			"padding-block-end",
+			"padding-bottom",
+			"padding-left",
+			"padding-inline-start",
+			"padding-inline",
+			"padding-inline-end",
+			"padding-right"
+		],
+		[
+			"font",
+			"font-family",
+			"font-size",
+			"font-style",
+			"font-weight",
+			"font-stretch",
+			"font-variant-caps",
+			"line-height"
+		],
+		[
+			"text-decoration",
+			"text-decoration-line",
+			"text-decoration-style",
+			"text-decoration-color",
+			"text-decoration-thickness"
+		],
+		[
+			"list-style",
+			"list-style-type",
+			"list-style-image",
+			"list-style-position"
+		],
+		[
+			"transition",
+			"transition-property",
+			"transition-duration",
+			"transition-timing-function",
+			"transition-delay"
+		],
+		[
+			"animation",
+			"animation-name",
+			"animation-duration",
+			"animation-timing-function",
+			"animation-iteration-count",
+			"animation-direction",
+			"animation-play-state",
+			"animation-delay",
+			"animation-fill-mode"
+		],
+		["display"],
+		["position"],
+		[
+			"inset",
+			"top",
+			"inset-block-start",
+			"inset-block",
+			"inset-block-end",
+			"bottom",
+			"left",
+			"inset-inline-start",
+			"inset-inline",
+			"inset-inline-end",
+			"right"
+		],
+		["overflow", "overflow-x", "overflow-y"],
+		["transform", "translate", "rotate", "scale"],
+		["box-shadow"],
+		[
+			"mask",
+			"mask-image",
+			"mask-position",
+			"mask-size",
+			"mask-repeat",
+			"mask-clip",
+			"mask-origin",
+			"mask-composite",
+			"mask-mode"
+		],
+		["container", "container-type", "container-name"]
+	],
+	// CSS Break 3 §3.4 makes each `page-break-*` a legacy shorthand of a `break-*`,
+	// as engines read `-webkit-column-break-*`; CSS Grid 2 §10.1 aliases `grid-*gap`.
+	legacyShorthandAliases: [
+		["-webkit-column-break-after", "break-after"],
+		["-webkit-column-break-before", "break-before"],
+		["-webkit-column-break-inside", "break-inside"],
+		["grid-column-gap", "column-gap"],
+		["grid-gap", "gap"],
+		["grid-row-gap", "row-gap"],
+		["page-break-after", "break-after"],
+		["page-break-before", "break-before"],
+		["page-break-inside", "break-inside"]
+	],
 	// CSS Easing 1 §2 defines each keyword as exactly this curve; the syntax
 	// database describes `cubic-bezier()`'s shape, not which curves have a name.
 	// Keyed by the arguments as `Number` prints them.
@@ -3874,12 +4333,21 @@ const SUPPLEMENT = {
 	// `outline-color:auto` and `text-emphasis-position:auto` are refused outright,
 	// `overflow-block` and `overflow-inline` compute `visible` where the spec says
 	// `auto`, and `text-autospace` computes `no-autospace` where it says `normal`.
+	// In Gecko `font-synthesis-position` computes `auto` where the spec says
+	// `none`; in WebKit `grid-auto-flow` computes `normal` where it says `row`,
+	// and `-webkit-user-select` computes `text` where the standard `user-select`
+	// computes `auto` in all three — the standard spelling is what goes, since the
+	// value rules run on it. Each is a property the other engines do not
+	// implement, which is why one engine alone could not see it.
 	initialKeywordsAnEngineReadsApart: [
+		"font-synthesis-position",
+		"grid-auto-flow",
 		"outline-color",
 		"overflow-block",
 		"overflow-inline",
 		"text-autospace",
-		"text-emphasis-position"
+		"text-emphasis-position",
+		"user-select"
 	],
 	// Not derivable, no grammar says the unit matters here: IE 11 drops a unitless
 	// `flex-basis`, and Chrome rejects `overflow-clip-margin:0` the spec allows.
@@ -3894,17 +4362,62 @@ const SUPPLEMENT = {
 	// Not derivable, a grammar naming `<length>` says `calc()` is valid there:
 	// Chrome takes no `calc()` in `overflow-clip-margin`, as it takes no bare `0`.
 	calcRejectingProperties: ["overflow-clip-margin"],
+	// WHY: These read a bare number as a length of their own, so taking the
+	// parentheses off brings a declaration the engine had thrown away back to
+	// life — the opposite of `calcRejectingProperties`, and not derivable either,
+	// since the grammar names `<number>` beside `<length>` for all four. Measured
+	// in Gecko over every property `mdn-data` and the prefix table name: it
+	// refuses `calc(2)` on each of these and reads a bare `2` as `2px`. Blink and
+	// WebKit read both alike, which is why one engine alone could not see it.
+	// `perspective` is here for its prefixed spelling, which is the one Gecko
+	// reads apart. Both names are named because the fold reads the declaration as
+	// written and the declaration printer reads the standard spelling it maps to,
+	// and `perspective`'s own two spellings are refused by all three anyway — so
+	// keeping the `calc()` there costs a declaration that does nothing either way.
+	numberOnlyOutsideCalcProperties: [
+		"-webkit-perspective",
+		"perspective",
+		"stroke-dasharray",
+		"stroke-dashoffset",
+		"stroke-width"
+	],
 	// WHY: Ranges the spec clamps a `calc()` to at computed-value time while rejecting
 	// the literal outright, so folding one to the value it equals switches the
 	// declaration off. CSS Fonts 4 §2.3 bounds `oblique` at ±90deg; `mdn-data`
 	// states `oblique <angle>` with no range, and no dataset carries the clamp.
 	clampedValueRanges: [["font-style", "deg", -90, 90]],
+	// WHY: The same trade one argument in: `steps()` clamps a count below its
+	// minimum inside a `calc()` and rejects the bare literal, so folding one to
+	// the value it equals switches the easing off. CSS Easing 2 §2.2 states the
+	// minimum as prose — `jump-none` holds neither end, so it takes two intervals
+	// to have any — and the grammar `mdn-data` carries says only `<integer>`.
+	stepPositionMinimumCounts: [
+		["jump-start", 1],
+		["jump-end", 1],
+		["jump-both", 1],
+		["jump-none", 2],
+		["start", 1],
+		["end", 1]
+	],
 	// CSS Backgrounds 3 §3.9 / CSS Masking 1 §4.5: these spell an omitted second
 	// value `auto`, not the first repeated. Their shared grammar cannot say so.
 	autoSecondValueProperties: ["background-size", "mask-size"],
 	// CSS Images 3 §3.1: a directionless linear gradient runs top to bottom,
 	// which each of these spells. An equivalence no dataset states.
 	defaultGradientDirections: ["to bottom", "180deg", "0.5turn"],
+	// CSS Images 3 §3.2 / 4 §3.3: a radial or conic gradient with no `at
+	// <position>` is centered, which each of these spells.
+	defaultGradientPositions: ["center", "center center", "50%", "50% 50%"],
+	// The default direction's opposite: with no stop positioned, the stops read
+	// in reverse run top to bottom, which needs no direction at all.
+	reversedGradientDirections: ["to top", "0deg"],
+	// CSS Images 3 §3.1: a side names the angle pointing at it, `to top` being
+	// 0deg and each side clockwise a quarter turn on. Only the shorter spellings.
+	gradientSideAngles: [
+		["to top", "0deg"],
+		["to right", "90deg"],
+		["to left", "270deg"]
+	],
 	// CSS Transforms 1 §11: a one-axis call is the pair whose other component is
 	// the 0 it means. Names the pair spelling, which the grammar does not.
 	xAxisTransforms: [
@@ -3914,6 +4427,34 @@ const SUPPLEMENT = {
 	// Newer than the longhands they merge, so the merge would lose both
 	// declarations. Named because `mdn-data` states no version.
 	placeShorthands: ["place-content", "place-items", "place-self"],
+	// SVG 2 §13.5 reads a stroke length's bare <number> as user units, which are
+	// CSS px; `mdn-data` writes the same grammar for `line-height`, where a number
+	// scales the font size instead, so the grammar alone cannot name these.
+	svgUserUnitProperties: [
+		"stroke-dasharray",
+		"stroke-dashoffset",
+		"stroke-width"
+	],
+	// The 2009 flexbox draft's properties, which BCD files as properties of their
+	// own that no engine ever spelled without a prefix.
+	legacyBoxProperties: [
+		"box-align",
+		"box-direction",
+		"box-flex",
+		"box-ordinal-group",
+		"box-orient",
+		"box-pack"
+	],
+	// WHY: the displays that lay a box out by that draft, where every engine still
+	// reads those properties and not the ones that replaced them: under
+	// `display:-webkit-box`, `-webkit-line-clamp` reads `-webkit-box-orient`, and
+	// `flex-direction` is read by nothing.
+	legacyBoxDisplays: [
+		"-webkit-box",
+		"-webkit-inline-box",
+		"-moz-box",
+		"-moz-inline-box"
+	],
 	// WHY: Pair shorthands whose *two-value* form is the newer one, so the merge is
 	// safe only where it collapses to a single value: `overflow: hidden` is CSS
 	// 2.1 and reads everywhere `overflow-x` does, while `overflow: hidden scroll`
@@ -4031,12 +4572,14 @@ const SUPPLEMENT = {
 	// WHY: At-rules whose empty block is inert. Not `@keyframes` (an empty one still
 	// runs the animation, firing its events) and not `@layer` (an empty block
 	// declares the layer's cascade order). An empty `@starting-style` states no
-	// starting value, so nothing transitions from one (CSS Transitions 2 §3).
+	// starting value, so nothing transitions from one (CSS Transitions 2 §3). Gecko's
+	// `@-moz-document` is a condition over its rules as `@media` is.
 	droppableWhenEmptyAtRules: [
 		"media",
 		"supports",
 		"container",
-		"starting-style"
+		"starting-style",
+		"-moz-document"
 	],
 	// WHY: At-rules holding rules whose prelude names one thing rather than stating a
 	// condition, so a second block with the same prelude replaces the first
@@ -5260,12 +5803,29 @@ const prefixBrowsers = [
 // (`major * 100000 + minor` tops out around 15 million) and past the one
 // `_encodeBrowserVersion` gives Safari TP, which has to compare as the newest
 // version that exists rather than as one that never arrives.
-const NEVER = 1e15;
+// Below 2**31 as well, so every table entry is a `Uint32Array` element V8 hands
+// back as a small integer rather than boxing — which is what lets those tables
+// be half the width `Infinity` or a 1e15 sentinel would force.
+const NEVER = 1e9;
 
-// How `NEVER` is written into the emitted tables: the same value, twelve
+// How `NEVER` is written into the emitted tables: the same value, seven
 // characters shorter than the digits it stands for, and still a plain number
 // literal — which is what lets prettier pack the tables many to a line.
-const NEVER_LITERAL = "1e15";
+const NEVER_LITERAL = "1e9";
+
+// WHY: browserslist names these, but no compat dataset states what they read, so
+// each is known only by its engine: Opera Mini renders with Presto, KaiOS with
+// Gecko, UC, QQ and Baidu with Blink and BlackBerry 10 with WebKit. Node renders
+// no CSS. The minifier keeps the one prefix such an engine reads and no other.
+const UNSTATED_BROWSER_PREFIXES = [
+	["and_qq", "-webkit-"],
+	["and_uc", "-webkit-"],
+	["baidu", "-webkit-"],
+	["bb", "-webkit-"],
+	["kaios", "-moz-"],
+	["node", null],
+	["op_mini", "-o-"]
+];
 
 /**
  * One version as the emitted tables spell it.
@@ -5393,25 +5953,141 @@ const collectSupportedFrom = (paths) => {
 };
 
 /**
- * When each browser first read every standard pseudo-class and pseudo-element,
- * keyed by the spelling a selector carries (`:hover`, `::before`, `:nth-child`).
- * Only a pseudo every target reads may be joined into a selector list, because
- * one selector an engine cannot parse invalidates the whole list.
+ * When each browser first read every standard pseudo-class and pseudo-element a
+ * style rule's selector may name, keyed by the shape it is written in: `:hover`
+ * bare, `:nth-child(` with its argument. Only a pseudo every target reads may be
+ * joined into a selector list, because one selector an engine cannot parse
+ * invalidates the whole list.
  * @returns {[string, [string, number][]][]} the versions, by spelling
  */
 const collectSelectorSupport = () => {
 	/** @type {[string, [string, number][]][]} */
 	const table = [];
+	/** @type {Set<string>} */
+	const spellings = new Set();
 	for (const entry of Object.values(selectors)) {
 		if (entry.status !== "standard") continue;
-		const match = /^(::?)([-\w]+)/.exec(entry.syntax || "");
+		// `:first`, `:left`, `:right` and `:blank` select pages, so a style rule
+		// naming one is a selector no engine parses.
+		if (entry.groups.includes("CSS Paged Media")) continue;
+		const match = /^(::?)([-\w]+)(\()?/.exec(entry.syntax || "");
 		if (match === null) continue;
-		const [, colons, name] = match;
+		const [, colons, name, call] = match;
 		if (!bcd.css.selectors[name]) continue;
-		table.push([
-			`${colons}${name}`,
-			collectSupportedFrom([`css.selectors.${name}`])
-		]);
+		// `::cue` and `::cue()` are two pseudos to a parser, each valid only in
+		// its own shape.
+		const spelling = `${colons}${name}${call || ""}`;
+		if (spellings.has(spelling)) continue;
+		spellings.add(spelling);
+		table.push([spelling, collectSupportedFrom([`css.selectors.${name}`])]);
+	}
+	return table.sort((a, b) => (a[0] < b[0] ? -1 : 1));
+};
+
+/**
+ * When each browser first read each length and angle unit, keyed `"unit <name>"`.
+ * A row grouping several units names them in its description; an absolute
+ * length has no row of its own, so the `<length>` type's row answers for it.
+ * @returns {[string, [string, number][]][]} the versions, by unit
+ */
+const collectUnitSupport = () => {
+	/** @type {Map<string, [string, number][]>} */
+	const out = new Map();
+	for (const type of ["length", "angle"]) {
+		const node = /** @type {EXPECTED_ANY} */ (bcd.css.types)[type];
+		for (const name of Object.keys(node)) {
+			if (name.startsWith("__")) continue;
+			/** @type {string[]} */
+			const units = [];
+			if (/^[a-z]+$/i.test(name)) {
+				units.push(name);
+			} else {
+				const listed = /<code>([a-z]+)<\/code>/gi;
+				const description = String(node[name].__compat.description || "");
+				let match;
+				while ((match = listed.exec(description)) !== null) {
+					units.push(match[1]);
+				}
+			}
+			if (units.length === 0) {
+				throw new Error(`css.types.${type}.${name} names no unit: bcd moved`);
+			}
+			const versions = collectSupportedFrom([`css.types.${type}.${name}`]);
+			for (const unit of units) out.set(`unit ${unit.toLowerCase()}`, versions);
+		}
+	}
+	const base = collectSupportedFrom(["css.types.length"]);
+	for (const [unit, group] of SUPPLEMENT.absoluteUnitScale) {
+		if (group === "length" && !out.has(`unit ${unit}`)) {
+			out.set(`unit ${unit}`, base);
+		}
+	}
+	return [...out].sort((a, b) => (a[0] < b[0] ? -1 : 1));
+};
+
+/**
+ * When each browser first read each gradient function, by its name.
+ * @returns {[string, [string, number][]][]} the versions, by function name
+ */
+const collectGradientSupport = () => {
+	/** @type {[string, [string, number][]][]} */
+	const table = [];
+	for (const name of Object.keys(bcd.css.types.gradient)) {
+		if (name.startsWith("__")) continue;
+		table.push([name, collectSupportedFrom([`css.types.gradient.${name}`])]);
+	}
+	return table;
+};
+
+/**
+ * When each browser first read a value a declaration may name, keyed by the
+ * spelling the printer looks one up by: a color function by its own name, and a
+ * property's keyword as `"<property> <keyword>"`. Only a construct BCD gives a
+ * row of its own is here — a parent's row answers for the construct it was
+ * filed under rather than for one it never names, which is why `canvastext` is
+ * absent and its ancient `<system-color>` parent is not read for it.
+ * @param {string[]} colorFunctions the functions `<color>` names
+ * @param {{ [name: string]: BcdNode }=} propertyNodes the BCD property tree to read
+ * @returns {[string, [string, number][]][]} the versions, by spelling
+ */
+const collectValueSupport = (
+	colorFunctions,
+	propertyNodes = /** @type {{ [name: string]: BcdNode }} */ (
+		/** @type {unknown} */ (bcd.css.properties)
+	)
+) => {
+	/** @type {[string, [string, number][]][]} */
+	const table = [];
+	for (const name of colorFunctions) {
+		const node = /** @type {EXPECTED_ANY} */ (bcd.css.types.color)[name];
+		if (!node || !node.__compat) continue;
+		table.push([name, collectSupportedFrom([`css.types.color.${name}`])]);
+	}
+	for (const [property, node] of Object.entries(propertyNodes)) {
+		if (property.startsWith("__")) continue;
+		const entry = /** @type {PartialPropertyTable} */ (properties)[property];
+		if (!entry || !entry.syntax || entry.status !== "standard") continue;
+		const keywords = new Set(
+			lowerSorted(acceptedValues(entry.syntax).keywords)
+		);
+		for (const value of Object.keys(node)) {
+			if (value === "__compat") continue;
+			const sub = /** @type {BcdNode} */ (
+				/** @type {EXPECTED_ANY} */ (node)[value]
+			);
+			const keyword = value.toLowerCase();
+			// A sub-feature the grammar does not name is something else BCD files
+			// under the property — an animation, a syntax variant, a longhand's own
+			// behaviour — rather than a value a declaration can be written with.
+			if (!sub.__compat || !keywords.has(keyword)) continue;
+			table.push([
+				`${property} ${keyword}`,
+				collectSupportedFrom([`css.properties.${property}.${value}`])
+			]);
+		}
+	}
+	if (table.length === 0) {
+		throw new Error("no value carries a support row of its own: bcd moved");
 	}
 	return table.sort((a, b) => (a[0] < b[0] ? -1 : 1));
 };
@@ -5450,6 +6126,36 @@ const poolSupport = (tables) => {
 		})
 	);
 	return { browsers, profiles, indexes };
+};
+
+/**
+ * The value table as one string: a group per property, `property:keyword index
+ * keyword index`, groups joined by `|`, and the functions that are nobody's
+ * keyword in the group with no property name. A `Map` literal of the same
+ * entries costs 3.7x this and is built whether or not a build looks one up.
+ * @param {[string, [string, number][]][]} table the values
+ * @param {number[]} indexes each one's profile
+ * @returns {string} the packed string, quoted
+ */
+const valueSupportLiteral = (table, indexes) => {
+	/** @type {Map<string, string[]>} */
+	const byProperty = new Map();
+	for (const [at, [name]] of table.entries()) {
+		const space = name.indexOf(" ");
+		const property = space === -1 ? "" : name.slice(0, space);
+		const keyword = space === -1 ? name : name.slice(space + 1);
+		let group = byProperty.get(property);
+		if (group === undefined) {
+			group = [];
+			byProperty.set(property, group);
+		}
+		group.push(`${keyword} ${indexes[at]}`);
+	}
+	return JSON.stringify(
+		[...byProperty]
+			.map(([name, group]) => `${name}:${group.join(" ")}`)
+			.join("|")
+	);
 };
 
 /**
@@ -5771,7 +6477,7 @@ const LOGICAL_SIZE_WINDOWS = [
 	["android", "4.4", "57"]
 ];
 
-/** @type {Map<string, [string, [string, string, string | number][], [string, string][]?][]>} */
+/** @type {Map<string, [string, [string, string, string | number][], [string, string][]?, number?][]>} */
 const PREFIX_SUPPLEMENT = new Map([
 	[
 		// WHY: Multi-column's own gap, prefixed until the module went unprefixed — Chrome
@@ -5898,6 +6604,93 @@ const PREFIX_SUPPLEMENT = new Map([
 			]
 		]
 	],
+	// WHY: The 2009 flexbox draft, which WebKit and Gecko shipped under `display:
+	// -webkit-box` / `-moz-box` before the 2012 one (caniuse, through autoprefixer's
+	// table). It named each property anew, and no dataset maps the names across.
+	// `box-flex` reads the grow factor alone, and `auto` and `none` as theirs.
+	[
+		"flex",
+		[
+			[
+				"-webkit-box-flex",
+				[
+					["chrome", "4", "21"],
+					["safari", "3.1", "6.1"],
+					["ios_saf", "3.2", "7"],
+					["android", "2.1", "4.4"]
+				],
+				[
+					["auto", "1"],
+					["none", "0"]
+				],
+				0
+			],
+			[
+				"-moz-box-flex",
+				[["firefox", "2", "22"]],
+				[
+					["auto", "1"],
+					["none", "0"]
+				],
+				0
+			]
+		]
+	],
+	[
+		"flex-direction",
+		[
+			[
+				"-webkit-box-orient",
+				[
+					["chrome", "4", "21"],
+					["safari", "3.1", "6.1"],
+					["ios_saf", "3.2", "7"],
+					["android", "2.1", "4.4"]
+				],
+				[
+					["row", "horizontal"],
+					["row-reverse", "horizontal"],
+					["column", "vertical"],
+					["column-reverse", "vertical"]
+				]
+			],
+			[
+				"-webkit-box-direction",
+				[
+					["chrome", "4", "21"],
+					["safari", "3.1", "6.1"],
+					["ios_saf", "3.2", "7"],
+					["android", "2.1", "4.4"]
+				],
+				[
+					["row", "normal"],
+					["row-reverse", "reverse"],
+					["column", "normal"],
+					["column-reverse", "reverse"]
+				]
+			],
+			[
+				"-moz-box-orient",
+				[["firefox", "2", "22"]],
+				[
+					["row", "horizontal"],
+					["row-reverse", "horizontal"],
+					["column", "vertical"],
+					["column-reverse", "vertical"]
+				]
+			],
+			[
+				"-moz-box-direction",
+				[["firefox", "2", "22"]],
+				[
+					["row", "normal"],
+					["row-reverse", "reverse"],
+					["column", "normal"],
+					["column-reverse", "reverse"]
+				]
+			]
+		]
+	],
 	// WHY: IE 10's flexbox, the 2012 draft: it renamed the properties rather than
 	// prefixing them, and BCD records the renames unevenly — `-ms-flex-positive`
 	// as an `alternative_name`, `-ms-flex-order` as a `-ms-` prefix on `order`
@@ -5916,7 +6709,20 @@ const PREFIX_SUPPLEMENT = new Map([
 					["ie", "10", "11"],
 					["ie_mob", "10", "11"]
 				]
-			]
+			],
+			// `-webkit-box-ordinal-group` counts from 1 where `order` counts from 0.
+			[
+				"-webkit-box-ordinal-group",
+				[
+					["chrome", "4", "21"],
+					["safari", "3.1", "6.1"],
+					["ios_saf", "3.2", "7"],
+					["android", "2.1", "4.4"]
+				],
+				[],
+				1
+			],
+			["-moz-box-ordinal-group", [["firefox", "2", "22"]], [], 1]
 		]
 	],
 	[
@@ -5987,6 +6793,33 @@ const PREFIX_SUPPLEMENT = new Map([
 					["baseline", "baseline"],
 					["stretch", "stretch"]
 				]
+			],
+			[
+				"-webkit-box-align",
+				[
+					["chrome", "4", "21"],
+					["safari", "3.1", "6.1"],
+					["ios_saf", "3.2", "7"],
+					["android", "2.1", "4.4"]
+				],
+				[
+					["flex-start", "start"],
+					["flex-end", "end"],
+					["center", "center"],
+					["baseline", "baseline"],
+					["stretch", "stretch"]
+				]
+			],
+			[
+				"-moz-box-align",
+				[["firefox", "2", "22"]],
+				[
+					["flex-start", "start"],
+					["flex-end", "end"],
+					["center", "center"],
+					["baseline", "baseline"],
+					["stretch", "stretch"]
+				]
 			]
 		]
 	],
@@ -6025,6 +6858,31 @@ const PREFIX_SUPPLEMENT = new Map([
 					["center", "center"],
 					["space-between", "justify"],
 					["space-around", "distribute"]
+				]
+			],
+			[
+				"-webkit-box-pack",
+				[
+					["chrome", "4", "21"],
+					["safari", "3.1", "6.1"],
+					["ios_saf", "3.2", "7"],
+					["android", "2.1", "4.4"]
+				],
+				[
+					["flex-start", "start"],
+					["flex-end", "end"],
+					["center", "center"],
+					["space-between", "justify"]
+				]
+			],
+			[
+				"-moz-box-pack",
+				[["firefox", "2", "22"]],
+				[
+					["flex-start", "start"],
+					["flex-end", "end"],
+					["center", "center"],
+					["space-between", "justify"]
 				]
 			]
 		]
@@ -6186,6 +7044,22 @@ const PREFIX_SUPPLEMENT = new Map([
  * spelling that table writes.
  * @returns {[string, [string, string][]][]} `[spelling, [standard, legacy][]][]`
  */
+/**
+ * The offset each legacy spelling reading a number adds to the standard value's
+ * first component, from the fourth element of a `PREFIX_SUPPLEMENT` entry.
+ * @returns {[string, number][]} spelling and offset, sorted by spelling
+ */
+const collectPrefixSpellingNumbers = () => {
+	/** @type {[string, number][]} */
+	const out = [];
+	for (const [, stated] of PREFIX_SUPPLEMENT) {
+		for (const [spelling, , , offset] of stated) {
+			if (offset !== undefined) out.push([spelling, offset]);
+		}
+	}
+	return out.sort((a, b) => (a[0] < b[0] ? -1 : 1));
+};
+
 const collectPrefixSpellingKeywords = () => {
 	/** @type {[string, [string, string][]][]} */
 	const out = [];
@@ -6280,7 +7154,12 @@ const PROPERTY_SPELLING_EXCLUSIONS = new Map([
 	// BCD dates a `-webkit-` longhand on the old Android WebView, but the WebKit
 	// fork that WebView ran carries the `-webkit-border-image` shorthand and no
 	// longhand of it, and no other engine's property list has ever had this name.
-	["border-image-slice", ["-webkit-border-image-slice"]]
+	["border-image-slice", ["-webkit-border-image-slice"]],
+	// The 2009 flexbox draft's names: `PREFIX_SUPPLEMENT` states each as the
+	// legacy spelling of the property that replaced it instead.
+	...SUPPLEMENT.legacyBoxProperties.map(
+		(name) => /** @type {[string, string[]]} */ ([name, ["-webkit-", "-moz-"]])
+	)
 ]);
 
 // A vendor spelling BCD files under a keyword it does not spell, by keyword —
@@ -6352,6 +7231,38 @@ const VALUE_PREFIX_SUPPLEMENT = new Map([
 					["opera", "15", "35"]
 				]
 			]
+		]
+	],
+	// WHY: The 2009 flexbox draft's containers, which BCD does not record under
+	// `display` at all; their windows are the draft's properties' own.
+	[
+		"flex",
+		[
+			[
+				"-webkit-box",
+				[
+					["chrome", "4", "21"],
+					["safari", "3.1", "6.1"],
+					["ios_saf", "3.2", "7"],
+					["android", "2.1", "4.4"]
+				]
+			],
+			["-moz-box", [["firefox", "2", "22"]]]
+		]
+	],
+	[
+		"inline-flex",
+		[
+			[
+				"-webkit-inline-box",
+				[
+					["chrome", "4", "21"],
+					["safari", "3.1", "6.1"],
+					["ios_saf", "3.2", "7"],
+					["android", "2.1", "4.4"]
+				]
+			],
+			["-moz-inline-box", [["firefox", "2", "22"]]]
 		]
 	]
 ]);
@@ -6606,6 +7517,7 @@ const collectData = async () => {
 		colorName
 	);
 	const zeroAngleFunctions = collectZeroAngleFunctions();
+	const numberArgumentFunctions = collectNumberArgumentFunctions();
 	const mathFunctionArity = collectMathFunctionArity(mathFunctions);
 	const mathFunctionSumArguments = collectMathFunctionSumArguments(
 		mathFunctions,
@@ -6619,6 +7531,10 @@ const collectData = async () => {
 		])
 	].sort();
 	const alphaValueProperties = collectAlphaValueProperties();
+	// An `<alpha-value>` takes every number, zero among them, ranged or not.
+	const numberZeroProperties = [
+		...new Set([...collectNumberZeroProperties(), ...alphaValueProperties])
+	].sort();
 	const ratioProperties = collectRatioProperties();
 	const cssModulesKeywords = collectCssModulesKeywords();
 	const negativeAcceptingProperties = collectNegativeAcceptingProperties();
@@ -6626,6 +7542,7 @@ const collectData = async () => {
 	const oneValuePairShorthands = collectOneValuePairShorthands(pairLonghands);
 	const familyLonghands = collectFamilyLonghands();
 	const familySlotInitials = collectFamilySlotInitials(familyLonghands);
+	const animationKeywordSlots = collectAnimationKeywordSlots();
 	const layerInitials = collectLayerInitials();
 	const orderedLonghands = collectOrderedLonghands(
 		SUPPLEMENT.orderedShorthands
@@ -6673,10 +7590,21 @@ const collectData = async () => {
 	}
 	assertClassesArePrintable(slotAccepts);
 	const lengthOnlyFunctions = collectLengthOnlyFunctions();
+	const negativeAcceptingFunctions = collectNegativeAcceptingFunctions();
 	const unitGroupBase = collectUnitGroupBase();
 	const eighthTurnCosine = collectEighthTurnCosine();
 	const prefixedProperties = collectPrefixTable(bcd.css.properties, true, true);
+	const propertyAliases = collectPropertyAliases(prefixedProperties);
+	const declarationRanks = collectDeclarationRanks(
+		[
+			...Object.keys(properties),
+			...Object.keys(bcd.css.properties),
+			...propertyAliases.map(([spelling]) => spelling)
+		],
+		propertyAliases
+	);
 	const prefixSpellingKeywords = collectPrefixSpellingKeywords();
+	const prefixSpellingNumbers = collectPrefixSpellingNumbers();
 	const prefixedSelectors = collectPrefixTable(bcd.css.selectors, true);
 	const selectorSupport = collectSelectorSupport();
 	/** @type {[string, [string, number][]][]} */
@@ -6684,12 +7612,38 @@ const collectData = async () => {
 		name,
 		collectSupportedFrom(paths)
 	]);
-	const pooled = poolSupport([supportedFrom, selectorSupport]);
+	const valueSupport = [
+		...collectValueSupport(colorValueFunctions),
+		...collectGradientSupport(),
+		...collectUnitSupport(),
+		// Where a substitution function is read, any declaration holding it parses.
+		// `attr()` is left out: its row is the `content` reading, not this one.
+		...[...substitutionFunctions]
+			.filter(
+				(name) =>
+					name !== "attr" &&
+					/** @type {EXPECTED_ANY} */ (bcd.css.types)[name] !== undefined
+			)
+			.map(
+				(name) =>
+					/** @type {[string, [string, number][]]} */ ([
+						name,
+						collectSupportedFrom([`css.types.${name}`])
+					])
+			)
+	].sort((a, b) => (a[0] < b[0] ? -1 : 1));
+	const pooled = poolSupport([supportedFrom, selectorSupport, valueSupport]);
 	const prefixedAtRules = collectPrefixTable(bcd.css["at-rules"]);
 	const prefixedValues = collectPrefixedValues();
 	// Built before the template so the window pool below is complete when it is
 	// written; the order fixes the indices the tables name.
 	const prefixedPropertiesText = prefixLiteral(prefixedProperties);
+	const legacyBoxSpellings = prefixedProperties
+		.flatMap(([, spellings]) => spellings.map(([spelling]) => spelling))
+		.filter((spelling) =>
+			SUPPLEMENT.legacyBoxProperties.includes(spelling.replace(/^-[a-z]+-/, ""))
+		)
+		.sort();
 	const prefixedSelectorsText = prefixLiteral(prefixedSelectors);
 	const prefixedAtRulesText = prefixLiteral(prefixedAtRules);
 	const prefixedValuesText = prefixedValueLiteral(prefixedValues);
@@ -6722,6 +7676,11 @@ const collectData = async () => {
 // Sources: mdn-data, color-name and @mdn/browser-compat-data, at the versions yarn.lock pins.
 
 "use strict";
+
+const memoize = require("../util/memoize");
+
+// Tables only the minifier or a \`css/module\` reads are getters built on first use,
+// so a build parsing CSS without them never compiles or allocates them.
 
 /** @typedef {(sums: Map<string, number>[]) => [string, number[]] | null} MathArgumentReader */
 /** @typedef {(values: number[], strategy: string, table: Map<number, number>) => number | null} MathOperation */
@@ -6772,6 +7731,16 @@ const ONE_VALUE_PAIR_SHORTHANDS = ${setLiteral(oneValuePairShorthands)};
 // the longhands they merge.
 const PLACE_SHORTHANDS = ${setLiteral(SUPPLEMENT.placeShorthands)};
 
+// The stroke lengths a bare number writes in px, the unit it is read in.
+const SVG_USER_UNIT_PROPERTIES = ${setLiteral(
+		SUPPLEMENT.svgUserUnitProperties
+	)};
+
+// The displays that lay a box out by the 2009 flexbox draft, and that draft's
+// prefixed properties, which such a box reads in place of their replacements.
+const LEGACY_BOX_DISPLAYS = ${setLiteral(SUPPLEMENT.legacyBoxDisplays)};
+const LEGACY_BOX_SPELLINGS = ${setLiteral(legacyBoxSpellings)};
+
 // The keywords a shorthand's longhands disagree on, so a merge writing one into
 // every slot would turn a declaration the engine kept into a shorthand it drops:
 // \`justify-items\` takes \`left\` and \`align-items\` does not.
@@ -6791,6 +7760,11 @@ const FAMILY_LONGHANDS = new Map([${familyLonghands
 		.map(([name, longhands]) => `["${name}", ${JSON.stringify(longhands)}]`)
 		.join(", ")}]);
 
+// The \`animation\` longhands whose every value is a keyword, and those keywords.
+const ANIMATION_KEYWORD_SLOTS = new Map([${animationKeywordSlots
+		.map(([name, keywords]) => `["${name}", ${JSON.stringify(keywords)}]`)
+		.join(", ")}]);
+
 // The properties whose comma-separated items take a \`<custom-ident>\`, where a
 // vendor spelling is a name the engine parses rather than one it may drop — so a
 // later declaration listing an earlier one's items cannot be its fallback.
@@ -6806,11 +7780,28 @@ const SLASH_LONGHANDS = new Map([${slashLonghands
 		.map(([name, longhands]) => `["${name}", ${JSON.stringify(longhands)}]`)
 		.join(", ")}]);
 
+// Every other spelling of a property — vendor, alternative or legacy — mapped to
+// the property, so two declarations of one property are known wherever spelled.
+const getPropertyAliases = memoize(() => new Map([${propertyAliases
+		.map(([spelling, name]) => `["${spelling}", "${name}"]`)
+		.join(", ")}]));
+
+// Every property a dataset names, mapped to its family's place in the order a
+// block's declarations print in; -1 keeps a property where it was written.
+const getDeclarationRanks = memoize(() => {
+	const names = [${declarationRanks.map(([name]) => `"${name}"`).join(", ")}];
+	const ranks = [${declarationRanks.map(([, rank]) => rank).join(", ")}];
+	/** @type {Map<string, number>} */
+	const out = new Map();
+	for (let i = 0; i < names.length; i++) out.set(names[i], ranks[i]);
+	return out;
+});
+
 // Every longhand each shorthand sets, so one block can be asked whether another
 // could shadow it. Not every shorthand prefixes its longhands: \`inset\` sets \`top\`.
-const SHORTHAND_LONGHANDS = new Map([${shorthandLonghands
+const getShorthandLonghands = memoize(() => new Map([${shorthandLonghands
 		.map(([name, longhands]) => `["${name}", ${setLiteral(longhands)}]`)
-		.join(", ")}]);
+		.join(", ")}]));
 
 // WHY: Every longhand the three merge tables above can consume, so a block is asked
 // once whether it holds anything mergeable at all. Two of them have to be
@@ -6897,7 +7888,9 @@ const COLOR_ONLY_PROPERTIES = ${setLiteral(colorOnlyProperties)};
 // directly in one is a keyword rather than a name of the author's — and matches
 // ASCII case-insensitively. A call's arguments are read against the function's
 // own grammar, so they are not covered.
-const KEYWORD_ONLY_PROPERTIES = ${setLiteral(keywordOnlyProperties)};
+const getKeywordOnlyProperties = memoize(() => ${setLiteral(
+		keywordOnlyProperties
+	)});
 
 // Each two-keyword \`display\` -> the single keyword naming the same box.
 const DISPLAY_SHORT_FORMS = new Map([
@@ -6908,15 +7901,20 @@ ${displayShortForms
 	.join(",\n")}
 ]);
 
-// Each property whose value is a list of shadows -> the count of lengths a
-// shadow cannot go below, past which a trailing zero is already implied.
-const SHADOW_PROPERTIES = ${countMapLiteral(shadowProperties)};
+// Each property whose value is a list of shadows -> the fewest and most lengths
+// a shadow takes; a trailing zero past the fewest is already implied.
+const SHADOW_PROPERTIES = new Map([${shadowProperties
+		.map(
+			([name, [minimum, maximum]]) => `["${name}", [${minimum}, ${maximum}]]`
+		)
+		.join(", ")}]);
 
 // WHY: Each shorthand -> the keywords one of its values may drop, each with every
 // spelling its own slot takes: the slot's keywords, and each function it
 // accepts written \`name()\`. A sibling out of that set means the value fills the
 // slot twice, which is a declaration the engine drops.
-const SHORTHAND_INITIAL_KEYWORDS = new Map([
+/** @type {() => Map<string, Map<string, { spellings: Set<string>, classes: Set<string> }>>} */
+const getShorthandInitialKeywords = memoize(() => new Map([
 ${shorthandInitialKeywords
 	.map(
 		([name, entries]) =>
@@ -6930,7 +7928,7 @@ ${shorthandInitialKeywords
 				.join(", ")}])]`
 	)
 	.join(",\n")}
-]);
+]));
 
 // Each \`font-stretch\` keyword -> the percentage it names, which is the same
 // value in fewer bytes.
@@ -6967,6 +7965,22 @@ const AUTO_SECOND_VALUE_PROPERTIES = ${setLiteral(
 const DEFAULT_GRADIENT_DIRECTIONS = ${setLiteral(
 		SUPPLEMENT.defaultGradientDirections
 	)};
+
+// The position a radial or conic gradient is centered on when it names none.
+const DEFAULT_GRADIENT_POSITIONS = ${setLiteral(
+		SUPPLEMENT.defaultGradientPositions
+	)};
+
+// The flow opposite the default one, which reversing the stops turns into it.
+const REVERSED_GRADIENT_DIRECTIONS = ${setLiteral(
+		SUPPLEMENT.reversedGradientDirections
+	)};
+
+// A linear gradient's side keyword -> the shorter angle naming the same flow.
+/** @type {Map<string, string>} */
+const GRADIENT_SIDE_ANGLES = new Map(${JSON.stringify(
+		SUPPLEMENT.gradientSideAngles
+	)});
 
 // A name CSS matches ASCII case-insensitively but spells with a capital ->
 // that spelling, so lowercasing a name normalizes its case without printing
@@ -7023,25 +8037,25 @@ const REPEAT_STYLE_PROPERTIES = ${setLiteral(repeatStyleProperties)};
 
 // Each property whose initial value is a keyword shorter than \`initial\` -> that
 // keyword, which is the same declaration written in fewer bytes.
-const INITIAL_VALUE_KEYWORDS = new Map([
+const getInitialValueKeywords = memoize(() => new Map([
 ${initialValueKeywords
 	.map(
 		([name, initial]) =>
 			`\t[${JSON.stringify(name)}, ${JSON.stringify(initial)}]`
 	)
 	.join(",\n")}
-]);
+]));
 
 // Each named color a shorter spelling beats -> that spelling, so a name written
 // where a color is unambiguous prints as the shortest text for the same value.
-const COLOR_NAME_TO_SHORTEST = new Map([
+const getColorNameToShortest = memoize(() => new Map([
 ${shorterColorSpellings
 	.map(
 		([name, shortest]) =>
 			`\t[${JSON.stringify(name)}, ${JSON.stringify(shortest)}]`
 	)
 	.join(",\n")}
-]);
+]));
 
 // The functions whose argument is a selector, so a \`>\` / \`+\` / \`~\` inside one
 // is a combinator and needs no whitespace around it.
@@ -7050,6 +8064,14 @@ const SELECTOR_FUNCTIONS = ${setLiteral(selectorFunctions)};
 // The functions every argument of which is an angle, so a zero one needs no
 // unit wherever it stands.
 const ZERO_ANGLE_FUNCTIONS = ${setLiteral(zeroAngleFunctions)};
+
+// The properties a unitless zero is a number in, so a folded \`calc(0)\` there
+// is written \`0\`; anywhere else \`0\` is a length \`calc(0)\` is not.
+const NUMBER_ZERO_PROPERTIES = ${setLiteral(numberZeroProperties)};
+
+// The functions every argument of which is a number or a percentage, so a
+// folded \`calc()\` standing as one is written bare there.
+const NUMBER_ARGUMENT_FUNCTIONS = ${setLiteral(numberArgumentFunctions)};
 
 // CSS Values 4's math functions: everything inside one is a math expression, so
 // \`*\` and \`/\` there are operators, and the whitespace around them carries nothing.
@@ -7125,11 +8147,26 @@ const CALC_REJECTING_PROPERTIES = ${setLiteral(
 		SUPPLEMENT.calcRejectingProperties
 	)};
 
+// The properties that read a bare number as a length of their own, where an
+// engine refuses the same number inside \`calc()\` — so taking the parentheses
+// off would revive a declaration it had thrown away.
+const NUMBER_ONLY_OUTSIDE_CALC_PROPERTIES = ${setLiteral(
+		SUPPLEMENT.numberOnlyOutsideCalcProperties
+	)};
+
 // The range a \`calc()\` is clamped to where the literal outside it is invalid,
 // keyed by property: \`[unit, min, max]\`.
 /** @type {Map<string, [string, number, number]>} */
 const CLAMPED_VALUE_RANGES = new Map([${SUPPLEMENT.clampedValueRanges
 		.map(([name, unit, min, max]) => `["${name}", ["${unit}", ${min}, ${max}]]`)
+		.join(", ")}]);
+
+// The smallest count \`steps()\` takes as a literal, keyed by its
+// \`<step-position>\`. A position missing here is one the table has not met, so
+// it reads as the largest and the fold declines rather than guesses.
+/** @type {Map<string, number>} */
+const STEP_POSITION_MINIMUM_COUNTS = new Map([${SUPPLEMENT.stepPositionMinimumCounts
+		.map(([name, min]) => `["${name}", ${min}]`)
 		.join(", ")}]);
 
 // At-rules whose empty block is inert, so dropping it changes nothing.
@@ -7211,10 +8248,10 @@ const LATER_COLOR_NAMES = ${setLiteral(laterColorNames)};
 // Every named color as its packed \`0xrrggbb\` value — what a color a mix or a
 // relative reference names resolves through. The two tables above cut this one
 // down to the spellings worth rewriting; this one answers for every name.
-/** @type {Map<string, number>} */
-const COLOR_NAME_TO_RGB = new Map([${colorNameValues
+/** @type {() => Map<string, number>} */
+const getColorNameToRgb = memoize(() => new Map([${colorNameValues
 		.map(([name, packed]) => `["${name}", ${packed}]`)
-		.join(", ")}]);
+		.join(", ")}]));
 
 // What a layered shorthand's position, size, origin and clip hold when nothing
 // writes them, as \`[x, y, size, origin, clip]\`. A layer holding its own is a
@@ -7235,9 +8272,17 @@ const FAMILY_SLOT_INITIALS = ${mapLiteral(familySlotInitials)};
 // The font stack \`system-ui\` names, for a target that does not read the keyword.
 const SYSTEM_UI_STACK = ${JSON.stringify(SUPPLEMENT.systemUiStack.join(","))};
 
-// The angle units. Excluded from rounding: \`rotate()\` runs its argument through
-// trig, which turns a truncated digit into a different computed matrix.
+// The angle units. An authored one is excluded from rounding: \`rotate()\` runs
+// its argument through trig, which turns a truncated digit into another matrix.
 const ANGLE_UNITS = ${setLiteral(SUPPLEMENT.angleUnits)};
+
+// How many degrees one of each angle unit is, so a sum in two of them folds.
+/** @type {Map<string, number>} */
+const ANGLE_DEGREES = new Map(${JSON.stringify([
+		...SUPPLEMENT.quarterTurnAngle.map(([unit, count]) => [unit, 90 / count]),
+		// CSS Values 4 §7.1: a radian is 180/π degrees, which no quarter turn spells.
+		["rad", 180 / Math.PI]
+	])});
 
 // The constants a calculation may name (CSS Values 4 §10.7), as \`name -> value\`.
 // \`infinity\` and \`NaN\` are named with none: no printed number spells either, so
@@ -7333,7 +8378,7 @@ const RATIO_PROPERTIES = ${setLiteral(ratioProperties)};
 // The keywords of every property a \`css/module\` reads a scoped name out of,
 // each mapped to how many times it may be spelled before the next one is the
 // name (\`Infinity\` — never the name). Derived from each property's grammar.
-const CSS_MODULES_KEYWORDS = new Map([
+const getCssModulesKeywords = memoize(() => new Map([
 ${cssModulesKeywords
 	.map(
 		([name, , table]) =>
@@ -7342,7 +8387,7 @@ ${cssModulesKeywords
 				.join(", ")}])]`
 	)
 	.join(",\n")}
-]);
+]));
 
 // The parser option gating each of them.
 const CSS_MODULES_KEYWORD_OPTIONS = ${mapLiteral(
@@ -7363,6 +8408,10 @@ const NEGATIVE_ACCEPTING_PROPERTIES = ${setLiteral(
 // a dropped declaration valid.
 const LENGTH_ONLY_FUNCTIONS = ${setLiteral(lengthOnlyFunctions)};
 
+// The transform functions a negative argument is valid in, all but those whose
+// grammar bounds one from below (\`perspective()\`).
+const NEGATIVE_ACCEPTING_FUNCTIONS = ${setLiteral(negativeAcceptingFunctions)};
+
 // Packed \`0xrrggbb\` -> the shortest named color with that value. Only names that
 // can beat \`#rrggbb\`; anything longer would never be picked.
 const RGB_TO_NAME = new Map([
@@ -7382,15 +8431,15 @@ ${colorNames
 // unprefixedFrom\` triples — the slot is the browser's place in
 // \`SUPPORT_BROWSERS\`, so no name is restated. A spelling names its list by
 // index, and two thirds of the lists are shared.
-const PREFIX_WINDOWS = new Float64Array([${windowTriples
+const getPrefixWindows = memoize(() => new Uint32Array([${windowTriples
 		.map(versionLiteral)
-		.join(", ")}]);
+		.join(", ")}]));
 
 // Where each window list begins; the entry after it is where it ends.
-const PREFIX_WINDOW_STARTS = new Int32Array([${windowStarts.join(", ")}]);
+const PREFIX_WINDOW_STARTS = new Uint16Array([${windowStarts.join(", ")}]);
 
-/** @type {Map<string, [string, number][]>} */
-const PREFIXED_PROPERTIES = ${prefixedPropertiesText};
+/** @type {() => Map<string, [string, number][]>} */
+const getPrefixedProperties = memoize(() => ${prefixedPropertiesText});
 
 /** @type {Map<string, [string, number][]>} */
 const PREFIXED_SELECTORS = ${prefixedSelectorsText};
@@ -7398,10 +8447,10 @@ const PREFIXED_SELECTORS = ${prefixedSelectorsText};
 /** @type {Map<string, [string, number][]>} */
 const PREFIXED_AT_RULES = ${prefixedAtRulesText};
 
-// WHY: The version a browser that never shipped a construct is given below, and the
-// one a spelling still prefixed today is unprefixed at. Finite and a plain
-// number, so both version tables hold numbers alone; far past any real version,
-// and past the one Safari TP is read as.
+// WHY: The version a browser that never shipped a construct is given below, and
+// the one a spelling still prefixed today is unprefixed at. Finite, a plain
+// number and below 2**31, so both version tables are \`Uint32Array\`s of small
+// integers; far past any real version, and past the one Safari TP is read as.
 const NEVER = ${NEVER_LITERAL};
 
 // The browsers every support profile below covers, in the order it states them.
@@ -7410,13 +8459,18 @@ const NEVER = ${NEVER_LITERAL};
 /** @type {string[]} */
 const SUPPORT_BROWSERS = ${JSON.stringify(pooled.browsers)};
 
+// The vendor prefix each browserslist name no profile covers reads, by its
+// engine, and null for one reading no CSS. A name missing here reads them all.
+/** @type {Map<string, string | null>} */
+const UNSTATED_BROWSER_PREFIXES = new Map(${JSON.stringify(UNSTATED_BROWSER_PREFIXES)});
+
 // The versions themselves, rows of \`SUPPORT_BROWSERS.length\` laid end to end,
 // one row per distinct profile: a construct names the row it reads rather than
 // carrying its own copy of it. \`NEVER\` is a browser that never shipped it.
-const SUPPORT_PROFILES = new Float64Array([${pooled.profiles
+const getSupportProfiles = memoize(() => new Uint32Array([${pooled.profiles
 		.flat()
 		.map(versionLiteral)
-		.join(", ")}]);
+		.join(", ")}]));
 
 /** @type {Map<string, number>} */
 const SUPPORTED_FROM = ${supportLiteral(supportedFrom, pooled.indexes[0])};
@@ -7424,50 +8478,74 @@ const SUPPORTED_FROM = ${supportLiteral(supportedFrom, pooled.indexes[0])};
 // When each browser first read a pseudo-class or pseudo-element, by the spelling
 // a selector carries. A pseudo missing here is one no target is known to read,
 // so it never joins a selector list.
-/** @type {Map<string, number>} */
-const SELECTOR_SUPPORTED_FROM = ${supportLiteral(selectorSupport, pooled.indexes[1])};
+/** @type {() => Map<string, number>} */
+const getSelectorSupportedFrom = memoize(() => ${supportLiteral(
+		selectorSupport,
+		pooled.indexes[1]
+	)});
+
+// When each browser first read a value a declaration may name, as
+// \`property:keyword index keyword index|...\` with the color functions under no
+// property. A value missing here is one no target is known to read.
+const getValueSupportPacked = memoize(() =>
+	${valueSupportLiteral(valueSupport, pooled.indexes[2])});
 
 // WHY: The vendor spellings of a property's own keyword values, as \`property ->
 // keyword -> [spelling, [browserslistBrowser, from, to][]][]\` — \`display:flex\`
 // was \`display:-webkit-flex\`, and \`width:max-content\` \`width:-moz-max-content\`.
 // Only keywords the property's syntax names are here, so a function whose older
 // spelling read its arguments differently is not.
-/** @type {Map<string, Map<string, [string, number][]>>} */
-const PREFIXED_VALUES = ${prefixedValuesText};
+/** @type {() => Map<string, Map<string, [string, number][]>>} */
+const getPrefixedValues = memoize(() => ${prefixedValuesText});
 
 // WHY: The keywords a vendor spelling reads in place of the standard ones, as
 // \`spelling -> standard -> legacy\` — IE 10's \`-ms-flex-pack\` reads
 // \`space-around\` as \`distribute\`. Each map is the older property's whole
 // grammar, so a value naming anything it does not is one that property cannot
 // read and no copy is written.
-/** @type {Map<string, Map<string, string>>} */
-const PREFIXED_SPELLING_KEYWORDS = new Map([
+/** @type {() => Map<string, Map<string, string>>} */
+const getPrefixedSpellingKeywords = memoize(() => new Map([
 ${prefixSpellingKeywords
 	.map(
 		([spelling, keywords]) =>
-			`\t["${spelling}", new Map([${keywords
-				.map(([standard, legacy]) => `["${standard}", "${legacy}"]`)
-				.join(", ")}])]`
+			`\t["${spelling}", new Map(${
+				keywords.length === 0
+					? ""
+					: `[${keywords
+							.map(([standard, legacy]) => `["${standard}", "${legacy}"]`)
+							.join(", ")}]`
+			})]`
 	)
+	.join(",\n")}
+]));
+
+// WHY: The legacy spellings reading a number where the standard property reads
+// more, as \`spelling -> offset\`: the standard value's first component, when a
+// plain non-negative number, plus the offset — \`order:1\` is \`box-ordinal-group:2\`.
+/** @type {Map<string, number>} */
+const PREFIXED_SPELLING_NUMBERS = new Map([
+${prefixSpellingNumbers
+	.map(([spelling, offset]) => `\t["${spelling}", ${offset}]`)
 	.join(",\n")}
 ]);
 
 module.exports.ABSOLUTE_UNIT_SCALE = ABSOLUTE_UNIT_SCALE;
-module.exports.ALPHA_VALUE_PROPERTIES = ALPHA_VALUE_PROPERTIES;\nmodule.exports.ANGLE_UNITS = ANGLE_UNITS;
+module.exports.ALPHA_VALUE_PROPERTIES = ALPHA_VALUE_PROPERTIES;\nmodule.exports.ANGLE_DEGREES = ANGLE_DEGREES;\nmodule.exports.ANGLE_UNITS = ANGLE_UNITS;
 module.exports.ARC_COSINE_DEGREES = ARC_COSINE_DEGREES;
 module.exports.ARC_SINE_DEGREES = ARC_SINE_DEGREES;
 module.exports.ARC_TANGENT_DEGREES = ARC_TANGENT_DEGREES;
+module.exports.ANIMATION_KEYWORD_SLOTS = ANIMATION_KEYWORD_SLOTS;
 module.exports.AUTO_SECOND_VALUE_PROPERTIES = AUTO_SECOND_VALUE_PROPERTIES;
 module.exports.BOX_FAMILY_PREFIX = BOX_FAMILY_PREFIX;
 module.exports.BOX_LONGHANDS = BOX_LONGHANDS;
 module.exports.BOX_SHORTHANDS = BOX_SHORTHANDS;
-module.exports.CALC_CONSTANTS = CALC_CONSTANTS;\nmodule.exports.CALC_REJECTING_PROPERTIES = CALC_REJECTING_PROPERTIES;\nmodule.exports.CANONICAL_NAMES = CANONICAL_NAMES;\nmodule.exports.CLAMPED_VALUE_RANGES = CLAMPED_VALUE_RANGES;\nmodule.exports.COLOR_ARGUMENT_FUNCTIONS = COLOR_ARGUMENT_FUNCTIONS;\nmodule.exports.COLOR_FUNCTIONS = COLOR_FUNCTIONS;
-module.exports.COLOR_KEYWORDS = COLOR_KEYWORDS;\nmodule.exports.COLOR_NAME_TO_RGB = COLOR_NAME_TO_RGB;\nmodule.exports.COLOR_NAME_TO_SHORTEST = COLOR_NAME_TO_SHORTEST;\nmodule.exports.COLOR_ONLY_PROPERTIES = COLOR_ONLY_PROPERTIES;\nmodule.exports.COLOR_SPACE_MODEL = COLOR_SPACE_MODEL;
+module.exports.CALC_CONSTANTS = CALC_CONSTANTS;\nmodule.exports.CALC_REJECTING_PROPERTIES = CALC_REJECTING_PROPERTIES;\nmodule.exports.CANONICAL_NAMES = CANONICAL_NAMES;\nmodule.exports.getDeclarationRanks = getDeclarationRanks;\nmodule.exports.getPropertyAliases = getPropertyAliases;\nmodule.exports.CLAMPED_VALUE_RANGES = CLAMPED_VALUE_RANGES;\nmodule.exports.COLOR_ARGUMENT_FUNCTIONS = COLOR_ARGUMENT_FUNCTIONS;\nmodule.exports.COLOR_FUNCTIONS = COLOR_FUNCTIONS;
+module.exports.COLOR_KEYWORDS = COLOR_KEYWORDS;\nmodule.exports.getColorNameToRgb = getColorNameToRgb;\nmodule.exports.getColorNameToShortest = getColorNameToShortest;\nmodule.exports.COLOR_ONLY_PROPERTIES = COLOR_ONLY_PROPERTIES;\nmodule.exports.getColorSpaceModel = getColorSpaceModel;
 module.exports.COMPOUND_CONTINUATIONS = COMPOUND_CONTINUATIONS;
-module.exports.CSS_MODULES_KEYWORDS = CSS_MODULES_KEYWORDS;
+module.exports.getCssModulesKeywords = getCssModulesKeywords;
 module.exports.CSS_MODULES_KEYWORD_OPTIONS = CSS_MODULES_KEYWORD_OPTIONS;
 module.exports.CSS_WIDE_KEYWORDS = CSS_WIDE_KEYWORDS;
-module.exports.CUBIC_BEZIER_KEYWORDS = CUBIC_BEZIER_KEYWORDS;\nmodule.exports.CUSTOM_IDENT_LIST_PROPERTIES = CUSTOM_IDENT_LIST_PROPERTIES;\nmodule.exports.DEFAULT_GRADIENT_DIRECTIONS = DEFAULT_GRADIENT_DIRECTIONS;
+module.exports.CUBIC_BEZIER_KEYWORDS = CUBIC_BEZIER_KEYWORDS;\nmodule.exports.CUSTOM_IDENT_LIST_PROPERTIES = CUSTOM_IDENT_LIST_PROPERTIES;\nmodule.exports.DEFAULT_GRADIENT_DIRECTIONS = DEFAULT_GRADIENT_DIRECTIONS;\nmodule.exports.DEFAULT_GRADIENT_POSITIONS = DEFAULT_GRADIENT_POSITIONS;\nmodule.exports.REVERSED_GRADIENT_DIRECTIONS = REVERSED_GRADIENT_DIRECTIONS;
 module.exports.DISPLAY_SHORT_FORMS = DISPLAY_SHORT_FORMS;\nmodule.exports.DROPPABLE_WHEN_EMPTY_AT_RULES = DROPPABLE_WHEN_EMPTY_AT_RULES;
 module.exports.EASING_KEYWORDS = EASING_KEYWORDS;
 module.exports.EIGHTH_TURN_COSINE = EIGHTH_TURN_COSINE;
@@ -7478,8 +8556,8 @@ module.exports.FAMILY_SLOT_CLASSES = FAMILY_SLOT_CLASSES;
 module.exports.FAMILY_SLOT_INITIALS = FAMILY_SLOT_INITIALS;\nmodule.exports.FAMILY_SLOT_KEYWORDS = FAMILY_SLOT_KEYWORDS;\nmodule.exports.FEATURELESS_PSEUDO_CLASSES = FEATURELESS_PSEUDO_CLASSES;
 module.exports.FILTER_FUNCTION_OMITTED = FILTER_FUNCTION_OMITTED;\nmodule.exports.FLEX_KEYWORDS = FLEX_KEYWORDS;\nmodule.exports.FONT_SIZE_KEYWORDS = FONT_SIZE_KEYWORDS;\nmodule.exports.FONT_STRETCH_PERCENTAGES = FONT_STRETCH_PERCENTAGES;
 module.exports.FONT_WEIGHT_NUMBERS = FONT_WEIGHT_NUMBERS;
-module.exports.GENERIC_FONT_FAMILIES = GENERIC_FONT_FAMILIES;\nmodule.exports.GRADIENT_LAST_POSITIONS = GRADIENT_LAST_POSITIONS;\nmodule.exports.INITIAL_VALUE_KEYWORDS = INITIAL_VALUE_KEYWORDS;\nmodule.exports.INTEGER_PROPERTIES = INTEGER_PROPERTIES;\nmodule.exports.KEYWORD_ONLY_PROPERTIES = KEYWORD_ONLY_PROPERTIES;\nmodule.exports.LATER_COLOR_NAMES = LATER_COLOR_NAMES;
-module.exports.LAYER_INITIALS = LAYER_INITIALS;\nmodule.exports.LEGACY_PSEUDO_ELEMENTS = LEGACY_PSEUDO_ELEMENTS;
+module.exports.GENERIC_FONT_FAMILIES = GENERIC_FONT_FAMILIES;\nmodule.exports.GRADIENT_LAST_POSITIONS = GRADIENT_LAST_POSITIONS;\nmodule.exports.GRADIENT_SIDE_ANGLES = GRADIENT_SIDE_ANGLES;\nmodule.exports.getInitialValueKeywords = getInitialValueKeywords;\nmodule.exports.INTEGER_PROPERTIES = INTEGER_PROPERTIES;\nmodule.exports.getKeywordOnlyProperties = getKeywordOnlyProperties;\nmodule.exports.LATER_COLOR_NAMES = LATER_COLOR_NAMES;
+module.exports.LAYER_INITIALS = LAYER_INITIALS;\nmodule.exports.LEGACY_BOX_DISPLAYS = LEGACY_BOX_DISPLAYS;\nmodule.exports.LEGACY_BOX_SPELLINGS = LEGACY_BOX_SPELLINGS;\nmodule.exports.LEGACY_PSEUDO_ELEMENTS = LEGACY_PSEUDO_ELEMENTS;
 module.exports.LENGTH_ONLY_FUNCTIONS = LENGTH_ONLY_FUNCTIONS;
 module.exports.LINEAR_GRADIENTS = LINEAR_GRADIENTS;\nmodule.exports.LINEAR_SRGB_TO_P3 = LINEAR_SRGB_TO_P3;
 module.exports.MATH_FUNCTIONS = MATH_FUNCTIONS;
@@ -7487,24 +8565,25 @@ module.exports.MATH_FUNCTION_ARITY = MATH_FUNCTION_ARITY;
 module.exports.MATH_FUNCTION_FOLD = MATH_FUNCTION_FOLD;
 module.exports.MATH_FUNCTION_KEYWORDS = MATH_FUNCTION_KEYWORDS;
 module.exports.MATH_FUNCTION_SUM_ARGUMENTS = MATH_FUNCTION_SUM_ARGUMENTS;\nmodule.exports.MERGEABLE_AT_RULES = MERGEABLE_AT_RULES;\nmodule.exports.MERGE_LONGHANDS = MERGE_LONGHANDS;
-module.exports.NEGATIVE_ACCEPTING_PROPERTIES = NEGATIVE_ACCEPTING_PROPERTIES;\nmodule.exports.NEVER = NEVER;
+module.exports.NEGATIVE_ACCEPTING_FUNCTIONS = NEGATIVE_ACCEPTING_FUNCTIONS;\nmodule.exports.NEGATIVE_ACCEPTING_PROPERTIES = NEGATIVE_ACCEPTING_PROPERTIES;\nmodule.exports.NEVER = NEVER;
 module.exports.NTH_NAMED_EQUIVALENTS = NTH_NAMED_EQUIVALENTS;\nmodule.exports.NTH_PSEUDO_FUNCTIONS = NTH_PSEUDO_FUNCTIONS;\nmodule.exports.OMITTABLE_INITIAL_KEYWORDS = OMITTABLE_INITIAL_KEYWORDS;
 module.exports.ONE_VALUE_PAIR_SHORTHANDS = ONE_VALUE_PAIR_SHORTHANDS;\nmodule.exports.ORDERED_LONGHANDS = ORDERED_LONGHANDS;
-module.exports.PAIR_LONGHANDS = PAIR_LONGHANDS;\nmodule.exports.PLACE_SHORTHANDS = PLACE_SHORTHANDS;\nmodule.exports.POSITION_PROPERTIES = POSITION_PROPERTIES;\nmodule.exports.POSITION_X_KEYWORDS = POSITION_X_KEYWORDS;\nmodule.exports.POSITION_Y_KEYWORDS = POSITION_Y_KEYWORDS;
+module.exports.NUMBER_ARGUMENT_FUNCTIONS = NUMBER_ARGUMENT_FUNCTIONS;\nmodule.exports.NUMBER_ONLY_OUTSIDE_CALC_PROPERTIES = NUMBER_ONLY_OUTSIDE_CALC_PROPERTIES;\nmodule.exports.NUMBER_ZERO_PROPERTIES = NUMBER_ZERO_PROPERTIES;\nmodule.exports.PAIR_LONGHANDS = PAIR_LONGHANDS;\nmodule.exports.PLACE_SHORTHANDS = PLACE_SHORTHANDS;\nmodule.exports.POSITION_PROPERTIES = POSITION_PROPERTIES;\nmodule.exports.POSITION_X_KEYWORDS = POSITION_X_KEYWORDS;\nmodule.exports.POSITION_Y_KEYWORDS = POSITION_Y_KEYWORDS;
 module.exports.PREDEFINED_COLOR_SPACES = PREDEFINED_COLOR_SPACES;
 module.exports.PREFIXED_AT_RULES = PREFIXED_AT_RULES;
-module.exports.PREFIXED_PROPERTIES = PREFIXED_PROPERTIES;
+module.exports.getPrefixedProperties = getPrefixedProperties;
 module.exports.PREFIXED_SELECTORS = PREFIXED_SELECTORS;
-module.exports.PREFIXED_SPELLING_KEYWORDS = PREFIXED_SPELLING_KEYWORDS;
-module.exports.PREFIXED_VALUES = PREFIXED_VALUES;
-module.exports.PREFIX_WINDOWS = PREFIX_WINDOWS;\nmodule.exports.PREFIX_WINDOW_STARTS = PREFIX_WINDOW_STARTS;
+module.exports.getPrefixedSpellingKeywords = getPrefixedSpellingKeywords;
+module.exports.PREFIXED_SPELLING_NUMBERS = PREFIXED_SPELLING_NUMBERS;
+module.exports.getPrefixedValues = getPrefixedValues;
+module.exports.getPrefixWindows = getPrefixWindows;\nmodule.exports.PREFIX_WINDOW_STARTS = PREFIX_WINDOW_STARTS;
 module.exports.QUARTER_TURN_ANGLE = QUARTER_TURN_ANGLE;
 module.exports.RATIO_PROPERTIES = RATIO_PROPERTIES;\nmodule.exports.REPEAT_STYLE_KEYWORDS = REPEAT_STYLE_KEYWORDS;\nmodule.exports.REPEAT_STYLE_PROPERTIES = REPEAT_STYLE_PROPERTIES;\nmodule.exports.RGB_TO_NAME = RGB_TO_NAME;
-module.exports.SELECTOR_FUNCTIONS = SELECTOR_FUNCTIONS;\nmodule.exports.SELECTOR_SUPPORTED_FROM = SELECTOR_SUPPORTED_FROM;\nmodule.exports.SHADOW_PROPERTIES = SHADOW_PROPERTIES;\nmodule.exports.SHORTHAND_INITIAL_KEYWORDS = SHORTHAND_INITIAL_KEYWORDS;\nmodule.exports.SHORTHAND_LONGHANDS = SHORTHAND_LONGHANDS;\nmodule.exports.SLASH_BOX_SHORTHANDS = SLASH_BOX_SHORTHANDS;\nmodule.exports.SLASH_LONGHANDS = SLASH_LONGHANDS;\nmodule.exports.SRGB_SPACE = SRGB_SPACE;
-module.exports.STEPPED_FUNCTIONS = STEPPED_FUNCTIONS;
-module.exports.SUBSTITUTION_FUNCTIONS = SUBSTITUTION_FUNCTIONS;\nmodule.exports.SUPPORTED_FROM = SUPPORTED_FROM;\nmodule.exports.SUPPORT_BROWSERS = SUPPORT_BROWSERS;\nmodule.exports.SUPPORT_PROFILES = SUPPORT_PROFILES;\nmodule.exports.SYSTEM_UI_STACK = SYSTEM_UI_STACK;\nmodule.exports.THROUGH_MATRIX = THROUGH_MATRIX;\nmodule.exports.THROUGH_TRANSFER = THROUGH_TRANSFER;\nmodule.exports.TRANSITION_BEHAVIORS = TRANSITION_BEHAVIORS;
+module.exports.SELECTOR_FUNCTIONS = SELECTOR_FUNCTIONS;\nmodule.exports.getSelectorSupportedFrom = getSelectorSupportedFrom;\nmodule.exports.SHADOW_PROPERTIES = SHADOW_PROPERTIES;\nmodule.exports.getShorthandInitialKeywords = getShorthandInitialKeywords;\nmodule.exports.getShorthandLonghands = getShorthandLonghands;\nmodule.exports.SLASH_BOX_SHORTHANDS = SLASH_BOX_SHORTHANDS;\nmodule.exports.SLASH_LONGHANDS = SLASH_LONGHANDS;\nmodule.exports.SRGB_SPACE = SRGB_SPACE;
+module.exports.STEPPED_FUNCTIONS = STEPPED_FUNCTIONS;\nmodule.exports.STEP_POSITION_MINIMUM_COUNTS = STEP_POSITION_MINIMUM_COUNTS;
+module.exports.SUBSTITUTION_FUNCTIONS = SUBSTITUTION_FUNCTIONS;\nmodule.exports.SUPPORTED_FROM = SUPPORTED_FROM;\nmodule.exports.SUPPORT_BROWSERS = SUPPORT_BROWSERS;\nmodule.exports.UNSTATED_BROWSER_PREFIXES = UNSTATED_BROWSER_PREFIXES;\nmodule.exports.getSupportProfiles = getSupportProfiles;\nmodule.exports.SVG_USER_UNIT_PROPERTIES = SVG_USER_UNIT_PROPERTIES;\nmodule.exports.SYSTEM_UI_STACK = SYSTEM_UI_STACK;\nmodule.exports.THROUGH_MATRIX = THROUGH_MATRIX;\nmodule.exports.THROUGH_TRANSFER = THROUGH_TRANSFER;\nmodule.exports.TRANSITION_BEHAVIORS = TRANSITION_BEHAVIORS;
 module.exports.UNIT_CONVERSION_TARGETS = UNIT_CONVERSION_TARGETS;
-module.exports.UNIT_GROUP_BASE = UNIT_GROUP_BASE;\nmodule.exports.UNSHARED_LONGHAND_KEYWORDS = UNSHARED_LONGHAND_KEYWORDS;\nmodule.exports.X_AXIS_TRANSFORMS = X_AXIS_TRANSFORMS;
+module.exports.UNIT_GROUP_BASE = UNIT_GROUP_BASE;\nmodule.exports.UNSHARED_LONGHAND_KEYWORDS = UNSHARED_LONGHAND_KEYWORDS;\nmodule.exports.getValueSupportPacked = getValueSupportPacked;\nmodule.exports.X_AXIS_TRANSFORMS = X_AXIS_TRANSFORMS;
 module.exports.ZERO_ANGLE_FUNCTIONS = ZERO_ANGLE_FUNCTIONS;
 module.exports.ZERO_UNIT_KEEPING_PROPERTIES = ZERO_UNIT_KEEPING_PROPERTIES;\n// The arithmetic the printer's own evaluator needs. Sorted after the tables:\n// \`import/order\` orders exports by case, uppercase first.\nmodule.exports.foldAdd = foldAdd;\nmodule.exports.foldDivide = foldDivide;\nmodule.exports.foldMultiply = foldMultiply;
 `;
@@ -7591,11 +8670,14 @@ module.exports.collectGradientFunctions = collectGradientFunctions;
 module.exports.collectLaterColorNames = collectLaterColorNames;
 module.exports.collectMergeableAtRules = collectMergeableAtRules;
 module.exports.collectNthNamedEquivalents = collectNthNamedEquivalents;
+module.exports.collectNumberArgumentFunctions = collectNumberArgumentFunctions;
+module.exports.collectNumberZeroProperties = collectNumberZeroProperties;
 module.exports.collectOmittableInitialKeywords =
 	collectOmittableInitialKeywords;
 module.exports.collectRatioProperties = collectRatioProperties;
 module.exports.collectUnsharedLonghandKeywords =
 	collectUnsharedLonghandKeywords;
+module.exports.collectValueSupport = collectValueSupport;
 module.exports.collectZeroUnitAmbiguousProperties =
 	collectZeroUnitAmbiguousProperties;
 module.exports.isPlainSupport = isPlainSupport;

@@ -103,6 +103,10 @@ module.exports = [
 		entry: "./index-worker",
 		output: { workerChunkLoading: "async-node" }
 	}),
+	// An entry that is no worker loading its chunks some other way keeps that runtime.
+	base("runtime-chunk-loading", {
+		entry: { main: { import: "./index", chunkLoading: "jsonp" } }
+	}),
 	// Chunks are not read through a native `import()` at all under this format.
 	base("chunk-format", { output: { chunkFormat: "array-push" } }),
 	// The call site is whatever this names, which is not a native `import()`.

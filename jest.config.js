@@ -1,33 +1,40 @@
 "use strict";
 
+// coverage instrumentation slows every build; test/helpers/testTimeout.js
+// reads this as a global, not from the environment the builds can expose
+const coverage = process.argv.some((arg) =>
+	/^--(coverage|collectCoverage|collect-coverage)(=true)?$/.test(arg)
+);
+
 /** @type {import("jest").Config} */
 const config = {
-	testTimeout: 30000,
+	testTimeout: coverage ? 90000 : 30000,
+	globals: { __WEBPACK_TEST_COVERAGE__: coverage },
 	prettierPath: require.resolve("prettier-2"),
 	forceExit: true,
-	globalSetup: "<rootDir>/test/globalSetup.js",
-	globalTeardown: "<rootDir>/test/globalTeardown.js",
+	globalSetup: "<rootDir>/test/harness/globalSetup.js",
+	globalTeardown: "<rootDir>/test/harness/globalTeardown.js",
 	setupFiles: [
-		"<rootDir>/test/bun-sandbox-setup.js",
-		"<rootDir>/test/deno-worker-setup.js"
+		"<rootDir>/test/harness/runtimes/bun-sandbox-setup.js",
+		"<rootDir>/test/harness/runtimes/deno-worker-setup.js"
 	],
-	setupFilesAfterEnv: ["<rootDir>/test/setupTestFramework.js"],
+	setupFilesAfterEnv: ["<rootDir>/test/harness/setupTestFramework.js"],
 	testMatch: [
 		"<rootDir>/test/*.test.js",
 		"<rootDir>/test/*.basictest.js",
 		"<rootDir>/test/*.longtest.js",
-		"<rootDir>/test/*.unittest.js",
-		"<rootDir>/test/*.spectest.js"
+		"<rootDir>/test/unitCases/**/*.unittest.js",
+		"<rootDir>/test/specCases/*.spectest.js"
 	],
 	watchPathIgnorePatterns: [
 		"<rootDir>/.git",
 		"<rootDir>/node_modules",
-		"<rootDir>/test/wpt",
+		"<rootDir>/test/external/wpt",
+		"<rootDir>/test/external/swc",
+		"<rootDir>/test/external/oxc",
 		"<rootDir>/test/js",
-		"<rootDir>/test/browsertest/js",
 		"<rootDir>/test/fixtures/temp-cache-fixture",
 		"<rootDir>/test/fixtures/temp-",
-		"<rootDir>/benchmark",
 		"<rootDir>/assembly",
 		"<rootDir>/tooling",
 		"<rootDir>/examples/*/dist",
@@ -36,13 +43,13 @@ const config = {
 	],
 	modulePathIgnorePatterns: [
 		"<rootDir>/.git",
-		"<rootDir>/test/wpt",
+		"<rootDir>/test/external/wpt",
+		"<rootDir>/test/external/swc",
+		"<rootDir>/test/external/oxc",
 		"<rootDir>/node_modules/webpack/node_modules",
 		"<rootDir>/test/js",
-		"<rootDir>/test/browsertest/js",
 		"<rootDir>/test/fixtures/temp-cache-fixture",
 		"<rootDir>/test/fixtures/temp-",
-		"<rootDir>/benchmark",
 		"<rootDir>/examples/*/dist",
 		"<rootDir>/coverage",
 		"<rootDir>/.eslintcache"
@@ -53,7 +60,7 @@ const config = {
 		"\\.runtime\\.js$",
 		// Serialized to the minimizer's worker pool as source (like runtime code):
 		// coverage instrumentation would inject counters the worker can't resolve.
-		"[\\\\/]lib[\\\\/](?:css[\\\\/]cssMinify|html[\\\\/]htmlMinify)\\.js$",
+		"[\\\\/]lib[\\\\/](?:css[\\\\/]cssMinify|html[\\\\/]htmlMinify|javascript[\\\\/]jsMinify|json[\\\\/]jsonMinify)\\.js$",
 		"<rootDir>/test",
 		"<rootDir>/schemas",
 		"<rootDir>/examples",

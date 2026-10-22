@@ -208,10 +208,9 @@ export const add = (content, from) => {
 /******/ 	// This file contains only the entry chunk.
 /******/ 	// The chunk loading function for additional chunks
 /******/ 	__webpack_require__.e = (chunkId) => {
-/******/ 		return Promise.all(Object.keys(__webpack_require__.f).reduce((promises, key) => {
-/******/ 			__webpack_require__.f[key](chunkId, promises);
-/******/ 			return promises;
-/******/ 		}, []));
+/******/ 		const promises = [];
+/******/ 		__webpack_require__.f.j(chunkId, promises);
+/******/ 		return Promise.all(promises);
 /******/ 	};
 /******/ 	
 /******/ 	/* webpack/runtime/get javascript chunk filename */
@@ -581,10 +580,9 @@ onconnect = function (e) {
 /******/ 	// This file contains only the entry chunk.
 /******/ 	// The chunk loading function for additional chunks
 /******/ 	__webpack_require__.e = (chunkId) => {
-/******/ 		return Promise.all(Object.keys(__webpack_require__.f).reduce((promises, key) => {
-/******/ 			__webpack_require__.f[key](chunkId, promises);
-/******/ 			return promises;
-/******/ 		}, []));
+/******/ 		const promises = [];
+/******/ 		__webpack_require__.f.i(chunkId, promises);
+/******/ 		return Promise.all(promises);
 /******/ 	};
 /******/ 	
 /******/ 	/* webpack/runtime/get javascript chunk filename */
@@ -663,7 +661,7 @@ onmessage = async event => {
 ```
 
 ```javascript
-(()=>{var e={};const o={};function r(t){const s=o[t];if(void 0!==s)return s.exports;const a=o[t]={exports:{}};return e[t](a,a.exports,r),a.exports}r.m=e,r.d=(e,o)=>{for(var t in o)r.o(o,t)&&!r.o(e,t)&&Object.defineProperty(e,t,{enumerable:!0,get:o[t]})},r.f={},r.e=e=>Promise.all(Object.keys(r.f).reduce((o,t)=>(r.f[t](e,o),o),[])),r.u=e=>e+".js",r.o=(e,o)=>Object.prototype.hasOwnProperty.call(e,o),r.p="/dist/",(()=>{var e={721:1},o=o=>{let[t,a,n]=o;for(var p in a)r.o(a,p)&&(r.m[p]=a[p]);for(n&&n(r);t.length;)e[t.pop()]=1;s(o)};r.f.i=(o,t)=>{e[o]||importScripts(r.p+r.u(o))};var t=self.webpackChunk=self.webpackChunk||[],s=t.push.bind(t);t.forEach(o),t.push=o})(),onmessage=async e=>{const{fibonacci:o}=await r.e(129).then(()=>r(129)),t=JSON.parse(e.data);postMessage(`fib(${t}) = ${o(t)}`)}})();
+(()=>{var e={};const o={};function r(t){const s=o[t];if(void 0!==s)return s.exports;const n=o[t]={exports:{}};return e[t](n,n.exports,r),n.exports}r.m=e,r.d=(e,o)=>{for(var t in o)r.o(o,t)&&!r.o(e,t)&&Object.defineProperty(e,t,{enumerable:!0,get:o[t]})},r.f={},r.e=e=>{const o=[];return r.f.i(e,o),Promise.all(o)},r.u=e=>e+".js",r.o=(e,o)=>Object.prototype.hasOwnProperty.call(e,o),r.p="/dist/",(()=>{var e={721:1},o=o=>{let[t,n,a]=o;for(var p in n)r.o(n,p)&&(r.m[p]=n[p]);for(a&&a(r);t.length;)e[t.pop()]=1;s(o)};r.f.i=(o,t)=>{e[o]||importScripts(r.p+r.u(o))};var t=self.webpackChunk=self.webpackChunk||[],s=t.push.bind(t);t.forEach(o),t.push=o})(),onmessage=async e=>{const{fibonacci:o}=await r.e(129).then(()=>r(129)),t=JSON.parse(e.data);postMessage(`fib(${t}) = ${o(t)}`)}})();
 ```
 
 # dist/129.js
@@ -699,8 +697,8 @@ function fibonacci(n) {
 ## Unoptimized
 
 ```
-asset main.js 11.6 KiB [emitted] (name: main)
-asset workers/fibonacci.js 4.74 KiB [emitted] (name: fibonacci)
+asset main.js 11.5 KiB [emitted] (name: main)
+asset workers/fibonacci.js 4.67 KiB [emitted] (name: fibonacci)
 asset chat.js 839 bytes [emitted] (name: chat)
 asset 129.js 729 bytes [emitted]
 chunk (runtime: 9a81d90cfd0dfd13d748, main) 129.js 103 bytes [rendered]
@@ -717,15 +715,15 @@ chunk (runtime: 1fad8bf8de78b0a77bfd) chat.js (chat) 527 bytes [entry] [rendered
     [no exports]
     [no exports used]
     new Worker() ./chat-worker.js ./example.js 25:19-31:1
-chunk (runtime: 9a81d90cfd0dfd13d748) workers/fibonacci.js (fibonacci) 176 bytes (javascript) 1.86 KiB (runtime) [entry] [rendered]
+chunk (runtime: 9a81d90cfd0dfd13d748) workers/fibonacci.js (fibonacci) 176 bytes (javascript) 1.8 KiB (runtime) [entry] [rendered]
   > ./example.js 80:18-84:2
-  runtime modules 1.86 KiB 6 modules
+  runtime modules 1.8 KiB 6 modules
   ./fib-worker.js 176 bytes [built] [code generated]
     [no exports used]
     new Worker() ./fib-worker.js ./example.js 80:18-84:2
-chunk (runtime: main) main.js (main) 2.25 KiB (javascript) 5.4 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) main.js (main) 2.25 KiB (javascript) 5.34 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.4 KiB 7 modules
+  runtime modules 5.34 KiB 7 modules
   ./example.js 2.25 KiB [built] [code generated]
     [no exports used]
     entry ./example.js main
@@ -735,8 +733,8 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset main.js 3.34 KiB [emitted] [minimized] (name: main)
-asset workers/fibonacci.js 800 bytes [emitted] [minimized] (name: fibonacci)
+asset main.js 3.32 KiB [emitted] [minimized] (name: main)
+asset workers/fibonacci.js 782 bytes [emitted] [minimized] (name: fibonacci)
 asset chat.js 270 bytes [emitted] [minimized] (name: chat)
 asset 129.js 156 bytes [emitted] [minimized]
 chunk (runtime: 9a81d90cfd0dfd13d748, main) 129.js 103 bytes [rendered]
@@ -753,15 +751,15 @@ chunk (runtime: 1fad8bf8de78b0a77bfd) chat.js (chat) 527 bytes [entry] [rendered
     [no exports]
     [no exports used]
     new Worker() ./chat-worker.js ./example.js 25:19-31:1
-chunk (runtime: 9a81d90cfd0dfd13d748) workers/fibonacci.js (fibonacci) 176 bytes (javascript) 1.86 KiB (runtime) [entry] [rendered]
+chunk (runtime: 9a81d90cfd0dfd13d748) workers/fibonacci.js (fibonacci) 176 bytes (javascript) 1.8 KiB (runtime) [entry] [rendered]
   > ./example.js 80:18-84:2
-  runtime modules 1.86 KiB 6 modules
+  runtime modules 1.8 KiB 6 modules
   ./fib-worker.js 176 bytes [built] [code generated]
     [no exports used]
     new Worker() ./fib-worker.js ./example.js 80:18-84:2
-chunk (runtime: main) main.js (main) 2.25 KiB (javascript) 5.4 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) main.js (main) 2.25 KiB (javascript) 5.34 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.4 KiB 7 modules
+  runtime modules 5.34 KiB 7 modules
   ./example.js 2.25 KiB [built] [code generated]
     [no exports used]
     entry ./example.js main

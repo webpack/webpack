@@ -29,7 +29,7 @@ module.exports = {
 		}
 	},
 	optimization: {
-		minimize: true,
+		minimize: { css: { extractComments: false } },
 		// None of these claim CSS or HTML: two real minimizers whose matchers cover
 		// other types, and a plugin function with no options at all.
 		minimizer: [

@@ -10,7 +10,7 @@ module.exports = {
 		parser: { html: { sources: false } }
 	},
 	optimization: {
-		minimize: { html: { mergeStyles: true } },
+		minimize: { css: { extractComments: false }, html: { mergeStyles: true } },
 		minimizer: ["..."]
 	},
 	experiments: { html: true }

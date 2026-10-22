@@ -1,0 +1,33 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases lazy-barrel side-effect-import side-effect-import should compile 1`] = `
+"./index.js
+└─ (Dialog, LIB_VERSION) ./lib/index.js [barrel]
+   ├─ (Dialog) ./lib/Dialog.js [barrel]
+   │  └─ css ./lib/Dialog.css
+   └─ (Button) ./Button.js [raw] [lazy]"
+`;
+
+exports[`ConfigCacheTestCases lazy-barrel side-effect-import side-effect-import should compile 2`] = `
+"./index.js
+└─ (Dialog, LIB_VERSION) ./lib/index.js [barrel]
+   ├─ (Dialog) ./lib/Dialog.js [barrel]
+   │  └─ css ./lib/Dialog.css
+   └─ (Button) ./Button.js [raw] [lazy]"
+`;
+
+exports[`ConfigCacheTestCases lazy-barrel side-effect-import side-effect-import should pre-compile to fill disk cache (1st) 1`] = `
+"./index.js
+└─ (Dialog, LIB_VERSION) ./lib/index.js [barrel]
+   ├─ (Dialog) ./lib/Dialog.js [barrel]
+   │  └─ css ./lib/Dialog.css
+   └─ (Button) ./Button.js [raw] [lazy]"
+`;
+
+exports[`ConfigCacheTestCases lazy-barrel side-effect-import side-effect-import should pre-compile to fill disk cache (2nd) 1`] = `
+"./index.js
+└─ (Dialog, LIB_VERSION) ./lib/index.js [barrel]
+   ├─ (Dialog) ./lib/Dialog.js [barrel]
+   │  └─ css ./lib/Dialog.css
+   └─ (Button) ./Button.js [raw] [lazy]"
+`;

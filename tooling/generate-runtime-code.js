@@ -14,7 +14,7 @@ const terser = require("terser");
 // Otherwise it only prints outdated files
 const doWrite = process.argv.includes("--write");
 
-const files = ["lib/util/semver.js"];
+const files = ["lib/sharing/semver.js"];
 
 (async () => {
 	for (const file of files) {
@@ -98,7 +98,7 @@ const files = ["lib/util/semver.js"];
  * @param {RuntimeTemplate} runtimeTemplate
  * @returns {string}
  */
-exports.${name}RuntimeCode = runtimeTemplate => \`var ${name} = \${runtimeTemplate.basicFunction("${args}", [
+module.exports.${name}RuntimeCode = runtimeTemplate => \`var ${name} = \${runtimeTemplate.basicFunction("${args}", [
 	"// see webpack/${file} for original code",
 	${templateLiteral ? `\`${code}\`` : `'${code}'`}
 ])}\`;

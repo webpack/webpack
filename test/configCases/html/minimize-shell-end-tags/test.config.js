@@ -2,7 +2,7 @@
 
 const fs = require("fs");
 const path = require("path");
-const { htmlMinify } = require("../../../../").html.syntax;
+const { htmlMinify } = require("../../../../").html;
 
 module.exports = {
 	findBundle(_i, options) {

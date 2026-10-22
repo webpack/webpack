@@ -47,5 +47,13 @@ module.exports = {
 		expect(page).toContain("<meta charset=utf-8><link rel=preload href=x.css>");
 		// A whitespace text node is a child.
 		expect(page).toContain("<div> </div>");
+		// Emptiness is read off what the renderer printed, not what was written:
+		// a sheet or a `style` it minifies to nothing leaves nothing to keep.
+		expect(page).not.toContain("gone");
+		expect(page).not.toContain("<style");
+		expect(page).not.toContain("color:");
+		expect(page).toContain("<span id=k></span>");
+		// A nested document minified to nothing is the bare name a next pass reads.
+		expect(page).toContain("<iframe srcdoc></iframe>");
 	}
 };

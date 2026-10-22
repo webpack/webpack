@@ -9,9 +9,7 @@ module.exports = {
 	},
 	optimization: {
 		minimize: {
-			css: {
-				convertLengthUnits: true
-			}
+			css: { extractComments: false, convertLengthUnits: true }
 		},
 		// `"..."` keeps the default minimizer, which is what reads
 		// `optimization.minimize.css` and hands it to `cssMinify`.

@@ -3,7 +3,7 @@
 const MinimizerPlugin = require("minimizer-webpack-plugin");
 const webpack = require("../../../../");
 
-const { cssMinify } = webpack.css.syntax;
+const { cssMinify } = webpack.css;
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {
@@ -19,6 +19,7 @@ module.exports = {
 			{
 				apply: (compiler) => {
 					new MinimizerPlugin({
+						extractComments: false,
 						test: /\.css(\?.*)?$/i,
 						minify: [cssMinify],
 						minimizerOptions: [{}]

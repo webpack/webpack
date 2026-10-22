@@ -156,10 +156,9 @@ module.exports = webpackAsyncContext;
 /******/ 	// This file contains only the entry chunk.
 /******/ 	// The chunk loading function for additional chunks
 /******/ 	__webpack_require__.e = (chunkId) => {
-/******/ 		return Promise.all(Object.keys(__webpack_require__.f).reduce((promises, key) => {
-/******/ 			__webpack_require__.f[key](chunkId, promises);
-/******/ 			return promises;
-/******/ 		}, []));
+/******/ 		const promises = [];
+/******/ 		__webpack_require__.f.j(chunkId, promises);
+/******/ 		return Promise.all(promises);
 /******/ 	};
 /******/ 	
 /******/ 	/* webpack/runtime/get javascript chunk filename */
@@ -354,7 +353,7 @@ getTemplate("baz");
 ## Unoptimized
 
 ```
-asset output.js 10.7 KiB [emitted] (name: main)
+asset output.js 10.6 KiB [emitted] (name: main)
 asset 717.output.js 846 bytes [emitted]
 asset 776.output.js 846 bytes [emitted]
 asset 0.output.js 844 bytes [emitted]
@@ -382,9 +381,9 @@ chunk (runtime: main) 776.output.js 38 bytes [rendered]
     [used exports unknown]
     import() context element ./bar ./templates/ lazy ^\.\/.*$ referencedExports:  namespace object ./bar
     import() context element ./bar.js ./templates/ lazy ^\.\/.*$ referencedExports:  namespace object ./bar.js
-chunk (runtime: main) output.js (main) 441 bytes (javascript) 5.34 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 441 bytes (javascript) 5.28 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.34 KiB 8 modules
+  runtime modules 5.28 KiB 8 modules
   dependent modules 160 bytes [dependent] 1 module
   ./example.js 281 bytes [built] [code generated]
     [used exports unknown]
@@ -395,7 +394,7 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 2.61 KiB [emitted] [minimized] (name: main)
+asset output.js 2.59 KiB [emitted] [minimized] (name: main)
 asset 717.output.js 117 bytes [emitted] [minimized]
 asset 776.output.js 117 bytes [emitted] [minimized]
 asset 0.output.js 114 bytes [emitted] [minimized]
@@ -420,9 +419,9 @@ chunk (runtime: main) 776.output.js 38 bytes [rendered]
     [exports: default]
     import() context element ./bar ./templates/ lazy ^\.\/.*$ referencedExports:  namespace object ./bar
     import() context element ./bar.js ./templates/ lazy ^\.\/.*$ referencedExports:  namespace object ./bar.js
-chunk (runtime: main) output.js (main) 441 bytes (javascript) 5.71 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 441 bytes (javascript) 5.65 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.71 KiB 8 modules
+  runtime modules 5.65 KiB 8 modules
   dependent modules 160 bytes [dependent] 1 module
   ./example.js 281 bytes [built] [code generated]
     [no exports used]

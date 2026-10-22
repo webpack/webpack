@@ -4,11 +4,11 @@ const fs = require("fs");
 const path = require("path");
 
 module.exports = {
-	moduleScope(scope) {
-		const link = scope.window.document.createElement("link");
+	setupDocument(document) {
+		const link = document.createElement("link");
 		link.rel = "stylesheet";
 		link.href = "bundle0.css";
-		scope.window.document.head.appendChild(link);
+		document.head.appendChild(link);
 	},
 	findBundle(i, options) {
 		const source = fs.readFileSync(

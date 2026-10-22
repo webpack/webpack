@@ -1,0 +1,8 @@
+.button {
+	color: red;
+}
+
+.primary {
+	composes: button;
+	background: blue;
+}

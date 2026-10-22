@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases lazy-barrel side-effect-css-async side-effect-css-async should compile 1`] = `
+"./index.js [barrel]
+└─ (*) ./page.js [barrel]
+   └─ (Used) ./lib/index.js [barrel]
+      ├─ (default) ./lib/Used.js [barrel]
+      │  └─ css ./lib/used.css
+      └─ (default) ./Unused [raw] [lazy]"
+`;

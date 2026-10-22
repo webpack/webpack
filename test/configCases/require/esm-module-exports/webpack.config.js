@@ -14,9 +14,8 @@ module.exports = {
 		resolve: { timestamp: true, hash: true }
 	},
 	// Enable used-exports tracking so the chicken-and-egg path between
-	// `getReferencedExports` and the unwrap helper is exercised — the
-	// regression this would catch is webpack falling back to `.named` for
-	// `require(esm).named` when `"module.exports"` hasn't been marked used yet.
+	// `getReferencedExports` and the unwrap helper is exercised: without it webpack
+	// falls back to `.named` for `require(esm).named`.
 	optimization: {
 		usedExports: true
 	},

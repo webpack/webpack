@@ -25,10 +25,9 @@ it("should ignore <body> / <title> markers that appear inside HTML comments", (d
 			// The `<body>` decoy in the *head* comment was never selected
 			// as the body element.
 			expect(document.body.innerHTML).not.toContain("fake body");
-			// The real comment that lives inside <body> is preserved
-			// verbatim — masking only hides comment contents from the
-			// tag-boundary regexes, exactly as a full page reload would
-			// render the body (comments and all).
+			// The real comment inside `<body>` is preserved verbatim — masking only hides
+			// comment contents from the tag-boundary regexps, exactly as a full page reload
+			// would render the body.
 			expect(document.body.innerHTML).toContain(
 				"<!-- another decoy <body>decoy</body> -->"
 			);

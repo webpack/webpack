@@ -5,7 +5,7 @@
 const webpack = require("../../../");
 const {
 	WEBPACK_MODULE_TYPE_PROVIDE
-} = require("../../../lib/ModuleTypeConstants");
+} = require("../../../lib/module/ModuleTypeConstants");
 
 const { ModuleFederationPlugin } = webpack.container;
 

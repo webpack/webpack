@@ -2,10 +2,9 @@ import "./style.css";
 import "./dependency.js";
 import url from "../../asset-modules/_images/file.png";
 
-// The dynamic import is here so ManifestPlugin emits a `file.txt?foo` entry;
-// it isn't awaited (CJS top-level), and the JSONP runtime never resolves it
-// in this harness. Catch so a stray rejection on old Node can't bubble up
-// into the test as an unhandled rejection.
+// The dynamic import is here so ManifestPlugin emits a `file.txt?foo` entry. It is
+// not awaited and the JSONP runtime never resolves it in this harness, so the
+// catch keeps a stray rejection from surfacing as an unhandled one.
 import(/* webpackChunkName: 'file' */ "./file.txt?foo").catch(() => {});
 
 new URL("./file.txt", import.meta.url);

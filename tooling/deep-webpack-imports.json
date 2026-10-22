@@ -1,0 +1,348 @@
+{
+  "sampledAt": "2026-09-20",
+  "perKeyword": 200,
+  "removed": {
+    "lib/AsyncDependenciesBlock": "Only hard-source-webpack-plugin imports it, and that is webpack 4 only \u2014 it also imports lib/DependenciesBlockVariable and lib/JavascriptGenerator, both removed in webpack 5.",
+    "lib/ChunkGroup": "No package the scan reaches imports it; it moved out of `lib/` root with nothing to re-export to.",
+    "lib/ConcatenationScope": "No package the scan reaches imports it; it moved out of `lib/` root with nothing to re-export to.",
+    "lib/DefinePlugin": "No package the scan reaches imports it; it moved out of `lib/` root with nothing to re-export to.",
+    "lib/DependenciesBlock": "No package the scan reaches imports it; it moved out of `lib/` root with nothing to re-export to.",
+    "lib/DependenciesBlockVariable": "Removed in webpack 5 with block variables.",
+    "lib/DotenvPlugin": "No package the scan reaches imports it; it moved out of `lib/` root with nothing to re-export to.",
+    "lib/EnvironmentPlugin": "No package the scan reaches imports it; it moved out of `lib/` root with nothing to re-export to.",
+    "lib/FunctionModulePlugin": "Removed in webpack 5.",
+    "lib/Generator": "Only hard-source-webpack-plugin imports it, and that is webpack 4 only \u2014 it also imports lib/DependenciesBlockVariable and lib/JavascriptGenerator, both removed in webpack 5.",
+    "lib/HotUpdateChunk": "No package the scan reaches imports it; it moved out of `lib/` root with nothing to re-export to.",
+    "lib/JavascriptGenerator": "@sector-labs/lingui-loader probes for it to detect webpack 4, so a re-export would send it down the wrong branch; its other importer, hard-source-webpack-plugin, is webpack 4 only.",
+    "lib/JsonGenerator": "Only hard-source-webpack-plugin imports it, and that is webpack 4 only.",
+    "lib/JsonParser": "Only hard-source-webpack-plugin imports it, and that is webpack 4 only.",
+    "lib/LazyBarrel": "No package the scan reaches imports it; it moved out of `lib/` root with nothing to re-export to.",
+    "lib/LoaderTargetPlugin": "Only miniprogram-webpack-plugin imports it, and that package also imports lib/FunctionModulePlugin and lib/MultiEntryPlugin, both removed in webpack 5.",
+    "lib/Module": "Only hard-source-webpack-plugin imports it, and that is webpack 4 only \u2014 it also imports lib/DependenciesBlockVariable and lib/JavascriptGenerator, both removed in webpack 5.",
+    "lib/ModuleDependencyWarning": "Moved to lib/errors/ before this record; kept unresolved deliberately.",
+    "lib/ModuleError": "Only hard-source-webpack-plugin imports it, and that is webpack 4 only.",
+    "lib/ModuleInfoHeaderPlugin": "No package the scan reaches imports it; it moved out of `lib/` root with nothing to re-export to.",
+    "lib/ModuleWarning": "Only hard-source-webpack-plugin imports it, and that is webpack 4 only.",
+    "lib/MultiEntryPlugin": "Removed in webpack 5 with MultiEntry; EntryPlugin takes an array.",
+    "lib/MultiModuleFactory": "Removed in webpack 5 with MultiModule; the package is webpack 4 only.",
+    "lib/Parser": "Both importers require it inside a `try` to detect webpack 4 \u2014 hard-source-webpack-plugin pairs it with `lib/JsonParser`, and @sector-labs/lingui-loader with `lib/JavascriptGenerator` \u2014 so a re-export would pick the webpack 4 branch.",
+    "lib/ParserHelpers": "Replaced in webpack 5 by javascript/JavascriptParserHelpers.",
+    "lib/RuleSet": "Replaced in webpack 5 by lib/rules/RuleSetCompiler.",
+    "lib/SizeFormatHelpers": "Removed in webpack 5; nothing in lib/ formats sizes under that name.",
+    "lib/WebAssemblyGenerator": "Only hard-source-webpack-plugin imports it, and that is webpack 4 only.",
+    "lib/WebAssemblyParser": "Only hard-source-webpack-plugin imports it, and that is webpack 4 only.",
+    "lib/dependencies/${dependency[0]}": "Not a path: a template literal the scanner reads from a dynamic require.",
+    "lib/dependencies/AMDDefineDependency": "Grouped under lib/dependencies/amd/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
+    "lib/dependencies/AMDRequireArrayDependency": "Grouped under lib/dependencies/amd/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
+    "lib/dependencies/AMDRequireContextDependency": "Grouped under lib/dependencies/amd/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
+    "lib/dependencies/AMDRequireDependenciesBlock": "Grouped under lib/dependencies/amd/; only hard-source-webpack-plugin imports it, inside a `try` to detect webpack 4, where a re-export would pick the wrong branch.",
+    "lib/dependencies/AMDRequireDependency": "Grouped under lib/dependencies/amd/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
+    "lib/dependencies/AMDRequireItemDependency": "Grouped under lib/dependencies/amd/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
+    "lib/dependencies/CommonJsRequireContextDependency": "Grouped under lib/dependencies/commonjs/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
+    "lib/dependencies/CommonJsRequireDependency": "Grouped under lib/dependencies/commonjs/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
+    "lib/dependencies/ContextDependency": "Grouped under lib/dependencies/context/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
+    "lib/dependencies/CriticalDependencyWarning": "Moved to lib/errors/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
+    "lib/dependencies/DelegatedExportsDependency": "Removed in webpack 5.",
+    "lib/dependencies/DelegatedSourceDependency": "Moved to lib/dll/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
+    "lib/dependencies/DllEntryDependency": "Moved to lib/dll/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
+    "lib/dependencies/HarmonyAcceptDependency": "Renamed to lib/dependencies/esm/ESMAcceptDependency; only hard-source-webpack-plugin imports it, and that is webpack 4 only.",
+    "lib/dependencies/HarmonyAcceptImportDependency": "Renamed to lib/dependencies/esm/ESMAcceptImportDependency; only hard-source-webpack-plugin imports it, and that is webpack 4 only.",
+    "lib/dependencies/HarmonyCompatibilityDependency": "Renamed to lib/dependencies/esm/ESMCompatibilityDependency; only hard-source-webpack-plugin imports it, and that is webpack 4 only.",
+    "lib/dependencies/HarmonyExportExpressionDependency": "Renamed to lib/dependencies/esm/ESMExportExpressionDependency; only hard-source-webpack-plugin imports it, and that is webpack 4 only.",
+    "lib/dependencies/HarmonyExportHeaderDependency": "Renamed to lib/dependencies/esm/ESMExportHeaderDependency; only hard-source-webpack-plugin imports it, and that is webpack 4 only.",
+    "lib/dependencies/HarmonyExportImportedSpecifierDependency": "Renamed to lib/dependencies/esm/ESMExportImportedSpecifierDependency; only hard-source-webpack-plugin imports it, and that is webpack 4 only.",
+    "lib/dependencies/HarmonyExportSpecifierDependency": "Renamed to lib/dependencies/esm/ESMExportSpecifierDependency; only hard-source-webpack-plugin imports it, and that is webpack 4 only.",
+    "lib/dependencies/HarmonyImportDependency": "Renamed to lib/dependencies/esm/ESMImportDependency; only hard-source-webpack-plugin imports it, and that is webpack 4 only.",
+    "lib/dependencies/HarmonyImportSideEffectDependency": "Renamed to lib/dependencies/esm/ESMImportSideEffectDependency; only hard-source-webpack-plugin imports it, and that is webpack 4 only.",
+    "lib/dependencies/HarmonyImportSpecifierDependency": "Renamed to lib/dependencies/esm/ESMImportSpecifierDependency without a re-export; its importers are hard-source-webpack-plugin, which is webpack 4 only, and worker-plugin.",
+    "lib/dependencies/HarmonyInitDependency": "Removed in webpack 5.",
+    "lib/dependencies/ImportContextDependency": "Grouped under lib/dependencies/import/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
+    "lib/dependencies/ImportDependenciesBlock": "Removed in webpack 5.",
+    "lib/dependencies/ImportDependency": "Grouped under lib/dependencies/import/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
+    "lib/dependencies/ImportEagerDependency": "Grouped under lib/dependencies/import/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
+    "lib/dependencies/ImportWeakDependency": "Grouped under lib/dependencies/import/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
+    "lib/dependencies/JsonExportsDependency": "Moved to lib/json/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
+    "lib/dependencies/LoaderDependency": "Moved to lib/loaders/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
+    "lib/dependencies/LocalModule": "Grouped under lib/dependencies/amd/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
+    "lib/dependencies/LocalModuleDependency": "Grouped under lib/dependencies/amd/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
+    "lib/dependencies/ModuleDependency": "Grouped under lib/dependencies/core/; both importers are webpack 4 only — hard-source-webpack-plugin from its lib/schema-4 module, which requires 14 paths webpack 5 deleted, and webpack-babel-multi-target-plugin, whose peer range is ^4.19.0.",
+    "lib/dependencies/ModuleHotAcceptDependency": "Grouped under lib/dependencies/hmr/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
+    "lib/dependencies/ModuleHotDeclineDependency": "Grouped under lib/dependencies/hmr/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
+    "lib/dependencies/MultiEntryDependency": "Removed in webpack 5 with MultiEntry; EntryPlugin takes an array.",
+    "lib/dependencies/PrefetchDependency": "Moved to lib/prefetch/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
+    "lib/dependencies/RequireContextDependency": "Grouped under lib/dependencies/context/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
+    "lib/dependencies/RequireEnsureDependenciesBlock": "Grouped under lib/dependencies/commonjs/; only hard-source-webpack-plugin imports it, inside a `try` to detect webpack 4, where a re-export would pick the wrong branch.",
+    "lib/dependencies/RequireEnsureDependency": "Grouped under lib/dependencies/commonjs/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
+    "lib/dependencies/RequireEnsureItemDependency": "Grouped under lib/dependencies/commonjs/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
+    "lib/dependencies/RequireHeaderDependency": "Grouped under lib/dependencies/commonjs/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
+    "lib/dependencies/RequireIncludeDependency": "Grouped under lib/dependencies/commonjs/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
+    "lib/dependencies/RequireResolveContextDependency": "Grouped under lib/dependencies/commonjs/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
+    "lib/dependencies/RequireResolveDependency": "Grouped under lib/dependencies/commonjs/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
+    "lib/dependencies/RequireResolveHeaderDependency": "Grouped under lib/dependencies/commonjs/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
+    "lib/dependencies/SingleEntryDependency": "Renamed in webpack 5 to dependencies/EntryDependency.",
+    "lib/dependencies/UnsupportedDependency": "Grouped under lib/dependencies/amd/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
+    "lib/dependencies/WebAssemblyImportDependency": "Grouped under lib/dependencies/wasm/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
+    "lib/wasm/WebAssemblyGenerator": "Only hard-source-webpack-plugin imports it, and that is webpack 4 only.",
+    "lib/wasm/WebAssemblyJavascriptGenerator": "Only hard-source-webpack-plugin imports it, and that is webpack 4 only.",
+    "lib/wasm/WebAssemblyParser": "Only hard-source-webpack-plugin imports it, and that is webpack 4 only.",
+    "lib/web/FetchCompileWasmTemplatePlugin": "Renamed in webpack 5 to web/FetchCompileWasmPlugin."
+  },
+  "requests": {
+    "lib/Chunk": {
+      "weekly": 684,
+      "packages": [
+        "@pixolith/external-svg-sprite-loader",
+        "external-svg-sprite-loader"
+      ]
+    },
+    "lib/Compilation": {
+      "weekly": 1996,
+      "packages": [
+        "@aiot-toolkit/dsl-xvm",
+        "@hap-toolkit/dsl-xvm",
+        "external-svg-sprite-loader"
+      ]
+    },
+    "lib/Compiler.js": {
+      "weekly": 79,
+      "packages": ["billd-html-webpack-plugin"]
+    },
+    "lib/css/CssModulesPlugin": {
+      "weekly": 12160713,
+      "packages": ["mini-css-extract-plugin"]
+    },
+    "lib/dependencies/ConstDependency": {
+      "weekly": 134683,
+      "packages": [
+        "@zainulbr/i18n-webpack-plugin",
+        "hard-source-webpack-plugin",
+        "webpack-extract-translation-keys-plugin",
+        "webpack-svgstore"
+      ]
+    },
+    "lib/dependencies/ContextElementDependency": {
+      "weekly": 132760,
+      "packages": ["context-map-webpack-plugin", "hard-source-webpack-plugin"]
+    },
+    "lib/dependencies/NullDependency": {
+      "weekly": 133995,
+      "packages": ["hard-source-webpack-plugin", "react-display-name-plugin"]
+    },
+    "lib/dependencies/NullDependency.js": {
+      "weekly": 3659559,
+      "packages": [
+        "@storybook/react-docgen-typescript-plugin",
+        "react-docgen-typescript-plugin"
+      ]
+    },
+    "lib/Dependency": {
+      "weekly": 5849,
+      "packages": ["ignore-webpack-plugin", "webpack-babel-multi-target-plugin"]
+    },
+    "lib/DependencyTemplate": {
+      "weekly": 728,
+      "packages": ["ignore-webpack-plugin"]
+    },
+    "lib/EntryPlugin": {
+      "weekly": 274,
+      "packages": ["@stylable/webpack-extensions"]
+    },
+    "lib/Entrypoint": {
+      "weekly": 188538,
+      "packages": ["@vue/preload-webpack-plugin"]
+    },
+    "lib/ExternalsPlugin": {
+      "weekly": 596945,
+      "packages": ["worker-loader"]
+    },
+    "lib/FileSystemInfo": {
+      "weekly": 10690048,
+      "packages": ["html-webpack-plugin"]
+    },
+    "lib/ids/IdHelpers": {
+      "weekly": 39,
+      "packages": ["@automattic/i18n-check-webpack-plugin"]
+    },
+    "lib/InitFragment": {
+      "weekly": 728,
+      "packages": ["ignore-webpack-plugin"]
+    },
+    "lib/javascript/JavascriptModulesPlugin": {
+      "weekly": 1393,
+      "packages": ["@aiot-toolkit/dsl-xvm", "@hap-toolkit/dsl-xvm"]
+    },
+    "lib/javascript/JavascriptParserHelpers": {
+      "weekly": 139230,
+      "packages": ["worker-plugin"]
+    },
+    "lib/LibraryTemplatePlugin": {
+      "weekly": 121040,
+      "packages": [
+        "@aiot-toolkit/dsl-xvm",
+        "@hap-toolkit/dsl-xvm",
+        "@stylable/webpack-extensions",
+        "@vivo-hap-toolkit/dsl-xvm",
+        "extract-css-chunks-webpack-plugin",
+        "styling"
+      ]
+    },
+    "lib/logging/runtime.js": {
+      "weekly": 17483282,
+      "packages": ["webpack-dev-middleware"]
+    },
+    "lib/ModuleFilenameHelpers": {
+      "weekly": 768841,
+      "packages": [
+        "@amoo-miki/terser-webpack-plugin",
+        "babel-minify-webpack-plugin",
+        "lightningcss-loader",
+        "terser-webpack-plugin-legacy",
+        "uglifyjs-3-webpack-plugin",
+        "uglifyjs-webpack-plugin",
+        "webpack-parallel-uglify-plugin",
+        "zip-webpack-plugin"
+      ]
+    },
+    "lib/ModuleFilenameHelpers.js": {
+      "weekly": 1041546,
+      "packages": ["esbuild-loader"]
+    },
+    "lib/node/NodeTargetPlugin": {
+      "weekly": 717985,
+      "packages": [
+        "@aiot-toolkit/dsl-xvm",
+        "@hap-toolkit/dsl-xvm",
+        "@stylable/webpack-extensions",
+        "@vivo-hap-toolkit/dsl-xvm",
+        "extract-css-chunks-webpack-plugin",
+        "styling",
+        "worker-loader"
+      ]
+    },
+    "lib/node/NodeTemplatePlugin": {
+      "weekly": 121040,
+      "packages": [
+        "@aiot-toolkit/dsl-xvm",
+        "@hap-toolkit/dsl-xvm",
+        "@stylable/webpack-extensions",
+        "@vivo-hap-toolkit/dsl-xvm",
+        "extract-css-chunks-webpack-plugin",
+        "styling"
+      ]
+    },
+    "lib/NormalModule": {
+      "weekly": 280062,
+      "packages": [
+        "@aiot-toolkit/dsl-xvm",
+        "@hap-toolkit/dsl-xvm",
+        "hard-source-webpack-plugin",
+        "san-loader",
+        "svg-sprite-loader"
+      ]
+    },
+    "lib/NullFactory": {
+      "weekly": 2053,
+      "packages": [
+        "@zainulbr/i18n-webpack-plugin",
+        "webpack-extract-translation-keys-plugin",
+        "webpack-svgstore"
+      ]
+    },
+    "lib/optimize/ConcatenatedModule": {
+      "weekly": 145973,
+      "packages": ["svg-sprite-loader"]
+    },
+    "lib/optimize/LimitChunkCountPlugin": {
+      "weekly": 121040,
+      "packages": [
+        "@aiot-toolkit/dsl-xvm",
+        "@hap-toolkit/dsl-xvm",
+        "@stylable/webpack-extensions",
+        "@vivo-hap-toolkit/dsl-xvm",
+        "extract-css-chunks-webpack-plugin",
+        "styling"
+      ]
+    },
+    "lib/ProgressPlugin": {
+      "weekly": 164184,
+      "packages": ["webpack-stream"]
+    },
+    "lib/RawModule": {
+      "weekly": 852,
+      "packages": ["google-fonts-plugin"]
+    },
+    "lib/RequestShortener": {
+      "weekly": 1754736,
+      "packages": [
+        "@amoo-miki/terser-webpack-plugin",
+        "@nuxt/friendly-errors-webpack-plugin",
+        "@soda/friendly-errors-webpack-plugin",
+        "hard-source-webpack-plugin",
+        "terser-webpack-plugin-legacy",
+        "uglifyjs-3-webpack-plugin",
+        "uglifyjs-webpack-plugin",
+        "v8-lazy-parse-webpack-plugin"
+      ]
+    },
+    "lib/rules/BasicEffectRulePlugin": {
+      "weekly": 66,
+      "packages": ["san-loader"]
+    },
+    "lib/rules/BasicMatcherRulePlugin": {
+      "weekly": 66,
+      "packages": ["san-loader"]
+    },
+    "lib/rules/RuleSetCompiler": {
+      "weekly": 66,
+      "packages": ["san-loader"]
+    },
+    "lib/rules/UseEffectRulePlugin": {
+      "weekly": 66,
+      "packages": ["san-loader"]
+    },
+    "lib/SingleEntryPlugin": {
+      "weekly": 857338,
+      "packages": [
+        "@aiot-toolkit/dsl-xvm",
+        "@hap-toolkit/dsl-xvm",
+        "@vivo-hap-toolkit/dsl-xvm",
+        "extract-css-chunks-webpack-plugin",
+        "service-worker-loader",
+        "styling",
+        "worker-loader",
+        "worker-plugin"
+      ]
+    },
+    "lib/util/createHash": {
+      "weekly": 132904,
+      "packages": ["@stylable/webpack-extensions", "hard-source-webpack-plugin"]
+    },
+    "lib/util/identifier": {
+      "weekly": 856277,
+      "packages": ["thread-loader"]
+    },
+    "lib/util/makeSerializable.js": {
+      "weekly": 3659559,
+      "packages": [
+        "@storybook/react-docgen-typescript-plugin",
+        "react-docgen-typescript-plugin"
+      ]
+    },
+    "lib/web/FetchCompileAsyncWasmPlugin": {
+      "weekly": 596945,
+      "packages": ["worker-loader"]
+    },
+    "lib/web/FetchCompileWasmPlugin": {
+      "weekly": 736175,
+      "packages": ["worker-loader", "worker-plugin"]
+    },
+    "lib/WebpackError": {
+      "weekly": 132650,
+      "packages": ["hard-source-webpack-plugin", "webpack-mjml-plugin"]
+    },
+    "lib/webworker/WebWorkerTemplatePlugin": {
+      "weekly": 736572,
+      "packages": ["service-worker-loader", "worker-loader", "worker-plugin"]
+    }
+  }
+}

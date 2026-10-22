@@ -27,12 +27,9 @@ import resourceEager from "./payload.svg?eager";
 import defer * as deferInline from "./payload.svg?inline";
 import inlineEager from "./payload.svg?inline&eager";
 
-// JS wrappers around each asset type — used to verify the TC39 import-defer
-// invariant that evaluation must be delayed until first observable access on
-// the namespace. Asset modules have no observable evaluation side effects of
-// their own, so each wrapper calls `touch()` at top level; the wrapper
-// (and therefore the asset module behind it) must not be evaluated until
-// `wrapped*.default` is first read.
+// JS wrappers around each asset type, for the TC39 import-defer invariant that
+// evaluation waits for the first observable access. Asset modules have no
+// observable side effects, so each wrapper calls `touch()` at top level.
 import defer * as wrappedText from "./wrapper-text.js";
 import defer * as wrappedBytes from "./wrapper-bytes.js";
 import defer * as wrappedResource from "./wrapper-resource.js";

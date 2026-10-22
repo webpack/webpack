@@ -31,6 +31,9 @@
           "description": "Include the fallback module directly instead behind an async request. This allows to use fallback module in initial load too. All possible shared modules need to be eager too.",
           "type": "boolean"
         },
+        "exclude": {
+          "$ref": "#/definitions/SharedModuleFilter"
+        },
         "import": {
           "description": "Fallback module if no shared module is found in share scope. Defaults to the property name.",
           "anyOf": [
@@ -42,6 +45,9 @@
               "$ref": "#/definitions/ConsumesItem"
             }
           ]
+        },
+        "include": {
+          "$ref": "#/definitions/SharedModuleFilter"
         },
         "packageName": {
           "description": "Package name to determine required version from description file. This is only needed when package name can't be automatically determined from request.",
@@ -100,6 +106,32 @@
           }
         ]
       }
+    },
+    "SharedModuleFilter": {
+      "description": "Filters shared modules by version or request: with 'include' only matching modules are shared, with 'exclude' matching ones are not. A filtered-out module is resolved and bundled as if it wasn't shared.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request": {
+          "description": "Request remainder after a key ending in a slash (e.g. 'get' for 'lodash/get' under 'lodash/'). Has no effect on other keys.",
+          "anyOf": [
+            {
+              "instanceof": "RegExp",
+              "tsType": "RegExp"
+            },
+            {
+              "type": "string",
+              "minLength": 1
+            }
+          ]
+        },
+        "version": {
+          "description": "Version range the module's version (from its description file or the 'version' option) is tested against. A consumed module is tested through its fallback module, so this has no effect on consumes without one.",
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "added": "5.112.0"
     }
   },
   "title": "ConsumeSharedPluginOptions",

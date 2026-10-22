@@ -86,5 +86,13 @@ module.exports = [
 		plugins: [copyTest, dropRedStyle]
 	},
 	// a fragment with no <head>: the CSP meta is prepended to the page
-	config("fragment", true, "./src/fragment.html")
+	config("fragment", true, "./src/fragment.html"),
+	// a `<meta charset>` is not an author-declared policy, so CSP is injected
+	config("charset", true, "./src/charset.html"),
+	// an external injected `<script src>` is covered by 'self', not hashed
+	config("external-script", true, "./src/main.js"),
+	// nonce on an injected inline `<script>`
+	config("nonce-script", { nonce: "__NONCE__" }, "./src/main.js", {
+		inline: "script"
+	})
 ];

@@ -1,0 +1,303 @@
+[
+  {
+    "label": "Angular Material 22 (theme)",
+    "package": "@angular/material",
+    "version": "22.2.1",
+    "file": "prebuilt-themes/azure-blue.css",
+    "integrity": "sha512-qw+/aJBV4lqqoJgv1VBWbMBVnE7431SX0Mew1j7PO+s1UcTushbG7CIAEo1hwmRq3kyo4Qqch8+uzFq4R631HQ=="
+  },
+  {
+    "label": "Arco Design 2",
+    "package": "@arco-design/web-react",
+    "version": "2.66.16",
+    "file": "dist/css/arco.css",
+    "integrity": "sha512-Ke6Do2GWPqWfbB7eounEdIjxocCSxxZT/TplQPtEZeeuavFWjdPDNyvHeBX6OGb7ZgZPl7NlcJbrTyTlhl56qQ=="
+  },
+  {
+    "label": "Blueprint 6",
+    "package": "@blueprintjs/core",
+    "version": "6.21.0",
+    "file": "lib/css/blueprint.css",
+    "integrity": "sha512-s4RrTRir+5cze76oHZp0jgodk1UR7RyzcbdDklIiDV1swgdTvOI4cZxcVJNhQBHdU9Sl0wCdKbXwo3J0nSEhvA=="
+  },
+  {
+    "label": "Carbon 1",
+    "package": "@carbon/styles",
+    "version": "1.116.0",
+    "file": "css/styles.css",
+    "integrity": "sha512-JGheJvrkuvgw93wLe+POy94olKvn0hSCIjgAIq6Goo38dNc/atkYOIt+PQhnQp7OwSk8SpRtCXB0Qt4p65biwQ=="
+  },
+  {
+    "label": "CoreUI 5",
+    "package": "@coreui/coreui",
+    "version": "5.9.1",
+    "file": "dist/css/coreui.css",
+    "integrity": "sha512-58BQg//QVs5tRLbboJyAsuOUigXyfJAbFgB3VvzA7J3NgGelbqzojxLvB5q5mDrjnSad/XW+zEazSRSKuokM8w=="
+  },
+  {
+    "label": "Designsystemet 1",
+    "package": "@digdir/designsystemet-css",
+    "version": "1.23.0",
+    "file": "dist/src/index.css",
+    "integrity": "sha512-OuqjDBxKl81K+X/5bDj2RydTq2+97kgImanjJOTB6uKe19mmEmnE22uLYuP6QWTjzU9LuBF5nTApM9zTtkRvSw=="
+  },
+  {
+    "label": "Semi Design 2",
+    "package": "@douyinfe/semi-ui",
+    "version": "2.103.0",
+    "file": "dist/css/semi.css",
+    "integrity": "sha512-I1fFJDmLtCPzJ6aoRyObEnAi7ffn+NSIjSntnHLBK2ItcsyK+AIzDnJ1ZRRSG4TAuSDtJ9TycQbNn4IjdotyOQ=="
+  },
+  {
+    "label": "Excalidraw 0.18",
+    "package": "@excalidraw/excalidraw",
+    "version": "0.18.1",
+    "file": "dist/prod/index.css",
+    "integrity": "sha512-6i5Gt7IDTOH//qa0Z315Ly5iVRhjWpu2whrlQFqkuwrkKUWgRsMk0P5qdE7bpyDpai7jeLeWYkyj1eVAfni1lw=="
+  },
+  {
+    "label": "Ionic 9",
+    "package": "@ionic/core",
+    "version": "9.0.6",
+    "file": "css/ionic.bundle.css",
+    "integrity": "sha512-WWxjOjwKPU75BuEhc42t3n2Tn89YEDe5Pce9kA61w/TlWVM3tqiAYC+qfR9MXmER4pQcST01oM2gftheMzcV6g=="
+  },
+  {
+    "label": "Mantine 9",
+    "package": "@mantine/core",
+    "version": "9.7.0",
+    "file": "styles.css",
+    "integrity": "sha512-WhCvfXXpYMKV6py05wt0Vlxthtxe4YOzQiVhrrCvWKYDmvhKXgOTDzRdjkGHNji4r+7f7d3nz2XpwbzaZ47R/w=="
+  },
+  {
+    "label": "Material Design Icons 7",
+    "package": "@mdi/font",
+    "version": "7.4.47",
+    "file": "css/materialdesignicons.css",
+    "integrity": "sha512-43MtGpd585SNzHZPcYowu/84Vz2a2g31TvPMTm9uTiCSWzaheQySUcSyUH/46fPnuPQWof2yd0pGBtzee/IQWw=="
+  },
+  {
+    "label": "Lightning Design System 2",
+    "package": "@salesforce-ux/design-system",
+    "version": "2.264.1",
+    "file": "assets/styles/salesforce-lightning-design-system.css",
+    "integrity": "sha512-HNAyY0sIp39mg+HX11Cxys13FHS5pfA/C1Im7HmzDe/xj1hgwbCkKez/3zgvvEkkAO6453iruxJ10R0Ae+xN1g=="
+  },
+  {
+    "label": "Uppy Dashboard 6",
+    "package": "@uppy/dashboard",
+    "version": "6.0.1",
+    "file": "dist/style.css",
+    "integrity": "sha512-nss7xYzh6zXly03Tz/j9Lclm8rOkBOp0wPSQuAYkrtTzJrRsahemrOXwYRQTW2hyN+hDdjVtU9Ouo2NMcPzkVQ=="
+  },
+  {
+    "label": "Codex 2",
+    "package": "@wikimedia/codex",
+    "version": "2.6.0",
+    "file": "dist/codex.style.css",
+    "integrity": "sha512-ul/WXyxZbMV3PrWd0tGATuhTwUijRhHQxEJ+k+NukzcbY4MTItU3zEiw0Ye3wgNGQBMcCDt34pRGF3tXQwwDgA=="
+  },
+  {
+    "label": "AdminLTE 4",
+    "package": "admin-lte",
+    "version": "4.10.0",
+    "file": "dist/css/adminlte.css",
+    "integrity": "sha512-CIJrStDk3l7d3md9qQWaV1OiIzk3tOUXryAdsWIt5nKex8VO7CL2xAYzMg5X5rjpJ2XcWerkltJT0hlGd1wx3w=="
+  },
+  {
+    "label": "AG Grid 36",
+    "package": "ag-grid-community",
+    "version": "36.2.0",
+    "file": "styles/ag-grid.css",
+    "integrity": "sha512-tK0Toj7t0fV/OMLPnDc0xlYKAqDbnCT3iJodYSn2TJ541caU8jPdYwWhMdW+AP2+pUNwFiJVgc04eJNfvBPsWw=="
+  },
+  {
+    "label": "Ant Design 4",
+    "package": "antd",
+    "version": "4.24.16",
+    "file": "dist/antd.css",
+    "integrity": "sha512-zZrK4UYxHtU6tGOOf0uG/kBRx1kTvypfuSB3GqE/SBQxFhZ/TZ+yj7Z1qwI8vGfMtUUJdLeuoCAqGDa1zPsXnQ=="
+  },
+  {
+    "label": "Bootstrap 3",
+    "package": "bootstrap",
+    "version": "3.4.1",
+    "file": "dist/css/bootstrap.css",
+    "integrity": "sha512-yN5oZVmRCwe5aKwzRj6736nSmKDX7pLYwsXiCj/EYmo16hODaBiT4En5btW/jhBF/seV+XMx3aYwukYC3A49DA=="
+  },
+  {
+    "label": "Bootstrap 4",
+    "package": "bootstrap",
+    "version": "4.6.2",
+    "file": "dist/css/bootstrap.css",
+    "integrity": "sha512-51Bbp/Uxr9aTuy6ca/8FbFloBUJZLHwnhTcnjIeRn2suQWsWzcuJhGjKDB5eppVte/8oCdOL3VuwxvZDUggwGQ=="
+  },
+  {
+    "label": "Element Plus 2",
+    "package": "element-plus",
+    "version": "2.14.7",
+    "file": "dist/index.css",
+    "integrity": "sha512-lrG7pZyCS+mpCNVpzxxyu5r35+T6V0hzkAeIwn7HA6to772XSTHKuYCZG51OfzlqaxGbNegLxs650zAF1j43gA=="
+  },
+  {
+    "label": "Font Awesome 4",
+    "package": "font-awesome",
+    "version": "4.7.0",
+    "file": "css/font-awesome.css",
+    "integrity": "sha512-U6kGnykA/6bFmg1M/oT9EkFeIYv7JlX3bozwQJWiiLz6L0w3F5vBVPxHlwyX/vtNq1ckcpRKOB9f2Qal/VtFpg=="
+  },
+  {
+    "label": "flatpickr 4",
+    "package": "flatpickr",
+    "version": "4.6.13",
+    "file": "dist/flatpickr.css",
+    "integrity": "sha512-97PMG/aywoYpB4IvbvUJi0RQi8vearvU0oov1WW3k0WZPBMrTQVqekSX5CjSG/M4Q3i6A/0FKXC7RyAoAUUSPw=="
+  },
+  {
+    "label": "github-markdown-css 5",
+    "package": "github-markdown-css",
+    "version": "5.9.0",
+    "file": "github-markdown.css",
+    "integrity": "sha512-tmT5sY+zvg2302XLYEfH2mtkViIM1SWf2nvYoF5N1ZsO0V6B2qZTiw3GOzw4vpjLygK/KG35qRlPFweHqfzz5w=="
+  },
+  {
+    "label": "GOV.UK Frontend 6 (minified)",
+    "package": "govuk-frontend",
+    "version": "6.5.1",
+    "file": "dist/govuk/govuk-frontend.min.css",
+    "integrity": "sha512-myC7pDU9d7NqHa/oiDKe7k/ojCPMY4LjHpJkDncgQ3MgWeGUkySpz/gfdjRVvGaER6GNoi0kDGSgSXMa1he0xg=="
+  },
+  {
+    "label": "Infima 0.2",
+    "package": "infima",
+    "version": "0.2.0-alpha.45",
+    "file": "dist/css/default/default.css",
+    "integrity": "sha512-uyH0zfr1erU1OohLk0fT4Rrb94AOhguWNOcD9uGrSpRvNB+6gZXUoJX5J0NtvzBO10YZ9PgvA4NFgt+fYg8ojw=="
+  },
+  {
+    "label": "jQuery UI 1.13",
+    "package": "jquery-ui-dist",
+    "version": "1.13.3",
+    "file": "jquery-ui.css",
+    "integrity": "sha512-qeTR3SOSQ0jgxaNXSFU6+JtxdzNUSJKgp8LCzVrVKntM25+2YBJW1Ea8B2AwjmmSHfPLy2dSlZxJQN06OfVFhg=="
+  },
+  {
+    "label": "Layui 2",
+    "package": "layui",
+    "version": "2.13.9",
+    "file": "dist/css/layui.css",
+    "integrity": "sha512-XIf11IPMWviiTXcRQOt7VZnX5hy/BaKOFGqqEJWLtCQRRakVzyLKD2CH7mpDFhhyhQZJAVWJ6kcU9g7HyN1gqQ=="
+  },
+  {
+    "label": "Leaflet 1",
+    "package": "leaflet",
+    "version": "1.9.4",
+    "file": "dist/leaflet.css",
+    "integrity": "sha512-nxS1ynzJOmOlHp+iL3FyWqK89GtNL8U8rvlMOsQdTTssxZwCXh8N2NB3GDQOL+YR3XnWyZAxwQixURb+FA74PA=="
+  },
+  {
+    "label": "MapLibre GL 6",
+    "package": "maplibre-gl",
+    "version": "6.12.0",
+    "file": "dist/maplibre-gl.css",
+    "integrity": "sha512-DwgganVi2BhNxOpD7ob3lJC0dQQz4HfJfuQQV3XxCY3XdOzFrMqp9ylMXhRzryRsOnIezdZcklWXIIs/Q8JPjA=="
+  },
+  {
+    "label": "Material Components Web 14",
+    "package": "material-components-web",
+    "version": "14.0.0",
+    "file": "dist/material-components-web.css",
+    "integrity": "sha512-bfGTQQOMhlBfZYkMzXNdydotG8p/hntiln13IRVIN38F170OU/y7ONpCxUweANDEVxrMeKAupVw/4u9in+LKFA=="
+  },
+  {
+    "label": "NHS.UK Frontend 10",
+    "package": "nhsuk-frontend",
+    "version": "10.6.1",
+    "file": "dist/nhsuk/nhsuk-frontend.css",
+    "integrity": "sha512-PZorqQZjZx/A26yJoskCL9z0ib6AtkAyF0o4K/RHr8zRrJyXrUOCnMbjy0VNXsGO4tfTNMwqlkwATKs4a0xayw=="
+  },
+  {
+    "label": "Fabric Core 11",
+    "package": "office-ui-fabric-core",
+    "version": "11.1.0",
+    "file": "dist/css/fabric.css",
+    "integrity": "sha512-uV7CbMBAqbHRa7ihNlgbDMIdiKb49TCamhsfuK7Yx7JXx05WdN/lZPWLmPnAALVQAFuO95ZJMAwNjyyEeXk47A=="
+  },
+  {
+    "label": "Plyr 3",
+    "package": "plyr",
+    "version": "3.8.4",
+    "file": "dist/plyr.css",
+    "integrity": "sha512-DrzLbK9Wol3zeiuZCleD9aUOl0KAaBHR9H6WVVVYPZ4Ya+LYxUFTgSF1jooHcMQCv96Ws96wCaZzIoP3bES8pQ=="
+  },
+  {
+    "label": "PrimeFlex 4",
+    "package": "primeflex",
+    "version": "4.0.0",
+    "file": "primeflex.css",
+    "integrity": "sha512-UOEZCRjR36+sm5bUpDhS1xbA068l9VC6y1aTNVqQPtXuKIdPTqAWHRUxj3mKAoPrQ9W373ooJJMgNVXfiaw04g=="
+  },
+  {
+    "label": "Quasar 2",
+    "package": "quasar",
+    "version": "2.34.0",
+    "file": "dist/quasar.css",
+    "integrity": "sha512-FwTTqffFyXtEMaEebo5olOHGAJtCZB7Gn6BtWBdypjYOarM6azllrgvVVIQp23qZ0W9leZDFqKRXFm87tua3DA=="
+  },
+  {
+    "label": "Quill 2 (snow)",
+    "package": "quill",
+    "version": "2.0.3",
+    "file": "dist/quill.snow.css",
+    "integrity": "sha512-xEYQBqfYx/sfb33VJiKnSJp8ehloavImQ2A6564GAbqG55PGw1dAWUn1MUbQB62t0azawUS2CZZhWCjO8gRvTw=="
+  },
+  {
+    "label": "reveal.js 6",
+    "package": "reveal.js",
+    "version": "6.0.2",
+    "file": "dist/reveal.css",
+    "integrity": "sha512-JYIg5D9aoxoaLeb84O+OvAwsKWdIavVgEDScxtYEXFCT6t6TQrhNtSgogcjdCpdLsWglhJn3zyE3fUOwiH5KEg=="
+  },
+  {
+    "label": "Select2 4",
+    "package": "select2",
+    "version": "4.0.13",
+    "file": "dist/css/select2.css",
+    "integrity": "sha512-1JeB87s6oN/TDxQQYCvS5EFoQyvV6eYMZZ0AeA4tdFDYWN3BAGZ8npr17UBFddU0lgAt3H0yjX3X6/ekOj1yjw=="
+  },
+  {
+    "label": "Swagger UI 5",
+    "package": "swagger-ui-dist",
+    "version": "5.33.1",
+    "file": "swagger-ui.css",
+    "integrity": "sha512-H872wWkA53bFIsGgi7OWgmq+CRWw3nFQGdJWRqOB9wNwTm6e5ol34+qPDkV4AJlK+gglM2EsJiOOzsGsEGbluA=="
+  },
+  {
+    "label": "SweetAlert2 11",
+    "package": "sweetalert2",
+    "version": "11.26.25",
+    "file": "dist/sweetalert2.css",
+    "integrity": "sha512-+hunCOJdJ6FLj04T9YSLvvZXRjsvIkTeTKP2e4VF8CaBias961BTnWiSFAy7F/CM5eq3QK2Rraoc5Gzftslvkg=="
+  },
+  {
+    "label": "TDesign 1",
+    "package": "tdesign-vue-next",
+    "version": "1.20.9",
+    "file": "dist/tdesign.css",
+    "integrity": "sha512-Yj0RFp1k/MioFvNrWdsWEubbXwunqBvG2ItNU+stenH9loaCZFt58UeOnhwZBkobGwjzgsE3Zl9SczfFUCf4mg=="
+  },
+  {
+    "label": "Vant 4",
+    "package": "vant",
+    "version": "4.10.2",
+    "file": "lib/index.css",
+    "integrity": "sha512-7lm1KtFub11ozleFqQ6rL8oa3Z8i33G3IUEuJGWBXlQwPTRfu8BYWGGZ/GhA5QdWhERp5mtBq6TjpYEmLcwwow=="
+  },
+  {
+    "label": "Vuetify 4",
+    "package": "vuetify",
+    "version": "4.2.3",
+    "file": "dist/vuetify.css",
+    "integrity": "sha512-guUzwFh5LhIKgt0iBaxo1d7UJg2X3P6L4OhnthGwXeGLO/sIOzpn1E2E9uh5bYPm5CgeARuuFmIaG50QPoeNKQ=="
+  }
+]

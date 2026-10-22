@@ -10,11 +10,9 @@ it("should hot-update an HTML module with a <script src> reference", (done) => {
 
 	NEXT(
 		require("../../update")(done, true, () => {
-			// HMR succeeded for both modules: the HTML string is the v2
-			// shape (proving the HTML module self-accepted with the new
-			// content) and the rewritten script src URL stays the same
-			// shape since the chunk's filename is derived from a stable
-			// per-HTML-module hash.
+			// HMR succeeded for both modules: the HTML string is the v2 shape, proving the
+			// HTML module self-accepted with the new content, and the rewritten script src
+			// keeps its shape since the chunk filename derives from a stable per-module hash.
 			const updated = require("./page.html");
 			expect(updated).toContain("script src v2");
 			expect(updated).not.toContain("script src v1");

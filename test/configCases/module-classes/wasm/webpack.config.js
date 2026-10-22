@@ -1,6 +1,6 @@
 "use strict";
 
-const AsyncWasmModule = require("../../../../lib/wasm-async/AsyncWasmModule");
+const AsyncWasmModule = require("../../../../lib/wasm/AsyncWasmModule");
 const SyncWasmModule = require("../../../../lib/wasm-sync/SyncWasmModule");
 
 /** @type {Map<string, { new (...args: EXPECTED_ANY[]): EXPECTED_ANY }>} */

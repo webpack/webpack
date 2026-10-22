@@ -1,4 +1,6 @@
 package.json
+# npm writes these; reformatting one only makes the next `npm ci` rewrite it.
+package-lock.json
 
 # Ignore some test files
 test/**/*.*
@@ -19,8 +21,12 @@ test/**/*.*
 !test/harness/**/*.*
 !test/benchmarkCases/**/*.mjs
 test/js/**/*.*
-test/test262-cases/**/*.*
-test/wpt/**
+test/external/test262-cases/**/*.*
+test/external/wpt/**
+test/external/terser/**
+test/external/swc/**
+test/external/oxc/**
+test/external/xml-conformance-suite/**
 
 # Ignore some folders
 benchmark/

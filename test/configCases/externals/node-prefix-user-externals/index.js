@@ -24,9 +24,16 @@ if (__STATS_I__ === 0) {
 		expect(source).not.toContain(ext(prefixed("fs")));
 		expect(source).not.toContain(ext(prefixed("path")));
 	});
-} else {
+} else if (__STATS_I__ === 1) {
 	it("should keep the developer-provided `node:` value when supported", () => {
 		expect(source).toContain(ext(prefixed("fs")));
 		expect(source).toContain(ext(prefixed("path")));
+	});
+} else {
+	it("should keep a bare external value bare when supported", () => {
+		expect(source).toContain(ext("fs"));
+		expect(source).toContain(ext("path"));
+		expect(source).not.toContain(ext(prefixed("fs")));
+		expect(source).not.toContain(ext(prefixed("path")));
 	});
 }

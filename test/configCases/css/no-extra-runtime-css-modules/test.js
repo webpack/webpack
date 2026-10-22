@@ -8,10 +8,8 @@ it("should work", () => {
 	).toBe(true);
 
 	if (__STATS_I__ === 0) {
-		// ./main.css
-		// ./a.css
-		// and it still output one runtime module:
-		// 	 'webpack/runtime/css loading'
+		// Three modules — ./main.css and ./a.css, plus the one runtime module
+		// `webpack/runtime/css loading`.
 		expect(stats.modules.length).toBe(3);
 	} else if (__STATS_I__ === 1) {
 		stats.modules

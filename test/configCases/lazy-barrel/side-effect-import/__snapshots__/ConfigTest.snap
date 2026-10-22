@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases lazy-barrel side-effect-import side-effect-import should compile 1`] = `
+"./index.js
+└─ (Dialog, LIB_VERSION) ./lib/index.js [barrel]
+   ├─ (Dialog) ./lib/Dialog.js [barrel]
+   │  └─ css ./lib/Dialog.css
+   └─ (Button) ./Button.js [raw] [lazy]"
+`;

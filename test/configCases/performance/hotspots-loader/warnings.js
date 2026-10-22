@@ -11,7 +11,8 @@ module.exports = (config) =>
 		? []
 		: [
 				[
-					/hotspots: 1 thing holds the main thread long enough to be worth looking at/,
+					// Other plugins can cross the reporting threshold on a busy runner.
+					/hotspots: (?:1 thing holds|\d+ things hold) the main thread long enough to be worth looking at/,
 					// A loader is not a tap, so this line is what proves loaders are
 					// measured too; the figure is a measurement, so only its shape is.
 					/\n {2}loader \.\/slow-loader\.js \(\d+ ms over 6 runs\)/

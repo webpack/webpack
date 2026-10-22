@@ -292,10 +292,9 @@ const AlternativeCreateUserAction = async name => {
 /******/ 	// This file contains only the entry chunk.
 /******/ 	// The chunk loading function for additional chunks
 /******/ 	__webpack_require__.e = (chunkId) => {
-/******/ 		return Promise.all(Object.keys(__webpack_require__.f).reduce((promises, key) => {
-/******/ 			__webpack_require__.f[key](chunkId, promises);
-/******/ 			return promises;
-/******/ 		}, []));
+/******/ 		const promises = [];
+/******/ 		__webpack_require__.f.j(chunkId, promises);
+/******/ 		return Promise.all(promises);
 /******/ 	};
 /******/ 	
 /******/ 	/* webpack/runtime/get javascript chunk filename */
@@ -568,7 +567,7 @@ __webpack_async_result__();
 ## Unoptimized
 
 ```
-asset output.js 14.5 KiB [emitted] (name: main)
+asset output.js 14.4 KiB [emitted] (name: main)
 asset UserApi_js.output.js 3.05 KiB [emitted]
 chunk (runtime: main) UserApi_js.output.js 617 bytes [rendered]
   > ./UserApi.js ./Actions.js 22:30-52
@@ -579,9 +578,9 @@ chunk (runtime: main) UserApi_js.output.js 617 bytes [rendered]
     [used exports unknown]
     import() ./UserApi.js ./Actions.js 2:16-38
     import() ./UserApi.js ./Actions.js 22:30-52
-chunk (runtime: main) output.js (main) 1.19 KiB (javascript) 7.3 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 1.19 KiB (javascript) 7.24 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 7.3 KiB 9 modules
+  runtime modules 7.24 KiB 9 modules
   dependent modules 1.09 KiB [dependent] 1 module
   ./example.js 103 bytes [built] [code generated]
     [no exports]
@@ -593,7 +592,7 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 2.97 KiB [emitted] [minimized] (name: main)
+asset output.js 2.96 KiB [emitted] [minimized] (name: main)
 asset UserApi_js.output.js 528 bytes [emitted] [minimized]
 chunk (runtime: main) UserApi_js.output.js 617 bytes [rendered]
   > ./UserApi.js ./Actions.js 22:30-52
@@ -603,9 +602,9 @@ chunk (runtime: main) UserApi_js.output.js 617 bytes [rendered]
     [exports: createUser]
     import() ./UserApi.js ./example.js + 1 modules ./Actions.js 2:16-38
     import() ./UserApi.js ./example.js + 1 modules ./Actions.js 22:30-52
-chunk (runtime: main) output.js (main) 1.19 KiB (javascript) 7.67 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 1.19 KiB (javascript) 7.61 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 7.67 KiB 9 modules
+  runtime modules 7.61 KiB 9 modules
   ./example.js + 1 modules 1.19 KiB [built] [code generated]
     [no exports]
     [no exports used]

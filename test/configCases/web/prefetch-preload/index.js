@@ -121,10 +121,9 @@ it("should prefetch and preload child chunks on chunk load", async () => {
 	// Loading chunk2 again should not trigger prefetch/preload as it's already prefetch/preloaded
 	expect(document.head._children).toHaveLength(8);
 
-	// chunk1-css / chunk2-css each install a <link rel="stylesheet"> AND a
-	// <script> for the JS half. We never invoke script.onload() for those, so
-	// the JSONP runtime arms a chunkLoadTimeout (120s) that would fire mid-way
-	// through later tests on slow runners. Swallow the eventual rejection.
+	// chunk1-css / chunk2-css each install a `<link rel="stylesheet">` and a `<script>`
+	// for the JS half. `script.onload()` is never invoked for those, so the JSONP
+	// runtime arms a 120s timeout — swallow the eventual rejection.
 	const promise4 = import(/* webpackChunkName: "chunk1-css" */ "./chunk1.css");
 	promise4.catch(() => {});
 

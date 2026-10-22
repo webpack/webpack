@@ -149,7 +149,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "import(\"../lib/TemplatedPathPlugin\").TemplatePathFn<import(\"../lib/Compilation\").PathDataModule>"
+          "tsType": "import('../lib/template/TemplatedPathPlugin').TemplatePathFn<import('../lib/Compilation').PathDataModule>"
         }
       ]
     },
@@ -162,14 +162,14 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "import(\"../lib/TemplatedPathPlugin\").TemplatePathFn<import(\"../lib/Compilation\").PathDataModule>"
+          "tsType": "import('../lib/template/TemplatedPathPlugin').TemplatePathFn<import('../lib/Compilation').PathDataModule>"
         }
       ]
     },
     "AssetParserDataUrlFunction": {
       "description": "Function that executes for module and should return whenever asset should be inlined as DataUrl.",
       "instanceof": "Function",
-      "tsType": "import(\"../lib/asset/AssetParser\").AssetParserDataUrlFunction"
+      "tsType": "import('../lib/asset/AssetParser').AssetParserDataUrlFunction"
     },
     "AssetParserDataUrlOptions": {
       "description": "Options object for DataUrl condition.",
@@ -380,7 +380,10 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "import(\"../lib/CleanPlugin\").KeepFn"
+              "tsType": "import('../lib/output/CleanPlugin').KeepFn"
+            },
+            {
+              "$ref": "#/definitions/GlobCondition"
             }
           ]
         }
@@ -475,7 +478,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "import('../lib/CopyPlugin').CopyFilenameFunction"
+              "tsType": "import('../lib/output/CopyPlugin').CopyFilenameFunction"
             }
           ]
         },
@@ -515,7 +518,7 @@
             {
               "description": "Asset info of a copied file, from the file itself.",
               "instanceof": "Function",
-              "tsType": "import('../lib/CopyPlugin').CopyInfoFunction"
+              "tsType": "import('../lib/output/CopyPlugin').CopyInfoFunction"
             }
           ]
         },
@@ -538,7 +541,7 @@
             {
               "description": "Directory a copied file is copied to, relative to 'output.path', from the file itself.",
               "instanceof": "Function",
-              "tsType": "import('../lib/CopyPlugin').CopyToFunction"
+              "tsType": "import('../lib/output/CopyPlugin').CopyToFunction"
             }
           ]
         },
@@ -570,12 +573,12 @@
                               "type": "object",
                               "additionalProperties": true,
                               "properties": {},
-                              "tsType": "import('../lib/CopyPlugin').CopyTransformCacheKeys"
+                              "tsType": "import('../lib/output/CopyPlugin').CopyTransformCacheKeys"
                             },
                             {
                               "description": "Everything beside the content of the file the transform depends on, from the file itself.",
                               "instanceof": "Function",
-                              "tsType": "import('../lib/CopyPlugin').CopyTransformCacheKeysFunction"
+                              "tsType": "import('../lib/output/CopyPlugin').CopyTransformCacheKeysFunction"
                             }
                           ]
                         }
@@ -586,7 +589,7 @@
                 "transformer": {
                   "description": "Modifies the content of a copied file.",
                   "instanceof": "Function",
-                  "tsType": "import('../lib/CopyPlugin').CopyTransform"
+                  "tsType": "import('../lib/output/CopyPlugin').CopyTransform"
                 }
               },
               "required": ["transformer"]
@@ -594,7 +597,7 @@
             {
               "description": "Modifies the content of a copied file.",
               "instanceof": "Function",
-              "tsType": "import('../lib/CopyPlugin').CopyTransform"
+              "tsType": "import('../lib/output/CopyPlugin').CopyTransform"
             }
           ]
         }
@@ -737,7 +740,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "import('../lib/dependencies/CssIcssExportDependency').ExportsConventionFn"
+          "tsType": "import('../lib/dependencies/css/CssIcssExportDependency').ExportsConventionFn"
         }
       ]
     },
@@ -753,7 +756,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "import(\"../lib/TemplatedPathPlugin\").TemplatePathFn<import(\"../lib/Compilation\").PathDataModule>"
+          "tsType": "import('../lib/template/TemplatedPathPlugin').TemplatePathFn<import('../lib/Compilation').PathDataModule>"
         }
       ]
     },
@@ -955,8 +958,7 @@
     },
     "DeferImportExperimentOptions": {
       "description": "Options for defer import.",
-      "type": "boolean",
-      "required": ["asyncModule"]
+      "type": "boolean"
     },
     "Dependencies": {
       "description": "References to other configurations to depend on.",
@@ -1013,7 +1015,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "import('../lib/ModuleFilenameHelpers').ModuleFilenameTemplateFunction"
+          "tsType": "import('../lib/devtool/ModuleFilenameHelpers').ModuleFilenameTemplateFunction"
         }
       ]
     },
@@ -1025,7 +1027,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "import('../lib/ModuleFilenameHelpers').ModuleFilenameTemplateFunction"
+          "tsType": "import('../lib/devtool/ModuleFilenameHelpers').ModuleFilenameTemplateFunction"
         }
       ]
     },
@@ -1284,12 +1286,12 @@
     "EntryDynamic": {
       "description": "A Function returning an entry object, an entry string, an entry array or a promise to these things.",
       "instanceof": "Function",
-      "tsType": "import('../lib/DynamicEntryPlugin').RawEntryDynamic"
+      "tsType": "import('../lib/entry/DynamicEntryPlugin').RawEntryDynamic"
     },
     "EntryDynamicNormalized": {
       "description": "A Function returning a Promise resolving to a normalized entry.",
       "instanceof": "Function",
-      "tsType": "import('../lib/DynamicEntryPlugin').EntryDynamic"
+      "tsType": "import('../lib/entry/DynamicEntryPlugin').EntryDynamic"
     },
     "EntryFilename": {
       "description": "Specifies the filename of the output file on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.",
@@ -1797,28 +1799,7 @@
           "type": "string"
         },
         {
-          "description": "If an dependency matches exactly a property of the object, the property value is used as dependency.",
-          "type": "object",
-          "additionalProperties": {
-            "$ref": "#/definitions/ExternalItemValue"
-          },
-          "properties": {
-            "byLayer": {
-              "description": "Specify externals depending on the layer.",
-              "anyOf": [
-                {
-                  "type": "object",
-                  "additionalProperties": {
-                    "$ref": "#/definitions/ExternalItem"
-                  }
-                },
-                {
-                  "instanceof": "Function",
-                  "tsType": "import('../lib/ExternalModuleFactoryPlugin').ExternalItemByLayerFn"
-                }
-              ]
-            }
-          }
+          "$ref": "#/definitions/ExternalItemObject"
         },
         {
           "$ref": "#/definitions/ExternalItemFunction"
@@ -1839,17 +1820,41 @@
     "ExternalItemFunctionCallback": {
       "description": "The function is called on each dependency (`function(context, request, callback(err, result))`).",
       "instanceof": "Function",
-      "tsType": "import(\"../lib/ExternalModuleFactoryPlugin\").ExternalItemFunctionCallback"
+      "tsType": "import('../lib/externals/ExternalModuleFactoryPlugin').ExternalItemFunctionCallback"
     },
     "ExternalItemFunctionPromise": {
       "description": "The function is called on each dependency (`function(context, request)`).",
       "instanceof": "Function",
-      "tsType": "import(\"../lib/ExternalModuleFactoryPlugin\").ExternalItemFunctionPromise"
+      "tsType": "import('../lib/externals/ExternalModuleFactoryPlugin').ExternalItemFunctionPromise"
     },
     "ExternalItemInterop": {
       "description": "How an external's exports interoperate with ES module imports, independent of the importing module's strictness (similar to Rollup's `output.interop`). 'default': treat as CommonJS, the default import is the whole exports (Node.js semantics). 'esModule': treat as an ES module namespace, the default import is unboxed to `.default`.",
       "enum": ["default", "esModule"],
       "added": "5.109.0"
+    },
+    "ExternalItemObject": {
+      "description": "If an dependency matches exactly a property of the object, the property value is used as dependency.",
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/ExternalItemValue"
+      },
+      "properties": {
+        "byLayer": {
+          "description": "Specify externals depending on the layer.",
+          "anyOf": [
+            {
+              "type": "object",
+              "additionalProperties": {
+                "$ref": "#/definitions/ExternalItem"
+              }
+            },
+            {
+              "instanceof": "Function",
+              "tsType": "import('../lib/externals/ExternalModuleFactoryPlugin').ExternalItemByLayerFn"
+            }
+          ]
+        }
+      }
     },
     "ExternalItemSideEffects": {
       "description": "Whether importing the external has side effects (like the `sideEffects` flag in a package.json). `false` allows webpack to drop the external when none of its exports are used. Defaults to `true`, as webpack can't analyze an external.",
@@ -2223,7 +2228,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "import(\"../lib/TemplatedPathPlugin\").TemplatePathFn<import(\"../lib/Compilation\").PathDataChunk>"
+          "tsType": "import('../lib/template/TemplatedPathPlugin').TemplatePathFn<import('../lib/Compilation').PathDataChunk>"
         }
       ]
     },
@@ -2327,6 +2332,26 @@
           "$ref": "#/definitions/JsonGeneratorOptions"
         }
       }
+    },
+    "GlobCondition": {
+      "description": "Match glob patterns against the value, `!` in front of a pattern excludes it. Path separators are normalized to `/` on every OS, and a relative pattern matches at any depth.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "glob": {
+          "description": "Glob patterns to match.",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/RuleSetGlobs"
+            },
+            {
+              "$ref": "#/definitions/RuleSetGlob"
+            }
+          ]
+        }
+      },
+      "required": ["glob"],
+      "added": "5.112.0"
     },
     "GlobalObject": {
       "description": "An expression which is used to address the global object/scope in runtime code.",
@@ -2472,6 +2497,20 @@
       "properties": {
         "as": {
           "$ref": "#/definitions/HtmlParserAs"
+        },
+        "chunkName": {
+          "description": "Name the chunk an extracted `<script>`/`<link>` tag becomes, in place of the page and the tag's position. A string may carry `[page]` (the page's path, escaped for a name), `[name]` (the tag's own basename, empty for an inline body), `[index]` (the tag's position in the page) and `[type]`; a function is called with the same values and returns the name. A `<!-- webpackChunkName: \"...\" -->` comment before a tag wins over it, and either way the name is also the stem the chunk's file is emitted under.",
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "instanceof": "Function",
+              "tsType": "import('../lib/html/HtmlParser').HtmlChunkNameFn"
+            }
+          ],
+          "added": "5.112.0"
         },
         "sources": {
           "description": "Configure extraction of URL-like attribute values (e.g. `<img src>`, `<link href>`, `<script src>`) as webpack dependencies. `true` (default) uses the built-in source list; `false` disables extraction entirely so attributes are left untouched and `<script src>` / `<link rel=\"modulepreload\">` / `<link rel=\"stylesheet\">` no longer become compilation entries; an array lets you customize which `tag`/`attribute` pairs are treated as URLs and how they are bundled. Use the string `\"...\"` inside the array to inline the defaults. Inline `<script>` and `<style>` bodies are always processed. Use `webpackIgnore` comments or `IgnorePlugin` to skip individual URLs.",
@@ -2703,9 +2742,19 @@
             "additionalProperties": false,
             "properties": {
               "file": {
-                "description": "A RegExp to select the origin file for the warning.",
-                "instanceof": "RegExp",
-                "tsType": "RegExp"
+                "description": "A RegExp or a glob to select the origin file for the warning.",
+                "anyOf": [
+                  {
+                    "instanceof": "RegExp",
+                    "tsType": "RegExp"
+                  },
+                  {
+                    "description": "A glob matching the origin file for the warning at any depth.",
+                    "type": "string",
+                    "minLength": 1,
+                    "added": "5.112.0"
+                  }
+                ]
               },
               "message": {
                 "description": "A RegExp to select the warning message.",
@@ -2722,7 +2771,7 @@
           {
             "description": "A custom function to select warnings based on the raw warning instance.",
             "instanceof": "Function",
-            "tsType": "import(\"../lib/IgnoreWarningsPlugin\").IgnoreFn"
+            "tsType": "import('../lib/diagnostics/IgnoreWarningsPlugin').IgnoreFn"
           }
         ]
       }
@@ -2733,7 +2782,7 @@
       "items": {
         "description": "A function to select warnings based on the raw warning instance.",
         "instanceof": "Function",
-        "tsType": "import(\"../lib/IgnoreWarningsPlugin\").IgnoreFn"
+        "tsType": "import('../lib/diagnostics/IgnoreWarningsPlugin').IgnoreFn"
       }
     },
     "Iife": {
@@ -2932,6 +2981,11 @@
           "description": "Enable/disable parsing of dynamic URL.",
           "type": "boolean"
         },
+        "esm": {
+          "description": "Enable/disable parsing of EcmaScript Modules syntax.",
+          "type": "boolean",
+          "added": "5.112.0"
+        },
         "exportsPresence": {
           "description": "Specifies the behavior of invalid export names in \"import ... from ...\" and \"export ... from ...\".",
           "enum": ["error", "warn", "auto", false]
@@ -2961,8 +3015,9 @@
           "type": "string"
         },
         "harmony": {
-          "description": "Enable/disable parsing of EcmaScript Modules syntax.",
-          "type": "boolean"
+          "description": "Deprecated in favor of \"esm\". Enable/disable parsing of EcmaScript Modules syntax.",
+          "type": "boolean",
+          "deprecated": true
         },
         "import": {
           "description": "Enable/disable parsing of import() syntax.",
@@ -3059,6 +3114,11 @@
         "system": {
           "description": "Enable/disable parsing of System.js special syntax like System.import, System.get, System.set and System.register.",
           "type": "boolean"
+        },
+        "topLevelThis": {
+          "description": "Set what top-level \"this\" refers to in a non-ES module: \"exports\" (the exports object, as in Node.js) or \"global\" (the global object, as in a classic script).",
+          "enum": ["exports", "global"],
+          "added": "5.112.0"
         },
         "typescript": {
           "description": "Enable typescript support.",
@@ -3224,12 +3284,12 @@
                   "type": "number"
                 }
               },
-              "tsType": "import(\"net\").ListenOptions"
+              "tsType": "import('net').ListenOptions"
             },
             {
               "description": "A custom listen function.",
               "instanceof": "Function",
-              "tsType": "import(\"../lib/hmr/lazyCompilationBackend\").Listen"
+              "tsType": "import('../lib/hmr/lazyCompilationBackend').Listen"
             }
           ]
         },
@@ -3250,7 +3310,7 @@
             {
               "description": "A custom create server function.",
               "instanceof": "Function",
-              "tsType": "import(\"../lib/hmr/lazyCompilationBackend\").CreateServerFunction"
+              "tsType": "import('../lib/hmr/lazyCompilationBackend').CreateServerFunction"
             }
           ]
         }
@@ -3267,7 +3327,7 @@
             {
               "description": "A custom backend.",
               "instanceof": "Function",
-              "tsType": "import(\"../lib/hmr/LazyCompilationPlugin\").BackEnd"
+              "tsType": "import('../lib/hmr/LazyCompilationPlugin').BackEnd"
             },
             {
               "$ref": "#/definitions/LazyCompilationDefaultBackendOptions"
@@ -3295,6 +3355,9 @@
             {
               "instanceof": "Function",
               "tsType": "import('../lib/hmr/LazyCompilationPlugin').TestFn"
+            },
+            {
+              "$ref": "#/definitions/GlobCondition"
             }
           ]
         }
@@ -3368,6 +3431,11 @@
         }
       }
     },
+    "LibraryEntryExports": {
+      "description": "Which modules of an entry the library exposes the exports of: only the last one, or all of them, where a name more than one module binds differently is left out, as 'export *' does.",
+      "enum": ["last", "all"],
+      "added": "5.112.0"
+    },
     "LibraryExport": {
       "description": "Specify which export should be exposed as library.",
       "anyOf": [
@@ -3416,6 +3484,9 @@
         },
         "auxiliaryComment": {
           "$ref": "#/definitions/AuxiliaryComment"
+        },
+        "entryExports": {
+          "$ref": "#/definitions/LibraryEntryExports"
         },
         "export": {
           "$ref": "#/definitions/LibraryExport"
@@ -3646,7 +3717,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "import(\"../lib/Compilation\").UnsafeCachePredicate"
+              "tsType": "import('../lib/Compilation').UnsafeCachePredicate"
             }
           ]
         },
@@ -3739,8 +3810,15 @@
                 "absolutePath": true
               },
               {
+                "description": "A glob, when it matches the module's resource path at any depth the module is not parsed.",
+                "type": "string",
+                "absolutePath": false,
+                "minLength": 1,
+                "added": "5.112.0"
+              },
+              {
                 "instanceof": "Function",
-                "tsType": "import(\"../lib/NormalModule\").NoParseFn"
+                "tsType": "import('../lib/module/NormalModule').NoParseFn"
               }
             ]
           },
@@ -3757,8 +3835,15 @@
           "absolutePath": true
         },
         {
+          "description": "A glob, when it matches the module's resource path at any depth the module is not parsed.",
+          "type": "string",
+          "absolutePath": false,
+          "minLength": 1,
+          "added": "5.112.0"
+        },
+        {
           "instanceof": "Function",
-          "tsType": "import(\"../lib/NormalModule\").NoParseFn"
+          "tsType": "import('../lib/module/NormalModule').NoParseFn"
         }
       ]
     },
@@ -3986,6 +4071,11 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "charset": {
+          "description": "How the minimizer states a `.css` asset's encoding. `\"auto\"` (the default) opens it with `@charset \"UTF-8\"` only when its output holds a non-ASCII character, so it is read as UTF-8 wherever the server's `Content-Type` names no other charset, which `@charset` cannot override. `false` writes no `@charset` at all, and writes an escaped character past U+FFFF (an icon font's `content: \"\\F0A86\"`) as the character itself, as `\"auto\"` does once that `@charset` is written. Set `false` only where the asset is read as UTF-8 anyway: a stylesheet with no `@charset` is read in the encoding the server's `Content-Type` names, else in the encoding of the page linking it, so it holds wherever the server names UTF-8 or the page is UTF-8 — and anywhere else every such character reads as other characters.",
+          "enum": ["auto", false],
+          "added": "5.112.0"
+        },
         "colorFallbacks": {
           "description": "Write a color the `browserslist` target cannot read as an extra declaration before the one naming it, in a spelling it does read: `color: oklch(59.686% 0.15619 49.7694)` is written as `color: #c65d06` and then the `oklch()` itself, so an engine reading neither the Lab family nor `hwb()` is left with a color rather than with nothing. The fallback is that color clipped into the sRGB gamut and rounded, which the declaration standing after it corrects wherever it is read. Nothing is written where the author already set the property earlier in the same block, where the color holds a substitution or a relative reference this cannot fold, or where the fallback would still name a function the target cannot read. On by default, and only in effect for a `browserslist` target — any other target names no browsers to answer for.",
           "type": "boolean",
@@ -4014,10 +4104,39 @@
           ],
           "added": "5.110.0"
         },
+        "convertApproximateColors": {
+          "description": "Write a polar or Lab color as the nearest hex even where that hex only approximates it. `shortenColors` converts one only where webpack can prove an engine's own conversion lands on the same bytes, and keeps the function in the two places it cannot: a channel sitting too near a `.5` boundary for two implementations to round it alike (it is why esbuild and lightningcss emit different bytes for `hwb(194 0% 0%)`), and a color outside the sRGB gamut, which hex can only clip to a different color. Off by default, for those two reasons, and the two are not the same trade: on the boundary this writes the byte esbuild, lightningcss and cssnano write anyway, while outside the gamut it goes further than any of them — lightningcss keeps the function there and writes a fallback before it, which is what `colorFallbacks` does. A space engines read through transfers of their own (`a98-rgb`, `prophoto-rgb`) is left alone either way, the hex there naming a color no engine paints rather than a near one. This is about replacing the function: a fallback stands before it rather than in its place, so it already clips and rounds this way.",
+          "type": "boolean",
+          "added": "5.112.0"
+        },
         "convertLengthUnits": {
           "description": "Rewrite a length into a shorter unit it is exactly equal in (`16px` -> `1pc`). Off by default: the authored unit is lost, and once the asset is compressed the rewrite rarely earns anything.",
           "type": "boolean",
           "added": "5.110.0"
+        },
+        "customMedia": {
+          "description": "Resolve the `@custom-media` at-rule: write the query a name stands for wherever a condition asks for it, and drop the rule that named it. `@custom-media --wide (width>400px)` with `@media (--wide)` becomes `@media (width>400px)`. Off by default: `module.parser.css.customMedia` already resolves it in every stylesheet webpack parses, so this is for a `.css` asset that reached the minimizer without being parsed — one emitted by `asset/resource` or copied in. Every rule is read first, so a name resolves wherever its rule stands, the last rule stating it holds, and one name may be read through another; names that read each other in a cycle stand for nothing and are left as written.",
+          "type": "boolean",
+          "added": "5.112.0"
+        },
+        "customSelectors": {
+          "description": "Resolve the `@custom-selector` at-rule: write the selector list a name stands for as `:is(…)` wherever a selector asks for it, and drop the rule that named it. `@custom-selector :--heading h1, h2` with `:--heading` becomes `:is(h1, h2)`. Off by default, for the reason `customMedia` is: `module.parser.css.customSelectors` already resolves it in every stylesheet webpack parses. Rules are read as `customMedia` reads them, and a name is written out only where the target reads `:is()`.",
+          "type": "boolean",
+          "added": "5.112.0"
+        },
+        "dropOverriddenDeclarations": {
+          "description": "Drop a declaration a later one in the same block overrides even where no target is selected, assuming the engines shipping today: wherever Chromium, Gecko and WebKit each read the later value. Off by default. With a `browserslist` target this is already done wherever every browser it names is known to read the later value, so the option only widens the case where no target is selected and there are no engines to name — which is what csso and cssnano do unconditionally. What it gives up is the fallback pair: `color:#c65d06;color:lab(50% 100 -100)` loses the hex, so an engine that cannot read `lab()` is left with nothing. A selection naming a browser the compat tables do not cover is still answered for the whole of it rather than by this option, since naming a browser states a target the option does not override.",
+          "type": "boolean",
+          "added": "5.112.0"
+        },
+        "extractComments": {
+          "description": "Move comments out of a `.css` asset into the `[file].LICENSE.txt` the minimizer plugin writes for JavaScript, leaving a one-line banner pointing at it. Takes terser's values: `true` or `\"some\"` (the default) a `/*!` banner and a comment annotated `@preserve` or `@lic` — terser's `some` bar IE's `@cc_on`, which is left alone, `\"all\"` every comment, a RegExp or a string read as one the comments it matches, and a function the comments it returns `true` for, asked with the comment's `value` (its text without the delimiters), `line` (from 1) and `col` (from 0). `false` leaves them in the stylesheet, where `comments` decides which survive. A stylesheet webpack minifies inside another document — an inline `<style>`, a `style=\"\"` — keeps them, having no file of its own to point from.",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/OptimizationMinimizeExtractComments"
+            }
+          ],
+          "added": "5.112.0"
         },
         "foldCase": {
           "description": "Write a name that matches ASCII case-insensitively in lowercase: an at-rule name, a property name, a pseudo-class or pseudo-element name, a function name, a unit, and a keyword standing in a value whose grammar takes keywords alone. `@MEDIA`, `COLOR`, `:NTH-CHILD`, `URL(`, `1PX` and `currentColor` become `@media`, `color`, `:nth-child`, `url(`, `1px` and `currentcolor`. On by default, and exact: CSS matches every one of these ASCII case-insensitively, so the fold names the same thing. What it never touches is a name the author chose — a custom property, a custom ident such as an animation or grid-area name, an id, a class, a type selector, an attribute's value, or anything inside a substituted value. `@charset` is left as written, being read as bytes rather than matched, and `!important` is always written in lowercase because the printer writes the keyword rather than copying it.",
@@ -4030,7 +4149,7 @@
           "added": "5.111.0"
         },
         "mergeDistantRules": {
-          "description": "Give a rule the selectors of a later one printing the same block, past the rules standing between them. Off by default because it reorders the cascade, so it holds only where nothing between the two declares a property the shared block does. A block repeated at a distance already compresses on its own, so the join is taken only where the copy of the block it drops is worth more than twice the selector it writes instead. `mergeRules` is the safe half of this, joining only what nothing stands between.",
+          "description": "Give a rule the selectors of a later one printing the same block, and an at-rule the block of a later one stating the same condition, past the rules standing between them. Off by default because it reorders the cascade, so it holds only where nothing between the two declares a property the block being moved does for an element its selectors can match (a rule whose selectors all name other element types, `h3` between two rules for `h1` and `h2`, never can) — a condition between counts for what its own rules declare, while `@layer` and anything else whose declarations cannot be read stands in the way whatever it says. A block repeated at a distance already compresses on its own, so a selector join is taken only where the copy of the block it drops is worth more than twice the selector it writes instead; an at-rule join writes no selector and drops the repeated prelude outright. A named `@layer` is not joined this way — its place in the cascade is where its name is first written, not what its prelude states. `mergeRules` is the safe half of this, joining only what nothing stands between.",
           "type": "boolean",
           "added": "5.111.0"
         },
@@ -4069,10 +4188,10 @@
           "type": "boolean",
           "added": "5.110.0"
         },
-        "resolveCustomAtRules": {
-          "description": "Resolve the `@custom-media` and `@custom-selector` at-rules: write the query or the selector list a name stands for wherever one asks for it, and drop the rule that named it. `@custom-media --wide (width>400px)` with `@media (--wide)` becomes `@media (width>400px)`, and `@custom-selector :--heading h1, h2` with `:--heading` becomes `:is(h1, h2)`. Off until asked for: `module.parser.css.customMedia` and `module.parser.css.customSelectors` already resolve both in every stylesheet webpack parses, so this is for a `.css` asset that reached the minimizer without being parsed — one emitted by `asset/resource` or copied in. Only a name stated before the rule asking for it is written out — the rules are read in the order they are written — and a rule naming one this has not come to is left as the author had it. A selector list is written as `:is(…)`, so a name is substituted only where the target reads `:is()`.",
+        "reorderDeclarations": {
+          "description": "Print a style rule's declarations in one order by property family, the properties no family names first where they were written, so blocks setting the same things read alike and compress smaller. Only declarations whose order nothing can see move: two spellings of one property, a shorthand and what it sets, two shorthands sharing a longhand, and a flow-relative side and a physical one keep theirs, and a block holding a property no dataset names or a nested rule is printed as written. On by default.",
           "type": "boolean",
-          "added": "5.111.0"
+          "added": "5.112.0"
         },
         "rewriteCustomProperties": {
           "description": "Shorten the values of custom properties (`--x: #ffffff` -> `#fff`, `--y: 0.5rem` -> `.5rem`), which are otherwise written back exactly as authored. Off by default: `getComputedStyle().getPropertyValue()` hands this text back, so a rewritten value is a different CSSOM — the one place a declaration's authored text survives. What it may rewrite is exactly what any other value's tokens may be, a color in a substitution's fallback included — that fallback being the property's value rather than the function's own argument.",
@@ -4085,7 +4204,7 @@
           "added": "5.111.0"
         },
         "rewriteEscapes": {
-          "description": "Write an escaped identifier the shortest way that names the same thing, in a value or an id: `grid-area:\\66oot` becomes `grid-area:foot` and `#\\41 x` becomes `#Ax`. On by default, and exact: the escape and what replaces it are the same identifier. Off leaves every escape as the author wrote it, which is what a consumer comparing the text rather than reading the identifier needs.",
+          "description": "Write an escaped identifier the shortest way that names the same thing, wherever it stands — a selector, a property, at-rule or function name, or a value: `grid-area:\\66oot` becomes `grid-area:foot`, `#\\41 x` becomes `#Ax`, `col\\6f r:red` becomes `color:red` and `c\\61 lc(` becomes `calc(`. On by default, and exact: the escape and what replaces it are the same identifier. Off leaves every escape as the author wrote it, which is what a consumer comparing the text rather than reading the identifier needs.",
           "type": "boolean",
           "added": "5.111.0"
         },
@@ -4131,6 +4250,29 @@
         }
       },
       "added": "5.110.0"
+    },
+    "OptimizationMinimizeExtractComments": {
+      "description": "Which comments a minimized asset gives up to its `[file].LICENSE.txt`.",
+      "anyOf": [
+        {
+          "instanceof": "RegExp",
+          "tsType": "RegExp"
+        },
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "string"
+        },
+        {
+          "$ref": "#/definitions/OptimizationMinimizeExtractCommentsCondition"
+        }
+      ]
+    },
+    "OptimizationMinimizeExtractCommentsCondition": {
+      "description": "Asked about each comment: its text without the delimiters, and its line (from 1) and column (from 0).",
+      "instanceof": "Function",
+      "tsType": "(comment: { value: string, line: number, col: number }) => boolean"
     },
     "OptimizationMinimizeHtml": {
       "description": "What the HTML minimizer does. Every transform that keeps the document's DOM is on by default and may be turned off on its own, so a page a rewrite breaks can be minimized without it while the rest still applies; the ones that change what a script or a selector reads back are off until asked for.",
@@ -4184,6 +4326,15 @@
           ],
           "added": "5.110.0"
         },
+        "extractComments": {
+          "description": "Move comments out of an `.html` asset into the `[file].LICENSE.txt` the minimizer plugin writes for JavaScript, leaving a `<!-- … -->` banner at the end of the document pointing at it, so the doctype stays first. Takes the values `minimize.css.extractComments` takes: `true` or `\"some\"` (the default) a comment opening with `!` or annotated `@preserve` or `@lic` — terser's `some` bar IE's `@cc_on`, which is left alone, `\"all\"` every comment, a RegExp or a string read as one the comments it matches, and a function the comments it returns `true` for, asked with the comment's `value` (its text without the delimiters), `line` (from 1) and `col` (from 0). `false` leaves them in the document, where `comments` decides which survive. A conditional comment, a server-side include and a `<?…?>` template directive are code and are never taken, and a document nested in another — an `<iframe srcdoc>`, a conditional comment's body — keeps its comments.",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/OptimizationMinimizeExtractComments"
+            }
+          ],
+          "added": "5.112.0"
+        },
         "mergeScripts": {
           "description": "Print a run of adjacent `<script>` elements as one, joined by a newline and a `;`. Only bare ones fold — any attribute at all, a `src`, `type`, `nonce`, `async` or `id` among them, says the two are not interchangeable with one — and only where the print writes the bodies itself, so a `<script>` that `output.html.inline` fills in after the print is left alone. A body is left alone too wherever appending it would change what it means: one still inside a string, template or block comment would swallow the next, and a directive prologue, a hashbang or a leading `-->` mean what they do only at a start the appended body no longer has. Off by default: it removes elements, so `document.scripts`, a `script:nth-child()` selector and `querySelectorAll(\"script\").length` all read a different document; a later body's `var` and `function` declarations become visible to the bodies before it; and a body that throws takes the rest of its run with it rather than only itself, while one that does not parse takes the whole run, its own code included.",
           "type": "boolean",
@@ -4230,7 +4381,7 @@
           "added": "5.110.0"
         },
         "removeEmptyElements": {
-          "description": "Drop an element that has no children and no attributes. Kept anyway when its bare form is still doing a job (`canvas`, `slot`, `template`, `textarea`, `progress`, `meter`, `output`, `dialog`, and the table structure), when it is a void element, or when it is foreign content. Off by default: CSS can give an empty element a size or a `::before`, and the minifier cannot see the stylesheet. Emptiness is read off the output rather than the source, so a run of nested empties goes together and an element left empty only by a dropped comment or by whitespace `collapseWhitespace` deletes goes with them.",
+          "description": "Drop an element that has no children and no attributes, where its bare form renders nothing and nothing reads it: a generic container such as `div`, `span` or `section`, an inline phrase element, an empty `title`, `script` or `style`, or an attribute-less `meta`, `link` or `base`. Every other element is kept, including widgets, list items, elements with margins and custom elements. Off by default: CSS can give an empty element a size or a `::before`, and the minifier cannot see the stylesheet. Emptiness is read off the output rather than the source, so a run of nested empties goes together and an element left empty only by a dropped comment or by whitespace `collapseWhitespace` deletes goes with them.",
           "type": "boolean",
           "added": "5.110.0"
         },
@@ -4319,9 +4470,41 @@
               "$ref": "#/definitions/OptimizationMinimizeJavascript"
             }
           ]
+        },
+        "json": {
+          "description": "Minimize JSON assets by re-serializing them without whitespace (defaults to `true` with `experiments.futureDefaults`, otherwise `false`).",
+          "type": "boolean",
+          "added": "5.112.0"
+        },
+        "xml": {
+          "description": "Minimize `.svg` and `.xml` assets: `false` disables it, an object enables it. Absent means off unless `experiments.futureDefaults` is set.",
+          "anyOf": [
+            {
+              "enum": [false]
+            },
+            {
+              "$ref": "#/definitions/OptimizationMinimizeXml"
+            }
+          ],
+          "experimental": true,
+          "added": "5.112.0"
         }
       },
       "added": "5.110.0"
+    },
+    "OptimizationMinimizeXml": {
+      "description": "What the XML minimizer does. The stylesheets an SVG or XHTML element holds are minified with `optimization.minimizeOptions.css` for the target's browsers.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "sortAttributes": {
+          "description": "Print attributes with the document's commonest names first, breaking ties by case-sensitive name. Off by default: consumers observing attribute order see the new order.",
+          "type": "boolean",
+          "added": "5.112.0"
+        }
+      },
+      "experimental": true,
+      "added": "5.112.0"
     },
     "OptimizationNormalized": {
       "description": "Enables/Disables integrated optimizations.",
@@ -4598,7 +4781,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "import(\"../lib/TemplatedPathPlugin\").TemplatePathFn<import(\"../lib/Compilation\").PathDataChunk>"
+              "tsType": "import('../lib/template/TemplatedPathPlugin').TemplatePathFn<import('../lib/Compilation').PathDataChunk>"
             }
           ]
         },
@@ -4721,6 +4904,9 @@
             {
               "instanceof": "Function",
               "tsType": "import('../lib/optimize/SplitChunksPlugin').CheckTestFn"
+            },
+            {
+              "$ref": "#/definitions/GlobCondition"
             }
           ]
         },
@@ -4825,13 +5011,19 @@
             }
           ]
         },
+        "dedupDepth": {
+          "description": "Rounds of intersections of the chunk sets to look through for modules shared by chunks no single chunk set holds together (0 looks through the chunk sets alone; every round costs more computation).",
+          "type": "number",
+          "minimum": 0,
+          "added": "5.112.0"
+        },
         "defaultSizeTypes": {
           "description": "Sets the size types which are used when a number is used for sizes.",
           "type": "array",
           "items": {
             "description": "Size type, like 'javascript', 'webassembly'.",
             "type": "string",
-            "tsType": "import(\"../lib/Module\").SourceType"
+            "tsType": "import(\"../lib/module/Module\").SourceType"
           },
           "minItems": 1
         },
@@ -4921,7 +5113,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "import(\"../lib/TemplatedPathPlugin\").TemplatePathFn<import(\"../lib/Compilation\").PathDataChunk>"
+              "tsType": "import('../lib/template/TemplatedPathPlugin').TemplatePathFn<import('../lib/Compilation').PathDataChunk>"
             }
           ]
         },
@@ -5411,7 +5603,7 @@
           "added": "5.109.0"
         },
         "inline": {
-          "description": "Inline the content of matching chunks directly into the HTML instead of emitting a separate `<script>`/`<link>` tag. `true` inlines every chunk; `\"script\"` inlines only JavaScript, `\"style\"` only CSS; an array of `RegExp` patterns matches against the chunk name.",
+          "description": "Inline the content of matching chunks directly into the HTML instead of emitting a separate `<script>`/`<link>` tag. `true` inlines every chunk; `\"script\"` inlines only JavaScript, `\"style\"` only CSS; an array of `RegExp` patterns matches against the chunk name and the filename template it is emitted under. A chunk another entry loads its runtime from by url stays a separate file.",
           "anyOf": [
             {
               "type": "array",
@@ -5446,7 +5638,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "((asset: { chunk: import('../lib/Chunk'), filename: string }) => string[] | false)"
+              "tsType": "((asset: { chunk: import('../lib/graph/Chunk'), filename: string }) => string[] | false)"
             }
           ],
           "added": "5.109.0"
@@ -5997,7 +6189,7 @@
         },
         {
           "type": "string",
-          "pattern": "^(inline-|hidden-|eval-)?(nosources-)?(cheap-(module-)?)?source-map(-debugids)?$"
+          "pattern": "^(inline-|hidden-|eval-)?(nosources-)?(cheap-(module-)?)?source-map(-debugids)?(-scopes)?$"
         }
       ]
     },
@@ -6009,7 +6201,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "import(\"../lib/TemplatedPathPlugin\").TemplatePathFn"
+          "tsType": "import('../lib/template/TemplatedPathPlugin').TemplatePathFn"
         }
       ]
     },
@@ -6186,7 +6378,7 @@
         "cachePredicate": {
           "description": "Predicate function to decide which requests should be cached.",
           "instanceof": "Function",
-          "tsType": "((request: import('enhanced-resolve').ResolveRequest) => boolean)"
+          "tsType": "(request: import('enhanced-resolve').ResolveRequest) => boolean"
         },
         "cacheWithContext": {
           "description": "Include the context information in the cache identifier when caching.",
@@ -6262,7 +6454,7 @@
         },
         "fileSystem": {
           "description": "Filesystem for the resolver.",
-          "tsType": "import('../lib/util/fs').InputFileSystem"
+          "tsType": "import('../lib/fs/fs').InputFileSystem"
         },
         "fullySpecified": {
           "description": "Treats the request specified by the user as fully specified, meaning no extensions are added and the mainFiles in directories are not resolved (This doesn't affect requests from mainFields, aliasFields or aliases).",
@@ -6361,6 +6553,13 @@
               {
                 "type": "string",
                 "absolutePath": true
+              },
+              {
+                "description": "A glob the resolve result must match at any depth.",
+                "type": "string",
+                "absolutePath": false,
+                "minLength": 1,
+                "added": "5.112.0"
               }
             ]
           }
@@ -6477,7 +6676,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "((context: { entryName: string, entrypoint: import('../lib/Entrypoint'), hostType: 'html' | 'js', compilation: import('../lib/Compilation'), defaultHints: (import('../lib/dependencies/HtmlEntryDependency').HtmlResourceHint & { hostChunks: string[] })[] }) => import('../lib/dependencies/HtmlEntryDependency').HtmlResourceHint[])"
+          "tsType": "((context: { entryName: string, entrypoint: import('../lib/graph/Entrypoint'), hostType: 'html' | 'js', compilation: import('../lib/Compilation'), defaultHints: (import('../lib/dependencies/html/HtmlEntryDependency').HtmlResourceHint & { hostChunks: string[] })[] }) => import('../lib/dependencies/html/HtmlEntryDependency').HtmlResourceHint[])"
         }
       ],
       "added": "5.109.0"
@@ -7132,6 +7331,13 @@
                 "description": "A path to an immutable directory (usually a package manager cache directory).",
                 "type": "string",
                 "absolutePath": true
+              },
+              {
+                "description": "A glob matching an immutable directory at any depth, or relative to the context when it starts with `./` or `../`; a path under several matches takes the outermost.",
+                "type": "string",
+                "absolutePath": false,
+                "minLength": 1,
+                "added": "5.112.0"
               }
             ]
           }
@@ -7151,6 +7357,13 @@
                 "description": "A path to a managed directory (usually a node_modules directory).",
                 "type": "string",
                 "absolutePath": true
+              },
+              {
+                "description": "A glob matching a managed directory at any depth (e.g. `node_modules`), or relative to the context when it starts with `./` or `../`; a path under several matches takes the outermost.",
+                "type": "string",
+                "absolutePath": false,
+                "minLength": 1,
+                "added": "5.112.0"
               }
             ]
           }
@@ -7215,6 +7428,13 @@
                 "description": "A path to an unmanaged directory.",
                 "type": "string",
                 "absolutePath": true
+              },
+              {
+                "description": "A glob matching an unmanaged directory at any depth, or relative to the context when it starts with `./` or `../`; a path under several matches takes the outermost.",
+                "type": "string",
+                "absolutePath": false,
+                "minLength": 1,
+                "added": "5.112.0"
               }
             ]
           }
@@ -7872,7 +8092,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "import(\"../lib/stats/DefaultStatsPresetPlugin\").WarningFilterFn"
+          "tsType": "import('../lib/stats/DefaultStatsPresetPlugin').WarningFilterFn"
         }
       ]
     },

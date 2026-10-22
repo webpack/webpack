@@ -102,10 +102,9 @@ require.ensure(["c"], function(require) {
 /******/ 	// This file contains only the entry chunk.
 /******/ 	// The chunk loading function for additional chunks
 /******/ 	__webpack_require__.e = (chunkId) => {
-/******/ 		return Promise.all(Object.keys(__webpack_require__.f).reduce((promises, key) => {
-/******/ 			__webpack_require__.f[key](chunkId, promises);
-/******/ 			return promises;
-/******/ 		}, []));
+/******/ 		const promises = [];
+/******/ 		__webpack_require__.f.j(chunkId, promises);
+/******/ 		return Promise.all(promises);
 /******/ 	};
 /******/ 	
 /******/ 	/* webpack/runtime/get javascript chunk filename */
@@ -320,11 +319,11 @@ Minimized
 ## Unoptimized
 
 ```
-asset output.js 9.16 KiB [emitted] (name: main)
+asset output.js 9.09 KiB [emitted] (name: main)
 asset node_modules_c_js-node_modules_d_js.output.js 562 bytes [emitted]
-chunk (runtime: main) output.js (main) 161 bytes (javascript) 4.83 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 161 bytes (javascript) 4.77 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.83 KiB 6 modules
+  runtime modules 4.77 KiB 6 modules
   dependent modules 22 bytes [dependent] 2 modules
   ./example.js 139 bytes [built] [code generated]
     [used exports unknown]
@@ -343,11 +342,11 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 1.8 KiB [emitted] [minimized] (name: main)
+asset output.js 1.78 KiB [emitted] [minimized] (name: main)
 asset node_modules_c_js-node_modules_d_js.output.js 108 bytes [emitted] [minimized]
-chunk (runtime: main) output.js (main) 161 bytes (javascript) 4.83 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 161 bytes (javascript) 4.77 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.83 KiB 6 modules
+  runtime modules 4.77 KiB 6 modules
   dependent modules 22 bytes [dependent] 2 modules
   ./example.js 139 bytes [built] [code generated]
     [no exports used]

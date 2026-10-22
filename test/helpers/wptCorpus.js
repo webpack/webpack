@@ -1,12 +1,12 @@
 "use strict";
 
-// Discovery for the `test/wpt` corpus, read one way by every tier. An absent
+// Discovery for the `test/external/wpt` corpus, read one way by every tier. An absent
 // submodule yields empty lists.
 
 const fs = require("fs");
 const path = require("path");
 
-const WPT = path.resolve(__dirname, "../wpt");
+const WPT = path.resolve(__dirname, "../external/wpt");
 
 // Parsed as XML, not HTML, so their trees legitimately differ from ours.
 const XML_EXTENSIONS = new Set([".xht", ".xhtml", ".xml", ".svg"]);

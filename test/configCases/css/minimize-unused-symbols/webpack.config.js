@@ -11,6 +11,7 @@ module.exports = {
 		// The object form enables minimizing and configures the built-in minimizer.
 		minimize: {
 			css: {
+				extractComments: false,
 				unusedSymbols: ["gone", "gone-in", "--gone"]
 			}
 		},

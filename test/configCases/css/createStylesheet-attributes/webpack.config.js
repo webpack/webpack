@@ -21,10 +21,9 @@ module.exports = {
 							compilation
 						);
 
-					// Mirrors mini-css-extract-plugin's `attributes` plugin option:
-					// merge a static map of attributes onto every stylesheet link.
-					// Mirrors mini-css-extract-plugin's `linkType` plugin option:
-					// pin link.type explicitly (defaulting to text/css).
+					// Mirrors mini-css-extract-plugin's `attributes` and `linkType` options: merge a
+					// static map of attributes onto every stylesheet link, and pin `link.type`
+					// explicitly, defaulting to text/css.
 					hooks.createStylesheet.tap(
 						"CreateStylesheetAttributesTest",
 						(source) =>

@@ -1,13 +1,7 @@
 "use strict";
 
-const { describeCases } = require("./TestCases.template");
+const { describeCases, variants } = require("./templates/TestCases");
 
 describe("TestCases", () => {
-	describeCases({
-		name: "devtool-eval-deterministic-module-ids",
-		devtool: "eval",
-		optimization: {
-			moduleIds: "deterministic"
-		}
-	});
+	describeCases(variants["devtool-eval-deterministic-module-ids"]);
 });

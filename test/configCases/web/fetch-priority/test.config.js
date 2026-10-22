@@ -1,10 +1,6 @@
 "use strict";
 
 module.exports = {
-	moduleScope(scope) {
-		// const link = scope.window.document.createElement("link");
-		// link.rel = "stylesheet";
-		// link.href = "style_css.css";
-		// scope.window.document.head.appendChild(link);
-	}
+	// Present so the harness builds a module scope; this case needs no setup.
+	moduleScope() {}
 };

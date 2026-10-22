@@ -70,7 +70,7 @@ exports[`ConfigCacheTestCases concatenate-modules commonjs-wrapped-body-asi-posi
   \\\\******************************/
 
 // MODULE: ./body.js
-var body_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var body_namespaceFn = /*#__PURE__*/__webpack_require__.cw((module) => {
 
 
 // semicolon-free: every require below opens a statement ASI would otherwise
@@ -87,7 +87,7 @@ module.exports.z = () => log
 });
 
 // MODULE: ./ctor.js
-var ctor_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var ctor_namespaceFn = /*#__PURE__*/__webpack_require__.cw((module) => {
 
 
 (log_namespaceFn().push)(\\"ctor\\");
@@ -99,7 +99,7 @@ module.exports = function Ctor() {
 });
 
 // MODULE: ./log.js
-var log_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var log_namespaceFn = /*#__PURE__*/__webpack_require__.cw((module) => {
 
 
 module.exports = [];
@@ -107,7 +107,7 @@ module.exports = [];
 });
 
 // MODULE: ./plain.js
-var plain_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var plain_namespaceFn = /*#__PURE__*/__webpack_require__.cw((module) => {
 
 
 (log_namespaceFn().push)(\\"plain\\");
@@ -117,7 +117,7 @@ module.exports = { member: () => \\"member\\" };
 });
 
 // MODULE: ./side.js
-var side_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var side_namespaceFn = /*#__PURE__*/__webpack_require__.cw(() => {
 
 
 (log_namespaceFn().push)(\\"side\\");
@@ -208,7 +208,7 @@ exports[`ConfigCacheTestCases concatenate-modules commonjs-wrapped-body-asi-posi
   \\\\******************************/
 
 // MODULE: ./body.js
-var body_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var body_namespaceFn = /*#__PURE__*/__webpack_require__.cw((module) => {
 
 
 // semicolon-free: every require below opens a statement ASI would otherwise
@@ -225,7 +225,7 @@ module.exports.z = () => log
 });
 
 // MODULE: ./ctor.js
-var ctor_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var ctor_namespaceFn = /*#__PURE__*/__webpack_require__.cw((module) => {
 
 
 (log_namespaceFn().push)(\\"ctor\\");
@@ -237,7 +237,7 @@ module.exports = function Ctor() {
 });
 
 // MODULE: ./log.js
-var log_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var log_namespaceFn = /*#__PURE__*/__webpack_require__.cw((module) => {
 
 
 module.exports = [];
@@ -245,7 +245,7 @@ module.exports = [];
 });
 
 // MODULE: ./plain.js
-var plain_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var plain_namespaceFn = /*#__PURE__*/__webpack_require__.cw((module) => {
 
 
 (log_namespaceFn().push)(\\"plain\\");
@@ -255,7 +255,7 @@ module.exports = { member: () => \\"member\\" };
 });
 
 // MODULE: ./side.js
-var side_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var side_namespaceFn = /*#__PURE__*/__webpack_require__.cw(() => {
 
 
 (log_namespaceFn().push)(\\"side\\");
@@ -346,7 +346,7 @@ exports[`ConfigCacheTestCases concatenate-modules commonjs-wrapped-body-asi-posi
   \\\\******************************/
 
 // MODULE: ./body.js
-var body_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var body_namespaceFn = /*#__PURE__*/__webpack_require__.cw((module) => {
 
 
 // semicolon-free: every require below opens a statement ASI would otherwise
@@ -363,7 +363,7 @@ module.exports.z = () => log
 });
 
 // MODULE: ./ctor.js
-var ctor_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var ctor_namespaceFn = /*#__PURE__*/__webpack_require__.cw((module) => {
 
 
 (log_namespaceFn().push)(\\"ctor\\");
@@ -375,7 +375,7 @@ module.exports = function Ctor() {
 });
 
 // MODULE: ./log.js
-var log_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var log_namespaceFn = /*#__PURE__*/__webpack_require__.cw((module) => {
 
 
 module.exports = [];
@@ -383,7 +383,7 @@ module.exports = [];
 });
 
 // MODULE: ./plain.js
-var plain_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var plain_namespaceFn = /*#__PURE__*/__webpack_require__.cw((module) => {
 
 
 (log_namespaceFn().push)(\\"plain\\");
@@ -393,7 +393,7 @@ module.exports = { member: () => \\"member\\" };
 });
 
 // MODULE: ./side.js
-var side_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var side_namespaceFn = /*#__PURE__*/__webpack_require__.cw(() => {
 
 
 (log_namespaceFn().push)(\\"side\\");
@@ -484,7 +484,7 @@ exports[`ConfigCacheTestCases concatenate-modules commonjs-wrapped-body-asi-posi
   \\\\******************************/
 
 // MODULE: ./body.js
-var body_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var body_namespaceFn = /*#__PURE__*/__webpack_require__.cw((module) => {
 
 
 // semicolon-free: every require below opens a statement ASI would otherwise
@@ -501,7 +501,7 @@ module.exports.z = () => log
 });
 
 // MODULE: ./ctor.js
-var ctor_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var ctor_namespaceFn = /*#__PURE__*/__webpack_require__.cw((module) => {
 
 
 (log_namespaceFn().push)(\\"ctor\\");
@@ -513,7 +513,7 @@ module.exports = function Ctor() {
 });
 
 // MODULE: ./log.js
-var log_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var log_namespaceFn = /*#__PURE__*/__webpack_require__.cw((module) => {
 
 
 module.exports = [];
@@ -521,7 +521,7 @@ module.exports = [];
 });
 
 // MODULE: ./plain.js
-var plain_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var plain_namespaceFn = /*#__PURE__*/__webpack_require__.cw((module) => {
 
 
 (log_namespaceFn().push)(\\"plain\\");
@@ -531,7 +531,7 @@ module.exports = { member: () => \\"member\\" };
 });
 
 // MODULE: ./side.js
-var side_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var side_namespaceFn = /*#__PURE__*/__webpack_require__.cw(() => {
 
 
 (log_namespaceFn().push)(\\"side\\");

@@ -9,8 +9,8 @@ module.exports = {
 	ignoreWarnings: [
 		(warning) => {
 			// when using swc-loader or `transpileOnly: true` with ts-loader, the warning is expected
-			expect(warning.message).toContain(
-				"export 'T' (reexported as 'T') was not found in './re-export' (possible exports: value)"
+			expect(warning.message).toMatch(
+				/export 'T' \(reexported as '(T|NamedT)'\) was not found in '\.\/(re-export|export)' \(possible exports: value\)/
 			);
 			return true;
 		}
@@ -54,6 +54,9 @@ module.exports = {
 					expect(source).toContain(
 						"export { file_namespaceObject as logo, value };"
 					);
+					// `NamedT` crosses a named re-export, which is marked provided itself:
+					// only the end of the chain says the erased type is missing
+					expect(source).not.toMatch(/^export .*\b(T|NamedT)\b/m);
 				});
 			};
 			this.hooks.compilation.tap("testcase", handler);

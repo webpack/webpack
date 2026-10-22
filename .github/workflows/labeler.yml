@@ -4,6 +4,13 @@ on:
   pull_request_target:
     types: [opened, synchronize, reopened]
 
+concurrency:
+  # Keyed on the pull request rather than on `github.ref`, which under
+  # `pull_request_target` is the base branch — every open pull request would
+  # share one group and cancel the others' labelling.
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
@@ -13,6 +20,7 @@ jobs:
       contents: read
       pull-requests: write
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/labeler@bf12e9b00b37c5c0ca2b87b79b2daf7891dbda13 # v7.0.0
         with:

@@ -161,6 +161,11 @@
         }
       }
     },
+    "LibraryEntryExports": {
+      "description": "Which modules of an entry the library exposes the exports of: only the last one, or all of them, where a name more than one module binds differently is left out, as 'export *' does.",
+      "enum": ["last", "all"],
+      "added": "5.112.0"
+    },
     "LibraryExport": {
       "description": "Specify which export should be exposed as library.",
       "anyOf": [
@@ -209,6 +214,9 @@
         },
         "auxiliaryComment": {
           "$ref": "#/definitions/AuxiliaryComment"
+        },
+        "entryExports": {
+          "$ref": "#/definitions/LibraryEntryExports"
         },
         "export": {
           "$ref": "#/definitions/LibraryExport"

@@ -18,7 +18,8 @@ exports[`ConfigCacheTestCases html minimize-attributes minimize-attributes shoul
 b\\">newline in a value</p>
 	<p data-dq='a\\"b'>double quote in a value</p>
 	<p data-sq='a\\"b'>the other quote wins</p>
-	<p data-amp=a?b&c data-ref=a&amp;b>raw value bytes</p>
+	<p data-amp=a?b&c data-ref=a&b>raw value bytes</p>
+	<p data-keep=\\"&amp;copy x\\" data-num=&amp;#38; data-bare=&zz data-query=\\"x?a=1&b=2\\">ampersands</p>
 	<input type=text value disabled checked>
 	
 	<input type=\\"time \\" id=padded-type>
@@ -32,7 +33,11 @@ b\\">newline in a value</p>
 	<p a=1>duplicate attribute</p>
 	<p class=\\"a b\\">repeated class token, folded</p>
 	
-	<input type=\\"text\\"{% if required %} required{% endif %}>
+	<input type=text {% if isRequired %} required{% endif %}>
+	<input type=checkbox {% if on %} checked {% endif %}>
+	<li class=row {% for x in y %} data-x=1 {% endfor %}>a block over a list</li>
+	<input type=text {%- if isRequired -%} required{%- endif -%}>
+	<input type=text {% if on %} a{% endif %}=\\"\\">
 	<p class=\\"btn{% if active %} btn-active{% endif %}\\">the same list, as text</p>
 	<p data-slash=/end/>value ending in a slash</p>
 	<a href=x/>unquoted value ending in a slash</a>

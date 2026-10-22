@@ -5,9 +5,16 @@ on:
   schedule:
     - cron: "0 0 * * 0"
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  # Each run regenerates every example from the current branch, so a newer
+  # run makes an older one redundant.
+  cancel-in-progress: true
+
 jobs:
   examples:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     permissions:
       contents: write
       pull-requests: write
@@ -19,12 +26,12 @@ jobs:
           fetch-depth: 0
 
       - name: Use Node.js
-        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: lts/*
           cache: yarn
 
-      - run: yarn --frozen-lockfile
+      - run: node tooling/retry.js yarn --frozen-lockfile
 
       - run: yarn link --frozen-lockfile || true
 

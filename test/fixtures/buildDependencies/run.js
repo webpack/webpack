@@ -56,7 +56,7 @@ function run({ default: value2, asyncDep: value3 }) {
 				debug: /PackFile/
 			},
 			snapshot: {
-				// TODO remove webpack 6
+				// TODO in the next major release: remove
 				managedPaths: [/^(.+?[\\/]node_modules[\\/])/]
 			},
 			cache: {

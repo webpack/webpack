@@ -3,8 +3,8 @@
 const { Compilation } = require("../../../../");
 
 /** @typedef {NonNullable<import("../../../../").Compiler["inputFileSystem"]>} InputFileSystem */
-/** @typedef {import("../../../../lib/util/fs").StatsCallback} StatsCallback */
-/** @typedef {import("../../../../lib/util/fs").ReaddirDirentCallback} ReaddirDirentCallback */
+/** @typedef {import("../../../../lib/fs/fs").StatsCallback} StatsCallback */
+/** @typedef {import("../../../../lib/fs/fs").ReaddirDirentCallback} ReaddirDirentCallback */
 
 const PLUGIN_NAME = "DenyReadingPlugin";
 

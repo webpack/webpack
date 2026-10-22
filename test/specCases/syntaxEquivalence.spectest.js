@@ -1,0 +1,3174 @@
+"use strict";
+
+// Both printers held to what an engine makes of their output, over `configCases`
+// and `test/external/wpt` alike, through the one path in `helpers/syntaxEquivalence`.
+// Nothing is compared as text where the engine can be asked instead. A third
+// tier needs no engine and so reads the whole corpus: webpack's own parser is a
+// DOM oracle, held to that corpus's expected trees by html5lib.spectest.js.
+
+const path = require("path");
+// The comparison has to know which family names are keywords, and the table
+// that says so is generated rather than written twice.
+const {
+	GENERIC_FONT_FAMILIES,
+	getDeclarationRanks
+} = require("../../lib/css/data");
+const { SourceProcessor: CssSourceProcessor } = require("../../lib/css/syntax");
+const { readToken } = require("../../lib/css/syntax-parser");
+const {
+	BOOLEAN_ATTRIBUTES,
+	EMPTY_REMOVABLE_ATTRIBUTES,
+	ENUMERATED_ATTRIBUTE_NAMES,
+	ENUMERATED_KEYWORDS,
+	REWRITABLE_ATTRIBUTES
+} = require("../../lib/html/data");
+const { SourceProcessor: HtmlSourceProcessor } = require("../../lib/html/syntax");
+const { A, Field, Namespace, NodeType, _attributeList, _namespaceOf, decodeEntities, parseHtml } = require("../../lib/html/syntax-parser");
+const expectNoDeprecations = require("../helpers/expectNoDeprecations");
+const launchBrowser = require("../helpers/launchBrowser");
+
+// Which engine the comparisons are held against. `EQUIVALENCE_BROWSER` points
+// the same corpus at Gecko or at WebKit; anything else is Blink.
+const ENGINES = new Set(["chrome", "firefox", "webkit"]);
+const ENGINE = ENGINES.has(String(process.env.EQUIVALENCE_BROWSER))
+	? String(process.env.EQUIVALENCE_BROWSER)
+	: "chrome";
+
+// Media is emulated on Chromium only, the engine the filed defects were
+// measured on; elsewhere the signature carries what no viewport varies as text,
+// though playwright could emulate print and the color scheme there too.
+const EMULATES_MEDIA = ENGINE === "chrome";
+
+// WHY: The printer caps a number at six significant digits, so a computed value
+// that differs past the sixth is the engine's own serialization rather than
+// anything the printer wrote — WebKit reads 38.7953px where Blink reads
+// 38.795277px for the one declaration. Chromium, whose serialization the
+// fixtures were measured against, stays held to the byte.
+/**
+ * A computed declaration with every number read at the precision the printer
+ * writes, where the engine serializes to fewer digits than Chromium.
+ * @param {string} line one `property:value` line
+ * @returns {string} it, at the printed precision
+ */
+const atPrintedPrecision = (line) =>
+	ENGINE === "chrome"
+		? line
+		: line.replace(/\d+\.\d+/g, (number) =>
+				String(Number(Number(number).toPrecision(6)))
+			);
+
+// A filed reason opening `<engine> only:` names the engines that have it, comma
+// separated where a file is filed by more than one for different causes.
+const ENGINE_ONLY_REGEXP = /^([a-z]+(?:, [a-z]+)*) only:/;
+
+/**
+ * A tier's filed defects as they stand in this engine. A reason opening
+ * `<engine> only:` names the engine that has it, and the entry is dropped
+ * elsewhere — the exactness check would otherwise fail on a defect the engine
+ * being run does not have.
+ * @param {Map<string, string>} filed every filed defect of a tier
+ * @returns {Map<string, string>} the ones this engine has
+ */
+const forEngine = (filed) =>
+	new Map(
+		[...filed].filter(([, why]) => {
+			const named = ENGINE_ONLY_REGEXP.exec(why);
+			return named === null || named[1].split(", ").includes(ENGINE);
+		})
+	);
+
+// No script runs in a frame and nothing reaches the network, so a page renders
+// the same every time it is loaded; eval is for the suite's own page functions.
+const PAGE_POLICY =
+	"default-src 'none'; script-src 'unsafe-eval'; style-src 'unsafe-inline' data:; img-src data:; font-src data:; media-src data:";
+const POLICED_PAGE = `<!doctype html><html><head><meta http-equiv="Content-Security-Policy" content="${PAGE_POLICY}"></head><body></body></html>`;
+
+// What neither a width nor a frame's color scheme reaches, set by media
+// emulation where the engine offers it; each runs only over the pairs naming it.
+/** @type {{ label: string, named: RegExp, apply: (page: import("playwright-core").Page, on: boolean) => Promise<void> }[]} */
+const EMULATIONS = EMULATES_MEDIA
+	? [
+			{
+				label: "print",
+				named: /@media[^{]*\bprint\b/i,
+				apply: (page, on) => page.emulateMedia({ media: on ? "print" : null })
+			}
+		]
+	: [];
+
+const {
+	benchmarkDocuments,
+	benchmarkStylesheets,
+	buildCorpus,
+	cascadeLines,
+	compareRenders,
+	compareStyles,
+	installHelpers,
+	numericallyEqual
+} = require("../helpers/syntaxEquivalence");
+const {
+	WPT,
+	browserCorpus,
+	cssCorpus: wptCssCorpus,
+	cssDeclarations,
+	fullCorpus,
+	hasCorpus,
+	nameOf,
+	readDocument
+} = require("../helpers/wptCorpus");
+
+/** @import { Fixture, PageHelpers, Relaxation, StylePair } from "../helpers/syntaxEquivalence" */
+
+/**
+ * Every pair whose stylesheets style some element differently, on a page with
+ * the helpers installed — at the default media, then under each emulation.
+ * @param {import("playwright-core").Page} page the page
+ * @param {StylePair[]} pairs the pairs
+ * @param {string[]=} types element types every pair nests in each other
+ * @returns {Promise<{ name: string, why: string }[]>} what moved, per pair
+ */
+const styleDifferences = async (page, pairs, types = []) => {
+	/** @type {{ name: string, why: string }[]} */
+	const out = [];
+	for (const emulation of [undefined, ...EMULATIONS]) {
+		const chosen =
+			emulation === undefined
+				? pairs
+				: pairs.filter(
+						(pair) =>
+							emulation.named.test(pair.before) ||
+							emulation.named.test(pair.after)
+					);
+		if (chosen.length === 0) continue;
+		if (emulation !== undefined) await emulation.apply(page, true);
+		for (let at = 0; at < chosen.length; at += 20) {
+			const reports = await page.evaluate(compareStyles, {
+				pairs: chosen.slice(at, at + 20),
+				types
+			});
+			for (const report of reports) {
+				const lines = cascadeLines(report);
+				if (lines.length === 0 || out.some((one) => one.name === report.name)) {
+					continue;
+				}
+				out.push({
+					name: report.name,
+					why: `${emulation === undefined ? "" : `${emulation.label} `}${lines.join("; ")}`
+				});
+			}
+		}
+		if (emulation !== undefined) await emulation.apply(page, false);
+	}
+	return out;
+};
+
+const CONFIG_CASES = path.join(__dirname, "../configCases");
+// How many documents go to the page at once — the wpt corpus is far larger than
+// one `evaluate` argument should carry.
+const BATCH = 150;
+// Documents one page parses before it is replaced. Each stays in memory until
+// the page goes, and a page costs 58ms — so this trades one page per few
+// hundred files against a renderer holding the whole corpus.
+const PAGE_DOCUMENTS = 500;
+// What one file gets, and what one batch's CDP call gets with it. A file compares
+// in milliseconds, so this is orders above what any needs — generous enough never
+// to fail a slow runner, small enough that every hanging file is named in one run.
+const FILE_TIMEOUT = 180000;
+// One declaration, bounded here rather than by jest — which is what lets the
+// page be replaced before the next one runs. A declaration costs a
+// millisecond, so this is three orders above what it needs.
+const VALUE_BUDGET = 2000;
+// The custom property a value is held in to be read back through `var()`. Any
+// name does: it is unregistered, so the engine keeps whatever tokens it is
+// given and resolves them where the substitution stands.
+const CUSTOM_PROPERTY = "--webpack-probe";
+
+// Documents and stylesheets the printers are known to get wrong, per corpus.
+// Each is a filed defect, not a tolerated one; every comparison matches its set
+// exactly, so an entry outlives its defect by one run.
+const FILED_CONFIG_CSS_DEFECTS = new Map([
+	[
+		"test/configCases/css/minimize-corpus/minimize-values/style.css",
+		"webkit only: not a printer defect — `shape-image-threshold: 12.5%` prints as `.125`, the number CSS Shapes 1 says the percentage names, but WebKit takes no percentage there, so it drops the source's declaration and reads the printed one"
+	]
+]);
+
+const FILED_CONFIG_HTML_DEFECTS = new Map([
+	[
+		"test/configCases/html/attribute-tables/page.html",
+		"firefox, webkit only: not a printer defect — an IDL attribute the engine does not implement falls back to the attribute as written, so a normalization reads as a difference. Measured in Firefox 156: `writingSuggestions` and `blocking` both read `undefined` where Chrome 147 reflects `false` and `render`; WebKit reads `autofocus`, `enterkeyhint` and `inputmode` apart from Blink the same way"
+	]
+]);
+
+const FILED_BENCHMARK_CSS_DEFECTS = new Map([
+	["UIkit 3", "firefox only: not a printer defect — `rgba(255, 255, 255, 0.7)` prints as `#ffffffb3` (lightningcss writes the same), whose alpha is 179/255. Blink stores alpha in a byte either way, while Gecko keeps 0.702 and its `::placeholder` mix lands one byte from the source's 0.378"],
+]);
+
+const FILED_BENCHMARK_HTML_DEFECTS = new Map();
+
+const FILED_WPT_HTML_DEFECTS = new Map([
+	[
+		"test/external/wpt/html/syntax/parsing/misnested-form-in-template.html",
+		"chrome only: not a printer defect — the form pointer is not set inside a `<template>`, which this test asserts and Chromium has not implemented while Gecko has, so webpack prints the tree wpt expects and only Chromium disagrees"
+	]
+]);
+
+const FILED_WPT_CSS_DEFECTS = new Map();
+
+// The same, for each corpus printed with every option that is off by default.
+const FILED_CONFIG_HTML_OPT_IN_DEFECTS = new Map([
+	[
+		"test/configCases/html/attribute-tables/page.html",
+		"firefox, webkit only: the unimplemented IDL attributes again — see `attribute-tables` above"
+	]
+]);
+const FILED_CONFIG_CSS_OPT_IN_DEFECTS = new Map([
+	[
+		"test/configCases/css/minimize-corpus/minimize-values/style.css",
+		"webkit only: the percentage `shape-image-threshold` again — see `minimize-values` above"
+	]
+]);
+const FILED_BENCHMARK_HTML_OPT_IN_DEFECTS = new Map();
+const FILED_BENCHMARK_CSS_OPT_IN_DEFECTS = new Map([
+	[
+		"Tailwind 4 + daisyUI 5",
+		"chrome, firefox, webkit only: not a printer defect — `convertApproximateColors` clips `oklch(71% .194 13.428)`, outside sRGB, before `color-mix(in oklab, … 80%, #000)` reads it, which is what the option documents; every engine pinned paints the mix of the clipped color a byte or two from the clipped mix (WebKit 190,71,91 against 192,71,92; Chrome 156 and Firefox 157 the same `.link-error` under hover)"
+	]
+]);
+
+// The same, for what webpack's own parser sees over the whole corpus.
+// Keyed `"<mode> <document>"`, so filing one print mode leaves the other held.
+const FILED_WPT_TREE_DEFECTS = new Map();
+
+// Color rewrites one engine paints differently from the color they replaced,
+// keyed by the color as written.
+const FILED_COLOR_REWRITES = new Map();
+
+// Enumerated values the printer lower-cases that one engine does not read
+// case-insensitively, keyed as the check reports them.
+const FILED_ENUMERATED_FOLDS = new Map([
+	['img fetchpriority=high: "auto" vs "high"', "webkit only: WebKit reflects no `fetchpriority`, so `high` and `low` both read `auto` and lower-casing one cannot be told from folding it away"],
+	['img fetchpriority=low: "auto" vs "low"', "webkit only: the unreflected `fetchpriority` again — see `img fetchpriority=high`"],
+	['link fetchpriority=high: "auto" vs "high"', "webkit only: the unreflected `fetchpriority` again — see `img fetchpriority=high`"],
+	['link fetchpriority=low: "auto" vs "low"', "webkit only: the unreflected `fetchpriority` again — see `img fetchpriority=high`"],
+	['script fetchpriority=high: "auto" vs "high"', "webkit only: the unreflected `fetchpriority` again — see `img fetchpriority=high`"],
+	['script fetchpriority=low: "auto" vs "low"', "webkit only: the unreflected `fetchpriority` again — see `img fetchpriority=high`"],
+	[
+		'* spellcheck=true: "false" vs "true"',
+		"firefox only: not a printer defect — HTML reads an enumerated attribute's value as an ASCII case-insensitive match for one of its keywords (Keywords and enumerated attributes), and `spellcheck` is one with the keywords `true` and `false`, so `TRUE` names the True state its IDL getter reads back. Gecko matches it case-sensitively instead. Measured in Firefox 156: `spellcheck=\"TRUE\"` reflects `false` and `spellcheck=\"true\"` reflects `true`; Chrome 147 reflects `true` for both, as the spec requires"
+	]
+]);
+
+// Declarations an engine computes a different style from once printed, keyed by
+// the value as written — and by `var(…):` before it where the value was read
+// through a custom property. A printer defect unless the reason says otherwise.
+const FILED_WPT_VALUE_DEFECTS = new Map([
+	[
+		"shape-image-threshold:50%",
+		"webkit only: WebKit reads a `shape-image-threshold` percentage as the number it means and the others keep the percentage, so a spelling neither reads differently still reads as a difference"
+	],
+	[
+		"shape-image-threshold:300%",
+		"webkit only: the `shape-image-threshold` percentage again \u2014 see `50%`"
+	],
+	[
+		"shape-image-threshold:-100%",
+		"webkit only: the `shape-image-threshold` percentage again \u2014 see `50%`"
+	],
+	[
+		"background-image:paint( mypaint",
+		"webkit only: WebKit implements no CSS Painting API, so a `paint()` image is dropped rather than echoed and the two spellings both read as absent"
+	],
+	[
+		"background-image:paint(mypaint ",
+		"webkit only: the unimplemented `paint()` again \u2014 see `paint( mypaint`"
+	]
+]);
+
+/**
+ * @param {string} source HTML
+ * @param {object=} options extra print options
+ * @returns {string} the same document, minified
+ */
+const minifyHtml = (source, options) =>
+	/** @type {{ code: string }} */ (
+		new HtmlSourceProcessor().process(source, { mode: "minify", ...options })
+	).code;
+
+/**
+ * @param {string} source HTML
+ * @returns {string} the same document, beautified
+ */
+const beautifyHtml = (source) =>
+	/** @type {{ code: string }} */ (
+		new HtmlSourceProcessor().process(source, { mode: "beautify" })
+	).code;
+
+/** @type {[string, (source: string) => string][]} both printing modes */
+const PRINT_MODES = [
+	["minify", (source) => minifyHtml(source)],
+	["beautify", beautifyHtml]
+];
+
+/**
+ * @param {string} source a stylesheet
+ * @param {object=} extra print options beyond the defaults
+ * @returns {string} the same stylesheet, minified
+ */
+// A fixture names the minimizer options its own claim is about, so the engine
+// is held to the option the file exists to cover.
+const CSSOM_DIRECTIVE = /\/\*\s*cssom:([^*]*)\*\//;
+
+/**
+ * @param {string} source the stylesheet as written
+ * @returns {string[]} the options its `cssom:` note names, empty when it has none
+ */
+const cssomDirective = (source) => {
+	// Read from the comments alone: the same text inside a string is a value the
+	// fixture prints, not a note about how to minify it.
+	for (let at = 0; at < source.length; at++) {
+		const ch = source[at];
+		if (ch === '"' || ch === "'") {
+			for (at++; at < source.length; at++) {
+				if (source[at] === "\\") at++;
+				else if (source[at] === ch) break;
+			}
+			continue;
+		}
+		// `/*` inside an unquoted `url()` is part of the address, not a comment.
+		if (/^url\(/i.test(source.slice(at, at + 4))) {
+			at += 3;
+			let quote = "";
+			while (/[\t\n\f\r ]/.test(source[at + 1] || "")) at++;
+			const opens = source[at + 1];
+			if (opens === '"' || opens === "'") quote = opens;
+			if (quote === "") {
+				for (at += 1; at < source.length; at++) {
+					if (source[at] === "\\") at++;
+					else if (source[at] === ")") break;
+				}
+			}
+			continue;
+		}
+		if (ch !== "/" || source[at + 1] !== "*") continue;
+		const close = source.indexOf("*/", at + 2);
+		const found = CSSOM_DIRECTIVE.exec(
+			source.slice(at, close === -1 ? source.length : close + 2)
+		);
+		if (found !== null) {
+			return found[1]
+				.trim()
+				.split(/[\s,]+/)
+				.filter(Boolean);
+		}
+		if (close === -1) break;
+		at = close + 1;
+	}
+	return [];
+};
+
+const minifyCss = (source, extra = {}) => {
+	// The merge too, which is off by default: every corpus is then held to it.
+	/** @type {{ mode: string, [k: string]: EXPECTED_ANY }} */
+	const options = { mode: "minify", mergeDistantRules: true, ...extra };
+	for (const name of cssomDirective(source)) options[name] = true;
+	return /** @type {{ code: string }} */ (
+		new CssSourceProcessor().process(source, options)
+	).code;
+};
+
+/**
+ * One declaration's minified value — `a{…}` is the smallest rule carrying one.
+ * @param {string} property the property name
+ * @param {string} value the value as written
+ * @returns {string} what the printer writes, "" when it dropped the declaration
+ */
+const minifyDeclaration = (property, value) => {
+	const printed = minifyCss(`a{${property}:${value}}`);
+	const open = printed.indexOf("{");
+	if (open === -1) return "";
+	const body = printed.slice(open + 1, printed.lastIndexOf("}"));
+	const colon = body.indexOf(":");
+	return colon === -1 ? "" : body.slice(colon + 1);
+};
+
+// Every option off by default, with a target current engines meet. What each
+// rewrites on purpose is set aside where it would read as a difference.
+const CSS_OPT_INS = {
+	convertLengthUnits: true,
+	convertApproximateColors: true,
+	dropOverriddenDeclarations: true,
+	rewriteCustomProperties: true,
+	environment: { browsers: ["chrome 140", "firefox 140", "safari 26.2"] }
+};
+/** @type {Relaxation[]} */
+const CSS_OPT_IN_RELAX = [
+	"custom-properties",
+	"length-units",
+	"approximate-colors",
+	"prefixes"
+];
+
+// The same for HTML; `removeImpliedTags` has variants of its own.
+const HTML_OPT_INS = {
+	collapseWhitespace: "conservative",
+	mergeStyles: true,
+	removeEmptyAttributes: true,
+	removeEmptyElements: true,
+	removeRedundantAttributes: "all",
+	sortAttributes: true,
+	sortTokenLists: true
+};
+/** @type {Relaxation[]} */
+const HTML_OPT_IN_RELAX = [
+	"whitespace",
+	"redundant-attributes",
+	"empty-elements",
+	"merged-styles"
+];
+
+/**
+ * @typedef {object} Corpus
+ * @property {string} label what to call it in a test name
+ * @property {Fixture[]} html every page
+ * @property {Fixture[]} htmlAllImpliedTags the same, printed with `removeImpliedTags: true`
+ * @property {Fixture[]} htmlSmartTags the same, printed with `removeImpliedTags: "smart"`
+ * @property {Fixture[]} htmlOptIns the same, printed with `HTML_OPT_INS`; empty for wpt
+ * @property {Fixture[]} css every stylesheet
+ * @property {Fixture[]} cssOptIns the same, printed with `CSS_OPT_INS`; empty for wpt
+ * @property {Map<string, string>} filedHtml its filed DOM defects
+ * @property {Map<string, string>} filedCss its filed stylesheet defects
+ * @property {Map<string, string>} filedHtmlOptIns its filed DOM defects under `HTML_OPT_INS`
+ * @property {Map<string, string>} filedCssOptIns its filed stylesheet defects under `CSS_OPT_INS`
+ */
+
+/**
+ * @param {Fixture[]} sources pages, read once
+ * @param {object} options extra print options
+ * @param {Relaxation[]=} relax what those options rewrite on purpose
+ * @returns {Fixture[]} the same pages, printed with them
+ */
+const variant = (sources, options, relax) =>
+	sources.map((one) => ({ ...one, min: minifyHtml(one.raw, options), relax }));
+
+/**
+ * @param {Fixture[]} sheets stylesheets, printed with `CSS_OPT_INS`
+ * @returns {Fixture[]} the same, compared with what those rewrite set aside
+ */
+const cssOptIns = (sheets) =>
+	sheets.map((one) => ({ ...one, relax: CSS_OPT_IN_RELAX }));
+
+/**
+ * Every corpus, built while jest collects — one test per fixture means the
+ * names are needed before anything can be awaited.
+ * @returns {Corpus[]} the corpora, `wpt` last and only when it is checked out
+ */
+const buildCorpora = () => {
+	const configHtml = buildCorpus(CONFIG_CASES, ".html", (source) => source);
+	const configCss = buildCorpus(CONFIG_CASES, ".css", minifyCss);
+	const configCssOptIns = buildCorpus(CONFIG_CASES, ".css", (source) =>
+		minifyCss(source, CSS_OPT_INS)
+	);
+	/** @type {Corpus[]} */
+	const built = [
+		{
+			label: "configCases",
+			html: variant(configHtml, {}),
+			// `removeImpliedTags` leaves out a tag the parser puts back, so it is
+			// the one option whose whole claim is that the DOM does not notice.
+			htmlAllImpliedTags: variant(configHtml, { removeImpliedTags: true }),
+			htmlSmartTags: variant(configHtml, { removeImpliedTags: "smart" }),
+			htmlOptIns: variant(configHtml, HTML_OPT_INS, HTML_OPT_IN_RELAX),
+			css: configCss,
+			cssOptIns: cssOptIns(configCssOptIns),
+			filedHtml: forEngine(FILED_CONFIG_HTML_DEFECTS),
+			filedCss: forEngine(FILED_CONFIG_CSS_DEFECTS),
+			filedHtmlOptIns: forEngine(FILED_CONFIG_HTML_OPT_IN_DEFECTS),
+			filedCssOptIns: forEngine(FILED_CONFIG_CSS_OPT_IN_DEFECTS)
+		}
+	];
+	// Real projects, where `configCases` and wpt are both written to exercise a
+	// rule rather than to ship.
+	const benchHtml = benchmarkDocuments((source) => source);
+	const benchCss = benchmarkStylesheets(minifyCss);
+	if (benchHtml.length > 0 || benchCss.length > 0) {
+		built.push({
+			label: "benchmark corpus",
+			html: variant(benchHtml, {}),
+			htmlAllImpliedTags: variant(benchHtml, { removeImpliedTags: true }),
+			htmlSmartTags: variant(benchHtml, { removeImpliedTags: "smart" }),
+			htmlOptIns: variant(benchHtml, HTML_OPT_INS, HTML_OPT_IN_RELAX),
+			css: benchCss,
+			cssOptIns: cssOptIns(
+				benchmarkStylesheets((source) => minifyCss(source, CSS_OPT_INS))
+			),
+			filedHtml: forEngine(FILED_BENCHMARK_HTML_DEFECTS),
+			filedCss: forEngine(FILED_BENCHMARK_CSS_DEFECTS),
+			filedHtmlOptIns: forEngine(FILED_BENCHMARK_HTML_OPT_IN_DEFECTS),
+			filedCssOptIns: forEngine(FILED_BENCHMARK_CSS_OPT_IN_DEFECTS)
+		});
+	}
+	if (!hasCorpus()) return built;
+	/** @type {Fixture[]} */
+	const wptHtml = [];
+	for (const file of browserCorpus()) {
+		const raw = readDocument(file);
+		if (raw !== null) wptHtml.push({ name: nameOf(file), raw, min: raw });
+	}
+	/** @type {Fixture[]} */
+	const wptCss = [];
+	for (const file of wptCssCorpus()) {
+		const raw = readDocument(file);
+		if (raw !== null) {
+			wptCss.push({ name: nameOf(file), raw, min: minifyCss(raw) });
+		}
+	}
+	built.push({
+		label: "wpt",
+		html: variant(wptHtml, {}),
+		htmlAllImpliedTags: variant(wptHtml, { removeImpliedTags: true }),
+		htmlSmartTags: variant(wptHtml, { removeImpliedTags: "smart" }),
+		// The opt-ins stay on the real-project corpora: wpt is far larger, and
+		// written to exercise one rule rather than to ship.
+		htmlOptIns: [],
+		css: wptCss,
+		cssOptIns: [],
+		filedHtml: forEngine(FILED_WPT_HTML_DEFECTS),
+		filedCss: forEngine(FILED_WPT_CSS_DEFECTS),
+		filedHtmlOptIns: new Map(),
+		filedCssOptIns: new Map()
+	});
+	return built;
+};
+
+const corpora = buildCorpora();
+
+// Pairs named `bad …` style some element differently and must be reported;
+// `good …` only respell, and must not be.
+/** @type {Map<string, [string, string]>} */
+const STYLE_CONTROLS = new Map([
+	["bad dropped rule", [".a{color:red}.b{color:blue}", ".a{color:red}"]],
+	["bad reordered cascade", [".a{color:red}.b{color:blue}", ".b{color:blue}.a{color:red}"]],
+	["bad state", [".a:hover{color:red}", ".a:hover{color:blue}"]],
+	["bad media threshold", ["@media (min-width:500px){.a{color:red}}", "@media (min-width:501px){.a{color:red}}"]],
+	["bad container threshold", ["@container (min-width:300px){.a{color:red}}", "@container (min-width:301px){.a{color:red}}"]],
+	["bad keyframes", ["@keyframes k{from{opacity:0}}.a{animation:k 1s}", "@keyframes k{from{opacity:.5}}.a{animation:k 1s}"]],
+	["bad font face", ["@font-face{font-family:x;src:url(a.woff)}", "@font-face{font-family:x;src:url(b.woff)}"]],
+	["bad layer order", ["@layer a,b;@layer a{.a{color:red}}@layer b{.a{color:blue}}", "@layer b,a;@layer a{.a{color:red}}@layer b{.a{color:blue}}"]],
+	["bad nested", [".a{& .b{color:red}}", ".a{& .b{color:blue}}"]],
+	["bad custom property", [":root{--x:1px}.a{margin:var(--x)}", ":root{--x:2px}.a{margin:var(--x)}"]],
+	["bad pseudo-element", [".a::before{content:'x'}", ".a::before{content:'y'}"]],
+	["bad dark scheme", ["@media (prefers-color-scheme:dark){.a{color:red}}", "@media (prefers-color-scheme:dark){.a{color:blue}}"]],
+	["bad theme on body", ["body.dark{--c:#4a4458}body.light{--c:#fff}", "body.dark{--c:#4a4558}body.light{--c:#fff}"]],
+	["bad theme on root", [":root.dark .a{color:red}", ":root.dark .a{color:blue}"]],
+	// A value naming custom properties no sheet defines still has to keep its arithmetic.
+	["bad operator over unset properties", [".a{width:calc(var(--r) + var(--w))}", ".a{width:calc(var(--r) - var(--w))}"]],
+	["bad custom number", [".a{--x:1}", ".a{--x:2}"]],
+	["bad custom list length", [".a{--k:0px 0px 0px 0px}", ".a{--k:0px 0px 0px}"]],
+	["bad custom url", ['.a{--u:url("./img.png")}', '.a{--u:url(".z/img.png")}']],
+	["bad keyframe", ["@keyframes k{50%{opacity:.7}}.a{animation-name:k}", "@keyframes k{50%{opacity:.8}}.a{animation-name:k}"]],
+	["bad direction", [".a:dir(rtl){color:red}", ".a:dir(rtl){color:blue}"]],
+	["bad dark color", [".a{color:light-dark(#eee,#111)}", ".a{color:light-dark(#eee,#a11)}"]],
+	["bad dropped display", [".a{display:block}", ".a{}"]],
+	["bad keyframe percentage", ["@keyframes k{to{transform:translateY(-5%)}}", "@keyframes k{to{transform:translateY(-6%)}}"]],
+	["bad rule after a byte order mark", ["\uFEFFbody{color:red}", "\uFEFFbody{color:blue}"]],
+	// A `)` inside a quoted `url()` belongs to the address, not to a color.
+	["bad quoted url body", ['.a{--u:url("assets/)#fff")}', '.a{--u:url("assets/)#ffffff")}']],
+	// A private-use character is a value's own, not a space the printer may write.
+	["bad private use", [".a{--x:a\uE000b}", ".a{--x:a b}"]],
+	// An element stands where a structural selector reaches it, so one reaching another position differs.
+	["bad nth-child", ["li:nth-child(2n+1){color:red}", "li:first-child{color:red}"]],
+	["bad nth-last-child", ["li:nth-last-child(2){color:red}", "li:nth-child(2){color:red}"]],
+	["bad nth-of-type", ["p:nth-of-type(3){color:red}", "p:nth-of-type(2){color:red}"]],
+	["bad has sibling", ["a:has(+ b){color:red}", "a:has(b){color:red}"]],
+	["bad has child", ["a:has(> b){color:red}", "a:has(> i){color:red}"]],
+	// The siblings a position counts are built around the ones already there, so what it declares is read.
+	["bad nth-child of", ["li:nth-child(2 of .x){color:red}", "li:nth-child(2 of .x){color:blue}"]],
+	["bad nth-child after", [".a+.b:nth-child(3){color:red}", ".a+.b:nth-child(3){color:blue}"]],
+	["bad nth-child among", [".a~.b:nth-child(3){color:red}", ".a~.b:nth-child(3){color:blue}"]],
+	["bad nth-of-type after", ["i+p:nth-of-type(2){color:red}", "i+p:nth-of-type(2){color:blue}"]],
+	["good spelling", [".a{color:red;margin:0px}", ".a{color:#f00;margin:0}"]],
+	["good nth spellings", ["li:nth-child(odd){color:red}li:nth-child(even){color:blue}", "li:nth-child(2n+1){color:red}li:nth-child(2n){color:blue}"]],
+	["good has spacing", ["a:has( > b ){color:red}", "a:has(>b){color:red}"]],
+	["good custom property spacing", [".a{--c:#e9ecef #e9ecef #dee2e6;--f:400 1rem / 1.5 \"Mona Sans\", sans-serif}", ".a{--c:#e9ecef#e9ecef#dee2e6;--f:400/**/1rem/ 1.5\"Mona Sans\",sans-serif}"]],
+	// CSS Syntax 4.3.6: recovery ends a bad url at the next `)`.
+	["good bad url", ['.a{--u:url(foo")#fff)}', '.a{--u:url(foo")#ffffff)}']],
+	// CSS Syntax 4.2: U+00A0 is no whitespace, so the quote after it ends a bad url.
+	["good url after a non-breaking space", ['.a{--u:url(\u00A0"foo)#fff")}', '.a{--u:url(\u00A0"foo)#ffffff")}']],
+	["good color against a name", [".a{--s:oklch(0% 0 0) calc(1px)}", ".a{--s:oklch(0% 0 0)calc(1px)}"]],
+	["good color against a non-ascii name", [".a{--s:oklch(0% 0 0) \u00E9}", ".a{--s:oklch(0% 0 0)\u00E9}"]],
+	// CSS Cascade 4 §6.2: a later normal declaration loses to an important one.
+	["good important then normal", [".a{--x:red!important}.a{--x:blue}", ".a{--x:red!important}"]],
+	["good normal then normal", [".a{--y:red}.a{--y:blue}", ".a{--y:blue}"]],
+	["good colors inside a value", [".a{box-shadow:0 1px oklch(0% 0 0/.01) inset,0 -1px oklch(100% 0 0/.01) inset}", ".a{box-shadow:0 1px#00000003 inset,0 -1px#ffffff03 inset}"]],
+	["good condition spacing", ["@supports (display: grid){@keyframes k{to{opacity:0}}}", "@supports (display:grid){@keyframes k{to{opacity:0}}}"]],
+	["good keyframes joined", ["@keyframes k{from{opacity:0}to{opacity:0}}", "@keyframes k{0%,to{opacity:0}}"]],
+	["good blocks under one layer statement", ["@layer reset,components;@layer components{.x{color:blue}}@layer reset{.x{color:red}}", "@layer reset,components;@layer reset{.x{color:red}}@layer components{.x{color:blue}}"]]
+]);
+
+/**
+ * Run `evaluate` over `items` in batches the page can hold.
+ * @template TIn
+ * @template TOut
+ * @param {import("playwright-core").Page} page the page
+ * @param {TIn[]} items everything to send
+ * @param {(batch: TIn[]) => Promise<TOut[]>} evaluate what to run per batch
+ * @returns {Promise<TOut[]>} every batch's results, in order
+ */
+const inBatches = async (page, items, evaluate) => {
+	/** @type {TOut[]} */
+	const out = [];
+	for (let at = 0; at < items.length; at += BATCH) {
+		out.push(...(await evaluate(items.slice(at, at + BATCH))));
+	}
+	return out;
+};
+
+// The corpus is an optional submodule, so a tier that cannot run reports that
+// rather than reporting green.
+const NO_CORPUS =
+	"wpt submodule not initialized (run `git submodule update --init --depth 1 test/external/wpt`)";
+
+const NO_BENCHMARK_CORPUS =
+	"comparison caches not built (run `yarn benchmark:css-tools` / `yarn benchmark:html-tools`)";
+
+expectNoDeprecations();
+
+describe(`printer output in real ${ENGINE}`, () => {
+	/** @type {import("playwright-core").Browser} */
+	let browser;
+	/** @type {import("playwright-core").Page | undefined} the corpus tiers' page */
+	let page;
+	/** @type {number} documents the current page has been asked to parse */
+	let parsed = 0;
+
+	/** @type {import("playwright-core").Page} the page the probing tiers share */
+	let probePage;
+
+	/** @returns {Promise<import("playwright-core").Page>} a page with the helpers */
+	const freshPage = async () => {
+		const opened = await browser.newPage();
+		await opened.setContent(POLICED_PAGE);
+		await opened.evaluate(installHelpers, [...GENERIC_FONT_FAMILIES]);
+		return opened;
+	};
+
+	/**
+	 * The corpus tiers' page, replaced once it holds enough. Every document it
+	 * parses stays in memory until it goes, and one page per test would cost more
+	 * than the tests do: opening one takes 58ms, comparing one document takes far
+	 * less.
+	 * @param {number} documents how many it is about to parse
+	 * @returns {Promise<import("playwright-core").Page>} the page to compare on
+	 */
+	const pageFor = async (documents) => {
+		if (page === undefined || parsed + documents > PAGE_DOCUMENTS) {
+			if (page !== undefined) await page.close();
+			page = await freshPage();
+			parsed = 0;
+		}
+		parsed += documents;
+		return page;
+	};
+
+	beforeAll(async () => {
+		browser = await launchBrowser({ browser: ENGINE });
+		// The probing tiers set a property on one element and read it back, leaving
+		// nothing behind, so they share a page — at 58ms to open one and 1ms to
+		// call into it, a page per test would cost more than the tests do.
+		probePage = await freshPage();
+	}, 300000);
+
+	afterAll(async () => {
+		if (browser) await browser.close();
+	}, FILE_TIMEOUT);
+
+	/**
+	 * Every page in `cases`, compared as the engine builds it: the facets it
+	 * reports, and what each stylesheet it carries styles.
+	 * @param {Fixture[]} cases the corpus
+	 * @param {boolean} withStyles whether to compare the stylesheets too
+	 * @returns {Promise<{ name: string, why: string }[]>} what moved, per page
+	 */
+	const comparePages = async (cases, withStyles) => {
+		// Both forms of every page, so the page is replaced before it holds more
+		// documents than one should.
+		const active = await pageFor(cases.length * 2);
+		/** @type {{ name: string, why: string }[]} */
+		const differences = [];
+		/** @type {StylePair[]} */
+		const sheets = [];
+		for (let at = 0; at < cases.length; at += BATCH) {
+			const collected = await active.evaluate(
+				(batch) => {
+					const { htmlFacets } = /** @type {{ __eq: PageHelpers }} */ (
+						/** @type {unknown} */ (window)
+					).__eq;
+					return batch.map((fixture) => ({
+						name: fixture.name,
+						relax: fixture.relax,
+						before: htmlFacets(fixture.raw, fixture.relax),
+						after: htmlFacets(fixture.min, fixture.relax)
+					}));
+				},
+				cases.slice(at, at + BATCH)
+			);
+			for (const { name, relax, before, after } of collected) {
+				let why = "";
+				for (const facet of Object.keys(before.facets)) {
+					const a = before.facets[facet];
+					const b = after.facets[facet];
+					// A comment renders nothing, so the minifier may drop one; the ones
+					// it keeps must be unchanged and still in order.
+					if (facet === "comments") {
+						let from = 0;
+						for (const comment of b) {
+							const found = a.indexOf(comment, from);
+							if (found === -1) {
+								why = `comment is not one of the source's: ${comment}`;
+								break;
+							}
+							from = found + 1;
+						}
+						if (why !== "") break;
+						continue;
+					}
+					if (a.length !== b.length) {
+						why = `${facet}: ${a.length} vs ${b.length}`;
+						break;
+					}
+					// Only an element's own shape carries a number the printer rounds;
+					// everything else is text, compared exactly as it is written.
+					const rounded = facet === "elements";
+					const found = a.findIndex((entry, i) =>
+						rounded ? !numericallyEqual(entry, b[i]) : entry !== b[i]
+					);
+					if (found !== -1) {
+						why = `${facet} ${found}: ${a[found]} vs ${b[found]}`;
+						break;
+					}
+				}
+				if (why === "" && withStyles) {
+					if (before.styles.length === after.styles.length) {
+						for (const [i, sheet] of before.styles.entries()) {
+							if (sheet !== after.styles[i]) {
+								sheets.push({
+									name,
+									before: sheet,
+									after: after.styles[i],
+									relax
+								});
+							}
+						}
+					} else {
+						why = `styles: ${before.styles.length} vs ${after.styles.length}`;
+					}
+				}
+				if (why !== "") differences.push({ name, why });
+			}
+		}
+		differences.push(...(await styleDifferences(active, sheets)));
+		return differences;
+	};
+
+	/**
+	 * Every stylesheet in `cases`, compared by what it styles.
+	 * @param {Fixture[]} cases the corpus
+	 * @returns {Promise<{ name: string, why: string }[]>} what moved, per sheet
+	 */
+	const compareStylesheets = async (cases) =>
+		styleDifferences(
+			await pageFor(cases.length * 2),
+			cases.map(({ name, raw, min, relax }) => ({
+				name,
+				before: raw,
+				after: min,
+				relax
+			}))
+		);
+
+	/**
+	 * What a fixture is expected to differ on: the file itself when a defect is
+	 * filed against it, nothing otherwise. Filed both ways, so a defect that has
+	 * been fixed fails too — which is what takes its entry back out.
+	 * @param {Map<string, string>} filed the tier's filed defects
+	 * @param {string} name the fixture
+	 * @returns {string[]} what `differences` must name
+	 */
+	const expected = (filed, name) => (filed.has(name) ? [name] : []);
+
+	/**
+	 * The differences as the assertion names them, one with no filed defect
+	 * carrying its reason: a log of files alone needs a second run to read.
+	 * @param {{ name: string, why: string }[]} differences what differed
+	 * @param {Map<string, string>} filed the tier's filed defects
+	 * @returns {string[]} the names, each unexpected one carrying its reason
+	 */
+	const named = (differences, filed) =>
+		differences.map((each) =>
+			filed.has(each.name) ? each.name : `${each.name}: ${each.why}`
+		);
+
+	/**
+	 * @param {number} at which of the built corpora to describe
+	 * @returns {void}
+	 */
+	const describeCorpus = (at) => {
+		const one = corpora[at];
+
+		describe(one.label, () => {
+			// One test per page, not per corpus: the file is what a defect is filed against,
+			// so a failure names it with nothing left to narrow down. Every part of the
+			// document the engine builds must survive minification.
+			for (const fixture of one.html) {
+				it(
+					`should build the same DOM and CSSOM from ${fixture.name}`,
+					async () => {
+						const differences = await comparePages([fixture], true);
+						expect(named(differences, one.filedHtml)).toEqual(
+							expected(one.filedHtml, fixture.name)
+						);
+					},
+					FILE_TIMEOUT
+				);
+			}
+
+			it.each([
+				["true", (/** @type {Corpus} */ c) => c.htmlAllImpliedTags],
+				["smart", (/** @type {Corpus} */ c) => c.htmlSmartTags]
+			])(
+				"should build the same DOM and CSSOM with removeImpliedTags %s",
+				async (_mode, pick) => {
+					// The tags this leaves out are the ones the parser puts back, so the tree it
+					// builds — every element's depth, and the CSSOM of what it carries — is untouched.
+					// Grouped: these vary the option, not the file, which the tier above names.
+					const differences = await comparePages(pick(one), true);
+					expect(differences.map((each) => each.name).sort()).toEqual(
+						[...one.filedHtml.keys()].sort()
+					);
+				},
+				1800000
+			);
+
+			// The rewrites only an option asks for, held to the same DOM and CSSOM.
+			for (const fixture of one.htmlOptIns) {
+				it(
+					`should build the same DOM and CSSOM from ${fixture.name} with the HTML opt-ins`,
+					async () => {
+						const differences = await comparePages([fixture], true);
+						expect(named(differences, one.filedHtmlOptIns)).toEqual(
+							expected(one.filedHtmlOptIns, fixture.name)
+						);
+					},
+					FILE_TIMEOUT
+				);
+			}
+
+			for (const fixture of one.cssOptIns) {
+				it(
+					`should build the same CSSOM from ${fixture.name} with the CSS opt-ins`,
+					async () => {
+						const differences = await compareStylesheets([fixture]);
+						expect(named(differences, one.filedCssOptIns)).toEqual(
+							expected(one.filedCssOptIns, fixture.name)
+						);
+					},
+					FILE_TIMEOUT
+				);
+			}
+
+			// The same rules, in the same cascade order, under conditions the engine
+			// answers alike, each computing to the same style.
+			for (const fixture of one.css) {
+				it(
+					`should build the same CSSOM from ${fixture.name}`,
+					async () => {
+						const differences = await compareStylesheets([fixture]);
+						expect(named(differences, one.filedCss)).toEqual(
+							expected(one.filedCss, fixture.name)
+						);
+					},
+					FILE_TIMEOUT
+				);
+			}
+
+			// WHY: `compatMode` is a function of the doctype alone — measured in
+			// Chrome 147, any two that read back as the same doctype compute the same
+			// mode — so with none it reports what the engine defaults a parsed document
+			// to, which WebKit and Blink answer differently. Only the doctype is the
+			// printer's to keep, so a page carrying one is still held to its effect.
+			it(
+				"reads quirks mode off the doctype rather than off the parse",
+				async () => {
+					const differences = await comparePages(
+						[
+							{
+								name: "doctype-absent",
+								raw: '<p class="a">a<b>b<i>c</p>d</i>e</b>f',
+								min: "<p class=a>a<b>b<i>c</p>d</i>e</b>f"
+							},
+							{
+								name: "doctype-dropped",
+								raw: "<!DOCTYPE html><p>x</p>",
+								min: "<p>x</p>"
+							},
+							{
+								name: "doctype-shortened",
+								raw: '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"><p>x</p>',
+								min: '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"><p>x</p>'
+							}
+						],
+						false
+					);
+					expect(differences).toEqual([
+						{ name: "doctype-dropped", why: "document: 2 vs 1" },
+						{
+							name: "doctype-shortened",
+							why: "document 0: html|-//W3C//DTD HTML 4.01 Transitional//EN|http://www.w3.org/TR/html4/loose.dtd vs html|-//W3C//DTD HTML 4.01 Transitional//EN|"
+						}
+					]);
+				},
+				FILE_TIMEOUT
+			);
+
+			// `/*` inside an unquoted `url()` is the address, so a fixture whose url
+			// spells one out is naming no option.
+			it("reads no cssom note out of a url() body", () => {
+				expect(
+					cssomDirective(
+						"a{background:url(/*cssom:rewriteCustomProperties*/x)}"
+					)
+				).toEqual([]);
+				expect(
+					cssomDirective("/* cssom: rewriteCustomProperties */a{color:red}")
+				).toEqual(["rewriteCustomProperties"]);
+			});
+
+			// A defect filed against a file no longer in the corpus is one nothing
+			// would report, since the test that carried it is gone with the file.
+			it("should file every defect against a fixture that is still there", () => {
+				const html = new Set(one.html.map((each) => each.name));
+				const css = new Set(one.css.map((each) => each.name));
+				expect([
+					...[...one.filedHtml.keys()].filter((name) => !html.has(name)),
+					...[...one.filedCss.keys()].filter((name) => !css.has(name)),
+					...[...one.filedHtmlOptIns.keys()].filter((name) => !html.has(name)),
+					...[...one.filedCssOptIns.keys()].filter((name) => !css.has(name))
+				]).toEqual([]);
+			});
+		});
+	};
+
+	// Which corpora were built depends on what is checked out, so each names
+	// itself, and one that could not be built says so rather than going quiet.
+	for (const at of corpora.keys()) describeCorpus(at);
+
+	// What the comparison has to tell apart, and what it has to leave alone.
+	it(
+		"should report every pair that styles an element differently, and only those",
+		async () => {
+			const differences = await compareStylesheets(
+				[...STYLE_CONTROLS].map(([name, [raw, min]]) => ({ name, raw, min }))
+			);
+			expect(differences.map((each) => each.name).sort()).toEqual(
+				[...STYLE_CONTROLS.keys()].filter((name) => name.startsWith("bad ")).sort()
+			);
+		},
+		FILE_TIMEOUT
+	);
+
+	// A reading that moves between two runs over one sheet would be reported as
+	// a printer defect, so every sheet has to read the same against itself.
+	it(
+		"should read every configCases stylesheet the same against itself",
+		async () => {
+			const differences = await compareStylesheets(
+				buildCorpus(CONFIG_CASES, ".css", (source) => source)
+			);
+			expect(differences).toEqual([]);
+		},
+		1800000
+	);
+
+	for (const [label, why] of [
+		["wpt", NO_CORPUS],
+		["benchmark corpus", NO_BENCHMARK_CORPUS]
+	]) {
+		if (corpora.some((one) => one.label === label)) continue;
+
+		describe(label, () => {
+			it(why, () => {
+				// No-op: both are optional, and each is built outside this suite.
+			});
+		});
+	}
+
+	// One test per declaration, not per file: the value is what a defect is filed
+	// against, so the run names it without anything having to narrow it down.
+	/** @type {{ name: string, property: string, key: string, raw: string, min: string | null, held: string | null }[]} */
+	const declarations = [];
+	/** @type {number} every declaration the corpus holds, compared or not */
+	let declarationsRead = 0;
+	/** @type {number} how many reach the custom property printer */
+	let valuesHeld = 0;
+	for (const { property, value, name } of hasCorpus()
+		? cssDeclarations()
+		: []) {
+		declarationsRead++;
+		const min = minifyDeclaration(property, value);
+		// The same value as a custom property's: a path of its own, written back
+		// token for token, and reached by any value at all — the corpus names no
+		// custom property, so nothing else here exercises it.
+		const held = minifyDeclaration(CUSTOM_PROPERTY, value);
+		// A value the printer copied out is compared against itself, which the engine
+		// answers the same way twice by construction. Three quarters of the corpus is
+		// that, and reading one back is not free.
+		if (min === value && held === value) continue;
+		if (held !== value) valuesHeld++;
+
+		declarations.push({
+			name,
+			property,
+			key: `${property}:${value}`,
+			raw: value,
+			min: min === value ? null : min,
+			held: held === value ? null : held
+		});
+	}
+	/** @type {Set<string>} every value that moved, filled as the files run */
+	const movedValues = new Set();
+
+	const compareValues = (cases) =>
+		inBatches(probePage, cases, (batch) =>
+			// playwright hands a page function one argument
+			probePage.evaluate(([each, custom]) => {
+				const { canonical, paintedColors, unquoteFamilies } =
+					/** @type {{ __eq: PageHelpers }} */ (/** @type {unknown} */ (window))
+						.__eq;
+				const probe = document.createElement("div");
+				document.body.append(probe);
+				// Computed values, not `cssText`: `left bottom` and `0% 100%` are one
+				// declaration the CSSOM serializes two ways, and only what the engine
+				// resolves them to says whether the printer changed the meaning.
+				const computed = getComputedStyle(probe);
+				/**
+				 * The longhands a value sets and what the engine computes for each. One
+				 * assignment per form: the style recalculation is the expensive part, and
+				 * anchor positioning makes one cost orders more than the rest.
+				 * @param {string} property the property name
+				 * @param {string} value the value to set
+				 * @param {boolean=} through whether to reach the property through a
+				 * custom property rather than to set it directly
+				 * @returns {string} each longhand it sets, with what it computes to
+				 */
+				const readBack = (property, value, through) => {
+					probe.style.cssText = "";
+					// The holder goes last: a value left open would swallow a declaration
+					// after it, where the end of the list closes it as its own source did.
+					probe.style.cssText = through
+						? `${property}:var(${custom});${custom}:${value}`
+						: `${property}:${value}`;
+					/** @type {string[]} */
+					const names = [];
+					for (let at = 0; at < probe.style.length; at++) {
+						names.push(probe.style.item(at));
+					}
+					names.sort();
+					// Separated: run together, a difference that shifts across a property
+					// boundary ("ab"+"c" against "a"+"bc") reads as equal.
+					let out = "";
+					for (const name of names) {
+						// The holder is the token stream itself, which a safe rewrite moves —
+						// what it substitutes into is the value, and that is read below.
+						if (name === custom) continue;
+						// Under the one name the spec gives the value, its colors painted: the engine
+						// echoes the spelling it was handed — `jump-start` beside `start` — so without
+						// this the tier reads a synonym as a change of meaning.
+						const value = computed.getPropertyValue(name);
+						// a family name quoted or bare is one family, which the engines echo
+						// in either spelling, as the cascade tier already reads it
+						out += `${name}:${paintedColors(
+							canonical(
+								name === "font-family" ? unquoteFamilies(value) : value
+							)
+						)}\u0000`;
+					}
+					return out;
+				};
+				const out = [];
+				for (const one of each) {
+					// Each form read against its own longhands, the name included: a form that sets a
+					// property the other does not — an invalid value the printer brought to life, or a
+					// valid one it erased — differs by that name alone.
+					if (
+						one.min !== null &&
+						readBack(one.property, one.raw) !== readBack(one.property, one.min)
+					) {
+						out.push({ name: one.name, key: one.key });
+					}
+					// WHY: a custom property is a token stream nothing reads until it is
+					// substituted, so what it means is what the property consuming it
+					// computes — `calc(var(--a)- var(--b))` parses and then fails there.
+					// Asking the engine through a `var()` is the only reading of that
+					// path that is not a comparison of two spellings (#22149).
+					if (
+						one.held !== null &&
+						readBack(one.property, one.raw, true) !==
+							readBack(one.property, one.held, true)
+					) {
+						out.push({ name: one.name, key: `var(${custom}):${one.key}` });
+					}
+				}
+				// The page is shared, so what this tier appends it takes back out.
+				probe.remove();
+				return out;
+			}, /** @type {const} */ ([batch, CUSTOM_PROPERTY]))
+		);
+
+	/**
+	 * Declarations read within a budget, on a page the next read can still use.
+	 * A value that hangs leaves the renderer mid-recalculation, so the page is
+	 * replaced rather than reused — without that, one bad read times out every
+	 * read behind it and the run ends on the job's budget with nothing named.
+	 * @param {{ name: string, property: string, key: string, raw: string, min: string | null, held: string | null }[]} cases the declarations to read
+	 * @param {number} budget milliseconds to allow
+	 * @returns {Promise<{ name: string, key: string }[]>} what moved
+	 */
+	const compareWithin = async (cases, budget) => {
+		/** @type {NodeJS.Timeout} */
+		let expiry;
+		const expired = new Promise((resolve, reject) => {
+			expiry = setTimeout(() => {
+				reject(new Error(`gave up after ${budget}ms`));
+			}, budget);
+		});
+		try {
+			return await Promise.race([compareValues(cases), expired]);
+		} catch (err) {
+			await probePage.close().catch(() => {});
+			probePage = await freshPage();
+			throw err;
+		} finally {
+			clearTimeout(expiry);
+		}
+	};
+
+	if (!hasCorpus()) {
+		it(NO_CORPUS, () => {
+			// No-op: the corpus is an optional git submodule.
+		});
+	} else {
+		// The tier compares what the printer rewrites, so a printer that rewrote
+		// nothing would pass with no work. Bounds well under today's 8,901 read,
+		// 2,981 compared and 1,859 of those held in a custom property.
+		it("should have a corpus the printer rewrites a share of", () => {
+			expect(declarationsRead).toBeGreaterThan(5000);
+			expect(declarations.length).toBeGreaterThan(1000);
+			expect(valuesHeld).toBeGreaterThan(1000);
+		});
+	}
+
+	for (const one of declarations) {
+		it(
+			`should compute the same style from ${one.property}: ${one.raw} in ${one.name}`,
+			async () => {
+				for (const moved of await compareWithin([one], VALUE_BUDGET)) {
+					movedValues.add(moved.key);
+				}
+			},
+			FILE_TIMEOUT
+		);
+	}
+
+	// Runs last, so every value has reported. Includes the values the spec
+	// rejects: an invalid declaration moves nothing, so one whose printed form
+	// does is one the printer brought to life.
+	if (declarations.length > 0) {
+		it("should still diverge on every filed value defect", () => {
+			expect([...movedValues].sort()).toEqual(
+				[...forEngine(FILED_WPT_VALUE_DEFECTS).keys()].sort()
+			);
+		});
+	}
+
+	it("should only fold enumerated values the engine folds too", async () => {
+		/**
+		 * The printer lower-cases a value in `ENUMERATED_KEYWORDS`, which is
+		 * unobservable exactly where the IDL member is "limited to only known
+		 * values" and hands back one spelling whichever was written — something no
+		 * dataset states, and `target` / `<textarea wrap>` reflect verbatim. The
+		 * corpus covers only the entries a fixture happens to carry; this covers
+		 * every one of them.
+		 * @type {Record<string, Record<string, string[]>>}
+		 */
+		const table = {};
+		for (const [element, attributes] of Object.entries(ENUMERATED_KEYWORDS)) {
+			table[element] = {};
+			for (const [attribute, keywords] of Object.entries(attributes)) {
+				table[element][attribute] = [...keywords];
+			}
+		}
+		const unfolded = await probePage.evaluate((cases) => {
+			/**
+			 * @param {string} element tag name
+			 * @param {string} attribute attribute name
+			 * @param {string} value the value to set
+			 * @returns {[string | undefined, string]} the IDL member and what it reads back
+			 */
+			const readBack = (element, attribute, value) => {
+				const { probeReflection } = /** @type {{ __eq: PageHelpers }} */ (
+					/** @type {unknown} */ (window)
+				).__eq;
+				const [property, reflected] = probeReflection(
+					element,
+					attribute,
+					value
+				);
+				// By value: a token list reflects as a fresh object per probe, so two
+				// spellings of one value would never compare equal as themselves.
+				return [property, String(reflected)];
+			};
+			/** @type {string[]} */
+			const out = [];
+			for (const [element, attributes] of Object.entries(cases)) {
+				for (const [attribute, keywords] of Object.entries(attributes)) {
+					for (const keyword of keywords) {
+						// A keyword with no lower case to fold cannot be respelled.
+						if (keyword === keyword.toUpperCase()) continue;
+						// A global attribute is read on an element that reflects it; one
+						// no element does (`referrerpolicy` on a `<div>`) is inert there.
+						const on = element === "*" ? "a" : element;
+						const [property, folded] = readBack(on, attribute, keyword);
+						if (property === undefined) continue;
+						const [, written] = readBack(on, attribute, keyword.toUpperCase());
+						if (written !== folded) {
+							out.push(
+								`${element} ${attribute}=${keyword}: ${JSON.stringify(
+									written
+								)} vs ${JSON.stringify(folded)}`
+							);
+						}
+					}
+				}
+			}
+			return out;
+		}, table);
+		expect([...unfolded].sort()).toEqual(
+			[...forEngine(FILED_ENUMERATED_FOLDS).keys()].sort()
+		);
+	}, 600000);
+
+	it("should only drop an empty attribute the engine reads back as absent", async () => {
+		/**
+		 * `removeEmptyAttributes` drops each of these when its value is empty,
+		 * which is unobservable only where the IDL member reads the same as with no
+		 * attribute at all — so an event handler is not in the table, its empty
+		 * body still compiling to a function rather than null. A global is read on
+		 * `<a>`, a scoped one on each element it names.
+		 * @type {[string, string[]][]}
+		 */
+		const probes = [];
+		for (const [name, on] of EMPTY_REMOVABLE_ATTRIBUTES) {
+			probes.push([name, on === null ? ["a"] : [...on]]);
+		}
+		const observable = await probePage.evaluate((pairs) => {
+			/**
+			 * @param {string} tagName the element to read it on
+			 * @param {string} attribute the attribute name
+			 * @param {boolean} set whether to give it the empty value
+			 * @returns {[string | undefined, unknown]} the IDL member and its value
+			 */
+			const readBack = (tagName, attribute, set) => {
+				const { probeReflection } = /** @type {{ __eq: PageHelpers }} */ (
+					/** @type {unknown} */ (window)
+				).__eq;
+				const [property, reflected] = probeReflection(
+					tagName,
+					attribute,
+					set ? "" : null
+				);
+				return [property, String(reflected)];
+			};
+			/** @type {string[]} */
+			const out = [];
+			for (const [name, elements] of pairs) {
+				for (const tagName of elements) {
+					const [property, empty] = readBack(tagName, name, true);
+					if (property === undefined) continue;
+					const [, absent] = readBack(tagName, name, false);
+					if (empty !== absent) {
+						out.push(`${tagName}[${name}]: ${empty} vs ${absent}`);
+					}
+				}
+			}
+			return out;
+		}, probes);
+		expect(observable).toEqual([]);
+	}, 600000);
+});
+
+const NS_PREFIX = { [Namespace.SVG]: "svg ", [Namespace.MathML]: "math " };
+// Whitespace inside these is data or is rendered verbatim, so it is not text to
+// collapse; a `<style>` body is CSS, held to the CSSOM comparison above instead.
+const VERBATIM_TEXT = new Set(["pre", "textarea", "script", "style"]);
+const ASCII_WHITESPACE = /[ \t\n\f\r]+/g;
+
+/**
+ * @param {string} name an attribute name
+ * @returns {boolean} whether the printer may write it differently
+ */
+const isRewritable = (name) =>
+	REWRITABLE_ATTRIBUTES.has(name) ||
+	BOOLEAN_ATTRIBUTES.has(name) ||
+	ENUMERATED_ATTRIBUTE_NAMES.has(name) ||
+	EMPTY_REMOVABLE_ATTRIBUTES.has(name);
+
+/**
+ * @typedef {object} DomShape
+ * @property {string[]} elements each element as `depth|namespace tag|attributes`
+ * @property {string[]} text the rendered text each element holds itself
+ */
+
+/**
+ * What an engine builds a document into, less what a minifier may change: a
+ * comment it may drop, and a whitespace run it may collapse to one space. An
+ * attribute the printer is free to rewrite carries its name only — whether it
+ * still means the same is what IDL reflection answers, in the tier above —
+ * and every other one carries its value. CSS is not compared here at all: two
+ * spellings of one stylesheet differ as text (a selector list reordered) while
+ * building the same CSSOM, which only an engine can say, so every stylesheet a
+ * page carries is compared in the tier above instead.
+ * @param {string} source the document
+ * @returns {DomShape} its shape
+ */
+const domShapeOf = (source) => {
+	const document = parseHtml(source, 0, {});
+	/** @type {string[]} */
+	const elements = [];
+	/** @type {string[]} */
+	const text = [];
+	/**
+	 * @param {number} node the subtree root
+	 * @param {number} depth how deep its children sit
+	 * @param {boolean} renders whether text here reaches the page
+	 */
+	const walk = (node, depth, renders) => {
+		for (
+			let childIndex = 0, child = A.child(0, node);
+			child !== 0;
+			child = A.child(++childIndex, node)
+		) {
+			if (A.type(child) !== NodeType.Element) continue;
+			const tag = A.name(child);
+			const namespace =
+				/** @type {Record<number, string>} */ (NS_PREFIX)[_namespaceOf(child)] ||
+				"";
+			const written = _attributeList(child)
+				.map((attribute) => {
+					const name = attribute.serializedName || attribute.name;
+					// The printer may rewrite these — a boolean written bare, an enumerated value
+					// folded, a `style` re-printed. Whether it still reflects the same is what IDL
+					// reflection answers in the tier above, so here only the name is compared.
+					if (isRewritable(name)) return name;
+					// The value as the DOM holds it: `&lt;` and a literal `<` are one
+					// attribute written two ways.
+					return `${name}=${decodeEntities(attribute.value, true)}`;
+				})
+				.sort();
+			elements.push(`${depth}|${namespace}${tag}|${written.join(" ")}`);
+			// Whitespace between two `<head>` children renders nothing, so only text
+			// that reaches the page is compared.
+			const inPage = renders || (namespace === "" && tag === "body");
+			if (inPage && !VERBATIM_TEXT.has(tag)) {
+				let own = "";
+				for (let tIndex = 0, t = A.child(0, child); t !== 0; t = A.child(++tIndex, child)) {
+					if (A.type(t) === NodeType.Text) own += A.value(t);
+				}
+				text.push(own.replace(ASCII_WHITESPACE, " "));
+			}
+			const content = A.field(0, Field.content, child);
+			if (content !== 0) walk(content, depth + 1, true);
+			walk(child, depth + 1, inPage);
+		}
+	};
+	walk(document, 0, false);
+	return { elements, text };
+};
+
+/**
+ * @param {DomShape} before the source document's shape
+ * @param {DomShape} after the minified document's shape
+ * @returns {string} what moved, or "" when nothing did
+ */
+const whatMoved = (before, after) => {
+	for (const facet of /** @type {("elements" | "text")[]} */ ([
+		"elements",
+		"text"
+	])) {
+		const a = before[facet];
+		const b = after[facet];
+		if (a.length !== b.length) return `${facet}: ${a.length} vs ${b.length}`;
+		const at = a.findIndex((entry, i) => entry !== b[i]);
+		if (at !== -1) {
+			return `${facet} ${at}: ${JSON.stringify(a[at])} vs ${JSON.stringify(
+				b[at]
+			)}`;
+		}
+	}
+	return "";
+};
+
+// The whole wpt corpus, with no engine: webpack's parser answers for the DOM, held
+// to this corpus's own expected trees. Both print modes run, since beautifying is
+// where the round-trip fallback lives; one test per spec area, not per document.
+describe("wpt tree stability", () => {
+	/** @type {Map<string, string[]>} the corpus, by wpt spec area */
+	const byGroup = new Map();
+	for (const file of hasCorpus() ? fullCorpus() : []) {
+		const group = nameOf(file).split("/").slice(2, 4).join("/");
+		const files = byGroup.get(group);
+		if (files === undefined) byGroup.set(group, [file]);
+		else files.push(file);
+	}
+	/** @type {Set<string>} every document that moved, filled as the groups run */
+	const diverging = new Set();
+
+	if (!hasCorpus()) {
+		it(NO_CORPUS, () => {
+			// No-op: the corpus is an optional git submodule.
+		});
+
+		return;
+	}
+
+	it("has a corpus", () => {
+		expect([...byGroup.values()].flat().length).toBeGreaterThan(1000);
+	});
+
+	// One test per spec area rather than per document: 49k test names report
+	// nothing a failing list does not. Each area does its own parsing, so a slow
+	// one is named by its own timing rather than hidden in a corpus-wide pass.
+	for (const [group, files] of byGroup) {
+		it(`should build the same tree from ${group} and its printed forms`, () => {
+			/** @type {{ name: string, why: string }[]} */
+			const differences = [];
+			for (const file of files) {
+				const source = readDocument(file);
+				if (source === null) continue;
+				const before = domShapeOf(source);
+				for (const [mode, print] of PRINT_MODES) {
+					const why = whatMoved(before, domShapeOf(print(source)));
+					if (why === "") continue;
+					// Keyed by mode too: a file filed for one says nothing about the
+					// other, and exempting both hides half of what this tier catches.
+					const name = `${mode} ${nameOf(file)}`;
+					diverging.add(name);
+					if (!FILED_WPT_TREE_DEFECTS.has(name)) {
+						differences.push({ name, why });
+					}
+				}
+			}
+			expect(differences).toEqual([]);
+		}, 600000);
+	}
+
+	// Runs last, so every group has reported what moved.
+	it("should still diverge on every filed defect", () => {
+		expect(
+			[...FILED_WPT_TREE_DEFECTS.keys()].filter((name) => !diverging.has(name))
+		).toEqual([]);
+	});
+});
+
+// css-syntax §serialization lists the token pairs that re-tokenize when written
+// together, so dropping the whitespace between them has to leave a separator.
+describe("wpt css token adjacency", () => {
+	const table = path.resolve(
+		WPT,
+		"css/css-syntax/serialize-consecutive-tokens.html"
+	);
+
+	/**
+	 * @param {string} css a stylesheet
+	 * @returns {string} its tokens, whitespace and comments dropped
+	 */
+	const significantTokens = (css) => {
+		/** @type {string[]} */
+		const out = [];
+		for (let pos = 0; ;) {
+			const token = readToken(
+				css,
+				pos,
+				/** @type {import("../../lib/css/syntax-parser").MutableToken} */ ({})
+			);
+			if (token === undefined) break;
+			pos = token.end;
+			const text = css.slice(token.start, token.end);
+			if (text.trim() === "" || text.startsWith("/*")) continue;
+			out.push(`${token.type}:${text}`);
+		}
+		return out.join(" ");
+	};
+
+	if (!hasCorpus()) {
+		it(NO_CORPUS, () => {
+			// No-op: the corpus is an optional git submodule.
+		});
+
+		return;
+	}
+
+	const pairs = [
+		...readDocument(table).matchAll(/testTokenPairs\("([^"]*)",\s*"([^"]*)"\)/g)
+	].map((match) => [match[1], match[2]]);
+
+	// The table is read out of a test file, so an extraction that silently found
+	// nothing would report green over no cases at all.
+	it("should read the table", () => {
+		expect(pairs.length).toBeGreaterThan(50);
+	});
+
+	it("should keep every listed pair apart once minified", () => {
+		/** @type {{ pair: string, minified: string }[]} */
+		const fused = [];
+		for (const [first, second] of pairs) {
+			const source = `a{b:${first} ${second}}`;
+			const minified = minifyCss(source);
+			if (significantTokens(minified) !== significantTokens(source)) {
+				fused.push({ pair: `${first} ${second}`, minified });
+			}
+		}
+		expect(fused).toEqual([]);
+	});
+});
+
+/**
+ * What a lowering is held to: an engine that reads both spellings computes the
+ * same style from either, so a fallback pair resolves to the author's own and a
+ * rewrite has to land on it. A lowering that changes the computed value on
+ * purpose names the properties it changes, with the reason.
+ * @typedef {object} LoweringFixture
+ * @property {string} name what it lowers
+ * @property {string} css the stylesheet
+ * @property {string[]} browsers the selection that turns the lowering on
+ * @property {string} html the document the probes are read from
+ * @property {[string, string][]} probes selector and the property to read
+ * @property {string[]=} schemes the color schemes to read it under
+ * @property {string[]=} directions the writing directions to read it under
+ * @property {string[]=} differs properties this lowering changes on purpose
+ * @property {string[]=} introduces custom properties the lowering writes that the source has none of, which a script enumerating them would see
+ * @property {string[]=} numeric properties whose value the rewrite reaches by arithmetic, held to `numericallyEqual` rather than to the same text
+ * @property {string[]} produces text the rewrite leaves, so a comparison of two sheets neither of which was rewritten cannot pass for one
+ * @property {string=} reference what the source means, where the engine reads no spelling of it — `:lang(en, fr)` is one Chromium has never taken, so the rewrite is held to the pair of rules that state the same thing rather than to an engine's reading of the original
+ */
+/** @type {LoweringFixture[]} */
+const LOWERING_FIXTURES = [
+	{
+		name: "what a modern target makes dead, and the shorter spellings",
+		produces: [
+			"outline:2px solid}",
+			"#b{background:none}",
+			"transform-origin:bottom",
+			"background-position:bottom",
+			"transition:color 1s.5s,opacity 2s 1s",
+			"#z{top:0}#e{width:var(--b,2px)}",
+			"#f{background-color:#73859f80}",
+			"#g{text-decoration:underline dotted}",
+			"button,[type=button]{"
+		],
+		css:
+			"#a{outline:2px solid currentColor;color:rgb(1,2,3)}" +
+			"#b{background:transparent}" +
+			"#c{transform-origin:50% 100%;background-position:center bottom}" +
+			"#d{transition:color 1s,opacity 2s;transition-delay:.5s,1s}" +
+			"#e{width:var(--a,1px)}#z{top:0}#e{width:var(--b,2px)}" +
+			"#f{background-color:#73859f;background-color:#73859f80}" +
+			"#g{text-decoration:underline;-webkit-text-decoration:underline;" +
+			"text-decoration:underline dotted;-webkit-text-decoration:underline dotted}" +
+			"[type=button],button{color:teal}",
+		browsers: ["chrome 140", "firefox 140", "safari 26.2"],
+		html:
+			"<div id=a>a</div><div id=b>b</div><div id=c>c</div><div id=d>d</div>" +
+			"<div id=e>e</div><div id=z>z</div><div id=f>f</div><div id=g>g</div>" +
+			"<button id=h>h</button><input id=i type=button>",
+		probes: [
+			["#a", "outline-color"],
+			["#b", "background-color"],
+			["#c", "transform-origin"],
+			["#c", "background-position"],
+			["#d", "transition-delay"],
+			["#e", "width"],
+			["#f", "background-color"],
+			["#g", "text-decoration-style"],
+			["#h", "color"],
+			["#i", "color"]
+		]
+	},
+	{
+		name: "an An+B argument whose sign stands apart",
+		// Written as they stand: no engine reads either argument, so each rule is
+		// dropped, where `-n+1` and `2` would match.
+		produces: ["li:nth-child(- n+1){", "li:nth-child(+ 2){"],
+		css: "li{color:blue}li:nth-child(- n+1){color:red}li:nth-child(+ 2){color:green}",
+		browsers: ["chrome 130"],
+		html: "<ul><li id=a>a</li><li id=b>b</li></ul>",
+		probes: [
+			["#a", "color"],
+			["#b", "color"]
+		]
+	},
+	{
+		name: "nesting",
+		// The rules the lowering writes on their own, which the source states
+		// inside the one they were written in.
+		produces: ["a b{", "a.x{", ":is(a,section) p{", "main>i{", ":is(a b) c{"],
+		css:
+			"a{color:red;& b{color:blue}&.x{color:green}}" +
+			"a,section{& p{color:teal}}" +
+			"main{& > i{color:navy}}" +
+			"a{& b{& c{color:olive}}}",
+		browsers: ["chrome 100"],
+		html:
+			"<a id=t>t<b id=u>u<c id=z>z</c></b></a>" +
+			"<a id=v class=x>v</a>" +
+			"<section><p id=w>w</p></section>" +
+			"<main><i id=y>y</i></main>",
+		probes: [
+			["#t", "color"],
+			["#u", "color"],
+			["#v", "color"],
+			["#w", "color"],
+			["#y", "color"],
+			["#z", "color"]
+		]
+	},
+	{
+		name: "nesting under a rule opening on a combinator",
+		// Swiper writes `.swiper-vertical{~.swiper-button-prev{.icon{…}}}`; the
+		// parent goes into `:is()` written out, which takes no relative argument.
+		produces: [":is(a b,a~b) c{"],
+		css: "a{b,~b{c{color:red}}}",
+		browsers: ["chrome 100"],
+		html: "<a><b><c id=t>t</c></b></a><b><c id=u>u</c></b>",
+		probes: [
+			["#t", "color"],
+			["#u", "color"]
+		]
+	},
+	{
+		name: "light-dark()",
+		// The pair the lowering writes, which a script enumerating the computed
+		// custom properties would see where the source has none.
+		introduces: ["--webpack-light", "--webpack-dark"],
+		produces: [
+			"var(--webpack-light,#aaa)var(--webpack-dark,#444)",
+			":where(:root){--webpack-light:initial",
+			"@media (prefers-color-scheme:dark){html{"
+		],
+		css:
+			"html{color-scheme:light dark}html[dir=rtl]{color-scheme:dark}" +
+			".panel{color-scheme:dark}" +
+			"button{background-color:light-dark(#aaa,#444);color:light-dark(red,blue)}",
+		browsers: ["chrome 100"],
+		html: "<button id=b>x</button><div class=panel><button id=c>y</button></div>",
+		probes: [
+			["#b", "background-color"],
+			["#b", "color"],
+			["#c", "background-color"],
+			["#c", "color"]
+		],
+		schemes: ["light", "dark"],
+		directions: ["ltr", "rtl"]
+	},
+	{
+		name: "light-dark() with no color-scheme, which is the light one",
+		introduces: ["--webpack-light", "--webpack-dark"],
+		produces: ["var(--webpack-light,#aaa)", ":where(:root){"],
+		css: "button{background-color:light-dark(#aaa,#444)}",
+		browsers: ["chrome 100"],
+		html: "<button id=b>x</button>",
+		probes: [["#b", "background-color"]],
+		schemes: ["light", "dark"]
+	},
+	{
+		name: "a color the target cannot read, and the gamut rung before it",
+		produces: ["color:#ff0704;color:color(display-p3"],
+		css:
+			"#b{color:oklch(.6322 .2577 29.23);background-color:lab(40% 56.6 39);" +
+			"border-top-color:hwb(120 20% 30%);outline-color:color(a98-rgb .44091 .49971 .37408)}",
+		browsers: ["safari 15"],
+		html: "<button id=b>x</button>",
+		probes: [
+			["#b", "color"],
+			["#b", "background-color"],
+			["#b", "border-top-color"],
+			["#b", "outline-color"]
+		]
+	},
+	{
+		name: "...and the same colors for a target that reads none of them",
+		css:
+			"#b{color:oklch(.6322 .2577 29.23);background-color:lab(40% 56.6 39);" +
+			"border-top-color:hwb(120 20% 30%);outline-color:color(a98-rgb .44091 .49971 .37408)}",
+		browsers: ["chrome 100"],
+		produces: [
+			"color:#ff0704;color:oklch(",
+			"background-color:#b32323;background-color:lab(",
+			"border-top-color:#33b333",
+			"outline-color:#6a805d"
+		],
+		html: "<button id=b>x</button>",
+		probes: [
+			["#b", "color"],
+			["#b", "background-color"],
+			["#b", "border-top-color"],
+			["#b", "outline-color"]
+		]
+	},
+	{
+		name: "a color-mix() and a relative color",
+		produces: ["color:#706a43", "background-color:#669"],
+		css:
+			"#b{color:color-mix(in hsl,hsl(120deg 10% 20%) 25%,hsl(30deg 30% 40%));" +
+			"background-color:rgb(from rebeccapurple r calc(g * 2) b)}",
+		browsers: ["chrome 130"],
+		html: "<button id=b>x</button>",
+		probes: [
+			["#b", "color"],
+			["#b", "background-color"]
+		]
+	},
+	{
+		name: "a hex alpha, a media range and a two-position color stop",
+		produces: [
+			"rgba(123,255,255,.5)",
+			"red 30%,red 40%",
+			"(min-width:480px) and (max-width:768px)",
+			"(min-width:1px)"
+		],
+		css:
+			"#b{color:#7bffff80;background-image:linear-gradient(green,red 30% 40%,pink)}" +
+			"@media (480px<=width<=768px){#b{outline-color:red}}" +
+			"@media (width>=1px){#b{border-top-color:red}}",
+		browsers: ["chrome 50"],
+		html: "<button id=b>x</button>",
+		probes: [
+			["#b", "color"],
+			["#b", "background-image"],
+			["#b", "outline-color"],
+			["#b", "border-top-color"]
+		]
+	},
+	{
+		name: "the shorthands the target does not have",
+		produces: [
+			"align-items:center;justify-items:start",
+			"overflow-x:hidden;overflow-y:auto",
+			"top:1px",
+			"display:inline-flex",
+			"text-decoration-thickness:2px"
+		],
+		css:
+			"#b{place-items:center start;overflow:hidden auto;inset:1px 2px;" +
+			"display:inline flex;text-decoration:underline 2px dotted red}",
+		browsers: ["chrome 50"],
+		html: "<button id=b>x</button>",
+		probes: [
+			["#b", "align-items"],
+			["#b", "justify-items"],
+			["#b", "overflow-x"],
+			["#b", "overflow-y"],
+			["#b", "top"],
+			["#b", "left"],
+			["#b", "display"],
+			["#b", "text-decoration-line"],
+			["#b", "text-decoration-style"],
+			["#b", "text-decoration-color"],
+			["#b", "text-decoration-thickness"]
+		]
+	},
+	{
+		name: "a matrix transform and a grid template",
+		produces: ["translate(100px,200px)", '"foot ."'],
+		css:
+			"#b{transform:matrix(1,0,0,1,100,200)}" +
+			'#c{display:grid;grid-template-areas:"head head" "foot ...."}',
+		browsers: ["chrome 130"],
+		html: "<button id=b>x</button><div id=c></div>",
+		probes: [
+			["#b", "transform"],
+			["#c", "grid-template-areas"]
+		]
+	},
+	{
+		name: "a `:not()` holding a list the target does not take",
+		css: "p:not(:first-child,.lead){color:rgb(4,5,6)}",
+		browsers: ["firefox 80"],
+		produces: [":not(:is(:first-child,.lead))"],
+		html: "<div><p id=p1>a</p><p id=p2 class=lead>b</p><p id=p3>c</p></div>",
+		probes: [
+			["#p1", "color"],
+			["#p2", "color"],
+			["#p3", "color"]
+		]
+	},
+	{
+		name: "a `:lang()` holding one, which no Chromium has ever taken",
+		css: "a:lang(en,fr){color:rgb(1,2,3)}",
+		reference: "a:lang(en),a:lang(fr){color:rgb(1,2,3)}",
+		browsers: ["firefox 80"],
+		produces: [":is(:lang(en),:lang(fr))"],
+		html: "<a id=en lang=en>x</a><a id=fr lang=fr>x</a><a id=de lang=de>x</a>",
+		probes: [
+			["#en", "color"],
+			["#fr", "color"],
+			["#de", "color"]
+		]
+	},
+	{
+		name: "a lone border none a later rule gives a style",
+		css: ".a{border:none}.a.b{border-style:solid}.c{border-left:none}.c.d{border-left-style:solid}",
+		browsers: ["chrome 130"],
+		produces: [".a{border:none}", ".c{border-left:none}"],
+		html: '<div class="a b"></div><div class="c d"></div>',
+		probes: [
+			[".a", "border-top-width"],
+			[".a", "border-top-style"],
+			[".c", "border-left-width"],
+			[".c", "border-left-style"]
+		]
+	},
+	{
+		name: "a rule beside one whose selector no engine parses",
+		// Each odd rule is one an engine drops, so joining it to the rule before
+		// would take that rule's color down with it.
+		css:
+			".a{color:green}.b:first{color:green}.c{color:green}.d:nth-child{color:green}" +
+			".e{color:green}.f::part{color:green}.g{color:green}.h:before.i{color:green}" +
+			".j{color:green}.k:hover(odd){color:green}.l{color:green}.m:playing{color:green}",
+		browsers: ["chrome 130", "firefox 130", "safari 18"],
+		produces: [
+			".a{color:green}.b:first{",
+			".c{color:green}.d:nth-child{",
+			".e{color:green}.f::part{",
+			".g{color:green}.h:before.i{",
+			".j{color:green}.k:hover(odd){",
+			".l{color:green}.m:playing{"
+		],
+		html: '<i class="a"></i><i class="c"></i><i class="e"></i><i class="g"></i><i class="j"></i><i class="l"></i>',
+		probes: [
+			[".a", "color"],
+			[".c", "color"],
+			[".e", "color"],
+			[".g", "color"],
+			[".j", "color"],
+			[".l", "color"]
+		]
+	},
+	{
+		name: "a layer block written where its layer is first named",
+		css:
+			"@layer a;@layer b;@layer c{.x{color:red;margin-left:3px!important}}" +
+			".x{padding-left:1px}@layer b{.x{color:blue;padding-left:2px;margin-left:2px!important}}" +
+			"@layer a{.x{color:green;padding-left:3px;margin-left:1px!important;border-left:1px solid}}",
+		browsers: ["chrome 130"],
+		produces: [
+			"@layer a{.x{color:green;",
+			"}}@layer b{.x{color:blue;",
+			"}}@layer c{.x{color:red;"
+		],
+		html: '<div class="x">x</div>',
+		probes: [
+			[".x", "color"],
+			[".x", "padding-left"],
+			[".x", "margin-left"],
+			[".x", "border-left-width"]
+		]
+	},
+	{
+		name: "a line height folded into the font before it",
+		css:
+			".a{font:italic 700 12px/1 serif;color:red;line-height:2}" +
+			".b{font:small serif;line-height:normal}.c{font-size:20px;font:menu;line-height:3}" +
+			".d{font:oblique 10deg 12px/1 serif;line-height:2}.e{font:0 serif!important;line-height:2!important}" +
+			".f{font:1.2em KaTeX_Main,Times New Roman,serif;line-height:1.2}",
+		browsers: ["chrome 130"],
+		produces: [
+			".a{color:red;font:italic 700 12px/2 serif}",
+			".b{font:small serif}",
+			".d{font:oblique 10deg 12px/2 serif}",
+			".e{font:0/2 serif!important}",
+			".f{font:1.2em/1.2 KaTeX_Main,Times New Roman,serif}"
+		],
+		html: '<p class="a">x</p><p class="b">x</p><p class="c">x</p><p class="d">x</p><p class="e">x</p><p class="f">x</p>',
+		probes: [
+			[".a", "line-height"],
+			[".a", "font-size"],
+			[".a", "font-weight"],
+			[".b", "line-height"],
+			[".c", "line-height"],
+			[".d", "line-height"],
+			[".d", "font-style"],
+			[".d", "font-size"],
+			[".e", "line-height"],
+			[".e", "font-size"],
+			[".f", "line-height"],
+			[".f", "font-family"]
+		]
+	},
+	{
+		name: "a slot holding the value an unwritten one takes",
+		css:
+			"#b{background:0% 0% / auto repeat scroll padding-box border-box red;" +
+			"border-left:currentcolor medium none;column-rule:medium none red;" +
+			"outline:medium none currentcolor;text-decoration:none currentcolor solid auto}" +
+			"#c{background:left top url(data:image/gif;base64,R0lGODlhAQABAAAAACw=)}" +
+			"#d{mask:url(data:image/gif;base64,R0lGODlhAQABAAAAACw=) border-box}",
+		browsers: ["chrome 130"],
+		produces: ["background:red", "border-left:none", "column-rule:red"],
+		html: "<button id=b>x</button><div id=c></div><div id=d></div>",
+		probes: [
+			["#b", "background-position"],
+			["#b", "background-size"],
+			["#b", "background-repeat"],
+			["#b", "background-attachment"],
+			["#b", "background-origin"],
+			["#b", "background-clip"],
+			["#b", "background-color"],
+			["#b", "background-image"],
+			["#b", "border-left-width"],
+			["#b", "border-left-style"],
+			["#b", "border-left-color"],
+			["#b", "column-rule-width"],
+			["#b", "column-rule-style"],
+			["#b", "column-rule-color"],
+			["#b", "outline-width"],
+			["#b", "outline-style"],
+			["#b", "outline-color"],
+			["#b", "text-decoration-line"],
+			["#b", "text-decoration-style"],
+			["#b", "text-decoration-color"],
+			["#b", "text-decoration-thickness"],
+			["#c", "background-position"],
+			["#c", "background-image"],
+			["#d", "mask-origin"],
+			["#d", "mask-clip"],
+			["#d", "mask-image"]
+		]
+	},
+	{
+		name: "a math function folded to the value it names",
+		css:
+			"#b{width:calc(sqrt(2)*100px);height:calc(sin(45deg)*100px);" +
+			"margin-left:calc(.1px + .2px);margin-right:calc(100px/7);" +
+			"padding-left:calc(pi*10px);padding-right:calc(exp(1)*10px);" +
+			"border-top-width:calc(hypot(3px,4px));top:calc(1cm + 1px);" +
+			"left:calc(log(8,2)*10px);right:calc(pow(2,10)*.01px)}",
+		browsers: ["chrome 130"],
+		produces: ["width:141.421px", "height:70.7107px", "margin-left:.3px"],
+		html: '<button id=b style="position:absolute">x</button>',
+		probes: [
+			["#b", "width"],
+			["#b", "height"],
+			["#b", "margin-left"],
+			["#b", "margin-right"],
+			["#b", "padding-left"],
+			["#b", "padding-right"],
+			["#b", "border-top-width"],
+			["#b", "top"],
+			["#b", "left"],
+			["#b", "right"]
+		],
+		// The engine computes at full precision and serializes what it computed; the
+		// printer writes the six significant digits a stylesheet can observe. So these
+		// are held to `numericallyEqual` rather than to the same text.
+		numeric: [
+			"width",
+			"height",
+			"margin-right",
+			"padding-left",
+			"padding-right",
+			"top",
+			"right"
+		]
+	},
+	{
+		name: "a shorthand slot, a query and a declaration saying nothing",
+		css:
+			"@media all and (min-width:1px){#b{outline-color:red}}" +
+			"@supports (color:red) and (color:red){#b{caret-color:red}}" +
+			"#b{border:medium none currentcolor;column-rule:medium none currentcolor;" +
+			"transition:opacity .3s 0s;animation:1s ease 0s 1 normal none running x;" +
+			"color:#eee;color:#333;margin-top:1px;margin-top:2px}" +
+			"#c{color:red}#c{color:blue}",
+		browsers: ["chrome 130"],
+		produces: [
+			"@media (width>=1px)",
+			"@supports (color:red){",
+			"border:none",
+			"transition:opacity.3s",
+			"color:#333",
+			"#c{color:blue}"
+		],
+		html:
+			'<button id=b style="position:absolute">x</button>' +
+			'<button id=c style="position:absolute">y</button>',
+		probes: [
+			["#b", "outline-color"],
+			["#b", "caret-color"],
+			["#b", "border-top-width"],
+			["#b", "border-top-style"],
+			["#b", "border-top-color"],
+			["#b", "column-rule-width"],
+			["#b", "column-rule-style"],
+			["#b", "column-rule-color"],
+			["#b", "transition"],
+			["#b", "animation"],
+			["#b", "color"],
+			["#b", "margin-top"],
+			["#c", "color"]
+		]
+	},
+	{
+		name: "a color computed rather than painted, kept as it was written",
+		// A gradient interpolates between its stops and a mix mixes its two, so the
+		// byte an engine paints is not what either computes from. The probes read
+		// the mixes; the gradient is here for the printer to leave alone.
+		css:
+			"#b{color:color-mix(in srgb,hsl(209.32 16.5% 53.41%) 20%,red);" +
+			"background-color:color-mix(in hsl,#ff0 12%,#808080);" +
+			"border-top-color:color-mix(in hwb,#ff0 12%,#808080);" +
+			"outline-color:color-mix(in hsl,#ff0 12%,#000);" +
+			"text-decoration-color:color-mix(in oklch,oklch(70% .3 30),oklch(50% .2 250));" +
+			"background-image:linear-gradient(hsl(209.32 16.5% 53.41%),red)}",
+		browsers: ["chrome 130"],
+		produces: ["background-color:#8f8f71", "color:#e31b1f"],
+		html: '<button id=b style="position:absolute">x</button>',
+		probes: [
+			["#b", "color"],
+			["#b", "background-color"],
+			["#b", "border-top-color"],
+			["#b", "outline-color"],
+			["#b", "text-decoration-color"],
+			["#b", "background-image"]
+		]
+	},
+	{
+		name: "a color() converted only as far as the byte is the engine's own",
+		css:
+			"#b{color:color(srgb .2 .4 .6);" +
+			"background-color:color(display-p3 .05 .06 .07);" +
+			"border-top-color:color(a98-rgb .5 .5 .5);" +
+			"outline-color:color(prophoto-rgb .5 .5 .5);" +
+			"text-decoration-color:color(srgb-linear .2 .4 .6);" +
+			"caret-color:color(display-p3 .6 .7 .8)}",
+		browsers: ["chrome 130"],
+		produces: ["color:#369", "background-color:#0c0f12"],
+		html: '<button id=b style="position:absolute">x</button>',
+		probes: [
+			["#b", "color"],
+			["#b", "background-color"],
+			["#b", "border-top-color"],
+			["#b", "outline-color"],
+			["#b", "text-decoration-color"],
+			["#b", "caret-color"]
+		]
+	},
+	{
+		name: "system-ui, which names each platform's own font instead",
+		produces: ["-apple-system,BlinkMacSystemFont"],
+		css: "#b{font-family:system-ui}#c{font:italic 700 12px/1.2 system-ui,serif}",
+		browsers: ["chrome 50"],
+		html: "<button id=b>x</button><button id=c>y</button>",
+		probes: [
+			["#b", "font-family"],
+			["#c", "font-family"],
+			["#c", "font-size"],
+			["#c", "font-style"]
+		],
+		// The stack *is* the rewrite: `system-ui` leads it, so an engine reading
+		// the keyword still takes it, and the rest is what one that does not reads.
+		differs: ["font-family"]
+	}
+];
+
+describe("a lowering computes as the spelling it replaces", () => {
+	/** @type {import("playwright-core").Browser} */
+	let browser;
+
+	beforeAll(async () => {
+		browser = await launchBrowser({ browser: ENGINE });
+	}, 300000);
+
+	afterAll(async () => {
+		if (browser) await browser.close();
+	}, FILE_TIMEOUT);
+
+	/**
+	 * Every probe's computed value under one stylesheet.
+	 * @param {import("playwright-core").Page} page the page to read from
+	 * @param {string} css the stylesheet
+	 * @param {string} html the document
+	 * @param {[string, string][]} probes selector and property
+	 * @returns {Promise<string[]>} the values, in the probes' order
+	 */
+	const readComputed = (page, css, html, probes) =>
+		page.setContent(`<style>${css}</style>${html}`).then(() =>
+			page.evaluate((asked) => {
+				// A color is compared as painted rather than as text: the engine keeps a mix at
+				// the precision it computed, while the printer writes the byte it lands on — the
+				// trade every color rewrite here already makes, and the pixel is what a reader sees.
+				const canvas = document.createElement("canvas");
+				const context = /** @type {CanvasRenderingContext2D} */ (
+					canvas.getContext("2d", { willReadFrequently: true })
+				);
+				return asked.map(([selector, property]) => {
+					const element = document.querySelector(selector);
+					if (element === null) return "no such element";
+					const value = getComputedStyle(element).getPropertyValue(property);
+					context.fillStyle = "#000";
+					context.fillStyle = value;
+					// Anything the canvas does not read as one color keeps its text.
+					if (context.fillStyle === "#000" && !/^#0{3,8}$/i.test(value)) {
+						return value;
+					}
+					context.clearRect(0, 0, 1, 1);
+					context.fillRect(0, 0, 1, 1);
+					return [...context.getImageData(0, 0, 1, 1).data].join(",");
+				});
+			}, probes)
+		);
+
+	/**
+	 * Every computed property of every element a fixture probes, under one
+	 * stylesheet — the whole of what the CSSOM reports rather than the handful of
+	 * properties the fixture names, so a rewrite reaching a property nobody
+	 * thought to probe is one this still sees.
+	 * @param {import("playwright-core").Page} page the page to read from
+	 * @param {string} css the stylesheet
+	 * @param {string} html the document
+	 * @param {string[]} selectors the elements to read
+	 * @returns {Promise<string[]>} one `property:value` list per element
+	 */
+	const readEveryProperty = (page, css, html, selectors) =>
+		page.setContent(`<style>${css}</style>${html}`).then(() =>
+			page.evaluate((asked) => {
+				const canvas = document.createElement("canvas");
+				const context = /** @type {CanvasRenderingContext2D} */ (
+					canvas.getContext("2d", { willReadFrequently: true })
+				);
+				// A color read as the color it is, not the text it serializes to:
+				// `color(srgb .2 .4 .6)` and `#369` are one color written two ways.
+				const painted = (value) => {
+					context.fillStyle = "#010203";
+					context.fillStyle = value;
+					if (context.fillStyle === "#010203") return value;
+					context.clearRect(0, 0, 1, 1);
+					context.fillRect(0, 0, 1, 1);
+					return [...context.getImageData(0, 0, 1, 1).data].join(",");
+				};
+				return asked.map((selector) => {
+					const element = document.querySelector(selector);
+					if (element === null) return "no such element";
+					const style = getComputedStyle(element);
+					/** @type {string[]} */
+					const out = [];
+					for (let at = 0; at < style.length; at++) {
+						const property = style.item(at);
+						out.push(
+							`${property}:${painted(style.getPropertyValue(property))}`
+						);
+					}
+					return out.sort().join("\n");
+				});
+			}, selectors)
+		);
+
+	it.each(LOWERING_FIXTURES.map((fixture) => [fixture.name, fixture]))(
+		"%s",
+		async (_name, fixture) => {
+			const lowered = new CssSourceProcessor().process(fixture.css, {
+				mode: "minify",
+				environment: { browsers: fixture.browsers }
+			}).code;
+			// The rewrite has to have happened, or the comparison proves nothing.
+			for (const written of fixture.produces) {
+				expect(lowered).toContain(written);
+			}
+			const asked = fixture.probes.filter(
+				([, property]) => !(fixture.differs || []).includes(property)
+			);
+			const approximate = new Set(fixture.numeric || []);
+			const page = await browser.newPage();
+			try {
+				for (const scheme of fixture.schemes || ["light"]) {
+					// An engine with no media emulation takes the scheme from its own
+					// launch settings, so a run there is held to the default one.
+					if (EMULATES_MEDIA) {
+						await page.emulateMedia({
+							colorScheme: /** @type {"light" | "dark"} */ (scheme)
+						});
+					} else if (scheme !== "light") {
+						continue;
+					}
+					for (const direction of fixture.directions || ["ltr"]) {
+						const html = `<script>document.documentElement.dir=${JSON.stringify(
+							direction
+						)}</script>${fixture.html}`;
+						const before = await readComputed(
+							page,
+							fixture.reference || fixture.css,
+							html,
+							asked
+						);
+						const after = await readComputed(page, lowered, html, asked);
+						// A probe the rewrite reaches by arithmetic is held to the
+						// tolerance the rounding rests on; every other one to the byte.
+						const held = after.map((value, at) =>
+							approximate.has(asked[at][1]) &&
+							numericallyEqual(before[at], value)
+								? before[at]
+								: value
+						);
+						expect({ scheme, direction, computed: held }).toEqual({
+							scheme,
+							direction,
+							computed: before
+						});
+						// ...and the same elements read whole: everything else the CSSOM
+						// says about them. What may move is left to the probes above.
+						const loose = new Set([
+							...(fixture.differs || []),
+							...(fixture.numeric || []),
+							...(fixture.introduces || [])
+						]);
+						const whole = [...new Set(asked.map(([selector]) => selector))];
+						const [wholeBefore, wholeAfter] = [
+							await readEveryProperty(
+								page,
+								fixture.reference || fixture.css,
+								html,
+								whole
+							),
+							await readEveryProperty(page, lowered, html, whole)
+						];
+						const kept = (/** @type {string} */ text) =>
+							text
+								.split("\n")
+								.filter((line) => !loose.has(line.slice(0, line.indexOf(":"))))
+								.map(atPrintedPrecision)
+								.join("\n");
+						expect(wholeAfter.map(kept)).toEqual(wholeBefore.map(kept));
+					}
+				}
+			} finally {
+				await page.close();
+			}
+		},
+		FILE_TIMEOUT
+	);
+});
+
+// Every color spelling a stylesheet can hold, in the shapes a rewrite reads them
+// through: a color of its own, one a mix or a relative reference computes with,
+// and one nested a level deeper.
+const COLOR_SPACES = [
+	"srgb",
+	"srgb-linear",
+	"display-p3",
+	"a98-rgb",
+	"prophoto-rgb",
+	"rec2020",
+	"xyz",
+	"xyz-d50",
+	"xyz-d65"
+];
+const MIX_SPACES = [
+	"srgb",
+	"hsl",
+	"hwb",
+	"lab",
+	"lch",
+	"oklab",
+	"oklch",
+	"display-p3"
+];
+const RELATIVE_CHANNELS = {
+	rgb: "r calc(g * 1.2) b",
+	// A hue keyword substitutes as the number it names, so the arithmetic over
+	// one is read in degrees — which these carry into the sweep.
+	hsl: "calc(h + 40) s calc(l * .9)",
+	hwb: "h w b",
+	lab: "calc(l * 1.1) a b",
+	lch: "l c calc(h * 2)",
+	oklab: "l a calc(b * .8)",
+	oklch: "calc(l * .95) c calc(h - 30)"
+};
+// The seed is what makes the corpus the same one every run; the count is what
+// the browser reads back in one batch of a few seconds.
+const COLOR_SAMPLES = 20000;
+
+describe("a color rewrite paints as the color it replaced", () => {
+	/** @type {import("playwright-core").Browser} */
+	let browser;
+
+	beforeAll(async () => {
+		browser = await launchBrowser({ browser: ENGINE });
+	}, FILE_TIMEOUT);
+
+	afterAll(async () => {
+		if (browser !== undefined) await browser.close();
+	}, FILE_TIMEOUT);
+
+	/**
+	 * One color, in a spelling drawn from the seeded sequence.
+	 * @param {() => number} random the sequence
+	 * @param {number} depth how many levels of mix or relative reference are left
+	 * @returns {string} the color as written
+	 */
+	const spell = (random, depth) => {
+		const number = (max, digits) => (random() * max).toFixed(digits);
+		const pick = random();
+		if (pick < 0.12) {
+			return `#${Math.floor(random() * 0xffffff)
+				.toString(16)
+				.padStart(6, "0")}`;
+		}
+		if (pick < 0.2) {
+			return `rgb(${number(255, 1)} ${number(255, 1)} ${number(255, 1)})`;
+		}
+		if (pick < 0.28) {
+			return `hsl(${number(360, 2)} ${number(100, 2)}% ${number(100, 2)}%)`;
+		}
+		if (pick < 0.34) {
+			return `hwb(${number(360, 2)} ${number(60, 2)}% ${number(60, 2)}%)`;
+		}
+		if (pick < 0.44) {
+			return `lab(${number(100, 4)}% ${number(200, 4) - 100} ${number(200, 4) - 100})`;
+		}
+		if (pick < 0.54) {
+			return `lch(${number(100, 4)}% ${number(140, 4)} ${number(360, 3)})`;
+		}
+		if (pick < 0.64) {
+			return `oklab(${number(1, 6)} ${number(0.8, 6) - 0.4} ${number(0.8, 6) - 0.4})`;
+		}
+		if (pick < 0.74) {
+			return `oklch(${number(1, 6)} ${number(0.4, 6)} ${number(360, 3)})`;
+		}
+		if (pick < 0.88) {
+			const space = COLOR_SPACES[Math.floor(random() * COLOR_SPACES.length)];
+			return `color(${space} ${number(1, 6)} ${number(1, 6)} ${number(1, 6)})`;
+		}
+		if (depth === 0) return "red";
+		if (pick < 0.94) {
+			const space = MIX_SPACES[Math.floor(random() * MIX_SPACES.length)];
+			return `color-mix(in ${space}, ${spell(random, depth - 1)} ${number(
+				100,
+				1
+			)}%, ${spell(random, depth - 1)})`;
+		}
+		const names = Object.keys(RELATIVE_CHANNELS);
+		const fn = names[Math.floor(random() * names.length)];
+		return `${fn}(from ${spell(random, depth - 1)} ${RELATIVE_CHANNELS[fn]})`;
+	};
+
+	it(
+		"over every spelling, mix and relative reference",
+		async () => {
+			let seed = 1234567;
+			const random = () => {
+				// `Math.imul` and a mask, not the arithmetic the recurrence reads as:
+				// the product passes 2^53, and the rounding collapses the sequence to
+				// a few thousand values however many are drawn.
+				seed = (Math.imul(seed, 1103515245) + 12345) & 0x7fffffff;
+				return seed / 2147483648;
+			};
+			/** @type {[string, string][]} */
+			const rewritten = [];
+			for (let at = 0; at < COLOR_SAMPLES; at++) {
+				const written = spell(random, 2);
+				const minified = /^a\{color:([\s\S]*)\}$/.exec(
+					new CssSourceProcessor().process(`a{color:${written}}`, {
+						mode: "minify"
+					}).code
+				)[1];
+				// Whitespace alone is no rewrite to hold to anything.
+				if (minified !== written.replace(/,\s+/g, ",").replace(/\s+/g, " ")) {
+					rewritten.push([written, minified]);
+				}
+			}
+			// The corpus has to reach the rewrites, or this proves nothing.
+			expect(rewritten.length).toBeGreaterThan(COLOR_SAMPLES / 10);
+			const page = await browser.newPage();
+			/** @type {string[]} */
+			const differed = [];
+			/**
+			 * Whether a pair differs by no more than a number's last significant
+			 * digit. The printer caps a number at six of them, which its own
+			 * measurement covers for lengths and unitless numbers — six sit below
+			 * what a stylesheet can observe. A color channel is quantized to a byte
+			 * after a conversion, so an out-of-gamut chroma can still move it by one
+			 * (`lch(1.8968% 125.4467 129.726)` paints 0,38,0 and its six-digit form
+			 * 0,39,0). That cap is generic number printing, so narrowing it for
+			 * colors is measured on its own rather than here; every other way a
+			 * rewrite can move a color is still held to agreement.
+			 * @param {string} before the color as written
+			 * @param {string} after the color the printer wrote
+			 * @returns {boolean} true when only a last digit moved
+			 */
+			const roundedOnly = (before, after) => {
+				const shape = (text) => text.replace(/[\d.]+/g, "#");
+				if (shape(before) !== shape(after)) return false;
+				const ours = before.match(/[\d.]+/g) || [];
+				const theirs = after.match(/[\d.]+/g) || [];
+				return (
+					ours.length === theirs.length &&
+					ours.every(
+						(num, at) =>
+							Number(num).toPrecision(5) === Number(theirs[at]).toPrecision(5)
+					)
+				);
+			};
+
+			// WHY: The margins in `lib/css/syntax.js` are measured against Chromium,
+			// and Gecko's conversion lands a channel elsewhere within the byte —
+			// measured in Firefox 156: `hsl(from rgb(214.7 138.3 226.0) calc(h + 40)
+			// s calc(l * .9))` paints 219,109,159 against the 219,109,160 of the
+			// `#db6da0` it is printed as. One unit is the quantization itself, so
+			// only that much is allowed, and only where the engine is not the one
+			// the margins were cut for.
+			/**
+			 * @param {string} before the pixel the source painted
+			 * @param {string} after the pixel the printed form painted
+			 * @returns {boolean} true when no channel moved by more than one
+			 */
+			const withinAByte = (before, after) => {
+				if (ENGINE !== "firefox") return false;
+				const ours = before.split(",").map(Number);
+				const theirs = after.split(",").map(Number);
+				return (
+					ours.length === theirs.length &&
+					ours.every((value, at) => Math.abs(value - theirs[at]) <= 1)
+				);
+			};
+
+			const filedColors = forEngine(FILED_COLOR_REWRITES);
+			/** @type {Set<string>} */
+			const stillFiled = new Set();
+			try {
+				await page.setContent("<body></body>");
+				const CHUNK = 300;
+				for (let at = 0; at < rewritten.length; at += CHUNK) {
+					const chunk = rewritten.slice(at, at + CHUNK);
+					const painted = await page.evaluate((pairs) => {
+						const canvas = document.createElement("canvas");
+						const context = /** @type {CanvasRenderingContext2D} */ (
+							canvas.getContext("2d", { willReadFrequently: true })
+						);
+						const paint = (color) => {
+							// A color the canvas will not take keeps its text, so a pair
+							// the engine reads differently is not read as agreement.
+							context.fillStyle = "#010203";
+							context.fillStyle = color;
+							if (context.fillStyle === "#010203") return `unread:${color}`;
+							context.clearRect(0, 0, 1, 1);
+							context.fillRect(0, 0, 1, 1);
+							return [...context.getImageData(0, 0, 1, 1).data].join(",");
+						};
+						return pairs.map(([before, after]) => [
+							paint(before),
+							paint(after)
+						]);
+					}, chunk);
+					for (const [index, [before, after]] of painted.entries()) {
+						if (before === after || roundedOnly(...chunk[index])) continue;
+						const written = chunk[index][0];
+						// Counted before the tolerance, so an entry filed for this engine
+						// still reads as diverging where the byte would have swallowed it.
+						if (filedColors.has(written)) {
+							stillFiled.add(written);
+							continue;
+						}
+						if (withinAByte(before, after)) continue;
+						differed.push(
+							`${written}\n  -> ${chunk[index][1]}\n  ${before} vs ${after}`
+						);
+					}
+				}
+			} finally {
+				await page.close();
+			}
+			expect({ rewrites: rewritten.length, differed }).toEqual({
+				rewrites: rewritten.length,
+				differed: []
+			});
+			// A filed entry outlives its defect by one run: the set is matched
+			// exactly, so a rewrite the engine stopped moving fails here.
+			expect([...stillFiled].sort()).toEqual([...filedColors.keys()].sort());
+		},
+		FILE_TIMEOUT
+	);
+
+	it(
+		"reads a merged <style> run as the sheets it joined",
+		async () => {
+			const {
+				builtinEmbeddedRenderer
+			} = require("../../lib/html/builtinEmbeddedRenderer");
+
+			const renderer = builtinEmbeddedRenderer();
+			// Sheets the input left open or unfinished, each joined to the next only
+			// once closed as its own end of input closed it.
+			const firsts = [
+				"a{}",
+				"a{color:red}/*x",
+				'a{content:"x',
+				'a{content:"x\n}',
+				"a{color:red",
+				"a{color:rgb(1,2,3",
+				"a{}b",
+				"a{}b,c",
+				"@import url(x.css)",
+				"a{}}",
+				'a{color:red}\\"',
+				"@media screen{a{color:red",
+				"a[x",
+				'a[x="y',
+				"@media (min-width:1px",
+				"@layer base",
+				"@font-face{font-family:x",
+				"a{color:red;/*",
+				"a{color:red!",
+				".a{--x:f(",
+				".a{--x:{",
+				"a{background:url(x",
+				'a{background:url(x"',
+				"<!-- a{color:red} -->",
+				"a{color:red} <!--",
+				"@supports (display:grid){a{color:red",
+				"a{color:red;b",
+				":is(",
+				"a:not(.b",
+				"@keyframes k{from{opacity:0",
+				"a{}.b{color:red}.c",
+				"a{color:red}}}",
+				"a{content:'\\'",
+				"@namespace url(http://www.w3.org/2000/svg);",
+				"@\\6e \\61 \\6d \\65 \\73 \\70 \\61 \\63 \\65 url(http://www.w3.org/2000/svg);"
+			];
+			// A custom property's value is kept open as the input left it, and a
+			// namespace applies to its whole sheet, so either is left apart.
+			const apart = new Set([
+				".a{--x:f(",
+				".a{--x:{",
+				"@namespace url(http://www.w3.org/2000/svg);",
+				"@\\6e \\61 \\6d \\65 \\73 \\70 \\61 \\63 \\65 url(http://www.w3.org/2000/svg);"
+			]);
+			const seconds = [
+				"b{color:#00f}",
+				"@media screen{c{color:red}}",
+				".x,.y{margin:1px;animation-name:k}"
+			];
+			const body =
+				'<a class="a b" x="y">a</a><b class="b x">b</b><c class="c y">c</c><p class="a">p</p><div>d</div>';
+			/**
+			 * @param {string} html a head holding both sheets
+			 * @param {boolean} mergeStyles whether to join them
+			 * @returns {string} the head, minified
+			 */
+			const print = (html, mergeStyles) =>
+				new HtmlSourceProcessor().process(html, {
+					mode: "minify",
+					mergeStyles,
+					renderEmbeddedSource: renderer
+				}).code;
+			const page = await browser.newPage();
+			try {
+				/**
+				 * @param {string} head the document's head
+				 * @returns {Promise<string>} every element's style, as the engine computes it
+				 */
+				const computed = async (head) => {
+					await page.setContent(
+						`<!doctype html><html><head>${head}</head><body>${body}</body></html>`
+					);
+					return page.evaluate(() =>
+						[...document.body.querySelectorAll("*")]
+							.map((element) => {
+								const style = getComputedStyle(element);
+								return [
+									"color",
+									"margin-top",
+									"background-image",
+									"content",
+									"opacity",
+									"animation-name",
+									"font-family",
+									"--x"
+								]
+									.map((name) => style.getPropertyValue(name))
+									.join("|");
+							})
+							.join("\n")
+					);
+				};
+				/** @type {string[]} */
+				const differences = [];
+				for (const first of firsts) {
+					for (const second of seconds) {
+						const html = `<style>${first}</style><style>${second}</style>`;
+						const joined = print(html, true);
+						if (joined.split("<style").length !== (apart.has(first) ? 3 : 2)) {
+							differences.push(`joined wrongly: ${html}`);
+						}
+						if ((await computed(print(html, false))) !== (await computed(joined))) {
+							differences.push(`reads differently: ${html}`);
+						}
+					}
+				}
+				expect(differences).toEqual([]);
+			} finally {
+				await page.close();
+			}
+		},
+		FILE_TIMEOUT
+	);
+});
+
+// A generated stylesheet repeats a few blocks under overlapping selectors, so
+// the merge has pairs to join and rules between them that may or may not reach
+// the same element.
+const MERGE_TYPES = ["div", "p", "span", "h1", "h2", "a", "li"];
+const MERGE_CLASSES = ["x", "y", "z"];
+const MERGE_DECLARATIONS = [
+	"color:red",
+	"color:#00f",
+	"background-color:#0f0",
+	"margin:1px",
+	"margin:2px 3px",
+	"margin-top:5px",
+	"padding-left:4px",
+	"display:flex",
+	"display:block",
+	"border:1px solid red",
+	"border-top-color:blue",
+	"inset:1px",
+	"top:2px",
+	"position:relative",
+	"font:12px serif",
+	"line-height:3",
+	"all:unset",
+	"color:red!important",
+	"--v:1",
+	"width:10px",
+	"width:var(--v,7px)"
+];
+// Stylesheets the merge changes, drawn until there are this many; about half of
+// those drawn are, and the page compares a hundred in a few seconds.
+const MERGE_SAMPLES = 1500;
+
+/**
+ * A stylesheet drawn from the seeded sequence: rules repeating a few blocks
+ * under overlapping selectors, some inside a condition or a layer.
+ * @param {() => number} random the sequence
+ * @returns {string} the stylesheet
+ */
+const mergeSheet = (random) => {
+	/**
+	 * @template T
+	 * @param {T[]} list the choices
+	 * @returns {T} one of them
+	 */
+	const pick = (list) => list[Math.floor(random() * list.length)];
+	/**
+	 * @returns {string} one selector
+	 */
+	const selector = () => {
+		const type = pick(MERGE_TYPES);
+		const other = pick(MERGE_TYPES);
+		const name = `.${pick(MERGE_CLASSES)}`;
+		return pick([
+			type,
+			type,
+			name,
+			`${type}${name}`,
+			`${type} ${other}`,
+			`${type}>${other}`,
+			`${type}+${other}`,
+			`${type}~${other}`,
+			`${type}:first-child`,
+			`${type}::before`,
+			"[data-a]",
+			`${type}[data-a=v]`
+		]);
+	};
+	/** @type {string[]} */
+	const blocks = [];
+	for (let i = 0; i < 4; i++) {
+		const size = 1 + Math.floor(random() * 3);
+		/** @type {Set<string>} */
+		const declarations = new Set();
+		while (declarations.size < size) declarations.add(pick(MERGE_DECLARATIONS));
+		blocks.push([...declarations].join(";"));
+	}
+	/**
+	 * @returns {string} one rule, most of them repeating a block
+	 */
+	const rule = () =>
+		`${random() < 0.15 ? `${selector()},${selector()}` : selector()}{${
+			random() < 0.7 ? pick(blocks) : pick(MERGE_DECLARATIONS)
+		}}`;
+	/** @type {string[]} */
+	const rules = [];
+	const count = 6 + Math.floor(random() * 10);
+	for (let i = 0; i < count; i++) {
+		const shape = random();
+		if (shape < 0.1) {rules.push(`@media (min-width:0){${rule()}${rule()}}`);}
+		else if (shape < 0.15) {rules.push(`@media (max-width:0){${rule()}}`);}
+		else if (shape < 0.2) {rules.push(`@supports (display:grid){${rule()}}`);}
+		else if (shape < 0.24) {
+			rules.push(`@layer l${Math.floor(random() * 2)}{${rule()}}`);
+		} else if (shape < 0.26) {
+			rules.push(`@media (min-width:0){@media (min-width:1px){${rule()}}}`);
+		} else {rules.push(rule());}
+	}
+	return rules.join("");
+};
+
+/**
+ * A stylesheet minified with and without `mergeDistantRules`, where the two differ.
+ * @param {string} name what to call it
+ * @param {string} source the stylesheet
+ * @returns {StylePair | null} both prints, or null where the merge changed nothing
+ */
+const mergePair = (name, source) => {
+	/**
+	 * @param {boolean} mergeDistantRules whether to merge
+	 * @returns {string} the print
+	 */
+	const print = (mergeDistantRules) =>
+		/** @type {{ code: string }} */ (
+			new CssSourceProcessor().process(source, {
+				mode: "minify",
+				mergeDistantRules
+			})
+		).code;
+	const before = print(false);
+	const after = print(true);
+	return before === after ? null : { name, before, after };
+};
+
+describe("a distant merge keeps every element's cascade", () => {
+	/** @type {import("playwright-core").Browser} */
+	let browser;
+	/** @type {import("playwright-core").Page} */
+	let page;
+
+	beforeAll(async () => {
+		browser = await launchBrowser({ browser: ENGINE });
+		page = await browser.newPage();
+		await page.setContent(POLICED_PAGE);
+		await page.evaluate(installHelpers, [...GENERIC_FONT_FAMILIES]);
+	}, FILE_TIMEOUT);
+
+	afterAll(async () => {
+		if (browser !== undefined) await browser.close();
+	}, FILE_TIMEOUT);
+
+	/**
+	 * @param {StylePair[]} pairs the pairs
+	 * @param {string[]=} types element types every pair nests in each other
+	 * @returns {Promise<{ name: string, why: string }[]>} what moved, per pair
+	 */
+	const differing = (pairs, types) => styleDifferences(page, pairs, types);
+
+	it(
+		"over a seeded corpus of rules repeating blocks",
+		async () => {
+			let seed = 20260930;
+			const random = () => {
+				seed = (Math.imul(seed, 1103515245) + 12345) & 0x7fffffff;
+				return seed / 2147483648;
+			};
+			/** @type {StylePair[]} */
+			const pairs = [];
+			for (let drawn = 0; pairs.length < MERGE_SAMPLES; drawn++) {
+				const source = mergeSheet(random);
+				const pair = mergePair(`sheet ${drawn}: ${source}`, source);
+				if (pair !== null) pairs.push(pair);
+			}
+			expect(await differing(pairs, MERGE_TYPES)).toEqual([]);
+		},
+		FILE_TIMEOUT
+	);
+
+});
+
+// A narrow viewport and a wide one, since media queries switch between them.
+const RENDER_WIDTHS = [360, 1400];
+
+// WHY: Chrome 155 lays out no box for an iframe the adoption agency moved —
+// measured: `<b><p><iframe></iframe></b>` gives it 0x0, where Chromium 141
+// gives 304x154 — so a page doing so renders apart from its printed tree, and
+// is skipped only in an engine `dropsAdoptedIframeBox` finds doing it.
+const ADOPTED_IFRAME_PAGES = new Set([
+	"test/external/wpt/html/syntax/parsing/crashtests/adoption-agency-cycle-mutation.html"
+]);
+
+/**
+ * Whether the engine lays out no box for an iframe the adoption agency moved.
+ * @param {import("playwright-core").Page} page a page to probe in
+ * @returns {Promise<boolean>} true when the moved iframe has no width
+ */
+const dropsAdoptedIframeBox = (page) =>
+	page.evaluate(async () => {
+		const frame = document.createElement("iframe");
+		frame.setAttribute("sandbox", "allow-same-origin");
+		const loaded = new Promise((resolve) => {
+			frame.addEventListener("load", resolve, { once: true });
+		});
+		frame.srcdoc = "<!doctype html><b><p><iframe></iframe></b>";
+		document.body.append(frame);
+		await loaded;
+		const moved = /** @type {HTMLIFrameElement} */ (
+			/** @type {Document} */ (frame.contentDocument).querySelector("iframe")
+		);
+		const { width } = moved.getBoundingClientRect();
+		frame.remove();
+		return width === 0;
+	});
+
+// Engine behaviors a workaround in this suite exists for, each probed in the
+// engines it was measured in: once one is fixed its test fails, naming the
+// workaround to take back out.
+/** @type {{ engines: string[], quirk: string, workaround: string, holds: (page: import("playwright-core").Page) => Promise<boolean> }[]} */
+const ENGINE_QUIRKS = [
+	{
+		engines: ["chrome"],
+		quirk: "reads a NUL right after `<` as U+FFFD",
+		workaround: "the render tier skipping every page holding a NUL",
+		holds: (page) =>
+			page.evaluate(
+				() =>
+					new DOMParser().parseFromString("a<\u0000!", "text/html").body
+						.textContent === "a<\uFFFD!"
+			)
+	},
+	{
+		engines: ["firefox"],
+		quirk: "paints a relative color a byte away from its sRGB spelling",
+		workaround: "`withinAByte` in the color rewrite tier",
+		holds: (page) =>
+			page.evaluate(() => {
+				const context = /** @type {CanvasRenderingContext2D} */ (
+					document
+						.createElement("canvas")
+						.getContext("2d", { willReadFrequently: true })
+				);
+				/**
+				 * @param {string} color a color
+				 * @returns {string} the pixel it paints
+				 */
+				const paint = (color) => {
+					context.fillStyle = color;
+					context.fillRect(0, 0, 1, 1);
+					return [...context.getImageData(0, 0, 1, 1).data].join(",");
+				};
+				return (
+					paint("hsl(from rgb(214.7 138.3 226.0) calc(h + 40) s calc(l * .9))") !==
+					paint("#db6da0")
+				);
+			})
+	},
+	{
+		engines: ["webkit"],
+		quirk: "serializes a computed length other than as Chromium does",
+		workaround: "`atPrintedPrecision` outside Chromium",
+		holds: (page) =>
+			page.evaluate(() => {
+				const element = document.createElement("div");
+				element.style.letterSpacing = "calc(1px + 1cm)";
+				document.body.append(element);
+				const read = getComputedStyle(element).letterSpacing;
+				element.remove();
+				// What Chromium 141 reads, at six significant digits.
+				return read !== "38.7953px";
+			})
+	}
+];
+
+describe(`engine quirks a workaround depends on in real ${ENGINE}`, () => {
+	/** @type {import("playwright-core").Browser} */
+	let browser;
+	/** @type {import("playwright-core").Page} */
+	let page;
+
+	beforeAll(async () => {
+		browser = await launchBrowser({ browser: ENGINE });
+		page = await browser.newPage();
+		await page.setContent(POLICED_PAGE);
+	}, FILE_TIMEOUT);
+
+	afterAll(async () => {
+		if (browser !== undefined) await browser.close();
+	}, FILE_TIMEOUT);
+
+	const quirks = ENGINE_QUIRKS.filter(({ engines }) => engines.includes(ENGINE));
+	if (quirks.length === 0) {
+		it("has no quirk filed for this engine", () => {
+			// No-op: every workaround here was measured in another engine.
+		});
+	} else {
+		it.each(quirks.map(({ quirk, workaround, holds }) => [quirk, workaround, holds]))(
+			"still %s, or %s can go",
+			async (_quirk, _workaround, holds) => {
+				expect(await holds(page)).toBe(true);
+			}
+		);
+	}
+});
+
+describe(`declaration order in real ${ENGINE}`, () => {
+	/** @type {import("playwright-core").Browser} */
+	let browser;
+	/** @type {import("playwright-core").Page} */
+	let page;
+
+	beforeAll(async () => {
+		browser = await launchBrowser({ browser: ENGINE });
+		page = await browser.newPage();
+		await page.setContent(POLICED_PAGE);
+	}, FILE_TIMEOUT);
+
+	afterAll(async () => {
+		if (browser !== undefined) await browser.close();
+	}, FILE_TIMEOUT);
+
+	// The engine, not the data, says which longhands each property sets, so a
+	// spec relating two properties before `mdn-data` does fails here first.
+	it("moves no declaration past one setting a longhand it sets", async () => {
+		const ranks = getDeclarationRanks();
+		/** @type {Record<string, string[]>} */
+		const sets = await page.evaluate((names) => {
+			/** @type {Record<string, string[]>} */
+			const out = {};
+			const element = document.createElement("div");
+			for (const name of names) {
+				element.style.cssText = "";
+				element.style.setProperty(name, "inherit");
+				if (element.style.length !== 0) out[name] = [...element.style];
+			}
+			return out;
+		}, [...ranks.keys()]);
+		const names = Object.keys(sets);
+		/** @type {string[]} */
+		const moved = [];
+		for (let i = 0; i < names.length; i++) {
+			for (let j = i + 1; j < names.length; j++) {
+				const [first, second] =
+					/** @type {number} */ (ranks.get(names[i])) >
+					/** @type {number} */ (ranks.get(names[j]))
+						? [names[i], names[j]]
+						: [names[j], names[i]];
+				if (ranks.get(first) === ranks.get(second)) continue;
+				if (!sets[first].some((longhand) => sets[second].includes(longhand))) {
+					continue;
+				}
+				const { code } = new CssSourceProcessor().process(
+					`a{${first}:var(--a);${second}:var(--b)}`,
+					{ mode: "minify" }
+				);
+				const at = code.indexOf(`{${second}:`);
+				if (at !== -1 && at < code.indexOf(`;${first}:`)) moved.push(code);
+			}
+		}
+		expect(moved).toEqual([]);
+	});
+});
+
+describe("a minified page renders as the page it came from", () => {
+	/** @type {import("playwright-core").Browser} */
+	let browser;
+	/** @type {import("playwright-core").Page} */
+	let page;
+	/** @type {Error | undefined} */
+	let unrecovered;
+	let skipAdoptedIframes = false;
+
+	// WHY: a WebKit run never returned from one wpt/css batch, and every later
+	// test then waited behind it on the same page. Past a deadline the batch is
+	// rendered again a pair at a time, on a fresh page, to name what never ends.
+	const BATCH_DEADLINE = 40000;
+	const PAIR_DEADLINE = 20000;
+
+	/** @returns {Promise<import("playwright-core").Page>} a page ready to render in */
+	const openPage = async () => {
+		const opened = await browser.newPage();
+		await opened.setContent(POLICED_PAGE);
+		await opened.evaluate(installHelpers, [...GENERIC_FONT_FAMILIES]);
+		return opened;
+	};
+
+	beforeAll(async () => {
+		browser = await launchBrowser({ browser: ENGINE });
+		page = await openPage();
+		skipAdoptedIframes = await dropsAdoptedIframeBox(page);
+	}, FILE_TIMEOUT);
+
+	// WHY: closing WebKit outlasted Jest's 30s hook default once every test had
+	// passed; closing the browser closes its pages, so none is closed first
+	afterAll(async () => {
+		if (browser !== undefined) await browser.close();
+	}, FILE_TIMEOUT);
+
+	/**
+	 * @template T
+	 * @param {Promise<T>} pending what to wait for
+	 * @param {number} deadline how long, in milliseconds
+	 * @returns {Promise<T | undefined>} its value, or undefined past the deadline
+	 */
+	const within = (pending, deadline) => {
+		/** @type {NodeJS.Timeout | undefined} */
+		let timer;
+		return Promise.race([
+			pending,
+			/** @type {Promise<undefined>} */ (
+				new Promise((resolve) => {
+					timer = setTimeout(() => resolve(undefined), deadline);
+				})
+			)
+		]).finally(() => clearTimeout(timer));
+	};
+
+	/**
+	 * @param {import("../helpers/syntaxEquivalence").RenderPair[]} batch the pairs
+	 * @param {number} width the frame's width
+	 * @param {number} deadline how long the batch may take, in milliseconds
+	 * @returns {Promise<import("../helpers/syntaxEquivalence").RenderReport[] | undefined>} the reports, or undefined when it ran past the deadline
+	 */
+	const renderWithin = async (batch, width, deadline) => {
+		if (unrecovered !== undefined) throw unrecovered;
+		const pending = page.evaluate(compareRenders, { pairs: batch, width });
+		const reports = await within(pending, deadline);
+		if (reports === undefined) {
+			pending.catch(() => {});
+			const stuck = page;
+			await within(stuck.close(), PAIR_DEADLINE).catch(() => {});
+			try {
+				page = await openPage();
+			} catch (error) {
+				unrecovered = new Error(
+					`no page to render in once ${batch.map(({ name }) => name).join(", ")} ran past ${deadline}ms`,
+					{ cause: error }
+				);
+				throw unrecovered;
+			}
+		}
+		return reports;
+	};
+
+	/**
+	 * @param {import("../helpers/syntaxEquivalence").RenderPair[]} pairs the pairs
+	 * @returns {Promise<string[]>} one line per difference, at every width
+	 */
+	const differing = async (pairs) => {
+		/** @type {string[]} */
+		const out = [];
+		for (const width of RENDER_WIDTHS) {
+			for (let at = 0; at < pairs.length; at += 20) {
+				const batch = pairs.slice(at, at + 20);
+				let reports = await renderWithin(batch, width, BATCH_DEADLINE);
+				if (reports === undefined) {
+					reports = [];
+					for (const pair of batch) {
+						const one = await renderWithin([pair], width, PAIR_DEADLINE);
+						if (one === undefined) {
+							out.push(
+								`${width}px ${pair.name}: no render within ${PAIR_DEADLINE}ms`
+							);
+						} else {
+							reports.push(...one);
+						}
+					}
+				}
+				for (const report of reports) {
+					for (const difference of report.differences) {
+						out.push(`${width}px ${report.name}: ${difference}`);
+					}
+				}
+			}
+		}
+		return out;
+	};
+
+	/**
+	 * @param {import("../helpers/syntaxEquivalence").Fixture[]} fixtures the documents
+	 * @param {{ removeImpliedTags?: boolean | "smart" }} options print options
+	 * @returns {import("../helpers/syntaxEquivalence").RenderPair[]} each document and its print, where they differ
+	 */
+	const renderPairs = (fixtures, options) =>
+		fixtures.flatMap((fixture) => {
+			if (skipAdoptedIframes && ADOPTED_IFRAME_PAGES.has(fixture.name)) {
+				return [];
+			}
+			const after = minifyHtml(fixture.raw, options);
+			return after === fixture.raw
+				? []
+				: [{ name: fixture.name, before: fixture.raw, after }];
+		});
+
+	const configPages = buildCorpus(CONFIG_CASES, ".html", (source) => source);
+	const benchmarkPages = benchmarkDocuments((source) => source);
+	/** @type {Map<string, import("../helpers/syntaxEquivalence").Fixture[]>} */
+	const wptPages = new Map();
+	for (const file of hasCorpus() ? browserCorpus() : []) {
+		const name = nameOf(file);
+		const raw = readDocument(file);
+		// A crash test is written to take the renderer down.
+		if (raw === null || /-crash\./.test(name)) continue;
+		// WHY: engines disagree on a NUL, so no print of one renders alike in all:
+		// the spec ignores it in body text, while Chromium turns one right after a
+		// `<` into U+FFFD — measured: `a<\0!` renders `a<\uFFFD!` in Chrome 141.
+		if (raw.includes("\u0000")) continue;
+		const group = name.split("/").slice(2, 4).join("/");
+		const pages = wptPages.get(group);
+		const fixture = { name, raw, min: raw };
+		if (pages === undefined) wptPages.set(group, [fixture]);
+		else pages.push(fixture);
+	}
+
+	for (const [label, options] of /** @type {[string, { removeImpliedTags?: boolean | "smart" }][]} */ ([
+		["minified", {}],
+		["minified with every implied tag left out", { removeImpliedTags: true }]
+	])) {
+		it(
+			`over every configCases page, ${label}`,
+			async () => {
+				const pairs = renderPairs(configPages, options);
+				expect(pairs.length).toBeGreaterThan(0);
+				expect(await differing(pairs)).toEqual([]);
+			},
+			FILE_TIMEOUT
+		);
+
+		for (const [group, fixtures] of wptPages) {
+			it(
+				`over ${group}, ${label}`,
+				async () => {
+					expect(await differing(renderPairs(fixtures, options))).toEqual([]);
+				},
+				FILE_TIMEOUT
+			);
+		}
+
+		it(
+			`over the benchmark pages, ${label}`,
+			async () => {
+				expect(await differing(renderPairs(benchmarkPages, options))).toEqual(
+					[]
+				);
+			},
+			FILE_TIMEOUT
+		);
+	}
+});

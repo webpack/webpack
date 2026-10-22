@@ -49,6 +49,12 @@ module.exports = {
 				from: "assets/**/*.txt",
 				globOptions: { ignore: ["assets/.hidden"] },
 				to: "no-hidden"
+			},
+			{
+				// `lstat` finds no path named like the glob, so it is no link either
+				from: "assets/*.txt",
+				globOptions: { followSymlinks: false },
+				to: "glob-no-follow"
 			}
 		]
 	}

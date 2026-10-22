@@ -64,11 +64,9 @@ const make = (i, chunkPlaceholder, htmlPlaceholder, realContentHash) => ({
 
 /** @type {Configuration[]} */
 module.exports = [
-	// [contenthash] is the placeholder most users reach for, and the one that
-	// `realContentHash` actually rewrites after final content is known. The
-	// html-webpack-plugin#1814 scenario lives here: chunks reference assets
-	// (and HTML references chunks) by their `[contenthash]`, and we want
-	// those references to keep matching the emitted filenames.
+	// `[contenthash]` is the placeholder most users reach for, and the one
+	// `realContentHash` rewrites once the final content is known. The
+	// html-webpack-plugin#1814 scenario lives here.
 	make(0, "[contenthash]", "[contenthash]", true),
 	make(1, "[contenthash]", "[contenthash]", false),
 	// [chunkhash] for the chunk-bound outputs; HTML falls back to

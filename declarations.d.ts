@@ -5,15 +5,19 @@ type EXPECTED_OBJECT = object;
 declare module "*.json";
 declare module "rimraf";
 
-declare module "commondir" {
-	function commonDir(paths: string[]): string;
-	function commonDir(basedir: string, relativePaths: string[]): string;
-	export = commonDir;
-}
-
 declare module "color-name" {
 	const colors: { [name: string]: [number, number, number] };
 	export = colors;
+}
+
+// The config half of browserslist, which the default target reads without the
+// caniuse data a query needs
+declare module "browserslist/node" {
+	export function loadConfig(opts: {
+		path?: string;
+		config?: string;
+		env?: string;
+	}): string | string[] | undefined;
 }
 
 // Deprecated NodeJS API usages in webpack
@@ -228,7 +232,8 @@ declare module "webpack-sources" {
 		PrefixSource,
 		CachedSource,
 		SizeOnlySource,
-		CompatSource
+		CompatSource,
+		util
 	} from "webpack-sources/types";
 }
 

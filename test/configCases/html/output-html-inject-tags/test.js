@@ -73,3 +73,9 @@ it("hashes an injected inline <script> into the CSP", () => {
 		.digest("base64")}'`;
 	expect(policy).toContain(hash);
 });
+
+it("adds the CSP nonce to an injected inline <script>", () => {
+	const html = readHtml("csp-nonce.html");
+	expect(html).toContain('<script nonce="__N__">console.log(2)</script>');
+	expect(html).toContain("'nonce-__N__'");
+});

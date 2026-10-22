@@ -33,11 +33,11 @@ it("should rewrite inline <script> tags and drop `type=module` when output.modul
 	// Classic inline `<script>` (no `type`) stays without a type attribute
 	// — the auto type=module upgrade only runs when `output.module` is on.
 	expect(pageContent).toMatch(
-		/<script src="__html_[0-9a-f]+_\d+\.js"><\/script>/
+		/<script src="page\d*\.js"><\/script>/
 	);
 	// `type="text/javascript"` stays as-is (classic-compatible).
 	expect(pageContent).toMatch(
-		/<script src="__html_[0-9a-f]+_\d+\.js" type="text\/javascript"><\/script>/
+		/<script src="page\d*\.js" type="text\/javascript"><\/script>/
 	);
 	// `type="module"` is REMOVED — the emitted chunk is a classic IIFE,
 	// loading it under module semantics would be wrong.
@@ -52,10 +52,11 @@ it("should emit classic IIFE-wrapped chunks for inline <script> bodies", () => {
 	// First executable inline script in document order is the classic
 	// `<script>` with the `<b>hello</b>` body.
 	const classicChunkName = pageContent.match(
-		/<script src="(__html_[0-9a-f]+_\d+\.js)"><\/script>/
+		/<script src="(page\d*\.js)"><\/script>/
 	)[1];
+	// Not snapshotted: it leads its run, so it carries the runtime, whose
+	// `hasOwnProperty` shorthand follows the Node the case runs under.
 	const classicChunk = readChunk(classicChunkName);
-	expect(classicChunk).toMatchSnapshot();
 	// Classic format: IIFE bootstrap wraps the runtime + entry module.
 	expect(classicChunk).toMatch(/^\/\*+\/ \(\(\) => \{/);
 	expect(classicChunk).toContain("// webpackBootstrap");
@@ -65,11 +66,12 @@ it("should emit classic IIFE-wrapped chunks for inline <script> bodies", () => {
 });
 
 it("should emit IIFE-wrapped chunks for inline <script type=module> too (no output.module)", () => {
-	// All inline-script chunks are in document order via `src` attributes;
-	// the module-origin chunk is the second.
+	// Without `output.module` a classic tag blocks the parser and a module tag
+	// defers, so the run ends where the kinds meet and this body has a chunk of
+	// its own — the second, after the classic body that precedes it.
 	const chunkUrls = collectMatches(
 		pageContent,
-		/<script[^>]*\bsrc="(__html_[0-9a-f]+_\d+\.js)"/g
+		/<script[^>]*\bsrc="(page\d*\.js)"/g
 	).map((m) => m[1]);
 	const moduleChunk = readChunk(chunkUrls[1]);
 	expect(moduleChunk).toMatchSnapshot();
@@ -83,17 +85,12 @@ it("should emit IIFE-wrapped chunks for inline <script type=module> too (no outp
 });
 
 it("should emit classic chunks for every inline-script body when output.module is off (mixed case)", () => {
-	// Without `output.module` every inline-script chunk — whether the
-	// source came from classic `<script>`, `<script type="text/javascript">`
-	// or `<script type="module">` — is rendered in classic format. Classic
-	// and module-typed inline scripts go into separate `dependOn` groups,
-	// so each group has its own IIFE-wrapped leader; followers within a
-	// group reuse the leader's runtime via the `webpackChunk` push
-	// pattern. Neither form uses ES-module `import`/`export` at top
-	// level.
+	// Without `output.module` every inline-script chunk is classic, whatever
+	// its tag said: an IIFE-wrapped leader, or a follower reusing the leader's
+	// runtime through the `webpackChunk` push. Neither uses `import`/`export`.
 	const allChunkUrls = collectMatches(
 		pageContent,
-		/<script[^>]*\bsrc="(__html_[0-9a-f]+_\d+\.js)"/g
+		/<script[^>]*\bsrc="(page\d*\.js)"/g
 	).map((m) => m[1]);
 	expect(allChunkUrls).toHaveLength(3);
 	const chunks = allChunkUrls.map(readChunk);

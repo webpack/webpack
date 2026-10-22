@@ -2,18 +2,27 @@ import { writeFile } from "fs";
 import fs from "fs/promises";
 import { Session } from "inspector";
 import { createRequire } from "module";
+import os from "os";
 import path from "path";
 import { fileURLToPath, pathToFileURL } from "url";
 import vm from "vm";
 import {
 	InstrumentHooks,
+	MARKER_TYPE_BENCHMARK_END,
+	MARKER_TYPE_BENCHMARK_START,
+	calculateQuantiles,
 	getCodspeedRunnerMode,
 	getGitDir,
 	mongoMeasurement,
+	msToNs,
+	msToS,
 	setupCore,
-	teardownCore
+	teardownCore,
+	writeWalltimeResults
 } from "@codspeed/core";
+import enhancedResolve from "enhanced-resolve";
 import { Bench, hrtimeNow } from "tinybench";
+import createSequentialFileSystem from "./sequential-fs.mjs";
 
 /**
  * @import {
@@ -24,8 +33,9 @@ import { Bench, hrtimeNow } from "tinybench";
  * } from "tinybench"
  */
 /** @typedef {TinybenchTask & { collectBy?: string }} Task */
+/** @import { Benchmark } from "@codspeed/core" */
 
-/** @import Webpack, { Configuration, Stats, Watching } from "../../.." */
+/** @import Webpack, { Compiler, Configuration, Stats, Watching } from "../../.." */
 /**
  * @import {
  * 	Scenario,
@@ -65,8 +75,15 @@ import { Bench, hrtimeNow } from "tinybench";
  * @property {((config: Configuration) => Promise<void> | void)=} beforeEachIteration reset run before every iteration, outside the measured region
  */
 
+const { CachedInputFileSystem } = enhancedResolve;
+
 const GENERATE_PROFILE = typeof process.env.PROFILE !== "undefined";
 const codspeedRunnerMode = getCodspeedRunnerMode();
+
+// Production builds minify in a worker-thread pool sized from the core count. Each
+// worker boots its own V8 in this process and races the main thread, so memory mode
+// runs the minimizer inline to measure webpack's allocations, not a thread's boot.
+if (codspeedRunnerMode === "memory") os.availableParallelism = () => 1;
 
 // Emitted entry of a `-runtime` benchmark; fixed so the bench can locate it.
 const RUNTIME_BUNDLE_FILENAME = "bundle.js";
@@ -77,6 +94,8 @@ const RUNTIME_SEED = 7;
 let baseOutputPath;
 /** @type {string | undefined} */
 let rootCallingFile;
+/** @type {string | undefined} */
+let onlyUnitTask;
 
 /**
  * @param {string} filename filename
@@ -149,6 +168,27 @@ async function withProfiling(name, fn) {
 }
 
 /**
+ * Give a memory-mode build file systems whose callbacks complete in call order
+ * and whose cache never expires on a timer, so the same build allocates the
+ * same way on every run and the garbage collector runs at the same points.
+ * @param {Compiler} compiler compiler
+ * @returns {void}
+ */
+function useSequentialFileSystems(compiler) {
+	const fs = createSequentialFileSystem();
+	// The default 60s cache drops a level every 500ms of wall time, so how long the
+	// build takes decides which lookups hit; an unbounded cache sets no timer.
+	// @ts-expect-error need to fix on enhanced-resolve side
+	compiler.inputFileSystem = new CachedInputFileSystem(fs, Infinity);
+	compiler.outputFileSystem = fs;
+	compiler.intermediateFileSystem = fs;
+	// A rebuild purges the changed files through this reference.
+	/** @type {{ inputFileSystem: Compiler["inputFileSystem"] }} */
+	(/** @type {unknown} */ (compiler.watchFileSystem)).inputFileSystem =
+		compiler.inputFileSystem;
+}
+
+/**
  * @param {Webpack} webpack webpack
  * @param {Configuration} config configuration
  * @returns {Promise<void>} watching
@@ -161,6 +201,7 @@ function runWebpack(webpack, config) {
 		 */
 		(resolve, reject) => {
 			const compiler = webpack(config);
+			if (codspeedRunnerMode === "memory") useSequentialFileSystems(compiler);
 			compiler.run((err, stats) => {
 				if (err) return reject(err);
 				if (stats && (stats.hasWarnings() || stats.hasErrors())) {
@@ -185,6 +226,7 @@ function runWebpack(webpack, config) {
  */
 async function runWatch(webpack, config, callback) {
 	const compiler = webpack(config);
+	if (codspeedRunnerMode === "memory") useSequentialFileSystems(compiler);
 	return /** @type {Watching} */ (compiler.watch({}, callback));
 }
 
@@ -257,6 +299,23 @@ function getTaskUri(bench, taskName, callingFile) {
 }
 
 /**
+ * @param {Fn} fn function
+ * @param {boolean} isAsync true if async function, otherwise false
+ * @returns {() => void} function wrapped in codspeed root frame
+ */
+const wrapFunctionWithFrame = (fn, isAsync) => {
+	if (isAsync) {
+		return async function __codspeed_root_frame__() {
+			await fn();
+		};
+	}
+
+	return function __codspeed_root_frame__() {
+		fn();
+	};
+};
+
+/**
  * @param {Bench} bench bench
  * @returns {Promise<Bench>} modifier bench
  */
@@ -272,6 +331,9 @@ const withCodSpeed = async (bench) => {
 	const NO_OP_FN = () => {};
 
 	bench.add = (name, fn, options) => {
+		// Skipped before tinybench's `add`, which calls `fn` once to tell whether
+		// it is async: every unit process would otherwise run each sibling bench.
+		if (onlyUnitTask !== undefined && name !== onlyUnitTask) return bench;
 		const callingFile = getCallingFile();
 		let uri = callingFile;
 		if (bench.name !== undefined) {
@@ -282,20 +344,24 @@ const withCodSpeed = async (bench) => {
 		if (releaseClosuresAfterMeasure) {
 			return rawAdd.bind(bench)(name, NO_OP_FN, {});
 		}
+		if (codspeedRunnerMode === "walltime") {
+			// Walltime samples outside this frame are not attributed to the bench.
+			const isAsync = fn.constructor.name === "AsyncFunction";
+			return rawAdd.bind(bench)(
+				name,
+				wrapFunctionWithFrame(fn, isAsync),
+				options
+			);
+		}
 		return rawAdd.bind(bench)(name, fn, options);
 	};
 	const callingFile = getCallingFile();
 
 	if (codspeedRunnerMode === "simulation" || codspeedRunnerMode === "memory") {
-		// Memory mode counts allocations in the instrumented region. With `--no-opt`
-		// (required by CodSpeed analysis mode), JIT stabilization isn't a factor,
-		// so 2 warmup runs are enough to populate require.cache, webpack lazy
-		// singletons, and V8 hidden classes. More warmup just bloats the heap with
-		// garbage that the pre-measurement drain has to clean up, raising the
-		// chance of an in-measurement GC and introducing variance across PRs that
-		// would otherwise touch identical code paths.
-		const warmupIterations =
-			codspeedRunnerMode === "memory" ? 2 : bench.iterations - 1;
+		// With `--no-opt` JIT stabilization is not a factor, so two warmup runs populate
+		// require.cache and V8 hidden classes. More only bloats the heap and, under
+		// Valgrind, multiplies the run time.
+		const warmupIterations = 2;
 
 		const setupBenchRun = () => {
 			setupCore();
@@ -307,23 +373,6 @@ const withCodSpeed = async (bench) => {
 			teardownCore();
 			console.log(`[CodSpeed] Done running ${bench.tasks.length} benches.`);
 			return bench.tasks;
-		};
-
-		/**
-		 * @param {Fn} fn function
-		 * @param {boolean} isAsync true if async function, otherwise false
-		 * @returns {() => void} function wrapped in codspeed root frame
-		 */
-		const wrapFunctionWithFrame = (fn, isAsync) => {
-			if (isAsync) {
-				return async function __codspeed_root_frame__() {
-					await fn();
-				};
-			}
-
-			return function __codspeed_root_frame__() {
-				fn();
-			};
 		};
 
 		/**
@@ -393,10 +442,9 @@ const withCodSpeed = async (bench) => {
 				codspeedRunnerMode === "simulation" ||
 				codspeedRunnerMode === "memory"
 			) {
-				// Custom warmup
-				// We don't run `optimizeFunction` because our function is never optimized, instead we just warmup webpack.
-				// Memory mode also needs warmup so the first measured sample isn't
-				// polluted by module loading, lazy webpack init, and JIT shape transitions.
+				// Custom warmup: `optimizeFunction` is not run because the function is never
+				// optimized — webpack itself is warmed instead. Memory mode needs it too, so the
+				// first sample is not polluted by module loading and lazy init.
 				const samples = [];
 
 				while (samples.length < warmupIterations) {
@@ -406,14 +454,9 @@ const withCodSpeed = async (bench) => {
 
 			await options?.beforeEach?.call(task, "run");
 			await mongoMeasurement.start(uri);
-			// Drain heap before the instrumented region so allocations from the
-			// warmup runs aren't attributed to the measured sample (especially
-			// under massif). One GC can leave promoted-but-unreachable objects
-			// pending finalization; finalizers themselves can allocate. Loop
-			// `gc -> microtask` three times so each GC's finalizers get a chance
-			// to run and any garbage they produce is collected on the next pass,
-			// then drain pending IO with `setImmediate`, then one final GC to
-			// catch anything the IO callbacks left behind.
+			// Drain the heap before the instrumented region so warmup allocations are not
+			// attributed to the measured sample. One GC can leave objects pending
+			// finalization, and finalizers allocate, so loop gc → microtask three times.
 			for (let i = 0; i < 3; i++) {
 				global.gc?.();
 				await new Promise((resolve) => {
@@ -657,11 +700,94 @@ const withCodSpeed = async (bench) => {
 			return finalizeSyncRun();
 		};
 	} else if (codspeedRunnerMode === "walltime") {
-		// We don't need it
+		/** @type {Benchmark[]} */
+		const codspeedBenchmarks = [];
+
+		bench.run = async () => {
+			setupCore();
+			console.log(
+				`[CodSpeed] running with @codspeed/tinybench (walltime mode, ${bench.warmupIterations} warmup iterations)`
+			);
+
+			for (const task of bench.tasks) {
+				const uri = getTaskUri(bench, task.name, callingFile);
+
+				await task.warmup();
+				InstrumentHooks.startBenchmark();
+				const runStart = InstrumentHooks.currentTimestamp();
+				await task.run();
+				const runEnd = InstrumentHooks.currentTimestamp();
+				InstrumentHooks.stopBenchmark();
+				InstrumentHooks.setExecutedBenchmark(process.pid, uri);
+				InstrumentHooks.addMarker(
+					process.pid,
+					MARKER_TYPE_BENCHMARK_START,
+					runStart
+				);
+				InstrumentHooks.addMarker(
+					process.pid,
+					MARKER_TYPE_BENCHMARK_END,
+					runEnd
+				);
+
+				codspeedBenchmarks.push(toWalltimeBenchmark(bench, task, uri));
+				console.log(`[CodSpeed] Collected walltime data for ${uri}`);
+			}
+
+			writeWalltimeResults(codspeedBenchmarks, true);
+			teardownCore();
+			console.log(`[CodSpeed] Done running ${bench.tasks.length} benches.`);
+			return bench.tasks;
+		};
 	}
 
 	return bench;
 };
+
+/**
+ * Convert a finished tinybench task into CodSpeed's walltime result entry.
+ * Tinybench runs one round, reported as one round of one iteration per sample.
+ * @param {Bench} bench bench
+ * @param {TinybenchTask} task finished task, run with `retainSamples`
+ * @param {string} uri task URI
+ * @returns {Benchmark} walltime result entry
+ */
+function toWalltimeBenchmark(bench, task, uri) {
+	const result = task.result;
+
+	if (!result || result.state !== "completed") {
+		throw new Error(`No walltime result for ${uri}`);
+	}
+
+	const { min, max, mean, sd, samples } = result.latency;
+	const sortedTimesNs = /** @type {number[]} */ (samples)
+		.map(msToNs)
+		.sort((a, b) => a - b);
+	const meanNs = msToNs(mean);
+	const stdevNs = msToNs(sd);
+
+	return {
+		name: task.name,
+		uri,
+		config: {
+			max_rounds: bench.iterations,
+			max_time_ns: msToNs(bench.time),
+			min_round_time_ns: null,
+			warmup_time_ns: msToNs(bench.warmupTime)
+		},
+		stats: {
+			min_ns: msToNs(min),
+			max_ns: msToNs(max),
+			mean_ns: meanNs,
+			stdev_ns: stdevNs,
+			...calculateQuantiles({ sortedTimesNs, stdevNs, meanNs }),
+			total_time: msToS(result.totalTime),
+			iter_per_round: 1,
+			rounds: sortedTimesNs.length,
+			warmup_iters: bench.warmupIterations
+		}
+	};
+}
 
 /**
  * @param {number} n number of runs
@@ -1241,6 +1367,8 @@ function createBenchInstance() {
 			warmup: true,
 			warmupIterations: 2,
 			iterations: 8,
+			// Walltime reports quantiles, computed from the raw samples.
+			retainSamples: codspeedRunnerMode === "walltime",
 			setup(task, mode) {
 				if (!task) {
 					return;
@@ -1434,9 +1562,8 @@ async function registerBenchmark(bench, task, casesPath) {
 }
 
 /**
- * Run one benchmark task in its own bench. Used by the jest-worker pool for
- * time/simulation runs, where per-process isolation is fine (and better) for
- * deterministic instruction counts.
+ * Run one benchmark task in its own bench. Used by the jest-worker pool, where
+ * per-process isolation keeps instruction and allocation counts deterministic.
  * @param {object} options options
  * @param {BenchmarkTask} options.task benchmark task
  * @param {string} options.casesPath benchmark cases directory
@@ -1454,6 +1581,7 @@ export async function run({
 
 	baseOutputPath = baseOutputPathArg;
 	rootCallingFile = callingFile;
+	onlyUnitTask = task.unitTask;
 
 	const bench = await createBenchInstance();
 
@@ -1467,50 +1595,6 @@ export async function run({
 	return {
 		benchmark: task.benchmark,
 		scenario: task.scenario ? task.scenario.name : "unit",
-		results
-	};
-}
-
-/**
- * Run every task in one shared bench and process. Used for CodSpeed memory
- * mode: a single `Bench`, one global prime pass, one setup/teardown — identical
- * to the pre-parallel harness, so allocation counts stay stable and comparable
- * across PRs (per-benchmark benches shift them). Never used with the worker pool.
- * @param {object} options options
- * @param {BenchmarkTask[]} options.tasks benchmark tasks
- * @param {string} options.casesPath benchmark cases directory
- * @param {string} options.baseOutputPath base output directory
- * @param {string=} options.callingFile harness path relative to the git root
- * @returns {Promise<BenchmarkResult>} combined benchmark result
- */
-export async function runAll({
-	tasks,
-	casesPath,
-	baseOutputPath: baseOutputPathArg,
-	callingFile
-}) {
-	console.log(`Process ${process.pid}: running ${tasks.length} task(s) in one bench`);
-
-	baseOutputPath = baseOutputPathArg;
-	rootCallingFile = callingFile;
-
-	const bench = await createBenchInstance();
-
-	/** @type {Result[]} */
-	const results = [];
-	attachResultCollector(bench, results);
-
-	// Register every task up front so the memory-mode global prime pass warms
-	// all of them before any measurement (removes cross-task order dependence).
-	for (const task of tasks) {
-		await registerBenchmark(bench, task, casesPath);
-	}
-
-	await bench.run();
-
-	return {
-		benchmark: "all",
-		scenario: "all",
 		results
 	};
 }

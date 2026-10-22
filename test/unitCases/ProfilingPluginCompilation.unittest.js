@@ -1,0 +1,150 @@
+"use strict";
+
+require("../helpers/warmup-webpack");
+
+const path = require("path");
+const testDirectory = path.resolve(__dirname, "..");
+const fs = require("graceful-fs");
+const rimraf = require("rimraf");
+
+// Bun's Node `inspector` CPU profiler never resolves, hanging this test until timeout.
+const itSkipBun = process.versions.bun ? it.skip : it;
+
+// ProfilingPlugin intercepts the deprecated Compilation.hooks.normalModuleLoader
+// hook; that deprecation is asserted in configCases/plugins/profiling-plugin.
+describe("Profiling Plugin", () => {
+	jest.setTimeout(120000);
+
+	itSkipBun("should handle output path with folder creation", (done) => {
+		const webpack = require("../../");
+
+		const outputPath = path.join(testDirectory, "js/profilingPath");
+		const finalPath = path.join(outputPath, "events.json");
+		let counter = 0;
+		rimraf(outputPath, () => {
+			const startTime = process.hrtime();
+			const compiler = webpack({
+				context: testDirectory,
+				entry: "./fixtures/a.js",
+				output: {
+					path: path.join(testDirectory, "js/profilingOut")
+				},
+				plugins: [
+					new webpack.debug.ProfilingPlugin({
+						outputPath: finalPath
+					}),
+					{
+						apply(compiler) {
+							const hook = compiler.hooks.make;
+							for (const { stage, order } of [
+								{ stage: 0, order: 1 },
+								{ stage: 1, order: 2 },
+								{ stage: -1, order: 0 }
+							]) {
+								hook.tap(
+									{
+										name: "RespectStageCheckerPlugin",
+										stage
+									},
+									// eslint-disable-next-line no-loop-func
+									() => {
+										expect(counter++).toBe(order);
+									}
+								);
+							}
+						}
+					}
+				],
+				experiments: {
+					backCompat: false
+				}
+			});
+			compiler.run((err) => {
+				if (err) return done(err);
+				const testDuration = process.hrtime(startTime);
+				if (!fs.existsSync(outputPath)) {
+					return done(new Error("Folder should be created."));
+				}
+
+				const data = require(finalPath);
+
+				const maxTs = data.reduce(
+					(/** @type {number} */ max, /** @type {EXPECTED_ANY} */ entry) =>
+						Math.max(max, entry.ts),
+					0
+				);
+				const minTs = data[0].ts;
+				const duration = maxTs - minTs;
+				expect(duration).toBeLessThan(
+					testDuration[0] * 1000000 + testDuration[1] / 1000
+				);
+				const cpuProfile = data.find(
+					(/** @type {EXPECTED_ANY} */ entry) => entry.name === "CpuProfile"
+				);
+				expect(cpuProfile).toBeTypeOf("object");
+				const profile = cpuProfile.args.data.cpuProfile;
+				expect(profile.startTime).toBeGreaterThanOrEqual(minTs);
+				expect(profile.endTime).toBeLessThanOrEqual(maxTs);
+				done();
+			});
+		});
+	});
+
+	itSkipBun.each(["before", "after"])(
+		"should profile the taps of hook maps accessed %s installation",
+		(timing, done) => {
+			const webpack = require("../../");
+
+			const finalPath = path.join(testDirectory, "js/profilingHookMaps.json");
+			const profilingPlugin = new webpack.debug.ProfilingPlugin({
+				outputPath: finalPath
+			});
+			const probePlugin = {
+				/**
+				 * @param {import("../../").Compiler} compiler compiler
+				 * @returns {void}
+				 */
+				apply(compiler) {
+					compiler.resolverFactory.hooks.resolveOptions
+						.for("normal")
+						.tap("ResolverHookMapProbePlugin", (options) => options);
+					compiler.hooks.compilation.tap(
+						"HookMapProbePlugin",
+						(compilation, { normalModuleFactory }) => {
+							normalModuleFactory.hooks.parser
+								.for("javascript/auto")
+								.tap("ParserHookMapProbePlugin", () => {});
+						}
+					);
+				}
+			};
+			const compiler = webpack({
+				context: testDirectory,
+				entry: "./fixtures/a.js",
+				output: {
+					path: path.join(testDirectory, "js/profilingHookMapsOut")
+				},
+				plugins:
+					timing === "before"
+						? [probePlugin, profilingPlugin]
+						: [profilingPlugin, probePlugin]
+			});
+			compiler.run((err) => {
+				if (err) return done(err);
+				compiler.close((closeErr) => {
+					if (closeErr) return done(closeErr);
+					try {
+						/** @type {{ name: string }[]} */
+						const data = JSON.parse(fs.readFileSync(finalPath, "utf8"));
+						const names = new Set(data.map((entry) => entry.name));
+						expect(names.has("ResolverHookMapProbePlugin")).toBe(true);
+						expect(names.has("ParserHookMapProbePlugin")).toBe(true);
+						done();
+					} catch (error) {
+						done(error);
+					}
+				});
+			});
+		}
+	);
+});

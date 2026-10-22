@@ -2,8 +2,8 @@
 
 exports[`errors 1`] = `
 Array [
-  "Test exception",
-  "Test exception",
+  "Generating the runtime module webpack/runtime/compat (CompatRuntimeModule) for hashing failed: Test exception",
+  "Generating the runtime module webpack/runtime/compat (CompatRuntimeModule) for hashing failed: Test exception",
   "Test exception",
 ]
 `;

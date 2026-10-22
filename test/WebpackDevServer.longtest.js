@@ -16,12 +16,11 @@ const net = require("net");
 const os = require("os");
 const path = require("path");
 const webpack = require("..");
-const launchChrome = require("./helpers/launchChrome");
+const launchBrowser = require("./helpers/launchBrowser");
 
-// Drives a real webpack-dev-server (added as a compiler plugin) in real Chrome via
-// puppeteer-core. webpack-dev-server needs Node >= 22.15 and the integration matrix
-// goes down to Node 10, so the suite is skipped there — a Chrome that will not
-// launch is a failure, not a skip.
+// Drives a real webpack-dev-server, added as a compiler plugin, in real Chrome via
+// playwright-core. It needs Node >= 22.15 and the matrix goes down to Node 10, so
+// the suite is skipped there — a Chrome that will not launch is a failure.
 const [nodeMajor, nodeMinor] = process.versions.node.split(".").map(Number);
 const nodeSupported = nodeMajor > 22 || (nodeMajor === 22 && nodeMinor >= 15);
 
@@ -30,9 +29,8 @@ let WebpackDevServer;
 if (nodeSupported) WebpackDevServer = require("webpack-dev-server");
 
 // webpack-dev-server resolves `webpack/hot/dev-server` from its own location, but
-// this repo is the `webpack` package itself and is not installed under
-// node_modules, so self-link it there once (CI does the same via `yarn link
-// webpack`). node_modules is gitignored, so this is a harmless test-time side effect.
+// this repo is the `webpack` package and is not installed under node_modules, so
+// self-link it once. node_modules is gitignored, so this is a test-time effect.
 const ensureWebpackSelfLink = () => {
 	const root = path.resolve(__dirname, "..");
 	const link = path.join(root, "node_modules", "webpack");
@@ -109,7 +107,7 @@ const waitForPort = (port) =>
 /**
  * Poll `#app`'s text until it matches. Uses `page.evaluate` rather than
  * `page.waitForFunction`, which does not resolve under jest-on-Bun.
- * @param {import("puppeteer-core").Page} page page
+ * @param {import("playwright-core").Page} page page
  * @param {string} text expected text content
  * @param {number} timeout ms
  * @returns {Promise<void>} promise
@@ -137,7 +135,7 @@ const waitForAppText = async (page, text, timeout) => {
 };
 
 /**
- * @param {import("puppeteer-core").Page} page page
+ * @param {import("playwright-core").Page} page page
  * @returns {Promise<boolean>} whether the dev-server error overlay is present
  */
 const hasOverlay = (page) =>
@@ -152,7 +150,7 @@ const hasOverlay = (page) =>
 
 /**
  * Poll until the error overlay reaches the expected presence.
- * @param {import("puppeteer-core").Page} page page
+ * @param {import("playwright-core").Page} page page
  * @param {boolean} present expected presence
  * @param {number} timeout ms
  * @returns {Promise<void>} promise
@@ -286,7 +284,7 @@ const startServer = (dir, port, devServerOptions) => {
 };
 
 describe("WebpackDevServer integration in real Chrome", () => {
-	/** @type {import("puppeteer-core").Browser} */
+	/** @type {import("playwright-core").Browser} */
 	let browser;
 
 	const itChrome = nodeSupported ? it : it.skip;
@@ -294,7 +292,7 @@ describe("WebpackDevServer integration in real Chrome", () => {
 	beforeAll(async () => {
 		if (!nodeSupported) return;
 		ensureWebpackSelfLink();
-		browser = await launchChrome();
+		browser = await launchBrowser();
 	}, 120000);
 
 	afterAll(async () => {

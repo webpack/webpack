@@ -8,9 +8,9 @@ const path = require("path");
 const acorn = require("acorn");
 const ConcatenatedModule = require("../../lib/optimize/ConcatenatedModule");
 
-/** @import Chunk from "../../lib/Chunk" */
+/** @import Chunk from "../../lib/graph/Chunk" */
 /** @import Compilation from "../../lib/Compilation" */
-/** @import Module from "../../lib/Module" */
+/** @import Module from "../../lib/module/Module" */
 
 /** @type {typeof import("es-module-lexer") | null | undefined} */
 let lexer;

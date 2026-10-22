@@ -11,9 +11,7 @@ module.exports = {
 	},
 	optimization: {
 		minimize: {
-			css: {
-				vendorPrefixes: false
-			}
+			css: { extractComments: false, vendorPrefixes: false }
 		},
 		minimizer: ["..."]
 	},

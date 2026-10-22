@@ -30,7 +30,7 @@ exports[`ConfigTestCases concatenate-modules commonjs-wrapped-assignment-asi-pos
   \\\\******************************/
 
 // MODULE: ./body.js
-var body_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var body_namespaceFn = /*#__PURE__*/__webpack_require__.cw((module) => {
 
 
 // semicolon-free: every require below starts a statement where ASI would join
@@ -78,7 +78,7 @@ module.exports.L = () => (store_namespaceFn().nested)
 });
 
 // MODULE: ./store.js
-var store_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var store_namespaceFn = /*#__PURE__*/__webpack_require__.cw((module) => {
 
 
 // exported through a variable, so the exports stay statically unknown and every

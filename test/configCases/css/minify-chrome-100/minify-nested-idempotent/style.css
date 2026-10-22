@@ -1,0 +1,29 @@
+/* A lowering that writes several rules still offers each one to the rules
+   around it: the join, and the drop of a rule a later copy restates. */
+.a { width: 1px; .x { color: red } }
+.mid { color: teal }
+.a { height: 2px; .x { color: red } }
+.p { color: blue }
+.q { .r { color: blue } .s { color: green } }
+
+/* A lowering that empties its rule writes one a later copy can take back. */
+.t { .u { color: navy } }
+.t { --c: 1; color: navy; .u { color: navy } }
+
+/* A nested rule a later copy restates parts no declarations from the rules. */
+.v { .w { top: 0 } top: 0; .w { top: 0 } }
+
+/* A rule a cut shrinks into a copy of an earlier one makes that one dead. */
+.y { --c: 1; color: olive }
+.z { top: 1px }
+.y { --c: 1; .y { color: olive } color: olive }
+.y { .y { color: olive } --c: 1; color: olive }
+
+/* A block a later copy took out parts the two rules it stood between. */
+.k .l { left: 0 }
+@media print { .k .l { left: 0 } }
+.l .m { left: 0 }
+@media print { .k .l { left: 0 } }
+
+/* An empty selector in a list the printer keeps has no descendant to part. */
+.e { f: (1) [2], { g: h }; .i { top: 0 } }

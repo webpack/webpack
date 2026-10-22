@@ -8,9 +8,12 @@ it("should report only this build's time, step 0", () => {
 	expect(hint).toBeDefined();
 
 	const ms = Number(/BurnPlugin \((\d+) ms/.exec(hint.message)[1]);
+	const { burned } = COMPILER.options.plugins.find(
+		(plugin) => "burned" in plugin
+	);
 
-	// The plugin burns the same amount every build. Anything near a multiple of
-	// it means the last build's time was carried into this one.
-	expect(ms).toBeGreaterThanOrEqual(100);
-	expect(ms).toBeLessThan(240);
+	// Measured against this build's own burn, so a slow machine cancels out; a
+	// carried-over build would add a whole earlier burn (130 ms or more).
+	expect(ms).toBeGreaterThanOrEqual(Math.floor(burned));
+	expect(ms - burned).toBeLessThan(100);
 });

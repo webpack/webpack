@@ -1,6 +1,5 @@
-// This file doesn't accept itself neither the parent accepts it.
-// On change it will bubble to all parents (which is 'element.js'),
-//  this parent is accepted by 'index.js'.
-// So on change 'element-dependency.js' and 'element.js' will be reloaded.
+// This file accepts neither itself nor does its parent accept it.
+// On change it bubbles up to its parents ('element.js'), and that parent is
+// accepted by 'index.js', so both are replaced together.
 
-module.exports = "This text comes from <b>'element-dependency.js'</b> version 1.";
+module.exports = "This text comes from <b>'element-dependency.js'</b>.";

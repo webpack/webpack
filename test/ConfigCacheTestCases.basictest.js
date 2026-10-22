@@ -1,6 +1,6 @@
 "use strict";
 
-const { describeCases } = require("./ConfigTestCases.template");
+const { describeCases } = require("./templates/ConfigTestCases");
 
 describeCases({
 	name: "ConfigCacheTestCases",

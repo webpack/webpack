@@ -1,0 +1,16 @@
+import "./decoding/index.js";
+import "./export-imported-global/index.js";
+import "./global-refs-imported-global/index.js";
+import "./import-wasm-wasm/index.js";
+import "./imported-global-preserve-ordering/index.js";
+import "./imported-global-preserve-type/index.js";
+import "./imports/index.js";
+import "./imports-circular/index.js";
+import "./imports-many-direct/index.js";
+import "./imports-multiple/index.js";
+import "./memory/index.js";
+import "./order/index.js";
+import "./simple/index.js";
+import "./table/index.js";
+import "./two-files-loader/index.js";
+import "./unused-export/index.js";

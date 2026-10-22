@@ -16,6 +16,7 @@ module.exports = {
 			{
 				apply: (compiler) => {
 					new MinimizerPlugin({
+						extractComments: false,
 						test: /\.css(\?.*)?$/i,
 						minify: cssMinify
 					}).apply(/** @type {EXPECTED_ANY} */ (compiler));

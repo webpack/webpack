@@ -1,6 +1,6 @@
 "use strict";
 
-const NormalModule = require("../../../../lib/NormalModule");
+const NormalModule = require("../../../../lib/module/NormalModule");
 
 // What a failing minimizer looks like: the rejection has to surface as this
 // module's build error, not as an unhandled one.

@@ -1,0 +1,145 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases lazy-barrel basic basic should compile 1`] = `
+"./index.js [barrel]
+├─ (b, cc) ./named-barrel/index.js [barrel]
+│  ├─ (a) ./named-barrel/a.js
+│  ├─ (b, dd) ./b [raw] [lazy]
+│  └─ (c) ./named-barrel/c.js
+├─ (b, d) ./mixed-barrel/index.js [barrel]
+│  ├─ (default) ./a [raw] [lazy]
+│  ├─ (*) ./b [raw] [lazy]
+│  └─ (value) ./mixed-barrel/c.js
+├─ (b) ./star-barrel/index.js [barrel]
+│  ├─ (c) ./c [raw] [lazy]
+│  ├─ (*) ./star-barrel/a.js
+│  └─ (*) ./star-barrel/b.js
+├─ (a) ./nested-barrel/index.js [barrel]
+│  ├─ (a) ./nested-barrel/a.js [barrel]
+│  │  ├─ (b) ./nested-barrel/b.js
+│  │  └─ (c) ./c [raw] [lazy]
+│  └─ (c) ./c [raw] [lazy]
+├─ (inner) ./ns-barrel/index.js [barrel]
+│  ├─ (*) ./ns-barrel/inner.js [barrel]
+│  │  ├─ (p) ./ns-barrel/inner-p.js
+│  │  └─ (q) ./ns-barrel/inner-q.js
+│  └─ (x) ./other [raw] [lazy]
+├─ (one) ./shared-barrel/one.js [barrel]
+│  ├─ (a) ./shared-barrel/barrel.js [barrel]
+│  │  ├─ (a) ./shared-barrel/a.js
+│  │  ├─ (b) ./shared-barrel/b.js
+│  │  ├─ (c) ./shared-barrel/c.js
+│  │  └─ (d) ./d [raw] [lazy]
+│  └─ (bc) ./shared-barrel/bc.js [barrel]
+│     └─ (b, c) ./shared-barrel/barrel.js [barrel] (deduped)
+└─ (two) ./shared-barrel/two.js [barrel]
+   └─ (b) ./shared-barrel/barrel.js [barrel] (deduped)"
+`;
+
+exports[`ConfigCacheTestCases lazy-barrel basic basic should compile 2`] = `
+"./index.js [barrel]
+├─ (b, cc) ./named-barrel/index.js [barrel]
+│  ├─ (a) ./named-barrel/a.js
+│  ├─ (b, dd) ./b [raw] [lazy]
+│  └─ (c) ./named-barrel/c.js
+├─ (b, d) ./mixed-barrel/index.js [barrel]
+│  ├─ (default) ./a [raw] [lazy]
+│  ├─ (*) ./b [raw] [lazy]
+│  └─ (value) ./mixed-barrel/c.js
+├─ (b) ./star-barrel/index.js [barrel]
+│  ├─ (c) ./c [raw] [lazy]
+│  ├─ (*) ./star-barrel/a.js
+│  └─ (*) ./star-barrel/b.js
+├─ (a) ./nested-barrel/index.js [barrel]
+│  ├─ (a) ./nested-barrel/a.js [barrel]
+│  │  ├─ (b) ./nested-barrel/b.js
+│  │  └─ (c) ./c [raw] [lazy]
+│  └─ (c) ./c [raw] [lazy]
+├─ (inner) ./ns-barrel/index.js [barrel]
+│  ├─ (*) ./ns-barrel/inner.js [barrel]
+│  │  ├─ (p) ./ns-barrel/inner-p.js
+│  │  └─ (q) ./ns-barrel/inner-q.js
+│  └─ (x) ./other [raw] [lazy]
+├─ (one) ./shared-barrel/one.js [barrel]
+│  ├─ (a) ./shared-barrel/barrel.js [barrel]
+│  │  ├─ (a) ./shared-barrel/a.js
+│  │  ├─ (b) ./shared-barrel/b.js
+│  │  ├─ (c) ./shared-barrel/c.js
+│  │  └─ (d) ./d [raw] [lazy]
+│  └─ (bc) ./shared-barrel/bc.js [barrel]
+│     └─ (b, c) ./shared-barrel/barrel.js [barrel] (deduped)
+└─ (two) ./shared-barrel/two.js [barrel]
+   └─ (b) ./shared-barrel/barrel.js [barrel] (deduped)"
+`;
+
+exports[`ConfigCacheTestCases lazy-barrel basic basic should pre-compile to fill disk cache (1st) 1`] = `
+"./index.js [barrel]
+├─ (b, cc) ./named-barrel/index.js [barrel]
+│  ├─ (a) ./named-barrel/a.js
+│  ├─ (b, dd) ./b [raw] [lazy]
+│  └─ (c) ./named-barrel/c.js
+├─ (b, d) ./mixed-barrel/index.js [barrel]
+│  ├─ (default) ./a [raw] [lazy]
+│  ├─ (*) ./b [raw] [lazy]
+│  └─ (value) ./mixed-barrel/c.js
+├─ (b) ./star-barrel/index.js [barrel]
+│  ├─ (c) ./c [raw] [lazy]
+│  ├─ (*) ./star-barrel/a.js
+│  └─ (*) ./star-barrel/b.js
+├─ (a) ./nested-barrel/index.js [barrel]
+│  ├─ (a) ./nested-barrel/a.js [barrel]
+│  │  ├─ (b) ./nested-barrel/b.js
+│  │  └─ (c) ./c [raw] [lazy]
+│  └─ (c) ./c [raw] [lazy]
+├─ (inner) ./ns-barrel/index.js [barrel]
+│  ├─ (*) ./ns-barrel/inner.js [barrel]
+│  │  ├─ (p) ./ns-barrel/inner-p.js
+│  │  └─ (q) ./ns-barrel/inner-q.js
+│  └─ (x) ./other [raw] [lazy]
+├─ (one) ./shared-barrel/one.js [barrel]
+│  ├─ (a) ./shared-barrel/barrel.js [barrel]
+│  │  ├─ (a) ./shared-barrel/a.js
+│  │  ├─ (b) ./shared-barrel/b.js
+│  │  ├─ (c) ./shared-barrel/c.js
+│  │  └─ (d) ./d [raw] [lazy]
+│  └─ (bc) ./shared-barrel/bc.js [barrel]
+│     └─ (b, c) ./shared-barrel/barrel.js [barrel] (deduped)
+└─ (two) ./shared-barrel/two.js [barrel]
+   └─ (b) ./shared-barrel/barrel.js [barrel] (deduped)"
+`;
+
+exports[`ConfigCacheTestCases lazy-barrel basic basic should pre-compile to fill disk cache (2nd) 1`] = `
+"./index.js [barrel]
+├─ (b, cc) ./named-barrel/index.js [barrel]
+│  ├─ (a) ./named-barrel/a.js
+│  ├─ (b, dd) ./b [raw] [lazy]
+│  └─ (c) ./named-barrel/c.js
+├─ (b, d) ./mixed-barrel/index.js [barrel]
+│  ├─ (default) ./a [raw] [lazy]
+│  ├─ (*) ./b [raw] [lazy]
+│  └─ (value) ./mixed-barrel/c.js
+├─ (b) ./star-barrel/index.js [barrel]
+│  ├─ (c) ./c [raw] [lazy]
+│  ├─ (*) ./star-barrel/a.js
+│  └─ (*) ./star-barrel/b.js
+├─ (a) ./nested-barrel/index.js [barrel]
+│  ├─ (a) ./nested-barrel/a.js [barrel]
+│  │  ├─ (b) ./nested-barrel/b.js
+│  │  └─ (c) ./c [raw] [lazy]
+│  └─ (c) ./c [raw] [lazy]
+├─ (inner) ./ns-barrel/index.js [barrel]
+│  ├─ (*) ./ns-barrel/inner.js [barrel]
+│  │  ├─ (p) ./ns-barrel/inner-p.js
+│  │  └─ (q) ./ns-barrel/inner-q.js
+│  └─ (x) ./other [raw] [lazy]
+├─ (one) ./shared-barrel/one.js [barrel]
+│  ├─ (a) ./shared-barrel/barrel.js [barrel]
+│  │  ├─ (a) ./shared-barrel/a.js
+│  │  ├─ (b) ./shared-barrel/b.js
+│  │  ├─ (c) ./shared-barrel/c.js
+│  │  └─ (d) ./d [raw] [lazy]
+│  └─ (bc) ./shared-barrel/bc.js [barrel]
+│     └─ (b, c) ./shared-barrel/barrel.js [barrel] (deduped)
+└─ (two) ./shared-barrel/two.js [barrel]
+   └─ (b) ./shared-barrel/barrel.js [barrel] (deduped)"
+`;
