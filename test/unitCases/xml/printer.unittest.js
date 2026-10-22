@@ -333,6 +333,17 @@ b&#10;c">
 		);
 	});
 
+	it("should escape an `&` that opens no reference when minifying", () => {
+		expect(printXml("<r>&amp", "minify")).toBe("<r>&amp;amp</r>");
+		expect(printXml("<r>a & b</r>", "minify")).toBe("<r>a &amp; b</r>");
+		expect(printXml('<r a="&amp x" b="&#38"/>', "minify")).toBe(
+			'<r a="&amp;amp x" b="&amp;#38"/>'
+		);
+		expect(printXml("<r>&undeclared;</r>", "minify")).toBe(
+			"<r>&undeclared;</r>"
+		);
+	});
+
 	it("should close a blank stylesheet the input ran out in", () => {
 		const { builtinEmbeddedRenderer } = require("../../../lib/html/builtinEmbeddedRenderer");
 		/**
