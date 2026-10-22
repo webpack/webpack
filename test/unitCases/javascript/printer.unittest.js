@@ -1995,6 +1995,23 @@ const IMPROVED_CASES = [
 		'function f(g){var x="keep this";g(x),g(x)}f(console.log);'
 	],
 	[
+		"an `if` with an empty branch and an `else` block, as an `if` of the negated test, but a chain's",
+		"function f(a, b) { if (a) {} else { if (b) { console.log(1); return; } console.log(2); } console.log(3); } function g(a, b) { if (a && b) {} else { if (b) { console.log(4); return; } console.log(5); } } f(0, 0); f(0, 1); f(1, 0); g(0, 1); g(1, 1);",
+		{ compress: {}, mangle: false },
+		"function f(a,b){if(!a){if(b){console.log(1);return}console.log(2)}console.log(3)}function g(a,b){if(a&&b);else{if(b){console.log(4);return}console.log(5)}}f(0,0),f(0,1),f(1,0),g(0,1),g(1,1);"
+	],
+	[
+		"a `Set` or a `Map` given `null`, `undefined` or an argument it ignores, and never read",
+		"function f(a, b) { new Set(null, a()); new Map(void b(), a()); new Set([a()], b()); } f(() => console.log(1), () => console.log(2));",
+		{ compress: {}, mangle: false },
+		"function f(a,b){a(),b(),a(),a(),b()}f(()=>console.log(1),()=>console.log(2));"
+	],
+	[
+		"a property assigned its own arithmetic through a name reassigned, or a constant times it",
+		"function f(o, x) { if (x > 5) o = { p: 0, q: 0 }; o.p = o.p + x; o.q = 2 * o.q; return o; } console.log(JSON.stringify(f({ p: 1, q: 2 }, 3)), JSON.stringify(f({ p: 1, q: 2 }, 6)));",
+		{ compress: {}, mangle: false }
+	],
+	[
 		"a `Set` or a `Map` built from an array literal and never read",
 		"function f(a, b) { new Set([a(), b()]); new Map([[a(), 1], [2, b()]]); new Set(); } f(() => console.log(1), () => console.log(2));",
 		{ compress: {}, mangle: false },
@@ -2082,7 +2099,7 @@ const KEPT_CASES = [
 	["a direct `eval` kept out of a `for…in` head whose `let` it may read in its dead zone", "function f(o) { let x = 1; eval('console.log(x)'); for (let x in o) console.log(x); } f({ a: 1 });"],
 	["an element of an array literal called, read as a place, or beside one with effects", "function f(o, g) { [o][0] = 1; [o][0]++; delete [o][0]; return [[o][0](), [g(), o][1], [, o][0]]; } console.log(f(function () { return this.length; }, () => 1));"],
 	["a `break` in a `do … while` that runs once, before a declaration or a labeled `break`", "function f(a) { do { if (a) break; class C {} console.log(C.name); } while (0); x: do { if (a) break x; console.log(2); } while (0); } f(0); f(1);"],
-	["a `Map` given what is no entry, or a collection given a spread or an argument more", "function f(a, s) { try { new Map([a]); } catch (e) { console.log(e.name); } try { new Map([, [1]]); } catch (e) { console.log(e.name); } new Set([...s]); new Map([[...s]]); new Set([1], a); } f(1, [2]);"],
+	["a `Map` given what is no entry, or a collection given a spread or what may be an iterable", "function f(a, s) { try { new Map([a]); } catch (e) { console.log(e.name); } try { new Map([, [1]]); } catch (e) { console.log(e.name); } new Set([...s]); new Map([[...s]]); new Set([1], ...s); new Set(a); } f(1, [2]);"],
 	[
 		"`-= 1` on a property that may hold a BigInt, which throws where `--` would not",
 		'const o = { x: 1n }; try { o.x -= 1; } catch { console.log("caught"); }'
@@ -2162,7 +2179,7 @@ const KEPT_CASES = [
 	["a character of a string literal deleted, or half of a surrogate pair", 'try { console.log(delete "abc"[0], "\\ud83d\\ude00"[0].length); } catch (e) { console.log(e.name); }'],
 	["an integer compared with zero where it is no test, or two values a BigInt may be", "function f(a, b) { console.log((a | +b) !== 0, (a | b) !== 0 ? 1 : 2, a - b === 0); } f(1n, 1n); f(1, 2);"],
 	["a nested array literal concatenated", 'console.log([1, [2, 3]] + "");'],
-	["a property assigned its own arithmetic through a name reassigned", "function f(o, x) { o.p = o.p + x; o[x] = o[x] + 1; o = {}; return o; } console.log(f({ p: 1 }, 2));"],
+	["a property assigned its own arithmetic through a key no constant, or the arithmetic of what is no constant first", "function f(o, x, y) { o[x] = o[x] + 1; o.p = y * o.p; return o; } console.log(f({ p: 1 }, 2, 3));"],
 	["`eval` called through `Object`, which a direct `eval` would not read as", 'var x = 1; function f() { var x = 2; return Object(eval)("x"); } console.log(f(), Object(eval)("x"));'],
 	["a call of `Object` passed two values, spread, or shadowed", "function f(Object) { return Object(g)(); } function g() { return 1; } console.log(f((x) => x), Object(g, 1)(), Object(...h)()); var h = [g];"],
 	["a link on a parenthesized chain that is not optional", "var a = { b: { c: 1 } }; console.log((a?.b).c);"],

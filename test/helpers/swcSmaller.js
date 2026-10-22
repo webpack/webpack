@@ -12,7 +12,6 @@ const SWC_SMALLER_BY_REASON = [
 		"swc drops what nothing reads or what has no effect: unused variables and destructuring, side-effect-free `new Map()` and pure calls, an empty constructor",
 		[
 			"swc minifier: fixture/issues/12192/input.js",
-			"swc minifier: fixture/issues/12204/nullish-arguments/input.js",
 			"swc minifier: fixture/issues/12223/catch-return-no-finalizer-control/input.js",
 			"swc minifier: fixture/issues/12223/nested-function-control/input.js",
 			"swc minifier: fixture/issues/12227/input.js",
