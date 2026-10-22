@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Fold string methods on constants, more aliases and `x -= 1` into `--x` when minifying JavaScript.
+Minify JavaScript faster, folding string methods on constants and `x -= 1`.
