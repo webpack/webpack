@@ -82,7 +82,9 @@ const {
 	spans,
 	sweepExitCode,
 	sweepMode,
-	thrownText
+	thrownText,
+	wantedExpectations,
+	wantedRespelling
 } = require("./compare-tools-harness");
 
 const ROOT = path.resolve(__dirname, "..");
@@ -1483,7 +1485,7 @@ const sweepRespellings = (minify, css, minified) => {
 	const reports = [];
 	const sites = cssSites(css);
 	for (const respelling of CSS_RESPELLINGS.filter((one) =>
-		wantedSpelling(one.name)
+		wantedRespelling(one.name)
 	)) {
 		/**
 		 * @param {Site[]} subset the sites to respell
@@ -1520,7 +1522,6 @@ const sweepRespellings = (minify, css, minified) => {
 };
 
 const wantedRelation = filterFrom("RELATION");
-const wantedSpelling = filterFrom("SPELLING");
 const wantedPreset = filterFrom("PRESET");
 
 /**
@@ -1656,13 +1657,14 @@ const invariants = (write) => {
 	_missingFixtures = built.missing.filter((label) => wantedFixture(label));
 	const corpus = built.corpus.filter(([label]) => wantedFixture(label));
 	const presets = PRESETS.filter(([name]) => wantedPreset(name));
-	// Filtered like the corpus is: an expectation for a relation this run was
-	// never going to reach matched nothing because nothing asked it to, which is
-	// not the divergence having gone away.
+	// Filtered like the corpus is: an expectation for a relation, fixture or
+	// preset this run was never going to reach matched nothing because nothing
+	// asked it to, which is not the divergence having gone away.
 	const groups = findingGroups(
-		EXPECTED.filter(
-			(entry) =>
-				wantedRelation(entry.relation) && wantedSpelling(entry.relation)
+		wantedExpectations(
+			EXPECTED,
+			corpus.map(([label]) => label),
+			presets.map(([name]) => name)
 		)
 	);
 	// Nothing is printed to reach this one, so it is read under no preset: what
@@ -1709,7 +1711,9 @@ const invariants = (write) => {
 	// The printer's two relations share a sweep: both need the output, and
 	// printing it twice to ask two questions of it would double the run.
 	const wantsIdempotence = wantedRelation("idempotence");
-	const wantsRespelling = wantedRelation("respelling");
+	const wantsRespelling = CSS_RESPELLINGS.some((one) =>
+		wantedRespelling(one.name)
+	);
 	if (wantsIdempotence || wantsRespelling) {
 		log(
 			`sweeping ${corpus.length} stylesheets under ${presets.length} presets …`

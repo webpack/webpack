@@ -69,7 +69,9 @@ const {
 	sliceRelation,
 	spans,
 	sweepExitCode,
-	sweepMode
+	sweepMode,
+	wantedExpectations,
+	wantedRespelling
 } = require("./compare-tools-harness");
 
 /** @typedef {import("../lib/html/syntax-parser").HtmlPath} HtmlPath */
@@ -592,7 +594,6 @@ const wantedFixture = filterFrom("FIXTURE");
 const wantedTool = filterFrom("TOOL");
 const wantedStage = filterFrom("STAGE");
 const wantedRelation = filterFrom("RELATION");
-const wantedSpelling = filterFrom("SPELLING");
 const wantedPreset = filterFrom("PRESET");
 
 /**
@@ -857,10 +858,9 @@ const spellingFinding = (xml, minified, sites, respelling) => {
 const sweepRespellings = (xml, minified) => {
 	/** @type {Report[]} */
 	const reports = [];
-	if (!wantedRelation("respelling")) return reports;
 	const sites = attributeSites(xml);
 	for (const respelling of RESPELLINGS.filter((one) =>
-		wantedSpelling(one.name)
+		wantedRespelling(one.name)
 	)) {
 		/**
 		 * @param {Site[]} subset the sites to respell
@@ -1183,8 +1183,16 @@ const invariants = (write) => {
 	const built = invariantFixtures();
 	_missingFixtures = built.missing.filter((label) => wantedFixture(label));
 	const corpus = built.corpus.filter(([label]) => wantedFixture(label));
+	const presets = PRESETS.filter(([name]) => wantedPreset(name));
+	// Filtered like the corpus is: an expectation for a relation, fixture or
+	// preset this run was never going to reach matched nothing because nothing
+	// asked it to, which is not the divergence having gone away.
 	const groups = findingGroups(
-		EXPECTED.filter((entry) => wantedRelation(entry.relation))
+		wantedExpectations(
+			EXPECTED,
+			corpus.map(([label]) => label),
+			presets.map(([name]) => name)
+		)
 	);
 	if (wantedRelation("spans")) {
 		log(`reading ranges over ${corpus.length} documents …`);
@@ -1221,7 +1229,6 @@ const invariants = (write) => {
 		}
 		log(`read ${read} documents twice over …`);
 	}
-	const presets = PRESETS.filter(([name]) => wantedPreset(name));
 	log(`sweeping ${corpus.length} documents under ${presets.length} presets …`);
 	for (const [label, xml] of corpus) {
 		for (const [preset, options] of presets) {

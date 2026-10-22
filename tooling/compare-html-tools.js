@@ -72,7 +72,9 @@ const {
 	spans,
 	sweepExitCode,
 	sweepMode,
-	thrownText
+	thrownText,
+	wantedExpectations,
+	wantedRespelling
 } = require("./compare-tools-harness");
 
 const ROOT = path.resolve(__dirname, "..");
@@ -1615,7 +1617,6 @@ const htmlPurityDigest = (html, print) => {
 };
 
 const wantedRelation = filterFrom("RELATION");
-const wantedSpelling = filterFrom("SPELLING");
 const wantedPreset = filterFrom("PRESET");
 
 /**
@@ -1628,10 +1629,9 @@ const wantedPreset = filterFrom("PRESET");
 const sweepRespellings = (minify, html, minified) => {
 	/** @type {import("./compare-tools-harness").Report[]} */
 	const reports = [];
-	if (!wantedRelation("respelling")) return reports;
 	const sites = attributeSites(html);
 	for (const respelling of RESPELLINGS.filter((one) =>
-		wantedSpelling(one.name)
+		wantedRespelling(one.name)
 	)) {
 		if (respelling.skips !== undefined && respelling.skips(html)) continue;
 		/**
@@ -1811,11 +1811,15 @@ const invariants = (write) => {
 	_missingFixtures = built.missing.filter((label) => wantedFixture(label));
 	const corpus = built.corpus.filter(([label]) => wantedFixture(label));
 	const presets = PRESETS.filter(([name]) => wantedPreset(name));
-	// Filtered like the corpus is: an expectation for a relation this run was
-	// never going to reach matched nothing because nothing asked it to, which is
-	// not the divergence having gone away.
+	// Filtered like the corpus is: an expectation for a relation, fixture or
+	// preset this run was never going to reach matched nothing because nothing
+	// asked it to, which is not the divergence having gone away.
 	const groups = findingGroups(
-		EXPECTED.filter((entry) => wantedRelation(entry.relation))
+		wantedExpectations(
+			EXPECTED,
+			corpus.map(([label]) => label),
+			presets.map(([name]) => name)
+		)
 	);
 	// Nothing is printed to reach this one, so it is read under no preset: what
 	// the parser said about the document it was handed.

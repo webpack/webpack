@@ -60,7 +60,9 @@ const {
 	spans,
 	sweepExitCode,
 	sweepMode,
-	thrownText
+	thrownText,
+	wantedExpectations,
+	wantedRespelling
 } = require("./compare-tools-harness");
 
 const ROOT = path.resolve(__dirname, "..");
@@ -1337,8 +1339,6 @@ const JS_RESPELLINGS = [
 	}
 ];
 
-const wantedSpelling = filterFrom("SPELLING");
-
 /**
  * @param {string} code a program
  * @param {Site[]} sites where it is respelled
@@ -1428,7 +1428,9 @@ const sweepRespellings = (minify, code, module, minified) => {
 		start: token.start,
 		end: token.end
 	}));
-	const respellings = JS_RESPELLINGS.filter((one) => wantedSpelling(one.name));
+	const respellings = JS_RESPELLINGS.filter((one) =>
+		wantedRespelling(one.name)
+	);
 	// No site is one two respellings write, so all of them at once cost one
 	// minify, and only a program that moves pays one per respelling.
 	/** @type {Respelling} */
@@ -1558,19 +1560,10 @@ const invariants = async (write) => {
 	// preset this run was never going to reach matched nothing because nothing
 	// asked it to, which is not the divergence having gone away.
 	const groups = findingGroups(
-		EXPECTED.filter(
-			(entry) =>
-				wantedRelation(entry.relation) &&
-				(entry.source === undefined ||
-					corpus.some(([label]) =>
-						label.includes(/** @type {string} */ (entry.source))
-					)) &&
-				(entry.presets === undefined ||
-					presets.some(([name]) =>
-						/** @type {string[]} */ (entry.presets).includes(name)
-					)) &&
-				(!entry.relation.startsWith("respelling ") ||
-					wantedSpelling(entry.relation.slice("respelling ".length)))
+		wantedExpectations(
+			EXPECTED,
+			corpus.map(([label]) => label),
+			presets.map(([name]) => name)
 		)
 	);
 	if (wantedRelation("spans")) {
@@ -1655,7 +1648,7 @@ const invariants = async (write) => {
 	// printing it twice to ask two questions of it would double the run.
 	const wantsIdempotence = wantedRelation("idempotence");
 	const wantsRespelling = JS_RESPELLINGS.some((respelling) =>
-		wantedRelation(`respelling ${respelling.name}`)
+		wantedRespelling(respelling.name)
 	);
 	const wantsBehavior = wantedRelation("behavior");
 	if (wantsIdempotence || wantsRespelling || wantsBehavior) {

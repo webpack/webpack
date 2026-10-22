@@ -1040,6 +1040,43 @@ const _covers = (expected, report, sources) => {
 	return true;
 };
 
+const RESPELLING = "respelling ";
+
+/**
+ * Whether a run asks one respelling: `RELATION` naming it or `respelling`
+ * alone, and `SPELLING` naming it.
+ * @param {string} name the respelling
+ * @returns {boolean} true when the run asks it
+ */
+const wantedRespelling = (name) =>
+	filterFrom("RELATION")(`${RESPELLING}${name}`) &&
+	filterFrom("SPELLING")(name);
+
+/**
+ * The expectations a run can meet. One for a relation, respelling, fixture or
+ * preset the run never reaches matches nothing because nothing asked it to,
+ * which is not the divergence having gone away.
+ * @param {readonly Expected[]} expected findings already answered for
+ * @param {readonly string[]} labels the fixtures the run reads
+ * @param {readonly string[]} presets the option sets the run prints under
+ * @returns {Expected[]} the ones the run reaches
+ */
+const wantedExpectations = (expected, labels, presets) => {
+	const wantedRelation = filterFrom("RELATION");
+	return expected.filter(
+		(entry) =>
+			(entry.relation.startsWith(RESPELLING)
+				? wantedRespelling(entry.relation.slice(RESPELLING.length))
+				: wantedRelation(entry.relation)) &&
+			(entry.source === undefined ||
+				labels.some((label) =>
+					label.includes(/** @type {string} */ (entry.source))
+				)) &&
+			(entry.presets === undefined ||
+				entry.presets.some((preset) => presets.includes(preset)))
+	);
+};
+
 /**
  * Findings gathered by the repro rather than by the source: one printer defect
  * reaches hundreds of files, and is one thing to fix. An expected finding is
@@ -1223,5 +1260,7 @@ module.exports = {
 	spans,
 	sweepExitCode,
 	sweepMode,
-	thrownText
+	thrownText,
+	wantedExpectations,
+	wantedRespelling
 };
