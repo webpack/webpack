@@ -8965,6 +8965,19 @@ describe("syntax-printer", () => {
 			}
 		});
 
+		it("should keep a global written through `globalThis` and a `slice` a patched `Array.prototype` changes", async () => {
+			const { minify } = await load();
+			for (const input of [
+				"globalThis.Number = { POSITIVE_INFINITY: 7 }; console.log(Number.POSITIVE_INFINITY);",
+				'globalThis["Number"] = { MAX_SAFE_INTEGER: 3 }; console.log(Number.MAX_SAFE_INTEGER);',
+				'Array.prototype.slice = function () { return "patched"; }; console.log([1, 2].slice());',
+				'Object.defineProperty(Array.prototype, "slice", { value: function () { return "defined"; } }); console.log([1, 2].slice());'
+			]) {
+				const { code } = await minify(input, { compress: {}, mangle: false });
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			}
+		});
+
 		it("should keep an extra constructor argument reading a `let` in its dead zone, and an optional call of a `let` written again", async () => {
 			const { minify } = await load();
 			for (const input of [
