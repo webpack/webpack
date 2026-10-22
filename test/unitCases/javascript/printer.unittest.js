@@ -2081,7 +2081,7 @@ const IMPROVED_CASES = [
 		"an array literal of primitives in a template, and a regular expression's `source`",
 		'function f(a) { return [`${[1, 1]}`, `a${[1, , null, "x"]}b`, `${[a]}`, /a\\/b/i.source]; } console.log(f(2));',
 		{ compress: {}, mangle: false },
-		'function f(a){return["1,1","a1,,,xb",`${[a]}`,"a\\\\/b"]}console.log(f(2));'
+		'function f(a){return["1,1",`a${[1,,null,"x"]}b`,`${[a]}`,"a\\\\/b"]}console.log(f(2));'
 	],
 ];
 
