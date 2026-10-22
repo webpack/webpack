@@ -241,8 +241,7 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/esbuild.rs:1798",
 			"oxc minifier: peephole/esbuild.rs:2309",
 			"oxc minifier: peephole/esbuild.rs:2368",
-			"oxc minifier: peephole/esbuild.rs:255",
-			"oxc minifier: peephole/esbuild.rs:700"
+			"oxc minifier: peephole/esbuild.rs:255"
 		]
 	],
 	[
