@@ -8971,7 +8971,12 @@ describe("syntax-printer", () => {
 				"globalThis.Number = { POSITIVE_INFINITY: 7 }; console.log(Number.POSITIVE_INFINITY);",
 				'globalThis["Number"] = { MAX_SAFE_INTEGER: 3 }; console.log(Number.MAX_SAFE_INTEGER);',
 				'Array.prototype.slice = function () { return "patched"; }; console.log([1, 2].slice());',
-				'Object.defineProperty(Array.prototype, "slice", { value: function () { return "defined"; } }); console.log([1, 2].slice());'
+				'Object.defineProperty(Array.prototype, "slice", { value: function () { return "defined"; } }); console.log([1, 2].slice());',
+				'globalThis.Number = function () { return 7; }; console.log(Number("3"));',
+				'var k = "Number"; globalThis[k] = { POSITIVE_INFINITY: 7 }; console.log(Number.POSITIVE_INFINITY);',
+				'globalThis.Array.prototype.slice = function () { return "patched"; }; console.log([1, 2].slice());',
+				'var k = "Array"; globalThis[k].prototype.slice = function () { return "patched"; }; console.log([1, 2].slice());',
+				"globalThis.Math.max = function () { return 0; }; console.log(Math.max(1, 2));"
 			]) {
 				const { code } = await minify(input, { compress: {}, mangle: false });
 				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
