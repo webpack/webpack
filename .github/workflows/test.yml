@@ -40,12 +40,12 @@ jobs:
         id: deep-imports
         run: |
           if node tooling/find-deep-webpack-imports.js \
-            --check --summary deep-imports-report.md; then
+            --check --summary "$RUNNER_TEMP/deep-imports-report.md"; then
             echo "broken=false" >> "$GITHUB_OUTPUT"
           else
             echo "broken=true" >> "$GITHUB_OUTPUT"
           fi
-          cat deep-imports-report.md >> "$GITHUB_STEP_SUMMARY"
+          cat "$RUNNER_TEMP/deep-imports-report.md" >> "$GITHUB_STEP_SUMMARY"
 
       - run: node tooling/retry.js yarn --frozen-lockfile
 
