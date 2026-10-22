@@ -1912,6 +1912,9 @@ const header = (stage) =>
 			)}${"2nd".padStart(7)}   round-trip\n`;
 
 const main = async () => {
+	// Before the install: the relations are webpack's own, so they answer
+	// whether or not there is anything to compare against yet.
+	await reportInvariants();
 	await installPackages(CACHE_NAME);
 	const acorn = load("acorn");
 	for (const [label, file, goal] of fixtures().filter(([name]) =>
