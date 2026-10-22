@@ -450,8 +450,12 @@ jobs:
 
       # Held to both corpora: webpack's own fixtures and the web's. WPT is 161k
       # files, so it is checked out one commit deep.
+      # The container runs as root over a checkout the runner's user owns, which
+      # git refuses as dubious ownership until the directory is marked safe.
       - name: Check out the WPT corpus
-        run: node tooling/retry.js git submodule update --init --depth 1 test/external/wpt
+        run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          node tooling/retry.js git submodule update --init --depth 1 test/external/wpt
 
       - name: Use Node.js
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
