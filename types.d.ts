@@ -32813,14 +32813,11 @@ type StatsFactoryItemSortHookMap = {
 	): SyncBailHook<[Comparator<any>[], StatsFactoryContext], void>;
 } & HookMap<SyncBailHook<[Comparator<any>[], StatsFactoryContext], void>>;
 type StatsFactoryMergeHookMap = {
-	for<
-		K extends keyof exports.StatsFactoryItemKeys,
-		R = Record<string, exports.StatsFactoryItemKeys[K][1]>
-	>(
+	for<K extends keyof exports.StatsFactoryItemKeys>(
 		key: K
 	): SyncBailHook<
 		[exports.StatsFactoryItemKeys[K][1][], StatsFactoryContext],
-		void | R
+		void | StatsFactoryMergedItems<K>
 	>;
 	for(key: string): SyncBailHook<[any[], StatsFactoryContext], any>;
 } & HookMap<SyncBailHook<[any[], StatsFactoryContext], any>>;
