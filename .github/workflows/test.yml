@@ -244,15 +244,6 @@ jobs:
       - name: Install the pinned browser
         run: node tooling/retry.js yarn setup:browsers chrome
 
-      - name: Cache jest result
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: .jest-cache
-          key: jest-unit-${{ runner.os }}-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}-${{ github.sha }}
-          restore-keys: |
-            jest-unit-${{ runner.os }}-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}-
-            jest-unit-${{ runner.os }}-
-
       - run: yarn cover:unit --ci --cacheDirectory .jest-cache
 
       - name: Codecov
@@ -291,15 +282,6 @@ jobs:
       - run: yarn link --frozen-lockfile || true
 
       - run: yarn link webpack --frozen-lockfile
-
-      - name: Cache jest result
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: .jest-cache
-          key: jest-test262-${{ matrix.shard }}-${{ runner.os }}-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}-${{ github.sha }}
-          restore-keys: |
-            jest-test262-${{ matrix.shard }}-${{ runner.os }}-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}-
-            jest-test262-${{ matrix.shard }}-${{ runner.os }}-
 
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -391,15 +373,6 @@ jobs:
       - run: yarn link --frozen-lockfile || true
 
       - run: yarn link webpack --frozen-lockfile
-
-      - name: Cache jest result
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: .jest-cache
-          key: jest-parser-${{ matrix.language }}-${{ runner.os }}-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}-${{ github.sha }}
-          restore-keys: |
-            jest-parser-${{ matrix.language }}-${{ runner.os }}-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}-
-            jest-parser-${{ matrix.language }}-${{ runner.os }}-
 
       - run: yarn ${{ matrix.script }} --ci --cacheDirectory .jest-cache
 
@@ -523,15 +496,6 @@ jobs:
         # Room for a cold cache's slow install, whose success saves the cache.
         timeout-minutes: 40
         run: node tooling/retry.js yarn setup:browsers ${{ matrix.browser }} ${{ matrix.browser != 'chrome' && '--with-deps' || '' }}
-
-      - name: Cache jest result
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: .jest-cache
-          key: jest-syntax-equivalence-${{ matrix.browser }}-${{ runner.os }}-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}-${{ github.sha }}
-          restore-keys: |
-            jest-syntax-equivalence-${{ matrix.browser }}-${{ runner.os }}-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}-
-            jest-syntax-equivalence-${{ matrix.browser }}-${{ runner.os }}-
 
       - run: yarn ${{ matrix.script }} --ci --cacheDirectory .jest-cache
         env:
@@ -736,15 +700,6 @@ jobs:
       - name: Install the pinned browser
         if: steps.browser-build.outputs.id
         run: node tooling/retry.js yarn setup:browsers chrome
-
-      - name: Cache jest result
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: .jest-cache
-          key: jest-integration-${{ runner.os }}-node-${{ matrix.node-version }}-${{ matrix.part }}-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}-${{ github.sha }}
-          restore-keys: |
-            jest-integration-${{ runner.os }}-node-${{ matrix.node-version }}-${{ matrix.part }}-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}-
-            jest-integration-${{ runner.os }}-node-${{ matrix.node-version }}-${{ matrix.part }}-
 
       - run: yarn cover:integration:${{ matrix.part }} --ci --cacheDirectory .jest-cache
         env:
