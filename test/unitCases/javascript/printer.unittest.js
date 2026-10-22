@@ -2094,6 +2094,8 @@ const KEPT_CASES = [
 	["a `Map` entry missing its value, which reads index 1 through `Array.prototype`", "function a() { console.log(1); return 1; } new Map([[a()]]);"],
 	["an assignment kept out of a `for…of` head declaring a `let`, where the sequence would need parens", "x = 1; for (let a of [x, 2]) console.log(a);"],
 	["a `Set` built from an array literal where a direct `eval` may rebind `Set`", 'function f() { eval("var Set = function () { console.log(1); }"); new Set([1]); } f();'],
+	["a `Set` built from an array literal where the program patches `Array.prototype`", 'Array.prototype[Symbol.iterator] = function* () { console.log("iterated"); }; function f() { new Set([1]); } f();'],
+	["an array literal read as a destructuring target", "var x; [[1][0]] = [2]; console.log(x);"],
 	["a `Set` built from an array literal where a `with` object may rebind `Set`", "with ({ Set: function () { console.log(1); } }) { new Set([1]); }"],
 	["an element of an array literal written through as a property of a destructuring assignment", "var a = 1, value = { x: 5 }; ({ x: [a][0] } = value); console.log(a);"],
 	["a direct `eval` kept out of a `for…in` head whose `let` it may read in its dead zone", "function f(o) { let x = 1; eval('console.log(x)'); for (let x in o) console.log(x); } f({ a: 1 });"],
