@@ -8965,6 +8965,42 @@ describe("syntax-printer", () => {
 			}
 		});
 
+		it("should keep a global written through `globalThis` and a `slice` a patched `Array.prototype` changes", async () => {
+			const { minify } = await load();
+			for (const input of [
+				"globalThis.Number = { POSITIVE_INFINITY: 7 }; console.log(Number.POSITIVE_INFINITY);",
+				'globalThis["Number"] = { MAX_SAFE_INTEGER: 3 }; console.log(Number.MAX_SAFE_INTEGER);',
+				'Array.prototype.slice = function () { return "patched"; }; console.log([1, 2].slice());',
+				'Object.defineProperty(Array.prototype, "slice", { value: function () { return "defined"; } }); console.log([1, 2].slice());',
+				'globalThis.Number = function () { return 7; }; console.log(Number("3"));',
+				'var k = "Number"; globalThis[k] = { POSITIVE_INFINITY: 7 }; console.log(Number.POSITIVE_INFINITY);',
+				'globalThis.Array.prototype.slice = function () { return "patched"; }; console.log([1, 2].slice());',
+				'var k = "Array"; globalThis[k].prototype.slice = function () { return "patched"; }; console.log([1, 2].slice());',
+				"globalThis.Math.max = function () { return 0; }; console.log(Math.max(1, 2));",
+				'for (globalThis.Number of [function () { return 7; }]); console.log(Number("3"));',
+				'[globalThis.Number] = [function () { return 7; }]; console.log(Number("3"));',
+				'({ n: globalThis.Number } = { n: function () { return 7; } }); console.log(Number("3"));',
+				'Object.defineProperty(globalThis, "Number", { value: function () { return 7; } }); console.log(Number("3"));',
+				'[globalThis.Array.prototype.slice] = [function () { return "patched"; }]; console.log([1, 2].slice());',
+				'Object.defineProperty(globalThis?.Array.prototype, "slice", { value: function () { return "S"; } }); console.log([1, 2].slice());',
+				'Object.defineProperty(Array?.prototype, "slice", { value: function () { return "S"; } }); console.log([1, 2].slice());',
+				'Reflect.set(globalThis, "Number", function () { return 7; }); console.log(Number("3"));',
+				'Object.assign(globalThis, { Number: function () { return 7; } }); console.log(Number("3"));'
+			]) {
+				const { code } = await minify(input, { compress: {}, mangle: false });
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			}
+			// Only the global object counts, not a local named `self`, nor one
+			// handed to a call that reads it.
+			for (const input of [
+				'function f() { var self = { a: 1 }; g(self); } function g(o) { o.Number = 1; } f(); console.log(Number("3"));',
+				'function isGlobal(g) { return g && g.Math === Math; } console.log(isGlobal(globalThis), Number("3"));'
+			]) {
+				const { code } = await minify(input, { compress: {}, mangle: false });
+				expect(code).not.toContain('Number("3")');
+			}
+		});
+
 		it("should keep an extra constructor argument reading a `let` in its dead zone, and an optional call of a `let` written again", async () => {
 			const { minify } = await load();
 			for (const input of [
