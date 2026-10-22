@@ -497,12 +497,18 @@ jobs:
       # Every engine is the build playwright-core pins, not the runner's Chrome
       # or today's `stable`: an engine then moves only in the pull request bumping
       # playwright-core, where an engine-quirk probe failing is the news, rather
-      # than under every pull request at once. A no-op while the image above
-      # matches playwright-core; a bump of one without the other fetches the
-      # pinned build here rather than failing.
+      # than under every pull request at once. The image above carries that
+      # build and its system libraries only for the same version, so a bump of
+      # one without the other fails here by name, not as a browser that won't launch.
       - name: Install the pinned browser
         timeout-minutes: 10
-        run: node tooling/retry.js yarn setup:browsers ${{ matrix.browser }}
+        run: |
+          version=$(node -p 'require("playwright-core/package.json").version')
+          if ! grep -q "mcr.microsoft.com/playwright:v$version-" .github/workflows/test.yml; then
+            echo "::error::Bump the Playwright image in test.yml to v$version, the version playwright-core pins"
+            exit 1
+          fi
+          node tooling/retry.js yarn setup:browsers ${{ matrix.browser }}
 
       - name: Cache jest result
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
