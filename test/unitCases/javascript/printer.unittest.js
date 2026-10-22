@@ -8937,7 +8937,9 @@ describe("syntax-printer", () => {
 				'Array.prototype[Symbol.iterator] = function* () { console.log("iterated"); yield 1; }; function f(x) { Math.max(...[1]); [...[1]]; [x(), ...[1]]; console.log(Math.max(...[2, 3])); } f(() => 1);',
 				'Array.prototype.join = function () { return "patched"; }; console.log([1].join(), [1, 2].join("-"));',
 				'Array.prototype[Symbol.iterator] = function* () { yield 5; }; console.log(new Date(...[1]).getTime());',
-				'Array["prototype"][Symbol.iterator] = function* () { yield 5; }; console.log(Math.max(...[1]));'
+				'Array["prototype"][Symbol.iterator] = function* () { yield 5; }; console.log(Math.max(...[1]));',
+				'Math.max = function () { console.log("called"); return 0; }; Math.max(1); console.log(Math.max(Math.max(1)));',
+				'Object.defineProperty(Math, "abs", { value: function () { console.log("abs"); return 0; } }); Math.max(Math.abs(1));'
 			]) {
 				const { code } = await minify(input, { compress: {}, mangle: false });
 				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
