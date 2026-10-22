@@ -1041,25 +1041,25 @@ const IMPROVED_CASES = [
 	[
 		"a function called in place, its parameter given an argument, as a block declaring it as a `let`",
 		`!function (a) { ${TRY} console.log(a); }(new Date(0).getTime());`,
-		{ compress: {}, mangle: false },
+		{ ecma: 2015, compress: {}, mangle: false },
 		'{let a=new Date(0).getTime();try{console.log(1)}catch(e){}console.log(a)}'
 	],
 	[
 		"a function called in place, its parameter given nothing, as a block declaring it as a `let`",
 		`!function (a) { ${TRY} console.log(a, a = new Date(0).getTime()); }();`,
-		{ compress: {}, mangle: false },
+		{ ecma: 2015, compress: {}, mangle: false },
 		'{let a;try{console.log(1)}catch(e){}console.log(a,a=new Date(0).getTime())}'
 	],
 	[
 		"a function called in place with statements, passed a variable written later, as a block declaring its parameter as a `let`",
 		'function foo(x) { (function (y) { if (y === 1) throw Error("one"); })(x); x = 2; return x; } console.log(foo(3));',
-		{ compress: {}, mangle: false },
+		{ ecma: 2015, compress: {}, mangle: false },
 		'function foo(x){{let y=x;if(1===y)throw Error("one")}return x=2}console.log(foo(3));'
 	],
 	[
 		"a function called in place, passed values other than variables, as a block declaring each as a `let`",
 		"var a = [1, 2]; (function (x, y, z) { let s = 0; for (const v of x) s += v; console.log(s, y, z); })(a.slice(), a.length); !function (o, c) { let e; for (; (e = c.exec(\"aa\")); ) console.log(e[0]); }(0, /a/g);",
-		{ mangle: false },
+		{ ecma: 2015, mangle: false },
 		'var a=[1,2];{let x=a.slice(),y=a.length,s=0;for(let v of x)s+=v;console.log(s,y,void 0)}{let c=/a/g,e;for(;e=c.exec("aa");)console.log(e[0])}'
 	],
 	[
