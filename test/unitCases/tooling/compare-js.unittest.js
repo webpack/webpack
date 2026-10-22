@@ -12,8 +12,10 @@ jest.mock("../../../tooling/compare-tools-harness", () => ({
 	installPackages: installed
 }));
 
+const acorn = require("acorn");
 const {
 	behaviorDifference,
+	roundTrip,
 	runMode
 } = require("../../../tooling/compare-js-tools");
 
@@ -33,6 +35,45 @@ describe("the JavaScript tool comparison", () => {
 
 		expect(installed).toHaveBeenCalledTimes(1);
 		expect(installed).toHaveBeenCalledWith(CACHE_NAME);
+	});
+});
+
+describe("the printing table's last column", () => {
+	const source =
+		'/*! a license */\n/** @license MIT */\nvar s = "/*! not one */"; /* plain */ a.b = 1;';
+
+	it("should find nothing where the output keeps every name and notice", () => {
+		expect(
+			roundTrip(
+				acorn,
+				new Set(["b"]),
+				2,
+				"/*! a license */\n/** @license MIT */\na.b=1",
+				"script"
+			)
+		).toBe("-");
+	});
+
+	it("should name the legal notices and property names the output dropped", () => {
+		expect(roundTrip(acorn, new Set(["b", "c"]), 2, "a.b=1", "script")).toBe(
+			"1 names! e.g. c, 2 legal notices!"
+		);
+		expect(roundTrip(acorn, new Set(), 2, "/*! a license */", "script")).toBe(
+			"1 legal notice!"
+		);
+	});
+
+	it("should not count a `/*!` inside a string as a notice", () => {
+		expect(roundTrip(acorn, new Set(), 0, source, "script")).toBe("-");
+		expect(roundTrip(acorn, new Set(), 3, source, "script")).toBe(
+			"1 legal notice!"
+		);
+	});
+
+	it("should say when the output does not parse back", () => {
+		expect(roundTrip(acorn, new Set(), 0, "a.=", "script")).toMatch(
+			/^will not parse back: /
+		);
 	});
 });
 

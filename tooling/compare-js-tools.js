@@ -42,6 +42,7 @@ const {
 	findingGroups,
 	formatCost,
 	formatProfile,
+	formatSecond,
 	hasher,
 	idempotence,
 	installPackages,
@@ -648,9 +649,10 @@ const compare = async () => {
  * @param {EXPECTED_ANY} acorn the acorn export
  * @param {string} code JavaScript source
  * @param {"module" | "script"} goal what to parse it as
+ * @param {EXPECTED_ANY[]=} comments receives every comment the parse reads
  * @returns {Set<string>} the property names it names
  */
-const propertyNames = (acorn, code, goal) => {
+const propertyNames = (acorn, code, goal, comments) => {
 	const names = new Set();
 	/**
 	 * @param {EXPECTED_ANY} node any node
@@ -676,11 +678,27 @@ const propertyNames = (acorn, code, goal) => {
 		acorn.parse(code, {
 			sourceType: goal,
 			ecmaVersion: "latest",
-			allowHashBang: true
+			allowHashBang: true,
+			onComment: comments
 		})
 	);
 	return names;
 };
+
+// What terser keeps by default, as a license asks a bundle to: a block comment
+// opening `/*!`, or one naming `@license` or `@preserve`.
+const LEGAL_COMMENT = /^\**!|@license|@preserve/;
+
+/**
+ * The legal notices among a program's comments, read off a real parse, so a
+ * `/*!` inside a string, a template or a regular expression is not one.
+ * @param {{ type: string, value: string }[]} comments what acorn read
+ * @returns {number} how many are legal notices
+ */
+const legalNoticesOf = (comments) =>
+	comments.filter(
+		(comment) => comment.type === "Block" && LEGAL_COMMENT.test(comment.value)
+	).length;
 
 const wantedFixture = filterFrom("FIXTURE");
 const wantedTool = filterFrom("TOOL");
@@ -1018,9 +1036,10 @@ const STACK_REFUSAL = "Not enough stack space to parse input";
  * without this being edited.
  * @param {string} source a script or a module
  * @param {EXPECTED_ANY} options what to parse it as
+ * @param {(code: string) => string} print the printer, printing alone
  * @returns {string} the digest
  */
-const jsPurityDigest = (source, options) => {
+const jsPurityDigest = (source, options, print) => {
 	const digest = hasher();
 	/** @type {EXPECTED_ANY} */
 	let root;
@@ -1071,6 +1090,11 @@ const jsPurityDigest = (source, options) => {
 		for (let index = children.length - 1; index >= 0; index--) {
 			stack.push(children[index]);
 		}
+	}
+	try {
+		digest.update(print(source));
+	} catch (error) {
+		digest.update(`print refused: ${/** @type {Error} */ (error).message}`);
 	}
 	return digest.hex();
 };
@@ -1613,14 +1637,27 @@ const invariants = async (write) => {
 		);
 	}
 	if (wantedRelation("purity")) {
+		// Printed alone: a compress pass over every source twice costs four
+		// minutes for state the printer, not the compressor, is asked to hold.
+		const { minifySync } = (
+			await require("../lib/javascript/syntax").printer.load()
+		).modules;
+		const [, presetOptions] = /** @type {[string, EXPECTED_ANY]} */ (
+			PRESETS.find(([name]) => name === "format")
+		);
 		/** @type {import("./compare-tools-harness").PuritySource[]} */
 		const sources = [];
 		for (const [label, source, options] of corpus) {
 			const settled = options === undefined ? goalFor(source) : options;
 			if (settled === null) continue;
+			const { minify } = printerFor(
+				minifySync,
+				presetOptions,
+				settled.sourceType === "module"
+			);
 			sources.push({
 				what: label,
-				digest: () => jsPurityDigest(source, settled)
+				digest: () => jsPurityDigest(source, settled, minify)
 			});
 		}
 		const { reports, read } = purityRelation(sources);
@@ -1872,7 +1909,7 @@ const header = (stage) =>
 				9
 			)}${"ms".padStart(7)}${"cpu".padStart(6)}${"peak".padStart(
 				8
-			)}   round-trip\n`;
+			)}${"2nd".padStart(7)}   round-trip\n`;
 
 const main = async () => {
 	await installPackages(CACHE_NAME);
@@ -1882,7 +1919,10 @@ const main = async () => {
 	)) {
 		const code = await fs.promises.readFile(file, "utf8");
 		process.env[SOURCE_TYPE_VARIABLE] = goal;
-		const before = propertyNames(acorn, code, goal);
+		/** @type {{ type: string, value: string }[]} */
+		const comments = [];
+		const before = propertyNames(acorn, code, goal, comments);
+		const notices = legalNoticesOf(comments);
 		const input = await compress(Buffer.from(code));
 		process.stdout.write(
 			`\n${label} — ${kb(input.raw)} (${kb(input.gzip)} gzip, ${kb(
@@ -1936,8 +1976,9 @@ const main = async () => {
 						kb(out.zstd).padStart(9) +
 						cost.wall.padStart(7) +
 						cost.cpu.padStart(6) +
-						cost.peak.padStart(8)
-					}   ${roundTrip(acorn, before, printed, goal)}\n`
+						cost.peak.padStart(8) +
+						formatSecond(result.second).padStart(7)
+					}   ${roundTrip(acorn, before, notices, printed, goal)}\n`
 				);
 				process.stdout.write(formatProfile(result));
 			}
@@ -1994,27 +2035,37 @@ const compareInWorker = (name, input) =>
 
 /**
  * What a printing table's last column says: whether the output parses back, and
- * whether it still names every property the input did.
+ * whether it still names every property and keeps every legal notice the input did.
  * @param {EXPECTED_ANY} acorn the acorn export
  * @param {Set<string>} before the input's property names
+ * @param {number} notices how many legal notices the input carries
  * @param {string} printed what the tool wrote
  * @param {"module" | "script"} goal what to parse it as
  * @returns {string} the cell
  */
-const roundTrip = (acorn, before, printed, goal) => {
+const roundTrip = (acorn, before, notices, printed, goal) => {
 	/** @type {Set<string>} */
 	let after;
+	/** @type {{ type: string, value: string }[]} */
+	const comments = [];
 	try {
-		after = propertyNames(acorn, printed, goal);
+		after = propertyNames(acorn, printed, goal, comments);
 	} catch (error) {
 		return `will not parse back: ${
 			String(/** @type {Error} */ (error).message).split("\n", 1)[0]
 		}`;
 	}
 	const lost = [...before].filter((name) => !after.has(name));
-	return lost.length === 0
-		? "-"
-		: `${lost.length} names! e.g. ${lost.slice(0, 3).join(", ")}`;
+	const dropped = notices - legalNoticesOf(comments);
+	/** @type {string[]} */
+	const parts = [];
+	if (lost.length > 0) {
+		parts.push(`${lost.length} names! e.g. ${lost.slice(0, 3).join(", ")}`);
+	}
+	if (dropped > 0) {
+		parts.push(`${dropped} legal notice${dropped === 1 ? "" : "s"}!`);
+	}
+	return parts.length === 0 ? "-" : parts.join(", ");
 };
 
 // A lookup rather than a chain of ternaries: each entry point is bound where
@@ -2053,6 +2104,7 @@ module.exports = {
 	behaviorDifference,
 	firstDifference,
 	reportable,
+	roundTrip,
 	runMode,
 	show
 };

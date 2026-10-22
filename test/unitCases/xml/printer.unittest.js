@@ -332,4 +332,30 @@ b&#10;c">
 			"<r>]]&gt;&#13;</r>"
 		);
 	});
+
+	it("should close a blank stylesheet the input ran out in", () => {
+		const { builtinEmbeddedRenderer } = require("../../../lib/html/builtinEmbeddedRenderer");
+		/**
+		 * @param {string} document an SVG
+		 * @returns {string} the minified document
+		 */
+		const minify = (document) =>
+			/** @type {{ code: string }} */ (
+				new SourceProcessor().process(document, {
+					xml: true,
+					mode: "minify",
+					renderEmbeddedSource: builtinEmbeddedRenderer()
+				})
+			).code;
+		expect(
+			minify('<svg xmlns="http://www.w3.org/2000/svg"><style>\n<![CDATA[\n')
+		).toBe('<svg xmlns="http://www.w3.org/2000/svg"><style>\n\n</style></svg>');
+		expect(
+			minify(
+				'<svg xmlns="http://www.w3.org/2000/svg"><style><![CDATA[ ]]></style></svg>'
+			)
+		).toBe(
+			'<svg xmlns="http://www.w3.org/2000/svg"><style><![CDATA[ ]]></style></svg>'
+		);
+	});
 });

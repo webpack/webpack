@@ -1,7 +1,42 @@
 "use strict";
 
+const CACHE_NAME = "css-tool-comparison";
+
+const installed = jest.fn(() => Promise.resolve(CACHE_NAME));
+
+// A real install would `npm ci` the corpus into a contributor's cache, and every
+// packed stylesheet and built fixture is taken as there, so `--setup` fetches
+// and builds nothing: what is under test is that it installs and stops.
+jest.mock("../../../tooling/compare-tools-harness", () => ({
+	...jest.requireActual("../../../tooling/compare-tools-harness"),
+	exists: () => Promise.resolve(true),
+	installPackages: installed
+}));
+
 const { SourceProcessor } = require("../../../lib/css/syntax");
-const { COLD_BRANCHES } = require("../../../tooling/compare-css-tools");
+const {
+	COLD_BRANCHES,
+	runMode
+} = require("../../../tooling/compare-css-tools");
+
+// Read before anything clears the mock: an unguarded script installs while
+// being required, and a `beforeEach` would erase exactly that evidence.
+const callsWhileRequiring = installed.mock.calls.length;
+
+describe("the CSS tool comparison", () => {
+	it("should start nothing when the script is required rather than run", () => {
+		expect(callsWhileRequiring).toBe(0);
+	});
+
+	it("should install the corpus and stop on `--setup`", async () => {
+		installed.mockClear();
+
+		await runMode("--setup");
+
+		expect(installed).toHaveBeenCalledTimes(1);
+		expect(installed).toHaveBeenCalledWith(CACHE_NAME);
+	});
+});
 
 // What each rewrite the fixture is there for writes. Every one was counted at
 // zero over every stylesheet on disk before the fixture was written, so an edit

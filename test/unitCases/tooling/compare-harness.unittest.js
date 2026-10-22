@@ -8,6 +8,7 @@ const { Readable } = require("stream");
 const { pathToFileURL } = require("url");
 const {
 	compress,
+	cutsAt,
 	exists,
 	filterFrom,
 	findingGroups,
@@ -835,6 +836,39 @@ describe("compare-tools-harness", () => {
 			expect(text).toContain("idempotence — bytes");
 			expect(text).toContain("stale — 1 expectation(s) matched nothing");
 		});
+
+		it("lets an entry naming several fixtures cover a group reaching them", () => {
+			const groups = findingGroups([
+				{
+					relation: "idempotence",
+					contains: "a ->",
+					source: ["one", "two"],
+					why: "those fixtures write it"
+				}
+			]);
+			groups.add(finding("idempotence", "    a -> b"), "default", "one.html");
+			groups.add(finding("idempotence", "    a -> b"), "default", "two.html");
+			expect(written(groups).count).toBe(0);
+			groups.add(finding("idempotence", "    a -> b"), "default", "three.html");
+			expect(written(groups).count).toBe(2);
+		});
+	});
+
+	describe("cutsAt", () => {
+		it("cuts inside the first construct past the midpoint, else the first", () => {
+			const source = "<a>1</a><b>2</b><c>3</c>";
+			expect(cutsAt(source, [["in a start tag", /<[a-z]/g]])).toEqual([
+				["in a start tag", "<a>1</a><b>2</b><c"]
+			]);
+			expect(cutsAt(source, [["in a comment", /<!--./g]])).toEqual([]);
+			expect(cutsAt("<a>1</a>xyz", [["in a tag", /<[a-z]/g]])).toEqual([
+				["in a tag", "<a"]
+			]);
+		});
+
+		it("leaves out a cut that would keep the whole source", () => {
+			expect(cutsAt("ab<a", [["in a start tag", /<[a-z]/g]])).toEqual([]);
+		});
 	});
 
 	describe("narrowing a sweep", () => {
@@ -868,7 +902,13 @@ describe("compare-tools-harness", () => {
 			{ relation: "idempotence", contains: "a", why: "…" },
 			{ relation: "respelling quote-double", contains: "b", why: "…" },
 			{ relation: "idempotence", contains: "c", source: "one", why: "…" },
-			{ relation: "idempotence", contains: "d", presets: ["legacy"], why: "…" }
+			{ relation: "idempotence", contains: "d", presets: ["legacy"], why: "…" },
+			{
+				relation: "idempotence",
+				contains: "e",
+				source: ["three", "one"],
+				why: "…"
+			}
 		];
 
 		/**
@@ -886,7 +926,8 @@ describe("compare-tools-harness", () => {
 				"a",
 				"b",
 				"c",
-				"d"
+				"d",
+				"e"
 			]);
 		});
 
@@ -896,7 +937,7 @@ describe("compare-tools-harness", () => {
 
 		it("drops an entry for a relation or respelling the run does not ask", () => {
 			process.env.SPELLING = "unquote";
-			expect(kept(["one.html"], ["legacy"])).toEqual(["a", "c", "d"]);
+			expect(kept(["one.html"], ["legacy"])).toEqual(["a", "c", "d", "e"]);
 			delete process.env.SPELLING;
 			process.env.RELATION = "respelling quote-double";
 			expect(kept(["one.html"], ["legacy"])).toEqual(["b"]);

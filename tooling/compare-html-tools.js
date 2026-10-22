@@ -49,6 +49,7 @@ const {
 	STAGES,
 	collectFiles,
 	compress,
+	cutsAt,
 	filterFrom,
 	findingGroups,
 	formatCost,
@@ -1691,30 +1692,6 @@ const HTML_CUTS = [
 ];
 
 /**
- * The document cut short just inside the first of each construct past its
- * midpoint, or the first anywhere when none lies past it: the end of the input
- * is where the tokenizer closes what the source left open.
- * @param {string} html a document
- * @returns {[string, string][]} `[where, cut]` for each construct it holds
- */
-const htmlCuts = (html) => {
-	/** @type {[string, string][]} */
-	const cuts = [];
-	for (const [where, pattern] of HTML_CUTS) {
-		pattern.lastIndex = html.length >> 1;
-		let match = pattern.exec(html);
-		if (match === null) {
-			pattern.lastIndex = 0;
-			match = pattern.exec(html);
-		}
-		if (match === null) continue;
-		const at = match.index + match[0].length;
-		if (at < html.length) cuts.push([where, html.slice(0, at)]);
-	}
-	return cuts;
-};
-
-/**
  * Every invariant this document breaks under one preset.
  * @param {(html: string) => string} minify the printer under test
  * @param {string} html the document
@@ -1873,7 +1850,7 @@ const invariants = (write) => {
 	if (wantedRelation("idempotence")) {
 		let cut = 0;
 		for (const [label, html] of corpus) {
-			for (const [where, source] of htmlCuts(html)) {
+			for (const [where, source] of cutsAt(html, HTML_CUTS)) {
 				cut++;
 				for (const [preset, options] of presets) {
 					const minify = printerFor(options);
@@ -1999,33 +1976,47 @@ const main = async () => {
 	}
 };
 
+/**
+ * `--invariants`: the relations alone, which need no install.
+ * @returns {Promise<void>} resolves once the exit code is set
+ */
+const reportInvariantsOnly = async () => {
+	process.exitCode = sweepExitCode(
+		reportInvariants(),
+		_missingFixtures,
+		process.argv
+	);
+};
+
+// A lookup rather than a chain of ternaries: each entry point is bound where
+// it is named, so reading the dispatch is reading the whole table. `--setup`
+// installs the fixtures and stops, without paying for the comparison.
+const RUNNERS = new Map(
+	/** @type {[string, () => Promise<unknown>][]} */ ([
+		["--measure", measure.bind(null, TOOLS)],
+		["--setup", setup],
+		["--invariants", reportInvariantsOnly]
+	])
+);
+
+/**
+ * Runs the entry point the mode names, defaulting to the whole comparison.
+ * @param {string=} mode which entry point to run
+ * @returns {Promise<unknown>} what that entry point resolves to
+ */
+const runMode = (mode = "") => (RUNNERS.get(mode) || main)();
+
 // Only as the entry point, so a test can read the corpus below without running
 // the comparison.
-if (require.main === module) {
-	// `--setup` installs the fixtures and builds nothing else, so a consumer
-	// that only reads them does not run the comparison to get them.
-	const mode = sweepMode(process.argv);
-	// The sweep alone, for a caller that wants the relations without the ten
-	// minutes the comparison costs; a full run prints the same section.
-	if (mode === "--invariants") {
-		process.exitCode = sweepExitCode(
-			reportInvariants(),
-			_missingFixtures,
-			process.argv
-		);
-	} else {
-		const started =
-			mode === "--measure"
-				? measure(TOOLS)
-				: mode === "--setup"
-					? setup()
-					: main();
-		started.catch((error) => {
-			log(String(error && error.stack ? error.stack : error));
-			process.exitCode = 1;
-		});
-	}
-}
+const started =
+	require.main === module
+		? runMode(sweepMode(process.argv))
+		: Promise.resolve();
+
+started.catch((error) => {
+	log(String(error && error.stack ? error.stack : error));
+	process.exitCode = 1;
+});
 
 // The documents the cache holds, and the pages a reader builds the rest from.
 // The bulk pages stay unexported: what they carry is size, not a construct.
@@ -2041,5 +2032,6 @@ module.exports = {
 	TAG_SOUP,
 	WEB_COMPONENTS,
 	inlineCssPage,
+	runMode,
 	spritePage
 };
