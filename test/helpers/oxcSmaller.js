@@ -61,7 +61,11 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: numbers/evaluate_1",
 			"terser compress: numbers/evaluate_2",
 			"terser compress: reduce_vars/multi_def_2",
-			"terser compress: sequences/hoist_decl"
+			"terser compress: sequences/hoist_decl",
+			"oxc minifier: peephole/minimize_statements.rs:32",
+			"swc minifier: fixture/issues/10281/input.js",
+			"swc minifier: fixture/projects/yui/13/input.js",
+			"terser compress: collapse_vars/collapse_rhs_conditional_2"
 		]
 	],
 	[
@@ -145,7 +149,8 @@ const OXC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/11684/bindings/input.js",
 			"terser compress: arguments/modified",
 			"terser compress: collapse_vars/collapse_rhs_loop",
-			"terser compress: sequences/lift_sequences_3"
+			"terser compress: sequences/lift_sequences_3",
+			"swc minifier: fixture/issues/framer-motion/1/input.js"
 		]
 	],
 	[
@@ -188,7 +193,9 @@ const OXC_SMALLER_BY_REASON = [
 			"swc exec: issue_8964",
 			"swc minifier: fixture/issues/11645/with-parent-scope-nested-block/input.js",
 			"swc minifier: fixture/issues/12212/with-scope/input.js",
-			"swc minifier: fixture/projects/react/15/input.js"
+			"swc minifier: fixture/projects/react/15/input.js",
+			"swc minifier: fixture/projects/mootools/8/input.js",
+			"swc minifier: fixture/projects/yui/1/input.js"
 		]
 	],
 	[
@@ -244,7 +251,9 @@ const OXC_SMALLER_BY_REASON = [
 		[
 			"swc minifier: fixture/issues/11082/input.js",
 			"swc minifier: fixture/issues/array-constructor-length/input.js",
-			"swc minifier: fixture/projects/backbone/2/input.js"
+			"swc minifier: fixture/projects/backbone/2/input.js",
+			"swc minifier: fixture/issues/10720/input.js",
+			"swc minifier: fixture/issues/12194/input.js"
 		]
 	],
 	[
@@ -288,7 +297,8 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/inline.rs:703",
 			"oxc minifier: peephole/inline.rs:704",
 			"oxc minifier: peephole/inline.rs:706",
-			"oxc minifier: peephole/inline.rs:33"
+			"oxc minifier: peephole/inline.rs:33",
+			"oxc minifier: peephole/inline.rs:642"
 		]
 	],
 	[
