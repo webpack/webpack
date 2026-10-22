@@ -603,7 +603,7 @@ exports[`syntax-printer improve phase should write less, printing the same: a va
 
 exports[`syntax-printer improve phase should write less, printing the same: a write nothing reads dropped from a function done with, its statement too 1`] = `"function m(e){e.f=function(){return 3},e.g=function(){}}var o={};m(o),o.g(),console.log(o.f());"`;
 
-exports[`syntax-printer improve phase should write less, printing the same: a write to a block's \`let\` nothing reads 1`] = `"function f(c){if(c){return 2+3}}console.log(f(1));"`;
+exports[`syntax-printer improve phase should write less, printing the same: a write to a block's \`let\` nothing reads 1`] = `"function f(c){if(c){return 5}}console.log(f(1));"`;
 
 exports[`syntax-printer improve phase should write less, printing the same: an \`if\` throwing and the \`throw\` after it as one \`throw\` of a conditional 1`] = `"function f(a,b,c){throw a?b:c}try{f(1,2,3)}catch(e){console.log(e)}try{f(0,2,3)}catch(e){console.log(e)}"`;
 
