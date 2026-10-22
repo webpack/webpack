@@ -50,7 +50,7 @@ To add a new case, create a new directory inside of the top level test groups, a
 
 By default this file will be the entry point for the test suite and you can add your `it()`'s there. This will also become bundled so that node env support happens as well.
 
-#### configCases (`ConfigTestCases.basictest.js`) <sup>1</sup>
+#### configCases (`ConfigTestCases.part*.basictest.js`) <sup>1</sup>
 
 If you are trying to solve a bug which is reproducible when x and y properties are used together in a config, then configCases is the place to be!!!!
 

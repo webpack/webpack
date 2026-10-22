@@ -2,12 +2,14 @@
 
 require("../helpers/warmup-webpack");
 
+/** @typedef {typeof import("../helpers/configCaseParts").PART_COUNTS} PartCounts */
 /** @typedef {Record<string, EXPECTED_ANY>} Env */
 /** @typedef {{ testPath: string }} TestOptions */
 /**
  * @typedef {object} SuiteConfig
  * @property {string} name suite name
  * @property {import("../../").FileCacheOptions=} cache filesystem cache options
+ * @property {number=} part which of the suite's files this is, from 1, running the categories `configCaseParts` deals it
  */
 /**
  * @typedef {object} TestConfig
@@ -36,6 +38,7 @@ const {
 } = require("../helpers/analyzableConformance");
 const captureStdio = require("../helpers/captureStdio");
 const checkArrayExpectation = require("../helpers/checkArrayExpectation");
+const { partOf } = require("../helpers/configCaseParts");
 const createLazyTestEnv = require("../helpers/createLazyTestEnv");
 const deprecationTracking = require("../helpers/deprecationTracking");
 const {
@@ -108,7 +111,18 @@ const describeCases = (config) => {
 
 		jest.setTimeout(testTimeout(20000));
 
-		for (const category of categories) {
+		const { part } = config;
+		const selected =
+			part === undefined
+				? categories
+				: categories.filter(
+						(category) =>
+							partOf(
+								/** @type {keyof PartCounts} */ (config.name),
+								category.name
+							) === part
+					);
+		for (const category of selected) {
 			// eslint-disable-next-line no-loop-func
 			describe(category.name, () => {
 				for (const testName of category.tests) {

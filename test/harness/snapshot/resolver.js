@@ -1,18 +1,23 @@
 "use strict";
 
 const path = require("path");
+const { partFileOf } = require("../../helpers/configCaseParts");
 
 /**
  * Maps per-case snapshot file names to their corresponding test files.
  * @type {Record<string, string>}
  */
 const suiteNameToTestFile = {
-	ConfigTest: path.resolve(__dirname, "../../ConfigTestCases.basictest.js"),
-	ConfigCacheTest: path.resolve(
-		__dirname,
-		"../../ConfigCacheTestCases.basictest.js"
-	),
 	StatsTest: path.resolve(__dirname, "../../StatsTestCases.basictest.js")
+};
+
+/**
+ * Per-case snapshot file names of the suites split into parts by category.
+ * @type {Record<string, "ConfigTestCases" | "ConfigCacheTestCases">}
+ */
+const suiteNameToPartedSuite = {
+	ConfigTest: "ConfigTestCases",
+	ConfigCacheTest: "ConfigCacheTestCases"
 };
 
 const SNAPSHOT_EXTENSION = ".snap";
@@ -27,6 +32,13 @@ const PER_KIND_NAMES = new Set(["errors", "warnings"]);
 
 const casesDir = path.resolve(__dirname, "../../cases");
 const configCasesDir = path.resolve(__dirname, "../../configCases");
+
+/**
+ * @param {string} snapshotPath a snapshot under `configCases`
+ * @returns {string} the category of the case it belongs to
+ */
+const categoryOf = (snapshotPath) =>
+	path.relative(configCasesDir, snapshotPath).split(path.sep)[0];
 
 module.exports = {
 	// Example test path, used for preflight consistency check of the implementation above
@@ -63,6 +75,12 @@ module.exports = {
 		if (suiteNameToTestFile[basename]) {
 			return suiteNameToTestFile[basename];
 		}
+		if (suiteNameToPartedSuite[basename]) {
+			return partFileOf(
+				suiteNameToPartedSuite[basename],
+				categoryOf(snapshotPath)
+			);
+		}
 
 		// Per-kind snapshots (errors.snap, warnings.snap) from matchKindSnapshot.
 		// Resolve to a test file based on the directory location.
@@ -71,7 +89,7 @@ module.exports = {
 				return path.resolve(__dirname, "../../TestCasesNormal.basictest.js");
 			}
 			if (snapshotPath.startsWith(configCasesDir + path.sep)) {
-				return path.resolve(__dirname, "../../ConfigTestCases.basictest.js");
+				return partFileOf("ConfigTestCases", categoryOf(snapshotPath));
 			}
 		}
 
