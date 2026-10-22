@@ -333,6 +333,18 @@ b&#10;c">
 		);
 	});
 
+	it("should tell XML text well-formed as written from text a strict parser refuses", () => {
+		const { isXmlWellFormedText } = require("../../../lib/html/syntax-parser");
+		expect(isXmlWellFormedText("a &amp; b &#38; &#x26; &undeclared;")).toBe(
+			true
+		);
+		expect(isXmlWellFormedText("a > b")).toBe(true);
+		expect(isXmlWellFormedText("a & b")).toBe(false);
+		expect(isXmlWellFormedText("&amp")).toBe(false);
+		expect(isXmlWellFormedText("&1a;")).toBe(false);
+		expect(isXmlWellFormedText("a < b")).toBe(false);
+	});
+
 	it("should escape an `&` that opens no reference when minifying", () => {
 		expect(printXml("<r>&amp", "minify")).toBe("<r>&amp;amp</r>");
 		expect(printXml("<r>a & b</r>", "minify")).toBe("<r>a &amp; b</r>");

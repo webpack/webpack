@@ -38328,6 +38328,7 @@ declare namespace exports {
 				export let isAllAsciiWhitespace: (s: string) => boolean;
 				export let isAsciiAlphanumeric: (cc: number) => boolean;
 				export let isAsciiWhitespace: (cc: number) => boolean;
+				export let isXmlWellFormedText: (raw: string) => boolean;
 				export let metaTag: (name: string, content: string) => string;
 				export let parseCssUrls: (input: string) => [string, number, number][];
 				export let parseHtml: (

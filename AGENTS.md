@@ -111,7 +111,7 @@ Path-shape regexps and their helpers live in `lib/util/identifier.js`: **import 
 
 > [!REQUIRED]
 
-**Never add a `_`-prefixed export** (`module.exports._foo`), in a `syntax-parser.js` or anywhere in `lib/`, to share an internal helper with a sibling file: every export is reachable from the package, so other developers come to depend on it and it can't change freely. Keep the helper in the one file that uses it, or move the logic so one file owns it. The exception is a helper useful in its own right, exported under a public name with full JSDoc, as the HTML and CSS `escape*` / `decode*` helpers are.
+**Never add a `_`-prefixed export** (`module.exports._foo`) to any file in the project to share an internal helper with another file: every export is reachable, so other developers come to depend on it and it can't change freely. Keep the helper in the one file that uses it, or move the logic so one file owns it; a helper useful in its own right is exported under a public name with full JSDoc instead, as the HTML and CSS `escape*` / `decode*` helpers are. **The only exception is testing**: a private export a test needs to reach code no public entry point can.
 
 ### Don't enumerate module or source types
 
