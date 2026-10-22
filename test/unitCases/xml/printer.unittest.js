@@ -342,6 +342,12 @@ b&#10;c">
 		expect(printXml("<r>&undeclared;</r>", "minify")).toBe(
 			"<r>&undeclared;</r>"
 		);
+		expect(printXml("<r>&foo?;&a(b;&.c;</r>", "minify")).toBe(
+			"<r>&amp;foo?;&amp;a(b;&amp;.c;</r>"
+		);
+		expect(printXml("<r>&é-1.x;&_:y;</r>", "minify")).toBe(
+			"<r>&é-1.x;&_:y;</r>"
+		);
 	});
 
 	it("should close a blank stylesheet the input ran out in", () => {

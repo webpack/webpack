@@ -1315,7 +1315,7 @@ const invariants = (write) => {
 				? idempotence({
 						minify,
 						source: xml,
-						says: canonical,
+						says: (text) => canonical(text, cssOptions),
 						repro: (minified, at) => idempotenceRepro(minify, minified, at)
 					})
 				: { printed: minify(xml), reports: [] };
@@ -1350,12 +1350,12 @@ const invariants = (write) => {
 		for (const [label, xml] of corpus) {
 			for (const [where, source] of cutsAt(xml, XML_CUTS)) {
 				cut++;
-				for (const [preset, options] of presets) {
+				for (const [preset, options, cssOptions] of presets) {
 					const minify = printerFor(options);
 					const { reports } = idempotence({
 						minify,
 						source,
-						says: canonical,
+						says: (text) => canonical(text, cssOptions),
 						repro: (minified, at) => idempotenceRepro(minify, minified, at)
 					});
 					for (const report of reports) {

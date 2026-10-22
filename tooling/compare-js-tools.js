@@ -693,12 +693,14 @@ const LEGAL_COMMENT = /^\**!|@license|@preserve/;
  * The legal notices among a program's comments, read off a real parse, so a
  * `/*!` inside a string, a template or a regular expression is not one.
  * @param {{ type: string, value: string }[]} comments what acorn read
- * @returns {number} how many are legal notices
+ * @returns {string[]} the legal notices, each as its comment's text
  */
 const legalNoticesOf = (comments) =>
-	comments.filter(
-		(comment) => comment.type === "Block" && LEGAL_COMMENT.test(comment.value)
-	).length;
+	comments
+		.filter(
+			(comment) => comment.type === "Block" && LEGAL_COMMENT.test(comment.value)
+		)
+		.map((comment) => comment.value);
 
 const wantedFixture = filterFrom("FIXTURE");
 const wantedTool = filterFrom("TOOL");
@@ -2041,7 +2043,7 @@ const compareInWorker = (name, input) =>
  * whether it still names every property and keeps every legal notice the input did.
  * @param {EXPECTED_ANY} acorn the acorn export
  * @param {Set<string>} before the input's property names
- * @param {number} notices how many legal notices the input carries
+ * @param {string[]} notices the legal notices the input carries
  * @param {string} printed what the tool wrote
  * @param {"module" | "script"} goal what to parse it as
  * @returns {string} the cell
@@ -2059,7 +2061,19 @@ const roundTrip = (acorn, before, notices, printed, goal) => {
 		}`;
 	}
 	const lost = [...before].filter((name) => !after.has(name));
-	const dropped = notices - legalNoticesOf(comments);
+	// Matched notice by notice: one changed, or another written twice in
+	// its place, is one dropped as surely as a missing one.
+	/** @type {Map<string, number>} */
+	const kept = new Map();
+	for (const notice of legalNoticesOf(comments)) {
+		kept.set(notice, (kept.get(notice) || 0) + 1);
+	}
+	let dropped = 0;
+	for (const notice of notices) {
+		const count = kept.get(notice) || 0;
+		if (count === 0) dropped++;
+		else kept.set(notice, count - 1);
+	}
 	/** @type {string[]} */
 	const parts = [];
 	if (lost.length > 0) {
