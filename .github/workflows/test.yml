@@ -489,10 +489,29 @@ jobs:
           path: ~/.cache/ms-playwright
           key: playwright-${{ matrix.browser }}-${{ steps.browser-build.outputs.id }}-${{ runner.os }}
 
+      # WHY: `--with-deps` downloads the system packages from Ubuntu's mirror on
+      # every run, which a slow mirror stretched from a minute to 37. apt keeps
+      # them in a directory the cache restores, so a hit installs from disk.
+      - name: Keep the system packages apt downloads
+        if: matrix.browser != 'chrome'
+        run: |
+          mkdir -p ~/apt-archives/partial
+          sudo rm -f /etc/apt/apt.conf.d/docker-clean
+          printf 'Dir::Cache::Archives "%s";\nAPT::Keep-Downloaded-Packages "true";\n' ~/apt-archives | sudo tee /etc/apt/apt.conf.d/99keep-archives
+
+      - name: Cache the system packages
+        if: matrix.browser != 'chrome'
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/apt-archives/*.deb
+          key: playwright-deps-${{ matrix.browser }}-${{ steps.browser-build.outputs.id }}-${{ runner.os }}
+
       # `--with-deps` for Firefox and WebKit, whose shared libraries a runner does
       # not carry where it already carries Chrome's; it runs on a cache hit too,
       # since the cache holds the browser and not the system packages.
       - name: Install the pinned browser
+        # Bounded: a stalled mirror otherwise holds the runner for the job's hour.
+        timeout-minutes: 10
         run: node tooling/retry.js yarn setup:browsers ${{ matrix.browser }} ${{ matrix.browser != 'chrome' && '--with-deps' || '' }}
 
       - name: Cache jest result
