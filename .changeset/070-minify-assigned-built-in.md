@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Keep assigned or patched built-ins, conversions and pattern targets when minifying.
+Preserve assigned or patched built-ins, conversions and pattern targets.

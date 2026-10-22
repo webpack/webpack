@@ -1901,6 +1901,7 @@ const KEPT_CASES = [
 	["an assignment kept out of a `for…of` head declaring a `let`, where the sequence would need parens", "x = 1; for (let a of [x, 2]) console.log(a);"],
 	["a `Set` built from an array literal where a direct `eval` may rebind `Set`", 'function f() { eval("var Set = function () { console.log(1); }"); new Set([1]); } f();'],
 	["a `Set` built from an array literal where the program patches `Array.prototype`", 'Array.prototype[Symbol.iterator] = function* () { console.log("iterated"); }; function f() { new Set([1]); } f();'],
+	["an array literal converted where the program patches `Array.prototype.toString`", 'Array.prototype.toString = function () { console.log("converted"); return ""; }; function f() { console.log("a" + [1], `${[2]}`); } f();'],
 	["an array literal read as a destructuring target", "var x; [[1][0]] = [2]; console.log(x);"],
 	["a `Set` built from an array literal where a `with` object may rebind `Set`", "with ({ Set: function () { console.log(1); } }) { new Set([1]); }"],
 	["an element of an array literal written through as a property of a destructuring assignment", "var a = 1, value = { x: 5 }; ({ x: [a][0] } = value); console.log(a);"],
@@ -8932,7 +8933,8 @@ describe("syntax-printer", () => {
 				"function g() { try { return new function (v) { this.v = v; }(1, x).v; } catch (e) { return e.name; } let x; } console.log(g());",
 				"function f() { let d = void 0; d ||= function () { console.log(\"called\"); }; d?.(console.log(\"effect\")); return 1; } console.log(f());",
 				"function f(c) { var d = void 0; if (c) d = function () { console.log(\"called\"); }; d?.(console.log(\"effect\")); } f(0); f(1);",
-				"function f() { switch (1) { case x: let x = 2; console.log(x); } } try { f(); } catch (e) { console.log(e.name); }"
+				"function f() { switch (1) { case x: let x = 2; console.log(x); } } try { f(); } catch (e) { console.log(e.name); }",
+				'Array.prototype[Symbol.iterator] = function* () { console.log("iterated"); yield 1; }; function f() { Math.max(...[1]); console.log(Math.max(...[2, 3])); } f();'
 			]) {
 				const { code } = await minify(input, { compress: {}, mangle: false });
 				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
