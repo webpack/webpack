@@ -8983,7 +8983,10 @@ describe("syntax-printer", () => {
 				'Object.defineProperty(globalThis, "Number", { value: function () { return 7; } }); console.log(Number("3"));',
 				'[globalThis.Array.prototype.slice] = [function () { return "patched"; }]; console.log([1, 2].slice());',
 				'Object.defineProperty(globalThis?.Array.prototype, "slice", { value: function () { return "S"; } }); console.log([1, 2].slice());',
-				'Object.defineProperty(Array?.prototype, "slice", { value: function () { return "S"; } }); console.log([1, 2].slice());'
+				'Object.defineProperty(Array?.prototype, "slice", { value: function () { return "S"; } }); console.log([1, 2].slice());',
+				'function patch(C) { C.prototype.slice = function () { return "S"; }; } patch(globalThis?.Array); console.log([1, 2].slice());',
+				'function patch(C) { C.prototype.slice = function () { return "S"; }; } patch(Array); console.log([1, 2].slice());',
+				'function patch(g) { g.Array.prototype.slice = function () { return "S"; }; } patch(globalThis); console.log([1, 2].slice());'
 			]) {
 				const { code } = await minify(input, { compress: {}, mangle: false });
 				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
