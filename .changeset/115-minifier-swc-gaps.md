@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Minify JavaScript smaller and preserve function calls, names, lengths and targets.
+Minify JavaScript smaller where swc does, and fold a function's `length` right.
