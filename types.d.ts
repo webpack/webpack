@@ -20525,8 +20525,16 @@ declare interface Minifier {
 		enabled: boolean;
 		lets: { enabled: boolean; applied: boolean };
 		literalsLast: { enabled: boolean; applied: boolean };
-		constantsLast: { enabled: boolean; applied: boolean };
-		wrappedCalls: { enabled: boolean; applied: boolean };
+		constantsLast: {
+			enabled: boolean;
+			applied: boolean;
+			respell?: (tree?: any) => void;
+		};
+		wrappedCalls: {
+			enabled: boolean;
+			applied: boolean;
+			respell?: (tree?: any) => void;
+		};
 		namesByCount: { enabled: boolean; applied: boolean };
 		updates: { enabled: boolean; applied: boolean };
 		namesAtSites: { enabled: boolean; applied: boolean };
