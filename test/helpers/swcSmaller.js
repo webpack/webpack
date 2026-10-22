@@ -19,6 +19,8 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/12282/call/input.js",
 			"swc minifier: fixture/issues/3256/1/input.js",
 			"swc minifier: fixture/issues/5588/input.js",
+			"swc minifier: fixture/issues/6279/1/input.js",
+			"swc minifier: fixture/issues/6279/2/input.js",
 			"swc minifier: fixture/issues/6791/1/input.js",
 			"swc minifier: fixture/issues/6957/2/input.js",
 			"swc minifier: fixture/issues/8119/input.js",
@@ -53,6 +55,7 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: comparing/issue_2857_3",
 			"terser compress: conditionals/cond_9",
 			"terser compress: drop-unused/issue_3192",
+			"terser compress: functions/loop_init_arg",
 			"terser compress: if_return/if_return_8",
 			"terser compress: if_return/issue_1437_conditionals",
 			"terser compress: inline/issue_308",
@@ -541,8 +544,7 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: concat-strings/concat_6",
 			"terser compress: concat-strings/concat_7",
 			"terser compress: concat-strings/concat_8",
-			"terser compress: dead-code/collapse_vars_misc1",
-			"terser compress: hoist_props/issue_2519"
+			"terser compress: dead-code/collapse_vars_misc1"
 		]
 	],
 	[
