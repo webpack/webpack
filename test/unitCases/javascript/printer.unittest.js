@@ -4275,22 +4275,15 @@ const ESTREE_PRINT_PROGRAM_FORMATS = [
 
 describe("syntax-printer", () => {
 	// Every case compares spellings with terser's, which writes an equality's
-	// literal first, for one run; tests below cover the literal last and the
-	// choice among runs.
+	// literal first; one test below covers writing it last.
 	beforeAll(async () => {
 		const { improvements } = await load();
-		if (improvements) {
-			improvements.literalsLast.enabled = false;
-			improvements.choosesBySize.enabled = false;
-		}
+		if (improvements) improvements.literalsLast.enabled = false;
 	});
 
 	afterAll(async () => {
 		const { improvements } = await load();
-		if (improvements) {
-			improvements.literalsLast.enabled = true;
-			improvements.choosesBySize.enabled = true;
-		}
+		if (improvements) improvements.literalsLast.enabled = true;
 	});
 
 	it("should install every phase", async () => {
@@ -9145,44 +9138,6 @@ describe("syntax-printer", () => {
 			expect(code).toContain("t?x.m(1):x.m(2)");
 		});
 
-		it("should write strings as templates where a measured program gzips smaller so", async () => {
-			const { minify, improvements } = await load();
-			if (!improvements) throw new Error("the improve phase is not installed");
-			const input =
-				'class Foo { bar = "bar"; static zzz = "zzz"; toString() { return this.bar + Foo.zzz; } } console.log(String(new Foo()));';
-			improvements.choosesBySize.enabled = true;
-			try {
-				const { code } = await minify(input, { ecma: 2020 });
-				expect(code).toBe(
-					"class Foo{bar=`bar`;static zzz=`zzz`;toString(){return this.bar+Foo.zzz}}console.log(String(new Foo));"
-				);
-				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
-				// Not before ES2015, nor where a string must stay one.
-				expect((await minify(input, { ecma: 5 })).code).not.toContain("`");
-				const { code: kept } = await minify(
-					'"use strict"; import("a"); export * from "b"; x({ "k": "v" }); String.raw`x`;',
-					{ ecma: 2020, module: true }
-				);
-				expect(kept).toBe('import("a");export*from"b";x({k:`v`}),String.raw`x`;');
-				// A bigint's digits print as a bigint, never a template.
-				const bigints =
-					"console.log('say \"a\"', 'say \"b\"', 'say \"c\"', -1n + \"\", \"\" + -123456789000000000000000n);";
-				const { code: digits } = await minify(bigints, { ecma: 2020 });
-				expect(digits).toBe(
-					'console.log(`say "a"`,`say "b"`,`say "c"`,-1n+``,``+-123456789000000000000000n);'
-				);
-				expect(runProgram(/** @type {string} */ (digits))).toBe(
-					runProgram(bigints)
-				);
-				improvements.backticks.enabled = false;
-				expect((await minify(input, { ecma: 2020 })).code).not.toContain("`");
-			} finally {
-				improvements.backticks.enabled = true;
-				improvements.choosesBySize.enabled = false;
-			}
-		});
-
-
 		it("should run a built-in where the program leaves it, and keep what reads through a prototype", async () => {
 			const { minify } = await load();
 			for (const input of [
@@ -9206,101 +9161,6 @@ describe("syntax-printer", () => {
 					)
 				).code
 			).toBe('console.log(2,"A");');
-		});
-
-		it("should keep what each measured trial changes from changing the program", async () => {
-			const { minify, improvements } = await load();
-			if (!improvements) throw new Error("the improve phase is not installed");
-			improvements.choosesBySize.enabled = true;
-			try {
-				// `evaluate` tried off with `unsafe` on leaves `[,].join()` an operand
-				// short, as in terser: the trial loses, the run goes on.
-				const holes =
-					"var b = [ , ].join(); var c = [ , 1, , 3 ].join(); console.log(b, c);";
-				const { code: joined } = await minify(holes, {
-					compress: { unsafe: true },
-					mangle: false
-				});
-				expect(runProgram(/** @type {string} */ (joined))).toBe(
-					runProgram(holes)
-				);
-				// A private name renamed in the tree is named again from its source.
-				const privates =
-					'class A { #fil; #another = "SS"; ["#another"] = "XX"; toString() { return this.another + this.#another; } } console.log(new A().toString(), "a", "b");';
-				const { code: renamed } = await minify(privates, {
-					ecma: 2020,
-					compress: { passes: 2 },
-					mangle: true
-				});
-				const [, declared, read] =
-					/** @type {RegExpExecArray} */ (
-						/#(\w+)=.*this\.#(\w+)/.exec(/** @type {string} */ (renamed))
-					);
-				expect(read).toBe(declared);
-				expect(runProgram(/** @type {string} */ (renamed))).toBe(
-					runProgram(privates)
-				);
-				// No template after `await`, nor as a member's key, whichever spelling
-				// the rest takes: gzip, and so the choice, differs by runtime.
-				const awaited =
-					'async function f(e) { console.log("a", "b", "c"); await "constructor"; return e["default"]; } f({ default: 1 }).then(console.log);';
-				const { code: kept } = await minify(awaited, {
-					ecma: 2020,
-					ie8: true,
-					compress: {},
-					mangle: false
-				});
-				expect(kept).toContain('await"constructor"');
-				expect(kept).toContain('e["default"]');
-				// The spellings tried off together, kept on where that loses, stay on
-				// for the transforms tried after, so the program gzips no bigger than
-				// unimproved: measured by Node's zlib, which Bun's and Deno's are not.
-				if (process.versions.bun === undefined && !("Deno" in globalThis)) {
-					const shared =
-						"const rab = CreateResizableArrayBuffer(20, 40); let tas_and_lengths = []; for (let ctor of ctors) { const length = 8 / ctor.BYTES_PER_ELEMENT; tas_and_lengths.push([new ctor(rab, 8, length), length]); } for (let [ta, length] of tas_and_lengths) { assert.sameValue(ta.byteOffset, 8); } rab.resize(10); for (let [ta, length] of tas_and_lengths) { assert.sameValue(ta.byteOffset, 0); } rab.resize(16); for (let [ta, length] of tas_and_lengths) { assert.sameValue(ta.byteOffset, 8); } rab.resize(40); for (let [ta, length] of tas_and_lengths) { assert.sameValue(ta.byteOffset, 8); }";
-					const options = { compress: { passes: 2 }, mangle: true };
-					const { code: measured } = await minify(shared, { ...options });
-					improvements.enabled = false;
-					let unimproved;
-					try {
-						({ code: unimproved } = await minify(shared, { ...options }));
-					} finally {
-						improvements.enabled = true;
-					}
-					const gzipped = (/** @type {string | undefined} */ code) =>
-						require("zlib").gzipSync(/** @type {string} */ (code), {
-							level: 9
-						}).length;
-					expect(gzipped(measured)).toBeLessThanOrEqual(gzipped(unimproved));
-				}
-			} finally {
-				improvements.choosesBySize.enabled = false;
-			}
-		});
-
-		it("should try a tiny program without each of terser's transforms gzip may find worse", async () => {
-			const { minify, improvements } = await load();
-			if (!improvements) throw new Error("the improve phase is not installed");
-			const input =
-				"var obj = { async a() { return await foo(1 + 0); }, anon: async function () { return await foo(2 + 0); } }; console.log(obj);";
-			const methods =
-				"var obj={async a(){return await foo(1)},anon:async function(){return await foo(2)}};console.log(obj);";
-			expect((await minify(input, { ecma: 2020 })).code).toBe(
-				"var obj={a:async()=>await foo(1),anon:async function(){return await foo(2)}};console.log(obj);"
-			);
-			improvements.choosesBySize.enabled = true;
-			try {
-				expect((await minify(input, { ecma: 2020 })).code).toBe(methods);
-				// One the caller turns off stays off, and none runs without compressing.
-				expect(
-					(await minify(input, { ecma: 2020, compress: { arrows: false } })).code
-				).toBe(methods);
-				expect(
-					(await minify(input, { ecma: 2020, compress: false })).code
-				).toContain("async a(){return await foo(1+0)}");
-			} finally {
-				improvements.choosesBySize.enabled = false;
-			}
 		});
 
 		it("should keep a function called in place whose parameters a block of `let`s could not declare", async () => {
@@ -9406,146 +9266,7 @@ describe("syntax-printer", () => {
 			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
 		});
 
-		it("should keep, of a small program minified with each measured spelling and without, the one gzip writes smallest", async () => {
-			const { minify, improvements } = await load();
-			if (!improvements) throw new Error("the improve phase is not installed");
-			const zlib = require("zlib");
-			/**
-			 * @param {string} code a program
-			 * @returns {number} its gzipped size
-			 */
-			const gzipSize = (code) => zlib.gzipSync(code, { level: 9 }).length;
-			const input =
-				"function f(a, p) { a === undefined || a === null || p; a === undefined || a !== null || p; a !== undefined || a === null || p; a !== undefined || a !== null || p; a === undefined && a === null || p; a === undefined && a !== null || p; a !== undefined && a === null || p; a !== undefined && a !== null || p; } f(); const c = 1; console.log(c);";
-			/** @type {import("terser").MinifyOptions} */
-			// Unmangled, so the names stay out of the choice this measures.
-			const options = { compress: { passes: 2 }, mangle: false };
-			/**
-			 * @param {boolean} literalsLast whether the literal is written last
-			 * @param {boolean} lets whether `const` is written as `let`
-			 * @returns {Promise<string>} the program minified so, in one run
-			 */
-			const once = async (literalsLast, lets) => {
-				if (!improvements) throw new Error("the improve phase is not installed");
-				improvements.literalsLast.enabled = literalsLast;
-				improvements.lets.enabled = lets;
-				try {
-					return /** @type {string} */ ((await minify(input, options)).code);
-				} finally {
-					improvements.literalsLast.enabled = false;
-					improvements.lets.enabled = true;
-				}
-			};
-			// One after another, as each run reads the switches the last one set.
-			const variants = [
-				await once(true, true),
-				await once(false, true),
-				await once(true, false),
-				await once(false, false)
-			];
-			improvements.literalsLast.enabled = true;
-			improvements.choosesBySize.enabled = true;
-			let chosen;
-			try {
-				chosen = /** @type {string} */ ((await minify(input, options)).code);
-			} finally {
-				improvements.literalsLast.enabled = false;
-				improvements.choosesBySize.enabled = false;
-			}
-			expect(variants).toContain(chosen);
-			// Greedy: at most the first variant, and the best of its single steps.
-			expect(gzipSize(chosen)).toBeLessThanOrEqual(gzipSize(variants[0]));
-			expect(gzipSize(chosen)).toBeLessThanOrEqual(gzipSize(variants[1]));
-			expect(runProgram(chosen)).toBe(runProgram(input));
-		});
-
-		it("should keep, of a small program's names ordered by counted characters and by their use in English, the one gzip writes smaller", async () => {
-			const { minify, improvements } = await load();
-			if (!improvements) throw new Error("the improve phase is not installed");
-			const zlib = require("zlib");
-			/**
-			 * @param {string} code a program
-			 * @returns {number} its gzipped size
-			 */
-			const gzipSize = (code) => zlib.gzipSync(code, { level: 9 }).length;
-			const input =
-				"function f1(x, y) { return [x + y]; } function f2(x, y) { var z = x + y; return [x, side_effect(), z]; } function f3(x, y) { return [[3], [f(x + y), x, y], [g()]]; }";
-			/**
-			 * @param {boolean} counted whether names are ordered by counted characters
-			 * @returns {Promise<string>} the program minified so, in one run
-			 */
-			const once = async (counted) => {
-				if (!improvements) throw new Error("the improve phase is not installed");
-				improvements.namesByCount.enabled = counted;
-				try {
-					return /** @type {string} */ ((await minify(input)).code);
-				} finally {
-					improvements.namesByCount.enabled = true;
-				}
-			};
-			const counted = await once(true);
-			const byUse = await once(false);
-			expect(counted).toBe(
-				"function f1(f,n){return[f+n]}function f2(f,n){var r=f+n;return[f,side_effect(),r]}function f3(n,r){return[[3],[f(n+r),n,r],[g()]]}"
-			);
-			expect(byUse).toBe(
-				"function f1(e,t){return[e+t]}function f2(e,t){var n=e+t;return[e,side_effect(),n]}function f3(e,t){return[[3],[f(e+t),e,t],[g()]]}"
-			);
-			improvements.choosesBySize.enabled = true;
-			let chosen;
-			try {
-				chosen = /** @type {string} */ ((await minify(input)).code);
-			} finally {
-				improvements.choosesBySize.enabled = false;
-			}
-			expect(chosen).toBe(gzipSize(byUse) < gzipSize(counted) ? byUse : counted);
-			expect(gzipSize(byUse)).toBeLessThan(gzipSize(counted));
-			improvements.choosesBySize.enabled = true;
-			try {
-				// Calls at once each keep their own choice.
-				const [first, second, third] = await Promise.all([
-					minify(input),
-					minify(input, { mangle: false }),
-					minify(input)
-				]);
-				expect(first.code).toBe(byUse);
-				expect(third.code).toBe(byUse);
-				expect(second.code).toBe(
-					/** @type {string} */ (
-						(await minify(input, { mangle: false })).code
-					)
-				);
-				// A callback keeping a license the first time it is asked keeps it.
-				let asked = false;
-				const { code: licensed } = await minify(`/*! @license L */${input}`, {
-					format: {
-						comments: (
-							/** @type {unknown} */ _node,
-							/** @type {{ value: string }} */ comment
-						) => {
-							if (asked || !comment.value.includes("@license")) return false;
-							asked = true;
-							return true;
-						}
-					}
-				});
-				expect(licensed).toBe(`/*! @license L */${byUse}`);
-				// A source map written into the code is no part of what is measured.
-				const { code: mapped } = await minify(input, {
-					sourceMap: { url: "inline" }
-				});
-				expect(
-					/** @type {string} */ (mapped).split("\n//# sourceMappingURL=")[0]
-				).toBe(byUse);
-								// A source past the limit is minified once, however small its output.
-				const padded = `/* ${"x".repeat(40000)} */${input}`;
-				expect((await minify(padded)).code).toBe(counted);
-			} finally {
-				improvements.choosesBySize.enabled = false;
-			}
-		});
-
-		it("should keep a name a destructuring declares in shorthand and nothing reads, where the output is measured", async () => {
+		it("should keep a name a destructuring declares in shorthand and nothing reads", async () => {
 			const { minify, improvements } = await load();
 			if (!improvements) throw new Error("the improve phase is not installed");
 			const input =
@@ -9553,73 +9274,16 @@ describe("syntax-printer", () => {
 			/** @type {import("terser").MinifyOptions} */
 			const options = { ecma: 2015 };
 			expect((await minify(input, options)).code).toBe(
-				"function f(n){var{unused:o}=n;return 1}console.log(f({}));"
+				"function f(n){var{unused}=n;return 1}console.log(f({}));"
 			);
-			improvements.choosesBySize.enabled = true;
+			improvements.enabled = false;
 			try {
 				expect((await minify(input, options)).code).toBe(
-					"function f(n){var{unused}=n;return 1}console.log(f({}));"
+					"function f(n){var{unused:o}=n;return 1}console.log(f({}));"
 				);
-				// Past the size measured, the name is mangled as written unmeasured.
-				const padded = `${input}/* ${"x".repeat(9000)} */`;
-				expect((await minify(padded, { ...options, format: { comments: "all" } })).code).toContain(
-					"{unused:o}"
-				);
-			} finally {
-				improvements.choosesBySize.enabled = false;
-			}
-		});
-
-		it("should fold a write of a global the program shares into its read past a built-in's, where the output is measured", async () => {
-			const { minify, improvements } = await load();
-			if (!improvements) throw new Error("the improve phase is not installed");
-			const input = 'var a = "FAIL"; a = "PASS"; console.log(a);';
-			/** @type {import("terser").MinifyOptions} */
-			const options = { compress: { passes: 2 } };
-			expect((await minify(input, options)).code).toBe(
-				'var a="FAIL";a="PASS",console.log(a);'
-			);
-			improvements.choosesBySize.enabled = true;
-			try {
-				const { code } = await minify(input, options);
-				expect(code).toBe('var a="FAIL";console.log(a="PASS");');
-				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
-			} finally {
-				improvements.choosesBySize.enabled = false;
-			}
-		});
-
-		it("should try the measured spellings off together, where each off alone gzips no smaller", async () => {
-			const { minify, improvements } = await load();
-			if (!improvements) throw new Error("the improve phase is not installed");
-			const zlib = require("zlib");
-			/**
-			 * @param {string} code a program
-			 * @returns {number} its gzipped size
-			 */
-			const gzipSize = (code) => zlib.gzipSync(code, { level: 9 }).length;
-			const input =
-				"var x = 1; var z = (x -= 1); if (z !== 0) { throw new Test262Error('#1: var x = 1; var z = (x -= 1); z === 0. Actual: ' + (z)); } var x = 1; var y = 1; var z = (x -= y); if (z !== 0) { throw new Test262Error('#2: var x = 1; var y = 1; var z = (x -= y); z === 0. Actual: ' + (z)); }";
-			/** @type {import("terser").MinifyOptions} */
-			const options = { compress: { passes: 2 }, mangle: true };
-			improvements.enabled = false;
-			let unimproved;
-			try {
-				unimproved = /** @type {string} */ ((await minify(input, options)).code);
 			} finally {
 				improvements.enabled = true;
 			}
-			improvements.literalsLast.enabled = true;
-			improvements.choosesBySize.enabled = true;
-			let chosen;
-			try {
-				chosen = /** @type {string} */ ((await minify(input, options)).code);
-			} finally {
-				improvements.literalsLast.enabled = false;
-				improvements.choosesBySize.enabled = false;
-			}
-			expect(gzipSize(chosen)).toBeLessThanOrEqual(gzipSize(unimproved));
-			expect(runProgram(chosen)).toBe(runProgram(input));
 		});
 
 		it("should name a module's imports and exports by the names they spell, where that writes less", async () => {
@@ -12822,27 +12486,20 @@ const OPTION_SETS = {
  * @returns {Promise<{ code: string | undefined, map: import("../../../lib/javascript/syntax-printer").MinifyOutput["map"], printedFromTree: number }>} the code, its source map, and how often the tree printer printed
  */
 const minifyCounted = async (input, options, fromTree) => {
-	const { minify, modules, improvements } = await load();
+	const { minify, modules } = await load();
 	const { printTree, treePrinting } = modules;
-	const choosesBySize = /** @type {NonNullable<typeof improvements>} */ (
-		improvements
-	).choosesBySize;
 	let printedFromTree = 0;
 	modules.printTree = (/** @type {EXPECTED_ANY[]} */ ...args) => {
 		printedFromTree++;
 		return printTree(...args);
 	};
 	treePrinting.enabled = fromTree;
-	// One run, as choosing a spelling by size prints the program again.
-	const choseBySize = choosesBySize.enabled;
-	choosesBySize.enabled = false;
 	try {
 		const { code, map } = await minify(input, options);
 		return { code, map, printedFromTree };
 	} finally {
 		modules.printTree = printTree;
 		treePrinting.enabled = true;
-		choosesBySize.enabled = choseBySize;
 	}
 };
 
