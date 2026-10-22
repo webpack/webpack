@@ -34,19 +34,6 @@ jobs:
           node-version: lts/*
           cache: yarn
 
-      # No install needed: `--check` reads the recorded scan and this checkout.
-      # A break fails the job only in the last step, so `yarn lint` still runs.
-      - name: Check the paths the ecosystem imports directly
-        id: deep-imports
-        run: |
-          if node tooling/find-deep-webpack-imports.js \
-            --check --summary "$RUNNER_TEMP/deep-imports-report.md"; then
-            echo "broken=false" >> "$GITHUB_OUTPUT"
-          else
-            echo "broken=true" >> "$GITHUB_OUTPUT"
-          fi
-          cat "$RUNNER_TEMP/deep-imports-report.md" >> "$GITHUB_STEP_SUMMARY"
-
       - run: node tooling/retry.js yarn --frozen-lockfile
 
       - name: Cache prettier result
@@ -91,14 +78,13 @@ jobs:
           node tooling/retry.js yarn --frozen-lockfile
           yarn validate:types
 
+      - name: Check the paths the ecosystem imports directly
+        run: node tooling/find-deep-webpack-imports.js --check
+
       - name: Validate changeset format
         if: github.event_name == 'pull_request'
         run: |
           yarn validate:changeset
-
-      - name: Fail on a path that stopped resolving
-        if: always() && steps.deep-imports.outputs.broken == 'true'
-        run: exit 1
 
   # What the CSS and HTML printers owe whatever they printed, which no
   # comparison against another tool can see: being a few bytes off its own best
