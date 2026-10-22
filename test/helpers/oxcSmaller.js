@@ -539,8 +539,7 @@ const OXC_SMALLER_BY_REASON = [
 		"oxc joins more neighboring declarations, as oxc's `peephole/collapse_variable_declarations.rs` tests show",
 		[
 			"oxc minifier: peephole/collapse_variable_declarations.rs:211",
-			"oxc minifier: peephole/collapse_variable_declarations.rs:234",
-			"oxc minifier: peephole/collapse_variable_declarations.rs:99"
+			"oxc minifier: peephole/collapse_variable_declarations.rs:234"
 		]
 	],
 	[
