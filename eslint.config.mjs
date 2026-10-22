@@ -153,7 +153,8 @@ export default defineConfig([
 		plugins: { jsdoc: getJsdocPlugin() },
 		rules: {
 			// The keywords an option type states for `tooling/generate-schemas.js`,
-			// which JSON Schema has and JSDoc does not
+			// which JSON Schema has and JSDoc does not, and `augmentable`, which
+			// `tooling/generate-types.js` exports for declaration merging
 			"jsdoc/check-tag-names": [
 				"error",
 				{
@@ -180,7 +181,8 @@ export default defineConfig([
 						"tsType",
 						"typeOnly",
 						"properties",
-						"not"
+						"not",
+						"augmentable"
 					]
 				}
 			]

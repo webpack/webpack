@@ -230,7 +230,7 @@ class TupleMap {
 /** @typedef {{ type: "primitive", name: string }} ParsedPrimitiveType */
 /** @typedef {{ type: "typeParameter", name: string, constraint?: ts.Type, defaultValue?: ts.Type }} ParsedTypeParameterType */
 /** @typedef {{ type: "tuple", typeArguments: readonly ts.Type[] }} ParsedTupleType */
-/** @typedef {{ type: "interface", symbolName: SymbolName, subtype: "class" | "module" | "literal" | undefined, properties: PropertiesMap, constructors: ParsedSignature[], calls: ParsedSignature[], numberIndex?: ts.Type, stringIndex?: ts.Type, typeParameters?: readonly ts.Type[], baseTypes: readonly ts.Type[], documentation: string }} ParsedInterfaceType */
+/** @typedef {{ type: "interface", symbolName: SymbolName, subtype: "class" | "module" | "literal" | undefined, properties: PropertiesMap, constructors: ParsedSignature[], calls: ParsedSignature[], numberIndex?: ts.Type, stringIndex?: ts.Type, typeParameters?: readonly ts.Type[], baseTypes: readonly ts.Type[], documentation: string, augmentable?: boolean }} ParsedInterfaceType */
 /** @typedef {{ type: "class" | "typeof class", symbolName: SymbolName, properties: PropertiesMap, staticProperties: PropertiesMap, constructors: ParsedSignature[], numberIndex?: ts.Type, stringIndex?: ts.Type, typeParameters?: readonly ts.Type[], baseType: ts.Type, correspondingType: ts.Type | undefined, documentation: string }} MergedClassType */
 /** @typedef {{ type: "namespace", symbolName: SymbolName, calls: ParsedSignature[], exports: PropertiesMap }} MergedNamespaceType */
 /** @typedef {{ type: "reference", target: ts.Type, typeArguments: readonly ts.Type[], typeArgumentsWithoutDefaults: readonly ts.Type[] }} ParsedReferenceType */
@@ -240,8 +240,9 @@ class TupleMap {
 /** @typedef {{ type: "template", texts: readonly string[], types: readonly ts.Type[] }} ParsedTemplateType */
 /** @typedef {{ type: "import", symbolName: SymbolName, exportName: string, from: string, isValue: boolean }} ParsedImportType */
 /** @typedef {{ type: "symbol", symbolName: SymbolName }} ParsedSymbolType */
+/** @typedef {{ type: "keyof", target: ts.Type }} ParsedKeyofType */
 /** @typedef {{ type: "conditional", symbolName: SymbolName, checkType: ts.Type, extendsType: ts.Type, trueType: ts.Type, falseType: ts.Type, typeParameters?: readonly ts.Type[] }} ParsedConditionalType */
-/** @typedef {ParsedPrimitiveType | ParsedTypeParameterType | ParsedTupleType | ParsedInterfaceType | ParsedReferenceType | ParsedUnionType | ParsedIntersectionType | ParsedIndexType | ParsedTemplateType | ParsedImportType | ParsedSymbolType | ParsedConditionalType} ParsedType */
+/** @typedef {ParsedPrimitiveType | ParsedTypeParameterType | ParsedTupleType | ParsedInterfaceType | ParsedReferenceType | ParsedUnionType | ParsedIntersectionType | ParsedIndexType | ParsedTemplateType | ParsedImportType | ParsedSymbolType | ParsedConditionalType | ParsedKeyofType} ParsedType */
 /** @typedef {ParsedType | MergedClassType | MergedNamespaceType} MergedType */
 
 /**
@@ -616,6 +617,22 @@ const isInternalAlias = (symbol) => {
 			? decl.parent.tags || []
 			: ts.getJSDocTags(decl);
 	return tags.some((tag) => tag.tagName.text === "internal");
+};
+
+/**
+ * A type whose typedef carries `@augmentable` is declared as an exported
+ * interface of the entry namespace, so users can extend it by declaration merging.
+ * @param {ts.Symbol | undefined} symbol the type's symbol or alias symbol
+ * @returns {boolean} whether its declaring JSDoc block is tagged `@augmentable`
+ */
+const isAugmentable = (symbol) => {
+	const decl = getDeclaration(symbol);
+	const block = decl && ts.findAncestor(decl, ts.isJSDoc);
+	return Boolean(
+		block &&
+		block.tags &&
+		block.tags.some((tag) => tag.tagName.text === "augmentable")
+	);
 };
 
 /**
@@ -1558,6 +1575,15 @@ const collectTypes = ({ program, checker, options }) => {
 				types.push(...nodeJSOriginTypes);
 			}
 
+			// `keyof` an augmentable interface stays `keyof`, so it takes merged keys
+			const keyofOrigin = /** @type {ts.Type | undefined} */ (origin);
+			if (keyofOrigin && keyofOrigin.flags & ts.TypeFlags.Index) {
+				const target = /** @type {ts.IndexType} */ (keyofOrigin).type;
+				if (isAugmentable(target.getSymbol() || target.aliasSymbol)) {
+					return { type: "keyof", target };
+				}
+			}
+
 			return {
 				type: "union",
 				symbolName: parseName(type),
@@ -1895,7 +1921,10 @@ const collectTypes = ({ program, checker, options }) => {
 			// WHY: a type alias to an anonymous object holds the description, where
 			// the type it names has none of its own.
 			documentation:
-				getDocumentation(type.getSymbol()) || getDocumentation(type.aliasSymbol)
+				getDocumentation(type.getSymbol()) ||
+				getDocumentation(type.aliasSymbol),
+			augmentable:
+				isAugmentable(type.getSymbol()) || isAugmentable(type.aliasSymbol)
 		};
 	};
 
@@ -1948,6 +1977,9 @@ const collectTypes = ({ program, checker, options }) => {
 			case "index":
 				captureType(type, parsed.objectType);
 				captureType(type, parsed.indexType);
+				break;
+			case "keyof":
+				captureType(type, parsed.target);
 				break;
 			case "reference":
 				captureType(type, parsed.target);
@@ -2504,6 +2536,8 @@ const generateDeclarations = ({
 	const importDeclarations = new Set();
 	/** @type {Map<ts.Type, () => void>} */
 	const emitDeclarations = new Map();
+	/** @type {Set<string>} */
+	const augmentableVariables = new Set();
 	/** @type {string[]} */
 	const exports = [];
 	const typeToCode = new TupleMap();
@@ -2810,6 +2844,9 @@ const generateDeclarations = ({
 				code += "`";
 				return code;
 			}
+			case "keyof": {
+				return `(keyof ${getCode(parsed.target, typeArgs)})`;
+			}
 			case "index": {
 				const { objectType, indexType } = parsed;
 				const getIndexTypeCode = () => {
@@ -3013,6 +3050,13 @@ const generateDeclarations = ({
 			case "interface": {
 				const variable = typeToVariable.get(type);
 				if (variable !== undefined) {
+					// An augmentable interface is declared inside the entry namespace,
+					// so every reference goes through that namespace.
+					const augmentable = Boolean(parsed.augmentable && exposedType);
+					if (augmentable) augmentableVariables.add(variable);
+					const name = augmentable
+						? `${typeToVariable.get(/** @type {ts.Type} */ (exposedType))}.${variable}`
+						: variable;
 					queueDeclaration(type, variable, () => {
 						const typeArgs = new Set(parsed.typeParameters);
 						if (isAbstractConstructor(parsed)) {
@@ -3024,7 +3068,7 @@ const generateDeclarations = ({
 									: ""
 							} = abstract new ${sigToString(parsed.constructors[0], typeArgs, "arrow")};`;
 						}
-						return `${parsed.documentation}declare interface ${variable}${
+						return `${parsed.documentation}${augmentable ? "export" : "declare"} interface ${variable}${
 							parsed.typeParameters
 								? `<${parsed.typeParameters
 										.map((t) => getCode(t, new Set(), "in type args"))
@@ -3045,11 +3089,11 @@ const generateDeclarations = ({
 						parsed.typeParameters &&
 						parsed.typeParameters.every((t) => typeArgs.has(t))
 					) {
-						return `${variable}<${parsed.typeParameters.map((t) =>
+						return `${name}<${parsed.typeParameters.map((t) =>
 							getCode(t, typeArgs)
 						)}>`;
 					}
-					return `${variable}`;
+					return `${name}`;
 				}
 				if (isSimpleFunction(parsed)) {
 					return `(${sigToString(parsed.calls[0], typeArgs, "arrow")})`;
@@ -3270,6 +3314,39 @@ const generateDeclarations = ({
 
 	for (const [, fn] of emitDeclarations) {
 		fn();
+	}
+
+	if (augmentableVariables.size > 0) {
+		const namespace = typeToVariable.get(/** @type {ts.Type} */ (exposedType));
+		/** @type {string[]} */
+		const augmentable = [];
+		/** @type {string | undefined} */
+		let namespaceText;
+		for (const text of declarations) {
+			const key = /** @type {string} */ (declarationKeys.get(text));
+			if (augmentableVariables.has(key)) {
+				augmentable.push(text);
+				declarations.delete(text);
+			} else if (key === namespace) {
+				namespaceText = text;
+			}
+		}
+		const opening = `namespace ${namespace} {\n`;
+		if (!namespaceText || !namespaceText.includes(opening)) {
+			throw new Error(
+				`no namespace ${namespace} to declare ${[...augmentableVariables].join(", ")} in`
+			);
+		}
+		augmentable.sort((a, b) => {
+			const ak = /** @type {string} */ (declarationKeys.get(a));
+			const bk = /** @type {string} */ (declarationKeys.get(b));
+			return ak < bk ? -1 : ak > bk ? 1 : 0;
+		});
+		declarations.delete(namespaceText);
+		addDeclaration(
+			/** @type {string} */ (namespace),
+			namespaceText.replace(opening, `${opening}${augmentable.join("\n")}\n`)
+		);
 	}
 
 	return {
