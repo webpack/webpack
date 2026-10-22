@@ -1,13 +1,9 @@
 "use strict";
 
-/** @type {import("../../../../").Configuration[]} */
-module.exports = [
-	{ entry: "./conversions.js", pureConversions: false },
-	{ entry: "./holes.js", pureConversions: false },
-	{ entry: "./holes.js", pureConversions: true }
-].map(({ entry, pureConversions }) => ({
+/** @type {import("../../../../").Configuration} */
+module.exports = {
 	mode: "production",
-	entry,
+	entry: "./conversions.js",
 	target: ["web", "es2018"],
 	experiments: { futureDefaults: true },
 	output: { module: false },
@@ -16,10 +12,10 @@ module.exports = [
 		minimize: {
 			javascript: {
 				compress: {
-					pure_conversions: pureConversions,
+					pure_conversions: false,
 					pure_getters: false
 				}
 			}
 		}
 	}
-}));
+};

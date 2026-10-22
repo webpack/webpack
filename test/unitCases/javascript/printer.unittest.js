@@ -8927,6 +8927,44 @@ describe("syntax-printer", () => {
 			});
 		}
 
+		it("should read a hole through an inherited element when converting an array to a string", async () => {
+			const { minify } = await load();
+			for (const [input, expected] of [
+				[
+					'Array.prototype[0] = "inherited"; console.log(`${[,]}`);',
+					"inherited"
+				],
+				[
+					'Object.prototype[1] = "inherited"; console.log(`before${[1, , 3]}after`);',
+					"before1,inherited,3after"
+				],
+				[
+					'var reads = 0; Object.defineProperty(Array.prototype, 0, { configurable: true, get() { reads++; return "inherited"; } }); console.log(`${[,]}`, reads);',
+					"inherited 1"
+				],
+				[
+					'Object.defineProperty(Array.prototype, 0, { configurable: true, get() { throw new Error("inherited element failed"); } }); try { console.log(`${[,]}`); } catch (e) { console.log(e.message); }',
+					"inherited element failed"
+				],
+				[
+					'Array.prototype[0] = "inherited"; console.log(`${[null]}|${[undefined]}|${[]}|${[1, null, undefined, "x"]}`);',
+					"|||1,,,x"
+				]
+			]) {
+				expect(runProgram(input)).toBe(expected);
+				for (const pureConversions of [false, true]) {
+					const { code } = await minify(input, {
+						compress: {
+							pure_conversions: pureConversions,
+							pure_getters: false
+						},
+						mangle: false
+					});
+					expect(runProgram(/** @type {string} */ (code))).toBe(expected);
+				}
+			}
+		});
+
 		it("should keep an extra constructor argument reading a `let` in its dead zone, and an optional call of a `let` written again", async () => {
 			const { minify } = await load();
 			for (const input of [
