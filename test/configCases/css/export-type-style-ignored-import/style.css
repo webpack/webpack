@@ -1,0 +1,5 @@
+@import "./ignored.css";
+
+.ignored-import {
+	color: red;
+}
