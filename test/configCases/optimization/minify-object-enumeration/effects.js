@@ -15,6 +15,27 @@ it("should preserve array element effects and exceptions", () => {
 	expect(() => Object.keys([missingEnumerationValue])).toThrow(ReferenceError);
 });
 
+it("should preserve array element reads before a let declaration", () => {
+	expect(() => Object.keys([value])).toThrow(ReferenceError);
+	let value;
+});
+
+it("should preserve array element reads before a const declaration", () => {
+	expect(() => Object.keys([value])).toThrow(ReferenceError);
+	const value = 1;
+});
+
+it("should preserve typeof before a lexical declaration", () => {
+	expect(() => Object.keys([typeof value])).toThrow(ReferenceError);
+	let value;
+});
+
+it("should preserve reads of a loop binding in its own iterable", () => {
+	expect(() => {
+		for (let value of Object.keys([value])) expect(value).toBeDefined();
+	}).toThrow(ReferenceError);
+});
+
 it("should preserve iteration when enumerating an array with a spread", () => {
 	let iterations = 0;
 	const iterable = {
