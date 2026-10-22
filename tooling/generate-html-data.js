@@ -1711,11 +1711,7 @@ const ENUMERATED_ATTRIBUTE_NAMES = [
 		/** @type {[string, string][]} */
 		(
 			/** @type {ParserTable} */
-			(
-				/** @type {ParserTable[]} */ (PARSER_TABLES).find(
-					([name]) => name === "ENUMERATED_KEYWORDS"
-				)
-			)[3]
+			(PARSER_TABLES.find(([name]) => name === "ENUMERATED_KEYWORDS"))[3]
 		).map(([key]) => key.slice(key.indexOf(" ") + 1))
 	)
 ].sort();
@@ -1742,11 +1738,7 @@ const REWRITABLE_ATTRIBUTE_NAMES = [
 // except `sandbox`, whose empty list is the most restrictive state there is.
 const emptyRemovable = /** @type {[string, string[] | null][]} */ (
 	/** @type {ParserTable} */
-	(
-		/** @type {ParserTable[]} */ (PARSER_TABLES).find(
-			([name]) => name === "EMPTY_REMOVABLE_ATTRIBUTES"
-		)
-	)[3]
+	(PARSER_TABLES.find(([name]) => name === "EMPTY_REMOVABLE_ATTRIBUTES"))[3]
 );
 // Carrying the scope, not just the name: off the elements the list is defined
 // for, the same spelling is an author attribute that means whatever a script
@@ -1769,19 +1761,11 @@ emptyRemovable.sort((a, b) => (a[0] < b[0] ? -1 : 1));
 // may drop these even though the void guard otherwise keeps every void element.
 const EMPTY_METADATA_ELEMENTS = /** @type {string[]} */ (
 	/** @type {ParserTable} */
-	(
-		/** @type {ParserTable[]} */ (PARSER_TABLES).find(
-			([name]) => name === "HEAD_ELEMENTS"
-		)
-	)[3]
+	(PARSER_TABLES.find(([name]) => name === "HEAD_ELEMENTS"))[3]
 ).filter((name) =>
 	/** @type {string[]} */ (
 		/** @type {ParserTable} */
-		(
-			/** @type {ParserTable[]} */ (PARSER_TABLES).find(
-				([name2]) => name2 === "VOID"
-			)
-		)[3]
+		(PARSER_TABLES.find(([name2]) => name2 === "VOID"))[3]
 	).includes(name)
 );
 

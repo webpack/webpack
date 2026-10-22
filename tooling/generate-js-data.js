@@ -1017,11 +1017,9 @@ const collectBuiltInMembers = () => {
  * @returns {number[]} major, minor and patch
  */
 const oldestSupportedNode = () =>
-	/** @type {string} */ (
-		/** @type {RegExpMatchArray} */ (
-			require("../package.json").engines.node.match(/\d+\.\d+\.\d+/)
-		)[0]
-	)
+	/** @type {RegExpMatchArray} */ (
+		require("../package.json").engines.node.match(/\d+\.\d+\.\d+/)
+	)[0]
 		.split(".")
 		.map(Number);
 

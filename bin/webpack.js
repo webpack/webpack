@@ -200,11 +200,7 @@ if (!cli.installed) {
 			}')...`
 		);
 
-		runCommand(
-			/** @type {string} */
-			(packageManager),
-			[...installOptions, cli.package]
-		)
+		runCommand(packageManager, [...installOptions, cli.package])
 			.then(() => {
 				runCli(cli);
 			})

@@ -6065,7 +6065,7 @@ const collectValueSupport = (
 	}
 	for (const [property, node] of Object.entries(propertyNodes)) {
 		if (property.startsWith("__")) continue;
-		const entry = /** @type {PartialPropertyTable} */ (properties)[property];
+		const entry = properties[property];
 		if (!entry || !entry.syntax || entry.status !== "standard") continue;
 		const keywords = new Set(
 			lowerSorted(acceptedValues(entry.syntax).keywords)
@@ -7274,7 +7274,7 @@ const collectPrefixedValues = () => {
 	const read = new Map();
 	for (const [property, node] of Object.entries(bcd.css.properties)) {
 		if (property.startsWith("__")) continue;
-		const entry = /** @type {PartialPropertyTable} */ (properties)[property];
+		const entry = properties[property];
 		if (!entry || !entry.syntax) continue;
 		const keywords = lowerSorted(acceptedValues(entry.syntax).keywords);
 		if (keywords.length === 0) continue;
