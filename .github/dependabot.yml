@@ -75,6 +75,15 @@ updates:
     open-pull-requests-limit: 2
     labels:
       - dependencies
+  # The Playwright image the browser suites run in (see the Dockerfile), pinned
+  # by tag and digest so every engine and its libraries are fixed.
+  - package-ecosystem: "docker"
+    directory: "/.github/browsers"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 2
+    labels:
+      - dependencies
   - package-ecosystem: "gitsubmodule"
     directory: "/"
     schedule:
