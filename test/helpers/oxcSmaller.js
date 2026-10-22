@@ -533,10 +533,7 @@ const OXC_SMALLER_BY_REASON = [
 	],
 	[
 		"oxc drops more unreachable code, as oxc's `peephole/remove_dead_code.rs` tests show",
-		[
-			"oxc minifier: peephole/remove_dead_code.rs:263",
-			"oxc minifier: peephole/remove_dead_code.rs:295"
-		]
+		["oxc minifier: peephole/remove_dead_code.rs:263"]
 	],
 	[
 		"oxc joins more neighboring declarations, as oxc's `peephole/collapse_variable_declarations.rs` tests show",

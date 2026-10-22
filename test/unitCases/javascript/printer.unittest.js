@@ -1821,6 +1821,12 @@ const IMPROVED_CASES = [
 		"function f(a,b){if(!a&&b)return 1}function g(a,b,c){if(!a)if(b){if(c)return 2}else console.log(3)}function h(a,b,c){if(!a&&b){if(c)return 4;console.log(5)}}console.log(f(0,0),f(0,1),f(1,1),g(0,1,1),g(0,0,0),g(1,0,0),h(0,1,1),h(0,1,0),h(1,1,0));"
 	],
 	[
+		"a loop's update, its value unread, without what has no effects",
+		"function f(a, b, i) { for (i = 0; i < 3; 0, i++, 0) console.log(i); for (; a < 2; b++, 1) a++; return a; } console.log(f(0, 0));",
+		{ compress: { passes: 2 }, mangle: false },
+		"function f(a,b,i){for(i=0;i<3;i++)console.log(i);for(;a<2;)a++;return a}console.log(f(0,0));"
+	],
+	[
 		"an `if` with an empty branch and an `else` block, as an `if` of the negated test, but a chain's",
 		"function f(a, b) { if (a) {} else { if (b) { console.log(1); return; } console.log(2); } console.log(3); } function g(a, b) { if (a && b) {} else { if (b) { console.log(4); return; } console.log(5); } } f(0, 0); f(0, 1); f(1, 0); g(0, 1); g(1, 1);",
 		{ compress: {}, mangle: false }
