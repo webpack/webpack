@@ -511,7 +511,8 @@ jobs:
       # since the cache holds the browser and not the system packages.
       - name: Install the pinned browser
         # Bounded: a stalled mirror otherwise holds the runner for the job's hour.
-        timeout-minutes: 10
+        # Room for a cold cache's slow install, whose success saves the cache.
+        timeout-minutes: 40
         run: node tooling/retry.js yarn setup:browsers ${{ matrix.browser }} ${{ matrix.browser != 'chrome' && '--with-deps' || '' }}
 
       - name: Cache jest result
