@@ -9417,8 +9417,9 @@ describe("syntax-printer", () => {
 				expect(code).toContain("arguments.length>");
 			}
 			const program =
-				'Object.defineProperty(Object.prototype, "1", { get() { console.log("getter"); return 7; } }); function f() { var a = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1; var b = arguments.length > 1 ? arguments[1] : void 0; return [a, b]; } console.log(f(3).join(), f(3, 4).join());';
+				'Object.defineProperty(Object.prototype, "1", { get() { console.log("getter"); return 7; } }); function f() { var a = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1; var b = arguments.length > 1 ? arguments[1] : void 0; return [a, b]; } function g() { delete arguments[1]; return arguments.length > 1 ? arguments[1] : void 0; } console.log(f(3).join(), f(3, 4).join(), g(3, 4));';
 			const { code } = await minify(program, { compress: {}, mangle: false });
+			expect(runProgram(program)).toContain("getter");
 			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(program));
 		});
 
