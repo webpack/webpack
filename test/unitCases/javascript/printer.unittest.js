@@ -2033,7 +2033,7 @@ const IMPROVED_CASES = [
 		"a write to a block's `let` nothing reads",
 		"function f(c) { var a; if (c) { let b; return (a = 2) + (b = 3); } } console.log(f(1));",
 		{ compress: {}, mangle: false },
-		"function f(c){if(c){return 2+3}}console.log(f(1));"
+		"function f(c){if(c){return 5}}console.log(f(1));"
 	],
 	[
 		"a name tested for `null` before an optional chain reading it",
@@ -9263,6 +9263,19 @@ describe("syntax-printer", () => {
 				mangle: false
 			});
 			expect(code).toContain(".v,(new a).v");
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+		});
+
+		it("should fold arithmetic on constants the last pass inlined into their reads", async () => {
+			const { minify } = await load();
+			const input =
+				'var f1 = function (x, y) { var a, b, r = x + y, q = r * r, z = q - r, a = z, b = 7; console.log(a + b); }; f1("1", 0);';
+			const { code } = await minify(input, {
+				compress: { passes: 2 },
+				mangle: { toplevel: true },
+				module: true
+			});
+			expect(code).toBe("console.log(97);");
 			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
 		});
 
