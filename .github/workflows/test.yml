@@ -78,6 +78,9 @@ jobs:
           node tooling/retry.js yarn --frozen-lockfile
           yarn validate:types
 
+      - name: Check the paths the ecosystem imports directly
+        run: node tooling/find-deep-webpack-imports.js --check
+
       - name: Validate changeset format
         if: github.event_name == 'pull_request'
         run: |
