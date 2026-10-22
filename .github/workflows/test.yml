@@ -434,6 +434,12 @@ jobs:
           - browser: webkit
             script: test:syntax-equivalence
     runs-on: ubuntu-latest
+    # Playwright's image for the version playwright-core pins: every engine and
+    # its system libraries are baked in, so no run waits on Ubuntu's mirror,
+    # which stretched installing Firefox and WebKit from a minute to 37.
+    container:
+      image: mcr.microsoft.com/playwright:v1.64.1-noble
+      options: --ipc=host
     # Bounded: a hung browser would otherwise hold a runner for the 6h default.
     timeout-minutes: 60
     steps:
@@ -487,42 +493,12 @@ jobs:
       # Every engine is the build playwright-core pins, not the runner's Chrome
       # or today's `stable`: an engine then moves only in the pull request bumping
       # playwright-core, where an engine-quirk probe failing is the news, rather
-      # than under every pull request at once. Cached by that version.
-      - name: Read the pinned browser build
-        id: browser-build
-        run: echo "id=$(node -p "require('playwright-core/package.json').version")" >> "$GITHUB_OUTPUT"
-
-      - name: Cache the pinned browser
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: ~/.cache/ms-playwright
-          key: playwright-${{ matrix.browser }}-${{ steps.browser-build.outputs.id }}-${{ runner.os }}
-
-      # WHY: `--with-deps` downloads the system packages from Ubuntu's mirror on
-      # every run, which a slow mirror stretched from a minute to 37. apt keeps
-      # them in a directory the cache restores, so a hit installs from disk.
-      - name: Keep the system packages apt downloads
-        if: matrix.browser != 'chrome'
-        run: |
-          mkdir -p ~/apt-archives/partial
-          sudo rm -f /etc/apt/apt.conf.d/docker-clean
-          printf 'Dir::Cache::Archives "%s";\nAPT::Keep-Downloaded-Packages "true";\n' ~/apt-archives | sudo tee /etc/apt/apt.conf.d/99keep-archives
-
-      - name: Cache the system packages
-        if: matrix.browser != 'chrome'
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: ~/apt-archives/*.deb
-          key: playwright-deps-${{ matrix.browser }}-${{ steps.browser-build.outputs.id }}-${{ runner.os }}
-
-      # `--with-deps` for Firefox and WebKit, whose shared libraries a runner does
-      # not carry where it already carries Chrome's; it runs on a cache hit too,
-      # since the cache holds the browser and not the system packages.
+      # than under every pull request at once. A no-op while the image above
+      # matches playwright-core; a bump of one without the other fetches the
+      # pinned build here rather than failing.
       - name: Install the pinned browser
-        # Bounded: a stalled mirror otherwise holds the runner for the job's hour.
-        # Room for a cold cache's slow install, whose success saves the cache.
-        timeout-minutes: 40
-        run: node tooling/retry.js yarn setup:browsers ${{ matrix.browser }} ${{ matrix.browser != 'chrome' && '--with-deps' || '' }}
+        timeout-minutes: 10
+        run: node tooling/retry.js yarn setup:browsers ${{ matrix.browser }}
 
       - name: Cache jest result
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
