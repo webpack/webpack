@@ -8981,7 +8981,9 @@ describe("syntax-printer", () => {
 				'[globalThis.Number] = [function () { return 7; }]; console.log(Number("3"));',
 				'({ n: globalThis.Number } = { n: function () { return 7; } }); console.log(Number("3"));',
 				'Object.defineProperty(globalThis, "Number", { value: function () { return 7; } }); console.log(Number("3"));',
-				'[globalThis.Array.prototype.slice] = [function () { return "patched"; }]; console.log([1, 2].slice());'
+				'[globalThis.Array.prototype.slice] = [function () { return "patched"; }]; console.log([1, 2].slice());',
+				'Object.defineProperty(globalThis?.Array.prototype, "slice", { value: function () { return "S"; } }); console.log([1, 2].slice());',
+				'Object.defineProperty(Array?.prototype, "slice", { value: function () { return "S"; } }); console.log([1, 2].slice());'
 			]) {
 				const { code } = await minify(input, { compress: {}, mangle: false });
 				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
