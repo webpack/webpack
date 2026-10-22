@@ -8984,12 +8984,20 @@ describe("syntax-printer", () => {
 				'[globalThis.Array.prototype.slice] = [function () { return "patched"; }]; console.log([1, 2].slice());',
 				'Object.defineProperty(globalThis?.Array.prototype, "slice", { value: function () { return "S"; } }); console.log([1, 2].slice());',
 				'Object.defineProperty(Array?.prototype, "slice", { value: function () { return "S"; } }); console.log([1, 2].slice());',
-				'function patch(C) { C.prototype.slice = function () { return "S"; }; } patch(globalThis?.Array); console.log([1, 2].slice());',
-				'function patch(C) { C.prototype.slice = function () { return "S"; }; } patch(Array); console.log([1, 2].slice());',
-				'function patch(g) { g.Array.prototype.slice = function () { return "S"; }; } patch(globalThis); console.log([1, 2].slice());'
+				'Reflect.set(globalThis, "Number", function () { return 7; }); console.log(Number("3"));',
+				'Object.assign(globalThis, { Number: function () { return 7; } }); console.log(Number("3"));'
 			]) {
 				const { code } = await minify(input, { compress: {}, mangle: false });
 				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			}
+			// Only the global object counts, not a local named `self`, nor one
+			// handed to a call that reads it.
+			for (const input of [
+				'function f() { var self = { a: 1 }; g(self); } function g(o) { o.Number = 1; } f(); console.log(Number("3"));',
+				'function isGlobal(g) { return g && g.Math === Math; } console.log(isGlobal(globalThis), Number("3"));'
+			]) {
+				const { code } = await minify(input, { compress: {}, mangle: false });
+				expect(code).not.toContain('Number("3")');
 			}
 		});
 
