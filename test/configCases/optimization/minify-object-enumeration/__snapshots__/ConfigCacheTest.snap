@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases optimization minify-object-enumeration exported tests should enumerate a string's UTF-16 code units 1`] = `"function(){return[[\`0\`,\`1\`],[\`a\`,\`b\`],[[\`0\`,\`a\`]],[\`\\\\ud800\`],[],[],[]]}"`;
+
+exports[`ConfigCacheTestCases optimization minify-object-enumeration exported tests should enumerate array literals without reading holes or length 1`] = `"function(){return[[\`0\`,\`2\`],[10,30],[[\`0\`,10],[\`2\`,30]],[],[],[]]}"`;
