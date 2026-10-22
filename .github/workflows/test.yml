@@ -349,11 +349,17 @@ jobs:
             script: cover:test262-parser
             flags: test262-parser
           # Minifies every source of each JS corpus with the published minifier
-          # and with webpack's own, then runs webpack's fuzzer on fixed seeds:
-          # each output prints what its input prints. One leg saves a runner.
+          # and with webpack's own: each output prints what its input prints.
+          # About 35 min, so it gets the longer bound below.
           - language: minify-corpora
             submodules: test/external/terser test/external/test262-cases test/external/swc test/external/oxc
             script: cover:minify
+            flags: minify-corpora
+            timeout: 90
+          # Runs webpack's fuzzer on fixed seeds, apart from the corpora: run
+          # together, the two took about 37 of the 60 min a leg is allowed.
+          - language: minify-fuzz
+            script: cover:minify-fuzz
             flags: minify-corpora
           # The W3C XML Conformance Test Suite: every document is read back in
           # canonical form and printed, which is small enough to run covered.
@@ -364,11 +370,14 @@ jobs:
     runs-on: ubuntu-latest
     # Bounded: the js leg allows ten minutes per area per mode, so a stall
     # would otherwise hold a runner for the 6h default.
-    timeout-minutes: 60
+    timeout-minutes: ${{ matrix.timeout || 60 }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Check out the ${{ matrix.language }} corpus
+        if: matrix.submodules
         run: node tooling/retry.js git submodule update --init --depth 1 ${{ matrix.submodules }}
 
       - name: Use Node.js
