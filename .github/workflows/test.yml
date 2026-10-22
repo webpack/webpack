@@ -440,6 +440,10 @@ jobs:
     container:
       image: mcr.microsoft.com/playwright:v1.64.1-noble
       options: --ipc=host
+    # Firefox refuses to run as root under a $HOME owned by another user, which
+    # is what the runner mounts; Playwright's documented fix.
+    env:
+      HOME: /root
     # Bounded: a hung browser would otherwise hold a runner for the 6h default.
     timeout-minutes: 60
     steps:
