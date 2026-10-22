@@ -1833,6 +1833,10 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 			"yield-promise-reject-next-for-await-of-sync-iterator.js (the default minimizer's options)",
 			"yield-promise-reject-next-yield-star-async-iterator.js (the default minimizer's options)"
 		]
+	],
+	[
+		"`Object.keys` of a string literal folded into the array it returns, where gzip matched the repeated call",
+		["keys.js (the default minimizer's options)"]
 	]
 ])) {
 	for (const key of keys) IMPROVED_YET_BIGGER[key] = reason;

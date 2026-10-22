@@ -713,7 +713,7 @@ exports[`syntax-printer improve phase should write less, printing the same: argu
 
 exports[`syntax-printer improve phase should write less, printing the same: assignments opening the statement after a \`var\`, as its values 1`] = `"var k;function f(o){var a,b;console.log(a=o.x,b=o.y,a,b)}function g(o){var a;return console.log(a=o.x,a),a}function h(o){var a=o.x;return k=function(){return a}}function m(o){var a=o.x;try{console.log(a)}finally{console.log(a+1)}}f({x:1,y:2}),h({x:4}),m({x:5}),console.log(g({x:3}),k());"`;
 
-exports[`syntax-printer improve phase should write less, printing the same: built-in calls and constructions on literals no one reads 1`] = `"Object.keys([1,,2]),console.log(1);"`;
+exports[`syntax-printer improve phase should write less, printing the same: built-in calls and constructions on literals no one reads 1`] = `"console.log(1);"`;
 
 exports[`syntax-printer improve phase should write less, printing the same: built-in globals and their properties no one reads 1`] = `"console.log(1);"`;
 
