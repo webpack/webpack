@@ -18624,161 +18624,6 @@ declare interface KnownStatsFactoryContext {
 }
 
 /**
- * The `[object, data]` each `extract` key webpack registers receives.
- */
-declare interface KnownStatsFactoryExtract {
-	compilation: [StatsCompilation, Compilation];
-	asset: [StatsAsset, PreprocessedAsset];
-	asset$visible: [StatsAsset, PreprocessedAsset];
-	chunkGroup: [StatsChunkGroup, ChunkGroupInfoWithName];
-	module: [StatsModule, Module];
-	module$visible: [StatsModule, Module];
-	moduleIssuer: [StatsModuleIssuer, Module];
-	profile: [StatsProfile, ModuleProfile];
-	moduleReason: [StatsModuleReason, ModuleGraphConnection];
-	chunk: [StatsChunk, Chunk];
-	chunkOrigin: [StatsChunkOrigin, OriginRecord];
-	error: [StatsError, WebpackError];
-	warning: [StatsError, WebpackError];
-	cause: [StatsError, WebpackError];
-	moduleTraceItem: [StatsModuleTraceItem, ModuleTrace];
-	moduleTraceDependency: [StatsModuleTraceDependency, Dependency];
-}
-
-declare interface KnownStatsFactoryItemFactories {
-	compilation: Compilation;
-	asset: PreprocessedAsset;
-	asset$visible: PreprocessedAsset;
-	chunkGroup: ChunkGroupInfoWithName;
-	module: Module;
-	module$visible: Module;
-	moduleIssuer: Module;
-	profile: ModuleProfile;
-	moduleReason: ModuleGraphConnection;
-	chunk: Chunk;
-	chunkOrigin: OriginRecord;
-	error: WebpackError;
-	warning: WebpackError;
-	cause: WebpackError;
-	moduleTraceItem: ModuleTrace;
-	moduleTraceDependency: Dependency;
-	"compilation.children[].compilation": Compilation;
-}
-
-/**
- * The item `getItemName` receives for each `<array path>[]` key webpack registers.
- */
-declare interface KnownStatsFactoryItemNames {
-	"compilation.assets[]": PreprocessedAsset;
-	"compilation.chunks[]": Chunk;
-	"compilation.modules[]": Module;
-	"compilation.entrypoints[]": ChunkGroupInfoWithName;
-	"compilation.namedChunkGroups[]": ChunkGroupInfoWithName;
-	"compilation.errors[]": Error;
-	"compilation.warnings[]": Error;
-	"compilation.hints[]": Error;
-	"compilation.children[]": Compilation;
-	"asset.related[]": PreprocessedAsset;
-	"error.errors[]": Error;
-	"warning.errors[]": Error;
-	"chunk.modules[]": Module;
-	"chunk.rootModules[]": Module;
-	"chunk.origins[]": OriginRecord;
-	"module.issuerPath[]": Module;
-	"module.reasons[]": ModuleGraphConnection;
-	"module.modules[]": Module;
-	"module.children[]": Module;
-	"moduleTrace[]": ModuleTrace;
-	"moduleTraceItem.dependencies[]": Dependency;
-}
-declare interface KnownStatsFactoryRawItems {
-	"compilation.assets": PreprocessedAsset;
-	"compilation.chunks": Chunk;
-	"compilation.modules": Module;
-	"compilation.entrypoints": ChunkGroupInfoWithName;
-	"compilation.namedChunkGroups": ChunkGroupInfoWithName;
-	"compilation.errors": Error;
-	"compilation.warnings": Error;
-	"compilation.hints": Error;
-	"compilation.children": Compilation;
-	"asset.related": PreprocessedAsset;
-	"error.errors": Error;
-	"warning.errors": Error;
-	"chunk.modules": Module;
-	"chunk.rootModules": Module;
-	"chunk.origins": OriginRecord;
-	"module.issuerPath": Module;
-	"module.reasons": ModuleGraphConnection;
-	"module.modules": Module;
-	"module.children": Module;
-	moduleTrace: ModuleTrace;
-	"moduleTraceItem.dependencies": Dependency;
-}
-declare interface KnownStatsFactoryResultItems {
-	"compilation.assets": StatsAsset;
-	"compilation.chunks": StatsChunk;
-	"compilation.modules": StatsModule;
-	"compilation.entrypoints": StatsChunkGroup;
-	"compilation.namedChunkGroups": StatsChunkGroup;
-	"compilation.errors": StatsError;
-	"compilation.warnings": StatsError;
-	"compilation.hints": StatsError;
-	"compilation.children": StatsCompilation;
-	"asset.related": StatsAsset;
-	"error.errors": StatsError;
-	"warning.errors": StatsError;
-	"chunk.modules": StatsModule;
-	"chunk.rootModules": StatsModule;
-	"chunk.origins": StatsChunkOrigin;
-	"module.issuerPath": StatsModuleIssuer;
-	"module.reasons": StatsModuleReason;
-	"module.modules": StatsModule;
-	"module.children": StatsModule;
-	moduleTrace: StatsModuleTraceItem;
-	"moduleTraceItem.dependencies": StatsModuleTraceDependency;
-}
-
-declare interface KnownStatsFactoryResults {
-	compilation: StatsCompilation;
-	asset: StatsAsset;
-	asset$visible: StatsAsset;
-	chunkGroup: StatsChunkGroup;
-	module: StatsModule;
-	module$visible: StatsModule;
-	moduleIssuer: StatsModuleIssuer;
-	profile: StatsProfile;
-	moduleReason: StatsModuleReason;
-	chunk: StatsChunk;
-	chunkOrigin: StatsChunkOrigin;
-	error: StatsError;
-	warning: StatsError;
-	cause: StatsError;
-	moduleTraceItem: StatsModuleTraceItem;
-	moduleTraceDependency: StatsModuleTraceDependency;
-	moduleTrace: StatsModuleTraceItem[];
-	"compilation.assets": StatsAsset[];
-	"compilation.chunks": StatsChunk[];
-	"compilation.modules": StatsModule[];
-	"compilation.errors": StatsError[];
-	"compilation.warnings": StatsError[];
-	"compilation.hints": StatsError[];
-	"compilation.children": StatsCompilation[];
-	"asset.related": StatsAsset[];
-	"error.errors": StatsError[];
-	"warning.errors": StatsError[];
-	"chunk.modules": StatsModule[];
-	"chunk.rootModules": StatsModule[];
-	"chunk.origins": StatsChunkOrigin[];
-	"module.issuerPath": StatsModuleIssuer[];
-	"module.reasons": StatsModuleReason[];
-	"module.modules": StatsModule[];
-	"module.children": StatsModule[];
-	"moduleTraceItem.dependencies": StatsModuleTraceDependency[];
-	"compilation.entrypoints": Record<string, StatsChunkGroup>;
-	"compilation.namedChunkGroups": Record<string, StatsChunkGroup>;
-}
-
-/**
  * Defines the known stats logging type used by this module.
  */
 declare interface KnownStatsLogging {
@@ -18891,88 +18736,6 @@ declare interface KnownStatsModuleTraceItem {
 	dependencies?: StatsModuleTraceDependency[];
 	originId?: string | number;
 	moduleId?: string | number;
-}
-
-/**
- * The item `getItemName` receives for each `<array path>[]` key of `KnownStatsPrintItems`.
- */
-declare interface KnownStatsPrintItemNames {
-	"compilation.assets[]": StatsAsset;
-	"compilation.modules[]": StatsModule;
-	"compilation.chunks[]": StatsChunk;
-	"compilation.entrypoints[]": StatsChunkGroup;
-	"compilation.namedChunkGroups[]": StatsChunkGroup;
-	"compilation.errors[]": StatsError;
-	"compilation.warnings[]": StatsError;
-	"compilation.hints[]": StatsError;
-	"compilation.logging[]": KnownStatsLogging &
-		Record<string, StatsJsonValue> & { name: string };
-	"compilation.children[]": StatsCompilation;
-	"asset.related[]": StatsAsset;
-	"asset.children[]": StatsAsset;
-	"module.modules[]": StatsModule;
-	"module.children[]": StatsModule;
-	"module.reasons[]": StatsModuleReason;
-	"moduleReason.children[]": StatsModuleReason;
-	"module.issuerPath[]": StatsModuleIssuer;
-	"chunk.origins[]": StatsChunkOrigin;
-	"chunk.modules[]": StatsModule;
-	"loggingGroup.entries[]": StatsLoggingEntry;
-	"loggingEntry.children[]": StatsLoggingEntry;
-	"error.moduleTrace[]": StatsModuleTraceItem;
-	"error.errors[]": StatsError;
-	"moduleTraceItem.dependencies[]": StatsModuleTraceDependency;
-}
-
-/**
- * The item of each array path webpack prints stats objects for.
- */
-declare interface KnownStatsPrintItems {
-	"compilation.assets": StatsAsset;
-	"compilation.modules": StatsModule;
-	"compilation.chunks": StatsChunk;
-	"compilation.entrypoints": StatsChunkGroup;
-	"compilation.namedChunkGroups": StatsChunkGroup;
-	"compilation.errors": StatsError;
-	"compilation.warnings": StatsError;
-	"compilation.hints": StatsError;
-	"compilation.logging": KnownStatsLogging &
-		Record<string, StatsJsonValue> & { name: string };
-	"compilation.children": StatsCompilation;
-	"asset.related": StatsAsset;
-	"asset.children": StatsAsset;
-	"module.modules": StatsModule;
-	"module.children": StatsModule;
-	"module.reasons": StatsModuleReason;
-	"moduleReason.children": StatsModuleReason;
-	"module.issuerPath": StatsModuleIssuer;
-	"chunk.origins": StatsChunkOrigin;
-	"chunk.modules": StatsModule;
-	"loggingGroup.entries": StatsLoggingEntry;
-	"loggingEntry.children": StatsLoggingEntry;
-	"error.moduleTrace": StatsModuleTraceItem;
-	"error.errors": StatsError;
-	"moduleTraceItem.dependencies": StatsModuleTraceDependency;
-}
-
-/**
- * The value `print` receives for each object key webpack prints; the key also matches same-named fields.
- */
-declare interface KnownStatsPrintObjects {
-	compilation: StatsCompilation;
-	asset: StatsAsset;
-	chunk: StatsChunk;
-	chunkGroup: StatsChunkGroup;
-	module: null | string | StatsModule;
-	moduleReason: StatsModuleReason;
-	moduleIssuer: StatsModuleIssuer;
-	chunkOrigin: StatsChunkOrigin;
-	error: StatsError;
-	profile: StatsProfile;
-	loggingGroup: KnownStatsLogging &
-		Record<string, StatsJsonValue> & { name: string };
-	moduleTraceItem: StatsModuleTraceItem;
-	moduleTraceDependency: StatsModuleTraceDependency;
 }
 
 /**
@@ -32962,30 +32725,12 @@ declare abstract class StatsFactory {
 }
 type StatsFactoryContext = KnownStatsFactoryContext & Record<string, any>;
 type StatsFactoryExtractHookMap = {
-	for<
-		K extends
-			| "module"
-			| "error"
-			| "asset"
-			| "compilation"
-			| "chunk"
-			| "profile"
-			| "warning"
-			| "asset$visible"
-			| "chunkGroup"
-			| "module$visible"
-			| "moduleIssuer"
-			| "moduleReason"
-			| "chunkOrigin"
-			| "cause"
-			| "moduleTraceItem"
-			| "moduleTraceDependency"
-	>(
+	for<K extends keyof exports.StatsFactoryExtractKeys>(
 		key: K
 	): SyncBailHook<
 		[
-			KnownStatsFactoryExtract[K][0],
-			KnownStatsFactoryExtract[K][1],
+			exports.StatsFactoryExtractKeys[K][0],
+			exports.StatsFactoryExtractKeys[K][1],
 			StatsFactoryContext
 		],
 		void
@@ -32993,96 +32738,33 @@ type StatsFactoryExtractHookMap = {
 	for(key: string): SyncBailHook<[any, any, StatsFactoryContext], void>;
 } & HookMap<SyncBailHook<[any, any, StatsFactoryContext], void>>;
 type StatsFactoryGetItemFactoryHookMap = {
-	for<
-		K extends
-			| "module"
-			| "error"
-			| "asset"
-			| "compilation"
-			| "chunk"
-			| "profile"
-			| "warning"
-			| "asset$visible"
-			| "chunkGroup"
-			| "module$visible"
-			| "moduleIssuer"
-			| "moduleReason"
-			| "chunkOrigin"
-			| "cause"
-			| "moduleTraceItem"
-			| "moduleTraceDependency"
-			| "compilation.children[].compilation"
-	>(
+	for<K extends keyof exports.StatsFactoryExtractKeys>(
 		key: K
 	): SyncBailHook<
-		[KnownStatsFactoryItemFactories[K], StatsFactoryContext],
+		[exports.StatsFactoryExtractKeys[K][1], StatsFactoryContext],
 		void | StatsFactory
 	>;
+	for(
+		key: "compilation.children[].compilation"
+	): SyncBailHook<[Compilation, StatsFactoryContext], void | StatsFactory>;
 	for(
 		key: string
 	): SyncBailHook<[any, StatsFactoryContext], void | StatsFactory>;
 } & HookMap<SyncBailHook<[any, StatsFactoryContext], void | StatsFactory>>;
 type StatsFactoryGetItemNameHookMap = {
-	for<
-		K extends
-			| "compilation.assets[]"
-			| "compilation.chunks[]"
-			| "compilation.modules[]"
-			| "compilation.entrypoints[]"
-			| "compilation.namedChunkGroups[]"
-			| "compilation.errors[]"
-			| "compilation.warnings[]"
-			| "compilation.hints[]"
-			| "compilation.children[]"
-			| "asset.related[]"
-			| "error.errors[]"
-			| "warning.errors[]"
-			| "chunk.modules[]"
-			| "chunk.rootModules[]"
-			| "chunk.origins[]"
-			| "module.issuerPath[]"
-			| "module.reasons[]"
-			| "module.modules[]"
-			| "module.children[]"
-			| "moduleTrace[]"
-			| "moduleTraceItem.dependencies[]"
-	>(
+	for<K extends keyof exports.StatsFactoryItemNameKeys>(
 		key: K
 	): SyncBailHook<
-		[KnownStatsFactoryItemNames[K], StatsFactoryContext],
+		[exports.StatsFactoryItemNameKeys[K], StatsFactoryContext],
 		string | void
 	>;
 	for(key: string): SyncBailHook<[any, StatsFactoryContext], string | void>;
 } & HookMap<SyncBailHook<[any, StatsFactoryContext], string | void>>;
 type StatsFactoryGroupResultsHookMap = {
-	for<
-		K extends
-			| "moduleTrace"
-			| "compilation.assets"
-			| "compilation.chunks"
-			| "compilation.modules"
-			| "compilation.entrypoints"
-			| "compilation.namedChunkGroups"
-			| "compilation.errors"
-			| "compilation.warnings"
-			| "compilation.hints"
-			| "compilation.children"
-			| "asset.related"
-			| "error.errors"
-			| "warning.errors"
-			| "chunk.modules"
-			| "chunk.rootModules"
-			| "chunk.origins"
-			| "module.issuerPath"
-			| "module.reasons"
-			| "module.modules"
-			| "module.children"
-			| "moduleTraceItem.dependencies",
-		G = object
-	>(
+	for<K extends keyof exports.StatsFactoryItemKeys, G = object>(
 		key: K
 	): SyncBailHook<
-		[GroupConfig<KnownStatsFactoryResultItems[K], G>[], StatsFactoryContext],
+		[GroupConfig<exports.StatsFactoryItemKeys[K][1], G>[], StatsFactoryContext],
 		void
 	>;
 	for(
@@ -33107,33 +32789,10 @@ declare interface StatsFactoryHooks {
 	getItemFactory: StatsFactoryGetItemFactoryHookMap;
 }
 type StatsFactoryItemFilterHookMap = {
-	for<
-		K extends
-			| "moduleTrace"
-			| "compilation.assets"
-			| "compilation.chunks"
-			| "compilation.modules"
-			| "compilation.entrypoints"
-			| "compilation.namedChunkGroups"
-			| "compilation.errors"
-			| "compilation.warnings"
-			| "compilation.hints"
-			| "compilation.children"
-			| "asset.related"
-			| "error.errors"
-			| "warning.errors"
-			| "chunk.modules"
-			| "chunk.rootModules"
-			| "chunk.origins"
-			| "module.issuerPath"
-			| "module.reasons"
-			| "module.modules"
-			| "module.children"
-			| "moduleTraceItem.dependencies"
-	>(
+	for<K extends keyof exports.StatsFactoryItemKeys>(
 		key: K
 	): SyncBailHook<
-		[KnownStatsFactoryRawItems[K], StatsFactoryContext, number, number],
+		[exports.StatsFactoryItemKeys[K][0], StatsFactoryContext, number, number],
 		boolean | void
 	>;
 	for(
@@ -33143,33 +32802,10 @@ type StatsFactoryItemFilterHookMap = {
 	SyncBailHook<[any, StatsFactoryContext, number, number], boolean | void>
 >;
 type StatsFactoryItemSortHookMap = {
-	for<
-		K extends
-			| "moduleTrace"
-			| "compilation.assets"
-			| "compilation.chunks"
-			| "compilation.modules"
-			| "compilation.entrypoints"
-			| "compilation.namedChunkGroups"
-			| "compilation.errors"
-			| "compilation.warnings"
-			| "compilation.hints"
-			| "compilation.children"
-			| "asset.related"
-			| "error.errors"
-			| "warning.errors"
-			| "chunk.modules"
-			| "chunk.rootModules"
-			| "chunk.origins"
-			| "module.issuerPath"
-			| "module.reasons"
-			| "module.modules"
-			| "module.children"
-			| "moduleTraceItem.dependencies"
-	>(
+	for<K extends keyof exports.StatsFactoryItemKeys>(
 		key: K
 	): SyncBailHook<
-		[Comparator<KnownStatsFactoryRawItems[K]>[], StatsFactoryContext],
+		[Comparator<exports.StatsFactoryItemKeys[K][0]>[], StatsFactoryContext],
 		void
 	>;
 	for(
@@ -33178,65 +32814,25 @@ type StatsFactoryItemSortHookMap = {
 } & HookMap<SyncBailHook<[Comparator<any>[], StatsFactoryContext], void>>;
 type StatsFactoryMergeHookMap = {
 	for<
-		K extends
-			| "moduleTrace"
-			| "compilation.assets"
-			| "compilation.chunks"
-			| "compilation.modules"
-			| "compilation.entrypoints"
-			| "compilation.namedChunkGroups"
-			| "compilation.errors"
-			| "compilation.warnings"
-			| "compilation.hints"
-			| "compilation.children"
-			| "asset.related"
-			| "error.errors"
-			| "warning.errors"
-			| "chunk.modules"
-			| "chunk.rootModules"
-			| "chunk.origins"
-			| "module.issuerPath"
-			| "module.reasons"
-			| "module.modules"
-			| "module.children"
-			| "moduleTraceItem.dependencies",
-		R = Record<string, KnownStatsFactoryResultItems[K]>
+		K extends keyof exports.StatsFactoryItemKeys,
+		R = Record<string, exports.StatsFactoryItemKeys[K][1]>
 	>(
 		key: K
 	): SyncBailHook<
-		[KnownStatsFactoryResultItems[K][], StatsFactoryContext],
+		[exports.StatsFactoryItemKeys[K][1][], StatsFactoryContext],
 		void | R
 	>;
 	for(key: string): SyncBailHook<[any[], StatsFactoryContext], any>;
 } & HookMap<SyncBailHook<[any[], StatsFactoryContext], any>>;
+type StatsFactoryMergedItems<K extends keyof exports.StatsFactoryItemKeys> =
+	exports.StatsFactoryItemKeys[K] extends [any, any, infer M]
+		? M
+		: exports.StatsFactoryItemKeys[K][1][];
 type StatsFactoryResultFilterHookMap = {
-	for<
-		K extends
-			| "moduleTrace"
-			| "compilation.assets"
-			| "compilation.chunks"
-			| "compilation.modules"
-			| "compilation.entrypoints"
-			| "compilation.namedChunkGroups"
-			| "compilation.errors"
-			| "compilation.warnings"
-			| "compilation.hints"
-			| "compilation.children"
-			| "asset.related"
-			| "error.errors"
-			| "warning.errors"
-			| "chunk.modules"
-			| "chunk.rootModules"
-			| "chunk.origins"
-			| "module.issuerPath"
-			| "module.reasons"
-			| "module.modules"
-			| "module.children"
-			| "moduleTraceItem.dependencies"
-	>(
+	for<K extends keyof exports.StatsFactoryItemKeys>(
 		key: K
 	): SyncBailHook<
-		[KnownStatsFactoryResultItems[K], StatsFactoryContext, number, number],
+		[exports.StatsFactoryItemKeys[K][1], StatsFactoryContext, number, number],
 		boolean | void
 	>;
 	for(
@@ -33246,81 +32842,25 @@ type StatsFactoryResultFilterHookMap = {
 	SyncBailHook<[any, StatsFactoryContext, number, number], boolean | void>
 >;
 type StatsFactoryResultHookMap = {
-	for<
-		K extends
-			| "module"
-			| "error"
-			| "asset"
-			| "compilation"
-			| "chunk"
-			| "moduleTrace"
-			| "profile"
-			| "warning"
-			| "asset$visible"
-			| "chunkGroup"
-			| "module$visible"
-			| "moduleIssuer"
-			| "moduleReason"
-			| "chunkOrigin"
-			| "cause"
-			| "moduleTraceItem"
-			| "moduleTraceDependency"
-			| "compilation.assets"
-			| "compilation.chunks"
-			| "compilation.modules"
-			| "compilation.entrypoints"
-			| "compilation.namedChunkGroups"
-			| "compilation.errors"
-			| "compilation.warnings"
-			| "compilation.hints"
-			| "compilation.children"
-			| "asset.related"
-			| "error.errors"
-			| "warning.errors"
-			| "chunk.modules"
-			| "chunk.rootModules"
-			| "chunk.origins"
-			| "module.issuerPath"
-			| "module.reasons"
-			| "module.modules"
-			| "module.children"
-			| "moduleTraceItem.dependencies"
-	>(
+	for<K extends keyof exports.StatsFactoryExtractKeys>(
 		key: K
 	): SyncBailHook<
-		[KnownStatsFactoryResults[K], StatsFactoryContext],
-		KnownStatsFactoryResults[K]
+		[exports.StatsFactoryExtractKeys[K][0], StatsFactoryContext],
+		exports.StatsFactoryExtractKeys[K][0]
+	>;
+	for<K extends keyof exports.StatsFactoryItemKeys>(
+		key: K
+	): SyncBailHook<
+		[StatsFactoryMergedItems<K>, StatsFactoryContext],
+		StatsFactoryMergedItems<K>
 	>;
 	for(key: string): SyncBailHook<[any, StatsFactoryContext], any>;
 } & HookMap<SyncBailHook<[any, StatsFactoryContext], any>>;
 type StatsFactoryResultSortHookMap = {
-	for<
-		K extends
-			| "moduleTrace"
-			| "compilation.assets"
-			| "compilation.chunks"
-			| "compilation.modules"
-			| "compilation.entrypoints"
-			| "compilation.namedChunkGroups"
-			| "compilation.errors"
-			| "compilation.warnings"
-			| "compilation.hints"
-			| "compilation.children"
-			| "asset.related"
-			| "error.errors"
-			| "warning.errors"
-			| "chunk.modules"
-			| "chunk.rootModules"
-			| "chunk.origins"
-			| "module.issuerPath"
-			| "module.reasons"
-			| "module.modules"
-			| "module.children"
-			| "moduleTraceItem.dependencies"
-	>(
+	for<K extends keyof exports.StatsFactoryItemKeys>(
 		key: K
 	): SyncBailHook<
-		[Comparator<KnownStatsFactoryResultItems[K]>[], StatsFactoryContext],
+		[Comparator<exports.StatsFactoryItemKeys[K][1]>[], StatsFactoryContext],
 		void
 	>;
 	for(
@@ -33897,60 +33437,19 @@ type StatsPrinterContext = KnownStatsPrinterColorFunctions &
 	KnownStatsPrinterContext &
 	Record<string, any>;
 type StatsPrinterGetItemNameHookMap = {
-	for<
-		K extends
-			| "compilation.assets[]"
-			| "compilation.chunks[]"
-			| "compilation.modules[]"
-			| "compilation.entrypoints[]"
-			| "compilation.namedChunkGroups[]"
-			| "compilation.errors[]"
-			| "compilation.warnings[]"
-			| "compilation.hints[]"
-			| "compilation.children[]"
-			| "asset.related[]"
-			| "error.errors[]"
-			| "chunk.modules[]"
-			| "chunk.origins[]"
-			| "module.issuerPath[]"
-			| "module.reasons[]"
-			| "module.modules[]"
-			| "module.children[]"
-			| "moduleTraceItem.dependencies[]"
-			| "compilation.logging[]"
-			| "asset.children[]"
-			| "moduleReason.children[]"
-			| "loggingGroup.entries[]"
-			| "loggingEntry.children[]"
-			| "error.moduleTrace[]"
-	>(
+	for<K extends keyof exports.StatsPrinterItemNameKeys>(
 		key: K
 	): SyncBailHook<
-		[KnownStatsPrintItemNames[K], StatsPrinterContext],
+		[exports.StatsPrinterItemNameKeys[K], StatsPrinterContext],
 		string | void
 	>;
 	for(key: string): SyncBailHook<[any, StatsPrinterContext], string | void>;
 } & HookMap<SyncBailHook<[any, StatsPrinterContext], string | void>>;
 type StatsPrinterPrintHookMap = {
-	for<
-		K extends
-			| "module"
-			| "error"
-			| "asset"
-			| "compilation"
-			| "chunk"
-			| "profile"
-			| "chunkGroup"
-			| "moduleIssuer"
-			| "moduleReason"
-			| "chunkOrigin"
-			| "moduleTraceItem"
-			| "moduleTraceDependency"
-			| "loggingGroup"
-	>(
+	for<K extends keyof exports.StatsPrinterPrintKeys>(
 		key: K
 	): SyncBailHook<
-		[KnownStatsPrintObjects[K], StatsPrinterContext],
+		[exports.StatsPrinterPrintKeys[K], StatsPrinterContext],
 		undefined | string | void
 	>;
 	for(
@@ -33960,36 +33459,10 @@ type StatsPrinterPrintHookMap = {
 	SyncBailHook<[any, StatsPrinterContext], undefined | string | void>
 >;
 type StatsPrinterSortItemsHookMap = {
-	for<
-		K extends
-			| "compilation.assets"
-			| "compilation.chunks"
-			| "compilation.modules"
-			| "compilation.entrypoints"
-			| "compilation.namedChunkGroups"
-			| "compilation.errors"
-			| "compilation.warnings"
-			| "compilation.hints"
-			| "compilation.children"
-			| "asset.related"
-			| "error.errors"
-			| "chunk.modules"
-			| "chunk.origins"
-			| "module.issuerPath"
-			| "module.reasons"
-			| "module.modules"
-			| "module.children"
-			| "moduleTraceItem.dependencies"
-			| "compilation.logging"
-			| "asset.children"
-			| "moduleReason.children"
-			| "loggingGroup.entries"
-			| "loggingEntry.children"
-			| "error.moduleTrace"
-	>(
+	for<K extends keyof exports.StatsPrinterItemKeys>(
 		key: K
 	): SyncBailHook<
-		[KnownStatsPrintItems[K][], StatsPrinterContext],
+		[exports.StatsPrinterItemKeys[K][], StatsPrinterContext],
 		boolean | void
 	>;
 	for(key: string): SyncBailHook<[any[], StatsPrinterContext], boolean | void>;
@@ -36343,6 +35816,177 @@ declare function exports(
 ): null | MultiCompiler;
 declare function exports(options: MultiConfiguration): MultiCompiler;
 declare namespace exports {
+	/**
+	 * The `[object, data]` `extract` receives for each object key, which also types that key's `getItemFactory` data and `result` value.
+	 * A plugin types its own keys by declaration merging: `declare module "webpack" { interface StatsFactoryExtractKeys { "myPlugin.data": [MyObject, MyData] } }`.
+	 */
+	export interface StatsFactoryExtractKeys {
+		compilation: [StatsCompilation, Compilation];
+		asset: [StatsAsset, PreprocessedAsset];
+		asset$visible: [StatsAsset, PreprocessedAsset];
+		chunkGroup: [StatsChunkGroup, ChunkGroupInfoWithName];
+		module: [StatsModule, Module];
+		module$visible: [StatsModule, Module];
+		moduleIssuer: [StatsModuleIssuer, Module];
+		profile: [StatsProfile, ModuleProfile];
+		moduleReason: [StatsModuleReason, ModuleGraphConnection];
+		chunk: [StatsChunk, Chunk];
+		chunkOrigin: [StatsChunkOrigin, OriginRecord];
+		error: [StatsError, WebpackError];
+		warning: [StatsError, WebpackError];
+		cause: [StatsError, WebpackError];
+		moduleTraceItem: [StatsModuleTraceItem, ModuleTrace];
+		moduleTraceDependency: [StatsModuleTraceDependency, Dependency];
+	}
+
+	/**
+	 * The `[item, created item]` of each array path, typing its item hooks (`filter`, `sort`, `filterSorted`) and created item hooks (`sortResults`, `groupResults`, `filterResults`, `merge`); an optional third element is what `merge` makes of the created items, which `result` then gets instead of their array.
+	 * A plugin types its own paths by declaration merging: `declare module "webpack" { interface StatsFactoryItemKeys { "myPlugin.items": [MyItem, MyCreatedItem] } }`.
+	 */
+	export interface StatsFactoryItemKeys {
+		"compilation.assets": [PreprocessedAsset, StatsAsset];
+		"compilation.chunks": [Chunk, StatsChunk];
+		"compilation.modules": [Module, StatsModule];
+		"compilation.entrypoints": [
+			ChunkGroupInfoWithName,
+			StatsChunkGroup,
+			Record<string, StatsChunkGroup>
+		];
+		"compilation.namedChunkGroups": [
+			ChunkGroupInfoWithName,
+			StatsChunkGroup,
+			Record<string, StatsChunkGroup>
+		];
+		"compilation.errors": [Error, StatsError];
+		"compilation.warnings": [Error, StatsError];
+		"compilation.hints": [Error, StatsError];
+		"compilation.children": [Compilation, StatsCompilation];
+		"asset.related": [PreprocessedAsset, StatsAsset];
+		"error.errors": [Error, StatsError];
+		"warning.errors": [Error, StatsError];
+		"chunk.modules": [Module, StatsModule];
+		"chunk.rootModules": [Module, StatsModule];
+		"chunk.origins": [OriginRecord, StatsChunkOrigin];
+		"module.issuerPath": [Module, StatsModuleIssuer];
+		"module.reasons": [ModuleGraphConnection, StatsModuleReason];
+		"module.modules": [Module, StatsModule];
+		"module.children": [Module, StatsModule];
+		moduleTrace: [ModuleTrace, StatsModuleTraceItem];
+		"moduleTraceItem.dependencies": [Dependency, StatsModuleTraceDependency];
+	}
+
+	/**
+	 * The item `getItemName` receives for each `<array path>[]` key: the first element of that path's `StatsFactoryItemKeys` entry.
+	 * A plugin types its own keys by declaration merging: `declare module "webpack" { interface StatsFactoryItemNameKeys { "myPlugin.items[]": MyItem } }`.
+	 */
+	export interface StatsFactoryItemNameKeys {
+		"compilation.assets[]": PreprocessedAsset;
+		"compilation.chunks[]": Chunk;
+		"compilation.modules[]": Module;
+		"compilation.entrypoints[]": ChunkGroupInfoWithName;
+		"compilation.namedChunkGroups[]": ChunkGroupInfoWithName;
+		"compilation.errors[]": Error;
+		"compilation.warnings[]": Error;
+		"compilation.hints[]": Error;
+		"compilation.children[]": Compilation;
+		"asset.related[]": PreprocessedAsset;
+		"error.errors[]": Error;
+		"warning.errors[]": Error;
+		"chunk.modules[]": Module;
+		"chunk.rootModules[]": Module;
+		"chunk.origins[]": OriginRecord;
+		"module.issuerPath[]": Module;
+		"module.reasons[]": ModuleGraphConnection;
+		"module.modules[]": Module;
+		"module.children[]": Module;
+		"moduleTrace[]": ModuleTrace;
+		"moduleTraceItem.dependencies[]": Dependency;
+	}
+
+	/**
+	 * The item of each array path, which `sortItems` receives the array of.
+	 * A plugin types its own paths by declaration merging: `declare module "webpack" { interface StatsPrinterItemKeys { "myPlugin.items": MyItem } }`.
+	 */
+	export interface StatsPrinterItemKeys {
+		"compilation.assets": StatsAsset;
+		"compilation.modules": StatsModule;
+		"compilation.chunks": StatsChunk;
+		"compilation.entrypoints": StatsChunkGroup;
+		"compilation.namedChunkGroups": StatsChunkGroup;
+		"compilation.errors": StatsError;
+		"compilation.warnings": StatsError;
+		"compilation.hints": StatsError;
+		"compilation.logging": KnownStatsLogging &
+			Record<string, StatsJsonValue> & { name: string };
+		"compilation.children": StatsCompilation;
+		"asset.related": StatsAsset;
+		"asset.children": StatsAsset;
+		"module.modules": StatsModule;
+		"module.children": StatsModule;
+		"module.reasons": StatsModuleReason;
+		"moduleReason.children": StatsModuleReason;
+		"module.issuerPath": StatsModuleIssuer;
+		"chunk.origins": StatsChunkOrigin;
+		"chunk.modules": StatsModule;
+		"loggingGroup.entries": StatsLoggingEntry;
+		"loggingEntry.children": StatsLoggingEntry;
+		"error.moduleTrace": StatsModuleTraceItem;
+		"error.errors": StatsError;
+		"moduleTraceItem.dependencies": StatsModuleTraceDependency;
+	}
+
+	/**
+	 * The item `getItemName` receives for each `<array path>[]` key: that path's `StatsPrinterItemKeys` entry.
+	 * A plugin types its own keys by declaration merging: `declare module "webpack" { interface StatsPrinterItemNameKeys { "myPlugin.items[]": MyItem } }`.
+	 */
+	export interface StatsPrinterItemNameKeys {
+		"compilation.assets[]": StatsAsset;
+		"compilation.modules[]": StatsModule;
+		"compilation.chunks[]": StatsChunk;
+		"compilation.entrypoints[]": StatsChunkGroup;
+		"compilation.namedChunkGroups[]": StatsChunkGroup;
+		"compilation.errors[]": StatsError;
+		"compilation.warnings[]": StatsError;
+		"compilation.hints[]": StatsError;
+		"compilation.logging[]": KnownStatsLogging &
+			Record<string, StatsJsonValue> & { name: string };
+		"compilation.children[]": StatsCompilation;
+		"asset.related[]": StatsAsset;
+		"asset.children[]": StatsAsset;
+		"module.modules[]": StatsModule;
+		"module.children[]": StatsModule;
+		"module.reasons[]": StatsModuleReason;
+		"moduleReason.children[]": StatsModuleReason;
+		"module.issuerPath[]": StatsModuleIssuer;
+		"chunk.origins[]": StatsChunkOrigin;
+		"chunk.modules[]": StatsModule;
+		"loggingGroup.entries[]": StatsLoggingEntry;
+		"loggingEntry.children[]": StatsLoggingEntry;
+		"error.moduleTrace[]": StatsModuleTraceItem;
+		"error.errors[]": StatsError;
+		"moduleTraceItem.dependencies[]": StatsModuleTraceDependency;
+	}
+
+	/**
+	 * The value `print` receives for each object key, which also matches same-named fields.
+	 * A plugin types its own keys by declaration merging: `declare module "webpack" { interface StatsPrinterPrintKeys { "myPlugin.data": MyObject } }`.
+	 */
+	export interface StatsPrinterPrintKeys {
+		compilation: StatsCompilation;
+		asset: StatsAsset;
+		chunk: StatsChunk;
+		chunkGroup: StatsChunkGroup;
+		module: null | string | StatsModule;
+		moduleReason: StatsModuleReason;
+		moduleIssuer: StatsModuleIssuer;
+		chunkOrigin: StatsChunkOrigin;
+		error: StatsError;
+		profile: StatsProfile;
+		loggingGroup: KnownStatsLogging &
+			Record<string, StatsJsonValue> & { name: string };
+		moduleTraceItem: StatsModuleTraceItem;
+		moduleTraceDependency: StatsModuleTraceDependency;
+	}
 	export const webpack: _functionWebpack;
 	export const defineConfig: <T extends DefineConfigInput>(config: T) => T;
 	export const validate: (
