@@ -482,3 +482,233 @@ describe("CssSyntax — code point and substitution helpers", () => {
 		expect(containsSubstitutionFunction("red")).toBe(false);
 	});
 });
+
+describe("CssSyntax — tokens at the end of the input", () => {
+	/**
+	 * @param {string} src css source
+	 * @returns {[number, number, number][]} each raw token's type and range
+	 */
+	const tokensOf = (src) => {
+		/** @type {[number, number, number][]} */
+		const tokens = [];
+		for (let pos = 0; ; ) {
+			const t = readToken(
+				src,
+				pos,
+				/** @type {import("../../../lib/css/syntax-parser").MutableToken} */ ({})
+			);
+			if (t === undefined) break;
+			tokens.push([t.type, t.start, t.end]);
+			pos = t.end;
+		}
+		return tokens;
+	};
+
+	it("reads a lone `@` as a delim and `@` with a name as an at-keyword", () => {
+		expect(tokensOf("@")).toEqual([[TokenType.Delim, 0, 1]]);
+		expect(tokensOf("@a")).toEqual([[TokenType.AtKeyword, 0, 2]]);
+	});
+
+	it("runs a bad url the input never closed to the end of the input", () => {
+		// §4.3.14 consumes the remnants up to `)` or EOF, whichever comes first.
+		expect(tokensOf('url(a"b')).toEqual([[TokenType.BadUrl, 0, 7]]);
+		expect(tokensOf("url(a b")).toEqual([[TokenType.BadUrl, 0, 7]]);
+	});
+});
+
+describe("CssSyntax — the token stream", () => {
+	const { _S } = require("../../../lib/css/syntax-parser");
+
+	/**
+	 * @param {TokenStream} stream a stream
+	 * @returns {[number, string]} the next token's type and source text
+	 */
+	const peek = (stream) => {
+		const t = stream.next();
+		return [t.type, stream.input.slice(t.start, t.end)];
+	};
+
+	it("fires each comment once, even when a mark rewinds over it", () => {
+		/** @type {string[]} */
+		const seen = [];
+		const stream = new TokenStream(
+			"/*1*/a/*2*/ b",
+			0,
+			undefined,
+			(input, start, end) => seen.push(input.slice(start, end))
+		);
+		stream.mark();
+		expect(stream.consume().start).toBe(5);
+		expect(stream.consume().type).toBe(TokenType.Whitespace);
+		stream.restoreMark();
+		// The rewound span is lexed again, comments included, without re-firing.
+		expect(peek(stream)).toEqual([TokenType.Ident, "a"]);
+		stream.consume();
+		expect(peek(stream)).toEqual([TokenType.Whitespace, " "]);
+		expect(seen).toEqual(["/*1*/", "/*2*/"]);
+	});
+
+	it("notes where a comment the source never closed opens", () => {
+		/**
+		 * @param {string} src css source
+		 * @returns {number} the offset of its unclosed comment, or -1
+		 */
+		const openCommentOf = (src) => {
+			parseAListOfComponentValues(src);
+			return _S._openCommentStart;
+		};
+		expect(openCommentOf("a /* x")).toBe(2);
+		expect(openCommentOf("/*")).toBe(0);
+		// `/*/` and `/* **` end in what could close a comment, but not one opened there.
+		expect(openCommentOf("a/*/")).toBe(1);
+		expect(openCommentOf("a/* **")).toBe(1);
+		expect(openCommentOf("a /**/")).toBe(-1);
+		expect(openCommentOf("a /* x */ b")).toBe(-1);
+	});
+
+	it("steps over whitespace without lexing it, unless a token is cached", () => {
+		const stream = new TokenStream(" \t\n\fa b");
+		stream.skipWhitespace();
+		expect(peek(stream)).toEqual([TokenType.Ident, "a"]);
+		// The cached `a` is still the next token.
+		stream.skipWhitespace();
+		expect(stream.next().start).toBe(4);
+	});
+
+	it("steps over a selector prelude up to what has to be lexed", () => {
+		/**
+		 * @param {string} src css source
+		 * @returns {[number, string]} the next token after skipping prelude leaves
+		 */
+		const afterPrelude = (src) => {
+			const stream = new TokenStream(src);
+			stream.skipPreludeLeaves();
+			return peek(stream);
+		};
+		expect(afterPrelude("a .b{")).toEqual([TokenType.LeftCurlyBracket, "{"]);
+		// A name running into `(` is lexed with it, as one function or url token.
+		expect(afterPrelude("a b:not(x){}")).toEqual([TokenType.Function, "not("]);
+		expect(afterPrelude("ab(")).toEqual([TokenType.Function, "ab("]);
+		expect(afterPrelude("a url(x) b{")).toEqual([TokenType.Url, "url(x)"]);
+		expect(afterPrelude("a (b)")).toEqual([TokenType.LeftParenthesis, "("]);
+		expect(afterPrelude("abc")).toEqual([TokenType.EOF, ""]);
+	});
+
+	it("does not step over a prelude while a token is cached", () => {
+		const stream = new TokenStream("a .b{");
+		stream.next();
+		stream.skipPreludeLeaves();
+		expect(peek(stream)).toEqual([TokenType.Ident, "a"]);
+	});
+
+	it("parses on from where an existing stream stands", () => {
+		const stream = new TokenStream("a b c");
+		stream.consume();
+		expect(cvTypes(/** @type {EXPECTED_ANY} */ (stream))).toEqual([
+			NodeType.Whitespace,
+			NodeType.Ident,
+			NodeType.Whitespace,
+			NodeType.Ident
+		]);
+	});
+});
+
+describe("CssSyntax — name and range helpers", () => {
+	const {
+		_trimCssWhiteSpace,
+		asciiLowercaseName,
+		isDashedIdentifier,
+		isSimpleIdentifier,
+		rangeAsciiCaseInsensitiveMatch,
+		rangeEquals,
+		skipEscape,
+		toLowerCaseIfNeeded
+	} = require("../../../lib/css/syntax-parser");
+
+	it("trims only the whitespace CSS skips", () => {
+		expect(_trimCssWhiteSpace(" \t\na\n\f ")).toBe("a");
+		expect(_trimCssWhiteSpace("   ")).toBe("");
+		// U+00A0 is an ident code point, not whitespace.
+		expect(_trimCssWhiteSpace(" x ")).toBe(" x ");
+		expect(_trimCssWhiteSpace("ab")).toBe("ab");
+	});
+
+	it("matches a source range against a literal", () => {
+		expect(rangeEquals("a{color}", 2, 7, "color")).toBe(true);
+		expect(rangeEquals("a{Color}", 2, 7, "color")).toBe(false);
+		expect(rangeEquals("a{color}", 2, 6, "color")).toBe(false);
+		expect(rangeAsciiCaseInsensitiveMatch("@MeDiA x", 1, 6, "media")).toBe(
+			true
+		);
+		expect(rangeAsciiCaseInsensitiveMatch("@medic x", 1, 6, "media")).toBe(
+			false
+		);
+		expect(rangeAsciiCaseInsensitiveMatch("@media x", 1, 7, "media")).toBe(
+			false
+		);
+	});
+
+	it("lowercases a string only where it can change", () => {
+		const plain = "color";
+		expect(toLowerCaseIfNeeded(plain)).toBe(plain);
+		expect(toLowerCaseIfNeeded("COLOR")).toBe("color");
+		expect(toLowerCaseIfNeeded("Été")).toBe("été");
+	});
+
+	it("folds only the ASCII letters of a name, and not one with an escape", () => {
+		expect(asciiLowercaseName("color")).toBe("color");
+		expect(asciiLowercaseName("BackGround")).toBe("background");
+		// CSS matches names ASCII case-insensitively, so `É` stays as written.
+		expect(asciiLowercaseName("ÉA")).toBe("Éa");
+		expect(asciiLowercaseName("\\47 Rid")).toBe("\\47 Rid");
+	});
+
+	it("recognizes a dashed ident and a plain identifier", () => {
+		expect(isDashedIdentifier("--x")).toBe(true);
+		expect(isDashedIdentifier("--")).toBe(false);
+		expect(isDashedIdentifier("-x")).toBe(false);
+		expect(isSimpleIdentifier("foo-bar")).toBe(true);
+		expect(isSimpleIdentifier("-foo")).toBe(true);
+		expect(isSimpleIdentifier("1a")).toBe(false);
+		expect(isSimpleIdentifier("a b")).toBe(false);
+		expect(isSimpleIdentifier("a\\62")).toBe(false);
+	});
+
+	it("steps over an escape from its backslash", () => {
+		// A hex escape takes up to six digits and one whitespace after them.
+		expect(skipEscape("\\41 b", 0)).toBe(4);
+		expect(skipEscape("a\\x", 1)).toBe(3);
+		expect(skipEscape("\\", 0)).toBe(1);
+	});
+});
+
+describe("CssSyntax — a signed number printed after a number", () => {
+	/**
+	 * @param {string} src css source
+	 * @returns {[number, string][]} each component value's type and source text
+	 */
+	const valuesOf = (src) =>
+		parseAListOfComponentValues(src).map((n) => [
+			n.type,
+			src.slice(n.range[0], n.range[1])
+		]);
+
+	it("drops the space where the sign starts a number of its own", () => {
+		// §4.3.3: `-` before a digit starts a number, not a unit, so `0-2px` is two tokens.
+		expect(minifyFor("a{margin:0 -2px}")).toBe("a{margin:0-2px}");
+		expect(minifyFor("a{margin:0 -.5px}")).toBe("a{margin:0-.5px}");
+		expect(valuesOf("0-2px")).toEqual([
+			[NodeType.Number, "0"],
+			[NodeType.Dimension, "-2px"]
+		]);
+		expect(valuesOf("0-.5px")).toEqual([
+			[NodeType.Number, "0"],
+			[NodeType.Dimension, "-.5px"]
+		]);
+	});
+
+	it("keeps the space where the sign would start a unit", () => {
+		expect(minifyFor("a{margin:0 -a}")).toBe("a{margin:0 -a}");
+		expect(valuesOf("0-a")).toEqual([[NodeType.Dimension, "0-a"]]);
+	});
+});
