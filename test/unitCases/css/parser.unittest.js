@@ -1409,7 +1409,7 @@ describe("CssSyntax — §5 parsing algorithms", () => {
 			src.length,
 			src.length
 		]);
-		expect(rule.declarations.map(String)).toEqual(["x:1"]);
+		expect(/** @type {import("../../../lib/css/syntax-parser").Declaration[]} */ (rule.declarations).map(String)).toEqual(["x:1"]);
 	});
 
 	it("parseADeclaration discards whitespace around comments before and after the colon", () => {
@@ -1487,7 +1487,9 @@ describe("CssSyntax — token value decoding", () => {
 
 	it("resolves ident escapes (§4.3.7)", () => {
 		expect(tok("a\\:b").unescaped).toBe("a:b");
-		expect(parseAListOfComponentValues("a\\:b c")[0].unescaped).toBe("a:b");
+		expect(
+			/** @type {EXPECTED_ANY} */ (parseAListOfComponentValues("a\\:b c")[0]).unescaped
+		).toBe("a:b");
 		expect(tok("a\\\\b").unescaped).toBe("a\\b");
 		expect(tok("\\0 a").unescaped).toBe("�a");
 		expect(tok("\\d800 a").unescaped).toBe("�a");
@@ -1681,19 +1683,20 @@ describe("CssSyntax — path reads on every node kind", () => {
 			return [
 				path.index,
 				path.children().map((n) => path.source(n)),
-				path.child(0) !== 0 && path.source(path.child(0)),
+				/** @type {unknown} */ (path.child(0)) !== 0 && path.source(path.child(0)),
 				path.child(9),
 				path.fieldCount(Field.prelude),
 				path.fieldCount(Field.value),
 				path.fieldCount(Field.declarations),
 				path.fieldCount(Field.rules),
 				path.source(path.field(0, Field.prelude)),
-				path.field(0, Field.rules) !== 0 && path.source(path.field(0, Field.rules)),
-				path.field(1, Field.declarations) !== 0 &&
+				/** @type {unknown} */ (path.field(0, Field.rules)) !== 0 &&
+					path.source(path.field(0, Field.rules)),
+				/** @type {unknown} */ (path.field(1, Field.declarations)) !== 0 &&
 					path.source(path.field(1, Field.declarations)),
 				path.field(-1, Field.declarations),
 				path.field(5, Field.declarations),
-				color !== 0 && path.source(color),
+				/** @type {unknown} */ (color) !== 0 && path.source(color),
 				path.fieldNamed(Field.declarations, "nope"),
 				path.source(path.node)
 			];
