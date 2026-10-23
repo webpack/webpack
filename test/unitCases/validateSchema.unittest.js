@@ -92,6 +92,35 @@ describe("validateSchema", () => {
 		]);
 	});
 
+	it("should name a stale check by the configuration it is given", () => {
+		const tracker = deprecationTracking.start();
+
+		validateSchema(
+			untitledSchema,
+			{ name: "valid" },
+			{ name: "Named Plugin" },
+			() => false
+		);
+
+		expect(tracker()).toEqual([
+			expect.objectContaining({
+				message: expect.stringMatching(/^Named Plugin pre-compiled schema/)
+			})
+		]);
+	});
+
+	it("should report a stale check that nothing names", () => {
+		const tracker = deprecationTracking.start();
+
+		validateSchema(untitledSchema, { name: "valid" }, undefined, () => false);
+
+		expect(tracker()).toEqual([
+			expect.objectContaining({
+				message: expect.stringMatching(/^A pre-compiled schema/)
+			})
+		]);
+	});
+
 	it("should read the name from the schema title in compiler.validate", () => {
 		const webpack = require("../..");
 
