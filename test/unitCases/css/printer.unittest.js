@@ -4,11 +4,12 @@ const fs = require("fs");
 const path = require("path");
 const { SourceProcessor } = require("../../../lib/css/syntax");
 const {
+	A,
+	buildSkipSet,
 	Field,
 	NodeType,
-	Part,
-	buildSkipSet,
-	parseAStylesheet
+	parseAStylesheet,
+	Part
 } = require("../../../lib/css/syntax-parser");
 
 /**
@@ -1108,9 +1109,13 @@ describe("CssSyntax — minify keeps input the grammar rejects", () => {
 	it("never materializes rejected input for a walk-only parse", () => {
 		// `Raw` exists only for the printer — a plain parse still drops the input,
 		// so consumers never see a node type they don't know.
-		const rule = parseAStylesheet("a{*zoom:1;color:red}").rules[0];
-		expect(rule.declarations).toHaveLength(1);
-		expect(rule.childRules).toHaveLength(0);
+		const rule = A.field(
+			0,
+			Field.rules,
+			parseAStylesheet("a{*zoom:1;color:red}")
+		);
+		expect(A.fieldCount(Field.declarations, rule)).toBe(1);
+		expect(A.fieldCount(Field.rules, rule)).toBe(0);
 	});
 });
 
