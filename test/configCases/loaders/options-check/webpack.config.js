@@ -24,6 +24,16 @@ module.exports = {
 				test: /d\.js$/,
 				loader: "./stale-loader",
 				options: { name: "valid" }
+			},
+			{
+				test: /e\.js$/,
+				loader: "./lazy-loader",
+				options: { name: "valid" }
+			},
+			{
+				test: /f\.js$/,
+				loader: "./lazy-loader",
+				options: { name: 42 }
 			}
 		]
 	}
