@@ -14,6 +14,10 @@ module.exports = {
 				type: "asset/resource"
 			},
 			{
+				test: /source\.txt$/,
+				type: "asset/source"
+			},
+			{
 				test: /text\.css$/,
 				resourceQuery: /text/,
 				type: "css/global",

@@ -16,6 +16,7 @@ it("should return the value of modules the bundle also reads from css", () => {
 	expect(values.image).toBe("/public/assets/image.png");
 	expect(values.plain).toBe("object");
 	expect(values.text.default).toContain("url(/public/assets/image.png)");
+	expect(values.source).toBe("source\n");
 });
 
 it("should not add javascript to modules only importModule reads as javascript", () => {

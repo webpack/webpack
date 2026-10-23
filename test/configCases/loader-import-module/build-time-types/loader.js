@@ -24,8 +24,9 @@ module.exports = async function loader() {
 	]) {
 		values[type] = await load(`${file}.webpack[${type}]!=!${file}`);
 	}
-	values.image = await load("./image.png");
 	values.plain = typeof (await load("./plain.css"));
 	values.text = await load("./text.css?text");
+	values.image = await load("./image.png");
+	values.source = await load("./source.txt");
 	return `export default ${JSON.stringify(values)};`;
 };
