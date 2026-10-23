@@ -514,6 +514,26 @@ describe("CssSyntax — tokens at the end of the input", () => {
 		expect(tokensOf('url(a"b')).toEqual([[TokenType.BadUrl, 0, 7]]);
 		expect(tokensOf("url(a b")).toEqual([[TokenType.BadUrl, 0, 7]]);
 	});
+
+	it("does not reread the first code point when a `-` ends the input", () => {
+		// §4.3.9: `-` then EOF starts no ident sequence, so the `-` is a delim.
+		expect(tokensOf("1-")).toEqual([
+			[TokenType.Number, 0, 1],
+			[TokenType.Delim, 1, 2]
+		]);
+		expect(tokensOf("@-")).toEqual([
+			[TokenType.Delim, 0, 1],
+			[TokenType.Delim, 1, 2]
+		]);
+		expect(tokensOf("1-a")).toEqual([[TokenType.Dimension, 0, 3]]);
+		expect(tokensOf("@-a")).toEqual([[TokenType.AtKeyword, 0, 3]]);
+	});
+
+	it("marks a hash of a lone `-` as unrestricted", () => {
+		const out = /** @type {import("../../../lib/css/syntax-parser").MutableToken} */ ({});
+		expect(readToken("#-", 0, out)).toMatchObject({ type: TokenType.Hash, isId: false });
+		expect(readToken("#-a", 0, out)).toMatchObject({ type: TokenType.Hash, isId: true });
+	});
 });
 
 describe("CssSyntax — the token stream", () => {
