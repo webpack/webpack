@@ -17,15 +17,29 @@ const {
 	ATOM_FEED,
 	EDITOR_SVG,
 	MAVEN_POM,
+	PRESETS,
 	XLIFF,
+	XML_CUTS,
 	canonical,
+	printerFor,
+	runMode,
 	toolsFor
 } = require("../../../tooling/compare-xml-tools");
+const { cutsAt } = require("../../../tooling/compare-tools-harness");
 const { SourceProcessor } = require("../../../lib/html/syntax");
 
 describe("the XML tool comparison", () => {
 	it("should start nothing when the script is required rather than run", () => {
 		expect(installed).toHaveBeenCalledTimes(0);
+	});
+
+	it("should install the corpus and stop on `--setup`", async () => {
+		installed.mockClear();
+
+		await expect(runMode("--setup")).resolves.toBe("xml-tool-comparison");
+
+		expect(installed).toHaveBeenCalledTimes(1);
+		expect(installed).toHaveBeenCalledWith("xml-tool-comparison");
 	});
 
 	it.each([
@@ -84,6 +98,57 @@ describe("the XML tool comparison", () => {
 	it("should expand what the DTD declares, but not inside a CDATA section", () => {
 		const read = canonical(EDITOR_SVG);
 		expect(read).toContain('xmlns="http://www.w3.org/2000/svg"');
-		expect(read).toContain(".st0{&amp;st0;}");
+		expect(read).toContain(".st0{&amp;st0}");
+	});
+
+	it("should read a stylesheet and a style attribute the same however the CSS minifier wrote them", () => {
+		const source =
+			'<svg><style>\n\t.dot {\n\t\tfill: #ff0000;\n\t}\n</style><g style="display: none;"/></svg>';
+		const minified =
+			'<svg><style>.dot{fill:red}</style><g style="display:none"/></svg>';
+		expect(canonical(minified)).toBe(canonical(source));
+		expect(canonical('<svg><g style="display:block"/></svg>')).not.toBe(
+			canonical('<svg><g style="display:none"/></svg>')
+		);
+	});
+
+	it("should read CSS under the target it was lowered for", () => {
+		const options = { environment: { browsers: ["safari 15.4"] } };
+		const source = "<svg><style>.a{user-select:none}</style></svg>";
+		const lowered =
+			"<svg><style>.a{-webkit-user-select:none;user-select:none}</style></svg>";
+		expect(canonical(lowered, options)).toBe(canonical(source, options));
+		expect(canonical(lowered)).not.toBe(canonical(source));
+	});
+
+	it("should cut the editor-exported SVG inside every construct it carries", () => {
+		const where = cutsAt(EDITOR_SVG, XML_CUTS).map(([name]) => name);
+		expect(where).toEqual(
+			expect.arrayContaining([
+				"in a processing instruction",
+				"in a comment",
+				"in an internal subset",
+				"in a reference",
+				"in a CDATA section",
+				"in a <style> body",
+				"in a style attribute"
+			])
+		);
+	});
+
+	it("should print every cut of the built fixtures as its own output under every preset", () => {
+		for (const xml of [EDITOR_SVG, ATOM_FEED, MAVEN_POM, XLIFF]) {
+			for (const [, source] of cutsAt(xml, XML_CUTS)) {
+				for (const [preset, options] of PRESETS) {
+					const minify = printerFor(options);
+					const once = minify(source);
+					expect({ preset, source, again: minify(once) }).toEqual({
+						preset,
+						source,
+						again: once
+					});
+				}
+			}
+		}
 	});
 });

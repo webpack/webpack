@@ -107,6 +107,12 @@ Spell names out in full (`attributeCount`, not `attrCnt`), beyond the abbreviati
 
 Path-shape regexps and their helpers live in `lib/util/identifier.js`: **import from there — never re-declare a local copy**, even a one-liner like `/\\/g`. Export one that is defined but not exported; define one locally only when nothing fits ([details](docs/code-style.md#path-regexps-and-helpers-live-in-one-file)).
 
+### No private exports
+
+> [!REQUIRED]
+
+**Never add a `_`-prefixed export** (`module.exports._foo`) to any file in the project to share an internal helper with another file: every export is reachable, so other developers come to depend on it and it can't change freely. Keep the helper in the one file that uses it, or move the logic so one file owns it; a helper useful in its own right is exported under a public name with full JSDoc instead, as the HTML and CSS `escape*` / `decode*` helpers are. **The only exception is testing**: a private export a test needs to reach code no public entry point can.
+
 ### Don't enumerate module or source types
 
 > [!REQUIRED]

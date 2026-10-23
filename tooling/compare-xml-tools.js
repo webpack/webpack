@@ -48,9 +48,11 @@ const {
 	STAGES,
 	collectFiles,
 	compress,
+	cutsAt,
 	filterFrom,
 	findingGroups,
 	formatCost,
+	formatProfile,
 	formatSecond,
 	hasher,
 	idempotence,
@@ -69,7 +71,9 @@ const {
 	sliceRelation,
 	spans,
 	sweepExitCode,
-	sweepMode
+	sweepMode,
+	wantedExpectations,
+	wantedRespelling
 } = require("./compare-tools-harness");
 
 /** @typedef {import("../lib/html/syntax-parser").HtmlPath} HtmlPath */
@@ -272,12 +276,32 @@ const printXml = (xml, mode) =>
 		new SourceProcessor().process(xml, { xml: true, mode })
 	).code;
 
-/** @typedef {Pick<import("../lib/html/syntax-printer").HtmlProcessOptions, "sortAttributes">} XmlPrintOptions */
+/** @typedef {Pick<import("../lib/html/syntax-printer").HtmlProcessOptions, "sortAttributes" | "renderEmbeddedSource">} XmlPrintOptions */
 
-/** @type {[string, XmlPrintOptions][]} */
+/** @typedef {import("../lib/html/builtinEmbeddedRenderer").BuiltinEmbeddedRendererOptions} CssOptions */
+
+/** @type {CssOptions} */
+const LEGACY_CSS_OPTIONS = {
+	environment: { browsers: ["chrome 100", "firefox 100", "safari 15.4"] }
+};
+
+// The printer alone, the two the webpack rows run, where an SVG's `<style>` and
+// `style=""` reach the CSS minifier as in a build, and a target it lowers for;
+// each with the CSS options its renderer minifies with, which `meaning` reads.
+/** @type {[string, XmlPrintOptions, CssOptions][]} */
 const PRESETS = [
-	["default", {}],
-	["sorted", { sortAttributes: true }]
+	["default", {}, {}],
+	["embedded", { renderEmbeddedSource: builtinEmbeddedRenderer() }, {}],
+	[
+		"sorted",
+		{ sortAttributes: true, renderEmbeddedSource: builtinEmbeddedRenderer() },
+		{}
+	],
+	[
+		"embedded+legacy",
+		{ renderEmbeddedSource: builtinEmbeddedRenderer(LEGACY_CSS_OPTIONS) },
+		LEGACY_CSS_OPTIONS
+	]
 ];
 
 /**
@@ -503,16 +527,17 @@ const STYLE_ELEMENT = /(?:^|:)style$/;
  * A stylesheet as webpack's CSS minifier reads it, run to a fixed point, so a
  * tool that minified an SVG's `<style>` is not reported for changing its text.
  * @param {string} css a `<style>` body
+ * @param {CssOptions=} options the CSS minifier's options, a target among them
  * @returns {string} its canonical form
  */
-const canonicalCss = (css) => {
+const canonicalCss = (css, options = {}) => {
 	try {
 		const { SourceProcessor: CssProcessor } = require("../lib/css/syntax");
 
 		const processor = new CssProcessor();
 		let out = css;
 		for (let i = 0; i < 3; i++) {
-			const next = processor.process(out, { mode: "minify" }).code;
+			const next = processor.process(out, { ...options, mode: "minify" }).code;
 			if (next === out) break;
 			out = next;
 		}
@@ -592,7 +617,6 @@ const wantedFixture = filterFrom("FIXTURE");
 const wantedTool = filterFrom("TOOL");
 const wantedStage = filterFrom("STAGE");
 const wantedRelation = filterFrom("RELATION");
-const wantedSpelling = filterFrom("SPELLING");
 const wantedPreset = filterFrom("PRESET");
 
 /**
@@ -659,14 +683,30 @@ const decodedAttributes = (nodePath) => {
 };
 
 /**
+ * A `style=""` value as the CSS minifier reads it, run to a fixed point.
+ * @param {string} value the declarations
+ * @param {CssOptions} options the CSS minifier's options
+ * @returns {string} their canonical form
+ */
+const canonicalDeclarations = (value, options) => {
+	const css = canonicalCss(`a{${value}}`, options);
+	return css.startsWith("a{") && css.endsWith("}") ? css.slice(2, -1) : css;
+};
+
+/**
  * What a document means, as webpack reads it: James Clark's canonical form,
  * attributes sorted and every value decoded, comments and the DTD left out.
+ * A `<style>` body and a `style=""` are read in their canonical CSS form, so
+ * the CSS minifier writing them is not the document saying something else.
  * @param {string} xml a document
+ * @param {CssOptions=} cssOptions the options that CSS is minified with
  * @returns {string} its canonical form
  */
-const canonical = (xml) => {
+const canonical = (xml, cssOptions = {}) => {
 	/** @type {string[]} */
 	const out = [];
+	/** @type {string[]} */
+	const open = [];
 	/** @type {Record<number, { enter: (nodePath: HtmlPath) => void, exit: (nodePath: HtmlPath) => void }>} */
 	const visitors = {
 		[NodeType.Element]: {
@@ -676,17 +716,33 @@ const canonical = (xml) => {
 				);
 				out.push(
 					`<${nodePath.name()}${attributes
-						.map(([name, value]) => ` ${name}="${escapeCanonical(value)}"`)
+						.map(
+							([name, value]) =>
+								` ${name}="${escapeCanonical(
+									name === "style"
+										? canonicalDeclarations(value, cssOptions)
+										: value
+								)}"`
+						)
 						.join("")}>`
 				);
+				open.push(nodePath.name());
 			},
 			exit: (nodePath) => {
 				out.push(`</${nodePath.name()}>`);
+				open.pop();
 			}
 		},
 		[NodeType.Text]: {
 			enter: (nodePath) => {
-				out.push(escapeCanonical(nodePath.value()));
+				const text = nodePath.value();
+				out.push(
+					escapeCanonical(
+						STYLE_ELEMENT.test(open[open.length - 1] || "")
+							? canonicalCss(text, cssOptions)
+							: text
+					)
+				);
 			},
 			exit: () => {}
 		},
@@ -857,10 +913,9 @@ const spellingFinding = (xml, minified, sites, respelling) => {
 const sweepRespellings = (xml, minified) => {
 	/** @type {Report[]} */
 	const reports = [];
-	if (!wantedRelation("respelling")) return reports;
 	const sites = attributeSites(xml);
 	for (const respelling of RESPELLINGS.filter((one) =>
-		wantedSpelling(one.name)
+		wantedRespelling(one.name)
 	)) {
 		/**
 		 * @param {Site[]} subset the sites to respell
@@ -888,14 +943,37 @@ const sweepRespellings = (xml, minified) => {
 	return reports;
 };
 
+// Where a cut lands, by the construct it interrupts: each pattern ends where the
+// document is cut, just inside what the end of the input then has to close.
+/** @type {[string, RegExp][]} */
+const XML_CUTS = [
+	["in a start tag's name", /<[a-z_]/gi],
+	["in an end tag's name", /<\/[a-z_]/gi],
+	["in an attribute's name", /<[a-z_][^\s<>]*\s+[a-z_]/gi],
+	["after an attribute's =", /<[a-z_][^\s<>]*\s+[\w:.-]+=/gi],
+	["in a double-quoted value", /[=]"[^"]/g],
+	["in a single-quoted value", /[=]'[^']/g],
+	["before a tag's >", /<[a-z_][^<>]*(?=>)/gi],
+	["between a tag's / and >", /<[a-z_][^<>]*\/(?=>)/gi],
+	["in a comment", /<!--[\s\S]/g],
+	["in a processing instruction", /<\?[\s\S]/g],
+	["in a doctype", /<!DOCTYPE/g],
+	["in an internal subset", /<!DOCTYPE[^>[]*\[[\s\S]/g],
+	["in a reference", /&[a-z#_]/gi],
+	["in a CDATA section", /<!\[CDATA\[[\s\S]/g],
+	["in a <style> body", /<(?:[\w.-]+:)?style[^>]*>[^<]/gi],
+	["in a style attribute", /style="[^"]/gi]
+];
+
 /**
  * The tag in the output a second pass first differs inside, minified on its
  * own: a repro only where minifying that tag alone moves it too.
+ * @param {(xml: string) => string} minify the printer under test
  * @param {string} minified one pass's output
  * @param {number} at where the second pass first differs
  * @returns {{ source: string, again: string } | null} the repro, or null
  */
-const idempotenceRepro = (minified, at) => {
+const idempotenceRepro = (minify, minified, at) => {
 	let found = "";
 	tokenizeXml(minified, 0, {
 		openTag: (input, start, end) => {
@@ -904,7 +982,7 @@ const idempotenceRepro = (minified, at) => {
 		}
 	});
 	if (found === "") return null;
-	const again = printXml(found, "minify");
+	const again = minify(found);
 	return again === found ? null : { source: found, again };
 };
 
@@ -1183,8 +1261,16 @@ const invariants = (write) => {
 	const built = invariantFixtures();
 	_missingFixtures = built.missing.filter((label) => wantedFixture(label));
 	const corpus = built.corpus.filter(([label]) => wantedFixture(label));
+	const presets = PRESETS.filter(([name]) => wantedPreset(name));
+	// Filtered like the corpus is: an expectation for a relation, fixture or
+	// preset this run was never going to reach matched nothing because nothing
+	// asked it to, which is not the divergence having gone away.
 	const groups = findingGroups(
-		EXPECTED.filter((entry) => wantedRelation(entry.relation))
+		wantedExpectations(
+			EXPECTED,
+			corpus.map(([label]) => label),
+			presets.map(([name]) => name)
+		)
 	);
 	if (wantedRelation("spans")) {
 		log(`reading ranges over ${corpus.length} documents …`);
@@ -1221,24 +1307,26 @@ const invariants = (write) => {
 		}
 		log(`read ${read} documents twice over …`);
 	}
-	const presets = PRESETS.filter(([name]) => wantedPreset(name));
 	log(`sweeping ${corpus.length} documents under ${presets.length} presets …`);
 	for (const [label, xml] of corpus) {
-		for (const [preset, options] of presets) {
+		for (const [preset, options, cssOptions] of presets) {
 			const minify = printerFor(options);
 			const { printed, reports } = wantedRelation("idempotence")
 				? idempotence({
 						minify,
 						source: xml,
-						says: canonical,
-						repro: idempotenceRepro
+						says: (text) => canonical(text, cssOptions),
+						repro: (minified, at) => idempotenceRepro(minify, minified, at)
 					})
 				: { printed: minify(xml), reports: [] };
 			for (const report of reports) groups.add(report, preset, label);
 			if (printed === null) continue;
 			// What minifying keeps is what the document says, which a reader other
 			// than the printer's own has to agree with.
-			if (wantedRelation("meaning") && canonical(printed) !== canonical(xml)) {
+			if (
+				wantedRelation("meaning") &&
+				canonical(printed, cssOptions) !== canonical(xml, cssOptions)
+			) {
 				groups.add(
 					{
 						relation: "meaning",
@@ -1256,6 +1344,27 @@ const invariants = (write) => {
 				groups.add(report, preset, label);
 			}
 		}
+	}
+	if (wantedRelation("idempotence")) {
+		let cut = 0;
+		for (const [label, xml] of corpus) {
+			for (const [where, source] of cutsAt(xml, XML_CUTS)) {
+				cut++;
+				for (const [preset, options, cssOptions] of presets) {
+					const minify = printerFor(options);
+					const { reports } = idempotence({
+						minify,
+						source,
+						says: (text) => canonical(text, cssOptions),
+						repro: (minified, at) => idempotenceRepro(minify, minified, at)
+					});
+					for (const report of reports) {
+						groups.add(report, preset, `${label}, cut ${where}`);
+					}
+				}
+			}
+		}
+		log(`… and ${cut} of them cut short inside a construct …`);
 	}
 	return groups.write(write);
 };
@@ -1329,6 +1438,7 @@ const main = async () => {
 							cost.peak.padStart(9)
 						}\n`
 					);
+					process.stdout.write(formatProfile(result));
 					continue;
 				}
 				const code = /** @type {string} */ (result.code);
@@ -1363,34 +1473,53 @@ const main = async () => {
 						formatSecond(result.second).padStart(7)
 					}   ${notes.length === 0 ? "-" : notes.slice(0, 4).join(", ")}\n`
 				);
+				process.stdout.write(formatProfile(result));
 			}
 		}
 	}
 };
 
+/**
+ * `--invariants`: the relations alone, which need no install.
+ * @returns {Promise<void>} resolves once the exit code is set
+ */
+const reportInvariantsOnly = async () => {
+	process.exitCode = sweepExitCode(
+		reportInvariants(),
+		_missingFixtures,
+		process.argv
+	);
+};
+
+// A lookup rather than a chain of ternaries: each entry point is bound where
+// it is named, so reading the dispatch is reading the whole table. `--setup`
+// installs the fixtures and stops, without paying for the comparison.
+const RUNNERS = new Map(
+	/** @type {[string, () => Promise<unknown>][]} */ ([
+		["--measure", measure.bind(null, TOOLS)],
+		["--setup", setup],
+		["--invariants", reportInvariantsOnly]
+	])
+);
+
+/**
+ * Runs the entry point the mode names, defaulting to the whole comparison.
+ * @param {string=} mode which entry point to run
+ * @returns {Promise<unknown>} what that entry point resolves to
+ */
+const runMode = (mode = "") => (RUNNERS.get(mode) || main)();
+
 // Only as the entry point, so a test can read the corpus below without running
 // the comparison.
-if (require.main === module) {
-	const mode = sweepMode(process.argv);
-	if (mode === "--invariants") {
-		process.exitCode = sweepExitCode(
-			reportInvariants(),
-			_missingFixtures,
-			process.argv
-		);
-	} else {
-		const started =
-			mode === "--measure"
-				? measure(TOOLS)
-				: mode === "--setup"
-					? setup()
-					: main();
-		started.catch((error) => {
-			log(String(error && error.stack ? error.stack : error));
-			process.exitCode = 1;
-		});
-	}
-}
+const started =
+	require.main === module
+		? runMode(sweepMode(process.argv))
+		: Promise.resolve();
+
+started.catch((error) => {
+	log(String(error && error.stack ? error.stack : error));
+	process.exitCode = 1;
+});
 
 module.exports = {
 	ATOM_FEED: atomFeed(8),
@@ -1398,7 +1527,11 @@ module.exports = {
 	EDITOR_SVG,
 	INSTALLED_DOCUMENTS,
 	MAVEN_POM,
+	PRESETS,
 	XLIFF,
+	XML_CUTS,
 	canonical,
+	printerFor,
+	runMode,
 	toolsFor
 };

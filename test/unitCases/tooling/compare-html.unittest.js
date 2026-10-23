@@ -1,14 +1,45 @@
 "use strict";
 
+const CACHE_NAME = "html-tool-comparison";
+
+const installed = jest.fn(() => Promise.resolve(CACHE_NAME));
+
+// A real install would `npm ci` the corpus into a contributor's cache, and
+// nothing here reads it: the built documents are the ones under test.
+jest.mock("../../../tooling/compare-tools-harness", () => ({
+	...jest.requireActual("../../../tooling/compare-tools-harness"),
+	installPackages: installed
+}));
+
 const fs = require("fs");
 const path = require("path");
 const { SourceProcessor } = require("../../../lib/html/syntax");
 const {
 	COLD_CONSTRUCTS,
 	EMBEDDED_LEGACY_OPTIONS,
-	EMBEDDED_OPTIONS
+	EMBEDDED_OPTIONS,
+	runMode
 } = require("../../../tooling/compare-html-tools");
 const { collectFiles } = require("../../../tooling/compare-tools-harness");
+
+// Read before anything clears the mock: an unguarded script installs while
+// being required, and a `beforeEach` would erase exactly that evidence.
+const callsWhileRequiring = installed.mock.calls.length;
+
+describe("the HTML tool comparison", () => {
+	it("should start nothing when the script is required rather than run", () => {
+		expect(callsWhileRequiring).toBe(0);
+	});
+
+	it("should install the corpus and stop on `--setup`", async () => {
+		installed.mockClear();
+
+		await expect(runMode("--setup")).resolves.toBe(CACHE_NAME);
+
+		expect(installed).toHaveBeenCalledTimes(1);
+		expect(installed).toHaveBeenCalledWith(CACHE_NAME);
+	});
+});
 
 const ROOT = path.join(__dirname, "..", "..", "..");
 

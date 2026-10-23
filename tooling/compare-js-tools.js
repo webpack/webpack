@@ -42,6 +42,7 @@ const {
 	findingGroups,
 	formatCost,
 	formatProfile,
+	formatSecond,
 	hasher,
 	idempotence,
 	installPackages,
@@ -60,7 +61,9 @@ const {
 	spans,
 	sweepExitCode,
 	sweepMode,
-	thrownText
+	thrownText,
+	wantedExpectations,
+	wantedRespelling
 } = require("./compare-tools-harness");
 
 const ROOT = path.resolve(__dirname, "..");
@@ -646,9 +649,10 @@ const compare = async () => {
  * @param {EXPECTED_ANY} acorn the acorn export
  * @param {string} code JavaScript source
  * @param {"module" | "script"} goal what to parse it as
+ * @param {EXPECTED_ANY[]=} comments receives every comment the parse reads
  * @returns {Set<string>} the property names it names
  */
-const propertyNames = (acorn, code, goal) => {
+const propertyNames = (acorn, code, goal, comments) => {
 	const names = new Set();
 	/**
 	 * @param {EXPECTED_ANY} node any node
@@ -674,11 +678,29 @@ const propertyNames = (acorn, code, goal) => {
 		acorn.parse(code, {
 			sourceType: goal,
 			ecmaVersion: "latest",
-			allowHashBang: true
+			allowHashBang: true,
+			onComment: comments
 		})
 	);
 	return names;
 };
+
+// What terser keeps by default, as a license asks a bundle to: a block comment
+// opening `/*!`, or one naming `@license` or `@preserve`.
+const LEGAL_COMMENT = /^\**!|@license|@preserve/;
+
+/**
+ * The legal notices among a program's comments, read off a real parse, so a
+ * `/*!` inside a string, a template or a regular expression is not one.
+ * @param {{ type: string, value: string }[]} comments what acorn read
+ * @returns {string[]} the legal notices, each as its comment's text
+ */
+const legalNoticesOf = (comments) =>
+	comments
+		.filter(
+			(comment) => comment.type === "Block" && LEGAL_COMMENT.test(comment.value)
+		)
+		.map((comment) => comment.value);
 
 const wantedFixture = filterFrom("FIXTURE");
 const wantedTool = filterFrom("TOOL");
@@ -1016,9 +1038,10 @@ const STACK_REFUSAL = "Not enough stack space to parse input";
  * without this being edited.
  * @param {string} source a script or a module
  * @param {EXPECTED_ANY} options what to parse it as
+ * @param {(code: string) => string} print the printer, printing alone
  * @returns {string} the digest
  */
-const jsPurityDigest = (source, options) => {
+const jsPurityDigest = (source, options, print) => {
 	const digest = hasher();
 	/** @type {EXPECTED_ANY} */
 	let root;
@@ -1069,6 +1092,11 @@ const jsPurityDigest = (source, options) => {
 		for (let index = children.length - 1; index >= 0; index--) {
 			stack.push(children[index]);
 		}
+	}
+	try {
+		digest.update(print(source));
+	} catch (error) {
+		digest.update(`print refused: ${/** @type {Error} */ (error).message}`);
 	}
 	return digest.hex();
 };
@@ -1337,8 +1365,6 @@ const JS_RESPELLINGS = [
 	}
 ];
 
-const wantedSpelling = filterFrom("SPELLING");
-
 /**
  * @param {string} code a program
  * @param {Site[]} sites where it is respelled
@@ -1428,7 +1454,9 @@ const sweepRespellings = (minify, code, module, minified) => {
 		start: token.start,
 		end: token.end
 	}));
-	const respellings = JS_RESPELLINGS.filter((one) => wantedSpelling(one.name));
+	const respellings = JS_RESPELLINGS.filter((one) =>
+		wantedRespelling(one.name)
+	);
 	// No site is one two respellings write, so all of them at once cost one
 	// minify, and only a program that moves pays one per respelling.
 	/** @type {Respelling} */
@@ -1558,19 +1586,10 @@ const invariants = async (write) => {
 	// preset this run was never going to reach matched nothing because nothing
 	// asked it to, which is not the divergence having gone away.
 	const groups = findingGroups(
-		EXPECTED.filter(
-			(entry) =>
-				wantedRelation(entry.relation) &&
-				(entry.source === undefined ||
-					corpus.some(([label]) =>
-						label.includes(/** @type {string} */ (entry.source))
-					)) &&
-				(entry.presets === undefined ||
-					presets.some(([name]) =>
-						/** @type {string[]} */ (entry.presets).includes(name)
-					)) &&
-				(!entry.relation.startsWith("respelling ") ||
-					wantedSpelling(entry.relation.slice("respelling ".length)))
+		wantedExpectations(
+			EXPECTED,
+			corpus.map(([label]) => label),
+			presets.map(([name]) => name)
 		)
 	);
 	if (wantedRelation("spans")) {
@@ -1620,14 +1639,27 @@ const invariants = async (write) => {
 		);
 	}
 	if (wantedRelation("purity")) {
+		// Printed alone: a compress pass over every source twice costs four
+		// minutes for state the printer, not the compressor, is asked to hold.
+		const { minifySync } = (
+			await require("../lib/javascript/syntax").printer.load()
+		).modules;
+		const [, presetOptions] = /** @type {[string, EXPECTED_ANY]} */ (
+			PRESETS.find(([name]) => name === "format")
+		);
 		/** @type {import("./compare-tools-harness").PuritySource[]} */
 		const sources = [];
 		for (const [label, source, options] of corpus) {
 			const settled = options === undefined ? goalFor(source) : options;
 			if (settled === null) continue;
+			const { minify } = printerFor(
+				minifySync,
+				presetOptions,
+				settled.sourceType === "module"
+			);
 			sources.push({
 				what: label,
-				digest: () => jsPurityDigest(source, settled)
+				digest: () => jsPurityDigest(source, settled, minify)
 			});
 		}
 		const { reports, read } = purityRelation(sources);
@@ -1655,7 +1687,7 @@ const invariants = async (write) => {
 	// printing it twice to ask two questions of it would double the run.
 	const wantsIdempotence = wantedRelation("idempotence");
 	const wantsRespelling = JS_RESPELLINGS.some((respelling) =>
-		wantedRelation(`respelling ${respelling.name}`)
+		wantedRespelling(respelling.name)
 	);
 	const wantsBehavior = wantedRelation("behavior");
 	if (wantsIdempotence || wantsRespelling || wantsBehavior) {
@@ -1879,9 +1911,12 @@ const header = (stage) =>
 				9
 			)}${"ms".padStart(7)}${"cpu".padStart(6)}${"peak".padStart(
 				8
-			)}   round-trip\n`;
+			)}${"2nd".padStart(7)}   round-trip\n`;
 
 const main = async () => {
+	// Before the install: the relations are webpack's own, so they answer
+	// whether or not there is anything to compare against yet.
+	await reportInvariants();
 	await installPackages(CACHE_NAME);
 	const acorn = load("acorn");
 	for (const [label, file, goal] of fixtures().filter(([name]) =>
@@ -1889,7 +1924,10 @@ const main = async () => {
 	)) {
 		const code = await fs.promises.readFile(file, "utf8");
 		process.env[SOURCE_TYPE_VARIABLE] = goal;
-		const before = propertyNames(acorn, code, goal);
+		/** @type {{ type: string, value: string }[]} */
+		const comments = [];
+		const before = propertyNames(acorn, code, goal, comments);
+		const notices = legalNoticesOf(comments);
 		const input = await compress(Buffer.from(code));
 		process.stdout.write(
 			`\n${label} — ${kb(input.raw)} (${kb(input.gzip)} gzip, ${kb(
@@ -1943,8 +1981,9 @@ const main = async () => {
 						kb(out.zstd).padStart(9) +
 						cost.wall.padStart(7) +
 						cost.cpu.padStart(6) +
-						cost.peak.padStart(8)
-					}   ${roundTrip(acorn, before, printed, goal)}\n`
+						cost.peak.padStart(8) +
+						formatSecond(result.second).padStart(7)
+					}   ${roundTrip(acorn, before, notices, printed, goal)}\n`
 				);
 				process.stdout.write(formatProfile(result));
 			}
@@ -2001,27 +2040,49 @@ const compareInWorker = (name, input) =>
 
 /**
  * What a printing table's last column says: whether the output parses back, and
- * whether it still names every property the input did.
+ * whether it still names every property and keeps every legal notice the input did.
  * @param {EXPECTED_ANY} acorn the acorn export
  * @param {Set<string>} before the input's property names
+ * @param {string[]} notices the legal notices the input carries
  * @param {string} printed what the tool wrote
  * @param {"module" | "script"} goal what to parse it as
  * @returns {string} the cell
  */
-const roundTrip = (acorn, before, printed, goal) => {
+const roundTrip = (acorn, before, notices, printed, goal) => {
 	/** @type {Set<string>} */
 	let after;
+	/** @type {{ type: string, value: string }[]} */
+	const comments = [];
 	try {
-		after = propertyNames(acorn, printed, goal);
+		after = propertyNames(acorn, printed, goal, comments);
 	} catch (error) {
 		return `will not parse back: ${
 			String(/** @type {Error} */ (error).message).split("\n", 1)[0]
 		}`;
 	}
 	const lost = [...before].filter((name) => !after.has(name));
-	return lost.length === 0
-		? "-"
-		: `${lost.length} names! e.g. ${lost.slice(0, 3).join(", ")}`;
+	// Matched notice by notice: one changed, or another written twice in
+	// its place, is one dropped as surely as a missing one.
+	/** @type {Map<string, number>} */
+	const kept = new Map();
+	for (const notice of legalNoticesOf(comments)) {
+		kept.set(notice, (kept.get(notice) || 0) + 1);
+	}
+	let dropped = 0;
+	for (const notice of notices) {
+		const count = kept.get(notice) || 0;
+		if (count === 0) dropped++;
+		else kept.set(notice, count - 1);
+	}
+	/** @type {string[]} */
+	const parts = [];
+	if (lost.length > 0) {
+		parts.push(`${lost.length} names! e.g. ${lost.slice(0, 3).join(", ")}`);
+	}
+	if (dropped > 0) {
+		parts.push(`${dropped} legal notice${dropped === 1 ? "" : "s"}!`);
+	}
+	return parts.length === 0 ? "-" : parts.join(", ");
 };
 
 // A lookup rather than a chain of ternaries: each entry point is bound where
@@ -2060,6 +2121,7 @@ module.exports = {
 	behaviorDifference,
 	firstDifference,
 	reportable,
+	roundTrip,
 	runMode,
 	show
 };

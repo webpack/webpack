@@ -82,7 +82,9 @@ const {
 	spans,
 	sweepExitCode,
 	sweepMode,
-	thrownText
+	thrownText,
+	wantedExpectations,
+	wantedRespelling
 } = require("./compare-tools-harness");
 
 const ROOT = path.resolve(__dirname, "..");
@@ -1386,6 +1388,7 @@ const EXPECTED = [
 	{
 		relation: "respelling escape",
 		contains: "-> \\7a ",
+		source: ["test/configCases/css/minimize", "Tachyons 4"],
 		why: "`*zoom: 1` is no declaration but the star hack an engine drops, which the printer writes back as authored, escape included"
 	},
 	{
@@ -1483,7 +1486,7 @@ const sweepRespellings = (minify, css, minified) => {
 	const reports = [];
 	const sites = cssSites(css);
 	for (const respelling of CSS_RESPELLINGS.filter((one) =>
-		wantedSpelling(one.name)
+		wantedRespelling(one.name)
 	)) {
 		/**
 		 * @param {Site[]} subset the sites to respell
@@ -1520,7 +1523,6 @@ const sweepRespellings = (minify, css, minified) => {
 };
 
 const wantedRelation = filterFrom("RELATION");
-const wantedSpelling = filterFrom("SPELLING");
 const wantedPreset = filterFrom("PRESET");
 
 /**
@@ -1656,13 +1658,14 @@ const invariants = (write) => {
 	_missingFixtures = built.missing.filter((label) => wantedFixture(label));
 	const corpus = built.corpus.filter(([label]) => wantedFixture(label));
 	const presets = PRESETS.filter(([name]) => wantedPreset(name));
-	// Filtered like the corpus is: an expectation for a relation this run was
-	// never going to reach matched nothing because nothing asked it to, which is
-	// not the divergence having gone away.
+	// Filtered like the corpus is: an expectation for a relation, fixture or
+	// preset this run was never going to reach matched nothing because nothing
+	// asked it to, which is not the divergence having gone away.
 	const groups = findingGroups(
-		EXPECTED.filter(
-			(entry) =>
-				wantedRelation(entry.relation) && wantedSpelling(entry.relation)
+		wantedExpectations(
+			EXPECTED,
+			corpus.map(([label]) => label),
+			presets.map(([name]) => name)
 		)
 	);
 	// Nothing is printed to reach this one, so it is read under no preset: what
@@ -1709,7 +1712,9 @@ const invariants = (write) => {
 	// The printer's two relations share a sweep: both need the output, and
 	// printing it twice to ask two questions of it would double the run.
 	const wantsIdempotence = wantedRelation("idempotence");
-	const wantsRespelling = wantedRelation("respelling");
+	const wantsRespelling = CSS_RESPELLINGS.some((one) =>
+		wantedRespelling(one.name)
+	);
 	if (wantsIdempotence || wantsRespelling) {
 		log(
 			`sweeping ${corpus.length} stylesheets under ${presets.length} presets …`
@@ -1857,33 +1862,47 @@ const main = async () => {
 	}
 };
 
+/**
+ * `--invariants`: the relations alone, which need no install.
+ * @returns {Promise<void>} resolves once the exit code is set
+ */
+const reportInvariantsOnly = async () => {
+	process.exitCode = sweepExitCode(
+		reportInvariants(),
+		_missingFixtures,
+		process.argv
+	);
+};
+
+// A lookup rather than a chain of ternaries: each entry point is bound where
+// it is named, so reading the dispatch is reading the whole table. `--setup`
+// installs the fixtures and stops, without paying for the comparison.
+const RUNNERS = new Map(
+	/** @type {[string, () => Promise<unknown>][]} */ ([
+		["--measure", measure.bind(null, TOOLS)],
+		["--setup", setup],
+		["--invariants", reportInvariantsOnly]
+	])
+);
+
+/**
+ * Runs the entry point the mode names, defaulting to the whole comparison.
+ * @param {string=} mode which entry point to run
+ * @returns {Promise<unknown>} what that entry point resolves to
+ */
+const runMode = (mode = "") => (RUNNERS.get(mode) || main)();
+
 // Only as the entry point, so a test can read the corpus below without running
 // the comparison.
-if (require.main === module) {
-	// `--setup` installs the fixtures and builds nothing else, so a consumer
-	// that only reads them does not run the comparison to get them.
-	const mode = sweepMode(process.argv);
-	// The sweep alone, for a caller that wants the relations without the ten
-	// minutes the comparison costs; a full run prints the same section.
-	if (mode === "--invariants") {
-		process.exitCode = sweepExitCode(
-			reportInvariants(),
-			_missingFixtures,
-			process.argv
-		);
-	} else {
-		const started =
-			mode === "--measure"
-				? measure(TOOLS)
-				: mode === "--setup"
-					? setup()
-					: main();
-		started.catch((error) => {
-			log(String(error && error.stack ? error.stack : error));
-			process.exitCode = 1;
-		});
-	}
-}
+const started =
+	require.main === module
+		? runMode(sweepMode(process.argv))
+		: Promise.resolve();
+
+started.catch((error) => {
+	log(String(error && error.stack ? error.stack : error));
+	process.exitCode = 1;
+});
 
 // Where the cache holds each fixture, for a reader that is not this script.
 module.exports = {
@@ -1893,5 +1912,6 @@ module.exports = {
 	GENERATED_FIXTURES: /** @type {[string, string][]} */ (
 		GENERATED_FIXTURES.map(([label, file]) => [label, file])
 	),
-	PACKED_FIXTURES
+	PACKED_FIXTURES,
+	runMode
 };

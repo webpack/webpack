@@ -1015,11 +1015,23 @@ const purityRelation = (sources) => {
 
 /**
  * A finding the printer owes nothing for, with the reason it is owed nothing.
- * `relation` and `contains` together name it; `source` narrows it to one
- * fixture where the same repro is a defect elsewhere, and `presets` to the
+ * `relation` and `contains` together name it; `source` narrows it to the
+ * fixtures where the same repro is a defect elsewhere, and `presets` to the
  * option sets it shows under, so a run narrowed past them does not ask for it.
- * @typedef {{ relation: string, contains: string, source?: string, presets?: string[], why: string }} Expected
+ * @typedef {{ relation: string, contains: string, source?: string | string[], presets?: string[], why: string }} Expected
  */
+
+/**
+ * Whether a fixture is one an expectation names.
+ * @param {Expected} expected the entry
+ * @param {string} label the fixture
+ * @returns {boolean} true when the entry has no `source` or names this one
+ */
+const _names = ({ source }, label) =>
+	source === undefined ||
+	(typeof source === "string"
+		? label.includes(source)
+		: source.some((one) => label.includes(one)));
 
 /**
  * Whether one expectation covers one group.
@@ -1031,13 +1043,71 @@ const purityRelation = (sources) => {
 const _covers = (expected, report, sources) => {
 	if (expected.relation !== report.relation) return false;
 	if (!report.repro.includes(expected.contains)) return false;
-	if (expected.source === undefined) return true;
 	// Every fixture the group reaches, not any one of them: the same repro found
 	// somewhere the entry does not name is a divergence it says nothing about.
 	for (const source of sources) {
-		if (!source.includes(expected.source)) return false;
+		if (!_names(expected, source)) return false;
 	}
 	return true;
+};
+
+/**
+ * The source cut short just inside the first of each construct past its
+ * midpoint, or the first anywhere when none lies past it: the end of the input
+ * is where the tokenizer closes what the source left open.
+ * @param {string} source a document
+ * @param {readonly [string, RegExp][]} patterns each construct, global, ending where its cut lands
+ * @returns {[string, string][]} `[where, cut]` for each construct it holds
+ */
+const cutsAt = (source, patterns) => {
+	/** @type {[string, string][]} */
+	const cuts = [];
+	for (const [where, pattern] of patterns) {
+		pattern.lastIndex = source.length >> 1;
+		let match = pattern.exec(source);
+		if (match === null) {
+			pattern.lastIndex = 0;
+			match = pattern.exec(source);
+		}
+		if (match === null) continue;
+		const at = match.index + match[0].length;
+		if (at < source.length) cuts.push([where, source.slice(0, at)]);
+	}
+	return cuts;
+};
+
+const RESPELLING = "respelling ";
+
+/**
+ * Whether a run asks one respelling: `RELATION` naming it or `respelling`
+ * alone, and `SPELLING` naming it.
+ * @param {string} name the respelling
+ * @returns {boolean} true when the run asks it
+ */
+const wantedRespelling = (name) =>
+	filterFrom("RELATION")(`${RESPELLING}${name}`) &&
+	filterFrom("SPELLING")(name);
+
+/**
+ * The expectations a run can meet. One for a relation, respelling, fixture or
+ * preset the run never reaches matches nothing because nothing asked it to,
+ * which is not the divergence having gone away.
+ * @param {readonly Expected[]} expected findings already answered for
+ * @param {readonly string[]} labels the fixtures the run reads
+ * @param {readonly string[]} presets the option sets the run prints under
+ * @returns {Expected[]} the ones the run reaches
+ */
+const wantedExpectations = (expected, labels, presets) => {
+	const wantedRelation = filterFrom("RELATION");
+	return expected.filter(
+		(entry) =>
+			(entry.relation.startsWith(RESPELLING)
+				? wantedRespelling(entry.relation.slice(RESPELLING.length))
+				: wantedRelation(entry.relation)) &&
+			labels.some((label) => _names(entry, label)) &&
+			(entry.presets === undefined ||
+				entry.presets.some((preset) => presets.includes(preset)))
+	);
 };
 
 /**
@@ -1194,6 +1264,7 @@ module.exports = {
 	STAGES,
 	collectFiles,
 	compress,
+	cutsAt,
 	exists,
 	filterFrom,
 	findingGroups,
@@ -1223,5 +1294,7 @@ module.exports = {
 	spans,
 	sweepExitCode,
 	sweepMode,
-	thrownText
+	thrownText,
+	wantedExpectations,
+	wantedRespelling
 };

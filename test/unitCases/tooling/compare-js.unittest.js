@@ -12,8 +12,10 @@ jest.mock("../../../tooling/compare-tools-harness", () => ({
 	installPackages: installed
 }));
 
+const acorn = require("acorn");
 const {
 	behaviorDifference,
+	roundTrip,
 	runMode
 } = require("../../../tooling/compare-js-tools");
 
@@ -33,6 +35,65 @@ describe("the JavaScript tool comparison", () => {
 
 		expect(installed).toHaveBeenCalledTimes(1);
 		expect(installed).toHaveBeenCalledWith(CACHE_NAME);
+	});
+});
+
+describe("the printing table's last column", () => {
+	const source =
+		'/*! a license */\n/** @license MIT */\nvar s = "/*! not one */"; /* plain */ a.b = 1;';
+
+	it("should find nothing where the output keeps every name and notice", () => {
+		expect(
+			roundTrip(
+				acorn,
+				new Set(["b"]),
+				["! a license ", "* @license MIT "],
+				"/*! a license */\n/** @license MIT */\na.b=1",
+				"script"
+			)
+		).toBe("-");
+	});
+
+	it("should name the legal notices and property names the output dropped", () => {
+		expect(
+			roundTrip(acorn, new Set(["b", "c"]), ["! a ", "! b "], "a.b=1", "script")
+		).toBe(
+			"1 names! e.g. c, 2 legal notices!"
+		);
+		expect(
+			roundTrip(acorn, new Set(), ["! a license ", "! b "], "/*! a license */", "script")
+		).toBe(
+			"1 legal notice!"
+		);
+	});
+
+	it("should name a notice the output changed or replaced with another", () => {
+		const notices = ["! a ", "! b "];
+		expect(
+			roundTrip(acorn, new Set(), notices, "/*! a *//*! a */", "script")
+		).toBe("1 legal notice!");
+		expect(
+			roundTrip(acorn, new Set(), notices, "/*! b *//*! a */", "script")
+		).toBe("-");
+	});
+
+	it("should not count a `/*!` inside a string as a notice", () => {
+		expect(roundTrip(acorn, new Set(), [], source, "script")).toBe("-");
+		expect(
+			roundTrip(
+				acorn,
+				new Set(),
+				["! a license ", "* @license MIT ", "! not one "],
+				source,
+				"script"
+			)
+		).toBe("1 legal notice!");
+	});
+
+	it("should say when the output does not parse back", () => {
+		expect(roundTrip(acorn, new Set(), [], "a.=", "script")).toMatch(
+			/^will not parse back: /
+		);
 	});
 });
 

@@ -160,7 +160,7 @@ jobs:
         run: yarn test:invariants:css --require-corpus
 
       # One language's finding must not hide another's: each names a repro of
-      # its own and all three are read in the same sitting. `!cancelled()`
+      # its own and all four are read in the same sitting. `!cancelled()`
       # rather than `always()`, so a cancelled run stops here instead of
       # sweeping again.
       - name: HTML printer invariants

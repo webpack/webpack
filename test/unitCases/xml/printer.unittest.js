@@ -332,4 +332,59 @@ b&#10;c">
 			"<r>]]&gt;&#13;</r>"
 		);
 	});
+
+	it("should tell XML text well-formed as written from text a strict parser refuses", () => {
+		const { isXmlWellFormedText } = require("../../../lib/html/syntax-parser");
+		expect(isXmlWellFormedText("a &amp; b &#38; &#x26; &undeclared;")).toBe(
+			true
+		);
+		expect(isXmlWellFormedText("a > b")).toBe(true);
+		expect(isXmlWellFormedText("a & b")).toBe(false);
+		expect(isXmlWellFormedText("&amp")).toBe(false);
+		expect(isXmlWellFormedText("&1a;")).toBe(false);
+		expect(isXmlWellFormedText("a < b")).toBe(false);
+	});
+
+	it("should escape an `&` that opens no reference when minifying", () => {
+		expect(printXml("<r>&amp", "minify")).toBe("<r>&amp;amp</r>");
+		expect(printXml("<r>a & b</r>", "minify")).toBe("<r>a &amp; b</r>");
+		expect(printXml('<r a="&amp x" b="&#38"/>', "minify")).toBe(
+			'<r a="&amp;amp x" b="&amp;#38"/>'
+		);
+		expect(printXml("<r>&undeclared;</r>", "minify")).toBe(
+			"<r>&undeclared;</r>"
+		);
+		expect(printXml("<r>&foo?;&a(b;&.c;</r>", "minify")).toBe(
+			"<r>&amp;foo?;&amp;a(b;&amp;.c;</r>"
+		);
+		expect(printXml("<r>&é-1.x;&_:y;</r>", "minify")).toBe(
+			"<r>&é-1.x;&_:y;</r>"
+		);
+	});
+
+	it("should close a blank stylesheet the input ran out in", () => {
+		const { builtinEmbeddedRenderer } = require("../../../lib/html/builtinEmbeddedRenderer");
+		/**
+		 * @param {string} document an SVG
+		 * @returns {string} the minified document
+		 */
+		const minify = (document) =>
+			/** @type {{ code: string }} */ (
+				new SourceProcessor().process(document, {
+					xml: true,
+					mode: "minify",
+					renderEmbeddedSource: builtinEmbeddedRenderer()
+				})
+			).code;
+		expect(
+			minify('<svg xmlns="http://www.w3.org/2000/svg"><style>\n<![CDATA[\n')
+		).toBe('<svg xmlns="http://www.w3.org/2000/svg"><style>\n\n</style></svg>');
+		expect(
+			minify(
+				'<svg xmlns="http://www.w3.org/2000/svg"><style><![CDATA[ ]]></style></svg>'
+			)
+		).toBe(
+			'<svg xmlns="http://www.w3.org/2000/svg"><style><![CDATA[ ]]></style></svg>'
+		);
+	});
 });

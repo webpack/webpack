@@ -8,6 +8,7 @@ const { Readable } = require("stream");
 const { pathToFileURL } = require("url");
 const {
 	compress,
+	cutsAt,
 	exists,
 	filterFrom,
 	findingGroups,
@@ -26,7 +27,9 @@ const {
 	profileShares,
 	run,
 	sweepExitCode,
-	sweepMode
+	sweepMode,
+	wantedExpectations,
+	wantedRespelling
 } = require("../../../tooling/compare-tools-harness");
 
 /** @type {string} */
@@ -832,6 +835,112 @@ describe("compare-tools-harness", () => {
 			expect(count).toBe(2);
 			expect(text).toContain("idempotence — bytes");
 			expect(text).toContain("stale — 1 expectation(s) matched nothing");
+		});
+
+		it("lets an entry naming several fixtures cover a group reaching them", () => {
+			const groups = findingGroups([
+				{
+					relation: "idempotence",
+					contains: "a ->",
+					source: ["one", "two"],
+					why: "those fixtures write it"
+				}
+			]);
+			groups.add(finding("idempotence", "    a -> b"), "default", "one.html");
+			groups.add(finding("idempotence", "    a -> b"), "default", "two.html");
+			expect(written(groups).count).toBe(0);
+			groups.add(finding("idempotence", "    a -> b"), "default", "three.html");
+			expect(written(groups).count).toBe(2);
+		});
+	});
+
+	describe("cutsAt", () => {
+		it("cuts inside the first construct past the midpoint, else the first", () => {
+			const source = "<a>1</a><b>2</b><c>3</c>";
+			expect(cutsAt(source, [["in a start tag", /<[a-z]/g]])).toEqual([
+				["in a start tag", "<a>1</a><b>2</b><c"]
+			]);
+			expect(cutsAt(source, [["in a comment", /<!--./g]])).toEqual([]);
+			expect(cutsAt("<a>1</a>xyz", [["in a tag", /<[a-z]/g]])).toEqual([
+				["in a tag", "<a"]
+			]);
+		});
+
+		it("leaves out a cut that would keep the whole source", () => {
+			expect(cutsAt("ab<a", [["in a start tag", /<[a-z]/g]])).toEqual([]);
+		});
+	});
+
+	describe("narrowing a sweep", () => {
+		afterEach(() => {
+			delete process.env.RELATION;
+			delete process.env.SPELLING;
+		});
+
+		it("asks every respelling when nothing narrows the run", () => {
+			expect(wantedRespelling("quote-double")).toBe(true);
+		});
+
+		it("asks a respelling `RELATION` names alone or as `respelling`", () => {
+			process.env.RELATION = "respelling quote-double";
+			expect(wantedRespelling("quote-double")).toBe(true);
+			expect(wantedRespelling("quote-single")).toBe(false);
+			process.env.RELATION = "respelling";
+			expect(wantedRespelling("quote-single")).toBe(true);
+			process.env.RELATION = "spans";
+			expect(wantedRespelling("quote-single")).toBe(false);
+		});
+
+		it("asks only the respelling `SPELLING` names", () => {
+			process.env.SPELLING = "unquote";
+			expect(wantedRespelling("unquote")).toBe(true);
+			expect(wantedRespelling("quote-double")).toBe(false);
+		});
+
+		/** @type {import("../../../tooling/compare-tools-harness").Expected[]} */
+		const EXPECTED = [
+			{ relation: "idempotence", contains: "a", why: "…" },
+			{ relation: "respelling quote-double", contains: "b", why: "…" },
+			{ relation: "idempotence", contains: "c", source: "one", why: "…" },
+			{ relation: "idempotence", contains: "d", presets: ["legacy"], why: "…" },
+			{
+				relation: "idempotence",
+				contains: "e",
+				source: ["three", "one"],
+				why: "…"
+			}
+		];
+
+		/**
+		 * @param {string[]} labels the fixtures the run reads
+		 * @param {string[]} presets the option sets it prints under
+		 * @returns {string[]} what each kept entry contains
+		 */
+		const kept = (labels, presets) =>
+			wantedExpectations(EXPECTED, labels, presets).map(
+				(entry) => entry.contains
+			);
+
+		it("keeps every entry a full run reaches", () => {
+			expect(kept(["one.html"], ["default", "legacy"])).toEqual([
+				"a",
+				"b",
+				"c",
+				"d",
+				"e"
+			]);
+		});
+
+		it("drops an entry for a fixture or preset the run does not read", () => {
+			expect(kept(["two.html"], ["default"])).toEqual(["a", "b"]);
+		});
+
+		it("drops an entry for a relation or respelling the run does not ask", () => {
+			process.env.SPELLING = "unquote";
+			expect(kept(["one.html"], ["legacy"])).toEqual(["a", "c", "d", "e"]);
+			delete process.env.SPELLING;
+			process.env.RELATION = "respelling quote-double";
+			expect(kept(["one.html"], ["legacy"])).toEqual(["b"]);
 		});
 	});
 });
