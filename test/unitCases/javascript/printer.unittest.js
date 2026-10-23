@@ -12360,6 +12360,7 @@ const PRINTED_SOURCES = [
 	"(a?.b).c; (a?.b)(); a?.b.c; a?.(); a?.b(); new (a.b()); new (a().b); new a.b(); new (a()); (new A).b; (new A)(); (new A)`x`; new A`x`; new (a`x`);",
 	"1..x; 0.5.x; 0..x; 1e3.x; 0x10.x; 0b1.x; 0o7.x; 07.x; 1e999; -1e999; x = 1e999.y; ({ [1e999]: 1, a: 1e999 });",
 	"1 in a; 1.5 in a; .5 in a; /x/ in a; /x/ instanceof a; a in b; a instanceof b; 1 instanceof a;",
+	"!/a/ in obj; a + /x/ in b; typeof /x/ instanceof y; x = !1. in a; x = -1. in a; (a, /x/) in b; a ? b : /c/ in d; (/x/) in b; f(/x/) in b; x = 1. + 2. in a;",
 	"a < /script/.test(b); a < /x/; f(/a/, /script/);",
 	"(a ? b : c)`x`; (a, b)`x`; (-a)`x`; (() => 1)`x`; (function () {})`x`; ({}).a`x`; ({}.a)`x`; a.b`x`; a[b]`x`; (a + b)`x`; (a = b)`x`; (new A())`x`; a()`x`;",
 	"({}).a; ({}.a); (function () {}).call(); (function () {})`x`; (class {}).a; ({}) + 1; ({}).a++; ({})?.a; ({}) ? 1 : 2; ({}), 1; (function () {}) + 1; (function () {}()).a = 1; ({}).a = 1;",
