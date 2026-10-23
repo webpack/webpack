@@ -1,10 +1,24 @@
 "use strict";
 
+// cspell:ignore dgimsuy
+
 /** @typedef {import("../../../lib/javascript/syntax-parser").CollectedComment} CollectedComment */
 /** @typedef {import("../../../lib/javascript/syntax-parser").ParserOptions} ParserOptions */
 /** @typedef {{ ast: import("estree").Program, comments: CollectedComment[] }} ParseResult */
+/** @typedef {typeof import("../../../lib/javascript/syntax-parser")} ParserExports */
+/** @typedef {Partial<import("../../../lib/javascript/syntax-parser").Options>} PortOptions */
 
+const acorn = require("acorn");
 const { parse: webpackParse } = require("../../../lib/javascript/syntax").parser;
+const {
+	Parser,
+	Position,
+	nextLineBreak,
+	tokTypes
+} = require("../../../lib/javascript/syntax-parser");
+
+// acorn's exports have the shape of ours, which is what the port promises
+const acornPort = /** @type {ParserExports} */ (/** @type {unknown} */ (acorn));
 
 /**
  * Parse with the options a build hands the parser: ranges alone become lazy
@@ -336,6 +350,492 @@ describe("WebpackParser", () => {
 				/** @type {import("estree").ExpressionStatement} */
 				(parse(`x${em}/ y;`).ast.body[0]);
 			expect(statement.expression.type).toBe("BinaryExpression");
+		});
+	});
+});
+
+/**
+ * A token, comment or error as plain data, so acorn's and ours compare by value.
+ * @param {unknown} value what to convert
+ * @returns {unknown} the plain data
+ */
+const plain = (value) =>
+	JSON.parse(
+		JSON.stringify(value, (key, v) => {
+			if (typeof v === "bigint") return `${v}n`;
+			if (v instanceof RegExp) return { regexp: v.source, flags: v.flags };
+			if (key === "type" && v && typeof v === "object" && "label" in v) {
+				return { label: v.label };
+			}
+			return v;
+		})
+	);
+
+/**
+ * @param {unknown} err what a tokenizer threw
+ * @returns {unknown} its message and where it was raised, as plain data
+ */
+const errorOutcome = (err) => {
+	const error =
+		/** @type {Error & { pos?: number, loc?: unknown, raisedAt?: number }} */ (
+			err
+		);
+	return {
+		error: error.message,
+		pos: error.pos,
+		loc: plain(error.loc),
+		raisedAt: error.raisedAt
+	};
+};
+
+/**
+ * Every token and comment a tokenizer reads from a source, or the error it
+ * threw with where it was raised.
+ * @param {typeof Parser} parser the parser class whose tokenizer to run
+ * @param {string} source the program text
+ * @param {PortOptions} options tokenizer options
+ * @returns {unknown} the outcome as plain data
+ */
+const tokenized = (parser, source, options) => {
+	/** @type {unknown[]} */
+	const comments = [];
+	/** @type {unknown[]} */
+	const tokens = [];
+	try {
+		for (const token of parser.tokenizer(source, {
+			...options,
+			onComment: /** @type {EXPECTED_ANY} */ (comments)
+		})) {
+			tokens.push(token);
+		}
+		return plain({ tokens, comments });
+	} catch (err) {
+		return errorOutcome(err);
+	}
+};
+
+/**
+ * The tokens a full parse reports through `onToken`, where the parser rather
+ * than the tokenizer's guess decides some contexts, or the error it threw.
+ * @param {typeof Parser} parser the parser class to run
+ * @param {string} source the program text
+ * @param {PortOptions} options parse options
+ * @returns {unknown} the outcome as plain data
+ */
+const parsedTokens = (parser, source, options) => {
+	/** @type {unknown[]} */
+	const tokens = [];
+	try {
+		parser.parse(source, {
+			...options,
+			onToken: /** @type {EXPECTED_ANY} */ (tokens)
+		});
+		return plain(tokens);
+	} catch (err) {
+		return errorOutcome(err);
+	}
+};
+
+/**
+ * @param {string} source the program text
+ * @param {PortOptions=} options tokenizer options
+ * @returns {string[]} the label of each token before eof
+ */
+const labels = (source, options = { ecmaVersion: "latest" }) =>
+	Array.from(Parser.tokenizer(source, options), (token) => token.type.label);
+
+/** @type {[string, PortOptions][]} */
+const TOKENIZER_OPTION_SETS = [
+	["es3", { ecmaVersion: 3 }],
+	["es5", { ecmaVersion: 5 }],
+	["es2015 with locations", { ecmaVersion: 6, locations: true }],
+	["es2016", { ecmaVersion: 7 }],
+	["es2018", { ecmaVersion: 9 }],
+	["es2019 with ranges", { ecmaVersion: 10, ranges: true }],
+	["es2020", { ecmaVersion: 11 }],
+	["es2021", { ecmaVersion: 12 }],
+	["es2022", { ecmaVersion: 13 }],
+	[
+		"latest with locations, ranges and a source file",
+		{
+			ecmaVersion: "latest",
+			locations: true,
+			ranges: true,
+			sourceFile: "input.js"
+		}
+	],
+	["latest module", { ecmaVersion: "latest", sourceType: "module" }],
+	["latest without hashbang", { ecmaVersion: "latest", allowHashBang: false }]
+];
+
+// template sources spell `${` as text on purpose
+/* eslint-disable no-template-curly-in-string */
+/**
+ * Sources by what they exercise, each tokenized under every option set: the
+ * option sets cross the ecmaVersion gates (`**`, `?.`, `??=`, bigint,
+ * separators, private names, template escapes, regexp flags) and the
+ * locations/ranges bookkeeping.
+ * @type {Record<string, string[]>}
+ */
+const TOKENIZER_SOURCES = {
+	punctuators: [
+		"a.b; a?.b; a?.5:1; a ?? b; a ??= b; a ||= b; a &&= b; a || b && c;",
+		"a | b & c ^ d; a |= 1; a &= 1; a ^= 1; ~a; !a; a ? b : c;",
+		"a ** b; a **= b; a * b; a *= b; a % b; a %= b;",
+		"a + b - c; a += 1; a -= 1; a++; --a; +a; -a;",
+		"a < b; a <= b; a > b; a >= b; a << b; a >> b; a >>> b;",
+		"a <<= 1; a >>= 1; a >>>= 1;",
+		"a == b; a === b; a != b; a !== b; a = b; (a) => b;",
+		"f(...a); [a, b]; ({ a: 1 }); x / y; x /= y; x = /re/g;",
+		"@",
+		"a \u2E2E b",
+		"\u{1F600}",
+		"\u000E"
+	],
+	numbers: [
+		"0x1F 0X1f 0o17 0O17 0b101 0B1 0777 0778 089 .5 1. 1.5e10 1E+5 2e-3 .5e3",
+		"00 0.0 09.5 5..toString",
+		"1_000 0x1_F 1_0.0_1e1_0 0b1_0 0o1_7",
+		"0x1Fn 10n 0b1n 0o7n 0n",
+		"0x",
+		"0x_1",
+		"1__0",
+		"1_",
+		"0_1",
+		"08_1",
+		"1.5n",
+		"0777n",
+		"1e",
+		"1e+",
+		"3in",
+		"0xg",
+		"0b2",
+		"0o8",
+		"10nx",
+		'"use strict"; 0777',
+		'"use strict"; 08',
+		'"use strict"; 0'
+	],
+	strings: [
+		"'a' \"b\" 'it\\'s' \"q\\\"\"",
+		"'\\x41\\u0041\\u{41}\\u{1F600}'",
+		"'\\n\\r\\t\\b\\v\\f\\0\\'\\\\\\a'",
+		"'\\101\\08\\9\\400\\1\\12\\377'",
+		"'a\\\nb' 'a\\\r\nb' 'a\\\rb' 'a\\\u2028b'",
+		"'a\u2028b\u2029c'\n'd'",
+		"'a\nb'",
+		"'a\rb'",
+		"'abc",
+		"'abc\\",
+		"'\\u{110000}'",
+		"'\\u{41'",
+		"'\\xZ'",
+		"'\\uZZZZ'",
+		"'\\u{}'",
+		'"use strict"; "\\01"',
+		'"use strict"; "\\0"',
+		'"use strict"; "\\08"',
+		'"use strict"; "\\9"'
+	],
+	templates: [
+		"`a${b}c${d}e`",
+		"`\\n\\x41\\u{42}\\u0043\\0`",
+		"`a\r\nb\rc\nd\u2028e\u2029f`\nx",
+		"`a\\\r\nb\\\nc`\nx",
+		"tag`\\8`",
+		"`\\01`",
+		"`\\0`",
+		"`\\00`",
+		"`\\08`",
+		"`\\u{110000}`",
+		"`\\xg${a}\\uZ`",
+		"`\\xg\r\n\n\r\u2028\\``\nx",
+		"`\\xg",
+		"`\\xg$a`",
+		"`abc",
+		"`abc${",
+		"`a${`b${c}`}d`",
+		"`${ {a: 1} }` / 2",
+		"`${a}` / 2; `${/re/}`"
+	],
+	regexps: [
+		"/a/g; /[/]/; /\\//; /[\\]/]/; /a/i",
+		"/a/dgimsuy",
+		"/a/v",
+		"/a/d",
+		"/a/s",
+		"/a/y",
+		"/a/gg",
+		"/a/x",
+		"/a/\\u0067",
+		"/a",
+		"/a\n/",
+		"/[a/",
+		"/(?<n>x)\\k<n>/",
+		"/\\k<n>/",
+		"/(/",
+		"/(?i:a)/",
+		"/(?<a>x)|(?<a>y)/"
+	],
+	"comments and whitespace": [
+		"// line\n/* block */ /*\n multi\r\n line\u2028*/ a // end",
+		"<!-- html\na --> b\n--> close\n-->",
+		"--> at the start",
+		"a\n--> after a line break",
+		"a /* c */ --> after a comment",
+		"a /*\n*/ --> after a multi-line comment",
+		"a <!-- b",
+		"a <! b; a <!- b",
+		"/* unterminated",
+		"/* a */ / b",
+		"\t\v\f \u00A0\uFEFF\u1680\u2000\u200A\u202F\u205F\u3000a\u2028b\u2029c\r\nd\re",
+		"a\u180E",
+		"#!/usr/bin/env node\na",
+		"#!",
+		"a\n#!b"
+	],
+	identifiers: [
+		"\u00E9 \u2118 \u309B abc$_ $ _ a1 a\u0300",
+		"\\u0061bc a\\u0062 \\u{61} \\u{1D400} a\\u{1D7CE}",
+		"\u{1D400} a\u{1D400} a\u{1D7CE}",
+		"a\u{1D400}",
+		"\\u0030",
+		"a\\u0020",
+		"\\x41",
+		"a\\",
+		"\\u{110000}",
+		"\\uZZZZ",
+		"\\u{1F600}",
+		"\\u0069f (a);",
+		"a.\\u0069f",
+		"\\u{69}f",
+		"\uD835",
+		"\uD835a",
+		"a\uDC00",
+		"\u{1D400}",
+		"#x #\\u0061 #\u{1D400}",
+		"#1",
+		"# x"
+	],
+	keywords: [
+		"if else for while do var let const class extends super import export",
+		"new this null true false typeof instanceof in of yield async await",
+		"function return break continue switch case default throw try catch",
+		"finally debugger with void delete enum implements static",
+		"a.if / 2; a.in / 2; a.of / 2; of / 2"
+	],
+	// where `/` is a regexp or a division depends on the tokenizer's context
+	contexts: [
+		"if (a) /re/.test(b); while (a) /x/; (a) / b; f() / 2; a[0] / 2",
+		"x = {} / 1; {} /re/; x = { a: /re/ }; a: /re/; a ? {} : /re/",
+		"function f() { return /re/; return\n/re/; return {} / 2; return\n{} /re/ }",
+		"x = function () {} / 2; function f() {} /re/",
+		"x = class {} / 2; class A {} /re/",
+		"(function () {} / 2); if (a) function f() {} /re/",
+		"a: function f() {} /re/; { function g() {} /re/ }",
+		"function f() { return function () {} / 2; return\nfunction g() {} /re/ }",
+		"if (a) {} else function f() {} /re/",
+		"for (;;) function f() {} / 2",
+		"x = function* () {} / 2; function* g() {} /re/",
+		"if (a) b; else /re/; a++ / 2; ++/re/.lastIndex",
+		"for (x of /re/g); yield / 2; typeof /re/; a => /re/",
+		"x => {} /re/; ; {} /re/; if (a) {} /re/; else {} /re/",
+		"var {} / 2; const {} / 2; a\n{} / 2; { {} /re/ }",
+		"x = `${ {} }`; `${ {} /2 }`; a: {} /re/",
+		"x = { a: {} / 2 }; x = { a: function () {} / 2 }",
+		"switch (a) { case /re/: }",
+		"x = y ? function () {} : /re/"
+	]
+};
+/* eslint-enable no-template-curly-in-string */
+
+describe("Parser.tokenizer", () => {
+	describe("tokenizes like acorn", () => {
+		for (const [group, sources] of Object.entries(TOKENIZER_SOURCES)) {
+			it(`for ${group} under every option set`, () => {
+				const differences = [];
+				for (const source of sources) {
+					for (const [name, options] of TOKENIZER_OPTION_SETS) {
+						const ours = tokenized(Parser, source, options);
+						const theirs = tokenized(acornPort.Parser, source, options);
+						if (JSON.stringify(ours) !== JSON.stringify(theirs)) {
+							differences.push({ source, options: name, ours, theirs });
+						}
+					}
+				}
+				expect(differences).toEqual([]);
+			});
+		}
+	});
+
+	describe("parser-decided contexts", () => {
+		it("should report the same tokens as acorn when the parser overrides a context", () => {
+			const sources = [
+				// `async function` reads as a statement until the parser says otherwise
+				"x = async function () {} / 2; async function f() {} /re/",
+				// a brace after a conditional's colon is an object, not a block
+				"x = a ? b : {} / 2; x = a ? b : function () {} / 2",
+				"function* g() { yield /re/g; yield\n{} }",
+				"x = { a: {} / 2 }; label: {} /re/"
+			];
+			const differences = [];
+			for (const source of sources) {
+				for (const options of /** @type {PortOptions[]} */ ([
+					{ ecmaVersion: "latest", locations: true, ranges: true },
+					{ ecmaVersion: 8 }
+				])) {
+					const ours = parsedTokens(Parser, source, options);
+					const theirs = parsedTokens(acornPort.Parser, source, options);
+					if (JSON.stringify(ours) !== JSON.stringify(theirs)) {
+						differences.push({ source, options, ours, theirs });
+					}
+				}
+			}
+			expect(differences).toEqual([]);
+			// the override is what turns the `/` after `{}` into a division
+			const tokens = /** @type {{ type: { label: string } }[]} */ (
+				parsedTokens(Parser, "x = a ? b : {} / 2", { ecmaVersion: "latest" })
+			);
+			expect(tokens.map((token) => token.type.label)).toEqual([
+				"name",
+				"=",
+				"name",
+				"?",
+				"name",
+				":",
+				"{",
+				"}",
+				"/",
+				"num",
+				"eof"
+			]);
+		});
+
+		it("should read a regexp after `yield` in a generator method", () => {
+			// a deliberate divergence, documented on `inGeneratorContext`: acorn
+			// looks for a generator `function` context, which a method's `*` never
+			// pushes, so it reads a division here and rejects the program
+			const source = "class A { *g() { yield /re/g; } }";
+			const tokens = /** @type {{ type: { label: string } }[]} */ (
+				parsedTokens(Parser, source, { ecmaVersion: "latest" })
+			);
+			expect(tokens.map((token) => token.type.label)).toContain("regexp");
+			expect(
+				parsedTokens(acornPort.Parser, source, { ecmaVersion: "latest" })
+			).toMatchObject({ error: "Unexpected token (1:23)" });
+		});
+	});
+
+	describe("token stream", () => {
+		it("should stop iterating at eof and keep returning eof", () => {
+			const tokenizer = Parser.tokenizer("a b", { ecmaVersion: "latest" });
+			expect(Array.from(tokenizer, (token) => token.value)).toEqual(["a", "b"]);
+			expect(tokenizer.getToken().type).toBe(tokTypes.eof);
+			expect(tokenizer.getToken().type).toBe(tokTypes.eof);
+		});
+
+		it("should skip comments when nothing collects them", () => {
+			const source = "a // line\nb /* block */ c";
+			expect(labels(source)).toEqual(["name", "name", "name"]);
+			expect(
+				plain([...Parser.tokenizer(source, { ecmaVersion: "latest" })])
+			).toEqual(
+				plain([
+					...acornPort.Parser.tokenizer(source, { ecmaVersion: "latest" })
+				])
+			);
+		});
+
+		it("should hand comments and tokens to callbacks like acorn", () => {
+			const source = "/* a */ x // b\n= 1;";
+			/**
+			 * @param {typeof Parser} parser the parser class to run
+			 * @returns {unknown[]} each callback's arguments, in call order
+			 */
+			const calls = (parser) => {
+				/** @type {unknown[]} */
+				const seen = [];
+				parser.parse(source, {
+					ecmaVersion: "latest",
+					locations: true,
+					onComment: (block, text, start, end, startLoc, endLoc) => {
+						seen.push(["comment", block, text, start, end, startLoc, endLoc]);
+					},
+					onToken: (token) => {
+						seen.push(["token", token]);
+					}
+				});
+				return /** @type {unknown[]} */ (plain(seen));
+			};
+			expect(calls(Parser)).toEqual(calls(acornPort.Parser));
+			expect(calls(Parser).slice(0, 2)).toEqual([
+				[
+					"comment",
+					true,
+					" a ",
+					0,
+					7,
+					{ line: 1, column: 0 },
+					{ line: 1, column: 7 }
+				],
+				[
+					"token",
+					expect.objectContaining({ type: { label: "name" }, value: "x" })
+				]
+			]);
+		});
+
+		it("should show onTokenRead the parser at each token", () => {
+			/** @type {[string, unknown][]} */
+			const seen = [];
+			Parser.parse("x = 1;", {
+				ecmaVersion: "latest",
+				onTokenRead: (parser) => {
+					seen.push([parser.type.label, parser.value]);
+				}
+			});
+			expect(seen).toEqual([
+				["name", "x"],
+				["=", "="],
+				["num", 1],
+				[";", undefined],
+				["eof", undefined]
+			]);
+		});
+
+		it("should report an error's line and column without locations", () => {
+			// CRLF counts as one line break and LS as another
+			const tokenizer = Parser.tokenizer("a\r\n\u2028  @", {
+				ecmaVersion: "latest",
+				sourceFile: "input.js"
+			});
+			expect(() => [...tokenizer]).toThrow(
+				expect.objectContaining({
+					message: "Unexpected character '@' (3:2) in input.js",
+					pos: 6,
+					loc: expect.objectContaining({ line: 3, column: 2 })
+				})
+			);
+		});
+	});
+
+	describe("position helpers", () => {
+		it("should find the end of the next line break, CRLF as one", () => {
+			expect(nextLineBreak("a\r\nb", 0)).toBe(3);
+			expect(nextLineBreak("a\rb", 0)).toBe(2);
+			expect(nextLineBreak("a\u2029b", 0)).toBe(2);
+			expect(nextLineBreak("ab", 0)).toBe(-1);
+			// a CR at the limit is a whole break, whatever follows it
+			expect(nextLineBreak("a\r\nb", 0, 2)).toBe(2);
+		});
+
+		it("should shift a position along its line like acorn", () => {
+			expect(new Position(2, 3).offset(4)).toEqual(
+				expect.objectContaining({ line: 2, column: 7 })
+			);
+			expect(plain(new Position(2, 3).offset(4))).toEqual(
+				plain(new acornPort.Position(2, 3).offset(4))
+			);
 		});
 	});
 });
