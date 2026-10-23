@@ -9,6 +9,7 @@
 /** @typedef {typeof import("../../../lib/javascript/syntax-parser")} ParserExports */
 /** @typedef {Partial<import("../../../lib/javascript/syntax-parser").Options>} PortOptions */
 /** @typedef {import("../../../lib/javascript/syntax-parser").Node} EstreeNode */
+/** @typedef {import("../../../lib/javascript/syntax-parser").ParserOptions} ParserOptions */
 /**
  * A parsed node whose children may already stand as the ids they were written as.
  * @typedef {{ type: string, [key: string]: unknown }} WrittenNode
