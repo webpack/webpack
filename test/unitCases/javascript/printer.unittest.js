@@ -8965,6 +8965,32 @@ describe("syntax-printer", () => {
 			}
 		});
 
+		it("should read `arguments[i]` as its parameter without `reduce_vars` where nothing writes either", async () => {
+			const { minify } = await load();
+			const options = {
+				compress: { defaults: false, arguments: true, properties: true },
+				mangle: false
+			};
+			const { code } = await minify(
+				'function f(a, b) { "use strict"; a = 2; return arguments[0] + arguments[1] + arguments[-0]; } console.log(f(1, 3));',
+				options
+			);
+			expect(code).toContain("arguments[0]+b+arguments[0]");
+			for (const input of [
+				'function f(a) { "use strict"; arguments[0] = 2; return arguments[0] + a; } console.log(f(1));',
+				"function f(a) { g(arguments); return arguments[0]; } function g(o) { o[0] = 5; } console.log(f(), f(1));",
+				"function f(a) { delete arguments[0]; return arguments[0]; } console.log(f(1));",
+				"function f(a) { [arguments[0]] = [4]; return arguments[0] + a; } console.log(f(), f(1));",
+				"function f(a) { var o = { a: 1 }; ({ a } = o); return arguments[0]; } console.log(f(2));",
+				"function f(a) { arguments = [7]; return arguments[0]; } console.log(f(1));",
+				"function f(a) { return eval('a = 3'), arguments[0]; } console.log(f(1));",
+				"function f(a, a2) { return arguments[1]; } console.log(f(1));"
+			]) {
+				const { code } = await minify(input, options);
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			}
+		});
+
 		it("should keep a global written through `globalThis` and a `slice` a patched `Array.prototype` changes", async () => {
 			const { minify } = await load();
 			for (const input of [

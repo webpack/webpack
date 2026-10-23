@@ -548,13 +548,6 @@ const SWC_SMALLER_BY_REASON = [
 		]
 	],
 	[
-		"swc reads `arguments[i]` as the named parameter it aliases",
-		[
-			"swc minifier: fixture/issues/12209/input.js",
-			"swc minifier: fixture/issues/arguments-canonical-index/input.js"
-		]
-	],
-	[
 		"real-world code, where the gap sums several of the transforms above; split it once those land",
 		[
 			"swc minifier: fixture/issues/10807/input.js",
