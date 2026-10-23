@@ -34136,6 +34136,12 @@ declare class SyntaxParser {
 	yieldPos: number;
 	labels: LabelLike[];
 	undefinedExports: Record<string, NodeLike>;
+
+	/**
+	 * Set by the parse entry points; a parser that only hands out tokens
+	 * keeps its top-level scope and reads its contexts instead.
+	 */
+	parsing: boolean;
 	scopeStack: ParserScope[];
 	regexpState: null | RegExpValidationState;
 	privateNameStack: any[];
@@ -34379,6 +34385,7 @@ declare class SyntaxParser {
 	/**
 	 * Whether the enclosing function is a generator. A parse reads its scope: a
 	 * method's `*` pushes no `function` context, which only the tokenizer reads.
+	 * The tokenizer alone enters no function scope, so it reads its contexts.
 	 */
 	inGeneratorContext(): boolean;
 	updateContext(prevType: TokenType): void;
