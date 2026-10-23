@@ -9109,6 +9109,58 @@ describe("syntax-printer", () => {
 			}
 		});
 
+		it("should write what oxc writes shorter: a catch binding, a nested `if`, a wide name, a loop update and a constructor's `this`", async () => {
+			const { minify } = await load();
+			for (const [input, expected] of [
+				["try { f(); } catch (e) { g(); }", "catch{g()}"],
+				["function _() { if (a) return; if (b) return c; } _();", "if(!a&&b)return c"],
+				['a["ÑStuffAfter"];', "a.ÑStuffAfter"],
+				["for (var i = 0; i < 10; i++, 0) foo(i);", "i<10;i++)"],
+				[
+					"class B extends A { constructor() { super(); if (x) this.b = 0; else this.b = 1; } }",
+					"super(),this.b=+!x"
+				]
+			]) {
+				const { code } = await minify(input, {
+					compress: { passes: 2 },
+					mangle: false,
+					ecma: 2020
+				});
+				expect(code).toContain(expected);
+			}
+			for (const [input, unexpected, options] of [
+				["try { f(); } catch (e) { g(e); }", "catch{", { ecma: 2020 }],
+				["try { f(); } catch (e) { g(); }", "catch{", { ecma: 2015 }],
+				["try { f(); } catch (e) { var e = 1; }", "catch{", { ecma: 2020 }],
+				["try { f(); } catch (e) { eval('g(e)'); }", "catch{", { ecma: 2020 }],
+				['a["ÑStuffAfter"];', "a.Ñ", { ecma: 5 }],
+				[
+					"class B extends A { constructor() { if (x) this.b = 0; else this.b = 1; super(); } }",
+					"this.b=+!x",
+					{ ecma: 2020 }
+				]
+			]) {
+				const { code } = await minify(/** @type {string} */ (input), {
+					compress: { passes: 2 },
+					mangle: false,
+					.../** @type {object} */ (options)
+				});
+				expect(code).not.toContain(unexpected);
+			}
+		});
+
+		it("should keep what `delete` and a call read through `??` once its left side is nullish", async () => {
+			const { minify } = await load();
+			for (const input of [
+				"var x = 1; console.log(delete (null ?? x), x);",
+				"x = 1; console.log(delete (null ?? x), typeof x);",
+				"var o = { f() { return this === o; } }; console.log((null ?? o.f)(), (void 0 ?? o.f)());"
+			]) {
+				const { code } = await minify(input, { compress: {}, mangle: false });
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			}
+		});
+
 		it("should keep a global written through `globalThis` and a `slice` a patched `Array.prototype` changes", async () => {
 			const { minify } = await load();
 			for (const input of [

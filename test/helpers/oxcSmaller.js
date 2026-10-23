@@ -237,10 +237,8 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/esbuild.rs:1181",
 			"oxc minifier: peephole/esbuild.rs:1215",
 			"oxc minifier: peephole/esbuild.rs:1222",
-			"oxc minifier: peephole/esbuild.rs:1598",
 			"oxc minifier: peephole/esbuild.rs:1798",
 			"oxc minifier: peephole/esbuild.rs:2309",
-			"oxc minifier: peephole/esbuild.rs:2368",
 			"oxc minifier: peephole/esbuild.rs:255"
 		]
 	],
@@ -303,7 +301,6 @@ const OXC_SMALLER_BY_REASON = [
 		"oxc drops what nothing reads or what has no effect: unused variables, functions, parameters and pure expressions",
 		[
 			"swc minifier: fixture/collapse-vars/trivial-literal-chain/input.js",
-			"swc minifier: fixture/issues/9785/input.js",
 			"terser compress: asm/asm_function_expression",
 			"terser compress: asm/asm_nested_functions",
 			"terser compress: asm/asm_toplevel",
@@ -343,7 +340,6 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc writes conditions shorter, as oxc's `peephole/minimize_conditions.rs` tests show",
 		[
-			"oxc minifier: peephole/minimize_conditions.rs:1053",
 			"oxc minifier: peephole/minimize_conditions.rs:1066",
 			"oxc minifier: peephole/minimize_conditions.rs:1204",
 			"oxc minifier: peephole/minimize_conditions.rs:1224",
@@ -568,13 +564,6 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc folds more constant expressions, as oxc's `peephole/fold_constants.rs` tests show",
 		["oxc minifier: peephole/fold_constants.rs:521"]
-	],
-	[
-		'oxc writes more `a["b"]` as `a.b`, as oxc\'s `peephole/convert_to_dotted_properties.rs` tests show',
-		[
-			"oxc minifier: peephole/convert_to_dotted_properties.rs:24",
-			"oxc minifier: peephole/convert_to_dotted_properties.rs:26"
-		]
 	],
 	[
 		"oxc aborts: its code generator panics on this source (`crates/oxc_codegen/src/str.rs:712`, a slice out of range)",
