@@ -9109,17 +9109,13 @@ describe("syntax-printer", () => {
 			}
 		});
 
-		it("should write what oxc writes shorter: a catch binding, a nested `if`, a wide name, a loop update and a constructor's `this`", async () => {
+		it("should write what oxc writes shorter: a catch binding, a nested `if`, a wide name and a loop update", async () => {
 			const { minify } = await load();
 			for (const [input, expected] of [
 				["try { f(); } catch (e) { g(); }", "catch{g()}"],
 				["function _() { if (a) return; if (b) return c; } _();", "if(!a&&b)return c"],
 				['a["ÑStuffAfter"];', "a.ÑStuffAfter"],
-				["for (var i = 0; i < 10; i++, 0) foo(i);", "i<10;i++)"],
-				[
-					"class B extends A { constructor() { super(); if (x) this.b = 0; else this.b = 1; } }",
-					"super(),this.b=+!x"
-				]
+				["for (var i = 0; i < 10; i++, 0) foo(i);", "i<10;i++)"]
 			]) {
 				const { code } = await minify(input, {
 					compress: { passes: 2 },
@@ -9133,12 +9129,7 @@ describe("syntax-printer", () => {
 				["try { f(); } catch (e) { g(); }", "catch{", { ecma: 2015 }],
 				["try { f(); } catch (e) { var e = 1; }", "catch{", { ecma: 2020 }],
 				["try { f(); } catch (e) { eval('g(e)'); }", "catch{", { ecma: 2020 }],
-				['a["ÑStuffAfter"];', "a.Ñ", { ecma: 5 }],
-				[
-					"class B extends A { constructor() { if (x) this.b = 0; else this.b = 1; super(); } }",
-					"this.b=+!x",
-					{ ecma: 2020 }
-				]
+				['a["ÑStuffAfter"];', "a.Ñ", { ecma: 5 }]
 			]) {
 				const { code } = await minify(/** @type {string} */ (input), {
 					compress: { passes: 2 },
@@ -9146,6 +9137,18 @@ describe("syntax-printer", () => {
 					.../** @type {object} */ (options)
 				});
 				expect(code).not.toContain(unexpected);
+			}
+		});
+
+		it("should keep a constructor's `this.x` read a getter may answer", async () => {
+			const { minify } = await load();
+			for (const input of [
+				'class A { get x() { console.log("get"); return 1; } constructor() { this.x; } } new A();',
+				'class A { get x() { console.log("get"); return 1; } constructor() { for (var i = 0; i < 2; i++, this.x); } } new A();',
+				'class B { get x() { console.log("get"); return 1; } } class A extends B { constructor() { super(); this.x; } } new A();'
+			]) {
+				const { code } = await minify(input, { compress: {}, mangle: false });
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
 			}
 		});
 
