@@ -9045,7 +9045,8 @@ describe("syntax-printer", () => {
 				"function f(...rest) { return 1; } console.log(f(console.log('kept'), 2));",
 				"class B { constructor(...a) { this.n = a.length; } } class C extends B {} console.log(new C(1, 2, 3).n);",
 				"var f = function (a) { return a; }; f = function (a, b) { return b; }; console.log(f(1, 2));",
-				"function f(a) { return a; } console.log(f(1, ...[2, 3]));"
+				"function f(a) { return a; } console.log(f(1, ...[2, 3]));",
+				'function Outer() {} function Replacement(v) { this.v = v; } function make() { eval("Outer = Replacement"); return new Outer(1); } console.log(make().v);'
 			]) {
 				const { code } = await minify(input, options);
 				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
