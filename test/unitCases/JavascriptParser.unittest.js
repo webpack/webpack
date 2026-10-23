@@ -3,16 +3,16 @@
 /* eslint-disable no-unused-expressions, no-unassigned-vars, func-names */
 
 // cspell:ignore fghsub notry fghsub notry notry this's ijksub this's ijksub fghsub fghsub notry ijksub ijksub strrring strrring strr strrring strrring strr Sstrrringy strone stronetwo stronetwothree stronetwo stronetwothree stronetwothreefour onetwo onetwo twothree twothree twothree threefour onetwo onetwo threefour threefour fourfive startstrmid igmy igmyi igmya
-const BasicEvaluatedExpression = require("../../../lib/javascript/BasicEvaluatedExpression");
-const JavascriptParser = require("../../../lib/javascript/JavascriptParser");
-const { parse } = require("../../../lib/javascript/syntax").parser;
+const BasicEvaluatedExpression = require("../../lib/javascript/BasicEvaluatedExpression");
+const JavascriptParser = require("../../lib/javascript/JavascriptParser");
+const { parse } = require("../../lib/javascript/syntax").parser;
 const {
 	BLOCK_DECLARATIONS,
 	HOISTED_DECLARATIONS,
 	MODULE_DECLARATIONS
-} = require("../../../lib/javascript/syntax-parser");
+} = require("../../lib/javascript/syntax-parser");
 
-/** @typedef {import("../../../lib/javascript/syntax-parser").CollectedComment} CollectedComment */
+/** @typedef {import("../../lib/javascript/syntax-parser").CollectedComment} CollectedComment */
 
 /**
  * Parse through the syntax parser on the lazy-node path a build takes, which
@@ -414,7 +414,7 @@ describe("JavascriptParser", () => {
 			});
 			const actual = testParser.parse(
 				source,
-				/** @type {import("../../../lib/module/Parser").ParserState} */ (
+				/** @type {import("../../lib/module/Parser").ParserState} */ (
 					/** @type {unknown} */ ({})
 				)
 			);
@@ -447,7 +447,7 @@ describe("JavascriptParser", () => {
 
 		const actual = testParser.parse(
 			source,
-			/** @type {import("../../../lib/module/Parser").ParserState} */ (
+			/** @type {import("../../lib/module/Parser").ParserState} */ (
 				/** @type {unknown} */ ({})
 			)
 		);
@@ -464,7 +464,7 @@ describe("JavascriptParser", () => {
 	describe("expression evaluation", () => {
 		/**
 		 * @param {string} source source
-		 * @returns {import("../../../lib/javascript/BasicEvaluatedExpression")} the evaluated expression
+		 * @returns {import("../../lib/javascript/BasicEvaluatedExpression")} the evaluated expression
 		 */
 		function evaluateInParser(source) {
 			const parser = new JavascriptParser();
@@ -477,7 +477,7 @@ describe("JavascriptParser", () => {
 					new BasicEvaluatedExpression()
 						.setString("aString")
 						.setRange(
-							/** @type {import("../../../lib/javascript/JavascriptParser").Range} */ (
+							/** @type {import("../../lib/javascript/JavascriptParser").Range} */ (
 								expr.range
 							)
 						)
@@ -488,14 +488,14 @@ describe("JavascriptParser", () => {
 					new BasicEvaluatedExpression()
 						.setNumber(123)
 						.setRange(
-							/** @type {import("../../../lib/javascript/JavascriptParser").Range} */ (
+							/** @type {import("../../lib/javascript/JavascriptParser").Range} */ (
 								expr.range
 							)
 						)
 				);
 			return parser.parse(
 				`test(${source});`,
-				/** @type {import("../../../lib/module/Parser").ParserState} */ (
+				/** @type {import("../../lib/module/Parser").ParserState} */ (
 					/** @type {unknown} */ ({})
 				)
 			).result;
@@ -686,7 +686,7 @@ describe("JavascriptParser", () => {
 
 		for (const key of Object.keys(testCases)) {
 			/**
-			 * @param {import("../../../lib/javascript/BasicEvaluatedExpression")} evalExpr eval expr
+			 * @param {import("../../lib/javascript/BasicEvaluatedExpression")} evalExpr eval expr
 			 * @returns {string} result
 			 */
 			function evalExprToString(evalExpr) {
@@ -701,12 +701,12 @@ describe("JavascriptParser", () => {
 				if (evalExpr.isRegExp()) result.push(`regExp=${evalExpr.regExp}`);
 				if (evalExpr.isConditional()) {
 					result.push(
-						`options=[${/** @type {import("../../../lib/javascript/BasicEvaluatedExpression")[]} */ (evalExpr.options).map(evalExprToString).join("],[")}]`
+						`options=[${/** @type {import("../../lib/javascript/BasicEvaluatedExpression")[]} */ (evalExpr.options).map(evalExprToString).join("],[")}]`
 					);
 				}
 				if (evalExpr.isArray()) {
 					result.push(
-						`items=[${/** @type {import("../../../lib/javascript/BasicEvaluatedExpression")[]} */ (evalExpr.items).map(evalExprToString).join("],[")}]`
+						`items=[${/** @type {import("../../lib/javascript/BasicEvaluatedExpression")[]} */ (evalExpr.items).map(evalExprToString).join("],[")}]`
 					);
 				}
 				if (evalExpr.isConstArray()) {
@@ -716,13 +716,13 @@ describe("JavascriptParser", () => {
 				}
 				if (evalExpr.isTemplateString()) {
 					result.push(
-						`template=[${/** @type {import("../../../lib/javascript/BasicEvaluatedExpression")[]} */ (evalExpr.quasis).map(evalExprToString).join("],[")}]`
+						`template=[${/** @type {import("../../lib/javascript/BasicEvaluatedExpression")[]} */ (evalExpr.quasis).map(evalExprToString).join("],[")}]`
 					);
 				}
 				if (evalExpr.isWrapped()) {
 					result.push(
-						`wrapped=[${evalExprToString(/** @type {import("../../../lib/javascript/BasicEvaluatedExpression")} */ (evalExpr.prefix))}]+[${evalExprToString(
-							/** @type {import("../../../lib/javascript/BasicEvaluatedExpression")} */ (
+						`wrapped=[${evalExprToString(/** @type {import("../../lib/javascript/BasicEvaluatedExpression")} */ (evalExpr.prefix))}]+[${evalExprToString(
+							/** @type {import("../../lib/javascript/BasicEvaluatedExpression")} */ (
 								evalExpr.postfix
 							)
 						)}]`
@@ -765,7 +765,7 @@ describe("JavascriptParser", () => {
 				it(name, () => {
 					const actual = parser.parse(
 						expr,
-						/** @type {import("../../../lib/module/Parser").ParserState} */ (
+						/** @type {import("../../lib/module/Parser").ParserState} */ (
 							/** @type {unknown} */ ({})
 						)
 					);
@@ -804,7 +804,7 @@ describe("JavascriptParser", () => {
 				it(name, () => {
 					const actual = parser.parse(
 						/** @type {Record<string, EXPECTED_ANY[]>} */ (cases)[name][0],
-						/** @type {import("../../../lib/module/Parser").ParserState} */ (
+						/** @type {import("../../lib/module/Parser").ParserState} */ (
 							/** @type {unknown} */ ({})
 						)
 					);
@@ -845,7 +845,7 @@ describe("JavascriptParser", () => {
 
 			parser.parse(
 				"const { a, ...rest } = { a: 1, b: 2 };",
-				/** @type {import("../../../lib/module/Parser").ParserState} */ (
+				/** @type {import("../../lib/module/Parser").ParserState} */ (
 					/** @type {unknown} */ ({})
 				)
 			);
@@ -885,7 +885,7 @@ describe("JavascriptParser", () => {
 
 			parser.parse(
 				"",
-				/** @type {import("../../../lib/module/Parser").ParserState} */ (
+				/** @type {import("../../lib/module/Parser").ParserState} */ (
 					/** @type {unknown} */ ({})
 				)
 			);
@@ -1045,7 +1045,7 @@ describe("JavascriptParser", () => {
 	});
 
 	describe("defined-identifier evaluation fast path", () => {
-		/** @type {import("../../../lib/module/Parser").ParserState} */
+		/** @type {import("../../lib/module/Parser").ParserState} */
 		const state = /** @type {EXPECTED_ANY} */ ({});
 
 		it("still walks callee and arguments of defined-callee calls", () => {
@@ -1117,7 +1117,7 @@ describe("JavascriptParser", () => {
 			try {
 				new JavascriptParser("auto", { importPhases: true }).parse(
 					source,
-					/** @type {import("../../../lib/module/Parser").ParserState} */ (
+					/** @type {import("../../lib/module/Parser").ParserState} */ (
 						/** @type {unknown} */ ({ source })
 					)
 				);
@@ -1292,7 +1292,7 @@ function outer() { var inOuter = 1; }
 				});
 			parser.parse(
 				/** @type {EXPECTED_ANY} */ (source),
-				/** @type {import("../../../lib/module/Parser").ParserState} */ (
+				/** @type {import("../../lib/module/Parser").ParserState} */ (
 					/** @type {unknown} */ ({})
 				)
 			);
@@ -1359,7 +1359,7 @@ function outer() { var inOuter = 1; }
 				tap(parser);
 				parser.parse(
 					source,
-					/** @type {import("../../../lib/module/Parser").ParserState} */ (
+					/** @type {import("../../lib/module/Parser").ParserState} */ (
 						/** @type {unknown} */ ({})
 					)
 				);
@@ -1378,7 +1378,7 @@ function outer() { var inOuter = 1; }
 				});
 			parser.parse(
 				source,
-				/** @type {import("../../../lib/module/Parser").ParserState} */ (
+				/** @type {import("../../lib/module/Parser").ParserState} */ (
 					/** @type {unknown} */ ({})
 				)
 			);
@@ -1438,7 +1438,7 @@ for (target of [ ]) { var fromForOfTarget = 1; }
 			parser.hooks.import.tap("test", record);
 			parser.parse(
 				source,
-				/** @type {import("../../../lib/module/Parser").ParserState} */ (
+				/** @type {import("../../lib/module/Parser").ParserState} */ (
 					/** @type {unknown} */ ({})
 				)
 			);
@@ -1467,7 +1467,7 @@ for (target of [ ]) { var fromForOfTarget = 1; }
 			});
 			parser.parse(
 				source,
-				/** @type {import("../../../lib/module/Parser").ParserState} */ (
+				/** @type {import("../../lib/module/Parser").ParserState} */ (
 					/** @type {unknown} */ ({})
 				)
 			);
@@ -1496,7 +1496,7 @@ for (target of [ ]) { var fromForOfTarget = 1; }
 				});
 				parser.parse(
 					/** @type {EXPECTED_ANY} */ (parsed),
-					/** @type {import("../../../lib/module/Parser").ParserState} */ (
+					/** @type {import("../../lib/module/Parser").ParserState} */ (
 						/** @type {unknown} */ ({})
 					)
 				);
@@ -1525,7 +1525,7 @@ for (target of [ ]) { var fromForOfTarget = 1; }
 
 		it("keeps no record when a plugin owns a production that records", () => {
 			const source = "class Declared {}\nvar plain = 1;\nfunction named() {}";
-			const { WebpackParser } = require("../../../lib/javascript/syntax-parser");
+			const { WebpackParser } = require("../../lib/javascript/syntax-parser");
 			const options = {
 				ecmaVersion: 2022,
 				lazyNodes: true,
@@ -1566,7 +1566,7 @@ for (target of [ ]) { var fromForOfTarget = 1; }
 
 		it("keeps no module record when a plugin reads imports or exports", () => {
 			const source = "import a from './a';\nexport * from './b';";
-			const { WebpackParser } = require("../../../lib/javascript/syntax-parser");
+			const { WebpackParser } = require("../../lib/javascript/syntax-parser");
 			const options = {
 				ecmaVersion: 2022,
 				lazyNodes: true,
@@ -1598,7 +1598,7 @@ for (target of [ ]) { var fromForOfTarget = 1; }
 		});
 
 		it("records only the declarations the program itself states", () => {
-			const { WebpackParser } = require("../../../lib/javascript/syntax-parser");
+			const { WebpackParser } = require("../../lib/javascript/syntax-parser");
 			// the option lets an import stand where no program states it, which
 			// is the one way a declaration reaches the record from a scope below
 			const program = /** @type {EXPECTED_ANY} */ (
@@ -1684,7 +1684,7 @@ class WithStatic { static { const inStaticBlock = 20; } }
 				});
 			parser.parse(
 				/** @type {EXPECTED_ANY} */ (source),
-				/** @type {import("../../../lib/module/Parser").ParserState} */ (
+				/** @type {import("../../lib/module/Parser").ParserState} */ (
 					/** @type {unknown} */ ({})
 				)
 			);
@@ -1771,7 +1771,7 @@ class WithStatic { static { const inStaticBlock = 20; } }
 			});
 			parser.parse(
 				source,
-				/** @type {import("../../../lib/module/Parser").ParserState} */ (
+				/** @type {import("../../lib/module/Parser").ParserState} */ (
 					/** @type {unknown} */ ({})
 				)
 			);
@@ -1799,7 +1799,7 @@ class WithStatic { static { const inStaticBlock = 20; } }
 				);
 				parser.parse(
 					source,
-					/** @type {import("../../../lib/module/Parser").ParserState} */ (
+					/** @type {import("../../lib/module/Parser").ParserState} */ (
 						/** @type {unknown} */ ({})
 					)
 				);
@@ -1811,7 +1811,7 @@ class WithStatic { static { const inStaticBlock = 20; } }
 
 		it("keeps an index too large for the mask in a list of its own", () => {
 			const { BLOCK_DECLARATIONS: SLOT, MAX_MASKED_INDEX } = require(
-				"../../../lib/javascript/syntax-parser"
+				"../../lib/javascript/syntax-parser"
 			);
 			// a mask is one 31-bit number, so an index it cannot hold must reach the
 			// fallback: `1 << 32` is `1 << 0`, which would claim the wrong statement
@@ -1829,7 +1829,7 @@ class WithStatic { static { const inStaticBlock = 20; } }
 
 		it("keeps a short list's declarations in the slot itself", () => {
 			const { BLOCK_DECLARATIONS: SLOT } = require(
-				"../../../lib/javascript/syntax-parser"
+				"../../lib/javascript/syntax-parser"
 			);
 			const { ast } = parseWithComments("void 0;\nconst only = 1;", "module");
 			// one declaration at index 1 and nothing allocated to say so
@@ -1837,7 +1837,7 @@ class WithStatic { static { const inStaticBlock = 20; } }
 		});
 
 		it("rejects a statement written before the first case", () => {
-			const { WebpackParser } = require("../../../lib/javascript/syntax-parser");
+			const { WebpackParser } = require("../../lib/javascript/syntax-parser");
 			expect(() =>
 				WebpackParser.parse(
 					"switch (1) { notACase(); }",
@@ -1864,7 +1864,7 @@ class WithStatic { static { const inStaticBlock = 20; } }
 				});
 			parser.parse(
 				source,
-				/** @type {import("../../../lib/module/Parser").ParserState} */ (
+				/** @type {import("../../lib/module/Parser").ParserState} */ (
 					/** @type {unknown} */ ({})
 				)
 			);
@@ -1971,7 +1971,7 @@ class WithStatic { static { const inStaticBlock = 20; } }
 	});
 
 	describe("WebpackParser fast paths", () => {
-		const { WebpackParser } = require("../../../lib/javascript/syntax-parser");
+		const { WebpackParser } = require("../../lib/javascript/syntax-parser");
 
 		/**
 		 * @param {string} source source code
@@ -1979,7 +1979,7 @@ class WithStatic { static { const inStaticBlock = 20; } }
 		 */
 		// `lazyNodes` is webpack's private extension of the parser's Options
 		const parseOptions =
-			/** @type {import("../../../lib/javascript/syntax-parser").Options} */ (
+			/** @type {import("../../lib/javascript/syntax-parser").Options} */ (
 				/** @type {unknown} */ ({ ecmaVersion: 2022, lazyNodes: true })
 			);
 		/**
@@ -2024,7 +2024,7 @@ class WithStatic { static { const inStaticBlock = 20; } }
 		});
 
 		it("reads a regular expression after `yield` in a generator method, as V8 does", () => {
-			const { Parser } = require("../../../lib/javascript/syntax-parser");
+			const { Parser } = require("../../lib/javascript/syntax-parser");
 			const programs = [
 				"class K { *m() { yield /a/g; } }",
 				"class K { static async *m() { yield /a/g; } }",
@@ -2119,7 +2119,7 @@ class WithStatic { static { const inStaticBlock = 20; } }
 			const legacy = /** @type {EXPECTED_ANY} */ (
 				WebpackParser.parse(
 					src,
-					/** @type {import("../../../lib/javascript/syntax-parser").Options} */ (
+					/** @type {import("../../lib/javascript/syntax-parser").Options} */ (
 						/** @type {unknown} */ ({ ecmaVersion: 5, lazyNodes: true })
 					)
 				)
@@ -2293,7 +2293,7 @@ class WithStatic { static { const inStaticBlock = 20; } }
 			const second = /** @type {EXPECTED_ANY} */ (
 				WebpackParser.parse(
 					"b;",
-					/** @type {import("../../../lib/javascript/syntax-parser").Options} */ (
+					/** @type {import("../../lib/javascript/syntax-parser").Options} */ (
 						/** @type {unknown} */ ({
 							ecmaVersion: 2022,
 							lazyNodes: true,
@@ -2314,7 +2314,7 @@ class WithStatic { static { const inStaticBlock = 20; } }
 			const parseModule = (source) => () =>
 				WebpackParser.parse(
 					source,
-					/** @type {import("../../../lib/javascript/syntax-parser").Options} */ (
+					/** @type {import("../../lib/javascript/syntax-parser").Options} */ (
 						/** @type {unknown} */ ({
 							ecmaVersion: "latest",
 							sourceType: "module",
@@ -2333,7 +2333,7 @@ class WithStatic { static { const inStaticBlock = 20; } }
 			const comments = [];
 			WebpackParser.parse(
 				"// hi\nvar x = 1; /* block */",
-				/** @type {import("../../../lib/javascript/syntax-parser").Options} */ (
+				/** @type {import("../../lib/javascript/syntax-parser").Options} */ (
 					/** @type {unknown} */ ({
 						ecmaVersion: 2022,
 						lazyNodes: true,
@@ -2358,7 +2358,7 @@ class WithStatic { static { const inStaticBlock = 20; } }
 			const program = /** @type {EXPECTED_ANY} */ (
 				WebpackParser.parse(
 					"var x = 1;",
-					/** @type {import("../../../lib/javascript/syntax-parser").Options} */ (
+					/** @type {import("../../lib/javascript/syntax-parser").Options} */ (
 						/** @type {unknown} */ (options)
 					)
 				)
@@ -2401,7 +2401,7 @@ class WithStatic { static { const inStaticBlock = 20; } }
 				});
 			parser.parse(
 				source,
-				/** @type {import("../../../lib/module/Parser").ParserState} */ (
+				/** @type {import("../../lib/module/Parser").ParserState} */ (
 					/** @type {unknown} */ ({})
 				)
 			);

@@ -142,7 +142,7 @@ Directories come first, in alphabetical order, then the individual files worth t
 
 - **Purpose**: Contains `*.unittest.js` unit tests for various functionalities.
 - **Usage**: Ensures individual modules and functions work as expected.
-- **Layout**: the syntax tests sit in one folder per language — `javascript/` (`parser`, `webpack-parser`, `scope`, `printer`, `minify`, `no-acorn`), `css/`, `html/`, `xml/` and `json/` — and the tests of the `tooling/` scripts in `tooling/`. The rest stay at the top level.
+- **Layout**: the syntax tests sit in one folder per language — `javascript/` (`tokenizer`, `parser`, `scope`, `printer`), `css/` and `html/` (`tokenizer`, `parser`, `printer`), `xml/` (`printer`) and `json/` (`printer`, `web-manifest`). A printer's file holds both of its modes and the language's minifier, which drives the printer in its `minify` mode. The tests of the `tooling/` scripts sit in `tooling/`. The rest, webpack's own classes such as `JavascriptParser`, stay at the top level.
 
 ### `watchCases/`
 
