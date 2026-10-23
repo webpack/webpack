@@ -318,6 +318,22 @@ describe("CssSyntax — preprocessing the input stream", () => {
 		expect(cvTypes(`url(a${NUL}b)`)).toEqual(cvTypes("url(a�b)"));
 		expect(minifyFor(`.x${NUL}y{color:red}`)).toBe(".x�y{color:red}");
 	});
+
+	it("reads one in a custom media name the walk resolves ahead", () => {
+		// The rules are read before the walk; a NUL there must still name U+FFFD,
+		// or `--a` is never seen to read `--b�c` and is left unresolved.
+		/** @type {(c: string) => string} */
+		const css = (c) =>
+			`@custom-media --a (--b${c}c);@custom-media --b${c}c (min-width:1px);@media (--a){.x{color:red}}`;
+		/** @type {(code: string) => string} */
+		const minify = (code) =>
+			new SourceProcessor().process(code, {
+				mode: "minify",
+				transforms: { customMedia: true }
+			}).code;
+		expect(minify(css(NUL))).toBe(minify(css("�")));
+		expect(minify(css(NUL))).toContain("@media (width>=1px){");
+	});
 });
 
 /**
@@ -513,6 +529,26 @@ describe("CssSyntax — tokens at the end of the input", () => {
 		// §4.3.14 consumes the remnants up to `)` or EOF, whichever comes first.
 		expect(tokensOf('url(a"b')).toEqual([[TokenType.BadUrl, 0, 7]]);
 		expect(tokensOf("url(a b")).toEqual([[TokenType.BadUrl, 0, 7]]);
+	});
+
+	it("does not reread the first code point when a `-` ends the input", () => {
+		// §4.3.9: `-` then EOF starts no ident sequence, so the `-` is a delim.
+		expect(tokensOf("1-")).toEqual([
+			[TokenType.Number, 0, 1],
+			[TokenType.Delim, 1, 2]
+		]);
+		expect(tokensOf("@-")).toEqual([
+			[TokenType.Delim, 0, 1],
+			[TokenType.Delim, 1, 2]
+		]);
+		expect(tokensOf("1-a")).toEqual([[TokenType.Dimension, 0, 3]]);
+		expect(tokensOf("@-a")).toEqual([[TokenType.AtKeyword, 0, 3]]);
+	});
+
+	it("marks a hash of a lone `-` as unrestricted", () => {
+		const out = /** @type {import("../../../lib/css/syntax-parser").MutableToken} */ ({});
+		expect(readToken("#-", 0, out)).toMatchObject({ type: TokenType.Hash, isId: false });
+		expect(readToken("#-a", 0, out)).toMatchObject({ type: TokenType.Hash, isId: true });
 	});
 });
 

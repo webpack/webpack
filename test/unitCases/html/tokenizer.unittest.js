@@ -2283,14 +2283,64 @@ describe("tokenize", () => {
 			]);
 		});
 
-		it("reports unexpected-question-mark-instead-of-tag-name as a warning", () => {
-			const errors = collectErrors("a<?pi?>b");
-			expect(errors).toEqual([
+		it("reports no error for a well-formed processing instruction", () => {
+			// The obsolete unexpected-question-mark-instead-of-tag-name is gone: `<?`
+			// opens the processing instruction states (§13.2.5.42-46).
+			expect(collectErrors("a<?pi?>b<?_a-1 x?y>")).toEqual([]);
+			// A target cut at `?`, `>` or whitespace may spell `xml` inside a longer name.
+			expect(collectErrors("<?xmls?><?xm>")).toEqual([]);
+		});
+
+		it("reports the processing instruction target errors as warnings", () => {
+			expect(collectErrors("<?1>")).toEqual([
 				{
-					code: "unexpected-question-mark-instead-of-tag-name",
-					slice: "?",
+					code: "invalid-first-character-of-processing-instruction-target",
+					slice: "1",
 					severity: "warning"
 				}
+			]);
+			expect(collectErrors("<?a.b>")).toEqual([
+				{
+					code: "invalid-processing-instruction-target",
+					slice: ".",
+					severity: "warning"
+				}
+			]);
+			expect(collectErrors("<?XML a?><?xml-stylesheet>")).toEqual([
+				{
+					code: "disallowed-processing-instruction-target",
+					slice: "XML",
+					severity: "warning"
+				},
+				{
+					code: "disallowed-processing-instruction-target",
+					slice: "xml-stylesheet",
+					severity: "warning"
+				}
+			]);
+			// A NUL after an invalid target is in the bogus comment that follows.
+			expect(collectErrors("<?\0>").map((e) => e.code)).toEqual([
+				"invalid-first-character-of-processing-instruction-target",
+				"unexpected-null-character"
+			]);
+		});
+
+		it("reports eof-in-processing-instruction as an error, after earlier ones", () => {
+			for (const html of ["<?", "<?a", "<?a b?", "<?a>x<?"]) {
+				expect(collectErrors(html)).toEqual([
+					{ code: "eof-in-processing-instruction", slice: "", severity: "error" }
+				]);
+			}
+			// An invalid target makes it a bogus comment, which EOF ends silently.
+			expect(collectErrors("<?1").map((e) => e.code)).toEqual([
+				"invalid-first-character-of-processing-instruction-target"
+			]);
+			expect(collectErrors("<?xml ").map((e) => e.code)).toEqual([
+				"disallowed-processing-instruction-target"
+			]);
+			// So does one a `<?` before it does not open.
+			expect(collectErrors("<?a>x</1").map((e) => e.code)).toEqual([
+				"invalid-first-character-of-tag-name"
 			]);
 		});
 
@@ -2782,15 +2832,33 @@ describe("tokenize", () => {
 		});
 
 		it("reports an unclosed CDATA outside foreign content as a bogus comment", () => {
-			// No adjusted current node, so `<![CDATA[` is not a CDATA section but an
-			// incorrectly-opened comment (§13.2.5.42); `eof-in-cdata` is unreachable
-			// from here and is covered by the foreign-content path.
+			// No adjusted current node, so `<![CDATA[` is not a CDATA section but a
+			// cdata-in-html-content bogus comment (§13.2.5.42); `eof-in-cdata` is
+			// covered by the foreign-content path.
 			const errors = collectErrors("<![CDATA[unclosed");
 			// The bogus comment state emits its token at EOF without a further
 			// parse error, so this is the only one.
 			expect(errors).toEqual([
-				{ code: "incorrectly-opened-comment", slice: "<!", severity: "warning" }
+				{
+					code: "cdata-in-html-content",
+					slice: "<![CDATA[",
+					severity: "warning"
+				}
 			]);
+		});
+
+		it("reports cdata-in-html-content where isForeign says HTML content", () => {
+			/** @type {string[]} */
+			const out = [];
+			tokenize("<![CDATA[a]]>", 0, {
+				isForeign: () => false,
+				comment: (input, start, end, dataStart, dataEnd) => {
+					out.push(input.slice(dataStart, dataEnd));
+					return end;
+				},
+				parseError: (input, code) => out.push(code)
+			});
+			expect(out).toEqual(["cdata-in-html-content", "[CDATA[a]]"]);
 		});
 
 		it("reports eof-in-script-html-comment-like-text as an error", () => {
@@ -2801,6 +2869,28 @@ describe("tokenize", () => {
 					slice: "",
 					severity: "error"
 				}
+			]);
+		});
+
+		it("reports eof-in-script-html-comment-like-text from the states that reconsume into it", () => {
+			// Escaped end tag open and double escape start emit what they hold and
+			// reconsume in the escaped state, whose EOF is the error.
+			for (const html of ["<script><!--</", "<script><!--<a", "<script><!--<"]) {
+				expect(collectErrors(html)).toEqual([
+					{
+						code: "eof-in-script-html-comment-like-text",
+						slice: "",
+						severity: "error"
+					}
+				]);
+			}
+		});
+
+		it("reports no end-tag-with-attributes for an end tag cut by EOF", () => {
+			// The spec drops the token, so eof-in-tag is its only error.
+			expect(collectErrors("</a b").map((e) => e.code)).toEqual(["eof-in-tag"]);
+			expect(collectErrors("</a b=1 ").map((e) => e.code)).toEqual([
+				"eof-in-tag"
 			]);
 		});
 
@@ -3695,6 +3785,24 @@ describe("tokenize — content modes, CDATA and NUL arcs", () => {
 			["open", "noframes"],
 			["text", "<b>"],
 			["close", "noframes"]
+		]);
+	});
+
+	it("switches the content mode after a self-closing start tag as well", () => {
+		// None of these elements is void, so the tree builder ignores the `/`
+		// and switches the tokenizer as it would for `<title>` (§13.2.6.4.4).
+		expect(walk("<title/><b></title><style/><b></style>")).toEqual([
+			["open", "title"],
+			["text", "<b>"],
+			["close", "title"],
+			["open", "style"],
+			["text", "<b>"],
+			["close", "style"]
+		]);
+		// Unless the tree builder vetoes it, as foreign content does.
+		expect(walk("<title/><b>", { vetoesContentMode: () => true })).toEqual([
+			["open", "title"],
+			["open", "b"]
 		]);
 	});
 
