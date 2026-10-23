@@ -9,14 +9,14 @@ module.exports = {
 	module: {
 		rules: [
 			{
-				test: /file\.png$/,
+				test: /file\.txt$/,
 				resourceQuery: /resource/,
 				loader: "./loader",
 				options: { type: "asset/resource" },
 				type: "javascript/auto"
 			},
 			{
-				test: /file\.png$/,
+				test: /file\.txt$/,
 				resourceQuery: /inline/,
 				loader: "./loader",
 				options: { type: "asset/inline" },
