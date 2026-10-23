@@ -316,6 +316,7 @@ export default defineConfig([
 		// inside the `describe` its export opens.
 		files: ["test/specCases/minify-corpora.js"],
 		rules: {
+			"jest/consistent-test-it": "off",
 			"jest/no-export": "off",
 			"jest/require-top-level-describe": "off"
 		}

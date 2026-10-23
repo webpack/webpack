@@ -2202,6 +2202,37 @@ const defineShard = (shard, count) => {
 			})
 		);
 		fs.renameSync(`${file}.tmp`, file);
+		// Shards finish moments apart, so one at a time reads, reports and cleans
+		// up; a holder that died frees the lock after a minute.
+		const lockDir = `${runDir}.lock`;
+		const pause = new Int32Array(new SharedArrayBuffer(4));
+		for (let waited = 0; ; waited += 10) {
+			try {
+				fs.mkdirSync(lockDir);
+				break;
+			} catch (err) {
+				if (/** @type {NodeJS.ErrnoException} */ (err).code !== "EEXIST") {
+					throw err;
+				}
+				if (waited >= 60000) break;
+				Atomics.wait(pause, 0, 0, 10);
+			}
+		}
+		try {
+			// The last shard already checked everything and removed the results.
+			if (!fs.existsSync(runDir)) return;
+			aggregate();
+		} finally {
+			fs.rmSync(lockDir, { recursive: true, force: true });
+		}
+	});
+
+	/**
+	 * Merges every shard result present, rewrites the report from them, and once
+	 * all shards ran every group, fails on the table entries none of them met.
+	 * @returns {void}
+	 */
+	const aggregate = () => {
 		const done = fs
 			.readdirSync(runDir)
 			.filter((name) => name.endsWith(".json"));
@@ -2235,9 +2266,9 @@ const defineShard = (shard, count) => {
 				`List no difference the reference no longer makes:\n${stale.join("\n")}`
 			);
 		}
-	});
+	};
 
-	test("should run only the node_version ranges it can read", () => {
+	it("should run only the node_version ranges it can read", () => {
 		const major = Number(process.versions.node.split(".")[0]);
 		expect(nodeSatisfies(`>=${major}`)).toBe(true);
 		expect(nodeSatisfies(`>= ${major}`)).toBe(true);
@@ -2247,7 +2278,7 @@ const defineShard = (shard, count) => {
 	});
 
 	if (shard === 1 && isPresent(referenceDir)) {
-		test("should pin the reference's corpus to the version it is compared with", () => {
+		it("should pin the reference's corpus to the version it is compared with", () => {
 			const pinned = JSON.parse(
 				fs.readFileSync(path.join(referenceDir, "package.json"), "utf8")
 			).version;
@@ -2256,7 +2287,7 @@ const defineShard = (shard, count) => {
 	}
 
 	if (shard === 1 && isPresent(oxcTestsDir)) {
-		test("should pin oxc's corpus to the oxc-minify it is compared with", () => {
+		it("should pin oxc's corpus to the oxc-minify it is compared with", () => {
 			const pinned = JSON.parse(
 				fs.readFileSync(
 					path.join(externalDir, "oxc/napi/minify/package.json"),
