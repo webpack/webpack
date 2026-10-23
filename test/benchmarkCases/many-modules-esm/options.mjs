@@ -8,5 +8,5 @@ export async function setup() {
 	const generated = resolve(__dirname, "./generated");
 
 	await fs.rm(generated, { recursive: true, force: true });
-	await createTree(generated, false, 75);
+	await createTree(generated, false, 250);
 }
