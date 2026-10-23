@@ -318,6 +318,22 @@ describe("CssSyntax — preprocessing the input stream", () => {
 		expect(cvTypes(`url(a${NUL}b)`)).toEqual(cvTypes("url(a�b)"));
 		expect(minifyFor(`.x${NUL}y{color:red}`)).toBe(".x�y{color:red}");
 	});
+
+	it("reads one in a custom media name the walk resolves ahead", () => {
+		// The rules are read before the walk; a NUL there must still name U+FFFD,
+		// or `--a` is never seen to read `--b�c` and is left unresolved.
+		/** @type {(c: string) => string} */
+		const css = (c) =>
+			`@custom-media --a (--b${c}c);@custom-media --b${c}c (min-width:1px);@media (--a){.x{color:red}}`;
+		/** @type {(code: string) => string} */
+		const minify = (code) =>
+			new SourceProcessor().process(code, {
+				mode: "minify",
+				transforms: { customMedia: true }
+			}).code;
+		expect(minify(css(NUL))).toBe(minify(css("�")));
+		expect(minify(css(NUL))).toContain("@media (width>=1px){");
+	});
 });
 
 /**
