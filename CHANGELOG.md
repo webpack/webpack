@@ -1,5 +1,15 @@
 # webpack
 
+## 5.112.2
+
+### Patch Changes
+
+- Reduce repeated scans when concatenating imported modules. (by [@xiaoxiaojx](https://github.com/xiaoxiaojx) in [#22865](https://github.com/webpack/webpack/pull/22865))
+
+- Avoid allocating CSS module sets for single-group chunks. (by [@xiaoxiaojx](https://github.com/xiaoxiaojx) in [#22866](https://github.com/webpack/webpack/pull/22866))
+
+- Return the value of every module type loaded with `importModule()`. (by [@alexander-akait](https://github.com/alexander-akait) in [#22869](https://github.com/webpack/webpack/pull/22869))
+
 ## 5.112.1
 
 ### Patch Changes
