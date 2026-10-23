@@ -18,19 +18,9 @@ const {
 } = require("../../../lib/html/syntax-parser");
 
 const { builtinEmbeddedRenderer } = require("../../../lib/html/builtinEmbeddedRenderer");
+const { childrenOf } = require("../../helpers/materializeHtmlTree");
 const serializeHtmlTree = require("../../helpers/serializeHtmlTree");
 
-/**
- * @param {number} ref node
- * @returns {number[]} its children, read one by one through the path
- */
-const childrenOf = (ref) => {
-	const out = [];
-	for (let i = 0, c = A.child(0, ref); c !== 0; c = A.child(++i, ref)) {
-		out.push(c);
-	}
-	return out;
-};
 
 describe("builtinEmbeddedRenderer — what it loads", () => {
 	// Run in a fresh process, so `require.cache` holds only what this loaded.
