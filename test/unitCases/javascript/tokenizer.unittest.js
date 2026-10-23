@@ -91,6 +91,32 @@ describe("WebpackParser", () => {
 			expect(parse("a.in / b; a.of / c;").ast).toBeDefined();
 		});
 
+		it("should re-read a `/=` the tokenizer took for division as a regexp", () => {
+			// `await` and a block's `}` leave the tokenizer guessing division, but
+			// an expression belongs there, so the spec reads a regexp (acorn throws)
+			const sources = [
+				"async function f() { await /=a/g; }",
+				"x\n{} /=a/g",
+				"class A { static { class B {} /=a/g; } }"
+			];
+			for (const source of sources) {
+				expect(() => acorn.parse(source, { ecmaVersion: "latest" })).toThrow(
+					/Unexpected token/
+				);
+				for (const options of [{}, { locations: true }]) {
+					expect(JSON.stringify(parse(source, options).ast)).toContain(
+						'"pattern":"=a"'
+					);
+				}
+				expect(
+					JSON.stringify(Parser.parse(source, { ecmaVersion: "latest" }))
+				).toContain('"pattern":"=a"');
+			}
+			expect(() => parse("x = /=")).toThrow(
+				/Unterminated regular expression \(1:5\)/
+			);
+		});
+
 		it("should re-allow an expression after `of` and generator `yield`", () => {
 			// the inlined name.updateContext true branches: the `/` lexes a regexp
 			expect(parse("for (x of /re/g);").ast).toBeDefined();
@@ -219,6 +245,11 @@ describe("WebpackParser", () => {
 			);
 			// a cold template chunk (escape seen) that never closes is unterminated
 			expect(() => parse("`a\\t")).toThrow(/Unterminated template/);
+			// input that ends right after a substitution's `}` is a SyntaxError
+			// like acorn's, not a TypeError from the lazy template element
+			expect(() => parse("x = `${ 1 }")).toThrow(
+				/Unterminated template literal \(1:11\)/
+			);
 		});
 
 		it("should read radix integers and bigints", () => {

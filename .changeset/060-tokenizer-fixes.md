@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Fix CSS and JavaScript tokenizer edge cases.
+Fix CSS, HTML and JavaScript tokenizer divergences from their specs.
