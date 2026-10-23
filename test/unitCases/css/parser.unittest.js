@@ -18,7 +18,8 @@ const {
 	parseAListOfComponentValues,
 	parseARule,
 	parseAStylesheet,
-	parseAStylesheetsContents
+	parseAStylesheetsContents,
+	readToken
 } = require("../../../lib/css/syntax-parser");
 
 /**
@@ -361,6 +362,83 @@ describe("CssSyntax — parser entry points", () => {
 	it("accepts a pre-built TokenStream as input", () => {
 		const ss = parseAStylesheet(new TokenStream("a{x:1}"));
 		expect(ss.rules).toHaveLength(1);
+	});
+});
+
+describe("CssSyntax — parseError callback", () => {
+	/** @typedef {[string, string, import("../../../lib/css/syntax-parser").ParseErrorSeverity]} ReportedError */
+
+	/**
+	 * @param {(input: string, pos: number, options: import("../../../lib/css/syntax-parser").CssParseOptions) => unknown} parse entry point
+	 * @param {string} css input
+	 * @returns {ReportedError[]} code, the source it spans and severity per error
+	 */
+	const collect = (parse, css) => {
+		/** @type {ReportedError[]} */
+		const errors = [];
+		parse(css, 0, {
+			parseError: (input, code, start, end, severity) => {
+				errors.push([code, input.slice(start, end), severity]);
+			}
+		});
+		return errors;
+	};
+
+	it.each([
+		["/* open", [["eof-in-comment", "", "error"]]],
+		['a{b:"open', [["eof-in-string", "", "error"]]],
+		['a{b:"open\\', [["eof-in-string", "", "error"]]],
+		['a{b:"x\n}', [["newline-in-string", "\n", "warning"]]],
+		["a{b:url(x", [["eof-in-url", "", "error"]]],
+		["a{b:url(x  ", [["eof-in-url", "", "error"]]],
+		['a{b:url(x"y)}', [["unexpected-character-in-url", '"', "warning"]]],
+		["a{b:url(x\\\ny)}", [["invalid-escape", "\\", "warning"]]],
+		[
+			"a{b:url(x\\",
+			[
+				["eof-in-escape", "\\", "error"],
+				["eof-in-url", "", "error"]
+			]
+		],
+		["a{b:\\\n}", [["invalid-escape", "\\", "warning"]]],
+		["a{b:c}", []]
+	])("reports %j", (css, expected) => {
+		expect(collect(parseAStylesheet, css)).toEqual(expected);
+	});
+
+	it("reports an error once when a backtracked span re-tokenizes", () => {
+		// The declaration fails on its `{}` value and the span re-parses as a rule.
+		expect(collect(parseAStylesheet, '.x{a:"q\n{}}')).toEqual([
+			["newline-in-string", "\n", "warning"]
+		]);
+	});
+
+	it.each([
+		["parseAStylesheetsContents", parseAStylesheetsContents, 'a{b:"x'],
+		["parseABlocksContents", parseABlocksContents, 'b:"x'],
+		["parseARule", parseARule, 'a{b:"x'],
+		["parseADeclaration", parseADeclaration, 'b:"x'],
+		["parseAComponentValue", parseAComponentValue, '"x'],
+		["parseAListOfComponentValues", parseAListOfComponentValues, '"x'],
+		[
+			"parseACommaSeparatedListOfComponentValues",
+			parseACommaSeparatedListOfComponentValues,
+			'a,"x'
+		]
+	])("%s forwards the callback", (name, parse, css) => {
+		expect(collect(parse, css)).toEqual([["eof-in-string", "", "error"]]);
+	});
+
+	it("stops reporting once the parse returns", () => {
+		const parseError = jest.fn();
+		parseAStylesheet("a{}", 0, { parseError });
+		readToken(
+			'"x',
+			0,
+			/** @type {import("../../../lib/css/syntax-parser").MutableToken} */ ({})
+		);
+		parseAStylesheet('"x');
+		expect(parseError).not.toHaveBeenCalled();
 	});
 });
 

@@ -7071,6 +7071,23 @@ type CssNormalModule = NormalModule & {
 	buildInfo?: CssModuleBuildInfo;
 	buildMeta?: CssModuleBuildMeta;
 };
+declare interface CssParseOptions {
+	/**
+	 * optional comment-token callback (string input only); the public `parse*` entry points use it to build the `TokenStream` so the outer parser's comment tracker still sees magic comments inside the consumed range
+	 */
+	comment?: (input: string, start: number, end: number) => number;
+
+	/**
+	 * optional callback for each tokenizer parse error (CSS Syntax Level 3 §4), with the same signature as the HTML tokenizer's; `severity` is `"error"` when EOF cuts a token short and `"warning"` otherwise
+	 */
+	parseError?: (
+		input: string,
+		code: string,
+		start: number,
+		end: number,
+		severity: ParseErrorSeverity
+	) => void;
+}
 declare abstract class CssParser extends Parser<BuiltCssModule> {
 	defaultMode: "global" | "auto" | "local" | "pure";
 	options: {
@@ -13031,6 +13048,17 @@ declare interface HtmlParseOptions {
 	 * parse as a browser with scripting on does, where a `noscript` holds raw text; off by default, so what it holds is read as markup
 	 */
 	scripting?: boolean;
+
+	/**
+	 * optional callback for each tokenizer parse error, as `HtmlTokenCallbacks#parseError` receives it
+	 */
+	parseError?: (
+		input: string,
+		code: string,
+		start: number,
+		end: number,
+		severity: ParseErrorSeverity
+	) => void;
 }
 declare abstract class HtmlParser extends Parser<BuiltHtmlModule> {
 	magicCommentContext: ContextImport;
@@ -26733,12 +26761,6 @@ declare interface ParseOptionsJavascriptParser {
 	 */
 	moduleFallback?: boolean;
 }
-declare interface ParseOptionsSyntaxParser {
-	/**
-	 * optional comment-token callback; the public `parse*` entry points use it to build the `TokenStream` so the outer parser's comment tracker still sees magic comments inside the consumed range
-	 */
-	comment?: (input: string, start: number, end: number) => number;
-}
 
 /**
  * Defines the parse result type used by this module.
@@ -38256,42 +38278,42 @@ declare namespace exports {
 				export let parseABlocksContents: (
 					input: string | TokenStream,
 					pos?: number,
-					options?: ParseOptionsSyntaxParser
+					options?: CssParseOptions
 				) => { decls: DeclarationSyntaxParser[]; rules: RuleSyntaxParser[] };
 				export let parseACommaSeparatedListOfComponentValues: (
 					input: string | TokenStream,
 					pos?: number,
-					options?: ParseOptionsSyntaxParser
+					options?: CssParseOptions
 				) => ComponentValue[][];
 				export let parseAComponentValue: (
 					input: string | TokenStream,
 					pos?: number,
-					options?: ParseOptionsSyntaxParser
+					options?: CssParseOptions
 				) => undefined | TokenSyntaxParserObject | FunctionNode | SimpleBlock;
 				export let parseADeclaration: (
 					input: string | TokenStream,
 					pos?: number,
-					options?: ParseOptionsSyntaxParser
+					options?: CssParseOptions
 				) => undefined | DeclarationSyntaxParser;
 				export let parseAListOfComponentValues: (
 					input: string | TokenStream,
 					pos?: number,
-					options?: ParseOptionsSyntaxParser
+					options?: CssParseOptions
 				) => ComponentValue[];
 				export let parseARule: (
 					input: string | TokenStream,
 					pos?: number,
-					options?: ParseOptionsSyntaxParser
+					options?: CssParseOptions
 				) => undefined | AtRule | QualifiedRule;
 				export let parseAStylesheet: (
 					input: string | TokenStream,
 					pos?: number,
-					options?: ParseOptionsSyntaxParser
+					options?: CssParseOptions
 				) => Stylesheet;
 				export let parseAStylesheetsContents: (
 					input: string | TokenStream,
 					pos?: number,
-					options?: ParseOptionsSyntaxParser
+					options?: CssParseOptions
 				) => RuleSyntaxParser[];
 				export let pickTransforms: (
 					options: CssTransformOptions

@@ -2928,6 +2928,27 @@ describe("tokenize", () => {
 				collectErrors("<!DOCTYPE html><html><body>hi</body></html>")
 			).toEqual([]);
 		});
+
+		it("parseHtml forwards the option", () => {
+			/** @type {[string, string][]} */
+			const errors = [];
+			parseHtmlRefs("<a foo=>", 0, {
+				parseError: (input, code, start, end) => {
+					errors.push([code, input.slice(start, end)]);
+				}
+			});
+			expect(errors).toEqual([["missing-attribute-value", ">"]]);
+		});
+
+		it("parseHtml leaves out errors in an XML entity's replacement text", () => {
+			const parseError = jest.fn();
+			parseHtmlRefs(
+				'<!DOCTYPE root [<!ENTITY value "<child">]><root>&value;</root>',
+				0,
+				{ xml: true, parseError }
+			);
+			expect(parseError).not.toHaveBeenCalled();
+		});
 	});
 
 	describe("decodeEntities", () => {
