@@ -1441,6 +1441,10 @@ const IMPROVED_YET_BIGGER = {
 		"4 bytes fewer, 8 more gzipped: `typeof class{}` folded to `\"function\"` breaks the `console.log(typeof` runs",
 	"drop-unused/issue_t1447_export_const (a module mangled at its top level)":
 		"5 bytes fewer, 6 more gzipped: the exported `const` kept out of its reader, where terser's copy repeats the `console.log(\"PASS\")` gzip matched",
+	"array-constructor/array_constructor_unsafe (its own options)":
+		"10 bytes fewer, 2 more gzipped: `Array(-0)` written `[]` breaks the `Array(` runs the other calls repeat",
+	"fixture/issues/4234/input.js (its own options)":
+		"28 bytes fewer, 5 more gzipped: two `RegExp` calls written as literals break the `bar(new RegExp(\"` runs the four calls repeat",
 };
 
 // Sources whose shorter spelling no longer repeats text gzip matched, by the
@@ -1744,7 +1748,6 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 			"evaluate/regexp_property_eval (the default minimizer's options)",
 			"fixture/issues/12201/input.js (its own options)",
 			"fixture/issues/12201/input.js (the default minimizer's options)",
-			"fixture/issues/12214/input.js (the default minimizer's options)",
 			"fixture/issues/12298/input.js (the default minimizer's options)",
 			"fixture/issues/12299/input.js (its own options)",
 			"fixture/issues/4234/input.js (the default minimizer's options)",

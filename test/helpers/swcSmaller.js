@@ -51,6 +51,7 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: full/size/54531ba076299b43c00a0d234240369f93371a41/input.js",
 			"swc minifier: pass-1/4/input.js",
 			"swc minifier: pass-1/5/input.js",
+			"swc minifier: pass-default/math-constant-folding/1/input.js",
 			"terser compress: comparing/issue_2857_2",
 			"terser compress: comparing/issue_2857_3",
 			"terser compress: conditionals/cond_9",
@@ -138,22 +139,18 @@ const SWC_SMALLER_BY_REASON = [
 	[
 		"swc runs a transform the case's own options leave off (`evaluate`, `side_effects`, `unused`, `inline` levels, or any when the case sets none), so the gap is the options, not a missing transform",
 		[
+			"swc minifier: fixture/issues/11512-exhaustive/iife-anon-arg-unused/input.js",
+			"swc minifier: fixture/issues/11512-exhaustive/iife-anon-default-unused/input.js",
+			"swc minifier: fixture/issues/11684/identifier-reduce-vars-only/input.js",
 			"swc minifier: fixture/issues/4234/input.js",
-			"terser compress: array-constructor/array_constructor",
 			"terser compress: collapse_vars/collapse_vars_repeated",
 			"terser compress: collapse_vars/collapse_vars_self_reference",
-			"terser compress: collapse_vars/issue_1605_1",
 			"terser compress: collapse_vars/issue_1631_3",
-			"terser compress: collapse_vars/issue_2954_2",
-			"terser compress: collapse_vars/issue_2954_3",
 			"terser compress: conditionals/cond_8c",
 			"terser compress: conditionals/no_evaluate",
 			"terser compress: defaults/defaults_false",
 			"terser compress: defaults/defaults_true_conditionals_false",
 			"terser compress: defaults/defaults_true_evaluate_false",
-			"terser compress: destructuring/unused_destructuring_decl_2",
-			"terser compress: destructuring/unused_destructuring_decl_4",
-			"terser compress: destructuring/unused_destructuring_decl_5",
 			"terser compress: evaluate/Infinity_NaN_undefined_LHS",
 			"terser compress: evaluate/pow_sequence_with_parens_exact",
 			"terser compress: export/export_default_seq",
@@ -195,7 +192,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: numbers/hex_numbers_in_parentheses_for_prototype_functions",
 			"terser compress: object/computed_property_names",
 			"terser compress: parameters/default_arguments",
-			"terser compress: pure_funcs/babel",
 			"terser compress: reduce_vars/duplicate_lambda_defun_name_1",
 			"terser compress: reduce_vars/iife_assign",
 			"terser compress: reduce_vars/inner_var_for_in_1",
@@ -223,7 +219,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: reduce_vars/var_assign_5",
 			"terser compress: sequences/iife",
 			"terser compress: sequences/issue_1758",
-			"terser compress: sequences/make_sequences_3",
 			"terser compress: sequences/negate_iife_for",
 			"terser compress: sequences/unsafe_undefined",
 			"terser compress: switch/if_else7",
@@ -234,8 +229,7 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: template-string/template_strings_ascii_only",
 			"terser compress: transform/if_else_empty",
 			"terser compress: try-catch/catch_destructuring_with_sequence",
-			"terser compress: typeof/issue_2728_4",
-			"terser compress: unicode/issue_2569"
+			"terser compress: typeof/issue_2728_4"
 		]
 	],
 	[
@@ -384,15 +378,9 @@ const SWC_SMALLER_BY_REASON = [
 	[
 		"swc evaluates a built-in called on literals at build time (`toFixed`, `Object.keys`, `[…].join`, `String.fromCharCode`, `Math.*`, string methods), which terser leaves to run time",
 		[
-			"swc minifier: fixture/issues/12213/distinct/input.js",
-			"swc minifier: fixture/issues/12213/duplicate/input.js",
-			"swc minifier: fixture/issues/12213/numeric-order/input.js",
-			"swc minifier: fixture/issues/12214/input.js",
-			"swc minifier: fixture/issues/12224/input.js",
 			"swc minifier: fixture/next/swc-4559/input.js",
 			"swc minifier: pass-1/compute/1/input.js",
 			"swc minifier: pass-default/compute/1/input.js",
-			"swc minifier: pass-default/math-constant-folding/1/input.js",
 			"terser compress: evaluate/issue_2207_1",
 			"terser compress: issue-597/NaN_and_Infinity_must_have_parens_evaluate",
 			"terser compress: issue-597/beautify_off_1",
@@ -446,22 +434,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: harmony/array_literal_with_spread_2a",
 			"terser compress: switch/issue_1679",
 			"terser compress: typeof/issue_2728_3"
-		]
-	],
-	[
-		"swc drops call and `new` arguments past the parameters of a callee it can see, and an unused parameter whose default is pure",
-		[
-			"swc minifier: fixture/issues/11512-exhaustive/iife-anon-arg-unused/input.js",
-			"swc minifier: fixture/issues/11512-exhaustive/iife-anon-default-unused/input.js",
-			"swc minifier: fixture/issues/11645/control-known-arity-drop/input.js",
-			"swc minifier: fixture/issues/11684/class-expression/input.js",
-			"swc minifier: fixture/issues/11684/constructor-scopes/input.js",
-			"swc minifier: fixture/issues/11684/identifier-reduce-vars-only/input.js",
-			"swc minifier: fixture/issues/11684/identifier-unused-only/input.js",
-			"swc minifier: fixture/issues/12212/safe-unused-rest/input.js",
-			"swc minifier: fixture/issues/12218/leading-argument/input.js",
-			"terser compress: collapse_vars/issue_2436_12",
-			"terser compress: export/issue_2131"
 		]
 	],
 	[
@@ -529,7 +501,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/12186/nested-bitwise/input.js",
 			"swc minifier: fixture/issues/12186/signed-shift/input.js",
 			"swc minifier: fixture/issues/12307/input.js",
-			"swc minifier: fixture/issues/array-constructor-length/input.js",
 			"terser compress: collapse_vars/collapse_vars_properties",
 			"terser compress: pure_funcs/assign"
 		]
@@ -545,13 +516,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: concat-strings/concat_7",
 			"terser compress: concat-strings/concat_8",
 			"terser compress: dead-code/collapse_vars_misc1"
-		]
-	],
-	[
-		"swc reads `arguments[i]` as the named parameter it aliases",
-		[
-			"swc minifier: fixture/issues/12209/input.js",
-			"swc minifier: fixture/issues/arguments-canonical-index/input.js"
 		]
 	],
 	[

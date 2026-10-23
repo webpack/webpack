@@ -2076,7 +2076,7 @@ const KEPT_CASES = [
 	["a RegExp pattern not a string", 'try { RegExp(1); console.log(1); } catch (e) { console.log(2); }'],
 	["a function returning a call in place of a function reading its own `this`, naming itself, holding a directive or declaring a parameter's name", 'var o = { m: function () { return function () { for (var i = 0; i < 2; i++) console.log(typeof this, i); }(); } }; o.m(); var f = function () { return function g() { for (var i = 0; i < 2; i++) console.log(typeof g, i); }(); }; f(); var h = function () { return function () { "use strict"; for (var i = 0; i < 2; i++) console.log(typeof this, i); }(); }; h(); var k = function (a) { return function () { for (var a in { x: 1, y: 2 }) console.log(a); }(); }; k(1);'],
 	["a count too large to run", 'try { new Uint8Array(1e9); console.log(1); } catch (e) { console.log(2); }'],
-	["an argument no literal", "function f(a) { String(a); Object.keys({ [a]: 1 }); Object.keys({ get b() { return 1; } }); Object.keys({ __proto__: a }); Object.keys(a); Object.keys({ b: a }, 0); } f([1]); console.log(1);"],
+	["an argument no literal", "function f(a) { String(a); Object.keys({ [a]: 1 }); Object.keys({ get b() { return 1; } }); Object.keys(a); Object.keys({ b: a }, 0); } f([1]); console.log(1);"],
 	["a built-in that runs code", 'eval("console.log(1)");'],
 	["a built-in global the program declares", "var Set = function () { console.log(1); }; new Set();"],
 	["a built-in call a `with` could rebind", "with ({ JSON: { parse: function () { console.log(1); } } }) JSON.parse(\"1\");"],
@@ -8965,6 +8965,120 @@ describe("syntax-printer", () => {
 			}
 		});
 
+		it("should fold a known function's `length` under `unsafe`, and a `Math` call of another's result", async () => {
+			const { minify } = await load();
+			const { code } = await minify(
+				"function f(a, b) {} function g(a = 1, b) {} function h(a, ...b) {} console.log(f.length, g.length, h.length, Math.ceil(Math.sqrt(2)));",
+				{ compress: { unsafe: true }, mangle: false }
+			);
+			expect(code).toContain("console.log(2,0,1,2)");
+			const { code: emptied } = await minify(
+				"console.log(Array(-0).length, Array(0.5));",
+				{ compress: {}, mangle: false }
+			);
+			expect(emptied).toContain("console.log(0,Array(.5))");
+			for (const input of [
+				"function f(a, b) {} f.length; Object.defineProperty(f, 'length', { value: 7 }); console.log(f.length);",
+				"function f(a) {} f = function (a, b) {}; console.log(f.length);",
+				"var f = function (a) {}; console.log(delete f.length, f.length);"
+			]) {
+				const { code } = await minify(input, {
+					compress: { unsafe: false },
+					mangle: false
+				});
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			}
+		});
+
+		it("should fold `Object.keys` of a literal without `reduce_vars`, unless the program writes `Object`", async () => {
+			const { minify } = await load();
+			const options = {
+				compress: { defaults: false, evaluate: true },
+				mangle: false
+			};
+			for (const [input, expected] of [
+				["console.log(Object.keys({ b: 1, 2: 2, a: 3, 1: 4, b: 5 }));", '["1","2","b","a"]'],
+				['console.log(Object.keys({ __proto__: null, a: 1 }), Object.keys({ ["__proto__"]: 1 }));', '["a"],["__proto__"]'],
+				["function f(a) { return Object.keys({ __proto__: a }); } console.log(f([1]));", "return[]"]
+			]) {
+				const { code } = await minify(input, options);
+				expect(code).toContain(expected);
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			}
+			for (const input of [
+				"Object = { keys: function () { return 1; } }; console.log(Object.keys({ a: 1 }));",
+				"[Object] = [{ keys: function () { return 2; } }]; console.log(Object.keys({ a: 1 }));",
+				"for (Object of [{ keys: function () { return 3; } }]); console.log(Object.keys({ a: 1 }));",
+				"var __proto__ = { a: 1 }; console.log(Object.keys({ __proto__ }));"
+			]) {
+				const { code } = await minify(input, options);
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			}
+		});
+
+		it("should drop arguments a known function or constructor never reads, keeping their effects", async () => {
+			const { minify } = await load();
+			const options = {
+				compress: { defaults: false, unused: true },
+				mangle: false
+			};
+			for (const [input, expected] of [
+				["function f(a) { return a; } console.log(f(1, 2));", "f(1)"],
+				[
+					"(function (unused, used) { console.log(used); })({ big: 1 }, ...[2, 3]);",
+					"(0,2)"
+				],
+				["function f(...rest) { return 1; } console.log(f(1, 2));", "f()"],
+				[
+					"class C { constructor(v) { this.v = v; } } console.log(new C(1, 2, 3).v);",
+					"new C(1)"
+				]
+			]) {
+				const { code } = await minify(input, options);
+				expect(code).toContain(expected);
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			}
+			for (const input of [
+				'function f(a) { return a; } console.log(f(1, console.log("effect")));',
+				"function f(a) { return arguments.length; } console.log(f(1, 2));",
+				"function f(a, b = console.log('default')) { return a; } console.log(f(1, void 0));",
+				"function f(...rest) { return 1; } console.log(f(console.log('kept'), 2));",
+				"class B { constructor(...a) { this.n = a.length; } } class C extends B {} console.log(new C(1, 2, 3).n);",
+				"var f = function (a) { return a; }; f = function (a, b) { return b; }; console.log(f(1, 2));",
+				"function f(a) { return a; } console.log(f(1, ...[2, 3]));",
+				'function Outer() {} function Replacement(v) { this.v = v; } function make() { eval("Outer = Replacement"); return new Outer(1); } console.log(make().v);'
+			]) {
+				const { code } = await minify(input, options);
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			}
+		});
+
+		it("should read `arguments[i]` as its parameter without `reduce_vars` where nothing writes either", async () => {
+			const { minify } = await load();
+			const options = {
+				compress: { defaults: false, arguments: true, properties: true },
+				mangle: false
+			};
+			const { code } = await minify(
+				'function f(a, b) { "use strict"; a = 2; return arguments[0] + arguments[1] + arguments[-0]; } console.log(f(1, 3));',
+				options
+			);
+			expect(code).toContain("arguments[0]+b+arguments[0]");
+			for (const input of [
+				'function f(a) { "use strict"; arguments[0] = 2; return arguments[0] + a; } console.log(f(1));',
+				"function f(a) { g(arguments); return arguments[0]; } function g(o) { o[0] = 5; } console.log(f(), f(1));",
+				"function f(a) { delete arguments[0]; return arguments[0]; } console.log(f(1));",
+				"function f(a) { [arguments[0]] = [4]; return arguments[0] + a; } console.log(f(), f(1));",
+				"function f(a) { var o = { a: 1 }; ({ a } = o); return arguments[0]; } console.log(f(2));",
+				"function f(a) { arguments = [7]; return arguments[0]; } console.log(f(1));",
+				"function f(a) { return eval('a = 3'), arguments[0]; } console.log(f(1));",
+				"function f(a, a2) { return arguments[1]; } console.log(f(1));"
+			]) {
+				const { code } = await minify(input, options);
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			}
+		});
+
 		it("should keep a global written through `globalThis` and a `slice` a patched `Array.prototype` changes", async () => {
 			const { minify } = await load();
 			for (const input of [
@@ -8985,7 +9099,20 @@ describe("syntax-printer", () => {
 				'Object.defineProperty(globalThis?.Array.prototype, "slice", { value: function () { return "S"; } }); console.log([1, 2].slice());',
 				'Object.defineProperty(Array?.prototype, "slice", { value: function () { return "S"; } }); console.log([1, 2].slice());',
 				'Reflect.set(globalThis, "Number", function () { return 7; }); console.log(Number("3"));',
-				'Object.assign(globalThis, { Number: function () { return 7; } }); console.log(Number("3"));'
+				'Object.assign(globalThis, { Number: function () { return 7; } }); console.log(Number("3"));',
+				'function patch(C) { C.prototype.slice = function () { return "S"; }; } patch(globalThis?.Array); console.log([1, 2].slice());',
+				'function patch(C) { C.prototype.slice = function () { return "S"; }; } patch(Array); console.log([1, 2].slice());',
+				'function patch(C) { C.prototype.slice = function () { return "S"; }; } const alias = patch; alias(Array); console.log([1, 2].slice());',
+				'function patch(t) { t.Number = function () { return 7; }; } var alias = patch, again = alias; again(globalThis); console.log(Number("3"));',
+				'var patch = function (g) { g.Array.prototype.slice = function () { return "S"; }; }; patch(globalThis); console.log([1, 2].slice());',
+				'(function (g) { g.Number = function () { return 7; }; })(globalThis); console.log(Number("3"));',
+				'function outer(g) { inner(g); } function inner(h) { h.Number = function () { return 7; }; } outer(globalThis); console.log(Number("3"));',
+				'function patch() { arguments[0].Number = function () { return 7; }; } patch(globalThis); console.log(Number("3"));',
+				'function patch({ Math: m }, g) { g.Number = function () { return 7; }; } patch(Math, globalThis); console.log(Number("3"));',
+				'function patch(target) { target.Number = function () { return 7; }; } patch(Array); patch(globalThis); console.log(Number("3"));',
+				'function patch(target) { target.Number = function () { return 7; }; } patch(globalThis); patch(Math); console.log(Math.Number(), Number("3"));',
+				'function patch(globalThis) { globalThis.Number = function () { return 7; }; } patch(globalThis); console.log(Number("3"));',
+				"Array = function (n) { return 1 / n; }; console.log(Array(-0));"
 			]) {
 				const { code } = await minify(input, { compress: {}, mangle: false });
 				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
@@ -8994,7 +9121,10 @@ describe("syntax-printer", () => {
 			// handed to a call that reads it.
 			for (const input of [
 				'function f() { var self = { a: 1 }; g(self); } function g(o) { o.Number = 1; } f(); console.log(Number("3"));',
-				'function isGlobal(g) { return g && g.Math === Math; } console.log(isGlobal(globalThis), Number("3"));'
+				'function isGlobal(g) { return g && g.Math === Math; } console.log(isGlobal(globalThis), Number("3"));',
+				'function name(C) { return C.name; } console.log(name(Array), [1, 2].slice(), Number("3"));',
+				'console.log(["1", "2"].map(Number), Number("3"));',
+				'var a = b, b = a; try { a(globalThis); } catch (e) {} console.log(Number("3"));'
 			]) {
 				const { code } = await minify(input, { compress: {}, mangle: false });
 				expect(code).not.toContain('Number("3")');

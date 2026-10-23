@@ -253,7 +253,6 @@ const OXC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/10885/input.js",
 			"swc minifier: fixture/issues/11368/input.js",
 			"swc minifier: fixture/issues/11684/identifier-preserved/input.js",
-			"swc minifier: fixture/issues/11684/identifier-side-effects/input.js",
 			"swc minifier: fixture/issues/11684/scopes-and-mutations/input.js",
 			"swc minifier: fixture/issues/12206/preserve-nonmatching-test-before-dynamic-case/input.js",
 			"swc minifier: fixture/issues/12228/disabled/input.js",
@@ -473,7 +472,6 @@ const OXC_SMALLER_BY_REASON = [
 		"oxc picks shorter spellings for comparisons, coercions and literals",
 		[
 			"swc minifier: fixture/issues/11082/input.js",
-			"swc minifier: fixture/issues/array-constructor-length/input.js",
 			"swc minifier: fixture/projects/backbone/2/input.js",
 			"swc minifier: fixture/issues/10720/input.js",
 			"swc minifier: fixture/issues/12194/input.js"
