@@ -1,6 +1,6 @@
 {
   "name": "webpack",
-  "version": "5.112.1",
+  "version": "5.112.2",
   "description": "Packs ECMAScript/CommonJs/AMD modules for the browser. Allows you to split your codebase into multiple bundles, which can be loaded on demand. Supports loaders to preprocess files, i.e. json, jsx, es7, css, less, ... and your custom stuff.",
   "homepage": "https://github.com/webpack/webpack",
   "bugs": "https://github.com/webpack/webpack/issues",
@@ -121,7 +121,8 @@
     "cover:minify": "yarn cover:base --testMatch \"<rootDir>/test/specCases/minify-corpora.spectest.js\" --coverage",
     "cover:minify-fuzz": "yarn cover:base --testMatch \"<rootDir>/test/specCases/js-fuzz.spectest.js\" --coverage",
     "cover:test262-parser": "yarn cover:base --testMatch \"<rootDir>/test/specCases/test262-parser.spectest.js\" --coverage",
-    "cover:xmlconf": "yarn cover:base --testMatch \"<rootDir>/test/specCases/xmlconf.spectest.js\" --coverage"
+    "cover:xmlconf": "yarn cover:base --testMatch \"<rootDir>/test/specCases/xmlconf.spectest.js\" --coverage",
+    "cover:spec-css-html-xml": "yarn cover:base --testMatch \"<rootDir>/test/specCases/cssParsing-webpack.spectest.js\" \"<rootDir>/test/specCases/html5lib.spectest.js\" \"<rootDir>/test/specCases/xmlconf.spectest.js\" --coverage"
   },
   "lint-staged": {
     "*.{js,cjs,mjs}": [

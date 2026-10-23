@@ -4724,10 +4724,358 @@ describe("SyntaxTree", () => {
 		expect(tree.name(tree.field(0, Field.argument, spread))).toBe("c");
 	});
 
+	/**
+	 * @param {SyntaxTree} tree the tree to write
+	 * @param {string} source the source
+	 * @returns {number} its program
+	 */
+	const parseInto = (tree, source) =>
+		/** @type {number} */ (
+			/** @type {unknown} */ (
+				new WebpackParser(
+					{ ecmaVersion: "latest", lazyNodes: true, syntaxTree: tree },
+					source
+				).parse()
+			)
+		);
+
+	it("hands a small tree's columns to the next tree, cleared", () => {
+		const tree = new SyntaxTree();
+		parseInto(tree, "x = { a: [b, c], [d]: `e${f}` };");
+		const types = tree._types;
+		const values = tree._values;
+		tree.release();
+		expect([tree._types.length, tree._values.length, tree._listCount]).toEqual([
+			0, 0, 0
+		]);
+		expect(values.every((value) => value === undefined)).toBe(true);
+		const next = new SyntaxTree();
+		expect(next._types).toBe(types);
+		expect(next._values).toBe(values);
+		const source = "a(b, [c]);";
+		const program = parseInto(next, source);
+		const fresh = new SyntaxTree();
+		expect(toEstreeObject(next, program)).toEqual(
+			toEstreeObject(fresh, parseInto(fresh, source))
+		);
+		next.release();
+	});
+
+	it("keeps a list's items while an item written into it grows the column", () => {
+		/**
+		 * @param {string} source a module
+		 * @returns {[SyntaxTree, number]} its tree and program
+		 */
+		const parseModule = (source) => {
+			const tree = new SyntaxTree();
+			const program = /** @type {number} */ (
+				/** @type {unknown} */ (
+					new WebpackParser(
+						{
+							ecmaVersion: "latest",
+							sourceType: "module",
+							lazyNodes: true,
+							syntaxTree: tree
+						},
+						source
+					).parse()
+				)
+			);
+			return [tree, program];
+		};
+		const body = `var a, b;${"a;".repeat(40000)}`;
+		// Large enough to be let go, it leaves the next tree its list room exactly:
+		// the body's list fits, and the export's one more name does not.
+		parseModule(`${body}export { a };`)[0].release();
+		const [tree, program] = parseModule(`${body}export { a, b };`);
+		const last = tree.field(
+			tree.fieldCount(Field.body, program) - 1,
+			Field.body,
+			program
+		);
+		expect(tree.type(last)).toBe(NodeType.ExportNamedDeclaration);
+		/** @type {string[]} */
+		const names = [];
+		for (let i = 0; i < tree.fieldCount(Field.specifiers, last); i++) {
+			const specifier = tree.field(i, Field.specifiers, last);
+			names.push(tree.name(tree.field(0, Field.local, specifier)));
+		}
+		expect(names).toEqual(["a", "b"]);
+		tree.release();
+	});
+
+	it("lets go of a large tree's columns, and the next grows to its size", () => {
+		const tree = new SyntaxTree();
+		parseInto(tree, "a;".repeat(40000));
+		const types = tree._types;
+		const nodes = tree._count;
+		tree.release();
+		// A runtime that transfers an ArrayBuffer frees the old one at once.
+		const detached =
+			typeof (
+				/** @type {ArrayBuffer & { transfer?: unknown }} */ (
+					new ArrayBuffer(0)
+				).transfer
+			) === "function";
+		expect(types.byteLength === 0).toBe(detached);
+		const next = new SyntaxTree();
+		expect(next._types).not.toBe(types);
+		next.add(NodeType.Identifier, 0, 1);
+		expect(next._types.length).toBe(nodes + 1);
+	});
+
 	it("refuses an unknown type or field", () => {
 		const tree = new SyntaxTree();
 		expect(() => tree.add(0, 0, 1)).toThrow(/Unknown node type/);
 		const node = tree.add(NodeType.Identifier, 0, 1);
 		expect(() => tree.set(node, "value", 1)).toThrow(/has no field value/);
+	});
+});
+
+describe("JavaScript SourceProcessor", () => {
+	const { SourceProcessor } = require("../../../lib/javascript/syntax");
+
+	/** @typedef {import("../../../lib/javascript/syntax-parser").JavascriptPath} JavascriptPath */
+
+	it("fires enter and exit in source order, a template's parts taking turns", () => {
+		/** @type {string[]} */
+		const events = [];
+		/**
+		 * @param {string} name what the event is named
+		 * @returns {{ enter: (path: JavascriptPath) => void, exit: (path: JavascriptPath) => void }} visitors recording it
+		 */
+		const record = (name) => ({
+			enter: (path) => {
+				events.push(`${name}>${path.source()}@${path.index}`);
+			},
+			exit: () => {
+				events.push(`${name}<`);
+			}
+		});
+		new SourceProcessor()
+			.use({
+				[NodeType.CallExpression]: record("call"),
+				[NodeType.TemplateLiteral]: record("template")
+			})
+			.use([NodeType.Identifier, NodeType.TemplateElement], (path) => {
+				events.push(path.source());
+			})
+			.process("f(`a${b}c`, d);");
+		expect(events).toEqual([
+			"call>f(`a${b}c`, d)@0",
+			"f",
+			"template>`a${b}c`@1",
+			"a",
+			"b",
+			"c",
+			"template<",
+			"d",
+			"call<"
+		]);
+	});
+
+	it("reads a node as the CSS and HTML paths read theirs", () => {
+		const source =
+			'import x from "y";\nlabel: for (const k of o) a?.[k];\u2028function f(z, y = 1) { return `t${z}`; }';
+		/** @type {Record<string, unknown>} */
+		const read = {};
+		new SourceProcessor()
+			.use({
+				[NodeType.Program]: (path) => {
+					read.programParent = path.parent;
+					read.childTypes = path.children().map((child) => path.type(child));
+					read.childCount = path.childCount();
+					read.secondChild = path.type(path.child(1));
+					read.pastLastChild = path.child(9);
+					read.sourceType = path.textOf(Part.sourceType);
+				},
+				[NodeType.ImportDeclaration]: (path) => {
+					read.importSource = path.value(path.field(0, Field.source));
+					read.specifiers = path.fieldCount(Field.specifiers);
+					read.withoutPart = [
+						path.rangeOf(Part.raw),
+						path.startOf(Part.raw),
+						path.endOf(Part.raw)
+					];
+				},
+				[NodeType.MemberExpression]: (path) => {
+					read.member = [
+						path.flag(Flag.computed),
+						path.flag(Flag.optional),
+						path.within(NodeType.ForOfStatement),
+						path.within(NodeType.FunctionDeclaration),
+						path.type(path.parent === null ? 0 : path.parent)
+					];
+				},
+				[NodeType.FunctionDeclaration]: (path) => {
+					read.functionRange = path.range();
+					read.functionStart = path.start();
+					read.functionEnd = path.end();
+					read.functionLoc = path.loc();
+					read.functionName = path.name(path.field(0, Field.id));
+					read.functionNoName = path.name();
+					read.functionNoValue = path.value();
+					read.param = path.type(path.fieldNamed(Field.params, "z"));
+					read.noParam = path.fieldNamed(Field.params, "w");
+					read.between = path.source(path.start(), path.start() + 8);
+				},
+				[NodeType.Identifier]: (path) => {
+					if (path.name() === "z") read.state = path.state;
+				}
+			})
+			.process(source, { state: "run" });
+		expect(read).toEqual({
+			programParent: null,
+			childTypes: [
+				NodeType.ImportDeclaration,
+				NodeType.LabeledStatement,
+				NodeType.FunctionDeclaration
+			],
+			childCount: 3,
+			secondChild: NodeType.LabeledStatement,
+			pastLastChild: 0,
+			sourceType: "module",
+			importSource: "y",
+			specifiers: 1,
+			withoutPart: [null, -1, -1],
+			member: [true, true, true, false, NodeType.ChainExpression],
+			functionRange: [53, 93],
+			functionStart: 53,
+			functionEnd: 93,
+			functionLoc: [3, 0, 3, 40],
+			functionName: "f",
+			functionNoName: "",
+			functionNoValue: "",
+			param: NodeType.Identifier,
+			noParam: 0,
+			between: "function",
+			state: "run"
+		});
+	});
+
+	it("skips a node's children, stops, and fires every visitor on the next run", () => {
+		/** @type {string[]} */
+		const names = [];
+		const processor = new SourceProcessor().use({
+			[NodeType.FunctionDeclaration]: (path) => path.skipChildren(),
+			[NodeType.Identifier]: (path) => {
+				names.push(path.name());
+				if (path.name() === "stop") path.stop();
+			}
+		});
+		processor.process("function f(a) { b; } c; stop; d;");
+		processor.process("e;");
+		expect(names).toEqual(["c", "stop", "e"]);
+	});
+
+	it("reads a script as a script, and refuses a walk inside a walk", () => {
+		/** @type {number[]} */
+		const types = [];
+		const processor = new SourceProcessor().use({
+			[NodeType.WithStatement]: (path) => {
+				types.push(path.type());
+				expect(() => processor.process("x;")).toThrow(/already running/);
+			}
+		});
+		processor.process("with (o) x;", { sourceType: "script" });
+		expect(types).toEqual([NodeType.WithStatement]);
+		expect(() => processor.process("with (o) x;")).toThrow(SyntaxError);
+		expect(() => processor.process("x;")).not.toThrow();
+	});
+});
+
+describe("WebpackParser writing a SyntaxTree", () => {
+	const {
+		SyntaxTree,
+		WebpackParser,
+		toEstreeObject
+	} = require("../../../lib/javascript/syntax-parser");
+
+	/** @type {ParserOptions} */
+	const options = {
+		ecmaVersion: "latest",
+		sourceType: "module",
+		lazyNodes: true,
+		preserveParens: true
+	};
+
+	/**
+	 * @param {string} source the source
+	 * @returns {{ tree: InstanceType<typeof SyntaxTree>, program: number }} the tree and its program
+	 */
+	const parseIntoTree = (source) => {
+		const tree = new SyntaxTree();
+		const program = /** @type {number} */ (
+			/** @type {unknown} */ (
+				new WebpackParser({ ...options, syntaxTree: tree }, source).parse()
+			)
+		);
+		return { tree, program };
+	};
+
+	/**
+	 * @param {unknown} node a node and everything under it
+	 * @returns {unknown} the same as JSON, a bigint and a regular expression as text
+	 */
+	const plain = (node) =>
+		JSON.parse(
+			JSON.stringify(node, (key, value) =>
+				typeof value === "bigint"
+					? `${value}n`
+					: value instanceof RegExp
+						? String(value)
+						: value
+			)
+		);
+
+	it.each([
+		'"use strict"; let { a, b: [c = 1, ...d], ...e } = f; (g) = h, i += 2;',
+		"class A extends B { static #x = 1; get y() { return super.y } static { var z } }",
+		"for (const [k, v] of m) label: for (x in y) continue label;",
+		"x = a ? b?.c(...d) : new E(`t${f}u`, /re/g, 10n);",
+		"async function* g(p = 1, { q }) { yield* await r; }",
+		"switch (s) { case 1: t(); default: }",
+		"try { u() } catch ({ v }) {} finally { w() }",
+		'import a, { b as c } from "d"; export { c }; export default (e) => e;',
+		"export const { f, g: [h] } = i; import.meta;",
+		"({ ...j, k, [l]: m, n() {}, get o() { return 1 } }); [, p, ...q] = r;"
+	])("writes %s as the objects it would build otherwise", (source) => {
+		const { tree, program } = parseIntoTree(source);
+		expect(plain(toEstreeObject(tree, program))).toEqual(
+			plain(new WebpackParser(options, source).parse())
+		);
+	});
+
+	it.each([
+		"({ ...{ a } } = b);",
+		"({ get a() {} } = b);",
+		"[...a = 1] = b;",
+		"[a += 1] = b;",
+		"[a?.b] = c;",
+		"[f()] = b;",
+		"(a, a) => 1;",
+		"async function f() { ({ await } = x); }",
+		"({ a: b.c }) => 1;",
+		"for ((a?.b) of c);"
+	])("refuses %s as it does otherwise", (source) => {
+		/** @type {string | undefined} */
+		let message;
+		try {
+			new WebpackParser(options, source).parse();
+		} catch (err) {
+			message = /** @type {Error} */ (err).message;
+		}
+		expect(message).toBeDefined();
+		expect(() => parseIntoTree(source)).toThrow(/** @type {string} */ (message));
+	});
+
+	it("refuses a tree where its productions would be acorn's", () => {
+		expect(
+			() =>
+				new WebpackParser(
+					{ ...options, ecmaVersion: 2015, syntaxTree: new SyntaxTree() },
+					"x"
+				)
+		).toThrow(/latest edition only/);
 	});
 });
