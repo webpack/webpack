@@ -9,10 +9,10 @@ module.exports = async function loader() {
 	 * @returns {Promise<unknown>} its exports, with bytes as a plain array
 	 */
 	const load = async (request) => {
-		const exports = await this.importModule(path.resolve(__dirname, request));
+		const exports = await this.importModule(request);
 		return exports instanceof Uint8Array ? Array.from(exports) : exports;
 	};
-	const file = path.resolve(__dirname, "file.txt");
+	const file = path.join(this.context, "file.txt");
 	/** @type {Record<string, unknown>} */
 	const values = {};
 	for (const type of [
