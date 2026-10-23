@@ -13093,6 +13093,23 @@ describe("JavaScript SourceProcessor printing", () => {
 		});
 	});
 
+	it("should minify a source a visitor hands minify while it walks", async () => {
+		const { modules } = await load();
+		const source = "/*! kept */(function () { return 1 })()";
+		const options = () => ({ compress: false, mangle: false });
+		const expected = modules.minifySync(source, options()).code;
+		/** @type {(string | undefined)[]} */
+		const printed = [];
+		const processor = new SourceProcessor().use({
+			[NodeType.CallExpression]: () => {
+				printed.push(modules.minifySync(source, options()).code);
+			}
+		});
+		processor.process("f()", {});
+		processor.process("f()", { mode: "minify" });
+		expect(printed).toEqual([expected, expected]);
+	});
+
 	it("should print one source after another, and a source anew after a parse error", () => {
 		const processor = new SourceProcessor();
 		expect(processor.process("a ( 1 )", { mode: "minify" }).code).toBe(

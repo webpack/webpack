@@ -37344,6 +37344,7 @@ declare namespace exports {
 						  >,
 					options: JavascriptProcessOptions
 				) => void;
+				export let isWalkingSyntaxTree: () => boolean;
 				export let walkSyntaxTree: (
 					tree: SyntaxTree,
 					program: number,
