@@ -9105,7 +9105,11 @@ describe("syntax-printer", () => {
 				'(function (g) { g.Number = function () { return 7; }; })(globalThis); console.log(Number("3"));',
 				'function outer(g) { inner(g); } function inner(h) { h.Number = function () { return 7; }; } outer(globalThis); console.log(Number("3"));',
 				'function patch() { arguments[0].Number = function () { return 7; }; } patch(globalThis); console.log(Number("3"));',
-				'function patch({ Math: m }, g) { g.Number = function () { return 7; }; } patch(Math, globalThis); console.log(Number("3"));'
+				'function patch({ Math: m }, g) { g.Number = function () { return 7; }; } patch(Math, globalThis); console.log(Number("3"));',
+				'function patch(target) { target.Number = function () { return 7; }; } patch(Array); patch(globalThis); console.log(Number("3"));',
+				'function patch(target) { target.Number = function () { return 7; }; } patch(globalThis); patch(Math); console.log(Math.Number(), Number("3"));',
+				'function patch(globalThis) { globalThis.Number = function () { return 7; }; } patch(globalThis); console.log(Number("3"));',
+				"Array = function (n) { return 1 / n; }; console.log(Array(-0));"
 			]) {
 				const { code } = await minify(input, { compress: {}, mangle: false });
 				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
