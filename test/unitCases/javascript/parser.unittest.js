@@ -5833,6 +5833,30 @@ describe("parseProgram", () => {
 		expect(parseProgram("a ~ ")).toBeUndefined();
 	});
 
+	it("rethrows a syntax error the callback throws", () => {
+		expect(() =>
+			parseProgram("let a; let a", 0, {
+				parseError: () => {
+					throw new SyntaxError("callback");
+				}
+			})
+		).toThrow("callback");
+	});
+
+	it("refuses a parse started from its own callback", () => {
+		/** @type {string[]} */
+		const codes = [];
+		expect(() =>
+			parseProgram("let a; let a", 0, {
+				parseError: (input, code) => {
+					codes.push(code);
+					parseProgram("x");
+				}
+			})
+		).toThrow("parseProgram() is running");
+		expect(codes).toEqual(["var-redeclaration"]);
+	});
+
 	it("rethrows what is not a syntax error", () => {
 		expect(() =>
 			parseProgram("a", 0, {

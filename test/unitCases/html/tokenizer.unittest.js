@@ -3067,6 +3067,8 @@ describe("tokenize", () => {
 				]
 			],
 			["<!DOCTYPE html><div/><br/><svg/><math/><svg><g/></svg>", undefined, ["non-void-html-element-start-tag-with-trailing-solidus", "expected-closing-tag-but-got-eof"]],
+			["<!DOCTYPE html><frameset><frame/></frameset>", undefined, []],
+			["<!DOCTYPE html><body><frame/>", undefined, ["unexpected-start-tag-ignored", "non-void-html-element-start-tag-with-trailing-solidus"]],
 			["</frameset>x", "frameset", ["unexpected-frameset-in-frameset-innerhtml", "unexpected-char-in-frameset"]],
 			["<body></body></html>", "html", ["unexpected-end-tag-after-body-innerhtml"]],
 		])("parseHtml reports the tree's errors in %j", (source, fragmentContext, codes) => {

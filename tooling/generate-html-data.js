@@ -1705,23 +1705,14 @@ const PARSER_TABLES = [
 		"ACKNOWLEDGED_NON_VOID",
 		"set",
 		"Start tags besides the void elements whose self-closing flag tree construction acknowledges.",
-		["basefont", "bgsound", "frame", "image"]
+		["basefont", "bgsound", "image"]
 	],
 	[
 		"END_TAG_OPTIONAL_AT_BODY_END",
 		"set",
 		"What the end of the body may leave open without a parse error: elements whose end tag is optional.",
 		[
-			"dd",
-			"dt",
-			"li",
-			"optgroup",
-			"option",
-			"p",
-			"rb",
-			"rp",
-			"rt",
-			"rtc",
+			...IMPLIED_END_TAG_ELEMENTS,
 			"tbody",
 			"td",
 			"tfoot",
