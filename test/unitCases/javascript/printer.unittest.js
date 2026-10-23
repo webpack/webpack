@@ -9102,6 +9102,8 @@ describe("syntax-printer", () => {
 				'Object.assign(globalThis, { Number: function () { return 7; } }); console.log(Number("3"));',
 				'function patch(C) { C.prototype.slice = function () { return "S"; }; } patch(globalThis?.Array); console.log([1, 2].slice());',
 				'function patch(C) { C.prototype.slice = function () { return "S"; }; } patch(Array); console.log([1, 2].slice());',
+				'function patch(C) { C.prototype.slice = function () { return "S"; }; } const alias = patch; alias(Array); console.log([1, 2].slice());',
+				'function patch(t) { t.Number = function () { return 7; }; } var alias = patch, again = alias; again(globalThis); console.log(Number("3"));',
 				'var patch = function (g) { g.Array.prototype.slice = function () { return "S"; }; }; patch(globalThis); console.log([1, 2].slice());',
 				'(function (g) { g.Number = function () { return 7; }; })(globalThis); console.log(Number("3"));',
 				'function outer(g) { inner(g); } function inner(h) { h.Number = function () { return 7; }; } outer(globalThis); console.log(Number("3"));',
@@ -9121,7 +9123,8 @@ describe("syntax-printer", () => {
 				'function f() { var self = { a: 1 }; g(self); } function g(o) { o.Number = 1; } f(); console.log(Number("3"));',
 				'function isGlobal(g) { return g && g.Math === Math; } console.log(isGlobal(globalThis), Number("3"));',
 				'function name(C) { return C.name; } console.log(name(Array), [1, 2].slice(), Number("3"));',
-				'console.log(["1", "2"].map(Number), Number("3"));'
+				'console.log(["1", "2"].map(Number), Number("3"));',
+				'var a = b, b = a; try { a(globalThis); } catch (e) {} console.log(Number("3"));'
 			]) {
 				const { code } = await minify(input, { compress: {}, mangle: false });
 				expect(code).not.toContain('Number("3")');
