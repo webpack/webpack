@@ -4591,7 +4591,15 @@ describe("Parser", () => {
 			try {
 				return { ast: parse(source, options), noted };
 			} catch (err) {
-				return { error: /** @type {Error} */ (err).message, noted };
+				// a parse error by its message; a crash after a noted error only by
+				// its kind, as engines word a TypeError each their own way
+				return {
+					error:
+						err instanceof SyntaxError
+							? err.message
+							: /** @type {Error} */ (err).name,
+					noted
+				};
 			}
 		};
 		for (const [name, options] of OPTION_SETS) {
