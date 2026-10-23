@@ -12788,11 +12788,9 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 	it("should read a single named source under its name", async () => {
 		const options = { compress: false, mangle: false };
 		const printed = await minifyCounted({ "a.js": "a( 1 )" }, options, true);
-		expect(printed).toEqual({
-			code: "a(1);",
-			printedFromTree: 0,
-			printedNodes: 1
-		});
+		expect(printed.code).toMatchSnapshot();
+		expect(printed.printedFromTree).toBe(0);
+		expect(printed.printedNodes).toBe(1);
 	});
 
 	it("should throw the parse error terser's tree throws", async () => {
@@ -12869,11 +12867,8 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 	it("should print terser's tree of several sources", async () => {
 		const options = { compress: false, mangle: false };
 		const printed = await minifyCounted({ "a.js": "a()", "b.js": "b()" }, options, true);
-		expect(printed).toEqual({
-			code: "a();b();",
-			printedFromTree: 0,
-			printedNodes: 0
-		});
+		expect(printed.code).toMatchSnapshot();
+		expect(printed.printedFromTree + printed.printedNodes).toBe(0);
 	});
 
 	it("should print terser's tree with the correct or improve phase off", async () => {

@@ -21,6 +21,10 @@ Array [
 ]
 `;
 
+exports[`JavaScript minifier printing a SyntaxTree should print terser's tree of several sources 1`] = `"a();b();"`;
+
+exports[`JavaScript minifier printing a SyntaxTree should read a single named source under its name 1`] = `"a(1);"`;
+
 exports[`jsMinify should minify: compress off (with source map) 1`] = `"\\"use strict\\";function unusedHelper(e,n){return e+n}sink(function e(){let n=[1,2,3].map(e=>e*2);if(n.length>0){console.log(n)}else{console.log(\\"empty\\")}return n});"`;
 
 exports[`jsMinify should minify: compress off (with source map) 2`] = `
