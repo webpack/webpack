@@ -352,7 +352,6 @@ const OXC_SMALLER_BY_REASON = [
 		"real-world code, where the gap sums several of the transforms above; split it once those land",
 		[
 			"swc minifier: fixture/issues/d3-color/1/input.js",
-			"swc minifier: fixture/next/66237/input.js",
 			"swc minifier: fixture/next/asmjs/1/input.js",
 			"swc minifier: fixture/projects/jquery/11/input.js",
 			"swc minifier: projects/files/backbone-1.1.0.js",
