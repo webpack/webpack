@@ -15254,7 +15254,7 @@ declare interface JavascriptParseOptions {
 	sourceType?: "module" | "script";
 
 	/**
-	 * optional callback for each parse error, with the CSS and HTML parsers' signature and Babel's `reasonCode` kebab-cased as `code`; `severity` is `"error"` for one that stops the parse and `"warning"` for one it reads past
+	 * optional callback for each parse error, with the CSS and HTML parsers' signature and Babel's `reasonCode` kebab-cased as `code`; `severity` is `"error"` for one that stops the parse and `"warning"` for one it reads past; without it, the errors read past go unreported
 	 */
 	parseError?: (
 		input: string,

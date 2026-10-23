@@ -2150,7 +2150,7 @@ const PARSE_ERRORS = [
  */
 const parseErrorTemplateRegExp = (template) =>
 	new RegExp(
-		`^${template.replace(/[.+?^${}()|[\]\\]/g, "\\$&").replace(/\*/g, ".*")}$`
+		`^${template.replace(/[.+?^${}()|[\]\\]/g, "\\$&").replace(/\*/g, "[\\s\\S]*")}$`
 	);
 
 /**

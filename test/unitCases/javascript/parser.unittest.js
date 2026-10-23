@@ -5819,6 +5819,15 @@ describe("parseProgram", () => {
 		]);
 	});
 
+	it("names an error whose message holds a line terminator", () => {
+		const { program, errors } = collect(
+			'export { a as "x\\ny", b as "x\\ny" }; var a, b',
+			{ sourceType: "module" }
+		);
+		expect(program).toBeDefined();
+		expect(errors.map(([code]) => code)).toEqual(["duplicate-export"]);
+	});
+
 	it("reads past an error without a callback", () => {
 		expect(parseProgram("let a; let a")).toBeDefined();
 		expect(parseProgram("a ~ ")).toBeUndefined();

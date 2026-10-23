@@ -1700,6 +1700,37 @@ const PARSER_TABLES = [
 			"text/x-ecmascript",
 			"text/x-javascript"
 		]
+	],
+	[
+		"ACKNOWLEDGED_NON_VOID",
+		"set",
+		"Start tags besides the void elements whose self-closing flag tree construction acknowledges.",
+		["basefont", "bgsound", "frame", "image"]
+	],
+	[
+		"END_TAG_OPTIONAL_AT_BODY_END",
+		"set",
+		"What the end of the body may leave open without a parse error: elements whose end tag is optional.",
+		[
+			"dd",
+			"dt",
+			"li",
+			"optgroup",
+			"option",
+			"p",
+			"rb",
+			"rp",
+			"rt",
+			"rtc",
+			"tbody",
+			"td",
+			"tfoot",
+			"th",
+			"thead",
+			"tr",
+			"body",
+			"html"
+		]
 	]
 ];
 
