@@ -18498,6 +18498,17 @@ declare interface KnownStatsAsset {
 }
 
 /**
+ * A group of assets that `groupResults` creates, listing them in `children` or counting hidden ones in `filteredChildren`.
+ */
+declare interface KnownStatsAssetGroup {
+	type: string;
+	size: number;
+	name?: string;
+	children?: StatsAsset[];
+	filteredChildren?: number;
+}
+
+/**
  * Defines the known stats chunk type used by this module.
  */
 declare interface KnownStatsChunk {
@@ -18691,6 +18702,20 @@ declare interface KnownStatsModule {
 }
 
 /**
+ * A group of modules that `groupResults` creates, listing them in `children` or counting hidden ones in `filteredChildren`.
+ */
+declare interface KnownStatsModuleGroup {
+	type: string;
+	size: number;
+	sizes: Record<string, number>;
+	name?: string;
+	moduleType?: string;
+	layer?: string;
+	children?: StatsModule[];
+	filteredChildren?: number;
+}
+
+/**
  * Defines the known stats module issuer type used by this module.
  */
 declare interface KnownStatsModuleIssuer {
@@ -18716,6 +18741,16 @@ declare interface KnownStatsModuleReason {
 	loc?: null | string;
 	moduleId?: null | string | number;
 	resolvedModuleId?: null | string | number;
+}
+
+/**
+ * A group of reasons from one origin module that `groupResults` creates.
+ */
+declare interface KnownStatsModuleReasonGroup {
+	type: string;
+	module: string;
+	active: boolean;
+	children: StatsModuleReason[];
 }
 
 /**
@@ -32706,6 +32741,7 @@ declare class Stats {
 	): string;
 }
 type StatsAsset = KnownStatsAsset & Record<string, StatsJsonValue>;
+type StatsAssetGroup = KnownStatsAssetGroup & Record<string, StatsJsonValue>;
 type StatsChunk = KnownStatsChunk & Record<string, StatsJsonValue>;
 type StatsChunkGroup = KnownStatsChunkGroup & Record<string, StatsJsonValue>;
 type StatsChunkOrigin = KnownStatsChunkOrigin & Record<string, StatsJsonValue>;
@@ -32760,11 +32796,18 @@ type StatsFactoryGetItemNameHookMap = {
 	>;
 	for(key: string): SyncBailHook<[any, StatsFactoryContext], string | void>;
 } & HookMap<SyncBailHook<[any, StatsFactoryContext], string | void>>;
+type StatsFactoryGroup<K extends keyof exports.StatsFactoryItemKeys> =
+	K extends keyof exports.StatsFactoryGroupKeys
+		? exports.StatsFactoryGroupKeys[K]
+		: object;
 type StatsFactoryGroupResultsHookMap = {
-	for<K extends keyof exports.StatsFactoryItemKeys, G = object>(
+	for<K extends keyof exports.StatsFactoryItemKeys>(
 		key: K
 	): SyncBailHook<
-		[GroupConfig<exports.StatsFactoryItemKeys[K][1], G>[], StatsFactoryContext],
+		[
+			GroupConfig<exports.StatsFactoryItemKeys[K][1], StatsFactoryGroup<K>>[],
+			StatsFactoryContext
+		],
 		void
 	>;
 	for(
@@ -32877,9 +32920,12 @@ type StatsLogging = KnownStatsLogging & Record<string, StatsJsonValue>;
 type StatsLoggingEntry = KnownStatsLoggingEntry &
 	Record<string, StatsJsonValue>;
 type StatsModule = KnownStatsModule & Record<string, StatsJsonValue>;
+type StatsModuleGroup = KnownStatsModuleGroup & Record<string, StatsJsonValue>;
 type StatsModuleIssuer = KnownStatsModuleIssuer &
 	Record<string, StatsJsonValue>;
 type StatsModuleReason = KnownStatsModuleReason &
+	Record<string, StatsJsonValue>;
+type StatsModuleReasonGroup = KnownStatsModuleReasonGroup &
 	Record<string, StatsJsonValue>;
 type StatsModuleTraceDependency = KnownStatsModuleTraceDependency &
 	Record<string, StatsJsonValue>;
@@ -35837,6 +35883,20 @@ declare namespace exports {
 	}
 
 	/**
+	 * The group object `groupResults` taps create for each array path of `StatsFactoryItemKeys` they group.
+	 * A plugin types its own groups by declaration merging: `declare module "webpack" { interface StatsFactoryGroupKeys { "myPlugin.items": MyGroup } }`.
+	 */
+	export interface StatsFactoryGroupKeys {
+		"compilation.assets": StatsAssetGroup;
+		"asset.related": StatsAssetGroup;
+		"compilation.modules": StatsModuleGroup;
+		"chunk.modules": StatsModuleGroup;
+		"chunk.rootModules": StatsModuleGroup;
+		"module.modules": StatsModuleGroup;
+		"module.reasons": StatsModuleReasonGroup;
+	}
+
+	/**
 	 * The `[item, created item]` of each array path, typing its item hooks (`filter`, `sort`, `filterSorted`) and created item hooks (`sortResults`, `groupResults`, `filterResults`, `merge`); an optional third element is what `merge` makes of the created items, which `result` then gets instead of their array, so a key declaring one must register a `merge` tap returning that type.
 	 * A plugin types its own paths by declaration merging: `declare module "webpack" { interface StatsFactoryItemKeys { "myPlugin.items": [MyItem, MyCreatedItem] } }`.
 	 */
@@ -38741,6 +38801,7 @@ declare namespace exports {
 		ColorsOptions,
 		DefineConfigInput,
 		StatsAsset,
+		StatsAssetGroup,
 		StatsChunk,
 		StatsChunkGroup,
 		StatsChunkOrigin,
@@ -38749,8 +38810,10 @@ declare namespace exports {
 		StatsLogging,
 		StatsLoggingEntry,
 		StatsModule,
+		StatsModuleGroup,
 		StatsModuleIssuer,
 		StatsModuleReason,
+		StatsModuleReasonGroup,
 		StatsModuleTraceDependency,
 		StatsModuleTraceItem,
 		StatsProfile,
