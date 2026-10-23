@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Add the JavaScript `SourceProcessor`, and parse JavaScript to minify faster.
+Add a JavaScript `SourceProcessor` that prints minified, and parse JS faster.

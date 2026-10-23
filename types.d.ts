@@ -17824,19 +17824,26 @@ type JavascriptParserState = ParserStateBase<BuiltJavascriptModule> &
 	KnownJavascriptParserState;
 
 /**
- * what the JavaScript `SourceProcessor` reads its source as
+ * what the JavaScript `SourceProcessor` reads its source as, and prints it with
  */
 declare interface JavascriptProcessOptions {
 	/**
 	 * a module (the default) or a script
 	 */
 	sourceType?: "module" | "script";
+
+	/**
+	 * terser's format options a print reads, as `minify` reads them under `format`; `comments`, `beautify` and `source_map` are not read yet
+	 */
+	format?: Partial<any>;
 }
 
 /**
  * The generic visitor coordinator (`util/SourceProcessor`) bound to the
- * JavaScript `grammar`, which walks the `SyntaxTree` a parse writes. It walks
- * only: there is no JavaScript node printer yet. Usage:
+ * JavaScript `grammar`, which walks the `SyntaxTree` a parse writes.
+ * `process(src, { mode: "minify" })` returns `{ code, map }`, printed by the
+ * same walk as `minify` prints a source it neither compresses nor mangles,
+ * comments left out; without `mode` it only walks. Usage:
  * ```
  * new JavascriptSourceProcessor().use({ [NodeType.CallExpression]: (path) => {} }).process(source, { sourceType: "module" });
  * ```
@@ -17858,6 +17865,12 @@ declare class JavascriptSourceProcessor<
 		 * Stops the walk: no visitor fires after the current one returns.
 		 */
 		stop(): void;
+		/**
+		 * The tree walked, for a reader of many nodes that would rather not go
+		 * through the path for each.
+		 */
+		get tree(): SyntaxTree;
+		ancestor(level: number): number;
 		within(type: number): boolean;
 		type(n?: number): number;
 		range(n?: number): [number, number];
@@ -17913,6 +17926,12 @@ declare class JavascriptSourceProcessor<
 		 * Stops the walk: no visitor fires after the current one returns.
 		 */
 		stop(): void;
+		/**
+		 * The tree walked, for a reader of many nodes that would rather not go
+		 * through the path for each.
+		 */
+		get tree(): SyntaxTree;
+		ancestor(level: number): number;
 		within(type: number): boolean;
 		type(n?: number): number;
 		range(n?: number): [number, number];
@@ -27557,6 +27576,13 @@ declare class PrintContext<TPath, TNode, TPrintOptions = object> {
 	 */
 	printPiece(path: TPath): string;
 	get(node: TNode): string;
+
+	/**
+	 * Read a child's text for the one time anything reads it: the slot lets go
+	 * of it, so a printer composing a large output from its children's text
+	 * holds each piece only until it is composed. Read again, it is empty.
+	 */
+	consume(node: TNode): string;
 
 	/**
 	 * Append `text` as a piece of its own, so {@link retract} can still take it
@@ -37215,6 +37241,12 @@ declare namespace exports {
 					 * Stops the walk: no visitor fires after the current one returns.
 					 */
 					stop(): void;
+					/**
+					 * The tree walked, for a reader of many nodes that would rather not go
+					 * through the path for each.
+					 */
+					get tree(): SyntaxTree;
+					ancestor(level: number): number;
 					within(type: number): boolean;
 					type(n?: number): number;
 					range(n?: number): [number, number];
@@ -37267,6 +37299,12 @@ declare namespace exports {
 						 * Stops the walk: no visitor fires after the current one returns.
 						 */
 						stop(): void;
+						/**
+						 * The tree walked, for a reader of many nodes that would rather not go
+						 * through the path for each.
+						 */
+						get tree(): SyntaxTree;
+						ancestor(level: number): number;
 						within(type: number): boolean;
 						type(n?: number): number;
 						range(n?: number): [number, number];
@@ -37320,6 +37358,12 @@ declare namespace exports {
 									 * Stops the walk: no visitor fires after the current one returns.
 									 */
 									stop(): void;
+									/**
+									 * The tree walked, for a reader of many nodes that would rather not go
+									 * through the path for each.
+									 */
+									get tree(): SyntaxTree;
+									ancestor(level: number): number;
 									within(type: number): boolean;
 									type(n?: number): number;
 									range(n?: number): [number, number];
@@ -37385,6 +37429,123 @@ declare namespace exports {
 				export let NODE_KIND_ANCESTRY: Record<string, string[]>;
 				export let plainIdentifier: (name: string) => string;
 				export let load: () => Promise<Minifier>;
+				export let printer: (
+					path: {
+						state: unknown;
+						get node(): number;
+						get parent(): null | number;
+						get index(): number;
+						/**
+						 * Stops the walk descending into the current node (enter only).
+						 */
+						skipChildren(): void;
+						/**
+						 * Stops the walk: no visitor fires after the current one returns.
+						 */
+						stop(): void;
+						/**
+						 * The tree walked, for a reader of many nodes that would rather not go
+						 * through the path for each.
+						 */
+						get tree(): SyntaxTree;
+						ancestor(level: number): number;
+						within(type: number): boolean;
+						type(n?: number): number;
+						range(n?: number): [number, number];
+						start(n?: number): number;
+						end(n?: number): number;
+						/**
+						 * Every JavaScript line terminator ends a line, as a parse error's position counts them.
+						 */
+						loc(n?: number): [number, number, number, number];
+						source(n?: number, end?: number): string;
+						name(n?: number): string;
+						value(
+							n?: number
+						):
+							| undefined
+							| null
+							| string
+							| number
+							| bigint
+							| boolean
+							| RegExp
+							| { cooked?: null | string; raw: string };
+						childCount(n?: number): number;
+						child(i: number, n?: number): number;
+						children(n?: number): number[];
+						fieldCount(field: number, n?: number): number;
+						field(i: number, field: number, n?: number): number;
+						fieldNamed(field: number, name: string, n?: number): number;
+						flag(flag: number, n?: number): boolean;
+						/**
+						 * A JavaScript node keeps no positions beyond its own.
+						 */
+						rangeOf(part: number, n?: number): null;
+						startOf(part: number, n?: number): number;
+						endOf(part: number, n?: number): number;
+						textOf(part: number, n?: number): null | string;
+					},
+					writer: PrintContext<
+						{
+							state: unknown;
+							get node(): number;
+							get parent(): null | number;
+							get index(): number;
+							/**
+							 * Stops the walk descending into the current node (enter only).
+							 */
+							skipChildren(): void;
+							/**
+							 * Stops the walk: no visitor fires after the current one returns.
+							 */
+							stop(): void;
+							/**
+							 * The tree walked, for a reader of many nodes that would rather not go
+							 * through the path for each.
+							 */
+							get tree(): SyntaxTree;
+							ancestor(level: number): number;
+							within(type: number): boolean;
+							type(n?: number): number;
+							range(n?: number): [number, number];
+							start(n?: number): number;
+							end(n?: number): number;
+							/**
+							 * Every JavaScript line terminator ends a line, as a parse error's position counts them.
+							 */
+							loc(n?: number): [number, number, number, number];
+							source(n?: number, end?: number): string;
+							name(n?: number): string;
+							value(
+								n?: number
+							):
+								| undefined
+								| null
+								| string
+								| number
+								| bigint
+								| boolean
+								| RegExp
+								| { cooked?: null | string; raw: string };
+							childCount(n?: number): number;
+							child(i: number, n?: number): number;
+							children(n?: number): number[];
+							fieldCount(field: number, n?: number): number;
+							field(i: number, field: number, n?: number): number;
+							fieldNamed(field: number, name: string, n?: number): number;
+							flag(flag: number, n?: number): boolean;
+							/**
+							 * A JavaScript node keeps no positions beyond its own.
+							 */
+							rangeOf(part: number, n?: number): null;
+							startOf(part: number, n?: number): number;
+							endOf(part: number, n?: number): number;
+							textOf(part: number, n?: number): null | string;
+						},
+						number
+					>
+				) => string;
 				export let PHASES: Phase[];
 				export let FORMAT_DEFAULTS: any;
 				export let IGNORED_FORMAT_OPTIONS: string[];

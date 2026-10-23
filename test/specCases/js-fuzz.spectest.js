@@ -10,9 +10,9 @@
 const vm = require("vm");
 const acorn = require("acorn");
 const {
-	collectCjsRequireSpecifiers,
-	parse
-} = require("../../lib/javascript/syntax").parser;
+	SourceProcessor,
+	parser: { collectCjsRequireSpecifiers, parse }
+} = require("../../lib/javascript/syntax");
 const { decodeMappings } = require("../../lib/util/createMappings");
 const { firstDifference } = require("../../tooling/compare-js-tools");
 const {
@@ -790,6 +790,22 @@ const checkProgram = async (
 			}
 			if (fromTerser !== code) {
 				return `minify ${label}: the SyntaxTree printer writes otherwise than terser's tree\n\toutput: ${code}\n\tterser's tree: ${fromTerser}`;
+			}
+		}
+		// The SourceProcessor's printer writes what `minify` prints, comments aside.
+		if (set === PRINT_ONLY) {
+			const uncommented = await write(source, {
+				...options,
+				format: { comments: false }
+			});
+			const processed = /** @type {{ code: string }} */ (
+				new SourceProcessor().process(source, {
+					mode: "minify",
+					sourceType: isModule ? "module" : "script"
+				})
+			).code;
+			if (processed !== uncommented) {
+				return `SourceProcessor: prints otherwise than minify\n\toutput: ${processed}\n\tminify: ${uncommented}`;
 			}
 		}
 		if (seen.has(code) && set !== DEFAULTS && set !== STRONGEST) continue;

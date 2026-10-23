@@ -12434,6 +12434,7 @@ describe("syntax-printer", () => {
 const { analyzeMinifierTree } = require("../../../lib/javascript/ScopeAnalyzer");
 const {
 	Field,
+	NodeType,
 	SyntaxTree,
 	WebpackParser
 } = require("../../../lib/javascript/syntax-parser");
@@ -12478,6 +12479,84 @@ const SOURCES = [
 	";// START\nf();\n;// END\n\n;/*! kept */\ng();",
 	"f(\n/*! a\n b */\n/* dropped */ (m) => 1);"
 ];
+
+// Sources reaching what the SourceProcessor's printer reads off a node's
+// place, which its own text cannot tell it.
+const PRINTED_SOURCES = [
+	// Parentheses a place asks for, by what holds the node.
+	"(a, b) + c; -(a + b); (a + b).c; (a + b)(); a ?? (b && c); (a || b) ?? c; a - (b - c); (a ** b) ** c; a ** b ** c; a * (b + c); (a = b) + c;",
+	"(a = b).c; -(a = b); (a = b) ? c : d; ({ a } = b); f(a, [b] = c); f([b] = c); a + (b = c); (a ? b : c).d; (a ? b : c) ? d : e; a = b ? c : d;",
+	"(-a).b; (-a)(); (-a) ** b; (++a) ** b; (a++) ** b; typeof (a ** b); - -a; + +a; - --a; + ++a; a - -b; a + +b; a < !--b; x = !--a; a-- > b; a-- >> b; a-- >= b;",
+	"(a?.b).c; (a?.b)(); a?.b.c; a?.(); a?.b(); new (a.b()); new (a().b); new a.b(); new (a()); (new A).b; (new A)(); (new A)`x`; new A`x`; new (a`x`);",
+	"1..x; 0.5.x; 0..x; 1e3.x; 0x10.x; 0b1.x; 0o7.x; 07.x; 1e999; -1e999; x = 1e999.y; ({ [1e999]: 1, a: 1e999 });",
+	"1 in a; 1.5 in a; .5 in a; /x/ in a; /x/ instanceof a; a in b; a instanceof b; 1 instanceof a;",
+	"!/a/ in obj; a + /x/ in b; typeof /x/ instanceof y; x = !1. in a; x = -1. in a; (a, /x/) in b; a ? b : /c/ in d; (/x/) in b; f(/x/) in b; x = 1. + 2. in a;",
+	"a < /script/.test(b); a < /x/; f(/a/, /script/);",
+	"(a ? b : c)`x`; (a, b)`x`; (-a)`x`; (() => 1)`x`; (function () {})`x`; ({}).a`x`; ({}.a)`x`; a.b`x`; a[b]`x`; (a + b)`x`; (a = b)`x`; (new A())`x`; a()`x`;",
+	"({}).a; ({}.a); (function () {}).call(); (function () {})`x`; (class {}).a; ({}) + 1; ({}).a++; ({})?.a; ({}) ? 1 : 2; ({}), 1; (function () {}) + 1; (function () {}()).a = 1; ({}).a = 1;",
+	"() => ({}).a; () => ({}, 1); () => ({})(); () => ({})`x`; () => ({})?.a; () => ({}) ? 1 : 2; () => ({}).a++; () => ({}) + 1; () => ({}); () => {}; () => { a }; () => { return a }; () => { return }; (a) => { b; return a };",
+	"(() => a).b; (() => a)(); (() => a) || b; a || (() => b); -(() => a); !(() => a); (() => a) ? b : c; a + (() => b); f(() => a); a = () => b; a ? () => b : () => c;",
+	"(a, b) ? c : d; f((a, b)); [(a, b)]; ({ a: (a, b) }); a[(b, c)]; (a, b).c; void (a, b); x = (1, 2); var v = (1, 2); for (a, b; c, d; e, f); for (x of (a, b)); for (x in a, b); (a, b);",
+	"var a = (b in c); for (var a = (b in c); ;); for ((a in b); ;); for (a = (b in c) ? 1 : 2; ;); for (var a = () => (b in c); ;); for (var a = function () { return b in c }; ;); for (var x = [b in c]; ;);",
+	"if (a) b; else c; if (a) { if (b) c } else d; if (a) for (;;) if (b) c; else d; if (a) while (b) if (c) d; else e; else f; if (a) label: if (b) c; else d; if (a) do b; while (c); else d; if (a) b; else if (c) d; else e; if (a) if (b) c; else d; if (a) ; else ;",
+	"for (;;) ; while (a) ; for (x in y) ; for (x of y) ; a: ; b: { break b } c: for (;;) continue c; switch (a) {} switch (a) { case 1: case 2: b(); break; default: }",
+	"try { a } catch { b } try { a } catch (e) { b } finally { c } try { a } finally { b } try {} catch ({ a, 'b': c }) {} debugger; throw a; function f() { return; }",
+	"for (var a in b); for (let [a] of b); for (const { a } of b); for (var i = 0, j = 1; i < j; i++, j--); for (let i = 0;;); for (x.y in z); for ([a, b] of c);",
+	"var { 'a': b } = c; ({ 'a': b } = c); function f({ 'a': b }) {} var [{ 'a': b }] = c; var { x: { 'a': b } } = c; var { 'a': b = 1 } = c; function g([{ 'a': b }] = []) {} for (var { 'a': b } of c); (function ({ 'a': b }) {}); ({ 'a': b }) => b; var { ...rest } = c; f = (a = { 'b': c }) => a;",
+	"({ a = 1 } = b); var { a = 1 } = b; ({ a: b = 1 } = c); ({ 'a': a = 1 } = c); ({ a: a = 1 } = b); ({ a: a } = b); ({ a: c } = b); var { a: a } = b;",
+	"x = { a: a, if: if_, b: if_, Infinity: 1e999, c: 1e999, async: async, get: get, set: set, static: s }; x = { get() {}, set(v) {}, async() {}, *gen() {}, async *ag() {}, get [k]() {}, set [k](v) {}, async [k]() {}, 'q'() {}, 1() {}, [k]: 1 };",
+	"x = { __proto__ }; x = { __proto__: __proto__ }; x = { '__proto__': a }; x = { __proto__: a }; x = { ['__proto__']: a }; ({ __proto__ } = a); ({ __proto__: b } = a); x = { __proto__() {} }; x = { get __proto__() {} };",
+	"class A extends (a, b) {} class B extends (a ? b : c) {} class C extends B.c {} class D extends class {} {} class E extends function () {} {} class F {} class G extends (a = b) {} class H extends a() {} class I extends (-a) {}",
+	"class A extends B { [function () {}]() {} static [function () {}]() {} #m() {} static #x = 1; get #y() {} set #y(v) {} static async *[k]() {} a = 1; static b; [k] = 1; 'x' = 1; #p = 1; static { a } static() {} get() {} set() {} async() {} m() { super.x(); this.#x; this?.#x; #x in this } constructor() { super() } }",
+	"x = class {}; x = class A extends B {}; x = (class {}).name; export default class A {}",
+	"export default class {}",
+	"function* g() { yield; yield a; yield* b; x = yield c; (yield d) + 1; (yield a).b; (yield a)(); (yield a) ? b : c; -(yield a); yield (a, b); yield yield a; a = yield; f(yield a); `${yield}`; (yield)`x`; }",
+	"async function f() { await a; await (a ? b : c); await (a, b); await a.b; await f(); await -a; await 1; await await a; await {}; await (() => 1); await new A(); await this; await (a + b); await `x`; (await a).b; (await a)(); (await a) ** b; -await a; (await a)`x`; await a?.b; await (a = b); await import('x'); }",
+	"async () => { for await (const a of b); }; async x => x; async (a, b) => a; (async) => 1; async; async(); async(a); x = async function () {}; x = async function* () {};",
+	"import a, * as b from 'c'; import {} from 'a'; import { d as d } from 'b'; import { 'e' as e } from 'b'; import { 'a b' as f } from 'd'; export {}; export { a as default }; export { 'a b' as g } from 'd'; export * as 'a b' from 'c'; export { a as 'a' }; export { b as 'h' }; export * from 'x' with { type: 'json' }; export { y } from 'z' with { type: 'json' }; import j from 'k' with { __proto__: 'x' };",
+	"export default (a, b); export const x = (a, b), y = 1; export function f() {} export class C {} export let z;",
+	"export default a = b;",
+	"export default 1 + 2;",
+	"export default (function () {})();",
+	"export default ({}).a;",
+	"export default (class {}).a;",
+	"export default function* g() {}",
+	"export default async function h() {}",
+	"export default async () => {};",
+	"export default (function () {}).call(this);",
+	"export default (function () {});",
+	"export default (class {});",
+	"export default ({ a: 1 });",
+	"label: function f() {} if (a) function g() {} a: b: c: ;",
+	"var re = /[/]\\//g, s = /x/dgimsuy, v = /[a]/v; t = `a${b}c` + `\\${x}` + `\\u{41}` + String.raw`\\n${x}\\t`; u = `line\nbreak`; tag`\\unicode`;",
+	"x = null; y = true; z = false; w = 1_000n; v = 0b1n; q = \"a'b\" + 'a\"b' + '\\'\"' + '\\u2028\\u2029\\ufeff\\0\\x001' + '\\b\\f\\v\\t\\r\\n' + '\\\\';",
+	"a.if; a['if']; a.𐊧; a?.𐊧; a.ゟ; a['b']; a[0]; a?.[0]; this.x; function n() { new.target } import.meta; a.b.c.d;",
+	"x = [,]; y = [a, , ]; z = [, a]; w = [a, b,]; v = [...a, ...b]; f(...a); ({ ...a, b }); [] ; ({});",
+	"'use strict'; ('x'); y;",
+	"('x'); 'use strict'; y;",
+	"function f() { ('x') } function g() { 'use strict'; ('y'); 'z' } x = { m() { 'use strict'; ('a') } }; class K { m() { ('b') } }; () => { 'not a directive' };",
+	"'use asm'; x = 1.50 + 0x10 + `a\nb`; function f() { 'use asm'; return 1.50 } function g() { return 1.50 }",
+	"function f() { 'use asm'; return 1.50 } y = 1.50;",
+	"function f() { var x = 1.50; 'use asm'; }",
+	"#!/usr/bin/env node\r\n'use strict';",
+	"#!/usr/bin/env node",
+	"(let)[0] = 1; for ((let).x of y); for ((async) of x); for (let.x in y); (let[0]); let = 1; for ((let)[0] in y); for ((let)[0];;); let.a; (let)?.[0]; async.x; for ((async).x of y);",
+	"with (o) { a } with (o) b; with (o) if (a) b; else c;",
+	"class P { #x; m(o) { #x in (a = b); #x in (a ? b : c); #x in (a, b); #x in (() => 1); (#x in o) + 1; !(#x in o); (#x in o).y; (#x in o)(); a < (#x in o); (#x in o) < a; (#x in o) || a; a in (#x in o); (#x in o) in a; (#x in o) ** 2; #x in (#x in o); #x in a + b; #x in (a in b); #x in (a || b); (#x in o) ? 1 : 2; (#x in o)`t`; } *g() { #x in (yield); } }",
+	"import async from 'x'; import { let as l } from 'y'; new (a[function () { b() }]); new (a[() => b()]); new (a[b()]); x = function () {}.y; do ; while (a); { ('x') } switch (a) { case 1: ('y') } 1. in a; .5 in a;",
+	"import a from 'b' with { type: 'json', other: 'x' }; export { c } from 'd' with { type: 'json', other: 'y' };",
+	"x = { 'a': a, 'b': b = 1, c: c, 'd e': d };",
+	"do { a } while (b); switch (a) { case 1: ; } (a ?? b) || c; a && (b ?? c); (a ?? b) && c;"
+];
+// Sources the printer reads `use asm` off for a number where no scope says it.
+PRINTED_SOURCES.push(
+	"'use asm'; f = () => 1.50; class A { x = 1.50; static { y = 1.50 } } g = function () { return 1.50 };"
+);
+// A source spelling its line breaks densely, which ECMAScript 2015 prints
+// in templates: a string, a template and a template's tag apart.
+PRINTED_SOURCES.push(
+	`("r\\ns"); ${'x = "a\\nb";'.repeat(1000)} y = "c\\nd"; z = \`e\\nf\`; t\`g\\nh\`; w = "\\t\\t\\n${"i".repeat(120)}"; import("j\\nk"); u.v = 1; import k from "l\\nm" with { type: "n\\no" }; ({ "p\\nq": 1 }); ("r\\ns"); x = \`\${"t\\nu"}\`;`
+);
 
 // What each source is printed with: the stream's options and a module.
 const OPTION_SETS = {
@@ -12734,6 +12813,136 @@ const MANGLE_SETS = {
 		mangle: { nth_identifier: plainIdentifiers() }
 	})
 };
+
+describe("JavaScript SourceProcessor printing", () => {
+	const { SourceProcessor } = require("../../../lib/javascript/syntax");
+
+	/**
+	 * Prints a source as the SourceProcessor prints it: a module as one, any
+	 * other source as a script where it reads as one, else as a module.
+	 * @param {string} source the source
+	 * @param {boolean | undefined} isModule whether it is a module
+	 * @param {EXPECTED_OBJECT} format the format options
+	 * @returns {string} the printed text
+	 */
+	const printed = (source, isModule, format) => {
+		/**
+		 * @param {"module" | "script"} sourceType what the source is read as
+		 * @returns {string} the printed text
+		 */
+		const print = (sourceType) =>
+			/** @type {{ code: string }} */ (
+				new SourceProcessor().process(source, {
+					mode: "minify",
+					sourceType,
+					format
+				})
+			).code;
+		if (isModule) return print("module");
+		try {
+			return print("script");
+		} catch (_err) {
+			return print("module");
+		}
+	};
+
+	for (const [name, set] of Object.entries({
+		...OPTION_SETS,
+		"quoted keys kept, shorthand on": {
+			format: { ecma: 2020, keep_quoted_props: true }
+		},
+		"keys quoted, shorthand on": { format: { ecma: 2020, quote_keys: true } },
+		"outside an inline script": { format: { inline_script: false } },
+		"a preamble ending a statement": { format: { preamble: "var p;" } },
+		"a module in ECMAScript 2020": {
+			module: true,
+			ecma: 2020
+		}
+	})) {
+		it(`should print what minify prints of a source it neither compresses nor mangles, comments aside, with ${name}`, async () => {
+			const { minify } = await load();
+			// The printer writes no comment or annotation yet.
+			const { preserve_annotations: _annotations, ...given } =
+				/** @type {Record<string, EXPECTED_ANY>} */ (set).format || {};
+			const ecma = /** @type {{ ecma?: number }} */ (set).ecma;
+			const format = {
+				...given,
+				...(ecma === undefined ? {} : { ecma }),
+				comments: false
+			};
+			const isModule = /** @type {{ module?: boolean }} */ (set).module;
+			for (const source of [...SOURCES, ...PRINTED_SOURCES]) {
+				const expected = await minify(source, {
+					module: isModule,
+					compress: false,
+					mangle: false,
+					format: { ...format }
+				}).then(
+					(result) => result.code,
+					(/** @type {Error} */ error) => error
+				);
+				if (expected instanceof Error) {
+					expect(() => printed(source, isModule, { ...format })).toThrow(
+						SyntaxError
+					);
+					continue;
+				}
+				expect(printed(source, isModule, { ...format })).toBe(expected);
+			}
+		});
+	}
+
+	it("should print the whole source while visitors skip and stop", () => {
+		/** @type {string[]} */
+		const seen = [];
+		const result = new SourceProcessor()
+			.use({
+				[NodeType.FunctionDeclaration]: {
+					enter: (path) => {
+						seen.push(`function ${path.name(path.field(0, Field.id))}`);
+						path.skipChildren();
+					}
+				},
+				[NodeType.Identifier]: (path) => {
+					seen.push(path.name());
+					if (path.name() === "stop") path.stop();
+				}
+			})
+			.process(
+				"function f(a) { return a + 1 } g(f); stop(); function h() { b }",
+				{ mode: "minify" }
+			);
+		expect(seen).toEqual(["function f", "g", "f", "stop"]);
+		expect(result).toEqual({
+			code: "function f(a){return a+1}g(f);stop();function h(){b}",
+			map: undefined
+		});
+	});
+
+	it("should print one source after another, and a source anew after a parse error", () => {
+		const processor = new SourceProcessor();
+		expect(processor.process("a ( 1 )", { mode: "minify" }).code).toBe(
+			"a(1);"
+		);
+		expect(() => processor.process("a(", { mode: "minify" })).toThrow(
+			/Unexpected token/
+		);
+		expect(
+			processor.process("let  x = [ 1 , 2 ]", { mode: "minify" }).code
+		).toBe("let x=[1,2];");
+	});
+
+	it("should map the output's start to the source's", () => {
+		const result = new SourceProcessor().process("a ( 1 )", {
+			mode: "minify",
+			source: "in.js"
+		});
+		expect(result.code).toBe("a(1);");
+		expect(result.map).toEqual(
+			expect.objectContaining({ sources: ["in.js"], mappings: "AAAA" })
+		);
+	});
+});
 
 describe("JavaScript minifier mangling a SyntaxTree", () => {
 	for (const [name, set] of Object.entries(MANGLE_SETS)) {
