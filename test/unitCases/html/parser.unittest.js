@@ -1092,6 +1092,16 @@ describe("parseHtml", () => {
 			expect(/** @type {MatText} */ (p.children[1]).data).toBe("3");
 		});
 
+		it("closes the <a> it found for a nested <a>, not the outermost one", () => {
+			// The inner `<a>`s sit below the cell's marker; the outer one stays open
+			// past the table, so the text after it is still inside it.
+			const [outer] = body("<a>1<table><td><a>2<a>3</td></table>4");
+			expect(outer.tagName).toBe("a");
+			expect(
+				/** @type {MatText} */ (outer.children[outer.children.length - 1]).data
+			).toBe("4");
+		});
+
 		it("should reconstruct active formatting elements", () => {
 			const nodes = body("<p>1<b>2</p>3</b>");
 			expect(nodes[0].tagName).toBe("p");

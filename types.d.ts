@@ -13012,7 +13012,7 @@ declare interface HtmlParseOptions {
 	scripting?: boolean;
 
 	/**
-	 * optional callback for each tokenizer parse error, as `HtmlTokenCallbacks#parseError` receives it
+	 * optional callback for each parse error of the tokenizer, as `HtmlTokenCallbacks#parseError` receives it, and of tree construction, named as html5lib names them since WHATWG names only one; those are `"warning"`
 	 */
 	parseError?: (
 		input: string,

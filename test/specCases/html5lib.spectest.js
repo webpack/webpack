@@ -538,7 +538,7 @@ const runTokenizerCase = (input, context) => {
 			attributes = null;
 			lastTagSource = source.slice(start, end);
 			lastTagWasRawText = rawText || rcdata;
-			lastTagEndedInName = end === nameEnd;
+			lastTagEndedInName = end === nameEnd && end === source.length;
 			rawText = false;
 			rcdata = false;
 			return end;
@@ -588,10 +588,10 @@ const runTokenizerCase = (input, context) => {
 	});
 	// A tag interrupted by EOF is reported so a consumer sees how far the source got;
 	// the spec emits no token for it. The exception is EOF inside a raw-text end tag's
-	// name, which hands the characters back — `<xmp>foo</xmp` still renders `foo</xmp`.
+	// name, no parse error, which hands the characters back as `foo</xmp`.
 	const last = tokens[tokens.length - 1];
 	if (
-		eofInTag &&
+		(eofInTag || (lastTagWasRawText && lastTagEndedInName)) &&
 		last !== undefined &&
 		(last[0] === "StartTag" || last[0] === "EndTag")
 	) {

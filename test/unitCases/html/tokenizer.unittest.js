@@ -2932,12 +2932,153 @@ describe("tokenize", () => {
 		it("parseHtml forwards the option", () => {
 			/** @type {[string, string][]} */
 			const errors = [];
-			parseHtmlRefs("<a foo=>", 0, {
+			parseHtmlRefs("<!DOCTYPE html><br foo=><p></x>", 0, {
 				parseError: (input, code, start, end) => {
 					errors.push([code, input.slice(start, end)]);
 				}
 			});
-			expect(errors).toEqual([["missing-attribute-value", ">"]]);
+			expect(errors).toEqual([
+				["missing-attribute-value", ">"],
+				["unexpected-end-tag", "</x>"]
+			]);
+		});
+
+		it.each([
+			["x", undefined, ["expected-doctype-but-got-chars"]],
+			["<p>", undefined, ["expected-doctype-but-got-start-tag"]],
+			["</p>", undefined, ["expected-doctype-but-got-end-tag", "unexpected-end-tag-before-html"]],
+			["", undefined, ["expected-doctype-but-got-eof"]],
+			["<!DOCTYPE html5>", undefined, ["unknown-doctype"]],
+			["<!DOCTYPE html PUBLIC \"x\">", undefined, ["unknown-doctype"]],
+			["<!DOCTYPE html SYSTEM \"x\">", undefined, ["unknown-doctype"]],
+			["<!DOCTYPE html SYSTEM \"about:legacy-compat\">", undefined, []],
+			["<!DOCTYPE html><!DOCTYPE html>", undefined, ["unexpected-doctype"]],
+			["<!DOCTYPE html><html><!DOCTYPE html></x>", undefined, ["unexpected-doctype", "end-tag-after-implied-root"]],
+			["<!DOCTYPE html><head><!DOCTYPE html><head></x>", undefined, ["unexpected-doctype", "two-heads-are-not-better-than-one", "unexpected-end-tag"]],
+			["<!DOCTYPE html><head></template>", undefined, ["unexpected-end-tag"]],
+			["<!DOCTYPE html><head><template><div></template>", undefined, ["end-tag-too-early"]],
+			["<!DOCTYPE html><head><noscript><!DOCTYPE html><head></x>x", undefined, ["unexpected-doctype", "unexpected-start-tag", "unexpected-end-tag", "char-in-head-noscript"]],
+			["<!DOCTYPE html><head><noscript></br>", undefined, ["unexpected-inhead-noscript-tag", "unexpected-end-tag-treated-as"]],
+			["<!DOCTYPE html><head><noscript>", undefined, ["eof-in-head-noscript"]],
+			["<!DOCTYPE html><head></head><!DOCTYPE html><title></title><head></x>", undefined, ["unexpected-doctype", "unexpected-start-tag-out-of-my-head", "unexpected-start-tag", "unexpected-end-tag"]],
+			["<!DOCTYPE html><body><!DOCTYPE html><html><body><frameset>", undefined, ["unexpected-doctype", "non-html-root", "unexpected-start-tag", "unexpected-start-tag"]],
+			["<!DOCTYPE html><h1><h2>", undefined, ["unexpected-start-tag", "expected-closing-tag-but-got-eof"]],
+			["<!DOCTYPE html><form><form>", undefined, ["unexpected-start-tag", "expected-closing-tag-but-got-eof"]],
+			["<!DOCTYPE html><li><b><li>", undefined, ["end-tag-too-early"]],
+			["<!DOCTYPE html><dd><b><dt>", undefined, ["end-tag-too-early"]],
+			["<!DOCTYPE html><button><button>", undefined, ["unexpected-start-tag-implies-end-tag", "expected-closing-tag-but-got-eof"]],
+			["<!DOCTYPE html><a><a>", undefined, ["unexpected-start-tag-implies-end-tag", "expected-closing-tag-but-got-eof"]],
+			["<!DOCTYPE html><nobr><nobr>", undefined, ["unexpected-start-tag-implies-end-tag", "expected-closing-tag-but-got-eof"]],
+			["<!DOCTYPE html><select><input>", undefined, ["unexpected-input-in-select"]],
+			["<!DOCTYPE html><select><option><b><hr>", undefined, ["unexpected-start-tag", "expected-closing-tag-but-got-eof"]],
+			["<!DOCTYPE html><select><option><b><option>", undefined, ["unexpected-start-tag-implies-end-tag", "expected-closing-tag-but-got-eof"]],
+			["<!DOCTYPE html><image>", undefined, ["unexpected-start-tag-treated-as"]],
+			["<!DOCTYPE html><select><select>", undefined, ["unexpected-select-in-select"]],
+			["<!DOCTYPE html><ruby><b><rb><span><rt>", undefined, ["unexpected-start-tag", "unexpected-start-tag", "expected-closing-tag-but-got-eof"]],
+			["<!DOCTYPE html><caption><col><frame><head><tbody>", undefined, ["unexpected-start-tag-ignored", "unexpected-start-tag-ignored", "unexpected-start-tag-ignored", "unexpected-start-tag-ignored", "unexpected-start-tag-ignored"]],
+			["<!DOCTYPE html><div>\u0000x", undefined, ["unexpected-null-character", "invalid-codepoint", "expected-closing-tag-but-got-eof"]],
+			["<!DOCTYPE html><p><li><dd>", undefined, []],
+			["<!DOCTYPE html></select><select><b></select>", undefined, ["unexpected-end-tag-before-html", "end-tag-too-early"]],
+			["<!DOCTYPE html></body><b></body>", undefined, ["unexpected-start-tag-after-body", "expected-one-end-tag-but-got-another"]],
+			["<!DOCTYPE html></div><div><b></div>", undefined, ["unexpected-end-tag-before-html", "end-tag-too-early"]],
+			["<!DOCTYPE html></form><form><b></form>", undefined, ["unexpected-end-tag-before-html", "end-tag-too-early-ignored", "expected-closing-tag-but-got-eof"]],
+			["<!DOCTYPE html><template></form><form><b></form></template>", undefined, ["unexpected-end-tag", "end-tag-too-early-ignored"]],
+			["<!DOCTYPE html></p><p><b></p>", undefined, ["unexpected-end-tag-before-html", "unexpected-end-tag"]],
+			["<!DOCTYPE html></li><li><b></li>", undefined, ["unexpected-end-tag-before-html", "end-tag-too-early"]],
+			["<!DOCTYPE html></dd><dd><b></dd>", undefined, ["unexpected-end-tag-before-html", "end-tag-too-early"]],
+			["<!DOCTYPE html></h1><h1><b></h2>", undefined, ["unexpected-end-tag-before-html", "end-tag-too-early"]],
+			["<!DOCTYPE html></object><object><b></object>", undefined, ["unexpected-end-tag-before-html", "end-tag-too-early"]],
+			["<!DOCTYPE html></br>", undefined, ["unexpected-end-tag-treated-as"]],
+			["<!DOCTYPE html><b></i></div><span><div></span>", undefined, ["unexpected-end-tag", "unexpected-end-tag", "unexpected-end-tag", "expected-closing-tag-but-got-eof"]],
+			["<!DOCTYPE html><b><div></b>", undefined, ["adoption-agency-1.3", "expected-closing-tag-but-got-eof"]],
+			["<!DOCTYPE html><b><table></b>", undefined, ["unexpected-end-tag-implies-table-voodoo", "adoption-agency-4.4", "expected-closing-tag-but-got-eof"]],
+			["<!DOCTYPE html><a><table><td><a><table></table><a></tr><a></table>", undefined, ["unexpected-cell-in-table-body", "unexpected-start-tag-implies-end-tag", "unexpected-cell-end-tag", "unexpected-start-tag-implies-table-voodoo", "unexpected-start-tag-implies-end-tag", "adoption-agency-4.4"]],
+			["<!DOCTYPE html><script>", undefined, ["expected-named-closing-tag-but-got-eof"]],
+			["<!DOCTYPE html><script></script x", undefined, ["eof-in-tag", "expected-named-closing-tag-but-got-eof"]],
+			["<!DOCTYPE html><script></S", undefined, ["expected-named-closing-tag-but-got-eof"]],
+			["<!DOCTYPE html><script><!--<a", undefined, ["eof-in-script-html-comment-like-text", "expected-named-closing-tag-but-got-eof"]],
+			["<!DOCTYPE html><script><!--</", undefined, ["eof-in-script-html-comment-like-text", "expected-named-closing-tag-but-got-eof"]],
+			["<!DOCTYPE html><script><!--</script", undefined, ["eof-in-script-html-comment-like-text", "expected-named-closing-tag-but-got-eof"]],
+			["</b test", undefined, ["eof-in-tag", "expected-doctype-but-got-eof"]],
+			["<!DOCTYPE html><table><!DOCTYPE html><table></table></table>", undefined, ["unexpected-doctype", "unexpected-start-tag-implies-end-tag", "unexpected-end-tag"]],
+			["<!DOCTYPE html><table><input type=hidden><form><form>", undefined, ["unexpected-hidden-input-in-table", "unexpected-form-in-table", "unexpected-form-in-table", "expected-closing-tag-but-got-eof"]],
+			["<!DOCTYPE html><table><tr><b>x y</b>", undefined, ["unexpected-start-tag-implies-table-voodoo", "unexpected-character-implies-table-voodoo", "unexpected-character-implies-table-voodoo", "unexpected-character-implies-table-voodoo", "unexpected-end-tag-implies-table-voodoo", "expected-closing-tag-but-got-eof"]],
+			["<!DOCTYPE html><table>\u0000 x<tr>", undefined, ["unexpected-null-character", "invalid-codepoint", "unexpected-character-implies-table-voodoo", "unexpected-character-implies-table-voodoo", "expected-closing-tag-but-got-eof"]],
+			["<!DOCTYPE html><table><caption></caption></caption>", undefined, ["unexpected-end-tag", "expected-closing-tag-but-got-eof"]],
+			["<!DOCTYPE html><table><caption><b></caption>", undefined, ["expected-one-end-tag-but-got-another", "expected-closing-tag-but-got-eof"]],
+			["<!DOCTYPE html><template><caption></caption></caption><caption></body><col>",
+				undefined,
+				["unexpected-end-tag", "unexpected-end-tag", "eof-in-template"]
+			],
+			["<col></caption>", "caption", ["unexpected-start-tag", "unexpected-end-tag"]],
+			[
+				"<!DOCTYPE html><p><b></p></b>",
+				undefined,
+				["unexpected-end-tag", "adoption-agency-1.2"]
+			],
+			[
+				"<!DOCTYPE html><div>&amp;\u0000",
+				undefined,
+				[
+					"unexpected-null-character",
+					"invalid-codepoint",
+					"expected-closing-tag-but-got-eof"
+				]
+			],
+			[
+				"<!DOCTYPE html><template><col></x>",
+				undefined,
+				["unexpected-end-tag", "eof-in-template"]
+			],
+			[
+				"<!DOCTYPE html><body></body></x>",
+				undefined,
+				["unexpected-end-tag-after-body", "unexpected-end-tag"]
+			],
+			[
+				"<!DOCTYPE html><body></body>x",
+				undefined,
+				["unexpected-char-after-body"]
+			],
+			["<!DOCTYPE html><table><colgroup><!DOCTYPE html></col>x", undefined, ["unexpected-doctype", "no-end-tag", "unexpected-character-implies-table-voodoo", "expected-closing-tag-but-got-eof"]],
+			["<!DOCTYPE html><template><col> x<b></colgroup>", undefined, ["unexpected-char-in-column-group", "unexpected-start-tag", "unexpected-end-tag", "eof-in-template"]],
+			["<!DOCTYPE html><table><tbody><td></thead></body>", undefined, ["unexpected-cell-in-table-body", "unexpected-end-tag", "unexpected-end-tag", "expected-closing-tag-but-got-eof"]],
+			["<!DOCTYPE html><table><tbody></thead></body>", undefined, ["unexpected-end-tag-in-table-body", "unexpected-end-tag-in-table-body", "expected-closing-tag-but-got-eof"]],
+			["<!DOCTYPE html><template><tr></tr><caption></table></template>", undefined, ["unexpected-start-tag", "unexpected-end-tag"]],
+			["<!DOCTYPE html><template><td></td></tr><caption></table></template>", undefined, ["unexpected-end-tag", "unexpected-start-tag", "unexpected-end-tag"]],
+			["<!DOCTYPE html><table><tr></thead></td>", undefined, ["unexpected-end-tag", "unexpected-end-tag-in-table-row", "expected-closing-tag-but-got-eof"]],
+			["<!DOCTYPE html><table><tr><td><b></td><td></table></td></caption>", undefined, ["unexpected-cell-end-tag", "unexpected-end-tag", "unexpected-end-tag"]],
+			["<!DOCTYPE html><table><tr><td></tr><td><b></tr>", undefined, ["unexpected-cell-in-table-body", "unexpected-cell-end-tag", "expected-closing-tag-but-got-eof"]],
+			["<!DOCTYPE html><template></x>", undefined, ["unexpected-end-tag", "eof-in-template"]],
+			["<!DOCTYPE html><body></body><!DOCTYPE html><b></b>x</html>", undefined, ["unexpected-doctype", "unexpected-start-tag-after-body"]],
+			["<!DOCTYPE html><body></body></html><p></p>x", undefined, ["expected-eof-but-got-start-tag"]],
+			["<!DOCTYPE html><html><body></html>x", undefined, ["expected-eof-but-got-char"]],
+			["<!DOCTYPE html><frameset><!DOCTYPE html>x <b></b></frameset></frameset>", undefined, ["unexpected-doctype", "unexpected-char-in-frameset", "unexpected-start-tag-in-frameset", "unexpected-end-tag-in-frameset", "unexpected-end-tag-after-frameset"]],
+			["<!DOCTYPE html><frameset>", undefined, ["eof-in-frameset"]],
+			["<!DOCTYPE html><frameset></frameset><!DOCTYPE html>x <b>", undefined, ["unexpected-doctype", "unexpected-char-after-frameset", "unexpected-start-tag-after-frameset"]],
+			["<!DOCTYPE html><frameset></frameset></html>x <b></b>", undefined, ["expected-eof-but-got-char", "expected-eof-but-got-start-tag", "expected-eof-but-got-end-tag"]],
+			["<!DOCTYPE html><svg><!DOCTYPE html>\u0000<b></svg><svg></p>", undefined, ["unexpected-doctype", "unexpected-null-character", "invalid-codepoint", "unexpected-html-element-in-foreign-content", "unexpected-end-tag", "unexpected-html-element-in-foreign-content", "unexpected-end-tag", "expected-closing-tag-but-got-eof"]],
+			["<!DOCTYPE html><svg><g></x>",
+				undefined,
+				[
+					"unexpected-end-tag",
+					"unexpected-end-tag",
+					"expected-closing-tag-but-got-eof"
+				]
+			],
+			["<!DOCTYPE html><div/><br/><svg/><math/><svg><g/></svg>", undefined, ["non-void-html-element-start-tag-with-trailing-solidus", "expected-closing-tag-but-got-eof"]],
+			["</frameset>x", "frameset", ["unexpected-frameset-in-frameset-innerhtml", "unexpected-char-in-frameset"]],
+			["<body></body></html>", "html", ["unexpected-end-tag-after-body-innerhtml"]],
+		])("parseHtml reports the tree's errors in %j", (source, fragmentContext, codes) => {
+			/** @type {string[]} */
+			const reported = [];
+			parseHtmlRefs(/** @type {string} */ (source), 0, {
+				fragmentContext: /** @type {string | undefined} */ (fragmentContext),
+				parseError: (input, code) => {
+					reported.push(code);
+				}
+			});
+			expect(reported).toEqual(codes);
 		});
 
 		it("parseHtml leaves out errors in an XML entity's replacement text", () => {
@@ -3359,10 +3500,10 @@ describe("tokenize — fused state transitions", () => {
 		]);
 	});
 
+	// The spec reads a truncated end tag in raw text as text: no parse error.
 	it("script end-tag name truncated", () => {
 		expect(walk("<script>x</scr")).toEqual([
 			["open", "script", false],
-			["error", "eof-in-tag", 14, 14, "error"],
 			["text", "x"],
 			["close", "scr"]
 		]);
@@ -3371,7 +3512,6 @@ describe("tokenize — fused state transitions", () => {
 	it("rcdata end-tag name truncated", () => {
 		expect(walk("<title>x</tit")).toEqual([
 			["open", "title", false],
-			["error", "eof-in-tag", 13, 13, "error"],
 			["text", "x"],
 			["close", "tit"]
 		]);
@@ -3380,7 +3520,6 @@ describe("tokenize — fused state transitions", () => {
 	it("rawtext end-tag name truncated", () => {
 		expect(walk("<style>x</sty")).toEqual([
 			["open", "style", false],
-			["error", "eof-in-tag", 13, 13, "error"],
 			["text", "x"],
 			["close", "sty"]
 		]);
@@ -3389,7 +3528,7 @@ describe("tokenize — fused state transitions", () => {
 	it("script-escaped end-tag name truncated", () => {
 		expect(walk("<script><!--x</scr")).toEqual([
 			["open", "script", false],
-			["error", "eof-in-tag", 18, 18, "error"],
+			["error", "eof-in-script-html-comment-like-text", 18, 18, "error"],
 			["text", "<!--x"],
 			["close", "scr"]
 		]);
