@@ -9772,6 +9772,17 @@ describe("syntax-printer", () => {
 			}
 		});
 
+		it("should keep an assignment out of a `let` declaration where its value reads a declarator the same `let` declares after it, in its dead zone", async () => {
+			const { minify } = await load();
+			for (const input of [
+				"function f() { let a, b; b = (() => 1)(); for (a = b; a < 3; a++) console.log(a, b); return a; } console.log(f());",
+				"function f() { let b, a; a = b = (() => 1)(); for (; a < 3; a++) console.log(a, b); return a; } console.log(f());"
+			]) {
+				const { code } = await minify(input, { compress: {}, mangle: false });
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			}
+		});
+
 		it("should keep a literal's missing key a built-in's prototype the program writes may hold", async () => {
 			const { minify } = await load();
 			for (const input of [
