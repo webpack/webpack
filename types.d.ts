@@ -17852,6 +17852,12 @@ declare class JavascriptSourceProcessor<
 		 * Stops the walk: no visitor fires after the current one returns.
 		 */
 		stop(): void;
+		/**
+		 * The tree walked, for a reader of many nodes that would rather not go
+		 * through the path for each.
+		 */
+		get tree(): SyntaxTree;
+		ancestor(level: number): number;
 		within(type: number): boolean;
 		type(n?: number): number;
 		range(n?: number): [number, number];
@@ -17907,6 +17913,12 @@ declare class JavascriptSourceProcessor<
 		 * Stops the walk: no visitor fires after the current one returns.
 		 */
 		stop(): void;
+		/**
+		 * The tree walked, for a reader of many nodes that would rather not go
+		 * through the path for each.
+		 */
+		get tree(): SyntaxTree;
+		ancestor(level: number): number;
 		within(type: number): boolean;
 		type(n?: number): number;
 		range(n?: number): [number, number];
@@ -37209,6 +37221,12 @@ declare namespace exports {
 					 * Stops the walk: no visitor fires after the current one returns.
 					 */
 					stop(): void;
+					/**
+					 * The tree walked, for a reader of many nodes that would rather not go
+					 * through the path for each.
+					 */
+					get tree(): SyntaxTree;
+					ancestor(level: number): number;
 					within(type: number): boolean;
 					type(n?: number): number;
 					range(n?: number): [number, number];
@@ -37261,6 +37279,12 @@ declare namespace exports {
 						 * Stops the walk: no visitor fires after the current one returns.
 						 */
 						stop(): void;
+						/**
+						 * The tree walked, for a reader of many nodes that would rather not go
+						 * through the path for each.
+						 */
+						get tree(): SyntaxTree;
+						ancestor(level: number): number;
 						within(type: number): boolean;
 						type(n?: number): number;
 						range(n?: number): [number, number];
@@ -37314,6 +37338,12 @@ declare namespace exports {
 									 * Stops the walk: no visitor fires after the current one returns.
 									 */
 									stop(): void;
+									/**
+									 * The tree walked, for a reader of many nodes that would rather not go
+									 * through the path for each.
+									 */
+									get tree(): SyntaxTree;
+									ancestor(level: number): number;
 									within(type: number): boolean;
 									type(n?: number): number;
 									range(n?: number): [number, number];
@@ -37393,6 +37423,12 @@ declare namespace exports {
 						 * Stops the walk: no visitor fires after the current one returns.
 						 */
 						stop(): void;
+						/**
+						 * The tree walked, for a reader of many nodes that would rather not go
+						 * through the path for each.
+						 */
+						get tree(): SyntaxTree;
+						ancestor(level: number): number;
 						within(type: number): boolean;
 						type(n?: number): number;
 						range(n?: number): [number, number];
@@ -37444,6 +37480,12 @@ declare namespace exports {
 							 * Stops the walk: no visitor fires after the current one returns.
 							 */
 							stop(): void;
+							/**
+							 * The tree walked, for a reader of many nodes that would rather not go
+							 * through the path for each.
+							 */
+							get tree(): SyntaxTree;
+							ancestor(level: number): number;
 							within(type: number): boolean;
 							type(n?: number): number;
 							range(n?: number): [number, number];

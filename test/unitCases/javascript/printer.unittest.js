@@ -12722,6 +12722,7 @@ describe("JavaScript SourceProcessor printing", () => {
 		},
 		"keys quoted, shorthand on": { format: { ecma: 2020, quote_keys: true } },
 		"outside an inline script": { format: { inline_script: false } },
+		"a preamble ending a statement": { format: { preamble: "var p;" } },
 		"a module in ECMAScript 2020": {
 			module: true,
 			ecma: 2020
@@ -12729,12 +12730,9 @@ describe("JavaScript SourceProcessor printing", () => {
 	})) {
 		it(`should print what minify prints of a source it neither compresses nor mangles, comments aside, with ${name}`, async () => {
 			const { minify } = await load();
-			// The printer writes no comment, annotation or preamble yet.
-			const {
-				preamble: _preamble,
-				preserve_annotations: _annotations,
-				...given
-			} = /** @type {Record<string, EXPECTED_ANY>} */ (set).format || {};
+			// The printer writes no comment or annotation yet.
+			const { preserve_annotations: _annotations, ...given } =
+				/** @type {Record<string, EXPECTED_ANY>} */ (set).format || {};
 			const ecma = /** @type {{ ecma?: number }} */ (set).ecma;
 			const format = {
 				...given,
