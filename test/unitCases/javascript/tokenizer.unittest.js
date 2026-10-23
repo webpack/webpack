@@ -115,6 +115,14 @@ describe("WebpackParser", () => {
 			expect(() => parse("x = /=")).toThrow(
 				/Unterminated regular expression \(1:5\)/
 			);
+			// a lone `/` there is re-read the same way, which acorn does too
+			for (const source of sources.map((code) => code.replace("/=a/", "/a/"))) {
+				for (const options of [{}, { locations: true }]) {
+					expect(JSON.stringify(parse(source, options).ast)).toContain(
+						'"pattern":"a"'
+					);
+				}
+			}
 		});
 
 		it("should re-allow an expression after `of` and generator `yield`", () => {
