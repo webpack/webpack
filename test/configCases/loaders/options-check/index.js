@@ -1,7 +1,8 @@
 it("should not validate options against the schema when the check passes", () => {
 	expect(require("./a")).toEqual({
 		options: { name: "valid" },
-		checked: [{ name: "valid" }]
+		checked: [{ name: "valid" }],
+		schemaRead: false
 	});
 });
 
@@ -12,13 +13,15 @@ it("should validate options against the schema when the check fails", () => {
 it("should trust a check that passes", () => {
 	expect(require("./c")).toEqual({
 		options: { name: 42 },
-		checked: [{ name: 42 }]
+		checked: [{ name: 42 }],
+		schemaRead: false
 	});
 });
 
 it("should fall back to the schema when a stale check rejects valid options", () => {
 	expect(require("./d")).toEqual({
 		options: { name: "valid" },
-		checked: [{ name: "valid" }]
+		checked: [{ name: "valid" }],
+		schemaRead: true
 	});
 });

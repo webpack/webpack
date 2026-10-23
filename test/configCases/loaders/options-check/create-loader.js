@@ -10,10 +10,20 @@ module.exports = (check) =>
 	function loader() {
 		/** @type {EXPECTED_ANY[]} */
 		const checked = [];
-		const options = this.getOptions(schema, (value) => {
-			checked.push(value);
-			return check(value);
-		});
+		// Validating reads the schema, so no read means `schema-utils` never ran
+		let schemaRead = false;
+		const options = this.getOptions(
+			new Proxy(schema, {
+				get(target, key) {
+					schemaRead = true;
+					return Reflect.get(target, key);
+				}
+			}),
+			(value) => {
+				checked.push(value);
+				return check(value);
+			}
+		);
 
-		return `module.exports = ${JSON.stringify({ options, checked })}`;
+		return `module.exports = ${JSON.stringify({ options, checked, schemaRead })}`;
 	};
