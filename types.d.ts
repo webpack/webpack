@@ -3906,6 +3906,13 @@ declare class Compilation {
 		embeddedSourceHash: SyncHook<[Module, Hash]>;
 		fullHash: SyncHook<[Hash]>;
 		chunkHash: SyncHook<[Chunk, Hash, ChunkHashContext]>;
+		/**
+		 * Called once per chunk, after chunk ids are assigned, to add the chunks whose
+		 * hashes its output reads, e.g. because it names their files. `createHash`
+		 * hashes those first and their hashes go into this chunk's JavaScript hashes.
+		 * @since 5.113.0
+		 */
+		chunkHashDependencies: SyncHook<[Chunk, Set<Chunk>]>;
 		moduleAsset: SyncHook<[Module, string]>;
 		chunkAsset: SyncHook<[Chunk, string]>;
 		assetPath: SyncWaterfallHook<
@@ -4312,6 +4319,12 @@ declare class Compilation {
 	sortItemsWithChunkIds(): void;
 	summarizeDependencies(): void;
 	createModuleHashes(): void;
+
+	/**
+	 * Returns the chunks whose hashes the output of a chunk reads, as declared through
+	 * `hooks.chunkHashDependencies`; `createHash` hashes them before it.
+	 */
+	getChunkHashDependencies(chunk: Chunk): ReadonlySet<Chunk>;
 	createHash(): CodeGenerationJob[];
 	fullHash?: string;
 	hash?: string;
