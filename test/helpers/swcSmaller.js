@@ -14,6 +14,7 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/11084/input.js",
 			"swc minifier: fixture/issues/11368/input.js",
 			"swc minifier: fixture/issues/11684/identifier-aliases/input.js",
+			"swc minifier: fixture/issues/11684/scopes-and-mutations/input.js",
 			"swc minifier: fixture/issues/12187/input.js",
 			"swc minifier: fixture/issues/12188/input.js",
 			"swc minifier: fixture/issues/12282/call/input.js",
@@ -51,6 +52,7 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: full/size/54531ba076299b43c00a0d234240369f93371a41/input.js",
 			"swc minifier: pass-1/4/input.js",
 			"swc minifier: pass-1/5/input.js",
+			"swc minifier: pass-default/math-constant-folding/1/input.js",
 			"terser compress: comparing/issue_2857_2",
 			"terser compress: comparing/issue_2857_3",
 			"terser compress: conditionals/cond_9",
@@ -138,6 +140,9 @@ const SWC_SMALLER_BY_REASON = [
 	[
 		"swc runs a transform the case's own options leave off (`evaluate`, `side_effects`, `unused`, `inline` levels, or any when the case sets none), so the gap is the options, not a missing transform",
 		[
+			"swc minifier: fixture/issues/11512-exhaustive/iife-anon-arg-unused/input.js",
+			"swc minifier: fixture/issues/11512-exhaustive/iife-anon-default-unused/input.js",
+			"swc minifier: fixture/issues/11684/identifier-reduce-vars-only/input.js",
 			"swc minifier: fixture/issues/4234/input.js",
 			"terser compress: array-constructor/array_constructor",
 			"terser compress: collapse_vars/collapse_vars_repeated",
@@ -384,15 +389,9 @@ const SWC_SMALLER_BY_REASON = [
 	[
 		"swc evaluates a built-in called on literals at build time (`toFixed`, `Object.keys`, `[…].join`, `String.fromCharCode`, `Math.*`, string methods), which terser leaves to run time",
 		[
-			"swc minifier: fixture/issues/12213/distinct/input.js",
-			"swc minifier: fixture/issues/12213/duplicate/input.js",
-			"swc minifier: fixture/issues/12213/numeric-order/input.js",
-			"swc minifier: fixture/issues/12214/input.js",
-			"swc minifier: fixture/issues/12224/input.js",
 			"swc minifier: fixture/next/swc-4559/input.js",
 			"swc minifier: pass-1/compute/1/input.js",
 			"swc minifier: pass-default/compute/1/input.js",
-			"swc minifier: pass-default/math-constant-folding/1/input.js",
 			"terser compress: evaluate/issue_2207_1",
 			"terser compress: issue-597/NaN_and_Infinity_must_have_parens_evaluate",
 			"terser compress: issue-597/beautify_off_1",
@@ -451,15 +450,6 @@ const SWC_SMALLER_BY_REASON = [
 	[
 		"swc drops call and `new` arguments past the parameters of a callee it can see, and an unused parameter whose default is pure",
 		[
-			"swc minifier: fixture/issues/11512-exhaustive/iife-anon-arg-unused/input.js",
-			"swc minifier: fixture/issues/11512-exhaustive/iife-anon-default-unused/input.js",
-			"swc minifier: fixture/issues/11645/control-known-arity-drop/input.js",
-			"swc minifier: fixture/issues/11684/class-expression/input.js",
-			"swc minifier: fixture/issues/11684/constructor-scopes/input.js",
-			"swc minifier: fixture/issues/11684/identifier-reduce-vars-only/input.js",
-			"swc minifier: fixture/issues/11684/identifier-unused-only/input.js",
-			"swc minifier: fixture/issues/12212/safe-unused-rest/input.js",
-			"swc minifier: fixture/issues/12218/leading-argument/input.js",
 			"terser compress: collapse_vars/issue_2436_12",
 			"terser compress: export/issue_2131"
 		]
@@ -529,7 +519,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/12186/nested-bitwise/input.js",
 			"swc minifier: fixture/issues/12186/signed-shift/input.js",
 			"swc minifier: fixture/issues/12307/input.js",
-			"swc minifier: fixture/issues/array-constructor-length/input.js",
 			"terser compress: collapse_vars/collapse_vars_properties",
 			"terser compress: pure_funcs/assign"
 		]
