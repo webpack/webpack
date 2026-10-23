@@ -4991,7 +4991,7 @@ describe("WebpackParser writing a SyntaxTree", () => {
 		toEstreeObject
 	} = require("../../../lib/javascript/syntax-parser");
 
-	/** @type {ParserOptions} */
+	/** @type {import("../../../lib/javascript/syntax-parser").ParserOptions} */
 	const options = {
 		ecmaVersion: "latest",
 		sourceType: "module",
