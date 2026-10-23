@@ -34,6 +34,11 @@ module.exports = {
 				test: /f\.js$/,
 				loader: "./lazy-loader",
 				options: { name: 42 }
+			},
+			{
+				test: /g\.js$/,
+				loader: "./named-loader",
+				options: { name: 42 }
 			}
 		]
 	}

@@ -12007,7 +12007,8 @@ declare interface GetOptionsMethod<OptionsType> {
 			| (JSONSchema6 & ExtendedSchema)
 			| (JSONSchema7 & ExtendedSchema)
 			| (() => Parameters<typeof validateFunction>[0]),
-		check?: PrecompiledCheck
+		check?: PrecompiledCheck,
+		configuration?: ValidationErrorConfiguration
 	): OptionsType;
 }
 
@@ -23431,7 +23432,8 @@ declare interface NormalModuleLoaderContext<OptionsType> {
 	 * Extracts and parses the options of the current loader.
 	 * Parses string options as JSON or a query string. Validates them against the schema when one is given, or a function
 	 * returning it, and a check precompiled from it with `schema-utils precompile` validates valid options without reading
-	 * or compiling the schema. A schema titled `"<name> <baseDataPath>"` names the loader in the errors.
+	 * or compiling the schema. The errors name the loader by the configuration when one is given, else by a schema titled
+	 * `"<name> <baseDataPath>"`, as `compiler.validate` does.
 	 */
 	getOptions: GetOptionsMethod<OptionsType>;
 
