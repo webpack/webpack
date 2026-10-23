@@ -465,25 +465,30 @@ const EMBEDDED_OPTIONS = {
 	renderEmbeddedSource: builtinEmbeddedRenderer()
 };
 
+/** @typedef {import("../lib/html/builtinEmbeddedRenderer").BuiltinEmbeddedRendererOptions} CssOptions */
+
 // `embedded` minifies a `<style>` with no target named, so no lowering inside a
 // document ever runs. This names one they all run for.
+/** @type {CssOptions} */
+const LEGACY_CSS_OPTIONS = {
+	environment: { browsers: ["chrome 100", "firefox 100", "safari 15.4"] }
+};
+
 /** @type {HtmlPrintOptions} */
 const EMBEDDED_LEGACY_OPTIONS = {
 	...AGGRESSIVE_OPTIONS,
-	renderEmbeddedSource: builtinEmbeddedRenderer({
-		environment: { browsers: ["chrome 100", "firefox 100", "safari 15.4"] }
-	})
+	renderEmbeddedSource: builtinEmbeddedRenderer(LEGACY_CSS_OPTIONS)
 };
 
-// The option sets the invariants are held over. The first two are the ones the
-// comparison's own webpack rows are measured with; the last two are what a
-// build runs, where a `<style>` and every `style=""` reach the CSS minifier.
-/** @type {[string, HtmlPrintOptions][]} */
+// The option sets the invariants are held over: the two the comparison's own
+// webpack rows run, then the two a build runs, where a `<style>` and `style=""`
+// reach the CSS minifier. Each names its CSS options, which `meaning` reads.
+/** @type {[string, HtmlPrintOptions, CssOptions][]} */
 const PRESETS = [
-	["default", DEFAULT_OPTIONS],
-	["aggressive", AGGRESSIVE_OPTIONS],
-	["embedded", EMBEDDED_OPTIONS],
-	["embedded+legacy", EMBEDDED_LEGACY_OPTIONS]
+	["default", DEFAULT_OPTIONS, {}],
+	["aggressive", AGGRESSIVE_OPTIONS, {}],
+	["embedded", EMBEDDED_OPTIONS, {}],
+	["embedded+legacy", EMBEDDED_LEGACY_OPTIONS, LEGACY_CSS_OPTIONS]
 ];
 
 // Each entry builds its callable on demand, so the measuring worker loads only
@@ -788,16 +793,17 @@ const VERBATIM_TEXT = new Set(["pre", "textarea", "script", "style"]);
  * To a fixed point: one pass is not idempotent, so canonicalizing an authored
  * sheet and an already-minified one once lands them on different spellings.
  * @param {string} css a `<style>` body
+ * @param {CssOptions=} options the CSS minifier's options, a target among them
  * @returns {string} its canonical form
  */
-const canonicalCss = (css) => {
+const canonicalCss = (css, options = {}) => {
 	try {
 		const { SourceProcessor } = require("../lib/css/syntax");
 
 		const processor = new SourceProcessor();
 		let out = css;
 		for (let i = 0; i < 3; i++) {
-			const next = processor.process(out, { mode: "minify" }).code;
+			const next = processor.process(out, { ...options, mode: "minify" }).code;
 			if (next === out) break;
 			out = next;
 		}
@@ -889,6 +895,86 @@ const fingerprint = (parse5, html) => {
 			)
 			.join(" ")
 	};
+};
+
+/**
+ * What a document says, read by webpack's own parser: the words of its text and
+ * each `<style>` sheet in its canonical CSS form, plus, where `tree` is set, every
+ * element with its namespace and attribute names, in order. Attribute values,
+ * whitespace, comments and `<script>` bodies are left out, as the printer and its
+ * renderers respell those by contract (`type=IMAGE` → `image`, a `srcset`'s spaces).
+ * @param {string} html a document
+ * @param {boolean} tree whether the element tree is read too
+ * @param {CssOptions} cssOptions the options the sheets are minified with
+ * @returns {{ said: string[], sheets: string[] }} what it says, and each non-empty sheet
+ */
+const htmlMeaning = (html, tree, cssOptions) => {
+	/** @type {string[]} */
+	const said = [];
+	/** @type {string[]} */
+	const sheets = [];
+	/** @type {string[]} */
+	const open = [];
+	/** @type {Record<number, { enter: (nodePath: EXPECTED_ANY) => void, exit: (nodePath: EXPECTED_ANY) => void }>} */
+	const visitors = {
+		[NodeType.Element]: {
+			enter: (nodePath) => {
+				open.push(nodePath.name());
+				if (!tree) return;
+				/** @type {string[]} */
+				const names = [];
+				const count = nodePath.fieldCount(Field.attributes);
+				for (let index = 0; index < count; index++) {
+					names.push(nodePath.name(nodePath.field(index, Field.attributes)));
+				}
+				said.push(
+					`<${_namespaceOf(nodePath.node)}:${nodePath.name()} ${names.sort().join(" ")}>`
+				);
+			},
+			exit: (nodePath) => {
+				open.pop();
+				if (tree) said.push(`</${nodePath.name()}>`);
+			}
+		},
+		[NodeType.Text]: {
+			enter: (nodePath) => {
+				const parent = open[open.length - 1];
+				if (parent === "script") return;
+				const text = nodePath.value();
+				if (parent === "style") {
+					const css = canonicalCss(text, cssOptions);
+					if (css !== "") sheets.push(css);
+					return;
+				}
+				const words = text.replace(/\s+/g, " ").trim();
+				if (words !== "") said.push(...words.split(" "));
+			},
+			exit: () => {}
+		}
+	};
+	new SourceProcessor().use(visitors).process(html, {});
+	return { said, sheets };
+};
+
+/**
+ * Whether the output's sheets say what the source's do, in order. An output
+ * sheet may stand for several consecutive source sheets merged into one, and is
+ * matched against them joined only then, so an open value can't swallow a sheet.
+ * @param {string[]} source the source's canonical sheets
+ * @param {string[]} output the output's canonical sheets
+ * @param {CssOptions} cssOptions the options the sheets are minified with
+ * @returns {boolean} true when every source sheet is accounted for
+ */
+const sameSheets = (source, output, cssOptions) => {
+	let at = 0;
+	for (const sheet of output) {
+		let joined = "";
+		do {
+			if (at === source.length) return false;
+			joined += source[at++];
+		} while (canonicalCss(joined, cssOptions) !== sheet);
+	}
+	return at === source.length;
 };
 
 /**
@@ -1695,9 +1781,11 @@ const HTML_CUTS = [
  * Every invariant this document breaks under one preset.
  * @param {(html: string) => string} minify the printer under test
  * @param {string} html the document
+ * @param {HtmlPrintOptions} options the preset's printer options
+ * @param {CssOptions} cssOptions the preset's CSS options
  * @returns {import("./compare-tools-harness").Report[]} what moved, and the smallest repro found for each
  */
-const sweepDocument = (minify, html) => {
+const sweepDocument = (minify, html, options, cssOptions) => {
 	const { printed, reports } = wantedRelation("idempotence")
 		? idempotence({
 				minify,
@@ -1707,7 +1795,34 @@ const sweepDocument = (minify, html) => {
 			})
 		: { printed: minify(html), reports: [] };
 	if (printed === null) return reports;
-	return [...reports, ...sweepRespellings(minify, html, printed)];
+	reports.push(...sweepRespellings(minify, html, printed));
+	if (wantedRelation("meaning")) {
+		// The tree is held only where no option removes elements or attributes,
+		// which every other preset's options name.
+		const tree =
+			!options.removeEmptyElements &&
+			!options.removeEmptyAttributes &&
+			!options.removeRedundantAttributes &&
+			!options.mergeStyles;
+		const before = htmlMeaning(html, tree, cssOptions);
+		const after = htmlMeaning(printed, tree, cssOptions);
+		let at = 0;
+		while (at < before.said.length && before.said[at] === after.said[at]) at++;
+		if (at < before.said.length || at < after.said.length) {
+			reports.push({
+				relation: "meaning",
+				what: "the minified document says something else",
+				repro: `    ${oneLine(before.said.slice(at, at + 4).join(" "), 76)}  ->  ${oneLine(after.said.slice(at, at + 4).join(" "), 76)}`
+			});
+		} else if (!sameSheets(before.sheets, after.sheets, cssOptions)) {
+			reports.push({
+				relation: "meaning",
+				what: "a minified stylesheet says something else",
+				repro: `    ${oneLine(before.sheets.join(" "), 76)}  ->  ${oneLine(after.sheets.join(" "), 76)}`
+			});
+		}
+	}
+	return reports;
 };
 
 /**
@@ -1841,8 +1956,13 @@ const invariants = (write) => {
 	}
 	log(`sweeping ${corpus.length} documents under ${presets.length} presets …`);
 	for (const [label, html] of corpus) {
-		for (const [preset, options] of presets) {
-			for (const report of sweepDocument(printerFor(options), html)) {
+		for (const [preset, options, cssOptions] of presets) {
+			for (const report of sweepDocument(
+				printerFor(options),
+				html,
+				options,
+				cssOptions
+			)) {
 				groups.add(report, preset, label);
 			}
 		}
@@ -2031,7 +2151,10 @@ module.exports = {
 	SPRITE_WITHIN,
 	TAG_SOUP,
 	WEB_COMPONENTS,
+	htmlMeaning,
 	inlineCssPage,
 	runMode,
-	spritePage
+	sameSheets,
+	spritePage,
+	sweepDocument
 };

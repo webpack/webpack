@@ -18,7 +18,10 @@ const {
 	COLD_CONSTRUCTS,
 	EMBEDDED_LEGACY_OPTIONS,
 	EMBEDDED_OPTIONS,
-	runMode
+	htmlMeaning,
+	runMode,
+	sameSheets,
+	sweepDocument
 } = require("../../../tooling/compare-html-tools");
 const { collectFiles } = require("../../../tooling/compare-tools-harness");
 
@@ -158,5 +161,65 @@ describe("compare-html-tools — the cold constructs fixture", () => {
 			const once = minify(COLD_CONSTRUCTS, options);
 			expect(minify(once, options)).toBe(once);
 		}
+	});
+});
+
+describe("compare-html-tools — what a document says", () => {
+	it("reads the words, each sheet, and the element tree when asked", () => {
+		const html =
+			'<p class="  a  " title="x">one  <b>two</b>\n</p><style>.a { color : #ff0000 }</style><script>let  a</script>';
+		const { said, sheets } = htmlMeaning(html, true, {});
+		expect(said).toEqual([
+			"<0:html >",
+			"<0:head >",
+			"</head>",
+			"<0:body >",
+			"<0:p class title>",
+			"one",
+			"<0:b >",
+			"two",
+			"</b>",
+			"</p>",
+			"<0:style >",
+			"</style>",
+			"<0:script >",
+			"</script>",
+			"</body>",
+			"</html>"
+		]);
+		expect(sheets).toEqual([".a{color:red}"]);
+		expect(htmlMeaning(html, false, {}).said).toEqual(["one", "two"]);
+	});
+
+	it("matches a merged or folded sheet against the sheets it came from", () => {
+		expect(sameSheets([".a{color:red}", ".b{color:red}"], [".a,.b{color:red}"], {})).toBe(true);
+		expect(sameSheets([".a{color:red}", ".b{color:red}"], [".a{color:red}"], {})).toBe(false);
+		expect(sameSheets([".a{color:red}"], [".a{color:blue}"], {})).toBe(false);
+		// Read apart, an open value cannot swallow the next sheet.
+		expect(
+			sameSheets([".a{--x:f(", ".b{color:red}"], [".a{--x:f(", ".b{color:red}"], {})
+		).toBe(true);
+	});
+
+	it("reports a printer that drops a word, an element or a rule", () => {
+		const html = "<p>one two</p><b>x</b><style>.a{color:red}</style>";
+		/**
+		 * @param {(html: string) => string} minify a broken printer
+		 * @returns {string[]} the `meaning` findings it earns under `default`
+		 */
+		const meaning = (minify) =>
+			sweepDocument(minify, html, {}, {})
+				.filter((report) => report.relation === "meaning")
+				.map((report) => report.what);
+		expect(meaning((source) => source)).toEqual([]);
+		expect(meaning((source) => source.replace("two", ""))).toEqual([
+			"the minified document says something else"
+		]);
+		expect(meaning((source) => source.replace(/<\/?b>/g, ""))).toEqual([
+			"the minified document says something else"
+		]);
+		expect(meaning((source) => source.replace("red", "blue"))).toEqual([
+			"a minified stylesheet says something else"
+		]);
 	});
 });
