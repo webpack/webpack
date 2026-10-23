@@ -212,6 +212,39 @@ const isRoundRobinMode = () => {
 	return mode === "memory" || mode === "simulation";
 };
 
+/**
+ * Picks this shard's tasks by their measured seconds in `benchmarkTimings.json`:
+ * longest first, each to the shard with the least time so far. Round-robin left
+ * the slowest simulation shard 25 minutes behind the fastest.
+ * @template T
+ * @param {T[]} tasks tasks, in the same order on every shard
+ * @param {(task: T) => string} getId the task's id in the timings
+ * @param {Record<string, number>} timings measured seconds by task id
+ * @param {[number, number]} shard shard [part, count]
+ * @returns {T[]} the tasks this shard runs, in their original order
+ */
+const pickShardTasksByTime = (tasks, getId, timings, shard) => {
+	const known = Object.values(timings).sort((a, b) => a - b);
+	// A task added since the timings were measured counts as a typical one.
+	const fallback = known.length > 0 ? known[Math.floor(known.length / 2)] : 1;
+	const weighted = tasks.map((task, index) => ({
+		index,
+		seconds: timings[getId(task)] ?? fallback
+	}));
+	weighted.sort((a, b) => b.seconds - a.seconds || a.index - b.index);
+	const loads = Array.from({ length: shard[1] }, () => 0);
+	/** @type {Set<number>} */
+	const picked = new Set();
+
+	for (const { index, seconds } of weighted) {
+		const target = loads.indexOf(Math.min(...loads));
+		loads[target] += seconds;
+		if (target === shard[0] - 1) picked.add(index);
+	}
+
+	return tasks.filter((_, index) => picked.has(index));
+};
+
 class BenchmarkRunner {
 	constructor() {
 		/** @type {Scenario[]} */
@@ -706,9 +739,21 @@ class BenchmarkRunner {
 		const splitTasks = await this.splitUnitTasks(benchmarkTasks);
 
 		await this.runInWorkers(
-			isRoundRobinMode()
-				? splitTasks.filter((_, index) => index % shard[1] === shard[0] - 1)
-				: splitTasks
+			getCodspeedRunnerMode() === "simulation"
+				? pickShardTasksByTime(
+						splitTasks,
+						(task) => task.id,
+						JSON.parse(
+							await fs.readFile(
+								path.join(__dirname, "benchmarkTimings.json"),
+								"utf8"
+							)
+						),
+						shard
+					)
+				: isRoundRobinMode()
+					? splitTasks.filter((_, index) => index % shard[1] === shard[0] - 1)
+					: splitTasks
 		);
 	}
 }
