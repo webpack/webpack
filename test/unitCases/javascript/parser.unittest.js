@@ -5680,6 +5680,25 @@ describe("WebpackParser writing a SyntaxTree", () => {
 		);
 	});
 
+	it("writes an import or export a loop runs, where they are allowed everywhere", () => {
+		for (const source of [
+			'for (;;) import a from "b";',
+			"while (x) export const c = 1;",
+			"let d; for (d of e) export { d };"
+		]) {
+			const everywhere = { ...options, allowImportExportEverywhere: true };
+			const tree = new SyntaxTree();
+			const program = /** @type {number} */ (
+				/** @type {unknown} */ (
+					new WebpackParser({ ...everywhere, syntaxTree: tree }, source).parse()
+				)
+			);
+			expect(plain(toEstreeObject(tree, program))).toEqual(
+				plain(new WebpackParser(everywhere, source).parse())
+			);
+		}
+	});
+
 	it.each([
 		"({ ...{ a } } = b);",
 		"({ get a() {} } = b);",
