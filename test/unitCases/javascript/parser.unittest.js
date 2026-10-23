@@ -1,8 +1,5 @@
 "use strict";
 
-/** @typedef {import("../../../lib/javascript/syntax-parser").CollectedComment} CollectedComment */
-/** @typedef {import("../../../lib/javascript/syntax-parser").ParserOptions} ParserOptions */
-/** @typedef {{ ast: import("estree").Program, comments: CollectedComment[] }} ParseResult */
 /** @typedef {{ type: { label: string }, value: unknown, start: number, end: number, loc?: object, range?: [number, number] }} TokenLike */
 /** @typedef {Record<string, EXPECTED_ANY>} Options */
 /** @typedef {{ file: string, code: string, options: Options, commonjs?: false, error?: string }} Corpus */
@@ -27,6 +24,7 @@ const path = require("path");
 const acorn = require("acorn");
 const JavascriptParser = require("../../../lib/javascript/JavascriptParser");
 const { parse: webpackParse } = require("../../../lib/javascript/syntax").parser;
+const { parse, plain } = require("../../helpers/javascriptParse");
 const { Parser } = require("../../../lib/javascript/syntax-parser");
 
 const {
@@ -42,40 +40,6 @@ const locationMapperFor = (code) => {
 	const parser = new JavascriptParser("auto");
 	parser._source = code;
 	return parser;
-};
-
-/**
- * Parse with the options a build hands the parser: ranges alone become lazy
- * offsets, and comments are collected lazily or eagerly to match.
- * @param {string} code source
- * @param {object=} options extra parse options, plus `comments` to collect them
- * @returns {ParseResult} result
- */
-const parse = (code, options) => {
-	const { comments: collectComments, ...rest } =
-		/** @type {ParserOptions & { comments?: boolean }} */ ({
-			sourceType: "script",
-			ecmaVersion: "latest",
-			comments: true,
-			ranges: true,
-			allowHashBang: true,
-			...options
-		});
-	/** @type {CollectedComment[]} */
-	const comments = [];
-	const lazyNodes = rest.ranges === true && rest.locations !== true;
-	/** @type {ParserOptions} */
-	const parserOptions = {
-		allowReturnOutsideFunction: rest.sourceType === "script",
-		...rest,
-		ranges: lazyNodes ? false : rest.ranges,
-		lazyNodes
-	};
-	if (collectComments === true) {
-		if (lazyNodes) parserOptions.lazyComments = comments;
-		else parserOptions.onComment = comments;
-	}
-	return { ast: webpackParse(code, parserOptions), comments };
 };
 
 describe("WebpackParser", () => {
@@ -4194,23 +4158,6 @@ const OPTION_SETS = [
 	["script without hashbang", { ecmaVersion: "latest", allowHashBang: false }],
 	["script, es2021 with hashbang", { ecmaVersion: 2021, allowHashBang: true }]
 ];
-
-/**
- * A tree, comment or token as plain data, so acorn's and ours compare by value.
- * @param {unknown} value what to convert
- * @returns {unknown} the plain data
- */
-const plain = (value) =>
-	JSON.parse(
-		JSON.stringify(value, (key, v) => {
-			if (typeof v === "bigint") return `${v}n`;
-			if (v instanceof RegExp) return { regexp: v.source, flags: v.flags };
-			if (key === "type" && v && typeof v === "object" && "label" in v) {
-				return { label: v.label };
-			}
-			return v;
-		})
-	);
 
 /**
  * What a parser makes of a program: its tree, comments and tokens, or the
