@@ -8985,7 +8985,14 @@ describe("syntax-printer", () => {
 				'Object.defineProperty(globalThis?.Array.prototype, "slice", { value: function () { return "S"; } }); console.log([1, 2].slice());',
 				'Object.defineProperty(Array?.prototype, "slice", { value: function () { return "S"; } }); console.log([1, 2].slice());',
 				'Reflect.set(globalThis, "Number", function () { return 7; }); console.log(Number("3"));',
-				'Object.assign(globalThis, { Number: function () { return 7; } }); console.log(Number("3"));'
+				'Object.assign(globalThis, { Number: function () { return 7; } }); console.log(Number("3"));',
+				'function patch(C) { C.prototype.slice = function () { return "S"; }; } patch(globalThis?.Array); console.log([1, 2].slice());',
+				'function patch(C) { C.prototype.slice = function () { return "S"; }; } patch(Array); console.log([1, 2].slice());',
+				'var patch = function (g) { g.Array.prototype.slice = function () { return "S"; }; }; patch(globalThis); console.log([1, 2].slice());',
+				'(function (g) { g.Number = function () { return 7; }; })(globalThis); console.log(Number("3"));',
+				'function outer(g) { inner(g); } function inner(h) { h.Number = function () { return 7; }; } outer(globalThis); console.log(Number("3"));',
+				'function patch() { arguments[0].Number = function () { return 7; }; } patch(globalThis); console.log(Number("3"));',
+				'function patch({ Math: m }, g) { g.Number = function () { return 7; }; } patch(Math, globalThis); console.log(Number("3"));'
 			]) {
 				const { code } = await minify(input, { compress: {}, mangle: false });
 				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
@@ -8994,7 +9001,9 @@ describe("syntax-printer", () => {
 			// handed to a call that reads it.
 			for (const input of [
 				'function f() { var self = { a: 1 }; g(self); } function g(o) { o.Number = 1; } f(); console.log(Number("3"));',
-				'function isGlobal(g) { return g && g.Math === Math; } console.log(isGlobal(globalThis), Number("3"));'
+				'function isGlobal(g) { return g && g.Math === Math; } console.log(isGlobal(globalThis), Number("3"));',
+				'function name(C) { return C.name; } console.log(name(Array), [1, 2].slice(), Number("3"));',
+				'console.log(["1", "2"].map(Number), Number("3"));'
 			]) {
 				const { code } = await minify(input, { compress: {}, mangle: false });
 				expect(code).not.toContain('Number("3")');
