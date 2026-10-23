@@ -2203,7 +2203,7 @@ const defineShard = (shard, count) => {
 		);
 		fs.renameSync(`${file}.tmp`, file);
 		// Shards finish moments apart, so one at a time reads, reports and cleans
-		// up; a holder that died frees the lock after a minute.
+		// up; one still waiting after a minute fails rather than hang the run.
 		const lockDir = `${runDir}.lock`;
 		const pause = new Int32Array(new SharedArrayBuffer(4));
 		for (let waited = 0; ; waited += 10) {
@@ -2214,7 +2214,12 @@ const defineShard = (shard, count) => {
 				if (/** @type {NodeJS.ErrnoException} */ (err).code !== "EEXIST") {
 					throw err;
 				}
-				if (waited >= 60000) break;
+				if (waited >= 60000) {
+					throw new Error(
+						`${lockDir} was held for a minute: remove it if no jest run is using it`,
+						{ cause: err }
+					);
+				}
 				Atomics.wait(pause, 0, 0, 10);
 			}
 		}
