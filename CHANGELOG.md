@@ -1,5 +1,83 @@
 # webpack
 
+## 5.112.2
+
+### Patch Changes
+
+- Reduce repeated scans when concatenating imported modules. (by [@xiaoxiaojx](https://github.com/xiaoxiaojx) in [#22865](https://github.com/webpack/webpack/pull/22865))
+
+- Avoid allocating CSS module sets for single-group chunks. (by [@xiaoxiaojx](https://github.com/xiaoxiaojx) in [#22866](https://github.com/webpack/webpack/pull/22866))
+
+- Return the value of every module type loaded with `importModule()`. (by [@alexander-akait](https://github.com/alexander-akait) in [#22869](https://github.com/webpack/webpack/pull/22869))
+
+## 5.112.1
+
+### Patch Changes
+
+- Rebuild a lazy barrel in watch when what it defers changes, and keep the imports and re-exports it still runs. (by [@aryanraj45](https://github.com/aryanraj45) in [#22699](https://github.com/webpack/webpack/pull/22699))
+
+- Rebuild under `cacheUnaffected` a module whose re-export target goes or returns. (by [@aryanraj45](https://github.com/aryanraj45) in [#22749](https://github.com/webpack/webpack/pull/22749))
+
+- Fix "Self-reference dependency has unused export name" for CommonJS namespace re-exports. (by [@alexander-akait](https://github.com/alexander-akait) in [#22791](https://github.com/webpack/webpack/pull/22791))
+
+- Fix `exportType: "style"` CSS modules throwing outside the runtime chunk. (by [@lazerg](https://github.com/lazerg) in [#22833](https://github.com/webpack/webpack/pull/22833))
+
+- Fix crash when a CSS module with `exportType: "style"` imports an ignored stylesheet. (by [@codeXsidd](https://github.com/codeXsidd) in [#22846](https://github.com/webpack/webpack/pull/22846))
+
+- Keep empty process environment variables that `.env` files don't define in `DotenvPlugin`. (by [@alexander-akait](https://github.com/alexander-akait) in [#22794](https://github.com/webpack/webpack/pull/22794))
+
+- Rehash an ESM entry chunk when a chunk it imports by file name changes. (by [@alexander-akait](https://github.com/alexander-akait) in [#22804](https://github.com/webpack/webpack/pull/22804))
+
+- Handle a NUL inside an HTML CDATA section the way the parsing spec does. (by [@dependabot](https://github.com/apps/dependabot) in [#22811](https://github.com/webpack/webpack/pull/22811))
+
+- Keep module exports live across chunks, runtimes, HMR and eval, sparing globals. (by [@alexander-akait](https://github.com/alexander-akait) in [#22733](https://github.com/webpack/webpack/pull/22733))
+
+- Await asynchronous modules that `ProvidePlugin` injects into ES modules. (by [@alexander-akait](https://github.com/alexander-akait) in [#22728](https://github.com/webpack/webpack/pull/22728))
+
+- Keep a resolve that ends after the compiler closed from throwing. (by [@alexander-akait](https://github.com/alexander-akait) in [#22795](https://github.com/webpack/webpack/pull/22795))
+
+- Preserve string names passed to SharedWorker constructors. (by [@bjohansebas](https://github.com/bjohansebas) in [#22770](https://github.com/webpack/webpack/pull/22770))
+
+- Preserve string contents when extracting source map comments. (by [@bjohansebas](https://github.com/bjohansebas) in [#22768](https://github.com/webpack/webpack/pull/22768))
+
+- Scope strict-mode, async and generator block function declarations to their block. (by [@alexander-akait](https://github.com/alexander-akait) in [#22800](https://github.com/webpack/webpack/pull/22800))
+
+- Preserve raw dotenv values when reusing cached environment files. (by [@Eshiv-Pandey](https://github.com/Eshiv-Pandey) in [#22787](https://github.com/webpack/webpack/pull/22787))
+
+- Preserve assigned or patched built-ins, conversions and pattern targets. (by [@aryanraj45](https://github.com/aryanraj45) in [#22761](https://github.com/webpack/webpack/pull/22761))
+
+- Keep globals a `globalThis` write replaces, and `slice` on a patched array. (by [@alexander-akait](https://github.com/alexander-akait) in [#22862](https://github.com/webpack/webpack/pull/22862))
+
+- Skip HTML script tags for shared chunks that emit no JavaScript. (by [@bjohansebas](https://github.com/bjohansebas) in [#22779](https://github.com/webpack/webpack/pull/22779))
+
+- Keep the digits Firefox lays out a minified CSS percentage with. (by [@alexander-akait](https://github.com/alexander-akait) in [#22718](https://github.com/webpack/webpack/pull/22718))
+
+- Reject a second `srcset` descriptor after a `0x` density descriptor. (by [@alexander-akait](https://github.com/alexander-akait) in [#22741](https://github.com/webpack/webpack/pull/22741))
+
+- Minify JavaScript faster, folding string methods on constants and `x -= 1`. (by [@alexander-akait](https://github.com/alexander-akait) in [#22823](https://github.com/webpack/webpack/pull/22823))
+
+- Shorten minified JavaScript, and keep it running like its source. (by [@alexander-akait](https://github.com/alexander-akait) in [#22717](https://github.com/webpack/webpack/pull/22717))
+
+- Drop more unused functions, arguments, calls, global reads and variable copies when minifying JavaScript. (by [@alexander-akait](https://github.com/alexander-akait) in [#22789](https://github.com/webpack/webpack/pull/22789))
+
+- Minify JavaScript smaller where swc does, and fold a function's `length` right. (by [@alexander-akait](https://github.com/alexander-akait) in [#22826](https://github.com/webpack/webpack/pull/22826))
+
+- Reduce JavaScript output size where oxc or swc produce smaller output. (by [@alexander-akait](https://github.com/alexander-akait) in [#22829](https://github.com/webpack/webpack/pull/22829))
+
+- Update watchpack to 2.6.3 and rebuild on a `node_modules` created mid-build. (by [@alexander-akait](https://github.com/alexander-akait) in [#22743](https://github.com/webpack/webpack/pull/22743))
+
+- Support `concatenateModules` with `cacheUnaffected`. (by [@alexander-akait](https://github.com/alexander-akait) in [#22746](https://github.com/webpack/webpack/pull/22746))
+
+- Update schema-utils to 4.8.1. (by [@alexander-akait](https://github.com/alexander-akait) in [#22774](https://github.com/webpack/webpack/pull/22774))
+
+- Keep CSS fallbacks, vendor overrides, `oklch()` hues and HTML elements. (by [@alexander-akait](https://github.com/alexander-akait) in [#22753](https://github.com/webpack/webpack/pull/22753))
+
+- Validate `CleanPlugin` and `DotenvPlugin` options with a precompiled check, so valid options no longer compile their schema at startup. (by [@alexander-akait](https://github.com/alexander-akait) in [#22758](https://github.com/webpack/webpack/pull/22758))
+
+- Speed up startup and CSS minification, sharing the compile cache with workers. (by [@xiaoxiaojx](https://github.com/xiaoxiaojx) in [#22706](https://github.com/webpack/webpack/pull/22706))
+
+- Use precise, generic types for modules, parsers, generators, stats and loaders. (by [@alexander-akait](https://github.com/alexander-akait) in [#22731](https://github.com/webpack/webpack/pull/22731))
+
 ## 5.112.0
 
 ### Minor Changes

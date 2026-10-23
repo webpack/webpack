@@ -142,7 +142,7 @@ Directories come first, in alphabetical order, then the individual files worth t
 
 - **Purpose**: Contains `*.unittest.js` unit tests for various functionalities.
 - **Usage**: Ensures individual modules and functions work as expected.
-- **Layout**: the syntax tests sit in one folder per language — `javascript/` (`parser`, `webpack-parser`, `scope`, `printer`, `minify`, `no-acorn`), `css/`, `html/`, `xml/` and `json/` — and the tests of the `tooling/` scripts in `tooling/`. The rest stay at the top level.
+- **Layout**: the syntax tests sit in one folder per language — `javascript/` (`tokenizer`, `parser`, `scope`, `printer`), `css/` and `html/` (`tokenizer`, `parser`, `printer`), `xml/` (`printer`) and `json/` (`printer`, `web-manifest`). A printer's file holds both of its modes and the language's minifier, which drives the printer in its `minify` mode. The tests of the `tooling/` scripts sit in `tooling/`. The rest, webpack's own classes such as `JavascriptParser`, stay at the top level.
 
 ### `watchCases/`
 
@@ -286,14 +286,14 @@ Upstream test suites webpack runs against but doesn't maintain — upstream's to
 
 Git submodules, all under `test/external/`, checked out on demand: `yarn setup` doesn't fetch them, and each CI job fetches only its own, one commit deep.
 
-- `test/external/test262-cases` — [tc39/test262](https://github.com/tc39/test262); fetched by `test262`, `parser (js)`, `parser (minify-corpora)`
-- `test/external/html5lib-tests` — [html5lib/html5lib-tests](https://github.com/html5lib/html5lib-tests); fetched by `parser (html)`
-- `test/external/wpt` — [web-platform-tests/wpt](https://github.com/web-platform-tests/wpt); fetched by `parser (html)`, `syntax-equivalence` (browsers)
-- `test/external/css-parsing-tests` — [CourtBouillon/css-parsing-tests](https://github.com/CourtBouillon/css-parsing-tests); fetched by `parser (css)`
-- `test/external/xml-conformance-suite` — [lddubeau/xml-conformance-suite](https://github.com/lddubeau/xml-conformance-suite) (the W3C XML Conformance Test Suite); fetched by `parser (xml)`
-- `test/external/terser` — [terser/terser](https://github.com/terser/terser), pinned to the installed `terser`'s version; fetched by `parser (minify-corpora)`
-- `test/external/swc` — [swc-project/swc](https://github.com/swc-project/swc), read only under `crates/swc_ecma_minifier/tests`; fetched by `parser (minify-corpora)`
-- `test/external/oxc` — [oxc-project/oxc](https://github.com/oxc-project/oxc), pinned to the installed `oxc-minify`'s release and read only under `crates/oxc_minifier/tests`; fetched by `parser (minify-corpora)`
+- `test/external/test262-cases` — [tc39/test262](https://github.com/tc39/test262); fetched by `test262`, `spec (js)`, `spec (minify-corpora)`
+- `test/external/html5lib-tests` — [html5lib/html5lib-tests](https://github.com/html5lib/html5lib-tests); fetched by `spec (css-html-xml)`
+- `test/external/wpt` — [web-platform-tests/wpt](https://github.com/web-platform-tests/wpt); fetched by `spec (css-html-xml)`, `syntax-equivalence` (browsers)
+- `test/external/css-parsing-tests` — [CourtBouillon/css-parsing-tests](https://github.com/CourtBouillon/css-parsing-tests); fetched by `spec (css-html-xml)`
+- `test/external/xml-conformance-suite` — [lddubeau/xml-conformance-suite](https://github.com/lddubeau/xml-conformance-suite) (the W3C XML Conformance Test Suite); fetched by `spec (css-html-xml)`
+- `test/external/terser` — [terser/terser](https://github.com/terser/terser), pinned to the installed `terser`'s version; fetched by `spec (minify-corpora)`
+- `test/external/swc` — [swc-project/swc](https://github.com/swc-project/swc), read only under `crates/swc_ecma_minifier/tests`; fetched by `spec (minify-corpora)`
+- `test/external/oxc` — [oxc-project/oxc](https://github.com/oxc-project/oxc), pinned to the installed `oxc-minify`'s release and read only under `crates/oxc_minifier/tests`; fetched by `spec (minify-corpora)`
 
 ```sh
 git submodule update --init --recursive --depth 1   # check out the commits the repo pins

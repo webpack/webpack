@@ -343,7 +343,7 @@ const installHelpers = (generics) => {
 	]);
 
 	// A generic family is a keyword, so quoting one names a font of that name
-	// instead, and the quoting is what tells the two apart. `css/syntax.unittest`
+	// instead, and the quoting is what tells the two apart. `css/printer.unittest`
 	// holds the printer to the same rule.
 	const GENERIC_FAMILIES = new Set(generics);
 

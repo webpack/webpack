@@ -4,6 +4,7 @@ test/hotCases/** eol=lf
 test/configCases/asset-modules/query-suffixes/raw.txt eol=lf
 test/configCases/asset-modules/minify-embedded-source/note.txt eol=lf
 test/configCases/asset-modules/minimize-embedded-asset-source/note.txt eol=lf
+test/configCases/loader-import-module/build-time-types/*.txt eol=lf
 test/configCases/css/public-path/*.js eol=lf
 test/configCases/copy/** eol=lf
 test/configCases/defer-import/** eol=lf

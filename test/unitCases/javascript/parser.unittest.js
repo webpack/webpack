@@ -1,5 +1,19 @@
 "use strict";
 
+/** @typedef {{ type: { label: string }, value: unknown, start: number, end: number, loc?: object, range?: [number, number] }} TokenLike */
+/** @typedef {Record<string, EXPECTED_ANY>} Options */
+/** @typedef {{ file: string, code: string, options: Options, commonjs?: false, error?: string }} Corpus */
+/** @typedef {{ file: string, code: string, options?: Options, error?: string }} RecordedCase */
+/** @typedef {{ case: string, file: string, at: string, ours: string, acorn: string }} TreeDifference */
+/** @typedef {{ case: string, file: string, webpack: string, acorn: string }} VerdictDifference */
+/** @typedef {typeof import("../../../lib/javascript/syntax-parser")} ParserExports */
+/** @typedef {Partial<import("../../../lib/javascript/syntax-parser").Options>} PortOptions */
+/** @typedef {import("../../../lib/javascript/syntax-parser").Node} EstreeNode */
+/**
+ * A parsed node whose children may already stand as the ids they were written as.
+ * @typedef {{ type: string, [key: string]: unknown }} WrittenNode
+ */
+
 // cspell:ignore ypeof averyvery ahri aafom Unsyntactic
 // cspell:ignore Grek Kawi Mundari Garay Todhri Keycap aeiou gimsuyd dgimsvy
 /* eslint-disable no-template-curly-in-string */
@@ -10,11 +24,9 @@ const path = require("path");
 const acorn = require("acorn");
 const JavascriptParser = require("../../../lib/javascript/JavascriptParser");
 const { parse: webpackParse } = require("../../../lib/javascript/syntax").parser;
+const { parse, plain } = require("../../helpers/javascriptParse");
 const { Parser } = require("../../../lib/javascript/syntax-parser");
 
-/** @typedef {import("../../../lib/javascript/syntax-parser").CollectedComment} CollectedComment */
-/** @typedef {import("../../../lib/javascript/syntax-parser").ParserOptions} ParserOptions */
-/** @typedef {{ ast: import("estree").Program, comments: CollectedComment[] }} ParseResult */
 const {
 	firstDifference,
 	reportable
@@ -28,40 +40,6 @@ const locationMapperFor = (code) => {
 	const parser = new JavascriptParser("auto");
 	parser._source = code;
 	return parser;
-};
-
-/**
- * Parse with the options a build hands the parser: ranges alone become lazy
- * offsets, and comments are collected lazily or eagerly to match.
- * @param {string} code source
- * @param {object=} options extra parse options, plus `comments` to collect them
- * @returns {ParseResult} result
- */
-const parse = (code, options) => {
-	const { comments: collectComments, ...rest } =
-		/** @type {ParserOptions & { comments?: boolean }} */ ({
-			sourceType: "script",
-			ecmaVersion: "latest",
-			comments: true,
-			ranges: true,
-			allowHashBang: true,
-			...options
-		});
-	/** @type {CollectedComment[]} */
-	const comments = [];
-	const lazyNodes = rest.ranges === true && rest.locations !== true;
-	/** @type {ParserOptions} */
-	const parserOptions = {
-		allowReturnOutsideFunction: rest.sourceType === "script",
-		...rest,
-		ranges: lazyNodes ? false : rest.ranges,
-		lazyNodes
-	};
-	if (collectComments === true) {
-		if (lazyNodes) parserOptions.lazyComments = comments;
-		else parserOptions.onComment = comments;
-	}
-	return { ast: webpackParse(code, parserOptions), comments };
 };
 
 describe("WebpackParser", () => {
@@ -634,91 +612,6 @@ describe("WebpackParser", () => {
 					).expression.operator
 			);
 			expect(ops).toEqual(["<", "<<", "<<=", "===", "===", ">>>=", "&&="]);
-		});
-	});
-
-	describe("token context (finishToken exprAllowed)", () => {
-		/**
-		 * @param {string} code source
-		 * @returns {string} the sole expression's node type
-		 */
-		const exprType = (code) => {
-			const statement =
-				/** @type {import("estree").ExpressionStatement} */
-				(parse(code).ast.body[0]);
-			return statement.expression.type;
-		};
-
-		it("should classify braces as blocks or objects like acorn", () => {
-			// colon in block vs object context, nested blocks, function bodies
-			const { ast } = parse(
-				"foo: { bar(); } x = { a: { b: 1 } }; { { } } y = function () { return 1; };"
-			);
-			expect(ast.body.map((s) => s.type)).toEqual([
-				"LabeledStatement",
-				"ExpressionStatement",
-				"BlockStatement",
-				"ExpressionStatement"
-			]);
-			// a line terminator after `return` turns the brace into a block
-			const returned =
-				/** @type {import("estree").FunctionDeclaration} */
-				(parse("function f() { return {}; }").ast.body[0]);
-			const ret = /** @type {import("estree").ReturnStatement} */ (
-				returned.body.body[0]
-			);
-			expect(/** @type {import("estree").Node} */ (ret.argument).type).toBe(
-				"ObjectExpression"
-			);
-			const broken =
-				/** @type {import("estree").FunctionDeclaration} */
-				(parse("function f() { return\n{}; }").ast.body[0]);
-			expect(
-				/** @type {import("estree").ReturnStatement} */ (broken.body.body[0])
-					.argument
-			).toBeNull();
-			// a stray closer still pops safely before the parser rejects it
-			expect(() => parse("}")).toThrow(/Unexpected token/);
-		});
-
-		it("should read `/` after a value as division, not a regexp", () => {
-			// the `else` branch: exprAllowed follows the token type's beforeExpr
-			expect(exprType("a / b / c")).toBe("BinaryExpression");
-			expect(exprType("1 / 2")).toBe("BinaryExpression");
-			expect(exprType("(1 / n) ** (1 / 2)")).toBe("BinaryExpression");
-			expect(exprType("a.b / c")).toBe("BinaryExpression");
-			expect(exprType("a[b] / c")).toBe("BinaryExpression");
-			expect(exprType("f() / 2")).toBe("BinaryExpression");
-		});
-
-		it("should read `/` where an expression is allowed as a regexp", () => {
-			// the updateContext branch (parenR pop) and value-position defaults
-			expect(exprType("x = /re/g")).toBe("AssignmentExpression");
-			expect(parse("if (a) /re/.test(b);").ast).toBeDefined();
-			expect(parse("function f() { return /re/; }").ast).toBeDefined();
-			expect(
-				// eslint-disable-next-line no-template-curly-in-string
-				parse("var t = `${1 / 2}${/re/.source}`;").ast
-			).toBeDefined();
-		});
-
-		it("should keep `/` after a keyword-valued property name as division", () => {
-			// keyword-after-dot forbids an expression, so the next `/` divides
-			expect(parse("a.in / b; a.of / c;").ast).toBeDefined();
-		});
-
-		it("should re-allow an expression after `of` and generator `yield`", () => {
-			// the inlined name.updateContext true branches: the `/` lexes a regexp
-			expect(parse("for (x of /re/g);").ast).toBeDefined();
-			expect(parse("function* g() { yield /re/g; }").ast).toBeDefined();
-		});
-
-		it("should read multi-char `.` and `=` tokens in the owned scanner", () => {
-			// `...`, `==`, `===` and `=>` miss the single-char dispatch fast paths
-			expect(exprType("f(...a)")).toBe("CallExpression");
-			expect(exprType("a == b")).toBe("BinaryExpression");
-			expect(exprType("a === b")).toBe("BinaryExpression");
-			expect(exprType("(x) => x")).toBe("ArrowFunctionExpression");
 		});
 	});
 
@@ -1343,38 +1236,6 @@ describe("WebpackParser", () => {
 		});
 	});
 
-	describe("newline-before-token tracking", () => {
-		it("should apply ASI from the flag without a gap scan", () => {
-			expect(parse("a\nb;").ast.body).toHaveLength(2);
-			expect(() => parse("a b;")).toThrow(/Unexpected token/);
-			// postfix `++` on the next line binds to the next statement
-			expect(parse("a\n++b;").ast.body).toHaveLength(2);
-		});
-
-		it("should fall back to the gap scan around comments", () => {
-			// line terminator hidden inside a block comment still triggers ASI
-			expect(parse("a /* \n */ b;").ast.body).toHaveLength(2);
-			expect(() => parse("a /* x */ b;")).toThrow(/Unexpected token/);
-			// unicode whitespace defers to acorn's skipSpace, then the scan
-			expect(parse("a \u2028 b;").ast.body).toHaveLength(2);
-			expect(() => parse("a \u00A0 b;")).toThrow(/Unexpected token/);
-		});
-
-		it("should keep ASI working inside template expression gaps", () => {
-			// tokens after a template chunk come from acorn's tokenizer (flag
-			// unknown), so the scan fallback decides
-			// eslint-disable-next-line no-template-curly-in-string
-			expect(parse("f`${a\n}`;").ast.body).toHaveLength(1);
-		});
-
-		it("should keep a seen line terminator across unicode whitespace", () => {
-			// LF before a NBSP: the flag stays "yes" through acorn's skipSpace
-			expect(parse("a \n   b;").ast.body).toHaveLength(2);
-			// unicode whitespace running to eof
-			expect(parse("a; ").ast.body).toHaveLength(1);
-		});
-	});
-
 	describe("keyword and reserved-word gates", () => {
 		/**
 		 * @param {string} code source with one expression statement
@@ -1489,186 +1350,6 @@ describe("WebpackParser", () => {
 				"SpreadElement",
 				"Property"
 			]);
-		});
-	});
-
-	describe("tokenizer cold paths (ported from acorn)", () => {
-		/**
-		 * @param {string} code source
-		 * @param {object=} options extra parse options
-		 * @returns {import("estree").Literal} the sole declarator's literal init
-		 */
-		const literal = (code, options) => {
-			const declaration =
-				/** @type {import("estree").VariableDeclaration} */
-				(parse(code, options).ast.body[0]);
-			return /** @type {import("estree").Literal} */ (
-				declaration.declarations[0].init
-			);
-		};
-
-		it("should cook hex, unicode and octal string escapes", () => {
-			expect(literal('var x = "\\x41\\u0042\\u{1F600}"').value).toBe(
-				"AB\u{1F600}"
-			);
-			// a hex escape routes the whole string cold, so every following escape
-			// is cooked there too, including the CRLF line continuation
-			expect(literal('var x = "\\x41\\r\\b\\f\\v\\n\\t"').value).toBe(
-				"A\r\b\f\u000B\n\t"
-			);
-			expect(literal('var x = "\\x41\\\r\nz"').value).toBe("Az");
-			// an unescaped LS/PS stays valid (ES2019+) even on the cold path
-			const ls = String.fromCharCode(0x2028);
-			expect(literal(`var x = "\\x41${ls}b"`).value).toBe(`A${ls}b`);
-			// an octal escape > 255 drops its last digit, which stays literal
-			expect(literal('var x = "\\400"').value).toBe(" 0");
-			expect(literal('var x = "\\101\\0"').value).toBe("A\u0000");
-		});
-
-		it("should report bad and out-of-range escapes like acorn", () => {
-			expect(() => parse('var x = "\\xZZ"')).toThrow(
-				/Bad character escape sequence/
-			);
-			expect(() => parse('var x = "\\u{110000}"')).toThrow(
-				/Code point out of bounds/
-			);
-			expect(() => parse('"use strict"; var x = "\\101"')).toThrow(
-				/Octal literal in strict mode/
-			);
-			expect(() => parse('"use strict"; var x = "\\8"')).toThrow(
-				/Invalid escape sequence/
-			);
-			// a bare line terminator after a cold escape is still unterminated
-			expect(() => parse('var x = "\\x41\nb"')).toThrow(
-				/Unterminated string constant/
-			);
-		});
-
-		it("should cook escapes and yield null for invalid template escapes", () => {
-			/**
-			 * @param {string} code source with a template literal
-			 * @returns {string | null | undefined} the first quasi's cooked value
-			 */
-			const cooked = (code) => {
-				const statement =
-					/** @type {import("estree").ExpressionStatement} */
-					(parse(code).ast.body[0]);
-				return /** @type {import("estree").TemplateLiteral} */ (
-					statement.expression
-				).quasis[0].value.cooked;
-			};
-			expect(cooked("`a\\x41\\u{42}b`;")).toBe("aABb");
-			// a tagged template keeps an invalid escape with a null cooked value
-			const tagged =
-				/** @type {import("estree").TaggedTemplateExpression} */
-				(
-					/** @type {import("estree").ExpressionStatement} */ (
-						parse("tag`bad \\8`;").ast.body[0]
-					).expression
-				);
-			expect(tagged.quasi.quasis[0].value.cooked).toBeNull();
-			// an untagged invalid template escape is rejected by the parser
-			expect(() => parse("`bad \\8`;")).toThrow(
-				/Bad escape sequence in untagged template literal/
-			);
-			// a cold template chunk (escape seen) that never closes is unterminated
-			expect(() => parse("`a\\t")).toThrow(/Unterminated template/);
-		});
-
-		it("should read radix integers and bigints", () => {
-			expect(literal("var x = 0xFF").value).toBe(255);
-			expect(literal("var x = 0o17").value).toBe(15);
-			expect(literal("var x = 0b1010").value).toBe(10);
-			expect(literal("var x = 0x1Fn").value).toBe(BigInt(31));
-			expect(typeof literal("var x = 0b101n").value).toBe("bigint");
-		});
-
-		it("should report radix, separator and octal number errors like acorn", () => {
-			expect(() => parse("var x = 0x")).toThrow(/Expected number in radix 16/);
-			expect(() => parse("var x = 0x1g")).toThrow(
-				/Identifier directly after number/
-			);
-			expect(() => parse("var x = 0x_1")).toThrow(
-				/Numeric separator is not allowed at the first of digits/
-			);
-			expect(() => parse("var x = 1_")).toThrow(
-				/Numeric separator is not allowed at the last of digits/
-			);
-			expect(() => parse("var x = 1__2")).toThrow(
-				/Numeric separator must be exactly one underscore/
-			);
-			expect(() => parse("var x = 0_1")).toThrow(
-				/Numeric separator is not allowed in legacy octal/
-			);
-			expect(() => parse('"use strict"; var x = 0777')).toThrow(
-				/Invalid number/
-			);
-			expect(() => parse("var x = 123nx")).toThrow(
-				/Identifier directly after number/
-			);
-		});
-
-		it("should read legacy octal, exponent and float forms", () => {
-			expect(literal("var x = 0777").value).toBe(511);
-			// an 8 or 9 digit makes a leading-zero literal decimal, not octal
-			expect(literal("var x = 0778").value).toBe(778);
-			expect(literal("var x = 1e3").value).toBe(1000);
-			expect(literal("var x = 1E-3").value).toBe(0.001);
-			expect(literal("var x = 1.5e+2").value).toBe(150);
-			expect(() => parse("var x = 1e")).toThrow(/Invalid number/);
-		});
-
-		it("should read escaped and astral identifiers", () => {
-			/**
-			 * @param {string} code source
-			 * @returns {string} the sole declarator's binding name
-			 */
-			const idName = (code) => {
-				const declaration =
-					/** @type {import("estree").VariableDeclaration} */
-					(parse(code).ast.body[0]);
-				return /** @type {import("estree").Identifier} */ (
-					declaration.declarations[0].id
-				).name;
-			};
-			expect(idName("var \\u0041 = 1")).toBe("A");
-			expect(idName("var \\u{42} = 1")).toBe("B");
-			// a raw astral identifier advances two code units per character
-			const astral = String.fromCodePoint(0x1d400);
-			expect(idName(`var ${astral} = 1`)).toBe(astral);
-		});
-
-		it("should report identifier escape errors like acorn", () => {
-			expect(() => parse("var \\q = 1")).toThrow(
-				/Expecting Unicode escape sequence/
-			);
-			expect(() => parse("var \\u0020 = 1")).toThrow(/Invalid Unicode escape/);
-		});
-
-		it("should read private identifiers and reject stray characters", () => {
-			expect(
-				parse("class C { #x = 1; m() { return this.#x; } }").ast
-			).toBeDefined();
-			expect(() => parse("var x = #;")).toThrow(/Unexpected character/);
-			expect(() => parse("var x = §;")).toThrow(/Unexpected character/);
-		});
-
-		it("should skip unicode whitespace and comments before a token", () => {
-			// NBSP, ideographic and em spaces and LS around real tokens are consumed
-			expect(literal(`var x =${String.fromCharCode(0xa0)}1`).value).toBe(1);
-			expect(literal(`var x =${String.fromCharCode(0x3000)}1`).value).toBe(1);
-			expect(literal(`var x =${String.fromCharCode(0x2028)}1`).value).toBe(1);
-			expect(
-				literal(`var x =${String.fromCharCode(0x2003)}/* c */1`).value
-			).toBe(1);
-			// a CRLF following unicode whitespace is consumed as one line break
-			expect(literal(`var x =${String.fromCharCode(0xa0)}\r\n1`).value).toBe(1);
-			// unicode whitespace before a `/` that is division, not a comment
-			const em = String.fromCharCode(0x2003);
-			const statement =
-				/** @type {import("estree").ExpressionStatement} */
-				(parse(`x${em}/ y;`).ast.body[0]);
-			expect(statement.expression.type).toBe("BinaryExpression");
 		});
 	});
 
@@ -2649,13 +2330,6 @@ describe("WebpackParser acorn-override fast-path gates", () => {
 // the corpus it owes the same answers on. What each case expects comes from
 // acorn itself, parsed side by side below.
 
-/** @typedef {{ type: { label: string }, value: unknown, start: number, end: number, loc?: object, range?: [number, number] }} TokenLike */
-/** @typedef {Record<string, EXPECTED_ANY>} Options */
-/** @typedef {{ file: string, code: string, options: Options, commonjs?: false, error?: string }} Corpus */
-/** @typedef {{ file: string, code: string, options?: Options, error?: string }} RecordedCase */
-/** @typedef {{ case: string, file: string, at: string, ours: string, acorn: string }} TreeDifference */
-/** @typedef {{ case: string, file: string, webpack: string, acorn: string }} VerdictDifference */
-
 const CORPUS_FILE = path.resolve(__dirname, "../../fixtures/acorn-corpus.json");
 const ACORN_VERSION = require("acorn/package.json").version;
 // acorn ships no tests in its npm tarball, so the corpus is vendored. Refresh
@@ -3635,9 +3309,6 @@ describe("RegExpValidator", () => {
 	});
 });
 
-/** @typedef {typeof import("../../../lib/javascript/syntax-parser")} ParserExports */
-/** @typedef {Partial<import("../../../lib/javascript/syntax-parser").Options>} PortOptions */
-
 // acorn's typings omit half its exports, and the port's types are its contract
 const acornPort = /** @type {ParserExports} */ (/** @type {unknown} */ (acorn));
 const {
@@ -4489,23 +4160,6 @@ const OPTION_SETS = [
 ];
 
 /**
- * A tree, comment or token as plain data, so acorn's and ours compare by value.
- * @param {unknown} value what to convert
- * @returns {unknown} the plain data
- */
-const plain = (value) =>
-	JSON.parse(
-		JSON.stringify(value, (key, v) => {
-			if (typeof v === "bigint") return `${v}n`;
-			if (v instanceof RegExp) return { regexp: v.source, flags: v.flags };
-			if (key === "type" && v && typeof v === "object" && "label" in v) {
-				return { label: v.label };
-			}
-			return v;
-		})
-	);
-
-/**
  * What a parser makes of a program: its tree, comments and tokens, or the
  * error it threw with where it was raised.
  * @param {(source: string, options: EXPECTED_ANY) => unknown} parse the parser
@@ -4759,12 +4413,6 @@ const {
 	SyntaxTree,
 	WebpackParser
 } = require("../../../lib/javascript/syntax-parser");
-/** @typedef {import("../../../lib/javascript/syntax-parser").Node} EstreeNode */
-
-/**
- * A parsed node whose children may already stand as the ids they were written as.
- * @typedef {{ type: string, [key: string]: unknown }} WrittenNode
- */
 
 /**
  * @param {WrittenNode} node a parsed node, some children written already
@@ -5076,10 +4724,358 @@ describe("SyntaxTree", () => {
 		expect(tree.name(tree.field(0, Field.argument, spread))).toBe("c");
 	});
 
+	/**
+	 * @param {SyntaxTree} tree the tree to write
+	 * @param {string} source the source
+	 * @returns {number} its program
+	 */
+	const parseInto = (tree, source) =>
+		/** @type {number} */ (
+			/** @type {unknown} */ (
+				new WebpackParser(
+					{ ecmaVersion: "latest", lazyNodes: true, syntaxTree: tree },
+					source
+				).parse()
+			)
+		);
+
+	it("hands a small tree's columns to the next tree, cleared", () => {
+		const tree = new SyntaxTree();
+		parseInto(tree, "x = { a: [b, c], [d]: `e${f}` };");
+		const types = tree._types;
+		const values = tree._values;
+		tree.release();
+		expect([tree._types.length, tree._values.length, tree._listCount]).toEqual([
+			0, 0, 0
+		]);
+		expect(values.every((value) => value === undefined)).toBe(true);
+		const next = new SyntaxTree();
+		expect(next._types).toBe(types);
+		expect(next._values).toBe(values);
+		const source = "a(b, [c]);";
+		const program = parseInto(next, source);
+		const fresh = new SyntaxTree();
+		expect(toEstreeObject(next, program)).toEqual(
+			toEstreeObject(fresh, parseInto(fresh, source))
+		);
+		next.release();
+	});
+
+	it("keeps a list's items while an item written into it grows the column", () => {
+		/**
+		 * @param {string} source a module
+		 * @returns {[SyntaxTree, number]} its tree and program
+		 */
+		const parseModule = (source) => {
+			const tree = new SyntaxTree();
+			const program = /** @type {number} */ (
+				/** @type {unknown} */ (
+					new WebpackParser(
+						{
+							ecmaVersion: "latest",
+							sourceType: "module",
+							lazyNodes: true,
+							syntaxTree: tree
+						},
+						source
+					).parse()
+				)
+			);
+			return [tree, program];
+		};
+		const body = `var a, b;${"a;".repeat(40000)}`;
+		// Large enough to be let go, it leaves the next tree its list room exactly:
+		// the body's list fits, and the export's one more name does not.
+		parseModule(`${body}export { a };`)[0].release();
+		const [tree, program] = parseModule(`${body}export { a, b };`);
+		const last = tree.field(
+			tree.fieldCount(Field.body, program) - 1,
+			Field.body,
+			program
+		);
+		expect(tree.type(last)).toBe(NodeType.ExportNamedDeclaration);
+		/** @type {string[]} */
+		const names = [];
+		for (let i = 0; i < tree.fieldCount(Field.specifiers, last); i++) {
+			const specifier = tree.field(i, Field.specifiers, last);
+			names.push(tree.name(tree.field(0, Field.local, specifier)));
+		}
+		expect(names).toEqual(["a", "b"]);
+		tree.release();
+	});
+
+	it("lets go of a large tree's columns, and the next grows to its size", () => {
+		const tree = new SyntaxTree();
+		parseInto(tree, "a;".repeat(40000));
+		const types = tree._types;
+		const nodes = tree._count;
+		tree.release();
+		// A runtime that transfers an ArrayBuffer frees the old one at once.
+		const detached =
+			typeof (
+				/** @type {ArrayBuffer & { transfer?: unknown }} */ (
+					new ArrayBuffer(0)
+				).transfer
+			) === "function";
+		expect(types.byteLength === 0).toBe(detached);
+		const next = new SyntaxTree();
+		expect(next._types).not.toBe(types);
+		next.add(NodeType.Identifier, 0, 1);
+		expect(next._types.length).toBe(nodes + 1);
+	});
+
 	it("refuses an unknown type or field", () => {
 		const tree = new SyntaxTree();
 		expect(() => tree.add(0, 0, 1)).toThrow(/Unknown node type/);
 		const node = tree.add(NodeType.Identifier, 0, 1);
 		expect(() => tree.set(node, "value", 1)).toThrow(/has no field value/);
+	});
+});
+
+describe("JavaScript SourceProcessor", () => {
+	const { SourceProcessor } = require("../../../lib/javascript/syntax");
+
+	/** @typedef {import("../../../lib/javascript/syntax-parser").JavascriptPath} JavascriptPath */
+
+	it("fires enter and exit in source order, a template's parts taking turns", () => {
+		/** @type {string[]} */
+		const events = [];
+		/**
+		 * @param {string} name what the event is named
+		 * @returns {{ enter: (path: JavascriptPath) => void, exit: (path: JavascriptPath) => void }} visitors recording it
+		 */
+		const record = (name) => ({
+			enter: (path) => {
+				events.push(`${name}>${path.source()}@${path.index}`);
+			},
+			exit: () => {
+				events.push(`${name}<`);
+			}
+		});
+		new SourceProcessor()
+			.use({
+				[NodeType.CallExpression]: record("call"),
+				[NodeType.TemplateLiteral]: record("template")
+			})
+			.use([NodeType.Identifier, NodeType.TemplateElement], (path) => {
+				events.push(path.source());
+			})
+			.process("f(`a${b}c`, d);");
+		expect(events).toEqual([
+			"call>f(`a${b}c`, d)@0",
+			"f",
+			"template>`a${b}c`@1",
+			"a",
+			"b",
+			"c",
+			"template<",
+			"d",
+			"call<"
+		]);
+	});
+
+	it("reads a node as the CSS and HTML paths read theirs", () => {
+		const source =
+			'import x from "y";\nlabel: for (const k of o) a?.[k];\u2028function f(z, y = 1) { return `t${z}`; }';
+		/** @type {Record<string, unknown>} */
+		const read = {};
+		new SourceProcessor()
+			.use({
+				[NodeType.Program]: (path) => {
+					read.programParent = path.parent;
+					read.childTypes = path.children().map((child) => path.type(child));
+					read.childCount = path.childCount();
+					read.secondChild = path.type(path.child(1));
+					read.pastLastChild = path.child(9);
+					read.sourceType = path.textOf(Part.sourceType);
+				},
+				[NodeType.ImportDeclaration]: (path) => {
+					read.importSource = path.value(path.field(0, Field.source));
+					read.specifiers = path.fieldCount(Field.specifiers);
+					read.withoutPart = [
+						path.rangeOf(Part.raw),
+						path.startOf(Part.raw),
+						path.endOf(Part.raw)
+					];
+				},
+				[NodeType.MemberExpression]: (path) => {
+					read.member = [
+						path.flag(Flag.computed),
+						path.flag(Flag.optional),
+						path.within(NodeType.ForOfStatement),
+						path.within(NodeType.FunctionDeclaration),
+						path.type(path.parent === null ? 0 : path.parent)
+					];
+				},
+				[NodeType.FunctionDeclaration]: (path) => {
+					read.functionRange = path.range();
+					read.functionStart = path.start();
+					read.functionEnd = path.end();
+					read.functionLoc = path.loc();
+					read.functionName = path.name(path.field(0, Field.id));
+					read.functionNoName = path.name();
+					read.functionNoValue = path.value();
+					read.param = path.type(path.fieldNamed(Field.params, "z"));
+					read.noParam = path.fieldNamed(Field.params, "w");
+					read.between = path.source(path.start(), path.start() + 8);
+				},
+				[NodeType.Identifier]: (path) => {
+					if (path.name() === "z") read.state = path.state;
+				}
+			})
+			.process(source, { state: "run" });
+		expect(read).toEqual({
+			programParent: null,
+			childTypes: [
+				NodeType.ImportDeclaration,
+				NodeType.LabeledStatement,
+				NodeType.FunctionDeclaration
+			],
+			childCount: 3,
+			secondChild: NodeType.LabeledStatement,
+			pastLastChild: 0,
+			sourceType: "module",
+			importSource: "y",
+			specifiers: 1,
+			withoutPart: [null, -1, -1],
+			member: [true, true, true, false, NodeType.ChainExpression],
+			functionRange: [53, 93],
+			functionStart: 53,
+			functionEnd: 93,
+			functionLoc: [3, 0, 3, 40],
+			functionName: "f",
+			functionNoName: "",
+			functionNoValue: "",
+			param: NodeType.Identifier,
+			noParam: 0,
+			between: "function",
+			state: "run"
+		});
+	});
+
+	it("skips a node's children, stops, and fires every visitor on the next run", () => {
+		/** @type {string[]} */
+		const names = [];
+		const processor = new SourceProcessor().use({
+			[NodeType.FunctionDeclaration]: (path) => path.skipChildren(),
+			[NodeType.Identifier]: (path) => {
+				names.push(path.name());
+				if (path.name() === "stop") path.stop();
+			}
+		});
+		processor.process("function f(a) { b; } c; stop; d;");
+		processor.process("e;");
+		expect(names).toEqual(["c", "stop", "e"]);
+	});
+
+	it("reads a script as a script, and refuses a walk inside a walk", () => {
+		/** @type {number[]} */
+		const types = [];
+		const processor = new SourceProcessor().use({
+			[NodeType.WithStatement]: (path) => {
+				types.push(path.type());
+				expect(() => processor.process("x;")).toThrow(/already running/);
+			}
+		});
+		processor.process("with (o) x;", { sourceType: "script" });
+		expect(types).toEqual([NodeType.WithStatement]);
+		expect(() => processor.process("with (o) x;")).toThrow(SyntaxError);
+		expect(() => processor.process("x;")).not.toThrow();
+	});
+});
+
+describe("WebpackParser writing a SyntaxTree", () => {
+	const {
+		SyntaxTree,
+		WebpackParser,
+		toEstreeObject
+	} = require("../../../lib/javascript/syntax-parser");
+
+	/** @type {ParserOptions} */
+	const options = {
+		ecmaVersion: "latest",
+		sourceType: "module",
+		lazyNodes: true,
+		preserveParens: true
+	};
+
+	/**
+	 * @param {string} source the source
+	 * @returns {{ tree: InstanceType<typeof SyntaxTree>, program: number }} the tree and its program
+	 */
+	const parseIntoTree = (source) => {
+		const tree = new SyntaxTree();
+		const program = /** @type {number} */ (
+			/** @type {unknown} */ (
+				new WebpackParser({ ...options, syntaxTree: tree }, source).parse()
+			)
+		);
+		return { tree, program };
+	};
+
+	/**
+	 * @param {unknown} node a node and everything under it
+	 * @returns {unknown} the same as JSON, a bigint and a regular expression as text
+	 */
+	const plain = (node) =>
+		JSON.parse(
+			JSON.stringify(node, (key, value) =>
+				typeof value === "bigint"
+					? `${value}n`
+					: value instanceof RegExp
+						? String(value)
+						: value
+			)
+		);
+
+	it.each([
+		'"use strict"; let { a, b: [c = 1, ...d], ...e } = f; (g) = h, i += 2;',
+		"class A extends B { static #x = 1; get y() { return super.y } static { var z } }",
+		"for (const [k, v] of m) label: for (x in y) continue label;",
+		"x = a ? b?.c(...d) : new E(`t${f}u`, /re/g, 10n);",
+		"async function* g(p = 1, { q }) { yield* await r; }",
+		"switch (s) { case 1: t(); default: }",
+		"try { u() } catch ({ v }) {} finally { w() }",
+		'import a, { b as c } from "d"; export { c }; export default (e) => e;',
+		"export const { f, g: [h] } = i; import.meta;",
+		"({ ...j, k, [l]: m, n() {}, get o() { return 1 } }); [, p, ...q] = r;"
+	])("writes %s as the objects it would build otherwise", (source) => {
+		const { tree, program } = parseIntoTree(source);
+		expect(plain(toEstreeObject(tree, program))).toEqual(
+			plain(new WebpackParser(options, source).parse())
+		);
+	});
+
+	it.each([
+		"({ ...{ a } } = b);",
+		"({ get a() {} } = b);",
+		"[...a = 1] = b;",
+		"[a += 1] = b;",
+		"[a?.b] = c;",
+		"[f()] = b;",
+		"(a, a) => 1;",
+		"async function f() { ({ await } = x); }",
+		"({ a: b.c }) => 1;",
+		"for ((a?.b) of c);"
+	])("refuses %s as it does otherwise", (source) => {
+		/** @type {string | undefined} */
+		let message;
+		try {
+			new WebpackParser(options, source).parse();
+		} catch (err) {
+			message = /** @type {Error} */ (err).message;
+		}
+		expect(message).toBeDefined();
+		expect(() => parseIntoTree(source)).toThrow(/** @type {string} */ (message));
+	});
+
+	it("refuses a tree where its productions would be acorn's", () => {
+		expect(
+			() =>
+				new WebpackParser(
+					{ ...options, ecmaVersion: 2015, syntaxTree: new SyntaxTree() },
+					"x"
+				)
+		).toThrow(/latest edition only/);
 	});
 });

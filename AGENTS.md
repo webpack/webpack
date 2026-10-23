@@ -24,6 +24,8 @@ Five habits that counter the usual coding-agent failures (assuming silently, ove
 
 These habits are working when diffs carry only requested changes, code is simple the first time, and clarifying questions come before implementation rather than after mistakes.
 
+**A regression with a known cause in history is reverted first.** When `git log` shows the commit that introduced it, undo that part, push, and let CI report what moved (corpus tables, snapshots, sizes); measure or improve only afterwards, in follow-up commits.
+
 **Recommend a fresh session when it pays.** Every call re-reads the whole session, so a call at 500k tokens of context costs several times one in a fresh session. When a task is done and the next one needs little of this context, suggest starting a new session with a short handoff brief; it is only a recommendation, and staying is right when the context saves explaining everything again. Hand read-heavy investigation (transcripts, large logs, wide searches) to a subagent, so the reading stays out of this context. A run longer than about ten minutes goes in the background once, with its output in a file and no progress polls. Never read a generated or very large file whole (type declarations, generated tables, snapshots): search for the symbol, then read that range.
 
 ## Commands

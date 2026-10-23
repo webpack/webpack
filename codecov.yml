@@ -22,12 +22,10 @@ coverage:
         flags:
           - unit
           - integration
-          - css-parsing
-          - html5lib
+          - css-html-xml
           - test262
           - minify-corpora
           - test262-parser
-          - xmlconf
         target: auto
         # Timing-dependent lines flip between runs, so a PR that changes no
         # code still moves the total by about 0.01%.
