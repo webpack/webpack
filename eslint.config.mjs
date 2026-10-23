@@ -312,6 +312,15 @@ export default defineConfig([
 		}
 	},
 	{
+		// The suite its three `minify-corpora-*.spectest.js` shards each define,
+		// inside the `describe` its export opens.
+		files: ["test/specCases/minify-corpora.js"],
+		rules: {
+			"jest/no-export": "off",
+			"jest/require-top-level-describe": "off"
+		}
+	},
+	{
 		files: ["test/helpers/**/*.{js,cjs,mjs}"],
 		languageOptions: {
 			globals: {

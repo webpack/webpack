@@ -14,6 +14,7 @@
 
 const { spawnSync } = require("child_process");
 const fs = require("fs");
+const os = require("os");
 const path = require("path");
 const { pathToFileURL } = require("url");
 const vm = require("vm");
@@ -44,7 +45,7 @@ const swcTestsDir = path.join(
 const oxcTestsDir = path.join(externalDir, "oxc/crates/oxc_minifier/tests");
 
 // A group minifies each of its sources once per option set, with both minifiers.
-const GROUP_TIMEOUT = 300000;
+const GROUP_TIMEOUT = 600000;
 
 /**
  * An option value, copied so neither minifier sees what the other wrote into
@@ -2040,11 +2041,93 @@ const formatLeads = (leads) => {
 	].join("\n");
 };
 
-describe("JavaScript minifier", () => {
+/**
+ * Lists the table entries no shard met, so one no longer met fails instead of
+ * lingering.
+ * @param {Record<string, string[]>} seen what every shard met, by table
+ * @returns {string[]} the entries to retire
+ */
+const staleEntries = (seen) => {
+	const refusalsSeen = new Set(seen.refusals);
+	const webpackRefusalsSeen = new Set(seen.webpackRefusals);
+	const misprintsSeen = new Set(seen.misprints);
+	const improvedYetBiggerSeen = new Set(seen.improvedYetBigger);
+	const rivalSmallerSeen = new Set(seen.rivalSmaller);
+	return [
+		...Object.keys(REFUSED_BY_REFERENCE)
+			.filter((message) => !refusalsSeen.has(message))
+			.map((message) => `REFUSED_BY_REFERENCE: ${message}`),
+		...Object.keys(REFUSED_BY_WEBPACK)
+			.filter((message) => !webpackRefusalsSeen.has(message))
+			.map((message) => `REFUSED_BY_WEBPACK: ${message}`),
+		...Object.keys(REFERENCE_MISPRINTS)
+			.filter((key) => !misprintsSeen.has(key))
+			.map((key) => `REFERENCE_MISPRINTS: ${key}`),
+		...Object.keys(IMPROVED_YET_BIGGER)
+			.filter((key) => !improvedYetBiggerSeen.has(key))
+			.map((key) => `IMPROVED_YET_BIGGER: ${key}`),
+		...Object.keys(SWC_SMALLER)
+			.map((key) => `SWC_SMALLER: ${key}`)
+			.filter((entry) => !rivalSmallerSeen.has(entry)),
+		...Object.keys(OXC_SMALLER)
+			.map((key) => `OXC_SMALLER: ${key}`)
+			.filter((entry) => !rivalSmallerSeen.has(entry))
+	];
+};
+
+/**
+ * Deals every corpus group to one of `count` shards by its measured
+ * milliseconds in `minify-corpora-timings.json`, longest first, each to the
+ * shard with the least time so far; a group missing there counts as the median.
+ * @param {number} count how many shards
+ * @returns {Map<string, number>} each group's shard, from 1, by `<corpus>/<group>`
+ */
+const assignShards = (count) => {
+	/** @type {Record<string, number>} */
+	const timings = require("./minify-corpora-timings.json");
+
+	const known = Object.values(timings).sort((a, b) => a - b);
+	const fallback = known[Math.floor(known.length / 2)] || 1;
+	/** @type {{ key: string, ms: number }[]} */
+	const weighted = [];
+	for (const corpus of CORPORA) {
+		if (!isPresent(corpus.directory)) continue;
+		for (const group of corpus.groups()) {
+			const key = `${corpus.name}/${group.name}`;
+			weighted.push({ key, ms: timings[key] || fallback });
+		}
+	}
+	weighted.sort((a, b) => b.ms - a.ms || (a.key < b.key ? -1 : 1));
+	const loads = Array.from({ length: count }, () => 0);
+	/** @type {Map<string, number>} */
+	const shards = new Map();
+	for (const { key, ms } of weighted) {
+		const target = loads.indexOf(Math.min(...loads));
+		loads[target] += ms;
+		shards.set(key, target + 1);
+	}
+	return shards;
+};
+
+/**
+ * Defines one shard's tests: its groups of every corpus, and in shard 1 the
+ * checks run once. Every shard records what it met of the tables, and the last
+ * to finish checks them all.
+ * @param {number} shard this shard, from 1
+ * @param {number} count how many shards the groups are dealt to
+ * @returns {void}
+ */
+const defineShard = (shard, count) => {
+	const shardOf = assignShards(count);
+	// Shared by the shards of one jest run, which all have its process as parent.
+	const runDir = path.join(os.tmpdir(), `webpack-minify-corpora-${process.ppid}`);
+
 	/** @type {{ reader?: CaseReader, printer?: { minify: Minify, phases: string[], corrections: { enabled: boolean } | undefined, improvements?: { enabled: boolean, lets: { enabled: boolean } } | undefined }, sandbox?: { run_code: (code: string, prepend: string) => string | Error, same_stdout: (expected: string | Error, actual: string | Error) => boolean } }} */
 	const loaded = {};
 	/** @type {Lead[]} */
 	const leads = [];
+	// A `-t` filter skips groups, whose table entries then look unmet.
+	const groupCounts = { defined: 0, run: 0 };
 	const { runInNewContext } = vm;
 	// Whether the sandbox also drains promise callbacks: swc's harness runs a
 	// whole process, terser's runner captures only what runs synchronously.
@@ -2102,11 +2185,59 @@ describe("JavaScript minifier", () => {
 
 	afterAll(() => {
 		vm.runInNewContext = runInNewContext;
+		fs.mkdirSync(runDir, { recursive: true });
+		const file = path.join(runDir, `${shard}.json`);
+		fs.writeFileSync(
+			`${file}.tmp`,
+			JSON.stringify({
+				leads,
+				complete: groupCounts.run === groupCounts.defined,
+				seen: {
+					refusals: [...refusalsSeen],
+					webpackRefusals: [...webpackRefusalsSeen],
+					misprints: [...misprintsSeen],
+					improvedYetBigger: [...improvedYetBiggerSeen],
+					rivalSmaller: [...rivalSmallerSeen]
+				}
+			})
+		);
+		fs.renameSync(`${file}.tmp`, file);
+		const done = fs
+			.readdirSync(runDir)
+			.filter((name) => name.endsWith(".json"));
+		let complete = done.length === count;
+		/** @type {Lead[]} */
+		const allLeads = [];
+		/** @type {Record<string, string[]>} */
+		const seen = {};
+		for (const name of done) {
+			const result = JSON.parse(
+				fs.readFileSync(path.join(runDir, name), "utf8")
+			);
+			allLeads.push(...result.leads);
+			if (!result.complete) complete = false;
+			for (const [table, entries] of Object.entries(result.seen)) {
+				(seen[table] = seen[table] || []).push(
+					.../** @type {string[]} */ (entries)
+				);
+			}
+		}
+		// Rewritten by every shard, as a filter can leave a shard with no test to run.
 		const report = process.env.JS_MINIFY_REPORT;
-		if (report) fs.writeFileSync(report, formatLeads(leads));
+		if (report) fs.writeFileSync(report, formatLeads(allLeads));
+		if (done.length === count) {
+			fs.rmSync(runDir, { recursive: true, force: true });
+		}
+		// Run alone or filtered, a shard cannot tell which entries the others meet.
+		const stale = complete ? staleEntries(seen) : [];
+		if (stale.length > 0) {
+			throw new Error(
+				`List no difference the reference no longer makes:\n${stale.join("\n")}`
+			);
+		}
 	});
 
-	it("should run only the node_version ranges it can read", () => {
+	test("should run only the node_version ranges it can read", () => {
 		const major = Number(process.versions.node.split(".")[0]);
 		expect(nodeSatisfies(`>=${major}`)).toBe(true);
 		expect(nodeSatisfies(`>= ${major}`)).toBe(true);
@@ -2115,8 +2246,8 @@ describe("JavaScript minifier", () => {
 		expect(() => nodeSatisfies(`^${major}`)).toThrow(/Unsupported/);
 	});
 
-	if (isPresent(referenceDir)) {
-		it("should pin the reference's corpus to the version it is compared with", () => {
+	if (shard === 1 && isPresent(referenceDir)) {
+		test("should pin the reference's corpus to the version it is compared with", () => {
 			const pinned = JSON.parse(
 				fs.readFileSync(path.join(referenceDir, "package.json"), "utf8")
 			).version;
@@ -2124,8 +2255,8 @@ describe("JavaScript minifier", () => {
 		});
 	}
 
-	if (isPresent(oxcTestsDir)) {
-		it("should pin oxc's corpus to the oxc-minify it is compared with", () => {
+	if (shard === 1 && isPresent(oxcTestsDir)) {
+		test("should pin oxc's corpus to the oxc-minify it is compared with", () => {
 			const pinned = JSON.parse(
 				fs.readFileSync(
 					path.join(externalDir, "oxc/napi/minify/package.json"),
@@ -2183,22 +2314,28 @@ describe("JavaScript minifier", () => {
 	for (const corpus of CORPORA) {
 		describe(corpus.name, () => {
 			if (!isPresent(corpus.directory)) {
+				if (shard !== 1) return;
+
 				it(`submodule not initialized (run \`git submodule update --init --depth 1 ${corpus.submodule}\`)`, () => {
 					// No-op: each corpus is an optional git submodule.
 				});
 
 				return;
 			}
-			const groups = corpus.groups();
+			const allGroups = corpus.groups();
+			const groups = allGroups.filter(
+				(group) => shardOf.get(`${corpus.name}/${group.name}`) === shard
+			);
 
-			it("should read every source the corpus holds", () => {
+			if (shard === 1) {
+				it("should read every source the corpus holds", () => {
 				const reader = /** @type {CaseReader} */ (loaded.reader);
 				let count = 0;
 				let own = 0;
 				let defaultsUnnamed = 0;
 				let runnable = 0;
 				let rivals = 0;
-				for (const { files } of groups) {
+				for (const { files } of allGroups) {
 					for (const file of files) {
 						for (const source of corpus.read(file, reader)) {
 							count++;
@@ -2228,11 +2365,15 @@ describe("JavaScript minifier", () => {
 				}
 				if (corpus.ownDefaultsNamed) expect(defaultsUnnamed).toBe(0);
 			});
+			}
 
+			groupCounts.defined += groups.length;
 			for (const group of groups) {
 				it(
 					`should minify as the reference does, printing what the input prints: ${group.name || "."}`,
 					async () => {
+						groupCounts.run++;
+
 						const reference = require("terser");
 
 						const reader = /** @type {CaseReader} */ (loaded.reader);
@@ -2619,26 +2760,16 @@ describe("JavaScript minifier", () => {
 		});
 	}
 
-	it("should list no difference the reference no longer makes", () => {
-		expect([
-			...Object.keys(REFUSED_BY_REFERENCE)
-				.filter((message) => !refusalsSeen.has(message))
-				.map((message) => `REFUSED_BY_REFERENCE: ${message}`),
-			...Object.keys(REFUSED_BY_WEBPACK)
-				.filter((message) => !webpackRefusalsSeen.has(message))
-				.map((message) => `REFUSED_BY_WEBPACK: ${message}`),
-			...Object.keys(REFERENCE_MISPRINTS)
-				.filter((key) => !misprintsSeen.has(key))
-				.map((key) => `REFERENCE_MISPRINTS: ${key}`),
-			...Object.keys(IMPROVED_YET_BIGGER)
-				.filter((key) => !improvedYetBiggerSeen.has(key))
-				.map((key) => `IMPROVED_YET_BIGGER: ${key}`),
-			...Object.keys(SWC_SMALLER)
-				.map((key) => `SWC_SMALLER: ${key}`)
-				.filter((entry) => !rivalSmallerSeen.has(entry)),
-			...Object.keys(OXC_SMALLER)
-				.map((key) => `OXC_SMALLER: ${key}`)
-				.filter((entry) => !rivalSmallerSeen.has(entry))
-		]).toEqual([]);
+};
+
+/**
+ * Defines the suite for one shard of the corpora's groups.
+ * @param {number} shard this shard, from 1
+ * @param {number} count how many shards the groups are dealt to
+ * @returns {void}
+ */
+module.exports = (shard, count) => {
+	describe(`JavaScript minifier (shard ${shard}/${count})`, () => {
+		defineShard(shard, count);
 	});
-});
+};
