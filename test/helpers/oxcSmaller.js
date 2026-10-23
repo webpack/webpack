@@ -241,8 +241,7 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/esbuild.rs:1798",
 			"oxc minifier: peephole/esbuild.rs:2309",
 			"oxc minifier: peephole/esbuild.rs:2368",
-			"oxc minifier: peephole/esbuild.rs:255",
-			"oxc minifier: peephole/esbuild.rs:700"
+			"oxc minifier: peephole/esbuild.rs:255"
 		]
 	],
 	[
@@ -532,17 +531,13 @@ const OXC_SMALLER_BY_REASON = [
 	],
 	[
 		"oxc drops more unreachable code, as oxc's `peephole/remove_dead_code.rs` tests show",
-		[
-			"oxc minifier: peephole/remove_dead_code.rs:263",
-			"oxc minifier: peephole/remove_dead_code.rs:295"
-		]
+		["oxc minifier: peephole/remove_dead_code.rs:263"]
 	],
 	[
 		"oxc joins more neighboring declarations, as oxc's `peephole/collapse_variable_declarations.rs` tests show",
 		[
 			"oxc minifier: peephole/collapse_variable_declarations.rs:211",
-			"oxc minifier: peephole/collapse_variable_declarations.rs:234",
-			"oxc minifier: peephole/collapse_variable_declarations.rs:99"
+			"oxc minifier: peephole/collapse_variable_declarations.rs:234"
 		]
 	],
 	[
