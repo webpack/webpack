@@ -15247,6 +15247,23 @@ type JavascriptNormalModule = NormalModule & {
 	buildInfo?: JavascriptModuleBuildInfo;
 	buildMeta?: JavascriptModuleBuildMeta;
 };
+declare interface JavascriptParseOptions {
+	/**
+	 * a module (the default) or a script
+	 */
+	sourceType?: "module" | "script";
+
+	/**
+	 * optional callback for each parse error, with the CSS and HTML parsers' signature and Babel's `reasonCode` kebab-cased as `code`; `severity` is `"error"` for one that stops the parse and `"warning"` for one it reads past
+	 */
+	parseError?: (
+		input: string,
+		code: string,
+		start: number,
+		end: number,
+		severity: ParseErrorSeverity
+	) => void;
+}
 declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 	/**
 	 * Creates an instance of JavascriptParser.
@@ -34268,7 +34285,11 @@ declare class SyntaxParser {
 	 * acorn source: https://github.com/acornjs/acorn/blob/8.18.0/acorn/src/location.js
 	 */
 	raise(pos: number, message: string): never;
-	raiseRecoverable(pos: number, message: string): never;
+
+	/**
+	 * An error the parse can go on past: `parseProgram` reports it and goes on.
+	 */
+	raiseRecoverable(pos: number, message: string): void;
 	curPosition(): undefined | Position;
 	skipLineComment(startSkip: number): void;
 	parse(): any;
@@ -37050,6 +37071,11 @@ declare namespace exports {
 					input: string,
 					options: ParserOptionsSyntaxParser
 				) => Program;
+				export let parseProgram: (
+					input: string,
+					pos?: number,
+					options?: JavascriptParseOptions
+				) => undefined | number;
 				export let positionAt: (
 					lineStarts: number[],
 					offset: number
