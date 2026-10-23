@@ -15,3 +15,10 @@ it("should trust a check that passes", () => {
 		checked: [{ name: 42 }]
 	});
 });
+
+it("should fall back to the schema when a stale check rejects valid options", () => {
+	expect(require("./d")).toEqual({
+		options: { name: "valid" },
+		checked: [{ name: "valid" }]
+	});
+});
