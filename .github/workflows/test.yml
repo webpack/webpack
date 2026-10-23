@@ -484,13 +484,18 @@ jobs:
       # than under every pull request at once. Cached by that version.
       - name: Read the pinned browser build
         id: browser-build
-        run: echo "id=$(node -p "require('playwright-core/package.json').version")" >> "$GITHUB_OUTPUT"
+        # WHY: playwright ships a WebKit build per Ubuntu release, and one built
+        # for 24.04 restored onto 26.04 cannot load its ICU; keyed on the image
+        # (`ImageOS`, e.g. `ubuntu26`), a runner moving release starts afresh.
+        run: |
+          echo "id=$(node -p "require('playwright-core/package.json').version")" >> "$GITHUB_OUTPUT"
+          echo "image=${ImageOS:-${{ runner.os }}}" >> "$GITHUB_OUTPUT"
 
       - name: Cache the pinned browser
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ~/.cache/ms-playwright
-          key: playwright-${{ matrix.browser }}-${{ steps.browser-build.outputs.id }}-${{ runner.os }}
+          key: playwright-${{ matrix.browser }}-${{ steps.browser-build.outputs.id }}-${{ steps.browser-build.outputs.image }}
 
       # WHY: `--with-deps` downloads the system packages from Ubuntu's mirror on
       # every run, which a slow mirror stretched from a minute to 37. apt keeps
@@ -511,8 +516,8 @@ jobs:
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ~/apt-archives/*.deb
-          key: playwright-deps-${{ matrix.browser }}-${{ runner.os }}-
-          restore-keys: playwright-deps-${{ matrix.browser }}-${{ runner.os }}-
+          key: playwright-deps-${{ matrix.browser }}-${{ steps.browser-build.outputs.image }}-
+          restore-keys: playwright-deps-${{ matrix.browser }}-${{ steps.browser-build.outputs.image }}-
 
       # `--with-deps` for Firefox and WebKit, whose shared libraries a runner does
       # not carry where it already carries Chrome's; it runs on a cache hit too,
@@ -533,7 +538,7 @@ jobs:
           sudo apt-get autoclean -qq || true
           debs=$(find ~/apt-archives -maxdepth 1 -name '*.deb' -printf '%f\n' | sort)
           if [ -n "$debs" ]; then
-            echo "key=playwright-deps-${{ matrix.browser }}-${{ runner.os }}-$(echo "$debs" | sha256sum | cut -c1-16)" >> "$GITHUB_OUTPUT"
+            echo "key=playwright-deps-${{ matrix.browser }}-${{ steps.browser-build.outputs.image }}-$(echo "$debs" | sha256sum | cut -c1-16)" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Save the system packages
