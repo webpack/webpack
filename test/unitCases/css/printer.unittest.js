@@ -8,6 +8,8 @@ const {
 	buildSkipSet,
 	Field,
 	NodeType,
+	escapeIdentifier,
+	normalizeUrl,
 	parseAStylesheet,
 	Part
 } = require("../../../lib/css/syntax-parser");
@@ -14620,5 +14622,1345 @@ describe("CssSyntax minify — a later value no engine reads keeps the one befor
 		["an important twin before a plain one", "a{transform:scale(2)!important;-moz-transform:scale(1)}"]
 	])("drops a vendor spelling behind %s", (_, css) => {
 		expect(minifyFor(css, MODERN)).not.toContain("-moz-transform");
+	});
+});
+
+// cspell:ignore OLOR abcdefghijklmnopqrstuvwxyzabcdefgh acontent arting auop conten displa imptant inear laye olor pmportant pxcustom suppo webk widt
+describe("CssSyntax minify — the math fold at its edges", () => {
+	/**
+	 * @param {string} css input stylesheet
+	 * @param {import("../../../lib/css/syntax-parser").CssProcessOptions=} options extra options
+	 * @returns {string} its minified serialization
+	 */
+	const minify = (css, options) =>
+		new SourceProcessor().process(css, { mode: "minify", ...options }).code;
+
+	it("leaves a dimension no double holds in the unit it was written in", () => {
+		const css = "a{width:1e999px;transition-duration:1e999ms}";
+		expect(minify(css, { convertLengthUnits: true })).toBe(css);
+	});
+
+	it.each([
+		["a sum inside the range", "calc(10deg + 5deg)", "15deg"],
+		["a sum past the range", "calc(50deg + 50deg)", "calc(100deg)"],
+		["a written value past the range", "calc(100deg)", "calc(100deg)"],
+		["a unit the range is not stated in", "calc(.5rad + .5rad)", "calc(1rad)"]
+	])("keeps the clamp an `oblique` angle has in `calc()`: %s", (_, angle, out) => {
+		expect(minify(`a{font-style:oblique ${angle}}`)).toBe(
+			`a{font-style:oblique ${out}}`
+		);
+	});
+
+	it("keeps the fraction that makes an integer property's zero a number", () => {
+		expect(minify("a{z-index:0.0;order:00.000}")).toBe("a{z-index:.0;order:.0}");
+		expect(minify("@supports (z-index:0.0){a{b:c}}")).toBe(
+			"@supports (z-index:.0){a{b:c}}"
+		);
+	});
+
+	it("folds a unit's case with `shortenNumbers` off", () => {
+		expect(
+			minify("a{width:1PX;height:1Q}", { transforms: { shortenNumbers: false } })
+		).toBe("a{width:1px;height:1Q}");
+	});
+
+	it("drops a zero percentage subtracted from a signed length", () => {
+		expect(
+			minify("a{transform:translate(calc(0% - -5px),calc(0% - +5px))}")
+		).toBe("a{transform:translate(5px,-5px)}");
+	});
+
+	it.each([
+		["no size argument", "calc-size(auto)", "calc-size(auto)"],
+		["a size naming the basis", "calc-size(auto,size + 10px)", "calc-size(auto,size + 10px)"],
+		["a size of two units", "calc-size(auto,1px + 1em)", "calc-size(auto,1px + 1em)"],
+		["a size already reduced", "calc-size(auto,15px)", "calc-size(auto,15px)"],
+		["a size to reduce", "calc-size(auto,10px + 5px)", "calc-size(auto,15px)"]
+	])("reduces the size of a `calc-size()` only where it is a sum: %s", (_, value, out) => {
+		expect(minify(`a{width:${value}}`)).toBe(`a{width:${out}}`);
+	});
+
+	it.each([
+		["a sum no unit spells exactly", "calc(1e-7px + 1e-7px)"],
+		["a size of two terms side by side", "calc-size(auto,1px 2px)"],
+		["a size no unit spells exactly", "calc-size(auto,1e-7px + 1e-7px)"],
+		["a rounding with no strategy and no step", "round(10.5px)"]
+	])("leaves %s as written", (_, value) => {
+		expect(minify(`a{width:${value}}`)).toBe(`a{width:${value}}`);
+	});
+
+	it("folds a math function in a media feature, which no property clamps", () => {
+		expect(minify("@media (width:calc(10px + 5px)){a{b:c}}")).toBe(
+			"@media (width:15px){a{b:c}}"
+		);
+	});
+
+	it("drops the zero percentage of a signed length the fold left alone", () => {
+		// A custom property's value is not folded, so its signs are as written.
+		expect(
+			minify("a{--x:translate(calc(0% - -5px),calc(0% - +5px),calc(0% - 5px))}", {
+				rewriteCustomProperties: true
+			})
+		).toBe("a{--x:translate(5px,-5px,-5px)}");
+		const css = "a{--x:translate(calc(0% - -5px),calc(0% - +5px))}";
+		expect(minify(css)).toBe(css);
+		expect(minify(css, { transforms: { shortenNumbers: false } })).toBe(css);
+	});
+
+	it("leaves a function whose answer is no number as written", () => {
+		// The angle overflows to infinity on its way to degrees, and the sine of
+		// that is not a number.
+		const css = "a{opacity:sin(1e307);width:calc(1px*cos(1e307))}";
+		expect(minify(css)).toBe(css);
+	});
+});
+
+describe("CssSyntax minify — a prefixable pseudo's selector list", () => {
+	it("trims the whitespace around a comma out of a copied selector", () => {
+		expect(minifyFor(".a::placeholder , .b{color:red}", ["chrome 40"])).toBe(
+			".a::-webkit-input-placeholder{color:red}.a::placeholder,.b{color:red}"
+		);
+	});
+
+	it.each([
+		[".a::placeholder:fullscreen{color:red}"],
+		["input::placeholder::selection{color:red}"]
+	])("leaves a selector carrying two prefixable pseudos as written: %s", (css) => {
+		// Each would take its own spelling, and no one copy can carry both.
+		expect(minifyFor(css, ["chrome 40", "firefox 40"])).toBe(css);
+	});
+});
+
+describe("CssSyntax minify — quoting at its edges", () => {
+	/**
+	 * @param {string} css input stylesheet
+	 * @param {import("../../../lib/css/syntax-parser").CssTransformOptions=} transforms the rewrites to set
+	 * @returns {string} its minified serialization
+	 */
+	const minify = (css, transforms) =>
+		new SourceProcessor().process(css, { mode: "minify", transforms }).code;
+
+	it("keeps a family's quotes with `normalizeQuotes` off", () => {
+		expect(minify('a{font-family:"Foo"}', { normalizeQuotes: false })).toBe(
+			'a{font-family:"Foo"}'
+		);
+	});
+
+	it.each([
+		["both quotes escaped, in apostrophes", "'a\\'b\\\"c'", "'a\\'b\"c'"],
+		["both quotes escaped, in quotation marks", "\"\\'\\\"\"", "\"'\\\"\""],
+		["an escaped quotation mark and a hex escape", "'\\\"\\61'", "'\"\\61'"]
+	])("unescapes only the quote the wrapper no longer needs: %s", (_, string, out) => {
+		expect(minify(`a{content:${string}}`)).toBe(`a{content:${out}}`);
+	});
+
+	it("writes back the quote a string ran out before", () => {
+		// The escape takes the quote, so `}` is part of the string, which EOF ends.
+		expect(minify('a{content:"a\\"}')).toBe("a{content:'a\"}'}");
+		expect(minify('a{content:"a\\')).toBe('a{content:"a"}');
+	});
+
+	it("writes back the `)` a url ran out before, past an escaped one", () => {
+		expect(minify("a{background:url(x\\)")).toBe("a{background:url(x\\))}");
+	});
+
+	it("keeps a url's quotes with `normalizeQuotes` off, decoding its escapes still", () => {
+		expect(minify("a{background:url('a b')}", { normalizeQuotes: false })).toBe(
+			"a{background:url('a b')}"
+		);
+		expect(
+			minify("a{background:url('data:image/svg+xml,%3Csvg%3E')}", {
+				normalizeQuotes: false
+			})
+		).toBe("a{background:url('data:image/svg+xml,<svg>')}");
+	});
+});
+
+describe("SourceProcessor — processAsync over a data: url", () => {
+	/**
+	 * @param {string} sheet the stylesheet
+	 * @param {(source: string) => Promise<string | undefined>} renderEmbeddedSource the renderer
+	 * @returns {Promise<string>} the minified stylesheet
+	 */
+	const minify = async (sheet, renderEmbeddedSource) =>
+		(
+			await new SourceProcessor().processAsync(sheet, {
+				mode: "minify",
+				renderEmbeddedSource
+			})
+		).code;
+	const quoted = '.a{background:url("data:image/svg+xml,<svg>  <rect/></svg>")}';
+	const bare = ".a{background:url(data:image/svg+xml,%3Csvg%3E%20%20%3C/svg%3E)}";
+
+	it("rebuilds a quoted url around the answer", async () => {
+		expect(await minify(quoted, async (source) => source.replace("  ", " "))).toBe(
+			".a{background:url(data:image/svg+xml,<svg>\\ <rect/></svg>)}"
+		);
+		expect(await minify(bare, async () => "<svg/>")).toBe(
+			".a{background:url(data:image/svg+xml,<svg/>)}"
+		);
+	});
+
+	it("prints a url as written where the answer is none or the same", async () => {
+		const out = '.a{background:url("data:image/svg+xml,<svg>  <rect/></svg>")}';
+		expect(await minify(quoted, async () => undefined)).toBe(out);
+		expect(await minify(quoted, async (source) => source)).toBe(out);
+		expect(await minify(bare, async () => undefined)).toBe(
+			".a{background:url(data:image/svg+xml,<svg>%20%20</svg>)}"
+		);
+	});
+
+	it("offers nothing for a url of two strings, which is no url", async () => {
+		// Read as one string, the payload would run on past the first quote, and
+		// the url rebuilt around the answer would be one where none was written.
+		const css = 'a{background:url("data:image/svg+xml,<svg/>" "x")}';
+		/** @type {string[]} */
+		const offered = [];
+		const render = (/** @type {string} */ source) => {
+			offered.push(source);
+			return `${source}<!---->`;
+		};
+		expect(await minify(css, async (source) => render(source))).toBe(css);
+		expect(
+			new SourceProcessor().process(css, {
+				mode: "minify",
+				renderEmbeddedSource: render
+			}).code
+		).toBe(css);
+		expect(offered).toEqual([]);
+	});
+
+	it("offers nothing for a url that is no data URL or holds a CSS escape", async () => {
+		/** @type {string[]} */
+		const offered = [];
+		const out = await minify(
+			'.a{background:url("data:image/svg+xml,<svg>\\\\</svg>");b:url("x.png")}.b{background:url(x.png)}',
+			async (source) => {
+				offered.push(source);
+				return source;
+			}
+		);
+		expect(offered).toEqual([]);
+		expect(out).toBe(
+			'.a{background:url("data:image/svg+xml,<svg>\\\\</svg>");b:url(x.png)}.b{background:url(x.png)}'
+		);
+	});
+});
+
+describe("CssSyntax minify — a value rewrite's guards", () => {
+	/**
+	 * @param {string} css input stylesheet
+	 * @param {import("../../../lib/css/syntax-parser").CssTransformOptions=} transforms the rewrites to set
+	 * @returns {string} its minified serialization
+	 */
+	const minify = (css, transforms) =>
+		new SourceProcessor().process(css, { mode: "minify", transforms }).code;
+
+	it.each([
+		["an empty layer between two", "left top,,right"],
+		["an empty last layer", "left top,right,"],
+		["an empty first layer", ",left"]
+	])("leaves a position list with %s as written", (_, value) => {
+		// The engine drops the whole value; a rewrite must not print one it reads.
+		const css = `a{background-position:${value}}`;
+		expect(minify(css)).toBe(css);
+	});
+
+	it("still shortens each layer of a position list", () => {
+		expect(minify("a{background-position:left top , right}")).toBe(
+			"a{background-position:0%0%,100%}"
+		);
+	});
+
+	it("leaves a unicode-range as written with `shortenNumbers` off", () => {
+		const css = "@font-face{unicode-range:U+0025-00FF}";
+		expect(minify(css, { shortenNumbers: false })).toBe(css);
+	});
+
+	it("writes a unicode-range wildcard only where the bounds line up", () => {
+		expect(
+			minify("@font-face{unicode-range:U+00??,U+??,U+1000-ff,U+0-f,U+10-1f}")
+		).toBe("@font-face{unicode-range:U+??,U+??,U+1000-ff,U+?,U+1?}");
+	});
+
+	it("leaves a translation of four components as written", () => {
+		expect(minify("a{translate:1px 2px 3px 4px}")).toBe(
+			"a{translate:1px 2px 3px 4px}"
+		);
+	});
+
+	it("drops a unicode-range's leading zeros", () => {
+		expect(minify("@font-face{unicode-range:U+0025}")).toBe(
+			"@font-face{unicode-range:U+25}"
+		);
+	});
+
+	it("leaves an `:nth-*()` as written with `shortenSelectors` off", () => {
+		expect(
+			minify(":nth-child(2n+1){a:b}", { shortenSelectors: false })
+		).toBe(":nth-child(2n+1){a:b}");
+	});
+
+	it("leaves a radius with two slashes as written", () => {
+		expect(minify("a{border-radius:1px/2px/3px}")).toBe(
+			"a{border-radius:1px/2px/3px}"
+		);
+	});
+
+	it.each([
+		["a comment before it", "/**/bold", "700"],
+		["a comment after it", "bold/**/", "700"],
+		["two components", "bold bold", "bold bold"],
+		["a number already", "600", "600"]
+	])("writes a `font-weight` keyword as its number past %s", (_, value, out) => {
+		expect(minify(`a{font-weight:${value}}`)).toBe(`a{font-weight:${out}}`);
+	});
+
+	it("leaves a transition holding what no slot takes as written", () => {
+		expect(minify("a{transition:opacity 1s 50%}")).toBe(
+			"a{transition:opacity 1s 50%}"
+		);
+	});
+
+	it("still reduces a transform with `shortenNumbers` off", () => {
+		expect(
+			minify("a{transform:translate3d(1px,0,0)}", { shortenNumbers: false })
+		).toBe("a{transform:translate(1px)}");
+	});
+
+	it.each([
+		["a quarter turn back", "matrix(0,-1,1,0,0,0)", "rotate(270deg)"],
+		["no rotation", "matrix(0,2,3,0,0,0)", "matrix(0,2,3,0,0,0)"]
+	])("writes a matrix as the rotation it is: %s", (_, value, out) => {
+		expect(minify(`a{transform:${value}}`)).toBe(`a{transform:${out}}`);
+	});
+
+	it.each([
+		["a color function", "rgb(1,2,3),blue", "linear-gradient(blue,#010203)"],
+		["a substitution", "var(--x),blue", "linear-gradient(to top,var(--x),blue)"],
+		["a color with a word after it", "rgb(1,2,3)x,blue", "linear-gradient(0deg,#010203 x,blue)"],
+		["two colors in one stop", "red blue,blue", "linear-gradient(0deg,red blue,blue)"]
+	])("reverses a gradient's bare colors only: %s", (_, stops, out) => {
+		expect(minify(`a{background:linear-gradient(to top,${stops})}`)).toBe(
+			`a{background:${out}}`
+		);
+	});
+
+	it.each([
+		["a color function", "color(display-p3 1 0 0),blue", "linear-gradient(blue,color(display-p3 1 0 0))"],
+		["a color function with a word after it", "color(display-p3 1 0 0)x,blue", "linear-gradient(0deg,color(display-p3 1 0 0)x,blue)"]
+	])("reverses a gradient's stops only where each is one color: %s", (_, stops, out) => {
+		expect(minify(`a{background:linear-gradient(to top,${stops})}`)).toBe(
+			`a{background:${out}}`
+		);
+	});
+
+	it("keeps the `at` of a gradient whose first argument holds a color", () => {
+		expect(minify("a{background:radial-gradient(red at center,blue)}")).toBe(
+			"a{background:radial-gradient(red at center,blue)}"
+		);
+	});
+
+	it("keeps an initial `grid-auto-flow` keyword its slot repeats", () => {
+		// Naming the slot twice is invalid; dropping one would make it valid.
+		expect(minify("a{grid-auto-flow:row row dense}")).toBe(
+			"a{grid-auto-flow:row row dense}"
+		);
+	});
+
+	it.each([
+		["a property that takes no `calc()`", "overflow-clip-margin", "calc(5px)", "calc(5px)"],
+		["a property that takes no `calc()`, folded", "overflow-clip-margin", "calc(2px + 3px)", "calc(5px)"],
+		["a number only taken bare", "stroke-width", "calc(5)", "calc(5)"],
+		["a number only taken bare, prefixed", "-webkit-perspective", "calc(5)", "calc(5)"],
+		["a number only taken bare, prefixed and folded", "-webkit-perspective", "calc(2 + 3)", "calc(5)"]
+	])("keeps the `calc()` of %s", (_, property, value, out) => {
+		expect(minify(`a{${property}:${value}}`)).toBe(`a{${property}:${out}}`);
+	});
+});
+
+describe("CssSyntax minify — nesting lowered, against the declarations after it", () => {
+	const TARGET = ["chrome 100"];
+
+	it("lowers past an early rule a later identical one restates", () => {
+		expect(
+			minifyFor(".a{color:red;.b{color:blue}.b{color:blue}color:green}", TARGET)
+		).toBe(".a{color:red;.b{color:blue}color:green}");
+		expect(
+			minifyFor(".a{color:red;.b{color:blue}color:green;.b{color:blue}}", TARGET)
+		).toBe(".a{color:red;color:green}.a .b{color:blue}");
+	});
+
+	it("keeps the nesting with `removeDeadRules` off", () => {
+		const css = ".a{color:red;.b{color:blue}color:green;.b{color:blue}}";
+		expect(minifyForWith(css, TARGET, { removeDeadRules: false })).toBe(css);
+	});
+});
+
+describe("CssSyntax minify — preludes and calls at their edges", () => {
+	/**
+	 * @param {string} css input stylesheet
+	 * @param {import("../../../lib/css/syntax-parser").CssProcessOptions=} options extra options
+	 * @returns {string} its minified serialization
+	 */
+	const minify = (css, options) =>
+		new SourceProcessor().process(css, { mode: "minify", ...options }).code;
+
+	it("keeps the whitespace after a namespace's `|`, which invalidates the selector", () => {
+		expect(minify("[| a]{c:d}")).toBe("[| a]{c:d}");
+		expect(minify('[a="b" i]{c:d}')).toBe("[a=b i]{c:d}");
+	});
+
+	it("writes back the `)` of a style query the input ran out in", () => {
+		expect(minify("@container style(--x: 1")).toBe(
+			"@container style(--x: 1);"
+		);
+	});
+
+	it("keeps the space before an `attr()`'s `)`", () => {
+		expect(minify("a{content:attr( data-x string )}")).toBe(
+			"a{content:attr(data-x string )}"
+		);
+	});
+
+	it("writes a transparent color as `#0000` only where the target reads it", () => {
+		expect(minifyFor("a{color:rgba(0,0,0,0)}", ["chrome 40"])).toBe(
+			"a{color:transparent}"
+		);
+		expect(minify("a{color:rgba(0,0,0,0)}")).toBe("a{color:#0000}");
+		expect(minify("a{-webkit-tap-highlight-color:rgba(0,0,0,0)}")).toBe(
+			"a{-webkit-tap-highlight-color:rgba(0,0,0,0)}"
+		);
+	});
+
+	it.each([
+		["red 0 10%,blue 100%", "linear-gradient(red 0,red 10%,blue)"],
+		["red 0 10%,blue", "linear-gradient(red 0,red 10%,blue)"],
+		["to bottom,red 0 10%,blue", "linear-gradient(red 0,red 10%,blue)"],
+		["180deg,red 0 10%,blue 10% 20%", "linear-gradient(red 0,red 10%,blue 10%,blue 20%)"],
+		["to top,red 0 10%,blue", "linear-gradient(0deg,red 0,red 10%,blue)"]
+	])("splits a double position over what the folds left: %s", (args, out) => {
+		expect(
+			minifyFor(`a{background:linear-gradient(${args})}`, ["chrome 40"])
+		).toBe(`a{background:${out}}`);
+	});
+
+	it("rebuilds a shouted `URL()` around what the renderer answers", async () => {
+		const css = ".a{background:URL(data:image/svg+xml,%3Csvg%3E%20%20%3C/svg%3E)}";
+		const out = ".a{background:url(data:image/svg+xml,<svg/>)}";
+		expect(
+			minify(css, { renderEmbeddedSource: () => "<svg/>" })
+		).toBe(out);
+		expect(
+			(
+				await new SourceProcessor().processAsync(css, {
+					mode: "minify",
+					renderEmbeddedSource: async () => "<svg/>"
+				})
+			).code
+		).toBe(out);
+	});
+
+	it("leaves a media feature's case with `foldCase` off", () => {
+		expect(
+			minify("@media (MIN-WIDTH:1px){a{b:c}}", { transforms: { foldCase: false } })
+		).toBe("@media (WIDTH>=1px){a{b:c}}");
+	});
+
+	it("does not lower nesting while beautifying", () => {
+		expect(
+			new SourceProcessor().process("a{color:red;& b{color:blue}}", {
+				mode: "beautify",
+				environment: { browsers: ["chrome 100"] }
+			}).code
+		).toBe("a {\ncolor: red;\n& b {\ncolor: blue;\n}\n}");
+	});
+
+	it.each([
+		["a prefix copy", "@media print{::placeholder{color:red}}", ["chrome 40"], "@media print{::-webkit-input-placeholder{color:red}::placeholder{color:red}}"],
+		["a dropped prefix", "@media print{::-webkit-input-placeholder{color:red}::placeholder{color:red}}", ["chrome 130"], "@media print{::placeholder{color:red}}"],
+		["a prefix copy joined", "@media print{a{color:red}}@media print{::placeholder{color:blue}}", ["chrome 40"], "@media print{a{color:red}::-webkit-input-placeholder{color:blue}::placeholder{color:blue}}"]
+	])("joins an at-rule's block with %s in it", (_, css, browsers, out) => {
+		expect(minifyFor(css, browsers)).toBe(out);
+	});
+
+	it("writes a lone `\\` delim with the newline that spells it", () => {
+		expect(minify("a{x:\\\n}")).toBe("a{x:\\\n}");
+		expect(minify("\\\n{x:y}")).toBe("\\\n{x:y}");
+	});
+});
+
+describe("CssSyntax — the printer called on every node", () => {
+	// The walk stores a whitespace or delim leaf's text without calling the
+	// printer; a printer wrapping it is called for those too, and must agree.
+	const BaseProcessor = require("../../../lib/util/SourceProcessor");
+	const syntax = require("../../../lib/css/syntax");
+
+	/**
+	 * @param {string} css input stylesheet
+	 * @returns {string} what a printer delegating to the CSS one prints
+	 */
+	const throughWrapper = (css) =>
+		new BaseProcessor(
+			syntax.parser.grammar,
+			undefined,
+			() =>
+				(
+					/** @type {import("../../../lib/css/syntax-parser").CssPath} */ path,
+					/** @type {import("../../../lib/css/syntax-parser").PrintContext} */ writer
+				) =>
+					syntax.printer.printer(path, writer),
+			syntax.parser.A
+		).process(css, { mode: "minify" }).code;
+
+	it.each([
+		["a  b , c{color:red;x:\\\n}"],
+		["a{b:c d}\\"],
+		["a{b:c\\"]
+	])("prints %j as the walk's own shortcut does", (css) => {
+		expect(throughWrapper(css)).toBe(
+			new SourceProcessor().process(css, { mode: "minify" }).code
+		);
+	});
+});
+
+describe("CssSyntax — the identifier and url helpers", () => {
+	it.each([
+		["a control character", "a\tb", "a\\9 b"],
+		["a control character before a digit", "\t1", "\\9 1"],
+		["a backslash before a control character", "a\\\tb", "a\\\\\\9 b"],
+		["a dash before a digit", "-1a", "\\-1a"],
+		["two dashes", "--x", "\\--x"],
+		["a dash before a letter", "-a", "-a"],
+		["a leading digit", "1a", "\\31 a"],
+		["a control character no whitespace", "a\u0001b", "a\\1 b"],
+		["a delete", "a\u007Fz", "a\\7Fz"],
+		["a lone dash", "-", "\\-"]
+	])("escapes %s", (_, name, out) => {
+		expect(escapeIdentifier(name)).toBe(out);
+	});
+
+	it.each([
+		["an astral escape", "\\1F600.png", "\u{1F600}.png"],
+		["a zero escape", "a\\0 b", "a\uFFFDb"],
+		["a surrogate escape", "\\D800 x", "\uFFFDx"],
+		["an escape past the last code point", "\\110000 y", "\uFFFDy"],
+		["a hex escape", "\\61 b", "ab"],
+		["a character escape", "a\\(b", "a(b"]
+	])("reads %s in a url as the code point it names", (_, url, out) => {
+		expect(normalizeUrl(url, false)).toBe(out);
+	});
+
+	it("normalizes a url the way it is resolved", () => {
+		expect(normalizeUrl("im\\\ng.png", true)).toBe("img.png");
+		expect(normalizeUrl("im\\\ng.png", false)).toBe("im\ng.png");
+		expect(normalizeUrl("  a.png\t", false)).toBe("a.png");
+		expect(normalizeUrl("", false)).toBe("");
+		expect(normalizeUrl("data:,%41", false)).toBe("data:,%41");
+		expect(normalizeUrl("dir/%41.png", false)).toBe("dir/A.png");
+		expect(normalizeUrl("d%41.png", false)).toBe("dA.png");
+		expect(normalizeUrl("%E0%A4%A.png", false)).toBe("%E0%A4%A.png");
+	});
+});
+
+describe("CssSyntax — the node accessors a print reads", () => {
+	const syntaxParser = require("../../../lib/css/syntax-parser");
+
+	it("numbers a declaration's property with its aliases resolved", () => {
+		/** @type {number[]} */
+		const ids = [];
+		new SourceProcessor()
+			.use({
+				[NodeType.Declaration]: (
+					/** @type {import("../../../lib/css/syntax-parser").CssPath} */ path
+				) => {
+					// Asked twice: the second read is the one remembered.
+					const id = syntaxParser._propertyIdOf(path.node);
+					expect(syntaxParser._propertyIdOf(path.node)).toBe(id);
+					ids.push(id);
+				}
+			})
+			.process("a{color:red;--x:1;foo:1;-webkit-transform:none;transform:none}");
+		expect(ids.slice(1, 3)).toEqual([-1, -2]);
+		expect(ids[0]).toBeGreaterThanOrEqual(0);
+		expect(ids[3]).toBe(ids[4]);
+	});
+
+	it("reads an at-rule without a block as having no rules and no bracket", () => {
+		/** @type {unknown[]} */
+		const seen = [];
+		new SourceProcessor()
+			.use({
+				[NodeType.AtRule]: (
+					/** @type {import("../../../lib/css/syntax-parser").CssPath} */ path
+				) => {
+					seen.push(
+						syntaxParser._rulesOf(path.node),
+						syntaxParser._blockTokenOf(path.node)
+					);
+				}
+			})
+			.process("@import 'a';");
+		expect(seen).toEqual([null, ""]);
+	});
+
+	it.each([
+		["shouted", "a{COLOR:red;Margin:0}", "a{color:red;margin:0}"],
+		["with a non-ASCII character", "a{col\u00f6r:red;color:blue;margin:0;col\u00f6r:x}", "a{col\u00f6r:red;color:blue;margin:0;col\u00f6r:x}"],
+		["escaped into a custom property", "a{\\2d -x:1;\\63olor:red}", "a{--x:1;color:red}"],
+		["escaped into a name no table holds", "a{b\\:c:1}", "a{b\\:c:1}"]
+	])("names a property written %s", (_, css, out) => {
+		expect(new SourceProcessor().process(css, { mode: "minify" }).code).toBe(
+			out
+		);
+	});
+});
+
+describe("CssSyntax — skipChildren() and stop() while printing", () => {
+	/** @type {(i: number) => string} */
+	const rule = (i) => `.c${i}>d${i}:hover{color:#ff0000;margin:${i + 1}px}`;
+	const BIG = Array.from({ length: 1800 }, (_, i) => rule(i)).join("");
+
+	it.each([
+		["a rule", NodeType.QualifiedRule, "a{color:#ff0000}b{c:d}"],
+		["a declaration", NodeType.Declaration, "a{color:#ff0000;margin:0 0}"],
+		["a function", NodeType.Function, "a{color:rgb(1,2,3)}"],
+		["a block", NodeType.SimpleBlock, "a{b:[c d]}"],
+		["an at-rule", NodeType.AtRule, "@media (x:calc(1px + 2px)){a{b:c}}"],
+		["a streamed at-rule", NodeType.AtRule, `@media screen{${BIG}}`]
+	])("prints all %s holds, and fires no visitor below it", (_, type, css) => {
+		/** @type {string[]} */
+		const log = [];
+		const processor = new SourceProcessor().use({
+			[type]: {
+				enter: (
+					/** @type {import("../../../lib/css/syntax-parser").CssPath} */ path
+				) => {
+					log.push("enter");
+					path.skipChildren();
+				},
+				exit: () => log.push("exit")
+			},
+			[NodeType.Ident]: () => log.push("ident"),
+			[NodeType.Hash]: () => log.push("hash"),
+			[NodeType.Comment]: () => log.push("comment")
+		});
+		const printed = processor.process(css, { mode: "minify" }).code;
+		expect(printed).toBe(
+			new SourceProcessor().process(css, { mode: "minify" }).code
+		);
+		const printLog = log.splice(0);
+		processor.process(css);
+		// The print fires what the walk fires, and the visitors held back are
+		// back for the next run.
+		expect(printLog).toEqual(log);
+		expect(log).toContain("exit");
+		log.length = 0;
+		processor.process(css, { mode: "minify" });
+		expect(log).toEqual(printLog);
+	});
+
+	it("prints the whole stylesheet after stop()", () => {
+		/** @type {string[]} */
+		const log = [];
+		const css = `a{b:1}${BIG}c{d:2}`;
+		const processor = new SourceProcessor().use({
+			[NodeType.Declaration]: (
+				/** @type {import("../../../lib/css/syntax-parser").CssPath} */ path
+			) => {
+				log.push(path.name());
+				path.stop();
+			}
+		});
+		expect(processor.process(css, { mode: "minify" }).code).toBe(
+			new SourceProcessor().process(css, { mode: "minify" }).code
+		);
+		expect(log).toEqual(["b"]);
+		log.length = 0;
+		processor.process(css);
+		expect(log).toEqual(["b"]);
+	});
+
+	it("ends a walk stopped inside a streamed rule once it closes", () => {
+		/** @type {string[]} */
+		const log = [];
+		new SourceProcessor()
+			.use({
+				[NodeType.Declaration]: (
+					/** @type {import("../../../lib/css/syntax-parser").CssPath} */ path
+				) => {
+					log.push(path.name());
+					if (log.length === 3) path.stop();
+				}
+			})
+			.process(`@media screen{${BIG}}a{z:1}`);
+		expect(log).toEqual(["color", "margin", "color"]);
+	});
+
+	it("puts back the visitors a skip held when the print throws", () => {
+		// A comment predicate runs as a streamed block is read, under the skip.
+		/** @type {number[]} */
+		const seen = [];
+		const processor = new SourceProcessor().use({
+			[NodeType.AtRule]: (
+				/** @type {import("../../../lib/css/syntax-parser").CssPath} */ path
+			) => path.skipChildren(),
+			[NodeType.Declaration]: () => seen.push(1)
+		});
+		const big = Array.from({ length: 4000 }, (_, i) => rule(i)).join("");
+		expect(() =>
+			processor.process(`@media print{${big}/*x*/}`, {
+				mode: "minify",
+				transforms: {
+					comments: (text) => {
+						if (text.includes("x")) throw new Error("comment");
+						return false;
+					}
+				}
+			})
+		).toThrow("comment");
+		processor.process("a{b:c}");
+		expect(seen).toEqual([1]);
+	});
+
+	it("passes on an error a visitor throws", () => {
+		expect(() =>
+			new SourceProcessor()
+				.use({
+					[NodeType.Declaration]: () => {
+						throw new Error("visitor");
+					}
+				})
+				.process("a{b:c}", { mode: "minify" })
+		).toThrow("visitor");
+	});
+});
+
+describe("CssSyntax — the options a print reads", () => {
+	const syntaxParser = require("../../../lib/css/syntax-parser");
+
+	it("picks the rewrite switches out of a minimizer's options", () => {
+		expect(
+			syntaxParser.pickTransforms(
+				/** @type {import("../../../lib/css/syntax-parser").CssTransformOptions} */ ({
+					foldCase: false,
+					shortenNumbers: true,
+					convertLengthUnits: true
+				})
+			)
+		).toEqual({ foldCase: false, shortenNumbers: true });
+		expect(syntaxParser.pickTransforms({})).toBeUndefined();
+	});
+
+	it("reads a prelude skip on a walk, and ignores it on a print", () => {
+		/** @type {number[]} */
+		const seen = [];
+		const processor = new SourceProcessor().use({
+			[NodeType.Ident]: () => seen.push(1)
+		});
+		const skip = { selectorPrelude: true, atRulePrelude: true };
+		processor.process("a b{c:d}@media x{}", { skip });
+		expect(seen).toHaveLength(1);
+		expect(processor.process("a b{c:d}", { mode: "minify", skip }).code).toBe(
+			"a b{c:d}"
+		);
+	});
+
+	it("reads a production it does not know as a stylesheet", () => {
+		expect(
+			new SourceProcessor().process("a{b:c}", {
+				mode: "minify",
+				as: /** @type {"stylesheet"} */ (/** @type {unknown} */ ("bogus"))
+			}).code
+		).toBe("a{b:c}");
+	});
+});
+
+describe("CssSyntax — a value too long for the buffers a parse keeps", () => {
+	it("prints it, and the next stylesheet after it", () => {
+		const value = "x ".repeat(40000).trim();
+		expect(minifyFor(`a{b:${value}}`)).toBe(`a{b:${value}}`);
+		expect(minifyFor("a{b:c}")).toBe("a{b:c}");
+	});
+});
+
+describe("CssSyntax minify — a `@supports` condition's outer parentheses", () => {
+	it.each([
+		["a `{` the input ran out in", "@supports ((display:grid) {a{b:c}}", "@supports ((display:grid){a{b:c}});"],
+		["a nested block the input ran out in", "@supports ((display:grid){.p{.lang-ko {}}", "@supports ((display:grid){.p{.lang-ko{}}});"],
+		["a word after the group", "@supports ((display:grid) x){a{b:c}}", "@supports ((display:grid) x){a{b:c}}"],
+		["two groups and no joiner", "@supports ((a:b) (c:d)){a{b:c}}", "@supports ((a:b) (c:d)){a{b:c}}"],
+		["an `and` beside an `or`", "@supports ((a:b) and (c:d) or (e:f)){a{b:c}}", "@supports ((a:b) and (c:d) or (e:f)){a{b:c}}"],
+		["a word no joiner is", "@supports ((a:b) x (c:d)){a{b:c}}", "@supports ((a:b) x (c:d)){a{b:c}}"],
+		["a joiner before a word", "@supports ((a:b) and c){a{b:c}}", "@supports ((a:b) and c){a{b:c}}"]
+	])("keeps them around %s", (_, css, out) => {
+		// Taken off, a `{` held inside them would open the rule's block, and a
+		// condition no grammar reads would stand bare.
+		expect(minifyFor(css)).toBe(out);
+	});
+
+	it.each([
+		["one group", "@supports ((display:grid)){a{b:c}}", "@supports (display:grid){a{b:c}}"],
+		["an `or` chain", "@supports ((display:grid) or (x)){a{b:c}}", "@supports (display:grid) or (x){a{b:c}}"],
+		["an `and` chain of any case", "@supports ((a:b) AND (c:d) and (e:f)){a{b:c}}", "@supports (a:b) AND (c:d) and (e:f){a{b:c}}"]
+	])("takes them off %s", (_, css, out) => {
+		expect(minifyFor(css)).toBe(out);
+	});
+});
+
+describe("CssSyntax minify — a box family holding a value its longhand does not read", () => {
+	it.each([
+		["a word", "a{margin-top:foo;margin-right:0;margin-bottom:0;margin-left:0}"],
+		["a word for an offset", "a{top:foo;right:0;bottom:0;left:0}"],
+		["a word naming no color", "a{border-top-color:red;border-right-color:foo;border-bottom-color:#fff;border-left-color:red}"],
+		["a call no box reads", "a{padding-top:foo(1px);padding-right:0;padding-bottom:0;padding-left:0}"]
+	])("keeps the longhands apart around %s", (_, css) => {
+		// The engine drops that one longhand; a shorthand holding it is dropped whole.
+		expect(minifyFor(css)).toBe(css);
+	});
+
+	it.each([
+		["keywords", "a{margin-top:auto;margin-right:0;margin-bottom:auto;margin-left:0}", "a{margin:auto 0}"],
+		["color functions", "a{border-top-color:color(display-p3 1 0 0);border-right-color:red;border-bottom-color:red;border-left-color:red}", "a{border-color:color(display-p3 1 0 0)red red}"],
+		["colors", "a{border-top-color:rgb(1 2 3);border-right-color:currentColor;border-bottom-color:#fff;border-left-color:red}", "a{border-color:#010203 currentcolor#fff red}"],
+		["styles", "a{border-top-style:solid;border-right-style:none;border-bottom-style:solid;border-left-style:none}", "a{border-style:solid none}"],
+		["widths", "a{border-top-width:thin;border-right-width:1px;border-bottom-width:thin;border-left-width:1px}", "a{border-width:thin 1px}"],
+		["math", "a{padding-top:calc(1px + 1em);padding-right:0;padding-bottom:0;padding-left:0}", "a{padding:calc(1px + 1em)0 0}"]
+	])("still merges %s every longhand reads", (_, css, out) => {
+		expect(minifyFor(css)).toBe(out);
+	});
+
+	it.each([
+		["a word", "a{inset:1px 2px 3px foo}"],
+		["a call no box reads", "a{inset:auto 0 0 auto(}", "a{inset:auto 0 0 auto(})}"]
+	])("leaves an `inset` holding %s for the target to drop", (_, css, out = css) => {
+		expect(minifyFor(css, ["edge 18"])).toBe(out);
+	});
+
+	it("still lowers an `inset` of what the offsets read", () => {
+		expect(minifyFor("a{inset:calc(1px + 1%) anchor(top)}", ["edge 18"])).toBe(
+			"a{top:calc(1px + 1%);right:anchor(top);bottom:calc(1px + 1%);left:anchor(top)}"
+		);
+	});
+});
+
+describe("CssSyntax minify — input left open, invalid or unusual, printed as it reads", () => {
+	// Each prints the stylesheet the input is, token for token where nothing is
+	// rewritten: a rule, a block or a string the input ran out in is closed, a
+	// value no grammar reads is kept, and only what reads the same goes.
+	it.each([
+		[".p{@-webkit-keyframes k{}@-webkit-keyframes k{}}", {"environment":{"browsers":["chrome 80"]},"transforms":{"shortenMediaQueries":false,"foldCase":false,"reduceFunctions":false}}, "minify", ".p{@-webkit-keyframes k{}}"],
+		["@media print{b c{}@media (--m){:--h{b:c}}@custom-media --m (min-width:1px);@custom-selector :--h1;}", {"environment":{"browsers":["chrome 130"]},"transforms":{"colorFallbacks":false,"lowerUnsupported":false,"rewriteDirSelector":false,"customMedia":true,"customSelectors":true}}, "minify", "@media print{@media (width>=1px){:--h{b:c}}@custom-selector :--h1}"],
+		[".z{color:t;eal}", {}, "minify", ".z{color:t;eal}"],
+		["b,a,b{\\c:1}", {}, "minify", "a,b{\\C:1}"],
+		["@layer x\\{", {"environment":{"browsers":["ie 9"]}}, "minify", "@layer x\\{;"],
+		["a{margin:var(--g\\) var(--g)}", {"environment":{"browsers":["chrome 80"]}}, "minify", "a{margin:var(--g\\) var(--g)})}"],
+		["a{b:c}a{widt.5px}a{b:c}", {}, "minify", "a{widt.5px}a{b:c}"],
+		["a{b:c}a{!x/* c */}a{!x/* c */}a{b:c}", {}, "minify", "a{!x/* c */}a{b:c}"],
+		["@media print{a{b:c}a{!x/* c */}a{!x/* c */}a{b:c}}", {"environment":{"browsers":["safari 17"]}}, "minify", "@media print{a{!x/* c */}a{b:c}}"],
+		["@layer x{/*! banner */a{b:c}}@lax{/*! banner */a{b:c}}", {"environment":{"browsers":["chrome 40"]}}, "minify", "@layer x{a{b:c}}/*! banner */@lax{a{b:c}}/*! banner */"],
+		["@layer x{", {}, "minify", "@layer x{}"],
+		["@layer l{}@layer l{", {}, "minify", "@layer l{}"],
+		["a{width&:.5px}a{width:.5px}a{width&:.5px}a{width:.5px}", {}, "minify", "a{width&:.5px;width:.5px}"],
+		["a{x:1}b{x:1}a{content:\"x\"}a{x:1}b{x:1}a{content:\"x\"}", {"environment":{"browsers":["opera 12"]}}, "minify", "a,b{x:1}a{content:\"x\"}"],
+		[".p{a{b:1;b\\:1}a{b:1;b:1}}", {}, "minify", ".p{a{b\\:1}a{b:1}}"],
+		["a{b:c}a{width:0.50pa{b:c}a{b:c}a{width:0.50px}a{b:c}", {}, "minify", "a{b:c;width:0.50pa{b:c}a{width:.5px}a{b:c}}"],
+		["a{x:1}b{x:1}a{border-radius:1px 2px / 3px 4px}a{x:1}b{x:}a{border-radius:1px 2px / 3px 4px}", {}, "minify", "a,b{x:1}a{x:1;border-radius:1px 2px/3px 4px}"],
+		["a{b:\"x\"}a{wih:3px}a{b:\"x\"}a{wih:3px}", {}, "minify", "a{b:\"x\";wih:3px}"],
+		[".a{x:1}@starting-style{y:2}.a{x:1}@starting-style{y:2}", {"environment":{"browsers":["ie 9"]},"mergeDistantRules":true}, "minify", "@starting-style{y:2}.a{x:1}@starting-style{y:2}"],
+		["@scope (.x){b c{}}@scope (.x){b c{}}", {"mergeDistantRules":true}, "minify", "@scope(.x){}@scope(.x){}"],
+		["@scope (.x){", {"mergeDistantRules":true}, "minify", "@scope(.x){}"],
+		["a{b:c}a{b:1}a{b:c}", {"mergeDistantRules":true}, "minify", "a{b:1}a{b:c}"],
+		["a:-webkit-autofill{color:blue}a{color:#ffffff;margin:1px}", {"environment":{"browsers":["firefox 120"]},"mergeDistantRules":true,"convertApproximateColors":true}, "minify", "a:-webkit-autofill{color:blue}a{color:#fff;margin:1px}"],
+		["@media print{a{width:3px}}/*! banner */a{b:c}", {"mergeDistantRules":true}, "minify", "@media print{a{width:3px}}/*! banner */a{b:c}"],
+		[".", {"as":"block-contents"}, "minify", "."],
+		["", {"as":"block-contents"}, "beautify", ""],
+		["", {"as":"block-contents"}, "minify", ""],
+		["a{b:c}a{margin:0em\\ -0.25rem 0rem}a{b\n:c}", {"environment":{"browsers":["chrome 140","firefox 140","safari 26.2"]},"rewriteCustomProperties":true}, "minify", "a{margin:0em\\ -0 .25rem 0;b:c}"],
+		["a{margin:0em-0.25rem 0rem}", {"environment":{"browsers":["safari 15"]}}, "minify", "a{margin:0em-0.25rem 0}"],
+		["@@media print{M", {}, "minify", "@@media print{M}"],
+		["", {"environment":{"browsers":["ie 9"]}}, "minify", ""],
+		["A{TOP:A", {"environment":{"browsers":["ie 9"]}}, "minify", "A{top:A}"],
+		["@supports (width:16p{x){a", {"environment":{"browsers":["samsung 4"]}}, "minify", "@supports (width:16p{x){a}});"],
+		["@supports (dis{play:grid){a{b:\"x\\}a{!x/* c */ /* d", {"environment":{"browsers":["chrome 60"]},"transforms":{"rewriteEscapes":false,"shortenColors":false}}, "minify", "@supports (dis{play:grid){a{b:\"x\\}a{!x/* c */ /* d\"}}});"],
+		["@supports( (display:grid){)}", {"environment":{"browsers":["chrome 130"]},"transforms":{"shortenSelectors":false}}, "minify", "@supports ((display:grid){)});"],
+		["@media print{a{margin:var(--g)var(--g)}a{margin:var(--g)var(-}", {}, "minify", "@media print{a{margin:var(--g)var(--g)}a{margin:var(--g)var(-})}}"],
+		[".a{--x:1px (/*!k*", {"environment":{"browsers":["chrome 130"]}}, "minify", ".a{--x:1px (/*!k*"],
+		["A{--MARGIN:1PX 1PXA{--MARGIN:1PX 1PX", {}, "minify", "A{--MARGIN:1PX 1PXA{--MARGIN:1PX 1PX"],
+		["a{inset:au\nto 0 0 auto}", {"environment":{"browsers":["ie 9"]}}, "minify", "a{inset:au to 0 0 auto}"],
+		["a{margin:1,px;margin-top:2px}", {}, "minify", "a{margin:1,px;margin-top:2px}"],
+		["a{margin:1px !important;margin-top:,2px !important}", {}, "minify", "a{margin:1px!important;margin-top:,2px!important}"],
+		["a{margin:1pmportant;margin-top:2px", {"environment":{"browsers":["firefox 120"]}}, "minify", "a{margin:1pmportant;margin-top:2px}"],
+		["op:auto;right:0em;bottom:0em;left:auto}op:auto;right:0em;bottom:0em;left:auto}", {"environment":{"browsers":["safari 17"]},"as":"block-contents"}, "minify", "op:auto;left:auto}op:auto;right:0;bottom:0;left:auto}"],
+		["a{grid-row:1 !imptant;grid-row-end:3 !im", {}, "minify", "a{grid-row:1!imptant;grid-row-end:3!im}"],
+		[".p{a{grid-row:1, !important;grid-row-end:3 !important}}", {"as":"block-contents"}, "minify", ".p{a{grid-row:1,!important;grid-row-end:3!important}}"],
+		["b,;a,b{c:1}b,;b{c:1}", {}, "minify", ";a,b{c:1};b,b{c:1}"],
+		["a{b:c}a[href=\"ab\\\\\"]{b:ca{b:c}", {"environment":{"browsers":["safari 15"]}}, "minify", "a{b:c}a[href=\"ab\\\\\"] b:ca{b:c}"],
+		["a{content:\"x\"}a{conten\"}", {}, "minify", "a{content:\"x\";conten\"}\"}"],
+		["a{b:\"x\\a{b:\"x\\", {"mergeDistantRules":true}, "minify", "a{b:\"x\\a{b:\"x�}"],
+		["a{b:c}a{mara{mara{b:c}", {}, "minify", "a{b:c;mara{mara{b:c}}}"],
+		["A{BORDER-RADIUS:1PX}A{BORDER-RAD;IUS:1PX}", {}, "minify", "A{border-radius:1px;BORDER-RAD;ius:1px}"],
+		["a{b:c}a{", {"environment":{"browsers":["firefox 120"]},"transforms":{"removeDeadRules":false}}, "minify", "a{b:c}"],
+		["a{b:c}a{!x", {}, "minify", "a{b:c;!x}"],
+		["@media print{a{margin:0% 1px 0px}a{!x/* c */}", {"transforms":{"mergeLonghands":false}}, "minify", "@media print{a{margin:0%1px 0;!x/* c */}}"],
+		["a{b:c}b c{}a{b\\:c}", {}, "minify", "a{b:c;b\\:c}"],
+		["@media print{@layer x{}{y/**/ z@media print{@layer x{}{y/**/ z", {"environment":{"browsers":["ie 9"]}}, "minify", "@media print{@layer x{}{y z@media print{@layer x{}{y/**/ z}}}}"],
+		["@laye x{@layer x{}@layer x{@layer x{}", {"as":"block-contents"}, "minify", "@laye x{@layer x{@layer x{}}}"],
+		[".p{@layer l{}@layer l{}}", {}, "minify", ".p{@layer l{}}"],
+		["@layer x{.a{x:1}.b{y:2}.a{x:1}.b{y:2}}", {"mergeDistantRules":true}, "minify", "@layer x{.a{x:1}.b{y:2}}"],
+		["@layer x{.p{a{b:c}@layer l{}a{b:c}}}", {"mergeDistantRules":true}, "minify", "@layer x{.p{@layer l{}a{b:c}}}"],
+		["@scope (.x){a{b:c}${ne}a{b:c}}", {"mergeDistantRules":true}, "minify", "@scope(.x){${ne}a{b:c}}"],
+		["@scope (.x){b c{}}@scope (.x){b c{}}", {"mergeDistantRules":true,"as":"block-contents"}, "minify", "@scope(.x){}"],
+		["{{y/*", {"mergeDistantRules":true}, "minify", "{{y/**/}}"],
+		["@layer x{a{margin:auto}a{b:c}a{content:\"it's\"}a{b:c}}", {"transforms":{"mergeRules":false},"mergeDistantRules":true}, "minify", "@layer x{a{margin:auto}a{content:\"it's\"}a{b:c}}"],
+		["a{b(:1}", {}, "minify", "a{b(:1})}"],
+		["@suppo\\rts (a:", {"environment":{"browsers":["firefox 40"]},"transforms":{"foldCase":false}}, "minify", "@supports (a:);"],
+		["a{ :1}a{ b:1}", {}, "minify", "a{:1;b:1}"],
+		["@media (--m){:--h{b:c}}@custom-media --m (min-width:1pxcustom-selector :--h h1;", {"transforms":{"shortenNumbers":false,"shortenColors":false,"customMedia":true,"customSelectors":true}}, "minify", "@media (width>=1pxcustom-selector:--h h1;;){:--h{b:c}}@custom-media --m (width>=1pxcustom-selector:--h h1;);"],
+		["a:-webkit-autofill{color:blue}a{color:#fff;margin:1px}@keyframes k{}", {"environment":{"browsers":["chrome 130"]},"rewriteCustomProperties":true}, "minify", "a:-webkit-autofill{color:blue}a{color:#fff;margin:1px}@keyframes k{}"],
+		["@layer x{transition:all-webkit- 500ms}@import url(x.css);}", {"environment":{"browsers":["opera 12"]},"mergeDistantRules":true}, "minify", "@layer x{-o-transition:all-webkit-.5s;transition:all-webkit-.5s}@import url(x.css);"],
+		["@layer x{", {}, "minify", "@layer x{}"],
+		["@layer l{}@layer l{", {}, "minify", "@layer l{}"],
+		["a:-webkit-autofill{color:blue}a{color:#fff;margin:1p", {"environment":{"browsers":["safari 15"]},"transforms":{"mergeRules":false}}, "minify", "a:-webkit-autofill{color:blue}a{color:#fff;margin:1p}"],
+		["", {"environment":{"browsers":["ie 9"]}}, "minify", ""],
+		[".p{@-webk-keyframes k{}}", {"environment":{"browsers":["edge 18"]}}, "minify", ".p{@-webk-keyframes k{}}"],
+		["A{TOP:A", {"environment":{"browsers":["ie 9"]}}, "minify", "A{top:A}"],
+		["A{border-radius:1px;BORDER-RAD;A{-webkit-border-radius:1px;BORDER-RAD;", {"environment":{"browsers":["ie 9"]}}, "minify", "A{border-radius:1px;BORDER-RAD;A{-webkit-border-radius:1px;BORDER-RAD}}"],
+		["@SUPPORTS ((DISPLAY:GRI", {}, "minify", "@supports (DISPLAY:GRI);"],
+		[".a{--x:1px (/*!k*", {}, "minify", ".a{--x:1px (/*!k*"],
+		["@media print{a{margin:;margin-top:2px}}", {"environment":{"browsers":["samsung 4"]},"transforms":{"removeDeadRules":false,"shortenColors":false,"reduceFunctions":false,"customMedia":true,"customSelectors":true}}, "minify", "@media print{a{margin:;margin-top:2px}}"],
+		["op:auto;right:0em;bottom:0em;left:auop:auto;right:0em;bottom:", {"environment":{"browsers":["samsung 4"]},"as":"block-contents"}, "minify", "op:auto;bottom:0;left:auop:auto;right:0"],
+		["a{b:1}a{b", {}, "minify", "a{b:1;b}"],
+		["@supports (display:grid){@laye x{@layer x{}@layer x{@layer x,{}@laye x{@layer x{}@layer x{@layer x,{}}", {"environment":{"browsers":["chrome 40"]}}, "minify", "@supports (display:grid){@laye x{@layer x{@layer x,{}@laye x{@layer x{@layer x,{}}}}}}"],
+		[".p{@media (--m){:--h{b:c}}@custom-media --(min-width:1pxcustom-selector :--h h1;}.p{@media (--m){:--h{b:c}}@custom-media --(min-width:1pxcustom-selector :--h h1;}", {"environment":{"browsers":["firefox 40"]},"transforms":{"shortenSelectors":false,"reorderDeclarations":false,"lowerUnsupported":false,"customMedia":true,"customSelectors":true},"mergeDistantRules":true}, "minify", ".p{@media (--m){:--h{b:c}}}"],
+		["@layer x{", {}, "minify", "@layer x{}"],
+		["@layer l{}@layer l{", {}, "minify", "@layer l{}"],
+		["A{TOP:A", {"environment":{"browsers":["ie 9"]}}, "minify", "A{top:A}"],
+		["op:auto;left:auto}op:auto;right:0;bottom:0;left:auto}acontent:}\"it's\"}", {"environment":{"browsers":["android 4.4"]},"transforms":{"lowerUnsupported":false},"as":"block-contents"}, "minify", "op:auto;left:auto}op:auto;right:0;bottom:0;left:auto}acontent:}'it\\'s'}"],
+		[".p{@supports( (di", {}, "minify", ".p{@supports (di)}"],
+		[".a{--x:1px (/*!k*", {}, "minify", ".a{--x:1px (/*!k*"],
+		["a{b:1}a{b", {}, "minify", "a{b:1;b}"],
+		["@media print{.a::placeholder{color:red}.b::placeholder{color:blue}}@media print{.a::placeholder{color:blue}.b::placeholder{color:blue}}@media print{.a::placeholder{color:red}.b::placeholder{color:blue}}@media print{.a::placeholder{color:blue}.b::placeholder{color:blue}}", {"environment":{"browsers":["chrome 60"]},"mergeDistantRules":true}, "minify", "@media print{.a::placeholder,.b::placeholder{color:blue}.a::placeholder{color:red}.a::placeholder,.b::placeholder{color:blue}}"]
+	])("prints %j (%j, %s)", (css, options, mode, out) => {
+		expect(
+			new SourceProcessor().process(
+				css,
+				/** @type {import("../../../lib/css/syntax-parser").CssProcessOptions & { mode: "minify" | "beautify" }} */ ({
+					...options,
+					mode
+				})
+			).code
+		).toBe(out);
+	});
+});
+
+describe("CssSyntax minify — a name escaping a code point no identifier holds", () => {
+	it.each([
+		["a custom property named with a control character", "a{--a\\1 b:1;color:var(--a\\1 b)}", "a{--a\\1 b:1;color:var(--a\\1 b)}"],
+		["a property named with a delete", "a{a\\7f b:1}", "a{a\\7F b:1}"],
+		["a property named `-`", "a{\\-:1}", "a{\\-:1}"],
+		["a property whose digit escape is already shortest", "a{\\31x:1}", "a{\\31x:1}"],
+		["a custom property its escape spells shorter than the canonical one", "a{----\\ :1}", "a{----\\ :1}"]
+	])("keeps the escape in %s", (_, css, out) => {
+		// Written raw, the code point would end the identifier there.
+		expect(minifyFor(css)).toBe(out);
+	});
+});
+
+describe("CssSyntax minify — a prefixed twin taken back", () => {
+	it.each([
+		["a prefixed at-rule no twin follows", "@-webkit-keyframes b{from{x:1}}@keyframes a{from{x:1}}", ["chrome 130"], "@-webkit-keyframes b{0%{x:1}}@keyframes a{0%{x:1}}"],
+		["a nested list a twin per selector covers", ".p{.a::-moz-placeholder,.b::-moz-placeholder{opacity:1}.a::placeholder{color:red}.b::placeholder{color:blue}}", ["firefox 120"], ".p{.a::placeholder{color:red}.b::placeholder{color:blue}}"],
+		["a nested list and a nested rule", ".p{.a::-moz-placeholder,.b::-moz-placeholder{opacity:1}::-moz-placeholder{x:1}.a::placeholder{color:red}.b::placeholder{color:blue}::placeholder{x:1}}", ["firefox 120"], ".p{.a::placeholder{color:red}.b::placeholder{color:blue}::placeholder{x:1}}"],
+		["two nested rules", ".p{::-moz-placeholder{x:1}::-moz-selection{y:1}::placeholder{x:1}::selection{y:1}}", ["firefox 120"], ".p{::placeholder{x:1}::selection{y:1}}"],
+		["two nested lists one set of twins covers", ".p{.a::-moz-placeholder,.b::-moz-placeholder{x:1}.a::-moz-placeholder,.c::-moz-placeholder{y:1}.a::placeholder{z:1}.b::placeholder{z:1}.c::placeholder{z:1}}", ["firefox 120"], ".p{.a::placeholder,.b::placeholder,.c::placeholder{z:1}}"],
+		["a list in an at-rule", "@media print{.a::-moz-placeholder,.b::-moz-placeholder{opacity:1}.a::placeholder{color:red}.b::placeholder{color:blue}}", ["firefox 120"], "@media print{.a::placeholder{color:red}.b::placeholder{color:blue}}"]
+	])("drops %s as it was", (_, css, browsers, out) => {
+		expect(minifyFor(css, browsers)).toBe(out);
+	});
+
+	it("lowers a `light-dark()` past a color function the target reads", () => {
+		expect(
+			minifyFor("a{color:light-dark(color(display-p3 1 0 0),blue)}", [
+				"safari 15"
+			])
+		).toBe(
+			"a{color:var(--webpack-light,color(display-p3 1 0 0))var(--webpack-dark,blue)}:where(:root){--webpack-light:initial;--webpack-dark:}"
+		);
+	});
+});
+
+describe("CssSyntax minify — the last of the printer's guards", () => {
+	it("keeps the quotes of a url holding a space no url-token escape spells", () => {
+		// U+00A0 is no CSS whitespace, but JavaScript's `\\s` matches it, so the
+		// url is not unquoted and nothing is escaped.
+		expect(minifyFor('a{background:url("a\u00a0b")}')).toBe(
+			'a{background:url("a\u00a0b")}'
+		);
+	});
+
+	it("keeps a `color-mix()` whose answer no byte holds and is longer", () => {
+		expect(minifyFor("a{color:color-mix(in srgb,#123 ,red)}", ["chrome 120"])).toBe(
+			"a{color:color-mix(in srgb,#123,red)}"
+		);
+	});
+
+	it.each([
+		["a vendor value it drops", ".p{@media print{display:-webkit-flex;display:flex}}", ["chrome 130"], ".p{@media print{display:flex}}"],
+		["a vendor property it adds", ".p{@media print{user-select:none}}", ["safari 15"], ".p{@media print{-webkit-user-select:none;user-select:none}}"],
+		["the same twice", ".p{@media print{user-select:none}}.p{@media print{user-select:none}}", ["safari 15"], ".p{@media print{-webkit-user-select:none;user-select:none}}"]
+	])("records a nested at-rule's declarations with %s", (_, css, browsers, out) => {
+		expect(minifyFor(css, browsers)).toBe(out);
+	});
+});
+
+describe("CssSyntax minify — a call or a sub-rule named with an escape", () => {
+	it.each([
+		["a `color-mix()`", "a{color:\\63olor-mix(in srgb,#ff0000 50%,blue)}", "a{color:color(srgb .5 0 .5)}"],
+		["a gradient", "a{background:\\6c inear-gradient(#ff0000,blue)}", "a{background:linear-gradient(red,blue)}"]
+	])("reads %s by the name its escape spells", (_, css, out) => {
+		expect(minifyFor(css)).toBe(out);
+	});
+
+	it("keeps each `@font-feature-values` block's sub-rules apart", () => {
+		const css =
+			"@font-feature-values F{@swash{a:1}@styleset{a:1}}@font-feature-values G{@swash{a:1}}";
+		expect(minifyFor(css)).toBe(css);
+	});
+
+	it("fires a comment visitor's exit", () => {
+		/** @type {number[]} */
+		const seen = [];
+		new SourceProcessor()
+			.use({
+				[NodeType.Comment]: {
+					exit: (
+						/** @type {import("../../../lib/css/syntax-parser").CssPath} */ path
+					) => {
+						seen.push(path.type());
+					}
+				}
+			})
+			.process("/*a*/b{c:d}");
+		expect(seen).toEqual([NodeType.Comment]);
+	});
+
+	it("keeps the space a hex escape needs after an escaped backslash", () => {
+		expect(escapeIdentifier("\\\t")).toBe("\\\\\\9");
+		expect(escapeIdentifier("\\\ta")).toBe("\\\\\\9 a");
+	});
+});
+
+describe("CssSyntax minify — nesting lowered in a block too big to collect", () => {
+	// Past `_STREAM_MIN_NODES` a block streams, its text going out before it
+	// closes — where lowering writes its rules, once their parent is done.
+	const TARGET = ["chrome 100"];
+	const rules = Array.from(
+		{ length: 4000 },
+		(_, i) => `.c${i}>d${i}{color:red;margin:${i + 1}px}`
+	);
+
+	it("writes every rule against its parent", () => {
+		const out = minifyFor(`.p{color:blue;${rules.join("")}}`, TARGET);
+		expect(out).toBe(`.p{color:blue}${rules.map((rule) => `.p ${rule}`).join("")}`);
+	});
+
+	it("keeps the rules beside a long at-rule", () => {
+		const prelude = Array.from({ length: 9000 }, (_, i) => `x${i}`).join(" ");
+		expect(minifyFor(`.p{.a{x:1}@st ${prelude};.b{y:1}}`, TARGET)).toBe(
+			`.p{@st ${prelude}}.p .a{x:1}.p .b{y:1}`
+		);
+	});
+
+	it("keeps a rule the repeats of another follow", () => {
+		expect(
+			minifyFor(`.p{.a{x:1}.b{y:1}${".z{w:1}".repeat(4000)}}`, TARGET)
+		).toBe(".p .a{x:1}.p .b{y:1}.p .z{w:1}");
+	});
+});
+
+describe("CssSyntax minify — input around a block big enough to stream", () => {
+	const BIG = Array.from(
+		{ length: 1700 },
+		(_, i) => `.c${i}>d${i}{color:red;margin:${i + 1}px}`
+	).join("");
+	const hash = (/** @type {string} */ text) =>
+		require("crypto").createHash("sha1").update(text).digest("hex").slice(0, 16);
+
+	// The whole output is pinned by its length, its digest and how it opens.
+	it.each([
+		["@supports (a:b){.p{@media print{display:-webkit-flex;display:flex}}${BIG}}", {"environment":{"browsers":["ie 9"]}}, 59640, "5fbd37571ad2871b", "@supports (a:b){.p{@media print{display:-ms-flexbox;display:"],
+		["@layer x{@media print{@LAYER X{A{COLOR:C\\OLOR-MIX(IN SRGB,#123,RED)}}${BIG}a{b:c;b\\:c}}}", {"environment":{"browsers":["chrome 100"]}}, 59668, "de61e70d773e560c", "@layer x{@media print{@layer X{A{color:#88111a;color:color-m"],
+		[".p{@supports (display:grid){@laye x{@layer x{}@layer x{@layer x,{}@laye x{@layer x{}@layer x{@layer x,{}}@media print{@media (width>=1px){:--h{b:c}}@custom-selector( :--h1}@media print{@media (width>=1px){:--h{b:c}}@custom-selector :--h1}${BIG}}", {"environment":{"browsers":["safari 15"]},"transforms":{"reduceFunctions":false},"convertApproximateColors":true}, 59802, "f700edac3df38205", ".p{@supports (display:grid){@laye x{@layer x{@layer x,{}@lay"],
+		[".p{.a{x:1}@st(arting-style{y:2}.a{x:1}@starting-style{y:2}${BIG}}", {"environment":{"browsers":["chrome 100"]},"convertLengthUnits":true}, 59638, "716f750a890312f9", ".p{@st (arting-style{y:2}.a{x:1}@starting-style{y:2}.c0>d0{c"],
+		["@layer x{@media print{@scope (.x){A{border-radius:1px;BORDER-RAD;iu(s:1px}}${BIG}}}", {"environment":{"browsers":["firefox 120"]},"transforms":{"removeDeadRules":false,"lowerUnsupported":false,"customMedia":true,"customSelectors":true},"rewriteCustomProperties":true}, 59654, "9236b96792fcc74d", "@layer x{@media print{@scope(.x){A{border-radius:1px;BORDER-"],
+		["@layer x{b c{}${BIG}}", {}, 59583, "c2202a5dc1ee4bdc", "@layer x{.c0>d0{color:red;margin:1px}.c1>d1{color:red;margin"],
+		[".p{)}}${BIG}@layer x{a{b:c}}d{e:f}@layer x{g{h:i}}}", {"environment":{"browsers":["chrome 60"]}}, 59607, "e387786e2ee3d1c9", ".p{)}}.c0>d0{color:red;margin:1px}.c1>d1{color:red;margin:2p"],
+		[".p{a${BIG}}", {"environment":{"browsers":["safari 9"]}}, 59578, "1c7f659b996f096b", ".p{a.c0>d0{color:red;margin:1px}.c1>d1{color:red;margin:2px}"],
+		["@media print{a{color:light-dark(color(display-p3 1 0 0),blue)}${BIG}}", {"environment":{"browsers":["firefox 40"]},"convertApproximateColors":true}, 59616, "6660d7cfebbb10af", "@media print{a{color:light-dark(red,blue)}.c0>d0{color:red;m"],
+		[".q .r{${BIG}@supports ((displa}", {}, 59599, "42bdd3e044d317c6", ".q .r{.c0>d0{color:red;margin:1px}.c1>d1{color:red;margin:2p"],
+		[".p{${BIG}.a{--x:1px (/*!k*}", {"environment":{"browsers":["safari 15"]}}, 64694, "d0372360dd4c3f18", ".p .c0>d0{color:red;margin:1px}.p .c1>d1{color:red;margin:2p"],
+		["@layer x{A{border-radius:1px;BORDER-RAD;A{-webkit-border-radius:1px;BORDER-RAD;${BIG}a{b:c}a{border-radius:1pxa{b:c}}", {"environment":{"browsers":["safari 17"]}}, 66490, "c81f51de8c22ae4b", "@layer x{A{border-radius:1px;BORDER-RAD}A A{-webkit-border-r"],
+		["@scope (.x){a{b:c}a{mara${BIG}}", {}, 59596, "3563243b1b3ccadb", "@scope(.x){a{b:c;mara.c0>d0{color:red;margin:1px}.c1>d1{colo"],
+		["@layer x{a{b:c}op:auto;left:auto}op:auto;right:0;bottom:0;left:auto}op:auto;left:auto}op:auto;right:0;bottom:0;left:auto}a{b(:1}a{b:c}${BIG}a{color:light-dark(color(display-p3 1 0 0),blue)}}", {"environment":{"browsers":["chrome 40"]}}, 59759, "3185c126c5f98d93", "@layer x{a{b:c}op:auto;left:auto}op:auto;right:0;bottom:0;le"],
+		["@media print{.p{a{b:c}@scope (.x){ {\ny/**/;\n}}a{b:c}${BIG}}}", {}, 59616, "d7c506afba0fc51b", "@media print{.p{@scope(.x){{y/**/}}a{b:c}.c0>d0{color:red;ma"],
+		[".p{a{top:calc(1px + 1%);right:anchor(top);bottom:calc(1px + 1%);left:anchor(top)}${BIG}@media print{a{co}lor:color-mix(in srgb,#123,red)}a{co}lor:color-mix(in srgb,#123,blue)}}}", {"environment":{"browsers":["safari 15"]},"convertLengthUnits":true}, 59496, "26149d6072c50870", ".p{a{inset:calc(1px + 1%)anchor(top)}.c0>d0{color:red;margin"],
+		[".p{@laye x{@layer x{}@layer x{@layer( x{}${BIG}{y/**/ z}}", {"environment":{"browsers":["opera 12"]}}, 59614, "dc0fe17fac5dcff0", ".p{@laye x{@layer x{@layer (x{}.c0>d0{color:red;margin:1px}."],
+		["@layer x{a{b:c}a{b:c};a,b{c:1};b,b{c:1}a{b(:1}a{b:c}a{b:c}${BIG}a{top:calc(1px + 1%);right:anchor(top);bottom:calc(1px + 1%);left:anchor(top)}}", {"environment":{"browsers":["chrome 120"]}}, 59703, "d654154b94e244d7", "@layer x{a{b:c}a,b{c:1}b{c:1}a{b(:1}a{b:c}a{b:c}.c0>d0{color"],
+		["@media print{.p{.a{x:}@st(arting-style{y:2}.a{x:1}@starting-style{y:2}}${BIG}}}", {"environment":{"browsers":["android 4.4"]}}, 59644, "c2f1c90198563afa", "@media print{.p{@st (arting-style{y:2}.a{x:1}@starting-style"]
+	])("prints %j (%j)", (css, options, length, digest, head) => {
+		const out = new SourceProcessor().process(css.replace("${BIG}", BIG), {
+			...options,
+			mode: "minify"
+		}).code;
+		expect(out.slice(0, 60)).toBe(head);
+		expect(out).toHaveLength(length);
+		expect(hash(out)).toBe(digest);
+	});
+});
+
+describe("CssSyntax minify — math and numbers past what a double says exactly", () => {
+	it.each([
+		["an operand past a double's range", "calc(1e999px)"],
+		["a product past a double's range", "calc(1e300px*1e300)"],
+		["a product of three past a double's range", "calc(2*1e308px*2)"],
+		["a difference whose product overflows", "calc(1e300px - 1e300px*1e10)"],
+		["a group of two dimensions multiplied", "calc((1px*1px))"],
+		["a group of two terms side by side", "calc((1px 2px))"],
+		["an empty group", "calc(())"],
+		["two operators in a row", "calc(1px**2)"],
+		["two divisions in a row", "calc(1px//2)"]
+	])("leaves %s as written", (_, value) => {
+		expect(minifyFor(`a{width:${value}}`)).toBe(`a{width:${value}}`);
+	});
+
+	it("keeps a number whose rounding would need an exponent", () => {
+		const css = "a{width:.0000001234567px;height:1234567.891px}";
+		expect(minifyFor(css)).toBe(css);
+	});
+
+	it("clamps a mixed channel past a byte's range", () => {
+		expect(minifyFor("a{color:color-mix(in srgb,rgb(300 -5 0),blue)}")).toBe(
+			"a{color:color(srgb .5 0 .5)}"
+		);
+	});
+
+	it("joins the sub-rules a `@font-feature-values` block repeats", () => {
+		expect(minifyFor("@font-feature-values F{x{a:1}y{a:1}}")).toBe(
+			"@font-feature-values F{x,y{a:1}}"
+		);
+	});
+});
+
+describe("CssSyntax minify — a browserslist selection the tables do not all answer", () => {
+	const css =
+		"a{display:-webkit-flex;display:flex;user-select:none;color:lab(50% 10 10)}::placeholder{color:red}@-webkit-keyframes k{}@keyframes k{}";
+
+	it.each([
+		["an unknown browser before one nothing states", ["foo 1", "op_mini all"]],
+		["a version that does not parse", ["chrome abc"]],
+		["a browser with no version", ["chrome"]]
+	])("keeps every spelling for %s", (_, browsers) => {
+		expect(minifyFor(css, browsers)).toBe(
+			"a{user-select:none;color:#8c7166;color:lab(50% 10 10);display:-webkit-flex;display:flex}::placeholder{color:red}@-webkit-keyframes k{}@keyframes k{}"
+		);
+	});
+
+	it("reads a selection of only a browser that renders no CSS as no target", () => {
+		expect(minifyFor(css, ["node 20"])).toBe(
+			"a{user-select:none;color:lab(50% 10 10);display:-webkit-flex;display:flex}::placeholder{color:red}@-webkit-keyframes k{}@keyframes k{}"
+		);
+	});
+});
+
+describe("CssSyntax minify — colors at the edges of their spaces", () => {
+	// Dark Lab colors, negative hues, the hue methods, weights short of 100 and a fully transparent mix.
+	it.each([
+		["a{color:lab(1% 0 0)}", {}, "a{color:#040404}"],
+		["a{color:lab(5% -10 10)}", {}, "a{color:lab(5% -10 10)}"],
+		["a{color:lch(1% 5% 30)}", {}, "a{color:lch(1% 5% 30)}"],
+		["a{color:hsl(-30 50% 50%)}", {}, "a{color:hsl(-30 50% 50%)}"],
+		["a{color:hwb(-30 10% 10%)}", {}, "a{color:hwb(-30 10% 10%)}"],
+		["a{color:color-mix(in hsl increasing hue,hsl(300 50% 50%),hsl(10 50% 50%))}", {}, "a{color:#bf4075}"],
+		["a{color:color-mix(in hsl decreasing hue,hsl(10 50% 50%),hsl(300 50% 50%))}", {}, "a{color:#bf4075}"],
+		["a{color:color-mix(in hsl increasing hue,hsl(10 50% 50%),hsl(300 50% 50%))}", {}, "a{color:#40bf8a}"],
+		["a{color:color-mix(in hsl decreasing hue,hsl(300 50% 50%),hsl(10 50% 50%))}", {}, "a{color:#40bf8a}"],
+		["a{color:color-mix(in srgb,red 30%,blue 30%)}", {}, "a{color:color(srgb .5 0 .5/.6)}"],
+		["a{color:color-mix(in srgb,red 0%,blue 0%)}", {}, "a{color:color-mix(in srgb,red 0%,blue 0%)}"],
+		["a{color:color-mix(in srgb,#f000,#00f0)}", {}, "a{color:#0000}"],
+		["a{color:color-mix(in oklch,oklch(50% .01 30),red)}", {}, "a{color:color-mix(in oklch,oklch(50% .01 30),red)}"],
+		["a{color:color-mix(in oklch,oklch(50% 0 30),red)}", {}, "a{color:color-mix(in oklch,oklch(50% 0 30),red)}"],
+		["a{color:color-mix(in lch,lch(50% 0 30),red)}", {}, "a{color:color-mix(in lch,lch(50% 0 30),red)}"],
+		["a{color:rgb(from red r g calc(b + 1deg))}", {}, "a{color:rgb(from red r g calc(b + 1deg))}"],
+		["a{color:hsl(from red calc(h + 1px) s l)}", {}, "a{color:hsl(from red calc(h + 1px) s l)}"],
+		["a{color:hsl(from red calc(h + 10deg) s l)}", {}, "a{color:hsl(from red calc(h + 10deg) s l)}"],
+		["a{color:foo(from red r g b)}", {}, "a{color:foo(from red r g b)}"],
+		["a{color:rgb(from red r g b)}", {}, "a{color:red}"]
+	])("prints %j (%j)", (css, options, out) => {
+		expect(
+			new SourceProcessor().process(css, { ...options, mode: "minify" }).code
+		).toBe(out);
+	});
+});
+
+describe("CssData — the names the printer's shape tables hold", () => {
+	const data = require("../../../lib/css/data");
+
+	it("open on two ASCII letters and are shorter than 31", () => {
+		// The tables give each name the bit of its length under its first two
+		// letters; a name past either would have neither.
+		const names = [
+			...data.getPrefixedProperties().keys(),
+			...data.getPrefixedValues().keys(),
+			...data.MERGE_LONGHANDS,
+			"grid-row",
+			"grid-column",
+			"grid-template-rows",
+			"grid-template-columns",
+			"grid-template-areas"
+		];
+		for (const name of names) {
+			expect(name).toMatch(/^[a-z]{2}/i);
+			expect(name.length).toBeLessThan(31);
+		}
+	});
+
+	it("give a function with an arity but `calc()` a fold", () => {
+		for (const name of data.MATH_FUNCTION_ARITY.keys()) {
+			if (name !== "calc") expect(data.MATH_FUNCTION_FOLD.has(name)).toBe(true);
+		}
+	});
+
+	it("leave a name longer than any of them unread", () => {
+		const name = "abcdefghijklmnopqrstuvwxyzabcdefgh";
+		expect(minifyFor(`a{${name}:1;margin:0}`, ["chrome 40"])).toBe(
+			`a{${name}:1;margin:0}`
+		);
+	});
+});
+
+describe("CssSyntax minify — blocks that stream inside another", () => {
+	// Twice `_STREAM_MIN_NODES` and more, so each of these blocks streams.
+	const BIG = Array.from(
+		{ length: 4000 },
+		(_, i) => `.c${i}>d${i}{color:red;margin:${i + 1}px}`
+	).join("");
+	const LONG = "x ".repeat(30000).trim();
+	const hash = (/** @type {string} */ text) =>
+		require("crypto").createHash("sha1").update(text).digest("hex").slice(0, 16);
+
+	it.each([
+		["@property --x{.q{${BIG}}}", {}, 144692, "59fd06d25e6daede"],
+		["@function --f(){.q{${BIG}}}", {}, 144694, "b092683738b6867d"],
+		["@font-feature-values F{.q{${BIG}}}", {}, 144701, "b94b5b8f205172a0"],
+		["@media a{${BIG}}.r{${BIG}}", {}, 289360, "a66a99334bfa2299"],
+		[".p{${BIG}.z{v:${LONG}}}", {}, 204682, "279e8109a89e4c9f"],
+		[".p{${BIG}::-moz-placeholder{x:1}::-moz-selection{y:1}::placeholder{x:1}}", {"environment":{"browsers":["firefox 120"]}}, 144716, "1d2ce264fd88ffa4"],
+		["@supports (a:b){@scope (.x){@layer l{}{}@scope (.x){@layer l{}{}${BIG}}", {"environment":{"browsers":["ie 9"]},"convertApproximateColors":true}, 144734, "8f15725eab59edf7"],
+		["@supports (a:b){B,;A,B{C:}B,;B{C:1}B,;A,B{C:}B,;B{C:1}${BIG}}", {"environment":{"browsers":["opera 12"]},"mergeDistantRules":true}, 144705, "63b109aff6a8fd11"],
+		["@layer x{@media print{${BIG}@layer x{.p{a{b:c}@layer l{}a{b:c}}}}}", {"environment":{"browsers":["safari 9"]},"transforms":{"removeDeadRules":false,"mergeLonghands":false,"foldCase":false,"customMedia":true,"customSelectors":true}}, 144727, "1651fef08b467925"],
+		["@layer x{", {}, 10, "cec3bc4c3560c48d"],
+		["@layer l{}@layer l{", {}, 10, "fe97e5e6b3af70a5"],
+		[".p{@supports( (di", {}, 18, "410115e642a326b2"],
+		["@media print{a{b:1}a{b${BIG}.a{--x:1px (/*!k*}", {}, 144713, "0f3f5b4bfa41cc69"],
+		["@layer x{${BIG}a{b:c}a{a{b:{ba{b:{b}", {}, 144701, "c39937110f690f2b"],
+		["@layer x{.p{@-webkit-keyframes k{}}${BIG}b,;a,b{c:1}b,;b{c:1}}", {"environment":{"browsers":["chrome 140","firefox 140","safari 26.2"]},"transforms":{"customSelectors":false,"rewriteEscapes":false,"mergeRules":false}}, 144729, "e8f008f21cc73857"],
+		["@layer x{", {}, 10, "cec3bc4c3560c48d"],
+		["@layer l{}@layer l{", {}, 10, "fe97e5e6b3af70a5"],
+		["a{b:c}a{b:\"x\\a{b:c}a{color:hsl(from red calc(1turn) s l)}", {"environment":{"browsers":["ie 9"]}}, 59, "47db0ac01e688f67"],
+		[".P{@SUPPORTS( (", {}, 16, "f2c987b3c1b993f3"],
+		[".a{--x:1px (/*!k*", {}, 17, "0cc191ab72c9ab47"],
+		["a{b:1}a{b", {}, 8, "65fb9901efa5b933"],
+		["a{x:1}b{x:1}a{border-radius:1px 2px / 3px 4px}a{x:1}b{x:}a{border-radius:1px 2px / 3px 4px}a{color:rgb(from red 1dea{x:1}b{x:1}a{border-radius:1px 2px / 3px 4px}a{x:1}b{x:}a{border-radius:1px 2px / 3px 4px}a{color:rgb(from red 1de", {"environment":{"browsers":["chrome 40"]}}, 185, "dfc2b87db7d23c9b"]
+	])("prints %j (%j)", (css, options, length, digest) => {
+		const out = new SourceProcessor().process(
+			css.split("${BIG}").join(BIG).replace("${LONG}", LONG),
+			{ ...options, mode: "minify" }
+		).code;
+		expect(out).toHaveLength(length);
+		expect(hash(out)).toBe(digest);
+	});
+});
+
+describe("CssSyntax minify — a hue no engine reads alike", () => {
+	// A near-gray's hue in a polar mix, and a relative color's channel written as an angle.
+	it.each([
+		["a{color:color-mix(in oklch,#7f7f80,red)}", {}, "a{color:color-mix(in oklch,#7f7f80,red)}"],
+		["a{color:hsl(from red calc(10deg) s l)}", {}, "a{color:hsl(from red 10deg s l)}"],
+		["a{color:hsl(from red calc(1turn) s l)}", {}, "a{color:hsl(from red 1turn s l)}"],
+		["a{color:rgb(from red calc(1deg) g b)}", {}, "a{color:rgb(from red 1deg g b)}"]
+	])("prints %j (%j)", (css, options, out) => {
+		expect(
+			new SourceProcessor().process(css, { ...options, mode: "minify" }).code
+		).toBe(out);
+	});
+});
+
+describe("CssSyntax minify — a declaration list holding a block too big to collect", () => {
+	it("composes the list whole, the big rule in its place", () => {
+		const rules = Array.from(
+			{ length: 4000 },
+			(_, i) => `.c${i}>d${i}{color:red;margin:${i + 1}px}`
+		).join("");
+		// Streamed, the rule went out before the declarations, and the ids they
+		// were held by were handed to it.
+		const css = `a:b;.x{${rules}}c:d`;
+		expect(
+			new SourceProcessor().process(css, {
+				mode: "minify",
+				as: "block-contents"
+			}).code
+		).toBe(css);
+	});
+});
+
+describe("CssSyntax minify — grid longhands merged beside others", () => {
+	// Placement and template merges after a box merge, an important template, and a placement of too many lines.
+	it.each([
+		["a{margin-top:1px;margin-right:1px;margin-bottom:1px;margin-left:1px;grid-row-start:1;grid-row-end:2;grid-template-rows:1px;grid-template-columns:2px;grid-template-areas:\"a\"}", {}, "a{grid-row:1/2;grid-template:\"a\"1px/2px;margin:1px}"],
+		["a{grid-row-start:1;grid-row-end:2;grid-template-rows:1px;grid-template-columns:2px;grid-template-areas:\"a\"}", {}, "a{grid-row:1/2;grid-template:\"a\"1px/2px}"],
+		["a{margin:0;color:red;margin-top:1px}", {}, "a{color:red;margin:1px 0 0}"],
+		["a{margin-top:1px;color:red;margin:0}", {}, "a{color:red;margin-top:1px;margin:0}"],
+		["a{border:1px solid;color:red;border-top-width:2px}", {}, "a{color:red;border:1px solid;border-top-width:2px}"],
+		["a{grid-template:auto/auto;grid-template-rows:1px}", {}, "a{grid-template:auto/auto;grid-template-rows:1px}"],
+		["a{grid-template-rows:1px 2px;grid-template-columns:3px;grid-template-areas:\"a\" \"b\"}", {}, "a{grid-template:\"a\"1px\"b\"2px/3px}"],
+		["a{grid-template-rows:1px;grid-template-columns:3px;grid-template-areas:\"a\" \"b\"}", {}, "a{grid-template-rows:1px;grid-template-columns:3px;grid-template-areas:\"a\"\"b\"}"],
+		["a{grid-template-rows:[x] 1px [y];grid-template-columns:3px;grid-template-areas:\"a\"}", {}, "a{grid-template-rows:[x]1px[y];grid-template-columns:3px;grid-template-areas:\"a\"}"],
+		["a{grid-template-rows:repeat(2,1px);grid-template-columns:3px;grid-template-areas:\"a\" \"b\"}", {}, "a{grid-template-rows:repeat(2,1px);grid-template-columns:3px;grid-template-areas:\"a\"\"b\"}"],
+		["a{grid-template-rows:1px;grid-template-columns:3px;grid-template-areas:\"a\"!important}", {}, "a{grid-template-rows:1px;grid-template-columns:3px;grid-template-areas:\"a\"!important}"],
+		["a{grid-template-rows:1px!important;grid-template-columns:3px!important;grid-template-areas:\"a\"!important}", {}, "a{grid-template:\"a\"1px/3px!important}"],
+		["a{grid-row-start:1;grid-row-end:2;grid-column-start:3;grid-column-end:4}", {}, "a{grid-area:1/3/2/4}"],
+		["a{grid-row-start:a;grid-row-end:b;grid-column-start:c;grid-column-end:d}", {}, "a{grid-area:a/c/b/d}"],
+		["a{grid-row-start:1;grid-column-start:2;grid-row-end:3;grid-column-end:4}", {}, "a{grid-area:1/2/3/4}"],
+		["a{grid-area:1/2/3/4;grid-row-end:5}", {}, "a{grid-area:1/2/5/4}"],
+		["a{grid-area:a;grid-row-end:b}", {}, "a{grid-area:a/a/b}"],
+		["a{grid-area:1/2/3/4/5;grid-row-end:5}", {}, "a{grid-area:1/2/3/4/5;grid-row-end:5}"],
+		["a{grid-column:1/2/3;grid-column-end:4}", {}, "a{grid-column:1/2/3;grid-column-end:4}"]
+	])("prints %j (%j)", (css, options, out) => {
+		expect(
+			new SourceProcessor().process(css, { ...options, mode: "minify" }).code
+		).toBe(out);
+	});
+});
+
+describe("CssSyntax minify — input that once threw", () => {
+	it.each([
+		["a `color-mix()` with an empty last argument", "a{color:color-mix(in srgb,#123,)}"],
+		["a `color-mix()` with an empty first color", "a{color:color-mix(in srgb,,red)}"]
+	])("leaves %s as written", (_, css) => {
+		expect(minifyFor(css)).toBe(css);
+	});
+
+	it.each([
+		["after a rule it would write again", "a{b:c}a{b:{b:c}", "a{b:c;b:{b:c}}"],
+		["between two rules", "a{b:c}a{b:{b:c}}a{b:c}", "a{b:c;b:{b:c}}a{b:c}"],
+		["before a rule", "a{b:{b:c}}a{b:c}", "a{b:{b:c}}a{b:c}"]
+	])("prints a rule whose value holds a block %s", (_, css, out) => {
+		// Its value is no declaration read apart, so it is neither dropped nor
+		// what drops another.
+		expect(
+			new SourceProcessor().process(css, { mode: "minify", as: "block-contents" })
+				.code
+		).toBe(out);
 	});
 });
