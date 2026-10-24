@@ -387,6 +387,23 @@ describe("CssSyntax — Node / Token", () => {
 		expect(loc).toEqual([2, 2, 3, 0]);
 	});
 
+	it("ranges a declaration's value without its `!important`", () => {
+		const src = "a{color: RED !important;--empty:;b:x y}";
+		/** @type {string[]} */
+		const values = [];
+		new SourceProcessor()
+			.use({
+				[NodeType.Declaration]: (
+					/** @type {import("../../../lib/css/syntax-parser").CssPath} */ path
+				) => {
+					const range = path.rangeOf(Part.value);
+					values.push(range === null ? "none" : src.slice(range[0], range[1]));
+				}
+			})
+			.process(src);
+		expect(values).toEqual(["RED", "none", "x y"]);
+	});
+
 	it("numbers a declaration's property by what it means", () => {
 		/** @type {Record<string, number>} */
 		const ids = {};

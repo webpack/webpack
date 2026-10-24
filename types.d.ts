@@ -6915,7 +6915,7 @@ type CssNodePath<T = number, S = unknown> = Omit<
 				"20": never;
 				"21": never;
 				"22": never;
-				"23": 1;
+				"23": 1 | 2;
 				"24": 1 | 3;
 				"25": 3;
 				"26": never;
@@ -6952,7 +6952,7 @@ type CssNodePath<T = number, S = unknown> = Omit<
 				"20": never;
 				"21": never;
 				"22": never;
-				"23": 1;
+				"23": 1 | 2;
 				"24": 1 | 3;
 				"25": 3;
 				"26": never;
@@ -6989,7 +6989,7 @@ type CssNodePath<T = number, S = unknown> = Omit<
 				"20": never;
 				"21": never;
 				"22": never;
-				"23": 1;
+				"23": 1 | 2;
 				"24": 1 | 3;
 				"25": 3;
 				"26": never;
@@ -7297,7 +7297,7 @@ declare interface CssParts {
 		"20": never;
 		"21": never;
 		"22": never;
-		"23": 1;
+		"23": 1 | 2;
 		"24": 1 | 3;
 		"25": 3;
 		"26": never;
