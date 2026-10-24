@@ -4619,6 +4619,19 @@ describe("Parser", () => {
 							source,
 							{ ...given, ranges: Boolean(options.ranges) || lazy }
 						);
+						// Where acorn crashes after an error it noted, ours may read on
+						// past it, noting at least the same errors first.
+						if (
+							theirs.error === "TypeError" &&
+							theirs.noted.length > 0 &&
+							ours.error === undefined &&
+							JSON.stringify(ours.noted).startsWith(
+								JSON.stringify(theirs.noted).slice(0, -1)
+							)
+						) {
+							recovered++;
+							continue;
+						}
 						const tree = firstDifference(ours.ast, theirs.ast, "program");
 						if (
 							tree ||
@@ -5796,7 +5809,8 @@ describe("parseProgram", () => {
 	it.each([
 		["let a; let a", ["var-redeclaration", "", "warning", "11"]],
 		["/(/", ["invalid-regular-expression", "", "warning", "1"]],
-		["class A { #a; #a }", ["private-name-redeclaration", "", "warning", "14"]]
+		["class A { #a; #a }", ["private-name-redeclaration", "", "warning", "14"]],
+		["class A { set x() {} }", ["bad-setter-arity", "", "warning", "15"]]
 	])("reads past %j", (source, error) => {
 		const { program, errors } = collect(source);
 		expect(program).toBeDefined();
