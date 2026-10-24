@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Add `parseError` to the CSS, HTML and JavaScript parsers, and `parseProgram`.
+Add `parseErrors` to the CSS and HTML parser options, and `parseError` and `parseProgram` to the syntax parsers.

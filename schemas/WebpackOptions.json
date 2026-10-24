@@ -695,6 +695,9 @@
         "namedExports": {
           "$ref": "#/definitions/CssParserNamedExports"
         },
+        "parseErrors": {
+          "$ref": "#/definitions/CssParserParseErrors"
+        },
         "pure": {
           "$ref": "#/definitions/CssParserPure"
         },
@@ -851,6 +854,9 @@
         "namedExports": {
           "$ref": "#/definitions/CssParserNamedExports"
         },
+        "parseErrors": {
+          "$ref": "#/definitions/CssParserParseErrors"
+        },
         "url": {
           "$ref": "#/definitions/CssParserUrl"
         },
@@ -940,6 +946,9 @@
         "namedExports": {
           "$ref": "#/definitions/CssParserNamedExports"
         },
+        "parseErrors": {
+          "$ref": "#/definitions/CssParserParseErrors"
+        },
         "url": {
           "$ref": "#/definitions/CssParserUrl"
         },
@@ -947,6 +956,11 @@
           "$ref": "#/definitions/UrlHints"
         }
       }
+    },
+    "CssParserParseErrors": {
+      "description": "Report each CSS parse error (CSS Syntax Level 3 §4, §5) the stylesheet holds: a build error where end of input cuts a token or rule short, a build warning for one the parser reads past. Off by default.",
+      "type": "boolean",
+      "added": "5.113.0"
     },
     "CssParserPure": {
       "description": "Enable strict pure mode: every selector must contain at least one local class or id selector.",
@@ -2511,6 +2525,11 @@
             }
           ],
           "added": "5.112.0"
+        },
+        "parseErrors": {
+          "description": "Report each HTML parse error the page holds, by its WHATWG or html5lib name: a build error where end of input cuts a tag, comment or doctype short, a build warning for one the parser reads past. Off by default.",
+          "type": "boolean",
+          "added": "5.113.0"
         },
         "sources": {
           "description": "Configure extraction of URL-like attribute values (e.g. `<img src>`, `<link href>`, `<script src>`) as webpack dependencies. `true` (default) uses the built-in source list; `false` disables extraction entirely so attributes are left untouched and `<script src>` / `<link rel=\"modulepreload\">` / `<link rel=\"stylesheet\">` no longer become compilation entries; an array lets you customize which `tag`/`attribute` pairs are treated as URLs and how they are bundled. Use the string `\"...\"` inside the array to inline the defaults. Inline `<script>` and `<style>` bodies are always processed. Use `webpackIgnore` comments or `IgnorePlugin` to skip individual URLs.",
