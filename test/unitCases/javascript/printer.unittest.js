@@ -12791,6 +12791,17 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		});
 	}
 
+	it("should print through the node printer while a parsed program waits to be read", async () => {
+		const { parseProgram } = require("../../../lib/javascript/syntax-parser");
+		const options = () => ({ compress: false, mangle: false });
+		const reference = await minifyCounted("b ( 2 )", options(), false);
+		parseProgram("a ( 1 )");
+		const printed = await minifyCounted("b ( 2 )", options(), true);
+		expect(printed.printedNodes).toBe(1);
+		expect(printed.printedFromTree).toBe(0);
+		expect(printed.code).toBe(reference.code);
+	});
+
 	it("should read a single named source under its name", async () => {
 		const options = { compress: false, mangle: false };
 		const printed = await minifyCounted({ "a.js": "a( 1 )" }, options, true);
