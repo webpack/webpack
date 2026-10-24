@@ -639,6 +639,7 @@
     "yarn.lock",
     "**/package-lock.json",
     "tooling/deep-webpack-imports.json",
+    "test/specCases/minify-corpora-timings.json",
     "tooling/comparison/css-tool-comparison/stylesheets.json",
     "types.d.ts",
     "**/**/*.snap",
