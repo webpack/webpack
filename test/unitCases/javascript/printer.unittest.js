@@ -12812,6 +12812,21 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 	});
 
 	it.each([
+		["the driver's own options", () => ({ code: true, ast: false })],
+		["a global regular expression", () => ({ comments: /keep/g })],
+		["a sticky regular expression", () => ({ comments: /keep/y })]
+	])(
+		"should print what terser's tree prints, with %s",
+		async (_name, format) => {
+			const source = "/*keep*/a();/*keep*/b();/*no*/c();/*keep*/d()";
+			const options = () => ({ compress: false, mangle: false, format: format() });
+			const reference = await minifyCounted(source, options(), false);
+			const printed = await minifyCounted(source, options(), true);
+			expect(printed.code).toBe(reference.code);
+		}
+	);
+
+	it.each([
 		["compressed", { compress: {}, mangle: false }],
 		[
 			"mangling its properties",
