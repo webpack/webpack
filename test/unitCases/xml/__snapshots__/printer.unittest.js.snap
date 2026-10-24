@@ -1,21 +1,5 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
-exports[`xmlMinify should hand the stylesheets the CSS minifier's options 1`] = `"<svg xmlns=\\"http://www.w3.org/2000/svg\\"><style>a{width:6pc}</style></svg>"`;
-
-exports[`xmlMinify should hand the stylesheets the target's browsers 1`] = `
-"<?xml version=\\"1.0\\" encoding=\\"UTF-8\\"?><svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 10 10\\">
-	<style>.dot{fill:red;-webkit-user-select:none;user-select:none}</style>
-	<circle class=\\"dot\\" cx=\\"5\\" cy=\\"5\\" r=\\"4\\" style=\\"stroke:#0f0\\"/>
-</svg>"
-`;
-
-exports[`xmlMinify should minify the document and the stylesheets it holds 1`] = `
-"<?xml version=\\"1.0\\" encoding=\\"UTF-8\\"?><svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 10 10\\">
-	<style>.dot{fill:red;user-select:none}</style>
-	<circle class=\\"dot\\" cx=\\"5\\" cy=\\"5\\" r=\\"4\\" style=\\"stroke:#0f0\\"/>
-</svg>"
-`;
-
 exports[`SourceProcessor — XML printing should defer an XML stylesheet to an asynchronous renderer 1`] = `"<svg xmlns=\\"http://www.w3.org/2000/svg\\"><style><![CDATA[a<b{}]]></style><rect style='fill:\\"a&lt;b\\"'/><style> </style></svg>"`;
 
 exports[`SourceProcessor — XML printing should hand SVG and XHTML stylesheets to the embedded renderer 1`] = `
@@ -60,5 +44,91 @@ exports[`SourceProcessor — XML printing should write the shortest well-formed 
   <style><![CDATA[a > b { fill: red } a < b && c]]></style>
   <script>x</script>
   <?render mode=\\"fast\\"?>
+</svg>"
+`;
+
+exports[`SourceProcessor — XML under an internal DTD subset prints NULs and a repeated attribute back to its tree 1`] = `"<d a=\\"1\\">��</d>"`;
+
+exports[`SourceProcessor — XML under an internal DTD subset prints a default the subset ends in back to its tree 1`] = `"<!DOCTYPE d [<!ATTLIST d a CDATA \\"unterminated]><d/>"`;
+
+exports[`SourceProcessor — XML under an internal DTD subset prints a doctype the input ends in back to its tree 1`] = `"<!DOCTYPE d [<!ATTLIST d a CDATA \\"v\\""`;
+
+exports[`SourceProcessor — XML under an internal DTD subset prints a doctype with no name back to its tree 1`] = `"<!DOCTYPE><d/>"`;
+
+exports[`SourceProcessor — XML under an internal DTD subset prints a public doctype back to its tree 1`] = `"<!DOCTYPE d PUBLIC \\"p\\" \\"s\\"><d/>"`;
+
+exports[`SourceProcessor — XML under an internal DTD subset prints a quote where a name goes back to its tree 1`] = `"<!DOCTYPE d [<!ATTLIST d \\"x\\">]><d/>"`;
+
+exports[`SourceProcessor — XML under an internal DTD subset prints a second doctype back to its tree 1`] = `"<!DOCTYPE d [<!ENTITY e \\"1\\">]><!DOCTYPE x [<!ENTITY e \\"2\\">]><d>1</d>"`;
+
+exports[`SourceProcessor — XML under an internal DTD subset prints a start tag an entity leaves open back to its tree 1`] = `"<!DOCTYPE d [<!ENTITY e \\"<b>\\">]><d>&e;</d>"`;
+
+exports[`SourceProcessor — XML under an internal DTD subset prints a subset an entity runs out in back to its tree 1`] = `"<!DOCTYPE d [<!ENTITY e \\"unterminated]><d/>"`;
+
+exports[`SourceProcessor — XML under an internal DTD subset prints a system doctype back to its tree 1`] = `"<!DOCTYPE d SYSTEM \\"s\\"><d/>"`;
+
+exports[`SourceProcessor — XML under an internal DTD subset prints a tag the input ends in back to its tree 1`] = `"<a/>"`;
+
+exports[`SourceProcessor — XML under an internal DTD subset prints a value already collapsed back to its tree 1`] = `"<!DOCTYPE d [<!ATTLIST d a NMTOKENS \\" 1 \\">]><d a=\\"1\\"/>"`;
+
+exports[`SourceProcessor — XML under an internal DTD subset prints a value the input ends in back to its tree 1`] = `""`;
+
+exports[`SourceProcessor — XML under an internal DTD subset prints an attribute name that is no name back to its tree 1`] = `"<!DOCTYPE d [<!ATTLIST d 1x CDATA \\"v\\">]><d/>"`;
+
+exports[`SourceProcessor — XML under an internal DTD subset prints an entity declared twice back to its tree 1`] = `"<!DOCTYPE d [<!ENTITY e \\"1\\"><!ENTITY e \\"2\\"><!NOTATION n SYSTEM 'a>b'>]><d>1</d>"`;
+
+exports[`SourceProcessor — XML under an internal DTD subset prints an enumeration the subset ends in back to its tree 1`] = `"<!DOCTYPE d [<!ATTLIST d a (x|y]><d/>"`;
+
+exports[`SourceProcessor — XML under an internal DTD subset prints attribute-list declarations back to its tree 1`] = `"<!DOCTYPE d [<!ATTLIST d><!ATTLIST d a NMTOKENS \\"  x  y \\" b CDATA #FIXED \\"q\\" c (u|v) #IMPLIED n NOTATION (p) \\"p\\" e ID #REQUIRED><!ATTLIST d a CDATA \\"z\\" f NMTOKEN 'w'>]><d a=\\"1 2\\" c=\\"u\\"/>"`;
+
+exports[`SourceProcessor — XML under an internal DTD subset prints attributes without a value or quotes back to its tree 1`] = `"<d a=\\"\\" b=\\"c\\" d=\\"e\\"/>"`;
+
+exports[`SourceProcessor — XML under an internal DTD subset prints carriage returns back to its tree 1`] = `
+"<d>a
+b
+c<?p a
+b?>q
+r</d>"
+`;
+
+exports[`SourceProcessor — XML under an internal DTD subset prints declarations for two elements back to its tree 1`] = `"<!DOCTYPE d [<!ATTLIST d a NMTOKEN \\" x \\"><!ATTLIST e b NMTOKEN \\" y \\">]><d a=\\"1\\"><e/><e b=\\"2\\"/></d>"`;
+
+exports[`SourceProcessor — XML under an internal DTD subset prints declarations past a parameter entity back to its tree 1`] = `"<!DOCTYPE d [<!-- c --><?pi x?><!ENTITY % p \\"x\\"><!NOTATION n SYSTEM \\"a>b\\"><!ENTITY e 'q'>%p;<!ENTITY late \\"no\\">]><d>&e;&late;</d>"`;
+
+exports[`SourceProcessor — XML under an internal DTD subset prints markup a reference cycle reaches back to its tree 1`] = `"<!DOCTYPE d [<!ENTITY a \\"&b;\\"><!ENTITY b \\"x&a;<y/>\\">]><d>&a;</d>"`;
+
+exports[`SourceProcessor — XML under an internal DTD subset prints markup an entity expands to back to its tree 1`] = `"<!DOCTYPE d [<!ENTITY e \\"<b x='1'>t</b>&f;\\"><!ENTITY f \\"<i/>\\"><!ENTITY t \\"txt\\">]><d>a&e;b&t;&nope;&#38;</d>"`;
+
+exports[`SourceProcessor — XML under an internal DTD subset prints markup past the depth searched back to its tree 1`] = `"<!DOCTYPE d [<!ENTITY e0 \\"&e1;\\"><!ENTITY e1 \\"&e2;\\"><!ENTITY e2 \\"&e3;\\"><!ENTITY e3 \\"&e4;\\"><!ENTITY e4 \\"&e5;\\"><!ENTITY e5 \\"&e6;\\"><!ENTITY e6 \\"&e7;\\"><!ENTITY e7 \\"&e8;\\"><!ENTITY e8 \\"&e9;\\"><!ENTITY e9 \\"&e10;\\"><!ENTITY e10 \\"&e11;\\"><!ENTITY e11 \\"&e12;\\"><!ENTITY e12 \\"&e13;\\"><!ENTITY e13 \\"&e14;\\"><!ENTITY e14 \\"&e15;\\"><!ENTITY e15 \\"&e16;\\"><!ENTITY e16 \\"&e17;\\"><!ENTITY e17 \\"&e18;\\"><!ENTITY e18 \\"<x/>\\">]><d>&e0;</d>"`;
+
+exports[`SourceProcessor — XML under an internal DTD subset prints markup with every kind of node back to its tree 1`] = `
+"<!DOCTYPE d [<!ENTITY e \\"<b x='1' y>t</b><!--c
+--><?p
+q?><![CDATA[z]]>\\">]><d>&e;</d>"
+`;
+
+exports[`SourceProcessor — XML under an internal DTD subset prints misnested end tags back to its tree 1`] = `"<a><b><c/></b>x</a>"`;
+
+exports[`SourceProcessor — XML under an internal DTD subset prints one a comment runs out in back to its tree 1`] = `"<!DOCTYPE d [<!-- open ]><d/>"`;
+
+exports[`SourceProcessor — XML under an internal DTD subset prints one a declaration's literal runs out in back to its tree 1`] = `"<!DOCTYPE d [<!ELEMENT d \\"x]><d/>"`;
+
+exports[`SourceProcessor — XML under an internal DTD subset prints one an instruction runs out in back to its tree 1`] = `"<!DOCTYPE d [<?open ]><d/>"`;
+
+exports[`SourceProcessor — XML under an internal DTD subset prints text a chain expands to back to its tree 1`] = `"<!DOCTYPE d [<!ENTITY a \\"&b;&b;\\"><!ENTITY b \\"&c;\\"><!ENTITY c \\"plain\\">]><d>&a;</d>"`;
+
+exports[`xmlMinify should hand the stylesheets the CSS minifier's options 1`] = `"<svg xmlns=\\"http://www.w3.org/2000/svg\\"><style>a{width:6pc}</style></svg>"`;
+
+exports[`xmlMinify should hand the stylesheets the target's browsers 1`] = `
+"<?xml version=\\"1.0\\" encoding=\\"UTF-8\\"?><svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 10 10\\">
+	<style>.dot{fill:red;-webkit-user-select:none;user-select:none}</style>
+	<circle class=\\"dot\\" cx=\\"5\\" cy=\\"5\\" r=\\"4\\" style=\\"stroke:#0f0\\"/>
+</svg>"
+`;
+
+exports[`xmlMinify should minify the document and the stylesheets it holds 1`] = `
+"<?xml version=\\"1.0\\" encoding=\\"UTF-8\\"?><svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 10 10\\">
+	<style>.dot{fill:red;user-select:none}</style>
+	<circle class=\\"dot\\" cx=\\"5\\" cy=\\"5\\" r=\\"4\\" style=\\"stroke:#0f0\\"/>
 </svg>"
 `;

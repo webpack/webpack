@@ -5,6 +5,7 @@
 // cspell:ignore contenteditable enterkeyhint formenctype formmethod formtarget
 // cspell:ignore inputmode writingsuggestions
 // cspell:ignore noembed noframes optgroup
+// cspell:ignore bgsound doctypehtml iewport abcb axxb
 
 /** @import { HtmlNodeRef, HtmlAttribute } from "../../../lib/html/syntax-parser" */
 
@@ -5402,5 +5403,1310 @@ describe("SourceProcessor — parseError while printing", () => {
 		expect(code).toBe("x<table><tr><td>a</table>");
 		expect(printed).toEqual(parsed);
 		expect(printed).not.toContain("expected-doctype-but-got-chars@0");
+	});
+});
+
+/** @typedef {import("../../../lib/html/syntax-printer").HtmlProcessOptions & import("../../../lib/html/syntax-printer").HtmlPrintOptions & { mode: "minify" | "beautify" }} HtmlPrint */
+
+// Inputs from the html5lib / wpt tree-construction corpus, picked for the
+// insertion-mode paths they take: each prints back to the tree it was read as,
+// read as the printer's own reader does — with scripting on.
+describe("SourceProcessor — tree-construction corpus round trips", () => {
+	const { SourceProcessor } = require("../../../lib/html/syntax");
+	const { parseHtml } = require("../../../lib/html/syntax-parser");
+
+	/** @type {[("beautify" | "minify"), string, string][]} */
+	const CASES = [
+		["beautify", "<cite><b><cite><i><cite><i><cite><i><div>X</b>TEST", ""],
+		[
+			"minify",
+			'<p><font size=4><font size=4><font size=4><font size="5"><font size=4><p>X',
+			""
+		],
+		["beautify", "<svg><![CDATA[\u0000]]></svg><frameset>", ""],
+		["minify", "<body><?a$><?b$><?good?>", ""],
+		["beautify", "<a><table><td><a><table></table><a></tr><a></table><a>", ""],
+		[
+			"beautify",
+			'<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"><html></html>',
+			""
+		],
+		[
+			"minify",
+			"<table><tr></strong></b></em></i></u></strike></s></blink></tt></pre></big></small></font></select></h1></h2></h3></h4></h5></h6></body></br></a></img></title></span></style></script></table></th></td></tr></frame></area></link></param></hr></input></col></base></meta></basefont></bgsound></embed></spacer></p></dd></dt></caption></colgroup></tbody></tfoot></thead></address></blockquote></center></dir></div></dl></fieldset></listing></menu></ol></ul></li></nobr></wbr></form></button></marquee></object></html></frameset></head></iframe></image></isindex></noembed></noframes></noscript></optgroup></option></plaintext></textarea>",
+			""
+		],
+		["beautify", "<nobr><table><marquee></table><nobr>", ""],
+		["minify", "<!doctype html><table><tbody><tr><plaintext></plaintext>", ""],
+		[
+			"beautify",
+			"<select><option>A<select><option>B<select><option>C<select><option>D<select><option>E<select><option>F<select><option>G<select>",
+			""
+		],
+		["beautify", "<g></path>X", "svg path"],
+		["minify", "<math><tbody><mo><tfoot>", "tbody"],
+		["beautify", "<body foo='bar'><body foo='baz' yo='mama'>", ""],
+		["beautify", "</b test", ""],
+		["minify", "<body><?_>", ""],
+		["beautify", "<!-- inside </script> -->", "script"],
+		["beautify", "<?", ""],
+		["beautify", "<form><form>", "template"],
+		["beautify", "<input><option>", "select"],
+		["beautify", "<table><a>1<p>2</a>3</p>", ""],
+		["beautify", "<!doctype html><div><body><frameset>", ""],
+		["minify", "<body><template><tr></tr><td></td></template>", ""],
+		[
+			"beautify",
+			"<body a=b><template><div></div><body c=d><div></div></body></template></body>",
+			""
+		],
+		[
+			"beautify",
+			'<!DOCTYPE html SYSTEM "http://www.ibm.com/data/dtd/v11/ibmxhtml1-transitional.dtd"><p><table>',
+			""
+		],
+		[
+			"minify",
+			'<!DOCTYPE html><body><title>X</title><meta name=z><link rel=foo><style>\nx { content:"</style" } </style>',
+			""
+		],
+		["beautify", "<?#", ""],
+		["beautify", "<select><hr>", ""],
+		["beautify", "<p><table></p>", ""],
+		["beautify", "<select><input>", ""],
+		["beautify", "<button><button>", ""],
+		["beautify", "<p><code x</code></p>\n", ""],
+		["minify", '<div bar="ZZ&gt=YY"></div>', ""],
+		[
+			"minify",
+			'<html><body>\n<p><font size="7">First paragraph.</p>\n<p>Second paragraph.</p></font>\n<b><p><i>Bold and Italic</b> Italic</p>',
+			""
+		],
+		["beautify", "<!---x", ""],
+		["minify", "<!doctype>", ""],
+		["beautify", "<frameset>X", "svg desc"],
+		["beautify", "<body><?xml>", ""],
+		["beautify", "<body><?start", ""],
+		["beautify", "<body><?start?", ""],
+		["beautify", "<div><svg></div>a", ""],
+		["beautify", "<!DOCTYPE ...>Hello", ""],
+		["beautify", "<table><tr><div><td>", ""],
+		["beautify", "<!doctype html><math/><foo>", ""],
+		["beautify", "<math><annotation-xml></svg>x", ""],
+		["beautify", "<!doctype html><table>abc<!--foo-->", ""],
+		["beautify", "<!DOCTYPE html><textarea>\n</textarea>", ""],
+		["beautify", '<!DOCTYPE html PUBLIC "html"><p><table>', ""],
+		["beautify", "<html a=b><template><div><html b=c><span></template>", ""],
+		[
+			"beautify",
+			"<p><b id=a><b id=a><b id=a><b><object><b id=a><b id=a>X</object><p>Y",
+			""
+		],
+		[
+			"beautify",
+			'<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN"\n   "http://www.w3.org/TR/html4/strict.dtd"><p><table>',
+			""
+		],
+		["beautify", "</", ""],
+		["beautify", "<body><!\u0000>", ""],
+		["beautify", "<dd>1</foo>", ""],
+		["beautify", "<script><!--", ""],
+		["minify", "FOO&&&&gt;BAR", ""],
+		["beautify", "<svg><![CDATA[", ""],
+		["beautify", "</html><!--abc-->", "html"],
+		["beautify", "<!doctypehtml><p><li>", ""],
+		["beautify", "<template><a><table><a>", ""],
+		["beautify", "<b><em><foo><foo><foo><aside></b>", ""],
+		["beautify", "<br>BC<form>D<div>E</form>F</div>G", "template"],
+		["beautify", "<div><sarcasm><div></div></sarcasm></div>", ""],
+		[
+			"beautify",
+			"<div><a><b><div><div><div><div><div><div><div><div><div><div></a>",
+			""
+		]
+	];
+
+	it.each(CASES)("%s prints %j back to its tree", (mode, source, context) => {
+		const fragmentContext = context || undefined;
+		const options = { fragmentContext, scripting: true };
+		const { code } = new SourceProcessor().process(source, {
+			mode,
+			fragmentContext
+		});
+		expect(serializeHtmlTree(parseHtml(code, 0, options))).toBe(
+			serializeHtmlTree(parseHtml(source, 0, options))
+		);
+	});
+});
+
+// Prints read back as a browser reads them: with scripting on, as `grammar`
+// parses the source it prints, and in the fragment context it was parsed in.
+describe("SourceProcessor — printing what re-parses to the same tree", () => {
+	const { SourceProcessor } = require("../../../lib/html/syntax");
+	const { parseHtml } = require("../../../lib/html/syntax-parser");
+
+	/**
+	 * @param {string} source html source
+	 * @param {HtmlPrint} options print options
+	 * @returns {string} the printed document
+	 */
+	const print = (source, options) =>
+		new SourceProcessor().process(source, options).code;
+
+	/**
+	 * @param {string} source html source
+	 * @param {string=} fragmentContext the context it is parsed in
+	 * @param {boolean=} blank whether to keep whitespace-only text
+	 * @returns {string} its tree, read as the printer's reader does
+	 */
+	const tree = (source, fragmentContext, blank = true) => {
+		const serialized = serializeHtmlTree(
+			parseHtml(source, 0, { fragmentContext, scripting: true })
+		);
+		return blank
+			? serialized
+			: serialized.replace(/^\| *"[\t\n\f\r ]*"$\n?/gm, "");
+	};
+
+	/**
+	 * @param {string} source html source
+	 * @param {HtmlPrint} options print options
+	 */
+	const keepsTree = (source, options) => {
+		// Collapsing is what drops whitespace, which is all it may drop.
+		const blank = options.collapseWhitespace === undefined;
+		expect(tree(print(source, options), options.fragmentContext, blank)).toBe(
+			tree(source, options.fragmentContext, blank)
+		);
+	};
+
+	const MINIFY = /** @type {const} */ ({ mode: "minify" });
+	const BEAUTIFY = /** @type {const} */ ({ mode: "beautify" });
+	const ALL = /** @type {const} */ ({
+		mode: "minify",
+		removeImpliedTags: "all"
+	});
+	const COLLAPSED = /** @type {const} */ ({
+		mode: "minify",
+		removeImpliedTags: "all",
+		collapseWhitespace: "all"
+	});
+
+	describe("what follows an element whose text runs to the end", () => {
+		// §13.2.5.7: the tokenizer never leaves the PLAINTEXT state, so an end tag
+		// printed after `<plaintext>` — its own or an ancestor's — is its text.
+		it.each([
+			["an ancestor's end tag", "<p><button><plaintext>a</p>"],
+			["a list item's", "<ul><li><plaintext>x"],
+			["a template's", "<template><plaintext>a</template>b"],
+			["an implied body's", "</html> <plaintext>x"],
+			["a rebuilt formatting element's", "<p><b>x</p>y<plaintext>z"],
+			["a cell's", "<table><td><plaintext>a"],
+			["the table one was fostered out of", "<table><rb><dd><plaintext>a"]
+		])("prints no end tag after it: %s", (_name, source) => {
+			for (const options of [BEAUTIFY, MINIFY, COLLAPSED]) {
+				// What follows the start tag is the source's: its text, and nothing more.
+				const printed = print(source, options);
+				expect(printed.slice(printed.indexOf("<plaintext>"))).toBe(
+					source.slice(source.indexOf("<plaintext>"))
+				);
+				keepsTree(source, options);
+			}
+		});
+
+		it("still ends one in foreign content, which is no PLAINTEXT state", () => {
+			expect(print("<svg><plaintext>a</plaintext>b", BEAUTIFY)).toBe(
+				"<svg><plaintext>a</plaintext>b</svg>"
+			);
+			keepsTree("<svg><plaintext>a</plaintext>b", MINIFY);
+		});
+
+		it("prints a script the input ran out in double-escaped as written", () => {
+			// §13.2.5.20 on: past `<!--` and `<script`, a `</script>` only ends the
+			// double escape, so the one this would add is more of the body.
+			for (const source of [
+				"<!doctype html><script><!--<script ",
+				"<p><script><!--<SCRIPT/>x</p>",
+				"<script><!--<script>a</scripts>-"
+			]) {
+				for (const options of [BEAUTIFY, MINIFY]) {
+					expect(print(source, options)).toBe(source);
+					keepsTree(source, options);
+				}
+			}
+			// Where the escape ended, or never doubled, the end tag closes it.
+			for (const [source, expected] of [
+				[
+					"<script><!--<script></script>x",
+					"<script><!--<script></script>x</script>"
+				],
+				["<script><!--<script>--->x", "<script><!--<script>--->x</script>"],
+				["<script><!--<scripts>x", "<script><!--<scripts>x</script>"],
+				["<script><!-- a -->", "<script><!-- a --></script>"]
+			]) {
+				expect(print(source, BEAUTIFY)).toBe(expected);
+				keepsTree(source, BEAUTIFY);
+			}
+		});
+
+		it("prints the source where the tree has something after it", () => {
+			// The comment went after `<body>`, behind the `<plaintext>` in tree
+			// order, so no print in tree order keeps it out of the text.
+			for (const source of [
+				"</body><!--c--><p><plaintext>a",
+				"<b></body><?pi?><plaintext>a",
+				"<template><tbody><li><td><plaintext>x"
+			]) {
+				expect(print(source, BEAUTIFY)).toBe(source);
+				expect(print(source, MINIFY)).toBe(source);
+			}
+		});
+	});
+
+	describe("a start tag left out where the parser puts its content elsewhere", () => {
+		it.each([
+			// §13.1.2.4 keeps `<html>` only before a comment, and `<?…>` is a bogus
+			// comment to HTML.
+			["a processing instruction first in <html>", "<html><?x><head>", MINIFY],
+			["one after </body>", "<body>x</body><?x>", ALL],
+			["one after </head>", "<head></head><?x><body>", ALL],
+			["one after </html>", "</html><?x>", ALL],
+			// §13.2.6.4.6 hands each of these to the head from "after head".
+			["a title opening the body", "<body><title>x</title>y", ALL],
+			["a base opening it", "<!DOCTYPE html><body><base>A", ALL],
+			["a bgsound opening it", "<body><bgsound>A", ALL],
+			["a basefont opening it", "<body><basefont>A", ALL],
+			["noframes opening it", "<body><noframes>x</noframes>y", ALL],
+			// "In head" reads a `<noscript>` too, before an omitted `</head>`.
+			[
+				"a noscript opening an implied body",
+				"<tr><noscript><li></html>",
+				BEAUTIFY
+			],
+			["one behind an ignored body tag", "<tbody><body><noscript><i>", MINIFY],
+			// The first thing that prints is what decides, past dropped whitespace.
+			[
+				"a head element behind dropped whitespace",
+				"</body> <template>x",
+				COLLAPSED
+			],
+			["a base behind it", "<link><tfoot>\n<base><p>", COLLAPSED],
+			[
+				"a processing instruction behind it",
+				"<col>\n</table><?pi?><p>",
+				COLLAPSED
+			],
+			// An `<html>` in foreign content is an element like any other.
+			["an svg html element", "<li><svg><html><script></script>", MINIFY],
+			["a MathML one", "<math><html><mi>x</mi></html></math>", MINIFY],
+			// Only "in table" implies a `<tbody>` or `<colgroup>`: a template's
+			// content takes the `<tr>` / `<col>` as it stands.
+			[
+				"a tbody in template content",
+				"<template><tbody><tr><td>x</tbody><p>",
+				MINIFY
+			],
+			[
+				"one behind other content",
+				"<template><tbody><area></p><tr> \n <tr>",
+				MINIFY
+			],
+			[
+				"a colgroup in template content",
+				"<template><colgroup><col></colgroup><p>",
+				MINIFY
+			]
+		])("keeps %s", (_name, source, options) => {
+			keepsTree(source, options);
+		});
+
+		it("still leaves out the ones the parser implies", () => {
+			expect(print("<html><!--x--><head>", MINIFY)).toBe(
+				"<head></head></html>"
+			);
+			expect(print("<body><p>x", ALL)).toBe("<p>x");
+			expect(print("<table><tbody><tr><td>x</table>", MINIFY)).toBe(
+				"<table><tr><td>x</table>"
+			);
+			expect(
+				print("<table><colgroup><col></colgroup><tr><td>x</table>", MINIFY)
+			).toBe("<table><col><tr><td>x</table>");
+			expect(
+				print("<template><tbody><tr><td>x</tbody></template>", MINIFY)
+			).toBe("<template><tbody><tr><td>x</template>");
+		});
+	});
+
+	describe("a fragment", () => {
+		it("keeps the whitespace its root holds, which renders as the context's", () => {
+			// The `<html>` a fragment parse roots its nodes in stands for the context
+			// element, so what it holds is no whitespace outside a formatting context.
+			expect(
+				print("<body>\n<div>", { ...MINIFY, fragmentContext: "div" })
+			).toBe("\n<div></div>");
+			keepsTree("<body>\n<div>", { ...MINIFY, fragmentContext: "div" });
+			// A document's is still dropped.
+			expect(print("<html>\n<head></head>\n<body>", MINIFY)).toBe(
+				"<head></head><body></body></html>"
+			);
+		});
+
+		it("never writes its root as an `<html>` tag", () => {
+			const KEPT = { ...MINIFY, transforms: { comments: true } };
+			for (const source of [" <b>x</b>", "<!--a--><b>x</b>", "<meta> x"]) {
+				for (const options of [BEAUTIFY, MINIFY, KEPT]) {
+					const printed = print(source, { ...options, fragmentContext: "div" });
+					expect(printed).not.toMatch(/<\/?html/);
+					// Minifying drops the comment, which is all it may change.
+					if (options !== MINIFY) {
+						keepsTree(source, { ...options, fragmentContext: "div" });
+					}
+				}
+			}
+		});
+
+		it("leaves out a table group a table context implies", () => {
+			// The root stands for the `<table>`, so "in table" reads the `<col>` and
+			// `<tr>` there, and implies the group around each.
+			for (const [source, expected] of [
+				["<colgroup><col>", "<col>"],
+				["<tbody><tr><td>x", "<tr><td>x"]
+			]) {
+				expect(print(source, { ...MINIFY, fragmentContext: "table" })).toBe(
+					expected
+				);
+				keepsTree(source, { ...MINIFY, fragmentContext: "table" });
+			}
+			// Under a `<div>` context the parser implies neither.
+			expect(
+				print("<template><colgroup><col></template>", {
+					...MINIFY,
+					fragmentContext: "div"
+				})
+			).toBe("<template><colgroup><col></template>");
+		});
+
+		it("reads a form in a template context as template contents", () => {
+			// Template contents never set the form element pointer, so the nested
+			// form needs no `</form>` in front of it.
+			expect(
+				print("<form><form>", { ...BEAUTIFY, fragmentContext: "template" })
+			).toBe("<form><form></form></form>");
+			keepsTree("<form><form>", { ...BEAUTIFY, fragmentContext: "template" });
+		});
+
+		it.each([
+			["svg path", "<th><p><html lang=en></tt><svg><dt>"],
+			[
+				"svg path",
+				"<plaintext>&amp;<p class=x><xmp><head><math/>\n</option>\n"
+			],
+			["svg path", "<p class=x><mo><xmp><input></i></caption>&amp;<listing>"],
+			[
+				"select",
+				"<svg/><select><ruby><input type=hidden><p class=x><math/><noembed>"
+			],
+			[
+				"table",
+				"<caption><math/><h2><a href=x><input></caption><source><thead><mi>"
+			],
+			["style", "<form><"]
+		])(
+			"is read back in its context, %s, before it is kept: %j",
+			(fragmentContext, source) => {
+				// A context element reads the same tags as another tree than a document
+				// does, so a fragment's print is checked the way a fostering one is.
+				for (const options of [BEAUTIFY, MINIFY]) {
+					keepsTree(source, { ...options, fragmentContext });
+				}
+			}
+		);
+	});
+
+	describe("an end tag the parser does not read where the source did", () => {
+		it("keeps `</caption>` before anything but a table part", () => {
+			// §13.1.2.4 lets it go unless whitespace or a comment follows, but "in
+			// caption" only ends at a table part: a `<script>` beside it, which the
+			// table's content model allows, would go inside it.
+			const source =
+				"<table><caption>x</caption><script>a()</script><tr><td>y</table>";
+			expect(print(source, MINIFY)).toBe(source);
+			keepsTree(source, MINIFY);
+			keepsTree("<template><caption></table><script>", MINIFY);
+			expect(
+				print("<table><caption>x</caption><tbody><tr><td>y</table>", MINIFY)
+			).toBe("<table><caption>x<tr><td>y</table>");
+			expect(print("<table><caption>x</caption></table>", MINIFY)).toBe(
+				"<table><caption>x</table>"
+			);
+		});
+
+		it("reads back a print with a form nested in another", () => {
+			// The `</form>` written in front of the inner one clears the form element
+			// pointer, so the outer form's own end tag is then ignored, and the `</b>`
+			// that follows it restructures both.
+			for (const source of [
+				"<b><form><applet></form><form>",
+				"<b id=1><form></div><button><tbody></body><applet></form><h1>&lt;b&gt;<form>"
+			]) {
+				keepsTree(source, BEAUTIFY);
+				keepsTree(source, MINIFY);
+			}
+			expect(print("<form><div></form><form>x", BEAUTIFY)).toBe(
+				"<form><div></form><form>x</form></div></form>"
+			);
+		});
+	});
+
+	describe("text fostered out of a table", () => {
+		it("prints what merged into the text before the table", () => {
+			// The fostered run joined the text node in front of the table without
+			// taking its range along, and both spellings happen to be five long.
+			const source = "&amp;<table>&lt;b&gt;<</frameset>";
+			for (const options of [BEAUTIFY, MINIFY]) {
+				expect(print(source, options)).toMatch(
+					/^&(?:amp;)?&lt;b(?:&gt;|>)&lt;/
+				);
+				keepsTree(source, options);
+			}
+		});
+
+		it("prints a run behind leading whitespace an implied body keeps", () => {
+			// The body printing from source held its start tag back without the end
+			// tag that goes with it once it prints, and the walk read an undefined one.
+			const source = "<tr> <table><tr><option><li>";
+			for (const options of [BEAUTIFY, MINIFY]) {
+				expect(print(source, options)).toBe(`<body>${source.slice(4)}`);
+				keepsTree(source, options);
+			}
+		});
+	});
+
+	describe("a print that skips what a visitor skipped", () => {
+		/**
+		 * @param {string} source html source
+		 * @param {HtmlPrint} options print options
+		 * @param {number} skipped the node type whose `enter` skips its children
+		 * @returns {{ code: string, log: string[] }} the print and what the visitors saw
+		 */
+		const skipping = (source, options, skipped) => {
+			/** @type {string[]} */
+			const log = [];
+			const code = new SourceProcessor()
+				.use({
+					[NodeType.Document]: {
+						enter: (path) => {
+							if (skipped === NodeType.Document) path.skipChildren();
+						},
+						exit: () => log.push("-doc")
+					},
+					[NodeType.Element]: {
+						enter: (path) => {
+							log.push(`+${path.name()}`);
+							if (skipped === NodeType.Element && path.name() === "div") {
+								path.skipChildren();
+							}
+						},
+						exit: (path) => log.push(`-${path.name()}`)
+					}
+				})
+				.process(source, options).code;
+			return { code, log };
+		};
+
+		it.each([MINIFY, BEAUTIFY])("still prints the subtree, %o", (options) => {
+			// `docs/syntax.md`: a print still writes the whole output, and the node
+			// skipped still exits. Its subtree used to print as `undefined`.
+			const source = "<div><b>x</b><template><i>t</i></template></div><p>y";
+			const { code, log } = skipping(source, options, NodeType.Element);
+			expect(code).toBe(
+				options === MINIFY
+					? source
+					: "<div><b>x</b><template><i>t</i></template></div><p>y</p>"
+			);
+			expect(log).toEqual([
+				"+html",
+				"+head",
+				"-head",
+				"+body",
+				"+div",
+				"-div",
+				"+p",
+				"-p",
+				"-body",
+				"-html",
+				"-doc"
+			]);
+		});
+
+		it("still prints a document whose root skipped its children", () => {
+			const { code, log } = skipping(
+				"<div><b>x</b></div><p>y",
+				MINIFY,
+				NodeType.Document
+			);
+			expect(code).toBe("<div><b>x</b></div><p>y");
+			expect(log).toEqual(["-doc"]);
+			expect(
+				skipping(
+					"<a><b/></a>",
+					{ xml: true, mode: "minify" },
+					NodeType.Document
+				).code
+			).toBe("<a><b/></a>");
+		});
+	});
+});
+
+describe("SourceProcessor — attribute values the minifier rewrites", () => {
+	const { SourceProcessor } = require("../../../lib/html/syntax");
+	const R = builtinEmbeddedRenderer();
+
+	/**
+	 * @param {string} source html source
+	 * @param {import("../../../lib/html/syntax-printer").HtmlPrintOptions=} options print options on top of `mode: "minify"`
+	 * @returns {string} the minified document
+	 */
+	const minify = (source, options) =>
+		new SourceProcessor().process(source, { mode: "minify", ...options }).code;
+
+	/**
+	 * @param {string} source html source
+	 * @returns {{ name: string, value: string }[][]} each element's attributes, decoded
+	 */
+	const attributes = (source) => {
+		/** @type {{ name: string, value: string }[][]} */
+		const out = [];
+		new SourceProcessor()
+			.use({
+				[NodeType.Element]: (path) => {
+					/** @type {{ name: string, value: string }[]} */
+					const list = [];
+					for (let i = 0, n = path.fieldCount(Field.attributes); i < n; i++) {
+						const attribute = path.field(i, Field.attributes);
+						list.push({
+							name: path.name(attribute),
+							value: path.value(attribute)
+						});
+					}
+					out.push(list);
+				}
+			})
+			.process(source);
+		return out;
+	};
+
+	it.each([
+		// Only the bytes between candidates go: the list itself is the same.
+		[
+			"<img srcset='  a.png 1x,  b.png   2x '>",
+			'<img srcset="a.png 1x,b.png 2x">'
+		],
+		// A descriptor-less URL keeps the space that ends it before the next.
+		["<img srcset='a.png, b.png 2x'>", "<img srcset='a.png, b.png 2x'>"],
+		["<img srcset='a.png 1x , b.png'>", '<img srcset="a.png 1x,b.png">'],
+		["<img srcset=',,a.png,, 1x'>", '<img srcset="a.png, 1x">'],
+		[
+			"<link rel=preload imagesrcset='a.png  100w,b.png 200w'>",
+			'<link rel=preload imagesrcset="a.png 100w,b.png 200w">'
+		],
+		// What the parser rejects is left as written: no valid descriptor holds a
+		// `(`, and a list of no candidate is no list.
+		["<img srcset='a.png 1x (x)'>", "<img srcset='a.png 1x (x)'>"],
+		["<img srcset=' , '>", "<img srcset=' , '>"],
+		// A comma list loses the whitespace around each comma only.
+		[
+			"<img sizes=' (max-width: 1px)  1px , 2px ' srcset='a.png 100w'>",
+			"<img sizes=\"(max-width: 1px)  1px,2px\" srcset='a.png 100w'>"
+		],
+		["<input accept=' image/*  , .png '>", "<input accept=image/*,.png>"],
+		["<map><area coords=' 1 , 2 '></map>", "<map><area coords=1,2></map>"],
+		// The viewport list's grammar skips the whitespace around its separators,
+		// whichever reference spells the name.
+		[
+			"<meta name=viewport content=' width = device-width , initial-scale=1 '>",
+			'<meta name=viewport content="width=device-width,initial-scale=1">'
+		],
+		[
+			"<meta name='&#118;iewport' content=' a = 1 ,  b=2 '>",
+			'<meta name=viewport content="a=1,b=2">'
+		],
+		[
+			"<meta name=description content=' a = 1 '>",
+			"<meta name=description content=' a = 1 '>"
+		],
+		// An integer is written the one way its rules read it, and a value they do
+		// not read as one is left alone.
+		[
+			"<table><tr><td colspan=' 02' rowspan='+3'>x</table>",
+			"<table><tr><td colspan=2 rowspan=+3>x</table>"
+		],
+		[
+			"<input tabindex='-0'><input tabindex='-07'><input maxlength='1e3'>",
+			"<input tabindex=0><input tabindex=-7><input maxlength=1e3>"
+		],
+		[
+			"<ol start='-01'><li value=' 3'>a</ol>",
+			"<ol start=-1><li value=3>a</ol>"
+		],
+		// Two tokens are one only when every character matches, whatever packed key
+		// the comparison starts from.
+		[
+			`<p class='ab a${"x".repeat(64)}b abcb axxb abcb'>t`,
+			`<p class="ab a${"x".repeat(64)}b abcb axxb">t`
+		]
+	])("rewrites %s", (source, expected) => {
+		expect(minify(source)).toBe(expected);
+	});
+
+	it("keeps a list as written where its normalization is switched off", () => {
+		const options = { transforms: { normalizeListAttributes: false } };
+		expect(minify("<img srcset='  a.png 1x,  b.png   2x '>", options)).toBe(
+			"<img srcset='  a.png 1x,  b.png   2x '>"
+		);
+		expect(
+			minify("<meta name=viewport content=' width = device-width '>", options)
+		).toBe("<meta name=viewport content=' width = device-width '>");
+	});
+
+	it.each([
+		// The shortest spelling of a value carrying references, `=` keeping it
+		// quoted and the `&` that opens nothing left bare.
+		["<p title=a&amp;b=c>t", '<p title="a&b=c">t'],
+		// `&#` opens a numeric reference whatever follows it.
+		[
+			"<p>&amp;#;x</p><a title='&amp;#;x'>t</a>",
+			"<p>&amp;#;x</p><a title=&amp;#;x>t</a>"
+		],
+		// A rewrite holding both quotes and no reference cannot take other quotes, so
+		// the source spelling stands.
+		["<img srcset=a'\"b.png,,>", "<img srcset=a'\"b.png,,>"],
+		[
+			"<p class=' a '>x<p class=\" a'b \">y<p class=' a\"b '>z",
+			"<p class=a>x<p class=\"a'b\">y<p class='a\"b'>z"
+		],
+		[
+			'<p class=" a\'&quot;b ">w<p a="x\'y&quot;z">t',
+			"<p class='a&#39;\"b'>w<p a='x&#39;y\"z'>t"
+		]
+	])("writes %s in the shortest quoting", (source, expected) => {
+		expect(minify(source)).toBe(expected);
+		// Respelled, not changed: every value but a rewritten list reads the same.
+		/**
+		 * @param {{ name: string, value: string }[][]} elements attributes per element
+		 * @returns {{ name: string, value: string }[][]} the ones no list rewrite touches
+		 */
+		const unlisted = (elements) =>
+			elements.map((list) =>
+				list.filter((a) => a.name !== "class" && a.name !== "srcset")
+			);
+		expect(unlisted(attributes(expected))).toEqual(
+			unlisted(attributes(source))
+		);
+	});
+
+	it("keeps the delimiter where quoting is frozen, even for a rewritten value", () => {
+		const options = { transforms: { normalizeAttributeQuotes: false } };
+		expect(
+			minify(
+				"<p class='  a  b  '>x<p title='a\"b' class=' c '>y<p class=\" d'e \">z",
+				options
+			)
+		).toBe("<p class='a b'>x<p title='a\"b' class='c'>y<p class=\"d'e\">z");
+		// Re-escaped, the rewrite costs more than the source spelled: a `&#34;` is
+		// one byte shorter than the `&quot;` this writes, but the value changed.
+		expect(minify('<p class="&#34;&#34;&#34;&#34;\' x ">t', options)).toBe(
+			'<p class="&quot;&quot;&quot;&quot;\' x">t'
+		);
+	});
+
+	it("drops an empty attribute only on an element that defines it", () => {
+		expect(
+			minify(
+				"<x-foo rel='' id=''></x-foo><a rel='' href=x>t</a><link rel><output for=''></output>",
+				{ removeEmptyAttributes: true }
+			)
+		).toBe("<x-foo rel></x-foo><a href=x>t</a><link><output></output>");
+		// A style the renderer reads as nothing is empty too, however it is spelled.
+		expect(
+			minify("<p style='&#x20;'>x<p style='a:b&#59;'>y", {
+				removeEmptyAttributes: true,
+				renderEmbeddedSource: R
+			})
+		).toBe("<p>x<p style=a:b>y");
+	});
+
+	it("sorts what prints, a dropped attribute ranking with no name", () => {
+		expect(
+			minify("<input type=text a=1 b=2><input b=3 type=text>", {
+				sortAttributes: true,
+				removeRedundantAttributes: "all"
+			})
+		).toBe("<input b=2 a=1><input b=3>");
+		// A DTD default is no attribute the tag wrote, so it does not count.
+		expect(
+			new SourceProcessor().process(
+				'<!DOCTYPE d [<!ATTLIST d a CDATA "v">]><d c="2" b="1"/><e c="3"/>',
+				{ xml: true, mode: "minify", sortAttributes: true }
+			).code
+		).toBe('<!DOCTYPE d [<!ATTLIST d a CDATA "v">]><d c="2" b="1"/><e c="3"/>');
+	});
+
+	it("leaves a body as written where the answer is no text", () => {
+		expect(
+			minify("<style>a { color : red }</style><p style='a : b'>x", {
+				embeddedAnswers: () => undefined
+			})
+		).toBe("<style>a { color : red }</style><p style='a : b'>x");
+		expect(
+			minify("<p style='a : b'>x<svg/>", {
+				renderEmbeddedSource: () => undefined
+			})
+		).toBe("<p style='a : b'>x<svg/>");
+		expect(minify("<p style='a : b'>x", { renderEmbeddedSource: R })).toBe(
+			"<p style=a:b>x"
+		);
+	});
+});
+
+describe("SourceProcessor — runs merged into one", () => {
+	const { SourceProcessor } = require("../../../lib/html/syntax");
+	const R = builtinEmbeddedRenderer();
+
+	/**
+	 * @param {string} source html source
+	 * @param {import("../../../lib/html/syntax-printer").HtmlPrintOptions=} options print options on top of `mode: "minify"`
+	 * @returns {string} the minified document
+	 */
+	const minify = (source, options) =>
+		new SourceProcessor().process(source, { mode: "minify", ...options }).code;
+
+	it("folds a style into the one before only across whitespace and equal attributes", () => {
+		expect(
+			minify(
+				"<p><style>a{color:red}</style> <style>b{color:red}</style>x<style>c{color:red}</style>y<style>d{color:red}</style>",
+				{ mergeStyles: true, renderEmbeddedSource: R }
+			)
+		).toBe(
+			"<p><style>a,b{color:red}</style> x<style>c{color:red}</style>y<style>d{color:red}</style>"
+		);
+		expect(
+			minify(
+				"<p><style media=print>a{color:red}</style><style media=print>b{color:red}</style><style media=screen>c{color:red}</style><style title=x>d{color:red}</style>",
+				{ mergeStyles: true, renderEmbeddedSource: R }
+			)
+		).toBe(
+			"<p><style media=print>a,b{color:red}</style><style media=screen>c{color:red}</style><style title=x>d{color:red}</style>"
+		);
+		// Composed rather than streamed, a template's content folds the same way.
+		expect(
+			minify(
+				"<template><style>a{color:red}</style><style>b{color:red}</style></template>",
+				{ mergeStyles: true, renderEmbeddedSource: R }
+			)
+		).toBe("<template><style>a,b{color:red}</style></template>");
+	});
+
+	it("folds a script into the one before only across whitespace and dropped comments", () => {
+		const options = { mergeScripts: true };
+		expect(
+			minify(
+				"<p><script>a()</script>x<script>b()</script><script>c()</script><!--x--><script>d()</script>",
+				options
+			)
+		).toBe("<p><script>a()</script>x<script>b()\n;c()\n;d()</script>");
+		expect(
+			minify("<p><script>a()</script><!--x--><script>b()</script>", {
+				...options,
+				transforms: { comments: true }
+			})
+		).toBe("<p><script>a()</script><!--x--><script>b()</script>");
+		expect(
+			minify(
+				"<template><script>a()</script><script>b()</script></template>",
+				options
+			)
+		).toBe("<template><script>a()\n;b()</script></template>");
+	});
+});
+
+describe("SourceProcessor — the markup generators", () => {
+	const {
+		baseTag,
+		buildHeadTags,
+		escapeAttribute,
+		escapeText,
+		metaTag,
+		parseHtml,
+		pickTransforms
+	} = require("../../../lib/html/syntax-parser");
+
+	/**
+	 * @param {string} html generated markup
+	 * @returns {string} its tree
+	 */
+	const tree = (html) => serializeHtmlTree(parseHtml(html));
+
+	it("escapes text so that it reads back as written", () => {
+		const text = "a & b < c > d e\nf\rg";
+		expect(escapeText("plain")).toBe("plain");
+		expect(escapeText(text)).toBe("a &amp; b &lt; c &gt; d&nbsp;e&#10;f&#13;g");
+		expect(tree(`<p>${escapeText(text)}`)).toBe(
+			tree("<p>a &amp; b &lt; c &gt; d&nbsp;e&#10;f&#13;g")
+		);
+	});
+
+	it("escapes an attribute value for the quote it is written in", () => {
+		expect(escapeAttribute("a b\rc\n\"x'")).toBe("a&nbsp;b&#13;c&#10;&quot;x'");
+		expect(escapeAttribute('it\'s "q"', 39)).toBe('it&#39;s "q"');
+		// Minimal: NBSP literal and an `&` no reference starts after left bare.
+		expect(escapeAttribute("a b", 39, true)).toBe("a b");
+		expect(escapeAttribute("&c &amp", 34, true)).toBe("&c &amp;amp");
+	});
+
+	it("builds head tags in spec order", () => {
+		expect(
+			buildHeadTags({
+				meta: { charset: "utf-8", viewport: "width=device-width", "og:x": "1" },
+				base: "/",
+				title: "A & B"
+			})
+		).toBe(
+			'<meta charset="utf-8"><base href="/"><meta name="viewport" content="width=device-width"><meta property="og:x" content="1"><title>A &amp; B</title>'
+		);
+		expect(buildHeadTags({})).toBe("");
+		expect(buildHeadTags({ meta: { author: "me" }, title: "" })).toBe(
+			'<meta name="author" content="me">'
+		);
+		expect(metaTag("og:title", 'A "B"')).toBe(
+			'<meta property="og:title" content="A &quot;B&quot;">'
+		);
+		expect(metaTag("description", "x&y")).toBe(
+			'<meta name="description" content="x&amp;y">'
+		);
+		expect(baseTag("/x/")).toBe('<base href="/x/">');
+		expect(baseTag({ href: "/y", target: "_top" })).toBe(
+			'<base href="/y" target="_top">'
+		);
+		expect(baseTag({ href: "/z" })).toBe('<base href="/z">');
+	});
+
+	it("picks the transforms an options object names", () => {
+		expect(
+			pickTransforms({ collapseBooleanAttributes: false, comments: false })
+		).toEqual({ collapseBooleanAttributes: false, comments: false });
+		expect(pickTransforms({})).toBeUndefined();
+	});
+});
+
+describe("SourceProcessor — tree construction the printer reads back", () => {
+	const { SourceProcessor } = require("../../../lib/html/syntax");
+	const { parseHtml } = require("../../../lib/html/syntax-parser");
+	const R = builtinEmbeddedRenderer();
+
+	/** @type {[string, string, import("../../../lib/html/syntax-printer").HtmlProcessOptions & import("../../../lib/html/syntax-printer").HtmlPrintOptions][]} */
+	const CASES = [
+		// Declarative shadow roots: hosts, and one the adoption agency leaves put.
+		[
+			"a shadow root on a MathML element",
+			"<math><mi><template shadowrootmode=open></template></mi></math>",
+			{}
+		],
+		[
+			"shadow roots on hosts",
+			"<span><template shadowrootmode=open>a</template></span><my-el><template shadowrootmode=closed>b</template></my-el><font-face><template shadowrootmode=open>c</template></font-face>",
+			{}
+		],
+		[
+			"a shadow root the adoption agency leaves on its host",
+			"<b><div><template shadowrootmode=open>s</template>x</b>y",
+			{}
+		],
+		// Quirks mode reads `<p><table>` its own way.
+		[
+			"a 4.01 frameset doctype",
+			'<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN"><p><table>',
+			{}
+		],
+		[
+			"a 4.01 transitional doctype",
+			'<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"><p><table>',
+			{}
+		],
+		[
+			"a frameset after a comment behind body",
+			"</body><!--x--><frameset>",
+			{ transforms: { comments: true } }
+		],
+		["a dd under a foreignObject", "<svg><foreignObject><dd>x", {}],
+		[
+			"an end tag form in template content",
+			"<template><div></form>x</div></template>",
+			{}
+		],
+		[
+			"an end tag an svg title stops",
+			"<svg><title><span></foo>x</span></title></svg>",
+			{}
+		],
+		[
+			"identical formatting elements with valueless attributes",
+			"<b x><b x><b x><b x>a</b></b></b></b><i y=a><i y=ab><i y=a>b",
+			{}
+		],
+		[
+			"identical ones with referenced values",
+			"<b id=&amp;><b id=&amp;><b id=&amp;><b id=&amp;>c",
+			{}
+		],
+		["formatting behind two markers", "<a><applet><object><a>x", {}],
+		[
+			"a nested form under foreign content",
+			"<form><svg><foreignObject></form><form>x",
+			{}
+		],
+		["an input the table fosters", "<table><input name=x type=text>", {}],
+		[
+			"a noscript a reader without scripts leaves the head at",
+			"<head><noscript><p>x</p></noscript></head> <body>y",
+			{ removeImpliedTags: "all" }
+		],
+		[
+			"whitespace a foreignObject keeps",
+			"<svg><foreignObject><p>x</p> </foreignObject></svg>",
+			{}
+		],
+		[
+			"empty elements inside a pre",
+			"<pre><span></span>x<s></s></pre>",
+			{ removeEmptyElements: true }
+		],
+		[
+			"a kept comment behind a template's tbody",
+			"<template><table><tbody><tr><td>x</td></tr></tbody><!--keep--></table></template>",
+			{ transforms: { comments: true } }
+		],
+		[
+			"a tbody before a tfoot in template content",
+			"<template><table><tbody><tr><td>x</td></tr></tbody><tfoot></tfoot></table></template>",
+			{}
+		],
+		[
+			"an implied tbody kept in template content",
+			"<template><table><tr><td>x</table></template>",
+			{ transforms: { removeOptionalTags: false } }
+		],
+		[
+			"a rebuilt formatting element in template content",
+			"<template><b>1<p>2</b>3</p></template>",
+			{}
+		],
+		[
+			"an svg stylesheet",
+			"<svg><style>a { color : red }</style></svg>",
+			{ renderEmbeddedSource: R }
+		],
+		[
+			"a fragment's styles, attributes and booleans read back",
+			"<style>a{color:red}</style><style>b{color:red}</style><style type=text/css>c{color:red}</style><input disabled=disabled><input type=text>",
+			{
+				fragmentContext: "div",
+				mergeStyles: true,
+				removeRedundantAttributes: "all",
+				renderEmbeddedSource: R
+			}
+		]
+	];
+
+	it.each(CASES)("prints %s", (_name, source, options) => {
+		const { code } = new SourceProcessor().process(source, {
+			mode: "minify",
+			...options
+		});
+		expect(code).toMatchSnapshot();
+		const beautified = new SourceProcessor().process(source, {
+			mode: "beautify",
+			fragmentContext: options.fragmentContext
+		}).code;
+		const read = { fragmentContext: options.fragmentContext, scripting: true };
+		expect(serializeHtmlTree(parseHtml(beautified, 0, read))).toBe(
+			serializeHtmlTree(parseHtml(source, 0, read))
+		);
+	});
+
+	it("writes back a NUL a doctype or an instruction holds", () => {
+		// The tree reads U+FFFD there; the source's own byte prints, and reads the same.
+		for (const source of ["<!DOCTYPE ht\0ml><p>", "<?pi a\0b?><p>"]) {
+			const { code } = new SourceProcessor().process(source, {
+				mode: "beautify"
+			});
+			expect(code).toBe(`${source}</p>`);
+			expect(serializeHtmlTree(parseHtml(code))).toBe(
+				serializeHtmlTree(parseHtml(source))
+			);
+		}
+	});
+
+	it("reads a raw-text context's end tag as its text", () => {
+		for (const source of ["a</style>\0b", "a</style>b", "</x>\0a"]) {
+			expect(
+				new SourceProcessor().process(source, {
+					mode: "minify",
+					fragmentContext: "style"
+				}).code
+			).toBe(source);
+		}
+	});
+
+	it("walks a document whose text it was told to skip", () => {
+		/** @type {string[]} */
+		const names = [];
+		new SourceProcessor()
+			.use({ [NodeType.Element]: (path) => names.push(path.name()) })
+			.process(
+				"<p>a</p>\n<pre>\nx</pre><p> é&amp;</p>b<textarea>\n\n</textarea>",
+				{
+					skip: { text: true }
+				}
+			);
+		expect(names).toEqual([
+			"html",
+			"head",
+			"body",
+			"p",
+			"pre",
+			"p",
+			"textarea"
+		]);
+	});
+});
+
+describe("SourceProcessor — the streamed walk", () => {
+	const { SourceProcessor } = require("../../../lib/html/syntax");
+
+	// Past `_STREAM_MIN_NODES` (49152) the walk follows the open element stack,
+	// entering what is still open and recycling what finished under it.
+	const BIG = 40000;
+
+	/**
+	 * @param {string} source html source
+	 * @param {string=} skip the element whose `enter` calls `skipChildren()`
+	 * @returns {string[]} `+name` / `-name` in visit order
+	 */
+	const walk = (source, skip) => {
+		/** @type {string[]} */
+		const log = [];
+		new SourceProcessor()
+			.use({
+				[NodeType.Element]: {
+					enter: (path) => {
+						log.push(`+${path.name()}`);
+						if (path.name() === skip) path.skipChildren();
+					},
+					exit: (path) => log.push(`-${path.name()}`)
+				}
+			})
+			.process(source);
+		return log;
+	};
+
+	/**
+	 * @param {string[]} log a walk's log
+	 * @param {string} entry one entry
+	 * @returns {number} how often it occurs
+	 */
+	const count = (log, entry) => log.filter((e) => e === entry).length;
+
+	/**
+	 * @param {string[]} log a walk's log
+	 */
+	const balanced = (log) => {
+		/** @type {string[]} */
+		const open = [];
+		for (const entry of log) {
+			if (entry.startsWith("+")) open.push(entry.slice(1));
+			else expect(open.pop()).toBe(entry.slice(1));
+		}
+		expect(open).toEqual([]);
+	};
+
+	it("closes an entered element when the next one ends it", () => {
+		// The `<p>` was entered while open; the `<div>` that closes it diverges the
+		// open stack from the entered one below the top.
+		const log = walk(`<p>${"<span>x</span>".repeat(BIG)}<div>y</div>`);
+		expect(count(log, "+span")).toBe(BIG);
+		expect(log.slice(-5)).toEqual(["-p", "+div", "-div", "-body", "-html"]);
+		balanced(log);
+	});
+
+	it("flushes a body whose first child is the text a head left", () => {
+		// The text ends the head and opens the body on one token, so the body
+		// already holds it when the walk first catches up.
+		const log = walk(`<head>${"<meta>".repeat(50000)}x<p>y</p>`);
+		expect(count(log, "+meta")).toBe(50000);
+		expect(log.slice(-4)).toEqual(["+p", "-p", "-body", "-html"]);
+		balanced(log);
+	});
+
+	it("does not start streaming on an open stack a `</form>` broke", () => {
+		// The nodes piled up with no stack change until `</form>` took the form off
+		// the middle of it, which is where the walk would first sync: entering the
+		// stack then entered the `<div>` with its form never entered, and visited
+		// the form after its own child had exited.
+		const log = walk(`<form><div>${"a<!---->".repeat(25000)}b</form>c`);
+		expect(log).toEqual([
+			"+html",
+			"+head",
+			"-head",
+			"+body",
+			"+form",
+			"+div",
+			"-div",
+			"-form",
+			"-body",
+			"-html"
+		]);
+	});
+
+	it("finishes a skipped element the input left open", () => {
+		const log = walk(`<div><section>${"<p><b>x</b></p>".repeat(BIG)}`, "div");
+		expect(log).toEqual([
+			"+html",
+			"+head",
+			"-head",
+			"+body",
+			"+div",
+			"-div",
+			"-body",
+			"-html"
+		]);
+	});
+
+	it("closes a body a frameset took out of the tree", () => {
+		const log = walk(`${"<p></p>".repeat(50000)}<frameset>`);
+		expect(count(log, "+p")).toBe(50000);
+		// The body still exits, detached, ahead of the frameset that replaced it.
+		expect(log.slice(-4)).toEqual(["-body", "+frameset", "-frameset", "-html"]);
+		balanced(log);
+	});
+
+	it("streams forms the end tag takes off the top of the stack", () => {
+		const log = walk(
+			`<!DOCTYPE html><html><body>${"<form><p>x</p></form>".repeat(BIG)}</body></html>`
+		);
+		expect(count(log, "+form")).toBe(BIG);
+		expect(count(log, "-form")).toBe(BIG);
+		balanced(log);
+	});
+
+	it("stops streaming where a `</form>` takes an entered form off mid-stack", () => {
+		// The `<div>` inside stays open, so nothing has finished: reconciling there
+		// would close and re-enter it.
+		const log = walk(
+			`<!DOCTYPE html><html><body><form>${"<p>x</p>".repeat(BIG)}<div></form><p>y</p></div></body></html>`
+		);
+		expect(count(log, "+div")).toBe(1);
+		expect(log.indexOf("-form")).toBeGreaterThan(log.lastIndexOf("-div"));
+		balanced(log);
+	});
+
+	it("exits a skipped element that closes while streaming", () => {
+		const log = walk(
+			`<div><section>${"<p><b>x</b></p>".repeat(BIG)}</section></div><p>after</p>`,
+			"div"
+		);
+		expect(log).toEqual([
+			"+html",
+			"+head",
+			"-head",
+			"+body",
+			"+div",
+			"-div",
+			"+p",
+			"-p",
+			"-body",
+			"-html"
+		]);
+	});
+
+	it("ends a walk a visitor stopped, and fires its visitors on the next", () => {
+		const processor = new SourceProcessor();
+		/** @type {string[]} */
+		const log = [];
+		processor.use({
+			[NodeType.Element]: (path) => {
+				log.push(path.name());
+				if (path.name() === "b") path.stop();
+			}
+		});
+		processor.process(`${"<p>x</p>".repeat(BIG)}<b>y</b><i>z</i>`);
+		expect(log.slice(-2)).toEqual(["p", "b"]);
+		log.length = 0;
+		processor.process("<b>y</b>");
+		expect(log).toEqual(["html", "head", "body", "b"]);
+	});
+
+	it("walks an XML document once at its end", () => {
+		/** @type {string[]} */
+		const names = [];
+		new SourceProcessor()
+			.use({ [NodeType.Element]: (path) => names.push(path.name()) })
+			.process("<a><b/></a>", { xml: true });
+		expect(names).toEqual(["a", "b"]);
+	});
+});
+
+describe("SourceProcessor — fostered runs no re-nesting reproduces", () => {
+	const { SourceProcessor } = require("../../../lib/html/syntax");
+	const { parseHtml } = require("../../../lib/html/syntax-parser");
+
+	// The run cannot move back inside its table, so the element holding the
+	// table prints the source it was built from, between its own tags.
+	it.each([
+		[
+			"text beside a column group the table kept",
+			"<rt><table><input disabled=disabled><svg><p class=x><col> </ol>x</caption>"
+		],
+		[
+			"a holder whose end tag the source wrote after the run",
+			"<div><nobr><table><b><colgroup><nobr></table></nobr></div>y"
+		],
+		[
+			"a holder that prints composed",
+			"<listing><table><object><object><tbody><input disabled=disabled><!--c--><table><b id=1><h1><svg>"
+		]
+	])("keeps %s", (_name, source) => {
+		const read = { scripting: true };
+		for (const mode of /** @type {const} */ (["beautify", "minify"])) {
+			// A boolean's value is all the minify may change here.
+			const { code } = new SourceProcessor().process(source, {
+				mode,
+				transforms: { collapseBooleanAttributes: false }
+			});
+			expect(code).toMatchSnapshot(mode);
+			expect(serializeHtmlTree(parseHtml(code, 0, read))).toBe(
+				serializeHtmlTree(parseHtml(source, 0, read))
+			);
+		}
+	});
+});
+
+describe("SourceProcessor — a foreign stylesheet answered later", () => {
+	const { SourceProcessor } = require("../../../lib/html/syntax");
+
+	it("escapes the answer where the body is character data", async () => {
+		// An SVG `<style>` holds character data, so a `<` the answer carries is
+		// written as a reference there and raw in HTML's own raw-text `<style>`.
+		const { code } = await new SourceProcessor().processAsync(
+			"<svg><style>a { b : c }</style></svg><style>d { e : f }</style>",
+			{
+				mode: "minify",
+				renderEmbeddedSource: (
+					/** @type {string} */ _source,
+					/** @type {{ type: string }} */ info
+				) => Promise.resolve(info.type === "css" ? "a<b{}" : undefined)
+			}
+		);
+		expect(code).toBe("<svg><style>a&lt;b{}</style></svg><style>a<b{}</style>");
 	});
 });
