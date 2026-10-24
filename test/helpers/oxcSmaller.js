@@ -562,6 +562,10 @@ const OXC_SMALLER_BY_REASON = [
 		["oxc minifier: mangler/property_mangler.rs:99"]
 	],
 	[
+		"oxc drops more unused declarations, as oxc's `peephole/remove_unused_declaration.rs` tests show",
+		["oxc minifier: peephole/remove_unused_declaration.rs:181"]
+	],
+	[
 		"oxc's output differs: it drops a class whose static member's computed key may be `\"prototype\"`, which throws a TypeError as the class is defined",
 		[
 			"oxc minifier: ecmascript/may_have_side_effects.rs:445",

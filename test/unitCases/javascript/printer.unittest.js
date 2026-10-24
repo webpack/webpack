@@ -9313,16 +9313,11 @@ describe("syntax-printer", () => {
 			expect(switched.code).toMatch(/^c,(b===2|2===b)&&/);
 		});
 
-		it("should drop a self-naming call running nothing, an unread `[] = arguments` and `??` after a fixed `let`, and write a `#__PURE__` call returning nothing as `void 0`", async () => {
+		it("should drop a self-naming call running nothing, an unread `[] = arguments` and `??` after a fixed `let`, and keep a `#__PURE__` call whose value is read", async () => {
 			const { minify } = await load();
 			const options = { compress: { passes: 2 }, mangle: false };
 			for (const [input, expected, module] of [
 				["(function foo() { return foo; })();", "", false],
-				[
-					"var x = /* @__PURE__ */ (() => { foo(); })();",
-					"var x=void 0;",
-					false
-				],
 				["export function f() { var [] = arguments; }", "export function f(){}", true],
 				[
 					"let s = 'hello'; export function a() { return s ?? other(); } export function b() { return s ?? other(); }",
@@ -9346,6 +9341,8 @@ describe("syntax-printer", () => {
 				"console.log((function foo(n) { return n ? foo(n - 1).x.y : {}; })(2));",
 				"var a = 1; var x = /* @__PURE__ */ (() => { if (a) return 1; })(); console.log(x);",
 				'var x = /* @__PURE__ */ (() => {})(console.log("arg")); console.log(x);',
+				'var y = 0; function foo(v) { console.log(v, y); } foo(/* @__PURE__ */ (() => { y = 1; })());',
+				'var x = /* @__PURE__ */ (() => { console.log("ran"); })(); console.log(x);',
 				'function f() { arguments[Symbol.iterator] = function () { console.log("it"); return [][Symbol.iterator](); }; var [] = arguments; } f();',
 				'function f(arguments) { var [] = arguments; } f({ [Symbol.iterator]() { console.log("own"); return [][Symbol.iterator](); } });',
 				'console.log(a()); var s = "x"; function a() { return s ?? "fallback"; }',
