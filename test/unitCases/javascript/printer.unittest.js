@@ -12549,6 +12549,8 @@ const {
 // Sources reaching each corner of the printer: parentheses it keeps or drops,
 // comments around them, directives, literals, modules and classes.
 const SOURCES = [
+	// Names beyond ASCII, one a surrogate pair, spaced from the words beside them.
+	"var ä = 1, 𐊧 = 2; typeof ä, ä in 𐊧, void 𐊧, new ä(), ä instanceof ä;",
 	"/*!a*/\nfunction f(){return /*x*/ 1e999+(a,b)}",
 	'var a = {b:1, "c d": [1,,2,], [e]: f, get g(){return 1}, h(){}, ...i, 1e3: 2, 0x10: 3};',
 	"class A extends B { #x = 1; static m(){ return #x in this } static { a } get [k](){} 'q'(){} static async *g(){} }",
@@ -13125,6 +13127,19 @@ describe("JavaScript SourceProcessor printing", () => {
 		processor.process("f()", {});
 		processor.process("f()", { mode: "minify" });
 		expect(printed).toEqual([expected, expected]);
+	});
+
+	it("should refuse a walk a visitor starts while another runs", () => {
+		const { walkSyntaxTree } = require("../../../lib/javascript/syntax-parser");
+		expect(() =>
+			new SourceProcessor()
+				.use({
+					[NodeType.CallExpression]: (path) => {
+						walkSyntaxTree(path.tree, path.node, "f()", [], undefined);
+					}
+				})
+				.process("f()", {})
+		).toThrow("process() is already running");
 	});
 
 	it("should print one source after another, and a source anew after a parse error", () => {
