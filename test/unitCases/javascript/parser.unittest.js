@@ -10,6 +10,7 @@
 /** @typedef {Partial<import("../../../lib/javascript/syntax-parser").Options>} PortOptions */
 /** @typedef {import("../../../lib/javascript/syntax-parser").Node} EstreeNode */
 /** @typedef {import("../../../lib/javascript/syntax-parser").ParserOptions} ParserOptions */
+/** @typedef {import("../../../lib/javascript/syntax-parser").CollectedComment} CollectedComment */
 /**
  * A parsed node whose children may already stand as the ids they were written as.
  * @typedef {{ type: string, [key: string]: unknown }} WrittenNode
@@ -80,6 +81,25 @@ describe("WebpackParser", () => {
 			expect(comments[0].value).toBe(" abc");
 			comments[0].value = "override";
 			expect(comments[0].value).toBe("override");
+			comments[0].range = [1, 2];
+			expect(comments[0].range).toEqual([1, 2]);
+		});
+
+		it("should collect a hashbang when acorn's constructor skipped it", () => {
+			// ranges asked for directly take the constructor that skips it early
+			/** @type {CollectedComment[]} */
+			const comments = [];
+			webpackParse("#!/usr/bin/env node\nx;", {
+				ecmaVersion: "latest",
+				sourceType: "script",
+				allowHashBang: true,
+				lazyNodes: true,
+				ranges: true,
+				lazyComments: comments
+			});
+			expect(comments.map((c) => [c.type, c.value, c.range])).toEqual([
+				["Line", "/usr/bin/env node", [0, 19]]
+			]);
 		});
 
 		it("should collect comments eagerly when ranges are off", () => {
@@ -1016,6 +1036,10 @@ describe("WebpackParser", () => {
 			expect(() => parse(`${"(".repeat(100000)}x`)).toThrow(
 				/Not enough stack space to parse input/
 			);
+			// statements alone nest past any expression's own catch
+			expect(() => parse("{".repeat(100000))).toThrow(
+				/Not enough stack space to parse input/
+			);
 		});
 
 		it("should check identifier parameter lists like acorn", () => {
@@ -1605,6 +1629,48 @@ describe("WebpackParser", () => {
 					end: { line: 1, column: 16 }
 				});
 			}
+		});
+
+		it("should locate phase names and phased imports when acorn tracks locations", () => {
+			/** @type {ParserOptions} */
+			const options = {
+				ecmaVersion: "latest",
+				sourceType: "module",
+				locations: true
+			};
+			// `defer` and `source` as default names are plain imports to acorn too
+			const names = 'import defer from "x";\nimport source, { a } from "y";';
+			expect(
+				plain(webpackParse(names, { ...options, importPhases: true }))
+			).toEqual(
+				plain(
+					acorn.parse(names, /** @type {acorn.Options} */ (options))
+				)
+			);
+			const program = webpackParse('x = import.defer("y");\nimport.source("z");', {
+				...options,
+				importPhases: true
+			});
+			expect(
+				program.body.map((statement) => {
+					const { expression } =
+						/** @type {import("estree").ExpressionStatement} */ (statement);
+					const call =
+						expression.type === "AssignmentExpression"
+							? expression.right
+							: expression;
+					return [call.type, call.loc];
+				})
+			).toEqual([
+				[
+					"ImportExpression",
+					{ start: { line: 1, column: 4 }, end: { line: 1, column: 21 } }
+				],
+				[
+					"ImportExpression",
+					{ start: { line: 2, column: 0 }, end: { line: 2, column: 18 } }
+				]
+			]);
 		});
 	});
 
@@ -2472,23 +2538,33 @@ const CORPUS_TIMEOUT = 300000;
 
 // The two entry points into webpack's parser: the subclass every build runs,
 // and the ported base it specializes. Both owe acorn the same trees; only the
-// first hands a regexp literal to the host engine before validating it.
-/** @type {[string, (code: string, options: Options) => EXPECTED_ANY, boolean][]} */
+// first hands a regexp literal to the host engine before validating it, and
+// only it reads the lazy-node and syntax-tree switches.
+/** @type {[string, (code: string, options: Options) => EXPECTED_ANY, boolean, boolean][]} */
 const PARSERS = [
 	[
 		"the parser a build runs",
-		(code, options) =>
-			webpackParse(
-				code,
-				/** @type {import("../../../lib/javascript/syntax-parser").ParserOptions} */ (
-					options
-				)
-			),
+		(code, options) => {
+			if (!options.syntaxTree) {
+				return webpackParse(code, /** @type {ParserOptions} */ (options));
+			}
+			const { SyntaxTree, WebpackParser, toEstreeObject } = require(
+				"../../../lib/javascript/syntax-parser"
+			);
+			const tree = new SyntaxTree();
+			const program = new WebpackParser(
+				/** @type {EXPECTED_ANY} */ ({ ...options, syntaxTree: tree }),
+				code
+			).parse();
+			return toEstreeObject(tree, /** @type {EXPECTED_ANY} */ (program));
+		},
+		true,
 		true
 	],
 	[
 		"the ported base parser",
 		(code, options) => Parser.parse(code, options),
+		false,
 		false
 	]
 ];
@@ -2496,14 +2572,36 @@ const PARSERS = [
 // What is asked on top of the options each case carries. Ranges, locations and
 // the two collectors are off in most of acorn's cases, and turning them on is
 // what reaches webpack's lazy nodes and its own comment and token bookkeeping.
-/** @type {[string, Options][]} */
+// The last three are a build's own: lazy nodes carry offsets alone, the latest
+// edition reaches the productions webpack owns rather than delegates, and a
+// syntax tree is written where an object would be built (acorn ignores both).
+// A lazy parse reports no tokens and collects comments into `lazyComments`.
+const LAZY = {
+	lazyNodes: true,
+	locations: false,
+	onComment: undefined,
+	onToken: undefined
+};
+/** @type {[string, Options, boolean][]} */
 const MODES = [
-	["as acorn's own suite runs them", {}],
+	["as acorn's own suite runs them", {}, false],
 	[
 		"with ranges, locations, comments and tokens",
-		{ ranges: true, locations: true, onComment: true, onToken: true }
+		{ ranges: true, locations: true, onComment: true, onToken: true },
+		false
 	],
-	["as commonjs", { sourceType: "commonjs" }]
+	["as commonjs", { sourceType: "commonjs" }, false],
+	["lazily, as a build parses", { ...LAZY, ranges: true }, true],
+	[
+		"lazily, at the latest edition",
+		{ ...LAZY, ranges: true, ecmaVersion: "latest" },
+		true
+	],
+	[
+		"into a syntax tree, at the latest edition",
+		{ ...LAZY, ecmaVersion: "latest", syntaxTree: true },
+		true
+	]
 ];
 
 // How deep input may nest before a parser gives up is the runtime's answer,
@@ -2726,7 +2824,7 @@ describe("acorn corpus", () => {
 		expect(refreshed).toBe(fs.readFileSync(CORPUS_FILE, "utf8"));
 	});
 
-	for (const [parserName, parse, engineValidates] of PARSERS) {
+	for (const [parserName, parse, engineValidates, readsBuildModes] of PARSERS) {
 		describe(parserName, () => {
 			it.each(["inside", "instanceofValue", "in𐐀", "instanceof𐐀"])(
 				"keeps strict mode before the identifier %s",
@@ -2740,7 +2838,8 @@ describe("acorn corpus", () => {
 				}
 			);
 
-			for (const [modeName, mode] of MODES) {
+			for (const [modeName, mode, buildOnly] of MODES) {
+				if (buildOnly && !readsBuildModes) continue;
 				it(
 					`builds acorn's tree ${modeName}`,
 					() => {
@@ -4088,7 +4187,55 @@ const PROGRAMS = [
 	"x = { a: function () {} };",
 	"switch (a) { case function () {}: }",
 	"x = a ? function : b;",
-	"x = { a: function };"
+	"x = { a: function };",
+	"'use strict'\ninstanceof x; 010",
+	"function f() { 'use strict'\ninstanceof x; 010 }",
+	"{ using \u{10400}\u{10401} = a; }",
+	"async function f() { for await (var x in y); }",
+	"async function f() { for await (x in y); }",
+	"async function f() { for await (async of x); }",
+	"async function f() { for await (async x => y of z); }",
+	"async function f() { for await (async o\\u0066 => y of z); }",
+	"if (x) a: b: c;",
+	"while (x) a: b;",
+	"{ var f; function f() {} }",
+	"x = [(a + b), c];",
+	"[(a), b] = c;",
+	"if (a) /=/.test(b); if (a) /x/.test(b);",
+	"function* g() { function f() {} yield /re/; }",
+	"async function* g() { async (a = yield, b = await 1) => 0 }",
+	"x = a ? b : import('c'); x = a + import('c'); x = a ? b : c`d`;",
+	"export var [, a] = b;",
+	"async function f() { await /x/; }",
+	"async function",
+	"throw /* a */\nx; throw // a\nx; throw /* a\n */ x; throw /* a */ /* b */ x;",
+	// what the look-ahead past `let`, `async` and `using` skips
+	"let /* a */ x = 1; let // a\ny = 2; let /* a\n */ [z] = c; let\n/* b\n */ w = 1;",
+	"let // a\r[x] = 1; let // a\u2028[y] = 1; let // a\u2029[z] = 1;",
+	"let /* \r */ [x] = 1; let /* \u2028 */ [y] = 1; let /* \u2029 */ [z] = 1;",
+	"var let; let / 2; let /* never closed",
+	"async /* a */ function f() {} async // a\nfunction g() {}",
+	"{ using /* a */ x = y; using // a\nz = y; }",
+	"x = 'a\\x41\nb'",
+	"x = 'a\\x41\rb'",
+	"x /* a */\ry; x\u2028/* a */\ry",
+	"let\u2003[x] = 1; let\u3000/* a */ [y] = 1;",
+	"(x => 1) ** 2;",
+	"x => {} ** 2;",
+	// more lexical declarations in one block than a bit mask holds
+	...[
+		"{ # }",
+		"#",
+		"switch (x) { case 0: # }",
+		"switch (x) { case 0: # case 1: }",
+		"class A { static { # } }"
+	].map(
+		(shape) =>
+			shape.replace(
+				"#",
+				Array.from({ length: 40 }, (_, i) => `let v${i};`).join(" ")
+			)
+	)
 ];
 
 /** @type {[string, Record<string, unknown>][]} */
@@ -4157,6 +4304,16 @@ const OPTION_SETS = [
 		{ ecmaVersion: "latest", sourceType: "module", checkPrivateFields: false }
 	],
 	["script without hashbang", { ecmaVersion: "latest", allowHashBang: false }],
+	["strict script", { ecmaVersion: "latest", strict: true }],
+	[
+		"script allowing await and super anywhere",
+		{
+			ecmaVersion: "latest",
+			allowAwaitOutsideFunction: true,
+			allowSuperOutsideMethod: true,
+			allowImportExportEverywhere: true
+		}
+	],
 	["script, es2021 with hashbang", { ecmaVersion: 2021, allowHashBang: true }]
 ];
 
@@ -4227,6 +4384,421 @@ describe("Parser", () => {
 		}
 	});
 
+	// The same programs through the parser a build runs, as it builds objects,
+	// as it builds lazy nodes, and as it writes a syntax tree: the three take
+	// different paths through its own productions.
+	describe("parses like acorn as the parser a build runs", () => {
+		const {
+			SyntaxTree,
+			WebpackParser,
+			toEstreeObject: treeToObject
+		} = require("../../../lib/javascript/syntax-parser");
+		/**
+		 * A plugin overriding every method with one calling it, which turns off
+		 * each fast path that checks a method is still the parser's own.
+		 * @param {typeof WebpackParser} BaseParser the parser to extend
+		 * @returns {typeof WebpackParser} the parser overriding all it inherits
+		 */
+		const overridingAll = (BaseParser) => {
+			class Overriding extends BaseParser {}
+			const seen = new Set(["constructor"]);
+			for (
+				let proto = BaseParser.prototype;
+				proto !== Object.prototype;
+				proto = Object.getPrototypeOf(proto)
+			) {
+				for (const name of Object.getOwnPropertyNames(proto)) {
+					const { value } = /** @type {PropertyDescriptor} */ (
+						Object.getOwnPropertyDescriptor(proto, name)
+					);
+					if (seen.has(name) || typeof value !== "function") continue;
+					seen.add(name);
+					const inherited = /** @type {EXPECTED_ANY} */ (BaseParser.prototype)[
+						name
+					];
+					/** @type {EXPECTED_ANY} */ (Overriding.prototype)[name] =
+						/**
+						 * @this {unknown}
+						 * @param {...unknown} args the arguments
+						 * @returns {unknown} what the inherited method returns
+						 */
+						function override(...args) {
+							return inherited.apply(this, args);
+						};
+				}
+			}
+			return Overriding;
+		};
+		const Overriding = WebpackParser.extend(
+			/** @type {EXPECTED_ANY} */ (overridingAll)
+		);
+		/** @type {[string, Record<string, unknown>, (code: string, options: EXPECTED_ANY) => unknown][]} */
+		const BUILD_MODES = [
+			["eagerly", {}, (code, options) => webpackParse(code, options)],
+			[
+				"eagerly, under a plugin overriding every method",
+				{},
+				(code, options) => Overriding.parse(code, options)
+			],
+			[
+				"lazily, under a plugin overriding every method",
+				{ lazyNodes: true },
+				(code, options) => Overriding.parse(code, options)
+			],
+			[
+				"lazily",
+				{ lazyNodes: true },
+				(code, options) => webpackParse(code, options)
+			],
+			[
+				"into a syntax tree",
+				{ lazyNodes: true },
+				(code, options) => {
+					const tree = new SyntaxTree();
+					const program = new WebpackParser(
+						{ ...options, syntaxTree: tree },
+						code
+					).parse();
+					return treeToObject(tree, /** @type {EXPECTED_ANY} */ (program));
+				}
+			]
+		];
+		/**
+		 * @param {(code: string, options: EXPECTED_ANY) => unknown} parse the parser
+		 * @param {string} source the program text
+		 * @param {Record<string, unknown>} options parse options
+		 * @param {boolean} collect whether comments and tokens are collected
+		 * @returns {{ ast?: unknown, rest: unknown }} the tree, apart from the rest of the outcome
+		 */
+		const buildOutcomeOf = (parse, source, options, collect) => {
+			/** @type {unknown[]} */
+			const comments = [];
+			/** @type {unknown[]} */
+			const tokens = [];
+			try {
+				const ast = parse(
+					source,
+					collect ? { ...options, onComment: comments, onToken: tokens } : options
+				);
+				return { ast, rest: plain({ comments, tokens }) };
+			} catch (err) {
+				return { rest: outcomeOf(() => { throw err; }, source, options) };
+			}
+		};
+		for (const [name, options] of OPTION_SETS) {
+			for (const [modeName, mode, parse] of BUILD_MODES) {
+				const lazy = mode.lazyNodes === true;
+				// Lazy nodes carry offsets alone, and a tree only the latest edition.
+				if (lazy && (options.locations || options.directSourceFile)) continue;
+				if (modeName.endsWith("tree") && options.ecmaVersion !== "latest") {
+					continue;
+				}
+				// a source type named is what a build always names
+				const given = { sourceType: "script", ...options };
+				it(`for every program as ${name}, ${modeName}`, () => {
+					const differences = [];
+					for (const source of PROGRAMS) {
+						// webpack reads the legacy `assert` clause acorn has dropped
+						if (/ assert \{/.test(source)) continue;
+						const ours = buildOutcomeOf(
+							parse,
+							source,
+							{ ...given, ...mode },
+							!lazy
+						);
+						const theirs = buildOutcomeOf(
+							(code, opts) => acornPort.Parser.parse(code, opts),
+							source,
+							{ ...given, ranges: Boolean(options.ranges) || lazy },
+							!lazy
+						);
+						const tree = firstDifference(ours.ast, theirs.ast, "program");
+						if (tree || JSON.stringify(ours.rest) !== JSON.stringify(theirs.rest)) {
+							differences.push({ source, tree, ours: ours.rest, theirs: theirs.rest });
+						}
+					}
+					expect(differences).toEqual([]);
+				});
+			}
+		}
+	});
+
+	// acorn's loose parser and its plugins override `raiseRecoverable` to note
+	// an error and read on, which takes every parser past the checks that throw.
+	describe("parses like acorn with recoverable errors noted", () => {
+		const {
+			SyntaxTree,
+			WebpackParser,
+			toEstreeObject: treeToObject
+		} = require("../../../lib/javascript/syntax-parser");
+		/** @type {[number, string][]} */
+		let noted = [];
+		/**
+		 * @param {EXPECTED_ANY} BaseParser the parser to extend
+		 * @returns {EXPECTED_ANY} the parser noting recoverable errors
+		 */
+		const noting = (BaseParser) =>
+			class extends BaseParser {
+				/**
+				 * @param {number} pos where the error is
+				 * @param {string} message what it is
+				 */
+				raiseRecoverable(pos, message) {
+					noted.push([pos, message]);
+				}
+			};
+		const Acorn = acornPort.Parser.extend(noting);
+		const NotingPort = Parser.extend(noting);
+		const NotingWebpack = WebpackParser.extend(noting);
+		/** @type {[string, (code: string, options: EXPECTED_ANY) => unknown, Record<string, unknown>][]} */
+		const NOTING_PARSERS = [
+			[
+				"the ported base parser",
+				(code, options) => NotingPort.parse(code, options),
+				{}
+			],
+			[
+				"the parser a build runs",
+				(code, options) => NotingWebpack.parse(code, options),
+				{}
+			],
+			[
+				"the parser a build runs, lazily",
+				(code, options) => NotingWebpack.parse(code, options),
+				{ lazyNodes: true }
+			],
+			[
+				"the parser a build runs, into a syntax tree",
+				(code, options) => {
+					const tree = new SyntaxTree();
+					const program = new NotingWebpack(
+						{ ...options, syntaxTree: tree },
+						code
+					).parse();
+					return treeToObject(tree, /** @type {EXPECTED_ANY} */ (program));
+				},
+				{ lazyNodes: true, syntaxTree: true }
+			]
+		];
+		/**
+		 * @param {(code: string, options: EXPECTED_ANY) => unknown} parse the parser
+		 * @param {string} source the program text
+		 * @param {Record<string, unknown>} options parse options
+		 * @returns {{ ast?: unknown, error?: string, noted: [number, string][] }} the outcome
+		 */
+		const notedOutcomeOf = (parse, source, options) => {
+			noted = [];
+			try {
+				return { ast: parse(source, options), noted };
+			} catch (err) {
+				// a parse error by its message; a crash after a noted error only by
+				// its kind, as engines word a TypeError each their own way
+				return {
+					error:
+						err instanceof SyntaxError
+							? err.message
+							: /** @type {Error} */ (err).name,
+					noted
+				};
+			}
+		};
+		for (const [name, options] of OPTION_SETS) {
+			for (const [parserName, parse, mode] of NOTING_PARSERS) {
+				const lazy = mode.lazyNodes === true;
+				if (lazy && (options.locations || options.directSourceFile)) continue;
+				if (mode.syntaxTree && options.ecmaVersion !== "latest") continue;
+				const given = { sourceType: "script", ...options };
+				it(`for every program as ${name}, by ${parserName}`, () => {
+					const differences = [];
+					let recovered = 0;
+					for (const source of PROGRAMS) {
+						if (/ assert \{/.test(source)) continue;
+						const ours = notedOutcomeOf(parse, source, { ...given, ...mode });
+						const theirs = notedOutcomeOf(
+							(code, opts) => Acorn.parse(code, opts),
+							source,
+							{ ...given, ranges: Boolean(options.ranges) || lazy }
+						);
+						const tree = firstDifference(ours.ast, theirs.ast, "program");
+						if (
+							tree ||
+							ours.error !== theirs.error ||
+							JSON.stringify(ours.noted) !== JSON.stringify(theirs.noted)
+						) {
+							differences.push({ source, tree, ours, theirs });
+						}
+						if (theirs.noted.length > 0) recovered++;
+					}
+					expect(differences).toEqual([]);
+					expect(recovered).toBeGreaterThan(0);
+				});
+			}
+		}
+	});
+
+	// What a plugin may call on a parser, with what the parser itself never
+	// passes: a missing record or export table, an object for clashes, a node
+	// no production makes.
+	describe("answers acorn's plugin calls like acorn", () => {
+		const { WebpackParser } = require("../../../lib/javascript/syntax-parser");
+		const BIND_LEXICAL = 2;
+		const BIND_SIMPLE_CATCH = 4;
+		const BIND_OUTSIDE = 5;
+		const a = { type: "Identifier", name: "a", start: 0, end: 1 };
+		/** @type {[string, (parser: EXPECTED_ANY) => unknown, string?][]} */
+		const CALLS = [
+			["checkPatternErrors without a record", (p) => p.checkPatternErrors()],
+			["checkExport without exports", (p) => p.checkExport(undefined, "a", 0)],
+			[
+				"checkVariableExport without exports",
+				(p) => p.checkVariableExport(undefined, [{ id: a }])
+			],
+			[
+				"checkPatternExport over a node no binding makes",
+				(p) => p.checkPatternExport({}, { type: "ParenthesizedExpression" })
+			],
+			[
+				"checkLValSimple with an object of clashes",
+				(p) => {
+					const clashes = {};
+					p.checkLValSimple(a, BIND_OUTSIDE, clashes);
+					return [clashes, p.checkLValSimple(a, BIND_OUTSIDE, clashes)];
+				}
+			],
+			[
+				"checkLValSimple binding a member",
+				(p) =>
+					p.checkLValSimple(
+						{ type: "MemberExpression", start: 0, end: 3 },
+						BIND_OUTSIDE
+					)
+			],
+			[
+				"checkLValSimple binding a parenthesized name",
+				(p) =>
+					p.checkLValSimple(
+						{ type: "ParenthesizedExpression", start: 0, end: 3, expression: a },
+						BIND_OUTSIDE
+					)
+			],
+			[
+				"checkLValSimple binding a literal",
+				(p) =>
+					p.checkLValSimple(
+						{ type: "Literal", start: 0, end: 1, value: 1 },
+						BIND_OUTSIDE
+					)
+			],
+			[
+				"checkPropClash over a key no object literal makes",
+				(p) =>
+					p.checkPropClash(
+						{
+							type: "Property",
+							kind: "init",
+							key: { type: "PrivateIdentifier", name: "a" }
+						},
+						{}
+					)
+			],
+			[
+				"declareName of a catch parameter after a lexical name",
+				(p) => {
+					p.declareName("a", BIND_LEXICAL, 0);
+					p.declareName("b", BIND_SIMPLE_CATCH, 0);
+					return p.declareName("b", BIND_LEXICAL, 0);
+				}
+			],
+			["parsePrivateIdent off a private name", (p) => p.parsePrivateIdent()],
+			["toAssignable over no node", (p) => p.toAssignable(null)],
+			[
+				"parseExprOps without a record",
+				(p) => {
+					p.nextToken();
+					return p.parseExprOps();
+				},
+				"a + b * c"
+			],
+			[
+				"checkLValInnerPattern without a binding kind",
+				(p) => p.checkLValInnerPattern(a)
+			],
+
+			[
+				"the strict-mode binding test",
+				(p) => [
+					p.reservedWordsStrictBind.test("eval"),
+					p.reservedWordsStrictBind.test("a")
+				]
+			]
+		];
+		/** @type {[string, (options: EXPECTED_ANY, input: string) => unknown][]} */
+		const INSTANCES = [
+			["the ported base parser", (options, input) => new Parser(options, input)],
+			[
+				"the parser a build runs",
+				(options, input) => new WebpackParser(options, input)
+			],
+			[
+				"the parser a build runs, lazily",
+				(options, input) =>
+					new WebpackParser({ ...options, lazyNodes: true }, input)
+			]
+		];
+		/**
+		 * @param {(parser: EXPECTED_ANY) => unknown} call the call
+		 * @param {unknown} parser the parser it is made on
+		 * @returns {unknown} what it returned or threw, as plain data
+		 */
+		const answerOf = (call, parser) => {
+			try {
+				return { returned: plain(call(parser)) };
+			} catch (err) {
+				return { threw: /** @type {Error} */ (err).message };
+			}
+		};
+		for (const [instanceName, create] of INSTANCES) {
+			it.each(CALLS)(`${instanceName}: %s`, (_name, call, input = "x") => {
+				/** @type {PortOptions} */
+				const options = { ecmaVersion: "latest", sourceType: "module" };
+				expect(answerOf(call, create(options, input))).toEqual(
+					answerOf(call, new acornPort.Parser(options, input))
+				);
+			});
+		}
+	});
+
+	it("reads a regexp after await that the tokenizer took for `/=`, unlike acorn", () => {
+		// acorn 8 refuses it; V8 and the spec read `await /=/g` as a regexp
+		const { SyntaxTree, WebpackParser } = require(
+			"../../../lib/javascript/syntax-parser"
+		);
+		const source = "async function f() { await /=/g; }";
+		expect(() => new (require("vm").Script)(source)).not.toThrow();
+		expect(() =>
+			acornPort.Parser.parse(source, { ecmaVersion: "latest" })
+		).toThrow(/Unexpected token/);
+		/** @type {ParserOptions} */
+		const options = { ecmaVersion: "latest", sourceType: "script" };
+		const tree = new SyntaxTree();
+		const program = new WebpackParser(
+			{ ...options, lazyNodes: true, syntaxTree: tree },
+			source
+		).parse();
+		for (const ast of [
+			Parser.parse(source, options),
+			webpackParse(source, options),
+			webpackParse(source, { ...options, lazyNodes: true }),
+			toEstreeObject(tree, /** @type {EXPECTED_ANY} */ (program))
+		]) {
+			const statement = /** @type {EXPECTED_ANY} */ (ast).body[0].body.body[0];
+			expect(statement.expression.argument.regex).toEqual({
+				pattern: "=",
+				flags: "g"
+			});
+		}
+	});
+
 	describe("static entry points", () => {
 		it("parses an expression at an offset like acorn", () => {
 			const source = "let x = a ? b : c; // rest";
@@ -4234,6 +4806,15 @@ describe("Parser", () => {
 			const options = { ecmaVersion: "latest", locations: true, ranges: true };
 			expect(plain(Parser.parseExpressionAt(source, 8, options))).toEqual(
 				plain(acornPort.Parser.parseExpressionAt(source, 8, options))
+			);
+			expect(
+				plain(Parser.parseExpressionAt(source, 8, { ecmaVersion: "latest" }))
+			).toEqual(
+				plain(
+					acornPort.Parser.parseExpressionAt(source, 8, {
+						ecmaVersion: "latest"
+					})
+				)
 			);
 		});
 
@@ -4311,25 +4892,44 @@ describe("Parser", () => {
 
 		it("reports inserted semicolons and trailing commas like acorn", () => {
 			const source = "a\nb\nf(c,)\nx = [d,]\nreturn";
-			/** @type {(parse: typeof Parser.parse) => unknown[][]} */
-			const eventsOf = (parse) => {
+			/** @type {(parse: (code: string, options: EXPECTED_ANY) => unknown, locations?: boolean) => unknown[][]} */
+			const eventsOf = (parse, locations = true) => {
 				/** @type {unknown[][]} */
 				const events = [];
 				parse(source, {
 					ecmaVersion: "latest",
-					locations: true,
+					locations,
 					allowReturnOutsideFunction: true,
-					onInsertedSemicolon: (end, loc) =>
-						events.push(["semicolon", end, plain(loc)]),
-					onTrailingComma: (end, loc) => events.push(["comma", end, plain(loc)])
+					onInsertedSemicolon: (
+						/** @type {number} */ end,
+						/** @type {unknown} */ loc
+					) => events.push(["semicolon", end, loc && plain(loc)]),
+					onTrailingComma: (
+						/** @type {number} */ end,
+						/** @type {unknown} */ loc
+					) => events.push(["comma", end, loc && plain(loc)])
 				});
 				return events;
 			};
-			const ours = eventsOf((code, opts) => Parser.parse(code, opts));
-			expect(ours).not.toHaveLength(0);
-			expect(ours).toEqual(
-				eventsOf((code, opts) => acornPort.Parser.parse(code, opts))
+			const theirs = eventsOf((code, opts) => acornPort.Parser.parse(code, opts));
+			expect(theirs).not.toHaveLength(0);
+			expect(eventsOf((code, opts) => Parser.parse(code, opts))).toEqual(
+				theirs
 			);
+			expect(eventsOf((code, opts) => webpackParse(code, opts))).toEqual(
+				theirs
+			);
+			// lazy nodes need locations off, and so do acorn's to compare
+			const unlocated = eventsOf(
+				(code, opts) => acornPort.Parser.parse(code, opts),
+				false
+			);
+			expect(
+				eventsOf(
+					(code, opts) => webpackParse(code, { ...opts, lazyNodes: true }),
+					false
+				)
+			).toEqual(unlocated);
 		});
 
 		it("appends to a program node the caller continues", () => {
@@ -4679,6 +5279,34 @@ describe("SyntaxTree", () => {
 		expect(tree.value(literal)).toBe("");
 		expect(tree.textOf(Part.directive, statement)).toBeNull();
 		expect(tree.fieldCount(Field.expression, statement)).toBe(0);
+		// an object with a string field of none writes it as never set
+		const copied = tree.addEstree(
+			/** @type {EXPECTED_ANY} */ ({
+				type: "Identifier",
+				start: 0,
+				end: 1,
+				name: null
+			})
+		);
+		expect(tree.name(copied)).toBe("");
+	});
+
+	it("writes a list of nodes written first", () => {
+		const tree = new SyntaxTree();
+		const items = [
+			tree.addValueNode(NodeType.Identifier, 1, 2, "a"),
+			tree.addValueNode(NodeType.Identifier, 4, 5, "b")
+		];
+		const array = tree.addNode(
+			NodeType.ArrayExpression,
+			0,
+			6,
+			0,
+			tree.addList(items, 2)
+		);
+		expect(plain(toEstreeObject(tree, array))).toEqual(
+			plain(acorn.parseExpressionAt("[a, b]", 0, { ecmaVersion: "latest" }))
+		);
 	});
 
 	it("builds a tree nested deeper than the call stack", () => {
@@ -4828,6 +5456,11 @@ describe("SyntaxTree", () => {
 	it("refuses an unknown type or field", () => {
 		const tree = new SyntaxTree();
 		expect(() => tree.add(0, 0, 1)).toThrow(/Unknown node type/);
+		expect(() =>
+			tree.addEstree(
+				/** @type {EXPECTED_ANY} */ ({ type: "Unknown", start: 0, end: 1 })
+			)
+		).toThrow(/Unknown node type Unknown/);
 		const node = tree.add(NodeType.Identifier, 0, 1);
 		expect(() => tree.set(node, "value", 1)).toThrow(/has no field value/);
 	});
@@ -5047,6 +5680,25 @@ describe("WebpackParser writing a SyntaxTree", () => {
 		);
 	});
 
+	it("writes an import or export a loop runs, where they are allowed everywhere", () => {
+		for (const source of [
+			'for (;;) import a from "b";',
+			"while (x) export const c = 1;",
+			"let d; for (d of e) export { d };"
+		]) {
+			const everywhere = { ...options, allowImportExportEverywhere: true };
+			const tree = new SyntaxTree();
+			const program = /** @type {number} */ (
+				/** @type {unknown} */ (
+					new WebpackParser({ ...everywhere, syntaxTree: tree }, source).parse()
+				)
+			);
+			expect(plain(toEstreeObject(tree, program))).toEqual(
+				plain(new WebpackParser(everywhere, source).parse())
+			);
+		}
+	});
+
 	it.each([
 		"({ ...{ a } } = b);",
 		"({ get a() {} } = b);",
@@ -5057,7 +5709,8 @@ describe("WebpackParser writing a SyntaxTree", () => {
 		"(a, a) => 1;",
 		"async function f() { ({ await } = x); }",
 		"({ a: b.c }) => 1;",
-		"for ((a?.b) of c);"
+		"for ((a?.b) of c);",
+		"for (using a = b in c);"
 	])("refuses %s as it does otherwise", (source) => {
 		/** @type {string | undefined} */
 		let message;

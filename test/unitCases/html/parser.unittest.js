@@ -2613,6 +2613,198 @@ describe("parseHtml — path accessor completeness", () => {
 			"nextSibling:0"
 		]);
 	});
+
+	it("reads every node kind and attribute through the current-node defaults", () => {
+		const { Flag } = require("../../../lib/html/syntax-parser");
+		const SRC =
+			"<!DOCTYPE html><template><p>t</p></template>" +
+			"<div a=1 b=\"2\" c='3' d>x<!--c--><i></i ></div>";
+		/** @type {string[]} */
+		const log = [];
+		new SourceProcessor()
+			.use(
+				/** @type {import("../../../lib/html/syntax-printer").VisitorMap} */ ({
+					[NodeType.Document]: (path) => {
+						log.push(
+							`doc:${path.index}:${path.range()}:${path.loc()}:${path.within(NodeType.Document)}`
+						);
+					},
+					[NodeType.DocumentFragment]: (path) => {
+						log.push(
+							`fragment:${path.index}:${path.within(NodeType.Element)}:${JSON.stringify(path.name())}:${JSON.stringify(path.value())}`
+						);
+					},
+					[NodeType.Doctype]: (path) => {
+						log.push(
+							`doctype:${path.startOf(Part.name)}:${path.endOf(Part.name)}:${path.textOf(Part.name)}`
+						);
+					},
+					[NodeType.Comment]: (path) => {
+						log.push(
+							`comment:${path.index}:${path.type()}:${path.source()}:${JSON.stringify(path.name())}:${path.fieldCount(Field.attributes)}:${path.field(0, Field.attributes)}:${path.fieldNamed(Field.attributes, "a")}:${path.startOf(Part.name)}:${path.endOf(Part.name)}:${path.textOf(Part.publicId)}`
+						);
+					},
+					[NodeType.Element]: (path) => {
+						const name = path.name();
+						if (name === "template") {
+							log.push(
+								`template:${path.fieldCount(Field.content)}:${path.type(path.field(0, Field.content))}:${path.field(1, Field.content)}`
+							);
+						}
+						if (name === "i") {
+							log.push(
+								`i:${path.index}:${path.rangeOf(Part.endTag)}:${path.within(NodeType.Element)}:${path.within(NodeType.DocumentFragment)}`
+							);
+						}
+						if (name !== "div") return;
+						for (let i = 0; i < 4; i++) {
+							const a = path.field(i, Field.attributes);
+							log.push(
+								`attr:${path.type(a)}:${path.source(a)}:${path.range(a)}:${path.start(a)}-${path.end(a)}:${path.loc(a)}:${path.rangeOf(Part.value, a)}:${path.startOf(Part.startTag, a)}:${path.endOf(Part.startTag, a)}:${path.flag(Flag.selfClosing, a)}:${path.children(a).length}`
+							);
+						}
+						log.push(
+							`div:${path.source(0, 9)}:${path.start()}-${path.end()}:${path.childCount()}/${path.childCount()}:${path.type(path.child(1))}:${path.type(path.child(0))}:${path.children().length}:${path.flag(Flag.selfClosing)}:${path.fieldCount(Field.content)}:${path.field(0, Field.content)}:${path.fieldNamed(Field.content, "a")}`
+						);
+					}
+				})
+			)
+			.process(SRC);
+		expect(log).toEqual([
+			"doc:0:0,0:1,0,1,0:false",
+			"doctype:-1:-1:null",
+			"template:1:2:0",
+			// the content fragment is in no sibling chain, and links to no element
+			'fragment:0:true:"":""',
+			"attr:8:a=1:49,52:49-52:1,49,1,52:51,52:-1:-1:false:0",
+			'attr:8:b="2":53,58:53-58:1,53,1,58:56,57:-1:-1:false:0',
+			"attr:8:c='3':59,64:59-64:1,59,1,64:62,63:-1:-1:false:0",
+			"attr:8:d:65,66:65-66:1,65,1,66:null:-1:-1:false:0",
+			`div:<!DOCTYPE:44-90:3/3:${NodeType.Comment}:${NodeType.Text}:3:false:0:0:0`,
+			`comment:1:${NodeType.Comment}:<!--c-->:"":0:0:0:-1:-1:null`,
+			// the end tag's range spans the whitespace before its `>`
+			"i:2:79,84:true:false"
+		]);
+	});
+
+	it("reads each part of an element, with an end tag, without one and parser-inserted", () => {
+		const doc = parseHtmlRefs("<table><tr><td>x</table><div a=1>y</div>");
+		/** @type {Record<string, string>} */
+		const parts = {};
+		/** @param {number} n node */
+		const walk = (n) => {
+			if (A.type(n) === NodeType.Element) {
+				parts[A.name(n)] = [
+					Part.name,
+					Part.startTag,
+					Part.content,
+					Part.endTag,
+					Part.publicId
+				]
+					.map((p) => `${A.startOf(p, n)}/${A.endOf(p, n)}`)
+					.join(" ");
+			}
+			for (const c of A.children(n)) walk(c);
+		};
+		walk(doc);
+		expect(parts).toEqual({
+			html: "-1/-1 -1/-1 -1/-1 -1/-1 -1/-1",
+			head: "-1/-1 -1/-1 -1/-1 -1/-1 -1/-1",
+			body: "-1/-1 -1/-1 -1/-1 -1/-1 -1/-1",
+			table: "1/6 0/7 7/16 16/24 -1/-1",
+			// borrowed from the `<tr>` that implied it, so no start tag of its own
+			tbody: "8/10 -1/-1 11/24 -1/-1 -1/-1",
+			tr: "8/10 7/11 11/24 -1/-1 -1/-1",
+			td: "12/14 11/15 15/24 -1/-1 -1/-1",
+			div: "25/28 24/33 33/34 34/40 -1/-1"
+		});
+	});
+
+	it("names a processing instruction by its target, empty or not", () => {
+		for (const [source, target, xml] of /** @type {[string, string, boolean][]} */ ([
+			["<?x y?>", "x", false],
+			// HTML reads this as a bogus comment, XML as a target-less instruction
+			["<? y?><r/>", "", true]
+		])) {
+			const pi = A.child(0, parseHtmlRefs(source, 0, { xml }));
+			expect([A.type(pi), A.name(pi), A.value(pi)]).toEqual([
+				NodeType.ProcessingInstruction,
+				target,
+				"y"
+			]);
+		}
+	});
+
+	it("clears the foster-region marks a print left on reused node slots", () => {
+		const { FLAG_FOSTER_REGION } = require("../../../lib/html/syntax-parser");
+		// A run no re-nesting reproduces prints from source, marking its holder.
+		const source = "<dt><table> </nav>x<p>";
+		expect(
+			new SourceProcessor().process(source, { mode: "minify" }).code
+		).toBe(source);
+		/** @type {number[]} */
+		const marked = [];
+		/** @param {number} n node */
+		const walk = (n) => {
+			if (A.flag(FLAG_FOSTER_REGION, n)) marked.push(n);
+			for (const c of A.children(n)) walk(c);
+		};
+		walk(parseHtmlRefs(source));
+		expect(marked).toEqual([]);
+	});
+
+	it("path.stop() ends the walk after the current visitor", () => {
+		/** @type {string[]} */
+		const log = [];
+		const { SourceProcessor: Processor } = require("../../../lib/html/syntax");
+		const processor = new Processor().use({
+			[NodeType.Element]: (path) => {
+				log.push(path.name());
+				if (path.name() === "b") {
+					path.stop();
+					// a second call is a no-op
+					path.stop();
+				}
+			}
+		});
+		processor.process("<a></a><b></b><i></i>");
+		expect(log).toEqual(["html", "head", "body", "a", "b"]);
+		// the next run starts with every visitor in place again
+		log.length = 0;
+		processor.process("<i></i>");
+		expect(log).toEqual(["html", "head", "body", "i"]);
+		// stopped from an `exit`: the enclosing elements exit no more
+		log.length = 0;
+		new Processor()
+			.use({
+				[NodeType.Element]: {
+					exit: (path) => {
+						log.push(path.name());
+						if (path.name() === "a") path.stop();
+					}
+				}
+			})
+			.process("<p><a></a></p><b></b>");
+		expect(log).toEqual(["head", "a"]);
+	});
+
+	it("a skipChildren() on the root leaves only the root's own exit", () => {
+		/** @type {string[]} */
+		const log = [];
+		new SourceProcessor()
+			.use({
+				[NodeType.Document]: {
+					enter: (path) => {
+						log.push("enter");
+						path.skipChildren();
+					},
+					exit: () => log.push("exit")
+				},
+				[NodeType.Element]: (path) => log.push(path.name())
+			})
+			.process("<p>x</p>");
+		expect(log).toEqual(["enter", "exit"]);
+	});
 });
 
 describe("parseSrcset", () => {
@@ -2682,6 +2874,26 @@ describe("parseSrcset", () => {
 		expect(() => parseSrcset("a.png (foo")).toThrow(/Invalid srcset/);
 	});
 
+	it("should end an empty descriptor list at a comma after the url", () => {
+		expect(parseSrcset("a.png ,b.png")).toEqual([
+			["a.png", 0, 5],
+			["b.png", 7, 12]
+		]);
+	});
+
+	it("should keep a parenthesized run inside a started descriptor", () => {
+		expect(() => parseSrcset("a.png 1x(2)")).toThrow(
+			"Invalid srcset descriptor found in 'a.png 1x(2)' at '1x(2)'"
+		);
+	});
+
+	it("should stay after a descriptor across a whitespace run", () => {
+		expect(parseSrcset("a.png 1x  , b.png")).toEqual([
+			["a.png", 0, 5],
+			["b.png", 12, 17]
+		]);
+	});
+
 	it("should handle whitespace between a descriptor and EOF", () => {
 		expect(parseSrcset("a.png 1w ")).toEqual([["a.png", 0, 5]]);
 		// a second descriptor after the inter-descriptor whitespace
@@ -2736,6 +2948,12 @@ describe("parseMsapplicationTask", () => {
 		expect(parseMsapplicationTask("icon-uri=   ")).toEqual([]);
 	});
 
+	it("should skip a part without a key", () => {
+		expect(parseMsapplicationTask("x;icon-uri=a.png")).toEqual([
+			["a.png", 11, 16]
+		]);
+	});
+
 	it("should trim whitespace around the icon-uri value", () => {
 		expect(parseMsapplicationTask("name=n;icon-uri= icon.png ;x=y")).toEqual([
 			["icon.png", 17, 25]
@@ -2755,6 +2973,17 @@ describe("parseCssUrls", () => {
 
 	it("should return nothing when the value carries no url()", () => {
 		expect(parseCssUrls("fill:red")).toEqual([]);
+	});
+
+	it("should skip a url() whose string is cut by a newline", () => {
+		// the bad string ends at the newline; scanning goes on after it
+		expect(parseCssUrls('mask:url("a\n"x") url(b.png)')).toEqual([
+			["b.png", 21, 26]
+		]);
+	});
+
+	it("should take an unterminated url() string up to EOF", () => {
+		expect(parseCssUrls('mask:url("a.png')).toEqual([["a.png", 10, 15]]);
 	});
 
 	it("should skip an empty url(), quoted or not", () => {
@@ -3291,4 +3520,164 @@ describe("parseHtml — insertion modes", () => {
 			expect(treeOf(source, fragmentContext)).toMatchSnapshot();
 		});
 	}
+});
+
+describe("parseHtml — arcs the conformance corpus leaves out", () => {
+	it("merges the texts a declarative shadow root parted when adoption moves them", () => {
+		// The engine takes the shadow root's template out of the tree, so "a" and
+		// "b" are one text node there; the clone the adoption agency makes takes it.
+		expect(
+			treeOf('<b><div>a<template shadowrootmode="open"></template>b</b>')
+		).toBe(
+			[
+				"| <html>",
+				"|   <head>",
+				"|   <body>",
+				"|     <b>",
+				"|     <div>",
+				"|       <template>",
+				'|         shadowrootmode="open"',
+				"|         content",
+				"|       <b>",
+				'|         "ab"'
+			].join("\n")
+		);
+	});
+
+	it("fosters text past foreign elements on the stack", () => {
+		expect(
+			treeOf("<svg><foreignObject><table>x</table></foreignObject></svg>")
+		).toBe(
+			[
+				"| <html>",
+				"|   <head>",
+				"|   <body>",
+				"|     <svg svg>",
+				"|       <svg foreignObject>",
+				'|         "x"',
+				"|         <table>"
+			].join("\n")
+		);
+	});
+
+	it("ignores a DOCTYPE in foreign content", () => {
+		expect(treeOf("<svg><!DOCTYPE html><g/></svg>")).toBe(
+			[
+				"| <html>",
+				"|   <head>",
+				"|   <body>",
+				"|     <svg svg>",
+				"|       <svg g>"
+			].join("\n")
+		);
+	});
+
+	it("keeps frameset-ok across whitespace and NUL in foreign content", () => {
+		const frameset = ["| <html>", "|   <head>", "|   <frameset>"].join("\n");
+		expect(treeOf("<svg> </svg><frameset>")).toBe(frameset);
+		expect(treeOf("<svg>\0</svg><frameset>")).toBe(frameset);
+		expect(treeOf("<svg>x</svg><frameset>")).toBe(
+			[
+				"| <html>",
+				"|   <head>",
+				"|   <body>",
+				"|     <svg svg>",
+				'|       "x"'
+			].join("\n")
+		);
+	});
+
+	it("inserts the whitespace among characters a column group without a colgroup ignores", () => {
+		// Each character is its own token, so only the non-whitespace ones go.
+		expect(treeOf("<template><col>a b<col></template>")).toBe(
+			[
+				"| <html>",
+				"|   <head>",
+				"|     <template>",
+				"|       content",
+				"|         <col>",
+				'|         " "',
+				"|         <col>",
+				"|   <body>"
+			].join("\n")
+		);
+		expect(treeOf("a b\tc", "colgroup")).toBe('| " \t"');
+	});
+
+	it("leaves the tokenizer in the data state after a tag the column group ignored", () => {
+		// The ignored start tag never runs the RCDATA / RAWTEXT switch, so what
+		// follows is markup: a comment, and an element the mode ignores too.
+		expect(treeOf("<textarea><!--c-->  <bgsound>", "colgroup")).toBe(
+			["| <!-- c -->", '| "  "'].join("\n")
+		);
+		expect(treeOf("<template><col><style>x</style> <col></template>")).toBe(
+			[
+				"| <html>",
+				"|   <head>",
+				"|     <template>",
+				"|       content",
+				"|         <col>",
+				'|         " "',
+				"|         <col>",
+				"|   <body>"
+			].join("\n")
+		);
+	});
+
+	it("keeps character references literal in a plaintext opened in a table mode", () => {
+		// The PLAINTEXT state outlives the table, cell or caption mode it opened in.
+		for (const opening of ["<table>", "<table><td>", "<table><caption>"]) {
+			const plaintext = find(`${opening}<plaintext>a&amp;b<p>`, "plaintext");
+			expect(plaintext.children).toEqual([
+				expect.objectContaining({ type: NodeType.Text, data: "a&amp;b<p>" })
+			]);
+		}
+		expect(treeOf("x<plaintext>&amp;", "tbody")).toBe(
+			['| "x"', "| <plaintext>", '|   "&amp;"'].join("\n")
+		);
+	});
+
+	it("reads the whole input as the text of a raw-text fragment context", () => {
+		// No start tag opened the context, so no end tag is appropriate to it.
+		expect(treeOf("a\0</textarea>\0<b>&amp;", "textarea")).toBe(
+			'| "a�</textarea>�<b>&"'
+		);
+		expect(treeOf("a</style><b>&amp;\r\n", "style")).toBe(
+			'| "a</style><b>&amp;\n"'
+		);
+		expect(treeOf("</script><!--<b>", "script")).toBe('| "</script><!--<b>"');
+		expect(treeOf("</title", "title")).toBe('| "</title"');
+		const doc = parseHtmlRefs("</noscript><b>x", 0, {
+			fragmentContext: "noscript",
+			scripting: true
+		});
+		expect(serializeHtmlTree(A.child(0, doc))).toBe('| "</noscript><b>x"');
+		// a foreign context's title is markup, and so is what follows
+		expect(treeOf("</title><b>", "svg title")).toBe("| <b>");
+	});
+
+	it("clears the whole name memo once a document filled every slot", () => {
+		// 512 unknown names, one per memo slot (`z` repeated 1…512 times).
+		let src = "";
+		for (let n = 1; n <= 512; n++) src += `<${"z".repeat(n)}>`;
+		expect(find(src, "z".repeat(512)).tagName).toBe("z".repeat(512));
+		// the next parse reads every name afresh
+		expect(body("<zz><Zz>").map((n) => n.tagName)).toEqual(["zz"]);
+		expect(find("<ZZZ><zzz>", "zzz").children[0]).toEqual(
+			expect.objectContaining({ tagName: "zzz" })
+		);
+	});
+
+	it("re-sizes the attribute columns a walk released from the next estimate", () => {
+		const { SourceProcessor } = require("../../../lib/html/syntax");
+		// Past the shrink threshold, the walk's release drops the columns, so the
+		// next parse pre-sizes them from its own (small) estimate.
+		let elements = 0;
+		new SourceProcessor()
+			.use({ [NodeType.Element]: () => elements++ })
+			.process("<i a b></i>".repeat(33000));
+		expect(elements).toBe(33003);
+		const nodes = body(`<b class="c">${"x".repeat(100)}</b>`);
+		expect(nodes[0].attributes[0].value).toBe("c");
+	});
 });
