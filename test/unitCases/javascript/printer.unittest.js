@@ -12549,6 +12549,8 @@ const {
 // Sources reaching each corner of the printer: parentheses it keeps or drops,
 // comments around them, directives, literals, modules and classes.
 const SOURCES = [
+	// Names beyond ASCII, one a surrogate pair, spaced from the words beside them.
+	"var ä = 1, 𐊧 = 2; typeof ä, ä in 𐊧, void 𐊧, new ä(), ä instanceof ä;",
 	"/*!a*/\nfunction f(){return /*x*/ 1e999+(a,b)}",
 	'var a = {b:1, "c d": [1,,2,], [e]: f, get g(){return 1}, h(){}, ...i, 1e3: 2, 0x10: 3};',
 	"class A extends B { #x = 1; static m(){ return #x in this } static { a } get [k](){} 'q'(){} static async *g(){} }",
@@ -12584,7 +12586,27 @@ const SOURCES = [
 	'import("a", (b, c)); new (import("a")); new A(import("a"));',
 	"'use\\x20strict'; \"a\\\\b\"; 'x\\x20</script>-->'; \"y\\\\<!--\"; f()",
 	";// START\nf();\n;// END\n\n;/*! kept */\ng();",
-	"f(\n/*! a\n b */\n/* dropped */ (m) => 1);"
+	"f(\n/*! a\n b */\n/* dropped */ (m) => 1);",
+	// Comments where a node's text, or the one holding it, starts.
+	"x = /*! a */ b + c; y = /*! b */ (c, d).e; z = (/*! c */ f)`t`; w = (0, j)(F /*! d */.Z)",
+	"async function f(){ return /*! a */ (await /*! b */ x).y } function* g(){ yield /*! c */ a ? b : c; throw /*! d */ a++ + b }",
+	"function h(){ return /*! a */ a || b; return /*! b */ a = 1; return /*! c */ a.b.c(); return /*! d */ (a, b); return /*! e */ a[0] }",
+	"function e() { /*! a */ } x = { /*! b */ }; switch (a) { /*! c */ } if (a) { /*! d */ } class K { /*! e */ }",
+	"a(); /*! a */ ; b(); { /*! b */ ; } { a() // x\n} if (a) b() // y\nelse c()",
+	"a() // x\n/* y */ b(); \u{10400}x.y; \ud801\udc00.z",
+	"(a /*! a */).b; (1 /*! b */).toFixed(); (let /*! c */)[0] = 1",
+	"for (var i = /*! a */ (a in b);;) break; x = !/*! b */--y",
+	"export default /*! a */ (function f(){}).call(); export default /*! b */ (/*! c */ function () {})();",
+	"x = (/*! a */ function(){})``; (/*! b */ function(){} + 1); /*! c */(/*! d */(/*! e */function(){} || o).toString())",
+	"x && /*! a */(/*! b */(/*! c */b = a) || (b -= a, b ^= a)); (0, j)(/*! d */ (/*! e */ f))",
+	"/*! a */ ('\\1'); function f() { /*! b */ ; ('\\1') } //! c;\n('\\1')",
+	"/*! a */ ('\\1')",
+	"//! a;\n/* b */ ('\\1')"
+];
+
+// Import phases, which `minify` reads and a `SourceProcessor` parse does not.
+const PHASED_SOURCES = [
+	'import defer * as a from "a"; import source b from "b"; import.defer("c"); import.source("d")'
 ];
 
 // Sources reaching what the SourceProcessor's printer reads off a node's
@@ -12670,8 +12692,10 @@ const OPTION_SETS = {
 	"no comments": { format: { comments: false } },
 	"the default comments": {},
 	"every comment": { format: { comments: "all" } },
-	"a module": { module: true, format: { comments: "all" } },
-	"ECMAScript 2020": { ecma: 2020, format: { comments: "all" } },
+	// Kept by a regular expression, every comment reaches the node printer.
+	"every comment a regular expression keeps": { format: { comments: "/(?:)/" } },
+	"a module": { module: true, format: { comments: "/(?:)/" } },
+	"ECMAScript 2020": { ecma: 2020, format: { comments: "/(?:)/" } },
 	"quoting options": {
 		format: {
 			quote_style: 3,
@@ -12705,22 +12729,31 @@ const OPTION_SETS = {
  * @param {import("../../../lib/javascript/syntax-printer").MinifySources} input the source, or the sources by name
  * @param {import("../../../lib/javascript/syntax-printer").MinifyOptions} options the options
  * @param {boolean} fromTree whether the tree printer may print it
- * @returns {Promise<{ code: string | undefined, map: import("../../../lib/javascript/syntax-printer").MinifyOutput["map"], printedFromTree: number }>} the code, its source map, and how often the tree printer printed
+ * @returns {Promise<{ code: string | undefined, map: import("../../../lib/javascript/syntax-printer").MinifyOutput["map"], printedFromTree: number, printedNodes: number }>} the code, its source map, how often `printTree` printed and how often the node printer did
  */
 const minifyCounted = async (input, options, fromTree) => {
 	const { minify, modules } = await load();
 	const { printTree, treePrinting } = modules;
+	const syntaxParser = require("../../../lib/javascript/syntax-parser");
+	const { walkSyntaxTree } = syntaxParser;
 	let printedFromTree = 0;
+	let printedNodes = 0;
 	modules.printTree = (/** @type {EXPECTED_ANY[]} */ ...args) => {
 		printedFromTree++;
 		return printTree(...args);
 	};
+	// A source printed with the node printer is walked once, to print it.
+	syntaxParser.walkSyntaxTree = (...args) => {
+		printedNodes++;
+		return walkSyntaxTree(...args);
+	};
 	treePrinting.enabled = fromTree;
 	try {
 		const { code, map } = await minify(input, options);
-		return { code, map, printedFromTree };
+		return { code, map, printedFromTree, printedNodes };
 	} finally {
 		modules.printTree = printTree;
+		syntaxParser.walkSyntaxTree = walkSyntaxTree;
 		treePrinting.enabled = true;
 	}
 };
@@ -12728,7 +12761,7 @@ const minifyCounted = async (input, options, fromTree) => {
 describe("JavaScript minifier printing a SyntaxTree", () => {
 	for (const [name, set] of Object.entries(OPTION_SETS)) {
 		it(`should print what terser's tree prints, with ${name}`, async () => {
-			for (const source of SOURCES) {
+			for (const source of [...SOURCES, ...PHASED_SOURCES]) {
 				const options = () => ({
 					...JSON.parse(JSON.stringify(set)),
 					compress: false,
@@ -12745,18 +12778,38 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 					continue;
 				}
 				const printed = await minifyCounted(source, options(), true);
-				expect(reference.printedFromTree).toBe(0);
-				expect(printed.printedFromTree).toBe(1);
+				expect(reference.printedFromTree + reference.printedNodes).toBe(0);
+				// A source map, and every comment kept, are still printed by `printTree`.
+				const format = /** @type {{ comments?: unknown }} */ (
+					"format" in set ? set.format : {}
+				);
+				const viaTree =
+					"sourceMap" in set || format.comments === "all" ? 1 : 0;
+				expect(printed.printedFromTree).toBe(viaTree);
+				expect(printed.printedNodes).toBe(1 - viaTree);
 				expect(printed.code).toBe(reference.code);
 				expect(printed.map).toEqual(reference.map);
 			}
 		});
 	}
 
+	it("should print through the node printer while a parsed program waits to be read", async () => {
+		const { parseProgram } = require("../../../lib/javascript/syntax-parser");
+		const options = () => ({ compress: false, mangle: false });
+		const reference = await minifyCounted("b ( 2 )", options(), false);
+		parseProgram("a ( 1 )");
+		const printed = await minifyCounted("b ( 2 )", options(), true);
+		expect(printed.printedNodes).toBe(1);
+		expect(printed.printedFromTree).toBe(0);
+		expect(printed.code).toBe(reference.code);
+	});
+
 	it("should read a single named source under its name", async () => {
 		const options = { compress: false, mangle: false };
 		const printed = await minifyCounted({ "a.js": "a( 1 )" }, options, true);
-		expect(printed).toEqual({ code: "a(1);", printedFromTree: 1 });
+		expect(printed.code).toMatchSnapshot();
+		expect(printed.printedFromTree).toBe(0);
+		expect(printed.printedNodes).toBe(1);
 	});
 
 	it("should throw the parse error terser's tree throws", async () => {
@@ -12768,6 +12821,38 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			/Unexpected token/
 		);
 	});
+
+	it("should refuse the format option terser's tree refuses", async () => {
+		const options = () => ({
+			compress: false,
+			mangle: false,
+			format: /** @type {EXPECTED_ANY} */ ({ unknown: true })
+		});
+		await expect(minifyCounted("a()", options(), true)).rejects.toThrow(
+			/unknown/
+		);
+		await expect(minifyCounted("a()", options(), false)).rejects.toThrow(
+			/unknown/
+		);
+	});
+
+	it.each([
+		["the driver's own options", () => ({ code: true, ast: false }), 1],
+		// Tested ahead of printing, it would keep other comments than terser's.
+		["a global regular expression", () => ({ comments: /keep/g }), 0],
+		["a sticky regular expression", () => ({ comments: /keep/y }), 0]
+	])(
+		"should print what terser's tree prints, with %s",
+		async (_name, format, printedNodes) => {
+			const source = "/*keep*/a();/*keep*/b();/*no*/c();/*keep*/d()";
+			const options = () => ({ compress: false, mangle: false, format: format() });
+			const reference = await minifyCounted(source, options(), false);
+			const printed = await minifyCounted(source, options(), true);
+			expect(printed.code).toBe(reference.code);
+			expect(printed.printedNodes).toBe(printedNodes);
+			expect(printed.printedFromTree).toBe(1 - printedNodes);
+		}
+	);
 
 	it.each([
 		["compressed", { compress: {}, mangle: false }],
@@ -12795,13 +12880,14 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		]
 	])("should print terser's tree of a source %s", async (_name, options) => {
 		const printed = await minifyCounted("a( 1 )", options, true);
-		expect(printed.printedFromTree).toBe(0);
+		expect(printed.printedFromTree + printed.printedNodes).toBe(0);
 	});
 
 	it("should print terser's tree of several sources", async () => {
 		const options = { compress: false, mangle: false };
 		const printed = await minifyCounted({ "a.js": "a()", "b.js": "b()" }, options, true);
-		expect(printed).toEqual({ code: "a();b();", printedFromTree: 0 });
+		expect(printed.code).toMatchSnapshot();
+		expect(printed.printedFromTree + printed.printedNodes).toBe(0);
 	});
 
 	it("should print terser's tree with the correct or improve phase off", async () => {
@@ -12811,7 +12897,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			/** @type {{ enabled: boolean }} */ (phase).enabled = false;
 			try {
 				const printed = await minifyCounted("a( 1 )", options, true);
-				expect(printed.printedFromTree).toBe(0);
+				expect(printed.printedFromTree + printed.printedNodes).toBe(0);
 			} finally {
 				/** @type {{ enabled: boolean }} */ (phase).enabled = true;
 			}
@@ -13024,6 +13110,36 @@ describe("JavaScript SourceProcessor printing", () => {
 			code: "function f(a){return a+1}g(f);stop();function h(){b}",
 			map: undefined
 		});
+	});
+
+	it("should minify a source a visitor hands minify while it walks", async () => {
+		const { modules } = await load();
+		const source = "/*! kept */(function () { return 1 })()";
+		const options = () => ({ compress: false, mangle: false });
+		const expected = modules.minifySync(source, options()).code;
+		/** @type {(string | undefined)[]} */
+		const printed = [];
+		const processor = new SourceProcessor().use({
+			[NodeType.CallExpression]: () => {
+				printed.push(modules.minifySync(source, options()).code);
+			}
+		});
+		processor.process("f()", {});
+		processor.process("f()", { mode: "minify" });
+		expect(printed).toEqual([expected, expected]);
+	});
+
+	it("should refuse a walk a visitor starts while another runs", () => {
+		const { walkSyntaxTree } = require("../../../lib/javascript/syntax-parser");
+		expect(() =>
+			new SourceProcessor()
+				.use({
+					[NodeType.CallExpression]: (path) => {
+						walkSyntaxTree(path.tree, path.node, "f()", [], undefined);
+					}
+				})
+				.process("f()", {})
+		).toThrow("process() is already running");
 	});
 
 	it("should print one source after another, and a source anew after a parse error", () => {
