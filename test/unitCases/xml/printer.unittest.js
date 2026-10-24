@@ -388,3 +388,156 @@ b&#10;c">
 		);
 	});
 });
+
+describe("SourceProcessor — XML under an internal DTD subset", () => {
+	const { SourceProcessor } = require("../../../lib/html/syntax");
+	const { parseHtml } = require("../../../lib/html/syntax-parser");
+	const serializeHtmlTree = require("../../helpers/serializeHtmlTree");
+
+	/**
+	 * @param {string} source XML source
+	 * @param {"minify" | "beautify"} mode print mode
+	 * @returns {string} printed XML
+	 */
+	const printXml = (source, mode) =>
+		/** @type {{ code: string }} */ (
+			new SourceProcessor().process(source, { xml: true, mode })
+		).code;
+
+	/**
+	 * @param {string} source XML source
+	 * @returns {string} its tree, comments left out as minifying leaves them
+	 */
+	const tree = (source) =>
+		serializeHtmlTree(parseHtml(source, 0, { xml: true }))
+			.replace(/^\| *<!--[\s\S]*?-->$\n?/gm, "")
+			.trimEnd();
+
+	const chain = Array.from(
+		{ length: 18 },
+		(_, i) => `<!ENTITY e${i} "&e${i + 1};">`
+	).join("");
+
+	it.each([
+		// An entity whose replacement is markup builds elements, which no reference
+		// is rebuilt from, so the document prints as written.
+		[
+			"markup an entity expands to",
+			`<!DOCTYPE d [<!ENTITY e "<b x='1'>t</b>&f;"><!ENTITY f "<i/>"><!ENTITY t "txt">]><d>a&e;b&t;&nope;&#38;</d>`
+		],
+		[
+			"markup with every kind of node",
+			`<!DOCTYPE d [<!ENTITY e "<b x='1' y>t</b><!--c\r\n--><?p\r\nq?><![CDATA[z]]>">]><d>&e;</d>`
+		],
+		[
+			"a start tag an entity leaves open",
+			`<!DOCTYPE d [<!ENTITY e "<b>">]><d>&e;</d>`
+		],
+		[
+			"markup a reference cycle reaches",
+			`<!DOCTYPE d [<!ENTITY a "&b;"><!ENTITY b "x&a;<y/>">]><d>&a;</d>`
+		],
+		[
+			"markup past the depth searched",
+			`<!DOCTYPE d [${chain}<!ENTITY e18 "<x/>">]><d>&e0;</d>`
+		],
+		[
+			"text a chain expands to",
+			`<!DOCTYPE d [<!ENTITY a "&b;&b;"><!ENTITY b "&c;"><!ENTITY c "plain">]><d>&a;</d>`
+		],
+		// §5.1: nothing after an unread parameter entity is processed.
+		[
+			"declarations past a parameter entity",
+			`<!DOCTYPE d [<!-- c --><?pi x?><!ENTITY % p "x"><!NOTATION n SYSTEM "a>b"><!ENTITY e 'q'>%p;<!ENTITY late "no">]><d>&e;&late;</d>`
+		],
+		[
+			"a subset an entity runs out in",
+			`<!DOCTYPE d [<!ENTITY e "unterminated]><d/>`
+		],
+		["one a comment runs out in", "<!DOCTYPE d [<!-- open ]><d/>"],
+		["one an instruction runs out in", "<!DOCTYPE d [<?open ]><d/>"],
+		[
+			"one a declaration's literal runs out in",
+			`<!DOCTYPE d [<!ELEMENT d "x]><d/>`
+		],
+		// §3.3: a tokenized value is trimmed and collapsed, a default fills in, and
+		// the first declaration of an attribute binds it.
+		[
+			"attribute-list declarations",
+			`<!DOCTYPE d [<!ATTLIST d><!ATTLIST d a NMTOKENS "  x  y " b CDATA #FIXED "q" c (u|v) #IMPLIED n NOTATION (p) "p" e ID #REQUIRED><!ATTLIST d a CDATA "z" f NMTOKEN 'w'>]><d a=" 1  2 " c="u"/>`
+		],
+		[
+			"declarations for two elements",
+			`<!DOCTYPE d [<!ATTLIST d a NMTOKEN " x "><!ATTLIST e b NMTOKEN " y ">]><d a=" 1 "><e/><e b=" 2 "/></d>`
+		],
+		[
+			"a value already collapsed",
+			`<!DOCTYPE d [<!ATTLIST d a NMTOKENS " 1 ">]><d a="1"/>`
+		],
+		[
+			"an attribute name that is no name",
+			`<!DOCTYPE d [<!ATTLIST d 1x CDATA "v">]><d/>`
+		],
+		["a quote where a name goes", `<!DOCTYPE d [<!ATTLIST d "x">]><d/>`],
+		[
+			"an enumeration the subset ends in",
+			"<!DOCTYPE d [<!ATTLIST d a (x|y]><d/>"
+		],
+		[
+			"a default the subset ends in",
+			`<!DOCTYPE d [<!ATTLIST d a CDATA "unterminated]><d/>`
+		],
+		["a doctype the input ends in", `<!DOCTYPE d [<!ATTLIST d a CDATA "v"`],
+		// §2.8: only the first DOCTYPE declares anything, and §4.2 the first
+		// declaration of an entity binds it.
+		[
+			"a second doctype",
+			`<!DOCTYPE d [<!ENTITY e "1">]><!DOCTYPE x [<!ENTITY e "2">]><d>&e;</d>`
+		],
+		[
+			"an entity declared twice",
+			`<!DOCTYPE d [<!ENTITY e "1"><!ENTITY e "2"><!NOTATION n SYSTEM 'a>b'>]><d>&e;</d>`
+		],
+		["a public doctype", `<!DOCTYPE d PUBLIC "p" "s"><d/>`],
+		["a system doctype", `<!DOCTYPE d SYSTEM "s"><d/>`],
+		["a doctype with no name", "<!DOCTYPE><d/>"],
+		// Line ends fold to LF, and a NUL reads as U+FFFD.
+		[
+			"carriage returns",
+			"<d>a\r\nb\rc<!--x\r\ny--><?p a\r\nb?><![CDATA[q\r\nr]]></d>"
+		],
+		[
+			"NULs and a repeated attribute",
+			'<d a="1" a="2">\0<![CDATA[\0]]><!--\0--></d>'
+		],
+		// A misnested end tag closes what it names; one naming nothing is dropped,
+		// and so is a tag the input ends inside.
+		["misnested end tags", "<a><b><c></b>x</a></z>"],
+		["a tag the input ends in", "<a><b"],
+		["a value the input ends in", '<a x="1'],
+		["attributes without a value or quotes", "<d a b=c d='e'/>"]
+	])("prints %s back to its tree", (_name, source) => {
+		const minified = printXml(source, "minify");
+		expect(minified).toMatchSnapshot();
+		expect(tree(minified)).toBe(tree(source));
+		expect(tree(printXml(source, "beautify"))).toBe(tree(source));
+	});
+
+	it("respells an unquoted reference by what it decodes to", () => {
+		const source = `<!DOCTYPE d [<!ENTITY e "a long replacement">]><d a=&e; b='&e;'/>`;
+		expect(printXml(source, "minify")).toBe(
+			`<!DOCTYPE d [<!ENTITY e "a long replacement">]><d a="a long replacement" b='&e;'/>`
+		);
+		expect(printXml(source, "beautify")).toBe(source);
+	});
+
+	it("prints no doctype the walk was told to skip", () => {
+		expect(
+			new SourceProcessor().process("<!DOCTYPE d><d/>", {
+				xml: true,
+				mode: "minify",
+				skip: { doctype: true }
+			}).code
+		).toBe("<d/>");
+	});
+});
