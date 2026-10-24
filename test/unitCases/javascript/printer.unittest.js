@@ -9338,6 +9338,8 @@ describe("syntax-printer", () => {
 			}
 			for (const input of [
 				'(function foo() { console.log("r"); return foo; })(); console.log(1);',
+				"try { (function f() { return f && x; })(); } catch (e) { console.log(e.name); } let x = 1;",
+				"try { (function f() { f; x; })(); } catch (e) { console.log(e.name); } let x = 1;",
 				"console.log((function foo(n) { return n ? foo(n - 1).x.y : {}; })(2));",
 				"var a = 1; var x = /* @__PURE__ */ (() => { if (a) return 1; })(); console.log(x);",
 				'var x = /* @__PURE__ */ (() => {})(console.log("arg")); console.log(x);',
