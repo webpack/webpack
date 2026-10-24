@@ -9690,6 +9690,15 @@ describe("syntax-printer", () => {
 			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
 		});
 
+		it("should stop dropping what a `switch` leaves over once a call comes back as a copy", async () => {
+			const { minify } = await load();
+			const { code } = await minify(
+				"switch ((function () { var v = class { static { a; } }; f(function () { switch (b) { case 0: const {} = { a() {} }; } }); })()) { case {}: }",
+				{ compress: { unsafe: true }, toplevel: true, module: true }
+			);
+			expect(code).toContain("f(");
+		});
+
 		it("should keep a constructor's `this.x` read a getter may answer", async () => {
 			const { minify } = await load();
 			for (const input of [
