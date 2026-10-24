@@ -9918,6 +9918,17 @@ describe("syntax-printer", () => {
 			}
 		});
 
+		it("should keep only what an empty function called in place is given to run, but where its parameters run code", async () => {
+			const { minify } = await load();
+			const input =
+				'function* it() { console.log("next"); yield 1; } function f(g) { (() => {})(...it()); (function () {})(g(), ...it()); ((...r) => {})(...it()); ((x = g()) => {})(); (async () => {})(...it()); } f(() => console.log("g"));';
+			const { code } = await minify(input, { compress: {}, mangle: false });
+			expect(code).toContain("[...it()],[g(),...it()],[...it()]");
+			expect(code).toContain("((x=g())=>{})()");
+			expect(code).toContain("(async()=>{})(...it())");
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+		});
+
 		it("should keep a literal's missing key a built-in's prototype the program writes may hold", async () => {
 			const { minify } = await load();
 			for (const input of [
