@@ -5607,8 +5607,8 @@ describe("syntax-printer", () => {
 		/**
 		 * @param {EXPECTED_FUNCTION} run a minify
 		 * @param {EXPECTED_ANY} files the sources
-		 * @param {EXPECTED_OBJECT} options the options
-		 * @returns {Promise<{ code?: string, logs: string[][] }>} the result, and each file written with its name
+		 * @param {EXPECTED_OBJECT | undefined} options the options
+		 * @returns {Promise<{ code?: string, threw?: boolean, logs: string[][] }>} the result, whether it threw, and each file written with its name
 		 */
 		const logged = async (run, files, options) => {
 			/** @type {string[][]} */
@@ -5625,13 +5625,15 @@ describe("syntax-printer", () => {
 			try {
 				const { code } = await run(files, options, fs);
 				return { code, logs };
+			} catch (_err) {
+				return { threw: true, logs };
 			} finally {
 				if (previous === undefined) delete process.env.TERSER_DEBUG_DIR;
 				else process.env.TERSER_DEBUG_DIR = previous;
 			}
 		};
 		// Built per run: both minifiers write into the option groups they are given.
-		/** @type {[EXPECTED_ANY, () => EXPECTED_OBJECT][]} */
+		/** @type {[EXPECTED_ANY, () => EXPECTED_OBJECT | undefined][]} */
 		const inputs = [
 			["sink(1 + 2);", () => ({ compress: { pure_funcs: ["f"] } })],
 			[
@@ -5641,12 +5643,17 @@ describe("syntax-printer", () => {
 			[
 				{ type: "Program", body: [] },
 				() => ({ parse: { spidermonkey: true }, format: { comments: /^!/ } })
-			]
+			],
+			// No options, and an option written as a function.
+			["sink(3);", () => undefined],
+			["sink(4); /* c */", () => ({ format: { comments: () => true } })],
+			// A source neither text nor sources by name, which neither parses.
+			[{ "a.js": 5 }, () => ({})]
 		];
 		for (const [files, options] of inputs) {
 			const ours = await logged(minify, files, options());
 			const theirs = await logged(reference.minify, files, options());
-			expect(ours.code).toBe(theirs.code);
+			expect([ours.code, ours.threw]).toEqual([theirs.code, theirs.threw]);
 			expect(ours.logs).toHaveLength(1);
 			expect(ours.logs[0][0]).toMatch(/^debug\/terser-debug-\d+\.log$/);
 			expect(ours.logs[0][1]).toBe(theirs.logs[0][1]);
@@ -6774,7 +6781,20 @@ describe("syntax-printer", () => {
 		const sources = [
 			[SIZED_SCRIPT, { compress: false }],
 			[SIZED_MODULE, { compress: false, module: true }],
-			["sink(NaN, void 0, 1 / 0, a + +b, a - -b);", { compress: {} }]
+			["sink(NaN, void 0, 1 / 0, a + +b, a - -b);", { compress: {} }],
+			// Where each kind of expression sits in parentheses, or needs none.
+			[
+				`(a = b)(); (a = b) ? 1 : 2; (a = b).c; (a || b)(); (a || b).c; (a ?? b) || c; a ?? (b || c); (a && b) ?? c; +(a = b); (a, b) ? c : d;
+function r() { return; } for (;;) { continue; } (function () {})(); (function () {}).call(); (class { #x; m() { return #x in (a || b) || this?.#x; } });
+x = a ** b ** c; x = (a ** b) ** c; x = (-a) ** b; x = a < b < c; x = a < (b < c); x = [, , ]; x = [a, , b];`,
+				{ compress: false }
+			],
+			["(class { #x; m() { return #x in (a in b); } });", { compress: false }],
+			["undefined++; sink(undefined);", { compress: {} }],
+			[
+				"sink(undefined, void 0); var u = undefined; sink(u)",
+				{ compress: { unsafe_undefined: true } }
+			]
 		];
 		for (const [source, options] of sources) {
 			/**
@@ -15424,4 +15444,2800 @@ describe("jsMinify", () => {
 			require("../../../package.json").version
 		);
 	});
+});
+
+// cspell:ignore IAAI, KAAK, AAAC, SAAA, CAAA
+// The cases below reach the corners of the passes the tables above leave out:
+// those terser's passes hold, held to terser itself, and those the correct and
+// improve phases write, held to running as the source does.
+const { createModules } = require("../../../lib/javascript/syntax-printer");
+
+/** @type {[string, string, EXPECTED_OBJECT, EXPECTED_OBJECT?][]} */
+const TERSER_PORT_CASES = [
+	[
+		"`join` of array literals",
+		"var a = g(); sink([1, a, , 2].join(), [a, 1, 2].join('-'), [, 1].join(), [1, ...a].join(), [].join(), [a].join(), ['x'].join(), [a, 1].join(''), ['a', a, 'b'].join(''), [a, b].join(''), [1, 2].join(a), [a, 1, 2].join(0), [a, 'x', 'y', b].join(), [1, 2, a, 3, 4, b, 5].join('-'));",
+		{ unsafe: true }
+	],
+	[
+		"`join` of array literals without evaluate",
+		"var a = g(); sink([1, , 2].join(), [, 1].join('-'), [a, , 2].join());",
+		{ unsafe: true, evaluate: false }
+	],
+	[
+		"a `RegExp` call of a pattern the runtime rejects",
+		"sink(RegExp('[', 'g'));",
+		{ unsafe: true }
+	],
+	[
+		"unused rest parameters dropping arguments",
+		"(function (...r) { return 1; })(g(), 2, h()); (function (a, ...r) { return a; })(1, g(), 3); sink(function (...r) { return 1; }(g(), ...x));",
+		{}
+	],
+	[
+		"`console.assert`",
+		"console.assert(1, 'x'); console.assert(true); console.assert(); console.assert(a); console.assert(0);",
+		{}
+	],
+	[
+		"unsafe built-in calls",
+		"sink(Array.from([1, 2]), Array.from(x), Array.from([1], f), Array(1, 2), Array(3), Array(a), Object(), Object(1), String(), String(a), String(a, b), Number(), Number(a), Number(a, b), Symbol('x'), Symbol(), Boolean(), Boolean(a), Boolean(a, b), RegExp('a', 'g'), RegExp('a'), RegExp(a), RegExp('a', 'g', 1), a.toString(), a.toString(1), (function () { return 1; }).call(), (function () { return this; }).call(a), (function (x) { return x; }).call(a, 1), f.call(a, 1), [a].apply, f.apply(a, [1, 2]), f.apply(a, b));",
+		{ unsafe: true }
+	],
+	[
+		"unsafe Symbols",
+		"sink(Symbol('x'), Symbol(1));",
+		{ unsafe: true, unsafe_symbols: true }
+	],
+	[
+		"`Function` under unsafe_Function",
+		"sink(Function(), Function('a', 'return a'), Function('return 1 +'), Function(a, 'return a'));",
+		{ unsafe: true, unsafe_Function: true }
+	],
+	[
+		"bitwise negations of xor",
+		"var x = g(), y = g(), s = '' + g(), n = +g(), i = g() | 0, j = g() | 0; sink(~(~x ^ y), ~(x ^ y), ~(x ^ ~y), ~(i ^ 1), ~(1 ^ i));",
+		{}
+	],
+	[
+		"assignments of sequences",
+		"var x = g(), y = g(), s = '' + g(), n = +g(), i = g() | 0, j = g() | 0; x = (g(), y); x.p = (g(), h(), y); x = (1, 2, y); x += (g(), y); x[g()] = (h(), y);",
+		{}
+	],
+	[
+		"comparisons",
+		"var x = g(), y = g(), s = '' + g(), n = +g(), i = g() | 0, j = g() | 0; sink(s == s + '', n == n * 2, 1n == 2n, x === x, void 0 == x, x == void 0, x != void 0, typeof x == 'undefined', typeof x.p == 'undefined', typeof x != 'undefined', 'undefined' == typeof x, typeof g == 'undefined');",
+		{}
+	],
+	[
+		"comparisons in ie8 mode",
+		"var x = g(), y = g(), s = '' + g(), n = +g(), i = g() | 0, j = g() | 0; sink(typeof x.p == 'undefined', typeof x.p !== 'undefined');",
+		{ ie8: true }
+	],
+	[
+		"an object compared with itself",
+		"!function () { var o = {}, a = [], f = function () {}, c = class {}; sink(o === o, a !== a, f == f, c != c); }();",
+		{}
+	],
+	[
+		"32-bit integers compared with zero or masked",
+		"var x = g(), y = g(), s = '' + g(), n = +g(), i = g() | 0, j = g() | 0; sink((i & 1) == 0, (i & 1) != 0, 0 == (i & 1), (i | j) === 0, (i & 255) == 255, (i & 255) != 255, 255 == (i & 255), (255 & i) != 255, (i & 3) == 2);",
+		{}
+	],
+	[
+		"32-bit integers compared in a test",
+		"var x = g(), y = g(), s = '' + g(), n = +g(), i = g() | 0, j = g() | 0; if ((i & 1) == 0) g(); if ((i & 1) != 0) g(); if (0 !== (i | j)) g(); if ((i & 255) == 255) g();",
+		{}
+	],
+	[
+		"concatenations with empty strings",
+		"var x = g(), y = g(), s = '' + g(), n = +g(), i = g() | 0, j = g() | 0; sink(s + '', '' + s, '' + s + s, '' + x + s, s + '' + x, (x + 'a') + ('b' + y), (s + 'a') + ('b' + s), (x + '1') + (2 + y));",
+		{}
+	],
+	[
+		"logical expressions with constants",
+		"var x = g(), y = g(), s = '' + g(), n = +g(), i = g() | 0, j = g() | 0; sink(x && 0, x && 1, x || 0, x || 1, (x || 0) && y, (x && 1) || y, x ?? y, null ?? y, 1 ?? y, x || false && y, x && true || y, (x || 0) || y);",
+		{}
+	],
+	[
+		"logical expressions with constants in tests",
+		"var x = g(), y = g(), s = '' + g(), n = +g(), i = g() | 0, j = g() | 0; if (x && 0) g(); if (x || 1) g(); if (x ?? 0) g(); if ((x || 0) || y) g(); if (x && 1) g();",
+		{}
+	],
+	[
+		"arithmetic",
+		"var x = g(), y = g(), s = '' + g(), n = +g(), i = g() | 0, j = g() | 0; sink(-x + n, -n + n, -n + 1, 1 + -n, n + (n + n), n * (n * n), (n + 2) + 3, (2 + n) + 3, (n * 2) * 3, (i | 1) | (2 | j), (i & 1) & (2 & j), `a${x}b` + `c${y}d`, 'x' + `a${x}`, `a${x}` + 'x');",
+		{}
+	],
+	[
+		"bitwise masks",
+		"var x = g(), y = g(), s = '' + g(), n = +g(), i = g() | 0, j = g() | 0; sink(5 & (i | 2), 5 & (2 | i), 1 & (i | 2), i | i, i & i, x | x, ~i ^ ~j, ~x ^ ~y, i << 0, x >> 0, i | 0, 0 | i, i ^ 0, x & 0, i & 0, i & -1, -1 & i, x & -1, i ^ -1, x ^ -1, -1 ^ i);",
+		{}
+	],
+	[
+		"bitwise masks in a 32-bit context",
+		"var x = g(), y = g(), s = '' + g(), n = +g(), i = g() | 0, j = g() | 0; sink((x | x) | 0, (x & -1) | 0, (x ^ -1) | 0, ~(x & -1));",
+		{}
+	],
+	[
+		"bitwise context under a logical or conditional",
+		"var x = g(), y = g(); sink((x && y | 0) | 0, (x || y | 0) | 0, (x ?? y | 0) | 0, (x ? y | 0 : 1) | 0, (y | 0 ? 1 : 2) | 0, ((g(), y | 0)) | 0, ~(x ? y & -1 : 2));",
+		{}
+	],
+	[
+		"bitwise context without evaluate",
+		"var x = g(); sink((x | x) | 0, x & -1);",
+		{ evaluate: false }
+	],
+	[
+		"a passes count given as a string",
+		"var x = 1; sink(x + 1);",
+		{ passes: "2" }
+	],
+	[
+		"a `debugger` kept",
+		"debugger; sink(1);",
+		{ drop_debugger: false }
+	],
+	[
+		"a label on a `break` of itself",
+		"a: break a; b: { break b; } c: if (x) break c; sink(1);",
+		{}
+	],
+	[
+		"hoisted `var`s",
+		"function f(p) { 'use strict'; var a = g(), b; for (var c in o) sink(c); for (var d = 0; d < 2; d++) sink(d); for (var e of o); var p = 1; b = 2; a = 3, sink(a); { var q; } ; var r; r = 4, sink(r); var s = 1; s = 2; return [a, b, p, q, r, s]; } sink(f);",
+		{ hoist_vars: true }
+	],
+	[
+		"hoisted `var`s in a sequence write",
+		"function f() { var a, b; a = 1, b = 2, sink(a, b); var c; c = g(); sink(c); { var d; d = 5; } return d; } sink(f);",
+		{ hoist_vars: true, join_vars: false }
+	],
+	[
+		"hoisted functions",
+		"function f() { sink(g()); function g() { return 1; } if (x) { function h() {} } return h; } sink(f);",
+		{ hoist_funs: true }
+	],
+	[
+		"loops off",
+		"while (x) sink(1); do sink(2); while (x); do sink(3); while (1); do { sink(4); } while (0); for (;;) { if (x) break; sink(5); }",
+		{ loops: false }
+	],
+	[
+		"a `do … while` of a truthy test",
+		"do { sink(1); if (g()) break; } while (1); do sink(2); while ('x');",
+		{}
+	],
+	[
+		"a `for` whose body ends in a `break`, with its init",
+		"for (x = 1; ; ) { sink(x); break; } for (var i = 0; ; ) { break; } for (g(); ; ) break;",
+		{}
+	],
+	[
+		"a block whose functions, classes, `let` and `const` stay apart",
+		"if (x) { function f() {} class C {} let [a, { b }] = g(); const c = 1; sink(f, C, a, b, c); }",
+		{}
+	],
+	[
+		"property reads of globals and top-level names",
+		"var t = 1; let u = 2; sink(t.p, u.p, undeclared.p, (0, t).p);",
+		{ pure_getters: "strict", unsafe: true }
+	],
+	[
+		"`undefined`, `Infinity` and `NaN` written to",
+		"undefined = 1; Infinity = 2; NaN = 3; [undefined] = [1]; ({ a: Infinity } = {}); sink(undefined, Infinity, NaN, -Infinity, 1 / Infinity);",
+		{ keep_infinity: true }
+	],
+	[
+		"`undefined` under unsafe_undefined",
+		"function f() { var u; sink(undefined, void 0, u === undefined); } f(); function g(undefined) { return undefined; } sink(g);",
+		{ unsafe_undefined: true }
+	],
+	[
+		"assignments before an exit in a `try`",
+		"function f() { var a = g(); try { return a = h(); } finally { sink(a); } } function k() { var b = g(); try { return b = h(); } catch (e) { return b; } } function m() { var c; try { return c = h(), 1; } catch (e) { return c; } } function n() { var d = 1; try { throw d += 1; } catch (e) {} return d; } function p(q) { var e = q; return e += 1; } function r(q) { var e = q; return e = 2; } sink(f, k, m, n, p, r);",
+		{}
+	],
+	[
+		"defaults that evaluate to `undefined`",
+		"function f(a = undefined, b = void 0, [c = void 0] = [], { d = undefined } = {}) { return [a, b, c, d]; } sink(f, function (a = void 0) { return a; }(), (function (a = void 0) { return a; })(1));",
+		{}
+	],
+	[
+		"defaults that evaluate to `undefined`, keep_fargs off",
+		"function f(a = void 0) { return a; } sink(f);",
+		{ keep_fargs: false }
+	],
+	[
+		"nullish checks of the same subject",
+		"var x = g(); sink(x === null || x === void 0 ? 1 : x, x === void 0 || x === null ? 1 : x, x == null ? 1 : x, null == x ? 1 : x, x === null || x === null ? 1 : x, x === null || y === void 0 ? 1 : x, x > null || x === void 0 ? 1 : x, x !== null || x === void 0 ? 1 : x, (x === null) | (x === void 0) ? 1 : x, x === void 0 || void 0 === x ? 1 : x, null === x || x === undefined ? 1 : x);",
+		{ ecma: 2020 }
+	],
+	[
+		"calls differing in one argument",
+		"var x = g(), y = g(), z = g(), w = g(); sink(x ? f(1, 2) : f(1, 3), x ? f(...y) : f(...y), x ? f(1, ...y) : f(2, ...y), x ? f(1, z) : f(2, ...z), x ? f(1, 2, ...y) : f(2, 3, ...y), x ? f(1, 2, z) : f(2, 3, z), x ? f(1) : f(1));",
+		{}
+	],
+	[
+		"conditionals folding into logical expressions",
+		"var x = g(), y = g(), z = g(), w = g(); sink(x ? y : (z, y), x ? y : z && y, x ? y ? z : w : w, x ? y || z : z, x ? true : false, x ? false : true, x ? !0 : !1, x ? 1 : 0, x ? !1 : 1);",
+		{}
+	],
+	[
+		"conditionals in tests",
+		"var x = g(), y = g(), z = g(), w = g(); if (x ? true : false) g(); if (x ? false : true) g(); if (x ? 1 : 0) g(); if (x ? 0 : 1) g(); if (x ? !0 : y) g();",
+		{}
+	],
+	[
+		"booleans as integers",
+		"var x = g(), y = g(), z = g(), w = g(); sink(x === true, x !== false, x == true, true, !0, x ? true : false);",
+		{ booleans_as_integers: true }
+	],
+	[
+		"booleans compared loosely",
+		"var x = g(), y = g(), z = g(), w = g(); sink(x == true, x != false, true == x);",
+		{}
+	],
+	[
+		"object literals read by a key",
+		"class C { #p = 1; m() { return { p: 1 }.#p; } } sink({ a: 1, b() { return 2; }, *c() {} }.a, { a: 1, b() { return 2; } }.b, { a: 1, get b() { return 2; } }.a, { a: g(), b: 1 }.b, { [g()]: 1, a: 2 }.a, { a: 1, b: 2 }['a'], { a: 1, b: function () {} }.b, ({ a: 1, b: 2 })[x]);",
+		{ ecma: 2015, unsafe_arrows: true, arrows: true }
+	],
+	[
+		"object literals read by a key, arrows on",
+		"sink({ a: 1, b() { return 2; } }.b, { a: 1, *b() {} }.a);",
+		{ ecma: 2015, arrows: true, unsafe_arrows: true }
+	],
+	[
+		"`arguments` read by index",
+		"function f(a, a) { return arguments[0]; } function h(a) { 'use strict'; return arguments[0]; } function k(a) { 'use strict'; a = 2; return arguments[0]; } sink(f, h, k);",
+		{},
+		{ module: false }
+	],
+	[
+		"`arguments` read by index without reduce_vars",
+		"function h(a) { 'use strict'; return arguments[0]; } sink(h);",
+		{ reduce_vars: false }
+	],
+	[
+		"array literals read by index",
+		"var x = g(); sink([x, , g()][0], [, x][0], [x, ...y][0], [...y, x][1], [g(), , x][2], [x, g()][0], [1, 2][1]);",
+		{ unsafe: true }
+	],
+	[
+		"subscripts of keys",
+		"sink(x['undefined'], x['a' + 'b'], x[1], x['1'], x['01'], x['a-b'], x[void 0]);",
+		{}
+	],
+	[
+		"subscripts without properties",
+		"sink(x['a'], { a: 1 }['a']);",
+		{ properties: false }
+	],
+	[
+		"a chain of what is nullish",
+		"sink(delete null?.a, delete (void 0)?.a, (void 0)?.a, null?.a.b);",
+		{}
+	],
+	[
+		"prototype reads under unsafe_proto",
+		"sink(Array.prototype.slice, Function.prototype.call, Number.prototype.toFixed, Object.prototype.hasOwnProperty, RegExp.prototype.test, String.prototype.trim, Date.prototype.getTime, x.prototype.y);",
+		{ unsafe_proto: true }
+	],
+	[
+		"spreads of constants into an object",
+		"sink({ ...1, ...'ab', ...null, ...void 0, ...true, .../a/, ...{ a: 1 }, ...x });",
+		{}
+	],
+	[
+		"functions written as arrows",
+		"sink(function () { return this; }, function () { return 1; }, function* () {}, function () { return arguments; }, function f() { return f; }, function () { eval(''); });",
+		{ ecma: 2015, unsafe_arrows: true }
+	],
+	[
+		"a `yield` of `undefined`",
+		"function* f() { yield undefined; yield void 0; yield* void 0; yield; }",
+		{}
+	],
+	[
+		"templates of constants",
+		"sink(`a${1}b`, `a${null}b`, `a${void 0}b`, `a${[1, 2]}b`, `a${{}}b`, `a${x}`, `${x}b`, `${x}`, `a${x}b`, `a${'s'}`, `a${1n}`, `a${null}`, `${x}${y}`);",
+		{}
+	],
+	[
+		"templates of values under unsafe",
+		"sink(`a${x}`, `${x}b`, `a${x}b`);",
+		{ unsafe: true }
+	],
+	[
+		"functions written as methods under unsafe_methods",
+		"sink({ a: function () { return 1; }, b: () => { return 2; }, c: () => 3, d: function f() {}, ['e']: function () {}, g: function* () {}, h: () => { return this; } });",
+		{ ecma: 2015, unsafe_methods: true }
+	],
+	[
+		"32-bit contexts without evaluate",
+		"var x = g(), y = g(); sink((x | x) | 0, ~(x & -1), x ^ -1, (x ? y | 0 : 1) | 0);",
+		{ evaluate: false }
+	],
+	[
+		"32-bit contexts reaching past a statement",
+		"var x = g(), y = g(); x | x; (x, y & -1) | 0; ~((x, y) ^ -1);",
+		{}
+	],
+	[
+		"passes that stop changing",
+		"var a = 1, b = a; sink(b); function f() { var c = 2; return c; } sink(f());",
+		{ passes: 5 }
+	],
+	[
+		"a program read as an expression",
+		"if (x) g(); else if (y) { h(); } else with (o) k();",
+		{ expression: true },
+		{ module: false }
+	],
+	[
+		"a program read as an expression, its last statement a bare `return`",
+		"g(); return;",
+		{ expression: true },
+		{ parse: { bare_returns: true } }
+	],
+	[
+		"a program read as an expression, ending with a `return` of a value",
+		"g(); if (x) return 1; return;",
+		{ expression: true },
+		{ parse: { bare_returns: true } }
+	],
+	[
+		"a loop whose leading `if` breaks in its alternate",
+		"for (; x; ) { if (y) g(); else break; h(); } for (;;) { if (y) g(); else break; h(); } while (z) { if (y) { g(); } else { break; } }",
+		{}
+	],
+	[
+		"loops of constant tests without dead_code",
+		"for (; 0; ) g(); for (; 1; ) { g(); break; } for (x = 1; 0; ) g(); for (var i = 0; false; ) g(); while (0) g(); if (0) g(); else h(); if (1) g(); switch (1) { case 1: g(); }",
+		{ dead_code: false }
+	],
+	[
+		"a `for` of a constant false test with its init",
+		"for (x = g(); 0; ) h(); for (var i = g(); 0; ) h(); for (g(); 0; );",
+		{}
+	],
+	[
+		"an `if` whose negation is as long",
+		"function f() { if (!a || !b) g(); if (a || b) g(); else h(); if (!(a || b)) g(); if (a) { k(); } else { g(); return; } h(); }",
+		{}
+	],
+	[
+		"an `if` whose alternate aborts",
+		"function f() { if (x) g(); else return; h(); } function k() { if (!x) g(); else throw 1; h(); } function m() { for (;;) { if (x || y) g(); else break; h(); } }",
+		{}
+	],
+	[
+		"`switch` cases declaring names",
+		"switch (x) { case 1: var a = 1; let b; function c() {} class D {} g(a, b, c, D); break; case 2: const [e, { f }] = h(); g(e, f); }",
+		{}
+	],
+	[
+		"`switch` without dead_code",
+		"switch (1) { case 1: g(); break; case 2: h(); }",
+		{ dead_code: false }
+	],
+	[
+		"`switch` branches",
+		"switch (1) { default: g(); case 1: h(); } switch (1) { case 0: g(); default: k(); case 1: h(); break; case 2: m(); } switch (x) { case 1: g(); case 2: g(); break; case 3: h(); } switch (x) { case 1: g(); break; case 2: g(); }",
+		{}
+	],
+	[
+		"`switch` with nested breaks",
+		"switch (1) { case 1: if (x) break; g(); break; } switch (x) { case 1: for (;;) { break; } g(); break; default: h(); } switch (x) { default: if (y) break; g(); }",
+		{}
+	],
+	[
+		"`switch` defaults after cases with effects",
+		"switch (x) { case 1: case g(): default: h(); } switch (x) { case 1: case 2: default: h(); case g(): k(); } switch (x) { case g(): default: h(); case 2: }",
+		{}
+	],
+	[
+		"`switch` reduced to one branch",
+		"switch (x) { case 1: g(); } switch (x) { default: g(); } switch (x) { case 1: } switch (g()) { case 1: break; default: h(); } switch (1) { case 1: var q = 1; }",
+		{}
+	],
+	[
+		"empty declarations",
+		"var a; let b; const c = 1; for (var d; ; ) break;",
+		{ unused: true },
+		{ toplevel: true }
+	],
+	[
+		"nullish checks of the same subject without comparisons",
+		"var x = g(); sink(x === null || x === void 0 ? 1 : x, x === void 0 || x === null ? 1 : x, null === x || void 0 === x ? 1 : x, x === null || x === null ? 1 : x, x === null || y === void 0 ? 1 : x, x > null || x === void 0 ? 1 : x, x === null || x > void 0 ? 1 : x, x === 1 || x === void 0 ? 1 : x, x == null || x === void 0 ? 1 : x, x === null || g() ? 1 : x, null == x ? 1 : x, x == null ? 1 : x, x == null ? 1 : y);",
+		{ comparisons: false },
+		{ ecma: 2020 }
+	],
+	[
+		"binary operations of sequences",
+		"var n = g(), y = g(); sink(n + (1, g(), y), n + (1, 2, y), n + (g(), y), (g(), n) + y); n = (g(), y); n += (g(), y); n.p = (g(), y);",
+		{}
+	],
+	[
+		"binary operations of sequences, unsafe",
+		"var n = g(), y = g(); sink(n + (1, g(), y), n * (2, h(), y));",
+		{ unsafe: true, side_effects: false }
+	],
+	[
+		"bitwise negations of xor, constants kept right",
+		"var x = g(), y = g(), s = '' + g(), n = +g(), i = g() | 0, j = g() | 0; sink(~(~x ^ y), ~(x ^ y), ~(x ^ ~y), ~(i ^ 1), ~(1 ^ i));",
+		{ lhs_constants: false }
+	],
+	[
+		"assignments of sequences, constants kept right",
+		"var x = g(), y = g(), s = '' + g(), n = +g(), i = g() | 0, j = g() | 0; x = (g(), y); x.p = (g(), h(), y); x = (1, 2, y); x += (g(), y); x[g()] = (h(), y);",
+		{ lhs_constants: false }
+	],
+	[
+		"comparisons, constants kept right",
+		"var x = g(), y = g(), s = '' + g(), n = +g(), i = g() | 0, j = g() | 0; sink(s == s + '', n == n * 2, 1n == 2n, x === x, void 0 == x, x == void 0, x != void 0, typeof x == 'undefined', typeof x.p == 'undefined', typeof x != 'undefined', 'undefined' == typeof x, typeof g == 'undefined');",
+		{ lhs_constants: false }
+	],
+	[
+		"comparisons in ie8 mode, constants kept right",
+		"var x = g(), y = g(), s = '' + g(), n = +g(), i = g() | 0, j = g() | 0; sink(typeof x.p == 'undefined', typeof x.p !== 'undefined');",
+		{ ie8: true, lhs_constants: false }
+	],
+	[
+		"an object compared with itself, constants kept right",
+		"!function () { var o = {}, a = [], f = function () {}, c = class {}; sink(o === o, a !== a, f == f, c != c); }();",
+		{ lhs_constants: false }
+	],
+	[
+		"32-bit integers compared with zero or masked, constants kept right",
+		"var x = g(), y = g(), s = '' + g(), n = +g(), i = g() | 0, j = g() | 0; sink((i & 1) == 0, (i & 1) != 0, 0 == (i & 1), (i | j) === 0, (i & 255) == 255, (i & 255) != 255, 255 == (i & 255), (255 & i) != 255, (i & 3) == 2);",
+		{ lhs_constants: false }
+	],
+	[
+		"32-bit integers compared in a test, constants kept right",
+		"var x = g(), y = g(), s = '' + g(), n = +g(), i = g() | 0, j = g() | 0; if ((i & 1) == 0) g(); if ((i & 1) != 0) g(); if (0 !== (i | j)) g(); if ((i & 255) == 255) g();",
+		{ lhs_constants: false }
+	],
+	[
+		"concatenations with empty strings, constants kept right",
+		"var x = g(), y = g(), s = '' + g(), n = +g(), i = g() | 0, j = g() | 0; sink(s + '', '' + s, '' + s + s, '' + x + s, s + '' + x, (x + 'a') + ('b' + y), (s + 'a') + ('b' + s), (x + '1') + (2 + y));",
+		{ lhs_constants: false }
+	],
+	[
+		"logical expressions with constants, constants kept right",
+		"var x = g(), y = g(), s = '' + g(), n = +g(), i = g() | 0, j = g() | 0; sink(x && 0, x && 1, x || 0, x || 1, (x || 0) && y, (x && 1) || y, x ?? y, null ?? y, 1 ?? y, x || false && y, x && true || y, (x || 0) || y);",
+		{ lhs_constants: false }
+	],
+	[
+		"logical expressions with constants in tests, constants kept right",
+		"var x = g(), y = g(), s = '' + g(), n = +g(), i = g() | 0, j = g() | 0; if (x && 0) g(); if (x || 1) g(); if (x ?? 0) g(); if ((x || 0) || y) g(); if (x && 1) g();",
+		{ lhs_constants: false }
+	],
+	[
+		"arithmetic, constants kept right",
+		"var x = g(), y = g(), s = '' + g(), n = +g(), i = g() | 0, j = g() | 0; sink(-x + n, -n + n, -n + 1, 1 + -n, n + (n + n), n * (n * n), (n + 2) + 3, (2 + n) + 3, (n * 2) * 3, (i | 1) | (2 | j), (i & 1) & (2 & j), `a${x}b` + `c${y}d`, 'x' + `a${x}`, `a${x}` + 'x');",
+		{ lhs_constants: false }
+	],
+	[
+		"bitwise masks, constants kept right",
+		"var x = g(), y = g(), s = '' + g(), n = +g(), i = g() | 0, j = g() | 0; sink(5 & (i | 2), 5 & (2 | i), 1 & (i | 2), i | i, i & i, x | x, ~i ^ ~j, ~x ^ ~y, i << 0, x >> 0, i | 0, 0 | i, i ^ 0, x & 0, i & 0, i & -1, -1 & i, x & -1, i ^ -1, x ^ -1, -1 ^ i);",
+		{ lhs_constants: false }
+	],
+	[
+		"bitwise masks in a 32-bit context, constants kept right",
+		"var x = g(), y = g(), s = '' + g(), n = +g(), i = g() | 0, j = g() | 0; sink((x | x) | 0, (x & -1) | 0, (x ^ -1) | 0, ~(x & -1));",
+		{ lhs_constants: false }
+	],
+	[
+		"property reads of globals and top-level names, constants kept right",
+		"var t = 1; let u = 2; sink(t.p, u.p, undeclared.p, (0, t).p);",
+		{ pure_getters: "strict", unsafe: true, lhs_constants: false }
+	],
+	[
+		"`undefined`, `Infinity` and `NaN` written to, constants kept right",
+		"undefined = 1; Infinity = 2; NaN = 3; [undefined] = [1]; ({ a: Infinity } = {}); sink(undefined, Infinity, NaN, -Infinity, 1 / Infinity);",
+		{ keep_infinity: true, lhs_constants: false }
+	],
+	[
+		"`undefined` under unsafe_undefined, constants kept right",
+		"function f() { var u; sink(undefined, void 0, u === undefined); } f(); function g(undefined) { return undefined; } sink(g);",
+		{ unsafe_undefined: true, lhs_constants: false }
+	],
+	[
+		"assignments before an exit in a `try`, constants kept right",
+		"function f() { var a = g(); try { return a = h(); } finally { sink(a); } } function k() { var b = g(); try { return b = h(); } catch (e) { return b; } } function m() { var c; try { return c = h(), 1; } catch (e) { return c; } } function n() { var d = 1; try { throw d += 1; } catch (e) {} return d; } function p(q) { var e = q; return e += 1; } function r(q) { var e = q; return e = 2; } sink(f, k, m, n, p, r);",
+		{ lhs_constants: false }
+	],
+	[
+		"defaults that evaluate to `undefined`, constants kept right",
+		"function f(a = undefined, b = void 0, [c = void 0] = [], { d = undefined } = {}) { return [a, b, c, d]; } sink(f, function (a = void 0) { return a; }(), (function (a = void 0) { return a; })(1));",
+		{ lhs_constants: false }
+	],
+	[
+		"defaults that evaluate to `undefined`, keep_fargs off, constants kept right",
+		"function f(a = void 0) { return a; } sink(f);",
+		{ keep_fargs: false, lhs_constants: false }
+	],
+	[
+		"nullish checks of the same subject, constants kept right",
+		"var x = g(); sink(x === null || x === void 0 ? 1 : x, x === void 0 || x === null ? 1 : x, x == null ? 1 : x, null == x ? 1 : x, x === null || x === null ? 1 : x, x === null || y === void 0 ? 1 : x, x > null || x === void 0 ? 1 : x, x !== null || x === void 0 ? 1 : x, (x === null) | (x === void 0) ? 1 : x, x === void 0 || void 0 === x ? 1 : x, null === x || x === undefined ? 1 : x);",
+		{ ecma: 2020, lhs_constants: false }
+	],
+	[
+		"calls differing in one argument, constants kept right",
+		"var x = g(), y = g(), z = g(), w = g(); sink(x ? f(1, 2) : f(1, 3), x ? f(...y) : f(...y), x ? f(1, ...y) : f(2, ...y), x ? f(1, z) : f(2, ...z), x ? f(1, 2, ...y) : f(2, 3, ...y), x ? f(1, 2, z) : f(2, 3, z), x ? f(1) : f(1));",
+		{ lhs_constants: false }
+	],
+	[
+		"conditionals folding into logical expressions, constants kept right",
+		"var x = g(), y = g(), z = g(), w = g(); sink(x ? y : (z, y), x ? y : z && y, x ? y ? z : w : w, x ? y || z : z, x ? true : false, x ? false : true, x ? !0 : !1, x ? 1 : 0, x ? !1 : 1);",
+		{ lhs_constants: false }
+	],
+	[
+		"conditionals in tests, constants kept right",
+		"var x = g(), y = g(), z = g(), w = g(); if (x ? true : false) g(); if (x ? false : true) g(); if (x ? 1 : 0) g(); if (x ? 0 : 1) g(); if (x ? !0 : y) g();",
+		{ lhs_constants: false }
+	],
+	[
+		"booleans as integers, constants kept right",
+		"var x = g(), y = g(), z = g(), w = g(); sink(x === true, x !== false, x == true, true, !0, x ? true : false);",
+		{ booleans_as_integers: true, lhs_constants: false }
+	],
+	[
+		"booleans compared loosely, constants kept right",
+		"var x = g(), y = g(), z = g(), w = g(); sink(x == true, x != false, true == x);",
+		{ lhs_constants: false }
+	],
+	[
+		"nullish checks of the same subject without comparisons, constants kept right",
+		"var x = g(); sink(x === null || x === void 0 ? 1 : x, x === void 0 || x === null ? 1 : x, null === x || void 0 === x ? 1 : x, x === null || x === null ? 1 : x, x === null || y === void 0 ? 1 : x, x > null || x === void 0 ? 1 : x, x === null || x > void 0 ? 1 : x, x === 1 || x === void 0 ? 1 : x, x == null || x === void 0 ? 1 : x, x === null || g() ? 1 : x, null == x ? 1 : x, x == null ? 1 : x, x == null ? 1 : y);",
+		{ comparisons: false, lhs_constants: false },
+		{ ecma: 2020 }
+	],
+	[
+		"binary operations of sequences, constants kept right",
+		"var n = g(), y = g(); sink(n + (1, g(), y), n + (1, 2, y), n + (g(), y), (g(), n) + y); n = (g(), y); n += (g(), y); n.p = (g(), y);",
+		{ lhs_constants: false }
+	],
+	[
+		"binary operations of sequences, unsafe, constants kept right",
+		"var n = g(), y = g(); sink(n + (1, g(), y), n * (2, h(), y));",
+		{ unsafe: true, side_effects: false, lhs_constants: false }
+	],
+	[
+		"comparisons of operations, constants kept right",
+		"var x = g(), y = g(), i = g() | 0; sink(x + y == void 0, x + y != void 0, (i << 1) == 0, (i << 1) != 0, (i >> 1) === 0, 1n + x == 1n);",
+		{ lhs_constants: false }
+	],
+	[
+		"comparisons of BigInt operations",
+		"var x = g(), y = g(); sink(1n * x == 2n * y, (x + 1n) != (y + 1n));",
+		{}
+	],
+	[
+		"`typeof` compared strictly with `undefined`",
+		"var x = g(); sink(typeof x === 'undefined', typeof x !== 'undefined', typeof x.p === 'undefined', void 0 === x, x !== void 0);",
+		{ lhs_constants: false }
+	],
+	[
+		"32-bit masks compared with what no mask reduces",
+		"var i = g() | 0, j = g() | 0; sink((i | 1) == 1, (i & 1) == 0.5, (i & j) == 3, (1 & i) != 1, (i & 3) == 3);",
+		{ lhs_constants: false }
+	],
+	[
+		"concatenations of strings with empty strings",
+		"var x = g(); sink(('a' + x) + '', '' + (x + 'a'), '' + x + 'a', ('' + x) + ('' + x), (x + 'a') + (g() + 'b'), (x + 'a') + ('b' + g()));",
+		{}
+	],
+	[
+		"arithmetic regrouped about a constant",
+		"var x = g(), y = g(); sink((+x + 2) + 3, (2 + +x) + 3, (+x * 2) * 3, (2 * +x) * 3, (x | 1) | (2 | y), (x & 1) & (2 & y), (x ^ 1) ^ (2 ^ y), 5 & (x | y), 5 & (x | 2), (x | 0) & 0, (x | 0) | 0, ~x & 0);",
+		{ lhs_constants: false }
+	],
+	[
+		"`void 0` where a variable named `undefined` is in scope",
+		"function f(undefined) { var a = void 0; return [a, 1 + void 0, undefined]; } sink(f);",
+		{ unsafe_undefined: true }
+	],
+	[
+		"functions called in place whose statements run nothing",
+		"(function (a) { switch (a) { case 1: a; default: a; } })(1); (function (a) { if (a) a; else a; })(1); (function (a) { try { a; } catch (e) { a; } finally { a; } })(1); (function (a) { for (; 0; ); while (0); do ; while (0); { a; } ; a: a; })(1); (function (a) { if (a) a; })(1); (function (a) { try { a; } catch (e) {} })(1); (function (a) { try { a; } finally {} })(1); (function (a) { var b = 1, c; let d; const e = 2; })(1); (function (a) { return `${a}${1}`; })(1); (function (a) { class C extends (a, Object) {} })(1); (function (a) { switch (g()) {} })(1); (function (a) { switch (a) { case g(): } })(1);",
+		{ inline: false, reduce_vars: false, collapse_vars: false }
+	],
+	[
+		"functions called in place whose statements may throw",
+		"function f() { var a = g(), b; try { b = 1; switch (a) { case 1: h(); } if (a) h(); else k(); try { h(); } finally { k(); } var c = 1, d = g(); a = { [g()]: 1 }; a = class { static x = h(); }; a = class { [g()]() {} }; a = class extends h() {}; } catch (e) { return b; } return [a, b, c, d]; } sink(f);",
+		{}
+	],
+	[
+		"unused classes whose static blocks run nothing",
+		"var x = 1; (class { static { switch (x) { case 1: x; default: x; } } }); (class { static { if (x) x; else x; } }); (class { static { try { x; } catch (e) { x; } finally { x; } } }); (class { static { for (; 0; ); while (0); do ; while (0); { x; } a: x; } }); (class { static { if (x) x; } }); (class { static { try { x; } catch (e) {} } }); (class { static { var b = 1, c; let d; const e = 2; } }); (class { static { `${x}${1}`; } }); (class { static { switch (g()) {} } }); (class { static { switch (x) { case g(): } } }); (class { static { if (g()) ; } }); (class { static { if (x) g(); } }); (class { static { if (x) ; else g(); } }); (class { static { try { g(); } catch (e) {} } }); (class { static { try { } catch (e) { g(); } } }); (class { static { try { } finally { g(); } } }); (class { static { import('a'); } }); (class { static { import.source('a'); } });",
+		{ conditionals: false, dead_code: false, switches: false, if_return: false, sequences: false, booleans: false, loops: false, join_vars: false, collapse_vars: false, reduce_vars: false, inline: false, evaluate: false }
+	],
+	[
+		"classes used once whose static blocks may throw",
+		"!function () { var x = sink(); var C0 = class { static { switch (x) { case 1: x; default: x; } } }; sink(C0); }(); !function () { var x = sink(); var C1 = class { static { switch (g()) {} } }; sink(C1); }(); !function () { var x = sink(); var C2 = class { static { switch (x) { case g(): } } }; sink(C2); }(); !function () { var x = sink(); var C3 = class { static { switch (x) { case 1: g(); } } }; sink(C3); }(); !function () { var x = sink(); var C4 = class { static { if (x) x; else x; } }; sink(C4); }(); !function () { var x = sink(); var C5 = class { static { if (g()) ; } }; sink(C5); }(); !function () { var x = sink(); var C6 = class { static { if (x) g(); } }; sink(C6); }(); !function () { var x = sink(); var C7 = class { static { if (x) ; else g(); } }; sink(C7); }(); !function () { var x = sink(); var C8 = class { static { if (x) x; } }; sink(C8); }(); !function () { var x = sink(); var C9 = class { static { try { x; } catch (e) { x; } finally { x; } } }; sink(C9); }(); !function () { var x = sink(); var C10 = class { static { try { g(); } catch (e) {} } }; sink(C10); }(); !function () { var x = sink(); var C11 = class { static { try { x; } catch (e) { g(); } } }; sink(C11); }(); !function () { var x = sink(); var C12 = class { static { try { x; } finally { g(); } } }; sink(C12); }(); !function () { var x = sink(); var C13 = class { static { try { x; } catch (e) {} } }; sink(C13); }(); !function () { var x = sink(); var C14 = class { static { var b = 1, c; } }; sink(C14); }(); !function () { var x = sink(); var C15 = class { static { var d = g(); } }; sink(C15); }(); !function () { var x = sink(); var C16 = class { static { let e; } }; sink(C16); }(); !function () { var x = sink(); var C17 = class { static { const f = 2; } }; sink(C17); }(); !function () { var x = sink(); var C18 = class { static { x; } }; sink(C18); }(); !function () { var x = sink(); var C19 = class { static { { x; } } }; sink(C19); }(); !function () { var x = sink(); var C20 = class { static { a: x; } }; sink(C20); }(); !function () { var x = sink(); var C21 = class { static { for (; 0; ); } }; sink(C21); }(); !function () { var x = sink(); var C22 = class { static { x.y; } }; sink(C22); }(); !function () { var x = sink(); var C23 = class { static { this.z; } }; sink(C23); }();",
+		{ conditionals: false, dead_code: false, switches: false, if_return: false, sequences: false, booleans: false, loops: false, join_vars: false, collapse_vars: false, evaluate: false, side_effects: false }
+	],
+	[
+		"classes used once whose members may throw",
+		"!function () { var x = sink(); var A = class { static [x] = 1; }; sink(A); }(); !function () { var x = sink(); var B = class { [x] = 1; }; sink(B); }(); !function () { var x = sink(); var D = class { static y = x; }; sink(D); }(); !function () { var x = sink(); var E = class { static y; }; sink(E); }(); !function () { var x = sink(); var F = class extends x {}; sink(F); }(); !function () { var x = sink(); var G = class { static m() {} }; sink(G); }(); !function () { var x = sink(); var H = function () { x; }; sink(H); }(); !function () { var x = sink(); var I = () => x; sink(I); }();",
+		{}
+	],
+	[
+		"a `var` of more declarations than collapse_vars reads",
+		"function f() { var v0 = g(0), v1 = g(1), v2 = g(2), v3 = g(3), v4 = g(4), v5 = g(5), v6 = g(6), v7 = g(7), v8 = g(8), v9 = g(9), v10 = g(10), v11 = g(11), v12 = g(12), v13 = g(13), v14 = g(14), v15 = g(15), v16 = g(16), v17 = g(17), v18 = g(18), v19 = g(19), v20 = g(20), v21 = g(21), v22 = g(22), v23 = g(23), v24 = g(24), v25 = g(25), v26 = g(26), v27 = g(27), v28 = g(28), v29 = g(29), v30 = g(30), v31 = g(31), v32 = g(32), v33 = g(33), v34 = g(34), v35 = g(35), v36 = g(36), v37 = g(37), v38 = g(38), v39 = g(39), v40 = g(40), v41 = g(41), v42 = g(42), v43 = g(43), v44 = g(44), v45 = g(45), v46 = g(46), v47 = g(47), v48 = g(48), v49 = g(49), v50 = g(50), v51 = g(51), v52 = g(52), v53 = g(53), v54 = g(54), v55 = g(55), v56 = g(56), v57 = g(57), v58 = g(58), v59 = g(59), v60 = g(60), v61 = g(61), v62 = g(62), v63 = g(63), v64 = g(64), v65 = g(65), v66 = g(66), v67 = g(67), v68 = g(68), v69 = g(69), v70 = g(70), v71 = g(71), v72 = g(72), v73 = g(73), v74 = g(74), v75 = g(75), v76 = g(76), v77 = g(77), v78 = g(78), v79 = g(79), v80 = g(80), v81 = g(81), v82 = g(82), v83 = g(83), v84 = g(84), v85 = g(85), v86 = g(86), v87 = g(87), v88 = g(88), v89 = g(89), v90 = g(90), v91 = g(91), v92 = g(92), v93 = g(93), v94 = g(94), v95 = g(95), v96 = g(96), v97 = g(97), v98 = g(98), v99 = g(99), v100 = g(100), v101 = g(101), v102 = g(102), v103 = g(103), v104 = g(104), v105 = g(105), v106 = g(106), v107 = g(107), v108 = g(108), v109 = g(109), v110 = g(110), v111 = g(111), v112 = g(112), v113 = g(113), v114 = g(114), v115 = g(115), v116 = g(116), v117 = g(117), v118 = g(118), v119 = g(119), v120 = g(120), v121 = g(121), v122 = g(122), v123 = g(123), v124 = g(124), v125 = g(125), v126 = g(126), v127 = g(127), v128 = g(128), v129 = g(129), v130 = g(130), v131 = g(131), v132 = g(132), v133 = g(133), v134 = g(134), v135 = g(135), v136 = g(136), v137 = g(137), v138 = g(138), v139 = g(139), v140 = g(140), v141 = g(141), v142 = g(142), v143 = g(143), v144 = g(144), v145 = g(145), v146 = g(146), v147 = g(147), v148 = g(148), v149 = g(149), v150 = g(150), v151 = g(151), v152 = g(152), v153 = g(153), v154 = g(154), v155 = g(155), v156 = g(156), v157 = g(157), v158 = g(158), v159 = g(159), v160 = g(160), v161 = g(161), v162 = g(162), v163 = g(163), v164 = g(164), v165 = g(165), v166 = g(166), v167 = g(167), v168 = g(168), v169 = g(169), v170 = g(170), v171 = g(171), v172 = g(172), v173 = g(173), v174 = g(174), v175 = g(175), v176 = g(176), v177 = g(177), v178 = g(178), v179 = g(179), v180 = g(180), v181 = g(181), v182 = g(182), v183 = g(183), v184 = g(184), v185 = g(185), v186 = g(186), v187 = g(187), v188 = g(188), v189 = g(189), v190 = g(190), v191 = g(191), v192 = g(192), v193 = g(193), v194 = g(194), v195 = g(195), v196 = g(196), v197 = g(197), v198 = g(198), v199 = g(199), v200 = g(200), v201 = g(201), v202 = g(202), v203 = g(203), v204 = g(204); return v204 + 1; } sink(f);",
+		{}
+	],
+	[
+		"writes through what never takes a property",
+		"var r = /a/, s = 'a'; function f(o) { var t = o; r.x = 1; s.y = 2; t.z = 3; this.w = 4; (0).v = 5; return [r, s, t]; } sink(f);",
+		{}
+	],
+	[
+		"unreachable declarations without names, and an export after a `throw`",
+		"function f() { return; var {} = g(), [] = h(); } sink(f);",
+		{}
+	],
+	[
+		"functions called in place passed what awaits",
+		"async function f() { return (function (a) { return a + 1; })(await g()); } async function k() { return (function (a, b) { return a + b; })(1, ...g()); } sink(f, k);",
+		{}
+	],
+	[
+		"a function called in place reading a name redeclared between",
+		"function f() { var a = g(); { let a = 2; sink(function () { return a; }()); } return a; } sink(f);",
+		{}
+	],
+	[
+		"an export after a top-level `throw`",
+		"throw 1; export var x = 1; export function y() {} export class Z {}",
+		{},
+		{ module: true }
+	],
+	[
+		"unsafe evaluations of literals' members",
+		"var k = g(); sink(`a${1}b`.length, `a`.length, { a: 1 }.a, { a: function () {} }.a, { get a() { return 1; } }.a, { [k]: 1 }.a, { a: 1, ['b']: 2 }.b, { a: k }.a, { __proto__: 1 }.a, [1, 2].length, [1, 2][5], [1, , 3][1], 'abc'.length, 'ab'[1], 'ab'[5], /a/.source, /a/g.global, /a\\n/.source, (function f() {}).name, (function () {}).name, (function (a, b) {}).length, (() => 1).name, Math.PI, Number.MAX_VALUE, [1, 2].join, 'ab'.charAt);",
+		{ unsafe: true }
+	],
+	[
+		"unsafe evaluations of `hasOwnProperty`",
+		"var o = g(); sink(Object.prototype.hasOwnProperty.call(o, 'a'), ({}).hasOwnProperty.call(o, 'a'), Object.prototype.hasOwnProperty.call(undeclared, 'a'), Object.prototype.hasOwnProperty.call({ a: 1 }, 'a'), {}.hasOwnProperty('a'), Object.prototype.toString.call(1));",
+		{ unsafe: true }
+	],
+	[
+		"evaluations of logical operators and identity",
+		"var a = g(); sink(0 || 1, 1 || 0, '' || 'x', 1 && 2, 0 && 2, null ?? 1, 0 ?? 1, void 0 ?? 2, [] === [], a === a, 1 === 1, 'a' == 'a', {} == {}, NaN === NaN);",
+		{ unsafe: true }
+	],
+	[
+		"evaluations of optional chains",
+		"var a = g(); sink(null?.a, (void 0)?.a.b, 'ab'?.length, [1]?.[0], ({ a: 1 })?.a, a?.b, null?.a.b.c, (0)?.toFixed);",
+		{ unsafe: true }
+	],
+	[
+		"evaluations of calls of literals' methods",
+		"sink('ab'.toUpperCase(), [1, 2].join('-'), 'a,b'.split(','), (1.5).toFixed(1), 'abc'.indexOf('b'), [1, 2].indexOf(2), 'ab'.charCodeAt(0), /a/.test('a'), 'ab'.slice(1), [3, 1].sort(), 'x'.repeat(3), (255).toString(16), 'ab'.concat('c'), [1].concat([2]), 'ab'.at(-1), Math.max(1, 2), String.fromCharCode(65), Number.parseFloat('1.5'), JSON.stringify({ a: 1 }));",
+		{ unsafe: true }
+	],
+	[
+		"evaluations of names holding literals",
+		"!function () { var o = { a: 1 }, s = 'ab', r = /x/g, f = function () {}, n = [1, 2]; sink(o.a, s.length, r.source, f.name, n.length, n[1], o.b, s[0]); }();",
+		{ unsafe: true }
+	],
+	[
+		"BigInt operands compared strictly",
+		"var x = g(), y = g(), b = g(); sink((x ? 1n : 2n) === (y ? 3n : 4n), (1n + 2n) === (b += 1n), (g(), 1n) === (g(), 2n), (b = 1n) !== 2n, (b *= 2n) === 3n, (1n + x) === 1n, (x + 1n) === 1n, (b <<= 1n) === 1n);",
+		{}
+	],
+	[
+		"`void` of what runs nothing, and names holding `null`",
+		"!function () { var n = null, u = void 0, a = g(); sink(void a === a, a === void a, n ?? 1, u ?? 2, n?.p, (void a)?.p); }();",
+		{ ecma: 2020 }
+	],
+	[
+		"nullish chains as statements",
+		"var o = g(); null?.a.b; (void 0)?.[o]; o?.[g()]; o?.a[g()]; null?.(); (void 0)?.a(); `${g()}`; `${o}`; o?.[1];",
+		{}
+	],
+	[
+		"bitwise negations of numbers",
+		"var x = g(), y = g(), b = g(); sink(~(x ^ 5), ~(x ^ -6), ~(x ^ 1e3), ~(x ^ ~y), ~(~x ^ 5));",
+		{}
+	],
+	[
+		"`try` without `catch` queried for throws",
+		"function f() { var a = g(); try { a = h(); } finally { k(); } return a; } function m() { var b = g(); try { b = h(); } finally { } return b; } sink(f, m);",
+		{}
+	],
+	[
+		"values collapsed whose evaluation may throw",
+		"function f(x) { var a = x?.y?.(), c; sink(a); var b = null?.(); sink(b); var d = { [x.y]: 1, z: 2 }; sink(d); var e = x.y; c = e; sink(c); }",
+		{}
+	],
+	[
+		"property reads under pure_getters",
+		"function f(o, p) { var a = {}.x, b = o.y, c = (o || p).z, d = (o && p).w, e = Math.x, u = undefined.x; return [a, b, c, d, e]; } sink(f);",
+		{ pure_getters: true, unsafe: true }
+	],
+	[
+		"property reads under pure_getters, sloppy",
+		"function f(o, p) { o.x; ({}).y; (o || p).z; (o && p).w; (o ?? p).v; Math.x; this.x; arguments.x; (function () {}).x; (1).x; 'a'.x; [].x; }",
+		{ pure_getters: "strict" }
+	],
+	[
+		"constant classes",
+		"const A = class { static [1] = 2; static a = 3; m() { return this; } }; const B = class { static b = g(); }; const C = class { [g()]() {} }; const D = class { static { g(); } }; const E = class extends Object {}; const F = class { static f = () => this; }; sink(A, B, C, D, E, F);",
+		{ toplevel: true }
+	],
+	[
+		"a property written then called",
+		"function f(o) { o.x = h(); o.x(); } function k(o) { o.x = h(); o.y(o.x); } sink(f, k);",
+		{}
+	],
+	[
+		"functions called in place passed identifier atoms",
+		"sink((function (a, b) { return a + b; })(NaN, 1), (function (a) { return [a, a]; })(Infinity), (function (a) { return typeof a; })(undefined));",
+		{}
+	],
+	[
+		"functions called in place with repeated or rest parameters",
+		"sink((function (a, a) { return a; })(1, 2), (function (...a) { return a; })(1, 2), (function (...a) { return a; })(1, g()), (function (a, ...b) { return [a, b]; })(g(), h()));",
+		{},
+		{ module: false }
+	],
+	[
+		"a collapse into `switch` cases",
+		"function f(x) { var a = g(); switch (x) { case a: h(); break; case 2: k(); default: m(); } } function q(x) { var a = g(); switch (x) { default: m(); case a: h(); } } function r(x) { var a = g(), b = h(); switch (a) { case b: k(); } } sink(f, q, r);",
+		{}
+	],
+	[
+		"a collapse stopped at a test or a case",
+		"function f(x) { var a; (a = g()) ? h(a) : k(a); } function q(x) { var a; switch (x) { case (a = g()): h(a); } } function r(x) { var a = g(); x ? a : h(); return a; } sink(f, q, r);",
+		{}
+	],
+	[
+		"a `var` copying `arguments`",
+		"function f() { var a = arguments; return a[0] + a.length; } function k() { var b = arguments, c = b; return c; } sink(f, k);",
+		{}
+	],
+	[
+		"a collapse past a function call in a `try`",
+		"function f() { var a = x.y; try { (function () { g(); })(); } catch (e) {} return a; } function k() { var a = x.y; (function () { g(); })(); return a; } sink(f, k);",
+		{}
+	],
+	[
+		"a collapse reading names a function called in place redeclares",
+		"function f() { var a = g(); return (function () { var a = 2; return a + 1; })() + a; } function k(b) { var a = b; { let b = 3; sink(function () { return a + b; }()); } } sink(f, k);",
+		{}
+	],
+	[
+		"`if` statements before a `throw`",
+		"function f(x) { if (x) { throw 1; } throw 2; } function k(x) { if (x) throw (g(), 1); throw 2; } function m(x) { if (x) throw 1; throw (g(), 2); } function n(x) { if (x) { g(); } throw 2; } sink(f, k, m, n);",
+		{}
+	],
+	[
+		"repeated directives",
+		"function f() { 'use strict'; 'use strict'; 'a'; 'a'; return this; } sink(f);",
+		{}
+	],
+	[
+		"`global_defs` read, written, as a key and through members",
+		"if (DEBUG) sink(1); sink(obj.x, obj.y, o[DEBUG], DEBUG.z, alert(2), CONF, CONF.a, typeof DEBUG); DEBUG = 1; obj.x = 2; obj.x++; sink(obj?.x, (DEBUG), function (DEBUG) { return DEBUG; }); var { DEBUG: d } = o; for (DEBUG in o);",
+		{ global_defs: { DEBUG: false, "obj.x": 1, "@alert": "console.log", "import.meta.env": { MODE: "p" }, CONF: { a: [1, { b: 2 }], c: null } } }
+	],
+	[
+		"`global_defs` of `import.meta`",
+		"sink(import.meta.env, import.meta.env.MODE, import.meta.url);",
+		{ global_defs: { DEBUG: false, "obj.x": 1, "@alert": "console.log", "import.meta.env": { MODE: "p" }, CONF: { a: [1, { b: 2 }], c: null } } },
+		{ module: true }
+	],
+	[
+		"`global_defs` beside `new.target`, a destructured default holding a function, and `console` read otherwise",
+		"function F() { sink(new.target, DEBUG); } var [a = function () { var q = 1; return q; }] = o; sink(F, a); foo.log(1); window.console.log(2); console.log(3);",
+		{ global_defs: { DEBUG: false, "obj.x": 1, "@alert": "console.log", "import.meta.env": { MODE: "p" }, CONF: { a: [1, { b: 2 }], c: null } }, drop_console: true }
+	],
+	[
+		"`global_defs` beside a string re-export",
+		"export { \"a\" as \"b\" } from \"m\"; export { \"c\" } from \"m\"; sink(DEBUG);",
+		{ global_defs: { DEBUG: false, "obj.x": 1, "@alert": "console.log", "import.meta.env": { MODE: "p" }, CONF: { a: [1, { b: 2 }], c: null } } },
+		{ module: true }
+	],
+	[
+		"functions `Function` makes in a pass, read for unused names",
+		"function f() { var g = Function(), h = Function('a', 'return a'), k = Function(); sink(g, h); return function () { return Function(); }; } sink(f);",
+		{ unsafe: true, unsafe_Function: true }
+	],
+	[
+		"functions `Function` makes in a pass, in a class, a loop and a label",
+		"function f(o) { var g = Function(); class C { m() { return Function(); } } for (var k in o) g = Function(); a: for (;;) { g = Function(); break a; } sink(g, C); } sink(f);",
+		{ unsafe: true, unsafe_Function: true }
+	],
+	[
+		"unused classes and labeled loops",
+		"function f(o) { class A {} class B { static x = g(); } a: for (var i = 0; i < 1; i++) { if (o) break a; } b: { var j = 1; } sink(j); } sink(f);",
+		{}
+	],
+	[
+		"optional reads of nullish values",
+		"var u; var n = null; (void 0)?.a; u?.b; n?.[f()]; (void g())?.c; null?.(f()); (void 0)?.a.b; sink(u?.x, n?.[1]);",
+		{}
+	],
+	[
+		"optional reads that may throw",
+		"var u; try { (void 0)?.a; u?.b.c; null?.[x]; (void 0)?.(); } catch (e) {} sink(1);",
+		{ side_effects: true }
+	],
+	[
+		"`try` without `catch` in a dropped function",
+		"function f() { try { a(); } finally { b(); } } function h() { try { a(); } finally {} } sink(f, h);",
+		{ unused: true }
+	],
+	[
+		"an object property whose computed key may throw",
+		"var o = { [a.b]: 1 }; var p = { [k]: c.d }; sink(1);",
+		{ toplevel: true, unused: true }
+	],
+	[
+		"an arrow reading `this` in a class of constants",
+		"var C = class { static x = () => this; }; var D = class { static [1] = 2; static y = 3; static { } }; sink(1);",
+		{ toplevel: true, unused: true }
+	],
+	[
+		"bitwise negations of numbers",
+		"sink(~1, ~-1, ~123456789012, ~~a, ~(~a | 0), ~(a & 1), ~~(b >>> 0));",
+		{}
+	],
+	[
+		"`typeof` of a known native",
+		"sink(typeof !0, typeof [].x, typeof (1).toFixed, typeof true.valueOf);",
+		{ unsafe: true }
+	],
+	[
+		"comparisons with `undefined`",
+		"function f(a) { var u; return [u === void 0, void 0 === a, u == null]; } sink(f());",
+		{}
+	],
+	[
+		"a negated sequence as a condition",
+		"if (!(a(), b)) c(); else d();",
+		{}
+	]
+];
+
+/** @type {[string, string, import("terser").MinifyOptions][]} */
+const BEHAVIOUR_CASES = [
+	[
+		"a function called in place passed a parameter its body declares again in a block",
+		"function g(a) { (function (x) { try { console.log(1); } catch (e) {} { let a = Math.max(x, 3); console.log(x, a, a); } })(a); } g(1);",
+		{ compress: {}, mangle: false, ecma: 2020 }
+	],
+	[
+		"a function called in place passed a call, its body declaring a `var` in a loop",
+		"function f() { return 3; } function g() { (function (x) { try { console.log(1); } catch (e) {} for (var i = 0; i < 2; i++) console.log(x, i); })(f()); } g();",
+		{ compress: {}, mangle: false, ecma: 2020 }
+	],
+	[
+		"a function called in place passed a call, its body making a closure",
+		"function f() { return 3; } function g() { (function (x) { try { console.log(1); } catch (e) {} console.log([1].map(function (v) { return v + x; })); })(f()); } g();",
+		{ compress: {}, mangle: false, ecma: 2020 }
+	],
+	[
+		"a function called in place passed a call, its body declaring a function",
+		"function f() { return 3; } function g() { (function (x) { try { console.log(1); } catch (e) {} function q() { return x; } console.log(q(), typeof q); })(f()); } g();",
+		{ compress: {}, mangle: false, ecma: 2020 }
+	],
+	[
+		"functions called in place passed an anonymous function or class",
+		"function g() { (function (x) { try { console.log(1); } catch (e) {} console.log(x.name, x.length); })(function () {}); (function (x) { try { console.log(1); } catch (e) {} console.log(x.name, x.length); })(class {}); } g();",
+		{ compress: {}, mangle: false, ecma: 2020 }
+	],
+	[
+		"an inner function called in place declaring a name the outer call's argument reads",
+		"var x = 5; function h() { return 7; } function g() { (function (p) { try { console.log(1); } catch (e) {} (function (x) { try { console.log(1); } catch (e) {} console.log(x); })(h()); console.log(p); })(x + 1); } g();",
+		{ compress: {}, mangle: false, ecma: 2020 }
+	],
+	[
+		"a function called in place passed a parameter of a function reading `arguments`",
+		"function g(a) { (function (x) { try { console.log(1); } catch (e) {} console.log(x); })(a); return arguments.length; } console.log(g(1, 2));",
+		{ compress: {}, mangle: false, ecma: 2020 }
+	],
+	[
+		"a `concat` called optionally or on an optional array",
+		"console.log([1].concat?.([2]), [1]?.concat([2]), [1]['concat']([2]), [1].concat([2]).concat?.(3));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"parameters passed their own names in a loop",
+		"function f(fn, o) { var r = []; for (var i = 0; i < 2; i++) r.push((function (fn, o) { return fn(o) + i; })(fn, o)); return r; } console.log(f(JSON.stringify, { a: 1 }));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"parameters passed their own names in a loop, read by a method call",
+		"function f(fn, o) { var r = []; for (var i = 0; i < 2; i++) r.push((function (fn, o) { return fn.call(o, i); })(fn, o)); return r; } console.log(f(function (i) { return this.a + i; }, { a: 1 }));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"parameters passed their own names in a loop, the value called",
+		"function f(fn, o) { var r = []; for (var i = 0; i < 2; i++) r.push((function (fn, o) { return fn.bind(o); })(fn, o)(i)); return r; } console.log(f(function (i) { return this.a + i; }, { a: 1 }));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"parameters passed their own names in a loop, the value a tag",
+		"function f(fn, o) { var r = []; for (var i = 0; i < 2; i++) r.push((function (fn, o) { return fn.bind(o); })(fn, o)`x${i}`); return r; } console.log(f(function (s, i) { return this.a + i; }, { a: 1 }));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"parameters passed their own names in a loop, the value read by typeof",
+		"function f(fn, o) { var r = []; for (var i = 0; i < 2; i++) r.push(typeof (function (fn, o) { return fn[o]; })(fn, o)); return r; } console.log(f({ a: 1 }, 'a'));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"parameters passed their own names in a loop, a chain read through",
+		"function f(fn, o) { var r = []; for (var i = 0; i < 2; i++) r.push((function (fn, o) { return fn?.[o]; })(fn, o).length); return r; } console.log(f({ a: [1] }, 'a'));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"parameters passed their own names in a loop, a string statement",
+		"function f(fn, o) { for (var i = 0; i < 2; i++) (function (fn, o) { return 'str'; })(fn, o); return i; } console.log(f({ a: [1] }, 'a'));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"parameters passed their own names in a loop, a `let` and a `var` holding them",
+		"function f(p, q) { let fn = p.f; var o = q.k; var r = [fn, o]; for (var i = 0; i < 2; i++) r.push((function (fn, o) { return fn[o] + [1].map(function () { return i; })[0]; })(fn, o)); return r; } console.log(f({ f: { a: 1 } }, { k: 'a' }));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"parameters passed their own names in a loop, a `const` and a function",
+		"function f(p) { const fn = p.f; function o() { return 'a'; } var r = [fn]; for (var i = 0; i < 2; i++) r.push((function (fn, o) { return fn[o()] + i; })(fn, o)); return r; } console.log(f({ f: { a: 1 } }));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"parameters passed their own names in a loop, the value assigned",
+		"function f(fn, o) { var r; for (var i = 0; i < 2; i++) r = (function (fn, o) { return fn[o]; })(fn, o); return r; } console.log(f({ a: 1 }, 'a'));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a `catch` returning nothing before the end of its function",
+		"function g(x) { if (x) throw x; return 2; } function f(x) { try { g(x); } catch (e) { return; } } console.log(f(0), f(1));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a `catch` return before a function declaration",
+		"function g(x) { if (x) throw x; return 2; } function f(x) { try { g(x); } catch (e) { return 1; } function h() {} console.log(typeof h); return 1; } console.log(f(0), f(1));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a `catch` return before a bare `var`",
+		"function g(x) { if (x) throw x; return 2; } function f(x) { try { g(x); } catch (e) { return 1; } var z; console.log(z); return 1; } console.log(f(0), f(1));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a `catch` return in a nested `catch`",
+		"function g(x) { if (x) throw x; return 2; } function f(x) { try { g(x); } catch (e) { try { g(e); } catch (e2) { return 1; } } return 1; } console.log(f(0), f(1));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a `catch` return in a block",
+		"function g(x) { if (x) throw x; return 2; } function f(x) { { try { g(x); } catch (e) { return 1; } } return 1; } console.log(f(0), f(1));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a `catch` return in a switch branch",
+		"function g(x) { if (x) throw x; return 2; } function f(x, k) { switch (k) { case 1: try { g(x); } catch (e) { return 1; } case 2: try { g(x); } catch (e) { return 1; } } return 1; } console.log(f(0, 1), f(1, 1), f(1, 2));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a `catch` return in a labeled statement and in an if",
+		"function g(x) { if (x) throw x; return 2; } function f(x, k) { a: if (k) try { g(x); } catch (e) { return 1; } return 1; } console.log(f(0, 1), f(1, 1), f(1, 0));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a `catch` return at the top level",
+		"function g(x) { if (x) throw x; } try { g(1); } catch (e) { return 1; }",
+		{ compress: {}, mangle: false, parse: { bare_returns: true } }
+	],
+	[
+		"bare `var`s of one name joined",
+		"function f(x) { var a = x + 1; if (x) { var a; var b; } return [a, b]; } console.log(f(1));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a bare `var` followed by a bare `return`",
+		"function f(x) { var a; return; } console.log(f(1));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a write into a bare `var` before an object literal read",
+		"function f(x) { var a; a = x, ({}).y++; a = x, ({}, x).y; a = x, ({})?.y; a = x, (function () {})``; return a; } console.log(f(1));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a bare var write after a `with`",
+		"function f(o) { var a; with (o) a = b, c(); return a; } console.log(f({ b: 1, c: function () {} }));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a write into a bare `var` before an update of an object literal's property",
+		"function h(x) { return [x]; } function f(x) { var a, b; a = h(x), ({}).y++; try { b = h(a); } catch (e) {} return [a, b, a, b]; } console.log(f(1));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a write into a bare `var` before a sequence opening with an object",
+		"function h(x) { return [x]; } function f(x) { var a, b; a = h(x), ({ toString: h } + \"\", x).y = 2; try { b = h(a); } catch (e) {} return [a, b, a, b, x]; } console.log(f(1));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a write into a bare `var` before an optional chain on an object",
+		"function h(x) { return [x]; } function f(x) { var a, b; a = h(x), ({ y: h }).y?.(x); try { b = h(a); } catch (e) {} return [a, b, a, b]; } console.log(f(1));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a write into a bare `var` before a tagged template of a function",
+		"function h(x) { return [x]; } function f(x) { var a, b; a = h(x), (function () { console.log(2); })``; try { b = h(a); } catch (e) {} return [a, b, a, b]; } console.log(f(1));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a write into a bare `var` before a postfix update",
+		"function h(x) { return [x]; } function f(x) { var a, b; a = h(x), x++; try { b = h(a); } catch (e) {} return [a, b, a, b, x]; } console.log(f(1));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a write into a bare `var` before a write through an optional call of an object's method",
+		"function h(x) { return [x]; } function f(x) { var a, b; a = h(x), (({ y: h }).y?.(x)).z = 1; try { b = h(a); } catch (e) {} return [a, b, a, b]; } console.log(f(1));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a constructor forwarding a literal's spread or `arguments` or a rest parameter",
+		"class A { constructor(...a) { console.log(a.length); } } class B extends A { constructor() { super(...[1, 2]); } } class C extends A { constructor() { super(...arguments); } } class D extends A { constructor(...r) { super(...r); } } class E extends A { constructor(x, ...r) { super(...r); } } class F extends A { constructor(...r) { super(...arguments); } } new B(); new C(1); new D(1, 2, 3); new E(1, 2); new F(1);",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"calls spreading alike, or one spread, or spreads differing twice",
+		"function g() { console.log([].slice.call(arguments).join()); } function f(c, a, b) { c ? g(...a, ...b) : g(...a, ...a); c ? g(...a, 1) : g(...b, 2); c ? g(...a, ...a) : g(...b, ...b); c ? g(1, ...a) : g(...a, 1); c ? g(...a) : g(1); c ? g(a.x, ...a) : g(a.x, ...b); } f(1, [1], [2]); f(0, [1], [2]);",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a call through a parameter, a `var` or a sub of a computed key in each branch",
+		"function g() { console.log([].slice.call(arguments).join()); } function f(c, h, o, k) { var v = h; c ? h(1) : h(2); c ? v(1) : v(2); c ? o[k](1) : o[k](2); c ? o.m().n(1) : o.m().n(2); c ? this.m(1) : this.m(2); c ? o.m(1) : o.m(2); (function () {}, c) ? o.m(1) : o.m(2); (c, k) ? o.m(1) : o.m(2); } var o = { m: function (x) { console.log(x); return o; }, n: g }; f.call(o, 1, g, o, 'm'); f.call(o, 0, g, o, 'm');",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a call through a member differing in two arguments, or after a read",
+		"function g() { console.log([].slice.call(arguments).join()); } function f(c, a) { var o = { m: g }; c ? o.m(1, a) : o.m(2, a.x); c ? o.m(a.y, 1) : o.m(a.y, 2); c ? o.m(1, 2) : o.m(3, 4); } f(1, {}); f(0, {});",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a call of a function, a `var` or a parameter nothing writes, in each branch of a test with effects",
+		"function f(t, p) { function h(x) { console.log(x); } var v = function (x) { console.log(-x); }; t() ? h(1) : h(2); t() ? v(1) : v(2); t() ? p(1) : p(2); } var n = 0; f(function () { return n++ % 2; }, console.log); f(function () { return 1; }, console.log);",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a call through a member, the test a parameter `arguments` aliases",
+		"function f(c, o) { c ? o.m(1) : o.m(2); return arguments.length; } var o = { m: console.log }; f(1, o); f(0, o);",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a call through a member, the test reading a global, then a parameter",
+		"function f(c, o) { (g === c || c) ? o.m(1) : o.m(2); } var g = 1, o = { m: console.log }; f(1, o); f(-1, o);",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a call through a member, the test reading a function",
+		"function f(c, o) { c == (() => 1) ? o.m(1) : o.m(2); } var o = { m: console.log }; f(1, o); f(0, o);",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a call through a member, the test reading a `var` assigned later",
+		"function f(c, o) { var v; v = c; v ? o.m(1) : o.m(2); v = 2; return v; } var o = { m: console.log }; f(1, o); f(0, o);",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a call of a parameter nothing writes, in each branch of a test with effects",
+		"function f(t, p) { t() ? p(1) : p(2); } f(function () { return 0; }, console.log); f(function () { return 1; }, console.log);",
+		{ compress: { reduce_vars: true }, mangle: false }
+	],
+	[
+		"a `do … while` run once, a `let` after its leading `break`",
+		"function g(x) { console.log('g', x); return x; } function f(a) { do { if (a) break; let x = g(1); g(x); } while (0); } f(0); f(1);",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a `do … while` run once ending in branches that leave",
+		"function g(x) { console.log('g', x); return x; } function f(a) { do { g(0); if (a) { g(1); break; } else { g(2); continue; } } while (0); do { g(3); if (a) break; } while (0); } f(0); f(1);",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an `await` or `yield` of a sequence ending a sequence",
+		"function g(x) { console.log('g', x); return x; } async function f() { g(1), await (g(2), g(3)); } function* h() { g(4), yield (g(5), g(6)); } f(); h().next();",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"object literals spread into another",
+		"function g(x) { console.log('g', x); return x; } var o = { ...{ a: 1 }, ...{ ...{ b: 2 } }, ...{ m() { return 1; } }, ...{ __proto__: null }, ...{ ['__proto__']: 3 }, ...{ get c() { return 4; } }, ...function () {} }; var p = { m() { return 0; } }; var q = { __proto__: p, ...{ m() { return super.m(); } } }; console.log(JSON.stringify(o), o.m(), Object.keys(o).join(), q.m());",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a known function called with constants it cannot fold",
+		"!function () { function k({ a }) { return 1; } function l(a, b) { return a + (b === void 0); } function m(a) { return [a]; } function n(a) { return 'a long string, longer than the call ' + a; } function p(a) { return a.length; } console.log(k({}), k({}), l(1), l(1), m(1)[0], m(1)[0], n(1), n(1), p([1, 2]), p([1, 2])); }();",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an optional link on a sequence ending in `void` or `null`",
+		"function g(x) { console.log('g', x); return x; } console.log((g(1), void 0)?.x, (g(2), null)?.x, (g(3), undefined)?.x, (g(4), void g(5))?.x);",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a known function called with fewer constants than it has parameters",
+		"!function () { function l(a, b) { return a * a + a * 2 + a * 3 + a * 4 + (b === void 0); } console.log(l(1), l(1), l(2)); }();",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a known function called with an array, or returning one, under `unsafe`",
+		"!function () { function p(a) { return a.length * 2 + a.length * 3 + a.length; } function q(a) { return [a, a, a, a, a, a]; } console.log(p([1, 2]), p([1, 2]), q(1)[0], q(1)[1]); }();",
+		{ compress: { unsafe: true }, mangle: false }
+	],
+	[
+		"a known function called with `null`, returning `null`",
+		"!function () { function p(a) { return a === null ? null : a * 2 + a * 3 + a * 4 + a * 5 + a * 6; } console.log(p(null), p(null), p(1)); }();",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"`delete` of an undeclared global, and of `undefined`",
+		"function f() { return [delete foo, delete undefined, delete NaN]; } globalThis.foo = 1; console.log(f(), typeof foo);",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"`typeof` of a number or a string expression",
+		"function f(a) { return [typeof (a * 2), typeof (a + ''), typeof (a ? 1 : 2), typeof (a ? 'x' : 'y'), typeof +a]; } console.log(f(1));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a `do … while` whose test is truthy",
+		"function g(x) { console.log('g', x); return x; } function f() { do { g(1); if (g(0)) continue; break; } while (1); } f();",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"`concat` of a negated BigInt",
+		"console.log([1].concat(-1n, ~2n).length);",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a method of a variable holding an array, not a string",
+		"!function () { var a = [1, 2]; console.log(a.join(), a.join('-'), a.indexOf(2)); }();",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a built-in call reading an array where `Array.prototype` is patched",
+		"Array.prototype.toString = function () { return 'patched'; }; console.log(String([1, 2]), Math.max([3]), [1, 2].join());",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a `Math` call of another's result, or of a value not a number",
+		"console.log(Math.ceil(Math.sqrt(2)), Math.floor(Math.max(1, 2)), Math.round(Math.random()) < 2, Math.abs(Math.sign(-3)), Math.max(Math.min('a', 1), 2));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a regular expression's `source` the runtime rejects",
+		"try { console.log(/(?<a>x)|(?<a>y)/.source); } catch (e) { console.log(e.name); }",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"`Math` constants whose digits print longer",
+		"console.log(Math.PI, Math.E, Math.LN2, Number.MAX_VALUE, Number.MIN_VALUE);",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"`Math.pow` called optionally, with one argument, a spread, or a long result",
+		"var m = Math; console.log(Math?.pow(2, 3), Math.pow(2), Math.pow(...[2, 3]), Math.pow(2, 0.5), Math.pow(3, 40), m.pow(2, 4));",
+		{ compress: {}, mangle: false, ecma: 2016 }
+	],
+	[
+		"a `RegExp` call no shorter as a literal",
+		"console.log(RegExp('\\u2028').source, RegExp('/').source, RegExp('\\n').source, new RegExp('a', 'g').flags);",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"`Object.keys` where the program writes a member of `Object` under a quoted key",
+		"Object['a-b'] = 1; Object['c'] = 2; console.log(Object.keys({ x: 1 }), Object['a-b']);",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"built-in calls on BigInts and regular expressions, their values unread",
+		"BigInt(1n); Number(2n); new RegExp(/a/g); RegExp(/a/, 'i'); RegExp(/b/, undefined); new RegExp(); RegExp('a', undefined); new RegExp('/'); RegExp('a', 1); console.log(1);",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a `Math` call of another call's result or of a spread, its value unread",
+		"Math.max(Math.min(1, 2), 3); Math.max(Array(1)); Math.max(...[1, 2]); Math.max(...'12'); Math.max(...{}); Math.min(Object(1)); console.log(1);",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a built-in call where a direct `eval` may rebind it",
+		"function f() { eval(''); Math.max(1, 2); Number('1'); return 1; } console.log(f());",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"`Map` and `WeakMap` built from entries, their values unread",
+		"new Map([[1, 2]]); new Map(['ab']); new Map([[1]]); new Map([1]); new Map(['a']); new WeakMap([[{}, 1]]); new WeakMap([1]); console.log(1);",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"built-ins read as statements",
+		"Math; Math.max; Array.prototype.slice; Array.prototype; console.log(1);",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"`Object.keys`, `values` and `entries` of literals whose values run code or print long",
+		"function g(x) { console.log('g', x); return x; } console.log(Object.keys({ __proto__: g(1) }), Object.keys({ __proto__: null }), Object.keys([g(2)]), Object.keys([...'ab']), Object.keys([, 1]), Object.keys('ab'), Object.values('ab'), Object.entries('ab'), Object.entries('abcdefgh').length, Object.keys([function () {}]), Object.values([1, 2]));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"unread names destructured from what is never nullish",
+		"function f() { var { length } = 'ab'; var { x } = [1]; var { y } = function () {}; var { z } = 1; var { w } = {}; var { v } = null; } try { f(); } catch (e) { console.log(e.name); }",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a `RegExp` call of a pattern the runtime rejects, or with flags it rejects, under `unsafe`",
+		"try { RegExp('(', 'g'); } catch (e) { console.log(e.name); } try { RegExp('a', 'gg'); } catch (e) { console.log(e.name); } console.log(RegExp('a', 'g').flags);",
+		{ compress: { unsafe: true }, mangle: false }
+	],
+	[
+		"a loop whose leading `if` tests a name its block's function, class, `let` or `const` declares",
+		"function f(x) { var r = []; for (var i = 0; i < 3; i++) { if (typeof g == 'function') break; else r.push(i); function g() {} } for (var j = 0; j < 2; j++) { if (j) { r.push(j); } else break; let k = 1, { m } = { m: 2 }; const n = 3; class C {} r.push(k, m, n, typeof C); } return r; } console.log(f().join());",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"nullish checks written with the literal last",
+		"function g(v) { return v; } function f(x) { return [x === null || x === void 0 ? 1 : x, x === void 0 || x === null ? 2 : x, x == null ? 3 : x, x === null || x === null ? 4 : x, x === void 0 || x === void 0 ? 5 : x, x === null || g(x) === void 0 ? 6 : x]; } console.log(f(null), f(void 0), f(0), f(7));",
+		{ compress: {}, mangle: false, ecma: 2020 }
+	],
+	[
+		"comparisons with `undefined` and `typeof` written with the literal last",
+		"function g(v) { return v; } function f(x, o) { return [x == void 0, x != void 0, typeof x == 'undefined', typeof x != 'undefined', typeof o.p == 'undefined', typeof o.p !== 'undefined', x === x, o.q === void 0]; } console.log(f(1, {}), f(void 0, { p: 1 }));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"32-bit integers compared with zero, the literal last",
+		"function g(v) { return v; } function f(i, j) { i |= 0; j |= 0; return [(i & 1) == 0, (i & 1) != 0, (i | j) == 0, (i & 255) == 255, (i & 255) != 255, (i & 3) == 2, i + j == 0]; } console.log(f(1, 2), f(255, 0));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"concatenations with empty strings, the literal last",
+		"function g(v) { return v; } function f(x) { var s = '' + x; return [s + '', '' + s, '' + s + s, s + '' + x, s + ('' + s)]; } console.log(f(1));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"logical expressions of flagged values",
+		"function g(v) { return v; } function f(x, y) { var t = x && 1, u = x || 0; return [(x || 1) && y, (x && 0) && y, (x && 0) || y, (x || 1) || y, (x ? 1 : 2) && y, !x && 0 || y]; } console.log(f(0, 1), f(1, 2));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"arithmetic of a constant nested on the right",
+		"function g(v) { return v; } function f(n, i, j) { n = +n; i |= 0; j |= 0; return [(n + 2) + 3, (2 + n) + 3, (n * 2) * 3, (2 * n) * 3, (i | 1) | (2 | j), (i & 1) & (2 & j), (i ^ 1) ^ (2 ^ j), 5 & (i | 2), 5 & (2 | i), 1 & (i | 2), 3 & (i | 7), i & 0, (i | 0) & 0, i ^ -1, -1 ^ i, i & -1, -1 & i]; } console.log(f(1, 2, 3));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"property reads of a script's top-level names, a `let`, and an expression",
+		"var t = { p: 1 }; let u = { p: 2 }; function f() { return [t.p, u.p, (0, t).p, g().p]; } function g() { return { p: 3 }; } console.log(f());",
+		{ compress: { pure_getters: "strict", unsafe: true }, mangle: false }
+	],
+	[
+		"an assignment of a sequence whose effects come first",
+		"function g(v) { return v; } function f(o) { var x; x = (g(1), g(2), 3); o.p = (g(1), o.q, 4); o[g(5)] = (g(6), 7); return [x, o.p]; } console.log(f({ q: 1 }));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"logical expressions of what is always an object",
+		"function g(v) { return v; } function f(x) { var o; return [(g(1), {}) && x, (o = []) || x, (o = function () {}) && x, (g(2), /a/) ? 1 : 2, class {} || x, (() => 1) && x]; } console.log(f(0).length, f(1).length);",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"compound assignments in each branch of a test, to a member, a local, a script's `var` and `let`",
+		"var t = 1; let u = 2; function f(x, o) { var v = 3; x ? o.p += 1 : o.p += 2; x ? v += 1 : v += 2; x ? t += 1 : t += 2; x ? u *= 2 : u *= 3; return [o.p, v, t, u]; } console.log(f(1, { p: 0 }), f(0, { p: 0 }));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"`this` unread in a derived constructor, before and after `super()`",
+		"class A {} class B extends A { constructor() { super(); this; } } class C extends A { constructor() { super(), this; } } class D extends A { constructor() { var f = () => this; super(); this.x; f; } } class E extends A { constructor() { try { this; } catch (e) { console.log(e.name); } super(); } } class F extends A { constructor(a) { if (a) { super(); this; } else { super(); } } } console.log(new B() instanceof A, new C() instanceof A, new D() instanceof A, new E() instanceof A, new F(1) instanceof A);",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"`this` unread in a derived constructor, improvements off",
+		"class A {} class B extends A { constructor() { super(); this; } } console.log(new B() instanceof A);",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"BigInt operations whose operands are both or neither BigInts",
+		"function f(a, b) { a * b; 1n + 2n; 1 + 2; a / 0n; return [a + b]; } console.log(f(1n, 2n), f(1, 2));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"conversions of what `~`, an assignment, a relation, `>>>` or BigInts make",
+		"function f(a, b) { var s = '' + ~'1', t = '' + (a += 1), u = '' + (a < b), v = '' + (a >>> 1), w = '' + (1n * b - 2n * b), x = ~(a = 2) + '', y = '' + (a ? 1 : '2'); return [s, t, u, v, w, x, y]; } console.log(f(1, 3n));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"conversions of objects spreading arrays, strings, templates and objects",
+		"function f(a) { return '' + { ...[1], ...'ab', ...`c${a}`, ...{ d: 1 }, ...{ ...a } }; } console.log(f({ e: 2 }));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"templates of known kinds, and an empty string after a string",
+		"function f(a) { var s = '' + a; return [`${1}${'x'}${s}`, s + '', '' + s, `a${s}b${1}`, `${void a}`]; } console.log(f(2));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"evaluations throwing an error other than a type or range error",
+		"try { console.log(decodeURIComponent('%')); } catch (e) { console.log(e.name); } try { console.log(encodeURI('\\uD800')); } catch (e) { console.log(e.name); }",
+		{ compress: { unsafe: true }, mangle: false }
+	],
+	[
+		"computed keys of what may name the prototype",
+		"!function () { var k = ['__proto__'], o = { a: '__proto__' }, n = [1, 2]; console.log(Object.keys({ [k]: 1 }), Object.keys({ [n]: 1 }), Object.keys({ [o.a]: 1 }), Object.keys({ [[[]]]: 2 }), Object.keys({ [[...k]]: 3 })); }();",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"loose comparisons with `undefined` written to",
+		"function f(x) { var undefined; return [undefined == x, x != undefined, void 0 == x]; } console.log(f(null), f(1));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"`caller` and `arguments` of functions and classes",
+		"!function () { function f() {} class C {} var g = function () {}; try { console.log(f.caller, g.arguments, C.caller); } catch (e) { console.log(e.name); } try { console.log((() => 1).caller); } catch (e) { console.log(e.name); } }();",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"line breaks kept escaped in a directive, asm.js, an import attribute and an import's source, compressed",
+		"(\"a\\nb\"); function m() { \"use asm\"; var s = \"c\\nd\"; return {}; } console.log(m(), \"e\\nf\".length, { \"g\\nh\": 1 }[\"g\\nh\"]); var many = \"\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\"; console.log(many.length);",
+		{ compress: {}, mangle: false, ecma: 2015 }
+	],
+	[
+		"line breaks kept escaped in an import's attributes, compressed",
+		"import a from \"a\\nb\" with { type: \"c\\nd\" }; export * from \"e\\nf\"; export { g } from \"h\\ni\"; import(\"j\\nk\"); var many = \"\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\"; console.log(many.length);",
+		{ compress: {}, mangle: false, ecma: 2015, module: true }
+	],
+	[
+		"a `catch` return before a bare `var` the `try` writes",
+		"function g(x) { if (x) throw x; return 2; } function sink(v) { console.log(v); } function f(x) { try { z = g(x); sink(z); } catch (e) { return 1; } var z; return 1; } console.log(f(0), f(1));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a `catch` return before a function the `try` calls",
+		"function g(x) { if (x) throw x; return 2; } function sink(v) { console.log(v); } function f(x) { try { h(g(x)); } catch (e) { return 1; } function h(v) { sink(v); } return 1; } console.log(f(0), f(1));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a `catch` return in a block declaring a `let`",
+		"function g(x) { if (x) throw x; return 2; } function sink(v) { console.log(v); } function f(x) { { let q = g(0); try { sink(g(x) + q); } catch (e) { return 1; } } return 1; } console.log(f(0), f(1));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a `catch` return before a `return` of another value",
+		"function g(x) { if (x) throw x; return 2; } function sink(v) { console.log(v); } function f(x) { try { sink(g(x)); } catch (e) { return 1; } return 2; } console.log(f(0), f(1));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"bare `var`s of one name in blocks",
+		"function f(x) { var a = x + 1, b; if (x) { var a, c; c = 2; } for (;;) { var b; break; } return [a, b, c]; } console.log(f(1), f(0));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a bare `var` and a block left holding one statement in an `if`, or a loop",
+		"function f(x) { var a = x; if (x) { var b; sink(b); } else { var c; sink(c); } while (x--) { var d; sink(d); } if (x) { var e; for (;;) break; } for (; x < 0; x++) { var k; for (;;) break; } return a; } function sink() {} console.log(f(2));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"bare `var`s moved out of `else if` blocks left holding one statement",
+		"function g(x) { return [x]; } function sink(v) { console.log(v); } function f(x, o, a) { var b = g(x); try { sink(b); } catch (e) {} if (x) { var r; for (r in o) sink(r); } else if (a) { var s; sink(s); } if (x) { var r2; for (r2 in o) sink(r2); } else if (a) { var t; for (t of a) sink(t); } else { var u; sink(u); } return [b, r, s, t, u]; } console.log(f(1, { p: 1 }, [2]), f(0, {}, [3]), f(0, {}, 0));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"bare `var`s moved out of a labeled block and a loop's",
+		"function g(x) { return [x]; } function sink(v) { console.log(v); } function f(x, o) { var a = g(x); try { sink(a); } catch (e) {} for (;;) { if (x) { var k; for (k in o) sink(k); } else { var m; break; } x--; } label: { var q; for (q in o) break label; } return [a, k, m, q]; } console.log(f(1, { p: 1 }));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"bare `var`s of a name the first `var` declares",
+		"function g(x) { return [x]; } function sink(v) { console.log(v); } function f(x, o, a) { var b = g(x), s = 1; try { sink(b); } catch (e) {} if (x) { var r; for (r in o) sink(r); } else if (a) { var s, w; for (w of a) sink(w); } s = g(s); return [b, r, s, s]; } console.log(f(0, {}, [3]));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"unsafe reads of object literals keyed by computed constants, a prototype's method or a function",
+		"function f(x) { return [{ ['a']: 1 }.a, { [1 + 1]: 2 }[2], { [x]: 3 }.a, { toString: 4 }.toString, { a: function () {}, b: 5 }.b, { a: x, b: 6 }.b, { a: 1, b: [7] }.b[0]]; } console.log(f('q'));",
+		{ compress: { unsafe: true }, mangle: false }
+	],
+	[
+		"`typeof` of a regular expression and a template, unsafe",
+		"!function () { var t = `abc`, r = /a/; console.log(typeof /a/, typeof r, t.length, t + 1, typeof t); }();",
+		{ compress: { unsafe: true }, mangle: false }
+	],
+	[
+		"a function's name read under keep_fnames, unsafe",
+		"console.log((function f() {}).name, (function () {}).name, (function (a, b) {}).length, (function (a) {}).prototype === void 0, (function () {}).call.length);",
+		{ compress: { unsafe: true }, mangle: false, keep_fnames: true }
+	],
+	[
+		"unused names of destructured parameters and catch bindings",
+		"function f({ a, b }) { return a; } function g() { try { throw { c: 1, d: 2 }; } catch ({ c, d }) { return c; } } console.log(f({ a: 1, b: 2 }), g());",
+		{ compress: {}, mangle: false, ecma: 2020 }
+	],
+	[
+		"a function read once, kept out of a pure call in a return or a concatenation",
+		"function wrap(f) { return { f: f, toString: function () { return 'w'; } }; } function o() { var F = function (a) { return a + 1; }; return /* @__PURE__ */ wrap(F); } function p() { var G = function (a) { return a * 2; }; return '' + /* @__PURE__ */ wrap(G); } console.log(o().f(1), p());",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a function called in place passed a `var` set before, after other statements, or written in a closure",
+		"function g(v) { return v; } function f(x) { var b = g(x); var c = g(2); (function (a) { try { console.log(1); } catch (e) {} console.log(a, c); })(b); } function h(x) { var b; b = g(x); g(0); (function (a) { try { console.log(1); } catch (e) {} console.log(a); })(b); } function k(x) { var b = g(x); function w() { b = 1; } (function (a) { try { console.log(1); } catch (e) {} console.log(a); })(b); w(); return b; } f(1); h(2); console.log(k(3));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a function called in place passed a call reading its parameter's name and a function",
+		"function g(v, w) { return v + (w ? w() : 0); } function f(a) { return (function (a) { try { console.log(1); } catch (e) {} return a * 2; })(g(a, function () { return 1; })); } console.log(f(3));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"objects split into variables where `eval` pins the scope, or holding `__proto__`, read by a computed key or deleted",
+		"function f(k) { var o = { a: 1, b: 2 }; eval(''); return o.a + o.b; } function g(k) { var o = { __proto__: null, a: 1, b: 2 }; return o.a + o.b; } function h(k) { var o = { a: 1, b: 2 }; return o.a + o[k]; } function m() { var o = { a: 1, b: 2 }; delete o.a; return [o.a, o.b]; } console.log(f(), g(), h('b'), m());",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"built-ins written through, by members and through `globalThis`",
+		"Math.foo = 1; JSON.bar = 2; Array.baz = 3; globalThis.qux = 4; var k = 'Object'; globalThis[k].quux = 5; globalThis?.Number && (Number.zz = 6); console.log(Math.foo, Math.max(1, 2), JSON.stringify([1]), Array.isArray([]), Object.keys({ a: 1 }));",
+		{ compress: {}, mangle: false, ecma: 2020 }
+	],
+	[
+		"functions handed built-ins, one or several",
+		"function f(A) { A.x = 1; } function g(B) { B.y = 2; } f(Array); g(Array); g(Object); function h(...C) { C[0].z = 3; } h(Math); console.log(Array.isArray([]), Object.keys({ a: 1 }), Math.max(1, 2));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"unused rest parameters of a known function, given what has effects",
+		"!function () { function g(v) { console.log('g', v); return v; } function k(a, ...r) { return a; } console.log(k(1, g(2), 3), k(4), k(5, ...[g(6)]), k(7, 8, g(9))); }();",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"`delete` of a member of a call's result",
+		"var o = { x: 1 }; function f() { return o; } console.log(delete f().x, o.x, delete (function () { return o; })().y);",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a value moved past an array literal reading a name",
+		"function f(o) { var a = g(o); var b = [o, a]; return b; } function g(o) { o.n = 1; return 2; } console.log(f({}));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"built-ins written through what keeps them: a variable, a literal, a script's or sloppy function's `this`, or `Object` reached through the global object",
+		"var G = globalThis; G.Number = function () { return 7; }; var M = Math; M.max = function () { return 0; }; var P = [Array.prototype]; P[0].slice = function () { return \"S\"; }; this.parseInt = function () { return 9; }; function patch() { this.isNaN = function () { return \"n\"; }; } patch(); (function () { this.JSON.stringify = function () { return \"j\"; }; })(); globalThis.Object.keys = function () { return [\"k\"]; }; console.log(Number(\"3\"), Math.max(1, 2), [1, 2].slice(), parseInt(\"4\"), isNaN(1), JSON.stringify([1]), Object.keys({ a: 1 }));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"built-ins left as they are beside a constructor's `this`, a strict function's, and the global object only tested",
+		"\"use strict\"; function C() { this.Number = 1; this.x = 2; } function isGlobal(g) { return g && g.Math === Math; } console.log(new C().x, isGlobal(globalThis), Number(\"3\"), Math.max(1, 2), Object.keys({ a: 1 }));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"the global object kept by a logical expression, a conditional or a sequence",
+		"var g = typeof globalThis == \"object\" ? globalThis : this, h = (0, globalThis), k = globalThis || {}; g.Number = function () { return 7; }; console.log(Number(\"3\"), h === k);",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a remainder of what is no BigInt, its value unread",
+		"function f(a, b) { a % b; 1n % 2n; return 1; } console.log(f(5, 2));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"conversions of BigInt operations and of a string concatenated with a string",
+		"function f(a, b) { var s = '' + a; return ['' + (-1n - -2n), '' + ((b ? 1n : 2n) - (b ? 3n : 4n)), s + ('' + s), ('' + s) + s]; } console.log(f(1, 1));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"evaluations throwing a `URIError` or `SyntaxError`",
+		"try { console.log(decodeURI('%') + 1); } catch (e) { console.log(e.name); } try { console.log(JSON.parse('{') + 1); } catch (e) { console.log(e.name); }",
+		{ compress: { unsafe: true }, mangle: false }
+	],
+	[
+		"computed keys naming the prototype through a variable or an array",
+		"!function () { var k = ['__proto__'], j = { x: 1 }, n = '__proto__'; console.log(Object.keys({ [k]: 1 }), Object.keys({ [j]: 2 }), Object.keys({ [[n]]: 3 }), Object.keys({ [[...k]]: 4 }), Object.keys({ [[, ]]: 5 }), Object.keys({ [[1, 2]]: 6 })); }();",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"`global_defs` naming a binding a module exports, or re-exports",
+		"var DEBUG = 1; export { DEBUG }; export { DEBUG as D2 } from 'm'; export { 'DEBUG' as D3 } from 'm'; sink(DEBUG);",
+		{ module: true, compress: { global_defs: { DEBUG: false } }, mangle: false }
+	],
+	[
+		"a catch binding unread where a nested function declares its name",
+		"function f(k) { try { g(); } catch (e) { sink(function (e) { return e + k; }(1)); } } function g() { throw 0; } function sink(v) { console.log(v); } f(2);",
+		{ compress: { ecma: 2020 }, mangle: false }
+	],
+	[
+		"a catch binding unread beside a `var` of its name",
+		"function f() { var e = 5; try { g(); } catch (e) { sink(1); } return e; } function g() { throw 0; } function sink(v) { console.log(v); } console.log(f());",
+		{ compress: { ecma: 2020 }, mangle: false }
+	],
+	[
+		"unused imports, a default and a namespace",
+		"import a, { b } from 'm'; import * as c from 'n'; import d, * as e from 'o'; sink(b, e);",
+		{ compress: {}, mangle: false, module: true }
+	],
+	[
+		"a `switch` whose branches run several statements, return and assign, or assign apart",
+		"function g(v) { console.log('g', v); return v; } function f(x) { switch (x) { case 1: g(1); g(2); break; case 2: g(3); break; case 3: g(4); break; } } function h(x) { var a; switch (x) { case 1: a = 1; break; case 2: return 2; } return a; } function k(x) { var a, b; switch (x) { case 1: a = 1; break; case 2: b = 2; break; default: a = 3; } return [a, b]; } function m(x) { var a; switch (x) { case 1: a = 1; break; case 2: a = 2; break; } return a; } function n(x) { switch (x) { case 1: case 2: } return 9; } f(1); f(2); console.log(h(1), h(2), h(3), k(1), k(2), k(3), m(1), m(3), n(1));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a `switch` on a local whose branches assign apart, a `return` after it",
+		"function g(v) { console.log('g', v); return v; } function k(x) { var a, b; switch (x) { case 1: a = g(1); break; case 2: b = g(2); break; } return a + b; } console.log(k(1), k(2), k(3));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a function handed the global object past its parameters, or twice",
+		"function patch(t) { if (t) t.Number = function () { return 7; }; } patch(0, globalThis); patch(globalThis); patch(globalThis); console.log(Number('3'));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a sloppy function's `this` handed to a call",
+		"function F() { g(this); this.y = 1; } function g(o) { o.x = 1; } console.log(new F().x, Number('3'));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"unused rest parameters of a known function, without reduce_vars",
+		"!function () { function g(v) { console.log('g', v); return v; } function k(a, ...r) { return a; } console.log(k(1, g(2), 3), k(4), k(5, 6, g(7))); }();",
+		{ compress: { reduce_vars: false }, mangle: false }
+	],
+	[
+		"unused rest parameters of a global function",
+		"function g(v) { console.log('g', v); return v; } function k(a, ...r) { return a; } console.log(k(1, g(2), 3), k(4), k(5, 6, g(7)), k(8, ...[9]));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"unused rest parameters of a global function, without reduce_vars",
+		"function g(v) { console.log('g', v); return v; } function k(a, ...r) { return a; } console.log(k(1, g(2), 3), k(4), k(5, 6, g(7)), k(8, 9, ...[g(10)]));",
+		{ compress: { reduce_vars: false }, mangle: false }
+	],
+	[
+		"`delete` of a member of a known function",
+		"!function () { function f() {} f.x = 1; console.log(delete f.x, f.x, delete f.name); }();",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a dropped `Map` whose entry holds a hole or a spread",
+		"var a = [1, 2]; new Map([[1, , 2]]); new Map([[...a, 3]]); new Map([[1, ...a]]); console.log(1);",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"calls in both branches spreading the same list and different ones",
+		"function f(c, a, b) { return c ? g(...a, 1) : g(...b, 1); } function g() { return arguments.length; } console.log(f(1, [1], [1, 2]), f(0, [1], [1, 2]));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"functions passed to `new`, under `wrap_func_args`",
+		"new Promise(function (r) { r(1); }).then(console.log); new Promise((r) => r(2)).then(console.log);",
+		{ compress: false, mangle: false, format: { wrap_func_args: true } }
+	]
+];
+
+/**
+ * Throws where acorn reads a program otherwise than as valid.
+ * @param {string} code a program
+ * @param {boolean} module whether it is a module
+ * @returns {void}
+ */
+const parses = (code, module) => {
+	acorn.parse(code, {
+		ecmaVersion: "latest",
+		sourceType: module ? "module" : "script",
+		allowReturnOutsideFunction: true
+	});
+};
+
+describe("JavaScript minifier, pass by pass", () => {
+	describe("terser's passes as webpack ports them", () => {
+		/** @type {EXPECTED_ANY} */
+		let terserPhases;
+
+		beforeAll(() => {
+			// The phases before `correct` are terser's own: built alone, they
+			// minify with none of the hooks the later phases fill.
+			terserPhases = createModules();
+			for (const phase of PHASES) {
+				if (phase.name === "correct") break;
+				phase.install(terserPhases);
+			}
+		});
+
+		for (const [name, source, compress, extra] of TERSER_PORT_CASES) {
+			it(`should compress as terser does: ${name}`, async () => {
+				const { minify } = await load();
+				/**
+				 * @param {Minifying} run a minify
+				 * @param {boolean} module whether the source is a module
+				 * @returns {Promise<{ code?: string, error?: string }>} what it writes, or the message it throws
+				 */
+				const outcome = async (run, module) => {
+					try {
+						const { code } = await run(source, {
+							mangle: false,
+							...structuredClone(extra || {}),
+							module,
+							compress: structuredClone(compress)
+						});
+						return { code };
+					} catch (err) {
+						return { error: /** @type {Error} */ (err).message };
+					}
+				};
+				for (const module of extra && "module" in extra
+					? [Boolean(extra.module)]
+					: [false, true]) {
+					const reference = await outcome(terserReference().minify, module);
+					expect(
+						await uncorrected(() => unimproved(() => outcome(minify, module)))
+					).toEqual(reference);
+					expect(await outcome(terserPhases.minify, module)).toEqual(reference);
+					// With every phase on, what is written still parses.
+					const { code } = await outcome(minify, module);
+					if (code !== undefined) parses(code, module);
+				}
+			});
+		}
+
+		it("should compress as terser does under an `unsafe_methods` pattern", async () => {
+			const { minify } = await load();
+			const source = "sink({ a: function () { return 1; }, b: function () { return 2; } });";
+			const options = () =>
+				/** @type {EXPECTED_ANY} */ ({ mangle: false, compress: { ecma: 2015, unsafe_methods: /^a$/ } });
+			const { code } = await uncorrected(() => unimproved(() => minify(source, options())));
+			expect(code).toBe((await terserReference().minify(source, options())).code);
+			expect(code).toBe("sink({a(){return 1},b:function(){return 2}});");
+		});
+
+		it("should keep the top-level names `top_retain` names as terser does", async () => {
+			const { minify } = await load();
+			const source = "var keep = 1, drop = 2, also = 3; function f() {} function g() {} sink(1);";
+			for (const [topRetain, expected] of [
+				[/^k/, "var keep=1;sink(1);"],
+				[(/** @type {EXPECTED_ANY} */ definition) => definition.name === "also", "var also=3;sink(1);"],
+				["keep,f", "var keep=1;function f(){}sink(1);"],
+				[["g"], "function g(){}sink(1);"]
+			]) {
+				const options = () =>
+					/** @type {EXPECTED_ANY} */ ({ toplevel: true, mangle: false, compress: { top_retain: topRetain } });
+				const { code } = await minify(source, options());
+				expect(code).toBe(expected);
+				expect(code).toBe((await terserReference().minify(source, options())).code);
+			}
+		});
+	});
+
+	describe("what the correct and improve phases write", () => {
+		for (const [name, source, options] of BEHAVIOUR_CASES) {
+			it(`should write what runs as the source does: ${name}`, async () => {
+				const { minify } = await load();
+				const { code } = await minify(source, structuredClone(options));
+				const module = Boolean(options.module);
+				parses(/** @type {string} */ (code), module);
+				if (!module) {
+					expect(runProgram(/** @type {string} */ (code))).toBe(
+						runProgram(source)
+					);
+				}
+				expect(code).toMatchSnapshot();
+			});
+		}
+	});
+});
+
+describe("JavaScript minifier, what the tables leave out", () => {
+	it("should print comments, shebangs and names as terser does", async () => {
+		const { minify, modules } = await load();
+		for (const [source, format] of /** @type {[string, EXPECTED_OBJECT][]} */ ([
+			["function f() { return ñ; } var ñ = 1; console.log(f());", {}],
+			["var a = 1 /* c */; console.log(a)", { beautify: true, comments: "all" }],
+			["var a = 1\n// c\n;[1].map(console.log)", { semicolons: false, comments: "all" }],
+			["var a = 1\n/* c */\n;[1].map(console.log)", { semicolons: false, comments: "all" }],
+			["console.log(1) /* @__PURE__ */", { comments: "all" }],
+			["/* @__PURE__ */ console.log(1);", { comments: "all" }],
+			["// @__PURE__\nconsole.log(1);", { comments: "all" }],
+			["console.log(1) // @__PURE__\n", { comments: "all" }],
+			["#!/usr/bin/env node\n/*a*/ /*b*/ console.log(1) /*c*/ /*d*/", { comments: "all" }]
+		])) {
+			const options = () => ({ compress: false, mangle: false, output: { ...format } });
+			const { code } = await minify(source, options());
+			parses(/** @type {string} */ (code), false);
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(source));
+			if (!(/** @type {EXPECTED_ANY} */ (format).beautify)) {
+				expect(code).toBe((await terserReference().minify(source, options())).code);
+			}
+		}
+		// A comment kept by a pattern given as a string.
+		expect(
+			modules.printToString(modules.parse.parse("/*x*/ a /*y*/"), { comments: "/x/" })
+		).toBe("/*x*/a;");
+		const unicode = createUnicode();
+		expect(unicode.isIdentifierString("")).toBe(false);
+		expect(unicode.isIdentifierString("a\u{10400}b", true)).toBe(true);
+	});
+
+	it("should enclose and wrap a converted tree as terser does", async () => {
+		const estree = acorn.parse("console.log(typeof exports); throw 1;", {
+			ecmaVersion: 2022
+		});
+		const { minify } = await load();
+		for (const wrapping of [{ enclose: true }, { wrap: "lib" }]) {
+			/**
+			 * @param {Minifying} run a minify
+			 * @returns {Promise<string>} what it writes
+			 */
+			const write = async (run) =>
+				(
+					await run(structuredClone(estree), {
+						parse: { spidermonkey: true },
+						...wrapping
+					})
+				).code;
+			expect(await unimproved(() => write(minify))).toBe(
+				await write(terserReference().minify)
+			);
+			expect(await write(minify)).toMatchSnapshot();
+		}
+	});
+
+	it("should drop the console calls `drop_console` names as terser does", async () => {
+		const { minify } = await load();
+		for (const [source, dropConsole] of /** @type {[string, boolean | string[]][]} */ ([
+			[
+				"console.log.call(console, 1); var f = console.log.bind(console); f(2); console.log.apply(console, [3]);",
+				true
+			],
+			[
+				"console.log.call(console, 1); var f = console.log.bind(console); f(2); console.info(3); console.log(4)",
+				["log"]
+			],
+			["var x = console; x.log(1); console.log(5)", ["info"]]
+		])) {
+			const options = () => /** @type {EXPECTED_ANY} */ ({ compress: { drop_console: dropConsole } });
+			const { code } = await minify(source, options());
+			parses(/** @type {string} */ (code), false);
+			expect(code).toBe((await terserReference().minify(source, options())).code);
+		}
+	});
+
+	it("should say a tree's `all_symbols` is not a function, as terser does", async () => {
+		const { modules } = await load();
+		const tree = modules.parse.parse("throw 1; a: for(;;) { break a; }");
+		expect(() => modules.ast.allSymbols(tree.body[0])).toThrow(
+			"all_symbols is not a function"
+		);
+	});
+
+	it("should read and write a parsed token's quote and template end", async () => {
+		const { ParsedToken } = (await load()).modules.ast;
+		const token = new ParsedToken("string", "a", 1, 2, 3, false, [], []);
+		const seen = [token.quote, token.template_end];
+		for (const quote of ["'", '"', ""]) {
+			token.quote = quote;
+			seen.push(token.quote);
+		}
+		for (const end of [true, false]) {
+			token.template_end = end;
+			seen.push(token.template_end);
+		}
+		expect(seen).toEqual(["", false, "'", '"', "", true, false]);
+		const util = require("util");
+		expect(util.inspect(token)).toBe("[ParsedToken `a` at 1:2]");
+		expect(
+			util.inspect(new ParsedToken("name", "a`b", 3, 4, 5, true, [], []))
+		).toBe("[ParsedToken 'a`b' at 3:4]");
+	});
+
+	it("should write as terser's output stream does through its methods", async () => {
+		const { modules } = await load();
+		const terserOutput = await importTerserSource(
+			require.resolve("terser").replace(/dist[\\/]bundle\.min\.js$/, "lib/output.js")
+		);
+		const terserParse = await importTerserSource(
+			require.resolve("terser").replace(/dist[\\/]bundle\.min\.js$/, "lib/parse.js")
+		);
+		const lambdaOf = {
+			ours: () => modules.parse.parse("function f(a) { return a; }").body[0],
+			theirs: () => terserParse.parse("function f(a) { return a; }").body[0]
+		};
+		const sizes = {
+			ours: (/** @type {EXPECTED_ANY} */ f) => [f.body.body.length, f.params.length],
+			theirs: (/** @type {EXPECTED_ANY} */ f) => [f.body.length, f.argnames.length]
+		};
+		/**
+		 * @param {"ours" | "theirs"} label whose stream
+		 * @param {EXPECTED_ANY} OutputStream its constructor
+		 * @returns {unknown[]} what its methods give
+		 */
+		const use = (label, OutputStream) => {
+			const out = OutputStream({});
+			out.print("a");
+			const seen = [out.toString(), out.indentation(), out.next_indent(), out.line(), out.col()];
+			seen.push(
+				out.with_indent(4, () => {
+					out.print("b");
+					return 1;
+				}),
+				out.with_block(() => {
+					out.print("c");
+					return 2;
+				})
+			);
+			out.push_node({ type: "x" });
+			seen.push(out.parent() && out.parent().type, out.pop_node().type);
+			seen.push(out.get(), out.line(), out.col());
+			const scope = lambdaOf[label]();
+			out.gc_scope(scope);
+			seen.push(...sizes[label](scope));
+			const destroyed = lambdaOf[label]();
+			OutputStream({ _destroy_ast: true }).gc_scope(destroyed);
+			seen.push(...sizes[label](destroyed));
+			const names = OutputStream({});
+			names.print_name("\u{10400}a\uD800");
+			names.print(" ");
+			names.print_name("\u{10400}\uDC00b");
+			seen.push(names.get());
+			return seen;
+		};
+		const ours = use("ours", modules.output.OutputStream);
+		expect(ours).toEqual(use("theirs", terserOutput.OutputStream));
+		expect(ours).toEqual(["a", 0, 4, 1, 1, 1, 2, undefined, "x", "ab{c}", 1, 5, 1, 1, 0, 0, "\u{10400}a\uD800 \u{10400}\uDC00b"]);
+	});
+
+	it("should walk and transform plain objects standing for nodes", async () => {
+		const { ast } = (await load()).modules;
+		/** @type {unknown[]} */
+		const seen = [];
+		const plain = { type: "Property", key: "a", value: ast.NumberNode({ value: 1 }) };
+		ast.walk(plain, (/** @type {EXPECTED_ANY} */ node) => {
+			seen.push(node.type || ast.kindOf(node));
+		});
+		ast.walkNode(
+			{ type: "Identifier", name: "x" },
+			ast.createWalker((/** @type {EXPECTED_ANY} */ node) => {
+				seen.push(node.name);
+			})
+		);
+		const replaced = ast.transformNode(
+			plain,
+			ast.createTransformer(undefined, (/** @type {EXPECTED_ANY} */ node) =>
+				ast.isNumberNode(node) ? ast.NumberNode({ value: 2 }) : undefined
+			)
+		);
+		seen.push(replaced.value.value);
+		ast.descendNode(plain, ast.createTransformer(() => undefined));
+		const keyVal = ast.ObjectKeyValNode({
+			key: ast.SymbolPropertyNode({ name: "k" }),
+			value: null,
+			computed: false
+		});
+		ast.transformNode(keyVal, ast.createTransformer(() => undefined));
+		seen.push(keyVal.value);
+		const unknown = { type: "Unknown" };
+		ast.walk(unknown, (/** @type {EXPECTED_ANY} */ node) => {
+			seen.push(node.type);
+		});
+		seen.push(ast.transformNode(unknown, ast.createTransformer(() => undefined)) === unknown);
+		ast.descendNode(unknown, ast.createTransformer(() => undefined));
+		expect(seen).toEqual(["Property", "Literal", "x", 2, null, "Unknown", true]);
+	});
+
+	it("should map through an input source map as terser does", async () => {
+		const { minify } = await load();
+		const source = "var one = 1;\nfunction two(x) { return x * 2; }\nconsole.log(two(one));\n";
+		const files = Object.create({ "inherited.js": "sink(0);" });
+		files["a.js"] = "sink(1);";
+		const sourceMap = { includeSources: true };
+		expect((await minify(files, { sourceMap })).map).toBe(
+			(await terserReference().minify(files, { sourceMap })).map
+		);
+		const section = (/** @type {number} */ line, /** @type {number} */ column, /** @type {string} */ name, /** @type {string} */ mappings) => ({
+			offset: { line, column },
+			map: { version: 3, sources: [name], names: [], mappings }
+		});
+		for (const content of [
+			{
+				version: 3,
+				sources: ["one.js"],
+				mappings: [[[0, 0, 0, 0], [4, 0, 0, 4]], [[0, 0, 1, 0], [9, 0, 1, 9]], [[0, 0, 2, 0]]]
+			},
+			{ version: 3, sources: ["one.js"], mappings: "AAAA,IAAI;AACA,SAAS;AACA" },
+			{
+				version: 3,
+				sections: [
+					section(0, 0, "a.js", "AAAA,KAAK,KAAK"),
+					section(0, 6, "b.js", "AAAA"),
+					section(1, 0, "c.js", "AAAA;;;;")
+				]
+			},
+			{ version: 3, sources: ["one.js"], names: [], mappings: "AAAA,AAAA,AAAC;AAAA;;;" },
+			{ version: 3, sources: ["one.js"], names: [], mappings: "AAAA" },
+			{
+				version: 3,
+				sections: [section(0, 0, "a.js", "AAAA;AACA;;AACA"), section(2, 0, "b.js", "AAAA")]
+			},
+			// A segment of a column alone maps to no source.
+			{
+				version: 3,
+				sections: [section(0, 0, "a.js", "AAAA;AACA;AACA;AACA"), section(2, 0, "b.js", "A,CAAA;AACA")]
+			},
+			{ version: 3, sources: ["one.js"], names: [], mappings: "SAAA" }
+		]) {
+			for (const [compress, format, mangle] of /** @type {[false | undefined, EXPECTED_OBJECT | undefined, EXPECTED_OBJECT | false][]} */ ([
+				[false, undefined, false],
+				[undefined, undefined, false],
+				[false, { semicolons: false }, false],
+				[undefined, { semicolons: false, comments: "all" }, false],
+				[false, { semicolons: false }, { toplevel: true }]
+			])) {
+				const options = () =>
+					/** @type {EXPECTED_ANY} */ ({
+						compress,
+						mangle,
+						format,
+						sourceMap: { content: structuredClone(content), includeSources: true }
+					});
+				expect((await minify({ "in.js": source }, options())).map).toBe(
+					(await terserReference().minify({ "in.js": source }, options())).map
+				);
+			}
+		}
+		// A section naming no source: terser lists it as "" though nothing maps
+		// to it, where webpack leaves it out.
+		const unnamed = () =>
+			/** @type {EXPECTED_ANY} */ ({
+			compress: false,
+			mangle: false,
+			sourceMap: {
+				content: {
+					version: 3,
+					sections: [
+						section(0, 0, "a.js", "AAAA;AACA;AACA;AACA"),
+						{
+							offset: { line: 2, column: 0 },
+							map: { version: 3, sources: [null], names: [], mappings: "A,CAAA;AACA" }
+						}
+					]
+				},
+				includeSources: true
+			}
+		});
+		const ours = JSON.parse(/** @type {string} */ ((await minify({ "in.js": source }, unnamed())).map));
+		const theirs = JSON.parse(
+			/** @type {string} */ ((await terserReference().minify({ "in.js": source }, unnamed())).map)
+		);
+		expect(theirs.sources).toEqual(["a.js", ""]);
+		expect({ ...ours, sources: theirs.sources }).toEqual(theirs);
+		expect(ours.sources).toEqual(["a.js"]);
+	});
+
+	it("should convert the ESTree trees terser does as terser does", async () => {
+		const { minify } = await load();
+		/**
+		 * @param {string} code a module
+		 * @param {EXPECTED_OBJECT=} extra acorn's options
+		 * @returns {EXPECTED_ANY} its tree
+		 */
+		const read = (code, extra = {}) =>
+			acorn.parse(code, { ecmaVersion: "latest", sourceType: "module", ...extra });
+		/**
+		 * @param {Minifying} run a minify
+		 * @param {EXPECTED_ANY} tree an ESTree tree
+		 * @returns {Promise<{ code?: string, error?: string }>} what it writes, or the message it throws
+		 */
+		const outcome = async (run, tree) => {
+			try {
+				const { code } = await run(structuredClone(tree), {
+					parse: { spidermonkey: true },
+					compress: false,
+					mangle: false,
+					module: true
+				});
+				return { code };
+			} catch (err) {
+				return { error: /** @type {Error} */ (err).message };
+			}
+		};
+		const unprefixed = read("!a; a++;");
+		delete unprefixed.body[0].expression.prefix;
+		delete unprefixed.body[1].expression.prefix;
+		const guarded = read("try {} catch (e) {}");
+		guarded.body[0].guardedHandlers = [{}];
+		const spread = read("[x, ...y] = z;");
+		spread.body[0].expression.left.elements[1].type = "SpreadElement";
+		const named = read("({ m() {} }); class A { m() {} }");
+		named.body[0].expression.properties[0].value.id = { type: "Identifier", name: "n" };
+		const unknownKind = read("x = { a: 1 };");
+		unknownKind.body[0].expression.right.properties[0].kind = "other";
+		const literalKey = read("class A { a() {} }");
+		literalKey.body[0].body.body[0].key = { type: "Literal", value: "b c" };
+		const asserted = read(
+			"import a from 'b' with { type: 'json' }; export * from 'c' with { type: 'json' }; export { e } from 'd' with { type: 'json' }; export { a };"
+		);
+		for (const statement of asserted.body) {
+			if (statement.attributes) {
+				statement.assertions = statement.attributes;
+				delete statement.attributes;
+			}
+		}
+		const legacyRegex = read("x = /a/g;");
+		legacyRegex.body[0].expression.right.regex = {};
+		legacyRegex.body[0].expression.right.raw = "/b/i";
+		const legacyRegexValue = read("x = /a/g;");
+		delete legacyRegexValue.body[0].expression.right.raw;
+		legacyRegexValue.body[0].expression.right.regex = {};
+		legacyRegexValue.body[0].expression.right.value = "/c/m";
+		const bigint = read("x = 1n;");
+		bigint.body[0].expression.right.value = null;
+		bigint.body[0].expression.right.bigint = "12";
+		const infinite = read("x = 1;");
+		infinite.body[0].expression.right.value = Infinity;
+		for (const tree of [
+			unprefixed,
+			guarded,
+			read('({ "a": b, 1: c, [d]: e, ...f } = g); [x, ...y] = z;'),
+			spread,
+			named,
+			unknownKind,
+			read("class A { 'a' = 1; 1 = 2; [c] = 3; #d = 4; static 'e'() {} 'f'() {} }"),
+			literalKey,
+			read(
+				"import { a } from 'b'; import c, { d } from 'e'; import * as f from 'g'; export { a, c, d, f };"
+			),
+			asserted,
+			read("export default function f() {}"),
+			read("export default class {}"),
+			read("export default class C {}"),
+			legacyRegex,
+			legacyRegexValue,
+			bigint,
+			infinite,
+			read("x = () => { 'use strict'; return 1; }")
+		]) {
+			expect(await outcome(minify, tree)).toEqual(
+				await outcome(terserReference().minify, tree)
+			);
+		}
+		// Parentheses acorn keeps as nodes, which terser's conversion has none for.
+		for (const extra of [{}, { locations: true, ranges: true, sourceFile: "x.js" }]) {
+			const tree = read("(f()); (a, b); x = (1); (/* c */ g());", {
+				preserveParens: true,
+				...extra
+			});
+			expect(await outcome(minify, tree)).toEqual({ code: "f();a,b;x=1;g();" });
+			expect((await outcome(terserReference().minify, tree)).error).toBeDefined();
+		}
+	});
+
+	it("should minify every program of acorn's corpus to one that parses", async () => {
+		const { minify } = await load();
+		for (const { code, options } of ACORN_CORPUS.cases) {
+			const module = Boolean(options && options.sourceType === "module");
+			try {
+				acorn.parse(code, {
+					ecmaVersion: "latest",
+					sourceType: module ? "module" : "script"
+				});
+			} catch (_err) {
+				// What acorn reads only under other options is left out.
+				continue;
+			}
+			for (const settings of [
+				{ compress: false, mangle: false },
+				{ compress: {}, mangle: true }
+			]) {
+				const { code: written } = await minify(code, { ...settings, module });
+				parses(/** @type {string} */ (written), module);
+			}
+		}
+	});
+
+	it("should write comments, semicolons and long output as terser's output stream does", async () => {
+		const { modules } = await load();
+		const terserOutput = await importTerserSource(
+			require.resolve("terser").replace(/dist[\\/]bundle\.min\.js$/, "lib/output.js")
+		);
+		const terserParse = await importTerserSource(
+			require.resolve("terser").replace(/dist[\\/]bundle\.min\.js$/, "lib/parse.js")
+		);
+		const terserAst = await importTerserSource(
+			require.resolve("terser").replace(/dist[\\/]bundle\.min\.js$/, "lib/ast.js")
+		);
+		/**
+		 * @param {EXPECTED_ANY} OutputStream a stream's constructor
+		 * @param {(code: string) => EXPECTED_ANY} parse a parser
+		 * @param {(name: string, token: EXPECTED_ANY) => EXPECTED_ANY} nameNode a name read at a token
+		 * @param {EXPECTED_ANY} Token a token's constructor
+		 * @returns {string[]} what each stream holds
+		 */
+		const write = (OutputStream, parse, nameNode, Token) => {
+			/** @type {string[]} */
+			const written = [];
+			/**
+			 * @param {EXPECTED_OBJECT} options the stream's options
+			 * @param {string=} code a program whose tokens the stream reads
+			 * @returns {[EXPECTED_ANY, EXPECTED_ANY]} the stream and the program's first statement
+			 */
+			const open = (options, code) => {
+				const out = OutputStream(options);
+				if (code === undefined) return [out, undefined];
+				const tree = parse(code);
+				// webpack's stream reads a program's comments through its tables.
+				if (tree.tokenTables) out.tokenTables = tree.tokenTables;
+				return [out, tree.body[0]];
+			};
+			// Past what one part holds, a directive's check reads back through the parts.
+			for (const [first, second] of [
+				[" ".repeat(8100), " ".repeat(8100)],
+				["x".repeat(8100), ""],
+				["x;".repeat(4100), ""]
+			]) {
+				const [out] = open({});
+				out.print(first);
+				out.print("\n");
+				if (second) out.print(second);
+				out.print(" ");
+				out.print_string("a", '"', true);
+				written.push(out.get().slice(-8));
+			}
+			for (const [prefix, code] of [
+				["a ", "/*c*/ b"],
+				["a  \n  ", "/*c*/ b"],
+				["a ", "\n/*c*/ b"],
+				["a", "b /*c*/\n/*d*/"],
+				["a \n ", "b\n/*c*/"]
+			]) {
+				const [out, statement] = open({ comments: "all" }, code);
+				out.print(prefix);
+				out.prepend_comments(statement);
+				out.print("b");
+				out.append_comments(statement);
+				written.push(out.get());
+			}
+			// What a block comment is followed by.
+			for (const next of ["ñ", "a", " ", "　x", ";"]) {
+				const [out, statement] = open({ comments: "all" }, "b /*c*/");
+				out.print("b");
+				out.append_comments(statement);
+				out.print(next);
+				written.push(out.get());
+			}
+			for (const [before, after] of [["a\n", "b"], ["a", "b"], ["a\n", "\n"], ["a", "}"]]) {
+				const [out] = open({ semicolons: false });
+				out.print(before);
+				out.semicolon();
+				out.print(after);
+				written.push(out.get());
+			}
+			// A token made without a comment list is given one.
+			const token = new Token("name", "a", 0, 0, 0, false, undefined, undefined);
+			const [out] = open({ comments: "all" });
+			out.prepend_comments(nameNode("a", token));
+			out.print("a");
+			written.push(out.get(), JSON.stringify(token.comments_before));
+			return written;
+		};
+		const { ast } = modules;
+		const ours = write(
+			modules.output.OutputStream,
+			modules.parse.parse,
+			(name, token) => ast.SymbolRefNode({ name, startToken: token, endToken: token }),
+			ast.ParsedToken
+		);
+		expect(ours).toEqual(
+			write(
+				terserOutput.OutputStream,
+				terserParse.parse,
+				(name, token) => new terserAst.AST_SymbolRef({ name, start: token, end: token }),
+				terserAst.AST_Token
+			)
+		);
+		expect(ours.slice(0, 3)).toEqual(['    ;"a"', 'x\n ;;"a"', 'x;\n ;"a"']);
+	});
+
+	it("should print the comments of a program as terser does", async () => {
+		const { modules } = await load();
+		const terserParse = await importTerserSource(
+			require.resolve("terser").replace(/dist[\\/]bundle\.min\.js$/, "lib/parse.js")
+		);
+		for (const name of ["output", "scope"]) {
+			await importTerserSource(
+				require.resolve("terser").replace(/dist[\\/]bundle\.min\.js$/, `lib/${name}.js`)
+			);
+		}
+		for (const [code, format] of /** @type {[string, EXPECTED_OBJECT][]} */ ([
+			["#!/usr/bin/env node\na()", { comments: "all", shebang: false }],
+			["#!/usr/bin/env node\n/*x*/ a()", { comments: "all", shebang: false }],
+			["a() /*x*/ /*x*/; b()", { comments: "all" }],
+			["a(); /*x*/", { comments: "all" }],
+			["function f() { return a /*x*/ } /*y*/", { comments: "all" }],
+			["a(b /*x*/, c /*y*/ /*z*/)", { comments: "all" }],
+			["if (a) b /*x*/\n/*y*/ else c", { comments: "all" }],
+			["{ /*x*/ }", { comments: "all" }],
+			["a /* x */ /* y */\n;b", { comments: "all" }]
+		])) {
+			expect(modules.printToString(modules.parse.parse(code), { ...format })).toBe(
+				terserParse.parse(code).print_to_string({ ...format })
+			);
+		}
+	});
+
+	it("should write options read as terser reads them", async () => {
+		const { minify } = await load();
+		const big = "x".repeat(8100);
+		for (const [source, options] of /** @type {[string, EXPECTED_OBJECT][]} */ ([
+			// An `ecma` between 5 and 2015 is a year less 2009.
+			["console.log(`a`, 1 ** 2, { a: a })", { ecma: 6 }],
+			["console.log(`a`, 1 ** 2, { a: a })", { compress: { ecma: 7 }, format: { ecma: 8 } }],
+			// A cache's names without the `$` they are written with are none.
+			["var abc = 1; console.log(abc)", { toplevel: true, nameCache: { vars: { props: { x: "q", $abc: "z" } } } }],
+			// `reserved` other than a list reserves nothing.
+			["function f(abc, def) { return abc + def } console.log(f(1, 2))", { mangle: { reserved: "abc" } }],
+			["console.log('\\x01\\x7f\\u0100')", { format: { ascii_only: true } }],
+			[`console.log("${big}") /* c */; /* d */ console.log(1)`, { compress: false, format: { comments: "all" } }],
+			[`console.log("${big}"); "s"; console.log(1)`, { compress: false }]
+		])) {
+			const settings = () => structuredClone(options);
+			const { code } = await minify(source, settings());
+			parses(/** @type {string} */ (code), false);
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(source));
+			expect(code).toBe((await terserReference().minify(source, settings())).code);
+		}
+	});
+
+	it("should make the nodes of classes no node is made of as terser's classes do", async () => {
+		const { modules, minify } = await load();
+		const { ast } = modules;
+		const name = (/** @type {string} */ value) => ast.SymbolRefNode({ name: value });
+		const made = [
+			ast.CallNode({ callee: name("f"), arguments: [name("a")], optional: false }),
+			// terser's own fields, which the factory reads.
+			ast.DestructuringNode(/** @type {EXPECTED_ANY} */ ({ is_array: true, names: [ast.SymbolVarNode({ name: "a" })] })),
+			ast.DestructuringNode(/** @type {EXPECTED_ANY} */ ({ is_array: false, names: [] })),
+			ast.ExportNode({ is_default: true, exported_value: name("a") })
+		];
+		expect(made.map((node) => ast.kindOf(node))).toEqual([
+			"CallExpression",
+			"ArrayPattern",
+			"ObjectPattern",
+			"ExportDefaultDeclaration"
+		]);
+		expect(modules.printToString(made[0])).toBe("f(a)");
+		expect(typeof minify).toBe("function");
+	});
+
+	it("should walk with an initial stack as terser's `walk_parent` does", async () => {
+		const { modules } = await load();
+		const terserAst = await importTerserSource(
+			require.resolve("terser").replace(/dist[\\/]bundle\.min\.js$/, "lib/ast.js")
+		);
+		const terserParse = await importTerserSource(
+			require.resolve("terser").replace(/dist[\\/]bundle\.min\.js$/, "lib/parse.js")
+		);
+		/**
+		 * @param {EXPECTED_ANY} walkParent a `walk_parent`
+		 * @param {EXPECTED_ANY} tree a program
+		 * @param {(node: EXPECTED_ANY) => string} kind a node's kind
+		 * @returns {string[]} what each node reads up its ancestors
+		 */
+		const read = (walkParent, tree, kind) => {
+			/** @type {string[]} */
+			const seen = [];
+			const outer = [tree, tree];
+			walkParent(
+				tree.body[0],
+				(/** @type {EXPECTED_ANY} */ node, /** @type {EXPECTED_ANY} */ info) => {
+					const up = [];
+					for (let n = -1; n < 5; n++) {
+						const parent = info.parent(n);
+						up.push(parent ? kind(parent) : "-");
+					}
+					seen.push(up.join(" "));
+				},
+				outer
+			);
+			return seen;
+		};
+		const code = "a(b, c.d);";
+		const ours = read(modules.ast.walk_parent, modules.parse.parse(code), (node) =>
+			terserTypeOf(kindName(node))
+		);
+		expect(ours).toEqual(
+			read(terserAst.walk_parent, terserParse.parse(code), (node) => kindName(node))
+		);
+	});
+
+	it("should refuse to parse before the parse phase is installed", () => {
+		expect(() => createModules().parse.parse("a")).toThrow(
+			"the parse phase is not installed"
+		);
+	});
+
+	it("should refuse to compare what terser has no comparison for", async () => {
+		const { modules } = await load();
+		const { ast } = modules;
+		const body = ast.ClassBodyNode({ body: [] });
+		expect(() => ast.isEquivalent(body, ast.ClassBodyNode({ body: [] }))).toThrow(
+			"did not find a shallow_cmp function for ClassBody"
+		);
+	});
+
+	it("should convert every ESTree tree of acorn's corpus as terser does", async () => {
+		const { minify } = await load();
+		/**
+		 * @param {Minifying} run a minify
+		 * @param {EXPECTED_ANY} tree an ESTree program
+		 * @param {boolean} module whether it is a module
+		 * @returns {Promise<string>} what it writes, or the message it throws
+		 */
+		const outcome = async (run, tree, module) => {
+			try {
+				const { code } = await run(structuredClone(tree), {
+					parse: { spidermonkey: true },
+					compress: false,
+					mangle: false,
+					module
+				});
+				return code;
+			} catch (err) {
+				return `throws ${/** @type {Error} */ (err).message}`;
+			}
+		};
+		/** @type {string[]} */
+		const corrected = [];
+		let compared = 0;
+		for (const { code, options } of ACORN_CORPUS.cases) {
+			const module = Boolean(options && options.sourceType === "module");
+			/**
+			 * @param {EXPECTED_OBJECT} extra acorn's options
+			 * @returns {EXPECTED_ANY} the tree, or undefined where acorn reads none
+			 */
+			const read = (extra) => {
+				try {
+					return acorn.parse(code, {
+						ecmaVersion: "latest",
+						sourceType: module ? "module" : "script",
+						...extra
+					});
+				} catch (_err) {
+					return undefined;
+				}
+			};
+			const tree = read({ locations: true });
+			if (tree === undefined) continue;
+			compared++;
+			const reference = await outcome(terserReference().minify, tree, module);
+			expect([code, await uncorrected(() => outcome(minify, tree, module))]).toEqual([
+				code,
+				reference
+			]);
+			const ours = await outcome(minify, tree, module);
+			parses(ours, module);
+			if (ours !== reference) corrected.push(`${code}\n${reference}\n${ours}`);
+			// Parentheses acorn keeps as nodes, which terser's conversion has none for.
+			parses(await outcome(minify, read({ preserveParens: true, ranges: true }), module), module);
+		}
+		expect(compared).toBeGreaterThan(2000);
+		// Each a source, what terser writes and what webpack writes instead.
+		expect(corrected).toMatchSnapshot();
+	});
+
+	it("should keep `{ __proto__ }` from a converted tree an own property", async () => {
+		const { minify } = await load();
+		const source =
+			"var __proto__ = { a: 1 }; var o = { __proto__ }; console.log(Object.keys(o).length, o.a, Object.getPrototypeOf(o) === Object.prototype);";
+		const tree = acorn.parse(source, { ecmaVersion: "latest", locations: true });
+		for (const compress of [false, {}]) {
+			const { code } = await minify(/** @type {EXPECTED_ANY} */ (structuredClone(tree)), {
+				parse: { spidermonkey: true },
+				compress,
+				mangle: false
+			});
+			expect(runProgram(/** @type {string} */ (code))).toBe("1 undefined true");
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(source));
+		}
+		// terser's conversion writes the prototype instead.
+		const { code } = await terserReference().minify(
+			/** @type {EXPECTED_ANY} */ (structuredClone(tree)),
+			/** @type {EXPECTED_ANY} */ ({ parse: { spidermonkey: true }, compress: false, mangle: false })
+		);
+		expect(runProgram(/** @type {string} */ (code))).toBe("0 1 false");
+	});
+
+	it("should leave a `RegExp` static `unsafe` reads, which terser throws on", async () => {
+		const { minify } = await load();
+		const source =
+			'var t = Math.random() < 2 ? "abc" : ""; console.log(/(b)(c)/.test(t), RegExp.$1, RegExp.$2.length, RegExp.lastMatch);';
+		const options = () => ({ compress: { unsafe: true }, mangle: false });
+		const { code } = await minify(source, options());
+		expect(code).toBe(
+			'var t=Math.random()<2?"abc":"";console.log(/(b)(c)/.test(t),RegExp.$1,RegExp.$2.length,RegExp.lastMatch);'
+		);
+		expect(runProgram(/** @type {string} */ (code))).toBe("true b 1 bc");
+		expect(runProgram(source)).toBe("true b 1 bc");
+		await expect(terserReference().minify(source, options())).rejects.toThrow(
+			"Cannot read properties of undefined (reading '$1')"
+		);
+		await expect(uncorrected(() => minify(source, options()))).rejects.toThrow(
+			"Cannot read properties of undefined (reading '$1')"
+		);
+	});
+
+	it("should write an ESTree tree of every program of acorn's corpus that reads back as the program", async () => {
+		const { minify } = await load();
+		let compared = 0;
+		for (const { code, options } of ACORN_CORPUS.cases) {
+			const module = Boolean(options && options.sourceType === "module");
+			try {
+				acorn.parse(code, { ecmaVersion: "latest", sourceType: module ? "module" : "script" });
+			} catch (_err) {
+				continue;
+			}
+			// ESTree holds a BigInt's digits in decimal, whatever radix wrote it,
+			// and has no place for a `#!` line.
+			if (/\b0[box][\da-f_]+n\b/i.test(code) || code.startsWith("#!")) continue;
+			for (const compress of [false, {}]) {
+				const settings = { compress, mangle: false, module };
+				const { code: written } = await minify(code, { ...settings });
+				const { ast: tree } = await minify(code, { ...settings, format: { spidermonkey: true } });
+				const { code: read } = await minify(/** @type {EXPECTED_ANY} */ (tree), {
+					parse: { spidermonkey: true },
+					compress: false,
+					mangle: false,
+					module
+				});
+				expect([code, read]).toEqual([code, written]);
+				compared++;
+			}
+		}
+		expect(compared).toBeGreaterThan(4000);
+	});
+
+	it("should write a directive's value to ESTree as acorn reads it, its spelling apart", async () => {
+		const { minify } = await load();
+		const code = '"\\u0075se strict"; function f() { "a\\nb"; return 1; }';
+		const { ast } = await minify(code, {
+			compress: false,
+			mangle: false,
+			format: { spidermonkey: true }
+		});
+		const tree = /** @type {EXPECTED_ANY} */ (ast);
+		const read = /** @type {EXPECTED_ANY} */ (acorn.parse(code, { ecmaVersion: "latest" }));
+		for (const [ours, acorns] of [
+			[tree.body[0], read.body[0]],
+			[tree.body[1].body.body[0], read.body[1].body.body[0]]
+		]) {
+			expect([ours.directive, ours.expression.value, ours.expression.raw]).toEqual([
+				acorns.directive,
+				acorns.expression.value,
+				acorns.expression.raw
+			]);
+		}
+		const { code: written } = await minify(/** @type {EXPECTED_ANY} */ (tree), {
+			parse: { spidermonkey: true },
+			compress: false,
+			mangle: false
+		});
+		expect(written).toBe('"\\u0075se strict";function f(){"a\\nb";return 1}');
+	});
+
+	it("should refuse to make a symbol it has no name for, as terser's `create_symbol` does", async () => {
+		const { modules } = await load();
+		const { ast } = modules;
+		const tree = modules.parse.parse("var a = 1; a;");
+		ast.figureOutScope(tree, {});
+		expect(() => ast.createSymbol(tree, ast.SymbolVarNode)).toThrow(
+			"No symbol name could be generated in create_symbol()"
+		);
+		const terser = await loadTerserSources(importTerserSource);
+		const theirs = terser.parse.parse("var a = 1; a;");
+		theirs.figure_out_scope({});
+		expect(() => theirs.create_symbol(terser.ast.AST_SymbolVar)).toThrow(
+			"No symbol name could be generated in create_symbol()"
+		);
+		// A definition asked about without mangle options is asked about under none.
+		const { definition } = tree.body[0].declarations[0].id;
+		const theirDefinition = theirs.body[0].definitions[0].name.definition();
+		expect(Boolean(ast.isDefinitionUnmangleable(definition))).toBe(
+			Boolean(theirDefinition.unmangleable())
+		);
+	});
+
+	it("should read only a `global_defs` object's own keys, as terser does", async () => {
+		const { minify } = await load();
+		const value = Object.create({ inherited: 1 });
+		value.own = 2;
+		const options = () => ({
+			compress: { global_defs: { CONFIG: value } },
+			mangle: false
+		});
+		const source = "console.log(CONFIG.own, CONFIG.inherited, Object.keys(CONFIG));";
+		const { code } = await unimproved(() => minify(source, options()));
+		expect(code).toBe((await terserReference().minify(source, options())).code);
+		expect(code).toBe("console.log(2,{own:2}.inherited,Object.keys({own:2}));");
+	});
+
+	it("should read only the options' own keys where an object's prototype holds others", async () => {
+		const { minify } = await load();
+		const source = "var a = 1; console.log(a + 1);";
+		const before = (await minify(source, {})).code;
+		Object.defineProperty(Object.prototype, "webpackInherited", {
+			value: true,
+			enumerable: true,
+			configurable: true,
+			writable: true
+		});
+		try {
+			expect((await minify(source, {})).code).toBe(before);
+		} finally {
+			delete (/** @type {EXPECTED_ANY} */ (Object.prototype)).webpackInherited;
+		}
+	});
+
+	it("should mangle properties where the engine lacks a global it lists as built in", async () => {
+		const source = "var o = {}; o.revocable = 1; o.custom = 2; console.log(o.custom);";
+		const options = () => ({ mangle: { properties: true } });
+		/**
+		 * @returns {Promise<string>} what a minifier built now writes
+		 */
+		const write = async () => {
+			const modules = createModules();
+			for (const phase of PHASES) phase.install(modules);
+			return /** @type {string} */ ((await modules.minify(source, options())).code);
+		};
+		const expected = await write();
+		const saved = /** @type {PropertyDescriptor} */ (
+			Object.getOwnPropertyDescriptor(globalThis, "Proxy")
+		);
+		// The names it lists are read once, when a minifier first mangles properties.
+		delete (/** @type {EXPECTED_ANY} */ (globalThis)).Proxy;
+		let written;
+		try {
+			written = await write();
+		} finally {
+			Object.defineProperty(globalThis, "Proxy", saved);
+		}
+		expect(written).toBe(expected);
+		expect(written).toBe((await terserReference().minify(source, options())).code);
+	});
+
+	it("should escape a `</script` a regular expression spells, as terser does", async () => {
+		const { minify } = await load();
+		const source = 'console.log(/[</script]/.test("/"), /a[</SCRIPT]/i.test("A<"));';
+		for (const compress of [false, {}]) {
+			const options = () => ({ compress, mangle: false });
+			const { code } = await minify(source, options());
+			expect(code).toBe((await terserReference().minify(source, options())).code);
+			expect(code).toContain("<\\/");
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(source));
+		}
+	});
+
+	it("should refuse to negate or evaluate a statement, as terser does", async () => {
+		const { modules } = await load();
+		const terser = await loadTerserSources(importTerserSource);
+		const ours = modules.parse.parse("a();").body[0];
+		const theirs = terser.parse.parse("a();").body[0];
+		expect(() => modules.ast.negate(ours)).toThrow("Cannot negate a statement");
+		expect(() => theirs.negate()).toThrow("Cannot negate a statement");
+		// A parse's node holds its token's number, which names no place here.
+		expect(() => modules.ast.evaluateNode(ours, /** @type {EXPECTED_ANY} */ ({}), 0)).toThrow(
+			"Cannot evaluate a statement ["
+		);
+		expect(() => theirs._eval({})).toThrow(/^Cannot evaluate a statement \[\w+:1,0\]$/);
+	});
+
+	it("should leave a kind with no optimizer unwrapped", async () => {
+		const { ast } = (await load()).modules;
+		expect(ast.wrapOptimizer("NoSuchKind", (original) => original)).toBe(false);
+	});
+
+	it("should show a token of a parse's table as Node's console shows a token", async () => {
+		const { modules } = await load();
+		const tree = modules.parse.parse("a;");
+		const token = tree.tokenTables.of(tree.body[0].startToken);
+		expect(require("util").inspect(token)).toBe(
+			'ParsedToken { type: "name", value: "a", line: 1, col: 0 }'
+		);
+	});
+});
+
+// Programs reduced from the packages webpack installs, each the smallest that
+// still reaches a path of the passes none of the cases above reach: its name,
+// its text, the options it is minified with by their index below, whether it
+// is a module, and whether terser's passes alone write what terser does.
+// cspell:disable
+/** @type {EXPECTED_OBJECT[]} */
+const REDUCED_OPTIONS = [{"compress":{},"mangle":true},{"compress":{"unsafe":true,"passes":2,"toplevel":true,"pure_getters":true,"unsafe_arrows":true,"unsafe_methods":true,"keep_fargs":false,"hoist_funs":true,"hoist_vars":true},"mangle":{"toplevel":true},"ecma":2020},{"compress":{"passes":3,"unsafe":true,"unsafe_comps":true,"unsafe_math":true,"unsafe_proto":true,"unsafe_regexp":true,"unsafe_symbols":true,"unsafe_undefined":true,"unsafe_Function":true,"booleans_as_integers":true,"keep_fargs":false,"pure_getters":true,"toplevel":true,"hoist_props":true,"module":false},"mangle":{"toplevel":true,"properties":false},"ecma":2022},{"compress":{"sequences":false,"conditionals":false,"inline":1,"join_vars":false,"collapse_vars":false,"reduce_vars":false,"dead_code":false},"mangle":false},{"compress":{"passes":2},"mangle":{"properties":{"regex":"^_"}},"ecma":2015},{"compress":{"unsafe":true,"inline":3,"reduce_funcs":false,"side_effects":true,"drop_console":true,"drop_debugger":true,"pure_funcs":["foo"],"keep_infinity":true,"negate_iife":false,"arguments":true,"computed_props":true,"lhs_constants":false,"global_defs":{"DEBUG":false}},"mangle":false,"ecma":5},{"compress":{"ie8":true,"keep_classnames":true,"keep_fnames":true,"inline":2,"sequences":5,"reduce_funcs":false,"pure_new":true,"passes":2},"mangle":{"ie8":true,"safari10":true,"eval":true,"keep_fnames":true},"ie8":true,"safari10":true,"format":{"ascii_only":true,"wrap_iife":true,"wrap_func_args":false,"braces":true,"preserve_annotations":true,"comments":"all","max_line_len":80,"semicolons":false,"quote_style":3,"keep_quoted_props":true,"inline_script":true}},{"compress":{"collapse_vars":false,"inline":0,"toplevel":true,"top_retain":["exports","module"],"unsafe":true,"unsafe_arrows":true,"ecma":2020,"module":true,"booleans":false,"if_return":false,"loops":false,"comparisons":false,"directives":false},"mangle":{"toplevel":true,"properties":{"keep_quoted":true}},"module":true,"ecma":2020,"sourceMap":true,"format":{"quote_style":1}}];
+/** @type {[string, string, number, boolean, boolean][]} */
+const REDUCED_CASES = [
+	["lodash-es/_createFlow.js", "import getFuncName from'';function createFlow(){flatRest(function(){{var func=[];if(''){}func=[];var funcName=getFuncName(func)\ndata=funcName==''?(func):undefined;if([][9]=1){((func))?wrapper[funcName]():(func)}}})}export default createFlow", 1, true, true],
+	["eslint-plugin-unicorn/rules/no-useless-undefined.js", "const shouldIgnore=node=>{if(type=''){name}else if(nodetype){}}\ncreate=context=>{getProblem=()=>{{{}}{}}\n(node=>{if((node)){}})({if(){}})\nif(options){(node=>{if((node)){}})}on(node=>{if((node)){return(node,function(){const assignmentPattern=parent;const{}=assignmentPattern;if(((context)).includes(assignmentPattern)){(typeAnnotation)}})}})(node=>{if(isUndefined|shouldIgnore()){}})}\nconfig={meta:{}}\nexport default config", 0, true, true],
+	["ms/index.js", "exports=function(){if(0){(val)}}/**/\nfunction parse(str){str=String(str)\nif(str.length>100){return}type=(match|'').toLowerCase()\nswitch(type){case'':n}}", 1, false, true],
+	["chokidar/index.js", "class FSWatcher extends EventEmitter{constructor(_opts={}){opts={}=()=>{{}for(ignored of this){if((ignored)&recursive){}}}\n((()=>{})).then(()=>{})(()=>{{}this._userIgnored=undefined})\nconst closers=((closerList)(()=>{}))\nthis}_remove(isDirectory){isDirectory!=null?isDirectory:_watched||(fullPath)\nif(this())return;const eventName=isDirectory?EVENTS:handler_js_1}/**/_closeFile(){(()=>{})(()=>{})}}exports=FSWatcher", 1, false, true],
+	["coffeescript/lib/coffeescript/index.js", "(function(){CoffeeScript=function(){var ref1,createContext=(ref)\nisContext=(ref1=vm)!=null?ref1:function(){return options instanceof createContext};{{if((options)){for(k in ref2){}}}if((require)){{if(''&''){}}}}}}).call()", 1, false, true],
+	["eslint-plugin-n/lib/rules/no-mixed-requires.js", "export default{meta:{schema:[{oneOf:[{properties:{}}]}]},create(){function isMixed(){for(declaration of declarations){if((init)){}}}return{VariableDeclaration(){if(isMixed()){report({})}else if((declarations)){({})}}}}}", 0, true, true],
+	["axios/lib/core/mergeConfig.js", "function mergeConfig(){function getMergedValue(){if((source)){}}function getMergedTransitionalOption(){if((transitional2)){if((transitional2)){if((prop)){}}else{return}}}function mergeDirectKeys(){if(hasOwnProp()){}}if(getMergedTransitionalOption('')){}}", 0, true, true],
+	["core-js/modules/es.regexp.constructor.js", "handleNCG=function(){for(;;index++){if(chr='\\\\'){if(charAt()=='\\\\'){}}else if(brackets)switch(true){case chr='':if((stringSlice())){}continue}}}\nif(isForced()){{{}if(rawPattern)try{(rawPattern=''?'':rawPattern)}catch(error){/ /}}({})}", 1, false, true],
+	["eslint-plugin-unicorn/rules/no-useless-error-capture-stack-trace.js", "const isSubclassOfBuiltinErrors=(node)=>node.superClass=node\n{([],()=>{errorClass=at()\nif((isSubclassOfBuiltinErrors(errorClass))){}})}", 1, true, true],
+	["ansis/index.js", "r&&r?t?231:e((8))+232:e(51),i=>{return r?30:(r>=232?n=((r)+8):((r16)=(0)),s?+(60):30)},l=(()=>{try{s}catch(e){0}let a=(\"edge\"),c=\"FORCE_COLOR\",u=s[c](u),g=isNaN(p)?\"false\"===u?0:-1:c in e(/^color=?(always)/);return(o),0&&(((r)=>{let{COLORTERM}=(n)?1:3})(\"win32\"===(n?r:i))),(/{((false))$/)?0:o?3:o}),{close},s?({open:`\u001b`,close:`\u001b`}):()=>(((r)=s)),e=>(i)=>e(),(``,p);letE=()=>{let=()=>{{if(te)o}let l=raw?raw(...i):e,s=_p,{_b}=s;{if(n){for(;~(e(a));a)islice(a)}s=s}return l(l(/(\\r?\\n)/g,c+\"$1\"+a)),a+l+c};return e&&(l._b),{_p:e},n}", 0, false, false],
+	["eslint/lib/rules/array-bracket-spacing.js", "exports={meta:{deprecated:{replacedBy:[]},schema:[{properties:{singleValue:{}}}],messages:{unexpectedSpaceAfter:\"\"}},create(){function isOptionSet(){}const options={spaced,singleElementException:(\"\")}\n{(1)?!options.spaced:spaced;if(astUtils) {\tif (\t( second)\t) {\t}\t}if (isTokenOnSameLine( last)\t) {\tif (( last)) {\t}\t}\t\t}\t}}", 0, false, true],
+	["@babel/traverse/lib/path/evaluation.js", "{if(path){{if(computed){}}if(binding){if(end)if(\"\"&bindingPathScope!=scope){for(;;){{{}}}}}if(\"\"()){if(prop){}}{if((name)){context=global[name];{}}}}}", 0, false, true],
+	["http-errors/index.js", "function codeClass(status){returnNumber((status).charAt)}//\nfunction createError(){(''())[status][codeClass(status)]\n{}(function(){switch(codeClass()){}})}", 1, false, true],
+	["cac/dist/index.js", "if(\"undefined\"){let runtimeName;if(Deno=\"\"&deno==\"\")runtimeName=\"\";else runtimeName=\"\";`${process.platform}${runtimeName}`;runtimeProcessArgs}(\"\")``", 0, true, true],
+	["cac/dist/index.js, 2", "CACError={constructor(){name=\"\";if(captureStackTrace!=\"\")(message)}}\nCommand=class{constructor(){((this)&commands)((\"\"))}checkUnusedArgs(){(````)}}\nCAC=class{command(){command = Command()\t}\tparse( {}) { {}\t}}", 1, true, true],
+	["source-map/lib/util.js", "function strcmp(){if(aStr2){return-1}if(aStr1>aStr2){return}return-1}", 0, false, true],
+	["schema-utils/dist/cli.js", "USAGE=``//\nfunction cli(){{(USAGE)}{try{{}}catch(_err){}}}", 1, true, true],
+	["type-check/lib/check.js", "(function(){types={Number:{validate:function(){}}}\nfunction checkArray(){for((of);;){if((types,options)){}}if(null){}}})", 1, false, true],
+	["@webassemblyjs/wasm-parser/esm/index.js", "{({ModuleNameMetadata:function(){{}}(function(){({Module:function(_Module){toString=function(){_Module.toString}}(function(){})})})})}", 1, true, true],
+	["ajv-keywords/keywords/transform.js", "exports=function defFunc(){transform={function(){}}\ndefFunc.definition={function(){}}\naddKeyword()}", 0, false, true],
+	["cspell-dictionary/dist/SpellingDictionary/FlagWordsDictionary.js", "export function createFlagWordsDictionary(){get(()=>{const{}=bisect(parseDictionaryLines(),(line)=>test(line))})}function bisect(values,predicate){for(v of values){if(predicate()){}}}", 1, true, true],
+	["postcss-modules-local-by-default/src/index.js", "function localizeDeclaration(){if(isAnimation){const valueNodes=((node)>{})\ndeclaration.value=valueNodes.toString()\nreturn}}", 0, false, true],
+	["undici/lib/dispatcher/client-h1.js", "function resumeH1(){{{{if(destroyed){return}return}}}}", 0, false, true],
+	["@babel/helpers/lib/helpers/applyDecs2311.js", "function applyDecs2311(){function createRunInitializers(){return function(){}\n{{{isPrivate?isMethod?function(){}:(assertInstanceIfPrivate):function(){}?_bindPropCall():function(){}}}}if(isClass){if(isPrivate){if(isAccessor){}}}}function applyMemberDecs(){var staticInitializers;pushInitializers=function(){if(initializers){if( !kindOnly == isField) {applyDec( isPrivate ? \"#\": ( _toPropertyKey.default)? [] : isStatic ? staticInitializers : isPrivate ? function (_) {} : instanceBrand) } } }\n pushInitializers(staticInitializers)} applyMemberDecs()\nreturn { c() { }  }}", 0, false, true],
+	["eslint-plugin-unicorn/rules/prefer-native-coercion-functions.js", "context=>{on(node=>{if((((node)))){}problem={}//\nif((node)>0){return problem}fix;return problem})}", 0, true, true],
+	["@sinclair/typebox/build/cjs/type/mapped/mapped.js", "function MappedKeyToUnknownMappedResultProperties(P){for(const L of P);}function MappedKeyToMappedResultProperties(K){((K)?(K):MappedKeyToUnknownMappedResultProperties())}function FromMappedKey(K){MappedKeyToMappedResultProperties(K)}function FromSchemaType(){((T)?FromMappedKey: T)} {Acc[L] = FromSchemaType}", 1, false, true],
+	["three/src/extras/PMREMGenerator.js", "class PMREMGenerator{dispose(){params={};{({})}for(;;){}}_blur(){}}{for(;;){{coordinates[2/3];for(vertex= 0;;  ) {\t}}\t}}{ }", 0, true, true],
+	["@webassemblyjs/wasm-opt/lib/index.js", "function _createSuper(Derived){var hasNativeReflectConstruct=_isNativeReflectConstruct;return function(){_getPrototypeOf(Derived),result;if(hasNativeReflectConstruct){Super()}(result)}}OptimizerError=/**/function(){_super=_createSuper(OptimizerError)\nfunction OptimizerError() { ( \"Error\" + message)}  return OptimizerError;}( /**/)\n {try {( uint8Buffer)  } catch (e) {OptimizerError()  }}", 2, false, true],
+	["core-js/internals/array-buffer.js", "var PROTOTYPE='prototype';{{}function DataView(){({})\n{}}[PROTOTYPE];({getInt8(){}})\nif(({})){{}$ArrayBuffer[PROTOTYPE]=ArrayBufferPrototype}}", 2, false, true],
+	["prelude-ls/lib/Num.js", "Math.PI", 2, false, true],
+	["eslint-plugin-react/lib/rules/destructuring-assignment.js", "module.exports = {  meta: {    schema: [{   properties: {   } }]},  create:detect(( utils) => { { { } (  node=== 'ThisExpression'\n)\n {   report( {   }) } } /**\n*/  function findParent(node, predicate) {      let n = node;      while (n) {   if (predicate(n)) {   }   n = n    }    }    return {      TSQualifiedName(node) {   if ('Identifier'\n & findParent(node, (n) => n.type === 'TSTypeQuery')        ) {     ( {  fix(fixer) {  }     })   }      }    }  })}", 2, false, true],
+	["espree/espree.js", "(function(){visitorKeys}())", 3, true, true],
+	["clean-css/lib/optimizer/level-1/value-optimizers/color/shorten-hsl.js", "function hueToRgb(){{(q)*(t)*6}}", 2, false, true],
+	["webpack-sources/lib/helpers/createMappingsSerializer.js", "const createLinesOnlyMappingsWriter=()=>{mappings=\"\";return{add(){if(sourceIndex)if(1){if(currentSourceIndex){if(1){mappings=\"\";return}}return}}}}", 2, false, true],
+	["@babel/core/lib/config/files/module-types.js", "function loadCodeDefault(){switch(pattern){case\"\":{}try{{}}catch(e){if(\"\"()){}}if(async!=null?async:(isAsync)){}}}", 4, false, true],
+	["tsyringe/dist/esm2015/decorators/auto-injectable.js", "function autoInjectable(){{return class extends target{constructor(...args){super(...((()=>{try{{if((type)){}}}catch{}})))}}}}", 4, true, true],
+	["@babel/core/lib/config/files/module-types.js, 2", "\"use strict\";function loadCodeDefault(loader,esmError,tlaError){switch(pattern){case\"\":try{{(arguments[2])}}catch(e){{}}}}", 5, false, true],
+	["zod/v4/core/core.js", "NEVER=/*@__PURE__*/Object.freeze()", 0, true, true],
+	["@cspell/rpc/dist/index.js", "{}/**\n*/\nfunction notifyEventToPromise( signal) {\treturn(( reject) => {\t})}function notifyEventOnce(event) {\tfunction notifyOnce(handler) {\t}}function createRPCOkRequest(id) {\treturn {\t\tid,\t}}var RPCClientImpl = class {\trequest( options) {\t\treturn {\t\t\tget isCanceled() {\t\t\t}\t\t}\t}\t#sendRequest() {\t}\tasync isOK(options = DefaultOkOptions) {\t\ttry {\t\tawait this.#sendRequest(createRPCOkRequest(), options)\t\t} catch {\t\t\treturn false;\t\t}\t}\t#calcId(method) {\t}}/**\n*/\nvar RPCClient = class extends RPCClientImpl {\t/**\n\t*/\n\tconstructor(config) {\t}}/**\n*/\nfunction protocolMethods(apiMethods) {}var RPCServer = class extends RPCServerImpl {\t/**\n\t*/\n\tconstructor( methods) {\t}}\nexport { RPCClient, protocolMethods }", 0, true, true],
+	["yaml/browser/dist/compose/compose-collection.js", "function composeCollection(onError){{{}}if((tagName='')){const kt=[];if(expType){if(kt){onError(tagToken,'',``,true)}else{onError(tagToken,'TAG_RESOLVE_FAILED',`Unresolved`,true)}}}}", 0, true, true],
+	["clean-css/lib/options/optimization-level.js", "function covertValuesToHashes(){var level;{if(([][level]=false)){}if(''){[]=covertToHash([],level)}}}function covertToHash(asString,level){reduce(function(){{(defaults(level))}})}", 1, false, true],
+	["chalk/source/index.js", "{[]={get(){return function(...arguments_){createBuilder(this[IS_EMPTY])}}}[bgModel]={get(){}}}", 0, true, true],
+	["prop-types/prop-types.js", "(function(){return (function(){function r(t){function o(f){{if(!e[i]){if(\"Cannot'\"+i+\"'\")a}var p=n[i]={exports:{}};(t)}return n[i].exports}for(i=0;i<t.length;i++)return o}return r})({1:[function(exports){ { { {    }    try {    } catch (x) { /**/ }  }  PropTypeError.prototype = Error.prototype; { { {        if (throwOnDirectAccess) {        if (   manualPropTypeWarningCount < 3\n          ) {          }        }      }    }  } {    function validate( secret) {    }  } {        for (var i = 1; i < arguments.length; i++) {        }    }}(function (process){(function (){ {  (function() {function typeOf(object) {  if (typeof object === 'object' && object !== null) { {    }  }}  })}}).call(this)}).call(function (process){call(this)})},{\"_process\":8}]},4)})", 0, false, true],
+	["@jridgewell/gen-mapping/dist/gen-mapping.umd.js", "(function(){{([''],{})}}(function(){var __copyProps=(to)=>{return to}\n(target)(target? __create: {}, __copyProps( ))\nvar __toCommonJS = (mod)> __copyProps(__defProp({ value: true }),)\nfunction toDecodedMap(map){  for (i = 0;length;) {  for (let;; j++) { }}  const {} = cast2(map)\n  for (i = 1;0; ) { }}}))", 0, false, false],
+	["@jridgewell/remapping/dist/remapping.umd.js", "(function ( factory) { {    define(['module', '@jridgewell/trace-mapping'], {    })  }})( (function ( require_traceMapping) {var __commonJS = ( mod) => function __require() { {  }}\nvar __toESM = (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps())\nfunction SegmentObject( ignore) {}function Source(map, sources, ignore) {  return {    map,    sources,  }}function MapSource(map, sources) {  return Source(map, sources, false)\n  return Source( ignore)} {  for (let i = 0; i < rootMappings.length; i++) { { {        traced = originalPositionFor(        )      }    }  }  if (!source.map) {\n  }\n  return originalPositionFor(\n  )}\n {\n  for (let i = 0; i < maps.length; i++) {\n {\n      throw new Error(\n        `Transformation map ${i} must have exactly one source file.\nDid you specify these with the most recent transformation maps first?`\n      );\n    }\n  }\n  for (let i = maps.length - 1; i >= 0; i--) {\n    tree = MapSource(maps[i], [tree])  }\n  const children = resolvedSources.map((sourceFile, i) => {\n\n  });\n  return MapSource(map, children)}\nvar SourceMap = class {\n  constructor(map, options) {\n    if (!options.excludeContent) {\n    }\n  }\n}}));", 0, false, true],
+	["array-timsort/src/index.js", "log10=x?1e2?x?0:1:1e4?x?2:3:4:function(){if((array))if(typeof compare!=''){compare}do{if(minRun){}}while(0)}", 0, false, true],
+	["glob/dist/esm/walker.js", "export class GlobUtil{constructor(){{(()=>{})}next=()=>{(-tasks==0)()}}}", 0, true, true],
+	["yaml/dist/compose/compose-scalar.js", " { tagToken\n ? ctxtagName( ( msg)) : null;    let tag; if (ctx.atKey) { tag = ctx.schema } else if (tagName)  tag = findScalarTagByTest( onError)\n    else\n  tag =schema[identity.SCALAR];    try {   res = tag.resolve( msgoptions) }    catch (error) { }}function findScalarTagByTest({ schema }) { const tag =(tag (tag.true || (atKey && tag=== 'key')))\n if (schema.compat) {  if (tagtag) {  }    }}exports.composeScalar = composeScalar;", 1, false, true],
+	["eslint-plugin-unicorn/rules/text-encoding-identifier-case.js", "MESSAGE_ID_ERROR='error';messages={[MESSAGE_ID_ERROR]:''}\ncontext=>{(node=>{problem={MESSAGE_ID_ERROR:{}}\nif(isFsReadFileEncoding){}problem=[]})}\nconfig={meta:{messages}}", 1, true, true],
+	["@babel/traverse/lib/path/evaluation.js, 2", "{if(path){if(isLiteral()){{}if(scope){for(;;){if(path){}}}}{{}}for(prop of props){if(isObjectMethod()){}}}if(isCallExpression()){let context;{{context=[];if(hasOwnProperty.call(context)){}}if(isLiteral()){}}}}", 1, false, true],
+	["write-file-atomic/index.js", "function writeFileAsync(options={}){try{}finally{if(fd){activeFiles[0]()}}}", 1, false, true],
+	["schema-utils/dist/validate.js", "const memoize=fn=>{let result;return()=>{{return result}result}}\nconst getAjv=memoize(()=>{})/function(){{getAjv()}}", 1, false, true],
+	["cssesc/cssesc.js", "cssesc=function cssesc(options){options=(cssesc.options);{if(0x7E){if(codePoint){}}if(/]/.test()){}}(function(){})}", 0, false, true],
+	["napi-postinstall/lib/index.js", "{try{}catch(err){const error=err;if(error.code==''){(errorLog)(`${error}`)}try{{for(dir of dirs){if(('')){for(nestedDir of nestedDirs){} }  }}  }catch {  }}}", 1, false, true],
+	["fill-range/index.js", "const fillLetters=(step=1,options={})=>{if(((end)&1)){invalidRange(options)}}\nfill=()=>{fillLetters()}", 1, false, true],
+	["@babel/helper-plugin-utils/lib/index.js", "{api=>{throwVersionError()}}function throwVersionError(){if(range=\"\"){if((range)){}}if(limit=\"\"<25){stackTraceLimit}throw assign()}", 0, true, true],
+	["lodash/_baseIsEqualDeep.js", "function baseIsEqualDeep(){var objIsArr,objTag=objIsArr?arrayTag:(object)\nobjTag=argsTag?objectTag:objTag;if((object)){{var objUnwrapped=objIsWrapped?value:othUnwrapped?other:other}}}", 1, false, true],
+	["webpack-dev-server/client/index.js", "reloadApp=function(){/**/if(allowToHot){if(\"\"){({})}}if(allowToLiveReload){rootWindow=self;(function(){{}})}}([\"\"].join(\"\"),\"\")", 1, true, true],
+	["@eslint/markdown/dist/rules/no-space-in-emphasis.js", "({meta:{schema:[{}]},create(){[{}]=/ /\nfunction reportWhitespace(){if(([])){({})}}return{\"\"(/**/){}}}})", 1, true, true],
+	["@sinclair/typebox/build/cjs/value/create/create.js", "function FromIterator(schema){if((index_1)){FromDefault(schema)}{return(function*(){})()}}function Visit(){const schema_=schema;switch([]){case'':FromIterator(schema_)}}", 1, false, true],
+	["@babel/core/lib/transformation/block-hoist-plugin.js", "{Math.pow(2,30)\nfor(;;){if(p){}}}", 3, false, true],
+	["fork-ts-checker-webpack-plugin/lib/rpc/rpc-worker.js", "function createRpcWorker(){worker={connect(){{}},connected(){Boolean(0?0:connected)}}((...args)=>{{}})}", 3, false, true],
+	["@eslint/config-helpers/dist/esm/index.js", "function findPluginConfig(){{if((directConfig)){deepNormalizePluginConfig()}}const flatConfig=configs?.[`${configName}`];if(((flatConfig))){}flatConfig?``:``}", 2, true, true],
+	["eslint-plugin-unicorn/rules/prefer-spread.js", "{(node)(comment> {\t})( preservedNodeOrRange)> {\t}\n getConcatPreservedRanges = () => {[\nflatMap(argument => {{ {\t}\tif (\t( sourceCode)\t) {\t}}\t})];if (fixedArgumentsCount) {\t\t}\t}\n\ton( node => {\t\tif (( {\t})) {\t}\t})\n\ton( node => {\t\tif (!isMethodCall( ))suggest = map(({\tfix: fixConcat(\t)}))\nif (\tlength\n) {\t\t}\t})\n( node => {if (!(\tisMethodCall\t)) {\treturn\t}const [firstArgument] = arguments;if (firstArgument( 0)) return {\t\t}\t})\n( node => {if (!(\tisMethodCall()\t\t)) {\t\t}\t})\n( node => {{\tif (typeof value== 'string') {\t}\t\t}\t})}", 3, true, true],
+	["three/src/renderers/common/extras/PMREMGenerator.js", "EXTRA_LODS=6;{lodMax-LOD_MIN+1+EXTRA_LODS;for(;;){for(;;face++){for(;;){if(0){}}}}}", 2, true, true],
+	["three/src/utils.js", "function error(){{if(isStackTrace){console.error(...params)}}}", 5, true, true],
+	["istanbul/lib/util/file-matcher.js", "{(function(){async(function(){})})}", 5, false, true],
+	["handlebars/lib/handlebars/runtime.js", "{{{if(options){for(;;i++){{}}}}}function ret(options={}){{if(depths){}}function main(/**/){(main())}main=executeDecorators()\nreturn main()}_setup=function(){if(options){}}}", 4, true, true],
+	["function-bind/implementation.js", "var max=Math.max", 5, false, true],
+	["eslint-plugin-unicorn/rules/no-named-default.js", "fixImportSpecifier=()=>{if(hasDefaultImport){[,]()}({})}\ncontext=>{(specifier=>{if(((specifier))){}{fixImportSpecifier()}})(specifier=>{if(((specifier))){}})}\nconfig={meta:{}}\nexport default config", 4, true, true],
+	["eslint-plugin-react/lib/rules/prop-types.js", "exports={meta:{docs:{},schema:[{properties:{ignore:{}}}]},create:(()=>{function checkNestedComponent(){[]&name=='';if(argumentIsForwardRef){(([].node.arguments[0].range))}}})}", 1, false, true],
+	["yaml/browser/dist/parse/cst.js", "BOM='';function tokenType(source){switch(source){case BOM:case'':return''};}", 0, true, true],
+	["@babel/helper-compilation-targets/lib/index.js", "function defaultTargetParser(target,value){(target)?value.toLowerCase():(value)}function getTargets({}={}){let{}=inputTargets;if(browsers){{for(browser of(queryBrowsers)){if(browser=\"\"&browser==\"\"){{}}}}  }for (const target of(targets)) { const value =[target]; if (value ==\"number\" &&0) { } [parsedTarget] = \"node\" ?(value) : defaultTargetParser(target, value)\nif (parsedValue) { }  }}", 0, true, true],
+	["shell-quote/parse.js", "var TOKEN = '';var mult = /** @type { */ (0x100000000)\nfor (var i = 0; i < 4; i++) {\tTOKEN += (mult * Math.random()).toString(16)}function closesAnsiC(s, i) {\tansiCAt.lastIndex = i;}function parseInternal( opts) {\treturn matches.map(function (match) {\t\tvar i;\t\tfunction parseEnvVar() { {\t\t\t\ti += 1;\t\t\t\tif (s.charAt(i) === '}') {\t\t\t\t}\t\t\t}\t\t\tif (esc) {\t\t\t} else if (c === DS && s.charAt(i + 1) === SQ && closesAnsiC(s, i)) {\t\t\t\tif (!ifs) {\t\t\t\t\tfor (var vi = 0; vi < value.length; vi += 1) {\t\t\t\t\t\tif (ifs.indexOf(vc) < 0) {\t\t\t\t\t\t}\t\t\t\t\t}\t\t\t\t}\t\t\t}\t\t} {\n\t\t}\n\t}, /** @type {ParseEntry[]} */ ([]))}", 1, false, true],
+	["chokidar/index.js, 2", "class FSWatcher extends EventEmitter{constructor(_opts={}){if(undefined){if(readyCalls){if(recursive){}}}((()=>{_addToNodeFs(undefined)})).then(()=>{(()=>{})})(()=>{{}})}}", 0, false, true],
+	["three/examples/jsm/utils/SortUtils.js", "(arr)=>{const aux=arr()\ndata=[arr,aux];{()=>{for(;;) {\t}}\n( ) => { {if (  0 ) {}\t}\t\t}\n\t\tfor (1;len;) {\t\t}\t}}", 1, true, true],
+	["jest-junit/utils/buildJsonResults.js", "const executionTime = function (startTime, endTime) {return (endTime - startTime)}\nmodule = function () {  jsonResults = {'testsuites': [{  '_attr': {  'time': executionTime()  }}] }\n((suite) => {if (noResults&  'false') {  } executionTime(suite, end)\n  testSuite = {'testsuite': [{  }]\n}\n { ((p) => {})} ((tc)> {  }); {{  }}  if (includeShortConsoleOutput = 'true' .length) {   }  })}", 1, false, true],
+	["istanbul/lib/config.js", "function isScalar(){(v)}function mergeObjects(template){(template)(function(){if((v1)){[]=mergeObjects()[k]=isScalar()}})}function mergeDefaults(explicit){mergeObjects(explicit||{})}{mergeDefaults()\nif((overrides)){config=mergeDefaults(config)}}", 1, false, true],
+	["shell-quote/parse.js, 2", "function parseInternal(){{}(function(){if(commented){{var depth=1;{if((varend)=''){depth-=1}}}}for(;;i++){ { { {\tif (c == DS) {\t}\t\t}\t}if (!ifs) {for (0; length;1) {}\t}\t}\t\t}/{/ ( {\t\t})\t} /***/ ([]))}", 0, false, true],
+	["rimraf/dist/commonjs/rimraf-move-remove.js", "rimrafMoveRemoveDirSync=()=>{if((parse).root){return false}if(filter&(ent)){return false}(ignoreENOENTSync)(()=>(rmdirSync))\nreturn true}", 0, false, true],
+	["type-check/lib/check.js, 2", "(function(){  types = { Number: { validate(it){ } }  }\n  function checkArray( options){ for ( len$().length;; i$) { }}  function check( options){ var type, structure;  type = typeObj, structure = typeObj.structure;if (type) {if ( defaultType[structure]) {if (thatcall(1)) {  }} return checkStructure() }  }function checkMultiple(){ if ((types)= 'Array') { } any(function(it){  check( options) }, types)  }  module= function( options){ {    }checkMultiple( options)  }}).call(this)", 0, false, true],
+	["eslint-plugin-unicorn/rules/text-encoding-identifier-case.js, 2", "MESSAGE_ID_SUGGESTION='/';messages={[MESSAGE_ID_SUGGESTION]:''}\ncontext=>{(node=>{if((node)){}[{}]})}", 0, true, true],
+	["@babel/core/lib/config/validation/option-assertions.js", "{for(key of(value)){(hasOwnProperty.call(_helperCompilationTargets().key))}}", 1, false, true],
+	["lru-cache/index.js", "isStale=()=>{diff=Date.now()}", 1, false, true],
+	["micromark/dev/lib/compile.js", " {const definitions =  {}  \n { {if (  (lineEndingBlank)  ) {  (  [index][2].sliceSerialize(events[index][1])    ) }  if (   listUnordered\n  ) { {    }  }    }    if (!hasOwnProperty.call(definitions, id)) {    }   }}", 1, true, true],
+	["@babel/core/lib/config/files/index.js", "function loadCodeDefault(){const ext=(filepath)\nconst isTS=ext=\"\";switch(pattern){case\"\":case\"\":try{(filepath)}catch{{}}if(isTS){}default:throw(\"\")}}", 0, true, true],
+	["@babel/helper-module-transforms/lib/normalize-and-load-metadata.js", "function getExportSpecifierName(){if(isIdentifier()){const stringValue=value;if((stringValue)){}}{throw(``)}}", 0, false, true],
+	["tsconfig-paths/lib/try-path.js", "function getPathsToTry(){{if(starMatch){_loop_1=function(){var physicalPath=replace()\npush({})\nvar indexPath=(\"\")((function(){return({path:indexPath})}))}\nfor(var _aentry; _a;) { _loop_1(physicalPathPattern) }}  }}exports = getPathsToTry", 1, false, true],
+	["eslint-plugin-unicorn/rules/prefer-string-starts-ends-with.js", "{(node=>{(({}))('')\nif(isString){{}}function fix(){switch(fixType){case FIX_TYPE_NULLISH_COALESCING:{if(isTargetParenthesized){}}}}if(isString||!isNonString){problem}if(isString){[].map(({}))}})}", 0, true, true],
+	["js-yaml/lib/dumper.js", "function writeBlockSequence(compact){for(;;){{if(compact|dump){}}}}function writeNode(level,isblockseq){{ { if ((Object)) { } if ((state0)) {  if (isblockseq && level > 0) {  writeBlockSequence( dump, compact)  } else {writeBlockSequence( level, compact)} } }  }}", 1, false, true],
+	["ws/lib/websocket.js", "const{toBuffer}=('')", 1, false, true],
+	["prelude-ls/lib/List.js", "andList=function(xs){var i$,x;for(;;){x=xs[i$];if(!x){return}}}", 1, false, true],
+	["verkit/dist/version-Co1j9Tpq.js", "function incrementMutable(release){switch(release){case\"\":version;patch;break;case\"\":}}", 3, true, true],
+	["debug/src/browser.js", "{{}((/()/)(RegExp.$1)(/\\/()/))}", 2, false, false],
+	["@sinclair/typebox/build/cjs/errors/function.js", "DefaultErrorFunction=DefaultErrorFunction;function DefaultErrorFunction(){}let errorFunction=DefaultErrorFunction;function SetErrorFunction(){errorFunction=errorFunction}", 2, false, true],
+	["eslint-plugin-unicorn/rules/no-unnecessary-polyfills.js", "(feature=>{{(()=>{for(module of[]){}})()}})", 3, true, true],
+	["playwright-core/lib/server/electron/loader.js", "var chromiumSwitches=(options)=>[options.android?\"\":\"sync\"]()\nfor(arg of chromiumSwitches()){}", 2, false, true],
+	["assemblyscript/std/portable/index.js", "{({})()[\"\"]=function(){while(len){apply()}({function(){}})({replaceAll(){}})}\nfunction defaultComparator(){if(a){}}[](Ctr=>{{({})}if(Ctr.prototype.findLastIndex){({})}if(Ctr){({})}})({signbit:{signbit(){}},sincos:{function(){}}})}", 2, false, true],
+	["eslint-plugin-jsdoc/src/rules/checkParamNames.js", "(()=>{const{}=[]|{}\nif((type)|\n(/**/(nde)=''))validateParameterNamesDeep()},{meta:{docs:{},schema:[{properties:{allowExtraTrailingParamDocs:{description:``}}}]}})", 4, true, true],
+	["cspell-lib/dist/lib/trace.js", "class CTraceResult extends Array{constructor(){super(...items)}}", 4, true, true],
+	["@changesets/config/dist/index.mjs", "function _stringify(){}function _addIssue(){received??/*@__PURE__*/_stringify()}", 4, true, true],
+	["@peculiar/utils/build/esm/encoding/hex.js", "function normalizeText(text,options){[...(options)](()=>left)\nfor(separator of separators){}text.trim()}export function normalize(text,options={}){return normalizeText(text,options)}", 4, true, true],
+	["yargs/lib/platform-shims/browser.mjs", "export default{assert:{notStrictEqual:(b)>{}},readFileSync:()=>{},y18n:{__:(...str)=>{},__n:(count,...args)=>{if(count==1){return sprintf(str1,...args)}{return sprintf(str2,...args)}}}}\nfunction sprintf(){}", 4, true, true],
+	["a package", "function hasNotInSchema(schema){return!schema}{if(hasNotInSchema()){}}class ValidationError{constructor(){{{{}}if(addSelf){}}if(hasNotInSchema(schema)){if((not)){}}}formatValidationError(){const{}=error;switch(keyword){case\"\":{const{}=error;if(0){if(1){}````}}}}/**/formatValidationErrors(){}}", 1, false, true],
+	["a package, 2", "/**/(()=>{/**/({\"\"(){(({}))\nconst IS_ORDERED_SENTINEL='@__IMMUTABLE_ORDERED__';{((source)[IS_KEYED_SENTINEL][IS_ORDERED_SENTINEL])}{([][IS_ORDERED_SENTINEL])}/**/}/**/})\nfunction __webpack_require__(){/**/}/**/})", 0, false, true],
+	["a package, 3", "(function(f){if(\"object\"&&\"undefined\"){module=f}if(define){}{if(self=\"\"){}}})(function(){(function(){function r(){function o(){{(e)[i]={exports:{}}[i].call(function(){(r)})}}for(;;)return}})()({1:[function(){function checkPropTypes(){{for(var typeSpecName in typeSpecs){if((typeSpecName)){try{}catch(ex){}{var stack=getStack?getStack: '';printWarning( (stack != null ? stack : '') )} } }  }}module= checkPropTypes;exports = function() { { { { {  Error(  )\n  var cacheKey =':' + propName; if (!manualPropTypeCallCache[cacheKey] && manualPropTypeWarningCount) { manualPropTypeWarningCount++; } } {} }  }function validate() { var expectedTypes = []; for (var i = 0; ; i++) {}  }switch (typeof propValue) {  case 'number': { if ( entries) { while (!(stepnext).done) {} } }  }if (propValue['@@toStringTag'] = 'Symbol') {}  }}(function (process){(function (){/* */\nif (process== \"production\") {  (function() { { {  switch ($$typeof) {case REACT_ELEMENT_TYPE:switch (type) { }  }}}})}}).call(this)})(require('_process'))}]},[4])})", 1, false, true],
+	["a package, 4", "class MiniCssExtractPlugin{getCssModule(){({});if((webpack)){}(resolve(),{serialize(){},deserialize(){const{}=({})}})(compilation=>{class CssModuleFactory{create({}){}}(()=>{const{}=webpack;{push({render:()=>this,hash:chunk.contentHash})}}).tap(chunk=>{const{}=sortModules()})\nclass CssLoadingRuntimeModule{/**/constructor(){([''````````````,withLoading?([\"\"(/ /(/**/).join(\"\"))``]):\"\"!=false?``````:\"\"])}}})/**/\n{}for(module of usedModules){}}}", 0, false, true],
+	["a package, 5", "class VXGIVolume{constructor(){(Math.floor(Math.log2(max()))+1)((object))(()=>{(()=>{({name:''},{name:''},()=>{({})})})})(()=>{(()=>{})(()=>{for(;;){}})}).setName(()=>{(()=>{(bits,()=>{for(;;){(greaterThan(),()=>{{(()=>{})}})}})})(()=>{((uint()),()=>{({name:''},()=>{})})})})}}", 0, true, true],
+	["a package, 6", "/**/(()=>{(()=>{{{}}function matchArity(){let mockConstructor;switch(length){case 1:mockConstructor=function(_a){}\nbreak;mockConstructor=function(){}\ndefault:mockConstructor=function(){}}return mockConstructor}class ModuleMocker{constructor(){{}}_defaultMockConfig(){{}}_makeComponent(){{mockConstructor=matchArity(function(...args){try{(()=>{{{{}}}})}catch(error){}})()\nmockReset=()=>{{}}}{{}}}}JestMock=ModuleMocker()})()/**/})()", 0, false, true],
+	["a package, 7", "class MiniCssExtractPlugin{getCssModule(){({});if((webpack)){}((\"\"),{serialize(){},deserialize(){}})\nruntimeOptions={linkType:linkType&/**/linkType==true?\"\":options}(compilation>{})(compilation=>{class CssModuleFactory{create({}){}}(({})=>{const{}=webpack;{({render:()=>this})}(/**/requestShortener)\n{const{}=outputOptions}})/**/\nfor(;;i++){}})/**/\nwhile(length){{{(/ /([``].join(\"\")))}}}}}", 1, false, true],
+	["a package, 8", "(function () { { }  function testStringCoercion(value) {  \"\" + value  } function checkKeyStringCoercion(value) {try {testStringCoercion(value)} catch (e) { testStringCoercion(value)} if (  REACT_LAZY_TYPE\n) try { } catch (x) { }((didWarnAboutElementRef[componentName] =0), error()) (0 ? refProp : null)? ( { }):(\"fulfilled\" ==_payload) ( )} { { } }  function mapIntoArray( callback) {switch (type) { case \"object\":switch (children) { case REACT_LAZY_TYPE:(mapIntoArray ) }(callback) ? ((escapedPrefix = \"\"),( { })) : ((callback)) }  (isArrayImpl) (invokeCallback += mapIntoArray( ))\n  if ((((children)), \"function\" ==i))  for (;(nameSoFar());) {}  console(  )\n  try { } catch (error) {try { { do { } while (1) }  } finally {}}}setState = function () {this( \"forceUpdate\") }\n { {  new window.ErrorEvent( {message:\nmessage ? String()  : String })} }queueMicrotask\n ? function (callback) {queueMicrotask( { })}  : function (callback) {   try {   } catch  {   }if (thrownErrors.length)\n   if (  \"function\" === typeof result) {(function () { ((didWarnNoAwaitAct = !0),error(   ))  })\n  return { function ( reject) { (  function (returnValue) {  if (prevActScopeDepth) {    try {  } catch (error$0) {    aggregateErrors(   )   }  } 0  ? ((erroraggregateErrors(   )), (error))    : reject(error)   })    }  }}  (    queueSeveralMicrotasks (( aggregateErrors()),)  )\n {  for (propName in config)(props[propName] )   }   var propName = arguments.length( 1e4 > ReactSharedInternals.recentlyCreatedOwnerStacks++)\n(  propName ? createTask(getTaskName(type)) : unknownOwnerDebugTask )\n( {}) }\n exports.useActionState = function ( permalink) { }  })()", 0, false, true],
+	["a package, 9", "(function(){{{if((key)){}}}(function(){{if((/ /)){{if(ch/**/){}}}if(isTypeParameterRequired){try{}catch(error){}}}Rules={'constructor':['','']};{if((Rules)){}}}()).type={}})", 2, false, true],
+	["a package, 10", "function getLocFromIndex(sourceCode,index){if(lineIndexes){[sourceCode()](match=>match)}const column=index[line];return{line,column}}{const sourceCode=getSourceCode()\nconst[]=(index=>getLocFromIndex(sourceCode,index)).report({data:{}})}eslintPluginPrettier={configs:{recommended:{meta:{schema:[{properties:{}}]},create(){(getSourceCode())\nreturn{[type](){{for(difference of differences){}}}}}}}}\neslintPluginPrettier", 1, false, true],
+	["a package, 11", "{({}.configuration)\nconst flags=(array)(function(){})\nextendAliases(flags.arrays)\nfor(;;i++){if(''()){}if(([''](/=/))){if(checkAllAliases()){{if(checkAllAliases()){}}if(checkAllAliases()){if((counts)){}}}}(function(){{try{}catch(ex){}}if(value=''['']){}})}function extendAliases(...args){args(function(){})\nif((flags.bools)``){}}}", 1, false, true],
+	["eslint-plugin-unicorn/rules/text-encoding-identifier-case.js, 3", "MESSAGE_ID_SUGGESTION='';messages={[MESSAGE_ID_SUGGESTION]:''}\nshouldEnforceDash=node=>isJsxElementAttributes({attributes:['']})/**/\ncontext=>{const options=context[0](['',''],node=>{if (!value) {}\t\tconst withDash = options.withDash| shouldEnforceDash(node)( withDash)\n\t problem = {\tdata: {\t}\t\t} (isFsReadFileEncoding(node)) [\n\t{}\t\t]})}", 6, true, false],
+	["ms/index.js, 2", "function parse(){var type=(match[2]|'')\nswitch(type){case'':case'':n}}function fmtLong(){plural('')}/**/function plural(){}", 6, false, false],
+	["eslint-plugin-unicorn/rules/no-array-reduce.js", "context=>{(function(){for({}of cases){if((callExpression)){}if(allowSimpleOperations&&isSimpleOperation?.()){}}})}", 6, true, true],
+	["minimatch/dist/esm/brace-expressions.js", "const posixClasses={}\nparseClass=()=>{{if((''=='')){for([[]]of Object()){if(startsWith()){}}}{{}}}if(length){return['',,,true]}return[,,, true];}", 6, true, false],
+	["acorn-jsx/xhtml.js", "module.exports", 7, false, true],
+	["prop-types/prop-types.js, 2", "(function(){exports;return (function(){function r(t){function o(i,f){{if(!e[i]){var c=\"function\"==typeof require&&require;if(\"Cannot find module '\"+i+\"'\");throw a.code=\"MODULE_NOT_FOUND\",a}var p=n[i]={exports:{}};e[i][0].call(t)}return n[i].exports}for(var u=\"function\"==typeof require&&require,i=0;i<t.length;i++);return o}return r})({1:[function(require,module,exports){\n {\n {\n {\n    }\n    try {\n    } catch (x) { /**/ }\n  }; {\n\n    try {\n    } catch (x) {}\n  }\n  PropTypeError.prototype = Error.prototype;\n  function createChainableTypeChecker(validate) {\n    if (\"development\" !== 'production') { {\n {\n          if (\n            manualPropTypeWarningCount < 3\n          ) {\n          }\n        }\n      }\n    }\n  }\n { {\n      if (propType !== expectedType) {\n      }\n    }\n  }\n  function createShapeTypeChecker(shapeTypes) {\n    function validate(props, propFullName) {\n {\n      }\n    }\n\n    var type = getPreciseType(value);\n    switch (type) {\n      case 'array':\n      case 'object':\n        return type;\n    }\n  }\n} {\n {\n { {\n\t\t\t\tif (propIsEnumerable.call(from, symbols[i])) {\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n};(function () {\n    try {\n        if (typeof setTimeout === 'function') {\n        }\n    } catch (e) {\n    }\n} ())\nfunction runTimeout(fun) {\n\n    while(len) {\n        while (++queueIndex < len) {\n        }\n    }\n} {\n    if (arguments.length > 1) {\n        for (var i = 1; i < arguments.length; i++) {\n        }\n    }\n};\n(function (process){(function (){ {\n  (function() { {\n  if (typeof object === 'object' && object !== null) {\n    switch ($$typeof) {\n      case REACT_ELEMENT_TYPE:\n        switch (type) {\n          case REACT_SUSPENSE_TYPE:\n\n        }\n    }\n\n  }\n}\n  })();\n}\n}).call(this)}).call(this,require('_process'))\n(function (process){(function (){\n}).call(this)})\n},{\"./cjs/react-is.development.js\":9,\"./cjs/react-is.production.min.js\":10,\"_process\":8}]},4)\n});", 6, false, true],
+	["yaml/browser/dist/compose/compose-collection.js, 2", "function composeCollection(onError){{{}}if((tagName='')){const kt=[];if(expType){if(kt){onError(tagToken,'',``,true)}else{onError(tagToken,'TAG_RESOLVE_FAILED',`Unresolved`,true)}}}}", 6, true, true],
+	["three/examples/jsm/lighting/vxgi/VXGIVolume.js", "class VXGIVolume {\tconstructor( resolution = 128 ) {\t\tlevels = Math.min( Math.floor( Math.log2( Math.max( gridSize.y ) ) ) + 1 )\n\t\tscene.traverseVisible( ( object ) => {\t\t} )\n\t\tif ( kernels.inject[ index ] === null || kernels.injectKey[ index ] !== this._lightsKey ) {\t\t}\t}\t_getKernels() {\t\tfor ( let level = 1; level < this._levels; level ++ ) {\t\t}\t\treturn Fn( () => {\t\t\tIf( triangleIndex.lessThan( triangleCount ), () => {\t\t\t\tLoop( { name: 'j' }, ( { j } ) => {\t\t\t\t\tIf( () => {\t\t\t\t\t\tLoop( { name: 'k' }, ( ) => {\t\t\t\t\t\t} )\t\t\t\t\t} )\t\t\t\t} )\t\t\t} )\t\t} )( 'VXGI.Voxelize' )\t}\t_createResolveKernel() {\t\treturn Fn( () => {\t\t\tIf( instanceIndex.lessThan( voxelCount ), () => {\t\t\t\tconst coverage = ( m3 ) => {\t\t\t\t}\t\t\t} )\n\t\t\tIf( instanceIndex.lessThan( ), () => {\t\t\t\tfor ( let z = 0; z < 2; z ++ ) {\t\t\t\t}\t\t\t} )\t\t} )\n\t\treturn Fn( () => {\t\t\tIf( instanceIndex.lessThan( uint( count ) ), () => {\t\t\t\tfor ( let z = 0; z < 2; z ++ ) {\t\t\t\t\tfor ( let y = 0; y < 2; y ++ ) {\t\t\t\t\t}\t\t\t\t\tif ( level === 1 ) {\t\t\t\t\t}\t\t\t\t}\t\t\t\tfor ( let direction = 0; direction < 6; direction ++ ) {\t\t\t\t\tfor ( let i = 0; i < 8; i ++ ) {\t\t\t\t\t}\t\t\t\t}\t\t\t} )\n\t\t} )( 'VXGI.Directional' + level );\n\t}\n\t_surface( coords, triangleId ) {\n\t\treturn Fn( () => {\n\t\t\tIf( instanceIndex.lessThan( voxelCount ), () => {\n\t\t\t\tIf( bits.notEqual( uint( 0 ) ), () => {\n\t\t\t\t\tfor ( let i = 0; i < lightTypes.length; i ++ ) {\n\t\t\t\t\t\tIf( ndl.greaterThan( 0 ).and( attenuation.greaterThan( 0 ) ), () => {\n\t\t\t\t\t\t\tif ( shadowTexture === null ) {\n\t\t\t\t\t\t\t\tIf( viewZ.greaterThanEqual( near ).and( viewZ.lessThanEqual( far ) ), () => {\n\t\t\t\t\t\t\t\t\tif ( reversedDepth ) {\n\t\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t\t} );\n\t\t\t\t\t\t\t\tIf( inside, () => {\n\t\t\t\t\t\t\t\t\tif ( reversedDepth ) {\n\t\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t\t} );\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t} );\n\t\t\t\t\t}\n\t\t\t\t} );\n\t\t\t} );\n\t\t} )( () => {\n\t\t\tIf( instanceIndex.lessThan( voxelCount ), () => {\n\t\t\t} )\t\t} )\t}\n}", 6, true, true],
+	["jest-junit/index.js", "{if(('testResults')){const newConfig=JSON({})}onTestResult=()=>(results)>{}}", 6, false, true],
+	["semver/bin/semver.js", "{{var a=shift()\nif(1){}switch(a){case'':case'':reverse=true\nbreak\ncase'':loose}}(function(){})\nfor(;;i++){({})}}", 6, false, false],
+	["@typescript-eslint/eslint-plugin/dist/rules/no-var-requires.js", "exports({meta:{deprecated:{replacedBy:[{rule:{}}]},schema:[{properties:{allow:{}}}]},create(){function isImportPathAllowed(importPath){some(pattern=>importPath())}return{''(){if([]([])){const argValue=(node)\nif(isImportPathAllowed(argValue)) {  } }if ([].includes()) { {({ })  }}}}  }})", 6, false, false],
+	["memfs/lib/node.js", "()=>{var _a,_b;(_b=(getgid))!==null&&_b!==void 0?_b:0}", 7, false, true],
+	["type-check/lib/check.js, 3", "(function(){types={Number:{validate(){}}}\nfunction checkArray(){for(len$().length;;){}}function check(){var type,structure;type=typeObj,structure = typeObj.structure;if (type) {if ( defaultType[structure]) {if (thatcall(1)) {  }} return checkStructure() }  }function checkMultiple(){ if ((types)= 'Array') { } any(function(it){  check( options) }, types)}  module= function(){ {}checkMultiple( options)}}).call(this)", 6, false, false],
+	["eslint-plugin-unicorn/rules/utils/get-call-or-new-expression-tokens.js", "function getNewExpressionTokens(){if(isNewExpressionWithParentheses()){}}function getCallExpressionTokens(){}export{getNewExpressionTokens}", 6, true, false],
+	["@jest/expect-utils/build/index.js", "/***/ (() => {/***/ \tvar __webpack_modules__ = ({/***/ \"ts\"\n( exports) {( ({}))\nconst IS_ORDERED_SENTINEL = '@@__IMMUTABLE_ORDERED__@@';function isObjectLiteral(source) { Boolean( source[IS_KEYED_SENTINEL] && !source[IS_ORDERED_SENTINEL])}function isImmutableUnorderedSet(source) { Boolean([IS_ORDERED_SENTINEL])}/***/ },/***/ \".\"\n( __webpack_require__) {Object.defineProperty( ({}))\nObject.keys(_utils).forEach(function (key) {})\nconst iterableEquality = ( bStack = []) => {  if (typeof a !== 'object'  !== 'object' ) { if (a.isNativeFunction(b.constructor)) { } if (a.size.size) {   for (const aValue of a) {  if (!(aValue)) {  }}   for (const aEntry of a) {  if (!b.has(get(aEntry), filteredCustomTesters)) { for (const bEntry of b) {    }     }}    }    if (!( bEntries)) {    }  }  propertyPath.replaceAll( match => {  })}\nvalue => {  switch (Object(value)) {  }}/***/ }/******/ \t})\n/******/ \tfunction __webpack_require__(moduleId) {/******/ \t\tif (cachedModule !== undefined) {/******/ \t\t}/******/ \t}/******/ })()", 6, false, true],
+	["micromark/stream.js", "{{if(typeof encoding===''){encoding}}function pipe(){if((options)){}//\nfunction onerror(){if(('')){}}}}", 7, true, true],
+	["eslint-plugin-unicorn/rules/text-encoding-identifier-case.js, 4", "messages={[MESSAGE_ID_SUGGESTION]:''}\nconfig={meta:{docs:{},messages}}", 7, true, true],
+	["@babel/helpers/lib/helpers/usingCtx.js", "function _usingCtx(){SuppressedError=\"\"?SuppressedError:function(){if(null){if((value)=value){var dispose=[[\"\"](\"\")];if(isAwait){var inner=dispose}}if(inner){{try{inner}catch(e){}  }} ({}) }}\nreturn { function () {function next() { {  try {} catch (e) {  }}  }}  }}", 6, false, true],
+	["ajv-formats/dist/formats.js", "function date(){const matches=DATE\nday=+matches[3];(([]))}", 6, false, true],
+	["cspell-lib/dist/lib/util/resolveFile.js", "debugMode=false;class FileResolver{constructor(){}/**/resolveFile(){try{}catch(error){if(debugMode){}}try{}catch{if((filename)){}}try{}catch{if(found){}}}}", 6, true, true],
+	["eslint-plugin-unicorn/rules/prefer-modern-dom-apis.js", "()=>{if((position)){}fix=''()?undefined:{data:{}}}", 7, true, true],
+	["eslint-plugin-unicorn/rules/no-useless-undefined.js, 2", "/()/i.test()\ncontext=>{(node=>{if((node)){if((functionNode)){}}})(node=>{if((node)){}})(node=>{if((node)){(function(){if(((context))){}})}})(node>{})}\nconfig={meta:{docs:{}}}", 6, true, true],
+	["shell-quote/parse.js, 3", "function parseInternal(){(function(){if(commented)function parseEnvVar(){{}}for(;;i++){if(ifs){{{if((vc)<0){}}}}}if(arg=''){return}/**/(arg)({})}/**/([]))}", 6, false, false],
+	["eslint-plugin-unicorn/rules/consistent-empty-array-spread.js", "isArray=()=>{const staticValueResult=getStaticValue()(staticValueResult.value)}\ncases=[];function getProblem(){const{}=conditionalExpression;for(problemCase of cases){const{}=problemCase;{({})}}}", 6, true, true],
+	["ms/index.js, 3", "s=1000;m=s*60;function fmtShort(){if(ms=m)if(s){(s)}}", 7, false, true],
+	["ansis/index.js, 2", "let{}=e=>{[]=/()/()|[],t?length:[]},n=(n)=n?8?231:((t)/24):16,i=r=>{(r?n:((o|0)/l)?(e):30)},l=(()=>{(((t))),1;try{toObject()}catch(e){}let a=(\"\")(n?(1):isTTY),c=\"FORCE_COLOR\",u=s[c]()?\"\"==1:c((()=>{let|\"\"==(n)?1:3}))(/$/)}),{}=s?(t)({open:``}):((((r)))),b=(``,u)", 6, false, false],
+	["eslint-plugin-unicorn/rules/no-array-reduce.js, 2", "[{test:([]),isSimpleOperation(){(((type='')((type=''))))}},{test:({})(),test:({})}];config={meta:{messages}}\nexport default config", 7, true, true],
+	["@babel/helper-compilation-targets/lib/index.js, 2", "import pluginsCompatData from''with{type:''}", 6, true, true],
+	["pug-code-gen/index.js", "Compiler.prototype = {  runtime: function(name) { {    }  },  visit: function( parent) {    var debug = this.debug;    if (!node) {      throw new TypeError(msg)    }    if (debug && node.debug !== false && node.type !== 'Block') { {      }    }    if (!this['visit' + node.type]) {      var msg;      switch (node.type) {        case 'Filter':\n        case 'FileReference': // unlikely but for the sake of completeness\n          msg += ' Please use pug-linker to preprocess this AST.';      } { { {\n            this.buf.push(\n            )          }\n        }\n      }\n      this.visitAttributes(\n      );\n      if (this.terse && !tag.selfClosing) {\n      }\n      if (\n        (tag.block &&\n          tag.block.nodes.some( {\n          }))\n      ) {      }\n      this.visitAttributes(\n      );\n    }\n  },\n  attributeBlocks: function(attributeBlocks) {\n    return (\n      attributeBlocks.slice().map(function(attrBlock) {\n      })\n    );\n  }};", 6, false, false],
+	["es-abstract/2025/GroupBy.js", "{{try{(undefined,[])}catch(e){try{}catch(e){}}}}", 6, false, true],
+	["eslint-plugin-unicorn/rules/no-useless-error-capture-stack-trace.js, 2", "const isSubclassOfBuiltinErrors=(node)=>node&node.type==''.includes(node.name)\n{context(callExpression=>{const errorClass=at()\nif (!(\tisSubclassOfBuiltinErrors(errorClass, {\t}))) {}\t\tif (\tfirstArgument= 'ThisExpression'\n) {\t\t}\t})} config = {\tcreate,}", 6, true, false],
+	["date-fns/locale/be/cdn.js", "(() => {{  return function () {  }}var formatDistanceLocale = {lessThanXSeconds:({})}; {({formats: {}  })} {var  _defaultOptions$local;  ((_ref2 ((_options$weekStartsOn? 0 : weekStartsOn)==0 ? 0 : weekStartsOn)==weekStartsOn)==_defaultOptions$local || (_defaultOptions$local = options) === null || _defaultOptions$local === void 0 ? 0 : weekStartsOn)}/**/\nfunction buildLocalizeFn(args) { {    if (context === \"formatting\" &formattingValues) {}  } return function (string) {   }}\nwindow.dateFns = _objectSpread(_objectSpread({}), {  locale: _objectSpread(_objectSpread({} (  window.dateFns) ===  _window$dateFns === void 0 ?.locale), {   be }) })})()", 7, false, true],
+	["cac/dist/index.js, 3", "if(process==\"\"){let runtimeName;if(deno=\"\")runtimeName=\"\";else runtimeName=\"node\";`${process.platform}${runtimeName}`}(\"\")", 6, true, true],
+	["@eslint/eslintrc/lib/config-array/extracted-config.js", "class ExtractedConfig{constructor(){}toCompatibleObjectAsConfigFileContent(){const{...config}=this}}export{ExtractedConfig}", 6, true, false],
+	["array-timsort/src/index.js, 2", "function sort(){if(length){}/**/if(compare){}if(typeof compare!==''){if(minRun){}}while(0)results}", 7, false, true],
+	["doctrine/lib/doctrine.js", "(function () { { { if (obj(key)) { } }}  (function (exports) { { if (esutils(ch /*  */)) { {  if (ch /* */) { } } } while (charCodeAt(index)== 0x40/* */) { }if (isTypeParameterRequired(this)) { try { } catch { {}  }if (!optional) {} }  } prototype = function () { {  if (!this) {}} }\n.parseDescription = function() { }; {  if (( kind)) { if (!addError()) {  } }    if (shouldBeEmpty) { }    } function epilogue() { if (isAllowedOptional(this._title) &&charAt(0) ) { if (!sloppy) {   }     }    } Rules = {     'constructor': ['parseType', 'ensureEnd'],    }; { if (hasOwnProperty(Rules, this._title)) {    }   while (true) {     if (!interestingTagsinterestingTags.hasOwnProperty(tag.title)) { }     } }    }(jsdoc = {}))\nexports.type = {    }}())", 7, false, true],
+	["less/lib/less/tree/namespace-value.js", "class Node{eval(){let rules=(context)\n{if((rules)){const rulesArr=/**/(rules)\nrules=rulesArr[rulesArr.length]}}}}", 6, true, true],
+	["tsconfig-paths/lib/__tests__/data/match-path-data.js", "var defaultExtensionsWhenRunningInTsNode=[];tests=[{paths:{}}]", 7, false, true],
+	["tar/dist/commonjs/pax.js", "()=>{if(1)switch(k){case'':const s=v}}", 6, false, true],
+	["three/examples/jsm/tsl/lighting/data/HemisphereLightDataNode.js", "const warn=(message)=>{console(`${message}`)}\nclass HemisphereLightDataNode extends Node{constructor(){if(maxCount){warn(`${length}`)}for(;;){}}}export default HemisphereLightDataNode", 6, true, false],
+	["/tmp/claude-0/-home-user/cd8a5332-c6e7-5315-a58d-6abfae3fad54/scratchpad/jsp/big2/b0.js", "(function(f){{var i=f();return i.default||i}if(typeofdefine.amd);})(function(){var ce=(t)=>{for(var n in t)ae()},X=_t;var At=()=>{},pe=At;var O=pe,J=pe;function N(){return n}var S={hard:!0},l=[It,ue];function W(e){return(r)=>{let i=backwards,{length:s}=1}}var wi=(/[^\\n\\r]/);function gt(n){{if(e.charAt)return t+1}return t}function  le(n={}){a=new Set();return r?m([l,E]):E}function kt(e){return Array.isArray0}function fe(t=\"type\"){{let i=s=e[i];if(new{node:r})return s}return n}var D=[[\"name\"],],Pe={UnionTypeExtension:[\"name\",\"fields\"]};{eincludes(`\n`.value.trim())}Me=/^\\s*(?:\\n|$)/;function bt(t){if(e=\"*\"){for(let ;n<e.length;++n)return n+2}return t}function Ft(t){(({isLast:i,node:s})=>{return!i&&qe()?[a,l]:a},r)}function he(n){let{node:r}=e;n.kind===\"OperationDefinition\"?N([S,([u,d()]),\")\"]):\"\"}function wt(n){let{node:r}=e;switch(r.kind){case\"Document\":return[...d(),l];case\"OperationDefinition\":{let i=t.originalText[ee(\"selectionSet\")]}case\"FragmentDefinition\":return[A([l,]),\"}\"];case\"Field\":return N([r.alias?[n(\"alias\"),\": \"]:\"\",T(r.arguments)?N([\"(\",\")\"]):\"\",]);{let i=X([\"[\",m([u,d([_(\", \"),u],)]),\"]\"])}case\"ObjectValue\":{let i=!T([\"{\",i?\"\":[m([u,d([_(\", \"),u],e.map)])],\"}\"])}case\"ObjectField\":return[n(\"name\"),(n)];case\"InputObjectTypeDefinitionInterfaceTypeDefinition\":{let{kind:i}=r;return i.endsWith(\"TypeDefinition\")?s.push():s.push(m([N([d(e.map(\"interfaces\"))])])),Tpush([\" {\",m,\"}\"]),s}case\"FieldDefinition\":return[A(arguments)?N([\"(\",m([u,d([],I(\"arguments\"))]),\")\"]):\"\",...d(n)];case\"SchemaExtension\":return[\"extend schema\",y(n),...T(r.operationTypes)?[]:\"\",y(\"selectionSet\")];case\"UnionTypeDefinition\":return N([A([r.kind===\"UnionTypeExtension\"?\"extend \":\"\",n?[\" =\",_(\" \"),m([_()])]:\"\"])]);case\"ScalarTypeExtension\":return[A(n),\"]\"];}return new Error()}function Ut(e){let.some(n==\"prettier-ignore\")}var Bt={getVisitorKeys:we},Qe=Bt;var $e=[{linguistLanguageId:139}];var Xe={bracketSpacing:{choices:[{description:\"Wrap-is.\"}]}};var R=class {constructor(){let{extensions:x}=n,$=v||p!=null?{cause:P}: C=We(G?.extensions)?G.extensions:void 0;this.create({message:{enumerable:!0}}),defineProperty()}get};function et(e){returne.length===0?void 0:e}varprototype.call.bind(Object.prototype.hasOwnProperty),tt==class{constructortoJSON(){return{}}};ce({ARGUMENT:()=>nn,VARIABLE_DEFINITION:()=>Xt});function xe(t){return it}function st(e){for(let i=0;i<e.length;++i){a=Kn()}return e.map((i,s)=>s===+1)}{for(;t<nt();)DIRECTIVE_DEFINITION:\"DIRECTIVE_DEFINITION\"}function f(n){return new R(`${n}`,{positions:[t]})}function jn(){let e;try{typeof t(e=t.getBuiltinModule(\"node:diagnostics_channel\"))}catch{}return e}var b=jn(\"graphql:subscribe\"),_s=b?.tracingChannel(\"graphql:resolve\"),Yn=[\"start\",\"error\"];{for(let n of [n].hasSubscribers)COMMENT:\"Comment\"}var Q=class{constructor(t){this.lineStart=0}get(){do if(t.next)t=t.next;while(to.COMMENT)return t}};function ct(e){return 55295}function h(i){return new V(i)}function qn(t){let n=e.source.body,i=t,a=!1;if(s===45&&(s=r.charCodeAt(++i)),s===48){if(s=r.charCodeAt(++i),L(s))throw f(``)}if(s===46&&(i=s=s))throw f(``);return h(r.slice(i))}function ie(n){if(!`Invalid number,.`);let r=e.source.body,i=t+1;for(;L();)for(;i<r;){if(p)i+=2;else throw f(`Invalid .`)}throw f(\"Unterminated string.\")}function Hn(t){let n=e.source.body,i=3;for(;i<12;){if(s===125){return{value:String,size:i}}if(r=q(s),r<0)break}throw f(`Invalid Unicode}\".`)}function Jn(t){r=at(t+2);return{value:6};if(pt(t+7)===117){let i=at(t+8);if(ut(i))return{size:12}}throw f(`Invalid Unicode}\".`)}function at(t){return q(e.charCodeAt(t+3))}function q(e){switch(n.charCodeAt(t+1)){case 34:return{size:2};case 116:return{size:2}}throw f(`Invalid }\".`)}function zn(t){for(;s<r;){if(U(x))++s;else if(re(s))s+= f(`$}.`)}throw f(\"Unterminated string.\")}function Zn(t){let n=e.source.body,i=t+1;for(;i<r;){if(rt(s))++i;else break}return }var lt=Symbol(\"Source\"),B=class{constructor(r={column:1}){return\"Source\"}};{(De)?De.traceSync():ft({value:n.tokenCount}),r}var _e=class{parseName(){return this.node({value:t.value}.peek(o.BRACE_L));let t=this.peekDescription(),n=t?this._lexer.lookahead():this._lexer.token;{switch(n.value){}if(n.value===\"extend\")return this.parseTypeSystemExtension()}}parseOperationDefinition(){if({});let n= this.peek({directives:thisthis.parseSelectionSet()});switch(t.value){case\"subscription\":return M.SUBSCRIPTION}}parseVariableDefinition(){return this.node({description:this.parseDescription?this.parseConstValueLiteral():void 0,})}parseVariable(){return this.expectToken(o.DOLLAR),this.node({})}parseSelection(){return this.peek(o.SPREAD)?this.parseFragment():this.parseField()}parseField(){let t=thisparseName(),i;return this.expectOptionalToken(o.COLON)?(i=this.parseName()):i=n,this.node({arguments:this.parseArguments(o.BRACE_L)?this.parseSelectionSet():void parseValueLiteral(t)})}parseConstArgument(){n=this.parseName();return this.expectToken({})}parseFragment(){{return this.peek(o.PAREN_L)&&this._options.experimentalFragmentArguments?this.node({}):this.node({})}return this.node({typeCondition:this.parseDirectives(!1)})}parseFragmentDefinition(){n}peek(t){throw f(`Expected ${mt(t)}.`)}expectOptionalToken(t){if(n.kind===o.NAME===t);}expectOptionalKeyword(t){return no.NAME&&n.value===t?(this.advanceLexer(),!0):!1(` aborted.`)}};{for(let i=n;i!==r;i=i.next)experimentalFragmentArguments:!0}function ai(e){let{locations:[n]}=e;return ht({loc:{start:n},cause:e})}{try{t=oe(oi)}catch(n){}return t.comments=si(t),t}})", 0, false, false],
+	["/tmp/claude-0/-home-user/cd8a5332-c6e7-5315-a58d-6abfae3fad54/scratchpad/jsp/big2/b2.js", "{if(e){for(;;)((108)),function(){{while(1){{if(((a))){{switch(16){}if(t?(a)|0:0){}}}switch(16){case 101:{if((16)?((10)):0)if(((([])==108?(r)|0:0)?((6))==0:0)?([]):0)if(((0)?([(3)])==5:0)?([(2)>2]([])==0):0){}if(0?([((65535)<3)]):0){if(([])!=0?(0):0){}}(0)==0?2:6}case125:{if(([((w))>2])){}}case47:switch([]){case 47:{{{if((41?0:0))w}switch(c){case 46:if((48)){}}}while(0)r:{if((0)){if(0?(102?([(3)>2])==1:0):0){if((([])==111?(0):0)?([(3)]):0)break}if((w)?(125):0){if(([(3)>2]))break}if(((p))){switch(16){case 47:}if((0?([]|0):0)?(0):((c))){{}while((r)){}}}}}}[(3)+2]}default:if((65535))if(((((((97)))))))[]}}while(0){if((r)){{(((([])?(e)|0:0)?((6)):0)?([]|0):0)[((c))>2]}case125:{if(([((1))>2])==4)break}case47:switch([]|0){default:{{if(((a))){if((([((r)<3)]|0)))57}switch(16){case 45:{}}}while((0)==56){{if(0?(102?([]):0):0){if((([])==111?0:0)?([(3)]|3):0)break}if((0)==62?(a):0){if(([]))break}if(((e))){switch(a){case 47:(0)[1]}while(((a))){while((e)){}}}}}while(0)break}}if((((((97)<26)))))88}}a:{{((((16==(((48)))))))}}while(0){[]}}([])==0?([]):0}function l(){{{if(((0))){if((8)|0)if((([])|0)){}}switch(((1))<16){case 109:{((0)?([])==46:((a))?([]):0);if((8)?([])==46:0)e}}}}while(0){if((t)=28){{[((c)<3)](([]|0)==46)[((65535)<2)];switch(((1))<16){}}if(((r)=0)){switch(e){}}}}((a));{if((t)=62){if((((0)!=[])==0))if((t)=67)if((0)==69){}}}while(((0)?(0):0)){if(3){a:{switch(a){case 123:{(1)|0;{if(0){}if(44){}if(e){}}switch((0)<16){case 97:{if(((8))?([]):0){(0)|21}if((((8))==0?((l)):0)?((1)):0)break}}{if(21?(((14))):0){if(((a)))switch(16){default:}}}while((0)==30?(0):((8)|0)==0?(0):0){}}}}while(34){}if((0)==41){{(a)}}if((u)){if(u?(0)==0:0){while(1){}}}}if(([])>0)do{{{{{{if((65535)){}r:while(1){{if((65535)){switch(a){default:}}}}}}while(0)break}}}}while(0)}}function h(){e:{switch(0){case 100:switch([]|0){case 105:{(3)|e}}case101:switch(0){case 115:switch(0){}}}}}function w(){switch(a){case 39:if(5){if(((c?([]):0)?([])==116:0)?(0)==104:0){if(24)if((c)=28){}}[]-2}if(0)switch([]){case 96:}}if((0)==6){[((r))+2]}if((a)){if(92){if((0)==13){([])==r}}if((r))i}((a));switch(a){default:}{if((r)){{(((a)))[1]|0}switch(16){}((a))}}while(0)0}{if((s)){(s)?0:0}[]()?0:a;{if((r)){}[]}if((0)==6)if((0)==7)0}{{if([]){}}}function U(){switch(0){case 41:{}}}function x(){{if(42?([])==47:0){}}if((t))return}function S(){do{if(r)e;else{while(1){(123)<0}}}while(0){if((9)){switch(16){}((e))|0}}((1))}{switch(e){case 123:{}}switch([]){case 101:{(([]))|0}}}{(0?([])==a:0)}{{((65535));{switch(e){case 160:}((e))}}}function F(){{switch([]|0){}}{(((33)-65));{switch(e){}(65535)}}while(0)0}{(e)()!=[(0)>2]}}()}((h));for(;;){}function v(){(e)?(r):slice}}", 4, false, true],
+	["/tmp/claude-0/-home-user/cd8a5332-c6e7-5315-a58d-6abfae3fad54/scratchpad/jsp/big2/b4.js", "(function(){{}(define=\"\"&amd)})(function(){()=>{};({languages:()=>ui})((r)??[]);var Dt=replaceAll??function(){global?(t):(t)},_t=Ie(function(){}),X=_t;{(e),{}}function N(){}function W(){()=>{if(1){}}}(\"\");{{}(t)}function le(){let{}=((((x))))?([]):E}{{((s))((``))}}[[\"\"][\"\"]],{OperationDefinition:[\"\"]};{if((t)=\"\"){for(;;(n)=\"\")2}(t)=\"\"?(t):t}function Pt(){for(;;)(r)}function I(){(({})=>{qe?[]:a},r)()?([\"\"]):\"\"}function A(){(n)?([\"\"([([(\"\")](\"\"))]),\"\"]):\"\";switch(r){case\"\":[...((\"\"))];case\"\":{[(r)]=\"\"[A?[\"\"]:\"\"()?\"\":\"\"]}case\"\":[(n),\"\"];case\"\":([r?[(\"\"),\"\"]:\"\"()?([([([])]),\"\"]):\"\",]);{X(0)}return['\"'(X(\"\"),\"n\")];case\"ObjectTypeExtension\":case\"ObjectTypeDefinition\":case\"InputObjectTypeExtensionInputObjectTypeDefinition\":case\"InterfaceTypeExtension\":case\"InterfaceTypeDefinition\":{endsWith(\"TypeDefinition\")?s(A(n)):sT(m([N([d()])])[\" {\"([])])}case\"FieldDefinition\":return[A(n)?N([\")\"]):\"\",...T(operationTypes)?[]:[]];N([A(n[r=\"UnionTypeExtension\"?\"\":(r)?[\"\",_([_([])])]:\"\"])]);case\"ScalarTypeExtensionScalarTypeDefinition\":return[A(\"type\"),\"]\"](\"kind\")}}function Mt({e}){Error()}[{extensions:[\"graphqls\"],linguistLanguageId:139}];Xe={bracketSpacing:{choices:[{description:\"Wrap.\"}]},singleAttributePerLine:{description:\".\"}};var R=class extends Error{constructor(){super({message:{enumerable}}),p?.defineProperty({value:Error().stack,})}get[Symbol](){}toString(){if(this)for(let n of this)t}};var Y=class{constructor(r){r}},V=class{constructor(a){return}}({Xt});function xe(t){for(let;i;++i){Kn()}map(1)}{for(;;)DIRECTIVE_DEFINITION:\"DIRECTIVE_DEFINITION\"}function f(n){try{\"function\"&&(getBuiltinModule(\"node\"))}catch{}return}Yn=[\"start\"];{{switch(s){case 33:h(1);case 46:{charCodeAt(1);if(a)return('');if(L(a)){let(``)}break}case 64:return(i)}if(ye(s))throw(s?``:`Invalid`)}for(;r;){if(U(s))ibreak}h(slice(i))}function $n(n){if(s(s(++i))===48){if(charCodeAt(i))throw(`.`)}}function ie(n){if(`Invalid`);for(;L(charCodeAt(i));)for(;r;){{aslice(1)?n(i):Wn(i)}if(re(i))(`.`)}for(;i;){{if(U(r))return{size}}break}f(`Invalid`)}{return{size:6};if(pt(t)===117){if(ut(i))return{value:fromCodePoint(i)}}f(`Invalid`)}{for(;s;){if(x34){s}else(`.`)}f(\"Unterminated.\")}{for(;r;){if(rt(s))++i}return}B=class{constructor(){this}};function dt(e){Je(B)?De((t)):ft(t)}{_e({value})}var _e=class{constructor(){let{...i}=n0}tokenCount(){_tokenCounter}parseName(){node()}parseDocument(){node({definitions:this(o)})}parseDefinition(){if(peek(BRACE_L))if(\".\"){switch(value){}if(\"Unexpected\")parseTypeSystemExtension()}node()}parseVariableDefinitions(){optionalMany({variable:this?this:void 0,})}parseVariable(){expectOptionalToken(COLON)?(parseName()):i({arguments:parseArguments()?parseSelectionSet():0})}parseArguments(t){}parseFragmentArguments(){optionalMany(COLON)}parseConstArgument(){n}parseFragment(){if(!(o)){letexperimentalFragmentArguments?node():node()}node()}parseFragmentDefinition(){node({typeCondition:(expectKeyword(\"on\"))})}parseValueLiteral(t){switch(n){case BRACKET_L:parseList({value});case o:switch(n){case\"true\":return}case o:if(this(o),NAME);default:throw this}if(this(o))parseNamedType()?node({type}):n({i})}parseEnumTypeExtension(){node({fields})}parseDirectiveExtensionparseDirectiveLocations(){}parseDirectiveLocation(){if(tt(n))n;}parseSchemaCoordinate(){n(this(o))?s({i}):node({name})}node(n){(n(this))}peek(t){f(`Expected.`)}any(r){return}delimitedMany(n){push(call(this));while(expectOptionalToken(t))if(n(++this._tokenCountert))throw(``)}};{for(n;i!==r;n)t}{graphql}})", 6, false, false],
+	["/tmp/claude-0/-home-user/cd8a5332-c6e7-5315-a58d-6abfae3fad54/scratchpad/jsp/big2/b6.js", "(function(){function defineDeprecationWarning(){({})}function testStringCoercion(value){\"\"+value}{try{testStringCoercion()}catch{testStringCoercion(value)}((didWarnAboutElementRef))()?Object:Object()?((key)):(36)\nswitch(thenable){case\"\":switch((\"\"==thenable?(noop):(then()),status)){}(((escapedPrefix()))(({})))}(ioInfo)\ntry{}finally{}}({})\nact=function(){try{}catch{}((callback))\nif(\"\"==then){return{function(){(function(){if(0==prevActScopeDepth){try{}catch{_thrownError()}}(returnValue)?((aggregateErrors())()):(error)})}}}{for(propName in config)([][propName])}var propName=(propName?createTask():unknownOwnerDebugTask)}})", 6, false, true],
+	["/tmp/claude-0/-home-user/cd8a5332-c6e7-5315-a58d-6abfae3fad54/scratchpad/jsp/big2/b3.js", "class MiniCssExtractPlugin{getCssModule(){((webpack))({serialize(){}});{}((\"\"),{serialize(){},deserialize(){}})}constructor(){(/**/schema).runtimeOptions={linkType:options=\"\"?\"\":linkType}(compilation>{})(compilation=>{class CssModuleFactory{create({}){}}(({})=>{{push({render:()=>this,hash:chunk.contentHash})}})\nclass RuntimeModule{/**/constructor(){const{}=(compilation)}}})/**/\n{{{}}}}}", 6, false, false],
+	["/tmp/claude-0/-home-user/cd8a5332-c6e7-5315-a58d-6abfae3fad54/scratchpad/jsp/big2/b7.js", "/**/(()=>{(()=>{{{}}function matchArity(){let mockConstructor;switch(length){case 1:mockConstructor=function(){}\nbreak;default:mockConstructor=function(){apply(arguments)}}return mockConstructor;if(''){}}class ModuleMocker{constructor(){return function(){mockConstructor=matchArity(function(...args){try{(()=>{if(f){}})}catch(error){}}|0)({})}}_createMockFunction(){for(spyState of this){{}}}}exports=ModuleMocker})()/**/})()", 6, false, false]
+];
+// cspell:enable
+
+describe("JavaScript minifier, programs reduced from packages", () => {
+	for (const [name, source, index, module, likeTerser] of REDUCED_CASES) {
+		it(`should minify what runs as the source does, reduced from ${name}`, async () => {
+			const { minify } = await load();
+			const options = () => ({ ...structuredClone(REDUCED_OPTIONS[index]), module });
+			const { code } = await minify(source, options());
+			parses(/** @type {string} */ (code), module);
+			if (!module) {
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(source));
+			}
+			// terser's own parser reads a few of these otherwise or not at all, and
+			// lays some out by the options webpack ignores (IGNORED_FORMAT_OPTIONS).
+			if (likeTerser) {
+				const plain = await uncorrected(() => unimproved(() => minify(source, options())));
+				expect(plain.code).toBe((await terserReference().minify(source, options())).code);
+			}
+			expect(code).toMatchSnapshot();
+		});
+	}
 });
