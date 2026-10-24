@@ -12690,8 +12690,10 @@ const OPTION_SETS = {
 	"no comments": { format: { comments: false } },
 	"the default comments": {},
 	"every comment": { format: { comments: "all" } },
-	"a module": { module: true, format: { comments: "all" } },
-	"ECMAScript 2020": { ecma: 2020, format: { comments: "all" } },
+	// Kept by a regular expression, every comment reaches the node printer.
+	"every comment a regular expression keeps": { format: { comments: "/(?:)/" } },
+	"a module": { module: true, format: { comments: "/(?:)/" } },
+	"ECMAScript 2020": { ecma: 2020, format: { comments: "/(?:)/" } },
 	"quoting options": {
 		format: {
 			quote_style: 3,
@@ -12775,10 +12777,14 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				}
 				const printed = await minifyCounted(source, options(), true);
 				expect(reference.printedFromTree + reference.printedNodes).toBe(0);
-				// A source map is still printed by `printTree`.
-				const mapped = "sourceMap" in set ? 1 : 0;
-				expect(printed.printedFromTree).toBe(mapped);
-				expect(printed.printedNodes).toBe(1 - mapped);
+				// A source map, and every comment kept, are still printed by `printTree`.
+				const format = /** @type {{ comments?: unknown }} */ (
+					"format" in set ? set.format : {}
+				);
+				const viaTree =
+					"sourceMap" in set || format.comments === "all" ? 1 : 0;
+				expect(printed.printedFromTree).toBe(viaTree);
+				expect(printed.printedNodes).toBe(1 - viaTree);
 				expect(printed.code).toBe(reference.code);
 				expect(printed.map).toEqual(reference.map);
 			}
