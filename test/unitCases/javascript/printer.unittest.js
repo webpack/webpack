@@ -12551,6 +12551,13 @@ const {
 const SOURCES = [
 	// Names beyond ASCII, one a surrogate pair, spaced from the words beside them.
 	"var ä = 1, 𐊧 = 2; typeof ä, ä in 𐊧, void 𐊧, new ä(), ä instanceof ä;",
+	// Comments inside the `(` a `new` reads its callee past, nested, not before
+	// the function opening it, and before a directive past an empty statement.
+	"new(/**/function(){function s(){}}())",
+	"new(/*a*/(/*b*/function(){}()))",
+	"new(function(){}, /*c*/ a);",
+	"function f(){ ; /*a*/ 'x' }",
+	"function f(){ ; /**/ 'x' }",
 	"/*!a*/\nfunction f(){return /*x*/ 1e999+(a,b)}",
 	'var a = {b:1, "c d": [1,,2,], [e]: f, get g(){return 1}, h(){}, ...i, 1e3: 2, 0x10: 3};',
 	"class A extends B { #x = 1; static m(){ return #x in this } static { a } get [k](){} 'q'(){} static async *g(){} }",
