@@ -12376,6 +12376,25 @@ describe("cssMinify export", () => {
 		expect(code).toBe('@charset "UTF-8";a:before{content:"é"}');
 	});
 
+	it("keeps the space before an SVG `data:` URL it minifies", async () => {
+		const cssMinify = require("../../../lib/css/cssMinify");
+
+		const { code } = await cssMinify(
+			{
+				"a.css":
+					'.a{background:red url("data:image/svg+xml,<svg></svg>")}' +
+					".b{background:no-repeat url(data:image/svg+xml,<svg></svg>)}"
+			},
+			undefined,
+			{ svg: true }
+		);
+
+		expect(code).toBe(
+			".a{background:red url(data:image/svg+xml,<svg/>)}" +
+				".b{background:no-repeat url(data:image/svg+xml,<svg/>)}"
+		);
+	});
+
 	describe("extractComments", () => {
 		const sheet =
 			"/*! one */a{color:red}/* plain */b{color:blue}/*! one */" +
