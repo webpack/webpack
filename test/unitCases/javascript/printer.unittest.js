@@ -9140,6 +9140,144 @@ describe("syntax-printer", () => {
 			}
 		});
 
+		it("should run a known `switch`'s leading case tests in its discriminant", async () => {
+			const { minify } = await load();
+			const log = "function a(v) { console.log('t' + v); }";
+			const options = { compress: { passes: 2 }, mangle: false, ecma: 2020 };
+			for (const [body, expected] of [
+				[
+					"switch (3) { case (a(1), 1): a(2); break; case (a(3), 2): a(4); break; case 3: a(5); break; }",
+					"a(1),a(3),a(5)"
+				],
+				[
+					"switch (4) { case (a(1), 1): a(2); case (a(3), 2): a(4); case 3: a(5); }",
+					"a(1),a(3)"
+				],
+				[
+					"switch (4) { case (a(1), 1): a(2); default: a(3); case (a(4), 2): a(5); case (a(6), 3): a(7); break; }",
+					"a(1),a(4),a(6),a(3),a(5),a(7)"
+				],
+				[
+					"switch ((a(0), 1)) { case (a(1), 1): a(2); break; default: a(3); }",
+					"a(0),a(1),a(2)"
+				],
+				["switch (-0) { case (a(1), 0): a(2); }", "a(1),a(2)"],
+				["switch (NaN) { case (a(1), NaN): a(2); }", "a(1)"]
+			]) {
+				const input = `${log} ${body}`;
+				const { code } = await minify(input, options);
+				expect(code).toContain(expected);
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			}
+			// A test after one the discriminant does not decide may not run.
+			const undecided = `var b = 1; ${log} switch (1) { case (a(1), 2): a(2); case b: a(3); case (a(4), 1): a(5); }`;
+			const { code: undecidedCode } = await minify(undecided, options);
+			expect(undecidedCode).toMatch(/case a\(4\),1|a\(4\),1===/);
+			expect(runProgram(/** @type {string} */ (undecidedCode))).toBe(
+				runProgram(undecided)
+			);
+			// A test after the one matching never runs.
+			const matched = `${log} switch (1) { case 1: a(1); break; case (a(2), 2): a(3); }`;
+			const { code: matchedCode } = await minify(matched, options);
+			expect(matchedCode).not.toContain("a(2)");
+			expect(runProgram(/** @type {string} */ (matchedCode))).toBe(
+				runProgram(matched)
+			);
+			for (const input of [
+				// The discriminant, outside the switch block, sees none of its bindings.
+				"function f() { return 2; } switch (1) { case (f(), 2): break; case 1: let f = 1; console.log(f); }",
+				"var log = []; switch (1) { case (log.push(typeof g), 2): break; case 1: class g {} } console.log(log);"
+			]) {
+				const { code } = await minify(input, options);
+				expect(code).toContain("switch");
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			}
+		});
+
+		it("should drop what a `switch` leaves over that does nothing, and a `switch` of no case", async () => {
+			const { minify } = await load();
+			for (const [input, compress, expected] of [
+				[
+					"switch (1) { case bar: bar(); break; case 1: other(); }",
+					{ dead_code: true, switches: true, evaluate: true },
+					"bar)bar();else other();"
+				],
+				[
+					"switch (w(), 42) { case 13: x(); case 42: y(); default: z(); }",
+					{ dead_code: true, switches: true, evaluate: true },
+					"w();y();z();"
+				],
+				[
+					"var a = 0, b = 1; switch (true) { case a, true: default: b = 2; case true: } console.log(a, b);",
+					{ dead_code: true, switches: true, evaluate: true },
+					"var a=0,b=1;b=2;console.log(a,b);"
+				],
+				[
+					'switch (console.log("PASS")) {}',
+					{ dead_code: false, switches: true },
+					'console.log("PASS");'
+				]
+			]) {
+				const { code } = await minify(/** @type {string} */ (input), {
+					compress: { defaults: false, .../** @type {object} */ (compress) },
+					mangle: false
+				});
+				expect(code).toContain(expected);
+			}
+			const undeclared = "switch (1) { case (x, 1): console.log(1); }";
+			const { code } = await minify(undeclared, {
+				compress: {
+					defaults: false,
+					dead_code: true,
+					switches: true,
+					evaluate: true
+				},
+				mangle: false
+			});
+			// Reading an undeclared name throws, so it stays.
+			expect(code).toBe("x;console.log(1);");
+			const { code: kept } = await minify('switch (console.log("PASS")) {}', {
+				compress: { defaults: false, switches: false },
+				mangle: false
+			});
+			expect(kept).toContain("switch");
+		});
+
+		it("should write a case whose block ends in `break` as an `if`", async () => {
+			const { minify } = await load();
+			const options = { compress: { passes: 2 }, mangle: false, ecma: 2020 };
+			const input =
+				"var log = []; function f(arg) { switch (arg) { case 1: { const data = arg + 1; log.push(data); { log.push(0); break; } } default: break; } } f(1); f(2); console.log(log);";
+			const { code } = await minify(input, options);
+			expect(code).not.toContain("switch");
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			for (const kept of [
+				"var log = []; function f(x) { l: switch (x) { case 1: { log.push(1); for (;;) { break l; } } case 2: log.push(2); } } f(1); f(2); console.log(log);",
+				"var log = []; function f(x) { switch (x) { case 1: { log.push(1); for (;;) break; } case 2: log.push(2); } } f(1); f(2); console.log(log);"
+			]) {
+				const { code } = await minify(kept, options);
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(kept));
+			}
+		});
+
+		it("should lift a sequence out of an operation whose other operand is a constant", async () => {
+			const { minify } = await load();
+			const input =
+				"var log = []; function c() { log.push('c'); } var b = 2; if ((c(), b) === 2) log.push('=='); var x = 1 + (c(), b); console.log(log, x);";
+			const { code } = await minify(input, {
+				compress: { passes: 2 },
+				mangle: false,
+				ecma: 2020
+			});
+			expect(code).toMatch(/c\(\),(b===2|2===b)&&/);
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			const switched = await minify(
+				"switch (c, b) { case 2: switch (a) { case 2: foo(); } }",
+				{ compress: { passes: 2 }, mangle: false, ecma: 2020 }
+			);
+			expect(switched.code).toMatch(/^c,(b===2|2===b)&&/);
+		});
+
 		it("should keep a constructor's `this.x` read a getter may answer", async () => {
 			const { minify } = await load();
 			for (const input of [

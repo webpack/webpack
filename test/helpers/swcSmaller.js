@@ -304,7 +304,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/12177/input.js",
 			"swc minifier: fixture/issues/12219/iife_rest_control_primitive/input.js",
 			"swc minifier: fixture/issues/12226/input.js",
-			"swc minifier: fixture/issues/12492/input.js",
 			"swc minifier: fixture/issues/6751/1/input.js",
 			"swc minifier: fixture/issues/6837/1/input.js",
 			"swc minifier: fixture/issues/6837/2/input.js",
@@ -464,15 +463,8 @@ const SWC_SMALLER_BY_REASON = [
 	[
 		"swc resolves a `switch` on a known value at build time, and writes a one-case `switch` as an `if`",
 		[
-			"swc minifier: fixture/issues/4412/input.js",
 			"swc minifier: fixture/issues/9619/input.js",
 			"terser compress: issue-1750/case_2",
-			"terser compress: switch/if_else5",
-			"terser compress: switch/if_else6",
-			"terser compress: switch/issue_1690_2",
-			"terser compress: switch/issue_1698",
-			"terser compress: switch/issue_1750",
-			"terser compress: switch/issue_2535",
 			"terser compress: switch/issue_441_1",
 			"terser compress: switch/issue_441_2"
 		]

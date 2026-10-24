@@ -83,7 +83,6 @@ const OXC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/12213/shadowed-object/input.js",
 			"swc minifier: fixture/issues/12218/dynamic-spread/input.js",
 			"swc minifier: fixture/issues/12311/input.js",
-			"swc minifier: fixture/issues/12492/input.js",
 			"swc minifier: fixture/issues/2078/1/input.js",
 			"swc minifier: fixture/issues/3256/1/input.js",
 			"swc minifier: fixture/issues/6636/input.js",
@@ -251,7 +250,6 @@ const OXC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/11368/input.js",
 			"swc minifier: fixture/issues/11684/identifier-preserved/input.js",
 			"swc minifier: fixture/issues/11684/scopes-and-mutations/input.js",
-			"swc minifier: fixture/issues/12206/preserve-nonmatching-test-before-dynamic-case/input.js",
 			"swc minifier: fixture/issues/12228/disabled/input.js",
 			"swc minifier: fixture/issues/12298/input.js",
 			"swc minifier: fixture/issues/12313/input.js",
@@ -538,15 +536,6 @@ const OXC_SMALLER_BY_REASON = [
 		[
 			"swc minifier: fixture/pr/11987/input.js",
 			"terser compress: inline/noinline_annotation_2"
-		]
-	],
-	[
-		"oxc writes `switch` statements shorter, or drops them, as oxc's `peephole/minimize_switch_statements.rs` tests show",
-		[
-			"oxc minifier: peephole/minimize_switch_statements.rs:12",
-			"oxc minifier: peephole/minimize_switch_statements.rs:25",
-			"oxc minifier: peephole/minimize_switch_statements.rs:32",
-			"oxc minifier: peephole/minimize_switch_statements.rs:5"
 		]
 	],
 	[
