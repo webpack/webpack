@@ -37463,7 +37463,8 @@ declare namespace exports {
 							textOf(part: number, n?: number): null | string;
 						},
 						number
-					>
+					>,
+					inlined?: Uint8Array
 				) => void;
 				export {
 					DestructuringErrors,
