@@ -484,13 +484,18 @@ jobs:
       # than under every pull request at once. Cached by that version.
       - name: Read the pinned browser build
         id: browser-build
-        run: echo "id=$(node -p "require('playwright-core/package.json').version")" >> "$GITHUB_OUTPUT"
+        # WHY: playwright ships a WebKit build per Ubuntu release, and one built
+        # for 24.04 restored onto 26.04 cannot load its ICU; keyed on the image
+        # (`ImageOS`, e.g. `ubuntu26`), a runner moving release starts afresh.
+        run: |
+          echo "id=$(node -p "require('playwright-core/package.json').version")" >> "$GITHUB_OUTPUT"
+          echo "image=${ImageOS:-${{ runner.os }}}" >> "$GITHUB_OUTPUT"
 
       - name: Cache the pinned browser
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ~/.cache/ms-playwright
-          key: playwright-${{ matrix.browser }}-${{ steps.browser-build.outputs.id }}-${{ runner.os }}
+          key: playwright-${{ matrix.browser }}-${{ steps.browser-build.outputs.id }}-${{ steps.browser-build.outputs.image }}
 
       # WHY: `--with-deps` downloads the system packages from Ubuntu's mirror on
       # every run, which a slow mirror stretched from a minute to 37. apt keeps
@@ -502,21 +507,46 @@ jobs:
           sudo rm -f /etc/apt/apt.conf.d/docker-clean
           printf 'Dir::Cache::Archives "%s";\nAPT::Keep-Downloaded-Packages "true";\n' ~/apt-archives | sudo tee /etc/apt/apt.conf.d/99keep-archives
 
-      - name: Cache the system packages
+      # WHY: a cold install on a slow mirror outruns the step's timeout, and a
+      # failed job saved nothing, so the cache stayed cold run after run. The
+      # newest set is restored by prefix, whatever playwright version wrote it.
+      - name: Restore the system packages
+        id: apt-restore
         if: matrix.browser != 'chrome'
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ~/apt-archives/*.deb
-          key: playwright-deps-${{ matrix.browser }}-${{ steps.browser-build.outputs.id }}-${{ runner.os }}
+          key: playwright-deps-${{ matrix.browser }}-${{ steps.browser-build.outputs.image }}-
+          restore-keys: playwright-deps-${{ matrix.browser }}-${{ steps.browser-build.outputs.image }}-
 
       # `--with-deps` for Firefox and WebKit, whose shared libraries a runner does
       # not carry where it already carries Chrome's; it runs on a cache hit too,
       # since the cache holds the browser and not the system packages.
       - name: Install the pinned browser
         # Bounded: a stalled mirror otherwise holds the runner for the job's hour.
-        # Room for a cold cache's slow install, whose success saves the cache.
+        # Room for a cold cache's slow install; what it fetched is saved anyway.
         timeout-minutes: 40
         run: node tooling/retry.js yarn setup:browsers ${{ matrix.browser }} ${{ matrix.browser != 'chrome' && '--with-deps' || '' }}
+
+      # Keyed on the packages held, and saved even when the install timed out:
+      # what it fetched is kept, so the next run resumes rather than restarts.
+      # `autoclean` drops versions the mirror replaced, so the set stays small.
+      - name: Name the system packages held
+        id: apt-held
+        if: always() && matrix.browser != 'chrome'
+        run: |
+          sudo apt-get autoclean -qq || true
+          debs=$(find ~/apt-archives -maxdepth 1 -name '*.deb' -printf '%f\n' | sort)
+          if [ -n "$debs" ]; then
+            echo "key=playwright-deps-${{ matrix.browser }}-${{ steps.browser-build.outputs.image }}-$(echo "$debs" | sha256sum | cut -c1-16)" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Save the system packages
+        if: always() && steps.apt-held.outputs.key != '' && steps.apt-held.outputs.key != steps.apt-restore.outputs.cache-matched-key
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/apt-archives/*.deb
+          key: ${{ steps.apt-held.outputs.key }}
 
       - name: Cache jest result
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
