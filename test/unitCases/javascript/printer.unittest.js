@@ -1835,6 +1835,11 @@ const IMPROVED_CASES = [
 		{ compress: {}, mangle: false, ecma: 2020 }
 	],
 	[
+		'a computed `"__proto__"` key of a destructuring pattern as a name, but one of an object literal',
+		'function f(o, p) { var { ["__proto__"]: x } = o; ({ ["__proto__"]: p.y } = o); return [x === Object.prototype, p.y === x, Object.getPrototypeOf({ ["__proto__"]: null }) === Object.prototype]; } console.log(f({}, {}));',
+		{ compress: {}, mangle: false }
+	],
+	[
 		"a private method, getter or setter nothing in its class reads, but one read, an instance one of a derived class, or one a direct `eval` may name",
 		'class B {} class C { #a() { return 1; } static #b() {} get #c() { return 2; } set #c(v) {} #d() { return 3; } m() { return this.#d(); } } class D extends B { #e() {} } class E { #f() {} m() { return eval("this.#f"); } } console.log(new C().m(), new D() instanceof B, typeof new E().m());',
 		{ compress: {}, mangle: false }

@@ -296,8 +296,7 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/substitute_alternate_syntax.rs:164",
 			"oxc minifier: peephole/substitute_alternate_syntax.rs:165",
 			"oxc minifier: peephole/substitute_alternate_syntax.rs:168",
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:169",
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:715"
+			"oxc minifier: peephole/substitute_alternate_syntax.rs:169"
 		]
 	],
 	[

@@ -571,6 +571,8 @@ exports[`syntax-printer improve phase should write less, printing the same: a ch
 
 exports[`syntax-printer improve phase should write less, printing the same: a class, kept in a block 1`] = `"{class A{}console.log(typeof new A,A.name)}"`;
 
+exports[`syntax-printer improve phase should write less, printing the same: a computed \`"__proto__"\` key of a destructuring pattern as a name, but one of an object literal 1`] = `"function f(o,p){var{__proto__:x}=o;return({__proto__:p.y}=o),[x===Object.prototype,p.y===x,Object.getPrototypeOf({[\\"__proto__\\"]:null})===Object.prototype]}console.log(f({},{}));"`;
+
 exports[`syntax-printer improve phase should write less, printing the same: a computed \`__proto__\` or \`constructor\` key, written as a name where it means the same 1`] = `"var o={[\\"__proto__\\"]:()=>1};class C{__proto__=2;static constructor(){return 3}}console.log(o.__proto__(),(new C).__proto__,C.constructor());"`;
 
 exports[`syntax-printer improve phase should write less, printing the same: a computed key of a pattern, read as the constant it holds 1`] = `"function f(o){let{3:x,a:y}=o;for(let{4:z}of[o])console.log(z);return[x,y]}console.log(f({3:1,a:2,4:3}));"`;
