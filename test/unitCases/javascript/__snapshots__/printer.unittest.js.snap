@@ -21,6 +21,1789 @@ Array [
 ]
 `;
 
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: \`Map\` and \`WeakMap\` built from entries, their values unread 1`] = `"new Map([\\"ab\\"]),new Map([[1]]),new Map([1]),new Map([\\"a\\"]),new WeakMap([1]),console.log(1);"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: \`Math.pow\` called optionally, with one argument, a spread, or a long result 1`] = `"var m=Math;console.log(Math?.pow(2,3),Math.pow(2),8,Math.pow(2,.5),Math.pow(3,40),m.pow(2,4));"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: \`Math\` constants whose digits print longer 1`] = `"console.log(Math.PI,Math.E,Math.LN2,Number.MAX_VALUE,Number.MIN_VALUE);"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: \`Object.keys\` where the program writes a member of \`Object\` under a quoted key 1`] = `"Object[\\"a-b\\"]=1,Object.c=2,console.log([\\"x\\"],Object[\\"a-b\\"]);"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: \`Object.keys\`, \`values\` and \`entries\` of literals whose values run code or print long 1`] = `"function g(x){return console.log(\\"g\\",x),x}console.log(Object.keys({__proto__:g(1)}),[],Object.keys([g(2)]),Object.keys([...\\"ab\\"]),[\\"1\\"],[\\"0\\",\\"1\\"],[\\"a\\",\\"b\\"],Object.entries(\\"ab\\"),Object.entries(\\"abcdefgh\\").length,[\\"0\\"],[1,2]);"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: \`caller\` and \`arguments\` of functions and classes 1`] = `"{class C{}try{console.log(function(){}.caller,function(){}.arguments,C.caller)}catch(e){console.log(e.name)}try{console.log((()=>1).caller)}catch(e){console.log(e.name)}}"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: \`concat\` of a negated BigInt 1`] = `"console.log([1].concat(-1n,-3n).length);"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: \`delete\` of a member of a call's result 1`] = `"var o={x:1};function f(){return o}console.log(delete f().x,o.x,delete o.y);"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: \`delete\` of a member of a known function 1`] = `"!function(){function f(){}f.x=1,console.log(delete f.x,f.x,delete f.name)}();"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: \`delete\` of an undeclared global, and of \`undefined\` 1`] = `"function f(){return[delete foo,!1,!1]}globalThis.foo=1,console.log(f(),typeof foo);"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: \`global_defs\` naming a binding a module exports, or re-exports 1`] = `"var DEBUG=1;export{DEBUG};export{DEBUG as D2}from\\"m\\";export{\\"DEBUG\\"as D3}from\\"m\\";sink(!1);"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: \`this\` unread in a derived constructor, before and after \`super()\` 1`] = `"class A{}class B extends A{constructor(){super()}}class C extends A{constructor(){super(),this}}class D extends A{constructor(){super(),this.x}}class E extends A{constructor(){try{this}catch(e){console.log(e.name)}super()}}class F extends A{constructor(a){super()}}console.log(new B instanceof A,new C instanceof A,new D instanceof A,new E instanceof A,new F(1)instanceof A);"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: \`this\` unread in a derived constructor, improvements off 1`] = `"class A{}class B extends A{constructor(){super()}}console.log(new B instanceof A);"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: \`typeof\` of a number or a string expression 1`] = `"function f(a){return[typeof(2*a),typeof(a+\\"\\"),\\"number\\",\\"string\\",typeof+a]}console.log(f(1));"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: \`typeof\` of a regular expression and a template, unsafe 1`] = `"!function(){var t=\\"abc\\";console.log(typeof/a/,typeof/a/,3,t+1,\\"string\\")}();"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: 32-bit integers compared with zero, the literal last 1`] = `"function g(v){return v}function f(i,j){return[!(1&(i|=0)),!!(1&i),(i|(j|=0))==0,!(255&~i),!!(255&~i),(3&i)==2,i+j==0]}console.log(f(1,2),f(255,0));"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: BigInt operations whose operands are both or neither BigInts 1`] = `"function f(a,b){return a*b,a/0n,[a+b]}console.log(f(1n,2n),f(1,2));"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a \`Math\` call of another call's result or of a spread, its value unread 1`] = `"Math.max([,]),Math.max(...{}),Math.min(Object(1)),console.log(1);"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a \`Math\` call of another's result, or of a value not a number 1`] = `"console.log(2,2,!0,1,NaN);"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a \`RegExp\` call no shorter as a literal 1`] = `"console.log(RegExp(\\"\\\\u2028\\").source,\\"\\\\\\\\/\\",RegExp(\\"\\\\n\\").source,/a/g.flags);"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a \`RegExp\` call of a pattern the runtime rejects, or with flags it rejects, under \`unsafe\` 1`] = `"try{RegExp(\\"(\\",\\"g\\")}catch(e){console.log(e.name)}try{RegExp(\\"a\\",\\"gg\\")}catch(e){console.log(e.name)}console.log(\\"g\\");"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a \`catch\` return at the top level 1`] = `"function g(x){if(x)throw x}try{g(1)}catch(e){return 1}"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a \`catch\` return before a \`return\` of another value 1`] = `"function g(x){if(x)throw x;return 2}function sink(v){console.log(v)}function f(x){try{sink(g(x))}catch(e){return 1}return 2}console.log(f(0),f(1));"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a \`catch\` return before a bare \`var\` 1`] = `"function g(x){if(x)throw x;return 2}function f(x){try{g(x)}catch(e){return 1}return console.log(void 0),1}console.log(f(0),f(1));"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a \`catch\` return before a bare \`var\` the \`try\` writes 1`] = `"function g(x){if(x)throw x;return 2}function sink(v){console.log(v)}function f(x){try{sink(g(x))}catch(e){}return 1}console.log(f(0),f(1));"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a \`catch\` return before a function declaration 1`] = `"function g(x){if(x)throw x;return 2}function f(x){try{g(x)}catch(e){return 1}return console.log(\\"function\\"),1}console.log(f(0),f(1));"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a \`catch\` return before a function the \`try\` calls 1`] = `"function g(x){if(x)throw x;return 2}function sink(v){console.log(v)}function f(x){try{sink(g(x))}catch(e){}return 1}console.log(f(0),f(1));"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a \`catch\` return in a block 1`] = `"function g(x){if(x)throw x;return 2}function f(x){try{g(x)}catch(e){}return 1}console.log(f(0),f(1));"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a \`catch\` return in a block declaring a \`let\` 1`] = `"function g(x){if(x)throw x;return 2}function sink(v){console.log(v)}function f(x){{let q=g(0);try{sink(g(x)+q)}catch(e){}}return 1}console.log(f(0),f(1));"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a \`catch\` return in a labeled statement and in an if 1`] = `"function g(x){if(x)throw x;return 2}function f(x,k){if(k)try{g(x)}catch(e){}return 1}console.log(f(0,1),f(1,1),f(1,0));"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a \`catch\` return in a nested \`catch\` 1`] = `"function g(x){if(x)throw x;return 2}function f(x){try{g(x)}catch(e){try{g(e)}catch(e2){return 1}}return 1}console.log(f(0),f(1));"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a \`catch\` return in a switch branch 1`] = `"function g(x){if(x)throw x;return 2}function f(x,k){switch(k){case 1:try{g(x)}catch(e){return 1}case 2:try{g(x)}catch(e){}}return 1}console.log(f(0,1),f(1,1),f(1,2));"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a \`catch\` returning nothing before the end of its function 1`] = `"function g(x){if(x)throw x;return 2}function f(x){try{g(x)}catch(e){}}console.log(f(0),f(1));"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a \`concat\` called optionally or on an optional array 1`] = `"console.log([1,2],[1].concat([2]),[1,2],[1,2,3]);"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a \`do … while\` run once ending in branches that leave 1`] = `"function g(x){return console.log(\\"g\\",x),x}function f(a){do{if(g(0),a){g(1);break}g(2)}while(0);g(3)}f(0),f(1);"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a \`do … while\` run once, a \`let\` after its leading \`break\` 1`] = `"function g(x){return console.log(\\"g\\",x),x}function f(a){do{if(a)break;g(g(1))}while(0)}f(0),f(1);"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a \`do … while\` whose test is truthy 1`] = `"function g(x){return console.log(\\"g\\",x),x}function f(){for(;g(1),g(0););}f();"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a \`switch\` on a local whose branches assign apart, a \`return\` after it 1`] = `"function g(v){return console.log(\\"g\\",v),v}function k(x){var a,b;return x===1?a=g(1):x===2&&(b=g(2)),a+b}console.log(k(1),k(2),k(3));"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a \`switch\` whose branches run several statements, return and assign, or assign apart 1`] = `"function g(v){return console.log(\\"g\\",v),v}function f(x){x===1?(g(1),g(2)):x===2?g(3):x===3&&g(4)}function h(x){var a;switch(x){case 1:a=1;break;case 2:return 2}return a}function k(x){var a,b;return x===1?a=1:x===2?b=2:a=3,[a,b]}function m(x){var a;return x===1?a=1:x===2&&(a=2),a}function n(x){return 9}f(1),f(2),console.log(h(1),h(2),h(3),k(1),k(2),k(3),m(1),m(3),n(1));"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a bare \`var\` and a block left holding one statement in an \`if\`, or a loop 1`] = `"function f(x){var a=x;x?sink(void 0):sink(void 0);for(;x--;){sink(void 0)}if(x);for(;x<0;x++);return a}function sink(){}console.log(f(2));"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a bare \`var\` followed by a bare \`return\` 1`] = `"function f(x){}console.log(f(1));"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a bare var write after a \`with\` 1`] = `"function f(o){var a;with(o)a=b,c();return a}console.log(f({b:1,c:function(){}}));"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a built-in call reading an array where \`Array.prototype\` is patched 1`] = `"Array.prototype.toString=function(){return\\"patched\\"},console.log(String([1,2]),Math.max([3]),[1,2].join());"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a built-in call where a direct \`eval\` may rebind it 1`] = `"function f(){return eval(\\"\\"),Math.max(1,2),Number(\\"1\\"),1}console.log(f());"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a call of a function, a \`var\` or a parameter nothing writes, in each branch of a test with effects 1`] = `"function f(t,p){function h(x){console.log(x)}var v=function(x){console.log(-x)};h(t()?1:2),v(t()?1:2),t()?p(1):p(2)}var n=0;f(function(){return n++%2},console.log),f(function(){return 1},console.log);"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a call of a parameter nothing writes, in each branch of a test with effects 1`] = `"function f(t,p){t()?p(1):p(2)}f(function(){return 0},console.log),f(function(){return 1},console.log);"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a call through a member differing in two arguments, or after a read 1`] = `"function g(){console.log([].slice.call(arguments).join())}function f(c,a){var o={m:g};c?o.m(1,a):o.m(2,a.x),c?o.m(a.y,1):o.m(a.y,2),c?o.m(1,2):o.m(3,4)}f(1,{}),f(0,{});"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a call through a member, the test a parameter \`arguments\` aliases 1`] = `"function f(c,o){return c?o.m(1):o.m(2),arguments.length}var o={m:console.log};f(1,o),f(0,o);"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a call through a member, the test reading a \`var\` assigned later 1`] = `"function f(c,o){return o.m(c?1:2),2}var o={m:console.log};f(1,o),f(0,o);"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a call through a member, the test reading a function 1`] = `"function f(c,o){c==(()=>1)?o.m(1):o.m(2)}var o={m:console.log};f(1,o),f(0,o);"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a call through a member, the test reading a global, then a parameter 1`] = `"function f(c,o){g===c||c?o.m(1):o.m(2)}var g=1,o={m:console.log};f(1,o),f(-1,o);"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a call through a parameter, a \`var\` or a sub of a computed key in each branch 1`] = `"function g(){console.log([].slice.call(arguments).join())}function f(c,h,o,k){h(c?1:2),h(c?1:2),c?o[k](1):o[k](2),c?o.m().n(1):o.m().n(2),this.m(c?1:2),o.m(c?1:2),o.m(c?1:2),o.m(k?1:2)}var o={m:function(x){return console.log(x),o},n:g};f.call(o,1,g,o,\\"m\\"),f.call(o,0,g,o,\\"m\\");"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a catch binding unread beside a \`var\` of its name 1`] = `"function f(){try{g()}catch{sink(1)}return 5}function g(){throw 0}function sink(v){console.log(v)}console.log(f());"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a catch binding unread where a nested function declares its name 1`] = `"function f(k){try{g()}catch{sink(1+k)}}function g(){throw 0}function sink(v){console.log(v)}f(2);"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a constructor forwarding a literal's spread or \`arguments\` or a rest parameter 1`] = `"class A{constructor(...a){console.log(a.length)}}class B extends A{constructor(){super(1,2)}}class C extends A{}class D extends A{}class E extends A{constructor(x,...r){super(...r)}}class F extends A{constructor(...r){super(...arguments)}}new B,new C(1),new D(1,2,3),new E(1,2),new F(1);"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a dropped \`Map\` whose entry holds a hole or a spread 1`] = `"var a=[1,2];new Map([[1,,2]]),new Map([[...a,3]]),new Map([[1,...a]]),console.log(1);"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a function called in place passed a \`var\` set before, after other statements, or written in a closure 1`] = `"function g(v){return v}function f(x){var b=g(x),c=g(2);try{console.log(1)}catch(e){}console.log(b,c)}function h(x){var b=g(x);g(0),function(a){try{console.log(1)}catch(e){}console.log(a)}(b)}function k(x){var b=g(x);return function(a){try{console.log(1)}catch(e){}console.log(a)}(b),b=1}f(1),h(2),console.log(k(3));"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a function called in place passed a call reading its parameter's name and a function 1`] = `"function g(v,w){return v+(w?w():0)}function f(a){return function(a){try{console.log(1)}catch(e){}return 2*a}(g(a,function(){return 1}))}console.log(f(3));"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a function called in place passed a call, its body declaring a \`var\` in a loop 1`] = `"function f(){return 3}function g(){!function(x){try{console.log(1)}catch{}for(var i=0;i<2;i++)console.log(x,i)}(f())}g();"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a function called in place passed a call, its body declaring a function 1`] = `"function f(){return 3}function g(){!function(x){try{console.log(1)}catch{}function q(){return x}console.log(q(),typeof q)}(f())}g();"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a function called in place passed a call, its body making a closure 1`] = `"function f(){return 3}function g(){{let x=f();try{console.log(1)}catch{}console.log([1].map(function(v){return v+x}))}}g();"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a function called in place passed a parameter its body declares again in a block 1`] = `"function g(a){!function(x){try{console.log(1)}catch{}{let a=Math.max(x,3);console.log(x,a,a)}}(a)}g(1);"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a function called in place passed a parameter of a function reading \`arguments\` 1`] = `"function g(a){{let x=a;try{console.log(1)}catch{}console.log(x)}return arguments.length}console.log(g(1,2));"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a function handed the global object past its parameters, or twice 1`] = `"function patch(t){t&&(t.Number=function(){return 7})}patch(0,globalThis),patch(globalThis),patch(globalThis),console.log(Number(\\"3\\"));"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a function read once, kept out of a pure call in a return or a concatenation 1`] = `"function wrap(f){return{f:f,toString:function(){return\\"w\\"}}}function o(){return wrap(function(a){return a+1})}function p(){return\\"\\"+wrap(function(a){return 2*a})}console.log(o().f(1),p());"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a function's name read under keep_fnames, unsafe 1`] = `"console.log(\\"f\\",\\"\\",2,function(a){}.prototype===void 0,function(){}.call.length);"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a known function called with \`null\`, returning \`null\` 1`] = `"console.log(null,null,20);"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a known function called with an array, or returning one, under \`unsafe\` 1`] = `"!function(){function p(a){return 2*a.length+3*a.length+a.length}function q(a){return[a,a,a,a,a,a]}console.log(p([1,2]),p([1,2]),q(1)[0],q(1)[1])}();"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a known function called with constants it cannot fold 1`] = `"!function(){function k({a:a}){return 1}function n(a){return\\"a long string, longer than the call \\"+a}function p(a){return a.length}console.log(k({}),k({}),2,2,1,1,n(1),n(1),p([1,2]),p([1,2]))}();"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a known function called with fewer constants than it has parameters 1`] = `"console.log(11,11,23);"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a loop whose leading \`if\` tests a name its block's function, class, \`let\` or \`const\` declares 1`] = `"function f(x){for(var r=[],j=0;j<2&&j;j++){r.push(j);let{m:m}={m:2};class C{}r.push(1,m,3,typeof C)}return r}console.log(f().join());"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a method of a variable holding an array, not a string 1`] = `"!function(){var a=[1,2];console.log(a.join(),a.join(\\"-\\"),a.indexOf(2))}();"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a regular expression's \`source\` the runtime rejects 1`] = `"try{console.log(/(?<a>x)|(?<a>y)/.source)}catch(e){console.log(e.name)}"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a remainder of what is no BigInt, its value unread 1`] = `"function f(a,b){return a%b,1}console.log(f(5,2));"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a sloppy function's \`this\` handed to a call 1`] = `"function F(){g(this),this.y=1}function g(o){o.x=1}console.log((new F).x,3);"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a value moved past an array literal reading a name 1`] = `"function f(o){return[o,g(o)]}function g(o){return o.n=1,2}console.log(f({}));"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a write into a bare \`var\` before a postfix update 1`] = `"function h(x){return[x]}function f(x){var b,a=h(x);x++;try{b=h(a)}catch(e){}return[a,b,a,b,x]}console.log(f(1));"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a write into a bare \`var\` before a sequence opening with an object 1`] = `"function h(x){return[x]}function f(x){var a,b;a=h(x),({toString:h}+\\"\\",x).y=2;try{b=h(a)}catch(e){}return[a,b,a,b,x]}console.log(f(1));"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a write into a bare \`var\` before a tagged template of a function 1`] = `"function h(x){return[x]}function f(x){var a,b;a=h(x),(function(){console.log(2)})\`\`;try{b=h(a)}catch(e){}return[a,b,a,b]}console.log(f(1));"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a write into a bare \`var\` before a write through an optional call of an object's method 1`] = `"function h(x){return[x]}function f(x){var a,b;a=h(x),({y:h}.y?.(x)).z=1;try{b=h(a)}catch(e){}return[a,b,a,b]}console.log(f(1));"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a write into a bare \`var\` before an object literal read 1`] = `"function f(x){return{}.y++,x.y,(function(){})\`\`,x}console.log(f(1));"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a write into a bare \`var\` before an optional chain on an object 1`] = `"function h(x){return[x]}function f(x){var a,b;a=h(x),{y:h}.y?.(x);try{b=h(a)}catch(e){}return[a,b,a,b]}console.log(f(1));"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a write into a bare \`var\` before an update of an object literal's property 1`] = `"function h(x){return[x]}function f(x){var a=h(x),b;({}).y++;try{b=h(a)}catch(e){}return[a,b,a,b]}console.log(f(1));"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: an \`await\` or \`yield\` of a sequence ending a sequence 1`] = `"function g(x){return console.log(\\"g\\",x),x}async function f(){g(1),g(2),await g(3)}function*h(){g(4),g(5),yield g(6)}f(),h().next();"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: an assignment of a sequence whose effects come first 1`] = `"function g(v){return v}function f(o){return g(1),g(2),o.p=(g(1),o.q,4),o[g(5)]=(g(6),7),[3,o.p]}console.log(f({q:1}));"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: an inner function called in place declaring a name the outer call's argument reads 1`] = `"var x=5;function h(){return 7}function g(){!function(p){try{console.log(1)}catch{}{let x=h();try{console.log(1)}catch{}console.log(x)}console.log(p)}(x+1)}g();"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: an optional link on a sequence ending in \`void\` or \`null\` 1`] = `"function g(x){return console.log(\\"g\\",x),x}console.log(void g(1),void g(2),void g(3),(g(4),void g(5)));"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: arithmetic of a constant nested on the right 1`] = `"function g(v){return v}function f(n,i,j){return[(n=+n)+2+3,2+n+3,2*n*3,2*n*3,3|(i|=0)|(j|=0),0&i&j,3^i^j,5&i,5&i,1&i,3&i|3,0&i,0&i,-1^i,-1^i,-1&i,-1&i]}console.log(f(1,2,3));"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: bare \`var\`s moved out of \`else if\` blocks left holding one statement 1`] = `"function g(x){return[x]}function sink(v){console.log(v)}function f(x,o,a){var r,r2,b=g(x),s,t,u;try{sink(b)}catch(e){}if(x)for(r in o)sink(r);else if(a)sink(s);if(x)for(r2 in o)sink(r2);else if(a){for(t of a)sink(t)}else sink(u);return[b,r,s,t,u]}console.log(f(1,{p:1},[2]),f(0,{},[3]),f(0,{},0));"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: bare \`var\`s moved out of a labeled block and a loop's 1`] = `"function g(x){return[x]}function sink(v){console.log(v)}function f(x,o){var a=g(x),k,q;try{sink(a)}catch(e){}for(;;){if(!x)break;for(k in o)sink(k);x--}label:{for(q in o)break label}return[a,k,void 0,q]}console.log(f(1,{p:1}));"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: bare \`var\`s of a name the first \`var\` declares 1`] = `"function g(x){return[x]}function sink(v){console.log(v)}function f(x,o,a){var r,b=g(x),s=1,w;try{sink(b)}catch(e){}if(x)for(r in o)sink(r);else if(a){for(w of a)sink(w)}return[b,r,s=g(s),s]}console.log(f(0,{},[3]));"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: bare \`var\`s of one name in blocks 1`] = `"function f(x){var c,a=x+1;x&&(c=2);for(;;){break}return[a,void 0,c]}console.log(f(1),f(0));"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: bare \`var\`s of one name joined 1`] = `"function f(x){if(x);return[x+1,void 0]}console.log(f(1));"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: built-in calls on BigInts and regular expressions, their values unread 1`] = `"RegExp(\\"a\\",1),console.log(1);"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: built-ins left as they are beside a constructor's \`this\`, a strict function's, and the global object only tested 1`] = `"\\"use strict\\";function C(){this.Number=1,this.x=2}function isGlobal(g){return g&&g.Math===Math}console.log((new C).x,isGlobal(globalThis),3,2,[\\"a\\"]);"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: built-ins read as statements 1`] = `"console.log(1);"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: built-ins written through what keeps them: a variable, a literal, a script's or sloppy function's \`this\`, or \`Object\` reached through the global object 1`] = `"var G=globalThis;G.Number=function(){return 7};var M=Math;M.max=function(){return 0};var P=[Array.prototype];function patch(){this.isNaN=function(){return\\"n\\"}}P[0].slice=function(){return\\"S\\"},this.parseInt=function(){return 9},patch(),function(){this.JSON.stringify=function(){return\\"j\\"}}(),globalThis.Object.keys=function(){return[\\"k\\"]},console.log(Number(\\"3\\"),Math.max(1,2),[1,2].slice(),parseInt(\\"4\\"),isNaN(1),JSON.stringify([1]),Object.keys({a:1}));"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: built-ins written through, by members and through \`globalThis\` 1`] = `"Math.foo=1,JSON.bar=2,Array.baz=3,globalThis.qux=4;var k=\\"Object\\";globalThis[k].quux=5,globalThis?.Number&&(Number.zz=6),console.log(Math.foo,Math.max(1,2),JSON.stringify([1]),Array.isArray([]),Object.keys({a:1}));"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: calls in both branches spreading the same list and different ones 1`] = `"function f(c,a,b){return g(...c?a:b,1)}function g(){return arguments.length}console.log(f(1,[1],[1,2]),f(0,[1],[1,2]));"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: calls spreading alike, or one spread, or spreads differing twice 1`] = `"function g(){console.log([].slice.call(arguments).join())}function f(c,a,b){c?g(...a,...b):g(...a,...a),c?g(...a,1):g(...b,2),c?g(...a,...a):g(...b,...b),c?g(1,...a):g(...a,1),c?g(...a):g(1),c?g(a.x,...a):g(a.x,...b)}f(1,[1],[2]),f(0,[1],[2]);"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: comparisons with \`undefined\` and \`typeof\` written with the literal last 1`] = `"function g(v){return v}function f(x,o){return[x==null,x!=null,x===void 0,x!==void 0,o.p===void 0,o.p!==void 0,x==x,o.q===void 0]}console.log(f(1,{}),f(void 0,{p:1}));"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: compound assignments in each branch of a test, to a member, a local, a script's \`var\` and \`let\` 1`] = `"var t=1;let u=2;function f(x,o){var v=3;return o.p+=x?1:2,x?++v:v+=2,x?t+=1:t+=2,u*=x?2:3,[o.p,v,t,u]}console.log(f(1,{p:0}),f(0,{p:0}));"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: computed keys naming the prototype through a variable or an array 1`] = `"!function(){var k=[\\"__proto__\\"],j={x:1};console.log(Object.keys({[k]:1}),Object.keys({[j]:2}),Object.keys({[[\\"__proto__\\"]]:3}),Object.keys({[[...k]]:4}),Object.keys({[[,]]:5}),Object.keys({[[1,2]]:6}))}();"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: computed keys of what may name the prototype 1`] = `"!function(){var k=[\\"__proto__\\"],n=[1,2];console.log(Object.keys({[k]:1}),Object.keys({[n]:1}),[\\"__proto__\\"],Object.keys({[[[]]]:2}),Object.keys({[[...k]]:3}))}();"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: concatenations with empty strings, the literal last 1`] = `"function g(v){return v}function f(x){var s=\\"\\"+x;return[s+\\"\\",\\"\\"+s,\\"\\"+s+s,s+\\"\\"+x,s+\\"\\"+s]}console.log(f(1));"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: conversions of BigInt operations and of a string concatenated with a string 1`] = `"function f(a,b){var s=\\"\\"+a;return[\\"1\\",\\"\\"+((b?1n:2n)-(b?3n:4n)),s+\\"\\"+s,\\"\\"+s+s]}console.log(f(1,1));"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: conversions of objects spreading arrays, strings, templates and objects 1`] = `"function f(a){return\\"\\"+{...[1],...\\"ab\\",...\`c\${a}\`,d:1,...a}}console.log(f({e:2}));"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: conversions of what \`~\`, an assignment, a relation, \`>>>\` or BigInts make 1`] = `"function f(a,b){return[\\"-2\\",\\"\\"+(a+=1),\\"\\"+(a<b),\\"\\"+(a>>>1),\\"\\"+(1n*b-2n*b),~(a=2)+\\"\\",\\"\\"+(a?1:\\"2\\")]}console.log(f(1,3n));"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: evaluations throwing a \`URIError\` or \`SyntaxError\` 1`] = `"try{console.log(decodeURI(\\"%\\")+1)}catch(e){console.log(e.name)}try{console.log(JSON.parse(\\"{\\")+1)}catch(e){console.log(e.name)}"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: evaluations throwing an error other than a type or range error 1`] = `"try{console.log(decodeURIComponent(\\"%\\"))}catch(e){console.log(e.name)}try{console.log(encodeURI(\\"\\\\ud800\\"))}catch(e){console.log(e.name)}"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: functions called in place passed an anonymous function or class 1`] = `"function g(){!function(x){try{console.log(1)}catch{}console.log(x.name,x.length)}(function(){}),function(x){try{console.log(1)}catch{}console.log(x.name,x.length)}(class{})}g();"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: functions handed built-ins, one or several 1`] = `"function f(A){A.x=1}function g(B){B.y=2}function h(...C){C[0].z=3}f(Array),g(Array),g(Object),h(Math),console.log(Array.isArray([]),Object.keys({a:1}),Math.max(1,2));"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: functions passed to \`new\`, under \`wrap_func_args\` 1`] = `"new Promise((function(r){r(1)})).then(console.log);new Promise((r=>r(2))).then(console.log);"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: line breaks kept escaped in a directive, asm.js, an import attribute and an import's source, compressed 1`] = `
+"function m(){\\"use asm\\";var s=\\"c\\\\nd\\";return{}}console.log(m(),3,1);var many=\`
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\`;console.log(many.length);"
+`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: line breaks kept escaped in an import's attributes, compressed 1`] = `"import\\"a\\\\nb\\"with{type:\\"c\\\\nd\\"};export*from\\"e\\\\nf\\";export{g}from\\"h\\\\ni\\";import(\\"j\\\\nk\\");console.log(1e3);"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: logical expressions of flagged values 1`] = `"function g(v){return v}function f(x,y){return[y,x&&0,y,x||1,(x?1:2)&&y,y]}console.log(f(0,1),f(1,2));"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: logical expressions of what is always an object 1`] = `"function g(v){return v}function f(x){return[(g(1),x),[],x,(g(2),1),class{},x]}console.log(f(0).length,f(1).length);"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: loose comparisons with \`undefined\` written to 1`] = `"function f(x){return[x==null,x!=null,x==null]}console.log(f(null),f(1));"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: nullish checks written with the literal last 1`] = `"function g(v){return v}function f(x){return[x??1,x??2,x??3,x===null||x===null?4:x,x===void 0||x===void 0?5:x,x===null||g(x)===void 0?6:x]}console.log(f(null),f(void 0),f(0),f(7));"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: object literals spread into another 1`] = `"function g(x){return console.log(\\"g\\",x),x}var o={a:1,b:2,m:()=>1,...{__proto__:null},[\\"__proto__\\"]:3,...{get c(){return 4}}},p={m:()=>0},q={__proto__:p,...{m(){return super.m()}}};console.log(JSON.stringify(o),o.m(),Object.keys(o).join(),q.m());"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: objects split into variables where \`eval\` pins the scope, or holding \`__proto__\`, read by a computed key or deleted 1`] = `"function f(k){var o={a:1,b:2};return eval(\\"\\"),o.a+o.b}function g(k){return 3}function h(k){var o={a:1,b:2};return o.a+o[k]}function m(){var o={a:1,b:2};return delete o.a,[o.a,o.b]}console.log(f(),g(),h(\\"b\\"),m());"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: parameters passed their own names in a loop 1`] = `"function f(fn,o){for(var r=[],i=0;i<2;i++)r.push(fn(o)+i);return r}console.log(f(JSON.stringify,{a:1}));"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: parameters passed their own names in a loop, a \`const\` and a function 1`] = `"function f(p){let fn=p.f;function o(){return\\"a\\"}for(var r=[fn],i=0;i<2;i++)r.push(fn[o()]+i);return r}console.log(f({f:{a:1}}));"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: parameters passed their own names in a loop, a \`let\` and a \`var\` holding them 1`] = `"function f(p,q){let fn=p.f;for(var o=q.k,r=[fn,o],i=0;i<2;i++)r.push(fn[o]+[1].map(function(){return i})[0]);return r}console.log(f({f:{a:1}},{k:\\"a\\"}));"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: parameters passed their own names in a loop, a chain read through 1`] = `"function f(fn,o){for(var r=[],i=0;i<2;i++)r.push(function(){return fn?.[o]}().length);return r}console.log(f({a:[1]},\\"a\\"));"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: parameters passed their own names in a loop, a string statement 1`] = `"function f(fn,o){for(var i=0;i<2;i++)(function(){})();return i}console.log(f({a:[1]},\\"a\\"));"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: parameters passed their own names in a loop, read by a method call 1`] = `"function f(fn,o){for(var r=[],i=0;i<2;i++)r.push(fn.call(o,i));return r}console.log(f(function(i){return this.a+i},{a:1}));"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: parameters passed their own names in a loop, the value a tag 1`] = `"function f(fn,o){for(var r=[],i=0;i<2;i++)r.push(function(){return fn.bind(o)}()\`x\${i}\`);return r}console.log(f(function(s,i){return this.a+i},{a:1}));"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: parameters passed their own names in a loop, the value assigned 1`] = `"function f(fn,o){for(var r,i=0;i<2;i++)r=fn[o];return r}console.log(f({a:1},\\"a\\"));"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: parameters passed their own names in a loop, the value called 1`] = `"function f(fn,o){for(var r=[],i=0;i<2;i++)r.push(function(){return fn.bind(o)}()(i));return r}console.log(f(function(i){return this.a+i},{a:1}));"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: parameters passed their own names in a loop, the value read by typeof 1`] = `"function f(fn,o){for(var r=[],i=0;i<2;i++)r.push(typeof function(){return fn[o]}());return r}console.log(f({a:1},\\"a\\"));"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: property reads of a script's top-level names, a \`let\`, and an expression 1`] = `"var t={p:1};let u={p:2};function f(){return[t.p,2,t.p,g().p]}function g(){return{p:3}}console.log(f());"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: templates of known kinds, and an empty string after a string 1`] = `"function f(a){var s=\\"\\"+a;return[\`1x\${s}\`,s+\\"\\",\\"\\"+s,\`a\${s}b1\`,\\"undefined\\"]}console.log(f(2));"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: the global object kept by a logical expression, a conditional or a sequence 1`] = `"var g=\\"object\\"==typeof globalThis?globalThis:this,h=globalThis,k=globalThis||{};g.Number=function(){return 7},console.log(Number(\\"3\\"),h===k);"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: unread names destructured from what is never nullish 1`] = `"function f(){var{y:y}=function(){},{v:v}=null}try{f()}catch(e){console.log(e.name)}"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: unsafe reads of object literals keyed by computed constants, a prototype's method or a function 1`] = `"function f(x){return[1,2,{[x]:3}.a,4,5,6,7]}console.log(f(\\"q\\"));"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: unused imports, a default and a namespace 1`] = `"import{b}from\\"m\\";import\\"n\\";import*as e from\\"o\\";sink(b,e);"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: unused names of destructured parameters and catch bindings 1`] = `"function f({a,b}){return a}function g(){try{throw{c:1,d:2}}catch({c,d}){return c}}console.log(f({a:1,b:2}),g());"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: unused rest parameters of a global function 1`] = `"function g(v){return console.log(\\"g\\",v),v}function k(a){return a}console.log(k(1,g(2),3),k(4),k(5,6,g(7)),k(8,9));"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: unused rest parameters of a global function, without reduce_vars 1`] = `"function g(v){return console.log(\\"g\\",v),v}function k(a){return a}console.log(k(1,g(2)),k(4),k(5,6,g(7)),k(8,9,g(10)));"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: unused rest parameters of a known function, given what has effects 1`] = `"!function(){function g(v){return console.log(\\"g\\",v),v}function k(a){return a}console.log(k(1,g(2)),4,k(5,g(6)),k(7,g(9)))}();"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: unused rest parameters of a known function, without reduce_vars 1`] = `"!function(){function g(v){return console.log(\\"g\\",v),v}function k(a){return a}console.log(k(1,g(2)),k(4),k(5,6,g(7)))}();"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from /tmp/claude-0/-home-user/cd8a5332-c6e7-5315-a58d-6abfae3fad54/scratchpad/jsp/big2/b0.js 1`] = `"!function(){var e=function(){var e=t=>{for(var e in t)ae()};_t;It,ue;eincludes(\\"\\\\n\\".value.trim()),Me=/^\\\\s*(?:\\\\n|$)/;we;varprototype.call.bind(Object.prototype.hasOwnProperty),tt,e({ARGUMENT:()=>nn,VARIABLE_DEFINITION:()=>Xt});for(;t<nt(););function o(){let e;try{t(e=t.getBuiltinModule(\\"node:diagnostics_channel\\"))}catch{}return e}o(\\"graphql:subscribe\\")?.tracingChannel(\\"graphql:resolve\\");for(let t of void t);De?De.traceSync():ft({value:n.tokenCount}),r;for(let t=n;t!==r;t=t.next);try{t=oe(oi)}catch(t){}return t.comments=si(t),t}();e.default}();"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from /tmp/claude-0/-home-user/cd8a5332-c6e7-5315-a58d-6abfae3fad54/scratchpad/jsp/big2/b2.js 1`] = `"{if(e)for(;;){for(;;)a&&t&&0|a;s&&s,[]()||a,r,e,e,e,e()}for(h;;);function v(){e?r:slice}}"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from /tmp/claude-0/-home-user/cd8a5332-c6e7-5315-a58d-6abfae3fad54/scratchpad/jsp/big2/b3.js 1`] = `"class MiniCssExtractPlugin{getCssModule(){webpack({serialize(){}})}constructor(){schema.runtimeOptions={linkType:options=linkType}(compilation>{})(i=>{})}}"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from /tmp/claude-0/-home-user/cd8a5332-c6e7-5315-a58d-6abfae3fad54/scratchpad/jsp/big2/b4.js 1`] = `
+"define=\\"\\"&amd
+"
+`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from /tmp/claude-0/-home-user/cd8a5332-c6e7-5315-a58d-6abfae3fad54/scratchpad/jsp/big2/b6.js 1`] = `""`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from /tmp/claude-0/-home-user/cd8a5332-c6e7-5315-a58d-6abfae3fad54/scratchpad/jsp/big2/b7.js 1`] = `
+"(()=>{function matchArity(){let t=length===1?function(){}:function(){apply(arguments)}
+return t}exports=class t{constructor(){return function(){mockConstructor=matchArity(0|function(){})({})}}_createMockFunction(){for(spyState of this);}}})()
+"
+`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from @babel/core/lib/config/files/index.js 1`] = `""`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from @babel/core/lib/config/files/module-types.js 1`] = `"function loadCodeDefault(){\\"\\"===pattern&&(async!=null?async:isAsync)}"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from @babel/core/lib/config/files/module-types.js, 2 1`] = `"\\"use strict\\";function loadCodeDefault(loader,esmError,tlaError){pattern}"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from @babel/core/lib/config/validation/option-assertions.js 1`] = `"for(key of value)hasOwnProperty.call(_helperCompilationTargets().key);"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from @babel/core/lib/transformation/block-hoist-plugin.js 1`] = `"for(;;)if(p);"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from @babel/helper-compilation-targets/lib/index.js 1`] = `""`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from @babel/helper-compilation-targets/lib/index.js, 2 1`] = `
+"import''with{type:''}
+"
+`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from @babel/helper-module-transforms/lib/normalize-and-load-metadata.js 1`] = `"function getExportSpecifierName(){if(isIdentifier()){value}throw\\"\\"}"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from @babel/helper-plugin-utils/lib/index.js 1`] = `""`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from @babel/helpers/lib/helpers/applyDecs2311.js 1`] = `"function applyDecs2311(){var i;return pushInitializers=function(){initializers&&!kindOnly==isField&&applyDec(isPrivate?\\"#\\":_toPropertyKey.default?[]:isStatic?i:isPrivate?function(i){}:instanceBrand)},pushInitializers(i),{c(){}}}"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from @babel/helpers/lib/helpers/usingCtx.js 1`] = `"function _usingCtx(){return SuppressedError=function(){},{\\"function\\"(){}}}"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from @babel/traverse/lib/path/evaluation.js 1`] = `"if(path){if(computed,binding&&end&&\\"\\"&bindingPathScope!=scope)for(;;);\\"\\"()&&prop,name&&(context=global[name])}"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from @babel/traverse/lib/path/evaluation.js, 2 1`] = `"if(path){if(isLiteral()&&scope)for(;;)path;for(prop of props)isObjectMethod()}isCallExpression()&&(hasOwnProperty.call([]),isLiteral());"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from @changesets/config/dist/index.mjs 1`] = `""`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from @cspell/rpc/dist/index.js 1`] = `"var e=class{request(e){return{get isCanceled(){}}}#e(){}async isOK(e=DefaultOkOptions){try{await this.#e({id:t},e)}catch{return!1}var t}},t=class extends e{constructor(e){}};function s(e){}RPCServerImpl;export{t as RPCClient,s as protocolMethods};"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from @eslint/config-helpers/dist/esm/index.js 1`] = `""`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from @eslint/eslintrc/lib/config-array/extracted-config.js 1`] = `
+"class t{toCompatibleObjectAsConfigFileContent(){let{...t}=this}}export{t as ExtractedConfig}
+"
+`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from @eslint/markdown/dist/rules/no-space-in-emphasis.js 1`] = `""`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from @jest/expect-utils/build/index.js 1`] = `
+"/***//******/ /******/ /******/ /******/
+/******/ /******/ /***/ /***/ /***/ /***/ /***/"
+`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from @jridgewell/gen-mapping/dist/gen-mapping.umd.js 1`] = `""`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from @jridgewell/remapping/dist/remapping.umd.js 1`] = `"define([\\"module\\",\\"@jridgewell/trace-mapping\\"],{});"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from @peculiar/utils/build/esm/encoding/hex.js 1`] = `"export function normalize(o,r={}){for(separator of([...r](()=>left),separators));o.trim()}"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from @sinclair/typebox/build/cjs/errors/function.js 1`] = `""`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from @sinclair/typebox/build/cjs/type/mapped/mapped.js 1`] = `"Acc[L]=()=>{T||T};"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from @sinclair/typebox/build/cjs/value/create/create.js 1`] = `""`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from @typescript-eslint/eslint-plugin/dist/rules/no-var-requires.js 1`] = `
+"exports({meta:{deprecated:{replacedBy:[{rule:{}}]},schema:[{properties:{allow:{}}}]},create:()=>({''(){if([]([])){let r=node
+e=r,some(r=>e())}var e;[].includes()}})})
+"
+`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from @webassemblyjs/wasm-opt/lib/index.js 1`] = `"OptimizerError=function(){var r,t;function e(){message}return _super=(r=e,t=_isNativeReflectConstruct,function(){_getPrototypeOf(r),result,t&&Super(),result}),e}();try{uint8Buffer}catch{OptimizerError()}"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from @webassemblyjs/wasm-parser/esm/index.js 1`] = `""`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from a package 1`] = `""`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from a package, 2 1`] = `""`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from a package, 3 1`] = `"module=()=>{(void 0)({1:[()=>{module=function(){for(var e in typeSpecs)e&&printWarning((getStack||\\"\\")??\\"\\")},exports=(()=>{if(!manualPropTypeCallCache[\\":\\"+propName]&&manualPropTypeWarningCount&&manualPropTypeWarningCount++,\\"number\\"==typeof propValue&&entries)for(;!stepnext.done;);propValue[\\"@@toStringTag\\"]=\\"Symbol\\"})()(require(\\"_process\\"))}]},[4])},define,self=\\"\\";"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from a package, 4 1`] = `"class MiniCssExtractPlugin{getCssModule(){for(module of(webpack,(resolve(),{serialize(){},deserialize(){}})(s=>{(()=>{let{}=webpack;push({render:()=>this,hash:chunk.contentHash})}).tap(s=>{let{}=sortModules()})}),usedModules));}}"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from a package, 5 1`] = `""`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from a package, 6 1`] = `"JestMock=class{_defaultMockConfig(){}_makeComponent(){mockConstructor=function(){let n=length===1?function(n){}:function(){};return n}()(),mockReset=()=>{}}}();"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from a package, 7 1`] = `""`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from a package, 8 1`] = `"setState=function(){this(\\"forceUpdate\\")},new window.ErrorEvent({message:message?\\"\\":String}),queueMicrotask,exports.useActionState=function(e){};"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from a package, 9 1`] = `""`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from a package, 10 1`] = `"{let e=getSourceCode(),[]=(r=>{lineIndexes&&[e()](e=>e);return{line,column:r[line]}}).report({data:{}})}eslintPluginPrettier={configs:{recommended:{meta:{schema:[{properties:{}}]},create(){return getSourceCode(),{[type](){for(difference of differences);}}}}}},eslintPluginPrettier;"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from a package, 11 1`] = `"{let l=array(()=>{});for(((...s)=>{s(()=>{}),l.bools\`\`})(l.arrays);;i++)\\"\\"(),[\\"\\"](/=/)&&checkAllAliases()&&(checkAllAliases(),checkAllAliases()&&counts)}"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from acorn-jsx/xhtml.js 1`] = `"module.exports;"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from ajv-formats/dist/formats.js 1`] = `"function date(){day=+DATE[3]}"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from ajv-keywords/keywords/transform.js 1`] = `"exports=function n(){transform={function(){}},n.definition={function(){}},addKeyword()};"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from ansis/index.js 1`] = `"r&&r?t||e(8)+232:e(51),l=()=>{try{s}catch(e){}let r=\\"FORCE_COLOR\\",a=s[r](a);isNaN(p)||r in e(/^color=?(always)/);return o,0},close,s,p,letE=()=>(let=()=>{te&&o;let r=raw?raw(...i):e,l=_p,{_b:t}=l;if(n)for(;~e(a);a)islice(a);return r(r(/(\\\\r?\\\\n)/g,c+\\"$1\\"+a)),a+r+c},e&&l._b,e,n);"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from ansis/index.js, 2 1`] = `
+"let{}=e=>{[]=/()/()|[],t&&length},n=n=n?231:16,i=t=>{t||!((0|o)/l)||e},l=()=>{t
+try{toObject()}catch(e){}\\"\\"(n?1:isTTY)
+let O=\\"FORCE_COLOR\\"
+s[O]()||O(()=>{let|\\"\\"==n})(/$/)},{}=s?t({open:\\"\\"}):r,b=u
+"
+`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from array-timsort/src/index.js 1`] = `"log10=x?+!x:function(){array&&\\"\\"!=typeof compare&&compare,minRun};"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from array-timsort/src/index.js, 2 1`] = `""`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from assemblyscript/std/portable/index.js 1`] = `"({})()[\\"\\"]=function(){for(;len;)apply();({function(){}})({replaceAll(){}})},[](()=>{})({signbit:{signbit(){}},sincos:{function(){}}});"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from axios/lib/core/mergeConfig.js 1`] = `""`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from cac/dist/index.js 1`] = `"{let e=(Deno=\\"\\"&\\"\\"==deno,\\"\\");\`\${process.platform}\${e}\`,runtimeProcessArgs}\\"\\"\`\`;"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from cac/dist/index.js, 2 1`] = `"CACError={constructor(){name=\\"\\",\\"\\"!=captureStackTrace&&message}},Command=class{constructor(){(this&commands)(\\"\\")}checkUnusedArgs(){\`\`\`\`}},CAC=class{command(){command=Command()}parse({}){}};"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from cac/dist/index.js, 3 1`] = `"if(\\"\\"==process){let e=(deno=\\"\\")?\\"\\":\\"node\\";\`\${process.platform}\${e}\`}"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from chalk/source/index.js 1`] = `"[]={get:()=>function(){createBuilder(this[IS_EMPTY])}}[bgModel]={get(){}};"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from chokidar/index.js 1`] = `"class e extends EventEmitter{constructor(e={}){opts=({}=()=>{for(ignored of this)ignored&recursive}),(()=>{}).then(()=>{})(()=>{this._userIgnored=void 0}),closerList(()=>{})}_remove(e){e??(_watched||fullPath),this()||(e?EVENTS:handler_js_1)}_closeFile(){}}exports=e;"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from chokidar/index.js, 2 1`] = `"class FSWatcher extends EventEmitter{constructor(t={}){(()=>{_addToNodeFs(void 0)}).then(()=>{})(()=>{})}}"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from clean-css/lib/optimizer/level-1/value-optimizers/color/shorten-hsl.js 1`] = `""`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from clean-css/lib/options/optimization-level.js 1`] = `""`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from coffeescript/lib/coffeescript/index.js 1`] = `"CoffeeScript=()=>{var e=ref;if(isContext=vm??(()=>options instanceof e),options)for(k in ref2);require};"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from core-js/internals/array-buffer.js 1`] = `"$ArrayBuffer.prototype=ArrayBufferPrototype;"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from core-js/modules/es.regexp.constructor.js 1`] = `"if(handleNCG=()=>{for(;;index++)if(chr=\\"\\\\\\\\\\")charAt();else if(brackets&&!0===(chr=\\"\\")){stringSlice();continue}},isForced()&&rawPattern)try{rawPattern=rawPattern}catch{}"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from cspell-dictionary/dist/SpellingDictionary/FlagWordsDictionary.js 1`] = `"export function createFlagWordsDictionary(){get(()=>{{let t=parseDictionaryLines();for(v of t)test(void 0)}})}"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from cspell-lib/dist/lib/trace.js 1`] = `""`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from cspell-lib/dist/lib/util/resolveFile.js 1`] = `
+"debugMode=!1
+"
+`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from cssesc/cssesc.js 1`] = `"cssesc=function(c){codePoint,/]/.test()};"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from date-fns/locale/be/cdn.js 1`] = `"void 0;"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from debug/src/browser.js 1`] = `"/()/(RegExp.$1)(/\\\\/()/);"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from doctrine/lib/doctrine.js 1`] = `"!function(){obj(key),function(){esutils(ch)&&ch;while(charCodeAt(index)==64);isTypeParameterRequired(this)&&optional,prototype=(()=>{}).t=()=>{},kind&&addError(),shouldBeEmpty,Rules={constructor:['parseType','ensureEnd']},hasOwnProperty(Rules,this.i);while(true)interestingTagsinterestingTags.hasOwnProperty(tag.title)}(jsdoc={}),exports.type={}}();"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from es-abstract/2025/GroupBy.js 1`] = `""`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from eslint/lib/rules/array-bracket-spacing.js 1`] = `"exports={meta:{deprecated:{replacedBy:[]},schema:[{properties:{singleValue:{}}}],messages:{unexpectedSpaceAfter:\\"\\"}},create(){spaced;astUtils&&second,isTokenOnSameLine(last)&&last}};"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from eslint-plugin-jsdoc/src/rules/checkParamNames.js 1`] = `""`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from eslint-plugin-n/lib/rules/no-mixed-requires.js 1`] = `"export default{meta:{schema:[{oneOf:[{properties:{}}]}]},create:()=>({VariableDeclaration(){!function(){for(declaration of declarations)init}()?declarations:report({})}})};"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from eslint-plugin-react/lib/rules/destructuring-assignment.js 1`] = `"module.exports={meta:{schema:[{properties:{}}]},create:detect(()=>(node,report({}),{TSQualifiedName(e){\\"Identifier\\"&function(e){for(;e;);}(e)}}))};"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from eslint-plugin-react/lib/rules/prop-types.js 1`] = `"exports={meta:{docs:{},schema:[{properties:{ignore:{}}}]},create(){}};"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from eslint-plugin-unicorn/rules/consistent-empty-array-spread.js 1`] = `
+"isArray=()=>{let a=getStaticValue()(a.value)},cases=[]
+"
+`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from eslint-plugin-unicorn/rules/no-array-reduce.js 1`] = `""`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from eslint-plugin-unicorn/rules/no-array-reduce.js, 2 1`] = `"({})(),config={m:{messages}};export default config;"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from eslint-plugin-unicorn/rules/no-named-default.js 1`] = `"fixImportSpecifier=()=>{hasDefaultImport&&[,]()},config={meta:{}};export default config;"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from eslint-plugin-unicorn/rules/no-unnecessary-polyfills.js 1`] = `""`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from eslint-plugin-unicorn/rules/no-useless-error-capture-stack-trace.js 1`] = `""`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from eslint-plugin-unicorn/rules/no-useless-error-capture-stack-trace.js, 2 1`] = `
+"context(e=>{let t=at()
+t&t.type==''.includes(t.name),firstArgument='ThisExpression'}),config={create:create}
+"
+`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from eslint-plugin-unicorn/rules/no-useless-undefined.js 1`] = `"create=e=>{getProblem=()=>{},options,on(n=>{if(n)return function(){let n=parent,{}=n;e.includes(n)&&typeAnnotation}})(e=>{isUndefined|void((type=\\"\\")?name:nodetype)})},config={meta:{}};export default config;"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from eslint-plugin-unicorn/rules/no-useless-undefined.js, 2 1`] = `
+"/()/i.test(),config={meta:{docs:{}}}
+"
+`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from eslint-plugin-unicorn/rules/prefer-modern-dom-apis.js 1`] = `""`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from eslint-plugin-unicorn/rules/prefer-native-coercion-functions.js 1`] = `""`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from eslint-plugin-unicorn/rules/prefer-spread.js 1`] = `"node(comment>{})(preservedNodeOrRange);getConcatPreservedRanges=()=>{flatMap(argument=>{if(sourceCode);});if(fixedArgumentsCount);};on(node=>{if(1);});on(node=>{if(!isMethodCall())suggest=map({fix:fixConcat()});if(length);})(node=>{if(!isMethodCall)return;let[firstArgument]=arguments;if(firstArgument(0))return{};else return})(node=>{if(!isMethodCall());})(node=>{if(\\"string\\"==typeof value);});"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from eslint-plugin-unicorn/rules/prefer-string-starts-ends-with.js 1`] = `""`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from eslint-plugin-unicorn/rules/text-encoding-identifier-case.js 1`] = `"MESSAGE_ID_ERROR=\\"error\\",messages={[MESSAGE_ID_ERROR]:\\"\\"},config={meta:{messages}};"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from eslint-plugin-unicorn/rules/text-encoding-identifier-case.js, 2 1`] = `"MESSAGE_ID_SUGGESTION=\\"/\\",messages={[MESSAGE_ID_SUGGESTION]:\\"\\"};"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from eslint-plugin-unicorn/rules/text-encoding-identifier-case.js, 3 1`] = `
+"MESSAGE_ID_SUGGESTION='',messages={\\"\\":''},shouldEnforceDash=s=>isJsxElementAttributes({attributes:['']})
+"
+`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from eslint-plugin-unicorn/rules/text-encoding-identifier-case.js, 4 1`] = `"messages={[MESSAGE_ID_SUGGESTION]:''},config={m:{S:{},messages}};"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from eslint-plugin-unicorn/rules/utils/get-call-or-new-expression-tokens.js 1`] = `
+"function getNewExpressionTokens(){isNewExpressionWithParentheses()}export{getNewExpressionTokens}
+"
+`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from espree/espree.js 1`] = `"visitorKeys;"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from fill-range/index.js 1`] = `"fill=()=>{((i=1,l={})=>{1&end&&invalidRange(l)})()};"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from fork-ts-checker-webpack-plugin/lib/rpc/rpc-worker.js 1`] = `"function createRpcWorker(){worker={connect(){},connected(){connected}}(()=>{})}"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from function-bind/implementation.js 1`] = `"var max=Math.max;"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from glob/dist/esm/walker.js 1`] = `"export class GlobUtil{constructor(){next=()=>{(-tasks==0)()}}}"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from handlebars/lib/handlebars/runtime.js 1`] = `"if(options)for(;;i++);_setup=function(){options};"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from http-errors/index.js 1`] = `""`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from istanbul/lib/config.js 1`] = `"function i(n){n(()=>{v1&&([]=i()[k]=void v)})}function n(n){i(n||{})}n(),overrides&&(config=n(config));"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from istanbul/lib/util/file-matcher.js 1`] = `""`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from jest-junit/index.js 1`] = `
+"JSON({}),onTestResult=()=>results>{}
+"
+`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from jest-junit/utils/buildJsonResults.js 1`] = `"module=()=>{jsonResults={testsuites:[{_attr:{time:NaN}}]}(t=>{\\"false\\"&noResults,end-t,testSuite={testsuite:[{}]},tc,includeShortConsoleOutput=4})};"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from js-yaml/lib/dumper.js 1`] = `""`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from less/lib/less/tree/namespace-value.js 1`] = `""`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from lodash/_baseIsEqualDeep.js 1`] = `""`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from lodash-es/_createFlow.js 1`] = `"import a from\\"\\";export default()=>{flatRest(()=>{var r,t;data=\\"\\"==(r=a(t=[]))?t:void 0,([][9]=1)&&t&&wrapper[r]()})};"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from lru-cache/index.js 1`] = `"isStale=()=>{diff=Date.now()};"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from memfs/lib/node.js 1`] = `""`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from micromark/dev/lib/compile.js 1`] = `"lineEndingBlank&&[index][2].sliceSerialize(events[index][1]),listUnordered,hasOwnProperty.call({},id);"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from micromark/stream.js 1`] = `""`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from minimatch/dist/esm/brace-expressions.js 1`] = `
+"parseClass=()=>{for([[]]of{})startsWith()
+return length?['',,,!0]:[,,,!0]}
+"
+`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from ms/index.js 1`] = `"exports=()=>{};"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from ms/index.js, 2 1`] = `"function parse(){var a=''|match[2];(''===a||''===a)&&n}function fmtLong(){plural('')}function plural(){}"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from ms/index.js, 3 1`] = `"s=1e3,m=60*s;"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from napi-postinstall/lib/index.js 1`] = `""`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from playwright-core/lib/server/electron/loader.js 1`] = `"for(arg of[(void 0).android?\\"\\":\\"sync\\"]());"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from postcss-modules-local-by-default/src/index.js 1`] = `"function localizeDeclaration(){if(isAnimation){let i=node>{};declaration.value=i.toString()}}"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from prelude-ls/lib/List.js 1`] = `"andList=i=>{for(;;)if(!i[void 0])return};"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from prelude-ls/lib/Num.js 1`] = `""`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from prop-types/prop-types.js 1`] = `""`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from prop-types/prop-types.js, 2 1`] = `""`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from pug-code-gen/index.js 1`] = `
+"Compiler.prototype={runtime:function(t){},visit:function(t){var e=this.debug,i
+if(!node)throw TypeError(i)
+if(e&&!1!==node.debug&&node.type,!this['visit'+node.type]){switch(node.type){case'Filter':case'FileReference':// unlikely but for the sake of completeness
+i+=' Please use pug-linker to preprocess this AST.'}this.buf.push(),this.visitAttributes(),this.terse&&tag.selfClosing,tag.block&&tag.block.nodes.some({}),this.visitAttributes()}},attributeBlocks:function(t){return t.slice().map(function(t){})}}
+"
+`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from rimraf/dist/commonjs/rimraf-move-remove.js 1`] = `"rimrafMoveRemoveDirSync=()=>!(parse.root||filter&ent)&&(ignoreENOENTSync(()=>rmdirSync),!0);"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from schema-utils/dist/cli.js 1`] = `"USAGE=\\"\\";"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from schema-utils/dist/validate.js 1`] = `"let c=(()=>{})/(()=>{c()});"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from semver/bin/semver.js 1`] = `
+"var a=shift()
+for(''===a||''===a?reverse=!0:''===a&&loose;;i++);"
+`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from shell-quote/parse.js 1`] = `"for(var a=0;a<4;a++)4294967296*Math.random();"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from shell-quote/parse.js, 2 1`] = `"function parseInternal(){if(commented){(varend=\\"\\")&&0}for(;;i++)if(c,DS,!ifs)for(;length;);/{/({})}"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from shell-quote/parse.js, 3 1`] = `"function parseInternal(){for(commented;;i++)ifs&&vc;(arg='')||arg({})}"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from source-map/lib/util.js 1`] = `"function strcmp(){return aStr2?-1:aStr1>aStr2?void 0:-1}"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from tar/dist/commonjs/pax.js 1`] = `""`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from three/examples/jsm/lighting/vxgi/VXGIVolume.js 1`] = `""`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from three/examples/jsm/tsl/lighting/data/HemisphereLightDataNode.js 1`] = `
+"class o extends Node{constructor(){for(maxCount&&console(\`\${\`\${length}\`}\`);;);}}export default o
+"
+`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from three/examples/jsm/utils/SortUtils.js 1`] = `""`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from three/src/extras/PMREMGenerator.js 1`] = `"for(;;)for(coordinates[2/3],vertex=0;;);"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from three/src/renderers/common/extras/PMREMGenerator.js 1`] = `"for(EXTRA_LODS=6,lodMax-LOD_MIN+7;;)for(;;face++)for(;;);"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from three/src/utils.js 1`] = `""`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from tsconfig-paths/lib/__tests__/data/match-path-data.js 1`] = `"tests=[{t:{}}];"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from tsconfig-paths/lib/try-path.js 1`] = `"exports=()=>{if(starMatch)for(_loop_1=()=>{var a;replace(),push({}),a=\\"\\"(()=>({path:a}))};_a;)_loop_1(physicalPathPattern)};"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from tsyringe/dist/esm2015/decorators/auto-injectable.js 1`] = `""`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from type-check/lib/check.js 1`] = `""`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from type-check/lib/check.js, 2 1`] = `"(function(){function t(){types=\\"Array\\",any(function(t){!function(){var t=typeObj,e=typeObj.structure;if(t)defaultType[e]&&thatcall(1),checkStructure()}(options)},types)}types={Number:{validate(t){}}},module=function(e){t()}}).call(this);"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from type-check/lib/check.js, 3 1`] = `
+"(function(){function check(){var t=typeObj,e=typeObj.structure
+if(t)return defaultType[e]&&thatcall(1),checkStructure()}types={Number:{validate(){}}},module=function(){options,types='Array',any(function(t){check(options)},types)}}).call(this)
+"
+`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from undici/lib/dispatcher/client-h1.js 1`] = `"function resumeH1(){destroyed}"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from verkit/dist/version-Co1j9Tpq.js 1`] = `""`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from webpack-dev-server/client/index.js 1`] = `"reloadApp=(allowToHot,void(allowToLiveReload&&(rootWindow=self)));"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from webpack-sources/lib/helpers/createMappingsSerializer.js 1`] = `""`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from write-file-atomic/index.js 1`] = `""`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from ws/lib/websocket.js 1`] = `""`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from yaml/browser/dist/compose/compose-collection.js 1`] = `""`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from yaml/browser/dist/compose/compose-collection.js, 2 1`] = `""`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from yaml/browser/dist/parse/cst.js 1`] = `"BOM=\\"\\";"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from yaml/dist/compose/compose-scalar.js 1`] = `"{tagToken&&ctxtagName(msg);let t=ctx.atKey?ctx.schema:tagName?(({schema:t})=>{let a=a(a.true||atKey&&\\"key\\"===a);t.compat&&tagtag})(onError):schema[identity.SCALAR];try{res=t.resolve(msgoptions)}catch{}}exports.composeScalar=composeScalar;"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from yargs/lib/platform-shims/browser.mjs 1`] = `"export default{assert:{notStrictEqual:b>{}},readFileSync:()=>{},y18n:{t:()=>{},_:(n,...r)=>n==1?t(str1,...r):t(str2,...r)}};function t(){}"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from zod/v4/core/core.js 1`] = `"NEVER=Object.freeze();"`;
+
+exports[`JavaScript minifier, what the tables leave out should convert every ESTree tree of acorn's corpus as terser does 1`] = `
+Array [
+  "for ((async) of [7]);
+for(async of[7]);
+for((async)of[7]);",
+  "class C { #𩸽 }
+class C{#\\"𩸽\\"}
+class C{#𩸽}",
+  "\\"\\\\u0075se strict\\"
+\\"use strict\\";
+\\"\\\\u0075se strict\\";",
+  "(\\"use strict\\"); foo
+\\"use strict\\";foo;
+;\\"use strict\\";foo;",
+  "function wrap() { (\\"use strict\\"); foo }
+function wrap(){\\"use strict\\";foo}
+function wrap(){;\\"use strict\\";foo}",
+  "new (import(s))
+new import(s);
+new(import(s));",
+  "import((s,t))
+import(s,t);
+import((s,t));",
+  "\\"\\\\u{714E}\\\\u{8336}\\"
+\\"煎茶\\";
+\\"\\\\u{714E}\\\\u{8336}\\";",
+  "\\"\\\\u{20BB7}\\\\u{91CE}\\\\u{5BB6}\\"
+\\"𠮷野家\\";
+\\"\\\\u{20BB7}\\\\u{91CE}\\\\u{5BB6}\\";",
+  "({ __proto__, __proto__: 2 })
+({__proto__:__proto__,__proto__:2});
+({[\\"__proto__\\"]:__proto__,__proto__:2});",
+  "(obj?.foo)\`template\`
+obj?.foo\`template\`;
+(obj?.foo)\`template\`;",
+  "export default (function foo(a,) { })
+export default function foo(a){}
+export default(function foo(a){});",
+  "export default (function foo(a,) { })
+export default function foo(a){}
+export default(function foo(a){});",
+  "\\"\\\\n\\\\r\\\\t\\\\v\\\\b\\\\f\\\\\\\\\\\\'\\\\\\"\\\\0\\"
+\\"\\\\n\\\\r\\\\t\\\\v\\\\b\\\\f\\\\\\\\'\\\\\\"\\\\0\\";
+\\"\\\\n\\\\r\\\\t\\\\v\\\\b\\\\f\\\\\\\\\\\\'\\\\\\"\\\\0\\";",
+  "\\"\\\\u0061\\"
+\\"a\\";
+\\"\\\\u0061\\";",
+  "\\"\\\\x61\\"
+\\"a\\";
+\\"\\\\x61\\";",
+  "\\"Hello\\\\
+world\\"
+\\"Helloworld\\";
+\\"Hello\\\\
+world\\";",
+  "\\"Hello\\\\ world\\"
+\\"Helloworld\\";
+\\"Hello\\\\ world\\";",
+  "\\"Hello\\\\ world\\"
+\\"Helloworld\\";
+\\"Hello\\\\ world\\";",
+  "\\"Hello\\\\02World\\"
+\\"HelloWorld\\";
+\\"Hello\\\\02World\\";",
+  "\\"Hello\\\\012World\\"
+\\"Hello\\\\nWorld\\";
+\\"Hello\\\\012World\\";",
+  "\\"Hello\\\\122World\\"
+\\"HelloRWorld\\";
+\\"Hello\\\\122World\\";",
+  "\\"Hello\\\\0122World\\"
+\\"Hello\\\\n2World\\";
+\\"Hello\\\\0122World\\";",
+  "\\"Hello\\\\312World\\"
+\\"HelloÊWorld\\";
+\\"Hello\\\\312World\\";",
+  "\\"Hello\\\\412World\\"
+\\"Hello!2World\\";
+\\"Hello\\\\412World\\";",
+  "\\"Hello\\\\812World\\"
+\\"Hello812World\\";
+\\"Hello\\\\812World\\";",
+  "\\"Hello\\\\712World\\"
+\\"Hello92World\\";
+\\"Hello\\\\712World\\";",
+  "\\"Hello\\\\
+world\\"
+\\"Helloworld\\";
+\\"Hello\\\\
+world\\";",
+  "\\"Hello\\\\1World\\"
+\\"HelloWorld\\";
+\\"Hello\\\\1World\\";",
+  "'use\\\\x20strict'; with (x) foo = bar;
+\\"use strict\\";with(x)foo=bar;
+'use\\\\x20strict';with(x)foo=bar;",
+  "\\"use\\\\x20strict\\"; with (x) foo = bar;
+\\"use strict\\";with(x)foo=bar;
+\\"use\\\\x20strict\\";with(x)foo=bar;",
+  "'a\\\\u0026b'
+\\"a&b\\";
+'a\\\\u0026b';",
+]
+`;
+
+exports[`JavaScript minifier, what the tables leave out should enclose and wrap a converted tree as terser does 1`] = `"throw console.log(typeof exports),1;"`;
+
+exports[`JavaScript minifier, what the tables leave out should enclose and wrap a converted tree as terser does 2`] = `"!function(o){throw console.log(typeof o),1}(typeof lib>\\"u\\"?lib={}:lib);"`;
+
 exports[`jsMinify should minify: compress off (with source map) 1`] = `"\\"use strict\\";function unusedHelper(e,n){return e+n}sink(function e(){let n=[1,2,3].map(e=>e*2);if(n.length>0){console.log(n)}else{console.log(\\"empty\\")}return n});"`;
 
 exports[`jsMinify should minify: compress off (with source map) 2`] = `
