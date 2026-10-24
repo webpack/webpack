@@ -1427,12 +1427,8 @@ const IMPROVED_YET_BIGGER = {
 		"74 bytes fewer, 2 more gzipped: case changes folded to their letters, which gzip matches less than the repeated `.toUpperCase()`",
 	"11.4.1-4.a-16.js (the default minimizer's options)":
 		"14 bytes fewer, 1 more gzipped: `delete arguments` folded to `!1`, which the code around it repeats less",
-	"S12.14_A11_T2.js (the default minimizer's options)":
-		"34 bytes fewer, 3 more gzipped: code after a `try` that always leaves dropped, breaking the loop bodies' repeated runs",
 	"S12.14_A7_T1.js (the default minimizer's options)":
 		"9 bytes fewer, 5 more gzipped: `if(a)throw b;throw c` merged into `throw a?b:c`, losing the repeated `throw new Test262Error(` run",
-	"S12.14_A7_T3.js (the default minimizer's options)":
-		"9 bytes fewer, 8 more gzipped: `if(a)throw b;throw c` merged into `throw a?b:c`, losing the repeated `throw new Test262Error(` run",
 	"constructor-buffer-sequence.js (the default minimizer's options)":
 		"55 bytes fewer, 6 more gzipped: `new` dropped before `Error` breaks the `new Error(` runs the rest repeat",
 	"fixture/issues/8622/input.js (its own options)":
@@ -1552,10 +1548,6 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 	[
 		"loops run in place, each counter taking a name of its own where the copies of one `for (var e = 0; e <` gzip matched",
 		["element-setting-converts-using-ToNumber.js (the default minimizer's options)"]
-	],
-	[
-		"a catch's `return` dropped where the function returns anyway, in a source too short for gzip to gain",
-		["peephole/minimize_exit_points.rs:101 (the default minimizer's options)"]
 	],
 	[
 		"`Object.keys` or `entries` of a literal written as the array, where the source writes the call again",
@@ -1749,7 +1741,6 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 			"fixture/issues/12201/input.js (its own options)",
 			"fixture/issues/12201/input.js (the default minimizer's options)",
 			"fixture/issues/12298/input.js (the default minimizer's options)",
-			"fixture/issues/12299/input.js (its own options)",
 			"fixture/issues/4234/input.js (the default minimizer's options)",
 			"fixture/issues/9460/strict-mode/input.js (its own options)",
 			"fixture/issues/number-radix-conversion/input.js (its own options)",
@@ -1794,7 +1785,6 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 			"obj-rest-non-string-computed-property-string-1.js (the default minimizer's options)",
 			"obj-rest-str-val.js (the default minimizer's options)",
 			"optional-catch-binding-throws.js (the default minimizer's options)",
-			"parameters/default_values_in_destructurings (a module mangled at its top level)",
 			"parseInt-default-to-decimal.js (the default minimizer's options)",
 			"positive-infinity.js (the default minimizer's options)",
 			"predicate-throws-then-closing-iterator-also-throws.js (the default minimizer's options)",
