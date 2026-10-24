@@ -4619,6 +4619,19 @@ describe("Parser", () => {
 							source,
 							{ ...given, ranges: Boolean(options.ranges) || lazy }
 						);
+						// Where acorn crashes after an error it noted, ours may read on
+						// past it, noting at least the same errors first.
+						if (
+							theirs.error === "TypeError" &&
+							theirs.noted.length > 0 &&
+							ours.error === undefined &&
+							JSON.stringify(ours.noted).startsWith(
+								JSON.stringify(theirs.noted).slice(0, -1)
+							)
+						) {
+							recovered++;
+							continue;
+						}
 						const tree = firstDifference(ours.ast, theirs.ast, "program");
 						if (
 							tree ||
@@ -5731,5 +5744,165 @@ describe("WebpackParser writing a SyntaxTree", () => {
 					"x"
 				)
 		).toThrow(/latest edition only/);
+	});
+});
+
+describe("parseProgram", () => {
+	const { A, NodeType, parseProgram } = require("../../../lib/javascript/syntax-parser");
+	const { SourceProcessor } = require("../../../lib/javascript/syntax");
+
+	/** @typedef {[string, string, string, string]} ReportedError */
+
+	/**
+	 * @param {string} source the program
+	 * @param {import("../../../lib/javascript/syntax-parser").JavascriptParseOptions=} options what to read it as
+	 * @returns {{ program: number | undefined, errors: ReportedError[] }} its node and each reported error's code, text and severity
+	 */
+	const collect = (source, options = {}) => {
+		/** @type {ReportedError[]} */
+		const errors = [];
+		const program = parseProgram(source, 0, {
+			...options,
+			parseError: (input, code, start, end, severity) => {
+				errors.push([code, input.slice(start, end), severity, String(start)]);
+			}
+		});
+		return { program, errors };
+	};
+
+	it("returns the program's node, read through A until the next parse", () => {
+		const program = /** @type {number} */ (parseProgram("let a = 1; f(a)"));
+		expect(A.type(program)).toBe(NodeType.Program);
+		expect(A.children(program).map((node) => A.type(node))).toEqual([
+			NodeType.VariableDeclaration,
+			NodeType.ExpressionStatement
+		]);
+		const call = A.child(0, A.child(1, program));
+		expect(A.source(call)).toBe("f(a)");
+		expect(A.loc(call)).toEqual([1, 11, 1, 15]);
+		parseProgram("g()");
+		expect(A.source(A.child(0, program))).toBe("g()");
+	});
+
+	it("starts at the offset given", () => {
+		const program = /** @type {number} */ (parseProgram("abc  def;", 5));
+		expect(A.source(A.child(0, program))).toBe("def;");
+	});
+
+	it("reads a script where asked", () => {
+		expect(collect("with (a) {}", { sourceType: "script" }).errors).toEqual([]);
+		expect(collect("with (a) {}").errors).toEqual([
+			["strict-with", "with", "error", "0"]
+		]);
+	});
+
+	it.each([
+		["a ~ ", ["unexpected-token", "~", "error", "2"]],
+		["return 1", ["illegal-return", "return", "error", "0"]],
+		["`${b}", ["unterminated-template", "", "error", "5"]]
+	])("stops at %j, returning nothing", (source, error) => {
+		const { program, errors } = collect(source);
+		expect(program).toBeUndefined();
+		expect(errors).toEqual([error]);
+	});
+
+	it.each([
+		["let a; let a", ["var-redeclaration", "", "warning", "11"]],
+		["/(/", ["invalid-regular-expression", "", "warning", "1"]],
+		["class A { #a; #a }", ["private-name-redeclaration", "", "warning", "14"]],
+		["class A { set x() {} }", ["bad-setter-arity", "", "warning", "15"]]
+	])("reads past %j", (source, error) => {
+		const { program, errors } = collect(source);
+		expect(program).toBeDefined();
+		expect(errors).toEqual([error]);
+	});
+
+	it("reports every error the parse reads past, once each", () => {
+		const { program, errors } = collect("let a; let a; let a; /(/; /(/");
+		expect(program).toBeDefined();
+		expect(errors.map(([code, , , start]) => `${code}@${start}`)).toEqual([
+			"var-redeclaration@11",
+			"var-redeclaration@18",
+			"invalid-regular-expression@22",
+			"invalid-regular-expression@27"
+		]);
+		expect(collect("let b; let b").errors).toHaveLength(1);
+		// Two faults in one pattern: the validator raises both at its start.
+		expect(collect("/(?<a>)(?<a>)(/").errors).toEqual([
+			["invalid-regular-expression", "", "warning", "1"]
+		]);
+	});
+
+	it("names an error whose message holds a line terminator", () => {
+		const { program, errors } = collect(
+			'export { a as "x\\ny", b as "x\\ny" }; var a, b',
+			{ sourceType: "module" }
+		);
+		expect(program).toBeDefined();
+		expect(errors.map(([code]) => code)).toEqual(["duplicate-export"]);
+	});
+
+	it("reads past an error without a callback", () => {
+		expect(parseProgram("let a; let a")).toBeDefined();
+		expect(parseProgram("a ~ ")).toBeUndefined();
+	});
+
+	it("rethrows a syntax error the callback throws", () => {
+		expect(() =>
+			parseProgram("let a; let a", 0, {
+				parseError: () => {
+					throw new SyntaxError("callback");
+				}
+			})
+		).toThrow("callback");
+	});
+
+	it("refuses a parse started from its own callback", () => {
+		/** @type {string[]} */
+		const codes = [];
+		expect(() =>
+			parseProgram("let a; let a", 0, {
+				parseError: (input, code) => {
+					codes.push(code);
+					parseProgram("x");
+				}
+			})
+		).toThrow("parseProgram() is running");
+		expect(codes).toEqual(["var-redeclaration"]);
+	});
+
+	it("rethrows what is not a syntax error", () => {
+		expect(() =>
+			parseProgram("a", 0, {
+				parseError: () => {
+					throw new TypeError("callback");
+				},
+				sourceType: "script"
+			})
+		).not.toThrow();
+		expect(() =>
+			parseProgram("let a; let a", 0, {
+				parseError: () => {
+					throw new TypeError("callback");
+				}
+			})
+		).toThrow(TypeError);
+	});
+
+	it("leaves the parsed tree to a SourceProcessor run, and refuses one inside it", () => {
+		parseProgram("x");
+		/** @type {number[]} */
+		const seen = [];
+		new SourceProcessor()
+			.use({
+				[NodeType.Identifier]: (path) => {
+					seen.push(path.start());
+					expect(() => parseProgram("y")).toThrow(/process\(\) is running/);
+				}
+			})
+			.process("a + b");
+		expect(seen).toEqual([0, 4]);
+		const program = /** @type {number} */ (parseProgram("z"));
+		expect(A.source(program)).toBe("z");
 	});
 });

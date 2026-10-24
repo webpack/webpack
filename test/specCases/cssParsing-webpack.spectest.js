@@ -16,6 +16,8 @@ const webpack = require("../..");
 const { getColorNameToRgb } = require("../../lib/css/data");
 const { SourceProcessor } = require("../../lib/css/syntax");
 const {
+	A,
+	NodeType,
 	parseABlocksContents,
 	parseAComponentValue,
 	parseADeclaration,
@@ -28,7 +30,8 @@ const {
 	serializeComponentValue,
 	serializeComponentValues,
 	serializeDeclaration,
-	serializeRule
+	serializeRules,
+	serializeStylesheet
 } = require("../helpers/serializeCssTree");
 
 const casesDir = path.resolve(__dirname, "../external/css-parsing-tests");
@@ -215,10 +218,16 @@ describe("css-parsing-tests block contents", () => {
 	const actual = (source) => {
 		const { decls, rules } = parseABlocksContents(source);
 		const items = [
-			...decls.map((d) => ({ at: d.start, text: `declaration ${d.name}` })),
+			...decls.map((d) => ({
+				at: A.start(d),
+				text: `declaration ${A.name(d)}`
+			})),
 			...rules.map((r) => ({
-				at: r.start,
-				text: r.name ? `at-rule ${r.name}` : "qualified rule"
+				at: A.start(r),
+				text:
+					A.type(r) === NodeType.AtRule
+						? `at-rule ${A.name(r)}`
+						: "qualified rule"
 			}))
 		];
 		items.sort((one, other) => one.at - other.at);
@@ -313,21 +322,23 @@ describe("css-parsing-tests trees", () => {
 		],
 		["one_component_value", one(parseAComponentValue, serializeComponentValue), true],
 		["one_declaration", one(parseADeclaration, serializeDeclaration), true],
-		["one_rule", one(parseARule, serializeRule), true],
+		[
+			"one_rule",
+			one(parseARule, (rule, source) => serializeRules([rule], source)[0]),
+			true
+		],
 		// `rule_list` is the spec's "parse a list of rules" with the top-level flag
 		// unset, which is what a block's contents are read as — a stylesheet's are
 		// the flag set, and the two differ over whether CDO/CDC are discarded.
 		[
 			"rule_list",
 			(source) =>
-				parseABlocksContents(source).rules.map((rule) =>
-					serializeRule(rule, source)
-				)
+				serializeRules(parseABlocksContents(source).rules, source)
 		],
 		[
 			"stylesheet",
 			(source) =>
-				parseAStylesheet(source).rules.map((rule) => serializeRule(rule, source))
+				serializeStylesheet(parseAStylesheet(source), source)
 		]
 	];
 

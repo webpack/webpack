@@ -4,11 +4,12 @@ const fs = require("fs");
 const path = require("path");
 const { SourceProcessor } = require("../../../lib/css/syntax");
 const {
+	A,
 	NodeType,
-	TokenType,
-	TokenStream,
 	parseAListOfComponentValues,
-	readToken
+	readToken,
+	TokenStream,
+	TokenType
 } = require("../../../lib/css/syntax-parser");
 
 /**
@@ -193,12 +194,9 @@ describe("CssSyntax — an escape the input ran out of", () => {
 
 	/**
 	 * @param {string} src css source whose first component value is a leaf token
-	 * @returns {string} that token's unescaped text
+	 * @returns {string | number} that token's unescaped text
 	 */
-	const unescapedOf = (src) =>
-		/** @type {import("../../../lib/css/syntax-parser").Token} */ (
-			parseAListOfComponentValues(src)[0]
-		).unescaped;
+	const unescapedOf = (src) => A.value(parseAListOfComponentValues(src)[0]);
 
 	it("removes a line continuation however the newline is spelled", () => {
 		expect(unescapedOf('"a\\\nb"')).toBe("ab");
@@ -281,11 +279,9 @@ describe("CssSyntax — preprocessing the input stream", () => {
 		// U+FFFD is an ident code point where a NUL is not, so the runs either
 		// side of one are a single identifier rather than three tokens.
 		expect(cvTypes(`a${NUL}b`)).toEqual(cvTypes("a�b"));
-		expect(
-			/** @type {import("../../../lib/css/syntax-parser").Token} */ (
-				parseAListOfComponentValues(`a${NUL}b`)[0]
-			).unescaped
-		).toBe("a\uFFFDb");
+		expect(A.value(parseAListOfComponentValues(`a${NUL}b`)[0])).toBe(
+			"a\uFFFDb"
+		);
 	});
 
 	it("leaves a surrogate, which tokenizes as that character already", () => {
@@ -307,7 +303,7 @@ describe("CssSyntax — preprocessing the input stream", () => {
 			// modulo the one code point, which is what is not being replaced.
 			expect(
 				cvUnescaped(wrap(HIGH)).map(
-					(value) => value && value.split(HIGH).join("\uFFFD")
+					(value) => value.split(HIGH).join("\uFFFD")
 				)
 			).toEqual(cvUnescaped(wrap("\uFFFD")));
 		}
@@ -340,16 +336,14 @@ describe("CssSyntax — preprocessing the input stream", () => {
  * @param {string} src css source
  * @returns {number[]} component value types
  */
-const cvTypes = (src) => parseAListOfComponentValues(src).map((n) => n.type);
+const cvTypes = (src) =>
+	parseAListOfComponentValues(src).map((n) => A.type(n));
 /**
  * @param {string} src css source
- * @returns {(string | undefined)[]} what each component value unescapes to
+ * @returns {string[]} what each component value unescapes to, a unit after its number
  */
 const cvUnescaped = (src) =>
-	parseAListOfComponentValues(src).map(
-		(n) =>
-			/** @type {import("../../../lib/css/syntax-parser").Token} */ (n).unescaped
-	);
+	parseAListOfComponentValues(src).map((n) => `${A.value(n)}${A.name(n)}`);
 /**
  * @param {string} src css source
  * @returns {number} the first token's type
@@ -724,10 +718,7 @@ describe("CssSyntax — a signed number printed after a number", () => {
 	 * @returns {[number, string][]} each component value's type and source text
 	 */
 	const valuesOf = (src) =>
-		parseAListOfComponentValues(src).map((n) => [
-			n.type,
-			src.slice(n.range[0], n.range[1])
-		]);
+		parseAListOfComponentValues(src).map((n) => [A.type(n), A.source(n)]);
 
 	it("drops the space where the sign starts a number of its own", () => {
 		// §4.3.3: `-` before a digit starts a number, not a unit, so `0-2px` is two tokens.

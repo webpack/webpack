@@ -842,16 +842,6 @@ declare interface AsyncWebAssemblyModulesPluginOptions {
 	mangleImports?: boolean;
 }
 declare abstract class AsyncWebAssemblyParser extends Parser<BuiltAsyncWasmModule> {}
-type AtRule = NodeSyntaxParser & {
-	name: string;
-	nameStart: number;
-	nameEnd: number;
-	prelude: ComponentValue[];
-	declarations: null | DeclarationSyntaxParser[];
-	childRules: null | RuleSyntaxParser[];
-	blockStart: number;
-	blockEnd: number;
-};
 
 /**
  * Records modules from one compilation and adds them back as prefetch
@@ -940,8 +930,7 @@ declare interface BannerPluginOptions {
 	/**
 	 * Exclude all modules matching any of these conditions.
 	 */
-	exclude?:
-		string | RegExp | ((str: string) => boolean) | RuleGlob | RuleObject[];
+	exclude?: string | RegExp | ((str: string) => boolean) | RuleGlob | Rule[];
 
 	/**
 	 * If true, banner will be placed at the end of the output.
@@ -951,8 +940,7 @@ declare interface BannerPluginOptions {
 	/**
 	 * Include all modules matching any of these conditions.
 	 */
-	include?:
-		string | RegExp | ((str: string) => boolean) | RuleGlob | RuleObject[];
+	include?: string | RegExp | ((str: string) => boolean) | RuleGlob | Rule[];
 
 	/**
 	 * If true, banner will not be wrapped in a comment.
@@ -967,7 +955,7 @@ declare interface BannerPluginOptions {
 	/**
 	 * Include all modules that pass test assertion.
 	 */
-	test?: string | RegExp | ((str: string) => boolean) | RuleGlob | RuleObject[];
+	test?: string | RegExp | ((str: string) => boolean) | RuleGlob | Rule[];
 }
 declare interface BaseResolveRequest {
 	/**
@@ -4787,7 +4775,6 @@ type ComplexSerializableType =
 	| object
 	| Buffer
 	| (() => ComplexSerializableType[] | Promise<ComplexSerializableType[]>);
-type ComponentValue = TokenSyntaxParserObject | FunctionNode | SimpleBlock;
 
 /**
  * The exports of terser's `compress/common.js`, `inference.js`,
@@ -6632,8 +6619,8 @@ declare class CssModulesPlugin {
 type CssNodePath<T = number, S = unknown> = Omit<
 	{
 		state: unknown;
-		get node(): NodeSyntaxParser;
-		get parent(): null | NodeSyntaxParser;
+		get node(): number;
+		get parent(): null | number;
 		get index(): number;
 		/**
 		 * Stop the walk descending into the current node (enter only).
@@ -6648,55 +6635,51 @@ type CssNodePath<T = number, S = unknown> = Omit<
 		 * a color, elsewhere an id.
 		 */
 		within(type: number): boolean;
-		type(n?: NodeSyntaxParser): number;
-		range(n?: NodeSyntaxParser): [number, number];
-		start(n?: NodeSyntaxParser): number;
-		end(n?: NodeSyntaxParser): number;
-		loc(n?: NodeSyntaxParser): [number, number, number, number];
+		type(n?: number): number;
+		range(n?: number): [number, number];
+		start(n?: number): number;
+		end(n?: number): number;
+		loc(n?: number): [number, number, number, number];
 		/**
 		 * A node's text exactly as the input wrote it (`name` and `value` decode).
 		 */
-		source(n?: number | NodeSyntaxParser, end?: number): string;
+		source(n?: number, end?: number): string;
 		/**
 		 * The token's value as CSS Syntax defines it: a number for a number,
 		 * percentage or dimension, otherwise text with escapes resolved (a string
 		 * without its quotes, a hash without its `#`, a `url()`'s contents, a
 		 * comment's text); "" for a rule, declaration, function or block.
 		 */
-		value(n?: NodeSyntaxParser): string | number;
-		name(n?: NodeSyntaxParser): string;
+		value(n?: number): string | number;
+		name(n?: number): string;
 		/**
 		 * A rule's children are its prelude; its block is read with {@link field }.
 		 */
-		childCount(n?: NodeSyntaxParser): number;
-		child(i: number, n?: NodeSyntaxParser): ComponentValue;
+		childCount(n?: number): number;
+		child(i: number, n?: number): number;
 		/**
 		 * Every child as a new array, for a reader that keeps or searches them.
 		 */
-		children(n?: NodeSyntaxParser): ComponentValue[];
+		children(n?: number): number[];
 		/**
 		 * A block big enough to stream hands its children to the visitors as each
 		 * one finishes rather than collecting them, so its lists read as empty here.
 		 */
-		fieldCount(field: number, n?: NodeSyntaxParser): number;
-		field(i: number, field: number, n?: NodeSyntaxParser): NodeSyntaxParser;
-		fieldNamed(
-			field: number,
-			name: string,
-			n?: NodeSyntaxParser
-		): NodeSyntaxParser;
+		fieldCount(field: number, n?: number): number;
+		field(i: number, field: number, n?: number): number;
+		fieldNamed(field: number, name: string, n?: number): number;
 		/**
 		 * `important` is a container's bit, cleared when its id is reused; a token's
 		 * type flags are read off its text.
 		 */
-		flag(flag: number, n?: NodeSyntaxParser): boolean;
-		rangeOf(part: number, n?: NodeSyntaxParser): null | [number, number];
-		startOf(part: number, n?: NodeSyntaxParser): number;
-		endOf(part: number, n?: NodeSyntaxParser): number;
+		flag(flag: number, n?: number): boolean;
+		rangeOf(part: number, n?: number): null | [number, number];
+		startOf(part: number, n?: number): number;
+		endOf(part: number, n?: number): number;
 		/**
 		 * CSS has no text beyond a node's name and value, read with `name` and `value`.
 		 */
-		textOf(_part: number, _n?: NodeSyntaxParser): null;
+		textOf(_part: number, _n?: number): null;
 	},
 	| "flag"
 	| "node"
@@ -6710,13 +6693,10 @@ type CssNodePath<T = number, S = unknown> = Omit<
 	| "endOf"
 	| "textOf"
 > & {
-	readonly node: TypedNode<NodeSyntaxParser, T>;
+	readonly node: TypedNode<number, T>;
 	readonly state: S;
 	within(type: CssNodeType): boolean;
-	field<
-		R extends NodeSyntaxParser = TypedNode<NodeSyntaxParser, T>,
-		F extends number = number
-	>(
+	field<R extends number = TypedNode<number, T>, F extends number = number>(
 		i: number,
 		field: F &
 			PartOf<
@@ -6755,7 +6735,7 @@ type CssNodePath<T = number, S = unknown> = Omit<
 			>,
 		n?: R
 	): TypedNode<
-		NodeSyntaxParser,
+		number,
 		{
 			[index: number]: number;
 			"1": CssComponentValueType;
@@ -6764,7 +6744,7 @@ type CssNodePath<T = number, S = unknown> = Omit<
 			"4": 24 | 25;
 		}[F]
 	>;
-	fieldCount<R extends NodeSyntaxParser = TypedNode<NodeSyntaxParser, T>>(
+	fieldCount<R extends number = TypedNode<number, T>>(
 		field: PartOf<
 			R,
 			{
@@ -6802,7 +6782,7 @@ type CssNodePath<T = number, S = unknown> = Omit<
 		n?: R
 	): number;
 	fieldNamed<
-		R extends NodeSyntaxParser = TypedNode<NodeSyntaxParser, T>,
+		R extends number = TypedNode<number, T>,
 		F extends number = number
 	>(
 		field: F &
@@ -6843,7 +6823,7 @@ type CssNodePath<T = number, S = unknown> = Omit<
 		name: string,
 		n?: R
 	): TypedNode<
-		NodeSyntaxParser,
+		number,
 		{
 			[index: number]: number;
 			"1": CssComponentValueType;
@@ -6852,7 +6832,7 @@ type CssNodePath<T = number, S = unknown> = Omit<
 			"4": 24 | 25;
 		}[F]
 	>;
-	flag<R extends NodeSyntaxParser = TypedNode<NodeSyntaxParser, T>>(
+	flag<R extends number = TypedNode<number, T>>(
 		flag: PartOf<
 			R,
 			{
@@ -6889,7 +6869,7 @@ type CssNodePath<T = number, S = unknown> = Omit<
 		>,
 		n?: R
 	): boolean;
-	rangeOf<R extends NodeSyntaxParser = TypedNode<NodeSyntaxParser, T>>(
+	rangeOf<R extends number = TypedNode<number, T>>(
 		part: PartOf<
 			R,
 			{
@@ -6926,7 +6906,7 @@ type CssNodePath<T = number, S = unknown> = Omit<
 		>,
 		n?: R
 	): null | [number, number];
-	startOf<R extends NodeSyntaxParser = TypedNode<NodeSyntaxParser, T>>(
+	startOf<R extends number = TypedNode<number, T>>(
 		part: PartOf<
 			R,
 			{
@@ -6963,7 +6943,7 @@ type CssNodePath<T = number, S = unknown> = Omit<
 		>,
 		n?: R
 	): number;
-	endOf<R extends NodeSyntaxParser = TypedNode<NodeSyntaxParser, T>>(
+	endOf<R extends number = TypedNode<number, T>>(
 		part: PartOf<
 			R,
 			{
@@ -7000,7 +6980,7 @@ type CssNodePath<T = number, S = unknown> = Omit<
 		>,
 		n?: R
 	): number;
-	textOf<R extends NodeSyntaxParser = TypedNode<NodeSyntaxParser, T>>(
+	textOf<R extends number = TypedNode<number, T>>(
 		part: PartOf<
 			R,
 			{
@@ -7071,6 +7051,23 @@ type CssNormalModule = NormalModule & {
 	buildInfo?: CssModuleBuildInfo;
 	buildMeta?: CssModuleBuildMeta;
 };
+declare interface CssParseOptions {
+	/**
+	 * optional comment-token callback (string input only); the public `parse*` entry points use it to build the `TokenStream` so the outer parser's comment tracker still sees magic comments inside the consumed range
+	 */
+	comment?: (input: string, start: number, end: number) => number;
+
+	/**
+	 * optional callback for each parse error of the tokenizer (CSS Syntax Level 3 §4) and parser (§5), with the same signature as the HTML tokenizer's; `severity` is `"error"` when EOF cuts a token or rule short and `"warning"` otherwise
+	 */
+	parseError?: (
+		input: string,
+		code: string,
+		start: number,
+		end: number,
+		severity: ParseErrorSeverity
+	) => void;
+}
 declare abstract class CssParser extends Parser<BuiltCssModule> {
 	defaultMode: "global" | "auto" | "local" | "pure";
 	options: {
@@ -7536,8 +7533,8 @@ declare interface CssProcessOptions {
 declare class CssSourceProcessor<TState = unknown> extends SourceProcessor<
 	{
 		state: unknown;
-		get node(): NodeSyntaxParser;
-		get parent(): null | NodeSyntaxParser;
+		get node(): number;
+		get parent(): null | number;
 		get index(): number;
 		/**
 		 * Stop the walk descending into the current node (enter only).
@@ -7552,57 +7549,53 @@ declare class CssSourceProcessor<TState = unknown> extends SourceProcessor<
 		 * a color, elsewhere an id.
 		 */
 		within(type: number): boolean;
-		type(n?: NodeSyntaxParser): number;
-		range(n?: NodeSyntaxParser): [number, number];
-		start(n?: NodeSyntaxParser): number;
-		end(n?: NodeSyntaxParser): number;
-		loc(n?: NodeSyntaxParser): [number, number, number, number];
+		type(n?: number): number;
+		range(n?: number): [number, number];
+		start(n?: number): number;
+		end(n?: number): number;
+		loc(n?: number): [number, number, number, number];
 		/**
 		 * A node's text exactly as the input wrote it (`name` and `value` decode).
 		 */
-		source(n?: number | NodeSyntaxParser, end?: number): string;
+		source(n?: number, end?: number): string;
 		/**
 		 * The token's value as CSS Syntax defines it: a number for a number,
 		 * percentage or dimension, otherwise text with escapes resolved (a string
 		 * without its quotes, a hash without its `#`, a `url()`'s contents, a
 		 * comment's text); "" for a rule, declaration, function or block.
 		 */
-		value(n?: NodeSyntaxParser): string | number;
-		name(n?: NodeSyntaxParser): string;
+		value(n?: number): string | number;
+		name(n?: number): string;
 		/**
 		 * A rule's children are its prelude; its block is read with {@link field }.
 		 */
-		childCount(n?: NodeSyntaxParser): number;
-		child(i: number, n?: NodeSyntaxParser): ComponentValue;
+		childCount(n?: number): number;
+		child(i: number, n?: number): number;
 		/**
 		 * Every child as a new array, for a reader that keeps or searches them.
 		 */
-		children(n?: NodeSyntaxParser): ComponentValue[];
+		children(n?: number): number[];
 		/**
 		 * A block big enough to stream hands its children to the visitors as each
 		 * one finishes rather than collecting them, so its lists read as empty here.
 		 */
-		fieldCount(field: number, n?: NodeSyntaxParser): number;
-		field(i: number, field: number, n?: NodeSyntaxParser): NodeSyntaxParser;
-		fieldNamed(
-			field: number,
-			name: string,
-			n?: NodeSyntaxParser
-		): NodeSyntaxParser;
+		fieldCount(field: number, n?: number): number;
+		field(i: number, field: number, n?: number): number;
+		fieldNamed(field: number, name: string, n?: number): number;
 		/**
 		 * `important` is a container's bit, cleared when its id is reused; a token's
 		 * type flags are read off its text.
 		 */
-		flag(flag: number, n?: NodeSyntaxParser): boolean;
-		rangeOf(part: number, n?: NodeSyntaxParser): null | [number, number];
-		startOf(part: number, n?: NodeSyntaxParser): number;
-		endOf(part: number, n?: NodeSyntaxParser): number;
+		flag(flag: number, n?: number): boolean;
+		rangeOf(part: number, n?: number): null | [number, number];
+		startOf(part: number, n?: number): number;
+		endOf(part: number, n?: number): number;
 		/**
 		 * CSS has no text beyond a node's name and value, read with `name` and `value`.
 		 */
-		textOf(_part: number, _n?: NodeSyntaxParser): null;
+		textOf(_part: number, _n?: number): null;
 	},
-	NodeSyntaxParser,
+	number,
 	CssProcessOptions,
 	CssPrintOptions,
 	CssParts,
@@ -7888,15 +7881,7 @@ declare interface CssVisitorMap<S = unknown> {
 				exit?: VisitorFn<CssNodePath<28, S>>;
 		  };
 }
-type DeclarationEstreeIndex =
-	FunctionDeclaration | VariableDeclaration | ClassDeclaration;
-type DeclarationSyntaxParser = NodeSyntaxParser & {
-	name: string;
-	nameStart: number;
-	nameEnd: number;
-	value: ComponentValue[];
-	important: boolean;
-};
+type Declaration = FunctionDeclaration | VariableDeclaration | ClassDeclaration;
 declare interface DecodedEntitiesWithMap {
 	text: string;
 	map?: number[];
@@ -11746,12 +11731,6 @@ declare interface FoundTargetItem {
 declare interface FullHashChunkModuleHashes {
 	[index: string]: string;
 }
-type FunctionNode = NodeSyntaxParser & {
-	name: string;
-	nameStart: number;
-	nameEnd: number;
-	value: ComponentValue[];
-};
 
 /**
  * Defines the generate context type used by this module.
@@ -13031,6 +13010,17 @@ declare interface HtmlParseOptions {
 	 * parse as a browser with scripting on does, where a `noscript` holds raw text; off by default, so what it holds is read as markup
 	 */
 	scripting?: boolean;
+
+	/**
+	 * optional callback for each parse error of the tokenizer, as `HtmlTokenCallbacks#parseError` receives it, and of tree construction, named as html5lib names them since WHATWG names only one; those are `"warning"`
+	 */
+	parseError?: (
+		input: string,
+		code: string,
+		start: number,
+		end: number,
+		severity: ParseErrorSeverity
+	) => void;
 }
 declare abstract class HtmlParser extends Parser<BuiltHtmlModule> {
 	magicCommentContext: ContextImport;
@@ -15257,6 +15247,23 @@ type JavascriptNormalModule = NormalModule & {
 	buildInfo?: JavascriptModuleBuildInfo;
 	buildMeta?: JavascriptModuleBuildMeta;
 };
+declare interface JavascriptParseOptions {
+	/**
+	 * a module (the default) or a script
+	 */
+	sourceType?: "module" | "script";
+
+	/**
+	 * optional callback for each parse error, with the CSS and HTML parsers' signature and Babel's `reasonCode` kebab-cased as `code`; `severity` is `"error"` for one that stops the parse and `"warning"` for one it reads past; without it, the errors read past go unreported
+	 */
+	parseError?: (
+		input: string,
+		code: string,
+		start: number,
+		end: number,
+		severity: ParseErrorSeverity
+	) => void;
+}
 declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 	/**
 	 * Creates an instance of JavascriptParser.
@@ -15635,7 +15642,7 @@ declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 					| ExportAllDeclaration
 					| ExportDefaultDeclaration
 				),
-				DeclarationEstreeIndex
+				Declaration
 			],
 			boolean | void
 		>;
@@ -16458,7 +16465,7 @@ declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 	 * Processes the provided declaration.
 	 */
 	enterDeclaration(
-		declaration: DeclarationEstreeIndex,
+		declaration: Declaration,
 		onIdent: (ident: string, identifier: Identifier) => void
 	): void;
 
@@ -23303,55 +23310,6 @@ declare class NodeSourcePlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
-
-/**
- * Base AST node — the property-accessor view the `parseA*` entry points return
- * (see `_makeReader`). Every concrete node carries the `[start, end)` byte
- * `range` of the source slice it covers; `loc` is computed on demand from the
- * shared `LocConverter`, so line/column conversion is only paid when a consumer
- * needs it. The concrete node typedefs below extend this via `&`.
- * Inside the parser a node ref is an integer id into the columns; the reader
- * exposes this property shape over a retained snapshot of those columns.
- */
-declare interface NodeSyntaxParser {
-	/**
-	 * node-type discriminator
-	 */
-	type: number;
-
-	/**
-	 * byte offset of the node's first code point
-	 */
-	start: number;
-
-	/**
-	 * byte offset just past the node's last code point
-	 */
-	end: number;
-
-	/**
-	 * the `[start, end)` byte range
-	 */
-	range: [number, number];
-
-	/**
-	 * source location (1-based line, 0-based column)
-	 */
-	loc: {
-		start: { line: number; column: number };
-		end: { line: number; column: number };
-	};
-
-	/**
-	 * source slice for this node
-	 */
-	toString: () => string;
-
-	/**
-	 * name with CSS escapes resolved (name-bearing nodes only)
-	 */
-	unescapedName: string;
-}
 declare class NodeTargetPlugin {
 	/**
 	 * Creates an instance of NodeTargetPlugin.
@@ -25699,8 +25657,7 @@ declare interface OptionsSyntaxParser {
 	/**
 	 * where tokens are reported
 	 */
-	onToken?:
-		((token: TokenSyntaxParserClass) => void) | TokenSyntaxParserClass[];
+	onToken?: ((token: Token) => void) | Token[];
 
 	/**
 	 * the parser itself at each token, for a reader that copies what it needs rather than taking a token of its own
@@ -26732,12 +26689,6 @@ declare interface ParseOptionsJavascriptParser {
 	 * internal: for `auto`, let the parser downgrade module->script in place instead of re-parsing
 	 */
 	moduleFallback?: boolean;
-}
-declare interface ParseOptionsSyntaxParser {
-	/**
-	 * optional comment-token callback; the public `parse*` entry points use it to build the `TokenStream` so the outer parser's comment tracker still sees magic comments inside the consumed range
-	 */
-	comment?: (input: string, start: number, end: number) => number;
 }
 
 /**
@@ -28004,13 +27955,6 @@ type PureCallView = NodeShape & {
 };
 type PureCondition =
 	boolean | ((compilation: Compilation, module: Module) => boolean);
-type QualifiedRule = NodeSyntaxParser & {
-	prelude: ComponentValue[];
-	declarations: null | DeclarationSyntaxParser[];
-	childRules: null | RuleSyntaxParser[];
-	blockStart: number;
-	blockEnd: number;
-};
 
 /**
  * Describes the scheduling hints that can be attached to a chunk group.
@@ -29589,7 +29533,7 @@ declare interface ResolvedOptionsSyntaxParser {
 	/**
 	 * where tokens are reported
 	 */
-	onToken: null | ((token: TokenSyntaxParserClass) => void);
+	onToken: null | ((token: Token) => void);
 
 	/**
 	 * the parser itself at each token
@@ -29886,6 +29830,7 @@ declare interface RestoreProvidedDataExports {
 	pureProvide?: boolean;
 	exportsInfo?: RestoreProvidedData;
 }
+type Rule = string | RegExp | ((str: string) => boolean) | RuleGlob;
 
 /**
  * Defines the rule condition type used by this module.
@@ -29922,7 +29867,6 @@ declare interface RuleGlob {
 	 */
 	glob: string | string[];
 }
-type RuleObject = string | RegExp | ((str: string) => boolean) | RuleGlob;
 
 /**
  * Defines the rule set type used by this module.
@@ -30399,7 +30343,6 @@ type RuleSetUseItem =
 			 */
 			options?: string | { [index: string]: any };
 	  };
-type RuleSyntaxParser = AtRule | QualifiedRule;
 
 /**
  * what a run hands its visitors as `path.state`
@@ -31800,11 +31743,6 @@ declare class SideEffectsFlagPlugin {
 	): undefined | boolean;
 }
 type SideEffectsFlagValue = undefined | string | boolean | string[];
-type SimpleBlock = NodeSyntaxParser & {
-	token: SimpleBlockToken;
-	value: ComponentValue[];
-};
-type SimpleBlockToken = "{" | "(" | "[";
 type SimpleType = "string" | "number" | "boolean";
 declare class SizeOnlySource extends Source {
 	constructor(size: number);
@@ -32284,8 +32222,7 @@ declare interface SourceMapDevToolPluginOptions {
 	/**
 	 * Exclude modules that match the given value from source map generation.
 	 */
-	exclude?:
-		string | RegExp | ((str: string) => boolean) | RuleGlob | RuleObject[];
+	exclude?: string | RegExp | ((str: string) => boolean) | RuleGlob | Rule[];
 
 	/**
 	 * Generator string or function to create identifiers of modules for the 'sources' array in the SourceMap used only if 'moduleFilenameTemplate' would result in a conflict.
@@ -32306,14 +32243,12 @@ declare interface SourceMapDevToolPluginOptions {
 	/**
 	 * Decide whether to ignore source files that match the specified value in the SourceMap.
 	 */
-	ignoreList?:
-		string | RegExp | ((str: string) => boolean) | RuleGlob | RuleObject[];
+	ignoreList?: string | RegExp | ((str: string) => boolean) | RuleGlob | Rule[];
 
 	/**
 	 * Include source maps for module paths that match the given value.
 	 */
-	include?:
-		string | RegExp | ((str: string) => boolean) | RuleGlob | RuleObject[];
+	include?: string | RegExp | ((str: string) => boolean) | RuleGlob | Rule[];
 
 	/**
 	 * Indicates whether SourceMaps from loaders should be used (defaults to true).
@@ -32350,7 +32285,7 @@ declare interface SourceMapDevToolPluginOptions {
 	/**
 	 * Include source maps for modules based on their extension (defaults to .js and .css).
 	 */
-	test?: string | RegExp | ((str: string) => boolean) | RuleGlob | RuleObject[];
+	test?: string | RegExp | ((str: string) => boolean) | RuleGlob | Rule[];
 }
 
 /**
@@ -34217,7 +34152,6 @@ declare interface StreamOptions {
 declare interface Stringable {
 	toString: () => string;
 }
-type Stylesheet = NodeSyntaxParser & { rules: RuleSyntaxParser[] };
 type Supports = undefined | string;
 
 /**
@@ -34351,7 +34285,11 @@ declare class SyntaxParser {
 	 * acorn source: https://github.com/acornjs/acorn/blob/8.18.0/acorn/src/location.js
 	 */
 	raise(pos: number, message: string): never;
-	raiseRecoverable(pos: number, message: string): never;
+
+	/**
+	 * An error the parse can go on past: `parseProgram` reports it and goes on.
+	 */
+	raiseRecoverable(pos: number, message: string): void;
 	curPosition(): undefined | Position;
 	skipLineComment(startSkip: number): void;
 	parse(): any;
@@ -34770,7 +34708,7 @@ declare class SyntaxParser {
 	 * acorn source: https://github.com/acornjs/acorn/blob/8.18.0/acorn/src/tokenize.js
 	 */
 	next(ignoreEscapeSequenceInKeyword?: boolean): void;
-	getToken(): TokenSyntaxParserClass;
+	getToken(): Token;
 	nextToken(): void;
 	readToken(code: number): void;
 	fullCharCodeAt(pos: number): number;
@@ -34836,7 +34774,7 @@ declare class SyntaxParser {
 	 */
 	readWord1(): string;
 	readWord(): void;
-	[Symbol.iterator](): Iterator<TokenSyntaxParserClass>;
+	[Symbol.iterator](): Iterator<Token>;
 	static extend(...plugins: ((parser?: any) => any)[]): any;
 	static parse(
 		input: string,
@@ -35135,6 +35073,19 @@ declare interface TokContextLike {
 }
 
 /**
+ * A token as `options.onToken` receives one.
+ */
+declare class Token {
+	constructor(p: SyntaxParser);
+	type: TokenType;
+	value: any;
+	start: number;
+	end: number;
+	loc?: ParserSourceLocation;
+	range?: number[];
+}
+
+/**
  * Position-based view over the lexer — webpack's stand-in for the spec's
  * "normalize into a token stream" (CSS Syntax §9). It unifies the lexer and the
  * stream in one class: the `readToken` primitive lexes one token (the CSS
@@ -35228,29 +35179,6 @@ declare class TokenStream {
 	 */
 	discardMark(): void;
 }
-
-/**
- * A token as `options.onToken` receives one.
- */
-declare class TokenSyntaxParserClass {
-	constructor(p: SyntaxParser);
-	type: TokenType;
-	value: any;
-	start: number;
-	end: number;
-	loc?: ParserSourceLocation;
-	range?: number[];
-}
-type TokenSyntaxParserObject = NodeSyntaxParser & {
-	value: string;
-	unescaped: string;
-	numericValue: number;
-	typeFlag: "number" | "id" | "integer" | "unrestricted";
-	sign: "" | "+" | "-";
-	unit: string;
-	contentStart: number;
-	contentEnd: number;
-};
 
 /**
  * A token's kind, carrying what the parser needs to know about it without
@@ -36417,7 +36345,7 @@ declare class WebpackParser extends SyntaxParser {
 		input: string,
 		startPos?: number
 	);
-	[Symbol.iterator](): Iterator<TokenSyntaxParserClass>;
+	[Symbol.iterator](): Iterator<Token>;
 
 	/**
 	 * Applies parser plugins, keeping the result typed as this parser.
@@ -37143,6 +37071,11 @@ declare namespace exports {
 					input: string,
 					options: ParserOptionsSyntaxParser
 				) => Program;
+				export let parseProgram: (
+					input: string,
+					pos?: number,
+					options?: JavascriptParseOptions
+				) => undefined | number;
 				export let positionAt: (
 					lineStarts: number[],
 					offset: number
@@ -37414,7 +37347,7 @@ declare namespace exports {
 					ParserScope as Scope,
 					ParserSourceLocation,
 					TokContext,
-					TokenSyntaxParserClass as Token,
+					Token,
 					TokenType,
 					BLOCK_DECLARATIONS,
 					HOISTED_DECLARATIONS,
@@ -37920,8 +37853,8 @@ declare namespace exports {
 			export namespace parser {
 				export let A: {
 					state: unknown;
-					get node(): NodeSyntaxParser;
-					get parent(): null | NodeSyntaxParser;
+					get node(): number;
+					get parent(): null | number;
 					get index(): number;
 					/**
 					 * Stop the walk descending into the current node (enter only).
@@ -37936,59 +37869,51 @@ declare namespace exports {
 					 * a color, elsewhere an id.
 					 */
 					within(type: number): boolean;
-					type(n?: NodeSyntaxParser): number;
-					range(n?: NodeSyntaxParser): [number, number];
-					start(n?: NodeSyntaxParser): number;
-					end(n?: NodeSyntaxParser): number;
-					loc(n?: NodeSyntaxParser): [number, number, number, number];
+					type(n?: number): number;
+					range(n?: number): [number, number];
+					start(n?: number): number;
+					end(n?: number): number;
+					loc(n?: number): [number, number, number, number];
 					/**
 					 * A node's text exactly as the input wrote it (`name` and `value` decode).
 					 */
-					source(n?: number | NodeSyntaxParser, end?: number): string;
+					source(n?: number, end?: number): string;
 					/**
 					 * The token's value as CSS Syntax defines it: a number for a number,
 					 * percentage or dimension, otherwise text with escapes resolved (a string
 					 * without its quotes, a hash without its `#`, a `url()`'s contents, a
 					 * comment's text); "" for a rule, declaration, function or block.
 					 */
-					value(n?: NodeSyntaxParser): string | number;
-					name(n?: NodeSyntaxParser): string;
+					value(n?: number): string | number;
+					name(n?: number): string;
 					/**
 					 * A rule's children are its prelude; its block is read with {@link field }.
 					 */
-					childCount(n?: NodeSyntaxParser): number;
-					child(i: number, n?: NodeSyntaxParser): ComponentValue;
+					childCount(n?: number): number;
+					child(i: number, n?: number): number;
 					/**
 					 * Every child as a new array, for a reader that keeps or searches them.
 					 */
-					children(n?: NodeSyntaxParser): ComponentValue[];
+					children(n?: number): number[];
 					/**
 					 * A block big enough to stream hands its children to the visitors as each
 					 * one finishes rather than collecting them, so its lists read as empty here.
 					 */
-					fieldCount(field: number, n?: NodeSyntaxParser): number;
-					field(
-						i: number,
-						field: number,
-						n?: NodeSyntaxParser
-					): NodeSyntaxParser;
-					fieldNamed(
-						field: number,
-						name: string,
-						n?: NodeSyntaxParser
-					): NodeSyntaxParser;
+					fieldCount(field: number, n?: number): number;
+					field(i: number, field: number, n?: number): number;
+					fieldNamed(field: number, name: string, n?: number): number;
 					/**
 					 * `important` is a container's bit, cleared when its id is reused; a token's
 					 * type flags are read off its text.
 					 */
-					flag(flag: number, n?: NodeSyntaxParser): boolean;
-					rangeOf(part: number, n?: NodeSyntaxParser): null | [number, number];
-					startOf(part: number, n?: NodeSyntaxParser): number;
-					endOf(part: number, n?: NodeSyntaxParser): number;
+					flag(flag: number, n?: number): boolean;
+					rangeOf(part: number, n?: number): null | [number, number];
+					startOf(part: number, n?: number): number;
+					endOf(part: number, n?: number): number;
 					/**
 					 * CSS has no text beyond a node's name and value, read with `name` and `value`.
 					 */
-					textOf(_part: number, _n?: NodeSyntaxParser): null;
+					textOf(_part: number, _n?: number): null;
 				};
 				export let DARK_PROPERTY: "--webpack-dark";
 				export let KEYFRAMES_AT_RULE_RE: RegExp;
@@ -38093,8 +38018,8 @@ declare namespace exports {
 					input: string,
 					visitors: CompiledVisitorBucket<{
 						state: unknown;
-						get node(): NodeSyntaxParser;
-						get parent(): null | NodeSyntaxParser;
+						get node(): number;
+						get parent(): null | number;
 						get index(): number;
 						/**
 						 * Stop the walk descending into the current node (enter only).
@@ -38109,70 +38034,59 @@ declare namespace exports {
 						 * a color, elsewhere an id.
 						 */
 						within(type: number): boolean;
-						type(n?: NodeSyntaxParser): number;
-						range(n?: NodeSyntaxParser): [number, number];
-						start(n?: NodeSyntaxParser): number;
-						end(n?: NodeSyntaxParser): number;
-						loc(n?: NodeSyntaxParser): [number, number, number, number];
+						type(n?: number): number;
+						range(n?: number): [number, number];
+						start(n?: number): number;
+						end(n?: number): number;
+						loc(n?: number): [number, number, number, number];
 						/**
 						 * A node's text exactly as the input wrote it (`name` and `value` decode).
 						 */
-						source(n?: number | NodeSyntaxParser, end?: number): string;
+						source(n?: number, end?: number): string;
 						/**
 						 * The token's value as CSS Syntax defines it: a number for a number,
 						 * percentage or dimension, otherwise text with escapes resolved (a string
 						 * without its quotes, a hash without its `#`, a `url()`'s contents, a
 						 * comment's text); "" for a rule, declaration, function or block.
 						 */
-						value(n?: NodeSyntaxParser): string | number;
-						name(n?: NodeSyntaxParser): string;
+						value(n?: number): string | number;
+						name(n?: number): string;
 						/**
 						 * A rule's children are its prelude; its block is read with {@link field }.
 						 */
-						childCount(n?: NodeSyntaxParser): number;
-						child(i: number, n?: NodeSyntaxParser): ComponentValue;
+						childCount(n?: number): number;
+						child(i: number, n?: number): number;
 						/**
 						 * Every child as a new array, for a reader that keeps or searches them.
 						 */
-						children(n?: NodeSyntaxParser): ComponentValue[];
+						children(n?: number): number[];
 						/**
 						 * A block big enough to stream hands its children to the visitors as each
 						 * one finishes rather than collecting them, so its lists read as empty here.
 						 */
-						fieldCount(field: number, n?: NodeSyntaxParser): number;
-						field(
-							i: number,
-							field: number,
-							n?: NodeSyntaxParser
-						): NodeSyntaxParser;
-						fieldNamed(
-							field: number,
-							name: string,
-							n?: NodeSyntaxParser
-						): NodeSyntaxParser;
+						fieldCount(field: number, n?: number): number;
+						field(i: number, field: number, n?: number): number;
+						fieldNamed(field: number, name: string, n?: number): number;
 						/**
 						 * `important` is a container's bit, cleared when its id is reused; a token's
 						 * type flags are read off its text.
 						 */
-						flag(flag: number, n?: NodeSyntaxParser): boolean;
-						rangeOf(
-							part: number,
-							n?: NodeSyntaxParser
-						): null | [number, number];
-						startOf(part: number, n?: NodeSyntaxParser): number;
-						endOf(part: number, n?: NodeSyntaxParser): number;
+						flag(flag: number, n?: number): boolean;
+						rangeOf(part: number, n?: number): null | [number, number];
+						startOf(part: number, n?: number): number;
+						endOf(part: number, n?: number): number;
 						/**
 						 * CSS has no text beyond a node's name and value, read with `name` and `value`.
 						 */
-						textOf(_part: number, _n?: NodeSyntaxParser): null;
+						textOf(_part: number, _n?: number): null;
 					}>[],
 					writer:
 						| undefined
 						| PrintContext<
 								{
 									state: unknown;
-									get node(): NodeSyntaxParser;
-									get parent(): null | NodeSyntaxParser;
+									get node(): number;
+									get parent(): null | number;
 									get index(): number;
 									/**
 									 * Stop the walk descending into the current node (enter only).
@@ -38187,64 +38101,53 @@ declare namespace exports {
 									 * a color, elsewhere an id.
 									 */
 									within(type: number): boolean;
-									type(n?: NodeSyntaxParser): number;
-									range(n?: NodeSyntaxParser): [number, number];
-									start(n?: NodeSyntaxParser): number;
-									end(n?: NodeSyntaxParser): number;
-									loc(n?: NodeSyntaxParser): [number, number, number, number];
+									type(n?: number): number;
+									range(n?: number): [number, number];
+									start(n?: number): number;
+									end(n?: number): number;
+									loc(n?: number): [number, number, number, number];
 									/**
 									 * A node's text exactly as the input wrote it (`name` and `value` decode).
 									 */
-									source(n?: number | NodeSyntaxParser, end?: number): string;
+									source(n?: number, end?: number): string;
 									/**
 									 * The token's value as CSS Syntax defines it: a number for a number,
 									 * percentage or dimension, otherwise text with escapes resolved (a string
 									 * without its quotes, a hash without its `#`, a `url()`'s contents, a
 									 * comment's text); "" for a rule, declaration, function or block.
 									 */
-									value(n?: NodeSyntaxParser): string | number;
-									name(n?: NodeSyntaxParser): string;
+									value(n?: number): string | number;
+									name(n?: number): string;
 									/**
 									 * A rule's children are its prelude; its block is read with {@link field }.
 									 */
-									childCount(n?: NodeSyntaxParser): number;
-									child(i: number, n?: NodeSyntaxParser): ComponentValue;
+									childCount(n?: number): number;
+									child(i: number, n?: number): number;
 									/**
 									 * Every child as a new array, for a reader that keeps or searches them.
 									 */
-									children(n?: NodeSyntaxParser): ComponentValue[];
+									children(n?: number): number[];
 									/**
 									 * A block big enough to stream hands its children to the visitors as each
 									 * one finishes rather than collecting them, so its lists read as empty here.
 									 */
-									fieldCount(field: number, n?: NodeSyntaxParser): number;
-									field(
-										i: number,
-										field: number,
-										n?: NodeSyntaxParser
-									): NodeSyntaxParser;
-									fieldNamed(
-										field: number,
-										name: string,
-										n?: NodeSyntaxParser
-									): NodeSyntaxParser;
+									fieldCount(field: number, n?: number): number;
+									field(i: number, field: number, n?: number): number;
+									fieldNamed(field: number, name: string, n?: number): number;
 									/**
 									 * `important` is a container's bit, cleared when its id is reused; a token's
 									 * type flags are read off its text.
 									 */
-									flag(flag: number, n?: NodeSyntaxParser): boolean;
-									rangeOf(
-										part: number,
-										n?: NodeSyntaxParser
-									): null | [number, number];
-									startOf(part: number, n?: NodeSyntaxParser): number;
-									endOf(part: number, n?: NodeSyntaxParser): number;
+									flag(flag: number, n?: number): boolean;
+									rangeOf(part: number, n?: number): null | [number, number];
+									startOf(part: number, n?: number): number;
+									endOf(part: number, n?: number): number;
 									/**
 									 * CSS has no text beyond a node's name and value, read with `name` and `value`.
 									 */
-									textOf(_part: number, _n?: NodeSyntaxParser): null;
+									textOf(_part: number, _n?: number): null;
 								},
-								NodeSyntaxParser,
+								number,
 								CssPrintOptions
 						  >,
 					options: CssProcessOptions
@@ -38256,43 +38159,43 @@ declare namespace exports {
 				export let parseABlocksContents: (
 					input: string | TokenStream,
 					pos?: number,
-					options?: ParseOptionsSyntaxParser
-				) => { decls: DeclarationSyntaxParser[]; rules: RuleSyntaxParser[] };
+					options?: CssParseOptions
+				) => { decls: number[]; rules: number[] };
 				export let parseACommaSeparatedListOfComponentValues: (
 					input: string | TokenStream,
 					pos?: number,
-					options?: ParseOptionsSyntaxParser
-				) => ComponentValue[][];
+					options?: CssParseOptions
+				) => number[][];
 				export let parseAComponentValue: (
 					input: string | TokenStream,
 					pos?: number,
-					options?: ParseOptionsSyntaxParser
-				) => undefined | TokenSyntaxParserObject | FunctionNode | SimpleBlock;
+					options?: CssParseOptions
+				) => undefined | number;
 				export let parseADeclaration: (
 					input: string | TokenStream,
 					pos?: number,
-					options?: ParseOptionsSyntaxParser
-				) => undefined | DeclarationSyntaxParser;
+					options?: CssParseOptions
+				) => undefined | number;
 				export let parseAListOfComponentValues: (
 					input: string | TokenStream,
 					pos?: number,
-					options?: ParseOptionsSyntaxParser
-				) => ComponentValue[];
+					options?: CssParseOptions
+				) => number[];
 				export let parseARule: (
 					input: string | TokenStream,
 					pos?: number,
-					options?: ParseOptionsSyntaxParser
-				) => undefined | AtRule | QualifiedRule;
+					options?: CssParseOptions
+				) => undefined | number;
 				export let parseAStylesheet: (
 					input: string | TokenStream,
 					pos?: number,
-					options?: ParseOptionsSyntaxParser
-				) => Stylesheet;
+					options?: CssParseOptions
+				) => number;
 				export let parseAStylesheetsContents: (
 					input: string | TokenStream,
 					pos?: number,
-					options?: ParseOptionsSyntaxParser
-				) => RuleSyntaxParser[];
+					options?: CssParseOptions
+				) => number[];
 				export let pickTransforms: (
 					options: CssTransformOptions
 				) => undefined | CssTransformOptions;
@@ -38324,8 +38227,8 @@ declare namespace exports {
 				export let printer: (
 					path: {
 						state: unknown;
-						get node(): NodeSyntaxParser;
-						get parent(): null | NodeSyntaxParser;
+						get node(): number;
+						get parent(): null | number;
 						get index(): number;
 						/**
 						 * Stop the walk descending into the current node (enter only).
@@ -38340,68 +38243,57 @@ declare namespace exports {
 						 * a color, elsewhere an id.
 						 */
 						within(type: number): boolean;
-						type(n?: NodeSyntaxParser): number;
-						range(n?: NodeSyntaxParser): [number, number];
-						start(n?: NodeSyntaxParser): number;
-						end(n?: NodeSyntaxParser): number;
-						loc(n?: NodeSyntaxParser): [number, number, number, number];
+						type(n?: number): number;
+						range(n?: number): [number, number];
+						start(n?: number): number;
+						end(n?: number): number;
+						loc(n?: number): [number, number, number, number];
 						/**
 						 * A node's text exactly as the input wrote it (`name` and `value` decode).
 						 */
-						source(n?: number | NodeSyntaxParser, end?: number): string;
+						source(n?: number, end?: number): string;
 						/**
 						 * The token's value as CSS Syntax defines it: a number for a number,
 						 * percentage or dimension, otherwise text with escapes resolved (a string
 						 * without its quotes, a hash without its `#`, a `url()`'s contents, a
 						 * comment's text); "" for a rule, declaration, function or block.
 						 */
-						value(n?: NodeSyntaxParser): string | number;
-						name(n?: NodeSyntaxParser): string;
+						value(n?: number): string | number;
+						name(n?: number): string;
 						/**
 						 * A rule's children are its prelude; its block is read with {@link field }.
 						 */
-						childCount(n?: NodeSyntaxParser): number;
-						child(i: number, n?: NodeSyntaxParser): ComponentValue;
+						childCount(n?: number): number;
+						child(i: number, n?: number): number;
 						/**
 						 * Every child as a new array, for a reader that keeps or searches them.
 						 */
-						children(n?: NodeSyntaxParser): ComponentValue[];
+						children(n?: number): number[];
 						/**
 						 * A block big enough to stream hands its children to the visitors as each
 						 * one finishes rather than collecting them, so its lists read as empty here.
 						 */
-						fieldCount(field: number, n?: NodeSyntaxParser): number;
-						field(
-							i: number,
-							field: number,
-							n?: NodeSyntaxParser
-						): NodeSyntaxParser;
-						fieldNamed(
-							field: number,
-							name: string,
-							n?: NodeSyntaxParser
-						): NodeSyntaxParser;
+						fieldCount(field: number, n?: number): number;
+						field(i: number, field: number, n?: number): number;
+						fieldNamed(field: number, name: string, n?: number): number;
 						/**
 						 * `important` is a container's bit, cleared when its id is reused; a token's
 						 * type flags are read off its text.
 						 */
-						flag(flag: number, n?: NodeSyntaxParser): boolean;
-						rangeOf(
-							part: number,
-							n?: NodeSyntaxParser
-						): null | [number, number];
-						startOf(part: number, n?: NodeSyntaxParser): number;
-						endOf(part: number, n?: NodeSyntaxParser): number;
+						flag(flag: number, n?: number): boolean;
+						rangeOf(part: number, n?: number): null | [number, number];
+						startOf(part: number, n?: number): number;
+						endOf(part: number, n?: number): number;
 						/**
 						 * CSS has no text beyond a node's name and value, read with `name` and `value`.
 						 */
-						textOf(_part: number, _n?: NodeSyntaxParser): null;
+						textOf(_part: number, _n?: number): null;
 					},
 					writer: PrintContext<
 						{
 							state: unknown;
-							get node(): NodeSyntaxParser;
-							get parent(): null | NodeSyntaxParser;
+							get node(): number;
+							get parent(): null | number;
 							get index(): number;
 							/**
 							 * Stop the walk descending into the current node (enter only).
@@ -38416,64 +38308,53 @@ declare namespace exports {
 							 * a color, elsewhere an id.
 							 */
 							within(type: number): boolean;
-							type(n?: NodeSyntaxParser): number;
-							range(n?: NodeSyntaxParser): [number, number];
-							start(n?: NodeSyntaxParser): number;
-							end(n?: NodeSyntaxParser): number;
-							loc(n?: NodeSyntaxParser): [number, number, number, number];
+							type(n?: number): number;
+							range(n?: number): [number, number];
+							start(n?: number): number;
+							end(n?: number): number;
+							loc(n?: number): [number, number, number, number];
 							/**
 							 * A node's text exactly as the input wrote it (`name` and `value` decode).
 							 */
-							source(n?: number | NodeSyntaxParser, end?: number): string;
+							source(n?: number, end?: number): string;
 							/**
 							 * The token's value as CSS Syntax defines it: a number for a number,
 							 * percentage or dimension, otherwise text with escapes resolved (a string
 							 * without its quotes, a hash without its `#`, a `url()`'s contents, a
 							 * comment's text); "" for a rule, declaration, function or block.
 							 */
-							value(n?: NodeSyntaxParser): string | number;
-							name(n?: NodeSyntaxParser): string;
+							value(n?: number): string | number;
+							name(n?: number): string;
 							/**
 							 * A rule's children are its prelude; its block is read with {@link field }.
 							 */
-							childCount(n?: NodeSyntaxParser): number;
-							child(i: number, n?: NodeSyntaxParser): ComponentValue;
+							childCount(n?: number): number;
+							child(i: number, n?: number): number;
 							/**
 							 * Every child as a new array, for a reader that keeps or searches them.
 							 */
-							children(n?: NodeSyntaxParser): ComponentValue[];
+							children(n?: number): number[];
 							/**
 							 * A block big enough to stream hands its children to the visitors as each
 							 * one finishes rather than collecting them, so its lists read as empty here.
 							 */
-							fieldCount(field: number, n?: NodeSyntaxParser): number;
-							field(
-								i: number,
-								field: number,
-								n?: NodeSyntaxParser
-							): NodeSyntaxParser;
-							fieldNamed(
-								field: number,
-								name: string,
-								n?: NodeSyntaxParser
-							): NodeSyntaxParser;
+							fieldCount(field: number, n?: number): number;
+							field(i: number, field: number, n?: number): number;
+							fieldNamed(field: number, name: string, n?: number): number;
 							/**
 							 * `important` is a container's bit, cleared when its id is reused; a token's
 							 * type flags are read off its text.
 							 */
-							flag(flag: number, n?: NodeSyntaxParser): boolean;
-							rangeOf(
-								part: number,
-								n?: NodeSyntaxParser
-							): null | [number, number];
-							startOf(part: number, n?: NodeSyntaxParser): number;
-							endOf(part: number, n?: NodeSyntaxParser): number;
+							flag(flag: number, n?: number): boolean;
+							rangeOf(part: number, n?: number): null | [number, number];
+							startOf(part: number, n?: number): number;
+							endOf(part: number, n?: number): number;
 							/**
 							 * CSS has no text beyond a node's name and value, read with `name` and `value`.
 							 */
-							textOf(_part: number, _n?: NodeSyntaxParser): null;
+							textOf(_part: number, _n?: number): null;
 						},
-						NodeSyntaxParser,
+						number,
 						CssPrintOptions
 					>
 				) => string;

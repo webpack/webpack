@@ -1596,6 +1596,725 @@ const renderNumberTable = (name, description, table) => {
 	return `// ${description}\n/** @type {Readonly<{ ${entries.join(", ")} }>} */\nconst ${name} = {\n${entries.join(",\n")}\n};\n`;
 };
 
+// Babel names its parse errors, ECMA-262 and acorn do not, so a parse error's
+// code is Babel's `reasonCode` for the same error, kebab-cased.
+const BABEL_PARSER = require.resolve("@babel/parser", {
+	paths: [require.resolve("@babel/core")]
+});
+
+/**
+ * One parse error message, `*` standing for its variable parts. A `probe` is
+ * read by both parsers to take Babel's code; one no option reaches names it.
+ * @typedef {object} ParseErrorEntry
+ * @property {string} template the message, `*` matching any text
+ * @property {string=} probe source raising it, read with Babel too
+ * @property {"script" | "module"=} sourceType what the probe is read as
+ * @property {boolean=} importPhases whether the probe needs import phases
+ * @property {string=} babel Babel's code, where no probe reaches the message
+ * @property {string=} own a code of webpack's own, where Babel has none
+ */
+
+// cspell:ignore rget
+/** @type {ParseErrorEntry[]} */
+const PARSE_ERRORS = [
+	{
+		template:
+			"'import defer' can only be used with namespace imports ('import defer * as identifierName from ...').",
+		probe: 'import defer a from "x"',
+		sourceType: "module",
+		importPhases: true
+	},
+	{
+		template:
+			"'import source' can only be used with direct identifier specifier imports ('import source identifierName from ...').",
+		babel: "SourcePhaseImportRequiresDefault"
+	},
+	{
+		template:
+			"'import source' can only be used with direct identifier specifier imports.",
+		probe: 'import source {a} from "x"',
+		sourceType: "module",
+		importPhases: true
+	},
+	{
+		template: "'import' and 'export' may appear only with 'sourceType: module'",
+		probe: "import a from 'x'",
+		sourceType: "script"
+	},
+	{
+		template: "'import' and 'export' may only appear at the top level",
+		probe: "{ import a from 'x' }",
+		sourceType: "module"
+	},
+	{
+		template: "'import.*' can only be used in a dynamic import.",
+		probe: "import.source",
+		sourceType: "module",
+		importPhases: true
+	},
+	{
+		template: "'import.*' must not contain escaped characters",
+		probe: "import.m\\u0065ta",
+		sourceType: "module"
+	},
+	{
+		template:
+			"'new.target' can only be used in functions and class static block",
+		probe: "new.target",
+		sourceType: "script"
+	},
+	{
+		template: "'new.target' must not contain escaped characters",
+		probe: "function f(){ new.t\\u0061rget }",
+		sourceType: "script"
+	},
+	{
+		template: "'return' outside of function",
+		probe: "return 1",
+		sourceType: "script"
+	},
+	{
+		template: "'super' keyword outside a method",
+		probe: "super.x",
+		sourceType: "script"
+	},
+	{
+		template: "'with' in strict mode",
+		probe: "'use strict'; with (a) {}",
+		sourceType: "script"
+	},
+	{
+		template: "* loop variable declaration may not have an initializer",
+		probe: "for (var a = 1 of b);",
+		sourceType: "script"
+	},
+	{
+		template:
+			"A string literal cannot be used as an exported binding without `from`.",
+		probe: "export { 'a' }",
+		sourceType: "module"
+	},
+	{
+		template: "An export name cannot include a lone surrogate.",
+		probe: "export { a as '\\uD800' }; var a",
+		sourceType: "module"
+	},
+	{
+		template: "Argument name clash",
+		probe: "function f(a, a) { 'use strict' }",
+		sourceType: "script"
+	},
+	{
+		template: "Assigning to * in strict mode",
+		probe: "'use strict'; eval = 1",
+		sourceType: "script"
+	},
+	{
+		template: "Binding * in strict mode",
+		probe: "'use strict'; function eval() {}",
+		sourceType: "script"
+	},
+	{ template: "Assigning to rvalue", probe: "1 = 2", sourceType: "script" },
+	{ template: "Binding rvalue", babel: "InvalidLhsBinding" },
+	{
+		template: "Await expression cannot be a default value",
+		probe: "async function f(a = await 1) {}",
+		sourceType: "module"
+	},
+	{
+		template: "Await using cannot appear outside of async function",
+		probe: "function f() { await using x = y }",
+		sourceType: "module"
+	},
+	{
+		template: "Bad character escape sequence",
+		probe: "a\\u0",
+		sourceType: "script"
+	},
+	{
+		template: "Bad escape sequence in untagged template literal",
+		probe: "`\\u{`",
+		sourceType: "script"
+	},
+	{
+		template: "Binding member expression",
+		babel: "InvalidPropertyBindingPattern"
+	},
+	{
+		template: "Binding parenthesized expression",
+		babel: "InvalidParenthesizedAssignment"
+	},
+	{
+		template: "Parenthesized pattern",
+		probe: "((a)) => 1",
+		sourceType: "script"
+	},
+	{
+		template: "Cannot use 'arguments' in class field initializer",
+		probe: "class A { x = arguments }",
+		sourceType: "script"
+	},
+	{
+		template: "Cannot use 'await' as identifier inside an async function",
+		probe: "async function f() { var await }",
+		sourceType: "script"
+	},
+	{
+		template: "Cannot use 'import.meta' outside a module",
+		probe: "import.meta",
+		sourceType: "script"
+	},
+	{
+		template: "Cannot use 'yield' as identifier inside a generator",
+		probe: "function* f() { var yield }",
+		sourceType: "script"
+	},
+	{
+		template: "Cannot use * in class static initialization block",
+		probe: "class A { static { arguments } }",
+		sourceType: "script"
+	},
+	{
+		template: "Cannot use keyword 'await' outside an async function",
+		probe: "function f() { await x }",
+		sourceType: "module"
+	},
+	{
+		template: "Classes can't have a field named 'constructor'",
+		probe: "class A { constructor = 1 }",
+		sourceType: "script"
+	},
+	{
+		template: "Classes can't have a static field named 'prototype'",
+		probe: "class A { static prototype = 1 }",
+		sourceType: "script"
+	},
+	{
+		template: "Classes can't have an element named '#constructor'",
+		probe: "class A { #constructor }",
+		sourceType: "script"
+	},
+	{
+		template: "Classes may not have a static property named prototype",
+		probe: "class A { static prototype() {} }",
+		sourceType: "script"
+	},
+	{ template: "Code point out of bounds", babel: "InvalidCodePoint" },
+	{
+		template: "Comma is not permitted after the rest element",
+		probe: "let [...a,] = b",
+		sourceType: "script"
+	},
+	{
+		template: "Complex binding patterns require an initialization value",
+		probe: "let {a}",
+		sourceType: "script"
+	},
+	{
+		template: "Constructor can't be a generator",
+		probe: "class A { *constructor() {} }",
+		sourceType: "script"
+	},
+	{
+		template: "Constructor can't be an async method",
+		probe: "class A { async constructor() {} }",
+		sourceType: "script"
+	},
+	{
+		template: "Constructor can't have get/set modifier",
+		probe: "class A { get constructor() {} }",
+		sourceType: "script"
+	},
+	{
+		template: "Deleting local variable in strict mode",
+		probe: "'use strict'; var a; delete a",
+		sourceType: "script"
+	},
+	{
+		template: "Duplicate attribute key '*'",
+		probe: "import a from 'x' with { type: 'a', type: 'b' }",
+		sourceType: "module"
+	},
+	{
+		template: "Duplicate constructor in the same class",
+		probe: "class A { constructor() {} constructor() {} }",
+		sourceType: "script"
+	},
+	{
+		template: "Duplicate export 'default'",
+		probe: "export default 1; export default 2",
+		sourceType: "module"
+	},
+	{
+		template: "Duplicate export '*'",
+		probe: "export { a }; export { b as a }; var a, b",
+		sourceType: "module"
+	},
+	{
+		template: "Duplicate regular expression flag",
+		probe: "/a/gg",
+		sourceType: "script"
+	},
+	{
+		template: "Escape sequence in keyword *",
+		probe: "\\u0069f (a) {}",
+		sourceType: "script"
+	},
+	{
+		template: "Expected number in radix *",
+		probe: "0b2",
+		sourceType: "script"
+	},
+	{
+		template: "Expecting Unicode escape sequence \\uXXXX",
+		probe: "\\x",
+		sourceType: "script"
+	},
+	{
+		template: "Export '*' is not defined",
+		probe: "export { a }",
+		sourceType: "module"
+	},
+	{
+		template: "Identifier '#*' has already been declared",
+		probe: "class A { #a; #a }",
+		sourceType: "script"
+	},
+	{
+		template: "Identifier '*' has already been declared",
+		probe: "let a; let a",
+		sourceType: "script"
+	},
+	{
+		template: "Identifier directly after number",
+		probe: "1a",
+		sourceType: "script"
+	},
+	{
+		template:
+			"Illegal 'use strict' directive in function with non-simple parameter list",
+		probe: "function f(a = 1) { 'use strict' }",
+		sourceType: "script"
+	},
+	{
+		template: "Illegal newline after throw",
+		probe: "throw\n1",
+		sourceType: "script"
+	},
+	{
+		template: "Invalid Unicode escape",
+		probe: "\\u0000",
+		sourceType: "script"
+	},
+	{ template: "Invalid escape sequence", probe: "'\\8'", sourceType: "module" },
+	{
+		template: "Invalid escape sequence in template string",
+		babel: "InvalidEscapeSequenceTemplate"
+	},
+	{
+		template: "Octal literal in strict mode",
+		probe: "'use strict'; '\\08'",
+		sourceType: "script"
+	},
+	{
+		template: "Octal literal in template string",
+		babel: "InvalidEscapeSequenceTemplate"
+	},
+	{ template: "Invalid number", probe: "1e", sourceType: "script" },
+	{
+		template: "Invalid regular expression flag",
+		probe: "/a/x",
+		sourceType: "script"
+	},
+	{
+		template: "Invalid regular expression: /*/: *",
+		own: "invalid-regular-expression"
+	},
+	{ template: "Invalid use of 'super'", babel: "UnsupportedSuper" },
+	{
+		template: "Label '*' is already declared",
+		probe: "a: a: 1",
+		sourceType: "script"
+	},
+	{
+		template:
+			"Logical expressions and coalesce expressions cannot be mixed. Wrap either by parentheses",
+		probe: "a ?? b || c",
+		sourceType: "script"
+	},
+	{
+		template: "Missing catch or finally clause",
+		probe: "try {}",
+		sourceType: "script"
+	},
+	{
+		template: "Missing initializer in * declaration",
+		probe: "using a",
+		sourceType: "module"
+	},
+	{
+		template: "Multiple default clauses",
+		probe: "switch (a) { default: default: }",
+		sourceType: "script"
+	},
+	{
+		template: "Not enough stack space to parse input",
+		own: "not-enough-stack-space"
+	},
+	{
+		template: "Numeric separator is not allowed at the first of digits",
+		probe: "0x_1",
+		sourceType: "script"
+	},
+	{
+		template: "Numeric separator is not allowed at the last of digits",
+		probe: "1_",
+		sourceType: "script"
+	},
+	{
+		template:
+			"Numeric separator is not allowed in legacy octal numeric literals",
+		probe: "0_1",
+		sourceType: "script"
+	},
+	{
+		template: "Numeric separator must be exactly one underscore",
+		probe: "1__0",
+		sourceType: "script"
+	},
+	{
+		template: "Object pattern can't contain getter or setter",
+		probe: "({get a(){}} = b)",
+		sourceType: "script"
+	},
+	{
+		template: "Only '=' operator can be used for specifying default value.",
+		probe: "[a += 1] = b",
+		sourceType: "script"
+	},
+	{
+		template: "Optional chaining cannot appear in left-hand side",
+		babel: "InvalidLhsOptionalChaining"
+	},
+	{
+		template:
+			"Optional chaining cannot appear in the callee of new expressions",
+		probe: "new a?.b()",
+		sourceType: "script"
+	},
+	{
+		template:
+			"Optional chaining cannot appear in the tag of tagged template expressions",
+		probe: "a?.b``",
+		sourceType: "script"
+	},
+	{
+		template: "Private field '#*' must be declared in an enclosing class",
+		probe: "class A { m() { this.#a } }",
+		sourceType: "script"
+	},
+	{
+		template: "Private fields can not be deleted",
+		probe: "class A { #a; m() { delete this.#a } }",
+		sourceType: "script"
+	},
+	{
+		template: "Private identifier can only be left side of binary expression",
+		babel: "PrivateInExpectedIn"
+	},
+	{
+		template: "Redefinition of __proto__ property",
+		probe: "({__proto__: 1, __proto__: 2})",
+		sourceType: "script"
+	},
+	{ template: "Redefinition of property", own: "redefinition-of-property" },
+	{
+		template: "Rest elements cannot have a default value",
+		probe: "[...a = 1] = b",
+		sourceType: "script"
+	},
+	{
+		template: "Setter cannot use rest params",
+		probe: "({set a(...b){}})",
+		sourceType: "script"
+	},
+	{
+		template:
+			"Shorthand property assignments are valid only in destructuring patterns",
+		probe: "({a = 1})",
+		sourceType: "script"
+	},
+	{
+		template: "The keyword '*' is reserved",
+		probe: "'use strict'; var implements",
+		sourceType: "script"
+	},
+	{
+		template: "The left-hand side of a for-of loop may not start with 'let'.",
+		probe: "for (let.a of b);",
+		sourceType: "script"
+	},
+	{
+		template: "The only valid meta property for import is 'import.meta'",
+		probe: "import.foo",
+		sourceType: "module"
+	},
+	{
+		template: "The only valid meta property for new is 'new.target'",
+		probe: "new.foo",
+		sourceType: "script"
+	},
+	{
+		template: "Trailing comma is not allowed in import()",
+		babel: "ImportCallArity"
+	},
+	{
+		template: "Unexpected character '*'",
+		probe: "\u0007",
+		sourceType: "script"
+	},
+	{
+		template: "Unexpected keyword '*'",
+		probe: "var break",
+		sourceType: "script"
+	},
+	{ template: "Unexpected token", probe: "a ~ ", sourceType: "script" },
+	{ template: "Unsyntactic *", probe: "break", sourceType: "script" },
+	{ template: "Unterminated comment", probe: "/* x", sourceType: "script" },
+	{
+		template: "Unterminated regular expression",
+		probe: "/a",
+		sourceType: "script"
+	},
+	{
+		template: "Unterminated string constant",
+		probe: "'a",
+		sourceType: "script"
+	},
+	{ template: "Unterminated template", probe: "`a", sourceType: "script" },
+	{
+		template: "Unterminated template literal",
+		probe: "`${`",
+		sourceType: "script"
+	},
+	{
+		template:
+			"Using declaration cannot appear in the top level when source type is `script` or in the bare case statement",
+		probe: "using x = y",
+		sourceType: "script"
+	},
+	{
+		template: "Using declaration is not allowed in for-in loops",
+		probe: "for (using x in y);",
+		sourceType: "module"
+	},
+	{
+		template: "Using declaration is not allowed in single-statement positions",
+		probe: "if (a) using x = y;",
+		sourceType: "module"
+	},
+	{
+		template: "Yield expression cannot be a default value",
+		probe: "function* g(){ (a = yield) => 1 }",
+		sourceType: "module"
+	},
+	{
+		template: "getter should have no params",
+		probe: "({get a(b){}})",
+		sourceType: "script"
+	},
+	{
+		template: "import call cannot be the target of `new`",
+		babel: "ImportCallNotNewExpression"
+	},
+	{
+		template: "let is disallowed as a lexically bound name",
+		probe: "let let = 1",
+		sourceType: "script"
+	},
+	{
+		template: "setter should have exactly one param",
+		probe: "({set a(){}})",
+		sourceType: "script"
+	},
+	{
+		template: "super() call outside constructor of a subclass",
+		probe: "class A extends B { m() { super() } }",
+		sourceType: "script"
+	}
+];
+
+/**
+ * @param {string} template a message, `*` standing for its variable parts
+ * @returns {RegExp} what matches every message it stands for
+ */
+const parseErrorTemplateRegExp = (template) =>
+	new RegExp(
+		`^${template.replace(/[.+?^${}()|[\]\\]/g, "\\$&").replace(/\*/g, "[\\s\\S]*")}$`
+	);
+
+/**
+ * @param {string} name a Babel `reasonCode`
+ * @returns {string} it kebab-cased
+ */
+const kebabCase = (name) =>
+	name
+		.replace(/([a-z0-9])([A-Z])/g, "$1-$2")
+		.replace(/([A-Z]+)([A-Z][a-z])/g, "$1-$2")
+		.toLowerCase();
+
+/**
+ * Every message the parser raises as a literal, `*` for each interpolation,
+ * read off the calls to its raising methods.
+ * @returns {Set<string>} the messages
+ */
+const collectRaisedMessages = () => {
+	/** @type {Set<string>} */
+	const messages = new Set();
+	for (const file of ["syntax-parser.js", "regexp.js"]) {
+		const source = fs.readFileSync(
+			path.resolve(__dirname, "../lib/javascript", file),
+			"utf8"
+		);
+		const call = /\b(?:raise|raiseRecoverable|invalidStringToken)\(/g;
+		for (
+			let match = call.exec(source);
+			match !== null;
+			match = call.exec(source)
+		) {
+			let depth = 1;
+			let end = call.lastIndex;
+			while (depth > 0 && end < source.length) {
+				const char = source[end];
+				if (char === '"' || char === "'" || char === "`") {
+					end++;
+					while (end < source.length && source[end] !== char) {
+						if (source[end] === "\\") end++;
+						end++;
+					}
+				} else if (char === "(") {
+					depth++;
+				} else if (char === ")") {
+					depth--;
+				}
+				end++;
+			}
+			const args = source.slice(call.lastIndex, end - 1);
+			for (const literal of args.matchAll(
+				/`(?:[^`\\]|\\[\s\S])*`|"(?:[^"\\]|\\[\s\S])*"/g
+			)) {
+				const text = literal[0]
+					.slice(1, -1)
+					.replace(/\$\{[^{}]*(?:\{[^{}]*\}[^{}]*)*\}/g, "*")
+					.replace(/\\\\/g, "\\")
+					.replace(/\s+/g, " ");
+				// Literals naming a node type ride along in casts; a message has a space.
+				// The pattern validator's own reach the parser wrapped, as one error.
+				if (!text.includes(" ")) continue;
+				messages.add(
+					file === "regexp.js" && literal.index === args.search(/\S/)
+						? `Invalid regular expression: /*/: ${text}`
+						: text
+				);
+			}
+		}
+	}
+	return messages;
+};
+
+/**
+ * Each parse error message the parser raises paired with its code: Babel's
+ * for the same error, read off a probe both parsers reject.
+ * @returns {[string, string][]} the templates and their codes, in match order
+ */
+const collectParseErrorCodes = () => {
+	const babel = require(BABEL_PARSER);
+
+	const babelSource = fs.readFileSync(BABEL_PARSER, "utf8");
+
+	const { parse } = require("../lib/javascript/syntax-parser");
+
+	const patterns = PARSE_ERRORS.map((entry) =>
+		parseErrorTemplateRegExp(entry.template)
+	);
+	// A message built from interpolations alone is matched the other way round.
+	for (const message of collectRaisedMessages()) {
+		const asPattern = parseErrorTemplateRegExp(message.replace(/\*+/g, "*"));
+		if (
+			!patterns.some((pattern) => pattern.test(message)) &&
+			!PARSE_ERRORS.some((entry) => asPattern.test(entry.template))
+		) {
+			throw new Error(`no PARSE_ERRORS template matches "${message}"`);
+		}
+	}
+	/** @type {[string, string][]} */
+	const codes = PARSE_ERRORS.map((entry, index) => {
+		if (entry.own !== undefined) return [entry.template, entry.own];
+		if (entry.babel !== undefined) {
+			if (!new RegExp(`\\n\\s+${entry.babel}:`).test(babelSource)) {
+				throw new Error(`Babel names no parse error ${entry.babel}`);
+			}
+			return [entry.template, kebabCase(entry.babel)];
+		}
+		const probe = /** @type {string} */ (entry.probe);
+		const sourceType = entry.sourceType || "script";
+		/** @type {{ message: string, pos: number } | undefined} */
+		let raised;
+		try {
+			parse(probe, {
+				ecmaVersion: "latest",
+				sourceType,
+				importPhases: entry.importPhases === true
+			});
+		} catch (error) {
+			const syntaxError = /** @type {SyntaxError & { pos: number }} */ (error);
+			raised = {
+				message: syntaxError.message.replace(/ \(\d+:\d+\)$/, ""),
+				pos: syntaxError.pos
+			};
+		}
+		const matched =
+			raised === undefined
+				? -1
+				: patterns.findIndex((pattern) => pattern.test(raised.message));
+		if (matched !== index) {
+			throw new Error(
+				`probe ${JSON.stringify(probe)} raises ${raised ? `"${raised.message}"` : "nothing"}, not "${entry.template}"`
+			);
+		}
+		const at = /** @type {{ message: string, pos: number }} */ (raised).pos;
+		/** @type {string | undefined} */
+		let reasonCode;
+		try {
+			const { errors } = babel.parse(probe, {
+				errorRecovery: true,
+				sourceType,
+				plugins: entry.importPhases
+					? ["sourcePhaseImports", "deferredImportEvaluation"]
+					: []
+			});
+			const error =
+				errors.find(
+					/**
+					 * @param {{ pos: number }} item a recovered error
+					 * @returns {boolean} whether it is the one our parser raised
+					 */
+					(item) => item.pos === at
+				) || errors[0];
+			reasonCode = error && error.reasonCode;
+		} catch (error) {
+			reasonCode = /** @type {{ reasonCode?: string }} */ (error).reasonCode;
+		}
+		if (reasonCode === undefined) {
+			throw new Error(`Babel raises no error for ${JSON.stringify(probe)}`);
+		}
+		return [entry.template, kebabCase(reasonCode)];
+	});
+	// Last, for a message built at run time that no template above names.
+	codes.push(["*", "syntax-error"]);
+	return codes;
+};
+
 /**
  * Build the module the parser classifies with: the identifier ranges the
  * tokenizer reads and the property names `\\p{...}` accepts.
@@ -1605,7 +2324,11 @@ const renderData = () => {
 	const tables = collectIdentifierTables();
 	const nodeTables = collectNodeTables();
 	const narrow = collectNarrowIdentifierTables();
-	return `${renderHeader(`acorn ${acorn.version}, ${TERSER_SOURCE}`)}
+	return `${renderHeader(
+		`acorn ${acorn.version}, ${TERSER_SOURCE}, @babel/parser ${
+			require(path.join(BABEL_PARSER, "../../package.json")).version
+		}`
+	)}
 ${renderTable(
 	"IDENTIFIER_START_RANGES",
 	"Non-ASCII code points in the BMP that may start an identifier.",
@@ -1652,6 +2375,11 @@ ${renderNumberTable("Part", "The text fields beyond an identifier's name and a l
 /** @type {Record<string, string>} */
 const NODE_FIELDS = ${JSON.stringify(collectNodeFields(), null, 1)};
 
+// Each parse error message, \`*\` for its variable parts, with its code: Babel's
+// \`reasonCode\` for the same error kebab-cased, where Babel has one.
+/** @type {[string, string][]} */
+const PARSE_ERROR_CODES = ${JSON.stringify(collectParseErrorCodes(), null, 1)};
+
 module.exports.ASTRAL_IDENTIFIER_PART_RANGES = ASTRAL_IDENTIFIER_PART_RANGES;
 module.exports.ASTRAL_IDENTIFIER_START_RANGES = ASTRAL_IDENTIFIER_START_RANGES;
 module.exports.IDENTIFIER_PART_RANGES = IDENTIFIER_PART_RANGES;
@@ -1662,6 +2390,7 @@ module.exports.Field = Field;
 module.exports.Flag = Flag;
 module.exports.NODE_FIELDS = NODE_FIELDS;
 module.exports.NodeType = NodeType;
+module.exports.PARSE_ERROR_CODES = PARSE_ERROR_CODES;
 module.exports.Part = Part;
 module.exports.UNICODE_BINARY_PROPERTIES = UNICODE_BINARY_PROPERTIES;
 module.exports.UNICODE_BINARY_PROPERTIES_OF_STRINGS =
