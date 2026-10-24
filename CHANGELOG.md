@@ -1,5 +1,39 @@
 # webpack
 
+## 5.113.0
+
+### Minor Changes
+
+- Add `compilation.hooks.chunkHashDependencies` for chunks naming other chunks. (by [@alexander-akait](https://github.com/alexander-akait) in [#22810](https://github.com/webpack/webpack/pull/22810))
+
+- Add a JavaScript `SourceProcessor` that prints minified, and parse JS faster. (by [@alexander-akait](https://github.com/alexander-akait) in [#22815](https://github.com/webpack/webpack/pull/22815))
+
+- Add `parseError` to the CSS, HTML and JavaScript parsers, and `parseProgram`. (by [@alexander-akait](https://github.com/alexander-akait) in [#22881](https://github.com/webpack/webpack/pull/22881))
+
+- Range a CSS declaration's value on its node, and minify CSS faster. (by [@alexander-akait](https://github.com/alexander-akait) in [#22886](https://github.com/webpack/webpack/pull/22886))
+
+- Drop unread call arguments and fold `Object.keys` and `.length` when minifying. (by [@alexander-akait](https://github.com/alexander-akait) in [#22871](https://github.com/webpack/webpack/pull/22871))
+
+- Fix `delete (null ?? x)`, and drop unused catch bindings when minifying. (by [@alexander-akait](https://github.com/alexander-akait) in [#22878](https://github.com/webpack/webpack/pull/22878))
+
+### Patch Changes
+
+- Keep an outer `<a>` open when a nested `<a>` in a table cell closes another. (by [@alexander-akait](https://github.com/alexander-akait) in [#22881](https://github.com/webpack/webpack/pull/22881))
+
+- Preserve optional chains when renaming CommonJS export self-references. (by [@bjohansebas](https://github.com/bjohansebas) in [#22883](https://github.com/webpack/webpack/pull/22883))
+
+- Make external module identifiers independent of resolution order. (by [@bjohansebas](https://github.com/bjohansebas) in [#22891](https://github.com/webpack/webpack/pull/22891))
+
+- Preserve URL objects when resolving dynamic asset requests. (by [@bjohansebas](https://github.com/bjohansebas) in [#22884](https://github.com/webpack/webpack/pull/22884))
+
+- Keep the space before an SVG `data:` URL the CSS minifier rewrites. (by [@lazerg](https://github.com/lazerg) in [#22880](https://github.com/webpack/webpack/pull/22880))
+
+- Fix CSS, HTML and JavaScript parser divergences their own tests found. (by [@alexander-akait](https://github.com/alexander-akait) in [#22889](https://github.com/webpack/webpack/pull/22889))
+
+- Fix CSS, HTML and JavaScript tokenizer divergences from their specs. (by [@alexander-akait](https://github.com/alexander-akait) in [#22872](https://github.com/webpack/webpack/pull/22872))
+
+- Keep minified XML well-formed: close a cut-off CDATA, escape a bare `&`. (by [@alexander-akait](https://github.com/alexander-akait) in [#22850](https://github.com/webpack/webpack/pull/22850))
+
 ## 5.112.2
 
 ### Patch Changes
