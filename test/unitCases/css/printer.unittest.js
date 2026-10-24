@@ -15940,3 +15940,195 @@ describe("CssSyntax minify — input that once threw", () => {
 		).toBe(out);
 	});
 });
+
+describe("CssSyntax minify — what a printed rule can still hit", () => {
+	// Each reaches one guard of the printer the rest of the suite leaves alone.
+	const BIG = Array.from(
+		{ length: 4000 },
+		(_, i) => `.c${i}>d${i}{color:red;margin:${i + 1}px}`
+	).join("");
+	it.each([
+		["@custom-media --x false;@media(--x){a{b:c}}",{"transforms":{"customMedia":true,"customSelectors":true},"environment":{"browsers":["chrome 120"]}},"@media not all{a{b:c}}"],
+		[":is(a) b:::before{x:y}",{},"a b::before{x:y}"],
+		[":is(a) b:{x:y}",{},"a b:{x:y}"],
+		["*:::before{x:y}",{},"::before{x:y}"],
+		["*:{x:y}",{},":{x:y}"],
+		[":is(a:) b{x:y}",{},":is(a:) b{x:y}"],
+		["@media (width>=1px) and (height<=2px){a{b:c}}",{},"@media (width>=1px) and (height<=2px){a{b:c}}"],
+		["@media (width>1px) and (width<2px){a{b:c}}",{},"@media (1px<width<2px){a{b:c}}"],
+		["@supports (-webkit-bogus:1) or (bogus:1){a{b:c}}",{"environment":{"browsers":["chrome 130"]}},"@supports (-webkit-bogus:1) or (bogus:1){a{b:c}}"],
+		["@supports ((a:\"b\n)){x{y:z}}",{},"@supports ((a:\"b\n)){x{y:z}}"],
+		["@layer x{a{b:c}}@layer x{}@layer x{d{e:f}}",{},"@layer x{a{b:c}d{e:f}}"],
+		["@keyframes k{100%{a:b}}",{},"@keyframes k{to{a:b}}"],
+		["a{margin-top:1px;margin-right:1px;padding-top:1px;padding-right:1px}a{margin-bottom:1px;margin-left:1px;padding-bottom:1px;padding-left:1px}",{},"a{margin:1px;padding:1px}"],
+		[".a::-moz-placeholder,.b::-moz-placeholder{opacity:1}.c::-moz-placeholder,.d::-moz-placeholder{opacity:0}.a::placeholder{color:red}.b::placeholder{color:#00f}.c::placeholder{color:#0f0}.d::placeholder{color:#ff0}",{"environment":{"browsers":["firefox 120"]}},".a::placeholder{color:red}.b::placeholder{color:#00f}.c::placeholder{color:#0f0}.d::placeholder{color:#ff0}"],
+		["a{margin:1px;margin-top:\"a  b\"}",{},"a{margin:1px;margin-top:\"a  b\"}"],
+		["a{text-decoration-line:underline;text-decoration-style:solid;text-decoration-color:red;text-decoration-thickness:1px}",{"environment":{"browsers":["safari 12"]}},"a{text-decoration:underline;text-decoration-style:solid;text-decoration-color:red;text-decoration-thickness:1px}"],
+		["a{margin-top:1px!important;margin-right:1px!important;margin-bottom:1px!important;margin-left:1px!important}",{},"a{margin:1px!important}"],
+		["a{grid-template-rows:1px;grid-template-columns:2px;grid-template-areas:foo}",{},"a{grid-template-rows:1px;grid-template-columns:2px;grid-template-areas:foo}"],
+		["a{grid-column:1;color:red;grid-row:2}",{},"a{color:red;grid-area:2/1}"],
+		["a{grid-row:;grid-column:1}",{},"a{grid-column:1}"],
+		["--x:(1, 2",{"as":"block-contents"},"--x:(1,2"],
+		["a{grid-area:abcdefghijklm;grid-row-end:b}",{},"a{grid-area:abcdefghijklm;grid-row-end:b}"],
+		["a{place-content:1px;justify-content:2px}",{"environment":{"browsers":["chrome 40"]}},"a{align-content:1px;justify-content:1px;justify-content:2px}"],
+		["a{transition:a 1s;-webkit-transition-delay:2s}",{},"a{transition:a 1s;-webkit-transition-delay:2s}"],
+		["a{text-decoration:underline;text-decoration-color:foo(1)}",{},"a{text-decoration:underline;text-decoration-color:foo(1)}"],
+		["a{margin-top:1px;margin-right:1px;margin-bottom:1px;margin-left:1px;grid-row:1;grid-column:2}",{},"a{grid-area:1/2;margin:1px}"],
+		["a{display:-webkit-box;display:-webkit-flex;display:flex}",{"environment":{"browsers":["chrome 130"]}},"a{display:flex}"],
+		["a{display:flex!important;display:-webkit-box!important}",{"environment":{"browsers":["chrome 130"]}},"a{display:flex!important;display:-webkit-box!important}"],
+		["a{color:color(display-p3 1 0 0);background:color(display-p3 0 1 0)}",{"environment":{"browsers":["chrome 60"]}},"a{color:red;color:color(display-p3 1 0 0);background:#0f0;background:color(display-p3 0 1 0)}"],
+		[".p{${BIG}b{x:1}a{x:1}c:d}",{},".p{${BIG}a,b{x:1}c:d}"],
+		[".p{${BIG}@layer x{{}}x{}@layer x{d{e:f}}}",{"environment":{"browsers":["chrome 80"]}},".p{${BIG}@layer x{d{e:f}}}"],
+		["@-webkit-keyframes a{}.p{${BIG}::-webkit-input-placeholder{x:1}::placeholder{x:1}}",{"environment":{"browsers":["chrome 130"]}},"@-webkit-keyframes a{}.p{${BIG}::placeholder{x:1}}"],
+		["@layer x{${BIG}}@layer x{a{b:c}}",{},"@layer x{${BIG}a{b:c}}"]
+	])("prints %j (%j)", (css, options, out) => {
+		expect(
+			new SourceProcessor()
+				.process(css.split("${BIG}").join(BIG), {
+					.../** @type {EXPECTED_ANY} */ (options),
+					mode: "minify"
+				})
+				.code.split(BIG)
+				.join("${BIG}")
+		).toBe(out);
+	});
+});
+
+describe("CssSyntax minify — a gather that once printed a second pass's work", () => {
+	const BIG = Array.from(
+		{ length: 4000 },
+		(_, i) => `.c${i}>d${i}{color:red;margin:${i + 1}px}`
+	).join("");
+	/**
+	 * @param {string} css a stylesheet
+	 * @returns {string} its minified serialization
+	 */
+	const once = (css) =>
+		new SourceProcessor().process(css, { mode: "minify" }).code;
+
+	it.each([
+		// The pair a streamed block's gather joined at the seam is one list,
+		// ordered and with a selector both named written once.
+		[".p{${BIG}@layer x{a,c{x:1}}@layer x{a,b{x:1}}}", ".p{${BIG}@layer x{a,b,c{x:1}}}"],
+		[".p{${BIG}@layer x{c{x:1}}@layer x{b{x:1}}@layer x{a{x:1}}}", ".p{${BIG}@layer x{a,b,c{x:1}}}"],
+		// An empty block folded in adds nothing, so the next block still joins.
+		["@layer x{}@layer x{a{b:c}}t{u:v}@layer x{e{b:c}}", "@layer x{a,e{b:c}}t{u:v}"],
+		["@layer x{a{b:c}}@layer x{}t{u:v}@layer x{e{b:c}}", "@layer x{a,e{b:c}}t{u:v}"],
+		[".q{@layer x{}@layer x{a{b:c}}t{u:v}@layer x{e{b:c}}}", ".q{@layer x{a,e{b:c}}t{u:v}}"],
+		[".q{@layer x{a{b:c}}@layer x{}t{u:v}@layer x{e{b:c}}}", ".q{@layer x{a,e{b:c}}t{u:v}}"]
+	])("prints %j in one pass", (css, out) => {
+		const printed = once(css.split("${BIG}").join(BIG));
+		expect(printed.split(BIG).join("${BIG}")).toBe(out);
+		expect(once(printed)).toBe(printed);
+	});
+});
+
+describe("CssSyntax minify — a value-less grid longhand", () => {
+	it.each([
+		[
+			"a{grid-template-rows:;grid-template-columns:1px;grid-template-areas:none}",
+			"a{grid-template-columns:1px;grid-template-areas:none}"
+		],
+		[
+			"a{grid-template-rows:1px;grid-template-columns:;grid-template-areas:none}",
+			"a{grid-template-rows:1px;grid-template-areas:none}"
+		],
+		[
+			'a{grid-template-rows:1px;grid-template-columns:2px;grid-template-areas:}',
+			"a{grid-template-rows:1px;grid-template-columns:2px}"
+		]
+	])("leaves %j unmerged", (css, out) => {
+		// It sets nothing, and an empty slot would void the whole `grid-template`.
+		expect(minifyFor(css)).toBe(out);
+	});
+});
+
+describe("CssSyntax minify — one processor after another", () => {
+	const BIG = Array.from(
+		{ length: 4000 },
+		(_, i) => `.c${i}>d${i}{color:red;margin:${i + 1}px}`
+	).join("");
+	/** @type {[string, object][]} */
+	const runs = [
+		["@media q{a{x:1}a{x:1}a{x:1}@media p{a{x:1}}}", { environment: { browsers: ["chrome 100"] } }],
+		["a{x:1}a{x:1}a{x:1}@layer l{a{x:1}}", {}],
+		["@layer x{a{b:c}}t{u:v}@layer x{e{b:c}}", { mergeDistantRules: true }],
+		[`@layer x{${BIG}c{x:1}}@layer x{b{x:1}}`, {}],
+		[`.p{${BIG}@layer x{a,c{x:1}}@layer x{a,b{x:1}}}`, {}],
+		[".a{color:red}.b{margin:0}.c{color:red}", { mergeDistantRules: true }],
+		["a{&:hover{b:c}}d{e:f}a:hover{b:c}", { environment: { browsers: ["chrome 100"] } }],
+		["a::-webkit-input-placeholder{x:1}a::placeholder{x:1}", { environment: { browsers: ["chrome 130"] } }],
+		["--x:(1, 2", { as: "block-contents" }]
+	];
+	/**
+	 * @param {[string, object]} run a stylesheet and its options
+	 * @returns {string} its minified serialization
+	 */
+	const print = ([css, options]) =>
+		new SourceProcessor().process(css, { ...options, mode: "minify" }).code;
+
+	it("prints each sheet as it prints alone, whatever ran before it", () => {
+		const alone = runs.map(print);
+		// Forwards, backwards, and each after every other: a leftover of one parse
+		// would show as a difference in the next.
+		expect(runs.map(print)).toEqual(alone);
+		expect([...runs].reverse().map(print)).toEqual([...alone].reverse());
+		for (let i = 0; i < runs.length; i++) {
+			for (let j = 0; j < runs.length; j++) {
+				print(runs[j]);
+				expect(print(runs[i])).toBe(alone[i]);
+			}
+		}
+	});
+});
+
+describe("CssSyntax — declaration ranks", () => {
+	it("ranks the property every ranked alias stands for", () => {
+		// The printer's order table reads a ranked alias's property by id.
+		const { getDeclarationRanks, getPropertyAliases } = require("../../../lib/css/data");
+		const ranks = getDeclarationRanks();
+		const aliases = getPropertyAliases();
+		expect(
+			[...ranks.keys()].filter((name) => !ranks.has(aliases.get(name) || name))
+		).toEqual([]);
+	});
+});
+
+describe("CssSyntax minify — what a printed rule can still hit, continued", () => {
+	it.each([
+		["a{x:1}a{x:2;&:h(over{y:z}}", {}, "a{x:2;&:h(over{y:z}})}"],
+		["@layer x{}.a{--x:(/*!@layer", { as: "block-contents" }, "@layer x{}.a{--x:(/*!@layer}"],
+		// Written escaped, `--1x` is shorter than the spelling that escapes its `1`.
+		["@--1\\x a{b:c}", {}, "@--1\\x a{b:c}"],
+		["a{grid-row-start:1;grid-area:a;grid-row-end:2}", {}, "a{grid-row-start:1;grid-area:a/a/2}"]
+	])("prints %j (%j)", (css, options, out) => {
+		expect(
+			new SourceProcessor().process(css, {
+				.../** @type {EXPECTED_ANY} */ (options),
+				mode: "minify"
+			}).code
+		).toBe(out);
+	});
+});
+
+describe("CssSyntax minify — a layer written into past an unquoted url", () => {
+	it.each([
+		[
+			".z{@layer x{a{b:c}}@media p{q{r:url(/*)}@layer x{d{e:f}}}@layer x{d{e:g}}}",
+			".z{@layer x{a{b:c}}@media p{q{r:url(/*)}@layer x{d{e:f}}}@layer x{d{e:g}}}"
+		],
+		[
+			".z{@layer x{a{b:c}}@media p{q{r:URL( /*)}@layer x{d{e:f}}}@layer x{d{e:g}}}",
+			".z{@layer x{a{b:c}}@media p{q{r:url(/*)}@layer x{d{e:f}}}@layer x{d{e:g}}}"
+		],
+		// Escapes, a quoted url and a `u` that starts none are read past as well.
+		[
+			'.z{@layer x{a{b:c}}@media p{.u\\:b{r:url("/*")}q{s:url(\\)/*)}@layer x{d{e:f}}}@layer x{d{e:g}}}',
+			".z{@layer x{a{b:c}}@media p{.u\\:b{r:url(/*)}q{s:url(\\)/*)}@layer x{d{e:f}}}@layer x{d{e:g}}}"
+		]
+	])("keeps the later block of %j where it stands", (css, out) => {
+		// The `/*` is the address's, so the `@layer x` after it is still a write
+		// into the layer, and the block after that may not fold back across it.
+		expect(minifyFor(css)).toBe(out);
+	});
+});
