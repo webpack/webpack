@@ -2106,7 +2106,7 @@ const KEPT_CASES = [
 	["a RegExp pattern not a string", 'try { RegExp(1); console.log(1); } catch (e) { console.log(2); }'],
 	["a function returning a call in place of a function reading its own `this`, naming itself, holding a directive or declaring a parameter's name", 'var o = { m: function () { return function () { for (var i = 0; i < 2; i++) console.log(typeof this, i); }(); } }; o.m(); var f = function () { return function g() { for (var i = 0; i < 2; i++) console.log(typeof g, i); }(); }; f(); var h = function () { return function () { "use strict"; for (var i = 0; i < 2; i++) console.log(typeof this, i); }(); }; h(); var k = function (a) { return function () { for (var a in { x: 1, y: 2 }) console.log(a); }(); }; k(1);'],
 	["a count too large to run", 'try { new Uint8Array(1e9); console.log(1); } catch (e) { console.log(2); }'],
-	["an argument no literal", "function f(a) { String(a); Object.keys({ [a]: 1 }); Object.keys({ get b() { return 1; } }); Object.keys(a); Object.keys({ b: a }, 0); } f([1]); console.log(1);"],
+	["an argument no literal", "function f(a) { String(a); Object.keys({ [a]: 1 }); Object.keys(a); Object.keys({ b: a }, 0); } f([1]); console.log(1);"],
 	["a built-in that runs code", 'eval("console.log(1)");'],
 	["a built-in global the program declares", "var Set = function () { console.log(1); }; new Set();"],
 	["a built-in call a `with` could rebind", "with ({ JSON: { parse: function () { console.log(1); } } }) JSON.parse(\"1\");"],
@@ -9194,6 +9194,39 @@ describe("syntax-printer", () => {
 			}
 		});
 
+		it("should drop a built-in's call on a literal whose functions it runs return literals, `Math.random`'s arguments and `#x in` a literal", async () => {
+			const { minify } = await load();
+			for (const input of [
+				"new String({ toString() { return 'x' } });",
+				"new Number({ valueOf() { return 1 } });",
+				"String({ toString() { return 'x' } });",
+				"Object.keys({ get a() { f() } });",
+				"Object.keys({ m() { f() } });",
+				"Object.keys({ set a(v) { f() } });",
+				"Math.random(Math);",
+				"(class { #x; static { #x in {}; } });"
+			]) {
+				const { code } = await minify(input, { compress: {}, mangle: false });
+				expect(code).toBe("");
+			}
+			for (const input of [
+				'String({ toString() { console.log("t"); return "x"; } }); console.log(1);',
+				'Number({ toString() { return 1; }, valueOf() { console.log("v"); } }); console.log(1);',
+				'String({ toString(a = console.log("d")) { return "x"; } }); console.log(1);',
+				"String({ toString() { return {}; } }); console.log(1);",
+				'Object.values({ get a() { console.log("g"); } }); console.log(1);',
+				'Object.keys({ get [(console.log("k"), "a")]() {} }); console.log(1);',
+				'new Promise(() => { console.log("p"); }); console.log(1);',
+				'Array.from({ length: 2 }, () => console.log("m")); console.log(1);',
+				'Math.random(console.log("r")); console.log(1);',
+				'Math.random = () => console.log("w"); Math.random(Math); console.log(1);',
+				'(class { #x; static { console.log(#x in [console.log("i")]); } });'
+			]) {
+				const { code } = await minify(input, { compress: {}, mangle: false });
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			}
+		});
+
 		it("should drop what a `switch` leaves over that does nothing, and a `switch` of no case", async () => {
 			const { minify } = await load();
 			for (const [input, compress, expected] of [
@@ -9276,6 +9309,51 @@ describe("syntax-printer", () => {
 				{ compress: { passes: 2 }, mangle: false, ecma: 2020 }
 			);
 			expect(switched.code).toMatch(/^c,(b===2|2===b)&&/);
+		});
+
+		it("should drop a self-naming call running nothing, an unread `[] = arguments` and `??` after a fixed `let`, and write a `#__PURE__` call returning nothing as `void 0`", async () => {
+			const { minify } = await load();
+			const options = { compress: { passes: 2 }, mangle: false };
+			for (const [input, expected, module] of [
+				["(function foo() { return foo; })();", "", false],
+				[
+					"var x = /* @__PURE__ */ (() => { foo(); })();",
+					"var x=void 0;",
+					false
+				],
+				["export function f() { var [] = arguments; }", "export function f(){}", true],
+				[
+					"let s = 'hello'; export function a() { return s ?? other(); } export function b() { return s ?? other(); }",
+					'let s="hello";export function a(){return s}export function b(){return s}',
+					true
+				],
+				[
+					"export class A extends B { constructor() { class C { [(this, f())]() {} } super(); } }",
+					"export class A extends B{constructor(){this,f(),super()}}",
+					true
+				]
+			]) {
+				const { code } = await minify(/** @type {string} */ (input), {
+					...options,
+					module: /** @type {boolean} */ (module)
+				});
+				expect(code).toBe(expected);
+			}
+			for (const input of [
+				'(function foo() { console.log("r"); return foo; })(); console.log(1);',
+				"console.log((function foo(n) { return n ? foo(n - 1).x.y : {}; })(2));",
+				"var a = 1; var x = /* @__PURE__ */ (() => { if (a) return 1; })(); console.log(x);",
+				'var x = /* @__PURE__ */ (() => {})(console.log("arg")); console.log(x);',
+				'function f() { arguments[Symbol.iterator] = function () { console.log("it"); return [][Symbol.iterator](); }; var [] = arguments; } f();',
+				'function f(arguments) { var [] = arguments; } f({ [Symbol.iterator]() { console.log("own"); return [][Symbol.iterator](); } });',
+				'console.log(a()); var s = "x"; function a() { return s ?? "fallback"; }',
+				'console.log(a()); let s = "x"; function a() { return s ?? "fallback"; }',
+				'class A extends Object { constructor() { (class { [(this, console.log("k"), "m")]() {} }); super(); } } try { new A(); } catch (e) { console.log(e.name); }',
+				'(function () { (class C { static x = C; [console.log("c")]() {} }); })(); console.log(1);'
+			]) {
+				const { code } = await minify(input, options);
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			}
 		});
 
 		it("should keep a constructor's `this.x` read a getter may answer", async () => {
