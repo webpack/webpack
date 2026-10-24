@@ -1635,7 +1635,7 @@ describe("CssSyntax — path reads on every node kind", () => {
 			})
 		).toEqual([
 			["", "a", 0, 0, false, false, false, null, null, null],
-			["b", "", 1, 1, false, false, false, null, null, null],
+			["b", "", 1, 1, false, false, false, [4, 5], null, null],
 			["", "c", 0, 0, false, false, false, null, null, null]
 		]);
 	});
