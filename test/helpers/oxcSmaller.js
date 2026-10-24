@@ -302,7 +302,6 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: asm/asm_function_expression",
 			"terser compress: asm/asm_nested_functions",
 			"terser compress: asm/asm_toplevel",
-			"terser compress: dead-code/try_catch_finally",
 			"terser compress: drop-unused/issue_1715_3",
 			"terser compress: reduce_vars/issue_t1382",
 			"terser compress: template-string/tagged_template_with_comment",
@@ -623,6 +622,7 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/remove_unused_expression.rs:594",
 			"oxc minifier: peephole/remove_unused_expression.rs:595",
 			"oxc minifier: peephole/remove_unused_expression.rs:767",
+			"oxc minifier: peephole/remove_unused_expression.rs:772",
 			"oxc minifier: peephole/remove_unused_expression.rs:777",
 			"oxc minifier: peephole/remove_unused_expression.rs:787",
 			"oxc minifier: peephole/remove_unused_expression.rs:792"
