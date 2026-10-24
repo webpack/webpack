@@ -76,7 +76,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/6175/1/input.js",
 			"swc minifier: fixture/issues/8953/input.js",
 			"swc minifier: fixture/issues/9610-nested-defaults/input.js",
-			"swc minifier: fixture/issues/do-while-false-terminal-jump/completion/unused-prefix-break/input.js",
 			"swc minifier: fixture/issues/do-while-false-terminal-jump/completion/unused-prefix-continue/input.js",
 			"swc minifier: fixture/issues/do-while-false-terminal-jump/directive-barrier/input.js",
 			"swc minifier: fixture/simple/sequences/.0001/input.js",
@@ -345,7 +344,6 @@ const SWC_SMALLER_BY_REASON = [
 	[
 		"webpack writes the same program in a spelling longer or compressing worse than swc's: `,` where swc keeps `;` between statements, operand order, `{0}` for an empty body",
 		[
-			"swc minifier: fixture/issues/do-while-false-terminal-jump/guarded-jump/input.js",
 			"swc minifier: fixture/next/43052/input.js",
 			"swc minifier: fixture/projects/mootools/3/input.js",
 			"swc minifier: fixture/projects/yui/12/input.js",
@@ -390,19 +388,14 @@ const SWC_SMALLER_BY_REASON = [
 		"swc restructures conditionals: an `if` as `&&` or `?:`, a shared tail or call factored out, `continue` and `break` folded into the condition",
 		[
 			"swc minifier: fixture/issues/2926/1/input.js",
-			"swc minifier: fixture/issues/do-while-false-terminal-jump/rejected/input.js",
-			"swc minifier: fixture/issues/do-while-false-terminal-jump/scope-directives/input.js",
 			"swc minifier: fixture/projects/mootools/8/input.js",
 			"terser compress: collapse_vars/boolean_binary_1",
 			"terser compress: collapse_vars/boolean_binary_2",
 			"terser compress: conditionals/issue_2535_1",
 			"terser compress: issue-1673/side_effects_else",
-			"terser compress: issue-637/wrongly_optimized",
 			"terser compress: issue-640/cond_5",
 			"terser compress: issue-640/conditional",
 			"terser compress: issue-640/dead_code_const_annotation_regex",
-			"terser compress: issue-640/wrongly_optimized",
-			"terser compress: loops/issue_1648",
 			"terser compress: reduce_vars/cond_assign",
 			"terser compress: reduce_vars/issue_2774"
 		]

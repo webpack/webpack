@@ -9433,6 +9433,179 @@ describe("syntax-printer", () => {
 			}
 		});
 
+		it("should write a shared assignment to `this` once, after `super()` binds it", async () => {
+			const { minify } = await load();
+			const options = { compress: { passes: 2 }, mangle: false };
+			for (const [input, expected] of [
+				[
+					"class A {} class B extends A { constructor() { super(); x ? this.b = 0 : this.b = 1; } } var x = 1; console.log(new B().b);",
+					"this.b=+!x"
+				],
+				[
+					"class A {} class B extends A { constructor() { super(); use(() => f() ? this.k = 1 : this.k = 2); } } function use(g) { g(); } function f() { return 0; } console.log(new B().k);",
+					"this.k=f()?1:2"
+				],
+				[
+					"class A {} class B extends A { constructor() { super(); class I { [f() ? this.k = 1 : this.k = 2]() {} } } } function f() { return 1; } console.log(new B().k);",
+					"super(),this.k=f()?1:2"
+				]
+			]) {
+				const { code } = await minify(input, options);
+				expect(code).toContain(expected);
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			}
+			for (const [input, kept] of [
+				[
+					"class A {} class B extends A { constructor() { try { y ? this.b = 0 : this.b = 1; } catch (e) { console.log(e.message); } super(); } } new B();",
+					"y?this.b=0:this.b=1"
+				],
+				[
+					"function g() { class I { static { console.log(this.name); } } } g();",
+					"class I"
+				]
+			]) {
+				const { code } = await minify(input, options);
+				expect(code).toContain(kept);
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			}
+		});
+
+		it("should read a `try` that always leaves, or never throws, as oxc does", async () => {
+			const { minify } = await load();
+			const options = { compress: { passes: 2 }, mangle: false };
+			const define =
+				"var a = 1; function g() { return 2; } function i() { return 3; } console.log(f());";
+			for (const [input, expected] of [
+				[
+					`function f() { if (a) try { return g(); } catch { return g(); } else throw i(); } ${define}`,
+					"}throw i()}"
+				],
+				[
+					`function f() { if (a) try { g(); } finally { return g(); } else throw i(); } ${define}`,
+					"}throw i()}"
+				],
+				[
+					"function f() { try { return; } catch (e) { return; } } console.log(f());",
+					"function f(){}"
+				],
+				[
+					"function f() { try { return 1; } catch (e) { var v = g(); } } console.log(f(), typeof v);",
+					"function f(){return 1}"
+				]
+			]) {
+				const { code } = await minify(input, options);
+				expect(code).toContain(expected);
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			}
+			for (const [input, kept] of [
+				[
+					"function f() { try { x(); } catch (e) { console.log(1); } } function x() { throw 0; } f();",
+					"catch"
+				],
+				[
+					"function f() { try { return 1; } catch (e) {} finally { console.log(2); } } console.log(f());",
+					"finally"
+				],
+				[
+					"function f() { try { a.b = 1; } catch (e) { console.log(e.name); } } var a; f();",
+					"catch"
+				],
+				[
+					`function f() { if (a) try { g(); } catch { i(); } else throw i(); } ${define}`,
+					"throw i();try"
+				]
+			]) {
+				const { code } = await minify(input, options);
+				expect(code).toContain(kept);
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			}
+		});
+
+		it("should fold a loop's tail `break` and `continue` into how often it runs", async () => {
+			const { minify } = await load();
+			const options = { compress: { passes: 2 }, mangle: false };
+			for (const [input, expected] of [
+				["do { break; } while (!new Date()); console.log(1);", "console.log(1)"],
+				[
+					"var n = 0; do { n++; break; } while (c()); function c() { console.log('c'); return true; } console.log(n);",
+					"n++,console.log(n)"
+				],
+				[
+					"do { let a = c(); g(() => a); break; } while (c()); function g(f) { console.log(f()); } function c() { return 1; }",
+					"{let a=c();g(()=>a)}"
+				],
+				[
+					"for (var i = 0; i < 2; i++) { if (i === 0) continue; break; } console.log(i);",
+					"i<2&&0===i;i++);"
+				]
+			]) {
+				const { code } = await minify(input, options);
+				expect(code).toContain(expected);
+				expect(code).not.toContain("break");
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			}
+			for (const [input, kept] of [
+				[
+					"var n = 0, y = 1; do { if (y--) continue; n++; break; } while (n < 3); console.log(n, y);",
+					"while(n<3)"
+				],
+				[
+					"var n = 0; L: do { if (n++ < 2) continue L; break; } while (n < 5); console.log(n);",
+					"while(n<5)"
+				],
+				[
+					"var n = 0; L: for (;;) { for (; n < 9; n++) { if (n > 2) continue L; break; } break; } console.log(n);",
+					"continue L"
+				]
+			]) {
+				const { code } = await minify(input, options);
+				expect(code).toContain(kept);
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			}
+		});
+
+		it("should drop an always-true test where `evaluate` or `dead_code` is off", async () => {
+			const { minify } = await load();
+			for (const [input, expected, compress] of [
+				[
+					"var n = 0; function f() { if (++n > 2) throw n; } try { for (; 1; ) f(); } catch (e) { console.log(e); }",
+					"for(;;)f()",
+					{ defaults: false, loops: true }
+				],
+				[
+					"function f() { console.log(1); } if (f() || true) console.log(2);",
+					"f();console.log(2)",
+					{
+						defaults: false,
+						booleans: true,
+						conditionals: true,
+						evaluate: true,
+						expression: true
+					}
+				]
+			]) {
+				const { code } = await minify(/** @type {string} */ (input), {
+					compress: /** @type {object} */ (compress),
+					mangle: false
+				});
+				expect(code).toContain(expected);
+				expect(runProgram(/** @type {string} */ (code))).toBe(
+					runProgram(/** @type {string} */ (input))
+				);
+			}
+			// The `if` completes with `undefined`, the call with its value.
+			const { code } = await minify("if (f(), 1) var a = g();", {
+				compress: {
+					defaults: false,
+					conditionals: true,
+					evaluate: true,
+					expression: true
+				},
+				mangle: false
+			});
+			expect(code).toContain("if(");
+		});
+
 		it("should keep a constructor's `this.x` read a getter may answer", async () => {
 			const { minify } = await load();
 			for (const input of [
