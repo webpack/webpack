@@ -711,7 +711,7 @@ exports[`syntax-printer improve phase should write less, printing the same: a ke
 
 exports[`syntax-printer improve phase should write less, printing the same: a known global's read taken as running nothing and never throwing, as swc and oxc take it 1`] = `"function f(){return[null==window,null!=window]}globalThis.window=0,globalThis.document=1,console.log(f());"`;
 
-exports[`syntax-printer improve phase should write less, printing the same: a literal's read of a key neither it nor its prototype holds, as swc reads it, where \`void 0\` is shorter 1`] = `"function x(){return console.log(\\"x\\"),1}console.log([][1],void 0,void 0,void 0,void 0,void x(),[].push===Array.prototype.push,{a:1}.toString===Object.prototype.toString);"`;
+exports[`syntax-printer improve phase should write less, printing the same: a literal's read of a key neither it nor its prototype holds, as swc reads it, where \`void 0\` is shorter 1`] = `"function x(){return console.log(\\"x\\"),1}console.log([][1],void 0,void 0,void 0,void 0,void x(),[].push===Array.prototype.push,{}.toString===Object.prototype.toString);"`;
 
 exports[`syntax-printer improve phase should write less, printing the same: a logical expression assigning what it tests, from ECMAScript 2021 1`] = `"function f(a,b,o){return a||=b,o.p||=1,o.q??=2,o.p&&(o.p=3),o[0]||=4,a}var o={};console.log(f(0,4,o),f(5,6,o),JSON.stringify(o));"`;
 

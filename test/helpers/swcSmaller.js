@@ -421,17 +421,13 @@ const SWC_SMALLER_BY_REASON = [
 		"swc evaluates reads on literals at build time: an index into an array or string, a missing property as `void 0`, `typeof` a class, `delete` of a binding",
 		[
 			"swc minifier: fixture/issues/9453/input.js",
-			"swc minifier: fixture/issues/string-index-utf16/input.js",
 			"swc minifier: fixture/member_expr/array_side_effects/input.js",
 			"swc minifier: fixture/member_expr/object_side_effects/input.js",
 			"terser compress: collapse_vars/collapse_vars_unary",
 			"terser compress: collapse_vars/reduce_vars_assign",
 			"terser compress: comparing/issue_2857_6",
-			"terser compress: evaluate/delete_expr_1",
-			"terser compress: evaluate/delete_expr_2",
 			"terser compress: evaluate/in_boolean_context",
 			"terser compress: harmony/array_literal_with_spread_2a",
-			"terser compress: switch/issue_1679",
 			"terser compress: typeof/issue_2728_3"
 		]
 	],

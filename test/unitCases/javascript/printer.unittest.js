@@ -2015,7 +2015,7 @@ const KEPT_CASES = [
 	["a conversion of no literal, which `+` and `\"\"+` would read otherwise for a BigInt or a symbol", "function f(a) { return [Number(a), String(a), BigInt(a)]; } console.log(f(1n));"],
 	["a conversion a variable shadows", "function f(Boolean, Number) { return [Boolean(1), Number(true)]; } console.log(f(String, String));"],
 	["a `BigInt` of a fraction, which throws", "try { console.log(BigInt(1.5)); } catch (e) { console.log(e.name); }"],
-	["a character of a string literal deleted, or half of a surrogate pair", 'try { console.log(delete "abc"[0], "\\ud83d\\ude00"[0].length); } catch (e) { console.log(e.name); }'],
+	["a character of a string literal deleted", 'try { console.log(delete "abc"[0]); } catch (e) { console.log(e.name); }'],
 	["an integer compared with zero where it is no test, or two values a BigInt may be", "function f(a, b) { console.log((a | +b) !== 0, (a | b) !== 0 ? 1 : 2, a - b === 0); } f(1n, 1n); f(1, 2);"],
 	["a nested array literal concatenated", 'console.log([1, [2, 3]] + "");'],
 	["a property assigned its own arithmetic through a key no constant, or the arithmetic of what is no constant first", "function f(o, x, y) { o[x] = o[x] + 1; o.p = y * o.p; return o; } console.log(f({ p: 1 }, 2, 3));"],
@@ -9356,6 +9356,83 @@ describe("syntax-printer", () => {
 			}
 		});
 
+		it("should fold reads, calls and operators on literals as they run", async () => {
+			const { minify } = await load();
+			for (const [input, expected, compress] of [
+				["console.log(delete void 0, delete (1 / 0));", "console.log(!0,!0)"],
+				[
+					"console.log(delete void 0);",
+					"!0",
+					{ defaults: false, booleans: true, evaluate: true }
+				],
+				["console.log(!function x() {}, !(() => 1), !class {});", "!1,!1,!1"],
+				["console.log(1n.toString(), 255n.toString(16));", '"1","ff"'],
+				["console.log(/a\\/b/ig.toString());", '"/a\\\\/b/gi"'],
+				["/a\\b/ig.toString();", ""],
+				['console.log("abab".replaceAll("b", /x/));', '"a/x/a/x/"'],
+				['console.log("a.b".replace(".", /-/));', '"a/-/b"'],
+				['console.log("abcdef/b./".indexOf(/b./));', "console.log(6)"],
+				['console.log("abcdef[object Object]".indexOf({ a: 2 }));', "console.log(6)"],
+				['var foo; console.log(+[0, foo ? "foo" : "", 1], +["a", !0]);', "NaN,NaN"],
+				[
+					'function f(b) { b = g(); var a = typeof b; return "text" == a && h(); } function g() {} console.log(f(), typeof g != "x");',
+					"!0"
+				],
+				['console.log("\\ud83d\\ude00"[0] === "\\ud83d", "\\ud800x"[0]);', '!0,"\\ud800"'],
+				['console.log([][[]], {}[[]], [g(), 2, "a"].push === [].push); function g() {}', "[g()].push"],
+				["console.log({ a: g(), b: 5 }.__proto__ === Object.prototype); function g() {}", "{a:g()}.__proto__"]
+			]) {
+				const { code } = await minify(/** @type {string} */ (input), {
+					compress: /** @type {object | undefined} */ (compress) || {},
+					mangle: false
+				});
+				expect(code).toContain(expected);
+				expect(runProgram(/** @type {string} */ (code))).toBe(
+					runProgram(/** @type {string} */ (input))
+				);
+			}
+			expect(
+				(await minify("/a\\b/ig.toString();", { mangle: false })).code
+			).toBe("");
+		});
+
+		it("should keep what reads, calls and operators on non-literals may do", async () => {
+			const { minify } = await load();
+			for (const [input, unexpected] of [
+				// A reference is deleted, or `NaN` refused: no fold to `true`.
+				["var o = { a: 1 }; console.log(delete o.a, delete NaN, o.a);", "!0,!1"],
+				["console.log(!class { [console.log(1)]() {} });", "console.log(!1)"],
+				// The pattern `replace` matches with, and a `$` replacement, stay.
+				['console.log("aXa".replace(/X/, "b"));', '"aba"'],
+				['console.log("abc".replaceAll("b", "$&$&"));', '"abbc"'],
+				// `includes` throws on a regular expression, `toString: 1` on conversion.
+				['try { console.log("a".includes(/a/)); } catch (e) { console.log(e.name); }', "!0"],
+				['try { console.log("a".indexOf({ toString: 1 })); } catch (e) { console.log(e.name); }', "-1"],
+				// An element that may be an object or run code is converted at run time.
+				["var o = { toString() { return '1'; } }; console.log(+[o, 1]);", "NaN"],
+				["console.log(+[g(), 1]); function g() { console.log(2); }", "NaN"],
+				// A `typeof` answer, or a `let` read before its declaration, stays.
+				['console.log(typeof g == "function"); function g() {}', "console.log(!1)"],
+				['try { console.log(typeof z == "q"); let z; } catch (e) { console.log(e.name); }', "console.log(!1)"],
+				// A key an array literal holds, a call of its method, or a write.
+				["console.log([g(), 1].push(2)); function g() {}", "[g()].push"],
+				["var a = [g(), 1]; console.log([g(), 1][1]); function g() {}", "[g()][1]"],
+				[
+					"Object.prototype.k = function () { return this.a; }; console.log({ a: 1, b: g() }.k()); function g() {}",
+					"{b:g()}"
+				]
+			]) {
+				const { code } = await minify(/** @type {string} */ (input), {
+					compress: {},
+					mangle: false
+				});
+				expect(code).not.toContain(unexpected);
+				expect(runProgram(/** @type {string} */ (code))).toBe(
+					runProgram(/** @type {string} */ (input))
+				);
+			}
+		});
+
 		it("should keep a constructor's `this.x` read a getter may answer", async () => {
 			const { minify } = await load();
 			for (const input of [
@@ -9549,12 +9626,12 @@ describe("syntax-printer", () => {
 			const { minify, improvements } = await load();
 			if (!improvements) throw new Error("the improve phase is not installed");
 			const input =
-				'function f(a, b) { if (null !== a && 5 === b.tag && void 0 !== b.x) return [null == a, "s" === b.t, "u" == typeof b.y]; } console.log(f(1, { tag: 5, x: 1 }));';
+				'function f(a, b) { if (null !== a && 5 === b.tag && void 0 !== b.x) return [null == a, "s" === b.t, "string" == typeof b.y]; } console.log(f(1, { tag: 5, x: 1 }));';
 			improvements.literalsLast.enabled = true;
 			try {
 				const { code } = await minify(input, { compress: {}, mangle: false });
 				expect(code).toBe(
-					'function f(a,b){if(a!==null&&b.tag===5&&b.x!==void 0)return[a==null,"s"===b.t,"u"==typeof b.y]}console.log(f(1,{tag:5,x:1}));'
+					'function f(a,b){if(a!==null&&b.tag===5&&b.x!==void 0)return[a==null,"s"===b.t,"string"==typeof b.y]}console.log(f(1,{tag:5,x:1}));'
 				);
 				expect(runProgram(/** @type {string} */ (code))).toBe(
 					runProgram(input)
