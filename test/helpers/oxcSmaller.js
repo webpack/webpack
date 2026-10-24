@@ -395,7 +395,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/dead_code_elimination.rs:713",
 			"oxc minifier: peephole/dead_code_elimination.rs:718",
 			"oxc minifier: peephole/dead_code_elimination.rs:723",
-			"oxc minifier: peephole/dead_code_elimination.rs:798",
 			"oxc minifier: peephole/dead_code_elimination.rs:847",
 			"oxc minifier: peephole/dead_code_elimination.rs:871"
 		]

@@ -933,6 +933,8 @@ exports[`syntax-printer improve phase should write less, printing the same: an o
 
 exports[`syntax-printer improve phase should write less, printing the same: an optional link on a parenthesized chain, joined to it, from ECMAScript 2020 1`] = `"function f(a){return[a?.b?.c,a?.b?.(1),a?.b?.[0]]}console.log(f(null),f({b:null}),f({b:Object.assign(x=>x,{c:2,0:3})}));"`;
 
+exports[`syntax-printer improve phase should write less, printing the same: an optional link on a sequence whose last value is never nullish, but one that may be 1`] = `"function f(g,h){return[(g(),{}).b,(g(),[1]).length,(g(),h)?.length]}console.log(f(()=>0,null));"`;
+
 exports[`syntax-printer improve phase should write less, printing the same: an unused class whose pure static value reads the class, run only for what it extends 1`] = `"console.log(\\"base\\");console.log(\\"ok\\");"`;
 
 exports[`syntax-printer improve phase should write less, printing the same: an unused function a catch clause's parameter shadows 1`] = `"function f(){try{throw 42}catch(a){return a}}console.log(f());"`;

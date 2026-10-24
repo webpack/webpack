@@ -1830,6 +1830,11 @@ const IMPROVED_CASES = [
 		{ compress: { passes: 2 }, mangle: false }
 	],
 	[
+		"an optional link on a sequence whose last value is never nullish, but one that may be",
+		"function f(g, h) { return [(g(), {})?.b, (g(), [1])?.length, (g(), h)?.length]; } console.log(f(() => 0, null));",
+		{ compress: {}, mangle: false, ecma: 2020 }
+	],
+	[
 		"a private method, getter or setter nothing in its class reads, but one read, an instance one of a derived class, or one a direct `eval` may name",
 		'class B {} class C { #a() { return 1; } static #b() {} get #c() { return 2; } set #c(v) {} #d() { return 3; } m() { return this.#d(); } } class D extends B { #e() {} } class E { #f() {} m() { return eval("this.#f"); } } console.log(new C().m(), new D() instanceof B, typeof new E().m());',
 		{ compress: {}, mangle: false }
