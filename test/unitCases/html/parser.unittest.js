@@ -14,6 +14,7 @@ const {
 	Namespace,
 	Part,
 	NodeType,
+	decodeEntities,
 	decodeXmlAttribute,
 	tokenizeXml,
 	parseCssUrls,
@@ -1425,6 +1426,14 @@ describe("parseHtml", () => {
 describe("parseHtml — SourceProcessor", () => {
 	const { SourceProcessor } = require("../../../lib/html/syntax");
 const { NodeType } = require("../../../lib/html/syntax-parser");
+
+	it("prints an implied opener only when its first piece needs it", () => {
+		// Leading whitespace is what the modes would drop, so it brings the tag back.
+		const minify = (/** @type {string} */ src) =>
+			new SourceProcessor().process(src, { mode: "minify" }).code;
+		expect(minify("</body> foo")).toBe("<body> foo</body>");
+		expect(minify("<template></template>")).toBe("<template></template>");
+	});
 
 	it("fires enter / exit visitors in source order", () => {
 		/** @type {string[]} */
@@ -3511,6 +3520,171 @@ const CASES = [
 		"ignores a template end tag after head",
 		"<head></head></template>",
 		undefined
+	],
+	[
+		"keeps a paragraph open around a table in quirks mode from a doctype naming no html",
+		"<!DOCTYPE potato><p><table>",
+		undefined
+	],
+	[
+		"ignores a form end tag whose form the table already closed",
+		"<table><form></table></form>x",
+		undefined
+	],
+	[
+		"drops a formatting end tag a marker hides nothing behind",
+		"<applet></b>x",
+		undefined
+	],
+	[
+		"drops a formatting end tag a marker on a marker hides",
+		"<applet><marquee></b>x",
+		undefined
+	],
+	[
+		"drops a formatting end tag naming another element below the marker",
+		"<i><applet></b>x",
+		undefined
+	],
+	[
+		"drops the formatting entry whose element an end tag already closed",
+		"<p id=a><b><p id=b></b>TEST",
+		undefined
+	],
+	[
+		"keeps the bookmark when the inner loop removes entries above it",
+		"<b><em><x><y><z><aside></b></em>",
+		undefined
+	],
+	[
+		"replaces a body that is not the last child of the root with a frameset",
+		"</body><!--x--><frameset>",
+		undefined
+	],
+	[
+		"drops whitespace before the html element",
+		"<!DOCTYPE html> <html>",
+		undefined
+	],
+	[
+		"keeps whitespace in a head noscript",
+		"<head><noscript> </noscript>",
+		undefined
+	],
+	[
+		"reopens a nested form under an implied end tag in a template",
+		"<template><form><li><form>",
+		undefined
+	],
+	[
+		"leaves a list item a special element shields open",
+		"<li>a<section><li>b",
+		undefined
+	],
+	[
+		"walks past an ordinary element to the definition list item",
+		"<foo>1<dd>2</foo>",
+		undefined
+	],
+	[
+		"walks past a foreign element below a special one for a definition item",
+		"<svg><foreignObject><dd>",
+		undefined
+	],
+	[
+		"leaves a definition item a special element shields open",
+		"<dd>a<section><dt>b",
+		undefined
+	],
+	[
+		"opens a link where a marker hides no other",
+		"<applet><a>x",
+		undefined
+	],
+	[
+		"closes a nobr with the adoption agency",
+		"<nobr>1<nobr>2",
+		undefined
+	],
+	[
+		"keeps frameset-ok after a hidden input",
+		"<input type=hidden><frameset>",
+		undefined
+	],
+	[
+		"inserts a param as a void element",
+		"<param>A",
+		undefined
+	],
+	[
+		"reads an image start tag as img",
+		"<p><image></p>",
+		undefined
+	],
+	[
+		"reads xmp, iframe and noembed content as raw text",
+		"<xmp><b></xmp><iframe><b></iframe><noembed><b></noembed>x",
+		undefined
+	],
+	[
+		"closes an option outside a select at the next option",
+		"<option>a<option>b",
+		undefined
+	],
+	[
+		"inserts ruby parts outside a ruby",
+		"<rb>a<rtc>b<rp>c<rt>d",
+		undefined
+	],
+	[
+		"closes a list item at its end tag",
+		"<ul><li>A</li>B</ul>",
+		undefined
+	],
+	[
+		"ignores a sarcasm end tag",
+		"<div></sarcasm>x",
+		undefined
+	],
+	[
+		"closes a marquee at its end tag",
+		"<marquee>a</marquee>b",
+		undefined
+	],
+	[
+		"keeps an end tag cut off by the end of the file as script text",
+		"<script></S",
+		undefined
+	],
+	[
+		"keeps an end tag cut off by the end of the file as title text",
+		"<title>a</title",
+		undefined
+	],
+	[
+		"goes back to the body for content after the body",
+		"</body>x",
+		undefined
+	],
+	[
+		"drops text after the frameset that is not whitespace",
+		"<frameset></frameset>x",
+		undefined
+	],
+	[
+		"keeps whitespace after the html end tag in the body",
+		"</html> <head>",
+		undefined
+	],
+	[
+		"nests forms in a template",
+		"<template><form><form>",
+		undefined
+	],
+	[
+		"takes a declarative shadow root on a custom element",
+		"<x-y>a<template shadowrootmode=open></template>b",
+		undefined
 	]
 ];
 
@@ -3666,6 +3840,97 @@ describe("parseHtml — arcs the conformance corpus leaves out", () => {
 		expect(find("<ZZZ><zzz>", "zzz").children[0]).toEqual(
 			expect.objectContaining({ tagName: "zzz" })
 		);
+	});
+
+	it("leaves the link below a marker open when a later one is closed", () => {
+		// The rule removes the `a` it found after the last marker, not the first
+		// one in the list: the outer link is another scope's and stays open.
+		expect(treeOf("<a>1<marquee><a>2<a>3</marquee>4")).toBe(
+			[
+				"| <html>",
+				"|   <head>",
+				"|   <body>",
+				"|     <a>",
+				'|       "1"',
+				"|       <marquee>",
+				"|         <a>",
+				'|           "2"',
+				"|         <a>",
+				'|           "3"',
+				'|       "4"'
+			].join("\n")
+		);
+	});
+
+	it("keeps the whitespace before other text in a head noscript", () => {
+		// Each character is its own token: the newline is the head rules', and
+		// only the `x` pops the noscript.
+		expect(treeOf("<head><noscript><!--c-->\nx")).toBe(
+			[
+				"| <html>",
+				"|   <head>",
+				"|     <noscript>",
+				"|       <!-- c -->",
+				'|       "',
+				'"',
+				"|   <body>",
+				'|     "x"'
+			].join("\n")
+		);
+	});
+
+	it("keeps every form in template contents, a template fragment's too", () => {
+		// The form element pointer is not used while parsing template contents
+		// (§13.2.4.4), which a template fragment context is as well.
+		expect(treeOf("<form><form>", "template")).toBe(
+			["| <form>", "|   <form>"].join("\n")
+		);
+		expect(treeOf("<table><form><form>", "template")).toBe(
+			["| <table>", "|   <form>", "|   <form>"].join("\n")
+		);
+		expect(treeOf("<template><table><form><form>")).toBe(
+			[
+				"| <html>",
+				"|   <head>",
+				"|     <template>",
+				"|       content",
+				"|         <table>",
+				"|           <form>",
+				"|           <form>",
+				"|   <body>"
+			].join("\n")
+		);
+	});
+
+	it("reads a noscript in the body as raw text when scripting", () => {
+		const doc = parseHtmlRefs("<body><noscript><b>x</noscript>y", 0, {
+			scripting: true
+		});
+		expect(serializeHtmlTree(doc)).toBe(
+			[
+				"| <html>",
+				"|   <head>",
+				"|   <body>",
+				"|     <noscript>",
+				'|       "<b>x"',
+				'|     "y"'
+			].join("\n")
+		);
+	});
+
+	it("maps decoded text back to the raw offsets", () => {
+		expect(decodeEntities("a&amp;b", true, true)).toEqual({
+			text: "a&b",
+			map: [0, 1, 6, 7]
+		});
+		expect(decodeEntities("x&lt;&gt;", false, true)).toEqual({
+			text: "x<>",
+			map: [0, 1, 5, 9]
+		});
+		expect(decodeEntities("&zz;", true, true)).toEqual({
+			text: "&zz;",
+			map: undefined
+		});
 	});
 
 	it("re-sizes the attribute columns a walk released from the next estimate", () => {
