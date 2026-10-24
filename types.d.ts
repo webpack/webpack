@@ -6142,6 +6142,12 @@ declare interface CssAutoOrModuleParserOptions {
 	namedExports?: boolean;
 
 	/**
+	 * Report each CSS parse error (CSS Syntax Level 3 §4, §5) the stylesheet holds: a build error where end of input cuts a token or rule short, a build warning for one the parser reads past. Off by default.
+	 * @since 5.113.0
+	 */
+	parseErrors?: boolean;
+
+	/**
 	 * Enable strict pure mode: every selector must contain at least one local class or id selector.
 	 */
 	pure?: boolean;
@@ -6477,6 +6483,12 @@ declare interface CssModuleParserOptions {
 	 * Use ES modules named export for css exports.
 	 */
 	namedExports?: boolean;
+
+	/**
+	 * Report each CSS parse error (CSS Syntax Level 3 §4, §5) the stylesheet holds: a build error where end of input cuts a token or rule short, a build warning for one the parser reads past. Off by default.
+	 * @since 5.113.0
+	 */
+	parseErrors?: boolean;
 
 	/**
 	 * Enable/disable `url()`/`image-set()`/`src()`/`image()` functions handling.
@@ -7127,6 +7139,11 @@ declare abstract class CssParser extends Parser<BuiltCssModule> {
 		 */
 		namedExports: boolean;
 		/**
+		 * Report each CSS parse error (CSS Syntax Level 3 §4, §5) the stylesheet holds: a build error where end of input cuts a token or rule short, a build warning for one the parser reads past. Off by default.
+		 * @since 5.113.0
+		 */
+		parseErrors?: boolean;
+		/**
 		 * Enable strict pure mode: every selector must contain at least one local class or id selector.
 		 */
 		pure?: boolean;
@@ -7188,6 +7205,12 @@ declare interface CssParserOptions {
 	 * Use ES modules named export for css exports.
 	 */
 	namedExports?: boolean;
+
+	/**
+	 * Report each CSS parse error (CSS Syntax Level 3 §4, §5) the stylesheet holds: a build error where end of input cuts a token or rule short, a build warning for one the parser reads past. Off by default.
+	 * @since 5.113.0
+	 */
+	parseErrors?: boolean;
 
 	/**
 	 * Enable/disable `url()`/`image-set()`/`src()`/`image()` functions handling.
@@ -7419,6 +7442,17 @@ declare interface CssProcessOptions {
 	 * shared loc converter (default a fresh one over the input)
 	 */
 	locConverter?: LocConverter;
+
+	/**
+	 * optional callback for each parse error, as the `parseA*` entry points report it; its offsets are into the preprocessed input `locConverter` reads
+	 */
+	parseError?: (
+		input: string,
+		code: string,
+		start: number,
+		end: number,
+		severity: ParseErrorSeverity
+	) => void;
 
 	/**
 	 * walk into block bodies' nested rules (default true); ignored while printing, as `skip` is, since a block is printed from the children it would leave unread
@@ -13058,6 +13092,12 @@ declare interface HtmlParserOptions {
 	chunkName?: string | ((data: HtmlChunkNameData) => string);
 
 	/**
+	 * Report each HTML parse error the page holds, by its WHATWG or html5lib name: a build error where end of input cuts a tag, comment or doctype short, a build warning for one the parser reads past. Off by default.
+	 * @since 5.113.0
+	 */
+	parseErrors?: boolean;
+
+	/**
 	 * Configure extraction of URL-like attribute values (e.g. `<img src>`, `<link href>`, `<script src>`) as webpack dependencies. `true` (default) uses the built-in source list; `false` disables extraction entirely so attributes are left untouched and `<script src>` / `<link rel="modulepreload">` / `<link rel="stylesheet">` no longer become compilation entries; an array lets you customize which `tag`/`attribute` pairs are treated as URLs and how they are bundled. Use the string `"..."` inside the array to inline the defaults. Inline `<script>` and `<style>` bodies are always processed. Use `webpackIgnore` comments or `IgnorePlugin` to skip individual URLs.
 	 */
 	sources?:
@@ -13200,6 +13240,17 @@ declare interface HtmlProcessOptions {
 	 * parse as XML instead of applying the HTML tree-construction rules
 	 */
 	xml?: boolean;
+
+	/**
+	 * optional callback for each parse error of the source, as `parseHtml` reports it
+	 */
+	parseError?: (
+		input: string,
+		code: string,
+		start: number,
+		end: number,
+		severity: ParseErrorSeverity
+	) => void;
 
 	/**
 	 * the quote an XML minifying print gives an attribute whose value costs the same in either (default `"`); `'` for a document bound for a `"`-quoted string, such as a CSS `url("data:…")`
