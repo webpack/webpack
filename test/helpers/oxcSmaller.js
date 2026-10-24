@@ -14,7 +14,7 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: mangler/property_mangler.rs:90",
 			"oxc minifier: peephole/collapse_variable_declarations.rs:226",
 			"oxc minifier: peephole/collapse_variable_declarations.rs:237",
-			"oxc minifier: peephole/dead_code_elimination.rs:886",
+			"oxc minifier: peephole/dead_code_elimination.rs:899",
 			"oxc minifier: peephole/esbuild.rs:688",
 			"oxc minifier: peephole/fold_constants.rs:1360",
 			"oxc minifier: peephole/inline.rs:314",
@@ -314,9 +314,9 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc evaluates more built-in methods called on constants, as oxc's `peephole/replace_known_methods.rs` tests show",
 		[
-			"oxc minifier: peephole/replace_known_methods.rs:1071",
-			"oxc minifier: peephole/replace_known_methods.rs:1073",
-			"oxc minifier: peephole/replace_known_methods.rs:178",
+			"oxc minifier: peephole/replace_known_methods.rs:1065",
+			"oxc minifier: peephole/replace_known_methods.rs:1067",
+			"oxc minifier: peephole/replace_known_methods.rs:203",
 			"oxc minifier: peephole/replace_known_methods.rs:48",
 			"oxc minifier: peephole/replace_known_methods.rs:49"
 		]
@@ -381,17 +381,17 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc drops more dead code, as oxc's `peephole/dead_code_elimination.rs` tests show",
 		[
-			"oxc minifier: peephole/dead_code_elimination.rs:600",
-			"oxc minifier: peephole/dead_code_elimination.rs:605",
-			"oxc minifier: peephole/dead_code_elimination.rs:610",
-			"oxc minifier: peephole/dead_code_elimination.rs:616",
-			"oxc minifier: peephole/dead_code_elimination.rs:698",
-			"oxc minifier: peephole/dead_code_elimination.rs:703",
-			"oxc minifier: peephole/dead_code_elimination.rs:713",
-			"oxc minifier: peephole/dead_code_elimination.rs:718",
-			"oxc minifier: peephole/dead_code_elimination.rs:723",
-			"oxc minifier: peephole/dead_code_elimination.rs:847",
-			"oxc minifier: peephole/dead_code_elimination.rs:871"
+			"oxc minifier: peephole/dead_code_elimination.rs:613",
+			"oxc minifier: peephole/dead_code_elimination.rs:618",
+			"oxc minifier: peephole/dead_code_elimination.rs:623",
+			"oxc minifier: peephole/dead_code_elimination.rs:629",
+			"oxc minifier: peephole/dead_code_elimination.rs:711",
+			"oxc minifier: peephole/dead_code_elimination.rs:716",
+			"oxc minifier: peephole/dead_code_elimination.rs:726",
+			"oxc minifier: peephole/dead_code_elimination.rs:731",
+			"oxc minifier: peephole/dead_code_elimination.rs:736",
+			"oxc minifier: peephole/dead_code_elimination.rs:860",
+			"oxc minifier: peephole/dead_code_elimination.rs:884"
 		]
 	],
 	[
@@ -419,9 +419,9 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc normalizes the syntax before compressing it, as oxc's `peephole/normalize.rs` tests show",
 		[
-			"oxc minifier: peephole/normalize.rs:194",
-			"oxc minifier: peephole/normalize.rs:203",
-			"oxc minifier: peephole/normalize.rs:247"
+			"oxc minifier: peephole/normalize.rs:221",
+			"oxc minifier: peephole/normalize.rs:230",
+			"oxc minifier: peephole/normalize.rs:274"
 		]
 	],
 	[
@@ -672,25 +672,25 @@ const OXC_SMALLER_BY_REASON = [
 		"oxc's output is wrong: it folds `parseFloat(\"1.e2\")` to 1, which is 100, and writes a regular expression's `toString()` with its flags in the order written, which reads them sorted",
 		[
 			"oxc minifier: peephole/esbuild.rs:494",
+			"oxc minifier: peephole/replace_known_methods.rs:796",
+			"oxc minifier: peephole/replace_known_methods.rs:797",
+			"oxc minifier: peephole/replace_known_methods.rs:798",
+			"oxc minifier: peephole/replace_known_methods.rs:799",
+			"oxc minifier: peephole/replace_known_methods.rs:800",
 			"oxc minifier: peephole/replace_known_methods.rs:802",
-			"oxc minifier: peephole/replace_known_methods.rs:803",
-			"oxc minifier: peephole/replace_known_methods.rs:804",
-			"oxc minifier: peephole/replace_known_methods.rs:805",
-			"oxc minifier: peephole/replace_known_methods.rs:806",
-			"oxc minifier: peephole/replace_known_methods.rs:808",
-			"oxc minifier: peephole/replace_known_methods.rs:809"
+			"oxc minifier: peephole/replace_known_methods.rs:803"
 		]
 	],
 	[
 		'oxc converts the operands of `Math.pow` or `"".concat` in another order, writing `a ** +b` or a template, where a getter or `valueOf` of one may see what converting the other did',
 		[
-			"oxc minifier: peephole/replace_known_methods.rs:1032",
-			"oxc minifier: peephole/replace_known_methods.rs:1033",
-			"oxc minifier: peephole/replace_known_methods.rs:1043",
-			"oxc minifier: peephole/replace_known_methods.rs:1045",
-			"oxc minifier: peephole/replace_known_methods.rs:629",
-			"oxc minifier: peephole/replace_known_methods.rs:630",
-			"oxc minifier: peephole/replace_known_methods.rs:631"
+			"oxc minifier: peephole/replace_known_methods.rs:1026",
+			"oxc minifier: peephole/replace_known_methods.rs:1027",
+			"oxc minifier: peephole/replace_known_methods.rs:1037",
+			"oxc minifier: peephole/replace_known_methods.rs:1039",
+			"oxc minifier: peephole/replace_known_methods.rs:610",
+			"oxc minifier: peephole/replace_known_methods.rs:611",
+			"oxc minifier: peephole/replace_known_methods.rs:612"
 		]
 	],
 	[
