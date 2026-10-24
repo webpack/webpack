@@ -522,14 +522,6 @@ const OXC_SMALLER_BY_REASON = [
 		]
 	],
 	[
-		"oxc drops unused private class members, as oxc's `peephole/remove_unused_private_members.rs` tests show",
-		[
-			"oxc minifier: peephole/remove_unused_private_members.rs:32",
-			"oxc minifier: peephole/remove_unused_private_members.rs:36",
-			"oxc minifier: peephole/remove_unused_private_members.rs:37"
-		]
-	],
-	[
 		"oxc drops more unreachable code, as oxc's `peephole/remove_dead_code.rs` tests show",
 		["oxc minifier: peephole/remove_dead_code.rs:263"]
 	],

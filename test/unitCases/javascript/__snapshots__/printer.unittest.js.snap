@@ -757,6 +757,8 @@ exports[`syntax-printer improve phase should write less, printing the same: a pa
 
 exports[`syntax-printer improve phase should write less, printing the same: a pattern naming nothing, reading a literal whose function spreads 1`] = `"console.log(2);"`;
 
+exports[`syntax-printer improve phase should write less, printing the same: a private method, getter or setter nothing in its class reads, but one read, an instance one of a derived class, or one a direct \`eval\` may name 1`] = `"class B{}class C{#d(){return 3}m(){return this.#d()}}class D extends B{#e(){}}class E{#f(){}m(){return eval(\\"this.#f\\")}}console.log((new C).m(),new D instanceof B,typeof(new E).m());"`;
+
 exports[`syntax-printer improve phase should write less, printing the same: a property assigned its own arithmetic through a name reassigned, or a constant times it 1`] = `"function f(o,x){return x>5&&(o={p:0,q:0}),o.p+=x,o.q*=2,o}console.log(JSON.stringify(f({p:1,q:2},3)),JSON.stringify(f({p:1,q:2},6)));"`;
 
 exports[`syntax-printer improve phase should write less, printing the same: a property assigned its own arithmetic, as a compound assignment 1`] = `"function f(o,x){return o.p+=x,o.q*=x,o}console.log(JSON.stringify(f({p:1,q:2},3)));"`;
