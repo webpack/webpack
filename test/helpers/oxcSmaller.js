@@ -83,7 +83,6 @@ const OXC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/12213/shadowed-object/input.js",
 			"swc minifier: fixture/issues/12218/dynamic-spread/input.js",
 			"swc minifier: fixture/issues/12311/input.js",
-			"swc minifier: fixture/issues/12492/input.js",
 			"swc minifier: fixture/issues/2078/1/input.js",
 			"swc minifier: fixture/issues/3256/1/input.js",
 			"swc minifier: fixture/issues/6636/input.js",
@@ -251,7 +250,6 @@ const OXC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/11368/input.js",
 			"swc minifier: fixture/issues/11684/identifier-preserved/input.js",
 			"swc minifier: fixture/issues/11684/scopes-and-mutations/input.js",
-			"swc minifier: fixture/issues/12206/preserve-nonmatching-test-before-dynamic-case/input.js",
 			"swc minifier: fixture/issues/12228/disabled/input.js",
 			"swc minifier: fixture/issues/12298/input.js",
 			"swc minifier: fixture/issues/12313/input.js",
@@ -304,7 +302,6 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: asm/asm_function_expression",
 			"terser compress: asm/asm_nested_functions",
 			"terser compress: asm/asm_toplevel",
-			"terser compress: dead-code/try_catch_finally",
 			"terser compress: drop-unused/issue_1715_3",
 			"terser compress: reduce_vars/issue_t1382",
 			"terser compress: template-string/tagged_template_with_comment",
@@ -312,40 +309,18 @@ const OXC_SMALLER_BY_REASON = [
 		]
 	],
 	[
-		"oxc evaluates more built-in methods called on constants, as oxc's `peephole/replace_known_methods.rs` tests show",
-		[
-			"oxc minifier: peephole/replace_known_methods.rs:1065",
-			"oxc minifier: peephole/replace_known_methods.rs:1067",
-			"oxc minifier: peephole/replace_known_methods.rs:203",
-			"oxc minifier: peephole/replace_known_methods.rs:48",
-			"oxc minifier: peephole/replace_known_methods.rs:49"
-		]
-	],
-	[
 		"oxc knows more expressions have no side effects and drops them when their value is unused, as oxc's `ecmascript/may_have_side_effects.rs` tests show",
 		[
-			"oxc minifier: ecmascript/may_have_side_effects.rs:1036",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:1047",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:1146",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:1293",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:1300",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:1365",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:1404",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:302",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:783",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:825",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:907"
 		]
 	],
 	[
 		"oxc writes conditions shorter, as oxc's `peephole/minimize_conditions.rs` tests show",
 		[
-			"oxc minifier: peephole/minimize_conditions.rs:1053",
 			"oxc minifier: peephole/minimize_conditions.rs:1066",
-			"oxc minifier: peephole/minimize_conditions.rs:1204",
-			"oxc minifier: peephole/minimize_conditions.rs:1224",
-			"oxc minifier: peephole/minimize_conditions.rs:1243",
-			"oxc minifier: peephole/minimize_conditions.rs:1252",
 			"oxc minifier: peephole/minimize_conditions.rs:223"
 		]
 	],
@@ -373,9 +348,7 @@ const OXC_SMALLER_BY_REASON = [
 		"oxc drops more unused expressions, as oxc's `peephole/remove_unused_expression.rs` tests show",
 		[
 			"oxc minifier: peephole/remove_unused_expression.rs:1169",
-			"oxc minifier: peephole/remove_unused_expression.rs:160",
-			"oxc minifier: peephole/remove_unused_expression.rs:514",
-			"oxc minifier: peephole/remove_unused_expression.rs:665"
+			"oxc minifier: peephole/remove_unused_expression.rs:514"
 		]
 	],
 	[
@@ -389,17 +362,12 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/dead_code_elimination.rs:716",
 			"oxc minifier: peephole/dead_code_elimination.rs:726",
 			"oxc minifier: peephole/dead_code_elimination.rs:731",
-			"oxc minifier: peephole/dead_code_elimination.rs:736",
-			"oxc minifier: peephole/dead_code_elimination.rs:860",
-			"oxc minifier: peephole/dead_code_elimination.rs:884"
+			"oxc minifier: peephole/dead_code_elimination.rs:736"
 		]
 	],
 	[
 		"oxc drops more unused declarations, as oxc's `peephole/remove_unused_declaration.rs` tests show",
-		[
-			"oxc minifier: peephole/remove_unused_declaration.rs:108",
-			"oxc minifier: peephole/remove_unused_declaration.rs:181"
-		]
+		["oxc minifier: peephole/remove_unused_declaration.rs:181"]
 	],
 	[
 		"oxc's mangler picks shorter or better-compressing names",
@@ -443,7 +411,6 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc restructures conditionals: an `if` as `&&` or `?:`, a shared tail factored out, a redundant branch or jump dropped",
 		[
-			"swc minifier: fixture/issues/12299/input.js",
 			"swc minifier: fixture/projects/backbone/5/input.js",
 			"swc minifier: fixture/projects/react/16/input.js",
 			"terser compress: conditionals/issue_1674_false_equivalency_of_props"
@@ -451,14 +418,7 @@ const OXC_SMALLER_BY_REASON = [
 	],
 	[
 		"oxc drops a redundant last `return`, `break` or `continue`, as oxc's `peephole/minimize_exit_points.rs` tests show",
-		[
-			"oxc minifier: peephole/minimize_exit_points.rs:101",
-			"oxc minifier: peephole/minimize_exit_points.rs:178",
-			"oxc minifier: peephole/minimize_exit_points.rs:254",
-			"oxc minifier: peephole/minimize_exit_points.rs:362",
-			"oxc minifier: peephole/minimize_exit_points.rs:369",
-			"oxc minifier: peephole/minimize_exit_points.rs:377"
-		]
+		["oxc minifier: peephole/minimize_exit_points.rs:178"]
 	],
 	[
 		"oxc picks shorter spellings for comparisons, coercions and literals",
@@ -498,9 +458,7 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: const/issue_1396",
 			"terser compress: destructuring/empty_object_destructuring_misc",
 			"terser compress: drop-unused/issue_t161_top_retain_13",
-			"terser compress: drop-unused/issue_t161_top_retain_14",
-			"terser compress: issue-368/collapse",
-			"terser compress: reduce_vars/issue_3068_2"
+			"terser compress: drop-unused/issue_t161_top_retain_14"
 		]
 	],
 	[
@@ -541,15 +499,6 @@ const OXC_SMALLER_BY_REASON = [
 		]
 	],
 	[
-		"oxc writes `switch` statements shorter, or drops them, as oxc's `peephole/minimize_switch_statements.rs` tests show",
-		[
-			"oxc minifier: peephole/minimize_switch_statements.rs:12",
-			"oxc minifier: peephole/minimize_switch_statements.rs:25",
-			"oxc minifier: peephole/minimize_switch_statements.rs:32",
-			"oxc minifier: peephole/minimize_switch_statements.rs:5"
-		]
-	],
-	[
 		"oxc resolves a `switch` on a known value, or writes a `switch` shorter",
 		["swc minifier: fixture/issues/10918/input.js"]
 	],
@@ -560,10 +509,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/minimize_if_statement.rs:78",
 			"oxc minifier: peephole/minimize_if_statement.rs:82"
 		]
-	],
-	[
-		"oxc folds more constant expressions, as oxc's `peephole/fold_constants.rs` tests show",
-		["oxc minifier: peephole/fold_constants.rs:521"]
 	],
 	[
 		"oxc aborts: its code generator panics on this source (`crates/oxc_codegen/src/str.rs:712`, a slice out of range)",
@@ -597,7 +542,14 @@ const OXC_SMALLER_BY_REASON = [
 	],
 	[
 		"oxc drops an unused `Symbol.for`, which webpack keeps: running it at build time would keep its key in the build's own symbol registry",
-		["oxc minifier: ecmascript/may_have_side_effects.rs:1259"]
+		[
+			"oxc minifier: ecmascript/may_have_side_effects.rs:1259",
+			"oxc minifier: ecmascript/may_have_side_effects.rs:1404"
+		]
+	],
+	[
+		"oxc's output is wrong: it renames `slot` inside a `with` body, so a `slot` property on the `with` object is no longer called",
+		["oxc minifier: peephole/dead_code_elimination.rs:860"]
 	],
 	[
 		"oxc's output is wrong: it renames a `#private` name a direct `eval` reads, so the `eval` throws a SyntaxError",
@@ -619,6 +571,7 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc's output is wrong: it calls a method read through `(0, o.f)`, `(t = o.f)` or an arrow returning it as a method of `o`, and an `eval` so read as a direct `eval`",
 		[
+			"oxc minifier: peephole/remove_unused_expression.rs:772",
 			"swc exec: indirect_eval_1",
 			"oxc minifier: peephole/oxc.rs:100",
 			"oxc minifier: peephole/oxc.rs:101",
@@ -669,9 +622,8 @@ const OXC_SMALLER_BY_REASON = [
 		]
 	],
 	[
-		"oxc's output is wrong: it folds `parseFloat(\"1.e2\")` to 1, which is 100, and writes a regular expression's `toString()` with its flags in the order written, which reads them sorted",
+		'oxc\'s output is wrong: it folds `parseFloat("1.e2")` to 1, which is 100',
 		[
-			"oxc minifier: peephole/esbuild.rs:494",
 			"oxc minifier: peephole/replace_known_methods.rs:796",
 			"oxc minifier: peephole/replace_known_methods.rs:797",
 			"oxc minifier: peephole/replace_known_methods.rs:798",
