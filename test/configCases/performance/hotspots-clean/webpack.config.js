@@ -24,5 +24,12 @@ module.exports = {
 		hints: "warning",
 		hotspots: true
 	},
-	plugins: [burn(0)]
+	plugins: [burn(0)],
+	// A loaded runner can hold the thread in webpack's own plugins for longer
+	// than the hint's floor; what this case holds is that BurnPlugin goes unnamed.
+	ignoreWarnings: [
+		(warning) =>
+			warning.name === "HotspotsWarning" &&
+			!warning.message.includes("BurnPlugin")
+	]
 };
