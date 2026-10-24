@@ -571,6 +571,8 @@ exports[`syntax-printer improve phase should write less, printing the same: a ch
 
 exports[`syntax-printer improve phase should write less, printing the same: a class, kept in a block 1`] = `"{class A{}console.log(typeof new A,A.name)}"`;
 
+exports[`syntax-printer improve phase should write less, printing the same: a computed \`"__proto__"\` key of a destructuring pattern as a name, but one of an object literal 1`] = `"function f(o,p){var{__proto__:x}=o;return({__proto__:p.y}=o),[x===Object.prototype,p.y===x,Object.getPrototypeOf({[\\"__proto__\\"]:null})===Object.prototype]}console.log(f({},{}));"`;
+
 exports[`syntax-printer improve phase should write less, printing the same: a computed \`__proto__\` or \`constructor\` key, written as a name where it means the same 1`] = `"var o={[\\"__proto__\\"]:()=>1};class C{__proto__=2;static constructor(){return 3}}console.log(o.__proto__(),(new C).__proto__,C.constructor());"`;
 
 exports[`syntax-printer improve phase should write less, printing the same: a computed key of a pattern, read as the constant it holds 1`] = `"function f(o){let{3:x,a:y}=o;for(let{4:z}of[o])console.log(z);return[x,y]}console.log(f({3:1,a:2,4:3}));"`;
@@ -757,6 +759,8 @@ exports[`syntax-printer improve phase should write less, printing the same: a pa
 
 exports[`syntax-printer improve phase should write less, printing the same: a pattern naming nothing, reading a literal whose function spreads 1`] = `"console.log(2);"`;
 
+exports[`syntax-printer improve phase should write less, printing the same: a private method, getter or setter nothing in its class reads, but one read, an instance one of a derived class, or one a direct \`eval\` may name 1`] = `"class B{}class C{#d(){return 3}m(){return this.#d()}}class D extends B{#e(){}}class E{#f(){}m(){return eval(\\"this.#f\\")}}console.log((new C).m(),new D instanceof B,typeof(new E).m());"`;
+
 exports[`syntax-printer improve phase should write less, printing the same: a property assigned its own arithmetic through a name reassigned, or a constant times it 1`] = `"function f(o,x){return x>5&&(o={p:0,q:0}),o.p+=x,o.q*=2,o}console.log(JSON.stringify(f({p:1,q:2},3)),JSON.stringify(f({p:1,q:2},6)));"`;
 
 exports[`syntax-printer improve phase should write less, printing the same: a property assigned its own arithmetic, as a compound assignment 1`] = `"function f(o,x){return o.p+=x,o.q*=x,o}console.log(JSON.stringify(f({p:1,q:2},3)));"`;
@@ -930,6 +934,8 @@ exports[`syntax-printer improve phase should write less, printing the same: an o
 exports[`syntax-printer improve phase should write less, printing the same: an optional chain whose base is a sequence ending in \`null\` or \`undefined\`, as the sequence's effects 1`] = `"function g(){console.log(\\"g\\")}let i=0;console.log(void g(),void i++,void g(),void i++,2);"`;
 
 exports[`syntax-printer improve phase should write less, printing the same: an optional link on a parenthesized chain, joined to it, from ECMAScript 2020 1`] = `"function f(a){return[a?.b?.c,a?.b?.(1),a?.b?.[0]]}console.log(f(null),f({b:null}),f({b:Object.assign(x=>x,{c:2,0:3})}));"`;
+
+exports[`syntax-printer improve phase should write less, printing the same: an optional link on a sequence whose last value is never nullish, but one that may be 1`] = `"function f(g,h){return[(g(),{}).b,(g(),[1]).length,(g(),h)?.length]}console.log(f(()=>0,null));"`;
 
 exports[`syntax-printer improve phase should write less, printing the same: an unused class whose pure static value reads the class, run only for what it extends 1`] = `"console.log(\\"base\\");console.log(\\"ok\\");"`;
 

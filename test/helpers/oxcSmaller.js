@@ -296,8 +296,7 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/substitute_alternate_syntax.rs:164",
 			"oxc minifier: peephole/substitute_alternate_syntax.rs:165",
 			"oxc minifier: peephole/substitute_alternate_syntax.rs:168",
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:169",
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:715"
+			"oxc minifier: peephole/substitute_alternate_syntax.rs:169"
 		]
 	],
 	[
@@ -380,7 +379,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/remove_unused_expression.rs:1169",
 			"oxc minifier: peephole/remove_unused_expression.rs:160",
 			"oxc minifier: peephole/remove_unused_expression.rs:514",
-			"oxc minifier: peephole/remove_unused_expression.rs:636",
 			"oxc minifier: peephole/remove_unused_expression.rs:665"
 		]
 	],
@@ -396,7 +394,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/dead_code_elimination.rs:713",
 			"oxc minifier: peephole/dead_code_elimination.rs:718",
 			"oxc minifier: peephole/dead_code_elimination.rs:723",
-			"oxc minifier: peephole/dead_code_elimination.rs:798",
 			"oxc minifier: peephole/dead_code_elimination.rs:847",
 			"oxc minifier: peephole/dead_code_elimination.rs:871"
 		]
@@ -519,14 +516,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/inline.rs:706",
 			"oxc minifier: peephole/inline.rs:33",
 			"oxc minifier: peephole/inline.rs:642"
-		]
-	],
-	[
-		"oxc drops unused private class members, as oxc's `peephole/remove_unused_private_members.rs` tests show",
-		[
-			"oxc minifier: peephole/remove_unused_private_members.rs:32",
-			"oxc minifier: peephole/remove_unused_private_members.rs:36",
-			"oxc minifier: peephole/remove_unused_private_members.rs:37"
 		]
 	],
 	[

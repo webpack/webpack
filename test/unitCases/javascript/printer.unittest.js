@@ -1830,6 +1830,21 @@ const IMPROVED_CASES = [
 		{ compress: { passes: 2 }, mangle: false }
 	],
 	[
+		"an optional link on a sequence whose last value is never nullish, but one that may be",
+		"function f(g, h) { return [(g(), {})?.b, (g(), [1])?.length, (g(), h)?.length]; } console.log(f(() => 0, null));",
+		{ compress: {}, mangle: false, ecma: 2020 }
+	],
+	[
+		'a computed `"__proto__"` key of a destructuring pattern as a name, but one of an object literal',
+		'function f(o, p) { var { ["__proto__"]: x } = o; ({ ["__proto__"]: p.y } = o); return [x === Object.prototype, p.y === x, Object.getPrototypeOf({ ["__proto__"]: null }) === Object.prototype]; } console.log(f({}, {}));',
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a private method, getter or setter nothing in its class reads, but one read, an instance one of a derived class, or one a direct `eval` may name",
+		'class B {} class C { #a() { return 1; } static #b() {} get #c() { return 2; } set #c(v) {} #d() { return 3; } m() { return this.#d(); } } class D extends B { #e() {} } class E { #f() {} m() { return eval("this.#f"); } } console.log(new C().m(), new D() instanceof B, typeof new E().m());',
+		{ compress: {}, mangle: false }
+	],
+	[
 		"an `if` with an empty branch and an `else` block, as an `if` of the negated test, but a chain's",
 		"function f(a, b) { if (a) {} else { if (b) { console.log(1); return; } console.log(2); } console.log(3); } function g(a, b) { if (a && b) {} else { if (b) { console.log(4); return; } console.log(5); } } f(0, 0); f(0, 1); f(1, 0); g(0, 1); g(1, 1);",
 		{ compress: {}, mangle: false }
@@ -9911,6 +9926,17 @@ describe("syntax-printer", () => {
 				const { code } = await minify(input, { compress: {}, mangle: false });
 				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
 			}
+		});
+
+		it("should keep only what an empty function called in place is given to run, but where its parameters run code", async () => {
+			const { minify } = await load();
+			const input =
+				'function* it() { console.log("next"); yield 1; } function f(g) { (() => {})(...it()); (function () {})(g(), ...it()); ((...r) => {})(...it()); ((x = g()) => {})(); (async () => {})(...it()); } f(() => console.log("g"));';
+			const { code } = await minify(input, { compress: {}, mangle: false });
+			expect(code).toContain("[...it()],[g(),...it()],[...it()]");
+			expect(code).toContain("((x=g())=>{})()");
+			expect(code).toContain("(async()=>{})(...it())");
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
 		});
 
 		it("should keep a literal's missing key a built-in's prototype the program writes may hold", async () => {
