@@ -42,3 +42,14 @@ Each step names its check.
 5. **Switch.** The API's backing becomes columns in the compressor's own layout (`NODE_TYPE_FIELDS` per kind): a kind column, each kind's record in slots, per-node state (`definition`, `scope`, `fixed`, flags, annotations, tokens) in side columns by node id, lists as arrays, new nodes appended. Adoption writes these columns instead of objects; factories, predicates, `copyNode` and the kind tables read the kind column. Objects are built only for `format.ast` and a tree passed in. → byte-identical, then callgrind against `main`.
 6. **Downstream.** With everything reading through the API, printing and mangling run on the columns unchanged; later, nodes copied verbatim print from their source slices as the node printer does. → same.
 7. **Tune and merge.** Hot accessors specialized, lists read without materializing arrays, columns released after each pass. → callgrind and peak RSS against `main`, then a PR.
+
+## Result: stopped after step 5
+
+Steps 1–5 were built: every node read goes through `Nodes`, and `WEBPACK_MINIFY_NODE_HANDLES=1` holds nodes as `NodeHandle`s over per-run slot records, printing the same bytes on the 4,200-file corpus. Measured with callgrind on the default `minify` (estimated cycles per run):
+
+| file            |  main | objects through `Nodes` |      handles |
+| --------------- | ----: | ----------------------: | -----------: |
+| lodash.js       | 2.84G |            3.64G (+28%) | 4.10G (+44%) |
+| three.module.js | 4.78G |            6.12G (+28%) | 6.87G (+44%) |
+
+With V8's inlining budgets raised far enough to inline every accessor, lodash.js still measures 3.23G on `main` against 4.49G with handles. The accessors' calls cost more than the megamorphic loads they replace, and a handle and its record are two cache lines where an object is one: last-level misses rise from 0.29M to 0.82M per run. The prototype's 2× came from a walk in source order over a freshly parsed tree, which the compressor's rewrites do not keep. CSS and HTML are fast because they never rewrite a tree and print in one pass, not because of the layout alone.
