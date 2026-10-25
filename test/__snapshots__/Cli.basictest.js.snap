@@ -11558,6 +11558,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "optimization-minimize-css-remove-shadowed-declarations": Object {
+    "configs": Array [
+      Object {
+        "description": "Take out of an earlier rule each declaration a later rule with the same selector, in the same at-rules, writes again: of two equally specific declarations the later wins wherever both match, whatever stands between. Off by default: over the CSS corpus it saves 248 of 2,456,527 gzip bytes for about 3% of the minifier's time. Needs \`removeDeadRules\`, which drops a rule it leaves empty.",
+        "multiple": false,
+        "path": "optimization.minimize.css.removeShadowedDeclarations",
+        "type": "boolean",
+      },
+    ],
+    "description": "Take out of an earlier rule each declaration a later rule with the same selector, in the same at-rules, writes again: of two equally specific declarations the later wins wherever both match, whatever stands between. Off by default: over the CSS corpus it saves 248 of 2,456,527 gzip bytes for about 3% of the minifier's time. Needs \`removeDeadRules\`, which drops a rule it leaves empty.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "optimization-minimize-css-reorder-declarations": Object {
     "configs": Array [
       Object {
@@ -12352,6 +12365,19 @@ Object {
       },
     ],
     "description": "Drop a rule or declaration nothing can read: a rule whose block ends up empty, a declaration a later one in the same block overrides, a rule an identical later sibling makes dead, and the \`@charset\` naming an encoding the output is not written in. On by default. Joining rules that are not dead is \`mergeRules\`.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-options-css-remove-shadowed-declarations": Object {
+    "configs": Array [
+      Object {
+        "description": "Take out of an earlier rule each declaration a later rule with the same selector, in the same at-rules, writes again: of two equally specific declarations the later wins wherever both match, whatever stands between. Off by default: over the CSS corpus it saves 248 of 2,456,527 gzip bytes for about 3% of the minifier's time. Needs \`removeDeadRules\`, which drops a rule it leaves empty.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.css.removeShadowedDeclarations",
+        "type": "boolean",
+      },
+    ],
+    "description": "Take out of an earlier rule each declaration a later rule with the same selector, in the same at-rules, writes again: of two equally specific declarations the later wins wherever both match, whatever stands between. Off by default: over the CSS corpus it saves 248 of 2,456,527 gzip bytes for about 3% of the minifier's time. Needs \`removeDeadRules\`, which drops a rule it leaves empty.",
     "multiple": false,
     "simpleType": "boolean",
   },
