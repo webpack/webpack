@@ -244,8 +244,12 @@ describe("the XML tool comparison — agreeing with @rgrove/parse-xml", () => {
 		directory = fs.mkdtempSync(path.join(os.tmpdir(), "compare-xml-"));
 		const entry = path.join(directory, "parse-xml.js");
 		fs.writeFileSync(
+			path.join(directory, "parsed.json"),
+			JSON.stringify(parsed)
+		);
+		fs.writeFileSync(
 			entry,
-			`exports.parseXml = () => (${JSON.stringify(parsed)});\n`
+			'exports.parseXml = () => require("./parsed.json");\n'
 		);
 		const main = path.relative(
 			path.join(CACHE, "node_modules", "@rgrove/parse-xml"),
