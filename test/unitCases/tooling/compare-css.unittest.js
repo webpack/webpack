@@ -7,17 +7,25 @@ const installed = jest.fn(() => Promise.resolve(CACHE_NAME));
 // A real install would `npm ci` the corpus into a contributor's cache, and every
 // packed stylesheet and built fixture is taken as there, so `--setup` fetches
 // and builds nothing: what is under test is that it installs and stops.
+// css-tree is installed into that same cache, so its tree is written out by
+// hand; postcss arrives with the `css-loader` dev dependency, so it is real.
+const mockCssTree = { parse: jest.fn() };
+
 jest.mock("../../../tooling/compare-tools-harness", () => ({
 	...jest.requireActual("../../../tooling/compare-tools-harness"),
 	exists: () => Promise.resolve(true),
-	installPackages: installed
+	installPackages: installed,
+	loaderFor: () => (/** @type {string} */ name) =>
+		name === "css-tree" ? mockCssTree : require(name)
 }));
 
 const { SourceProcessor } = require("../../../lib/css/syntax");
 const {
 	COLD_BRANCHES,
+	TREE_READERS,
 	runMode
 } = require("../../../tooling/compare-css-tools");
+const { agreement } = require("../../../tooling/compare-tools-harness");
 
 // Read before anything clears the mock: an unguarded script installs while
 // being required, and a `beforeEach` would erase exactly that evidence.
@@ -134,5 +142,97 @@ describe("compare-css-tools — the cold branches fixture", () => {
 			const once = minify(COLD_BRANCHES, options);
 			expect(minify(once, options)).toBe(once);
 		}
+	});
+});
+
+describe("compare-css-tools — agreeing with css-tree", () => {
+	const css =
+		'/* c */ .a /* s */ .d { color : red /* v */ !important; .b{x:y;z:} } @media (x)/* m */,(y){.c{d:e}} @font-face{} @import "x";';
+
+	/**
+	 * @param {string} text a part of the stylesheet
+	 * @param {string=} before what it follows, where the text alone isn't unique
+	 * @returns {{ loc: { start: { offset: number }, end: { offset: number } } }} where it is
+	 */
+	const at = (text, before = "") => {
+		const offset = css.indexOf(before + text) + before.length;
+		return { loc: { start: { offset }, end: { offset: offset + text.length } } };
+	};
+
+	/**
+	 * @param {string} prelude a rule's prelude
+	 * @param {EXPECTED_ANY[]} children what its block holds
+	 * @returns {EXPECTED_ANY} a css-tree rule
+	 */
+	const rule = (prelude, children) => ({
+		type: "Rule",
+		prelude: at(prelude),
+		block: { children }
+	});
+
+	/**
+	 * What css-tree builds for the stylesheet, where it read `.b{x:y}`.
+	 * @param {EXPECTED_ANY} nested the node standing for `.b{x:y}`
+	 * @returns {EXPECTED_ANY} the css-tree stylesheet
+	 */
+	const parsed = (nested) => ({
+		children: [
+			rule(".a /* s */ .d", [
+				{
+					type: "Declaration",
+					property: "color",
+					important: true,
+					value: at("red /* v */")
+				},
+				nested
+			]),
+			{
+				type: "Atrule",
+				name: "media",
+				prelude: at("(x)/* m */,(y)"),
+				block: {
+					children: [
+						rule(".c", [
+							{
+								type: "Declaration",
+								property: "d",
+								important: false,
+								value: at("e", "d:")
+							}
+						])
+					]
+				}
+			},
+			{
+				type: "Atrule",
+				name: "font-face",
+				prelude: null,
+				block: { children: [] }
+			},
+			{ type: "Atrule", name: "import", prelude: at('"x"'), block: null }
+		]
+	});
+
+	const nestedRule = rule(".b", [
+		{ type: "Declaration", property: "x", important: false, value: at("y") },
+		{ type: "Declaration", property: "z", important: false, value: at("", "z:") }
+	]);
+
+	it("holds webpack and postcss to css-tree's rules, at-rules and declarations", async () => {
+		mockCssTree.parse.mockReturnValue(parsed(nestedRule));
+		const cell = agreement("css-tree", TREE_READERS, css);
+		expect(await cell("css-tree")).toBe("reference");
+		expect(await cell("stylis")).toBe("own dialect");
+		expect(await cell("webpack")).toBe("yes");
+		expect(await cell("postcss")).toBe("yes");
+	});
+
+	it("names a block css-tree left unparsed", async () => {
+		mockCssTree.parse.mockReturnValue(
+			parsed({ type: "Raw", ...at(".b{x:y;z:}") })
+		);
+		expect(await agreement("css-tree", TREE_READERS, css)("webpack")).toBe(
+			"no — /.a .d[1]: css-tree unparsed .b{x:y;z:}, tool rule .b"
+		);
 	});
 });

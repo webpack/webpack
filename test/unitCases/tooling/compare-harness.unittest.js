@@ -7,6 +7,8 @@ const path = require("path");
 const { Readable } = require("stream");
 const { pathToFileURL } = require("url");
 const {
+	TreeEvents,
+	agreement,
 	compress,
 	cutsAt,
 	exists,
@@ -28,6 +30,7 @@ const {
 	run,
 	sweepExitCode,
 	sweepMode,
+	treeDifference,
 	wantedExpectations,
 	wantedRespelling
 } = require("../../../tooling/compare-tools-harness");
@@ -1035,5 +1038,126 @@ describe("profileShares", () => {
 		expect(
 			profileShares({ nodes, samples: [1], timeDeltas: [0] })
 		).toEqual([["terser minify.js", 0]]);
+	});
+});
+
+describe("parser agreement", () => {
+	/**
+	 * @param {string[]} texts what each `<p>` holds
+	 * @returns {TreeEvents} a body of paragraphs
+	 */
+	const paragraphs = (texts) => {
+		const events = new TreeEvents();
+		events.open("body", "<body>");
+		for (const text of texts) {
+			events.open("p", "<p>");
+			events.text(text);
+			events.close("</p>");
+		}
+		events.leaf("comment");
+		events.close("</body>");
+		return events;
+	};
+
+	it("numbers each node among its same-named siblings and folds text runs", () => {
+		const events = new TreeEvents();
+		events.open("a", "<a>");
+		expect(events.depth).toBe(1);
+		events.text("x");
+		events.text("y");
+		events.open("b", "<b>");
+		events.close("</b>");
+		events.text("z");
+		events.open("b", "<b>");
+		events.close("</b>");
+		events.close("</a>");
+		events.open("a", "<a>");
+		events.close("</a>");
+		expect(events.depth).toBe(0);
+		expect(events.list).toEqual([
+			["/a[1]", "open", "<a>"],
+			["/a[1]", "text", "xy"],
+			["/a[1]/b[1]", "open", "<b>"],
+			["/a[1]/b[1]", "close", "</b>"],
+			["/a[1]", "text", "z"],
+			["/a[1]/b[2]", "open", "<b>"],
+			["/a[1]/b[2]", "close", "</b>"],
+			["/a[1]", "close", "</a>"],
+			["/a[2]", "open", "<a>"],
+			["/a[2]", "close", "</a>"]
+		]);
+	});
+
+	it("names the first event two trees differ at, and what each side says there", () => {
+		expect(
+			treeDifference(paragraphs(["a", "b"]), paragraphs(["a", "b"]), "ref")
+		).toBeUndefined();
+		expect(
+			treeDifference(paragraphs(["a", "b"]), paragraphs(["a", "c"]), "ref")
+		).toBe('/body[1]/p[2]: ref text "b", tool text "c"');
+		expect(
+			treeDifference(paragraphs(["a"]), paragraphs(["a", "b"]), "ref")
+		).toBe("/body[1]: ref comment, tool <p>");
+		const empty = new TreeEvents();
+		expect(treeDifference(empty, paragraphs([]), "ref")).toBe(
+			"/body[1]: ref nothing, tool <body>"
+		);
+		const loose = new TreeEvents();
+		loose.leaf("comment");
+		expect(treeDifference(loose, empty, "ref")).toBe(
+			"/: ref comment, tool nothing"
+		);
+		expect(
+			treeDifference(paragraphs(["x".repeat(80)]), paragraphs(["y"]), "ref")
+		).toBe(`/body[1]/p[1]: ref text "${"x".repeat(41)}…, tool text "y"`);
+		/**
+		 * @param {string} said what the innermost node says
+		 * @returns {TreeEvents} it under twenty nested sections
+		 */
+		const deep = (said) => {
+			const events = new TreeEvents();
+			for (let i = 0; i < 20; i++) events.open("section", "<section>");
+			events.leaf(said);
+			return events;
+		};
+		expect(treeDifference(deep("a"), deep("b"), "ref")).toBe(
+			`…${"/section[1]".repeat(20).slice(-59)}: ref a, tool b`
+		);
+	});
+
+	it("answers each parser's cell, reading the reference once", async () => {
+		const reference = jest.fn((/** @type {string} */ source) =>
+			paragraphs(source.split(" "))
+		);
+		/** @typedef {import("../../../tooling/compare-tools-harness").TreeReader} TreeReader */
+		const readers = new Map(
+			/** @type {[string, TreeReader][]} */ ([
+			["ref", reference],
+			["same", (source) => Promise.resolve(paragraphs(source.split(" ")))],
+			["other", () => paragraphs(["no"])],
+			[
+				"throws",
+				() => {
+					throw new Error("bad input\nmore");
+				}
+			]
+		])
+		);
+		const cell = agreement("ref", readers, "a b");
+		expect(await cell("ref")).toBe("reference");
+		expect(await cell("unread")).toBe("own dialect");
+		expect(await cell("same")).toBe("yes");
+		expect(await cell("other")).toBe(
+			'no — /body[1]/p[1]: ref text "a", tool text "no"'
+		);
+		expect(await cell("throws")).toBe("could not compare: bad input");
+		expect(reference).toHaveBeenCalledTimes(1);
+
+		readers.set("ref", () => {
+			throw new Error("not well-formed");
+		});
+		expect(await agreement("ref", readers, "a")("same")).toBe(
+			"could not compare: ref rejects it: not well-formed"
+		);
 	});
 });

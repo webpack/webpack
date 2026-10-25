@@ -47,6 +47,8 @@ const {
 } = require("../lib/html/syntax-parser");
 const {
 	STAGES,
+	TreeEvents,
+	agreement,
 	collectFiles,
 	compress,
 	cutsAt,
@@ -91,12 +93,16 @@ const setup = () => installPackages(CACHE_NAME);
  * @typedef {object} Parse5Node
  * @property {string} nodeName
  * @property {string=} tagName
+ * @property {string=} namespaceURI an element's namespace
  * @property {string=} value text, on a `#text` node
- * @property {{ name: string, value: string }[]=} attrs
+ * @property {string=} data a comment's text
+ * @property {string=} name a doctype's name
+ * @property {{ name: string, value: string, prefix?: string }[]=} attrs
  * @property {Parse5Node[]=} childNodes
  * @property {Parse5Node=} content a `<template>`'s document fragment
  */
 /** @typedef {{ parse: (html: string) => Parse5Node }} Parse5 */
+/** @typedef {import("../lib/html/syntax-parser").HtmlPath} HtmlPath */
 
 // An app shell, whose weight is inline critical CSS and form markup: without
 // it no fixture carries a `<style>`, a `srcset` or a boolean attribute.
@@ -896,6 +902,164 @@ const fingerprint = (parse5, html) => {
 			.join(" ")
 	};
 };
+
+// --- Parser agreement -------------------------------------------------------
+
+// parse5 builds the tree §13.2 specifies, so it is the reference webpack's
+// parser is held to. The other parsers build trees of their own.
+const REFERENCE_PARSER = "parse5";
+
+/** @type {Record<string, string>} */
+const PARSE5_NAMESPACES = {
+	"http://www.w3.org/1999/xhtml": "html",
+	"http://www.w3.org/1998/Math/MathML": "math",
+	"http://www.w3.org/2000/svg": "svg"
+};
+
+// webpack's namespace bits, in the order `_namespaceOf` numbers them.
+const NAMESPACE_NAMES = ["html", "math", "svg", "xml"];
+
+/**
+ * @param {string} namespace the element's namespace
+ * @param {string} name its name
+ * @param {[string, string][]} attributes its attributes, in order
+ * @returns {string} what its start tag says, as both readers write it
+ */
+const startOf = (namespace, name, attributes) =>
+	`<${namespace}:${name}${attributes
+		.map(([key, value]) => ` ${key}=${JSON.stringify(value)}`)
+		.join("")}>`;
+
+/**
+ * parse5's tree, as the agreement column reads it.
+ * @param {string} html a document
+ * @returns {TreeEvents} what it says
+ */
+const parse5Tree = (html) => {
+	const parse5 = /** @type {Parse5} */ (load("parse5"));
+	const events = new TreeEvents();
+	/**
+	 * @param {Parse5Node} node a parse5 node
+	 */
+	const walk = (node) => {
+		for (const child of /** @type {Parse5Node[]} */ (node.childNodes)) {
+			if (child.nodeName === "#text") {
+				events.text(/** @type {string} */ (child.value));
+			} else if (child.nodeName === "#comment") {
+				events.leaf(`comment ${JSON.stringify(child.data)}`);
+			} else if (child.nodeName === "#documentType") {
+				events.leaf(`doctype ${child.name}`);
+			} else {
+				const name = /** @type {string} */ (child.tagName);
+				events.open(
+					name,
+					startOf(
+						PARSE5_NAMESPACES[/** @type {string} */ (child.namespaceURI)],
+						name,
+						/** @type {NonNullable<Parse5Node["attrs"]>} */ (child.attrs).map(
+							(attribute) => [
+								attribute.prefix
+									? `${attribute.prefix}:${attribute.name}`
+									: attribute.name,
+								attribute.value
+							]
+						)
+					)
+				);
+				walk(child);
+				if (child.content !== undefined) {
+					events.leaf("#document-fragment");
+					walk(child.content);
+				}
+				events.close(`</${name}>`);
+			}
+		}
+	};
+	// Decoding strips a byte order mark before tree construction sees the text;
+	// parse5 is handed text, so it would otherwise read one as content.
+	walk(parse5.parse(html.replace(/^\uFEFF/, "")));
+	return events;
+};
+
+/**
+ * webpack's tree, as the agreement column reads it. A processing instruction is
+ * the bogus comment the tokenizer reads `<?…>` as, which webpack tells apart.
+ * @param {string} html a document
+ * @returns {TreeEvents} what it says
+ */
+const webpackTree = (html) => {
+	const events = new TreeEvents();
+	/** @type {Record<number, { enter: (nodePath: HtmlPath) => void, exit: (nodePath: HtmlPath) => void }>} */
+	const visitors = {
+		[NodeType.Element]: {
+			enter: (nodePath) => {
+				/** @type {[string, string][]} */
+				const attributes = [];
+				const count = nodePath.fieldCount(Field.attributes);
+				for (let index = 0; index < count; index++) {
+					const attribute = nodePath.field(index, Field.attributes);
+					attributes.push([
+						nodePath.name(attribute),
+						nodePath.value(attribute)
+					]);
+				}
+				events.open(
+					nodePath.name(),
+					startOf(
+						NAMESPACE_NAMES[_namespaceOf(nodePath.node)],
+						nodePath.name(),
+						attributes
+					)
+				);
+			},
+			exit: (nodePath) => {
+				events.close(`</${nodePath.name()}>`);
+			}
+		},
+		[NodeType.DocumentFragment]: {
+			enter: () => {
+				events.leaf("#document-fragment");
+			},
+			exit: () => {}
+		},
+		[NodeType.Text]: {
+			enter: (nodePath) => {
+				events.text(nodePath.value());
+			},
+			exit: () => {}
+		},
+		[NodeType.Comment]: {
+			enter: (nodePath) => {
+				events.leaf(`comment ${JSON.stringify(nodePath.value())}`);
+			},
+			exit: () => {}
+		},
+		[NodeType.ProcessingInstruction]: {
+			enter: (nodePath) => {
+				events.leaf(
+					`comment ${JSON.stringify(
+						html.slice(nodePath.start() + 1, nodePath.end() - 1)
+					)}`
+				);
+			},
+			exit: () => {}
+		},
+		[NodeType.Doctype]: {
+			enter: (nodePath) => {
+				events.leaf(`doctype ${nodePath.name()}`);
+			},
+			exit: () => {}
+		}
+	};
+	new SourceProcessor().use(visitors).process(html, {});
+	return events;
+};
+
+/** @type {Map<string, import("./compare-tools-harness").TreeReader>} */
+const TREE_READERS = new Map([
+	["webpack", webpackTree],
+	[REFERENCE_PARSER, parse5Tree]
+]);
 
 /**
  * What a document says, read by webpack's own parser: the words of its text and
@@ -2014,6 +2178,7 @@ const main = async () => {
 		wantedFixture(name)
 	)) {
 		const before = fingerprint(parse5, html);
+		const agrees = agreement(REFERENCE_PARSER, TREE_READERS, html);
 		const input = await compress(Buffer.from(html));
 		process.stdout.write(
 			`\n${label} — ${kb(input.raw)} (${kb(input.gzip)} gzip, ${kb(
@@ -2030,7 +2195,7 @@ const main = async () => {
 				stage === "parse"
 					? `  ${"parse".padEnd(34)}${"ms".padStart(8)}${"cpu".padStart(
 							7
-						)}${"peak".padStart(9)}\n`
+						)}${"peak".padStart(9)}   agrees with ${REFERENCE_PARSER}\n`
 					: `  ${stage.padEnd(34)}${"out".padStart(10)}${"gzip".padStart(
 							9
 						)}${"saved".padStart(8)}${"brotli".padStart(9)}${"zstd".padStart(
@@ -2061,7 +2226,7 @@ const main = async () => {
 							cost.wall.padStart(8) +
 							cost.cpu.padStart(7) +
 							cost.peak.padStart(9)
-						}\n`
+						}   ${await agrees(tool.name)}\n`
 					);
 					process.stdout.write(formatProfile(result));
 					continue;
@@ -2150,6 +2315,7 @@ module.exports = {
 	INSTALLED_DOCUMENTS,
 	SPRITE_WITHIN,
 	TAG_SOUP,
+	TREE_READERS,
 	WEB_COMPONENTS,
 	htmlMeaning,
 	inlineCssPage,

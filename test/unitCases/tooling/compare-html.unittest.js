@@ -6,10 +6,19 @@ const installed = jest.fn(() => Promise.resolve(CACHE_NAME));
 
 // A real install would `npm ci` the corpus into a contributor's cache, and
 // nothing here reads it: the built documents are the ones under test.
-jest.mock("../../../tooling/compare-tools-harness", () => ({
-	...jest.requireActual("../../../tooling/compare-tools-harness"),
-	installPackages: installed
-}));
+// parse5 is installed into that same cache, so its tree is written out by hand.
+const mockParse5 = { parse: jest.fn() };
+
+jest.mock("../../../tooling/compare-tools-harness", () => {
+	const actual = jest.requireActual("../../../tooling/compare-tools-harness");
+	return {
+		...actual,
+		installPackages: installed,
+		loaderFor:
+			(/** @type {string} */ cache) => (/** @type {string} */ name) =>
+				name === "parse5" ? mockParse5 : actual.loaderFor(cache)(name)
+	};
+});
 
 const fs = require("fs");
 const path = require("path");
@@ -18,12 +27,16 @@ const {
 	COLD_CONSTRUCTS,
 	EMBEDDED_LEGACY_OPTIONS,
 	EMBEDDED_OPTIONS,
+	TREE_READERS,
 	htmlMeaning,
 	runMode,
 	sameSheets,
 	sweepDocument
 } = require("../../../tooling/compare-html-tools");
-const { collectFiles } = require("../../../tooling/compare-tools-harness");
+const {
+	agreement,
+	collectFiles
+} = require("../../../tooling/compare-tools-harness");
 
 // Read before anything clears the mock: an unguarded script installs while
 // being required, and a `beforeEach` would erase exactly that evidence.
@@ -221,5 +234,87 @@ describe("compare-html-tools — what a document says", () => {
 		expect(meaning((source) => source.replace("red", "blue"))).toEqual([
 			"a minified stylesheet says something else"
 		]);
+	});
+});
+
+describe("compare-html-tools — agreeing with parse5", () => {
+	const HTML_NAMESPACE = "http://www.w3.org/1999/xhtml";
+	const SVG_NAMESPACE = "http://www.w3.org/2000/svg";
+
+	/**
+	 * @param {string} name a tag name
+	 * @param {string} namespaceURI its namespace
+	 * @param {EXPECTED_ANY[]} childNodes its children
+	 * @param {{ name: string, value: string, prefix?: string }[]} attrs its attributes
+	 * @returns {EXPECTED_ANY} a parse5 element
+	 */
+	const element = (name, namespaceURI, childNodes, attrs = []) => ({
+		nodeName: name,
+		tagName: name,
+		namespaceURI,
+		attrs,
+		childNodes
+	});
+
+	/**
+	 * What parse5 builds for the document below, its `<p>` holding `id`.
+	 * @param {string} id the paragraph's `id`
+	 * @returns {EXPECTED_ANY} the parse5 document
+	 */
+	const parsed = (id) => ({
+		nodeName: "#document",
+		childNodes: [
+			{ nodeName: "#documentType", name: "html" },
+			element("html", HTML_NAMESPACE, [
+				element("head", HTML_NAMESPACE, []),
+				element("body", HTML_NAMESPACE, [
+					element(
+						"p",
+						HTML_NAMESPACE,
+						[
+							{ nodeName: "#text", value: "x" },
+							{ nodeName: "#comment", data: "?pi y?" },
+							{ nodeName: "#comment", data: "c" }
+						],
+						[{ name: "id", value: id }]
+					),
+					{
+						...element("template", HTML_NAMESPACE, []),
+						content: {
+							nodeName: "#document-fragment",
+							childNodes: [{ nodeName: "#text", value: "t" }]
+						}
+					},
+					element("svg", SVG_NAMESPACE, [
+						element(
+							"use",
+							SVG_NAMESPACE,
+							[],
+							[{ name: "href", value: "#i", prefix: "xlink" }]
+						)
+					])
+				])
+			])
+		]
+	});
+
+	const html =
+		'\uFEFF<!doctype html><html><head></head><body><p id="a">x<?pi y?><!--c--></p><template>t</template><svg><use xlink:href="#i"/></svg></body></html>';
+
+	it("reads the tree parse5 builds, a processing instruction as its bogus comment", async () => {
+		mockParse5.parse.mockReturnValue(parsed("a"));
+		const cell = agreement("parse5", TREE_READERS, html);
+		expect(await cell("parse5")).toBe("reference");
+		expect(await cell("htmlparser2")).toBe("own dialect");
+		expect(await cell("webpack")).toBe("yes");
+		// The byte order mark is the decoder's, gone before tree construction.
+		expect(mockParse5.parse).toHaveBeenLastCalledWith(html.slice(1));
+	});
+
+	it("names the first node the two trees differ at", async () => {
+		mockParse5.parse.mockReturnValue(parsed("b"));
+		expect(await agreement("parse5", TREE_READERS, html)("webpack")).toBe(
+			'no — /html[1]/body[1]/p[1]: parse5 <html:p id="b">, tool <html:p id="a">'
+		);
 	});
 });

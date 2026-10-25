@@ -46,6 +46,8 @@ const {
 } = require("../lib/html/syntax-parser");
 const {
 	STAGES,
+	TreeEvents,
+	agreement,
 	collectFiles,
 	compress,
 	cutsAt,
@@ -757,6 +759,202 @@ const canonical = (xml, cssOptions = {}) => {
 	return out.join("");
 };
 
+// --- Parser agreement -------------------------------------------------------
+
+// `@rgrove/parse-xml` is strict and shares nothing with webpack's parser, so it
+// is the reference the trees are held to. A parser reporting events rather than
+// building a tree, or trimming and typing values, has a dialect of its own.
+const REFERENCE_PARSER = "@rgrove/parse-xml";
+
+/**
+ * @param {string} name the element's name
+ * @param {[string, string][]} attributes its attributes, in order
+ * @returns {string} what its start tag says, as every reader writes it
+ */
+const startOf = (name, attributes) =>
+	`<${name}${attributes
+		.map(([key, value]) => ` ${key}=${JSON.stringify(value)}`)
+		.join("")}>`;
+
+/**
+ * Character data, CDATA sections folded in. What sits outside the root element
+ * is markup's whitespace, not character data (XML §2.1), so it is left out.
+ * @param {TreeEvents} events the tree so far
+ * @param {string} value the text
+ */
+const textOf = (events, value) => {
+	if (events.depth > 0) events.text(value);
+};
+
+/**
+ * `@rgrove/parse-xml`'s tree, as the agreement column reads it.
+ * @param {string} xml a document
+ * @returns {Promise<TreeEvents>} what it says
+ */
+const parseXmlTree = async (xml) => {
+	const { parseXml } = await importPackage("@rgrove/parse-xml");
+	const events = new TreeEvents();
+	/**
+	 * @param {EXPECTED_ANY} node a parse-xml node
+	 */
+	const walk = (node) => {
+		for (const child of node.children) {
+			if (child.type === "element") {
+				events.open(
+					child.name,
+					startOf(child.name, Object.entries(child.attributes))
+				);
+				walk(child);
+				events.close(`</${child.name}>`);
+			} else if (child.type === "text" || child.type === "cdata") {
+				textOf(events, child.text);
+			} else if (child.type === "comment") {
+				events.leaf(`comment ${JSON.stringify(child.content)}`);
+			} else if (child.type === "pi") {
+				events.leaf(`<?${child.name} ${JSON.stringify(child.content)}?>`);
+			}
+		}
+	};
+	walk(parseXml(xml, { preserveComments: true }));
+	return events;
+};
+
+/**
+ * webpack's tree, as the agreement column reads it.
+ * @param {string} xml a document
+ * @returns {TreeEvents} what it says
+ */
+const webpackTree = (xml) => {
+	const events = new TreeEvents();
+	/** @type {Record<number, { enter: (nodePath: HtmlPath) => void, exit: (nodePath: HtmlPath) => void }>} */
+	const visitors = {
+		[NodeType.Element]: {
+			enter: (nodePath) => {
+				events.open(
+					nodePath.name(),
+					startOf(nodePath.name(), decodedAttributes(nodePath))
+				);
+			},
+			exit: (nodePath) => {
+				events.close(`</${nodePath.name()}>`);
+			}
+		},
+		[NodeType.Text]: {
+			enter: (nodePath) => {
+				textOf(events, nodePath.value());
+			},
+			exit: () => {}
+		},
+		[NodeType.Comment]: {
+			enter: (nodePath) => {
+				events.leaf(`comment ${JSON.stringify(nodePath.value())}`);
+			},
+			exit: () => {}
+		},
+		[NodeType.ProcessingInstruction]: {
+			enter: (nodePath) => {
+				// The XML declaration is not a processing instruction (§2.8).
+				if (nodePath.name() === "xml") return;
+				events.leaf(
+					`<?${nodePath.name()} ${JSON.stringify(nodePath.value())}?>`
+				);
+			},
+			exit: () => {}
+		}
+	};
+	new SourceProcessor().use(visitors).process(xml, { xml: true });
+	return events;
+};
+
+/**
+ * `@xmldom/xmldom`'s DOM, as the agreement column reads it.
+ * @param {string} xml a document
+ * @returns {TreeEvents} what it says
+ */
+const xmldomTree = (xml) => {
+	const { DOMParser } = load("@xmldom/xmldom");
+	const events = new TreeEvents();
+	/**
+	 * @param {EXPECTED_ANY} node a DOM node
+	 */
+	const walk = (node) => {
+		for (let child = node.firstChild; child; child = child.nextSibling) {
+			if (child.nodeType === 1) {
+				/** @type {[string, string][]} */
+				const attributes = [];
+				for (let i = 0; i < child.attributes.length; i++) {
+					attributes.push([
+						child.attributes[i].name,
+						child.attributes[i].value
+					]);
+				}
+				events.open(child.nodeName, startOf(child.nodeName, attributes));
+				walk(child);
+				events.close(`</${child.nodeName}>`);
+			} else if (child.nodeType === 3 || child.nodeType === 4) {
+				textOf(events, child.data);
+			} else if (child.nodeType === 8) {
+				events.leaf(`comment ${JSON.stringify(child.data)}`);
+			} else if (child.nodeType === 7 && child.target !== "xml") {
+				events.leaf(`<?${child.target} ${JSON.stringify(child.data)}?>`);
+			}
+		}
+	};
+	walk(new DOMParser().parseFromString(xml, "text/xml"));
+	return events;
+};
+
+/**
+ * htmlparser2's tree in `xmlMode`, as the agreement column reads it.
+ * @param {string} xml a document
+ * @returns {TreeEvents} what it says
+ */
+const htmlparser2Tree = (xml) => {
+	const htmlparser2 = load("htmlparser2");
+	const events = new TreeEvents();
+	/**
+	 * @param {EXPECTED_ANY} node an htmlparser2 node
+	 */
+	const walk = (node) => {
+		for (const child of node.children) {
+			if (child.attribs !== undefined) {
+				events.open(
+					child.name,
+					startOf(child.name, Object.entries(child.attribs))
+				);
+				walk(child);
+				events.close(`</${child.name}>`);
+			} else if (child.type === "text") {
+				textOf(events, child.data);
+			} else if (child.type === "cdata") {
+				for (const text of child.children) textOf(events, text.data);
+			} else if (child.type === "comment") {
+				events.leaf(`comment ${JSON.stringify(child.data)}`);
+			} else if (child.type === "directive" && child.name !== "?xml") {
+				// A directive is a doctype or a processing instruction, kept whole.
+				const instruction = /^\?(\S+)\s*([\s\S]*?)\??$/.exec(child.data);
+				if (instruction !== null) {
+					events.leaf(
+						`<?${instruction[1]} ${JSON.stringify(instruction[2])}?>`
+					);
+				}
+			}
+		}
+	};
+	walk(htmlparser2.parseDocument(xml, { xmlMode: true }));
+	return events;
+};
+
+/** @type {Map<string, import("./compare-tools-harness").TreeReader>} */
+const TREE_READERS = new Map(
+	/** @type {[string, import("./compare-tools-harness").TreeReader][]} */ ([
+		["webpack", webpackTree],
+		["@xmldom/xmldom", xmldomTree],
+		[REFERENCE_PARSER, parseXmlTree],
+		["htmlparser2 (xmlMode)", htmlparser2Tree]
+	])
+);
+
 /**
  * @typedef {object} Site
  * @property {number} valueStart where the attribute value begins
@@ -1393,6 +1591,7 @@ const main = async () => {
 		wantedFixture(name)
 	)) {
 		const before = fingerprint(parseXml, xml);
+		const agrees = agreement(REFERENCE_PARSER, TREE_READERS, xml);
 		const input = await compress(Buffer.from(xml));
 		process.stdout.write(
 			`\n${label} — ${kb(input.raw)} (${kb(input.gzip)} gzip, ${kb(
@@ -1410,7 +1609,7 @@ const main = async () => {
 				stage === "parse"
 					? `  ${"parse".padEnd(40)}${"ms".padStart(8)}${"cpu".padStart(
 							7
-						)}${"peak".padStart(9)}\n`
+						)}${"peak".padStart(9)}   agrees with ${REFERENCE_PARSER}\n`
 					: `  ${stage.padEnd(40)}${"out".padStart(10)}${"gzip".padStart(
 							9
 						)}${"saved".padStart(8)}${"brotli".padStart(9)}${"zstd".padStart(
@@ -1436,7 +1635,7 @@ const main = async () => {
 							cost.wall.padStart(8) +
 							cost.cpu.padStart(7) +
 							cost.peak.padStart(9)
-						}\n`
+						}   ${await agrees(tool.name)}\n`
 					);
 					process.stdout.write(formatProfile(result));
 					continue;
@@ -1528,6 +1727,7 @@ module.exports = {
 	INSTALLED_DOCUMENTS,
 	MAVEN_POM,
 	PRESETS,
+	TREE_READERS,
 	XLIFF,
 	XML_CUTS,
 	canonical,
