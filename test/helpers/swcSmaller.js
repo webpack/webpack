@@ -225,9 +225,7 @@ const SWC_SMALLER_BY_REASON = [
 		[
 			"swc minifier: fixture/issues/7402/input.js",
 			"swc minifier: fixture/issues/7500/input.js",
-			"swc minifier: fixture/issues/7568/1/input.js",
 			"swc minifier: fixture/issues/react-countup/2/input.js",
-			"swc minifier: fixture/next/feedback-1/reduced/1/input.js",
 			"swc minifier: fixture/pr/11446/input.js",
 			"swc minifier: fixture/projects/yui/11/input.js",
 			"terser compress: classes/class_duplication_2",

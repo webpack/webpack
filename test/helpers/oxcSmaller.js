@@ -398,8 +398,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/esbuild.rs:2274",
 			"swc minifier: fixture/issues/7770/2/input.js",
 			"swc minifier: fixture/issues/next-97517/input.js",
-			"terser compress: collapse_vars/shadowed_variable",
-			"terser compress: destructuring/destructuring_remove_unused_2",
 			"terser compress: harmony/module_enabled",
 			"terser compress: reduce_vars/unsafe_evaluate_side_effect_free_2"
 		]
@@ -443,11 +441,7 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc writes a variable's value at its one read and drops the variable, as oxc's `peephole/inline_single_use_variable.rs` tests show",
 		[
-			"oxc minifier: peephole/inline_single_use_variable.rs:242",
-			"oxc minifier: peephole/inline_single_use_variable.rs:258",
 			"oxc minifier: peephole/inline_single_use_variable.rs:282",
-			"oxc minifier: peephole/inline_single_use_variable.rs:286",
-			"oxc minifier: peephole/inline_single_use_variable.rs:324",
 			"oxc minifier: peephole/inline_single_use_variable.rs:411"
 		]
 	],
@@ -590,6 +584,15 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/remove_unused_expression.rs:777",
 			"oxc minifier: peephole/remove_unused_expression.rs:787",
 			"oxc minifier: peephole/remove_unused_expression.rs:792"
+		]
+	],
+	[
+		"oxc's output is wrong: it folds a property read into a tag, as in `let c = a.b; return c``` to `a.b```, which calls the tag as a method of `a`",
+		[
+			"oxc minifier: peephole/esbuild.rs:1332",
+			"oxc minifier: peephole/esbuild.rs:1333",
+			"oxc minifier: peephole/inline_single_use_variable.rs:324",
+			"oxc minifier: peephole/inline_single_use_variable.rs:325"
 		]
 	],
 	[
