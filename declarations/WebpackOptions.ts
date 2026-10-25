@@ -3234,6 +3234,11 @@ export interface OptimizationMinimizeCss {
 	 */
 	removeDeadRules?: boolean;
 	/**
+	 * Take out of an earlier rule each declaration a later rule with the same selector, in the same at-rules, writes again: of two equally specific declarations the later wins wherever both match, whatever stands between. Off by default: over the CSS corpus it saves 248 of 2,456,527 gzip bytes for about 3% of the minifier's time. Needs `removeDeadRules`, which drops a rule it leaves empty.
+	 * @since 5.113.0
+	 */
+	removeShadowedDeclarations?: boolean;
+	/**
 	 * Print a style rule's declarations in one order by property family, the properties no family names first where they were written, so blocks setting the same things read alike and compress smaller. Only declarations whose order nothing can see move: two spellings of one property, a shorthand and what it sets, two shorthands sharing a longhand, and a flow-relative side and a physical one keep theirs, and a block holding a property no dataset names or a nested rule is printed as written. On by default.
 	 * @since 5.112.0
 	 */

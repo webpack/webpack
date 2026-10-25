@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Range a CSS declaration's value on its node, and minify CSS faster.
+Range CSS values on nodes, add `removeShadowedDeclarations`, minify CSS faster.
