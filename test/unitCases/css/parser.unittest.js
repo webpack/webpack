@@ -732,6 +732,17 @@ describe("CssSyntax — SourceProcessor", () => {
 			}
 		});
 
+		it("prints a replacement in a custom property's value, the rest as written", () => {
+			/** @type {import("../../../lib/css/syntax-parser").CssVisitorMap} */
+			const visitors = { [NodeType.Hash]: (path) => path.replace("blue") };
+			expect(print("a{--x: foo  #f00 bar(#f00) ;color:#f00}", visitors)).toBe(
+				"a{--x:foo blue bar(blue);color:blue}"
+			);
+			expect(
+				print("a{--x: foo  #f00 bar(#f00) }", visitors, "beautify")
+			).toBe("a {\n--x: foo  blue bar(blue);\n}");
+		});
+
 		it("does nothing on a walk that prints nothing", () => {
 			let seen = 0;
 			new SourceProcessor()
