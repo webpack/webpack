@@ -2182,7 +2182,7 @@ const KEPT_CASES = [
 	["a function written in place passed the name of its one parameter, which would stay called", "function f(o) { return (function (o) { var t = o.a; return [t, t, o.b]; })(o); } console.log(f({ a: 1, b: 2 }));"],
 	["functions calling themselves, chosen by a conditional that is called", "!function () { function fact(n) { return n < 2 ? 1 : n * fact(n - 1); } function sum(n) { return n < 1 ? 0 : n + sum(n - 1); } function make(b) { return function (x) { return (b ? fact : sum)(x); }; } console.log(make(1)(4), make(0)(4)); }();"],
 	["functions chosen by a conditional that is constructed or passed on", "!function () { function P(s) { this.s = s; } function Q(s) { this.s = -s; } function f1(s) { return s + 1; } function f2(s) { return s * 2; } function make(b) { return function (x) { return [new (b ? P : Q)(x).s, [x].map(b ? f1 : f2)]; }; } console.log(make(1)(3), make(0)(3)); }();"],
-	["a function passed variables of its parameters' names that a closure in it reads, set in a loop or after the call", "!function () { var fs = []; function show(props, name) { props.get = function () { return name; }; } function create(list) { for (var i = 0; i < list.length; i++) { var props = {}, name = list[i]; list[i] && show(props, name); fs.push(props); } } function late(props, flag) { flag && show(props, name); var name = \"late\"; return props; } create([\"a\", \"b\"]); console.log(fs.map(function (p) { return p.get(); }).join(), late({}, 1).get()); }();"],
+["a function passed variables of its parameters' names that a closure in it reads, set in a loop or after the call", "!function () { var fs = []; function show(props, name) { props.get = function () { return name; }; } function create(list) { for (var i = 0; i < list.length; i++) { var props = {}, name = list[i]; list[i] && show(props, name); fs.push(props); } } function late(props, flag) { flag && show(props, name); var name = \"late\"; return props; } create([\"a\", \"b\"]); console.log(fs.map(function (p) { return p.get(); }).join(), late({}, 1).get()); }();"],
 	["a function passed a variable of another name, or of its name but written", "!function () { function show(props, name) { props.seen = name; } function other(props, value, name, flag) { flag && show(props, value); return [props, name]; } function written(props, name, flag) { flag && show(props, name); name = 2; return [props, name]; } console.log(other({}, [\"a\"], [\"n\"], [1])[0].seen, written({}, [\"a\"], [1])[0].seen); }();"],
 	["a function passed variables of its parameters' names, which a pattern or a `for` head writes", "!function () { function show(props, name) { props.get = function () { return name; }; } function pattern(props, name, flag) { flag && show(props, name); [name] = [\"later\"]; return props; } function head(props, name, flag) { flag && show(props, name); for (name in { later: 1 }); return props; } console.log(pattern({}, [\"a\"], [1]).get(), head({}, [\"a\"], [1]).get()); }();"],
 	["a function incrementing a parameter, passed the variable of its name", "!function () { function show(props, name) { props.seen = name++; props.next = name; } function create(props, name, flag) { flag && show(props, name); return [props, name]; } console.log(create({}, \"a\", 1)[0].next, create({}, 1, 1)[0].next); }();"],
@@ -10044,6 +10044,159 @@ describe("syntax-printer", () => {
 			expect(code).toContain("g(c);for(var a,i=0;");
 			// A function declared between keeps the order names are mangled in.
 			expect(code).toContain("var a;function k");
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+		});
+
+		it("should write a binding's value where the writes running before a read leave it known", async () => {
+			const { minify } = await load();
+			for (const [input, written, options] of [
+				[
+					"function f() { let c = 0; let a = 1; c += a; a += 5; let b = c; console.log(a, b, c); } f();",
+					"console.log(6,1,1)"
+				],
+				["let a = 0; a = \"\"; console.log((a += 1, a += 2));", 'console.log("12")', { toplevel: true }],
+				[
+					"function f() { var done = !1; done || (done = !0); console.log(\"x\"); } f();",
+					'function f(){console.log("x")}'
+				],
+				[
+					"function f(c) { var a = 1; if (c) { a = 2; } else { a = 2; } a++; console.log(a); } f(0);",
+					"console.log(3)"
+				],
+				[
+					"function f() { let a = 2; const g = () => a; console.log(a * 3, g()); } f();",
+					"console.log(6,"
+				]
+			]) {
+				const { code } = await minify(input, {
+					compress: {},
+					mangle: false,
+					.../** @type {object} */ (options)
+				});
+				expect(code).toContain(written);
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			}
+		});
+
+		it("should keep a binding's read where code it cannot follow may write it first", async () => {
+			const { minify } = await load();
+			for (const [input, kept] of [
+				[
+					"function f() { let a = 1; const o = { get x() { return a = 2; } }; console.log(o.x, a); } f();",
+					".x,a)"
+				],
+				[
+					"function f() { let a = 1; const b = { valueOf() { a = 10; return 1; } }; const c = a + b; console.log(a, c); } f();",
+					"console.log(a,c)"
+				],
+				["function f(c) { var a = 1; if (c) a = 2; console.log(a); } f(0); f(1);", "console.log(a)"],
+				[
+					"function f() { var a = 0; for (var i = 0; i < 3; i++) a += i; console.log(a); } f();",
+					"console.log(a)"
+				],
+				[
+					"function f(o) { let a = 1; o?.m(a = 2); console.log(a); } f(null); f({ m() {} });",
+					"console.log(a)"
+				],
+				["function f(a) { arguments[0] = 9; console.log(a); } f(3);", "console.log(a)"],
+				[
+					'(function (a) { var c = arguments[0]; var a = "foo"; arguments[0] = "moo"; console.log(a, c); })("bar");',
+					"console.log(a,c)"
+				],
+				[
+					'function f(o) { var s = "PASS"; o.p &&= console.log(s = "FAIL"); console.log(s); } f({ p: null });',
+					"console.log(s)"
+				],
+				["function f() { let a = 1; eval(\"a = 2\"); console.log(a); } f();", "console.log(a)"],
+				[
+					"function f() { try { console.log(a); } catch (e) { console.log(\"TDZ\"); } let a = 2; console.log(a); } f();",
+					"console.log(a)"
+				]
+			]) {
+				const { code } = await minify(input, { compress: {}, mangle: false });
+				expect(code).toContain(kept);
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			}
+		});
+
+		it("should read a primitive straight off an object only read through its properties", async () => {
+			const { minify } = await load();
+			const options = {
+				compress: { reduce_vars: false, hoist_props: true },
+				mangle: false
+			};
+			const input =
+				'function f() { var o = { key: "s", n: 1 }; var b = () => o.key + o.n; return () => b; } console.log(f()()());';
+			const { code } = await minify(input, options);
+			expect(code).toContain('"s1"');
+			expect(code).not.toContain("o.key");
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			for (const kept of [
+				"function f() { g(); var o = { a: 1 }; function g() { try { console.log(o.a); } catch (e) { console.log(\"T\"); } } } f();",
+				"function f(c) { if (c) var o = { a: 1 }; try { console.log(o.a); } catch (e) { console.log(\"T\"); } } f(0); f(1);",
+				"function f() { var h = () => o.a; try { h(); } catch (e) { console.log(\"T\"); } var o = { a: 1 }; console.log(h()); } f();",
+				"function f() { var o = { a: 1 }; o.a = 2; console.log(o.a); } f();",
+				"function f() { var o = { a: 1 }; delete o.a; console.log(o.a); } f();",
+				"function f() { var o = { __proto__: { a: 9 }, b: 1 }; console.log(o.a, o.b); } f();",
+				"function f() { var o = { a: 1, ...{ a: 3 } }; console.log(o.a); } f();",
+				"function f() { var o = { a: 1, get a() { return 5; } }; console.log(o.a); } f();"
+			]) {
+				const { code } = await minify(kept, options);
+				expect(code).toContain(".a");
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(kept));
+			}
+		});
+
+		it("should call a function straight off an object literal where it reads no `this`", async () => {
+			const { minify } = await load();
+			const input =
+				"({ m: async function (v) { console.log(v); }, get x() { return 1; } }).m(1); ({ k: 2, m: () => console.log(3) }).m();";
+			const { code } = await minify(input, { compress: {}, mangle: false });
+			expect(code).not.toContain(".m(");
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			for (const kept of [
+				'console.log({ v: 1, m: function () { return this.v; } }.m());',
+				'console.log({ v: 2, m: function (a) { return a + (this && this.v); } }.m(1));'
+			]) {
+				const { code } = await minify(kept, { compress: {}, mangle: false });
+				expect(code).toContain(".m(");
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(kept));
+			}
+		});
+
+		it("should read a primitive straight off an object literal where nothing else it holds runs", async () => {
+			const { minify } = await load();
+			const input =
+				"console.log({ a: 1, b: 2 }.b, { a: 1 }['a'], { a: 1, a: 'x' }.a, { get a() { return 3; } }.a, { a: 1, v: console.log(0) }.a);";
+			const { code } = await minify(input, { compress: {}, mangle: false });
+			expect(code).toContain('console.log(2,1,"x",{get a(){return 3}}.a,');
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+		});
+
+		it("should keep a sequence after `||`, `&&` or `??` running only as the left side decides", async () => {
+			const { minify } = await load();
+			for (const input of [
+				'1 || (console.log("a"), console.log("b"));',
+				'0 && (console.log("a"), console.log("b"));',
+				'console.log(null ?? (console.log("a"), 2), 1 ?? (console.log("b"), 3));'
+			]) {
+				const { code } = await minify(input, {
+					compress: { evaluate: false },
+					mangle: false
+				});
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			}
+		});
+
+		it("should split a `const` object read only through its properties where `reduce_vars` is off", async () => {
+			const { minify } = await load();
+			const input =
+				"function f() { const o = { read: () => this.v, n: 2 }; return o.read() + o.n + o.read(); } console.log(f.call({ v: 1 }));";
+			const { code } = await minify(input, {
+				compress: { reduce_vars: false, hoist_props: true },
+				mangle: false
+			});
+			expect(code).toContain("o_read");
 			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
 		});
 

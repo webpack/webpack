@@ -18,7 +18,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/12188/input.js",
 			"swc minifier: fixture/issues/12192/input.js",
 			"swc minifier: fixture/issues/12282/call/input.js",
-			"swc minifier: fixture/issues/3256/1/input.js",
 			"swc minifier: fixture/issues/5588/input.js",
 			"swc minifier: fixture/issues/6279/1/input.js",
 			"swc minifier: fixture/issues/6279/2/input.js",
@@ -249,7 +248,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: functions/issue_2663_1",
 			"terser compress: functions/issue_2663_3",
 			"terser compress: harmony/issue_2874_3",
-			"terser compress: hoist_props/issue_2473_4",
 			"terser compress: hoist_props/issue_851_hoist_to_conflicting_name",
 			"terser compress: hoist_props/name_collision_1",
 			"terser compress: hoist_props/name_collision_2",
@@ -414,13 +412,9 @@ const SWC_SMALLER_BY_REASON = [
 	[
 		"swc splits a constant object into a variable per property, or reads a property or method straight off the literal, where terser keeps the object",
 		[
-			"swc minifier: fixture/issues/11083/input.js",
 			"swc minifier: fixture/issues/12182/callee-safety/lexical-this/input.js",
-			"swc minifier: fixture/issues/12182/callee-safety/nested-values/input.js",
 			"swc minifier: fixture/issues/12182/hoist-props/input.js",
 			"swc minifier: fixture/issues/12182/receiver-sensitive/input.js",
-			"swc minifier: fixture/issues/8737/2/input.js",
-			"swc minifier: fixture/issues/8737/input.js",
 			"swc minifier: fixture/issues/9610-methods/input.js",
 			"swc minifier: fixture/member_expr/callee/input.js",
 			"terser compress: hoist_props/direct_access_2"
@@ -438,11 +432,6 @@ const SWC_SMALLER_BY_REASON = [
 	[
 		"swc follows a variable's value through its reassignments and folds the result to a constant",
 		[
-			"swc minifier: fixture/issues/5280/input.js",
-			"swc minifier: fixture/issues/8718/2/input.js",
-			"swc minifier: fixture/issues/8718/5/input.js",
-			"swc minifier: fixture/issues/8718/6/input.js",
-			"swc minifier: fixture/next/joda/input.js",
 			"terser compress: collapse_vars/issue_2313_2",
 			"terser compress: dead-code/issue_2860_1",
 			"terser compress: reduce_vars/issue_1670_1",
