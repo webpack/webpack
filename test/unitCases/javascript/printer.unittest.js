@@ -16661,11 +16661,6 @@ const BEHAVIOUR_CASES = [
 		{ compress: {}, mangle: false }
 	],
 	[
-		"a regular expression's `source` the runtime rejects",
-		"try { console.log(/(?<a>x)|(?<a>y)/.source); } catch (e) { console.log(e.name); }",
-		{ compress: {}, mangle: false }
-	],
-	[
 		"`Math` constants whose digits print longer",
 		"console.log(Math.PI, Math.E, Math.LN2, Number.MAX_VALUE, Number.MIN_VALUE);",
 		{ compress: {}, mangle: false }
@@ -17200,6 +17195,26 @@ describe("JavaScript minifier, pass by pass", () => {
 				expect(code).toMatchSnapshot();
 			});
 		}
+
+		it("should read a regular expression's `source` only where the runtime compiles it", async () => {
+			const { minify } = await load();
+			// Duplicate names in alternatives parse, but only newer runtimes compile them.
+			const pattern = "(?<a>x)|(?<a>y)";
+			const source = `try { console.log(/${pattern}/.source); } catch (e) { console.log(e.name); }`;
+			let compiles = true;
+			try {
+				new RegExp(pattern);
+			} catch (_err) {
+				compiles = false;
+			}
+			const { code } = await minify(source, { compress: {}, mangle: false });
+			expect(code).toBe(
+				compiles
+					? `try{console.log(${JSON.stringify(pattern)})}catch(e){console.log(e.name)}`
+					: `try{console.log(/${pattern}/.source)}catch(e){console.log(e.name)}`
+			);
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(source));
+		});
 	});
 });
 

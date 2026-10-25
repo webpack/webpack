@@ -183,8 +183,6 @@ exports[`JavaScript minifier, pass by pass what the correct and improve phases w
 
 exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a method of a variable holding an array, not a string 1`] = `"!function(){var a=[1,2];console.log(a.join(),a.join(\\"-\\"),a.indexOf(2))}();"`;
 
-exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a regular expression's \`source\` the runtime rejects 1`] = `"try{console.log(/(?<a>x)|(?<a>y)/.source)}catch(e){console.log(e.name)}"`;
-
 exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a remainder of what is no BigInt, its value unread 1`] = `"function f(a,b){return a%b,1}console.log(f(5,2));"`;
 
 exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a sloppy function's \`this\` handed to a call 1`] = `"function F(){g(this),this.y=1}function g(o){o.x=1}console.log((new F).x,3);"`;
