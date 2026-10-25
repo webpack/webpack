@@ -1311,6 +1311,10 @@ const IMPROVED_YET_BIGGER = {
 		"27 bytes fewer, 3 more gzipped: the third function written in place as `(console.log(3),3)` repeats the first one's, breaking the `function(){var o=` runs gzip matched",
 	"reduce_vars/unsafe_evaluate_side_effect_free_1 (reminify 8 {\"compress\":{\"reduce_funcs\":false}})":
 		"27 bytes fewer, 3 more gzipped: the third function written in place as `(console.log(3),3)` repeats the first one's, breaking the `function(){var o=` runs gzip matched",
+	"terser_reduce_vars_unsafe_evaluate_side_effect_free_1 (its own options)":
+		"27 bytes fewer, 1 more gzipped: the first function written in place as `(console.log(1),1)` breaks the `function(){var o=` run the second one repeats",
+	"terser_reduce_vars_unsafe_evaluate_side_effect_free_1 (the default minimizer's options)":
+		"27 bytes fewer, 3 more gzipped: the third function written in place as `(console.log(3),3)` repeats the first one's, breaking the `function(){var o=` runs gzip matched",
 	"pure_getters/set_immutable_5 (its own options)":
 		"13 bytes fewer, 1 more gzipped: `console.log(c?\"FAIL\":\"PASS\")` merges two calls a file this small compresses alike",
 	"collapse_vars/modified (a module mangled at its top level)":
