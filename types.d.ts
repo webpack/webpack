@@ -27482,6 +27482,12 @@ declare class PrintContext<TPath, TNode, TPrintOptions = object> {
 	emitStreamed(text: string): void;
 
 	/**
+	 * Make room for the handles below `count` before anything is printed, for a
+	 * grammar that knows how many nodes it prints, so the columns grow once.
+	 */
+	reserve(count: number): void;
+
+	/**
 	 * Forget every node's printed text. A node printed in pieces does this once
 	 * each child is emitted, so the store never holds more than one of them —
 	 * which is also what keeps a recycled node id from reading as an earlier
@@ -37337,6 +37343,128 @@ declare namespace exports {
 								number
 						  >,
 					options: JavascriptProcessOptions
+				) => void;
+				export let isWalkingSyntaxTree: () => boolean;
+				export let walkSyntaxTree: (
+					tree: SyntaxTree,
+					program: number,
+					input: string,
+					visitors: CompiledVisitorBucket<{
+						state: unknown;
+						get node(): number;
+						get parent(): null | number;
+						get index(): number;
+						/**
+						 * Stops the walk descending into the current node (enter only).
+						 */
+						skipChildren(): void;
+						/**
+						 * Stops the walk: no visitor fires after the current one returns.
+						 */
+						stop(): void;
+						/**
+						 * The tree walked, for a reader of many nodes that would rather not go
+						 * through the path for each.
+						 */
+						get tree(): SyntaxTree;
+						ancestor(level: number): number;
+						within(type: number): boolean;
+						type(n?: number): number;
+						range(n?: number): [number, number];
+						start(n?: number): number;
+						end(n?: number): number;
+						/**
+						 * Every JavaScript line terminator ends a line, as a parse error's position counts them.
+						 */
+						loc(n?: number): [number, number, number, number];
+						source(n?: number, end?: number): string;
+						name(n?: number): string;
+						value(
+							n?: number
+						):
+							| undefined
+							| null
+							| string
+							| number
+							| bigint
+							| boolean
+							| RegExp
+							| { cooked?: null | string; raw: string };
+						childCount(n?: number): number;
+						child(i: number, n?: number): number;
+						children(n?: number): number[];
+						fieldCount(field: number, n?: number): number;
+						field(i: number, field: number, n?: number): number;
+						fieldNamed(field: number, name: string, n?: number): number;
+						flag(flag: number, n?: number): boolean;
+						/**
+						 * A JavaScript node keeps no positions beyond its own.
+						 */
+						rangeOf(part: number, n?: number): null;
+						startOf(part: number, n?: number): number;
+						endOf(part: number, n?: number): number;
+						textOf(part: number, n?: number): null | string;
+					}>[],
+					writer?: PrintContext<
+						{
+							state: unknown;
+							get node(): number;
+							get parent(): null | number;
+							get index(): number;
+							/**
+							 * Stops the walk descending into the current node (enter only).
+							 */
+							skipChildren(): void;
+							/**
+							 * Stops the walk: no visitor fires after the current one returns.
+							 */
+							stop(): void;
+							/**
+							 * The tree walked, for a reader of many nodes that would rather not go
+							 * through the path for each.
+							 */
+							get tree(): SyntaxTree;
+							ancestor(level: number): number;
+							within(type: number): boolean;
+							type(n?: number): number;
+							range(n?: number): [number, number];
+							start(n?: number): number;
+							end(n?: number): number;
+							/**
+							 * Every JavaScript line terminator ends a line, as a parse error's position counts them.
+							 */
+							loc(n?: number): [number, number, number, number];
+							source(n?: number, end?: number): string;
+							name(n?: number): string;
+							value(
+								n?: number
+							):
+								| undefined
+								| null
+								| string
+								| number
+								| bigint
+								| boolean
+								| RegExp
+								| { cooked?: null | string; raw: string };
+							childCount(n?: number): number;
+							child(i: number, n?: number): number;
+							children(n?: number): number[];
+							fieldCount(field: number, n?: number): number;
+							field(i: number, field: number, n?: number): number;
+							fieldNamed(field: number, name: string, n?: number): number;
+							flag(flag: number, n?: number): boolean;
+							/**
+							 * A JavaScript node keeps no positions beyond its own.
+							 */
+							rangeOf(part: number, n?: number): null;
+							startOf(part: number, n?: number): number;
+							endOf(part: number, n?: number): number;
+							textOf(part: number, n?: number): null | string;
+						},
+						number
+					>,
+					inlined?: Uint8Array
 				) => void;
 				export {
 					DestructuringErrors,
