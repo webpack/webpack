@@ -57,6 +57,12 @@ it("synthetic base string: base href set correctly", () => {
 	expect(html).not.toContain("target=");
 });
 
+it("synthetic base string: the entry script is still bundled", () => {
+	const html = read("synthetic-base.html");
+	expect(html).not.toContain("./src/main.js");
+	expect(html).toMatch(/<script defer src="synthetic-base\.js"><\/script>/);
+});
+
 it("authored: charset injected at head start", () => {
 	const html = read("page.html");
 	expect(html).toMatch(/<meta charset="UTF-8">/);
@@ -195,4 +201,11 @@ it("entity-encoded meta names are decoded before dedup", () => {
 	const html = read("page-entity-meta.html");
 	expect(html).toContain('content="authored entity"');
 	expect(html).not.toContain('content="from options"');
+});
+
+it("authored: an entry's html object overrides output.html for its page", () => {
+	const html = read("page-entry.html");
+	expect(html).toMatch(/<base href="\/entry\/">/);
+	expect(html).not.toContain("/global/");
+	expect(html).toMatch(/<title>Global Title<\/title>/);
 });

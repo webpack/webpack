@@ -3,6 +3,8 @@ import deep from "./deep.html";
 import dotseg from "./dotseg.html";
 import external from "./external.html";
 import root from "./root.html";
+import rootDir from "./root-dir.html";
+import protocolRelative from "./protocol-relative.html";
 import escape from "./escape.html";
 
 it("should resolve relative URLs against a relative <base href>", () => {
@@ -45,9 +47,18 @@ it("should leave URLs untouched under an absolute <base href>", () => {
 	expect(external).toMatchSnapshot();
 });
 
-it("should leave URLs untouched under a root-relative <base href>", () => {
-	expect(root).toContain('src="server-root.png"');
+it("should leave URLs untouched under a protocol-relative <base href>", () => {
+	expect(protocolRelative).toContain('src="remote-only.png"');
+});
+
+it("should resolve relative URLs against the page under a root-relative <base href>", () => {
+	// A root-relative base names where the page's own directory is served, so
+	// `abs.png` is bundled from beside the page, as without a base.
+	expect(root).not.toContain('src="abs.png"');
+	expect(root).toMatch(/<img src="[^"]+\.png" alt="resolved beside the page">/);
 	expect(root).toMatchSnapshot();
+	expect(rootDir).not.toContain('src="abs.png"');
+	expect(rootDir).toMatch(/<img src="[^"]+\.png" alt="resolved against the page">/);
 });
 
 it("should handle a base that escapes above the document dir without warning", () => {
