@@ -9849,7 +9849,7 @@ describe("syntax-printer", () => {
 			});
 			expect(code).not.toContain("function");
 			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
-			for (const [source, options] of [
+			for (const [source, options] of /** @type {[string, import("terser").MinifyOptions][]} */ ([
 				// Without `toplevel` the names are the page's.
 				[input, { compress: {}, mangle: false }],
 				// A `var` named as a value prints would hide that value.
@@ -9857,7 +9857,7 @@ describe("syntax-printer", () => {
 					"!function () { var NaN = 1; for (var i = 0; i < 2; i++) NaN += i; console.log(NaN, i); }();",
 					{ compress: { toplevel: true, reduce_vars: false }, mangle: false }
 				]
-			]) {
+			])) {
 				const { code: kept } = await minify(source, options);
 				expect(kept).toContain("function");
 				expect(runProgram(/** @type {string} */ (kept))).toBe(runProgram(source));
@@ -10049,7 +10049,7 @@ describe("syntax-printer", () => {
 
 		it("should write a binding's value where the writes running before a read leave it known", async () => {
 			const { minify } = await load();
-			for (const [input, written, options] of [
+			for (const [input, written, options] of /** @type {[string, string, import("terser").MinifyOptions?][]} */ ([
 				[
 					"function f() { let c = 0; let a = 1; c += a; a += 5; let b = c; console.log(a, b, c); } f();",
 					"console.log(6,1,1)"
@@ -10067,7 +10067,7 @@ describe("syntax-printer", () => {
 					"function f() { let a = 2; const g = () => a; console.log(a * 3, g()); } f();",
 					"console.log(6,"
 				]
-			]) {
+			])) {
 				const { code } = await minify(input, {
 					compress: {},
 					mangle: false,
