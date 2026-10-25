@@ -381,6 +381,8 @@ exports[`syntax-printer improve phase should write less, printing the same: \`co
 
 exports[`syntax-printer improve phase should write less, printing the same: \`const\` declarations heading loops and holding holes, defaults and rests, written as \`let\` where they stand 1`] = `"function run(o){for(let l=o.x;l;){console.log(l);break}for(let[,l]of o.list)console.log(l);let{c:l=1,d:{e:n}={},...c}=o,[r,...e]=o.arr,s=2;console.log(n,c,r,e,s,s+l),s++;console.log(o.k,o.l);return()=>{console.log(o.p)}}run({x:1,list:[[1,2]],c:3,d:{e:4},arr:[5,6],k:7,l:8,p:9})();"`;
 
+exports[`syntax-printer improve phase should write less, printing the same: \`new RegExp\` of a BigInt pattern, as the call, which builds the same 1`] = `"console.log(String(RegExp(10n)),String(RegExp(-10n)),String(RegExp(-11n)));"`;
+
 exports[`syntax-printer improve phase should write less, printing the same: \`null != a && a.b\` where only its truth is read, as \`a?.b\`, which is \`undefined\` where \`a\` is nullish 1`] = `"function f(n){return n?.length?\\"x\\":n?.a?\\"z\\":\\"y\\"}console.log(f(),f(null),f([1]),f({a:1}),f({}));"`;
 
 exports[`syntax-printer improve phase should write less, printing the same: \`replaceAll\` of a string by a string, folded, but not with a \`$\` pattern 1`] = `"console.log(\\"-a-b-\\",\\"x_x\\",\\"aa\\".replaceAll(\\"a\\",\\"$&$&\\"));"`;

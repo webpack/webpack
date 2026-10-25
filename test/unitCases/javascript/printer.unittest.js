@@ -1847,6 +1847,11 @@ const IMPROVED_CASES = [
 		{ compress: {}, mangle: false }
 	],
 	[
+		"`new RegExp` of a BigInt pattern, as the call, which builds the same",
+		"console.log(String(new RegExp(10n)), String(new RegExp(-10n)), String(new RegExp(~10n)));",
+		{ compress: {}, mangle: false }
+	],
+	[
 		"an `if` with an empty branch and an `else` block, as an `if` of the negated test, but a chain's",
 		"function f(a, b) { if (a) {} else { if (b) { console.log(1); return; } console.log(2); } console.log(3); } function g(a, b) { if (a && b) {} else { if (b) { console.log(4); return; } console.log(5); } } f(0, 0); f(0, 1); f(1, 0); g(0, 1); g(1, 1);",
 		{ compress: {}, mangle: false }
@@ -10541,6 +10546,7 @@ describe("syntax-printer", () => {
 				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
 			}
 		});
+
 
 		it("should keep only what an empty function called in place is given to run, but where its parameters run code", async () => {
 			const { minify } = await load();

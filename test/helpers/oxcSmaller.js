@@ -387,7 +387,6 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc normalizes the syntax before compressing it, as oxc's `peephole/normalize.rs` tests show",
 		[
-			"oxc minifier: peephole/normalize.rs:221",
 			"oxc minifier: peephole/normalize.rs:230",
 			"oxc minifier: peephole/normalize.rs:274"
 		]
