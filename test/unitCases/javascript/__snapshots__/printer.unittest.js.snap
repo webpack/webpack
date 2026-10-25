@@ -1323,25 +1323,6 @@ exports[`JavaScript minifier, pass by pass what the correct and improve phases w
 
 exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: unused rest parameters of a known function, without reduce_vars 1`] = `"!function(){function g(v){return console.log(\\"g\\",v),v}function k(a){return a}console.log(k(1,g(2)),k(4),k(5,6,g(7)))}();"`;
 
-exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from /tmp/claude-0/-home-user/cd8a5332-c6e7-5315-a58d-6abfae3fad54/scratchpad/jsp/big2/b0.js 1`] = `"!function(){var e=function(){var e=t=>{for(var e in t)ae()};_t;It,ue;eincludes(\\"\\\\n\\".value.trim()),Me=/^\\\\s*(?:\\\\n|$)/;we;varprototype.call.bind(Object.prototype.hasOwnProperty),tt,e({ARGUMENT:()=>nn,VARIABLE_DEFINITION:()=>Xt});for(;t<nt(););function o(){let e;try{t(e=t.getBuiltinModule(\\"node:diagnostics_channel\\"))}catch{}return e}o(\\"graphql:subscribe\\")?.tracingChannel(\\"graphql:resolve\\");for(let t of void t);De?De.traceSync():ft({value:n.tokenCount}),r;for(let t=n;t!==r;t=t.next);try{t=oe(oi)}catch(t){}return t.comments=si(t),t}();e.default}();"`;
-
-exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from /tmp/claude-0/-home-user/cd8a5332-c6e7-5315-a58d-6abfae3fad54/scratchpad/jsp/big2/b2.js 1`] = `"{if(e)for(;;){for(;;)a&&t&&0|a;s&&s,[]()||a,r,e,e,e,e()}for(h;;);function v(){e?r:slice}}"`;
-
-exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from /tmp/claude-0/-home-user/cd8a5332-c6e7-5315-a58d-6abfae3fad54/scratchpad/jsp/big2/b3.js 1`] = `"class MiniCssExtractPlugin{getCssModule(){webpack({serialize(){}})}constructor(){schema.runtimeOptions={linkType:options=linkType}(compilation>{})(i=>{})}}"`;
-
-exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from /tmp/claude-0/-home-user/cd8a5332-c6e7-5315-a58d-6abfae3fad54/scratchpad/jsp/big2/b4.js 1`] = `
-"define=\\"\\"&amd
-"
-`;
-
-exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from /tmp/claude-0/-home-user/cd8a5332-c6e7-5315-a58d-6abfae3fad54/scratchpad/jsp/big2/b6.js 1`] = `""`;
-
-exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from /tmp/claude-0/-home-user/cd8a5332-c6e7-5315-a58d-6abfae3fad54/scratchpad/jsp/big2/b7.js 1`] = `
-"(()=>{function matchArity(){let t=length===1?function(){}:function(){apply(arguments)}
-return t}exports=class t{constructor(){return function(){mockConstructor=matchArity(0|function(){})({})}}_createMockFunction(){for(spyState of this);}}})()
-"
-`;
-
 exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from @babel/core/lib/config/files/index.js 1`] = `""`;
 
 exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from @babel/core/lib/config/files/module-types.js 1`] = `"function loadCodeDefault(){\\"\\"===pattern&&(async!=null?async:isAsync)}"`;
@@ -1410,6 +1391,25 @@ e=r,some(r=>e())}var e;[].includes()}})})
 exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from @webassemblyjs/wasm-opt/lib/index.js 1`] = `"OptimizerError=function(){var r,t;function e(){message}return _super=(r=e,t=_isNativeReflectConstruct,function(){_getPrototypeOf(r),result,t&&Super(),result}),e}();try{uint8Buffer}catch{OptimizerError()}"`;
 
 exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from @webassemblyjs/wasm-parser/esm/index.js 1`] = `""`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from a bundled program, b0.js 1`] = `"!function(){var e=function(){var e=t=>{for(var e in t)ae()};_t;It,ue;eincludes(\\"\\\\n\\".value.trim()),Me=/^\\\\s*(?:\\\\n|$)/;we;varprototype.call.bind(Object.prototype.hasOwnProperty),tt,e({ARGUMENT:()=>nn,VARIABLE_DEFINITION:()=>Xt});for(;t<nt(););function o(){let e;try{t(e=t.getBuiltinModule(\\"node:diagnostics_channel\\"))}catch{}return e}o(\\"graphql:subscribe\\")?.tracingChannel(\\"graphql:resolve\\");for(let t of void t);De?De.traceSync():ft({value:n.tokenCount}),r;for(let t=n;t!==r;t=t.next);try{t=oe(oi)}catch(t){}return t.comments=si(t),t}();e.default}();"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from a bundled program, b2.js 1`] = `"{if(e)for(;;){for(;;)a&&t&&0|a;s&&s,[]()||a,r,e,e,e,e()}for(h;;);function v(){e?r:slice}}"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from a bundled program, b3.js 1`] = `"class MiniCssExtractPlugin{getCssModule(){webpack({serialize(){}})}constructor(){schema.runtimeOptions={linkType:options=linkType}(compilation>{})(i=>{})}}"`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from a bundled program, b4.js 1`] = `
+"define=\\"\\"&amd
+"
+`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from a bundled program, b6.js 1`] = `""`;
+
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from a bundled program, b7.js 1`] = `
+"(()=>{function matchArity(){let t=length===1?function(){}:function(){apply(arguments)}
+return t}exports=class t{constructor(){return function(){mockConstructor=matchArity(0|function(){})({})}}_createMockFunction(){for(spyState of this);}}})()
+"
+`;
 
 exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from a package 1`] = `""`;
 
