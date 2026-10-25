@@ -748,6 +748,8 @@ describe("CssSyntax — SourceProcessor", () => {
 					[NodeType.Whitespace]: (path) => path.remove()
 				})
 			).toBe("a{--x:a / bc;b:x}");
+			// A string the input ran out in is closed, so the `}` stays outside it.
+			expect(print('a{--x:#f00 "open', visitors)).toBe('a{--x:blue "open"}');
 			// Only a value holding an edit is printed as written.
 			expect(print("a{--x: a  b;--y: c  #f00}", visitors)).toBe(
 				"a{--x:a b;--y:c  blue}"
