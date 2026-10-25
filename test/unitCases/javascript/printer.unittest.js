@@ -16381,6 +16381,11 @@ const BEHAVIOUR_CASES = [
 		{ compress: {}, mangle: false, ecma: 2020 }
 	],
 	[
+		"a built-in method read by a computed key off a literal, then called or tagged",
+		"console.log([1]['concat']([2]), [1, 2]['indexOf'](2), ({ a: 1 })['hasOwnProperty']('a'), [1]['join']`-`);",
+		{ compress: {}, mangle: false }
+	],
+	[
 		"a `concat` called optionally or on an optional array",
 		"console.log([1].concat?.([2]), [1]?.concat([2]), [1]['concat']([2]), [1].concat([2]).concat?.(3));",
 		{ compress: {}, mangle: false }

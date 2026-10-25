@@ -24,6 +24,7 @@ Array [
 exports[`JavaScript minifier printing a SyntaxTree should print terser's tree of several sources 1`] = `"a();b();"`;
 
 exports[`JavaScript minifier printing a SyntaxTree should read a single named source under its name 1`] = `"a(1);"`;
+
 exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: \`Map\` and \`WeakMap\` built from entries, their values unread 1`] = `"new Map([\\"ab\\"]),new Map([[1]]),new Map([1]),new Map([\\"a\\"]),new WeakMap([1]),console.log(1);"`;
 
 exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: \`Math.pow\` called optionally, with one argument, a spread, or a long result 1`] = `"var m=Math;console.log(Math?.pow(2,3),Math.pow(2),8,Math.pow(2,.5),Math.pow(3,40),m.pow(2,4));"`;
@@ -119,6 +120,8 @@ exports[`JavaScript minifier, pass by pass what the correct and improve phases w
 exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a built-in call reading an array where \`Array.prototype\` is patched 1`] = `"Array.prototype.toString=function(){return\\"patched\\"},console.log(String([1,2]),Math.max([3]),[1,2].join());"`;
 
 exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a built-in call where a direct \`eval\` may rebind it 1`] = `"function f(){return eval(\\"\\"),Math.max(1,2),Number(\\"1\\"),1}console.log(f());"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a built-in method read by a computed key off a literal, then called or tagged 1`] = `"console.log([1,2],[1,2].indexOf(2),{a:1}.hasOwnProperty(\\"a\\"),[1].join\`-\`);"`;
 
 exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a call of a function, a \`var\` or a parameter nothing writes, in each branch of a test with effects 1`] = `"function f(t,p){function h(x){console.log(x)}var v=function(x){console.log(-x)};h(t()?1:2),v(t()?1:2),t()?p(1):p(2)}var n=0;f(function(){return n++%2},console.log),f(function(){return 1},console.log);"`;
 
@@ -1448,7 +1451,7 @@ s[O]()||O(()=>{let|\\"\\"==n})(/$/)},{}=s?t({open:\\"\\"}):r,b=u
 "
 `;
 
-exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from array-timsort/src/index.js 1`] = `"log10=x?+!x:function(){array&&\\"\\"!=typeof compare&&compare,minRun};"`;
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from array-timsort/src/index.js 1`] = `"log10=x?+!x:function(){array&&compare,minRun};"`;
 
 exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from array-timsort/src/index.js, 2 1`] = `""`;
 
@@ -1464,7 +1467,7 @@ exports[`JavaScript minifier, programs reduced from packages should minify what 
 
 exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from chalk/source/index.js 1`] = `"[]={get:()=>function(){createBuilder(this[IS_EMPTY])}}[bgModel]={get(){}};"`;
 
-exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from chokidar/index.js 1`] = `"class e extends EventEmitter{constructor(e={}){opts=({}=()=>{for(ignored of this)ignored&recursive}),(()=>{}).then(()=>{})(()=>{this._userIgnored=void 0}),closerList(()=>{})}_remove(e){e??(_watched||fullPath),this()||(e?EVENTS:handler_js_1)}_closeFile(){}}exports=e;"`;
+exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from chokidar/index.js 1`] = `"class e extends EventEmitter{constructor(e={}){opts=()=>{for(ignored of this)ignored&recursive},(()=>{}).then(()=>{})(()=>{this._userIgnored=void 0}),closerList(()=>{})}_remove(e){e??(_watched||fullPath),this()||(e?EVENTS:handler_js_1)}_closeFile(){}}exports=e;"`;
 
 exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from chokidar/index.js, 2 1`] = `"class FSWatcher extends EventEmitter{constructor(t={}){(()=>{_addToNodeFs(void 0)}).then(()=>{})(()=>{})}}"`;
 
@@ -1728,7 +1731,7 @@ exports[`JavaScript minifier, the cases' sources under options drawn at random s
 
 exports[`JavaScript minifier, the cases' sources under options drawn at random should minify source 5 under options 0 1`] = `"sink(3);"`;
 
-exports[`JavaScript minifier, the cases' sources under options drawn at random should minify source 6 under options 0 1`] = `"outer:for(let i=0;i<10;i++)inner:for(let j=0;j<10;j++){if(j>i)continue outer;if(j===3)break inner;sink(i,j)}"`;
+exports[`JavaScript minifier, the cases' sources under options drawn at random should minify source 6 under options 0 1`] = `"outer:for(let i=0;i<10;i++)for(let j=0;j<10;j++){if(j>i)continue outer;if(j===3)break;sink(i,j)}"`;
 
 exports[`JavaScript minifier, the cases' sources under options drawn at random should minify source 7 under options 2 1`] = `"class e{constructor(e){this.value=e}read(e){return this.value+e}}sink(new e(1).read(2));"`;
 
@@ -1890,7 +1893,7 @@ exports[`JavaScript minifier, the cases' sources under options drawn at random s
 
 exports[`JavaScript minifier, the cases' sources under options drawn at random should minify source 59 under options 0 1`] = `"import\\"c\\";import\\"e\\";import\\"j\\";import\\"l\\"with{type:\\"json\\"};"`;
 
-exports[`JavaScript minifier, the cases' sources under options drawn at random should minify source 60 under options 2 1`] = `"a=b(c||d).e();f=g[h].forEach(i);j=k\`l\`.m();n=o+p;do{q()}while(r);o:for(;!t;);var l=function(){},e=class{},s={};"`;
+exports[`JavaScript minifier, the cases' sources under options drawn at random should minify source 60 under options 2 1`] = `"a=b(c||d).e();f=g[h].forEach(i);j=k\`l\`.m();n=o+p;do{q()}while(r);for(;!t;);var l=function(){},e=class{},s={};"`;
 
 exports[`JavaScript minifier, the cases' sources under options drawn at random should minify source 61 under options 0 1`] = `"do{}while(a);b;for(var i in o)c();for(let v of w)d();with(o)e;x===1?f():g();try{h()}catch{}try{h()}catch(error){}finally{k()}a?b():c();throw Error(\\"x\\",1);var p,q,s,u;function named(a){return arguments}async function*generate(){for await(let v of w)yield*v}"`;
 
@@ -1938,7 +1941,7 @@ exports[`JavaScript minifier, the cases' sources under options drawn at random s
 
 exports[`JavaScript minifier, the cases' sources under options drawn at random should minify source 80 under options 2 1`] = `"for(;x&&y;){g();h()}for(;y;){g();h()}for(;z&&y;)g();"`;
 
-exports[`JavaScript minifier, the cases' sources under options drawn at random should minify source 81 under options 0 1`] = `"!(()=>{var x=sink();sink(class{static{x}})})();sink();sink(class{static{g()}});!(()=>{var x=sink();sink(class{static{x===g()}})})();!(()=>{var x=sink();sink(class{static{x===1&&g()}})})();!(()=>{var x=sink();sink(class{static{x||x}})})();sink();sink(class{static{g()}});!(()=>{var x=sink();sink(class{static{x&&g()}})})();!(()=>{var x=sink();sink(class{static{x||g()}})})();!(()=>{var x=sink();sink(class{static{x&&x}})})();!(()=>{var x=sink();sink(class{static{try{x}catch(e){x}finally{x}}})})();sink();sink(class{static{try{g()}catch(e){}}});!(()=>{var x=sink();sink(class{static{try{x}catch(e){g()}}})})();!(()=>{var x=sink();sink(class{static{try{x}finally{g()}}})})();!(()=>{var x=sink();sink(class{static{try{x}catch(e){}}})})();sink();sink(class{});sink();sink(class{static{g()}});sink();sink(class{});sink();sink(class{});!(()=>{var x=sink();sink(class{static{x}})})();!(()=>{var x=sink();sink(class{static{x}})})();!(()=>{var x=sink();sink(class{static{x}})})();sink();sink(class{static{0}});!(()=>{var x=sink();sink(class{static{x.y}})})();!function(){sink();sink(class{static{this.z}})}();"`;
+exports[`JavaScript minifier, the cases' sources under options drawn at random should minify source 81 under options 0 1`] = `"sink();sink(class{});sink();sink(class{static{g()}});!(()=>{var x=sink();sink(class{static{x===g()}})})();!(()=>{var x=sink();sink(class{static{x===1&&g()}})})();!(()=>{var x=sink();sink(class{static{x||x}})})();sink();sink(class{static{g()}});!(()=>{var x=sink();sink(class{static{x&&g()}})})();!(()=>{var x=sink();sink(class{static{x||g()}})})();!(()=>{var x=sink();sink(class{static{x&&x}})})();!(()=>{var x=sink();sink(class{static{try{x}catch(e){x}finally{x}}})})();sink();sink(class{static{try{g()}catch(e){}}});!(()=>{var x=sink();sink(class{static{try{x}catch(e){g()}}})})();!(()=>{var x=sink();sink(class{static{try{x}finally{g()}}})})();!(()=>{var x=sink();sink(class{static{try{x}catch(e){}}})})();sink();sink(class{});sink();sink(class{static{g()}});sink();sink(class{});sink();sink(class{});!(()=>{var x=sink();sink(class{static{x}})})();!(()=>{var x=sink();sink(class{static{x}})})();!(()=>{var x=sink();sink(class{static{x}})})();sink();sink(class{static{0}});!(()=>{var x=sink();sink(class{static{x.y}})})();!function(){sink();sink(class{static{this.z}})}();"`;
 
 exports[`JavaScript minifier, the cases' sources under options drawn at random should minify source 82 under options 3 1`] = `
 "var x=g(),y=g(),b=g()
@@ -1991,7 +1994,7 @@ return}console.log(f(1))
 "
 `;
 
-exports[`JavaScript minifier, the cases' sources under options drawn at random should minify source 99 under options 17 1`] = `"function named(r){return arguments}async function*generate(){for await(let r of w)yield*r}r:for(;;)break r;do{}while(a);while(b)break;for(var i in o)c();for(let r of w)d();with(o)e;x===1?f():g();try{h()}catch{}try{h()}catch(error){}finally{k()}throw a?b():c(),Error(\\"x\\",1);var p,q,s,u;"`;
+exports[`JavaScript minifier, the cases' sources under options drawn at random should minify source 99 under options 17 1`] = `"function named(r){return arguments}async function*generate(){for await(let r of w)yield*r}for(;;)break;do{}while(a);while(b)break;for(var i in o)c();for(let r of w)d();with(o)e;x===1?f():g();try{h()}catch{}try{h()}catch(error){}finally{k()}throw a?b():c(),Error(\\"x\\",1);var p,q,s,u;"`;
 
 exports[`JavaScript minifier, the cases' sources under options drawn at random should minify source 100 under options 19 1`] = `"var e=g(),r=g(),t=g(),u=g();sink(true===e,false!==e,true==e,true,!0,!!e);"`;
 
@@ -2065,7 +2068,7 @@ exports[`JavaScript minifier, the cases' sources under options drawn at random s
 
 exports[`JavaScript minifier, the cases' sources under options drawn at random should minify source 135 under options 24 1`] = `"import a,*as b from\\"c\\";import*as d from\\"e\\";import{\\"f g\\"as h,i}from\\"j\\";import k from\\"l\\"with{type:\\"json\\"};"`;
 
-exports[`JavaScript minifier, the cases' sources under options drawn at random should minify source 136 under options 25 1`] = `"\\"a directive\\";label:for(;;)break label;do{}while(a);while(b)break;for(var i in o)c();for(let v of w)d();with(o)e;if(x===1)f();else g();try{h()}catch{}try{h()}catch(error){}finally{k()}if(a)b();else c();throw Error(\\"x\\",1);var p,q,s,u;function named(a){return arguments}async function*generate(){for await(let v of w)yield*v}"`;
+exports[`JavaScript minifier, the cases' sources under options drawn at random should minify source 136 under options 25 1`] = `"\\"a directive\\";for(;;)break;do{}while(a);while(b)break;for(var i in o)c();for(let v of w)d();with(o)e;if(x===1)f();else g();try{h()}catch{}try{h()}catch(error){}finally{k()}if(a)b();else c();throw Error(\\"x\\",1);var p,q,s,u;function named(a){return arguments}async function*generate(){for await(let v of w)yield*v}"`;
 
 exports[`JavaScript minifier, the cases' sources under options drawn at random should minify source 137 under options 24 1`] = `"sink(~~a,~~a,~~a,-2,0,-123456790,a|b,~(a&b),~~a>>>0,0^~a,0|a,~a?1:2);"`;
 
@@ -2246,7 +2249,7 @@ exports[`JavaScript minifier, the cases' sources under options drawn at random s
 
 exports[`JavaScript minifier, the cases' sources under options drawn at random should minify source 197 under options 67 1`] = `"function f(a){let x=a*2,y=g(x);return[x,y]}function g(v){return v+1}console.log(f(3));"`;
 
-exports[`JavaScript minifier, the cases' sources under options drawn at random should minify source 198 under options 68 1`] = `"(function(){if(1){var o=console.log.name;console.log(o,o)}console.log(\\"g\\")})();"`;
+exports[`JavaScript minifier, the cases' sources under options drawn at random should minify source 198 under options 68 1`] = `"(function(){var o=console.log.name;console.log(o,o);console.log(\\"g\\")})();"`;
 
 exports[`JavaScript minifier, the cases' sources under options drawn at random should minify source 199 under options 66 1`] = `"function f(o,l,n){if(o==null||o===l||n)return!0;for(var r=0;r<2;r++)o!==r&&l!==r&&console.log(r);try{if(o===7||l===7)throw o}catch(o){console.log(\\"caught\\",o)}for(;!o&&!l;){console.log(3);break}return!1}console.log(f(1,1),f(null,2),f(7,0),f(0,7),f(0,0,0));"`;
 
