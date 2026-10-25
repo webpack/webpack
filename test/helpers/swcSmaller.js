@@ -66,7 +66,6 @@ const SWC_SMALLER_BY_REASON = [
 	[
 		"swc drops what nothing reads or what has no effect: unused variables and destructuring, side-effect-free `new Map()` and pure calls, an empty constructor",
 		[
-			"swc minifier: fixture/issues/12301/input.js",
 			"swc minifier: fixture/simple/sequences/.0001/input.js",
 			"swc minifier: pass-1/joda/2/input.js"
 		]

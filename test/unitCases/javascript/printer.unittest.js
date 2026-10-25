@@ -1857,6 +1857,11 @@ const IMPROVED_CASES = [
 		{ compress: {}, mangle: false }
 	],
 	[
+		"the values a function called in place returns, where nothing reads the call's value, in a `finally`, a branch, an arrow or a sequence",
+		'function g(v) { console.log("g", v); return v; } var w = 8; function t(y) { (function () { try { throw 1; } finally { return 2; } })(); (function (x) { if (x) return 3; g(x); })(y); (() => { if (g(1)) return 4; g(2); })(); g(3), function (x) { if (x) return x; g(x); }(y); void function (x) { if (x) return w; g(4); }(y); } t(0); t(1);',
+		{ compress: {}, mangle: false }
+	],
+	[
 		"a computed `NaN` or `null` key as the name it converts to, in an object, a pattern and a class",
 		"class C { [NaN]() { return 1; } static [null] = 2; get [null]() { return 3; } } var { [NaN]: a, [null]: b } = { [NaN]: 4, [null]: 5 }; console.log(new C().NaN(), C.null, new C().null, a, b, Object.keys({ [NaN]: 6, [null]: 7 }).join());",
 		{ compress: {}, mangle: false }
@@ -10591,6 +10596,35 @@ describe("syntax-printer", () => {
 				mangle: false
 			});
 			expect(plain.code).toContain("c?{[a]:1}:{a:1}");
+		});
+
+		it("should keep what a function called in place returns where it may be read", async () => {
+			const { minify } = await load();
+			for (const input of [
+				"a = function (x) { if (x) return 1; g(); }(y);",
+				"x = (h(), function (x) { if (x) return 1; g(); }(y));",
+				"(async function (x) { if (x) return 1; await g(); })(y);",
+				"(function f(n) { if (n) return f(n - 1) + 1; g(); })(y);",
+				"(function (n) { if (n) return 1; arguments.length && g(); })(y);",
+				"new function (x) { if (x) return 1; g(); }(y);",
+				"(function (x) { if (x) return x.y; g(); })(y);",
+				"try { (function (x) { if (x) return z; g(); })(y); } catch (e) {} let z = 1;",
+				"(function (x) { if (x) return undeclared; g(); })(y);",
+				"g(function (x) { if (x) return 1; h(); });",
+				"(function () { g(function (x) { if (x) return 1; h(); }); })();",
+				'(function f(n) { if (!n) return { valueOf() { console.log("v"); } }; f(n - 1) + 1; })(1);',
+				"(function f(n) { if (!n) return 2; console.log(f(n - 1) * 3); })(1);",
+				"var a; (function (x) { if (x) return a = 1; g(); })(y); console.log(a);",
+				"try { (function (x) { if (x) return 1n + 1; g(); })(y); } catch (e) { console.log(e.name); }"
+			]) {
+				const { code } = await minify(input, { compress: {}, mangle: false });
+				expect(code).toMatch(/return[^;}]/);
+			}
+			const { code } = await minify("(function (x) { if (x) return 1; g(); })(y);", {
+				compress: { side_effects: false },
+				mangle: false
+			});
+			expect(code).toContain("return 1");
 		});
 
 		it("should keep a computed `NaN` key in brackets where computed keys stay", async () => {

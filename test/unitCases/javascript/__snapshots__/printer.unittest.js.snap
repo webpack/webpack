@@ -2007,6 +2007,8 @@ exports[`syntax-printer improve phase should write less, printing the same: stor
 
 exports[`syntax-printer improve phase should write less, printing the same: tabs in a long string, written raw, beside an escaped backslash 1`] = `"console.log(\\"row	row	row	row	row	row	row	row	row	row	row	row	row	row	row	row	row	row	row	row	row	row	row	row	row	row	row	row	row	row	\\",\\"a\\\\\\\\tb	b	b	b	b	b	b	b	b	b	b	b	b	b	b	b	b	b	b	b	b	b	b	b	b	b	b	b	b	b	b	b	b	b	b	b	b	b	b	b	b	b	b	b	b	b	b	b	b	b	\\",\\"c\\\\td\\\\te\\");"`;
 
+exports[`syntax-printer improve phase should write less, printing the same: the values a function called in place returns, where nothing reads the call's value, in a \`finally\`, a branch, an arrow or a sequence 1`] = `"function g(v){return console.log(\\"g\\",v),v}var w=8;function t(y){!function(){try{throw 1}finally{return}}(),y||g(y),g(1)||g(2),g(3),y||g(y),y||g(4)}t(0),t(1);"`;
+
 exports[`syntax-printer improve phase should write less, printing the same: two \`var\`s declared bare and set once to one constructor, read through it inside functions called with \`new\` 1`] = `"!function(){var C=function(){this.v=1};console.log([function(){return(new C).v},function(){return(new C).v}].map(function(f){return f()}))}();"`;
 
 exports[`syntax-printer improve phase should write less, printing the same: two calls in a sequence, one keeping a \`let\` in a block 1`] = `"{let o=console.log.name;console.log(o,o)}try{console.log(1)}catch(o){}console.log(2);"`;
