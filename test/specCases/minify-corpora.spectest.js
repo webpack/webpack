@@ -1315,10 +1315,12 @@ const IMPROVED_YET_BIGGER = {
 		"27 bytes fewer, 1 more gzipped: the first function written in place as `(console.log(1),1)` breaks the `function(){var o=` run the second one repeats",
 	"terser_reduce_vars_unsafe_evaluate_side_effect_free_1 (the default minimizer's options)":
 		"27 bytes fewer, 3 more gzipped: the third function written in place as `(console.log(3),3)` repeats the first one's, breaking the `function(){var o=` runs gzip matched",
+	"array-iterator-close.js (the default minimizer's options)":
+		"19 bytes fewer, 10 more gzipped: counting `++r` written as the values it reaches breaks the `assert.sameValue(e,++r)` runs each check repeats",
+	"for-of-iterator-close.js (the default minimizer's options)":
+		"16 bytes fewer, 3 more gzipped: counting `++r` written as the values it reaches breaks the `assert.sameValue(e,++r)` runs each check repeats",
 	"pure_getters/set_immutable_5 (its own options)":
 		"13 bytes fewer, 1 more gzipped: `console.log(c?\"FAIL\":\"PASS\")` merges two calls a file this small compresses alike",
-	"collapse_vars/modified (a module mangled at its top level)":
-		"17 bytes fewer, 9 more gzipped: the flattened `(r=n=1,n+++r)` breaks the `function(n){var r=n` runs the calls beside it repeat",
 	"arrow/object_parens (its own options)":
 		"3 bytes fewer, 1 more gzipped: `+!!{}` breaks the `()=>(` runs of the arrows around it gzip reused",
 	"functions/issue_3054 (its own options)":
@@ -1656,7 +1658,6 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 			"S11.4.4_A2.1_T1.js (the default minimizer's options)",
 			"S11.4.5_A2.1_T1.js (the default minimizer's options)",
 			"S11.5.1_A2.1_T1.js (the default minimizer's options)",
-			"S11.6.1_A2.1_T1.js (the default minimizer's options)",
 			"S11.6.1_A2.2_T2.js (the default minimizer's options)",
 			"S11.8.3_A2.1_T1.js (the default minimizer's options)",
 			"S11.8.4_A2.1_T1.js (the default minimizer's options)",
@@ -1803,7 +1804,6 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 			"range.js (the default minimizer's options)",
 			"reduce_vars/defun_assign (a module mangled at its top level)",
 			"reduce_vars/defun_assign (reminify 4 {\"toplevel\":true})",
-			"reduce_vars/modified (reminify 2 {\"mangle\":false})",
 			"replacer-function-result-undefined.js (the default minimizer's options)",
 			"resizable-buffer-shrink-mid-iteration.js (the default minimizer's options)",
 			"return-a-new-array-object.js (the default minimizer's options)",
@@ -1819,7 +1819,6 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 			"symbol-logical-not-evaluation.js (the default minimizer's options)",
 			"template-string/side_effects (the default minimizer's options)",
 			"terser_array_constructor_unsafe (its own options)",
-			"terser_insane_2 (its own options)",
 			"terser_insane_2 (the default minimizer's options)",
 			"terser_issue_1466_different_variable_in_multiple_for_in (its own options)",
 			"terser_issue_1466_different_variable_in_multiple_for_of (its own options)",
