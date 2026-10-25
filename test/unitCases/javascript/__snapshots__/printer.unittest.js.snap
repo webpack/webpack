@@ -25,7 +25,7 @@ exports[`JavaScript minifier printing a SyntaxTree should print terser's tree of
 
 exports[`JavaScript minifier printing a SyntaxTree should read a single named source under its name 1`] = `"a(1);"`;
 
-exports[`jsMinify should minify: compress off (with source map) 1`] = `"\\"use strict\\";function unusedHelper(e,n){return e+n}sink(function e(){let n=[1,2,3].map(e=>e*2);if(n.length>0){console.log(n)}else{console.log(\\"empty\\")}return n});"`;
+exports[`jsMinify should minify: compress off (with source map) 1`] = `"\\"use strict\\";function unusedHelper(e,n){return e+n}sink(function e(){let n=[1,2,3].map(e=>e+1);if(n.length>0){console.log(n)}else{console.log(\\"empty\\")}return n});"`;
 
 exports[`jsMinify should minify: compress off (with source map) 2`] = `
 Array [
@@ -33,7 +33,7 @@ Array [
 ]
 `;
 
-exports[`jsMinify should minify: compress off 1`] = `"\\"use strict\\";function unusedHelper(e,n){return e+n}sink(function e(){let n=[1,2,3].map(e=>e*2);if(n.length>0){console.log(n)}else{console.log(\\"empty\\")}return n});"`;
+exports[`jsMinify should minify: compress off 1`] = `"\\"use strict\\";function unusedHelper(e,n){return e+n}sink(function e(){let n=[1,2,3].map(e=>e+1);if(n.length>0){console.log(n)}else{console.log(\\"empty\\")}return n});"`;
 
 exports[`jsMinify should minify: compress off 2`] = `
 Array [
@@ -41,7 +41,7 @@ Array [
 ]
 `;
 
-exports[`jsMinify should minify: defaults (with source map) 1`] = `"\\"use strict\\";function unusedHelper(e,n){return e+n}sink(function(){let e=[1,2,3].map(e=>2*e);return e.length>0?console.log(e):console.log(\\"empty\\"),e});"`;
+exports[`jsMinify should minify: defaults (with source map) 1`] = `"\\"use strict\\";function unusedHelper(e,n){return e+n}sink(function(){let e=[1,2,3].map(e=>e+1);return e.length>0?console.log(e):console.log(\\"empty\\"),e});"`;
 
 exports[`jsMinify should minify: defaults (with source map) 2`] = `
 Array [
@@ -49,7 +49,7 @@ Array [
 ]
 `;
 
-exports[`jsMinify should minify: defaults 1`] = `"\\"use strict\\";function unusedHelper(e,n){return e+n}sink(function(){let e=[1,2,3].map(e=>2*e);return e.length>0?console.log(e):console.log(\\"empty\\"),e});"`;
+exports[`jsMinify should minify: defaults 1`] = `"\\"use strict\\";function unusedHelper(e,n){return e+n}sink(function(){let e=[1,2,3].map(e=>e+1);return e.length>0?console.log(e):console.log(\\"empty\\"),e});"`;
 
 exports[`jsMinify should minify: defaults 2`] = `
 Array [
@@ -60,7 +60,7 @@ Array [
 exports[`jsMinify should minify: deprecated output spelling (with source map) 1`] = `
 "/*! @license MIT - keep me */
 // a line comment
-\\"use strict\\";function unusedHelper(e,n){return e+n}sink(function(){let e=[1,2,3].map(e=>2*e);return e.length>0?console.log(e):console.log(\\"empty\\"),e});"
+\\"use strict\\";function unusedHelper(e,n){return e+n}sink(function(){let e=[1,2,3].map(e=>e+1);return e.length>0?console.log(e):console.log(\\"empty\\"),e});"
 `;
 
 exports[`jsMinify should minify: deprecated output spelling (with source map) 2`] = `Array []`;
@@ -68,12 +68,12 @@ exports[`jsMinify should minify: deprecated output spelling (with source map) 2`
 exports[`jsMinify should minify: deprecated output spelling 1`] = `
 "/*! @license MIT - keep me */
 // a line comment
-\\"use strict\\";function unusedHelper(e,n){return e+n}sink(function(){let e=[1,2,3].map(e=>2*e);return e.length>0?console.log(e):console.log(\\"empty\\"),e});"
+\\"use strict\\";function unusedHelper(e,n){return e+n}sink(function(){let e=[1,2,3].map(e=>e+1);return e.length>0?console.log(e):console.log(\\"empty\\"),e});"
 `;
 
 exports[`jsMinify should minify: deprecated output spelling 2`] = `Array []`;
 
-exports[`jsMinify should minify: ecma 5 (with source map) 1`] = `"\\"use strict\\";function unusedHelper(e,n){return e+n}sink(function(){let e=[1,2,3].map(e=>2*e);return e.length>0?console.log(e):console.log(\\"empty\\"),e});"`;
+exports[`jsMinify should minify: ecma 5 (with source map) 1`] = `"\\"use strict\\";function unusedHelper(e,n){return e+n}sink(function(){let e=[1,2,3].map(e=>e+1);return e.length>0?console.log(e):console.log(\\"empty\\"),e});"`;
 
 exports[`jsMinify should minify: ecma 5 (with source map) 2`] = `
 Array [
@@ -81,7 +81,7 @@ Array [
 ]
 `;
 
-exports[`jsMinify should minify: ecma 5 1`] = `"\\"use strict\\";function unusedHelper(e,n){return e+n}sink(function(){let e=[1,2,3].map(e=>2*e);return e.length>0?console.log(e):console.log(\\"empty\\"),e});"`;
+exports[`jsMinify should minify: ecma 5 1`] = `"\\"use strict\\";function unusedHelper(e,n){return e+n}sink(function(){let e=[1,2,3].map(e=>e+1);return e.length>0?console.log(e):console.log(\\"empty\\"),e});"`;
 
 exports[`jsMinify should minify: ecma 5 2`] = `
 Array [
@@ -97,7 +97,7 @@ exports[`jsMinify should minify: event handler 1`] = `"window.x?console.log(\\"c
 
 exports[`jsMinify should minify: event handler 2`] = `Array []`;
 
-exports[`jsMinify should minify: extract by condition (with source map) 1`] = `"\\"use strict\\";function unusedHelper(e,n){return e+n}sink(function(){let e=[1,2,3].map(e=>2*e);return e.length>0?console.log(e):console.log(\\"empty\\"),e});"`;
+exports[`jsMinify should minify: extract by condition (with source map) 1`] = `"\\"use strict\\";function unusedHelper(e,n){return e+n}sink(function(){let e=[1,2,3].map(e=>e+1);return e.length>0?console.log(e):console.log(\\"empty\\"),e});"`;
 
 exports[`jsMinify should minify: extract by condition (with source map) 2`] = `
 Array [
@@ -105,7 +105,7 @@ Array [
 ]
 `;
 
-exports[`jsMinify should minify: extract by condition 1`] = `"\\"use strict\\";function unusedHelper(e,n){return e+n}sink(function(){let e=[1,2,3].map(e=>2*e);return e.length>0?console.log(e):console.log(\\"empty\\"),e});"`;
+exports[`jsMinify should minify: extract by condition 1`] = `"\\"use strict\\";function unusedHelper(e,n){return e+n}sink(function(){let e=[1,2,3].map(e=>e+1);return e.length>0?console.log(e):console.log(\\"empty\\"),e});"`;
 
 exports[`jsMinify should minify: extract by condition 2`] = `
 Array [
@@ -113,7 +113,7 @@ Array [
 ]
 `;
 
-exports[`jsMinify should minify: extract by pattern (with source map) 1`] = `"\\"use strict\\";function unusedHelper(e,n){return e+n}sink(function(){let e=[1,2,3].map(e=>2*e);return e.length>0?console.log(e):console.log(\\"empty\\"),e});"`;
+exports[`jsMinify should minify: extract by pattern (with source map) 1`] = `"\\"use strict\\";function unusedHelper(e,n){return e+n}sink(function(){let e=[1,2,3].map(e=>e+1);return e.length>0?console.log(e):console.log(\\"empty\\"),e});"`;
 
 exports[`jsMinify should minify: extract by pattern (with source map) 2`] = `
 Array [
@@ -121,7 +121,7 @@ Array [
 ]
 `;
 
-exports[`jsMinify should minify: extract by pattern 1`] = `"\\"use strict\\";function unusedHelper(e,n){return e+n}sink(function(){let e=[1,2,3].map(e=>2*e);return e.length>0?console.log(e):console.log(\\"empty\\"),e});"`;
+exports[`jsMinify should minify: extract by pattern 1`] = `"\\"use strict\\";function unusedHelper(e,n){return e+n}sink(function(){let e=[1,2,3].map(e=>e+1);return e.length>0?console.log(e):console.log(\\"empty\\"),e});"`;
 
 exports[`jsMinify should minify: extract by pattern 2`] = `
 Array [
@@ -129,24 +129,24 @@ Array [
 ]
 `;
 
-exports[`jsMinify should minify: extract nothing named (with source map) 1`] = `"\\"use strict\\";function unusedHelper(e,n){return e+n}sink(function(){let e=[1,2,3].map(e=>2*e);return e.length>0?console.log(e):console.log(\\"empty\\"),e});"`;
+exports[`jsMinify should minify: extract nothing named (with source map) 1`] = `"\\"use strict\\";function unusedHelper(e,n){return e+n}sink(function(){let e=[1,2,3].map(e=>e+1);return e.length>0?console.log(e):console.log(\\"empty\\"),e});"`;
 
 exports[`jsMinify should minify: extract nothing named (with source map) 2`] = `Array []`;
 
-exports[`jsMinify should minify: extract nothing named 1`] = `"\\"use strict\\";function unusedHelper(e,n){return e+n}sink(function(){let e=[1,2,3].map(e=>2*e);return e.length>0?console.log(e):console.log(\\"empty\\"),e});"`;
+exports[`jsMinify should minify: extract nothing named 1`] = `"\\"use strict\\";function unusedHelper(e,n){return e+n}sink(function(){let e=[1,2,3].map(e=>e+1);return e.length>0?console.log(e):console.log(\\"empty\\"),e});"`;
 
 exports[`jsMinify should minify: extract nothing named 2`] = `Array []`;
 
 exports[`jsMinify should minify: extraction off (with source map) 1`] = `
 "/*! @license MIT - keep me */
-\\"use strict\\";function unusedHelper(e,n){return e+n}sink(function(){let e=[1,2,3].map(e=>2*e);return e.length>0?console.log(e):console.log(\\"empty\\"),e});"
+\\"use strict\\";function unusedHelper(e,n){return e+n}sink(function(){let e=[1,2,3].map(e=>e+1);return e.length>0?console.log(e):console.log(\\"empty\\"),e});"
 `;
 
 exports[`jsMinify should minify: extraction off (with source map) 2`] = `Array []`;
 
 exports[`jsMinify should minify: extraction off 1`] = `
 "/*! @license MIT - keep me */
-\\"use strict\\";function unusedHelper(e,n){return e+n}sink(function(){let e=[1,2,3].map(e=>2*e);return e.length>0?console.log(e):console.log(\\"empty\\"),e});"
+\\"use strict\\";function unusedHelper(e,n){return e+n}sink(function(){let e=[1,2,3].map(e=>e+1);return e.length>0?console.log(e):console.log(\\"empty\\"),e});"
 `;
 
 exports[`jsMinify should minify: extraction off 2`] = `Array []`;
@@ -154,7 +154,7 @@ exports[`jsMinify should minify: extraction off 2`] = `Array []`;
 exports[`jsMinify should minify: keep every comment (with source map) 1`] = `
 "/*! @license MIT - keep me */
 // a line comment
-\\"use strict\\";function unusedHelper(e,n){return e+n}sink(function(){let e=[1,2,3].map(e=>2*e);return e.length>0?console.log(e):console.log(\\"empty\\"),e});"
+\\"use strict\\";function unusedHelper(e,n){return e+n}sink(function(){let e=[1,2,3].map(e=>e+1);return e.length>0?console.log(e):console.log(\\"empty\\"),e});"
 `;
 
 exports[`jsMinify should minify: keep every comment (with source map) 2`] = `Array []`;
@@ -162,12 +162,12 @@ exports[`jsMinify should minify: keep every comment (with source map) 2`] = `Arr
 exports[`jsMinify should minify: keep every comment 1`] = `
 "/*! @license MIT - keep me */
 // a line comment
-\\"use strict\\";function unusedHelper(e,n){return e+n}sink(function(){let e=[1,2,3].map(e=>2*e);return e.length>0?console.log(e):console.log(\\"empty\\"),e});"
+\\"use strict\\";function unusedHelper(e,n){return e+n}sink(function(){let e=[1,2,3].map(e=>e+1);return e.length>0?console.log(e):console.log(\\"empty\\"),e});"
 `;
 
 exports[`jsMinify should minify: keep every comment 2`] = `Array []`;
 
-exports[`jsMinify should minify: keep no comment (with source map) 1`] = `"\\"use strict\\";function unusedHelper(e,n){return e+n}sink(function(){let e=[1,2,3].map(e=>2*e);return e.length>0?console.log(e):console.log(\\"empty\\"),e});"`;
+exports[`jsMinify should minify: keep no comment (with source map) 1`] = `"\\"use strict\\";function unusedHelper(e,n){return e+n}sink(function(){let e=[1,2,3].map(e=>e+1);return e.length>0?console.log(e):console.log(\\"empty\\"),e});"`;
 
 exports[`jsMinify should minify: keep no comment (with source map) 2`] = `
 Array [
@@ -175,7 +175,7 @@ Array [
 ]
 `;
 
-exports[`jsMinify should minify: keep no comment 1`] = `"\\"use strict\\";function unusedHelper(e,n){return e+n}sink(function(){let e=[1,2,3].map(e=>2*e);return e.length>0?console.log(e):console.log(\\"empty\\"),e});"`;
+exports[`jsMinify should minify: keep no comment 1`] = `"\\"use strict\\";function unusedHelper(e,n){return e+n}sink(function(){let e=[1,2,3].map(e=>e+1);return e.length>0?console.log(e):console.log(\\"empty\\"),e});"`;
 
 exports[`jsMinify should minify: keep no comment 2`] = `
 Array [
@@ -183,7 +183,7 @@ Array [
 ]
 `;
 
-exports[`jsMinify should minify: mangle off (with source map) 1`] = `"\\"use strict\\";function unusedHelper(a,b){return a+b}sink(function(){let list=[1,2,3].map(value=>2*value);return list.length>0?console.log(list):console.log(\\"empty\\"),list});"`;
+exports[`jsMinify should minify: mangle off (with source map) 1`] = `"\\"use strict\\";function unusedHelper(a,b){return a+b}sink(function(){let list=[1,2,3].map(value=>value+1);return list.length>0?console.log(list):console.log(\\"empty\\"),list});"`;
 
 exports[`jsMinify should minify: mangle off (with source map) 2`] = `
 Array [
@@ -191,7 +191,7 @@ Array [
 ]
 `;
 
-exports[`jsMinify should minify: mangle off 1`] = `"\\"use strict\\";function unusedHelper(a,b){return a+b}sink(function(){let list=[1,2,3].map(value=>2*value);return list.length>0?console.log(list):console.log(\\"empty\\"),list});"`;
+exports[`jsMinify should minify: mangle off 1`] = `"\\"use strict\\";function unusedHelper(a,b){return a+b}sink(function(){let list=[1,2,3].map(value=>value+1);return list.length>0?console.log(list):console.log(\\"empty\\"),list});"`;
 
 exports[`jsMinify should minify: mangle off 2`] = `
 Array [
@@ -231,7 +231,7 @@ Array [
 ]
 `;
 
-exports[`jsMinify should minify: script goal (with source map) 1`] = `"\\"use strict\\";function unusedHelper(e,n){return e+n}sink(function(){let e=[1,2,3].map(e=>2*e);return e.length>0?console.log(e):console.log(\\"empty\\"),e});"`;
+exports[`jsMinify should minify: script goal (with source map) 1`] = `"\\"use strict\\";function unusedHelper(e,n){return e+n}sink(function(){let e=[1,2,3].map(e=>e+1);return e.length>0?console.log(e):console.log(\\"empty\\"),e});"`;
 
 exports[`jsMinify should minify: script goal (with source map) 2`] = `
 Array [
@@ -239,7 +239,7 @@ Array [
 ]
 `;
 
-exports[`jsMinify should minify: script goal 1`] = `"\\"use strict\\";function unusedHelper(e,n){return e+n}sink(function(){let e=[1,2,3].map(e=>2*e);return e.length>0?console.log(e):console.log(\\"empty\\"),e});"`;
+exports[`jsMinify should minify: script goal 1`] = `"\\"use strict\\";function unusedHelper(e,n){return e+n}sink(function(){let e=[1,2,3].map(e=>e+1);return e.length>0?console.log(e):console.log(\\"empty\\"),e});"`;
 
 exports[`jsMinify should minify: script goal 2`] = `
 Array [
