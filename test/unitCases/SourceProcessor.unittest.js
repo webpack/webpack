@@ -171,6 +171,21 @@ describe("SourceProcessor", () => {
 			expect(held(context)).toBe(0);
 		});
 
+		it("prints a replaced node as its replacement, once, after running its printer", () => {
+			let printed = 0;
+			const context = new PrintContext({ mode: "minify" }, () => {
+				printed++;
+				return "printed";
+			});
+			expect(context.printNode(1, null)).toBe(false);
+			context.replace(2, "replaced");
+			expect(context.printNode(2, null)).toBe(true);
+			expect(context.get(2)).toBe("replaced");
+			expect(context.printNode(2, null)).toBe(false);
+			expect(context.get(2)).toBe("printed");
+			expect(printed).toBe(3);
+		});
+
 		it("answers for a node printed since the drop, and no earlier one", () => {
 			const context = new PrintContext({ mode: "minify" }, () => "z");
 			context.printNode(1, null);

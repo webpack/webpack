@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Range a CSS declaration's value on its node, and minify CSS faster.
+Let CSS visitors replace nodes and read value ranges, and minify CSS faster.

@@ -624,6 +624,80 @@ describe("CssSyntax — substitution span searches", () => {
 });
 
 describe("CssSyntax — SourceProcessor", () => {
+	describe("replacing a node", () => {
+		/**
+		 * @param {string} css source
+		 * @param {import("../../../lib/css/syntax-parser").CssVisitorMap} visitors visitors
+		 * @param {"minify" | "beautify"} mode print mode
+		 * @returns {string | undefined} the printed code
+		 */
+		const print = (css, visitors, mode = "minify") => {
+			const result = new SourceProcessor().use(visitors).process(css, { mode });
+			return result && result.code;
+		};
+
+		it("prints a value token, a declaration and a rule as their replacement", () => {
+			const css = "a{color:#ff0000;margin-top:1px}b{color:red}";
+			expect(print(css, { [NodeType.Hash]: (path) => path.replace("blue") })).toBe(
+				"a{color:blue;margin-top:1px}b{color:red}"
+			);
+			expect(
+				print(css, {
+					[NodeType.Declaration]: (path) => {
+						if (path.name() === "margin-top") path.replace("padding:2px");
+					}
+				})
+			).toBe("a{color:red;padding:2px}b{color:red}");
+			expect(
+				print(css, {
+					[NodeType.QualifiedRule]: (path) => {
+						if (path.source().startsWith("b")) path.replace("i{x:y}");
+					}
+				})
+			).toBe("a{color:red;margin-top:1px}i{x:y}");
+			expect(
+				print(
+					css,
+					{ [NodeType.Hash]: (path) => path.replace("blue") },
+					"beautify"
+				)
+			).toBe("a {\ncolor: blue;\nmargin-top: 1px;\n}b {\ncolor: red;\n}");
+		});
+
+		it("removes a node, in an enter visitor too", () => {
+			expect(
+				print("a{color:red;top:0}", {
+					[NodeType.Declaration]: {
+						enter: (path) => {
+							if (path.name() === "color") path.remove();
+						}
+					}
+				})
+			).toBe("a{top:0}");
+		});
+
+		it("prints what holds a replacement without the rewrites, and the rest with them", () => {
+			expect(
+				print("a{margin:0;margin-top:#f00}b{margin:0;margin-top:1px}", {
+					[NodeType.Hash]: (path) => path.replace("1px")
+				})
+			).toBe("a{margin:0;margin-top:1px}b{margin:1px 0 0}");
+		});
+
+		it("does nothing on a walk that prints nothing", () => {
+			let seen = 0;
+			new SourceProcessor()
+				.use({
+					[NodeType.Hash]: (path) => {
+						seen++;
+						path.replace("blue");
+					}
+				})
+				.process("a{color:#f00}");
+			expect(seen).toBe(1);
+		});
+	});
+
 	it("exposes range / unescaped / type flags / setEnd / setBlockEnd on the path", () => {
 		/** @type {Record<string, unknown>} */
 		const seen = {};
