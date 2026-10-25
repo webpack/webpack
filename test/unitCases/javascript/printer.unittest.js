@@ -14793,6 +14793,31 @@ describe("JavaScript minifier mangling a SyntaxTree", () => {
 });
 
 const ACORN_CORPUS = require("../../fixtures/acorn-corpus.json");
+/**
+ * How deep a program nests its brackets.
+ * @param {string} code a program
+ * @returns {number} the deepest nesting
+ */
+const nestingOf = (code) => {
+	let depth = 0;
+	let deepest = 0;
+	for (const char of code) {
+		if (char === "(" || char === "[" || char === "{") {
+			deepest = Math.max(deepest, ++depth);
+		} else if (char === ")" || char === "]" || char === "}") {
+			depth--;
+		}
+	}
+	return deepest;
+};
+// Bun runs a test in a worker whose stack no parser gets 2000 levels deep in,
+// as acorn's own test of the deepest nesting asks.
+const ACORN_CORPUS_CASES =
+	process.versions.bun === undefined
+		? ACORN_CORPUS.cases
+		: ACORN_CORPUS.cases.filter(
+				(/** @type {{ code: string }} */ { code }) => nestingOf(code) < 1000
+			);
 const { NODE_KIND_ANCESTRY } = require("../../../lib/javascript/syntax-printer");
 
 // What terser calls each field webpack's nodes name as ESTree does, by the
@@ -15146,7 +15171,7 @@ describe("syntax-printer's port of terser's ESTree conversion", () => {
 	it("should convert acorn's corpus both ways as terser does", async () => {
 		/** @type {string[]} */
 		const found = [];
-		for (const { code, options } of ACORN_CORPUS.cases) {
+		for (const { code, options } of ACORN_CORPUS_CASES) {
 			const sourceType =
 				options && options.sourceType === "module" ? "module" : "script";
 			for (const difference of await disagreements(code, sourceType)) {
@@ -17637,7 +17662,7 @@ describe("JavaScript minifier, what the tables leave out", () => {
 
 	it("should minify every program of acorn's corpus to one that parses", async () => {
 		const { minify } = await load();
-		for (const { code, options } of ACORN_CORPUS.cases) {
+		for (const { code, options } of ACORN_CORPUS_CASES) {
 			const module = Boolean(options && options.sourceType === "module");
 			try {
 				acorn.parse(code, {
@@ -17652,21 +17677,7 @@ describe("JavaScript minifier, what the tables leave out", () => {
 				{ compress: false, mangle: false },
 				{ compress: {}, mangle: true }
 			]) {
-				/** @type {string | undefined} */
-				let written;
-				try {
-					({ code: written } = await minify(code, { ...settings, module }));
-				} catch (err) {
-					// A runtime with a small stack, as Bun's workers have, stops the
-					// deepest nesting where the parser says so.
-					if (
-						/** @type {Error} */ (err).message ===
-						"Not enough stack space to parse input"
-					) {
-						continue;
-					}
-					throw err;
-				}
+				const { code: written } = await minify(code, { ...settings, module });
 				parses(/** @type {string} */ (written), module);
 			}
 		}
@@ -17926,7 +17937,7 @@ describe("JavaScript minifier, what the tables leave out", () => {
 		/** @type {string[]} */
 		const corrected = [];
 		let compared = 0;
-		for (const { code, options } of ACORN_CORPUS.cases) {
+		for (const { code, options } of ACORN_CORPUS_CASES) {
 			const module = Boolean(options && options.sourceType === "module");
 			/**
 			 * @param {EXPECTED_OBJECT} extra acorn's options
@@ -18040,7 +18051,7 @@ describe("JavaScript minifier, what the tables leave out", () => {
 	it("should write an ESTree tree of every program of acorn's corpus that reads back as the program", async () => {
 		const { minify } = await load();
 		let compared = 0;
-		for (const { code, options } of ACORN_CORPUS.cases) {
+		for (const { code, options } of ACORN_CORPUS_CASES) {
 			const module = Boolean(options && options.sourceType === "module");
 			try {
 				acorn.parse(code, { ecmaVersion: "latest", sourceType: module ? "module" : "script" });
