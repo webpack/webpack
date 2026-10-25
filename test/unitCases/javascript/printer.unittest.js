@@ -1852,6 +1852,11 @@ const IMPROVED_CASES = [
 		{ compress: {}, mangle: false }
 	],
 	[
+		"branches reading `a[\"b\"]` and `a.b`, or writing `\"b\": x` and `b: x`, as one where no quote is kept",
+		'function f(a, b, body) { if (a) return { body }; if (b) return { "body": body }; } function g(x, foo) { return x ? foo["bar"]() : foo.bar(); } console.log(JSON.stringify([f(1, 0, 2), f(0, 1, 3), f(0, 0, 4)]), g(0, { bar: () => 5 }), g(1, { bar: () => 6 }));',
+		{ compress: {}, mangle: false }
+	],
+	[
 		"a computed `NaN` or `null` key as the name it converts to, in an object, a pattern and a class",
 		"class C { [NaN]() { return 1; } static [null] = 2; get [null]() { return 3; } } var { [NaN]: a, [null]: b } = { [NaN]: 4, [null]: 5 }; console.log(new C().NaN(), C.null, new C().null, a, b, Object.keys({ [NaN]: 6, [null]: 7 }).join());",
 		{ compress: {}, mangle: false }
@@ -10550,6 +10555,42 @@ describe("syntax-printer", () => {
 				const { code } = await minify(input, { compress: {}, mangle: false });
 				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
 			}
+		});
+
+		it("should keep `a[\"b\"]` apart from `a.b` where the run keeps quotes", async () => {
+			const { minify } = await load();
+			const input =
+				'function f(a, b, o) { if (a) return { o }; if (b) return { "o": o }; } function g(x, foo) { return x ? foo["bar"]() : foo.bar(); }';
+			for (const options of /** @type {import("terser").MinifyOptions[]} */ ([
+				{ compress: {}, mangle: { properties: { keep_quoted: "strict" } } },
+				{ compress: {}, mangle: false, format: { keep_quoted_props: true } }
+			])) {
+				const { code } = await minify(input, options);
+				expect(code).not.toMatch(/if\(\w+\|\|\w+\)/);
+				expect(code).toMatch(/\?\w+\.bar\(\):/);
+			}
+			const { code } = await minify(input, {
+				compress: {},
+				mangle: { properties: { keep_quoted: true } }
+			});
+			expect(code).toMatch(/if\(\w+\|\|\w+\)/);
+			expect(code).toMatch(/return \w+\.bar\(\)\}$/);
+			const apart = await minify(
+				'function f(a, b, o) { if (a) return { a: o }; if (b) return { "b": o }; } function g(x, foo) { return x ? foo["bar"]() : foo.baz(); }',
+				{ compress: {}, mangle: false }
+			);
+			expect(apart.code).toContain("a?{a:o}:b?{b:o}:void 0");
+			expect(apart.code).toContain("x?foo.bar():foo.baz()");
+			const computed = await minify("function f(c, a, b) { return c ? { [a]: 1 } : { [b]: 1 }; }", {
+				compress: {},
+				mangle: false
+			});
+			expect(computed.code).toContain("c?{[a]:1}:{[b]:1}");
+			const plain = await minify("function f(c, a) { return c ? { [a]: 1 } : { a: 1 }; }", {
+				compress: {},
+				mangle: false
+			});
+			expect(plain.code).toContain("c?{[a]:1}:{a:1}");
 		});
 
 		it("should keep a computed `NaN` key in brackets where computed keys stay", async () => {
