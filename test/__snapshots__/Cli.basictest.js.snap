@@ -2557,6 +2557,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-css-auto-parse-errors": Object {
+    "configs": Array [
+      Object {
+        "description": "Report each CSS parse error (CSS Syntax Level 3 §4, §5) the stylesheet holds: a build error where end of input cuts a token or rule short, a build warning for one the parser reads past. Off by default.",
+        "multiple": false,
+        "path": "module.parser.css/auto.parseErrors",
+        "type": "boolean",
+      },
+    ],
+    "description": "Report each CSS parse error (CSS Syntax Level 3 §4, §5) the stylesheet holds: a build error where end of input cuts a token or rule short, a build warning for one the parser reads past. Off by default.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-parser-css-auto-pure": Object {
     "configs": Array [
       Object {
@@ -3109,6 +3122,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-css-global-parse-errors": Object {
+    "configs": Array [
+      Object {
+        "description": "Report each CSS parse error (CSS Syntax Level 3 §4, §5) the stylesheet holds: a build error where end of input cuts a token or rule short, a build warning for one the parser reads past. Off by default.",
+        "multiple": false,
+        "path": "module.parser.css/global.parseErrors",
+        "type": "boolean",
+      },
+    ],
+    "description": "Report each CSS parse error (CSS Syntax Level 3 §4, §5) the stylesheet holds: a build error where end of input cuts a token or rule short, a build warning for one the parser reads past. Off by default.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-parser-css-global-url": Object {
     "configs": Array [
       Object {
@@ -3603,6 +3629,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-css-module-parse-errors": Object {
+    "configs": Array [
+      Object {
+        "description": "Report each CSS parse error (CSS Syntax Level 3 §4, §5) the stylesheet holds: a build error where end of input cuts a token or rule short, a build warning for one the parser reads past. Off by default.",
+        "multiple": false,
+        "path": "module.parser.css/module.parseErrors",
+        "type": "boolean",
+      },
+    ],
+    "description": "Report each CSS parse error (CSS Syntax Level 3 §4, §5) the stylesheet holds: a build error where end of input cuts a token or rule short, a build warning for one the parser reads past. Off by default.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-parser-css-module-pure": Object {
     "configs": Array [
       Object {
@@ -3928,6 +3967,19 @@ Object {
       },
     ],
     "description": "Use ES modules named export for css exports.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-css-parse-errors": Object {
+    "configs": Array [
+      Object {
+        "description": "Report each CSS parse error (CSS Syntax Level 3 §4, §5) the stylesheet holds: a build error where end of input cuts a token or rule short, a build warning for one the parser reads past. Off by default.",
+        "multiple": false,
+        "path": "module.parser.css.parseErrors",
+        "type": "boolean",
+      },
+    ],
+    "description": "Report each CSS parse error (CSS Syntax Level 3 §4, §5) the stylesheet holds: a build error where end of input cuts a token or rule short, a build warning for one the parser reads past. Off by default.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -4267,6 +4319,19 @@ Object {
     "description": "Name the chunk an extracted \`<script>\`/\`<link>\` tag becomes, in place of the page and the tag's position. A string may carry \`[page]\` (the page's path, escaped for a name), \`[name]\` (the tag's own basename, empty for an inline body), \`[index]\` (the tag's position in the page) and \`[type]\`; a function is called with the same values and returns the name. A \`<!-- webpackChunkName: \\"...\\" -->\` comment before a tag wins over it, and either way the name is also the stem the chunk's file is emitted under.",
     "multiple": false,
     "simpleType": "string",
+  },
+  "module-parser-html-parse-errors": Object {
+    "configs": Array [
+      Object {
+        "description": "Report each HTML parse error the page holds, by its WHATWG or html5lib name: a build error where end of input cuts a tag, comment or doctype short, a build warning for one the parser reads past. Off by default.",
+        "multiple": false,
+        "path": "module.parser.html.parseErrors",
+        "type": "boolean",
+      },
+    ],
+    "description": "Report each HTML parse error the page holds, by its WHATWG or html5lib name: a build error where end of input cuts a tag, comment or doctype short, a build warning for one the parser reads past. Off by default.",
+    "multiple": false,
+    "simpleType": "boolean",
   },
   "module-parser-html-sources": Object {
     "configs": Array [

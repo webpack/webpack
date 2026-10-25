@@ -5376,3 +5376,31 @@ describe("SourceProcessor — a byte order mark", () => {
 		expect(log).toEqual(["doctype"]);
 	});
 });
+
+describe("SourceProcessor — parseError while printing", () => {
+	const { SourceProcessor } = require("../../../lib/html/syntax");
+
+	it("reports the source's errors, not the printed form's", () => {
+		// Foster parenting makes the print read itself back, and the printed form
+		// opens with text: an error of its own that the source does not have.
+		const html = "<table>x<tr><td>a</table>";
+		/** @type {string[]} */
+		const parsed = [];
+		parseHtmlRefs(html, 0, {
+			parseError: (input, code, start) => {
+				parsed.push(`${code}@${start}`);
+			}
+		});
+		/** @type {string[]} */
+		const printed = [];
+		const { code } = new SourceProcessor().process(html, {
+			mode: "minify",
+			parseError: (input, code, start) => {
+				printed.push(`${code}@${start}`);
+			}
+		});
+		expect(code).toBe("x<table><tr><td>a</table>");
+		expect(printed).toEqual(parsed);
+		expect(printed).not.toContain("expected-doctype-but-got-chars@0");
+	});
+});
