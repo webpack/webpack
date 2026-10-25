@@ -434,10 +434,7 @@ const OXC_SMALLER_BY_REASON = [
 	],
 	[
 		"oxc writes classes, methods and object literals shorter",
-		[
-			"swc exec: object_spread_proto_key_is_not_flattened",
-			"terser compress: object/convert_computed_props_to_regular_ones"
-		]
+		["swc exec: object_spread_proto_key_is_not_flattened"]
 	],
 	[
 		"oxc writes a variable's value at its one read and drops the variable, as oxc's `peephole/inline_single_use_variable.rs` tests show",

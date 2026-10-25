@@ -581,6 +581,8 @@ exports[`syntax-printer improve phase should write less, printing the same: a co
 
 exports[`syntax-printer improve phase should write less, printing the same: a computed \`__proto__\` or \`constructor\` key, written as a name where it means the same 1`] = `"var o={[\\"__proto__\\"]:()=>1};class C{__proto__=2;static constructor(){return 3}}console.log(o.__proto__(),(new C).__proto__,C.constructor());"`;
 
+exports[`syntax-printer improve phase should write less, printing the same: a computed \`NaN\` or \`null\` key as the name it converts to, in an object, a pattern and a class 1`] = `"class C{NaN(){return 1}static null=2;get null(){return 3}}var{NaN:a,null:b}={NaN:4,null:5};console.log((new C).NaN(),C.null,(new C).null,a,b,\\"NaN,null\\");"`;
+
 exports[`syntax-printer improve phase should write less, printing the same: a computed key of a pattern, read as the constant it holds 1`] = `"function f(o){let{3:x,a:y}=o;for(let{4:z}of[o])console.log(z);return[x,y]}console.log(f({3:1,a:2,4:3}));"`;
 
 exports[`syntax-printer improve phase should write less, printing the same: a conditional assigning a property of \`this\` at the top level or in a class extending none 1`] = `"this.q=c(1)?1:2;class C{m(x){return this.p=c(x)?3:4,this.p}}function c(x){return x}console.log(q,(new C).m(0));"`;

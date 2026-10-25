@@ -1852,6 +1852,11 @@ const IMPROVED_CASES = [
 		{ compress: {}, mangle: false }
 	],
 	[
+		"a computed `NaN` or `null` key as the name it converts to, in an object, a pattern and a class",
+		"class C { [NaN]() { return 1; } static [null] = 2; get [null]() { return 3; } } var { [NaN]: a, [null]: b } = { [NaN]: 4, [null]: 5 }; console.log(new C().NaN(), C.null, new C().null, a, b, Object.keys({ [NaN]: 6, [null]: 7 }).join());",
+		{ compress: {}, mangle: false }
+	],
+	[
 		"an `if` with an empty branch and an `else` block, as an `if` of the negated test, but a chain's",
 		"function f(a, b) { if (a) {} else { if (b) { console.log(1); return; } console.log(2); } console.log(3); } function g(a, b) { if (a && b) {} else { if (b) { console.log(4); return; } console.log(5); } } f(0, 0); f(0, 1); f(1, 0); g(0, 1); g(1, 1);",
 		{ compress: {}, mangle: false }
@@ -10545,6 +10550,15 @@ describe("syntax-printer", () => {
 				const { code } = await minify(input, { compress: {}, mangle: false });
 				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
 			}
+		});
+
+		it("should keep a computed `NaN` key in brackets where computed keys stay", async () => {
+			const { minify } = await load();
+			const { code } = await minify("console.log({ [NaN]: 1, [null]: 2 });", {
+				compress: { computed_props: false },
+				mangle: false
+			});
+			expect(code).toBe("console.log({[NaN]:1,[null]:2});");
 		});
 
 
