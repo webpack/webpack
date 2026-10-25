@@ -5802,7 +5802,9 @@ describe("parseProgram", () => {
 		["`${b}", ["unterminated-template", "", "error", "5"]],
 		// No token to read where these are: an empty range, as at end of input.
 		["throw\n1", ["newline-after-throw", "", "error", "5"]],
-		["#\\041", ["missing-unicode-escape", "", "error", "2"]]
+		["#\\041", ["missing-unicode-escape", "", "error", "2"]],
+		// Raised while skipping to the next token, not inside the last one.
+		["a;/*", ["unterminated-comment", "", "error", "2"]]
 	])("stops at %j, returning nothing", (source, error) => {
 		const { program, errors } = collect(source);
 		expect(program).toBeUndefined();
