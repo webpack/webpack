@@ -709,6 +709,29 @@ describe("CssSyntax — SourceProcessor", () => {
 			).toBe("/*! x */a{color:red}b{top:0}");
 		});
 
+		it("prints a rule large enough to stream as written, and what follows it too", () => {
+			// Past the streaming threshold the block is written out as it is read.
+			let body = "";
+			for (let i = 0; i < 1800; i++) {
+				body += `.c${i}>d${i}:hover{color:red;margin:${i + 1}px}`;
+			}
+			const css = `a{${body}}b{color:red}`;
+			const plain = print(css, {});
+			for (const event of ["enter", "exit"]) {
+				expect(
+					print(css, {
+						[NodeType.QualifiedRule]: {
+							[event]: (
+								/** @type {import("../../../lib/css/syntax-parser").CssPath} */ path
+							) => {
+								if (path.source().startsWith("a{")) path.replace("z{q:1}");
+							}
+						}
+					})
+				).toBe(plain);
+			}
+		});
+
 		it("does nothing on a walk that prints nothing", () => {
 			let seen = 0;
 			new SourceProcessor()

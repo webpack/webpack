@@ -27541,6 +27541,12 @@ declare class PrintContext<TPath, TNode, TPrintOptions = object> {
 	replace(node: TNode, text: string): void;
 
 	/**
+	 * Drop what {@link replace} gave `node`, for a node the grammar writes out
+	 * without {@link printNode}.
+	 */
+	discardReplacement(node: TNode): void;
+
+	/**
 	 * Store `text` as what `node` printed, where the grammar already knows what
 	 * the node printer would return and so does not call it.
 	 */
