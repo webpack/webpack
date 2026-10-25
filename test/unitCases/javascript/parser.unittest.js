@@ -5799,7 +5799,12 @@ describe("parseProgram", () => {
 	it.each([
 		["a ~ ", ["unexpected-token", "~", "error", "2"]],
 		["return 1", ["illegal-return", "return", "error", "0"]],
-		["`${b}", ["unterminated-template", "", "error", "5"]]
+		["`${b}", ["unterminated-template", "", "error", "5"]],
+		// No token to read where these are: an empty range, as at end of input.
+		["throw\n1", ["newline-after-throw", "", "error", "5"]],
+		["#\\041", ["missing-unicode-escape", "", "error", "2"]],
+		// Raised while skipping to the next token, not inside the last one.
+		["a;/*", ["unterminated-comment", "", "error", "2"]]
 	])("stops at %j, returning nothing", (source, error) => {
 		const { program, errors } = collect(source);
 		expect(program).toBeUndefined();
@@ -5807,10 +5812,18 @@ describe("parseProgram", () => {
 	});
 
 	it.each([
-		["let a; let a", ["var-redeclaration", "", "warning", "11"]],
-		["/(/", ["invalid-regular-expression", "", "warning", "1"]],
-		["class A { #a; #a }", ["private-name-redeclaration", "", "warning", "14"]],
-		["class A { set x() {} }", ["bad-setter-arity", "", "warning", "15"]]
+		["let a; let a", ["var-redeclaration", "a", "warning", "11"]],
+		["/(/", ["invalid-regular-expression", "(/", "warning", "1"]],
+		["class A { #a; #a }", ["private-name-redeclaration", "#a", "warning", "14"]],
+		["class A { set x() {} }", ["bad-setter-arity", "(", "warning", "15"]],
+		[
+			"({ __proto__: 1, __proto__: 2 })",
+			["duplicate-proto", "__proto__", "warning", "17"]
+		],
+		[
+			'export { a as "x", b as "x" }; var a, b',
+			["duplicate-export", '"x"', "warning", "24"]
+		]
 	])("reads past %j", (source, error) => {
 		const { program, errors } = collect(source);
 		expect(program).toBeDefined();
@@ -5829,7 +5842,7 @@ describe("parseProgram", () => {
 		expect(collect("let b; let b").errors).toHaveLength(1);
 		// Two faults in one pattern: the validator raises both at its start.
 		expect(collect("/(?<a>)(?<a>)(/").errors).toEqual([
-			["invalid-regular-expression", "", "warning", "1"]
+			["invalid-regular-expression", "(?<a>)(?<a>)(/", "warning", "1"]
 		]);
 	});
 
