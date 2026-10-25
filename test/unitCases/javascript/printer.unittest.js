@@ -17466,6 +17466,47 @@ describe("JavaScript minifier, what the tables leave out", () => {
 		expect(seen).toEqual(["Property", "Literal", "x", 2, null, "Unknown", true]);
 	});
 
+	// cspell:ignore EAAE
+	it("should keep a nested index map's section that ends past the outer one", async () => {
+		const { minify } = await load();
+		const section = (/** @type {number} */ line, /** @type {number} */ column, /** @type {EXPECTED_OBJECT} */ map) => ({
+			offset: { line, column },
+			map
+		});
+		const plain = (/** @type {string} */ name, /** @type {string} */ mappings) => ({
+			version: 3,
+			sources: [name],
+			names: [],
+			mappings
+		});
+		// The inner map's next section starts on line 5, past where the outer
+		// one stops at column 10 of line 0: `a.js` still maps that far.
+		const content = {
+			version: 3,
+			sections: [
+				section(0, 0, {
+					version: 3,
+					sections: [section(0, 0, plain("a.js", "AAAA,EAAE,EAAE,EAAE")), section(5, 0, plain("b.js", "AAAA"))]
+				}),
+				section(0, 10, plain("c.js", "AAAA,EAAE"))
+			]
+		};
+		const options = () =>
+			/** @type {EXPECTED_ANY} */ ({
+				compress: false,
+				mangle: false,
+				sourceMap: { content: structuredClone(content) }
+			});
+		const source = { "in.js": "x(1);y(2);z(3);w(4);" };
+		const ours = JSON.parse(/** @type {string} */ ((await minify(source, options())).map));
+		expect(ours.sources).toEqual(["a.js", "c.js"]);
+		// terser, through its source-map reader, cuts `a.js` at column 0.
+		const theirs = JSON.parse(
+			/** @type {string} */ ((await terserReference().minify(source, options())).map)
+		);
+		expect(theirs.sources).toEqual(["c.js"]);
+	});
+
 	it("should map through an input source map as terser does", async () => {
 		const { minify } = await load();
 		const source = "var one = 1;\nfunction two(x) { return x * 2; }\nconsole.log(two(one));\n";
