@@ -736,11 +736,22 @@ describe("CssSyntax — SourceProcessor", () => {
 			/** @type {import("../../../lib/css/syntax-parser").CssVisitorMap} */
 			const visitors = { [NodeType.Hash]: (path) => path.replace("blue") };
 			expect(print("a{--x: foo  #f00 bar(#f00) ;color:#f00}", visitors)).toBe(
-				"a{--x:foo blue bar(blue);color:blue}"
+				"a{--x:foo  blue bar(blue);color:blue}"
 			);
 			expect(
 				print("a{--x: foo  #f00 bar(#f00) }", visitors, "beautify")
 			).toBe("a {\n--x: foo  blue bar(blue);\n}");
+			// A comma and whitespace print as written too.
+			expect(
+				print("a{--x: a, b c;b:x}", {
+					[NodeType.Comma]: (path) => path.replace(" / "),
+					[NodeType.Whitespace]: (path) => path.remove()
+				})
+			).toBe("a{--x:a / bc;b:x}");
+			// Only a value holding an edit is printed as written.
+			expect(print("a{--x: a  b;--y: c  #f00}", visitors)).toBe(
+				"a{--x:a b;--y:c  blue}"
+			);
 		});
 
 		it("does nothing on a walk that prints nothing", () => {
