@@ -9,7 +9,6 @@
 
 /** @import { HtmlNodeRef, HtmlAttribute } from "../../../lib/html/syntax-parser" */
 
-
 const { execFileSync } = require("child_process");
 const {
 	A,
@@ -18,18 +17,23 @@ const {
 	parseHtml: parseHtmlRefs
 } = require("../../../lib/html/syntax-parser");
 
-const { builtinEmbeddedRenderer } = require("../../../lib/html/builtinEmbeddedRenderer");
+const {
+	builtinEmbeddedRenderer
+} = require("../../../lib/html/builtinEmbeddedRenderer");
 const { childrenOf } = require("../../helpers/materializeHtmlTree");
 const serializeHtmlTree = require("../../helpers/serializeHtmlTree");
-
 
 describe("builtinEmbeddedRenderer — what it loads", () => {
 	// Run in a fresh process, so `require.cache` holds only what this loaded.
 	it("loads neither parser until a body needs one", () => {
 		const script = `
 			const loaded = (file) => require.cache[file] !== undefined;
-			const cssParser = ${JSON.stringify(require.resolve("../../../lib/css/syntax-parser"))};
-			const htmlParser = ${JSON.stringify(require.resolve("../../../lib/html/syntax-parser"))};
+			const cssParser = ${JSON.stringify(
+				require.resolve("../../../lib/css/syntax-parser")
+			)};
+			const htmlParser = ${JSON.stringify(
+				require.resolve("../../../lib/html/syntax-parser")
+			)};
 			const { builtinEmbeddedRenderer } = require(${JSON.stringify(
 				require.resolve("../../../lib/html/builtinEmbeddedRenderer")
 			)});
@@ -62,8 +66,12 @@ describe("builtinEmbeddedRenderer — what it loads", () => {
 
 	it("keeps the CSS parser out of an HTML or XML minify with no CSS", () => {
 		const script = `
-			const cssParser = ${JSON.stringify(require.resolve("../../../lib/css/syntax-parser"))};
-			const webpack = require(${JSON.stringify(require.resolve("../../../lib/index"))});
+			const cssParser = ${JSON.stringify(
+				require.resolve("../../../lib/css/syntax-parser")
+			)};
+			const webpack = require(${JSON.stringify(
+				require.resolve("../../../lib/index")
+			)});
 			(async () => {
 				const states = [];
 				const state = ({ code }) =>
@@ -79,7 +87,10 @@ describe("builtinEmbeddedRenderer — what it loads", () => {
 				execFileSync(process.execPath, ["-e", script], { encoding: "utf8" })
 			)
 		).toEqual([
-			{ code: '<svg xmlns="http://www.w3.org/2000/svg"><rect/></svg>', css: false },
+			{
+				code: '<svg xmlns="http://www.w3.org/2000/svg"><rect/></svg>',
+				css: false
+			},
 			{ code: "<p>hi", css: false },
 			{ code: "<style>a{color:#ff0000}</style>", css: true }
 		]);
@@ -197,9 +208,15 @@ describe("SourceProcessor — merging adjacent <style>", () => {
 			"<style>@namespace url(http://www.w3.org/2000/svg);</style><style>p{color:red}</style>",
 			"<style>@namespace s url(x);</style><style>s|a{color:red}</style>",
 			// An escaped name spells the at-rule it escapes.
-			`<style>a{color:red}</style><style>@${escaped("namespace")}url(x);p{color:red}</style>`,
-			`<style>a{color:red}</style><style>@${escaped("import")}url(x.css);p{color:red}</style>`,
-			`<style>@${escaped("namespace")}url(x);</style><style>p{color:red}</style>`
+			`<style>a{color:red}</style><style>@${escaped(
+				"namespace"
+			)}url(x);p{color:red}</style>`,
+			`<style>a{color:red}</style><style>@${escaped(
+				"import"
+			)}url(x.css);p{color:red}</style>`,
+			`<style>@${escaped(
+				"namespace"
+			)}url(x);</style><style>p{color:red}</style>`
 		]) {
 			expect(minifyAsWritten(html)).toBe(html);
 		}
@@ -249,7 +266,9 @@ describe("SourceProcessor — merging adjacent <style>", () => {
 			// CSS preprocessing makes each newline equivalent to LF, including
 			// where it ends a bad string before the next sheet is joined.
 			expect(minify(html)).toBe(
-				minify('<style>a{content:"x\n;color:blue}</style><style>b{color:red}</style>')
+				minify(
+					'<style>a{content:"x\n;color:blue}</style><style>b{color:red}</style>'
+				)
 			);
 		}
 	);
@@ -344,9 +363,9 @@ describe("SourceProcessor — merging adjacent <style>", () => {
 			// §5.4.8: a `]` in a `(` is a token in it, not the block's end.
 			"a{b:(])}"
 		]) {
-			expect(
-				minifyAsWritten(`<style>${sheet}</style><style>b{}</style>`)
-			).toBe(`<style>${sheet}b{}</style>`);
+			expect(minifyAsWritten(`<style>${sheet}</style><style>b{}</style>`)).toBe(
+				`<style>${sheet}b{}</style>`
+			);
 		}
 		// Nothing follows the last sheet, so it may be left open; one that leads
 		// with `@import` is not joined, and one before it is closed first.
@@ -388,9 +407,9 @@ describe("SourceProcessor — merging adjacent <style>", () => {
 			["@import url(x.css)", "@import url(x.css);"],
 			["a[x", ""]
 		]) {
-			expect(minify(`<style>${sheet}</style><style>c{color:#00f}</style>`)).toBe(
-				`<style>${printed}c{color:#00f}</style>`
-			);
+			expect(
+				minify(`<style>${sheet}</style><style>c{color:#00f}</style>`)
+			).toBe(`<style>${printed}c{color:#00f}</style>`);
 		}
 		// A lone backslash would escape whatever followed, so nothing is joined.
 		expect(minify("<style>a\\</style><style>c{color:#00f}</style>")).toBe(
@@ -1300,8 +1319,15 @@ describe("SourceProcessor — an enumerated value naming no keyword", () => {
 	}
 
 	it("reaches exactly the pairs both tables name", () => {
-		expect(PAIRS.map(([element, attribute]) => `${element} ${attribute}`).sort())
-			.toEqual(["button type", "form enctype", "form method", "input type", "track kind"]);
+		expect(
+			PAIRS.map(([element, attribute]) => `${element} ${attribute}`).sort()
+		).toEqual([
+			"button type",
+			"form enctype",
+			"form method",
+			"input type",
+			"track kind"
+		]);
 	});
 
 	it("names no pair the drop cannot reach", () => {
@@ -1313,16 +1339,19 @@ describe("SourceProcessor — an enumerated value naming no keyword", () => {
 		}
 	});
 
-	it.each(PAIRS)("drops it on <%s %s> unless the two defaults part", (element, attribute) => {
-		// A track outside a media element is dropped by tree construction.
-		const open = element === "track" ? "<video>" : "";
-		const out = minify(`${open}<${element} ${attribute}="ZzCustomZz">`);
-		if (INVALID_VALUE_DEFAULT_DIFFERS.has(`${element} ${attribute}`)) {
-			expect(out).toContain(`${attribute}=ZzCustomZz`);
-		} else {
-			expect(out).not.toContain(attribute);
+	it.each(PAIRS)(
+		"drops it on <%s %s> unless the two defaults part",
+		(element, attribute) => {
+			// A track outside a media element is dropped by tree construction.
+			const open = element === "track" ? "<video>" : "";
+			const out = minify(`${open}<${element} ${attribute}="ZzCustomZz">`);
+			if (INVALID_VALUE_DEFAULT_DIFFERS.has(`${element} ${attribute}`)) {
+				expect(out).toContain(`${attribute}=ZzCustomZz`);
+			} else {
+				expect(out).not.toContain(attribute);
+			}
 		}
-	});
+	);
 
 	it("keeps one the element states no default for", () => {
 		// `<img decoding>` is enumerated but has no entry to fall to, and
@@ -1466,7 +1495,9 @@ describe("SourceProcessor — an empty value is the bare name", () => {
 	it("writes out a value a reference only spells as whitespace", () => {
 		// A reference is how the value is written, not what it says: the element
 		// is handed the same one space either way, so the shorter spelling wins.
-		expect(minify('<div title="&#x20;">x</div>')).toBe('<div title=" ">x</div>');
+		expect(minify('<div title="&#x20;">x</div>')).toBe(
+			'<div title=" ">x</div>'
+		);
 	});
 
 	it("reads a reference-spelled empty as empty when dropping them", () => {
@@ -2204,9 +2235,9 @@ describe("SourceProcessor — a duplicate attribute name", () => {
 	it("leaves the values it has no minifier for as the source wrote them", () => {
 		// A nested language is read by the renderer the host hands in, and none is
 		// set here, so both are the source's own bytes with the references decoded.
-		expect(minify('<p style="color : red ;"{% if x %} a{% endif %}>t</p>')).toBe(
-			'<p style="color : red ;"{% if x %} a{% endif %}>t'
-		);
+		expect(
+			minify('<p style="color : red ;"{% if x %} a{% endif %}>t</p>')
+		).toBe('<p style="color : red ;"{% if x %} a{% endif %}>t');
 		expect(
 			minify('<p onclick="a  &amp;&amp;  b()"{% if x %} a{% endif %}>t</p>')
 		).toBe('<p onclick="a  &&  b()"{% if x %} a{% endif %}>t');
@@ -2408,7 +2439,10 @@ describe("SourceProcessor — sortAttributes / sortTokenLists", () => {
 		// `<input type=text>` is redundant and goes, so counting it would rank
 		// `type` above `checked` on the first pass and tie them on the second.
 		const options = { removeRedundantAttributes: "all", sortAttributes: true };
-		const once = minify("<input type=text><input type=checkbox checked>", options);
+		const once = minify(
+			"<input type=text><input type=checkbox checked>",
+			options
+		);
 		expect(once).toBe("<input><input checked type=checkbox>");
 		expect(minify(once, options)).toBe(once);
 	});
@@ -2959,8 +2993,8 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 
 	it("offers a URL attribute's `data:` payload as its media type's language", () => {
 		const html =
-			"<img src=\"data:image/svg+xml,<svg>  </svg>\">" +
-			"<iframe src=\"  data:text/html,<p>  a  </p>  \"></iframe>" +
+			'<img src="data:image/svg+xml,<svg>  </svg>">' +
+			'<iframe src="  data:text/html,<p>  a  </p>  "></iframe>' +
 			"<object data='data:application/json,{ \"a\" : 1 }'></object>";
 
 		expect(offered(html)).toEqual([
@@ -3010,7 +3044,7 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 		// A browser loads only what precedes the `#`, so that URL stays as written.
 		expect(minify(html, compactJson)).toBe(
 			"<a href='data:application/json,{\"a\":1}'>a</a>" +
-				"<a href='data:application/json,{ \"b\" : \"#\" }'>b</a>"
+				'<a href=\'data:application/json,{ "b" : "#" }\'>b</a>'
 		);
 	});
 
@@ -3022,11 +3056,11 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 
 		expect(offered(html)).toEqual([["json", "stylesheet", '{ "a" : "\'" }']]);
 		expect(minify(html, compactJson)).toBe(
-			"<a href='data:application/json,{\"a\":\"&#39;\"}'>x</a>"
+			'<a href=\'data:application/json,{"a":"&#39;"}\'>x</a>'
 		);
 		// A `#` the answer brings is escaped, or it would start a fragment.
 		expect(minify(html, () => '{"a":"#"}')).toBe(
-			"<a href='data:application/json,{\"a\":\"%23\"}'>x</a>"
+			'<a href=\'data:application/json,{"a":"%23"}\'>x</a>'
 		);
 	});
 
@@ -3034,9 +3068,14 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 		const payload = Buffer.from('{ "a" : 1 }').toString("base64");
 
 		expect(
-			minify(`<a href="data:application/json;base64,${payload}">x</a>`, compactJson)
+			minify(
+				`<a href="data:application/json;base64,${payload}">x</a>`,
+				compactJson
+			)
 		).toBe(
-			`<a href="data:application/json;base64,${Buffer.from('{"a":1}').toString("base64")}">x</a>`
+			`<a href="data:application/json;base64,${Buffer.from('{"a":1}').toString(
+				"base64"
+			)}">x</a>`
 		);
 	});
 
@@ -3075,7 +3114,9 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 					() => undefined
 				)
 			).code
-		).toBe("<svg><image href='data:application/json,{ }'/></svg><a href='data:application/json,{ }'>x</a>");
+		).toBe(
+			"<svg><image href='data:application/json,{ }'/></svg><a href='data:application/json,{ }'>x</a>"
+		);
 	});
 
 	it("names html as the host of every body it offers", () => {
@@ -3232,9 +3273,7 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 	});
 
 	it("offers a self-closing `<svg>`", () => {
-		expect(offered("<svg/>")).toEqual([
-			["svg", "foreign-element", "<svg/>"]
-		]);
+		expect(offered("<svg/>")).toEqual([["svg", "foreign-element", "<svg/>"]]);
 	});
 
 	it("keeps a map the renderer attached to an inline `<style>` / `<script>`", () => {
@@ -3246,8 +3285,8 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 				info.type === "css"
 					? ".a{color:red}\n/*# sourceMappingURL=data:application/json;base64,e30= */"
 					: info.type === "javascript"
-						? "var a=1\n//# sourceMappingURL=data:application/json;base64,e30="
-						: source
+					? "var a=1\n//# sourceMappingURL=data:application/json;base64,e30="
+					: source
 		);
 		expect(out).toContain(
 			"/*# sourceMappingURL=data:application/json;base64,e30= */</style>"
@@ -3302,9 +3341,7 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 			})
 			.process(out, {});
 		expect(readBack).toBeDefined();
-		expect(readBack).toBe(
-			payload
-		);
+		expect(readBack).toBe(payload);
 	});
 
 	it("keeps the body when the renderer answers with something other than text", () => {
@@ -3402,9 +3439,7 @@ describe("SourceProcessor — inline CSS honors the target's abilities", () => {
 
 	it("keeps a lowered list that holds both quotes", () => {
 		expect(
-			minifyLegacy(
-				`<p style="content:'\\''; background: hwb(194 0% 0%)">x`
-			)
+			minifyLegacy(`<p style="content:'\\''; background: hwb(194 0% 0%)">x`)
 		).toBe(
 			`<p style="content:'\\'';background:#00c3ff;background:hwb(194 0% 0%)">x`
 		);
@@ -3757,7 +3792,9 @@ describe("SourceProcessor — minify serialization edge cases", () => {
 			);
 			expect(
 				minify("<!doctype html><head><noscript>PASS</noscript></head>\n<body>x")
-			).toBe("<!doctype html><head><noscript>PASS</noscript></head>\n<body>x</body>");
+			).toBe(
+				"<!doctype html><head><noscript>PASS</noscript></head>\n<body>x</body>"
+			);
 			// `<!-->` closes at once, so `PASS` is text to that reader, not a comment.
 			expect(
 				minify(
@@ -3885,9 +3922,9 @@ describe("SourceProcessor — minify serialization edge cases", () => {
 		it("writes back a `/` the tokenizer read as the separator", () => {
 			// A template engine reads `{{/if}}` as one word, and the space this print
 			// used to put there instead split it. Both separate, at the same byte.
-			expect(
-				minify('<a href="x"{{#if y}} target="_blank"{{/if}}>t</a>')
-			).toBe("<a href=x {{#if y}} target=_blank {{/if}}>t</a>");
+			expect(minify('<a href="x"{{#if y}} target="_blank"{{/if}}>t</a>')).toBe(
+				"<a href=x {{#if y}} target=_blank {{/if}}>t</a>"
+			);
 			expect(minify("<p a/b>t</p>")).toBe("<p a/b>t");
 			// A run holding whitespace still collapses to the one space it needs.
 			expect(minify("<p a / b>t</p>")).toBe("<p a b>t");
@@ -4178,7 +4215,7 @@ describe("SourceProcessor — printing in pieces", () => {
 
 describe("SourceProcessor — re-serializing keeps the tree", () => {
 	const { SourceProcessor } = require("../../../lib/html/syntax");
-const { parseHtml } = require("../../../lib/html/syntax-parser");
+	const { parseHtml } = require("../../../lib/html/syntax-parser");
 
 	/**
 	 * @param {string} source html source
@@ -4403,7 +4440,7 @@ const { parseHtml } = require("../../../lib/html/syntax-parser");
 // and echoes the rest byte for byte, so what it writes is snapshotted.
 describe("SourceProcessor — beautifying", () => {
 	const { SourceProcessor } = require("../../../lib/html/syntax");
-const { parseHtml } = require("../../../lib/html/syntax-parser");
+	const { parseHtml } = require("../../../lib/html/syntax-parser");
 
 	/**
 	 * @param {string} source html source
@@ -4935,10 +4972,7 @@ describe("htmlMinify export", () => {
 		it.each([
 			[true, ["<!--! one -->", "<!-- @license two -->"]],
 			["some", ["<!--! one -->", "<!-- @license two -->"]],
-			[
-				"all",
-				["<!--! one -->", "<!-- plain -->", "<!-- @license two -->"]
-			],
+			["all", ["<!--! one -->", "<!-- plain -->", "<!-- @license two -->"]],
 			[/license/, ["<!-- @license two -->"]],
 			["^!", ["<!--! one -->"]],
 			[
@@ -5815,12 +5849,44 @@ describe("SourceProcessor — printing what re-parses to the same tree", () => {
 			"is read back in its context, %s, before it is kept: %j",
 			(fragmentContext, source) => {
 				// A context element reads the same tags as another tree than a document
-				// does, so a fragment's print is checked the way a fostering one is.
+				// does, so a fragment's print must read back to that tree.
 				for (const options of [BEAUTIFY, MINIFY]) {
 					keepsTree(source, { ...options, fragmentContext });
 				}
 			}
 		);
+
+		it("reads a checked print back as the options leave it, reporting nothing twice", () => {
+			// A foreign context is read back, with what the options drop dropped there
+			// too, and the read back reports no error of its own.
+			const source =
+				'<p><script type="text/javascript">a()</script><input value="" class=""><span></span><b/>x&amp y</p>';
+			/** @type {string[]} */
+			const errors = [];
+			const options = {
+				mode: /** @type {const} */ ("minify"),
+				fragmentContext: "svg path",
+				removeRedundantAttributes: /** @type {const} */ ("all"),
+				parseError: (
+					/** @type {string} */ _input,
+					/** @type {string} */ code
+				) => {
+					errors.push(code);
+				}
+			};
+			const printed = print(source, options);
+			const once = [...errors];
+			errors.length = 0;
+			expect(print(source, options)).toBe(printed);
+			expect(printed).toMatchInlineSnapshot(
+				`"<p><script>a()</script><input value class><span></span><b>x& y</b>"`
+			);
+			expect(errors).toEqual(once);
+			expect(errors).toContain("missing-semicolon-after-character-reference");
+			expect(errors).toContain(
+				"non-void-html-element-start-tag-with-trailing-solidus"
+			);
+		});
 	});
 
 	describe("an end tag the parser does not read where the source did", () => {
@@ -6415,6 +6481,16 @@ describe("SourceProcessor — tree construction the printer reads back", () => {
 				removeRedundantAttributes: "all",
 				renderEmbeddedSource: R
 			}
+		],
+		[
+			"a `select` fragment's merged styles, read back",
+			"<style>a{color:red}</style><style>b{color:red}</style><style type=text/css>c{color:red}</style><option selected=selected>",
+			{
+				fragmentContext: "select",
+				mergeStyles: true,
+				removeRedundantAttributes: "all",
+				renderEmbeddedSource: R
+			}
 		]
 	];
 
@@ -6592,7 +6668,9 @@ describe("SourceProcessor — the streamed walk", () => {
 
 	it("streams forms the end tag takes off the top of the stack", () => {
 		const log = walk(
-			`<!DOCTYPE html><html><body>${"<form><p>x</p></form>".repeat(BIG)}</body></html>`
+			`<!DOCTYPE html><html><body>${"<form><p>x</p></form>".repeat(
+				BIG
+			)}</body></html>`
 		);
 		expect(count(log, "+form")).toBe(BIG);
 		expect(count(log, "-form")).toBe(BIG);
@@ -6603,7 +6681,9 @@ describe("SourceProcessor — the streamed walk", () => {
 		// The `<div>` inside stays open, so nothing has finished: reconciling there
 		// would close and re-enter it.
 		const log = walk(
-			`<!DOCTYPE html><html><body><form>${"<p>x</p>".repeat(BIG)}<div></form><p>y</p></div></body></html>`
+			`<!DOCTYPE html><html><body><form>${"<p>x</p>".repeat(
+				BIG
+			)}<div></form><p>y</p></div></body></html>`
 		);
 		expect(count(log, "+div")).toBe(1);
 		expect(log.indexOf("-form")).toBeGreaterThan(log.lastIndexOf("-div"));
@@ -6612,7 +6692,9 @@ describe("SourceProcessor — the streamed walk", () => {
 
 	it("exits a skipped element that closes while streaming", () => {
 		const log = walk(
-			`<div><section>${"<p><b>x</b></p>".repeat(BIG)}</section></div><p>after</p>`,
+			`<div><section>${"<p><b>x</b></p>".repeat(
+				BIG
+			)}</section></div><p>after</p>`,
 			"div"
 		);
 		expect(log).toEqual([

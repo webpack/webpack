@@ -29,7 +29,10 @@ describe("xmlMinify", () => {
 
 	it("should hand the stylesheets the CSS minifier's options", async () => {
 		const { code } = await xmlMinify(
-			{ "image.svg": '<svg xmlns="http://www.w3.org/2000/svg"><style>a{width:96px}</style></svg>' },
+			{
+				"image.svg":
+					'<svg xmlns="http://www.w3.org/2000/svg"><style>a{width:96px}</style></svg>'
+			},
 			undefined,
 			{ css: { convertLengthUnits: true } }
 		);
@@ -44,12 +47,17 @@ describe("xmlMinify", () => {
 	});
 
 	it("should compact attribute spacing and optionally sort attributes", async () => {
-		const input = { "image.svg": '<svg  xmlns = "http://www.w3.org/2000/svg" viewBox = "0 0 1 1"><path z = "1" style = "fill: #ff0000" a = "2" /></svg>' };
+		const input = {
+			"image.svg":
+				'<svg  xmlns = "http://www.w3.org/2000/svg" viewBox = "0 0 1 1"><path z = "1" style = "fill: #ff0000" a = "2" /></svg>'
+		};
 		for (const sortAttributes of [undefined, false, true]) {
 			const { code } = await xmlMinify(input, undefined, { sortAttributes });
-			expect(code).toBe(sortAttributes
-				? '<svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg"><path a="2" style="fill:red" z="1"/></svg>'
-				: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1"><path z="1" style="fill:red" a="2"/></svg>');
+			expect(code).toBe(
+				sortAttributes
+					? '<svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg"><path a="2" style="fill:red" z="1"/></svg>'
+					: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1"><path z="1" style="fill:red" a="2"/></svg>'
+			);
 		}
 	});
 
@@ -68,8 +76,10 @@ describe("xmlMinify", () => {
 describe("SVG data URLs", () => {
 	const { builtinEmbeddedRenderer, htmlMinify } = webpack.html;
 	const { cssMinify } = webpack.css;
-	const SVG = "<svg xmlns='http://www.w3.org/2000/svg'  >  <rect   width='1' />  </svg>";
-	const MINIFIED = "<svg xmlns='http://www.w3.org/2000/svg'>  <rect width='1'/>  </svg>";
+	const SVG =
+		"<svg xmlns='http://www.w3.org/2000/svg'  >  <rect   width='1' />  </svg>";
+	const MINIFIED =
+		"<svg xmlns='http://www.w3.org/2000/svg'>  <rect width='1'/>  </svg>";
 	const OFFER = { type: "svg", hostType: "css" };
 
 	it("should minify one with the XML minifier, quoting with `'` on a tie", () => {
@@ -79,7 +89,7 @@ describe("SVG data URLs", () => {
 		expect(render(`<svg  a="'" b='x' />`, OFFER)).toBe(`<svg a="'" b='x'/>`);
 	});
 
-	it("should print a tie in `\"` unless asked otherwise", () => {
+	it('should print a tie in `"` unless asked otherwise', () => {
 		/**
 		 * @param {("\"" | "'")=} xmlQuote the quote a tie takes
 		 * @returns {string} the printed document
@@ -188,6 +198,26 @@ b&#10;c">
 </svg>
 `;
 
+	it("should report no error an entity's replacement text holds", () => {
+		/** @type {string[]} */
+		const reported = [];
+		const options = {
+			xml: true,
+			mode: /** @type {const} */ ("minify"),
+			parseError: (/** @type {string} */ _input, /** @type {string} */ c) => {
+				reported.push(c);
+			}
+		};
+		const { code } = new SourceProcessor().process(
+			'<!DOCTYPE root [<!ENTITY value "<child">]><root>&value;</root>',
+			options
+		);
+		expect(code).toMatchInlineSnapshot(
+			`"<!DOCTYPE root [<!ENTITY value \\"<child\\">]><root>&value;</root>"`
+		);
+		expect(reported).toEqual([]);
+	});
+
 	it("should write XML back as written when beautifying", () => {
 		expect(printXml(source, "beautify")).toMatchSnapshot();
 	});
@@ -199,7 +229,9 @@ b&#10;c">
 	});
 
 	it("should hand SVG and XHTML stylesheets to the embedded renderer", () => {
-		const { builtinEmbeddedRenderer } = require("../../../lib/html/builtinEmbeddedRenderer");
+		const {
+			builtinEmbeddedRenderer
+		} = require("../../../lib/html/builtinEmbeddedRenderer");
 		const document = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:h="http://www.w3.org/1999/xhtml">
 <style type="text/css"><![CDATA[
 	.a  { fill : #FFFFFF ; }
@@ -227,7 +259,9 @@ b&#10;c">
 	});
 
 	it("should write only what the target browsers read", () => {
-		const { builtinEmbeddedRenderer } = require("../../../lib/html/builtinEmbeddedRenderer");
+		const {
+			builtinEmbeddedRenderer
+		} = require("../../../lib/html/builtinEmbeddedRenderer");
 		const document =
 			'<svg xmlns="http://www.w3.org/2000/svg"><style>g > .b { fill: rgba(0,0,255,0.5) } @media (min-width: 0px) { .e { fill: red } } .p { user-select: none }</style><rect style="fill: rgba(255,0,0,0.5)"/></svg>';
 		/**
@@ -297,7 +331,9 @@ b&#10;c">
 	});
 
 	it("should resolve a prefixed stylesheet's namespace through its own prefix", () => {
-		const { builtinEmbeddedRenderer } = require("../../../lib/html/builtinEmbeddedRenderer");
+		const {
+			builtinEmbeddedRenderer
+		} = require("../../../lib/html/builtinEmbeddedRenderer");
 		expect(
 			/** @type {{ code: string }} */ (
 				new SourceProcessor().process(
@@ -363,7 +399,9 @@ b&#10;c">
 	});
 
 	it("should close a blank stylesheet the input ran out in", () => {
-		const { builtinEmbeddedRenderer } = require("../../../lib/html/builtinEmbeddedRenderer");
+		const {
+			builtinEmbeddedRenderer
+		} = require("../../../lib/html/builtinEmbeddedRenderer");
 		/**
 		 * @param {string} document an SVG
 		 * @returns {string} the minified document

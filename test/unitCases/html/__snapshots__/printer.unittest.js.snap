@@ -58,6 +58,8 @@ exports[`SourceProcessor — minifying what the round-trip guard checks minifies
 
 exports[`SourceProcessor — minifying what the round-trip guard checks minifies an inline sheet under a nested list 1`] = `"<ul><li>a<ul><li><style>a{color:red}</style></ul></ul>"`;
 
+exports[`SourceProcessor — tree construction the printer reads back prints a \`select\` fragment's merged styles, read back 1`] = `"<style>a,b,c{color:red}</style><option selected>"`;
+
 exports[`SourceProcessor — tree construction the printer reads back prints a 4.01 frameset doctype 1`] = `"<!doctype html PUBLIC \\"-//W3C//DTD HTML 4.01 Frameset//EN\\"><p><table></table>"`;
 
 exports[`SourceProcessor — tree construction the printer reads back prints a 4.01 transitional doctype 1`] = `"<!doctype html PUBLIC \\"-//W3C//DTD HTML 4.01 Transitional//EN\\"><p><table></table>"`;
