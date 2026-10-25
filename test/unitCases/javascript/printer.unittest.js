@@ -9839,6 +9839,111 @@ describe("syntax-printer", () => {
 			);
 		});
 
+		it("should run a function called in place at the top level, its `var`s moving there, where `toplevel` owns its names", async () => {
+			const { minify } = await load();
+			const input =
+				"function p() { try { t = JSON.stringify(g()); } catch (r) { t = 'x'; } for (var r = 0, o = 0; o < t.length; o++) r += 1; console.log(r, o); } function g() { return [1]; } p(); var t;";
+			const { code } = await minify(input, {
+				compress: { toplevel: true },
+				mangle: false
+			});
+			expect(code).not.toContain("function");
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			for (const [source, options] of [
+				// Without `toplevel` the names are the page's.
+				[input, { compress: {}, mangle: false }],
+				// A `var` named as a value prints would hide that value.
+				[
+					"!function () { var NaN = 1; for (var i = 0; i < 2; i++) NaN += i; console.log(NaN, i); }();",
+					{ compress: { toplevel: true, reduce_vars: false }, mangle: false }
+				]
+			]) {
+				const { code: kept } = await minify(source, options);
+				expect(kept).toContain("function");
+				expect(runProgram(/** @type {string} */ (kept))).toBe(runProgram(source));
+			}
+		});
+
+		it("should read a parameter of a function called in place as the literal passed for it", async () => {
+			const { minify } = await load();
+			const options = {
+				compress: { ecma: 2020 },
+				ecma: 2020,
+				mangle: false
+			};
+			for (const [input, expected] of [
+				["(x => effect(x + 1))((sideEffect(), 1));", "sideEffect();effect(2)"],
+				["((x, y) => effect(x, y))(b(), (a(), 1));", "a();effect(x,1)"],
+				["((x, y) => effect(x, y, x))((a(), 'ab'), b());", 'effect("ab",y,"ab")']
+			]) {
+				const source = `var effect = (...v) => console.log(...v), sideEffect = () => console.log('s'), a = () => console.log('a'), b = () => 2; ${input}`;
+				const { code } = await minify(source, options);
+				expect(code).toContain(expected);
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(source));
+			}
+			for (const input of [
+				// Written, the parameter is no longer the literal.
+				"(x => { x++; effect(x); })((sideEffect(), 1));",
+				// A regular expression passed is one object, read twice.
+				"(x => effect(x === x))(/a/);",
+				// A long string read often costs more than its name.
+				"(x => effect(x, x, x, x))((sideEffect(), 'abcdefghij'));"
+			]) {
+				const source = `var effect = (...v) => console.log(...v), sideEffect = () => console.log('s'); ${input}`;
+				const { code } = await minify(source, options);
+				expect(code).toContain("let x=");
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(source));
+			}
+		});
+
+		it("should copy a function called from several places writing a property, or passed more than it reads", async () => {
+			const { minify } = await load();
+			for (const [input, expected] of [
+				[
+					"var m = { exports: {} }; function set(a, b, c) { a[b] = c; } set(m.exports, 'A', function () { return 1; }); set(m.exports, 'B', function () { return 2; }); console.log(m.exports.A() + m.exports.B());",
+					'm.exports.A=function(){return 1},m.exports.B=function(){return 2}'
+				],
+				[
+					"var o = {}, p = {}; function f(a) { return a.v + 1; } o.v = 1; p.v = 2; console.log(f(o), f(p));",
+					"console.log(o.v+1,p.v+1)"
+				],
+				[
+					"const id = x => x; console.log(id(1, console.log(2)), id(3, 4));",
+					"console.log((console.log(2),1),3)"
+				],
+				[
+					"const id = x => x; const inc = x => x + 1; console.log(id(inc)(2), id(inc)(3));",
+					"console.log(3,4)"
+				]
+			]) {
+				const { code } = await minify(input, {
+					compress: { toplevel: true },
+					mangle: false
+				});
+				expect(code).toContain(expected);
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			}
+			for (const [input, declaration] of [
+				// The argument `g()` would run after the getter on `a.v`.
+				["var o = { get v() { console.log('get'); return 1; } }; function f(a, b) { return a.v + b; } function g() { console.log('g'); return 2; } console.log(f(o, g()), f(o, g()));", "function f("],
+				// A key converted after `c` runs would run before it.
+				["var o = {}; function set(a, b, c) { a[b] = c; } function k(n) { return { toString() { console.log('key', n); return 'k' + n; } }; } function v(n) { console.log('value', n); return n; } set(o, k(1), v(1)); set(o, k(2), v(2)); console.log(o.k1, o.k2);", "function set("],
+				// An argument past the parameters would run before one read.
+				["function f(a) { return a + 1; } function g(n) { console.log('g', n); return n; } console.log(f(g(1), g(2)), f(g(3), g(4)));", "function f("],
+				// Called, a method read passes its object as `this`.
+				["var o = { m() { return this === o; } }; const id = x => x; console.log(id(o.m)(), id(o.m)());", "(0,o.m)()"],
+				// Called, `eval` would become a direct one.
+				["var x = 'global'; const id = y => y; function f() { var x = 'local'; return [id(eval)('x'), id(eval)('x')]; } console.log(f().join());", "id("]
+			]) {
+				const { code } = await minify(input, {
+					compress: { toplevel: true },
+					mangle: false
+				});
+				expect(code).toContain(declaration);
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			}
+		});
+
 		it("should keep a constructor's `this.x` read a getter may answer", async () => {
 			const { minify } = await load();
 			for (const input of [
