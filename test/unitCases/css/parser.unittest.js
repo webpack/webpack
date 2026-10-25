@@ -684,6 +684,31 @@ describe("CssSyntax — SourceProcessor", () => {
 			).toBe("a{margin:0;margin-top:1px}b{margin:1px 0 0}");
 		});
 
+		it("composes a style attribute's declarations as they printed", () => {
+			const result = new SourceProcessor()
+				.use({
+					[NodeType.Declaration]: (path) => {
+						if (path.name() === "margin-top") path.replace("padding:0");
+					}
+				})
+				.process(
+					"margin-top:1px;margin-bottom:1px;margin-left:2px;margin-right:2px",
+					{ mode: "minify", as: "block-contents" }
+				);
+			expect(result && result.code).toBe(
+				"padding:0;margin-bottom:1px;margin-left:2px;margin-right:2px"
+			);
+		});
+
+		it("leaves a comment and what follows it as written", () => {
+			// A comment is read from the token stream, not printed as a node.
+			expect(
+				print("/*! x */a{color:red}b{top:0}", {
+					[NodeType.Comment]: (path) => path.replace("/*y*/")
+				})
+			).toBe("/*! x */a{color:red}b{top:0}");
+		});
+
 		it("does nothing on a walk that prints nothing", () => {
 			let seen = 0;
 			new SourceProcessor()

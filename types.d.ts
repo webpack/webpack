@@ -6632,8 +6632,8 @@ type CssNodePath<T = number, S = unknown> = Omit<
 		stop(): void;
 		/**
 		 * Print the current node as `text` in place of what the printer writes; on a
-		 * walk that prints nothing it does nothing. What holds the node then prints
-		 * its children's text as they printed, without the minifier's rewrites.
+		 * walk that prints nothing, or on a comment, it does nothing. What holds the
+		 * node then prints its children's text as they printed, without the rewrites.
 		 */
 		replace(text: string): void;
 		/**
@@ -7556,8 +7556,8 @@ declare class CssSourceProcessor<TState = unknown> extends SourceProcessor<
 		stop(): void;
 		/**
 		 * Print the current node as `text` in place of what the printer writes; on a
-		 * walk that prints nothing it does nothing. What holds the node then prints
-		 * its children's text as they printed, without the minifier's rewrites.
+		 * walk that prints nothing, or on a comment, it does nothing. What holds the
+		 * node then prints its children's text as they printed, without the rewrites.
 		 */
 		replace(text: string): void;
 		/**
@@ -38020,8 +38020,8 @@ declare namespace exports {
 					stop(): void;
 					/**
 					 * Print the current node as `text` in place of what the printer writes; on a
-					 * walk that prints nothing it does nothing. What holds the node then prints
-					 * its children's text as they printed, without the minifier's rewrites.
+					 * walk that prints nothing, or on a comment, it does nothing. What holds the
+					 * node then prints its children's text as they printed, without the rewrites.
 					 */
 					replace(text: string): void;
 					/**
@@ -38195,8 +38195,8 @@ declare namespace exports {
 						stop(): void;
 						/**
 						 * Print the current node as `text` in place of what the printer writes; on a
-						 * walk that prints nothing it does nothing. What holds the node then prints
-						 * its children's text as they printed, without the minifier's rewrites.
+						 * walk that prints nothing, or on a comment, it does nothing. What holds the
+						 * node then prints its children's text as they printed, without the rewrites.
 						 */
 						replace(text: string): void;
 						/**
@@ -38272,8 +38272,8 @@ declare namespace exports {
 									stop(): void;
 									/**
 									 * Print the current node as `text` in place of what the printer writes; on a
-									 * walk that prints nothing it does nothing. What holds the node then prints
-									 * its children's text as they printed, without the minifier's rewrites.
+									 * walk that prints nothing, or on a comment, it does nothing. What holds the
+									 * node then prints its children's text as they printed, without the rewrites.
 									 */
 									replace(text: string): void;
 									/**
@@ -38424,8 +38424,8 @@ declare namespace exports {
 						stop(): void;
 						/**
 						 * Print the current node as `text` in place of what the printer writes; on a
-						 * walk that prints nothing it does nothing. What holds the node then prints
-						 * its children's text as they printed, without the minifier's rewrites.
+						 * walk that prints nothing, or on a comment, it does nothing. What holds the
+						 * node then prints its children's text as they printed, without the rewrites.
 						 */
 						replace(text: string): void;
 						/**
@@ -38499,8 +38499,8 @@ declare namespace exports {
 							stop(): void;
 							/**
 							 * Print the current node as `text` in place of what the printer writes; on a
-							 * walk that prints nothing it does nothing. What holds the node then prints
-							 * its children's text as they printed, without the minifier's rewrites.
+							 * walk that prints nothing, or on a comment, it does nothing. What holds the
+							 * node then prints its children's text as they printed, without the rewrites.
 							 */
 							replace(text: string): void;
 							/**
