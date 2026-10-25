@@ -13,11 +13,16 @@ jest.mock("../../../tooling/compare-tools-harness", () => ({
 	loaderFor: () => mockLoad
 }));
 
+const fs = require("fs");
+const os = require("os");
+const path = require("path");
 const {
 	ATOM_FEED,
+	CACHE,
 	EDITOR_SVG,
 	MAVEN_POM,
 	PRESETS,
+	TREE_READERS,
 	XLIFF,
 	XML_CUTS,
 	canonical,
@@ -25,7 +30,10 @@ const {
 	runMode,
 	toolsFor
 } = require("../../../tooling/compare-xml-tools");
-const { cutsAt } = require("../../../tooling/compare-tools-harness");
+const {
+	agreement,
+	cutsAt
+} = require("../../../tooling/compare-tools-harness");
 const { SourceProcessor } = require("../../../lib/html/syntax");
 
 describe("the XML tool comparison", () => {
@@ -150,5 +158,142 @@ describe("the XML tool comparison", () => {
 				}
 			}
 		}
+	});
+});
+
+describe("the XML tool comparison — agreeing with @rgrove/parse-xml", () => {
+	const xml =
+		'<?xml version="1.0"?>\n<?style href="a"?>\n<r a="1" b="&amp;">t<![CDATA[c]]><!--m--><e/></r>\n';
+
+	// What `@rgrove/parse-xml` builds for it, the declaration left out.
+	const parsed = {
+		children: [
+			{ type: "pi", name: "style", content: 'href="a"' },
+			{ type: "text", text: "\n" },
+			{
+				type: "element",
+				name: "r",
+				attributes: { a: "1", b: "&" },
+				children: [
+					{ type: "text", text: "t" },
+					{ type: "cdata", text: "c" },
+					{ type: "comment", content: "m" },
+					{ type: "element", name: "e", attributes: {}, children: [] }
+				]
+			}
+		]
+	};
+
+	/**
+	 * @param {EXPECTED_ANY[]} children DOM nodes
+	 * @returns {EXPECTED_ANY} a node holding them as siblings
+	 */
+	const dom = (children) => {
+		children.forEach((child, i) => {
+			child.nextSibling = children[i + 1] || null;
+		});
+		return { firstChild: children[0] || null };
+	};
+
+	// What `@xmldom/xmldom` builds for it, the declaration as an instruction.
+	const document = dom([
+		{ nodeType: 7, target: "xml", data: 'version="1.0"' },
+		{ nodeType: 7, target: "style", data: 'href="a"' },
+		{
+			nodeType: 1,
+			nodeName: "r",
+			attributes: [
+				{ name: "a", value: "1" },
+				{ name: "b", value: "&" }
+			],
+			...dom([
+				{ nodeType: 3, data: "t" },
+				{ nodeType: 4, data: "c" },
+				{ nodeType: 8, data: "m" },
+				{ nodeType: 1, nodeName: "e", attributes: [], firstChild: null }
+			])
+		}
+	]);
+
+	// What htmlparser2 builds for it in `xmlMode`, a doctype kept as a directive.
+	const handled = {
+		children: [
+			{ type: "directive", name: "?xml", data: '?xml version="1.0"?' },
+			{ type: "directive", name: "!doctype", data: "!DOCTYPE r" },
+			{ type: "directive", name: "?style", data: '?style href="a"?' },
+			{
+				type: "tag",
+				name: "r",
+				attribs: { a: "1", b: "&" },
+				children: [
+					{ type: "text", data: "t" },
+					{ type: "cdata", children: [{ type: "text", data: "c" }] },
+					{ type: "comment", data: "m" },
+					{ type: "tag", name: "e", attribs: {}, children: [] }
+				]
+			}
+		]
+	};
+
+	/** @type {string} */
+	let directory;
+
+	beforeAll(() => {
+		// `@rgrove/parse-xml` is an ES module read through its manifest's entry,
+		// so the stand-in is a file that entry points at.
+		directory = fs.mkdtempSync(path.join(os.tmpdir(), "compare-xml-"));
+		const entry = path.join(directory, "parse-xml.js");
+		fs.writeFileSync(
+			path.join(directory, "parsed.json"),
+			JSON.stringify(parsed)
+		);
+		fs.writeFileSync(
+			entry,
+			'exports.parseXml = () => require("./parsed.json");\n'
+		);
+		const main = path.relative(
+			path.join(CACHE, "node_modules", "@rgrove/parse-xml"),
+			entry
+		);
+		mockLoad.mockImplementation(
+			/** @type {EXPECTED_ANY} */ (
+				(/** @type {string} */ name) =>
+					({
+						"@rgrove/parse-xml/package.json": { main },
+						"@xmldom/xmldom": {
+							DOMParser: class {
+								parseFromString() {
+									return document;
+								}
+							}
+						},
+						htmlparser2: { parseDocument: () => handled }
+					})[name]
+			)
+		);
+	});
+
+	afterAll(() => {
+		mockLoad.mockReset();
+		fs.rmSync(directory, { recursive: true, force: true });
+	});
+
+	it("should hold every tree-building parser to its tree", async () => {
+		const cell = agreement("@rgrove/parse-xml", TREE_READERS, xml);
+		expect(await cell("@rgrove/parse-xml")).toBe("reference");
+		expect(await cell("saxes")).toBe("own dialect");
+		expect(await cell("webpack")).toBe("yes");
+		expect(await cell("@xmldom/xmldom")).toBe("yes");
+		expect(await cell("htmlparser2 (xmlMode)")).toBe("yes");
+	});
+
+	it("should name the first node a parser reads apart", async () => {
+		expect(
+			await agreement(
+				"@rgrove/parse-xml",
+				TREE_READERS,
+				xml.replace("<e/>", "<f/>")
+			)("webpack")
+		).toBe("no — /r[1]/e[1]: @rgrove/parse-xml <e>, tool <f>");
 	});
 });

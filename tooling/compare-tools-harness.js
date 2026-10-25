@@ -623,6 +623,164 @@ const firstDifference = (before, after) => {
 	return shortest;
 };
 
+// --- Parser agreement -------------------------------------------------------
+
+// A parse table's last column: whether each parser reads the tree the
+// reference parser does. Every parser that builds a comparable tree writes
+// it as a flat list of events, so two trees compare as two lists.
+
+/** @typedef {[string, "open" | "close" | "leaf" | "text", string]} TreeEvent `[path, kind, what it says]` */
+
+/**
+ * One parse tree as what it says in document order, each event under the path
+ * of the node holding it (`/html[1]/body[1]/p[2]`, XPath's numbering).
+ */
+class TreeEvents {
+	constructor() {
+		/** @type {TreeEvent[]} */
+		this.list = [];
+		/** @type {string[]} */
+		this.paths = [""];
+		// How many children of each name every open node has had so far.
+		/** @type {Map<string, number>[]} */
+		this.seen = [new Map()];
+	}
+
+	/**
+	 * @returns {number} how many nodes are open
+	 */
+	get depth() {
+		return this.paths.length - 1;
+	}
+
+	/**
+	 * @param {string} name the node's name in the path
+	 * @param {string} said what its start says
+	 */
+	open(name, said) {
+		const seen = this.seen[this.seen.length - 1];
+		const index = (seen.get(name) || 0) + 1;
+		seen.set(name, index);
+		const at = `${this.paths[this.paths.length - 1]}/${name}[${index}]`;
+		this.paths.push(at);
+		this.seen.push(new Map());
+		this.list.push([at, "open", said]);
+	}
+
+	/**
+	 * @param {string} said what its end says
+	 */
+	close(said) {
+		this.list.push([/** @type {string} */ (this.paths.pop()), "close", said]);
+		this.seen.pop();
+	}
+
+	/**
+	 * @param {string} said a node with nothing inside it: a comment, a doctype
+	 */
+	leaf(said) {
+		this.list.push([this.paths[this.paths.length - 1], "leaf", said]);
+	}
+
+	/**
+	 * Text runs fold into one, since parsers split character data differently.
+	 * @param {string} value character data
+	 */
+	text(value) {
+		const at = this.paths[this.paths.length - 1];
+		const last = this.list[this.list.length - 1];
+		if (last !== undefined && last[1] === "text" && last[0] === at) {
+			last[2] += value;
+			return;
+		}
+		this.list.push([at, "text", value]);
+	}
+}
+
+/**
+ * @param {TreeEvent | undefined} event one event
+ * @returns {string} it as a cell shows it
+ */
+const shownEvent = (event) =>
+	event === undefined
+		? "nothing"
+		: oneLine(
+				event[1] === "text" ? `text ${JSON.stringify(event[2])}` : event[2],
+				48
+			);
+
+/**
+ * Where two trees first stop saying the same thing, or `undefined` where they
+ * agree, short enough for a cell: each side and the path are cut.
+ * @param {TreeEvents} reference the reference parser's tree
+ * @param {TreeEvents} tree the tree under test
+ * @param {string} referenceName the reference parser
+ * @returns {string | undefined} the path and what each side says there
+ */
+const treeDifference = (reference, tree, referenceName) => {
+	const length = Math.max(reference.list.length, tree.list.length);
+	for (let i = 0; i < length; i++) {
+		const left = reference.list[i];
+		const right = tree.list[i];
+		if (
+			left !== undefined &&
+			right !== undefined &&
+			left[1] === right[1] &&
+			left[2] === right[2]
+		) {
+			continue;
+		}
+		const at = (left || right)[0] || "/";
+		// A deep path keeps its end, where the node that differs is named.
+		const shown = at.length > 60 ? `…${at.slice(-59)}` : at;
+		return `${shown}: ${referenceName} ${shownEvent(left)}, tool ${shownEvent(right)}`;
+	}
+	return undefined;
+};
+
+/** @typedef {(source: string) => TreeEvents | Promise<TreeEvents>} TreeReader */
+
+/**
+ * The parse table's last column for one fixture: the reference reads it once,
+ * a parser with a reader is held to it, and anything else has a tree of its own.
+ * @param {string} referenceName the reference parser, which `readers` holds
+ * @param {Map<string, TreeReader>} readers every parser whose tree compares
+ * @param {string} source the fixture
+ * @returns {(name: string) => Promise<string>} the cell for each parser
+ */
+const agreement = (referenceName, readers, source) => {
+	/** @type {Promise<TreeEvents> | undefined} */
+	let reference;
+	return async (name) => {
+		if (name === referenceName) return "reference";
+		const read = readers.get(name);
+		if (read === undefined) return "own dialect";
+		reference =
+			reference ||
+			Promise.resolve().then(() =>
+				/** @type {TreeReader} */ (readers.get(referenceName))(source)
+			);
+		/** @type {TreeEvents} */
+		let theirs;
+		try {
+			theirs = await reference;
+		} catch (error) {
+			return `could not compare: ${referenceName} rejects it: ${thrownText(
+				error
+			)}`;
+		}
+		/** @type {TreeEvents} */
+		let tree;
+		try {
+			tree = await read(source);
+		} catch (error) {
+			return `could not compare: ${thrownText(error)}`;
+		}
+		const said = treeDifference(theirs, tree, referenceName);
+		return said === undefined ? "yes" : `no — ${said}`;
+	};
+};
+
 // Each bisection step prints the whole source twice, so a page carrying
 // thousands of sites stops shrinking rather than holding up the report.
 const SHRINK_BUDGET = 40;
@@ -1262,6 +1420,8 @@ const sweepExitCode = (found, missing, argv) =>
 
 module.exports = {
 	STAGES,
+	TreeEvents,
+	agreement,
 	collectFiles,
 	compress,
 	cutsAt,
@@ -1295,6 +1455,7 @@ module.exports = {
 	sweepExitCode,
 	sweepMode,
 	thrownText,
+	treeDifference,
 	wantedExpectations,
 	wantedRespelling
 };

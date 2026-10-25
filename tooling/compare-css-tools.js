@@ -43,6 +43,7 @@ const { SourceProcessor } = require("../lib/css/syntax");
 const cssSyntaxParser = require("../lib/css/syntax-parser");
 
 const {
+	Flag,
 	NodeType,
 	TokenType,
 	Part,
@@ -53,6 +54,8 @@ const {
 
 const {
 	STAGES,
+	TreeEvents,
+	agreement,
 	collectFiles,
 	compress,
 	exists,
@@ -306,6 +309,7 @@ const fixtures = () => [
 	)
 ];
 
+/** @typedef {import("../lib/css/syntax-parser").CssPath} CssPath */
 /** @typedef {import("../lib/css/syntax-parser").CssPrintOptions} CssPrintOptions */
 /** @typedef {import("../lib/css/syntax-parser").CssTransformOptions} CssTransformOptions */
 
@@ -689,6 +693,221 @@ const classSelectors = (postcss, selectorParser, css) => {
 	});
 	return set;
 };
+
+// --- Parser agreement -------------------------------------------------------
+
+// css-tree is the reference the trees are held to; postcss builds the same
+// rules, at-rules and declarations. The others build trees of their own.
+const REFERENCE_PARSER = "css-tree";
+
+/**
+ * A prelude or value as the readers compare it: comments dropped, whitespace
+ * runs collapsed. Each side's own source text, so no printer respells it.
+ * @param {string} text what the source wrote
+ * @returns {string} it compared
+ */
+const comparedText = (text) =>
+	text
+		.replace(/\/\*[\s\S]*?(?:\*\/|$)/g, " ")
+		.replace(/\s+/g, " ")
+		.trim();
+
+/**
+ * @param {string} property a declaration's name
+ * @param {string} value its value
+ * @param {boolean} important whether it carries `!important`
+ * @returns {string} what it says, as every reader writes it
+ */
+const declarationOf = (property, value, important) =>
+	`${property}: ${comparedText(value)}${important ? " !important" : ""}`;
+
+/**
+ * @param {string} name an at-rule's name
+ * @param {string} prelude its prelude
+ * @param {boolean} block whether it has a block
+ * @returns {string} what its start says, as every reader writes it
+ */
+const atRuleOf = (name, prelude, block) => {
+	const compared = comparedText(prelude);
+	return `@${name}${compared === "" ? "" : ` ${compared}`}${
+		block ? " {" : ";"
+	}`;
+};
+
+/**
+ * css-tree's tree, as the agreement column reads it. A prelude or value is
+ * read off its source range; css-tree leaves what it could not parse in a block
+ * as a `Raw` node, which reads `unparsed`.
+ * @param {string} css a stylesheet
+ * @returns {TreeEvents} what it says
+ */
+const cssTreeTree = (css) => {
+	const cssTree = load("css-tree");
+	const events = new TreeEvents();
+	/**
+	 * @param {EXPECTED_ANY} node a css-tree node
+	 * @returns {string} its source
+	 */
+	const source = (node) =>
+		node === null
+			? ""
+			: comparedText(css.slice(node.loc.start.offset, node.loc.end.offset));
+	/**
+	 * @param {Iterable<EXPECTED_ANY>} list a css-tree list
+	 */
+	const walk = (list) => {
+		for (const node of list) {
+			if (node.type === "Rule") {
+				const prelude = source(node.prelude);
+				events.open(prelude, `rule ${prelude}`);
+				walk(node.block.children);
+				events.close("}");
+			} else if (node.type === "Atrule") {
+				events.open(
+					`@${node.name}`,
+					atRuleOf(node.name, source(node.prelude), Boolean(node.block))
+				);
+				if (node.block) walk(node.block.children);
+				events.close(node.block ? "}" : "");
+			} else if (node.type === "Declaration") {
+				events.leaf(
+					declarationOf(node.property, source(node.value), node.important)
+				);
+			} else if (node.type === "Raw") {
+				events.leaf(`unparsed ${source(node)}`);
+			}
+		}
+	};
+	walk(
+		cssTree.parse(css, {
+			positions: true,
+			parseValue: false,
+			parseAtrulePrelude: false,
+			parseCustomProperty: false
+		}).children
+	);
+	return events;
+};
+
+/**
+ * webpack's tree, as the agreement column reads it.
+ * @param {string} css a stylesheet
+ * @returns {TreeEvents} what it says
+ */
+const webpackTree = (css) => {
+	const events = new TreeEvents();
+	/** @type {Record<number, { enter: (nodePath: CssPath) => void, exit: (nodePath: CssPath) => void }>} */
+	const visitors = {
+		[NodeType.QualifiedRule]: {
+			enter: (nodePath) => {
+				// A rule the input ends before its block opens is a parse error, dropped.
+				const block = /** @type {[number, number]} */ (
+					nodePath.rangeOf(Part.block)
+				);
+				const prelude = comparedText(
+					nodePath.source(nodePath.start(), block[0])
+				);
+				events.open(prelude, `rule ${prelude}`);
+			},
+			exit: () => {
+				events.close("}");
+			}
+		},
+		[NodeType.AtRule]: {
+			enter: (nodePath) => {
+				const block = nodePath.rangeOf(Part.block);
+				const name = /** @type {[number, number]} */ (
+					nodePath.rangeOf(Part.name)
+				);
+				const prelude = nodePath.source(
+					name[1],
+					block ? block[0] : nodePath.end()
+				);
+				const written = nodePath.source(name[0], name[1]);
+				events.open(
+					`@${written}`,
+					atRuleOf(
+						written,
+						block ? prelude : prelude.replace(/;\s*$/, ""),
+						block !== null
+					)
+				);
+			},
+			exit: (nodePath) => {
+				events.close(nodePath.rangeOf(Part.block) ? "}" : "");
+			}
+		},
+		[NodeType.Declaration]: {
+			enter: (nodePath) => {
+				const name = /** @type {[number, number]} */ (
+					nodePath.rangeOf(Part.name)
+				);
+				const value = nodePath.rangeOf(Part.value);
+				events.leaf(
+					declarationOf(
+						nodePath.source(name[0], name[1]),
+						value ? nodePath.source(value[0], value[1]) : "",
+						nodePath.flag(Flag.important)
+					)
+				);
+				nodePath.skipChildren();
+			},
+			exit: () => {}
+		}
+	};
+	new SourceProcessor().use(visitors).process(css, {});
+	return events;
+};
+
+/**
+ * postcss's tree, as the agreement column reads it: each prelude and value as
+ * the source wrote it, which postcss keeps in `raws` where a comment cleaned it.
+ * @param {string} css a stylesheet
+ * @returns {TreeEvents} what it says
+ */
+const postcssTree = (css) => {
+	const postcss = load("postcss");
+	const events = new TreeEvents();
+	/**
+	 * @param {EXPECTED_ANY} parent a postcss container
+	 */
+	const walk = (parent) => {
+		for (const node of parent.nodes) {
+			if (node.type === "rule") {
+				const prelude = comparedText(
+					node.raws.selector ? node.raws.selector.raw : node.selector
+				);
+				events.open(prelude, `rule ${prelude}`);
+				walk(node);
+				events.close("}");
+			} else if (node.type === "atrule") {
+				events.open(
+					`@${node.name}`,
+					atRuleOf(node.name, node.params, node.nodes !== undefined)
+				);
+				if (node.nodes) walk(node);
+				events.close(node.nodes ? "}" : "");
+			} else if (node.type === "decl") {
+				events.leaf(
+					declarationOf(
+						node.prop,
+						node.raws.value ? node.raws.value.raw : node.value,
+						Boolean(node.important)
+					)
+				);
+			}
+		}
+	};
+	walk(postcss.parse(css));
+	return events;
+};
+
+/** @type {Map<string, import("./compare-tools-harness").TreeReader>} */
+const TREE_READERS = new Map([
+	["webpack", webpackTree],
+	["postcss", postcssTree],
+	[REFERENCE_PARSER, cssTreeTree]
+]);
 
 const wantedFixture = filterFrom("FIXTURE");
 const wantedTool = filterFrom("TOOL");
@@ -1791,6 +2010,7 @@ const main = async () => {
 		);
 		const before = classSelectors(postcss, selectorParser, css);
 		const noticesBefore = legalNotices(css);
+		const agrees = agreement(REFERENCE_PARSER, TREE_READERS, css);
 		const input = await compress(Buffer.from(css));
 		process.stdout.write(
 			`\n${label} — ${kb(input.raw)} (${kb(input.gzip)} gzip, ${kb(
@@ -1806,7 +2026,7 @@ const main = async () => {
 				stage === "parse"
 					? `  ${"parse".padEnd(26)}${"ms".padStart(8)}${"cpu".padStart(
 							7
-						)}${"peak".padStart(9)}\n`
+						)}${"peak".padStart(9)}   agrees with ${REFERENCE_PARSER}\n`
 					: `  ${stage.padEnd(26)}${"out".padStart(10)}${"gzip".padStart(
 							9
 						)}${"saved".padStart(8)}${"brotli".padStart(9)}${"zstd".padStart(
@@ -1832,7 +2052,7 @@ const main = async () => {
 							cost.wall.padStart(8) +
 							cost.cpu.padStart(7) +
 							cost.peak.padStart(9)
-						}\n`
+						}   ${await agrees(tool.name)}\n`
 					);
 					process.stdout.write(formatProfile(result));
 					continue;
@@ -1913,5 +2133,6 @@ module.exports = {
 		GENERATED_FIXTURES.map(([label, file]) => [label, file])
 	),
 	PACKED_FIXTURES,
+	TREE_READERS,
 	runMode
 };
