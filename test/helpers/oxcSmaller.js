@@ -36,7 +36,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/substitute_alternate_syntax.rs:1086",
 			"oxc minifier: peephole/substitute_alternate_syntax.rs:865",
 			"swc exec: concat_tpl_keeps_delimiter_after_interpolation",
-			"swc exec: emotion_react_1",
 			"swc exec: issue_10095",
 			"swc exec: issue_11517_continue",
 			"swc exec: issue_11517_http_status",
@@ -107,7 +106,6 @@ const OXC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/projects/jquery/3/input.js",
 			"swc minifier: fixture/projects/jquery/7/input.js",
 			"swc minifier: fixture/projects/mootools/4/input.js",
-			"swc minifier: fixture/projects/mootools/6/input.js",
 			"swc minifier: fixture/projects/next/extra/if_return/.4/input.js",
 			"swc minifier: fixture/projects/react/3/input.js",
 			"swc minifier: fixture/reduced/1/input.js",
@@ -233,7 +231,6 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc applies esbuild's shortenings, as oxc's `peephole/esbuild.rs` tests show",
 		[
-			"oxc minifier: peephole/esbuild.rs:1181",
 			"oxc minifier: peephole/esbuild.rs:1215",
 			"oxc minifier: peephole/esbuild.rs:1222",
 			"oxc minifier: peephole/esbuild.rs:1798",
@@ -244,6 +241,9 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"webpack writes the same program in a spelling longer or compressing worse than oxc's",
 		[
+			"swc minifier: pass-1/uiw-codemirror/input.js",
+			"terser compress: big_int/big_int_math_counter_examples",
+			"terser compress: evaluate/or",
 			"swc exec: terser_arguments_modified",
 			"swc minifier: fixture/issues/10412/input.js",
 			"swc minifier: fixture/issues/10885/input.js",
@@ -273,14 +273,11 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: export/issue_2038_2",
 			"terser compress: export/name_cache_import_star_as_name_from_module",
 			"terser compress: issue-973/this_binding_sequences",
-			"terser compress: lhs_constants/lhs_constants",
 			"terser compress: new/new_statements_3",
 			"terser compress: numbers/evaluate_1",
 			"terser compress: numbers/evaluate_2",
 			"terser compress: reduce_vars/multi_def_2",
-			"terser compress: sequences/hoist_decl",
 			"oxc minifier: peephole/minimize_statements.rs:32",
-			"swc minifier: fixture/issues/10281/input.js",
 			"swc minifier: fixture/projects/yui/13/input.js",
 			"terser compress: collapse_vars/collapse_rhs_conditional_2"
 		]
@@ -372,7 +369,6 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc's mangler picks shorter or better-compressing names",
 		[
-			"swc exec: issue_8964",
 			"swc minifier: fixture/issues/11645/with-parent-scope-nested-block/input.js",
 			"swc minifier: fixture/issues/12212/with-scope/input.js",
 			"swc minifier: fixture/projects/react/15/input.js",

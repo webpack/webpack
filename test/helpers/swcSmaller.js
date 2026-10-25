@@ -37,7 +37,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/projects/jquery/11/input.js",
 			"swc minifier: fixture/projects/jquery/2/input.js",
 			"swc minifier: fixture/projects/jquery/20/input.js",
-			"swc minifier: fixture/projects/mootools/6/input.js",
 			"swc minifier: fixture/projects/mootools/7/input.js",
 			"swc minifier: fixture/projects/next/.archive-4/webpack-eb940a9a97802b481f9b/input.js",
 			"swc minifier: fixture/projects/next/extra/if_return/.4/input.js",
@@ -328,6 +327,7 @@ const SWC_SMALLER_BY_REASON = [
 	[
 		"webpack writes the same program in a spelling longer or compressing worse than swc's: `,` where swc keeps `;` between statements, operand order, `{0}` for an empty body",
 		[
+			"swc minifier: pass-1/uiw-codemirror/input.js",
 			"swc minifier: fixture/next/43052/input.js",
 			"swc minifier: fixture/projects/mootools/3/input.js",
 			"swc minifier: fixture/projects/yui/12/input.js",
@@ -387,7 +387,6 @@ const SWC_SMALLER_BY_REASON = [
 	[
 		"swc writes `const` as `let`, a byte shorter and mergeable with its neighbors, and moves leading `var`s into a later declaration",
 		[
-			"swc minifier: fixture/issues/vercel/004/input.js",
 			"terser compress: block-scope/do_not_hoist_let",
 			"terser compress: collapse_vars/switch_case_2",
 			"terser compress: collapse_vars/switch_case_3",
@@ -410,13 +409,7 @@ const SWC_SMALLER_BY_REASON = [
 	],
 	[
 		"swc merges imports of one module, drops unused specifiers, and folds a declaration into its `export default`",
-		[
-			"swc minifier: fixture/check/1/input.js",
-			"swc minifier: fixture/issues/11321/input.js",
-			"swc minifier: fixture/issues/7634/1/input.js",
-			"terser compress: export/issue_2126",
-			"terser compress: export/redirection"
-		]
+		["swc minifier: fixture/check/1/input.js"]
 	],
 	[
 		"swc splits a constant object into a variable per property, or reads a property or method straight off the literal, where terser keeps the object",

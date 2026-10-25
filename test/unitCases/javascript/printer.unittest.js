@@ -9944,6 +9944,109 @@ describe("syntax-printer", () => {
 			}
 		});
 
+		it("should merge a module's export lists of one module, or of none, into the first", async () => {
+			const { minify } = await load();
+			const input =
+				"let a = 1, b = 2; export { a }; export { x } from 'm'; export * from 'm'; export { b as c }; export * as n from 'm'; export { y } from 'm'; export { z } from 'm' with { type: 'json' };";
+			const { code } = await minify(input, {
+				module: true,
+				compress: {},
+				mangle: false
+			});
+			expect(code).toBe(
+				'let a=1,b=2;export{a,b as c};export{x,y}from"m";export*from"m";export*as n from"m";export{z}from"m"with{type:"json"};'
+			);
+		});
+
+		it("should write an import's `default` as its default name and merge each import where it fits", async () => {
+			const { minify } = await load();
+			const input =
+				"import G, * as n1 from 'q'; import { default as E, 'default' as F } from 'q'; import { a } from 'q'; import * as n2 from 'q'; import H from 'q'; sink(G, n1, E, F, a, n2, H);";
+			const { code } = await minify(input, {
+				module: true,
+				compress: {},
+				mangle: false
+			});
+			expect(code).toBe(
+				'import G,*as n1 from"q";import E,{default as F,a}from"q";import H,*as n2 from"q";sink(G,n1,E,F,a,n2,H);'
+			);
+		});
+
+		it("should declare a function or the class just before it as the default export it is", async () => {
+			const { minify } = await load();
+			/** @type {import("terser").MinifyOptions} */
+			const options = { module: true, compress: {}, mangle: false };
+			for (const [input, expected] of [
+				[
+					"function f(a) { return a.map(f); } sink(f); export default f;",
+					"export default function f(a){return a.map(f)}sink(f);"
+				],
+				[
+					"class C {} export default C; sink(new C());",
+					"export default class C{}sink(new C);"
+				],
+				// A class is not hoisted, so it stays where it is evaluated.
+				[
+					"class C {} sink(new C()); export default C;",
+					"class C{}sink(new C);export default C;"
+				],
+				// The default export is the value then, not the binding.
+				[
+					"function f() {} export function g() { f = 1; } export default f;",
+					"function f(){}export function g(){f=1}export default f;"
+				]
+			]) {
+				expect((await minify(input, options)).code).toBe(expected);
+			}
+		});
+
+		it("should throw a sequence a branch throws where both fold into `||`", async () => {
+			const { minify } = await load();
+			for (const [input, expected] of [
+				[
+					"function f() { a = b; if (a) throw a; if (b) c = b; throw c; } b = 0; c = 2; try { f(); } catch (e) { console.log(e); }",
+					"throw a=b,a||(b&&(c=b),c)"
+				],
+				// Both branches kept would repeat the text of the sequence.
+				[
+					"function f() { if (x) throw y; throw z(), w; } var x = 0, y = 1, w = 2; function z() { console.log(3); } try { f(); } catch (e) { console.log(e); }",
+					"if(x)throw y;throw z(),w"
+				]
+			]) {
+				const { code } = await minify(input, { compress: {}, mangle: false });
+				expect(code).toContain(expected);
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			}
+		});
+
+		it("should write a number multiplied or masked last, and keep it first where order matters", async () => {
+			const { minify, improvements } = await load();
+			if (!improvements) throw new Error("the improve phase is not installed");
+			const input =
+				"var x = { valueOf() { console.log('v'); return 6; } }; console.log(3 * x, 3 & x, 3 | x, 3 ^ x, 2 + x, 2 - x, 2 << x, 2 * 3);";
+			improvements.literalsLast.enabled = true;
+			try {
+				const { code } = await minify(input, { compress: {}, mangle: false });
+				expect(code).toContain("x*3,x&3,x|3,x^3,2+x,2-x,2<<x,6");
+				expect(runProgram(/** @type {string} */ (code))).toBe(
+					runProgram(input)
+				);
+			} finally {
+				improvements.literalsLast.enabled = false;
+			}
+		});
+
+		it("should declare a `var` without values in a later `var` of its list past statements declaring nothing", async () => {
+			const { minify } = await load();
+			const input =
+				"function f(c) { var a; g(c); for (var i = 0; i < c; i++) a = i; return a; } function g(v) { console.log(v); return v; } function h(c) { var a; function k() { return a; } g(c); var z = g(c + 1); a = z; return [k(), k, z]; } console.log(f(2), h(1)[0]);";
+			const { code } = await minify(input, { compress: {}, mangle: false });
+			expect(code).toContain("g(c);for(var a,i=0;");
+			// A function declared between keeps the order names are mangled in.
+			expect(code).toContain("var a;function k");
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+		});
+
 		it("should keep a constructor's `this.x` read a getter may answer", async () => {
 			const { minify } = await load();
 			for (const input of [
@@ -10278,7 +10381,7 @@ describe("syntax-printer", () => {
 				mangle: false
 			};
 			expect((await minify(input, options)).code).toBe(
-				'import A,{b as c,d}from"m";import"side";export*as"n"from"n"with{type:"json"};import*as P from"p";export{r}from"r";import defer*as D from"d";export{A,c as e,d,P as p1,P as p2,D};export{};sink(d);'
+				'import A,{b as c,d}from"m";import"side";export*as"n"from"n"with{type:"json"};import*as P from"p";export{r}from"r";import defer*as D from"d";export{A,c as e,d,P as p1,P as p2,D};sink(d);'
 			);
 			// `export * as` is ES2020.
 			expect(
@@ -10316,7 +10419,7 @@ describe("syntax-printer", () => {
 					)
 				).code
 			).toBe(
-				'import foo,*as bar from"foo";export{foo,bar};import{a,b}from"m";export{a};sink(b);'
+				'import foo,*as bar from"foo";export{foo,bar,a};import{a,b}from"m";sink(b);'
 			);
 			expect(
 				(
