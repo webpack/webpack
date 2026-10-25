@@ -48,6 +48,7 @@ new SourceProcessor()
 | `rangeOf(P, n)`                      | where a `Part` is written, `[start, end]`, `null` without one                            | `name`, `value` (a `url()`'s contents), `block`                                                                             | `name`, `value` (inside the quotes), `content`, `startTag`, `endTag`, `publicId`, `systemId` | —                            |
 | `startOf(P, n)`, `endOf(P, n)`       | the same as numbers, `-1` without one                                                    | ✓                                                                                                                           | ✓                                                                                            | —                            |
 | `textOf(P, n)`                       | a `Part`'s text beyond the name and value, decoded; `null` without one                   | none                                                                                                                        | `publicId`, `systemId`                                                                       | `raw`, `operator`, `kind`, … |
+| `replace(text)`, `remove()`          | while printing, the current node prints as `text`, or as nothing                         | ✓ (a declaration's `;` optional)                                                                                            | —                                                                                            | —                            |
 
 `Field`, `Flag` and `Part` are exported beside `NodeType` and named with the spec's word: CSS Syntax's for CSS (a rule's `declarations` and `rules` read as empty on a block big enough to stream, so read those from the walk), the DOM's for HTML. A `Flag` is a bit of the node's flags column (`important`, an element's namespace and `selfClosing`) or read off a token's text (CSS's type flags).
 
@@ -63,7 +64,7 @@ path.rangeOf(Part.name); // where the name is written, null without one
 
 The types follow the same tables: a visitor registered for some node types gets a path whose `field`, `fieldCount`, `fieldNamed`, `flag`, `rangeOf`, `textOf` and `within` accept only the parts those types have, and an item read from a field is typed as its node type. So `use([NodeType.Comment], (path) => path.fieldCount(Field.attributes))` fails to type-check, as does reading attributes off an attribute; a node of unknown type (`parent`, `child(i)`) takes any part.
 
-No language has a member of its own: what one grammar has is a row in its `NodeType`, `Field`, `Flag` or `Part` table, read through the members above, so a new language adds tables, not methods.
+No language has a member of its own, the writes below aside: what one grammar has is a row in its `NodeType`, `Field`, `Flag` or `Part` table, read through the members above, so a new language adds tables, not methods.
 
 HTML's `Part.content` runs to where the content ends when the end tag was left out, and an element the parser inserted has no `name`, tag or `content` range.
 
@@ -91,7 +92,8 @@ Conventions every language keeps, and a new member follows:
 - **Positions come as numbers and as ranges**, like acorn's `start`/`end` and `range`: `start`, `end`, `startOf` and `endOf` allocate nothing, so `CssParser` and `HtmlParser` read every position through them; `range`, `rangeOf` and `loc` (`[line, column, endLine, endColumn]`) are a fresh array per call.
 - **Walk children one way everywhere**: `for (let i = 0, c = path.child(0); c !== 0; c = path.child(++i))`. HTML keeps where the last `child` read stopped per parent, so this takes one step per child even with nested loops.
 - **Nothing is stored for a read.** A member reads the columns the parser already fills or derives its answer when called: HTML counts `index` along the sibling links and makes `loc`'s converter on its first call in a parse. The walk writes no more than its position, so a read nobody makes costs nothing.
-- **The path only reads, and webpack's own plugins read through it.** `CssParser` and `HtmlParser` use the members above and nothing else from a node, so what they do a plugin can; only the printers keep raw readers of their own (`_rawName`, `_attributeList`, …).
+- **Writes act on the current node and only while printing.** `replace(text)` and `remove()` take effect when the node prints after its visitors, which still run its printer for what it records; on a walk that prints nothing, or on a comment, which prints from the token stream, they do nothing, and a rule whose block is large enough to stream prints as written. In CSS, what holds a replaced node prints the text its children printed as, without the minifier's rewrites, which read fields the replacement no longer matches; the rest of the sheet minifies as before. HTML streams most elements to the output before their `exit` and JavaScript decides parentheses and spacing from the original node, so neither has writes yet.
+- **Reads go through the path, and webpack's own plugins read through it.** `CssParser` and `HtmlParser` use the members above and nothing else from a node, so what they do a plugin can; only the printers keep raw readers of their own (`_rawName`, `_attributeList`, …).
 
 ## Generated tables
 

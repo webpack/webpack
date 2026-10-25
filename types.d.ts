@@ -6643,6 +6643,16 @@ type CssNodePath<T = number, S = unknown> = Omit<
 		 */
 		stop(): void;
 		/**
+		 * Print the current node as `text` in place of what the printer writes; on a
+		 * walk that prints nothing, or on a comment, it does nothing. What holds the
+		 * node then prints its children's text as they printed, without the rewrites.
+		 */
+		replace(text: string): void;
+		/**
+		 * Print nothing for the current node, as `replace("")`.
+		 */
+		remove(): void;
+		/**
 		 * A top-level rule and a comment have none; a hash within a declaration is
 		 * a color, elsewhere an id.
 		 */
@@ -7578,6 +7588,16 @@ declare class CssSourceProcessor<TState = unknown> extends SourceProcessor<
 		 * Stop the walk: no visitor fires after the current one returns.
 		 */
 		stop(): void;
+		/**
+		 * Print the current node as `text` in place of what the printer writes; on a
+		 * walk that prints nothing, or on a comment, it does nothing. What holds the
+		 * node then prints its children's text as they printed, without the rewrites.
+		 */
+		replace(text: string): void;
+		/**
+		 * Print nothing for the current node, as `replace("")`.
+		 */
+		remove(): void;
 		/**
 		 * A top-level rule and a comment have none; a hash within a declaration is
 		 * a color, elsewhere an id.
@@ -27563,7 +27583,19 @@ declare class PrintContext<TPath, TNode, TPrintOptions = object> {
 	 * Run the node printer for `node` and store what it returns (the grammar calls
 	 * this once the node's visitors and children are done). `path` is on `node`.
 	 */
-	printNode(node: TNode, path: TPath): void;
+	printNode(node: TNode, path: TPath): boolean;
+
+	/**
+	 * Have `node` print as `text` in place of what its printer returns, from its
+	 * next {@link printNode}. The printer still runs, for what it records.
+	 */
+	replace(node: TNode, text: string): void;
+
+	/**
+	 * Drop what {@link replace} gave `node`, for a node the grammar writes out
+	 * without {@link printNode}.
+	 */
+	discardReplacement(node: TNode): void;
 
 	/**
 	 * Store `text` as what `node` printed, where the grammar already knows what
@@ -38044,6 +38076,16 @@ declare namespace exports {
 					 */
 					stop(): void;
 					/**
+					 * Print the current node as `text` in place of what the printer writes; on a
+					 * walk that prints nothing, or on a comment, it does nothing. What holds the
+					 * node then prints its children's text as they printed, without the rewrites.
+					 */
+					replace(text: string): void;
+					/**
+					 * Print nothing for the current node, as `replace("")`.
+					 */
+					remove(): void;
+					/**
 					 * A top-level rule and a comment have none; a hash within a declaration is
 					 * a color, elsewhere an id.
 					 */
@@ -38209,6 +38251,16 @@ declare namespace exports {
 						 */
 						stop(): void;
 						/**
+						 * Print the current node as `text` in place of what the printer writes; on a
+						 * walk that prints nothing, or on a comment, it does nothing. What holds the
+						 * node then prints its children's text as they printed, without the rewrites.
+						 */
+						replace(text: string): void;
+						/**
+						 * Print nothing for the current node, as `replace("")`.
+						 */
+						remove(): void;
+						/**
 						 * A top-level rule and a comment have none; a hash within a declaration is
 						 * a color, elsewhere an id.
 						 */
@@ -38275,6 +38327,16 @@ declare namespace exports {
 									 * Stop the walk: no visitor fires after the current one returns.
 									 */
 									stop(): void;
+									/**
+									 * Print the current node as `text` in place of what the printer writes; on a
+									 * walk that prints nothing, or on a comment, it does nothing. What holds the
+									 * node then prints its children's text as they printed, without the rewrites.
+									 */
+									replace(text: string): void;
+									/**
+									 * Print nothing for the current node, as `replace("")`.
+									 */
+									remove(): void;
 									/**
 									 * A top-level rule and a comment have none; a hash within a declaration is
 									 * a color, elsewhere an id.
@@ -38418,6 +38480,16 @@ declare namespace exports {
 						 */
 						stop(): void;
 						/**
+						 * Print the current node as `text` in place of what the printer writes; on a
+						 * walk that prints nothing, or on a comment, it does nothing. What holds the
+						 * node then prints its children's text as they printed, without the rewrites.
+						 */
+						replace(text: string): void;
+						/**
+						 * Print nothing for the current node, as `replace("")`.
+						 */
+						remove(): void;
+						/**
 						 * A top-level rule and a comment have none; a hash within a declaration is
 						 * a color, elsewhere an id.
 						 */
@@ -38482,6 +38554,16 @@ declare namespace exports {
 							 * Stop the walk: no visitor fires after the current one returns.
 							 */
 							stop(): void;
+							/**
+							 * Print the current node as `text` in place of what the printer writes; on a
+							 * walk that prints nothing, or on a comment, it does nothing. What holds the
+							 * node then prints its children's text as they printed, without the rewrites.
+							 */
+							replace(text: string): void;
+							/**
+							 * Print nothing for the current node, as `replace("")`.
+							 */
+							remove(): void;
 							/**
 							 * A top-level rule and a comment have none; a hash within a declaration is
 							 * a color, elsewhere an id.
