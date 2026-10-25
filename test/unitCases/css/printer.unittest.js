@@ -15432,10 +15432,20 @@ describe("CssSyntax minify — a box family holding a value its longhand does no
 
 	it.each([
 		["a word", "a{inset:1px 2px 3px foo}"],
+		["a CSS-wide keyword beside another value", "a{inset:inherit 0}"],
 		["a call no box reads", "a{inset:auto 0 0 auto(}", "a{inset:auto 0 0 auto(})}"]
 	])("leaves an `inset` holding %s for the target to drop", (_, css, out = css) => {
 		expect(minifyFor(css, ["edge 18"])).toBe(out);
 	});
+
+	it.each(["inherit", "INITIAL", "unset", "revert-layer"])(
+		"still lowers an `inset` of the CSS-wide keyword %s",
+		(keyword) => {
+			expect(minifyFor(`a{inset:${keyword}}`, ["edge 18"])).toBe(
+				`a{top:${keyword};right:${keyword};bottom:${keyword};left:${keyword}}`
+			);
+		}
+	);
 
 	it("still lowers an `inset` of what the offsets read", () => {
 		expect(minifyFor("a{inset:calc(1px + 1%) anchor(top)}", ["edge 18"])).toBe(
