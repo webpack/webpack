@@ -37,3 +37,7 @@ it("should not call a function returning the schema when the check passes", () =
 it("should validate with the schema a function returns when the check fails", () => {
 	expect(() => require("./f")).toThrow(/options\.name should be a string/);
 });
+
+it("should name the loader by the configuration it passes", () => {
+	expect(() => require("./g")).toThrow(/Named Loader has been initialized/);
+});

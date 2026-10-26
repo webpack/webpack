@@ -58,6 +58,27 @@ describe("validateSchema", () => {
 		).toThrow(/^Invalid options object\. Loader has been initialized/);
 	});
 
+	it("should prefer a given configuration over the schema title and the defaults", () => {
+		expect(() =>
+			validateSchema(
+				schema,
+				{ name: 42 },
+				{ name: "Named Loader" },
+				undefined,
+				{ name: "Loader", baseDataPath: "options" }
+			)
+		).toThrow(/^Invalid options object\. Named Loader has been initialized/);
+	});
+
+	it("should prefer the schema title over the defaults", () => {
+		expect(() =>
+			validateSchema(schema, { name: 42 }, undefined, undefined, {
+				name: "Loader",
+				baseDataPath: "options"
+			})
+		).toThrow(/^Invalid options object\. My Plugin has been initialized/);
+	});
+
 	it("should report a check that rejects what the schema accepts", () => {
 		const tracker = deprecationTracking.start();
 
