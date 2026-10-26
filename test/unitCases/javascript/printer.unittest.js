@@ -15470,6 +15470,17 @@ describe("JavaScript minifier reading an event handler's body", () => {
 		}
 	});
 
+	it("should wrap a body as `wrap` and `enclose` ask, inside its function", async () => {
+		const { minify } = await load();
+		for (const given of [{ enclose: true }, { wrap: "lib" }]) {
+			const { code } = await minify("x(); return 1", {
+				...given,
+				sourceType: "event-handler"
+			});
+			expect(code).toMatch(/x\(\)/);
+		}
+	});
+
 	it("should refuse what a function's body cannot hold", async () => {
 		const { minify } = await load();
 		for (const source of ['import a from "b"', "#!x\n1"]) {
