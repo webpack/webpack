@@ -10532,6 +10532,25 @@ describe("syntax-printer", () => {
 			}
 		});
 
+		it("should keep a function called in a `with` body a call where it declares names", async () => {
+			const { minify } = await load();
+			for (const input of [
+				"function f(o) { with (o) { (function () { var q = 1; q += o.n; console.log(q); })(); } return o.q; } console.log(f({ q: 5, n: 2 }));",
+				"function f(o) { with (o) { (function (q) { q += o.n; console.log(q); })(1); } return o.q; } console.log(f({ q: 5, n: 2 }));"
+			]) {
+				const { code } = await minify(input, {
+					compress: { passes: 2 },
+					mangle: false
+				});
+				expect(code).toContain("function(");
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			}
+			// Declaring nothing, it is still flattened there.
+			const bare = "function f(o) { with (o) { console.log((function () { return n + 1; })()); } } f({ n: 2 });";
+			const flat = await minify(bare, { compress: {}, mangle: false });
+			expect(flat.code).toContain("console.log(n+1)");
+		});
+
 		it("should keep a constructor's `this.x` read a getter may answer", async () => {
 			const { minify } = await load();
 			for (const input of [
