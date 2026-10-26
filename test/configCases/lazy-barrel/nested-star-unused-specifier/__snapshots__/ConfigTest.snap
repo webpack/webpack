@@ -3,12 +3,21 @@
 exports[`ConfigTestCases lazy-barrel nested-star-unused-specifier nested-star-unused-specifier should compile 1`] = `
 "./index.js
 ├─ ./unused.js
-│  └─ ./ui/index.js [barrel]
-│     └─ (*) ./ui/theme/index.js [barrel]
-│        ├─ (colors) ./ui/theme/colors.js
-│        ├─ (fonts) ./fonts [raw] [lazy]
-│        ├─ (spacing) ./spacing [raw] [lazy]
-│        ├─ (default) ./default-theme [raw] [lazy]
-│        └─ (*) ./ui/index.js [barrel] (deduped)
-└─ (colors, missing) ./ui/index.js [barrel] (deduped)"
+│  ├─ ./ui/index.js [barrel]
+│  │  └─ (*) ./ui/theme/index.js [barrel]
+│  │     ├─ (colors) ./ui/theme/colors.js
+│  │     ├─ (fonts) ./fonts [raw] [lazy]
+│  │     ├─ (spacing) ./spacing [raw] [lazy]
+│  │     ├─ (default) ./default-theme [raw] [lazy]
+│  │     └─ (*) ./ui/index.js [barrel] (deduped)
+│  ├─ ./kit/index.js [barrel]
+│  │  └─ (*) ./kit/theme/index.js [barrel]
+│  │     ├─ (tone) ./kit/theme/tone.js
+│  │     └─ (*) ./more [raw] [lazy]
+│  └─ ./lib/index.js [barrel]
+│     ├─ (default) ./foo [raw] [lazy]
+│     └─ (*) ./other [raw] [lazy]
+├─ (colors, missing) ./ui/index.js [barrel] (deduped)
+├─ (tone) ./kit/index.js [barrel] (deduped)
+└─ (local) ./lib/index.js [barrel] (deduped)"
 `;
