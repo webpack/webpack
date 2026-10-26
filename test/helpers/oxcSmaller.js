@@ -334,7 +334,6 @@ const OXC_SMALLER_BY_REASON = [
 		[
 			"swc minifier: fixture/issues/11684/bindings/input.js",
 			"terser compress: arguments/modified",
-			"terser compress: collapse_vars/collapse_rhs_loop",
 			"terser compress: sequences/lift_sequences_3",
 			"swc minifier: fixture/issues/framer-motion/1/input.js"
 		]
@@ -457,13 +456,6 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc drops more unreachable code, as oxc's `peephole/remove_dead_code.rs` tests show",
 		["oxc minifier: peephole/remove_dead_code.rs:263"]
-	],
-	[
-		"oxc joins more neighboring declarations, as oxc's `peephole/collapse_variable_declarations.rs` tests show",
-		[
-			"oxc minifier: peephole/collapse_variable_declarations.rs:211",
-			"oxc minifier: peephole/collapse_variable_declarations.rs:234"
-		]
 	],
 	[
 		"oxc's own integration cases, several transforms combined, as oxc's `peephole/oxc.rs` tests show",

@@ -21,7 +21,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/5588/input.js",
 			"swc minifier: fixture/issues/6279/1/input.js",
 			"swc minifier: fixture/issues/6279/2/input.js",
-			"swc minifier: fixture/issues/6791/1/input.js",
 			"swc minifier: fixture/issues/6957/2/input.js",
 			"swc minifier: fixture/issues/8119/input.js",
 			"swc minifier: fixture/issues/8813/input.js",

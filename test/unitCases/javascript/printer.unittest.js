@@ -10268,6 +10268,62 @@ describe("syntax-printer", () => {
 			}
 		});
 
+		it("should declare a bare `var` in a later loop's head assigning it in the same function", async () => {
+			const { minify } = await load();
+			const input =
+				"function f(b, x) { var a; if (x) for (a in b) console.log(a); else console.log(x); } f({ p: 1 }, true); f({}, false);";
+			const { code } = await minify(input, { compress: {}, mangle: false });
+			expect(code).toContain("for(var a in b)");
+			expect(code).not.toContain("var a;");
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			for (const kept of [
+				// A loop in a function assigns the outer `var`, which stays declared.
+				"function f(b) { var a; [0].forEach(function () { for (a in b); }); return a; } console.log(f({ p: 1 }));",
+				// The loop's `a` is the block's own.
+				"function f(b, x) { var a = 0; if (x) { let a; for (a in b); console.log(a); } return a; } console.log(f({ p: 1 }, true));",
+				// Read past the loop, `for(a in b)` stays as other loops may write it.
+				"function f(b, x) { var a; if (x) for (a in b); return a; } console.log(f({ p: 1 }, true));",
+				// The loop's `a` is the catch parameter.
+				"function f(b) { var a; try { throw 1; } catch (a) { for (a in b); console.log(a); } return a; } console.log(f({ p: 1 }));"
+			]) {
+				const { code } = await minify(kept, { compress: {}, mangle: false });
+				expect(code).not.toContain("for(var a");
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(kept));
+			}
+		});
+
+		it("should move a `var` given its value into the next loop's head", async () => {
+			const { minify } = await load();
+			const input =
+				'var s; s = "<b>PASS</b>"; for (var m, r = /<b>(.*)<\\/b>/; m = s.match(r);) s = s.replace(m[0], m[1]); console.log(s);';
+			const { code } = await minify(input, { compress: {}, mangle: false });
+			expect(code).toContain('for(var s="<b>PASS</b>",m,r=');
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			// A `let` in the loop's head would be a binding of each turn.
+			const kept =
+				"let s; s = 0; for (let i = 0; i < 2; i++) s += i; console.log(s);";
+			const { code: keptCode } = await minify(kept, {
+				compress: {},
+				mangle: false
+			});
+			expect(keptCode).not.toContain("for(let s");
+			expect(runProgram(/** @type {string} */ (keptCode))).toBe(
+				runProgram(kept)
+			);
+		});
+
+		it("should keep an exported name where mangling it costs its `as` clause more", async () => {
+			const { minify } = await load();
+			const { code } = await minify(
+				"let LET = 1; const TEST = 2; var VAR = 3; import * as stuff from 'm'; stuff.a(); stuff.b(); export { LET, TEST, VAR, stuff };",
+				{ compress: false, mangle: true, module: true }
+			);
+			expect(code).toContain("const TEST=2");
+			expect(code).toContain("export{LET,TEST,VAR,");
+			// Read twice more, a name one long and its clause write less.
+			expect(code).not.toContain("stuff.a()");
+		});
+
 		it("should keep a constructor's `this.x` read a getter may answer", async () => {
 			const { minify } = await load();
 			for (const input of [
