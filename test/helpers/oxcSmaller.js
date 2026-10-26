@@ -265,7 +265,6 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: collapse_vars/collapse_vars_side_effects_2",
 			"terser compress: concat-strings/concat_1",
 			"terser compress: conditionals/ifs_6",
-			"terser compress: evaluate/in_boolean_context",
 			"terser compress: evaluate/unsafe_array",
 			"terser compress: evaluate/unsafe_integer_key",
 			"terser compress: export/issue_2038_2",
@@ -449,7 +448,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/inline.rs:698",
 			"oxc minifier: peephole/inline.rs:703",
 			"oxc minifier: peephole/inline.rs:704",
-			"oxc minifier: peephole/inline.rs:706",
 			"oxc minifier: peephole/inline.rs:642"
 		]
 	],
