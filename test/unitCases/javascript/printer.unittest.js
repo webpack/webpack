@@ -15458,14 +15458,14 @@ describe("JavaScript minifier reading an event handler's body", () => {
 
 	it("should read a module or a script as `module` says", async () => {
 		const { minify } = await load();
-		for (const [source, sourceType, module] of [
+		/** @type {[string, "module" | "script", boolean][]} */
+		const cases = [
 			["export const a = 1; let b = 2; f(b)", "module", true],
 			["let b = 2; f(b)", "script", false]
-		]) {
-			const given = await minify(source, {
-				sourceType: /** @type {"module" | "script"} */ (sourceType)
-			});
-			const reference = await minify(source, { module: Boolean(module) });
+		];
+		for (const [source, sourceType, module] of cases) {
+			const given = await minify(source, { sourceType });
+			const reference = await minify(source, { module });
 			expect(given.code).toBe(reference.code);
 		}
 	});
