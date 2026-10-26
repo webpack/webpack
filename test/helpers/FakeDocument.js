@@ -403,14 +403,6 @@ class FakeElement {
 	}
 
 	/**
-	 * Removes this node from its parent, if any (`ChildNode#remove`).
-	 * @returns {void}
-	 */
-	remove() {
-		if (this.parentNode) this.parentNode.removeChild(this);
-	}
-
-	/**
 	 * @param {string} name attribute name
 	 * @param {string} value attribute value
 	 * @returns {void}
