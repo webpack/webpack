@@ -14927,6 +14927,12 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				{},
 				"{let a=g();using b=a;h(b)}"
 			],
+			// A callee a read of which may throw is read before what a statement set runs.
+			[
+				"function f(){ var x; x = s(); g(x); let g = () => {}; } function h(){ var x; x = s(); new C(x); class C {} } function i(){ var x; x = s(); k(x); var k = () => {} }",
+				{},
+				"function f(){var n;n=s();x(n);let x=()=>{}}function h(){var n;n=s();new x(n);class x{}}function i(){var n;x(n=s());var x=()=>{}}"
+			],
 			// A directive stays, and so does a global set before a call that may read it.
 			[
 				"function f(){ 'use strict'; g() } function h(){ x = g(); k(x) }",
