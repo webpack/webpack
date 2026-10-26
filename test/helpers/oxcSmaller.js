@@ -383,7 +383,6 @@ const OXC_SMALLER_BY_REASON = [
 		[
 			"oxc minifier: peephole/esbuild.rs:2274",
 			"swc minifier: fixture/issues/7770/2/input.js",
-			"swc minifier: fixture/issues/next-97517/input.js",
 			"terser compress: harmony/module_enabled",
 			"terser compress: reduce_vars/unsafe_evaluate_side_effect_free_2"
 		]
