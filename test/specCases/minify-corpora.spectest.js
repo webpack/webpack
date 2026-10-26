@@ -1845,6 +1845,17 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 	[
 		"`Object.keys` of a string literal folded into the array it returns, where gzip matched the repeated call",
 		["keys.js (the default minimizer's options)"]
+	],
+	[
+		"1 or 2 bytes fewer, 1 or 2 more gzipped: a statement kept before a `for…of`, out of the parens its head would need, no longer sits in the run of the loop's own text gzip matched",
+		[
+			"chinese-calendar-dates.js (the default minimizer's options)",
+			"dangi-calendar-dates.js (the default minimizer's options)",
+			"map-contract.js (the default minimizer's options)",
+			"set-contract.js (the default minimizer's options)",
+			"set.js (the default minimizer's options)",
+			"sort_byteoffset.js (the default minimizer's options)"
+		]
 	]
 ])) {
 	for (const key of keys) IMPROVED_YET_BIGGER[key] = reason;

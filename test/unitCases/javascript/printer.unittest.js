@@ -10730,6 +10730,55 @@ x = a ** b ** c; x = (a ** b) ** c; x = (-a) ** b; x = a < b < c; x = a < (b < c
 			}
 		});
 
+		it("should write a function's last `return` of `undefined` as the effects it runs", async () => {
+			const { minify } = await load();
+			for (const [input, written] of [
+				[
+					"function f(a, b) { if (a) { if (b) { console.log(1); return; } else { return; } } else { return; } console.log(2); } f(1, 1); f(1, 0); f(0, 1);",
+					"a&&b&&console.log(1)"
+				],
+				[
+					"function f(a) { if (!a) { console.log(1); return; } } f(0); f(1);",
+					"a||console.log(1)"
+				],
+				[
+					"function f(a) { if (a) { console.log(1); console.log(2); return; } else { console.log(3); return; } } f(0); f(1);",
+					"a?(console.log(1),console.log(2)):console.log(3)"
+				],
+				[
+					"var f = async (a) => { if (a) { console.log(1); return; } }; f(1).then(function (v) { console.log(v); });",
+					"a&&console.log(1)"
+				]
+			]) {
+				const { code } = await minify(input, { compress: {}, mangle: false });
+				expect(code).toContain(written);
+				expect(code).not.toContain("return");
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			}
+			// Not in its last statement, the `return` skips what follows.
+			const middle = 'function f(a) { for (var i of a) { if (i) { console.log(i); return; } } console.log("none"); } f([0, 2]); f([0]);';
+			const kept = await minify(middle, { compress: {}, mangle: false });
+			expect(kept.code).toContain("return");
+			expect(runProgram(/** @type {string} */ (kept.code))).toBe(runProgram(middle));
+		});
+
+		it("should keep a statement before a `for…of` out of the parens its value needs", async () => {
+			const { minify } = await load();
+			for (const [input, written] of [
+				["var a; a = 0; for (a of [1, 2]) console.log(a);", "a=0;for(a of[1,2])"],
+				["function f(b) { console.log(0); for (var a of b) console.log(a); } f([1]);", "console.log(0);for("],
+				["function f(b) { console.log(0); for (const a of b) console.log(a); } f([1]);", "console.log(0);for("]
+			]) {
+				const { code } = await minify(input, { compress: {}, mangle: false });
+				expect(code).toContain(written);
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			}
+			// A `for…in` holds the sequence bare, saving the `;`.
+			const forIn = "function f(b) { console.log(0); for (var a in b) console.log(a); } f({ x: 1 });";
+			const joined = await minify(forIn, { compress: {}, mangle: false });
+			expect(joined.code).toContain("in console.log(0),b)");
+		});
+
 		it("should keep a constructor's `this.x` read a getter may answer", async () => {
 			const { minify } = await load();
 			for (const input of [

@@ -76,7 +76,6 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"`,` vs `;` statements: the same statements joined into one sequence where the rival writes them apart, or a sequence's expressions lifted out or kept in another order",
 		[
-			"oxc minifier: peephole/collapse_variable_declarations.rs:237",
 			"oxc minifier: peephole/minimize_conditions.rs:1405",
 			"oxc minifier: peephole/remove_unused_expression.rs:1269",
 			"swc minifier: fixture/issues/11684/nested-eval/input.js",
@@ -143,7 +142,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/minimize_conditional_expression.rs:188",
 			"oxc minifier: peephole/minimize_conditions.rs:113",
 			"oxc minifier: peephole/minimize_exit_points.rs:375",
-			"oxc minifier: peephole/minimize_exit_points.rs:74",
 			"swc minifier: fixture/projects/backbone/15/input.js",
 			"swc minifier: fixture/projects/jquery/2/input.js",
 			"swc minifier: fixture/projects/jquery/3/input.js",
@@ -185,7 +183,6 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"where a declaration goes: a `let`, `var` or function declaration placed earlier or later, or its first value assigned apart",
 		[
-			"oxc minifier: peephole/collapse_variable_declarations.rs:226",
 			"swc exec: terser_drop_unused_drop_var",
 			"swc minifier: fixture/issues/12182/receiver-sensitive/input.js",
 			"swc minifier: fixture/projects/backbone/12/input.js",
