@@ -15523,7 +15523,9 @@ describe("JavaScript minifier reading an event handler's body", () => {
 			const { code } = await minify("x(); return 1", {
 				sourceType,
 				module: true,
-				parse: { module: true }
+				parse: { module: true },
+				compress: { module: true },
+				mangle: { module: true }
 			});
 			expect(code).toMatch(/^return x\(\),1;?$/);
 		}
