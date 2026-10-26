@@ -265,7 +265,6 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: collapse_vars/collapse_vars_side_effects_2",
 			"terser compress: concat-strings/concat_1",
 			"terser compress: conditionals/ifs_6",
-			"terser compress: evaluate/in_boolean_context",
 			"terser compress: evaluate/unsafe_array",
 			"terser compress: evaluate/unsafe_integer_key",
 			"terser compress: export/issue_2038_2",
@@ -293,10 +292,6 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc drops what nothing reads or what has no effect: unused variables, functions, parameters and pure expressions",
 		[
-			"swc minifier: fixture/collapse-vars/trivial-literal-chain/input.js",
-			"terser compress: asm/asm_function_expression",
-			"terser compress: asm/asm_nested_functions",
-			"terser compress: asm/asm_toplevel",
 			"terser compress: drop-unused/issue_1715_3",
 			"terser compress: reduce_vars/issue_t1382",
 			"terser compress: template-string/tagged_template_with_comment",
@@ -334,7 +329,6 @@ const OXC_SMALLER_BY_REASON = [
 		[
 			"swc minifier: fixture/issues/11684/bindings/input.js",
 			"terser compress: arguments/modified",
-			"terser compress: collapse_vars/collapse_rhs_loop",
 			"terser compress: sequences/lift_sequences_3",
 			"swc minifier: fixture/issues/framer-motion/1/input.js"
 		]
@@ -368,7 +362,6 @@ const OXC_SMALLER_BY_REASON = [
 		"oxc's mangler picks shorter or better-compressing names",
 		[
 			"swc minifier: fixture/issues/11645/with-parent-scope-nested-block/input.js",
-			"swc minifier: fixture/issues/12212/with-scope/input.js",
 			"swc minifier: fixture/projects/react/15/input.js",
 			"swc minifier: fixture/projects/mootools/8/input.js",
 			"swc minifier: fixture/projects/yui/1/input.js"
@@ -450,7 +443,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/inline.rs:698",
 			"oxc minifier: peephole/inline.rs:703",
 			"oxc minifier: peephole/inline.rs:704",
-			"oxc minifier: peephole/inline.rs:706",
 			"oxc minifier: peephole/inline.rs:642"
 		]
 	],
@@ -459,22 +451,12 @@ const OXC_SMALLER_BY_REASON = [
 		["oxc minifier: peephole/remove_dead_code.rs:263"]
 	],
 	[
-		"oxc joins more neighboring declarations, as oxc's `peephole/collapse_variable_declarations.rs` tests show",
-		[
-			"oxc minifier: peephole/collapse_variable_declarations.rs:211",
-			"oxc minifier: peephole/collapse_variable_declarations.rs:234"
-		]
-	],
-	[
 		"oxc's own integration cases, several transforms combined, as oxc's `peephole/oxc.rs` tests show",
 		["oxc minifier: peephole/oxc.rs:23"]
 	],
 	[
 		"oxc inlines a function into its call site, where terser keeps the call",
-		[
-			"swc minifier: fixture/pr/11987/input.js",
-			"terser compress: inline/noinline_annotation_2"
-		]
+		["terser compress: inline/noinline_annotation_2"]
 	],
 	[
 		"oxc resolves a `switch` on a known value, or writes a `switch` shorter",
@@ -513,10 +495,6 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc's output differs: it drops an unused class extending a regular expression, whose definition throws a TypeError",
 		["terser compress: harmony/class_extends_regex"]
-	],
-	[
-		"oxc's output is wrong: it renames `LocalCtor` inside a `with` body, so a `LocalCtor` property on the `with` object is no longer used",
-		["swc minifier: fixture/issues/11684/with-scope/input.js"]
 	],
 	[
 		"oxc drops an unused `Symbol.for`, which webpack keeps: running it at build time would keep its key in the build's own symbol registry",

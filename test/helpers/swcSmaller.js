@@ -21,7 +21,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/5588/input.js",
 			"swc minifier: fixture/issues/6279/1/input.js",
 			"swc minifier: fixture/issues/6279/2/input.js",
-			"swc minifier: fixture/issues/6791/1/input.js",
 			"swc minifier: fixture/issues/6957/2/input.js",
 			"swc minifier: fixture/issues/8119/input.js",
 			"swc minifier: fixture/issues/8813/input.js",
@@ -258,8 +257,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: pure_getters/issue_2265_2",
 			"terser compress: pure_getters/set_immutable_2",
 			"terser compress: pure_getters/set_immutable_4",
-			"terser compress: reduce_vars/defun_inline_1",
-			"terser compress: reduce_vars/defun_inline_2",
 			"terser compress: reduce_vars/issue_1606",
 			"terser compress: reduce_vars/issue_1850_4",
 			"terser compress: reduce_vars/issue_3110_3",
@@ -372,7 +369,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/projects/mootools/8/input.js",
 			"terser compress: collapse_vars/boolean_binary_1",
 			"terser compress: collapse_vars/boolean_binary_2",
-			"terser compress: conditionals/issue_2535_1",
 			"terser compress: issue-1673/side_effects_else",
 			"terser compress: issue-640/cond_5",
 			"terser compress: issue-640/conditional",
@@ -393,13 +389,11 @@ const SWC_SMALLER_BY_REASON = [
 	[
 		"swc evaluates reads on literals at build time: an index into an array or string, a missing property as `void 0`, `typeof` a class, `delete` of a binding",
 		[
-			"swc minifier: fixture/issues/9453/input.js",
 			"swc minifier: fixture/member_expr/array_side_effects/input.js",
 			"swc minifier: fixture/member_expr/object_side_effects/input.js",
 			"terser compress: collapse_vars/collapse_vars_unary",
 			"terser compress: collapse_vars/reduce_vars_assign",
 			"terser compress: comparing/issue_2857_6",
-			"terser compress: evaluate/in_boolean_context",
 			"terser compress: harmony/array_literal_with_spread_2a",
 			"terser compress: typeof/issue_2728_3"
 		]
@@ -479,7 +473,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/react-autosuggest/1/input.js",
 			"swc minifier: fixture/issues/react-autowhatever/1/input.js",
 			"swc minifier: fixture/issues/react-instancesearch/002/input.js",
-			"swc minifier: fixture/issues/vercel/005/input.js",
 			"swc minifier: fixture/next/33458/static/chunks/pages/spread-be872e60d968a0f7/input.js",
 			"swc minifier: fixture/next/46887/input.js",
 			"swc minifier: fixture/next/56408/input.js",

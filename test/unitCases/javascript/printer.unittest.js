@@ -10220,6 +10220,337 @@ describe("syntax-printer", () => {
 			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
 		});
 
+		it("should decide `&&` and `||` by the constant a sequence on their left ends with", async () => {
+			const { minify } = await load();
+			const input =
+				'var n = 0; function x() { n++; return n; } function y() { console.log("y"); return 5; } if (x() && false) y(); console.log((x(), 1) && y(), (x(), "") || y(), (x(), 0n) && y(), (x(), 0) || y(), n);';
+			const options = {
+				compress: {
+					defaults: false,
+					booleans: true,
+					conditionals: true,
+					evaluate: true,
+					side_effects: true
+				},
+				mangle: false
+			};
+			const { code } = await minify(input, options);
+			expect(code).not.toContain("&&y()");
+			expect(code).not.toContain("||y()");
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			for (const kept of [
+				'var a = 0; console.log((console.log("x"), a) && 1);',
+				'console.log((console.log("x"), 0) && 1);'
+			]) {
+				const { code } = await minify(kept, {
+					compress: { evaluate: false },
+					mangle: false
+				});
+				expect(code).toContain("&&");
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(kept));
+			}
+		});
+
+		it("should write `(() => eval(s))()` as `eval(s)` in strict code only", async () => {
+			const { minify } = await load();
+			const input =
+				'"use strict"; var x = 1; console.log((() => eval("x + 1"))(), (() => eval("var y = 2; y"))(), typeof y);';
+			const { code } = await minify(input, { compress: {}, mangle: false });
+			expect(code).not.toContain("=>");
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			for (const kept of [
+				'console.log((() => eval("var y = 2; y"))(), typeof y);',
+				'"use strict"; console.log(((a) => eval("a"))(1), (async () => eval("1"))() instanceof Promise);'
+			]) {
+				const { code } = await minify(kept, { compress: {}, mangle: false });
+				expect(code).toContain("=>");
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(kept));
+			}
+		});
+
+		it("should declare a bare `var` in a later loop's head assigning it in the same function", async () => {
+			const { minify } = await load();
+			const input =
+				"function f(b, x) { var a; if (x) for (a in b) console.log(a); else console.log(x); } f({ p: 1 }, true); f({}, false);";
+			const { code } = await minify(input, { compress: {}, mangle: false });
+			expect(code).toContain("for(var a in b)");
+			expect(code).not.toContain("var a;");
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			for (const kept of [
+				// A loop in a function assigns the outer `var`, which stays declared.
+				"function f(b) { var a; [0].forEach(function () { for (a in b); }); return a; } console.log(f({ p: 1 }));",
+				// The loop's `a` is the block's own.
+				"function f(b, x) { var a = 0; if (x) { let a; for (a in b); console.log(a); } return a; } console.log(f({ p: 1 }, true));",
+				// Read past the loop, `for(a in b)` stays as other loops may write it.
+				"function f(b, x) { var a; if (x) for (a in b); return a; } console.log(f({ p: 1 }, true));",
+				// The loop's `a` is the catch parameter.
+				"function f(b) { var a; try { throw 1; } catch (a) { for (a in b); console.log(a); } return a; } console.log(f({ p: 1 }));"
+			]) {
+				const { code } = await minify(kept, { compress: {}, mangle: false });
+				expect(code).not.toContain("for(var a");
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(kept));
+			}
+		});
+
+		it("should move a `var` given its value into the next loop's head", async () => {
+			const { minify } = await load();
+			const input =
+				'var s; s = "<b>PASS</b>"; for (var m, r = /<b>(.*)<\\/b>/; m = s.match(r);) s = s.replace(m[0], m[1]); console.log(s);';
+			const { code } = await minify(input, { compress: {}, mangle: false });
+			expect(code).toContain('for(var s="<b>PASS</b>",m,r=');
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			// A `let` in the loop's head would be a binding of each turn.
+			const kept =
+				"let s; s = 0; for (let i = 0; i < 2; i++) s += i; console.log(s);";
+			const { code: keptCode } = await minify(kept, {
+				compress: {},
+				mangle: false
+			});
+			expect(keptCode).not.toContain("for(let s");
+			expect(runProgram(/** @type {string} */ (keptCode))).toBe(
+				runProgram(kept)
+			);
+		});
+
+		it("should keep an exported name where mangling it costs its `as` clause more", async () => {
+			const { minify } = await load();
+			const { code } = await minify(
+				"let LET = 1; const TEST = 2; var VAR = 3; import * as stuff from 'm'; stuff.a(); stuff.b(); export { LET, TEST, VAR, stuff };",
+				{ compress: false, mangle: true, module: true }
+			);
+			expect(code).toContain("const TEST=2");
+			expect(code).toContain("export{LET,TEST,VAR,");
+			// Read twice more, a name one long and its clause write less.
+			expect(code).not.toContain("stuff.a()");
+		});
+
+		it("should write `!` of a new array or object as false, its effects kept", async () => {
+			const { minify } = await load();
+			const input =
+				"function foo() { console.log('foo'); return 0; } console.log(![1, foo()], ![1, foo(), 2], !{ a: foo() }, ![], !{});";
+			const { code } = await minify(input, { compress: {}, mangle: false });
+			expect(code).toContain("console.log((foo(),!1),(foo(),!1),(foo(),!1),!1,!1)");
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			const kept = "var a = []; console.log(!a, !a.length, ![1, 2].x);";
+			const { code: keptCode } = await minify(kept, {
+				compress: {},
+				mangle: false
+			});
+			expect(keptCode).toContain("!a");
+			expect(runProgram(/** @type {string} */ (keptCode))).toBe(
+				runProgram(kept)
+			);
+		});
+
+		it("should write `typeof` a class or function its declaration binds as `\"function\"`", async () => {
+			const { minify } = await load();
+			const input =
+				'"use strict"; class x {} const y = x; function draw() { return 1; } console.log(typeof x, typeof y, typeof draw, draw());';
+			const options = {
+				compress: { toplevel: true, passes: 2 },
+				mangle: false
+			};
+			const { code } = await minify(input, options);
+			expect(code).not.toContain("typeof");
+			expect(code).not.toContain("class");
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			for (const kept of [
+				"class x {} x = 1; console.log(typeof x);",
+				"class x { static t = typeof x; } console.log(x.t, x.name);",
+				"function f() { console.log(typeof g, g); { function g() {} } } f();",
+				"function g() {} g = 2; console.log(typeof g);",
+				"switch (1) { case 0: class x {} break; case 1: try { console.log(typeof x); } catch (e) { console.log(e.name); } }",
+				"var o = { g: 1 }; function g() {} with (o) console.log(typeof g, g);"
+			]) {
+				const { code } = await minify(kept, options);
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(kept));
+			}
+			const exposed = "class x {} console.log(typeof x, x.name);";
+			const { code: exposedCode } = await minify(exposed, {
+				compress: {},
+				mangle: false
+			});
+			expect(exposedCode).toContain("typeof x");
+		});
+
+		it("should write a constant a template's name reads into the template", async () => {
+			const { minify } = await load();
+			const input =
+				'const width = "wide", n = 12, t = true, dollar = "$"; console.log(`a ${width} b ${n}${t}`, `${dollar}{n}`);';
+			const { code } = await minify(input, { compress: {}, mangle: false });
+			expect(code).toContain('"a wide b 12true"');
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			for (const kept of [
+				'try { console.log(`a ${s} b`); } catch (e) { console.log(e.name); } const s = "wide";',
+				'let s = "wide"; function f() { return `a ${s} b`; } s = "x"; console.log(f());',
+				'const s = "wide"; console.log(String.raw`a ${s} b`);'
+			]) {
+				const { code } = await minify(kept, { compress: {}, mangle: false });
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(kept));
+			}
+		});
+
+		it("should read a literal passed to a function written in place at its parameter", async () => {
+			const { minify } = await load();
+			const options = {
+				compress: {
+					defaults: false,
+					reduce_funcs: true,
+					reduce_vars: true,
+					unused: true
+				},
+				mangle: false
+			};
+			const input =
+				"function f() { return g(2) + h(); function g(b) { return b; } function h() { return 1; } } console.log(f());";
+			const { code } = await minify(input, options);
+			expect(code).toContain("function(){return 2}()");
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			const several =
+				"function f() { return g(2, 'a') + g(3, 'b'); function g(b, c) { return b + c; } } console.log(f());";
+			const { code: severalCode } = await minify(several, options);
+			expect(runProgram(/** @type {string} */ (severalCode))).toBe(
+				runProgram(several)
+			);
+			for (const kept of [
+				"function f() { return g(2); function g(b, c = b) { return c; } } console.log(f());",
+				"function f() { return g(void 0, 3); function g(b = a, a) { return b; } } try { console.log(f()); } catch (e) { console.log(e.name); }",
+				"function f() { return g(2); function g(b) { b++; return b; } } console.log(f());",
+				"function f() { return g(2); function g(b) { return arguments[0] + b; } } console.log(f());",
+				"function f(o) { return g(2); function g(b) { with (o) return b; } } console.log(f({ b: 3 }));",
+				"function f() { return g(x(), 2); function g(a, b) { return a + b; } } function x() { console.log('x'); return 1; } console.log(f());"
+			]) {
+				const { code } = await minify(kept, options);
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(kept));
+			}
+		});
+
+		it("should drop a constant or function statement inside asm.js and nothing else there", async () => {
+			const { minify } = await load();
+			const input =
+				'"use asm"; 0.0; function f() { 0.0; (function () { 0.0; }); } var a = function () { "use asm"; 0.0; return 1 | 0; }; console.log(a(), f());';
+			const { code } = await minify(input, {
+				compress: { passes: 2 },
+				mangle: false
+			});
+			expect(code).toBe(
+				'"use asm";function f(){}var a=function(){"use asm";return 1|0};console.log(a(),f());'
+			);
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			// Under terser's own options `side_effects` is off, and asm.js stays whole.
+			const own = await minify(input, {
+				compress: { defaults: false },
+				mangle: false
+			});
+			expect(own.code).toContain("0.0;");
+		});
+
+		it("should drop a product of names known to hold numbers where nothing reads it", async () => {
+			const { minify } = await load();
+			for (const [input, kept] of /** @type {[string, string][]} */ ([
+				[
+					"function f(o) { const h = 36e5, d = h * 24; d * 365.25; return o * d; } console.log(f(2));",
+					""
+				],
+				[
+					"function f(o) { const d = (o | 0) * 24; d * 365.25; return d; } console.log(f(2));",
+					""
+				],
+				// Each name read once, however long the chain of sums.
+				[
+					"function f(o) { const a = o | 0, b = 2 + a, c = 3 + b + a, d = 4 + c + b, e = 5 + d + c, g = 6 + e + d; g * 365.25; return a; } console.log(f(1));",
+					""
+				],
+				// A sum beside a value that may be an object runs its conversion.
+				[
+					"function f(o) { const a = o.v, b = 2 + a, c = 3 + b + a, g = 6 + c + b; g * 365.25; return a; } console.log(f({ v: { valueOf() { console.log('read'); return 1; } } }));",
+					"365.25"
+				],
+				// A value of no known kind may be a BigInt, which a number beside it throws for.
+				[
+					"function f(o) { const d = o.v; d * 365.25; return d; } console.log(f({ v: 1n }));",
+					"365.25"
+				],
+				// Read in its dead zone, a `let` throws.
+				[
+					"function f(o) { try { d * 2; } catch (e) { console.log(e.name); } let d = o | 0; return d; } console.log(f(1));",
+					"2*d"
+				]
+			])) {
+				const { code } = await minify(input, {
+					compress: { passes: 2 },
+					mangle: false
+				});
+				if (kept) expect(code).toContain(kept);
+				else expect(code).not.toContain("365.25");
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			}
+		});
+
+		it("should mangle the names a `with` body does not spell in the scopes it reaches", async () => {
+			const { minify } = await load();
+			for (const [input, gone, kept] of /** @type {[string, string, string][]} */ ([
+				[
+					"function outer(obj) { let f = (o) => o; with (obj) f = (o, t) => t; return f(1, 2); } console.log(outer({}), outer({ f: 0 }));",
+					"obj",
+					"with(o)f="
+				],
+				[
+					"function f(...rest) { var size = rest.length; with ({}) return size; } console.log(f(1));",
+					"rest",
+					"return size"
+				],
+				[
+					"function f(obj, value) { var other = value * 2; with (obj) { var x = other; } return x; } console.log(f({ x: 9 }, 3), f({}, 4));",
+					"obj",
+					"var x=other"
+				],
+				[
+					"function f(obj, aa, bb) { with (obj) { with (aa) console.log(bb); } return bb; } console.log(f({}, { bb: 4 }, 5), f({ bb: 1 }, {}, 6));",
+					"obj",
+					"with(aa)console.log(bb)"
+				],
+				[
+					"var e = 1, t = 2; function f(obj, value) { var other = value * 2; with (obj) console.log(e, t); return other; } console.log(f({}, 3), f({ e: 5 }, 1));",
+					"other",
+					"console.log(e,t)"
+				],
+				// A name mangled beside those kept takes none of theirs.
+				[
+					"var g = (o, a, b, c, d, e, f, h, i, j, k, l, m, n, p, q, r, s, t, u, v, w, x, y, z, last) => { with (o) { o.run(function (a, b, c, d, e, f, h, i, j, k, l, m, n, p, q, r, s, t, u, v, w, x, y, z) { return a + b + c + d + e + f + h + i + j + k + l + m + n + p + q + r + s + t + u + v + w + x + y + z; }); } return last; }; console.log(g({ run: function (fn) { return fn(); } }, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26));",
+					"last",
+					"(o,a,b,c,d,e,f,h,i,j,k,l,m,n,p,q,r,s,t,u,v,w,x,y,z,"
+				]
+			])) {
+				const { code } = await minify(input, {
+					compress: { passes: 2 },
+					mangle: true
+				});
+				expect(code).not.toContain(gone);
+				expect(code).toContain(kept);
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			}
+		});
+
+		it("should keep a function called in a `with` body a call where it declares names", async () => {
+			const { minify } = await load();
+			for (const input of [
+				"function f(o) { with (o) { (function () { var q = 1; q += o.n; console.log(q); })(); } return o.q; } console.log(f({ q: 5, n: 2 }));",
+				"function f(o) { with (o) { (function (q) { q += o.n; console.log(q); })(1); } return o.q; } console.log(f({ q: 5, n: 2 }));"
+			]) {
+				const { code } = await minify(input, {
+					compress: { passes: 2 },
+					mangle: false
+				});
+				expect(code).toContain("function(");
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			}
+			// Declaring nothing, it is still flattened there.
+			const bare = "function f(o) { with (o) { console.log((function () { return n + 1; })()); } } f({ n: 2 });";
+			const flat = await minify(bare, { compress: {}, mangle: false });
+			expect(flat.code).toContain("console.log(n+1)");
+		});
+
 		it("should keep a constructor's `this.x` read a getter may answer", async () => {
 			const { minify } = await load();
 			for (const input of [
@@ -12760,10 +13091,17 @@ describe("syntax-printer", () => {
 			}
 			/** @type {EXPECTED_ANY} */
 			let analysis;
+			// The improvements mangle a name in a scope a `with` reaches where no
+			// `with` body spells it, which terser keeps.
+			const { improvements } = modules;
+			const improving = improvements.enabled;
+			improvements.enabled = false;
 			try {
 				analysis = modules.analyzeManglingScopes(tree, options);
 			} catch (error) {
 				ourError = error;
+			} finally {
+				improvements.enabled = improving;
 			}
 			if (theirError || ourError) {
 				if (errorOf(theirError) !== errorOf(ourError)) {
