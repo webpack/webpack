@@ -4,9 +4,9 @@ exports[`ConfigCacheTestCases optimization minify-traversal-work exported tests 
 
 exports[`ConfigCacheTestCases optimization minify-traversal-work exported tests should keep repeated member reads before a later write 2`] = `"function e(e){var t=e.value+e.value+(e.value=5)+e.value;return e.value=9,t}"`;
 
-exports[`ConfigCacheTestCases optimization minify-traversal-work exported tests should preserve assignments when joining bare declarations across blocks 1`] = `"function joined(flag,calls){var extra;flag&&(extra=calls.push(1)),calls.push(2);var result=calls.push(3);return[calls.push(4),extra,result]}"`;
+exports[`ConfigCacheTestCases optimization minify-traversal-work exported tests should preserve assignments when joining bare declarations across blocks 1`] = `"function joined(flag,calls){flag&&(extra=calls.push(1)),calls.push(2);var extra,result=calls.push(3);return[calls.push(4),extra,result]}"`;
 
-exports[`ConfigCacheTestCases optimization minify-traversal-work exported tests should preserve assignments when joining bare declarations across blocks 2`] = `"function e(e,t){var a;e&&(a=t.push(1)),t.push(2);var o=t.push(3);return[t.push(4),a,o]}"`;
+exports[`ConfigCacheTestCases optimization minify-traversal-work exported tests should preserve assignments when joining bare declarations across blocks 2`] = `"function e(e,t){e&&(a=t.push(1)),t.push(2);var a,o=t.push(3);return[t.push(4),a,o]}"`;
 
 exports[`ConfigCacheTestCases optimization minify-traversal-work exported tests should preserve captured values beside nested functions with their own variables 1`] = `"function capture(make){var source=make();return[function(){var copy=source;return copy.value+copy.value},function(){for(var source=make(),index=0;index<source.value;index++)var copy=index;return copy},()=>make().value]}"`;
 
