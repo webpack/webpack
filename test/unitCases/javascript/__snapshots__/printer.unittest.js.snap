@@ -649,6 +649,8 @@ exports[`syntax-printer improve phase should write less, printing the same: a fu
 
 exports[`syntax-printer improve phase should write less, printing the same: a function expression whose name nothing reads written as an arrow in one pass, where unsafe_arrows is on 1`] = `"console.log([1,2].map(x=>x+1).join());"`;
 
+exports[`syntax-printer improve phase should write less, printing the same: a function or object assigned to a name read once, written at that read 1`] = `"function k(r){return r.map(x=>x+1)}function m(r){return[r.length,{f:x=>2*x}]}console.log(k([1,2]),JSON.stringify(m([3])));"`;
+
 exports[`syntax-printer improve phase should write less, printing the same: a function passed the parameters of its own parameters' names, flattened into it 1`] = `"!function(){function create(props,name,flag){return flag&&(props.seen=name+1),props}console.log(create({},\\"a\\",1).seen,create({},\\"b\\",0).seen)}();"`;
 
 exports[`syntax-printer improve phase should write less, printing the same: a function passed the variables of its parameters' names flattened into a function reading \`arguments\`, its \`var\` holding a function 1`] = `"function create(type,config){var props={};config&&(props.a=config.a);var warn,key=arguments.length>2,displayName=\\"object\\"==typeof type?type.id:type;return key&&((warn=function(){console.log(\\"warn\\",displayName)}).isWarning=!0,Object.defineProperty(props,\\"key\\",{get:warn})),props}console.log(Object.keys(create(\\"div\\",{a:1},1)),create({id:\\"f\\"},null,1).key);"`;
@@ -818,6 +820,8 @@ exports[`syntax-printer improve phase should write less, printing the same: a tr
 exports[`syntax-printer improve phase should write less, printing the same: a value calling a method on a name, moved past a bare read of the name 1`] = `"function c(ctl,e){return u(ctl,ctl.t(e))}function u(a,b){return[typeof a,b]}console.log(c({t:function(x){return x+1}},1));"`;
 
 exports[`syntax-printer improve phase should write less, printing the same: a value compared with \`null\` and then, read back, with \`undefined\` 1`] = `"function f(o){return null==o.a}console.log(f({a:null}),f({}),f({a:1}));"`;
+
+exports[`syntax-printer improve phase should write less, printing the same: a value folded into what an \`await\` or \`yield\` hands over, which runs before it suspends 1`] = `"function g(v){return console.log(\\"g\\",v),v}async function a(f){await f(1)}async function b(f){return await f(2)}function*c(f){yield f(3)}function*d(f){yield*[f(4)]}a(g),b(g),console.log([...c(g)],[...d(g)]);"`;
 
 exports[`syntax-printer improve phase should write less, printing the same: a value kept before a global no built-in names, a member a built-in computes, a shadowed built-in, or a built-in the value writes 1`] = `"function f(Math){h(g());var w=g();console.log(RegExp.$1,w);var x=g();console.log(Math.max(x))}function k(){var o=console,u=(console={log:function(){o.log(\\"new\\")}},1);console.log(u),console=o}var h=console.log;function g(){return 2}f({max:String}),k();"`;
 
