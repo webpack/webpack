@@ -32,7 +32,7 @@ exports[`ConfigCacheTestCases concatenate-modules commonjs-wrapped-external-new-
 /******/ 			while(i < definition.length) {
 /******/ 				var key = definition[i++];
 /******/ 				var binding = definition[i++];
-/******/ 				var descriptor = binding === 0 ? { enumerable: true, value: definition[i++] } : { enumerable: true, get: binding };
+/******/ 				var descriptor = binding ? { enumerable: true, get: binding } : { enumerable: true, value: definition[i++] };
 /******/ 				if(!__webpack_require__.o(exports, key)) Object.defineProperty(exports, key, descriptor);
 /******/ 			}
 /******/ 		} else {
@@ -139,7 +139,7 @@ exports[`ConfigCacheTestCases concatenate-modules commonjs-wrapped-external-new-
 /******/ 			while(i < definition.length) {
 /******/ 				var key = definition[i++];
 /******/ 				var binding = definition[i++];
-/******/ 				var descriptor = binding === 0 ? { enumerable: true, value: definition[i++] } : { enumerable: true, get: binding };
+/******/ 				var descriptor = binding ? { enumerable: true, get: binding } : { enumerable: true, value: definition[i++] };
 /******/ 				if(!__webpack_require__.o(exports, key)) Object.defineProperty(exports, key, descriptor);
 /******/ 			}
 /******/ 		} else {
@@ -246,7 +246,7 @@ exports[`ConfigCacheTestCases concatenate-modules commonjs-wrapped-external-new-
 /******/ 			while(i < definition.length) {
 /******/ 				var key = definition[i++];
 /******/ 				var binding = definition[i++];
-/******/ 				var descriptor = binding === 0 ? { enumerable: true, value: definition[i++] } : { enumerable: true, get: binding };
+/******/ 				var descriptor = binding ? { enumerable: true, get: binding } : { enumerable: true, value: definition[i++] };
 /******/ 				if(!__webpack_require__.o(exports, key)) Object.defineProperty(exports, key, descriptor);
 /******/ 			}
 /******/ 		} else {
@@ -353,7 +353,7 @@ exports[`ConfigCacheTestCases concatenate-modules commonjs-wrapped-external-new-
 /******/ 			while(i < definition.length) {
 /******/ 				var key = definition[i++];
 /******/ 				var binding = definition[i++];
-/******/ 				var descriptor = binding === 0 ? { enumerable: true, value: definition[i++] } : { enumerable: true, get: binding };
+/******/ 				var descriptor = binding ? { enumerable: true, get: binding } : { enumerable: true, value: definition[i++] };
 /******/ 				if(!__webpack_require__.o(exports, key)) Object.defineProperty(exports, key, descriptor);
 /******/ 			}
 /******/ 		} else {
