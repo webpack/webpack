@@ -471,10 +471,7 @@ const OXC_SMALLER_BY_REASON = [
 	],
 	[
 		"oxc inlines a function into its call site, where terser keeps the call",
-		[
-			"swc minifier: fixture/pr/11987/input.js",
-			"terser compress: inline/noinline_annotation_2"
-		]
+		["terser compress: inline/noinline_annotation_2"]
 	],
 	[
 		"oxc resolves a `switch` on a known value, or writes a `switch` shorter",

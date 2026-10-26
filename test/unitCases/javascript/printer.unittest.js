@@ -10220,6 +10220,54 @@ describe("syntax-printer", () => {
 			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
 		});
 
+		it("should decide `&&` and `||` by the constant a sequence on their left ends with", async () => {
+			const { minify } = await load();
+			const input =
+				'var n = 0; function x() { n++; return n; } function y() { console.log("y"); return 5; } if (x() && false) y(); console.log((x(), 1) && y(), (x(), "") || y(), (x(), 0n) && y(), (x(), 0) || y(), n);';
+			const options = {
+				compress: {
+					defaults: false,
+					booleans: true,
+					conditionals: true,
+					evaluate: true,
+					side_effects: true
+				},
+				mangle: false
+			};
+			const { code } = await minify(input, options);
+			expect(code).not.toContain("&&y()");
+			expect(code).not.toContain("||y()");
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			for (const kept of [
+				'var a = 0; console.log((console.log("x"), a) && 1);',
+				'console.log((console.log("x"), 0) && 1);'
+			]) {
+				const { code } = await minify(kept, {
+					compress: { evaluate: false },
+					mangle: false
+				});
+				expect(code).toContain("&&");
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(kept));
+			}
+		});
+
+		it("should write `(() => eval(s))()` as `eval(s)` in strict code only", async () => {
+			const { minify } = await load();
+			const input =
+				'"use strict"; var x = 1; console.log((() => eval("x + 1"))(), (() => eval("var y = 2; y"))(), typeof y);';
+			const { code } = await minify(input, { compress: {}, mangle: false });
+			expect(code).not.toContain("=>");
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			for (const kept of [
+				'console.log((() => eval("var y = 2; y"))(), typeof y);',
+				'"use strict"; console.log(((a) => eval("a"))(1), (async () => eval("1"))() instanceof Promise);'
+			]) {
+				const { code } = await minify(kept, { compress: {}, mangle: false });
+				expect(code).toContain("=>");
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(kept));
+			}
+		});
+
 		it("should keep a constructor's `this.x` read a getter may answer", async () => {
 			const { minify } = await load();
 			for (const input of [

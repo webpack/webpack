@@ -372,7 +372,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/projects/mootools/8/input.js",
 			"terser compress: collapse_vars/boolean_binary_1",
 			"terser compress: collapse_vars/boolean_binary_2",
-			"terser compress: conditionals/issue_2535_1",
 			"terser compress: issue-1673/side_effects_else",
 			"terser compress: issue-640/cond_5",
 			"terser compress: issue-640/conditional",
