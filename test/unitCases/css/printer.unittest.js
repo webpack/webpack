@@ -16166,3 +16166,165 @@ describe("CssSyntax minify — a layer written into past an unquoted url", () =>
 		expect(minifyFor(css)).toBe(out);
 	});
 });
+
+// The printer is what writes an edit out, so its own tests read every path
+// an edit takes through it, as the parser tests read the walk that makes it.
+describe("CssSyntax — printing what a visitor replaced or removed", () => {
+	/**
+	 * @param {string} css source
+	 * @param {import("../../../lib/css/syntax-parser").CssVisitorMap} visitors visitors
+	 * @param {"minify" | "beautify"} mode print mode
+	 * @returns {string | undefined} the printed code
+	 */
+	const print = (css, visitors, mode = "minify") => {
+		const result = new SourceProcessor().use(visitors).process(css, { mode });
+		return result && result.code;
+	};
+
+	it("prints a value token, a declaration and a rule as their replacement", () => {
+		const css = "a{color:#ff0000;margin-top:1px}b{color:red}";
+		expect(print(css, { [NodeType.Hash]: (path) => path.replace("blue") })).toBe(
+			"a{color:blue;margin-top:1px}b{color:red}"
+		);
+		expect(
+			print(css, {
+				[NodeType.Declaration]: (path) => {
+					if (path.name() === "margin-top") path.replace("padding:2px");
+				}
+			})
+		).toBe("a{color:red;padding:2px}b{color:red}");
+		expect(
+			print(css, {
+				[NodeType.QualifiedRule]: (path) => {
+					if (path.source().startsWith("b")) path.replace("i{x:y}");
+				}
+			})
+		).toBe("a{color:red;margin-top:1px}i{x:y}");
+		expect(
+			print(
+				css,
+				{ [NodeType.Hash]: (path) => path.replace("blue") },
+				"beautify"
+			)
+		).toBe("a {\ncolor: blue;\nmargin-top: 1px;\n}b {\ncolor: red;\n}");
+	});
+
+	it("removes a node, in an enter visitor too", () => {
+		expect(
+			print("a{color:red;top:0}", {
+				[NodeType.Declaration]: {
+					enter: (path) => {
+						if (path.name() === "color") path.remove();
+					}
+				}
+			})
+		).toBe("a{top:0}");
+	});
+
+	it("prints what holds a replacement without the rewrites, and the rest with them", () => {
+		expect(
+			print("a{margin:0;margin-top:#f00}b{margin:0;margin-top:1px}", {
+				[NodeType.Hash]: (path) => path.replace("1px")
+			})
+		).toBe("a{margin:0;margin-top:1px}b{margin:1px 0 0}");
+	});
+
+	it("composes a style attribute's declarations as they printed", () => {
+		const result = new SourceProcessor()
+			.use({
+				[NodeType.Declaration]: (path) => {
+					if (path.name() === "margin-top") path.replace("padding:0");
+				}
+			})
+			.process(
+				"margin-top:1px;margin-bottom:1px;margin-left:2px;margin-right:2px",
+				{ mode: "minify", as: "block-contents" }
+			);
+		expect(result && result.code).toBe(
+			"padding:0;margin-bottom:1px;margin-left:2px;margin-right:2px"
+		);
+	});
+
+	it("leaves a comment and what follows it as written", () => {
+		// A comment is read from the token stream, not printed as a node.
+		expect(
+			print("/*! x */a{color:red}b{top:0}", {
+				[NodeType.Comment]: (path) => path.replace("/*y*/")
+			})
+		).toBe("/*! x */a{color:red}b{top:0}");
+	});
+
+	it("prints a rule large enough to stream as written, and what follows it too", () => {
+		// Past the streaming threshold the block is written out as it is read.
+		let body = "";
+		for (let i = 0; i < 1800; i++) {
+			body += `.c${i}>d${i}:hover{color:red;margin:${i + 1}px}`;
+		}
+		const css = `a{${body}}b{color:red}`;
+		const plain = print(css, {});
+		for (const event of ["enter", "exit"]) {
+			expect(
+				print(css, {
+					[NodeType.QualifiedRule]: {
+						[event]: (
+							/** @type {import("../../../lib/css/syntax-parser").CssPath} */ path
+						) => {
+							if (path.source().startsWith("a{")) path.replace("z{q:1}");
+						}
+					}
+				})
+			).toBe(plain);
+		}
+	});
+
+	it("prints a replacement in a custom property's value, the rest as written", () => {
+		/** @type {import("../../../lib/css/syntax-parser").CssVisitorMap} */
+		const visitors = { [NodeType.Hash]: (path) => path.replace("blue") };
+		expect(print("a{--x: foo  #f00 bar(#f00) ;color:#f00}", visitors)).toBe(
+			"a{--x:foo  blue bar(blue);color:blue}"
+		);
+		expect(
+			print("a{--x: foo  #f00 bar(#f00) }", visitors, "beautify")
+		).toBe("a {\n--x: foo  blue bar(blue);\n}");
+		// A comma and whitespace print as written too.
+		expect(
+			print("a{--x: a, b c;b:x}", {
+				[NodeType.Comma]: (path) => path.replace(" / "),
+				[NodeType.Whitespace]: (path) => path.remove()
+			})
+		).toBe("a{--x:a / bc;b:x}");
+		// A string the input ran out in is closed, so the `}` stays outside it.
+		expect(print('a{--x:#f00 "open', visitors)).toBe('a{--x:blue "open"}');
+		// Only a value holding an edit is printed as written.
+		expect(print("a{--x: a  b;--y: c  #f00}", visitors)).toBe(
+			"a{--x:a b;--y:c  blue}"
+		);
+	});
+
+	it("prints a replaced node holding a replaced one as its own replacement", () => {
+		/** @type {import("../../../lib/css/syntax-parser").CssVisitorMap} */
+		const visitors = {
+			[NodeType.Hash]: (path) => path.replace("blue"),
+			[NodeType.Declaration]: (path) => {
+				if (path.name() === "color") path.replace("fill:red");
+			}
+		};
+		expect(print("a{color:#f00;top:0}b{x:#f00}", visitors)).toBe(
+			"a{fill:red;top:0}b{x:blue}"
+		);
+	});
+
+	it("does nothing on a walk that prints nothing", () => {
+		let seen = 0;
+		new SourceProcessor()
+			.use({
+				[NodeType.Hash]: (path) => {
+					seen++;
+					path.replace("blue");
+				}
+			})
+			.process("a{color:#f00}");
+		expect(seen).toBe(1);
+	});
+});
+
