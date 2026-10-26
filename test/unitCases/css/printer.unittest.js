@@ -15281,6 +15281,22 @@ describe("CssSyntax — skipChildren() and stop() while printing", () => {
 		expect(log).toEqual(["b"]);
 	});
 
+	it("reads past the comments after a comment's visitor stops, printing or not", () => {
+		const css = "/*a*/x{/*b*/y:1;/*c*/}/*d*/z{w:2}";
+		let fired = 0;
+		const processor = new SourceProcessor().use({
+			[NodeType.Comment]: (
+				/** @type {import("../../../lib/css/syntax-parser").CssPath} */ path
+			) => {
+				fired++;
+				path.stop();
+			}
+		});
+		expect(processor.process(css, { mode: "minify" }).code).toBe("x{y:1}z{w:2}");
+		processor.process(css);
+		expect(fired).toBe(2);
+	});
+
 	it("ends a walk stopped inside a streamed rule once it closes", () => {
 		/** @type {string[]} */
 		const log = [];
