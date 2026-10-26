@@ -381,7 +381,6 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc writes a variable's value at its one read and drops the variable, or an alias of another binding",
 		[
-			"oxc minifier: peephole/esbuild.rs:2274",
 			"terser compress: harmony/module_enabled",
 			"terser compress: reduce_vars/unsafe_evaluate_side_effect_free_2"
 		]
