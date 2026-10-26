@@ -10425,6 +10425,113 @@ describe("syntax-printer", () => {
 			}
 		});
 
+		it("should drop a constant or function statement inside asm.js and nothing else there", async () => {
+			const { minify } = await load();
+			const input =
+				'"use asm"; 0.0; function f() { 0.0; (function () { 0.0; }); } var a = function () { "use asm"; 0.0; return 1 | 0; }; console.log(a(), f());';
+			const { code } = await minify(input, {
+				compress: { passes: 2 },
+				mangle: false
+			});
+			expect(code).toBe(
+				'"use asm";function f(){}var a=function(){"use asm";return 1|0};console.log(a(),f());'
+			);
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			// Under terser's own options `side_effects` is off, and asm.js stays whole.
+			const own = await minify(input, {
+				compress: { defaults: false },
+				mangle: false
+			});
+			expect(own.code).toContain("0.0;");
+		});
+
+		it("should drop a product of names known to hold numbers where nothing reads it", async () => {
+			const { minify } = await load();
+			for (const [input, kept] of /** @type {[string, string][]} */ ([
+				[
+					"function f(o) { const h = 36e5, d = h * 24; d * 365.25; return o * d; } console.log(f(2));",
+					""
+				],
+				[
+					"function f(o) { const d = (o | 0) * 24; d * 365.25; return d; } console.log(f(2));",
+					""
+				],
+				// Each name read once, however long the chain of sums.
+				[
+					"function f(o) { const a = o | 0, b = 2 + a, c = 3 + b + a, d = 4 + c + b, e = 5 + d + c, g = 6 + e + d; g * 365.25; return a; } console.log(f(1));",
+					""
+				],
+				// A sum beside a value that may be an object runs its conversion.
+				[
+					"function f(o) { const a = o.v, b = 2 + a, c = 3 + b + a, g = 6 + c + b; g * 365.25; return a; } console.log(f({ v: { valueOf() { console.log('read'); return 1; } } }));",
+					"365.25"
+				],
+				// A value of no known kind may be a BigInt, which a number beside it throws for.
+				[
+					"function f(o) { const d = o.v; d * 365.25; return d; } console.log(f({ v: 1n }));",
+					"365.25"
+				],
+				// Read in its dead zone, a `let` throws.
+				[
+					"function f(o) { try { d * 2; } catch (e) { console.log(e.name); } let d = o | 0; return d; } console.log(f(1));",
+					"2*d"
+				]
+			])) {
+				const { code } = await minify(input, {
+					compress: { passes: 2 },
+					mangle: false
+				});
+				if (kept) expect(code).toContain(kept);
+				else expect(code).not.toContain("365.25");
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			}
+		});
+
+		it("should mangle the names a `with` body does not spell in the scopes it reaches", async () => {
+			const { minify } = await load();
+			for (const [input, gone, kept] of /** @type {[string, string, string][]} */ ([
+				[
+					"function outer(obj) { let f = (o) => o; with (obj) f = (o, t) => t; return f(1, 2); } console.log(outer({}), outer({ f: 0 }));",
+					"obj",
+					"with(o)f="
+				],
+				[
+					"function f(...rest) { var size = rest.length; with ({}) return size; } console.log(f(1));",
+					"rest",
+					"return size"
+				],
+				[
+					"function f(obj, value) { var other = value * 2; with (obj) { var x = other; } return x; } console.log(f({ x: 9 }, 3), f({}, 4));",
+					"obj",
+					"var x=other"
+				],
+				[
+					"function f(obj, aa, bb) { with (obj) { with (aa) console.log(bb); } return bb; } console.log(f({}, { bb: 4 }, 5), f({ bb: 1 }, {}, 6));",
+					"obj",
+					"with(aa)console.log(bb)"
+				],
+				[
+					"var e = 1, t = 2; function f(obj, value) { var other = value * 2; with (obj) console.log(e, t); return other; } console.log(f({}, 3), f({ e: 5 }, 1));",
+					"other",
+					"console.log(e,t)"
+				],
+				// A name mangled beside those kept takes none of theirs.
+				[
+					"var g = (o, a, b, c, d, e, f, h, i, j, k, l, m, n, p, q, r, s, t, u, v, w, x, y, z, last) => { with (o) { o.run(function (a, b, c, d, e, f, h, i, j, k, l, m, n, p, q, r, s, t, u, v, w, x, y, z) { return a + b + c + d + e + f + h + i + j + k + l + m + n + p + q + r + s + t + u + v + w + x + y + z; }); } return last; }; console.log(g({ run: function (fn) { return fn(); } }, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26));",
+					"last",
+					"(o,a,b,c,d,e,f,h,i,j,k,l,m,n,p,q,r,s,t,u,v,w,x,y,z,"
+				]
+			])) {
+				const { code } = await minify(input, {
+					compress: { passes: 2 },
+					mangle: true
+				});
+				expect(code).not.toContain(gone);
+				expect(code).toContain(kept);
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			}
+		});
+
 		it("should keep a constructor's `this.x` read a getter may answer", async () => {
 			const { minify } = await load();
 			for (const input of [
@@ -12965,10 +13072,17 @@ describe("syntax-printer", () => {
 			}
 			/** @type {EXPECTED_ANY} */
 			let analysis;
+			// The improvements mangle a name in a scope a `with` reaches where no
+			// `with` body spells it, which terser keeps.
+			const { improvements } = modules;
+			const improving = improvements.enabled;
+			improvements.enabled = false;
 			try {
 				analysis = modules.analyzeManglingScopes(tree, options);
 			} catch (error) {
 				ourError = error;
+			} finally {
+				improvements.enabled = improving;
 			}
 			if (theirError || ourError) {
 				if (errorOf(theirError) !== errorOf(ourError)) {

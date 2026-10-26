@@ -292,10 +292,6 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc drops what nothing reads or what has no effect: unused variables, functions, parameters and pure expressions",
 		[
-			"swc minifier: fixture/collapse-vars/trivial-literal-chain/input.js",
-			"terser compress: asm/asm_function_expression",
-			"terser compress: asm/asm_nested_functions",
-			"terser compress: asm/asm_toplevel",
 			"terser compress: drop-unused/issue_1715_3",
 			"terser compress: reduce_vars/issue_t1382",
 			"terser compress: template-string/tagged_template_with_comment",
@@ -366,7 +362,6 @@ const OXC_SMALLER_BY_REASON = [
 		"oxc's mangler picks shorter or better-compressing names",
 		[
 			"swc minifier: fixture/issues/11645/with-parent-scope-nested-block/input.js",
-			"swc minifier: fixture/issues/12212/with-scope/input.js",
 			"swc minifier: fixture/projects/react/15/input.js",
 			"swc minifier: fixture/projects/mootools/8/input.js",
 			"swc minifier: fixture/projects/yui/1/input.js"
@@ -500,10 +495,6 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc's output differs: it drops an unused class extending a regular expression, whose definition throws a TypeError",
 		["terser compress: harmony/class_extends_regex"]
-	],
-	[
-		"oxc's output is wrong: it renames `LocalCtor` inside a `with` body, so a `LocalCtor` property on the `with` object is no longer used",
-		["swc minifier: fixture/issues/11684/with-scope/input.js"]
 	],
 	[
 		"oxc drops an unused `Symbol.for`, which webpack keeps: running it at build time would keep its key in the build's own symbol registry",
