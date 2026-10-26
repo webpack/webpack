@@ -19,6 +19,11 @@ module.exports = {
 				test: /c\.js$/,
 				loader: "./trusting-loader",
 				options: { name: 42 }
+			},
+			{
+				test: /d\.js$/,
+				loader: "./stale-loader",
+				options: { name: "valid" }
 			}
 		]
 	}
