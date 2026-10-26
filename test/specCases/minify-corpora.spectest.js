@@ -1317,8 +1317,6 @@ const IMPROVED_YET_BIGGER = {
 		"27 bytes fewer, 3 more gzipped: the third function written in place as `(console.log(3),3)` repeats the first one's, breaking the `function(){var o=` runs gzip matched",
 	"array-iterator-close.js (the default minimizer's options)":
 		"19 bytes fewer, 10 more gzipped: counting `++r` written as the values it reaches breaks the `assert.sameValue(e,++r)` runs each check repeats",
-	"for-of-iterator-close.js (the default minimizer's options)":
-		"16 bytes fewer, 3 more gzipped: counting `++r` written as the values it reaches breaks the `assert.sameValue(e,++r)` runs each check repeats",
 	"pure_getters/set_immutable_5 (its own options)":
 		"13 bytes fewer, 1 more gzipped: `console.log(c?\"FAIL\":\"PASS\")` merges two calls a file this small compresses alike",
 	"arrow/object_parens (its own options)":
