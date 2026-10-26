@@ -12085,7 +12085,10 @@ declare class GetChunkFilenameRuntimeModule extends RuntimeModule {
 
 declare interface GetOptionsMethod<OptionsType> {
 	(): OptionsType;
-	(schema: Parameters<typeof validateFunction>[0]): OptionsType;
+	(
+		schema: Parameters<typeof validateFunction>[0],
+		check?: (options?: any) => boolean
+	): OptionsType;
 }
 type GivenCompressOptions = Omit<Partial<any>, "global_defs" | "pure_funcs"> & {
 	global_defs?: false | object;
@@ -24109,7 +24112,8 @@ declare interface NormalModuleLoaderContext<OptionsType> {
 
 	/**
 	 * Extracts and parses the options of the current loader.
-	 * Parses string options as JSON or a query string.
+	 * Parses string options as JSON or a query string. Validates them against the schema when one is given, and
+	 * a check precompiled from it with `schema-utils precompile` validates valid options without compiling the schema.
 	 */
 	getOptions: GetOptionsMethod<OptionsType>;
 
