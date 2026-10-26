@@ -5748,7 +5748,7 @@ describe("WebpackParser writing a SyntaxTree", () => {
 });
 
 describe("parseProgram", () => {
-	const { A, NodeType, parseProgram } = require("../../../lib/javascript/syntax-parser");
+	const { A, NodeType, Part, parseProgram } = require("../../../lib/javascript/syntax-parser");
 	const { SourceProcessor } = require("../../../lib/javascript/syntax");
 
 	/** @typedef {[string, string, string, string]} ReportedError */
@@ -5793,6 +5793,79 @@ describe("parseProgram", () => {
 		expect(collect("with (a) {}", { sourceType: "script" }).errors).toEqual([]);
 		expect(collect("with (a) {}").errors).toEqual([
 			["strict-with", "with", "error", "0"]
+		]);
+	});
+
+	it.each([
+		["module", 'import x from "y"; await x', []],
+		["module", "return 1", [["illegal-return", "return", "error", "0"]]],
+		["script", "await = 1; with (a) {}", []],
+		["script", "new.target", [["unexpected-new-target", "new", "warning", "0"]]],
+		[
+			"script",
+			'import x from "y"',
+			[["import-outside-module", "import", "error", "0"]]
+		],
+		// A function's body: `return` and `new.target` at its top, sloppy, and
+		// `await` and `yield` names, as in a function neither async nor generator.
+		[
+			"event-handler",
+			"if (a) return new.target; await = yield = 1; with (a) {}",
+			[]
+		],
+		[
+			"event-handler",
+			'"use strict"; with (a) {}',
+			[["strict-with", "with", "error", "14"]]
+		],
+		[
+			"event-handler",
+			"let a; var a",
+			[["var-redeclaration", "a", "warning", "11"]]
+		],
+		["event-handler", "super.x", [["unexpected-super", "super", "error", "0"]]],
+		[
+			"event-handler",
+			'import x from "y"',
+			[["import-outside-module", "import", "error", "0"]]
+		],
+		[
+			"event-handler",
+			"export {}",
+			[["import-outside-module", "export", "error", "0"]]
+		],
+		// Only a script or a module opens with a `#!` line.
+		[
+			"event-handler",
+			"#!x\n1",
+			[["invalid-or-unexpected-token", "!", "error", "1"]]
+		],
+		["module", "#!x\n1", []]
+	])("reads a source as %s: %j", (sourceType, source, expected) => {
+		const { program, errors } = collect(source, {
+			sourceType: /** @type {"module" | "script" | "event-handler"} */ (
+				sourceType
+			)
+		});
+		expect(errors).toEqual(expected);
+		expect(program === undefined).toBe(
+			expected.some(([, , severity]) => severity === "error")
+		);
+	});
+
+	it("reads import phases", () => {
+		const { program, errors } = collect(
+			'import defer * as a from "x"; import source b from "y"; import.defer("x"); import.source("y")'
+		);
+		expect(errors).toEqual([]);
+		const [deferred, source] = A.children(/** @type {number} */ (program));
+		expect(A.textOf(Part.phase, deferred)).toBe("defer");
+		expect(A.textOf(Part.phase, source)).toBe("source");
+		expect(collect('import.defer("x")', { sourceType: "script" }).errors).toEqual(
+			[]
+		);
+		expect(collect('import defer a from "x"').errors).toEqual([
+			["defer-import-requires-namespace", "defer", "warning", "7"]
 		]);
 	});
 
