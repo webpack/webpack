@@ -209,3 +209,15 @@ it("authored: an entry's html object overrides output.html for its page", () => 
 	expect(html).not.toContain("/global/");
 	expect(html).toMatch(/<title>Global Title<\/title>/);
 });
+
+it("authored: a relative entry html.base gets a `../` prefix on emitted URLs", () => {
+	const html = read("page-relative-base.html");
+	expect(html).toMatch(/<base href="assets\/">/);
+	expect(html).toMatch(/<script src="\.\.\/main\.js"><\/script>/);
+});
+
+it("synthetic: a relative base neither misresolves nor misdirects the entry script", () => {
+	const html = read("synthetic-relative-base.html");
+	expect(html).toMatch(/<base href="assets\/">/);
+	expect(html).toMatch(/<script defer src="\.\.\/synthetic-relative-base\.js"><\/script>/);
+});
