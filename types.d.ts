@@ -4752,7 +4752,7 @@ declare class Compiler {
 	close(callback: (err: null | Error, result?: void) => void): void;
 
 	/**
-	 * Schema validation function with optional pre-compiled check
+	 * Validates a value against a schema, skipping the schema when the precompiled check passes
 	 */
 	validate<T extends Parameters<typeof validateFunction>[1] = object>(
 		schema:
@@ -4762,7 +4762,7 @@ declare class Compiler {
 			| (() => Parameters<typeof validateFunction>[0]),
 		value: T,
 		options?: ValidationErrorConfiguration,
-		check?: (value: T) => boolean
+		check?: PrecompiledCheck<T>
 	): void;
 }
 type ComplexSerializableType =
@@ -12086,8 +12086,12 @@ declare class GetChunkFilenameRuntimeModule extends RuntimeModule {
 declare interface GetOptionsMethod<OptionsType> {
 	(): OptionsType;
 	(
-		schema: Parameters<typeof validateFunction>[0],
-		check?: (options?: any) => boolean
+		schema:
+			| (JSONSchema4 & ExtendedSchema)
+			| (JSONSchema6 & ExtendedSchema)
+			| (JSONSchema7 & ExtendedSchema)
+			| (() => Parameters<typeof validateFunction>[0]),
+		check?: PrecompiledCheck
 	): OptionsType;
 }
 type GivenCompressOptions = Omit<Partial<any>, "global_defs" | "pure_funcs"> & {
@@ -24112,8 +24116,9 @@ declare interface NormalModuleLoaderContext<OptionsType> {
 
 	/**
 	 * Extracts and parses the options of the current loader.
-	 * Parses string options as JSON or a query string. Validates them against the schema when one is given, and
-	 * a check precompiled from it with `schema-utils precompile` validates valid options without compiling the schema.
+	 * Parses string options as JSON or a query string. Validates them against the schema when one is given, or a function
+	 * returning it, and a check precompiled from it with `schema-utils precompile` validates valid options without reading
+	 * or compiling the schema. A schema titled `"<name> <baseDataPath>"` names the loader in the errors.
 	 */
 	getOptions: GetOptionsMethod<OptionsType>;
 
@@ -27439,6 +27444,14 @@ declare class Position {
 declare interface PositionLike {
 	line: number;
 	column: number;
+}
+
+/**
+ * A check precompiled from a schema with `schema-utils precompile`, it only
+ * says whether the value is valid
+ */
+declare interface PrecompiledCheck<T = any> {
+	(value: T): boolean;
 }
 declare class PrefetchPlugin {
 	/**

@@ -25,3 +25,15 @@ it("should fall back to the schema when a stale check rejects valid options", ()
 		schemaRead: true
 	});
 });
+
+it("should not call a function returning the schema when the check passes", () => {
+	expect(require("./e")).toEqual({
+		options: { name: "valid" },
+		checked: [{ name: "valid" }],
+		schemaRead: false
+	});
+});
+
+it("should validate with the schema a function returns when the check fails", () => {
+	expect(() => require("./f")).toThrow(/options\.name should be a string/);
+});
