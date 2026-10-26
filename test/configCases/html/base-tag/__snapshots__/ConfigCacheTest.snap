@@ -14,20 +14,6 @@ exports[`ConfigCacheTestCases html base-tag exported tests should handle a base 
 "
 `;
 
-exports[`ConfigCacheTestCases html base-tag exported tests should leave URLs untouched under a root-relative <base href> 1`] = `
-"<!DOCTYPE html>
-<html>
-<head>
-<base href=\\"/\\">
-<title>Root base</title>
-</head>
-<body>
-<img src=\\"server-root.png\\" alt=\\"left untouched: resolved against the server root\\">
-</body>
-</html>
-"
-`;
-
 exports[`ConfigCacheTestCases html base-tag exported tests should leave URLs untouched under an absolute <base href> 1`] = `
 "<!DOCTYPE html>
 <html>
@@ -81,6 +67,20 @@ exports[`ConfigCacheTestCases html base-tag exported tests should resolve relati
 <img src=\\"../31d6cfe0d16ae931b73c.png\\" alt=\\"resolved via base\\">
 <img src=\\"../31d6cfe0d16ae931b73c.png\\" alt=\\"root-relative ignores base\\">
 <img src=\\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==\\" alt=\\"scheme ignores base\\">
+</body>
+</html>
+"
+`;
+
+exports[`ConfigCacheTestCases html base-tag exported tests should resolve relative URLs against the page under a root-relative <base href> 1`] = `
+"<!DOCTYPE html>
+<html>
+<head>
+<base href=\\"/\\">
+<title>Root base</title>
+</head>
+<body>
+<img src=\\"31d6cfe0d16ae931b73c.png\\" alt=\\"resolved beside the page\\">
 </body>
 </html>
 "
