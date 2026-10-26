@@ -4172,15 +4172,21 @@ const ESTREE_PRINT_PROGRAM_FORMATS = [
 
 describe("syntax-printer", () => {
 	// Every case compares spellings with terser's, which writes an equality's
-	// literal first; one test below covers writing it last.
+	// literal first and strings quoted; tests below cover the other spellings.
 	beforeAll(async () => {
 		const { improvements } = await load();
-		if (improvements) improvements.literalsLast.enabled = false;
+		if (improvements) {
+			improvements.literalsLast.enabled = false;
+			improvements.backticks.enabled = false;
+		}
 	});
 
 	afterAll(async () => {
 		const { improvements } = await load();
-		if (improvements) improvements.literalsLast.enabled = true;
+		if (improvements) {
+			improvements.literalsLast.enabled = true;
+			improvements.backticks.enabled = true;
+		}
 	});
 
 	it("should install every phase", async () => {
@@ -10625,6 +10631,152 @@ x = a ** b ** c; x = (a ** b) ** c; x = (-a) ** b; x = a < b < c; x = a < (b < c
 			const bare = "function f(o) { with (o) { console.log((function () { return n + 1; })()); } } f({ n: 2 });";
 			const flat = await minify(bare, { compress: {}, mangle: false });
 			expect(flat.code).toContain("console.log(n+1)");
+		});
+
+		it("should write every string of a program as a template where each one can be", async () => {
+			const { minify, improvements } = await load();
+			if (!improvements) throw new Error("the improve phase is not installed");
+			improvements.backticks.enabled = true;
+			try {
+				const input =
+					"var o = { k: 'v' }; o['c-d'] = 1; function f(x) { switch (x) { case 'a': return 'b' in o; } return typeof x == 'string' ? o['c-d'] + 'e\"f' + x.concat('g') : new Error('h').message; } console.log(f('a'), f('z'), f(2), 'tab\\there', '\\u2028', 'i'[0]);";
+				for (const options of /** @type {import("terser").MinifyOptions[]} */ ([
+					{ compress: {}, mangle: false, ecma: 2015 },
+					{ compress: { passes: 2 }, mangle: true, ecma: 2020 },
+					{ compress: {}, mangle: true, ecma: 2020, toplevel: true }
+				])) {
+					const { code } = await minify(input, options);
+					expect(code).toContain("`a`");
+					expect(code).toContain('`e"f`');
+					expect(
+						/** @type {string} */ (code).replace(/`[^`]*`/g, "")
+					).not.toMatch(/["']/);
+					expect(runProgram(/** @type {string} */ (code))).toBe(
+						runProgram(input)
+					);
+				}
+				// A source map maps the same, as each template is its string's length.
+				const mapped = { compress: {}, mangle: true, ecma: 2020, sourceMap: true };
+				const withBackticks = await minify(input, mapped);
+				improvements.backticks.enabled = false;
+				const quoted = await minify(input, mapped);
+				expect(withBackticks.code).not.toBe(quoted.code);
+				expect(withBackticks.code).toHaveLength(
+					/** @type {string} */ (quoted.code).length
+				);
+				expect(withBackticks.map).toEqual(quoted.map);
+			} finally {
+				improvements.backticks.enabled = false;
+			}
+		});
+
+		it("should keep every string of a program quoted where one cannot be a template, or the options keep quotes", async () => {
+			const { minify, improvements } = await load();
+			if (!improvements) throw new Error("the improve phase is not installed");
+			improvements.backticks.enabled = true;
+			try {
+				for (const [input, options] of /** @type {[string, import("terser").MinifyOptions][]} */ ([
+					// a directive
+					["'use strict'; console.log('a');", {}],
+					["function f() { 'use strict'; return 'a'; } console.log(f());", {}],
+					// a property name a bare name cannot spell
+					["console.log('a', { 'b-c': 1 });", {}],
+					["class A { 'b-c'() { return 'a'; } } console.log(new A()['b-c']());", {}],
+					// a module's name, an imported or exported name and an attribute
+					["import a from 'm'; console.log(a, 'b');", { module: true }],
+					["import { 'b-c' as a } from 'm'; console.log(a, 'b');", { module: true }],
+					["export { a as 'b-c' }; var a = 1; console.log('b');", { module: true }],
+					["import a from 'm' with { type: 'json' }; console.log(a, 'b');", { module: true }],
+					["import('m').then(console.log, 'b');", {}],
+					// what a template would spell longer or differently
+					["console.log('a`b', 'c');", {}],
+					["console.log('a${b}', 'c');", {}],
+					["console.log('a\\'b\"c', 'd');", {}],
+					// a string read as a tag, or after `await` or `yield`
+					["console.log('a'`x`, 'c');", {}],
+					["(async () => console.log(await 'a', 'b'))();", {}],
+					["console.log(function* () { yield 'a'; }().next().value, 'b');", {}],
+					// what Node's `cjs-module-lexer` reads quoted
+					["console.log(require('fs'), 'a');", {}],
+					["Object.defineProperty(exports, 'a', { value: 'b' });", {}],
+					// the options keeping quotes
+					["console.log('a');", { ecma: 5 }],
+					["console.log('a');", { format: { quote_style: 1 } }],
+					["console.log('a');", { format: { semicolons: false } }],
+					["console.log('a');", { compress: false }]
+				])) {
+					const { code } = await minify(input, {
+						compress: {},
+						mangle: false,
+						ecma: 2020,
+						...options
+					});
+					expect(code).not.toContain("`a`");
+					expect(code).not.toContain("`b`");
+					expect(code).not.toContain("`c`");
+				}
+				improvements.enabled = false;
+				try {
+					const { code } = await minify("console.log('a');", {
+						compress: {},
+						ecma: 2020
+					});
+					expect(code).toBe('console.log("a");');
+				} finally {
+					improvements.enabled = true;
+				}
+			} finally {
+				improvements.backticks.enabled = false;
+			}
+		});
+
+		it("should write a function's last `return` of `undefined` as the effects it runs", async () => {
+			const { minify } = await load();
+			for (const [input, written] of [
+				[
+					"function f(a, b) { if (a) { if (b) { console.log(1); return; } else { return; } } else { return; } console.log(2); } f(1, 1); f(1, 0); f(0, 1);",
+					"a&&b&&console.log(1)"
+				],
+				[
+					"function f(a) { if (!a) { console.log(1); return; } } f(0); f(1);",
+					"a||console.log(1)"
+				],
+				[
+					"function f(a) { if (a) { console.log(1); console.log(2); return; } else { console.log(3); return; } } f(0); f(1);",
+					"a?(console.log(1),console.log(2)):console.log(3)"
+				],
+				[
+					"var f = async (a) => { if (a) { console.log(1); return; } }; f(1).then(function (v) { console.log(v); });",
+					"a&&console.log(1)"
+				]
+			]) {
+				const { code } = await minify(input, { compress: {}, mangle: false });
+				expect(code).toContain(written);
+				expect(code).not.toContain("return");
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			}
+			// Not in its last statement, the `return` skips what follows.
+			const middle = 'function f(a) { for (var i of a) { if (i) { console.log(i); return; } } console.log("none"); } f([0, 2]); f([0]);';
+			const kept = await minify(middle, { compress: {}, mangle: false });
+			expect(kept.code).toContain("return");
+			expect(runProgram(/** @type {string} */ (kept.code))).toBe(runProgram(middle));
+		});
+
+		it("should keep a statement before a `for…of` out of the parens its value needs", async () => {
+			const { minify } = await load();
+			for (const [input, written] of [
+				["var a; a = 0; for (a of [1, 2]) console.log(a);", "a=0;for(a of[1,2])"],
+				["function f(b) { console.log(0); for (var a of b) console.log(a); } f([1]);", "console.log(0);for("],
+				["function f(b) { console.log(0); for (const a of b) console.log(a); } f([1]);", "console.log(0);for("]
+			]) {
+				const { code } = await minify(input, { compress: {}, mangle: false });
+				expect(code).toContain(written);
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			}
+			// A `for…in` holds the sequence bare, saving the `;`.
+			const forIn = "function f(b) { console.log(0); for (var a in b) console.log(a); } f({ x: 1 });";
+			const joined = await minify(forIn, { compress: {}, mangle: false });
+			expect(joined.code).toContain("in console.log(0),b)");
 		});
 
 		it("should keep a constructor's `this.x` read a getter may answer", async () => {
@@ -17891,8 +18043,12 @@ describe("JavaScript minifier, what the tables leave out", () => {
 	});
 
 	it("should write options read as terser reads them", async () => {
-		const { minify } = await load();
+		const { minify, improvements } = await load();
+		if (!improvements) throw new Error("the improve phase is not installed");
 		const big = "x".repeat(8100);
+		// Backticks for every string are webpack's, not terser's.
+		improvements.backticks.enabled = false;
+		try {
 		for (const [source, options] of /** @type {[string, EXPECTED_OBJECT][]} */ ([
 			// An `ecma` between 5 and 2015 is a year less 2009.
 			["console.log(`a`, 1 ** 2, { a: a })", { ecma: 6 }],
@@ -17910,6 +18066,9 @@ describe("JavaScript minifier, what the tables leave out", () => {
 			parses(/** @type {string} */ (code), false);
 			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(source));
 			expect(code).toBe((await terserReference().minify(source, settings())).code);
+		}
+		} finally {
+			improvements.backticks.enabled = true;
 		}
 	});
 

@@ -1317,8 +1317,6 @@ const IMPROVED_YET_BIGGER = {
 		"27 bytes fewer, 3 more gzipped: the third function written in place as `(console.log(3),3)` repeats the first one's, breaking the `function(){var o=` runs gzip matched",
 	"array-iterator-close.js (the default minimizer's options)":
 		"19 bytes fewer, 10 more gzipped: counting `++r` written as the values it reaches breaks the `assert.sameValue(e,++r)` runs each check repeats",
-	"for-of-iterator-close.js (the default minimizer's options)":
-		"16 bytes fewer, 3 more gzipped: counting `++r` written as the values it reaches breaks the `assert.sameValue(e,++r)` runs each check repeats",
 	"pure_getters/set_immutable_5 (its own options)":
 		"13 bytes fewer, 1 more gzipped: `console.log(c?\"FAIL\":\"PASS\")` merges two calls a file this small compresses alike",
 	"arrow/object_parens (its own options)":
@@ -1845,6 +1843,17 @@ for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
 	[
 		"`Object.keys` of a string literal folded into the array it returns, where gzip matched the repeated call",
 		["keys.js (the default minimizer's options)"]
+	],
+	[
+		"1 or 2 bytes fewer, 1 or 2 more gzipped: a statement kept before a `for…of`, out of the parens its head would need, no longer sits in the run of the loop's own text gzip matched",
+		[
+			"chinese-calendar-dates.js (the default minimizer's options)",
+			"dangi-calendar-dates.js (the default minimizer's options)",
+			"map-contract.js (the default minimizer's options)",
+			"set-contract.js (the default minimizer's options)",
+			"set.js (the default minimizer's options)",
+			"sort_byteoffset.js (the default minimizer's options)"
+		]
 	]
 ])) {
 	for (const key of keys) IMPROVED_YET_BIGGER[key] = reason;

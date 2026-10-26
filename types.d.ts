@@ -20772,6 +20772,7 @@ declare interface Minifier {
 		enabled: boolean;
 		lets: { enabled: boolean };
 		literalsLast: { enabled: boolean };
+		backticks: { enabled: boolean };
 	};
 	modules: MinifierModules;
 }

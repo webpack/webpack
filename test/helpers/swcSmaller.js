@@ -9,56 +9,101 @@
 /** @type {[string, string[]][]} */
 const SWC_SMALLER_BY_REASON = [
 	[
-		"a program this small gzips a few bytes smaller in a spelling the fixed rules do not pick, which only minifying it again to measure would find",
+		"deflate's header: the program is no longer raw, yet gzips 1 to 3 bytes bigger, as the Huffman codes deflate writes for a small program cost more or less with which characters it holds (an operand's side, `let` or `const`, `NaN` or `0/0`); measured corpus-wide, no fixed spelling rule wins, each one making about as many programs bigger as smaller",
 		[
-			"swc minifier: fixture/issues/11084/input.js",
-			"swc minifier: fixture/issues/11368/input.js",
-			"swc minifier: fixture/issues/11684/identifier-aliases/input.js",
-			"swc minifier: fixture/issues/12187/input.js",
-			"swc minifier: fixture/issues/12188/input.js",
-			"swc minifier: fixture/issues/12192/input.js",
 			"swc minifier: fixture/issues/12282/call/input.js",
-			"swc minifier: fixture/issues/5588/input.js",
-			"swc minifier: fixture/issues/6279/1/input.js",
-			"swc minifier: fixture/issues/6279/2/input.js",
-			"swc minifier: fixture/issues/6957/2/input.js",
-			"swc minifier: fixture/issues/8119/input.js",
-			"swc minifier: fixture/issues/8813/input.js",
 			"swc minifier: fixture/issues/9460/strict-mode/input.js",
-			"swc minifier: fixture/issues/drop-console-es2015/input.js",
-			"swc minifier: fixture/issues/pure-callee-call/input.js",
-			"swc minifier: fixture/issues/react/hooks/1/input.js",
 			"swc minifier: fixture/issues/stylis/1/input.js",
 			"swc minifier: fixture/issues/stylis/2/input.js",
-			"swc minifier: fixture/next/36127/2/3/input.js",
 			"swc minifier: fixture/projects/backbone/14/input.js",
 			"swc minifier: fixture/projects/jquery/11/input.js",
 			"swc minifier: fixture/projects/jquery/2/input.js",
-			"swc minifier: fixture/projects/jquery/20/input.js",
-			"swc minifier: fixture/projects/mootools/7/input.js",
-			"swc minifier: fixture/projects/next/.archive-4/webpack-eb940a9a97802b481f9b/input.js",
-			"swc minifier: fixture/projects/next/extra/if_return/.4/input.js",
-			"swc minifier: fixture/projects/react/13/input.js",
 			"swc minifier: fixture/projects/react/15/input.js",
-			"swc minifier: fixture/projects/react/9/input.js",
-			"swc minifier: fixture/terser/issue-2435-1/2/input.js",
-			"swc minifier: fixture/terser/issue-2535-2/1/input.js",
-			"swc minifier: fixture/terser/issue-2535-2/2-1/input.js",
-			"swc minifier: fixture/terser/issue-2535-2/4/input.js",
-			"swc minifier: full/size/54531ba076299b43c00a0d234240369f93371a41/input.js",
 			"swc minifier: pass-1/4/input.js",
 			"swc minifier: pass-1/5/input.js",
 			"swc minifier: pass-default/math-constant-folding/1/input.js",
 			"terser compress: comparing/issue_2857_2",
 			"terser compress: comparing/issue_2857_3",
-			"terser compress: conditionals/cond_9",
-			"terser compress: drop-unused/issue_3192",
-			"terser compress: functions/loop_init_arg",
 			"terser compress: if_return/if_return_8",
-			"terser compress: if_return/issue_1437_conditionals",
-			"terser compress: inline/issue_308",
 			"terser compress: reduce_vars/issue_2670"
 		]
+	],
+	[
+		"`,` vs `;` statements: the same statements joined into one sequence where the rival writes them apart, or a sequence's expressions lifted out or kept in another order",
+		[
+			"swc minifier: fixture/issues/11084/input.js",
+			"swc minifier: fixture/issues/11368/input.js",
+			"swc minifier: fixture/issues/11684/identifier-aliases/input.js",
+			"swc minifier: fixture/issues/5588/input.js",
+			"swc minifier: fixture/issues/6957/2/input.js",
+			"swc minifier: fixture/issues/react/hooks/1/input.js",
+			"swc minifier: fixture/projects/jquery/20/input.js",
+			"swc minifier: fixture/terser/issue-2435-1/2/input.js",
+			"swc minifier: fixture/terser/issue-2535-2/1/input.js",
+			"swc minifier: fixture/terser/issue-2535-2/4/input.js",
+			"swc minifier: full/size/54531ba076299b43c00a0d234240369f93371a41/input.js"
+		]
+	],
+	[
+		"inlining: a function, a call in place or a single-use value written where it is used by one side and kept apart by the other",
+		[
+			"swc minifier: fixture/issues/12188/input.js",
+			"swc minifier: fixture/issues/6279/1/input.js",
+			"swc minifier: fixture/issues/6279/2/input.js",
+			"swc minifier: fixture/issues/pure-callee-call/input.js",
+			"terser compress: functions/loop_init_arg",
+			"terser compress: inline/issue_308"
+		]
+	],
+	[
+		"where a declaration goes: a `let`, `var` or function declaration placed earlier or later, or its first value assigned apart",
+		[
+			"swc minifier: fixture/issues/12192/input.js",
+			"swc minifier: fixture/issues/8119/input.js",
+			"swc minifier: fixture/projects/mootools/7/input.js",
+			"swc minifier: fixture/projects/next/.archive-4/webpack-eb940a9a97802b481f9b/input.js"
+		]
+	],
+	[
+		"mangled-name choice: the same program with other mangled names, or one name given to other bindings",
+		[
+			"swc minifier: fixture/next/36127/2/3/input.js",
+			"swc minifier: fixture/projects/react/9/input.js"
+		]
+	],
+	[
+		"boolean and conditional forms: `!a&&b` vs `a?!1:b`, `!!a` vs `a&&!0`, `x||void 0` vs `if(x)`, an `if` with or without braces, a test's branches swapped",
+		[
+			"swc minifier: fixture/projects/react/13/input.js",
+			"swc minifier: fixture/terser/issue-2535-2/2-1/input.js"
+		]
+	],
+	[
+		"a dead read or write: one side keeps a statement only reading a name, a parameter nothing reads or a write nothing reads that the other drops",
+		[
+			"terser compress: conditionals/cond_9",
+			"terser compress: drop-unused/issue_3192"
+		]
+	],
+	[
+		"a shorter operator swc writes: `!=` for `!==` where both operands' types are known, and `new` dropped before a built-in that constructs the same called",
+		["swc minifier: fixture/issues/12187/input.js"]
+	],
+	[
+		"block scoping: a block of `let` declarations kept where the rival flattens it, renaming the names it would shadow, or the reverse",
+		["swc minifier: fixture/issues/8813/input.js"]
+	],
+	[
+		"method vs arrow: webpack writes an object's function property as the shorter `a:()=>x` where oxc writes the method `a(){return x}`, or keeps a `function` swc writes as an arrow",
+		["swc minifier: fixture/issues/drop-console-es2015/input.js"]
+	],
+	[
+		"`if…return` chain vs `?:…void 0`: webpack folds the returns into one `return a?b:c?d:void 0` where the rival keeps `if(a)return b;if(c)return d`",
+		["swc minifier: fixture/projects/next/extra/if_return/.4/input.js"]
+	],
+	[
+		"`void 0` vs a name known to hold `undefined`: webpack writes `void 0` where the rival reads a binding nothing assigned, or the reverse",
+		["terser compress: if_return/issue_1437_conditionals"]
 	],
 	[
 		"swc drops what nothing reads or what has no effect: unused variables and destructuring, side-effect-free `new Map()` and pure calls, an empty constructor",
