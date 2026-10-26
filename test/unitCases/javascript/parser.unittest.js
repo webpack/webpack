@@ -5834,7 +5834,25 @@ describe("parseProgram", () => {
 			"export {}",
 			[["import-outside-module", "export", "error", "0"]]
 		],
-		// Only a script or a module opens with a `#!` line.
+		// A CommonJS module is a function's body too, which a `#!` line may open.
+		["commonjs", "#!x\nif (a) return new.target; await = 1", []],
+		[
+			"commonjs",
+			'import x from "y"',
+			[["import-outside-module", "import", "error", "0"]]
+		],
+		[
+			"commonjs",
+			"import.meta",
+			[["import-meta-outside-module", "import", "warning", "0"]]
+		],
+		// A handler is never a module: what only a module may hold stays out.
+		[
+			"event-handler",
+			"import.meta",
+			[["import-meta-outside-module", "import", "warning", "0"]]
+		],
+		// Only a script, a module or a CommonJS module opens with a `#!` line.
 		[
 			"event-handler",
 			"#!x\n1",
@@ -5843,9 +5861,10 @@ describe("parseProgram", () => {
 		["module", "#!x\n1", []]
 	])("reads a source as %s: %j", (sourceType, source, expected) => {
 		const { program, errors } = collect(source, {
-			sourceType: /** @type {"module" | "script" | "event-handler"} */ (
-				sourceType
-			)
+			sourceType:
+				/** @type {import("../../../lib/javascript/syntax-parser").JavascriptSourceType} */ (
+					sourceType
+				)
 		});
 		expect(errors).toEqual(expected);
 		expect(program === undefined).toBe(

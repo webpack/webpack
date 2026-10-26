@@ -3,6 +3,7 @@
 // cspell:ignore binop, fnames, propmangle, fargs, domprops, argnames, nondeferred, loopcontrol, Defun, defun, NOINLINE, Funarg, unmangleable, Unmangleable, thedef, funs
 // cspell:ignore fnames
 // cspell:ignore argnames, bcatch, bfinally, argname
+// cspell:ignore AAAWA MAAH
 // cspell:ignore endline, endcol, endpos, nlb, thedef
 
 const vm = require("vm");
@@ -15468,6 +15469,41 @@ describe("JavaScript minifier reading an event handler's body", () => {
 			const reference = await minify(source, { module });
 			expect(given.code).toBe(reference.code);
 		}
+	});
+
+	it.each([
+		// Its declared names are the module's own, its `#!` line kept.
+		[
+			"#!/usr/bin/env node\nvar v = 5; exports.x = v",
+			"#!/usr/bin/env node\nexports.x=5;"
+		],
+		["value = 5; alert(value)", "value=5,alert(value);"],
+		["x(); return new.target", "return x(),new.target;"]
+	])("should compress %j as a CommonJS module's body", async (source, expected) => {
+		const { minify } = await load();
+		const { code } = await minify(source, { sourceType: "commonjs" });
+		expect(code).toBe(expected);
+	});
+
+	it("should map a body where it was read", async () => {
+		const { minify } = await load();
+		const { code, map } = await minify(
+			{ "a.js": "var v = 5; alert(v)" },
+			{ sourceType: "event-handler", sourceMap: { asObject: true } }
+		);
+		expect(code).toBe("alert(5)");
+		// `alert` at column 0 maps back to column 11, where the source has it.
+		expect(map).toEqual(
+			expect.objectContaining({ names: ["alert"], mappings: "AAAWA,MAAH" })
+		);
+	});
+
+	it("should keep the comments around a body whose statements are dropped", async () => {
+		const { minify } = await load();
+		const { code } = await minify("/*! a */ var v = 5; f(v) /*! b */", {
+			sourceType: "event-handler"
+		});
+		expect(code).toBe("/*! a */f(5)/*! b */");
 	});
 
 	it("should wrap a body as `wrap` and `enclose` ask, inside its function", async () => {
