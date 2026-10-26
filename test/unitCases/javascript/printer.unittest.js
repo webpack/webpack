@@ -1847,6 +1847,26 @@ const IMPROVED_CASES = [
 		{ compress: {}, mangle: false }
 	],
 	[
+		"`new RegExp` of a BigInt pattern, as the call, which builds the same",
+		"console.log(String(new RegExp(10n)), String(new RegExp(-10n)), String(new RegExp(~10n)));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"branches reading `a[\"b\"]` and `a.b`, or writing `\"b\": x` and `b: x`, as one where no quote is kept",
+		'function f(a, b, body) { if (a) return { body }; if (b) return { "body": body }; } function g(x, foo) { return x ? foo["bar"]() : foo.bar(); } console.log(JSON.stringify([f(1, 0, 2), f(0, 1, 3), f(0, 0, 4)]), g(0, { bar: () => 5 }), g(1, { bar: () => 6 }));',
+		{ compress: {}, mangle: false }
+	],
+	[
+		"the values a function called in place returns, where nothing reads the call's value, in a `finally`, a branch, an arrow or a sequence",
+		'function g(v) { console.log("g", v); return v; } var w = 8; function t(y) { (function () { try { throw 1; } finally { return 2; } })(); (function (x) { if (x) return 3; g(x); })(y); (() => { if (g(1)) return 4; g(2); })(); g(3), function (x) { if (x) return x; g(x); }(y); void function (x) { if (x) return w; g(4); }(y); } t(0); t(1);',
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a computed `NaN` or `null` key as the name it converts to, in an object, a pattern and a class",
+		"class C { [NaN]() { return 1; } static [null] = 2; get [null]() { return 3; } } var { [NaN]: a, [null]: b } = { [NaN]: 4, [null]: 5 }; console.log(new C().NaN(), C.null, new C().null, a, b, Object.keys({ [NaN]: 6, [null]: 7 }).join());",
+		{ compress: {}, mangle: false }
+	],
+	[
 		"an `if` with an empty branch and an `else` block, as an `if` of the negated test, but a chain's",
 		"function f(a, b) { if (a) {} else { if (b) { console.log(1); return; } console.log(2); } console.log(3); } function g(a, b) { if (a && b) {} else { if (b) { console.log(4); return; } console.log(5); } } f(0, 0); f(0, 1); f(1, 0); g(0, 1); g(1, 1);",
 		{ compress: {}, mangle: false }
@@ -11042,6 +11062,81 @@ describe("syntax-printer", () => {
 				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
 			}
 		});
+
+		it("should keep `a[\"b\"]` apart from `a.b` where the run keeps quotes", async () => {
+			const { minify } = await load();
+			const input =
+				'function f(a, b, o) { if (a) return { o }; if (b) return { "o": o }; } function g(x, foo) { return x ? foo["bar"]() : foo.bar(); }';
+			for (const options of /** @type {import("terser").MinifyOptions[]} */ ([
+				{ compress: {}, mangle: { properties: { keep_quoted: "strict" } } },
+				{ compress: {}, mangle: false, format: { keep_quoted_props: true } }
+			])) {
+				const { code } = await minify(input, options);
+				expect(code).not.toMatch(/if\(\w+\|\|\w+\)/);
+				expect(code).toMatch(/\?\w+\.bar\(\):/);
+			}
+			const { code } = await minify(input, {
+				compress: {},
+				mangle: { properties: { keep_quoted: true } }
+			});
+			expect(code).toMatch(/if\(\w+\|\|\w+\)/);
+			expect(code).toMatch(/return \w+\.bar\(\)\}$/);
+			const apart = await minify(
+				'function f(a, b, o) { if (a) return { a: o }; if (b) return { "b": o }; } function g(x, foo) { return x ? foo["bar"]() : foo.baz(); }',
+				{ compress: {}, mangle: false }
+			);
+			expect(apart.code).toContain("a?{a:o}:b?{b:o}:void 0");
+			expect(apart.code).toContain("x?foo.bar():foo.baz()");
+			const computed = await minify("function f(c, a, b) { return c ? { [a]: 1 } : { [b]: 1 }; }", {
+				compress: {},
+				mangle: false
+			});
+			expect(computed.code).toContain("c?{[a]:1}:{[b]:1}");
+			const plain = await minify("function f(c, a) { return c ? { [a]: 1 } : { a: 1 }; }", {
+				compress: {},
+				mangle: false
+			});
+			expect(plain.code).toContain("c?{[a]:1}:{a:1}");
+		});
+
+		it("should keep what a function called in place returns where it may be read", async () => {
+			const { minify } = await load();
+			for (const input of [
+				"a = function (x) { if (x) return 1; g(); }(y);",
+				"x = (h(), function (x) { if (x) return 1; g(); }(y));",
+				"(async function (x) { if (x) return 1; await g(); })(y);",
+				"(function f(n) { if (n) return f(n - 1) + 1; g(); })(y);",
+				"(function (n) { if (n) return 1; arguments.length && g(); })(y);",
+				"new function (x) { if (x) return 1; g(); }(y);",
+				"(function (x) { if (x) return x.y; g(); })(y);",
+				"try { (function (x) { if (x) return z; g(); })(y); } catch (e) {} let z = 1;",
+				"(function (x) { if (x) return undeclared; g(); })(y);",
+				"g(function (x) { if (x) return 1; h(); });",
+				"(function () { g(function (x) { if (x) return 1; h(); }); })();",
+				'(function f(n) { if (!n) return { valueOf() { console.log("v"); } }; f(n - 1) + 1; })(1);',
+				"(function f(n) { if (!n) return 2; console.log(f(n - 1) * 3); })(1);",
+				"var a; (function (x) { if (x) return a = 1; g(); })(y); console.log(a);",
+				"try { (function (x) { if (x) return 1n + 1; g(); })(y); } catch (e) { console.log(e.name); }"
+			]) {
+				const { code } = await minify(input, { compress: {}, mangle: false });
+				expect(code).toMatch(/return[^;}]/);
+			}
+			const { code } = await minify("(function (x) { if (x) return 1; g(); })(y);", {
+				compress: { side_effects: false },
+				mangle: false
+			});
+			expect(code).toContain("return 1");
+		});
+
+		it("should keep a computed `NaN` key in brackets where computed keys stay", async () => {
+			const { minify } = await load();
+			const { code } = await minify("console.log({ [NaN]: 1, [null]: 2 });", {
+				compress: { computed_props: false },
+				mangle: false
+			});
+			expect(code).toBe("console.log({[NaN]:1,[null]:2});");
+		});
+
 
 		it("should keep only what an empty function called in place is given to run, but where its parameters run code", async () => {
 			const { minify } = await load();

@@ -381,6 +381,8 @@ exports[`syntax-printer improve phase should write less, printing the same: \`co
 
 exports[`syntax-printer improve phase should write less, printing the same: \`const\` declarations heading loops and holding holes, defaults and rests, written as \`let\` where they stand 1`] = `"function run(o){for(let l=o.x;l;){console.log(l);break}for(let[,l]of o.list)console.log(l);let{c:l=1,d:{e:n}={},...c}=o,[r,...s]=o.arr;console.log(n,c,r,s,2,2+l);console.log(o.k,o.l);return()=>{console.log(o.p)}}run({x:1,list:[[1,2]],c:3,d:{e:4},arr:[5,6],k:7,l:8,p:9})();"`;
 
+exports[`syntax-printer improve phase should write less, printing the same: \`new RegExp\` of a BigInt pattern, as the call, which builds the same 1`] = `"console.log(String(RegExp(10n)),String(RegExp(-10n)),String(RegExp(-11n)));"`;
+
 exports[`syntax-printer improve phase should write less, printing the same: \`null != a && a.b\` where only its truth is read, as \`a?.b\`, which is \`undefined\` where \`a\` is nullish 1`] = `"function f(n){return n?.length?\\"x\\":n?.a?\\"z\\":\\"y\\"}console.log(f(),f(null),f([1]),f({a:1}),f({}));"`;
 
 exports[`syntax-printer improve phase should write less, printing the same: \`replaceAll\` of a string by a string, folded, but not with a \`$\` pattern 1`] = `"console.log(\\"-a-b-\\",\\"x_x\\",\\"aa\\".replaceAll(\\"a\\",\\"$&$&\\"));"`;
@@ -579,6 +581,8 @@ exports[`syntax-printer improve phase should write less, printing the same: a co
 
 exports[`syntax-printer improve phase should write less, printing the same: a computed \`__proto__\` or \`constructor\` key, written as a name where it means the same 1`] = `"var o={[\\"__proto__\\"]:()=>1};class C{__proto__=2;static constructor(){return 3}}console.log(o.__proto__(),(new C).__proto__,C.constructor());"`;
 
+exports[`syntax-printer improve phase should write less, printing the same: a computed \`NaN\` or \`null\` key as the name it converts to, in an object, a pattern and a class 1`] = `"class C{NaN(){return 1}static null=2;get null(){return 3}}var{NaN:a,null:b}={NaN:4,null:5};console.log((new C).NaN(),C.null,(new C).null,a,b,\\"NaN,null\\");"`;
+
 exports[`syntax-printer improve phase should write less, printing the same: a computed key of a pattern, read as the constant it holds 1`] = `"function f(o){let{3:x,a:y}=o;for(let{4:z}of[o])console.log(z);return[x,y]}console.log(f({3:1,a:2,4:3}));"`;
 
 exports[`syntax-printer improve phase should write less, printing the same: a conditional assigning a property of \`this\` at the top level or in a class extending none 1`] = `"this.q=c(1)?1:2;class C{m(x){return this.p=c(x)?3:4,this.p}}function c(x){return x}console.log(q,(new C).m(0));"`;
@@ -717,7 +721,7 @@ exports[`syntax-printer improve phase should write less, printing the same: a kn
 
 exports[`syntax-printer improve phase should write less, printing the same: a literal's read of a key neither it nor its prototype holds, as swc reads it, where \`void 0\` is shorter 1`] = `"function x(){return console.log(\\"x\\"),1}console.log([][1],void 0,void 0,void 0,void 0,void x(),[].push===Array.prototype.push,{}.toString===Object.prototype.toString);"`;
 
-exports[`syntax-printer improve phase should write less, printing the same: a logical expression assigning what it tests, from ECMAScript 2021 1`] = `"function f(a,b,o){return a||=b,o.p||=1,o.q??=2,o.p&&(o.p=3),o[0]||=4,a}var o={};console.log(f(0,4,o),f(5,6,o),JSON.stringify(o));"`;
+exports[`syntax-printer improve phase should write less, printing the same: a logical expression assigning what it tests, from ECMAScript 2021 1`] = `"function f(a,b,o){return a||=b,o.p||=1,o.q??=2,o.p&&=3,o[0]||=4,a}var o={};console.log(f(0,4,o),f(5,6,o),JSON.stringify(o));"`;
 
 exports[`syntax-printer improve phase should write less, printing the same: a logical expression running a sequence that ends assigning what it tests, from ECMAScript 2021 1`] = `"function f(a,b,o,log){return a||=(log.push(1),b),o.p||=(log.push(o.p),2),a&&=(log.push(a),3),o[0]??=(log.push(4),a),[a,log.join()]}var o={};console.log(f(0,4,o,[]),f(5,6,o,[]),JSON.stringify(o));"`;
 
@@ -950,6 +954,8 @@ exports[`syntax-printer improve phase should write less, printing the same: an u
 exports[`syntax-printer improve phase should write less, printing the same: arguments without effects among others past a constructor's parameters 1`] = `"function e(v){return console.log(v),v}console.log(new function(v){this.v=v}(e(1),e(2)).v);"`;
 
 exports[`syntax-printer improve phase should write less, printing the same: assignments opening the statement after a \`var\`, as its values 1`] = `"var k;function f(o){var a,b;console.log(a=o.x,b=o.y,a,b)}function g(o){var a;return console.log(a=o.x,a),a}function h(o){var a=o.x;return k=function(){return a}}function m(o){var a=o.x;try{console.log(a)}finally{console.log(a+1)}}f({x:1,y:2}),h({x:4}),m({x:5}),console.log(g({x:3}),k());"`;
+
+exports[`syntax-printer improve phase should write less, printing the same: branches reading \`a["b"]\` and \`a.b\`, or writing \`"b": x\` and \`b: x\`, as one where no quote is kept 1`] = `"function f(a,b,body){if(a||b)return{body:body}}function g(x,foo){return foo.bar()}console.log(JSON.stringify([f(1,0,2),f(0,1,3),f(0,0,4)]),g(0,{bar:()=>5}),g(1,{bar:()=>6}));"`;
 
 exports[`syntax-printer improve phase should write less, printing the same: built-in calls and constructions on literals no one reads 1`] = `"console.log(1);"`;
 
@@ -2000,6 +2006,8 @@ exports[`syntax-printer improve phase should write less, printing the same: stor
 exports[`syntax-printer improve phase should write less, printing the same: stores to the next index of an array literal, up to the first not constant, where unsafe is on 1`] = `"function f(a){var e=[1,\\"b\\"];return e[2]=a,e}console.log(f(3).join());"`;
 
 exports[`syntax-printer improve phase should write less, printing the same: tabs in a long string, written raw, beside an escaped backslash 1`] = `"console.log(\\"row	row	row	row	row	row	row	row	row	row	row	row	row	row	row	row	row	row	row	row	row	row	row	row	row	row	row	row	row	row	\\",\\"a\\\\\\\\tb	b	b	b	b	b	b	b	b	b	b	b	b	b	b	b	b	b	b	b	b	b	b	b	b	b	b	b	b	b	b	b	b	b	b	b	b	b	b	b	b	b	b	b	b	b	b	b	b	b	\\",\\"c\\\\td\\\\te\\");"`;
+
+exports[`syntax-printer improve phase should write less, printing the same: the values a function called in place returns, where nothing reads the call's value, in a \`finally\`, a branch, an arrow or a sequence 1`] = `"function g(v){return console.log(\\"g\\",v),v}var w=8;function t(y){!function(){try{throw 1}finally{return}}(),y||g(y),g(1)||g(2),g(3),y||g(y),y||g(4)}t(0),t(1);"`;
 
 exports[`syntax-printer improve phase should write less, printing the same: two \`var\`s declared bare and set once to one constructor, read through it inside functions called with \`new\` 1`] = `"!function(){var C=function(){this.v=1};console.log([function(){return(new C).v},function(){return(new C).v}].map(function(f){return f()}))}();"`;
 

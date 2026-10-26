@@ -381,7 +381,6 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc normalizes the syntax before compressing it, as oxc's `peephole/normalize.rs` tests show",
 		[
-			"oxc minifier: peephole/normalize.rs:221",
 			"oxc minifier: peephole/normalize.rs:230",
 			"oxc minifier: peephole/normalize.rs:274"
 		]
@@ -404,8 +403,7 @@ const OXC_SMALLER_BY_REASON = [
 		"oxc restructures conditionals: an `if` as `&&` or `?:`, a shared tail factored out, a redundant branch or jump dropped",
 		[
 			"swc minifier: fixture/projects/backbone/5/input.js",
-			"swc minifier: fixture/projects/react/16/input.js",
-			"terser compress: conditionals/issue_1674_false_equivalency_of_props"
+			"swc minifier: fixture/projects/react/16/input.js"
 		]
 	],
 	[
@@ -427,10 +425,7 @@ const OXC_SMALLER_BY_REASON = [
 	],
 	[
 		"oxc writes classes, methods and object literals shorter",
-		[
-			"swc exec: object_spread_proto_key_is_not_flattened",
-			"terser compress: object/convert_computed_props_to_regular_ones"
-		]
+		["swc exec: object_spread_proto_key_is_not_flattened"]
 	],
 	[
 		"oxc writes a variable's value at its one read and drops the variable, as oxc's `peephole/inline_single_use_variable.rs` tests show",
@@ -469,10 +464,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/collapse_variable_declarations.rs:211",
 			"oxc minifier: peephole/collapse_variable_declarations.rs:234"
 		]
-	],
-	[
-		"oxc joins and reorders statements to write them shorter, as oxc's `peephole/minimize_statements.rs` tests show",
-		["oxc minifier: peephole/minimize_statements.rs:188"]
 	],
 	[
 		"oxc's own integration cases, several transforms combined, as oxc's `peephole/oxc.rs` tests show",
