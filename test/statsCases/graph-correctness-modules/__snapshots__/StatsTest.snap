@@ -2,7 +2,7 @@
 
 exports[`StatsTestCases graph-correctness-modules should print correct stats for graph-correctness-modules 1`] = `
 "chunk (runtime: e2) e2.js (e2) X bytes (javascript) X KiB (runtime) >{390}< >{460}< [entry] [rendered]
-  runtime modules X KiB 11 modules
+  runtime modules X KiB 10 modules
   cacheable modules X bytes
     ./e2.js X bytes [built] [code generated]
       entry ./e2 e2
@@ -14,7 +14,7 @@ chunk (runtime: e1, e2) b.js (b) X bytes <{996}> >{390}< [rendered]
   ./module-b.js X bytes [built] [code generated]
     import() ./module-b ./module-a.js 1:0-47
 chunk (runtime: e1) e1.js (e1) X bytes (javascript) X KiB (runtime) >{460}< >{996}< [entry] [rendered]
-  runtime modules X KiB 11 modules
+  runtime modules X KiB 10 modules
   cacheable modules X bytes
     ./e1.js X bytes [built] [code generated]
       entry ./e1 e1

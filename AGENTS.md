@@ -246,6 +246,17 @@ CI's `lint` job verifies these are current; `yarn fix` (`fix:code` + `fix:specia
 
 Runtime-emitting code (chunk loading, resource hints, library and externals presets) is **per-target**: apply a change to **every** affected target with an integration case per target, then check wire cost with `yarn test:size` and say in the PR what moved. Targets, the universal runtime's DOM guard and how to read the size report: [docs/runtime.md](docs/runtime.md).
 
+### Keep emitted runtime small
+
+> [!REQUIRED]
+
+**Emitted runtime is paid for in every user's bundle, so emit the shortest equivalent.** Read the checklist in [docs/runtime.md](docs/runtime.md#keep-emitted-runtime-small) before writing or changing an emitted string; the rules it enforces:
+
+- **Never hand-write a form a `RuntimeTemplate` helper covers** (`function(`, `var`, `x = x || y`, `hasOwnProperty.call`, `a && a.b`): the helper picks the shortest form per `output.environment`.
+- **Minifiers can't do it for you**: unused parameters, guards on values already known to be set, repeated property chains and default arguments survive terser.
+- **Emit only what this config runs**: gate code a feature, HMR or the import's usage needs behind that condition.
+- **Equivalence covers falsy values, prototype keys, the ES5 fallback and third-party overrides**; keep a guard you can't prove dead.
+
 ### Lint covers every file, docs included
 
 `lint` runs Prettier (`fmt:check`) and cspell (`lint:spellcheck`) over the **whole repo**, Markdown and this guide included. Run `yarn fix` before pushing even a docs change: an unaligned Markdown table or unknown word fails `lint` alone. Add a genuine new word to `words` in `cspell.json` (or reword); Prettier reformats Markdown tables, so hand-written columns must match its output.
