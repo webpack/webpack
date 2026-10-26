@@ -819,6 +819,8 @@ exports[`syntax-printer improve phase should write less, printing the same: a va
 
 exports[`syntax-printer improve phase should write less, printing the same: a value compared with \`null\` and then, read back, with \`undefined\` 1`] = `"function f(o){return null==o.a}console.log(f({a:null}),f({}),f({a:1}));"`;
 
+exports[`syntax-printer improve phase should write less, printing the same: a value folded into what an \`await\` or \`yield\` hands over, which runs before it suspends 1`] = `"function g(v){return console.log(\\"g\\",v),v}async function a(f){await f(1)}async function b(f){return await f(2)}function*c(f){yield f(3)}function*d(f){yield*[f(4)]}a(g),b(g),console.log([...c(g)],[...d(g)]);"`;
+
 exports[`syntax-printer improve phase should write less, printing the same: a value kept before a global no built-in names, a member a built-in computes, a shadowed built-in, or a built-in the value writes 1`] = `"function f(Math){h(g());var w=g();console.log(RegExp.$1,w);var x=g();console.log(Math.max(x))}function k(){var o=console,u=(console={log:function(){o.log(\\"new\\")}},1);console.log(u),console=o}var h=console.log;function g(){return 2}f({max:String}),k();"`;
 
 exports[`syntax-printer improve phase should write less, printing the same: a value moved into the \`=\` writing a global, which throws, where it does, only after it 1`] = `"function f(r){return out=r.O(),1}console.log(f({O:function(){return 2}}),out),function(){\\"use strict\\";try{missing={O:function(){return console.log(\\"called\\"),2}}.O()}catch(e){console.log(e.name)}}();"`;

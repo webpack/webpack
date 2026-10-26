@@ -1867,6 +1867,11 @@ const IMPROVED_CASES = [
 		{ compress: {}, mangle: false }
 	],
 	[
+		"a value folded into what an `await` or `yield` hands over, which runs before it suspends",
+		'function g(v) { console.log("g", v); return v; } async function a(f) { let o = f(1); await o; } async function b(f) { const o = f(2); return await o; } function* c(f) { let o = f(3); yield o; } function* d(f) { let o = f(4); yield* [o]; } a(g); b(g); console.log([...c(g)], [...d(g)]);',
+		{ compress: {}, mangle: false }
+	],
+	[
 		"an `if` with an empty branch and an `else` block, as an `if` of the negated test, but a chain's",
 		"function f(a, b) { if (a) {} else { if (b) { console.log(1); return; } console.log(2); } console.log(3); } function g(a, b) { if (a && b) {} else { if (b) { console.log(4); return; } console.log(5); } } f(0, 0); f(0, 1); f(1, 0); g(0, 1); g(1, 1);",
 		{ compress: {}, mangle: false }
@@ -11468,6 +11473,19 @@ describe("syntax-printer", () => {
 			expect(code).toBe("console.log({[NaN]:1,[null]:2});");
 		});
 
+
+		it("should keep a value apart from an `await` or `yield` it would move past", async () => {
+			const { minify } = await load();
+			for (const [input, expected] of [
+				["function* y(g) { let o = g(); yield; h(o); }", "yield,h("],
+				["function* y(g) { let o = g(); yield x; h(o); }", "yield x,h("],
+				["async function y(g) { let o = g(); await x; h(o); }", "await x,h("]
+			]) {
+				const { code } = await minify(input, { compress: {}, mangle: false });
+				expect(code).toContain(expected);
+				expect(code).toMatch(/let \w+=g\(\)/);
+			}
+		});
 
 		it("should keep only what an empty function called in place is given to run, but where its parameters run code", async () => {
 			const { minify } = await load();
