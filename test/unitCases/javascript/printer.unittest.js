@@ -14558,6 +14558,249 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		expect(printed.code).toBe(reference.code);
 	});
 
+	it("should mangle and print in one walk where it compresses in one pass", async () => {
+		const { modules } = await load();
+		modules.onePass.enabled = true;
+		try {
+			const printed = await minifyCounted(
+				"function foo(longName, other) { var local = longName + other; return local * 2; } foo(1, 2); class A { #field = 1; read() { return this.#field } static #hidden() {} } print(new A().read());",
+				{ toplevel: true },
+				true
+			);
+			expect(printed.code).toBe(
+				"function e(e,r){return(e+r)*2}e(1,2);class r{#e=1;read(){return this.#e}static#r(){}}print((new r).read());"
+			);
+			expect(printed.printedFromTree).toBe(0);
+			// One walk a print, and the one pass prints twice.
+			expect(printed.printedNodes).toBe(2);
+		} finally {
+			modules.onePass.enabled = false;
+		}
+	});
+
+	it("should compress in the one pass where nothing outside a node decides it", async () => {
+		const { minify, modules } = await load();
+		/** @type {[string, import("../../../lib/javascript/syntax-printer").MinifyOptions, string][]} */
+		const cases = [
+			[
+				"if (a) { b() } while (a) { a-- } for (;;) { break } l: { c() } with (o) { d() } do { e() } while (a); for (k in o) { f(k) } for (k of o) { f(k) }",
+				{},
+				"if(a)b();while(a)a--;for(;;)break;o:c();with(o)d();do e();while(a);for(k in o)f(k);for(k of o)f(k);"
+			],
+			// An `else` after a block keeps it where the block ends in an `if` of its own.
+			[
+				"if (a) { if (b) c(); } else d(); if (a) { for (;;) if (b) c(); } else d(); if (a) { if (b) c(); else e(); } else d(); if (a) { l: if (b) c(); } else d();",
+				{},
+				"if(a){if(b)c()}else d();if(a){for(;;)if(b)c()}else d();if(a)if(b)c();else e();else d();if(a){e:if(b)c()}else d();"
+			],
+			[
+				"if (a) { let x = h(); f(x) } if (a) { const y = h(); f(y) } if (a) { var z = 1 } if (a) { class C {} } if (a) { function g() {} } if (a) {} if (a) { b(); c() }",
+				{},
+				"if(a){let i=h();f(i)}if(a){let n=h();f(n)}if(a)var z=1;if(a){class l{}}if(a){function g(){}}if(a){}if(a){b();c()}"
+			],
+			[
+				"if (a) /* before */ { b() } if (a) { b() /* after */ }",
+				{ format: { comments: /before|after/ } },
+				"if(a)/* before */{b()}if(a){b()/* after */}"
+			],
+			[
+				"var a = 1; var b = 2, c; var [d] = e; let x = 1; let y = 2; const z = 3; var w; /* note */ var q; f(a, b, c, d, x, y, z, w, q)",
+				{ format: { comments: /note/ } },
+				"var a=1,b=2,c,[d]=e;let x=1,y=2;const z=3;var w;/* note */var q;f(a,b,c,d,x,y,z,w,q);"
+			],
+			[
+				"f(true, false); x = true.toString(); y = true ** b; z = b ** true; w = { a: false }; t = typeof true; new true; true`x`; v = a(true)(false)",
+				{},
+				"f(!0,!1);x=true.toString();y=true**b;z=b**!0;w={a:!1};t=typeof!0;new true;true`x`;v=a(!0)(!1);"
+			],
+			// `undefined` is `void 0` where it reads the global, not where it is bound or written.
+			[
+				"function f(a){ return a === undefined ? undefined.x : typeof undefined } function g(undefined) { return undefined } y = { undefined: 1 }; z = o.undefined; w = [undefined]",
+				{},
+				"function f(n){return n===void 0?undefined.x:typeof void 0}function g(n){return n}y={undefined:1};z=o.undefined;w=[void 0];"
+			],
+			// Where anything writes it, it stays a name everywhere.
+			[
+				"x = undefined; undefined = 1; for (undefined in o); undefined++",
+				{},
+				"x=undefined;undefined=1;for(undefined in o);undefined++;"
+			],
+			// Strings compare loosely, a name in brackets prints after a `.`, and
+			// a `return` of `undefined` from nothing happening is bare.
+			[
+				'typeof a === "string" && typeof b !== typeof c && a === "s" && "s" === typeof a && "a" !== "b" && typeof a === /*! c */ "s"; o["key"]; o?.["if"]; o["a-b"]; 1["k"]; o[/*! c */ "k"]; o[1]; function f(){ return void 0 } function g(){ return undefined } function h(){ return void x() } function k(){ return /*! c */ void 0 }',
+				{},
+				'"string"==typeof a&&typeof b!=typeof c&&a==="s"&&"s"==typeof a&&!0&&typeof a==/*! c */"s";o.key;o?.if;o["a-b"];1..k;o[/*! c */"k"];o[1];function f(){}function g(){}function h(){return void x()}function k(){/*! c */return}'
+			],
+			// A `const` nothing writes is a `let`, private to the module or where
+			// `toplevel` says so, and a loop forever is `for(;;)`.
+			[
+				'const a = g(), b = 1; const { x, y: [z = 1, ...r] } = a; const c = 1; c = 2; const d = 1; d++; const e = 1; [e] = []; const k = 1; ({ k } = {}); const m = 1; for (m of a); export const ex = 1; for (const i of a) g(i, x, z, r, b, c, d, e, k, m); while (true) g(); while (/*! t */ true) g(); while (a) g()',
+				{ module: true },
+				'let o=g(),{x:t,y:[s=1,...e]}=o;const f=1;f=2;const n=1;n++;const r=1;[r]=[];const c=1;({k:c}={});const i=1;for(i of o);export const ex=1;for(let x of o)g(x,t,s,e,1,f,n,r,c,i);for(;;)g();while(/*! t */!0)g();while(o)g();'
+			],
+			[
+				"const a = 1; function f() { const b = g(); h(b); return b } f(a)",
+				{},
+				"const a=1;function f(){let n=g();h(n);return n}f(a);"
+			],
+			// Unmangled, no name is known: every one stays.
+			[
+				"function f(){ const b = 2; var u = 1; return void 0 } f(undefined)",
+				{ mangle: false },
+				"function f(){const b=2;var u=1}f(undefined);"
+			],
+			// What only dropped code reads goes too; a constant prints as its value
+			// where that is shorter and the read prints as a name would; a comment
+			// that does not print holds nothing back; a built-in needs no `new`.
+			[
+				'/** doc */ var A = "[object Array]"; /** doc */ var B = 200, C = 1, D = "d"; function f(o){ var a = 1; function g(){ return a } var b = g; const K = 2; if (o) { var u = 1; h(K, K) } return [o.t == A, A, B, B.x, C, {C}, D, new Error("e"), new Map()] } function k(){ g(V); var V = 2; } f(k)',
+				{ compress: { toplevel: true } },
+				'var A="[object Array]",B=200;function f(r){if(r)h(2,2);return[r.t==A,A,B,B.x,1,{C:1},"d",Error("e"),new Map]}function k(){g(r);var r=2}f(k);'
+			],
+			// A read where the value would print otherwise keeps the name, and so
+			// does a value no literal of a name's length prints the same.
+			[
+				'function f(){ var A = "a", B = "b", D = "d", E = "e", R = /r/, N = -1, G = 1n; (A); B; delete D; g((E)); return [R, N, G, A, B, D, E] } f()',
+				{},
+				'function f(){var e="a",n="b",r="d",t=/r/,a=-1,d=1n;e;n;delete r;g("e");return[t,a,d,e,n,r,"e"]}f();'
+			],
+			// Constants fold; a name nothing reads goes from a function or class
+			// expression; `null` and `undefined` test as one; a `let` needs no
+			// `undefined`; and a function's last `return` of nothing goes.
+			[
+				'function f(a, b){ var MAX = 4294967295, IDX = MAX - 1, S = "a" + "b", T = S + "c", B = !0, U = typeof x + "y"; let x = void 0; var w = undefined; w = 1; var v = function n(){}, c = class C {}, d = function e(){ return e }; g(a === null || a === void 0, b !== void 0 && b !== null, a == undefined, IDX, T, T.length, B, B.x, x, w, v, c, d, U, typeof a === "s"); return }',
+				{},
+				'function f(n,l){var o=typeof t+"y";let t;var e=void 0;e=1;var u=class{};g(n==null,l!=null,n==null,4294967294,"abc","abc".length,!0,true.x,t,e,function(){},u,function n(){return n},o,"s"==typeof n)}'
+			],
+			// A name set to another nothing writes reads that one; a function
+			// read once prints where it is read, where that runs after it once.
+			[
+				"function f(m, c, e){ const s = e; let t = s; g(s.kind, t, {s}); var o = (n) => n + t; m.exports = o; if (c) { var p = () => 1 } g(p); switch (c) { case 1: var q = () => 2; case 2: g(q) } const r = () => 3; for (;;) g(r); const u = function(){}; { g(u) } }",
+				{},
+				"function f(t,c,s){g(s.kind,s,{s:s});t.exports=t=>t+s;if(c)var f=()=>1;g(f);switch(c){case 1:var a=()=>2;case 2:g(a)}let e=()=>3;for(;;)g(e);{g(function(){})}}"
+			],
+			// A `var` is a constant where nothing called before it can read it,
+			// nor a read in its own function before it.
+			[
+				"function f(){ function m(){ return [A, B.x, C] } g(); var A = 1, B = 2, C = 3; y = C; return m } function h(){ var r = D; var D = 4; function k(){ return D } return [r, k] } function j(){ x = 1; var E = 5, F = 6; function q(){ return [E, (F).x, F] } return q }",
+				{},
+				"function f(){g();var n=2;y=3;return function(){return[1,n.x,3]}}function h(){var r=n,n=4;return[r,function(){return n}]}function j(){x=1;var r=6;return function(){return[5,r.x,r]}}"
+			],
+			// A function declared and called once prints where it is called,
+			// but not into a loop, nor where the call comes before it.
+			[
+				"function f(a){ function h(x){ return x + a } function k(){ return 1 } function r(n){ return n ? r(n - 1) : 0 } var z = h(2); for (;;) k(); g(z, r); function late(){} late(); return [early()]; function early(){ return 2 } }",
+				{},
+				"function f(n){function r(){return 1}function u(n){return n?u(n-1):0}var t=function(r){return r+n}(2);for(;;)r();g(t,u);(function(){})();return[f()];function f(){return 2}}"
+			],
+			// A name nothing reads goes, its value still running; a `var` set
+			// after a call is a constant where only its own function reads it.
+			[
+				"function f(){ var a = g(), b = 1, c = h(), d = k(); var e = function(){}.call(), o = {x: 1}.x, q = m(); return b + d } function u(){ let x = g(); var y = h(); var z = 1, w = 2; function k(){ return w } return [z, k] }",
+				{},
+				"function f(){g();h();var u=k();(function(){}).call();({x:1}).x;m();return 1+u}function u(){g();h();return[1,function(){return 2}]}"
+			],
+			// A `var` set after a call is a constant where a function made after
+			// it reads it, and a function called once from another moves there.
+			[
+				'function u(){ g(); var z = "z1", w = "w2", v = "v3"; function k(){ return w } h(function(){ return z }, function(){ function inner(){ return v } return inner }); return k } function f(o){ function a(e){ return e + o } const b = function(){ return this }, c = () => this; return [function(x){ return a(x) }, function(){ return b() }, function(){ return c() }] }',
+				{},
+				'function u(){g();h(function(){return"z1"},function(){return function(){return"v3"}});return function(){return"w2"}}function f(n){let r=()=>this;return[function(r){return function(r){return r+n}(r)},function(){return function(){return this}()},function(){return r()}]}'
+			],
+			// What a statement sets folds into the next where that reads it first,
+			// but not past a compound assignment's read nor a name it may write.
+			[
+				'function f(e, t, s){ var i; i = e.indexOf("x", t); if (i === -1 || i > s) return 1; let n = g(e); r(n); let o = {a: 1}; o.a; i = 2; while (i) i--; var p = h(); q += p; var u = h(); w(u); w = 1; let m = h(); return [m, 2] } function r(){} var q, w',
+				{},
+				'function f(t,n,i){var f;if((f=t.indexOf("x",n))===-1||f>i)return 1;r(g(t));({a:1}).a;f=2;while(f)f--;var a=h();q+=a;var e=h();w(e);w=1;return[h(),2]}function r(){}var q,w;'
+			],
+			// What folds to a constant prints its value where that is shorter,
+			// and a template's parts that fold are its text; a tag's are not.
+			[
+				'function f(o){ const S = "\\\\/", T = 64; return [`[^${S}]`, `${o}{1,2}(?:[${S}]|$)`, 1024 * T, 64 * 1024, o["_" + "x"], a - (2 - 7), "_" + "check", 1 + 2, String.raw`${S}`, S, S] }',
+				{},
+				'function f(n){let r="\\\\/";return["[^\\\\/]",`${n}{1,2}(?:[\\\\/]|$)`,65536,65536,n._x,a- -5,"_check",3,String.raw`${r}`,r,r]}'
+			],
+			// A `typeof` tests against "u"; a `do` body that is no block stays
+			// one; a `new` with arguments folds bare, one without in parentheses.
+			[
+				'g(typeof a !== "undefined", "undefined" == typeof b, typeof d != "object"); do e(); while (a); function f(e){ let o = new Set(e); return o } function k(){ let o = new X; return o() }',
+				{},
+				'g(typeof a<"u",typeof b>"u","object"!=typeof d);do e();while(a);function f(e){return new Set(e)}function k(){return(new X)()}'
+			],
+			// A function reading `arguments` may write a parameter through it.
+			[
+				"function h(e){ const s = e; arguments[0] = 2; return s } h(1)",
+				{},
+				"function h(n){let e=n;arguments[0]=2;return e}h(1);"
+			],
+			// Each pass prints the last one's output again.
+			[
+				"function f(){ var a = undefined; return 1 } f()",
+				{ compress: { passes: 1 } },
+				"function f(){return 1}f();"
+			],
+			[
+				"function f(){ var a = undefined; return 1 } f()",
+				{ compress: { passes: 2 } },
+				"function f(){return 1}f();"
+			],
+			// A preamble is not printed twice.
+			[
+				"function f(){ var a = undefined; return 1 } f()",
+				{ compress: { passes: 2 }, format: { preamble: "/* p */" } },
+				"/* p */\nfunction f(){return 1}f();"
+			],
+			// A `with` may bind `undefined`, so every one stays a name.
+			[
+				"f(undefined); with (o) f(undefined)",
+				{},
+				"f(undefined);with(o)f(undefined);"
+			],
+			// What nothing reads goes where its value makes nothing happen.
+			[
+				"function f(a){ var x = 1, y = g(), z = { a: 1, b: [2, -3, !0, void 0, typeof 1, `t`] }, k = { [q]: 1 }, s = { ...o }, t = `${a}`, p = [g()]; var w = [1, () => 2, function () {}]; function h() {} function used() {} used(); for (var i = 0;;) break; var v = 1, u = 2; return a } var top = 1; function topFunction() {}",
+				{},
+				"function f(n){g();({[q]:1});({...o});`${n}`;[g()];(function(){})();for(var t=0;;)break;return n}var top=1;function topFunction(){}"
+			],
+			[
+				"function f(a){ var a = 1; return arguments[0] } function g(){ var b = 1; var b = 2 } function e(){ var x = 1; eval('x') } function w(){ /* keep */ var c = 1 } function l(){ { function inner() {} } var m = -b, n = typeof b }",
+				{ format: { comments: /keep/ } },
+				'function f(n){var n=1;return arguments[0]}function g(){}function e(){var x=1;eval("x")}function w(){/* keep */var n=1}function l(){{}-b}'
+			],
+			[
+				"var top = 1; let t2 = 2; export function e() {} function unusedTop() {} var ex = 1; export { ex }",
+				{ module: true },
+				"export function e(){}var ex=1;export{ex};"
+			],
+			// A `using` declaration disposes of each of its names alone.
+			[
+				"{ using a = b(); using c = d(); f(a, c) }",
+				{},
+				"{using a=b();using c=d();f(a,c)}"
+			]
+		];
+		modules.onePass.enabled = true;
+		try {
+			for (const [source, options, expected] of cases) {
+				const { code } = await minify(source, {
+					compress: { toplevel: false },
+					mangle: { toplevel: false },
+					...options
+				});
+				expect(code).toBe(expected);
+			}
+			// Every comment kept is still the compressor's to keep.
+			const { code } = await minify("if (a) { b() } /* c */", {
+				format: { comments: "all" }
+			});
+			expect(code).toBe("a&&b()/* c */;");
+		} finally {
+			modules.onePass.enabled = false;
+		}
+	});
+
 	it("should read a single named source under its name", async () => {
 		const options = { compress: false, mangle: false };
 		const printed = await minifyCounted({ "a.js": "a( 1 )" }, options, true);
