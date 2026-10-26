@@ -4761,7 +4761,7 @@ declare class Compiler {
 			| (JSONSchema7 & ExtendedSchema)
 			| (() => Parameters<typeof validateFunction>[0]),
 		value: T,
-		options?: ValidationErrorConfiguration,
+		options?: ValidationErrorConfiguration | PrecompiledCheck<T>,
 		check?: PrecompiledCheck<T>
 	): void;
 }
@@ -12091,8 +12091,16 @@ declare interface GetOptionsMethod<OptionsType> {
 			| (JSONSchema6 & ExtendedSchema)
 			| (JSONSchema7 & ExtendedSchema)
 			| (() => Parameters<typeof validateFunction>[0]),
-		check?: PrecompiledCheck,
-		configuration?: ValidationErrorConfiguration
+		check?: PrecompiledCheck
+	): OptionsType;
+	(
+		schema:
+			| (JSONSchema4 & ExtendedSchema)
+			| (JSONSchema6 & ExtendedSchema)
+			| (JSONSchema7 & ExtendedSchema)
+			| (() => Parameters<typeof validateFunction>[0]),
+		configuration?: ValidationErrorConfiguration,
+		check?: PrecompiledCheck
 	): OptionsType;
 }
 type GivenCompressOptions = Omit<Partial<any>, "global_defs" | "pure_funcs"> & {

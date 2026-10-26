@@ -121,12 +121,34 @@ describe("validateSchema", () => {
 		]);
 	});
 
+	it("should take the check in the configuration's place", () => {
+		const getSchema = jest.fn(() => schema);
+
+		validateSchema(getSchema, { name: 42 }, () => true);
+
+		expect(getSchema).not.toHaveBeenCalled();
+		expect(() => validateSchema(schema, { name: 42 }, () => false)).toThrow(
+			/^Invalid options object\. My Plugin has been initialized/
+		);
+	});
+
 	it("should read the name from the schema title in compiler.validate", () => {
 		const webpack = require("../..");
 
 		const compiler = webpack({ context: __dirname });
 
 		expect(() => compiler.validate(schema, { name: 42 })).toThrow(
+			/^Invalid options object\. My Plugin has been initialized/
+		);
+	});
+
+	it("should take the check in the configuration's place in compiler.validate", () => {
+		const webpack = require("../..");
+
+		const compiler = webpack({ context: __dirname });
+
+		expect(() => compiler.validate(schema, { name: 42 }, () => true)).not.toThrow();
+		expect(() => compiler.validate(schema, { name: 42 }, () => false)).toThrow(
 			/^Invalid options object\. My Plugin has been initialized/
 		);
 	});
