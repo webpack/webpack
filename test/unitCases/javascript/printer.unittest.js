@@ -14792,6 +14792,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				{ mangle: false },
 				"const k=1;print(a+1,`${k}`,o[c]);"
 			],
+			["function f(){ return void a }", { mangle: false }, "function f(){return void a}"],
 			// A `var` whose dropped declarator prints apart keeps its braces.
 			[
 				"function h(c) { if (c) { var a = f(), b = 2 } return b }",
@@ -14803,6 +14804,161 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				"function q() { const a = b; const b = a; return a }",
 				{},
 				"function q(){let n=t,t=n;return n}"
+			],
+			// Constants fold through every operator terser evaluates.
+			[
+				"function f(o){ const a = 3, b = 2; return [a<<b, a>>b, a>>>b, a&b, a|b, a^b, a==b, a!=b, a!==b, a<b, a>b, a<=b, a>=b, a in o, ~a, +a, typeof a, void a, a - b, a / b, a % b, a ** b, a * b] }",
+				{},
+				"function f(n){return[12,0,0,2,3,1,!1,!0,!0,!1,!0,!1,!0,3 in n,~3,+3,typeof 3,void 3,1,3/2,1,9,6]}"
+			],
+			[
+				"function f(){ const a = 1, z = 0, n = null; return [a && 2, a || 2, a ?? 2, z && a, z || 3, n ?? 4, a ? 5 : 6, z ? 7 : 8] }",
+				{},
+				"function f(){return[1&&2,1||2,1??2,0&&1,0||3,null??4,1?5:6,0?7:8]}"
+			],
+			[
+				"function f(){ const t = true, u = false, n = null; return [t, t, t, u, u, u, !t, n, n, n, n] }",
+				{},
+				"function f(){let u=null;return[!0,!0,!0,!1,!1,!1,!!0,u,u,u,u]}"
+			],
+			[
+				"function f(){ const t = true; if (!t) g(); return t ? 1 : 2 }",
+				{},
+				"function f(){if(!!0)g();return!0?1:2}"
+			],
+			// A constant's value folds where only its value is known.
+			[
+				"function f(){ const a = ~3, b = +'1', c = typeof 1, d = typeof null, e = -1, h = !0, i = 1 && 2, j = 0 || 3, k = null ?? 5, l = 1 ? 6 : 7, m = 1 === 1, n = 1 instanceof 2, p = 0 ? 8 : 9; g(a, b, c, d, e, h, i, j, k, l, m, n, p) }",
+				{},
+				"function f(){let n=~3;+\"1\";let e=-1,f=1 instanceof 2;g(n,1,\"number\",\"object\",e,!0,2,3,5,6,!0,f,9)}"
+			],
+			// What nothing reads goes where its value makes nothing happen.
+			[
+				"function f(){ var x = 1, y = 2; var u = x || y, v = x ? y : 1, w = !x, q = (x, y); }",
+				{},
+				"function f(){1,2}"
+			],
+			[
+				"function f(){ var a = g(); var b = a } function h(){ var a = g(); var b = a; return b } function i(){ var m = function(){}; var n = m } function j(){ const k = 1; var p = k }",
+				{},
+				"function f(){g()}function h(){return g()}function i(){}function j(){}"
+			],
+			// A value kept as a statement keeps it from reading as a declaration.
+			[
+				"function f(o){ var a = {}.x + g(); var b = (class{}).y || g(); var c = (function(){})() ? g() : 1; var d = (function(){}(), g()); var e = function(){}`t${g()}`; var h = {}.p++; var i = ++o.p; var j = new X(g()); var k = (o.q = g()); }",
+				{},
+				"function f(n){({}).x+g();(class{}).y||g();(function(){})()?g():1;(function(){})(),g();(function(){})`t${g()}`;({}).p++;++n.p;new X(g());n.q=g()}"
+			],
+			// A function moved to its read prints in parentheses where it would not read as a value.
+			[
+				"function f(){ var g = function(){}; (g || h)(); var k = function(){}; k ? 1 : 2; var m = function(){}; m`t`; var p = class{}; (p, 1); var q = {}; q.r++; }",
+				{},
+				"function f(){(function(){}||h)();(function(){})?1:2;(function(){})`t`;(class{}),1;var n={};n.r++}"
+			],
+			[
+				"function f(){ var m = function(){}; h({ k: m }); var n = function(){}; h(n + 1); var p = function(){}; h({ [p]: 1 }) }",
+				{},
+				"function f(){h({k:function(){}});h(function(){}+1);h({[function(){}]:1})}"
+			],
+			// The global `undefined` is `void 0` only where it is read as a value.
+			[
+				"function f(){ return [undefined, function(a = undefined){ return a }, { k: undefined }, { undefined }] } var v = undefined; ({ k: v } = o)",
+				{},
+				"function f(){return[void 0,function(n=void 0){return n},{k:void 0},{undefined:void 0}]}var v=void 0;({k:v}=o);"
+			],
+			// A statement folds into the next one's first read, where nothing runs before it.
+			[
+				"function f(H){ var x; x = g(); switch (x) {} x = g(); x ? 1 : 2; x = g(); h(...x); x = g(); delete x.y; x = g(); (x, 1); x = g(); ({ k: x }); x = g(); ({ [k]: x }); x = g(); ({ x }); x = g(); new H(x); x = g(); new H(...x); x = g(); new U(x); x = g(); [...x]; x = g(); `${x}`; x = g(); -x; return x }",
+				{},
+				"function f(e){var n;switch(n=g()){}(n=g())?1:2;n=g();h(...n);n=g();delete n.y;n=g(),1;({k:n=g()});n=g();({[k]:n});({x:(n=g())});new e(n=g());n=g();new e(...n);n=g();new U(n);n=g();[...n];`${n=g()}`;-(n=g());return n}"
+			],
+			[
+				"function f(H){ var x; x = g(); H(...x) }",
+				{},
+				"function f(f){var n;n=g();f(...n)}"
+			],
+			// A `const` prints as `let` only where nothing writes a name its patterns bind.
+			[
+				"function f(){ var { a, b: [c] } = o; var [d, , e] = o; return a + c + d + e }",
+				{},
+				"function f(){var{a:r,b:[a]}=o,[c,,e]=o;return r+a+c+e}"
+			],
+			[
+				"function f(o){ let { a } = o, [b, , c] = o; a = 1; return a + b + c }",
+				{},
+				"function f(n){let{a:o}=n,[a,,c]=n;return(o=1)+a+c}"
+			],
+			[
+				"function f(o){ const [, a] = o, { b } = o; const [c] = o; c = 1; return a + b + c }",
+				{},
+				"function f(t){let[,n]=t,{b:o}=t;const[c]=t;c=1;return n+o+c}"
+			],
+			// An alias reads its target, a catch parameter of its name aside.
+			[
+				"function f(){ const t = g(); const a = t; try { h(a) } catch (e) { h(e) } }",
+				{},
+				"function f(){let t=g();try{h(t)}catch(t){h(t)}}"
+			],
+			// A comment kept keeps the statement it is on.
+			[
+				"function f(){ var a = 1; /* keep */ g(a); /* drop */ h(); } // tail",
+				{ format: { comments: /keep/ } },
+				"function f(){var a=1;/* keep */g(a);h()}"
+			],
+			[
+				"function f(){ var a = 1; g(a) /* keep */ }",
+				{ format: { comments: /keep/ } },
+				"function f(){g(1)/* keep */}"
+			],
+			// Names read in a static block or a field initializer.
+			[
+				"var a = 1; class C { static { h(a) } x = a } h(); var b = 2; function q(){ return b } h()",
+				{ toplevel: true },
+				"var a=1;class C{static{h(a)}x=a}h();var b=2;function q(){return b}h();"
+			],
+			// A `using` declaration's value runs, read or not.
+			[
+				"{ using a = b(); }",
+				{},
+				"{using a=b()}"
+			],
+			[
+				"{ const a = g(); using b = a; h(b) }",
+				{},
+				"{let a=g();using b=a;h(b)}"
+			],
+			// A directive stays, and so does a global set before a call that may read it.
+			[
+				"function f(){ 'use strict'; g() } function h(){ x = g(); k(x) }",
+				{},
+				"function f(){\"use strict\";g()}function h(){x=g();k(x)}"
+			],
+			// A kept comment on a function keeps it where it is declared.
+			[
+				"function f(){ var m = /*! lic */ function(){}; h(m) } function i(){ function k(){} h(k) } function j(){ var n = function(){}; for (;;) h(n) }",
+				{},
+				"function f(){var n=/*! lic */function(){};h(n)}function i(){h(function(){})}function j(){var n=function(){};for(;;)h(n)}"
+			],
+			[
+				"function f(){ var m = function(){} /* keep */; h(m) }",
+				{ format: { comments: /keep/ } },
+				"function f(){var n=function(){}/* keep */;h(n)}"
+			],
+			[
+				"function f(){ var m = /* keep */ function(){}; h(m) } function i(){ /* keep */ var n = 1; g(n) }",
+				{ format: { comments: /keep/ } },
+				"function f(){var n=/* keep */function(){};h(n)}function i(){/* keep */var n=1;g(n)}"
+			],
+			// A function moved to its one read.
+			[
+				"function f(){ var g = function(){ return 1 }; h(g) + 1 } function i(){ var k = () => {}; h(k) }",
+				{},
+				"function f(){h(function(){return 1})+1}function i(){h(()=>{})}"
+			],
+			[
+				"function f(){ var g = () => a; h(g) } function i(){ var k = async () => 1; h(k) }",
+				{},
+				"function f(){h(()=>a)}function i(){h(async()=>1)}"
 			]
 		];
 		modules.onePass.enabled = true;
