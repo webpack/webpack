@@ -1,0 +1,53 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases lazy-barrel nested-star-unused-specifier nested-star-unused-specifier should compile 1`] = `
+"./index.js
+├─ ./unused.js
+│  └─ ./ui/index.js [barrel]
+│     └─ (*) ./ui/theme/index.js [barrel]
+│        ├─ (colors) ./ui/theme/colors.js
+│        ├─ (fonts) ./fonts [raw] [lazy]
+│        ├─ (spacing) ./spacing [raw] [lazy]
+│        ├─ (default) ./default-theme [raw] [lazy]
+│        └─ (*) ./ui/index.js [barrel] (deduped)
+└─ (colors, missing) ./ui/index.js [barrel] (deduped)"
+`;
+
+exports[`ConfigCacheTestCases lazy-barrel nested-star-unused-specifier nested-star-unused-specifier should compile 2`] = `
+"./index.js
+├─ ./unused.js
+│  └─ ./ui/index.js [barrel]
+│     └─ (*) ./ui/theme/index.js [barrel]
+│        ├─ (colors) ./ui/theme/colors.js
+│        ├─ (fonts) ./fonts [raw] [lazy]
+│        ├─ (spacing) ./spacing [raw] [lazy]
+│        ├─ (default) ./default-theme [raw] [lazy]
+│        └─ (*) ./ui/index.js [barrel] (deduped)
+└─ (colors, missing) ./ui/index.js [barrel] (deduped)"
+`;
+
+exports[`ConfigCacheTestCases lazy-barrel nested-star-unused-specifier nested-star-unused-specifier should pre-compile to fill disk cache (1st) 1`] = `
+"./index.js
+├─ ./unused.js
+│  └─ ./ui/index.js [barrel]
+│     └─ (*) ./ui/theme/index.js [barrel]
+│        ├─ (colors) ./ui/theme/colors.js
+│        ├─ (fonts) ./fonts [raw] [lazy]
+│        ├─ (spacing) ./spacing [raw] [lazy]
+│        ├─ (default) ./default-theme [raw] [lazy]
+│        └─ (*) ./ui/index.js [barrel] (deduped)
+└─ (colors, missing) ./ui/index.js [barrel] (deduped)"
+`;
+
+exports[`ConfigCacheTestCases lazy-barrel nested-star-unused-specifier nested-star-unused-specifier should pre-compile to fill disk cache (2nd) 1`] = `
+"./index.js
+├─ ./unused.js
+│  └─ ./ui/index.js [barrel]
+│     └─ (*) ./ui/theme/index.js [barrel]
+│        ├─ (colors) ./ui/theme/colors.js
+│        ├─ (fonts) ./fonts [raw] [lazy]
+│        ├─ (spacing) ./spacing [raw] [lazy]
+│        ├─ (default) ./default-theme [raw] [lazy]
+│        └─ (*) ./ui/index.js [barrel] (deduped)
+└─ (colors, missing) ./ui/index.js [barrel] (deduped)"
+`;
