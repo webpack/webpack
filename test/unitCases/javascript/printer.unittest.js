@@ -14779,6 +14779,30 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				"{ using a = b(); using c = d(); f(a, c) }",
 				{},
 				"{using a=b();using c=d();f(a,c)}"
+			],
+			// A value folded into a declarator that goes still runs.
+			[
+				"function g() { var a = f(); var b = a } function h() { var x; x = f(); var b = x }",
+				{},
+				"function g(){f()}function h(){var n;n=f()}"
+			],
+			// Without the mangler nothing is known constant.
+			[
+				"const k = 1; print(a + 1, `${k}`, o[c])",
+				{ mangle: false },
+				"const k=1;print(a+1,`${k}`,o[c]);"
+			],
+			// A `var` whose dropped declarator prints apart keeps its braces.
+			[
+				"function h(c) { if (c) { var a = f(), b = 2 } return b }",
+				{},
+				"function h(r){if(r){f();var c=2}return c}"
+			],
+			// An alias cycle has no name at its end to read.
+			[
+				"function q() { const a = b; const b = a; return a }",
+				{},
+				"function q(){let n=t,t=n;return n}"
 			]
 		];
 		modules.onePass.enabled = true;
