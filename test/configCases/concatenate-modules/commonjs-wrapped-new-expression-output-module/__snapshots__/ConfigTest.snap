@@ -64,6 +64,9 @@ module.exports = Thing;
 
 });
 
+;// ./thing.cjs
+thing_namespaceFn();
+
 function thing_default() { return thing_default.c || (thing_default.c = __webpack_require__.n(thing_namespaceFn())); }
 ;// ./loose.js
 // javascript/auto: the default import goes through the interop helper instead

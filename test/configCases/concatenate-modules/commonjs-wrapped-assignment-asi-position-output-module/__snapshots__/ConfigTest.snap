@@ -81,6 +81,9 @@ module.exports = formats;
 
 });
 
+;// ./formats.js
+formats_namespaceFn();
+
 function formats_default() { return formats_default.c || (formats_default.c = __webpack_require__.n(formats_namespaceFn())); }
 ;// ./loose.js
 // javascript/auto: the default import reads through the interop accessor, which

@@ -53,6 +53,12 @@ module.exports = Thing;
 
 });
 
+;// ./thing.cjs
+thing_namespaceFn();
+
+;// ./identity.cjs
+identity_namespaceFn();
+
 ;// ./entry.mjs
 // strict ESM: the default import of a CommonJS module resolves straight to the
 // wrapper accessor call, skipping the \`__webpack_require__.n\` interop
