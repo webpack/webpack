@@ -566,6 +566,10 @@ const SWC_SMALLER_BY_REASON = [
 	[
 		"webpack, as terser, collapses a variable into its one read in a first pass only: from a second pass on, which swc's `passes: 0` asks for, the variable stays",
 		["swc minifier: fixture/issues/5910/1/input.js"]
+	],
+	[
+		"webpack reads the global object a function hands back as one a later write may patch a built-in of, so a value stays bound rather than move past a read of `console`, which swc assumes unpatched",
+		["swc minifier: fixture/issues/8284/input.js"]
 	]
 ];
 

@@ -29,7 +29,10 @@ describe("xmlMinify", () => {
 
 	it("should hand the stylesheets the CSS minifier's options", async () => {
 		const { code } = await xmlMinify(
-			{ "image.svg": '<svg xmlns="http://www.w3.org/2000/svg"><style>a{width:96px}</style></svg>' },
+			{
+				"image.svg":
+					'<svg xmlns="http://www.w3.org/2000/svg"><style>a{width:96px}</style></svg>'
+			},
 			undefined,
 			{ css: { convertLengthUnits: true } }
 		);
@@ -44,12 +47,17 @@ describe("xmlMinify", () => {
 	});
 
 	it("should compact attribute spacing and optionally sort attributes", async () => {
-		const input = { "image.svg": '<svg  xmlns = "http://www.w3.org/2000/svg" viewBox = "0 0 1 1"><path z = "1" style = "fill: #ff0000" a = "2" /></svg>' };
+		const input = {
+			"image.svg":
+				'<svg  xmlns = "http://www.w3.org/2000/svg" viewBox = "0 0 1 1"><path z = "1" style = "fill: #ff0000" a = "2" /></svg>'
+		};
 		for (const sortAttributes of [undefined, false, true]) {
 			const { code } = await xmlMinify(input, undefined, { sortAttributes });
-			expect(code).toBe(sortAttributes
-				? '<svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg"><path a="2" style="fill:red" z="1"/></svg>'
-				: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1"><path z="1" style="fill:red" a="2"/></svg>');
+			expect(code).toBe(
+				sortAttributes
+					? '<svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg"><path a="2" style="fill:red" z="1"/></svg>'
+					: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1"><path z="1" style="fill:red" a="2"/></svg>'
+			);
 		}
 	});
 
@@ -68,8 +76,10 @@ describe("xmlMinify", () => {
 describe("SVG data URLs", () => {
 	const { builtinEmbeddedRenderer, htmlMinify } = webpack.html;
 	const { cssMinify } = webpack.css;
-	const SVG = "<svg xmlns='http://www.w3.org/2000/svg'  >  <rect   width='1' />  </svg>";
-	const MINIFIED = "<svg xmlns='http://www.w3.org/2000/svg'>  <rect width='1'/>  </svg>";
+	const SVG =
+		"<svg xmlns='http://www.w3.org/2000/svg'  >  <rect   width='1' />  </svg>";
+	const MINIFIED =
+		"<svg xmlns='http://www.w3.org/2000/svg'>  <rect width='1'/>  </svg>";
 	const OFFER = { type: "svg", hostType: "css" };
 
 	it("should minify one with the XML minifier, quoting with `'` on a tie", () => {
@@ -79,7 +89,7 @@ describe("SVG data URLs", () => {
 		expect(render(`<svg  a="'" b='x' />`, OFFER)).toBe(`<svg a="'" b='x'/>`);
 	});
 
-	it("should print a tie in `\"` unless asked otherwise", () => {
+	it('should print a tie in `"` unless asked otherwise', () => {
 		/**
 		 * @param {("\"" | "'")=} xmlQuote the quote a tie takes
 		 * @returns {string} the printed document
@@ -188,6 +198,26 @@ b&#10;c">
 </svg>
 `;
 
+	it("should report no error an entity's replacement text holds", () => {
+		/** @type {string[]} */
+		const reported = [];
+		const options = {
+			xml: true,
+			mode: /** @type {const} */ ("minify"),
+			parseError: (/** @type {string} */ _input, /** @type {string} */ c) => {
+				reported.push(c);
+			}
+		};
+		const { code } = new SourceProcessor().process(
+			'<!DOCTYPE root [<!ENTITY value "<child">]><root>&value;</root>',
+			options
+		);
+		expect(code).toMatchInlineSnapshot(
+			`"<!DOCTYPE root [<!ENTITY value \\"<child\\">]><root>&value;</root>"`
+		);
+		expect(reported).toEqual([]);
+	});
+
 	it("should write XML back as written when beautifying", () => {
 		expect(printXml(source, "beautify")).toMatchSnapshot();
 	});
@@ -199,7 +229,9 @@ b&#10;c">
 	});
 
 	it("should hand SVG and XHTML stylesheets to the embedded renderer", () => {
-		const { builtinEmbeddedRenderer } = require("../../../lib/html/builtinEmbeddedRenderer");
+		const {
+			builtinEmbeddedRenderer
+		} = require("../../../lib/html/builtinEmbeddedRenderer");
 		const document = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:h="http://www.w3.org/1999/xhtml">
 <style type="text/css"><![CDATA[
 	.a  { fill : #FFFFFF ; }
@@ -227,7 +259,9 @@ b&#10;c">
 	});
 
 	it("should write only what the target browsers read", () => {
-		const { builtinEmbeddedRenderer } = require("../../../lib/html/builtinEmbeddedRenderer");
+		const {
+			builtinEmbeddedRenderer
+		} = require("../../../lib/html/builtinEmbeddedRenderer");
 		const document =
 			'<svg xmlns="http://www.w3.org/2000/svg"><style>g > .b { fill: rgba(0,0,255,0.5) } @media (min-width: 0px) { .e { fill: red } } .p { user-select: none }</style><rect style="fill: rgba(255,0,0,0.5)"/></svg>';
 		/**
@@ -297,7 +331,9 @@ b&#10;c">
 	});
 
 	it("should resolve a prefixed stylesheet's namespace through its own prefix", () => {
-		const { builtinEmbeddedRenderer } = require("../../../lib/html/builtinEmbeddedRenderer");
+		const {
+			builtinEmbeddedRenderer
+		} = require("../../../lib/html/builtinEmbeddedRenderer");
 		expect(
 			/** @type {{ code: string }} */ (
 				new SourceProcessor().process(
@@ -363,7 +399,9 @@ b&#10;c">
 	});
 
 	it("should close a blank stylesheet the input ran out in", () => {
-		const { builtinEmbeddedRenderer } = require("../../../lib/html/builtinEmbeddedRenderer");
+		const {
+			builtinEmbeddedRenderer
+		} = require("../../../lib/html/builtinEmbeddedRenderer");
 		/**
 		 * @param {string} document an SVG
 		 * @returns {string} the minified document
@@ -386,5 +424,158 @@ b&#10;c">
 		).toBe(
 			'<svg xmlns="http://www.w3.org/2000/svg"><style><![CDATA[ ]]></style></svg>'
 		);
+	});
+});
+
+describe("SourceProcessor — XML under an internal DTD subset", () => {
+	const { SourceProcessor } = require("../../../lib/html/syntax");
+	const { parseHtml } = require("../../../lib/html/syntax-parser");
+	const serializeHtmlTree = require("../../helpers/serializeHtmlTree");
+
+	/**
+	 * @param {string} source XML source
+	 * @param {"minify" | "beautify"} mode print mode
+	 * @returns {string} printed XML
+	 */
+	const printXml = (source, mode) =>
+		/** @type {{ code: string }} */ (
+			new SourceProcessor().process(source, { xml: true, mode })
+		).code;
+
+	/**
+	 * @param {string} source XML source
+	 * @returns {string} its tree, comments left out as minifying leaves them
+	 */
+	const tree = (source) =>
+		serializeHtmlTree(parseHtml(source, 0, { xml: true }))
+			.replace(/^\| *<!--[\s\S]*?-->$\n?/gm, "")
+			.trimEnd();
+
+	const chain = Array.from(
+		{ length: 18 },
+		(_, i) => `<!ENTITY e${i} "&e${i + 1};">`
+	).join("");
+
+	it.each([
+		// An entity whose replacement is markup builds elements, which no reference
+		// is rebuilt from, so the document prints as written.
+		[
+			"markup an entity expands to",
+			`<!DOCTYPE d [<!ENTITY e "<b x='1'>t</b>&f;"><!ENTITY f "<i/>"><!ENTITY t "txt">]><d>a&e;b&t;&nope;&#38;</d>`
+		],
+		[
+			"markup with every kind of node",
+			`<!DOCTYPE d [<!ENTITY e "<b x='1' y>t</b><!--c\r\n--><?p\r\nq?><![CDATA[z]]>">]><d>&e;</d>`
+		],
+		[
+			"a start tag an entity leaves open",
+			`<!DOCTYPE d [<!ENTITY e "<b>">]><d>&e;</d>`
+		],
+		[
+			"markup a reference cycle reaches",
+			`<!DOCTYPE d [<!ENTITY a "&b;"><!ENTITY b "x&a;<y/>">]><d>&a;</d>`
+		],
+		[
+			"markup past the depth searched",
+			`<!DOCTYPE d [${chain}<!ENTITY e18 "<x/>">]><d>&e0;</d>`
+		],
+		[
+			"text a chain expands to",
+			`<!DOCTYPE d [<!ENTITY a "&b;&b;"><!ENTITY b "&c;"><!ENTITY c "plain">]><d>&a;</d>`
+		],
+		// §5.1: nothing after an unread parameter entity is processed.
+		[
+			"declarations past a parameter entity",
+			`<!DOCTYPE d [<!-- c --><?pi x?><!ENTITY % p "x"><!NOTATION n SYSTEM "a>b"><!ENTITY e 'q'>%p;<!ENTITY late "no">]><d>&e;&late;</d>`
+		],
+		[
+			"a subset an entity runs out in",
+			`<!DOCTYPE d [<!ENTITY e "unterminated]><d/>`
+		],
+		["one a comment runs out in", "<!DOCTYPE d [<!-- open ]><d/>"],
+		["one an instruction runs out in", "<!DOCTYPE d [<?open ]><d/>"],
+		[
+			"one a declaration's literal runs out in",
+			`<!DOCTYPE d [<!ELEMENT d "x]><d/>`
+		],
+		// §3.3: a tokenized value is trimmed and collapsed, a default fills in, and
+		// the first declaration of an attribute binds it.
+		[
+			"attribute-list declarations",
+			`<!DOCTYPE d [<!ATTLIST d><!ATTLIST d a NMTOKENS "  x  y " b CDATA #FIXED "q" c (u|v) #IMPLIED n NOTATION (p) "p" e ID #REQUIRED><!ATTLIST d a CDATA "z" f NMTOKEN 'w'>]><d a=" 1  2 " c="u"/>`
+		],
+		[
+			"declarations for two elements",
+			`<!DOCTYPE d [<!ATTLIST d a NMTOKEN " x "><!ATTLIST e b NMTOKEN " y ">]><d a=" 1 "><e/><e b=" 2 "/></d>`
+		],
+		[
+			"a value already collapsed",
+			`<!DOCTYPE d [<!ATTLIST d a NMTOKENS " 1 ">]><d a="1"/>`
+		],
+		[
+			"an attribute name that is no name",
+			`<!DOCTYPE d [<!ATTLIST d 1x CDATA "v">]><d/>`
+		],
+		["a quote where a name goes", `<!DOCTYPE d [<!ATTLIST d "x">]><d/>`],
+		[
+			"an enumeration the subset ends in",
+			"<!DOCTYPE d [<!ATTLIST d a (x|y]><d/>"
+		],
+		[
+			"a default the subset ends in",
+			`<!DOCTYPE d [<!ATTLIST d a CDATA "unterminated]><d/>`
+		],
+		["a doctype the input ends in", `<!DOCTYPE d [<!ATTLIST d a CDATA "v"`],
+		// §2.8: only the first DOCTYPE declares anything, and §4.2 the first
+		// declaration of an entity binds it.
+		[
+			"a second doctype",
+			`<!DOCTYPE d [<!ENTITY e "1">]><!DOCTYPE x [<!ENTITY e "2">]><d>&e;</d>`
+		],
+		[
+			"an entity declared twice",
+			`<!DOCTYPE d [<!ENTITY e "1"><!ENTITY e "2"><!NOTATION n SYSTEM 'a>b'>]><d>&e;</d>`
+		],
+		["a public doctype", `<!DOCTYPE d PUBLIC "p" "s"><d/>`],
+		["a system doctype", `<!DOCTYPE d SYSTEM "s"><d/>`],
+		["a doctype with no name", "<!DOCTYPE><d/>"],
+		// Line ends fold to LF, and a NUL reads as U+FFFD.
+		[
+			"carriage returns",
+			"<d>a\r\nb\rc<!--x\r\ny--><?p a\r\nb?><![CDATA[q\r\nr]]></d>"
+		],
+		[
+			"NULs and a repeated attribute",
+			'<d a="1" a="2">\0<![CDATA[\0]]><!--\0--></d>'
+		],
+		// A misnested end tag closes what it names; one naming nothing is dropped,
+		// and so is a tag the input ends inside.
+		["misnested end tags", "<a><b><c></b>x</a></z>"],
+		["a tag the input ends in", "<a><b"],
+		["a value the input ends in", '<a x="1'],
+		["attributes without a value or quotes", "<d a b=c d='e'/>"]
+	])("prints %s back to its tree", (_name, source) => {
+		const minified = printXml(source, "minify");
+		expect(minified).toMatchSnapshot();
+		expect(tree(minified)).toBe(tree(source));
+		expect(tree(printXml(source, "beautify"))).toBe(tree(source));
+	});
+
+	it("respells an unquoted reference by what it decodes to", () => {
+		const source = `<!DOCTYPE d [<!ENTITY e "a long replacement">]><d a=&e; b='&e;'/>`;
+		expect(printXml(source, "minify")).toBe(
+			`<!DOCTYPE d [<!ENTITY e "a long replacement">]><d a="a long replacement" b='&e;'/>`
+		);
+		expect(printXml(source, "beautify")).toBe(source);
+	});
+
+	it("prints no doctype the walk was told to skip", () => {
+		expect(
+			new SourceProcessor().process("<!DOCTYPE d><d/>", {
+				xml: true,
+				mode: "minify",
+				skip: { doctype: true }
+			}).code
+		).toBe("<d/>");
 	});
 });

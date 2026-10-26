@@ -1991,6 +1991,29 @@ describe("CssSyntax — path reads on every node kind", () => {
 			.process("a{b:1;c:2}d{e:3}");
 		expect(log).toEqual(["b"]);
 	});
+
+	it.each([
+		["a comment", NodeType.Comment],
+		["a rule", NodeType.QualifiedRule]
+	])("stop() in %s reads past the comments after it", (_, type) => {
+		/** @type {string[]} */
+		const log = [];
+		new SourceProcessor()
+			.use({
+				[NodeType.Comment]: () => log.push("comment"),
+				[type]: (
+					/** @type {import("../../../lib/css/syntax-parser").CssPath} */ path
+				) => {
+					log.push("stop");
+					path.stop();
+				}
+			})
+			.process("/*a*/x{/*b*/y:1;/*c*/}/*d*/z{}");
+		expect(log).toEqual(
+			// A comment's own visitor is the one that stops.
+			type === NodeType.Comment ? ["stop"] : ["comment", "comment", "comment", "stop"]
+		);
+	});
 });
 
 describe("CssSyntax — a skip set keeps the tree a full parse builds", () => {

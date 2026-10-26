@@ -26,6 +26,18 @@ exports[`SourceProcessor — beautifying should beautify implied table sections 
 
 exports[`SourceProcessor — beautifying should beautify raw text 1`] = `"<style>a{b:c}</style><script>1<2</script>"`;
 
+exports[`SourceProcessor — fostered runs no re-nesting reproduces keeps a holder that prints composed: beautify 1`] = `"<listing><table><object><object><tbody><input disabled=disabled><!--c--><table><b id=1><h1><svg>"`;
+
+exports[`SourceProcessor — fostered runs no re-nesting reproduces keeps a holder that prints composed: minify 1`] = `"<listing><table><object><object><tbody><input disabled=disabled><!--c--><table><b id=1><h1><svg>"`;
+
+exports[`SourceProcessor — fostered runs no re-nesting reproduces keeps a holder whose end tag the source wrote after the run: beautify 1`] = `"<div><nobr><table><b><colgroup><nobr></table></nobr></div>y"`;
+
+exports[`SourceProcessor — fostered runs no re-nesting reproduces keeps a holder whose end tag the source wrote after the run: minify 1`] = `"<div><nobr><table><b><colgroup><nobr></table></nobr></div>y"`;
+
+exports[`SourceProcessor — fostered runs no re-nesting reproduces keeps text beside a column group the table kept: beautify 1`] = `"<rt><table><input disabled=disabled><svg></svg><p class=x></p><col> x</table></rt>"`;
+
+exports[`SourceProcessor — fostered runs no re-nesting reproduces keeps text beside a column group the table kept: minify 1`] = `"<rt><table><input disabled=disabled><svg></svg><p class=x></p><col> x</table>"`;
+
 exports[`SourceProcessor — minifying what the round-trip guard checks minifies a document whose deferred svg the guard reads back 1`] = `
 "<svg viewBox=\\"0 0 8 8\\">   <circle cx=4 cy=4 r=3 />   </svg><table>
 	
@@ -45,6 +57,54 @@ exports[`SourceProcessor — minifying what the round-trip guard checks minifies
 exports[`SourceProcessor — minifying what the round-trip guard checks minifies a term nested behind a division 1`] = `"<dl><dt>a<dt>b</dt></dl>"`;
 
 exports[`SourceProcessor — minifying what the round-trip guard checks minifies an inline sheet under a nested list 1`] = `"<ul><li>a<ul><li><style>a{color:red}</style></ul></ul>"`;
+
+exports[`SourceProcessor — tree construction the printer reads back prints a \`select\` fragment's merged styles, read back 1`] = `"<style>a,b,c{color:red}</style><option selected>"`;
+
+exports[`SourceProcessor — tree construction the printer reads back prints a 4.01 frameset doctype 1`] = `"<!doctype html PUBLIC \\"-//W3C//DTD HTML 4.01 Frameset//EN\\"><p><table></table>"`;
+
+exports[`SourceProcessor — tree construction the printer reads back prints a 4.01 transitional doctype 1`] = `"<!doctype html PUBLIC \\"-//W3C//DTD HTML 4.01 Transitional//EN\\"><p><table></table>"`;
+
+exports[`SourceProcessor — tree construction the printer reads back prints a dd under a foreignObject 1`] = `"<svg><foreignObject><dd>x</dd></foreignObject></svg>"`;
+
+exports[`SourceProcessor — tree construction the printer reads back prints a fragment's styles, attributes and booleans read back 1`] = `"<style>a,b,c{color:red}</style><input disabled><input>"`;
+
+exports[`SourceProcessor — tree construction the printer reads back prints a frameset after a comment behind body 1`] = `"</head><!--x--><frameset></frameset>"`;
+
+exports[`SourceProcessor — tree construction the printer reads back prints a kept comment behind a template's tbody 1`] = `"<template><table><tr><td>x</tbody><!--keep--></table></template>"`;
+
+exports[`SourceProcessor — tree construction the printer reads back prints a nested form under foreign content 1`] = `"<form><svg><foreignObject></form><form>x</form></foreignObject></svg></form>"`;
+
+exports[`SourceProcessor — tree construction the printer reads back prints a noscript a reader without scripts leaves the head at 1`] = `"<noscript><p>x</p></noscript></head> y"`;
+
+exports[`SourceProcessor — tree construction the printer reads back prints a rebuilt formatting element in template content 1`] = `"<template><b>1</b><p><b>2</b>3</template>"`;
+
+exports[`SourceProcessor — tree construction the printer reads back prints a shadow root on a MathML element 1`] = `"<math><mi><template shadowrootmode=open></template></mi></math>"`;
+
+exports[`SourceProcessor — tree construction the printer reads back prints a shadow root the adoption agency leaves on its host 1`] = `"<b></b><div><template shadowrootmode=open>s</template><b>x</b>y</div>"`;
+
+exports[`SourceProcessor — tree construction the printer reads back prints a tbody before a tfoot in template content 1`] = `"<template><table><tr><td>x<tfoot></table></template>"`;
+
+exports[`SourceProcessor — tree construction the printer reads back prints an end tag an svg title stops 1`] = `"<svg><title><span>x</span></title></svg>"`;
+
+exports[`SourceProcessor — tree construction the printer reads back prints an end tag form in template content 1`] = `"<template><div>x</div></template>"`;
+
+exports[`SourceProcessor — tree construction the printer reads back prints an implied tbody kept in template content 1`] = `"<template><table><tbody><tr><td>x</td></tr></table></template>"`;
+
+exports[`SourceProcessor — tree construction the printer reads back prints an input the table fosters 1`] = `"<input name=x type=text><table></table>"`;
+
+exports[`SourceProcessor — tree construction the printer reads back prints an svg stylesheet 1`] = `"<svg><style>a{color:red}</style></svg>"`;
+
+exports[`SourceProcessor — tree construction the printer reads back prints empty elements inside a pre 1`] = `"<pre>x</pre>"`;
+
+exports[`SourceProcessor — tree construction the printer reads back prints formatting behind two markers 1`] = `"<a><applet><object><a>x</a></object></applet></a>"`;
+
+exports[`SourceProcessor — tree construction the printer reads back prints identical formatting elements with valueless attributes 1`] = `"<b x><b x><b x><b x>a</b></b></b></b><i y=a><i y=ab><i y=a>b</i></i></i>"`;
+
+exports[`SourceProcessor — tree construction the printer reads back prints identical ones with referenced values 1`] = `"<b id=&><b id=&><b id=&><b id=&>c</b></b></b></b>"`;
+
+exports[`SourceProcessor — tree construction the printer reads back prints shadow roots on hosts 1`] = `"<span><template shadowrootmode=open>a</template></span><my-el><template shadowrootmode=closed>b</template></my-el><font-face><template shadowrootmode=open>c</template></font-face>"`;
+
+exports[`SourceProcessor — tree construction the printer reads back prints whitespace a foreignObject keeps 1`] = `"<svg><foreignObject><p>x</p> </foreignObject></svg>"`;
 
 exports[`htmlMinify — one document reaching every embedded site minifies with webpack's own minifiers when no renderer is given 1`] = `
 "<!doctype html><html lang=en><head><title>   every embedded body   </title><style>.a{color:red;margin:10px}.svg{background:url(\\"data:image/svg+xml,<svg>   <rect  fill='red' />   </svg>\\")}.css{background:url(\\"data:text/css,.i {  color : #ff0000  }\\")}.html{background:url(\\"data:text/html,<div>  <!-- x -->  <p>hi</p>  </div>\\")}.json{background:url('data:application/json,{ \\"a\\" :  1 }')}.js{background:url(\\"data:text/javascript,var  a  =  1 ;\\")}.b64{background:url(data:text/css;base64,LmlubmVyIHsgIGNvbG9yIDogI2ZmMDAwMCAgfQ==)}.png{background:url(data:image/png;base64,AAAA)}</style><script type=application/json>{\\"a\\":1,\\"b\\":[1,2]}</script><script>  var  a  =  1 ;  function  f ( ) { return  a }  </script></head><body>

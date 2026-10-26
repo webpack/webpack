@@ -73,6 +73,35 @@ exports[`parseHtml — insertion modes closes a foreign element by its own end t
 |   \\"X\\""
 `;
 
+exports[`parseHtml — insertion modes closes a list item at its end tag 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <ul>
+|       <li>
+|         \\"A\\"
+|       \\"B\\""
+`;
+
+exports[`parseHtml — insertion modes closes a marquee at its end tag 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <marquee>
+|       \\"a\\"
+|     \\"b\\""
+`;
+
+exports[`parseHtml — insertion modes closes a nobr with the adoption agency 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <nobr>
+|       \\"1\\"
+|     <nobr>
+|       \\"2\\""
+`;
+
 exports[`parseHtml — insertion modes closes an implied tbody from a cell 1`] = `
 "| <html>
 |   <head>
@@ -95,10 +124,46 @@ exports[`parseHtml — insertion modes closes an optgroup when the next one open
 |       <optgroup>"
 `;
 
+exports[`parseHtml — insertion modes closes an option outside a select at the next option 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <option>
+|       \\"a\\"
+|     <option>
+|       \\"b\\""
+`;
+
 exports[`parseHtml — insertion modes drops a NUL before a frameset 1`] = `
 "| <html>
 |   <head>
 |   <frameset>"
+`;
+
+exports[`parseHtml — insertion modes drops a formatting end tag a marker hides nothing behind 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <applet>
+|       \\"x\\""
+`;
+
+exports[`parseHtml — insertion modes drops a formatting end tag a marker on a marker hides 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <applet>
+|       <marquee>
+|         \\"x\\""
+`;
+
+exports[`parseHtml — insertion modes drops a formatting end tag naming another element below the marker 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <i>
+|       <applet>
+|         \\"x\\""
 `;
 
 exports[`parseHtml — insertion modes drops a table cell holding nothing but a NUL 1`] = `
@@ -109,6 +174,31 @@ exports[`parseHtml — insertion modes drops a table cell holding nothing but a 
 `;
 
 exports[`parseHtml — insertion modes drops an input from a select fragment 1`] = `"| <option>"`;
+
+exports[`parseHtml — insertion modes drops text after the frameset that is not whitespace 1`] = `
+"| <html>
+|   <head>
+|   <frameset>"
+`;
+
+exports[`parseHtml — insertion modes drops the formatting entry whose element an end tag already closed 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <p>
+|       id=\\"a\\"
+|       <b>
+|     <p>
+|       id=\\"b\\"
+|       \\"TEST\\""
+`;
+
+exports[`parseHtml — insertion modes drops whitespace before the html element 1`] = `
+"| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>"
+`;
 
 exports[`parseHtml — insertion modes ends a caption fragment 1`] = `"| <div>"`;
 
@@ -198,6 +288,13 @@ exports[`parseHtml — insertion modes fosters an adoption-agency reparent out o
 |             <table>"
 `;
 
+exports[`parseHtml — insertion modes goes back to the body for content after the body 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\"x\\""
+`;
+
 exports[`parseHtml — insertion modes handles a break and a comment in head noscript 1`] = `
 "| <html>
 |   <head>
@@ -263,6 +360,15 @@ exports[`parseHtml — insertion modes ignores a doctype inside a column group 1
 
 exports[`parseHtml — insertion modes ignores a foreign end tag with no match 1`] = `"| \\"X\\""`;
 
+exports[`parseHtml — insertion modes ignores a form end tag whose form the table already closed 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <table>
+|       <form>
+|     \\"x\\""
+`;
+
 exports[`parseHtml — insertion modes ignores a frameset start tag in an SVG desc fragment 1`] = `"| \\"X\\""`;
 
 exports[`parseHtml — insertion modes ignores a paragraph end tag after head 1`] = `
@@ -310,6 +416,14 @@ exports[`parseHtml — insertion modes ignores a row end tag inside a template c
 |         content
 |           <td>
 |             <div>"
+`;
+
+exports[`parseHtml — insertion modes ignores a sarcasm end tag 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <div>
+|       \\"x\\""
 `;
 
 exports[`parseHtml — insertion modes ignores a second doctype before html 1`] = `
@@ -424,6 +538,28 @@ exports[`parseHtml — insertion modes implies the end of a ruby base 1`] = `
 |       <rb>"
 `;
 
+exports[`parseHtml — insertion modes inserts a param as a void element 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <param>
+|     \\"A\\""
+`;
+
+exports[`parseHtml — insertion modes inserts ruby parts outside a ruby 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <rb>
+|       \\"a\\"
+|       <rtc>
+|         \\"b\\"
+|         <rp>
+|           \\"c\\"
+|           <rt>
+|             \\"d\\""
+`;
+
 exports[`parseHtml — insertion modes keeps a frameset out once text arrived 1`] = `
 "| <html>
 |   <head>
@@ -431,7 +567,88 @@ exports[`parseHtml — insertion modes keeps a frameset out once text arrived 1`
 |     \\"aa\\""
 `;
 
+exports[`parseHtml — insertion modes keeps a paragraph open around a table in quirks mode from a doctype naming no html 1`] = `
+"| <!DOCTYPE potato>
+| <html>
+|   <head>
+|   <body>
+|     <p>
+|       <table>"
+`;
+
+exports[`parseHtml — insertion modes keeps an end tag cut off by the end of the file as script text 1`] = `
+"| <html>
+|   <head>
+|     <script>
+|       \\"</S\\"
+|   <body>"
+`;
+
+exports[`parseHtml — insertion modes keeps an end tag cut off by the end of the file as title text 1`] = `
+"| <html>
+|   <head>
+|     <title>
+|       \\"a</title\\"
+|   <body>"
+`;
+
 exports[`parseHtml — insertion modes keeps an end tag inside a script fragment 1`] = `"| \\"<!-- inside </script> -->\\""`;
+
+exports[`parseHtml — insertion modes keeps frameset-ok after a hidden input 1`] = `
+"| <html>
+|   <head>
+|   <frameset>"
+`;
+
+exports[`parseHtml — insertion modes keeps the bookmark when the inner loop removes entries above it 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <b>
+|       <em>
+|         <x>
+|           <y>
+|             <z>
+|     <aside>
+|       <b>"
+`;
+
+exports[`parseHtml — insertion modes keeps whitespace after the html end tag in the body 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\" \\""
+`;
+
+exports[`parseHtml — insertion modes keeps whitespace in a head noscript 1`] = `
+"| <html>
+|   <head>
+|     <noscript>
+|       \\" \\"
+|   <body>"
+`;
+
+exports[`parseHtml — insertion modes leaves a definition item a special element shields open 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <dd>
+|       \\"a\\"
+|       <section>
+|         <dt>
+|           \\"b\\""
+`;
+
+exports[`parseHtml — insertion modes leaves a list item a special element shields open 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <li>
+|       \\"a\\"
+|       <section>
+|         <li>
+|           \\"b\\""
+`;
 
 exports[`parseHtml — insertion modes leaves annotation-xml when its SVG child closes 1`] = `
 "| <html>
@@ -509,6 +726,16 @@ exports[`parseHtml — insertion modes merges html attributes across a template 
 |   <body>"
 `;
 
+exports[`parseHtml — insertion modes nests forms in a template 1`] = `
+"| <html>
+|   <head>
+|     <template>
+|       content
+|         <form>
+|           <form>
+|   <body>"
+`;
+
 exports[`parseHtml — insertion modes nests framesets and switches to after-frameset 1`] = `
 "| <html>
 |   <head>
@@ -527,6 +754,15 @@ exports[`parseHtml — insertion modes opens a column group inside a template 1`
 |     <template>
 |       content
 |         <col>"
+`;
+
+exports[`parseHtml — insertion modes opens a link where a marker hides no other 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <applet>
+|       <a>
+|         \\"x\\""
 `;
 
 exports[`parseHtml — insertion modes opens a row inside a template 1`] = `
@@ -619,6 +855,14 @@ This page contains an insanely badly-nested tag sequence.\\""
 
 exports[`parseHtml — insertion modes reads a textarea fragment as text 1`] = `"| \\"direct textarea content\\""`;
 
+exports[`parseHtml — insertion modes reads an image start tag as img 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <p>
+|       <img>"
+`;
+
 exports[`parseHtml — insertion modes reads noframes text after the frameset closed 1`] = `
 "| <!DOCTYPE html>
 | <html>
@@ -626,6 +870,19 @@ exports[`parseHtml — insertion modes reads noframes text after the frameset cl
 |   <frameset>
 |   <noframes>
 |     \\"abc\\""
+`;
+
+exports[`parseHtml — insertion modes reads xmp, iframe and noembed content as raw text 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <xmp>
+|       \\"<b>\\"
+|     <iframe>
+|       \\"<b>\\"
+|     <noembed>
+|       \\"<b>\\"
+|     \\"x\\""
 `;
 
 exports[`parseHtml — insertion modes reconstructs nobr across a table and a marquee 1`] = `
@@ -645,6 +902,24 @@ exports[`parseHtml — insertion modes reopens a form once the table that held i
 |   <body>
 |     <table>
 |       <form>"
+`;
+
+exports[`parseHtml — insertion modes reopens a nested form under an implied end tag in a template 1`] = `
+"| <html>
+|   <head>
+|     <template>
+|       content
+|         <form>
+|           <li>
+|             <form>
+|   <body>"
+`;
+
+exports[`parseHtml — insertion modes replaces a body that is not the last child of the root with a frameset 1`] = `
+"| <html>
+|   <head>
+|   <!-- x -->
+|   <frameset>"
 `;
 
 exports[`parseHtml — insertion modes runs the adoption agency past its outer-loop limit 1`] = `
@@ -694,6 +969,18 @@ exports[`parseHtml — insertion modes strips the newline a pre element starts w
 |     <pre>"
 `;
 
+exports[`parseHtml — insertion modes takes a declarative shadow root on a custom element 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <x-y>
+|       \\"a\\"
+|       <template>
+|         shadowrootmode=\\"open\\"
+|         content
+|       \\"b\\""
+`;
+
 exports[`parseHtml — insertion modes treats a self-closed math element as foreign 1`] = `
 "| <!DOCTYPE html>
 | <html>
@@ -709,4 +996,23 @@ exports[`parseHtml — insertion modes treats an html start tag in a column grou
 |   <body>
 |     <table>
 |       <colgroup>"
+`;
+
+exports[`parseHtml — insertion modes walks past a foreign element below a special one for a definition item 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <svg svg>
+|       <svg foreignObject>
+|         <dd>"
+`;
+
+exports[`parseHtml — insertion modes walks past an ordinary element to the definition list item 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <foo>
+|       \\"1\\"
+|       <dd>
+|         \\"2\\""
 `;
