@@ -27,11 +27,10 @@ Every byte a runtime module emits ships in every user's bundle that needs it, an
 
 **Write what terser can't shorten.** It keeps unused parameters, property names and string keys, repeated `__webpack_require__.x` chains, default arguments such as `.bind(null, void 0, …)`, default descriptor fields (`configurable: false`) and guards on values the code already relies on:
 
-```js
-// before: `event` is dereferenced one line earlier, so the guard is dead
-var errorType = event && event.type;
-// after
-var errorType = event.type;
+```diff
+ // `event` is dereferenced one line earlier, so the guard is dead
+-var errorType = event && event.type;
++var errorType = event.type;
 ```
 
 **Emit only what this config runs.** Gate code behind the condition that needs it (HMR, a feature flag, whether any import reads the value), rather than emitting it for every build and relying on the minifier to drop it.
