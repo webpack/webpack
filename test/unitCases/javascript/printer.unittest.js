@@ -18043,8 +18043,12 @@ describe("JavaScript minifier, what the tables leave out", () => {
 	});
 
 	it("should write options read as terser reads them", async () => {
-		const { minify } = await load();
+		const { minify, improvements } = await load();
+		if (!improvements) throw new Error("the improve phase is not installed");
 		const big = "x".repeat(8100);
+		// Backticks for every string are webpack's, not terser's.
+		improvements.backticks.enabled = false;
+		try {
 		for (const [source, options] of /** @type {[string, EXPECTED_OBJECT][]} */ ([
 			// An `ecma` between 5 and 2015 is a year less 2009.
 			["console.log(`a`, 1 ** 2, { a: a })", { ecma: 6 }],
@@ -18062,6 +18066,9 @@ describe("JavaScript minifier, what the tables leave out", () => {
 			parses(/** @type {string} */ (code), false);
 			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(source));
 			expect(code).toBe((await terserReference().minify(source, settings())).code);
+		}
+		} finally {
+			improvements.backticks.enabled = true;
 		}
 	});
 
