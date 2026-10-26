@@ -15517,6 +15517,18 @@ describe("JavaScript minifier reading an event handler's body", () => {
 		}
 	});
 
+	it("should read a body as `sourceType` says over a `module` given", async () => {
+		const { minify } = await load();
+		for (const sourceType of /** @type {const} */ (["event-handler", "commonjs"])) {
+			const { code } = await minify("x(); return 1", {
+				sourceType,
+				module: true,
+				parse: { module: true }
+			});
+			expect(code).toMatch(/^return x\(\),1;?$/);
+		}
+	});
+
 	it("should refuse what a function's body cannot hold", async () => {
 		const { minify } = await load();
 		for (const source of ['import a from "b"', "#!x\n1"]) {
