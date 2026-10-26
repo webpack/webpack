@@ -11,8 +11,17 @@ const lessLoader =
 		: "less-loader";
 
 /**
- * A `<style lang="…">` body is a `data:text/x-<lang>` module, so a `mimetype`
- * rule runs that language's loader on it and on no other `<style>`.
+ * @param {string} marker class the loader appends, naming the rule that ran
+ * @returns {import("../../../../").RuleSetUseItem} the stand-in loader
+ */
+const variablesLoader = (marker) => ({
+	loader: path.resolve(__dirname, "variables-loader.js"),
+	options: { marker }
+});
+
+/**
+ * A `<style lang>` body is a `data:` module typed as mime-db types the
+ * language's files, so a `mimetype` rule runs that language's loader on it.
  * @type {import("../../../../").Configuration}
  */
 module.exports = {
@@ -23,11 +32,10 @@ module.exports = {
 	},
 	module: {
 		rules: [
-			{ mimetype: "text/x-less", use: lessLoader },
-			{
-				mimetype: "text/x-scss",
-				use: path.resolve(__dirname, "scss-loader.js")
-			}
+			{ mimetype: "text/less", use: lessLoader },
+			{ mimetype: "text/x-scss", use: variablesLoader("by-scss-rule") },
+			{ mimetype: "text/stylus", use: variablesLoader("by-stylus-rule") },
+			{ mimetype: "text/x-postcss", use: variablesLoader("by-postcss-rule") }
 		]
 	},
 	experiments: {
