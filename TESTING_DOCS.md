@@ -40,7 +40,7 @@ Directories come first, in alphabetical order, then the individual files worth t
 #### `test262-cases/`
 
 - **Purpose**: ECMAScript test262 conformance test cases.
-- **Usage**: Git submodule — initialize with `git submodule update --init test/external/test262-cases`. Test runners: `test/specCases/test262.spectest.js`, which builds and runs each test in development, in production unminified (a failure there is webpack's own, not a minimizer's), and in production once per JavaScript minimizer: terser, and webpack's printer as `experiments.futureDefaults` switches it. The minified modes skip the `fn-name` cases a renamed binding changes and keep function and class names and turn `pure_getters` off, as test262 reads names and properties that throw; the printer also runs with `pure_conversions` and `pure_heritage` off, as test262 converts and extends values that run code or throw on purpose. What each minimizer still fails is listed by reason in its `MINIFIED_FAILURES` table, and a listed case that passes fails the suite until removed. And `test/specCases/minify-corpora.js`, which minifies each test with webpack's printer and with terser.
+- **Usage**: Git submodule — initialize with `git submodule update --init test/external/test262-cases`. Test runners: `test/specCases/test262.spectest.js`, which builds and runs each test in development, in production unminified (a failure there is webpack's own, not a minimizer's), and in production once per JavaScript minimizer: terser, and webpack's printer as `experiments.futureDefaults` switches it. The minified modes skip the `fn-name` cases a renamed binding changes and keep function and class names and turn `pure_getters` off, as test262 reads names and properties that throw; the printer also runs with `pure_conversions` and `pure_heritage` off, as test262 converts and extends values that run code or throw on purpose. What each minimizer still fails is listed by reason in its `MINIFIED_FAILURES` table, and a listed case that passes fails the suite until removed. And `test/specCases/minify-corpora.spectest.js`, which minifies each test with webpack's printer and with terser.
 
 #### `html5lib-tests/`
 
@@ -65,17 +65,17 @@ Directories come first, in alphabetical order, then the individual files worth t
 #### `swc/`
 
 - **Purpose**: swc's repository, read only under `crates/swc_ecma_minifier/tests`: its fixtures with their configs, the tests `exec.rs` and `mangle.rs` write inline, and the libraries it measures itself on. Each is held to terser's bytes like the terser corpora; a test with an `expected.stdout`, and every `exec.rs` test, also has its outputs run, and webpack's output may be no bigger than each fixture's recorded `output.js`, nor than what swc's port of a terser case records when its `passing.txt` lists it, unless `SWC_SMALLER` lists why.
-- **Usage**: Git submodule — initialize with `git submodule update --init --depth 1 test/external/swc`. Test runner: `test/specCases/minify-corpora.js` (`yarn test:minify-corpora`).
+- **Usage**: Git submodule — initialize with `git submodule update --init --depth 1 test/external/swc`. Test runner: `test/specCases/minify-corpora.spectest.js` (`yarn test:minify-corpora`).
 
 #### `oxc/`
 
 - **Purpose**: oxc's repository, pinned to the commit that released webpack's `oxc-minify` devDependency and read only under `crates/oxc_minifier/tests`: the source each `test…(` helper call in its Rust tests passes first, but TypeScript. Each is held to terser's bytes like the other corpora, and under the default minimizer's options every source of every corpus but test262 is also minified by `oxc-minify`: webpack's output may be no bigger than oxc's unless `OXC_SMALLER` lists why, and an oxc output that misprints is no lead.
-- **Usage**: Git submodule — initialize with `git submodule update --init --depth 1 test/external/oxc`. Test runner: `test/specCases/minify-corpora.js` (`yarn test:minify-corpora`), which also fails when the pin and the installed `oxc-minify` disagree.
+- **Usage**: Git submodule — initialize with `git submodule update --init --depth 1 test/external/oxc`. Test runner: `test/specCases/minify-corpora.spectest.js` (`yarn test:minify-corpora`), which also fails when the pin and the installed `oxc-minify` disagree.
 
 #### `terser/`
 
 - **Purpose**: terser's own repository, pinned to webpack's `terser` devDependency. Its `test/compress` cases and `test/input` files are two of the seven corpora `lib/javascript/syntax-printer.js` is held to (test262, swc's fixtures, `exec.rs` and `mangle.rs` tests, and oxc's tests are the other five): each source is minified by terser as published and by webpack's printer under several option sets, and the outputs, or the errors, must be byte-for-byte the same, but for what webpack's `correct` phase fixes. A case stating its `expect_stdout` also has each output run in terser's sandbox, which must print it — or, for `expect_stdout: true`, do whatever its input does, a throw or silence included.
-- **Usage**: Git submodule — initialize with `git submodule update --init --depth 1 test/external/terser`. Test runner: `test/specCases/minify-corpora.js` (`yarn test:minify-corpora`), which also fails when the pin and the installed `terser` disagree, so bumping the dependency means moving the pin with it. A new corpus is one entry in its `CORPORA` list.
+- **Usage**: Git submodule — initialize with `git submodule update --init --depth 1 test/external/terser`. Test runner: `test/specCases/minify-corpora.spectest.js` (`yarn test:minify-corpora`), which also fails when the pin and the installed `terser` disagree, so bumping the dependency means moving the pin with it. A new corpus is one entry in its `CORPORA` list.
 
 ### `fixtures/`
 
@@ -118,7 +118,7 @@ Directories come first, in alphabetical order, then the individual files worth t
   - `syntaxEquivalence.spectest.js` — `yarn test:syntax-equivalence`
   - `cssParsing-webpack.spectest.js` — `yarn test:css-parsing`
   - `xmlconf.spectest.js` — `yarn test:xmlconf`
-  - `minify-corpora-{1,2,3}.spectest.js` — `yarn test:minify-corpora`: the suite in `test/specCases/minify-corpora.js`, its corpus groups dealt to three files by size so jest runs them in parallel; the last to finish checks no table entry went unmet
+  - `minify-corpora.spectest.js` — `yarn test:minify-corpora`, in three [parts](#splitting-one-file-across-workers) its corpus groups are dealt to by `minify-corpora-timings.json`; the last part to finish checks no table entry went unmet
   - `js-fuzz.spectest.js` — `yarn test:js-fuzz`: programs from `test/helpers/jsFuzzProgram.js`, in the sloppy ES5 terser's ufuzz writes, in modern syntax, as modules importing a fixed `dep` and as webpack-shaped bundles, minified under ufuzz's option sets, webpack's and random ones; the parser is held to acorn's tree on each program and output, the printer to the tree it read and to its own output, each output to what its program prints and exports, the default set's source map to its output and source, and the output to what it prints minified again. Needs no submodule; `JS_FUZZ_SEED=<n>` replays one seed, `JS_FUZZ_SEED=random` runs a new one named in the test's title, and `JS_FUZZ_PROGRAMS` sets the programs per seed.
 
 ### `statsCases/`
@@ -194,6 +194,10 @@ During the test run, webpack compiles this project and compares the result with 
 - Snapshots help maintain consistency in output.
 - Unit tests verify individual module functionality.
 - Integration tests ensure multiple components work together.
+
+### Splitting one file across workers
+
+Jest runs each file in one worker, so a long suite in one file leaves the runner's other cores idle. `--parts=<n>` (read by `jest.config.js`) runs every matched file in `n` workers at once, as `n` projects whose coverage merges as usual; global setup and teardown run once. A file splits its own work with `test/helpers/testParts.js`: `keysOfPart(keys, weights)` returns the keys this part runs, dealt by measured weight so the parts end together, and `currentPart()` returns `[part, parts]`, e.g. to run a check once in part 1. Without the flag a file is one part and runs everything; a file that doesn't use the helper runs whole in every part, so pass the flag only to a script that runs a file using it.
 
 ### Suites that drive a real browser
 

@@ -75,4 +75,25 @@ const config = {
 	}
 };
 
-module.exports = config;
+// `--parts=<n>` runs every matched file in n parallel workers at once, each
+// told its part through `test/helpers/testParts.js`; setup runs once.
+const partsArg = process.argv.find((arg) => arg.startsWith("--parts="));
+const parts = partsArg ? Number(partsArg.slice("--parts=".length)) : 1;
+
+module.exports =
+	parts > 1
+		? {
+				// global options (coverage, forceExit) are read from the top level
+				...config,
+				projects: Array.from({ length: parts }, (_, index) => ({
+					...config,
+					rootDir: __dirname,
+					displayName: `part ${index + 1}/${parts}`,
+					globals: { ...config.globals, __TEST_PART__: [index + 1, parts] },
+					...(index > 0 && {
+						globalSetup: undefined,
+						globalTeardown: undefined
+					})
+				}))
+			}
+		: config;

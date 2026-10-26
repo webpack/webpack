@@ -24,6 +24,7 @@ const { IGNORED_FORMAT_OPTIONS, load } =
 	require("../../lib/javascript/syntax").printer;
 const OXC_SMALLER = require("../helpers/oxcSmaller");
 const SWC_SMALLER = require("../helpers/swcSmaller");
+const { currentPart, keysOfPart } = require("../helpers/testParts");
 
 /** @typedef {import("terser").MinifyOptions} MinifyOptions */
 /** @typedef {(code: string, options: MinifyOptions) => Promise<{ code?: string }>} Minify */
@@ -2042,9 +2043,9 @@ const formatLeads = (leads) => {
 };
 
 /**
- * Lists the table entries no shard met, so one no longer met fails instead of
+ * Lists the table entries no part met, so one no longer met fails instead of
  * lingering.
- * @param {Record<string, string[]>} seen what every shard met, by table
+ * @param {Record<string, string[]>} seen what every part met, by table
  * @returns {string[]} the entries to retire
  */
 const staleEntries = (seen) => {
@@ -2075,51 +2076,16 @@ const staleEntries = (seen) => {
 	];
 };
 
-/**
- * Deals every corpus group to one of `count` shards by its measured
- * milliseconds in `minify-corpora-timings.json`, longest first, each to the
- * shard with the least time so far; a group missing there counts as the median.
- * @param {number} count how many shards
- * @returns {Map<string, number>} each group's shard, from 1, by `<corpus>/<group>`
- */
-const assignShards = (count) => {
-	/** @type {Record<string, number>} */
-	const timings = require("./minify-corpora-timings.json");
-
-	const known = Object.values(timings).sort((a, b) => a - b);
-	const fallback = known[Math.floor(known.length / 2)] || 1;
-	/** @type {{ key: string, ms: number }[]} */
-	const weighted = [];
-	for (const corpus of CORPORA) {
-		if (!isPresent(corpus.directory)) continue;
-		for (const group of corpus.groups()) {
-			const key = `${corpus.name}/${group.name}`;
-			weighted.push({ key, ms: timings[key] || fallback });
-		}
-	}
-	weighted.sort((a, b) => b.ms - a.ms || (a.key < b.key ? -1 : 1));
-	const loads = Array.from({ length: count }, () => 0);
-	/** @type {Map<string, number>} */
-	const shards = new Map();
-	for (const { key, ms } of weighted) {
-		const target = loads.indexOf(Math.min(...loads));
-		loads[target] += ms;
-		shards.set(key, target + 1);
-	}
-	return shards;
-};
-
-/**
- * Defines one shard's tests: its groups of every corpus, and in shard 1 the
- * checks run once. Every shard records what it met of the tables, and the last
- * to finish checks them all.
- * @param {number} shard this shard, from 1
- * @param {number} count how many shards the groups are dealt to
- * @returns {void}
- */
-const defineShard = (shard, count) => {
-	const shardOf = assignShards(count);
-	// Shared by the shards of one jest run, which all have its process as parent.
+describe("JavaScript minifier", () => {
+	const [part, parts] = currentPart();
+	// `--parts=<n>` deals the groups by their measured time, so parts end together.
+	const groupsOfPart = keysOfPart(
+		CORPORA.filter((corpus) => isPresent(corpus.directory)).flatMap((corpus) =>
+			corpus.groups().map((group) => `${corpus.name}/${group.name}`)
+		),
+		require("./minify-corpora-timings.json")
+	);
+	// Shared by the parts of one jest run, which all have its process as parent.
 	const runDir = path.join(os.tmpdir(), `webpack-minify-corpora-${process.ppid}`);
 
 	/** @type {{ reader?: CaseReader, printer?: { minify: Minify, phases: string[], corrections: { enabled: boolean } | undefined, improvements?: { enabled: boolean, lets: { enabled: boolean } } | undefined }, sandbox?: { run_code: (code: string, prepend: string) => string | Error, same_stdout: (expected: string | Error, actual: string | Error) => boolean } }} */
@@ -2186,7 +2152,7 @@ const defineShard = (shard, count) => {
 	afterAll(() => {
 		vm.runInNewContext = runInNewContext;
 		fs.mkdirSync(runDir, { recursive: true });
-		const file = path.join(runDir, `${shard}.json`);
+		const file = path.join(runDir, `${part}.json`);
 		fs.writeFileSync(
 			`${file}.tmp`,
 			JSON.stringify({
@@ -2202,7 +2168,7 @@ const defineShard = (shard, count) => {
 			})
 		);
 		fs.renameSync(`${file}.tmp`, file);
-		// Shards finish moments apart, so one at a time reads, reports and cleans
+		// Parts finish moments apart, so one at a time reads, reports and cleans
 		// up; one still waiting after a minute fails rather than hang the run.
 		const lockDir = `${runDir}.lock`;
 		const pause = new Int32Array(new SharedArrayBuffer(4));
@@ -2224,7 +2190,7 @@ const defineShard = (shard, count) => {
 			}
 		}
 		try {
-			// The last shard already checked everything and removed the results.
+			// The last part already checked everything and removed the results.
 			if (!fs.existsSync(runDir)) return;
 			aggregate();
 		} finally {
@@ -2233,15 +2199,15 @@ const defineShard = (shard, count) => {
 	});
 
 	/**
-	 * Merges every shard result present, rewrites the report from them, and once
-	 * all shards ran every group, fails on the table entries none of them met.
+	 * Merges every part result present, rewrites the report from them, and once
+	 * all parts ran every group, fails on the table entries none of them met.
 	 * @returns {void}
 	 */
 	const aggregate = () => {
 		const done = fs
 			.readdirSync(runDir)
 			.filter((name) => name.endsWith(".json"));
-		let complete = done.length === count;
+		let complete = done.length === parts;
 		/** @type {Lead[]} */
 		const allLeads = [];
 		/** @type {Record<string, string[]>} */
@@ -2258,13 +2224,13 @@ const defineShard = (shard, count) => {
 				);
 			}
 		}
-		// Rewritten by every shard, as a filter can leave a shard with no test to run.
+		// Rewritten by every part, as a filter can leave a part with no test to run.
 		const report = process.env.JS_MINIFY_REPORT;
 		if (report) fs.writeFileSync(report, formatLeads(allLeads));
-		if (done.length === count) {
+		if (done.length === parts) {
 			fs.rmSync(runDir, { recursive: true, force: true });
 		}
-		// Run alone or filtered, a shard cannot tell which entries the others meet.
+		// Run alone or filtered, a part cannot tell which entries the others meet.
 		const stale = complete ? staleEntries(seen) : [];
 		if (stale.length > 0) {
 			throw new Error(
@@ -2282,7 +2248,7 @@ const defineShard = (shard, count) => {
 		expect(() => nodeSatisfies(`^${major}`)).toThrow(/Unsupported/);
 	});
 
-	if (shard === 1 && isPresent(referenceDir)) {
+	if (part === 1 && isPresent(referenceDir)) {
 		it("should pin the reference's corpus to the version it is compared with", () => {
 			const pinned = JSON.parse(
 				fs.readFileSync(path.join(referenceDir, "package.json"), "utf8")
@@ -2291,7 +2257,7 @@ const defineShard = (shard, count) => {
 		});
 	}
 
-	if (shard === 1 && isPresent(oxcTestsDir)) {
+	if (part === 1 && isPresent(oxcTestsDir)) {
 		it("should pin oxc's corpus to the oxc-minify it is compared with", () => {
 			const pinned = JSON.parse(
 				fs.readFileSync(
@@ -2350,7 +2316,7 @@ const defineShard = (shard, count) => {
 	for (const corpus of CORPORA) {
 		describe(corpus.name, () => {
 			if (!isPresent(corpus.directory)) {
-				if (shard !== 1) return;
+				if (part !== 1) return;
 
 				it(`submodule not initialized (run \`git submodule update --init --depth 1 ${corpus.submodule}\`)`, () => {
 					// No-op: each corpus is an optional git submodule.
@@ -2360,10 +2326,10 @@ const defineShard = (shard, count) => {
 			}
 			const allGroups = corpus.groups();
 			const groups = allGroups.filter(
-				(group) => shardOf.get(`${corpus.name}/${group.name}`) === shard
+				(group) => groupsOfPart.has(`${corpus.name}/${group.name}`)
 			);
 
-			if (shard === 1) {
+			if (part === 1) {
 				it("should read every source the corpus holds", () => {
 				const reader = /** @type {CaseReader} */ (loaded.reader);
 				let count = 0;
@@ -2796,16 +2762,4 @@ const defineShard = (shard, count) => {
 		});
 	}
 
-};
-
-/**
- * Defines the suite for one shard of the corpora's groups.
- * @param {number} shard this shard, from 1
- * @param {number} count how many shards the groups are dealt to
- * @returns {void}
- */
-module.exports = (shard, count) => {
-	describe(`JavaScript minifier (shard ${shard}/${count})`, () => {
-		defineShard(shard, count);
-	});
-};
+});
