@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+.plain { color: red; }
+</style>
+<style lang="css">
+.css-lang { color: blue; }
+</style>
+<style lang="less">
+@accent: green;
+.less-lang { color: @accent; .nested { background: url("./pixel.png"); } }
+</style>
+<style lang="SCSS">
+$accent: purple; .scss-lang { color: $accent; }
+</style>
+</head>
+<body></body>
+</html>
