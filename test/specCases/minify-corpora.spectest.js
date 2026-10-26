@@ -24,7 +24,7 @@ const { IGNORED_FORMAT_OPTIONS, load } =
 	require("../../lib/javascript/syntax").printer;
 const OXC_SMALLER = require("../helpers/oxcSmaller");
 const SWC_SMALLER = require("../helpers/swcSmaller");
-const { currentPart, keysOfPart } = require("../helpers/testParts");
+const { currentPart, isInPart } = require("../helpers/testParts");
 
 /** @typedef {import("terser").MinifyOptions} MinifyOptions */
 /** @typedef {(code: string, options: MinifyOptions) => Promise<{ code?: string }>} Minify */
@@ -2078,13 +2078,6 @@ const staleEntries = (seen) => {
 
 describe("JavaScript minifier", () => {
 	const [part, parts] = currentPart();
-	// `--parts=<n>` deals the groups by their measured time, so parts end together.
-	const groupsOfPart = keysOfPart(
-		CORPORA.filter((corpus) => isPresent(corpus.directory)).flatMap((corpus) =>
-			corpus.groups().map((group) => `${corpus.name}/${group.name}`)
-		),
-		require("./minify-corpora-timings.json")
-	);
 	// Shared by the parts of one jest run, which all have its process as parent.
 	const runDir = path.join(os.tmpdir(), `webpack-minify-corpora-${process.ppid}`);
 
@@ -2325,9 +2318,6 @@ describe("JavaScript minifier", () => {
 				return;
 			}
 			const allGroups = corpus.groups();
-			const groups = allGroups.filter(
-				(group) => groupsOfPart.has(`${corpus.name}/${group.name}`)
-			);
 
 			if (part === 1) {
 				it("should read every source the corpus holds", () => {
@@ -2369,8 +2359,8 @@ describe("JavaScript minifier", () => {
 			});
 			}
 
-			groupCounts.defined += groups.length;
-			for (const group of groups) {
+			groupCounts.defined += allGroups.length;
+			for (const group of allGroups) {
 				it(
 					`should minify as the reference does, printing what the input prints: ${group.name || "."}`,
 					async () => {
@@ -2440,9 +2430,12 @@ describe("JavaScript minifier", () => {
 								);
 							}
 						};
-						const sources = group.files.flatMap((file) =>
-							corpus.read(file, reader)
-						);
+						// `--parts=<n>` splits by source, as one group can hold most of a corpus.
+						const sources = group.files
+							.flatMap((file) => corpus.read(file, reader))
+							.filter((source) =>
+								isInPart(`${corpus.name}/${group.name}/${source.name}`)
+							);
 						const oxcSet = "the default minimizer's options";
 						// webpack's minimizer reads `ecma` off `output.environment`, 2020 for a
 						// modern target, which oxc's output assumes too.

@@ -10,29 +10,20 @@ const currentPart = () =>
 		.__TEST_PART__ || [1, 1];
 
 /**
- * Picks the keys this part runs, dealing them longest first, each to the part
- * with the least weight so far; a key missing from `weights` counts as their median.
- * @param {string[]} keys every key, in any order
- * @param {Record<string, number>} weights each key's measured cost, e.g. milliseconds
- * @returns {Set<string>} the keys of this part
+ * Tells whether this part runs the work named `key`, by a hash of the name, so
+ * a key keeps its part however the others around it change.
+ * @param {string} key a name unique to one piece of work
+ * @returns {boolean} true when this part runs it
  */
-const keysOfPart = (keys, weights) => {
+const isInPart = (key) => {
 	const [part, parts] = currentPart();
-	if (parts === 1) return new Set(keys);
-	const known = Object.values(weights).sort((a, b) => a - b);
-	const fallback = known[Math.floor(known.length / 2)] || 1;
-	const weighted = keys
-		.map((key) => ({ key, weight: weights[key] || fallback }))
-		.sort((a, b) => b.weight - a.weight || (a.key < b.key ? -1 : 1));
-	const loads = Array.from({ length: parts }, () => 0);
-	/** @type {Set<string>} */
-	const mine = new Set();
-	for (const { key, weight } of weighted) {
-		const target = loads.indexOf(Math.min(...loads));
-		loads[target] += weight;
-		if (target === part - 1) mine.add(key);
+	if (parts === 1) return true;
+	// FNV-1a
+	let hash = 0x811c9dc5;
+	for (let i = 0; i < key.length; i++) {
+		hash = Math.imul(hash ^ key.charCodeAt(i), 0x01000193);
 	}
-	return mine;
+	return (hash >>> 0) % parts === part - 1;
 };
 
-module.exports = { currentPart, keysOfPart };
+module.exports = { currentPart, isInPart };
