@@ -6,6 +6,8 @@ import root from "./root.html";
 import rootDir from "./root-dir.html";
 import protocolRelative from "./protocol-relative.html";
 import escape from "./escape.html";
+import query from "./query.html";
+import entity from "./entity.html";
 
 it("should resolve relative URLs against a relative <base href>", () => {
 	// `logo.png` only exists under `nested/`; a successful build with a rewritten
@@ -68,4 +70,11 @@ it("should handle a base that escapes above the document dir without warning", (
 	expect(escape).toContain("data:image/png;base64,");
 	expect(escape).toContain('<base href="../up/">');
 	expect(escape).toMatchSnapshot();
+});
+
+it("should drop a base's query and fragment and decode its entities", () => {
+	// `logo.png` only exists under `nested/`, so each build proves the base
+	// resolved to that directory, and the emitted URL cancels it.
+	expect(query).toMatch(/<img src="\.\.\/[^"]+\.png" alt="query and fragment ignored">/);
+	expect(entity).toMatch(/<img src="\.\.\/[^"]+\.png" alt="entity decoded">/);
 });
