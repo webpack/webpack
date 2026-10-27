@@ -14835,7 +14835,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"function g() { var a = f(); var b = a } function h() { var x; x = f(); var b = x }",
 				{},
-				"function g(){f()}function h(){var n;n=f()}"
+				"function g(){f()}function h(){f()}"
 			],
 			// Without the mangler nothing is known constant.
 			[
