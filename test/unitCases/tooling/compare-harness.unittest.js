@@ -1123,6 +1123,15 @@ describe("parser agreement", () => {
 		expect(treeDifference(deep("a"), deep("b"), "ref")).toBe(
 			`…${"/section[1]".repeat(20).slice(-59)}: ref a, tool b`
 		);
+		// Two sides alike past the cut are shown from just before they differ.
+		const long = (/** @type {string} */ tail) => {
+			const events = new TreeEvents();
+			events.leaf(`<path d="${"m0 0".repeat(20)}${tail}">`);
+			return events;
+		};
+		expect(treeDifference(long("h1"), long("v1"), "ref")).toBe(
+			'/: ref …m0 0m0 0m0 0h1">, tool …m0 0m0 0m0 0v1">'
+		);
 	});
 
 	it("answers each parser's cell, reading the reference once", async () => {
