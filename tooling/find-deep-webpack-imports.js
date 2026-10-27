@@ -37,10 +37,19 @@ const KEYWORDS = [
 	{ keyword: "webpack-loader", label: "loader" }
 ];
 
-// Every spelling a package imports a webpack internal with; the `.js` a few
-// write is stripped before lookup. Matching import positions only skips the
-// `makeSerializable` requests a package that bundled webpack carries.
-const IMPORT_PREFIX = String.raw`(?:(?:require|import)(?:\.resolve)?\s*\(\s*|from\s+)`;
+// Packages no keyword search reaches (they publish without `keywords`) that
+// still import webpack internals, scanned whatever their rank.
+const EXTRA_PACKAGES = [
+	"@module-federation/enhanced",
+	"@module-federation/node"
+];
+
+// WHY: every spelling a package imports a webpack internal with; the `.js` a
+// few write is stripped before lookup. Matching import positions only skips the
+// `makeSerializable` requests a package that bundled webpack carries. The
+// optional call inside `require(` is a path wrapper, such as Module Federation's
+// compiled `require((0, _sdk.normalizeWebpackPath)("webpack/lib/…"))`.
+const IMPORT_PREFIX = String.raw`(?:(?:require|import)(?:\.resolve)?\s*\(\s*(?:(?:\(\s*0\s*,\s*[\w$.]+\s*\)|[\w$.]+)\s*\(\s*)?|from\s+)`;
 const SPECIFIER_REGEXP = new RegExp(
 	`${IMPORT_PREFIX}["'\`](webpack/lib/[^"'\`\\n]+)["'\`]|${IMPORT_PREFIX}["'\`]webpack/lib/["'\`]\\s*\\+`,
 	"g"
@@ -135,6 +144,26 @@ const searchByKeyword = async (keyword, count) => {
 		.map(([name, weekly]) => ({ name, weekly }))
 		.sort((a, b) => b.weekly - a.weekly)
 		.slice(0, count);
+};
+
+/**
+ * Returns one package with its weekly downloads, which only the search
+ * endpoint carries.
+ * @param {string} name exact package name
+ * @returns {Promise<{ name: string, weekly: number }>} the package
+ */
+const searchByName = async (name) => {
+	const { objects } = await fetchJson(
+		`${REGISTRY}/-/v1/search?text=${encodeURIComponent(name)}&size=20`
+	);
+	const found = (objects || []).find(
+		(/** @type {EXPECTED_ANY} */ object) => object.package.name === name
+	);
+
+	return {
+		name,
+		weekly: found && found.downloads ? found.downloads.weekly : 0
+	};
 };
 
 /**
@@ -468,8 +497,20 @@ const collect = async (perKeyword, write) => {
 	let scanned = 0;
 	let unavailable = 0;
 
-	for (const { keyword, label } of KEYWORDS) {
-		const packages = await searchByKeyword(keyword, perKeyword);
+	/** @type {{ label: string, search: () => Promise<{ name: string, weekly: number }[]> }[]} */
+	const sources = [
+		...KEYWORDS.map(({ keyword, label }) => ({
+			label,
+			search: () => searchByKeyword(keyword, perKeyword)
+		})),
+		{
+			label: "package without keywords",
+			search: () => Promise.all(EXTRA_PACKAGES.map(searchByName))
+		}
+	];
+
+	for (const { label, search } of sources) {
+		const packages = await search();
 
 		process.stderr.write(
 			`Scanning ${packages.length} ${label}(s) by weekly downloads\n`

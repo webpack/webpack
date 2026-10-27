@@ -1,8 +1,8 @@
 {
-  "sampledAt": "2026-09-20",
+  "sampledAt": "2026-10-27",
   "perKeyword": 200,
   "removed": {
-    "lib/AsyncDependenciesBlock": "Only hard-source-webpack-plugin imports it, and that is webpack 4 only \u2014 it also imports lib/DependenciesBlockVariable and lib/JavascriptGenerator, both removed in webpack 5.",
+    "lib/AsyncDependenciesBlock": "Only hard-source-webpack-plugin imports it, and that is webpack 4 only — it also imports lib/DependenciesBlockVariable and lib/JavascriptGenerator, both removed in webpack 5.",
     "lib/ChunkGroup": "No package the scan reaches imports it; it moved out of `lib/` root with nothing to re-export to.",
     "lib/ConcatenationScope": "No package the scan reaches imports it; it moved out of `lib/` root with nothing to re-export to.",
     "lib/DefinePlugin": "No package the scan reaches imports it; it moved out of `lib/` root with nothing to re-export to.",
@@ -10,25 +10,28 @@
     "lib/DependenciesBlockVariable": "Removed in webpack 5 with block variables.",
     "lib/DotenvPlugin": "No package the scan reaches imports it; it moved out of `lib/` root with nothing to re-export to.",
     "lib/EnvironmentPlugin": "No package the scan reaches imports it; it moved out of `lib/` root with nothing to re-export to.",
+    "lib/ExternalModule": "Only @beisen/webpack-compile-plugin imports it, and that is webpack 1 only — it imports lib/OriginalSource and lib/RawSource, which webpack 2 removed.",
     "lib/FunctionModulePlugin": "Removed in webpack 5.",
-    "lib/Generator": "Only hard-source-webpack-plugin imports it, and that is webpack 4 only \u2014 it also imports lib/DependenciesBlockVariable and lib/JavascriptGenerator, both removed in webpack 5.",
-    "lib/HotUpdateChunk": "No package the scan reaches imports it; it moved out of `lib/` root with nothing to re-export to.",
+    "lib/Generator": "Only hard-source-webpack-plugin imports it, and that is webpack 4 only — it also imports lib/DependenciesBlockVariable and lib/JavascriptGenerator, both removed in webpack 5.",
     "lib/JavascriptGenerator": "@sector-labs/lingui-loader probes for it to detect webpack 4, so a re-export would send it down the wrong branch; its other importer, hard-source-webpack-plugin, is webpack 4 only.",
     "lib/JsonGenerator": "Only hard-source-webpack-plugin imports it, and that is webpack 4 only.",
     "lib/JsonParser": "Only hard-source-webpack-plugin imports it, and that is webpack 4 only.",
     "lib/LazyBarrel": "No package the scan reaches imports it; it moved out of `lib/` root with nothing to re-export to.",
     "lib/LoaderTargetPlugin": "Only miniprogram-webpack-plugin imports it, and that package also imports lib/FunctionModulePlugin and lib/MultiEntryPlugin, both removed in webpack 5.",
-    "lib/Module": "Only hard-source-webpack-plugin imports it, and that is webpack 4 only \u2014 it also imports lib/DependenciesBlockVariable and lib/JavascriptGenerator, both removed in webpack 5.",
+    "lib/Module": "Only hard-source-webpack-plugin imports it, and that is webpack 4 only — it also imports lib/DependenciesBlockVariable and lib/JavascriptGenerator, both removed in webpack 5.",
     "lib/ModuleDependencyWarning": "Moved to lib/errors/ before this record; kept unresolved deliberately.",
     "lib/ModuleError": "Only hard-source-webpack-plugin imports it, and that is webpack 4 only.",
     "lib/ModuleInfoHeaderPlugin": "No package the scan reaches imports it; it moved out of `lib/` root with nothing to re-export to.",
     "lib/ModuleWarning": "Only hard-source-webpack-plugin imports it, and that is webpack 4 only.",
     "lib/MultiEntryPlugin": "Removed in webpack 5 with MultiEntry; EntryPlugin takes an array.",
     "lib/MultiModuleFactory": "Removed in webpack 5 with MultiModule; the package is webpack 4 only.",
-    "lib/Parser": "Both importers require it inside a `try` to detect webpack 4 \u2014 hard-source-webpack-plugin pairs it with `lib/JsonParser`, and @sector-labs/lingui-loader with `lib/JavascriptGenerator` \u2014 so a re-export would pick the webpack 4 branch.",
+    "lib/OriginalSource": "Only @beisen/webpack-compile-plugin imports it, and that is webpack 1 only — it imports lib/OriginalSource and lib/RawSource, which webpack 2 removed.",
+    "lib/Parser": "Both importers require it inside a `try` to detect webpack 4 — hard-source-webpack-plugin pairs it with `lib/JsonParser`, and @sector-labs/lingui-loader with `lib/JavascriptGenerator` — so a re-export would pick the webpack 4 branch.",
     "lib/ParserHelpers": "Replaced in webpack 5 by javascript/JavascriptParserHelpers.",
+    "lib/RawSource": "Only @beisen/webpack-compile-plugin imports it, and that is webpack 1 only — it imports lib/OriginalSource and lib/RawSource, which webpack 2 removed.",
     "lib/RuleSet": "Replaced in webpack 5 by lib/rules/RuleSetCompiler.",
     "lib/SizeFormatHelpers": "Removed in webpack 5; nothing in lib/ formats sizes under that name.",
+    "lib/Template": "Only @beisen/webpack-compile-plugin imports it, and that is webpack 1 only — it imports lib/OriginalSource and lib/RawSource, which webpack 2 removed.",
     "lib/WebAssemblyGenerator": "Only hard-source-webpack-plugin imports it, and that is webpack 4 only.",
     "lib/WebAssemblyParser": "Only hard-source-webpack-plugin imports it, and that is webpack 4 only.",
     "lib/dependencies/${dependency[0]}": "Not a path: a template literal the scanner reads from a dynamic require.",
@@ -65,7 +68,6 @@
     "lib/dependencies/LoaderDependency": "Moved to lib/loaders/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
     "lib/dependencies/LocalModule": "Grouped under lib/dependencies/amd/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
     "lib/dependencies/LocalModuleDependency": "Grouped under lib/dependencies/amd/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
-    "lib/dependencies/ModuleDependency": "Grouped under lib/dependencies/core/; both importers are webpack 4 only — hard-source-webpack-plugin from its lib/schema-4 module, which requires 14 paths webpack 5 deleted, and webpack-babel-multi-target-plugin, whose peer range is ^4.19.0.",
     "lib/dependencies/ModuleHotAcceptDependency": "Grouped under lib/dependencies/hmr/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
     "lib/dependencies/ModuleHotDeclineDependency": "Grouped under lib/dependencies/hmr/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
     "lib/dependencies/MultiEntryDependency": "Removed in webpack 5 with MultiEntry; EntryPlugin takes an array.",
@@ -82,6 +84,7 @@
     "lib/dependencies/SingleEntryDependency": "Renamed in webpack 5 to dependencies/EntryDependency.",
     "lib/dependencies/UnsupportedDependency": "Grouped under lib/dependencies/amd/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
     "lib/dependencies/WebAssemblyImportDependency": "Grouped under lib/dependencies/wasm/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
+    "lib/dependencies/WebpackMissingModule": "Only @beisen/webpack-compile-plugin imports it, and that is webpack 1 only — it imports lib/OriginalSource and lib/RawSource, which webpack 2 removed.",
     "lib/wasm/WebAssemblyGenerator": "Only hard-source-webpack-plugin imports it, and that is webpack 4 only.",
     "lib/wasm/WebAssemblyJavascriptGenerator": "Only hard-source-webpack-plugin imports it, and that is webpack 4 only.",
     "lib/wasm/WebAssemblyParser": "Only hard-source-webpack-plugin imports it, and that is webpack 4 only.",
@@ -89,30 +92,42 @@
   },
   "requests": {
     "lib/Chunk": {
-      "weekly": 684,
+      "weekly": 826,
       "packages": [
         "@pixolith/external-svg-sprite-loader",
-        "external-svg-sprite-loader"
+        "external-svg-sprite-loader",
+        "sequisimilique",
+        "webpack-svg-icon-system"
       ]
     },
+    "lib/ChunkGraph": {
+      "weekly": 4531959,
+      "packages": ["@module-federation/enhanced"]
+    },
     "lib/Compilation": {
-      "weekly": 1996,
+      "weekly": 4532970,
       "packages": [
         "@aiot-toolkit/dsl-xvm",
+        "@hap-toolkit-xiaomi/dsl-xvm",
         "@hap-toolkit/dsl-xvm",
+        "@module-federation/enhanced",
         "external-svg-sprite-loader"
       ]
     },
     "lib/Compiler.js": {
-      "weekly": 79,
+      "weekly": 28,
       "packages": ["billd-html-webpack-plugin"]
     },
+    "lib/container/ModuleFederationPlugin": {
+      "weekly": 2354468,
+      "packages": ["@module-federation/node"]
+    },
     "lib/css/CssModulesPlugin": {
-      "weekly": 12160713,
+      "weekly": 17721738,
       "packages": ["mini-css-extract-plugin"]
     },
     "lib/dependencies/ConstDependency": {
-      "weekly": 134683,
+      "weekly": 188582,
       "packages": [
         "@zainulbr/i18n-webpack-plugin",
         "hard-source-webpack-plugin",
@@ -121,119 +136,161 @@
       ]
     },
     "lib/dependencies/ContextElementDependency": {
-      "weekly": 132760,
+      "weekly": 187348,
       "packages": ["context-map-webpack-plugin", "hard-source-webpack-plugin"]
     },
+    "lib/dependencies/EntryDependency": {
+      "weekly": 4531959,
+      "packages": ["@module-federation/enhanced"]
+    },
+    "lib/dependencies/ModuleDependency": {
+      "weekly": 4723567,
+      "packages": [
+        "@module-federation/enhanced",
+        "hard-source-webpack-plugin",
+        "webpack-babel-multi-target-plugin"
+      ]
+    },
     "lib/dependencies/NullDependency": {
-      "weekly": 133995,
+      "weekly": 190092,
       "packages": ["hard-source-webpack-plugin", "react-display-name-plugin"]
     },
     "lib/dependencies/NullDependency.js": {
-      "weekly": 3659559,
+      "weekly": 5130858,
       "packages": [
         "@storybook/react-docgen-typescript-plugin",
         "react-docgen-typescript-plugin"
       ]
     },
+    "lib/dependencies/StaticExportsDependency": {
+      "weekly": 4531959,
+      "packages": ["@module-federation/enhanced"]
+    },
     "lib/Dependency": {
-      "weekly": 5849,
-      "packages": ["ignore-webpack-plugin", "webpack-babel-multi-target-plugin"]
+      "weekly": 4538482,
+      "packages": [
+        "@module-federation/enhanced",
+        "ignore-webpack-plugin",
+        "webpack-babel-multi-target-plugin"
+      ]
     },
     "lib/DependencyTemplate": {
-      "weekly": 728,
+      "weekly": 2223,
       "packages": ["ignore-webpack-plugin"]
     },
-    "lib/EntryPlugin": {
-      "weekly": 274,
-      "packages": ["@stylable/webpack-extensions"]
-    },
     "lib/Entrypoint": {
-      "weekly": 188538,
+      "weekly": 266641,
       "packages": ["@vue/preload-webpack-plugin"]
     },
     "lib/ExternalsPlugin": {
-      "weekly": 596945,
+      "weekly": 826665,
       "packages": ["worker-loader"]
     },
     "lib/FileSystemInfo": {
-      "weekly": 10690048,
-      "packages": ["html-webpack-plugin"]
+      "weekly": 19945808,
+      "packages": ["@module-federation/enhanced", "html-webpack-plugin"]
+    },
+    "lib/hmr/JavascriptHotModuleReplacement.runtime.js": {
+      "weekly": 2354468,
+      "packages": ["@module-federation/node"]
+    },
+    "lib/HotUpdateChunk": {
+      "weekly": 4531959,
+      "packages": ["@module-federation/enhanced"]
     },
     "lib/ids/IdHelpers": {
-      "weekly": 39,
+      "weekly": 25,
       "packages": ["@automattic/i18n-check-webpack-plugin"]
     },
     "lib/InitFragment": {
-      "weekly": 728,
+      "weekly": 2223,
       "packages": ["ignore-webpack-plugin"]
     },
+    "lib/javascript/ChunkHelpers": {
+      "weekly": 4531959,
+      "packages": ["@module-federation/enhanced"]
+    },
     "lib/javascript/JavascriptModulesPlugin": {
-      "weekly": 1393,
-      "packages": ["@aiot-toolkit/dsl-xvm", "@hap-toolkit/dsl-xvm"]
+      "weekly": 6886692,
+      "packages": [
+        "@aiot-toolkit/dsl-xvm",
+        "@hap-toolkit-xiaomi/dsl-xvm",
+        "@hap-toolkit/dsl-xvm",
+        "@module-federation/enhanced",
+        "@module-federation/node"
+      ]
     },
     "lib/javascript/JavascriptParserHelpers": {
-      "weekly": 139230,
+      "weekly": 133094,
       "packages": ["worker-plugin"]
     },
     "lib/LibraryTemplatePlugin": {
-      "weekly": 121040,
+      "weekly": 176633,
       "packages": [
         "@aiot-toolkit/dsl-xvm",
+        "@hap-toolkit-xiaomi/dsl-xvm",
         "@hap-toolkit/dsl-xvm",
-        "@stylable/webpack-extensions",
-        "@vivo-hap-toolkit/dsl-xvm",
         "extract-css-chunks-webpack-plugin",
         "styling"
       ]
     },
-    "lib/logging/runtime.js": {
-      "weekly": 17483282,
-      "packages": ["webpack-dev-middleware"]
+    "lib/ModuleFactory": {
+      "weekly": 4531959,
+      "packages": ["@module-federation/enhanced"]
     },
     "lib/ModuleFilenameHelpers": {
-      "weekly": 768841,
+      "weekly": 701370,
       "packages": [
         "@amoo-miki/terser-webpack-plugin",
         "babel-minify-webpack-plugin",
+        "butternut-webpack-plugin",
         "lightningcss-loader",
         "terser-webpack-plugin-legacy",
         "uglifyjs-3-webpack-plugin",
         "uglifyjs-webpack-plugin",
-        "webpack-parallel-uglify-plugin",
-        "zip-webpack-plugin"
+        "uglifyjs-webpack-plugin-new",
+        "webpack-parallel-uglify-plugin"
       ]
     },
     "lib/ModuleFilenameHelpers.js": {
-      "weekly": 1041546,
+      "weekly": 1571405,
       "packages": ["esbuild-loader"]
     },
+    "lib/ModuleNotFoundError": {
+      "weekly": 4531959,
+      "packages": ["@module-federation/enhanced"]
+    },
+    "lib/node/NodeEnvironmentPlugin": {
+      "weekly": 2354468,
+      "packages": ["@module-federation/node"]
+    },
     "lib/node/NodeTargetPlugin": {
-      "weekly": 717985,
+      "weekly": 3357766,
       "packages": [
         "@aiot-toolkit/dsl-xvm",
+        "@hap-toolkit-xiaomi/dsl-xvm",
         "@hap-toolkit/dsl-xvm",
-        "@stylable/webpack-extensions",
-        "@vivo-hap-toolkit/dsl-xvm",
+        "@module-federation/node",
         "extract-css-chunks-webpack-plugin",
         "styling",
         "worker-loader"
       ]
     },
     "lib/node/NodeTemplatePlugin": {
-      "weekly": 121040,
+      "weekly": 176633,
       "packages": [
         "@aiot-toolkit/dsl-xvm",
+        "@hap-toolkit-xiaomi/dsl-xvm",
         "@hap-toolkit/dsl-xvm",
-        "@stylable/webpack-extensions",
-        "@vivo-hap-toolkit/dsl-xvm",
         "extract-css-chunks-webpack-plugin",
         "styling"
       ]
     },
     "lib/NormalModule": {
-      "weekly": 280062,
+      "weekly": 419849,
       "packages": [
         "@aiot-toolkit/dsl-xvm",
+        "@hap-toolkit-xiaomi/dsl-xvm",
         "@hap-toolkit/dsl-xvm",
         "hard-source-webpack-plugin",
         "san-loader",
@@ -241,7 +298,7 @@
       ]
     },
     "lib/NullFactory": {
-      "weekly": 2053,
+      "weekly": 1274,
       "packages": [
         "@zainulbr/i18n-webpack-plugin",
         "webpack-extract-translation-keys-plugin",
@@ -249,30 +306,29 @@
       ]
     },
     "lib/optimize/ConcatenatedModule": {
-      "weekly": 145973,
+      "weekly": 232212,
       "packages": ["svg-sprite-loader"]
     },
     "lib/optimize/LimitChunkCountPlugin": {
-      "weekly": 121040,
+      "weekly": 176633,
       "packages": [
         "@aiot-toolkit/dsl-xvm",
+        "@hap-toolkit-xiaomi/dsl-xvm",
         "@hap-toolkit/dsl-xvm",
-        "@stylable/webpack-extensions",
-        "@vivo-hap-toolkit/dsl-xvm",
         "extract-css-chunks-webpack-plugin",
         "styling"
       ]
     },
     "lib/ProgressPlugin": {
-      "weekly": 164184,
-      "packages": ["webpack-stream"]
+      "weekly": 301978,
+      "packages": ["grunt-webpack", "webpack-stream"]
     },
     "lib/RawModule": {
-      "weekly": 852,
+      "weekly": 1117,
       "packages": ["google-fonts-plugin"]
     },
     "lib/RequestShortener": {
-      "weekly": 1754736,
+      "weekly": 2128322,
       "packages": [
         "@amoo-miki/terser-webpack-plugin",
         "@nuxt/friendly-errors-webpack-plugin",
@@ -281,31 +337,60 @@
         "terser-webpack-plugin-legacy",
         "uglifyjs-3-webpack-plugin",
         "uglifyjs-webpack-plugin",
+        "uglifyjs-webpack-plugin-new",
         "v8-lazy-parse-webpack-plugin"
       ]
     },
+    "lib/ResolverFactory": {
+      "weekly": 4531959,
+      "packages": ["@module-federation/enhanced"]
+    },
     "lib/rules/BasicEffectRulePlugin": {
-      "weekly": 66,
+      "weekly": 64,
       "packages": ["san-loader"]
     },
     "lib/rules/BasicMatcherRulePlugin": {
-      "weekly": 66,
+      "weekly": 64,
       "packages": ["san-loader"]
     },
     "lib/rules/RuleSetCompiler": {
-      "weekly": 66,
+      "weekly": 64,
       "packages": ["san-loader"]
     },
     "lib/rules/UseEffectRulePlugin": {
-      "weekly": 66,
+      "weekly": 64,
       "packages": ["san-loader"]
     },
+    "lib/runtime/StartupChunkDependenciesPlugin": {
+      "weekly": 2354468,
+      "packages": ["@module-federation/node"]
+    },
+    "lib/runtime/StartupEntrypointRuntimeModule": {
+      "weekly": 4531959,
+      "packages": ["@module-federation/enhanced"]
+    },
+    "lib/RuntimeGlobals": {
+      "weekly": 4531959,
+      "packages": ["@module-federation/enhanced"]
+    },
+    "lib/RuntimeModule": {
+      "weekly": 4531959,
+      "packages": ["@module-federation/enhanced"]
+    },
+    "lib/RuntimeTemplate": {
+      "weekly": 4531959,
+      "packages": ["@module-federation/enhanced"]
+    },
+    "lib/serialization/ObjectMiddleware": {
+      "weekly": 4531959,
+      "packages": ["@module-federation/enhanced"]
+    },
     "lib/SingleEntryPlugin": {
-      "weekly": 857338,
+      "weekly": 1136829,
       "packages": [
         "@aiot-toolkit/dsl-xvm",
+        "@hap-toolkit-xiaomi/dsl-xvm",
         "@hap-toolkit/dsl-xvm",
-        "@vivo-hap-toolkit/dsl-xvm",
         "extract-css-chunks-webpack-plugin",
         "service-worker-loader",
         "styling",
@@ -313,35 +398,79 @@
         "worker-plugin"
       ]
     },
+    "lib/util/comparators": {
+      "weekly": 4531959,
+      "packages": ["@module-federation/enhanced"]
+    },
+    "lib/util/compileBooleanMatcher": {
+      "weekly": 6886427,
+      "packages": ["@module-federation/enhanced", "@module-federation/node"]
+    },
     "lib/util/createHash": {
-      "weekly": 132904,
-      "packages": ["@stylable/webpack-extensions", "hard-source-webpack-plugin"]
+      "weekly": 187308,
+      "packages": ["hard-source-webpack-plugin"]
+    },
+    "lib/util/extractUrlAndGlobal": {
+      "weekly": 4531959,
+      "packages": ["@module-federation/enhanced"]
+    },
+    "lib/util/fs": {
+      "weekly": 4531959,
+      "packages": ["@module-federation/enhanced"]
     },
     "lib/util/identifier": {
-      "weekly": 856277,
-      "packages": ["thread-loader"]
+      "weekly": 8133840,
+      "packages": [
+        "@module-federation/enhanced",
+        "@module-federation/node",
+        "thread-loader"
+      ]
+    },
+    "lib/util/LazySet": {
+      "weekly": 4531959,
+      "packages": ["@module-federation/enhanced"]
+    },
+    "lib/util/makeSerializable": {
+      "weekly": 4531959,
+      "packages": ["@module-federation/enhanced"]
     },
     "lib/util/makeSerializable.js": {
-      "weekly": 3659559,
+      "weekly": 5130858,
       "packages": [
         "@storybook/react-docgen-typescript-plugin",
         "react-docgen-typescript-plugin"
       ]
     },
+    "lib/util/memoize": {
+      "weekly": 4531959,
+      "packages": ["@module-federation/enhanced"]
+    },
+    "lib/util/semver": {
+      "weekly": 4531959,
+      "packages": ["@module-federation/enhanced"]
+    },
+    "lib/util/SetHelpers": {
+      "weekly": 4531959,
+      "packages": ["@module-federation/enhanced"]
+    },
+    "lib/util/SortableSet": {
+      "weekly": 6886427,
+      "packages": ["@module-federation/enhanced", "@module-federation/node"]
+    },
     "lib/web/FetchCompileAsyncWasmPlugin": {
-      "weekly": 596945,
+      "weekly": 826665,
       "packages": ["worker-loader"]
     },
     "lib/web/FetchCompileWasmPlugin": {
-      "weekly": 736175,
+      "weekly": 959759,
       "packages": ["worker-loader", "worker-plugin"]
     },
     "lib/WebpackError": {
-      "weekly": 132650,
-      "packages": ["hard-source-webpack-plugin", "webpack-mjml-plugin"]
+      "weekly": 4719267,
+      "packages": ["@module-federation/enhanced", "hard-source-webpack-plugin"]
     },
     "lib/webworker/WebWorkerTemplatePlugin": {
-      "weekly": 736572,
+      "weekly": 960196,
       "packages": ["service-worker-loader", "worker-loader", "worker-plugin"]
     }
   }
