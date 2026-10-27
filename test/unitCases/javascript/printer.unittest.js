@@ -15256,6 +15256,18 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				{},
 				"function f(n,t){n=2;return[(n=>n+1)(n),(n=>()=>n)(t),function(){return this}(),function n(){return n}(),(async()=>1)(),(n=>n)(t,t),(()=>1)?.()]}"
 			],
+			// The assignment every branch of a chain ends in prints once, before its test.
+			[
+				"function f(e, t) { if (e === 7) t += \"a\"; else if (e === 8) t += \"b\"; else t += e; if (e()) t += 1; else t += 2; return [t, e ? t = 1 : t = 2, e ? t = 1 : t += 2, e ? t = 1 : o.t = 2] }",
+				{},
+				"function f(t,e){e+=t===7?\"a\":t===8?\"b\":t;t()?e+=1:e+=2;return[e,e=t?1:2,t?e=1:e+=2,t?e=1:o.t=2]}"
+			],
+			// `if`s next to each other leaving alike test as one.
+			[
+				"function f(a, b, c) { for (const t of a) { if (t < 1) continue; if (t > 9) { continue } g(t) } if (a) return; if (b = c, b) return; if (a ?? b) return; if (c) break_(); g() }",
+				{},
+				"function f(f,n,t){for(let n of f){if(n<1||n>9)continue;g(n)}if(f||(n=t,n)||(f??n))return;if(t)break_();g()}"
+			],
 			[
 				"function f(o) { return [typeof (function () { return undeclaredX })(), delete (() => o.p)(), ((x) => x.m)(o)()] }",
 				{},
