@@ -24678,8 +24678,9 @@ declare interface OptimizationMinimizeCss {
 	charset?: false | "auto";
 
 	/**
-	 * Write a color the `browserslist` target cannot read as an extra declaration before the one naming it, in a spelling it does read: `color: oklch(59.686% 0.15619 49.7694)` is written as `color: #c65d06` and then the `oklch()` itself, so an engine reading neither the Lab family nor `hwb()` is left with a color rather than with nothing. The fallback is that color clipped into the sRGB gamut and rounded, which the declaration standing after it corrects wherever it is read. Nothing is written where the author already set the property earlier in the same block, where the color holds a substitution or a relative reference this cannot fold, or where the fallback would still name a function the target cannot read. On by default, and only in effect for a `browserslist` target — any other target names no browsers to answer for.
+	 * Deprecated: this option has moved to `target.colorFallbacks`.
 	 * @since 5.111.0
+	 * @deprecated
 	 */
 	colorFallbacks?: boolean;
 
@@ -24690,32 +24691,43 @@ declare interface OptimizationMinimizeCss {
 	comments?: string | boolean | RegExp | ((comment: string) => boolean);
 
 	/**
-	 * Write a polar or Lab color as the nearest hex even where that hex only approximates it. `shortenColors` converts one only where webpack can prove an engine's own conversion lands on the same bytes, and keeps the function in the two places it cannot: a channel sitting too near a `.5` boundary for two implementations to round it alike (it is why esbuild and lightningcss emit different bytes for `hwb(194 0% 0%)`), and a color outside the sRGB gamut, which hex can only clip to a different color. Off by default, for those two reasons, and the two are not the same trade: on the boundary this writes the byte esbuild, lightningcss and cssnano write anyway, while outside the gamut it goes further than any of them — lightningcss keeps the function there and writes a fallback before it, which is what `colorFallbacks` does. A space engines read through transfers of their own (`a98-rgb`, `prophoto-rgb`) is left alone either way, the hex there naming a color no engine paints rather than a near one. This is about replacing the function: a fallback stands before it rather than in its place, so it already clips and rounds this way.
+	 * Trade the authored spelling for a shorter one, each rewrite off by default: `true` turns every one of these on, `false` every one off, and an object sets them one by one.
+	 * @since 5.113.0
+	 */
+	convert?: boolean | OptimizationMinimizeCssConvert;
+
+	/**
+	 * Deprecated: this option has moved to `convert.approximateColors`.
 	 * @since 5.112.0
+	 * @deprecated
 	 */
 	convertApproximateColors?: boolean;
 
 	/**
-	 * Rewrite a length into a shorter unit it is exactly equal in (`16px` -> `1pc`). Off by default: the authored unit is lost, and once the asset is compressed the rewrite rarely earns anything.
+	 * Deprecated: this option has moved to `convert.lengthUnits`.
 	 * @since 5.110.0
+	 * @deprecated
 	 */
 	convertLengthUnits?: boolean;
 
 	/**
-	 * Resolve the `@custom-media` at-rule: write the query a name stands for wherever a condition asks for it, and drop the rule that named it. `@custom-media --wide (width>400px)` with `@media (--wide)` becomes `@media (width>400px)`. Off by default: `module.parser.css.customMedia` already resolves it in every stylesheet webpack parses, so this is for a `.css` asset that reached the minimizer without being parsed — one emitted by `asset/resource` or copied in. Every rule is read first, so a name resolves wherever its rule stands, the last rule stating it holds, and one name may be read through another; names that read each other in a cycle stand for nothing and are left as written.
+	 * Deprecated: this option has moved to `resolve.customMedia`.
 	 * @since 5.112.0
+	 * @deprecated
 	 */
 	customMedia?: boolean;
 
 	/**
-	 * Resolve the `@custom-selector` at-rule: write the selector list a name stands for as `:is(…)` wherever a selector asks for it, and drop the rule that named it. `@custom-selector :--heading h1, h2` with `:--heading` becomes `:is(h1, h2)`. Off by default, for the reason `customMedia` is: `module.parser.css.customSelectors` already resolves it in every stylesheet webpack parses. Rules are read as `customMedia` reads them, and a name is written out only where the target reads `:is()`.
+	 * Deprecated: this option has moved to `resolve.customSelectors`.
 	 * @since 5.112.0
+	 * @deprecated
 	 */
 	customSelectors?: boolean;
 
 	/**
-	 * Drop a declaration a later one in the same block overrides even where no target is selected, assuming the engines shipping today: wherever Chromium, Gecko and WebKit each read the later value. Off by default. With a `browserslist` target this is already done wherever every browser it names is known to read the later value, so the option only widens the case where no target is selected and there are no engines to name — which is what csso and cssnano do unconditionally. What it gives up is the fallback pair: `color:#c65d06;color:lab(50% 100 -100)` loses the hex, so an engine that cannot read `lab()` is left with nothing. A selection naming a browser the compat tables do not cover is still answered for the whole of it rather than by this option, since naming a browser states a target the option does not override.
+	 * Deprecated: this option has moved to `remove.overriddenDeclarations`.
 	 * @since 5.112.0
+	 * @deprecated
 	 */
 	dropOverriddenDeclarations?: boolean;
 
@@ -24730,38 +24742,50 @@ declare interface OptimizationMinimizeCss {
 		| ((comment: { value: string; line: number; col: number }) => boolean);
 
 	/**
-	 * Write a name that matches ASCII case-insensitively in lowercase: an at-rule name, a property name, a pseudo-class or pseudo-element name, a function name, a unit, and a keyword standing in a value whose grammar takes keywords alone. `@MEDIA`, `COLOR`, `:NTH-CHILD`, `URL(`, `1PX` and `currentColor` become `@media`, `color`, `:nth-child`, `url(`, `1px` and `currentcolor`. On by default, and exact: CSS matches every one of these ASCII case-insensitively, so the fold names the same thing. What it never touches is a name the author chose — a custom property, a custom ident such as an animation or grid-area name, an id, a class, a type selector, an attribute's value, or anything inside a substituted value. `@charset` is left as written, being read as bytes rather than matched, and `!important` is always written in lowercase because the printer writes the keyword rather than copying it.
+	 * Deprecated: this option has moved to `shorten.case`.
 	 * @since 5.111.0
+	 * @deprecated
 	 */
 	foldCase?: boolean;
 
 	/**
-	 * Write a spelling the `browserslist` target cannot read as one it can — the same value said another way, rather than left for an engine that will drop it: a 4-/8-digit hex as `rgba()`, a double-position gradient stop as the two stops it names, `inset` / `overflow` / `place-*` as the longhands they set, `text-decoration` as its own longhands where a slot is newer than the shorthand, `system-ui` as the stack of platform font names it stands for, a `:lang()` or `:not()` holding a list as the `:is()` that means it, a media feature range as the `min-`/`max-` pair, and `light-dark()` as the custom-property pair a color scheme switches. On by default, and only in effect for a `browserslist` target — any other target names no browsers to answer for. Off leaves every such spelling as written, which is how a stylesheet one of these rewrites gets wrong is minified; it never makes the minifier write a spelling the target cannot read.
+	 * Deprecated: this option has moved to `target.lowerUnsupported`.
 	 * @since 5.111.0
+	 * @deprecated
 	 */
 	lowerUnsupported?: boolean;
 
 	/**
-	 * Give a rule the selectors of a later one printing the same block, and an at-rule the block of a later one stating the same condition, past the rules standing between them. Off by default because it reorders the cascade, so it holds only where nothing between the two declares a property the block being moved does for an element its selectors can match (a rule whose selectors all name other element types, `h3` between two rules for `h1` and `h2`, never can) — a condition between counts for what its own rules declare, while `@layer` and anything else whose declarations cannot be read stands in the way whatever it says. A block repeated at a distance already compresses on its own, so a selector join is taken only where the copy of the block it drops is worth more than twice the selector it writes instead; an at-rule join writes no selector and drops the repeated prelude outright. A named `@layer` is not joined this way — its place in the cascade is where its name is first written, not what its prelude states. `mergeRules` is the safe half of this, joining only what nothing stands between.
+	 * Join what can be written once: `true` turns every one of these on, `false` every one off, and an object sets them one by one.
+	 * @since 5.113.0
+	 */
+	merge?: boolean | OptimizationMinimizeCssMerge;
+
+	/**
+	 * Deprecated: this option has moved to `merge.distantRules`.
 	 * @since 5.111.0
+	 * @deprecated
 	 */
 	mergeDistantRules?: boolean;
 
 	/**
-	 * Write a family of longhands as the one shorthand that sets them — four sides or corners, the two a pair shorthand sets, or the slots of an order-free one — even where unrelated declarations stand between them. On by default.
+	 * Deprecated: this option has moved to `merge.longhands`.
 	 * @since 5.110.0
+	 * @deprecated
 	 */
 	mergeLonghands?: boolean;
 
 	/**
-	 * Join rules nothing stands between: adjacent rules that print the same block become one selector list, at-rules that share a prelude become one rule, and a named `@layer` block a later sibling opens again is folded into the first. On by default.
+	 * Deprecated: this option has moved to `merge.rules`.
 	 * @since 5.110.0
+	 * @deprecated
 	 */
 	mergeRules?: boolean;
 
 	/**
-	 * Normalize quoting: a string takes whichever quote needs fewer escapes, a `url()` and an attribute selector's value drop theirs where the content is still one token, and a font family whose name is a run of identifiers is written unquoted. On by default.
+	 * Deprecated: this option has moved to `shorten.quotes`.
 	 * @since 5.110.0
+	 * @deprecated
 	 */
 	normalizeQuotes?: boolean;
 
@@ -24772,22 +24796,24 @@ declare interface OptimizationMinimizeCss {
 	pseudoClasses?: { [index: string]: string };
 
 	/**
-	 * Compute a call into the shorter call naming the same value: `calc()` and every math function over constants, a transform naming one axis or an identity, a gradient's default direction and its implied stops, an easing function that has a keyword, and a filter function given the amount an omitted argument already means. On by default.
+	 * Deprecated: this option has moved to `shorten.functions`.
 	 * @since 5.110.0
+	 * @deprecated
 	 */
 	reduceFunctions?: boolean;
 
 	/**
-	 * Drop a rule or declaration nothing can read: a rule whose block ends up empty, a declaration a later one in the same block overrides, a rule an identical later sibling makes dead, and the `@charset` naming an encoding the output is not written in. On by default. Joining rules that are not dead is `mergeRules`.
-	 * @since 5.110.0
-	 */
-	removeDeadRules?: boolean;
-
-	/**
-	 * Take out of an earlier rule each declaration a later rule with the same selector, in the same at-rules, writes again: of two equally specific declarations the later wins wherever both match, whatever stands between. On by default; turning it off saves about 3% of the minifier's time for 248 of 2,456,527 gzip bytes over the CSS corpus. Needs `removeDeadRules`, which drops a rule it leaves empty.
+	 * Take out what nothing can read: `true` turns every one of these on, `false` every one off, and an object sets them one by one.
 	 * @since 5.113.0
 	 */
-	removeShadowedDeclarations?: boolean;
+	remove?: boolean | OptimizationMinimizeCssRemove;
+
+	/**
+	 * Deprecated: this option has moved to `remove.deadRules`.
+	 * @since 5.110.0
+	 * @deprecated
+	 */
+	removeDeadRules?: boolean;
 
 	/**
 	 * Print a style rule's declarations in one order by property family, the properties no family names first where they were written, so blocks setting the same things read alike and compress smaller. Only declarations whose order nothing can see move: two spellings of one property, a shorthand and what it sets, two shorthands sharing a longhand, and a flow-relative side and a physical one keep theirs, and a block holding a property no dataset names or a nested rule is printed as written. On by default.
@@ -24796,52 +24822,78 @@ declare interface OptimizationMinimizeCss {
 	reorderDeclarations?: boolean;
 
 	/**
-	 * Shorten the values of custom properties (`--x: #ffffff` -> `#fff`, `--y: 0.5rem` -> `.5rem`), which are otherwise written back exactly as authored. Off by default: `getComputedStyle().getPropertyValue()` hands this text back, so a rewritten value is a different CSSOM — the one place a declaration's authored text survives. What it may rewrite is exactly what any other value's tokens may be, a color in a substitution's fallback included — that fallback being the property's value rather than the function's own argument.
+	 * Resolve the at-rules no engine reads, each off by default: `true` turns every one of these on, `false` every one off, and an object sets them one by one.
+	 * @since 5.113.0
+	 */
+	resolve?: boolean | OptimizationMinimizeCssResolve;
+
+	/**
+	 * Deprecated: this option has moved to `shorten.customProperties`.
 	 * @since 5.110.0
+	 * @deprecated
 	 */
 	rewriteCustomProperties?: boolean;
 
 	/**
-	 * Write a `:dir()` the `browserslist` target cannot read as the `[dir]` attribute selector it approximates: `a:dir(rtl)` becomes `a[dir=rtl]`. Off until asked for, because the two are not the same question — `:dir()` reads the directionality an element resolves to, which it may inherit from an ancestor, while `[dir=rtl]` reads the attribute on the element itself, so an element inside a `dir="rtl"` ancestor matches the first and not the second. Only in effect for a `browserslist` target that reads no `:dir()`; any other target names no browsers to answer for.
+	 * Deprecated: this option has moved to `target.dirSelector`.
 	 * @since 5.111.0
+	 * @deprecated
 	 */
 	rewriteDirSelector?: boolean;
 
 	/**
-	 * Write an escaped identifier the shortest way that names the same thing, wherever it stands — a selector, a property, at-rule or function name, or a value: `grid-area:\66oot` becomes `grid-area:foot`, `#\41 x` becomes `#Ax`, `col\6f r:red` becomes `color:red` and `c\61 lc(` becomes `calc(`. On by default, and exact: the escape and what replaces it are the same identifier. Off leaves every escape as the author wrote it, which is what a consumer comparing the text rather than reading the identifier needs.
+	 * Deprecated: this option has moved to `shorten.escapes`.
 	 * @since 5.111.0
+	 * @deprecated
 	 */
 	rewriteEscapes?: boolean;
 
 	/**
-	 * Write each color in the shortest spelling of the same value: `#ffffff` -> `#fff`, `rgb(1 2 3)` -> `#010203`, a named color where the property takes no identifier of the author's own, and every polar and Lab function the target agrees with hex on. On by default.
+	 * Write each value, selector and condition the shortest way that means the same: `true` turns every one of these on, `false` every one off, and an object sets them one by one.
+	 * @since 5.113.0
+	 */
+	shorten?: boolean | OptimizationMinimizeCssShorten;
+
+	/**
+	 * Deprecated: this option has moved to `shorten.colors`.
 	 * @since 5.110.0
+	 * @deprecated
 	 */
 	shortenColors?: boolean;
 
 	/**
-	 * Shorten a rule's condition prelude: a media feature in its range spelling where the target reads one (`(min-width:100px)` -> `(width>=100px)`), an `and` of two one-sided ranges collapsed into the interval it describes, the `all` a query states before an `and` (which matches what the condition alone matches), and an operand a condition already states — in `@supports` and `@container` as well as `@media`. On by default.
+	 * Deprecated: this option has moved to `shorten.mediaQueries`.
 	 * @since 5.110.0
+	 * @deprecated
 	 */
 	shortenMediaQueries?: boolean;
 
 	/**
-	 * Write each number in its shortest equal spelling — dropping a leading zero, a trailing fraction and a `+`, rounding to the six significant digits a stylesheet can observe, dropping the unit a zero does not need, and writing an alpha and a ratio the one way its grammar spells them. On by default.
+	 * Deprecated: this option has moved to `shorten.numbers`.
 	 * @since 5.110.0
+	 * @deprecated
 	 */
 	shortenNumbers?: boolean;
 
 	/**
-	 * Rewrite a selector into an equal one: a selector list deduplicated and ordered, a CSS2 pseudo-element's second colon dropped, the universal a compound already implies dropped, an `An+B` written the shortest way its microsyntax allows, and a `from` / `100%` keyframe selector written as the shorter of the pair. On by default.
+	 * Deprecated: this option has moved to `shorten.selectors`.
 	 * @since 5.110.0
+	 * @deprecated
 	 */
 	shortenSelectors?: boolean;
 
 	/**
-	 * Write a value the shortest way its property's own grammar allows: a `{1,4}` box or corner notation collapsed, a slot holding its own initial dropped, and `flex` / `font-weight` / `display` / `transition` / `<position>` / `<repeat-style>` written the short way. On by default. Merging separate longhand declarations is `mergeLonghands`.
+	 * Deprecated: this option has moved to `shorten.values`.
 	 * @since 5.110.0
+	 * @deprecated
 	 */
 	shortenValues?: boolean;
+
+	/**
+	 * Fit the stylesheet to the `browserslist` target: `true` turns every one of these on, `false` every one off, and an object sets them one by one.
+	 * @since 5.113.0
+	 */
+	target?: boolean | OptimizationMinimizeCssTarget;
 
 	/**
 	 * Names a whole-project analysis found nothing uses, which the minimizer then takes out: a bare name is matched against every class and id a selector names and against every `@keyframes` name, and a `--`-prefixed one against every custom property a declaration sets. A selector list keeps the selectors that do not name one, and a rule left with none goes; a name inside a functional pseudo (`:not(.gone)`, `:is(.gone, .kept)`) is not one the rule needs, so it is left alone. Nothing is derived here — the list is the caller's, and a name on it that something does use takes working CSS out.
@@ -24850,8 +24902,189 @@ declare interface OptimizationMinimizeCss {
 	unusedSymbols?: string[];
 
 	/**
-	 * Maintain vendor prefixes for the `browserslist` target: add the `-webkit-` / `-moz-` / `-ms-` spelling of a property, at-rule or pseudo-selector that a selected browser still needs, and drop one none of them does. On by default, and only in effect for a `browserslist` target — any other target names no browsers to prefix for. A browserslist name no compat dataset covers (`op_mini`, `and_uc`, `and_qq`, `baidu`, `kaios`, `bb`) is skipped, and a selection of nothing but those prefixes for no one.
+	 * Deprecated: this option has moved to `target.vendorPrefixes`.
 	 * @since 5.110.0
+	 * @deprecated
+	 */
+	vendorPrefixes?: boolean;
+}
+
+/**
+ * Trade the authored spelling for a shorter one, each rewrite off by default.
+ * @since 5.113.0
+ */
+declare interface OptimizationMinimizeCssConvert {
+	/**
+	 * Write a polar or Lab color as the nearest hex even where that hex only approximates it. `shorten.colors` converts one only where webpack can prove an engine's own conversion lands on the same bytes, and keeps the function in the two places it cannot: a channel sitting too near a `.5` boundary for two implementations to round it alike (it is why esbuild and lightningcss emit different bytes for `hwb(194 0% 0%)`), and a color outside the sRGB gamut, which hex can only clip to a different color. Off by default, for those two reasons, and the two are not the same trade: on the boundary this writes the byte esbuild, lightningcss and cssnano write anyway, while outside the gamut it goes further than any of them — lightningcss keeps the function there and writes a fallback before it, which is what `target.colorFallbacks` does. A space engines read through transfers of their own (`a98-rgb`, `prophoto-rgb`) is left alone either way, the hex there naming a color no engine paints rather than a near one. This is about replacing the function: a fallback stands before it rather than in its place, so it already clips and rounds this way.
+	 * @since 5.113.0
+	 */
+	approximateColors?: boolean;
+
+	/**
+	 * Rewrite a length into a shorter unit it is exactly equal in (`16px` -> `1pc`). Off by default: the authored unit is lost, and once the asset is compressed the rewrite rarely earns anything.
+	 * @since 5.113.0
+	 */
+	lengthUnits?: boolean;
+}
+
+/**
+ * Join what can be written once.
+ * @since 5.113.0
+ */
+declare interface OptimizationMinimizeCssMerge {
+	/**
+	 * Give a rule the selectors of a later one printing the same block, and an at-rule the block of a later one stating the same condition, past the rules standing between them. Off by default because it reorders the cascade, so it holds only where nothing between the two declares a property the block being moved does for an element its selectors can match (a rule whose selectors all name other element types, `h3` between two rules for `h1` and `h2`, never can) — a condition between counts for what its own rules declare, while `@layer` and anything else whose declarations cannot be read stands in the way whatever it says. A block repeated at a distance already compresses on its own, so a selector join is taken only where the copy of the block it drops is worth more than twice the selector it writes instead; an at-rule join writes no selector and drops the repeated prelude outright. A named `@layer` is not joined this way — its place in the cascade is where its name is first written, not what its prelude states. `merge.rules` is the safe half of this, joining only what nothing stands between.
+	 * @since 5.113.0
+	 */
+	distantRules?: boolean;
+
+	/**
+	 * Write a family of longhands as the one shorthand that sets them — four sides or corners, the two a pair shorthand sets, or the slots of an order-free one — even where unrelated declarations stand between them. On by default.
+	 * @since 5.113.0
+	 */
+	longhands?: boolean;
+
+	/**
+	 * Join rules nothing stands between: adjacent rules that print the same block become one selector list, at-rules that share a prelude become one rule, and a named `@layer` block a later sibling opens again is folded into the first. On by default.
+	 * @since 5.113.0
+	 */
+	rules?: boolean;
+}
+
+/**
+ * Take out what nothing can read.
+ * @since 5.113.0
+ */
+declare interface OptimizationMinimizeCssRemove {
+	/**
+	 * Drop a rule or declaration nothing can read: a rule whose block ends up empty, a declaration a later one in the same block overrides, a rule an identical later sibling makes dead, and the `@charset` naming an encoding the output is not written in. On by default. Joining rules that are not dead is `merge.rules`.
+	 * @since 5.113.0
+	 */
+	deadRules?: boolean;
+
+	/**
+	 * Drop a declaration a later one in the same block overrides even where no target is selected, assuming the engines shipping today: wherever Chromium, Gecko and WebKit each read the later value. Off by default. With a `browserslist` target this is already done wherever every browser it names is known to read the later value, so the option only widens the case where no target is selected and there are no engines to name — which is what csso and cssnano do unconditionally. What it gives up is the fallback pair: `color:#c65d06;color:lab(50% 100 -100)` loses the hex, so an engine that cannot read `lab()` is left with nothing. A selection naming a browser the compat tables do not cover is still answered for the whole of it rather than by this option, since naming a browser states a target the option does not override.
+	 * @since 5.113.0
+	 */
+	overriddenDeclarations?: boolean;
+
+	/**
+	 * Take out of an earlier rule each declaration a later rule with the same selector, in the same at-rules, writes again: of two equally specific declarations the later wins wherever both match, whatever stands between. On by default; turning it off saves about 3% of the minifier's time for 248 of 2,456,527 gzip bytes over the CSS corpus. Needs `remove.deadRules`, which drops a rule it leaves empty.
+	 * @since 5.113.0
+	 */
+	shadowedDeclarations?: boolean;
+}
+
+/**
+ * Resolve the at-rules no engine reads, each off by default.
+ * @since 5.113.0
+ */
+declare interface OptimizationMinimizeCssResolve {
+	/**
+	 * Resolve the `@custom-media` at-rule: write the query a name stands for wherever a condition asks for it, and drop the rule that named it. `@custom-media --wide (width>400px)` with `@media (--wide)` becomes `@media (width>400px)`. Off by default: `module.parser.css.customMedia` already resolves it in every stylesheet webpack parses, so this is for a `.css` asset that reached the minimizer without being parsed — one emitted by `asset/resource` or copied in. Every rule is read first, so a name resolves wherever its rule stands, the last rule stating it holds, and one name may be read through another; names that read each other in a cycle stand for nothing and are left as written.
+	 * @since 5.113.0
+	 */
+	customMedia?: boolean;
+
+	/**
+	 * Resolve the `@custom-selector` at-rule: write the selector list a name stands for as `:is(…)` wherever a selector asks for it, and drop the rule that named it. `@custom-selector :--heading h1, h2` with `:--heading` becomes `:is(h1, h2)`. Off by default, for the reason `resolve.customMedia` is: `module.parser.css.customSelectors` already resolves it in every stylesheet webpack parses. Rules are read as `resolve.customMedia` reads them, and a name is written out only where the target reads `:is()`.
+	 * @since 5.113.0
+	 */
+	customSelectors?: boolean;
+}
+
+/**
+ * Write each value, selector and condition the shortest way that means the same.
+ * @since 5.113.0
+ */
+declare interface OptimizationMinimizeCssShorten {
+	/**
+	 * Write a name that matches ASCII case-insensitively in lowercase: an at-rule name, a property name, a pseudo-class or pseudo-element name, a function name, a unit, and a keyword standing in a value whose grammar takes keywords alone. `@MEDIA`, `COLOR`, `:NTH-CHILD`, `URL(`, `1PX` and `currentColor` become `@media`, `color`, `:nth-child`, `url(`, `1px` and `currentcolor`. On by default, and exact: CSS matches every one of these ASCII case-insensitively, so the fold names the same thing. What it never touches is a name the author chose — a custom property, a custom ident such as an animation or grid-area name, an id, a class, a type selector, an attribute's value, or anything inside a substituted value. `@charset` is left as written, being read as bytes rather than matched, and `!important` is always written in lowercase because the printer writes the keyword rather than copying it.
+	 * @since 5.113.0
+	 */
+	case?: boolean;
+
+	/**
+	 * Write each color in the shortest spelling of the same value: `#ffffff` -> `#fff`, `rgb(1 2 3)` -> `#010203`, a named color where the property takes no identifier of the author's own, and every polar and Lab function the target agrees with hex on. On by default.
+	 * @since 5.113.0
+	 */
+	colors?: boolean;
+
+	/**
+	 * Shorten the values of custom properties (`--x: #ffffff` -> `#fff`, `--y: 0.5rem` -> `.5rem`), which are otherwise written back exactly as authored. Off by default: `getComputedStyle().getPropertyValue()` hands this text back, so a rewritten value is a different CSSOM — the one place a declaration's authored text survives. What it may rewrite is exactly what any other value's tokens may be, a color in a substitution's fallback included — that fallback being the property's value rather than the function's own argument.
+	 * @since 5.113.0
+	 */
+	customProperties?: boolean;
+
+	/**
+	 * Write an escaped identifier the shortest way that names the same thing, wherever it stands — a selector, a property, at-rule or function name, or a value: `grid-area:\66oot` becomes `grid-area:foot`, `#\41 x` becomes `#Ax`, `col\6f r:red` becomes `color:red` and `c\61 lc(` becomes `calc(`. On by default, and exact: the escape and what replaces it are the same identifier. Off leaves every escape as the author wrote it, which is what a consumer comparing the text rather than reading the identifier needs.
+	 * @since 5.113.0
+	 */
+	escapes?: boolean;
+
+	/**
+	 * Compute a call into the shorter call naming the same value: `calc()` and every math function over constants, a transform naming one axis or an identity, a gradient's default direction and its implied stops, an easing function that has a keyword, and a filter function given the amount an omitted argument already means. On by default.
+	 * @since 5.113.0
+	 */
+	functions?: boolean;
+
+	/**
+	 * Shorten a rule's condition prelude: a media feature in its range spelling where the target reads one (`(min-width:100px)` -> `(width>=100px)`), an `and` of two one-sided ranges collapsed into the interval it describes, the `all` a query states before an `and` (which matches what the condition alone matches), and an operand a condition already states — in `@supports` and `@container` as well as `@media`. On by default.
+	 * @since 5.113.0
+	 */
+	mediaQueries?: boolean;
+
+	/**
+	 * Write each number in its shortest equal spelling — dropping a leading zero, a trailing fraction and a `+`, rounding to the six significant digits a stylesheet can observe, dropping the unit a zero does not need, and writing an alpha and a ratio the one way its grammar spells them. On by default.
+	 * @since 5.113.0
+	 */
+	numbers?: boolean;
+
+	/**
+	 * Normalize quoting: a string takes whichever quote needs fewer escapes, a `url()` and an attribute selector's value drop theirs where the content is still one token, and a font family whose name is a run of identifiers is written unquoted. On by default.
+	 * @since 5.113.0
+	 */
+	quotes?: boolean;
+
+	/**
+	 * Rewrite a selector into an equal one: a selector list deduplicated and ordered, a CSS2 pseudo-element's second colon dropped, the universal a compound already implies dropped, an `An+B` written the shortest way its microsyntax allows, and a `from` / `100%` keyframe selector written as the shorter of the pair. On by default.
+	 * @since 5.113.0
+	 */
+	selectors?: boolean;
+
+	/**
+	 * Write a value the shortest way its property's own grammar allows: a `{1,4}` box or corner notation collapsed, a slot holding its own initial dropped, and `flex` / `font-weight` / `display` / `transition` / `<position>` / `<repeat-style>` written the short way. On by default. Merging separate longhand declarations is `merge.longhands`.
+	 * @since 5.113.0
+	 */
+	values?: boolean;
+}
+
+/**
+ * Fit the stylesheet to the `browserslist` target.
+ * @since 5.113.0
+ */
+declare interface OptimizationMinimizeCssTarget {
+	/**
+	 * Write a color the `browserslist` target cannot read as an extra declaration before the one naming it, in a spelling it does read: `color: oklch(59.686% 0.15619 49.7694)` is written as `color: #c65d06` and then the `oklch()` itself, so an engine reading neither the Lab family nor `hwb()` is left with a color rather than with nothing. The fallback is that color clipped into the sRGB gamut and rounded, which the declaration standing after it corrects wherever it is read. Nothing is written where the author already set the property earlier in the same block, where the color holds a substitution or a relative reference this cannot fold, or where the fallback would still name a function the target cannot read. On by default, and only in effect for a `browserslist` target — any other target names no browsers to answer for.
+	 * @since 5.113.0
+	 */
+	colorFallbacks?: boolean;
+
+	/**
+	 * Write a `:dir()` the `browserslist` target cannot read as the `[dir]` attribute selector it approximates: `a:dir(rtl)` becomes `a[dir=rtl]`. Off until asked for, because the two are not the same question — `:dir()` reads the directionality an element resolves to, which it may inherit from an ancestor, while `[dir=rtl]` reads the attribute on the element itself, so an element inside a `dir="rtl"` ancestor matches the first and not the second. Only in effect for a `browserslist` target that reads no `:dir()`; any other target names no browsers to answer for.
+	 * @since 5.113.0
+	 */
+	dirSelector?: boolean;
+
+	/**
+	 * Write a spelling the `browserslist` target cannot read as one it can — the same value said another way, rather than left for an engine that will drop it: a 4-/8-digit hex as `rgba()`, a double-position gradient stop as the two stops it names, `inset` / `overflow` / `place-*` as the longhands they set, `text-decoration` as its own longhands where a slot is newer than the shorthand, `system-ui` as the stack of platform font names it stands for, a `:lang()` or `:not()` holding a list as the `:is()` that means it, a media feature range as the `min-`/`max-` pair, and `light-dark()` as the custom-property pair a color scheme switches. On by default, and only in effect for a `browserslist` target — any other target names no browsers to answer for. Off leaves every such spelling as written, which is how a stylesheet one of these rewrites gets wrong is minified; it never makes the minifier write a spelling the target cannot read.
+	 * @since 5.113.0
+	 */
+	lowerUnsupported?: boolean;
+
+	/**
+	 * Maintain vendor prefixes for the `browserslist` target: add the `-webkit-` / `-moz-` / `-ms-` spelling of a property, at-rule or pseudo-selector that a selected browser still needs, and drop one none of them does. On by default, and only in effect for a `browserslist` target — any other target names no browsers to prefix for. A browserslist name no compat dataset covers (`op_mini`, `and_uc`, `and_qq`, `baidu`, `kaios`, `bb`) is skipped, and a selection of nothing but those prefixes for no one.
+	 * @since 5.113.0
 	 */
 	vendorPrefixes?: boolean;
 }

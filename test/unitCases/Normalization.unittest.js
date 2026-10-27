@@ -53,4 +53,54 @@ describe("getNormalizedWebpackOptions", () => {
 			expect(options.snapshot.managedPaths).toEqual([directory, expression]);
 		});
 	});
+
+	describe("optimization.minimize.css groups", () => {
+		/**
+		 * @param {import("../../declarations/WebpackOptions").OptimizationMinimizeCss} css the CSS minimizer options
+		 * @returns {unknown} what the minimizer reads
+		 */
+		const normalize = (css) =>
+			/** @type {NonNullable<import("../../declarations/WebpackOptions").OptimizationMinimizeOptions>} */ (
+				getNormalizedWebpackOptions({ optimization: { minimize: { css } } })
+					.optimization.minimizeOptions
+			).css;
+
+		it("sets every switch of a group a boolean names", () => {
+			expect(normalize({ merge: false, convert: true })).toEqual({
+				mergeRules: false,
+				mergeLonghands: false,
+				mergeDistantRules: false,
+				convertApproximateColors: true,
+				convertLengthUnits: true
+			});
+		});
+
+		it("sets each switch a group object names, over its deprecated name", () => {
+			expect(
+				normalize({
+					shorten: { colors: false, case: false },
+					remove: { shadowedDeclarations: false },
+					target: { dirSelector: true },
+					shortenColors: true,
+					shortenNumbers: false,
+					comments: false
+				})
+			).toEqual({
+				shortenColors: false,
+				foldCase: false,
+				removeShadowedDeclarations: false,
+				rewriteDirSelector: true,
+				shortenNumbers: false,
+				comments: false
+			});
+		});
+
+		it("reads the same groups from minimizeOptions", () => {
+			expect(
+				getNormalizedWebpackOptions({
+					optimization: { minimizeOptions: { css: { resolve: true } } }
+				}).optimization.minimizeOptions
+			).toEqual({ css: { customMedia: true, customSelectors: true } });
+		});
+	});
 });

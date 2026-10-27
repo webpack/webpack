@@ -14,18 +14,19 @@ module.exports = {
 				// `false` here would drop every comment; `"all"` is the level that
 				// makes none of them go, which is what leaves each label below.
 				comments: "all",
-				lowerUnsupported: false,
-				mergeLonghands: false,
-				mergeRules: false,
-				normalizeQuotes: false,
-				reduceFunctions: false,
-				removeDeadRules: false,
+				merge: false,
+				remove: false,
 				reorderDeclarations: false,
-				shortenColors: false,
-				shortenMediaQueries: false,
-				shortenNumbers: false,
-				shortenSelectors: false,
-				shortenValues: false
+				shorten: {
+					colors: false,
+					functions: false,
+					mediaQueries: false,
+					numbers: false,
+					quotes: false,
+					selectors: false,
+					values: false
+				},
+				target: { lowerUnsupported: false }
 			}
 		},
 		// `"..."` keeps the default minimizer, which is what reads
