@@ -12402,6 +12402,70 @@ describe("cssMinify export", () => {
 		);
 	});
 
+	describe("a caller's renderEmbeddedSource", () => {
+		const sheet =
+			'.a{background:url("data:image/svg+xml,<svg></svg>")}' +
+			'.b{background:url("data:text/css,a { color : red }")}';
+
+		it("prints what it answers, and leaves what it declines as written", async () => {
+			const cssMinify = require("../../../lib/css/cssMinify");
+
+			/** @type {string[]} */
+			const asked = [];
+			const { code } = await cssMinify({ "a.css": sheet }, undefined, {
+				renderEmbeddedSource: (_source, { type }) => {
+					asked.push(type);
+					return type === "svg" ? "<svg id=x/>" : undefined;
+				}
+			});
+
+			expect(asked).toEqual(["svg", "css"]);
+			expect(code).toBe(
+				".a{background:url(data:image/svg+xml,<svg\\ id=x/>)}" +
+					'.b{background:url("data:text/css,a { color : red }")}'
+			);
+		});
+
+		it("minifies an SVG it declines as the `.svg` assets are, under `svg`", async () => {
+			const cssMinify = require("../../../lib/css/cssMinify");
+
+			const { code } = await cssMinify({ "a.css": sheet }, undefined, {
+				svg: true,
+				renderEmbeddedSource: () => undefined
+			});
+
+			expect(code).toBe(
+				".a{background:url(data:image/svg+xml,<svg/>)}" +
+					'.b{background:url("data:text/css,a { color : red }")}'
+			);
+		});
+
+		it("returns what it reports beside the code", async () => {
+			const cssMinify = require("../../../lib/css/cssMinify");
+
+			const result = await cssMinify({ "a.css": sheet }, undefined, {
+				renderEmbeddedSource: (source, { type }) =>
+					type === "svg" ? { code: source, warnings: ["w"] } : undefined
+			});
+
+			expect(result.warnings).toEqual(["w"]);
+			expect(result.errors).toBeUndefined();
+		});
+	});
+
+	it("keeps the comments `some` names while extracting others", async () => {
+		const cssMinify = require("../../../lib/css/cssMinify");
+
+		const result = await cssMinify(
+			{ "a.css": "/*! keep */a{b:c}/* foo */d{e:f}/* drop */" },
+			undefined,
+			{ extractComments: /foo/, comments: "some" }
+		);
+
+		expect(result.code).toBe("/*! keep */a{b:c}d{e:f}");
+		expect(result.extractedComments).toEqual(["/* foo */"]);
+	});
+
 	describe("extractComments", () => {
 		const sheet =
 			"/*! one */a{color:red}/* plain */b{color:blue}/*! one */" +

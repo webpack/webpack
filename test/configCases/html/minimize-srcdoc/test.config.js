@@ -39,7 +39,7 @@ module.exports = {
 		// Both nested languages reach a srcdoc: a conditional comment in there is
 		// minified as one, not left as the text of an attribute.
 		expect(page).toContain(
-			'srcdoc="<!--[if IE]><p class=ie>downlevel<![endif]-->"'
+			'srcdoc="<!--[if IE]><p class=ie>downlevel</p><![endif]-->"'
 		);
 
 		// A document cannot sit in an unquoted value — a space or a `>` would end
@@ -53,7 +53,7 @@ module.exports = {
 		// The comment is put back where it was parsed, so the same text written
 		// inside a script is left as the script wrote it.
 		expect(page).toContain('{"cc":"<!--[if IE]><p   >script</p><![endif]-->"}');
-		expect(page).toContain("<!--[if IE]><p>script<![endif]-->");
+		expect(page).toContain("<!--[if IE]><p>script</p><![endif]-->");
 
 		// Nothing to minify, and nothing invented.
 		expect(page).toContain("<iframe id=empty srcdoc>");
