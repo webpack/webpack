@@ -15262,6 +15262,11 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				"function f(e){return[typeof(0,undeclaredX),delete(0,e.p),(0,e.m)()]}"
 			],
 			[
+				"function f(y) { var h = function (x) { return x.a }; return [((x) => x)(/*! a */ y), (function () { /*! b */ return y })(), h(/*! c */ y)] }",
+				{},
+				"function f(n){return[(n=>n)(/*! a */n),function(){/*! b */return n}(),function(n){return n.a}(/*! c */n)]}"
+			],
+			[
 				"function f(a){ if (0) x(); Math.PI }",
 				{ compress: {toplevel: false,builtins_ecma: 2020},format: {comments: false} },
 				"function f(f){}"
