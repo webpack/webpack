@@ -24,7 +24,7 @@ const { IGNORED_FORMAT_OPTIONS, load } =
 	require("../../lib/javascript/syntax").printer;
 const OXC_SMALLER = require("../helpers/oxcSmaller");
 const SWC_SMALLER = require("../helpers/swcSmaller");
-const { currentPart, isInPart } = require("../helpers/testParts");
+const { claimInPart, currentPart } = require("../helpers/testParts");
 
 /** @typedef {import("terser").MinifyOptions} MinifyOptions */
 /** @typedef {(code: string, options: MinifyOptions) => Promise<{ code?: string }>} Minify */
@@ -47,6 +47,8 @@ const oxcTestsDir = path.join(externalDir, "oxc/crates/oxc_minifier/tests");
 
 // A group minifies each of its sources once per option set, with both minifiers.
 const GROUP_TIMEOUT = 600000;
+// Sources a part claims at once: enough that oxc's batches stay few.
+const CLAIM_SIZE = 100;
 
 /**
  * An option value, copied so neither minifier sees what the other wrote into
@@ -2444,319 +2446,323 @@ describe("JavaScript minifier", () => {
 								);
 							}
 						};
-						// `--parts=<n>` splits by source, as one group can hold most of a corpus.
-						const sources = group.files
-							.flatMap((file) => corpus.read(file, reader))
-							.filter((source) =>
-								isInPart(`${corpus.name}/${group.name}/${source.name}`)
-							);
-						const oxcSet = "the default minimizer's options";
-						// webpack's minimizer reads `ecma` off `output.environment`, 2020 for a
-						// modern target, which oxc's output assumes too.
-						const oxcEcma = 2020;
-						/** @type {Map<Source, string | null | Error>} */
-						const oxcOutputs = new Map();
-						if (!corpus.withoutOxc && corpus.optionSets.includes(oxcSet)) {
-							const jobs = sources.map((source) => ({
-								input: source.input,
-								...oxcOptionsOf(
-									/** @type {MinifyOptions} */ (OPTION_SETS[oxcSet](source))
-								)
-							}));
-							const outputs = minifyAllWithOxc(jobs);
-							for (const [i, source] of sources.entries()) {
-								oxcOutputs.set(source, outputs[i]);
-							}
-						}
-						for (const source of sources) {
-							const expectation = source.stdout
-								? expectedOf(source.stdout)
-								: {};
-							if (expectation.disagrees) {
-								differences.push(`${source.name}: ${expectation.disagrees}`);
-							}
-							/** @type {Map<string, string | undefined>} */
-							const verdicts = new Map();
-							for (const setName of corpus.optionSets) {
-								const optionsFor = OPTION_SETS[setName];
-								const options = optionsFor(source);
-								if (!options) continue;
-								const theirs = await outcome(
-									reference.minify,
-									source.input,
-									withoutLayout(options)
-								);
-								const ours = await outcome(
-									printer.minify,
-									source.input,
-									optionsFor(source)
-								);
-								// A case reading its source with a parser option webpack's
-								// parser has no counterpart for holds nothing of webpack's.
-								if (
-									ours.error !== undefined &&
-									DROPPED_PARSE_OPTIONS.some(
-										(name) =>
-											ours.error === `\`${name}\` is not a supported option`
+						const allSources = group.files.flatMap((file) =>
+							corpus.read(file, reader)
+						);
+						// `--parts=<n>`: each part claims the next chunk of sources no other part
+						// took, so one that ends its chunks early takes more and the parts end
+						// together; a chunk is minified by oxc in one batch.
+						for (let start = 0; start < allSources.length; start += CLAIM_SIZE) {
+							if (!claimInPart(`${corpus.name}/${group.name}/${start}`)) continue;
+							const sources = allSources.slice(start, start + CLAIM_SIZE);
+							const oxcSet = "the default minimizer's options";
+							// webpack's minimizer reads `ecma` off `output.environment`, 2020 for a
+							// modern target, which oxc's output assumes too.
+							const oxcEcma = 2020;
+							/** @type {Map<Source, string | null | Error>} */
+							const oxcOutputs = new Map();
+							if (!corpus.withoutOxc && corpus.optionSets.includes(oxcSet)) {
+								const jobs = sources.map((source) => ({
+									input: source.input,
+									...oxcOptionsOf(
+										/** @type {MinifyOptions} */ (OPTION_SETS[oxcSet](source))
 									)
-								) {
-									continue;
+								}));
+								const outputs = minifyAllWithOxc(jobs);
+								for (const [i, source] of sources.entries()) {
+									oxcOutputs.set(source, outputs[i]);
 								}
-								if (
-									corpus.ownOptionsKnown &&
-									setName === "its own options" &&
-									theirs.error !== undefined &&
-									/is not a supported option/.test(theirs.error)
-								) {
-									differences.push(
-										`${source.name} (${setName})\n\tterser refused an option: ${theirs.error}`
+							}
+							for (const source of sources) {
+								const expectation = source.stdout
+									? expectedOf(source.stdout)
+									: {};
+								if (expectation.disagrees) {
+									differences.push(`${source.name}: ${expectation.disagrees}`);
+								}
+								/** @type {Map<string, string | undefined>} */
+								const verdicts = new Map();
+								for (const setName of corpus.optionSets) {
+									const optionsFor = OPTION_SETS[setName];
+									const options = optionsFor(source);
+									if (!options) continue;
+									const theirs = await outcome(
+										reference.minify,
+										source.input,
+										withoutLayout(options)
 									);
-								}
-								const { expected } = expectation;
-								// Run where the case says what it prints: under its own options
-								// always, under another set unless it opts out, and never as a
-								// module where it is a script, since a module is strict.
-								const runs =
-									expected !== undefined &&
-									(setName === "its own options" ||
-										(source.reminify !== false &&
-											!(options.module && !source.module)));
-								/**
-								 * @param {string} code an output
-								 * @returns {string | undefined} how it misprints, if it does
-								 */
-								const misprint = (code) => {
-									const { same_stdout: sameStdout } =
-										/** @type {NonNullable<typeof loaded.sandbox>} */ (
-											loaded.sandbox
-										);
-									const stdout = /** @type {Stdout} */ (source.stdout);
-									const wanted = /** @type {string | Error} */ (expected);
-									let actual = run(stdout, code);
-									// As terser's runner reminifies: a throw of the expected kind
-									// passes whatever its message says.
+									const ours = await outcome(
+										printer.minify,
+										source.input,
+										optionsFor(source)
+									);
+									// A case reading its source with a parser option webpack's
+									// parser has no counterpart for holds nothing of webpack's.
 									if (
-										setName !== "its own options" &&
-										typeof wanted !== "string" &&
-										typeof actual !== "string" &&
-										wanted.name === actual.name
+										ours.error !== undefined &&
+										DROPPED_PARSE_OPTIONS.some(
+											(name) =>
+												ours.error === `\`${name}\` is not a supported option`
+										)
 									) {
-										actual = wanted;
+										continue;
 									}
-									return sameStdout(wanted, actual)
-										? undefined
-										: `\n\toutput:   ${code}\n\texpected: ${String(wanted)}\n\tprinted:  ${String(actual)}`;
-								};
-								const key = `${corpus.name}: ${source.name} (${setName})`;
-								if (!sameOutcome(theirs, ours)) {
-									// A difference only the `correct` and `improve` phases make is
-									// theirs, which the run check below holds to; any other is a
-									// difference, and an improvement must not write more.
-									const { corrections, improvements } = printer;
-									const unimproved = await outcomeWithout([improvements], () =>
-										outcome(printer.minify, source.input, optionsFor(source))
-									);
-									// Without the improvements terser's bytes back, nothing else differs.
-									const uncorrected = sameOutcome(theirs, unimproved)
-										? unimproved
-											: await outcomeWithout([corrections, improvements], () =>
-													outcome(printer.minify, source.input, optionsFor(source))
-												);
-									if (!sameOutcome(theirs, uncorrected)) {
-										const webpackRefusal =
-											theirs.code !== undefined &&
-											uncorrected.error !== undefined
-												? `${corpus.name}: ${source.name}`
-												: undefined;
-										const refused =
-											uncorrected.code !== undefined &&
-											typeof theirs.error === "string" &&
-											Object.prototype.hasOwnProperty.call(
-												REFUSED_BY_REFERENCE,
-												theirs.error
-											);
-										if (
-											webpackRefusal !== undefined &&
-											Object.prototype.hasOwnProperty.call(
-												REFUSED_BY_WEBPACK,
-												webpackRefusal
-											)
-										) {
-											webpackRefusalsSeen.add(webpackRefusal);
-										} else if (
-											webpackRefusal !== undefined &&
-											source.invalid
-										) {
-											// The corpus says the source is not JavaScript.
-										} else if (refused) {
-											refusalsSeen.add(
-												/** @type {string} */ (theirs.error)
-											);
-										} else if (
-											// A misprint is the reference's: webpack must still print.
-											uncorrected.code !== undefined &&
-											Object.prototype.hasOwnProperty.call(
-												REFERENCE_MISPRINTS,
-												key
-											)
-										) {
-											misprintsSeen.add(key);
-										} else {
-											differences.push(
-												`${source.name} (${setName})\n\treference: ${JSON.stringify(theirs)}\n\twebpack:   ${JSON.stringify(uncorrected)}`
-											);
-										}
-									}
-									if (unimproved.error !== ours.error) {
+									if (
+										corpus.ownOptionsKnown &&
+										setName === "its own options" &&
+										theirs.error !== undefined &&
+										/is not a supported option/.test(theirs.error)
+									) {
 										differences.push(
-											`${source.name} (${setName}) refused differently with the improvements\n\twithout: ${JSON.stringify(unimproved)}\n\twith:    ${JSON.stringify(ours)}`
+											`${source.name} (${setName})\n\tterser refused an option: ${theirs.error}`
 										);
-									} else if (
-										ours.code !== undefined &&
-										unimproved.code !== undefined &&
-										ours.code !== unimproved.code
-									) {
-										const withSize = sizeOf(ours.code);
-										const withoutSize = sizeOf(unimproved.code);
-										/** @type {Lead} */
-										const lead = {
-											source: source.name,
-											rival: "unimproved",
-											ours: withSize.raw,
-											theirs: withoutSize.raw,
-											oursGzip: withSize.gzip,
-											theirsGzip: withoutSize.gzip
-										};
-										const key = `${source.name} (${setName})`;
-										// Sources sharing a name share an entry, standing while one is bigger;
-										// an entry none of them meets fails at the end.
-										if (standingOf(lead) === "worse") {
+									}
+									const { expected } = expectation;
+									// Run where the case says what it prints: under its own options
+									// always, under another set unless it opts out, and never as a
+									// module where it is a script, since a module is strict.
+									const runs =
+										expected !== undefined &&
+										(setName === "its own options" ||
+											(source.reminify !== false &&
+												!(options.module && !source.module)));
+									/**
+									 * @param {string} code an output
+									 * @returns {string | undefined} how it misprints, if it does
+									 */
+									const misprint = (code) => {
+										const { same_stdout: sameStdout } =
+											/** @type {NonNullable<typeof loaded.sandbox>} */ (
+												loaded.sandbox
+											);
+										const stdout = /** @type {Stdout} */ (source.stdout);
+										const wanted = /** @type {string | Error} */ (expected);
+										let actual = run(stdout, code);
+										// As terser's runner reminifies: a throw of the expected kind
+										// passes whatever its message says.
+										if (
+											setName !== "its own options" &&
+											typeof wanted !== "string" &&
+											typeof actual !== "string" &&
+											wanted.name === actual.name
+										) {
+											actual = wanted;
+										}
+										return sameStdout(wanted, actual)
+											? undefined
+											: `\n\toutput:   ${code}\n\texpected: ${String(wanted)}\n\tprinted:  ${String(actual)}`;
+									};
+									const key = `${corpus.name}: ${source.name} (${setName})`;
+									if (!sameOutcome(theirs, ours)) {
+										// A difference only the `correct` and `improve` phases make is
+										// theirs, which the run check below holds to; any other is a
+										// difference, and an improvement must not write more.
+										const { corrections, improvements } = printer;
+										const unimproved = await outcomeWithout([improvements], () =>
+											outcome(printer.minify, source.input, optionsFor(source))
+										);
+										// Without the improvements terser's bytes back, nothing else differs.
+										const uncorrected = sameOutcome(theirs, unimproved)
+											? unimproved
+												: await outcomeWithout([corrections, improvements], () =>
+														outcome(printer.minify, source.input, optionsFor(source))
+													);
+										if (!sameOutcome(theirs, uncorrected)) {
+											const webpackRefusal =
+												theirs.code !== undefined &&
+												uncorrected.error !== undefined
+													? `${corpus.name}: ${source.name}`
+													: undefined;
+											const refused =
+												uncorrected.code !== undefined &&
+												typeof theirs.error === "string" &&
+												Object.prototype.hasOwnProperty.call(
+													REFUSED_BY_REFERENCE,
+													theirs.error
+												);
 											if (
-												Object.prototype.hasOwnProperty.call(IMPROVED_YET_BIGGER, key)
-											) {
-												improvedYetBiggerSeen.add(key);
-											} else if (
-												await onlyLetsGzipWorse(
-													withSize,
-													withoutSize,
-													() =>
-														outcome(
-															printer.minify,
-															source.input,
-															optionsFor(source)
-														),
-													improvements
+												webpackRefusal !== undefined &&
+												Object.prototype.hasOwnProperty.call(
+													REFUSED_BY_WEBPACK,
+													webpackRefusal
 												)
 											) {
-												// `let` gzips worse than the `const` it replaced in a small program.
+												webpackRefusalsSeen.add(webpackRefusal);
 											} else if (
-												await onlyLiteralsLastGzipWorse(
-													withoutSize,
-													() =>
-														outcome(
-															printer.minify,
-															source.input,
-															optionsFor(source)
-														),
-													improvements
+												webpackRefusal !== undefined &&
+												source.invalid
+											) {
+												// The corpus says the source is not JavaScript.
+											} else if (refused) {
+												refusalsSeen.add(
+													/** @type {string} */ (theirs.error)
+												);
+											} else if (
+												// A misprint is the reference's: webpack must still print.
+												uncorrected.code !== undefined &&
+												Object.prototype.hasOwnProperty.call(
+													REFERENCE_MISPRINTS,
+													key
 												)
 											) {
-												// `x===null` gzips worse than `null===x` in a small program.
+												misprintsSeen.add(key);
 											} else {
 												differences.push(
-												`${key} is bigger with the improvements: ${withSize.raw} raw, ${withSize.gzip} gzip, against ${withoutSize.raw} raw, ${withoutSize.gzip} gzip\n\twith:    ${ours.code}\n\twithout: ${unimproved.code}`
+													`${source.name} (${setName})\n\treference: ${JSON.stringify(theirs)}\n\twebpack:   ${JSON.stringify(uncorrected)}`
+												);
+											}
+										}
+										if (unimproved.error !== ours.error) {
+											differences.push(
+												`${source.name} (${setName}) refused differently with the improvements\n\twithout: ${JSON.stringify(unimproved)}\n\twith:    ${JSON.stringify(ours)}`
 											);
+										} else if (
+											ours.code !== undefined &&
+											unimproved.code !== undefined &&
+											ours.code !== unimproved.code
+										) {
+											const withSize = sizeOf(ours.code);
+											const withoutSize = sizeOf(unimproved.code);
+											/** @type {Lead} */
+											const lead = {
+												source: source.name,
+												rival: "unimproved",
+												ours: withSize.raw,
+												theirs: withoutSize.raw,
+												oursGzip: withSize.gzip,
+												theirsGzip: withoutSize.gzip
+											};
+											const key = `${source.name} (${setName})`;
+											// Sources sharing a name share an entry, standing while one is bigger;
+											// an entry none of them meets fails at the end.
+											if (standingOf(lead) === "worse") {
+												if (
+													Object.prototype.hasOwnProperty.call(IMPROVED_YET_BIGGER, key)
+												) {
+													improvedYetBiggerSeen.add(key);
+												} else if (
+													await onlyLetsGzipWorse(
+														withSize,
+														withoutSize,
+														() =>
+															outcome(
+																printer.minify,
+																source.input,
+																optionsFor(source)
+															),
+														improvements
+													)
+												) {
+													// `let` gzips worse than the `const` it replaced in a small program.
+												} else if (
+													await onlyLiteralsLastGzipWorse(
+														withoutSize,
+														() =>
+															outcome(
+																printer.minify,
+																source.input,
+																optionsFor(source)
+															),
+														improvements
+													)
+												) {
+													// `x===null` gzips worse than `null===x` in a small program.
+												} else {
+													differences.push(
+													`${key} is bigger with the improvements: ${withSize.raw} raw, ${withSize.gzip} gzip, against ${withoutSize.raw} raw, ${withoutSize.gzip} gzip\n\twith:    ${ours.code}\n\twithout: ${unimproved.code}`
+												);
+												}
 											}
 										}
 									}
-								}
-								if (runs && ours.code !== undefined) {
-									let wrong = verdicts.get(ours.code);
-									if (!verdicts.has(ours.code)) {
-										wrong = misprint(ours.code);
-										verdicts.set(ours.code, wrong);
-									}
-									const corrected = Boolean(
-										printer.corrections && printer.corrections.enabled
-									);
-									const table = Object.prototype.hasOwnProperty.call(
-										INHERITED,
-										key
-									)
-										? "INHERITED"
-										: !corrected &&
-											  Object.prototype.hasOwnProperty.call(CORRECTED, key)
-											? "CORRECTED"
-											: undefined;
-									if (wrong !== undefined && table === undefined) {
-										differences.push(`${key} prints differently${wrong}`);
-									} else if (wrong === undefined && table !== undefined) {
-										differences.push(
-											`${key} prints what it should now: retire it from ${table}`
-										);
-									}
-								}
-								if (
-									source.rival &&
-									setName === "its own options" &&
-									ours.code !== undefined
-								) {
-									await compareWithRival(
-										source,
-										source.rival,
-										ours.code,
-										SWC_SMALLER,
-										"SWC_SMALLER"
-									);
-								}
-								const oxc = oxcOutputs.get(source);
-								const oxcKey = `${corpus.name}: ${source.name}`;
-								if (oxc instanceof Error && setName === oxcSet) {
-									if (Object.prototype.hasOwnProperty.call(OXC_SMALLER, oxcKey)) {
-										rivalSmallerSeen.add(`OXC_SMALLER: ${oxcKey}`);
-									} else {
-										differences.push(`${oxcKey} aborts oxc: ${oxc.message}`);
-									}
-								} else if (
-									typeof oxc === "string" &&
-									setName === oxcSet &&
-									ours.code !== undefined &&
-									// A smaller output that prints wrong is no lead to follow.
-									!(expected !== undefined && runs && misprint(oxc))
-								) {
-									const plain = /** @type {MinifyOptions} */ (optionsFor(source));
-									// As webpack's minimizer passes it, to the compressor too.
-									const modern = await outcome(printer.minify, source.input, {
-										...plain,
-										ecma: oxcEcma,
-										compress: plain.compress && {
-											...plain.compress,
-											ecma: oxcEcma
+									if (runs && ours.code !== undefined) {
+										let wrong = verdicts.get(ours.code);
+										if (!verdicts.has(ours.code)) {
+											wrong = misprint(ours.code);
+											verdicts.set(ours.code, wrong);
 										}
-									});
-									if (modern.code === undefined) {
-										differences.push(
-											`${source.name} (${setName}, ecma ${oxcEcma}) failed: ${modern.error}`
+										const corrected = Boolean(
+											printer.corrections && printer.corrections.enabled
+										);
+										const table = Object.prototype.hasOwnProperty.call(
+											INHERITED,
+											key
+										)
+											? "INHERITED"
+											: !corrected &&
+												  Object.prototype.hasOwnProperty.call(CORRECTED, key)
+												? "CORRECTED"
+												: undefined;
+										if (wrong !== undefined && table === undefined) {
+											differences.push(`${key} prints differently${wrong}`);
+										} else if (wrong === undefined && table !== undefined) {
+											differences.push(
+												`${key} prints what it should now: retire it from ${table}`
+											);
+										}
+									}
+									if (
+										source.rival &&
+										setName === "its own options" &&
+										ours.code !== undefined
+									) {
+										await compareWithRival(
+											source,
+											source.rival,
+											ours.code,
+											SWC_SMALLER,
+											"SWC_SMALLER"
 										);
 									}
-									const modernCode =
-										modern.code === undefined ? ours.code : modern.code;
-									const wrong =
-										runs && modernCode !== ours.code
-											? misprint(modernCode)
-											: undefined;
-									if (wrong !== undefined) {
-										differences.push(
-											`${source.name} (${setName}, ecma ${oxcEcma}) prints differently${wrong}`
+									const oxc = oxcOutputs.get(source);
+									const oxcKey = `${corpus.name}: ${source.name}`;
+									if (oxc instanceof Error && setName === oxcSet) {
+										if (Object.prototype.hasOwnProperty.call(OXC_SMALLER, oxcKey)) {
+											rivalSmallerSeen.add(`OXC_SMALLER: ${oxcKey}`);
+										} else {
+											differences.push(`${oxcKey} aborts oxc: ${oxc.message}`);
+										}
+									} else if (
+										typeof oxc === "string" &&
+										setName === oxcSet &&
+										ours.code !== undefined &&
+										// A smaller output that prints wrong is no lead to follow.
+										!(expected !== undefined && runs && misprint(oxc))
+									) {
+										const plain = /** @type {MinifyOptions} */ (optionsFor(source));
+										// As webpack's minimizer passes it, to the compressor too.
+										const modern = await outcome(printer.minify, source.input, {
+											...plain,
+											ecma: oxcEcma,
+											compress: plain.compress && {
+												...plain.compress,
+												ecma: oxcEcma
+											}
+										});
+										if (modern.code === undefined) {
+											differences.push(
+												`${source.name} (${setName}, ecma ${oxcEcma}) failed: ${modern.error}`
+											);
+										}
+										const modernCode =
+											modern.code === undefined ? ours.code : modern.code;
+										const wrong =
+											runs && modernCode !== ours.code
+												? misprint(modernCode)
+												: undefined;
+										if (wrong !== undefined) {
+											differences.push(
+												`${source.name} (${setName}, ecma ${oxcEcma}) prints differently${wrong}`
+											);
+										}
+										await compareWithRival(
+											source,
+											{ name: "oxc", code: oxc },
+											modernCode,
+											OXC_SMALLER,
+											"OXC_SMALLER"
 										);
 									}
-									await compareWithRival(
-										source,
-										{ name: "oxc", code: oxc },
-										modernCode,
-										OXC_SMALLER,
-										"OXC_SMALLER"
-									);
 								}
 							}
 						}
