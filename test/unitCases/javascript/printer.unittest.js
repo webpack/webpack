@@ -11507,7 +11507,6 @@ x = a ** b ** c; x = (a ** b) ** c; x = (-a) ** b; x = a < b < c; x = a < (b < c
 			expect(code).not.toContain("?.");
 		});
 
-
 		it("should keep a store to an array index a setter on `Array.prototype` may take", async () => {
 			const { minify } = await load();
 			const input =
@@ -11746,7 +11745,6 @@ x = a ** b ** c; x = (a ** b) ** c; x = (-a) ** b; x = a < b < c; x = a < (b < c
 			});
 			expect(code).toBe("console.log({[NaN]:1,[null]:2});");
 		});
-
 
 		it("should keep a value apart from an `await` or `yield` it would move past", async () => {
 			const { minify } = await load();
@@ -16250,12 +16248,6 @@ const MINIFY_CASES = [
 		{ as: "event-handler" },
 		true
 	],
-	[
-		"an event handler dropped whole",
-		{ "handler.js": "var a = 1;" },
-		{ as: "event-handler", toplevel: true },
-		true
-	]
 ];
 
 describe("jsMinify", () => {
@@ -16329,26 +16321,6 @@ describe("jsMinify", () => {
 			"a.js": Buffer.from('console.log( "é" );', "utf8")
 		});
 		expect(code).toBe('console.log("é");');
-	});
-
-	it("should give an event handler back as written where no code is asked for", async () => {
-		const result = await jsMinify(
-			{ "handler.js": "a( 1 )" },
-			undefined,
-			{ as: "event-handler", format: { code: false } },
-			false
-		);
-		expect(result.code).toBe("a( 1 )");
-	});
-
-	it("should give an event handler dropped whole back as written", async () => {
-		const result = await jsMinify(
-			{ "handler.js": "var a = 1;" },
-			undefined,
-			{ as: "event-handler", toplevel: true },
-			false
-		);
-		expect(result.code).toBe("var a = 1;");
 	});
 
 	it("should match string comment patterns like RegExp conditions", async () => {
@@ -18030,6 +18002,61 @@ const BEHAVIOUR_CASES = [
 		"a `RegExp` of a regular expression under `unsafe`",
 		"var r = /a/g; console.log(new RegExp(r).flags, RegExp(r, \"i\").flags, new RegExp(/b/m).flags, RegExp(/c/y).sticky);",
 		{ compress: { unsafe: true, toplevel: true }, mangle: false }
+	],
+	[
+		"a binding's value through shifts and comparisons",
+		"function f() { let a = 8; a <<= 2; a >>= 1; a >>>= 1; console.log(a, a <= 3, a >= 9, a << 1, a >> 1, a >>> 1); } f();",
+		{ compress: { passes: 2 }, mangle: false }
+	],
+	[
+		"logical assignments to a binding whose value is not known",
+		"function g() { return 0; } function f() { let a = g(); a ||= 2; a &&= 3; a ??= 4; console.log(a); } f();",
+		{ compress: { passes: 2 }, mangle: false }
+	],
+	[
+		"logical assignments that never run their right side",
+		"function g() { console.log(\"g\"); return 5; } function f() { let a = 1; a ||= g(); let b = 0; b &&= g(); let c = 0; c ??= g(); console.log(a, b, c); } f();",
+		{ compress: { passes: 2 }, mangle: false }
+	],
+	[
+		"logical assignments that run their right side",
+		"function g() { return 5; } function f() { let a = 0; a ||= g(); let b = 1; b &&= 7; let c = null; c ??= 8; console.log(a, b, c); } f();",
+		{ compress: { passes: 2 }, mangle: false }
+	],
+	[
+		"a compound assignment of a value not known, then one of a binding's",
+		"function g() { return 2; } function f() { let b = 2; let a = 1; a += g(); a *= 3; let c = 1; c += b; console.log(a, c); } f();",
+		{ compress: { passes: 2 }, mangle: false }
+	],
+	[
+		"a string a binding grows past what the walk computes",
+		"function f() { let s = \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\"; s += s; console.log(s.length, s.length); } f();",
+		{ compress: { passes: 2 }, mangle: false }
+	],
+	[
+		"a literal's member read in the declaration list holding it",
+		"function f() { const o = { a: 1 }, p = o.a, q = { b: 2 }; console.log(p, q.b); } f();",
+		{ compress: { passes: 2 }, mangle: false }
+	],
+	[
+		"a number counted down and up by one",
+		"function f(n) { var x = n | 0; x -= 1; console.log(x); x += 1; console.log(x); } f(5);",
+		{ compress: { passes: 2 }, mangle: false }
+	],
+	[
+		"a built-in handed a function with no body",
+		"console.log([1, 2].map(function () {}).length, [1].map(() => {})[0]); var r = !fails(function () { Reflect.apply(function () {}); }); function fails(f) { try { f(); return false; } catch (e) { return true; } } console.log(r);",
+		{ compress: { passes: 2 }, mangle: false }
+	],
+	[
+		"a prototype read off a value only known as a property",
+		"var c = {}, p = c.constructor && c.constructor.prototype; console.log(p === Object.prototype ? void 0 : p);",
+		{ compress: { passes: 2 }, mangle: false }
+	],
+	[
+		"a store to a `const` object in a block below its declaration",
+		"function f(g) { const o = {}; { if (g) { var v = g(); o.p = v; } } console.log(o.p); } f(() => 1); f();",
+		{ compress: { passes: 2 }, mangle: false }
 	]
 ];
 

@@ -1,0 +1,70 @@
+{
+  "css": {
+    "lib/css/syntax-parser.js": {
+      "statements": 0,
+      "branches": 0,
+      "functions": 0
+    },
+    "lib/css/syntax-printer.js": {
+      "statements": 0,
+      "branches": 0,
+      "functions": 0
+    },
+    "lib/css/cssMinify.js": {
+      "statements": 0,
+      "branches": 0,
+      "functions": 0
+    }
+  },
+  "html": {
+    "lib/html/syntax-parser.js": {
+      "statements": 1,
+      "branches": 1,
+      "functions": 0
+    },
+    "lib/html/syntax-printer.js": {
+      "statements": 0,
+      "branches": 0,
+      "functions": 0
+    },
+    "lib/html/htmlMinify.js": {
+      "statements": 0,
+      "branches": 0,
+      "functions": 0
+    },
+    "lib/html/xmlMinify.js": {
+      "statements": 0,
+      "branches": 0,
+      "functions": 0
+    }
+  },
+  "javascript": {
+    "lib/javascript/syntax-parser.js": {
+      "statements": 4,
+      "branches": 5,
+      "functions": 1
+    },
+    "lib/javascript/syntax-printer.js": {
+      "statements": 214,
+      "branches": 397,
+      "functions": 9
+    },
+    "lib/javascript/ScopeAnalyzer.js": {
+      "statements": 9,
+      "branches": 20,
+      "functions": 0
+    },
+    "lib/javascript/jsMinify.js": {
+      "statements": 0,
+      "branches": 0,
+      "functions": 0
+    }
+  },
+  "json": {
+    "lib/json/jsonMinify.js": {
+      "statements": 0,
+      "branches": 0,
+      "functions": 0
+    }
+  }
+}
