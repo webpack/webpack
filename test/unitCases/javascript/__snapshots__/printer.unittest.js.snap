@@ -2989,6 +2989,8 @@ exports[`syntax-printer improve phase should write less, printing the same: a \`
 
 exports[`syntax-printer improve phase should write less, printing the same: a \`let\` before a loop assigning it first, given that value where it stands, but where the value reads it 1`] = `"function f(n){let i=0,j;for(;i<n;i++);for(j=()=>j;i<3;i++);return[i,typeof j]}console.log(f(2));"`;
 
+exports[`syntax-printer improve phase should write less, printing the same: a \`let\` closures created after its declaration write and nothing reads 1`] = `"function f(a){return[1,2].forEach(v=>{}),a+1}console.log(f(1));[3].forEach(function(v){});"`;
+
 exports[`syntax-printer improve phase should write less, printing the same: a \`let\` declaration beside one written from a \`const\`, joined, its names mangled 1`] = `"function f(o){let n=o.x,t=o.y;t++;for(let o of[n,t]){let c=o+t,f=[c,c];f.push(n),console.log(f)}}f({x:1,y:2});"`;
 
 exports[`syntax-printer improve phase should write less, printing the same: a \`let\` of a \`switch\` case a later case reads, kept 1`] = `"function f(x){switch(x){case 1:let a=[x];case 2:return a}}console.log(f(1));"`;
