@@ -363,6 +363,21 @@ describe("the XML tool comparison — the entities a DTD declares", () => {
 		).toContain('decoded="AB"');
 	});
 
+	it("should read only the declarations the internal subset holds, not text inside one", async () => {
+		const reference = /** @type {import("../../../tooling/compare-tools-harness").TreeReader} */ (
+			TREE_READERS.get("@rgrove/parse-xml")
+		);
+		const tree = await reference(`<!DOCTYPE r [
+	<!ENTITY nested SYSTEM "<!ENTITY first 'x'>">
+	<?pi <!ENTITY quoted "y">?>
+	<!ENTITY tab SYSTEM "t.txt"><!ENTITY tab "plain">
+	<!ENTITY decoded "ok">
+]><r/>`);
+		expect(tree.list[0][2]).toBe(
+			'<r first="undefined" quoted="undefined" decoded="ok" nested="undefined" parameter="undefined" commented="undefined" tab="undefined">'
+		);
+	});
+
 	it("should still reject a source whose entities no internal subset declares", async () => {
 		for (const [xml, error] of [
 			["<r>&a;</r>", "Named entity isn't defined"],

@@ -787,11 +787,15 @@ const textOf = (events, value) => {
 	if (events.depth > 0) events.text(value);
 };
 
+// What an internal subset holds: comments, processing instructions and markup
+// declarations, the last scanned whole so no literal inside one is read as one.
+const SUBSET_MARKUP =
+	/<!--[\s\S]*?-->|<\?[\s\S]*?\?>|<!([A-Z]+)((?:"[^"]*"|'[^']*'|[^"'>])*)>/g;
+
 // An entity's declared value is read with its character references decoded;
 // one still holding markup, or whitespace an attribute would normalize, is
 // left undeclared, so a source using it stays one the reference rejects.
-const ENTITY_DECLARATION =
-	/<!ENTITY\s+([^\s%]\S*)\s+(?:"([^"]*)"|'([^']*)')\s*>/g;
+const GENERAL_ENTITY = /^\s+([^\s%]\S*)\s+(?:"([^"]*)"|'([^']*)')?/;
 
 /**
  * The general entities a doctype's internal subset declares, each name bound
@@ -802,12 +806,13 @@ const ENTITY_DECLARATION =
 const declaredEntities = (subset) => {
 	/** @type {Map<string, string | undefined>} */
 	const declared = new Map();
-	for (const match of subset
-		.replace(/<!--[\s\S]*?-->/g, "")
-		.matchAll(ENTITY_DECLARATION)) {
-		if (declared.has(match[1])) continue;
+	for (const [, keyword, body] of subset.matchAll(SUBSET_MARKUP)) {
+		if (keyword !== "ENTITY") continue;
+		const match = GENERAL_ENTITY.exec(body);
+		if (match === null || declared.has(match[1])) continue;
 		const literal = match[2] === undefined ? match[3] : match[2];
-		if (literal.includes("%")) {
+		// An external entity, or one a parameter entity builds, binds no text.
+		if (literal === undefined || literal.includes("%")) {
 			declared.set(match[1], undefined);
 			continue;
 		}
