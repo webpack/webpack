@@ -63,6 +63,7 @@
     "test:invariants:html": "node tooling/compare-html-tools.js --invariants",
     "test:invariants:js": "node tooling/compare-js-tools.js --invariants",
     "test:invariants:xml": "node tooling/compare-xml-tools.js --invariants",
+    "test:syntax-coverage": "node tooling/check-syntax-coverage.js",
     "test:invariants:full": "yarn test:invariants:css --require-corpus && yarn test:invariants:html --require-corpus && yarn test:invariants:js --require-corpus && yarn test:invariants:xml --require-corpus",
     "benchmark:css-tools": "node tooling/compare-css-tools.js",
     "benchmark:css-tools:setup": "node tooling/compare-css-tools.js --setup",

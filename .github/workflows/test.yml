@@ -268,6 +268,47 @@ jobs:
   # Every suite from here down is held behind the three cheap ones, which are
   # also the three a merge needs: each costs tens of runner-minutes, and a tree
   # that fails `lint`, `basic` or `unit` is not going to land on what they say.
+
+  # Each language's syntax held to its own unit tests: what they never run may
+  # not grow past `tooling/syntax-coverage.json`. Skipped on a pull request
+  # that touches neither the syntax code nor the tests that hold it.
+  syntax-coverage:
+    needs: [lint, basic, unit]
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Read whether the syntax or its tests changed
+        id: changed
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          if [ "$GITHUB_EVENT_NAME" != "pull_request" ] || git diff --name-only "origin/$BASE_REF...HEAD" | grep -qE '^(lib/(css|html|javascript|json)/|test/unitCases/|tooling/(check-syntax-coverage\.js|syntax-coverage\.json)$|jest\.config\.js$)'; then
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Use Node.js
+        if: steps.changed.outputs.run == 'true'
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: lts/*
+          cache: yarn
+
+      - if: steps.changed.outputs.run == 'true'
+        run: node tooling/retry.js yarn --frozen-lockfile
+
+      - if: steps.changed.outputs.run == 'true'
+        run: yarn link --frozen-lockfile || true
+
+      - if: steps.changed.outputs.run == 'true'
+        run: yarn link webpack --frozen-lockfile
+
+      - if: steps.changed.outputs.run == 'true'
+        run: yarn test:syntax-coverage
+
   test262:
     needs: [lint, basic, unit]
     strategy:
