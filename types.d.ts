@@ -3688,6 +3688,25 @@ declare abstract class ColumnarSyntaxTree {
 	addList(items: number[], count: number): number;
 
 	/**
+	 * Replaces `removeCount` items of a node's list field from `index` with
+	 * `items`, in place where the list shrinks or ends the item column.
+	 */
+	spliceList(
+		node: number,
+		field: number,
+		index: number,
+		removeCount: number,
+		items: number[]
+	): void;
+
+	/**
+	 * Places nodes the editor parsed at one offset of the input, so a node
+	 * written nowhere in it starts and ends where it was put.
+	 */
+	place(first: number, last: number, offset: number): void;
+	get size(): number;
+
+	/**
 	 * Retypes a node whose record the new type reads the same, as an
 	 * expression the parser then reads as a pattern.
 	 */
@@ -19390,6 +19409,51 @@ declare abstract class JavascriptSyntaxPath {
 	startOf(part: number, n?: number): number;
 	endOf(part: number, n?: number): number;
 	textOf(part: number, n?: number): null | string;
+
+	/**
+	 * Sets an identifier's name, which later reads return.
+	 */
+	setName(name: string, n?: number): void;
+
+	/**
+	 * Sets a literal's or template element's value, which later reads return;
+	 * a literal's `raw` is written to match.
+	 */
+	setValue(value: TreeValue, n?: number): void;
+
+	/**
+	 * Sets or clears a `Flag` the node's type has.
+	 */
+	setFlag(flag: number, on: boolean, n?: number): void;
+
+	/**
+	 * Sets a `Part`'s text, as `textOf` reads it; `""` leaves an optional part out.
+	 */
+	setText(part: number, text: string, n?: number): void;
+
+	/**
+	 * Puts nodes where the node is, text parsed as what the field holding it
+	 * takes; the walk visits them, and the node leaves the tree.
+	 */
+	replaceWith(
+		replacement: string | number | (string | number)[],
+		n?: number
+	): number[];
+
+	/**
+	 * Inserts nodes just before or after the node, or at the end of one of its
+	 * fields; the walk visits them.
+	 */
+	insert(
+		where: number | "before" | "after",
+		nodes: string | number | (string | number)[],
+		n?: number
+	): number[];
+
+	/**
+	 * Takes the node out of the tree; it reads as before until the next parse.
+	 */
+	remove(n?: number): void;
 }
 declare interface JoinCacheEntry {
 	/**
