@@ -20,22 +20,28 @@ const variablesLoader = (marker) => ({
 });
 
 /**
- * A `<style lang>` body is a `data:` module typed as mime-db types the
- * language's files, so a `mimetype` rule runs that language's loader on it.
+ * A `<style lang>` / `<script lang>` body is a virtual file beside its page
+ * with the `lang` as extension, so the rules for that language's files apply;
+ * `with: { lang }` matches the attribute as written.
  * @type {import("../../../../").Configuration}
  */
 module.exports = {
 	devtool: false,
-	target: "web",
+	entry: {
+		main: ["./index.js", "./page.html"]
+	},
 	output: {
+		filename: "[name].js",
 		assetModuleFilename: "handled-[name][ext]"
 	},
 	module: {
 		rules: [
-			{ mimetype: "text/less", use: lessLoader },
-			{ mimetype: "text/x-scss", use: variablesLoader("by-scss-rule") },
-			{ mimetype: "text/stylus", use: variablesLoader("by-stylus-rule") },
-			{ mimetype: "text/x-postcss", use: variablesLoader("by-postcss-rule") }
+			{ test: /\.less$/, use: lessLoader },
+			{ test: /\.scss$/, use: variablesLoader("by-scss-rule") },
+			{ test: /\.styl$/, use: variablesLoader("by-stylus-rule") },
+			{ test: /\.postcss$/, use: variablesLoader("by-postcss-rule") },
+			{ with: { lang: "no extension" }, use: variablesLoader("by-with-rule") },
+			{ test: /\.upper$/, use: path.resolve(__dirname, "upper-loader.js") }
 		]
 	},
 	experiments: {

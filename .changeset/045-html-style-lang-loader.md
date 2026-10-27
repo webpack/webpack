@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Run loaders on `<style lang>` bodies by the language's mimetype.
+Run the rules for a `<style lang>` or `<script lang>` body's language.

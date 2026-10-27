@@ -8,7 +8,7 @@
 .css-lang { color: blue; }
 </style>
 <style lang="less">
-@accent: green;
+@import "./partials/vars.less";
 .less-lang { color: @accent; .nested { background: url("./pixel.png"); } }
 </style>
 <style lang="SCSS">
@@ -17,12 +17,18 @@ $accent: purple; .scss-lang { color: $accent; }
 <style lang="styl">
 $accent: teal; .styl-lang { color: $accent; }
 </style>
-<style lang="stylus">
-$accent: navy; .stylus-lang { color: $accent; }
-</style>
 <style lang="postcss">
 $accent: olive; .postcss-lang { color: $accent; }
 </style>
+<style lang="no extension">
+$accent: navy; .attribute-lang { color: $accent; }
+</style>
+<script lang="upper">
+window.inlineScriptLang = "shout";
+</script>
+<script>
+window.inlineScriptPlain = "plain";
+</script>
 </head>
 <body></body>
 </html>
