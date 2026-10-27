@@ -7970,16 +7970,52 @@ declare abstract class CssSyntaxPath {
 	stop(): void;
 
 	/**
-	 * Print the current node as `text` in place of what the printer writes; on a
-	 * walk that prints nothing, or on a comment, it does nothing. What holds the
-	 * node then prints its children's text as they printed, without the rewrites.
+	 * Sets a declaration's, at-rule's or function's name, or a dimension's
+	 * unit, which later reads return and the print writes.
 	 */
-	replace(text: string): void;
+	setName(name: string, n?: number): void;
 
 	/**
-	 * Print nothing for the current node, as `replace("")`.
+	 * Sets a token's value, as `value` reads it: text for an ident, string,
+	 * hash, url or delim, a number for a number, percentage or dimension.
 	 */
-	remove(): void;
+	setValue(value: string | number, n?: number): void;
+
+	/**
+	 * Sets or clears a declaration's `important`; a token's type flags follow
+	 * from its text.
+	 */
+	setFlag(flag: number, on: boolean, n?: number): void;
+
+	/**
+	 * CSS nodes have no text beyond their name and value, so this throws.
+	 */
+	setText(part: number, text: string, n?: number): void;
+
+	/**
+	 * Puts nodes where the node is, text parsed as what the field holding it
+	 * takes; the walk visits them, and the node leaves the tree.
+	 */
+	replaceWith(
+		replacement: string | number | (string | number)[],
+		n?: number
+	): number[];
+
+	/**
+	 * Inserts nodes just before or after the node, or at the end of one of its
+	 * fields; the walk visits them.
+	 */
+	insert(
+		where: number | "before" | "after",
+		nodes: string | number | (string | number)[],
+		n?: number
+	): number[];
+
+	/**
+	 * Takes the node out of the tree; it reads as before until its top-level
+	 * node is printed.
+	 */
+	remove(n?: number): void;
 
 	/**
 	 * A top-level rule and a comment have none; a hash within a declaration is
@@ -9770,6 +9806,22 @@ declare class EditContext {
 		node: number
 	): number[];
 	remove(node: number): void;
+
+	/**
+	 * Walks the items an edit left in a field that the walk has not reached,
+	 * for a language whose own walk goes on once edits begin, reading the
+	 * marks: the items are read again where an edit adds to the node meanwhile.
+	 */
+	walkRest(
+		node: number,
+		field: number,
+		walk: (item: number, index: number) => void
+	): void;
+
+	/**
+	 * Marks a node the walk enters, or with `done` leaves, once edits begin.
+	 */
+	mark(node: number, done: boolean): void;
 
 	/**
 	 * Where the first edit leaves the walk, thrown to unwind it so that
