@@ -1909,6 +1909,11 @@ const IMPROVED_CASES = [
 		{ compress: {}, mangle: false }
 	],
 	[
+		"a conditional giving `!1` or `!0` beside a value `&&` or `||` would take parentheses for, kept as the conditional where it sits bare",
+		"function f(a, b, c, d) { var o = {}; var x = a ? false : b ? c : d, y = a ? true : (o.y = 1), z = a ? (o.z = 2) : true, w = a ? (o.w = 3) : false; return [x, y, z, w, a ? false : b ?? c, o]; } function g(a, b, h) { var o = {}; o.v = a ? false : (o.u = 1); h(a ? false : (o.t = 1)); o.k = { k: a ? false : (o.s = 1) }; o.n = b ? (a ? false : (o.r = 1)) : 0; o.f = a ? false : () => 1; o.ft = typeof o.f; return a ? false : (o.q = 1), o; } function* y(a) { return a ? false : yield 1; } var it = y(0); it.next(); console.log(JSON.stringify([f(0, 1, 2, 3), f(1, 0, 2, 3), f(0, null, 4, 5), g(0, 1, console.log), g(1, 0, console.log), it.next(2)]));",
+		{ compress: {}, mangle: false }
+	],
+	[
 		"an `if` with an empty branch and an `else` block, as an `if` of the negated test, but a chain's",
 		"function f(a, b) { if (a) {} else { if (b) { console.log(1); return; } console.log(2); } console.log(3); } function g(a, b) { if (a && b) {} else { if (b) { console.log(4); return; } console.log(5); } } f(0, 0); f(0, 1); f(1, 0); g(0, 1); g(1, 1);",
 		{ compress: {}, mangle: false }
@@ -10139,6 +10144,19 @@ x = a ** b ** c; x = (a ** b) ** c; x = (-a) ** b; x = a < b < c; x = a < (b < c
 				["function f(b) { return new (y, b.c)(); }", "new(y,b.c)"],
 				["function f(g) { return new (0, g())(); }", "new(g())"],
 				["function f(a) { return new (0, a?.b)(); }", "new(a?.b)"]
+			]) {
+				const { code } = await minify(input, { compress: {}, mangle: false });
+				expect(code).toContain(expected);
+			}
+		});
+
+		it("should keep `!a && (b = 1)` where a conditional would take parentheses itself, or the value is a sequence", async () => {
+			const { minify } = await load();
+			for (const [input, expected] of [
+				["function f(a) { if (a ? false : (b = 1)) g(); }", "!a&&(b=1)&&g()"],
+				["function f(a) { return (a ? false : (b = 1)) + 1; }", "(!a&&(b=1))+1"],
+				["function f(a, c) { return a ? false : (b, c); }", "!a&&(b,c)"],
+				["function f(a, b) { return a ? false : b; }", "!a&&b"]
 			]) {
 				const { code } = await minify(input, { compress: {}, mangle: false });
 				expect(code).toContain(expected);

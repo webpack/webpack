@@ -3125,6 +3125,8 @@ exports[`syntax-printer improve phase should write less, printing the same: a co
 
 exports[`syntax-printer improve phase should write less, printing the same: a conditional choosing between calls spreading different arrays 1`] = `"function f(a,b,c){return b(...a||c)}console.log(f([1,2],Math.max,[3]),f(null,Math.max,[3,4]));"`;
 
+exports[`syntax-printer improve phase should write less, printing the same: a conditional giving \`!1\` or \`!0\` beside a value \`&&\` or \`||\` would take parentheses for, kept as the conditional where it sits bare 1`] = `"function f(a,b,c,d){var o={};return[a?!1:b?c:d,a?!0:o.y=1,a?o.z=2:!0,a?o.w=3:!1,a?!1:b??c,o]}function g(a,b,h){var o={};return o.v=a?!1:o.u=1,h(a?!1:o.t=1),o.k={k:a?!1:o.s=1},o.n=b?a?!1:o.r=1:0,o.f=a?!1:()=>1,o.ft=typeof o.f,!a&&(o.q=1),o}function*y(a){return a?!1:yield 1}var it=y(0);it.next(),console.log(JSON.stringify([f(0,1,2,3),f(1,0,2,3),f(0,null,4,5),g(0,1,console.log),g(1,0,console.log),it.next(2)]));"`;
+
 exports[`syntax-printer improve phase should write less, printing the same: a conditional tested for truth whose branch is \`void 0\`, as \`&&\` 1`] = `"function f(t){return null!=t&&t.b&&console.log(\\"b\\"),null!=t&&t.c&&console.log(\\"c\\"),t&&t.d&&console.log(\\"d\\"),null==t?void 0:t.e}console.log(f(),f({b:1,c:1,d:1,e:2}),f({}));"`;
 
 exports[`syntax-printer improve phase should write less, printing the same: a conditional whose chain ends in its own alternate, spread where shorter 1`] = `"function f(a,b){return b&&1===a?\\"one\\":b&&2===a?\\"two\\":\\"a much longer default string\\"}console.log(f(1,1),f(2,1),f(3,1),f(1,0));"`;

@@ -137,8 +137,6 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"boolean and conditional forms: `!a&&b` vs `a?!1:b`, `!!a` vs `a&&!0`, `x||void 0` vs `if(x)`, an `if` with or without braces, a test's branches swapped",
 		[
-			"oxc minifier: peephole/minimize_conditional_expression.rs:187",
-			"oxc minifier: peephole/minimize_conditional_expression.rs:188",
 			"oxc minifier: peephole/minimize_conditions.rs:113",
 			"oxc minifier: peephole/minimize_exit_points.rs:375",
 			"swc minifier: fixture/projects/backbone/15/input.js",
