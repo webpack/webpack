@@ -22,6 +22,7 @@ const {
 	createRegExpGenerator,
 	createRequireSourceGenerator
 } = require("../helpers/jsFuzzProgram");
+const { isInPart } = require("../helpers/testParts");
 
 /** @typedef {(code: string | Record<string, string> | EXPECTED_OBJECT, options: EXPECTED_OBJECT) => Promise<{ code?: string, map?: string, ast?: EXPECTED_OBJECT, timings?: Record<string, number> }>} Minify */
 /** @typedef {import("../helpers/jsFuzzProgram").Program} Program */
@@ -985,6 +986,8 @@ describe("JavaScript fuzzer", () => {
 	});
 
 	for (const seed of seedsToRun()) {
+		if (!isInPart(`require calls ${seed}`)) continue;
+
 		it(`should find the require calls acorn finds: seed ${seed}`, () => {
 			const next = createRequireSourceGenerator(seed);
 			/** @type {string[]} */
@@ -1003,6 +1006,8 @@ describe("JavaScript fuzzer", () => {
 	}
 
 	for (const seed of seedsToRun()) {
+		if (!isInPart(`regular expressions ${seed}`)) continue;
+
 		it(`should accept and refuse the regular expressions the engine does: seed ${seed}`, () => {
 			const next = createRegExpGenerator(seed);
 			/** @type {string[]} */
@@ -1033,6 +1038,9 @@ describe("JavaScript fuzzer", () => {
 						randomOptions(random),
 						randomOptions(random)
 					];
+					// Each part generates every program, so the seed's stream stays
+					// the same, and checks only its own rounds.
+					if (!isInPart(`${seed}/${round}`)) continue;
 					/** @type {string | undefined} */
 					let failure;
 					try {

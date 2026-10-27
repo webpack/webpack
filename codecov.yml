@@ -22,10 +22,8 @@ coverage:
         flags:
           - unit
           - integration
-          - css-html-xml
           - test262
-          - minify-corpora
-          - test262-parser
+          - spec
         target: auto
         # Timing-dependent lines flip between runs, so a PR that changes no
         # code still moves the total by about 0.01%.
