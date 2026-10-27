@@ -15152,9 +15152,9 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			],
 			// A branch that is no expression keeps the `if`, a sequence test is parenthesized, and a dead `if` declaring only in its own scopes goes.
 			[
-				"function f(a, b){ const T = 1; if (a) throw 1; else y(); if ((a, b)) x(); else y(); if (0) { let w = () => { var z } } g([T ? a : 2]) }",
+				"function f(a, b){ const T = 1; if (a) for (;;) g(); else y(); if ((a, b)) x(); else y(); if (0) { let w = () => { var z } } g([T ? a : 2]) }",
 				{},
-				"function f(a,e){if(a)throw 1;else y();(a,e)?x():y();g([a])}"
+				"function f(f,a){if(f)for(;;)g();else y();(f,a)?x():y();g([f])}"
 			],
 			// A statement that runs nothing goes, but not a directive, a comment kept, a `#__PURE__` call with `side_effects: false` nor a global a `try` probes for.
 			[
@@ -15200,6 +15200,23 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				"function f(){ let a = g(), b = h(a), c = i(b), d; j(c, d) }",
 				{},
 				"function f(){let d;j(i(h(g())),d)}"
+			],
+			// After a body that always leaves, what the `else` holds prints after the `if` where a list holds it, but not a block scoping a name or keeping a comment.
+			[
+				"function f(a, b){ if (a) return 1; else b(); if (b) { x(); return 2 } else { y(); z() } if (a) throw 1; else { let q = g(); h(q) } while (a) { if (b) break; else w() } for (;;) { if (a) continue; else { /*! c */ v() } } if (b) return; else if (a) v(); else u(); } for (;;) if (a) break; else b(); l: if (a) break l; else b(); switch (a) { case 1: if (b) break; else c() }",
+				{},
+				"function f(e,a){if(e)return 1;a();if(a){x();return 2}y();z();if(e)throw 1;h(g());while(e){if(a)break;w()}for(;;)if(e)continue;else{/*! c */v()}if(a)return;e?v():u()}for(;;)if(a)break;else b();e:if(a)break e;else b();switch(a){case 1:if(b)break;c()}"
+			],
+			[
+				"function f(a){ if (a) return 1; else { class C {} g(new C) } if (a) return 2; else { function q(){} q() } if (a) return 3; else /*! c */ { h() } }",
+				{},
+				"function f(e){if(e)return 1;else{class f{}g(new f)}if(e)return 2;else{function n(){}n()}if(e)return 3;else/*! c */{h()}}"
+			],
+			// A `switch` drops a `break` ending it and a `default` doing nothing last, and a value folds into `import()`.
+			[
+				"function f(c){ switch (c) { case -1: c = 1; break; case 0: c = 2; break; default: break } switch (c) { case 1: x(); break } switch (c) { default: break } switch (c) { case 1: y(); break; default: } a: switch (c) { case 1: z(); break a } switch (c) { case 1: y(); /*! c */ break } var i = r(c); return import(i) }",
+				{},
+				"function f(c){switch(c){case-1:c=1;break;case 0:c=2}switch(c){case 1:x()}switch(c){default:}switch(c){case 1:y()}c:switch(c){case 1:z();break c}switch(c){case 1:y();/*! c */break}return import(r(c))}"
 			],
 			[
 				"function f(a){ if (0) x(); Math.PI }",
