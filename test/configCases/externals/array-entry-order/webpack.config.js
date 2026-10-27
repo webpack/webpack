@@ -15,7 +15,20 @@ const externals = [
 	},
 	"os-alias",
 	// The strings above match "path" first, so this mapping never applies.
-	{ path: "os" }
+	{ path: "os" },
+	// A RegExp subclass runs user code too, and may append an entry the same way.
+	new (class extends RegExp {
+		/**
+		 * @param {string} request the request
+		 * @returns {boolean} never a match itself
+		 */
+		test(request) {
+			if (request === "zlib" && !externals.includes("zlib")) {
+				externals.push("zlib");
+			}
+			return false;
+		}
+	})("^$")
 ];
 
 /** @type {import("../../../../").Configuration} */

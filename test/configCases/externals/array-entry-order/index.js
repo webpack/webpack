@@ -7,4 +7,5 @@ it("should keep the order of string entries in an externals array", () => {
 	expect(require("node:path")).toBe(path);
 	expect(typeof require("util").inspect).toBe("function");
 	expect(require("os-alias")).toBe(os);
+	expect(typeof require("zlib").gzipSync).toBe("function");
 });
