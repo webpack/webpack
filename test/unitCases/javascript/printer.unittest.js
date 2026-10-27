@@ -15212,6 +15212,18 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				{},
 				"function f(e){if(e)return 1;else{class f{}g(new f)}if(e)return 2;else{function n(){}n()}if(e)return 3;else/*! c */{h()}}"
 			],
+			// A value `using` or `await using` disposes of folds nowhere.
+			[
+				"async function f(){ await using x = g(); h(x) } async function k(){ await using y = g(), z = q(y); h(z) } function m(){ using w = g(); h(w) }",
+				{},
+				"async function f(){await using n=g();h(n)}async function k(){await using n=g(),i=q(n);h(i)}function m(){using n=g();h(n)}"
+			],
+			// Dividing a bigint by zero or raising it to a negative power throws, so it stays unless the right side is a literal that cannot.
+			[
+				"function b(a){ 1n / 0n; 2n ** -1n; 1n % 0n; 1n / 2n; 1n % 3n; 2n ** 3n; 1n / (2n); 1n / a; 1n + 2n }",
+				{},
+				"function b(n){1n/0n;2n**-1n;1n%0n;1n/n}"
+			],
 			// A `switch` drops a `break` ending it and a `default` doing nothing last, and a value folds into `import()`.
 			[
 				"function f(c){ switch (c) { case -1: c = 1; break; case 0: c = 2; break; default: break } switch (c) { case 1: x(); break } switch (c) { default: break } switch (c) { case 1: y(); break; default: } a: switch (c) { case 1: z(); break a } switch (c) { case 1: y(); /*! c */ break } var i = r(c); return import(i) }",
