@@ -16070,7 +16070,38 @@ const MINIFY_CASES = [
 	["module goal", { "module.mjs": MODULE }, { as: "module" }, true],
 	["module option", { "module.mjs": MODULE }, { module: true }, true],
 	["event handler", { "handler.js": HANDLER }, { as: "event-handler" }, true],
-	["script goal", { "script.js": SCRIPT }, { as: "script" }, true]
+	["script goal", { "script.js": SCRIPT }, { as: "script" }, true],
+	["extract every comment named", { "script.js": SCRIPT }, {}, { condition: true }],
+	["extract by an object naming no condition", { "script.js": SCRIPT }, {}, {}],
+	["keep every comment, as `true`", { "script.js": SCRIPT }, { format: { comments: true } }, false],
+	[
+		"keep and extract by predicate",
+		{ "script.js": SCRIPT },
+		{ format: { comments: (_node, comment) => /kept/.test(comment.value) } },
+		(/** @type {EXPECTED_ANY} */ _node, /** @type {EXPECTED_ANY} */ comment) =>
+			/license/i.test(comment.value)
+	],
+	[
+		"a line comment, and one written twice",
+		{ "lines.js": "/*! twice */ a();\n//! line\nb();\n/*! twice */ c();" },
+		{},
+		true
+	],
+	["compress on", { "script.js": SCRIPT }, { compress: true }, true],
+	["ecma of the compressor's own", { "script.js": SCRIPT }, { ecma: 5, compress: { ecma: 2020 } }, true],
+	["mangle options", { "script.js": SCRIPT }, { mangle: { reserved: ["value"] } }, true],
+	[
+		"an event handler holding runs of `_`",
+		{ "handler.js": "__a(_b, ___c);" },
+		{ as: "event-handler" },
+		true
+	],
+	[
+		"an event handler dropped whole",
+		{ "handler.js": "var a = 1;" },
+		{ as: "event-handler", toplevel: true },
+		true
+	]
 ];
 
 describe("jsMinify", () => {
@@ -16121,6 +16152,47 @@ describe("jsMinify", () => {
 
 	it("should report a parse error rather than throwing a different shape", async () => {
 		await expect(jsMinify({ "broken.js": "function (" })).rejects.toThrow();
+	});
+
+	it("should answer an error, not throw, when the minifier cannot load", async () => {
+		const { printer } = require("../../../lib/javascript/syntax");
+		const failure = new Error("cannot load");
+		const load = jest.spyOn(printer, "load").mockRejectedValueOnce(failure);
+		try {
+			expect(await jsMinify({ "a.js": "a()" })).toEqual({
+				code: "",
+				errors: [failure]
+			});
+		} finally {
+			load.mockRestore();
+		}
+	});
+
+	it("should read a Buffer input as UTF-8", async () => {
+		const { code } = await jsMinify({
+			"a.js": Buffer.from('console.log( "é" );', "utf8")
+		});
+		expect(code).toBe('console.log("é");');
+	});
+
+	it("should give an event handler back as written where no code is asked for", async () => {
+		const result = await jsMinify(
+			{ "handler.js": "a( 1 )" },
+			undefined,
+			{ as: "event-handler", format: { code: false } },
+			false
+		);
+		expect(result.code).toBe("a( 1 )");
+	});
+
+	it("should give an event handler dropped whole back as written", async () => {
+		const result = await jsMinify(
+			{ "handler.js": "var a = 1;" },
+			undefined,
+			{ as: "event-handler", toplevel: true },
+			false
+		);
+		expect(result.code).toBe("var a = 1;");
 	});
 
 	it("should match string comment patterns like RegExp conditions", async () => {

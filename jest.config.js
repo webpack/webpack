@@ -60,7 +60,7 @@ const config = {
 		"\\.runtime\\.js$",
 		// Serialized to the minimizer's worker pool as source (like runtime code):
 		// coverage instrumentation would inject counters the worker can't resolve.
-		"[\\\\/]lib[\\\\/](?:css[\\\\/]cssMinify|html[\\\\/]htmlMinify|javascript[\\\\/]jsMinify|json[\\\\/]jsonMinify)\\.js$",
+		"[\\\\/]lib[\\\\/](?:css[\\\\/]cssMinify|html[\\\\/](?:htmlMinify|xmlMinify)|javascript[\\\\/]jsMinify|json[\\\\/]jsonMinify)\\.js$",
 		"<rootDir>/test",
 		"<rootDir>/schemas",
 		"<rootDir>/examples",
