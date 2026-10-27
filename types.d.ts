@@ -2492,7 +2492,11 @@ declare class ChunkGraph {
 	/**
 	 * Processes the provided chunk a.
 	 */
-	integrateChunks(chunkA: Chunk, chunkB: Chunk): void;
+	integrateChunks(
+		chunkA: Chunk,
+		chunkB: Chunk,
+		namedChunks?: Map<string, Chunk>
+	): void;
 
 	/**
 	 * Upgrade dependent to full hash modules.
