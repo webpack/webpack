@@ -11,6 +11,8 @@ const {
 } = require("../../../lib/javascript/syntax-parser");
 
 /** @typedef {import("../../../lib/javascript/syntax-parser").JavascriptPath} JavascriptPath */
+/** @typedef {import("../../../lib/util/SourceProcessor").AnyParts} AnyParts */
+/** @typedef {import("../../../lib/util/SourceProcessor").TypedNodePath<JavascriptPath, number, AnyParts, number>} VisitorPath */
 /** @typedef {import("../../../lib/javascript/syntax-parser").TreeValue} TreeValue */
 /**
  * @template TNode
@@ -28,7 +30,7 @@ const editingPath = A;
  * checks the output parses as the source did.
  * @param {string} source the source
  * @param {number[]} types the node types the visitor visits
- * @param {((path: JavascriptPath) => void) | { enter?: (path: JavascriptPath) => void, exit?: (path: JavascriptPath) => void }} visitor the visitor
+ * @param {((path: VisitorPath) => void) | { enter?: (path: VisitorPath) => void, exit?: (path: VisitorPath) => void }} visitor the visitor
  * @param {JavascriptSourceType=} sourceType what the source is read as
  * @returns {string} the printed text
  */
@@ -43,7 +45,7 @@ const edited = (source, types, visitor, sourceType = "module") => {
 };
 
 /**
- * @param {JavascriptPath} path the path
+ * @param {VisitorPath} path the path
  * @param {string} name a name
  * @returns {boolean} whether the current node is an identifier of that name
  */
@@ -56,15 +58,15 @@ describe("JavaScript node path edits", () => {
 			[
 				"a statement",
 				"a;b;",
-				(/** @type {JavascriptPath} */ path) => {
-					if (named(path, "a")) path.insert("after", "c()", path.parent);
+				(/** @type {VisitorPath} */ path) => {
+					if (named(path, "a")) path.insert("after", "c()", /** @type {number} */ (path.parent));
 				},
 				"a;c();b;"
 			],
 			[
 				"an expression, parenthesized as it is printed",
 				"x=2*y;",
-				(/** @type {JavascriptPath} */ path) => {
+				(/** @type {VisitorPath} */ path) => {
 					if (named(path, "y")) path.replaceWith("a + b");
 				},
 				"x=2*(a+b);"
@@ -72,7 +74,7 @@ describe("JavaScript node path edits", () => {
 			[
 				"arguments, a spread among them",
 				"f(a);",
-				(/** @type {JavascriptPath} */ path) => {
+				(/** @type {VisitorPath} */ path) => {
 					if (named(path, "a")) path.insert("after", "...b, c");
 				},
 				"f(a,...b,c);"
@@ -80,7 +82,7 @@ describe("JavaScript node path edits", () => {
 			[
 				"an array's holes",
 				"[a];",
-				(/** @type {JavascriptPath} */ path) => {
+				(/** @type {VisitorPath} */ path) => {
 					if (named(path, "a")) path.insert("after", ", b");
 				},
 				"[a,,b];"
@@ -88,7 +90,7 @@ describe("JavaScript node path edits", () => {
 			[
 				"a function's body",
 				"function f(){a}",
-				(/** @type {JavascriptPath} */ path) => {
+				(/** @type {VisitorPath} */ path) => {
 					// A replacement is visited too, and is written nowhere in the input.
 					if (path.type() === NodeType.BlockStatement && path.source() !== "") {
 						path.replaceWith("{return 1}");
@@ -99,7 +101,7 @@ describe("JavaScript node path edits", () => {
 			[
 				"an arrow's body, a block",
 				"(()=>a);",
-				(/** @type {JavascriptPath} */ path) => {
+				(/** @type {VisitorPath} */ path) => {
 					if (named(path, "a")) path.replaceWith("{}");
 				},
 				"()=>{};"
@@ -107,7 +109,7 @@ describe("JavaScript node path edits", () => {
 			[
 				"a function's parameters",
 				"function f(a){}",
-				(/** @type {JavascriptPath} */ path) => {
+				(/** @type {VisitorPath} */ path) => {
 					if (named(path, "a")) path.insert("after", "b = 1, ...c");
 				},
 				"function f(a,b=1,...c){}"
@@ -115,7 +117,7 @@ describe("JavaScript node path edits", () => {
 			[
 				"a binding pattern",
 				"var [a] = d;",
-				(/** @type {JavascriptPath} */ path) => {
+				(/** @type {VisitorPath} */ path) => {
 					if (named(path, "a")) path.insert("after", "{ b }");
 				},
 				"var[a,{b}]=d;"
@@ -123,7 +125,7 @@ describe("JavaScript node path edits", () => {
 			[
 				"an assignment pattern, which a member stands in",
 				"[a] = d;",
-				(/** @type {JavascriptPath} */ path) => {
+				(/** @type {VisitorPath} */ path) => {
 					if (named(path, "a")) path.insert("after", "e.f");
 				},
 				"[a,e.f]=d;"
@@ -131,7 +133,7 @@ describe("JavaScript node path edits", () => {
 			[
 				"a binding object pattern",
 				"var {a} = d;",
-				(/** @type {JavascriptPath} */ path) => {
+				(/** @type {VisitorPath} */ path) => {
 					if (path.type() === NodeType.ObjectPattern) {
 						path.insert(Field.properties, "b, ...c");
 					}
@@ -141,7 +143,7 @@ describe("JavaScript node path edits", () => {
 			[
 				"an assigned object pattern",
 				"({a} = d);",
-				(/** @type {JavascriptPath} */ path) => {
+				(/** @type {VisitorPath} */ path) => {
 					if (path.type() === NodeType.ObjectPattern) {
 						path.insert(Field.properties, "b: e.f");
 					}
@@ -151,7 +153,7 @@ describe("JavaScript node path edits", () => {
 			[
 				"an object's properties",
 				"({a});",
-				(/** @type {JavascriptPath} */ path) => {
+				(/** @type {VisitorPath} */ path) => {
 					if (path.type() === NodeType.ObjectExpression) {
 						path.insert(Field.properties, "b: 1, ...c");
 					}
@@ -161,7 +163,7 @@ describe("JavaScript node path edits", () => {
 			[
 				"a class's members, a private one among them",
 				"class A{}",
-				(/** @type {JavascriptPath} */ path) => {
+				(/** @type {VisitorPath} */ path) => {
 					if (path.type() === NodeType.ClassBody) {
 						path.insert(Field.body, "#x = 1; static { this.#x; }");
 					}
@@ -171,7 +173,7 @@ describe("JavaScript node path edits", () => {
 			[
 				"a switch's cases",
 				"switch(a){case 1:}",
-				(/** @type {JavascriptPath} */ path) => {
+				(/** @type {VisitorPath} */ path) => {
 					if (path.type() === NodeType.SwitchStatement) {
 						path.insert(Field.cases, "default: b()");
 					}
@@ -181,7 +183,7 @@ describe("JavaScript node path edits", () => {
 			[
 				"a declaration's declarators",
 				"let a;",
-				(/** @type {JavascriptPath} */ path) => {
+				(/** @type {VisitorPath} */ path) => {
 					if (path.type() === NodeType.VariableDeclaration) {
 						path.insert(Field.declarations, "b = 2");
 					}
@@ -191,7 +193,7 @@ describe("JavaScript node path edits", () => {
 			[
 				"a for loop's head",
 				"for(;;);",
-				(/** @type {JavascriptPath} */ path) => {
+				(/** @type {VisitorPath} */ path) => {
 					if (path.type() === NodeType.ForStatement) {
 						path.insert(Field.init, "let i = 0");
 					}
@@ -201,7 +203,7 @@ describe("JavaScript node path edits", () => {
 			[
 				"a for…of loop's left side",
 				"for(a of b);",
-				(/** @type {JavascriptPath} */ path) => {
+				(/** @type {VisitorPath} */ path) => {
 					if (named(path, "a")) path.replaceWith("const c");
 				},
 				"for(const c of b);"
@@ -209,7 +211,7 @@ describe("JavaScript node path edits", () => {
 			[
 				"a catch clause",
 				"try{}finally{}",
-				(/** @type {JavascriptPath} */ path) => {
+				(/** @type {VisitorPath} */ path) => {
 					if (path.type() === NodeType.TryStatement) {
 						path.insert(Field.handler, "catch{}");
 					}
@@ -219,7 +221,7 @@ describe("JavaScript node path edits", () => {
 			[
 				"import specifiers, named and default",
 				'import "x";',
-				(/** @type {JavascriptPath} */ path) => {
+				(/** @type {VisitorPath} */ path) => {
 					if (path.type() === NodeType.ImportDeclaration) {
 						path.insert(Field.specifiers, "d");
 					}
@@ -229,7 +231,7 @@ describe("JavaScript node path edits", () => {
 			[
 				"a named import specifier",
 				'import {a} from "x";',
-				(/** @type {JavascriptPath} */ path) => {
+				(/** @type {VisitorPath} */ path) => {
 					if (path.type() === NodeType.ImportDeclaration) {
 						path.insert(Field.specifiers, '"b-c" as b');
 					}
@@ -239,7 +241,7 @@ describe("JavaScript node path edits", () => {
 			[
 				"import attributes",
 				'import a from "x";',
-				(/** @type {JavascriptPath} */ path) => {
+				(/** @type {VisitorPath} */ path) => {
 					if (path.type() === NodeType.ImportDeclaration) {
 						path.insert(Field.attributes, 'type: "json"');
 					}
@@ -249,7 +251,7 @@ describe("JavaScript node path edits", () => {
 			[
 				"a module's name",
 				'import a from "x";',
-				(/** @type {JavascriptPath} */ path) => {
+				(/** @type {VisitorPath} */ path) => {
 					if (path.type() === NodeType.Literal && path.source() !== "") {
 						path.replaceWith('"y"');
 					}
@@ -259,7 +261,7 @@ describe("JavaScript node path edits", () => {
 			[
 				"export specifiers",
 				'export {} from "x";',
-				(/** @type {JavascriptPath} */ path) => {
+				(/** @type {VisitorPath} */ path) => {
 					if (path.type() === NodeType.ExportNamedDeclaration) {
 						path.insert(Field.specifiers, "default as b");
 					}
@@ -269,7 +271,7 @@ describe("JavaScript node path edits", () => {
 			[
 				"an exported declaration",
 				"export const a = 1;",
-				(/** @type {JavascriptPath} */ path) => {
+				(/** @type {VisitorPath} */ path) => {
 					if (path.type() === NodeType.VariableDeclaration) {
 						path.replaceWith("function f(){}");
 					}
@@ -279,7 +281,7 @@ describe("JavaScript node path edits", () => {
 			[
 				"a default export",
 				"export default 1;",
-				(/** @type {JavascriptPath} */ path) => {
+				(/** @type {VisitorPath} */ path) => {
 					if (path.type() === NodeType.Literal) {
 						path.replaceWith("class {}");
 					}
@@ -289,7 +291,7 @@ describe("JavaScript node path edits", () => {
 			[
 				"a tagged template's template",
 				"t`a`;",
-				(/** @type {JavascriptPath} */ path) => {
+				(/** @type {VisitorPath} */ path) => {
 					if (path.type() === NodeType.TemplateLiteral && path.source() !== "") {
 						path.replaceWith("`b${c}`");
 					}
@@ -299,7 +301,7 @@ describe("JavaScript node path edits", () => {
 			[
 				"a label",
 				"a:for(;;)break a;",
-				(/** @type {JavascriptPath} */ path) => {
+				(/** @type {VisitorPath} */ path) => {
 					if (path.type() === NodeType.BreakStatement) {
 						path.replaceWith("continue a");
 					}
@@ -308,7 +310,7 @@ describe("JavaScript node path edits", () => {
 			]
 		])("should read %s", (_name, source, visitor, expected) => {
 			expect(
-				edited(source, Object.values(NodeType), /** @type {(path: JavascriptPath) => void} */ (visitor))
+				edited(source, Object.values(NodeType), /** @type {(path: VisitorPath) => void} */ (visitor))
 			).toBe(expected);
 		});
 
@@ -383,7 +385,7 @@ describe("JavaScript node path edits", () => {
 			).toThrow(/"await b" does not read as an ExpressionStatement's expression/);
 			expect(() =>
 				edited('"use strict";a;', [NodeType.Identifier], (path) => {
-					path.insert("after", "with(b);", path.parent);
+					path.insert("after", "with(b);", /** @type {number} */ (path.parent));
 				}, "script")
 			).toThrow(/does not read/);
 			expect(() =>
@@ -602,8 +604,8 @@ describe("JavaScript node path edits", () => {
 			const seen = [];
 			edited("a;b;", [NodeType.Identifier], (path) => {
 				seen.push(path.name());
-				if (named(path, "a")) path.insert("after", "c", path.parent);
-				if (named(path, "b")) path.insert("before", "d", path.parent);
+				if (named(path, "a")) path.insert("after", "c", /** @type {number} */ (path.parent));
+				if (named(path, "b")) path.insert("before", "d", /** @type {number} */ (path.parent));
 			});
 			expect(seen).toEqual(["a", "c", "b", "d"]);
 		});
@@ -617,7 +619,7 @@ describe("JavaScript node path edits", () => {
 						if (path.type() === NodeType.Identifier) seen.push(path.name());
 						if (named(path, "a")) path.replaceWith("x(y)");
 						if (path.type() === NodeType.CallExpression && path.name(path.field(0, Field.callee)) === "g") {
-							path.remove(path.parent);
+							path.remove(/** @type {number} */ (path.parent));
 						}
 					},
 					exit(path) {
@@ -645,7 +647,7 @@ describe("JavaScript node path edits", () => {
 				.use([NodeType.Identifier], (path) => {
 					seen.push(path.name());
 					if (named(path, "a")) {
-						path.insert("after", "c", path.parent);
+						path.insert("after", "c", /** @type {number} */ (path.parent));
 						path.stop();
 					}
 				})
