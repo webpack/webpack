@@ -52,7 +52,12 @@ const createClaims = () => {
  */
 const removeClaims = () => {
 	const directory = process.env[CLAIMS_ENV];
-	if (directory) fs.rmSync(directory, { recursive: true, force: true });
+	if (!directory || !fs.existsSync(directory)) return;
+	// Not `fs.rmSync`, which Node.js 10 lacks; every claim is an empty directory.
+	for (const name of fs.readdirSync(directory)) {
+		fs.rmdirSync(path.join(directory, name));
+	}
+	fs.rmdirSync(directory);
 };
 
 /**
