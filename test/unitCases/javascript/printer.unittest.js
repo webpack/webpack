@@ -14645,9 +14645,9 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				"if(a){if(b)c()}else d();if(a){for(;;)if(b)c()}else d();a?b?c():e():d();if(a){e:if(b)c()}else d();"
 			],
 			[
-				"if (a) { let x = h(); f(x) } if (a) { const y = h(); f(y) } if (a) { var z = 1 } if (a) { class C {} } if (a) { function g() {} } if (a) {} if (a) { b(); c() }",
+				"if (a) { let x = h(); f(x, x) } if (a) { const y = h(); f(y, y) } if (a) { var z = 1 } if (a) { class C {} } if (a) { function g() {} } if (a) {} if (a) { b(); c() }",
 				{},
-				"if(a){let i=h();f(i)}if(a){let n=h();f(n)}if(a)var z=1;if(a){class l{}}if(a){function g(){}}if(a){}if(a){b();c()}"
+				"if(a){let i=h();f(i,i)}if(a){let n=h();f(n,n)}if(a)var z=1;if(a){class l{}}if(a){function g(){}}if(a){}if(a){b();c()}"
 			],
 			[
 				"if (a) /* before */ { b() } if (a) { b() /* after */ }",
@@ -14921,7 +14921,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"function f(H){ var x; x = g(); switch (x) {} x = g(); x ? 1 : 2; x = g(); h(...x); x = g(); delete x.y; x = g(); (x, 1); x = g(); ({ k: x }); x = g(); ({ [k]: x }); x = g(); ({ x }); x = g(); new H(x); x = g(); new H(...x); x = g(); new U(x); x = g(); [...x]; x = g(); `${x}`; x = g(); -x; return x }",
 				{},
-				"function f(e){var n;switch(n=g()){}(n=g())?1:2;n=g();h(...n);n=g();delete n.y;n=g(),1;({k:n=g()});n=g();({[k]:n});n=g();new e(n=g());n=g();new e(...n);n=g();new U(n);n=g();[...n];`${n=g()}`;-(n=g());return n}"
+				"function f(e){var n;switch(n=g()){}(n=g())?1:2;n=g();h(...n);n=g();delete n.y;n=g(),1;({k:n=g()});n=g();({[k]:n});n=g();new e(n=g());n=g();new e(...n);new U(n=g());n=g();[...n];`${n=g()}`;-(n=g());return n}"
 			],
 			[
 				"function f(H){ var x; x = g(); H(...x) }",
@@ -15061,7 +15061,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"function f(){ var a = g(), b = h(), c = k(); use(a, c) }",
 				{},
-				"function f(){var a=g();h();var f=k();use(a,f)}"
+				"function f(){var a=g();h();use(a,k())}"
 			],
 			// A `with` anywhere may answer any name.
 			[
@@ -15182,6 +15182,24 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				"function f(a){ if (0) { a = function(){ var z } } return a }",
 				{},
 				"function f(n){return n}"
+			],
+			// A value folds past what reads the same after it runs: a global callee, for a local, `await`, a literal, `this`, a name nothing writes and the stable left of a binary or computed member.
+			[
+				"async function f(p){ var a = g(); h(p, 1, this, a); var b = g(); new K(p, b); var c = g(); i(await c); var d = g(); j(p + d); var e = g(); k(p[e]); var m = g(); l([p, , m]); var n = g(); o({ x: p, y: n }); var q = g(); r((p, q)) }",
+				{},
+				"async function f(a){h(a,1,this,g());new K(a,g());i(await g());j(a+g());k(a[g()]);l([a,,g()]);o({x:a,y:g()});r((a,g()))}"
+			],
+			// But not past a spread, shorthand, computed key, getter or template part before it, an optional member, a global the value sets, a name something writes, nor where `eval` may read it.
+			[
+				"function f(p){ var a = g(); h(...p, a); var b = g(); h({ p, b }); var c = g(); h({ [p]: 1, c }); var d = g(); h({ get x(){}, y: d }); var e = g(); h(`${p}${e}`); var m = g(); h(p?.[m]); var n = (h = g)(); h(n); var q = (h++, g()); h(q); var r = g(); h(p, r); p = 1 } function k(){ var a = g(); h(a); eval(\"\") } function l(){ x = g(); h(x) }",
+				{},
+				"function f(a){var v=g();h(...a,v);var r=g();h({p:a,b:r});var n=g();h({[a]:1,c:n});var c=g();h({get x(){},y:c});var f=g();h(`${a}${f}`);var t=g();h(a?.[t]);var i=(h=g)();h(i);var e=(h++,g());h(e);var o=g();h(a,o);a=1}function k(){var a=g();h(a);eval(\"\")}function l(){x=g();h(x)}"
+			],
+			// Each declarator folds into the next value after it, past one without a value.
+			[
+				"function f(){ let a = g(), b = h(a), c = i(b), d; j(c, d) }",
+				{},
+				"function f(){let d;j(i(h(g())),d)}"
 			],
 			[
 				"function f(a){ if (0) x(); Math.PI }",
