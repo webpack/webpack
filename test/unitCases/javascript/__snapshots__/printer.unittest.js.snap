@@ -2913,6 +2913,8 @@ exports[`syntax-printer improve phase should write less, printing the same: \`nu
 
 exports[`syntax-printer improve phase should write less, printing the same: \`replaceAll\` of a string by a string, folded, but not with a \`$\` pattern 1`] = `"console.log(\\"-a-b-\\",\\"x_x\\",\\"aa\\".replaceAll(\\"a\\",\\"$&$&\\"));"`;
 
+exports[`syntax-printer improve phase should write less, printing the same: \`return a || void 0\` ending a function, as \`if (a) return a\`, for a name of its own or \`this\` 1`] = `"function f(n){if(n)return n}function g(){if(this)return this}async function h(n){if(console.log(n),n)return n}console.log(f(0),f(2),3==g.call(3)),h(4).then(console.log);"`;
+
 exports[`syntax-printer improve phase should write less, printing the same: \`this\` in a derived constructor past its \`super()\`, where it no longer throws 1`] = `"class A{}class B extends A{constructor(x){super(),this.b=+!x}}console.log(new B(1).b,new B(0).b);"`;
 
 exports[`syntax-printer improve phase should write less, printing the same: \`toFixed\`, \`toPrecision\`, \`toExponential\` and \`valueOf\` of number literals 1`] = `"console.log(\\"0\\",\\"1.0\\",\\"110.0000\\",\\"1.00e-101\\",\\"0.00\\",\\"Infinity\\",\\"1.50e+0\\",\\"1e+21\\",1);"`;

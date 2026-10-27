@@ -1914,6 +1914,11 @@ const IMPROVED_CASES = [
 		{ compress: {}, mangle: false }
 	],
 	[
+		"`return a || void 0` ending a function, as `if (a) return a`, for a name of its own or `this`",
+		"function f(n) { if (n) return n; else return; } function g() { return this || void 0; } async function h(n) { console.log(n); return n || void 0; } console.log(f(0), f(2), g.call(3) == 3); h(4).then(console.log);",
+		{ compress: {}, mangle: false }
+	],
+	[
 		"an `if` with an empty branch and an `else` block, as an `if` of the negated test, but a chain's",
 		"function f(a, b) { if (a) {} else { if (b) { console.log(1); return; } console.log(2); } console.log(3); } function g(a, b) { if (a && b) {} else { if (b) { console.log(4); return; } console.log(5); } } f(0, 0); f(0, 1); f(1, 0); g(0, 1); g(1, 1);",
 		{ compress: {}, mangle: false }
@@ -10161,6 +10166,28 @@ x = a ** b ** c; x = (a ** b) ** c; x = (-a) ** b; x = a < b < c; x = a < (b < c
 				const { code } = await minify(input, { compress: {}, mangle: false });
 				expect(code).toContain(expected);
 			}
+		});
+
+		it("should keep `return a || void 0` where `a` may read otherwise twice, or the return is no function's last", async () => {
+			const { minify } = await load();
+			for (const [input, expected] of [
+				["function f() { return x || void 0; }", "return x||void 0"],
+				["function f() { return this.p || void 0; }", "return this.p||void 0"],
+				["const f = (n) => n || void 0;", "n=>n||void 0"],
+				["function f(n) { for (;;) { return n || void 0; } }", "return n||void 0"],
+				["function f(n) { if (y) return 1; return n || void 0; }", "n||void 0"],
+				["function f(n) { return n && void 0; }", "return n&&void 0"],
+				["function f(n) { return n || -1; }", "return n||-1"],
+				["function f(n) { return n || !1; }", "return n||!1"]
+			]) {
+				const { code } = await minify(input, { compress: {}, mangle: false });
+				expect(code).toContain(expected);
+			}
+			const { code } = await minify("const f = (n) => { g(); return n || void 0; };", {
+				compress: {},
+				mangle: false
+			});
+			expect(code).toContain("if(g(),n)return n");
 		});
 
 		it("should write a number multiplied or masked last, and keep it first where order matters", async () => {
