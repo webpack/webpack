@@ -10089,6 +10089,39 @@ declare class EnvironmentPlugin {
 type ErrorWithDetail = Error & { details?: string };
 
 /**
+ * ESTree objects read the way a `SyntaxTree` is, `toEstreeObject`'s way back:
+ * an object takes an id when a read first reaches it, and nothing is copied.
+ */
+declare class EstreeView {
+	constructor();
+	add(object: NodeEstreeIndex): number;
+	object(node: number): NodeEstreeIndex;
+
+	/**
+	 * Forgets every id, for the next read.
+	 */
+	reset(): void;
+	type(node: number): number;
+	start(node: number): number;
+	name(node: number): string;
+	value(
+		node: number
+	):
+		| undefined
+		| null
+		| string
+		| number
+		| bigint
+		| boolean
+		| RegExp
+		| { cooked?: null | string; raw: string };
+	fieldCount(field: number, node: number): number;
+	field(i: number, field: number, node: number): number;
+	flag(flag: number, node: number): boolean;
+	textOf(part: number, node: number): null | string;
+}
+
+/**
  * Cache validation token whose string representation identifies the build
  * inputs associated with a cached value.
  */
@@ -37885,7 +37918,8 @@ declare namespace exports {
 					LEGACY_ASSERT_ATTRIBUTES,
 					ParserPosition,
 					SyntaxTree,
-					WebpackParser
+					WebpackParser,
+					EstreeView
 				};
 			}
 			export namespace printer {
