@@ -14,6 +14,7 @@
 
 const { spawnSync } = require("child_process");
 const fs = require("fs");
+const os = require("os");
 const path = require("path");
 const { pathToFileURL } = require("url");
 const vm = require("vm");
@@ -23,6 +24,7 @@ const { IGNORED_FORMAT_OPTIONS, load } =
 	require("../../lib/javascript/syntax").printer;
 const OXC_SMALLER = require("../helpers/oxcSmaller");
 const SWC_SMALLER = require("../helpers/swcSmaller");
+const { currentPart, isInPart } = require("../helpers/testParts");
 
 /** @typedef {import("terser").MinifyOptions} MinifyOptions */
 /** @typedef {(code: string, options: MinifyOptions) => Promise<{ code?: string }>} Minify */
@@ -44,7 +46,7 @@ const swcTestsDir = path.join(
 const oxcTestsDir = path.join(externalDir, "oxc/crates/oxc_minifier/tests");
 
 // A group minifies each of its sources once per option set, with both minifiers.
-const GROUP_TIMEOUT = 300000;
+const GROUP_TIMEOUT = 600000;
 
 /**
  * An option value, copied so neither minifier sees what the other wrote into
@@ -2054,11 +2056,51 @@ const formatLeads = (leads) => {
 	].join("\n");
 };
 
+/**
+ * Lists the table entries no part met, so one no longer met fails instead of
+ * lingering.
+ * @param {Record<string, string[]>} seen what every part met, by table
+ * @returns {string[]} the entries to retire
+ */
+const staleEntries = (seen) => {
+	const refusalsSeen = new Set(seen.refusals);
+	const webpackRefusalsSeen = new Set(seen.webpackRefusals);
+	const misprintsSeen = new Set(seen.misprints);
+	const improvedYetBiggerSeen = new Set(seen.improvedYetBigger);
+	const rivalSmallerSeen = new Set(seen.rivalSmaller);
+	return [
+		...Object.keys(REFUSED_BY_REFERENCE)
+			.filter((message) => !refusalsSeen.has(message))
+			.map((message) => `REFUSED_BY_REFERENCE: ${message}`),
+		...Object.keys(REFUSED_BY_WEBPACK)
+			.filter((message) => !webpackRefusalsSeen.has(message))
+			.map((message) => `REFUSED_BY_WEBPACK: ${message}`),
+		...Object.keys(REFERENCE_MISPRINTS)
+			.filter((key) => !misprintsSeen.has(key))
+			.map((key) => `REFERENCE_MISPRINTS: ${key}`),
+		...Object.keys(IMPROVED_YET_BIGGER)
+			.filter((key) => !improvedYetBiggerSeen.has(key))
+			.map((key) => `IMPROVED_YET_BIGGER: ${key}`),
+		...Object.keys(SWC_SMALLER)
+			.map((key) => `SWC_SMALLER: ${key}`)
+			.filter((entry) => !rivalSmallerSeen.has(entry)),
+		...Object.keys(OXC_SMALLER)
+			.map((key) => `OXC_SMALLER: ${key}`)
+			.filter((entry) => !rivalSmallerSeen.has(entry))
+	];
+};
+
 describe("JavaScript minifier", () => {
+	const [part, parts] = currentPart();
+	// Shared by the parts of one jest run, which all have its process as parent.
+	const runDir = path.join(os.tmpdir(), `webpack-minify-corpora-${process.ppid}`);
+
 	/** @type {{ reader?: CaseReader, printer?: { minify: Minify, phases: string[], corrections: { enabled: boolean } | undefined, improvements?: { enabled: boolean, lets: { enabled: boolean } } | undefined }, sandbox?: { run_code: (code: string, prepend: string) => string | Error, same_stdout: (expected: string | Error, actual: string | Error) => boolean } }} */
 	const loaded = {};
 	/** @type {Lead[]} */
 	const leads = [];
+	// A `-t` filter skips groups, whose table entries then look unmet.
+	const groupCounts = { defined: 0, run: 0 };
 	const { runInNewContext } = vm;
 	// Whether the sandbox also drains promise callbacks: swc's harness runs a
 	// whole process, terser's runner captures only what runs synchronously.
@@ -2116,9 +2158,93 @@ describe("JavaScript minifier", () => {
 
 	afterAll(() => {
 		vm.runInNewContext = runInNewContext;
-		const report = process.env.JS_MINIFY_REPORT;
-		if (report) fs.writeFileSync(report, formatLeads(leads));
+		fs.mkdirSync(runDir, { recursive: true });
+		const file = path.join(runDir, `${part}.json`);
+		fs.writeFileSync(
+			`${file}.tmp`,
+			JSON.stringify({
+				leads,
+				complete: groupCounts.run === groupCounts.defined,
+				seen: {
+					refusals: [...refusalsSeen],
+					webpackRefusals: [...webpackRefusalsSeen],
+					misprints: [...misprintsSeen],
+					improvedYetBigger: [...improvedYetBiggerSeen],
+					rivalSmaller: [...rivalSmallerSeen]
+				}
+			})
+		);
+		fs.renameSync(`${file}.tmp`, file);
+		// Parts finish moments apart, so one at a time reads, reports and cleans
+		// up; one still waiting after a minute fails rather than hang the run.
+		const lockDir = `${runDir}.lock`;
+		const pause = new Int32Array(new SharedArrayBuffer(4));
+		for (let waited = 0; ; waited += 10) {
+			try {
+				fs.mkdirSync(lockDir);
+				break;
+			} catch (err) {
+				if (/** @type {NodeJS.ErrnoException} */ (err).code !== "EEXIST") {
+					throw err;
+				}
+				if (waited >= 60000) {
+					throw new Error(
+						`${lockDir} was held for a minute: remove it if no jest run is using it`,
+						{ cause: err }
+					);
+				}
+				Atomics.wait(pause, 0, 0, 10);
+			}
+		}
+		try {
+			// The last part already checked everything and removed the results.
+			if (!fs.existsSync(runDir)) return;
+			aggregate();
+		} finally {
+			fs.rmSync(lockDir, { recursive: true, force: true });
+		}
 	});
+
+	/**
+	 * Merges every part result present, rewrites the report from them, and once
+	 * all parts ran every group, fails on the table entries none of them met.
+	 * @returns {void}
+	 */
+	const aggregate = () => {
+		const done = fs
+			.readdirSync(runDir)
+			.filter((name) => name.endsWith(".json"));
+		let complete = done.length === parts;
+		/** @type {Lead[]} */
+		const allLeads = [];
+		/** @type {Record<string, string[]>} */
+		const seen = {};
+		for (const name of done) {
+			const result = JSON.parse(
+				fs.readFileSync(path.join(runDir, name), "utf8")
+			);
+			allLeads.push(...result.leads);
+			if (!result.complete) complete = false;
+			for (const [table, entries] of Object.entries(result.seen)) {
+				(seen[table] = seen[table] || []).push(
+					.../** @type {string[]} */ (entries)
+				);
+			}
+		}
+		// Rewritten by every part, as a filter can leave a part with no test to run.
+		const report = process.env.JS_MINIFY_REPORT;
+		if (report) fs.writeFileSync(report, formatLeads(allLeads));
+		if (done.length === parts) {
+			fs.rmSync(runDir, { recursive: true, force: true });
+		}
+		// Run alone or filtered, a part cannot tell which entries the others meet.
+		const stale = complete ? staleEntries(seen) : [];
+		if (stale.length > 0) {
+			throw new Error(
+				`List no difference the reference no longer makes:\n${stale.join("\n")}`
+			);
+		}
+	};
 
 	it("should run only the node_version ranges it can read", () => {
 		const major = Number(process.versions.node.split(".")[0]);
@@ -2129,7 +2255,7 @@ describe("JavaScript minifier", () => {
 		expect(() => nodeSatisfies(`^${major}`)).toThrow(/Unsupported/);
 	});
 
-	if (isPresent(referenceDir)) {
+	if (part === 1 && isPresent(referenceDir)) {
 		it("should pin the reference's corpus to the version it is compared with", () => {
 			const pinned = JSON.parse(
 				fs.readFileSync(path.join(referenceDir, "package.json"), "utf8")
@@ -2138,7 +2264,7 @@ describe("JavaScript minifier", () => {
 		});
 	}
 
-	if (isPresent(oxcTestsDir)) {
+	if (part === 1 && isPresent(oxcTestsDir)) {
 		it("should pin oxc's corpus to the oxc-minify it is compared with", () => {
 			const pinned = JSON.parse(
 				fs.readFileSync(
@@ -2197,22 +2323,25 @@ describe("JavaScript minifier", () => {
 	for (const corpus of CORPORA) {
 		describe(corpus.name, () => {
 			if (!isPresent(corpus.directory)) {
+				if (part !== 1) return;
+
 				it(`submodule not initialized (run \`git submodule update --init --depth 1 ${corpus.submodule}\`)`, () => {
 					// No-op: each corpus is an optional git submodule.
 				});
 
 				return;
 			}
-			const groups = corpus.groups();
+			const allGroups = corpus.groups();
 
-			it("should read every source the corpus holds", () => {
+			if (part === 1) {
+				it("should read every source the corpus holds", () => {
 				const reader = /** @type {CaseReader} */ (loaded.reader);
 				let count = 0;
 				let own = 0;
 				let defaultsUnnamed = 0;
 				let runnable = 0;
 				let rivals = 0;
-				for (const { files } of groups) {
+				for (const { files } of allGroups) {
 					for (const file of files) {
 						for (const source of corpus.read(file, reader)) {
 							count++;
@@ -2242,11 +2371,15 @@ describe("JavaScript minifier", () => {
 				}
 				if (corpus.ownDefaultsNamed) expect(defaultsUnnamed).toBe(0);
 			});
+			}
 
-			for (const group of groups) {
+			groupCounts.defined += allGroups.length;
+			for (const group of allGroups) {
 				it(
 					`should minify as the reference does, printing what the input prints: ${group.name || "."}`,
 					async () => {
+						groupCounts.run++;
+
 						const reference = require("terser");
 
 						const reader = /** @type {CaseReader} */ (loaded.reader);
@@ -2311,9 +2444,12 @@ describe("JavaScript minifier", () => {
 								);
 							}
 						};
-						const sources = group.files.flatMap((file) =>
-							corpus.read(file, reader)
-						);
+						// `--parts=<n>` splits by source, as one group can hold most of a corpus.
+						const sources = group.files
+							.flatMap((file) => corpus.read(file, reader))
+							.filter((source) =>
+								isInPart(`${corpus.name}/${group.name}/${source.name}`)
+							);
 						const oxcSet = "the default minimizer's options";
 						// webpack's minimizer reads `ecma` off `output.environment`, 2020 for a
 						// modern target, which oxc's output assumes too.
@@ -2633,26 +2769,4 @@ describe("JavaScript minifier", () => {
 		});
 	}
 
-	it("should list no difference the reference no longer makes", () => {
-		expect([
-			...Object.keys(REFUSED_BY_REFERENCE)
-				.filter((message) => !refusalsSeen.has(message))
-				.map((message) => `REFUSED_BY_REFERENCE: ${message}`),
-			...Object.keys(REFUSED_BY_WEBPACK)
-				.filter((message) => !webpackRefusalsSeen.has(message))
-				.map((message) => `REFUSED_BY_WEBPACK: ${message}`),
-			...Object.keys(REFERENCE_MISPRINTS)
-				.filter((key) => !misprintsSeen.has(key))
-				.map((key) => `REFERENCE_MISPRINTS: ${key}`),
-			...Object.keys(IMPROVED_YET_BIGGER)
-				.filter((key) => !improvedYetBiggerSeen.has(key))
-				.map((key) => `IMPROVED_YET_BIGGER: ${key}`),
-			...Object.keys(SWC_SMALLER)
-				.map((key) => `SWC_SMALLER: ${key}`)
-				.filter((entry) => !rivalSmallerSeen.has(entry)),
-			...Object.keys(OXC_SMALLER)
-				.map((key) => `OXC_SMALLER: ${key}`)
-				.filter((entry) => !rivalSmallerSeen.has(entry))
-		]).toEqual([]);
-	});
 });

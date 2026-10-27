@@ -350,10 +350,11 @@ jobs:
             flags: test262-parser
           # Minifies every source of each JS corpus with the published minifier
           # and with webpack's own: each output prints what its input prints.
-          # About 35 min, so it gets the longer bound below.
+          # About 35 min of work, run in three parts at once on the runner's
+          # cores (`--parts`, TESTING_DOCS.md); it keeps the longer bound below.
           - language: minify-corpora
             submodules: test/external/terser test/external/test262-cases test/external/swc test/external/oxc
-            script: cover:minify
+            script: cover:minify --parts=3
             flags: minify-corpora
             timeout: 90
           # Runs webpack's fuzzer on fixed seeds, apart from the corpora: run
