@@ -352,6 +352,7 @@ describe("the XML tool comparison — the entities a DTD declares", () => {
 	<!ENTITY parameter "%p;">
 	<!-- <!ENTITY commented "no"> -->
 	<!ENTITY tab "a&#9;b">
+	<!ENTITY nested "plain"><!ENTITY parameter "plain"><!ENTITY tab "plain">
 ]><r/>`);
 		expect(tree.list[0][2]).toBe(
 			'<r first="one" quoted="say \\"hi\\"" decoded="undefined" nested="undefined" parameter="undefined" commented="undefined" tab="undefined">'

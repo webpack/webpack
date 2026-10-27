@@ -797,22 +797,26 @@ const ENTITY_DECLARATION =
  * The general entities a doctype's internal subset declares, each name bound
  * to its replacement text by its first declaration (XML §4.2).
  * @param {string} subset the internal subset
- * @returns {Map<string, string>} each entity's replacement text, by name
+ * @returns {Map<string, string | undefined>} each entity's replacement text, by name, `undefined` where it is not plain text
  */
 const declaredEntities = (subset) => {
-	/** @type {Map<string, string>} */
+	/** @type {Map<string, string | undefined>} */
 	const declared = new Map();
 	for (const match of subset
 		.replace(/<!--[\s\S]*?-->/g, "")
 		.matchAll(ENTITY_DECLARATION)) {
+		if (declared.has(match[1])) continue;
 		const literal = match[2] === undefined ? match[3] : match[2];
-		if (declared.has(match[1]) || literal.includes("%")) continue;
+		if (literal.includes("%")) {
+			declared.set(match[1], undefined);
+			continue;
+		}
 		const value = literal.replace(/&#(x[\da-fA-F]+|\d+);/g, (_, code) =>
 			String.fromCodePoint(
 				code[0] === "x" ? Number.parseInt(code.slice(1), 16) : Number(code)
 			)
 		);
-		if (!/[&<\t\n\r]/.test(value)) declared.set(match[1], value);
+		declared.set(match[1], /[&<\t\n\r]/.test(value) ? undefined : value);
 	}
 	return declared;
 };
