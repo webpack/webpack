@@ -404,6 +404,7 @@ describe("snapshots", () => {
 		          "fullySpecified": true,
 		          "preferRelative": true,
 		        },
+		        "type": "css",
 		      },
 		      Object {
 		        "dependency": "html-style-attribute",
@@ -5364,15 +5365,12 @@ describe("snapshots", () => {
 			-         },
 			-         "test": /\\.css$/i,
 			-         "type": "css/auto",
-			-       },
-			-       Object {
+			@@ ... @@
 			-         "mimetype": "text/css+module",
-			-         "resolve": Object {
-			-           "fullySpecified": true,
-			-           "preferRelative": true,
+			@@ ... @@
 			-         },
 			-         "type": "css/module",
-			-       },
+			@@ ... @@
 			-       Object {
 			-         "mimetype": "text/css",
 			-         "resolve": Object {
@@ -5421,8 +5419,13 @@ describe("snapshots", () => {
 			-         "resolve": Object {
 			-           "fullySpecified": true,
 			-           "preferRelative": true,
-			@@ ... @@
+			-         },
 			-       },
+			-       Object {
+			-         "resolve": Object {
+			-           "fullySpecified": true,
+			-           "preferRelative": true,
+			-         },
 			@@ ... @@
 			-         },
 			-         "resolve": Object {
@@ -5435,6 +5438,9 @@ describe("snapshots", () => {
 			-         "parser": Object {
 			-           "exportType": "text",
 			@@ ... @@
+			-         "type": "css",
+			-       },
+			-       Object {
 			-         "dependency": "html-style-attribute",
 			-         "parser": Object {
 			-           "as": "block-contents",
@@ -5444,24 +5450,17 @@ describe("snapshots", () => {
 			-           "fullySpecified": true,
 			-           "preferRelative": true,
 			-         },
-			-       },
-			-       Object {
-			@@ ... @@
-			+       },
-			+       Object {
-			+         "oneOf": Array [
-			+           Object {
-			+             "resourceQuery": /(\\?|&)raw(&|$)/,
-			+             "type": "asset/source",
 			@@ ... @@
 			-     ],
 			-     "generator": Object {
 			-       "css": Object {
 			-         "esModule": true,
 			-         "exportsOnly": false,
+			+       Object {
+			+         "oneOf": Array [
 			+           Object {
-			+             "resourceQuery": /(\\?|&)url(&|$)/,
-			+             "type": "asset/resource",
+			+             "resourceQuery": /(\\?|&)raw(&|$)/,
+			+             "type": "asset/source",
 			@@ ... @@
 			-       "css/auto": Object {
 			-         "exportsConvention": "as-is",
@@ -5470,6 +5469,10 @@ describe("snapshots", () => {
 			-         "localIdentHashFunction": "md4",
 			-         "localIdentHashSalt": undefined,
 			-         "localIdentName": "[fullhash]",
+			+           Object {
+			+             "resourceQuery": /(\\?|&)url(&|$)/,
+			+             "type": "asset/resource",
+			+           },
 			+           Object {
 			+             "resourceQuery": /(\\?|&)no-inline(&|$)/,
 			+             "type": "asset/resource",
@@ -5497,6 +5500,8 @@ describe("snapshots", () => {
 			+     ],
 			+     "generator": Object {
 			@@ ... @@
+			-         },
+			-       },
 			-       "css": Object {
 			-         "customMedia": true,
 			-         "customSelectors": true,
@@ -5523,7 +5528,7 @@ describe("snapshots", () => {
 			-         "dashedIdents": true,
 			-         "function": true,
 			-         "grid": true,
-			-       },
+			@@ ... @@
 			-       "css/module": Object {
 			-         "animation": true,
 			-         "container": true,
@@ -5533,7 +5538,6 @@ describe("snapshots", () => {
 			-         "dashedIdents": true,
 			-         "function": true,
 			-         "grid": true,
-			-       },
 			@@ ... @@
 			+         "exportsPresence": "error",
 			@@ ... @@
