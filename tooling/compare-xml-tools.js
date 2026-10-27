@@ -787,6 +787,78 @@ const textOf = (events, value) => {
 	if (events.depth > 0) events.text(value);
 };
 
+// What an internal subset holds: comments, processing instructions and markup
+// declarations, the last scanned whole so no literal inside one is read as one.
+const SUBSET_MARKUP =
+	/<!--[\s\S]*?-->|<\?[\s\S]*?\?>|<!([A-Z]+)((?:"[^"]*"|'[^']*'|[^"'>])*)>/g;
+
+// An entity's declared value is read with its character references decoded;
+// one still holding markup, or whitespace an attribute would normalize, is
+// left undeclared, so a source using it stays one the reference rejects.
+const GENERAL_ENTITY = /^\s+([^\s%]\S*)\s+(?:"([^"]*)"|'([^']*)')?/;
+
+/**
+ * The general entities a doctype's internal subset declares, each name bound
+ * to its replacement text by its first declaration (XML §4.2).
+ * @param {string} subset the internal subset
+ * @returns {Map<string, string | undefined>} each entity's replacement text, by name, `undefined` where it is not plain text
+ */
+const declaredEntities = (subset) => {
+	/** @type {Map<string, string | undefined>} */
+	const declared = new Map();
+	for (const [, keyword, body] of subset.matchAll(SUBSET_MARKUP)) {
+		if (keyword !== "ENTITY") continue;
+		const match = GENERAL_ENTITY.exec(body);
+		if (match === null || declared.has(match[1])) continue;
+		const literal = match[2] === undefined ? match[3] : match[2];
+		// An external entity, or one a parameter entity builds, binds no text.
+		if (literal === undefined || literal.includes("%")) {
+			declared.set(match[1], undefined);
+			continue;
+		}
+		const value = literal.replace(/&#(x[\da-fA-F]+|\d+);/g, (_, code) =>
+			String.fromCodePoint(
+				code[0] === "x" ? Number.parseInt(code.slice(1), 16) : Number(code)
+			)
+		);
+		declared.set(match[1], /[&<\t\n\r]/.test(value) ? undefined : value);
+	}
+	return declared;
+};
+
+/**
+ * `@rgrove/parse-xml`'s document. It reads no DTD, so where it rejects a source
+ * the source is read again with what the internal subset declares.
+ * @param {EXPECTED_ANY} parseXml its `parseXml`
+ * @param {string} xml a document
+ * @returns {EXPECTED_ANY} the document
+ */
+const parseXmlDocument = (parseXml, xml) => {
+	try {
+		return parseXml(xml, { preserveComments: true });
+	} catch (error) {
+		/** @type {EXPECTED_ANY} */
+		let doctype;
+		try {
+			doctype = parseXml(xml, {
+				preserveDocumentType: true,
+				ignoreUndefinedEntities: true
+			}).children.find(
+				(/** @type {EXPECTED_ANY} */ node) => node.type === "doctype"
+			);
+		} catch (_error) {
+			throw error;
+		}
+		if (doctype === undefined || !doctype.internalSubset) throw error;
+		const declared = declaredEntities(doctype.internalSubset);
+		return parseXml(xml, {
+			preserveComments: true,
+			resolveUndefinedEntity: (/** @type {string} */ reference) =>
+				declared.get(reference.slice(1, -1))
+		});
+	}
+};
+
 /**
  * `@rgrove/parse-xml`'s tree, as the agreement column and relation read it.
  * @param {EXPECTED_ANY} parseXml its `parseXml`
@@ -816,7 +888,7 @@ const parseXmlEvents = (parseXml, xml) => {
 			}
 		}
 	};
-	walk(parseXml(xml, { preserveComments: true }));
+	walk(parseXmlDocument(parseXml, xml));
 	return events;
 };
 
