@@ -7677,7 +7677,7 @@ declare interface CssTransformOptions {
 	removeDeadRules?: boolean;
 
 	/**
-	 * take out of an earlier rule each declaration a later rule with the same selector writes again (off by default)
+	 * take out of an earlier rule each declaration a later rule with the same selector writes again
 	 */
 	removeShadowedDeclarations?: boolean;
 
@@ -24784,7 +24784,7 @@ declare interface OptimizationMinimizeCss {
 	removeDeadRules?: boolean;
 
 	/**
-	 * Take out of an earlier rule each declaration a later rule with the same selector, in the same at-rules, writes again: of two equally specific declarations the later wins wherever both match, whatever stands between. Off by default: over the CSS corpus it saves 248 of 2,456,527 gzip bytes for about 3% of the minifier's time. Needs `removeDeadRules`, which drops a rule it leaves empty.
+	 * Take out of an earlier rule each declaration a later rule with the same selector, in the same at-rules, writes again: of two equally specific declarations the later wins wherever both match, whatever stands between. On by default; turning it off saves about 3% of the minifier's time for 248 of 2,456,527 gzip bytes over the CSS corpus. Needs `removeDeadRules`, which drops a rule it leaves empty.
 	 * @since 5.113.0
 	 */
 	removeShadowedDeclarations?: boolean;

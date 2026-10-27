@@ -38,19 +38,6 @@ const minifyForWith = (css, browsers, transforms) =>
 		transforms
 	}).code;
 
-/**
- * Minify with `removeShadowedDeclarations` set.
- * @param {string} css a stylesheet
- * @param {string[]=} browsers the browserslist selection to target
- * @returns {string} its minified serialization
- */
-const minifyShadowing = (css, browsers) =>
-	new SourceProcessor().process(css, {
-		mode: "minify",
-		environment: browsers ? { browsers } : undefined,
-		transforms: { removeShadowedDeclarations: true }
-	}).code;
-
 describe("CssSyntax — block streaming", () => {
 	// A block streams once it holds more than `_STREAM_MIN_NODES` nodes; under that
 	// it is collected and walked in one batch. `BIG` clears the threshold, `SMALL`
@@ -3714,9 +3701,6 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 	});
 
 	describe("a rule a later one of the same selector writes wholly again", () => {
-		/** @type {(css: string) => string} */
-		const minify = (css) => minifyShadowing(css);
-
 		it("drops the earlier, whatever stands between", () => {
 			expect(
 				minify(
@@ -3753,17 +3737,15 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			).toBe("@media all{b{color:blue}a{color:#456!important}}");
 		});
 
-		it("takes out nothing unless `removeShadowedDeclarations` is set", () => {
+		it("takes out nothing where `removeShadowedDeclarations` is off", () => {
 			const css = "a{color:red;top:0}b{x:1}a{color:blue}";
-			expect(minifyFor(css)).toBe(css);
-			// Without `removeDeadRules` no rule is keyed to shadow.
-			expect(
-				new SourceProcessor().process(css, {
-					mode: "minify",
-					transforms: { removeShadowedDeclarations: true, removeDeadRules: false }
-				}).code
-			).toBe(css);
 			expect(minify(css)).toBe("a{top:0}b{x:1}a{color:blue}");
+			/** @type {(transforms: import("../../../lib/css/syntax-parser").CssTransformOptions) => string} */
+			const off = (transforms) =>
+				new SourceProcessor().process(css, { mode: "minify", transforms }).code;
+			expect(off({ removeShadowedDeclarations: false })).toBe(css);
+			// Without `removeDeadRules` no rule is keyed to shadow.
+			expect(off({ removeDeadRules: false })).toBe(css);
 		});
 
 		it("takes out of it what the later rule writes again", () => {
@@ -11150,13 +11132,11 @@ describe("CssSyntax minify — what a nesting lowering writes is minified once",
 	/**
 	 * @param {string} css source text
 	 * @param {string[] | undefined} browsers the browserslist selection to target
-	 * @param {boolean=} shadowing whether to set `removeShadowedDeclarations`
 	 * @returns {string} its minified serialization, checked against a second pass
 	 */
-	const settled = (css, browsers, shadowing = false) => {
-		const run = shadowing ? minifyShadowing : minifyFor;
-		const once = run(css, browsers);
-		expect(run(once, browsers)).toBe(once);
+	const settled = (css, browsers) => {
+		const once = minifyFor(css, browsers);
+		expect(minifyFor(once, browsers)).toBe(once);
 		return once;
 	};
 
@@ -11211,8 +11191,7 @@ describe("CssSyntax minify — what a nesting lowering writes is minified once",
 			expect(
 				settled(
 					".y{--c:1;color:olive}.z{top:1px}.y{--c:1;.y{color:olive}color:olive}.y{.y{color:olive}--c:1;color:olive}",
-					browsers,
-					true
+					browsers
 				)
 			).toBe(
 				".z{top:1px}.y{.y{color:olive}--c:1;color:olive}"
@@ -11226,8 +11205,7 @@ describe("CssSyntax minify — what a nesting lowering writes is minified once",
 		expect(
 			settled(
 				".t{.t{top:0}}.t{.t{top:0}top:0}.t{.t{top:0}.t{top:0}}.t{.t{top:0}top:0;.t{top:0}}",
-				undefined,
-				true
+				undefined
 			)
 		).toBe(".t{top:0;.t{top:0}}");
 	});
@@ -14465,9 +14443,9 @@ describe("CssSyntax minify — what a modern target makes dead", () => {
 
 	it("takes out a hex fallback before one every target reads with its alpha", () => {
 		const css = "a{background-color:#73859f;background-color:#73859f80}";
-		expect(minifyShadowing(css, MODERN)).toBe("a{background-color:#73859f80}");
-		expect(minifyShadowing(css)).toBe(css);
-		expect(minifyShadowing("a{color:red}b{x:1}a{color:#ff000080}", MODERN)).toBe(
+		expect(minifyFor(css, MODERN)).toBe("a{background-color:#73859f80}");
+		expect(minifyFor(css)).toBe(css);
+		expect(minifyFor("a{color:red}b{x:1}a{color:#ff000080}", MODERN)).toBe(
 			"b{x:1}a{color:#ff000080}"
 		);
 	});
@@ -14479,7 +14457,7 @@ describe("CssSyntax minify — what a modern target makes dead", () => {
 		["a thickness's unit is unread", "a{text-decoration:underline;text-decoration:underline dotted 1cap}", "a{text-decoration:underline;text-decoration:underline dotted 1cap}"]
 	])("reads the later rule's values where %s", (_name, css, expected) => {
 		expect(
-			minifyShadowing(css, css.includes("cap}") ? ["chrome 100"] : MODERN)
+			minifyFor(css, css.includes("cap}") ? ["chrome 100"] : MODERN)
 		).toBe(expected);
 	});
 
@@ -14492,8 +14470,8 @@ describe("CssSyntax minify — what a modern target makes dead", () => {
 
 	it("takes out an earlier rule's declaration a substitution later writes again", () => {
 		const css = "a{width:var(--a)}b{x:1}a{width:var(--b)}";
-		expect(minifyShadowing(css, MODERN)).toBe("b{x:1}a{width:var(--b)}");
-		expect(minifyShadowing(css)).toBe(css);
+		expect(minifyFor(css, MODERN)).toBe("b{x:1}a{width:var(--b)}");
+		expect(minifyFor(css)).toBe(css);
 	});
 });
 
