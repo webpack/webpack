@@ -7,6 +7,7 @@
 
 const path = require("path");
 const { create } = require("../helpers/browserslistConfigPackages");
+const { createClaims } = require("../helpers/testParts");
 
 module.exports = () => {
 	// Trust the self-signed certificate of the lazy-compilation https case, so
@@ -16,6 +17,8 @@ module.exports = () => {
 		__dirname,
 		"../hotCases/lazy-compilation/https/cert.pem"
 	);
+
+	createClaims();
 
 	return create();
 };
