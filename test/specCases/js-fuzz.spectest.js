@@ -244,6 +244,15 @@ const seedsToRun = () => {
 };
 
 /**
+ * Tells whether this part of a `--parts` run checks the work named `key`. A
+ * random seed differs per part, so each part checks all of its own seed.
+ * @param {string} key a name unique to one piece of work
+ * @returns {boolean} true when this part checks it
+ */
+const checksInPart = (key) =>
+	process.env.JS_FUZZ_SEED === "random" || isInPart(key);
+
+/**
  * The identifier written at an offset, its escapes decoded.
  * @param {string} code the source
  * @param {number} offset where it starts
@@ -986,7 +995,7 @@ describe("JavaScript fuzzer", () => {
 	});
 
 	for (const seed of seedsToRun()) {
-		if (!isInPart(`require calls ${seed}`)) continue;
+		if (!checksInPart(`require calls ${seed}`)) continue;
 
 		it(`should find the require calls acorn finds: seed ${seed}`, () => {
 			const next = createRequireSourceGenerator(seed);
@@ -1006,7 +1015,7 @@ describe("JavaScript fuzzer", () => {
 	}
 
 	for (const seed of seedsToRun()) {
-		if (!isInPart(`regular expressions ${seed}`)) continue;
+		if (!checksInPart(`regular expressions ${seed}`)) continue;
 
 		it(`should accept and refuse the regular expressions the engine does: seed ${seed}`, () => {
 			const next = createRegExpGenerator(seed);
@@ -1040,7 +1049,7 @@ describe("JavaScript fuzzer", () => {
 					];
 					// Each part generates every program, so the seed's stream stays
 					// the same, and checks only its own rounds.
-					if (!isInPart(`${seed}/${round}`)) continue;
+					if (!checksInPart(`${seed}/${round}`)) continue;
 					/** @type {string | undefined} */
 					let failure;
 					try {
