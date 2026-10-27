@@ -46,11 +46,11 @@ it("should type a <style lang> body as its language's files", () => {
 	}
 });
 
-it("should match a <style lang> no media type can name with `with: { lang }`", () => {
+it("should leave a <style lang> no media type can name in CSS", () => {
 	const sheet = sheetOf(".attribute-lang");
 	expect(sheet).toContain("css data:text/css;base64,");
-	expect(sheet).toContain(".attribute-lang { color: navy; }");
-	expect(sheet).toContain(".by-with-rule-from-page-directory {}");
+	expect(sheet).toContain("$accent: navy;");
+	expect(sheet).not.toContain("by-");
 });
 
 it("should type a <script lang> body as its language's files", () => {
