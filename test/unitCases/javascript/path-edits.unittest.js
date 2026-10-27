@@ -513,7 +513,7 @@ describe("JavaScript node path edits", () => {
 			).toThrow("a const declaration gives each declarator a value");
 			expect(() =>
 				edited("a;", [NodeType.Program], (path) => path.replaceWith("b"))
-			).toThrow("the program is in no field");
+			).toThrow("the Program is in no field");
 		});
 
 		it("should replace with several nodes, or with none in a list", () => {
