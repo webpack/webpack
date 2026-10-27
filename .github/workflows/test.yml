@@ -270,10 +270,6 @@ jobs:
   # that fails `lint`, `basic` or `unit` is not going to land on what they say.
   test262:
     needs: [lint, basic, unit]
-    strategy:
-      fail-fast: false
-      matrix:
-        shard: [1/2, 2/2]
     runs-on: ubuntu-latest
     timeout-minutes: 90
     steps:
@@ -299,10 +295,10 @@ jobs:
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: .jest-cache
-          key: jest-test262-${{ matrix.shard }}-${{ runner.os }}-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}-${{ github.sha }}
+          key: jest-test262-${{ runner.os }}-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}-${{ github.sha }}
           restore-keys: |
-            jest-test262-${{ matrix.shard }}-${{ runner.os }}-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}-
-            jest-test262-${{ matrix.shard }}-${{ runner.os }}-
+            jest-test262-${{ runner.os }}-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}-
+            jest-test262-${{ runner.os }}-
 
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -310,9 +306,9 @@ jobs:
           path: test/js/test262
           ref: f2d59ea6e4b2f6f87de9f0d18a41d73782b6a9bc
 
-      - run: yarn cover:test262 --ci --cacheDirectory .jest-cache
-        env:
-          SHARD: ${{ matrix.shard }}
+      # One file, in three parts at once on the runner's cores (`--parts`,
+      # TESTING_DOCS.md), where it took two runners one core each.
+      - run: yarn cover:test262 --parts=3 --ci --cacheDirectory .jest-cache
 
       - name: Codecov
         uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7.1.1
