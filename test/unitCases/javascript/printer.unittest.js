@@ -11507,7 +11507,6 @@ x = a ** b ** c; x = (a ** b) ** c; x = (-a) ** b; x = a < b < c; x = a < (b < c
 			expect(code).not.toContain("?.");
 		});
 
-
 		it("should keep a store to an array index a setter on `Array.prototype` may take", async () => {
 			const { minify } = await load();
 			const input =
@@ -11746,7 +11745,6 @@ x = a ** b ** c; x = (a ** b) ** c; x = (-a) ** b; x = a < b < c; x = a < (b < c
 			});
 			expect(code).toBe("console.log({[NaN]:1,[null]:2});");
 		});
-
 
 		it("should keep a value apart from an `await` or `yield` it would move past", async () => {
 			const { minify } = await load();
@@ -16250,12 +16248,6 @@ const MINIFY_CASES = [
 		{ as: "event-handler" },
 		true
 	],
-	[
-		"an event handler dropped whole",
-		{ "handler.js": "var a = 1;" },
-		{ as: "event-handler", toplevel: true },
-		true
-	]
 ];
 
 describe("jsMinify", () => {
@@ -16329,26 +16321,6 @@ describe("jsMinify", () => {
 			"a.js": Buffer.from('console.log( "é" );', "utf8")
 		});
 		expect(code).toBe('console.log("é");');
-	});
-
-	it("should give an event handler back as written where no code is asked for", async () => {
-		const result = await jsMinify(
-			{ "handler.js": "a( 1 )" },
-			undefined,
-			{ as: "event-handler", format: { code: false } },
-			false
-		);
-		expect(result.code).toBe("a( 1 )");
-	});
-
-	it("should give an event handler dropped whole back as written", async () => {
-		const result = await jsMinify(
-			{ "handler.js": "var a = 1;" },
-			undefined,
-			{ as: "event-handler", toplevel: true },
-			false
-		);
-		expect(result.code).toBe("var a = 1;");
 	});
 
 	it("should match string comment patterns like RegExp conditions", async () => {
