@@ -845,7 +845,13 @@ const agreementInvariant = ({
 					rejected++;
 					continue;
 				}
-				const said = treeDifference(theirs, tree(source), referenceName);
+				/** @type {string | undefined} */
+				let said;
+				try {
+					said = treeDifference(theirs, tree(source), referenceName);
+				} catch (error) {
+					said = `/: webpack's parser throws: ${thrownText(error)}`;
+				}
 				if (said === undefined) continue;
 				groups.add(
 					{

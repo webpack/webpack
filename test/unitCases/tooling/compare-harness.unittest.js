@@ -1192,7 +1192,8 @@ describe("agreementInvariant", () => {
 	const corpus = /** @type {[string, string][]} */ ([
 		["same", "a"],
 		["apart", "b"],
-		["rejected", "!"]
+		["rejected", "!"],
+		["throws", "?"]
 	]);
 
 	/**
@@ -1207,7 +1208,10 @@ describe("agreementInvariant", () => {
 			wanted,
 			referenceName: "ref",
 			reference,
-			tree: (source) => paragraph(source === "b" ? "c" : source),
+			tree: (source) => {
+				if (source === "?") throw new Error("parser bug\nstack");
+				return paragraph(source === "b" ? "c" : source);
+			},
 			corpus,
 			expected,
 			missing
@@ -1230,7 +1234,8 @@ describe("agreementInvariant", () => {
 		expect(missing).toEqual([]);
 		expect(held.expected).toEqual(expected);
 		expect(reports).toEqual([
-			['    /p[1]: ref text "b", tool text "c"', "parse", "apart"]
+			['    /p[1]: ref text "b", tool text "c"', "parse", "apart"],
+			["    /: webpack's parser throws: parser bug", "parse", "throws"]
 		]);
 	});
 
