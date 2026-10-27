@@ -54,9 +54,14 @@ it("should leave a <style lang> no media type can name in CSS", () => {
 });
 
 it("should type a <script lang> body as its language's files", () => {
-	const scripts = [...page.matchAll(/<script src="([^"]+)"/g)]
-		.map((match) => fs.readFileSync(path.resolve(__dirname, match[1]), "utf-8"))
-		.join("\n");
+	// `exec` in a loop: `String.prototype.matchAll` is newer than Node 10.
+	const scriptSrcRegExp = /<script src="([^"]+)"/g;
+	const sources = [];
+	let match;
+	while ((match = scriptSrcRegExp.exec(page)) !== null) {
+		sources.push(fs.readFileSync(path.resolve(__dirname, match[1]), "utf-8"));
+	}
+	const scripts = sources.join("\n");
 	expect(scripts).toContain('window.inlineScriptLang = "SHOUT"');
 	expect(scripts).toContain('window.inlineScriptPlain = "plain"');
 	expect(scripts).toContain("data:text/x-upper;base64,");
