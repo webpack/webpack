@@ -2716,7 +2716,11 @@ module.exports = PARSE_ERROR_CODES;
 const renderFieldGoals = () => {
 	const fieldGoals = collectFieldGoals();
 	return `${renderHeader(
-		`@types/estree ${require("@types/estree/package.json").version}`
+		`@types/estree ${
+			JSON.parse(
+				fs.readFileSync(require.resolve("@types/estree/package.json"), "utf8")
+			).version
+		}`
 	)}
 // Each node type's node and list fields as \`name:goal:set\`, read off
 // @types/estree: what text written into the field parses as, \`goal?\` where it
