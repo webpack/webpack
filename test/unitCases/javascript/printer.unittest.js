@@ -15531,6 +15531,19 @@ describe("JavaScript minifier reading an event handler's body", () => {
 		}
 	});
 
+	it("should compress a body inside its function with the one pass switched on", async () => {
+		const { minify, modules } = await load();
+		const source = "var v = 5; value = v; return value == null ? undefined : v";
+		const off = await minify(source, { sourceType: "event-handler" });
+		modules.onePass.enabled = true;
+		try {
+			const on = await minify(source, { sourceType: "event-handler" });
+			expect(on.code).toBe(off.code);
+		} finally {
+			modules.onePass.enabled = false;
+		}
+	});
+
 	it("should refuse what a function's body cannot hold", async () => {
 		const { minify } = await load();
 		for (const source of ['import a from "b"', "#!x\n1"]) {
