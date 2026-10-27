@@ -360,6 +360,125 @@ describe("Compiler", () => {
 		});
 	});
 
+	describe("additionalOutputs", () => {
+		const timestamps = {
+			atime: Date.UTC(2020, 0, 2, 3, 4, 5),
+			mtime: Date.UTC(2020, 0, 3, 4, 5, 6)
+		};
+
+		/**
+		 * @param {import("../../").OutputFileSystem} outputFileSystem the additional output's file system
+		 * @returns {import("../../").Compiler} a compiler emitting a file with attributes, a link, a name with a query and one the additional output leaves out
+		 */
+		function createCompiler(outputFileSystem) {
+			const webpack = require("../..");
+			const { RawSource } = require("webpack-sources");
+
+			const created = webpack({
+				context: path.join(testDirectory, "fixtures"),
+				mode: "production",
+				entry: "./a",
+				output: { path: "/directory", filename: "bundle.js" },
+				plugins: [
+					(compiler) => {
+						compiler.hooks.thisCompilation.tap("Test", (compilation) => {
+							compilation.hooks.processAssets.tap(
+								{
+									name: "Test",
+									stage: webpack.Compilation.PROCESS_ASSETS_STAGE_ADDITIONAL
+								},
+								() => {
+									compilation.emitAsset(
+										"nested/run.sh",
+										new RawSource("run"),
+										{ mode: 0o755, timestamps }
+									);
+									compilation.emitAsset(
+										"link.sh",
+										new RawSource("nested/run.sh"),
+										{ symlink: { target: "nested/run.sh", isDirectory: false } }
+									);
+									compilation.emitAsset("query.txt?v=1", new RawSource("query"));
+									compilation.emitAsset("skipped.txt", new RawSource("skipped"));
+								}
+							);
+						});
+						const output = {
+							outputFileSystem,
+							/** @type {(targetPath: string) => boolean} */
+							test: (targetPath) => !targetPath.endsWith("skipped.txt")
+						};
+						compiler.hooks.additionalOutputs.tap("Test", (outputs) => {
+							outputs.add(output);
+						});
+					}
+				]
+			});
+			created.outputFileSystem =
+				/** @type {import("../../").OutputFileSystem} */ (
+					/** @type {unknown} */ (createFsFromVolume(new Volume()))
+				);
+			return created;
+		}
+
+		it("should write the assets to an additional output as to the output file system", (done) => {
+			const additional = createFsFromVolume(new Volume());
+			compiler = createCompiler(
+				/** @type {import("../../").OutputFileSystem} */ (
+					/** @type {unknown} */ (additional)
+				)
+			);
+			compiler.run((err) => {
+				if (err) return done(err);
+				expect(additional.readFileSync("/directory/nested/run.sh", "utf8")).toBe(
+					"run"
+				);
+				const stats = additional.statSync("/directory/nested/run.sh");
+				expect(Number(stats.mode) & 0o777).toBe(0o755);
+				expect(Number(stats.mtimeMs)).toBe(timestamps.mtime);
+				expect(additional.lstatSync("/directory/link.sh").isSymbolicLink()).toBe(
+					true
+				);
+				expect(additional.readlinkSync("/directory/link.sh")).toBe(
+					"nested/run.sh"
+				);
+				expect(additional.readFileSync("/directory/query.txt", "utf8")).toBe(
+					"query"
+				);
+				expect(additional.existsSync("/directory/bundle.js")).toBe(true);
+				expect(additional.existsSync("/directory/skipped.txt")).toBe(false);
+				const own = /** @type {import("memfs").IFs} */ (
+					/** @type {unknown} */ (compiler.outputFileSystem)
+				);
+				expect(own.existsSync("/directory/skipped.txt")).toBe(true);
+				done();
+			});
+		});
+
+		it("should fail when an additional output cannot write an asset", (done) => {
+			compiler = createCompiler(
+				/** @type {import("../../").OutputFileSystem} */ (
+					/** @type {unknown} */ ({
+						...createFsFromVolume(new Volume()),
+						/**
+						 * @param {string} file file
+						 * @param {Buffer} data data
+						 * @param {(err: Error) => void} callback callback
+						 */
+						writeFile: (file, data, callback) =>
+							callback(new Error(`cannot write '${file}'`))
+					})
+				)
+			);
+			compiler.run((err) => {
+				expect(/** @type {Error} */ (err).message).toMatch(
+					/cannot write '\/directory\//
+				);
+				done();
+			});
+		});
+	});
+
 	it("should not emit compilation errors in async (watch)", async () => {
 		const createStats = (/** @type {import("../../").Configuration} */ options) =>
 			new Promise((resolve, reject) => {
