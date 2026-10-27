@@ -1,7 +1,8 @@
 "use strict";
 
 /**
- * Inlines `$name: value;` variables, standing in for a preprocessor's loader.
+ * Inlines `$name: value;` variables, standing in for a preprocessor's loader,
+ * and records the directory it was given to resolve from.
  * @type {import("../../../../").LoaderDefinition<{ marker: string }>}
  */
 module.exports = function variablesLoader(source) {
@@ -13,5 +14,6 @@ module.exports = function variablesLoader(source) {
 			return "";
 		})
 		.replace(/\$([\w-]+)/g, (_, name) => variables[name]);
-	return `${css}\n.${this.getOptions().marker} {}`;
+	const context = this.context === __dirname ? "page-directory" : "elsewhere";
+	return `${css}\n.${this.getOptions().marker}-from-${context} {}`;
 };

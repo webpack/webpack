@@ -1,7 +1,7 @@
 "use strict";
 
 /**
- * `<script lang="ts">` is a `.ts` file beside its page, so the built-in
+ * `<script lang="ts">` is a `data:text/typescript` module, so the built-in
  * TypeScript support strips its types with no rule for it.
  * @type {import("../../../../").Configuration}
  */
