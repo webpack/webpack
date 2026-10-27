@@ -9,6 +9,7 @@ const { pathToFileURL } = require("url");
 const {
 	TreeEvents,
 	agreement,
+	agreementInvariant,
 	compress,
 	cutsAt,
 	exists,
@@ -1168,5 +1169,91 @@ describe("parser agreement", () => {
 		expect(await agreement("ref", readers, "a")("same")).toBe(
 			"could not compare: ref rejects it: not well-formed"
 		);
+	});
+});
+
+describe("agreementInvariant", () => {
+	/**
+	 * @param {string} source words a paragraph holds
+	 * @returns {TreeEvents} the paragraph
+	 */
+	const paragraph = (source) => {
+		const events = new TreeEvents();
+		events.open("p", "<p>");
+		events.text(source);
+		events.close("</p>");
+		return events;
+	};
+	/** @type {import("../../../tooling/compare-tools-harness").Expected[]} */
+	const expected = [
+		{ relation: "agreement", contains: "x", why: "the reference's gap" },
+		{ relation: "spans", contains: "y", why: "another relation's" }
+	];
+	const corpus = /** @type {[string, string][]} */ ([
+		["same", "a"],
+		["apart", "b"],
+		["rejected", "!"],
+		["throws", "?"]
+	]);
+
+	/**
+	 * @param {boolean} wanted whether the run asks for the relation
+	 * @param {() => (source: string) => TreeEvents} reference the reference's reader
+	 * @returns {{ missing: string[], held: ReturnType<typeof agreementInvariant>, reports: [string, string, string][] }} what the sweep made of it
+	 */
+	const sweep = (wanted, reference) => {
+		/** @type {string[]} */
+		const missing = [];
+		const held = agreementInvariant({
+			wanted,
+			referenceName: "ref",
+			reference,
+			tree: (source) => {
+				if (source === "?") throw new Error("parser bug\nstack");
+				return paragraph(source === "b" ? "c" : source);
+			},
+			corpus,
+			expected,
+			missing
+		});
+		/** @type {[string, string, string][]} */
+		const reports = [];
+		held.hold({
+			add: (report, preset, label) => {
+				reports.push([report.repro, preset, label]);
+			}
+		});
+		return { missing, held, reports };
+	};
+
+	it("holds webpack's tree to the reference's, counting what the reference rejects", () => {
+		const { missing, held, reports } = sweep(true, () => (source) => {
+			if (source === "!") throw new Error("not well-formed");
+			return paragraph(source);
+		});
+		expect(missing).toEqual([]);
+		expect(held.expected).toEqual(expected);
+		expect(reports).toEqual([
+			['    /p[1]: ref text "b", tool text "c"', "parse", "apart"],
+			["    /: webpack's parser throws: parser bug", "parse", "throws"]
+		]);
+	});
+
+	it("names a reference that is not installed as missing, and sets its expectations aside", () => {
+		const { missing, held, reports } = sweep(true, () => {
+			throw new Error("Cannot find module");
+		});
+		expect(missing).toEqual(["ref, the agreement relation's reference"]);
+		expect(held.expected).toEqual([expected[1]]);
+		expect(reports).toEqual([]);
+	});
+
+	it("reads nothing where the run does not ask for the relation", () => {
+		const reference = jest.fn(() => paragraph);
+		const { missing, held, reports } = sweep(false, reference);
+		expect(reference).not.toHaveBeenCalled();
+		expect(missing).toEqual([]);
+		expect(held.expected).toEqual([expected[1]]);
+		expect(reports).toEqual([]);
 	});
 });

@@ -309,7 +309,8 @@ describe("compare-html-tools — agreeing with parse5", () => {
 		expect(await cell("webpack")).toBe("yes");
 		// The byte order mark is the decoder's, gone before tree construction.
 		expect(mockParse5.parse).toHaveBeenLastCalledWith(html.slice(1), {
-			sourceCodeLocationInfo: true
+			sourceCodeLocationInfo: true,
+			scriptingEnabled: false
 		});
 	});
 

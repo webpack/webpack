@@ -57,6 +57,7 @@ const {
 	STAGES,
 	TreeEvents,
 	agreement,
+	agreementInvariant,
 	collectFiles,
 	compress,
 	exists,
@@ -838,6 +839,8 @@ const cssTreeTree = (css) => {
 			} else if (node.type === "Declaration") {
 				declaration(events, node.property, source(node.value), node.important);
 			} else if (node.type === "Raw") {
+				// A stray `;` is no statement: the spec discards it (§5.4.5).
+				if (/^[\s;]*$/.test(source(node))) continue;
 				if (nested) {
 					reread(node.loc.start.offset, node.loc.end.offset);
 				} else {
@@ -1726,6 +1729,60 @@ const EXPECTED = [
 		contains: "-> \\76 ",
 		source: "parsing/cases/declaration.css",
 		why: "`prop: {value}{value}` is no declaration: it reparses as a rule whose selector `prop:` is invalid, which the printer writes back as authored"
+	},
+	{
+		relation: "agreement",
+		contains: "css-tree unparsed module.exports = ",
+		source: "entry/depend-on-non-js/",
+		why: "JavaScript saved as `.css` opens no `{}` block, so the spec drops it as a rule without one; css-tree keeps it as raw text"
+	},
+	{
+		relation: "agreement",
+		contains: "css-tree unparsed \\, tool nothing",
+		source: "parsing/cases/revers-solidus.css",
+		why: "a lone `\\` opens no `{}` block, so the spec drops it as a rule without one; css-tree keeps it as raw text"
+	},
+	{
+		relation: "agreement",
+		contains: "css-tree rule color: red; .class, tool color: red",
+		source: "css/css-modules/style.module.css",
+		why: "an unknown at-rule's block holds declarations and rules, as any block does; css-tree reads it as rules alone"
+	},
+	{
+		relation: "agreement",
+		contains: "css-tree unparsed color: red;, tool color: red",
+		source: "parsing/cases/at-rule.css",
+		why: "an unknown at-rule's block holds declarations and rules, as any block does; css-tree reads it as rules alone"
+	},
+	{
+		relation: "agreement",
+		contains: "css-tree f: (1) [2], { g: h }, tool rule f: (1) [2],",
+		source: "minify-nested-idempotent/style.css",
+		why: "a value holding a `{}` block beside anything else is no declaration but a rule (§5.4.5); css-tree keeps the declaration"
+	},
+	{
+		relation: "agreement",
+		contains: "css-tree prop: {value}{value}, tool rule prop:",
+		source: "parsing/cases/declaration.css",
+		why: "a value holding a `{}` block beside anything else is no declaration but a rule (§5.4.5); css-tree keeps the declaration"
+	},
+	{
+		relation: "agreement",
+		contains: "css-tree rule *zoom: 1; .t11, tool rule .t11",
+		source: "minimize-dead-rules/style.css",
+		why: "`*zoom: 1;` in a block opens no identifier and ends at its `;`, so the spec drops it; css-tree reads it into the next rule's selector"
+	},
+	{
+		relation: "agreement",
+		contains: "css-tree unparsed url('./inline.png')",
+		source: "no-extra-runtime-with-asset-modules/style.css",
+		why: "a statement opening with `url(` rather than an identifier and ending at its `;` is dropped by the spec; css-tree keeps it as raw text"
+	},
+	{
+		relation: "agreement",
+		contains: "css-tree @\\30 media \\;, tool @\\30 media\\;",
+		source: "css/escape-at-end-of-input.css",
+		why: "a `\\` the input ends after is a valid escape (§4.3.8), so it belongs to the at-rule's name; css-tree reads it as its prelude"
 	}
 ];
 
@@ -1988,16 +2045,29 @@ const invariants = (write) => {
 	_missingFixtures = built.missing.filter((label) => wantedFixture(label));
 	const corpus = built.corpus.filter(([label]) => wantedFixture(label));
 	const presets = PRESETS.filter(([name]) => wantedPreset(name));
+	const referenceHeld = agreementInvariant({
+		wanted: wantedRelation("agreement"),
+		referenceName: REFERENCE_PARSER,
+		reference: () => {
+			load(REFERENCE_PARSER);
+			return cssTreeTree;
+		},
+		tree: webpackTree,
+		corpus,
+		expected: EXPECTED,
+		missing: _missingFixtures
+	});
 	// Filtered like the corpus is: an expectation for a relation, fixture or
 	// preset this run was never going to reach matched nothing because nothing
 	// asked it to, which is not the divergence having gone away.
 	const groups = findingGroups(
 		wantedExpectations(
-			EXPECTED,
+			referenceHeld.expected,
 			corpus.map(([label]) => label),
 			presets.map(([name]) => name)
 		)
 	);
+	referenceHeld.hold(groups);
 	// Nothing is printed to reach this one, so it is read under no preset: what
 	// the parser said about the stylesheet it was handed.
 	if (wantedRelation("spans")) {

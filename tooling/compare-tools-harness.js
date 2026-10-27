@@ -797,6 +797,79 @@ const agreement = (referenceName, readers, source) => {
 	};
 };
 
+/**
+ * The `agreement` relation: webpack's parser reads every source to the tree
+ * the reference does. A source the reference rejects is counted, not reported.
+ * @param {object} options what to hold to what
+ * @param {boolean} options.wanted whether the run asks for the relation
+ * @param {string} options.referenceName the reference parser
+ * @param {() => (source: string) => TreeEvents} options.reference its reader, throwing where it is not installed
+ * @param {(source: string) => TreeEvents} options.tree webpack's reader
+ * @param {readonly [string, string][]} options.corpus `[label, source]` for each source
+ * @param {readonly Expected[]} options.expected the sweep's expectations
+ * @param {string[]} options.missing what the sweep did not find, which a missing reference joins
+ * @returns {{ expected: Expected[], hold: (groups: { add: (report: Report, preset: string, label: string) => void }) => void }} the expectations the run can reach, and the relation
+ */
+const agreementInvariant = ({
+	wanted,
+	referenceName,
+	reference,
+	tree,
+	corpus,
+	expected,
+	missing
+}) => {
+	/** @type {((source: string) => TreeEvents) | undefined} */
+	let read;
+	if (wanted) {
+		try {
+			read = reference();
+		} catch (_error) {
+			// The reference comes with the corpus, so it is missing as a fixture is.
+			missing.push(`${referenceName}, the agreement relation's reference`);
+		}
+	}
+	return {
+		expected: expected.filter(
+			(entry) => read !== undefined || entry.relation !== "agreement"
+		),
+		hold: (groups) => {
+			if (read === undefined) return;
+			let rejected = 0;
+			for (const [label, source] of corpus) {
+				/** @type {TreeEvents} */
+				let theirs;
+				try {
+					theirs = read(source);
+				} catch (_error) {
+					rejected++;
+					continue;
+				}
+				/** @type {string | undefined} */
+				let said;
+				try {
+					said = treeDifference(theirs, tree(source), referenceName);
+				} catch (error) {
+					said = `/: webpack's parser throws: ${thrownText(error)}`;
+				}
+				if (said === undefined) continue;
+				groups.add(
+					{
+						relation: "agreement",
+						what: `webpack's tree reads apart from ${referenceName}'s`,
+						repro: `    ${said}`
+					},
+					"parse",
+					label
+				);
+			}
+			log(
+				`held ${corpus.length - rejected} trees to ${referenceName}'s (${rejected} it rejects) …`
+			);
+		}
+	};
+};
+
 // Each bisection step prints the whole source twice, so a page carrying
 // thousands of sites stops shrinking rather than holding up the report.
 const SHRINK_BUDGET = 40;
@@ -1438,6 +1511,7 @@ module.exports = {
 	STAGES,
 	TreeEvents,
 	agreement,
+	agreementInvariant,
 	collectFiles,
 	compress,
 	cutsAt,

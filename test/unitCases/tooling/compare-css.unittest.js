@@ -353,6 +353,33 @@ describe("compare-css-tools — agreeing with css-tree", () => {
 		);
 	});
 
+	it("reads a stray `;` css-tree leaves raw as nothing, as the spec discards it", async () => {
+		const source = ".a{top:0;;}";
+		const loc = within(source);
+		answering({
+			"stylesheet@0": [
+				{
+					type: "Rule",
+					prelude: loc(".a"),
+					block: {
+						children: [
+							{
+								type: "Declaration",
+								property: "top",
+								important: false,
+								value: loc("0")
+							},
+							{ type: "Raw", ...loc(";", "0;") }
+						]
+					}
+				}
+			]
+		});
+		expect(await agreement("css-tree", TREE_READERS, source)("webpack")).toBe(
+			"yes"
+		);
+	});
+
 	it("names what css-tree can't read as declarations or rules", async () => {
 		const source = ".a{%}";
 		const loc = within(source);

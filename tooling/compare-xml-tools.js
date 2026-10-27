@@ -48,6 +48,7 @@ const {
 	STAGES,
 	TreeEvents,
 	agreement,
+	agreementInvariant,
 	collectFiles,
 	compress,
 	cutsAt,
@@ -787,12 +788,12 @@ const textOf = (events, value) => {
 };
 
 /**
- * `@rgrove/parse-xml`'s tree, as the agreement column reads it.
+ * `@rgrove/parse-xml`'s tree, as the agreement column and relation read it.
+ * @param {EXPECTED_ANY} parseXml its `parseXml`
  * @param {string} xml a document
- * @returns {Promise<TreeEvents>} what it says
+ * @returns {TreeEvents} what it says
  */
-const parseXmlTree = async (xml) => {
-	const { parseXml } = await importPackage("@rgrove/parse-xml");
+const parseXmlEvents = (parseXml, xml) => {
 	const events = new TreeEvents();
 	/**
 	 * @param {EXPECTED_ANY} node a parse-xml node
@@ -818,6 +819,13 @@ const parseXmlTree = async (xml) => {
 	walk(parseXml(xml, { preserveComments: true }));
 	return events;
 };
+
+/**
+ * @param {string} xml a document
+ * @returns {Promise<TreeEvents>} what `@rgrove/parse-xml` reads it to
+ */
+const parseXmlTree = async (xml) =>
+	parseXmlEvents((await importPackage(REFERENCE_PARSER)).parseXml, xml);
 
 /**
  * webpack's tree, as the agreement column reads it.
@@ -1451,25 +1459,40 @@ const EXPECTED = [];
 
 /**
  * Sweep mode: hold the parser and printer to their own invariants and report
- * what they break. Nothing is installed and nothing is compared to.
+ * what they break. Nothing is installed; `agreement` reads against the
+ * reference where the corpus brought it.
  * @param {(text: string) => void} write receives the report
+ * @param {EXPECTED_ANY=} parseXml the reference's `parseXml`, when installed
  * @returns {number} how many distinct findings it named
  */
-const invariants = (write) => {
+const invariants = (write, parseXml) => {
 	const built = invariantFixtures();
 	_missingFixtures = built.missing.filter((label) => wantedFixture(label));
 	const corpus = built.corpus.filter(([label]) => wantedFixture(label));
 	const presets = PRESETS.filter(([name]) => wantedPreset(name));
+	const referenceHeld = agreementInvariant({
+		wanted: wantedRelation("agreement"),
+		referenceName: REFERENCE_PARSER,
+		reference: () => {
+			if (parseXml === undefined) throw new Error("not installed");
+			return (xml) => parseXmlEvents(parseXml, xml);
+		},
+		tree: webpackTree,
+		corpus,
+		expected: EXPECTED,
+		missing: _missingFixtures
+	});
 	// Filtered like the corpus is: an expectation for a relation, fixture or
 	// preset this run was never going to reach matched nothing because nothing
 	// asked it to, which is not the divergence having gone away.
 	const groups = findingGroups(
 		wantedExpectations(
-			EXPECTED,
+			referenceHeld.expected,
 			corpus.map(([label]) => label),
 			presets.map(([name]) => name)
 		)
 	);
+	referenceHeld.hold(groups);
 	if (wantedRelation("spans")) {
 		log(`reading ranges over ${corpus.length} documents …`);
 		for (const [label, xml] of corpus) {
@@ -1569,13 +1592,20 @@ const invariants = (write) => {
 
 /**
  * The sweep as a section of the comparison's own report.
- * @returns {number} how many distinct findings it named
+ * @returns {Promise<number>} how many distinct findings it named
  */
-const reportInvariants = () => {
+const reportInvariants = async () => {
 	process.stdout.write(
 		"\ninvariants — what the parser and printer owe their own output\n"
 	);
-	const found = invariants((text) => process.stdout.write(text));
+	/** @type {EXPECTED_ANY} */
+	let parseXml;
+	try {
+		({ parseXml } = await importPackage(REFERENCE_PARSER));
+	} catch (_error) {
+		// Not installed yet: the sweep names it among what it did not find.
+	}
+	const found = invariants((text) => process.stdout.write(text), parseXml);
 	process.stdout.write(missingReport(_missingFixtures));
 	process.stdout.write(`\n${found} finding${found === 1 ? "" : "s"}\n`);
 	return found;
@@ -1584,7 +1614,7 @@ const reportInvariants = () => {
 const main = async () => {
 	// Before the install: the relations are webpack's own, so they answer in
 	// seconds whether or not there is anything to compare against yet.
-	reportInvariants();
+	await reportInvariants();
 	await setup();
 	const { parseXml } = await importPackage("@rgrove/parse-xml");
 	for (const [label, xml] of (await fixtures()).filter(([name]) =>
@@ -1684,7 +1714,7 @@ const main = async () => {
  */
 const reportInvariantsOnly = async () => {
 	process.exitCode = sweepExitCode(
-		reportInvariants(),
+		await reportInvariants(),
 		_missingFixtures,
 		process.argv
 	);
