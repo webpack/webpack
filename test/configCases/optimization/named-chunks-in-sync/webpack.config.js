@@ -80,6 +80,25 @@ module.exports = [
 			}
 		}
 	}),
+	// MergeDuplicateChunksPlugin merges "named" and "other", then the merged chunk becomes empty and is removed
+	config("merge-then-remove", "./merge-then-remove.js", {
+		optimization: {
+			splitChunks: {
+				cacheGroups: {
+					default: false,
+					defaultVendors: false,
+					shared: {
+						test: /x\.js$/,
+						name: "shared",
+						chunks: "async",
+						minSize: 0,
+						enforce: true,
+						reuseExistingChunk: false
+					}
+				}
+			}
+		}
+	}),
 	// The chunk group of an import() of an already available module is never connected and is removed
 	config("unconnected-chunk-group", "./unconnected-chunk-group.js", {})
 ];
