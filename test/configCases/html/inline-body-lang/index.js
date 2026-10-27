@@ -64,5 +64,7 @@ it("should type a <script lang> body as its language's files", () => {
 	const scripts = sources.join("\n");
 	expect(scripts).toContain('window.inlineScriptLang = "SHOUT"');
 	expect(scripts).toContain('window.inlineScriptPlain = "plain"');
+	expect(scripts).toContain('window.inlineScriptJs = "js"');
+	expect(scripts).toContain('window.inlineScriptInvalid = "invalid"');
 	expect(scripts).toContain("data:text/x-upper;base64,");
 });
