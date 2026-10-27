@@ -307,9 +307,9 @@ jobs:
           path: test/js/test262
           ref: f2d59ea6e4b2f6f87de9f0d18a41d73782b6a9bc
 
-      # One file, in three parts at once on the runner's cores (`--parts`,
+      # One file, one part per core of the runner at once (`--parts=auto`,
       # TESTING_DOCS.md), where it took two runners one core each.
-      - run: yarn cover:test262 --parts=3 --ci --cacheDirectory .jest-cache
+      - run: yarn cover:test262 --parts=auto --maxWorkers=100% --ci --cacheDirectory .jest-cache
 
       - name: Codecov
         uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7.1.1
@@ -322,7 +322,7 @@ jobs:
   # language's upstream corpus, and they differ only in which submodule they
   # check out and which suite they run.
   # Every spec-conformance suite but test262's builds, in one Jest run split
-  # into three parts (`--parts`, TESTING_DOCS.md) that use the runner's cores;
+  # into one part per core (`--parts=auto`, TESTING_DOCS.md), using every core;
   # one runner per suite left all but one core idle.
   spec:
     needs: [lint, basic, unit]
@@ -360,7 +360,7 @@ jobs:
             jest-spec-${{ runner.os }}-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}-
             jest-spec-${{ runner.os }}-
 
-      - run: yarn cover:spec --parts=3 --ci --cacheDirectory .jest-cache
+      - run: yarn cover:spec --parts=auto --maxWorkers=100% --ci --cacheDirectory .jest-cache
 
       - name: Codecov
         uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7.1.1
