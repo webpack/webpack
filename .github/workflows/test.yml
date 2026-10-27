@@ -320,56 +320,23 @@ jobs:
   # One job per language, the way `runtimes` is one per runtime: each reads that
   # language's upstream corpus, and they differ only in which submodule they
   # check out and which suite they run.
+  # Every spec-conformance suite but test262's builds, in one Jest run split
+  # into three parts (`--parts`, TESTING_DOCS.md) that use the runner's cores;
+  # one runner per suite left all but one core idle.
   spec:
-    # Named for the language alone: a matrix row carries the suite and the
-    # coverage flag too, and the generated name would otherwise print all three.
-    name: spec (${{ matrix.language }})
     needs: [lint, basic, unit]
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          # The CSS, HTML and XML suites take a minute or two each, less than
-          # a runner's setup, so they share one. WPT is 161k files, so it is
-          # checked out one commit deep: it carries the tree-construction corpus
-          # html5lib-tests dropped.
-          - language: css-html-xml
-            submodules: test/external/css-parsing-tests test/external/html5lib-tests test/external/wpt test/external/xml-conformance-suite
-            script: cover:spec-css-html-xml
-            flags: css-html-xml
-          # Parses all of test262 with webpack's parser and with acorn and
-          # compares the trees. Instrumented although that makes the parser ~5x
-          # slower: about 7 min uninstrumented, well inside the job's bound.
-          - language: js
-            submodules: test/external/test262-cases
-            script: cover:test262-parser
-            flags: test262-parser
-          # Minifies every source of each JS corpus with the published minifier
-          # and with webpack's own: each output prints what its input prints.
-          # About 35 min of work, run in three parts at once on the runner's
-          # cores (`--parts`, TESTING_DOCS.md); it keeps the longer bound below.
-          - language: minify-corpora
-            submodules: test/external/terser test/external/test262-cases test/external/swc test/external/oxc
-            script: cover:minify --parts=3
-            flags: minify-corpora
-            timeout: 90
-          # Runs webpack's fuzzer on fixed seeds, apart from the corpora: run
-          # together, the two took about 37 of the 60 min a leg is allowed.
-          - language: minify-fuzz
-            script: cover:minify-fuzz
-            flags: minify-corpora
     runs-on: ubuntu-latest
-    # Bounded: the js leg allows ten minutes per area per mode, so a stall
-    # would otherwise hold a runner for the 6h default.
-    timeout-minutes: ${{ matrix.timeout || 60 }}
+    # Bounded: a stall would otherwise hold the runner for the 6h default.
+    timeout-minutes: 90
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
-      - name: Check out the ${{ matrix.language }} corpus
-        if: matrix.submodules
-        run: node tooling/retry.js git submodule update --init --depth 1 ${{ matrix.submodules }}
+      # WPT is 161k files, so it is checked out one commit deep: it carries the
+      # tree-construction corpus html5lib-tests dropped.
+      - name: Check out the corpora
+        run: node tooling/retry.js git submodule update --init --depth 1 test/external/css-parsing-tests test/external/html5lib-tests test/external/wpt test/external/xml-conformance-suite test/external/test262-cases test/external/terser test/external/swc test/external/oxc
 
       - name: Use Node.js
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
@@ -387,18 +354,17 @@ jobs:
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: .jest-cache
-          key: jest-spec-${{ matrix.language }}-${{ runner.os }}-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}-${{ github.sha }}
+          key: jest-spec-${{ runner.os }}-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}-${{ github.sha }}
           restore-keys: |
-            jest-spec-${{ matrix.language }}-${{ runner.os }}-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}-
-            jest-spec-${{ matrix.language }}-${{ runner.os }}-
+            jest-spec-${{ runner.os }}-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}-
+            jest-spec-${{ runner.os }}-
 
-      - run: yarn ${{ matrix.script }} --ci --cacheDirectory .jest-cache
+      - run: yarn cover:spec --parts=3 --ci --cacheDirectory .jest-cache
 
       - name: Codecov
-        if: matrix.flags
         uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7.1.1
         with:
-          flags: ${{ matrix.flags }}
+          flags: spec
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 

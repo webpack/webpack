@@ -8,6 +8,7 @@ const {
 	firstDifference,
 	reportable
 } = require("../../tooling/compare-js-tools");
+const { isInPart } = require("../helpers/testParts");
 
 /** @typedef {{ file: string, at: string, ours: string, acorn: string }} TreeDifference */
 /** @typedef {{ file: string, webpack: string, acorn: string }} VerdictDifference */
@@ -189,6 +190,7 @@ describe("test262 parser parity", () => {
 						/** @type {VerdictDifference[]} */
 						const verdicts = [];
 						for (const file of files) {
+							if (!isInPart(path.relative(corpusDir, file))) continue;
 							compareFile(file, mode, trees, verdicts);
 						}
 						expect(files.length).toBeGreaterThan(0);

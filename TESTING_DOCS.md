@@ -197,7 +197,7 @@ During the test run, webpack compiles this project and compares the result with 
 
 ### Splitting one file across workers
 
-Jest runs each file in one worker, so a long suite in one file leaves the runner's other cores idle. `--parts=<n>` (read by `jest.config.js`) runs every matched file in `n` workers at once, as `n` projects whose coverage merges as usual; global setup and teardown run once. A file splits its own work with `test/helpers/testParts.js`: `isInPart(key)` tells whether this part runs the work named `key`, by a hash of the name, so nothing to measure or store, and `currentPart()` returns `[part, parts]`, e.g. to run a check once in part 1. Without the flag a file is one part and runs everything; a file that doesn't use the helper runs whole in every part, so pass the flag only where it runs a file using it — e.g. CI's `yarn cover:minify --parts=3`.
+Jest runs each file in one worker, so a long suite in one file leaves the runner's other cores idle. `--parts=<n>` (read by `jest.config.js`) runs every matched file in `n` workers at once, as `n` projects whose coverage merges as usual; global setup and teardown run once. A file splits its own work with `test/helpers/testParts.js`: `isInPart(key)` tells whether this part runs the work named `key`, by a hash of the name, so nothing to measure or store, and `currentPart()` returns `[part, parts]`, e.g. to run a check once in part 1. Without the flag a file is one part and runs everything; a file that doesn't use the helper runs whole in every part, so pass the flag only where it runs files using it — e.g. CI's `yarn cover:spec --parts=3`. CI's `spec` job also runs the CSS, HTML and XML suites, which take a minute together and so run whole in every part.
 
 ### Suites that drive a real browser
 
@@ -290,14 +290,14 @@ Upstream test suites webpack runs against but doesn't maintain — upstream's to
 
 Git submodules, all under `test/external/`, checked out on demand: `yarn setup` doesn't fetch them, and each CI job fetches only its own, one commit deep.
 
-- `test/external/test262-cases` — [tc39/test262](https://github.com/tc39/test262); fetched by `test262`, `spec (js)`, `spec (minify-corpora)`
-- `test/external/html5lib-tests` — [html5lib/html5lib-tests](https://github.com/html5lib/html5lib-tests); fetched by `spec (css-html-xml)`
-- `test/external/wpt` — [web-platform-tests/wpt](https://github.com/web-platform-tests/wpt); fetched by `spec (css-html-xml)`, `syntax-equivalence` (browsers)
-- `test/external/css-parsing-tests` — [CourtBouillon/css-parsing-tests](https://github.com/CourtBouillon/css-parsing-tests); fetched by `spec (css-html-xml)`
-- `test/external/xml-conformance-suite` — [lddubeau/xml-conformance-suite](https://github.com/lddubeau/xml-conformance-suite) (the W3C XML Conformance Test Suite); fetched by `spec (css-html-xml)`
-- `test/external/terser` — [terser/terser](https://github.com/terser/terser), pinned to the installed `terser`'s version; fetched by `spec (minify-corpora)`
-- `test/external/swc` — [swc-project/swc](https://github.com/swc-project/swc), read only under `crates/swc_ecma_minifier/tests`; fetched by `spec (minify-corpora)`
-- `test/external/oxc` — [oxc-project/oxc](https://github.com/oxc-project/oxc), pinned to the installed `oxc-minify`'s release and read only under `crates/oxc_minifier/tests`; fetched by `spec (minify-corpora)`
+- `test/external/test262-cases` — [tc39/test262](https://github.com/tc39/test262); fetched by `test262`, `spec`
+- `test/external/html5lib-tests` — [html5lib/html5lib-tests](https://github.com/html5lib/html5lib-tests); fetched by `spec`
+- `test/external/wpt` — [web-platform-tests/wpt](https://github.com/web-platform-tests/wpt); fetched by `spec`, `syntax-equivalence` (browsers)
+- `test/external/css-parsing-tests` — [CourtBouillon/css-parsing-tests](https://github.com/CourtBouillon/css-parsing-tests); fetched by `spec`
+- `test/external/xml-conformance-suite` — [lddubeau/xml-conformance-suite](https://github.com/lddubeau/xml-conformance-suite) (the W3C XML Conformance Test Suite); fetched by `spec`
+- `test/external/terser` — [terser/terser](https://github.com/terser/terser), pinned to the installed `terser`'s version; fetched by `spec`
+- `test/external/swc` — [swc-project/swc](https://github.com/swc-project/swc), read only under `crates/swc_ecma_minifier/tests`; fetched by `spec`
+- `test/external/oxc` — [oxc-project/oxc](https://github.com/oxc-project/oxc), pinned to the installed `oxc-minify`'s release and read only under `crates/oxc_minifier/tests`; fetched by `spec`
 
 ```sh
 git submodule update --init --recursive --depth 1   # check out the commits the repo pins

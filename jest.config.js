@@ -79,6 +79,8 @@ const config = {
 // told its part through `test/helpers/testParts.js`; setup runs once.
 const partsArg = process.argv.find((arg) => arg.startsWith("--parts="));
 const parts = partsArg ? Number(partsArg.slice("--parts=".length)) : 1;
+// Jest reads these only from the top level and warns when a project sets them.
+const { forceExit, coverageReporters, ...projectConfig } = config;
 
 module.exports =
 	parts > 1
@@ -86,7 +88,7 @@ module.exports =
 				// global options (coverage, forceExit) are read from the top level
 				...config,
 				projects: Array.from({ length: parts }, (_, index) => ({
-					...config,
+					...projectConfig,
 					rootDir: __dirname,
 					displayName: `part ${index + 1}/${parts}`,
 					globals: { ...config.globals, __TEST_PART__: [index + 1, parts] },

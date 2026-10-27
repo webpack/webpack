@@ -22,6 +22,7 @@ const {
 	createRegExpGenerator,
 	createRequireSourceGenerator
 } = require("../helpers/jsFuzzProgram");
+const { isInPart } = require("../helpers/testParts");
 
 /** @typedef {(code: string | Record<string, string> | EXPECTED_OBJECT, options: EXPECTED_OBJECT) => Promise<{ code?: string, map?: string, ast?: EXPECTED_OBJECT, timings?: Record<string, number> }>} Minify */
 /** @typedef {import("../helpers/jsFuzzProgram").Program} Program */
@@ -241,6 +242,15 @@ const seedsToRun = () => {
 	if (given === "random") return [Math.floor(Math.random() * 2 ** 31)];
 	return [Number(given)];
 };
+
+/**
+ * Tells whether this part of a `--parts` run checks the work named `key`. A
+ * random seed differs per part, so each part checks all of its own seed.
+ * @param {string} key a name unique to one piece of work
+ * @returns {boolean} true when this part checks it
+ */
+const checksInPart = (key) =>
+	process.env.JS_FUZZ_SEED === "random" || isInPart(key);
 
 /**
  * The identifier written at an offset, its escapes decoded.
@@ -985,6 +995,8 @@ describe("JavaScript fuzzer", () => {
 	});
 
 	for (const seed of seedsToRun()) {
+		if (!checksInPart(`require calls ${seed}`)) continue;
+
 		it(`should find the require calls acorn finds: seed ${seed}`, () => {
 			const next = createRequireSourceGenerator(seed);
 			/** @type {string[]} */
@@ -1003,6 +1015,8 @@ describe("JavaScript fuzzer", () => {
 	}
 
 	for (const seed of seedsToRun()) {
+		if (!checksInPart(`regular expressions ${seed}`)) continue;
+
 		it(`should accept and refuse the regular expressions the engine does: seed ${seed}`, () => {
 			const next = createRegExpGenerator(seed);
 			/** @type {string[]} */
@@ -1033,6 +1047,9 @@ describe("JavaScript fuzzer", () => {
 						randomOptions(random),
 						randomOptions(random)
 					];
+					// Each part generates every program, so the seed's stream stays
+					// the same, and checks only its own rounds.
+					if (!checksInPart(`${seed}/${round}`)) continue;
 					/** @type {string | undefined} */
 					let failure;
 					try {
