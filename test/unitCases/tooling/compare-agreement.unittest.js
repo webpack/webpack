@@ -19,9 +19,18 @@ jest.mock("../../../tooling/compare-tools-harness", () => ({
 const sweep = async (script, fixture) => {
 	const previous = {
 		RELATION: process.env.RELATION,
-		FIXTURE: process.env.FIXTURE,
-		exitCode: process.exitCode
+		FIXTURE: process.env.FIXTURE
 	};
+	// WHY: Bun's sandboxed `process.exitCode` accessor drops every write, so a
+	// plain property stands in for it while the sweep runs.
+	const exitCodeDescriptor = /** @type {PropertyDescriptor} */ (
+		Object.getOwnPropertyDescriptor(process, "exitCode")
+	);
+	Object.defineProperty(process, "exitCode", {
+		value: undefined,
+		writable: true,
+		configurable: true
+	});
 	process.env.RELATION = "agreement";
 	process.env.FIXTURE = fixture;
 	/** @type {string[]} */
@@ -50,7 +59,7 @@ const sweep = async (script, fixture) => {
 			if (previous[key] === undefined) delete process.env[key];
 			else process.env[key] = previous[key];
 		}
-		process.exitCode = previous.exitCode;
+		Object.defineProperty(process, "exitCode", exitCodeDescriptor);
 	}
 };
 
