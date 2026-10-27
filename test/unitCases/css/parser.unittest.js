@@ -638,27 +638,27 @@ describe("CssSyntax — SourceProcessor", () => {
 
 		it("prints a value token, a declaration and a rule as their replacement", () => {
 			const css = "a{color:#ff0000;margin-top:1px}b{color:red}";
-			expect(print(css, { [NodeType.Hash]: (path) => path.replace("blue") })).toBe(
+			expect(print(css, { [NodeType.Hash]: (path) => path.replaceWith("blue") })).toBe(
 				"a{color:blue;margin-top:1px}b{color:red}"
 			);
 			expect(
 				print(css, {
 					[NodeType.Declaration]: (path) => {
-						if (path.name() === "margin-top") path.replace("padding:2px");
+						if (path.name() === "margin-top") path.replaceWith("padding:2px");
 					}
 				})
 			).toBe("a{color:red;padding:2px}b{color:red}");
 			expect(
 				print(css, {
 					[NodeType.QualifiedRule]: (path) => {
-						if (path.source().startsWith("b")) path.replace("i{x:y}");
+						if (path.source().startsWith("b")) path.replaceWith("i{x:y}");
 					}
 				})
 			).toBe("a{color:red;margin-top:1px}i{x:y}");
 			expect(
 				print(
 					css,
-					{ [NodeType.Hash]: (path) => path.replace("blue") },
+					{ [NodeType.Hash]: (path) => path.replaceWith("blue") },
 					"beautify"
 				)
 			).toBe("a {\ncolor: blue;\nmargin-top: 1px;\n}b {\ncolor: red;\n}");
@@ -679,7 +679,7 @@ describe("CssSyntax — SourceProcessor", () => {
 		it("prints what holds a replacement without the rewrites, and the rest with them", () => {
 			expect(
 				print("a{margin:0;margin-top:#f00}b{margin:0;margin-top:1px}", {
-					[NodeType.Hash]: (path) => path.replace("1px")
+					[NodeType.Hash]: (path) => path.replaceWith("1px")
 				})
 			).toBe("a{margin:0;margin-top:1px}b{margin:1px 0 0}");
 		});
@@ -688,7 +688,7 @@ describe("CssSyntax — SourceProcessor", () => {
 			const result = new SourceProcessor()
 				.use({
 					[NodeType.Declaration]: (path) => {
-						if (path.name() === "margin-top") path.replace("padding:0");
+						if (path.name() === "margin-top") path.replaceWith("padding:0");
 					}
 				})
 				.process(
@@ -700,54 +700,55 @@ describe("CssSyntax — SourceProcessor", () => {
 			);
 		});
 
-		it("leaves a comment and what follows it as written", () => {
-			// A comment is read from the token stream, not printed as a node.
-			expect(
+		it("refuses an edit from a comment's visitor", () => {
+			// A comment is read from the token stream, not walked as a node.
+			expect(() =>
 				print("/*! x */a{color:red}b{top:0}", {
-					[NodeType.Comment]: (path) => path.replace("/*y*/")
+					[NodeType.Comment]: (path) => path.replaceWith("/*y*/")
 				})
-			).toBe("/*! x */a{color:red}b{top:0}");
+			).toThrow(
+				"css syntax: path.replaceWith() cannot edit from a Comment's visitor, which fires as the source is read"
+			);
 		});
 
-		it("prints a rule large enough to stream as written, and what follows it too", () => {
-			// Past the streaming threshold the block is written out as it is read.
+		it("refuses an edit in a rule large enough to stream", () => {
+			// Past the streaming threshold the block is walked as it is read.
 			let body = "";
 			for (let i = 0; i < 1800; i++) {
 				body += `.c${i}>d${i}:hover{color:red;margin:${i + 1}px}`;
 			}
 			const css = `a{${body}}b{color:red}`;
-			const plain = print(css, {});
 			for (const event of ["enter", "exit"]) {
-				expect(
+				expect(() =>
 					print(css, {
 						[NodeType.QualifiedRule]: {
 							[event]: (
 								/** @type {import("../../../lib/css/syntax-parser").CssPath} */ path
 							) => {
-								if (path.source().startsWith("a{")) path.replace("z{q:1}");
+								if (path.start() === 0) path.replaceWith("z{q:1}");
 							}
 						}
 					})
-				).toBe(plain);
+				).toThrow("not a block of over 16384 nodes, walked as it parses");
 			}
 		});
 
 		it("prints a replacement in a custom property's value, the rest as written", () => {
 			/** @type {import("../../../lib/css/syntax-parser").CssVisitorMap} */
-			const visitors = { [NodeType.Hash]: (path) => path.replace("blue") };
+			const visitors = { [NodeType.Hash]: (path) => path.replaceWith("blue") };
 			expect(print("a{--x: foo  #f00 bar(#f00) ;color:#f00}", visitors)).toBe(
 				"a{--x:foo  blue bar(blue);color:blue}"
 			);
 			expect(
 				print("a{--x: foo  #f00 bar(#f00) }", visitors, "beautify")
 			).toBe("a {\n--x: foo  blue bar(blue);\n}");
-			// A comma and whitespace print as written too.
+			// The walk visits what an edit adds: the replacement's whitespace goes too.
 			expect(
 				print("a{--x: a, b c;b:x}", {
-					[NodeType.Comma]: (path) => path.replace(" / "),
+					[NodeType.Comma]: (path) => path.replaceWith(" / "),
 					[NodeType.Whitespace]: (path) => path.remove()
 				})
-			).toBe("a{--x:a / bc;b:x}");
+			).toBe("a{--x:a/bc;b:x}");
 			// A string the input ran out in is closed, so the `}` stays outside it.
 			expect(print('a{--x:#f00 "open', visitors)).toBe('a{--x:blue "open"}');
 			// Only a value holding an edit is printed as written.
@@ -756,17 +757,25 @@ describe("CssSyntax — SourceProcessor", () => {
 			);
 		});
 
-		it("does nothing on a walk that prints nothing", () => {
+		it("edits a walk that prints nothing, whose later reads see it", () => {
 			let seen = 0;
+			/** @type {number[]} */
+			const types = [];
 			new SourceProcessor()
 				.use({
 					[NodeType.Hash]: (path) => {
 						seen++;
-						path.replace("blue");
+						path.replaceWith("blue");
+					},
+					[NodeType.Declaration]: {
+						exit: (path) => {
+							types.push(path.type(path.child(0)));
+						}
 					}
 				})
 				.process("a{color:#f00}");
 			expect(seen).toBe(1);
+			expect(types).toEqual([NodeType.Ident]);
 		});
 	});
 

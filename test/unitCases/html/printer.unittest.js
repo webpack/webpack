@@ -7175,11 +7175,14 @@ describe("SourceProcessor — node path edits", () => {
 	});
 
 	it("refuses an edit outside a walk of a parsed tree", () => {
+		// The HTML path is held to the members every editing path shares.
+		/** @type {import("../../../lib/util/SourceProcessor").NodePathEdits<number, string>} */
+		const editing = A;
 		expect(() =>
 			new SourceProcessor()
 				.use({ [NodeType.Document]: (path) => path.insert(Field.childNodes, "<!--a-->") })
 				.process("<p>x")
 		).toThrow("html syntax: path.insert() edits only a tree a SourceProcessor run walks, once it is parsed");
-		expect(() => A.remove(1)).toThrow("html syntax: path.remove() edits only");
+		expect(() => editing.remove(1)).toThrow("html syntax: path.remove() edits only");
 	});
 });

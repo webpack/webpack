@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Add a JavaScript `SourceProcessor` that edits and prints, and minify JS faster.
+Add a JS `SourceProcessor`, let visitors edit CSS/HTML/JS, and minify JS faster.
