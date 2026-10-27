@@ -89,7 +89,6 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: inline/inline_into_scope_conflict_enclosed_2",
 			"terser compress: reduce_vars/issue_2440_with_1",
 			"terser compress: reduce_vars/issue_2440_with_2",
-			"terser compress: sequences/call",
 			"terser compress: sequences/lift_sequences_1",
 			"terser compress: sequences/lift_sequences_2",
 			"terser compress: yield/yield_before_punctuators"

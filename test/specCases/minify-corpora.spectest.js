@@ -1460,7 +1460,8 @@ const IMPROVED_YET_BIGGER = {
 	"array-constructor/array_constructor_unsafe (its own options)":
 		"10 bytes fewer, 2 more gzipped: `Array(-0)` written `[]` breaks the `Array(` runs the other calls repeat",
 	"fixture/issues/4234/input.js (its own options)":
-		"28 bytes fewer, 5 more gzipped: two `RegExp` calls written as literals break the `bar(new RegExp(\"` runs the four calls repeat",
+		"28 bytes fewer, 5 more gzipped: two `RegExp` calls written as literals break the `bar(new RegExp(\"` runs the four calls repeat",	"detached-buffer-realm.js (the default minimizer's options)":
+		"3 bytes fewer, 1 more gzipped: `new other[e.name](1)` without its `(0, …)` leaves a file this small coded with a costlier Huffman table",
 };
 
 // Sources whose shorter spelling no longer repeats text gzip matched, by the

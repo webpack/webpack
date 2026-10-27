@@ -2999,6 +2999,8 @@ exports[`syntax-printer improve phase should write less, printing the same: a \`
 
 exports[`syntax-printer improve phase should write less, printing the same: a \`let\`, kept in a block 1`] = `"{let a=console.log.name;console.log(a,a)}"`;
 
+exports[`syntax-printer improve phase should write less, printing the same: a \`new\` of a sequence whose leading values run nothing, as a \`new\` of its last 1`] = `"function B(){this.v=1}B.C=function(n){this.n=n};var a=new B.C(2),b=new B,c=new B.C;console.log(a.n,b.v,c instanceof B.C);"`;
+
 exports[`syntax-printer improve phase should write less, printing the same: a \`new\` passing arguments past what its constructor reads 1`] = `"function f(){function Z(a){this.a=a}class B{}return[new Z(1).a,(new class{constructor(){this.n=1}}).n,new B instanceof B,new Z(4,g()).a]}function g(){console.log(\\"g\\")}console.log(f());"`;
 
 exports[`syntax-printer improve phase should write less, printing the same: a \`return\` of \`undefined\` as an \`else\` or a loop's body, braced, which terser leaves with its defaults off 1`] = `"var r=[];function f(a){if(a)r.push(1);else{r.push(2);return}r.push(3)}function g(a){for(;;){r.push(a);return}}function h(a){if(a)\\"x\\",r.push(a);else r.push(0)}f(0);f(1);g(4);h(0);h(5);console.log(r.join());"`;

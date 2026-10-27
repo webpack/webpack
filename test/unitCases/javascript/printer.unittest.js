@@ -1904,6 +1904,11 @@ const IMPROVED_CASES = [
 		{ compress: {}, mangle: false }
 	],
 	[
+		"a `new` of a sequence whose leading values run nothing, as a `new` of its last",
+		"function B() { this.v = 1; } B.C = function (n) { this.n = n; }; var a = new (0, B.C)(2), b = new (0, B)(), c = new (0, B.C)(); console.log(a.n, b.v, c instanceof B.C);",
+		{ compress: {}, mangle: false }
+	],
+	[
 		"an `if` with an empty branch and an `else` block, as an `if` of the negated test, but a chain's",
 		"function f(a, b) { if (a) {} else { if (b) { console.log(1); return; } console.log(2); } console.log(3); } function g(a, b) { if (a && b) {} else { if (b) { console.log(4); return; } console.log(5); } } f(0, 0); f(0, 1); f(1, 0); g(0, 1); g(1, 1);",
 		{ compress: {}, mangle: false }
@@ -10124,6 +10129,19 @@ x = a ** b ** c; x = (a ** b) ** c; x = (-a) ** b; x = a < b < c; x = a < (b < c
 				const { code } = await minify(input, { compress: {}, mangle: false });
 				expect(code).toContain(expected);
 				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			}
+		});
+
+		it("should keep a `new` of a sequence whose leading values may run code, and parenthesize a callee that is a call or a chain", async () => {
+			const { minify } = await load();
+			for (const [input, expected] of [
+				["function f(x, b) { return new (x(), b.c)(); }", "new(x(),b.c)"],
+				["function f(b) { return new (y, b.c)(); }", "new(y,b.c)"],
+				["function f(g) { return new (0, g())(); }", "new(g())"],
+				["function f(a) { return new (0, a?.b)(); }", "new(a?.b)"]
+			]) {
+				const { code } = await minify(input, { compress: {}, mangle: false });
+				expect(code).toContain(expected);
 			}
 		});
 
