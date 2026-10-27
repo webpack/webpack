@@ -112,7 +112,7 @@ Directories come first, in alphabetical order, then the individual files worth t
 
 - **Purpose**: Holds the runners for specification-conformance suites.
 - **Files**:
-  - `test262.spectest.js` — `yarn test:test262`
+  - `test262.spectest.js` — `yarn test:test262 --parts=3`: defined whole, its ~175k tests overflow Jest's stack, so it always runs in [parts](#splitting-one-file-across-workers), as CI does
   - `test262-parser.spectest.js` — `yarn test:test262-parser`
   - `html5lib.spectest.js` — `yarn test:html5lib`
   - `syntaxEquivalence.spectest.js` — `yarn test:syntax-equivalence`
