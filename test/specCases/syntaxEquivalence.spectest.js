@@ -28,11 +28,13 @@ const expectNoDeprecations = require("../helpers/expectNoDeprecations");
 const launchBrowser = require("../helpers/launchBrowser");
 
 // Which engine the comparisons are held against. `EQUIVALENCE_BROWSER` points
-// the same corpus at Gecko or at WebKit; anything else is Blink.
+// the same corpus at Gecko or at WebKit; anything else is Blink. A list
+// (`chrome,firefox,webkit`) gives each part of a `--parts` run its own engine.
 const ENGINES = new Set(["chrome", "firefox", "webkit"]);
-const ENGINE = ENGINES.has(String(process.env.EQUIVALENCE_BROWSER))
-	? String(process.env.EQUIVALENCE_BROWSER)
-	: "chrome";
+const LISTED = String(process.env.EQUIVALENCE_BROWSER).split(",");
+const LISTED_ENGINE =
+	LISTED[(require("../helpers/testParts").currentPart()[0] - 1) % LISTED.length];
+const ENGINE = ENGINES.has(LISTED_ENGINE) ? LISTED_ENGINE : "chrome";
 
 // Media is emulated on Chromium only, the engine the filed defects were
 // measured on; elsewhere the signature carries what no viewport varies as text,

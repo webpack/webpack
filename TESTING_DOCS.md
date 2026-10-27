@@ -212,8 +212,10 @@ the lockfile: run `yarn setup:browsers chrome` first, or set
 `CHROME_EXECUTABLE_PATH` to point at another binary.
 
 `syntaxEquivalence.spectest.js` is the one that reads more than one engine:
-`EQUIVALENCE_BROWSER` takes `chrome`, `firefox` or `webkit`, and CI runs all
-three as one matrix. Fetch the browser first — `yarn setup:browsers` (all three,
+`EQUIVALENCE_BROWSER` takes `chrome`, `firefox` or `webkit`, or a list of them
+that gives each part of a [`--parts`](#splitting-one-file-across-workers) run its
+own engine: CI runs `EQUIVALENCE_BROWSER=chrome,firefox,webkit` with
+`--parts=3`, all three at once on one runner. Fetch the browser first — `yarn setup:browsers` (all three,
 or name one; `--with-deps` also installs the system libraries Firefox and WebKit
 need) — which installs into playwright's own cache (`PLAYWRIGHT_BROWSERS_PATH`,
 defaulting to `~/.cache/ms-playwright` on Linux). Firefox and WebKit are
