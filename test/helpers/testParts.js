@@ -7,7 +7,7 @@ const path = require("path");
 
 // Where the parts of one run record what they claimed: a fresh directory per
 // run, made by Jest's global setup before it spawns the workers that inherit it.
-const CLAIMS_ENV = "WEBPACK_TEST_CLAIMS";
+const CLAIMS_ENV = "TEST_PARTS_CLAIMS";
 
 /**
  * This run's part of a test file `--parts=<n>` splits, as `[part, parts]` from
