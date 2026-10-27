@@ -5919,3 +5919,20 @@ describe("parseProgram", () => {
 		expect(A.source(program)).toBe("z");
 	});
 });
+
+describe("hasOctalEscape", () => {
+	const { hasOctalEscape } = require("../../../lib/javascript/syntax-parser");
+
+	it.each([
+		["'\\1'", true],
+		["'\\01'", true],
+		["'a\\7b'", true],
+		["'\\0'", false],
+		["'\\0a'", false],
+		["'\\\\1'", false],
+		["'\\n\\x41'", false],
+		["'plain'", false]
+	])("reads %s as holding a legacy octal escape: %s", (raw, expected) => {
+		expect(hasOctalEscape(raw)).toBe(expected);
+	});
+});
