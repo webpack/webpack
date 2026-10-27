@@ -2409,14 +2409,6 @@ Array [
 ]
 `;
 
-exports[`jsMinify should minify: an event handler dropped whole (with source map) 1`] = `"var a = 1;"`;
-
-exports[`jsMinify should minify: an event handler dropped whole (with source map) 2`] = `Array []`;
-
-exports[`jsMinify should minify: an event handler dropped whole 1`] = `"var a = 1;"`;
-
-exports[`jsMinify should minify: an event handler dropped whole 2`] = `Array []`;
-
 exports[`jsMinify should minify: an event handler holding runs of \`_\` (with source map) 1`] = `"__a(_b,___c)"`;
 
 exports[`jsMinify should minify: an event handler holding runs of \`_\` (with source map) 2`] = `Array []`;
