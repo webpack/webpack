@@ -14699,7 +14699,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"function f(){ var a = g(), b = 1, c = h(), d = k(); var e = function(){}.call(), o = {x: 1}.x, q = m(); return b + d } function u(){ let x = g(); var y = h(); var z = 1, w = 2; function k(){ return w } return [z, k] }",
 				{},
-				"function f(){g();h();var u=k();(function(){}).call();({x:1}).x;m();return 1+u}function u(){g();h();return[1,function(){return 2}]}"
+				"function f(){g();h();var u=k();(function(){}).call();m();return 1+u}function u(){g();h();return[1,function(){return 2}]}"
 			],
 			// A `var` set after a call is a constant where a function made after
 			// it reads it, and a function called once from another moves there.
@@ -14830,13 +14830,13 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"function f(){ const a = ~3, b = +'1', c = typeof 1, d = typeof null, e = -1, h = !0, i = 1 && 2, j = 0 || 3, k = null ?? 5, l = 1 ? 6 : 7, m = 1 === 1, n = 1 instanceof 2, p = 0 ? 8 : 9; g(a, b, c, d, e, h, i, j, k, l, m, n, p) }",
 				{},
-				"function f(){let n=~3;+\"1\";let e=-1,f=1 instanceof 2;g(n,1,\"number\",\"object\",e,!0,2,3,5,6,!0,f,9)}"
+				"function f(){let n=~3,f=-1,b=1 instanceof 2;g(n,1,\"number\",\"object\",f,!0,2,3,5,6,!0,b,9)}"
 			],
 			// What nothing reads goes where its value makes nothing happen.
 			[
 				"function f(){ var x = 1, y = 2; var u = x || y, v = x ? y : 1, w = !x, q = (x, y); }",
 				{},
-				"function f(){1,2}"
+				"function f(){}"
 			],
 			[
 				"function f(){ var a = g(); var b = a } function h(){ var a = g(); var b = a; return b } function i(){ var m = function(){}; var n = m } function j(){ const k = 1; var p = k }",
@@ -14965,6 +14965,93 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				"function f(){ var g = () => a; h(g) } function i(){ var k = async () => 1; h(k) }",
 				{},
 				"function f(){h(()=>a)}function i(){h(async()=>1)}"
+			],
+			// What a `#__PURE__` annotation marks drops, where `side_effects` reads it.
+			[
+				"function f(){ var a = /*#__PURE__*/ g(), b = /*@__PURE__*/ new C(1), c = /*#__PURE__*/ g(h()), d = g(); }",
+				{},
+				"function f(){g(h());g()}"
+			],
+			[
+				"function f(){ var a = /*#__PURE__*/ g(); }",
+				{ compress: {toplevel: false,side_effects: false} },
+				"function f(){g()}"
+			],
+			// A known global, or its member, reads without an effect, short of a `try` probing for it or a `with`.
+			[
+				"function h(){ var m = Math, w = window, j = JSON.parse, u = undeclaredThing, k = JSON[x], q = JSON?.p; } function t(){ try { var m = Math; } catch (e) {} }",
+				{},
+				"function h(){undeclaredThing;JSON[x]}function t(){try{Math}catch(n){}}"
+			],
+			[
+				"function w(o){ var q; with (o) { var m = Math, r = q; } }",
+				{},
+				"function w(a){var q;with(a)var m=Math,r=q}"
+			],
+			// Reading a member of what may be `null`, or have a getter, may throw or run it.
+			[
+				"function f(o, a){ var b = ({ ...o }).x, c = (o && {}).x, d = (o?.p).x, e = (function(){}).prototype.x, h = (o += 1).x, i = (o = {}).y, j = [1][a()], k = [1][0], l = delete o.x, m = (a ? o : {}).x, n = (() => 1).prototype.x, p = (class {}).prototype.x, q = ({} || o).x, r = (1 && {}).x; }",
+				{},
+				"function f(o,x){({...o}).x;(o&&{}).x;(o?.p).x;(o+=1).x;(o={}).y;[1][x()];delete o.x;(x?o:{}).x;(()=>1).prototype.x;({}||o).x}"
+			],
+			// What a value converts as is known through its operators, three levels deep.
+			[
+				"function g(a, b){ var c = (a < b) - 1, d = (1 >>> 0) - 1, e = (1 + \"s\") - 1, h = (1n + 1n) - 1n, i = (1 + 2) - 1, j = (a + 1) - 1, k = (1n * 1n) - 1n, l = (1 * 2) - 1, m = (a * 1) - 1, n = null - 1, w = `x` - 1, x = 1 - ((((1 + 1) + 1) + 1) + 1), o = (0, /r/) - 1, p = (b++) - 1, q = -(-1n) - 1n, r = -(a + 1), s = 1 - (((1 + 1) + 1) + 1), t = undefined + 1, u = (a ? 1 : \"s\") - 1, v = (a = 1) - 1, y = (a += 1) - 1, z = -\"1\" - 1, aa = -(1 + \"\".length) - 1; }",
+				{},
+				"function g(n,a){n+1-1;n*1-1;-4;(0,/r/)-1;a++-1;-(n+1);(n?1:\"s\")-1;(n=1)-1;(n+=1)-1;-(1+\"\".length)-1}"
+			],
+			// A constant's value folds where only its value is known.
+			[
+				"function f(){ const k = void 1, m = delete x; g(k, m) }",
+				{},
+				"function f(){let e,n=delete x;g(e,n)}"
+			],
+			// A declarator going, but keeping its value, prints it apart.
+			[
+				"function f(){ var a = g(), b = h(), c = k(); use(a, c) }",
+				{},
+				"function f(){var a=g();h();var f=k();use(a,f)}"
+			],
+			// A `with` anywhere may answer any name.
+			[
+				"function w(o){ with (o) {} } function f(){ var a = b; }",
+				{},
+				"function w(n){with(n){}}function f(){b}"
+			],
+			// A conversion of what may be an object may run its methods, as `in` and `instanceof` may throw.
+			[
+				"function f(a, b){ var p = a + b, q = -a, r = a in b, s = a instanceof b, t = `${a}`, u = !a, v = typeof a, w = a < b, x = `${1}`, y = a && b, c = +a, d = a == b, e = ~a, h = a * 2; }",
+				{},
+				"function f(a,n){a+n;-a;a in n;a instanceof n;`${a}`;+a;~a;a*2}"
+			],
+			[
+				"function g(a){ var p = 1 + 2, q = \"s\" + 1, r = -1, s = 1n + 2n, t = 1n + 1, u = `${-1}${\"x\"}`, v = typeof a + \"\", w = !a + 1, x = (a, 1) * 2, y = 1 - \"2\", z = /r/ + \"\", k = 1n >>> 1n, m = -(a ? 1 : 2), n = (a = 1) + 1, o = (a || \"\") + 1, l = 1 + ++a; }",
+				{},
+				"function g(n){1n+1;1n>>>1n;(n=1)+1;(n||\"\")+1;1+ ++n}"
+			],
+			// Reading a member runs nothing only off what is no `null`, `undefined` or object with a getter.
+			[
+				"function f(o){ var a = Math, b = o.x, c = [1].length, d = {}.x, e = { get x(){} }.x, h = typeof q, i = [...o], j = { ...o }, m = Function.prototype, n = (function(){}).prototype, p = o?.x, q2 = null.x, r = { ...{ a: 1 } }.a, s = (o, {}).x, t = (o ? {} : []).x, u = (void 0).x, v = (o = {}).x, w = (o &&= {}).x, y = (o ? 1 : 2).x, z = o.y.prototype; }",
+				{},
+				"function f(o){o.x;({get x(){}}).x;[...o];({...o});null.x;({...{a:1}}).a;(void 0).x;(o={}).x;(o&&={}).x;o.y.prototype}"
+			],
+			// A class is made with effects where its heritage or a key may run or throw.
+			[
+				"function f(){ var a = class extends (() => 1) {}, b = class extends null {}, d = class { [k] = 1 }, e = class { static x = 1; m(){} }, g = class extends Object {}, h = class extends (async function(){}) {}, i = class extends {} {}, j = class extends (function*(){}) {}, l = class extends 1 {}, n = class { static {} }, p = class { static { q() } }, r = class { static y = q() }; }",
+				{},
+				"function f(){(class extends(()=>1){});(class{[k]=1});(class extends async function(){}{});(class extends({}){});(class extends function*(){}{});(class extends(1){});(class{static{q()}});(class{static y=q()})}"
+			],
+			// A `typeof` reads a name in its dead zone with a throw, so its value folds in after.
+			[
+				"function f(){ var a = typeof x; let x = 1; return a } function g(){ return k } const k = 2; h(g())",
+				{},
+				"function f(){var n=typeof t;let t=1;return n}function g(){return k}const k=2;h(g());"
+			],
+			// A callee set before the statement a collapse moves reads the same after it.
+			[
+				"function f(c){ { if (c) { var x; x = s(); g(x) } let g = q; } } function h(c){ let g = q; if (c) { var x; x = s(); g(x) } } function k(){ class C {} var x; x = s(); new C(x) } function m(){ let g = () => {}; function n(){ var x; x = s(); g(x) } return n }",
+				{},
+				"function f(n){{if(n){var c;c=s();x(c)}let x=q}}function h(n){let c=q;if(n){var x;c(x=s())}}function k(){class n{}var c;new n(c=s())}function m(){let n=()=>{};return function(){var c;c=s();n(c)}}"
 			]
 		];
 		modules.onePass.enabled = true;
