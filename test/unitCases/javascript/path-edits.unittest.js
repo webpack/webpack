@@ -377,6 +377,36 @@ describe("JavaScript node path edits", () => {
 			).toBe('"a";with(b);');
 		});
 
+		it("should read text as strict where the code around it is", () => {
+			/**
+			 * @param {string} source a script
+			 * @param {string} text the statement to put after `a;`
+			 * @returns {string} the printed text
+			 */
+			const after = (source, text) =>
+				edited(
+					source,
+					[NodeType.ExpressionStatement],
+					(path) => {
+						if (path.source() === "a;") path.insert("after", text);
+					},
+					"script"
+				);
+			expect(() => after('function f(){"use strict";a;}', "with(b);")).toThrow(
+				/does not read/
+			);
+			expect(() => after("class A{m(){a;}}", "with(b);")).toThrow(
+				/does not read/
+			);
+			expect(() =>
+				after('"use strict";function f(){a;}', "with(b);")
+			).toThrow(/does not read/);
+			expect(after('function f(){"use strict";a;}', "b;")).toBe(
+				'function f(){"use strict";a;b}'
+			);
+			expect(after('"use strict";a;', "b;")).toBe('"use strict";a;b;');
+		});
+
 		it("should refuse text that does not read there", () => {
 			expect(() =>
 				edited("function f(){a}", [NodeType.Identifier], (path) => {
@@ -655,6 +685,31 @@ describe("JavaScript node path edits", () => {
 			expect(seen).toEqual(["a"]);
 		});
 
+		it("should visit a moved node where it went, not where it was", () => {
+			/** @type {string[]} */
+			const seen = [];
+			edited(
+				"x = y; [z];",
+				[NodeType.AssignmentExpression, NodeType.Identifier],
+				(path) => {
+					if (path.type() === NodeType.Identifier) {
+						seen.push(path.name());
+						return;
+					}
+					const array = path.field(
+						0,
+						Field.expression,
+						path.field(1, Field.body, path.ancestor(1))
+					);
+					path.replaceWith(
+						path.field(0, Field.elements, array),
+						path.field(0, Field.left)
+					);
+				}
+			);
+			expect(seen).toEqual(["z", "y"]);
+		});
+
 		it("should print what an exit visitor adds to its own node", () => {
 			expect(
 				edited("f(a);", [NodeType.CallExpression], {
@@ -815,6 +870,26 @@ describe("JavaScript node path edits", () => {
 			).toThrow("an Identifier has no value");
 		});
 
+		it("should refuse a value the field holding the literal does not take", () => {
+			expect(() =>
+				edited('import a from "x";', [NodeType.Literal], (path) =>
+					path.setValue(5)
+				)
+			).toThrow("an ImportDeclaration's source holds a string");
+			expect(() =>
+				edited('({"a":1});', [NodeType.Literal], (path) => {
+					if (path.value() === "a") path.setValue(/a/);
+				})
+			).toThrow(
+				"a key that is not computed is a string or a number, not /a/"
+			);
+			expect(
+				edited('({"a":1});', [NodeType.Literal], (path) => {
+					if (path.value() === "a") path.setValue(2);
+				})
+			).toBe("({2:1});");
+		});
+
 		it("should write a template element's text", () => {
 			expect(
 				edited("`a${b}c`;", [NodeType.TemplateElement], (path) => {
@@ -897,6 +972,41 @@ describe("JavaScript node path edits", () => {
 					if (type === NodeType.ForOfStatement) path.setFlag(Flag.await, true);
 				})
 			).toBe("function*f(){}async()=>1;class A{m(){}}for await(a of b);");
+		});
+
+		it("should keep a function's kind as its own code reads it", () => {
+			/**
+			 * @param {string} source the source
+			 * @param {number} flag `Flag.async` or `Flag.generator`
+			 * @param {boolean} on whether to set it
+			 * @param {import("../../../lib/javascript/syntax-parser").JavascriptSourceType=} sourceType what the source is read as
+			 * @returns {string} the printed text
+			 */
+			const flagged = (source, flag, on, sourceType = "module") =>
+				edited(
+					source,
+					[NodeType.FunctionDeclaration],
+					(path) => path.setFlag(flag, on),
+					sourceType
+				);
+			expect(() =>
+				flagged("async function f(){await a}", Flag.async, false)
+			).toThrow("its code holds await");
+			expect(() =>
+				flagged("async function f(){for await(a of b);}", Flag.async, false)
+			).toThrow("its code holds await");
+			expect(() =>
+				flagged("function*f(){yield}", Flag.generator, false)
+			).toThrow("its code holds yield");
+			expect(() =>
+				flagged("function f(){var await;(()=>await)}", Flag.async, true, "script")
+			).toThrow("its code names something await");
+			expect(
+				flagged("async function f(){(async()=>await a)}", Flag.async, false)
+			).toBe("function f(){async()=>await a}");
+			expect(
+				flagged("function f(){a.await;yield:;}", Flag.async, true, "script")
+			).toBe("async function f(){a.await;yield:;}");
 		});
 
 		it.each([
