@@ -97,6 +97,28 @@ describe("builtinEmbeddedRenderer — what it loads", () => {
 	});
 });
 
+describe("SourceProcessor — one print at a time", () => {
+	it("refuses a parse a visitor starts while the print runs", () => {
+		const { SourceProcessor } = require("../../../lib/html/syntax");
+
+		expect(() =>
+			new SourceProcessor()
+				.use(
+					/** @type {import("../../../lib/html/syntax-printer").VisitorMap} */ ({
+						[NodeType.Element]: () => {
+							new SourceProcessor().process("<b>nested</b>", { mode: "minify" });
+						}
+					})
+				)
+				.process("<p>x</p>", { mode: "minify" })
+		).toThrow(/already running/);
+		// The refusal leaves nothing behind for the next print.
+		expect(new SourceProcessor().process("<p> x </p>", { mode: "minify" }).code).toBe(
+			"<p> x "
+		);
+	});
+});
+
 describe("SourceProcessor — collapseWhitespace", () => {
 	const { SourceProcessor } = require("../../../lib/html/syntax");
 
@@ -3487,6 +3509,76 @@ describe("htmlMinify — assets webpack only passes through", () => {
 		expect(
 			await min("<a href='data:application/json,{ \"a\" : 1 }'>x</a>")
 		).toBe("<a href='data:application/json,{\"a\":1}'>x</a>");
+	});
+
+	it("minifies an SVG `data:` URL under `svg`, and leaves it as written without", async () => {
+		const page = '<img src="data:image/svg+xml,<svg></svg>">';
+		const svg = await htmlMinify({ "page.html": page }, undefined, {
+			svg: true
+		});
+
+		expect(svg.code).toBe('<img src="data:image/svg+xml,<svg/>">');
+		expect(await min(page)).toBe(page);
+	});
+
+	it("drops the comments `some` names, as no comment it reaches carries anything", async () => {
+		const result = await htmlMinify(
+			{ "page.html": "<!-- keep --><p>a</p><!-- foo -->" },
+			undefined,
+			{ extractComments: /foo/, comments: "some" }
+		);
+
+		expect(result.code).toBe("<p>a");
+		expect(result.extractedComments).toEqual(["<!-- foo -->"]);
+	});
+
+	describe("minifyConditionalComments", () => {
+		/**
+		 * @param {string} page html source
+		 * @returns {Promise<string>} it minified, conditional comments' bodies too
+		 */
+		const conditional = async (page) =>
+			(
+				await htmlMinify({ "page.html": page }, undefined, {
+					minifyConditionalComments: true
+				})
+			).code;
+
+		it("minifies a body that reads alike where the comment sits", async () => {
+			expect(
+				await conditional(
+					'<!--[if lt IE 9]><script src="h.js"></script><link rel="stylesheet"  href="a.css"><![endif]-->'
+				)
+			).toBe(
+				"<!--[if lt IE 9]><script src=h.js></script><link rel=stylesheet href=a.css><![endif]-->"
+			);
+		});
+
+		it.each([
+			[
+				"a wrapper one opens and another closes",
+				'<!--[if IE]><div class="ie"><![endif]--><p>x</p><!--[if IE]></div><![endif]-->'
+			],
+			["the `<html>` it spells", '<!--[if IE]><html class="ie"><![endif]-->'],
+			["a row of the table it sits in", "<table><!--[if IE]><tr><td>a</td></tr><![endif]--></table>"]
+		])("keeps %s as written", async (_, page) => {
+			const body = page.slice(page.indexOf("<!--["), page.lastIndexOf("-->") + 3);
+
+			expect(await conditional(page)).toContain(body);
+		});
+
+		it("keeps the end tags what follows the comment reads", async () => {
+			expect(
+				await conditional('<!--[if IE]><p  class="a" >a</p><![endif]--><span>b</span>')
+			).toBe("<!--[if IE]><p class=a>a</p><![endif]--><span>b</span>");
+		});
+
+		it("leaves a comment that only starts like one, and a plain one, to the document", async () => {
+			expect(
+				await conditional("<p>a</p><!--[if IE]> no end --><!-- plain -->")
+			).toBe("<p>a</p><!--[if IE]> no end -->");
+			expect(await conditional("<p>a</p>")).toBe("<p>a");
+		});
 	});
 
 	it("reads a Buffer input as UTF-8", async () => {
