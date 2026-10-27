@@ -373,24 +373,7 @@ jobs:
   # one engine reads differently is invisible to a suite that asks one, and
   # several of the defects filed today are ones only Gecko sees.
   syntax-equivalence:
-    # Named for the engine alone: a matrix row carries the script and the
-    # coverage flag too, and the generated name would otherwise print all three.
-    name: syntax-equivalence (${{ matrix.browser }})
     needs: [lint, basic, unit]
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          # Chrome's run is the one that reports coverage. Both cover the same
-          # lines, so a second uploader would only leave every pull request a
-          # report short until the other engine lands.
-          - browser: chrome
-            script: cover:syntax-equivalence
-            coverage: true
-          - browser: firefox
-            script: test:syntax-equivalence
-          - browser: webkit
-            script: test:syntax-equivalence
     runs-on: ubuntu-latest
     # Bounded: a hung browser would otherwise hold a runner for the 6h default.
     timeout-minutes: 60
@@ -459,13 +442,12 @@ jobs:
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ~/.cache/ms-playwright
-          key: playwright-${{ matrix.browser }}-${{ steps.browser-build.outputs.id }}-${{ steps.browser-build.outputs.image }}
+          key: playwright-${{ steps.browser-build.outputs.id }}-${{ steps.browser-build.outputs.image }}
 
       # WHY: `--with-deps` downloads the system packages from Ubuntu's mirror on
       # every run, which a slow mirror stretched from a minute to 37. apt keeps
       # them in a directory the cache restores, so a hit installs from disk.
       - name: Keep the system packages apt downloads
-        if: matrix.browser != 'chrome'
         run: |
           mkdir -p ~/apt-archives/partial
           sudo rm -f /etc/apt/apt.conf.d/docker-clean
@@ -476,12 +458,11 @@ jobs:
       # newest set is restored by prefix, whatever playwright version wrote it.
       - name: Restore the system packages
         id: apt-restore
-        if: matrix.browser != 'chrome'
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ~/apt-archives/*.deb
-          key: playwright-deps-${{ matrix.browser }}-${{ steps.browser-build.outputs.image }}-
-          restore-keys: playwright-deps-${{ matrix.browser }}-${{ steps.browser-build.outputs.image }}-
+          key: playwright-deps-${{ steps.browser-build.outputs.image }}-
+          restore-keys: playwright-deps-${{ steps.browser-build.outputs.image }}-
 
       # `--with-deps` for Firefox and WebKit, whose shared libraries a runner does
       # not carry where it already carries Chrome's; it runs on a cache hit too,
@@ -490,19 +471,19 @@ jobs:
         # Bounded: a stalled mirror otherwise holds the runner for the job's hour.
         # Room for a cold cache's slow install; what it fetched is saved anyway.
         timeout-minutes: 40
-        run: node tooling/retry.js yarn setup:browsers ${{ matrix.browser }} ${{ matrix.browser != 'chrome' && '--with-deps' || '' }}
+        run: node tooling/retry.js yarn setup:browsers chrome firefox webkit --with-deps
 
       # Keyed on the packages held, and saved even when the install timed out:
       # what it fetched is kept, so the next run resumes rather than restarts.
       # `autoclean` drops versions the mirror replaced, so the set stays small.
       - name: Name the system packages held
         id: apt-held
-        if: always() && matrix.browser != 'chrome'
+        if: always()
         run: |
           sudo apt-get autoclean -qq || true
           debs=$(find ~/apt-archives -maxdepth 1 -name '*.deb' -printf '%f\n' | sort)
           if [ -n "$debs" ]; then
-            echo "key=playwright-deps-${{ matrix.browser }}-${{ steps.browser-build.outputs.image }}-$(echo "$debs" | sha256sum | cut -c1-16)" >> "$GITHUB_OUTPUT"
+            echo "key=playwright-deps-${{ steps.browser-build.outputs.image }}-$(echo "$debs" | sha256sum | cut -c1-16)" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Save the system packages
@@ -516,17 +497,18 @@ jobs:
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: .jest-cache
-          key: jest-syntax-equivalence-${{ matrix.browser }}-${{ runner.os }}-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}-${{ github.sha }}
+          key: jest-syntax-equivalence-${{ runner.os }}-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}-${{ github.sha }}
           restore-keys: |
-            jest-syntax-equivalence-${{ matrix.browser }}-${{ runner.os }}-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}-
-            jest-syntax-equivalence-${{ matrix.browser }}-${{ runner.os }}-
+            jest-syntax-equivalence-${{ runner.os }}-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}-
+            jest-syntax-equivalence-${{ runner.os }}-
 
-      - run: yarn ${{ matrix.script }} --ci --cacheDirectory .jest-cache
+      # One engine per part (`--parts`, TESTING_DOCS.md), all three at once on
+      # the runner's cores, where each took a runner and one core of its own.
+      - run: yarn cover:syntax-equivalence --parts=3 --ci --cacheDirectory .jest-cache
         env:
-          EQUIVALENCE_BROWSER: ${{ matrix.browser }}
+          EQUIVALENCE_BROWSER: chrome,firefox,webkit
 
       - name: Codecov
-        if: matrix.coverage
         uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7.1.1
         with:
           flags: syntax-equivalence
