@@ -111,6 +111,8 @@ exports[`JavaScript minifier, pass by pass what the correct and improve phases w
 
 exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a bare var write after a \`with\` 1`] = `"function f(o){var a;with(o)a=b,c();return a}console.log(f({b:1,c:function(){}}));"`;
 
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a binding's value through shifts and comparisons 1`] = `"function f(){console.log(8,!1,!1,16,4,4)}f();"`;
+
 exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a block holding a \`let\` read by a conditional of a getter, under \`hoist_vars\` 1`] = `"var n=0,o={get x(){return++n}};function f(b){var a=1,r=b-2||o.x?b:o.x;return[r,a,n]}console.log(f(2));"`;
 
 exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a block holding a \`let\` that \`hoist_vars\` alone empties of its \`var\` 1`] = `"function f(b){var r,a=1;{let a=b-2;r=a}return[r,a]}console.log(f(2),f(5));"`;
@@ -120,6 +122,8 @@ exports[`JavaScript minifier, pass by pass what the correct and improve phases w
 exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a built-in call reading an array where \`Array.prototype\` is patched 1`] = `"Array.prototype.toString=function(){return\\"patched\\"},console.log(String([1,2]),Math.max([3]),[1,2].join());"`;
 
 exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a built-in call where a direct \`eval\` may rebind it 1`] = `"function f(){return eval(\\"\\"),Math.max(1,2),Number(\\"1\\"),1}console.log(f());"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a built-in handed a function with no body 1`] = `"console.log([1,2].map(function(){}).length,[1].map(()=>{})[0]);var r=!fails(function(){Reflect.apply(function(){})});function fails(f){try{return f(),!1}catch(e){return!0}}console.log(r);"`;
 
 exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a built-in method read by a computed key off a literal, then called or tagged 1`] = `"console.log([1,2],[1,2].indexOf(2),{a:1}.hasOwnProperty(\\"a\\"),[1].join\`-\`);"`;
 
@@ -142,6 +146,8 @@ exports[`JavaScript minifier, pass by pass what the correct and improve phases w
 exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a catch binding unread beside a \`var\` of its name 1`] = `"function f(){try{g()}catch{sink(1)}return 5}function g(){throw 0}function sink(v){console.log(v)}console.log(f());"`;
 
 exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a catch binding unread where a nested function declares its name 1`] = `"function f(k){try{g()}catch{sink(1+k)}}function g(){throw 0}function sink(v){console.log(v)}f(2);"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a compound assignment of a value not known, then one of a binding's 1`] = `"function g(){return 2}function f(){let a=1;a+=g(),console.log(a*=3,3)}f();"`;
 
 exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a computed or shorthand \`__proto__\` key in an object \`unsafe\` evaluates 1`] = `"var __proto__=null;console.log(Object.getPrototypeOf({[\\"__proto__\\"]:null})===Object.prototype,null,Object.getPrototypeOf({[\\"__proto__\\"]:__proto__})===Object.prototype,[\\"__proto__\\"]);"`;
 
@@ -179,13 +185,23 @@ exports[`JavaScript minifier, pass by pass what the correct and improve phases w
 
 exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a known function called with fewer constants than it has parameters 1`] = `"console.log(11,11,23);"`;
 
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a literal's member read in the declaration list holding it 1`] = `"function f(){console.log(1,2)}f();"`;
+
 exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a loop whose leading \`if\` tests a name its block's function, class, \`let\` or \`const\` declares 1`] = `"function f(x){for(var r=[],j=0;j<2&&j;j++){r.push(j);let{m:m}={m:2};r.push(1,m,3,\\"function\\")}return r}console.log(f().join());"`;
 
 exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a method of a variable holding an array, not a string 1`] = `"!function(){var a=[1,2];console.log(a.join(),a.join(\\"-\\"),a.indexOf(2))}();"`;
 
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a number counted down and up by one 1`] = `"function f(n){var x=n|0;console.log(--x),console.log(++x)}f(5);"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a prototype read off a value only known as a property 1`] = `"var c={},p=c.constructor&&c.constructor.prototype;console.log(p===Object.prototype?void 0:p);"`;
+
 exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a remainder of what is no BigInt, its value unread 1`] = `"function f(a,b){return a%b,1}console.log(f(5,2));"`;
 
 exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a sloppy function's \`this\` handed to a call 1`] = `"function F(){g(this),this.y=1}function g(o){o.x=1}console.log((new F).x,3);"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a store to a \`const\` object in a block below its declaration 1`] = `"function f(g){let o={};g&&(o.p=g()),console.log(o.p)}f(()=>1),f();"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a string a binding grows past what the walk computes 1`] = `"function f(){let s=\\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\\";s+=s,console.log(s.length,s.length)}f();"`;
 
 exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a value moved past an array literal reading a name 1`] = `"function f(o){return[o,g(o)]}function g(o){return o.n=1,2}console.log(f({}));"`;
 
@@ -1268,6 +1284,12 @@ exports[`JavaScript minifier, pass by pass what the correct and improve phases w
 `;
 
 exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: line breaks kept escaped in an import's attributes, compressed 1`] = `"import\\"a\\\\nb\\"with{type:\\"c\\\\nd\\"};export*from\\"e\\\\nf\\";export{g}from\\"h\\\\ni\\";import(\\"j\\\\nk\\");console.log(1e3);"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: logical assignments that never run their right side 1`] = `"function g(){return console.log(\\"g\\"),5}function f(){console.log(1,0,0)}f();"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: logical assignments that run their right side 1`] = `"function g(){return 5}function f(){let a=0;a||=g(),console.log(a,7,8)}f();"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: logical assignments to a binding whose value is not known 1`] = `"function g(){return 0}function f(){let a=g();a||=2,a&&=3,a??=4,console.log(a)}f();"`;
 
 exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: logical expressions of flagged values 1`] = `"function g(v){return v}function f(x,y){return[y,x&&0,y,x||1,(x?1:2)&&y,y]}console.log(f(0,1),f(1,2));"`;
 
