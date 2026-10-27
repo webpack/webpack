@@ -405,6 +405,19 @@ describe("JavaScript node path edits", () => {
 				'function f(){"use strict";a;b}'
 			);
 			expect(after('"use strict";a;', "b;")).toBe('"use strict";a;b;');
+			expect(() => after("class A{static{a;}}", "with(b);")).toThrow(
+				/does not read/
+			);
+			expect(() =>
+				edited(
+					"class A{x=a}",
+					[NodeType.Identifier],
+					(path) => {
+						if (named(path, "a")) path.replaceWith("010");
+					},
+					"script"
+				)
+			).toThrow(/does not read/);
 		});
 
 		it("should refuse text that does not read there", () => {
