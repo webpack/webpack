@@ -297,3 +297,80 @@ describe("the XML tool comparison — agreeing with @rgrove/parse-xml", () => {
 		).toBe("no — /r[1]/e[1]: @rgrove/parse-xml <e>, tool <f>");
 	});
 });
+
+describe("the XML tool comparison — the entities a DTD declares", () => {
+	// A stand-in for `@rgrove/parse-xml`, which reads no DTD: it rejects every
+	// entity unless resolved, and the internal subset is what `[…]` holds.
+	const standIn = `exports.parseXml = (xml, options) => {
+	if (xml === "broken") throw new Error(options.preserveDocumentType ? "second" : "first");
+	if (options.preserveDocumentType) {
+		const start = xml.indexOf("[");
+		return { children: start === -1 ? [] : [{ type: "doctype", internalSubset: xml.slice(start + 1, xml.lastIndexOf("]")) }] };
+	}
+	if (options.resolveUndefinedEntity === undefined) throw new Error("Named entity isn't defined");
+	const attributes = {};
+	for (const name of ["first", "quoted", "decoded", "nested", "parameter", "commented", "tab"]) {
+		attributes[name] = String(options.resolveUndefinedEntity("&" + name + ";"));
+	}
+	return { children: [{ type: "element", name: "r", attributes, children: [] }] };
+};
+`;
+
+	/** @type {string} */
+	let directory;
+
+	beforeAll(() => {
+		directory = fs.mkdtempSync(path.join(os.tmpdir(), "compare-xml-dtd-"));
+		const entry = path.join(directory, "parse-xml.js");
+		fs.writeFileSync(entry, standIn);
+		const main = path.relative(
+			path.join(CACHE, "node_modules", "@rgrove/parse-xml"),
+			entry
+		);
+		mockLoad.mockImplementation(
+			/** @type {EXPECTED_ANY} */ (
+				(/** @type {string} */ name) =>
+					name === "@rgrove/parse-xml/package.json" ? { main } : undefined
+			)
+		);
+	});
+
+	afterAll(() => {
+		mockLoad.mockReset();
+		fs.rmSync(directory, { recursive: true, force: true });
+	});
+
+	it("should read what the internal subset declares as plain text, and nothing else", async () => {
+		const reference = /** @type {import("../../../tooling/compare-tools-harness").TreeReader} */ (
+			TREE_READERS.get("@rgrove/parse-xml")
+		);
+		const tree = await reference(`<!DOCTYPE r [
+	<!ENTITY first "one"><!ENTITY first "two">
+	<!ENTITY quoted 'say "hi"'>
+	<!ENTITY decoded "&#x41;&#66;&#X43;">
+	<!ENTITY nested "&first;">
+	<!ENTITY parameter "%p;">
+	<!-- <!ENTITY commented "no"> -->
+	<!ENTITY tab "a&#9;b">
+]><r/>`);
+		expect(tree.list[0][2]).toBe(
+			'<r first="one" quoted="say \\"hi\\"" decoded="undefined" nested="undefined" parameter="undefined" commented="undefined" tab="undefined">'
+		);
+		expect(
+			(await reference('<!DOCTYPE r [<!ENTITY decoded "&#x41;&#66;">]><r/>'))
+				.list[0][2]
+		).toContain('decoded="AB"');
+	});
+
+	it("should still reject a source whose entities no internal subset declares", async () => {
+		for (const [xml, error] of [
+			["<r>&a;</r>", "Named entity isn't defined"],
+			["<!DOCTYPE r []><r>&a;</r>", "Named entity isn't defined"],
+			["broken", "first"]
+		]) {
+			expect(
+				await agreement("@rgrove/parse-xml", TREE_READERS, xml)("webpack")
+			).toBe(`could not compare: @rgrove/parse-xml rejects it: ${error}`);
+		}
+	});
+});
