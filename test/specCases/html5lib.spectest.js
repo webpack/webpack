@@ -25,6 +25,7 @@ const webpack = require("../..");
 const { A, NodeType, Quote, decodeEntities, parseHtml, tokenize } = require("../../lib/html/syntax-parser");
 const expectNoDeprecations = require("../helpers/expectNoDeprecations");
 const serialize = require("../helpers/serializeHtmlTree");
+const { isInPart } = require("../helpers/testParts");
 
 const testsDir = path.resolve(__dirname, "../external/html5lib-tests");
 
@@ -170,9 +171,10 @@ const tokenizerCases =
 		? loadTokenizerCases()
 		: [];
 // The build suite drives the pipeline from a document, so only the cases that
-// start in the data state describe a document webpack could be handed.
-const buildCases = tokenizerCases.filter((c) =>
-	c.initialStates.includes("Data state")
+// start in the data state describe a document webpack could be handed; each
+// part of a `--parts` run builds its own share of them.
+const buildCases = tokenizerCases.filter(
+	(c) => c.initialStates.includes("Data state") && isInPart(c.id)
 );
 
 expectNoDeprecations();

@@ -33,6 +33,7 @@ const {
 	serializeRules,
 	serializeStylesheet
 } = require("../helpers/serializeCssTree");
+const { isInPart } = require("../helpers/testParts");
 
 const casesDir = path.resolve(__dirname, "../external/css-parsing-tests");
 const MODES = ["development", "production"];
@@ -130,9 +131,10 @@ const buildBatch = (inputs, mode) =>
 		});
 	});
 
+// Each part of a `--parts` run builds its own share of the inputs.
 const cases =
 	fs.existsSync(casesDir) && fs.readdirSync(casesDir).length > 0
-		? loadCases()
+		? loadCases().filter((c) => isInPart(c.id))
 		: [];
 
 expectNoDeprecations();
