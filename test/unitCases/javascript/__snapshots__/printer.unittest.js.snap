@@ -2789,6 +2789,8 @@ exports[`syntax-printer improve phase should write less, printing the same: a \`
 
 exports[`syntax-printer improve phase should write less, printing the same: a \`+\` dropped where \`-\`, \`*\`, \`/\`, \`%\` or \`**\` converts, with \`unsafe_math\` 1`] = `"function f(a,b,g){return[+a-b,b*+a,(+a)**b,b**+a,+a%b,+g()-a,\\"2\\"/b,+a-g(),g()-+a,a-+b,+a|b,+a+b]}console.log(f(2,3,()=>4).join());"`;
 
+exports[`syntax-printer improve phase should write less, printing the same: a \`/*#__PURE__*/\` call's value past another pure call, into the one read of a name only its function sees 1`] = `"function h(t,c){return t+\\"(\\"+c+\\")\\"}function f(h){return h(\\"div\\",[h(\\"b\\",2),h(\\"u\\",3),h(\\"i\\",1)])}console.log(f(h));"`;
+
 exports[`syntax-printer improve phase should write less, printing the same: a \`||\` and an \`&&\` of a name holding a string longer than the name 1`] = `"function f(g){var x=\\"keep this\\";g(x),g(x)}f(console.log);"`;
 
 exports[`syntax-printer improve phase should write less, printing the same: a \`Number\` constant read after an assignment it ignores 1`] = `"Number.NaN=1,console.log(NaN);"`;

@@ -1977,6 +1977,11 @@ const IMPROVED_CASES = [
 		'function f(a) { return [`${[1, 1]}`, `a${[1, , null, "x"]}b`, `${[a]}`, /a\\/b/i.source]; } console.log(f(2));',
 		{ compress: {}, mangle: false }
 	],
+	[
+		"a `/*#__PURE__*/` call's value past another pure call, into the one read of a name only its function sees",
+		'function h(t, c) { return t + "(" + c + ")"; } function f(h) { const a = /*#__PURE__*/ h("i", 1); const b = /*#__PURE__*/ h("b", 2); return /*#__PURE__*/ h("div", [b, /*#__PURE__*/ h("u", 3), a]); } console.log(f(h));',
+		{ compress: {}, mangle: false }
+	],
 ];
 
 // What the `improve` phase leaves as terser writes it: each body has something
@@ -10176,6 +10181,51 @@ x = a ** b ** c; x = (a ** b) ** c; x = (-a) ** b; x = a < b < c; x = a < (b < c
 					.../** @type {object} */ (options)
 				});
 				expect(code).toContain(written);
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			}
+		});
+
+		it("should keep a value before a call it may see or that may see it", async () => {
+			const { minify } = await load();
+			for (const [input, kept] of [
+				// The call passed is not pure.
+				[
+					"function f(g, h) { const a = /*#__PURE__*/ g(1); return [h(2), a]; } console.log(f(String, String));",
+					"[h(2),a]"
+				],
+				// The value is not pure.
+				[
+					"function f(g, h) { const a = g(1); return [/*#__PURE__*/ h(2), a]; } console.log(f(String, String));",
+					"[h(2),a]"
+				],
+				// A closure the pure call gets reads the name.
+				[
+					"function f(g, h) { let a = /*#__PURE__*/ g(1); const r = () => a; return [/*#__PURE__*/ h(r), a]; } console.log(f(String, (r) => r()));",
+					",a]"
+				],
+				// What the pure call is passed runs.
+				[
+					'function f(g, h) { const a = /*#__PURE__*/ g(1); return [/*#__PURE__*/ h(console.log("x")), a]; } console.log(f(String, String));',
+					",a]"
+				],
+				// The value writes a global the pure call reads.
+				[
+					"var G = 0; function f(h) { const a = (G = 1); return [/*#__PURE__*/ h(), a]; } console.log(f(() => G));",
+					"[h(),a]"
+				],
+				// The value is stored in a property the pure call reads.
+				[
+					"function f(o, g, h) { o.p = /*#__PURE__*/ g(1); return [/*#__PURE__*/ h(o), o.p]; } console.log(f({}, String, (o) => o.p));",
+					",o.p]"
+				],
+				// The name is the function's parameter, which `arguments` reads.
+				[
+					"function f(a, g, h) { a = /*#__PURE__*/ g(1); return [/*#__PURE__*/ h(arguments[0]), a]; } console.log(f(0, String, String));",
+					",a]"
+				]
+			]) {
+				const { code } = await minify(input, { compress: {}, mangle: false });
+				expect(code).toContain(kept);
 				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
 			}
 		});
