@@ -38,6 +38,20 @@ module.exports = {
 				};
 				// the same source every build, so the additional output gets it once
 				const unchanged = new RawSource("unchanged");
+				// the same source every build, so the output file system keeps it
+				// rather than writing it again
+				const skipped = new RawSource("skipped");
+				// an additional output on the output file system itself, which must
+				// neither clean what that output writes nor write it again
+				const sameFileSystemOutput = {
+					/** @type {(targetPath: string) => boolean} */
+					test: (targetPath) => !targetPath.endsWith("skipped.txt"),
+					get outputFileSystem() {
+						return /** @type {import("../../../../").OutputFileSystem} */ (
+							compiler.outputFileSystem
+						);
+					}
+				};
 
 				compiler.hooks.initialize.tap("Test", () => {
 					// left from an earlier session, as webpack would find them
@@ -48,6 +62,10 @@ module.exports = {
 				});
 				compiler.hooks.additionalOutputs.tap("Test", (outputs) => {
 					outputs.add(output);
+					// from a later build, when the output file system keeps what it wrote
+					if (String(currentWatchStep.step) !== "0") {
+						outputs.add(sameFileSystemOutput);
+					}
 				});
 				compiler.hooks.thisCompilation.tap("Test", (compilation) => {
 					written.length = 0;
@@ -58,7 +76,7 @@ module.exports = {
 							`query.txt?${step}`,
 							new RawSource(`query ${step}`)
 						);
-						compilation.emitAsset("skipped.txt", new RawSource("skipped"));
+						compilation.emitAsset("skipped.txt", skipped);
 						compilation.emitAsset("unchanged.txt", unchanged);
 						// written to `dropped.txt`, so that is the file cleaned once it is gone
 						if (String(step) === "0") {
