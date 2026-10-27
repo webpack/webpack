@@ -651,6 +651,7 @@
     "test/unitCases/JavascriptParser.unittest.js",
     "lib/javascript/data.js",
     "lib/javascript/syntax-printer-data.js",
+    "lib/javascript/parse-error-codes.js",
     "tooling/html-entities.json",
     "test/external/test262-cases/**",
     "test/external/wpt/**",

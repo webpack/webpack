@@ -3,6 +3,7 @@
 // cspell:ignore binop, fnames, propmangle, fargs, domprops, argnames, nondeferred, loopcontrol, Defun, defun, NOINLINE, Funarg, unmangleable, Unmangleable, thedef, funs
 // cspell:ignore fnames
 // cspell:ignore argnames, bcatch, bfinally, argname
+// cspell:ignore AAAWA MAAH
 // cspell:ignore endline, endcol, endpos, nlb, thedef
 
 const vm = require("vm");
@@ -15398,6 +15399,159 @@ describe("JavaScript SourceProcessor printing", () => {
 			expect.objectContaining({ sources: ["in.js"], mappings: "AAAA" })
 		);
 	});
+
+	it("should print an event handler's body without the semicolon its brace closes", () => {
+		const print = (/** @type {string} */ source) =>
+			/** @type {{ code: string }} */ (
+				new SourceProcessor().process(source, {
+					mode: "minify",
+					sourceType: "event-handler"
+				})
+			).code;
+		expect(print("x(); return new.target")).toBe("x();return new.target");
+		expect(print("for (;;);")).toBe("for(;;);");
+	});
+});
+
+describe("JavaScript minifier reading an event handler's body", () => {
+	it.each([
+		// The names it declares are its function's own; those it reads undeclared
+		// resolve on the element, its form or its document.
+		["var v = 5; alert(v)", "alert(5)"],
+		["value = 5; alert(value)", "value=5,alert(value)"],
+		// Falling off its end returns `undefined`, as a function's body does.
+		["return a == null ? undefined : a.b", "if(a!=null)return a.b"],
+		["x(); return new.target", "return x(),new.target"],
+		["const a = f(); g(a, a)", "let c=f();g(c,c)"],
+		// The function it is compressed in is named past every run of `_`.
+		["var _ = 1, __ = _; foo(__)", "foo(1)"],
+		["", ""]
+	])("should compress %j as a function's body", async (source, expected) => {
+		const { minify } = await load();
+		const { code, map } = await minify(
+			{ "a.js": source },
+			{ sourceType: "event-handler", sourceMap: { asObject: true } }
+		);
+		expect(code).toBe(expected);
+		// Mapped where it is read, nothing wrapped around it.
+		expect(map).toEqual(
+			expect.objectContaining({ sources: expected === "" ? [] : ["a.js"] })
+		);
+	});
+
+	for (const fromTree of [true, false]) {
+		it(`should print a body uncompressed, ${fromTree ? "from its SyntaxTree" : "from terser's tree"}`, async () => {
+			const print = async (/** @type {string} */ source, mangle = true) =>
+				(
+					await minifyCounted(
+						source,
+						{ sourceType: "event-handler", compress: false, mangle },
+						fromTree
+					)
+				).code;
+			expect(await print("let veryLong = 1; f(veryLong)")).toBe("let e=1;f(e)");
+			expect(await print("x(); return 1", false)).toBe("x();return 1");
+			// An empty statement prints its own semicolon, which stays.
+			expect(await print("for (;;);", false)).toBe("for(;;);");
+			expect(await print("a: ;", false)).toBe("a:;");
+		});
+	}
+
+	it("should read a module or a script as `module` says", async () => {
+		const { minify } = await load();
+		/** @type {[string, "module" | "script", boolean][]} */
+		const cases = [
+			["export const a = 1; let b = 2; f(b)", "module", true],
+			["let b = 2; f(b)", "script", false]
+		];
+		for (const [source, sourceType, module] of cases) {
+			const given = await minify(source, { sourceType });
+			const reference = await minify(source, { module });
+			expect(given.code).toBe(reference.code);
+		}
+	});
+
+	it.each([
+		// Its declared names are the module's own, its `#!` line kept.
+		[
+			"#!/usr/bin/env node\nvar v = 5; exports.x = v",
+			"#!/usr/bin/env node\nexports.x=5;"
+		],
+		["value = 5; alert(value)", "value=5,alert(value);"],
+		["x(); return new.target", "return x(),new.target;"]
+	])("should compress %j as a CommonJS module's body", async (source, expected) => {
+		const { minify } = await load();
+		const { code } = await minify(source, { sourceType: "commonjs" });
+		expect(code).toBe(expected);
+	});
+
+	it("should map a body where it was read", async () => {
+		const { minify } = await load();
+		const { code, map } = await minify(
+			{ "a.js": "var v = 5; alert(v)" },
+			{ sourceType: "event-handler", sourceMap: { asObject: true } }
+		);
+		expect(code).toBe("alert(5)");
+		// `alert` at column 0 maps back to column 11, where the source has it.
+		expect(map).toEqual(
+			expect.objectContaining({ names: ["alert"], mappings: "AAAWA,MAAH" })
+		);
+	});
+
+	it("should keep the comments around a body whose statements are dropped", async () => {
+		const { minify } = await load();
+		const { code } = await minify("/*! a */ var v = 5; f(v) /*! b */", {
+			sourceType: "event-handler"
+		});
+		expect(code).toBe("/*! a */f(5)/*! b */");
+	});
+
+	it("should wrap a body as `wrap` and `enclose` ask, inside its function", async () => {
+		const { minify } = await load();
+		for (const given of [{ enclose: true }, { wrap: "lib" }]) {
+			const { code } = await minify("x(); return 1", {
+				...given,
+				sourceType: "event-handler"
+			});
+			expect(code).toMatch(/x\(\)/);
+		}
+	});
+
+	it("should read a body as `sourceType` says over a `module` given", async () => {
+		const { minify } = await load();
+		for (const sourceType of /** @type {const} */ (["event-handler", "commonjs"])) {
+			const { code } = await minify("x(); return 1", {
+				sourceType,
+				module: true,
+				parse: { module: true },
+				compress: { module: true },
+				mangle: { module: true }
+			});
+			expect(code).toMatch(/^return x\(\),1;?$/);
+		}
+	});
+
+	it("should compress a body inside its function with the one pass switched on", async () => {
+		const { minify, modules } = await load();
+		const source = "var v = 5; value = v; return value == null ? undefined : v";
+		const off = await minify(source, { sourceType: "event-handler" });
+		modules.onePass.enabled = true;
+		try {
+			const on = await minify(source, { sourceType: "event-handler" });
+			expect(on.code).toBe(off.code);
+		} finally {
+			modules.onePass.enabled = false;
+		}
+	});
+
+	it("should refuse what a function's body cannot hold", async () => {
+		const { minify } = await load();
+		for (const source of ['import a from "b"', "#!x\n1"]) {
+			await expect(
+				minify(source, { sourceType: "event-handler" })
+			).rejects.toThrow();
+		}
+	});
 });
 
 describe("JavaScript minifier mangling a SyntaxTree", () => {
@@ -16088,10 +16242,8 @@ describe("jsMinify", () => {
 
 				expect(result.code).toMatchSnapshot();
 				expect(result.extractedComments).toMatchSnapshot();
-				// Wrapping a handler body moves every position, so that answer
-				// carries no map however the asset was mapped.
-				const mapped = withMap && options.as !== "event-handler";
-				expect(typeof result.map).toBe(mapped ? "object" : "undefined");
+				// A handler body is read as the function body it is, so it maps.
+				expect(typeof result.map).toBe(withMap ? "object" : "undefined");
 			});
 
 			// The plugin's own terser entry point is what the default path still
@@ -16114,7 +16266,11 @@ describe("jsMinify", () => {
 
 				expect(mine.code).toBe(reference.code);
 				expect(mine.extractedComments).toEqual(reference.extractedComments);
-				expect(mine.map).toEqual(reference.map);
+				// The reference wraps a handler body in a function, moving every
+				// position, so it answers no map.
+				if (options.as !== "event-handler") {
+					expect(mine.map).toEqual(reference.map);
+				}
 			});
 		}
 	}

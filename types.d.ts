@@ -15336,9 +15336,9 @@ type JavascriptNormalModule = NormalModule & {
 };
 declare interface JavascriptParseOptions {
 	/**
-	 * a module (the default) or a script
+	 * what the source is: a module (the default), a script, or a function's body, a CommonJS module's or an event handler's
 	 */
-	sourceType?: "module" | "script";
+	sourceType?: "module" | "commonjs" | "script" | "event-handler";
 
 	/**
 	 * optional callback for each parse error, with the CSS and HTML parsers' signature and Babel's `reasonCode` kebab-cased as `code`; `severity` is `"error"` for one that stops the parse and `"warning"` for one it reads past; without it, the errors read past go unreported
@@ -17922,9 +17922,9 @@ type JavascriptParserState = ParserStateBase<BuiltJavascriptModule> &
  */
 declare interface JavascriptProcessOptions {
 	/**
-	 * a module (the default) or a script
+	 * what the source is: a module (the default), a script, or a function's body, a CommonJS module's or an event handler's
 	 */
-	sourceType?: "module" | "script";
+	sourceType?: "module" | "commonjs" | "script" | "event-handler";
 
 	/**
 	 * terser's format options a print reads, as `minify` reads them under `format`; `comments`, `beautify` and `source_map` are not read yet
@@ -20849,6 +20849,11 @@ declare interface MinifyOptions {
 	 * whether the source is a module
 	 */
 	module?: boolean;
+
+	/**
+	 * which production the source is, `module` read from it where given
+	 */
+	sourceType?: "module" | "commonjs" | "script" | "event-handler";
 
 	/**
 	 * which edition the output may use
