@@ -15228,6 +15228,18 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				{},
 				"function f(c){switch(c){case-1:c=1;break;case 0:c=2}switch(c){case 1:x()}switch(c){default:}switch(c){case 1:y()}c:switch(c){case 1:z();break c}switch(c){case 1:y();/*! c */break}return import(r(c))}"
 			],
+			// `!!!x` read for its truth folds its innermost `!!` alone.
+			[
+				"function f(x) { if (!!!x) g(); if (!!!!x) h(); return [!!!x ? 1 : 2, !!!x] }",
+				{},
+				"function f(x){if(!x)g();if(x)h();return[!x?1:2,!x]}"
+			],
+			// A parameter `arguments` reads keeps what sets it.
+			[
+				"function f(a) { a = 1; return arguments[0] } function k(b) { b = 1; return () => arguments } function m(c) { c = 1; return function () { return arguments } }",
+				{},
+				"function f(n){n=1;return arguments[0]}function k(n){n=1;return()=>arguments}function m(n){return function(){return arguments}}"
+			],
 			[
 				"function f(a){ if (0) x(); Math.PI }",
 				{ compress: {toplevel: false,builtins_ecma: 2020},format: {comments: false} },
