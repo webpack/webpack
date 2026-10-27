@@ -49,6 +49,7 @@ const {
 	STAGES,
 	TreeEvents,
 	agreement,
+	agreementInvariant,
 	collectFiles,
 	compress,
 	cutsAt,
@@ -102,7 +103,7 @@ const setup = () => installPackages(CACHE_NAME);
  * @property {Parse5Node=} content a `<template>`'s document fragment
  * @property {{ startOffset: number, endOffset: number }=} sourceCodeLocation where it was written, when asked for
  */
-/** @typedef {{ parse: (html: string, options?: { sourceCodeLocationInfo: boolean }) => Parse5Node }} Parse5 */
+/** @typedef {{ parse: (html: string, options?: { sourceCodeLocationInfo: boolean, scriptingEnabled: boolean }) => Parse5Node }} Parse5 */
 /** @typedef {import("../lib/html/syntax-parser").HtmlPath} HtmlPath */
 
 // An app shell, whose weight is inline critical CSS and form markup: without
@@ -1008,7 +1009,13 @@ const parse5Tree = (html) => {
 			}
 		}
 	};
-	walk(parse5.parse(source, { sourceCodeLocationInfo: true }));
+	// Scripting off, as webpack parses: a `noscript` then holds markup.
+	walk(
+		parse5.parse(source, {
+			sourceCodeLocationInfo: true,
+			scriptingEnabled: false
+		})
+	);
 	return events;
 };
 
@@ -2076,6 +2083,22 @@ const invariantFixtures = () => {
  */
 const EXPECTED = [
 	{
+		relation: "agreement",
+		contains: 'tool <html:template shadowrootmode="open">',
+		source: [
+			"html/declarative-shadow-root/page.html",
+			"html/parser-decoded-attribute-values/page.html"
+		],
+		why: "a declarative shadow root attaches to its host, so the `</a>` after it reconstructs no formatting element around it; parse5 8 predates declarative shadow roots"
+	},
+	{
+		relation: "agreement",
+		contains:
+			'select[1]: parse5 text "\\n\\t\\t\\n\\t\\t", tool text "\\n\\t\\t"',
+		source: "html/minimize/page.html",
+		why: "a customizable `<select>` keeps its `<button>`; parse5 8 predates customizable selects, so it drops the button and joins the text around it"
+	},
+	{
 		relation: "respelling quote-double",
 		contains: "&#34;",
 		source: "style-attribute",
@@ -2098,16 +2121,29 @@ const invariants = (write) => {
 	_missingFixtures = built.missing.filter((label) => wantedFixture(label));
 	const corpus = built.corpus.filter(([label]) => wantedFixture(label));
 	const presets = PRESETS.filter(([name]) => wantedPreset(name));
+	const referenceHeld = agreementInvariant({
+		wanted: wantedRelation("agreement"),
+		referenceName: REFERENCE_PARSER,
+		reference: () => {
+			load(REFERENCE_PARSER);
+			return parse5Tree;
+		},
+		tree: webpackTree,
+		corpus,
+		expected: EXPECTED,
+		missing: _missingFixtures
+	});
 	// Filtered like the corpus is: an expectation for a relation, fixture or
 	// preset this run was never going to reach matched nothing because nothing
 	// asked it to, which is not the divergence having gone away.
 	const groups = findingGroups(
 		wantedExpectations(
-			EXPECTED,
+			referenceHeld.expected,
 			corpus.map(([label]) => label),
 			presets.map(([name]) => name)
 		)
 	);
+	referenceHeld.hold(groups);
 	// Nothing is printed to reach this one, so it is read under no preset: what
 	// the parser said about the document it was handed.
 	if (wantedRelation("spans")) {
