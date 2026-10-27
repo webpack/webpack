@@ -676,12 +676,12 @@ describe("CssSyntax — SourceProcessor", () => {
 			).toBe("a{top:0}");
 		});
 
-		it("prints what holds a replacement without the rewrites, and the rest with them", () => {
+		it("minifies what holds a replacement as the source it spells", () => {
 			expect(
 				print("a{margin:0;margin-top:#f00}b{margin:0;margin-top:1px}", {
 					[NodeType.Hash]: (path) => path.replaceWith("1px")
 				})
-			).toBe("a{margin:0;margin-top:1px}b{margin:1px 0 0}");
+			).toBe("a,b{margin:1px 0 0}");
 		});
 
 		it("composes a style attribute's declarations as they printed", () => {
@@ -733,11 +733,11 @@ describe("CssSyntax — SourceProcessor", () => {
 			}
 		});
 
-		it("prints a replacement in a custom property's value, the rest as written", () => {
+		it("prints a custom property's value holding a replacement as one written so", () => {
 			/** @type {import("../../../lib/css/syntax-parser").CssVisitorMap} */
 			const visitors = { [NodeType.Hash]: (path) => path.replaceWith("blue") };
 			expect(print("a{--x: foo  #f00 bar(#f00) ;color:#f00}", visitors)).toBe(
-				"a{--x:foo  blue bar(blue);color:blue}"
+				"a{--x:foo blue bar(blue);color:blue}"
 			);
 			expect(
 				print("a{--x: foo  #f00 bar(#f00) }", visitors, "beautify")
@@ -749,11 +749,10 @@ describe("CssSyntax — SourceProcessor", () => {
 					[NodeType.Whitespace]: (path) => path.remove()
 				})
 			).toBe("a{--x:a/bc;b:x}");
-			// A string the input ran out in is closed, so the `}` stays outside it.
-			expect(print('a{--x:#f00 "open', visitors)).toBe('a{--x:blue "open"}');
-			// Only a value holding an edit is printed as written.
-			expect(print("a{--x: a  b;--y: c  #f00}", visitors)).toBe(
-				"a{--x:a b;--y:c  blue}"
+			// A string the input ran out in is left open, as written.
+			expect(print('a{--x:#f00 "open', visitors)).toBe('a{--x:blue "open');
+						expect(print("a{--x: a  b;--y: c  #f00}", visitors)).toBe(
+				"a{--x:a b;--y:c blue}"
 			);
 		});
 

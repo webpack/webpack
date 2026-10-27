@@ -16301,12 +16301,12 @@ describe("CssSyntax — printing what a visitor replaced or removed", () => {
 		).toBe("a{top:0}");
 	});
 
-	it("prints what holds a replacement without the rewrites, and the rest with them", () => {
+	it("minifies what holds a replacement as the source it spells", () => {
 		expect(
 			print("a{margin:0;margin-top:#f00}b{margin:0;margin-top:1px}", {
 				[NodeType.Hash]: (path) => path.replaceWith("1px")
 			})
-		).toBe("a{margin:0;margin-top:1px}b{margin:1px 0 0}");
+		).toBe("a,b{margin:1px 0 0}");
 	});
 
 	it("composes a style attribute's declarations as they printed", () => {
@@ -16358,11 +16358,11 @@ describe("CssSyntax — printing what a visitor replaced or removed", () => {
 		}
 	});
 
-	it("prints a replacement in a custom property's value, the rest as written", () => {
+	it("prints a custom property's value holding a replacement as one written so", () => {
 		/** @type {import("../../../lib/css/syntax-parser").CssVisitorMap} */
 		const visitors = { [NodeType.Hash]: (path) => path.replaceWith("blue") };
 		expect(print("a{--x: foo  #f00 bar(#f00) ;color:#f00}", visitors)).toBe(
-			"a{--x:foo  blue bar(blue);color:blue}"
+			"a{--x:foo blue bar(blue);color:blue}"
 		);
 		expect(
 			print("a{--x: foo  #f00 bar(#f00) }", visitors, "beautify")
@@ -16374,11 +16374,10 @@ describe("CssSyntax — printing what a visitor replaced or removed", () => {
 				[NodeType.Whitespace]: (path) => path.remove()
 			})
 		).toBe("a{--x:a/bc;b:x}");
-		// A string the input ran out in is closed, so the `}` stays outside it.
-		expect(print('a{--x:#f00 "open', visitors)).toBe('a{--x:blue "open"}');
-		// Only a value holding an edit is printed as written.
-		expect(print("a{--x: a  b;--y: c  #f00}", visitors)).toBe(
-			"a{--x:a b;--y:c  blue}"
+		// A string the input ran out in is left open, as written.
+		expect(print('a{--x:#f00 "open', visitors)).toBe('a{--x:blue "open');
+				expect(print("a{--x: a  b;--y: c  #f00}", visitors)).toBe(
+			"a{--x:a b;--y:c blue}"
 		);
 	});
 
@@ -16452,7 +16451,7 @@ describe("CssSyntax — node path edits", () => {
 					path.insert(Field.prelude, ",b");
 				}
 			})
-		).toBe("a,b{color:red;top:1px;padding:0;z-index:1}");
+		).toBe(print("a,b{color:red;top:1px;padding:0;z-index:1}", {}));
 		// The walk visits each node an edit adds, the replacement in its place.
 		expect(seen).toEqual(["color", "top", "margin", "padding", "z-index"]);
 	});
@@ -16525,8 +16524,8 @@ describe("CssSyntax — node path edits", () => {
 					];
 					path.insert("before", top, color);
 				}
-			})
-		).toBe("a{top:0;color:red}");
+			}, "beautify")
+		).toBe("a {\ntop: 0;\ncolor: red;\n}");
 		expect(
 			print("a{color:red;top:0}", {
 				[NodeType.Declaration]: {
@@ -16563,7 +16562,94 @@ describe("CssSyntax — node path edits", () => {
 			print("a{--x: a  #f00;b:c}", {
 				[NodeType.Hash]: (path) => path.replaceWith("3 4")
 			})
-		).toBe("a{--x:a  3 4;b:c}");
+		).toBe("a{--x:a 3 4;b:c}");
+	});
+
+	it("prints an edited tree as the source it spells", () => {
+		/** @type {import("../../../lib/css/syntax-parser").CssVisitorMap} */
+		const hash = { [NodeType.Hash]: (path) => path.replaceWith("blue") };
+		// The walk below reads the new name: a custom property's value is opaque.
+		expect(
+			print("a{color:#ff0000}", {
+				[NodeType.Declaration]: (path) => path.setName("--c")
+			})
+		).toBe(print("a{--c:#ff0000}", {}));
+		expect(
+			print("@media screen{a{b:#f00}}", {
+				...hash,
+				[NodeType.AtRule]: (path) => path.setName("supports")
+			})
+		).toBe(print("@supports screen{a{b:blue}}", {}));
+		// A kept comment in a value no edit changed is written once.
+		expect(print("a{--x: a /*! k */ b;y:#f00}b{c:d}", hash)).toBe(
+			print("a{--x: a /*! k */ b;y:blue}b{c:d}", {})
+		);
+		// Declarations an edit adds keep their place among the nested rules.
+		expect(
+			print(
+				"a{b:c;&:hover{d:e}f:g}",
+				{
+					[NodeType.QualifiedRule]: (path) => {
+						if (path.source().startsWith("a")) {
+							path.insert(Field.declarations, "z:1");
+						}
+					}
+				},
+				"beautify"
+			)
+		).toBe("a {\nb: c;\n&:hover {\nd: e;\n}\nf: g;\nz: 1;\n}");
+	});
+
+	it("writes an edited block, prelude and rule list as their source would", () => {
+		/** @type {import("../../../lib/css/syntax-parser").CssVisitorMap} */
+		const hash = { [NodeType.Hash]: (path) => path.replaceWith("blue") };
+		for (const [css, spelled] of [
+			["@media x{@layer y;b:#f00}", "@media x{@layer y;b:blue}"],
+			["a{--b:[#f00] {#f00}}", "a{--b:[blue] {blue}}"],
+			["@media(x:#f00){a{b:c}}", "@media (x:blue){a{b:c}}"],
+			["a{--y:[#f00", "a{--y:[blue"],
+			["a{--y:{#f00", "a{--y:{blue"],
+			["a{b:c}@media x{d{e:#f00", "a{b:c}@media x{d{e:blue"]
+		]) {
+			expect(print(css, hash)).toBe(print(spelled, {}));
+		}
+	});
+
+	it("leaves what the input ran out in open after an edit", () => {
+		/** @type {import("../../../lib/css/syntax-parser").CssVisitorMap} */
+		const hash = { [NodeType.Hash]: (path) => path.replaceWith("blue") };
+		expect(print("a{x:#f00}b{--y:f(a", hash)).toBe("a{x:blue}b{--y:f(a");
+		expect(print("a{x:#f00;--y:f(#f00", hash)).toBe(
+			print("a{x:blue;--y:f(blue", {})
+		);
+	});
+
+	it("maps an edited rule to where its source stood", () => {
+		/**
+		 * @param {string} css source
+		 * @param {import("../../../lib/css/syntax-parser").CssVisitorMap} visitors visitors
+		 * @returns {string} the mappings
+		 */
+		const mappings = (css, visitors) => {
+			const result = new SourceProcessor()
+				.use(visitors)
+				.process(css, { mode: "minify", source: "s.css", content: css });
+			return /** @type {{ mappings: string }} */ (result.map).mappings;
+		};
+		/** @type {[number, number, number, number][]} */
+		const locs = [];
+		const css = "a{x:1}\nb{y:#f00}\n/*! k */c{z:#f00}";
+		expect(
+			mappings(css, {
+				[NodeType.Hash]: (path) => path.replaceWith("blue"),
+				[NodeType.QualifiedRule]: { exit: (path) => locs.push(path.loc()) }
+			})
+		).toBe(mappings("a{x:1}\nb{y:blue}\n/*! k */c{z:blue}", {}));
+		expect(locs).toEqual([
+			[1, 0, 1, 6],
+			[2, 0, 2, 9],
+			[3, 8, 3, 17]
+		]);
 	});
 
 	it("refuses what the stylesheet cannot hold", () => {
