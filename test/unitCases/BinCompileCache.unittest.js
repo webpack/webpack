@@ -51,7 +51,9 @@ process.exit(0);
 		const out = execFileSync(process.execPath, [BIN, "--config", config], {
 			cwd: dir,
 			encoding: "utf8",
-			env: { ...env, ...extra }
+			// WHY: Node's default cache lives in the temp directory, which a CI
+			// runner may share or leave unwritable; a fresh one keeps it usable.
+			env: { ...env, TMPDIR: dir, TMP: dir, TEMP: dir, ...extra }
 		});
 		return JSON.parse(out.slice(out.indexOf("REPORT") + 6).split("\n")[0]);
 	} finally {
