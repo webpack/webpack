@@ -16263,27 +16263,27 @@ describe("CssSyntax — printing what a visitor replaced or removed", () => {
 
 	it("prints a value token, a declaration and a rule as their replacement", () => {
 		const css = "a{color:#ff0000;margin-top:1px}b{color:red}";
-		expect(print(css, { [NodeType.Hash]: (path) => path.replace("blue") })).toBe(
+		expect(print(css, { [NodeType.Hash]: (path) => path.replaceWith("blue") })).toBe(
 			"a{color:blue;margin-top:1px}b{color:red}"
 		);
 		expect(
 			print(css, {
 				[NodeType.Declaration]: (path) => {
-					if (path.name() === "margin-top") path.replace("padding:2px");
+					if (path.name() === "margin-top") path.replaceWith("padding:2px");
 				}
 			})
 		).toBe("a{color:red;padding:2px}b{color:red}");
 		expect(
 			print(css, {
 				[NodeType.QualifiedRule]: (path) => {
-					if (path.source().startsWith("b")) path.replace("i{x:y}");
+					if (path.source().startsWith("b")) path.replaceWith("i{x:y}");
 				}
 			})
 		).toBe("a{color:red;margin-top:1px}i{x:y}");
 		expect(
 			print(
 				css,
-				{ [NodeType.Hash]: (path) => path.replace("blue") },
+				{ [NodeType.Hash]: (path) => path.replaceWith("blue") },
 				"beautify"
 			)
 		).toBe("a {\ncolor: blue;\nmargin-top: 1px;\n}b {\ncolor: red;\n}");
@@ -16301,19 +16301,19 @@ describe("CssSyntax — printing what a visitor replaced or removed", () => {
 		).toBe("a{top:0}");
 	});
 
-	it("prints what holds a replacement without the rewrites, and the rest with them", () => {
+	it("minifies what holds a replacement as the source it spells", () => {
 		expect(
 			print("a{margin:0;margin-top:#f00}b{margin:0;margin-top:1px}", {
-				[NodeType.Hash]: (path) => path.replace("1px")
+				[NodeType.Hash]: (path) => path.replaceWith("1px")
 			})
-		).toBe("a{margin:0;margin-top:1px}b{margin:1px 0 0}");
+		).toBe("a,b{margin:1px 0 0}");
 	});
 
 	it("composes a style attribute's declarations as they printed", () => {
 		const result = new SourceProcessor()
 			.use({
 				[NodeType.Declaration]: (path) => {
-					if (path.name() === "margin-top") path.replace("padding:0");
+					if (path.name() === "margin-top") path.replaceWith("padding:0");
 				}
 			})
 			.process(
@@ -16325,68 +16325,68 @@ describe("CssSyntax — printing what a visitor replaced or removed", () => {
 		);
 	});
 
-	it("leaves a comment and what follows it as written", () => {
-		// A comment is read from the token stream, not printed as a node.
-		expect(
+	it("refuses an edit from a comment's visitor", () => {
+		// A comment is read from the token stream, not walked as a node.
+		expect(() =>
 			print("/*! x */a{color:red}b{top:0}", {
-				[NodeType.Comment]: (path) => path.replace("/*y*/")
+				[NodeType.Comment]: (path) => path.replaceWith("/*y*/")
 			})
-		).toBe("/*! x */a{color:red}b{top:0}");
+		).toThrow(
+			"css syntax: path.replaceWith() cannot edit from a Comment's visitor, which fires as the source is read"
+		);
 	});
 
-	it("prints a rule large enough to stream as written, and what follows it too", () => {
-		// Past the streaming threshold the block is written out as it is read.
+	it("refuses an edit in a rule large enough to stream", () => {
+		// Past the streaming threshold the block is walked as it is read.
 		let body = "";
 		for (let i = 0; i < 1800; i++) {
 			body += `.c${i}>d${i}:hover{color:red;margin:${i + 1}px}`;
 		}
 		const css = `a{${body}}b{color:red}`;
-		const plain = print(css, {});
 		for (const event of ["enter", "exit"]) {
-			expect(
+			expect(() =>
 				print(css, {
 					[NodeType.QualifiedRule]: {
 						[event]: (
 							/** @type {import("../../../lib/css/syntax-parser").CssPath} */ path
 						) => {
-							if (path.source().startsWith("a{")) path.replace("z{q:1}");
+							if (path.start() === 0) path.replaceWith("z{q:1}");
 						}
 					}
 				})
-			).toBe(plain);
+			).toThrow("not a block of over 16384 nodes, walked as it parses");
 		}
 	});
 
-	it("prints a replacement in a custom property's value, the rest as written", () => {
+	it("prints a custom property's value holding a replacement as one written so", () => {
 		/** @type {import("../../../lib/css/syntax-parser").CssVisitorMap} */
-		const visitors = { [NodeType.Hash]: (path) => path.replace("blue") };
+		const visitors = { [NodeType.Hash]: (path) => path.replaceWith("blue") };
 		expect(print("a{--x: foo  #f00 bar(#f00) ;color:#f00}", visitors)).toBe(
-			"a{--x:foo  blue bar(blue);color:blue}"
+			"a{--x:foo blue bar(blue);color:blue}"
 		);
 		expect(
 			print("a{--x: foo  #f00 bar(#f00) }", visitors, "beautify")
 		).toBe("a {\n--x: foo  blue bar(blue);\n}");
-		// A comma and whitespace print as written too.
+		// The walk visits what an edit adds: the replacement's whitespace goes too.
 		expect(
 			print("a{--x: a, b c;b:x}", {
-				[NodeType.Comma]: (path) => path.replace(" / "),
+				[NodeType.Comma]: (path) => path.replaceWith(" / "),
 				[NodeType.Whitespace]: (path) => path.remove()
 			})
-		).toBe("a{--x:a / bc;b:x}");
-		// A string the input ran out in is closed, so the `}` stays outside it.
-		expect(print('a{--x:#f00 "open', visitors)).toBe('a{--x:blue "open"}');
-		// Only a value holding an edit is printed as written.
-		expect(print("a{--x: a  b;--y: c  #f00}", visitors)).toBe(
-			"a{--x:a b;--y:c  blue}"
+		).toBe("a{--x:a/bc;b:x}");
+		// A string the input ran out in is left open, as written.
+		expect(print('a{--x:#f00 "open', visitors)).toBe('a{--x:blue "open');
+				expect(print("a{--x: a  b;--y: c  #f00}", visitors)).toBe(
+			"a{--x:a b;--y:c blue}"
 		);
 	});
 
 	it("prints a replaced node holding a replaced one as its own replacement", () => {
 		/** @type {import("../../../lib/css/syntax-parser").CssVisitorMap} */
 		const visitors = {
-			[NodeType.Hash]: (path) => path.replace("blue"),
+			[NodeType.Hash]: (path) => path.replaceWith("blue"),
 			[NodeType.Declaration]: (path) => {
-				if (path.name() === "color") path.replace("fill:red");
+				if (path.name() === "color") path.replaceWith("fill:red");
 			}
 		};
 		expect(print("a{color:#f00;top:0}b{x:#f00}", visitors)).toBe(
@@ -16394,17 +16394,322 @@ describe("CssSyntax — printing what a visitor replaced or removed", () => {
 		);
 	});
 
-	it("does nothing on a walk that prints nothing", () => {
+	it("edits a walk that prints nothing, whose later reads see it", () => {
 		let seen = 0;
+		/** @type {number[]} */
+		const types = [];
 		new SourceProcessor()
 			.use({
 				[NodeType.Hash]: (path) => {
 					seen++;
-					path.replace("blue");
+					path.replaceWith("blue");
+				},
+				[NodeType.Declaration]: {
+					exit: (path) => {
+						types.push(path.type(path.child(0)));
+					}
 				}
 			})
 			.process("a{color:#f00}");
 		expect(seen).toBe(1);
+		expect(types).toEqual([NodeType.Ident]);
 	});
 });
 
+
+describe("CssSyntax — node path edits", () => {
+	const { Flag } = require("../../../lib/css/syntax-parser");
+
+	/** @typedef {import("../../../lib/css/syntax-parser").CssPath} CssPath */
+
+	/**
+	 * @param {string} css source
+	 * @param {import("../../../lib/css/syntax-parser").CssVisitorMap} visitors visitors
+	 * @param {"minify" | "beautify"} mode print mode
+	 * @param {{ as?: "block-contents" }=} options process options
+	 * @returns {string | undefined} the printed code
+	 */
+	const print = (css, visitors, mode = "minify", options = {}) => {
+		const result = new SourceProcessor()
+			.use(visitors)
+			.process(css, { mode, ...options });
+		return result && result.code;
+	};
+
+	it("puts text in a node's place, beside it and at the end of a field", () => {
+		/** @type {string[]} */
+		const seen = [];
+		expect(
+			print("a{color:red;margin:0}", {
+				[NodeType.Declaration]: (path) => {
+					seen.push(path.name());
+					if (path.name() === "color") path.insert("after", "top:1px");
+					if (path.name() === "margin") path.replaceWith("padding:0");
+				},
+				[NodeType.QualifiedRule]: (path) => {
+					path.insert(Field.declarations, "z-index:1");
+					path.insert(Field.prelude, ",b");
+				}
+			})
+		).toBe(print("a,b{color:red;top:1px;padding:0;z-index:1}", {}));
+		// The walk visits each node an edit adds, the replacement in its place.
+		expect(seen).toEqual(["color", "top", "margin", "padding", "z-index"]);
+	});
+
+	it("visits a node put behind the walk as soon as the visitor returns", () => {
+		/** @type {string[]} */
+		const seen = [];
+		expect(
+			print("a{color:red}", {
+				[NodeType.Declaration]: (path) => {
+					seen.push(path.name());
+					if (path.name() === "color") path.insert("before", "x:1");
+				}
+			})
+		).toBe("a{x:1;color:red}");
+		expect(seen).toEqual(["color", "x"]);
+	});
+
+	it("puts top-level rules beside the one the walk is in, and takes it out", () => {
+		/**
+		 * @param {(path: import("../../../lib/css/syntax-parser").CssNodePath<25>) => void} edit the edit, on the rule `a`
+		 * @returns {string | undefined} the printed code
+		 */
+		const top = (edit) =>
+			print("a{color:red}b{x:y}", {
+				[NodeType.QualifiedRule]: (path) => {
+					if (path.source().startsWith("a")) edit(path);
+				}
+			});
+		expect(top((path) => path.insert("after", "c{z:1}"))).toBe(
+			"a{color:red}c{z:1}b{x:y}"
+		);
+		expect(top((path) => path.insert("before", "@media print{c{z:1}}"))).toBe(
+			"@media print{c{z:1}}a{color:red}b{x:y}"
+		);
+		expect(top((path) => path.replaceWith("c{z:1}d{w:2}"))).toBe(
+			"c{z:1}d{w:2}b{x:y}"
+		);
+		expect(top((path) => path.remove())).toBe("b{x:y}");
+		expect(
+			print("a{color:red}", {
+				[NodeType.QualifiedRule]: { exit: (path) => path.remove() }
+			})
+		).toBe("");
+	});
+
+	it("edits a style attribute's declarations", () => {
+		expect(
+			print(
+				"color:red;margin:0",
+				{
+					[NodeType.Declaration]: (path) => {
+						if (path.name() === "color") path.insert("after", "top:1");
+						if (path.name() === "margin") path.remove();
+					}
+				},
+				"minify",
+				{ as: "block-contents" }
+			)
+		).toBe("color:red;top:1");
+	});
+
+	it("moves nodes, and edits from exit visitors", () => {
+		expect(
+			print("a{color:red;top:0}", {
+				[NodeType.QualifiedRule]: (path) => {
+					const [color, top] = [
+						path.field(0, Field.declarations),
+						path.field(1, Field.declarations)
+					];
+					path.insert("before", top, color);
+				}
+			}, "beautify")
+		).toBe("a {\ntop: 0;\ncolor: red;\n}");
+		expect(
+			print("a{color:red;top:0}", {
+				[NodeType.Declaration]: {
+					exit: (path) => {
+						if (path.name() === "top") path.remove();
+					}
+				}
+			})
+		).toBe("a{color:red}");
+	});
+
+	it("sets names, values and the important flag, which the print writes", () => {
+		expect(
+			print("a{color:red;width:1px}", {
+				[NodeType.Declaration]: (path) => {
+					if (path.name() === "color") {
+						path.setName("background-color");
+						path.setFlag(Flag.important, true);
+						expect(path.name()).toBe("background-color");
+					}
+				},
+				[NodeType.Ident]: (path) => {
+					if (path.value() === "red") path.setValue("blue");
+				},
+				[NodeType.Dimension]: (path) => {
+					path.setValue(2);
+					path.setName("em");
+					expect(path.value()).toBe(2);
+					expect(path.name()).toBe("em");
+				}
+			})
+		).toBe("a{background-color:blue!important;width:2em}");
+		expect(
+			print("a{--x: a  #f00;b:c}", {
+				[NodeType.Hash]: (path) => path.replaceWith("3 4")
+			})
+		).toBe("a{--x:a 3 4;b:c}");
+	});
+
+	it("prints an edited tree as the source it spells", () => {
+		/** @type {import("../../../lib/css/syntax-parser").CssVisitorMap} */
+		const hash = { [NodeType.Hash]: (path) => path.replaceWith("blue") };
+		// The walk below reads the new name: a custom property's value is opaque.
+		expect(
+			print("a{color:#ff0000}", {
+				[NodeType.Declaration]: (path) => path.setName("--c")
+			})
+		).toBe(print("a{--c:#ff0000}", {}));
+		expect(
+			print("@media screen{a{b:#f00}}", {
+				...hash,
+				[NodeType.AtRule]: (path) => path.setName("supports")
+			})
+		).toBe(print("@supports screen{a{b:blue}}", {}));
+		// A kept comment in a value no edit changed is written once.
+		expect(print("a{--x: a /*! k */ b;y:#f00}b{c:d}", hash)).toBe(
+			print("a{--x: a /*! k */ b;y:blue}b{c:d}", {})
+		);
+		// Declarations an edit adds keep their place among the nested rules.
+		expect(
+			print(
+				"a{b:c;&:hover{d:e}f:g}",
+				{
+					[NodeType.QualifiedRule]: (path) => {
+						if (path.source().startsWith("a")) {
+							path.insert(Field.declarations, "z:1");
+						}
+					}
+				},
+				"beautify"
+			)
+		).toBe("a {\nb: c;\n&:hover {\nd: e;\n}\nf: g;\nz: 1;\n}");
+	});
+
+	it("writes an edited block, prelude and rule list as their source would", () => {
+		/** @type {import("../../../lib/css/syntax-parser").CssVisitorMap} */
+		const hash = { [NodeType.Hash]: (path) => path.replaceWith("blue") };
+		for (const [css, spelled] of [
+			["@media x{@layer y;b:#f00}", "@media x{@layer y;b:blue}"],
+			["a{--b:[#f00] {#f00}}", "a{--b:[blue] {blue}}"],
+			["@media(x:#f00){a{b:c}}", "@media (x:blue){a{b:c}}"],
+			["a{--y:[#f00", "a{--y:[blue"],
+			["a{--y:{#f00", "a{--y:{blue"],
+			["a{b:c}@media x{d{e:#f00", "a{b:c}@media x{d{e:blue"]
+		]) {
+			expect(print(css, hash)).toBe(print(spelled, {}));
+		}
+	});
+
+	it("leaves what the input ran out in open after an edit", () => {
+		/** @type {import("../../../lib/css/syntax-parser").CssVisitorMap} */
+		const hash = { [NodeType.Hash]: (path) => path.replaceWith("blue") };
+		expect(print("a{x:#f00}b{--y:f(a", hash)).toBe("a{x:blue}b{--y:f(a");
+		expect(print("a{x:#f00;--y:f(#f00", hash)).toBe(
+			print("a{x:blue;--y:f(blue", {})
+		);
+	});
+
+	it("maps an edited rule to where its source stood", () => {
+		/**
+		 * @param {string} css source
+		 * @param {import("../../../lib/css/syntax-parser").CssVisitorMap} visitors visitors
+		 * @returns {string} the mappings
+		 */
+		const mappings = (css, visitors) => {
+			const result = new SourceProcessor()
+				.use(visitors)
+				.process(css, { mode: "minify", source: "s.css", content: css });
+			return /** @type {{ mappings: string }} */ (result.map).mappings;
+		};
+		/** @type {[number, number, number, number][]} */
+		const locs = [];
+		const css = "a{x:1}\nb{y:#f00}\n/*! k */c{z:#f00}";
+		expect(
+			mappings(css, {
+				[NodeType.Hash]: (path) => path.replaceWith("blue"),
+				[NodeType.QualifiedRule]: { exit: (path) => locs.push(path.loc()) }
+			})
+		).toBe(mappings("a{x:1}\nb{y:blue}\n/*! k */c{z:blue}", {}));
+		expect(locs).toEqual([
+			[1, 0, 1, 6],
+			[2, 0, 2, 9],
+			[3, 8, 3, 17]
+		]);
+	});
+
+	it("refuses what the stylesheet cannot hold", () => {
+		/**
+		 * @param {string} css source
+		 * @param {number} type the node type to edit at
+		 * @param {(path: CssPath) => void} edit the edit
+		 * @returns {() => void} the print
+		 */
+		const editing = (css, type, edit) => () =>
+			print(css, /** @type {import("../../../lib/css/syntax-parser").CssVisitorMap} */ ({ [type]: edit }));
+		expect(
+			editing("@import 'x';", NodeType.AtRule, (path) =>
+				path.insert(Field.declarations, "a:b")
+			)
+		).toThrow("an AtRule with no block holds no declarations");
+		expect(
+			editing("a{b:c}", NodeType.QualifiedRule, (path) =>
+				path.insert(Field.declarations, "d{e:f}")
+			)
+		).toThrow('"d{e:f}" does not read as a QualifiedRule\'s declarations');
+		expect(
+			editing("a{b:c}", NodeType.Declaration, (path) =>
+				path.insert(Field.value, path.parent || 0)
+			)
+		).toThrow("a QualifiedRule cannot be put inside itself");
+		expect(
+			editing("a{b:c}", NodeType.Ident, (path) => path.setName("x"))
+		).toThrow("an Ident has no name");
+		expect(
+			editing("a{b:1}", NodeType.Number, (path) => path.setValue("x"))
+		).toThrow('a Number holds no "x"');
+		expect(
+			editing("a{b:1}", NodeType.Number, (path) => path.setFlag(Flag.integer, false))
+		).toThrow("a Number's type flag follows from its text");
+		expect(
+			editing("a{b:c}", NodeType.Declaration, (path) =>
+				path.setText(Part.value, "x")
+			)
+		).toThrow("a Declaration has no text part 2");
+	});
+
+	it("refuses an edit to what the print wrote already", () => {
+		expect(() =>
+			print("a{b:c;d:e}", {
+				[NodeType.Declaration]: (path) => {
+					if (path.name() === "d") {
+						path.setName("x", path.field(0, Field.declarations, path.parent || 0));
+					}
+				}
+			})
+		).toThrow(
+			"a Declaration the walk printed already can no longer be edited; edit it before its exit visitors return"
+		);
+	});
+
+	it("refuses an edit outside a walk", () => {
+		// The CSS path is held to the members every editing path shares.
+		/** @type {import("../../../lib/util/SourceProcessor").NodePathEdits<number, string | number>} */
+		const editing = A;
+		expect(() => editing.remove(1)).toThrow("css syntax: path.remove() edits only");
+	});
+});

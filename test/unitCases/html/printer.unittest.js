@@ -5,7 +5,7 @@
 // cspell:ignore contenteditable enterkeyhint formenctype formmethod formtarget
 // cspell:ignore inputmode writingsuggestions
 // cspell:ignore noembed noframes optgroup
-// cspell:ignore bgsound doctypehtml iewport abcb axxb
+// cspell:ignore bgsound doctypehtml iewport abcb axxb viewbox
 
 /** @import { HtmlNodeRef, HtmlAttribute } from "../../../lib/html/syntax-parser" */
 
@@ -6882,5 +6882,386 @@ describe("SourceProcessor — a foreign stylesheet answered later", () => {
 			}
 		);
 		expect(code).toBe("<svg><style>a&lt;b{}</style></svg><style>a<b{}</style>");
+	});
+});
+
+describe("SourceProcessor — node path edits", () => {
+	const { SourceProcessor } = require("../../../lib/html/syntax");
+	const { Flag, Part } = require("../../../lib/html/syntax-parser");
+
+	/** @typedef {import("../../../lib/html/syntax-parser").HtmlPath} HtmlPath */
+
+	/**
+	 * @param {string} source the markup
+	 * @param {Record<number, ((path: HtmlPath) => void) | { enter?: (path: HtmlPath) => void, exit?: (path: HtmlPath) => void }>} visitors the visitors
+	 * @param {"minify" | "beautify"=} mode the print
+	 * @param {{ xml?: boolean }=} options process options
+	 * @returns {string} what it prints as
+	 */
+	const edited = (source, visitors, mode = "beautify", options = {}) =>
+		new SourceProcessor()
+			.use(/** @type {EXPECTED_ANY} */ (visitors))
+			.process(source, { mode, ...options }).code;
+
+	/**
+	 * @param {HtmlPath} path the path
+	 * @param {string} name an element's name
+	 * @returns {boolean} whether the path is on such an element
+	 */
+	const on = (path, name) =>
+		path.type() === NodeType.Element && path.name() === name;
+
+	it("puts markup in a node's place, beside it and at the end of its children", () => {
+		/** @type {string[]} */
+		const seen = [];
+		const code = edited("<div><p>a</p><span>b</span></div>", {
+			[NodeType.Element]: (path) => {
+				seen.push(path.name());
+				if (on(path, "p")) path.insert("after", "<b>new</b>");
+				if (on(path, "span")) path.replaceWith("<i>x</i>");
+				if (on(path, "div")) path.insert(Field.childNodes, "<hr>");
+			}
+		});
+		expect(code).toBe("<div><p>a</p><b>new</b><i>x</i><hr></div>");
+		// The walk visits each node an edit adds, the replacement in its place.
+		expect(seen).toEqual(["html", "head", "body", "div", "p", "b", "span", "i", "hr"]);
+	});
+
+	it("parses markup as the content of where it goes", () => {
+		expect(
+			edited("<table><tr><td>a</td></tr></table>", {
+				[NodeType.Element]: (path) => {
+					if (on(path, "tr")) path.insert(Field.childNodes, "<td>b</td>");
+				}
+			})
+		).toBe("<table><tr><td>a</td><td>b</td></tr></table>");
+		expect(
+			edited("<script>var a</script>", {
+				[NodeType.Element]: (path) => {
+					if (on(path, "script")) path.insert(Field.childNodes, ";<b>");
+				}
+			})
+		).toBe("<script>var a;<b></script>");
+	});
+
+	it("prints a node inserted before the one the walk is at before it", () => {
+		expect(
+			edited("<p>x</p><p>y</p>", {
+				[NodeType.Element]: (path) => {
+					if (on(path, "p")) path.insert("before", "<hr>");
+				}
+			})
+		).toBe("<hr><p>x</p><hr><p>y</p>");
+	});
+
+	it("moves nodes, and takes them out", () => {
+		expect(
+			edited("<div><p>a</p><p>b</p></div>", {
+				[NodeType.Element]: (path) => {
+					if (on(path, "div")) {
+						const [first, second] = path.children();
+						path.insert("before", second, first);
+					}
+				}
+			})
+		).toBe("<div><p>b</p><p>a</p></div>");
+		expect(
+			edited("<div><p>a</p><i>b</i></div>", {
+				[NodeType.Element]: {
+					exit: (path) => {
+						if (on(path, "p")) path.remove();
+					}
+				}
+			})
+		).toBe("<div><i>b</i></div>");
+	});
+
+	it("edits from exit visitors, whose element prints once they return", () => {
+		/** @type {string[]} */
+		const seen = [];
+		const code = edited("<p>x</p>", {
+			[NodeType.Element]: {
+				exit: (path) => {
+					seen.push(path.name());
+					if (on(path, "p")) path.replaceWith("<div>y</div>");
+				}
+			}
+		});
+		expect(code).toBe("<div>y</div>");
+		expect(seen).toEqual(["head", "p", "div", "body", "html"]);
+	});
+
+	it("sets names, values and identifiers, which the print writes", () => {
+		expect(
+			edited("<i>a</i><a href=x>t</a><!--c-->", {
+				[NodeType.Element]: (path) => {
+					if (on(path, "i")) path.setName("EM");
+					if (on(path, "a")) {
+						const href = path.fieldNamed(Field.attributes, "href");
+						path.setValue("y&z", href);
+						path.setName("data-href", href);
+						expect(path.name(href)).toBe("data-href");
+						expect(path.value(href)).toBe("y&z");
+					}
+				},
+				[NodeType.Comment]: (path) => path.setValue("new"),
+				[NodeType.Text]: (path) => {
+					if (path.value() === "t") path.setValue("<T>");
+				}
+			})
+		).toBe('<em>a</em><a data-href="y&amp;z">&lt;T&gt;</a><!--new-->');
+		expect(
+			edited("<!DOCTYPE html><p>x", {
+				[NodeType.Doctype]: (path) => {
+					path.setText(Part.publicId, "-//W3C//DTD");
+					expect(path.textOf(Part.publicId)).toBe("-//W3C//DTD");
+				}
+			})
+		).toBe('<!DOCTYPE html PUBLIC "-//W3C//DTD"><p>x</p>');
+	});
+
+	it("edits attributes, which keep their ids", () => {
+		expect(
+			edited(
+				"<p id=a class=b>x</p>",
+				{
+					[NodeType.Element]: (path) => {
+						if (!on(path, "p")) return;
+						const id = path.fieldNamed(Field.attributes, "id");
+						const kept = path.fieldNamed(Field.attributes, "class");
+						path.remove(id);
+						const [added] = path.insert(Field.attributes, "title=t");
+						expect(path.fieldCount(Field.attributes)).toBe(2);
+						expect(path.field(0, Field.attributes)).toBe(kept);
+						expect(path.name(added)).toBe("title");
+						path.insert("before", added, kept);
+					}
+				},
+				"minify"
+			)
+		).toBe("<p title=t class=b>x");
+		expect(
+			edited("<svg><path d=m /></svg>", {
+				[NodeType.Element]: (path) => {
+					if (on(path, "path")) {
+						path.insert(Field.attributes, 'viewbox="0 0 1 1"');
+					}
+				}
+			})
+		).toBe(edited('<svg><path d=m viewbox="0 0 1 1"/></svg>', {}));
+	});
+
+	it("prints an edited start tag as the source it spells", () => {
+		/** @type {[string, Record<number, (path: HtmlPath) => void>, string][]} */
+		const cases = [
+			[
+				"<div  id='a'   class=\"b\">x</div>",
+				{
+					[NodeType.Element]: (path) => {
+						if (on(path, "div")) path.setName("section");
+					}
+				},
+				"<section  id='a'   class=\"b\">x</section>"
+			],
+			[
+				"<div  id='a'   class=\"b\">x</div>",
+				{
+					[NodeType.Element]: (path) => {
+						if (on(path, "div")) {
+							path.setValue('z"q', path.fieldNamed(Field.attributes, "id"));
+						}
+					}
+				},
+				'<div  id="z&quot;q"   class="b">x</div>'
+			],
+			[
+				"<p title='x' hidden>y</p>",
+				{
+					[NodeType.Element]: (path) => {
+						if (on(path, "p")) {
+							path.setName("alt", path.fieldNamed(Field.attributes, "title"));
+						}
+					}
+				},
+				"<p alt='x' hidden>y</p>"
+			],
+			[
+				"<input type=text   disabled>",
+				{
+					[NodeType.Element]: (path) => {
+						if (on(path, "input")) path.insert(Field.attributes, "name=n");
+					}
+				},
+				"<input type=text   disabled name=n>"
+			]
+		];
+		for (const mode of /** @type {const} */ (["beautify", "minify"])) {
+			for (const [source, visitors, spelled] of cases) {
+				expect(edited(source, visitors, mode)).toBe(
+					edited(spelled, {}, mode)
+				);
+			}
+		}
+	});
+
+	it("reads an edited tag's source and place", () => {
+		/** @type {unknown[]} */
+		const seen = [];
+		edited("<p>\n<b id=x>t</b></p>", {
+			[NodeType.Element]: {
+				enter: (path) => {
+					if (on(path, "b")) path.setValue("y", path.field(0, Field.attributes));
+				},
+				exit: (path) => {
+					if (on(path, "b")) seen.push(path.loc(), path.source());
+				}
+			}
+		});
+		expect(seen).toEqual([[2, 0, 2, 13], '<b id="y">t</b>']);
+	});
+
+	it("refuses a tree its print reads back as another", () => {
+		expect(() =>
+			edited("<table><tr><td>a</td></tr></table>", {
+				[NodeType.Element]: (path) => {
+					if (on(path, "td")) path.insert("after", "<p>q</p>");
+				}
+			})
+		).toThrow("the tree the visitors edited prints as markup that reads back as another");
+	});
+
+	it("edits a template's content and an XML document", () => {
+		expect(
+			edited("<template><p>a</p></template>", {
+				[NodeType.Element]: (path) => {
+					if (on(path, "p")) path.insert("after", "<i>b</i>");
+				}
+			})
+		).toBe("<template><p>a</p><i>b</i></template>");
+		expect(
+			edited(
+				"<a><b/></a>",
+				{
+					[NodeType.Element]: (path) => {
+						if (on(path, "b")) {
+							path.insert("after", "<c x='1'/>");
+							path.setName("d");
+						}
+					}
+				},
+				"minify",
+				{ xml: true }
+			)
+		).toBe('<a><d/><c x="1"/></a>');
+	});
+
+	it("reads the edited tree in a walk that prints nothing", () => {
+		/** @type {string[]} */
+		const seen = [];
+		new SourceProcessor()
+			.use({
+				[NodeType.Element]: (path) => {
+					seen.push(path.name());
+					if (path.name() === "p") path.insert("after", "<q></q>");
+				},
+				[NodeType.Document]: {
+					exit: (path) => {
+						seen.push(String(path.childCount(path.child(0))));
+					}
+				}
+			})
+			.process("<div><p>a</p></div>");
+		expect(seen).toEqual(["html", "head", "body", "div", "p", "q", "2"]);
+	});
+
+	it("refuses what the markup cannot hold", () => {
+		/**
+		 * @param {string} source the markup
+		 * @param {(path: HtmlPath) => void} edit the edit, on the first element named as the path's
+		 * @param {string} name the element
+		 * @returns {() => void} the print
+		 */
+		const editing = (source, edit, name) => () =>
+			edited(source, {
+				[NodeType.Element]: (path) => {
+					if (on(path, name)) edit(path);
+				}
+			});
+		expect(
+			editing("<div>a</div>", (path) => path.setName("br"), "div")
+		).toThrow("a <div> cannot be renamed to \"br\", whose content reads otherwise");
+		expect(
+			editing("<div>a</div>", (path) => path.setName("a b"), "div")
+		).toThrow('"a b" is no element name');
+		expect(
+			editing(
+				"<p>x</p>",
+				(path) => path.insert(Field.attributes, "a=1><b"),
+				"p"
+			)
+		).toThrow('"a=1><b" does not read as attributes');
+		expect(
+			editing(
+				"<p a=1>x</p>",
+				(path) => path.setName("a", path.insert(Field.attributes, "b=2")[0]),
+				"p"
+			)
+		).toThrow("an Element holds one attribute named a");
+		expect(
+			editing("<div><p>x</p></div>", (path) => path.insert(Field.childNodes, path.parent || 0), "p")
+		).toThrow("an Element cannot be put inside itself");
+		expect(
+			editing("<br>", (path) => path.insert(Field.childNodes, "x"), "br")
+		).toThrow("an Element <br> holds no children");
+		expect(
+			editing("<script>a</script>", (path) => path.insert(Field.childNodes, path.parent || 0), "script")
+		).toThrow("an Element cannot be put inside itself");
+		expect(
+			editing("<p>x</p>", (path) => path.setFlag(Flag.svg, true), "p")
+		).toThrow("an Element's flags follow from its name and where it stands");
+		expect(
+			editing("<p>x</p>", (path) => path.setValue("x"), "p")
+		).toThrow("an Element has no value");
+		expect(() =>
+			edited("<style>a</style>", {
+				[NodeType.Text]: (path) => path.setValue("b</style>")
+			})
+		).toThrow('a <style>\'s text cannot hold "</style"');
+		expect(() =>
+			edited("<!--a-->", {
+				[NodeType.Comment]: (path) => path.setValue("b-->")
+			})
+		).toThrow('"b-->" cannot stand in a comment');
+	});
+
+	it("refuses an edit to what the print wrote already", () => {
+		expect(() =>
+			edited("<div><p>a</p><i>b</i></div>", {
+				[NodeType.Element]: (path) => {
+					if (on(path, "i")) path.remove(path.parent || 0);
+				}
+			})
+		).toThrow(
+			"an Element the walk printed already can no longer be edited; edit it before its enter visitors return"
+		);
+		expect(() =>
+			edited("<div><p>a</p><i>b</i></div>", {
+				[NodeType.Element]: (path) => {
+					if (on(path, "i")) path.insert("before", "<b>c</b>", path.child(0, path.parent || 0));
+				}
+			})
+		).toThrow("an Element the walk printed already can no longer be edited");
+	});
+
+	it("refuses an edit outside a walk of a parsed tree", () => {
+		// The HTML path is held to the members every editing path shares.
+		/** @type {import("../../../lib/util/SourceProcessor").NodePathEdits<number, string>} */
+		const editing = A;
+		expect(() =>
+			new SourceProcessor()
+				.use({ [NodeType.Document]: (path) => path.insert(Field.childNodes, "<!--a-->") })
+				.process("<p>x")
+		).toThrow("html syntax: path.insert() edits only a tree a SourceProcessor run walks, once it is parsed");
+		expect(() => editing.remove(1)).toThrow("html syntax: path.remove() edits only");
 	});
 });
