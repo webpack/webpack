@@ -24,6 +24,10 @@ const PRINTER_DATA_TARGET = path.resolve(
 	__dirname,
 	"../lib/javascript/syntax-printer-data.js"
 );
+const FIELD_GOALS_TARGET = path.resolve(
+	__dirname,
+	"../lib/javascript/field-goals.js"
+);
 const PARSE_ERROR_CODES_TARGET = path.resolve(
 	__dirname,
 	"../lib/javascript/parse-error-codes.js"
@@ -1591,6 +1595,251 @@ const collectNodeFields = () => {
 	return result;
 };
 
+// What text standing in a field is parsed as, by the ESTree types the field
+// holds: `@types/estree` names them, and the parser's goals read one of these.
+/** @type {Record<string, string>} */
+const FIELD_GOAL_BY_TYPES = {
+	Expression: "expression",
+	"Expression|Super": "expression",
+	"Expression|PrivateIdentifier": "expression",
+	ChainElement: "expression",
+	"Expression|SpreadElement": "argument",
+	Pattern: "pattern",
+	"MemberExpression|Pattern": "pattern",
+	"Expression|Pattern": "expression",
+	Statement: "statement",
+	"Directive|ModuleDeclaration|Statement": "statement",
+	Declaration: "declaration",
+	"Expression|MaybeNamedClassDeclaration|MaybeNamedFunctionDeclaration":
+		"exportDefault",
+	BlockStatement: "block",
+	"BlockStatement|Expression": "arrowBody",
+	Identifier: "identifier",
+	"Identifier|Literal": "moduleName",
+	Literal: "string",
+	TemplateLiteral: "template",
+	VariableDeclarator: "declarator",
+	"MethodDefinition|PropertyDefinition|StaticBlock": "classMember",
+	"Property|SpreadElement": "property",
+	"AssignmentProperty|RestElement": "patternProperty",
+	SwitchCase: "switchCase",
+	"Expression|VariableDeclaration": "forInit",
+	"Pattern|VariableDeclaration": "forLeft",
+	CatchClause: "catchClause",
+	"ImportDefaultSpecifier|ImportNamespaceSpecifier|ImportSpecifier":
+		"importSpecifier",
+	ImportAttribute: "importAttribute",
+	ExportSpecifier: "exportSpecifier",
+	// Written by the parser alone: a method's function, a class's body and a
+	// template's quasis stand in no other shape, so text for them is refused.
+	FunctionExpression: "none",
+	ClassBody: "none",
+	TemplateElement: "none"
+};
+
+// Fields `@types/estree` lacks, as the types they hold: acorn's parenthesized
+// expression, and an arrow's `id`, which ESTree leaves out as always null.
+/** @type {Record<string, { types: string, nullable: boolean }>} */
+const FIELD_GOAL_SUPPLEMENT = {
+	"ParenthesizedExpression.expression": {
+		types: "Expression",
+		nullable: false
+	},
+	"ArrowFunctionExpression.id": { types: "", nullable: true }
+};
+
+/**
+ * Each node type's node and list fields as `name:goal:set`, `goal?` where the
+ * field may hold no node: what text written into the field is parsed as, and
+ * the index in `types` of the node types it holds. Read off `@types/estree`.
+ * @returns {{ goals: Record<string, string>, types: string[] }} the goals by node type, and the type sets they index
+ */
+const collectFieldGoals = () => {
+	const ts = require("typescript");
+
+	const file = require.resolve("@types/estree/index.d.ts");
+	const source = ts.createSourceFile(
+		file,
+		fs.readFileSync(file, "utf8"),
+		ts.ScriptTarget.Latest,
+		true
+	);
+	/** @type {Map<string, import("typescript").InterfaceDeclaration>} */
+	const interfaces = new Map();
+	/** @type {Map<string, import("typescript").InterfaceDeclaration>} */
+	const byType = new Map();
+	/** @type {Map<string, import("typescript").TypeNode>} */
+	const aliases = new Map();
+	for (const statement of source.statements) {
+		if (ts.isTypeAliasDeclaration(statement)) {
+			aliases.set(statement.name.text, statement.type);
+		}
+		if (!ts.isInterfaceDeclaration(statement)) continue;
+		interfaces.set(statement.name.text, statement);
+		for (const member of statement.members) {
+			if (
+				ts.isPropertySignature(member) &&
+				member.name.getText() === "type" &&
+				member.type !== undefined &&
+				ts.isLiteralTypeNode(member.type) &&
+				ts.isStringLiteral(member.type.literal)
+			) {
+				byType.set(member.type.literal.text, statement);
+			}
+		}
+	}
+	/**
+	 * @param {import("typescript").InterfaceDeclaration | undefined} declaration an interface
+	 * @param {Map<string, import("typescript").PropertySignature>} properties what it holds so far
+	 * @returns {Map<string, import("typescript").PropertySignature>} its properties, inherited ones included
+	 */
+	const propertiesOf = (declaration, properties = new Map()) => {
+		if (declaration === undefined) return properties;
+		for (const clause of declaration.heritageClauses || []) {
+			for (const base of clause.types) {
+				// `Omit<BlockStatement, "type">` inherits from its first argument.
+				const name =
+					base.typeArguments !== undefined &&
+					base.expression.getText() === "Omit"
+						? base.typeArguments[0].getText()
+						: base.expression.getText();
+				propertiesOf(interfaces.get(name), properties);
+			}
+		}
+		for (const member of declaration.members) {
+			if (ts.isPropertySignature(member)) {
+				properties.set(member.name.getText(), member);
+			}
+		}
+		return properties;
+	};
+	/**
+	 * @param {import("typescript").TypeNode} type a property's type
+	 * @param {{ names: string[], nullable: boolean }} into the names read so far
+	 * @returns {{ names: string[], nullable: boolean }} the type names it unites, and whether null is one
+	 */
+	const readTypes = (type, into) => {
+		if (ts.isUnionTypeNode(type)) {
+			for (const member of type.types) readTypes(member, into);
+		} else if (ts.isParenthesizedTypeNode(type)) {
+			readTypes(type.type, into);
+		} else if (ts.isArrayTypeNode(type)) {
+			readTypes(type.elementType, into);
+		} else if (
+			ts.isTypeReferenceNode(type) &&
+			type.typeName.getText() === "Array" &&
+			type.typeArguments !== undefined
+		) {
+			readTypes(type.typeArguments[0], into);
+		} else if (
+			type.kind === ts.SyntaxKind.UndefinedKeyword ||
+			(ts.isLiteralTypeNode(type) &&
+				type.literal.kind === ts.SyntaxKind.NullKeyword)
+		) {
+			into.nullable = true;
+		} else {
+			into.names.push(type.getText());
+		}
+		return into;
+	};
+	/**
+	 * @param {import("typescript").TypeNode} type a type
+	 * @param {Set<string>} into the node types read so far
+	 * @returns {Set<string>} the ESTree node types it names, aliases and maps expanded
+	 */
+	const nodeTypesOf = (type, into) => {
+		if (ts.isUnionTypeNode(type)) {
+			for (const member of type.types) nodeTypesOf(member, into);
+		} else if (ts.isParenthesizedTypeNode(type)) {
+			nodeTypesOf(type.type, into);
+		} else if (ts.isIndexedAccessTypeNode(type)) {
+			// `ExpressionMap[keyof ExpressionMap]`: every type the map holds.
+			const map = interfaces.get(type.objectType.getText());
+			for (const property of propertiesOf(map).values()) {
+				if (property.type !== undefined) nodeTypesOf(property.type, into);
+			}
+		} else if (ts.isTypeReferenceNode(type)) {
+			const name = type.typeName.getText();
+			const alias = aliases.get(name);
+			if (alias !== undefined) return nodeTypesOf(alias, into);
+			const typeField = propertiesOf(interfaces.get(name)).get("type");
+			if (
+				typeField === undefined ||
+				typeField.type === undefined ||
+				!ts.isLiteralTypeNode(typeField.type) ||
+				!ts.isStringLiteral(typeField.type.literal)
+			) {
+				throw new Error(`@types/estree's ${name} names no node type`);
+			}
+			const nodeType = typeField.type.literal.text;
+			if (!(nodeType in NODE_TYPES)) {
+				throw new Error(`The tree has no ${nodeType}, which ${name} is`);
+			}
+			into.add(nodeType);
+		}
+		return into;
+	};
+	/** @type {string[]} */
+	const typeSets = [];
+	/**
+	 * @param {string} key the ESTree types a field holds, joined by `|`
+	 * @returns {number} the index of the node types they are in `typeSets`
+	 */
+	const typeSetOf = (key) => {
+		const names = [
+			...nodeTypesOf(
+				/** @type {import("typescript").TypeAliasDeclaration} */ (
+					ts.createSourceFile(
+						"field.ts",
+						`type T = ${key};`,
+						ts.ScriptTarget.Latest,
+						true
+					).statements[0]
+				).type,
+				new Set()
+			)
+		]
+			.sort()
+			.join(" ");
+		const index = typeSets.indexOf(names);
+		return index !== -1 ? index : typeSets.push(names) - 1;
+	};
+	/** @type {Record<string, string>} */
+	const result = {};
+	for (const name of Object.keys(NODE_TYPES)) {
+		const properties = propertiesOf(interfaces.get(name) || byType.get(name));
+		/** @type {string[]} */
+		const goals = [];
+		for (const part of NODE_TYPES[name].split(" ").filter(Boolean)) {
+			const [field, kind] = part.split(":");
+			if (kind !== "node" && kind !== "list") continue;
+			const supplement = FIELD_GOAL_SUPPLEMENT[`${name}.${field}`];
+			const property = properties.get(field);
+			let key;
+			let nullable;
+			if (supplement !== undefined) {
+				key = supplement.types;
+				nullable = supplement.nullable;
+			} else if (property === undefined || property.type === undefined) {
+				throw new Error(`@types/estree has no ${name}.${field}`);
+			} else {
+				const read = readTypes(property.type, { names: [], nullable: false });
+				key = read.names.sort().join("|");
+				nullable = read.nullable || property.questionToken !== undefined;
+			}
+			// A field that never holds a node takes no text and no type.
+			const goal = key === "" ? "none" : FIELD_GOAL_BY_TYPES[key];
+			if (goal === undefined) {
+				throw new Error(`No goal for ${name}.${field}, holding ${key}`);
+			}
+			const set = key === "" ? -1 : typeSetOf(key);
+			goals.push(`${field}:${goal}${nullable ? "?" : ""}:${set}`);
+		}
+		result[name] = goals.join(" ");
+	}
+	return { goals: result, types: typeSets };
+};
+
 /**
  * One generated table as a constant whose JSDoc types each member literally,
  * so `types.d.ts` reads `NodeType.Identifier` as `1`.
@@ -2460,6 +2709,30 @@ module.exports = PARSE_ERROR_CODES;
 `;
 
 /**
+ * Build the module only an edit reads, so a parse whose visitors edit nothing
+ * never loads these tables.
+ * @returns {string} its source
+ */
+const renderFieldGoals = () => {
+	const fieldGoals = collectFieldGoals();
+	return `${renderHeader(
+		`@types/estree ${require("@types/estree/package.json").version}`
+	)}
+// Each node type's node and list fields as \`name:goal:set\`, read off
+// @types/estree: what text written into the field parses as, \`goal?\` where it
+// may hold none, and which of \`FIELD_TYPE_SETS\` holds the types it takes.
+/** @type {Record<string, string>} */
+const FIELD_GOALS = ${JSON.stringify(fieldGoals.goals, null, 1)};
+// The node types a field takes, as \`FIELD_GOALS\` indexes them.
+/** @type {string[]} */
+const FIELD_TYPE_SETS = ${JSON.stringify(fieldGoals.types, null, 1)};
+
+module.exports.FIELD_GOALS = FIELD_GOALS;
+module.exports.FIELD_TYPE_SETS = FIELD_TYPE_SETS;
+`;
+};
+
+/**
  * Write one generated module, or report that it is stale.
  * @param {string} target where it belongs
  * @param {string} source what it should hold
@@ -2502,6 +2775,7 @@ const generate = async () => {
 	await writeGenerated(DATA_TARGET, renderData());
 	await writeGenerated(PRINTER_DATA_TARGET, renderPrinterData());
 	await writeGenerated(PARSE_ERROR_CODES_TARGET, renderParseErrorCodes());
+	await writeGenerated(FIELD_GOALS_TARGET, renderFieldGoals());
 };
 
 if (require.main === module) {
@@ -2516,6 +2790,7 @@ if (require.main === module) {
 module.exports.DATA_TARGET = DATA_TARGET;
 module.exports.PRINTER_DATA_TARGET = PRINTER_DATA_TARGET;
 module.exports.collectDomProperties = collectDomProperties;
+module.exports.collectFieldGoals = collectFieldGoals;
 module.exports.collectIdentifierTables = collectIdentifierTables;
 module.exports.collectNarrowIdentifierTables = collectNarrowIdentifierTables;
 module.exports.collectNativeObjects = collectNativeObjects;

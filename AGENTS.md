@@ -218,7 +218,7 @@ Produced by `yarn fix:special` — never edit by hand:
 - `types.d.ts` — from JSDoc + schemas.
 - `schemas/**/*.check.{js,d.ts}` — precompiled schema validators.
 - Generated runtime code under `lib/` (`tooling/generate-runtime-code.js`).
-- `lib/css/data.js`, `lib/html/data.js`, `lib/javascript/data.js`, `lib/javascript/syntax-printer-data.js`, `lib/javascript/parse-error-codes.js` — every lookup table the CSS minifier, HTML parser/minifier and JS parser and printer read, by `tooling/generate-css-data.js`, `generate-html-data.js` and `generate-js-data.js`; `generate-html-data.js` also writes the `// #region html entities` block in `lib/html/syntax-parser.js`. Sources and contents: [docs/syntax.md](docs/syntax.md#generated-tables).
+- `lib/css/data.js`, `lib/html/data.js`, `lib/javascript/data.js`, `lib/javascript/syntax-printer-data.js`, `lib/javascript/parse-error-codes.js`, `lib/javascript/field-goals.js` — every lookup table the CSS minifier, HTML parser/minifier and JS parser, printer and editor read, by `tooling/generate-css-data.js`, `generate-html-data.js` and `generate-js-data.js`; `generate-html-data.js` also writes the `// #region html entities` block in `lib/html/syntax-parser.js`. Sources and contents: [docs/syntax.md](docs/syntax.md#generated-tables).
 
 A `syntax-parser.js` or `syntax-printer.js` is algorithm only — a new lookup table belongs in the matching generator. Generator-written regions such as `// #region html entities` are the exception; `syntax.js` is a facade, neither.
 
@@ -230,7 +230,7 @@ Re-run `yarn fix:special` **before the next commit** after touching:
 
 - An option type in `lib/**/*.js` or `declarations/**/*.ts` — rewrites that schema, its validator and `types.d.ts`.
 - JSDoc in `lib/**/*.js` reachable from a public export — `types.d.ts`.
-- `tooling/generate-runtime-code.js`, `generate-wasm-code.js`, `generate-css-data.js`, `generate-html-data.js`, `generate-js-data.js`, or anything they consume (incl. the `acorn` / `mdn-data` / `color-name` / `@webref/*` versions in `package.json` and `tooling/html-entities.json`).
+- `tooling/generate-runtime-code.js`, `generate-wasm-code.js`, `generate-css-data.js`, `generate-html-data.js`, `generate-js-data.js`, or anything they consume (incl. the `acorn` / `mdn-data` / `color-name` / `@webref/*` / `@types/estree` versions in `package.json` and `tooling/html-entities.json`).
 
 CI's `lint` job verifies these are current; `yarn fix` (`fix:code` + `fix:special` + `fmt`) is the preferred final step.
 
