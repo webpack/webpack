@@ -100,8 +100,9 @@ const setup = () => installPackages(CACHE_NAME);
  * @property {{ name: string, value: string, prefix?: string }[]=} attrs
  * @property {Parse5Node[]=} childNodes
  * @property {Parse5Node=} content a `<template>`'s document fragment
+ * @property {{ startOffset: number, endOffset: number }=} sourceCodeLocation where it was written, when asked for
  */
-/** @typedef {{ parse: (html: string) => Parse5Node }} Parse5 */
+/** @typedef {{ parse: (html: string, options?: { sourceCodeLocationInfo: boolean }) => Parse5Node }} Parse5 */
 /** @typedef {import("../lib/html/syntax-parser").HtmlPath} HtmlPath */
 
 // An app shell, whose weight is inline critical CSS and form markup: without
@@ -931,13 +932,34 @@ const startOf = (namespace, name, attributes) =>
 		.join("")}>`;
 
 /**
- * parse5's tree, as the agreement column reads it.
+ * Whether webpack's processing instruction rules drop the bogus comment `<?…`
+ * the input ran out in: cut inside its target, or cut before its `>` with a
+ * target other than `xml` or `xml-stylesheet`, which stay comments.
+ * @param {string} data the source from the comment's `?` to the end of input
+ * @returns {boolean} true where webpack's tree holds no node for it
+ */
+const droppedAtEnd = (data) => {
+	const target = /^\?([A-Za-z_][\w-]*)?([^]?)/.exec(data);
+	const name = /** @type {RegExpExecArray} */ (target)[1];
+	const after = /** @type {RegExpExecArray} */ (target)[2];
+	if (data === "?" || (name !== undefined && after === "")) return true;
+	if (name === undefined || !/[\t\n\f\r ?]/.test(after)) return false;
+	return !/^xml(?:-stylesheet)?$/i.test(name);
+};
+
+/**
+ * parse5's tree, as the agreement column reads it. A bogus comment `<?…` the
+ * input ran out in is left out where webpack's processing instruction rules
+ * drop it, as they are the tree webpack is held to.
  * @param {string} html a document
  * @returns {TreeEvents} what it says
  */
 const parse5Tree = (html) => {
 	const parse5 = /** @type {Parse5} */ (load("parse5"));
 	const events = new TreeEvents();
+	// Decoding strips a byte order mark before tree construction sees the text;
+	// parse5 is handed text, so it would otherwise read one as content.
+	const source = html.replace(/^\uFEFF/, "");
 	/**
 	 * @param {Parse5Node} node a parse5 node
 	 */
@@ -946,6 +968,17 @@ const parse5Tree = (html) => {
 			if (child.nodeName === "#text") {
 				events.text(/** @type {string} */ (child.value));
 			} else if (child.nodeName === "#comment") {
+				const at = child.sourceCodeLocation;
+				// parse5 ends a token the input ran out in one past its end, and a
+				// closed one at its `>`.
+				if (
+					at !== undefined &&
+					at.endOffset > source.length &&
+					source.charCodeAt(at.startOffset + 1) === 0x3f &&
+					droppedAtEnd(source.slice(at.startOffset + 1))
+				) {
+					continue;
+				}
 				events.leaf(`comment ${JSON.stringify(child.data)}`);
 			} else if (child.nodeName === "#documentType") {
 				events.leaf(`doctype ${child.name}`);
@@ -975,9 +1008,7 @@ const parse5Tree = (html) => {
 			}
 		}
 	};
-	// Decoding strips a byte order mark before tree construction sees the text;
-	// parse5 is handed text, so it would otherwise read one as content.
-	walk(parse5.parse(html.replace(/^\uFEFF/, "")));
+	walk(parse5.parse(source, { sourceCodeLocationInfo: true }));
 	return events;
 };
 

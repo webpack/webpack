@@ -227,12 +227,191 @@ describe("compare-css-tools — agreeing with css-tree", () => {
 		expect(await cell("postcss")).toBe("yes");
 	});
 
-	it("names a block css-tree left unparsed", async () => {
-		mockCssTree.parse.mockReturnValue(
-			parsed({ type: "Raw", ...at(".b{x:y;z:}") })
+	/**
+	 * @param {string} source a stylesheet
+	 * @returns {(text: string, before?: string) => { loc: { start: { offset: number }, end: { offset: number } } }} where a part of it is
+	 */
+	const within = (source) => (text, before = "") => {
+		const offset = source.indexOf(before + text) + before.length;
+		return { loc: { start: { offset }, end: { offset: offset + text.length } } };
+	};
+
+	/**
+	 * A css-tree that answers each parse from a table, keyed by the context
+	 * it is asked for and the offset it starts at.
+	 * @param {Record<string, EXPECTED_ANY[]>} answers the nodes each parse returns
+	 */
+	const answering = (answers) => {
+		mockCssTree.parse.mockImplementation(
+			(
+				/** @type {string} */ _text,
+				/** @type {{ context: string, offset: number }} */ options
+			) => ({ children: answers[`${options.context}@${options.offset}`] })
 		);
-		expect(await agreement("css-tree", TREE_READERS, css)("webpack")).toBe(
-			"no — /.a .d[1]: css-tree unparsed .b{x:y;z:}, tool rule .b"
+	};
+
+	it("reads again a style rule's block css-tree gave up on, and holds webpack in source order", async () => {
+		// Declarations around a nested rule and a nested at-rule holding declarations.
+		const source = ".a{color:red;.b{x:y}@media (x){top:0}left:0}";
+		const loc = within(source);
+		const raw = ".b{x:y}@media (x){top:0}left:0";
+		answering({
+			"stylesheet@0": [
+				{
+					type: "Rule",
+					prelude: loc(".a"),
+					block: {
+						children: [
+							{
+								type: "Declaration",
+								property: "color",
+								important: false,
+								value: loc("red")
+							},
+							{ type: "Raw", ...loc(raw) }
+						]
+					}
+				}
+			],
+			[`declarationList@${source.indexOf(raw)}`]: [{ type: "Raw", ...loc(raw) }],
+			[`stylesheet@${source.indexOf(raw)}`]: [
+				{
+					type: "Rule",
+					prelude: loc(".b"),
+					block: {
+						children: [
+							{
+								type: "Declaration",
+								property: "x",
+								important: false,
+								value: loc("y")
+							}
+						]
+					}
+				},
+				{
+					type: "Atrule",
+					name: "media",
+					prelude: loc("(x)"),
+					block: loc("{top:0}")
+				},
+				{ type: "Raw", ...loc("left:0") }
+			],
+			[`declarationList@${source.indexOf("top:0")}`]: [
+				{
+					type: "Declaration",
+					property: "top",
+					important: false,
+					value: loc("0", "top:")
+				}
+			],
+			[`declarationList@${source.indexOf("left:0")}`]: [
+				{
+					type: "Declaration",
+					property: "left",
+					important: false,
+					value: loc("0", "left:")
+				}
+			]
+		});
+		const cell = agreement("css-tree", TREE_READERS, source);
+		expect(await cell("webpack")).toBe("yes");
+		expect(await cell("postcss")).toBe("yes");
+	});
+
+	it("reads a nested at-rule the input ends inside", async () => {
+		const source = ".a{@media (x){top:0";
+		const loc = within(source);
+		answering({
+			"stylesheet@0": [
+				{
+					type: "Rule",
+					prelude: loc(".a"),
+					block: {
+						children: [
+							{
+								type: "Atrule",
+								name: "media",
+								prelude: loc("(x)"),
+								block: loc("{top:0")
+							}
+						]
+					}
+				}
+			],
+			[`declarationList@${source.indexOf("top")}`]: [
+				{
+					type: "Declaration",
+					property: "top",
+					important: false,
+					value: loc("0")
+				}
+			]
+		});
+		expect(await agreement("css-tree", TREE_READERS, source)("webpack")).toBe(
+			"yes"
 		);
+	});
+
+	it("names what css-tree can't read as declarations or rules", async () => {
+		const source = ".a{%}";
+		const loc = within(source);
+		answering({
+			"stylesheet@0": [
+				{
+					type: "Rule",
+					prelude: loc(".a"),
+					block: { children: [{ type: "Raw", ...loc("%") }] }
+				}
+			],
+			"declarationList@3": [{ type: "Raw", ...loc("%") }],
+			"stylesheet@3": []
+		});
+		expect(await agreement("css-tree", TREE_READERS, source)("webpack")).toBe(
+			"no — /.a[1]: css-tree unparsed %, tool }"
+		);
+		answering({ "stylesheet@0": [{ type: "Raw", ...within("%")("%") }] });
+		expect(await agreement("css-tree", TREE_READERS, "%")("webpack")).toBe(
+			"no — /: css-tree unparsed %, tool nothing"
+		);
+	});
+
+	it("drops an IE hack the spec drops, and reads postcss's as written", async () => {
+		const source =
+			".a{*zoom:1;;_display:inline;-webkit-box:2;--v:3;-1x:4;\\61:5;-\\62:6}";
+		const loc = within(source);
+		/**
+		 * @param {string} property a declaration's name, as written
+		 * @param {string} value its value, written once in the source
+		 * @returns {EXPECTED_ANY} the css-tree declaration
+		 */
+		const declared = (property, value) => ({
+			type: "Declaration",
+			property,
+			important: false,
+			value: loc(value, `${property}:`)
+		});
+		answering({
+			"stylesheet@0": [
+				{
+					type: "Rule",
+					prelude: loc(".a"),
+					block: {
+						children: [
+							declared("*zoom", "1"),
+							declared("_display", "inline"),
+							declared("-webkit-box", "2"),
+							declared("--v", "3"),
+							declared("-1x", "4"),
+							declared("\\61", "5"),
+							declared("-\\62", "6")
+						]
+					}
+				}
+			]
+		});
+		const cell = agreement("css-tree", TREE_READERS, source);
+		expect(await cell("webpack")).toBe("yes");
+		expect(await cell("postcss")).toBe("yes");
 	});
 });
