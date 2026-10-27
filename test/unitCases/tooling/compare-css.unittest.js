@@ -378,7 +378,7 @@ describe("compare-css-tools — agreeing with css-tree", () => {
 
 	it("drops an IE hack the spec drops, and reads postcss's as written", async () => {
 		const source =
-			".a{*zoom:1;_display:inline;-webkit-box:2;--v:3;-1x:4;\\61:5;-\\62:6}";
+			".a{*zoom:1;;_display:inline;-webkit-box:2;--v:3;-1x:4;\\61:5;-\\62:6}";
 		const loc = within(source);
 		/**
 		 * @param {string} property a declaration's name, as written

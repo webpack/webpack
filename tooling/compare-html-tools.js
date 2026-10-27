@@ -100,8 +100,9 @@ const setup = () => installPackages(CACHE_NAME);
  * @property {{ name: string, value: string, prefix?: string }[]=} attrs
  * @property {Parse5Node[]=} childNodes
  * @property {Parse5Node=} content a `<template>`'s document fragment
+ * @property {{ startOffset: number, endOffset: number }=} sourceCodeLocation where it was written, when asked for
  */
-/** @typedef {{ parse: (html: string) => Parse5Node }} Parse5 */
+/** @typedef {{ parse: (html: string, options?: { sourceCodeLocationInfo: boolean }) => Parse5Node }} Parse5 */
 /** @typedef {import("../lib/html/syntax-parser").HtmlPath} HtmlPath */
 
 // An app shell, whose weight is inline critical CSS and form markup: without
@@ -934,15 +935,15 @@ const startOf = (namespace, name, attributes) =>
  * Whether webpack's processing instruction rules drop the bogus comment `<?…`
  * the input ran out in: cut inside its target, or cut before its `>` with a
  * target other than `xml` or `xml-stylesheet`, which stay comments.
- * @param {string} data the comment's text, from its `?`
+ * @param {string} data the source from the comment's `?` to the end of input
  * @returns {boolean} true where webpack's tree holds no node for it
  */
 const droppedAtEnd = (data) => {
-	const target = /^\?([A-Za-z_][\w-]*)?(.?)/.exec(data);
+	const target = /^\?([A-Za-z_][\w-]*)?([^]?)/.exec(data);
 	const name = /** @type {RegExpExecArray} */ (target)[1];
 	const after = /** @type {RegExpExecArray} */ (target)[2];
 	if (data === "?" || (name !== undefined && after === "")) return true;
-	if (name === undefined || !/[\s?]/.test(after)) return false;
+	if (name === undefined || !/[\t\n\f\r ?]/.test(after)) return false;
 	return !/^xml(?:-stylesheet)?$/i.test(name);
 };
 
@@ -967,15 +968,18 @@ const parse5Tree = (html) => {
 			if (child.nodeName === "#text") {
 				events.text(/** @type {string} */ (child.value));
 			} else if (child.nodeName === "#comment") {
-				const data = /** @type {string} */ (child.data);
+				const at = child.sourceCodeLocation;
+				// parse5 ends a token the input ran out in one past its end, and a
+				// closed one at its `>`.
 				if (
-					data[0] === "?" &&
-					source.endsWith(`<${data}`) &&
-					droppedAtEnd(data)
+					at !== undefined &&
+					at.endOffset > source.length &&
+					source.charCodeAt(at.startOffset + 1) === 0x3f &&
+					droppedAtEnd(source.slice(at.startOffset + 1))
 				) {
 					continue;
 				}
-				events.leaf(`comment ${JSON.stringify(data)}`);
+				events.leaf(`comment ${JSON.stringify(child.data)}`);
 			} else if (child.nodeName === "#documentType") {
 				events.leaf(`doctype ${child.name}`);
 			} else {
@@ -1004,7 +1008,7 @@ const parse5Tree = (html) => {
 			}
 		}
 	};
-	walk(parse5.parse(source));
+	walk(parse5.parse(source, { sourceCodeLocationInfo: true }));
 	return events;
 };
 

@@ -1000,7 +1000,9 @@ const postcssTree = (css) => {
 			} else if (node.type === "decl") {
 				declaration(
 					events,
-					node.raws.before.trim() + node.prop,
+					/** @type {RegExpExecArray} */ (
+						/[^\s;]*$/.exec(node.raws.before)
+					)[0] + node.prop,
 					node.raws.value ? node.raws.value.raw : node.value,
 					Boolean(node.important)
 				);

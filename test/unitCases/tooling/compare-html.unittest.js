@@ -308,7 +308,9 @@ describe("compare-html-tools — agreeing with parse5", () => {
 		expect(await cell("htmlparser2")).toBe("own dialect");
 		expect(await cell("webpack")).toBe("yes");
 		// The byte order mark is the decoder's, gone before tree construction.
-		expect(mockParse5.parse).toHaveBeenLastCalledWith(html.slice(1));
+		expect(mockParse5.parse).toHaveBeenLastCalledWith(html.slice(1), {
+			sourceCodeLocationInfo: true
+		});
 	});
 
 	// Each a `<?…` the input runs out in, which webpack's processing instruction
@@ -319,8 +321,10 @@ describe("compare-html-tools — agreeing with parse5", () => {
 		["a cut instruction", "?x y"],
 		["a target no name starts", "?1x"],
 		["a target spelled out of name characters", "?x$y"],
-		["a target the XML reserves", "?xml v"]
+		["a target the XML reserves", "?xml v"],
+		["a target the XML reserves, before a line break", "?xml\nv"]
 	])("agrees about %s at the end of the input", async (_name, data) => {
+		const source = `<p>a</p><${data}`;
 		mockParse5.parse.mockReturnValue({
 			nodeName: "#document",
 			childNodes: [
@@ -328,14 +332,47 @@ describe("compare-html-tools — agreeing with parse5", () => {
 					element("head", HTML_NAMESPACE, []),
 					element("body", HTML_NAMESPACE, [
 						element("p", HTML_NAMESPACE, [{ nodeName: "#text", value: "a" }]),
-						{ nodeName: "#comment", data }
+						{
+							nodeName: "#comment",
+							data,
+							sourceCodeLocation: {
+								startOffset: source.indexOf("<?"),
+								// Where parse5 ends a token the input ran out in.
+								endOffset: source.length + 1
+							}
+						}
 					])
 				])
 			]
 		});
-		expect(
-			await agreement("parse5", TREE_READERS, `<p>a</p><${data}`)("webpack")
-		).toBe("yes");
+		expect(await agreement("parse5", TREE_READERS, source)("webpack")).toBe(
+			"yes"
+		);
+	});
+
+	it("keeps a closed `<?…>` whose text the input happens to end with", async () => {
+		const source = "<?x y><script><?x y";
+		mockParse5.parse.mockReturnValue({
+			nodeName: "#document",
+			childNodes: [
+				{
+					nodeName: "#comment",
+					data: "?x y",
+					sourceCodeLocation: { startOffset: 0, endOffset: 6 }
+				},
+				element("html", HTML_NAMESPACE, [
+					element("head", HTML_NAMESPACE, [
+						element("script", HTML_NAMESPACE, [
+							{ nodeName: "#text", value: "<?x y" }
+						])
+					]),
+					element("body", HTML_NAMESPACE, [])
+				])
+			]
+		});
+		expect(await agreement("parse5", TREE_READERS, source)("webpack")).toBe(
+			"yes"
+		);
 	});
 
 	it("names the first node the two trees differ at", async () => {
