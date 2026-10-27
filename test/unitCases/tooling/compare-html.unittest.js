@@ -311,6 +311,33 @@ describe("compare-html-tools — agreeing with parse5", () => {
 		expect(mockParse5.parse).toHaveBeenLastCalledWith(html.slice(1));
 	});
 
+	// Each a `<?…` the input runs out in, which webpack's processing instruction
+	// rules drop or keep as a comment; parse5 always keeps the bogus comment.
+	it.each([
+		["nothing after `<?`", "?"],
+		["a cut target", "?x"],
+		["a cut instruction", "?x y"],
+		["a target no name starts", "?1x"],
+		["a target spelled out of name characters", "?x$y"],
+		["a target the XML reserves", "?xml v"]
+	])("agrees about %s at the end of the input", async (_name, data) => {
+		mockParse5.parse.mockReturnValue({
+			nodeName: "#document",
+			childNodes: [
+				element("html", HTML_NAMESPACE, [
+					element("head", HTML_NAMESPACE, []),
+					element("body", HTML_NAMESPACE, [
+						element("p", HTML_NAMESPACE, [{ nodeName: "#text", value: "a" }]),
+						{ nodeName: "#comment", data }
+					])
+				])
+			]
+		});
+		expect(
+			await agreement("parse5", TREE_READERS, `<p>a</p><${data}`)("webpack")
+		).toBe("yes");
+	});
+
 	it("names the first node the two trees differ at", async () => {
 		mockParse5.parse.mockReturnValue(parsed("b"));
 		expect(await agreement("parse5", TREE_READERS, html)("webpack")).toBe(

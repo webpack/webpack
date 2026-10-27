@@ -931,13 +931,34 @@ const startOf = (namespace, name, attributes) =>
 		.join("")}>`;
 
 /**
- * parse5's tree, as the agreement column reads it.
+ * Whether webpack's processing instruction rules drop the bogus comment `<?…`
+ * the input ran out in: cut inside its target, or cut before its `>` with a
+ * target other than `xml` or `xml-stylesheet`, which stay comments.
+ * @param {string} data the comment's text, from its `?`
+ * @returns {boolean} true where webpack's tree holds no node for it
+ */
+const droppedAtEnd = (data) => {
+	const target = /^\?([A-Za-z_][\w-]*)?(.?)/.exec(data);
+	const name = /** @type {RegExpExecArray} */ (target)[1];
+	const after = /** @type {RegExpExecArray} */ (target)[2];
+	if (data === "?" || (name !== undefined && after === "")) return true;
+	if (name === undefined || !/[\s?]/.test(after)) return false;
+	return !/^xml(?:-stylesheet)?$/i.test(name);
+};
+
+/**
+ * parse5's tree, as the agreement column reads it. A bogus comment `<?…` the
+ * input ran out in is left out where webpack's processing instruction rules
+ * drop it, as they are the tree webpack is held to.
  * @param {string} html a document
  * @returns {TreeEvents} what it says
  */
 const parse5Tree = (html) => {
 	const parse5 = /** @type {Parse5} */ (load("parse5"));
 	const events = new TreeEvents();
+	// Decoding strips a byte order mark before tree construction sees the text;
+	// parse5 is handed text, so it would otherwise read one as content.
+	const source = html.replace(/^\uFEFF/, "");
 	/**
 	 * @param {Parse5Node} node a parse5 node
 	 */
@@ -946,7 +967,15 @@ const parse5Tree = (html) => {
 			if (child.nodeName === "#text") {
 				events.text(/** @type {string} */ (child.value));
 			} else if (child.nodeName === "#comment") {
-				events.leaf(`comment ${JSON.stringify(child.data)}`);
+				const data = /** @type {string} */ (child.data);
+				if (
+					data[0] === "?" &&
+					source.endsWith(`<${data}`) &&
+					droppedAtEnd(data)
+				) {
+					continue;
+				}
+				events.leaf(`comment ${JSON.stringify(data)}`);
 			} else if (child.nodeName === "#documentType") {
 				events.leaf(`doctype ${child.name}`);
 			} else {
@@ -975,9 +1004,7 @@ const parse5Tree = (html) => {
 			}
 		}
 	};
-	// Decoding strips a byte order mark before tree construction sees the text;
-	// parse5 is handed text, so it would otherwise read one as content.
-	walk(parse5.parse(html.replace(/^\uFEFF/, "")));
+	walk(parse5.parse(source));
 	return events;
 };
 

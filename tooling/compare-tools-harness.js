@@ -699,15 +699,14 @@ class TreeEvents {
 
 /**
  * @param {TreeEvent | undefined} event one event
- * @returns {string} it as a cell shows it
+ * @returns {string | undefined} what it says, in full
  */
-const shownEvent = (event) =>
+const saidBy = (event) =>
 	event === undefined
-		? "nothing"
-		: oneLine(
-				event[1] === "text" ? `text ${JSON.stringify(event[2])}` : event[2],
-				48
-			);
+		? undefined
+		: event[1] === "text"
+			? `text ${JSON.stringify(event[2])}`
+			: event[2];
 
 /**
  * Where two trees first stop saying the same thing, or `undefined` where they
@@ -733,7 +732,24 @@ const treeDifference = (reference, tree, referenceName) => {
 		const at = (left || right)[0] || "/";
 		// A deep path keeps its end, where the node that differs is named.
 		const shown = at.length > 60 ? `…${at.slice(-59)}` : at;
-		return `${shown}: ${referenceName} ${shownEvent(left)}, tool ${shownEvent(right)}`;
+		const theirs = saidBy(left);
+		const ours = saidBy(right);
+		// Two sides apart past the cut are both shown from just before the
+		// first character they differ at, or the cell shows them the same.
+		const differ =
+			theirs === undefined || ours === undefined
+				? 0
+				: firstDifference(theirs, ours);
+		const from = differ > 36 ? differ - 12 : 0;
+		/**
+		 * @param {string | undefined} said what one side says
+		 * @returns {string} it as the cell shows it
+		 */
+		const show = (said) =>
+			said === undefined
+				? "nothing"
+				: oneLine(from > 0 ? `…${said.slice(from)}` : said, 48);
+		return `${shown}: ${referenceName} ${show(theirs)}, tool ${show(ours)}`;
 	}
 	return undefined;
 };

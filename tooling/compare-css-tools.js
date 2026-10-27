@@ -48,6 +48,7 @@ const {
 	TokenType,
 	Part,
 	TokenStream,
+	isIdentStartCodePoint,
 	pickTransforms,
 	unescapeIdentifier
 } = cssSyntaxParser;
@@ -713,13 +714,32 @@ const comparedText = (text) =>
 		.trim();
 
 /**
+ * Whether a declaration's name opens with an identifier, which is all the spec
+ * reads as one: an IE hack such as `*zoom` is a parse error, dropped.
+ * @param {string} name a declaration's name
+ * @returns {boolean} true when the spec keeps the declaration
+ */
+const startsIdentifier = (name) => {
+	const first = name.charCodeAt(0);
+	if (first === 0x2d) {
+		const second = name.charCodeAt(1);
+		return isIdentStartCodePoint(second) || second === 0x2d || second === 0x5c;
+	}
+	return isIdentStartCodePoint(first) || first === 0x5c;
+};
+
+/**
+ * @param {TreeEvents} events the tree so far
  * @param {string} property a declaration's name
  * @param {string} value its value
  * @param {boolean} important whether it carries `!important`
- * @returns {string} what it says, as every reader writes it
  */
-const declarationOf = (property, value, important) =>
-	`${property}: ${comparedText(value)}${important ? " !important" : ""}`;
+const declaration = (events, property, value, important) => {
+	if (!startsIdentifier(property)) return;
+	events.leaf(
+		`${property}: ${comparedText(value)}${important ? " !important" : ""}`
+	);
+};
 
 /**
  * @param {string} name an at-rule's name
@@ -736,8 +756,9 @@ const atRuleOf = (name, prelude, block) => {
 
 /**
  * css-tree's tree, as the agreement column reads it. A prelude or value is
- * read off its source range; css-tree leaves what it could not parse in a block
- * as a `Raw` node, which reads `unparsed`.
+ * read off its source range. Inside a style rule, css-tree gives up on a block
+ * mixing declarations and rules, and reads an at-rule's block as rules alone, so
+ * both are read again below.
  * @param {string} css a stylesheet
  * @returns {TreeEvents} what it says
  */
@@ -753,49 +774,116 @@ const cssTreeTree = (css) => {
 			? ""
 			: comparedText(css.slice(node.loc.start.offset, node.loc.end.offset));
 	/**
-	 * @param {Iterable<EXPECTED_ANY>} list a css-tree list
+	 * @param {number} start where to parse from
+	 * @param {number} end where to stop
+	 * @param {string} context what to parse it as
+	 * @returns {EXPECTED_ANY[]} the nodes it holds
 	 */
-	const walk = (list) => {
-		for (const node of list) {
-			if (node.type === "Rule") {
-				const prelude = source(node.prelude);
-				events.open(prelude, `rule ${prelude}`);
-				walk(node.block.children);
-				events.close("}");
-			} else if (node.type === "Atrule") {
-				events.open(
-					`@${node.name}`,
-					atRuleOf(node.name, source(node.prelude), Boolean(node.block))
-				);
-				if (node.block) walk(node.block.children);
-				events.close(node.block ? "}" : "");
-			} else if (node.type === "Declaration") {
-				events.leaf(
-					declarationOf(node.property, source(node.value), node.important)
-				);
-			} else if (node.type === "Raw") {
-				events.leaf(`unparsed ${source(node)}`);
-			}
-		}
-	};
-	walk(
-		cssTree.parse(css, {
+	const parse = (start, end, context) => [
+		...cssTree.parse(css.slice(start, end), {
+			context,
 			positions: true,
+			offset: start,
 			parseValue: false,
 			parseAtrulePrelude: false,
 			parseCustomProperty: false
 		}).children
-	);
+	];
+	/**
+	 * Part of a style rule's block, read as declarations, else as rules,
+	 * whichever reads its start; what neither does reads `unparsed`. Each pass
+	 * reads past one node, so a `Raw` node it leaves is shorter.
+	 * @param {number} start where the part starts
+	 * @param {number} end where it ends
+	 */
+	const reread = (start, end) => {
+		for (const context of ["declarationList", "stylesheet"]) {
+			const nodes = parse(start, end, context);
+			if (nodes.length > 0 && nodes[0].type !== "Raw") {
+				walk(nodes, true);
+				return;
+			}
+		}
+		events.leaf(`unparsed ${comparedText(css.slice(start, end))}`);
+	};
+	/**
+	 * @param {Iterable<EXPECTED_ANY>} list a css-tree list
+	 * @param {boolean} nested whether it is inside a style rule
+	 */
+	const walk = (list, nested) => {
+		for (const node of list) {
+			if (node.type === "Rule") {
+				const prelude = source(node.prelude);
+				events.open(prelude, `rule ${prelude}`);
+				walk(node.block.children, true);
+				events.close("}");
+			} else if (node.type === "Atrule") {
+				const { block } = node;
+				events.open(
+					`@${node.name}`,
+					atRuleOf(node.name, source(node.prelude), Boolean(block))
+				);
+				if (block && nested) {
+					const { start, end } = block.loc;
+					reread(
+						start.offset + 1,
+						css.charCodeAt(end.offset - 1) === 0x7d
+							? end.offset - 1
+							: end.offset
+					);
+				} else if (block) {
+					walk(block.children, false);
+				}
+				events.close(block ? "}" : "");
+			} else if (node.type === "Declaration") {
+				declaration(events, node.property, source(node.value), node.important);
+			} else if (node.type === "Raw") {
+				if (nested) {
+					reread(node.loc.start.offset, node.loc.end.offset);
+				} else {
+					events.leaf(`unparsed ${source(node)}`);
+				}
+			}
+		}
+	};
+	walk(parse(0, css.length, "stylesheet"), false);
 	return events;
 };
 
 /**
- * webpack's tree, as the agreement column reads it.
+ * One node of webpack's tree, held until its block is complete.
+ * @typedef {object} HeldNode
+ * @property {number} start where it starts in the stylesheet
+ * @property {string} name its name in the path, or "" for a declaration
+ * @property {string} said what its start says, or the declaration itself
+ * @property {string | undefined} end what its end says; none for a declaration
+ * @property {HeldNode[]} children what its block holds
+ */
+
+/**
+ * webpack's tree, as the agreement column reads it. The walk visits a block's
+ * declarations before its nested rules (the parse-css.js model, §5.4.5), so a
+ * block's contents are put back in source order, the order a printer keeps.
  * @param {string} css a stylesheet
  * @returns {TreeEvents} what it says
  */
 const webpackTree = (css) => {
-	const events = new TreeEvents();
+	/** @type {HeldNode} */
+	const root = { start: 0, name: "", said: "", end: "", children: [] };
+	/** @type {HeldNode[]} */
+	const open = [root];
+	/**
+	 * @param {number} start where the node starts
+	 * @param {string} name its name in the path
+	 * @param {string} said what its start says
+	 * @param {string | undefined} end what its end says
+	 */
+	const hold = (start, name, said, end) => {
+		/** @type {HeldNode} */
+		const node = { start, name, said, end, children: [] };
+		open[open.length - 1].children.push(node);
+		if (end !== undefined) open.push(node);
+	};
 	/** @type {Record<number, { enter: (nodePath: CssPath) => void, exit: (nodePath: CssPath) => void }>} */
 	const visitors = {
 		[NodeType.QualifiedRule]: {
@@ -807,10 +895,10 @@ const webpackTree = (css) => {
 				const prelude = comparedText(
 					nodePath.source(nodePath.start(), block[0])
 				);
-				events.open(prelude, `rule ${prelude}`);
+				hold(nodePath.start(), prelude, `rule ${prelude}`, "}");
 			},
 			exit: () => {
-				events.close("}");
+				open.pop();
 			}
 		},
 		[NodeType.AtRule]: {
@@ -824,17 +912,19 @@ const webpackTree = (css) => {
 					block ? block[0] : nodePath.end()
 				);
 				const written = nodePath.source(name[0], name[1]);
-				events.open(
+				hold(
+					nodePath.start(),
 					`@${written}`,
 					atRuleOf(
 						written,
 						block ? prelude : prelude.replace(/;\s*$/, ""),
 						block !== null
-					)
+					),
+					block ? "}" : ""
 				);
 			},
-			exit: (nodePath) => {
-				events.close(nodePath.rangeOf(Part.block) ? "}" : "");
+			exit: () => {
+				open.pop();
 			}
 		},
 		[NodeType.Declaration]: {
@@ -843,25 +933,45 @@ const webpackTree = (css) => {
 					nodePath.rangeOf(Part.name)
 				);
 				const value = nodePath.rangeOf(Part.value);
-				events.leaf(
-					declarationOf(
-						nodePath.source(name[0], name[1]),
-						value ? nodePath.source(value[0], value[1]) : "",
-						nodePath.flag(Flag.important)
-					)
+				const held = new TreeEvents();
+				declaration(
+					held,
+					nodePath.source(name[0], name[1]),
+					value ? nodePath.source(value[0], value[1]) : "",
+					nodePath.flag(Flag.important)
 				);
+				for (const [, , said] of held.list) {
+					hold(nodePath.start(), "", said, undefined);
+				}
 				nodePath.skipChildren();
 			},
 			exit: () => {}
 		}
 	};
 	new SourceProcessor().use(visitors).process(css, {});
+	const events = new TreeEvents();
+	/**
+	 * @param {HeldNode[]} nodes one block's contents
+	 */
+	const emit = (nodes) => {
+		for (const node of nodes.sort((a, b) => a.start - b.start)) {
+			if (node.end === undefined) {
+				events.leaf(node.said);
+				continue;
+			}
+			events.open(node.name, node.said);
+			emit(node.children);
+			events.close(node.end);
+		}
+	};
+	emit(root.children);
 	return events;
 };
 
 /**
  * postcss's tree, as the agreement column reads it: each prelude and value as
- * the source wrote it, which postcss keeps in `raws` where a comment cleaned it.
+ * the source wrote it, which postcss keeps in `raws` where a comment cleaned it,
+ * and each declaration's name with the IE hack (`_`, `*`) it moves into `raws`.
  * @param {string} css a stylesheet
  * @returns {TreeEvents} what it says
  */
@@ -888,12 +998,11 @@ const postcssTree = (css) => {
 				if (node.nodes) walk(node);
 				events.close(node.nodes ? "}" : "");
 			} else if (node.type === "decl") {
-				events.leaf(
-					declarationOf(
-						node.prop,
-						node.raws.value ? node.raws.value.raw : node.value,
-						Boolean(node.important)
-					)
+				declaration(
+					events,
+					node.raws.before.trim() + node.prop,
+					node.raws.value ? node.raws.value.raw : node.value,
+					Boolean(node.important)
 				);
 			}
 		}
