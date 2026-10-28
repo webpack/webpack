@@ -15268,6 +15268,12 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				{},
 				"function f(f,n,t){for(let n of f){if(n<1||n>9)continue;g(n)}if(f||(n=t,n)||(f??n))return;if(t)break_();g()}"
 			],
+			// A conditional `dead_code` folds keeps the assignment of the branch it prints.
+			[
+				"function f(c) { var a = 0, b = 0; true ? a = 1 : a = 2; c ? (0 ? b = 1 : b = 2) : b = 3; return [a, b] }",
+				{},
+				"function f(r){var a=0,b=0;a=1;b=r?2:3;return[a,b]}"
+			],
 			// A global or labelled exit stays; a name nothing mangles prints as written.
 			[
 				'var t; if (a === 1) t = "x"; else t = "y"; function f(a) { if (a) X = 1; else X = 2; l: for (;;) { if (a) break l; if (!a) break l; g() } }',
