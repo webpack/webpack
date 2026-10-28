@@ -15410,6 +15410,12 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				{},
 				"g(r=>({}.a?1:2));"
 			],
+			// A value printed where a read opening a statement was keeps its parentheses.
+			[
+				"function f(){ var c = {}.a ? g() : h(); c, 1; var d = function(){}.call() ? g() : h(); d; (() => ({}.a ? 1 : 2))(), g() }",
+				{},
+				"function f(){({}.a?g():h()),1;(function(){}.call()?g():h());({}.a?1:2),g()}"
+			],
 			// A function expression's name that goes takes no name from its scope.
 			[
 				"function m(o) { var T = function Token(label, options) { this.label = label; this.options = options }; return [new T(o, 1), new T(o, 2)] }",
