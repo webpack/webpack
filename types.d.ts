@@ -30710,6 +30710,12 @@ declare class RuntimeModule extends Module {
 	shouldIsolate(): boolean;
 
 	/**
+	 * Returns true, if a hot update may re-ship this module to a running runtime.
+	 * False for code that is only valid at the top level of the runtime chunk.
+	 */
+	shouldHotUpdate(): boolean;
+
+	/**
 	 * The answer a runtime module gives when it installs no chunk handler at all
 	 */
 	static NO_CHUNK_HANDLERS: [string, string][];
