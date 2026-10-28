@@ -57,7 +57,7 @@ Traps: a step is not a job — `Run yarn lint` sits inside the `lint` job, and a
 
 When a job fails with no error message — jest-worker's `Call retries were exceeded`, a thread or process exiting without a stack — the real error was swallowed, and every reproduction run before it is surfaced is a guess:
 
-1. **Make the error print.** Add a temporary `uncaughtException` / `unhandledRejection` handler that writes the stack with `fs.writeSync(2, …)`, then exits non-zero so the failure stays one — under Bun in `test/harness/runtimes/bun-preload.js`, which every worker thread loads. jest drops a worker's own stderr; only a direct fd 2 write reaches the log.
+1. **Make the error print.** Add a temporary `uncaughtException` / `unhandledRejection` handler that writes the stack with `fs.writeSync(2, …)`, then exits non-zero so the failure stays one — under Bun in `test/harness/runtimes/bun-preload.js`, which every worker thread loads.
 2. **Run the one named file the way CI does.** Bun: the version `.github/runtimes/Dockerfile` pins, the `test/patches/*.patch` the job applies, and `--workerThreads --workerIdleMemoryLimit=2048MB` — without a memory limit jest runs a single file in-band, with no worker thread at all.
 3. **Cut it to one `it`.** `-t "<describe>"`, then a throwaway one-test file with just the trigger (one `process.stderr.write` in a Bun worker thread reproduced #22977's failure 4/4).
 4. **Then fix it.** A runtime bug gets a workaround beside the existing ones in that runtime's preload, with a comment naming the bug; drop the temporary handler.
