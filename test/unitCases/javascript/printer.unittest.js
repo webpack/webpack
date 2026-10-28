@@ -15268,6 +15268,12 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				{},
 				"function f(f,n,t){for(let n of f){if(n<1||n>9)continue;g(n)}if(f||(n=t,n)||(f??n))return;if(t)break_();g()}"
 			],
+			// A global or labelled exit stays; a name nothing mangles prints as written.
+			[
+				'var t; if (a === 1) t = "x"; else t = "y"; function f(a) { if (a) X = 1; else X = 2; l: for (;;) { if (a) break l; if (!a) break l; g() } }',
+				{},
+				'var t;t=a===1?"x":"y";function f(a){a?X=1:X=2;a:for(;;){if(a)break a;if(!a)break a;g()}}'
+			],
 			[
 				"function f(o) { return [typeof (function () { return undeclaredX })(), delete (() => o.p)(), ((x) => x.m)(o)()] }",
 				{},
