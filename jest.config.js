@@ -77,8 +77,11 @@ const config = {
 
 // `--parts=<n>` runs every matched file in n parallel workers at once, each
 // told its part through `test/helpers/testParts.js`; setup runs once.
+// `--parts=auto` takes one part per core the machine has.
 const partsArg = process.argv.find((arg) => arg.startsWith("--parts="));
-const parts = partsArg ? Number(partsArg.slice("--parts=".length)) : 1;
+const partsValue = partsArg ? partsArg.slice("--parts=".length) : "1";
+const parts =
+	partsValue === "auto" ? require("os").cpus().length : Number(partsValue);
 // Jest reads these only from the top level and warns when a project sets them.
 const { forceExit, coverageReporters, ...projectConfig } = config;
 
