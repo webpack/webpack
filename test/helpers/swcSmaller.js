@@ -284,7 +284,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: drop-unused/issue_t161_top_retain_10",
 			"terser compress: drop-unused/issue_t161_top_retain_12",
 			"terser compress: drop-unused/issue_t161_top_retain_13",
-			"terser compress: drop-unused/issue_t161_top_retain_14",
 			"terser compress: drop-unused/vardef_value",
 			"terser compress: evaluate/issue_2916_1",
 			"terser compress: functions/duplicate_argnames",

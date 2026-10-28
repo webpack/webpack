@@ -1327,6 +1327,8 @@ const IMPROVED_YET_BIGGER = {
 		"3 bytes fewer, 1 more gzipped: `+!!{}` breaks the `()=>(` runs of the arrows around it gzip reused",
 	"functions/issue_3054 (its own options)":
 		"2 bytes fewer, 2 more gzipped: the call `return f()` kept breaks the `return{a:!0}` the function beside it repeats",
+	"peephole/minimize_statements.rs:384 (the default minimizer's options)":
+		"9 bytes more, 9 more gzipped: the read of `x` before its `let` stays, as it throws there, where terser drops it",
 	"peephole/dead_code_elimination.rs:860 (the default minimizer's options)":
 		"4 bytes fewer, 3 more gzipped: the parameter a `with` body does not read, mangled, no longer repeats the `obj` the call passes",
 	"negative-duration-with-leading-zero-style-digital-en.js (the default minimizer's options)":

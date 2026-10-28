@@ -430,7 +430,6 @@ const OXC_SMALLER_BY_REASON = [
 			"swc exec: terser_drop_unused_issue_t161_top_retain_15",
 			"terser compress: const/issue_1396",
 			"terser compress: destructuring/empty_object_destructuring_misc",
-			"terser compress: drop-unused/issue_t161_top_retain_13",
 			"terser compress: drop-unused/issue_t161_top_retain_14"
 		]
 	],
