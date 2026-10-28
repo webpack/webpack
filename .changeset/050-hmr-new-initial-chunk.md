@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Fix HMR when an update adds a new initial chunk, including ES module output.
+Fix HMR when an update needs a chunk the client has not loaded, including ES module output.
