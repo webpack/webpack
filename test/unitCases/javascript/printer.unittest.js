@@ -14741,7 +14741,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"function f(a){ function h(x){ return x + a } function k(){ return 1 } function r(n){ return n ? r(n - 1) : 0 } var z = h(2); for (;;) k(); g(z, r); function late(){} late(); return [early()]; function early(){ return 2 } }",
 				{},
-				"function f(n){function r(){return 1}function u(n){return n?u(n-1):0}var t=function(r){return r+n}(2);for(;;)r();g(t,u);(function(){})();return[f()];function f(){return 2}}"
+				"function f(n){function r(){return 1}function u(n){return n?u(n-1):0}var t=function(r){return r+n}(2);for(;;)r();g(t,u);(function(){})();return[2]}"
 			],
 			// A name nothing reads goes, its value still running; a `var` set
 			// after a call is a constant where only its own function reads it.
@@ -14902,7 +14902,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"function f(){ var g = function(){}; (g || h)(); var k = function(){}; k ? 1 : 2; var m = function(){}; m`t`; var p = class{}; (p, 1); var q = {}; q.r++; }",
 				{},
-				"function f(){(function(){}||h)();(function(){})`t`;var f={};f.r++}"
+				"function f(){(function(){}||h)();(function(){})`t`;({}).r++}"
 			],
 			[
 				"function f(){ var m = function(){}; h({ k: m }); var n = function(){}; h(n + 1); var p = function(){}; h({ [p]: 1 }) }",
@@ -15279,6 +15279,55 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				'var t; if (a === 1) t = "x"; else t = "y"; function f(a) { if (a) X = 1; else X = 2; l: for (;;) { if (a) break l; if (!a) break l; g() } }',
 				{},
 				'var t;t=a===1?"x":"y";function f(a){a?X=1:X=2;a:for(;;){if(a)break a;if(!a)break a;g()}}'
+			],
+			// A function declaration read once before it prints there, but in a loop.
+			[
+				"function f(t) { t.exports = u; function u() { return g() } return t } function k(t) { for (var i = 0; i < 2; i++) t.push(v); function v() {} return t } function m(t) { t.a = w; var r = h(); function w(e) { return r(e) } return t }",
+				{},
+				"function f(t){t.exports=function(){return g()};return t}function k(t){for(var n=0;n<2;n++)t.push(r);function r(){}return t}function m(t){t.a=function(t){return n(t)};var n=h();return t}"
+			],
+			// One holding a function moved after the read stays, until a reprint.
+			[
+				"function f(t) { t.e = a; function c() { h(); return g(1) } function a() { return c() } return t }",
+				{},
+				"function f(n){n.e=function(){return function(){h();return g(1)}()};return n}"
+			],
+			[
+				"u(); function u() { return g() }",
+				{ compress: { toplevel: true }, mangle: { toplevel: true } },
+				"u();function u(){return g()}"
+			],
+			// A literal of constants folds into its read where that runs once.
+			[
+				'function f(n, e) { let A = { negated: false, prefix: "" }; return n(e, A) } function k(n) { let C = [1, ["a"]]; return n.map(() => C) } function m() { let D = {}; return delete D }',
+				{},
+				'function f(e,n){return e(n,{negated:!1,prefix:""})}function k(e){let n=[1,["a"]];return e.map(()=>n)}function m(){let e={};return delete e}'
+			],
+			// Literals a string adds join; an operation folds in bare where it may.
+			[
+				'function f(b, c) { var j = "(?:" + b + "|" + c + ")", re = j + "?"; return [re + re, b + 1 + "a " + true, (b + "a") + 1] }',
+				{},
+				'function f(r,a){var e="(?:"+r+"|"+a+")?";return[e+e,r+1+"a true",r+"a1"]}'
+			],
+			[
+				"function a(b,c){var j=b-c;return 10-j}function d(b,c){var j=b-c;return j-10}function e(b,c){var j=b+c;return j*2}function h(b,c){var j=b??c;return j||3}function k(b,c){var j=b**c;return j**2}function l(b,c){var j=b+c;return j(1)}function m(b,c){var j=b&&c;return j.x}function n(b,c){var j=b+c;return g(j,1)}function o(b,c){var j=b+c;throw j}function p(b,c){var j=b+c;return[j]}function q(b,c){var j=b+c;return`${j}`}function r(b,c){var j=b+c;return j?1:2}function s(b,c){var j=b+c;return{x:j}}function t(b,c){var j=b+c;return{[j]:1}}function v(b,c){var j=b+c;return[...j]}function w(b,c){var j=b+c;return new G(j)}function x(b,c){var j=function(){}+c;return j}function y(b,c){var j=b+c,z=j;return z}",
+				{},
+				"function a(n,c){return 10-(n-c)}function d(n,c){return n-c-10}function e(n,c){return(n+c)*2}function h(n,c){return(n??c)||3}function k(n,c){return(n**c)**2}function l(n,c){return(n+c)(1)}function m(n,c){return(n&&c).x}function n(n,c){return g(n+c,1)}function o(n,c){throw n+c}function p(n,c){return[n+c]}function q(n,c){return`${n+c}`}function r(n,c){return n+c?1:2}function s(n,c){return{x:n+c}}function t(n,c){var r=n+c;return{[r]:1}}function v(n,c){var r=n+c;return[...r]}function w(n,c){return new G(n+c)}function x(n,c){return function(){}+c}function y(n,c){return n+c}"
+			],
+			[
+				"function f(n){let A=[1,,g()];return[n.y,A]}function k(n){let B={...n};return[n.y,B]}function m(n){let C={get x(){return 1}};return[n.y,C]}function o(n){let D={[n]:1};return[n.y,D]}function p(n){let E={f(){}};return[n.y,E]}function q(n){let F=[1];return[n.y,/*! c */F]}function r(n){let H=[1];return[n.y,delete H]}function s(n){let I=[1];return[n.y,()=>I]}function t(n){let J=[1,,2];return[n.y,J]}",
+				{},
+				"function f(n){let t=[1,,g()];return[n.y,t]}function k(n){let t={...n};return[n.y,t]}function m(n){let t={get x(){return 1}};return[n.y,t]}function o(n){let t={[n]:1};return[n.y,t]}function p(n){let t={f(){}};return[n.y,t]}function q(n){let t=[1];return[n.y,/*! c */t]}function r(n){let t=[1];return[n.y,delete t]}function s(n){let t=[1];return[n.y,()=>t]}function t(n){return[n.y,[1,,2]]}"
+			],
+			[
+				"function u(b,c){var j=b||c;return j??1}function z(b,c){var j=b+c,k;k=j;return k}",
+				{},
+				"function u(n,u){return(n||u)??1}function z(n,u){var c;return c=n+u}"
+			],
+			[
+				"(function () { u(); function u() { console.log(g()) } })()",
+				{},
+				"(function(){n();function n(){console.log(g())}})();"
 			],
 			[
 				"function f(o) { return [typeof (function () { return undeclaredX })(), delete (() => o.p)(), ((x) => x.m)(o)()] }",

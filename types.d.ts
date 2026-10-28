@@ -37905,6 +37905,7 @@ declare namespace exports {
 					>,
 					inlined?: Uint8Array
 				) => void;
+				export let printEarlyIn: (early: Map<number, number>) => void;
 				export {
 					DestructuringErrors,
 					Label,
