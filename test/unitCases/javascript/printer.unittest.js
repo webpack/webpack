@@ -15416,6 +15416,12 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				{},
 				"function f(){({}.a?g():h()),1;(function(){}.call()?g():h());({}.a?1:2),g()}"
 			],
+			// A function declared as the branch kept declares it only once that runs.
+			[
+				"g(function(){ g(typeof f); if (1) function f(){} if (0) ; else function h(){} g(f, h) })",
+				{},
+				"g(function(){g(typeof f);if(1)function f(){}if(0);else function n(){}g(f,n)});"
+			],
 			// A function expression's name that goes takes no name from its scope.
 			[
 				"function m(o) { var T = function Token(label, options) { this.label = label; this.options = options }; return [new T(o, 1), new T(o, 2)] }",
