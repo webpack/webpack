@@ -328,6 +328,19 @@ const describeCases = (config) => {
 							let unseenChanges = new Set();
 							// builds started so far, and how many had started when the step was written
 							const buildCount = { started: 0, beforeStep: 0 };
+							// the same per child compiler, whose stats stay its last build's until it rebuilds
+							/** @type {Map<import("../../").Compiler, number>} */
+							const childBuilds = new Map();
+							/** @type {Map<import("../../").Compiler, number>} */
+							let childBuildsBeforeStep = new Map();
+							// watched files the current step changed, kept after builds report them
+							/** @type {Set<string>} */
+							let stepChanges = new Set();
+							/** @type {Map<import("../../").Compiler, import("../../").Compilation>} */
+							const lastChildCompilations = new Map();
+							// each child's stats from the builds of the current step
+							/** @type {Map<import("../../").Compiler, import("../../").Stats>} */
+							let stepStats = new Map();
 
 							const currentWatchStepModule = require("../helpers/currentWatchStep");
 
@@ -428,6 +441,7 @@ const describeCases = (config) => {
 									for (const child of compilers) {
 										child.hooks.watchRun.tap("WatchTestCasesTest", () => {
 											buildCount.started++;
+											childBuilds.set(child, (childBuilds.get(child) || 0) + 1);
 										});
 										child.hooks.finishMake.tap(
 											{ name: "WatchTestCasesTest", stage: Infinity },
@@ -455,10 +469,34 @@ const describeCases = (config) => {
 												// a late event of the last step can start a build just before this
 												// step is written; it read the old files, and the new ones start the next
 												if (buildCount.started <= buildCount.beforeStep) return;
+												// a multi-compiler reports only the children that built since its last
+												// report, so a child built late arrives alone: assert on all of the step
+												if ("stats" in stats) {
+													const children = /** @type {import("../../").Stats[]} */ (
+														stats.stats
+													);
+													for (const childStats of children) {
+														stepStats.set(childStats.compilation.compiler, childStats);
+													}
+													children.length = 0;
+													for (const child of compilers) {
+														const childStats = stepStats.get(child);
+														if (childStats !== undefined) children.push(childStats);
+													}
+												}
 												// macOS can report one step's changes over more than the aggregate
 												// timeout; a build that missed some reuses the stale cached module,
 												// and the late change starts the build this step's tests wait for
+												/**
+												 * @param {import("../../").Compiler} child child compiler
+												 * @returns {boolean} true, when it built since the step was written
+												 */
+												const builtThisStep = (child) =>
+													(childBuilds.get(child) || 0) >
+													(childBuildsBeforeStep.get(child) || 0);
 												for (const child of compilers) {
+													// a child yet to rebuild still shows its last build's reports
+													if (!builtThisStep(child)) continue;
 													// a watched directory reports itself, not the file inside it
 													const reported = [
 														...(child.modifiedFiles || []),
@@ -501,6 +539,27 @@ const describeCases = (config) => {
 														unseenChanges.delete(file);
 													}
 												}
+												// one child's change event can land past the aggregate timeout under
+												// load: wait (re-sending if dropped) while a child that watched a
+												// changed file still shows its last build
+												const waitingFor = [...stepChanges].filter((file) =>
+													compilers.some((child) => {
+														const compilation = lastChildCompilations.get(child);
+														return (
+															compilation !== undefined &&
+															!builtThisStep(child) &&
+															(compilation.fileDependencies.has(file) ||
+																compilation.missingDependencies.has(file) ||
+																isWithin(file, [...compilation.contextDependencies]))
+														);
+													})
+												);
+												if (waitingFor.length > 0) {
+													for (const file of waitingFor) unseenChanges.add(file);
+													clearTimeout(retouchTimer);
+													retouchUnseenChanges(compilers, RETOUCH_LIMIT);
+													return;
+												}
 												if (unseenChanges.size > 0) return;
 												clearTimeout(retouchTimer);
 												if (run.done && stats.hash === lastHash) return;
@@ -519,6 +578,7 @@ const describeCases = (config) => {
 												for (const { compilation } of /** @type {import("../../").Stats[]} */ (
 													"stats" in stats ? stats.stats : [stats]
 												)) {
+													lastChildCompilations.set(compilation.compiler, compilation);
 													// a missing directory is watched for existence, not content
 													for (const file of compilation.fileDependencies) {
 														lastFileDependencies.add(file);
@@ -670,6 +730,9 @@ const describeCases = (config) => {
 																		changed
 																	);
 																	buildCount.beforeStep = buildCount.started;
+																	childBuildsBeforeStep = new Map(childBuilds);
+																	stepStats = new Map();
+																	stepChanges = new Set();
 																	unseenChanges = new Set();
 																	if (!restartCompiler && watchedCompiler) {
 																		// only a file the last build watched reports its change
@@ -733,6 +796,7 @@ const describeCases = (config) => {
 																				if (isWithin(file, ignored)) unseenChanges.delete(file);
 																			}
 																		}
+																		stepChanges = new Set(unseenChanges);
 																		if (unseenChanges.size > 0) {
 																			retouchUnseenChanges(children, RETOUCH_LIMIT);
 																		}

@@ -97,6 +97,7 @@ Directories come first, in alphabetical order, then the individual files worth t
 
 - **Purpose**: Focuses on Webpack’s Hot Module Replacement (HMR) functionality.
 - **Usage**: Ensures live reloading and hot updates work correctly.
+- **Every HMR change is covered twice**: a case for the default output (JSONP on `web`, `require` on `node`, `importScripts` on `webworker`) and a twin under `hotCases/esm-output/` with `output.module: true` and `chunkFormat: "module"`. The ES module hot update wraps runtime code in a function, so it breaks in ways the default output never shows. A Worker twin there needs `publicPath: "auto"`: a Node ES module worker can't import the harness's `https://` default.
 
 ### `hotPlayground/`
 
