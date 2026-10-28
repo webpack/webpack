@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Make CSS HMR load the stylesheet of a new chunk that joined a loaded chunk's group, such as CSS moved into a new shared chunk.
+Load the stylesheet of a new chunk joining a loaded group on HMR update.
