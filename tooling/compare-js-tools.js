@@ -158,19 +158,20 @@ const readOxcResult = (result) => {
  * @param {SyntaxTree} tree the tree to write into
  * @returns {number} the program's node
  */
-const parseFlat = (code, tree) =>
-	/** @type {number} */ (
-		/** @type {unknown} */ (
-			webpackParse(code, {
-				sourceType: sourceType(),
-				ecmaVersion: "latest",
-				lazyNodes: true,
-				locations: false,
-				allowHashBang: true,
-				syntaxTree: tree
-			})
-		)
+const parseFlat = (code, tree) => {
+	/** @type {ConstructorParameters<typeof import("../lib/javascript/syntax-parser").WebpackParser>[0]} */
+	const options = {
+		sourceType: sourceType(),
+		ecmaVersion: "latest",
+		lazyNodes: true,
+		locations: false,
+		allowHashBang: true,
+		syntaxTree: tree
+	};
+	return /** @type {number} */ (
+		/** @type {unknown} */ (webpackParse(code, options))
 	);
+};
 
 /**
  * yuku recovers as oxc does, reporting each error beside the tree it built.
