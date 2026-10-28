@@ -15422,6 +15422,12 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				{},
 				"g(function(){g(typeof f);if(1)function f(){}if(0);else function n(){}g(f,n)});"
 			],
+			// With shorthands, a name printing otherwise than its key prints after it.
+			[
+				"function m(o){ var add = g(), b = h(); function f(a){ o.x(a) } var c = \"x\"; var __proto__ = g(); return { add, b, f, c, __proto__ } }",
+				{ ecma: 2015 },
+				"function m(o){var _=g(),b=h(),a=g();return{add:_,b,f:function(_){o.x(_)},c:\"x\",[\"__proto__\"]:a}}"
+			],
 			// A function expression's name that goes takes no name from its scope.
 			[
 				"function m(o) { var T = function Token(label, options) { this.label = label; this.options = options }; return [new T(o, 1), new T(o, 2)] }",
