@@ -1,6 +1,6 @@
 "use strict";
 
-// cspell:ignore argnames autowhatever chartjs cryptojs defun dont farg fargs firestore hoofd instancesearch joda lvalues nonmatching outstatic redef syncfusion
+// cspell:ignore argnames autowhatever chartjs cryptojs defun dont farg fargs firestore instancesearch joda lvalues nonmatching outstatic redef syncfusion
 
 // What swc's minifier does that webpack's does not yet, each with the tests
 // whose output under their own options is bigger than swc's recorded one.
@@ -51,6 +51,8 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/6279/1/input.js",
 			"swc minifier: fixture/issues/6279/2/input.js",
 			"swc minifier: fixture/issues/pure-callee-call/input.js",
+			"swc minifier: fixture/projects/next/.archive-4/main-2953d6142ff4a439dbc0/input.js",
+			"swc minifier: fixture/projects/wmr/archive-1/chunks/.compat.2f7d9500/input.js",
 			"terser compress: functions/loop_init_arg",
 			"terser compress: inline/issue_308"
 		]
@@ -282,7 +284,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: drop-unused/issue_t161_top_retain_10",
 			"terser compress: drop-unused/issue_t161_top_retain_12",
 			"terser compress: drop-unused/issue_t161_top_retain_13",
-			"terser compress: drop-unused/issue_t161_top_retain_14",
 			"terser compress: drop-unused/vardef_value",
 			"terser compress: evaluate/issue_2916_1",
 			"terser compress: functions/duplicate_argnames",
@@ -332,7 +333,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/6837/1/input.js",
 			"swc minifier: fixture/issues/6837/2/input.js",
 			"swc minifier: fixture/issues/8271/input.js",
-			"swc minifier: fixture/issues/8622/input.js",
 			"swc minifier: fixture/issues/8826/input.js",
 			"swc minifier: fixture/issues/9148/input.js",
 			"swc minifier: fixture/issues/9468/input.js",
@@ -531,7 +531,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/projects/next/archive-2/pages/hmr/.error-in-gip-bd210c03b443f903b86d/input.js",
 			"swc minifier: fixture/projects/next/archive-2/pages/hmr/.style-stateful-component-6cd7bdfa37b75acb9d04/input.js",
 			"swc minifier: fixture/projects/next/archive-3/pages/dynamic/no-chunk-e2d9573b8d7df68a6cde/input.js",
-			"swc minifier: fixture/projects/wmr/archive-1/chunks/hoofd.module.6c5395cb/input.js",
 			"swc minifier: full/vercel/ms/1/input.js",
 			"swc minifier: pass-1/seq/1/input.js",
 			"swc minifier: projects/files/backbone-1.1.0.js"

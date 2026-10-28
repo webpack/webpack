@@ -23,7 +23,6 @@ const OXC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/12311/input.js",
 			"swc minifier: fixture/issues/6636/input.js",
 			"swc minifier: fixture/issues/8324/input.js",
-			"swc minifier: fixture/issues/8622/input.js",
 			"swc minifier: fixture/issues/object-accessor-function-boundary/input.js",
 			"swc minifier: fixture/projects/backbone/7/input.js",
 			"swc minifier: fixture/projects/mootools/4/input.js",
@@ -365,10 +364,6 @@ const OXC_SMALLER_BY_REASON = [
 		]
 	],
 	[
-		"oxc follows a variable's value through its reassignments and folds the result",
-		["terser compress: drop-unused/issue_t161_top_retain_15"]
-	],
-	[
 		"oxc normalizes the syntax before compressing it, as oxc's `peephole/normalize.rs` tests show",
 		[
 			"oxc minifier: peephole/normalize.rs:230",
@@ -424,11 +419,8 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc folds arithmetic, comparisons and concatenation of constants",
 		[
-			"swc exec: terser_drop_unused_issue_t161_top_retain_15",
 			"terser compress: const/issue_1396",
-			"terser compress: destructuring/empty_object_destructuring_misc",
-			"terser compress: drop-unused/issue_t161_top_retain_13",
-			"terser compress: drop-unused/issue_t161_top_retain_14"
+			"terser compress: destructuring/empty_object_destructuring_misc"
 		]
 	],
 	[

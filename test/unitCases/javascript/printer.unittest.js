@@ -486,6 +486,16 @@ const IMPROVED_CASES = [
 		{ compress: {}, mangle: false }
 	],
 	[
+		"a function read once, to be called inside an array or object literal, inlined there",
+		"function m(c) { function g(c) { let r = 1; if (c) r = 2; return r; } function k(c) { let r = c; r++; return r; } return () => [1, g(c), { a: k(c) }]; } console.log(m(1)(), m(0)());",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a `let` or `const` read after its declaration, where a read or a function read may come before it",
+		"function m() { var t = typeof f; function f() { return x; } const x = 2; let r = []; try { r.push(z); } catch (e) { r.push(e.name); } let z = x + 1; r.push(t, f(), x * 3, z * z); return r; } console.log(m());",
+		{ compress: {}, mangle: false }
+	],
+	[
 		"a `let` whose every read folds into its value, left with its write",
 		"(function () { let x; x = 2; console.log(x); globalThis.g = function () { return x; }; })(); console.log(g());",
 		{ compress: {}, mangle: false }
@@ -11351,6 +11361,63 @@ x = a ** b ** c; x = (a ** b) ** c; x = (-a) ** b; x = a < b < c; x = a < (b < c
 				const { code } = await minify(input, { compress: false, mangle: true, ecma: 2015 });
 				expect(code).toBe(written);
 				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			}
+		});
+
+		it("should keep a function out of an array or object literal holding it as a value", async () => {
+			const { minify } = await load();
+			for (const input of [
+				"export function m(){function g(){return h()}return()=>[g]}",
+				"export function m(){function g(){return h()}return()=>[h(g)]}",
+				"export function m(){function g(){return h()}return()=>({a:g})}"
+			]) {
+				const { code } = await minify(input, {
+					module: true,
+					compress: {},
+					mangle: false
+				});
+				expect(code).toContain("function g(){return h()}");
+			}
+		});
+
+		it("should keep each read of a `let` or `const` that may run before its declaration", async () => {
+			const { minify } = await load();
+			for (const [input, written] of [
+				[
+					"export function g(){try{f()}catch(e){h(e.name)}function f(){h(x)}const x=2;h(x,x)}",
+					"export function g(){try{h(x)}catch(e){h(e.name)}let x=2;h(2,2)}"
+				],
+				[
+					"export function g(){try{f()}catch(e){h(e.name)}function f(){return x.a}const x={a:1};h(f(),x.a)}",
+					"export function g(){try{f()}catch(e){h(e.name)}function f(){return x.a}let x={a:1};h(f(),x.a)}"
+				],
+				[
+					"export function g(){var t=0;try{f()}catch(e){h(e.name)}function f(){t=x}const x=2;f();h(t,x)}",
+					"export function g(){try{x}catch(e){h(e.name)}let x=2;h(x,2)}"
+				],
+				[
+					"export function g(){try{x}catch(e){h(e.name)}const x=2;h(x)}",
+					"export function g(){try{x}catch(e){h(e.name)}let x=2;h(2)}"
+				],
+				[
+					"export function g(){h(typeof f);function f(){return x}let x=3;h(f(),x)}",
+					"export function g(){function f(){return x}h(typeof f);let x=3;h(f(),3)}"
+				],
+				[
+					"export function g(){try{f()()}catch(e){h(e.name)}function f(){return()=>x}const x=2;h(x)}",
+					"export function g(){try{x}catch(e){h(e.name)}let x=2;h(2)}"
+				],
+				[
+					"export function g(){h(x);var x=2;h(x)}",
+					"export function g(){h(x);var x=2;h(x)}"
+				]
+			]) {
+				const { code } = await minify(input, {
+					module: true,
+					compress: {},
+					mangle: false
+				});
+				expect(code).toBe(written);
 			}
 		});
 
