@@ -563,6 +563,21 @@ jobs:
 
       - run: yarn link webpack --frozen-lockfile
 
+      # The Chrome `ProfilingPlugin.unittest.js` and `WebpackDevServer.longtest.js`
+      # launch is the build playwright-core pins, as in `unit`.
+      - name: Read the pinned browser build
+        id: browser-build
+        run: echo "id=$(node -p "require('playwright-core/package.json').version")" >> "$GITHUB_OUTPUT"
+
+      - name: Cache the pinned browser
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-chrome-${{ steps.browser-build.outputs.id }}-${{ runner.os }}
+
+      - name: Install the pinned browser
+        run: node tooling/retry.js yarn setup:browsers chrome
+
       # Bun runs with worker_threads (see test:base:bun): in-band's single heap
       # OOMs the runner on the full suite and Bun's child_process workers hang, but
       # threads work once jest-worker loads the Bun preload per thread. Apply that
@@ -580,10 +595,7 @@ jobs:
           git apply test/patches/jest-runner+30.4.2.patch
 
       # Both runtimes run the same suites with jest's parallel workers, the
-      # HotTestCases ones included. Only the Chrome-driven suites are dropped
-      # (see the testPathIgnorePatterns in test:deno / test:bun): they were left
-      # out while puppeteer-core could not load under either, and playwright-core
-      # has not been tried there yet.
+      # HotTestCases and Chrome-driven ones included.
       - run: yarn test:${{ matrix.runtime }} --ci
 
   integration:

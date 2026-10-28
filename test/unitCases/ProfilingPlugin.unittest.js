@@ -37,7 +37,9 @@ describe("Profiling Plugin", () => {
 			})
 		);
 
-		return profiler.startProfiling();
+		return profiler.startProfiling().then(() => {
+			expect(profiler.hasSession()).toBe(false);
+		});
 	});
 
 	it("handles sending a profiling message when no session", () => {

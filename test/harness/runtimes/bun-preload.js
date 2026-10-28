@@ -118,6 +118,31 @@ if (nodeVm.SourceTextModule) {
 	};
 }
 
+// In a vm context Bun ignores `Error.prepareStackTrace`, leaving `stack` a
+// string where `depd` (which express loads) reads V8 call sites. Capture through
+// the main realm's `Error`, which honors it, with the context's hook and limit.
+const originalCreateContext = nodeVm.createContext;
+nodeVm.createContext = function createContext(...args) {
+	const context = originalCreateContext.apply(this, args);
+	const ContextError = nodeVm.runInContext("Error", context);
+	const capture = ContextError.captureStackTrace;
+	ContextError.captureStackTrace = function captureStackTrace(object, fn) {
+		const prepare = ContextError.prepareStackTrace;
+		if (typeof prepare !== "function") return capture.call(this, object, fn);
+		const outerPrepare = Error.prepareStackTrace;
+		const outerLimit = Error.stackTraceLimit;
+		Error.prepareStackTrace = prepare;
+		Error.stackTraceLimit = ContextError.stackTraceLimit;
+		try {
+			Error.captureStackTrace(object, fn || captureStackTrace);
+		} finally {
+			Error.prepareStackTrace = outerPrepare;
+			Error.stackTraceLimit = outerLimit;
+		}
+	};
+	return context;
+};
+
 // Bun's native `fs.watch` does not deliver change events reliably under jest's
 // worker threads, so watchpack misses edits and the WatchTestCases hang or read
 // stale output. Force watchpack into polling mode (honored unless already set).
