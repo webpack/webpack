@@ -198,7 +198,7 @@ const TOOLS = [
 	{
 		// The options a build asks for: a node serves its range when something
 		// reads it, which is most of what the eager rows below pay for up front.
-		name: "webpack",
+		name: "webpack (objects)",
 		stage: "parse",
 		create: () => (code) =>
 			webpackParse(code, {
@@ -223,7 +223,7 @@ const TOOLS = [
 	{
 		// What a tool reading ESTree pays on top of the flat parse: every node's
 		// object, from the program down. The tree stays, as `range` reads it.
-		name: "webpack (flat + toEstreeObject)",
+		name: "webpack (flat+ESTree)",
 		stage: "parse",
 		create: () => (code) => {
 			const tree = new SyntaxTree();
@@ -607,8 +607,8 @@ const TOOLS = [
 // The parsers that answer in ESTree, so their trees are comparable with
 // acorn's. The rest speak a dialect of their own and are not held to it.
 const ESTREE_PARSERS = new Set([
-	"webpack",
-	"webpack (flat + toEstreeObject)",
+	"webpack (objects)",
+	"webpack (flat+ESTree)",
 	"espree",
 	"meriyah",
 	"esprima",
