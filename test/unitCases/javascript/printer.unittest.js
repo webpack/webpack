@@ -15404,6 +15404,12 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				{},
 				"function f(){a();b();e();g();h()}"
 			],
+			// An arrow's chain opening with an object is parenthesized past what goes.
+			[
+				"g(x => { var u = 1; if ({}.a) return 1; return 2 })",
+				{},
+				"g(r=>({}.a?1:2));"
+			],
 			// A function expression's name that goes takes no name from its scope.
 			[
 				"function m(o) { var T = function Token(label, options) { this.label = label; this.options = options }; return [new T(o, 1), new T(o, 2)] }",
