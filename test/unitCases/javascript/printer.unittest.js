@@ -10178,7 +10178,8 @@ x = a ** b ** c; x = (a ** b) ** c; x = (-a) ** b; x = a < b < c; x = a < (b < c
 				["function f(n) { if (y) return 1; return n || void 0; }", "n||void 0"],
 				["function f(n) { return n && void 0; }", "return n&&void 0"],
 				["function f(n) { return n || -1; }", "return n||-1"],
-				["function f(n) { return n || !1; }", "return n||!1"]
+				["function f(n) { return n || !1; }", "return n||!1"],
+				["async function* f(n) { yield 1; return n || void 0; }", "n||void 0"]
 			]) {
 				const { code } = await minify(input, { compress: {}, mangle: false });
 				expect(code).toContain(expected);
