@@ -15433,7 +15433,52 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				"function m(o) { var T = function Token(label, options) { this.label = label; this.options = options }; return [new T(o, 1), new T(o, 2)] }",
 				{},
 				"function m(o){var n=function(o,n){this.label=o;this.options=n};return[new n(o,1),new n(o,2)]}"
-			]
+			],
+			// A value folded into its one read takes the parentheses that read needs.
+			["function f(a){var b=!a;return b.x}", {}, "function f(a){return(!a).x}"],
+			["function f(a){var b=-a;return b(1)}", {}, "function f(a){return(-a)(1)}"],
+			["function f(a){var b=-a;return b**2}", {}, "function f(a){return(-a)**2}"],
+			["function f(a){var b=-a;return 2**b}", {}, "function f(a){return 2**-a}"],
+			["function f(a){var b=-a;return[b]}", {}, "function f(a){return[-a]}"],
+			["function f(a,c){var b=a+1;return c[b]}", {}, "function f(a,c){return c[a+1]}"],
+			["function f(a,c){var b=a+1;return[b]}", {}, "function f(a,n){return[a+1]}"],
+			["function f(a){var b=function(){}.x+a;b,g()}", {}, "function f(n){(function(){}.x+n),g()}"],
+			["function f(){var b={}.x=1;b,g()}", {}, "function f(){({}.x=1),g()}"],
+			["function f(a){var b={x:a()};b.y,g()}", {}, "function f(a){({x:a()}).y,g()}"],
+			["function f(a){var b=class{};return b.name}", {}, "function f(a){return class{}.name}"],
+			["function f(a){var b=function(){return a};b.call()}", {}, "function f(n){(function(){return n}).call()}"],
+			["function f(a){var c={}.x;var b=c+1;b,g()}", {}, "function f(a){({}.x+1),g()}"],
+			["function f(a){var b=a+1;return\"x\"+b+\"y\"}", {}, "function f(a){return\"x\"+(a+1)+\"y\"}"],
+			["function f(a){var b=a+1;return`${b}`}", {}, "function f(a){return`${a+1}`}"],
+			["function f(a){var b=function(){};b.x=a}", {}, "function f(n){(function(){}).x=n}"],
+			["function f(a){var b=function(){};return b.x}", {}, "function f(n){return function(){}.x}"],
+			["function f(a){var b=a&&c;return b?1:2}", {}, "function f(a){return a&&c?1:2}"],
+			["function f(a){var b=-a;return b?1:2}", {}, "function f(a){return-a?1:2}"],
+			// A sequence a declarator set prints bare where a `return`, `throw` or sequence reads it.
+			["function f(a){var b=(a,1);g(b)}", {}, "function f(a){g((a,1))}"],
+			["function f(a){var b=(a,1);return b}", {}, "function f(a){return a,1}"],
+			["function f(a){var b=(a,1);throw b}", {}, "function f(a){throw a,1}"],
+			["function f(a){var b=(a,1);return b,2}", {}, "function f(a){return a,1,2}"],
+			["function f(a){var b=(a,1);return b.x}", {}, "function f(a){return(a,1).x}"],
+			// A test known to be pure goes with the branch it never takes.
+			["function f(){if((0))g()}", {}, "function f(){}"],
+			["function f(){if(0&&x())g()}", {}, "function f(){}"],
+			["function f(){if(1||x())g()}", {}, "function f(){g()}"],
+			["function f(){if(1??x())g()}", {}, "function f(){g()}"],
+			["function f(){return(0)?a():b()}", {}, "function f(){return b()}"],
+			["function f(){var x=(1);if(x)g()}", {}, "function f(){g()}"],
+			// `if` chains returning print as one `return t?x:y`, booleans as `!`.
+			["function f(a,b){if(a)return 1;else if(b)return 2;else return 3}", {}, "function f(e,r){return e?1:r?2:3}"],
+			["function f(a){if(a)return!0;return!1}", {}, "function f(n){return!!n}"],
+			["function f(a){if(a)return false;else return true}", {}, "function f(e){return!e}"],
+			["function f(a,b){if(a)return true;if(b)return 1;return false}", {}, "function f(r,e){return r?!0:e?1:!1}"],
+			["const f=(a,b)=>{;if({}.x)return 1;if(b)return 2;return 3}", {}, "const f=(r,n)=>({}.x?1:n?2:3);"],
+			["function f(a,b,c){if(a){;if(b)return 1;if(c)return 4;return 2}return 3}", {}, "function f(r,n,f){return r?n?1:f?4:2:3}"],
+			// An empty statement prints nothing, a block of only those as `;`.
+			["function f(a){if(a){;}else g()}", {}, "function f(f){if(f);else g()}"],
+			["while(a){;}", {}, "while(a);"],
+			// A `const` set to `undefined` prints as a `let` without it.
+			["function f(){const c=undefined;g(c);g(c)}", {}, "function f(){let c;g(c);g(c)}"]
 		];
 		modules.onePass.enabled = true;
 		try {
