@@ -37127,9 +37127,11 @@ declare namespace exports {
 		export let hasOwnProperty: "__webpack_require__.o";
 		export let hasSealedDeferredNamespace: "has sealed deferred namespace";
 		export let hasSynthesizedDeferredNamespace: "has synthesized deferred namespace";
+		export let hmrChunkVersions: "__webpack_require__.hmrV";
 		export let hmrDownloadManifest: "__webpack_require__.hmrM";
 		export let hmrDownloadUpdateHandlers: "__webpack_require__.hmrC";
 		export let hmrInvalidateModuleHandlers: "__webpack_require__.hmrI";
+		export let hmrLoadedChunkVersions: "__webpack_require__.hmrL";
 		export let hmrModuleData: "__webpack_require__.hmrD";
 		export let hmrRuntimeStatePrefix: "__webpack_require__.hmrS";
 		export let initializeSharing: "__webpack_require__.I";
@@ -38264,9 +38266,11 @@ declare namespace exports {
 			export let hasOwnProperty: "__webpack_require__.o";
 			export let hasSealedDeferredNamespace: "has sealed deferred namespace";
 			export let hasSynthesizedDeferredNamespace: "has synthesized deferred namespace";
+			export let hmrChunkVersions: "__webpack_require__.hmrV";
 			export let hmrDownloadManifest: "__webpack_require__.hmrM";
 			export let hmrDownloadUpdateHandlers: "__webpack_require__.hmrC";
 			export let hmrInvalidateModuleHandlers: "__webpack_require__.hmrI";
+			export let hmrLoadedChunkVersions: "__webpack_require__.hmrL";
 			export let hmrModuleData: "__webpack_require__.hmrD";
 			export let hmrRuntimeStatePrefix: "__webpack_require__.hmrS";
 			export let initializeSharing: "__webpack_require__.I";
