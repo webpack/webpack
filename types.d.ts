@@ -35319,8 +35319,9 @@ declare class SyntaxTree {
 	setPart(part: number, node: number, text: string): void;
 
 	/**
-	 * Writes a parsed node and everything under it, its children taking ids
-	 * after it in source order; a child already written stands as its id.
+	 * Writes a parsed node and everything under it, children before their
+	 * parent in source order, as the parser writes; a child already written
+	 * stands as its id.
 	 */
 	addEstree(root: NodeEstreeIndex): number;
 	type(node: number): number;
