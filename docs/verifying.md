@@ -50,3 +50,16 @@ When the only proof a change works is a check that takes longer than a few minut
 - **GitHub and CodSpeed tool results count too**: list check runs or pull requests with `gh api … --jq` into a file (failing checks only) or pass `minimal_output: true`, save CodSpeed comparisons to a file, and never call `list_triggers` (one call returns about 30k characters).
 
 Traps: a step is not a job — `Run yarn lint` sits inside the `lint` job, and a step's id fetches the wrong log, so select the object with a `steps` array. And `yarn lint` stops at its first failing stage, so a CI failure in `lint:code` says nothing about later stages — just as a local `lint:special` complaint `main` also makes says nothing about CI.
+
+## A failure with no error
+
+> [!REQUIRED]
+
+When a job fails with no error message — jest-worker's `Call retries were exceeded`, a thread or process exiting without a stack — the real error was swallowed, and every reproduction run before it is surfaced is a guess:
+
+1. **Make the error print.** Add a temporary `uncaughtException` / `unhandledRejection` handler writing the stack with `fs.writeSync(2, …)` — under Bun in `test/harness/runtimes/bun-preload.js`, which every worker thread loads. jest drops a worker's own stderr; only a direct fd 2 write reaches the log.
+2. **Run the one named file the way CI does.** Bun: the version `.github/runtimes/Dockerfile` pins, the `test/patches/*.patch` the job applies, and `--workerThreads --workerIdleMemoryLimit=2048MB` — without a memory limit jest runs a single file in-band, with no worker thread at all.
+3. **Cut it to one `it`.** `-t "<describe>"`, then a throwaway one-test file with just the trigger (one `process.stderr.write` in a Bun worker thread reproduced #22977's failure 4/4).
+4. **Then fix it.** A runtime bug gets a workaround beside the existing ones in that runtime's preload, with a comment naming the bug; drop the temporary handler.
+
+Full-suite runs, CPU-load runs, merged checkouts and stdin variants come only if step 3 does not reproduce: each costs 5–20 minutes and can fill the disk.

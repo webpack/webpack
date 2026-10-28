@@ -188,6 +188,10 @@ A language's syntax (`lib/{css,html,javascript,json}` tokenizer, parser, printer
 
 **When CI is red, read its log instead of reproducing the whole job locally**, then reproduce **only the named case**. Save logs and large reports to a file and grep them rather than reading them inline, and re-fetch check runs only when a push, re-run or CI event changed them. Commands and traps (a step is not a job; `yarn lint` stops at its first failing stage): [docs/verifying.md](docs/verifying.md#read-ci-rather-than-re-running-it).
 
+**A red check on the PR's head is the PR's until a base run of the same job shows it too** — never assume a flake and wait for a re-run.
+
+**A failure with no error message (a crashed worker, `Call retries were exceeded`) gets its error surfaced first**, then is cut to a one-`it` test; no full-suite, load or environment reproductions before that ([how](docs/verifying.md#a-failure-with-no-error)).
+
 ### Verifying a performance or memory change
 
 > [!REQUIRED]
