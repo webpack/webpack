@@ -5693,6 +5693,29 @@ describe("WebpackParser writing a SyntaxTree", () => {
 		);
 	});
 
+	it("builds the same objects whether the program or a part of it is asked for first", () => {
+		const { Field } = require("../../../lib/javascript/syntax-parser");
+		const source = "x = /re/g + 10n; if (y) { z(1, 2, 3, 4, [, 5]); }";
+		const whole = parseIntoTree(source);
+		const program = /** @type {EXPECTED_ANY} */ (
+			toEstreeObject(whole.tree, whole.program)
+		);
+		const statement = whole.tree.field(1, Field.body, whole.program);
+		expect(toEstreeObject(whole.tree, statement)).toBe(program.body[1]);
+		const expected = plain(new WebpackParser(options, source).parse());
+		expect(plain(program)).toEqual(expected);
+		const partFirst = parseIntoTree(source);
+		const part = toEstreeObject(
+			partFirst.tree,
+			partFirst.tree.field(1, Field.body, partFirst.program)
+		);
+		const rest = /** @type {EXPECTED_ANY} */ (
+			toEstreeObject(partFirst.tree, partFirst.program)
+		);
+		expect(rest.body[1]).toBe(part);
+		expect(plain(rest)).toEqual(expected);
+	});
+
 	it.each([
 		'let a, c; function n() { new.target; } import.meta.url; export { a as b, c }; export * as d from "e";',
 		'import f, { g as h } from "i"; ({ j: 1, k }); switch (l) { case 1: m; }'
