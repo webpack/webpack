@@ -11438,7 +11438,6 @@ x = a ** b ** c; x = (a ** b) ** c; x = (-a) ** b; x = a < b < c; x = a < (b < c
 				"export function f(){h(()=>{x=1});let x}",
 				"export function f(){let x=h(()=>{x=1})}",
 				"export function f(){let x;h(()=>{x=1});h(()=>x)}",
-				"export function f(a){switch(a){case 0:let x;h(()=>{x=1});break;case 1:h(()=>{x=2})}}",
 				"export function f(){for(let x of(g(()=>{x=1}),[]));}",
 				"export function f(){for(let x in(x=1,{}));}",
 				"export function f(){const w=()=>{x=1};h(w),h(w);let x}",
@@ -11451,6 +11450,11 @@ x = a ** b ** c; x = (a ** b) ** c; x = (-a) ** b; x = a < b < c; x = a < (b < c
 				});
 				expect(code).toMatch(/x=[12]/);
 			}
+			const { code: inSwitch } = await minify(
+				"export function f(a){switch(a){case 0:let x;h(()=>{x=1});break;case 1:h(()=>{x=2})}}",
+				{ module: true, compress: {}, mangle: false }
+			);
+			expect(inSwitch).toContain("x=2");
 			const { code } = await minify("let x;h(()=>{x=1})", {
 				compress: {},
 				mangle: false
