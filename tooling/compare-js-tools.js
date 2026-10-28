@@ -147,6 +147,24 @@ const readOxcResult = (result) => {
 	return result;
 };
 
+/**
+ * yuku recovers as oxc does, reporting each error beside the tree it built.
+ * @param {string} code the fixture's source
+ * @returns {EXPECTED_ANY} the parsed file, where no diagnostic was an error
+ */
+const parseWithYuku = (code) => {
+	const file = load("yuku").parse(code, {
+		sourceType: sourceType(),
+		preserveParens: false
+	});
+	const error = file.diagnostics.find(
+		(/** @type {{ severity: string }} */ diagnostic) =>
+			diagnostic.severity === "error"
+	);
+	if (error !== undefined) throw new Error(error.message);
+	return file;
+};
+
 // Each entry builds its callable on demand, so the measuring worker loads only
 // the one tool it measures — anything else would land in that tool's peak RSS.
 /** @type {import("./compare-tools-harness").Tool[]} */
@@ -238,6 +256,13 @@ const TOOLS = [
 				readOxcResult(oxc.parseSync(file, code, { preserveParens: false }))
 					.program;
 		}
+	},
+	{
+		// `program` decodes the tree its native parse wrote, which is part of
+		// what a caller pays for, as oxc's `program` is.
+		name: "yuku",
+		stage: "parse",
+		create: () => (code) => parseWithYuku(code).program
 	},
 	{
 		name: "@babel/parser",
@@ -349,6 +374,14 @@ const TOOLS = [
 					isModule: sourceType() === "module",
 					jsc: { target: "esnext" }
 				}).code;
+		}
+	},
+	{
+		name: "yuku",
+		stage: "beautify",
+		create: () => {
+			const { print } = load("yuku");
+			return (code) => print(parseWithYuku(code)).code;
 		}
 	},
 	{
@@ -505,6 +538,16 @@ const TOOLS = [
 		}
 	},
 	{
+		// Shorter spellings and no whitespace only: yuku neither compresses nor
+		// mangles, so this row is the floor a printer reaches without either.
+		name: "yuku",
+		stage: "minify",
+		create: () => {
+			const { print } = load("yuku");
+			return (code) => print(parseWithYuku(code), { minify: true }).code;
+		}
+	},
+	{
 		name: "tdewolff/minify",
 		stage: "minify",
 		create: () => {
@@ -522,7 +565,8 @@ const ESTREE_PARSERS = new Set([
 	"meriyah",
 	"esprima",
 	"hermes-parser",
-	"oxc-parser"
+	"oxc-parser",
+	"yuku"
 ]);
 
 // Positions, source text and per-parser bookkeeping: everything a tree carries
