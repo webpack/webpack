@@ -3257,6 +3257,10 @@ declare interface ChunkRuntime {
 	[index: number]: string;
 	[index: string]: string;
 }
+declare interface ChunkSiblingIds {
+	[index: number]: ChunkId[];
+	[index: string]: ChunkId[];
+}
 
 /**
  * Represents the module hash info runtime component.
@@ -18846,6 +18850,7 @@ declare interface KnownRecords {
 	chunkHashes?: ChunkHashes;
 	chunkRuntime?: ChunkRuntime;
 	chunkModuleIds?: ChunkModuleIds;
+	chunkSiblingIds?: ChunkSiblingIds;
 }
 
 /**
