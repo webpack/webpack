@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Make HMR apply the pending updates before running an async chunk that a newer build already overwrote.
+Apply pending HMR updates before running a chunk from a newer build.
