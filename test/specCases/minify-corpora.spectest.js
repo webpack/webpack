@@ -1343,6 +1343,10 @@ const IMPROVED_YET_BIGGER = {
 		"17 bytes fewer, 6 more gzipped: `\"Infinity\"` and `\"NaN\"` broke the run of `.toString()` calls gzip reused",
 	"issue-597/beautify_off_1 (the default minimizer's options)":
 		"17 bytes fewer, 6 more gzipped: `\"Infinity\"` and `\"NaN\"` broke the run of `.toString()` calls gzip reused",
+	"drop-unused/issue_t161_top_retain_14 (reminify 4 {\"toplevel\":true})":
+		"5 bytes fewer, 2 more gzipped: the products of `x`, `y` and `z` folded no longer repeat the `n*u,n*e,u*e` names gzip matched",
+	"drop-unused/issue_t161_top_retain_15 (reminify 4 {\"toplevel\":true})":
+		"5 bytes fewer, 2 more gzipped: the products of `x`, `y` and `z` folded no longer repeat the `n*u,n*e,u*e` names gzip matched",
 	"issue-597/beautify_off_1 (a module mangled at its top level)":
 		"17 bytes fewer, 5 more gzipped: `\"Infinity\"` and `\"NaN\"` broke the run of `.toString()` calls gzip reused",
 	"issue-597/beautify_off_1 (reminify 2 {\"mangle\":false})":
