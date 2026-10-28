@@ -5693,6 +5693,25 @@ describe("WebpackParser writing a SyntaxTree", () => {
 		);
 	});
 
+	it.each([
+		'let a, c; function n() { new.target; } import.meta.url; export { a as b, c }; export * as d from "e";',
+		'import f, { g as h } from "i"; ({ j: 1, k }); switch (l) { case 1: m; }'
+	])("writes every child of %s before its parent", (source) => {
+		const { Field } = require("../../../lib/javascript/syntax-parser");
+		const { tree } = parseIntoTree(source);
+		/** @type {string[]} */
+		const later = [];
+		for (let node = 1; node <= tree._count; node++) {
+			for (const field of Object.values(Field)) {
+				for (let i = 0, n = tree.fieldCount(field, node); i < n; i++) {
+					const child = tree.field(i, field, node);
+					if (child >= node) later.push(`${node} -> ${child}`);
+				}
+			}
+		}
+		expect(later).toEqual([]);
+	});
+
 	it("writes an import or export a loop runs, where they are allowed everywhere", () => {
 		for (const source of [
 			'for (;;) import a from "b";',
