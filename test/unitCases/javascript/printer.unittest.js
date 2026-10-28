@@ -14755,7 +14755,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				'function u(){ g(); var z = "z1", w = "w2", v = "v3"; function k(){ return w } h(function(){ return z }, function(){ function inner(){ return v } return inner }); return k } function f(o){ function a(e){ return e + o } const b = function(){ return this }, c = () => this; return [function(x){ return a(x) }, function(){ return b() }, function(){ return c() }] }',
 				{},
-				'function u(){g();h(function(){return"z1"},function(){return function(){return"v3"}});return function(){return"w2"}}function f(n){let r=()=>this;return[function(r){return function(r){return r+n}(r)},function(){return function(){return this}()},function(){return r()}]}'
+				'function u(){g();h(function(){return"z1"},function(){return function(){return"v3"}});return function(){return"w2"}}function f(n){let t=()=>this;return[function(t){return t+n},function(){return function(){return this}()},function(){return t()}]}'
 			],
 			// What a statement sets folds into the next where that reads it first,
 			// but not past a compound assignment's read nor a name it may write.
@@ -15239,6 +15239,52 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				"function f(a) { a = 1; return arguments[0] } function k(b) { b = 1; return () => arguments } function m(c) { c = 1; return function () { return arguments } }",
 				{},
 				"function f(n){n=1;return arguments[0]}function k(n){n=1;return()=>arguments}function m(n){return function(){return arguments}}"
+			],
+			// A function called with nothing but names never written passed prints as what it returns.
+			[
+				"function f(g) { var h = function () { return g.a }; function k() { return g.b } return [h(), k(), (() => ({ a: 1 }))(), (function () { return g.c + 1 })() * 2] }",
+				{},
+				"function f(n){return[n.a,n.b,{a:1},(n.c+1)*2]}"
+			],
+			[
+				"function f(s, e) { (() => ({ a: 1 }))(); return [((x, y) => x + y)(s, e), ((x) => (x, 1))(s)] }",
+				{},
+				"function f(e,n){return[e+n,(e,1)]}"
+			],
+			[
+				"function f(a, b) { a = 2; return [((x) => x + 1)(a), ((x) => () => x)(b), (function () { return this })(), (function n() { return n })(), (async () => 1)(), ((x) => x)(b, b), (() => 1)?.()] }",
+				{},
+				"function f(n,t){n=2;return[(n=>n+1)(n),(n=>()=>n)(t),function(){return this}(),function n(){return n}(),(async()=>1)(),(n=>n)(t,t),(()=>1)?.()]}"
+			],
+			[
+				"function f(o) { return [typeof (function () { return undeclaredX })(), delete (() => o.p)(), ((x) => x.m)(o)()] }",
+				{},
+				"function f(e){return[typeof(0,undeclaredX),delete(0,e.p),(0,e.m)()]}"
+			],
+			[
+				"function f(o) { var h = function () { return o.m }; const k = () => undeclaredY; return [h()(), typeof k()] }",
+				{},
+				"function f(n){return[(0,n.m)(),typeof(0,undeclaredY)]}"
+			],
+			[
+				'function f(a) { const k = 1; let r = [((x) => x + 1)(k), ((x) => 1)(later), (function () { return eval("a") })(), (function () { return () => this })(), (function () { return () => arguments })()]; const later = 2; return r }',
+				{},
+				'function f(a){const k=1;let r=[k+1,(n=>1)(later),function(){return eval("a")}(),function(){return()=>this}(),function(){return()=>arguments}()];const later=2;return r}'
+			],
+			[
+				"function f(a, b, o) { (() => o.x = b)(); (() => ({ a: g() }))(); g((() => a + b)()); new G((() => a - b)()); o.y = (() => a * b)(); o[(() => a + b)()] = 1; return [`${(() => a + b)()}`, ...(() => [a])(), { p: (() => a + b)(), [(() => a | b)()]: 1 }, (() => \"s\")(), (() => `t${a}`)(), (() => -a)()] }",
+				{},
+				'function f(a,b,o){o.x=b;({a:g()});g(a+b);new G(a-b);o.y=a*b;o[a+b]=1;return[`${a+b}`,...[a],{p:a+b,[a|b]:1},"s",`t${a}`,-a]}'
+			],
+			[
+				"function f() { return [(function () { g() })(), (function () { return })(), (function () { return new.target })(), (function () { return class {} })(), (function n() { return function () { return 1 } })(), (function n() { return function () { return n } })(), (function () { return function () { return 1 } })()] } class A extends B { m() { return (() => super.m())() } } function h(a, b) { throw (() => a + b)() } function k(a, b) { var v = (() => a % b)(); g(v); g(v) }",
+				{},
+				"function f(){return[function(){g()}(),function(){}(),function(){return new.target}(),class{},function(){return 1},function n(){return function(){return n}}(),function(){return 1}]}class A extends B{m(){return(()=>super.m())()}}function h(n,t){throw n+t}function k(n,t){var r=n%t;g(r);g(r)}"
+			],
+			[
+				"function f(y) { var h = function (x) { return x.a }; return [((x) => x)(/*! a */ y), (function () { /*! b */ return y })(), h(/*! c */ y)] }",
+				{},
+				"function f(n){return[(n=>n)(/*! a */n),function(){/*! b */return n}(),function(n){return n.a}(/*! c */n)]}"
 			],
 			[
 				"function f(a){ if (0) x(); Math.PI }",
