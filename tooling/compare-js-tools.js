@@ -30,7 +30,11 @@ const fs = require("fs");
 const path = require("path");
 const vm = require("vm");
 const { parse: acornParse, tokenizer: acornTokenizer } = require("acorn");
-const { parse: webpackParse } = require("../lib/javascript/syntax-parser");
+const {
+	SyntaxTree,
+	parse: webpackParse,
+	toEstreeObject
+} = require("../lib/javascript/syntax-parser");
 // Acorn's own suite, recorded case by case: what `javascript/parser.unittest.js`
 // replays, read here for the ranges rather than for the trees.
 const ACORN_CORPUS = require("../test/fixtures/acorn-corpus.json");
@@ -148,6 +152,27 @@ const readOxcResult = (result) => {
 };
 
 /**
+ * webpack's flat parse under a build's options: each node is written into the
+ * tree's columns as an id, and no ESTree object is made.
+ * @param {string} code the fixture's source
+ * @param {SyntaxTree} tree the tree to write into
+ * @returns {number} the program's node
+ */
+const parseFlat = (code, tree) =>
+	/** @type {number} */ (
+		/** @type {unknown} */ (
+			webpackParse(code, {
+				sourceType: sourceType(),
+				ecmaVersion: "latest",
+				lazyNodes: true,
+				locations: false,
+				allowHashBang: true,
+				syntaxTree: tree
+			})
+		)
+	);
+
+/**
  * yuku recovers as oxc does, reporting each error beside the tree it built.
  * @param {string} code the fixture's source
  * @returns {EXPECTED_ANY} the parsed file, where no diagnostic was an error
@@ -182,6 +207,27 @@ const TOOLS = [
 				locations: false,
 				allowHashBang: true
 			})
+	},
+	{
+		// Releasing hands the columns to the next parse, as a build's does.
+		name: "webpack (flat)",
+		stage: "parse",
+		create: () => (code) => {
+			const tree = new SyntaxTree();
+			const program = parseFlat(code, tree);
+			tree.release();
+			return program;
+		}
+	},
+	{
+		// What a tool reading ESTree pays on top of the flat parse: every node's
+		// object, from the program down. The tree stays, as `range` reads it.
+		name: "webpack (flat + toEstreeObject)",
+		stage: "parse",
+		create: () => (code) => {
+			const tree = new SyntaxTree();
+			return toEstreeObject(tree, parseFlat(code, tree));
+		}
 	},
 	{
 		name: "acorn",
@@ -561,6 +607,7 @@ const TOOLS = [
 // acorn's. The rest speak a dialect of their own and are not held to it.
 const ESTREE_PARSERS = new Set([
 	"webpack",
+	"webpack (flat + toEstreeObject)",
 	"espree",
 	"meriyah",
 	"esprima",
@@ -1236,7 +1283,9 @@ const reportable = (differences, limit = 10) =>
 
 /**
  * Where webpack's parser and acorn's read one source apart, under the options
- * a build parses with, or null where they agree or acorn refuses it.
+ * a build parses with, or null where they agree or acorn refuses it. A source
+ * of the latest edition is also read flat, its whole tree built back with
+ * `toEstreeObject`, so every node from the program down is held too.
  * @param {string} source a script or a module
  * @param {EXPECTED_ANY} options what to parse it as
  * @returns {import("./compare-tools-harness").Report[]} the difference, as a finding
@@ -1251,19 +1300,49 @@ const acornDifference = (source, options) => {
 		// held by the test262 suites, not by this one.
 		return [];
 	}
-	const difference = firstDifference(
-		webpackParse(source, options),
-		theirs,
-		"Program"
-	);
-	if (difference === null) return [];
-	return [
-		{
-			relation: "acorn",
-			what: difference.at.replace(/\[\d+\]/g, "[]"),
-			repro: `    ours ${oneLine(difference.ours, 60)}, acorn ${oneLine(difference.acorn, 60)}`
+	/** @type {[string, () => unknown][]} */
+	const readings = [["", () => webpackParse(source, options)]];
+	if (options.ecmaVersion === "latest") {
+		const tree = new SyntaxTree();
+		readings.push([
+			"toEstreeObject ",
+			() =>
+				toEstreeObject(
+					tree,
+					/** @type {number} */ (
+						/** @type {unknown} */ (
+							webpackParse(source, {
+								...options,
+								lazyNodes: true,
+								syntaxTree: tree
+							})
+						)
+					)
+				)
+		]);
+	}
+	/** @type {import("./compare-tools-harness").Report[]} */
+	const reports = [];
+	for (const [reading, read] of readings) {
+		/** @type {ReturnType<typeof firstDifference>} */
+		let difference;
+		try {
+			difference = firstDifference(read(), theirs, "Program");
+		} catch (error) {
+			difference = {
+				at: "Program",
+				ours: `threw ${/** @type {Error} */ (error).message}`,
+				acorn: "a tree"
+			};
 		}
-	];
+		if (difference === null) continue;
+		reports.push({
+			relation: "acorn",
+			what: reading + difference.at.replace(/\[\d+\]/g, "[]"),
+			repro: `    ours ${oneLine(difference.ours, 60)}, acorn ${oneLine(difference.acorn, 60)}`
+		});
+	}
+	return reports;
 };
 
 // --- The printer's invariants -----------------------------------------------
