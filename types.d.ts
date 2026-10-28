@@ -3034,6 +3034,10 @@ declare interface ChunkHashes {
 	[index: string]: string;
 }
 type ChunkId = string | number;
+declare interface ChunkInjectedModuleIds {
+	[index: number]: ModuleId[];
+	[index: string]: ModuleId[];
+}
 
 /**
  * Defines the chunk maps type used by this module.
@@ -18851,6 +18855,7 @@ declare interface KnownRecords {
 	chunkRuntime?: ChunkRuntime;
 	chunkModuleIds?: ChunkModuleIds;
 	chunkSiblingIds?: ChunkSiblingIds;
+	chunkInjectedModuleIds?: ChunkInjectedModuleIds;
 }
 
 /**
