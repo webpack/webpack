@@ -15310,6 +15310,12 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				{},
 				"function f(n){return[(n=>n)(/*! a */n),function(){/*! b */return n}(),function(n){return n.a}(/*! c */n)]}"
 			],
+			// Not mangled, no definition reads a name an assignment sets.
+			[
+				"function f(c) { var a; c ? a = 1 : a = 2; return a }",
+				{ mangle: false },
+				"function f(c){var a;c?a=1:a=2;return a}"
+			],
 			[
 				"function f(a){ if (0) x(); Math.PI }",
 				{ compress: {toplevel: false,builtins_ecma: 2020},format: {comments: false} },
