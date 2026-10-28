@@ -15297,6 +15297,12 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				{ compress: { toplevel: true }, mangle: { toplevel: true } },
 				"u();function u(){return g()}"
 			],
+			// One reading its own `arguments` keeps one identity across calls.
+			[
+				"function f() { function r() { return a() } function a() { return arguments.callee } function s() { return b(1) } function b(n) { return () => n } return [r(), r(), s(), s()] }",
+				{},
+				"function f(){function n(){return t()}function t(){return arguments.callee}function r(){return function(n){return()=>n}(1)}return[n(),n(),r(),r()]}"
+			],
 			// A literal of constants folds into its read where that runs once.
 			[
 				'function f(n, e) { let A = { negated: false, prefix: "" }; return n(e, A) } function k(n) { let C = [1, ["a"]]; return n.map(() => C) } function m() { let D = {}; return delete D }',
