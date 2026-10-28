@@ -1904,6 +1904,21 @@ const IMPROVED_CASES = [
 		{ compress: {}, mangle: false }
 	],
 	[
+		"a `new` of a sequence whose leading values run nothing, as a `new` of its last",
+		"function B() { this.v = 1; } B.C = function (n) { this.n = n; }; var a = new (0, B.C)(2), b = new (0, B)(), c = new (0, B.C)(); console.log(a.n, b.v, c instanceof B.C);",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a conditional giving `!1` or `!0` beside a value `&&` or `||` would take parentheses for, kept as the conditional where it sits bare",
+		"function f(a, b, c, d) { var o = {}; var x = a ? false : b ? c : d, y = a ? true : (o.y = 1), z = a ? (o.z = 2) : true, w = a ? (o.w = 3) : false; return [x, y, z, w, a ? false : b ?? c, o]; } function g(a, b, h) { var o = {}; o.v = a ? false : (o.u = 1); h(a ? false : (o.t = 1)); o.k = { k: a ? false : (o.s = 1) }; o.n = b ? (a ? false : (o.r = 1)) : 0; o.f = a ? false : () => 1; o.ft = typeof o.f; return a ? false : (o.q = 1), o; } function* y(a) { return a ? false : yield 1; } var it = y(0); it.next(); console.log(JSON.stringify([f(0, 1, 2, 3), f(1, 0, 2, 3), f(0, null, 4, 5), g(0, 1, console.log), g(1, 0, console.log), it.next(2)]));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"`return a || void 0` ending a function, as `if (a) return a`, for a name of its own or `this`",
+		"function f(n) { if (n) return n; else return; } function g() { return this || void 0; } async function h(n) { console.log(n); return n || void 0; } console.log(f(0), f(2), g.call(3) == 3); h(4).then(console.log);",
+		{ compress: {}, mangle: false }
+	],
+	[
 		"an `if` with an empty branch and an `else` block, as an `if` of the negated test, but a chain's",
 		"function f(a, b) { if (a) {} else { if (b) { console.log(1); return; } console.log(2); } console.log(3); } function g(a, b) { if (a && b) {} else { if (b) { console.log(4); return; } console.log(5); } } f(0, 0); f(0, 1); f(1, 0); g(0, 1); g(1, 1);",
 		{ compress: {}, mangle: false }
@@ -10125,6 +10140,55 @@ x = a ** b ** c; x = (a ** b) ** c; x = (-a) ** b; x = a < b < c; x = a < (b < c
 				expect(code).toContain(expected);
 				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
 			}
+		});
+
+		it("should keep a `new` of a sequence whose leading values may run code, and parenthesize a callee that is a call or a chain", async () => {
+			const { minify } = await load();
+			for (const [input, expected] of [
+				["function f(x, b) { return new (x(), b.c)(); }", "new(x(),b.c)"],
+				["function f(b) { return new (y, b.c)(); }", "new(y,b.c)"],
+				["function f(g) { return new (0, g())(); }", "new(g())"],
+				["function f(a) { return new (0, a?.b)(); }", "new(a?.b)"]
+			]) {
+				const { code } = await minify(input, { compress: {}, mangle: false });
+				expect(code).toContain(expected);
+			}
+		});
+
+		it("should keep `!a && (b = 1)` where a conditional would take parentheses itself, or the value is a sequence", async () => {
+			const { minify } = await load();
+			for (const [input, expected] of [
+				["function f(a) { if (a ? false : (b = 1)) g(); }", "!a&&(b=1)&&g()"],
+				["function f(a) { return (a ? false : (b = 1)) + 1; }", "(!a&&(b=1))+1"],
+				["function f(a, c) { return a ? false : (b, c); }", "!a&&(b,c)"],
+				["function f(a, b) { return a ? false : b; }", "!a&&b"]
+			]) {
+				const { code } = await minify(input, { compress: {}, mangle: false });
+				expect(code).toContain(expected);
+			}
+		});
+
+		it("should keep `return a || void 0` where `a` may read otherwise twice, or the return is no function's last", async () => {
+			const { minify } = await load();
+			for (const [input, expected] of [
+				["function f() { return x || void 0; }", "return x||void 0"],
+				["function f() { return this.p || void 0; }", "return this.p||void 0"],
+				["const f = (n) => n || void 0;", "n=>n||void 0"],
+				["function f(n) { for (;;) { return n || void 0; } }", "return n||void 0"],
+				["function f(n) { if (y) return 1; return n || void 0; }", "n||void 0"],
+				["function f(n) { return n && void 0; }", "return n&&void 0"],
+				["function f(n) { return n || -1; }", "return n||-1"],
+				["function f(n) { return n || !1; }", "return n||!1"],
+				["async function* f(n) { yield 1; return n || void 0; }", "n||void 0"]
+			]) {
+				const { code } = await minify(input, { compress: {}, mangle: false });
+				expect(code).toContain(expected);
+			}
+			const { code } = await minify("const f = (n) => { g(); return n || void 0; };", {
+				compress: {},
+				mangle: false
+			});
+			expect(code).toContain("if(g(),n)return n");
 		});
 
 		it("should write a number multiplied or masked last, and keep it first where order matters", async () => {
