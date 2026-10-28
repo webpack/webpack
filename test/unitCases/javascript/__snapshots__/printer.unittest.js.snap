@@ -3197,6 +3197,8 @@ exports[`syntax-printer improve phase should write less, printing the same: a fu
 
 exports[`syntax-printer improve phase should write less, printing the same: a function read once, called in a loop, flattened into its call there, unless a closure keeps its parameter 1`] = `"function f(a){for(var s=0,i=0;i<a.length;i++)s+=2*a[i];return s}function k(a){var fs=[];function g(x){fs.push(function(){return x})}for(var i=0;i<a.length;i++)g(a[i]);return fs.map(function(h){return h()})}!function(){for(var i in{a:1,b:2})console.log(i)}(),console.log(f([1,2]),k([3,4]));"`;
 
+exports[`syntax-printer improve phase should write less, printing the same: a function read once, to be called inside an array or object literal, inlined there 1`] = `"function m(c){return()=>[1,function(c){let r=1;return c&&(r=2),r}(c),{a:function(c){let r=c;return++r}(c)}]}console.log(m(1)(),m(0)());"`;
+
 exports[`syntax-printer improve phase should write less, printing the same: a function read only by \`export default\`, exported as it is, unless it calls itself 1`] = `"function count(n){return n?count(n-1):0}export{count};export default function(){return 1}"`;
 
 exports[`syntax-printer improve phase should write less, printing the same: a function returning a literal keeps its calls where a value read keeps it 1`] = `"function make(){return{some:\\"data\\",more:\\"values\\"}}console.log(make(),make());"`;

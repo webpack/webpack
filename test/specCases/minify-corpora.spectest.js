@@ -1451,8 +1451,6 @@ const IMPROVED_YET_BIGGER = {
 		"9 bytes fewer, 5 more gzipped: `if(a)throw b;throw c` merged into `throw a?b:c`, losing the repeated `throw new Test262Error(` run",
 	"constructor-buffer-sequence.js (the default minimizer's options)":
 		"55 bytes fewer, 6 more gzipped: `new` dropped before `Error` breaks the `new Error(` runs the rest repeat",
-	"fixture/issues/8622/input.js (its own options)":
-		"4 bytes fewer, 2 more gzipped: read as a module, `bar` mangles to `t`, breaking the parameter names' runs",
 	"fixture/issues/9453/input.js (the default minimizer's options)":
 		"4 bytes fewer, 8 more gzipped: `typeof class{}` folded to `\"function\"` breaks the `console.log(typeof` runs",
 	"drop-unused/issue_t1447_export_const (a module mangled at its top level)":

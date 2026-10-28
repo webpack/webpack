@@ -486,6 +486,11 @@ const IMPROVED_CASES = [
 		{ compress: {}, mangle: false }
 	],
 	[
+		"a function read once, to be called inside an array or object literal, inlined there",
+		"function m(c) { function g(c) { let r = 1; if (c) r = 2; return r; } function k(c) { let r = c; r++; return r; } return () => [1, g(c), { a: k(c) }]; } console.log(m(1)(), m(0)());",
+		{ compress: {}, mangle: false }
+	],
+	[
 		"a `let` whose every read folds into its value, left with its write",
 		"(function () { let x; x = 2; console.log(x); globalThis.g = function () { return x; }; })(); console.log(g());",
 		{ compress: {}, mangle: false }
@@ -11287,6 +11292,22 @@ x = a ** b ** c; x = (a ** b) ** c; x = (-a) ** b; x = a < b < c; x = a < (b < c
 				const { code } = await minify(input, { compress: false, mangle: true, ecma: 2015 });
 				expect(code).toBe(written);
 				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+			}
+		});
+
+		it("should keep a function out of an array or object literal holding it as a value", async () => {
+			const { minify } = await load();
+			for (const input of [
+				"export function m(){function g(){return h()}return()=>[g]}",
+				"export function m(){function g(){return h()}return()=>[h(g)]}",
+				"export function m(){function g(){return h()}return()=>({a:g})}"
+			]) {
+				const { code } = await minify(input, {
+					module: true,
+					compress: {},
+					mangle: false
+				});
+				expect(code).toContain("function g(){return h()}");
 			}
 		});
 
