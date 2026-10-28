@@ -53,7 +53,7 @@ fetch-priority:
 hmr:
   asset main.mjs X KiB [emitted] [javascript module] (name: main)
   asset async_js.mjs X bytes [emitted] [javascript module]
-  runtime modules X KiB 12 modules
+  runtime modules X KiB 14 modules
   cacheable modules X bytes
     ./index.js X bytes [built] [code generated]
     ./async.js X bytes [built] [code generated]
@@ -186,7 +186,7 @@ hmr-css-urls:
   asset lazy_css.mjs X bytes [emitted] [javascript module]
   asset async_js.mjs X bytes [emitted] [javascript module]
   asset lazy_css.css X bytes [emitted]
-  runtime modules X KiB 14 modules
+  runtime modules X KiB 17 modules
   cacheable modules X bytes (javascript) X bytes (css)
     ./index-css.js X bytes [built] [code generated]
     css ./lazy.css X bytes (javascript) X bytes (css) [built] [code generated]
@@ -198,7 +198,7 @@ hmr-hashed-css:
   asset lazy_css.mjs X bytes [emitted] [javascript module]
   asset async_js.mjs X bytes [emitted] [javascript module]
   asset lazy_css.XXXXXXXXXXXXXXXXXXXX.css X bytes [emitted] [immutable]
-  runtime modules X KiB 14 modules
+  runtime modules X KiB 17 modules
   cacheable modules X bytes (javascript) X bytes (css)
     ./index-css.js X bytes [built] [code generated]
     css ./lazy.css X bytes (javascript) X bytes (css) [built] [code generated]
@@ -213,7 +213,7 @@ hmr-hashed-css-entry:
     asset lazy_css.XXXXXXXXXXXXXXXXXXXX.css X bytes [emitted] [immutable]
     asset main.XXXXXXXXXXXXXXXXXXXX.css X bytes [emitted] [immutable] (name: main)
   Entrypoint main X KiB = main.mjs X KiB main.XXXXXXXXXXXXXXXXXXXX.css X bytes
-  runtime modules X KiB 14 modules
+  runtime modules X KiB 16 modules
   cacheable modules X bytes (javascript) X bytes (css)
     ./index-css-own.js X bytes [built] [code generated]
     css ./own.css X bytes [built] [code generated]
@@ -225,7 +225,7 @@ hmr-fullhash-css:
   asset lazy_css.mjs X bytes [emitted] [javascript module]
   asset async_js.mjs X bytes [emitted] [javascript module]
   asset lazy_css.XXXXXXXXXXXXXXXXXXXX.css X bytes [emitted] [immutable]
-  runtime modules X KiB 14 modules
+  runtime modules X KiB 17 modules
   cacheable modules X bytes (javascript) X bytes (css)
     ./index-css.js X bytes [built] [code generated]
     css ./lazy.css X bytes (javascript) X bytes (css) [built] [code generated]
@@ -238,7 +238,7 @@ hmr-hashed-css-depth:
     asset async_js.mjs X bytes [emitted] [javascript module]
   asset js/main.mjs X KiB [emitted] [javascript module] (name: main)
   asset lazy_css.XXXXXXXXXXXXXXXXXXXX.css X bytes [emitted] [immutable]
-  runtime modules X KiB 14 modules
+  runtime modules X KiB 17 modules
   cacheable modules X bytes (javascript) X bytes (css)
     ./index-css.js X bytes [built] [code generated]
     css ./lazy.css X bytes (javascript) X bytes (css) [built] [code generated]
@@ -247,9 +247,9 @@ hmr-hashed-css-depth:
 
 hmr-hashed-prefetch:
   asset main.mjs X KiB [emitted] [javascript module] (name: main)
-  asset mid_js.XXXXXXXXXXXXXXXXXXXX.mjs X bytes [emitted] [immutable] [javascript module]
+  asset mid_js.XXXXXXXXXXXXXXXXXXXX.mjs X KiB [emitted] [immutable] [javascript module]
   asset async_js.XXXXXXXXXXXXXXXXXXXX.mjs X bytes [emitted] [immutable] [javascript module]
-  runtime modules X KiB 14 modules
+  runtime modules X KiB 17 modules
   cacheable modules X bytes
     ./index-prefetch.js X bytes [built] [code generated]
     ./mid.js X bytes [built] [code generated]
@@ -263,7 +263,7 @@ hmr-css-two-depths:
     asset async_js.mjs X bytes [emitted] [javascript module]
   asset nested/side.mjs X KiB [emitted] [javascript module] (name: nested/side)
   asset lazy_css.css X bytes [emitted]
-  runtime modules X KiB 28 modules
+  runtime modules X KiB 32 modules
   cacheable modules X bytes (javascript) X bytes (css)
     ./index-css.js X bytes [built] [code generated]
     css ./lazy.css X bytes (javascript) X bytes (css) [built] [code generated]
@@ -276,7 +276,7 @@ hmr-css-depth:
     asset async_js.mjs X bytes [emitted] [javascript module]
   asset js/main.mjs X KiB [emitted] [javascript module] (name: main)
   asset lazy_css.css X bytes [emitted]
-  runtime modules X KiB 14 modules
+  runtime modules X KiB 17 modules
   cacheable modules X bytes (javascript) X bytes (css)
     ./index-css.js X bytes [built] [code generated]
     css ./lazy.css X bytes (javascript) X bytes (css) [built] [code generated]
