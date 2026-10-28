@@ -15371,6 +15371,12 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				{ mangle: false },
 				"function f(c){var a;c?a=1:a=2;return a}"
 			],
+			// A call prints as its value only where what it passes prints as named.
+			[
+				"(function () { var x = 7; function h(k) { return k() } function f(a) { var g = function () { return x }; return h(g) + a } g(f(3)) })(); (function () { function h(k) { return k + 1 } function f(a) { var c = 5; return h(c) + a } g(f(3)) })(); (function () { function h(k) { return k.v } function f(a) { var c = { v: 5 }; return h(c) + a } g(f(3)) })()",
+				{},
+				"(function(){g(function(n){return function(n){return n()}(function(){return 7})+n}(3))})();(function(){g(function(n){return function(n){return n+1}(5)+n}(3))})();(function(){g(function(n){return function(n){return n.v}({v:5})+n}(3))})();"
+			],
 			[
 				"function f(a){ if (0) x(); Math.PI }",
 				{ compress: {toplevel: false,builtins_ecma: 2020},format: {comments: false} },
