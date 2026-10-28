@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Add a JavaScript `SourceProcessor` that minifies faster; drop `printer.load()`.
+Add a JavaScript `SourceProcessor` that minifies faster and builds ESTree from its tree faster; drop `printer.load()`.
