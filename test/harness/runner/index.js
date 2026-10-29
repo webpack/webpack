@@ -455,7 +455,8 @@ class TestRunner {
 		const base = {
 			global,
 			process,
-			setTimeout,
+			// spread over the module scope, so a page's timers have to be unref'd here too
+			setTimeout: this.jsDom() ? unrefTimeout : setTimeout,
 			clearTimeout,
 			setImmediate,
 			URL,
