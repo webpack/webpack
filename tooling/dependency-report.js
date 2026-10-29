@@ -266,11 +266,11 @@ const formatVersions = (rows) =>
 		.join(", ");
 
 /**
- * Escapes `|` so text stays inside one Markdown table cell.
+ * Escapes `\` and `|` so text stays inside one Markdown table cell.
  * @param {string} text cell text
  * @returns {string} escaped text
  */
-const escapeCell = (text) => text.replace(/\|/g, "\\|");
+const escapeCell = (text) => text.replace(/[\\|]/g, "\\$&");
 
 /**
  * Renders what changed between the base commit's report and this one.
