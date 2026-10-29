@@ -36,7 +36,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        shard: [1/6, 2/6, 3/6, 4/6, 5/6, 6/6]
+        # Every runner measures its share of both modes: memory takes a tenth of
+        # simulation's time, so runners of its own sat idle for most of the run.
+        shard: [1/8, 2/8, 3/8, 4/8, 5/8, 6/8, 7/8, 8/8]
     # Hosted runners mix CPU generations (EPYC 7763, 9V74, 9V45) that time the same
     # build up to ~35% apart. Simulation counts instructions instead, at the cost of
     # leaving system calls out. To measure walltime again, see `mode` below.
@@ -44,6 +46,12 @@ jobs:
     # The harness has no deadline of its own and a watch bench waits on a
     # rebuild callback, so this only trips on a hang.
     timeout-minutes: 120
+    env:
+      LAST_COMMIT: 1
+      SHARD: ${{ matrix.shard }}
+      # Single libuv thread → deterministic fs-completion order, so a build
+      # runs the same instructions and allocations every time.
+      UV_THREADPOOL_SIZE: 1
     permissions:
       # A job's own block replaces the workflow's, so checkout's read and
       # CodSpeed's OIDC upload are granted again here.
@@ -57,69 +65,6 @@ jobs:
           fetch-tags: true
           fetch-depth: 0
           persist-credentials: false
-
-      - name: Use Node.js
-        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
-        with:
-          # Pinned: `lts/*` resolves per runner image, and a base and head on two
-          # V8 builds differ in time and native allocations alike. Bump every job.
-          node-version: "24.22.0"
-          cache: yarn
-
-      - run: node tooling/retry.js yarn --frozen-lockfile
-
-      - run: yarn link --frozen-lockfile || true
-
-      - run: yarn link webpack --frozen-lockfile
-
-      - name: Check Memory Status
-        run: >
-          node -e 'const os=require("os");
-          const toGb=b=>(b/1024**3).toFixed(2)+" GB";
-          console.log(`--- Memory Status ---\nTotal: ${toGb(os.totalmem())}\nFree:  ${toGb(os.freemem())}\nUsed:  ${toGb(os.totalmem()-os.freemem())}`)'
-
-      - name: Run benchmarks
-        uses: CodSpeedHQ/action@78102a468f96d8e0ccb92d0ec49425753fc42062 # v5.6.0
-        with:
-          run: yarn benchmark --ci
-          mode: "simulation"
-          # Walltime, for a runner whose CPU is fixed (`runs-on: codspeed-macro`);
-          # the harness still supports it:
-          # mode: "walltime"
-        env:
-          LAST_COMMIT: 1
-          NEGATIVE_FILTER: ${{ github.event_name != 'schedule' && 'on-schedule' || '' }}
-          SHARD: ${{ matrix.shard }}
-          # Single libuv thread → deterministic fs-completion order, so a build
-          # runs the same instructions every time.
-          UV_THREADPOOL_SIZE: 1
-  benchmark-memory:
-    strategy:
-      fail-fast: false
-      matrix:
-        shard: [1/2, 2/2]
-    # Hosted runners mix Intel and AMD hosts, and the same JS can make a different
-    # number of native allocations on each; the CPU step below names the host, and
-    # the sequential file systems keep the rest of a build's order fixed.
-    runs-on: ubuntu-latest
-    # The harness has no deadline of its own, so this only trips on a hang.
-    timeout-minutes: 120
-    env:
-      LAST_COMMIT: 1
-      # A unit case's JS heap does not show in this count (parsing typescript.js
-      # reports ~450 KB), so it holds V8's own native allocations, which move run to run.
-      NEGATIVE_FILTER: ${{ github.event_name != 'schedule' && 'on-schedule|-unit$' || '-unit$' }}
-      # Single libuv thread → deterministic fs-completion order, removing the
-      # last I/O race that perturbs allocation counts between runs.
-      UV_THREADPOOL_SIZE: 1
-    permissions:
-      issues: write
-      pull-requests: write
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          fetch-tags: true
-          fetch-depth: 0
 
       - name: Use Node.js
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
@@ -155,4 +100,17 @@ jobs:
           mode: "memory"
           token: ${{ secrets.CODSPEED_TOKEN }}
         env:
-          SHARD: ${{ matrix.shard }}
+          # A unit case's JS heap does not show in this count (parsing typescript.js
+          # reports ~450 KB), so it holds V8's own native allocations, which move run to run.
+          NEGATIVE_FILTER: ${{ github.event_name != 'schedule' && 'on-schedule|-unit$' || '-unit$' }}
+
+      - name: Run benchmarks
+        uses: CodSpeedHQ/action@78102a468f96d8e0ccb92d0ec49425753fc42062 # v5.6.0
+        with:
+          run: yarn benchmark --ci
+          mode: "simulation"
+          # Walltime, for a runner whose CPU is fixed (`runs-on: codspeed-macro`);
+          # the harness still supports it:
+          # mode: "walltime"
+        env:
+          NEGATIVE_FILTER: ${{ github.event_name != 'schedule' && 'on-schedule' || '' }}
