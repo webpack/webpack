@@ -3922,7 +3922,10 @@ describe("SourceProcessor — minify serialization edge cases", () => {
 				'<body><noscript><noscript>a</noscript>b</noscript x=">"><p>x',
 				"<body><NOSCRIPT><noscript>a</noscript>b &amp; c</noscript >&lt;d<p>x",
 				// `</noscript-x>` ends no raw text, so the nested one after it counts.
-				"<body><noscript></noscript-x><noscript>a</noscript></noscript><p>x"
+				"<body><noscript></noscript-x><noscript>a</noscript></noscript><p>x",
+				// A comment hides an end tag from a reader with scripting off only.
+				"<body><noscript><!-- </noscript> -->x</noscript><p>y",
+				"<body><noscript><!-- </noscript> --><noscript>a</noscript></noscript><p>y"
 			]) {
 				expect(minify(source)).toBe(source);
 			}
@@ -3935,6 +3938,9 @@ describe("SourceProcessor — minify serialization edge cases", () => {
 			).toBe("<body><noscript><noscript>a</noscript><p>bc</body>");
 			// Without a nested one, a stray end tag still goes.
 			expect(minify("<p>a</noscript>b")).toBe("<p>ab");
+			expect(minify("<body><noscript>a</noscript> <p>x</p>")).toBe(
+				"<body><noscript>a</noscript> <p>x</body>"
+			);
 		});
 
 		it("drops `</head>` once collapsing drops the whitespace behind it, in one print", () => {
