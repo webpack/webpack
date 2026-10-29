@@ -20,6 +20,19 @@ describe("xmlMinify", () => {
 		expect(code).toMatchSnapshot();
 	});
 
+	it("should report what the CSS minifier throws and keep the stylesheets", async () => {
+		// `unusedSymbols` that is no list stands in for anything that makes it throw.
+		const unreadable = /** @type {string[]} */ (/** @type {unknown} */ (42));
+		const { code, errors } = await xmlMinify(
+			{ "image.svg": SOURCE },
+			undefined,
+			{ css: { unusedSymbols: unreadable } }
+		);
+		expect(code).toContain(".dot { fill: #ff0000; user-select: none; }");
+		expect(code).toContain('style="stroke: #00ff00"');
+		expect(errors).toHaveLength(2);
+	});
+
 	it("should hand the stylesheets the target's browsers", async () => {
 		const { code } = await xmlMinify({ "image.svg": SOURCE }, undefined, {
 			environment: { browsers: ["chrome 50"], vendorPrefixes: true }
@@ -256,6 +269,34 @@ b&#10;c">
 				})
 			).code
 		).toMatchSnapshot();
+	});
+
+	it("should self-close a stylesheet the renderer minifies away", () => {
+		const {
+			builtinEmbeddedRenderer
+		} = require("../../../lib/html/builtinEmbeddedRenderer");
+		/**
+		 * @param {string} document an XML document
+		 * @returns {string} the minified document
+		 */
+		const minify = (document) =>
+			/** @type {{ code: string }} */ (
+				new SourceProcessor().process(document, {
+					xml: true,
+					mode: "minify",
+					renderEmbeddedSource: builtinEmbeddedRenderer()
+				})
+			).code;
+		const svg = '<svg xmlns="http://www.w3.org/2000/svg">';
+		// An empty rule, and a prelude the input ran out in before its block.
+		for (const body of ["<style>a{}</style>", "<style>.cut"]) {
+			const minified = minify(`${svg}${body}</svg>`);
+			expect(minified).toBe(`${svg}<style/></svg>`);
+			expect(minify(minified)).toBe(minified);
+		}
+		expect(minify(`${svg}<style>a { b : c }</style></svg>`)).toBe(
+			`${svg}<style>a{b:c}</style></svg>`
+		);
 	});
 
 	it("should write only what the target browsers read", () => {
