@@ -260,13 +260,7 @@ declare interface AbstractLibraryPluginOptions {
 	 */
 	type: string;
 }
-type AdditionalData = AdditionalDataKnown & Record<string, any>;
-declare interface AdditionalDataKnown {
-	/**
-	 * the AST webpack should parse instead of the source
-	 */
-	webpackAST?: PreparsedAst;
-}
+type AdditionalData = exports.AdditionalDataKnown & Record<string, any>;
 type AfterContextResolveData = ContextResolveData &
 	ContextOptions & {
 		resource: string | string[];
@@ -546,7 +540,7 @@ declare interface AssetGeneratorDataUrlOptions {
 }
 type AssetGeneratorOptions = AssetInlineGeneratorOptions &
 	AssetResourceGeneratorOptions;
-type AssetInfo = KnownAssetInfo & Record<string, any>;
+type AssetInfo = exports.KnownAssetInfo & Record<string, any>;
 
 /**
  * Generator options for asset/inline modules.
@@ -567,7 +561,7 @@ declare interface AssetInlineGeneratorOptions {
 				context: { filename: string; module: Module }
 		  ) => string);
 }
-type AssetModuleBuildInfo = KnownBuildInfo &
+type AssetModuleBuildInfo = exports.KnownBuildInfo &
 	Record<string, any> &
 	KnownNormalModuleBuildInfo &
 	KnownAssetModuleBuildInfo;
@@ -1528,8 +1522,8 @@ declare interface BuildDiagnostics {
 	 */
 	notCacheableReasons?: string[];
 }
-type BuildInfo = KnownBuildInfo & Record<string, any>;
-type BuildMeta = KnownBuildMeta & Record<string, any>;
+type BuildInfo = exports.KnownBuildInfo & Record<string, any>;
+type BuildMeta = exports.KnownBuildMeta & Record<string, any>;
 type BuiltAssetModule = NormalModule & {
 	buildInfo: AssetModuleBuildInfo;
 	buildMeta: BuildMeta;
@@ -4934,7 +4928,7 @@ declare interface ConcatenateModulesOptions {
 	 */
 	commonjs?: boolean;
 }
-type ConcatenatedModuleBuildInfo = KnownBuildInfo &
+type ConcatenatedModuleBuildInfo = exports.KnownBuildInfo &
 	Record<string, any> &
 	KnownConcatenatedModuleBuildInfo;
 declare interface ConcatenatedModuleInfo {
@@ -5721,7 +5715,7 @@ declare interface ContextHash {
 }
 type ContextMode =
 	"eager" | "weak" | "lazy" | "lazy-once" | "sync" | "async-weak";
-type ContextModuleBuildInfo = KnownBuildInfo &
+type ContextModuleBuildInfo = exports.KnownBuildInfo &
 	Record<string, any> &
 	KnownContextModuleBuildInfo;
 declare abstract class ContextModuleFactory extends ModuleFactory {
@@ -6365,11 +6359,11 @@ declare abstract class CssModule extends NormalModule {
 	inheritance?: [CssLayer, Supports, Media][];
 	exportType?: "link" | "text" | "css-style-sheet" | "style";
 }
-type CssModuleBuildInfo = KnownBuildInfo &
+type CssModuleBuildInfo = exports.KnownBuildInfo &
 	Record<string, any> &
 	KnownNormalModuleBuildInfo &
 	KnownCssModuleBuildInfo;
-type CssModuleBuildMeta = KnownBuildMeta &
+type CssModuleBuildMeta = exports.KnownBuildMeta &
 	Record<string, any> &
 	KnownCssModuleBuildMeta;
 
@@ -11218,7 +11212,7 @@ declare class ExternalModule extends Module {
 	 */
 	static getSourceBasicTypes(module: Module): ReadonlySet<string>;
 }
-type ExternalModuleBuildInfo = KnownBuildInfo &
+type ExternalModuleBuildInfo = exports.KnownBuildInfo &
 	Record<string, any> &
 	KnownExternalModuleBuildInfo;
 declare interface ExternalModuleInfo {
@@ -12845,7 +12839,7 @@ declare interface HtmlInjectTagsContext {
 	outputName: string;
 	html: string;
 }
-type HtmlModuleBuildInfo = KnownBuildInfo &
+type HtmlModuleBuildInfo = exports.KnownBuildInfo &
 	Record<string, any> &
 	KnownNormalModuleBuildInfo &
 	KnownHtmlModuleBuildInfo;
@@ -14875,11 +14869,11 @@ declare abstract class JavascriptGenerator extends Generator<JavascriptNormalMod
 		generateContext: GenerateContext
 	): null | Source;
 }
-type JavascriptModuleBuildInfo = KnownBuildInfo &
+type JavascriptModuleBuildInfo = exports.KnownBuildInfo &
 	Record<string, any> &
 	KnownNormalModuleBuildInfo &
 	KnownJavascriptModuleBuildInfo;
-type JavascriptModuleBuildMeta = KnownBuildMeta &
+type JavascriptModuleBuildMeta = exports.KnownBuildMeta &
 	Record<string, any> &
 	KnownJavascriptModuleBuildMeta;
 declare class JavascriptModulesPlugin {
@@ -17465,33 +17459,20 @@ declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 	isStatementLevelExpression(expr: Expression): boolean;
 
 	/**
-	 * Returns tag data.
+	 * Returns tag data, typed by the tag it was stored under.
 	 */
-	getTagData(
+	getTagData<T extends TagData = TagData>(
 		name: string,
-		tag: symbol
-	):
-		| undefined
-		| object
-		| TopLevelSymbol
-		| ESMSettings
-		| ImportSettings
-		| CommonJsImportSettings
-		| CompatibilitySettings;
+		tag: symbol | Tag<T>
+	): undefined | T;
 
 	/**
 	 * Processes the provided name.
 	 */
-	tagVariable(
+	tagVariable<T extends TagData = TagData>(
 		name: string,
-		tag: symbol,
-		data?:
-			| object
-			| TopLevelSymbol
-			| ESMSettings
-			| ImportSettings
-			| CommonJsImportSettings
-			| CompatibilitySettings,
+		tag: symbol | Tag<T>,
+		data?: T,
 		flags?: 0 | 1 | 2 | 4
 	): void;
 
@@ -18240,7 +18221,7 @@ declare interface JsonGeneratorOptions {
 	 */
 	JSONParse?: boolean;
 }
-type JsonModuleBuildInfo = KnownBuildInfo &
+type JsonModuleBuildInfo = exports.KnownBuildInfo &
 	Record<string, any> &
 	KnownNormalModuleBuildInfo &
 	KnownJsonModuleBuildInfo;
@@ -18383,101 +18364,6 @@ declare interface KeptComment {
 }
 
 /**
- * Defines the known asset info type used by this module.
- */
-declare interface KnownAssetInfo {
-	/**
-	 * true, if the asset can be long term cached forever (contains a hash)
-	 */
-	immutable?: boolean;
-
-	/**
-	 * whether the asset is minimized
-	 */
-	minimized?: boolean;
-
-	/**
-	 * the value(s) of the full hash used for this asset
-	 */
-	fullhash?: string | string[];
-
-	/**
-	 * the value(s) of the chunk hash used for this asset
-	 */
-	chunkhash?: string | string[];
-
-	/**
-	 * the value(s) of the module hash used for this asset
-	 */
-	modulehash?: string | string[];
-
-	/**
-	 * the value(s) of the content hash used for this asset
-	 */
-	contenthash?: string | string[];
-
-	/**
-	 * maps a `[contenthash:<digest>]` value to its digest, so `RealContentHashPlugin` re-encodes the recomputed hash in it
-	 */
-	contenthashDigest?: Record<string, string>;
-
-	/**
-	 * when asset was created from a source file (potentially transformed), the original filename relative to compilation context
-	 */
-	sourceFilename?: string;
-
-	/**
-	 * true, when the asset was copied from a file by `output.copy`
-	 */
-	copied?: boolean;
-
-	/**
-	 * when set, the asset is emitted as a symbolic link rather than as its content
-	 */
-	symlink?: AssetSymlink;
-
-	/**
-	 * when set, the file the asset is written to is given these permissions
-	 */
-	mode?: number;
-
-	/**
-	 * when set, the file the asset is written to is stamped with these times
-	 */
-	timestamps?: AssetTimestamps;
-
-	/**
-	 * size in bytes, only set after asset has been emitted
-	 */
-	size?: number;
-
-	/**
-	 * true, when asset is only used for development and doesn't count towards user-facing assets
-	 */
-	development?: boolean;
-
-	/**
-	 * true, when asset ships data for updating an existing application (HMR)
-	 */
-	hotModuleReplacement?: boolean;
-
-	/**
-	 * true, when asset is javascript and an ESM
-	 */
-	javascriptModule?: boolean;
-
-	/**
-	 * true, when file is a manifest
-	 */
-	manifest?: boolean;
-
-	/**
-	 * object of pointers to other assets, keyed by type of relation (only points from parent to child)
-	 */
-	related?: Record<string, null | string | string[]>;
-}
-
-/**
  * Defines the build info properties specific to asset modules.
  */
 declare interface KnownAssetModuleBuildInfo {
@@ -18495,63 +18381,6 @@ declare interface KnownAssetModuleBuildInfo {
 	 * rename set while building survives the persistent cache
 	 */
 	assetResource?: string;
-}
-
-/**
- * Defines the build info properties common to all module types.
- * Module type specific properties live in the `Known*BuildInfo` typedef of the dedicated module class.
- */
-declare interface KnownBuildInfo {
-	/**
-	 * the module hands out a spec Module Namespace Exotic Object
-	 */
-	specNamespaceObject?: boolean;
-	cacheable?: boolean;
-	strict?: boolean;
-	moduleArgument?: string;
-	exportsArgument?: string;
-
-	/**
-	 * assets added by loaders or plugins
-	 */
-	assets?: Record<string, Source>;
-	assetsInfo?: Map<string, undefined | AssetInfo>;
-
-	/**
-	 * top level declaration names
-	 */
-	topLevelDeclarations?: Set<string>;
-
-	/**
-	 * true when the module is in a synchronous circular dependency chain
-	 */
-	isCircular?: boolean;
-
-	/**
-	 * CircularKind bit flags from CircularModulesPlugin; unset when the plugin did not run
-	 */
-	circularKind?: number;
-
-	/**
-	 * module uses top-level `for await…of` or `await using`, which can't be lowered to a generator
-	 */
-	usesTopLevelAwaitForOf?: boolean;
-
-	/**
-	 * what the build recorded for stats and the performance hints to report
-	 */
-	diagnostics?: BuildDiagnostics;
-}
-
-/**
- * Defines the build meta properties common to all module types.
- * Module type specific properties live in the `Known*BuildMeta` typedef of the dedicated module class.
- */
-declare interface KnownBuildMeta {
-	exportsType?: "default" | "namespace" | "flagged" | "dynamic";
-	defaultObject?: false | "redirect" | "redirect-warn";
-	async?: boolean;
-	sideEffectFree?: boolean;
 }
 
 /**
@@ -18757,29 +18586,6 @@ declare interface KnownJsonModuleBuildInfo {
 }
 
 /**
- * Defines the known meta type used by this module.
- */
-declare interface KnownMeta {
-	importVarMap?: Map<Module, string>;
-	deferredImportVarMap?: Map<Module, string>;
-
-	/**
-	 * generate export definitions on demand
-	 */
-	onDemandExports?: boolean;
-
-	/**
-	 * module-level `let` names a module library declares in the chunk's scope instead
-	 */
-	liveBindings?: Map<string, LiveBinding>;
-
-	/**
-	 * module-level names a module keeps declared and mirrors to the chunk's scope on each write
-	 */
-	liveSetters?: Map<string, LiveBinding>;
-}
-
-/**
  * Defines the build info properties of normal modules (filesystem-backed, loader-processed).
  */
 declare interface KnownNormalModuleBuildInfo {
@@ -18843,24 +18649,6 @@ declare interface KnownNormalizedStatsOptions {
 	logging: false | "none" | "verbose" | "error" | "warn" | "info" | "log";
 	loggingDebug: ((value: string) => boolean)[];
 	loggingTrace: boolean;
-}
-
-/**
- * Defines the known records type used by this module.
- */
-declare interface KnownRecords {
-	aggressiveSplits?: SplitData[];
-	chunks?: RecordsChunks;
-	modules?: RecordsModules;
-	hash?: string;
-	hotIndex?: number;
-	fullHashChunkModuleHashes?: FullHashChunkModuleHashes;
-	chunkModuleHashes?: ChunkModuleHashes;
-	chunkHashes?: ChunkHashes;
-	chunkRuntime?: ChunkRuntime;
-	chunkModuleIds?: ChunkModuleIds;
-	chunkSiblingIds?: ChunkSiblingIds;
-	chunkInjectedModuleIds?: ChunkInjectedModuleIds;
 }
 
 /**
@@ -19005,21 +18793,6 @@ declare interface KnownStatsError {
 	cause?: KnownStatsError;
 	errors?: KnownStatsError[];
 	compilerPath?: string;
-}
-
-/**
- * Defines the known stats factory context type used by this module.
- */
-declare interface KnownStatsFactoryContext {
-	type: string;
-	compilation: Compilation;
-	makePathsRelative: (path: string) => string;
-	rootModules: Set<Module>;
-	compilationFileToChunks: Map<string, Chunk[]>;
-	compilationAuxiliaryFileToChunks: Map<string, Chunk[]>;
-	runtime: RuntimeSpec;
-	cachedGetErrors: (compilation: Compilation) => Error[];
-	cachedGetWarnings: (compilation: Compilation) => Error[];
 }
 
 /**
@@ -19171,26 +18944,6 @@ declare interface KnownStatsPrinterColorFunctions {
 	green?: (value: string | number) => string;
 	magenta?: (value: string | number) => string;
 	cyan?: (value: string | number) => string;
-}
-
-/**
- * Defines the known stats printer context type used by this module.
- */
-declare interface KnownStatsPrinterContext {
-	type?: string;
-	compilation?: StatsCompilation;
-	chunkGroup?: StatsChunkGroup;
-	chunkGroupKind?: string;
-	asset?: StatsAsset;
-	module?: StatsModule;
-	chunk?: StatsChunk;
-	moduleReason?: StatsModuleReason;
-	moduleIssuer?: StatsModuleIssuer;
-	error?: StatsError;
-	profile?: StatsProfile;
-	logging?: StatsLogging;
-	moduleTraceItem?: StatsModuleTraceItem;
-	moduleTraceDependency?: StatsModuleTraceDependency;
 }
 
 /**
@@ -20278,7 +20031,7 @@ declare const MODULE_DECLARATIONS: unique symbol;
  * Magic comment options by name; each value is whatever the user's comment evaluates to.
  */
 declare interface MagicCommentOptions {
-	[index: string]: any;
+	[index: string]: unknown;
 }
 
 /**
@@ -20667,7 +20420,7 @@ type MergedDefinitionNode =
 			| RuntimeValue
 	  >[]
 	| Map<string, MergedDefinitionNode>;
-type Meta = KnownMeta & Record<symbol, string[]> & Record<string, any>;
+type Meta = exports.KnownMeta & Record<symbol, string[]> & Record<string, any>;
 declare class MinChunkSizePlugin {
 	/**
 	 * Creates an instance of MinChunkSizePlugin.
@@ -23573,7 +23326,7 @@ declare class NormalModule extends Module {
 	 */
 	static getSourceBasicTypes(module: Module): ReadonlySet<string>;
 }
-type NormalModuleBuildInfo = KnownBuildInfo &
+type NormalModuleBuildInfo = exports.KnownBuildInfo &
 	Record<string, any> &
 	KnownNormalModuleBuildInfo;
 declare interface NormalModuleCreateData<T extends string = string> {
@@ -28862,8 +28615,8 @@ declare interface RealPathSync {
 	(path: PathLikeFs, options: BufferEncodingOption): Buffer;
 	(path: PathLikeFs, options?: EncodingOptionFs): string | Buffer;
 }
-type Records = KnownRecords &
-	Record<string, KnownRecords[]> &
+type Records = exports.KnownRecords &
+	Record<string, exports.KnownRecords[]> &
 	Record<string, any>;
 
 /**
@@ -33309,7 +33062,8 @@ declare abstract class StatsFactory {
 		baseContext: Omit<StatsFactoryContext, "type">
 	): CreatedObject<FactoryData, FallbackCreatedObject>;
 }
-type StatsFactoryContext = KnownStatsFactoryContext & Record<string, any>;
+type StatsFactoryContext = exports.KnownStatsFactoryContext &
+	Record<string, any>;
 type StatsFactoryExtractHookMap = {
 	for<K extends keyof exports.StatsFactoryExtractKeys>(
 		key: K
@@ -34027,7 +33781,7 @@ declare abstract class StatsPrinter {
 }
 type StatsPrinterContext = KnownStatsPrinterColorFunctions &
 	KnownStatsPrinterFormatters &
-	KnownStatsPrinterContext &
+	exports.KnownStatsPrinterContext &
 	Record<string, any>;
 type StatsPrinterGetItemNameHookMap = {
 	for<K extends keyof exports.StatsPrinterItemNameKeys>(
@@ -34151,7 +33905,7 @@ declare interface SyncModuleIdsPluginOptions {
 	 */
 	mode?: "read" | "create" | "merge" | "update";
 }
-type SyncWasmModuleBuildMeta = KnownBuildMeta &
+type SyncWasmModuleBuildMeta = exports.KnownBuildMeta &
 	Record<string, any> &
 	KnownSyncWasmModuleBuildMeta;
 
@@ -34865,12 +34619,20 @@ declare interface SyntheticDependencyLocation {
 }
 declare const TOMBSTONE: unique symbol;
 declare const TRANSITIVE_ONLY: unique symbol;
+type Tag<T = TagData> = symbol & { readonly __tagData?: T };
+type TagData =
+	| object
+	| TopLevelSymbol
+	| ESMSettings
+	| ImportSettings
+	| CommonJsImportSettings
+	| CompatibilitySettings;
 
 /**
  * Defines the tag info type used by this module.
  */
 declare interface TagInfo {
-	tag: symbol;
+	tag: Tag<TagData>;
 	data?:
 		| object
 		| TopLevelSymbol
@@ -36476,6 +36238,251 @@ declare function exports(
 declare function exports(options: MultiConfiguration): MultiCompiler;
 declare namespace exports {
 	/**
+	 * A plugin types its own fields by declaration merging: `declare module "webpack" { interface AdditionalDataKnown { myField?: MyType } }`.
+	 */
+	export interface AdditionalDataKnown {
+		/**
+		 * the AST webpack should parse instead of the source
+		 */
+		webpackAST?: PreparsedAst;
+	}
+
+	/**
+	 * Defines the known asset info type used by this module.
+	 * A plugin types its own fields by declaration merging: `declare module "webpack" { interface KnownAssetInfo { myField?: MyType } }`.
+	 */
+	export interface KnownAssetInfo {
+		/**
+		 * true, if the asset can be long term cached forever (contains a hash)
+		 */
+		immutable?: boolean;
+
+		/**
+		 * whether the asset is minimized
+		 */
+		minimized?: boolean;
+
+		/**
+		 * the value(s) of the full hash used for this asset
+		 */
+		fullhash?: string | string[];
+
+		/**
+		 * the value(s) of the chunk hash used for this asset
+		 */
+		chunkhash?: string | string[];
+
+		/**
+		 * the value(s) of the module hash used for this asset
+		 */
+		modulehash?: string | string[];
+
+		/**
+		 * the value(s) of the content hash used for this asset
+		 */
+		contenthash?: string | string[];
+
+		/**
+		 * maps a `[contenthash:<digest>]` value to its digest, so `RealContentHashPlugin` re-encodes the recomputed hash in it
+		 */
+		contenthashDigest?: Record<string, string>;
+
+		/**
+		 * when asset was created from a source file (potentially transformed), the original filename relative to compilation context
+		 */
+		sourceFilename?: string;
+
+		/**
+		 * true, when the asset was copied from a file by `output.copy`
+		 */
+		copied?: boolean;
+
+		/**
+		 * when set, the asset is emitted as a symbolic link rather than as its content
+		 */
+		symlink?: AssetSymlink;
+
+		/**
+		 * when set, the file the asset is written to is given these permissions
+		 */
+		mode?: number;
+
+		/**
+		 * when set, the file the asset is written to is stamped with these times
+		 */
+		timestamps?: AssetTimestamps;
+
+		/**
+		 * size in bytes, only set after asset has been emitted
+		 */
+		size?: number;
+
+		/**
+		 * true, when asset is only used for development and doesn't count towards user-facing assets
+		 */
+		development?: boolean;
+
+		/**
+		 * true, when asset ships data for updating an existing application (HMR)
+		 */
+		hotModuleReplacement?: boolean;
+
+		/**
+		 * true, when asset is javascript and an ESM
+		 */
+		javascriptModule?: boolean;
+
+		/**
+		 * true, when file is a manifest
+		 */
+		manifest?: boolean;
+
+		/**
+		 * object of pointers to other assets, keyed by type of relation (only points from parent to child)
+		 */
+		related?: Record<string, null | string | string[]>;
+	}
+
+	/**
+	 * Defines the build info properties common to all module types.
+	 * Module type specific properties live in the `Known*BuildInfo` typedef of the dedicated module class.
+	 * A plugin types its own fields by declaration merging: `declare module "webpack" { interface KnownBuildInfo { myField?: MyType } }`.
+	 */
+	export interface KnownBuildInfo {
+		/**
+		 * the module hands out a spec Module Namespace Exotic Object
+		 */
+		specNamespaceObject?: boolean;
+		cacheable?: boolean;
+		strict?: boolean;
+		moduleArgument?: string;
+		exportsArgument?: string;
+
+		/**
+		 * assets added by loaders or plugins
+		 */
+		assets?: Record<string, Source>;
+		assetsInfo?: Map<string, undefined | AssetInfo>;
+
+		/**
+		 * top level declaration names
+		 */
+		topLevelDeclarations?: Set<string>;
+
+		/**
+		 * true when the module is in a synchronous circular dependency chain
+		 */
+		isCircular?: boolean;
+
+		/**
+		 * CircularKind bit flags from CircularModulesPlugin; unset when the plugin did not run
+		 */
+		circularKind?: number;
+
+		/**
+		 * module uses top-level `for await…of` or `await using`, which can't be lowered to a generator
+		 */
+		usesTopLevelAwaitForOf?: boolean;
+
+		/**
+		 * what the build recorded for stats and the performance hints to report
+		 */
+		diagnostics?: BuildDiagnostics;
+	}
+
+	/**
+	 * Defines the build meta properties common to all module types.
+	 * Module type specific properties live in the `Known*BuildMeta` typedef of the dedicated module class.
+	 * A plugin types its own fields by declaration merging: `declare module "webpack" { interface KnownBuildMeta { myField?: MyType } }`.
+	 */
+	export interface KnownBuildMeta {
+		exportsType?: "default" | "namespace" | "flagged" | "dynamic";
+		defaultObject?: false | "redirect" | "redirect-warn";
+		async?: boolean;
+		sideEffectFree?: boolean;
+	}
+
+	/**
+	 * Defines the known meta type used by this module.
+	 * A plugin types its own fields by declaration merging: `declare module "webpack" { interface KnownMeta { myField?: MyType } }`.
+	 */
+	export interface KnownMeta {
+		importVarMap?: Map<Module, string>;
+		deferredImportVarMap?: Map<Module, string>;
+
+		/**
+		 * generate export definitions on demand
+		 */
+		onDemandExports?: boolean;
+
+		/**
+		 * module-level `let` names a module library declares in the chunk's scope instead
+		 */
+		liveBindings?: Map<string, LiveBinding>;
+
+		/**
+		 * module-level names a module keeps declared and mirrors to the chunk's scope on each write
+		 */
+		liveSetters?: Map<string, LiveBinding>;
+	}
+
+	/**
+	 * Defines the known records type used by this module.
+	 * A plugin types its own fields by declaration merging: `declare module "webpack" { interface KnownRecords { myField?: MyType } }`.
+	 */
+	export interface KnownRecords {
+		aggressiveSplits?: SplitData[];
+		chunks?: RecordsChunks;
+		modules?: RecordsModules;
+		hash?: string;
+		hotIndex?: number;
+		fullHashChunkModuleHashes?: FullHashChunkModuleHashes;
+		chunkModuleHashes?: ChunkModuleHashes;
+		chunkHashes?: ChunkHashes;
+		chunkRuntime?: ChunkRuntime;
+		chunkModuleIds?: ChunkModuleIds;
+		chunkSiblingIds?: ChunkSiblingIds;
+		chunkInjectedModuleIds?: ChunkInjectedModuleIds;
+	}
+
+	/**
+	 * Defines the known stats factory context type used by this module.
+	 * A plugin types its own fields by declaration merging: `declare module "webpack" { interface KnownStatsFactoryContext { myField?: MyType } }`.
+	 */
+	export interface KnownStatsFactoryContext {
+		type: string;
+		compilation: Compilation;
+		makePathsRelative: (path: string) => string;
+		rootModules: Set<Module>;
+		compilationFileToChunks: Map<string, Chunk[]>;
+		compilationAuxiliaryFileToChunks: Map<string, Chunk[]>;
+		runtime: RuntimeSpec;
+		cachedGetErrors: (compilation: Compilation) => Error[];
+		cachedGetWarnings: (compilation: Compilation) => Error[];
+	}
+
+	/**
+	 * Defines the known stats printer context type used by this module.
+	 * A plugin types its own fields by declaration merging: `declare module "webpack" { interface KnownStatsPrinterContext { myField?: MyType } }`.
+	 */
+	export interface KnownStatsPrinterContext {
+		type?: string;
+		compilation?: StatsCompilation;
+		chunkGroup?: StatsChunkGroup;
+		chunkGroupKind?: string;
+		asset?: StatsAsset;
+		module?: StatsModule;
+		chunk?: StatsChunk;
+		moduleReason?: StatsModuleReason;
+		moduleIssuer?: StatsModuleIssuer;
+		error?: StatsError;
+		profile?: StatsProfile;
+		logging?: StatsLogging;
+		moduleTraceItem?: StatsModuleTraceItem;
+		moduleTraceDependency?: StatsModuleTraceDependency;
+	}
+
+	/**
 	 * The `[object, data]` `extract` receives for each object key, which also types that key's `getItemFactory` data and `result` value.
 	 * A plugin types its own keys by declaration merging: `declare module "webpack" { interface StatsFactoryExtractKeys { "myPlugin.data": [MyObject, MyData] } }`.
 	 */
@@ -37894,7 +37901,8 @@ declare namespace exports {
 			export let getInnerGraphUtils: (
 				compilation: Compilation
 			) => InnerGraphUtils;
-			export { TopLevelSymbol, topLevelSymbolTag };
+			export let topLevelSymbolTag: Tag<TopLevelSymbol>;
+			export { TopLevelSymbol };
 		}
 		export {
 			ConcatenationScope,
@@ -39945,6 +39953,5 @@ declare namespace exports {
 		LoaderContextLibIndex as LoaderContext
 	};
 }
-declare const topLevelSymbolTag: unique symbol;
 
 export = exports;
