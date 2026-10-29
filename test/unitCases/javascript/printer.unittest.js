@@ -16063,6 +16063,25 @@ describe("JavaScript SourceProcessor printing", () => {
 		);
 	});
 
+	it("should beautify: each statement, member and case on a line of its own", () => {
+		const source =
+			"function f(a,b){if(a){return b in a}for(;;)x()} class A{m(){}} switch(x){case 1:y();break;default:z()} const o={a:1,b:[2,3]};";
+		const print = (/** @type {object} */ options) =>
+			/** @type {{ code: string }} */ (
+				new SourceProcessor().process(source, {
+					mode: "beautify",
+					...options
+				})
+			).code;
+		expect(print({})).toBe(
+			"function f(a, b) {\nif (a) {\nreturn b in a;\n}\nfor (;;) x();\n}\nclass A {\nm() {}\n}\nswitch (x) {\ncase 1:\ny();\nbreak;\ndefault:\nz();\n}\nconst o = {a: 1, b: [ 2, 3 ]};"
+		);
+		// Minified as it is beautified, the layout is the same.
+		expect(print({ compress: {}, mangle: {} })).toBe(
+			"function f(a, c) {\nif (a) return c in a;\nfor (;;) x();\n}\nclass A {\nm() {}\n}\nswitch (x) {\ncase 1:\ny();\nbreak;\ndefault:\nz();\n}\nconst o = {a: 1, b: [ 2, 3 ]};"
+		);
+	});
+
 	it("should print an event handler's body without the semicolon its brace closes", () => {
 		const print = (/** @type {string} */ source) =>
 			/** @type {{ code: string }} */ (
