@@ -3721,10 +3721,10 @@ coffee-loader@^5.0.0:
   resolved "https://registry.yarnpkg.com/coffee-loader/-/coffee-loader-5.0.0.tgz#376de71ea3dc648a9c4cac5b02fbadb7c19c8e6e"
   integrity sha512-gUIfnuyjVEkjuugx6uRHHhnqmjqsL5dlhYgvhAUla25EoQhI57IFBQvsHvJHtBv5BMB2IzTKezDU2SrZkEiPdQ==
 
-coffeescript@^2.5.1:
-  version "2.7.1"
-  resolved "https://registry.yarnpkg.com/coffeescript/-/coffeescript-2.7.1.tgz#5209efcb56af15b52aab2d6412fe1d86442d309a"
-  integrity sha512-zDQ0M/Ad05+5eudURWh31RIQc8i1TxIWuUgidoRx7gtrcQnDwSwSckVaJLg3AGKE+z0PuKnIOZ1DZnYvebuvIg==
+coffeescript@2.7.0:
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/coffeescript/-/coffeescript-2.7.0.tgz#a43ec03be6885d6d1454850ea70b9409c391279c"
+  integrity sha512-hzWp6TUE2d/jCcN67LrW1eh5b/rSDKQK6oD6VMLlggYVUUFexgTH9z3dNYihzX4RMhze5FTUsUmOXViJKFQR/A==
 
 collect-v8-coverage@^1.0.2:
   version "1.0.3"
