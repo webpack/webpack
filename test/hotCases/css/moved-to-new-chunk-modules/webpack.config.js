@@ -10,6 +10,8 @@ module.exports = {
 		css: true
 	},
 	optimization: {
+		// Numeric ids: the runtime can't name a stylesheet it was not built with.
+		chunkIds: "deterministic",
 		splitChunks: {
 			cacheGroups: {
 				default: false,
