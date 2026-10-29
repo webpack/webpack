@@ -15454,9 +15454,9 @@ type JavascriptNormalModule = NormalModule & {
 };
 declare interface JavascriptParseOptions {
 	/**
-	 * what the source is: a module (the default), a script, or a function's body, a CommonJS module's or an event handler's
+	 * what the source is: a module (the default), a script, a function's body, a CommonJS module's or an event handler's, or `auto`
 	 */
-	sourceType?: "module" | "commonjs" | "script" | "event-handler";
+	sourceType?: "module" | "commonjs" | "auto" | "script" | "event-handler";
 
 	/**
 	 * optional callback for each parse error, with the CSS and HTML parsers' signature and Babel's `reasonCode` kebab-cased as `code`; `severity` is `"error"` for one that stops the parse and `"warning"` for one it reads past; without it, the first error throws, as acorn's does
@@ -25961,7 +25961,6 @@ declare interface OptionsSyntaxParser {
 	 * where comments are reported
 	 */
 	onComment?:
-		| CollectedComment[]
 		| ((
 				isBlock: boolean,
 				text: string,
@@ -25969,7 +25968,8 @@ declare interface OptionsSyntaxParser {
 				end: number,
 				startLoc?: null | Position,
 				endLoc?: null | Position
-		  ) => void);
+		  ) => void)
+		| CollectedComment[];
 
 	/**
 	 * whether nodes carry `range`
@@ -26969,11 +26969,6 @@ declare interface ParseOptionsJavascriptParser {
 	lazyNodes?: boolean;
 
 	/**
-	 * internal: with `lazyNodes`, build ESTree objects rather than the flat `SyntaxTree`
-	 */
-	estree?: boolean;
-
-	/**
 	 * internal: collect comments here without slicing their text eagerly
 	 */
 	lazyComments?: CommentJavascriptParser[];
@@ -27201,7 +27196,6 @@ type ParserOptionsSyntaxParser = Omit<OptionsSyntaxParser, "onComment"> & {
 	lazyComments?: CollectedComment[];
 	importPhases?: boolean;
 	moduleFallback?: boolean;
-	estree?: boolean;
 	syntaxTree?: SyntaxTree;
 };
 
@@ -36897,154 +36891,10 @@ declare class WebpackParser extends SyntaxParser {
 	static extend(
 		...plugins: ((BaseParser: typeof SyntaxParser) => typeof SyntaxParser)[]
 	): typeof WebpackParser;
-
-	/**
-	 * webpack's lazy mode is flat: it writes a `SyntaxTree` read through `A` and
-	 * returns the program's node, unless `estree: true` asks for ESTree objects.
-	 */
-	static parse<
-		O extends Partial<ParserOptionsSyntaxParser> =
-			Partial<ParserOptionsSyntaxParser>
-	>(
+	static parse(
 		input: string,
-		options?: O
-	): O extends { lazyNodes: true }
-		? {
-				lazyNodes: true;
-				/**
-				 * whether the code is strict whatever it says
-				 */
-				strict?: boolean;
-				/**
-				 * a program node to append to
-				 */
-				program?: NodeLike;
-				/**
-				 * which edition to parse
-				 */
-				ecmaVersion?:
-					| 3
-					| 5
-					| 6
-					| 7
-					| 8
-					| 9
-					| 10
-					| 11
-					| 12
-					| 13
-					| 14
-					| 15
-					| 16
-					| 17
-					| 2015
-					| 2016
-					| 2017
-					| 2018
-					| 2019
-					| 2020
-					| 2021
-					| 2022
-					| 2023
-					| 2024
-					| 2025
-					| 2026
-					| "latest";
-				/**
-				 * the goal symbol
-				 */
-				sourceType?: "module" | "commonjs" | "script";
-				/**
-				 * called where a semicolon was inserted
-				 */
-				onInsertedSemicolon?: (
-					lastTokEnd: number,
-					lastTokEndLoc?: null | Position
-				) => void;
-				/**
-				 * called at a trailing comma
-				 */
-				onTrailingComma?: (
-					lastTokEnd: number,
-					lastTokEndLoc?: null | Position
-				) => void;
-				/**
-				 * whether reserved words may name things
-				 */
-				allowReserved?: boolean | "never";
-				/**
-				 * whether `return` may sit at the top level
-				 */
-				allowReturnOutsideFunction?: boolean;
-				/**
-				 * whether module syntax may sit anywhere
-				 */
-				allowImportExportEverywhere?: boolean;
-				/**
-				 * whether `await` may sit outside a function
-				 */
-				allowAwaitOutsideFunction?: boolean;
-				/**
-				 * whether `super` may sit outside a method
-				 */
-				allowSuperOutsideMethod?: boolean;
-				/**
-				 * whether a leading `#!` line is skipped
-				 */
-				allowHashBang?: boolean;
-				/**
-				 * whether private names must be declared
-				 */
-				checkPrivateFields?: boolean;
-				/**
-				 * whether nodes carry `loc`
-				 */
-				locations?: boolean;
-				/**
-				 * where the first offset falls
-				 */
-				startLocation?: { line: number; column: number };
-				/**
-				 * where tokens are reported
-				 */
-				onToken?: ((token: Token) => void) | Token[];
-				/**
-				 * the parser itself at each token, for a reader that copies what it needs rather than taking a token of its own
-				 */
-				onTokenRead?: (parser: SyntaxParser) => void;
-				/**
-				 * whether nodes carry `range`
-				 */
-				ranges?: boolean;
-				/**
-				 * the name errors and locations carry
-				 */
-				sourceFile?: string;
-				/**
-				 * the name every node carries
-				 */
-				directSourceFile?: string;
-				/**
-				 * whether parentheses become nodes
-				 */
-				preserveParens?: boolean;
-				onComment?:
-					| CollectedComment[]
-					| ((
-							isBlock: boolean,
-							text: string,
-							start: number,
-							end: number
-					  ) => void);
-				lazyComments?: CollectedComment[];
-				importPhases?: boolean;
-				moduleFallback?: boolean;
-				estree?: boolean;
-				syntaxTree?: SyntaxTree;
-			} extends { estree: true }
-			? ParsedProgram
-			: number
-		: ParsedProgram;
+		options?: Partial<OptionsSyntaxParser>
+	): ParsedProgram;
 	static parseExpressionAt(
 		input: string,
 		pos: number,
@@ -37135,7 +36985,37 @@ type WriteStreamOptions = StreamOptions & {
 	fs?: null | CreateWriteStreamFSImplementation;
 	flush?: boolean;
 };
-declare interface _functionSyntaxParser {
+declare interface _functionSyntaxParserFunction_1 {
+	/**
+	 * Parse a program, ECMA-262 §16.1 or §16.2, into a `SyntaxTree` read through
+	 * `A`, its node ids valid until the next JavaScript parse, or under `estree`
+	 * into ESTree objects.
+	 */
+	(
+		input: string,
+		pos: undefined | number,
+		options: JavascriptParseOptions & { estree: true; parseError?: undefined }
+	): Program;
+	(
+		input: string,
+		pos: undefined | number,
+		options: JavascriptParseOptions & { estree: true }
+	): undefined | Program;
+	(
+		input: string,
+		pos?: number,
+		options?: JavascriptParseOptions & {
+			estree?: false;
+			parseError?: undefined;
+		}
+	): number;
+	(
+		input: string,
+		pos?: number,
+		options?: JavascriptParseOptions
+	): undefined | number;
+}
+declare interface _functionSyntaxParserFunction_2 {
 	/**
 	 * Decode HTML character references in a string. Handles all numeric
 	 * references (with WHATWG remap of 0x00, surrogates, out-of-range, and the
@@ -37774,131 +37654,11 @@ declare namespace exports {
 				export let declaresIntoBlock: (statement?: any) => boolean;
 				export let overflowFrom: (mask: number, index: number) => number[];
 				export let hasOctalEscape: (raw: string) => boolean;
-				export let parse: <O extends ParserOptionsSyntaxParser>(
+				export let parse: (
 					input: string,
-					options: O
-				) => O extends { lazyNodes: true }
-					? {
-							lazyNodes: true;
-							/**
-							 * whether the code is strict whatever it says
-							 */
-							strict?: boolean;
-							/**
-							 * a program node to append to
-							 */
-							program?: NodeLike;
-							/**
-							 * which edition to parse
-							 */
-							ecmaVersion: EcmaVersion;
-							/**
-							 * the goal symbol
-							 */
-							sourceType?: "module" | "commonjs" | "script";
-							/**
-							 * called where a semicolon was inserted
-							 */
-							onInsertedSemicolon?: (
-								lastTokEnd: number,
-								lastTokEndLoc?: null | Position
-							) => void;
-							/**
-							 * called at a trailing comma
-							 */
-							onTrailingComma?: (
-								lastTokEnd: number,
-								lastTokEndLoc?: null | Position
-							) => void;
-							/**
-							 * whether reserved words may name things
-							 */
-							allowReserved?: boolean | "never";
-							/**
-							 * whether `return` may sit at the top level
-							 */
-							allowReturnOutsideFunction?: boolean;
-							/**
-							 * whether module syntax may sit anywhere
-							 */
-							allowImportExportEverywhere?: boolean;
-							/**
-							 * whether `await` may sit outside a function
-							 */
-							allowAwaitOutsideFunction?: boolean;
-							/**
-							 * whether `super` may sit outside a method
-							 */
-							allowSuperOutsideMethod?: boolean;
-							/**
-							 * whether a leading `#!` line is skipped
-							 */
-							allowHashBang?: boolean;
-							/**
-							 * whether private names must be declared
-							 */
-							checkPrivateFields?: boolean;
-							/**
-							 * whether nodes carry `loc`
-							 */
-							locations?: boolean;
-							/**
-							 * where the first offset falls
-							 */
-							startLocation?: { line: number; column: number };
-							/**
-							 * where tokens are reported
-							 */
-							onToken?: ((token: Token) => void) | Token[];
-							/**
-							 * the parser itself at each token, for a reader that copies what it needs rather than taking a token of its own
-							 */
-							onTokenRead?: (parser: SyntaxParser) => void;
-							/**
-							 * whether nodes carry `range`
-							 */
-							ranges?: boolean;
-							/**
-							 * the name errors and locations carry
-							 */
-							sourceFile?: string;
-							/**
-							 * the name every node carries
-							 */
-							directSourceFile?: string;
-							/**
-							 * whether parentheses become nodes
-							 */
-							preserveParens?: boolean;
-							onComment?:
-								| CollectedComment[]
-								| ((
-										isBlock: boolean,
-										text: string,
-										start: number,
-										end: number
-								  ) => void);
-							lazyComments?: CollectedComment[];
-							importPhases?: boolean;
-							moduleFallback?: boolean;
-							estree?: boolean;
-							syntaxTree?: SyntaxTree;
-						} extends { estree: true }
-						? Program
-						: number
-					: Program;
-				export let parseProgram: <
-					O extends Omit<JavascriptParseOptions, "sourceType"> & {
-						sourceType?:
-							"module" | "commonjs" | "auto" | "script" | "event-handler";
-					} = JavascriptParseOptions
-				>(
-					input: string,
-					pos?: number,
-					options?: O
-				) =>
-					| (O extends { estree: true } ? Program : number)
-					| (O extends { parseError: Function } ? undefined : never);
+					options: ParserOptionsSyntaxParser
+				) => Program;
+				export let parseProgram: _functionSyntaxParserFunction_1;
 				export let parsedTree: () => null | SyntaxTree;
 				export let positionAt: (
 					lineStarts: number[],
@@ -39535,7 +39295,7 @@ declare namespace exports {
 				) => string;
 				export let buildHeadTags: (opts: OutputHtmlOptions) => string;
 				export let collapseWhitespaceRuns: (s: string) => string;
-				export let decodeEntities: _functionSyntaxParser;
+				export let decodeEntities: _functionSyntaxParserFunction_2;
 				export let decodeXmlAttribute: (value: string) => string;
 				export let decodeXmlEntities: (value: string) => string;
 				export let escapeAttribute: (

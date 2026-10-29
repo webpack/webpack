@@ -28,7 +28,6 @@ const parseWithComments = (code, sourceType) => {
 		sourceType,
 		ecmaVersion: "latest",
 		lazyNodes: true,
-		estree: true,
 		lazyComments: comments
 	});
 	return { ast, comments };
@@ -1530,7 +1529,6 @@ for (target of [ ]) { var fromForOfTarget = 1; }
 			const options = {
 				ecmaVersion: 2022,
 				lazyNodes: true,
-				estree: true,
 				ranges: true,
 				sourceType: "script"
 			};
@@ -1572,7 +1570,6 @@ for (target of [ ]) { var fromForOfTarget = 1; }
 			const options = {
 				ecmaVersion: 2022,
 				lazyNodes: true,
-				estree: true,
 				ranges: true,
 				sourceType: "module"
 			};
@@ -1612,7 +1609,6 @@ for (target of [ ]) { var fromForOfTarget = 1; }
 							allowImportExportEverywhere: true,
 							ecmaVersion: 2022,
 							lazyNodes: true,
-							estree: true,
 							ranges: true,
 							sourceType: "module"
 						})
@@ -1849,8 +1845,7 @@ class WithStatic { static { const inStaticBlock = 20; } }
 						/** @type {unknown} */ ({
 							ecmaVersion: "latest",
 							sourceType: "module",
-							lazyNodes: true,
-							estree: true
+							lazyNodes: true
 						})
 					)
 				)
@@ -1985,7 +1980,7 @@ class WithStatic { static { const inStaticBlock = 20; } }
 		// `lazyNodes` is webpack's private extension of the parser's Options
 		const parseOptions =
 			/** @type {import("../../lib/javascript/syntax-parser").Options} */ (
-				/** @type {unknown} */ ({ ecmaVersion: 2022, lazyNodes: true, estree: true })
+				/** @type {unknown} */ ({ ecmaVersion: 2022, lazyNodes: true })
 			);
 		/**
 		 * @param {string} source source code
@@ -2125,7 +2120,7 @@ class WithStatic { static { const inStaticBlock = 20; } }
 				WebpackParser.parse(
 					src,
 					/** @type {import("../../lib/javascript/syntax-parser").Options} */ (
-						/** @type {unknown} */ ({ ecmaVersion: 5, lazyNodes: true, estree: true })
+						/** @type {unknown} */ ({ ecmaVersion: 5, lazyNodes: true })
 					)
 				)
 			);
@@ -2302,7 +2297,6 @@ class WithStatic { static { const inStaticBlock = 20; } }
 						/** @type {unknown} */ ({
 							ecmaVersion: 2022,
 							lazyNodes: true,
-							estree: true,
 							program: first
 						})
 					)
@@ -2324,8 +2318,7 @@ class WithStatic { static { const inStaticBlock = 20; } }
 						/** @type {unknown} */ ({
 							ecmaVersion: "latest",
 							sourceType: "module",
-							lazyNodes: true,
-							estree: true
+							lazyNodes: true
 						})
 					)
 				);
@@ -2344,7 +2337,6 @@ class WithStatic { static { const inStaticBlock = 20; } }
 					/** @type {unknown} */ ({
 						ecmaVersion: 2022,
 						lazyNodes: true,
-						estree: true,
 						lazyComments: comments
 					})
 				)
@@ -2362,7 +2354,7 @@ class WithStatic { static { const inStaticBlock = 20; } }
 		});
 
 		it("serves a direct caller's `ranges` lazily, leaving its options alone", () => {
-			const options = { ecmaVersion: 2022, lazyNodes: true, estree: true, ranges: true };
+			const options = { ecmaVersion: 2022, lazyNodes: true, ranges: true };
 			const program = /** @type {EXPECTED_ANY} */ (
 				WebpackParser.parse(
 					"var x = 1;",
@@ -2374,7 +2366,6 @@ class WithStatic { static { const inStaticBlock = 20; } }
 			expect(options).toEqual({
 				ecmaVersion: 2022,
 				lazyNodes: true,
-				estree: true,
 				ranges: true
 			});
 			const declaration = program.body[0];

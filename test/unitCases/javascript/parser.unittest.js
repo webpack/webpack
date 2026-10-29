@@ -94,7 +94,6 @@ describe("WebpackParser", () => {
 				sourceType: "script",
 				allowHashBang: true,
 				lazyNodes: true,
-				estree: true,
 				ranges: true,
 				lazyComments: comments
 			});
@@ -816,8 +815,7 @@ describe("WebpackParser", () => {
 					/** @type {unknown} */ ({
 						ecmaVersion: "latest",
 						sourceType: "script",
-						lazyNodes: true,
-						estree: true
+						lazyNodes: true
 					})
 				)
 			);
@@ -1238,8 +1236,7 @@ describe("WebpackParser", () => {
 			const parser = new WebpackParser(
 				/** @type {EXPECTED_ANY} */ ({
 					ecmaVersion: "latest",
-					lazyNodes: true,
-					estree: true
+					lazyNodes: true
 				}),
 				source
 			);
@@ -1737,8 +1734,7 @@ describe("WebpackParser acorn-override fast-path gates", () => {
 			/** @type {unknown} */ ({
 				ecmaVersion: "latest",
 				sourceType: "script",
-				lazyNodes: true,
-				estree: true
+				lazyNodes: true
 			})
 		);
 
@@ -1853,8 +1849,7 @@ describe("WebpackParser acorn-override fast-path gates", () => {
 				/** @type {unknown} */ ({
 					ecmaVersion: "latest",
 					sourceType: "module",
-					lazyNodes: true,
-					estree: true
+					lazyNodes: true
 				})
 			);
 		expect(() => WebpackParser.parse("eval = 1;", strictOptions)).toThrow(
@@ -2170,7 +2165,6 @@ describe("WebpackParser acorn-override fast-path gates", () => {
 				ecmaVersion: "latest",
 				sourceType: "module",
 				lazyNodes: true,
-				estree: true,
 				lazyComments: [],
 				allowHashBang: true,
 				allowReturnOutsideFunction: false
@@ -2288,8 +2282,7 @@ describe("WebpackParser acorn-override fast-path gates", () => {
 				/** @type {unknown} */ ({
 					ecmaVersion: "latest",
 					sourceType: "module",
-					lazyNodes: true,
-					estree: true
+					lazyNodes: true
 				})
 			);
 		const code = "import { a, b as c } from 'm'; export { c as d };";
@@ -2311,7 +2304,6 @@ describe("WebpackParser acorn-override fast-path gates", () => {
 				ecmaVersion: "latest",
 				sourceType: "module",
 				lazyNodes: true,
-				estree: true,
 				locations: false,
 				ranges: false
 			})
@@ -2564,7 +2556,7 @@ const PARSERS = [
 				/** @type {EXPECTED_ANY} */ ({ ...options, syntaxTree: tree }),
 				code
 			).parse();
-			return tree.estree(/** @type {EXPECTED_ANY} */ (program));
+			return tree.estree(/** @type {number} */ (/** @type {unknown} */ (program)));
 		},
 		true,
 		true
@@ -2586,7 +2578,6 @@ const PARSERS = [
 // A lazy parse reports no tokens and collects comments into `lazyComments`.
 const LAZY = {
 	lazyNodes: true,
-	estree: true,
 	locations: false,
 	onComment: undefined,
 	onToken: undefined
@@ -4450,24 +4441,24 @@ describe("Parser", () => {
 			],
 			[
 				"lazily, under a plugin overriding every method",
-				{ lazyNodes: true, estree: true },
+				{ lazyNodes: true },
 				(code, options) => Overriding.parse(code, options)
 			],
 			[
 				"lazily",
-				{ lazyNodes: true, estree: true },
+				{ lazyNodes: true },
 				(code, options) => webpackParse(code, options)
 			],
 			[
 				"into a syntax tree",
-				{ lazyNodes: true, estree: true },
+				{ lazyNodes: true },
 				(code, options) => {
 					const tree = new SyntaxTree();
 					const program = new WebpackParser(
 						{ ...options, syntaxTree: tree },
 						code
 					).parse();
-					return tree.estree(/** @type {EXPECTED_ANY} */ (program));
+					return tree.estree(/** @type {number} */ (/** @type {unknown} */ (program)));
 				}
 			]
 		];
@@ -4572,7 +4563,7 @@ describe("Parser", () => {
 			[
 				"the parser a build runs, lazily",
 				(code, options) => NotingWebpack.parse(code, options),
-				{ lazyNodes: true, estree: true }
+				{ lazyNodes: true }
 			],
 			[
 				"the parser a build runs, into a syntax tree",
@@ -4582,7 +4573,7 @@ describe("Parser", () => {
 						{ ...options, syntaxTree: tree },
 						code
 					).parse();
-					return tree.estree(/** @type {EXPECTED_ANY} */ (program));
+					return tree.estree(/** @type {number} */ (/** @type {unknown} */ (program)));
 				},
 				{ lazyNodes: true, syntaxTree: true }
 			]
@@ -4762,7 +4753,7 @@ describe("Parser", () => {
 			[
 				"the parser a build runs, lazily",
 				(options, input) =>
-					new WebpackParser({ ...options, lazyNodes: true, estree: true }, input)
+					new WebpackParser({ ...options, lazyNodes: true }, input)
 			]
 		];
 		/**
@@ -4808,8 +4799,8 @@ describe("Parser", () => {
 		for (const ast of [
 			Parser.parse(source, options),
 			webpackParse(source, options),
-			webpackParse(source, { ...options, lazyNodes: true, estree: true }),
-			tree.estree(/** @type {EXPECTED_ANY} */ (program))
+			webpackParse(source, { ...options, lazyNodes: true }),
+			tree.estree(/** @type {number} */ (/** @type {unknown} */ (program)))
 		]) {
 			const statement = /** @type {EXPECTED_ANY} */ (ast).body[0].body.body[0];
 			expect(statement.expression.argument.regex).toEqual({
@@ -4946,7 +4937,7 @@ describe("Parser", () => {
 			);
 			expect(
 				eventsOf(
-					(code, opts) => webpackParse(code, { ...opts, lazyNodes: true, estree: true }),
+					(code, opts) => webpackParse(code, { ...opts, lazyNodes: true }),
 					false
 				)
 			).toEqual(unlocated);
@@ -5224,7 +5215,7 @@ describe("SyntaxTree", () => {
 			const statement = tree.field(i, Field.body, root);
 			expect(tree.fieldCount(Field.attributes, statement)).toBe(0);
 			expect(
-				/** @type {EXPECTED_ANY} */ (tree.estree(statement)).attributes
+				/** @type {import("estree").ImportDeclaration} */ (tree.estree(statement)).attributes
 			).toEqual([]);
 		}
 	});
@@ -5256,7 +5247,7 @@ describe("SyntaxTree", () => {
 		expect("value" in literal).toBe(false);
 		const bigint = writeExpression("10n;");
 		expect(
-			/** @type {EXPECTED_ANY} */ (bigint.tree.estree(bigint.node))
+			/** @type {import("estree").BigIntLiteral} */ (bigint.tree.estree(bigint.node))
 				.bigint
 		).toBe("10");
 	});
@@ -5285,13 +5276,13 @@ describe("SyntaxTree", () => {
 		const statement = tree.add(NodeType.ExpressionStatement, 0, 2);
 		tree.set(statement, "directive", undefined);
 		expect(
-			/** @type {EXPECTED_ANY} */ (tree.estree(block)).body
+			/** @type {import("estree").BlockStatement} */ (tree.estree(block)).body
 		).toEqual([]);
 		expect(
-			/** @type {EXPECTED_ANY} */ (tree.estree(name)).name
+			/** @type {import("estree").Identifier} */ (tree.estree(name)).name
 		).toBeNull();
 		expect(
-			"directive" in /** @type {EXPECTED_OBJECT} */ (tree.estree(statement))
+			"directive" in /** @type {import("estree").Node} */ (tree.estree(statement))
 		).toBe(false);
 		const literal = tree.add(NodeType.Literal, 0, 1);
 		expect(tree.name(name)).toBe("");
@@ -5339,9 +5330,9 @@ describe("SyntaxTree", () => {
 			tree.set(unary, "argument", node);
 			node = unary;
 		}
-		let object = /** @type {EXPECTED_ANY} */ (tree.estree(node));
+		let object = /** @type {import("estree").Expression} */ (tree.estree(node));
 		while (object.type === "UnaryExpression") object = object.argument;
-		expect(object.name).toBe("a");
+		expect(/** @type {import("estree").Identifier} */ (object).name).toBe("a");
 	});
 
 	it("reads a node as the CSS and HTML paths read theirs", () => {
@@ -5648,7 +5639,6 @@ describe("WebpackParser writing a SyntaxTree", () => {
 		ecmaVersion: "latest",
 		sourceType: "module",
 		lazyNodes: true,
-		estree: true,
 		preserveParens: true
 	};
 
@@ -5699,21 +5689,16 @@ describe("WebpackParser writing a SyntaxTree", () => {
 		);
 	});
 
-	it("parses lazily into a tree unless asked for ESTree, read as the last parse", () => {
+	it("parses into a tree unless asked for ESTree, read as the last parse", () => {
 		const {
 			NodeType,
+			parseProgram,
 			parsedTree,
 			toEstreeObject
 		} = require("../../../lib/javascript/syntax-parser");
 		const source = "import a from 'b'; a(1);";
-		const lazy = /** @type {const} */ ({
-			ecmaVersion: "latest",
-			sourceType: "module",
-			lazyNodes: true
-		});
-		const expected = plain(WebpackParser.parse(source, { ...lazy, estree: true }));
-		const program = WebpackParser.parse(source, lazy);
-		expect(typeof program).toBe("number");
+		const expected = plain(parseProgram(source, 0, { estree: true }));
+		const program = parseProgram(source);
 		const tree =
 			/** @type {InstanceType<typeof SyntaxTree>} */ (parsedTree());
 		expect(tree.type(program)).toBe(NodeType.Program);
@@ -5726,7 +5711,7 @@ describe("WebpackParser writing a SyntaxTree", () => {
 		const { Field } = require("../../../lib/javascript/syntax-parser");
 		const source = "x = /re/g + 10n; if (y) { z(1, 2, 3, 4, [, 5]); }";
 		const whole = parseIntoTree(source);
-		const program = /** @type {EXPECTED_ANY} */ (
+		const program = /** @type {import("estree").Program} */ (
 			whole.tree.estree(whole.program)
 		);
 		const statement = whole.tree.field(1, Field.body, whole.program);
@@ -5736,7 +5721,7 @@ describe("WebpackParser writing a SyntaxTree", () => {
 		const partFirst = parseIntoTree(source);
 		const part = partFirst.tree.estree(partFirst.tree.field(1, Field.body, partFirst.program)
 		);
-		const rest = /** @type {EXPECTED_ANY} */ (
+		const rest = /** @type {import("estree").Program} */ (
 			partFirst.tree.estree(partFirst.program)
 		);
 		expect(rest.body[1]).toBe(part);

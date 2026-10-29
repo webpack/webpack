@@ -414,8 +414,7 @@ const parseOurs = (code, isModule) =>
 		sourceType: isModule ? "module" : "script",
 		ecmaVersion: "latest",
 		ranges: false,
-		lazyNodes: true,
-		estree: true
+		lazyNodes: true
 	});
 
 /**

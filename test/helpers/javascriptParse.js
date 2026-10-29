@@ -31,8 +31,7 @@ const parse = (code, options) => {
 		allowReturnOutsideFunction: rest.sourceType === "script",
 		...rest,
 		ranges: lazyNodes ? false : rest.ranges,
-		lazyNodes,
-		estree: true
+		lazyNodes
 	};
 	if (collectComments === true) {
 		if (lazyNodes) parserOptions.lazyComments = comments;
