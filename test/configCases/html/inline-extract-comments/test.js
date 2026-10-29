@@ -19,7 +19,7 @@ const listFiles = (dir) => {
 	return files;
 };
 
-for (const page of ["page.html", "sub/page.html"]) {
+for (const page of ["page.html", "sub/page.html", "my pages/page.html"]) {
 	it(`should point ${page} at the license files of what it inlines`, () => {
 		const html = fs
 			.readFileSync(path.resolve(__dirname, page))
@@ -29,7 +29,7 @@ for (const page of ["page.html", "sub/page.html"]) {
 		expect(html).toMatch(/<style>[^<]*--spacing:\s*1em/);
 		expect(html).not.toContain("css license");
 		expect(html).not.toContain("js license");
-		const pattern = /For license information please see ([^\s*]+)/g;
+		const pattern = /For license information please see (.+?) \*\//g;
 		/** @type {string[]} */
 		const licenses = [];
 		let match;

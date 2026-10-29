@@ -54,5 +54,11 @@ module.exports = [
 		filename: "scripts/[name].js",
 		cssFilename: "styles/[name].css",
 		htmlFilename: "sub/page.html"
+	}),
+	// The same, with spaces in every path the banner names.
+	config({
+		filename: "my scripts/my [name].js",
+		cssFilename: "my styles/my [name].css",
+		htmlFilename: "my pages/page.html"
 	})
 ];
