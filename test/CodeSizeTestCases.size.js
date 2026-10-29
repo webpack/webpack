@@ -52,6 +52,9 @@ const prepareOptions = require("./helpers/prepareOptions");
  * @property {Record<string, string[]>} runtimes runtime module names per runtime,
  * sorted — how many a runtime carries, and which ones, is the deterministic half
  * of what this measures; their bytes in isolation are not what anyone downloads
+ * @property {Record<string, Metrics>} compilers metrics per compiler of a
+ * multi-compiler case, keyed by its report prefix — what a case building one
+ * library per `output.library.type` is read by
  * @property {number} errors number of compilation errors
  * @property {string=} noOutput why the case emitted nothing — a build a case
  * expects to error (its own snapshot records it) counts as measured, not failed:
@@ -308,7 +311,7 @@ const applyDefaults = (options, index, testDirectory, outputDirectory) => {
  * build needs to run here is filled in; the rest is as the application says.
  * @param {string} directory application directory
  * @param {string} outputDirectory directory to build into
- * @returns {Promise<Configuration>} its configuration
+ * @returns {Promise<Configuration[]>} its configuration, one per compiler
  */
 const loadAppOptions = async (directory, outputDirectory) => {
 	// `require` of an ES module needs the Node.js this script already demands.
@@ -324,13 +327,22 @@ const loadAppOptions = async (directory, outputDirectory) => {
 
 	const config = require(path.join(directory, configName));
 
-	/** @type {Configuration} */
-	const options = { ...(config.default || config) };
-	options.context = directory;
-	if (!options.mode) options.mode = "production";
-	options.output = { ...options.output, path: outputDirectory };
-	options.infrastructureLogging = { level: "error", progress: false };
-	return options;
+	/** @type {Configuration | Configuration[]} */
+	const loaded = config.default || config;
+	const configs = Array.isArray(loaded) ? loaded : [loaded];
+	return configs.map((options, index) => ({
+		...options,
+		context: directory,
+		mode: options.mode || "production",
+		output: {
+			...options.output,
+			path:
+				configs.length === 1
+					? outputDirectory
+					: path.join(outputDirectory, options.name || String(index))
+		},
+		infrastructureLogging: { level: "error", progress: false }
+	}));
 };
 
 /**
@@ -457,6 +469,7 @@ const measureCase = async ({ category, name, directory: testDirectory }) => {
 		assets: {},
 		input: createInput(),
 		runtimes: {},
+		compilers: {},
 		errors: 0
 	};
 
@@ -475,7 +488,7 @@ const measureCase = async ({ category, name, directory: testDirectory }) => {
 	let optionsArr;
 	try {
 		if (app) {
-			optionsArr = [await loadAppOptions(testDirectory, outputDirectory)];
+			optionsArr = await loadAppOptions(testDirectory, outputDirectory);
 		} else {
 			const options = await prepareOptions(
 				require(path.join(testDirectory, "webpack.config.js")),
@@ -531,6 +544,14 @@ const measureCase = async ({ category, name, directory: testDirectory }) => {
 						? addMetrics(existing, metrics)
 						: metrics;
 					addMetrics(result.metrics, metrics);
+					if (compilers.length > 1) {
+						const key = prefix.slice(0, -1);
+						addMetrics(
+							result.compilers[key] ||
+								(result.compilers[key] = createMetrics()),
+							metrics
+						);
+					}
 				}
 			});
 		}
@@ -578,6 +599,7 @@ const measureCase = async ({ category, name, directory: testDirectory }) => {
 		result.assets = {};
 		result.input = createInput();
 		result.runtimes = {};
+		result.compilers = {};
 		result.metrics = createMetrics();
 	} finally {
 		DEFAULTS.HASH_FUNCTION = hashFunction;
@@ -1143,25 +1165,45 @@ const formatApps = (report, baseline) => {
 			: "| App | Gzip | Raw |",
 		baseline ? "| :-- | --: | --: | --: | --: |" : "| :-- | --: | --: |"
 	];
+	/**
+	 * @param {string} label app, and compiler of a multi-compiler app
+	 * @param {Metrics} metrics current metrics
+	 * @param {Metrics=} before baseline metrics, none when the row is new
+	 * @returns {string} the row
+	 */
+	const row = (label, { gzip, raw }, before) =>
+		baseline
+			? `| ${label} | ${formatBytes(gzip)} | ${change(
+					before && before.gzip,
+					gzip
+				)} | ${formatBytes(raw)} | ${change(before && before.raw, raw)} |`
+			: `| ${label} | ${formatBytes(gzip)} | ${formatBytes(raw)} |`;
+
 	for (const name of names) {
 		const result = report.cases[name];
-		const label = `\`${name.slice(APP_CATEGORY.length + 1)}\``;
+		const app = name.slice(APP_CATEGORY.length + 1);
 		if (result.noOutput) {
-			lines.push(`| ${label} | emitted nothing |`);
+			lines.push(`| \`${app}\` | emitted nothing |`);
 			continue;
 		}
-		const { gzip, raw } = result.metrics;
-		if (!baseline) {
-			lines.push(`| ${label} | ${formatBytes(gzip)} | ${formatBytes(raw)} |`);
-			continue;
+		const previous = baseline && baseline.cases[name];
+		// A multi-compiler app is one row per compiler: its total would add up
+		// bundles no user downloads together.
+		const compilers = Object.keys(result.compilers || {}).sort();
+		if (compilers.length === 0) {
+			lines.push(
+				row(`\`${app}\``, result.metrics, previous && previous.metrics)
+			);
 		}
-		const before = baseline.cases[name] && baseline.cases[name].metrics;
-		lines.push(
-			`| ${label} | ${formatBytes(gzip)} | ${change(
-				before && before.gzip,
-				gzip
-			)} | ${formatBytes(raw)} | ${change(before && before.raw, raw)} |`
-		);
+		for (const compiler of compilers) {
+			lines.push(
+				row(
+					`\`${app}\` ${compiler}`,
+					result.compilers[compiler],
+					previous && previous.compilers && previous.compilers[compiler]
+				)
+			);
+		}
 	}
 	lines.push("");
 	return lines;
@@ -1559,6 +1601,7 @@ const run = async () => {
 				assets: {},
 				input: createInput(),
 				runtimes: {},
+				compilers: {},
 				errors: 0,
 				noOutput: `harness: ${/** @type {Error} */ (err).message}`
 			};

@@ -112,8 +112,12 @@ Directories come first, in alphabetical order, then the individual files worth t
 ### `sizeCoreReports/`
 
 - **Purpose**: Whole applications for `yarn test:size` ([below](#codesizetestcasessizejs)), whose report gives each one's total download in a **Sample apps** table.
-- **A case** is a directory with a `webpack.config.mjs` (or `.js`) and, optionally, an `options.mjs` whose exported `setup()` runs first to generate or install its sources (into `generated/`, which git ignores). The harness sets only `context`, `output.path`, `mode: "production"` when unset and quiet logging; everything else is the application's own configuration.
-- **Today**: `react-100`, `react-1k` and `react-5k`, React apps of that many components from the `realistic-app` benchmark's generator (`test/harness/benchmark/create-app.mjs`).
+- **A case** is a directory with a `webpack.config.mjs` (or `.js`; an array builds one compiler per entry, each reported on its own row) and, optionally, an `options.mjs` whose exported `setup()` runs first to generate or install its sources (into `generated/`, which git ignores). The harness sets only `context`, `output.path`, `mode: "production"` when unset and quiet logging; everything else is the application's own configuration.
+- **Today**, each target with script (or CommonJS) and ES module output (`-esm`):
+  - `web`: `react-100`, `react-1k`, `react-5k` and `react-1k-esm`, React apps of that many components (lazy routes, CSS modules, JSON, SVG) from the `realistic-app` benchmark's generator (`test/harness/benchmark/create-app.mjs`).
+  - `node`: `node-ssr` and `node-ssr-esm`, that app rendered on the server by an `http` server with `react-dom/server` (`test/harness/size/create-server.mjs`).
+  - `webworker`: `webworker` and `webworker-esm`, a message loop lazily loading 40 data tasks built on `lodash-es` and `date-fns` (`test/harness/size/create-worker.mjs`).
+  - `library`: one small library built once per `output.library.type`, the types read from the schema.
 
 ### `specCases/`
 
