@@ -11426,6 +11426,31 @@ x = a ** b ** c; x = (a ** b) ** c; x = (-a) ** b; x = a < b < c; x = a < (b < c
 			}
 		});
 
+		it("should drop a write to a `for…of` head's `let` from its body, not its right side", async () => {
+			const { minify } = await load();
+			for (const [input, written] of [
+				[
+					"export function f(a){let p;for(let x of a)p=()=>{x=3};return p}",
+					"export function f(a){let p;for(let x of a)p=()=>{};return p}"
+				],
+				[
+					"export function f(a){for(let x of a)x=1,h(x)}",
+					"export function f(a){for(let x of a)h(1)}"
+				],
+				[
+					"export function f(a){let p;for(const x of a)p=()=>x;return p}",
+					"export function f(a){let p;for(let x of a)p=()=>x;return p}"
+				]
+			]) {
+				const { code } = await minify(input, {
+					module: true,
+					compress: {},
+					mangle: false
+				});
+				expect(code).toBe(written);
+			}
+		});
+
 		it("should keep a write to a `let` that may run before its declaration", async () => {
 			const { minify } = await load();
 			for (const input of [

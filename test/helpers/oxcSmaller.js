@@ -498,6 +498,13 @@ const OXC_SMALLER_BY_REASON = [
 		["oxc minifier: peephole/remove_unused_private_members.rs:27"]
 	],
 	[
+		"oxc's output is wrong: it drops a write in a `for…of` or `for…in` right side to the loop's own `let`, which throws a ReferenceError there, as its own test keeps it",
+		[
+			"oxc minifier: peephole/merge_assignments_to_declarations.rs:106",
+			"oxc minifier: peephole/merge_assignments_to_declarations.rs:107"
+		]
+	],
+	[
 		"oxc drops an unread deferred or source-phase import, assuming its load cannot fail, where webpack keeps it as oxc's `invalid_import_side_effects` does, since it still fetches and links its module",
 		[
 			"oxc minifier: peephole/remove_unused_declaration.rs:1086",
