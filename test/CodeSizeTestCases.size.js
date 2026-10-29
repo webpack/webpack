@@ -1131,20 +1131,61 @@ const formatBiggestAssets = (report) => {
 };
 
 /**
+ * The rows of the sample apps table: one per app, or per compiler of a
+ * multi-compiler app, whose total would add up bundles no user downloads together.
+ * @param {Report} report report to read
+ * @returns {Map<string, Metrics | null>} metrics per row label, null for an app
+ * that emitted nothing
+ */
+const appRows = (report) => {
+	/** @type {Map<string, Metrics | null>} */
+	const rows = new Map();
+	for (const name of Object.keys(report.cases)) {
+		if (!name.startsWith(`${APP_CATEGORY}/`)) continue;
+		const result = report.cases[name];
+		const app = `\`${name.slice(APP_CATEGORY.length + 1)}\``;
+		if (result.noOutput) {
+			rows.set(app, null);
+			continue;
+		}
+		const compilers = Object.keys(result.compilers || {}).sort();
+		if (compilers.length === 0) rows.set(app, result.metrics);
+		for (const compiler of compilers) {
+			rows.set(`${app} ${compiler}`, result.compilers[compiler]);
+		}
+	}
+	return rows;
+};
+
+/**
  * One row per sample application, summed over every asset it emits: the whole
- * download, which per-asset rows hide once code moves between chunks.
+ * download, which per-asset rows hide once code moves between chunks. Against a
+ * baseline only new, changed and deleted rows are open; unchanged ones fold away.
  * @param {Report} report current report
  * @param {Report=} baseline baseline report
  * @returns {string[]} markdown lines
  */
 const formatApps = (report, baseline) => {
-	const names = Object.keys(report.cases).filter((name) =>
-		name.startsWith(`${APP_CATEGORY}/`)
-	);
-	if (names.length === 0) return [];
+	const current = appRows(report);
+	if (current.size === 0) return [];
+
+	if (!baseline) {
+		return [
+			"### Sample apps",
+			"",
+			"| App | Gzip | Raw |",
+			"| :-- | --: | --: |",
+			...Array.from(current, ([label, metrics]) =>
+				metrics
+					? `| ${label} | ${formatBytes(metrics.gzip)} | ${formatBytes(metrics.raw)} |`
+					: `| ${label} | emitted nothing |`
+			),
+			""
+		];
+	}
 
 	/**
-	 * @param {number | undefined} before baseline bytes, none when the app is new
+	 * @param {number | undefined} before baseline bytes, none when the row is new
 	 * @param {number} after current bytes
 	 * @returns {string} the change cell
 	 */
@@ -1156,57 +1197,73 @@ const formatApps = (report, baseline) => {
 				: `${changeMarker(after - before)} ${formatDelta(
 						after - before
 					)} (${formatPercent(before, after)})`;
-
-	const lines = [
-		"### Sample apps",
-		"",
-		baseline
-			? "| App | Gzip | Gzip change | Raw | Raw change |"
-			: "| App | Gzip | Raw |",
-		baseline ? "| :-- | --: | --: | --: | --: |" : "| :-- | --: | --: |"
-	];
 	/**
 	 * @param {string} label app, and compiler of a multi-compiler app
-	 * @param {Metrics} metrics current metrics
-	 * @param {Metrics=} before baseline metrics, none when the row is new
+	 * @param {Metrics} after current metrics
+	 * @param {Metrics | null | undefined} before baseline metrics, none when new
 	 * @returns {string} the row
 	 */
-	const row = (label, { gzip, raw }, before) =>
-		baseline
-			? `| ${label} | ${formatBytes(gzip)} | ${change(
-					before && before.gzip,
-					gzip
-				)} | ${formatBytes(raw)} | ${change(before && before.raw, raw)} |`
-			: `| ${label} | ${formatBytes(gzip)} | ${formatBytes(raw)} |`;
+	const row = (label, after, before) =>
+		`| ${label} | ${formatBytes(after.gzip)} | ${change(
+			before ? before.gzip : undefined,
+			after.gzip
+		)} | ${formatBytes(after.raw)} | ${change(
+			before ? before.raw : undefined,
+			after.raw
+		)} |`;
 
-	for (const name of names) {
-		const result = report.cases[name];
-		const app = name.slice(APP_CATEGORY.length + 1);
-		if (result.noOutput) {
-			lines.push(`| \`${app}\` | emitted nothing |`);
-			continue;
-		}
-		const previous = baseline && baseline.cases[name];
-		// A multi-compiler app is one row per compiler: its total would add up
-		// bundles no user downloads together.
-		const compilers = Object.keys(result.compilers || {}).sort();
-		if (compilers.length === 0) {
-			lines.push(
-				row(`\`${app}\``, result.metrics, previous && previous.metrics)
+	const previous = appRows(baseline);
+	/** @type {string[]} */
+	const moved = [];
+	/** @type {string[]} */
+	const unchanged = [];
+	for (const [label, after] of current) {
+		const before = previous.get(label);
+		if (!after) {
+			(before === null ? unchanged : moved).push(
+				`| ${label} | emitted nothing | | | |`
 			);
+		} else if (
+			before &&
+			before.gzip === after.gzip &&
+			before.raw === after.raw
+		) {
+			unchanged.push(row(label, after, before));
+		} else {
+			moved.push(row(label, after, before));
 		}
-		for (const compiler of compilers) {
-			lines.push(
-				row(
-					`\`${app}\` ${compiler}`,
-					result.compilers[compiler],
-					previous && previous.compilers && previous.compilers[compiler]
-				)
+	}
+	for (const [label, before] of previous) {
+		if (before && !current.has(label)) {
+			moved.push(
+				`| ${label} | — | ➖ deleted (${formatBytes(before.gzip)}) | — | ➖ deleted (${formatBytes(before.raw)}) |`
 			);
 		}
 	}
-	lines.push("");
-	return lines;
+
+	const header = [
+		"| App | Gzip | Gzip change | Raw | Raw change |",
+		"| :-- | --: | --: | --: | --: |"
+	];
+	return [
+		"### Sample apps",
+		"",
+		...(moved.length > 0
+			? [...header, ...moved]
+			: ["No sample app changed size."]),
+		"",
+		...(unchanged.length > 0
+			? [
+					`<details><summary>${unchanged.length} unchanged app(s)</summary>`,
+					"",
+					...header,
+					...unchanged,
+					"",
+					"</details>",
+					""
+				]
+			: [])
+	];
 };
 
 /**
