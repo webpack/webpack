@@ -15748,6 +15748,80 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		).toBe("it(function(){g(class{m(){return this.x}})});");
 	});
 
+	it("should keep what may throw or run code in the one pass, as test262 reads it", () => {
+		const print = (
+			/** @type {string} */ source,
+			/** @type {Record<string, unknown>} */ compress = {}
+		) => minifyOnePass(source, { compress, mangle: {} }).code;
+		// A `using` binding is disposed of, read or not.
+		expect(print("function g(){ using x = f(); } g();")).toBe(
+			"function g(){using g=f()}g();"
+		);
+		expect(print("async function g(){ await using x = f(); } g();")).toBe(
+			"async function g(){await using n=f()}g();"
+		);
+		// Comparing or keying by an object converts it, under `pure_conversions: false`.
+		const compares =
+			"var y = {}; t(function () { 0 == y; y < 1; y === 1; null == y; });";
+		expect(print(compares)).toBe("var y={};t(function(){});");
+		expect(print(compares, { pure_conversions: false })).toBe(
+			"var y={};t(function(){0==y;y<1});"
+		);
+		const keys = "var k = {}; t(function () { ({ get [k]() {} }); });";
+		expect(print(keys)).toBe("var k={};t(function(){});");
+		expect(print(keys, { pure_conversions: false })).toBe(
+			"var k={};t(function(){({get[k](){}})});"
+		);
+		// Setting a class's or a strict function expression's own name throws.
+		expect(
+			print("t(function () { new (class C { m() { C = 1; } })().m(); });")
+		).toBe("t(function(){(new class n{m(){n=1}}).m()});");
+		expect(
+			print("t(function () { new (function f() { 'use strict'; f = 1; })(); });")
+		).toBe('t(function(){new function n(){"use strict";n=1}});');
+		// Setting a `let` in its dead zone throws; set after, it may go.
+		expect(print("{ function f() { x = 1; } t(f); let x; }")).toBe(
+			"{function f(){n=1}t(f);let n}"
+		);
+		expect(print("function g() { let x; x = 1; } g();")).toBe(
+			"function g(){}g();"
+		);
+		// A derived constructor's `this` throws before `super()`.
+		expect(
+			print(
+				"class C extends B { constructor() { t(() => { this; }); super(); } }"
+			)
+		).toBe("class C extends B{constructor(){t(()=>{this});super()}}");
+		expect(print("class C { constructor() { t(() => { this; }); } }")).toBe(
+			"class C{constructor(){t(()=>{})}}"
+		);
+		// An async generator awaits what it returns, a tick a bare `return` skips.
+		expect(
+			print(
+				"async function* g() { return undefined; } async function h() { return void 0; } t(g, h);"
+			)
+		).toBe("async function*g(){return void 0}async function h(){}t(g,h);");
+		// A global read in a test folds nothing, and throws nothing.
+		expect(print("if (!(1 < Infinity)) t();")).toBe("if(!(1<1/0))t();");
+	});
+
+	it("should keep a named function a direct eval in a class or function it returns reads", () => {
+		const sources = [
+			'result = (function f() { return class { static value = eval("typeof f") } })().value;',
+			'result = (function f() { return new (class { m() { return eval("typeof f") } })().m() })();',
+			'result = (function f() { return function () { return eval("typeof f") } })()();'
+		];
+		for (const source of sources) {
+			/** @type {{ result?: unknown }} */
+			const context = {};
+			vm.runInNewContext(
+				minifyOnePass(source, { compress: {}, mangle: {} }).code,
+				context
+			);
+			expect(context.result).toBe("function");
+		}
+	});
+
 	it("should wrap or enclose the source, mapping what it printed of it", () => {
 		const options = { compress: {}, mangle: {} };
 		const { SourceProcessor } = require("../../../lib/javascript/syntax");
