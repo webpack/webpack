@@ -9,7 +9,7 @@ it("should answer a check made while the runtime catches up", (done) => {
 			let concurrent;
 			const onStatus = (status) => {
 				if (status === "check" && !concurrent) {
-					concurrent = import.meta.webpackHot.check(true);
+					concurrent = Promise.resolve().then(() => import.meta.webpackHot.check(true));
 				}
 			};
 			import.meta.webpackHot.addStatusHandler(onStatus);
