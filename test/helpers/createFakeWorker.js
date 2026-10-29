@@ -128,6 +128,8 @@ if (${options.type === "module"}) {
 			this.worker = new (require("worker_threads").Worker)(workerBootstrap, {
 				eval: true
 			});
+			// A worker a test never terminates must not hold the process open after it.
+			this.worker.unref();
 
 			this._terminated = false;
 			// A chunk load rejected after the test got its result and called `terminate()`

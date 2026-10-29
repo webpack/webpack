@@ -11,7 +11,6 @@ const config = {
 	testTimeout: coverage ? 90000 : 30000,
 	globals: { __WEBPACK_TEST_COVERAGE__: coverage },
 	prettierPath: require.resolve("prettier-2"),
-	forceExit: true,
 	globalSetup: "<rootDir>/test/harness/globalSetup.js",
 	globalTeardown: "<rootDir>/test/harness/globalTeardown.js",
 	setupFiles: [
@@ -83,12 +82,12 @@ const partsValue = partsArg ? partsArg.slice("--parts=".length) : "1";
 const parts =
 	partsValue === "auto" ? require("os").cpus().length : Number(partsValue);
 // Jest reads these only from the top level and warns when a project sets them.
-const { forceExit, coverageReporters, ...projectConfig } = config;
+const { coverageReporters, ...projectConfig } = config;
 
 module.exports =
 	parts > 1
 		? {
-				// global options (coverage, forceExit) are read from the top level
+				// global options (coverage) are read from the top level
 				...config,
 				projects: Array.from({ length: parts }, (_, index) => ({
 					...projectConfig,
