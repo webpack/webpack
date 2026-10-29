@@ -227,11 +227,12 @@ it('inline: true keeps type="module" on an inlined module-script entry', () => {
 for (const page of ["page-classic.html", "page-typed.html"]) {
 	it(`inline: true writes the type="module" upgrade into the tag of ${page}`, () => {
 		const scripts =
-			readHtml(page).match(/<script\b[^>]*>[\s\S]*?<\/script>/g) || [];
+			readHtml(page).match(/<script\b[^>]*>[\s\S]*?<\/script[^>]*>/gi) ||
+			[];
 		expect(scripts).toHaveLength(1);
 		expect(scripts[0]).toMatch(/^<script type="module">[\s\S]*console\.log/);
 		// Never after the inlined body, where it would be a syntax error.
-		expect(scripts[0]).not.toMatch(/(?:type="module"|module)<\/script>$/);
+		expect(scripts[0]).not.toMatch(/(?:type="module"|module)<\/script[^>]*>$/i);
 	});
 }
 
