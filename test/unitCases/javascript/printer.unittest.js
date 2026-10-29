@@ -15832,10 +15832,10 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		// something else, and for a `NaN` some scope binds.
 		expect(
 			print(
-				'export const o={["a"]:1,[1]:2,["b c"]:3,["__proto__"]:4,["__proto__"](){}}; export class C{["m"](){} static ["x"]=1; ["constructor"](){} static ["prototype"](){} [NaN](){return 1} get [null](){return 2}} export function f({["k"]:v,["__proto__"]:p,[NaN]:n,[null]:u}){return [v,p,n,u]} export function g(NaN){return {[NaN]:1}}'
+				'export const o={["a"]:1,[1]:2,["b c"]:3,["__proto__"]:4,["__proto__"](){}}; export class C{["m"](){} static ["x"]=1; ["constructor"](){} static ["prototype"](){} ["#constructor"]=1; ["#x"](){} [NaN](){return 1} get [null](){return 2}} export function f({["k"]:v,["__proto__"]:p,[NaN]:n,[null]:u}){return [v,p,n,u]} export function g(NaN){return {[NaN]:1}}'
 			)
 		).toBe(
-			'export const o={a:1,1:2,"b c":3,["__proto__"]:4,__proto__(){}};export class C{m(){}static x=1;["constructor"](){}static["prototype"](){}NaN(){return 1}get null(){return 2}}export function f({k:t,__proto__:r,NaN:n,null:_}){return[t,r,n,_]}export function g(t){return{[t]:1}}'
+			'export const o={a:1,1:2,"b c":3,["__proto__"]:4,__proto__(){}};export class C{m(){}static x=1;["constructor"](){}static["prototype"](){}["#constructor"]=1;["#x"](){}NaN(){return 1}get null(){return 2}}export function f({k:t,__proto__:r,NaN:n,null:u}){return[t,r,n,u]}export function g(t){return{[t]:1}}'
 		);
 		expect(
 			print('export const o={["a"]:1};', {
