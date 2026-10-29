@@ -2874,6 +2874,17 @@ Array [
 ]
 `;
 
+exports[`syntax-printer improve phase should write a \`var\` guarded before anything writes it as \`undefined\` 1`] = `
+Array [
+  "export function f(){var E=g({});return E}",
+  "export function f(){var S;return g(S={}),S}",
+  "export function f(){var S;return g(S={}),S}",
+  "export function f(){var S,X=g(S={});return[S,X]}",
+  "export function f(){var E=g({});return E}",
+  "export function f(){for(;;){g({})}}",
+]
+`;
+
 exports[`syntax-printer improve phase should write less, printing the same: \`#__PURE__\` calls running more than a \`return\`, or returning what has side effects, passed on as arguments 1`] = `"function g(x){return x}var o={p:{q:g}};console.log((g(),1),g(g()),o.p.q(1),o.p);"`;
 
 exports[`syntax-printer improve phase should write less, printing the same: \`+= 1\` as \`++\` on a counter holding only numbers, but not on a property or a parameter that may hold a BigInt or a string 1`] = `"function f(o,s){o.a-=1,s+=1;for(var i=0;i<3;++i)console.log(i,o.a,s)}f({a:5},\\"s\\");"`;
@@ -3067,6 +3078,8 @@ exports[`syntax-printer improve phase should write less, printing the same: a \`
 exports[`syntax-printer improve phase should write less, printing the same: a \`var\` copying one of the function around it, set once per call, read through the name it copies 1`] = `"function g(){return{a:1,b:2}}function f(){var S=g();return function(){return S.a+S.b}}console.log(f()());"`;
 
 exports[`syntax-printer improve phase should write less, printing the same: a \`var\` declared bare, then set once to a parameter before every read, read through the parameter 1`] = `"function f(x){return x.foo+x.bar+x.baz}function g(x){return[x.p,x.p,x.p]}console.log(f({foo:1,bar:2,baz:3}),g({p:1}));"`;
+
+exports[`syntax-printer improve phase should write less, printing the same: a \`var\` guarded by \`||\` or \`??\` before anything writes it, as TypeScript writes an enum 1`] = `"function m(){var S,E=function(E){return E[E.A=0]=\\"A\\",E}({});!function(S){S[S.B=1]=\\"B\\"}(S={});var N=[];return N.push(E.A,S.B),[E,S,N]}console.log(JSON.stringify(m()));"`;
 
 exports[`syntax-printer improve phase should write less, printing the same: a \`var\` moving into a function called in place, which then stays one 1`] = `"function f(x){!function(){if(x){var a=console.log.name;console.log(a,a)}if(x){var b=console.log.name;console.log(b,b)}}()}f(1);"`;
 
