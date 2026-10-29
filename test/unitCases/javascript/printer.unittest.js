@@ -16495,6 +16495,30 @@ describe("JavaScript minifier mangling a SyntaxTree", () => {
 		}
 	});
 
+	it("should not read an outer name where a catch parameter of its name shadows it, in the one pass", () => {
+		const sources = [
+			"function k(e) { let a = e; try { throw 2 } catch (e) { return a } } result = k(1);",
+			"function k(e) { let a = e; try { throw 2 } catch (e) { return a + e } } result = k(1);",
+			"function k(e) { let a = e, b = a; try { throw 2 } catch (e) { return b + e } } result = k(1);",
+			"function k(e) { let a = e; g(a); try { throw 2 } catch (e) { return a } } function g() {} result = k(1);",
+			"function k(e) { const f = function () { return e }; try { throw 2 } catch (e) { return f() + e } } result = k(1);"
+		];
+		for (const source of sources) {
+			/** @type {{ result?: unknown }} */
+			const expected = {};
+			vm.runInNewContext(source, expected);
+			for (const mangle of [{}, false]) {
+				/** @type {{ result?: unknown }} */
+				const context = {};
+				vm.runInNewContext(
+					minifyOnePass(source, { compress: {}, mangle }).code,
+					context
+				);
+				expect(context.result).toBe(expected.result);
+			}
+		}
+	});
+
 	it("should refuse a node its scope analysis cannot read", () => {
 		const tree = new SyntaxTree();
 		const program = tree.addEstree(
