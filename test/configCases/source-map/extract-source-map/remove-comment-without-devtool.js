@@ -5,6 +5,7 @@ const fs = require("fs");
 require("./test1");
 require("./test2");
 require("./no-source-map");
+require("./malformed-url");
 
 it("should remove sourceMap comments when devtool is disabled", () => {
 	const source = fs.readFileSync(__filename, "utf-8");
