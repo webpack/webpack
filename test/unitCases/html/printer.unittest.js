@@ -3912,24 +3912,27 @@ describe("SourceProcessor — minify serialization edge cases", () => {
 			);
 		});
 
-		it("keeps a stray `</noscript>` that closes a nested one with scripting off", () => {
+		it("prints a nested <noscript> as written where minifying would move what follows it", () => {
 			// With scripting on, the outer body is text up to the first end tag and
-			// the second one closes nothing; with it off, the second closes the outer.
-			expect(
-				minify("<body><noscript><noscript>a</noscript>b</noscript>\n<p>x")
-			).toBe("<body><noscript><noscript>a</noscript>b</noscript>\n<p>x</body>");
-			expect(
-				minify(
-					"<body><noscript><noscript>a</noscript>b &amp; c</NOSCRIPT >&lt;d<p>x"
-				)
-			).toBe(
-				"<body><noscript><noscript>a</noscript>b & c</NOSCRIPT >&lt;d<p>x</body>"
-			);
+			// the next one closes nothing; with it off, that one closes the outer.
+			for (const source of [
+				"<body><noscript><noscript>a</noscript>b</noscript>\n<p>x",
+				"<body><noscript><noscript>a</noscript></noscript><p>x",
+				"<body><noscript><noscript>a</noscript>b\r\n</noscript>\r\n<p>x",
+				'<body><noscript><noscript>a</noscript>b</noscript x=">"><p>x',
+				"<body><NOSCRIPT><noscript>a</noscript>b &amp; c</noscript >&lt;d<p>x"
+			]) {
+				expect(minify(source)).toBe(source);
+			}
 		});
 
-		it("escapes the text as a whole where an end tag quotes a `>`", () => {
-			// The tag ends past the quoted `>`, so its pieces do not add up to the text.
-			expect(minify('<p>a</noscript x=">">b')).toBe("<p>ab");
+		it("minifies a nested <noscript> where both readers read the print alike", () => {
+			// Inside the `<p>` the stray end tag closes nothing for either reader.
+			expect(
+				minify("<body><noscript><noscript>a</noscript><p>b</noscript>c</p>")
+			).toBe("<body><noscript><noscript>a</noscript><p>bc</body>");
+			// Without a nested one, a stray end tag still goes.
+			expect(minify("<p>a</noscript>b")).toBe("<p>ab");
 		});
 
 		it("drops `</head>` once collapsing drops the whitespace behind it, in one print", () => {

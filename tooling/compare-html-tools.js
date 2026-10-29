@@ -298,8 +298,8 @@ ${body}\t<tfoot><tr><td colspan="4">${rows} rows</td></tr></tfoot>
 };
 
 // A `noscript` wherever the two scripting modes read it apart: in the head and
-// the body, around markup and references, in a table and a select, nested, and
-// one the input ends inside.
+// the body, around markup and references, in a table and a select, and one the
+// input ends inside.
 const NOSCRIPT = `<!DOCTYPE html>
 <html>
 <head>
@@ -311,9 +311,17 @@ const NOSCRIPT = `<!DOCTYPE html>
 <noscript><img src="pixel.gif" alt="tracking &amp; more"></noscript>
 <p>before<noscript>inline <b>bold</b> &lt;escaped&gt;</noscript >after</p>
 <table><tr><td>cell</td></tr><noscript>in a table</noscript></table>
-<noscript><noscript>nested</noscript>tail</noscript>
 <select><noscript><option>one</option></noscript></select>
 <noscript>left open <!-- a comment --> </nos
+`;
+
+// One `noscript` opening another, which a reader with scripting off nests and
+// closes at the end tag the scripting-on tree ignores: printed as written.
+const NESTED_NOSCRIPT = `<!DOCTYPE html>
+<title>Nested noscript</title>
+<p>before</p>
+<noscript><noscript>nested</noscript>tail</noscript>
+<p>after</p>
 `;
 
 // Every shape §13.2 has a recovery rule for: implied end tags, formatting
@@ -459,6 +467,7 @@ const fixtures = async () => {
 	}
 	out.push(["Table report (600 rows)", tablePage(600)]);
 	out.push(["Noscript", NOSCRIPT]);
+	out.push(["Nested noscript", NESTED_NOSCRIPT]);
 	out.push(["Tag soup", TAG_SOUP]);
 	out.push(["Web components", WEB_COMPONENTS]);
 	out.push([
@@ -2088,6 +2097,7 @@ const invariantFixtures = () => {
 	out.push(["Component library page", componentPage(8)]);
 	out.push(["Table report", tablePage(10)]);
 	out.push(["Noscript", NOSCRIPT]);
+	out.push(["Nested noscript", NESTED_NOSCRIPT]);
 	out.push(["Tag soup", TAG_SOUP]);
 	out.push(["Web components", WEB_COMPONENTS]);
 	out.push(["cold constructs", COLD_CONSTRUCTS]);
