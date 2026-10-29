@@ -15714,6 +15714,32 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		expect(print("var a = 5; function reset() { a = 6 }")).toBe("");
 	});
 
+	it("should keep a `Number` constant a pattern or assignment writes", () => {
+		const { code } = minifyOnePass(
+			"[Number.POSITIVE_INFINITY]=[7];({v:Number.NEGATIVE_INFINITY}={v:1});[...Number.POSITIVE_INFINITY]=[7];for([Number.POSITIVE_INFINITY] of [[7]]);Number.NaN++;let v;({[Number.POSITIVE_INFINITY]:v=Number.NEGATIVE_INFINITY}={});g(Number.NaN)",
+			{ compress: {}, mangle: {} }
+		);
+		// Written, each stays; read, a key, a default and an argument fold.
+		expect(code).toBe(
+			"[Number.POSITIVE_INFINITY]=[7];({v:Number.NEGATIVE_INFINITY}={v:1});[...Number.POSITIVE_INFINITY]=[7];for([Number.POSITIVE_INFINITY]of[[7]]);Number.NaN++;let v;({[1/0]:v=-1/0}={});g(NaN);"
+		);
+	});
+
+	it("should keep a `let` read before its declaration, from any function", () => {
+		const print = (/** @type {string} */ source) =>
+			minifyOnePass(source, { compress: {}, mangle: {} }).code;
+		// The read throws: it may not print as the value.
+		expect(
+			print(
+				"function f(){ try { g(() => later) } catch (e) {} let later = 1; return later } it(f())"
+			)
+		).toBe("function f(){try{g(()=>t)}catch(t){}let t=1;return t}it(f());");
+		// Read after it, it folds.
+		expect(
+			print("function f(){ let later = 1; g(() => later); return later } it(f())")
+		).toBe("function f(){g(()=>1);return 1}it(f());");
+	});
+
 	it("should read a single named source under its name", async () => {
 		const options = { compress: false, mangle: false };
 		const printed = await minifyCounted({ "a.js": "a( 1 )" }, options, true);
