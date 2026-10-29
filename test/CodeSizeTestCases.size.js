@@ -1,10 +1,10 @@
 "use strict";
 
-// Builds every `test/configCases` case with the defaults a user gets, plus
-// generated React apps of three sizes, and reports how large what webpack
-// generated is. Run through `yarn test:size`; CI compares the report against
-// the one `main` last uploaded. Nothing here asserts and nothing here fails: a
-// size that moved is information, not a defect.
+// Builds every `test/configCases` case with the defaults a user gets, plus the
+// whole applications in `test/sizeCoreReports`, and reports how large what
+// webpack generated is. Run through `yarn test:size`; CI compares the report
+// against the one `main` last uploaded. Nothing here asserts and nothing here
+// fails: a size that moved is information, not a defect.
 
 const { execFileSync } = require("child_process");
 const { createHash } = require("crypto");
@@ -106,18 +106,10 @@ const prepareOptions = require("./helpers/prepareOptions");
 const rootPath = path.resolve(__dirname, "..");
 const casesPath = path.join(__dirname, "configCases");
 const outputBaseDir = path.join(__dirname, "js", "size");
-const appsBaseDir = path.join(__dirname, "js", "size-apps");
-
-// Whole applications, generated the way the `realistic-app` benchmark is, at
-// [lazy features, components per feature]: a config case isolates one feature,
-// so only these show what a change costs a real bundle as it grows.
+// Whole applications, one directory each, reported as `apps/<case>`: a config
+// case isolates one feature, so only these show what a real bundle pays.
+const appsPath = path.join(__dirname, "sizeCoreReports");
 const APP_CATEGORY = "apps";
-/** @type {Record<string, [number, number]>} */
-const APP_SHAPES = {
-	"react-100": [10, 10],
-	"react-1k": [25, 40],
-	"react-5k": [50, 100]
-};
 
 // Bumped whenever a compression setting or the report shape changes, so a stale
 // baseline is reported as incomparable instead of compared against silently.
@@ -311,35 +303,34 @@ const applyDefaults = (options, index, testDirectory, outputDirectory) => {
 };
 
 /**
- * Generates a sample application and returns how a user would build it for the
- * browser, with hashed filenames as a deployed app has them.
- * @param {string} name key of `APP_SHAPES`
- * @param {string} directory directory to generate it into
+ * Loads an application's configuration, first running the `setup()` its
+ * `options.mjs` may export to generate or install its sources. Only what a
+ * build needs to run here is filled in; the rest is as the application says.
+ * @param {string} directory application directory
  * @param {string} outputDirectory directory to build into
  * @returns {Promise<Configuration>} its configuration
  */
-const createAppOptions = async (name, directory, outputDirectory) => {
-	// Loaded here, not at the top: `require` of an ES module needs the Node.js
-	// this script already demands, and a run filtered to config cases skips it.
-	const { default: createApp } = require("./harness/benchmark/create-app.mjs");
+const loadAppOptions = async (directory, outputDirectory) => {
+	// `require` of an ES module needs the Node.js this script already demands.
+	const optionsPath = path.join(directory, "options.mjs");
+	if (fs.existsSync(optionsPath)) {
+		const { setup } = require(optionsPath);
 
-	await createApp(directory, ...APP_SHAPES[name]);
-	return {
-		context: directory,
-		mode: "production",
-		entry: "./index.js",
-		target: "web",
-		experiments: { css: true },
-		module: { rules: [{ test: /\.svg$/, type: "asset" }] },
-		resolve: { alias: { "@": directory } },
-		output: {
-			path: outputDirectory,
-			filename: "[name].[contenthash].js",
-			chunkFilename: "[name].[contenthash].js",
-			assetModuleFilename: "[name].[contenthash][ext]"
-		},
-		infrastructureLogging: { level: "error", progress: false }
-	};
+		if (setup) await setup();
+	}
+	const configName = fs.existsSync(path.join(directory, "webpack.config.mjs"))
+		? "webpack.config.mjs"
+		: "webpack.config.js";
+
+	const config = require(path.join(directory, configName));
+
+	/** @type {Configuration} */
+	const options = { ...(config.default || config) };
+	options.context = directory;
+	if (!options.mode) options.mode = "production";
+	options.output = { ...options.output, path: outputDirectory };
+	options.infrastructureLogging = { level: "error", progress: false };
+	return options;
 };
 
 /**
@@ -484,9 +475,7 @@ const measureCase = async ({ category, name, directory: testDirectory }) => {
 	let optionsArr;
 	try {
 		if (app) {
-			optionsArr = [
-				await createAppOptions(name, testDirectory, outputDirectory)
-			];
+			optionsArr = [await loadAppOptions(testDirectory, outputDirectory)];
 		} else {
 			const options = await prepareOptions(
 				require(path.join(testDirectory, "webpack.config.js")),
@@ -1220,7 +1209,7 @@ const formatMarkdown = (report, baseline, noBaselineReason) => {
 		""
 	];
 
-	const built = `Built \`test/configCases\` with the defaults a user gets, and generated React apps (\`apps/\`): ${
+	const built = `Built \`test/configCases\` with the defaults a user gets, and the apps in \`test/sizeCoreReports\` (\`apps/\`): ${
 		report.meta.cases
 	} test(s), ${report.meta.assets} asset(s)${
 		report.meta.withoutOutput > 0
@@ -1497,11 +1486,14 @@ const discoverCases = (filter, negativeFilter) => {
 		}
 	}
 
-	for (const name of Object.keys(APP_SHAPES)) {
+	for (const name of fs.readdirSync(appsPath).sort()) {
+		const directory = path.join(appsPath, name);
+		if (name.startsWith("_") || !fs.statSync(directory).isDirectory()) {
+			continue;
+		}
 		const id = `${APP_CATEGORY}/${name}`;
 		if (filter && !filter.test(id)) continue;
 		if (negativeFilter && negativeFilter.test(id)) continue;
-		const directory = path.join(appsBaseDir, name);
 		cases.push({ category: APP_CATEGORY, name, id, directory });
 	}
 
