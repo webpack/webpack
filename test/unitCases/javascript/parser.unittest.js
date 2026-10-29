@@ -6130,7 +6130,12 @@ describe("validateRegExpLiteral", () => {
 			["a", "gg", 2018, "Duplicate regular expression flag"],
 			["[a-z]", "v", 2018, "Invalid regular expression flag"],
 			["\\p{L}", "u", 2018, undefined],
-			["(", "", "latest", "Unterminated group"]
+			["(", "", "latest", "Unterminated group"],
+			["[", "g", 2018, "Unterminated regular expression"],
+			["a\\", "", 2018, "Unterminated regular expression"],
+			["a/b", "", 2018, "Unterminated regular expression"],
+			["[/]", "", 2018, undefined],
+			["a\nb", "", 2018, "Unterminated regular expression"]
 		])
 	)("holds /%s/%s at %s to the spec", (pattern, flags, ecmaVersion, error) => {
 		const validate = () => validateRegExpLiteral(pattern, flags, ecmaVersion);
