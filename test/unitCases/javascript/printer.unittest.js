@@ -15900,6 +15900,142 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			}
 		}
 	});
+
+	describe("mangling properties in one pass", () => {
+		const PROPERTY_SOURCES = [
+			'var o = { zAlpha: 1, "zGamma": 3, 4: "four", zNested: { zDeep: 5 } }; o.zDelta = o.zAlpha + 1; o["zEpsilon"] = 6; console.log(o.zAlpha, o.zGamma, o[4], o.zNested.zDeep, o.zDelta, o.zEpsilon, "zDelta" in o, "zZeta" in o);',
+			'class Base { constructor(v) { this.zValue = v; } get zDoubled() { return this.zValue * 2; } set zDoubled(v) { this.zValue = v / 2; } zMethod() { return this.zValue + 1; } static zCreate(v) { return new Base(v); } } class Child extends Base { zField = 3; static zCount = 0; ["zComputed"]() { return this.zField; } #zSecret = 4; get zBoth() { return this.#zSecret + this.zField; } } const c = new Child(4); c.zDoubled = 20; console.log(c.zValue, c.zDoubled, c.zMethod(), c.zComputed(), Child.zCount, Base.zCreate(2).zMethod(), c.zBoth);',
+			"function f({ zFirst, zSecond: renamed, zThird = 3, ...rest }) { return [zFirst, renamed, zThird, rest.zFourth]; } const { zFirst, zSecond } = { zFirst: 1, zSecond: 2 }; let a, b; ({ zA: a, zB: b = 5 } = { zA: 7 }); console.log(f({ zFirst: 1, zSecond: 2, zFourth: 4 }).join(), zFirst, zSecond, a, b);",
+			"(function () { var zAlpha = 1, zBeta = { zAlpha: 2 }; function h({ zAlpha = 3, zBeta: g }) { return zAlpha + g; } var o = { zAlpha, zBeta, zSum() { return this.zAlpha; } }; console.log(o.zAlpha, o.zBeta.zAlpha, o.zSum(), h({ zAlpha: 4, zBeta: 5 }), h({ zBeta: 6 })); })();",
+			'var conf = { "zQuoted": 1, zPlain: 2 }; conf["zQuoted"] += 1; conf.zPlain += conf["zQuoted"]; console.log(conf["zQuoted"], conf.zPlain);',
+			'var o = { toString() { return "custom"; }, valueOf() { return 42; }, length: 3, zLen: 4, innerHTML: 5 }; var base = { zInherited: 1 }; var p = { __proto__: base, zOwn: 2 }; console.log(String(o), o + 1, o.length, o.zLen, o.innerHTML, [1, 2].map(function (v) { return v * 2; }).join(), p.zInherited, p.zOwn, Object.getPrototypeOf(p) === base);',
+			'var o = { /*@__MANGLE_PROP__*/ zMarked: 1, zUnmarked: 2, _zUnder: 3 }; Object.defineProperty(o, "zDefined", { value: 4, enumerable: true }); console.log(o.zMarked, o.zUnmarked, o._zUnder, o["_zUnder"], o.zDefined, "zDefined" in o);',
+			'var o = { zA: { zB: 1 } }; function* g() { yield o.zA; yield (yield).zA; } var it = g(); var t = function () { return o; }; class P { #zP = 1; static zHas(x) { return #zP in x; } } var x = 0; console.log(o.zA?.zB, (o).zA.zB, it.next().value.zB, typeof o.zA, t`a`.zA.zB, void o.zA, -o.zA.zB, ++x.zN, [o][0].zA.zB, new P().zP, (1, o).zA.zB, /*@__MANGLE_PROP__*/ o.zA.zB, /*@__MANGLE_PROP__*/ t().zA, /*@__MANGLE_PROP__*/ o["zA"], P.zHas(new P()), "zA" in o, o[/*@__KEY__*/ "zA"].zB, typeof globalThis.zG, o.zA["zB"], /* plain */ o.zA.zB, (o?.zA).zB, [, o.zA][1].zB, o[(0, "zA")].zB, Q.zS); switch (x) { case o.zA: break; } class Q { static ["zS" + "t"] = 1; static get zS() { return Q.zSt; } }',
+			'var o = {}; Object.defineProperty(o, "zDef", { value: 1 }); Object["defineProperty"](o, "zIdx", { value: 2 }); console.defineProperty = function () {}; console.defineProperty(o, "zNot"); Object?.defineProperty(o, "zOpt", { value: 3 }); (async function () { return (await o).zDef; })(); console.log(o.zDef, o.zIdx, o.zOpt, o["zIdx"], o?.zIdx, o[0 ? "zDef" : "zIdx"]);',
+			'var k = "zDyn"; var o = { ["zLit"]: 1, [k]: 2, ["zA" + "zB"]: 3 }; o.zLit2 = o["zLit"]; function pick(c) { return o[c ? "zLit" : "zLit2"]; } console.log(o.zLit, o.zLit2, o.zAzB, o["zA" + "zB"], pick(true), pick(false), o?.["zLit"], globalThis.zGlobal);'
+		];
+		/** @type {{ keep_quoted?: boolean | "strict", reserved?: string[], regex?: RegExp | string, debug?: boolean | string, undeclared?: boolean, only_annotated?: boolean }[]} */
+		const PROPERTY_OPTIONS = [
+			{},
+			{ keep_quoted: true },
+			{ keep_quoted: "strict" },
+			{ reserved: ["zAlpha", "zValue"] },
+			{ regex: /^_/ },
+			{ regex: "^(zAlpha|zLit|zValue)$" },
+			{ debug: true },
+			{ debug: "S" },
+			{ undeclared: true },
+			{ only_annotated: true },
+			{ only_annotated: true, regex: /^zU/ }
+		];
+
+		it("should rename the properties terser's tree renames, and run alike", async () => {
+			const { minify } = await load();
+			for (const source of PROPERTY_SOURCES) {
+				for (const given of PROPERTY_OPTIONS) {
+					const reference = { props: new Map() };
+					const oneCache = { props: new Map() };
+					const minified = await minify(source, {
+						compress: {},
+						mangle: { properties: { ...given, cache: reference } }
+					});
+					const { code } = minifyOnePass(source, {
+						compress: {},
+						mangle: { properties: { ...given, cache: oneCache } }
+					});
+					// Where terser's output reads a key it kept as renamed, this runs
+					// as the source does; strictly, a name read quoted and bare is
+					// the source's to keep apart, which these do not.
+					if (given.keep_quoted !== "strict") {
+						expect([
+							runProgram(/** @type {string} */ (minified.code)),
+							runProgram(source)
+						]).toContain(runProgram(code));
+					}
+					// A computed key `keep_quoted` keeps is kept with its reads.
+					const computedKept =
+						source.includes('["zComputed"]') && given.keep_quoted === true;
+					if (!computedKept) {
+						expect([...oneCache.props.keys()].sort()).toEqual(
+							[...reference.props.keys()].sort()
+						);
+					}
+				}
+			}
+		});
+
+		it("should read a `defineProperty` call with no name as no name", () => {
+			const { code } = minifyOnePass(
+				"var o = read(); Object.defineProperty(o); sink(o.zKey);",
+				{ compress: {}, mangle: { properties: {} } }
+			);
+			expect(code).toBe("var o=read();Object.defineProperty(o);sink(o.o);");
+		});
+
+		it("should print a key renamed apart from the name its shorthand reads", () => {
+			const { code } = minifyOnePass(
+				"var zKey = read(); var { zOther } = zKey; sink({ zKey, zOther });",
+				{ compress: {}, mangle: { properties: {} } }
+			);
+			expect(code).toBe("var zKey=read(),{K:zOther}=zKey;sink({h:zKey,K:zOther});");
+			const shorthand = minifyOnePass(
+				"function f({ zKey, zOther = 1 }, zLast) { return { zKey, zOther, zLast }; } sink(f({ zKey: 1 }, 2).zLast);",
+				{ ecma: 2020, compress: {}, mangle: { properties: {} } }
+			).code;
+			expect(shorthand).toBe(
+				"function f({t:zKey,K:zOther=1},z){return{t:zKey,K:zOther,L:z}}sink(f({t:1},2).L);"
+			);
+		});
+
+		it("should keep a computed key kept quoted together with its reads", () => {
+			const { code } = minifyOnePass(
+				'class A { ["zKept"]() { return 1; } zRenamed() { return 2; } } var a = new A(); console.log(a.zKept(), a.zRenamed());',
+				{ compress: {}, mangle: { properties: { keep_quoted: true } } }
+			);
+			expect(code).toContain('["zKept"]()');
+			expect(code).toContain("a.zKept()");
+			expect(code).not.toContain("zRenamed");
+			expect(runProgram(code)).toBe("1 2");
+		});
+
+		it("should read and write the property names a name cache holds", async () => {
+			const { minify } = await load();
+			const first = "var o = { zFooBar: 1, zBazQux: 2 }; console.log(o.zFooBar, o.zBazQux);";
+			const second = "var p = { zBazQux: 3, zOther: 4 }; console.log(p.zBazQux, p.zOther);";
+			/**
+			 * @param {(source: string, nameCache: EXPECTED_OBJECT) => Promise<string>} run a minify
+			 * @returns {Promise<{ codes: string[], nameCache: EXPECTED_OBJECT }>} what it printed, and the cache it left
+			 */
+			const twice = async (run) => {
+				const nameCache = { props: { props: { $zFooBar: "x" } } };
+				const codes = [await run(first, nameCache), await run(second, nameCache)];
+				return { codes, nameCache };
+			};
+			const reference = await twice(
+				async (source, nameCache) =>
+					/** @type {string} */ (
+						(
+							await minify(source, {
+								nameCache,
+								compress: {},
+								mangle: { cache: null, properties: {} }
+							})
+						).code
+					)
+			);
+			const onePass = await twice(
+				async (source, nameCache) =>
+					minifyOnePass(source, {
+						nameCache,
+						compress: {},
+						mangle: { cache: null, properties: {} }
+					}).code
+			);
+			expect(onePass.codes[0]).toContain("{x:1,");
+			expect(onePass.nameCache).toEqual(reference.nameCache);
+			expect(onePass.codes.map(runProgram)).toEqual(reference.codes.map(runProgram));
+		});
+	});
 });
 
 // Sources reaching each corner of the mangler's scopes: parameters, hoisting
