@@ -3,7 +3,7 @@
 // cspell:ignore binop, fnames, propmangle, fargs, domprops, argnames, nondeferred, loopcontrol, Defun, defun, NOINLINE, Funarg, unmangleable, Unmangleable, thedef, funs
 // cspell:ignore fnames
 // cspell:ignore argnames, bcatch, bfinally, argname
-// cspell:ignore AAAWA MAAH EAAI EAAIA EAAGC
+// cspell:ignore AAAWA MAAH EAAI EAAIA EAAGC ACAA IAAYC EAAWC
 // cspell:ignore endline, endcol, endpos, nlb, thedef
 
 const vm = require("vm");
@@ -15748,6 +15748,44 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		).toBe("it(function(){g(class{m(){return this.x}})});");
 	});
 
+	it("should wrap or enclose the source, mapping what it printed of it", () => {
+		const options = { compress: {}, mangle: {} };
+		const { SourceProcessor } = require("../../../lib/javascript/syntax");
+		const wrapped = /** @type {{ code: string, map: EXPECTED_ANY }} */ (
+			new SourceProcessor().process(
+				"var longName = 1;\nexports.a = longName + g();",
+				{ mode: "minify", ...options, wrap: "lib", source: "a.js" }
+			)
+		);
+		expect(wrapped.code).toBe(
+			'(function(e){e.a=1+g()})(typeof lib>"u"?lib={}:lib);'
+		);
+		// Only the source's own names map, from its second line.
+		expect(wrapped.map.names).toEqual(["exports", "longName", "g"]);
+		expect(wrapped.map.mappings).toBe("aACAA,IAAYC,EAAWC");
+		expect(
+			minifyOnePass("var x = 1; window.v = x + y;", {
+				...options,
+				enclose: "y:7"
+			}).code
+		).toBe("(function(n){window.v=1+n})(7);");
+		expect(
+			minifyOnePass("window.v = y;", { ...options, enclose: true }).code
+		).toBe("(function(){window.v=y})();");
+	});
+
+	it("should keep the names a global pattern keeps, however often it is asked", () => {
+		const pattern = /keep/g;
+		const { code } = minifyOnePass(
+			"function keepMe(){} function keepToo(){} function dropMe(){} g(keepMe, keepToo, dropMe)",
+			{ compress: {}, mangle: { keep_fnames: pattern }, keep_fnames: pattern, toplevel: true }
+		);
+		expect(code).toBe(
+			"function keepMe(){}function keepToo(){}function e(){}g(keepMe,keepToo,e);"
+		);
+		expect(pattern.lastIndex).toBe(0);
+	});
+
 	it("should keep a `let` read before its declaration, from any function", () => {
 		const print = (/** @type {string} */ source) =>
 			minifyOnePass(source, { compress: {}, mangle: {} }).code;
@@ -17046,7 +17084,7 @@ describe("jsMinify", () => {
 		await expect(jsMinify({ "broken.js": "function (" })).rejects.toThrow();
 	});
 
-	it("should minify through terser's tree what the one pass does not read", async () => {
+	it("should cache the names it hands out across assets", async () => {
 		const nameCache = {};
 		const result = await jsMinify(
 			{ "cached.js": "var longName = 1; sink(longName);" },
@@ -17057,6 +17095,37 @@ describe("jsMinify", () => {
 		expect(result.code).toBe("sink(1);");
 		expect(typeof result.map).toBe("object");
 		expect(nameCache).toEqual({ vars: { props: {} } });
+		const shared = {};
+		const options = { compress: false, toplevel: true, nameCache: shared };
+		const first = await jsMinify(
+			{ "first.js": 'var shared = "cached"; sink(shared);' },
+			undefined,
+			{ ...options },
+			false
+		);
+		const second = await jsMinify(
+			{ "second.js": "sink(shared);" },
+			undefined,
+			{ ...options },
+			false
+		);
+		expect([first.code, second.code]).toEqual([
+			'var a="cached";sink(a);',
+			"sink(a);"
+		]);
+		expect(shared).toEqual({ vars: { props: { $shared: "a" } } });
+	});
+
+	it("should refuse what reads or prints a tree rather than code", async () => {
+		for (const options of [
+			{ parse: { spidermonkey: true } },
+			{ format: { ast: true } },
+			{ format: { code: false } }
+		]) {
+			await expect(
+				jsMinify({ "a.js": "a()" }, undefined, options, false)
+			).rejects.toThrow(/not supported/);
+		}
 	});
 
 	it("should read a Buffer input as UTF-8", async () => {
