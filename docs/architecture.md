@@ -82,7 +82,7 @@ Every schema is derived from the module declaring its options by `generate-schem
 
 **Tests** — structure, naming and running one case: [TESTING_DOCS.md](../TESTING_DOCS.md).
 
-- `test/` — all suites (`unitCases/`, `cases/`, `configCases/`, `specCases/`, `watchCases/`, `hotCases/`, `statsCases/`, `typesCases/`, `benchmarkCases/`, `memoryLimitCases/`, …).
+- `test/` — all suites (`unitCases/`, `cases/`, `configCases/`, `specCases/`, `watchCases/`, `hotCases/`, `statsCases/`, `typesCases/`, `benchmarkCases/`, `sizeCoreReports/` (whole applications for `yarn test:size`), `memoryLimitCases/`, …).
   - `templates/` — suite drivers (`TestCases.js`, `ConfigTestCases.js`, `HotTestCases.js`, `WatchTestCases.js`); the top-level `*.test.js` / `*.basictest.js` / `*.longtest.js` are thin shims over them. Each exports `describeCases(config)` and resolves case directories against `test/`, never its own. The shims' option sets live together in `templates/variants.js` (re-exported as `variants`) so suite differences read side by side; there's one shim per entry because jest parallelizes per file, not per describe.
   - `harness/` — what runs the suites: jest lifecycle (`globalSetup.js`, `globalTeardown.js`, `setupTestFramework.js`), the `patch-node-env.js` environment, the crash reporter, the case `runner/`, the `snapshot/` resolver, and `runtimes/` (preload/setup files for Bun and Deno). Reusable assertions and fixtures go in `helpers/`.
   - `RoundTripConfigCases` re-bundles the output of `configCases` that have a `roundTrip.js`.
