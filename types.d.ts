@@ -23475,7 +23475,7 @@ declare class NormalModule extends Module {
 	 * Marks the module as failed, so what it generates says so. A tap or a
 	 * loader may fail with anything, and what reads the failure expects an error.
 	 */
-	markModuleAsErrored(error?: any): void;
+	markModuleAsErrored(error?: unknown): void;
 
 	/**
 	 * An absolute path string is a prefix of `content`; a relative one is a glob
