@@ -1233,9 +1233,11 @@ const formatApps = (report, baseline) => {
 		}
 	}
 	for (const [label, before] of previous) {
-		if (before && !current.has(label)) {
+		if (!current.has(label)) {
 			moved.push(
-				`| ${label} | — | ➖ deleted (${formatBytes(before.gzip)}) | — | ➖ deleted (${formatBytes(before.raw)}) |`
+				before
+					? `| ${label} | — | ➖ deleted (${formatBytes(before.gzip)}) | — | ➖ deleted (${formatBytes(before.raw)}) |`
+					: `| ${label} | — | ➖ deleted | — | ➖ deleted |`
 			);
 		}
 	}
