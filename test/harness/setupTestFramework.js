@@ -181,7 +181,8 @@ const outerGlobal = vm.runInThisContext("this");
 const outerGlobalKeys = new Set(Object.getOwnPropertyNames(outerGlobal));
 
 // eslint-disable-next-line jest/require-top-level-describe
-afterAll(() => {
+afterAll(async () => {
+	await require("../helpers/createFakeWorker").terminateAll();
 	for (const key of Object.getOwnPropertyNames(outerGlobal)) {
 		if (outerGlobalKeys.has(key)) continue;
 		const descriptor =
