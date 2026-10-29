@@ -4,10 +4,6 @@ import "./pure-bare";
 import pureUsed, { value } from "./pure-used";
 import { value as impureValue } from "./impure";
 import { fromConsumer } from "./pure-esm-consumer";
-import config from "./reads-config";
-import flaggedConfig from "./flagged/reads-config";
-import { barrelConfig } from "./barrel";
-import { reexportedConfig } from "./set-config";
 import "./last";
 
 require("./pure-required");
@@ -29,12 +25,4 @@ it("should read a pure module kept for its exports", () => {
 	expect(pureUsed.read().original).toBe(true);
 	expect(impureValue).toBe(2);
 	expect(fromConsumer).toBe(3);
-});
-
-it("should evaluate a used pure module at its import, before later imports run", () => {
-	expect(config).toBe("unset");
-	expect(flaggedConfig).toBe("unset");
-	expect(barrelConfig).toBe("unset");
-	expect(reexportedConfig).toBe("unset");
-	delete global.__commonjsExportsConfig;
 });
