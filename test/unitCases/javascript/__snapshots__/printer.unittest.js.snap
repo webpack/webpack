@@ -2847,6 +2847,12 @@ Array [
 ]
 `;
 
+exports[`syntax-printer improve phase should drop a write to a \`for…of\` head's \`let\` from its body, not its right side 1`] = `"export function f(a){let p;for(let x of a)p=()=>{};return p}"`;
+
+exports[`syntax-printer improve phase should drop a write to a \`for…of\` head's \`let\` from its body, not its right side 2`] = `"export function f(a){for(let x of a)h(1)}"`;
+
+exports[`syntax-printer improve phase should drop a write to a \`for…of\` head's \`let\` from its body, not its right side 3`] = `"export function f(a){let p;for(let x of a)p=()=>x;return p}"`;
+
 exports[`syntax-printer improve phase should keep a function called in place whose \`var\`, its name taken, a class in a block there also names 1`] = `"function f(x){var a=g();!function(){var x=typeof a;{class x{}console.log(x.name)}console.log(x)}(),console.log(x,a)}function g(){return 1}f(\\"o\\");"`;
 
 exports[`syntax-printer improve phase should keep a function called in place whose \`var\`s, more than one, take names already taken 1`] = `"function f(x){var a=g(),b=g();console.log(x),function(){if(x){var a=console.log.name,b=typeof x;console.log(a,a,b,b)}}(),console.log(a,b)}function g(){return\\"o\\"}f(1),f(0);"`;
@@ -2988,6 +2994,8 @@ exports[`syntax-printer improve phase should write less, printing the same: a \`
 exports[`syntax-printer improve phase should write less, printing the same: a \`const\` only copying a parameter read as the parameter 1`] = `"function f(a){return g(a),a[0]}function g(x){x.push(2)}console.log(f([1]));"`;
 
 exports[`syntax-printer improve phase should write less, printing the same: a \`let\` before a loop assigning it first, given that value where it stands, but where the value reads it 1`] = `"function f(n){let i=0,j;for(;i<n;i++);for(j=()=>j;i<3;i++);return[i,typeof j]}console.log(f(2));"`;
+
+exports[`syntax-printer improve phase should write less, printing the same: a \`let\` closures created after its declaration write and nothing reads 1`] = `"function f(a){return[1,2].forEach(v=>{}),a+1}console.log(f(1));[3].forEach(function(v){});"`;
 
 exports[`syntax-printer improve phase should write less, printing the same: a \`let\` declaration beside one written from a \`const\`, joined, its names mangled 1`] = `"function f(o){let n=o.x,t=o.y;t++;for(let o of[n,t]){let c=o+t,f=[c,c];f.push(n),console.log(f)}}f({x:1,y:2});"`;
 

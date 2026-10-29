@@ -496,6 +496,11 @@ const IMPROVED_CASES = [
 		{ compress: {}, mangle: false }
 	],
 	[
+		"a `let` closures created after its declaration write and nothing reads",
+		"function f(a) { let x, k = function (v) { x = v; return v + 1; }; [1, 2].forEach((v) => { x = v; }); return k(a); } console.log(f(1)); { let y; [3].forEach(function (v) { y = v; }); }",
+		{ compress: {}, mangle: false }
+	],
+	[
 		"a `let` whose every read folds into its value, left with its write",
 		"(function () { let x; x = 2; console.log(x); globalThis.g = function () { return x; }; })(); console.log(g());",
 		{ compress: {}, mangle: false }
@@ -11421,6 +11426,22 @@ x = a ** b ** c; x = (a ** b) ** c; x = (-a) ** b; x = a < b < c; x = a < (b < c
 			}
 		});
 
+		it("should drop a write to a `for…of` head's `let` from its body, not its right side", async () => {
+			const { minify } = await load();
+			for (const input of [
+				"export function f(a){let p;for(let x of a)p=()=>{x=3};return p}",
+				"export function f(a){for(let x of a)x=1,h(x)}",
+				"export function f(a){let p;for(const x of a)p=()=>x;return p}"
+			]) {
+				const { code } = await minify(input, {
+					module: true,
+					compress: {},
+					mangle: false
+				});
+				expect(code).toMatchSnapshot();
+			}
+		});
+
 		it("should keep a write to a `let` that may run before its declaration", async () => {
 			const { minify } = await load();
 			for (const input of [
@@ -11429,7 +11450,14 @@ x = a ** b ** c; x = (a ** b) ** c; x = (-a) ** b; x = a < b < c; x = a < (b < c
 				"export function f(){for(;;){x=1;let x}}",
 				"export function f(){let x;window.h=()=>x;x=2}",
 				"export function f(){g();let x;function g(){x=1}}",
-				"export function f(){class C{static{x=1}}let x}"
+				"export function f(){class C{static{x=1}}let x}",
+				"export function f(){h(()=>{x=1});let x}",
+				"export function f(){let x=h(()=>{x=1})}",
+				"export function f(){let x;h(()=>{x=1});h(()=>x)}",
+				"export function f(){for(let x of(g(()=>{x=1}),[]));}",
+				"export function f(){for(let x in(x=1,{}));}",
+				"export function f(){const w=()=>{x=1};h(w),h(w);let x}",
+				"export function f(){let y;const w=()=>{x=1};h(w),h(w);let x}"
 			]) {
 				const { code } = await minify(input, {
 					module: true,
@@ -11438,6 +11466,16 @@ x = a ** b ** c; x = (a ** b) ** c; x = (-a) ** b; x = a < b < c; x = a < (b < c
 				});
 				expect(code).toMatch(/x=[12]/);
 			}
+			const { code: inSwitch } = await minify(
+				"export function f(a){switch(a){case 0:let x;h(()=>{x=1});break;case 1:h(()=>{x=2})}}",
+				{ module: true, compress: {}, mangle: false }
+			);
+			expect(inSwitch).toContain("x=2");
+			const { code } = await minify("let x;h(()=>{x=1})", {
+				compress: {},
+				mangle: false
+			});
+			expect(code).toContain("x=1");
 		});
 
 		it("should drop a `#__PURE__` call nothing reads rather than unwrap it", async () => {
