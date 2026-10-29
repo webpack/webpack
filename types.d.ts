@@ -16048,10 +16048,10 @@ declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 	>;
 	currentTagData?:
 		| object
-		| TopLevelSymbol
 		| ESMSettings
 		| ImportSettings
 		| CommonJsImportSettings
+		| TopLevelSymbol
 		| CompatibilitySettings;
 	magicCommentContext: ContextImport;
 
@@ -17948,6 +17948,7 @@ declare interface JavascriptParserOptions {
 type JavascriptParserState = ParserStateBase<BuiltJavascriptModule> &
 	Record<string, any> &
 	KnownJavascriptParserState;
+type JavascriptParserTag<T = TagData> = symbol & { readonly __tagData?: T };
 
 /**
  * what the JavaScript `SourceProcessor` reads its source as, and prints it with
@@ -34169,10 +34170,10 @@ declare const TRANSITIVE_ONLY: unique symbol;
 type Tag<T = TagData> = symbol & { readonly __tagData?: T };
 type TagData =
 	| object
-	| TopLevelSymbol
 	| ESMSettings
 	| ImportSettings
 	| CommonJsImportSettings
+	| TopLevelSymbol
 	| CompatibilitySettings;
 
 /**
@@ -34182,10 +34183,10 @@ declare interface TagInfo {
 	tag: Tag<TagData>;
 	data?:
 		| object
-		| TopLevelSymbol
 		| ESMSettings
 		| ImportSettings
 		| CommonJsImportSettings
+		| TopLevelSymbol
 		| CompatibilitySettings;
 	next?: TagInfo;
 }
@@ -39891,6 +39892,7 @@ declare namespace exports {
 		StatsOptions as MultiStatsOptions,
 		ResolveData,
 		ParserState,
+		JavascriptParserTag,
 		ResolvePluginInstance,
 		Resolver,
 		RenderManifestEntry,
