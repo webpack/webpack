@@ -3,7 +3,7 @@
 // cspell:ignore binop, fnames, propmangle, fargs, domprops, argnames, nondeferred, loopcontrol, Defun, defun, NOINLINE, Funarg, unmangleable, Unmangleable, thedef, funs
 // cspell:ignore fnames
 // cspell:ignore argnames, bcatch, bfinally, argname
-// cspell:ignore AAAWA MAAH
+// cspell:ignore AAAWA MAAH EAAI EAAIA EAAGC
 // cspell:ignore endline, endcol, endpos, nlb, thedef
 
 const vm = require("vm");
@@ -16036,14 +16036,30 @@ describe("JavaScript SourceProcessor printing", () => {
 		).toBe("let x=[1,2];");
 	});
 
-	it("should map the output's start to the source's", () => {
+	it("should map each node's output to the source's", () => {
 		const result = new SourceProcessor().process("a ( 1 )", {
 			mode: "minify",
 			source: "in.js"
 		});
 		expect(result.code).toBe("a(1);");
+		// `a` at 0:0, named, and `1` from column 4 to column 2.
 		expect(result.map).toEqual(
-			expect.objectContaining({ sources: ["in.js"], mappings: "AAAA" })
+			expect.objectContaining({
+				sources: ["in.js"],
+				names: ["a"],
+				mappings: "AAAAA,EAAI"
+			})
+		);		// A name read twice is given once.
+		expect(
+			new SourceProcessor().process("a ( a, b )", {
+				mode: "minify",
+				source: "in.js"
+			}).map
+		).toEqual(
+			expect.objectContaining({
+				names: ["a", "b"],
+				mappings: "AAAAA,EAAIA,EAAGC"
+			})
 		);
 	});
 

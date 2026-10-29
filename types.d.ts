@@ -27019,6 +27019,13 @@ declare class PrintContext<TPath, TNode, TPrintOptions = object> {
 	): void;
 
 	/**
+	 * Anchor the text the next {@link take} writes at many places rather than at
+	 * its start alone: a grammar printing a whole program as one node maps each
+	 * piece inside it. Nothing is kept where no map is wanted.
+	 */
+	anchorWithin(mappings: number[], names: string[]): void;
+
+	/**
 	 * Tie whatever is emitted next to a source position: flush the kept comments
 	 * that precede it, then record the mapping. Split out of {@link take} for a
 	 * node printed in pieces, whose first piece is emitted well after the printer
