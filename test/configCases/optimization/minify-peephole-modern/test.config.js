@@ -13,6 +13,7 @@ module.exports = {
 			"utf8"
 		);
 		expect(code).toContain("#used");
+		expect(code).toContain("{__proto__:");
 		expect(code).toContain('{["__proto__"]:');
 	}
 };

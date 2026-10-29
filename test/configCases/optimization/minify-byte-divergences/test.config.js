@@ -11,5 +11,6 @@ module.exports = {
 		);
 		expect(code).toContain("a?!0:o.y=1");
 		expect(code).toContain("if(n)return n");
+		expect(code).toContain("new Base.Child(2)");
 	}
 };

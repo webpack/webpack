@@ -15651,7 +15651,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["while(a){;}", {}, "while(a);"],
 			// A `RegExp` built from constants that parse goes unused; one that throws stays.
 			["function m(){f();var rangeChars=\"abcdefghijklmnopq\";new RegExp(\"[\"+rangeChars+\"]\");new RegExp(\"[\"+rangeChars+\"0-9]\",\"g\")}", {}, "function m(){f()}"],
-			["function m(){new RegExp(\"[\");RegExp(\"a\",\"q\")}", {}, "function m(){new RegExp(\"[\");RegExp(\"a\",\"q\")}"],
+			["function m(){new RegExp(\"[\");RegExp(\"a\",\"q\")}", {}, "function m(){RegExp(\"[\");RegExp(\"a\",\"q\")}"],
 			["function m(RegExp){new RegExp(\"a\")}", {}, "function m(e){new e(\"a\")}"],
 			// A `var` set after a call folds where its function reads it after the declaration.
 			["function m(){f();var greeting=\"hello\";g(greeting+\"!\")}", {}, "function m(){f();g(\"hello!\")}"],
@@ -15815,6 +15815,66 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		).toBe("async function*g(){return void 0}async function h(){}t(g,h);");
 		// A global read in a test folds nothing, and throws nothing.
 		expect(print("if (!(1 < Infinity)) t();")).toBe("if(!(1<1/0))t();");
+	});
+
+	it("should print constant keys, `new` targets and enumerations shorter in the one pass", () => {
+		const print = (
+			/** @type {string} */ source,
+			/** @type {Record<string, unknown>} */ options = {}
+		) =>
+			minifyOnePass(source, {
+				compress: { passes: 2 },
+				mangle: {},
+				module: true,
+				...options
+			}).code;
+		// A computed key of a constant prints as its name, but where that means
+		// something else, and for a `NaN` some scope binds.
+		expect(
+			print(
+				'export const o={["a"]:1,[1]:2,["b c"]:3,["__proto__"]:4,["__proto__"](){}}; export class C{["m"](){} static ["x"]=1; ["constructor"](){} static ["prototype"](){} [NaN](){return 1} get [null](){return 2}} export function f({["k"]:v,["__proto__"]:p,[NaN]:n,[null]:u}){return [v,p,n,u]} export function g(NaN){return {[NaN]:1}}'
+			)
+		).toBe(
+			'export const o={a:1,1:2,"b c":3,["__proto__"]:4,__proto__(){}};export class C{m(){}static x=1;["constructor"](){}static["prototype"](){}NaN(){return 1}get null(){return 2}}export function f({k:t,__proto__:r,NaN:n,null:_}){return[t,r,n,_]}export function g(t){return{[t]:1}}'
+		);
+		expect(
+			print('export const o={["a"]:1};', {
+				compress: { passes: 2, computed_props: false }
+			})
+		).toBe('export const o={["a"]:1};');
+		// `RegExp` of a primitive builds as `new RegExp` does; of an expression, it may hand it back.
+		expect(
+			print(
+				"export function b(r){return [new RegExp(10n), new RegExp(-10n), new RegExp(`x`), new RegExp(), new RegExp(/a/), new RegExp(r)]}"
+			)
+		).toBe(
+			"export function b(e){return[RegExp(10n),RegExp(-10n),RegExp(`x`),RegExp(),new RegExp(/a/),new RegExp(e)]}"
+		);
+		// `new` reads no `this` from a sequence, so what runs nothing before it goes.
+		expect(
+			print(
+				"export function f(log,k){return [new (0, a.b)(2), new (0, a)(), new (log.push(1), a)(), new (0, a.b().c)(), new (0, a[k])(1), new (0, a?.b)(), (0, a.b)(1), new (0,this.x)]}"
+			)
+		).toBe(
+			"export function f(n,e){return[new a.b(2),new a,new(n.push(1),a),new(0,a.b().c),new a[e](1),new(0,a?.b),(0,a.b)(1),new this.x]}"
+		);
+		// A read in its dead zone throws and keeps the name; the reads after fold.
+		expect(
+			print(
+				"export function late(g){ function first(){return limit} const limit = 3; g(first); return [first(), limit*2, limit] }"
+			)
+		).toBe(
+			"export function late(t){function i(){return r}let r=3;t(i);return[i(),6,r]}"
+		);
+		// `Object.keys`, `values` and `entries` of a string or of an array of what
+		// runs nothing print as the array they make.
+		expect(
+			print(
+				'export function e(g,l){return [Object.keys([10,,30]),Object.values([10,,30]),Object.entries([10,,30]),Object.keys("ab"),Object.entries("a"),Object.keys([g()]),Object.keys([...l]),Object.keys?.([1])]} export function s(Object){return Object.keys([1])}'
+			)
+		).toBe(
+			'export function e(t,c){return[["0","2"],[10,30],[["0",10],["2",30]],["0","1"],[["0","a"]],Object.keys([t()]),Object.keys([...c]),Object.keys?.([1])]}export function s(t){return t.keys([1])}'
+		);
 	});
 
 	it("should keep a named function a direct eval in a class or function it returns reads", () => {
