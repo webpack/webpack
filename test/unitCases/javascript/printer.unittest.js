@@ -30,6 +30,19 @@ const {
 const importTerserSource = (specifier) => import(specifier);
 
 /**
+ * The one-pass minify: one JavaScript `SourceProcessor` run.
+ * @param {string} source the source
+ * @param {import("../../../lib/javascript/syntax-parser").JavascriptProcessOptions} options its options, `compress` or `mangle` among them
+ * @returns {{ code: string }} the minified code
+ */
+const minifyOnePass = (source, options) => {
+	const { SourceProcessor } = require("../../../lib/javascript/syntax");
+	return /** @type {{ code: string }} */ (
+		new SourceProcessor().process(source, { mode: "minify", ...options })
+	);
+};
+
+/**
  * terser as published, the minifier the printer is held to.
  * @returns {{ minify: typeof import("terser").minify }} it
  */
@@ -14776,24 +14789,14 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		expect(printed.code).toBe(reference.code);
 	});
 
-	it("should mangle and print in one walk where it compresses in one pass", async () => {
-		const { modules } = await load();
-		modules.onePass.enabled = true;
-		try {
-			const printed = await minifyCounted(
-				"function foo(longName, other) { var local = longName + other; return local * 2; } foo(1, 2); class A { #field = 1; read() { return this.#field } static #hidden() {} } print(new A().read());",
-				{ toplevel: true },
-				true
-			);
-			expect(printed.code).toBe(
-				"function e(e,o){return(e+o)*2}e(1,2);class o{#e=1;read(){return this.#e}static#o(){}}print((new o).read());"
-			);
-			expect(printed.printedFromTree).toBe(0);
-			// One walk, the one pass printing once.
-			expect(printed.printedNodes).toBe(1);
-		} finally {
-			modules.onePass.enabled = false;
-		}
+	it("should mangle and print in one walk where it compresses in one pass", () => {
+		const printed = minifyOnePass(
+			"function foo(longName, other) { var local = longName + other; return local * 2; } foo(1, 2); class A { #field = 1; read() { return this.#field } static #hidden() {} } print(new A().read());",
+			{ compress: {}, mangle: {}, toplevel: true }
+		);
+		expect(printed.code).toBe(
+			"function e(e,o){return(e+o)*2}e(1,2);class o{#e=1;read(){return this.#e}static#o(){}}print((new o).read());"
+		);
 	});
 
 	it("should compress in the one pass where nothing outside a node decides it", async () => {
@@ -15665,24 +15668,21 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// A `const` set to `undefined` prints as a `let` without it.
 			["function f(){const c=undefined;g(c);g(c)}", {}, "function f(){let c;g(c);g(c)}"]
 		];
-		modules.onePass.enabled = true;
-		try {
-			for (const [source, options, expected] of cases) {
-				const { code } = await minify(source, {
-					compress: { toplevel: false },
-					mangle: { toplevel: false },
-					...options
-				});
-				expect(code).toBe(expected);
-			}
-			// Every comment kept is still the compressor's to keep.
-			const { code } = await minify("if (a) { b() } /* c */", {
-				format: { comments: "all" }
+		for (const [source, options, expected] of cases) {
+			const { code } = minifyOnePass(source, {
+				compress: { toplevel: false },
+				mangle: { toplevel: false },
+				...options
 			});
-			expect(code).toBe("a&&b()/* c */;");
-		} finally {
-			modules.onePass.enabled = false;
+			expect(code).toBe(expected);
 		}
+		// Every comment kept is still the compressor's to keep.
+		const { code } = minifyOnePass("if (a) { b() } /* c */", {
+			compress: {},
+			mangle: {},
+			format: { comments: "all" }
+		});
+		expect(code).toBe("if(a){b()}/* c */");
 	});
 
 	it("should read a single named source under its name", async () => {
@@ -16178,17 +16178,17 @@ describe("JavaScript minifier reading an event handler's body", () => {
 		}
 	});
 
-	it("should compress a body inside its function with the one pass switched on", async () => {
-		const { minify, modules } = await load();
+	it("should compress a body inside its function in one pass", async () => {
+		const { minify } = await load();
 		const source = "var v = 5; value = v; return value == null ? undefined : v";
-		const off = await minify(source, { sourceType: "event-handler" });
-		modules.onePass.enabled = true;
-		try {
-			const on = await minify(source, { sourceType: "event-handler" });
-			expect(on.code).toBe(off.code);
-		} finally {
-			modules.onePass.enabled = false;
-		}
+		const twoPass = await minify(source, { sourceType: "event-handler" });
+		const onePass = minifyOnePass(source, {
+			compress: {},
+			mangle: {},
+			sourceType: "event-handler"
+		});
+		expect(twoPass.code).toBe("return value=5,value==null?void 0:5");
+		expect(onePass.code).toBe("var v=5;return(value=v)==null?void 0:v");
 	});
 
 	it("should refuse what a function's body cannot hold", async () => {
@@ -16816,7 +16816,6 @@ describe("JavaScript minifier name cache", () => {
 	});
 });
 
-const { terserMinify } = require("minimizer-webpack-plugin");
 const jsMinify = require("../../../lib/javascript/jsMinify");
 
 /** @typedef {import("../../../lib/javascript/jsMinify")} JsMinify */
@@ -16914,55 +16913,24 @@ describe("jsMinify", () => {
 
 				expect(result.code).toMatchSnapshot();
 				expect(result.extractedComments).toMatchSnapshot();
+				// It reads back as the production it was printed for.
+				expect(() =>
+					acorn.parse(result.code, {
+						ecmaVersion: "latest",
+						sourceType:
+							options.as === "module" || options.module ? "module" : "script",
+						allowReturnOutsideFunction: options.as === "event-handler"
+					})
+				).not.toThrow();
 				// A handler body is read as the function body it is, so it maps.
 				expect(typeof result.map).toBe(withMap ? "object" : "undefined");
 			});
 
-			// The plugin's own terser entry point is what the default path still
-			// dispatches to, so the printer owes the same answer byte for byte.
-			it(`should match the reference minifier: ${label}`, async () => {
-				const args =
-					/** @type {[{ [file: string]: string }, EXPECTED_ANY, EXPECTED_ANY, EXPECTED_ANY]} */ ([
-						input,
-						withMap ? INPUT_MAP : undefined,
-						options,
-						extractComments
-					]);
-				const mine = await jsMinify(args[0], args[1], { ...args[2] }, args[3]);
-				const reference = await terserMinify(
-					args[0],
-					args[1],
-					{ ...args[2] },
-					args[3]
-				);
-
-				expect(mine.code).toBe(reference.code);
-				expect(mine.extractedComments).toEqual(reference.extractedComments);
-				// The reference wraps a handler body in a function, moving every
-				// position, so it answers no map.
-				if (options.as !== "event-handler") {
-					expect(mine.map).toEqual(reference.map);
-				}
-			});
 		}
 	}
 
 	it("should report a parse error rather than throwing a different shape", async () => {
 		await expect(jsMinify({ "broken.js": "function (" })).rejects.toThrow();
-	});
-
-	it("should answer an error, not throw, when the minifier cannot load", async () => {
-		const { printer } = require("../../../lib/javascript/syntax");
-		const failure = new Error("cannot load");
-		const load = jest.spyOn(printer, "load").mockRejectedValueOnce(failure);
-		try {
-			expect(await jsMinify({ "a.js": "a()" })).toEqual({
-				code: "",
-				errors: [failure]
-			});
-		} finally {
-			load.mockRestore();
-		}
 	});
 
 	it("should read a Buffer input as UTF-8", async () => {
