@@ -3698,6 +3698,70 @@ describe("htmlMinify — embedded bodies with no renderer", () => {
 	});
 });
 
+describe("htmlMinify — embedded code a minifier fails on", () => {
+	const htmlMinify = require("../../../lib/html/htmlMinify");
+
+	const page =
+		'<style>a { b : c }</style><p style="b : c">x</p><script type=application/json>{ "a" : 1 }</script>';
+
+	it("keeps the placeholder `output.html.inline` fills in after it", async () => {
+		const placeholder = "__WEBPACK_HTML_INLINE__30__css__END__";
+		const { code } = await htmlMinify(
+			{ "page.html": `<style>${placeholder}</style>` },
+			undefined,
+			{ renderEmbeddedSource: () => undefined }
+		);
+		expect(code).toBe(`<style>${placeholder}</style>`);
+	});
+
+	it("reports what webpack's own CSS minifier throws and keeps the body", async () => {
+		// `unusedSymbols` that is no list stands in for anything that makes it throw.
+		const unreadable = /** @type {string[]} */ (/** @type {unknown} */ (42));
+		const { code, errors } = await htmlMinify({ "page.html": page }, undefined, {
+			css: { unusedSymbols: unreadable }
+		});
+		expect(code).toBe(
+			'<style>a { b : c }</style><p style="b : c">x</p><script type=application/json>{"a":1}</script>'
+		);
+		expect(errors).toHaveLength(2);
+	});
+
+	it("keeps a body the caller's minifier fails on, reported once", async () => {
+		const { code, errors } = await htmlMinify({ "page.html": page }, undefined, {
+			renderEmbeddedSource: (
+				/** @type {string} */ _source,
+				/** @type {{ type: string }} */ info
+			) => {
+				if (info.type === "css") throw new Error("failing CSS minifier");
+				return undefined;
+			}
+		});
+		// Webpack's own CSS minifier is not asked after the caller's failed.
+		expect(code).toBe(
+			'<style>a { b : c }</style><p style="b : c">x</p><script type=application/json>{"a":1}</script>'
+		);
+		expect(errors).toEqual([
+			expect.objectContaining({ message: "failing CSS minifier" }),
+			expect.objectContaining({ message: "failing CSS minifier" })
+		]);
+	});
+
+	it("keeps a body the caller's minifier answers with errors beside code", async () => {
+		const { code, errors } = await htmlMinify(
+			{ "page.html": "<style>a { b : c }</style>" },
+			undefined,
+			{
+				renderEmbeddedSource: () => ({
+					code: "broken",
+					errors: [new Error("failing CSS minifier")]
+				})
+			}
+		);
+		expect(code).toBe("<style>a { b : c }</style>");
+		expect(errors).toHaveLength(1);
+	});
+});
+
 describe("htmlMinify — one document reaching every embedded site", () => {
 	const htmlMinify = require("../../../lib/html/htmlMinify");
 

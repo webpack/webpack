@@ -1072,6 +1072,30 @@ describe("CssSyntax — nesting and error recovery", () => {
 			.process("a{width:calc(1 + 2);grid:[x] 3px}");
 		expect([nums, fns, blocks]).toEqual([2, 1, 1]);
 	});
+
+	it("fails on a nesting deeper than the stack as a parse error", () => {
+		const deep = `a{b:${"(".repeat(100000)}}`;
+		expect(() => new SourceProcessor().process(deep)).toThrow(
+			/^Not enough stack space to parse input \(1:\d+\)$/
+		);
+		expect(() =>
+			new SourceProcessor().process(deep, { mode: "minify" })
+		).toThrow(SyntaxError);
+		// The parse after it starts clean.
+		expect(
+			new SourceProcessor().process("a { b : c }", { mode: "minify" })
+		).toMatchObject({ code: "a{b:c}" });
+	});
+
+	it("rethrows what else fails a parse as it is", () => {
+		const unreadable = /** @type {string[]} */ (/** @type {unknown} */ (42));
+		expect(() =>
+			new SourceProcessor().process("a{b:c}", {
+				mode: "minify",
+				unusedSymbols: unreadable
+			})
+		).toThrow(TypeError);
+	});
 });
 
 describe("CssSyntax — skip set (CssProcessOptions.skip)", () => {
