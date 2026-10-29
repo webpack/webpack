@@ -73,6 +73,7 @@
     "benchmark:js-tools:setup": "node tooling/compare-js-tools.js --setup",
     "benchmark:xml-tools": "node tooling/compare-xml-tools.js",
     "benchmark:xml-tools:setup": "node tooling/compare-xml-tools.js --setup",
+    "report:dependencies": "node tooling/dependency-report.js",
     "find-deep-imports": "node tooling/find-deep-webpack-imports.js",
     "find-deep-imports:check": "node tooling/find-deep-webpack-imports.js --check",
     "measure:color-agreement": "node tooling/measure-color-agreement.js",
