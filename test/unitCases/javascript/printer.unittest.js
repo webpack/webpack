@@ -15685,6 +15685,35 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		expect(code).toBe("if(a){b()}/* c */");
 	});
 
+	it("should forget what the last one-pass print found", () => {
+		const source =
+			"(()=>{function f(){return [g(1),g(2)]} class K{} it(()=>f())})()";
+		const unmangled = () =>
+			minifyOnePass(source, { compress: {}, mangle: false }).code;
+		const first = unmangled();
+		minifyOnePass(source, {
+			compress: { side_effects: false },
+			mangle: {}
+		});
+		expect(unmangled()).toBe(first);
+		expect(first).toBe(
+			"(()=>{function f(){return[g(1),g(2)]}class K{}it(()=>f())})();"
+		);
+	});
+
+	it("should keep a name a dropped function sets where it is read", () => {
+		const print = (/** @type {string} */ source) =>
+			minifyOnePass(source, { compress: {}, mangle: {}, module: true }).code;
+		expect(print("var a = 5; function reset() { a = 6 } console.log(a);")).toBe(
+			"var a=5;console.log(a);"
+		);
+		expect(print("var a = 5; function reset() { a = 6 } export { a };")).toBe(
+			"var a=5;export{a};"
+		);
+		// Set and never read, it goes with what sets it.
+		expect(print("var a = 5; function reset() { a = 6 }")).toBe("");
+	});
+
 	it("should read a single named source under its name", async () => {
 		const options = { compress: false, mangle: false };
 		const printed = await minifyCounted({ "a.js": "a( 1 )" }, options, true);
