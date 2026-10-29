@@ -4,8 +4,14 @@ const path = require("path");
 
 /** @typedef {{ terminate(): Promise<number> }} LiveWorker */
 
+const LIVE = Symbol.for("webpack.test.fakeWorkers");
+/** @type {EXPECTED_ANY} */
+const testGlobal = global;
+
+// On the test file's global, so a copy of this module loaded after
+// `jest.resetModules()` shares it and teardown still reaches every worker
 /** @type {Set<LiveWorker>} the workers not terminated yet */
-const live = new Set();
+const live = testGlobal[LIVE] || (testGlobal[LIVE] = new Set());
 
 const createFakeWorker = (
 	/** @type {{ outputDirectory: string }} */ { outputDirectory }
