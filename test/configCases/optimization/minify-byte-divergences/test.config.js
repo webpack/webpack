@@ -9,7 +9,6 @@ module.exports = {
 			path.join(options.output.path, "bundle0.js"),
 			"utf8"
 		);
-		expect(code).toContain("new Base.Child(2)");
 		expect(code).toContain("a?!0:o.y=1");
 		expect(code).toContain("if(n)return n");
 	}

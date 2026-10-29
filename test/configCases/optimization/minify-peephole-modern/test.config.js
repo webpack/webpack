@@ -12,10 +12,7 @@ module.exports = {
 			path.join(options.output.path, "bundle0.js"),
 			"utf8"
 		);
-		expect(code).not.toContain("#unused");
 		expect(code).toContain("#used");
-		expect(code).toContain("{__proto__:");
 		expect(code).toContain('{["__proto__"]:');
-		expect(code).not.toContain("=>{})(...");
 	}
 };

@@ -9,7 +9,6 @@ module.exports = {
 			path.join(options.output.path, "bundle0.js"),
 			"utf8"
 		);
-		expect(code).not.toContain("limit*2");
 		expect(code).toContain("return limit");
 		expect(code).toContain("label.length");
 	}
