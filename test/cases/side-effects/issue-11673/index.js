@@ -12,12 +12,13 @@ it("should compile", done => {
 	};
 	const start = retry => {
 		const worker = new Worker(new URL("worker.js", import.meta.url));
-		// WORKAROUND(bun): a worker thread started from Bun's jest worker thread
-		// now and then never posts, errors or exits, so start one fresh worker
-		// instead; terminating the stuck one can crash Bun, so it is only unref'd.
+		// WORKAROUND(bun): a worker started from Bun's jest worker thread now and
+		// then never posts, errors or exits; start one fresh worker, and unref the
+		// stuck one (terminating it can crash Bun) with its late errors swallowed.
 		const timer = retry
 			? setTimeout(() => {
 					worker.removeAllListeners();
+					worker.on("error", () => {});
 					worker.unref();
 					start(false);
 				}, 5000)
@@ -33,8 +34,13 @@ it("should compile", done => {
 		worker.once("message", value => {
 			clearTimeout(timer);
 			worker.removeAllListeners("exit");
-			expect(value).toBe(42);
-			Promise.resolve(worker.terminate()).then(() => finish(), finish);
+			let error;
+			try {
+				expect(value).toBe(42);
+			} catch (err) {
+				error = err;
+			}
+			Promise.resolve(worker.terminate()).then(() => finish(error), finish);
 		});
 	};
 	start(Boolean(process.versions.bun));
