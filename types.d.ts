@@ -267,6 +267,21 @@ declare interface AdditionalDataKnown {
 	 */
 	webpackAST?: PreparsedAst;
 }
+
+/**
+ * A file system the assets are written to besides `outputFileSystem`, at the paths they have in `output.path`.
+ */
+declare interface AdditionalOutput {
+	/**
+	 * the file system the assets are written to
+	 */
+	outputFileSystem: OutputFileSystem;
+
+	/**
+	 * whether the asset at this absolute path is written to it, every asset is when omitted
+	 */
+	test?: (targetPath: string) => boolean;
+}
 type AfterContextResolveData = ContextResolveData &
 	ContextOptions & {
 		resource: string | string[];
@@ -4572,6 +4587,12 @@ declare class Compiler {
 		run: AsyncSeriesHook<[Compiler]>;
 		emit: AsyncSeriesHook<[Compilation]>;
 		assetEmitted: AsyncSeriesHook<[string, AssetEmittedInfo]>;
+		/**
+		 * Collects the outputs the assets are written to besides `outputFileSystem`, which `output.clean` cleans too.
+		 * Add the same object on every call, as what was written to it is tracked across builds.
+		 * @since 5.113.0
+		 */
+		additionalOutputs: SyncHook<[Set<AdditionalOutput>]>;
 		afterEmit: AsyncSeriesHook<[Compilation]>;
 		thisCompilation: SyncHook<[Compilation, CompilationParams]>;
 		compilation: SyncHook<[Compilation, CompilationParams]>;
@@ -40180,6 +40201,7 @@ declare namespace exports {
 		WebpackPluginInstance,
 		AssetModuleBuildInfo,
 		ChunkGroup,
+		AdditionalOutput,
 		AssetEmittedInfo,
 		ContextModuleBuildInfo,
 		CssModuleBuildInfo,
