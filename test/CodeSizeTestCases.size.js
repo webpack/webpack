@@ -52,9 +52,9 @@ const prepareOptions = require("./helpers/prepareOptions");
  * @property {Record<string, string[]>} runtimes runtime module names per runtime,
  * sorted — how many a runtime carries, and which ones, is the deterministic half
  * of what this measures; their bytes in isolation are not what anyone downloads
- * @property {Record<string, Metrics>} compilers metrics per compiler of a
- * multi-compiler case, keyed by its report prefix — what a case building one
- * library per `output.library.type` is read by
+ * @property {Record<string, Metrics | null>} compilers metrics per compiler of a
+ * multi-compiler case, keyed by its report prefix, null for one that emitted
+ * nothing — what a case building one library per `output.library.type` is read by
  * @property {number} errors number of compilation errors
  * @property {string=} noOutput why the case emitted nothing — a build a case
  * expects to error (its own snapshot records it) counts as measured, not failed:
@@ -533,8 +533,13 @@ const measureCase = async ({ category, name, directory: testDirectory }) => {
 		// have been replaced by `SizeOnlySource`.
 		for (const [index, child] of compilers.entries()) {
 			const prefix = prefixes[index];
+			const key = prefix.slice(0, -1);
+			// Null until the compiler emits, so one whose build fails is reported
+			// as emitting nothing rather than missing from the case.
+			if (compilers.length > 1) result.compilers[key] = null;
 			child.hooks.emit.tap("CodeSizeMeasure", (compilation) => {
 				emitted.set(compilation, prefix);
+				if (compilers.length > 1) result.compilers[key] = createMetrics();
 				for (const asset of compilation.getAssets()) {
 					const metrics = measureAsset(asset.source.buffer());
 					const name = `${prefix}${normalizeAssetName(asset.name, asset.info)}`;
@@ -544,14 +549,8 @@ const measureCase = async ({ category, name, directory: testDirectory }) => {
 						? addMetrics(existing, metrics)
 						: metrics;
 					addMetrics(result.metrics, metrics);
-					if (compilers.length > 1) {
-						const key = prefix.slice(0, -1);
-						addMetrics(
-							result.compilers[key] ||
-								(result.compilers[key] = createMetrics()),
-							metrics
-						);
-					}
+					const compilerMetrics = result.compilers[key];
+					if (compilerMetrics) addMetrics(compilerMetrics, metrics);
 				}
 			});
 		}
@@ -1167,7 +1166,8 @@ const appRows = (report) => {
  */
 const formatApps = (report, baseline) => {
 	const current = appRows(report);
-	if (current.size === 0) return [];
+	const previous = baseline ? appRows(baseline) : new Map();
+	if (current.size === 0 && previous.size === 0) return [];
 
 	if (!baseline) {
 		return [
@@ -1212,7 +1212,6 @@ const formatApps = (report, baseline) => {
 			after.raw
 		)} |`;
 
-	const previous = appRows(baseline);
 	/** @type {string[]} */
 	const moved = [];
 	/** @type {string[]} */
