@@ -297,6 +297,25 @@ ${body}\t<tfoot><tr><td colspan="4">${rows} rows</td></tr></tfoot>
 </html>`;
 };
 
+// A `noscript` wherever the two scripting modes read it apart: in the head and
+// the body, around markup and references, in a table and a select, nested, and
+// one the input ends inside.
+const NOSCRIPT = `<!DOCTYPE html>
+<html>
+<head>
+<title>Noscript</title>
+<noscript><link rel="stylesheet" href="no-js.css"><style>.js{display:none}</style></noscript>
+<noscript><p>flow content in the head</p></noscript>
+</head>
+<body>
+<noscript><img src="pixel.gif" alt="tracking &amp; more"></noscript>
+<p>before<noscript>inline <b>bold</b> &lt;escaped&gt;</noscript >after</p>
+<table><tr><td>cell</td></tr><noscript>in a table</noscript></table>
+<noscript><noscript>nested</noscript>tail</noscript>
+<select><noscript><option>one</option></noscript></select>
+<noscript>left open <!-- a comment --> </nos
+`;
+
 // Every shape §13.2 has a recovery rule for: implied end tags, formatting
 // elements reopened across a block, and text a table fosters out of itself.
 const TAG_SOUP = `<!DOCTYPE html>
@@ -439,6 +458,7 @@ const fixtures = async () => {
 		out.push([label, marked.parse(await fs.promises.readFile(file, "utf8"))]);
 	}
 	out.push(["Table report (600 rows)", tablePage(600)]);
+	out.push(["Noscript", NOSCRIPT]);
 	out.push(["Tag soup", TAG_SOUP]);
 	out.push(["Web components", WEB_COMPONENTS]);
 	out.push([
@@ -953,9 +973,10 @@ const droppedAtEnd = (data) => {
  * input ran out in is left out where webpack's processing instruction rules
  * drop it, as they are the tree webpack is held to.
  * @param {string} html a document
+ * @param {boolean=} scripting whether to parse with scripting on, a `noscript` then holding text
  * @returns {TreeEvents} what it says
  */
-const parse5Tree = (html) => {
+const parse5Tree = (html, scripting = false) => {
 	const parse5 = /** @type {Parse5} */ (load("parse5"));
 	const events = new TreeEvents();
 	// Decoding strips a byte order mark before tree construction sees the text;
@@ -1009,11 +1030,10 @@ const parse5Tree = (html) => {
 			}
 		}
 	};
-	// Scripting off, as webpack parses: a `noscript` then holds markup.
 	walk(
 		parse5.parse(source, {
 			sourceCodeLocationInfo: true,
-			scriptingEnabled: false
+			scriptingEnabled: scripting
 		})
 	);
 	return events;
@@ -1023,9 +1043,10 @@ const parse5Tree = (html) => {
  * webpack's tree, as the agreement column reads it. A processing instruction is
  * the bogus comment the tokenizer reads `<?…>` as, which webpack tells apart.
  * @param {string} html a document
+ * @param {boolean=} scripting whether to parse with scripting on, as the printer does
  * @returns {TreeEvents} what it says
  */
-const webpackTree = (html) => {
+const webpackTree = (html, scripting = false) => {
 	const events = new TreeEvents();
 	/** @type {Record<number, { enter: (nodePath: HtmlPath) => void, exit: (nodePath: HtmlPath) => void }>} */
 	const visitors = {
@@ -1089,7 +1110,17 @@ const webpackTree = (html) => {
 			exit: () => {}
 		}
 	};
-	new SourceProcessor().use(visitors).process(html, {});
+	// A walk hands its options to `parseHtml`, which reads `scripting`.
+	/** @type {import("../lib/html/syntax-parser").HtmlParseOptions} */
+	const options = { scripting };
+	new SourceProcessor()
+		.use(visitors)
+		.process(
+			html,
+			/** @type {import("../lib/html/syntax-printer").HtmlProcessOptions} */ (
+				options
+			)
+		);
 	return events;
 };
 
@@ -1270,7 +1301,8 @@ const isWordName = (name) => /^[A-Za-z_-][^{}<>]*$/.test(name);
 /**
  * Every attribute the tokenizer reports, with the open tag holding it. A close
  * tag's attributes are dropped by the tree builder, so they are dropped here,
- * as is every attribute of a tag carrying template syntax.
+ * as is every attribute of a tag carrying template syntax. Read with scripting
+ * on, as the printer reads: a `noscript` holds text, whose spelling is its own.
  * @param {string} html a document
  * @returns {Site[]} the sites, in source order
  */
@@ -1280,6 +1312,7 @@ const attributeSites = (html) => {
 	/** @type {Site[]} */
 	let pending = [];
 	tokenize(html, 0, {
+		scripting: true,
 		attribute: (input, nameStart, nameEnd, valueStart, valueEnd, quoteType) => {
 			const end = afterAttribute(valueStart, valueEnd, nameEnd, quoteType);
 			pending.push({
@@ -2054,6 +2087,7 @@ const invariantFixtures = () => {
 	// bisection can still cut down: what they carry is the shape, not the bulk.
 	out.push(["Component library page", componentPage(8)]);
 	out.push(["Table report", tablePage(10)]);
+	out.push(["Noscript", NOSCRIPT]);
 	out.push(["Tag soup", TAG_SOUP]);
 	out.push(["Web components", WEB_COMPONENTS]);
 	out.push(["cold constructs", COLD_CONSTRUCTS]);
@@ -2084,7 +2118,7 @@ const invariantFixtures = () => {
 const EXPECTED = [
 	{
 		relation: "agreement",
-		contains: 'div[1]/a[1]: parse5 <html:a href="#x">, tool nothing',
+		contains: '<html:a href="#x">, tool nothing',
 		source: [
 			"html/declarative-shadow-root/page.html",
 			"html/parser-decoded-attribute-values/page.html"
@@ -2093,19 +2127,37 @@ const EXPECTED = [
 	},
 	{
 		relation: "agreement",
-		contains: 'div[1]/a[1]: parse5 nothing, tool <html:a href="#x">',
+		contains: 'nothing, tool <html:a href="#x">',
 		source: [
 			"html/declarative-shadow-root/page.html",
 			"html/parser-decoded-attribute-values/page.html"
 		],
 		why: "a declarative shadow root attaches to its host, so the `</a>` after it reconstructs no formatting element around it; parse5 8 predates declarative shadow roots, so the `<a>` lands elsewhere"
+	},
+	{
+		relation: "agreement",
+		contains: 'text "\\n\\t\\t\\n\\t\\t", tool text "\\n\\t\\t"',
+		source: "html/minimize/page.html",
+		why: "a customizable `<select>` keeps its `<button>`; parse5 8 predates customizable selects, so it drops the button and joins the text around it"
+	},
+	{
+		relation: "agreement",
+		contains: "select[1]/noscript[1]: parse5 nothing, tool <html:noscript>",
+		source: "Noscript",
+		why: "a `noscript` in a `select` is read by the in-body rules since customizable selects took the in-select mode out (§13.2.6.4.7); parse5 8 predates them and drops it"
+	},
+	{
+		relation: "agreement",
+		contains: "select[1]/noscript[1]: parse5 nothing, tool </noscript>",
+		source: "Noscript",
+		why: "a `noscript` in a `select` is read by the in-body rules since customizable selects took the in-select mode out (§13.2.6.4.7); parse5 8 predates them and drops it"
 	},
 	{
 		relation: "agreement",
 		contains:
-			'select[1]: parse5 text "\\n\\t\\t\\n\\t\\t", tool text "\\n\\t\\t"',
-		source: "html/minimize/page.html",
-		why: "a customizable `<select>` keeps its `<button>`; parse5 8 predates customizable selects, so it drops the button and joins the text around it"
+			"select[1]/option[1]: parse5 (scripting) <html:option>, tool <html:noscript>",
+		source: "Noscript",
+		why: "a `noscript` in a `select` is read by the in-body rules since customizable selects took the in-select mode out (§13.2.6.4.7); parse5 8 predates them and drops it"
 	},
 	{
 		relation: "respelling quote-double",
@@ -2142,6 +2194,19 @@ const invariants = (write) => {
 		expected: EXPECTED,
 		missing: _missingFixtures
 	});
+	// The printer reads a document with scripting on, a `noscript` holding text.
+	const scriptingHeld = agreementInvariant({
+		wanted: wantedRelation("agreement"),
+		referenceName: `${REFERENCE_PARSER} (scripting)`,
+		reference: () => {
+			load(REFERENCE_PARSER);
+			return (html) => parse5Tree(html, true);
+		},
+		tree: (html) => webpackTree(html, true),
+		corpus,
+		expected: EXPECTED,
+		missing: _missingFixtures
+	});
 	// Filtered like the corpus is: an expectation for a relation, fixture or
 	// preset this run was never going to reach matched nothing because nothing
 	// asked it to, which is not the divergence having gone away.
@@ -2153,6 +2218,7 @@ const invariants = (write) => {
 		)
 	);
 	referenceHeld.hold(groups);
+	scriptingHeld.hold(groups);
 	// Nothing is printed to reach this one, so it is read under no preset: what
 	// the parser said about the document it was handed.
 	if (wantedRelation("spans")) {

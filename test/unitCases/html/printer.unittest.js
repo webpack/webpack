@@ -3912,6 +3912,44 @@ describe("SourceProcessor — minify serialization edge cases", () => {
 			);
 		});
 
+		it("keeps a stray `</noscript>` that closes a nested one with scripting off", () => {
+			// With scripting on, the outer body is text up to the first end tag and
+			// the second one closes nothing; with it off, the second closes the outer.
+			expect(
+				minify("<body><noscript><noscript>a</noscript>b</noscript>\n<p>x")
+			).toBe("<body><noscript><noscript>a</noscript>b</noscript>\n<p>x</body>");
+			expect(
+				minify(
+					"<body><noscript><noscript>a</noscript>b &amp; c</NOSCRIPT >&lt;d<p>x"
+				)
+			).toBe(
+				"<body><noscript><noscript>a</noscript>b & c</NOSCRIPT >&lt;d<p>x</body>"
+			);
+		});
+
+		it("escapes the text as a whole where an end tag quotes a `>`", () => {
+			// The tag ends past the quoted `>`, so its pieces do not add up to the text.
+			expect(minify('<p>a</noscript x=">">b')).toBe("<p>ab");
+		});
+
+		it("drops `</head>` once collapsing drops the whitespace behind it, in one print", () => {
+			// That whitespace is body text to a reader with scripting off, so the
+			// active collapse tier decides it, as it does for any body text.
+			const options = /** @type {const} */ ({
+				mode: "minify",
+				collapseWhitespace: "all",
+				removeImpliedTags: "all"
+			});
+			const once = new SourceProcessor().process(
+				"<!doctype html><head><title>t</title><noscript>a</noscript></head>\n<body><p>x",
+				options
+			).code;
+			expect(once).toBe(
+				"<!doctype html><title>t</title><noscript>a</noscript><p>x"
+			);
+			expect(new SourceProcessor().process(once, options).code).toBe(once);
+		});
+
 		it("drops the head whitespace where every reader keeps the head", () => {
 			expect(
 				minify(
