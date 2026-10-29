@@ -16384,6 +16384,117 @@ describe("JavaScript minifier mangling a SyntaxTree", () => {
 		});
 	}
 
+	it("should move catch parameters to their function under ie8 or safari10 in the one pass", () => {
+		const source =
+			"function t(a, b) { try { a() } catch (e) { b(e) } var c = b; return c }";
+		expect(minifyOnePass(source, { compress: {}, mangle: {} }).code).toBe(
+			"function t(c,t){try{c()}catch(c){t(c)}return t}"
+		);
+		for (const options of [
+			{ ie8: true },
+			{ safari10: true },
+			{ mangle: { ie8: true } },
+			{ mangle: { safari10: true } }
+		]) {
+			expect(
+				minifyOnePass(source, { compress: {}, mangle: {}, ...options }).code
+			).toBe("function t(c,t){try{c()}catch(a){t(a)}return t}");
+		}
+	});
+
+	it("should keep a loop's names off its function's under safari10 in the one pass", () => {
+		const shadowing =
+			"function f(a) { var s = 0; for (let a = 0; a < 3; a++) s += a; for (const k of [1, 2]) s += k; return s + a }";
+		expect(minifyOnePass(shadowing, { compress: {}, mangle: {} }).code).toBe(
+			"function f(a){var f=0;for(let a=0;a<3;a++)f+=a;for(let a of[1,2])f+=a;return f+a}"
+		);
+		for (const options of [{ safari10: true }, { mangle: { safari10: true } }]) {
+			expect(
+				minifyOnePass(shadowing, { compress: {}, mangle: {}, ...options }).code
+			).toBe(
+				"function f(a){var f=0;for(let o=0;o<3;o++)f+=o;for(let o of[1,2])f+=o;return f+a}"
+			);
+		}
+		// The block around the loop prints without braces, so the loop is the function's.
+		const unbraced =
+			"function f(a, list) { a = g(a); if (list) { for (const s of list) h(s) } return a }";
+		expect(minifyOnePass(unbraced, { compress: {}, mangle: {} }).code).toBe(
+			"function f(s,t){s=g(s);if(t)for(let s of t)h(s);return s}"
+		);
+		expect(
+			minifyOnePass(unbraced, { compress: {}, mangle: {}, safari10: true }).code
+		).toBe("function f(s,t){s=g(s);if(t)for(let f of t)h(f);return s}");
+	});
+
+	it("should keep the global names ie8 keeps, and print as ie8 and safari10 ask, in the one pass", () => {
+		const source =
+			"x = [undefined, Infinity, o.default, '\\v']; if (a) do b(); while (c); else d(); async function f(x) { return !await x }";
+		expect(minifyOnePass(source, { compress: {}, mangle: {} }).code).toBe(
+			'x=[void 0,1/0,o.default,"\\v"];if(a)do b();while(c);else d();async function f(n){return!await n}'
+		);
+		expect(
+			minifyOnePass(source, { compress: {}, mangle: {}, ie8: true }).code
+		).toBe(
+			'x=[undefined,Infinity,o["default"],"\\x0B"];if(a){do b();while(c)}else d();async function f(n){return!await n}'
+		);
+		expect(
+			minifyOnePass(source, { compress: {}, mangle: {}, safari10: true }).code
+		).toBe(
+			'x=[void 0,1/0,o.default,"\\v"];if(a)do b();while(c);else d();async function f(n){return!(await n)}'
+		);
+	});
+
+	it("should run as terser's tree runs under ie8 or safari10 in the one pass", async () => {
+		const { minify } = await load();
+		const sources = [
+			"var out = []; function f(a) { try { throw a + 1 } catch (e) { out.push(e); var g = function () { return e } } return g() } var x = 5; out.push(f(x), x); result = out.join();",
+			"result = (function () { var n = 4; function h() { var a = 1, b = 2; try { null.x } catch (err) { return typeof err + a + b + n } } return h() })();",
+			"result = (function () { var e = 'outer'; function q() { try { throw 'in' } catch (e) { return e } } return q() + e })();",
+			"result = (function () { var o = []; try { throw 1 } catch (e) { try { throw 2 } catch (f) { o.push(e, f) } } return o.join() })();",
+			"result = (function () { function k() { var longName = 1; try { throw 2 } catch (other) { var inner = other + longName } return inner } return k() })();",
+			"result = (function () { try { throw [1, 2] } catch ({ length: n, 0: z }) { return n + z } })();",
+			// Moved into the catch, the arrow would read the catch's `e`.
+			"result = (function () { function k() { let e = 1; const g = () => e; try { throw 2 } catch (e) { return g() } } return k() })();",
+			"result = (function () { var fns = []; for (let i = 0; i < 3; i++) { const j = i * 2; fns.push(() => i + j) } return fns.map(f => f()).join() })();",
+			"result = (function (a) { var s = 0; for (let a = 0; a < 3; a++) s += a; for (const k of [1, 2]) s += k; for (let p in { x: 1 }) s += p; return s + a })(10);",
+			"result = (async function () { var s = []; for (let i = 0; i < 3; i++) { s.push(await Promise.resolve(i)) } for (const v of [4, 5]) { await null; s.push(() => v) } return s.map(x => typeof x === 'function' ? x() : x).join() })();",
+			"result = (function () { function w(p) { var acc = []; for (let i = 0; i < p.length; i++) { let v = p[i]; acc.push(function () { return v + i }) } try { throw acc } catch (z) { return z.map(function (f) { return f() }).join() } } return w([3, 4, 5]) })();"
+		];
+		/**
+		 * @param {string} code a script setting `result`
+		 * @returns {Promise<unknown>} what it sets `result` to, awaited
+		 */
+		const run = async (code) => {
+			/** @type {{ result: unknown, Promise: PromiseConstructor }} */
+			const context = { result: undefined, Promise };
+			vm.runInNewContext(code, context);
+			return await context.result;
+		};
+		for (const options of [
+			{ ie8: true },
+			{ safari10: true },
+			{ mangle: { ie8: true, safari10: true } }
+		]) {
+			for (const source of sources) {
+				const expected = await run(source);
+				const reference = await minify(source, {
+					compress: {},
+					mangle: {},
+					...options
+				});
+				expect(await run(/** @type {string} */ (reference.code))).toEqual(
+					expected
+				);
+				const printed = minifyOnePass(source, {
+					compress: {},
+					mangle: {},
+					...options
+				});
+				expect(await run(printed.code)).toEqual(expected);
+			}
+		}
+	});
+
 	it("should refuse a node its scope analysis cannot read", () => {
 		const tree = new SyntaxTree();
 		const program = tree.addEstree(
