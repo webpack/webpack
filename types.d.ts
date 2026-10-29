@@ -335,71 +335,6 @@ declare interface AggressiveSplittingPluginOptions {
 	 */
 	minSize?: number;
 }
-
-/**
- * Defines the all code generation schemas type used by this module.
- */
-declare interface AllCodeGenerationSchemas {
-	/**
-	 * top level declarations for javascript modules
-	 */
-	topLevelDeclarations: Set<string>;
-
-	/**
-	 * free identifier names in the rendered source for javascript modules
-	 */
-	freeNames: Set<string>;
-
-	/**
-	 * chunk init fragments for javascript modules
-	 */
-	chunkInitFragments: InitFragment<ChunkRenderContextJavascriptModulesPlugin>[];
-
-	/**
-	 * native external reexport source and attributes
-	 */
-	externalReexport: string;
-
-	/**
-	 * export definitions left out of a javascript module's source on demand (see `KnownMeta.onDemandExports`), to be placed before its body where it is wrapped
-	 */
-	exportsSource: string;
-
-	/**
-	 * export definitions left out on demand that read the module's own declarations, to be placed after its body where it is wrapped
-	 */
-	exportsBindingSource: string;
-
-	/**
-	 * final name of each used export of a concatenated module whose definitions were left out on demand
-	 */
-	exportsFinalName: Record<string, string>;
-
-	/**
-	 * url for asset modules
-	 */
-	url: { javascript?: string; "asset-url"?: string };
-
-	/**
-	 * a filename for asset modules
-	 */
-	filename: string;
-
-	/**
-	 * an asset info for asset modules
-	 */
-	assetInfo: AssetInfo;
-
-	/**
-	 * a full content hash for asset modules
-	 */
-	fullContentHash: string;
-
-	/**
-	 * share-init for modules federation
-	 */
-	"share-init": [{ shareScope: string; initStage: number; init: string }];
-}
 type AnalyzableForm =
 	"import" | "url" | "url-runtime" | "url-inline" | "wasm" | "wasm-relative";
 type AnyLoaderContext = NormalModuleLoaderContext<any> &
@@ -3402,21 +3337,10 @@ declare interface CodeGenMapOverloads {
 	has: <K extends string>(key: K) => boolean;
 	delete: <K extends string>(key: K) => boolean;
 }
-type CodeGenValue<K extends string> = K extends
-	| "filename"
-	| "assetInfo"
-	| "share-init"
-	| "topLevelDeclarations"
-	| "freeNames"
-	| "chunkInitFragments"
-	| "externalReexport"
-	| "exportsSource"
-	| "exportsBindingSource"
-	| "exportsFinalName"
-	| "url"
-	| "fullContentHash"
-	? AllCodeGenerationSchemas[K]
-	: any;
+type CodeGenValue<K extends string> =
+	K extends keyof exports.AllCodeGenerationSchemas
+		? exports.AllCodeGenerationSchemas[K]
+		: any;
 
 /**
  * Defines the code generation context type used by this module.
@@ -3546,7 +3470,11 @@ declare abstract class CodeGenerationResults {
 	/**
 	 * Returns an arbitrary metadata entry recorded during code generation.
 	 */
-	getData(module: Module, runtime: RuntimeSpec, key: string): any;
+	getData<K extends string>(
+		module: Module,
+		runtime: RuntimeSpec,
+		key: K
+	): undefined | CodeGenValue<K>;
 
 	/**
 	 * Returns a stable hash for the generated sources and runtime requirements,
@@ -18605,336 +18533,6 @@ declare interface KnownNormalModuleBuildInfo {
 }
 
 /**
- * Defines the known normalized stats options type used by this module.
- */
-declare interface KnownNormalizedStatsOptions {
-	context: string;
-	requestShortener: RequestShortener;
-	chunksSort: string | false;
-	modulesSort: string | false;
-	chunkModulesSort: string | false;
-	nestedModulesSort: string | false;
-	assetsSort: string | false;
-	ids: boolean;
-	cachedAssets: boolean;
-	groupAssetsByEmitStatus: boolean;
-	groupAssetsByPath: boolean;
-	groupAssetsByExtension: boolean;
-	assetsSpace: number;
-	excludeAssets: ((value: string, asset: StatsAsset) => boolean)[];
-	excludeModules: ((
-		name: string,
-		module: StatsModule,
-		type: ExcludeModulesType
-	) => boolean)[];
-	warningsFilter: ((warning: StatsError, textValue: string) => boolean)[];
-	cachedModules: boolean;
-	orphanModules: boolean;
-	dependentModules: boolean;
-	runtimeModules: boolean;
-	groupModulesByCacheStatus: boolean;
-	groupModulesByLayer: boolean;
-	groupModulesByAttributes: boolean;
-	groupModulesByPath: boolean;
-	groupModulesByExtension: boolean;
-	groupModulesByType: boolean;
-	entrypoints: boolean | "auto";
-	chunkGroups: boolean;
-	chunkGroupAuxiliary: boolean;
-	chunkGroupChildren: boolean;
-	chunkGroupMaxAssets: number;
-	modulesSpace: number;
-	chunkModulesSpace: number;
-	nestedModulesSpace: number;
-	logging: false | "none" | "verbose" | "error" | "warn" | "info" | "log";
-	loggingDebug: ((value: string) => boolean)[];
-	loggingTrace: boolean;
-}
-
-/**
- * Defines the known stats asset type used by this module.
- */
-declare interface KnownStatsAsset {
-	type: string;
-	name: string;
-	info: AssetInfo;
-	size: number;
-	emitted: boolean;
-	comparedForEmit: boolean;
-	cached: boolean;
-	related?: StatsAsset[];
-	chunks?: ChunkId[];
-	chunkNames?: ChunkName[];
-	chunkIdHints?: string[];
-	auxiliaryChunks?: ChunkId[];
-	auxiliaryChunkNames?: ChunkName[];
-	auxiliaryChunkIdHints?: string[];
-	filteredRelated?: number;
-	isOverSizeLimit?: boolean;
-}
-
-/**
- * A group of assets that `groupResults` creates, listing them in `children` or counting hidden ones in `filteredChildren`.
- */
-declare interface KnownStatsAssetGroup {
-	type: string;
-	size: number;
-	name?: string;
-	children?: StatsAsset[];
-	filteredChildren?: number;
-}
-
-/**
- * Defines the known stats chunk type used by this module.
- */
-declare interface KnownStatsChunk {
-	rendered: boolean;
-	initial: boolean;
-	entry: boolean;
-	recorded: boolean;
-	reason?: string;
-	size: number;
-	sizes: Record<string, number>;
-	names: string[];
-	idHints: string[];
-	runtime?: string[];
-	files: string[];
-	auxiliaryFiles: string[];
-	hash: string;
-	childrenByOrder: Record<string, ChunkId[]>;
-	id?: string | number;
-	siblings?: ChunkId[];
-	parents?: ChunkId[];
-	children?: ChunkId[];
-	modules?: StatsModule[];
-	filteredModules?: number;
-	origins?: StatsChunkOrigin[];
-}
-
-/**
- * Defines the known stats chunk group type used by this module.
- */
-declare interface KnownStatsChunkGroup {
-	name?: null | string;
-	chunks?: ChunkId[];
-	assets?: { name: string; size?: number }[];
-	filteredAssets?: number;
-	assetsSize?: number;
-	auxiliaryAssets?: { name: string; size?: number }[];
-	filteredAuxiliaryAssets?: number;
-	auxiliaryAssetsSize?: number;
-	children?: Record<string, StatsChunkGroup[]>;
-	childAssets?: Record<string, string[]>;
-	isOverSizeLimit?: boolean;
-}
-
-/**
- * Defines the known stats chunk origin type used by this module.
- */
-declare interface KnownStatsChunkOrigin {
-	module: string;
-	moduleIdentifier: string;
-	moduleName: string;
-	loc: string;
-	request: string;
-	moduleId?: string | number;
-}
-
-/**
- * Defines the known stats compilation type used by this module.
- */
-declare interface KnownStatsCompilation {
-	env?: StatsJsonValue;
-	name?: string;
-	hash?: string;
-	version?: string;
-	time?: number;
-	builtAt?: number;
-	needAdditionalPass?: boolean;
-	publicPath?: string;
-	outputPath?: string;
-	assetsByChunkName?: Record<string, string[]>;
-	assets?: StatsAsset[];
-	filteredAssets?: number;
-	chunks?: StatsChunk[];
-	modules?: StatsModule[];
-	filteredModules?: number;
-	entrypoints?: Record<string, StatsChunkGroup>;
-	namedChunkGroups?: Record<string, StatsChunkGroup>;
-	errors?: StatsError[];
-	errorsCount?: number;
-	warnings?: StatsError[];
-	warningsCount?: number;
-	hints?: StatsError[];
-	hintsCount?: number;
-	children?: StatsCompilation[];
-	logging?: Record<string, StatsLogging>;
-	filteredWarningDetailsCount?: number;
-	filteredErrorDetailsCount?: number;
-}
-
-/**
- * Defines the known stats error type used by this module.
- */
-declare interface KnownStatsError {
-	message: string;
-	chunkName?: string;
-	chunkEntry?: boolean;
-	chunkInitial?: boolean;
-	file?: string;
-	moduleIdentifier?: string;
-	moduleName?: string;
-	loc?: string;
-	chunkId?: string | number;
-	moduleId?: string | number;
-	moduleTrace?: StatsModuleTraceItem[];
-	details?: string;
-	stack?: string;
-	cause?: KnownStatsError;
-	errors?: KnownStatsError[];
-	compilerPath?: string;
-}
-
-/**
- * Defines the known stats logging type used by this module.
- */
-declare interface KnownStatsLogging {
-	entries: StatsLoggingEntry[];
-	filteredEntries: number;
-	debug: boolean;
-}
-
-/**
- * Defines the known stats logging entry type used by this module.
- */
-declare interface KnownStatsLoggingEntry {
-	type: string;
-	message?: string;
-	trace?: string[];
-	children?: StatsLoggingEntry[];
-	args?: any[];
-	time?: number;
-}
-
-/**
- * Defines the known stats module type used by this module.
- */
-declare interface KnownStatsModule {
-	type?: string;
-	moduleType?: string;
-	layer?: null | string;
-	identifier?: string;
-	name?: string;
-	nameForCondition?: null | string;
-	index?: number;
-	preOrderIndex?: number;
-	index2?: number;
-	postOrderIndex?: number;
-	size?: number;
-	sizes?: Record<string, number>;
-	cacheable?: boolean;
-	notCacheableReasons?: string[];
-	built?: boolean;
-	codeGenerated?: boolean;
-	buildTimeExecuted?: boolean;
-	cached?: boolean;
-	optional?: boolean;
-	orphan?: boolean;
-	id?: string | number;
-	issuerId?: null | string | number;
-	chunks?: ChunkId[];
-	assets?: string[];
-	dependent?: boolean;
-	issuer?: null | string;
-	issuerName?: null | string;
-	issuerPath?: null | StatsModuleIssuer[];
-	failed?: boolean;
-	errors?: number;
-	warnings?: number;
-	profile?: StatsProfile;
-	reasons?: StatsModuleReason[];
-	usedExports?: null | boolean | string[];
-	providedExports?: null | string[];
-	optimizationBailout?: string[];
-	depth?: null | number;
-	modules?: StatsModule[];
-	filteredModules?: number;
-	source?: string | Buffer;
-}
-
-/**
- * A group of modules that `groupResults` creates, listing them in `children` or counting hidden ones in `filteredChildren`.
- */
-declare interface KnownStatsModuleGroup {
-	type: string;
-	size: number;
-	sizes: Record<string, number>;
-	name?: string;
-	moduleType?: string;
-	layer?: string;
-	children?: StatsModule[];
-	filteredChildren?: number;
-}
-
-/**
- * Defines the known stats module issuer type used by this module.
- */
-declare interface KnownStatsModuleIssuer {
-	identifier: string;
-	name: string;
-	id?: string | number;
-	profile: StatsProfile;
-}
-
-/**
- * Defines the known stats module reason type used by this module.
- */
-declare interface KnownStatsModuleReason {
-	moduleIdentifier: null | string;
-	module: null | string;
-	moduleName: null | string;
-	resolvedModuleIdentifier: null | string;
-	resolvedModule: null | string;
-	type: null | string;
-	active: boolean;
-	explanation: null | string;
-	userRequest: null | string;
-	loc?: null | string;
-	moduleId?: null | string | number;
-	resolvedModuleId?: null | string | number;
-}
-
-/**
- * A group of reasons from one origin module that `groupResults` creates.
- */
-declare interface KnownStatsModuleReasonGroup {
-	type: string;
-	module: string;
-	active: boolean;
-	children: StatsModuleReason[];
-}
-
-/**
- * Defines the known stats module trace dependency type used by this module.
- */
-declare interface KnownStatsModuleTraceDependency {
-	loc?: string;
-}
-
-/**
- * Defines the known stats module trace item type used by this module.
- */
-declare interface KnownStatsModuleTraceItem {
-	originIdentifier?: string;
-	originName?: string;
-	moduleIdentifier?: string;
-	moduleName?: string;
-	dependencies?: StatsModuleTraceDependency[];
-	originId?: string | number;
-	moduleId?: string | number;
-}
-
-/**
  * Defines the known stats printer color functions type used by this module.
  */
 declare interface KnownStatsPrinterColorFunctions {
@@ -18962,22 +18560,6 @@ declare interface KnownStatsPrinterFormatters {
 	formatFlag?: (flag: string) => string;
 	formatTime?: (time: number, boldQuantity?: boolean) => string;
 	formatError?: (message: string) => string;
-}
-
-/**
- * Defines the known stats profile type used by this module.
- */
-declare interface KnownStatsProfile {
-	total: number;
-	resolving: number;
-	restoring: number;
-	building: number;
-	integration: number;
-	storing: number;
-	additionalResolving: number;
-	additionalIntegration: number;
-	factory: number;
-	dependencies: number;
 }
 
 /**
@@ -19909,8 +19491,8 @@ declare interface LogEntry {
 		| "info"
 		| "log"
 		| "debug"
-		| "clear"
 		| "profile"
+		| "clear"
 		| "trace"
 		| "group"
 		| "groupCollapsed"
@@ -19928,8 +19510,8 @@ type LogTypeEnum =
 	| "info"
 	| "log"
 	| "debug"
-	| "clear"
 	| "profile"
+	| "clear"
 	| "trace"
 	| "group"
 	| "groupCollapsed"
@@ -23970,48 +23552,8 @@ declare abstract class NormalReexportItem {
 declare interface NormalizedModules {
 	[index: string]: VirtualModule;
 }
-type NormalizedStatsOptions = KnownNormalizedStatsOptions &
-	Omit<
-		StatsOptions,
-		| "context"
-		| "chunkGroups"
-		| "requestShortener"
-		| "chunksSort"
-		| "modulesSort"
-		| "chunkModulesSort"
-		| "nestedModulesSort"
-		| "assetsSort"
-		| "ids"
-		| "cachedAssets"
-		| "groupAssetsByEmitStatus"
-		| "groupAssetsByPath"
-		| "groupAssetsByExtension"
-		| "assetsSpace"
-		| "excludeAssets"
-		| "excludeModules"
-		| "warningsFilter"
-		| "cachedModules"
-		| "orphanModules"
-		| "dependentModules"
-		| "runtimeModules"
-		| "groupModulesByCacheStatus"
-		| "groupModulesByLayer"
-		| "groupModulesByAttributes"
-		| "groupModulesByPath"
-		| "groupModulesByExtension"
-		| "groupModulesByType"
-		| "entrypoints"
-		| "chunkGroupAuxiliary"
-		| "chunkGroupChildren"
-		| "chunkGroupMaxAssets"
-		| "modulesSpace"
-		| "chunkModulesSpace"
-		| "nestedModulesSpace"
-		| "logging"
-		| "loggingDebug"
-		| "loggingTrace"
-		| "_env"
-	> &
+type NormalizedStatsOptions = exports.KnownNormalizedStatsOptions &
+	Omit<StatsOptions, keyof exports.KnownNormalizedStatsOptions> &
 	Record<string, any>;
 declare class NullDependency extends Dependency {
 	constructor();
@@ -33043,13 +32585,17 @@ declare class Stats {
 			| "verbose"
 	): string;
 }
-type StatsAsset = KnownStatsAsset & Record<string, StatsJsonValue>;
-type StatsAssetGroup = KnownStatsAssetGroup & Record<string, StatsJsonValue>;
-type StatsChunk = KnownStatsChunk & Record<string, StatsJsonValue>;
-type StatsChunkGroup = KnownStatsChunkGroup & Record<string, StatsJsonValue>;
-type StatsChunkOrigin = KnownStatsChunkOrigin & Record<string, StatsJsonValue>;
-type StatsCompilation = KnownStatsCompilation & Record<string, StatsJsonValue>;
-type StatsError = KnownStatsError & Record<string, StatsJsonValue>;
+type StatsAsset = exports.KnownStatsAsset & Record<string, StatsJsonValue>;
+type StatsAssetGroup = exports.KnownStatsAssetGroup &
+	Record<string, StatsJsonValue>;
+type StatsChunk = exports.KnownStatsChunk & Record<string, StatsJsonValue>;
+type StatsChunkGroup = exports.KnownStatsChunkGroup &
+	Record<string, StatsJsonValue>;
+type StatsChunkOrigin = exports.KnownStatsChunkOrigin &
+	Record<string, StatsJsonValue>;
+type StatsCompilation = exports.KnownStatsCompilation &
+	Record<string, StatsJsonValue>;
+type StatsError = exports.KnownStatsError & Record<string, StatsJsonValue>;
 declare abstract class StatsFactory {
 	hooks: StatsFactoryHooks;
 
@@ -33220,20 +32766,21 @@ type StatsJsonValue =
 	| Buffer
 	| StatsJsonValue[]
 	| { [index: string]: StatsJsonValue };
-type StatsLogging = KnownStatsLogging & Record<string, StatsJsonValue>;
-type StatsLoggingEntry = KnownStatsLoggingEntry &
+type StatsLogging = exports.KnownStatsLogging & Record<string, StatsJsonValue>;
+type StatsLoggingEntry = exports.KnownStatsLoggingEntry &
 	Record<string, StatsJsonValue>;
-type StatsModule = KnownStatsModule & Record<string, StatsJsonValue>;
-type StatsModuleGroup = KnownStatsModuleGroup & Record<string, StatsJsonValue>;
-type StatsModuleIssuer = KnownStatsModuleIssuer &
+type StatsModule = exports.KnownStatsModule & Record<string, StatsJsonValue>;
+type StatsModuleGroup = exports.KnownStatsModuleGroup &
 	Record<string, StatsJsonValue>;
-type StatsModuleReason = KnownStatsModuleReason &
+type StatsModuleIssuer = exports.KnownStatsModuleIssuer &
 	Record<string, StatsJsonValue>;
-type StatsModuleReasonGroup = KnownStatsModuleReasonGroup &
+type StatsModuleReason = exports.KnownStatsModuleReason &
 	Record<string, StatsJsonValue>;
-type StatsModuleTraceDependency = KnownStatsModuleTraceDependency &
+type StatsModuleReasonGroup = exports.KnownStatsModuleReasonGroup &
 	Record<string, StatsJsonValue>;
-type StatsModuleTraceItem = KnownStatsModuleTraceItem &
+type StatsModuleTraceDependency = exports.KnownStatsModuleTraceDependency &
+	Record<string, StatsJsonValue>;
+type StatsModuleTraceItem = exports.KnownStatsModuleTraceItem &
 	Record<string, StatsJsonValue>;
 type StatsObject<T, F> = T extends Compilation
 	? StatsCompilation
@@ -33814,7 +33361,7 @@ type StatsPrinterSortItemsHookMap = {
 	>;
 	for(key: string): SyncBailHook<[any[], StatsPrinterContext], boolean | void>;
 } & HookMap<SyncBailHook<[any[], StatsPrinterContext], boolean | void>>;
-type StatsProfile = KnownStatsProfile & Record<string, StatsJsonValue>;
+type StatsProfile = exports.KnownStatsProfile & Record<string, StatsJsonValue>;
 type StatsValue =
 	| boolean
 	| StatsOptions
@@ -36248,6 +35795,72 @@ declare namespace exports {
 	}
 
 	/**
+	 * Defines the all code generation schemas type used by this module.
+	 * A plugin types its own code generation data by declaration merging: `declare module "webpack" { interface AllCodeGenerationSchemas { myField?: MyType } }`.
+	 */
+	export interface AllCodeGenerationSchemas {
+		/**
+		 * top level declarations for javascript modules
+		 */
+		topLevelDeclarations: Set<string>;
+
+		/**
+		 * free identifier names in the rendered source for javascript modules
+		 */
+		freeNames: Set<string>;
+
+		/**
+		 * chunk init fragments for javascript modules
+		 */
+		chunkInitFragments: InitFragment<ChunkRenderContextJavascriptModulesPlugin>[];
+
+		/**
+		 * native external reexport source and attributes
+		 */
+		externalReexport: string;
+
+		/**
+		 * export definitions left out of a javascript module's source on demand (see `KnownMeta.onDemandExports`), to be placed before its body where it is wrapped
+		 */
+		exportsSource: string;
+
+		/**
+		 * export definitions left out on demand that read the module's own declarations, to be placed after its body where it is wrapped
+		 */
+		exportsBindingSource: string;
+
+		/**
+		 * final name of each used export of a concatenated module whose definitions were left out on demand
+		 */
+		exportsFinalName: Record<string, string>;
+
+		/**
+		 * url for asset modules
+		 */
+		url: { javascript?: string; "asset-url"?: string };
+
+		/**
+		 * a filename for asset modules
+		 */
+		filename: string;
+
+		/**
+		 * an asset info for asset modules
+		 */
+		assetInfo: AssetInfo;
+
+		/**
+		 * a full content hash for asset modules
+		 */
+		fullContentHash: string;
+
+		/**
+		 * share-init for modules federation
+		 */
+		"share-init": [{ shareScope: string; initStage: number; init: string }];
+	}
+
+	/**
 	 * Defines the known asset info type used by this module.
 	 * A plugin types its own fields by declaration merging: `declare module "webpack" { interface KnownAssetInfo { myField?: MyType } }`.
 	 */
@@ -36427,6 +36040,54 @@ declare namespace exports {
 	}
 
 	/**
+	 * Defines the known normalized stats options type used by this module.
+	 * A plugin types its own stats options by declaration merging: `declare module "webpack" { interface KnownNormalizedStatsOptions { myField?: MyType } }`.
+	 */
+	export interface KnownNormalizedStatsOptions {
+		context: string;
+		requestShortener: RequestShortener;
+		chunksSort: string | false;
+		modulesSort: string | false;
+		chunkModulesSort: string | false;
+		nestedModulesSort: string | false;
+		assetsSort: string | false;
+		ids: boolean;
+		cachedAssets: boolean;
+		groupAssetsByEmitStatus: boolean;
+		groupAssetsByPath: boolean;
+		groupAssetsByExtension: boolean;
+		assetsSpace: number;
+		excludeAssets: ((value: string, asset: StatsAsset) => boolean)[];
+		excludeModules: ((
+			name: string,
+			module: StatsModule,
+			type: ExcludeModulesType
+		) => boolean)[];
+		warningsFilter: ((warning: StatsError, textValue: string) => boolean)[];
+		cachedModules: boolean;
+		orphanModules: boolean;
+		dependentModules: boolean;
+		runtimeModules: boolean;
+		groupModulesByCacheStatus: boolean;
+		groupModulesByLayer: boolean;
+		groupModulesByAttributes: boolean;
+		groupModulesByPath: boolean;
+		groupModulesByExtension: boolean;
+		groupModulesByType: boolean;
+		entrypoints: boolean | "auto";
+		chunkGroups: boolean;
+		chunkGroupAuxiliary: boolean;
+		chunkGroupChildren: boolean;
+		chunkGroupMaxAssets: number;
+		modulesSpace: number;
+		chunkModulesSpace: number;
+		nestedModulesSpace: number;
+		logging: false | "none" | "verbose" | "error" | "warn" | "info" | "log";
+		loggingDebug: ((value: string) => boolean)[];
+		loggingTrace: boolean;
+	}
+
+	/**
 	 * Defines the known records type used by this module.
 	 * A plugin types its own fields by declaration merging: `declare module "webpack" { interface KnownRecords { myField?: MyType } }`.
 	 */
@@ -36446,6 +36107,157 @@ declare namespace exports {
 	}
 
 	/**
+	 * Defines the known stats asset type used by this module.
+	 * A plugin types its own stats fields by declaration merging: `declare module "webpack" { interface KnownStatsAsset { myField?: MyType } }`.
+	 */
+	export interface KnownStatsAsset {
+		type: string;
+		name: string;
+		info: AssetInfo;
+		size: number;
+		emitted: boolean;
+		comparedForEmit: boolean;
+		cached: boolean;
+		related?: StatsAsset[];
+		chunks?: ChunkId[];
+		chunkNames?: ChunkName[];
+		chunkIdHints?: string[];
+		auxiliaryChunks?: ChunkId[];
+		auxiliaryChunkNames?: ChunkName[];
+		auxiliaryChunkIdHints?: string[];
+		filteredRelated?: number;
+		isOverSizeLimit?: boolean;
+	}
+
+	/**
+	 * A group of assets that `groupResults` creates, listing them in `children` or counting hidden ones in `filteredChildren`.
+	 * A plugin types its own stats fields by declaration merging: `declare module "webpack" { interface KnownStatsAssetGroup { myField?: MyType } }`.
+	 */
+	export interface KnownStatsAssetGroup {
+		type: string;
+		size: number;
+		name?: string;
+		children?: StatsAsset[];
+		filteredChildren?: number;
+	}
+
+	/**
+	 * Defines the known stats chunk type used by this module.
+	 * A plugin types its own stats fields by declaration merging: `declare module "webpack" { interface KnownStatsChunk { myField?: MyType } }`.
+	 */
+	export interface KnownStatsChunk {
+		rendered: boolean;
+		initial: boolean;
+		entry: boolean;
+		recorded: boolean;
+		reason?: string;
+		size: number;
+		sizes: Record<string, number>;
+		names: string[];
+		idHints: string[];
+		runtime?: string[];
+		files: string[];
+		auxiliaryFiles: string[];
+		hash: string;
+		childrenByOrder: Record<string, ChunkId[]>;
+		id?: string | number;
+		siblings?: ChunkId[];
+		parents?: ChunkId[];
+		children?: ChunkId[];
+		modules?: StatsModule[];
+		filteredModules?: number;
+		origins?: StatsChunkOrigin[];
+	}
+
+	/**
+	 * Defines the known stats chunk group type used by this module.
+	 * A plugin types its own stats fields by declaration merging: `declare module "webpack" { interface KnownStatsChunkGroup { myField?: MyType } }`.
+	 */
+	export interface KnownStatsChunkGroup {
+		name?: null | string;
+		chunks?: ChunkId[];
+		assets?: { name: string; size?: number }[];
+		filteredAssets?: number;
+		assetsSize?: number;
+		auxiliaryAssets?: { name: string; size?: number }[];
+		filteredAuxiliaryAssets?: number;
+		auxiliaryAssetsSize?: number;
+		children?: Record<string, StatsChunkGroup[]>;
+		childAssets?: Record<string, string[]>;
+		isOverSizeLimit?: boolean;
+	}
+
+	/**
+	 * Defines the known stats chunk origin type used by this module.
+	 * A plugin types its own stats fields by declaration merging: `declare module "webpack" { interface KnownStatsChunkOrigin { myField?: MyType } }`.
+	 */
+	export interface KnownStatsChunkOrigin {
+		module: string;
+		moduleIdentifier: string;
+		moduleName: string;
+		loc: string;
+		request: string;
+		moduleId?: string | number;
+	}
+
+	/**
+	 * Defines the known stats compilation type used by this module.
+	 * A plugin types its own stats fields by declaration merging: `declare module "webpack" { interface KnownStatsCompilation { myField?: MyType } }`.
+	 */
+	export interface KnownStatsCompilation {
+		env?: StatsJsonValue;
+		name?: string;
+		hash?: string;
+		version?: string;
+		time?: number;
+		builtAt?: number;
+		needAdditionalPass?: boolean;
+		publicPath?: string;
+		outputPath?: string;
+		assetsByChunkName?: Record<string, string[]>;
+		assets?: StatsAsset[];
+		filteredAssets?: number;
+		chunks?: StatsChunk[];
+		modules?: StatsModule[];
+		filteredModules?: number;
+		entrypoints?: Record<string, StatsChunkGroup>;
+		namedChunkGroups?: Record<string, StatsChunkGroup>;
+		errors?: StatsError[];
+		errorsCount?: number;
+		warnings?: StatsError[];
+		warningsCount?: number;
+		hints?: StatsError[];
+		hintsCount?: number;
+		children?: StatsCompilation[];
+		logging?: Record<string, StatsLogging>;
+		filteredWarningDetailsCount?: number;
+		filteredErrorDetailsCount?: number;
+	}
+
+	/**
+	 * Defines the known stats error type used by this module.
+	 * A plugin types its own stats fields by declaration merging: `declare module "webpack" { interface KnownStatsError { myField?: MyType } }`.
+	 */
+	export interface KnownStatsError {
+		message: string;
+		chunkName?: string;
+		chunkEntry?: boolean;
+		chunkInitial?: boolean;
+		file?: string;
+		moduleIdentifier?: string;
+		moduleName?: string;
+		loc?: string;
+		chunkId?: string | number;
+		moduleId?: string | number;
+		moduleTrace?: StatsModuleTraceItem[];
+		details?: string;
+		stack?: string;
+		cause?: exports.KnownStatsError;
+		errors?: exports.KnownStatsError[];
+		compilerPath?: string;
+	}
+
+	/**
 	 * Defines the known stats factory context type used by this module.
 	 * A plugin types its own fields by declaration merging: `declare module "webpack" { interface KnownStatsFactoryContext { myField?: MyType } }`.
 	 */
@@ -36459,6 +36271,154 @@ declare namespace exports {
 		runtime: RuntimeSpec;
 		cachedGetErrors: (compilation: Compilation) => Error[];
 		cachedGetWarnings: (compilation: Compilation) => Error[];
+	}
+
+	/**
+	 * Defines the known stats logging type used by this module.
+	 * A plugin types its own stats fields by declaration merging: `declare module "webpack" { interface KnownStatsLogging { myField?: MyType } }`.
+	 */
+	export interface KnownStatsLogging {
+		entries: StatsLoggingEntry[];
+		filteredEntries: number;
+		debug: boolean;
+	}
+
+	/**
+	 * Defines the known stats logging entry type used by this module.
+	 * A plugin types its own stats fields by declaration merging: `declare module "webpack" { interface KnownStatsLoggingEntry { myField?: MyType } }`.
+	 */
+	export interface KnownStatsLoggingEntry {
+		type: string;
+		message?: string;
+		trace?: string[];
+		children?: StatsLoggingEntry[];
+		args?: any[];
+		time?: number;
+	}
+
+	/**
+	 * Defines the known stats module type used by this module.
+	 * A plugin types its own stats fields by declaration merging: `declare module "webpack" { interface KnownStatsModule { myField?: MyType } }`.
+	 */
+	export interface KnownStatsModule {
+		type?: string;
+		moduleType?: string;
+		layer?: null | string;
+		identifier?: string;
+		name?: string;
+		nameForCondition?: null | string;
+		index?: number;
+		preOrderIndex?: number;
+		index2?: number;
+		postOrderIndex?: number;
+		size?: number;
+		sizes?: Record<string, number>;
+		cacheable?: boolean;
+		notCacheableReasons?: string[];
+		built?: boolean;
+		codeGenerated?: boolean;
+		buildTimeExecuted?: boolean;
+		cached?: boolean;
+		optional?: boolean;
+		orphan?: boolean;
+		id?: string | number;
+		issuerId?: null | string | number;
+		chunks?: ChunkId[];
+		assets?: string[];
+		dependent?: boolean;
+		issuer?: null | string;
+		issuerName?: null | string;
+		issuerPath?: null | StatsModuleIssuer[];
+		failed?: boolean;
+		errors?: number;
+		warnings?: number;
+		profile?: StatsProfile;
+		reasons?: StatsModuleReason[];
+		usedExports?: null | boolean | string[];
+		providedExports?: null | string[];
+		optimizationBailout?: string[];
+		depth?: null | number;
+		modules?: StatsModule[];
+		filteredModules?: number;
+		source?: string | Buffer;
+	}
+
+	/**
+	 * A group of modules that `groupResults` creates, listing them in `children` or counting hidden ones in `filteredChildren`.
+	 * A plugin types its own stats fields by declaration merging: `declare module "webpack" { interface KnownStatsModuleGroup { myField?: MyType } }`.
+	 */
+	export interface KnownStatsModuleGroup {
+		type: string;
+		size: number;
+		sizes: Record<string, number>;
+		name?: string;
+		moduleType?: string;
+		layer?: string;
+		children?: StatsModule[];
+		filteredChildren?: number;
+	}
+
+	/**
+	 * Defines the known stats module issuer type used by this module.
+	 * A plugin types its own stats fields by declaration merging: `declare module "webpack" { interface KnownStatsModuleIssuer { myField?: MyType } }`.
+	 */
+	export interface KnownStatsModuleIssuer {
+		identifier: string;
+		name: string;
+		id?: string | number;
+		profile: StatsProfile;
+	}
+
+	/**
+	 * Defines the known stats module reason type used by this module.
+	 * A plugin types its own stats fields by declaration merging: `declare module "webpack" { interface KnownStatsModuleReason { myField?: MyType } }`.
+	 */
+	export interface KnownStatsModuleReason {
+		moduleIdentifier: null | string;
+		module: null | string;
+		moduleName: null | string;
+		resolvedModuleIdentifier: null | string;
+		resolvedModule: null | string;
+		type: null | string;
+		active: boolean;
+		explanation: null | string;
+		userRequest: null | string;
+		loc?: null | string;
+		moduleId?: null | string | number;
+		resolvedModuleId?: null | string | number;
+	}
+
+	/**
+	 * A group of reasons from one origin module that `groupResults` creates.
+	 * A plugin types its own stats fields by declaration merging: `declare module "webpack" { interface KnownStatsModuleReasonGroup { myField?: MyType } }`.
+	 */
+	export interface KnownStatsModuleReasonGroup {
+		type: string;
+		module: string;
+		active: boolean;
+		children: StatsModuleReason[];
+	}
+
+	/**
+	 * Defines the known stats module trace dependency type used by this module.
+	 * A plugin types its own stats fields by declaration merging: `declare module "webpack" { interface KnownStatsModuleTraceDependency { myField?: MyType } }`.
+	 */
+	export interface KnownStatsModuleTraceDependency {
+		loc?: string;
+	}
+
+	/**
+	 * Defines the known stats module trace item type used by this module.
+	 * A plugin types its own stats fields by declaration merging: `declare module "webpack" { interface KnownStatsModuleTraceItem { myField?: MyType } }`.
+	 */
+	export interface KnownStatsModuleTraceItem {
+		originIdentifier?: string;
+		originName?: string;
+		moduleIdentifier?: string;
+		moduleName?: string;
+		dependencies?: StatsModuleTraceDependency[];
+		originId?: string | number;
+		moduleId?: string | number;
 	}
 
 	/**
@@ -36480,6 +36440,23 @@ declare namespace exports {
 		logging?: StatsLogging;
 		moduleTraceItem?: StatsModuleTraceItem;
 		moduleTraceDependency?: StatsModuleTraceDependency;
+	}
+
+	/**
+	 * Defines the known stats profile type used by this module.
+	 * A plugin types its own stats fields by declaration merging: `declare module "webpack" { interface KnownStatsProfile { myField?: MyType } }`.
+	 */
+	export interface KnownStatsProfile {
+		total: number;
+		resolving: number;
+		restoring: number;
+		building: number;
+		integration: number;
+		storing: number;
+		additionalResolving: number;
+		additionalIntegration: number;
+		factory: number;
+		dependencies: number;
 	}
 
 	/**
@@ -36596,7 +36573,7 @@ declare namespace exports {
 		"compilation.errors": StatsError;
 		"compilation.warnings": StatsError;
 		"compilation.hints": StatsError;
-		"compilation.logging": KnownStatsLogging &
+		"compilation.logging": exports.KnownStatsLogging &
 			Record<string, StatsJsonValue> & { name: string };
 		"compilation.children": StatsCompilation;
 		"asset.related": StatsAsset;
@@ -36628,7 +36605,7 @@ declare namespace exports {
 		"compilation.errors[]": StatsError;
 		"compilation.warnings[]": StatsError;
 		"compilation.hints[]": StatsError;
-		"compilation.logging[]": KnownStatsLogging &
+		"compilation.logging[]": exports.KnownStatsLogging &
 			Record<string, StatsJsonValue> & { name: string };
 		"compilation.children[]": StatsCompilation;
 		"asset.related[]": StatsAsset;
@@ -36662,7 +36639,7 @@ declare namespace exports {
 		chunkOrigin: StatsChunkOrigin;
 		error: StatsError;
 		profile: StatsProfile;
-		loggingGroup: KnownStatsLogging &
+		loggingGroup: exports.KnownStatsLogging &
 			Record<string, StatsJsonValue> & { name: string };
 		moduleTraceItem: StatsModuleTraceItem;
 		moduleTraceDependency: StatsModuleTraceDependency;

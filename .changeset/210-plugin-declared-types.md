@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Let plugins declare typed build info, build meta, asset info and parser tag data.
+Let plugins type their build info, stats fields, code generation data and tags.
