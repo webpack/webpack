@@ -194,7 +194,7 @@ describe("AsyncQueue", () => {
 		let pending = 2;
 		/**
 		 * @param {Error | null | undefined} err error
-		 * @param {string=} result result
+		 * @param {(string | null)=} result result
 		 */
 		const finish = (err, result) => {
 			expect(err).toBeFalsy();
