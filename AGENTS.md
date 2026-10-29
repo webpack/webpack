@@ -97,6 +97,8 @@ Use the most specific real type. `EXPECTED_ANY`, `EXPECTED_OBJECT`, `EXPECTED_FU
 
 When a function's output type depends on its input, use a generic (`@template`) rather than widening, so callers stay precisely typed.
 
+`yarn lint:escape-hatches` fails when a file's count of the three `EXPECTED_*` aliases grows; after removing some, run it with `--write` to lock the lower count in.
+
 ### Naming
 
 Spell names out in full (`attributeCount`, not `attrCnt`), beyond the abbreviations webpack already uses pervasively. Name a class for what it does, with its kind's suffix (`*Plugin`, `*Dependency`, …), and the file for the class; a name never invents a role suffix (`*Manager`, `*Util`), takes a `Webpack` prefix or repeats another `lib/` class. Exceptions and reasons: [docs/code-style.md](docs/code-style.md#naming).
