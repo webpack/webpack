@@ -2084,12 +2084,21 @@ const invariantFixtures = () => {
 const EXPECTED = [
 	{
 		relation: "agreement",
-		contains: 'tool <html:template shadowrootmode="open">',
+		contains: 'div[1]/a[1]: parse5 <html:a href="#x">, tool nothing',
 		source: [
 			"html/declarative-shadow-root/page.html",
 			"html/parser-decoded-attribute-values/page.html"
 		],
-		why: "a declarative shadow root attaches to its host, so the `</a>` after it reconstructs no formatting element around it; parse5 8 predates declarative shadow roots"
+		why: "a declarative shadow root attaches to its host, so the `</a>` after it reconstructs no formatting element around it; parse5 8 predates declarative shadow roots, so the `<a>` lands elsewhere"
+	},
+	{
+		relation: "agreement",
+		contains: 'div[1]/a[1]: parse5 nothing, tool <html:a href="#x">',
+		source: [
+			"html/declarative-shadow-root/page.html",
+			"html/parser-decoded-attribute-values/page.html"
+		],
+		why: "a declarative shadow root attaches to its host, so the `</a>` after it reconstructs no formatting element around it; parse5 8 predates declarative shadow roots, so the `<a>` lands elsewhere"
 	},
 	{
 		relation: "agreement",

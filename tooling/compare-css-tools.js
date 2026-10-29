@@ -798,14 +798,30 @@ const cssTreeTree = (css) => {
 	 * @param {number} end where it ends
 	 */
 	const reread = (start, end) => {
-		for (const context of ["declarationList", "stylesheet"]) {
-			const nodes = parse(start, end, context);
-			if (nodes.length > 0 && nodes[0].type !== "Raw") {
-				walk(nodes, true);
+		let at = start;
+		while (at < end) {
+			let nodes = parse(at, end, "declarationList");
+			if (nodes.length === 0) return;
+			if (nodes[0].type === "Raw") nodes = parse(at, end, "stylesheet");
+			if (nodes.length === 0 || nodes[0].type === "Raw") {
+				events.leaf(`unparsed ${comparedText(css.slice(at, end))}`);
 				return;
 			}
+			at = end;
+			for (let i = 0; i < nodes.length; i++) {
+				// Read as rules, a declaration after one runs into the next
+				// selector, which a `;` gives away: read on from it afresh.
+				if (
+					i > 0 &&
+					nodes[i].type === "Rule" &&
+					source(nodes[i].prelude).includes(";")
+				) {
+					at = nodes[i].loc.start.offset;
+					break;
+				}
+				walk([nodes[i]], true);
+			}
 		}
-		events.leaf(`unparsed ${comparedText(css.slice(start, end))}`);
 	};
 	/**
 	 * @param {Iterable<EXPECTED_ANY>} list a css-tree list
@@ -1744,9 +1760,28 @@ const EXPECTED = [
 	},
 	{
 		relation: "agreement",
-		contains: "css-tree rule color: red; .class, tool color: red",
+		contains: "css-tree rule color: red; .class, tool nothing",
 		source: "css/css-modules/style.module.css",
 		why: "an unknown at-rule's block holds declarations and rules, as any block does; css-tree reads it as rules alone"
+	},
+	{
+		relation: "agreement",
+		contains: "/@unknown[3]/.class[1]: css-tree nothing, tool rule .class",
+		source: "css/css-modules/style.module.css",
+		why: "an unknown at-rule's block holds declarations and rules, as any block does; css-tree reads it as rules alone"
+	},
+	{
+		relation: "agreement",
+		contains: "css-tree test: (1, 2) [3, 4], { 1: 2}, tool rule test:",
+		source: "css/css-modules/style.module.css",
+		why: "a value holding a `{}` block beside anything else is no declaration but a rule (§5.4.5); css-tree keeps the declaration"
+	},
+	{
+		relation: "agreement",
+		contains:
+			"css-tree rule result: var(--wide); @media (width < 700px), tool result: var(--wide)",
+		source: "css/css-modules/style.module.css",
+		why: "a `@function` body holds declarations and conditional rules, as a style rule's block does; css-tree reads it as rules alone"
 	},
 	{
 		relation: "agreement",
