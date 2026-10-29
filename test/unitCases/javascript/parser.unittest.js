@@ -6116,3 +6116,25 @@ describe("hasOctalEscape", () => {
 		expect(hasOctalEscape(raw)).toBe(expected);
 	});
 });
+
+describe("validateRegExpLiteral", () => {
+	const {
+		validateRegExpLiteral
+	} = require("../../../lib/javascript/regexp");
+
+	it.each(
+		/** @type {[string, string, import("../../../lib/javascript/syntax-parser").EcmaVersion, string | undefined][]} */ ([
+			["a+", "g", 2018, undefined],
+			["(?<a>x)\\k<a>", "", 2018, undefined],
+			["(?<a>x)", "", 2017, "Invalid group"],
+			["a", "gg", 2018, "Duplicate regular expression flag"],
+			["[a-z]", "v", 2018, "Invalid regular expression flag"],
+			["\\p{L}", "u", 2018, undefined],
+			["(", "", "latest", "Unterminated group"]
+		])
+	)("holds /%s/%s at %s to the spec", (pattern, flags, ecmaVersion, error) => {
+		const validate = () => validateRegExpLiteral(pattern, flags, ecmaVersion);
+		if (error === undefined) expect(validate).not.toThrow();
+		else expect(validate).toThrow(error);
+	});
+});
