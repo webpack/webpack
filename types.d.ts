@@ -3608,6 +3608,15 @@ declare interface CommentSyntax {
 	 */
 	unstated: (comment: string) => boolean;
 }
+
+/**
+ * a comment terser's tokenizer read
+ */
+declare interface CommentSyntaxPrinter {
+	type: string;
+	value: string;
+	nlb?: boolean;
+}
 type CommentsOption =
 	string | boolean | RegExp | ((comment: string) => boolean);
 
@@ -4756,8 +4765,15 @@ declare interface CompressorShape {
 			| "arguments"
 			| "expression"
 			| "evaluate"
+			| "ecma"
+			| "toplevel"
+			| "keep_classnames"
+			| "keep_fnames"
+			| "ie8"
 			| "unused"
 			| "properties"
+			| "global_defs"
+			| "pure_funcs"
 			| "arrows"
 			| "booleans"
 			| "booleans_as_integers"
@@ -4770,26 +4786,20 @@ declare interface CompressorShape {
 			| "directives"
 			| "drop_console"
 			| "drop_debugger"
-			| "ecma"
 			| "builtins_ecma"
 			| "builtins_pure"
-			| "global_defs"
 			| "hoist_funs"
 			| "hoist_props"
 			| "hoist_vars"
-			| "ie8"
 			| "if_return"
 			| "join_vars"
-			| "keep_classnames"
 			| "keep_fargs"
-			| "keep_fnames"
 			| "keep_infinity"
 			| "lhs_constants"
 			| "loops"
 			| "negate_iife"
 			| "passes"
 			| "pure_getters"
-			| "pure_funcs"
 			| "pure_conversions"
 			| "pure_heritage"
 			| "pure_new"
@@ -4799,7 +4809,6 @@ declare interface CompressorShape {
 			| "side_effects"
 			| "switches"
 			| "top_retain"
-			| "toplevel"
 			| "typeofs"
 			| "unsafe"
 			| "unsafe_arrows"
@@ -12168,6 +12177,21 @@ declare interface GivenFormatOptions {
 		string | boolean | RegExp | ((node: any, comment: KeptComment) => boolean);
 
 	/**
+	 * which edition the output may use
+	 */
+	ecma?: number;
+
+	/**
+	 * whether the output works around that engine
+	 */
+	ie8?: boolean;
+
+	/**
+	 * whether the output works around that engine
+	 */
+	safari10?: boolean;
+
+	/**
 	 * whether the output is laid out to read, always false here
 	 */
 	beautify?: boolean;
@@ -12201,21 +12225,6 @@ declare interface GivenFormatOptions {
 	 * whether properties are written in shorthand, undefined until read from `ecma`
 	 */
 	shorthand?: boolean;
-
-	/**
-	 * which edition the output may use
-	 */
-	ecma?: number;
-
-	/**
-	 * whether the output works around that engine
-	 */
-	ie8?: boolean;
-
-	/**
-	 * whether the output works around that engine
-	 */
-	safari10?: boolean;
 
 	/**
 	 * whether only ASCII is written
@@ -17949,18 +17958,20 @@ type JavascriptParserState = ParserStateBase<BuiltJavascriptModule> &
 	Record<string, any> &
 	KnownJavascriptParserState;
 type JavascriptParserTag<T = TagData> = symbol & { readonly __tagData?: T };
+type JavascriptProcessOptions = JavascriptReadOptions &
+	Omit<MinifyOptions, "sourceType" | "format" | "output" | "sourceMap">;
 
 /**
  * what the JavaScript `SourceProcessor` reads its source as, and prints it with
  */
-declare interface JavascriptProcessOptions {
+declare interface JavascriptReadOptions {
 	/**
 	 * what the source is: a module (the default), a script, or a function's body, a CommonJS module's or an event handler's
 	 */
 	sourceType?: "module" | "commonjs" | "script" | "event-handler";
 
 	/**
-	 * terser's format options a print reads, as `minify` reads them under `format`; `comments`, `beautify` and `source_map` are not read yet
+	 * terser's format options a print reads, as `minify` reads them under `format`; `comments` is read where it compresses or mangles
 	 */
 	format?: Partial<any>;
 }
@@ -19771,6 +19782,73 @@ declare interface MakeDirectoryOptions {
 }
 
 /**
+ * What a print recorded for mangling to rewrite in its text: each name it
+ * printed as written, and each import or export `as` clause.
+ */
+declare interface MangleRecording {
+	/**
+	 * where each piece starts in the text, `count` of them
+	 */
+	starts: Int32Array;
+
+	/**
+	 * how long each piece is, negated where the frequency count leaves its name out
+	 */
+	lengths: Int32Array;
+
+	/**
+	 * how many pieces there are
+	 */
+	count: number;
+
+	/**
+	 * the definition whose name replaces each piece
+	 */
+	targets: NamedDefinition[];
+
+	/**
+	 * the pieces that are an import's or export's `as` clause, in order
+	 */
+	specifiers: MangleSpecifier[];
+
+	/**
+	 * text a string print would have written but this one did not
+	 */
+	counted: string[];
+
+	/**
+	 * text this print wrote that a string print would not
+	 */
+	uncounted: string[];
+}
+
+/**
+ * A recorded `as` clause: whether the local's final name matches the foreign
+ * one decides if it is written.
+ */
+declare interface MangleSpecifier {
+	/**
+	 * which piece it is
+	 */
+	index: number;
+
+	/**
+	 * the other module's name
+	 */
+	foreign: string;
+
+	/**
+	 * that name as printed
+	 */
+	text: string;
+
+	/**
+	 * whether the clause precedes the local name
+	 */
+	isImport: boolean;
+}
+
+/**
  * Describes a manifest entrypoint.
  */
 declare interface ManifestEntrypoint {
@@ -20053,11 +20131,36 @@ declare interface Minifier {
 }
 
 /**
+ * A label: a statement's, its `break`s and `continue`s naming it too.
+ */
+declare abstract class MinifierLabel {
+	name: string;
+	mangled_name: null | string;
+	parent: null | MinifierLabel;
+	counter: number;
+}
+
+/**
  * terser's own modules
  */
 declare interface MinifierModules {
 	[index: string]: any;
 	ast: Ast;
+}
+
+/**
+ * One name declared in one scope, or a global: terser's `SymbolDef`, less
+ * what only the compressor reads.
+ */
+declare abstract class MinifierVariable extends Variable {
+	kind: number;
+	declarations: number;
+	global: boolean;
+	undeclared: boolean;
+	export: number;
+	mangled_name: null | string;
+	referenceCount: number;
+	written: boolean;
 }
 
 /**
@@ -20148,6 +20251,16 @@ declare interface MinifyOptions {
 	 * whether the output works around that engine
 	 */
 	safari10?: boolean;
+
+	/**
+	 * the global a CommonJS module is wrapped to write its exports to
+	 */
+	wrap?: string | false;
+
+	/**
+	 * the function the source is enclosed in, as `parameters:arguments`
+	 */
+	enclose?: string | boolean;
 }
 
 /**
@@ -22300,6 +22413,14 @@ declare interface NamedChunkIdsPluginOptions {
 	 */
 	delimiter?: string;
 }
+
+/**
+ * what every definition of a name holds: the name it declares, and the one mangling gave it
+ */
+declare interface NamedDefinition {
+	name: string;
+	mangled_name?: null | string;
+}
 declare class NamedModuleIdsPlugin {
 	/**
 	 * Creates an instance of NamedModuleIdsPlugin.
@@ -22638,6 +22759,14 @@ declare interface NodePathReads<TNode, TValue = unknown> {
 	 */
 	children: (n?: TNode) => TNode[];
 }
+type NodePrintOptions = Omit<JavascriptProcessOptions, "compress"> & {
+	parsed?: ParsedTree;
+	leading?: { tables: TokenTables; token: number };
+	inlinesNames?: boolean;
+	names?: null | TreeNames;
+	compress?: null | Partial<any>;
+	mapsFrom?: { offset: number; length: number };
+};
 
 /**
  * A language node printer, fired for one node once all its visitors have run and
@@ -26161,6 +26290,36 @@ declare interface ParsedIdentifier {
 	internal: boolean;
 }
 type ParsedProgram = Program & NodeLike;
+
+/**
+ * A source `parse.parseTree` read for the tree printer.
+ */
+declare interface ParsedTree {
+	/**
+	 * the tree
+	 */
+	tree: SyntaxTree;
+
+	/**
+	 * its program
+	 */
+	program: number;
+
+	/**
+	 * what its tokens' numbers are read through
+	 */
+	tables: TokenTables;
+
+	/**
+	 * its nodes' tokens, null where nothing printing it reads them
+	 */
+	read: null | TreeTokens;
+
+	/**
+	 * whether it imports or exports
+	 */
+	module: boolean;
+}
 declare class Parser<TModule extends NormalModule = NormalModule> {
 	constructor();
 
@@ -27295,6 +27454,36 @@ declare interface ProgressPluginOptionsProgressBarBranch3Object {
 	 * Width of the progress bar in characters. Default: 25.
 	 */
 	width?: number;
+}
+
+/**
+ * What property mangling asks of its options, as both of its walks read it.
+ */
+declare interface PropertyNames {
+	/**
+	 * records a name a walk finds, before any is renamed
+	 */
+	add: (name: string) => void;
+
+	/**
+	 * the name a property is renamed to, itself where kept
+	 */
+	mangle: (name: string) => string;
+
+	/**
+	 * whether a name written quoted is kept
+	 */
+	keepQuoted: boolean;
+
+	/**
+	 * whether a name read off an undeclared global is found too
+	 */
+	undeclared: boolean;
+
+	/**
+	 * the identifier source it names from
+	 */
+	identifiers: { get: (index: number) => string };
 }
 declare class ProvidePlugin {
 	/**
@@ -31893,6 +32082,26 @@ declare abstract class SourceProcessor<
 declare interface SourceTable {
 	[index: string]: SourceBucket;
 }
+
+/**
+ * A token of webpack's parse: where it sits in the source, and the parse that
+ * read it. terser's `ParsedToken` keeps what this reads off that parse — its
+ * line, its kind, the comments beside it — in nine fields of its own, which a
+ * tree of a million nodes cannot afford.
+ */
+declare abstract class SourceToken {
+	tokens: any;
+	index: number;
+	get pos(): number;
+	get type(): string;
+	get value(): string;
+	get line(): number;
+	get col(): number;
+	get file(): string;
+	nlb: boolean;
+	comments_before: CommentSyntaxPrinter[];
+	comments_after: CommentSyntaxPrinter[];
+}
 type SourceType =
 	| "html"
 	| "script"
@@ -34451,6 +34660,44 @@ declare class TokenStream {
 }
 
 /**
+ * the tokens of one parse, read by their index past `base`
+ */
+declare interface TokenTable {
+	base: number;
+	size: () => number;
+	token: (index: number) => SourceToken;
+	commentsOf: (index: number, after: boolean) => CommentSyntaxPrinter[];
+	forEachCommentGap: (
+		callback: (index: number, comments: CommentSyntaxPrinter[]) => void
+	) => void;
+	keptComments: (test: (comment: CommentSyntaxPrinter) => boolean) => number;
+	placeComments: () => void;
+	commentFlags: () => Uint8Array;
+	outerCounts: Map<number, number>;
+}
+
+/**
+ * The tokens of every parse a tree was read from. Its nodes hold their tokens'
+ * numbers, which this answers for; a token handed in whole answers for itself.
+ */
+declare abstract class TokenTables {
+	tables: TokenTable[];
+	last?: TokenTable;
+	lastBase: number;
+	add(table: TokenTable): void;
+	nextBase(): number;
+	tableOf(number: number): undefined | TokenTable;
+	of(token?: null | number | any): any;
+	forEachCommentGap(
+		callback: (token: number, comments: CommentSyntaxPrinter[]) => void
+	): void;
+	commentsOf(
+		token: undefined | null | number | any,
+		after: boolean
+	): undefined | CommentSyntaxPrinter[];
+}
+
+/**
  * A token's kind, carrying what the parser needs to know about it without
  * re-inspecting the source: whether an expression may follow, its binary
  * precedence, and how it updates the tokenizer's context.
@@ -34497,6 +34744,93 @@ declare class TopLevelSymbol {
 	 */
 	setPure(pure: PureCondition): void;
 	isPure(compilation: Compilation, module: Module): boolean;
+}
+type TreeDefinition = null | MinifierVariable | MinifierLabel;
+
+/**
+ * What mangling gave a source `parse.parseTree` read, for the tree printer.
+ */
+declare interface TreeNames {
+	/**
+	 * each name's definition, by its node
+	 */
+	definitions: TreeDefinition[];
+
+	/**
+	 * each private name's new name, null for none renamed
+	 */
+	privateNames: null | Map<string, string>;
+
+	/**
+	 * where the result was printed while mangling, what `patchRecording` rewrites
+	 */
+	recorded: null | MangleRecording;
+
+	/**
+	 * what that print wrote
+	 */
+	text: string;
+
+	/**
+	 * for the one pass, the declarators whose name no read reads any more
+	 */
+	aliases: null | number[];
+
+	/**
+	 * for the one pass, each declarator of a function read once and that read, in pairs
+	 */
+	movedFunctions: null | number[];
+
+	/**
+	 * for the one pass, names the definitions but those it finds no name of prints, once it found what prints and how many reads of each go
+	 */
+	nameDefinitions:
+		| null
+		| ((
+				unprinted: null | Set<MinifierVariable>,
+				readsGone: null | Map<TreeDefinition, number>
+		  ) => void);
+
+	/**
+	 * for the one pass, the names property mangling gives, null where properties keep theirs
+	 */
+	properties: null | PropertyNames;
+
+	/**
+	 * for the one pass, the string literals renamed as property names
+	 */
+	propertyStrings: null | Set<number>;
+}
+
+/**
+ * Where each node of a `SyntaxTree` starts and ends among its parse's tokens,
+ * and what terser's conversion makes of it, by node.
+ */
+declare interface TreeTokens {
+	/**
+	 * each node's first token's number, 0 for none
+	 */
+	starts: Int32Array;
+
+	/**
+	 * each node's last token's number, 0 for none
+	 */
+	ends: Int32Array;
+
+	/**
+	 * each node's `NodeType`, as terser's conversion types it
+	 */
+	types: Uint8Array;
+
+	/**
+	 * each node's `MARK_` bits
+	 */
+	marks: Uint8Array;
+
+	/**
+	 * the number of the source's first token
+	 */
+	first: number;
 }
 type TreeValue =
 	| null
@@ -37636,6 +37970,17 @@ declare namespace exports {
 			}
 			export namespace printer {
 				export let NODE_KIND_ANCESTRY: Record<string, string[]>;
+				export let prepareMinify: (
+					text: string,
+					options: JavascriptProcessOptions
+				) => {
+					tree: SyntaxTree;
+					program: number;
+					text: string;
+					options: NodePrintOptions;
+					inlined?: Uint8Array;
+					finish?: () => void;
+				};
 				export let plainIdentifier: (name: string) => string;
 				export let load: () => Promise<Minifier>;
 				export let printer: (
