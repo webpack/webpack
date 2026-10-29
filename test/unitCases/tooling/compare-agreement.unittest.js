@@ -65,15 +65,21 @@ const sweep = async (script, fixture) => {
 
 describe("the agreement invariant without its reference installed", () => {
 	it.each([
-		["compare-css-tools.js", "cold branches", "css-tree"],
-		["compare-html-tools.js", "Tag soup", "parse5"],
-		["compare-xml-tools.js", "Maven POM", "@rgrove/parse-xml"]
+		["compare-css-tools.js", "cold branches", ["css-tree"]],
+		// The printer reads with scripting on, so HTML is held to both readings.
+		["compare-html-tools.js", "Tag soup", ["parse5", "parse5 (scripting)"]],
+		["compare-xml-tools.js", "Maven POM", ["@rgrove/parse-xml"]]
 	])(
 		"%s names %s's reference as missing and reports no finding",
-		async (script, fixture, reference) => {
+		async (script, fixture, references) => {
 			const { out, exitCode } = await sweep(script, fixture);
 			expect(out).toContain(
-				`not built — 1\n    ${reference}, the agreement relation's reference\n`
+				`not built — ${references.length}\n${references
+					.map(
+						(reference) =>
+							`    ${reference}, the agreement relation's reference\n`
+					)
+					.join("")}`
 			);
 			expect(out).toContain("\n0 findings\n");
 			// Without `--require-corpus` a sweep missing its corpus still passes.
