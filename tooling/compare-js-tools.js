@@ -161,6 +161,7 @@ const TOOLS = [
 				sourceType: sourceType(),
 				ecmaVersion: "latest",
 				lazyNodes: true,
+				estree: true,
 				locations: false,
 				allowHashBang: true
 			})

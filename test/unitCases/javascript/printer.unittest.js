@@ -15729,12 +15729,23 @@ describe("JavaScript SourceProcessor printing", () => {
 	});
 
 	it("should refuse a walk a visitor starts while another runs", () => {
-		const { walkSyntaxTree } = require("../../../lib/javascript/syntax-parser");
+		const {
+			parsedTree,
+			walkSyntaxTree
+		} = require("../../../lib/javascript/syntax-parser");
 		expect(() =>
 			new SourceProcessor()
 				.use({
 					[NodeType.CallExpression]: (path) => {
-						walkSyntaxTree(path.tree, path.node, "f()", [], undefined);
+						walkSyntaxTree(
+							/** @type {import("../../../lib/javascript/syntax-parser").SyntaxTree} */ (
+								parsedTree()
+							),
+							path.node,
+							"f()",
+							[],
+							undefined
+						);
 					}
 				})
 				.process("f()", {})

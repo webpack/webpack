@@ -71,7 +71,8 @@ const parseOurs = (code, { comments: collectComments, ...options }) => {
 		...options,
 		allowReturnOutsideFunction: options.sourceType === "script",
 		ranges: lazyNodes ? false : options.ranges,
-		lazyNodes
+		lazyNodes,
+		estree: true
 	};
 	if (collectComments === true) {
 		if (lazyNodes) parserOptions.lazyComments = comments;

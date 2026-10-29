@@ -18077,11 +18077,6 @@ declare class JavascriptSourceProcessor<
 		 * Stops the walk: no visitor fires after the current one returns.
 		 */
 		stop(): void;
-		/**
-		 * The tree walked, for a reader of many nodes that would rather not go
-		 * through the path for each.
-		 */
-		get tree(): SyntaxTree;
 		ancestor(level: number): number;
 		within(type: number): boolean;
 		type(n?: number): number;
@@ -18138,11 +18133,6 @@ declare class JavascriptSourceProcessor<
 		 * Stops the walk: no visitor fires after the current one returns.
 		 */
 		stop(): void;
-		/**
-		 * The tree walked, for a reader of many nodes that would rather not go
-		 * through the path for each.
-		 */
-		get tree(): SyntaxTree;
 		ancestor(level: number): number;
 		within(type: number): boolean;
 		type(n?: number): number;
@@ -26959,6 +26949,11 @@ declare interface ParseOptionsJavascriptParser {
 	lazyNodes?: boolean;
 
 	/**
+	 * internal: with `lazyNodes`, build ESTree objects rather than the flat `SyntaxTree`
+	 */
+	estree?: boolean;
+
+	/**
 	 * internal: collect comments here without slicing their text eagerly
 	 */
 	lazyComments?: CommentJavascriptParser[];
@@ -27186,6 +27181,8 @@ type ParserOptionsSyntaxParser = Omit<OptionsSyntaxParser, "onComment"> & {
 	lazyComments?: CollectedComment[];
 	importPhases?: boolean;
 	moduleFallback?: boolean;
+	estree?: boolean;
+	syntaxTree?: SyntaxTree;
 };
 
 /**
@@ -35324,6 +35321,90 @@ declare class SyntaxTree {
 	 * stands as its id.
 	 */
 	addEstree(root: NodeEstreeIndex): number;
+
+	/**
+	 * The ESTree object of a node of this tree, as `toEstreeObject` builds it
+	 * for the last parse's.
+	 */
+	estree(
+		node: number,
+		fields?: string[]
+	):
+		| null
+		| Program
+		| ImportDeclaration
+		| ExportNamedDeclaration
+		| ExportAllDeclaration
+		| ImportExpressionImport
+		| UnaryExpression
+		| ArrayExpression
+		| ArrowFunctionExpression
+		| AssignmentExpression
+		| AwaitExpression
+		| BinaryExpression
+		| SimpleCallExpression
+		| NewExpression
+		| ChainExpression
+		| ClassExpression
+		| ConditionalExpression
+		| FunctionExpression
+		| Identifier
+		| SimpleLiteral
+		| RegExpLiteral
+		| BigIntLiteral
+		| LogicalExpression
+		| MemberExpression
+		| MetaProperty
+		| ObjectExpression
+		| SequenceExpression
+		| TaggedTemplateExpression
+		| TemplateLiteral
+		| ThisExpression
+		| UpdateExpression
+		| YieldExpression
+		| SpreadElement
+		| PrivateIdentifier
+		| Super
+		| FunctionDeclaration
+		| VariableDeclaration
+		| ClassDeclaration
+		| ExpressionStatement
+		| BlockStatement
+		| StaticBlock
+		| EmptyStatement
+		| DebuggerStatement
+		| WithStatement
+		| ReturnStatement
+		| LabeledStatement
+		| BreakStatement
+		| ContinueStatement
+		| IfStatement
+		| SwitchStatement
+		| ThrowStatement
+		| TryStatement
+		| WhileStatement
+		| DoWhileStatement
+		| ForStatement
+		| ForInStatement
+		| ForOfStatement
+		| ExportDefaultDeclaration
+		| MethodDefinition
+		| PropertyDefinition
+		| VariableDeclarator
+		| Property
+		| CatchClause
+		| ClassBody
+		| SwitchCase
+		| TemplateElement
+		| AssignmentProperty
+		| ImportSpecifier
+		| ImportDefaultSpecifier
+		| ImportNamespaceSpecifier
+		| ExportSpecifier
+		| ObjectPattern
+		| ArrayPattern
+		| RestElement
+		| AssignmentPattern;
 	type(node: number): number;
 	start(node: number): number;
 	end(node: number): number;
@@ -36796,10 +36877,154 @@ declare class WebpackParser extends SyntaxParser {
 	static extend(
 		...plugins: ((BaseParser: typeof SyntaxParser) => typeof SyntaxParser)[]
 	): typeof WebpackParser;
-	static parse(
+
+	/**
+	 * webpack's lazy mode is flat: it writes a `SyntaxTree` read through `A` and
+	 * returns the program's node, unless `estree: true` asks for ESTree objects.
+	 */
+	static parse<
+		O extends Partial<ParserOptionsSyntaxParser> =
+			Partial<ParserOptionsSyntaxParser>
+	>(
 		input: string,
-		options?: Partial<OptionsSyntaxParser>
-	): ParsedProgram;
+		options?: O
+	): O extends { lazyNodes: true }
+		? {
+				lazyNodes: true;
+				/**
+				 * whether the code is strict whatever it says
+				 */
+				strict?: boolean;
+				/**
+				 * a program node to append to
+				 */
+				program?: NodeLike;
+				/**
+				 * which edition to parse
+				 */
+				ecmaVersion?:
+					| 3
+					| 5
+					| 6
+					| 7
+					| 8
+					| 9
+					| 10
+					| 11
+					| 12
+					| 13
+					| 14
+					| 15
+					| 16
+					| 17
+					| 2015
+					| 2016
+					| 2017
+					| 2018
+					| 2019
+					| 2020
+					| 2021
+					| 2022
+					| 2023
+					| 2024
+					| 2025
+					| 2026
+					| "latest";
+				/**
+				 * the goal symbol
+				 */
+				sourceType?: "module" | "commonjs" | "script";
+				/**
+				 * called where a semicolon was inserted
+				 */
+				onInsertedSemicolon?: (
+					lastTokEnd: number,
+					lastTokEndLoc?: null | Position
+				) => void;
+				/**
+				 * called at a trailing comma
+				 */
+				onTrailingComma?: (
+					lastTokEnd: number,
+					lastTokEndLoc?: null | Position
+				) => void;
+				/**
+				 * whether reserved words may name things
+				 */
+				allowReserved?: boolean | "never";
+				/**
+				 * whether `return` may sit at the top level
+				 */
+				allowReturnOutsideFunction?: boolean;
+				/**
+				 * whether module syntax may sit anywhere
+				 */
+				allowImportExportEverywhere?: boolean;
+				/**
+				 * whether `await` may sit outside a function
+				 */
+				allowAwaitOutsideFunction?: boolean;
+				/**
+				 * whether `super` may sit outside a method
+				 */
+				allowSuperOutsideMethod?: boolean;
+				/**
+				 * whether a leading `#!` line is skipped
+				 */
+				allowHashBang?: boolean;
+				/**
+				 * whether private names must be declared
+				 */
+				checkPrivateFields?: boolean;
+				/**
+				 * whether nodes carry `loc`
+				 */
+				locations?: boolean;
+				/**
+				 * where the first offset falls
+				 */
+				startLocation?: { line: number; column: number };
+				/**
+				 * where tokens are reported
+				 */
+				onToken?: ((token: Token) => void) | Token[];
+				/**
+				 * the parser itself at each token, for a reader that copies what it needs rather than taking a token of its own
+				 */
+				onTokenRead?: (parser: SyntaxParser) => void;
+				/**
+				 * whether nodes carry `range`
+				 */
+				ranges?: boolean;
+				/**
+				 * the name errors and locations carry
+				 */
+				sourceFile?: string;
+				/**
+				 * the name every node carries
+				 */
+				directSourceFile?: string;
+				/**
+				 * whether parentheses become nodes
+				 */
+				preserveParens?: boolean;
+				onComment?:
+					| CollectedComment[]
+					| ((
+							isBlock: boolean,
+							text: string,
+							start: number,
+							end: number
+					  ) => void);
+				lazyComments?: CollectedComment[];
+				importPhases?: boolean;
+				moduleFallback?: boolean;
+				estree?: boolean;
+				syntaxTree?: SyntaxTree;
+			} extends { estree: true }
+			? ParsedProgram
+			: number
+		: ParsedProgram;
 	static parseExpressionAt(
 		input: string,
 		pos: number,
@@ -37529,22 +37754,131 @@ declare namespace exports {
 				export let declaresIntoBlock: (statement?: any) => boolean;
 				export let overflowFrom: (mask: number, index: number) => number[];
 				export let hasOctalEscape: (raw: string) => boolean;
-				export let parse: (
+				export let parse: <O extends ParserOptionsSyntaxParser>(
 					input: string,
-					options: ParserOptionsSyntaxParser
-				) => Program;
+					options: O
+				) => O extends { lazyNodes: true }
+					? {
+							lazyNodes: true;
+							/**
+							 * whether the code is strict whatever it says
+							 */
+							strict?: boolean;
+							/**
+							 * a program node to append to
+							 */
+							program?: NodeLike;
+							/**
+							 * which edition to parse
+							 */
+							ecmaVersion: EcmaVersion;
+							/**
+							 * the goal symbol
+							 */
+							sourceType?: "module" | "commonjs" | "script";
+							/**
+							 * called where a semicolon was inserted
+							 */
+							onInsertedSemicolon?: (
+								lastTokEnd: number,
+								lastTokEndLoc?: null | Position
+							) => void;
+							/**
+							 * called at a trailing comma
+							 */
+							onTrailingComma?: (
+								lastTokEnd: number,
+								lastTokEndLoc?: null | Position
+							) => void;
+							/**
+							 * whether reserved words may name things
+							 */
+							allowReserved?: boolean | "never";
+							/**
+							 * whether `return` may sit at the top level
+							 */
+							allowReturnOutsideFunction?: boolean;
+							/**
+							 * whether module syntax may sit anywhere
+							 */
+							allowImportExportEverywhere?: boolean;
+							/**
+							 * whether `await` may sit outside a function
+							 */
+							allowAwaitOutsideFunction?: boolean;
+							/**
+							 * whether `super` may sit outside a method
+							 */
+							allowSuperOutsideMethod?: boolean;
+							/**
+							 * whether a leading `#!` line is skipped
+							 */
+							allowHashBang?: boolean;
+							/**
+							 * whether private names must be declared
+							 */
+							checkPrivateFields?: boolean;
+							/**
+							 * whether nodes carry `loc`
+							 */
+							locations?: boolean;
+							/**
+							 * where the first offset falls
+							 */
+							startLocation?: { line: number; column: number };
+							/**
+							 * where tokens are reported
+							 */
+							onToken?: ((token: Token) => void) | Token[];
+							/**
+							 * the parser itself at each token, for a reader that copies what it needs rather than taking a token of its own
+							 */
+							onTokenRead?: (parser: SyntaxParser) => void;
+							/**
+							 * whether nodes carry `range`
+							 */
+							ranges?: boolean;
+							/**
+							 * the name errors and locations carry
+							 */
+							sourceFile?: string;
+							/**
+							 * the name every node carries
+							 */
+							directSourceFile?: string;
+							/**
+							 * whether parentheses become nodes
+							 */
+							preserveParens?: boolean;
+							onComment?:
+								| CollectedComment[]
+								| ((
+										isBlock: boolean,
+										text: string,
+										start: number,
+										end: number
+								  ) => void);
+							lazyComments?: CollectedComment[];
+							importPhases?: boolean;
+							moduleFallback?: boolean;
+							estree?: boolean;
+							syntaxTree?: SyntaxTree;
+						} extends { estree: true }
+						? Program
+						: number
+					: Program;
 				export let parseProgram: (
 					input: string,
 					pos?: number,
 					options?: JavascriptParseOptions
 				) => undefined | number;
+				export let parsedTree: () => null | SyntaxTree;
 				export let positionAt: (
 					lineStarts: number[],
 					offset: number
 				) => SourcePosition;
 				export let releaseParserCaches: () => void;
 				export let toEstreeObject: (
-					tree: SyntaxTree,
 					node: number,
 					fields?: string[]
 				) =>
@@ -37636,11 +37970,6 @@ declare namespace exports {
 					 * Stops the walk: no visitor fires after the current one returns.
 					 */
 					stop(): void;
-					/**
-					 * The tree walked, for a reader of many nodes that would rather not go
-					 * through the path for each.
-					 */
-					get tree(): SyntaxTree;
 					ancestor(level: number): number;
 					within(type: number): boolean;
 					type(n?: number): number;
@@ -37694,11 +38023,6 @@ declare namespace exports {
 						 * Stops the walk: no visitor fires after the current one returns.
 						 */
 						stop(): void;
-						/**
-						 * The tree walked, for a reader of many nodes that would rather not go
-						 * through the path for each.
-						 */
-						get tree(): SyntaxTree;
 						ancestor(level: number): number;
 						within(type: number): boolean;
 						type(n?: number): number;
@@ -37753,11 +38077,6 @@ declare namespace exports {
 									 * Stops the walk: no visitor fires after the current one returns.
 									 */
 									stop(): void;
-									/**
-									 * The tree walked, for a reader of many nodes that would rather not go
-									 * through the path for each.
-									 */
-									get tree(): SyntaxTree;
 									ancestor(level: number): number;
 									within(type: number): boolean;
 									type(n?: number): number;
@@ -37818,11 +38137,6 @@ declare namespace exports {
 						 * Stops the walk: no visitor fires after the current one returns.
 						 */
 						stop(): void;
-						/**
-						 * The tree walked, for a reader of many nodes that would rather not go
-						 * through the path for each.
-						 */
-						get tree(): SyntaxTree;
 						ancestor(level: number): number;
 						within(type: number): boolean;
 						type(n?: number): number;
@@ -37875,11 +38189,6 @@ declare namespace exports {
 							 * Stops the walk: no visitor fires after the current one returns.
 							 */
 							stop(): void;
-							/**
-							 * The tree walked, for a reader of many nodes that would rather not go
-							 * through the path for each.
-							 */
-							get tree(): SyntaxTree;
 							ancestor(level: number): number;
 							within(type: number): boolean;
 							type(n?: number): number;
@@ -37962,11 +38271,6 @@ declare namespace exports {
 						 * Stops the walk: no visitor fires after the current one returns.
 						 */
 						stop(): void;
-						/**
-						 * The tree walked, for a reader of many nodes that would rather not go
-						 * through the path for each.
-						 */
-						get tree(): SyntaxTree;
 						ancestor(level: number): number;
 						within(type: number): boolean;
 						type(n?: number): number;
@@ -38019,11 +38323,6 @@ declare namespace exports {
 							 * Stops the walk: no visitor fires after the current one returns.
 							 */
 							stop(): void;
-							/**
-							 * The tree walked, for a reader of many nodes that would rather not go
-							 * through the path for each.
-							 */
-							get tree(): SyntaxTree;
 							ancestor(level: number): number;
 							within(type: number): boolean;
 							type(n?: number): number;
@@ -38089,7 +38388,6 @@ declare namespace exports {
 				};
 			}
 			export const toEstreeObject: (
-				tree: SyntaxTree,
 				node: number,
 				fields?: string[]
 			) =>
