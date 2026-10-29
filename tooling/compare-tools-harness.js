@@ -709,49 +709,170 @@ const saidBy = (event) =>
 			: event[2];
 
 /**
- * Where two trees first stop saying the same thing, or `undefined` where they
- * agree, short enough for a cell: each side and the path are cut.
+ * One difference as a cell, short enough to read: each side and the path are cut.
+ * @param {TreeEvent | undefined} left the reference's event there, if any
+ * @param {TreeEvent | undefined} right the tree's event there, if any
+ * @param {string} referenceName the reference parser
+ * @returns {string} the path and what each side says there
+ */
+const differenceCell = (left, right, referenceName) => {
+	const at = /** @type {TreeEvent} */ (left || right)[0] || "/";
+	// A deep path keeps its end, where the node that differs is named.
+	const shown = at.length > 60 ? `…${at.slice(-59)}` : at;
+	const theirs = saidBy(left);
+	const ours = saidBy(right);
+	// Two sides apart past the cut are both shown from just before the
+	// first character they differ at, or the cell shows them the same.
+	const differ =
+		theirs === undefined || ours === undefined
+			? 0
+			: firstDifference(theirs, ours);
+	const from = differ > 36 ? differ - 12 : 0;
+	/**
+	 * @param {string | undefined} said what one side says
+	 * @returns {string} it as the cell shows it
+	 */
+	const show = (said) =>
+		said === undefined
+			? "nothing"
+			: oneLine(from > 0 ? `…${said.slice(from)}` : said, 48);
+	return `${shown}: ${referenceName} ${show(theirs)}, tool ${show(ours)}`;
+};
+
+// Past this many edits the trees are too far apart to align, and what is
+// left of them is reported as one difference.
+const EDIT_BUDGET = 500;
+
+/**
+ * Every place two trees stop saying the same thing, in document order. They are
+ * aligned first (Myers' diff), so a node one side lacks is one difference.
  * @param {TreeEvents} reference the reference parser's tree
  * @param {TreeEvents} tree the tree under test
  * @param {string} referenceName the reference parser
- * @returns {string | undefined} the path and what each side says there
+ * @returns {string[]} each difference as a cell
  */
-const treeDifference = (reference, tree, referenceName) => {
-	const length = Math.max(reference.list.length, tree.list.length);
-	for (let i = 0; i < length; i++) {
-		const left = reference.list[i];
-		const right = tree.list[i];
-		if (
-			left !== undefined &&
-			right !== undefined &&
-			left[1] === right[1] &&
-			left[2] === right[2]
-		) {
-			continue;
-		}
-		const at = (left || right)[0] || "/";
-		// A deep path keeps its end, where the node that differs is named.
-		const shown = at.length > 60 ? `…${at.slice(-59)}` : at;
-		const theirs = saidBy(left);
-		const ours = saidBy(right);
-		// Two sides apart past the cut are both shown from just before the
-		// first character they differ at, or the cell shows them the same.
-		const differ =
-			theirs === undefined || ours === undefined
-				? 0
-				: firstDifference(theirs, ours);
-		const from = differ > 36 ? differ - 12 : 0;
-		/**
-		 * @param {string | undefined} said what one side says
-		 * @returns {string} it as the cell shows it
-		 */
-		const show = (said) =>
-			said === undefined
-				? "nothing"
-				: oneLine(from > 0 ? `…${said.slice(from)}` : said, 48);
-		return `${shown}: ${referenceName} ${show(theirs)}, tool ${show(ours)}`;
+const treeDifferences = (reference, tree, referenceName) => {
+	const theirs = reference.list;
+	const ours = tree.list;
+	/**
+	 * @param {number} i an event of the reference's
+	 * @param {number} j an event of the tree's
+	 * @returns {boolean} whether both say the same
+	 */
+	const same = (i, j) =>
+		theirs[i][1] === ours[j][1] && theirs[i][2] === ours[j][2];
+	let first = 0;
+	while (first < theirs.length && first < ours.length && same(first, first)) {
+		first++;
 	}
-	return undefined;
+	let theirEnd = theirs.length;
+	let ourEnd = ours.length;
+	while (theirEnd > first && ourEnd > first && same(theirEnd - 1, ourEnd - 1)) {
+		theirEnd--;
+		ourEnd--;
+	}
+	const n = theirEnd - first;
+	const m = ourEnd - first;
+	if (n === 0 && m === 0) return [];
+	const max = n + m;
+	// `furthest[max + k]` is how far along the reference diagonal `k` reaches.
+	const furthest = new Int32Array(2 * max + 2);
+	/** @type {Int32Array[]} */
+	const trace = [];
+	let found = false;
+	for (let d = 0; d <= Math.min(max, EDIT_BUDGET) && !found; d++) {
+		trace.push(furthest.slice(max - d, max + d + 2));
+		for (let k = -d; k <= d; k += 2) {
+			let x =
+				k === -d || (k !== d && furthest[max + k - 1] < furthest[max + k + 1])
+					? furthest[max + k + 1]
+					: furthest[max + k - 1] + 1;
+			let y = x - k;
+			while (x < n && y < m && same(first + x, first + y)) {
+				x++;
+				y++;
+			}
+			furthest[max + k] = x;
+			if (x >= n && y >= m) {
+				found = true;
+				break;
+			}
+		}
+	}
+	if (!found) {
+		return [
+			`${differenceCell(theirs[first], ours[first], referenceName)}, and too many more to align`
+		];
+	}
+	// Walk the edits back from the end, then read each run of them as one.
+	/** @type {[number, number][]} */
+	const kept = [];
+	let x = n;
+	let y = m;
+	for (let d = trace.length - 1; d > 0; d--) {
+		const before = trace[d];
+		/**
+		 * @param {number} k a diagonal
+		 * @returns {number} how far it reached before this step
+		 */
+		const reached = (k) => before[k + d];
+		const k = x - y;
+		const previous =
+			k === -d || (k !== d && reached(k - 1) < reached(k + 1)) ? k + 1 : k - 1;
+		const previousX = reached(previous);
+		const previousY = previousX - previous;
+		while (x > previousX && y > previousY) {
+			kept.push([--x, --y]);
+		}
+		x = previousX;
+		y = previousY;
+	}
+	while (x > 0 && y > 0) kept.push([--x, --y]);
+	kept.reverse();
+	kept.push([n, m]);
+	/** @type {string[]} */
+	const cells = [];
+	let i = 0;
+	let j = 0;
+	/**
+	 * @param {TreeEvent[]} list one side's events
+	 * @param {number} from where its run of edits starts
+	 * @param {number} to where it ends
+	 * @returns {TreeEvent} the event naming a run only this side has
+	 */
+	const named = (list, from, to) => {
+		// A run can start at a close it shares the shape of; name what it opens.
+		for (let at = from; at < to; at++) {
+			if (list[at][1] !== "close") return list[at];
+		}
+		return list[from];
+	};
+	for (const [keptX, keptY] of kept) {
+		if (keptX > i && keptY > j) {
+			cells.push(
+				differenceCell(theirs[first + i], ours[first + j], referenceName)
+			);
+		} else if (keptX > i) {
+			cells.push(
+				differenceCell(
+					named(theirs, first + i, first + keptX),
+					undefined,
+					referenceName
+				)
+			);
+		} else if (keptY > j) {
+			cells.push(
+				differenceCell(
+					undefined,
+					named(ours, first + j, first + keptY),
+					referenceName
+				)
+			);
+		}
+		i = keptX + 1;
+		j = keptY + 1;
+	}
+	return cells;
 };
 
 /** @typedef {(source: string) => TreeEvents | Promise<TreeEvents>} TreeReader */
@@ -792,8 +913,11 @@ const agreement = (referenceName, readers, source) => {
 		} catch (error) {
 			return `could not compare: ${thrownText(error)}`;
 		}
-		const said = treeDifference(theirs, tree, referenceName);
-		return said === undefined ? "yes" : `no — ${said}`;
+		const said = treeDifferences(theirs, tree, referenceName);
+		if (said.length === 0) return "yes";
+		return said.length === 1
+			? `no — ${said[0]}`
+			: `no — ${said[0]} (and ${said.length - 1} more)`;
 	};
 };
 
@@ -845,23 +969,26 @@ const agreementInvariant = ({
 					rejected++;
 					continue;
 				}
-				/** @type {string | undefined} */
+				/** @type {string[]} */
 				let said;
 				try {
-					said = treeDifference(theirs, tree(source), referenceName);
+					said = treeDifferences(theirs, tree(source), referenceName);
 				} catch (error) {
-					said = `/: webpack's parser throws: ${thrownText(error)}`;
+					said = [`/: webpack's parser throws: ${thrownText(error)}`];
 				}
-				if (said === undefined) continue;
-				groups.add(
-					{
-						relation: "agreement",
-						what: `webpack's tree reads apart from ${referenceName}'s`,
-						repro: `    ${said}`
-					},
-					"parse",
-					label
-				);
+				// Each difference stands alone, so one `EXPECTED` entry answers
+				// for its own and never hides another later in the source.
+				for (const difference of said) {
+					groups.add(
+						{
+							relation: "agreement",
+							what: `webpack's tree reads apart from ${referenceName}'s`,
+							repro: `    ${difference}`
+						},
+						"parse",
+						label
+					);
+				}
 			}
 			log(
 				`held ${corpus.length - rejected} trees to ${referenceName}'s (${rejected} it rejects) …`
@@ -1545,7 +1672,7 @@ module.exports = {
 	sweepExitCode,
 	sweepMode,
 	thrownText,
-	treeDifference,
+	treeDifferences,
 	wantedExpectations,
 	wantedRespelling
 };

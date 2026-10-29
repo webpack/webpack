@@ -319,6 +319,57 @@ describe("compare-css-tools — agreeing with css-tree", () => {
 		expect(await cell("postcss")).toBe("yes");
 	});
 
+	it("reads on from a declaration css-tree's rule reading swallowed into a selector", async () => {
+		const source = ".a{.b{}x:1;.c{}@media (y){ }}";
+		const loc = within(source);
+		const raw = ".b{}x:1;.c{}@media (y){ }";
+		const rest = ".c{}@media (y){ }";
+		answering({
+			"stylesheet@0": [
+				{
+					type: "Rule",
+					prelude: loc(".a"),
+					block: { children: [{ type: "Raw", ...loc(raw) }] }
+				}
+			],
+			"declarationList@3": [{ type: "Raw", ...loc(raw) }],
+			"stylesheet@3": [
+				{ type: "Rule", prelude: loc(".b"), block: { children: [] } },
+				{
+					type: "Rule",
+					prelude: loc("x:1;.c"),
+					block: { children: [] },
+					...loc("x:1;.c{}")
+				}
+			],
+			"declarationList@7": [
+				{
+					type: "Declaration",
+					property: "x",
+					important: false,
+					value: loc("1")
+				},
+				{ type: "Raw", ...loc(rest) }
+			],
+			[`declarationList@${source.indexOf(rest)}`]: [
+				{ type: "Raw", ...loc(rest) }
+			],
+			[`stylesheet@${source.indexOf(rest)}`]: [
+				{ type: "Rule", prelude: loc(".c"), block: { children: [] } },
+				{
+					type: "Atrule",
+					name: "media",
+					prelude: loc("(y)"),
+					block: loc("{ }")
+				}
+			],
+			[`declarationList@${source.indexOf("{ }") + 1}`]: []
+		});
+		expect(await agreement("css-tree", TREE_READERS, source)("webpack")).toBe(
+			"yes"
+		);
+	});
+
 	it("reads a nested at-rule the input ends inside", async () => {
 		const source = ".a{@media (x){top:0";
 		const loc = within(source);
@@ -395,7 +446,7 @@ describe("compare-css-tools — agreeing with css-tree", () => {
 			"stylesheet@3": []
 		});
 		expect(await agreement("css-tree", TREE_READERS, source)("webpack")).toBe(
-			"no — /.a[1]: css-tree unparsed %, tool }"
+			"no — /.a[1]: css-tree unparsed %, tool nothing"
 		);
 		answering({ "stylesheet@0": [{ type: "Raw", ...within("%")("%") }] });
 		expect(await agreement("css-tree", TREE_READERS, "%")("webpack")).toBe(

@@ -31,7 +31,7 @@ const {
 	run,
 	sweepExitCode,
 	sweepMode,
-	treeDifference,
+	treeDifferences,
 	wantedExpectations,
 	wantedRespelling
 } = require("../../../tooling/compare-tools-harness");
@@ -1089,28 +1089,39 @@ describe("parser agreement", () => {
 		]);
 	});
 
-	it("names the first event two trees differ at, and what each side says there", () => {
+	it("names each place two trees differ, and what each side says there", () => {
 		expect(
-			treeDifference(paragraphs(["a", "b"]), paragraphs(["a", "b"]), "ref")
-		).toBeUndefined();
+			treeDifferences(paragraphs(["a", "b"]), paragraphs(["a", "b"]), "ref")
+		).toEqual([]);
 		expect(
-			treeDifference(paragraphs(["a", "b"]), paragraphs(["a", "c"]), "ref")
-		).toBe('/body[1]/p[2]: ref text "b", tool text "c"');
+			treeDifferences(paragraphs(["a", "b"]), paragraphs(["a", "c"]), "ref")
+		).toEqual(['/body[1]/p[2]: ref text "b", tool text "c"']);
+		// A node one side lacks is one difference, not one per node after it.
 		expect(
-			treeDifference(paragraphs(["a"]), paragraphs(["a", "b"]), "ref")
-		).toBe("/body[1]: ref comment, tool <p>");
+			treeDifferences(paragraphs(["a", "c"]), paragraphs(["a", "b", "c"]), "ref")
+		).toEqual(['/body[1]/p[2]: ref nothing, tool text "b"']);
+		expect(
+			treeDifferences(
+				paragraphs(["x", "a", "b", "y"]),
+				paragraphs(["z", "a", "b"]),
+				"ref"
+			)
+		).toEqual([
+			'/body[1]/p[1]: ref text "x", tool text "z"',
+			"/body[1]/p[4]: ref <p>, tool nothing"
+		]);
 		const empty = new TreeEvents();
-		expect(treeDifference(empty, paragraphs([]), "ref")).toBe(
+		expect(treeDifferences(empty, paragraphs([]), "ref")).toEqual([
 			"/body[1]: ref nothing, tool <body>"
-		);
+		]);
 		const loose = new TreeEvents();
 		loose.leaf("comment");
-		expect(treeDifference(loose, empty, "ref")).toBe(
+		expect(treeDifferences(loose, empty, "ref")).toEqual([
 			"/: ref comment, tool nothing"
-		);
+		]);
 		expect(
-			treeDifference(paragraphs(["x".repeat(80)]), paragraphs(["y"]), "ref")
-		).toBe(`/body[1]/p[1]: ref text "${"x".repeat(41)}…, tool text "y"`);
+			treeDifferences(paragraphs(["x".repeat(80)]), paragraphs(["y"]), "ref")
+		).toEqual([`/body[1]/p[1]: ref text "${"x".repeat(41)}…, tool text "y"`]);
 		/**
 		 * @param {string} said what the innermost node says
 		 * @returns {TreeEvents} it under twenty nested sections
@@ -1121,18 +1132,31 @@ describe("parser agreement", () => {
 			events.leaf(said);
 			return events;
 		};
-		expect(treeDifference(deep("a"), deep("b"), "ref")).toBe(
+		expect(treeDifferences(deep("a"), deep("b"), "ref")).toEqual([
 			`…${"/section[1]".repeat(20).slice(-59)}: ref a, tool b`
-		);
+		]);
 		// Two sides alike past the cut are shown from just before they differ.
 		const long = (/** @type {string} */ tail) => {
 			const events = new TreeEvents();
 			events.leaf(`<path d="${"m0 0".repeat(20)}${tail}">`);
 			return events;
 		};
-		expect(treeDifference(long("h1"), long("v1"), "ref")).toBe(
+		expect(treeDifferences(long("h1"), long("v1"), "ref")).toEqual([
 			'/: ref …m0 0m0 0m0 0h1">, tool …m0 0m0 0m0 0v1">'
-		);
+		]);
+	});
+
+	it("reports trees too far apart to align as one difference", () => {
+		const texts = Array.from({ length: 300 }, (_, i) => `${i}`);
+		expect(
+			treeDifferences(
+				paragraphs(texts),
+				paragraphs(texts.map((text) => `${text}!`)),
+				"ref"
+			)
+		).toEqual([
+			'/body[1]/p[1]: ref text "0", tool text "0!", and too many more to align'
+		]);
 	});
 
 	it("answers each parser's cell, reading the reference once", async () => {
@@ -1144,7 +1168,7 @@ describe("parser agreement", () => {
 			/** @type {[string, TreeReader][]} */ ([
 			["ref", reference],
 			["same", (source) => Promise.resolve(paragraphs(source.split(" ")))],
-			["other", () => paragraphs(["no"])],
+			["other", () => paragraphs(["no", "b", "x"])],
 			[
 				"throws",
 				() => {
@@ -1158,7 +1182,7 @@ describe("parser agreement", () => {
 		expect(await cell("unread")).toBe("own dialect");
 		expect(await cell("same")).toBe("yes");
 		expect(await cell("other")).toBe(
-			'no — /body[1]/p[1]: ref text "a", tool text "no"'
+			'no — /body[1]/p[1]: ref text "a", tool text "no" (and 1 more)'
 		);
 		expect(await cell("throws")).toBe("could not compare: bad input");
 		expect(reference).toHaveBeenCalledTimes(1);
@@ -1236,6 +1260,32 @@ describe("agreementInvariant", () => {
 		expect(reports).toEqual([
 			['    /p[1]: ref text "b", tool text "c"', "parse", "apart"],
 			["    /: webpack's parser throws: parser bug", "parse", "throws"]
+		]);
+	});
+
+	it("reports each difference in a source as its own finding", () => {
+		/** @type {string[]} */
+		const reproductions = [];
+		agreementInvariant({
+			wanted: true,
+			referenceName: "ref",
+			reference: () => () => {
+				const events = paragraph("a");
+				events.leaf("comment");
+				return events;
+			},
+			tree: () => {
+				const events = paragraph("b");
+				events.leaf("other");
+				return events;
+			},
+			corpus: [["twice", ""]],
+			expected: [],
+			missing: []
+		}).hold({ add: (report) => reproductions.push(report.repro) });
+		expect(reproductions).toEqual([
+			'    /p[1]: ref text "a", tool text "b"',
+			"    /: ref comment, tool other"
 		]);
 	});
 
