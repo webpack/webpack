@@ -1384,6 +1384,11 @@ const IMPROVED_CASES = [
 		{ compress: { ecma: 2020 }, ecma: 2020, mangle: false }
 	],
 	[
+		"a logical expression whose value nothing reads, its test negated where that writes shorter and adds no negation",
+		"function f(a, b, c, g) { (!a || b === c) && g(1); g(a) || ((!a || b === c) && g(2)); (!a || !b) && g(3), g(4); a && ((!c || b === c) && g(5)); (g(0), !a || b === c) && g(6); b === 2 && g(7); } [[0, 1, 1], [1, 1, 2], [1, 2, 2], [1, 0, 0]].forEach(function (t) { f(t[0], t[1], t[2], console.log); });",
+		{ compress: { passes: 2 }, mangle: false }
+	],
+	[
 		"a test for null or undefined guarding a write of what it tests, as a logical assignment, from ECMAScript 2021",
 		"function f(a, o) { null == a && (a = 1); null == o.p && (o.p = 2); return [a, o.p]; } console.log(f(null, {}), f(0, { p: 3 }));",
 		{ compress: { ecma: 2021 }, ecma: 2021, mangle: false }

@@ -1463,7 +1463,7 @@ exports[`JavaScript minifier, programs reduced from packages should minify what 
 exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from ansis/index.js 1`] = `"r&&r?t||e(8)+232:e(51),l=()=>{try{s}catch(e){}let r=\\"FORCE_COLOR\\",a=s[r](a);isNaN(p)||r in e(/^color=?(always)/);return o,0},close,s,p,letE=()=>(let=()=>{te&&o;let r=raw?raw(...i):e,l=_p,{_b:t}=l;if(n)for(;~e(a);a)islice(a);return r(r(/(\\\\r?\\\\n)/g,c+\\"$1\\"+a)),a+r+c},e&&l._b,e,n);"`;
 
 exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from ansis/index.js, 2 1`] = `
-"let{}=e=>{[]=/()/()|[],t&&length},n=n=n?231:16,i=t=>{t||!((o|0)/l)||e},l=()=>{t
+"let{}=e=>{[]=/()/()|[],t&&length},n=n=n?231:16,i=t=>{t||(o|0)/l&&e},l=()=>{t
 try{toObject()}catch(e){}\\"\\"(n?1:isTTY)
 let O=\\"FORCE_COLOR\\"
 s[O]()||O(()=>{let|\\"\\"==n})(/$/)},{}=s?t({open:\\"\\"}):r,b=u
@@ -3137,7 +3137,7 @@ exports[`syntax-printer improve phase should write less, printing the same: a co
 
 exports[`syntax-printer improve phase should write less, printing the same: a conditional choosing between calls spreading different arrays 1`] = `"function f(a,b,c){return b(...a||c)}console.log(f([1,2],Math.max,[3]),f(null,Math.max,[3,4]));"`;
 
-exports[`syntax-printer improve phase should write less, printing the same: a conditional giving \`!1\` or \`!0\` beside a value \`&&\` or \`||\` would take parentheses for, kept as the conditional where it sits bare 1`] = `"function f(a,b,c,d){var o={};return[a?!1:b?c:d,a?!0:o.y=1,a?o.z=2:!0,a?o.w=3:!1,a?!1:b??c,o]}function g(a,b,h){var o={};return o.v=a?!1:o.u=1,h(a?!1:o.t=1),o.k={k:a?!1:o.s=1},o.n=b?a?!1:o.r=1:0,o.f=a?!1:()=>1,o.ft=typeof o.f,!a&&(o.q=1),o}function*y(a){return a?!1:yield 1}var it=y(0);it.next(),console.log(JSON.stringify([f(0,1,2,3),f(1,0,2,3),f(0,null,4,5),g(0,1,console.log),g(1,0,console.log),it.next(2)]));"`;
+exports[`syntax-printer improve phase should write less, printing the same: a conditional giving \`!1\` or \`!0\` beside a value \`&&\` or \`||\` would take parentheses for, kept as the conditional where it sits bare 1`] = `"function f(a,b,c,d){var o={};return[a?!1:b?c:d,a?!0:o.y=1,a?o.z=2:!0,a?o.w=3:!1,a?!1:b??c,o]}function g(a,b,h){var o={};return o.v=a?!1:o.u=1,h(a?!1:o.t=1),o.k={k:a?!1:o.s=1},o.n=b?a?!1:o.r=1:0,o.f=a?!1:()=>1,o.ft=typeof o.f,a||(o.q=1),o}function*y(a){return a?!1:yield 1}var it=y(0);it.next(),console.log(JSON.stringify([f(0,1,2,3),f(1,0,2,3),f(0,null,4,5),g(0,1,console.log),g(1,0,console.log),it.next(2)]));"`;
 
 exports[`syntax-printer improve phase should write less, printing the same: a conditional tested for truth whose branch is \`void 0\`, as \`&&\` 1`] = `"function f(t){return null!=t&&t.b&&console.log(\\"b\\"),null!=t&&t.c&&console.log(\\"c\\"),t&&t.d&&console.log(\\"d\\"),null==t?void 0:t.e}console.log(f(),f({b:1,c:1,d:1,e:2}),f({}));"`;
 
@@ -3272,6 +3272,8 @@ exports[`syntax-printer improve phase should write less, printing the same: a li
 exports[`syntax-printer improve phase should write less, printing the same: a logical expression assigning what it tests, from ECMAScript 2021 1`] = `"function f(a,b,o){return a||=b,o.p||=1,o.q??=2,o.p&&=3,o[0]||=4,a}var o={};console.log(f(0,4,o),f(5,6,o),JSON.stringify(o));"`;
 
 exports[`syntax-printer improve phase should write less, printing the same: a logical expression running a sequence that ends assigning what it tests, from ECMAScript 2021 1`] = `"function f(a,b,o,log){return a||=(log.push(1),b),o.p||=(log.push(o.p),2),a&&=(log.push(a),3),o[0]??=(log.push(4),a),[a,log.join()]}var o={};console.log(f(0,4,o,[]),f(5,6,o,[]),JSON.stringify(o));"`;
+
+exports[`syntax-printer improve phase should write less, printing the same: a logical expression whose value nothing reads, its test negated where that writes shorter and adds no negation 1`] = `"function f(a,b,c,g){a&&b!==c||g(1),g(a)||a&&b!==c||g(2),a&&b||g(3),g(4),a&&(!c||b===c)&&g(5),g(0),a&&b!==c||g(6),2===b&&g(7)}[[0,1,1],[1,1,2],[1,2,2],[1,0,0]].forEach(function(t){f(t[0],t[1],t[2],console.log)});"`;
 
 exports[`syntax-printer improve phase should write less, printing the same: a loop copying \`arguments\` for a rest parameter as a spread, from ECMAScript 2015, joined to a following \`var\` 1`] = `"function f(a){for(var args=[...arguments].slice(1),i=0;i<args.length;i++)console.log(a,args[i])}function g(){var args=[...arguments],n=args.join();return console.log(n,n),[args,function(){return function(){return arguments[0]}}]}function k(a,b){var rest=[...arguments].slice(2);return rest}f(1,2,3),console.log(g(1,2)[0],k(1),k(1,2,3,4),0,2);"`;
 
