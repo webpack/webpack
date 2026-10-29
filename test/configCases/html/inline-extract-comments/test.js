@@ -25,6 +25,7 @@ for (const page of ["page.html", "sub/page.html"]) {
 			.readFileSync(path.resolve(__dirname, page))
 			.toString("utf-8");
 		expect(html).toContain("inlined-body");
+		expect(html).toMatch(/__licenseName\s*=\s*"main\.js\.LICENSE\.txt"/);
 		expect(html).toMatch(/<style>[^<]*--spacing:\s*1em/);
 		expect(html).not.toContain("css license");
 		expect(html).not.toContain("js license");
