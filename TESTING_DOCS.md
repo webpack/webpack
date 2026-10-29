@@ -97,6 +97,7 @@ Directories come first, in alphabetical order, then the individual files worth t
 
 - **Purpose**: Focuses on Webpack’s Hot Module Replacement (HMR) functionality.
 - **Usage**: Ensures live reloading and hot updates work correctly.
+- **Every HMR change is covered twice**: a case for the default output (JSONP on `web`, `require` on `node`, `importScripts` on `webworker`) and a twin under `hotCases/esm-output/` with `output.module: true` and `chunkFormat: "module"`. The ES module hot update wraps runtime code in a function, so it breaks in ways the default output never shows. A Worker twin there needs `publicPath: "auto"`: a Node ES module worker can't import the harness's `https://` default.
 
 ### `hotPlayground/`
 
@@ -238,10 +239,8 @@ Every engine is the build the lockfile pins: the ones the installed
 a new engine arrives in one pull request, and a defect or quirk it fixes fails
 there rather than under unrelated changes.
 
-They are excluded from `test:bun` / `test:deno` (see the `--testPathIgnorePatterns`
-in those scripts). They were left out while `puppeteer-core`, which these suites
-used before, could not load under either runtime; `playwright-core` has not been
-tried there yet.
+`test:bun` and `test:deno` run the Chrome-driven `ProfilingPlugin.unittest.js`
+and `WebpackDevServer.longtest.js` too, on the same pinned Chrome.
 
 ### Generated code is held to `output.environment`
 

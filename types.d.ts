@@ -3034,6 +3034,10 @@ declare interface ChunkHashes {
 	[index: string]: string;
 }
 type ChunkId = string | number;
+declare interface ChunkInjectedModuleIds {
+	[index: number]: ModuleId[];
+	[index: string]: ModuleId[];
+}
 
 /**
  * Defines the chunk maps type used by this module.
@@ -3256,6 +3260,10 @@ declare interface ChunkRenderContextJavascriptModulesPlugin {
 declare interface ChunkRuntime {
 	[index: number]: string;
 	[index: string]: string;
+}
+declare interface ChunkSiblingIds {
+	[index: number]: ChunkId[];
+	[index: string]: ChunkId[];
 }
 
 /**
@@ -18846,6 +18854,8 @@ declare interface KnownRecords {
 	chunkHashes?: ChunkHashes;
 	chunkRuntime?: ChunkRuntime;
 	chunkModuleIds?: ChunkModuleIds;
+	chunkSiblingIds?: ChunkSiblingIds;
+	chunkInjectedModuleIds?: ChunkInjectedModuleIds;
 }
 
 /**
@@ -30710,6 +30720,12 @@ declare class RuntimeModule extends Module {
 	shouldIsolate(): boolean;
 
 	/**
+	 * Returns true, if a hot update may re-ship this module to a running runtime.
+	 * False for code that is only valid at the top level of the runtime chunk.
+	 */
+	shouldHotUpdate(): boolean;
+
+	/**
 	 * The answer a runtime module gives when it installs no chunk handler at all
 	 */
 	static NO_CHUNK_HANDLERS: [string, string][];
@@ -37111,9 +37127,11 @@ declare namespace exports {
 		export let hasOwnProperty: "__webpack_require__.o";
 		export let hasSealedDeferredNamespace: "has sealed deferred namespace";
 		export let hasSynthesizedDeferredNamespace: "has synthesized deferred namespace";
+		export let hmrChunkVersions: "__webpack_require__.hmrV";
 		export let hmrDownloadManifest: "__webpack_require__.hmrM";
 		export let hmrDownloadUpdateHandlers: "__webpack_require__.hmrC";
 		export let hmrInvalidateModuleHandlers: "__webpack_require__.hmrI";
+		export let hmrLoadedChunkVersions: "__webpack_require__.hmrL";
 		export let hmrModuleData: "__webpack_require__.hmrD";
 		export let hmrRuntimeStatePrefix: "__webpack_require__.hmrS";
 		export let initializeSharing: "__webpack_require__.I";
@@ -37905,6 +37923,7 @@ declare namespace exports {
 					>,
 					inlined?: Uint8Array
 				) => void;
+				export let printEarlyIn: (early: Map<number, number>) => void;
 				export {
 					DestructuringErrors,
 					Label,
@@ -38247,9 +38266,11 @@ declare namespace exports {
 			export let hasOwnProperty: "__webpack_require__.o";
 			export let hasSealedDeferredNamespace: "has sealed deferred namespace";
 			export let hasSynthesizedDeferredNamespace: "has synthesized deferred namespace";
+			export let hmrChunkVersions: "__webpack_require__.hmrV";
 			export let hmrDownloadManifest: "__webpack_require__.hmrM";
 			export let hmrDownloadUpdateHandlers: "__webpack_require__.hmrC";
 			export let hmrInvalidateModuleHandlers: "__webpack_require__.hmrI";
+			export let hmrLoadedChunkVersions: "__webpack_require__.hmrL";
 			export let hmrModuleData: "__webpack_require__.hmrD";
 			export let hmrRuntimeStatePrefix: "__webpack_require__.hmrS";
 			export let initializeSharing: "__webpack_require__.I";

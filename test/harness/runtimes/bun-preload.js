@@ -17,8 +17,48 @@
 //
 // Realign those descriptors with Node so the copy loop succeeds.
 
+const fs = require("node:fs");
 const nodeModule = require("node:module");
 const nodeVm = require("node:vm");
+const { isMainThread } = require("node:worker_threads");
+
+// Bun's worker stdio calls a write's callback twice once the parent answers,
+// an uncaught error that kills the thread. Write a worker's stdout and stderr
+// to the process's own descriptors instead, as the parent would have.
+if (!isMainThread) {
+	const SLEEP = new Int32Array(new SharedArrayBuffer(4));
+	for (const [stream, fd] of /** @type {[NodeJS.WriteStream, number][]} */ ([
+		[process.stdout, 1],
+		[process.stderr, 2]
+	])) {
+		stream.write = /** @type {NodeJS.WriteStream["write"]} */ (
+			function write(chunk, encoding, callback) {
+				const done = typeof encoding === "function" ? encoding : callback;
+				const buffer =
+					typeof chunk === "string"
+						? Buffer.from(
+								chunk,
+								typeof encoding === "string" ? encoding : undefined
+							)
+						: Buffer.from(chunk);
+				let offset = 0;
+				while (offset < buffer.length) {
+					try {
+						offset += fs.writeSync(fd, buffer, offset);
+					} catch (err) {
+						// A non-blocking pipe can be full for a moment.
+						if (/** @type {NodeJS.ErrnoException} */ (err).code !== "EAGAIN") {
+							throw err;
+						}
+						Atomics.wait(SLEEP, 0, 0, 1);
+					}
+				}
+				if (typeof done === "function") process.nextTick(done);
+				return true;
+			}
+		);
+	}
+}
 
 // Pure-JS `vm.SyntheticModule` stand-in: Bun segfaults when jest drives the
 // native one through link/evaluate inside the jest environment context.
@@ -117,6 +157,31 @@ if (nodeVm.SourceTextModule) {
 		}
 	};
 }
+
+// In a vm context Bun ignores `Error.prepareStackTrace`, leaving `stack` a
+// string where `depd` (which express loads) reads V8 call sites. Capture through
+// the main realm's `Error`, which honors it, with the context's hook and limit.
+const originalCreateContext = nodeVm.createContext;
+nodeVm.createContext = function createContext(...args) {
+	const context = originalCreateContext.apply(this, args);
+	const ContextError = nodeVm.runInContext("Error", context);
+	const capture = ContextError.captureStackTrace;
+	ContextError.captureStackTrace = function captureStackTrace(object, fn) {
+		const prepare = ContextError.prepareStackTrace;
+		if (typeof prepare !== "function") return capture.call(this, object, fn);
+		const outerPrepare = Error.prepareStackTrace;
+		const outerLimit = Error.stackTraceLimit;
+		Error.prepareStackTrace = prepare;
+		Error.stackTraceLimit = ContextError.stackTraceLimit;
+		try {
+			Error.captureStackTrace(object, fn || captureStackTrace);
+		} finally {
+			Error.prepareStackTrace = outerPrepare;
+			Error.stackTraceLimit = outerLimit;
+		}
+	};
+	return context;
+};
 
 // Bun's native `fs.watch` does not deliver change events reliably under jest's
 // worker threads, so watchpack misses edits and the WatchTestCases hang or read
