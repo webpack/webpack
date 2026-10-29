@@ -15,7 +15,9 @@ const os = require("os");
 const path = require("path");
 
 const ROOT = path.join(__dirname, "..");
-const PACKAGES = ["webpack-cli", "webpack-dev-server"];
+// What a user installs, left out of the report itself: `webpack` is this
+// checkout, every other package the latest release.
+const PACKAGES = ["webpack", "webpack-cli", "webpack-dev-server"];
 // Shown as the parent of the packages the user asked for.
 const DIRECT = "(direct)";
 
@@ -286,8 +288,10 @@ try {
 		)
 	);
 	/** @type {Record<string, string>} */
-	const dependencies = { webpack: `file:./${filename}` };
-	for (const name of PACKAGES) dependencies[name] = "latest";
+	const dependencies = {};
+	for (const name of PACKAGES) {
+		dependencies[name] = name === "webpack" ? `file:./${filename}` : "latest";
+	}
 	fs.writeFileSync(
 		path.join(dir, "package.json"),
 		JSON.stringify({ private: true, dependencies })
@@ -308,17 +312,21 @@ try {
 	const rows = collect(dir);
 	/** @type {Record<string, string>} */
 	const installed = {};
-	for (const name of ["webpack", ...PACKAGES]) {
+	for (const name of PACKAGES) {
 		const row = rows.find(
 			(row) => row.name === name && row.parents.includes(DIRECT)
 		);
 		installed[name] = row ? row.version : "?";
 	}
-	const markdown = toMarkdown(rows, installed);
+	const dependencyRows = rows.filter((row) => !PACKAGES.includes(row.name));
+	const markdown = toMarkdown(dependencyRows, installed);
 	if (values.output) fs.writeFileSync(values.output, markdown);
 	else process.stdout.write(markdown);
 	if (values.json) {
-		fs.writeFileSync(values.json, `${JSON.stringify(rows, null, 2)}\n`);
+		fs.writeFileSync(
+			values.json,
+			`${JSON.stringify(dependencyRows, null, 2)}\n`
+		);
 	}
 } finally {
 	// eslint-disable-next-line n/no-unsupported-features/node-builtins
