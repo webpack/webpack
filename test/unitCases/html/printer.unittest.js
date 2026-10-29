@@ -3745,6 +3745,21 @@ describe("htmlMinify — embedded code a minifier fails on", () => {
 			expect.objectContaining({ message: "failing CSS minifier" })
 		]);
 	});
+
+	it("keeps a body the caller's minifier answers with errors beside code", async () => {
+		const { code, errors } = await htmlMinify(
+			{ "page.html": "<style>a { b : c }</style>" },
+			undefined,
+			{
+				renderEmbeddedSource: () => ({
+					code: "broken",
+					errors: [new Error("failing CSS minifier")]
+				})
+			}
+		);
+		expect(code).toBe("<style>a { b : c }</style>");
+		expect(errors).toHaveLength(1);
+	});
 });
 
 describe("htmlMinify — one document reaching every embedded site", () => {
