@@ -73,12 +73,6 @@ it("should evaluate every module whose export writes may run user code", () => {
 		"define-descriptor-value-getter",
 		"define-getter-then-read",
 		"define-shadowed-object",
-		"proto-write",
-		"proto-escaped-identifier",
-		"proto-escaped-string",
-		"proto-template-key",
-		"proto-in-chain",
-		"proto-through-alias",
 		"set-prototype-of",
 		"module-exports-getter-read",
 		"module-exports-property-setter",
@@ -128,6 +122,23 @@ it("should drop a module whose export writes run no user code", () => {
 		"pure-annotated-call"
 	];
 	expect(dropped.filter(bundled)).toEqual([]);
+});
+
+it("should retain modules whose prototype writes may run user code", () => {
+	const expected = [
+		"proto-write",
+		"proto-escaped-identifier",
+		"proto-escaped-string",
+		"proto-template-key",
+		"proto-in-chain",
+		"proto-through-alias"
+	];
+	expect(expected.filter((name) => !bundled(name))).toEqual([]);
+	// Deno disables Object.prototype.__proto__ by default.
+	if (!process.versions.deno) {
+		const missing = expected.filter((name) => !global.cjsEffects.includes(name));
+		expect(missing).toEqual([]);
+	}
 	delete global.cjsEffects;
 	delete global.cjsReplacedMarker;
 });
