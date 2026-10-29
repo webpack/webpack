@@ -1589,6 +1589,11 @@ declare interface BuiltinSvgOptions {
 	 * minify an SVG `data:` URL as the `.svg` assets are, wherever that is shorter (default false)
 	 */
 	svg?: boolean;
+
+	/**
+	 * called with what the CSS minifier throws on a body, which is then left as written
+	 */
+	reportError?: (error: Error) => void;
 }
 declare class BunTargetPlugin {
 	constructor();
@@ -39605,7 +39610,7 @@ declare namespace exports {
 					pseudoClasses?: { [index: string]: string };
 				} & CssTransformOptions;
 			}
-		): Promise<{ code: string }>;
+		): Promise<{ code: string; errors?: Error[] }>;
 		export namespace xmlMinify {
 			export let supportsWorkerThreads: () => boolean;
 			export let getTypes: () => string[];

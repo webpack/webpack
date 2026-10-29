@@ -224,6 +224,17 @@ it('inline: true keeps type="module" on an inlined module-script entry', () => {
 	expect(html).toMatch(/<script type="module">[\s\S]+?<\/script>/);
 });
 
+for (const page of ["page-classic.html", "page-typed.html"]) {
+	it(`inline: true writes the type="module" upgrade into the tag of ${page}`, () => {
+		const scripts =
+			readHtml(page).match(/<script\b[^>]*>[\s\S]*?<\/script>/g) || [];
+		expect(scripts).toHaveLength(1);
+		expect(scripts[0]).toMatch(/^<script type="module">[\s\S]*console\.log/);
+		// Never after the inlined body, where it would be a syntax error.
+		expect(scripts[0]).not.toMatch(/(?:type="module"|module)<\/script>$/);
+	});
+}
+
 it("inline: true does not inline a <link rel=modulepreload> hint", () => {
 	const html = readHtml("modulepreload.html");
 	// The preload hint must stay a `<link>` with a URL, not become an inlined
