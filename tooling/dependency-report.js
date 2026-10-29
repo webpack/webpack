@@ -34,7 +34,7 @@ const DIRECT = "(direct)";
  * @property {string} version
  * @property {number} copies how many times npm installed this version
  * @property {number} size bytes on disk of all copies, nested `node_modules` excluded
- * @property {string[]} parents names of the packages depending on it
+ * @property {string[]} parents `name@version` of the packages depending on it
  */
 
 /**
@@ -130,7 +130,7 @@ const collect = (dir) => {
 			const resolved = resolveLocation(packages, location, name);
 			const row = resolved && rowsByLocation.get(resolved);
 			if (!row) continue;
-			const parentName = parent ? parent.name : DIRECT;
+			const parentName = parent ? `${parent.name}@${parent.version}` : DIRECT;
 			if (!row.parents.includes(parentName)) row.parents.push(parentName);
 		}
 	}
