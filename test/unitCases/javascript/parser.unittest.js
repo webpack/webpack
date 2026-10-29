@@ -6016,9 +6016,43 @@ describe("parseProgram", () => {
 		expect(errors.map(([code]) => code)).toEqual(["duplicate-export"]);
 	});
 
-	it("reads past an error without a callback", () => {
-		expect(parseProgram("let a; let a")).toBeDefined();
-		expect(parseProgram("a ~ ")).toBeUndefined();
+	it("reads a build's options: ESTree, comments, auto, a top-level return", () => {
+		/** @type {import("../../../lib/javascript/syntax-parser").CollectedComment[]} */
+		const comments = [];
+		const program = parseProgram("/* a */ import b from 'c'; b;", 0, {
+			estree: true,
+			comments
+		});
+		expect(program.type).toBe("Program");
+		expect(program.body[0].type).toBe("ImportDeclaration");
+		expect(comments.map((comment) => comment.value)).toEqual([" a "]);
+		const auto = parseProgram("x; return;", 0, {
+			sourceType: "auto",
+			estree: true
+		});
+		expect(auto.sourceType).toBe("script");
+		expect(() => parseProgram("return;", 0, { sourceType: "script" })).toThrow(
+			"'return' outside of function"
+		);
+		expect(
+			parseProgram("return;", 0, {
+				sourceType: "script",
+				allowReturnOutsideFunction: true,
+				estree: true
+			}).body[0].type
+		).toBe("ReturnStatement");
+		expect(() =>
+			parseProgram("import defer * as d from 'e';", 0, { importPhases: false })
+		).toThrow(SyntaxError);
+		expect(typeof parseProgram("import defer * as d from 'e';")).toBe("number");
+	});
+
+	it("throws the first error without a callback, as acorn does", () => {
+		expect(() => parseProgram("let a; let a")).toThrow(
+			"Identifier 'a' has already been declared (1:11)"
+		);
+		expect(() => parseProgram("a ~ ")).toThrow(SyntaxError);
+		expect(parseProgram("a ~ ", 0, { parseError: () => {} })).toBeUndefined();
 	});
 
 	it("rethrows a syntax error the callback throws", () => {
