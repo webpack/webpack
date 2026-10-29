@@ -15725,6 +15725,29 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		);
 	});
 
+	it("should keep a call whose class reads the function's `new.target` where it is defined", () => {
+		const print = (/** @type {string} */ source) =>
+			minifyOnePass(source, { compress: {}, mangle: {}, module: true }).code;
+		expect(
+			print(
+				"it(function () { g((function () { return class { [new.target]() {} }; })()); });"
+			)
+		).toBe("it(function(){g(function(){return class{[new.target](){}}}())});");
+		expect(
+			print(
+				"it(function () { g((function () { return class extends (new.target || Object) {}; })()); });"
+			)
+		).toBe(
+			"it(function(){g(function(){return class extends(new.target||Object){}}())});"
+		);
+		// A method's `this` is its own: the class is the call's value.
+		expect(
+			print(
+				"it(function () { g((function () { return class { m() { return this.x } }; })()); });"
+			)
+		).toBe("it(function(){g(class{m(){return this.x}})});");
+	});
+
 	it("should keep a `let` read before its declaration, from any function", () => {
 		const print = (/** @type {string} */ source) =>
 			minifyOnePass(source, { compress: {}, mangle: {} }).code;
@@ -17021,6 +17044,19 @@ describe("jsMinify", () => {
 
 	it("should report a parse error rather than throwing a different shape", async () => {
 		await expect(jsMinify({ "broken.js": "function (" })).rejects.toThrow();
+	});
+
+	it("should minify through terser's tree what the one pass does not read", async () => {
+		const nameCache = {};
+		const result = await jsMinify(
+			{ "cached.js": "var longName = 1; sink(longName);" },
+			INPUT_MAP,
+			{ toplevel: true, nameCache },
+			false
+		);
+		expect(result.code).toBe("sink(1);");
+		expect(typeof result.map).toBe("object");
+		expect(nameCache).toEqual({ vars: { props: {} } });
 	});
 
 	it("should read a Buffer input as UTF-8", async () => {
