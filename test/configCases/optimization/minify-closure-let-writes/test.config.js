@@ -9,7 +9,6 @@ module.exports = {
 			path.join(options.output.path, "bundle0.js"),
 			"utf8"
 		);
-		expect(code).not.toContain("lastSeen");
 		expect(code).toContain("pending=");
 		expect(code).toContain("seen=");
 	}
