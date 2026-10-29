@@ -1,10 +1,20 @@
 name: Dependency Report
 
+# Only what changes the report: webpack's own `dependencies` live in
+# `package.json`; `yarn.lock` is not read, since the install resolves afresh.
 on:
   push:
     branches: [main]
+    paths:
+      - package.json
+      - tooling/dependency-report.js
+      - .github/workflows/dependency-report.yml
   pull_request:
     branches: [main]
+    paths:
+      - package.json
+      - tooling/dependency-report.js
+      - .github/workflows/dependency-report.yml
   workflow_dispatch:
 
 concurrency:
