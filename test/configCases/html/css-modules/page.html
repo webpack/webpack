@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="./card.module.css">
+<link rel="stylesheet" href="./global.css">
+<style module>
+.btn { color: red; }
+.base { margin: 0; }
+.primary { composes: base; color: blue; }
+#main { padding: 0; }
+:global(.shell) { color: black; }
+</style>
+<style module lang="less">
+@accent: green;
+.less-scoped { color: @accent; }
+</style>
+<style module lang="scss">
+$accent: purple; .scss-scoped { color: $accent; }
+</style>
+<style>
+.plain { color: gray; }
+</style>
+</head>
+<body id="main">
+<button class="btn  primary shell" data-class="btn">one</button>
+<div class="card less-scoped scss-scoped plain global">two</div>
+<div class=card>three</div>
+<div id="other" class="&#98;tn">four</div>
+<div style="color: red" class="">five</div>
+</body>
+</html>
