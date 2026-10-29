@@ -18652,6 +18652,225 @@ const BEHAVIOUR_CASES = [
 		"a store to a `const` object in a block below its declaration",
 		"function f(g) { const o = {}; { if (g) { var v = g(); o.p = v; } } console.log(o.p); } f(() => 1); f();",
 		{ compress: { passes: 2 }, mangle: false }
+	],
+	[
+		"arithmetic on two numbers left longer folded, kept where its result prints longer",
+		"console.log(0.1 - 0.3, 0.1 * 3, 0.7 % 0.1, 1 / 3, 0.1 + 0.2);",
+		{ compress: {  }, mangle: false }
+	],
+	[
+		"a fresh object compared with a primitive or `void`, never equal",
+		"function f(a) { return [[a] === 1n, { a } !== 2n, [a] == void 0, { a } != void 1, [a] == null, [a] === 'a', { a } == undefined, void 0 == [a]]; } console.log(f(1));",
+		{ compress: {  }, mangle: false }
+	],
+	[
+		"a function a `switch` case declares beside a `let`, hoisted where `hoist_funs` is on",
+		"var a = 1, b = 1, l = [2], m = 1; switch (a) { case b: let c = 1; function d() { return c } default: { function d2() {} } } for (let i = 0, j; i < j; i++) { (() => i)() } for (var k of l) k; while (m) { let n = m-- } do { var o } while (0); console.log(a, k, m, typeof d);",
+		{ compress: { hoist_funs: true }, mangle: false }
+	],
+	[
+		"a class's static block reading a name the top level assigns, kept with `toplevel` on",
+		"function sink(v) { console.log(typeof v); return 1; } function g() { console.log(\"g\"); } !function () { var x = sink(); var C0 = class { static { switch (x) { case 1: x; default: x; } } }; sink(C0); }(); !function () { var x = sink(); var C1 = class { static { switch (g()) {} } }; sink(C1); }(); !function () { var x = sink(); var C2 = class { static { switch (x) { case g(): } } }; sink(C2); }(); !function () { var x = sink(); var C3 = class { static { switch (x) { case 1: g(); } } }; sink(C3); }(); !function () { var x = sink(); var C4 = class { static { if (x) x; else x; } }; sink(C4); }(); !function () { var x = sink(); var C5 = class { static { if (g()) ; } }; sink(C5); }(); !function () { var x = sink(); var C6 = class { static { if (x) g(); } }; sink(C6); }(); !function () { var x = sink(); var C7 = class { static { if (x) ; else g(); } }; sink(C7); }(); !function () { var x = sink(); var C8 = class { static { if (x) x; } }; sink(C8); }(); !function () { var x = sink(); var C9 = class { static { try { x; } catch (e) { x; } finally { x; } } }; sink(C9); }(); !function () { var x = sink(); var C10 = class { static { try { g(); } catch (e) {} } }; sink(C10); }(); !function () { var x = sink(); var C11 = class { static { try { x; } catch (e) { g(); } } }; sink(C11); }(); !function () { var x = sink(); var C12 = class { static { try { x; } finally { g(); } } }; sink(C12); }(); !function () { var x = sink(); var C13 = class { static { try { x; } catch (e) {} } }; sink(C13); }(); !function () { var x = sink(); var C14 = class { static { var b = 1, c; } }; sink(C14); }(); !function () { var x = sink(); var C15 = class { static { var d = g(); } }; sink(C15); }(); !function () { var x = sink(); var C16 = class { static { let e; } }; sink(C16); }(); !function () { var x = sink(); var C17 = class { static { const f = 2; } }; sink(C17); }(); !function () { var x = sink(); var C18 = class { static { x; } }; sink(C18); }(); !function () { var x = sink(); var C19 = class { static { { x; } } }; sink(C19); }(); !function () { var x = sink(); var C20 = class { static { a: x; } }; sink(C20); }(); !function () { var x = sink(); var C21 = class { static { for (; 0; ); } }; sink(C21); }(); !function () { var x = sink(); var C22 = class { static { x.y; } }; sink(C22); }(); !function () { var x = sink(); var C23 = class { static { this.z; } }; sink(C23); }();",
+		{ compress: { toplevel: true, passes: 2 }, mangle: false }
+	],
+	[
+		"`??` evaluated where both sides are known, under `unsafe` and `passes`",
+		"function f(c, d) { return [null != c ? c : 1, void 0 == c ? 2 : c, d || (null != c ? c : 3)]; } function g(c) { var t; return [null == (t = c.a) ? 4 : t, (t = c.b) !== null && t !== void 0 ? t : 5]; } console.log(f(null, 0), f(0, 1), g({}), g({ a: 6, b: 7 }));",
+		{ compress: { passes: 3, unsafe: true, unsafe_arrows: true, unsafe_methods: true, unsafe_comps: true, unsafe_math: true, pure_getters: true, toplevel: true, keep_fargs: false, hoist_vars: true, hoist_funs: true }, mangle: { toplevel: true }, ecma: 2020 }
+	],
+	[
+		"a `typeof` of a function declared after it and a `let` read in its dead zone, with names mangled",
+		"function m() { var t = typeof f; function f() { return x; } const x = 2; let r = []; try { r.push(z); } catch (e) { r.push(e.name); } let z = x + 1; r.push(t, f(), x * 3, z * z); return r; } console.log(m());",
+		{ compress: {  } }
+	],
+	[
+		"a BigInt operation converted to a string, folded where the top level is compressed",
+		"function f(a, b) { var s = '' + ~'1', t = '' + (a += 1), u = '' + (a < b), v = '' + (a >>> 1), w = '' + (1n * b - 2n * b), x = ~(a = 2) + '', y = '' + (a ? 1 : '2'); return [s, t, u, v, w, x, y]; } console.log(f(1, 3n));",
+		{ compress: { toplevel: true, passes: 2 }, mangle: false }
+	],
+	[
+		"a comment inside parentheses before an object a conditional opens with",
+		"var r = ((function () { return 1; }))() + (/* k */ ({}).x === void 0 ? 1 : 2); console.log(r);",
+		{ compress: false, mangle: false, format: { comments: /k/ } }
+	],
+	[
+		"a line comment inside parentheses before a function called first in a declaration",
+		"var r = ((// k\nfunction () { return 1; }))() + (({// k\n}).x // k\n=== void 0 ? 1 : 2); console.log(r);",
+		{ compress: false, mangle: false, format: { comments: /k/ } }
+	],
+	[
+		"a `typeof` compared loosely unequal to a string, guarding a read of an undeclared global, where `sequences` joins three",
+		"globalThis.x = 0; globalThis.array = 1; globalThis.minRun = 0; globalThis.compare = 2; log10=x?1e2?x?0:1:1e4?x?2:3:4:function(){if((array))if(typeof compare!=''){compare}do{if(minRun){}}while(0)}; console.log(typeof log10, log10());",
+		{ compress: { sequences: 3, if_return: false, loops: false, switches: false, evaluate: false }, mangle: false }
+	],
+	[
+		"a function a `switch` declares in a `default` before a `case`, rebinding an outer `var` a loop then writes",
+		"var b = \"outer\"; function f(x) { switch (0) { default: function b() {} case x(): } for (var i = 0; i < 2; i++) b = x(b); return b; } console.log(f(function (v) { return typeof v; }), b);",
+		{ compress: { sequences: 3, if_return: false, loops: false, switches: false, evaluate: false }, mangle: false }
+	]
+];
+
+// What the one pass, which compresses a source as the node printer prints it,
+// writes where the cases above leave it untried.
+/** @type {[string, string, import("terser").MinifyOptions][]} */
+const ONE_PASS_CASES = [
+	[
+		"`Infinity` read as a value, as `1/0` in parentheses wherever an operator or a member would bind it",
+		"console.log(Infinity, -Infinity, Infinity * 2, 2 / Infinity, Infinity % 2, Infinity ** 0, Infinity + 1, String(Infinity), new Number(Infinity) + 0, Infinity.toString(), typeof Infinity, void Infinity, `${Infinity}`, [Infinity], { a: Infinity }.a); try { Infinity``; } catch (e) { console.log(e.name); } try { (class extends Infinity {}); } catch (e) { console.log(e.name); } try { new Infinity(); } catch (e) { console.log(e.name); }",
+		{ compress: {  } }
+	],
+	[
+		"`Number`'s infinities and `NaN` read as values, as `1/0`, `-1/0` and `NaN`",
+		"console.log(Number.POSITIVE_INFINITY, Number.NEGATIVE_INFINITY, Number.NEGATIVE_INFINITY * 2, 1 / Number.POSITIVE_INFINITY, Number.NEGATIVE_INFINITY.toString(), -Number.NEGATIVE_INFINITY, String(Number.NEGATIVE_INFINITY), typeof Number.POSITIVE_INFINITY, Number.NaN, Number.NaN + 1, Number.MAX_VALUE, Number?.NaN, Number['NaN']); try { Number.NEGATIVE_INFINITY``; } catch (e) { console.log(e.name); } try { (class extends Number.POSITIVE_INFINITY {}); } catch (e) { console.log(e.name); } try { new Number.POSITIVE_INFINITY(); } catch (e) { console.log(e.name); }",
+		{ compress: {  } }
+	],
+	[
+		"`Number`'s constants written, deleted or called on, which stay as they are",
+		"Number.NaN = 1; Number.POSITIVE_INFINITY++; for (Number.NEGATIVE_INFINITY in { a: 1 }); for (Number.NaN of [2]); console.log(delete Number.NaN, Number.isNaN(Number.NaN), Number.NaN, Number.POSITIVE_INFINITY, Number.NEGATIVE_INFINITY);",
+		{ compress: {  } }
+	],
+	[
+		"a boolean compared loosely, as the number it reads as",
+		"function f(x) { return [x == true, x != false, true == x, x == !0, x != !1, x === true, x !== false]; } console.log(f(1), f(0), f('1'), f(true));",
+		{ compress: {  } }
+	],
+	[
+		"a conditional choosing between booleans, as its test negated once or twice",
+		"function f(x, y) { if (x ? true : false) console.log('t'); return [x ? true : false, x ? false : true, x ? !0 : !1, x ? !1 : !0, !(x ? true : false), (x, y) ? true : false, x + y ? false : true, [x] ? true : false]; } console.log(f(1, 2), f(0, 0));",
+		{ compress: {  } }
+	],
+	[
+		"a call of a function printed as the value it returns, in parentheses where an operator, member, `new` or tag around it binds tighter",
+		"function f(o, k) { var a = (function (o) { return -o; })(o) ** 2, b = (function (o) { return !o; })(o).constructor.name, c = typeof (function (o) { return void o; })(o), d = (function (o) { return { a: o }; })(o).a, e = (function () { return class { static n = 1; }; })().n, g = (function () { return function () { return 3; }; })()(), h = (function (o) { return (x) => x + o; })(o)(1), i = (function (o) { return o + k; })(o) * 2, j = (function (o) { return o || k; })(o) && 5, l = (function (o) { return o ? k : 0; })(o).toString(), m = (function (o) { return o = k; })(o) + 1, n = new ((function (o) { return function () { this.o = o; }; })(o))().o; return [a, b, c, d, e, g, h, i, j, l, m, n]; } function t(o) { return (function (o) { return -o; })(o)``; } console.log(f(2, 3)); try { t(1); } catch (e) { console.log(e.name); }",
+		{ compress: {  } }
+	],
+	[
+		"a value set just before its one read, in parentheses where `??` meets `||` or `&&` or a unary operator takes it",
+		"function f(a, b, c) { var t = a ?? b; return t || c; } function g(a, b, c) { var t = a || b; return t ?? c; } function h(a, b, c) { var t = a && b; return t ?? c; } function k(a, b) { var t = a ?? b; return t && a; } function m(a, b) { var t = a + b; return -t; } function n(a, b) { var t = a + b; return `${t}`; } function p(a, b) { var t = a * b; return [...[t]]; } console.log(f(null, 0, 2), g(0, null, 3), h(1, null, 4), m(1, 2), n(1, 2), p(2, 3), k(1, 2));",
+		{ compress: {  } }
+	],
+	[
+		"an arrow read once, printed where it is read, in parentheses only where a member reads it",
+		"function f(x) { const a = (v) => v + x; const b = (v) => v * x; const c = (v) => v - x; const d = (v) => v / x; const e = (v, w) => v % x; const g = (v) => [v]; const h = (v) => v; const i = () => x; const j = () => 1; const k = () => 2; return [x ? a : 0, { p: b }.p, [c][0], (0, d), e.length, `${typeof g}`, ((y) => y)(h), i.length, ...[j], k]; } console.log(f(2).map((v) => typeof v === 'function' ? v(6) : v));",
+		{ compress: {  } }
+	],
+	[
+		"a call printed as its value where a statement starts, in parentheses where the value opens with an object",
+		"function f(o) { (function (o) { return { t(s) { console.log(s[0], o); } }.t`x`; })(o); (function (o) { return o.t`y`; })(o); (function (o) { return o.x++; })(o); (function (o) { return ++o.x; })(o); console.log(o.x); } f({ x: 1, t(s) { console.log(s[0]); } });",
+		{ compress: {  } }
+	],
+	[
+		"a test in parentheses known to be a constant, folded",
+		"function f(x) { if ((0)) x(); var a = ((1)) ? 'a' : 'b'; var b = ((1) && (0)) ? 'c' : 'd'; return [a, b, (('x')) + 1]; } console.log(f());",
+		{ compress: {  } }
+	],
+	[
+		"a `var` set after a call whose function reads it, which the call reads before it is set",
+		"function f() { console.log(h()); var c = 5; function h() { return c; } return c; } console.log(f()); function g() { var r = k(); var d = 2; var k2 = () => d; return [r, d, k2()]; function k() { return typeof d; } } console.log(g());",
+		{ compress: {  } }
+	],
+	[
+		"an object a function called in an arrow's body returns, in parentheses as the arrow's body",
+		"var f = (o) => (function () { return { a: o }; })(); console.log(f(1).a);",
+		{ compress: {  } }
+	],
+	[
+		"an `if` whose `else` follows a block ending in an `if` chain with no `else`, which keeps its braces",
+		"function f(a, b, c) { if (a) { if (b) { for (;;) { console.log(1); break; } } else if (c) { for (;;) { console.log(2); break; } } } else { for (;;) { console.log(3); break; } } } f(1, 1); f(1, 0, 1); f(1, 0, 0); f(0);",
+		{ compress: {  } }
+	],
+	[
+		"an assignment both branches make, hoisted out of the `if` and the conditional where `dead_code` is off",
+		"function f(a) { var x; if (a) x = 1; else x = 2; var y; a ? (y = 3) : (y = 4); return [x, y]; } console.log(f(1), f(0));",
+		{ compress: { dead_code: false } }
+	],
+	[
+		"an `else if` whose branches return, lifted out after the `if` before it",
+		"function f(a, b) { if (a) { console.log(1); return; } else if (b) { console.log(2); return; } else { console.log(3); } console.log(4); } f(1); f(0, 1); f(0, 0);",
+		{ compress: {  } }
+	],
+	[
+		"a number in a scope saying `use asm`, kept as written, where another scope says other directives",
+		"function a() { 'use asm'; var x = 1.0; return { x: x }; } function b(y) { 'use strict'; 'other'; return y * 1.5; } console.log(a().x, b(2));",
+		{ compress: {  } }
+	],
+	[
+		"an arrow's block of `if`s returning, as the conditional they return, and one returning after empty statements, as its value",
+		"var f = (a, b) => { if (a) return 1; if (b) return 2; return 3; }; var g = (a) => { if (a) return 1; console.log('g'); return 3; }; var h = (a) => { ; return a + 1; }; var k = (a) => { if (a) { return 1; } ; return 2; }; console.log(f(1), f(0, 1), f(0, 0), g(1), g(0), h(1), k(0));",
+		{ compress: {  } }
+	],
+	[
+		"a function reading an object a call it makes replaces, and `arguments` a call writes",
+		"function o(p) { var s = { a: 1 }, args = arguments; function* gen() { var t = { a: 2 }; yield function (k) { var x = h(k); return t[x]; }; } function h(k) { s = { a: 3 }; args[0] = { a: 5 }; return k; } return [function (k) { var x = h(k); return s[x]; }, function (k) { var x = h(k); return p[x]; }, gen().next().value]; } var r = o({ a: 4 }); console.log(r[0](\"a\"), r[1](\"a\"), r[2](\"a\"));",
+		{  }
+	],
+	[
+		"a conditional reading a getter twice, kept beside a block declaring a `let` of the same name",
+		"var n = 0, o = { get x() { return ++n; } }; function f(b) { var a = 1; { let a = b - 2; var r = a ? b : o.x ? b : o.x; } return [r, a, n]; } console.log(f(2));",
+		{  }
+	],
+	[
+		"`#x in` a conditional, a sequence and another `in`",
+		"var a = 1; class C { #x; m(o) { return #x in (a ? o : o) && #x in (a, o) && (#x in o) in o; } } console.log(new C().m(new C()));",
+		{  }
+	],
+	[
+		"a program of only a `#!` line",
+		"#!/usr/bin/env node",
+		{  }
+	],
+	[
+		"a module exporting a function of more parameters than one-character names",
+		`export const z = 1, y = 2;
+		export function crowded(${Array.from({ length: 60 }, (_, i) => `parameter${i}`).join(", ")}) {
+			return sink(${Array.from({ length: 60 }, (_, i) => `parameter${i}`).join(", ")});
+		}`,
+		{ module: true }
+	],
+	[
+		"an `if` returning, as `return` of a conditional, its test in parentheses where a comment before it would end the line after `return`",
+		"function f(a) { if (// k\na) return a; return -a; } function g(a, b) { if (a) return 1; if (// k\nb) return 2; return 3; } function h(a) { if (/* k */ a) return 1; else return 2; } function k(a) { if (// k\na) return true; return false; } console.log(f(0), f(2), g(0, 1), g(0, 0), g(1), h(0), h(1), k(1), k(0));",
+		{ compress: {  }, format: { comments: /k/ } }
+	],
+	[
+		"comments before an arrow's parameter and inside the object it returns",
+		"var f = (a) => ((a))/* k */ , g = (/* k */ a) => ({ a // k\n}); console.log(f(1), g(2).a);",
+		{ compress: {  }, mangle: false, format: { comments: /k/ } }
+	],
+	[
+		"a declaration joined to the one before it, ending in a line comment, which still ends its line",
+		"var a = 1; var b = 2; // k\nconsole.log(a, b); let c = 3; let d = 4; // k\nconsole.log(c, d);",
+		{ compress: {  }, format: { comments: /k/ } }
+	],
+	[
+		"a `new` whose callee a comment opens, kept where dropping it would leave the comment after `return` or `throw`",
+		"function g() { return new // k\nError('e'); } function h() { throw new // k\nError('t'); } console.log(g().message); try { h(); } catch (e) { console.log(e.message); }",
+		{ compress: {  }, format: { comments: /k/ } }
+	],
+	[
+		"`delete` of the global `undefined` or `Infinity`, which takes the name as written, not the value",
+		"console.log(delete undefined, delete NaN, delete Infinity, delete Number.NaN, typeof undefined, -undefined, void Infinity);",
+		{ compress: {  } }
+	],
+	[
+		"a `let` or `const` set to a name, read in place of that name only where both are set, never in a dead zone",
+		"function f() { let b = c; let c = 1; return b; } function k(p) { var r = m(); let a = p; return [r, a.s]; function m() { try { return a; } catch (e) { return e.name; } } } function g(x) { const y = x; return () => y; } function h(x) { var f = () => y; const y = x; return f(); } function s(x) { switch (x) { case 1: const y = x; return y * y; } } try { console.log(f()); } catch (e) { console.log(e.name); } console.log(k({}), g(1)(), h(2), s(1));",
+		{ compress: {  } }
+	],
+	[
+		"a function called in place passed a parameter `arguments` writes, which its body still reads as its own",
+		"function f(a) { var args = arguments; return (function (a) { return [a, (args[0] = 5), a]; })(a); } function g(a) { return (function (b) { return [b, b]; })(a); } console.log(f(1), g(2));",
+		{ compress: {  } }
+	],
+	[
+		"comments before `async`, inside a body, and before a value `await` waits for in parentheses",
+		"/* k */ async function f() { /* k */ await (// k\n/x/); return (await 1) + 1; } f();",
+		{ compress: {  }, mangle: false, format: { comments: /k/ } }
+	],
+	[
+		"`const`s set to one another in a cycle, kept where each reads the next in its dead zone, and a chain read as the name it starts from",
+		"function f() { const a = b, b = a; return a; } function g(x) { const a = x, b = a, c = b; return [c, c]; } try { console.log(f()); } catch (e) { console.log(e.name); } console.log(g(1));",
+		{ compress: {  } }
 	]
 ];
 
@@ -18783,6 +19002,47 @@ describe("JavaScript minifier, pass by pass", () => {
 			);
 			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(source));
 		});
+	});
+});
+
+describe("JavaScript minifier, the one pass", () => {
+	for (const [name, source, options] of ONE_PASS_CASES) {
+		it(`should write what runs as the source does: ${name}`, async () => {
+			const { minify, modules } = await load();
+			modules.onePass.enabled = true;
+			/** @type {string} */
+			let code;
+			try {
+				code = /** @type {string} */ (
+					(await minify(source, structuredClone(options))).code
+				);
+			} finally {
+				modules.onePass.enabled = false;
+			}
+			const module = Boolean(options.module);
+			parses(code, module);
+			if (!module) expect(runProgram(code)).toBe(runProgram(source));
+			expect(code).toMatchSnapshot();
+		});
+	}
+
+	it("should leave nothing it found of a tree to the print of the next", async () => {
+		const { minify, modules } = await load();
+		const source =
+			"function f(o) { return (function (x) { return x + 1; })(o); } console.log(f(1));";
+		modules.onePass.enabled = true;
+		try {
+			expect((await minify(source, { compress: {} })).code).toBe(
+				"function f(n){return n+1}console.log(f(1));"
+			);
+		} finally {
+			modules.onePass.enabled = false;
+		}
+		// The same node numbers, printed without compressing, print every node.
+		const { code } = await minify(source, { compress: false, mangle: false });
+		expect(code).toBe(
+			"function f(o){return function(x){return x+1}(o)}console.log(f(1));"
+		);
 	});
 });
 

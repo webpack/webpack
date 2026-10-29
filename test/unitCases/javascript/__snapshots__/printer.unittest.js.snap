@@ -25,6 +25,8 @@ exports[`JavaScript minifier printing a SyntaxTree should print terser's tree of
 
 exports[`JavaScript minifier printing a SyntaxTree should read a single named source under its name 1`] = `"a(1);"`;
 
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: \`??\` evaluated where both sides are known, under \`unsafe\` and \`passes\` 1`] = `"function n(n,o){return[n??1,n??2,o||(n??3)]}function o(n){return[n.a??4,n.b??5]}console.log(n(null,0),n(0,1),o({}),o({a:6,b:7}));"`;
+
 exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: \`Map\` and \`WeakMap\` built from entries, their values unread 1`] = `"new Map([\\"ab\\"]),new Map([[1]]),new Map([1]),new Map([\\"a\\"]),new WeakMap([1]),console.log(1);"`;
 
 exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: \`Math.pow\` called optionally, with one argument, a spread, or a long result 1`] = `"var m=Math;console.log(Math?.pow(2,3),Math.pow(2),8,Math.pow(2,.5),Math.pow(3,40),m.pow(2,4));"`;
@@ -105,6 +107,12 @@ exports[`JavaScript minifier, pass by pass what the correct and improve phases w
 
 exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a \`switch\` whose branches run several statements, return and assign, or assign apart 1`] = `"function g(v){return console.log(\\"g\\",v),v}function f(x){x===1?(g(1),g(2)):x===2?g(3):x===3&&g(4)}function h(x){var a;switch(x){case 1:a=1;break;case 2:return 2}return a}function k(x){var a,b;return x===1?a=1:x===2?b=2:a=3,[a,b]}function m(x){var a;return x===1?a=1:x===2&&(a=2),a}function n(x){return 9}f(1),f(2),console.log(h(1),h(2),h(3),k(1),k(2),k(3),m(1),m(3),n(1));"`;
 
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a \`typeof\` compared loosely unequal to a string, guarding a read of an undeclared global, where \`sequences\` joins three 1`] = `"globalThis.x=0,globalThis.array=1,globalThis.minRun=0;globalThis.compare=2,log10=x?100?+!x:1e4?x?2:3:4:function(){array&&\\"\\"!=typeof compare&&compare;do{minRun}while(0)},console.log(typeof log10,log10());"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a \`typeof\` of a function declared after it and a \`let\` read in its dead zone, with names mangled 1`] = `"function m(){var t=typeof n;function n(){return e}let e=2,o=[];try{o.push(u)}catch(t){o.push(t.name)}let u=3;return o.push(t,n(),6,9),o}console.log(m());"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a BigInt operation converted to a string, folded where the top level is compressed 1`] = `"console.log([\\"-2\\",\\"2\\",\\"\\"+(2<3n),\\"1\\",\\"\\"+-3n,~2+\\"\\",\\"1\\"]);"`;
+
 exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a bare \`var\` and a block left holding one statement in an \`if\`, or a loop 1`] = `"function f(x){var a=x;x?sink(void 0):sink(void 0);for(;x--;){sink(void 0)}if(x);for(;x<0;x++);return a}function sink(){}console.log(f(2));"`;
 
 exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a bare \`var\` followed by a bare \`return\` 1`] = `"function f(x){}console.log(f(1));"`;
@@ -147,6 +155,10 @@ exports[`JavaScript minifier, pass by pass what the correct and improve phases w
 
 exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a catch binding unread where a nested function declares its name 1`] = `"function f(k){try{g()}catch{sink(1+k)}}function g(){throw 0}function sink(v){console.log(v)}f(2);"`;
 
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a class's static block reading a name the top level assigns, kept with \`toplevel\` on 1`] = `"function sink(v){return console.log(typeof v),1}function g(){console.log(\\"g\\")}sink(),sink(class{}),sink(),sink(class{static{g()}}),sink(),sink(class{static{g()}}),x=sink(),sink(class{static{x===1&&g()}}),sink(),sink(class{}),sink(),sink(class{static{g()}});var x,x$0=sink();sink(class{static{x$0&&g()}});var x$1=sink();sink(class{static{x$1||g()}});sink(),sink(class{}),sink(),sink(class{}),sink(),sink(class{static{try{g()}catch(e){}}}),sink(),sink(class{}),sink(),sink(class{static{g()}}),sink(),sink(class{}),sink(),sink(class{}),sink(),sink(class{static{g()}}),sink(),sink(class{}),sink(),sink(class{}),sink(),sink(class{}),sink(),sink(class{}),sink(),sink(class{}),sink(),sink(class{});var x$2=sink();sink(class{static{x$2.y}});sink(),sink(class{static{this.z}});"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a comment inside parentheses before an object a conditional opens with 1`] = `"var r=function(){return 1}()+(/* k */{}.x===void 0?1:2);console.log(r);"`;
+
 exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a compound assignment of a value not known, then one of a binding's 1`] = `"function g(){return 2}function f(){let a=1;a+=g(),console.log(a*=3,3)}f();"`;
 
 exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a computed or shorthand \`__proto__\` key in an object \`unsafe\` evaluates 1`] = `"var __proto__=null;console.log(Object.getPrototypeOf({[\\"__proto__\\"]:null})===Object.prototype,null,Object.getPrototypeOf({[\\"__proto__\\"]:__proto__})===Object.prototype,[\\"__proto__\\"]);"`;
@@ -154,6 +166,12 @@ exports[`JavaScript minifier, pass by pass what the correct and improve phases w
 exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a constructor forwarding a literal's spread or \`arguments\` or a rest parameter 1`] = `"class A{constructor(...a){console.log(a.length)}}class B extends A{constructor(){super(1,2)}}class C extends A{}class D extends A{}class E extends A{constructor(x,...r){super(...r)}}class F extends A{constructor(...r){super(...arguments)}}new B,new C(1),new D(1,2,3),new E(1,2),new F(1);"`;
 
 exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a dropped \`Map\` whose entry holds a hole or a spread 1`] = `"var a=[1,2];new Map([[1,,2]]),new Map([[...a,3]]),new Map([[1,...a]]),console.log(1);"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a fresh object compared with a primitive or \`void\`, never equal 1`] = `"function f(a){return[!1,!0,!1,!0,!1,!1,!1,!1]}console.log(f(1));"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a function a \`switch\` case declares beside a \`let\`, hoisted where \`hoist_funs\` is on 1`] = `"var o,a=1,b=1,l=[2],m=1;if(a===b){function d(){return 1}}{function d2(){}}for(let i=0;i<void 0;i++){}for(var k of l);for(;m;){m--}console.log(a,k,m,typeof d);"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a function a \`switch\` declares in a \`default\` before a \`case\`, rebinding an outer \`var\` a loop then writes 1`] = `"var b=\\"outer\\";function f(x){switch(0){default:function b(){}case x():}for(var i=0;i<2;i++)b=x(b);return b}console.log(f(function(v){return typeof v}),b);"`;
 
 exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a function called in place passed a \`var\` set before, after other statements, or written in a closure 1`] = `"function g(v){return v}function f(x){var b=g(x),c=g(2);try{console.log(1)}catch(e){}console.log(b,c)}function h(x){var b=g(x);g(0),function(a){try{console.log(1)}catch(e){}console.log(a)}(b)}function k(x){var b=g(x);return function(a){try{console.log(1)}catch(e){}console.log(a)}(b),b=1}f(1),h(2),console.log(k(3));"`;
 
@@ -184,6 +202,11 @@ exports[`JavaScript minifier, pass by pass what the correct and improve phases w
 exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a known function called with constants it cannot fold 1`] = `"!function(){function k({a:a}){return 1}function n(a){return\\"a long string, longer than the call \\"+a}function p(a){return a.length}console.log(k({}),k({}),2,2,1,1,n(1),n(1),p([1,2]),p([1,2]))}();"`;
 
 exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a known function called with fewer constants than it has parameters 1`] = `"console.log(11,11,23);"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a line comment inside parentheses before a function called first in a declaration 1`] = `
+"var r=// k
+function(){return 1}()+({}.x===void 0?1:2);console.log(r);"
+`;
 
 exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: a literal's member read in the declaration list holding it 1`] = `"function f(){console.log(1,2)}f();"`;
 
@@ -228,6 +251,8 @@ exports[`JavaScript minifier, pass by pass what the correct and improve phases w
 exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: an optional link on a sequence ending in \`void\` or \`null\` 1`] = `"function g(x){return console.log(\\"g\\",x),x}console.log(void g(1),void g(2),void g(3),(g(4),void g(5)));"`;
 
 exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: arithmetic of a constant nested on the right 1`] = `"function g(v){return v}function f(n,i,j){return[(n=+n)+2+3,2+n+3,n*2*3,n*2*3,(i|=0)|3|(j|=0),i&0&j,i^3^j,i&5,i&5,i&1,i&3|3,i&0,i&0,-1^i,-1^i,-1&i,-1&i]}console.log(f(1,2,3));"`;
+
+exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: arithmetic on two numbers left longer folded, kept where its result prints longer 1`] = `"console.log(.1-.3,.1*3,.7%.1,1/3,.1+.2);"`;
 
 exports[`JavaScript minifier, pass by pass what the correct and improve phases write should write what runs as the source does: bare \`var\`s moved out of \`else if\` blocks left holding one statement 1`] = `"function g(x){return[x]}function sink(v){console.log(v)}function f(x,o,a){var r,r2,b=g(x),s,t,u;try{sink(b)}catch(e){}if(x)for(r in o)sink(r);else if(a)sink(s);if(x)for(r2 in o)sink(r2);else if(a){for(t of a)sink(t)}else sink(u);return[b,r,s,t,u]}console.log(f(1,{p:1},[2]),f(0,{},[3]),f(0,{},0));"`;
 
@@ -2303,6 +2328,88 @@ exports[`JavaScript minifier, the cases' sources under options drawn at random s
 exports[`JavaScript minifier, the cases' sources under options drawn at random should minify source 214 under options 66 1`] = `"globalThis.Number=function(){return 7};Math.max=function(){return 0};[Array.prototype][0].slice=function(){return\`S\`};this.parseInt=function(){return 9};!function(){this.isNaN=function(){return\`n\`}}();!function(){this.JSON.stringify=function(){return\`j\`}}();globalThis.Object.keys=function(){return[\`k\`]};console.log(Number(\`3\`),2,[1,2].slice(),parseInt(\`4\`),isNaN(1),JSON.stringify([1]),Object.keys({a:1}));"`;
 
 exports[`JavaScript minifier, the cases' sources under options drawn at random should minify source 215 under options 68 1`] = `"export function normalize(r,o={}){[...o](()=>left);for(separator of separators);r.trim()}"`;
+
+exports[`JavaScript minifier, the one pass should write what runs as the source does: \`#x in\` a conditional, a sequence and another \`in\` 1`] = `"var a=1;class C{#o;m(o){return#o in(a?o:o)&&#o in(a,o)&&#o in o in o}}console.log((new C).m(new C));"`;
+
+exports[`JavaScript minifier, the one pass should write what runs as the source does: \`Infinity\` read as a value, as \`1/0\` in parentheses wherever an operator or a member would bind it 1`] = `"console.log(1/0,-(1/0),(1/0)*2,2/(1/0),(1/0)%2,(1/0)**0,1/0+1,String(1/0),new Number(1/0)+0,(1/0).toString(),typeof(1/0),void(1/0),\`\${1/0}\`,[1/0],{a:1/0}.a);try{(1/0)\`\`}catch(n){console.log(n.name)}try{(class extends Infinity{})}catch(n){console.log(n.name)}try{new(1/0)}catch(n){console.log(n.name)}"`;
+
+exports[`JavaScript minifier, the one pass should write what runs as the source does: \`Number\`'s constants written, deleted or called on, which stay as they are 1`] = `"Number.NaN=1;Number.POSITIVE_INFINITY++;for(Number.NEGATIVE_INFINITY in{a:1});for(Number.NaN of[2]);console.log(delete Number.NaN,Number.isNaN(NaN),NaN,1/0,-1/0);"`;
+
+exports[`JavaScript minifier, the one pass should write what runs as the source does: \`Number\`'s infinities and \`NaN\` read as values, as \`1/0\`, \`-1/0\` and \`NaN\` 1`] = `"console.log(1/0,-1/0,(-1/0)*2,1/(1/0),(-1/0).toString(),-(-1/0),String(-1/0),typeof(1/0),NaN,NaN+1,Number.MAX_VALUE,Number?.NaN,Number.NaN);try{(-1/0)\`\`}catch(N){console.log(N.name)}try{(class extends(1/0){})}catch(N){console.log(N.name)}try{new(1/0)}catch(N){console.log(N.name)}"`;
+
+exports[`JavaScript minifier, the one pass should write what runs as the source does: \`const\`s set to one another in a cycle, kept where each reads the next in its dead zone, and a chain read as the name it starts from 1`] = `"function f(){let o=c,c=o;return o}function g(o){return[o,o]}try{console.log(f())}catch(o){console.log(o.name)}console.log(g(1));"`;
+
+exports[`JavaScript minifier, the one pass should write what runs as the source does: \`delete\` of the global \`undefined\` or \`Infinity\`, which takes the name as written, not the value 1`] = `"console.log(delete undefined,delete NaN,delete Infinity,delete Number.NaN,typeof void 0,-void 0,void(1/0));"`;
+
+exports[`JavaScript minifier, the one pass should write what runs as the source does: a \`let\` or \`const\` set to a name, read in place of that name only where both are set, never in a dead zone 1`] = `"function f(){let n=t,t=1;return n}function k(n){var t=function(){try{return c}catch(n){return n.name}}();let c=n;return[t,c.s]}function g(n){return()=>n}function h(n){let t=n;return t}function s(n){switch(n){case 1:let t=n;return t*t}}try{console.log(f())}catch(n){console.log(n.name)}console.log(k({}),g(1)(),h(2),s(1));"`;
+
+exports[`JavaScript minifier, the one pass should write what runs as the source does: a \`new\` whose callee a comment opens, kept where dropping it would leave the comment after \`return\` or \`throw\` 1`] = `
+"function g(){// k
+return Error(\\"e\\")}function h(){// k
+throw Error(\\"t\\")}console.log(g().message);try{h()}catch(o){console.log(o.message)}"
+`;
+
+exports[`JavaScript minifier, the one pass should write what runs as the source does: a \`var\` set after a call whose function reads it, which the call reads before it is set 1`] = `"function f(){console.log(n);var n=5;return n}console.log(f());function g(){var n=typeof o,o=2;return[n,o,o]}console.log(g());"`;
+
+exports[`JavaScript minifier, the one pass should write what runs as the source does: a boolean compared loosely, as the number it reads as 1`] = `"function f(e){return[e==1,e!=0,!0==e,e==1,e!=0,e===!0,e!==!1]}console.log(f(1),f(0),f(\\"1\\"),f(!0));"`;
+
+exports[`JavaScript minifier, the one pass should write what runs as the source does: a call of a function printed as the value it returns, in parentheses where an operator, member, \`new\` or tag around it binds tighter 1`] = `"function f(o,n){var t=(-o)**2,r=(!o).constructor.name,u=typeof void o,c={a:o}.a,e=class{static n=1}.n,i=function(){return 3}(),f=function(o){return n=>n+o}(o)(1),a=(o+n)*2,l=(o||n)&&5,s=(o?n:0).toString(),g=function(o){return o=n}(o)+1;return[t,r,u,c,e,i,f,a,l,s,g,(new(function(o){return function(){this.o=o}}(o))).o]}function t(o){return(-o)\`\`}console.log(f(2,3));try{t(1)}catch(o){console.log(o.name)}"`;
+
+exports[`JavaScript minifier, the one pass should write what runs as the source does: a call printed as its value where a statement starts, in parentheses where the value opens with an object 1`] = `"function f(o){(function(o){return({t(n){console.log(n[0],o)}}.t)\`x\`})(o);(o.t\`y\`);(o.x++);(++o.x);console.log(o.x)}f({x:1,t(o){console.log(o[0])}});"`;
+
+exports[`JavaScript minifier, the one pass should write what runs as the source does: a conditional choosing between booleans, as its test negated once or twice 1`] = `"function f(e,f){if(e)console.log(\\"t\\");return[!!e,!e,!!e,!e,!(e),!!((e,f)),!(e+f),!![e]]}console.log(f(1,2),f(0,0));"`;
+
+exports[`JavaScript minifier, the one pass should write what runs as the source does: a conditional reading a getter twice, kept beside a block declaring a \`let\` of the same name 1`] = `"var n=0,o={get x(){return++n}};function f(r){{var a=r-2?r:o.x?r:o.x}return[a,1,n]}console.log(f(2));"`;
+
+exports[`JavaScript minifier, the one pass should write what runs as the source does: a declaration joined to the one before it, ending in a line comment, which still ends its line 1`] = `
+"var a=1,b=2;// k
+console.log(a,b);let c=3,d=4;// k
+console.log(3,4);"
+`;
+
+exports[`JavaScript minifier, the one pass should write what runs as the source does: a function called in place passed a parameter \`arguments\` writes, which its body still reads as its own 1`] = `"function f(n){var r=arguments;return function(n){return[n,r[0]=5,n]}(n)}function g(n){return[n,n]}console.log(f(1),g(2));"`;
+
+exports[`JavaScript minifier, the one pass should write what runs as the source does: a function reading an object a call it makes replaces, and \`arguments\` a call writes 1`] = `"function o(r){var n={a:1},a=arguments;function t(r){n={a:3};a[0]={a:5};return r}return[function(r){var a=t(r);return n[a]},function(n){return r[t(n)]},function*(){var r={a:2};yield function(n){return r[t(n)]}}().next().value]}var r=o({a:4});console.log(r[0](\\"a\\"),r[1](\\"a\\"),r[2](\\"a\\"));"`;
+
+exports[`JavaScript minifier, the one pass should write what runs as the source does: a module exporting a function of more parameters than one-character names 1`] = `"export const z=1,y=2;export function crowded(r,e,a,t,p,m,n,o,c,d,i,s,u,x,f,k,w,b,g,h,j,l,q,v,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,$,_,rr,er,ar,tr,pr,mr,nr,or){return sink(r,e,a,t,p,m,n,o,c,d,i,s,u,x,f,k,w,b,g,h,j,l,q,v,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,$,_,rr,er,ar,tr,pr,mr,nr,or)}"`;
+
+exports[`JavaScript minifier, the one pass should write what runs as the source does: a number in a scope saying \`use asm\`, kept as written, where another scope says other directives 1`] = `"function a(){\\"use asm\\";return{x:1.0}}function b(n){\\"use strict\\";\\"other\\";return n*1.5}console.log(a().x,b(2));"`;
+
+exports[`JavaScript minifier, the one pass should write what runs as the source does: a program of only a \`#!\` line 1`] = `
+"#!/usr/bin/env node
+"
+`;
+
+exports[`JavaScript minifier, the one pass should write what runs as the source does: a test in parentheses known to be a constant, folded 1`] = `"function f(a){return[\\"a\\",\\"d\\",\\"x1\\"]}console.log(f());"`;
+
+exports[`JavaScript minifier, the one pass should write what runs as the source does: a value set just before its one read, in parentheses where \`??\` meets \`||\` or \`&&\` or a unary operator takes it 1`] = `"function f(t,n,a){return(t??n)||a}function g(t,n,a){return(t||n)??a}function h(t,n,a){return(t&&n)??a}function k(t,n){return(t??n)&&t}function m(t,n){return-(t+n)}function n(t,n){return\`\${t+n}\`}function p(t,n){var a=t*n;return[...[a]]}console.log(f(null,0,2),g(0,null,3),h(1,null,4),m(1,2),n(1,2),p(2,3),k(1,2));"`;
+
+exports[`JavaScript minifier, the one pass should write what runs as the source does: an \`else if\` whose branches return, lifted out after the \`if\` before it 1`] = `"function f(o,e){if(o){console.log(1);return}if(e){console.log(2);return}console.log(3);console.log(4)}f(1);f(0,1);f(0,0);"`;
+
+exports[`JavaScript minifier, the one pass should write what runs as the source does: an \`if\` returning, as \`return\` of a conditional, its test in parentheses where a comment before it would end the line after \`return\` 1`] = `
+"function f(n){// k
+return n||-n}function g(n,r){return n?1:// k
+r?2:3}function h(n){/* k */return n?1:2}function k(n){// k
+return!!n}console.log(f(0),f(2),g(0,1),g(0,0),g(1),h(0),h(1),k(1),k(0));"
+`;
+
+exports[`JavaScript minifier, the one pass should write what runs as the source does: an \`if\` whose \`else\` follows a block ending in an \`if\` chain with no \`else\`, which keeps its braces 1`] = `"function f(o,f,e){if(o){if(f)for(;;){console.log(1);break}else if(e)for(;;){console.log(2);break}}else for(;;){console.log(3);break}}f(1,1);f(1,0,1);f(1,0,0);f(0);"`;
+
+exports[`JavaScript minifier, the one pass should write what runs as the source does: an arrow read once, printed where it is read, in parentheses only where a member reads it 1`] = `"function f(n){return[n?v=>v+n:0,{p:v=>v*n}.p,[v=>v-n][0],(0,v=>v/n),((v,o)=>v%n).length,\`\${typeof(n=>[n])}\`,(n=>n)(n=>n),(()=>n).length,...[()=>1],()=>2]}console.log(f(2).map(n=>\\"function\\"==typeof n?n(6):n));"`;
+
+exports[`JavaScript minifier, the one pass should write what runs as the source does: an arrow's block of \`if\`s returning, as the conditional they return, and one returning after empty statements, as its value 1`] = `"var f=(r,a)=>r?1:a?2:3,g=r=>{if(r)return 1;console.log(\\"g\\");return 3},h=r=>r+1,k=r=>{if(r)return 1;return 2};console.log(f(1),f(0,1),f(0,0),g(1),g(0),h(1),k(0));"`;
+
+exports[`JavaScript minifier, the one pass should write what runs as the source does: an assignment both branches make, hoisted out of the \`if\` and the conditional where \`dead_code\` is off 1`] = `"function f(a){var f;f=a?1:2;var e;e=a?3:4;return[f,e]}console.log(f(1),f(0));"`;
+
+exports[`JavaScript minifier, the one pass should write what runs as the source does: an object a function called in an arrow's body returns, in parentheses as the arrow's body 1`] = `"var f=o=>({a:o});console.log(f(1).a);"`;
+
+exports[`JavaScript minifier, the one pass should write what runs as the source does: comments before \`async\`, inside a body, and before a value \`await\` waits for in parentheses 1`] = `
+"/* k */async function f(){// k
+/* k */
+return await/x/,await 1+1}f();"
+`;
+
+exports[`JavaScript minifier, the one pass should write what runs as the source does: comments before an arrow's parameter and inside the object it returns 1`] = `"var f=a=>a/* k */,g=/* k */a=>({a:a});console.log(f(1),g(2).a);"`;
 
 exports[`JavaScript minifier, what the tables leave out should convert every ESTree tree of acorn's corpus as terser does 1`] = `
 Array [

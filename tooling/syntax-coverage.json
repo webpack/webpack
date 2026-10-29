@@ -40,14 +40,14 @@
   },
   "javascript": {
     "lib/javascript/syntax-parser.js": {
-      "statements": 4,
-      "branches": 5,
-      "functions": 1
+      "statements": 41,
+      "branches": 25,
+      "functions": 15
     },
     "lib/javascript/syntax-printer.js": {
-      "statements": 214,
-      "branches": 397,
-      "functions": 9
+      "statements": 213,
+      "branches": 393,
+      "functions": 5
     },
     "lib/javascript/ScopeAnalyzer.js": {
       "statements": 9,
@@ -56,7 +56,7 @@
     },
     "lib/javascript/jsMinify.js": {
       "statements": 0,
-      "branches": 0,
+      "branches": 1,
       "functions": 0
     }
   },
