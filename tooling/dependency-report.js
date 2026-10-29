@@ -34,7 +34,8 @@ const DIRECT = "(direct)";
  * @property {string} version
  * @property {number} copies how many times npm installed this version
  * @property {number} size bytes on disk of all copies, nested `node_modules` excluded
- * @property {string[]} parents `name@version` of the packages depending on it
+ * @property {string[]} parents `name@version (range)` of each package depending on it
+ * @property {string[]} path shortest `name@version` chain from a requested package to it
  */
 
 /**
@@ -110,28 +111,67 @@ const collect = (dir) => {
 		const key = `${name}@${version}`;
 		let row = rows.get(key);
 		if (!row) {
-			row = { name, version, copies: 0, size: 0, parents: [] };
+			row = { name, version, copies: 0, size: 0, parents: [], path: [] };
 			rows.set(key, row);
 		}
 		row.copies++;
 		row.size += packageSize(path.join(dir, location));
 		rowsByLocation.set(location, row);
 	}
+	/** @type {ReportRow[]} */
+	const requested = [];
+	/** @type {Map<ReportRow, Set<ReportRow>>} */
+	const children = new Map();
 	for (const location of Object.keys(packages)) {
 		const parent = location === "" ? undefined : rowsByLocation.get(location);
 		if (location !== "" && !parent) continue;
 		const entry = packages[location];
-		const names = new Set([
-			...Object.keys(entry.dependencies || {}),
-			...Object.keys(entry.optionalDependencies || {}),
-			...Object.keys(entry.peerDependencies || {})
-		]);
-		for (const name of names) {
+		/** @type {Map<string, string>} */
+		const ranges = new Map();
+		for (const [name, range] of Object.entries(entry.dependencies || {})) {
+			ranges.set(name, range);
+		}
+		for (const [name, range] of Object.entries(
+			entry.optionalDependencies || {}
+		)) {
+			if (!ranges.has(name)) ranges.set(name, `optional ${range}`);
+		}
+		for (const [name, range] of Object.entries(entry.peerDependencies || {})) {
+			if (!ranges.has(name)) ranges.set(name, `peer ${range}`);
+		}
+		for (const [name, range] of ranges) {
 			const resolved = resolveLocation(packages, location, name);
 			const row = resolved && rowsByLocation.get(resolved);
 			if (!row) continue;
-			const parentName = parent ? `${parent.name}@${parent.version}` : DIRECT;
-			if (!row.parents.includes(parentName)) row.parents.push(parentName);
+			if (!parent) {
+				if (!requested.includes(row)) requested.push(row);
+				if (!row.parents.includes(DIRECT)) row.parents.push(DIRECT);
+				continue;
+			}
+			const label = `${parent.name}@${parent.version} (${range})`;
+			if (!row.parents.includes(label)) row.parents.push(label);
+			const set = children.get(parent);
+			if (set) set.add(row);
+			else children.set(parent, new Set([row]));
+		}
+	}
+	// Breadth-first from the requested packages, so each path is a shortest one.
+	/** @type {Map<ReportRow, ReportRow | undefined>} */
+	const via = new Map(requested.map((row) => [row, undefined]));
+	const queue = [...requested];
+	for (let index = 0; index < queue.length; index++) {
+		for (const child of children.get(queue[index]) || []) {
+			if (via.has(child)) continue;
+			via.set(child, queue[index]);
+			queue.push(child);
+		}
+	}
+	for (const row of rows.values()) {
+		/** @type {ReportRow | undefined} */
+		let step = row;
+		while (step) {
+			row.path.unshift(`${step.name}@${step.version}`);
+			step = via.get(step);
 		}
 	}
 	return [...rows.values()]
@@ -185,21 +225,23 @@ const toMarkdown = (rows, installed) => {
 			total
 		)}** in total (dependencies only, no devDependencies).`,
 		"",
-		"| Name | Version | Copies | Size | Parent packages |",
-		"| ---- | ------- | -----: | ---: | --------------- |",
+		"Parent packages name the version range each one asks for; the path is the shortest chain from a requested package.",
+		"",
+		"| Name | Version | Copies | Size | Parent packages | Path |",
+		"| ---- | ------- | -----: | ---: | --------------- | ---- |",
 		...rows.map(
 			(row) =>
 				`| ${row.name} | ${row.version} | ${row.copies} | ${formatSize(
 					row.size
-				)} | ${row.parents.join(", ")} |`
+				)} | ${row.parents.join(", ")} | ${row.path.join(" › ")} |`
 		),
 		"",
 		"## Duplicated packages",
 		"",
-		`${duplicated.length} packages are installed more than once: in several versions, or one version npm could not hoist.`,
+		`${duplicated.length} packages are installed more than once: in several versions, or one version npm could not hoist. Widening or upgrading the parent whose range excludes the newest version removes a copy.`,
 		"",
-		"| Name | Versions | Size | Parent packages per version |",
-		"| ---- | -------- | ---: | --------------------------- |",
+		"| Name | Versions | Size | Parent packages and path per version |",
+		"| ---- | -------- | ---: | ------------------------------------ |",
 		...duplicated.map(
 			(list) =>
 				`| ${list[0].name} | ${list
@@ -207,7 +249,12 @@ const toMarkdown = (rows, installed) => {
 					.join(", ")} | ${formatSize(
 					list.reduce((sum, row) => sum + row.size, 0)
 				)} | ${list
-					.map((row) => `${row.version}: ${row.parents.join(", ")}`)
+					.map(
+						(row) =>
+							`**${row.version}**: ${row.parents.join(
+								", "
+							)}<br>path: ${row.path.join(" › ")}`
+					)
 					.join("<br>")} |`
 		),
 		""
