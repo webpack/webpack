@@ -15772,6 +15772,18 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		expect(print(keys, { pure_conversions: false })).toBe(
 			"var k={};t(function(){({get[k](){}})});"
 		);
+		// A bound `undefined` may be an object; a computed read converts its key.
+		const bound =
+			"t(function (undefined, x) { undefined == x; null == x; void 0 == x; });";
+		expect(print(bound)).toBe("t(function(n,d){});");
+		expect(print(bound, { pure_conversions: false })).toBe(
+			"t(function(n,d){n==d});"
+		);
+		const reads = 't(function (k) { (0)[k]; o[1]; o["a"]; });';
+		expect(print(reads)).toBe("t(function(k){o[1];o.a});");
+		expect(print(reads, { pure_conversions: false })).toBe(
+			"t(function(k){(0)[k];o[1];o.a});"
+		);
 		// Setting a class's or a strict function expression's own name throws.
 		expect(
 			print("t(function () { new (class C { m() { C = 1; } })().m(); });")
