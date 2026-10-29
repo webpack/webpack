@@ -3920,7 +3920,9 @@ describe("SourceProcessor — minify serialization edge cases", () => {
 				"<body><noscript><noscript>a</noscript></noscript><p>x",
 				"<body><noscript><noscript>a</noscript>b\r\n</noscript>\r\n<p>x",
 				'<body><noscript><noscript>a</noscript>b</noscript x=">"><p>x',
-				"<body><NOSCRIPT><noscript>a</noscript>b &amp; c</noscript >&lt;d<p>x"
+				"<body><NOSCRIPT><noscript>a</noscript>b &amp; c</noscript >&lt;d<p>x",
+				// `</noscript-x>` ends no raw text, so the nested one after it counts.
+				"<body><noscript></noscript-x><noscript>a</noscript></noscript><p>x"
 			]) {
 				expect(minify(source)).toBe(source);
 			}
