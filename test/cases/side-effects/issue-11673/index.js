@@ -4,44 +4,47 @@ import { X } from "./module";
 
 it("should compile", done => {
 	expect(X()).toBe("X");
+	const started = Date.now();
+	let online = false;
 	let settled = false;
+	const worker = new Worker(new URL("worker.js", import.meta.url));
 	const finish = error => {
 		if (settled) return;
 		settled = true;
+		clearTimeout(timer);
 		done(error);
 	};
-	const start = retry => {
-		const worker = new Worker(new URL("worker.js", import.meta.url));
-		// WORKAROUND(bun): a worker started from Bun's jest worker thread now and
-		// then never posts, errors or exits; start one fresh worker, and unref the
-		// stuck one (terminating it can crash Bun) with its late errors swallowed.
-		const timer = retry
-			? setTimeout(() => {
-					worker.removeAllListeners();
-					worker.on("error", () => {});
-					worker.unref();
-					start(false);
-				}, 5000)
-			: undefined;
-		worker.once("error", error => {
-			clearTimeout(timer);
-			finish(error);
-		});
-		worker.once("exit", code => {
-			clearTimeout(timer);
-			finish(new Error(`Worker exited with code ${code} before posting`));
-		});
-		worker.once("message", value => {
-			clearTimeout(timer);
-			worker.removeAllListeners("exit");
-			let error;
-			try {
-				expect(value).toBe(42);
-			} catch (err) {
-				error = err;
-			}
-			Promise.resolve(worker.terminate()).then(() => finish(error), finish);
-		});
-	};
-	start(Boolean(process.versions.bun));
+	// Fail before jest's 10s timeout, naming the stage a silent worker stopped
+	// at; the stuck worker is only unref'd, as terminating a worker that never
+	// started can crash Bun, and keeps a listener so a late error stays caught.
+	const timer = setTimeout(() => {
+		worker.removeAllListeners();
+		worker.on("error", () => {});
+		worker.unref();
+		const elapsed = Date.now() - started;
+		finish(
+			new Error(
+				online
+					? `Worker came online but posted nothing within ${elapsed} ms`
+					: `Worker never came online within ${elapsed} ms`
+			)
+		);
+	}, 8000);
+	worker.once("online", () => {
+		online = true;
+	});
+	worker.once("error", finish);
+	worker.once("exit", code => {
+		finish(new Error(`Worker exited with code ${code} before posting`));
+	});
+	worker.once("message", value => {
+		worker.removeAllListeners("exit");
+		let error;
+		try {
+			expect(value).toBe(42);
+		} catch (err) {
+			error = err;
+		}
+		Promise.resolve(worker.terminate()).then(() => finish(error), finish);
+	});
 });
