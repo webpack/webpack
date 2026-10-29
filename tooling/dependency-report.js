@@ -124,9 +124,11 @@ const collect = (dir) => {
 		row.size += packageSize(path.join(dir, location));
 		rowsByLocation.set(location, row);
 	}
-	/** @type {ReportRow[]} */
+	// The graph stays per location, as two copies of one version can resolve
+	// a dependency to different copies; only the rows merge them.
+	/** @type {string[]} */
 	const requested = [];
-	/** @type {Map<ReportRow, Set<ReportRow>>} */
+	/** @type {Map<string, Set<string>>} */
 	const children = new Map();
 	for (const location of Object.keys(packages)) {
 		const parent = location === "" ? undefined : rowsByLocation.get(location);
@@ -148,24 +150,35 @@ const collect = (dir) => {
 		for (const [name, range] of ranges) {
 			const resolved = resolveLocation(packages, location, name);
 			const row = resolved && rowsByLocation.get(resolved);
-			if (!row) continue;
+			if (!resolved || !row) continue;
 			if (!parent) {
-				if (!requested.includes(row)) requested.push(row);
+				if (!requested.includes(resolved)) requested.push(resolved);
 				if (!row.parents.includes(DIRECT)) row.parents.push(DIRECT);
 				continue;
 			}
 			const label = `${parent.name}@${parent.version} (${range})`;
 			if (!row.parents.includes(label)) row.parents.push(label);
-			const set = children.get(parent);
-			if (set) set.add(row);
-			else children.set(parent, new Set([row]));
+			const set = children.get(location);
+			if (set) set.add(resolved);
+			else children.set(location, new Set([resolved]));
 		}
 	}
-	// Breadth-first from the requested packages, so each path is a shortest one.
-	/** @type {Map<ReportRow, ReportRow | undefined>} */
-	const via = new Map(requested.map((row) => [row, undefined]));
+	// Breadth-first from the requested packages: the first copy of a row
+	// reached gives it a shortest path.
+	/** @type {Map<string, string | undefined>} */
+	const via = new Map(requested.map((location) => [location, undefined]));
 	const queue = [...requested];
 	for (let index = 0; index < queue.length; index++) {
+		const row = /** @type {ReportRow} */ (rowsByLocation.get(queue[index]));
+		if (row.path.length === 0) {
+			/** @type {string | undefined} */
+			let step = queue[index];
+			while (step) {
+				const stepRow = /** @type {ReportRow} */ (rowsByLocation.get(step));
+				row.path.unshift(`${stepRow.name}@${stepRow.version}`);
+				step = via.get(step);
+			}
+		}
 		for (const child of children.get(queue[index]) || []) {
 			if (via.has(child)) continue;
 			via.set(child, queue[index]);
@@ -173,12 +186,7 @@ const collect = (dir) => {
 		}
 	}
 	for (const row of rows.values()) {
-		/** @type {ReportRow | undefined} */
-		let step = row;
-		while (step) {
-			row.path.unshift(`${step.name}@${step.version}`);
-			step = via.get(step);
-		}
+		if (row.path.length === 0) row.path.push(`${row.name}@${row.version}`);
 	}
 	return [...rows.values()]
 		.map((row) => ({ ...row, parents: row.parents.sort() }))
