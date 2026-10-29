@@ -15846,6 +15846,24 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		expect(
 			minifyOnePass("window.v = y;", { ...options, enclose: true }).code
 		).toBe("(function(){window.v=y})();");
+		// `enclose` goes around `wrap`; a hashbang, no longer first, goes.
+		const bare = { compress: false, mangle: false };
+		expect(
+			minifyOnePass("exports.x = undefined;", {
+				...bare,
+				wrap: "lib",
+				enclose: "window,undefined:window"
+			}).code
+		).toBe(
+			'(function(window,undefined){(function(exports){exports.x=undefined})(typeof lib=="undefined"?lib={}:lib)})(window);'
+		);
+		expect(
+			minifyOnePass("#!/usr/bin/env node\r\nfoo();", { ...bare, enclose: true })
+				.code
+		).toBe("(function(){foo()})();");
+		expect(
+			minifyOnePass("#!/usr/bin/env node", { ...bare, wrap: "lib" }).code
+		).toBe('(function(exports){})(typeof lib=="undefined"?lib={}:lib);');
 	});
 
 	it("should keep the names a global pattern keeps, however often it is asked", () => {
