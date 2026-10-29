@@ -254,6 +254,13 @@ const formatVersions = (rows) =>
 		.join(", ");
 
 /**
+ * Escapes `|` so text stays inside one Markdown table cell.
+ * @param {string} text cell text
+ * @returns {string} escaped text
+ */
+const escapeCell = (text) => text.replace(/\|/g, "\\|");
+
+/**
  * Renders what changed between the base commit's report and this one.
  * @param {ReportRow[]} base rows of the base commit
  * @param {ReportRow[]} rows rows of this commit
@@ -375,7 +382,7 @@ const toMarkdown = (rows, installed, base) => {
 			(row) =>
 				`| ${row.name} | ${row.version} | ${row.copies} | ${formatSize(
 					row.size
-				)} | ${row.parents.join(", ")} | ${row.path.join(" › ")} |`
+				)} | ${escapeCell(row.parents.join(", "))} | ${row.path.join(" › ")} |`
 		),
 		"",
 		"## Duplicated packages",
@@ -391,9 +398,7 @@ const toMarkdown = (rows, installed, base) => {
 				)} | ${list
 					.map(
 						(row) =>
-							`**${row.version}**: ${row.parents.join(
-								", "
-							)}<br>path: ${row.path.join(" › ")}`
+							`**${row.version}**: ${escapeCell(row.parents.join(", "))}<br>path: ${row.path.join(" › ")}`
 					)
 					.join("<br>")} |`
 		),

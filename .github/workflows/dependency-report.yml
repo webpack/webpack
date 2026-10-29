@@ -28,8 +28,8 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-          # The first parent is the base the report compares against: the `main`
-          # commit a pull request's merge ref was built on, or the previous push.
+          # A pull request's merge ref has the `main` commit it was built on
+          # as its first parent, which the report compares against.
           fetch-depth: 2
 
       - name: Use Node.js
@@ -37,8 +37,18 @@ jobs:
         with:
           node-version: lts/*
 
+      # A push compares against the branch tip before it, which `HEAD^1` is
+      # not when the push carries several commits.
       - name: Check out the base commit
-        run: git worktree add --detach ../base HEAD^1
+        env:
+          BEFORE: ${{ github.event_name == 'push' && github.event.before || '' }}
+        run: |
+          base=HEAD^1
+          if [ -n "$BEFORE" ]; then
+            node tooling/retry.js git fetch --depth 1 origin "$BEFORE"
+            base=$BEFORE
+          fi
+          git worktree add --detach ../base "$base"
 
       # Node builtins and npm only, so no `yarn install` first.
       - name: Report what installing webpack, webpack-cli and webpack-dev-server pulls in
