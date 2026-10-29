@@ -32,7 +32,8 @@ const DIRECT = "(direct)";
  * @typedef {object} ReportRow
  * @property {string} name
  * @property {string} version
- * @property {number} size bytes on disk, nested `node_modules` excluded
+ * @property {number} copies how many times npm installed this version
+ * @property {number} size bytes on disk of all copies, nested `node_modules` excluded
  * @property {string[]} parents names of the packages depending on it
  */
 
@@ -87,30 +88,37 @@ const resolveLocation = (packages, from, name) => {
 /**
  * Builds one row per installed package from an npm lockfile.
  * @param {string} dir install directory holding `package-lock.json`
- * @returns {ReportRow[]} rows sorted by name, then version
+ * @returns {ReportRow[]} one row per name and version, sorted by both
  */
 const collect = (dir) => {
 	/** @type {Record<string, LockEntry>} */
 	const packages = JSON.parse(
 		fs.readFileSync(path.join(dir, "package-lock.json"), "utf8")
 	).packages;
+	// Copies of one version npm could not hoist share a row.
 	/** @type {Map<string, ReportRow>} */
 	const rows = new Map();
+	/** @type {Map<string, ReportRow>} */
+	const rowsByLocation = new Map();
 	for (const location of Object.keys(packages)) {
 		// An optional dependency for another platform is locked but not installed.
 		if (location === "" || !fs.existsSync(path.join(dir, location))) continue;
 		const entry = packages[location];
-		rows.set(location, {
-			name:
-				entry.name ||
-				location.slice(location.lastIndexOf("node_modules/") + 13),
-			version: entry.version || "",
-			size: packageSize(path.join(dir, location)),
-			parents: []
-		});
+		const name =
+			entry.name || location.slice(location.lastIndexOf("node_modules/") + 13);
+		const version = entry.version || "";
+		const key = `${name}@${version}`;
+		let row = rows.get(key);
+		if (!row) {
+			row = { name, version, copies: 0, size: 0, parents: [] };
+			rows.set(key, row);
+		}
+		row.copies++;
+		row.size += packageSize(path.join(dir, location));
+		rowsByLocation.set(location, row);
 	}
 	for (const location of Object.keys(packages)) {
-		const parent = location === "" ? undefined : rows.get(location);
+		const parent = location === "" ? undefined : rowsByLocation.get(location);
 		if (location !== "" && !parent) continue;
 		const entry = packages[location];
 		const names = new Set([
@@ -120,7 +128,7 @@ const collect = (dir) => {
 		]);
 		for (const name of names) {
 			const resolved = resolveLocation(packages, location, name);
-			const row = resolved && rows.get(resolved);
+			const row = resolved && rowsByLocation.get(resolved);
 			if (!row) continue;
 			const parentName = parent ? parent.name : DIRECT;
 			if (!row.parents.includes(parentName)) row.parents.push(parentName);
@@ -153,25 +161,53 @@ const formatSize = (bytes) => {
  */
 const toMarkdown = (rows, installed) => {
 	const total = rows.reduce((sum, row) => sum + row.size, 0);
+	const copies = rows.reduce((sum, row) => sum + row.copies, 0);
 	const requested = Object.keys(installed)
 		.map((name) => `\`${name}@${installed[name]}\``)
 		.join(", ");
+	/** @type {Map<string, ReportRow[]>} */
+	const versions = new Map();
+	for (const row of rows) {
+		const list = versions.get(row.name);
+		if (list) list.push(row);
+		else versions.set(row.name, [row]);
+	}
+	const duplicated = [...versions.values()].filter(
+		(list) => list.length > 1 || list[0].copies > 1
+	);
 	return [
 		"## Installed dependencies",
 		"",
-		`Installing ${requested} pulls in **${
+		`Installing ${requested} pulls in **${versions.size}** packages (${
 			rows.length
-		}** packages, **${formatSize(
+		} versions, ${copies} copies on disk), **${formatSize(
 			total
-		)}** on disk (dependencies only, no devDependencies).`,
+		)}** in total (dependencies only, no devDependencies).`,
 		"",
-		"| Name | Version | Size | Parent packages |",
-		"| ---- | ------- | ---: | --------------- |",
+		"| Name | Version | Copies | Size | Parent packages |",
+		"| ---- | ------- | -----: | ---: | --------------- |",
 		...rows.map(
 			(row) =>
-				`| ${row.name} | ${row.version} | ${formatSize(
+				`| ${row.name} | ${row.version} | ${row.copies} | ${formatSize(
 					row.size
 				)} | ${row.parents.join(", ")} |`
+		),
+		"",
+		"## Duplicated packages",
+		"",
+		`${duplicated.length} packages are installed more than once: in several versions, or one version npm could not hoist.`,
+		"",
+		"| Name | Versions | Size | Parent packages per version |",
+		"| ---- | -------- | ---: | --------------------------- |",
+		...duplicated.map(
+			(list) =>
+				`| ${list[0].name} | ${list
+					.map((row) => `${row.version} (×${row.copies})`)
+					.join(", ")} | ${formatSize(
+					list.reduce((sum, row) => sum + row.size, 0)
+				)} | ${list
+					.map((row) => `${row.version}: ${row.parents.join(", ")}`)
+					.join("<br>")} |`
 		),
 		""
 	].join("\n");
