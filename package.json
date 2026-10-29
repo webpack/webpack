@@ -218,7 +218,7 @@
     "node-gyp": "^13.0.0",
     "nyc": "^18.0.0",
     "open-cli": "^9.0.0",
-    "oxc-minify": "^0.154.0",
+    "oxc-minify": "^0.155.0",
     "oxc-parser": "^0.154.0",
     "pkg-pr-new": "^0.0.91",
     "playwright-core": "^1.63.0",

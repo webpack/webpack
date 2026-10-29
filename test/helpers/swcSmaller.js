@@ -12,6 +12,8 @@ const SWC_SMALLER_BY_REASON = [
 		"deflate's header: the program is no longer raw, yet gzips 1 to 3 bytes bigger, as the Huffman codes deflate writes for a small program cost more or less with which characters it holds (an operand's side, `let` or `const`, `NaN` or `0/0`); measured corpus-wide, no fixed spelling rule wins, each one making about as many programs bigger as smaller",
 		[
 			"swc minifier: fixture/issues/12282/call/input.js",
+			"swc minifier: fixture/issues/9238-prologue/input.js",
+			"swc minifier: fixture/issues/9238/input.js",
 			"swc minifier: fixture/issues/9460/strict-mode/input.js",
 			"swc minifier: fixture/issues/stylis/1/input.js",
 			"swc minifier: fixture/issues/stylis/2/input.js",
@@ -329,6 +331,8 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/12177/input.js",
 			"swc minifier: fixture/issues/12219/iife_rest_control_primitive/input.js",
 			"swc minifier: fixture/issues/12226/input.js",
+			"swc minifier: fixture/issues/12545/iife_rest_control_length/input.js",
+			"swc minifier: fixture/issues/12545/iife_rest_control_once/input.js",
 			"swc minifier: fixture/issues/6751/1/input.js",
 			"swc minifier: fixture/issues/6837/1/input.js",
 			"swc minifier: fixture/issues/6837/2/input.js",
@@ -398,7 +402,6 @@ const SWC_SMALLER_BY_REASON = [
 	[
 		"swc evaluates a built-in called on literals at build time (`toFixed`, `Object.keys`, `[…].join`, `String.fromCharCode`, `Math.*`, string methods), which terser leaves to run time",
 		[
-			"swc minifier: fixture/next/swc-4559/input.js",
 			"swc minifier: pass-1/compute/1/input.js",
 			"swc minifier: pass-default/compute/1/input.js",
 			"terser compress: evaluate/issue_2207_1",
@@ -453,6 +456,7 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/12182/callee-safety/lexical-this/input.js",
 			"swc minifier: fixture/issues/12182/hoist-props/input.js",
 			"swc minifier: fixture/issues/12182/receiver-sensitive/input.js",
+			"swc minifier: fixture/issues/12545/iife_rest_escape_object/input.js",
 			"swc minifier: fixture/issues/9610-methods/input.js",
 			"swc minifier: fixture/member_expr/callee/input.js",
 			"terser compress: hoist_props/direct_access_2"
