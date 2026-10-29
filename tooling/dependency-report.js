@@ -15,7 +15,7 @@ const os = require("os");
 const path = require("path");
 
 const ROOT = path.join(__dirname, "..");
-// What a user installs, left out of the report itself: `webpack` is this
+// What a user installs, left out of the report itself: `webpack` as this
 // checkout, every other package the latest release.
 const PACKAGES = ["webpack", "webpack-cli", "webpack-dev-server"];
 // Shown as the parent of the packages the user asked for.
@@ -197,28 +197,169 @@ const formatSize = (bytes) => {
 };
 
 /**
+ * Formats a size change, signed.
+ * @param {number} bytes difference in bytes
+ * @param {number} before size it is relative to
+ * @returns {string} e.g. `+1.2 KiB, +3.4%`
+ */
+const formatDelta = (bytes, before) => {
+	const sign = bytes < 0 ? "−" : "+";
+	const percent = before
+		? `, ${sign}${Math.abs((bytes / before) * 100).toFixed(1)}%`
+		: "";
+	return `${sign}${formatSize(Math.abs(bytes))}${percent}`;
+};
+
+/**
+ * Picks the marker for a size change: red grows, green shrinks.
+ * @param {number} bytes difference in bytes
+ * @returns {string} emoji
+ */
+const marker = (bytes) => (bytes > 0 ? "🔴" : bytes < 0 ? "🟢" : "⚪");
+
+/**
+ * Groups rows by package name.
+ * @param {ReportRow[]} rows report rows
+ * @returns {Map<string, ReportRow[]>} the rows of each name
+ */
+const groupByName = (rows) => {
+	/** @type {Map<string, ReportRow[]>} */
+	const groups = new Map();
+	for (const row of rows) {
+		const list = groups.get(row.name);
+		if (list) list.push(row);
+		else groups.set(row.name, [row]);
+	}
+	return groups;
+};
+
+/**
+ * Sums the size of rows.
+ * @param {ReportRow[]} rows report rows
+ * @returns {number} bytes
+ */
+const sumSize = (rows) => rows.reduce((sum, row) => sum + row.size, 0);
+
+/**
+ * Lists the versions of rows, with copy counts above one.
+ * @param {ReportRow[]} rows rows of one package
+ * @returns {string} e.g. `1.0.0, 2.0.0 (×2)`
+ */
+const formatVersions = (rows) =>
+	rows
+		.map((row) =>
+			row.copies > 1 ? `${row.version} (×${row.copies})` : row.version
+		)
+		.join(", ");
+
+/**
+ * Renders what changed between the base commit's report and this one.
+ * @param {ReportRow[]} base rows of the base commit
+ * @param {ReportRow[]} rows rows of this commit
+ * @returns {string[]} Markdown lines
+ */
+const toChanges = (base, rows) => {
+	const before = groupByName(base);
+	const after = groupByName(rows);
+	/** @type {string[][]} */
+	const added = [];
+	/** @type {string[][]} */
+	const removed = [];
+	/** @type {string[][]} */
+	const updated = [];
+	for (const [name, list] of after) {
+		const old = before.get(name);
+		const size = sumSize(list);
+		const path = list[0].path.join(" › ");
+		if (!old) {
+			added.push([
+				"🔴",
+				name,
+				"added",
+				formatVersions(list),
+				`${formatSize(size)} (${formatDelta(size, 0)})`,
+				path
+			]);
+			continue;
+		}
+		const oldSize = sumSize(old);
+		if (formatVersions(old) === formatVersions(list) && oldSize === size) {
+			continue;
+		}
+		const versions =
+			formatVersions(old) === formatVersions(list)
+				? formatVersions(list)
+				: `${formatVersions(old)} → ${formatVersions(list)}`;
+		updated.push([
+			marker(size - oldSize),
+			name,
+			"updated",
+			versions,
+			`${formatSize(oldSize)} → ${formatSize(size)} (${formatDelta(
+				size - oldSize,
+				oldSize
+			)})`,
+			path
+		]);
+	}
+	for (const [name, list] of before) {
+		if (after.has(name)) continue;
+		const size = sumSize(list);
+		removed.push([
+			"🟢",
+			name,
+			"removed",
+			formatVersions(list),
+			`${formatSize(size)} (${formatDelta(-size, size)})`,
+			`was ${list[0].path.join(" › ")}`
+		]);
+	}
+	const total = sumSize(rows);
+	const baseTotal = sumSize(base);
+	const changes = [...added, ...removed, ...updated];
+	return [
+		"## Changes against the base commit",
+		"",
+		"🔴 added or grew · 🟢 removed or shrank · ⚪ same size",
+		"",
+		`${marker(total - baseTotal)} **${before.size} → ${
+			after.size
+		}** packages, **${formatSize(baseTotal)} → ${formatSize(
+			total
+		)}** (${formatDelta(total - baseTotal, baseTotal)}): ${
+			added.length
+		} added, ${removed.length} removed, ${updated.length} updated.`,
+		"",
+		...(changes.length === 0
+			? ["No dependency was added, removed or updated."]
+			: [
+					"| | Package | Change | Version | Size | Path |",
+					"| - | ------- | ------ | ------- | ---: | ---- |",
+					...changes.map((cells) => `| ${cells.join(" | ")} |`)
+				]),
+		""
+	];
+};
+
+/**
  * Renders the rows as a Markdown report.
  * @param {ReportRow[]} rows report rows
  * @param {Record<string, string>} installed versions of the requested packages
+ * @param {ReportRow[]=} base rows of the base commit, to show what changed
  * @returns {string} Markdown
  */
-const toMarkdown = (rows, installed) => {
-	const total = rows.reduce((sum, row) => sum + row.size, 0);
+const toMarkdown = (rows, installed, base) => {
+	const total = sumSize(rows);
 	const copies = rows.reduce((sum, row) => sum + row.copies, 0);
 	const requested = Object.keys(installed)
 		.map((name) => `\`${name}@${installed[name]}\``)
 		.join(", ");
-	/** @type {Map<string, ReportRow[]>} */
-	const versions = new Map();
-	for (const row of rows) {
-		const list = versions.get(row.name);
-		if (list) list.push(row);
-		else versions.set(row.name, [row]);
-	}
+	const versions = groupByName(rows);
 	const duplicated = [...versions.values()].filter(
 		(list) => list.length > 1 || list[0].copies > 1
 	);
 	return [
+		...(base ? toChanges(base, rows) : []),
 		"## Installed dependencies",
 		"",
 		`Installing ${requested} pulls in **${versions.size}** packages (${
@@ -246,10 +387,8 @@ const toMarkdown = (rows, installed) => {
 		"| ---- | -------- | ---: | ------------------------------------ |",
 		...duplicated.map(
 			(list) =>
-				`| ${list[0].name} | ${list
-					.map((row) => `${row.version} (×${row.copies})`)
-					.join(", ")} | ${formatSize(
-					list.reduce((sum, row) => sum + row.size, 0)
+				`| ${list[0].name} | ${formatVersions(list)} | ${formatSize(
+					sumSize(list)
 				)} | ${list
 					.map(
 						(row) =>
@@ -264,6 +403,77 @@ const toMarkdown = (rows, installed) => {
 };
 
 /**
+ * Installs the requested packages, `webpack` as declared by a checkout.
+ * @param {string} root webpack checkout whose `package.json` to install
+ * @returns {{ rows: ReportRow[], installed: Record<string, string> }} the
+ * rows of every package they pull in, and the version of each requested one
+ */
+const install = (root) => {
+	const dir = fs.mkdtempSync(
+		path.join(os.tmpdir(), "webpack-dependency-report-")
+	);
+	try {
+		// WHY: `npm pack` runs `prepare` (husky) even with `--ignore-scripts`, and
+		// webpack is left out of the report, so a stub carrying only the fields
+		// npm installs from stands in for the checkout.
+		const manifest = JSON.parse(
+			fs.readFileSync(path.join(root, "package.json"), "utf8")
+		);
+		fs.mkdirSync(path.join(dir, "webpack"));
+		fs.writeFileSync(
+			path.join(dir, "webpack", "package.json"),
+			JSON.stringify({
+				name: manifest.name,
+				version: manifest.version,
+				dependencies: manifest.dependencies,
+				optionalDependencies: manifest.optionalDependencies,
+				peerDependencies: manifest.peerDependencies,
+				peerDependenciesMeta: manifest.peerDependenciesMeta
+			})
+		);
+		/** @type {Record<string, string>} */
+		const dependencies = {};
+		for (const name of PACKAGES) {
+			dependencies[name] = name === "webpack" ? "file:./webpack" : "latest";
+		}
+		fs.writeFileSync(
+			path.join(dir, "package.json"),
+			JSON.stringify({ private: true, dependencies })
+		);
+		run(
+			process.execPath,
+			[
+				path.join(__dirname, "retry.js"),
+				"npm",
+				"install",
+				"--omit=dev",
+				"--install-links",
+				"--ignore-scripts",
+				"--no-audit",
+				"--no-fund"
+			],
+			dir
+		);
+		const rows = collect(dir);
+		/** @type {Record<string, string>} */
+		const installed = {};
+		for (const name of PACKAGES) {
+			const row = rows.find(
+				(row) => row.name === name && row.parents.includes(DIRECT)
+			);
+			installed[name] = row ? row.version : "?";
+		}
+		return {
+			rows: rows.filter((row) => !PACKAGES.includes(row.name)),
+			installed
+		};
+	} finally {
+		// eslint-disable-next-line n/no-unsupported-features/node-builtins
+		fs.rmSync(dir, { recursive: true, force: true });
+	}
+};
+
+/**
  * Reads the value of a `--name <value>` flag.
  * @param {string} name flag name without the dashes
  * @returns {string | undefined} the value, if the flag was passed
@@ -273,62 +483,17 @@ const readFlag = (name) => {
 	return index === -1 ? undefined : process.argv[index + 1];
 };
 
-const values = { output: readFlag("output"), json: readFlag("json") };
+const values = {
+	output: readFlag("output"),
+	json: readFlag("json"),
+	base: readFlag("base")
+};
 
-const dir = fs.mkdtempSync(
-	path.join(os.tmpdir(), "webpack-dependency-report-")
-);
-try {
-	// `--ignore-scripts` keeps `prepare` (husky) from running on the checkout.
-	const [{ filename }] = JSON.parse(
-		run(
-			"npm",
-			["pack", "--json", "--ignore-scripts", "--pack-destination", dir],
-			ROOT
-		)
-	);
-	/** @type {Record<string, string>} */
-	const dependencies = {};
-	for (const name of PACKAGES) {
-		dependencies[name] = name === "webpack" ? `file:./${filename}` : "latest";
-	}
-	fs.writeFileSync(
-		path.join(dir, "package.json"),
-		JSON.stringify({ private: true, dependencies })
-	);
-	run(
-		process.execPath,
-		[
-			path.join(__dirname, "retry.js"),
-			"npm",
-			"install",
-			"--omit=dev",
-			"--ignore-scripts",
-			"--no-audit",
-			"--no-fund"
-		],
-		dir
-	);
-	const rows = collect(dir);
-	/** @type {Record<string, string>} */
-	const installed = {};
-	for (const name of PACKAGES) {
-		const row = rows.find(
-			(row) => row.name === name && row.parents.includes(DIRECT)
-		);
-		installed[name] = row ? row.version : "?";
-	}
-	const dependencyRows = rows.filter((row) => !PACKAGES.includes(row.name));
-	const markdown = toMarkdown(dependencyRows, installed);
-	if (values.output) fs.writeFileSync(values.output, markdown);
-	else process.stdout.write(markdown);
-	if (values.json) {
-		fs.writeFileSync(
-			values.json,
-			`${JSON.stringify(dependencyRows, null, 2)}\n`
-		);
-	}
-} finally {
-	// eslint-disable-next-line n/no-unsupported-features/node-builtins
-	fs.rmSync(dir, { recursive: true, force: true });
+const { rows, installed } = install(ROOT);
+const base = values.base ? install(path.resolve(values.base)).rows : undefined;
+const markdown = toMarkdown(rows, installed, base);
+if (values.output) fs.writeFileSync(values.output, markdown);
+else process.stdout.write(markdown);
+if (values.json) {
+	fs.writeFileSync(values.json, `${JSON.stringify(rows, null, 2)}\n`);
 }

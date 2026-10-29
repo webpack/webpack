@@ -1,20 +1,16 @@
 name: Dependency Report
 
-# Only what changes the report: webpack's own `dependencies` live in
-# `package.json`; `yarn.lock` is not read, since the install resolves afresh.
 on:
   push:
     branches: [main]
     paths:
       - package.json
-      - tooling/dependency-report.js
-      - .github/workflows/dependency-report.yml
+      - yarn.lock
   pull_request:
     branches: [main]
     paths:
       - package.json
-      - tooling/dependency-report.js
-      - .github/workflows/dependency-report.yml
+      - yarn.lock
   workflow_dispatch:
 
 concurrency:
@@ -32,16 +28,23 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          # The first parent is the base the report compares against: the `main`
+          # commit a pull request's merge ref was built on, or the previous push.
+          fetch-depth: 2
 
       - name: Use Node.js
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: lts/*
 
+      - name: Check out the base commit
+        run: git worktree add --detach ../base HEAD^1
+
       # Node builtins and npm only, so no `yarn install` first.
       - name: Report what installing webpack, webpack-cli and webpack-dev-server pulls in
         run: |
           node tooling/dependency-report.js \
+            --base ../base \
             --output dependency-report.md \
             --json dependency-report.json
           cat dependency-report.md >> "$GITHUB_STEP_SUMMARY"
