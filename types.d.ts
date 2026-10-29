@@ -15380,7 +15380,7 @@ declare interface JavascriptParseOptions {
 	sourceType?: "module" | "commonjs" | "script" | "event-handler";
 
 	/**
-	 * optional callback for each parse error, with the CSS and HTML parsers' signature and Babel's `reasonCode` kebab-cased as `code`; `severity` is `"error"` for one that stops the parse and `"warning"` for one it reads past; without it, the errors read past go unreported
+	 * optional callback for each parse error, with the CSS and HTML parsers' signature and Babel's `reasonCode` kebab-cased as `code`; `severity` is `"error"` for one that stops the parse and `"warning"` for one it reads past; without it, the first error throws, as acorn's does
 	 */
 	parseError?: (
 		input: string,
@@ -15389,6 +15389,26 @@ declare interface JavascriptParseOptions {
 		end: number,
 		severity: ParseErrorSeverity
 	) => void;
+
+	/**
+	 * whether a script's top level may `return`, as webpack reads a script it may wrap in a function
+	 */
+	allowReturnOutsideFunction?: boolean;
+
+	/**
+	 * where to collect the source's comments, their text read on demand
+	 */
+	comments?: CollectedComment[];
+
+	/**
+	 * whether `import defer` and `import source` parse, as they always do without the option
+	 */
+	importPhases?: boolean;
+
+	/**
+	 * whether to build ESTree objects, the program returned, rather than the `SyntaxTree` `A` reads
+	 */
+	estree?: boolean;
 }
 declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 	/**
@@ -25025,6 +25045,7 @@ declare interface OptionsSyntaxParser {
 	 * where comments are reported
 	 */
 	onComment?:
+		| CollectedComment[]
 		| ((
 				isBlock: boolean,
 				text: string,
@@ -25032,8 +25053,7 @@ declare interface OptionsSyntaxParser {
 				end: number,
 				startLoc?: null | Position,
 				endLoc?: null | Position
-		  ) => void)
-		| CollectedComment[];
+		  ) => void);
 
 	/**
 	 * whether nodes carry `range`
@@ -37961,11 +37981,18 @@ declare namespace exports {
 						? Program
 						: number
 					: Program;
-				export let parseProgram: (
+				export let parseProgram: <
+					O extends Omit<JavascriptParseOptions, "sourceType"> & {
+						sourceType?:
+							"module" | "commonjs" | "auto" | "script" | "event-handler";
+					} = JavascriptParseOptions
+				>(
 					input: string,
 					pos?: number,
-					options?: JavascriptParseOptions
-				) => undefined | number;
+					options?: O
+				) =>
+					| (O extends { estree: true } ? Program : number)
+					| (O extends { parseError: Function } ? undefined : never);
 				export let parsedTree: () => null | SyntaxTree;
 				export let positionAt: (
 					lineStarts: number[],
