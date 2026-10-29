@@ -1,9 +1,10 @@
 "use strict";
 
-// Builds every `test/configCases` case with the defaults a user gets and reports
-// how large what webpack generated is. Run through `yarn test:size`; CI compares
-// the report against the one `main` last uploaded. Nothing here asserts and
-// nothing here fails: a size that moved is information, not a defect.
+// Builds every `test/configCases` case with the defaults a user gets, plus
+// generated React apps of three sizes, and reports how large what webpack
+// generated is. Run through `yarn test:size`; CI compares the report against
+// the one `main` last uploaded. Nothing here asserts and nothing here fails: a
+// size that moved is information, not a defect.
 
 const { execFileSync } = require("child_process");
 const { createHash } = require("crypto");
@@ -99,11 +100,24 @@ const prepareOptions = require("./helpers/prepareOptions");
  * @property {string} category case category
  * @property {string} name case name
  * @property {string} id `<category>/<case>`
+ * @property {string} directory directory the case is built from
  */
 
 const rootPath = path.resolve(__dirname, "..");
 const casesPath = path.join(__dirname, "configCases");
 const outputBaseDir = path.join(__dirname, "js", "size");
+const appsBaseDir = path.join(__dirname, "js", "size-apps");
+
+// Whole applications, generated the way the `realistic-app` benchmark is, at
+// [lazy features, components per feature]: a config case isolates one feature,
+// so only these show what a change costs a real bundle as it grows.
+const APP_CATEGORY = "apps";
+/** @type {Record<string, [number, number]>} */
+const APP_SHAPES = {
+	"react-100": [10, 10],
+	"react-1k": [25, 40],
+	"react-5k": [50, 100]
+};
 
 // Bumped whenever a compression setting or the report shape changes, so a stale
 // baseline is reported as incomparable instead of compared against silently.
@@ -297,6 +311,38 @@ const applyDefaults = (options, index, testDirectory, outputDirectory) => {
 };
 
 /**
+ * Generates a sample application and returns how a user would build it for the
+ * browser, with hashed filenames as a deployed app has them.
+ * @param {string} name key of `APP_SHAPES`
+ * @param {string} directory directory to generate it into
+ * @param {string} outputDirectory directory to build into
+ * @returns {Promise<Configuration>} its configuration
+ */
+const createAppOptions = async (name, directory, outputDirectory) => {
+	// Loaded here, not at the top: `require` of an ES module needs the Node.js
+	// this script already demands, and a run filtered to config cases skips it.
+	const { default: createApp } = require("./harness/benchmark/create-app.mjs");
+
+	await createApp(directory, ...APP_SHAPES[name]);
+	return {
+		context: directory,
+		mode: "production",
+		entry: "./index.js",
+		target: "web",
+		experiments: { css: true },
+		module: { rules: [{ test: /\.svg$/, type: "asset" }] },
+		resolve: { alias: { "@": directory } },
+		output: {
+			path: outputDirectory,
+			filename: "[name].[contenthash].js",
+			chunkFilename: "[name].[contenthash].js",
+			assetModuleFilename: "[name].[contenthash][ext]"
+		},
+		infrastructureLogging: { level: "error", progress: false }
+	};
+};
+
+/**
  * Which runtime modules each runtime carries. A count is the deterministic thing
  * to compare — it catches a runtime module added for one target and forgotten for
  * another — and the names say what moved when a count does.
@@ -400,8 +446,8 @@ const closeCompiler = (compiler) =>
  * @param {Case} testCase case to measure
  * @returns {Promise<CaseResult>} measured metrics
  */
-const measureCase = async ({ category, name }) => {
-	const testDirectory = path.join(casesPath, category, name);
+const measureCase = async ({ category, name, directory: testDirectory }) => {
+	const app = category === APP_CATEGORY;
 	const outputDirectory = path.join(outputBaseDir, category, name);
 
 	fs.rmSync(outputDirectory, { recursive: true, force: true });
@@ -437,13 +483,19 @@ const measureCase = async ({ category, name }) => {
 	/** @type {Configuration[]} */
 	let optionsArr;
 	try {
-		const options = await prepareOptions(
-			require(path.join(testDirectory, "webpack.config.js")),
-			{ testPath: outputDirectory }
-		);
-		optionsArr = Array.isArray(options) ? [...options] : [options];
-		for (const [index, options] of optionsArr.entries()) {
-			applyDefaults(options, index, testDirectory, outputDirectory);
+		if (app) {
+			optionsArr = [
+				await createAppOptions(name, testDirectory, outputDirectory)
+			];
+		} else {
+			const options = await prepareOptions(
+				require(path.join(testDirectory, "webpack.config.js")),
+				{ testPath: outputDirectory }
+			);
+			optionsArr = Array.isArray(options) ? [...options] : [options];
+			for (const [index, options] of optionsArr.entries()) {
+				applyDefaults(options, index, testDirectory, outputDirectory);
+			}
 		}
 	} catch (err) {
 		result.noOutput = `config: ${/** @type {Error} */ (err).message}`;
@@ -1068,6 +1120,65 @@ const formatBiggestAssets = (report) => {
 };
 
 /**
+ * One row per sample application, summed over every asset it emits: the whole
+ * download, which per-asset rows hide once code moves between chunks.
+ * @param {Report} report current report
+ * @param {Report=} baseline baseline report
+ * @returns {string[]} markdown lines
+ */
+const formatApps = (report, baseline) => {
+	const names = Object.keys(report.cases).filter((name) =>
+		name.startsWith(`${APP_CATEGORY}/`)
+	);
+	if (names.length === 0) return [];
+
+	/**
+	 * @param {number | undefined} before baseline bytes, none when the app is new
+	 * @param {number} after current bytes
+	 * @returns {string} the change cell
+	 */
+	const change = (before, after) =>
+		before === undefined
+			? ADDED_MARKER
+			: after === before
+				? "—"
+				: `${changeMarker(after - before)} ${formatDelta(
+						after - before
+					)} (${formatPercent(before, after)})`;
+
+	const lines = [
+		"### Sample apps",
+		"",
+		baseline
+			? "| App | Gzip | Gzip change | Raw | Raw change |"
+			: "| App | Gzip | Raw |",
+		baseline ? "| :-- | --: | --: | --: | --: |" : "| :-- | --: | --: |"
+	];
+	for (const name of names) {
+		const result = report.cases[name];
+		const label = `\`${name.slice(APP_CATEGORY.length + 1)}\``;
+		if (result.noOutput) {
+			lines.push(`| ${label} | emitted nothing |`);
+			continue;
+		}
+		const { gzip, raw } = result.metrics;
+		if (!baseline) {
+			lines.push(`| ${label} | ${formatBytes(gzip)} | ${formatBytes(raw)} |`);
+			continue;
+		}
+		const before = baseline.cases[name] && baseline.cases[name].metrics;
+		lines.push(
+			`| ${label} | ${formatBytes(gzip)} | ${change(
+				before && before.gzip,
+				gzip
+			)} | ${formatBytes(raw)} | ${change(before && before.raw, raw)} |`
+		);
+	}
+	lines.push("");
+	return lines;
+};
+
+/**
  * The verdict sentence: what a reviewer reads before anything else, so it leads
  * with the assets webpack builds from unchanged source — the only ones whose
  * delta is webpack's doing — and says how much of the rest is the pull request
@@ -1109,7 +1220,7 @@ const formatMarkdown = (report, baseline, noBaselineReason) => {
 		""
 	];
 
-	const built = `Built \`test/configCases\` with the defaults a user gets: ${
+	const built = `Built \`test/configCases\` with the defaults a user gets, and generated React apps (\`apps/\`): ${
 		report.meta.cases
 	} test(s), ${report.meta.assets} asset(s)${
 		report.meta.withoutOutput > 0
@@ -1123,6 +1234,7 @@ const formatMarkdown = (report, baseline, noBaselineReason) => {
 			"",
 			`${noBaselineReason}, so there is nothing to compare against yet.`,
 			"",
+			...formatApps(report),
 			...formatBiggestAssets(report)
 		);
 		return `${lines.join("\n")}\n`;
@@ -1262,6 +1374,8 @@ const formatMarkdown = (report, baseline, noBaselineReason) => {
 		""
 	);
 
+	lines.push(...formatApps(report, baseline));
+
 	// One row per emitted file, so a minifier change reads as the files it shrank.
 	// Unchanged-source assets first, then rebuilt ones, then new and deleted.
 	if (changes.length === 0) {
@@ -1379,8 +1493,16 @@ const discoverCases = (filter, negativeFilter) => {
 				continue;
 			}
 
-			cases.push({ category, name, id });
+			cases.push({ category, name, id, directory: testDirectory });
 		}
+	}
+
+	for (const name of Object.keys(APP_SHAPES)) {
+		const id = `${APP_CATEGORY}/${name}`;
+		if (filter && !filter.test(id)) continue;
+		if (negativeFilter && negativeFilter.test(id)) continue;
+		const directory = path.join(appsBaseDir, name);
+		cases.push({ category: APP_CATEGORY, name, id, directory });
 	}
 
 	return cases;
