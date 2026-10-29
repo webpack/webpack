@@ -1,6 +1,6 @@
 /*
 	MIT License http://www.opensource.org/licenses/mit-license.php
-	Author sheo13666q @sheo13666q
+	Author Alexander Akait @alexander-akait
 */
 
 "use strict";
@@ -188,26 +188,12 @@ const collect = (dir) => {
 /**
  * Formats a byte count for people.
  * @param {number} bytes size
- * @returns {string} e.g. `12.3 KiB`
+ * @returns {string} e.g. `12.3 KB`, counting 1024 bytes to a KB
  */
 const formatSize = (bytes) => {
 	if (bytes < 1024) return `${bytes} B`;
-	if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KiB`;
-	return `${(bytes / 1024 / 1024).toFixed(2)} MiB`;
-};
-
-/**
- * Formats a size change, signed.
- * @param {number} bytes difference in bytes
- * @param {number} before size it is relative to
- * @returns {string} e.g. `+1.2 KiB, +3.4%`
- */
-const formatDelta = (bytes, before) => {
-	const sign = bytes < 0 ? "−" : "+";
-	const percent = before
-		? `, ${sign}${Math.abs((bytes / before) * 100).toFixed(1)}%`
-		: "";
-	return `${sign}${formatSize(Math.abs(bytes))}${percent}`;
+	if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+	return `${(bytes / 1024 / 1024).toFixed(2)} MB`;
 };
 
 /**
@@ -216,6 +202,21 @@ const formatDelta = (bytes, before) => {
  * @returns {string} emoji
  */
 const marker = (bytes) => (bytes > 0 ? "🔴" : bytes < 0 ? "🟢" : "⚪");
+
+/**
+ * Formats a size change, signed and marked red when it grows, green when it shrinks.
+ * @param {number} bytes difference in bytes
+ * @param {number} before size it is relative to
+ * @returns {string} e.g. `🔴 +1.2 KB (+3.4%)`
+ */
+const formatDelta = (bytes, before) => {
+	if (bytes === 0) return `${marker(0)} no change`;
+	const sign = bytes < 0 ? "−" : "+";
+	const percent = before
+		? ` (${sign}${Math.abs((bytes / before) * 100).toFixed(1)}%)`
+		: "";
+	return `${marker(bytes)} ${sign}${formatSize(Math.abs(bytes))}${percent}`;
+};
 
 /**
  * Groups rows by package name.
@@ -273,11 +274,10 @@ const toChanges = (base, rows) => {
 		const path = list[0].path.join(" › ");
 		if (!old) {
 			added.push([
-				"🔴",
 				name,
-				"added",
+				"🔴 added",
 				formatVersions(list),
-				`${formatSize(size)} (${formatDelta(size, 0)})`,
+				formatDelta(size, 0),
 				path
 			]);
 			continue;
@@ -291,14 +291,13 @@ const toChanges = (base, rows) => {
 				? formatVersions(list)
 				: `${formatVersions(old)} → ${formatVersions(list)}`;
 		updated.push([
-			marker(size - oldSize),
 			name,
-			"updated",
+			`${marker(size - oldSize)} updated`,
 			versions,
-			`${formatSize(oldSize)} → ${formatSize(size)} (${formatDelta(
+			`${formatSize(oldSize)} → ${formatSize(size)}<br>${formatDelta(
 				size - oldSize,
 				oldSize
-			)})`,
+			)}`,
 			path
 		]);
 	}
@@ -306,11 +305,10 @@ const toChanges = (base, rows) => {
 		if (after.has(name)) continue;
 		const size = sumSize(list);
 		removed.push([
-			"🟢",
 			name,
-			"removed",
+			"🟢 removed",
 			formatVersions(list),
-			`${formatSize(size)} (${formatDelta(-size, size)})`,
+			formatDelta(-size, size),
 			`was ${list[0].path.join(" › ")}`
 		]);
 	}
@@ -322,19 +320,20 @@ const toChanges = (base, rows) => {
 		"",
 		"🔴 added or grew · 🟢 removed or shrank · ⚪ same size",
 		"",
-		`${marker(total - baseTotal)} **${before.size} → ${
-			after.size
-		}** packages, **${formatSize(baseTotal)} → ${formatSize(
-			total
-		)}** (${formatDelta(total - baseTotal, baseTotal)}): ${
+		`**${before.size} → ${after.size}** packages, **${formatSize(
+			baseTotal
+		)} → ${formatSize(total)}** (${formatDelta(
+			total - baseTotal,
+			baseTotal
+		)}): ${
 			added.length
 		} added, ${removed.length} removed, ${updated.length} updated.`,
 		"",
 		...(changes.length === 0
 			? ["No dependency was added, removed or updated."]
 			: [
-					"| | Package | Change | Version | Size | Path |",
-					"| - | ------- | ------ | ------- | ---: | ---- |",
+					"| Package | Change | Version | Size | Path |",
+					"| ------- | ------ | ------- | ---: | ---- |",
 					...changes.map((cells) => `| ${cells.join(" | ")} |`)
 				]),
 		""
