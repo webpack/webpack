@@ -12,10 +12,10 @@ const OXC_SMALLER_BY_REASON = [
 		"mangled-name choice: the same program with other mangled names, or one name given to other bindings",
 		[
 			"oxc minifier: peephole/dead_code_elimination.rs:899",
-			"oxc minifier: peephole/fold_constants.rs:1360",
+			"oxc minifier: peephole/fold_constants.rs:1377",
 			"oxc minifier: peephole/inline_single_use_variable.rs:359",
 			"oxc minifier: peephole/remove_unused_expression.rs:1030",
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:1086",
+			"oxc minifier: peephole/substitute_alternate_syntax.rs:1097",
 			"swc exec: issue_10095",
 			"swc exec: issue_8864_1",
 			"swc exec: terser_issue_t292_no_flatten_with_arg_colliding_with_arg_value_inner_scope",
@@ -23,7 +23,6 @@ const OXC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/12311/input.js",
 			"swc minifier: fixture/issues/6636/input.js",
 			"swc minifier: fixture/issues/8324/input.js",
-			"swc minifier: fixture/issues/8622/input.js",
 			"swc minifier: fixture/issues/object-accessor-function-boundary/input.js",
 			"swc minifier: fixture/projects/backbone/7/input.js",
 			"swc minifier: fixture/projects/mootools/4/input.js",
@@ -89,7 +88,6 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: inline/inline_into_scope_conflict_enclosed_2",
 			"terser compress: reduce_vars/issue_2440_with_1",
 			"terser compress: reduce_vars/issue_2440_with_2",
-			"terser compress: sequences/call",
 			"terser compress: sequences/lift_sequences_1",
 			"terser compress: sequences/lift_sequences_2",
 			"terser compress: yield/yield_before_punctuators"
@@ -138,8 +136,6 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"boolean and conditional forms: `!a&&b` vs `a?!1:b`, `!!a` vs `a&&!0`, `x||void 0` vs `if(x)`, an `if` with or without braces, a test's branches swapped",
 		[
-			"oxc minifier: peephole/minimize_conditional_expression.rs:187",
-			"oxc minifier: peephole/minimize_conditional_expression.rs:188",
 			"oxc minifier: peephole/minimize_conditions.rs:113",
 			"oxc minifier: peephole/minimize_exit_points.rs:375",
 			"swc minifier: fixture/projects/backbone/15/input.js",
@@ -156,7 +152,6 @@ const OXC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/number-radix-conversion/input.js",
 			"terser compress: harmony/array_literal_with_spread_2b",
 			"terser compress: harmony/array_literal_with_spread_4a",
-			"terser compress: harmony/issue_2345",
 			"terser compress: ie8/do_screw_try_catch_undefined",
 			"terser compress: ie8/dont_screw_try_catch_undefined",
 			"terser compress: issue-597/beautify_off_1",
@@ -169,7 +164,7 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"`if…return` chain vs `?:…void 0`: webpack folds the returns into one `return a?b:c?d:void 0` where the rival keeps `if(a)return b;if(c)return d`",
 		[
-			"oxc minifier: peephole/esbuild.rs:688",
+			"oxc minifier: peephole/esbuild.rs:686",
 			"oxc minifier: peephole/minimize_statements.rs:195",
 			"terser compress: if_return/if_return_2",
 			"terser compress: if_return/if_return_4",
@@ -224,24 +219,28 @@ const OXC_SMALLER_BY_REASON = [
 	],
 	[
 		"deflate's header: the program is no longer raw, yet gzips 1 to 3 bytes bigger, as the Huffman codes deflate writes for a small program cost more or less with which characters it holds (an operand's side, `let` or `const`, `NaN` or `0/0`, a backtick or a quote); measured corpus-wide, no fixed spelling rule wins, each one making about as many programs bigger as smaller",
-		["terser compress: conditionals/issue_2560"]
+		[
+			"oxc minifier: peephole/inline_single_use_variable.rs:580",
+			"swc minifier: fixture/issues/12545/iife_rest_escape_object/input.js",
+			"terser compress: conditionals/issue_2560"
+		]
 	],
 	[
 		"oxc applies esbuild's shortenings, as oxc's `peephole/esbuild.rs` tests show",
 		[
-			"oxc minifier: peephole/esbuild.rs:1215",
-			"oxc minifier: peephole/esbuild.rs:1222",
-			"oxc minifier: peephole/esbuild.rs:1798",
-			"oxc minifier: peephole/esbuild.rs:2309",
-			"oxc minifier: peephole/esbuild.rs:255"
+			"oxc minifier: peephole/esbuild.rs:1213",
+			"oxc minifier: peephole/esbuild.rs:1220",
+			"oxc minifier: peephole/esbuild.rs:1796",
+			"oxc minifier: peephole/esbuild.rs:2307",
+			"oxc minifier: peephole/esbuild.rs:252"
 		]
 	],
 	[
 		"webpack writes the same program in a spelling longer or compressing worse than oxc's",
 		[
-			"swc minifier: pass-1/uiw-codemirror/input.js",
-			"terser compress: big_int/big_int_math_counter_examples",
-			"terser compress: evaluate/or",
+			"oxc minifier: peephole/minimize_statements.rs:32",
+			"oxc minifier: peephole/replace_known_methods.rs:1059",
+			"oxc minifier: peephole/replace_known_methods.rs:1090",
 			"swc exec: terser_arguments_modified",
 			"swc minifier: fixture/issues/10412/input.js",
 			"swc minifier: fixture/issues/10885/input.js",
@@ -257,14 +256,20 @@ const OXC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/projects/jquery/25/input.js",
 			"swc minifier: fixture/projects/jquery/27/input.js",
 			"swc minifier: fixture/projects/yui/12/input.js",
+			"swc minifier: fixture/projects/yui/13/input.js",
 			"swc minifier: fixture/terser/issue-2535-2/2/input.js",
 			"swc minifier: pass-1/7/input.js",
+			"swc minifier: pass-1/uiw-codemirror/input.js",
+			"terser compress: arrays/constant_join",
 			"terser compress: asm/asm_mixed",
 			"terser compress: assignment/op_equals_right_global_var",
 			"terser compress: assignment/op_equals_right_local_var",
+			"terser compress: big_int/big_int_math_counter_examples",
+			"terser compress: collapse_vars/collapse_rhs_conditional_2",
 			"terser compress: collapse_vars/collapse_vars_side_effects_2",
 			"terser compress: concat-strings/concat_1",
 			"terser compress: conditionals/ifs_6",
+			"terser compress: evaluate/or",
 			"terser compress: evaluate/unsafe_array",
 			"terser compress: evaluate/unsafe_integer_key",
 			"terser compress: export/issue_2038_2",
@@ -273,20 +278,17 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: new/new_statements_3",
 			"terser compress: numbers/evaluate_1",
 			"terser compress: numbers/evaluate_2",
-			"terser compress: reduce_vars/multi_def_2",
-			"oxc minifier: peephole/minimize_statements.rs:32",
-			"swc minifier: fixture/projects/yui/13/input.js",
-			"terser compress: collapse_vars/collapse_rhs_conditional_2"
+			"terser compress: reduce_vars/multi_def_2"
 		]
 	],
 	[
 		"oxc substitutes shorter syntax, as oxc's `peephole/substitute_alternate_syntax.rs` tests show",
 		[
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:135",
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:164",
+			"oxc minifier: peephole/substitute_alternate_syntax.rs:136",
 			"oxc minifier: peephole/substitute_alternate_syntax.rs:165",
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:168",
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:169"
+			"oxc minifier: peephole/substitute_alternate_syntax.rs:166",
+			"oxc minifier: peephole/substitute_alternate_syntax.rs:169",
+			"oxc minifier: peephole/substitute_alternate_syntax.rs:170"
 		]
 	],
 	[
@@ -294,7 +296,6 @@ const OXC_SMALLER_BY_REASON = [
 		[
 			"terser compress: drop-unused/issue_1715_3",
 			"terser compress: reduce_vars/issue_t1382",
-			"terser compress: template-string/tagged_template_with_comment",
 			"terser compress: typescript/typescript_disabled_interface"
 		]
 	],
@@ -368,10 +369,6 @@ const OXC_SMALLER_BY_REASON = [
 		]
 	],
 	[
-		"oxc follows a variable's value through its reassignments and folds the result",
-		["terser compress: drop-unused/issue_t161_top_retain_15"]
-	],
-	[
 		"oxc normalizes the syntax before compressing it, as oxc's `peephole/normalize.rs` tests show",
 		[
 			"oxc minifier: peephole/normalize.rs:230",
@@ -427,19 +424,16 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc folds arithmetic, comparisons and concatenation of constants",
 		[
-			"swc exec: terser_drop_unused_issue_t161_top_retain_15",
 			"terser compress: const/issue_1396",
-			"terser compress: destructuring/empty_object_destructuring_misc",
-			"terser compress: drop-unused/issue_t161_top_retain_13",
-			"terser compress: drop-unused/issue_t161_top_retain_14"
+			"terser compress: destructuring/empty_object_destructuring_misc"
 		]
 	],
 	[
 		"oxc inlines more constants and functions, as oxc's `peephole/inline.rs` tests show",
 		[
 			"oxc minifier: peephole/inline.rs:698",
-			"oxc minifier: peephole/inline.rs:703",
-			"oxc minifier: peephole/inline.rs:704",
+			"oxc minifier: peephole/inline.rs:705",
+			"oxc minifier: peephole/inline.rs:706",
 			"oxc minifier: peephole/inline.rs:642"
 		]
 	],
@@ -468,10 +462,6 @@ const OXC_SMALLER_BY_REASON = [
 		]
 	],
 	[
-		"oxc aborts: its code generator panics on this source (`crates/oxc_codegen/src/str.rs:712`, a slice out of range)",
-		["swc minifier: fixture/issues/string-index-utf16/input.js"]
-	],
-	[
 		"oxc's mangler picks shorter or better-compressing names, as oxc's `mangler/property_mangler.rs` tests show",
 		["oxc minifier: mangler/property_mangler.rs:99"]
 	],
@@ -487,7 +477,7 @@ const OXC_SMALLER_BY_REASON = [
 	],
 	[
 		"oxc's output differs: it drops a name read in a `with` body, which runs the object's `has` trap or getter",
-		["oxc minifier: peephole/esbuild.rs:1637"]
+		["oxc minifier: peephole/esbuild.rs:1635"]
 	],
 	[
 		"oxc's output differs: it drops an unused class extending a regular expression, whose definition throws a TypeError",
@@ -509,6 +499,13 @@ const OXC_SMALLER_BY_REASON = [
 		["oxc minifier: peephole/remove_unused_private_members.rs:27"]
 	],
 	[
+		"oxc's output is wrong: it drops a write in a `for…of` or `for…in` right side to the loop's own `let`, which throws a ReferenceError there, as its own test keeps it",
+		[
+			"oxc minifier: peephole/merge_assignments_to_declarations.rs:106",
+			"oxc minifier: peephole/merge_assignments_to_declarations.rs:107"
+		]
+	],
+	[
 		"oxc drops an unread deferred or source-phase import, assuming its load cannot fail, where webpack keeps it as oxc's `invalid_import_side_effects` does, since it still fetches and links its module",
 		[
 			"oxc minifier: peephole/remove_unused_declaration.rs:1086",
@@ -524,40 +521,19 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc's output is wrong: it calls a method read through `(0, o.f)`, `(t = o.f)` or an arrow returning it as a method of `o`, and an `eval` so read as a direct `eval`",
 		[
-			"oxc minifier: peephole/remove_unused_expression.rs:772",
 			"swc exec: indirect_eval_1",
-			"oxc minifier: peephole/oxc.rs:100",
-			"oxc minifier: peephole/oxc.rs:101",
-			"oxc minifier: peephole/oxc.rs:102",
-			"oxc minifier: peephole/oxc.rs:103",
-			"oxc minifier: peephole/oxc.rs:104",
-			"oxc minifier: peephole/oxc.rs:105",
-			"oxc minifier: peephole/oxc.rs:106",
-			"oxc minifier: peephole/oxc.rs:107",
 			"oxc minifier: peephole/oxc.rs:108",
-			"oxc minifier: peephole/remove_unused_expression.rs:592",
-			"oxc minifier: peephole/remove_unused_expression.rs:593",
-			"oxc minifier: peephole/remove_unused_expression.rs:594",
-			"oxc minifier: peephole/remove_unused_expression.rs:595",
-			"oxc minifier: peephole/remove_unused_expression.rs:767",
-			"oxc minifier: peephole/remove_unused_expression.rs:777",
-			"oxc minifier: peephole/remove_unused_expression.rs:787",
-			"oxc minifier: peephole/remove_unused_expression.rs:792"
+			"oxc minifier: peephole/remove_unused_expression.rs:787"
 		]
 	],
 	[
 		"oxc's output is wrong: it folds a property read into a tag, as in `let c = a.b; return c``` to `a.b```, which calls the tag as a method of `a`",
-		[
-			"oxc minifier: peephole/esbuild.rs:1332",
-			"oxc minifier: peephole/esbuild.rs:1333",
-			"oxc minifier: peephole/inline_single_use_variable.rs:324",
-			"oxc minifier: peephole/inline_single_use_variable.rs:325"
-		]
+		["oxc minifier: peephole/inline_single_use_variable.rs:324"]
 	],
 	[
 		"oxc reads a global twice as one value, as in `a ? b : a` to `a && b` or `a === null || a === void 0` to `a == null`, where webpack takes a global for a getter that may answer each read anew",
 		[
-			"oxc minifier: peephole/esbuild.rs:520",
+			"oxc minifier: peephole/esbuild.rs:518",
 			"oxc minifier: peephole/minimize_conditional_expression.rs:110",
 			"oxc minifier: peephole/minimize_conditional_expression.rs:44",
 			"oxc minifier: peephole/minimize_conditional_expression.rs:90",
@@ -585,27 +561,19 @@ const OXC_SMALLER_BY_REASON = [
 		]
 	],
 	[
-		'oxc\'s output is wrong: it folds `parseFloat("1.e2")` to 1, which is 100',
+		'oxc converts the operands of `Math.pow` or `"".concat` in another order, writing `a ** +b`, a template or one `concat` for a chain of them, where a getter or `valueOf` of one may see what converting the other did',
 		[
-			"oxc minifier: peephole/replace_known_methods.rs:796",
-			"oxc minifier: peephole/replace_known_methods.rs:797",
-			"oxc minifier: peephole/replace_known_methods.rs:798",
-			"oxc minifier: peephole/replace_known_methods.rs:799",
-			"oxc minifier: peephole/replace_known_methods.rs:800",
-			"oxc minifier: peephole/replace_known_methods.rs:802",
-			"oxc minifier: peephole/replace_known_methods.rs:803"
-		]
-	],
-	[
-		'oxc converts the operands of `Math.pow` or `"".concat` in another order, writing `a ** +b` or a template, where a getter or `valueOf` of one may see what converting the other did',
-		[
-			"oxc minifier: peephole/replace_known_methods.rs:1026",
-			"oxc minifier: peephole/replace_known_methods.rs:1027",
-			"oxc minifier: peephole/replace_known_methods.rs:1037",
-			"oxc minifier: peephole/replace_known_methods.rs:1039",
-			"oxc minifier: peephole/replace_known_methods.rs:610",
-			"oxc minifier: peephole/replace_known_methods.rs:611",
-			"oxc minifier: peephole/replace_known_methods.rs:612"
+			"oxc minifier: peephole/replace_known_methods.rs:1081",
+			"oxc minifier: peephole/replace_known_methods.rs:1082",
+			"oxc minifier: peephole/replace_known_methods.rs:1083",
+			"oxc minifier: peephole/replace_known_methods.rs:1085",
+			"oxc minifier: peephole/replace_known_methods.rs:1105",
+			"oxc minifier: peephole/replace_known_methods.rs:1106",
+			"oxc minifier: peephole/replace_known_methods.rs:1116",
+			"oxc minifier: peephole/replace_known_methods.rs:1118",
+			"oxc minifier: peephole/replace_known_methods.rs:637",
+			"oxc minifier: peephole/replace_known_methods.rs:638",
+			"oxc minifier: peephole/replace_known_methods.rs:639"
 		]
 	],
 	[
@@ -627,8 +595,46 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/minimize_conditions.rs:166",
 			"oxc minifier: peephole/obscure_edge_cases.rs:222",
 			"oxc minifier: peephole/real_world_patterns.rs:79",
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:149",
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:150"
+			"oxc minifier: peephole/substitute_alternate_syntax.rs:150",
+			"oxc minifier: peephole/substitute_alternate_syntax.rs:151"
+		]
+	],
+	[
+		"oxc's output is wrong: it folds a string method otherwise than the spec, as its own tests now show: `slice` and `substring` keep a surrogate pair they split, an `undefined` end reads as 0, `indexOf` wraps a position past 2**32, and `trim` keeps U+FEFF and drops U+0085",
+		[
+			"oxc minifier: peephole/replace_known_methods.rs:251",
+			"oxc minifier: peephole/replace_known_methods.rs:254",
+			"oxc minifier: peephole/replace_known_methods.rs:265",
+			"oxc minifier: peephole/replace_known_methods.rs:274",
+			"oxc minifier: peephole/replace_known_methods.rs:449",
+			"oxc minifier: peephole/replace_known_methods.rs:450",
+			"oxc minifier: peephole/replace_known_methods.rs:451",
+			"oxc minifier: peephole/replace_known_methods.rs:452",
+			"oxc minifier: peephole/replace_known_methods.rs:60"
+		]
+	],
+	[
+		"oxc's output is wrong: it folds `delete` of a string's index or `length`, an array's `length` or a `Number` constant to `true`, where it is `false`, or a TypeError in strict code",
+		[
+			"oxc minifier: peephole/replace_known_methods.rs:1245",
+			"oxc minifier: peephole/replace_known_methods.rs:1246",
+			"oxc minifier: peephole/replace_known_methods.rs:1247",
+			"oxc minifier: peephole/replace_known_methods.rs:1248",
+			"oxc minifier: peephole/replace_known_methods.rs:1249",
+			"oxc minifier: peephole/replace_known_methods.rs:1250",
+			"oxc minifier: peephole/replace_known_methods.rs:1251",
+			"oxc minifier: peephole/replace_known_methods.rs:1252"
+		]
+	],
+	[
+		"oxc's output is wrong: it drops a call in place of an empty function whose rest parameter's pattern runs a default or throws, as `(function (...[v = n++]) {})()`",
+		[
+			"oxc minifier: peephole/substitute_alternate_syntax.rs:1187",
+			"oxc minifier: peephole/substitute_alternate_syntax.rs:1191",
+			"oxc minifier: peephole/substitute_alternate_syntax.rs:1195",
+			"oxc minifier: peephole/substitute_alternate_syntax.rs:1199",
+			"oxc minifier: peephole/substitute_alternate_syntax.rs:1203",
+			"oxc minifier: peephole/substitute_alternate_syntax.rs:1204"
 		]
 	]
 ];

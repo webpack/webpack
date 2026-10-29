@@ -42,7 +42,7 @@ Every other script, with what it does: [TESTING_DOCS.md](TESTING_DOCS.md#more-sc
 
 Never run `yarn jest`/`npx jest`: the required `--experimental-vm-modules` flag lives only in `test:base`, and bare jest crashes the ESM/test262 suites. Running a single case: [TESTING_DOCS.md](TESTING_DOCS.md).
 
-**CI must come back fully green** ([details](docs/pull-requests.md#after-opening-the-pr--every-check-ends-green)); read the job list from `.github/workflows/`, not memory. Two jobs are unusual — watch both when touching hot paths or large fixtures: the benchmark's memory mode is sensitive to fixture size and to which cases share its process, and the Bun job runs under `--smol` and surfaces OOMs Node doesn't. Every job costing more than a few minutes waits on `lint`, `basic` and `unit` (needed for merge anyway), so while one of them is red most of the run reports `skipped`. That includes the benchmarks: on a PR `test.yml` calls `benchmarks.yml` behind those three (reported as `benchmarks / benchmark (1/6)`); on `main` nothing gates them (plain `benchmark (1/6)`) so CodSpeed always has a baseline.
+**CI must come back fully green** ([details](docs/pull-requests.md#after-opening-the-pr--every-check-ends-green)); read the job list from `.github/workflows/`, not memory. Two jobs are unusual — watch both when touching hot paths or large fixtures: the benchmark's memory mode is sensitive to fixture size and to which cases share its process, and the Bun job runs under `--smol` and surfaces OOMs Node doesn't. Every job costing more than a few minutes waits on `lint`, `basic` and `unit` (needed for merge anyway), so while one of them is red most of the run reports `skipped`. That includes the benchmarks: on a PR `test.yml` calls `benchmarks.yml` behind those three (reported as `benchmarks / benchmark (1/8)`); on `main` nothing gates them (plain `benchmark (1/8)`) so CodSpeed always has a baseline.
 
 ## Architecture
 
@@ -187,6 +187,10 @@ A language's syntax (`lib/{css,html,javascript,json}` tokenizer, parser, printer
 > [!REQUIRED]
 
 **When CI is red, read its log instead of reproducing the whole job locally**, then reproduce **only the named case**. Save logs and large reports to a file and grep them rather than reading them inline, and re-fetch check runs only when a push, re-run or CI event changed them. Commands and traps (a step is not a job; `yarn lint` stops at its first failing stage): [docs/verifying.md](docs/verifying.md#read-ci-rather-than-re-running-it).
+
+**A red check on the PR's head is the PR's until a base run of the same job shows it too** — never assume a flake and wait for a re-run.
+
+**A failure with no error message (a crashed worker, `Call retries were exceeded`) gets its error surfaced first**, then is cut to a one-`it` test; no full-suite, load or environment reproductions before that ([how](docs/verifying.md#a-failure-with-no-error)).
 
 ### Verifying a performance or memory change
 

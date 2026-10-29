@@ -3698,6 +3698,70 @@ describe("htmlMinify — embedded bodies with no renderer", () => {
 	});
 });
 
+describe("htmlMinify — embedded code a minifier fails on", () => {
+	const htmlMinify = require("../../../lib/html/htmlMinify");
+
+	const page =
+		'<style>a { b : c }</style><p style="b : c">x</p><script type=application/json>{ "a" : 1 }</script>';
+
+	it("keeps the placeholder `output.html.inline` fills in after it", async () => {
+		const placeholder = "__WEBPACK_HTML_INLINE__30__css__END__";
+		const { code } = await htmlMinify(
+			{ "page.html": `<style>${placeholder}</style>` },
+			undefined,
+			{ renderEmbeddedSource: () => undefined }
+		);
+		expect(code).toBe(`<style>${placeholder}</style>`);
+	});
+
+	it("reports what webpack's own CSS minifier throws and keeps the body", async () => {
+		// `unusedSymbols` that is no list stands in for anything that makes it throw.
+		const unreadable = /** @type {string[]} */ (/** @type {unknown} */ (42));
+		const { code, errors } = await htmlMinify({ "page.html": page }, undefined, {
+			css: { unusedSymbols: unreadable }
+		});
+		expect(code).toBe(
+			'<style>a { b : c }</style><p style="b : c">x</p><script type=application/json>{"a":1}</script>'
+		);
+		expect(errors).toHaveLength(2);
+	});
+
+	it("keeps a body the caller's minifier fails on, reported once", async () => {
+		const { code, errors } = await htmlMinify({ "page.html": page }, undefined, {
+			renderEmbeddedSource: (
+				/** @type {string} */ _source,
+				/** @type {{ type: string }} */ info
+			) => {
+				if (info.type === "css") throw new Error("failing CSS minifier");
+				return undefined;
+			}
+		});
+		// Webpack's own CSS minifier is not asked after the caller's failed.
+		expect(code).toBe(
+			'<style>a { b : c }</style><p style="b : c">x</p><script type=application/json>{"a":1}</script>'
+		);
+		expect(errors).toEqual([
+			expect.objectContaining({ message: "failing CSS minifier" }),
+			expect.objectContaining({ message: "failing CSS minifier" })
+		]);
+	});
+
+	it("keeps a body the caller's minifier answers with errors beside code", async () => {
+		const { code, errors } = await htmlMinify(
+			{ "page.html": "<style>a { b : c }</style>" },
+			undefined,
+			{
+				renderEmbeddedSource: () => ({
+					code: "broken",
+					errors: [new Error("failing CSS minifier")]
+				})
+			}
+		);
+		expect(code).toBe("<style>a { b : c }</style>");
+		expect(errors).toHaveLength(1);
+	});
+});
+
 describe("htmlMinify — one document reaching every embedded site", () => {
 	const htmlMinify = require("../../../lib/html/htmlMinify");
 
@@ -3910,6 +3974,55 @@ describe("SourceProcessor — minify serialization edge cases", () => {
 			).toBe(
 				"<!doctype html><head><noscript><style>a{}</style></noscript> <title>t</title></head><p>x"
 			);
+		});
+
+		it("prints a nested <noscript> as written where minifying would move what follows it", () => {
+			// With scripting on, the outer body is text up to the first end tag and
+			// the next one closes nothing; with it off, that one closes the outer.
+			for (const source of [
+				"<body><noscript><noscript>a</noscript>b</noscript>\n<p>x",
+				"<body><noscript><noscript>a</noscript></noscript><p>x",
+				"<body><noscript><noscript>a</noscript>b\r\n</noscript>\r\n<p>x",
+				'<body><noscript><noscript>a</noscript>b</noscript x=">"><p>x',
+				"<body><NOSCRIPT><noscript>a</noscript>b &amp; c</noscript >&lt;d<p>x",
+				// `</noscript-x>` ends no raw text, so the nested one after it counts.
+				"<body><noscript></noscript-x><noscript>a</noscript></noscript><p>x",
+				// A comment hides an end tag from a reader with scripting off only.
+				"<body><noscript><!-- </noscript> -->x</noscript><p>y",
+				"<body><noscript><!-- </noscript> --><noscript>a</noscript></noscript><p>y"
+			]) {
+				expect(minify(source)).toBe(source);
+			}
+		});
+
+		it("minifies a nested <noscript> where both readers read the print alike", () => {
+			// Inside the `<p>` the stray end tag closes nothing for either reader.
+			expect(
+				minify("<body><noscript><noscript>a</noscript><p>b</noscript>c</p>")
+			).toBe("<body><noscript><noscript>a</noscript><p>bc</body>");
+			// Without a nested one, a stray end tag still goes.
+			expect(minify("<p>a</noscript>b")).toBe("<p>ab");
+			expect(minify("<body><noscript>a</noscript> <p>x</p>")).toBe(
+				"<body><noscript>a</noscript> <p>x</body>"
+			);
+		});
+
+		it("drops `</head>` once collapsing drops the whitespace behind it, in one print", () => {
+			// That whitespace is body text to a reader with scripting off, so the
+			// active collapse tier decides it, as it does for any body text.
+			const options = /** @type {const} */ ({
+				mode: "minify",
+				collapseWhitespace: "all",
+				removeImpliedTags: "all"
+			});
+			const once = new SourceProcessor().process(
+				"<!doctype html><head><title>t</title><noscript>a</noscript></head>\n<body><p>x",
+				options
+			).code;
+			expect(once).toBe(
+				"<!doctype html><title>t</title><noscript>a</noscript><p>x"
+			);
+			expect(new SourceProcessor().process(once, options).code).toBe(once);
 		});
 
 		it("drops the head whitespace where every reader keeps the head", () => {

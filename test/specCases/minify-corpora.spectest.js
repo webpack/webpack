@@ -1216,18 +1216,18 @@ const REFUSED_BY_WEBPACK = {
 	"oxc minifier: peephole/remove_unused_expression.rs:975": AUTO_ACCESSOR,
 	"oxc minifier: peephole/remove_unused_private_members.rs:49": AUTO_ACCESSOR,
 	"oxc minifier: peephole/remove_unused_private_members.rs:53": AUTO_ACCESSOR,
-	"oxc minifier: peephole/replace_known_methods.rs:1318": INVALID_PATTERN,
-	"oxc minifier: peephole/replace_known_methods.rs:1320": INVALID_PATTERN,
-	"oxc minifier: peephole/substitute_alternate_syntax.rs:705": AUTO_ACCESSOR,
-	"oxc minifier: peephole/substitute_alternate_syntax.rs:718": AUTO_ACCESSOR,
-	"oxc minifier: peephole/substitute_alternate_syntax.rs:720": AUTO_ACCESSOR,
-	"oxc minifier: peephole/substitute_alternate_syntax.rs:734": AUTO_ACCESSOR,
-	"oxc minifier: peephole/substitute_alternate_syntax.rs:751": AUTO_ACCESSOR,
-	"oxc minifier: peephole/substitute_alternate_syntax.rs:756": AUTO_ACCESSOR,
-	"oxc minifier: peephole/substitute_alternate_syntax.rs:758": AUTO_ACCESSOR,
-	"oxc minifier: peephole/substitute_alternate_syntax.rs:760": AUTO_ACCESSOR,
-	"oxc minifier: peephole/substitute_alternate_syntax.rs:771": AUTO_ACCESSOR,
+	"oxc minifier: peephole/replace_known_methods.rs:1423": INVALID_PATTERN,
+	"oxc minifier: peephole/replace_known_methods.rs:1425": INVALID_PATTERN,
+	"oxc minifier: peephole/substitute_alternate_syntax.rs:708": AUTO_ACCESSOR,
+	"oxc minifier: peephole/substitute_alternate_syntax.rs:721": AUTO_ACCESSOR,
+	"oxc minifier: peephole/substitute_alternate_syntax.rs:723": AUTO_ACCESSOR,
+	"oxc minifier: peephole/substitute_alternate_syntax.rs:737": AUTO_ACCESSOR,
+	"oxc minifier: peephole/substitute_alternate_syntax.rs:754": AUTO_ACCESSOR,
+	"oxc minifier: peephole/substitute_alternate_syntax.rs:759": AUTO_ACCESSOR,
+	"oxc minifier: peephole/substitute_alternate_syntax.rs:761": AUTO_ACCESSOR,
+	"oxc minifier: peephole/substitute_alternate_syntax.rs:763": AUTO_ACCESSOR,
 	"oxc minifier: peephole/substitute_alternate_syntax.rs:774": AUTO_ACCESSOR,
+	"oxc minifier: peephole/substitute_alternate_syntax.rs:777": AUTO_ACCESSOR,
 	"swc minifier: fixture/issues/11133/input.js": REDECLARED,
 	"terser compress: class-properties/parens_in": PRIVATE_UNDECLARED,
 	"terser compress: class-properties/parens_in_10": PRIVATE_UNDECLARED,
@@ -1327,6 +1327,8 @@ const IMPROVED_YET_BIGGER = {
 		"3 bytes fewer, 1 more gzipped: `+!!{}` breaks the `()=>(` runs of the arrows around it gzip reused",
 	"functions/issue_3054 (its own options)":
 		"2 bytes fewer, 2 more gzipped: the call `return f()` kept breaks the `return{a:!0}` the function beside it repeats",
+	"peephole/minimize_statements.rs:384 (the default minimizer's options)":
+		"9 bytes more, 9 more gzipped: the read of `x` before its `let` stays, as it throws there, where terser drops it",
 	"peephole/dead_code_elimination.rs:860 (the default minimizer's options)":
 		"4 bytes fewer, 3 more gzipped: the parameter a `with` body does not read, mangled, no longer repeats the `obj` the call passes",
 	"negative-duration-with-leading-zero-style-digital-en.js (the default minimizer's options)":
@@ -1341,6 +1343,10 @@ const IMPROVED_YET_BIGGER = {
 		"17 bytes fewer, 6 more gzipped: `\"Infinity\"` and `\"NaN\"` broke the run of `.toString()` calls gzip reused",
 	"issue-597/beautify_off_1 (the default minimizer's options)":
 		"17 bytes fewer, 6 more gzipped: `\"Infinity\"` and `\"NaN\"` broke the run of `.toString()` calls gzip reused",
+	"drop-unused/issue_t161_top_retain_14 (reminify 4 {\"toplevel\":true})":
+		"5 bytes fewer, 2 more gzipped: the products of `x`, `y` and `z` folded no longer repeat the `n*u,n*e,u*e` names gzip matched",
+	"drop-unused/issue_t161_top_retain_15 (reminify 4 {\"toplevel\":true})":
+		"5 bytes fewer, 2 more gzipped: the products of `x`, `y` and `z` folded no longer repeat the `n*u,n*e,u*e` names gzip matched",
 	"issue-597/beautify_off_1 (a module mangled at its top level)":
 		"17 bytes fewer, 5 more gzipped: `\"Infinity\"` and `\"NaN\"` broke the run of `.toString()` calls gzip reused",
 	"issue-597/beautify_off_1 (reminify 2 {\"mangle\":false})":
@@ -1451,8 +1457,6 @@ const IMPROVED_YET_BIGGER = {
 		"9 bytes fewer, 5 more gzipped: `if(a)throw b;throw c` merged into `throw a?b:c`, losing the repeated `throw new Test262Error(` run",
 	"constructor-buffer-sequence.js (the default minimizer's options)":
 		"55 bytes fewer, 6 more gzipped: `new` dropped before `Error` breaks the `new Error(` runs the rest repeat",
-	"fixture/issues/8622/input.js (its own options)":
-		"4 bytes fewer, 2 more gzipped: read as a module, `bar` mangles to `t`, breaking the parameter names' runs",
 	"fixture/issues/9453/input.js (the default minimizer's options)":
 		"4 bytes fewer, 8 more gzipped: `typeof class{}` folded to `\"function\"` breaks the `console.log(typeof` runs",
 	"drop-unused/issue_t1447_export_const (a module mangled at its top level)":
@@ -1460,7 +1464,8 @@ const IMPROVED_YET_BIGGER = {
 	"array-constructor/array_constructor_unsafe (its own options)":
 		"10 bytes fewer, 2 more gzipped: `Array(-0)` written `[]` breaks the `Array(` runs the other calls repeat",
 	"fixture/issues/4234/input.js (its own options)":
-		"28 bytes fewer, 5 more gzipped: two `RegExp` calls written as literals break the `bar(new RegExp(\"` runs the four calls repeat",
+		"28 bytes fewer, 5 more gzipped: two `RegExp` calls written as literals break the `bar(new RegExp(\"` runs the four calls repeat",	"sequences/call (its own options)":
+		"9 bytes fewer, 1 more gzipped: `new b` and `new b.c` written without their `(a, …)` break the `(a,` runs the calls before them repeat",
 };
 
 // Sources whose shorter spelling no longer repeats text gzip matched, by the
