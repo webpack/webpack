@@ -18,6 +18,10 @@ const ROOT = path.join(__dirname, "..");
 // What a user installs, left out of the report itself: `webpack` as this
 // checkout, every other package the latest release.
 const PACKAGES = ["webpack", "webpack-cli", "webpack-dev-server"];
+// Opens the pull request comment, so a later run updates it in place.
+const COMMENT_MARKER = "<!-- dependency-report -->";
+// GitHub rejects a comment body longer than this many characters.
+const MAX_COMMENT_LENGTH = 65536;
 // Shown as the parent of the packages the user asked for.
 const DIRECT = "(direct)";
 
@@ -352,9 +356,11 @@ const toChanges = (base, rows) => {
  * @param {ReportRow[]} rows report rows
  * @param {Record<string, string>} installed versions of the requested packages
  * @param {ReportRow[]=} base rows of the base commit, to show what changed
+ * @param {boolean=} comment whether to render the pull request comment, which
+ * opens with its marker and folds the full table away while it fits
  * @returns {string} Markdown
  */
-const toMarkdown = (rows, installed, base) => {
+const toMarkdown = (rows, installed, base, comment) => {
 	const total = sumSize(rows);
 	const copies = rows.reduce((sum, row) => sum + row.copies, 0);
 	const requested = Object.keys(installed)
@@ -364,8 +370,7 @@ const toMarkdown = (rows, installed, base) => {
 	const duplicated = [...versions.values()].filter(
 		(list) => list.length > 1 || list[0].copies > 1
 	);
-	return [
-		...(base ? toChanges(base, rows) : []),
+	const installedSection = [
 		"## Installed dependencies",
 		"",
 		`Installing ${requested} pulls in **${versions.size}** packages (${
@@ -384,7 +389,9 @@ const toMarkdown = (rows, installed, base) => {
 					row.size
 				)} | ${escapeCell(row.parents.join(", "))} | ${row.path.join(" › ")} |`
 		),
-		"",
+		""
+	];
+	const duplicatedSection = [
 		"## Duplicated packages",
 		"",
 		`${duplicated.length} packages are installed more than once: in several versions, or one version npm could not hoist. Widening or upgrading the parent whose range excludes the newest version removes a copy.`,
@@ -403,7 +410,29 @@ const toMarkdown = (rows, installed, base) => {
 					.join("<br>")} |`
 		),
 		""
-	].join("\n");
+	];
+	const changes = base ? toChanges(base, rows) : [];
+	if (!comment) {
+		return [...changes, ...installedSection, ...duplicatedSection].join("\n");
+	}
+	// A scoped name such as `@types/node` would mention a GitHub user or team.
+	const head = [COMMENT_MARKER, ...changes, ...duplicatedSection]
+		.join("\n")
+		.replace(/@/g, "@\u200B");
+	const table = [
+		"<details><summary>All installed dependencies</summary>",
+		"",
+		...installedSection,
+		"</details>",
+		""
+	]
+		.join("\n")
+		.replace(/@/g, "@\u200B");
+	return `${head}\n${
+		head.length + table.length < MAX_COMMENT_LENGTH
+			? table
+			: "The full table is in this run's job summary and artifact.\n"
+	}`;
 };
 
 /**
@@ -490,6 +519,7 @@ const readFlag = (name) => {
 const values = {
 	output: readFlag("output"),
 	json: readFlag("json"),
+	comment: readFlag("comment"),
 	base: readFlag("base")
 };
 
@@ -498,6 +528,9 @@ const base = values.base ? install(path.resolve(values.base)).rows : undefined;
 const markdown = toMarkdown(rows, installed, base);
 if (values.output) fs.writeFileSync(values.output, markdown);
 else process.stdout.write(markdown);
+if (values.comment) {
+	fs.writeFileSync(values.comment, toMarkdown(rows, installed, base, true));
+}
 if (values.json) {
 	fs.writeFileSync(values.json, `${JSON.stringify(rows, null, 2)}\n`);
 }
