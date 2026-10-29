@@ -2847,6 +2847,12 @@ Array [
 ]
 `;
 
+exports[`syntax-printer improve phase should drop a write to a \`for…of\` head's \`let\` from its body, not its right side 1`] = `"export function f(a){let p;for(let x of a)p=()=>{};return p}"`;
+
+exports[`syntax-printer improve phase should drop a write to a \`for…of\` head's \`let\` from its body, not its right side 2`] = `"export function f(a){for(let x of a)h(1)}"`;
+
+exports[`syntax-printer improve phase should drop a write to a \`for…of\` head's \`let\` from its body, not its right side 3`] = `"export function f(a){let p;for(let x of a)p=()=>x;return p}"`;
+
 exports[`syntax-printer improve phase should keep a function called in place whose \`var\`, its name taken, a class in a block there also names 1`] = `"function f(x){var a=g();!function(){var x=typeof a;{class x{}console.log(x.name)}console.log(x)}(),console.log(x,a)}function g(){return 1}f(\\"o\\");"`;
 
 exports[`syntax-printer improve phase should keep a function called in place whose \`var\`s, more than one, take names already taken 1`] = `"function f(x){var a=g(),b=g();console.log(x),function(){if(x){var a=console.log.name,b=typeof x;console.log(a,a,b,b)}}(),console.log(a,b)}function g(){return\\"o\\"}f(1),f(0);"`;
