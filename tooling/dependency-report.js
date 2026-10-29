@@ -138,7 +138,8 @@ const collect = (dir) => {
 		.map((row) => ({ ...row, parents: row.parents.sort() }))
 		.sort(
 			(a, b) =>
-				a.name.localeCompare(b.name) || a.version.localeCompare(b.version)
+				a.name.localeCompare(b.name) ||
+				a.version.localeCompare(b.version, undefined, { numeric: true })
 		);
 };
 
