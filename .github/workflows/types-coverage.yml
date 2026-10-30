@@ -44,33 +44,20 @@ jobs:
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
 
+      # Renders the report too: overall typed lines, the escape-hatch types this
+      # pull request adds or removes, and the files that still have any.
       - name: Collect types coverage
-        run: |
-          rm -rf coverage
-          node tooling/type-coverage.js --base "$BASE_SHA"
-          yarn report:cover
+        run: node tooling/type-coverage.js --base "$BASE_SHA"
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
-
-      # `output-file` renders the comment without posting it, which is all a
-      # fork's token allows; `pulls.get` for the title only needs read access.
-      - name: Render the report
-        uses: Nef10/lcov-reporter-action@797ec1c1e78e3a9a7890c1a104d58b9e05fcef76 # v0.6.1
-        with:
-          pr-number: ${{ github.event.pull_request.number }}
-          lcov-file: ./coverage/lcov.info
-          title: Types Coverage
-          output-file: lcov-report.md
 
       - name: Mark the report for the commenter
         run: |
           {
             echo "<!-- types-coverage-report -->"
-            cat lcov-report.md
-            echo
-            cat coverage/escape-hatch-types.md
+            cat coverage/types-coverage.md
           } > types-coverage-report.md
-          tail -n +2 types-coverage-report.md >> "$GITHUB_STEP_SUMMARY"
+          cat coverage/types-coverage.md >> "$GITHUB_STEP_SUMMARY"
 
       # Updated in place on every push, so the thread keeps one comment.
       - name: Comment the report on the pull request

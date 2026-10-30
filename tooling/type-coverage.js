@@ -323,44 +323,135 @@ const totalEscapeHatches = (byFile) => {
 const formatChange = (change) =>
 	change > 0 ? `🔴 +${change}` : change < 0 ? `🟢 −${-change}` : "—";
 
+/**
+ * Returns the share of a file's lines whose identifiers are typed, as lcov counts lines.
+ * @param {FileReport} fileReport the file's report
+ * @returns {{ lines: number, typed: number }} the line counts
+ */
+const lineCoverage = (fileReport) => {
+	/** @type {Map<number, number>} */
+	const lines = new Map();
+	for (const [index, count] of Object.entries(fileReport.s)) {
+		const { line } = fileReport.statementMap[Number(index)].start;
+		lines.set(line, Math.max(lines.get(line) || 0, count));
+	}
+	let typed = 0;
+	for (const count of lines.values()) if (count > 0) typed++;
+	return { lines: lines.size, typed };
+};
+
+/**
+ * Formats a share as a percentage.
+ * @param {number} part the part
+ * @param {number} whole the whole
+ * @returns {string} the percentage, with two decimals
+ */
+const percent = (part, whole) =>
+	whole === 0 ? "100%" : `${((100 * part) / whole).toFixed(2)}%`;
+
+/** @type {Map<string, { lines: number, typed: number }>} */
+const coverageByFile = new Map();
+let allLines = 0;
+let allTyped = 0;
+for (const fileReport of Object.values(coverageReport)) {
+	const coverage = lineCoverage(fileReport);
+	allLines += coverage.lines;
+	allTyped += coverage.typed;
+	coverageByFile.set(
+		path.relative(root, fileReport.path).split(path.sep).join("/"),
+		coverage
+	);
+}
+
 const headCounts = countAllEscapeHatches();
 const headTotals = totalEscapeHatches(headCounts);
-let report = "";
-if (base) {
-	const baseCounts = countAllEscapeHatches(base);
-	const baseTotals = totalEscapeHatches(baseCounts);
-	report += "| Type | Base | Head | Change |\n| :-- | --: | --: | --: |\n";
-	for (const name of ESCAPE_HATCHES) {
-		report += `| \`${name}\` | ${baseTotals[name]} | ${headTotals[name]} | ${formatChange(
-			headTotals[name] - baseTotals[name]
-		)} |\n`;
-	}
-	/** @type {string[]} */
-	const changed = [];
-	for (const file of [
+const baseCounts = base ? countAllEscapeHatches(base) : undefined;
+const baseTotals = baseCounts ? totalEscapeHatches(baseCounts) : undefined;
+
+/**
+ * Returns a file's count of one escape hatch.
+ * @param {Record<string, EscapeHatchCounts> | undefined} byFile counts by file
+ * @param {string} file the file
+ * @param {string} name the escape hatch
+ * @returns {number} the count
+ */
+const countOf = (byFile, file, name) =>
+	(byFile && byFile[file] && byFile[file][name]) || 0;
+
+let report = `Typed lines: **${percent(allTyped, allLines)}** (${allTyped} of ${allLines})\n\n`;
+report += baseTotals
+	? "| Escape hatch | Base | Head | Change |\n| :-- | --: | --: | --: |\n"
+	: "| Escape hatch | Count |\n| :-- | --: |\n";
+for (const name of ESCAPE_HATCHES) {
+	report += baseTotals
+		? `| \`${name}\` | ${baseTotals[name]} | ${headTotals[name]} | ${formatChange(
+				headTotals[name] - baseTotals[name]
+			)} |\n`
+		: `| \`${name}\` | ${headTotals[name]} |\n`;
+}
+
+const header = `| File | Typed lines | ${ESCAPE_HATCHES.map((name) => `\`${name}\``).join(" | ")} |\n| :-- | --: |${" --: |".repeat(ESCAPE_HATCHES.length)}\n`;
+
+/**
+ * Renders a file's row: its coverage and each escape hatch, with its change against the base.
+ * @param {string} file the file
+ * @returns {string} the row
+ */
+const fileRow = (file) => {
+	const coverage = coverageByFile.get(file);
+	const cells = ESCAPE_HATCHES.map((name) => {
+		const head = countOf(headCounts, file, name);
+		const change = head - countOf(baseCounts, file, name);
+		if (!baseCounts || change === 0) return head === 0 ? "" : `${head}`;
+		return `${head} (${formatChange(change)})`;
+	});
+	return `| \`${file}\` | ${coverage ? percent(coverage.typed, coverage.lines) : "—"} | ${cells.join(" | ")} |`;
+};
+
+if (baseCounts) {
+	const changed = [
 		...new Set([...Object.keys(baseCounts), ...Object.keys(headCounts)])
-	].sort()) {
-		const parts = ESCAPE_HATCHES.map((name) => {
-			const change =
-				((headCounts[file] && headCounts[file][name]) || 0) -
-				((baseCounts[file] && baseCounts[file][name]) || 0);
-			return change === 0 ? "" : `\`${name}\` ${formatChange(change)}`;
-		}).filter(Boolean);
-		if (parts.length > 0) changed.push(`| \`${file}\` | ${parts.join(", ")} |`);
-	}
+	]
+		.filter((file) =>
+			ESCAPE_HATCHES.some(
+				(name) =>
+					countOf(headCounts, file, name) !== countOf(baseCounts, file, name)
+			)
+		)
+		.sort();
 	report +=
 		changed.length > 0
-			? `\n<details><summary>${changed.length} file(s) changed</summary>\n\n| File | Change |\n| :-- | :-- |\n${changed.join("\n")}\n\n</details>\n`
-			: "\nNo file changed its escape-hatch types.\n";
-} else {
-	report += "| Type | Count |\n| :-- | --: |\n";
-	for (const name of ESCAPE_HATCHES) {
-		report += `| \`${name}\` | ${headTotals[name]} |\n`;
-	}
+			? `\n#### Changed by this pull request\n\n${header}${changed.map(fileRow).join("\n")}\n`
+			: "\nThis pull request adds or removes no escape-hatch type.\n";
 }
+
+// Every file still owing a real type: an escape hatch or an untyped line.
+const remaining = [
+	...new Set([
+		...Object.keys(headCounts),
+		...[...coverageByFile]
+			.filter(
+				([file, { lines, typed }]) =>
+					typed < lines &&
+					ESCAPE_HATCH_DIRECTORIES.some((directory) =>
+						file.startsWith(directory)
+					)
+			)
+			.map(([file]) => file)
+	])
+].sort((a, b) => {
+	const total = (/** @type {string} */ file) =>
+		ESCAPE_HATCHES.reduce(
+			(sum, name) => sum + countOf(headCounts, file, name),
+			0
+		);
+	return total(b) - total(a) || (a < b ? -1 : 1);
+});
+report += `\n<details><summary>${remaining.length} file(s) in <code>lib/</code> and <code>hot/</code> still use an escape hatch or have untyped lines</summary>\n\n${header}${remaining.map(fileRow).join("\n")}\n\n</details>\n`;
+
 fs.writeFileSync(
-	path.resolve(outputDirectory, "escape-hatch-types.md"),
-	`### Escape-hatch types\n\n${report}`,
+	path.resolve(outputDirectory, "types-coverage.md"),
+	`## Types Coverage\n\n${report}`,
 	"utf8"
 );
 console.log(report);
