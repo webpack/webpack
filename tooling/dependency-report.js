@@ -104,16 +104,19 @@ const collect = (dir) => {
 	const packages = JSON.parse(
 		fs.readFileSync(path.join(dir, "package-lock.json"), "utf8")
 	).packages;
-	// npm 11 links a `file:` dependency despite `--install-links`: the link
-	// location carries no version, and its target sits outside `node_modules`.
+	// npm 11 links a `file:` dependency despite `--install-links`, leaving the
+	// link without a version: its target and all nested under it move to it.
 	for (const location of Object.keys(packages)) {
 		const entry = packages[location];
 		// A target already folded into its link is gone.
 		if (!entry || !entry.link || !entry.resolved) continue;
 		const { resolved } = entry;
 		if (!packages[resolved]) continue;
-		packages[location] = packages[resolved];
-		delete packages[resolved];
+		for (const nested of Object.keys(packages)) {
+			if (nested !== resolved && !nested.startsWith(`${resolved}/`)) continue;
+			packages[location + nested.slice(resolved.length)] = packages[nested];
+			delete packages[nested];
+		}
 	}
 	// Copies of one version npm could not hoist share a row.
 	/** @type {Map<string, ReportRow>} */
