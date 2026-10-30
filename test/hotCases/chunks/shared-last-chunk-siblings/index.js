@@ -1,7 +1,7 @@
 import { loadB } from "./importer";
 
 const hasX = () =>
-	Object.keys(__webpack_modules__).some((id) => /x\.js$/.test(id));
+	Object.keys(__webpack_modules__).some((id) => /(^|\/)x\.js$/.test(id));
 
 it("should load only the chunks of the imported group when its last chunk ends another group", (done) => {
 	loadB()
