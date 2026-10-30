@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Fix HMR with a reused persistent cache, CSS order and rejected accepts.
+Fix HMR cache, CSS order, rejected accepts, over-fetching and custom chunk ids.

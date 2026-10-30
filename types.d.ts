@@ -3191,6 +3191,10 @@ declare interface ChunkRenderContextJavascriptModulesPlugin {
 	 */
 	inlinedEntrySource?: Source;
 }
+declare interface ChunkRetainedDependencyIds {
+	[index: number]: ModuleId[];
+	[index: string]: ModuleId[];
+}
 declare interface ChunkRuntime {
 	[index: number]: string;
 	[index: string]: string;
@@ -36540,6 +36544,7 @@ declare namespace exports {
 		chunkModuleIds?: ChunkModuleIds;
 		chunkSiblingIds?: ChunkSiblingIds;
 		chunkInjectedModuleIds?: ChunkInjectedModuleIds;
+		chunkRetainedDependencyIds?: ChunkRetainedDependencyIds;
 	}
 
 	/**
@@ -37250,6 +37255,7 @@ declare namespace exports {
 		export let hasSynthesizedDeferredNamespace: "has synthesized deferred namespace";
 		export let hmrChunkGroups: "__webpack_require__.hmrG";
 		export let hmrChunkVersions: "__webpack_require__.hmrV";
+		export let hmrCheckChunkVersions: "__webpack_require__.hmrK";
 		export let hmrDownloadManifest: "__webpack_require__.hmrM";
 		export let hmrDownloadUpdateHandlers: "__webpack_require__.hmrC";
 		export let hmrInvalidateModuleHandlers: "__webpack_require__.hmrI";
@@ -38402,6 +38408,7 @@ declare namespace exports {
 			export let hasSynthesizedDeferredNamespace: "has synthesized deferred namespace";
 			export let hmrChunkGroups: "__webpack_require__.hmrG";
 			export let hmrChunkVersions: "__webpack_require__.hmrV";
+			export let hmrCheckChunkVersions: "__webpack_require__.hmrK";
 			export let hmrDownloadManifest: "__webpack_require__.hmrM";
 			export let hmrDownloadUpdateHandlers: "__webpack_require__.hmrC";
 			export let hmrInvalidateModuleHandlers: "__webpack_require__.hmrI";
