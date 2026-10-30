@@ -16010,6 +16010,14 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		).toBe(
 			"export function a(t){t.forEach(t=>{});t.forEach(function(t){g(t)})}export function b(t){let n=()=>{o=t};n();let o;n()}export function c(t){let n;(function(){n=t})()}export function d(t){let n;t.forEach(t=>{n=t});return()=>n}"
 		);
+		// A value running nothing moves past what runs nothing, not past what may.
+		expect(
+			print(
+				'export function r(j){const i=/*#__PURE__*/j("i",[]);return /*#__PURE__*/j("d",[/*#__PURE__*/j("b",[]),i])}export function s(j,l){const i=/*#__PURE__*/j("i",[]);return j("d",[l("b"),i])}'
+			)
+		).toBe(
+			'export function r(i){return i("d",[i("b",[]),i("i",[])])}export function s(i,n){let t=i("i",[]);return i("d",[n("b"),t])}'
+		);
 		// A literal of functions and constants is made where its one read is.
 		expect(
 			print(
