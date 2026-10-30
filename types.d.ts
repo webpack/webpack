@@ -37916,6 +37916,12 @@ declare namespace exports {
 				};
 			}
 			export namespace printer {
+				export let load: () => Promise<{
+					minify: (
+						code: string,
+						options: MinifyOptions
+					) => Promise<{ code: string }>;
+				}>;
 				export let prepareMinify: (
 					text: string,
 					options: JavascriptProcessOptions
