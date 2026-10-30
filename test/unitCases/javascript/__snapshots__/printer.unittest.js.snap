@@ -1427,8 +1427,7 @@ exports[`JavaScript minifier, programs reduced from packages should minify what 
 exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from a bundled program, b6.js 1`] = `""`;
 
 exports[`JavaScript minifier, programs reduced from packages should minify what runs as the source does, reduced from a bundled program, b7.js 1`] = `
-"(()=>{function matchArity(){let t=length===1?function(){}:function(){apply(arguments)}
-return t}exports=class t{constructor(){return function(){mockConstructor=matchArity(function(){}|0)({})}}_createMockFunction(){for(spyState of this);}}})()
+"(()=>{function matchArity(){return length===1?function(){}:function(){apply(arguments)}}exports=class t{constructor(){return function(){mockConstructor=matchArity(function(){}|0)({})}}_createMockFunction(){for(spyState of this);}}})()
 "
 `;
 
@@ -2863,6 +2862,17 @@ exports[`syntax-printer improve phase should keep an object whose making runs co
 
 exports[`syntax-printer improve phase should keep an object whose making runs code before a property write 3`] = `"var x={};!function(){var C={f:f};x.y=1;{function f(){}}x.z=C}(),console.log(typeof x.z.f);"`;
 
+exports[`syntax-printer improve phase should move an assignment past writes to a name only a function in its value redeclares 1`] = `
+Array [
+  "function f(o){return 6}console.log(f(1));",
+  "function f(o){return(c?function(o){return o}:null)(o+=1)}var c=1;console.log(f(1));",
+  "function f(o){return[o.p,(o={p:3}).p]}console.log(f({p:1}));",
+  "function f(o){return[(o=>()=>o)(o)(),o=7]}console.log(f(2));",
+  "function f(o){var x=function(){o=8};return o=3,x(),o}console.log(f(1));",
+  "var o=1;function t(){return(t=function(o){return 2*o})(o)}console.log(t(),t(),o);",
+]
+`;
+
 exports[`syntax-printer improve phase should write less, printing the same: \`#__PURE__\` calls running more than a \`return\`, or returning what has side effects, passed on as arguments 1`] = `"function g(x){return x}var o={p:{q:g}};console.log((g(),1),g(g()),o.p.q(1),o.p);"`;
 
 exports[`syntax-printer improve phase should write less, printing the same: \`+= 1\` as \`++\` on a counter holding only numbers, but not on a property or a parameter that may hold a BigInt or a string 1`] = `"function f(o,s){o.a-=1,s+=1;for(var i=0;i<3;++i)console.log(i,o.a,s)}f({a:5},\\"s\\");"`;
@@ -2937,7 +2947,7 @@ exports[`syntax-printer improve phase should write less, printing the same: \`va
 
 exports[`syntax-printer improve phase should write less, printing the same: \`void x ?? y\`, which runs \`x\` and reads \`y\` whatever \`x\` holds 1`] = `"function y(){console.log(\\"y\\")}var z=2;console.log((y(),1),z,(y(),y(),3));"`;
 
-exports[`syntax-printer improve phase should write less, printing the same: Babel's \`typeof\` helper asking whether \`Symbol\` exists, from ECMAScript 2015 on 1`] = `"function t(e){return t=function(e){return typeof e},t(e)}console.log(t(1),t(Symbol()));"`;
+exports[`syntax-printer improve phase should write less, printing the same: Babel's \`typeof\` helper asking whether \`Symbol\` exists, from ECMAScript 2015 on 1`] = `"function t(e){return(t=function(e){return typeof e})(e)}console.log(t(1),t(Symbol()));"`;
 
 exports[`syntax-printer improve phase should write less, printing the same: Babel's loop copying a rest parameter out of \`arguments\` as a spread, from ECMAScript 2015 1`] = `"function all(){var args=[...arguments];return args}function rest(a){var others=[...arguments].slice(1);return[a,others.length,others]}var o={m:function(){var more=[...arguments].slice(2);return[this===o,more]}};console.log(all(),all(1,2),rest(),rest(1),rest(1,2,3),o.m(1),o.m(1,2,3,4));"`;
 
@@ -3454,6 +3464,8 @@ exports[`syntax-printer improve phase should write less, printing the same: an a
 exports[`syntax-printer improve phase should write less, printing the same: an assignment after a bare \`let\`, moved into it, but never into a loop's head 1`] = `"function f(n){if(n){let t;g(t=g(n)),g(t)}}function h(n){if(n){let t;for(t=g(n);t<4;t++)setTimeout(()=>console.log(t))}}function g(x){return console.log(x),x+1}f(1),h(1);"`;
 
 exports[`syntax-printer improve phase should write less, printing the same: an assignment moved into a \`for…of\` head declaring its own names, unless it reads one 1`] = `"function f(){for(let t of[1,2])console.log(t)}function g(t){var e=[t];for(let t of e)console.log(t)}f(),g(3);"`;
+
+exports[`syntax-printer improve phase should write less, printing the same: an assignment moved into the call reading it, past a name only a function in its value declares 1`] = `"function e(o){return(e=Object.assign||function(o){for(var i=1;i<arguments.length;i++)for(var k in arguments[i])o[k]=arguments[i][k];return o}).apply(this,arguments)}console.log(JSON.stringify(e({a:1},{b:2})));"`;
 
 exports[`syntax-printer improve phase should write less, printing the same: an assignment moved past a built-in kept out of the object of the property it reads 1`] = `"console.log(function(){var o={};return console.log(o.p),o.p}());"`;
 
