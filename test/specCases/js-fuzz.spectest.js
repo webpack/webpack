@@ -261,8 +261,10 @@ const identifierAt = (code, offset) => {
 	);
 	return match === null
 		? ""
-		: match[0].replace(/\\u\{?([\da-fA-F]+)\}?/g, (_, hex) =>
-				String.fromCodePoint(Number.parseInt(hex, 16))
+		: match[0].replace(
+				/\\u(?:\{([\da-fA-F]+)\}|([\da-fA-F]{4}))/g,
+				(_, braced, hex) =>
+					String.fromCodePoint(Number.parseInt(braced || hex, 16))
 			);
 };
 
@@ -428,6 +430,17 @@ const parseAcorn = (code, isModule, ranges) =>
 		ranges
 	});
 
+// The statements whose body may print with or without braces.
+const BRACED_BODIES = new Set([
+	"DoWhileStatement",
+	"WhileStatement",
+	"ForStatement",
+	"ForInStatement",
+	"ForOfStatement",
+	"IfStatement",
+	"LabeledStatement"
+]);
+
 /**
  * A tree with what printing may respell taken out: positions, a literal's or an
  * untagged template's spelling, a key's quotes, nested sequences' commas and
@@ -463,6 +476,24 @@ const normalize = (node, tagged) => {
 	const out = {};
 	for (const key of Object.keys(source)) {
 		if (key === "start" || key === "end" || key === "range" || key === "loc") continue;
+		// A block of one statement a loop or `if` runs prints with or without braces.
+		if (
+			BRACED_BODIES.has(source.type) &&
+			(key === "body" || key === "consequent" || key === "alternate") &&
+			source[key] !== null &&
+			source[key].type === "BlockStatement" &&
+			source[key].body.length === 1 &&
+			!/^(?:FunctionDeclaration|ClassDeclaration)$/.test(
+				source[key].body[0].type
+			) &&
+			!(
+				source[key].body[0].type === "VariableDeclaration" &&
+				source[key].body[0].kind !== "var"
+			)
+		) {
+			out[key] = normalize(source[key].body[0]);
+			continue;
+		}
 		if (key === "raw" && source.type === "Literal") continue;
 		if (source.type === "TemplateElement" && key === "value" && !tagged) {
 			out.value = source.value.cooked;
@@ -511,6 +542,24 @@ const normalize = (node, tagged) => {
  * @param {boolean} isModule whether it is a module
  * @returns {string} its tokens, one per line
  */
+/**
+ * Compressed as it prints, an output may keep parentheses or leave out braces
+ * a plain print writes, so it is held to reading back as the same program.
+ * @param {string} code an output
+ * @param {string} reprinted it printed again
+ * @param {boolean} isModule whether it is a module
+ * @returns {boolean} whether both read as the same tree
+ */
+const readsBackTheSame = (code, reprinted, isModule) => {
+	const ours = parseAcornUnlessDefect(code, isModule, false);
+	const again = parseAcornUnlessDefect(reprinted, isModule, false);
+	return (
+		ours === undefined ||
+		again === undefined ||
+		!firstDifference(normalize(again), normalize(ours), "program")
+	);
+};
+
 const tokensOf = (code, isModule) => {
 	/** @type {string[]} */
 	const tokens = [];
@@ -596,15 +645,19 @@ const eagerParserDifference = (code, isModule) => {
 };
 
 /**
- * webpack's one-pass minify of a program: its code, and its source map as
- * JSON where `sourceMap` asks for one.
+ * webpack's one-pass minify of a program, given its options as `jsMinify`
+ * gives them: `compress` and `mangle` on where unnamed, a script unless a
+ * module. Its code, and its source map as JSON where `sourceMap` asks.
  * @type {Minify}
  */
 const minify = async (code, { sourceMap, ...options }) => {
 	const result = /** @type {{ code: string, map: EXPECTED_OBJECT | undefined }} */ (
 		new SourceProcessor().process(code, {
 			mode: "minify",
+			compress: {},
+			mangle: true,
 			...options,
+			sourceType: options.module ? "module" : "script",
 			...(sourceMap ? { source: "0", content: code } : undefined)
 		})
 	);
@@ -686,7 +739,10 @@ const checkProgram = async ({ code: source, module: isModule }, optionSets) => {
 		});
 		let sameTokens;
 		try {
-			sameTokens = tokensOf(reprinted, isModule) === tokensOf(code, isModule);
+			sameTokens =
+				options.compress === false
+					? tokensOf(reprinted, isModule) === tokensOf(code, isModule)
+					: readsBackTheSame(code, reprinted, isModule);
 		} catch (err) {
 			if (compileError(reprinted, isModule) !== undefined) {
 				return `minify ${label}: printer writes its output as what does not parse: ${/** @type {Error} */ (err).message}\n\toutput:    ${code}\n\treprinted: ${reprinted}`;
