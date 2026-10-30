@@ -15144,7 +15144,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"function f(o){ let { a } = o, [b, , c] = o; a = 1; return a + b + c }",
 				{},
-				"function f(o){let{a:a}=o,[c,,n]=o;return 1+c+n}"
+				"function f(o){let{a:a}=o,[c,,n]=o;return(a=1)+c+n}"
 			],
 			[
 				"function f(o){ const [, a] = o, { b } = o; const [c] = o; c = 1; return a + b + c }",
@@ -16188,14 +16188,15 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			"export var c;!function n(){(a--&&n()).p;return{get p(){c=1}}}();!function(){!function(n){n=n&&(c=2)}()}();"
 		);
 		// A name set only for its one read keeps the assignment where the
-		// name alone would be a direct `eval` or read by `typeof`.
+		// name alone would be a direct `eval` or read by `typeof`, or the
+		// write throws in its dead zone.
 		expect(
 			print(
-				'export function run(f){"use strict";f=eval;return f("this")}export function t(f){g();f=missing;return typeof f}',
+				'export function run(f){"use strict";f=eval;return f("this")}export function t(f){g();f=missing;return typeof f}export function d(){g();x=1;return x;let x}',
 				{ mangle: false }
 			)
 		).toBe(
-			'export function run(f){"use strict";return(f=eval)("this")}export function t(f){g();return typeof(f=missing)}'
+			'export function run(f){"use strict";return(f=eval)("this")}export function t(f){g();return typeof(f=missing)}export function d(){g();return x=1;let x}'
 		);
 		// A call printing as what it runs, unread last in a sequence or under
 		// `void` or `!`, prints bare.
