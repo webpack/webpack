@@ -213,6 +213,24 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				{},
 				"if(a){if(b)c()}else d();if(a){for(;;)if(b)c()}else d();a?b?c():e():d();if(a){e:if(b)c()}else d();"
 			],
+			// A block unwrapped to the `if` it holds still ends in that `if`.
+			[
+				"if (s) { if (a) { f() } else { if (b) { g() } } } else { h() }",
+				{ mangle: false },
+				"if(s){if(a)f();else if(b)g()}else h();"
+			],
+			// An empty loop body keeps the `;` no line break stands in for.
+			[
+				"x(); do ; while (a)",
+				{ format: { semicolons: false } },
+				"x()\ndo;while(a)\n"
+			],
+			// An import attribute's value stays a string where strings print as templates.
+			[
+				"import a from 'b' with { type: 'json' }; a(); x = 'json'",
+				{ sourceType: "module", ecma: 2020 },
+				'import o from"b"with{type:"json"};o();x=`json`;'
+			],
 			[
 				"if (a) { let x = h(); f(x, x) } if (a) { const y = h(); f(y, y) } if (a) { var z = 1 } if (a) { class C {} } if (a) { function g() {} } if (a) {} if (a) { b(); c() }",
 				{},
