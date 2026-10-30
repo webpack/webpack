@@ -2868,6 +2868,7 @@ Array [
   "function f(o){return(c?function(o){return o}:null)(o+=1)}var c=1;console.log(f(1));",
   "function f(o){return[o.p,(o={p:3}).p]}console.log(f({p:1}));",
   "function f(o){return[(o=>()=>o)(o)(),o=7]}console.log(f(2));",
+  "function f(o){var x;return(x=[function(o){return o},o])[0](x[1])+(o=4)}console.log(f(1));",
   "function f(o){var x=function(){o=8};return o=3,x(),o}console.log(f(1));",
   "var o=1;function t(){return(t=function(o){return 2*o})(o)}console.log(t(),t(),o);",
 ]

@@ -11473,10 +11473,14 @@ x = a ** b ** c; x = (a ** b) ** c; x = (-a) ** b; x = a < b < c; x = a < (b < c
 				"function f(o){var g;g=c?function(o){return o}:null;o=o+1;return g(o)}var c=1;console.log(f(1))",
 				"function f(o){var g;g=function(o){return o.p}(o);o={p:3};return[g,o.p]}console.log(f({p:1}))",
 				"function f(o){var g;g=(o=>()=>o)(o);o=7;return[g(),o]}console.log(f(2))",
+				"function f(o){var x;x=[function(o){return o},o];o=4;return x[0](x[1])+o}console.log(f(1))",
 				"function f(o){var x;x=function(){o=8};o=3;x();return o}console.log(f(1))",
 				"var o=1;function t(){t=function(o){return o*2};return t(o)}console.log(t(),t(),o)"
 			]) {
-				const { code } = await minify(input, { compress: {}, mangle: false });
+				const { code } = await minify(input, {
+					compress: { passes: 2 },
+					mangle: false
+				});
 				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
 				written.push(code);
 			}
