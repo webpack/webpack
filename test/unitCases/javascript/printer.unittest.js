@@ -16118,6 +16118,31 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		expect(print('export const q=["a","c`"]', { ecma: 2020 })).toBe(
 			'export const q=["a","c`"];'
 		);
+		// `if`s next to each other returning values written alike test either.
+		expect(
+			print(
+				'export function q(a,b,v){if(a)return{kept:v};if(b)return{"kept":v};if(v)return v.x;if(a)return v.y}'
+			)
+		).toBe(
+			"export function q(r,t,e){if(r||t)return{kept:e};if(e)return e.x;if(r)return e.y}"
+		);
+		expect(
+			print(
+				'export function q(a,b,v){if(a)return{kept:v};if(b)return{"kept":v}}',
+				{ format: { keep_quoted_props: true } }
+			)
+		).toBe(
+			'export function q(t,e,r){if(t)return{kept:r};if(e)return{"kept":r}}'
+		);
+		// A call printing as what it runs, unread last in a sequence or under
+		// `void` or `!`, prints bare.
+		expect(
+			print(
+				"export function u(y,t){t(5),function(e){if(e)return e;t(e)}(y);void function(e){if(e)return t;t(6)}(y);!function(e){if(e)return;t(7)}(y);x=void function(e){t(e)}(y)}"
+			)
+		).toBe(
+			"export function u(t,e){e(5),t||e(t);t||e(6);t||e(7);x=void function(t){e(t)}(t)}"
+		);
 		// A literal of functions and constants is made where its one read is.
 		expect(
 			print(
