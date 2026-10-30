@@ -14918,7 +14918,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"function f(a){ function h(x){ return x + a } function k(){ return 1 } function r(n){ return n ? r(n - 1) : 0 } var z = h(2); for (;;) k(); g(z, r); function late(){} late(); return [early()]; function early(){ return 2 } }",
 				{},
-				"function f(n){function r(){return 1}function t(n){return n?t(n-1):0}var u=function(r){return r+n}(2);for(;;)r();g(u,t);(function(){})();return[2]}"
+				"function f(n){function r(){return 1}function t(n){return n?t(n-1):0}var u=function(){return 2+n}();for(;;)r();g(u,t);(function(){})();return[2]}"
 			],
 			// A name nothing reads goes, its value still running; a `var` set
 			// after a call is a constant where only its own function reads it.
@@ -15478,7 +15478,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"function f() { function r() { return a() } function a() { return arguments.callee } function s() { return b(1) } function b(n) { return () => n } return [r(), r(), s(), s()] }",
 				{},
-				"function f(){function n(){return r()}function r(){return arguments.callee}function t(){return function(n){return()=>n}(1)}return[n(),n(),t(),t()]}"
+				"function f(){function n(){return r()}function r(){return arguments.callee}function t(){return function(){return()=>1}()}return[n(),n(),t(),t()]}"
 			],
 			// A literal of constants folds into its read where that runs once.
 			[
@@ -15552,7 +15552,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"(function () { var x = 7; function h(k) { return k() } function f(a) { var g = function () { return x }; return h(g) + a } g(f(3)) })(); (function () { function h(k) { return k + 1 } function f(a) { var c = 5; return h(c) + a } g(f(3)) })(); (function () { function h(k) { return k.v } function f(a) { var c = { v: 5 }; return h(c) + a } g(f(3)) })()",
 				{},
-				"!function(){g(function(n){return function(n){return n()}(function(){return 7})+n}(3))}();!function(){g(function(n){return function(n){return n+1}(5)+n}(3))}();!function(){g(function(n){return function(n){return n.v}({v:5})+n}(3))}();"
+				"!function(){g(function(){return function(n){return n()}(function(){return 7})+3}())}();!function(){g(function(){return function(){return 5+1}()+3}())}();!function(){g(function(){return function(n){return n.v}({v:5})+3}())}();"
 			],
 			[
 				"function f(a){ if (0) x(); Math.PI }",
@@ -15926,14 +15926,18 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		}
 		// A statement calling a function expression prints the call after `!`.
 		expect(
-			print("(function(){g()})();(function(){g()})(),h();h(),(function(){g()})()")
-		).toBe("!function(){g()}();!function(){g()}(),h();h(),function(){g()}();");
+			print(
+				"(function(){for(;;)g()})();(function(){for(;;)g()})(),h();h(),(function(){for(;;)g()})()"
+			)
+		).toBe(
+			"!function(){for(;;)g()}();!function(){for(;;)g()}(),h();h(),function(){for(;;)g()}();"
+		);
 		expect(
-			print("(function(){g()})();h()", { compress: { negate_iife: false } })
-		).toBe("(function(){g()})();h();");
+			print("(function(){for(;;)g()})();h()", { compress: { negate_iife: false } })
+		).toBe("(function(){for(;;)g()})();h();");
 		expect(
-			print("(function(){g()})();h()", { format: { wrap_iife: true } })
-		).toBe("(function(){g()})();h();");
+			print("(function(){for(;;)g()})();h()", { format: { wrap_iife: true } })
+		).toBe("(function(){for(;;)g()})();h();");
 		// An empty function called where nothing reads it runs only its arguments.
 		expect(
 			print(
@@ -15958,10 +15962,10 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		// What a function called where nothing reads its call returns goes, where it runs nothing.
 		expect(
 			print(
-				"(function(){try{throw 1}finally{return 2}})();x=(function(){try{g()}finally{return 2}})();(function(){if(g())return 1;h()})();(async function(){g();return 1})();(function(){g();return h()})();a(),(()=>{g();return 2})(),b();(function*(){return 1})().next()"
+				"(function(){try{throw 1}finally{return 2}})();x=(function(){try{g()}finally{return 2}})();(function(){if(g())return 1;for(;;)h()})();(async function(){g();return 1})();(function(){g();return h()})();a(),(()=>{g();return 2})(),b();(function*(){return 1})().next()"
 			)
 		).toBe(
-			"!function(){try{throw 1}finally{return}}();x=function(){try{g()}finally{return 2}}();!function(){if(g())return;h()}();!async function(){g();return 1}();!function(){g();return h()}();a(),(()=>{g();return})(),b();(function*(){return 1})().next();"
+			"!function(){try{throw 1}finally{return}}();x=function(){try{g()}finally{return 2}}();!function(){if(g())return;for(;;)h()}();!async function(){g();return 1}();!function(){g();return h()}();a(),(()=>{g();return})(),b();(function*(){return 1})().next();"
 		);
 		// A method's value is the method's, read whatever the call around its class.
 		expect(
@@ -15983,12 +15987,12 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["(()=>{if(x){function f(){}g(f,f)}})()", "(()=>{if(x){function f(){}g(f,f)}})();"],
 			["(()=>{for(;;){var a=g();h(a,a)}})()", "(()=>{for(;;){var a=g();h(a,a)}})();"],
 			['(()=>{"use strict";g()})()', '(()=>{"use strict";g()})();'],
-			["(()=>{if(x)return;g()})()", "(()=>{if(x)return;g()})();"],
+			["(()=>{if(x)return;g()})()", "x||g();"],
 			["(()=>{eval(x)})()", "(()=>{eval(x)})();"],
 			["(function(){g(this)})()", "!function(){g(this)}();"],
 			["(function(){g(arguments)})()", "!function(){g(arguments)}();"],
-			["(function(a){g(a)})(1)", "!function(a){g(a)}(1);"],
-			["(()=>{g()})();h()", "(()=>{g()})();h();"]
+			["(function(a){g(a)})(1)", "!function(){g(1)}();"],
+			["(()=>{g()})();h()", "g();h();"]
 		]) {
 			expect(print(source, { module: false })).toBe(expected);
 		}
@@ -16017,6 +16021,30 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			)
 		).toBe(
 			'export function r(i){return i("d",[i("b",[]),i("i",[])])}export function s(i,n){let t=i("i",[]);return i("d",[n("b"),t])}'
+		);
+		// What follows a statement always leaving its list goes, but what it declares.
+		expect(
+			print(
+				"export function a(){return 1;g()}export function b(){if(1)return 7;g()}export function c(){return x;var x}export function d(){return h;function h(){}}export function e(){for(;;){if(a)break;else continue;h()}}"
+			)
+		).toBe(
+			"export function a(){return 1}export function b(){return 7}export function c(){return n;var n}export function d(){return function(){}}export function e(){for(;;){if(a)break;continue}}"
+		);
+		// A constant passed to a function called once is its parameter's value.
+		expect(
+			print(
+				'export const r=[function(a,b,c){return a+b+c}(1,g(),"s"),(x=>x*2)(3),function(x){x=2;return x}(1),function(x){return arguments[0]+x}(1),function f(x){return f.length+x}(1),function(x){return x}(1,2),function(x,y){return x+y}(...a)];export function m(){function n(y){return h(y,y)}return n(1)}'
+			)
+		).toBe(
+			"export const r=[function(t){return 1+t+\"s\"}(g()),(()=>6)(),function(n){return n=2}(1),function(n){return arguments[0]+n}(1),function n(t){return n.length+t}(1),function(){return 1}(2),function(n,t){return n+t}(...a)];export function m(){return function(){return h(1,1)}()}"
+		);
+		// A function called where nothing reads the call prints as what it runs.
+		expect(
+			print(
+				"export function u(y,r){(function(x){if(x)return 3;r(x)})(y);(()=>{if(r(1))return 4;r(2)})();(function(x){r(x);r(1)})(y);(function(){if({}.a)return;r()})();(function(x){if(x)return;r(x,()=>x)})(y)}export function v(y,r){(function(x){if(x=y)return;r(x)})(y)}export function w(y,r){(function(x){if(x)return y=1;r(x)})(y)}"
+			)
+		).toBe(
+			"export function u(r,n){r||n(r);n(1)||n(2);n(r),n(1);!function(){if({}.a)return;n()}();!function(r){if(r)return;n(r,()=>r)}(r)}export function v(r,n){!function(t){if(t=r)return;n(t)}(r)}export function w(r,n){!function(t){if(t)return r=1;n(t)}(r)}"
 		);
 		// A literal of functions and constants is made where its one read is.
 		expect(
@@ -16076,7 +16104,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				...options,
 				enclose: "y:7"
 			}).code
-		).toBe("!function(n){window.v=1+n}(7);");
+		).toBe("!function(){window.v=8}();");
 		expect(
 			minifyOnePass("window.v = y;", { ...options, enclose: true }).code
 		).toBe("!function(){window.v=y}();");
