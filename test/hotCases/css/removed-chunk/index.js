@@ -9,6 +9,7 @@ const expectStyles = (removedLoaded, lateLoaded = false, sharedLoaded = true) =>
 		expect(__webpack_css_server_styles__.includes("color: red")).toBe(removedLoaded);
 		expect(__webpack_css_server_styles__).toContain("color: blue");
 		expect(__webpack_css_server_styles__).toContain("color: purple");
+		expect(__webpack_css_server_styles__).toContain("color: teal");
 		expect(__webpack_css_server_styles__).not.toContain("color: green");
 		expect(__webpack_css_server_styles__.includes("color: orange")).toBe(lateLoaded);
 	} else {
@@ -16,6 +17,7 @@ const expectStyles = (removedLoaded, lateLoaded = false, sharedLoaded = true) =>
 		expect(links.some(link => link.href.includes("/removed."))).toBe(removedLoaded);
 		expect(links.some(link => link.href.includes("/kept_css."))).toBe(true);
 		expect(links.some(link => link.href.includes("/shared."))).toBe(sharedLoaded);
+		expect(links.some(link => link.href.includes("/page."))).toBe(true);
 		expect(links.some(link => link.href.includes("/unused."))).toBe(false);
 		expect(links.some(link => link.href.includes("/late."))).toBe(lateLoaded);
 	}
@@ -28,10 +30,18 @@ const rebuild = () =>
 	});
 
 it("should remove a loaded chunk's styles on apply and load them again when restored", async () => {
+	if (typeof document !== "undefined") {
+		// The HTML of a page whose entry loads "page" initially already links its stylesheet.
+		const link = document.createElement("link");
+		link.rel = "stylesheet";
+		link.href = __webpack_require__.p + __webpack_require__.k("page");
+		document.head.appendChild(link);
+	}
 	await Promise.all([
 		import("./kept.css"),
 		require("./owner").load(),
-		require("./owner").loadShared()
+		require("./owner").loadShared(),
+		require("./owner").loadPage()
 	]);
 	expectStyles(true);
 
