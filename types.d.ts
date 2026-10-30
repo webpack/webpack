@@ -12598,16 +12598,6 @@ declare abstract class HelperRuntimeModule extends RuntimeModule {
 	 */
 	receivesHotUpdates(): boolean;
 }
-
-/**
- * The hooks `HotModuleReplacementPlugin` calls on a compilation.
- */
-declare interface HotModuleReplacementCompilationHooks {
-	/**
-	 * called for each hot update manifest before it is emitted
-	 */
-	updateManifest: SyncHook<[HotUpdateManifest, HotUpdateManifestContext]>;
-}
 declare class HotModuleReplacementPlugin {
 	constructor();
 
@@ -12624,9 +12614,13 @@ declare class HotModuleReplacementPlugin {
 	/**
 	 * Returns the hooks a compilation calls while it renders hot updates.
 	 */
-	static getCompilationHooks(
-		compilation: Compilation
-	): HotModuleReplacementCompilationHooks;
+	static getCompilationHooks: (compilation: Compilation) => {
+		/**
+		 * Called for each hot update manifest before it is emitted; add a field for your own download handler, which gets the whole manifest.
+		 * @since 5.113.0
+		 */
+		updateManifest: SyncHook<[HotUpdateManifest, HotUpdateManifestContext]>;
+	};
 }
 declare interface HotModuleReplacementPluginLoaderContext {
 	hot?: boolean;
