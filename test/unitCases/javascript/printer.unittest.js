@@ -16170,6 +16170,23 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		).toBe(
 			"export function f(e){var o;e.a();(o=e.test)()}export class C extends B{#e;#o(){}}"
 		);
+		// Values fold in order, past no read folded already; a `const` set
+		// still throws; a function that may call itself keeps its return; an
+		// unread call whose body opens with a function stays a call.
+		expect(
+			print(
+				"export function f(){var i=0;var log=g;var x=i++;var y=i++;log(y,x)}export function k(){const a=1;a=2;return a}export function m(i){var x=i++;return x**2}"
+			)
+		).toBe(
+			"export function f(){var r=0,n=g,o=r++;n(r++,o)}export function k(){const r=1;return r=2}export function m(r){return(r++)**2}"
+		);
+		expect(
+			print(
+				"export var c;(function f(){(a--&&f()).p;return{get p(){c=1}}})();(function(){(function(a){a=a&&(c=2)})()})()"
+			)
+		).toBe(
+			"export var c;!function n(){(a--&&n()).p;return{get p(){c=1}}}();!function(){!function(n){n=n&&(c=2)}()}();"
+		);
 		// A call printing as what it runs, unread last in a sequence or under
 		// `void` or `!`, prints bare.
 		expect(
