@@ -11,7 +11,7 @@ const { execFileSync } = require("child_process");
 const fs = require("fs");
 const path = require("path");
 const ts = require("typescript");
-const { base, root } = require("./argv");
+const { base, baseAny, root } = require("./argv");
 const createTypeScriptProgram = require("./typescript-program");
 
 const program = createTypeScriptProgram("tsconfig.json");
@@ -37,6 +37,19 @@ const typeChecker = program.getTypeChecker();
 /** @type {Record<string, FileReport>} */
 const coverageReport = Object.create(null);
 
+// Directories whose escape hatches and inferred `any` the report counts.
+const ESCAPE_HATCH_DIRECTORIES = ["lib/", "hot/"];
+
+/**
+ * @typedef {object} InferredAny
+ * @property {number} line the line, from 1
+ * @property {string} name the identifier
+ * @property {string} type the type TypeScript infers for it
+ */
+
+/** @type {Record<string, InferredAny[]>} */
+const inferredAnyByFile = {};
+
 for (const sourceFile of program.getSourceFiles()) {
 	const file = sourceFile.fileName;
 	if (!sourceFile.isDeclarationFile) {
@@ -52,6 +65,13 @@ for (const sourceFile of program.getSourceFiles()) {
 		};
 		coverageReport[rep.path] = rep;
 		let statementIndex = 0;
+		const relativeFile = path.relative(root, file).split(path.sep).join("/");
+		/** @type {InferredAny[] | undefined} */
+		const inferredAny = ESCAPE_HATCH_DIRECTORIES.some((directory) =>
+			relativeFile.startsWith(directory)
+		)
+			? (inferredAnyByFile[relativeFile] = [])
+			: undefined;
 
 		/**
 		 * @param {ts.Node} node the node to be walked
@@ -126,12 +146,62 @@ for (const sourceFile of program.getSourceFiles()) {
 		};
 
 		/**
+		 * Tells whether a node declares or assigns a `let` written without a
+		 * type or a value. TypeScript answers `any` there, but types every
+		 * read by the values assigned before it, so nothing reads an `any`.
+		 * @param {ts.Node} node the identifier or `this`
+		 * @returns {boolean} true at such a declaration or assignment
+		 */
+		const isEvolvingLetWrite = (node) => {
+			if (!ts.isIdentifier(node)) return false;
+			const { parent } = node;
+			const isWrite =
+				(ts.isVariableDeclaration(parent) && parent.name === node) ||
+				(ts.isBinaryExpression(parent) &&
+					parent.left === node &&
+					parent.operatorToken.kind === ts.SyntaxKind.EqualsToken);
+			if (!isWrite) return false;
+			const symbol = typeChecker.getSymbolAtLocation(node);
+			const declaration = symbol && symbol.valueDeclaration;
+			return Boolean(
+				declaration &&
+				ts.isVariableDeclaration(declaration) &&
+				!declaration.initializer &&
+				!declaration.type &&
+				ts.getJSDocType(declaration) === undefined &&
+				ts.getJSDocType(declaration.parent.parent) === undefined
+			);
+		};
+
+		/**
+		 * Returns an identifier's type. The name `x` in `this.x = value` declares
+		 * the property, and TypeScript answers `any` there, so it is read off
+		 * the property's symbol instead.
+		 * @param {ts.Node} node the identifier or `this`
+		 * @returns {ts.Type} its type
+		 */
+		const getIdentifierType = (node) => {
+			const { parent } = node;
+			if (
+				ts.isPropertyAccessExpression(parent) &&
+				parent.name === node &&
+				ts.isBinaryExpression(parent.parent) &&
+				parent.parent.left === parent &&
+				parent.parent.operatorToken.kind === ts.SyntaxKind.EqualsToken
+			) {
+				const symbol = typeChecker.getSymbolAtLocation(parent);
+				if (symbol) return typeChecker.getTypeOfSymbol(symbol);
+			}
+			return typeChecker.getTypeAtLocation(node);
+		};
+
+		/**
 		 * @param {ts.Node} node the node to be walked
 		 * @returns {void}
 		 */
 		const walkNode = (node) => {
 			if (ts.isIdentifier(node) || node.kind === ts.SyntaxKind.ThisKeyword) {
-				const type = typeChecker.getTypeAtLocation(node);
+				const type = getIdentifierType(node);
 
 				if (!type) {
 					return;
@@ -184,6 +254,8 @@ for (const sourceFile of program.getSourceFiles()) {
 					isReplaceMethod(node) ||
 					// Ignore external types
 					isExternal ||
+					// Ignore where `let x;` is declared or assigned, its reads are narrowed
+					isEvolvingLetWrite(node) ||
 					// Should be not `any` and don't include `any` in types
 					(!(type.flags & ts.TypeFlags.Any) && !/\bany\b/.test(typeText));
 
@@ -198,6 +270,13 @@ for (const sourceFile of program.getSourceFiles()) {
 					}
 				};
 				rep.s[statementIndex] = isTyped ? typeText.length : 0;
+				if (!isTyped && inferredAny && type.flags & ts.TypeFlags.Any) {
+					inferredAny.push({
+						line: line + 1,
+						name: node.getText(sourceFile),
+						type: typeText
+					});
+				}
 				statementIndex++;
 			}
 
@@ -216,6 +295,22 @@ fs.writeFileSync(
 	"utf8"
 );
 
+/** @type {Record<string, number>} */
+const headAny = {};
+for (const [file, list] of Object.entries(inferredAnyByFile)) {
+	if (list.length > 0) headAny[file] = list.length;
+}
+// A run on the base commit writes these for `--base-any` to compare with.
+fs.writeFileSync(
+	path.resolve(outputDirectory, "inferred-any.json"),
+	JSON.stringify(headAny),
+	"utf8"
+);
+/** @type {Record<string, number> | undefined} */
+const baseAnyCounts = baseAny
+	? JSON.parse(fs.readFileSync(path.resolve(baseAny), "utf8"))
+	: undefined;
+
 // Escape-hatch types: how often each one stands in a JSDoc type in `lib/` and
 // `hot/`, against `--base` when given, for the report the pull request shows.
 const ESCAPE_HATCHES = [
@@ -229,8 +324,6 @@ const ESCAPE_HATCH_REGEXP =
 const JSDOC_REGEXP = /\/\*\*[\s\S]*?\*\//g;
 const TYPE_TAG_REGEXP =
 	/@(?:type|param|returns?|typedef|property|prop|template|this|satisfies|callback|enum)\s*\{/g;
-const ESCAPE_HATCH_DIRECTORIES = ["lib/", "hot/"];
-
 /** @typedef {Record<string, number>} EscapeHatchCounts */
 
 /**
@@ -378,6 +471,34 @@ const baseTotals = baseCounts ? totalEscapeHatches(baseCounts) : undefined;
 const countOf = (byFile, file, name) =>
 	(byFile && byFile[file] && byFile[file][name]) || 0;
 
+/**
+ * Returns a file's count of inferred `any`.
+ * @param {Record<string, number> | undefined} byFile counts by file
+ * @param {string} file the file
+ * @returns {number} the count
+ */
+const anyOf = (byFile, file) => (byFile && byFile[file]) || 0;
+
+/**
+ * Sums the counts of every file.
+ * @param {Record<string, number>} byFile counts by file
+ * @returns {number} the total
+ */
+const totalAny = (byFile) =>
+	Object.values(byFile).reduce((sum, count) => sum + count, 0);
+
+/**
+ * Renders a count with its change against the base, or nothing when it is zero and unchanged.
+ * @param {number} head the count at the head
+ * @param {number | undefined} baseCount the count at the base, when there is one
+ * @returns {string} the cell
+ */
+const countCell = (head, baseCount) => {
+	const change = baseCount === undefined ? 0 : head - baseCount;
+	if (change === 0) return head === 0 ? "" : `${head}`;
+	return `${head} (${formatChange(change)})`;
+};
+
 let report = `Typed lines: **${percent(allTyped, allLines)}** (${allTyped} of ${allLines})\n\n`;
 report += baseTotals
 	? "| Escape hatch | Base | Head | Change |\n| :-- | --: | --: | --: |\n"
@@ -389,46 +510,93 @@ for (const name of ESCAPE_HATCHES) {
 			)} |\n`
 		: `| \`${name}\` | ${headTotals[name]} |\n`;
 }
+if (baseTotals && baseAnyCounts) {
+	const baseAnyTotal = totalAny(baseAnyCounts);
+	const headAnyTotal = totalAny(headAny);
+	report += `| inferred \`any\` | ${baseAnyTotal} | ${headAnyTotal} | ${formatChange(
+		headAnyTotal - baseAnyTotal
+	)} |\n`;
+} else {
+	report += baseTotals
+		? `| inferred \`any\` | — | ${totalAny(headAny)} | — |\n`
+		: `| inferred \`any\` | ${totalAny(headAny)} |\n`;
+}
+report +=
+	"\nInferred `any` counts the identifiers whose type TypeScript infers as `any` though no JSDoc names it, such as `const map = new Map()`.\n";
 
-const header = `| File | Typed lines | ${ESCAPE_HATCHES.map((name) => `\`${name}\``).join(" | ")} |\n| :-- | --: |${" --: |".repeat(ESCAPE_HATCHES.length)}\n`;
+const header = `| File | Typed lines | ${ESCAPE_HATCHES.map((name) => `\`${name}\``).join(" | ")} | inferred \`any\` |\n| :-- | --: |${" --: |".repeat(ESCAPE_HATCHES.length + 1)}\n`;
 
 /**
- * Renders a file's row: its coverage and each escape hatch, with its change against the base.
+ * Renders a file's row: its coverage, each escape hatch and its inferred `any`, with their changes against the base.
  * @param {string} file the file
  * @returns {string} the row
  */
 const fileRow = (file) => {
 	const coverage = coverageByFile.get(file);
-	const cells = ESCAPE_HATCHES.map((name) => {
-		const head = countOf(headCounts, file, name);
-		const change = head - countOf(baseCounts, file, name);
-		if (!baseCounts || change === 0) return head === 0 ? "" : `${head}`;
-		return `${head} (${formatChange(change)})`;
-	});
+	const cells = ESCAPE_HATCHES.map((name) =>
+		countCell(
+			countOf(headCounts, file, name),
+			baseCounts ? countOf(baseCounts, file, name) : undefined
+		)
+	);
+	cells.push(
+		countCell(
+			anyOf(headAny, file),
+			baseAnyCounts ? anyOf(baseAnyCounts, file) : undefined
+		)
+	);
 	return `| \`${file}\` | ${coverage ? percent(coverage.typed, coverage.lines) : "—"} | ${cells.join(" | ")} |`;
 };
 
 if (baseCounts) {
 	const changed = [
-		...new Set([...Object.keys(baseCounts), ...Object.keys(headCounts)])
+		...new Set([
+			...Object.keys(baseCounts),
+			...Object.keys(headCounts),
+			...Object.keys(baseAnyCounts || {}),
+			...Object.keys(headAny)
+		])
 	]
-		.filter((file) =>
-			ESCAPE_HATCHES.some(
-				(name) =>
-					countOf(headCounts, file, name) !== countOf(baseCounts, file, name)
-			)
+		.filter(
+			(file) =>
+				ESCAPE_HATCHES.some(
+					(name) =>
+						countOf(headCounts, file, name) !== countOf(baseCounts, file, name)
+				) ||
+				(baseAnyCounts !== undefined &&
+					anyOf(headAny, file) !== anyOf(baseAnyCounts, file))
 		)
 		.sort();
 	report +=
 		changed.length > 0
 			? `\n#### Changed by this pull request\n\n${header}${changed.map(fileRow).join("\n")}\n`
-			: "\nThis pull request adds or removes no escape-hatch type.\n";
+			: "\nThis pull request adds or removes no escape-hatch type or inferred `any`.\n";
+
+	// Where each inferred `any` stands in the files this pull request gave more of them.
+	const worse = baseAnyCounts
+		? changed.filter(
+				(file) => anyOf(headAny, file) > anyOf(baseAnyCounts, file)
+			)
+		: [];
+	if (worse.length > 0) {
+		/** @type {string[]} */
+		const lines = [];
+		for (const file of worse) {
+			for (const { line, name, type } of inferredAnyByFile[file] || []) {
+				lines.push(
+					`| \`${file}:${line}\` | \`${name}\` | \`${type.replace(/\|/g, "\\|")}\` |`
+				);
+			}
+		}
+		report += `\n<details><summary>Inferred \`any\` in the files this pull request adds some to</summary>\n\n| Location | Identifier | Type |\n| :-- | :-- | :-- |\n${lines.join("\n")}\n\n</details>\n`;
+	}
 }
 
-// Every file still owing a real type: an escape hatch or an untyped line.
+// Every file still owing a real type: an escape hatch, an inferred `any` or an untyped line.
 const remaining = [
 	...new Set([
 		...Object.keys(headCounts),
+		...Object.keys(headAny),
 		...[...coverageByFile]
 			.filter(
 				([file, { lines, typed }]) =>
@@ -443,11 +611,11 @@ const remaining = [
 	const total = (/** @type {string} */ file) =>
 		ESCAPE_HATCHES.reduce(
 			(sum, name) => sum + countOf(headCounts, file, name),
-			0
+			anyOf(headAny, file)
 		);
 	return total(b) - total(a) || (a < b ? -1 : 1);
 });
-report += `\n<details><summary>${remaining.length} file(s) in <code>lib/</code> and <code>hot/</code> still use an escape hatch or have untyped lines</summary>\n\n${header}${remaining.map(fileRow).join("\n")}\n\n</details>\n`;
+report += `\n<details><summary>${remaining.length} file(s) in <code>lib/</code> and <code>hot/</code> still use an escape hatch, infer \`any\` or have untyped lines</summary>\n\n${header}${remaining.map(fileRow).join("\n")}\n\n</details>\n`;
 
 fs.writeFileSync(
 	path.resolve(outputDirectory, "types-coverage.md"),
