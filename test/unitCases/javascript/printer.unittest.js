@@ -15961,11 +15961,11 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			print("(function(){g()})();(function(){g()})(),h();h(),(function(){g()})()")
 		).toBe("!function(){g()}();!function(){g()}(),h();h(),function(){g()}();");
 		expect(
-			print("(function(){g()})()", { compress: { negate_iife: false } })
-		).toBe("(function(){g()})();");
+			print("(function(){g()})();h()", { compress: { negate_iife: false } })
+		).toBe("(function(){g()})();h();");
 		expect(
-			print("(function(){g()})()", { format: { wrap_iife: true } })
-		).toBe("(function(){g()})();");
+			print("(function(){g()})();h()", { format: { wrap_iife: true } })
+		).toBe("(function(){g()})();h();");
 		// An empty function called where nothing reads it runs only its arguments.
 		expect(
 			print(
@@ -16003,12 +16003,34 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		).toBe(
 			"(()=>{class r{a(){return 1}get b(){return 2}static c(){return 3}}g(r,{m(){return 4},get n(){return 5}})})();"
 		);
+		// A program only calling a function prints as its statements, where they
+		// declare nothing, return nothing and read nothing the call gives them.
+		for (const [source, expected] of [
+			["(()=>{it(1);it(2)})()", "it(1);it(2);"],
+			["(function(){if(x){let y=g();h(y)}})()", "if(x)h(g());"],
+			["(()=>{var a=1;g(a)})()", "g(1);"],
+			["(()=>{g(this,()=>{return 1})})()", "g(this,()=>1);"],
+			["(()=>{let a=g();h(a);h(a)})()", "(()=>{let a=g();h(a);h(a)})();"],
+			["(()=>{class A{}g(A,A)})()", "(()=>{class A{}g(A,A)})();"],
+			["(()=>{if(x){function f(){}g(f,f)}})()", "(()=>{if(x){function f(){}g(f,f)}})();"],
+			["(()=>{for(;;){var a=g();h(a,a)}})()", "(()=>{for(;;){var a=g();h(a,a)}})();"],
+			['(()=>{"use strict";g()})()', '(()=>{"use strict";g()})();'],
+			["(()=>{if(x)return;g()})()", "(()=>{if(x)return;g()})();"],
+			["(()=>{eval(x)})()", "(()=>{eval(x)})();"],
+			["(function(){g(this)})()", "!function(){g(this)}();"],
+			["(function(){g(arguments)})()", "!function(){g(arguments)}();"],
+			["(function(a){g(a)})(1)", "!function(a){g(a)}(1);"],
+			["(()=>{g()})();h()", "(()=>{g()})();h();"]
+		]) {
+			expect(print(source, { module: false })).toBe(expected);
+		}
+		expect(print("g()", { enclose: true })).toBe("!function(){g()}();");
 		// Moved to its one read, a function keeps the name `keep_fnames` keeps.
 		expect(
 			print("(()=>{function spread(a){h(a);return a}g(()=>spread([]))})()", {
 				keep_fnames: true
 			})
-		).toBe("(()=>{g(()=>function spread(a){h(a);return a}([]))})();");
+		).toBe("g(()=>function spread(a){h(a);return a}([]));");
 	});
 
 	it("should keep a named function a direct eval in a class or function it returns reads", () => {
