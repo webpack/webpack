@@ -5,6 +5,44 @@ const { pathToFileURL } = require("url");
 const identifierUtil = require("../../lib/util/identifier");
 
 describe("util/identifier", () => {
+	describe("contextifySourceUrl", () => {
+		/** @type {[string, string, string][]} */
+		const cases = [
+			["/project", "file:///project/source.js", "webpack://./source.js"],
+			["/project", "file:///project/a%20file.js", "webpack://./a file.js"],
+			["/project", "file:///shared/source.js", "webpack://../shared/source.js"],
+			["/project", "file:///project/a%2520file.js", "webpack://./a%20file.js"],
+			["/project", "file:///project/a%23file.js", "webpack://./a#file.js"],
+			[
+				"/project",
+				"file:///project/source.js?query=%20#fragment",
+				"webpack://./source.js?query=%20#fragment"
+			],
+			[
+				"C:\\project",
+				"file:///C:/project/a%20file.js",
+				"webpack://./a file.js"
+			],
+			[
+				"/project",
+				"file://server/share/source.js",
+				"webpack://file://server/share/source.js"
+			],
+			["/project", "file:///project/100%.js", "webpack://file:///project/100%.js"],
+			[
+				"/project",
+				"file:///project/%FF.js",
+				"webpack://file:///project/%FF.js"
+			],
+			["/project", "webpack://custom/source.js", "webpack://custom/source.js"],
+			["/project", "/project/source.js", "webpack://./source.js"]
+		];
+
+		it.each(cases)("contextifies %s and %s as %s", (context, source, expected) => {
+			expect(identifierUtil.contextifySourceUrl(context, source)).toBe(expected);
+		});
+	});
+
 	describe("normalizeSourceMapUrl", () => {
 		it("should normalize a source map's source as its readers resolve it", () => {
 			/** @type {[string, string][]} */
