@@ -36,7 +36,7 @@ const FIXTURES = [
 const MODES = [
 	["print", { compress: false, mangle: false }],
 	["mangle", { compress: false, mangle: true }],
-	["minify", {}]
+	["minify", { compress: {}, mangle: true }]
 ];
 
 /**

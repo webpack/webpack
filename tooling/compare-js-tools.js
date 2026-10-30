@@ -413,9 +413,8 @@ const TOOLS = [
 	},
 	{
 		// What a `futureDefaults` production build pays: webpack's own minify
-		// function under the options `optimization.minimize` defaults to, whose
-		// second compress pass is why this is no like for like against terser's.
-		name: "webpack (2 passes)",
+		// function, compressing and mangling in its one pass.
+		name: "webpack",
 		stage: "minify",
 		create: () => {
 			const jsMinify = require("../lib/javascript/jsMinify");
@@ -425,10 +424,7 @@ const TOOLS = [
 					await jsMinify(
 						{ "input.js": code },
 						undefined,
-						{
-							as: sourceType() === "module" ? "module" : "script",
-							compress: { passes: 2 }
-						},
+						{ as: sourceType() === "module" ? "module" : "script" },
 						false
 					)
 				).code;
@@ -440,10 +436,7 @@ const TOOLS = [
 		name: "webpack printer",
 		stage: "minify",
 		create: () => (code) =>
-			minifyOnePass(code, {
-				compress: { passes: 2 },
-				module: sourceType() === "module"
-			}).code
+			minifyOnePass(code, { module: sourceType() === "module" }).code
 	},
 	{
 		name: "terser",
@@ -1217,17 +1210,17 @@ const acornDifference = (source, options) => {
 // --- The printer's invariants -----------------------------------------------
 
 // The option sets the printer is held over: what a production build minifies
-// with, a second compress pass, the printer alone, and the printer laying out.
+// with, the printer alone, and the printer laying out.
 /** @type {[string, EXPECTED_ANY][]} */
 const PRESETS = [
 	["default", {}],
-	["2 passes", { compress: { passes: 2 } }],
 	["format", { compress: false, mangle: false }],
 	["beautify", { compress: false, mangle: false, format: { beautify: true } }]
 ];
 
 /**
- * webpack's one-pass minify: one JavaScript `SourceProcessor` run.
+ * webpack's one-pass minify: one JavaScript `SourceProcessor` run, given its
+ * options as `jsMinify` gives them, `compress` and `mangle` on where unnamed.
  * @param {string} code the source
  * @param {EXPECTED_ANY} options the minify options
  * @returns {{ code: string }} the output
@@ -1235,7 +1228,13 @@ const PRESETS = [
 const minifyOnePass = (code, options) => {
 	const { SourceProcessor } = require("../lib/javascript/syntax");
 
-	return new SourceProcessor().process(code, { mode: "minify", ...options });
+	return new SourceProcessor().process(code, {
+		compress: {},
+		mangle: true,
+		...options,
+		sourceType: options.module ? "module" : "script",
+		mode: options.format && options.format.beautify ? "beautify" : "minify"
+	});
 };
 
 /**
@@ -1515,7 +1514,7 @@ const EXPECTED = [
 		relation: "idempotence",
 		contains: "var ",
 		source: "ECharts",
-		presets: ["default", "2 passes"],
+		presets: ["default"],
 		why: "terser breaks the line after a statement's trailing comment only where it compresses, so a print-only reprint joins them"
 	}
 ];
