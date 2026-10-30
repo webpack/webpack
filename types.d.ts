@@ -34599,33 +34599,25 @@ declare class TokenStream {
  */
 declare interface TokenTable {
 	base: number;
-	size: () => number;
 	token: (index: number) => SourceToken;
 	commentsOf: (index: number, after: boolean) => CommentSyntaxPrinter[];
 	forEachCommentGap: (
 		callback: (index: number, comments: CommentSyntaxPrinter[]) => void
 	) => void;
-	keptComments: (test: (comment: CommentSyntaxPrinter) => boolean) => number;
-	placeComments: () => void;
 	commentFlags: () => Uint8Array;
 	outerCounts: Map<number, number>;
 }
 
 /**
- * The tokens of every parse a tree was read from. Its nodes hold their tokens'
+ * The tokens of the parse a tree was read from. Its nodes hold their tokens'
  * numbers, which this answers for; a token handed in whole answers for itself.
  */
 declare abstract class TokenTables {
-	tables: TokenTable[];
 	last?: TokenTable;
 	lastBase: number;
 	add(table: TokenTable): void;
-	nextBase(): number;
 	tableOf(number: number): undefined | TokenTable;
 	of(token?: null | number | any): any;
-	forEachCommentGap(
-		callback: (token: number, comments: CommentSyntaxPrinter[]) => void
-	): void;
 	commentsOf(
 		token: undefined | null | number | any,
 		after: boolean
