@@ -20137,7 +20137,7 @@ declare abstract class MinifierLabel {
 
 /**
  * One name declared in one scope, or a global: terser's `SymbolDef`, less
- * what only the compressor reads.
+ * what only terser's compressor reads.
  */
 declare abstract class MinifierVariable extends Variable {
 	kind: number;
