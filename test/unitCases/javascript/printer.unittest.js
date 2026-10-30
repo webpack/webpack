@@ -14832,7 +14832,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			{ compress: {}, mangle: {}, toplevel: true }
 		);
 		expect(printed.code).toBe(
-			"function e(e,o){return(e+o)*2}e(1,2);class o{#e=1;read(){return this.#e}static#o(){}}print((new o).read());"
+			"function e(e,o){return(e+o)*2}e(1,2);class o{#e=1;read(){return this.#e}}print((new o).read());"
 		);
 	});
 
@@ -15105,7 +15105,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"function f(o){ var a = {}.x + g(); var b = (class{}).y || g(); var c = (function(){})() ? g() : 1; var d = (function(){}(), g()); var e = function(){}`t${g()}`; var h = {}.p++; var i = ++o.p; var j = new X(g()); var k = (o.q = g()); }",
 				{},
-				"function f(a){({}).x+g();(class{}).y||g();(function(){})()?g():1;(function(){}(),g());(function(){})`t${g()}`;({}).p++;++a.p;new X(g());a.q=g()}"
+				"function f(a){({}).x+g();(class{}).y||g();(function(){})()?g():1;([],g());(function(){})`t${g()}`;({}).p++;++a.p;new X(g());a.q=g()}"
 			],
 			// A function moved to its read prints in parentheses where it would not read as a value.
 			[
@@ -15932,6 +15932,67 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		for (const [source, expected] of replaced) {
 			expect(print(source)).toBe(expected);
 		}
+		// A private member nothing reads goes, a field only where its value runs nothing.
+		const members = [
+			[
+				"export class C{#a(){return 1}#b=2;#c=g();get #d(){return 1}set #d(v){}static #e(){}#f;m(){return this.#f}}",
+				"export class C{#r=g();#c;m(){return this.#c}}"
+			],
+			[
+				'export class C{#a(){return 1}m(){return eval("this.#a()")}}',
+				'export class C{#a(){return 1}m(){return eval("this.#a()")}}'
+			],
+			[
+				"export class C{#a(){}m(o){return #a in o}}",
+				"export class C{#a(){}m(a){return#a in a}}"
+			],
+			[
+				"export class C{#a(){}m(){class D{f(o){return o.#a}}return D}}",
+				"export class C{#r(){}m(){class r{f(r){return r.#r}}return r}}"
+			],
+			["export class C{#a(){}}", "export class C{}"],
+			["export class C{/*! keep */#a(){}}", "export class C{/*! keep */#a(){}}"]
+		];
+		for (const [source, expected] of members) {
+			expect(print(source)).toBe(expected);
+		}
+		// A statement calling a function expression prints the call after `!`.
+		expect(
+			print("(function(){g()})();(function(){g()})(),h();h(),(function(){g()})()")
+		).toBe("!function(){g()}();!function(){g()}(),h();h(),function(){g()}();");
+		expect(
+			print("(function(){g()})()", { compress: { negate_iife: false } })
+		).toBe("(function(){g()})();");
+		expect(
+			print("(function(){g()})()", { format: { wrap_iife: true } })
+		).toBe("(function(){g()})();");
+		// An empty function called where nothing reads it runs only its arguments.
+		expect(
+			print(
+				"(function(){})(a(),b());x(),(()=>{})(...a),y();if(c)(function(a){})(...a);else d();z=(function(){})(a());(function({a}){})(b);(function(a=g()){})(b);(async function(){})(b)"
+			)
+		).toBe(
+			"[a(),b()];x(),[...a],y();c?[...a]:d();z=function(){}(a());!function({a:n}){}(b);!function(n=g()){}(b);!async function(){}(b);"
+		);
+		// Branches printing alike print once, after the test where it runs anything.
+		expect(
+			print(
+				'export function q(x,o){return[x?o["read"]():o.read(),1+(g(x)?o.read():o.read()),f(g(x)?o.r:o.r),(x?o.f:o.f)(),delete(x?o.f:o.f),typeof(x?y:y)]}export function s(x,o){x?o.f():o.f();g(x)?o.f():o.f()}'
+			)
+		).toBe(
+			"export function q(o,x){return[x.read(),1+(g(o),x.read()),f((g(o),x.r)),(o?x.f:x.f)(),delete(o?x.f:x.f),typeof(o?y:y)]}export function s(o,f){f.f();g(o),f.f()}"
+		);
+		expect(
+			print("export function q(x,o){return x?o.read():o.read()}", {
+				compress: { side_effects: false }
+			})
+		).toBe("export function q(o,r){return o,r.read()}");
+		// Moved to its one read, a function keeps the name `keep_fnames` keeps.
+		expect(
+			print("(()=>{function spread(a){h(a);return a}g(()=>spread([]))})()", {
+				keep_fnames: true
+			})
+		).toBe("(()=>{g(()=>function spread(a){h(a);return a}([]))})();");
 	});
 
 	it("should keep a named function a direct eval in a class or function it returns reads", () => {
