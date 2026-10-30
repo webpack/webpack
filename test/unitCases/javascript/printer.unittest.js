@@ -14895,7 +14895,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				'const a = g(), b = 1; const { x, y: [z = 1, ...r] } = a; const c = 1; c = 2; const d = 1; d++; const e = 1; [e] = []; const k = 1; ({ k } = {}); const m = 1; for (m of a); export const ex = 1; for (const i of a) g(i, x, z, r, b, c, d, e, k, m); while (true) g(); while (/*! t */ true) g(); while (a) g()',
 				{ module: true },
-				'let o=g(),{x:c,y:[t=1,...e]}=o;const n=1;n=2;const s=1;s++;const r=1;[r]=[];const a=1;({k:a}={});const i=1;for(i of o);export const ex=1;for(let f of o)g(f,c,t,e,1,n,s,r,a,i);for(;;)g();while(/*! t */!0)g();while(o)g();'
+				'const o=g(),{x:c,y:[t=1,...e]}=o,n=1;n=2;const s=1;s++;const r=1;[r]=[];const a=1;({k:a}={});const i=1;for(i of o);export const ex=1;for(let f of o)g(f,c,t,e,1,n,s,r,a,i);for(;;)g();while(/*! t */!0)g();while(o)g();'
 			],
 			[
 				"const a = 1; function f() { const b = g(); h(b); return b } f(a)",
@@ -15149,7 +15149,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"function f(o){ const [, a] = o, { b } = o; const [c] = o; c = 1; return a + b + c }",
 				{},
-				"function f(o){let[,c]=o,{b:n}=o;const[t]=o;t=1;return c+n+t}"
+				"function f(o){const[,c]=o,{b:n}=o,[t]=o;t=1;return c+n+t}"
 			],
 			// An alias reads its target, a catch parameter of its name aside.
 			[
@@ -16085,7 +16085,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				"export function t(r){return(function(y){let a=(function(x){if(x)return 7;r(x)})(y);let c=new function(x){if(x)return{b:9};this.b=0}(y);return[a,c]})(1)}"
 			)
 		).toBe(
-			"export function t(n){return function(){let e=function(){return 7}();return[e,new function(){return{b:9}}()]}()}"
+			"export function t(n){return function(){return[function(){return 7}(),new function(){return{b:9}}()]}()}"
 		);
 		// A conditional giving a boolean on one side prints as `&&` or `||`.
 		expect(
