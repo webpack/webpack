@@ -21,8 +21,9 @@ module.exports = {
 			compiler.hooks.compilation.tap("Test", (compilation) => {
 				compilation.hooks.chunkIds.tap("Test", (chunks) => {
 					for (const chunk of chunks) {
-						chunk.id = chunk.name;
-						chunk.ids = [chunk.id];
+						const name = /** @type {string} */ (chunk.name);
+						chunk.id = name;
+						chunk.ids = [name];
 					}
 				});
 			});
