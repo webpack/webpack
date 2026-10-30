@@ -135,6 +135,7 @@ import {
 	createScopesWriter,
 	encodeScopes
 } from "webpack-sources/types/helpers/scopes";
+import { originalPositionFor } from "webpack-sources/types/helpers/sourceMap";
 import {
 	disableDualStringBufferCaching,
 	enableDualStringBufferCaching,
@@ -40098,6 +40099,9 @@ declare namespace exports {
 					createScopesWriter,
 					encodeScopes
 				};
+			}
+			export namespace sourceMap {
+				export { originalPositionFor };
 			}
 			export namespace stringBufferUtils {
 				export {
