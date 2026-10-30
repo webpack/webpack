@@ -1842,16 +1842,16 @@ const byElementLiteral = (entries, asSet = false) => {
 	const inner = [...grouped]
 		.map(
 			([element, attributes]) =>
-				`${propertyKey(
-					element
-				)}: Object.assign(Object.create(null), {${attributes
+				`${propertyKey(element)}: /** @type {${
+					asSet ? "Record<string, Set<string>>" : "Record<string, string>"
+				}} */ (Object.assign(Object.create(null), {${attributes
 					.map(
 						([attribute, mapped]) =>
 							`${propertyKey(attribute)}: ${
 								asSet ? setLiteral(mapped.split(" ")) : `"${mapped}"`
 							}`
 					)
-					.join(", ")}})`
+					.join(", ")}}))`
 		)
 		.join(", ");
 	return `Object.assign(Object.create(null), {${inner}})`;

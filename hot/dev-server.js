@@ -44,7 +44,7 @@ if (module.hot) {
 					log("info", "[HMR] App is up to date.");
 				}
 			})
-			.catch(function (err) {
+			.catch(function (/** @type {Error} */ err) {
 				var status = module.hot.status();
 				if (["abort", "fail"].indexOf(status) >= 0) {
 					log(

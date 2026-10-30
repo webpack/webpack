@@ -12779,7 +12779,12 @@ x = a ** b ** c; x = (a ** b) ** c; x = (-a) ** b; x = a < b < c; x = a < (b < c
 			const ours = /** @type {EXPECTED_ANY} */ (
 				await writingAsTerser(() => minify(source, withTree()))
 			);
-			const theirs = await terserResult(() => terser.minify(source, withTree()));
+			const theirs = await terserResult(() =>
+				/** @type {NonNullable<typeof terser.minify>} */ (terser.minify)(
+					source,
+					withTree()
+				)
+			);
 			/**
 			 * @param {EXPECTED_ANY} tree a toplevel
 			 * @param {(tree: EXPECTED_ANY, visit: (node: EXPECTED_ANY) => void) => void} walk the walk of its tree's classes
@@ -20437,7 +20442,10 @@ describe("JavaScript minifier, what the tables leave out", () => {
 		const write = async () => {
 			const modules = createModules();
 			for (const phase of PHASES) phase.install(modules);
-			return /** @type {string} */ ((await modules.minify(source, options())).code);
+			const minify = /** @type {NonNullable<typeof modules.minify>} */ (
+				modules.minify
+			);
+			return /** @type {string} */ ((await minify(source, options())).code);
 		};
 		const expected = await write();
 		const saved = /** @type {PropertyDescriptor} */ (

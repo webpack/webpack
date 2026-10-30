@@ -11,7 +11,9 @@ if (typeof EventSource !== "function") {
 var urlBase = decodeURIComponent(__resourceQuery.slice(1));
 /** @type {EventSource | undefined} */
 var activeEventSource;
+/** @type {Map<string, number>} */
 var activeKeys = new Map();
+/** @type {Set<(err: Error) => void>} */
 var errorHandlers = new Set();
 
 var updateEventSource = function updateEventSource() {
@@ -74,7 +76,7 @@ exports.keepAlive = function (options) {
 	return function () {
 		errorHandlers.delete(onError);
 		setTimeout(function () {
-			var value = activeKeys.get(data);
+			var value = /** @type {number} */ (activeKeys.get(data));
 			if (value === 1) {
 				activeKeys.delete(data);
 				updateEventSource();
