@@ -44,7 +44,6 @@ const ESCAPE_HATCH_DIRECTORIES = ["lib/", "hot/"];
  * @typedef {object} InferredAny
  * @property {number} line the line, from 1
  * @property {string} name the identifier
- * @property {string} type the type TypeScript infers for it
  */
 
 /** @type {Record<string, InferredAny[]>} */
@@ -273,8 +272,7 @@ for (const sourceFile of program.getSourceFiles()) {
 				if (!isTyped && inferredAny && type.flags & ts.TypeFlags.Any) {
 					inferredAny.push({
 						line: line + 1,
-						name: node.getText(sourceFile),
-						type: typeText
+						name: node.getText(sourceFile)
 					});
 				}
 				statementIndex++;
@@ -582,13 +580,11 @@ if (baseCounts) {
 		/** @type {string[]} */
 		const lines = [];
 		for (const file of worse) {
-			for (const { line, name, type } of inferredAnyByFile[file] || []) {
-				lines.push(
-					`| \`${file}:${line}\` | \`${name}\` | \`${type.replace(/\|/g, "\\|")}\` |`
-				);
+			for (const { line, name } of inferredAnyByFile[file] || []) {
+				lines.push(`- \`${file}:${line}\` \`${name}\``);
 			}
 		}
-		report += `\n<details><summary>Inferred \`any\` in the files this pull request adds some to</summary>\n\n| Location | Identifier | Type |\n| :-- | :-- | :-- |\n${lines.join("\n")}\n\n</details>\n`;
+		report += `\n<details><summary>Inferred \`any\` in the files this pull request adds some to</summary>\n\n${lines.join("\n")}\n\n</details>\n`;
 	}
 }
 
