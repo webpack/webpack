@@ -14939,7 +14939,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				'function f(e, t, s){ var i; i = e.indexOf("x", t); if (i === -1 || i > s) return 1; let n = g(e); r(n); let o = {a: 1}; o.a; i = 2; while (i) i--; var p = h(); q += p; var u = h(); w(u); w = 1; let m = h(); return [m, 2] } function r(){} var q, w',
 				{},
-				'function f(i,e,n){var t;if((t=i.indexOf("x",e))===-1||t>n)return 1;r(g(i));t=2;while(t)t--;var a=h();q+=a;var u=h();w(u);w=1;return[h(),2]}function r(){}var q,w;'
+				'function f(i,e,n){var t=i.indexOf("x",e);if(t===-1||t>n)return 1;r(g(i));t=2;while(t)t--;var a=h();q+=a;var u=h();w(u);w=1;return[h(),2]}function r(){}var q,w;'
 			],
 			// What folds to a constant prints its value where that is shorter,
 			// and a template's parts that fold are its text; a tag's are not.
@@ -15096,12 +15096,12 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"function f(H){ var x; x = g(); switch (x) {} x = g(); x ? 1 : 2; x = g(); h(...x); x = g(); delete x.y; x = g(); (x, 1); x = g(); ({ k: x }); x = g(); ({ [k]: x }); x = g(); ({ x }); x = g(); new H(x); x = g(); new H(...x); x = g(); new U(x); x = g(); [...x]; x = g(); `${x}`; x = g(); -x; return x }",
 				{},
-				"function f(x){var e;switch(e=g()){}(e=g())?1:2;e=g();h(...e);e=g();delete e.y;e=g(),1;({k:e=g()});e=g();({[k]:e});e=g();new x(e=g());e=g();new x(...e);new U(e=g());e=g();[...e];`${e=g()}`;-(e=g());return e}"
+				"function f(x){var e=g();switch(e){}(e=g())?1:2;e=g();h(...e);e=g();delete e.y;e=g(),1;({k:e=g()});e=g();({[k]:e});e=g();new x(e=g());e=g();new x(...e);new U(e=g());e=g();[...e];`${e=g()}`;-(e=g());return e}"
 			],
 			[
 				"function f(H){ var x; x = g(); H(...x) }",
 				{},
-				"function f(x){var f;f=g();x(...f)}"
+				"function f(x){var f=g();x(...f)}"
 			],
 			// A `const` prints as `let` only where nothing writes a name its patterns bind.
 			[
@@ -15157,7 +15157,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"function f(){ var x; x = s(); g(x); let g = () => {}; } function h(){ var x; x = s(); new C(x); class C {} } function i(){ var x; x = s(); k(x); var k = () => {} }",
 				{},
-				"function f(){var x;x=s();n(x);let n=()=>{}}function h(){var x;x=s();new n(x);class n{}}function i(){var x;n(x=s());var n=()=>{}}"
+				"function f(){var x=s();n(x);let n=()=>{}}function h(){var x=s();new n(x);class n{}}function i(){var x=s();n(x);var n=()=>{}}"
 			],
 			// A directive stays, and so does a global set before a call that may read it.
 			[
@@ -15277,7 +15277,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"function f(c){ { if (c) { var x; x = s(); g(x) } let g = q; } } function h(c){ let g = q; if (c) { var x; x = s(); g(x) } } function k(){ class C {} var x; x = s(); new C(x) } function m(){ let g = () => {}; function n(){ var x; x = s(); g(x) } return n }",
 				{},
-				"function f(n){{if(n){var x;x=s();c(x)}let c=q}}function h(n){let x=q;if(n){var c;x(c=s())}}function k(){class n{}var x;new n(x=s())}function m(){let n=()=>{};return function(){var x;x=s();n(x)}}"
+				"function f(n){{if(n){var x=s();c(x)}let c=q}}function h(n){let x=q;if(n){var c=s();x(c)}}function k(){class n{}var x=s();new n(x)}function m(){let n=()=>{};return function(){var x=s();n(x)}}"
 			],
 			// An `if` of expressions prints as `?:`, its test parenthesized where it binds looser, first in a statement or not.
 			[
@@ -15505,7 +15505,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"function u(b,c){var j=b||c;return j??1}function z(b,c){var j=b+c,k;k=j;return k}",
 				{},
-				"function u(c,n){return(c||n)??1}function z(c,n){var r;return r=c+n}"
+				"function u(c,n){return(c||n)??1}function z(c,n){var r=c+n;return r}"
 			],
 			[
 				"(function () { u(); function u() { console.log(g()) } })()",
@@ -15993,6 +15993,19 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			expect(print(source, { module: false })).toBe(expected);
 		}
 		expect(print("g()", { enclose: true })).toBe("!function(){g()}();");
+		// A declaration and the statement setting its last name read as one.
+		expect(
+			print(
+				"export function f(r){var h;h=x=>x+1;r.add([h])}export function g(r){var a,b;b=r();return[a,b]}export function h(){var h;h=h||1;return h}export function k(r){let a;a=r();switch(r){case 1:var c;c=r();r(c,c)}return[a,a]}"
+			)
+		).toBe(
+			"export function f(r){r.add([r=>r+1])}export function g(r){var t,a=r();return[t,a]}export function h(){var r;return r=r||1}export function k(r){let t=r();switch(r){case 1:var a;a=r();r(a,a)}return[t,t]}"
+		);
+		expect(
+			print("export function f(r){var h;h=r();g(h,h)}", {
+				compress: { join_vars: false }
+			})
+		).toBe("export function f(h){var r;g(r=h(),r)}");
 		// Moved to its one read, a function keeps the name `keep_fnames` keeps.
 		expect(
 			print("(()=>{function spread(a){h(a);return a}g(()=>spread([]))})()", {
