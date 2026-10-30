@@ -23,6 +23,20 @@ const rewriteImportMeta = require("./rewriteImportMeta");
 const [major] = getNodeVersion();
 
 /**
+ * `setTimeout` for a page, whose timers never keep the process alive.
+ * @param {(...args: EXPECTED_ANY[]) => void} fn callback
+ * @param {number=} ms delay
+ * @param {...EXPECTED_ANY} args callback arguments
+ * @returns {ReturnType<typeof setTimeout>} the timer
+ */
+const unrefTimeout = (fn, ms, ...args) => {
+	const timer = setTimeout(fn, ms, ...args);
+	// Deno's setTimeout returns a number
+	if (typeof timer.unref === "function") timer.unref();
+	return timer;
+};
+
+/**
  * Mirrors the library types `lib/config/defaults.js` turns `output.module` on for.
  * @param {string | undefined} type library type
  * @returns {boolean} true, when the type is only emitted as an ECMAScript module
@@ -441,7 +455,8 @@ class TestRunner {
 		const base = {
 			global,
 			process,
-			setTimeout,
+			// spread over the module scope, so a page's timers have to be unref'd here too
+			setTimeout: this.jsDom() ? unrefTimeout : setTimeout,
 			clearTimeout,
 			setImmediate,
 			URL,
@@ -970,7 +985,8 @@ class TestRunner {
 				}
 			};
 			const env = {
-				setTimeout,
+				// the runtime's chunk-load timeout waits 120s on a script never loaded
+				setTimeout: unrefTimeout,
 				document,
 				CSSStyleSheet: FakeDocument.CSSStyleSheet,
 				location: {
