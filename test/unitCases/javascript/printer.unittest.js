@@ -15157,7 +15157,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"function f(){ var x; x = s(); g(x); let g = () => {}; } function h(){ var x; x = s(); new C(x); class C {} } function i(){ var x; x = s(); k(x); var k = () => {} }",
 				{},
-				"function f(){var x=s();n(x);let n=()=>{}}function h(){var x=s();new n(x);class n{}}function i(){var x=s();n(x);var n=()=>{}}"
+				"function f(){var x=s();n(x);let n=()=>{}}function h(){var x=s();new n(x);class n{}}function i(){x(s());var x=()=>{}}"
 			],
 			// A directive stays, and so does a global set before a call that may read it.
 			[
@@ -15277,7 +15277,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"function f(c){ { if (c) { var x; x = s(); g(x) } let g = q; } } function h(c){ let g = q; if (c) { var x; x = s(); g(x) } } function k(){ class C {} var x; x = s(); new C(x) } function m(){ let g = () => {}; function n(){ var x; x = s(); g(x) } return n }",
 				{},
-				"function f(n){{if(n){var x=s();c(x)}let c=q}}function h(n){let x=q;if(n){var c=s();x(c)}}function k(){class n{}var x=s();new n(x)}function m(){let n=()=>{};return function(){var x=s();n(x)}}"
+				"function f(n){{if(n){var x=s();c(x)}let c=q}}function h(n){let x=q;if(n)x(s())}function k(){class n{}new n(s())}function m(){let n=()=>{};return function(){var x=s();n(x)}}"
 			],
 			// An `if` of expressions prints as `?:`, its test parenthesized where it binds looser, first in a statement or not.
 			[
@@ -15505,7 +15505,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"function u(b,c){var j=b||c;return j??1}function z(b,c){var j=b+c,k;k=j;return k}",
 				{},
-				"function u(c,n){return(c||n)??1}function z(c,n){var r=c+n;return r}"
+				"function u(c,n){return(c||n)??1}function z(c,n){return c+n}"
 			],
 			[
 				"(function () { u(); function u() { console.log(g()) } })()",
@@ -15999,7 +15999,15 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				"export function f(r){var h;h=x=>x+1;r.add([h])}export function g(r){var a,b;b=r();return[a,b]}export function h(){var h;h=h||1;return h}export function k(r){let a;a=r();switch(r){case 1:var c;c=r();r(c,c)}return[a,a]}"
 			)
 		).toBe(
-			"export function f(r){r.add([r=>r+1])}export function g(r){var t,a=r();return[t,a]}export function h(){var r;return r=r||1}export function k(r){let t=r();switch(r){case 1:var a;a=r();r(a,a)}return[t,t]}"
+			"export function f(r){r.add([r=>r+1])}export function g(r){var t;return[t,r()]}export function h(){var r;return r=r||1}export function k(r){let t=r();switch(r){case 1:var a;a=r();r(a,a)}return[t,t]}"
+		);
+		// A literal of functions and constants is made where its one read is.
+		expect(
+			print(
+				"export function f(r){var t;t={d:x=>x*2,e:[function(){return 1}]};r.add(t)}export function g(r){var t={a:()=>1};for(;;)r.add(t)}"
+			)
+		).toBe(
+			"export function f(r){r.add({d:r=>r*2,e:[function(){return 1}]})}export function g(r){var t={a:()=>1};for(;;)r.add(t)}"
 		);
 		expect(
 			print("export function f(r){var h;h=r();g(h,h)}", {
