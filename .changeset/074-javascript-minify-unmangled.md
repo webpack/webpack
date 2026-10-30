@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Compress JavaScript with `mangle: false` as with mangling, and keep `Object.keys`, `values` and `entries` calls a program replaces.
+Compress unmangled JavaScript as mangled, keeping replaced `Object.keys` calls.
