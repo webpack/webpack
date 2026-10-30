@@ -429,6 +429,50 @@ describe("MultiCompiler", () => {
 		});
 	});
 
+	it("should wait for async taps of the aggregated 'done' hook before calling back", (done) => {
+		const compiler = createMultiCompiler();
+		let resolved = false;
+		compiler.hooks.done.tapPromise(
+			"MultiCompiler test",
+			() =>
+				new Promise((resolve) => {
+					setTimeout(() => {
+						resolved = true;
+						resolve();
+					}, 10);
+				})
+		);
+		compiler.run((err) => {
+			if (err) return done(err);
+			expect(resolved).toBe(true);
+			compiler.close(done);
+		});
+	});
+
+	it("should pass an error of the aggregated 'done' hook to the run callback", (done) => {
+		const compiler = createMultiCompiler();
+		const error = new Error("done failed");
+		compiler.hooks.done.tapPromise("MultiCompiler test", () =>
+			Promise.reject(error)
+		);
+		compiler.run((err) => {
+			expect(err).toBe(error);
+			compiler.close(done);
+		});
+	});
+
+	it("should pass an error of the aggregated 'done' hook to the watch callback", (done) => {
+		const compiler = createMultiCompiler();
+		const error = new Error("done failed");
+		compiler.hooks.done.tapPromise("MultiCompiler test", () =>
+			Promise.reject(error)
+		);
+		compiler.watch({}, (err) => {
+			expect(err).toBe(error);
+			compiler.close(done);
+		});
+	});
+
 	it("should not stay running after dependency validation fails", (done) => {
 		const compiler = /** @type {import("../../").MultiCompiler} */ (
 			webpack(
