@@ -1826,7 +1826,7 @@ declare interface CallbackCacheCache<T> {
  * Defines the callback cache callback.
  */
 declare interface CallbackCacheCacheFacade<T> {
-	(err?: null | Error, result?: null | T): void;
+	(err?: null | Error, result?: T): void;
 }
 
 /**
@@ -10716,7 +10716,7 @@ declare abstract class ExportsInfo {
 	/**
 	 * Gets read only export info.
 	 */
-	getReadOnlyExportInfo(name: string): any;
+	getReadOnlyExportInfo(name: string): ExportInfo;
 
 	/**
 	 * Gets read only export info recursive.
@@ -18559,6 +18559,11 @@ declare interface KnownJavascriptParserState {
 	 * deprecated, use `lastESMImportOrder`
 	 */
 	lastHarmonyImportOrder?: number;
+
+	/**
+	 * the guard frames of the branches being walked, innermost last
+	 */
+	guardStack?: GuardFrame[];
 }
 
 /**
@@ -20216,11 +20221,22 @@ declare abstract class MinifierLabel {
 }
 
 /**
- * terser's own modules
+ * terser's own modules, naming those read once the phases install them
  */
 declare interface MinifierModules {
 	[index: string]: any;
 	ast: Ast;
+	minify: (
+		sources: MinifySources,
+		options?: MinifyOptions
+	) => Promise<MinifyOutput>;
+	corrections?: { enabled: boolean };
+	improvements?: {
+		enabled: boolean;
+		lets: { enabled: boolean };
+		literalsLast: { enabled: boolean };
+		backticks: { enabled: boolean };
+	};
 }
 
 /**
@@ -36860,6 +36876,11 @@ declare namespace exports {
 		logging?: StatsLogging;
 		moduleTraceItem?: StatsModuleTraceItem;
 		moduleTraceDependency?: StatsModuleTraceDependency;
+
+		/**
+		 * the compilation's time, which colors other times by their share of it
+		 */
+		timeReference?: number;
 	}
 
 	/**
