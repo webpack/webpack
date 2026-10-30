@@ -9,9 +9,9 @@ asset 964.js X bytes [emitted]
 asset 226.js X bytes [emitted]
 asset 899.js X bytes [emitted]
 runtime modules X KiB 7 modules
+orphan modules X bytes [orphan] 1 module
 cacheable modules X bytes
   ./index.js X bytes [built] [code generated]
-  ./a.js X bytes [built] [code generated]
   ./b.js X bytes [built] [code generated]
   ./c.js X bytes [built] [code generated]
   ./d.js X bytes [built] [code generated]
