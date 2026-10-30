@@ -24,6 +24,9 @@ function _extends() {
 }
 
 it("should move a helper's assignment into its call past a name only the new function declares", () => {
+	// Each helper replaces itself on its first call, so print it before.
+	expect(_typeof.toString()).toMatchSnapshot();
+	expect(_extends.toString()).toMatchSnapshot();
 	expect([_typeof(1), _typeof("a"), _typeof(1)]).toEqual([
 		"number",
 		"string",
