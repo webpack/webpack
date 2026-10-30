@@ -1,9 +1,10 @@
 /**
  * @param {boolean} removedLoaded whether the removable stylesheet is loaded
  * @param {boolean} lateLoaded whether the stylesheet imported during ready is loaded
+ * @param {boolean} sharedLoaded whether the page keeps the stylesheet only another entry still uses
  * @returns {void}
  */
-const expectStyles = (removedLoaded, lateLoaded = false) => {
+const expectStyles = (removedLoaded, lateLoaded = false, sharedLoaded = true) => {
 	if (typeof document === "undefined") {
 		expect(__webpack_css_server_styles__.includes("color: red")).toBe(removedLoaded);
 		expect(__webpack_css_server_styles__).toContain("color: blue");
@@ -14,7 +15,7 @@ const expectStyles = (removedLoaded, lateLoaded = false) => {
 		const links = Array.from(document.getElementsByTagName("link"));
 		expect(links.some(link => link.href.includes("/removed."))).toBe(removedLoaded);
 		expect(links.some(link => link.href.includes("/kept_css."))).toBe(true);
-		expect(links.some(link => link.href.includes("/shared."))).toBe(true);
+		expect(links.some(link => link.href.includes("/shared."))).toBe(sharedLoaded);
 		expect(links.some(link => link.href.includes("/unused."))).toBe(false);
 		expect(links.some(link => link.href.includes("/late."))).toBe(lateLoaded);
 	}
@@ -41,10 +42,11 @@ it("should remove a loaded chunk's styles on apply and load them again when rest
 	await require("./owner").loadLate();
 	expectStyles(true, true);
 	await module.hot.apply();
-	expectStyles(false);
+	// The server registry serves every entry, so it keeps what "other" still uses.
+	expectStyles(false, false, false);
 
 	await rebuild();
 	await module.hot.check(true);
 	await require("./owner").load();
-	expectStyles(true);
+	expectStyles(true, false, false);
 });
