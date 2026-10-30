@@ -44,10 +44,19 @@ jobs:
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
 
-      # Renders the report too: overall typed lines, the escape-hatch types this
-      # pull request adds or removes, and the files that still have any.
+      # The same script, run on the base commit's tree, counts its inferred `any`.
+      - name: Collect the base commit's inferred `any`
+        run: |
+          git worktree add --detach "$RUNNER_TEMP/base" "$BASE_SHA"
+          ln -s "$GITHUB_WORKSPACE/node_modules" "$RUNNER_TEMP/base/node_modules"
+          node tooling/type-coverage.js --root "$RUNNER_TEMP/base" > /dev/null
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+
+      # Renders the report too: overall typed lines, the escape-hatch types and
+      # inferred `any` this pull request adds or removes, and the files that still have any.
       - name: Collect types coverage
-        run: node tooling/type-coverage.js --base "$BASE_SHA"
+        run: node tooling/type-coverage.js --base "$BASE_SHA" --base-any "$RUNNER_TEMP/base/coverage/inferred-any.json"
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
 

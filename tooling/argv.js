@@ -15,6 +15,7 @@
  * @property {string} types output file for types declarations
  * @property {boolean} templateLiterals whether template literal types are allowed
  * @property {string} base git revision the types coverage report compares escape-hatch type counts with
+ * @property {string} baseAny `coverage/inferred-any.json` of a types coverage run on the base, for the report to compare inferred `any` with
  */
 
 /** @type {Record<string, string | boolean>} */
@@ -26,7 +27,8 @@ const DEFAULTS = {
 	declarations: "declarations",
 	types: "types.d.ts",
 	templateLiterals: true,
-	base: ""
+	base: "",
+	baseAny: ""
 };
 
 /**
