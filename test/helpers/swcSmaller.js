@@ -54,7 +54,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/6279/2/input.js",
 			"swc minifier: fixture/issues/pure-callee-call/input.js",
 			"swc minifier: fixture/projects/next/.archive-4/main-2953d6142ff4a439dbc0/input.js",
-			"swc minifier: fixture/projects/wmr/archive-1/chunks/.compat.2f7d9500/input.js",
 			"terser compress: functions/loop_init_arg",
 			"terser compress: inline/issue_308"
 		]

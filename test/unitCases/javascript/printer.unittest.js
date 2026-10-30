@@ -474,6 +474,11 @@ const IMPROVED_CASES = [
 		{ compress: { ecma: 2015 }, ecma: 2015, mangle: false }
 	],
 	[
+		"an assignment moved into the call reading it, past a name only a function in its value declares",
+		"function e(o) { e = Object.assign || function (o) { for (var i = 1; i < arguments.length; i++) for (var k in arguments[i]) o[k] = arguments[i][k]; return o; }; return e.apply(this, arguments); } console.log(JSON.stringify(e({ a: 1 }, { b: 2 })));",
+		{ compress: {}, mangle: false }
+	],
+	[
 		"a conditional whose chain ends in its own alternate, spread where shorter",
 		'function f(a, b) { return b ? 1 === a ? "one" : 2 === a ? "two" : "a much longer default string" : "a much longer default string"; } console.log(f(1, 1), f(2, 1), f(3, 1), f(1, 0));',
 		{ compress: {}, mangle: false }
@@ -11458,6 +11463,28 @@ x = a ** b ** c; x = (a ** b) ** c; x = (-a) ** b; x = a < b < c; x = a < (b < c
 				});
 				expect(code).toMatchSnapshot();
 			}
+		});
+
+		it("should move an assignment past writes to a name only a function in its value redeclares", async () => {
+			const { minify } = await load();
+			const written = [];
+			for (const input of [
+				"function f(o){var x;return x=function(o){return o+1},o=5,x(o)}console.log(f(1))",
+				"function f(o){var g;g=c?function(o){return o}:null;o=o+1;return g(o)}var c=1;console.log(f(1))",
+				"function f(o){var g;g=function(o){return o.p}(o);o={p:3};return[g,o.p]}console.log(f({p:1}))",
+				"function f(o){var g;g=(o=>()=>o)(o);o=7;return[g(),o]}console.log(f(2))",
+				"function f(o){var x;x=[function(o){return o},o];o=4;return x[0](x[1])+o}console.log(f(1))",
+				"function f(o){var x;x=function(){o=8};o=3;x();return o}console.log(f(1))",
+				"var o=1;function t(){t=function(o){return o*2};return t(o)}console.log(t(),t(),o)"
+			]) {
+				const { code } = await minify(input, {
+					compress: { passes: 2 },
+					mangle: false
+				});
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+				written.push(code);
+			}
+			expect(written).toMatchSnapshot();
 		});
 
 		it("should keep a write to a `let` that may run before its declaration", async () => {

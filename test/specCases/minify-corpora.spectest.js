@@ -1466,6 +1466,8 @@ const IMPROVED_YET_BIGGER = {
 	"fixture/issues/4234/input.js (its own options)":
 		"28 bytes fewer, 5 more gzipped: two `RegExp` calls written as literals break the `bar(new RegExp(\"` runs the four calls repeat",	"sequences/call (its own options)":
 		"9 bytes fewer, 1 more gzipped: `new b` and `new b.c` written without their `(a, …)` break the `(a,` runs the calls before them repeat",
+	"fixture/projects/jquery/7/input.js (its own options)":
+		"4 bytes fewer, 1 more gzipped: `(proxy=function(){…}).guid` drops the `,proxy` gzip matched against the `,proxy` the function returns",
 };
 
 // Sources whose shorter spelling no longer repeats text gzip matched, by the
