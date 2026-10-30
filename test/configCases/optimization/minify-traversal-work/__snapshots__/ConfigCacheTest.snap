@@ -12,9 +12,9 @@ exports[`ConfigCacheTestCases optimization minify-traversal-work exported tests 
 
 exports[`ConfigCacheTestCases optimization minify-traversal-work exported tests should preserve captured values beside nested functions with their own variables 2`] = `"function e(e){var a=e();return[function(){var e=a;return e.value+e.value},function(){var a=e();for(var t=0;t<a.value;t++)var r=t;return r},()=>e().value]}"`;
 
-exports[`ConfigCacheTestCases optimization minify-traversal-work exported tests should preserve copies of variables initialized inside a loop 1`] = `"function capture(values){let readers=[];for(var index=0;index<values.length;index++){var source=values[index];(function(){var copy=source;readers.push(()=>copy.value+copy.value)})()}return readers}"`;
+exports[`ConfigCacheTestCases optimization minify-traversal-work exported tests should preserve copies of variables initialized inside a loop 1`] = `"function capture(values){let readers=[];for(var index=0;index<values.length;index++){var source=values[index];!function(){var copy=source;readers.push(()=>copy.value+copy.value)}()}return readers}"`;
 
-exports[`ConfigCacheTestCases optimization minify-traversal-work exported tests should preserve copies of variables initialized inside a loop 2`] = `"function e(e){let a=[];for(var t=0;t<e.length;t++){var r=e[t];(function(){var e=r;a.push(()=>e.value+e.value)})()}return a}"`;
+exports[`ConfigCacheTestCases optimization minify-traversal-work exported tests should preserve copies of variables initialized inside a loop 2`] = `"function e(e){let a=[];for(var t=0;t<e.length;t++){var r=e[t];!function(){var e=r;a.push(()=>e.value+e.value)}()}return a}"`;
 
 exports[`ConfigCacheTestCases optimization minify-traversal-work exported tests should preserve copies when a generator resumes inside a loop 1`] = `"function*capture(values){for(var source of values)yield function(){var copy=source;return()=>copy.value+copy.value}()}"`;
 
