@@ -97,8 +97,6 @@ Use the most specific real type. `EXPECTED_ANY`, `EXPECTED_OBJECT`, `EXPECTED_FU
 
 When a function's output type depends on its input, use a generic (`@template`) rather than widening, so callers stay precisely typed.
 
-`yarn lint:escape-hatches` fails when a file's count of the three `EXPECTED_*` aliases grows; after removing some, run it with `--write` to lock the lower count in.
-
 ### Naming
 
 Spell names out in full (`attributeCount`, not `attrCnt`), beyond the abbreviations webpack already uses pervasively. Name a class for what it does, with its kind's suffix (`*Plugin`, `*Dependency`, …), and the file for the class; a name never invents a role suffix (`*Manager`, `*Util`), takes a `Webpack` prefix or repeats another `lib/` class. Exceptions and reasons: [docs/code-style.md](docs/code-style.md#naming).
@@ -182,7 +180,7 @@ Running one integration case, and what a `configCases/` case contains: [TESTING_
 
 A language's syntax (`lib/{css,html,javascript,json}` tokenizer, parser, printer and minifier) is held to its **own** unit tests: `yarn test:syntax-coverage [css|html|javascript|json]` fails when what they never run grows past `tooling/syntax-coverage.json`; `--list` prints it, `--write` lowers the baseline once you covered more.
 
-**Don't lower type coverage either.** CI collects it (`yarn types:cover:report`) and reports the delta on the PR. Prefer real types over `EXPECTED_ANY` ([Type annotations](#type-annotations)), and run `yarn types:cover` if you widened any annotation.
+**Don't lower type coverage either.** CI collects it (`yarn types:cover:report`) and reports the delta on the PR, with how many `EXPECTED_*` and `unknown` types it added (🔴) or removed (🟢). Prefer real types over `EXPECTED_ANY` ([Type annotations](#type-annotations)), and run `yarn types:cover` if you widened any annotation.
 
 ### Read CI rather than re-running it
 

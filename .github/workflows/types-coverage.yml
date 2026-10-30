@@ -38,8 +38,19 @@ jobs:
       - name: Generate the declarations the type check reads
         run: yarn fix:special
 
+      # The escape-hatch counts compare with the pull request's base commit.
+      - name: Fetch the base commit
+        run: git fetch --no-tags --depth=1 origin "$BASE_SHA"
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+
       - name: Collect types coverage
-        run: yarn types:cover:report
+        run: |
+          rm -rf coverage
+          node tooling/type-coverage.js --base "$BASE_SHA"
+          yarn report:cover
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
 
       # `output-file` renders the comment without posting it, which is all a
       # fork's token allows; `pulls.get` for the title only needs read access.
@@ -56,8 +67,10 @@ jobs:
           {
             echo "<!-- types-coverage-report -->"
             cat lcov-report.md
+            echo
+            cat coverage/escape-hatch-types.md
           } > types-coverage-report.md
-          cat lcov-report.md >> "$GITHUB_STEP_SUMMARY"
+          tail -n +2 types-coverage-report.md >> "$GITHUB_STEP_SUMMARY"
 
       # Updated in place on every push, so the thread keeps one comment.
       - name: Comment the report on the pull request

@@ -14,7 +14,7 @@ How to prove a change before pushing it and how to read CI when it is red, behin
 
 **A generated file is stale as soon as any JSDoc it copies changes — prose included.** `types.d.ts` carries the comment above `process()`, not just its signature; a reworded comment, or a signature edited without its doc paragraph, fails `lint` with the same `types.d.ts need to be updated` a missing member gives. After splicing your hunks, diff your file against the generator's whole output for that symbol's **region**, not just the lines you meant to change.
 
-`yarn lint` runs `lint:agents` and `lint:special` in sequence and the rest in parallel, so `lint:special` tripping on sandbox drift hides every later stage. If it reports declarations "need to be updated" that `main` reports too, run the rest by hand: `lint:agents`, `lint:code`, `lint:class-names`, `lint:redundant-casts`, `lint:escape-hatches`, `lint:types`, `lint:types-test`, `lint:types-benchmark`, `lint:types-module-test`, `lint:types-hot`, `fmt:check`, `lint:spellcheck`. `lint:types-test` catches `tsc` errors in `test/`; skipping it is how a red `lint` survives "lint passed locally".
+`yarn lint` runs `lint:agents` and `lint:special` in sequence and the rest in parallel, so `lint:special` tripping on sandbox drift hides every later stage. If it reports declarations "need to be updated" that `main` reports too, run the rest by hand: `lint:agents`, `lint:code`, `lint:class-names`, `lint:redundant-casts`, `lint:types`, `lint:types-test`, `lint:types-benchmark`, `lint:types-module-test`, `lint:types-hot`, `fmt:check`, `lint:spellcheck`. `lint:types-test` catches `tsc` errors in `test/`; skipping it is how a red `lint` survives "lint passed locally".
 
 ## Long runs
 
