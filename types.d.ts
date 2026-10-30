@@ -625,35 +625,6 @@ declare interface AssetTimestamps {
 	 */
 	mtime: number;
 }
-
-/**
- * What terser's `ast.js` exports: each kind's factory, the predicate
- * `is<Kind>Node` for it, and the walkers and helpers, which stay open.
- */
-declare interface Ast {
-	[index: string]: any;
-	expressionOf(node: NodeShape): undefined | NodeShape;
-	createStackTransformer(
-		before?: (
-			this: CompressorShape,
-			node: NodeShape,
-			descend: (node: NodeShape, walker: CompressorShape) => void,
-			inList?: boolean
-		) => null | void | NodeShape | Splice | SkipMarker,
-		after?: (
-			this: CompressorShape,
-			node: NodeShape,
-			inList?: boolean
-		) => null | void | NodeShape | Splice | SkipMarker
-	): CompressorShape;
-	namesOf(node: NodeShape): (null | NodeShape)[];
-	wrapOptimizer(
-		name: string,
-		wrap: (
-			original: (self: NodeShape, compressor: CompressorShape) => NodeShape
-		) => (self: NodeShape, compressor: CompressorShape) => NodeShape
-	): boolean;
-}
 declare class AsyncDependenciesBlock extends DependenciesBlock {
 	constructor(
 		groupOptions: null | string | GroupOptionsAsyncDependenciesBlock,
@@ -1483,20 +1454,6 @@ type BuiltJsonModule = NormalModule & {
 	buildInfo: JsonModuleBuildInfo;
 	buildMeta: BuildMeta;
 };
-
-/**
- * The map a minify writes, its mappings decoded, less the keys that say nothing.
- */
-declare interface BuiltSourceMap {
-	version: number;
-	file?: string;
-	names: string[];
-	sourceRoot?: string;
-	sources: string[];
-	sourcesContent?: (undefined | null | string)[];
-	mappings: DecodedSegment[][];
-	ignoreList: number[];
-}
 type BuiltSyncWasmModule = NormalModule & {
 	buildInfo: NormalModuleBuildInfo;
 	buildMeta: SyncWasmModuleBuildMeta;
@@ -4727,32 +4684,6 @@ type ComplexSerializableType =
 	| object
 	| Buffer
 	| (() => ComplexSerializableType[] | Promise<ComplexSerializableType[]>);
-
-/**
- * The exports of terser's `compress/common.js`, `inference.js`,
- * `compressor-flags.js` and `utils/index.js` the phases read, ported.
- */
-declare interface CompressHelpers {
-	/**
-	 * terser's `compress/common.js`
-	 */
-	common: Record<string, any>;
-
-	/**
-	 * the functions of terser's `compress/inference.js`
-	 */
-	inference: Record<string, any>;
-
-	/**
-	 * terser's `compress/compressor-flags.js`
-	 */
-	flags: Record<string, any>;
-
-	/**
-	 * terser's `utils/index.js`
-	 */
-	utils: Record<string, any>;
-}
 
 /**
  * terser's compressor: the methods the phases call typed, the rest open.
@@ -9490,7 +9421,6 @@ declare class EnableWasmLoadingPlugin {
 	 */
 	static checkEnabled(compiler: Compiler, type: string): void;
 }
-type EncodedSourceMap = Omit<BuiltSourceMap, "mappings"> & { mappings: string };
 type EncodingOptionFs =
 	| undefined
 	| null
@@ -20196,25 +20126,6 @@ declare interface MinChunkSizePluginOptions {
 }
 
 /**
- * what a caller minifies with, the switches of its corrections and improvements, and the modules it is built from
- */
-declare interface Minifier {
-	minify: (
-		sources: MinifySources,
-		options?: MinifyOptions
-	) => Promise<MinifyOutput>;
-	phases: string[];
-	corrections?: { enabled: boolean };
-	improvements?: {
-		enabled: boolean;
-		lets: { enabled: boolean };
-		literalsLast: { enabled: boolean };
-		backticks: { enabled: boolean };
-	};
-	modules: MinifierModules;
-}
-
-/**
  * A label: a statement's, its `break`s and `continue`s naming it too.
  */
 declare abstract class MinifierLabel {
@@ -20222,25 +20133,6 @@ declare abstract class MinifierLabel {
 	mangled_name: null | string;
 	parent: null | MinifierLabel;
 	counter: number;
-}
-
-/**
- * terser's own modules, naming those read once the phases install them
- */
-declare interface MinifierModules {
-	[index: string]: any;
-	ast: Ast;
-	minify?: (
-		sources: MinifySources,
-		options?: MinifyOptions
-	) => Promise<MinifyOutput>;
-	corrections?: { enabled: boolean };
-	improvements?: {
-		enabled: boolean;
-		lets: { enabled: boolean };
-		literalsLast: { enabled: boolean };
-		backticks: { enabled: boolean };
-	};
 }
 
 /**
@@ -20357,33 +20249,6 @@ declare interface MinifyOptions {
 	 */
 	enclose?: string | boolean;
 }
-
-/**
- * What a minify answers with: the code it wrote, the map it was asked for, and
- * the tree where the format options asked for one instead of code.
- */
-declare interface MinifyOutput {
-	/**
-	 * the minified source
-	 */
-	code?: string;
-
-	/**
-	 * the source map, as a string or an object
-	 */
-	map?: string | EncodedSourceMap;
-
-	/**
-	 * the map with its mappings read
-	 */
-	decoded_map?: null | BuiltSourceMap;
-
-	/**
-	 * the tree, where `format.ast` asked for it
-	 */
-	ast?: NodeShape;
-}
-type MinifySources = string | string[] | Record<string, string> | NodeShape;
 
 /**
  * Describes the mkdir shape.
@@ -26889,15 +26754,6 @@ declare interface PerformanceOptions {
 	 */
 	unusedModules?: boolean;
 }
-
-/**
- * One step building webpack's minifier, installing what it implements onto
- * the modules.
- */
-declare interface Phase {
-	name: string;
-	install: (modules: MinifierModules) => void;
-}
 declare interface PitchLoaderDefinitionFunction<
 	OptionsType = {},
 	ContextAdditions = {}
@@ -31453,13 +31309,6 @@ declare class SizeOnlySource extends Source {
 }
 
 /**
- * `MAP.skip`, which a transform returns to drop a node from its list
- */
-declare interface SkipMarker {
-	[index: string]: never;
-}
-
-/**
  * `CssProcessOptions.skip`: two independent axes, so each reads unambiguously.
  */
 declare interface SkipOptions {
@@ -32227,13 +32076,6 @@ type SourceTypeOrResolver =
 	| "msapplication-task"
 	| ((attrs: Map<string, string>, css: boolean) => SourceType);
 type SourceValue = string | Buffer;
-
-/**
- * terser's `Splice`: what a transform returns to put several nodes in its place.
- */
-declare abstract class Splice<T = NodeShape> {
-	v: T[];
-}
 
 /**
  * Defines the split chunks options type used by this module.
@@ -38074,7 +37916,6 @@ declare namespace exports {
 				};
 			}
 			export namespace printer {
-				export let NODE_KIND_ANCESTRY: Record<string, string[]>;
 				export let prepareMinify: (
 					text: string,
 					options: JavascriptProcessOptions
@@ -38086,8 +37927,6 @@ declare namespace exports {
 					inlined?: Uint8Array;
 					finish?: () => void;
 				};
-				export let plainIdentifier: (name: string) => string;
-				export let load: () => Promise<Minifier>;
 				export let printer: (
 					path: {
 						state: unknown;
@@ -38205,14 +38044,8 @@ declare namespace exports {
 						number
 					>
 				) => string;
-				export let PHASES: Phase[];
 				export let FORMAT_DEFAULTS: any;
 				export let IGNORED_FORMAT_OPTIONS: string[];
-				export let createAst: () => Ast;
-				export let createModules: () => MinifierModules;
-				export let createCompressHelpers: (
-					modules: MinifierModules
-				) => CompressHelpers;
 				export let createUnicode: () => {
 					getFullChar: (str: string, pos: number) => string;
 					getFullCharCode: (str: string, pos: number) => number;
