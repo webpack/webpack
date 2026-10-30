@@ -15510,7 +15510,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"(function () { u(); function u() { console.log(g()) } })()",
 				{},
-				"(function(){n();function n(){console.log(g())}})();"
+				"!function(){n();function n(){console.log(g())}}();"
 			],
 			[
 				"function f(o) { return [typeof (function () { return undeclaredX })(), delete (() => o.p)(), ((x) => x.m)(o)()] }",
@@ -15552,7 +15552,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"(function () { var x = 7; function h(k) { return k() } function f(a) { var g = function () { return x }; return h(g) + a } g(f(3)) })(); (function () { function h(k) { return k + 1 } function f(a) { var c = 5; return h(c) + a } g(f(3)) })(); (function () { function h(k) { return k.v } function f(a) { var c = { v: 5 }; return h(c) + a } g(f(3)) })()",
 				{},
-				"(function(){g(function(n){return function(n){return n()}(function(){return 7})+n}(3))})();(function(){g(function(n){return function(n){return n+1}(5)+n}(3))})();(function(){g(function(n){return function(n){return n.v}({v:5})+n}(3))})();"
+				"!function(){g(function(n){return function(n){return n()}(function(){return 7})+n}(3))}();!function(){g(function(n){return function(n){return n+1}(5)+n}(3))}();!function(){g(function(n){return function(n){return n.v}({v:5})+n}(3))}();"
 			],
 			[
 				"function f(a){ if (0) x(); Math.PI }",
@@ -15929,7 +15929,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			)
 		);
 		expect(wrapped.code).toBe(
-			'(function(e){e.a=1+g()})(typeof lib>"u"?lib={}:lib);'
+			'!function(e){e.a=1+g()}(typeof lib>"u"?lib={}:lib);'
 		);
 		// Only the source's own names map, from its second line.
 		expect(wrapped.map.names).toEqual(["exports", "longName", "g"]);
@@ -15939,10 +15939,10 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				...options,
 				enclose: "y:7"
 			}).code
-		).toBe("(function(n){window.v=1+n})(7);");
+		).toBe("!function(n){window.v=1+n}(7);");
 		expect(
 			minifyOnePass("window.v = y;", { ...options, enclose: true }).code
-		).toBe("(function(){window.v=y})();");
+		).toBe("!function(){window.v=y}();");
 		// `enclose` goes around `wrap`; a hashbang, no longer first, goes.
 		const bare = { compress: false, mangle: false };
 		expect(
