@@ -16153,6 +16153,23 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		).toBe(
 			'export function f(o){return["a","b"].join(o)}export const k=["4294967294","b","4294967295"],j="1,";'
 		);
+		// `undefined` folded in reads `void 0`, held in parentheses; `-0` keeps
+		// its sign; a member stays a value when called; a derived class keeps
+		// private members a base constructor's object would take again.
+		expect(
+			print(
+				"export function f(p){var b=undefined;return[b[p],1]}export function g(p){var b=undefined;return b(p)}export const h=+(-0)"
+			)
+		).toBe(
+			"export function f(n){return[(void 0)[n],1]}export function g(n){return(void 0)(n)}export const h=+-0;"
+		);
+		expect(
+			print(
+				"export function f(o){var e;o.a();e=o.test;e()}export class C extends B{#x;#m(){}}"
+			)
+		).toBe(
+			"export function f(e){var o;e.a();(o=e.test)()}export class C extends B{#e;#o(){}}"
+		);
 		// A call printing as what it runs, unread last in a sequence or under
 		// `void` or `!`, prints bare.
 		expect(
