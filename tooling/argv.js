@@ -14,6 +14,7 @@
  * @property {string} declarations folder holding the option types that are not a plugin's own
  * @property {string} types output file for types declarations
  * @property {boolean} templateLiterals whether template literal types are allowed
+ * @property {string} base git revision the types coverage report compares escape-hatch type counts with
  */
 
 /** @type {Record<string, string | boolean>} */
@@ -24,7 +25,8 @@ const DEFAULTS = {
 	schemas: "./schemas/**/*.json",
 	declarations: "declarations",
 	types: "types.d.ts",
-	templateLiterals: true
+	templateLiterals: true,
+	base: ""
 };
 
 /**

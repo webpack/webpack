@@ -7,10 +7,11 @@
 
 // loosely based on https://github.com/plantain-00/type-coverage
 
+const { execFileSync } = require("child_process");
 const fs = require("fs");
 const path = require("path");
 const ts = require("typescript");
-const { root } = require("./argv");
+const { base, root } = require("./argv");
 const createTypeScriptProgram = require("./typescript-program");
 
 const program = createTypeScriptProgram("tsconfig.json");
@@ -214,3 +215,243 @@ fs.writeFileSync(
 	JSON.stringify(coverageReport),
 	"utf8"
 );
+
+// Escape-hatch types: how often each one stands in a JSDoc type in `lib/` and
+// `hot/`, against `--base` when given, for the report the pull request shows.
+const ESCAPE_HATCHES = [
+	"EXPECTED_ANY",
+	"EXPECTED_OBJECT",
+	"EXPECTED_FUNCTION",
+	"unknown"
+];
+const ESCAPE_HATCH_REGEXP =
+	/\b(?:EXPECTED_ANY|EXPECTED_OBJECT|EXPECTED_FUNCTION|unknown)\b/g;
+const JSDOC_REGEXP = /\/\*\*[\s\S]*?\*\//g;
+const TYPE_TAG_REGEXP =
+	/@(?:type|param|returns?|typedef|property|prop|template|this|satisfies|callback|enum)\s*\{/g;
+const ESCAPE_HATCH_DIRECTORIES = ["lib/", "hot/"];
+
+/** @typedef {Record<string, number>} EscapeHatchCounts */
+
+/**
+ * Counts the escape-hatch types in the braces of a file's JSDoc type tags.
+ * @param {string} source the file's source
+ * @returns {EscapeHatchCounts} counts by name
+ */
+const countEscapeHatches = (source) => {
+	/** @type {EscapeHatchCounts} */
+	const counts = {};
+	for (const [comment] of source.matchAll(JSDOC_REGEXP)) {
+		TYPE_TAG_REGEXP.lastIndex = 0;
+		while (TYPE_TAG_REGEXP.exec(comment) !== null) {
+			// The type runs to the brace that balances the tag's opening one.
+			let depth = 1;
+			let end = TYPE_TAG_REGEXP.lastIndex;
+			while (end < comment.length && depth > 0) {
+				if (comment[end] === "{") depth++;
+				else if (comment[end] === "}") depth--;
+				end++;
+			}
+			const type = comment.slice(TYPE_TAG_REGEXP.lastIndex, end - 1);
+			for (const [name] of type.matchAll(ESCAPE_HATCH_REGEXP)) {
+				counts[name] = (counts[name] || 0) + 1;
+			}
+			TYPE_TAG_REGEXP.lastIndex = end;
+		}
+	}
+	return counts;
+};
+
+/**
+ * Returns the escape-hatch counts of every file, from the working tree or from a git revision.
+ * @param {string=} revision a git revision, or nothing for the working tree
+ * @returns {Record<string, EscapeHatchCounts>} counts by file
+ */
+const countAllEscapeHatches = (revision) => {
+	const git = (/** @type {string[]} */ ...args) =>
+		execFileSync("git", args, {
+			cwd: root,
+			encoding: "utf8",
+			maxBuffer: 1024 * 1024 * 1024
+		});
+	const files = git(
+		"ls-files",
+		...(revision ? ["--with-tree", revision] : []),
+		"--",
+		...ESCAPE_HATCH_DIRECTORIES
+	)
+		.split("\n")
+		.filter((file) => file.endsWith(".js"));
+	/** @type {Record<string, EscapeHatchCounts>} */
+	const result = {};
+	for (const file of files) {
+		let source;
+		try {
+			source = revision
+				? git("show", `${revision}:${file}`)
+				: fs.readFileSync(path.resolve(root, file), "utf8");
+		} catch (_err) {
+			// Listed by the tree but not present on this side.
+			continue;
+		}
+		const counts = countEscapeHatches(source);
+		if (Object.keys(counts).length > 0) result[file] = counts;
+	}
+	return result;
+};
+
+/**
+ * Sums the counts of every file by name.
+ * @param {Record<string, EscapeHatchCounts>} byFile counts by file
+ * @returns {EscapeHatchCounts} totals by name
+ */
+const totalEscapeHatches = (byFile) => {
+	/** @type {EscapeHatchCounts} */
+	const totals = {};
+	for (const name of ESCAPE_HATCHES) totals[name] = 0;
+	for (const counts of Object.values(byFile)) {
+		for (const name of ESCAPE_HATCHES) totals[name] += counts[name] || 0;
+	}
+	return totals;
+};
+
+/**
+ * Renders a change, red when it grows and green when it shrinks.
+ * @param {number} change the change
+ * @returns {string} the change as the report shows it
+ */
+const formatChange = (change) =>
+	change > 0 ? `🔴 +${change}` : change < 0 ? `🟢 −${-change}` : "—";
+
+/**
+ * Returns the share of a file's lines whose identifiers are typed, as lcov counts lines.
+ * @param {FileReport} fileReport the file's report
+ * @returns {{ lines: number, typed: number }} the line counts
+ */
+const lineCoverage = (fileReport) => {
+	/** @type {Map<number, number>} */
+	const lines = new Map();
+	for (const [index, count] of Object.entries(fileReport.s)) {
+		const { line } = fileReport.statementMap[Number(index)].start;
+		lines.set(line, Math.max(lines.get(line) || 0, count));
+	}
+	let typed = 0;
+	for (const count of lines.values()) if (count > 0) typed++;
+	return { lines: lines.size, typed };
+};
+
+/**
+ * Formats a share as a percentage.
+ * @param {number} part the part
+ * @param {number} whole the whole
+ * @returns {string} the percentage, with two decimals
+ */
+const percent = (part, whole) =>
+	whole === 0 ? "100%" : `${((100 * part) / whole).toFixed(2)}%`;
+
+/** @type {Map<string, { lines: number, typed: number }>} */
+const coverageByFile = new Map();
+let allLines = 0;
+let allTyped = 0;
+for (const fileReport of Object.values(coverageReport)) {
+	const coverage = lineCoverage(fileReport);
+	allLines += coverage.lines;
+	allTyped += coverage.typed;
+	coverageByFile.set(
+		path.relative(root, fileReport.path).split(path.sep).join("/"),
+		coverage
+	);
+}
+
+const headCounts = countAllEscapeHatches();
+const headTotals = totalEscapeHatches(headCounts);
+const baseCounts = base ? countAllEscapeHatches(base) : undefined;
+const baseTotals = baseCounts ? totalEscapeHatches(baseCounts) : undefined;
+
+/**
+ * Returns a file's count of one escape hatch.
+ * @param {Record<string, EscapeHatchCounts> | undefined} byFile counts by file
+ * @param {string} file the file
+ * @param {string} name the escape hatch
+ * @returns {number} the count
+ */
+const countOf = (byFile, file, name) =>
+	(byFile && byFile[file] && byFile[file][name]) || 0;
+
+let report = `Typed lines: **${percent(allTyped, allLines)}** (${allTyped} of ${allLines})\n\n`;
+report += baseTotals
+	? "| Escape hatch | Base | Head | Change |\n| :-- | --: | --: | --: |\n"
+	: "| Escape hatch | Count |\n| :-- | --: |\n";
+for (const name of ESCAPE_HATCHES) {
+	report += baseTotals
+		? `| \`${name}\` | ${baseTotals[name]} | ${headTotals[name]} | ${formatChange(
+				headTotals[name] - baseTotals[name]
+			)} |\n`
+		: `| \`${name}\` | ${headTotals[name]} |\n`;
+}
+
+const header = `| File | Typed lines | ${ESCAPE_HATCHES.map((name) => `\`${name}\``).join(" | ")} |\n| :-- | --: |${" --: |".repeat(ESCAPE_HATCHES.length)}\n`;
+
+/**
+ * Renders a file's row: its coverage and each escape hatch, with its change against the base.
+ * @param {string} file the file
+ * @returns {string} the row
+ */
+const fileRow = (file) => {
+	const coverage = coverageByFile.get(file);
+	const cells = ESCAPE_HATCHES.map((name) => {
+		const head = countOf(headCounts, file, name);
+		const change = head - countOf(baseCounts, file, name);
+		if (!baseCounts || change === 0) return head === 0 ? "" : `${head}`;
+		return `${head} (${formatChange(change)})`;
+	});
+	return `| \`${file}\` | ${coverage ? percent(coverage.typed, coverage.lines) : "—"} | ${cells.join(" | ")} |`;
+};
+
+if (baseCounts) {
+	const changed = [
+		...new Set([...Object.keys(baseCounts), ...Object.keys(headCounts)])
+	]
+		.filter((file) =>
+			ESCAPE_HATCHES.some(
+				(name) =>
+					countOf(headCounts, file, name) !== countOf(baseCounts, file, name)
+			)
+		)
+		.sort();
+	report +=
+		changed.length > 0
+			? `\n#### Changed by this pull request\n\n${header}${changed.map(fileRow).join("\n")}\n`
+			: "\nThis pull request adds or removes no escape-hatch type.\n";
+}
+
+// Every file still owing a real type: an escape hatch or an untyped line.
+const remaining = [
+	...new Set([
+		...Object.keys(headCounts),
+		...[...coverageByFile]
+			.filter(
+				([file, { lines, typed }]) =>
+					typed < lines &&
+					ESCAPE_HATCH_DIRECTORIES.some((directory) =>
+						file.startsWith(directory)
+					)
+			)
+			.map(([file]) => file)
+	])
+].sort((a, b) => {
+	const total = (/** @type {string} */ file) =>
+		ESCAPE_HATCHES.reduce(
+			(sum, name) => sum + countOf(headCounts, file, name),
+			0
+		);
+	return total(b) - total(a) || (a < b ? -1 : 1);
+});
+report += `\n<details><summary>${remaining.length} file(s) in <code>lib/</code> and <code>hot/</code> still use an escape hatch or have untyped lines</summary>\n\n${header}${remaining.map(fileRow).join("\n")}\n\n</details>\n`;
+
+fs.writeFileSync(
+	path.resolve(outputDirectory, "types-coverage.md"),
+	`## Types Coverage\n\n${report}`,
+	"utf8"
+);
+console.log(report);

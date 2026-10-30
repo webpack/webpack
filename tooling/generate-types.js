@@ -2916,11 +2916,19 @@ const generateDeclarations = ({
 							.map((t) => getCode(t, typeArgs))
 							.join(", ")}]`;
 					} else if (parsedTarget.name === "[...]") {
-						const items = parsed.typeArgumentsWithoutDefaults.map((t) =>
-							getCode(t, typeArgs)
+						// The rest element may sit anywhere, so each element prints by its own flag.
+						const { elementFlags } = /** @type {ts.TupleType} */ (
+							parsed.target
 						);
-						const last = items.pop();
-						return `[${items.join(", ")}, ...(${last})[]]`;
+						const items = parsed.typeArgumentsWithoutDefaults.map((t, i) => {
+							const item = getCode(t, typeArgs);
+							const flag = elementFlags[i];
+							if (flag & ts.ElementFlags.Rest) return `...(${item})[]`;
+							if (flag & ts.ElementFlags.Variadic) return `...${item}`;
+							if (flag & ts.ElementFlags.Optional) return `${item}?`;
+							return item;
+						});
+						return `[${items.join(", ")}]`;
 					} else if (
 						parsedTarget.name === "Array" &&
 						parsed.typeArgumentsWithoutDefaults.length === 1
@@ -3018,6 +3026,38 @@ const generateDeclarations = ({
 						return `${readonly ? "readonly " : ""}(${getExtendsString(
 							elementType
 						)})[]`;
+					}
+
+					// An object literal is rendered property-wise too, so `infer` in a
+					// property's type survives, e.g. `{ readonly key?: infer V }`.
+					if (
+						objectFlags & ts.ObjectFlags.Anonymous &&
+						!t.aliasSymbol &&
+						t.getCallSignatures().length === 0 &&
+						t.getConstructSignatures().length === 0 &&
+						!checker.getIndexInfosOfType(t).length
+					) {
+						const members = checker.getPropertiesOfType(t).map((property) => {
+							const declaration =
+								property.declarations && property.declarations[0];
+							const readonly =
+								declaration &&
+								ts.getCombinedModifierFlags(declaration) &
+									ts.ModifierFlags.Readonly;
+							const optional = property.flags & ts.SymbolFlags.Optional;
+							let propertyType = checker.getTypeOfSymbol(property);
+							// An optional property's type includes the `undefined` its `?` adds.
+							if (optional && propertyType.isUnion()) {
+								const kept = propertyType.types.filter(
+									(member) => !(member.flags & ts.TypeFlags.Undefined)
+								);
+								if (kept.length === 1) propertyType = kept[0];
+							}
+							return `${readonly ? "readonly " : ""}${property.getName()}${
+								optional ? "?" : ""
+							}: ${getExtendsString(propertyType)}`;
+						});
+						return `{ ${members.join("; ")} }`;
 					}
 
 					return getCode(t, typeArgs, state);
