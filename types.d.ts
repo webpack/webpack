@@ -20226,7 +20226,7 @@ declare abstract class MinifierLabel {
 declare interface MinifierModules {
 	[index: string]: any;
 	ast: Ast;
-	minify: (
+	minify?: (
 		sources: MinifySources,
 		options?: MinifyOptions
 	) => Promise<MinifyOutput>;

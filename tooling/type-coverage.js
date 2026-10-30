@@ -14,8 +14,16 @@ const ts = require("typescript");
 const { base, baseAny, root } = require("./argv");
 const createTypeScriptProgram = require("./typescript-program");
 
-const program = createTypeScriptProgram("tsconfig.json");
-const typeChecker = program.getTypeChecker();
+// `hot/` is a project of its own, so its files reach only that program.
+/** @type {[ts.SourceFile, ts.TypeChecker][]} */
+const sourceFiles = [];
+for (const configName of ["tsconfig.json", "tsconfig.hot.json"]) {
+	const program = createTypeScriptProgram(configName);
+	const checker = program.getTypeChecker();
+	for (const sourceFile of program.getSourceFiles()) {
+		sourceFiles.push([sourceFile, checker]);
+	}
+}
 
 /**
  * @typedef {object} Location
@@ -49,9 +57,12 @@ const ESCAPE_HATCH_DIRECTORIES = ["lib/", "hot/"];
 /** @type {Record<string, InferredAny[]>} */
 const inferredAnyByFile = {};
 
-for (const sourceFile of program.getSourceFiles()) {
+/** @type {Set<string>} */
+const walkedFiles = new Set();
+for (const [sourceFile, typeChecker] of sourceFiles) {
 	const file = sourceFile.fileName;
-	if (!sourceFile.isDeclarationFile) {
+	if (!sourceFile.isDeclarationFile && !walkedFiles.has(file)) {
+		walkedFiles.add(file);
 		/** @type {FileReport} */
 		const rep = {
 			path: path.sep !== "/" ? file.replace(/\//g, path.sep) : file,
