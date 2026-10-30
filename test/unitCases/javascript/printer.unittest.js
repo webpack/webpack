@@ -16187,6 +16187,16 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		).toBe(
 			"export var c;!function n(){(a--&&n()).p;return{get p(){c=1}}}();!function(){!function(n){n=n&&(c=2)}()}();"
 		);
+		// A name set only for its one read keeps the assignment where the
+		// name alone would be a direct `eval` or read by `typeof`.
+		expect(
+			print(
+				'export function run(f){"use strict";f=eval;return f("this")}export function t(f){g();f=missing;return typeof f}',
+				{ mangle: false }
+			)
+		).toBe(
+			'export function run(f){"use strict";return(f=eval)("this")}export function t(f){g();return typeof(f=missing)}'
+		);
 		// A call printing as what it runs, unread last in a sequence or under
 		// `void` or `!`, prints bare.
 		expect(
