@@ -998,14 +998,17 @@ const REFUSED_BY_REFERENCE = {
 		"terser's compressor throws on a BigInt operation that throws only when it runs",
 	"Division by zero":
 		"terser's compressor throws on a BigInt division by zero that throws only when it runs",
-	"First identifier char is an invalid identifier char":
-		"Unicode 17 adds identifier characters terser's tables predate",
-	"Invalid escaped identifier char":
-		"Unicode 17 adds identifier characters terser's tables predate",
-	"Unexpected character '\u088F'":
-		"Unicode 17 adds identifier characters terser's tables predate",
-	"Unexpected character '\u1ACF'":
-		"Unicode 17 adds identifier characters terser's tables predate",
+	// terser reads identifier characters off the running V8's Unicode tables.
+	...(!/\p{ID_Start}/u.test("\u088F") && {
+		"First identifier char is an invalid identifier char":
+			"Unicode 17 adds identifier characters this Node's Unicode tables predate",
+		"Invalid escaped identifier char":
+			"Unicode 17 adds identifier characters this Node's Unicode tables predate",
+		"Unexpected character '\u088F'":
+			"Unicode 17 adds identifier characters this Node's Unicode tables predate",
+		"Unexpected character '\u1ACF'":
+			"Unicode 17 adds identifier characters this Node's Unicode tables predate"
+	}),
 	"Unexpected token: punc (})":
 		"the corpus reads this as a script, where a class field may read a binding named `await`",
 	"Unexpected token: punc (;)":

@@ -1202,7 +1202,10 @@ const acornDifference = (source, options) => {
 		{
 			relation: "acorn",
 			what: difference.at.replace(/\[\d+\]/g, "[]"),
-			repro: `    ours ${oneLine(difference.ours, 60)}, acorn ${oneLine(difference.acorn, 60)}`
+			repro: `    ours ${oneLine(difference.ours, 60)}, acorn ${oneLine(
+				difference.acorn,
+				60
+			)}`
 		}
 	];
 };
@@ -1363,7 +1366,9 @@ const JS_RESPELLINGS = [
 			label === "name" &&
 			/^[A-Za-z_$]/.test(text) &&
 			!CONTEXTUAL_NAMES.has(text)
-				? `\\u${text.charCodeAt(0).toString(16).padStart(4, "0")}${text.slice(1)}`
+				? `\\u${text.charCodeAt(0).toString(16).padStart(4, "0")}${text.slice(
+						1
+					)}`
 				: null
 	}
 ];
@@ -1520,9 +1525,23 @@ const EXPECTED = [
 	{
 		relation: "idempotence",
 		contains: "var ",
-		source: "ECharts",
+		source: ["ECharts", "Babel 8"],
 		presets: ["default"],
-		why: "terser breaks the line after a statement's trailing comment only where it compresses, so a print-only reprint joins them"
+		why: "terser breaks the line after a comment only where it compresses, so a print-only reprint joins them"
+	},
+	{
+		relation: "idempotence",
+		contains: "{return",
+		source: "test/statsCases/track-returned/index.js",
+		presets: ["default"],
+		why: "an arrow whose one statement is an `if` with a known test returning a value keeps its braces: the `if` prints before the arrow reads what it returns"
+	},
+	{
+		relation: "idempotence",
+		contains: "(e)>0",
+		source: "D3",
+		presets: ["default"],
+		why: "an `if` printing as `?:` parenthesizes a test opening with a function where the reprint parenthesizes the function alone, the same size"
 	}
 ];
 
@@ -1625,7 +1644,9 @@ const invariants = async (write) => {
 			for (const report of reports) groups.add(report, "parse", label);
 		}
 		log(
-			`read ranges over ${corpus.length - refused} sources (${refused} the parser refuses) …`
+			`read ranges over ${
+				corpus.length - refused
+			} sources (${refused} the parser refuses) …`
 		);
 	}
 	if (wantedRelation("slices")) {
@@ -1853,7 +1874,9 @@ const behaviorDifference = (source, printed) => {
 		{
 			relation: "behavior",
 			what: got === null ? "times out" : "runs otherwise",
-			repro: `    ${oneLine(expected, 80)}\n      -> ${got === null ? "<timeout>" : oneLine(got, 80)}`
+			repro: `    ${oneLine(expected, 80)}\n      -> ${
+				got === null ? "<timeout>" : oneLine(got, 80)
+			}`
 		}
 	];
 };
