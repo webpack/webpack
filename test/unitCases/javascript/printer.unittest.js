@@ -16033,6 +16033,15 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		).toBe(
 			"export function f(r){r.add([r=>r+1])}export function g(r){var t;return[t,r()]}export function h(){var r;return r=r||1}export function k(r){let t=r();switch(r){case 1:var a;a=r();r(a,a)}return[t,t]}"
 		);
+		// A `let` nothing reads loses the writes of closures made once it is set,
+		// not of one made before it, of a function declaration, or a closure that reads it.
+		expect(
+			print(
+				"export function a(v){let s,k=function(x){s=x;g(x)};v.forEach(x=>{s=x});v.forEach(k)}export function b(r){const w=()=>{p=r};w();let p;w()}export function c(r){function w(){p=r}let p;w()}export function d(v){let s;v.forEach(x=>{s=x});return()=>s}"
+			)
+		).toBe(
+			"export function a(t){t.forEach(t=>{});t.forEach(function(t){g(t)})}export function b(t){let n=()=>{o=t};n();let o;n()}export function c(t){let n;(function(){n=t})()}export function d(t){let n;t.forEach(t=>{n=t});return()=>n}"
+		);
 		// A literal of functions and constants is made where its one read is.
 		expect(
 			print(
