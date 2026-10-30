@@ -20009,11 +20009,27 @@ type MemCache = {
 		key: K,
 		...restAndValue: [...TupleElement[], MemCacheValue<K>]
 	): void;
-	provide<V>(...keyAndCompute: [...TupleElement[], () => V]): V;
-} & Omit<WeakTupleMap<TupleElement[], unknown>, "get" | "set" | "provide">;
+	provide<K extends TupleElement, V>(
+		key: K,
+		...restAndCompute: [
+			...TupleElement[],
+			(...key: any[]) => MemCacheProvided<K, V>
+		]
+	): MemCacheProvided<K, V>;
+	cachedProvide<This, V>(
+		compute: (thisArg: This, ...key: any[]) => V,
+		thisArg: This,
+		args: TupleElement[]
+	): V;
+} & Omit<
+	WeakTupleMap<TupleElement[], unknown>,
+	"get" | "set" | "provide" | "cachedProvide"
+>;
 type MemCacheKeyValue<K> = K extends { readonly __memCacheValue?: infer V }
 	? V
 	: unknown;
+type MemCacheProvided<K, V> =
+	unknown extends MemCacheKeyValue<K> ? V : MemCacheKeyValue<K>;
 type MemCacheValue<K> =
 	unknown extends MemCacheKeyValue<K> ? any : MemCacheKeyValue<K>;
 
