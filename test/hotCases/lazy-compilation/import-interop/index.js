@@ -26,7 +26,7 @@ it("should apply the importer's interop to a lazily compiled module", (done) => 
 				expect(looseNamespace.default).toBe(42);
 				expect(looseNamespace.named).toBe(1);
 				done();
-			}, done);
+			}).catch(done);
 		})
 	);
 });
