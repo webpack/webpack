@@ -579,7 +579,9 @@ if (baseCounts) {
 	report +=
 		changed.length > 0
 			? `\n#### Changed by this pull request\n\n${header}${changed.map(fileRow).join("\n")}\n`
-			: "\nThis pull request adds or removes no escape-hatch type or inferred `any`.\n";
+			: baseAnyCounts
+				? "\nThis pull request adds or removes no escape-hatch type or inferred `any`.\n"
+				: "\nThis pull request adds or removes no escape-hatch type. Inferred `any` was not compared, as `--base-any` was not given.\n";
 
 	// Where each inferred `any` stands in the files this pull request gave more of them.
 	const worse = baseAnyCounts
