@@ -14870,11 +14870,11 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				{},
 				"const a=1;function f(){let n=g();h(n);return n}f(a);"
 			],
-			// Unmangled, no name is known: every one stays.
+			// Unmangled, the scopes are still read: what nothing reads goes, names as written.
 			[
 				"function f(){ const b = 2; var u = 1; return void 0 } f(undefined)",
 				{ mangle: false },
-				"function f(){const b=2;var u=1}f(undefined);"
+				"function f(){}f(void 0);"
 			],
 			// What only dropped code reads goes too; a constant prints as its value
 			// where that is shorter and the read prints as a name would; a comment
@@ -15342,11 +15342,11 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				{ compress: {toplevel: false,side_effects: false} },
 				"function f(a){a;g()}"
 			],
-			// Without mangling nothing goes, and with `builtins_ecma` and no comments it does.
+			// Without mangling it compresses the same, names as written.
 			[
 				"function f(a){ if (a) x(); else y(); Math.PI; a - 1 }",
 				{ mangle: false },
-				"function f(a){if(a)x();else y();Math.PI;a-1}"
+				"function f(a){a?x():y();a-1}"
 			],
 			[
 				"function f(a){ g((1 || -a) ? 1 : 2, (1 || Math.PI) ? 3 : 4) }",
@@ -15542,11 +15542,11 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				{},
 				"function f(n){return[(n=>n)(/*! a */n),function(){/*! b */return n}(),function(n){return n.a}(/*! c */n)]}"
 			],
-			// Not mangled, no definition reads a name an assignment sets.
+			// Not mangled, the definitions still merge the assignments.
 			[
 				"function f(c) { var a; c ? a = 1 : a = 2; return a }",
 				{ mangle: false },
-				"function f(c){var a;c?a=1:a=2;return a}"
+				"function f(c){var a;a=c?1:2;return a}"
 			],
 			// A call prints as its value only where what it passes prints as named.
 			[
@@ -15701,9 +15701,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			mangle: {}
 		});
 		expect(unmangled()).toBe(first);
-		expect(first).toBe(
-			"(()=>{function f(){return[g(1),g(2)]}class K{}it(()=>f())})();"
-		);
+		expect(first).toBe("(()=>{class K{}it(()=>[g(1),g(2)])})();");
 	});
 
 	it("should keep a name a dropped function sets where it is read", () => {
@@ -15880,6 +15878,28 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		).toBe(
 			'export function e(t,c){return[["0","2"],[10,30],[["0",10],["2",30]],["0","1"],[["0","a"]],Object.keys([t()]),Object.keys([...c]),Object.keys?.([1])]}export function s(t){return t.keys([1])}'
 		);
+		// A method the program writes stays a call, and every one once `Object` goes elsewhere.
+		const replaced = [
+			[
+				'export function r(){Object.keys=()=>["k"];[Object.values]=[()=>1];return[Object.keys([1]),Object.values("a"),Object.entries("a")]}',
+				'export function r(){Object.keys=()=>["k"];[Object.values]=[()=>1];return[Object.keys([1]),Object.values("a"),[["0","a"]]]}'
+			],
+			[
+				'export function r(){delete Object["entries"];Object.keys.call;return[Object.keys([1]),Object.entries("a")]}',
+				'export function r(){delete Object.entries;Object.keys.call;return[["0"],Object.entries("a")]}'
+			],
+			[
+				'export function r(g){g(Object);return[Object.keys([1]),typeof Object,g instanceof Object]}',
+				"export function r(e){e(Object);return[Object.keys([1]),typeof Object,e instanceof Object]}"
+			],
+			[
+				'export function r(g){Object[g]=1;return Object.keys([1])}',
+				"export function r(e){Object[e]=1;return Object.keys([1])}"
+			]
+		];
+		for (const [source, expected] of replaced) {
+			expect(print(source)).toBe(expected);
+		}
 	});
 
 	it("should keep a named function a direct eval in a class or function it returns reads", () => {

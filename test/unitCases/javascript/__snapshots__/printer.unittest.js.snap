@@ -2693,7 +2693,7 @@ Array [
 ]
 `;
 
-exports[`jsMinify should minify: mangle off (with source map) 1`] = `"\\"use strict\\";function unusedHelper(a,b){return a+b}sink(function outer(){let list=[1,2,3].map(value=>value+1);if(list.length>0)console.log(list);else console.log(\\"empty\\");return list});"`;
+exports[`jsMinify should minify: mangle off (with source map) 1`] = `"\\"use strict\\";function unusedHelper(a,b){return a+b}sink(function(){let list=[1,2,3].map(value=>value+1);list.length>0?console.log(list):console.log(\\"empty\\");return list});"`;
 
 exports[`jsMinify should minify: mangle off (with source map) 2`] = `
 Array [
@@ -2701,7 +2701,7 @@ Array [
 ]
 `;
 
-exports[`jsMinify should minify: mangle off 1`] = `"\\"use strict\\";function unusedHelper(a,b){return a+b}sink(function outer(){let list=[1,2,3].map(value=>value+1);if(list.length>0)console.log(list);else console.log(\\"empty\\");return list});"`;
+exports[`jsMinify should minify: mangle off 1`] = `"\\"use strict\\";function unusedHelper(a,b){return a+b}sink(function(){let list=[1,2,3].map(value=>value+1);list.length>0?console.log(list):console.log(\\"empty\\");return list});"`;
 
 exports[`jsMinify should minify: mangle off 2`] = `
 Array [
