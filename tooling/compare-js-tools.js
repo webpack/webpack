@@ -1505,6 +1505,13 @@ const sweepRespellings = (minify, code, module, minified) => {
 /** @type {import("./compare-tools-harness").Expected[]} */
 const EXPECTED = [
 	{
+		relation: "idempotence",
+		contains: "Unexpected token",
+		source: "acorn corpus: tests.js",
+		presets: ["default"],
+		why: "acorn reads a `/` after an async function expression as a regular expression, which V8 reads as division, and the printer writes `typeof async function(){}/foo/g` on one line"
+	},
+	{
 		relation: "respelling hex",
 		contains: "0x",
 		source: "asm-js/asm.js",

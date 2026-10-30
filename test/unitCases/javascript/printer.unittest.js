@@ -4,7 +4,7 @@
 // cspell:ignore fnames
 // cspell:ignore argnames, bcatch, bfinally, argname
 // cspell:ignore AAAWA MAAH EAAI EAAIA EAAGC ACAA IAAYC EAAWC
-// cspell:ignore endline, endcol, endpos, nlb, thedef, ymgsid, dgimsy
+// cspell:ignore endline, endcol, endpos, nlb, thedef, ymgsid, dgimsy, elta
 
 const vm = require("vm");
 const acorn = require("acorn");
@@ -1264,10 +1264,10 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 	});
 
 	it("should refuse an option it does not know, and a module statement off the top level", () => {
-		expect(() => minifyOnePass("x", { mangle: { nope: 1 } })).toThrow(
+		expect(() => minifyOnePass("x", { mangle: /** @type {EXPECTED_ANY} */ ({ nope: 1 }) })).toThrow(
 			"`nope` is not a supported option"
 		);
-		expect(() => minifyOnePass("x", { format: { nope: 1 } })).toThrow(
+		expect(() => minifyOnePass("x", { format: /** @type {EXPECTED_ANY} */ ({ nope: 1 }) })).toThrow(
 			"`nope` is not a supported option"
 		);
 		// A script reads module syntax anywhere, which the scopes then refuse.
@@ -1439,6 +1439,48 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			});
 			expect(runProgram(code)).toBe(runProgram(source));
 		}
+	});
+
+	it("should print folded values where they are read as reading back the same", () => {
+		const print = (/** @type {string} */ source) =>
+			minifyOnePass(source, { compress: {}, mangle: true, module: true }).code;
+		for (const [source, expected] of [
+			// A name printing as a number takes a `.` before a member's.
+			["var a = 1; a.toString();", "1..toString();"],
+			["var a = /1/; a.test(1);", "/1/.test(1);"],
+			// A folded `await` or `new` without arguments takes no parentheses.
+			[
+				"export async function f(){ const r = await g(1); h(r) }",
+				"export async function f(){h(await g(1))}"
+			],
+			[
+				"export async function f(){ const r = await g(1); return r.x }",
+				"export async function f(){return(await g(1)).x}"
+			],
+			["export function f(){ const r = new C; h(r) }", "export function f(){h(new C)}"],
+			[
+				"export function f(){ const r = new C; return r() }",
+				"export function f(){return(new C)()}"
+			],
+			// A test known folds to the name, member or call it keeps.
+			["export class C extends (true ? A : B) {}", "export class C extends A{}"],
+			["g(a * (1 ? b : c), (1 ? x : y).z)", "g(a*b,x.z);"],
+			["g(new (1 ? a.b() : c))", "g(new(a.b()));"],
+			// An arrow returning an object folded in keeps it in parentheses.
+			["f(() => { var o = {}; return o.a + 1 })", "f(()=>({}.a+1));"],
+			["define(() => { var w = 42; return w + l })", "define(()=>42+l);"],
+			// A `do` body prints in braces, as terser prints it.
+			["do x(); while (y)", "do{x()}while(y);"]
+		]) {
+			expect(print(source)).toBe(expected);
+		}
+		// The names handed out hang on what prints, not on how a source spells it.
+		const source =
+			"function f(alpha,beta){var delta=alpha+beta;g(delta,delta*7,6,5,4,3,2,1)}g(f)";
+		expect(print(source.replace(/\b([1-7])\b/g, "0x$1"))).toBe(print(source));
+		expect(print(source.replace(/\bdelta\b/g, "\\u0064elta"))).toBe(
+			print(source)
+		);
 	});
 
 	it("should keep a `Number` constant a pattern or assignment writes", () => {
