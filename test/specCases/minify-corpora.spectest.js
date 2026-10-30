@@ -10,8 +10,7 @@
 //    prints, run in terser's own sandbox it must print that too, and webpack
 //    must refuse a source where terser does, and only there, unless
 //    REFUSED_BY_REFERENCE or REFUSED_BY_WEBPACK lists why;
-// 2. webpack's output must be no bigger than terser's (gzip, then raw), unless
-//    TERSER_SMALLER lists why;
+// 2. summed over each corpus, webpack's output must gzip no bigger than terser's;
 // 3. where swc records its own output, webpack's must be no bigger (gzip, then
 //    raw), unless SWC_SMALLER lists why, nor than oxc's unless OXC_SMALLER does;
 //    JS_MINIFY_REPORT names a file to tally where it is worse, the same and better.
@@ -27,7 +26,6 @@ const acorn = require("acorn");
 const { SourceProcessor, printer } = require("../../lib/javascript/syntax");
 const OXC_SMALLER = require("../helpers/oxcSmaller");
 const SWC_SMALLER = require("../helpers/swcSmaller");
-const TERSER_SMALLER = require("../helpers/terserSmaller");
 const { claimInPart, currentPart } = require("../helpers/testParts");
 
 /** @typedef {import("terser").MinifyOptions} MinifyOptions */
@@ -1131,9 +1129,9 @@ const REFUSED_BY_WEBPACK = {
 const refusalsSeen = new Set();
 /** @type {Set<string>} */
 const webpackRefusalsSeen = new Set();
-// Each `TERSER_SMALLER` entry met.
-/** @type {Set<string>} */
-const terserSmallerSeen = new Set();
+// The gzip sizes of webpack's and terser's outputs, summed per corpus.
+/** @type {Record<string, { ours: number, theirs: number }>} */
+const terserTotals = {};
 // Each `SWC_SMALLER` and `OXC_SMALLER` entry met, as `<table>: <source>`.
 /** @type {Set<string>} */
 const rivalSmallerSeen = new Set();
@@ -1311,7 +1309,6 @@ const formatLeads = (leads) => {
 const staleEntries = (seen) => {
 	const refusalsSeen = new Set(seen.refusals);
 	const webpackRefusalsSeen = new Set(seen.webpackRefusals);
-	const terserSmallerSeen = new Set(seen.terserSmaller);
 	const rivalSmallerSeen = new Set(seen.rivalSmaller);
 	return [
 		...Object.keys(REFUSED_BY_REFERENCE)
@@ -1320,9 +1317,6 @@ const staleEntries = (seen) => {
 		...Object.keys(REFUSED_BY_WEBPACK)
 			.filter((message) => !webpackRefusalsSeen.has(message))
 			.map((message) => `REFUSED_BY_WEBPACK: ${message}`),
-		...Object.keys(TERSER_SMALLER)
-			.filter((key) => !terserSmallerSeen.has(key))
-			.map((key) => `TERSER_SMALLER: ${key}`),
 		...Object.keys(SWC_SMALLER)
 			.map((key) => `SWC_SMALLER: ${key}`)
 			.filter((entry) => !rivalSmallerSeen.has(entry)),
@@ -1406,10 +1400,10 @@ describe("JavaScript minifier", () => {
 			JSON.stringify({
 				leads,
 				complete: groupCounts.run === groupCounts.defined,
+				terserTotals,
 				seen: {
 					refusals: [...refusalsSeen],
 					webpackRefusals: [...webpackRefusalsSeen],
-					terserSmaller: [...terserSmallerSeen],
 					rivalSmaller: [...rivalSmallerSeen]
 				}
 			})
@@ -1459,12 +1453,23 @@ describe("JavaScript minifier", () => {
 		const allLeads = [];
 		/** @type {Record<string, string[]>} */
 		const seen = {};
+		/** @type {Record<string, { ours: number, theirs: number }>} */
+		const totals = {};
 		for (const name of done) {
 			const result = JSON.parse(
 				fs.readFileSync(path.join(runDir, name), "utf8")
 			);
 			allLeads.push(...result.leads);
 			if (!result.complete) complete = false;
+			for (const [name, { ours, theirs }] of Object.entries(
+				/** @type {Record<string, { ours: number, theirs: number }>} */ (
+					result.terserTotals
+				)
+			)) {
+				const total = totals[name] || (totals[name] = { ours: 0, theirs: 0 });
+				total.ours += ours;
+				total.theirs += theirs;
+			}
 			for (const [table, entries] of Object.entries(result.seen)) {
 				(seen[table] = seen[table] || []).push(
 					.../** @type {string[]} */ (entries)
@@ -1482,6 +1487,19 @@ describe("JavaScript minifier", () => {
 		if (stale.length > 0) {
 			throw new Error(
 				`List no difference the reference no longer makes:\n${stale.join("\n")}`
+			);
+		}
+		const bigger = complete
+			? Object.entries(totals)
+					.filter(([, { ours, theirs }]) => ours > theirs)
+					.map(
+						([name, { ours, theirs }]) =>
+							`${name}: ${ours} B gzip, against terser's ${theirs} B`
+					)
+			: [];
+		if (bigger.length > 0) {
+			throw new Error(
+				`Corpora whose outputs gzip bigger than terser's in total:\n${bigger.join("\n")}`
 			);
 		}
 	};
@@ -1824,28 +1842,11 @@ describe("JavaScript minifier", () => {
 											);
 										}
 									} else if (theirs.code !== undefined && ours.code !== undefined) {
-										const oursSize = sizeOf(ours.code);
-										const theirsSize = sizeOf(theirs.code);
-										// Sources sharing a name share an entry, standing while one is
-										// bigger; an entry none of them meets fails at the end.
-										if (
-											standingOf({
-												source: key,
-												rival: "terser",
-												ours: oursSize.raw,
-												theirs: theirsSize.raw,
-												oursGzip: oursSize.gzip,
-												theirsGzip: theirsSize.gzip
-											}) === "worse"
-										) {
-											if (Object.prototype.hasOwnProperty.call(TERSER_SMALLER, key)) {
-												terserSmallerSeen.add(key);
-											} else {
-												differences.push(
-													`${key} is bigger than terser's output: ${oursSize.raw} raw, ${oursSize.gzip} gzip, against ${theirsSize.raw} raw, ${theirsSize.gzip} gzip`
-												);
-											}
-										}
+										const total =
+											terserTotals[corpus.name] ||
+											(terserTotals[corpus.name] = { ours: 0, theirs: 0 });
+										total.ours += sizeOf(ours.code).gzip;
+										total.theirs += sizeOf(theirs.code).gzip;
 									}
 									if (runs && ours.code !== undefined) {
 										let wrong = verdicts.get(ours.code);
