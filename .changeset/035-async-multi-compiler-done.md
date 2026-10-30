@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Make the `MultiCompiler` `done` hook async so plugins can wait in it.
+Make the `MultiCompiler` `done` hook async; its sync `call` is deprecated.
