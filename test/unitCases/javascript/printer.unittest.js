@@ -14832,7 +14832,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			{ compress: {}, mangle: {}, toplevel: true }
 		);
 		expect(printed.code).toBe(
-			"function e(e,o){return(e+o)*2}e(1,2);class o{#e=1;read(){return this.#e}static#o(){}}print((new o).read());"
+			"function e(e,o){return(e+o)*2}e(1,2);class o{#e=1;read(){return this.#e}}print((new o).read());"
 		);
 	});
 
@@ -14895,7 +14895,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				'const a = g(), b = 1; const { x, y: [z = 1, ...r] } = a; const c = 1; c = 2; const d = 1; d++; const e = 1; [e] = []; const k = 1; ({ k } = {}); const m = 1; for (m of a); export const ex = 1; for (const i of a) g(i, x, z, r, b, c, d, e, k, m); while (true) g(); while (/*! t */ true) g(); while (a) g()',
 				{ module: true },
-				'let o=g(),{x:c,y:[t=1,...e]}=o;const n=1;n=2;const s=1;s++;const r=1;[r]=[];const a=1;({k:a}={});const i=1;for(i of o);export const ex=1;for(let f of o)g(f,c,t,e,1,n,s,r,a,i);for(;;)g();while(/*! t */!0)g();while(o)g();'
+				'const o=g(),{x:c,y:[t=1,...e]}=o,n=1;n=2;const s=1;s++;const r=1;[r]=[];const a=1;({k:a}={});const i=1;for(i of o);export const ex=1;for(let f of o)g(f,c,t,e,1,n,s,r,a,i);for(;;)g();while(/*! t */!0)g();while(o)g();'
 			],
 			[
 				"const a = 1; function f() { const b = g(); h(b); return b } f(a)",
@@ -14950,7 +14950,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"function f(a){ function h(x){ return x + a } function k(){ return 1 } function r(n){ return n ? r(n - 1) : 0 } var z = h(2); for (;;) k(); g(z, r); function late(){} late(); return [early()]; function early(){ return 2 } }",
 				{},
-				"function f(n){function r(){return 1}function t(n){return n?t(n-1):0}var u=function(r){return r+n}(2);for(;;)r();g(u,t);(function(){})();return[2]}"
+				"function f(n){function r(){return 1}function t(n){return n?t(n-1):0}var u=function(){return 2+n}();for(;;)r();g(u,t);(function(){})();return[2]}"
 			],
 			// A name nothing reads goes, its value still running; a `var` set
 			// after a call is a constant where only its own function reads it.
@@ -14971,7 +14971,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				'function f(e, t, s){ var i; i = e.indexOf("x", t); if (i === -1 || i > s) return 1; let n = g(e); r(n); let o = {a: 1}; o.a; i = 2; while (i) i--; var p = h(); q += p; var u = h(); w(u); w = 1; let m = h(); return [m, 2] } function r(){} var q, w',
 				{},
-				'function f(i,e,n){var t;if((t=i.indexOf("x",e))===-1||t>n)return 1;r(g(i));t=2;while(t)t--;var a=h();q+=a;var u=h();w(u);w=1;return[h(),2]}function r(){}var q,w;'
+				'function f(i,e,n){var t=i.indexOf("x",e);if(t===-1||t>n)return 1;r(g(i));t=2;while(t)t--;var a=h();q+=a;var u=h();w(u);w=1;return[h(),2]}function r(){}var q,w;'
 			],
 			// What folds to a constant prints its value where that is shorter,
 			// and a template's parts that fold are its text; a tag's are not.
@@ -15067,7 +15067,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"function f(o){ const a = 3, b = 2; return [a<<b, a>>b, a>>>b, a&b, a|b, a^b, a==b, a!=b, a!==b, a<b, a>b, a<=b, a>=b, a in o, ~a, +a, typeof a, void a, a - b, a / b, a % b, a ** b, a * b] }",
 				{},
-				"function f(a){return[12,0,0,2,3,1,!1,!0,!0,!1,!0,!1,!0,3 in a,~3,+3,typeof 3,void 3,1,3/2,1,9,6]}"
+				"function f(a){return[12,0,0,2,3,1,!1,!0,!0,!1,!0,!1,!0,3 in a,~3,3,\"number\",void 3,1,3/2,1,9,6]}"
 			],
 			[
 				"function f(){ const a = 1, z = 0, n = null; return [a && 2, a || 2, a ?? 2, z && a, z || 3, n ?? 4, a ? 5 : 6, z ? 7 : 8] }",
@@ -15088,7 +15088,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"function f(){ const a = ~3, b = +'1', c = typeof 1, d = typeof null, e = -1, h = !0, i = 1 && 2, j = 0 || 3, k = null ?? 5, l = 1 ? 6 : 7, m = 1 === 1, n = 1 instanceof 2, p = 0 ? 8 : 9; g(a, b, c, d, e, h, i, j, k, l, m, n, p) }",
 				{},
-				"function f(){let n=~3,l=-1,c=1 instanceof 2;g(n,1,\"number\",\"object\",l,!0,2,3,5,6,!0,c,9)}"
+				"function f(){g(~3,1,\"number\",\"object\",-1,!0,2,3,5,6,!0,1 instanceof 2,9)}"
 			],
 			// What nothing reads goes where its value makes nothing happen.
 			[
@@ -15105,7 +15105,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"function f(o){ var a = {}.x + g(); var b = (class{}).y || g(); var c = (function(){})() ? g() : 1; var d = (function(){}(), g()); var e = function(){}`t${g()}`; var h = {}.p++; var i = ++o.p; var j = new X(g()); var k = (o.q = g()); }",
 				{},
-				"function f(a){({}).x+g();(class{}).y||g();(function(){})()?g():1;(function(){}(),g());(function(){})`t${g()}`;({}).p++;++a.p;new X(g());a.q=g()}"
+				"function f(a){({}).x+g();(class{}).y||g();(function(){})()?g():1;([],g());(function(){})`t${g()}`;({}).p++;++a.p;new X(g());a.q=g()}"
 			],
 			// A function moved to its read prints in parentheses where it would not read as a value.
 			[
@@ -15128,12 +15128,12 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"function f(H){ var x; x = g(); switch (x) {} x = g(); x ? 1 : 2; x = g(); h(...x); x = g(); delete x.y; x = g(); (x, 1); x = g(); ({ k: x }); x = g(); ({ [k]: x }); x = g(); ({ x }); x = g(); new H(x); x = g(); new H(...x); x = g(); new U(x); x = g(); [...x]; x = g(); `${x}`; x = g(); -x; return x }",
 				{},
-				"function f(x){var e;switch(e=g()){}(e=g())?1:2;e=g();h(...e);e=g();delete e.y;e=g(),1;({k:e=g()});e=g();({[k]:e});e=g();new x(e=g());e=g();new x(...e);new U(e=g());e=g();[...e];`${e=g()}`;-(e=g());return e}"
+				"function f(x){var e=g();switch(e){}(e=g())?1:2;e=g();h(...e);e=g();delete e.y;e=g(),1;({k:e=g()});e=g();({[k]:e});e=g();new x(e=g());e=g();new x(...e);new U(e=g());e=g();[...e];`${e=g()}`;-(e=g());return e}"
 			],
 			[
 				"function f(H){ var x; x = g(); H(...x) }",
 				{},
-				"function f(x){var f;f=g();x(...f)}"
+				"function f(x){var f=g();x(...f)}"
 			],
 			// A `const` prints as `let` only where nothing writes a name its patterns bind.
 			[
@@ -15149,7 +15149,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"function f(o){ const [, a] = o, { b } = o; const [c] = o; c = 1; return a + b + c }",
 				{},
-				"function f(o){let[,c]=o,{b:n}=o;const[t]=o;t=1;return c+n+t}"
+				"function f(o){const[,c]=o,{b:n}=o,[t]=o;t=1;return c+n+t}"
 			],
 			// An alias reads its target, a catch parameter of its name aside.
 			[
@@ -15189,7 +15189,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"function f(){ var x; x = s(); g(x); let g = () => {}; } function h(){ var x; x = s(); new C(x); class C {} } function i(){ var x; x = s(); k(x); var k = () => {} }",
 				{},
-				"function f(){var x;x=s();n(x);let n=()=>{}}function h(){var x;x=s();new n(x);class n{}}function i(){var x;n(x=s());var n=()=>{}}"
+				"function f(){var x=s();n(x);let n=()=>{}}function h(){var x=s();new n(x);class n{}}function i(){x(s());var x=()=>{}}"
 			],
 			// A directive stays, and so does a global set before a call that may read it.
 			[
@@ -15262,7 +15262,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"function f(){ const k = void 1, m = delete x; g(k, m) }",
 				{},
-				"function f(){let e,n=delete x;g(e,n)}"
+				"function f(){g(void 1,delete x)}"
 			],
 			// A declarator going, but keeping its value, prints it apart.
 			[
@@ -15309,7 +15309,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"function f(c){ { if (c) { var x; x = s(); g(x) } let g = q; } } function h(c){ let g = q; if (c) { var x; x = s(); g(x) } } function k(){ class C {} var x; x = s(); new C(x) } function m(){ let g = () => {}; function n(){ var x; x = s(); g(x) } return n }",
 				{},
-				"function f(n){{if(n){var x;x=s();c(x)}let c=q}}function h(n){let x=q;if(n){var c;x(c=s())}}function k(){class n{}var x;new n(x=s())}function m(){let n=()=>{};return function(){var x;x=s();n(x)}}"
+				"function f(n){{if(n){var x=s();c(x)}let c=q}}function h(n){let x=q;if(n)x(s())}function k(){class n{}new n(s())}function m(){let n=()=>{};return function(){var x=s();n(x)}}"
 			],
 			// An `if` of expressions prints as `?:`, its test parenthesized where it binds looser, first in a statement or not.
 			[
@@ -15510,7 +15510,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"function f() { function r() { return a() } function a() { return arguments.callee } function s() { return b(1) } function b(n) { return () => n } return [r(), r(), s(), s()] }",
 				{},
-				"function f(){function n(){return r()}function r(){return arguments.callee}function t(){return function(n){return()=>n}(1)}return[n(),n(),t(),t()]}"
+				"function f(){function n(){return r()}function r(){return arguments.callee}function t(){return function(){return()=>1}()}return[n(),n(),t(),t()]}"
 			],
 			// A literal of constants folds into its read where that runs once.
 			[
@@ -15537,12 +15537,12 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"function u(b,c){var j=b||c;return j??1}function z(b,c){var j=b+c,k;k=j;return k}",
 				{},
-				"function u(c,n){return(c||n)??1}function z(c,n){var r;return r=c+n}"
+				"function u(c,n){return(c||n)??1}function z(c,n){return c+n}"
 			],
 			[
 				"(function () { u(); function u() { console.log(g()) } })()",
 				{},
-				"(function(){n();function n(){console.log(g())}})();"
+				"!function(){n();function n(){console.log(g())}}();"
 			],
 			[
 				"function f(o) { return [typeof (function () { return undeclaredX })(), delete (() => o.p)(), ((x) => x.m)(o)()] }",
@@ -15584,7 +15584,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"(function () { var x = 7; function h(k) { return k() } function f(a) { var g = function () { return x }; return h(g) + a } g(f(3)) })(); (function () { function h(k) { return k + 1 } function f(a) { var c = 5; return h(c) + a } g(f(3)) })(); (function () { function h(k) { return k.v } function f(a) { var c = { v: 5 }; return h(c) + a } g(f(3)) })()",
 				{},
-				"(function(){g(function(n){return function(n){return n()}(function(){return 7})+n}(3))})();(function(){g(function(n){return function(n){return n+1}(5)+n}(3))})();(function(){g(function(n){return function(n){return n.v}({v:5})+n}(3))})();"
+				"!function(){g(function(){return function(n){return n()}(function(){return 7})+3}())}();!function(){g(function(){return function(){return 6}()+3}())}();!function(){g(function(){return function(n){return n.v}({v:5})+3}())}();"
 			],
 			[
 				"function f(a){ if (0) x(); Math.PI }",
@@ -15635,7 +15635,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"function m(o){ var add = g(), b = h(); function f(a){ o.x(a) } var c = \"x\"; var __proto__ = g(); return { add, b, f, c, __proto__ } }",
 				{ ecma: 2015 },
-				"function m(o){var _=g(),b=h(),a=g();return{add:_,b,f:function(_){o.x(_)},c:\"x\",[\"__proto__\"]:a}}"
+				"function m(o){var _=g(),b=h(),a=g();return{add:_,b,f:function(_){o.x(_)},c:`x`,[\"__proto__\"]:a}}"
 			],
 			// A function expression's name that goes takes no name from its scope.
 			[
@@ -15932,6 +15932,300 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		for (const [source, expected] of replaced) {
 			expect(print(source)).toBe(expected);
 		}
+		// A private member nothing reads goes, a field only where its value runs nothing.
+		const members = [
+			[
+				"export class C{#a(){return 1}#b=2;#c=g();get #d(){return 1}set #d(v){}static #e(){}#f;m(){return this.#f}}",
+				"export class C{#r=g();#c;m(){return this.#c}}"
+			],
+			[
+				'export class C{#a(){return 1}m(){return eval("this.#a()")}}',
+				'export class C{#a(){return 1}m(){return eval("this.#a()")}}'
+			],
+			[
+				"export class C{#a(){}m(o){return #a in o}}",
+				"export class C{#a(){}m(a){return#a in a}}"
+			],
+			[
+				"export class C{#a(){}m(){class D{f(o){return o.#a}}return D}}",
+				"export class C{#r(){}m(){class r{f(r){return r.#r}}return r}}"
+			],
+			["export class C{#a(){}}", "export class C{}"],
+			["export class C{/*! keep */#a(){}}", "export class C{/*! keep */#a(){}}"]
+		];
+		for (const [source, expected] of members) {
+			expect(print(source)).toBe(expected);
+		}
+		// A statement calling a function expression prints the call after `!`.
+		expect(
+			print(
+				"(function(){for(;;)g()})();(function(){for(;;)g()})(),h();h(),(function(){for(;;)g()})()"
+			)
+		).toBe(
+			"!function(){for(;;)g()}();!function(){for(;;)g()}(),h();h(),function(){for(;;)g()}();"
+		);
+		expect(
+			print("(function(){for(;;)g()})();h()", { compress: { negate_iife: false } })
+		).toBe("(function(){for(;;)g()})();h();");
+		expect(
+			print("(function(){for(;;)g()})();h()", { format: { wrap_iife: true } })
+		).toBe("(function(){for(;;)g()})();h();");
+		// An empty function called where nothing reads it runs only its arguments.
+		expect(
+			print(
+				"(function(){})(a(),b());x(),(()=>{})(...a),y();if(c)(function(a){})(...a);else d();z=(function(){})(a());(function({a}){})(b);(function(a=g()){})(b);(async function(){})(b)"
+			)
+		).toBe(
+			"[a(),b()];x(),[...a],y();c?[...a]:d();z=function(){}(a());!function({a:n}){}(b);!function(n=g()){}(b);!async function(){}(b);"
+		);
+		// Branches printing alike print once, after the test where it runs anything.
+		expect(
+			print(
+				'export function q(x,o){return[x?o["read"]():o.read(),1+(g(x)?o.read():o.read()),f(g(x)?o.r:o.r),(x?o.f:o.f)(),delete(x?o.f:o.f),typeof(x?y:y)]}export function s(x,o){x?o.f():o.f();g(x)?o.f():o.f()}'
+			)
+		).toBe(
+			"export function q(o,x){return[x.read(),1+(g(o),x.read()),f((g(o),x.r)),(o?x.f:x.f)(),delete(o?x.f:x.f),typeof(o?y:y)]}export function s(o,f){f.f();g(o),f.f()}"
+		);
+		expect(
+			print("export function q(x,o){return x?o.read():o.read()}", {
+				compress: { side_effects: false }
+			})
+		).toBe("export function q(o,r){return o,r.read()}");
+		// What a function called where nothing reads its call returns goes, where it runs nothing.
+		expect(
+			print(
+				"(function(){try{throw 1}finally{return 2}})();x=(function(){try{g()}finally{return 2}})();(function(){if(g())return 1;for(;;)h()})();(async function(){g();return 1})();(function(){g();return h()})();a(),(()=>{g();return 2})(),b();(function*(){return 1})().next()"
+			)
+		).toBe(
+			"!function(){try{throw 1}finally{return}}();x=function(){try{g()}finally{return 2}}();!function(){if(g())return;for(;;)h()}();!async function(){g();return 1}();!function(){g();return h()}();a(),(()=>{g();return})(),b();(function*(){return 1})().next();"
+		);
+		// A method's value is the method's, read whatever the call around its class.
+		expect(
+			print(
+				"(()=>{class K{a(){return 1}get b(){return 2}static c(){return 3}}g(K,{m(){return 4},get n(){return 5}})})()"
+			)
+		).toBe(
+			"(()=>{class r{a(){return 1}get b(){return 2}static c(){return 3}}g(r,{m(){return 4},get n(){return 5}})})();"
+		);
+		// A program only calling a function prints as its statements, where they
+		// declare nothing, return nothing and read nothing the call gives them.
+		for (const [source, expected] of [
+			["(()=>{it(1);it(2)})()", "it(1);it(2);"],
+			["(function(){if(x){let y=g();h(y)}})()", "if(x)h(g());"],
+			["(()=>{var a=1;g(a)})()", "g(1);"],
+			["(()=>{g(this,()=>{return 1})})()", "g(this,()=>1);"],
+			["(()=>{let a=g();h(a);h(a)})()", "(()=>{let a=g();h(a);h(a)})();"],
+			["(()=>{class A{}g(A,A)})()", "(()=>{class A{}g(A,A)})();"],
+			["(()=>{if(x){function f(){}g(f,f)}})()", "(()=>{if(x){function f(){}g(f,f)}})();"],
+			["(()=>{for(;;){var a=g();h(a,a)}})()", "(()=>{for(;;){var a=g();h(a,a)}})();"],
+			['(()=>{"use strict";g()})()', '(()=>{"use strict";g()})();'],
+			["(()=>{if(x)return;g()})()", "x||g();"],
+			["(()=>{eval(x)})()", "(()=>{eval(x)})();"],
+			["(function(){g(this)})()", "!function(){g(this)}();"],
+			["(function(){g(arguments)})()", "!function(){g(arguments)}();"],
+			["(function(a){g(a)})(1)", "!function(){g(1)}();"],
+			["(()=>{g()})();h()", "g();h();"]
+		]) {
+			expect(print(source, { module: false })).toBe(expected);
+		}
+		expect(print("g()", { enclose: true })).toBe("!function(){g()}();");
+		// A `var` and the statement setting its last name read as one; a `let`
+		// stays apart, its dead zone lasting while the value runs.
+		expect(
+			print(
+				"export function f(r){var h;h=x=>x+1;r.add([h])}export function g(r){var a,b;b=r();return[a,b]}export function h(){var h;h=h||1;return h}export function k(r){let a;a=r();switch(r){case 1:var c;c=r();r(c,c)}return[a,a]}"
+			)
+		).toBe(
+			"export function f(r){r.add([r=>r+1])}export function g(r){var t;return[t,r()]}export function h(){var r;return r=r||1}export function k(r){let t;t=r();switch(r){case 1:var a;a=r();r(a,a)}return[t,t]}"
+		);
+		// A `let` nothing reads loses the writes of closures made once it is set,
+		// not of one made before it, of a function declaration, or a closure that reads it.
+		expect(
+			print(
+				"export function a(v){let s,k=function(x){s=x;g(x)};v.forEach(x=>{s=x});v.forEach(k)}export function b(r){const w=()=>{p=r};w();let p;w()}export function c(r){function w(){p=r}let p;w()}export function d(v){let s;v.forEach(x=>{s=x});return()=>s}"
+			)
+		).toBe(
+			"export function a(t){t.forEach(t=>{});t.forEach(function(t){g(t)})}export function b(t){let n=()=>{o=t};n();let o;n()}export function c(t){let n;(function(){n=t})()}export function d(t){let n;t.forEach(t=>{n=t});return()=>n}"
+		);
+		// A value running nothing moves past what runs nothing, not past what may.
+		expect(
+			print(
+				'export function r(j){const i=/*#__PURE__*/j("i",[]);return /*#__PURE__*/j("d",[/*#__PURE__*/j("b",[]),i])}export function s(j,l){const i=/*#__PURE__*/j("i",[]);return j("d",[l("b"),i])}'
+			)
+		).toBe(
+			'export function r(i){return i("d",[i("b",[]),i("i",[])])}export function s(i,n){let t=i("i",[]);return i("d",[n("b"),t])}'
+		);
+		// What follows a statement always leaving its list goes, but what it declares.
+		expect(
+			print(
+				"export function a(){return 1;g()}export function b(){if(1)return 7;g()}export function c(){return x;var x}export function d(){return h;function h(){}}export function e(){for(;;){if(a)break;else continue;h()}}"
+			)
+		).toBe(
+			"export function a(){return 1}export function b(){return 7}export function c(){return n;var n}export function d(){return function(){}}export function e(){for(;;){if(a)break;continue}}"
+		);
+		// A constant passed to a function called once is its parameter's value.
+		expect(
+			print(
+				'export const r=[function(a,b,c){return a+b+c}(1,g(),"s"),(x=>x*2)(3),function(x){x=2;return x}(1),function(x){return arguments[0]+x}(1),function f(x){return f.length+x}(1),function(x){return x}(1,2),function(x,y){return x+y}(...a)];export function m(){function n(y){return h(y,y)}return n(1)}'
+			)
+		).toBe(
+			"export const r=[function(t){return 1+t+\"s\"}(g()),(()=>6)(),function(n){return 2}(1),function(n){return arguments[0]+n}(1),function n(t){return n.length+t}(1),function(){return 1}(2),function(n,t){return n+t}(...a)];export function m(){return function(){return h(1,1)}()}"
+		);
+		// A function called where nothing reads the call prints as what it runs.
+		expect(
+			print(
+				"export function u(y,r){(function(x){if(x)return 3;r(x)})(y);(()=>{if(r(1))return 4;r(2)})();(function(x){r(x);r(1)})(y);(function(){if({}.a)return;r()})();(function(x){if(x)return;r(x,()=>x)})(y)}export function v(y,r){(function(x){if(x=y)return;r(x)})(y)}export function w(y,r){(function(x){if(x)return y=1;r(x)})(y)}"
+			)
+		).toBe(
+			"export function u(r,n){r||n(r);n(1)||n(2);n(r),n(1);!function(){if({}.a)return;n()}();!function(r){if(r)return;n(r,()=>r)}(r)}export function v(r,n){!function(t){if(t=r)return;n(t)}(r)}export function w(r,n){!function(t){if(t)return r=1;n(t)}(r)}"
+		);
+		// A constant passed on as a name folds where it is read, after what
+		// always returns, and through `new`.
+		expect(
+			print(
+				"export function t(r){return(function(y){let a=(function(x){if(x)return 7;r(x)})(y);let c=new function(x){if(x)return{b:9};this.b=0}(y);return[a,c]})(1)}"
+			)
+		).toBe(
+			"export function t(n){return function(){return[function(){return 7}(),new function(){return{b:9}}()]}()}"
+		);
+		// A conditional giving a boolean on one side prints as `&&` or `||`.
+		expect(
+			print(
+				"export function f(a,l){return a?false:l(1)}export function g(a,l,b,c){if(a?true:l(1))l(2);if(a?l(3):false)l(4);if(a?l(5):true)l(6);return a?false:b||c}"
+			)
+		).toBe(
+			"export function f(l,a){return!l&&a(1)}export function g(l,a,e,r){if(l||a(1))a(2);if(l&&a(3))a(4);if(!l||a(5))a(6);return l?!1:e||r}"
+		);
+		// An array read at a known index prints as that element, kept where
+		// written, deleted, called or its others run anything.
+		expect(
+			print(
+				"export function p(e,o,f){[e][0]=2;o[['a'][0]]=3;return[[1,e][1],[f][0](),[2][0],{[['b'][0]]:e},[...[[2,3]][0]],[e,f()][0],delete[e][0]]}"
+			)
+		).toBe(
+			"export function p(e,f,o){[e][0]=2;f.a=3;return[e,[o][0](),2,{b:e},[...[2,3]],[e,o()][0],delete[e][0]]}"
+		);
+		// A bare `return` after an `if` returning ends the function anyway.
+		expect(
+			print("export function s(n){if(n)return n;else return}")
+		).toBe("export function s(n){if(n)return n}");
+		// Where every string spells as a template, strings print as templates.
+		expect(
+			print(
+				"export const q=[\"a\",'b\"'];g(\"d'\");import(\"x\")",
+				{ ecma: 2020 }
+			)
+		).toBe("export const q=[`a`,`b\"`];g(`d'`);import(\"x\");");
+		expect(print('export const q=["a","c`"]', { ecma: 2020 })).toBe(
+			'export const q=["a","c`"];'
+		);
+		// `if`s next to each other returning values written alike test either.
+		expect(
+			print(
+				'export function q(a,b,v){if(a)return{kept:v};if(b)return{"kept":v};if(v)return v.x;if(a)return v.y}'
+			)
+		).toBe(
+			"export function q(r,t,e){if(r||t)return{kept:e};if(e)return e.x;if(r)return e.y}"
+		);
+		expect(
+			print(
+				'export function q(a,b,v){if(a)return{kept:v};if(b)return{"kept":v}}',
+				{ format: { keep_quoted_props: true } }
+			)
+		).toBe(
+			'export function q(t,e,r){if(t)return{kept:r};if(e)return{"kept":r}}'
+		);
+		// `Object.keys` of an object literal prints its keys, and `.join` of
+		// constants the string it makes.
+		expect(
+			print(
+				'export const a=["a","b"].join(),b=Object.keys("ab").join("-"),c=Object.keys({x:1,y:2,1:3,0:4,x:5}),d=Object.keys([1,,2]).join(),e=[1,null,,void 0,"x"].join(""),f=Object.keys({[NaN]:5,[null]:6}).join(),g=Object.keys({__proto__:1,a:2}),h=[x].join(),i=Object.keys({a:f()}),j=[1.5,true].join(void 0),k=Object.keys({get a(){},b(){},["__proto__"]:1})'
+			)
+		).toBe(
+			'export const a="a,b",b="0-1",c=["0","1","x","y"],d="0,2",e="1x",f="NaN,null",g=Object.keys({__proto__:1,a:2}),h=[x].join(),i=Object.keys({a:f()}),j="1.5,true",k=["a","b","__proto__"];'
+		);
+		// A separator not known stays a call; a key past the last array index
+		// keeps its place.
+		expect(
+			print(
+				'export function f(s){return["a","b"].join(s)}export const k=Object.keys({b:1,4294967295:2,4294967294:3}),j=[1,void 0].join(void 0)'
+			)
+		).toBe(
+			'export function f(o){return["a","b"].join(o)}export const k=["4294967294","b","4294967295"],j="1,";'
+		);
+		// `undefined` folded in reads `void 0`, held in parentheses; `-0` keeps
+		// its sign; a member stays a value when called; a derived class keeps
+		// private members a base constructor's object would take again.
+		expect(
+			print(
+				"export function f(p){var b=undefined;return[b[p],1]}export function g(p){var b=undefined;return b(p)}export const h=+(-0)"
+			)
+		).toBe(
+			"export function f(n){return[(void 0)[n],1]}export function g(n){return(void 0)(n)}export const h=+-0;"
+		);
+		expect(
+			print(
+				"export function f(o){var e;o.a();e=o.test;e()}export class C extends B{#x;#m(){}}"
+			)
+		).toBe(
+			"export function f(e){var o;e.a();(o=e.test)()}export class C extends B{#e;#o(){}}"
+		);
+		// Values fold in order, past no read folded already; a `const` set
+		// still throws; a function that may call itself keeps its return; an
+		// unread call whose body opens with a function stays a call.
+		expect(
+			print(
+				"export function f(){var i=0;var log=g;var x=i++;var y=i++;log(y,x)}export function k(){const a=1;a=2;return a}export function m(i){var x=i++;return x**2}"
+			)
+		).toBe(
+			"export function f(){var r=0,n=g,o=r++;n(r++,o)}export function k(){const r=1;return r=2}export function m(r){return(r++)**2}"
+		);
+		expect(
+			print(
+				"export var c;(function f(){(a--&&f()).p;return{get p(){c=1}}})();(function(){(function(a){a=a&&(c=2)})()})()"
+			)
+		).toBe(
+			"export var c;!function n(){(a--&&n()).p;return{get p(){c=1}}}();!function(){!function(n){n=n&&(c=2)}()}();"
+		);
+		// A name set only for its one read keeps the assignment where the
+		// name alone would be a direct `eval` or read by `typeof`, or the
+		// write throws in its dead zone.
+		expect(
+			print(
+				'export function run(f){"use strict";f=eval;return f("this")}export function t(f){g();f=missing;return typeof f}export function d(){g();x=1;return x;let x}',
+				{ mangle: false }
+			)
+		).toBe(
+			'export function run(f){"use strict";return(f=eval)("this")}export function t(f){g();return typeof(f=missing)}export function d(){g();return x=1;let x}'
+		);
+		// A call printing as what it runs, unread last in a sequence or under
+		// `void` or `!`, prints bare.
+		expect(
+			print(
+				"export function u(y,t){t(5),function(e){if(e)return e;t(e)}(y);void function(e){if(e)return t;t(6)}(y);!function(e){if(e)return;t(7)}(y);x=void function(e){t(e)}(y)}"
+			)
+		).toBe(
+			"export function u(t,e){e(5),t||e(t);t||e(6);t||e(7);x=void function(t){e(t)}(t)}"
+		);
+		// A literal of functions and constants is made where its one read is.
+		expect(
+			print(
+				"export function f(r){var t;t={d:x=>x*2,e:[function(){return 1}]};r.add(t)}export function g(r){var t={a:()=>1};for(;;)r.add(t)}"
+			)
+		).toBe(
+			"export function f(r){r.add({d:r=>r*2,e:[function(){return 1}]})}export function g(r){var t={a:()=>1};for(;;)r.add(t)}"
+		);
+		expect(
+			print("export function f(r){var h;h=r();g(h,h)}", {
+				compress: { join_vars: false }
+			})
+		).toBe("export function f(h){var r;g(r=h(),r)}");
+		// Moved to its one read, a function keeps the name `keep_fnames` keeps.
+		expect(
+			print("(()=>{function spread(a){h(a);return a}g(()=>spread([]))})()", {
+				keep_fnames: true
+			})
+		).toBe("g(()=>function spread(a){h(a);return a}([]));");
 	});
 
 	it("should keep a named function a direct eval in a class or function it returns reads", () => {
@@ -15961,7 +16255,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			)
 		);
 		expect(wrapped.code).toBe(
-			'(function(e){e.a=1+g()})(typeof lib>"u"?lib={}:lib);'
+			'!function(e){e.a=1+g()}(typeof lib>"u"?lib={}:lib);'
 		);
 		// Only the source's own names map, from its second line.
 		expect(wrapped.map.names).toEqual(["exports", "longName", "g"]);
@@ -15971,10 +16265,10 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				...options,
 				enclose: "y:7"
 			}).code
-		).toBe("(function(n){window.v=1+n})(7);");
+		).toBe("!function(){window.v=8}();");
 		expect(
 			minifyOnePass("window.v = y;", { ...options, enclose: true }).code
-		).toBe("(function(){window.v=y})();");
+		).toBe("!function(){window.v=y}();");
 		// `enclose` goes around `wrap`; a hashbang, no longer first, goes.
 		const bare = { compress: false, mangle: false };
 		expect(
