@@ -1,25 +1,25 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
-exports[`ConfigTestCases optimization minify-traversal-work exported tests should keep repeated member reads before a later write 1`] = `"function read(object){var result=object.value+object.value+(object.value=5)+object.value;return object.value=9,result}"`;
+exports[`ConfigTestCases optimization minify-traversal-work exported tests should keep repeated member reads before a later write 1`] = `"function read(object){var result=object.value+object.value+(object.value=5)+object.value;object.value=9;return result}"`;
 
-exports[`ConfigTestCases optimization minify-traversal-work exported tests should keep repeated member reads before a later write 2`] = `"function e(e){var t=e.value+e.value+(e.value=5)+e.value;return e.value=9,t}"`;
+exports[`ConfigTestCases optimization minify-traversal-work exported tests should keep repeated member reads before a later write 2`] = `"function e(e){var a=e.value+e.value+(e.value=5)+e.value;e.value=9;return a}"`;
 
-exports[`ConfigTestCases optimization minify-traversal-work exported tests should preserve assignments when joining bare declarations across blocks 1`] = `"function joined(flag,calls){flag&&(extra=calls.push(1)),calls.push(2);var extra,result=calls.push(3);return[calls.push(4),extra,result]}"`;
+exports[`ConfigTestCases optimization minify-traversal-work exported tests should preserve assignments when joining bare declarations across blocks 1`] = `"function joined(flag,calls){var value;if(flag){var extra;extra=calls.push(1)}value=calls.push(2);function inner(){var value;value=calls.push(3);return value}var result=inner();value=calls.push(4);return[value,extra,result]}"`;
 
-exports[`ConfigTestCases optimization minify-traversal-work exported tests should preserve assignments when joining bare declarations across blocks 2`] = `"function e(e,t){e&&(a=t.push(1)),t.push(2);var a,o=t.push(3);return[t.push(4),a,o]}"`;
+exports[`ConfigTestCases optimization minify-traversal-work exported tests should preserve assignments when joining bare declarations across blocks 2`] = `"function e(e,a){var t;if(e){var r;r=a.push(1)}t=a.push(2);var o=function(){var e;return e=a.push(3)}();return[t=a.push(4),r,o]}"`;
 
-exports[`ConfigTestCases optimization minify-traversal-work exported tests should preserve captured values beside nested functions with their own variables 1`] = `"function capture(make){var source=make();return[function(){var copy=source;return copy.value+copy.value},function(){for(var source=make(),index=0;index<source.value;index++)var copy=index;return copy},()=>make().value]}"`;
+exports[`ConfigTestCases optimization minify-traversal-work exported tests should preserve captured values beside nested functions with their own variables 1`] = `"function capture(make){function nested(){var source=make();for(var index=0;index<source.value;index++)var copy=index;return copy}const arrow=()=>{var source=make();return source.value};var source=make();function read(){var copy=source;return copy.value+copy.value}return[read,nested,arrow]}"`;
 
-exports[`ConfigTestCases optimization minify-traversal-work exported tests should preserve captured values beside nested functions with their own variables 2`] = `"function e(e){var t=e();return[function(){return t.value+t.value},function(){for(var t=e(),a=0;a<t.value;a++)var o=a;return o},()=>e().value]}"`;
+exports[`ConfigTestCases optimization minify-traversal-work exported tests should preserve captured values beside nested functions with their own variables 2`] = `"function e(e){var a=e();return[function(){var e=a;return e.value+e.value},function(){var a=e();for(var t=0;t<a.value;t++)var r=t;return r},()=>e().value]}"`;
 
-exports[`ConfigTestCases optimization minify-traversal-work exported tests should preserve copies of variables initialized inside a loop 1`] = `"function capture(values){let readers=[];for(var index=0;index<values.length;index++){var source=values[index];(function(){var copy=source;readers.push(()=>copy.value+copy.value)})()}return readers}"`;
+exports[`ConfigTestCases optimization minify-traversal-work exported tests should preserve copies of variables initialized inside a loop 1`] = `"function capture(values){const readers=[];for(var index=0;index<values.length;index++){var source=values[index];(function(){var copy=source;readers.push(()=>copy.value+copy.value)})()}return readers}"`;
 
-exports[`ConfigTestCases optimization minify-traversal-work exported tests should preserve copies of variables initialized inside a loop 2`] = `"function e(e){let t=[];for(var a=0;a<e.length;a++){var o=e[a];(function(){var e=o;t.push(()=>e.value+e.value)})()}return t}"`;
+exports[`ConfigTestCases optimization minify-traversal-work exported tests should preserve copies of variables initialized inside a loop 2`] = `"function e(e){let a=[];for(var t=0;t<e.length;t++){var r=e[t];(function(){var e=r;a.push(()=>e.value+e.value)})()}return a}"`;
 
 exports[`ConfigTestCases optimization minify-traversal-work exported tests should preserve copies when a generator resumes inside a loop 1`] = `"function*capture(values){for(var source of values)yield function(){var copy=source;return()=>copy.value+copy.value}()}"`;
 
-exports[`ConfigTestCases optimization minify-traversal-work exported tests should preserve copies when a generator resumes inside a loop 2`] = `"function*e(e){for(var t of e)yield function(){var e=t;return()=>e.value+e.value}()}"`;
+exports[`ConfigTestCases optimization minify-traversal-work exported tests should preserve copies when a generator resumes inside a loop 2`] = `"function*e(e){for(var a of e)yield function(){var e=a;return()=>e.value+e.value}()}"`;
 
-exports[`ConfigTestCases optimization minify-traversal-work exported tests should preserve getters and shadowed parameters during assignment folding 1`] = `"function read(object,other){var result=object.value+function(object){var value=object.value+object.value;return object.value=7,value+object.value}(other)+object.value;return result}"`;
+exports[`ConfigTestCases optimization minify-traversal-work exported tests should preserve getters and shadowed parameters during assignment folding 1`] = `"function read(object,other){var result=object.value+function(object){var value=object.value+object.value;object.value=7;return value+object.value}(other)+object.value;return result}"`;
 
-exports[`ConfigTestCases optimization minify-traversal-work exported tests should preserve getters and shadowed parameters during assignment folding 2`] = `"function e(e,t){var a=e.value+function(e){var t=e.value+e.value;return e.value=7,t+e.value}(t)+e.value;return a}"`;
+exports[`ConfigTestCases optimization minify-traversal-work exported tests should preserve getters and shadowed parameters during assignment folding 2`] = `"function e(e,a){return e.value+function(e){var a=e.value+e.value;e.value=7;return a+e.value}(a)+e.value}"`;

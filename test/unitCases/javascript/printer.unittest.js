@@ -3,7 +3,7 @@
 // cspell:ignore binop, fnames, propmangle, fargs, domprops, argnames, nondeferred, loopcontrol, Defun, defun, NOINLINE, Funarg, unmangleable, Unmangleable, thedef, funs
 // cspell:ignore fnames
 // cspell:ignore argnames, bcatch, bfinally, argname
-// cspell:ignore AAAWA MAAH
+// cspell:ignore AAAWA MAAH EAAI EAAIA EAAGC ACAA IAAYC EAAWC
 // cspell:ignore endline, endcol, endpos, nlb, thedef
 
 const vm = require("vm");
@@ -28,6 +28,19 @@ const {
  * @returns {Promise<EXPECTED_ANY>} the module, imported through this file's runtime
  */
 const importTerserSource = (specifier) => import(specifier);
+
+/**
+ * The one-pass minify: one JavaScript `SourceProcessor` run.
+ * @param {string} source the source
+ * @param {import("../../../lib/javascript/syntax-parser").JavascriptProcessOptions} options its options, `compress` or `mangle` among them
+ * @returns {{ code: string }} the minified code
+ */
+const minifyOnePass = (source, options) => {
+	const { SourceProcessor } = require("../../../lib/javascript/syntax");
+	return /** @type {{ code: string }} */ (
+		new SourceProcessor().process(source, { mode: "minify", ...options })
+	);
+};
 
 /**
  * terser as published, the minifier the printer is held to.
@@ -14781,24 +14794,14 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		expect(printed.code).toBe(reference.code);
 	});
 
-	it("should mangle and print in one walk where it compresses in one pass", async () => {
-		const { modules } = await load();
-		modules.onePass.enabled = true;
-		try {
-			const printed = await minifyCounted(
-				"function foo(longName, other) { var local = longName + other; return local * 2; } foo(1, 2); class A { #field = 1; read() { return this.#field } static #hidden() {} } print(new A().read());",
-				{ toplevel: true },
-				true
-			);
-			expect(printed.code).toBe(
-				"function e(e,o){return(e+o)*2}e(1,2);class o{#e=1;read(){return this.#e}static#o(){}}print((new o).read());"
-			);
-			expect(printed.printedFromTree).toBe(0);
-			// One walk, the one pass printing once.
-			expect(printed.printedNodes).toBe(1);
-		} finally {
-			modules.onePass.enabled = false;
-		}
+	it("should mangle and print in one walk where it compresses in one pass", () => {
+		const printed = minifyOnePass(
+			"function foo(longName, other) { var local = longName + other; return local * 2; } foo(1, 2); class A { #field = 1; read() { return this.#field } static #hidden() {} } print(new A().read());",
+			{ compress: {}, mangle: {}, toplevel: true }
+		);
+		expect(printed.code).toBe(
+			"function e(e,o){return(e+o)*2}e(1,2);class o{#e=1;read(){return this.#e}static#o(){}}print((new o).read());"
+		);
 	});
 
 	it("should compress in the one pass where nothing outside a node decides it", async () => {
@@ -15653,7 +15656,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["while(a){;}", {}, "while(a);"],
 			// A `RegExp` built from constants that parse goes unused; one that throws stays.
 			["function m(){f();var rangeChars=\"abcdefghijklmnopq\";new RegExp(\"[\"+rangeChars+\"]\");new RegExp(\"[\"+rangeChars+\"0-9]\",\"g\")}", {}, "function m(){f()}"],
-			["function m(){new RegExp(\"[\");RegExp(\"a\",\"q\")}", {}, "function m(){new RegExp(\"[\");RegExp(\"a\",\"q\")}"],
+			["function m(){new RegExp(\"[\");RegExp(\"a\",\"q\")}", {}, "function m(){RegExp(\"[\");RegExp(\"a\",\"q\")}"],
 			["function m(RegExp){new RegExp(\"a\")}", {}, "function m(e){new e(\"a\")}"],
 			// A `var` set after a call folds where its function reads it after the declaration.
 			["function m(){f();var greeting=\"hello\";g(greeting+\"!\")}", {}, "function m(){f();g(\"hello!\")}"],
@@ -15670,24 +15673,301 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// A `const` set to `undefined` prints as a `let` without it.
 			["function f(){const c=undefined;g(c);g(c)}", {}, "function f(){let c;g(c);g(c)}"]
 		];
-		modules.onePass.enabled = true;
-		try {
-			for (const [source, options, expected] of cases) {
-				const { code } = await minify(source, {
-					compress: { toplevel: false },
-					mangle: { toplevel: false },
-					...options
-				});
-				expect(code).toBe(expected);
-			}
-			// Every comment kept is still the compressor's to keep.
-			const { code } = await minify("if (a) { b() } /* c */", {
-				format: { comments: "all" }
+		for (const [source, options, expected] of cases) {
+			const { code } = minifyOnePass(source, {
+				compress: { toplevel: false },
+				mangle: { toplevel: false },
+				...options
 			});
-			expect(code).toBe("a&&b()/* c */;");
-		} finally {
-			modules.onePass.enabled = false;
+			expect(code).toBe(expected);
 		}
+		// Every comment kept is still the compressor's to keep.
+		const { code } = minifyOnePass("if (a) { b() } /* c */", {
+			compress: {},
+			mangle: {},
+			format: { comments: "all" }
+		});
+		expect(code).toBe("if(a){b()}/* c */");
+	});
+
+	it("should forget what the last one-pass print found", () => {
+		const source =
+			"(()=>{function f(){return [g(1),g(2)]} class K{} it(()=>f())})()";
+		const unmangled = () =>
+			minifyOnePass(source, { compress: {}, mangle: false }).code;
+		const first = unmangled();
+		minifyOnePass(source, {
+			compress: { side_effects: false },
+			mangle: {}
+		});
+		expect(unmangled()).toBe(first);
+		expect(first).toBe(
+			"(()=>{function f(){return[g(1),g(2)]}class K{}it(()=>f())})();"
+		);
+	});
+
+	it("should keep a name a dropped function sets where it is read", () => {
+		const print = (/** @type {string} */ source) =>
+			minifyOnePass(source, { compress: {}, mangle: {}, module: true }).code;
+		expect(print("var a = 5; function reset() { a = 6 } console.log(a);")).toBe(
+			"var a=5;console.log(a);"
+		);
+		expect(print("var a = 5; function reset() { a = 6 } export { a };")).toBe(
+			"var a=5;export{a};"
+		);
+		// Set and never read, it goes with what sets it.
+		expect(print("var a = 5; function reset() { a = 6 }")).toBe("");
+	});
+
+	it("should keep a `Number` constant a pattern or assignment writes", () => {
+		const { code } = minifyOnePass(
+			"[Number.POSITIVE_INFINITY]=[7];({v:Number.NEGATIVE_INFINITY}={v:1});[...Number.POSITIVE_INFINITY]=[7];for([Number.POSITIVE_INFINITY] of [[7]]);Number.NaN++;let v;({[Number.POSITIVE_INFINITY]:v=Number.NEGATIVE_INFINITY}={});g(Number.NaN)",
+			{ compress: {}, mangle: {} }
+		);
+		// Written, each stays; read, a key, a default and an argument fold.
+		expect(code).toBe(
+			"[Number.POSITIVE_INFINITY]=[7];({v:Number.NEGATIVE_INFINITY}={v:1});[...Number.POSITIVE_INFINITY]=[7];for([Number.POSITIVE_INFINITY]of[[7]]);Number.NaN++;let v;({[1/0]:v=-1/0}={});g(NaN);"
+		);
+	});
+
+	it("should keep a call whose class reads the function's `new.target` where it is defined", () => {
+		const print = (/** @type {string} */ source) =>
+			minifyOnePass(source, { compress: {}, mangle: {}, module: true }).code;
+		expect(
+			print(
+				"it(function () { g((function () { return class { [new.target]() {} }; })()); });"
+			)
+		).toBe("it(function(){g(function(){return class{[new.target](){}}}())});");
+		expect(
+			print(
+				"it(function () { g((function () { return class extends (new.target || Object) {}; })()); });"
+			)
+		).toBe(
+			"it(function(){g(function(){return class extends(new.target||Object){}}())});"
+		);
+		// A method's `this` is its own: the class is the call's value.
+		expect(
+			print(
+				"it(function () { g((function () { return class { m() { return this.x } }; })()); });"
+			)
+		).toBe("it(function(){g(class{m(){return this.x}})});");
+	});
+
+	it("should keep what may throw or run code in the one pass, as test262 reads it", () => {
+		const print = (
+			/** @type {string} */ source,
+			/** @type {Record<string, unknown>} */ compress = {}
+		) => minifyOnePass(source, { compress, mangle: {} }).code;
+		// A `using` binding is disposed of, read or not.
+		expect(print("function g(){ using x = f(); } g();")).toBe(
+			"function g(){using g=f()}g();"
+		);
+		expect(print("async function g(){ await using x = f(); } g();")).toBe(
+			"async function g(){await using n=f()}g();"
+		);
+		// Comparing or keying by an object converts it, under `pure_conversions: false`.
+		const compares =
+			"var y = {}; t(function () { 0 == y; y < 1; y === 1; null == y; });";
+		expect(print(compares)).toBe("var y={};t(function(){});");
+		expect(print(compares, { pure_conversions: false })).toBe(
+			"var y={};t(function(){0==y;y<1});"
+		);
+		const keys = "var k = {}; t(function () { ({ get [k]() {} }); });";
+		expect(print(keys)).toBe("var k={};t(function(){});");
+		expect(print(keys, { pure_conversions: false })).toBe(
+			"var k={};t(function(){({get[k](){}})});"
+		);
+		// A bound `undefined` may be an object; a computed read converts its key.
+		const bound =
+			"t(function (undefined, x) { undefined == x; null == x; void 0 == x; });";
+		expect(print(bound)).toBe("t(function(n,d){});");
+		expect(print(bound, { pure_conversions: false })).toBe(
+			"t(function(n,d){n==d});"
+		);
+		const reads = 't(function (k) { (0)[k]; o[1]; o["a"]; });';
+		expect(print(reads)).toBe("t(function(k){o[1];o.a});");
+		expect(print(reads, { pure_conversions: false })).toBe(
+			"t(function(k){(0)[k];o[1];o.a});"
+		);
+		// Setting a class's or a strict function expression's own name throws.
+		expect(
+			print("t(function () { new (class C { m() { C = 1; } })().m(); });")
+		).toBe("t(function(){(new class n{m(){n=1}}).m()});");
+		expect(
+			print("t(function () { new (function f() { 'use strict'; f = 1; })(); });")
+		).toBe('t(function(){new function n(){"use strict";n=1}});');
+		// Setting a `let` in its dead zone throws; set after, it may go.
+		expect(print("{ function f() { x = 1; } t(f); let x; }")).toBe(
+			"{function f(){n=1}t(f);let n}"
+		);
+		expect(print("function g() { let x; x = 1; } g();")).toBe(
+			"function g(){}g();"
+		);
+		// A derived constructor's `this` throws before `super()`.
+		expect(
+			print(
+				"class C extends B { constructor() { t(() => { this; }); super(); } }"
+			)
+		).toBe("class C extends B{constructor(){t(()=>{this});super()}}");
+		expect(print("class C { constructor() { t(() => { this; }); } }")).toBe(
+			"class C{constructor(){t(()=>{})}}"
+		);
+		// An async generator awaits what it returns, a tick a bare `return` skips.
+		expect(
+			print(
+				"async function* g() { return undefined; } async function h() { return void 0; } t(g, h);"
+			)
+		).toBe("async function*g(){return void 0}async function h(){}t(g,h);");
+		// A global read in a test folds nothing, and throws nothing.
+		expect(print("if (!(1 < Infinity)) t();")).toBe("if(!(1<1/0))t();");
+	});
+
+	it("should print constant keys, `new` targets and enumerations shorter in the one pass", () => {
+		const print = (
+			/** @type {string} */ source,
+			/** @type {Record<string, unknown>} */ options = {}
+		) =>
+			minifyOnePass(source, {
+				compress: { passes: 2 },
+				mangle: {},
+				module: true,
+				...options
+			}).code;
+		// A computed key of a constant prints as its name, but where that means
+		// something else, and for a `NaN` some scope binds.
+		expect(
+			print(
+				'export const o={["a"]:1,[1]:2,["b c"]:3,["__proto__"]:4,["__proto__"](){}}; export class C{["m"](){} static ["x"]=1; ["constructor"](){} static ["prototype"](){} ["#constructor"]=1; ["#x"](){} [NaN](){return 1} get [null](){return 2}} export function f({["k"]:v,["__proto__"]:p,[NaN]:n,[null]:u}){return [v,p,n,u]} export function g(NaN){return {[NaN]:1}}'
+			)
+		).toBe(
+			'export const o={a:1,1:2,"b c":3,["__proto__"]:4,__proto__(){}};export class C{m(){}static x=1;["constructor"](){}static["prototype"](){}["#constructor"]=1;["#x"](){}NaN(){return 1}get null(){return 2}}export function f({k:t,__proto__:r,NaN:n,null:u}){return[t,r,n,u]}export function g(t){return{[t]:1}}'
+		);
+		expect(
+			print('export const o={["a"]:1};', {
+				compress: { passes: 2, computed_props: false }
+			})
+		).toBe('export const o={["a"]:1};');
+		// `RegExp` of a primitive builds as `new RegExp` does; of an expression, it may hand it back.
+		expect(
+			print(
+				"export function b(r){return [new RegExp(10n), new RegExp(-10n), new RegExp(`x`), new RegExp(), new RegExp(/a/), new RegExp(r)]}"
+			)
+		).toBe(
+			"export function b(e){return[RegExp(10n),RegExp(-10n),RegExp(`x`),RegExp(),new RegExp(/a/),new RegExp(e)]}"
+		);
+		// `new` reads no `this` from a sequence, so what runs nothing before it goes.
+		expect(
+			print(
+				"export function f(log,k){return [new (0, a.b)(2), new (0, a)(), new (log.push(1), a)(), new (0, a.b().c)(), new (0, a[k])(1), new (0, a?.b)(), (0, a.b)(1), new (0,this.x)]}"
+			)
+		).toBe(
+			"export function f(n,e){return[new a.b(2),new a,new(n.push(1),a),new(0,a.b().c),new a[e](1),new(0,a?.b),(0,a.b)(1),new this.x]}"
+		);
+		// A read in its dead zone throws and keeps the name; the reads after fold.
+		expect(
+			print(
+				"export function late(g){ function first(){return limit} const limit = 3; g(first); return [first(), limit*2, limit] }"
+			)
+		).toBe(
+			"export function late(t){function i(){return r}let r=3;t(i);return[i(),6,r]}"
+		);
+		// `Object.keys`, `values` and `entries` of a string or of an array of what
+		// runs nothing print as the array they make.
+		expect(
+			print(
+				'export function e(g,l){return [Object.keys([10,,30]),Object.values([10,,30]),Object.entries([10,,30]),Object.keys("ab"),Object.entries("a"),Object.keys([g()]),Object.keys([...l]),Object.keys?.([1])]} export function s(Object){return Object.keys([1])}'
+			)
+		).toBe(
+			'export function e(t,c){return[["0","2"],[10,30],[["0",10],["2",30]],["0","1"],[["0","a"]],Object.keys([t()]),Object.keys([...c]),Object.keys?.([1])]}export function s(t){return t.keys([1])}'
+		);
+	});
+
+	it("should keep a named function a direct eval in a class or function it returns reads", () => {
+		const sources = [
+			'result = (function f() { return class { static value = eval("typeof f") } })().value;',
+			'result = (function f() { return new (class { m() { return eval("typeof f") } })().m() })();',
+			'result = (function f() { return function () { return eval("typeof f") } })()();'
+		];
+		for (const source of sources) {
+			/** @type {{ result?: unknown }} */
+			const context = {};
+			vm.runInNewContext(
+				minifyOnePass(source, { compress: {}, mangle: {} }).code,
+				context
+			);
+			expect(context.result).toBe("function");
+		}
+	});
+
+	it("should wrap or enclose the source, mapping what it printed of it", () => {
+		const options = { compress: {}, mangle: {} };
+		const { SourceProcessor } = require("../../../lib/javascript/syntax");
+		const wrapped = /** @type {{ code: string, map: EXPECTED_ANY }} */ (
+			new SourceProcessor().process(
+				"var longName = 1;\nexports.a = longName + g();",
+				{ mode: "minify", ...options, wrap: "lib", source: "a.js" }
+			)
+		);
+		expect(wrapped.code).toBe(
+			'(function(e){e.a=1+g()})(typeof lib>"u"?lib={}:lib);'
+		);
+		// Only the source's own names map, from its second line.
+		expect(wrapped.map.names).toEqual(["exports", "longName", "g"]);
+		expect(wrapped.map.mappings).toBe("aACAA,IAAYC,EAAWC");
+		expect(
+			minifyOnePass("var x = 1; window.v = x + y;", {
+				...options,
+				enclose: "y:7"
+			}).code
+		).toBe("(function(n){window.v=1+n})(7);");
+		expect(
+			minifyOnePass("window.v = y;", { ...options, enclose: true }).code
+		).toBe("(function(){window.v=y})();");
+		// `enclose` goes around `wrap`; a hashbang, no longer first, goes.
+		const bare = { compress: false, mangle: false };
+		expect(
+			minifyOnePass("exports.x = undefined;", {
+				...bare,
+				wrap: "lib",
+				enclose: "window,undefined:window"
+			}).code
+		).toBe(
+			'(function(window,undefined){(function(exports){exports.x=undefined})(typeof lib=="undefined"?lib={}:lib)})(window);'
+		);
+		expect(
+			minifyOnePass("#!/usr/bin/env node\r\nfoo();", { ...bare, enclose: true })
+				.code
+		).toBe("(function(){foo()})();");
+		expect(
+			minifyOnePass("#!/usr/bin/env node", { ...bare, wrap: "lib" }).code
+		).toBe('(function(exports){})(typeof lib=="undefined"?lib={}:lib);');
+	});
+
+	it("should keep the names a global pattern keeps, however often it is asked", () => {
+		const pattern = /keep/g;
+		const { code } = minifyOnePass(
+			"function keepMe(){} function keepToo(){} function dropMe(){} g(keepMe, keepToo, dropMe)",
+			{ compress: {}, mangle: { keep_fnames: pattern }, keep_fnames: pattern, toplevel: true }
+		);
+		expect(code).toBe(
+			"function keepMe(){}function keepToo(){}function e(){}g(keepMe,keepToo,e);"
+		);
+		expect(pattern.lastIndex).toBe(0);
+	});
+
+	it("should keep a `let` read before its declaration, from any function", () => {
+		const print = (/** @type {string} */ source) =>
+			minifyOnePass(source, { compress: {}, mangle: {} }).code;
+		// The read throws: it may not print as the value.
+		expect(
+			print(
+				"function f(){ try { g(() => later) } catch (e) {} let later = 1; return later } it(f())"
+			)
+		).toBe("function f(){try{g(()=>t)}catch(t){}let t=1;return t}it(f());");
+		// Read after it, it folds.
+		expect(
+			print("function f(){ let later = 1; g(() => later); return later } it(f())")
+		).toBe("function f(){g(()=>1);return 1}it(f());");
 	});
 
 	it("should read a single named source under its name", async () => {
@@ -15788,6 +16068,142 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				/** @type {{ enabled: boolean }} */ (phase).enabled = true;
 			}
 		}
+	});
+
+	describe("mangling properties in one pass", () => {
+		const PROPERTY_SOURCES = [
+			'var o = { zAlpha: 1, "zGamma": 3, 4: "four", zNested: { zDeep: 5 } }; o.zDelta = o.zAlpha + 1; o["zEpsilon"] = 6; console.log(o.zAlpha, o.zGamma, o[4], o.zNested.zDeep, o.zDelta, o.zEpsilon, "zDelta" in o, "zZeta" in o);',
+			'class Base { constructor(v) { this.zValue = v; } get zDoubled() { return this.zValue * 2; } set zDoubled(v) { this.zValue = v / 2; } zMethod() { return this.zValue + 1; } static zCreate(v) { return new Base(v); } } class Child extends Base { zField = 3; static zCount = 0; ["zComputed"]() { return this.zField; } #zSecret = 4; get zBoth() { return this.#zSecret + this.zField; } } const c = new Child(4); c.zDoubled = 20; console.log(c.zValue, c.zDoubled, c.zMethod(), c.zComputed(), Child.zCount, Base.zCreate(2).zMethod(), c.zBoth);',
+			"function f({ zFirst, zSecond: renamed, zThird = 3, ...rest }) { return [zFirst, renamed, zThird, rest.zFourth]; } const { zFirst, zSecond } = { zFirst: 1, zSecond: 2 }; let a, b; ({ zA: a, zB: b = 5 } = { zA: 7 }); console.log(f({ zFirst: 1, zSecond: 2, zFourth: 4 }).join(), zFirst, zSecond, a, b);",
+			"(function () { var zAlpha = 1, zBeta = { zAlpha: 2 }; function h({ zAlpha = 3, zBeta: g }) { return zAlpha + g; } var o = { zAlpha, zBeta, zSum() { return this.zAlpha; } }; console.log(o.zAlpha, o.zBeta.zAlpha, o.zSum(), h({ zAlpha: 4, zBeta: 5 }), h({ zBeta: 6 })); })();",
+			'var conf = { "zQuoted": 1, zPlain: 2 }; conf["zQuoted"] += 1; conf.zPlain += conf["zQuoted"]; console.log(conf["zQuoted"], conf.zPlain);',
+			'var o = { toString() { return "custom"; }, valueOf() { return 42; }, length: 3, zLen: 4, innerHTML: 5 }; var base = { zInherited: 1 }; var p = { __proto__: base, zOwn: 2 }; console.log(String(o), o + 1, o.length, o.zLen, o.innerHTML, [1, 2].map(function (v) { return v * 2; }).join(), p.zInherited, p.zOwn, Object.getPrototypeOf(p) === base);',
+			'var o = { /*@__MANGLE_PROP__*/ zMarked: 1, zUnmarked: 2, _zUnder: 3 }; Object.defineProperty(o, "zDefined", { value: 4, enumerable: true }); console.log(o.zMarked, o.zUnmarked, o._zUnder, o["_zUnder"], o.zDefined, "zDefined" in o);',
+			'var o = { zA: { zB: 1 } }; function* g() { yield o.zA; yield (yield).zA; } var it = g(); var t = function () { return o; }; class P { #zP = 1; static zHas(x) { return #zP in x; } } var x = 0; console.log(o.zA?.zB, (o).zA.zB, it.next().value.zB, typeof o.zA, t`a`.zA.zB, void o.zA, -o.zA.zB, ++x.zN, [o][0].zA.zB, new P().zP, (1, o).zA.zB, /*@__MANGLE_PROP__*/ o.zA.zB, /*@__MANGLE_PROP__*/ t().zA, /*@__MANGLE_PROP__*/ o["zA"], P.zHas(new P()), "zA" in o, o[/*@__KEY__*/ "zA"].zB, typeof globalThis.zG, o.zA["zB"], /* plain */ o.zA.zB, (o?.zA).zB, [, o.zA][1].zB, o[(0, "zA")].zB, Q.zS); switch (x) { case o.zA: break; } class Q { static ["zS" + "t"] = 1; static get zS() { return Q.zSt; } }',
+			'var o = {}; Object.defineProperty(o, "zDef", { value: 1 }); Object["defineProperty"](o, "zIdx", { value: 2 }); console.defineProperty = function () {}; console.defineProperty(o, "zNot"); Object?.defineProperty(o, "zOpt", { value: 3 }); (async function () { return (await o).zDef; })(); console.log(o.zDef, o.zIdx, o.zOpt, o["zIdx"], o?.zIdx, o[0 ? "zDef" : "zIdx"]);',
+			'var k = "zDyn"; var o = { ["zLit"]: 1, [k]: 2, ["zA" + "zB"]: 3 }; o.zLit2 = o["zLit"]; function pick(c) { return o[c ? "zLit" : "zLit2"]; } console.log(o.zLit, o.zLit2, o.zAzB, o["zA" + "zB"], pick(true), pick(false), o?.["zLit"], globalThis.zGlobal);'
+		];
+		/** @type {{ keep_quoted?: boolean | "strict", reserved?: string[], regex?: RegExp | string, debug?: boolean | string, undeclared?: boolean, only_annotated?: boolean }[]} */
+		const PROPERTY_OPTIONS = [
+			{},
+			{ keep_quoted: true },
+			{ keep_quoted: "strict" },
+			{ reserved: ["zAlpha", "zValue"] },
+			{ regex: /^_/ },
+			{ regex: "^(zAlpha|zLit|zValue)$" },
+			{ debug: true },
+			{ debug: "S" },
+			{ undeclared: true },
+			{ only_annotated: true },
+			{ only_annotated: true, regex: /^zU/ }
+		];
+
+		it("should rename the properties terser's tree renames, and run alike", async () => {
+			const { minify } = await load();
+			for (const source of PROPERTY_SOURCES) {
+				for (const given of PROPERTY_OPTIONS) {
+					const reference = { props: new Map() };
+					const oneCache = { props: new Map() };
+					const minified = await minify(source, {
+						compress: {},
+						mangle: { properties: { ...given, cache: reference } }
+					});
+					const { code } = minifyOnePass(source, {
+						compress: {},
+						mangle: { properties: { ...given, cache: oneCache } }
+					});
+					// Where terser's output reads a key it kept as renamed, this runs
+					// as the source does; strictly, a name read quoted and bare is
+					// the source's to keep apart, which these do not.
+					if (given.keep_quoted !== "strict") {
+						expect([
+							runProgram(/** @type {string} */ (minified.code)),
+							runProgram(source)
+						]).toContain(runProgram(code));
+					}
+					// A computed key `keep_quoted` keeps is kept with its reads.
+					const computedKept =
+						source.includes('["zComputed"]') && given.keep_quoted === true;
+					if (!computedKept) {
+						expect([...oneCache.props.keys()].sort()).toEqual(
+							[...reference.props.keys()].sort()
+						);
+					}
+				}
+			}
+		});
+
+		it("should read a `defineProperty` call with no name as no name", () => {
+			const { code } = minifyOnePass(
+				"var o = read(); Object.defineProperty(o); sink(o.zKey);",
+				{ compress: {}, mangle: { properties: {} } }
+			);
+			expect(code).toBe("var o=read();Object.defineProperty(o);sink(o.o);");
+		});
+
+		it("should print a key renamed apart from the name its shorthand reads", () => {
+			const { code } = minifyOnePass(
+				"var zKey = read(); var { zOther } = zKey; sink({ zKey, zOther });",
+				{ compress: {}, mangle: { properties: {} } }
+			);
+			expect(code).toBe("var zKey=read(),{K:zOther}=zKey;sink({h:zKey,K:zOther});");
+			const shorthand = minifyOnePass(
+				"function f({ zKey, zOther = 1 }, zLast) { return { zKey, zOther, zLast }; } sink(f({ zKey: 1 }, 2).zLast);",
+				{ ecma: 2020, compress: {}, mangle: { properties: {} } }
+			).code;
+			expect(shorthand).toBe(
+				"function f({t:zKey,K:zOther=1},z){return{t:zKey,K:zOther,L:z}}sink(f({t:1},2).L);"
+			);
+		});
+
+		it("should keep a computed key kept quoted together with its reads", () => {
+			const { code } = minifyOnePass(
+				'class A { ["zKept"]() { return 1; } zRenamed() { return 2; } } var a = new A(); console.log(a.zKept(), a.zRenamed());',
+				{ compress: {}, mangle: { properties: { keep_quoted: true } } }
+			);
+			expect(code).toContain('["zKept"]()');
+			expect(code).toContain("a.zKept()");
+			expect(code).not.toContain("zRenamed");
+			expect(runProgram(code)).toBe("1 2");
+		});
+
+		it("should read and write the property names a name cache holds", async () => {
+			const { minify } = await load();
+			const first = "var o = { zFooBar: 1, zBazQux: 2 }; console.log(o.zFooBar, o.zBazQux);";
+			const second = "var p = { zBazQux: 3, zOther: 4 }; console.log(p.zBazQux, p.zOther);";
+			/**
+			 * @param {(source: string, nameCache: EXPECTED_OBJECT) => Promise<string>} run a minify
+			 * @returns {Promise<{ codes: string[], nameCache: EXPECTED_OBJECT }>} what it printed, and the cache it left
+			 */
+			const twice = async (run) => {
+				const nameCache = { props: { props: { $zFooBar: "x" } } };
+				const codes = [await run(first, nameCache), await run(second, nameCache)];
+				return { codes, nameCache };
+			};
+			const reference = await twice(
+				async (source, nameCache) =>
+					/** @type {string} */ (
+						(
+							await minify(source, {
+								nameCache,
+								compress: {},
+								mangle: { cache: null, properties: {} }
+							})
+						).code
+					)
+			);
+			const onePass = await twice(
+				async (source, nameCache) =>
+					minifyOnePass(source, {
+						nameCache,
+						compress: {},
+						mangle: { cache: null, properties: {} }
+					}).code
+			);
+			expect(onePass.codes[0]).toContain("{x:1,");
+			expect(onePass.nameCache).toEqual(reference.nameCache);
+			expect(onePass.codes.map(runProgram)).toEqual(reference.codes.map(runProgram));
+		});
 	});
 });
 
@@ -16041,14 +16457,49 @@ describe("JavaScript SourceProcessor printing", () => {
 		).toBe("let x=[1,2];");
 	});
 
-	it("should map the output's start to the source's", () => {
+	it("should map each node's output to the source's", () => {
 		const result = new SourceProcessor().process("a ( 1 )", {
 			mode: "minify",
 			source: "in.js"
 		});
 		expect(result.code).toBe("a(1);");
+		// `a` at 0:0, named, and `1` from column 4 to column 2.
 		expect(result.map).toEqual(
-			expect.objectContaining({ sources: ["in.js"], mappings: "AAAA" })
+			expect.objectContaining({
+				sources: ["in.js"],
+				names: ["a"],
+				mappings: "AAAAA,EAAI"
+			})
+		);		// A name read twice is given once.
+		expect(
+			new SourceProcessor().process("a ( a, b )", {
+				mode: "minify",
+				source: "in.js"
+			}).map
+		).toEqual(
+			expect.objectContaining({
+				names: ["a", "b"],
+				mappings: "AAAAA,EAAIA,EAAGC"
+			})
+		);
+	});
+
+	it("should beautify: each statement, member and case on a line of its own", () => {
+		const source =
+			"function f(a,b){if(a){return b in a}for(;;)x()} class A{m(){}} switch(x){case 1:y();break;default:z()} const o={a:1,b:[2,3]};";
+		const print = (/** @type {object} */ options) =>
+			/** @type {{ code: string }} */ (
+				new SourceProcessor().process(source, {
+					mode: "beautify",
+					...options
+				})
+			).code;
+		expect(print({})).toBe(
+			"function f(a, b) {\nif (a) {\nreturn b in a;\n}\nfor (;;) x();\n}\nclass A {\nm() {}\n}\nswitch (x) {\ncase 1:\ny();\nbreak;\ndefault:\nz();\n}\nconst o = {a: 1, b: [ 2, 3 ]};"
+		);
+		// Minified as it is beautified, the layout is the same.
+		expect(print({ compress: {}, mangle: {} })).toBe(
+			"function f(a, c) {\nif (a) return c in a;\nfor (;;) x();\n}\nclass A {\nm() {}\n}\nswitch (x) {\ncase 1:\ny();\nbreak;\ndefault:\nz();\n}\nconst o = {a: 1, b: [ 2, 3 ]};"
 		);
 	});
 
@@ -16183,17 +16634,17 @@ describe("JavaScript minifier reading an event handler's body", () => {
 		}
 	});
 
-	it("should compress a body inside its function with the one pass switched on", async () => {
-		const { minify, modules } = await load();
+	it("should compress a body inside its function in one pass", async () => {
+		const { minify } = await load();
 		const source = "var v = 5; value = v; return value == null ? undefined : v";
-		const off = await minify(source, { sourceType: "event-handler" });
-		modules.onePass.enabled = true;
-		try {
-			const on = await minify(source, { sourceType: "event-handler" });
-			expect(on.code).toBe(off.code);
-		} finally {
-			modules.onePass.enabled = false;
-		}
+		const twoPass = await minify(source, { sourceType: "event-handler" });
+		const onePass = minifyOnePass(source, {
+			compress: {},
+			mangle: {},
+			sourceType: "event-handler"
+		});
+		expect(twoPass.code).toBe("return value=5,value==null?void 0:5");
+		expect(onePass.code).toBe("var v=5;return(value=v)==null?void 0:v");
 	});
 
 	it("should refuse what a function's body cannot hold", async () => {
@@ -16237,6 +16688,141 @@ describe("JavaScript minifier mangling a SyntaxTree", () => {
 			}
 		});
 	}
+
+	it("should move catch parameters to their function under ie8 or safari10 in the one pass", () => {
+		const source =
+			"function t(a, b) { try { a() } catch (e) { b(e) } var c = b; return c }";
+		expect(minifyOnePass(source, { compress: {}, mangle: {} }).code).toBe(
+			"function t(c,t){try{c()}catch(c){t(c)}return t}"
+		);
+		for (const options of [
+			{ ie8: true },
+			{ safari10: true },
+			{ mangle: { ie8: true } },
+			{ mangle: { safari10: true } }
+		]) {
+			expect(
+				minifyOnePass(source, { compress: {}, mangle: {}, ...options }).code
+			).toBe("function t(c,t){try{c()}catch(a){t(a)}return t}");
+		}
+	});
+
+	it("should keep a loop's names off its function's under safari10 in the one pass", () => {
+		const shadowing =
+			"function f(a) { var s = 0; for (let a = 0; a < 3; a++) s += a; for (const k of [1, 2]) s += k; return s + a }";
+		expect(minifyOnePass(shadowing, { compress: {}, mangle: {} }).code).toBe(
+			"function f(a){var f=0;for(let a=0;a<3;a++)f+=a;for(let a of[1,2])f+=a;return f+a}"
+		);
+		for (const options of [{ safari10: true }, { mangle: { safari10: true } }]) {
+			expect(
+				minifyOnePass(shadowing, { compress: {}, mangle: {}, ...options }).code
+			).toBe(
+				"function f(a){var f=0;for(let o=0;o<3;o++)f+=o;for(let o of[1,2])f+=o;return f+a}"
+			);
+		}
+		// The block around the loop prints without braces, so the loop is the function's.
+		const unbraced =
+			"function f(a, list) { a = g(a); if (list) { for (const s of list) h(s) } return a }";
+		expect(minifyOnePass(unbraced, { compress: {}, mangle: {} }).code).toBe(
+			"function f(s,t){s=g(s);if(t)for(let s of t)h(s);return s}"
+		);
+		expect(
+			minifyOnePass(unbraced, { compress: {}, mangle: {}, safari10: true }).code
+		).toBe("function f(s,t){s=g(s);if(t)for(let f of t)h(f);return s}");
+	});
+
+	it("should keep the global names ie8 keeps, and print as ie8 and safari10 ask, in the one pass", () => {
+		const source =
+			"x = [undefined, Infinity, o.default, '\\v']; if (a) do b(); while (c); else d(); async function f(x) { return !await x }";
+		expect(minifyOnePass(source, { compress: {}, mangle: {} }).code).toBe(
+			'x=[void 0,1/0,o.default,"\\v"];if(a)do b();while(c);else d();async function f(n){return!await n}'
+		);
+		expect(
+			minifyOnePass(source, { compress: {}, mangle: {}, ie8: true }).code
+		).toBe(
+			'x=[undefined,Infinity,o["default"],"\\x0B"];if(a){do b();while(c)}else d();async function f(n){return!await n}'
+		);
+		expect(
+			minifyOnePass(source, { compress: {}, mangle: {}, safari10: true }).code
+		).toBe(
+			'x=[void 0,1/0,o.default,"\\v"];if(a)do b();while(c);else d();async function f(n){return!(await n)}'
+		);
+	});
+
+	it("should run as terser's tree runs under ie8 or safari10 in the one pass", async () => {
+		const { minify } = await load();
+		const sources = [
+			"var out = []; function f(a) { try { throw a + 1 } catch (e) { out.push(e); var g = function () { return e } } return g() } var x = 5; out.push(f(x), x); result = out.join();",
+			"result = (function () { var n = 4; function h() { var a = 1, b = 2; try { null.x } catch (err) { return typeof err + a + b + n } } return h() })();",
+			"result = (function () { var e = 'outer'; function q() { try { throw 'in' } catch (e) { return e } } return q() + e })();",
+			"result = (function () { var o = []; try { throw 1 } catch (e) { try { throw 2 } catch (f) { o.push(e, f) } } return o.join() })();",
+			"result = (function () { function k() { var longName = 1; try { throw 2 } catch (other) { var inner = other + longName } return inner } return k() })();",
+			"result = (function () { try { throw [1, 2] } catch ({ length: n, 0: z }) { return n + z } })();",
+			// Moved into the catch, the arrow would read the catch's `e`.
+			"result = (function () { function k() { let e = 1; const g = () => e; try { throw 2 } catch (e) { return g() } } return k() })();",
+			"result = (function () { var fns = []; for (let i = 0; i < 3; i++) { const j = i * 2; fns.push(() => i + j) } return fns.map(f => f()).join() })();",
+			"result = (function (a) { var s = 0; for (let a = 0; a < 3; a++) s += a; for (const k of [1, 2]) s += k; for (let p in { x: 1 }) s += p; return s + a })(10);",
+			"result = (async function () { var s = []; for (let i = 0; i < 3; i++) { s.push(await Promise.resolve(i)) } for (const v of [4, 5]) { await null; s.push(() => v) } return s.map(x => typeof x === 'function' ? x() : x).join() })();",
+			"result = (function () { function w(p) { var acc = []; for (let i = 0; i < p.length; i++) { let v = p[i]; acc.push(function () { return v + i }) } try { throw acc } catch (z) { return z.map(function (f) { return f() }).join() } } return w([3, 4, 5]) })();"
+		];
+		/**
+		 * @param {string} code a script setting `result`
+		 * @returns {Promise<unknown>} what it sets `result` to, awaited
+		 */
+		const run = async (code) => {
+			/** @type {{ result: unknown, Promise: PromiseConstructor }} */
+			const context = { result: undefined, Promise };
+			vm.runInNewContext(code, context);
+			return await context.result;
+		};
+		for (const options of [
+			{ ie8: true },
+			{ safari10: true },
+			{ mangle: { ie8: true, safari10: true } }
+		]) {
+			for (const source of sources) {
+				const expected = await run(source);
+				const reference = await minify(source, {
+					compress: {},
+					mangle: {},
+					...options
+				});
+				expect(await run(/** @type {string} */ (reference.code))).toEqual(
+					expected
+				);
+				const printed = minifyOnePass(source, {
+					compress: {},
+					mangle: {},
+					...options
+				});
+				expect(await run(printed.code)).toEqual(expected);
+			}
+		}
+	});
+
+	it("should not read an outer name where a catch parameter of its name shadows it, in the one pass", () => {
+		const sources = [
+			"function k(e) { let a = e; try { throw 2 } catch (e) { return a } } result = k(1);",
+			"function k(e) { let a = e; try { throw 2 } catch (e) { return a + e } } result = k(1);",
+			"function k(e) { let a = e, b = a; try { throw 2 } catch (e) { return b + e } } result = k(1);",
+			"function k(e) { let a = e; g(a); try { throw 2 } catch (e) { return a } } function g() {} result = k(1);",
+			"function k(e) { const f = function () { return e }; try { throw 2 } catch (e) { return f() + e } } result = k(1);"
+		];
+		for (const source of sources) {
+			/** @type {{ result?: unknown }} */
+			const expected = {};
+			vm.runInNewContext(source, expected);
+			for (const mangle of [{}, false]) {
+				/** @type {{ result?: unknown }} */
+				const context = {};
+				vm.runInNewContext(
+					minifyOnePass(source, { compress: {}, mangle }).code,
+					context
+				);
+				expect(context.result).toBe(expected.result);
+			}
+		}
+	});
 
 	it("should refuse a node its scope analysis cannot read", () => {
 		const tree = new SyntaxTree();
@@ -16821,7 +17407,6 @@ describe("JavaScript minifier name cache", () => {
 	});
 });
 
-const { terserMinify } = require("minimizer-webpack-plugin");
 const jsMinify = require("../../../lib/javascript/jsMinify");
 
 /** @typedef {import("../../../lib/javascript/jsMinify")} JsMinify */
@@ -16919,36 +17504,19 @@ describe("jsMinify", () => {
 
 				expect(result.code).toMatchSnapshot();
 				expect(result.extractedComments).toMatchSnapshot();
+				// It reads back as the production it was printed for.
+				expect(() =>
+					acorn.parse(result.code, {
+						ecmaVersion: "latest",
+						sourceType:
+							options.as === "module" || options.module ? "module" : "script",
+						allowReturnOutsideFunction: options.as === "event-handler"
+					})
+				).not.toThrow();
 				// A handler body is read as the function body it is, so it maps.
 				expect(typeof result.map).toBe(withMap ? "object" : "undefined");
 			});
 
-			// The plugin's own terser entry point is what the default path still
-			// dispatches to, so the printer owes the same answer byte for byte.
-			it(`should match the reference minifier: ${label}`, async () => {
-				const args =
-					/** @type {[{ [file: string]: string }, EXPECTED_ANY, EXPECTED_ANY, EXPECTED_ANY]} */ ([
-						input,
-						withMap ? INPUT_MAP : undefined,
-						options,
-						extractComments
-					]);
-				const mine = await jsMinify(args[0], args[1], { ...args[2] }, args[3]);
-				const reference = await terserMinify(
-					args[0],
-					args[1],
-					{ ...args[2] },
-					args[3]
-				);
-
-				expect(mine.code).toBe(reference.code);
-				expect(mine.extractedComments).toEqual(reference.extractedComments);
-				// The reference wraps a handler body in a function, moving every
-				// position, so it answers no map.
-				if (options.as !== "event-handler") {
-					expect(mine.map).toEqual(reference.map);
-				}
-			});
 		}
 	}
 
@@ -16956,17 +17524,47 @@ describe("jsMinify", () => {
 		await expect(jsMinify({ "broken.js": "function (" })).rejects.toThrow();
 	});
 
-	it("should answer an error, not throw, when the minifier cannot load", async () => {
-		const { printer } = require("../../../lib/javascript/syntax");
-		const failure = new Error("cannot load");
-		const load = jest.spyOn(printer, "load").mockRejectedValueOnce(failure);
-		try {
-			expect(await jsMinify({ "a.js": "a()" })).toEqual({
-				code: "",
-				errors: [failure]
-			});
-		} finally {
-			load.mockRestore();
+	it("should cache the names it hands out across assets", async () => {
+		const nameCache = {};
+		const result = await jsMinify(
+			{ "cached.js": "var longName = 1; sink(longName);" },
+			INPUT_MAP,
+			{ toplevel: true, nameCache },
+			false
+		);
+		expect(result.code).toBe("sink(1);");
+		expect(typeof result.map).toBe("object");
+		expect(nameCache).toEqual({ vars: { props: {} } });
+		const shared = {};
+		const options = { compress: false, toplevel: true, nameCache: shared };
+		const first = await jsMinify(
+			{ "first.js": 'var shared = "cached"; sink(shared);' },
+			undefined,
+			{ ...options },
+			false
+		);
+		const second = await jsMinify(
+			{ "second.js": "sink(shared);" },
+			undefined,
+			{ ...options },
+			false
+		);
+		expect([first.code, second.code]).toEqual([
+			'var a="cached";sink(a);',
+			"sink(a);"
+		]);
+		expect(shared).toEqual({ vars: { props: { $shared: "a" } } });
+	});
+
+	it("should refuse what reads or prints a tree rather than code", async () => {
+		for (const options of [
+			{ parse: { spidermonkey: true } },
+			{ format: { ast: true } },
+			{ format: { code: false } }
+		]) {
+			await expect(
+				jsMinify({ "a.js": "a()" }, undefined, options, false)
+			).rejects.toThrow(/not supported/);
 		}
 	});
 

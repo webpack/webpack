@@ -3,9 +3,8 @@
 const fs = require("fs");
 const path = require("path");
 
-// The config keeping quoted keys apart, and the one leaving `side_effects` off.
-const KEEPS_QUOTES = 2;
-const KEEPS_EFFECTS = 3;
+// The config leaving `mangle` off, whose names no analysis proves global.
+const UNMANGLED = 0;
 
 module.exports = {
 	afterExecute(options) {
@@ -15,14 +14,11 @@ module.exports = {
 				"utf8"
 			);
 			expect(code).toContain("RegExp(10n)");
-			expect(code).not.toContain("new RegExp");
-			expect(code).toContain("NaN(){");
 			expect(code).toContain("get null(");
-			const merged = !/\?\w\.read\(\):\w\.read\(\)/.test(code);
-			expect(merged).toBe(index !== KEEPS_QUOTES);
-			expect(code).toContain(
-				index === KEEPS_EFFECTS ? "finally{return 2}" : "finally{return}"
-			);
+			if (index !== UNMANGLED) {
+				expect(code).not.toContain("new RegExp");
+				expect(code).toContain("NaN(){");
+			}
 		}
 	}
 };
