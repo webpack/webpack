@@ -15987,6 +15987,22 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				compress: { side_effects: false }
 			})
 		).toBe("export function q(o,r){return o,r.read()}");
+		// What a function called where nothing reads its call returns goes, where it runs nothing.
+		expect(
+			print(
+				"(function(){try{throw 1}finally{return 2}})();x=(function(){try{g()}finally{return 2}})();(function(){if(g())return 1;h()})();(async function(){g();return 1})();(function(){g();return h()})();a(),(()=>{g();return 2})(),b();(function*(){return 1})().next()"
+			)
+		).toBe(
+			"!function(){try{throw 1}finally{return}}();x=function(){try{g()}finally{return 2}}();!function(){if(g())return;h()}();!async function(){g();return 1}();!function(){g();return h()}();a(),(()=>{g();return})(),b();(function*(){return 1})().next();"
+		);
+		// A method's value is the method's, read whatever the call around its class.
+		expect(
+			print(
+				"(()=>{class K{a(){return 1}get b(){return 2}static c(){return 3}}g(K,{m(){return 4},get n(){return 5}})})()"
+			)
+		).toBe(
+			"(()=>{class r{a(){return 1}get b(){return 2}static c(){return 3}}g(r,{m(){return 4},get n(){return 5}})})();"
+		);
 		// Moved to its one read, a function keeps the name `keep_fnames` keeps.
 		expect(
 			print("(()=>{function spread(a){h(a);return a}g(()=>spread([]))})()", {
