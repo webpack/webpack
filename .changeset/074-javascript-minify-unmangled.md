@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Compress JavaScript smaller in one pass, with or without mangling.
+Compress JavaScript smaller and correctly in one pass, with or without mangling.
