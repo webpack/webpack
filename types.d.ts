@@ -19299,6 +19299,7 @@ declare interface LoaderEntry<
 	data?: DataType;
 	pitchExecuted: boolean;
 	normalExecuted: boolean;
+	sourceTest?: string | RegExp;
 	type?: "module" | "commonjs";
 }
 declare interface LoaderItem {
@@ -19306,6 +19307,7 @@ declare interface LoaderItem {
 	options?: null | string | Record<string, any>;
 	ident?: null | string;
 	type?: null | string;
+	sourceTest?: string | RegExp;
 }
 
 /**
@@ -29922,6 +29924,11 @@ declare interface RuleSetRule {
 						 * Loader options.
 						 */
 						options?: string | { [index: string]: any };
+						/**
+						 * Run the loader's normal function when its current input contains this string, matches this regular expression, or cannot be decoded as UTF-8 text.
+						 * @since 5.113.0
+						 */
+						sourceTest?: string | RegExp;
 				  }
 		  )[]
 		| RuleSetUseFunction
@@ -29938,6 +29945,11 @@ declare interface RuleSetRule {
 				 * Loader options.
 				 */
 				options?: string | { [index: string]: any };
+				/**
+				 * Run the loader's normal function when its current input contains this string, matches this regular expression, or cannot be decoded as UTF-8 text.
+				 * @since 5.113.0
+				 */
+				sourceTest?: string | RegExp;
 		  };
 
 	/**
@@ -29967,6 +29979,11 @@ type RuleSetUse =
 					 * Loader options.
 					 */
 					options?: string | { [index: string]: any };
+					/**
+					 * Run the loader's normal function when its current input contains this string, matches this regular expression, or cannot be decoded as UTF-8 text.
+					 * @since 5.113.0
+					 */
+					sourceTest?: string | RegExp;
 			  }
 	  )[]
 	| RuleSetUseFunction
@@ -29983,6 +30000,11 @@ type RuleSetUse =
 			 * Loader options.
 			 */
 			options?: string | { [index: string]: any };
+			/**
+			 * Run the loader's normal function when its current input contains this string, matches this regular expression, or cannot be decoded as UTF-8 text.
+			 * @since 5.113.0
+			 */
+			sourceTest?: string | RegExp;
 	  };
 type RuleSetUseFunction = (data: EffectData) =>
 	| string
@@ -30000,6 +30022,11 @@ type RuleSetUseFunction = (data: EffectData) =>
 			 * Loader options.
 			 */
 			options?: string | { [index: string]: any };
+			/**
+			 * Run the loader's normal function when its current input contains this string, matches this regular expression, or cannot be decoded as UTF-8 text.
+			 * @since 5.113.0
+			 */
+			sourceTest?: string | RegExp;
 	  }
 	| (
 			| undefined
@@ -30021,6 +30048,11 @@ type RuleSetUseFunction = (data: EffectData) =>
 					 * Loader options.
 					 */
 					options?: string | { [index: string]: any };
+					/**
+					 * Run the loader's normal function when its current input contains this string, matches this regular expression, or cannot be decoded as UTF-8 text.
+					 * @since 5.113.0
+					 */
+					sourceTest?: string | RegExp;
 			  }
 	  )[];
 type RuleSetUseItem =
@@ -30039,6 +30071,11 @@ type RuleSetUseItem =
 			 * Loader options.
 			 */
 			options?: string | { [index: string]: any };
+			/**
+			 * Run the loader's normal function when its current input contains this string, matches this regular expression, or cannot be decoded as UTF-8 text.
+			 * @since 5.113.0
+			 */
+			sourceTest?: string | RegExp;
 	  };
 
 /**
@@ -40148,6 +40185,11 @@ declare namespace exports {
 				 * Loader options.
 				 */
 				options?: string | { [index: string]: any };
+				/**
+				 * Run the loader's normal function when its current input contains this string, matches this regular expression, or cannot be decoded as UTF-8 text.
+				 * @since 5.113.0
+				 */
+				sourceTest?: string | RegExp;
 		  }
 		| (
 				| undefined
@@ -40169,6 +40211,11 @@ declare namespace exports {
 						 * Loader options.
 						 */
 						options?: string | { [index: string]: any };
+						/**
+						 * Run the loader's normal function when its current input contains this string, matches this regular expression, or cannot be decoded as UTF-8 text.
+						 * @since 5.113.0
+						 */
+						sourceTest?: string | RegExp;
 				  }
 		  )[];
 	export type WebpackPluginFunction = (

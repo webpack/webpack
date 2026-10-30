@@ -5433,6 +5433,11 @@ export type RuleSetUseItem =
 			 * Loader options.
 			 */
 			options?: RuleSetLoaderOptions;
+			/**
+			 * Run the loader's normal function when its current input contains this string, matches this regular expression, or cannot be decoded as UTF-8 text.
+			 * @since 5.113.0
+			 */
+			sourceTest?: RegExp | string;
 	  }
 	| RuleSetUseFunction
 	| RuleSetLoader;

@@ -10936,6 +10936,25 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
+  "module-rules-use-source-test": Object {
+    "configs": Array [
+      Object {
+        "description": "Run the loader's normal function when its current input contains this string, matches this regular expression, or cannot be decoded as UTF-8 text.",
+        "multiple": true,
+        "path": "module.rules[].use.sourceTest",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Run the loader's normal function when its current input contains this string, matches this regular expression, or cannot be decoded as UTF-8 text.",
+        "multiple": true,
+        "path": "module.rules[].use.sourceTest",
+        "type": "string",
+      },
+    ],
+    "description": "Run the loader's normal function when its current input contains this string, matches this regular expression, or cannot be decoded as UTF-8 text.",
+    "multiple": true,
+    "simpleType": "string",
+  },
   "module-strict-export-presence": Object {
     "configs": Array [
       Object {

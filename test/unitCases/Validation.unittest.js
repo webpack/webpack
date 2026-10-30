@@ -947,4 +947,34 @@ describe("Validation", () => {
 		`)
 		);
 	});
+
+	it("accepts string and regular expression loader source tests", () => {
+		const webpack = require("../..");
+		expect(() =>
+			webpack.validate({
+				module: {
+					rules: [
+						{ use: [{ loader: "example-loader", sourceTest: "use client" }] },
+						{ use: [{ loader: "example-loader", sourceTest: /use client/ }] }
+					]
+				}
+			})
+		).not.toThrow();
+	});
+
+	for (const [name, sourceTest] of [
+		["array", [/marker/]],
+		["object", { include: /marker/ }],
+		["object with include array", { include: [/marker/] }],
+		["object with exclude array", { exclude: [/marker/] }],
+		["function", () => true],
+		["number", 42],
+		["null", null]
+	]) {
+		createTestCaseOnlyValidate(
+			`loader sourceTest with ${name}`,
+			{ module: { rules: [{ use: [{ loader: "example-loader", sourceTest }] }] } },
+			(msg) => expect(msg).toContain("sourceTest")
+		);
+	}
 });

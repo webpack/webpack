@@ -7285,6 +7285,19 @@
                   "$ref": "#/definitions/RuleSetLoaderOptions"
                 }
               ]
+            },
+            "sourceTest": {
+              "description": "Run the loader's normal function when its current input contains this string, matches this regular expression, or cannot be decoded as UTF-8 text.",
+              "anyOf": [
+                {
+                  "instanceof": "RegExp",
+                  "tsType": "RegExp"
+                },
+                {
+                  "type": "string"
+                }
+              ],
+              "added": "5.113.0"
             }
           }
         },
