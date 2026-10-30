@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Call back with the cached value from callback-style `CacheFacade.provide` on a hit.
+Call back with the cached value on a hit in both cache facade `provide` methods.
