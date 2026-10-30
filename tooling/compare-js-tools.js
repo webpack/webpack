@@ -439,19 +439,11 @@ const TOOLS = [
 		// shows what that function's own plumbing costs.
 		name: "webpack printer",
 		stage: "minify",
-		create: () => {
-			const loading = require("../lib/javascript/syntax").printer.load();
-
-			return async (code) =>
-				(
-					await (
-						await loading
-					).minify(code, {
-						compress: { passes: 2 },
-						module: sourceType() === "module"
-					})
-				).code;
-		}
+		create: () => (code) =>
+			minifyOnePass(code, {
+				compress: { passes: 2 },
+				module: sourceType() === "module"
+			}).code
 	},
 	{
 		name: "terser",
@@ -1235,6 +1227,18 @@ const PRESETS = [
 ];
 
 /**
+ * webpack's one-pass minify: one JavaScript `SourceProcessor` run.
+ * @param {string} code the source
+ * @param {EXPECTED_ANY} options the minify options
+ * @returns {{ code: string }} the output
+ */
+const minifyOnePass = (code, options) => {
+	const { SourceProcessor } = require("../lib/javascript/syntax");
+
+	return new SourceProcessor().process(code, { mode: "minify", ...options });
+};
+
+/**
  * The printer under one preset, and the same printer reading its output back:
  * minified twice, an output shrinks again, which is the compressor's business
  * rather than a printer moving, so the second pass prints and nothing else.
@@ -1641,9 +1645,6 @@ const invariants = async (write) => {
 	if (wantedRelation("purity")) {
 		// Printed alone: a compress pass over every source twice costs four
 		// minutes for state the printer, not the compressor, is asked to hold.
-		const { minifySync } = (
-			await require("../lib/javascript/syntax").printer.load()
-		).modules;
 		const [, presetOptions] = /** @type {[string, EXPECTED_ANY]} */ (
 			PRESETS.find(([name]) => name === "format")
 		);
@@ -1653,7 +1654,7 @@ const invariants = async (write) => {
 			const settled = options === undefined ? goalFor(source) : options;
 			if (settled === null) continue;
 			const { minify } = printerFor(
-				minifySync,
+				minifyOnePass,
 				presetOptions,
 				settled.sourceType === "module"
 			);
@@ -1691,9 +1692,6 @@ const invariants = async (write) => {
 	);
 	const wantsBehavior = wantedRelation("behavior");
 	if (wantsIdempotence || wantsRespelling || wantsBehavior) {
-		const { minifySync } = (
-			await require("../lib/javascript/syntax").printer.load()
-		).modules;
 		// Only what a script does before it returns is compared: a promise it
 		// leaves rejected, such as an `import()` with no loader, is ignored, and
 		// for the rest of the run, as one may settle after the sweep.
@@ -1727,7 +1725,7 @@ const invariants = async (write) => {
 			const says = (text) => tokenMeaning(text, module);
 			for (const [preset, presetOptions] of printing) {
 				const { minify, reprint } = printerFor(
-					minifySync,
+					minifyOnePass,
 					presetOptions,
 					module
 				);
