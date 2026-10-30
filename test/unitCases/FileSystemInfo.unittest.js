@@ -1578,6 +1578,108 @@ ${details(snapshot)}`)
 			);
 		});
 
+		it.each(["async_hooks", "path"])(
+			"tracks package imports targeting %s without treating builtins as files",
+			(target, done) => {
+				const fs = createProjectFs();
+				const packageData = {
+					imports: {
+						"#async_hooks": { node: target, default: "./fallback.mjs" },
+						"#file": "./lib.mjs"
+					}
+				};
+				fs.writeFileSync("/proj/package.json", JSON.stringify(packageData));
+				fs.writeFileSync(
+					"/proj/entry.mjs",
+					'import "#async_hooks";\nimport "#file";\n'
+				);
+				const fsInfo = createProjectFsInfo(fs);
+
+				fsInfo.resolveBuildDependencies(
+					"/proj",
+					["/proj/entry.mjs"],
+					undefined,
+					(err, result_) => {
+						if (err) return done(err);
+						const result =
+							/** @type {import("../../lib/fs/FileSystemInfo").ResolveBuildDependenciesResult} */ (
+								result_
+							);
+
+						expect([...result.files].sort()).toEqual([
+							"/proj/entry.mjs",
+							"/proj/lib.mjs"
+						]);
+						expect(result.resolveDependencies.files).toContain(
+							"/proj/package.json"
+						);
+						createProjectFsInfo(fs).checkResolveResultsValid(
+							result.resolveResults,
+							(err, valid) => {
+								if (err) return done(err);
+								expect(valid).toBe(true);
+
+								packageData.imports["#async_hooks"].node = "./lib.mjs";
+								fs.writeFileSync(
+									"/proj/package.json",
+									JSON.stringify(packageData)
+								);
+								createProjectFsInfo(fs).checkResolveResultsValid(
+									result.resolveResults,
+									(err, valid) => {
+										if (err) return done(err);
+										expect(valid).toBe(false);
+										done();
+									}
+								);
+							}
+						);
+					}
+				);
+			}
+		);
+
+
+		it.each([
+			{ before: "fs", after: "path", optional: false },
+			{ before: "./missing.mjs", after: "fs", optional: true },
+			{ before: "fs", after: "./missing.mjs", optional: true }
+		])(
+			"invalidates a package import changing from $before to $after",
+			async ({ before, after, optional }) => {
+				const fs = createProjectFs();
+				const packageData = { imports: { "#dependency": before } };
+				fs.writeFileSync("/proj/package.json", JSON.stringify(packageData));
+				fs.writeFileSync(
+					"/proj/entry.mjs",
+					optional ? 'import("#dependency");' : 'import "#dependency";'
+				);
+				const result = await new Promise((resolve, reject) => {
+					createProjectFsInfo(fs).resolveBuildDependencies(
+						"/proj",
+						["/proj/entry.mjs"],
+						undefined,
+						(err, result) => err ? reject(err) : resolve(result)
+					);
+				});
+				packageData.imports["#dependency"] = after;
+				fs.writeFileSync("/proj/package.json", JSON.stringify(packageData));
+
+				const validation = new Promise((resolve, reject) => {
+					createProjectFsInfo(fs).checkResolveResultsValid(
+						/** @type {import("../../lib/fs/FileSystemInfo").ResolveBuildDependenciesResult} */ (result).resolveResults,
+						(err, valid) => err ? reject(err) : resolve(valid)
+					);
+				});
+
+				if (after === "./missing.mjs") {
+					await expect(validation).rejects.toThrow("Can't resolve '#dependency'");
+				} else {
+					await expect(validation).resolves.toBe(false);
+				}
+			}
+		);
+
 		it("checkResolveResultsValid errors on an unexpected key type", (done) => {
 			const fs = createProjectFs();
 			const fsInfo = createProjectFsInfo(fs);

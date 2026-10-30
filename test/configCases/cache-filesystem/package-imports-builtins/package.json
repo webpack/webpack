@@ -1,0 +1,9 @@
+{
+	"imports": {
+		"#async_hooks": {
+			"node": "async_hooks",
+			"default": "./fallback.js"
+		},
+		"#path": "path"
+	}
+}
