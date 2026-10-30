@@ -18428,7 +18428,6 @@ declare interface KnownCssModuleBuildInfo {
  */
 declare interface KnownCssModuleBuildMeta {
 	isCssModule?: boolean;
-	needIdInConcatenation?: boolean;
 }
 
 /**
@@ -36399,6 +36398,11 @@ declare namespace exports {
 		defaultObject?: false | "redirect" | "redirect-warn";
 		async?: boolean;
 		sideEffectFree?: boolean;
+
+		/**
+		 * true when the module keeps its own id after concatenation into another module, so id assignment and hot module replacement records still track it
+		 */
+		needIdInConcatenation?: boolean;
 	}
 
 	/**
