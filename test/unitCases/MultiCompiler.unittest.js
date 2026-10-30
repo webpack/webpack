@@ -1028,4 +1028,19 @@ describe("MultiCompiler deprecated 'done' hook call", () => {
 		).toThrow(error);
 		tracker();
 	});
+
+	it("should throw without running the taps when one is async", () => {
+		const tracker = deprecationTracking.start();
+		const compiler = new webpack.MultiCompiler([], {});
+		let called = false;
+		compiler.hooks.done.tap("sync", () => {
+			called = true;
+		});
+		compiler.hooks.done.tapPromise("async", () => Promise.resolve());
+		expect(() => compiler.hooks.done.call(createStats(), [])).toThrow(
+			/has async taps/
+		);
+		expect(called).toBe(false);
+		tracker();
+	});
 });
