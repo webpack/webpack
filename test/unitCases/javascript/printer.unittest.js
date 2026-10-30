@@ -16029,13 +16029,14 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			expect(print(source, { module: false })).toBe(expected);
 		}
 		expect(print("g()", { enclose: true })).toBe("!function(){g()}();");
-		// A declaration and the statement setting its last name read as one.
+		// A `var` and the statement setting its last name read as one; a `let`
+		// stays apart, its dead zone lasting while the value runs.
 		expect(
 			print(
 				"export function f(r){var h;h=x=>x+1;r.add([h])}export function g(r){var a,b;b=r();return[a,b]}export function h(){var h;h=h||1;return h}export function k(r){let a;a=r();switch(r){case 1:var c;c=r();r(c,c)}return[a,a]}"
 			)
 		).toBe(
-			"export function f(r){r.add([r=>r+1])}export function g(r){var t;return[t,r()]}export function h(){var r;return r=r||1}export function k(r){let t=r();switch(r){case 1:var a;a=r();r(a,a)}return[t,t]}"
+			"export function f(r){r.add([r=>r+1])}export function g(r){var t;return[t,r()]}export function h(){var r;return r=r||1}export function k(r){let t;t=r();switch(r){case 1:var a;a=r();r(a,a)}return[t,t]}"
 		);
 		// A `let` nothing reads loses the writes of closures made once it is set,
 		// not of one made before it, of a function declaration, or a closure that reads it.
@@ -16142,6 +16143,15 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			)
 		).toBe(
 			'export const a="a,b",b="0-1",c=["0","1","x","y"],d="0,2",e="1x",f="NaN,null",g=Object.keys({__proto__:1,a:2}),h=[x].join(),i=Object.keys({a:f()}),j="1.5,true",k=["a","b","__proto__"];'
+		);
+		// A separator not known stays a call; a key past the last array index
+		// keeps its place.
+		expect(
+			print(
+				'export function f(s){return["a","b"].join(s)}export const k=Object.keys({b:1,4294967295:2,4294967294:3}),j=[1,void 0].join(void 0)'
+			)
+		).toBe(
+			'export function f(o){return["a","b"].join(o)}export const k=["4294967294","b","4294967295"],j="1,";'
 		);
 		// A call printing as what it runs, unread last in a sequence or under
 		// `void` or `!`, prints bare.
