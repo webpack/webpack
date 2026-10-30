@@ -12619,12 +12619,56 @@ declare class HotModuleReplacementPlugin {
 	 * Returns the attached hooks.
 	 */
 	static getParserHooks(parser: JavascriptParser): HMRJavascriptParserHooks;
+
+	/**
+	 * Returns the hooks a compilation calls while it renders hot updates.
+	 */
+	static getCompilationHooks: (compilation: Compilation) => {
+		/**
+		 * Called for each hot update manifest before it is emitted; add a field for your own download handler, which gets the whole manifest.
+		 * @since 5.113.0
+		 */
+		updateManifest: SyncHook<[HotUpdateManifest, HotUpdateManifestContext]>;
+	};
 }
 declare interface HotModuleReplacementPluginLoaderContext {
 	hot?: boolean;
 }
 declare class HotUpdateChunk extends Chunk {
 	constructor();
+}
+
+/**
+ * The manifest a runtime downloads first in a hot update; every download handler gets it
+ * whole, so a plugin adds a field here for its own handler.
+ */
+declare interface HotUpdateManifest {
+	[index: string]: unknown;
+	c: ChunkId[];
+	r: ChunkId[];
+	m: ModuleId[];
+	f?: ChunkId[];
+	s?: ModuleId[];
+}
+
+/**
+ * What a plugin needs to fill its manifest field.
+ */
+declare interface HotUpdateManifestContext {
+	/**
+	 * the compilation
+	 */
+	compilation: Compilation;
+
+	/**
+	 * the updated chunks that are still in this build
+	 */
+	chunks: Chunk[];
+
+	/**
+	 * the chunks that joined one of the chunk's groups since the last build, which the runtime never loads on its own
+	 */
+	joinedSiblings: (chunk: Chunk) => Chunk[];
 }
 
 /**
