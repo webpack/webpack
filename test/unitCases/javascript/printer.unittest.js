@@ -294,7 +294,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"if (a) { b() } while (a) { a-- } for (;;) { break } l: { c() } with (o) { d() } do { e() } while (a); for (k in o) { f(k) } for (k of o) { f(k) }",
 				{},
-				"if(a)b();while(a)a--;for(;;)break;o:c();with(o)d();do e();while(a);for(k in o)f(k);for(k of o)f(k);"
+				"if(a)b();while(a)a--;for(;;)break;o:c();with(o)d();do{e()}while(a);for(k in o)f(k);for(k of o)f(k);"
 			],
 			// An `else` after a block keeps it where the block ends in an `if` of its own.
 			[
@@ -312,7 +312,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"x(); do ; while (a)",
 				{ format: { semicolons: false } },
-				"x()\ndo;while(a)\n"
+				"x()\ndo{}while(a)\n"
 			],
 			// An import attribute's value stays a string where strings print as templates.
 			[
@@ -466,7 +466,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				'g(typeof a !== "undefined", "undefined" == typeof b, typeof d != "object"); do e(); while (a); function f(e){ let o = new Set(e); return o } function k(){ let o = new X; return o() }',
 				{},
-				'g(typeof a<"u",typeof b>"u","object"!=typeof d);do e();while(a);function f(e){return new Set(e)}function k(){return(new X)()}'
+				'g(typeof a<"u",typeof b>"u","object"!=typeof d);do{e()}while(a);function f(e){return new Set(e)}function k(){return(new X)()}'
 			],
 			// A function reading `arguments` may write a parameter through it.
 			[
@@ -2282,17 +2282,17 @@ describe("JavaScript minifier mangling a SyntaxTree", () => {
 		const source =
 			"x = [undefined, Infinity, o.default, '\\v']; if (a) do b(); while (c); else d(); async function f(x) { return !await x }";
 		expect(minifyOnePass(source, { compress: {}, mangle: {} }).code).toBe(
-			'x=[void 0,1/0,o.default,"\\v"];if(a)do b();while(c);else d();async function f(n){return!await n}'
+			'x=[void 0,1/0,o.default,"\\v"];if(a)do{b()}while(c);else d();async function f(n){return!await n}'
 		);
 		expect(
 			minifyOnePass(source, { compress: {}, mangle: {}, ie8: true }).code
 		).toBe(
-			'x=[undefined,Infinity,o["default"],"\\x0B"];if(a){do b();while(c)}else d();async function f(n){return!await n}'
+			'x=[undefined,Infinity,o["default"],"\\x0B"];if(a){do{b()}while(c)}else d();async function f(n){return!await n}'
 		);
 		expect(
 			minifyOnePass(source, { compress: {}, mangle: {}, safari10: true }).code
 		).toBe(
-			'x=[void 0,1/0,o.default,"\\v"];if(a)do b();while(c);else d();async function f(n){return!(await n)}'
+			'x=[void 0,1/0,o.default,"\\v"];if(a)do{b()}while(c);else d();async function f(n){return!(await n)}'
 		);
 	});
 

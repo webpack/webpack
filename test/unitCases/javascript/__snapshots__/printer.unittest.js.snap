@@ -36,7 +36,7 @@ for(var i=(a in b);i;){}for(let o of(a,b));for((x=1 in o);;){}
 
 function*g(){yield;yield a;yield*b;x=yield c;(yield d)+1}
 
-l:for(;;)continue l;l:;do x();while(y);with(o)p;
+l:for(;;)continue l;l:;do{x()}while(y);with(o)p;
 
 switch(a){case 1:b();default:c()}switch(x){}try{a}catch{b}finally{c}
 
@@ -148,7 +148,7 @@ a;(()=>a)||b;a||(()=>b);-(()=>a);(()=>a)?b:c;a+(()=>b);f(()=>a);(a=()=>b)?()=>b:
 
 var a=b in c;for(var a=(b in c);;);for((a in b);;);for((a=b in c?1:2);;);for(var a=(()=>b in c);;);for(var a=function(){return b in c};;);for(var x=([b in c]);;);
 
-a?b:c;if(a){if(b)c}else d;if(a)for(;;)b?c:d;if(a)while(b)c?d:e;else f;if(a)e:b?c:d;if(a)do b;while(c);else d;a?b:c?d:e;if(a)b?c:d;if(a);else;
+a?b:c;if(a){if(b)c}else d;if(a)for(;;)b?c:d;if(a)while(b)c?d:e;else f;if(a)e:b?c:d;if(a)do{b}while(c);else d;a?b:c?d:e;if(a)b?c:d;if(a);else;
 
 for(;;);while(a);for(x in y);for(x of y);a:;a:break a;a:for(;;)continue a;switch(a){}switch(a){case 1:case 2:b()}
 
@@ -240,13 +240,13 @@ with(o)a;with(o)b;with(o)a?b:c;
 
 class P{#i;m(i){#i in(a=b);#i in(a?b:c);#i in(a,b);#i in(()=>1);(#i in i)+1;!(#i in i);(#i in i).y;(#i in i)();a<(#i in i);#i in i<a;#i in i||a;a in(#i in i);#i in i in a;(#i in i)**2;#i in(#i in i);#i in a+b;#i in(a in b);#i in(a||b);#i in i?1:2;(#i in i)\`t\`}*g(){#i in(yield)}}
 
-import n from\\"x\\";import{let as i}from\\"y\\";new a[function(){b()}];new a[()=>b()];new(a[b()]);x=function(){}.y;do;while(a);{}switch(a){case 1:\`y\`}1 in a;.5 in a;
+import n from\\"x\\";import{let as i}from\\"y\\";new a[function(){b()}];new a[()=>b()];new(a[b()]);x=function(){}.y;do{}while(a);{}switch(a){case 1:\`y\`}1 in a;.5 in a;
 
 import o from\\"b\\"with{type:\\"json\\",other:\\"x\\"};export{c}from\\"d\\"with{type:\\"json\\",other:\\"y\\"};
 
 x={a,b:b=1,c,\\"d e\\":d};
 
-do a;while(b);switch(a){case 1:;}(a??b)||c;a&&(b??c);(a??b)&&c;
+do{a}while(b);switch(a){case 1:;}(a??b)||c;a&&(b??c);(a??b)&&c;
 
 \\"use asm\\";f=()=>1.50;class A{x=1.50;static{y=1.50}}g=function(){return 1.50};
 
@@ -289,7 +289,7 @@ for(var i=(a in b);i;){}for(let o of(a,b));for((x=1 in o);;){}
 
 function*g(){yield;yield a;yield*b;x=yield c;(yield d)+1}
 
-l:for(;;)continue l;l:;do x();while(y);with(o)p;
+l:for(;;)continue l;l:;do{x()}while(y);with(o)p;
 
 switch(a){case 1:b();default:c()}switch(x){}try{a}catch{b}finally{c}
 
@@ -407,7 +407,7 @@ a;(()=>a)||b;a||(()=>b);-(()=>a);(()=>a)?b:c;a+(()=>b);f(()=>a);(a=()=>b)?()=>b:
 
 var a=b in c;for(var a=(b in c);;);for((a in b);;);for((a=b in c?1:2);;);for(var a=(()=>b in c);;);for(var a=function(){return b in c};;);for(var x=([b in c]);;);
 
-a?b:c;if(a){if(b)c}else d;if(a)for(;;)b?c:d;if(a)while(b)c?d:e;else f;if(a)e:b?c:d;if(a)do b;while(c);else d;a?b:c?d:e;if(a)b?c:d;if(a);else;
+a?b:c;if(a){if(b)c}else d;if(a)for(;;)b?c:d;if(a)while(b)c?d:e;else f;if(a)e:b?c:d;if(a)do{b}while(c);else d;a?b:c?d:e;if(a)b?c:d;if(a);else;
 
 for(;;);while(a);for(x in y);for(x of y);a:;a:break a;a:for(;;)continue a;switch(a){}switch(a){case 1:case 2:b()}
 
@@ -499,13 +499,13 @@ with(o)a;with(o)b;with(o)a?b:c;
 
 class P{#i;m(i){#i in(a=b);#i in(a?b:c);#i in(a,b);#i in(()=>1);(#i in i)+1;!(#i in i);(#i in i).y;(#i in i)();a<(#i in i);#i in i<a;#i in i||a;a in(#i in i);#i in i in a;(#i in i)**2;#i in(#i in i);#i in a+b;#i in(a in b);#i in(a||b);#i in i?1:2;(#i in i)\`t\`}*g(){#i in(yield)}}
 
-import n from\\"x\\";import{let as i}from\\"y\\";new a[function(){b()}];new a[()=>b()];new(a[b()]);x=function(){}.y;do;while(a);{}switch(a){case 1:\\"y\\"}1 in a;.5 in a;
+import n from\\"x\\";import{let as i}from\\"y\\";new a[function(){b()}];new a[()=>b()];new(a[b()]);x=function(){}.y;do{}while(a);{}switch(a){case 1:\\"y\\"}1 in a;.5 in a;
 
 import o from\\"b\\"with{type:\\"json\\",other:\\"x\\"};export{c}from\\"d\\"with{type:\\"json\\",other:\\"y\\"};
 
 x={a:a,b:b=1,c:c,\\"d e\\":d};
 
-do a;while(b);switch(a){case 1:;}(a??b)||c;a&&(b??c);(a??b)&&c;
+do{a}while(b);switch(a){case 1:;}(a??b)||c;a&&(b??c);(a??b)&&c;
 
 \\"use asm\\";f=()=>1.50;class A{x=1.50;static{y=1.50}}g=function(){return 1.50};
 
@@ -548,7 +548,7 @@ for(var i=(a in b);i;){}for(let o of(a,b));for((x=1 in o);;){}
 
 function*g(){yield;yield a;yield*b;x=yield c;(yield d)+1}
 
-l:for(;;)continue l;l:;do x();while(y);with(o)p;
+l:for(;;)continue l;l:;do{x()}while(y);with(o)p;
 
 switch(a){case 1:b();default:c()}switch(x){}try{a}catch{b}finally{c}
 
@@ -660,7 +660,7 @@ a;(()=>a)||b;a||(()=>b);-(()=>a);(()=>a)?b:c;a+(()=>b);f(()=>a);(a=()=>b)?()=>b:
 
 var a=b in c;for(var a=(b in c);;);for((a in b);;);for((a=b in c?1:2);;);for(var a=(()=>b in c);;);for(var a=function(){return b in c};;);for(var x=([b in c]);;);
 
-a?b:c;if(a){if(b)c}else d;if(a)for(;;)b?c:d;if(a)while(b)c?d:e;else f;if(a)e:b?c:d;if(a)do b;while(c);else d;a?b:c?d:e;if(a)b?c:d;if(a);else;
+a?b:c;if(a){if(b)c}else d;if(a)for(;;)b?c:d;if(a)while(b)c?d:e;else f;if(a)e:b?c:d;if(a)do{b}while(c);else d;a?b:c?d:e;if(a)b?c:d;if(a);else;
 
 for(;;);while(a);for(x in y);for(x of y);a:;a:break a;a:for(;;)continue a;switch(a){}switch(a){case 1:case 2:b()}
 
@@ -752,13 +752,13 @@ with(o)a;with(o)b;with(o)a?b:c;
 
 class P{#i;m(i){#i in(a=b);#i in(a?b:c);#i in(a,b);#i in(()=>1);(#i in i)+1;!(#i in i);(#i in i).y;(#i in i)();a<(#i in i);#i in i<a;#i in i||a;a in(#i in i);#i in i in a;(#i in i)**2;#i in(#i in i);#i in a+b;#i in(a in b);#i in(a||b);#i in i?1:2;(#i in i)\`t\`}*g(){#i in(yield)}}
 
-import n from\\"x\\";import{let as i}from\\"y\\";new a[function(){b()}];new a[()=>b()];new(a[b()]);x=function(){}.y;do;while(a);{}switch(a){case 1:\\"y\\"}1 in a;.5 in a;
+import n from\\"x\\";import{let as i}from\\"y\\";new a[function(){b()}];new a[()=>b()];new(a[b()]);x=function(){}.y;do{}while(a);{}switch(a){case 1:\\"y\\"}1 in a;.5 in a;
 
 import o from\\"b\\"with{type:\\"json\\",other:\\"x\\"};export{c}from\\"d\\"with{type:\\"json\\",other:\\"y\\"};
 
 x={a:a,b:b=1,c:c,\\"d e\\":d};
 
-do a;while(b);switch(a){case 1:;}(a??b)||c;a&&(b??c);(a??b)&&c;
+do{a}while(b);switch(a){case 1:;}(a??b)||c;a&&(b??c);(a??b)&&c;
 
 \\"use asm\\";f=()=>1.50;class A{x=1.50;static{y=1.50}}g=function(){return 1.50};
 
@@ -801,7 +801,7 @@ for(var i=(a in b);i;){}for(let k of(a,b));for((x=1 in o);;){}
 
 function*g(){yield;yield a;yield*b;x=yield c;(yield d)+1}
 
-label:for(;;)continue label;lbl:;do x();while(y);with(o)p;
+label:for(;;)continue label;lbl:;do{x()}while(y);with(o)p;
 
 switch(a){case 1:b();default:c()}switch(x){}try{a}catch{b}finally{c}
 
@@ -919,7 +919,7 @@ a;(()=>a)||b;a||(()=>b);-(()=>a);(()=>a)?b:c;a+(()=>b);f(()=>a);(a=()=>b)?()=>b:
 
 var a=b in c;for(var a=(b in c);;);for((a in b);;);for((a=b in c?1:2);;);for(var a=(()=>b in c);;);for(var a=function(){return b in c};;);for(var x=([b in c]);;);
 
-a?b:c;if(a){if(b)c}else d;if(a)for(;;)b?c:d;if(a)while(b)c?d:e;else f;if(a)label:b?c:d;if(a)do b;while(c);else d;a?b:c?d:e;if(a)b?c:d;if(a);else;
+a?b:c;if(a){if(b)c}else d;if(a)for(;;)b?c:d;if(a)while(b)c?d:e;else f;if(a)label:b?c:d;if(a)do{b}while(c);else d;a?b:c?d:e;if(a)b?c:d;if(a);else;
 
 for(;;);while(a);for(x in y);for(x of y);a:;b:break b;c:for(;;)continue c;switch(a){}switch(a){case 1:case 2:b()}
 
@@ -1011,13 +1011,13 @@ with(o)a;with(o)b;with(o)a?b:c;
 
 class P{#x;m(o){#x in(a=b);#x in(a?b:c);#x in(a,b);#x in(()=>1);(#x in o)+1;!(#x in o);(#x in o).y;(#x in o)();a<(#x in o);#x in o<a;#x in o||a;a in(#x in o);#x in o in a;(#x in o)**2;#x in(#x in o);#x in a+b;#x in(a in b);#x in(a||b);#x in o?1:2;(#x in o)\`t\`}*g(){#x in(yield)}}
 
-import async from'x';import{let as l}from'y';new a[function(){b()}];new a[()=>b()];new(a[b()]);x=function(){}.y;do;while(a);{}switch(a){case 1:'y'}1. in a;.5 in a;
+import async from'x';import{let as l}from'y';new a[function(){b()}];new a[()=>b()];new(a[b()]);x=function(){}.y;do{}while(a);{}switch(a){case 1:'y'}1. in a;.5 in a;
 
 import a from'b'with{type:'json',other:'x'};export{c}from'd'with{type:'json',other:'y'};
 
 x={'a':a,'b':b=1,c,'d e':d};
 
-do a;while(b);switch(a){case 1:;}(a??b)||c;a&&(b??c);(a??b)&&c;
+do{a}while(b);switch(a){case 1:;}(a??b)||c;a&&(b??c);(a??b)&&c;
 
 'use asm';f=()=>1.50;class A{x=1.50;static{y=1.50}}g=function(){return 1.50};
 
@@ -1106,8 +1106,7 @@ x=yield c;(yield d)+1}
 
 /* p */
 l:for(;;)continue l
-l:;do x()
-while(y)
+l:;do{x()}while(y)
 with(o)p
 
 
@@ -1428,8 +1427,7 @@ if(a)for(;;)b?c:d
 if(a)while(b)c?d:e
 else f
 if(a)e:b?c:d
-if(a){do b
-while(c)}else d
+if(a){do{b}while(c)}else d
 a?b:c?d:e
 if(a)b?c:d
 if(a);else;
@@ -1718,7 +1716,7 @@ new a[function(){b()}]
 new a[()=>b()]
 new(a[b()])
 x=(function(){}).y
-do;while(a)
+do{}while(a)
 {}switch(a){case 1:\\"y\\"}1 in a;.5 in a
 
 
@@ -1732,8 +1730,7 @@ x={a:a,b:b=1,c:c,\\"d e\\":d}
 
 
 /* p */
-do a
-while(b)
+do{a}while(b)
 switch(a){case 1:
 }(a??b)||c
 a&&(b??c);(a??b)&&c
