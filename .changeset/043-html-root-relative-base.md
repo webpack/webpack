@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Fix HTML `<base href>` handling; apply entry `html` options to authored pages.
+Fix HTML URL decoding and `<base href>` handling; apply entry `html` options to authored pages.
