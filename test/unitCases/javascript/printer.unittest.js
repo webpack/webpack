@@ -16102,6 +16102,15 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		).toBe(
 			'export function q(t,e,r){if(t)return{kept:r};if(e)return{"kept":r}}'
 		);
+		// `Object.keys` of an object literal prints its keys, and `.join` of
+		// constants the string it makes.
+		expect(
+			print(
+				'export const a=["a","b"].join(),b=Object.keys("ab").join("-"),c=Object.keys({x:1,y:2,1:3,0:4,x:5}),d=Object.keys([1,,2]).join(),e=[1,null,,void 0,"x"].join(""),f=Object.keys({[NaN]:5,[null]:6}).join(),g=Object.keys({__proto__:1,a:2}),h=[x].join(),i=Object.keys({a:f()}),j=[1.5,true].join(void 0),k=Object.keys({get a(){},b(){},["__proto__"]:1})'
+			)
+		).toBe(
+			'export const a="a,b",b="0-1",c=["0","1","x","y"],d="0,2",e="1x",f="NaN,null",g=Object.keys({__proto__:1,a:2}),h=[x].join(),i=Object.keys({a:f()}),j="1.5,true",k=["a","b","__proto__"];'
+		);
 		// A call printing as what it runs, unread last in a sequence or under
 		// `void` or `!`, prints bare.
 		expect(
