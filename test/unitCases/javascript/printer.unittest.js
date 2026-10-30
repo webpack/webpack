@@ -1111,6 +1111,47 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		expect(print("var a = 5; function reset() { a = 6 }")).toBe("");
 	});
 
+	it("should print what runs the same for names, `delete` and pure callees", () => {
+		for (const [source, options] of /** @type {[string, EXPECTED_OBJECT][]} */ ([
+			// A dropped `var` frees its name for the catch parameter sharing it.
+			[
+				'"aaaaaaaa";var a=1,b="FAIL";try{throw 1}catch(c){try{throw 0}catch(a){if(c)b="PASS"}}console.log(b);',
+				{ toplevel: true }
+			],
+			[
+				'"aaaaaaaa";var a=1,b="FAIL";try{throw 1}catch(c){try{throw 0}catch(a){if(c)b="PASS"}}console.log(b);',
+				{ toplevel: true, mangle: { keep_fnames: true } }
+			],
+			// Sloppy code ignores a function expression setting its own name.
+			[
+				"console.log(function c(){c=6;return c}(),function c(){c=6;return typeof c}())",
+				{ compress: { passes: 3 } }
+			],
+			// Moved into a function moved itself, a read stays the outer name's.
+			[
+				'!function(){function foo(x){console.log("foo",x);if(x)bar(x-1)}function bar(x){console.log("bar",x);if(x)qux(x-1)}function qux(x){console.log("qux",x);if(x)foo(x-1)}qux(4)}();',
+				{ compress: { passes: 2 } }
+			],
+			[
+				"console.log(delete undefined,delete void 0,delete Infinity,delete NaN);var x=1;console.log(delete x)",
+				{}
+			],
+			// The annotation inside a parenthesis marks only what it holds.
+			[
+				"let count=0;function invoke(){count+=1}function id(v){return v}(/* @__PURE__ */ id(invoke))();(/* @__PURE__ */ id(invoke)).call();console.log(count)",
+				{}
+			]
+		])) {
+			const { code } = minifyOnePass(source, {
+				compress: {},
+				mangle: true,
+				module: false,
+				...options
+			});
+			expect(runProgram(code)).toBe(runProgram(source));
+		}
+	});
+
 	it("should keep a `Number` constant a pattern or assignment writes", () => {
 		const { code } = minifyOnePass(
 			"[Number.POSITIVE_INFINITY]=[7];({v:Number.NEGATIVE_INFINITY}={v:1});[...Number.POSITIVE_INFINITY]=[7];for([Number.POSITIVE_INFINITY] of [[7]]);Number.NaN++;let v;({[Number.POSITIVE_INFINITY]:v=Number.NEGATIVE_INFINITY}={});g(Number.NaN)",

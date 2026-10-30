@@ -1791,13 +1791,16 @@ describe("JavaScript minifier", () => {
 										const stdout = /** @type {Stdout} */ (source.stdout);
 										const wanted = /** @type {string | Error} */ (expected);
 										let actual = run(stdout, code);
-										// As terser's runner reminifies: a throw of the expected kind
-										// passes whatever its message says.
+										// A throw of the expected kind passes whatever its message says
+										// as terser's runner reminifies, and anywhere for a callee that is
+										// not a function, which V8 names as written and folding rewrites.
 										if (
-											setName !== "its own options" &&
 											typeof wanted !== "string" &&
 											typeof actual !== "string" &&
-											wanted.name === actual.name
+											wanted.name === actual.name &&
+											(setName !== "its own options" ||
+												(wanted.message.endsWith(" is not a function") &&
+													actual.message.endsWith(" is not a function")))
 										) {
 											actual = wanted;
 										}
