@@ -14,6 +14,16 @@ describe("util/identifier", () => {
 			["/project", "file:///project/a%2520file.js", "webpack://./a%20file.js"],
 			["/project", "file:///project/a%23file.js", "webpack://./a#file.js"],
 			[
+				"/work/a?b/project",
+				"file:///work/a%3Fb/project/src/entry.js?query#fragment",
+				"webpack://./src/entry.js?query#fragment"
+			],
+			[
+				"C:\\work\\a?b",
+				"file:///C:/work/a%3Fb/entry.js",
+				"webpack://./entry.js"
+			],
+			[
 				"/project",
 				"file:///project/source.js?query=%20#fragment",
 				"webpack://./source.js?query=%20#fragment"
