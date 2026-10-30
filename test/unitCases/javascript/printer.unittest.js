@@ -1429,6 +1429,26 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"let count=0;function invoke(){count+=1}function id(v){return v}(/* @__PURE__ */ id(invoke))();(/* @__PURE__ */ id(invoke)).call();console.log(count)",
 				{}
+			],
+			// A member read where a call binds `this` stays the value it was set to.
+			[
+				"var o={get(){return this===o}};function h(t){const y=t.get;return y()}console.log(h(o))",
+				{}
+			],
+			[
+				"function f(){var x=123;var z=0;z=x&&(z=2);return z}console.log(f())",
+				{}
+			],
+			// A branch's earlier assignment, collapsed into the one the `?:` hoists, stays.
+			[
+				"function f(o,t,k){var v,d;if(o.d){d=Object.getOwnPropertyDescriptor(t,k);v=d&&d.value}else v=t[k];return v}console.log(f({d:1},{a:1},'a'),f({},{a:2},'a'))",
+				{}
+			],
+			// Declared after its read and reading a function moved into it, a
+			// function stays in place, so its call is no longer its value.
+			[
+				"!function(){var p=function(o){return isS(o)?1:2};function isO(v){return v>1}function isS(v){return v&&isO(v)}console.log(p(0),p(3))}()",
+				{}
 			]
 		])) {
 			const { code } = minifyOnePass(source, {
@@ -1458,6 +1478,53 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				"export async function f(){return(await g(1)).x}"
 			],
 			["export function f(){ const r = new C; h(r) }", "export function f(){h(new C)}"],
+			// What a value folds to, or the call it prints as, takes its own parentheses.
+			["export const f = l => { var m = 42 + l; return m; };", "export const f=r=>42+r;"],
+			[
+				"export function g(){ var x = import.meta; x.url() }",
+				"export function g(){import.meta.url()}"
+			],
+			[
+				"export function g(){ var x = new Error(); return x.stack }",
+				"export function g(){return Error().stack}"
+			],
+			["f((new Error()).stack);", "f(Error().stack);"],
+			["f(new (new Error())(1));", "f(new(Error())(1));"],
+			[
+				"export function g(){ (function(){ return c ? 1 : 2 })() }",
+				"export function g(){c?1:2}"
+			],
+			[
+				"export class A extends (this === undefined ? B : B) {}",
+				"export class A extends B{}"
+			],
+			[
+				"export const f = (a, b, c = (x ? false : !!b.d)) => g(a, b, c);",
+				"export const f=(a,b,c=!x&&!!b.d)=>g(a,b,c);"
+			],
+			[
+				"export const s = (\"a b \" + \"c d\").split(\" \");",
+				'export const s="a b c d".split(" ");'
+			],
+			["export const n = ~(1 | 2);", "export const n=~3;"],
+			["export async function f(){ await (4 ** 2) }", "export async function f(){await 16}"],
+			[
+				'export const h = (e, t) => { const y = t?.get("type"); y && (o = o.push(1)) };',
+				'export const h=(t,e)=>{e?.get("type")&&(o=o.push(1))};'
+			],
+			['export function f(o){ if (!!("a" in o)) g() }', 'export function f(o){if("a"in o)g()}'],
+			["export const t = [(l, c) => g(l, c)];", "export const t=[(c,l)=>g(c,l)];"],
+			[
+				'export function f(){ const c = (n, U) => g(n, U); return c("file", h) }',
+				'export function f(){return(c=>g("file",c))(h)}'
+			],
+			[
+				"export function f(e){ if (a) b(); else (function(e){ g(e) })(e) }",
+				"export function f(e){a?b():g(e)}"
+			],
+			// Bare, the function would be a declaration, hoisted.
+			["export default (function(){});", "export default(function(){});"],
+			["export default function(){}", "export default function(){}"],
 			[
 				"export function f(){ const r = new C; return r() }",
 				"export function f(){return(new C)()}"

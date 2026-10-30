@@ -200,7 +200,7 @@ export default async()=>{};
 
 export default(function(){}).call(this);
 
-export default function(){}
+export default(function(){});
 
 export default class{}
 
@@ -459,7 +459,7 @@ export default async()=>{};
 
 export default(function(){}).call(this);
 
-export default function(){}
+export default(function(){});
 
 export default class{}
 
@@ -712,7 +712,7 @@ export default async()=>{};
 
 export default(function(){}).call(this);
 
-export default function(){}
+export default(function(){});
 
 export default class{}
 
@@ -971,7 +971,7 @@ export default async()=>{};
 
 export default(function(){}).call(this);
 
-export default function(){}
+export default(function(){});
 
 export default class{}
 
@@ -1590,7 +1590,8 @@ export default(function(){}).call(this)
 
 
 /* p */
-export default function(){}
+export default(function(){})
+
 
 /* p */
 export default class{}
