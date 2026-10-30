@@ -1,5 +1,1754 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
+exports[`JavaScript minifier printing a SyntaxTree should print each source, with ECMAScript 2020 1`] = `
+"var ä=1,𐊧=2;typeof ä,ä in 𐊧,void 𐊧,new ä,ä instanceof ä;
+
+new(function(){}());
+
+new(function(){}());
+
+new a;
+
+function f(){}
+
+function f(){}
+
+/*!a*/
+function f(){return Infinity+(a,b)}
+
+var a={b:1,\\"c d\\":[1,,2],[e]:f,get g(){return 1},h(){},...i,1e3:2,16:3};
+
+class A extends B{#t=1;static m(){return#t in this}static{a}get[k](){}q(){}static async*g(){}}
+
+import z,{b,d}from\\"f\\"with{type:\\"json\\"};export*from\\"g\\";export*as h from\\"i\\";export{z};export*as\\"*\\"from\\"j\\";import*as o from\\"k\\";import\\"l\\";
+
+export default function(){}
+
+export default(function(){});
+
+export default(class{}).name;
+
+let x=\`a\${b}c\${\`d\${e}\`}\`;tag\`x\\\\u{41}\${y}\\\\n\`;new(a.b().c);new(a().b);[];[];![];
+
+for(var i=(a in b);i;){}for(let o of(a,b));for((x=1 in o);;){}
+
+(a=b?c:d,b)?c:d;a??(b||c);(a??b)||c;a**-b;(-a)**b;
+
+function*g(){yield;yield a;yield*b;x=yield c;(yield d)+1}
+
+l:for(;;)continue l;l:;do x();while(y);with(o)p;
+
+switch(a){case 1:b();default:c()}switch(x){}try{a}catch{b}finally{c}
+
+if(a){if(b)c}else d;if(a)for(;;)b?c:d;
+
+var{a,b:{c=1},...d}=e;({a,b:c}=d);[a,[b],...c]=d;function f({q,[s]:a=1},[c=2],...b){}
+
+x={a,b,d,async e(){},*f(){},get h(){},set h(_){},__proto__:p,[\`__proto__\`]:q,__proto__};
+
+a?.b;a?.[b];a?.();(a?.b).c;function t(){}import(\\"x\\");import(\\"y\\",{with:{}});
+
+\\"use strict\\";\\"use asm\\";function f(){\\"use asm\\";return 17.5}
+
+var re=/a\\\\/b[/]c/gimsuy,x=/<\\\\/script>/,y=a in/x/;z=1..toString()+1.5.toFixed()+16..x+15..x;
+
+a=1n+0x1Fn+1000n;b=1e6;c=.5;e=1e-4;f=1e-7;
+
+x=\\"a'bc\\\\\\"de\\\\nf\\\\u2028\\\\0<\\\\/script>\\\\x3c!----\\\\x3e\\";
+
+(let)[0]=1;for((let).x of y);for((async)of x);
+
+a,b;x=(1,2);f((a,b));[(a,b)];({a:(b,c)});a[b,c];(a,b).c;void(a,b);
+
+c=()=>({});d=()=>({}.x);e=async a=>a;g=(...a)=>a;h=([a])=>a;i=()=>{};
+
+x=typeof typeof a;y=- -a;v=a- -b;t=a-- >b;s=! --a;r=a<! --b;
+
+var a=1;
+/*! keep */function f(a){return a}
+
+function f(){return a+b}function g(){throw Error()}h(/*! a */x,y);
+
+#!/usr/bin/env node
+\\"use strict\\";console.log(1);
+
+({}=a);if(a)function f(){}if(c){}
+
+(o={if:1,class:2,\\"a-b\\":3,1:4,\\"01\\":5,\\" \\":7}).if;o[\`a-b\`];o[\`1\`];
+
+x=f();y=(b,c);z=g(h);
+
+import(\\"a\\",(b,c));new(import(\\"a\\"));new A(import(\\"a\\"));
+
+'use\\\\x20strict';\\"a\\\\\\\\b\\";'x\\\\x20<\\\\/script>--\\\\x3e';\\"y\\\\\\\\\\\\x3c!--\\";f();
+
+f();/*! kept */
+g();
+
+f(
+/*! a
+ b */
+f=>1);
+
+x=/*! a */b+c;y=/*! b */(c,d).e;z=/*! c */f\`t\`;w=(0,j/*! d */)(F.Z);
+
+async function f(){/*! a */ /*! b */return(await x).y}function*g(){/*! c */yield a?b:c;/*! d */throw a+++b}
+
+function h(){/*! a */return a||b;/*! b */return a=1;/*! c */return a.b.c();/*! d */return a,b/*! e */;return a[0]}
+
+function e(){/*! a */}x={/*! b */};switch(a){/*! c */}if(a){/*! d */}class K{}
+
+a();/*! a */b();{/*! b */}{a()}a?b():c();
+
+a();b();𐐀x.y;𐐀.z;
+
+a/*! a */.b;1/*! b */.toFixed();(let/*! c */)[0]=1;
+
+for(var i=(/*! a */a in b);;)break;x=!/*! b */--y;
+
+throws Duplicate export 'default'
+
+x=/*! a */(function(){})\`\`;/*! b */(function(){})+1;/*! c */ /*! d */ /*! e */(function(){}||o).toString();
+
+x&&(/*! a */ /*! b */ /*! c */(b=a)||(b-=a,b^=a));(0,j/*! e */)(/*! d */f);
+
+/*! a */;;\\"\\";function f(){/*! b */}//! c;
+\`\`;
+
+/*! a */;;\\"\\";
+
+//! a;
+;\\"\\";
+
+(a,b)+c;-(a+b);(a+b).c;(a+b)();a??(b&&c);(a||b)??c;a-(b-c);(a**b)**c;a**(b**c);a*(b+c);(a=b)+c;
+
+(a=b).c;-(a=b);(a=b)?c:d;({a}=b);f(a,([b]=c));f([b]=c);a+(b=c);(a?b:c).d;(a?b:c)?d:e;a=b?c:d;
+
+(-a).b;(-a)();(-a)**b;++a**b;a++**b;typeof(a**b);- -a;+ +a;- --a;+ ++a;a- -b;a+ +b;a<! --b;x=! --a;a-- >b;a-- >>b;a-- >=b;
+
+(a?.b).c;(a?.b)();a?.b.c;a?.();a?.b();new(a.b());new(a().b);new a.b;new(a());(new A).b;(new A)();(new A)\`x\`;new(A\`x\`);new(a\`x\`);
+
+x=Infinity.y;
+
+1 in a;1.5 in a;.5 in a;/x/ in a;/x/ instanceof a;a in b;a instanceof b;1 instanceof a;
+
+!/a/ in obj;a+/x/ in b;typeof/x/ instanceof y;x=!1 in a;x=-1 in a;(a,/x/)in b;a?b:/c/ in d;/x/ in b;f(/x/)in b;x=3 in a;
+
+a< /script/.test(b);a</x/;f(/a/,/script/);
+
+(a?b:c)\`x\`;(a,b)\`x\`;(-a)\`x\`;(()=>1)\`x\`;(function(){})\`x\`;({}.a)\`x\`;({}.a)\`x\`;a.b\`x\`;a[b]\`x\`;(a+b)\`x\`;(a=b)\`x\`;(new A)\`x\`;a()\`x\`;
+
+(function(){}).call();(function(){})\`x\`;({})+1;({}).a++;(function(){})+1;(function(){}()).a=1;({}).a=1;
+
+
+
+a;(()=>a)||b;a||(()=>b);-(()=>a);(()=>a)?b:c;a+(()=>b);f(()=>a);(a=()=>b)?()=>b:()=>c;
+
+(a,b)?c:d;f((a,b));[(a,b)];({a:(a,b)});a[b,c];(a,b).c;void(a,b);x=(1,2);var v=(1,2);for(a,b;c,d;e,f);for(x of(a,b));for(x in a,b);a,b;
+
+var a=b in c;for(var a=(b in c);;);for((a in b);;);for((a=b in c?1:2);;);for(var a=(()=>b in c);;);for(var a=function(){return b in c};;);for(var x=([b in c]);;);
+
+a?b:c;if(a){if(b)c}else d;if(a)for(;;)b?c:d;if(a)while(b)c?d:e;else f;if(a)e:b?c:d;if(a)do b;while(c);else d;a?b:c?d:e;if(a)b?c:d;if(a);else;
+
+for(;;);while(a);for(x in y);for(x of y);a:;a:break a;a:for(;;)continue a;switch(a){}switch(a){case 1:case 2:b()}
+
+try{a}catch{b}try{a}catch(a){b}finally{c}try{a}finally{b}try{}catch({a,b}){}debugger;throw a;function f(){}
+
+for(var a in b);for(let[o]of b);for(let{a}of b);for(var i=0,j=1;i<j;i++,j--);for(let o=0;;);for(x.y in z);for([a,b]of c);
+
+var{a:b}=c;({a:b}=c);function f({a}){}var[{a:b}]=c,{x:{a:b}}=c,{a:b=1}=c;function g([{a}]=[]){}for(var{a:b}of c);var{...rest}=c;f=(a={b:c})=>a;
+
+({a=1}=b);var{a=1}=b;({a:b=1}=c);({a=1}=c);({a=1}=b);({a}=b);({a:c}=b);var{a}=b;
+
+x={a,if:if_,b:if_,Infinity:Infinity,c:Infinity,async,get,set,static:s};x={get(){},set(e){},async(){},*gen(){},async*ag(){},get[k](){},set[k](e){},async[k](){},q(){},1(){},[k]:1};
+
+x={__proto__};x={__proto__:__proto__};x={__proto__:a};x={__proto__:a};x={[\`__proto__\`]:a};({__proto__}=a);({__proto__:b}=a);x={__proto__(){}};x={get __proto__(){}};
+
+class A extends(a,b){}class B extends(a?b:c){}class C extends B.c{}class D extends class{}{}class E extends function(){}{}class F{}class G extends(a=b){}class H extends(a()){}class I extends(-a){}
+
+class A extends B{[function(){}](){}static[function(){}](){}#t(){}static#s=1;get#c(){}set#c(t){}static async*[k](){}a=1;static b;[k]=1;x=1;#i=1;static{a}static(){}get(){}set(){}async(){}m(){super.x();this.#s;#s in this}constructor(){super()}}
+
+x=class{};x=class extends B{};x=class{}.name;export default class s{}
+
+export default class{}
+
+function*g(){yield;yield a;yield*b;x=yield c;(yield d)+1;(yield a).b;(yield a)();(yield a)?b:c;-(yield a);yield(a,b);yield yield a;a=yield;f(yield a);\`\${yield}\`;(yield)\`x\`}
+
+async function f(){await a;await(a?b:c);await(a,b);await a.b;await f();await-a;await 1;await await a;await{};await(()=>1);await new A;await(this);await(a+b);await(\`x\`);(await a).b;(await a)();(await a)**b;-await a;(await a)\`x\`;await(a?.b);await(a=b);await(import(\\"x\\"))}
+
+async;async();async(a);x=async function(){};x=async function*(){};
+
+import a,*as h from\\"c\\";import\\"a\\";import{d}from\\"b\\";import{e}from\\"b\\";import{\\"a b\\"as o}from\\"d\\";export{};export{a as default};export{\\"a b\\"as g}from\\"d\\";export*as\\"a b\\"from\\"c\\";export{a};export{h};export*from\\"x\\"with{type:\\"json\\"};export{y}from\\"z\\"with{type:\\"json\\"};import r from\\"k\\"with{__proto__:\\"x\\"};
+
+export default(a,b);export const x=(a,b),y=1;export function f(){}export class C{}export let z;
+
+export default a=b;
+
+export default 3;
+
+export default(function(){}());
+
+export default{}.a;
+
+export default(class{}).a;
+
+export default function*t(){}
+
+export default async function n(){}
+
+export default async()=>{};
+
+export default(function(){}).call(this);
+
+export default function(){}
+
+export default class{}
+
+export default{a:1};
+
+f:function f(){}if(a)function g(){}f:n:a:;
+
+var re=/[/]\\\\//g,s=/x/dgimsuy,v=/[a]/v;t=\`a\${b}c\`+\`\\\\\${x}\`+\`A\`+String.raw\`\\\\n\${x}\\\\t\`;u=\`line\\\\nbreak\`;tag\`\\\\unicode\`;
+
+x=null;y=!0;z=!1;w=1000n;v=0b1n;q=\\"a'ba\\\\\\"b'\\\\\\"\\\\u2028\\\\u2029\\\\ufeff\\\\0\\\\x001\\\\b\\\\f\\\\v\\\\t\\\\r\\\\n\\\\\\\\\\";
+
+a.if;a.if;a.𐊧;a?.𐊧;a.ゟ;a.b;a[0];a?.[0];this.x;function n(){}a.b.c.d;
+
+x=[,];y=[a,,];z=[,a];w=[a,b];v=[...a,...b];f(...a);({...a,b});
+
+\\"use strict\\";y;
+
+y;
+
+function f(){}function g(){\\"use strict\\"}x={m(){\\"use strict\\"}};class K{m(){}}
+
+\\"use asm\\";x=\\"17.5a\\\\nb\\";function f(){\\"use asm\\";return 1.50}function g(){return 1.50}
+
+function f(){\\"use asm\\";return 1.50}y=1.5;
+
+function f(){}
+
+#!/usr/bin/env node
+\\"use strict\\";
+
+#!/usr/bin/env node
+
+
+(let)[0]=1;for((let).x of y);for((async)of x);for(let.x in y);(let)[0];let=1;for((let)[0]in y);for((let)[0];;);let.a;let?.[0];async.x;for(async.x of y);
+
+with(o)a;with(o)b;with(o)a?b:c;
+
+class P{#i;m(i){#i in(a=b);#i in(a?b:c);#i in(a,b);#i in(()=>1);(#i in i)+1;!(#i in i);(#i in i).y;(#i in i)();a<(#i in i);#i in i<a;#i in i||a;a in(#i in i);#i in i in a;(#i in i)**2;#i in(#i in i);#i in a+b;#i in(a in b);#i in(a||b);#i in i?1:2;(#i in i)\`t\`}*g(){#i in(yield)}}
+
+import n from\\"x\\";import{let as i}from\\"y\\";new a[function(){b()}];new a[()=>b()];new(a[b()]);x=function(){}.y;do;while(a);{}switch(a){case 1:\`y\`}1 in a;.5 in a;
+
+import o from\\"b\\"with{type:\\"json\\",other:\\"x\\"};export{c}from\\"d\\"with{type:\\"json\\",other:\\"y\\"};
+
+x={a,b:b=1,c,\\"d e\\":d};
+
+do a;while(b);switch(a){case 1:;}(a??b)||c;a&&(b??c);(a??b)&&c;
+
+\\"use asm\\";f=()=>1.50;class A{x=1.50;static{y=1.50}}g=function(){return 1.50};
+
+1004 lines"
+`;
+
+exports[`JavaScript minifier printing a SyntaxTree should print each source, with every comment, compressed 1`] = `
+"var ä=1,𐊧=2;typeof ä,ä in 𐊧,void 𐊧,new ä,ä instanceof ä;
+
+new(function(){}());
+
+new(/*a*/ /*b*/function(){}());
+
+new(function(){},/*c*/a);
+
+function f(){/*a*/;;\\"x\\"}
+
+function f(){}
+
+/*!a*/
+function f(){/*x*/return Infinity+(a,b)}
+
+var a={b:1,\\"c d\\":[1,,2],[e]:f,get g(){return 1},h(){},...i,1e3:2,16:3};
+
+class A extends B{#t=1;static m(){return#t in this}static{a}get[k](){}q(){}static async*g(){}}
+
+import z,{b,d}from\\"f\\"with{type:\\"json\\"};export*from\\"g\\";export*as h from\\"i\\";export{z};export*as\\"*\\"from\\"j\\";import*as o from\\"k\\";import\\"l\\";
+
+export default function(){}
+
+export default(function(){});
+
+export default(class{}).name;
+
+let x=\`a\${b}c\${\`d\${e}\`}\`;tag\`x\\\\u{41}\${y}\\\\n\`;new(a.b().c);new(a().b);[];[];![];
+
+for(var i=(a in b);i;){}for(let o of(a,b));for((x=1 in o);;){}
+
+(a=b?c:d,b)?c:d;a??(b||c);(a??b)||c;a**-b;(-a)**b;
+
+function*g(){yield;yield a;yield*b;x=yield c;(yield d)+1}
+
+l:for(;;)continue l;l:;do x();while(y);with(o)p;
+
+switch(a){case 1:b();default:c()}switch(x){}try{a}catch{b}finally{c}
+
+if(a){if(b)c}else d;if(a)for(;;)b?c:d;
+
+var{a:a,b:{c:c=1},...d}=e;({a:a,b:c}=d);[a,[b],...c]=d;function f({q:a,[s]:c=1},[b=2],...d){}
+
+x={a:a,b:b,d:d,async e(){},*f(){},get h(){},set h(_){},__proto__:p,[\\"__proto__\\"]:q,[\\"__proto__\\"]:__proto__};
+
+a?.b;a?.[b];a?.();(a?.b).c;function t(){}import(\\"x\\");import(\\"y\\",{with:{}});
+
+\\"use strict\\";\\"use asm\\";function f(){\\"use asm\\";return 17.5}
+
+var re=/a\\\\/b[/]c/gimsuy,x=/<\\\\/script>/,y=a in/x/;z=1..toString()+1.5.toFixed()+16..x+15..x;
+
+a=1n+0x1Fn+1000n;b=1e6;c=.5;e=1e-4;f=1e-7;
+
+x=\\"a'bc\\\\\\"de\\\\nf\\\\u2028\\\\0<\\\\/script>\\\\x3c!----\\\\x3e\\";
+
+(let)[0]=1;for((let).x of y);for((async)of x);
+
+a,b;x=(1,2);f((a,b));[(a,b)];({a:(b,c)});a[b,c];(a,b).c;void(a,b);
+
+c=()=>({});d=()=>({}.x);e=async a=>a;g=(...a)=>a;h=([a])=>a;i=()=>{};
+
+x=typeof typeof a;y=- -a;v=a- -b;t=a-- >b;s=! --a;r=a<! --b;
+
+/** @license abc */var a=1;// trailing
+/*! keep */function f(/* p */a/* q */){/* r */return a}/* end */
+
+function f(){// c
+return a+b}function g(){/*x*/throw Error()}h(/*! a */x,/* b */y);
+
+#!/usr/bin/env node
+\\"use strict\\";console.log(1);
+
+({}=a);if(a)function f(){}if(c){}
+
+(o={if:1,class:2,\\"a-b\\":3,1:4,\\"01\\":5,\\" \\":7}).if;o[\\"a-b\\"];o[\\"1\\"];
+
+x=f();y=(/* a */b,c/* d */);z=/* e */g/* f */(h);
+
+import(\\"a\\",(b,c));new(import(\\"a\\"));new A(import(\\"a\\"));
+
+'use\\\\x20strict';\\"a\\\\\\\\b\\";'x\\\\x20<\\\\/script>--\\\\x3e';\\"y\\\\\\\\\\\\x3c!--\\";f();
+
+// START
+f();// END
+/*! kept */
+g();
+
+f(
+/*! a
+ b */
+/* dropped */f=>1);
+
+x=/*! a */b+c;y=/*! b */(c,d).e;z=/*! c */f\`t\`;w=(0,j/*! d */)(F.Z);
+
+async function f(){/*! a */ /*! b */return(await x).y}function*g(){/*! c */yield a?b:c;/*! d */throw a+++b}
+
+function h(){/*! a */return a||b;/*! b */return a=1;/*! c */return a.b.c();/*! d */return a,b/*! e */;return a[0]}
+
+function e(){/*! a */}x={/*! b */};switch(a){/*! c */}if(a){/*! d */}class K{}
+
+a();/*! a */b();{/*! b */}{a();// x
+}if(a)b();// y
+else c();
+
+a();// x
+/* y */b();𐐀x.y;𐐀.z;
+
+a/*! a */.b;1/*! b */.toFixed();(let/*! c */)[0]=1;
+
+for(var i=(/*! a */a in b);;)break;x=!/*! b */--y;
+
+throws Duplicate export 'default'
+
+x=/*! a */(function(){})\`\`;/*! b */(function(){})+1;/*! c */ /*! d */ /*! e */(function(){}||o).toString();
+
+x&&(/*! a */ /*! b */ /*! c */(b=a)||(b-=a,b^=a));(0,j/*! e */)(/*! d */f);
+
+/*! a */;;\\"\\";function f(){/*! b */}//! c;
+\\"\\";
+
+/*! a */;;\\"\\";
+
+//! a;
+/* b */;;\\"\\";
+
+(a,b)+c;-(a+b);(a+b).c;(a+b)();a??(b&&c);(a||b)??c;a-(b-c);(a**b)**c;a**(b**c);a*(b+c);(a=b)+c;
+
+(a=b).c;-(a=b);(a=b)?c:d;({a:a}=b);f(a,([b]=c));f([b]=c);a+(b=c);(a?b:c).d;(a?b:c)?d:e;a=b?c:d;
+
+(-a).b;(-a)();(-a)**b;++a**b;a++**b;typeof(a**b);- -a;+ +a;- --a;+ ++a;a- -b;a+ +b;a<! --b;x=! --a;a-- >b;a-- >>b;a-- >=b;
+
+(a?.b).c;(a?.b)();a?.b.c;a?.();a?.b();new(a.b());new(a().b);new a.b;new(a());(new A).b;(new A)();(new A)\`x\`;new(A\`x\`);new(a\`x\`);
+
+x=Infinity.y;
+
+1 in a;1.5 in a;.5 in a;/x/ in a;/x/ instanceof a;a in b;a instanceof b;1 instanceof a;
+
+!/a/ in obj;a+/x/ in b;typeof/x/ instanceof y;x=!1 in a;x=-1 in a;(a,/x/)in b;a?b:/c/ in d;/x/ in b;f(/x/)in b;x=3 in a;
+
+a< /script/.test(b);a</x/;f(/a/,/script/);
+
+(a?b:c)\`x\`;(a,b)\`x\`;(-a)\`x\`;(()=>1)\`x\`;(function(){})\`x\`;({}.a)\`x\`;({}.a)\`x\`;a.b\`x\`;a[b]\`x\`;(a+b)\`x\`;(a=b)\`x\`;(new A)\`x\`;a()\`x\`;
+
+(function(){}).call();(function(){})\`x\`;({})+1;({}).a++;(function(){})+1;(function(){}()).a=1;({}).a=1;
+
+
+
+a;(()=>a)||b;a||(()=>b);-(()=>a);(()=>a)?b:c;a+(()=>b);f(()=>a);(a=()=>b)?()=>b:()=>c;
+
+(a,b)?c:d;f((a,b));[(a,b)];({a:(a,b)});a[b,c];(a,b).c;void(a,b);x=(1,2);var v=(1,2);for(a,b;c,d;e,f);for(x of(a,b));for(x in a,b);a,b;
+
+var a=b in c;for(var a=(b in c);;);for((a in b);;);for((a=b in c?1:2);;);for(var a=(()=>b in c);;);for(var a=function(){return b in c};;);for(var x=([b in c]);;);
+
+a?b:c;if(a){if(b)c}else d;if(a)for(;;)b?c:d;if(a)while(b)c?d:e;else f;if(a)e:b?c:d;if(a)do b;while(c);else d;a?b:c?d:e;if(a)b?c:d;if(a);else;
+
+for(;;);while(a);for(x in y);for(x of y);a:;a:break a;a:for(;;)continue a;switch(a){}switch(a){case 1:case 2:b()}
+
+try{a}catch{b}try{a}catch(a){b}finally{c}try{a}finally{b}try{}catch({a:a,b:t}){}debugger;throw a;function f(){}
+
+for(var a in b);for(let[o]of b);for(let{a:o}of b);for(var i=0,j=1;i<j;i++,j--);for(let o=0;;);for(x.y in z);for([a,b]of c);
+
+var{a:b}=c;({a:b}=c);function f({a:a}){}var[{a:b}]=c,{x:{a:b}}=c,{a:b=1}=c;function g([{a:a}]=[]){}for(var{a:b}of c);var{...rest}=c;f=(a={b:c})=>a;
+
+({a:a=1}=b);var{a:a=1}=b;({a:b=1}=c);({a:a=1}=c);({a:a=1}=b);({a:a}=b);({a:c}=b);var{a:a}=b;
+
+x={a:a,if:if_,b:if_,Infinity:Infinity,c:Infinity,async:async,get:get,set:set,static:s};x={get(){},set(e){},async(){},*gen(){},async*ag(){},get[k](){},set[k](e){},async[k](){},q(){},1(){},[k]:1};
+
+x={[\\"__proto__\\"]:__proto__};x={__proto__:__proto__};x={__proto__:a};x={__proto__:a};x={[\\"__proto__\\"]:a};({__proto__:__proto__}=a);({__proto__:b}=a);x={__proto__(){}};x={get __proto__(){}};
+
+class A extends(a,b){}class B extends(a?b:c){}class C extends B.c{}class D extends class{}{}class E extends function(){}{}class F{}class G extends(a=b){}class H extends(a()){}class I extends(-a){}
+
+class A extends B{[function(){}](){}static[function(){}](){}#t(){}static#s=1;get#c(){}set#c(t){}static async*[k](){}a=1;static b;[k]=1;x=1;#i=1;static{a}static(){}get(){}set(){}async(){}m(){super.x();this.#s;#s in this}constructor(){super()}}
+
+x=class{};x=class extends B{};x=class{}.name;export default class s{}
+
+export default class{}
+
+function*g(){yield;yield a;yield*b;x=yield c;(yield d)+1;(yield a).b;(yield a)();(yield a)?b:c;-(yield a);yield(a,b);yield yield a;a=yield;f(yield a);\`\${yield}\`;(yield)\`x\`}
+
+async function f(){await a;await(a?b:c);await(a,b);await a.b;await f();await-a;await 1;await await a;await{};await(()=>1);await new A;await(this);await(a+b);await(\`x\`);(await a).b;(await a)();(await a)**b;-await a;(await a)\`x\`;await(a?.b);await(a=b);await(import(\\"x\\"))}
+
+async;async();async(a);x=async function(){};x=async function*(){};
+
+import a,*as h from\\"c\\";import\\"a\\";import{d}from\\"b\\";import{e}from\\"b\\";import{\\"a b\\"as o}from\\"d\\";export{};export{a as default};export{\\"a b\\"as g}from\\"d\\";export*as\\"a b\\"from\\"c\\";export{a};export{h};export*from\\"x\\"with{type:\\"json\\"};export{y}from\\"z\\"with{type:\\"json\\"};import r from\\"k\\"with{__proto__:\\"x\\"};
+
+export default(a,b);export const x=(a,b),y=1;export function f(){}export class C{}export let z;
+
+export default a=b;
+
+export default 3;
+
+export default(function(){}());
+
+export default{}.a;
+
+export default(class{}).a;
+
+export default function*t(){}
+
+export default async function n(){}
+
+export default async()=>{};
+
+export default(function(){}).call(this);
+
+export default function(){}
+
+export default class{}
+
+export default{a:1};
+
+f:function f(){}if(a)function g(){}f:n:a:;
+
+var re=/[/]\\\\//g,s=/x/dgimsuy,v=/[a]/v;t=\`a\${b}c\`+\`\\\\\${x}\`+\`A\`+String.raw\`\\\\n\${x}\\\\t\`;u=\`line\\\\nbreak\`;tag\`\\\\unicode\`;
+
+x=null;y=!0;z=!1;w=1000n;v=0b1n;q=\\"a'ba\\\\\\"b'\\\\\\"\\\\u2028\\\\u2029\\\\ufeff\\\\0\\\\x001\\\\b\\\\f\\\\v\\\\t\\\\r\\\\n\\\\\\\\\\";
+
+a.if;a.if;a[\\"𐊧\\"];a?.[\\"𐊧\\"];a.ゟ;a.b;a[0];a?.[0];this.x;function n(){}a.b.c.d;
+
+x=[,];y=[a,,];z=[,a];w=[a,b];v=[...a,...b];f(...a);({...a,b:b});
+
+\\"use strict\\";y;
+
+y;
+
+function f(){}function g(){\\"use strict\\"}x={m(){\\"use strict\\"}};class K{m(){}}
+
+\\"use asm\\";x=\\"17.5a\\\\nb\\";function f(){\\"use asm\\";return 1.50}function g(){return 1.50}
+
+function f(){\\"use asm\\";return 1.50}y=1.5;
+
+function f(){}
+
+#!/usr/bin/env node
+\\"use strict\\";
+
+#!/usr/bin/env node
+
+
+(let)[0]=1;for((let).x of y);for((async)of x);for(let.x in y);(let)[0];let=1;for((let)[0]in y);for((let)[0];;);let.a;let?.[0];async.x;for(async.x of y);
+
+with(o)a;with(o)b;with(o)a?b:c;
+
+class P{#i;m(i){#i in(a=b);#i in(a?b:c);#i in(a,b);#i in(()=>1);(#i in i)+1;!(#i in i);(#i in i).y;(#i in i)();a<(#i in i);#i in i<a;#i in i||a;a in(#i in i);#i in i in a;(#i in i)**2;#i in(#i in i);#i in a+b;#i in(a in b);#i in(a||b);#i in i?1:2;(#i in i)\`t\`}*g(){#i in(yield)}}
+
+import n from\\"x\\";import{let as i}from\\"y\\";new a[function(){b()}];new a[()=>b()];new(a[b()]);x=function(){}.y;do;while(a);{}switch(a){case 1:\\"y\\"}1 in a;.5 in a;
+
+import o from\\"b\\"with{type:\\"json\\",other:\\"x\\"};export{c}from\\"d\\"with{type:\\"json\\",other:\\"y\\"};
+
+x={a:a,b:b=1,c:c,\\"d e\\":d};
+
+do a;while(b);switch(a){case 1:;}(a??b)||c;a&&(b??c);(a??b)&&c;
+
+\\"use asm\\";f=()=>1.50;class A{x=1.50;static{y=1.50}}g=function(){return 1.50};
+
+1 lines"
+`;
+
+exports[`JavaScript minifier printing a SyntaxTree should print each source, with names mangled 1`] = `
+"var ä=1,𐊧=2;typeof ä,ä in 𐊧,void 𐊧,new ä,ä instanceof ä;
+
+new(function(){}());
+
+new(function(){}());
+
+new a;
+
+function f(){}
+
+function f(){}
+
+/*!a*/
+function f(){return Infinity+(a,b)}
+
+var a={b:1,\\"c d\\":[1,,2],[e]:f,get g(){return 1},h(){},...i,1e3:2,16:3};
+
+class A extends B{#t=1;static m(){return#t in this}static{a}get[k](){}q(){}static async*g(){}}
+
+import z,{b,d}from\\"f\\"with{type:\\"json\\"};export*from\\"g\\";export*as h from\\"i\\";export{z};export*as\\"*\\"from\\"j\\";import*as o from\\"k\\";import\\"l\\";
+
+export default function(){}
+
+export default(function(){});
+
+export default(class{}).name;
+
+let x=\`a\${b}c\${\`d\${e}\`}\`;tag\`x\\\\u{41}\${y}\\\\n\`;new(a.b().c);new(a().b);[];[];![];
+
+for(var i=(a in b);i;){}for(let o of(a,b));for((x=1 in o);;){}
+
+(a=b?c:d,b)?c:d;a??(b||c);(a??b)||c;a**-b;(-a)**b;
+
+function*g(){yield;yield a;yield*b;x=yield c;(yield d)+1}
+
+l:for(;;)continue l;l:;do x();while(y);with(o)p;
+
+switch(a){case 1:b();default:c()}switch(x){}try{a}catch{b}finally{c}
+
+if(a){if(b)c}else d;if(a)for(;;)b?c:d;
+
+var{a:a,b:{c:c=1},...d}=e;({a:a,b:c}=d);[a,[b],...c]=d;function f({q:a,[s]:c=1},[b=2],...d){}
+
+x={a:a,b:b,d:d,async e(){},*f(){},get h(){},set h(_){},__proto__:p,[\\"__proto__\\"]:q,[\\"__proto__\\"]:__proto__};
+
+a?.b;a?.[b];a?.();(a?.b).c;function t(){}import(\\"x\\");import(\\"y\\",{with:{}});
+
+\\"use strict\\";\\"use asm\\";function f(){\\"use asm\\";return 17.5}
+
+var re=/a\\\\/b[/]c/gimsuy,x=/<\\\\/script>/,y=a in/x/;z=1..toString()+1.5.toFixed()+16..x+15..x;
+
+a=1n+0x1Fn+1000n;b=1e6;c=.5;e=1e-4;f=1e-7;
+
+x=\\"a'bc\\\\\\"de\\\\nf\\\\u2028\\\\0<\\\\/script>\\\\x3c!----\\\\x3e\\";
+
+(let)[0]=1;for((let).x of y);for((async)of x);
+
+a,b;x=(1,2);f((a,b));[(a,b)];({a:(b,c)});a[b,c];(a,b).c;void(a,b);
+
+c=()=>({});d=()=>({}.x);e=async a=>a;g=(...a)=>a;h=([a])=>a;i=()=>{};
+
+x=typeof typeof a;y=- -a;v=a- -b;t=a-- >b;s=! --a;r=a<! --b;
+
+/** @license abc */var a=1;
+/*! keep */function f(a){return a}
+
+function f(){return a+b}function g(){throw Error()}h(/*! a */x,y);
+
+#!/usr/bin/env node
+\\"use strict\\";console.log(1);
+
+({}=a);if(a)function f(){}if(c){}
+
+(o={if:1,class:2,\\"a-b\\":3,1:4,\\"01\\":5,\\" \\":7}).if;o[\\"a-b\\"];o[\\"1\\"];
+
+x=f();y=(b,c);z=g(h);
+
+import(\\"a\\",(b,c));new(import(\\"a\\"));new A(import(\\"a\\"));
+
+'use\\\\x20strict';\\"a\\\\\\\\b\\";'x\\\\x20<\\\\/script>--\\\\x3e';\\"y\\\\\\\\\\\\x3c!--\\";f();
+
+f();/*! kept */
+g();
+
+f(
+/*! a
+ b */
+f=>1);
+
+x=/*! a */b+c;y=/*! b */(c,d).e;z=/*! c */f\`t\`;w=(0,j/*! d */)(F.Z);
+
+async function f(){/*! a */ /*! b */return(await x).y}function*g(){/*! c */yield a?b:c;/*! d */throw a+++b}
+
+function h(){/*! a */return a||b;/*! b */return a=1;/*! c */return a.b.c();/*! d */return a,b/*! e */;return a[0]}
+
+function e(){/*! a */}x={/*! b */};switch(a){/*! c */}if(a){/*! d */}class K{}
+
+a();/*! a */b();{/*! b */}{a()}a?b():c();
+
+a();b();𐐀x.y;𐐀.z;
+
+a/*! a */.b;1/*! b */.toFixed();(let/*! c */)[0]=1;
+
+for(var i=(/*! a */a in b);;)break;x=!/*! b */--y;
+
+throws Duplicate export 'default'
+
+x=/*! a */(function(){})\`\`;/*! b */(function(){})+1;/*! c */ /*! d */ /*! e */(function(){}||o).toString();
+
+x&&(/*! a */ /*! b */ /*! c */(b=a)||(b-=a,b^=a));(0,j/*! e */)(/*! d */f);
+
+/*! a */;;\\"\\";function f(){/*! b */}//! c;
+\\"\\";
+
+/*! a */;;\\"\\";
+
+//! a;
+;\\"\\";
+
+(a,b)+c;-(a+b);(a+b).c;(a+b)();a??(b&&c);(a||b)??c;a-(b-c);(a**b)**c;a**(b**c);a*(b+c);(a=b)+c;
+
+(a=b).c;-(a=b);(a=b)?c:d;({a:a}=b);f(a,([b]=c));f([b]=c);a+(b=c);(a?b:c).d;(a?b:c)?d:e;a=b?c:d;
+
+(-a).b;(-a)();(-a)**b;++a**b;a++**b;typeof(a**b);- -a;+ +a;- --a;+ ++a;a- -b;a+ +b;a<! --b;x=! --a;a-- >b;a-- >>b;a-- >=b;
+
+(a?.b).c;(a?.b)();a?.b.c;a?.();a?.b();new(a.b());new(a().b);new a.b;new(a());(new A).b;(new A)();(new A)\`x\`;new(A\`x\`);new(a\`x\`);
+
+x=Infinity.y;
+
+1 in a;1.5 in a;.5 in a;/x/ in a;/x/ instanceof a;a in b;a instanceof b;1 instanceof a;
+
+!/a/ in obj;a+/x/ in b;typeof/x/ instanceof y;x=!1 in a;x=-1 in a;(a,/x/)in b;a?b:/c/ in d;/x/ in b;f(/x/)in b;x=3 in a;
+
+a< /script/.test(b);a</x/;f(/a/,/script/);
+
+(a?b:c)\`x\`;(a,b)\`x\`;(-a)\`x\`;(()=>1)\`x\`;(function(){})\`x\`;({}.a)\`x\`;({}.a)\`x\`;a.b\`x\`;a[b]\`x\`;(a+b)\`x\`;(a=b)\`x\`;(new A)\`x\`;a()\`x\`;
+
+(function(){}).call();(function(){})\`x\`;({})+1;({}).a++;(function(){})+1;(function(){}()).a=1;({}).a=1;
+
+
+
+a;(()=>a)||b;a||(()=>b);-(()=>a);(()=>a)?b:c;a+(()=>b);f(()=>a);(a=()=>b)?()=>b:()=>c;
+
+(a,b)?c:d;f((a,b));[(a,b)];({a:(a,b)});a[b,c];(a,b).c;void(a,b);x=(1,2);var v=(1,2);for(a,b;c,d;e,f);for(x of(a,b));for(x in a,b);a,b;
+
+var a=b in c;for(var a=(b in c);;);for((a in b);;);for((a=b in c?1:2);;);for(var a=(()=>b in c);;);for(var a=function(){return b in c};;);for(var x=([b in c]);;);
+
+a?b:c;if(a){if(b)c}else d;if(a)for(;;)b?c:d;if(a)while(b)c?d:e;else f;if(a)e:b?c:d;if(a)do b;while(c);else d;a?b:c?d:e;if(a)b?c:d;if(a);else;
+
+for(;;);while(a);for(x in y);for(x of y);a:;a:break a;a:for(;;)continue a;switch(a){}switch(a){case 1:case 2:b()}
+
+try{a}catch{b}try{a}catch(a){b}finally{c}try{a}finally{b}try{}catch({a:a,b:t}){}debugger;throw a;function f(){}
+
+for(var a in b);for(let[o]of b);for(let{a:o}of b);for(var i=0,j=1;i<j;i++,j--);for(let o=0;;);for(x.y in z);for([a,b]of c);
+
+var{a:b}=c;({a:b}=c);function f({a:a}){}var[{a:b}]=c,{x:{a:b}}=c,{a:b=1}=c;function g([{a:a}]=[]){}for(var{a:b}of c);var{...rest}=c;f=(a={b:c})=>a;
+
+({a:a=1}=b);var{a:a=1}=b;({a:b=1}=c);({a:a=1}=c);({a:a=1}=b);({a:a}=b);({a:c}=b);var{a:a}=b;
+
+x={a:a,if:if_,b:if_,Infinity:Infinity,c:Infinity,async:async,get:get,set:set,static:s};x={get(){},set(e){},async(){},*gen(){},async*ag(){},get[k](){},set[k](e){},async[k](){},q(){},1(){},[k]:1};
+
+x={[\\"__proto__\\"]:__proto__};x={__proto__:__proto__};x={__proto__:a};x={__proto__:a};x={[\\"__proto__\\"]:a};({__proto__:__proto__}=a);({__proto__:b}=a);x={__proto__(){}};x={get __proto__(){}};
+
+class A extends(a,b){}class B extends(a?b:c){}class C extends B.c{}class D extends class{}{}class E extends function(){}{}class F{}class G extends(a=b){}class H extends(a()){}class I extends(-a){}
+
+class A extends B{[function(){}](){}static[function(){}](){}#t(){}static#s=1;get#c(){}set#c(t){}static async*[k](){}a=1;static b;[k]=1;x=1;#i=1;static{a}static(){}get(){}set(){}async(){}m(){super.x();this.#s;#s in this}constructor(){super()}}
+
+x=class{};x=class extends B{};x=class{}.name;export default class s{}
+
+export default class{}
+
+function*g(){yield;yield a;yield*b;x=yield c;(yield d)+1;(yield a).b;(yield a)();(yield a)?b:c;-(yield a);yield(a,b);yield yield a;a=yield;f(yield a);\`\${yield}\`;(yield)\`x\`}
+
+async function f(){await a;await(a?b:c);await(a,b);await a.b;await f();await-a;await 1;await await a;await{};await(()=>1);await new A;await(this);await(a+b);await(\`x\`);(await a).b;(await a)();(await a)**b;-await a;(await a)\`x\`;await(a?.b);await(a=b);await(import(\\"x\\"))}
+
+async;async();async(a);x=async function(){};x=async function*(){};
+
+import a,*as h from\\"c\\";import\\"a\\";import{d}from\\"b\\";import{e}from\\"b\\";import{\\"a b\\"as o}from\\"d\\";export{};export{a as default};export{\\"a b\\"as g}from\\"d\\";export*as\\"a b\\"from\\"c\\";export{a};export{h};export*from\\"x\\"with{type:\\"json\\"};export{y}from\\"z\\"with{type:\\"json\\"};import r from\\"k\\"with{__proto__:\\"x\\"};
+
+export default(a,b);export const x=(a,b),y=1;export function f(){}export class C{}export let z;
+
+export default a=b;
+
+export default 3;
+
+export default(function(){}());
+
+export default{}.a;
+
+export default(class{}).a;
+
+export default function*t(){}
+
+export default async function n(){}
+
+export default async()=>{};
+
+export default(function(){}).call(this);
+
+export default function(){}
+
+export default class{}
+
+export default{a:1};
+
+f:function f(){}if(a)function g(){}f:n:a:;
+
+var re=/[/]\\\\//g,s=/x/dgimsuy,v=/[a]/v;t=\`a\${b}c\`+\`\\\\\${x}\`+\`A\`+String.raw\`\\\\n\${x}\\\\t\`;u=\`line\\\\nbreak\`;tag\`\\\\unicode\`;
+
+x=null;y=!0;z=!1;w=1000n;v=0b1n;q=\\"a'ba\\\\\\"b'\\\\\\"\\\\u2028\\\\u2029\\\\ufeff\\\\0\\\\x001\\\\b\\\\f\\\\v\\\\t\\\\r\\\\n\\\\\\\\\\";
+
+a.if;a.if;a[\\"𐊧\\"];a?.[\\"𐊧\\"];a.ゟ;a.b;a[0];a?.[0];this.x;function n(){}a.b.c.d;
+
+x=[,];y=[a,,];z=[,a];w=[a,b];v=[...a,...b];f(...a);({...a,b:b});
+
+\\"use strict\\";y;
+
+y;
+
+function f(){}function g(){\\"use strict\\"}x={m(){\\"use strict\\"}};class K{m(){}}
+
+\\"use asm\\";x=\\"17.5a\\\\nb\\";function f(){\\"use asm\\";return 1.50}function g(){return 1.50}
+
+function f(){\\"use asm\\";return 1.50}y=1.5;
+
+function f(){}
+
+#!/usr/bin/env node
+\\"use strict\\";
+
+#!/usr/bin/env node
+
+
+(let)[0]=1;for((let).x of y);for((async)of x);for(let.x in y);(let)[0];let=1;for((let)[0]in y);for((let)[0];;);let.a;let?.[0];async.x;for(async.x of y);
+
+with(o)a;with(o)b;with(o)a?b:c;
+
+class P{#i;m(i){#i in(a=b);#i in(a?b:c);#i in(a,b);#i in(()=>1);(#i in i)+1;!(#i in i);(#i in i).y;(#i in i)();a<(#i in i);#i in i<a;#i in i||a;a in(#i in i);#i in i in a;(#i in i)**2;#i in(#i in i);#i in a+b;#i in(a in b);#i in(a||b);#i in i?1:2;(#i in i)\`t\`}*g(){#i in(yield)}}
+
+import n from\\"x\\";import{let as i}from\\"y\\";new a[function(){b()}];new a[()=>b()];new(a[b()]);x=function(){}.y;do;while(a);{}switch(a){case 1:\\"y\\"}1 in a;.5 in a;
+
+import o from\\"b\\"with{type:\\"json\\",other:\\"x\\"};export{c}from\\"d\\"with{type:\\"json\\",other:\\"y\\"};
+
+x={a:a,b:b=1,c:c,\\"d e\\":d};
+
+do a;while(b);switch(a){case 1:;}(a??b)||c;a&&(b??c);(a??b)&&c;
+
+\\"use asm\\";f=()=>1.50;class A{x=1.50;static{y=1.50}}g=function(){return 1.50};
+
+1 lines"
+`;
+
+exports[`JavaScript minifier printing a SyntaxTree should print each source, with quoting options 1`] = `
+"var \\\\u00e4=1,\\\\u{102a7}=2;typeof \\\\u00e4,\\\\u00e4 in \\\\u{102a7},void \\\\u{102a7},new \\\\u00e4,\\\\u00e4 instanceof \\\\u00e4;
+
+new(function(){}());
+
+new(/*a*/ /*b*/function(){}());
+
+new(function(){},/*c*/a);
+
+function f(){/*a*/;;'x'}
+
+function f(){}
+
+/*!a*/
+function f(){/*x*/return Infinity+(a,b)}
+
+var a={b:1,\\"c d\\":[1,,2],[e]:f,get g(){return 1},h(){},...i,1000:2,16:3};
+
+class A extends B{#x=1;static m(){return#x in this}static{a}get[k](){}'q'(){}static async*g(){}}
+
+import a,{b as c,\\"d\\"as e}from\\"f\\"with{type:\\"json\\"};export*from\\"g\\";export*as h from\\"i\\";export{a as\\"z\\"};export*as\\"*\\"from\\"j\\";import*as ns from\\"k\\";import\\"l\\";
+
+export default function(){}
+
+export default(function(){});
+
+export default(class{}).name;
+
+let x=\`a\${b}c\${\`d\${e}\`}\`;tag\`x\\\\u{41}\${y}\\\\n\`;new(a.b().c);new(a().b);[];[];![];
+
+for(var i=(a in b);i;){}for(let k of(a,b));for((x=1 in o);;){}
+
+(a=b?c:d,b)?c:d;a??(b||c);(a??b)||c;a**-b;(-a)**b;
+
+function*g(){yield;yield a;yield*b;x=yield c;(yield d)+1}
+
+label:for(;;)continue label;lbl:;do x();while(y);with(o)p;
+
+switch(a){case 1:b();default:c()}switch(x){}try{a}catch{b}finally{c}
+
+if(a){if(b)c}else d;if(a)for(;;)b?c:d;
+
+var{a,b:{c=1},...d}=e;({a,b:c}=d);[a,[b],...c]=d;function f({\\"q\\":r,[s]:t=1},[u=2],...v){}
+
+x={a,b,'d':d,async e(){},*f(){},get h(){},set h(v){},__proto__:p,['__proto__']:q,__proto__};
+
+a?.b;a?.[b];a?.();(a?.b).c;function t(){}import('x');import('y',{with:{}});
+
+'use strict';'use asm';function f(){'use asm';return 17.5}
+
+var re=/a\\\\/b[/]c/gimsuy,x=/<\\\\/script>/,y=a in/x/;z=1..toString()+1.5.toFixed()+0x10.x+017.x;
+
+a=1n+0x1Fn+1_000n;b=1_000_000;c=.5;e=0.0001;f=1e-7;
+
+x=\\"a'bc\\\\\\"de\\\\nf\\\\u2028\\\\0<\\\\/script>\\\\x3c!----\\\\x3e\\";
+
+(let)[0]=1;for((let).x of y);for((async)of x);
+
+a,b;x=(1,2);f((a,b));[(a,b)];({a:(b,c)});a[b,c];(a,b).c;void(a,b);
+
+c=()=>({});d=()=>({}.x);e=async x=>x;g=(...a)=>a;h=([a])=>a;i=()=>{};
+
+x=typeof typeof a;y=- -a;v=a- -b;t=a-- >b;s=! --a;r=a<! --b;
+
+/** @license abc */var a=1;// trailing
+/*! keep */function f(/* p */a/* q */){/* r */return a}/* end */
+
+function f(){// c
+return a+b}function g(){/*x*/throw Error()}h(/*! a */x,/* b */y);
+
+#!/usr/bin/env node
+'use strict';console.log(1);
+
+({}=a);if(a)function f(){}if(c){}
+
+(o={if:1,class:2,'a-b':3,1:4,'01':5,' ':7}).if;o['a-b'];o['1'];
+
+x=f();y=(/* a */b,c/* d */);z=/* e */g/* f */(h);
+
+import(\\"a\\",(b,c));new(import(\\"a\\"));new A(import(\\"a\\"));
+
+'use\\\\x20strict';\\"a\\\\\\\\b\\";'x\\\\x20<\\\\/script>--\\\\x3e';\\"y\\\\\\\\\\\\x3c!--\\";f();
+
+// START
+f();// END
+/*! kept */
+g();
+
+f(
+/*! a
+ b */
+/* dropped */m=>1);
+
+x=/*! a */b+c;y=/*! b */(c,d).e;z=/*! c */f\`t\`;w=(0,j/*! d */)(F.Z);
+
+async function f(){/*! a */ /*! b */return(await x).y}function*g(){/*! c */yield a?b:c;/*! d */throw a+++b}
+
+function h(){/*! a */return a||b;/*! b */return a=1;/*! c */return a.b.c();/*! d */return a,b/*! e */;return a[0]}
+
+function e(){/*! a */}x={/*! b */};switch(a){/*! c */}if(a){/*! d */}class K{}
+
+a();/*! a */b();{/*! b */}{a();// x
+}if(a)b();// y
+else c();
+
+a();// x
+/* y */b();\\\\u{10400}x.y;\\\\u{10400}.z;
+
+a/*! a */.b;1/*! b */.toFixed();(let/*! c */)[0]=1;
+
+for(var i=(/*! a */a in b);;)break;x=!/*! b */--y;
+
+throws Duplicate export 'default'
+
+x=/*! a */(function(){})\`\`;/*! b */(function(){})+1;/*! c */ /*! d */ /*! e */(function(){}||o).toString();
+
+x&&(/*! a */ /*! b */ /*! c */(b=a)||(b-=a,b^=a));(0,j/*! e */)(/*! d */f);
+
+/*! a */'\\\\x01';function f(){/*! b */}//! c;
+'\\\\x01';
+
+/*! a */'\\\\x01';
+
+//! a;
+/* b */'\\\\x01';
+
+(a,b)+c;-(a+b);(a+b).c;(a+b)();a??(b&&c);(a||b)??c;a-(b-c);(a**b)**c;a**(b**c);a*(b+c);(a=b)+c;
+
+(a=b).c;-(a=b);(a=b)?c:d;({a}=b);f(a,([b]=c));f([b]=c);a+(b=c);(a?b:c).d;(a?b:c)?d:e;a=b?c:d;
+
+(-a).b;(-a)();(-a)**b;++a**b;a++**b;typeof(a**b);- -a;+ +a;- --a;+ ++a;a- -b;a+ +b;a<! --b;x=! --a;a-- >b;a-- >>b;a-- >=b;
+
+(a?.b).c;(a?.b)();a?.b.c;a?.();a?.b();new(a.b());new(a().b);new a.b;new(a());(new A).b;(new A)();(new A)\`x\`;new(A\`x\`);new(a\`x\`);
+
+x=Infinity.y;
+
+1 in a;1.5 in a;.5 in a;/x/ in a;/x/ instanceof a;a in b;a instanceof b;1 instanceof a;
+
+!/a/ in obj;a+/x/ in b;typeof/x/ instanceof y;x=!1. in a;x=-1. in a;(a,/x/)in b;a?b:/c/ in d;/x/ in b;f(/x/)in b;x=3 in a;
+
+a< /script/.test(b);a</x/;f(/a/,/script/);
+
+(a?b:c)\`x\`;(a,b)\`x\`;(-a)\`x\`;(()=>1)\`x\`;(function(){})\`x\`;({}.a)\`x\`;({}.a)\`x\`;a.b\`x\`;a[b]\`x\`;(a+b)\`x\`;(a=b)\`x\`;(new A)\`x\`;a()\`x\`;
+
+(function(){}).call();(function(){})\`x\`;({})+1;({}).a++;(function(){})+1;(function(){}()).a=1;({}).a=1;
+
+
+
+a;(()=>a)||b;a||(()=>b);-(()=>a);(()=>a)?b:c;a+(()=>b);f(()=>a);(a=()=>b)?()=>b:()=>c;
+
+(a,b)?c:d;f((a,b));[(a,b)];({a:(a,b)});a[b,c];(a,b).c;void(a,b);x=(1,2);var v=(1,2);for(a,b;c,d;e,f);for(x of(a,b));for(x in a,b);a,b;
+
+var a=b in c;for(var a=(b in c);;);for((a in b);;);for((a=b in c?1:2);;);for(var a=(()=>b in c);;);for(var a=function(){return b in c};;);for(var x=([b in c]);;);
+
+a?b:c;if(a){if(b)c}else d;if(a)for(;;)b?c:d;if(a)while(b)c?d:e;else f;if(a)label:b?c:d;if(a)do b;while(c);else d;a?b:c?d:e;if(a)b?c:d;if(a);else;
+
+for(;;);while(a);for(x in y);for(x of y);a:;b:break b;c:for(;;)continue c;switch(a){}switch(a){case 1:case 2:b()}
+
+try{a}catch{b}try{a}catch(e){b}finally{c}try{a}finally{b}try{}catch({a,\\"b\\":c}){}debugger;throw a;function f(){}
+
+for(var a in b);for(let[a]of b);for(let{a}of b);for(var i=0,j=1;i<j;i++,j--);for(let i=0;;);for(x.y in z);for([a,b]of c);
+
+var{\\"a\\":b}=c;({'a':b}=c);function f({\\"a\\":b}){}var[{\\"a\\":b}]=c,{x:{\\"a\\":b}}=c,{\\"a\\":b=1}=c;function g([{\\"a\\":b}]=[]){}for(var{\\"a\\":b}of c);var{...rest}=c;f=(a={'b':c})=>a;
+
+({a=1}=b);var{a=1}=b;({a:b=1}=c);({'a':a=1}=c);({a=1}=b);({a}=b);({a:c}=b);var{a}=b;
+
+x={a,if:if_,b:if_,Infinity:Infinity,c:Infinity,async,get,set,static:s};x={get(){},set(v){},async(){},*gen(){},async*ag(){},get[k](){},set[k](v){},async[k](){},'q'(){},1(){},[k]:1};
+
+x={__proto__};x={__proto__:__proto__};x={'__proto__':a};x={__proto__:a};x={['__proto__']:a};({__proto__}=a);({__proto__:b}=a);x={__proto__(){}};x={get __proto__(){}};
+
+class A extends(a,b){}class B extends(a?b:c){}class C extends B.c{}class D extends class{}{}class E extends function(){}{}class F{}class G extends(a=b){}class H extends(a()){}class I extends(-a){}
+
+class A extends B{[function(){}](){}static[function(){}](){}#m(){}static#x=1;get#y(){}set#y(v){}static async*[k](){}a=1;static b;[k]=1;'x'=1;#p=1;static{a}static(){}get(){}set(){}async(){}m(){super.x();this.#x;#x in this}constructor(){super()}}
+
+x=class{};x=class extends B{};x=class{}.name;export default class A{}
+
+export default class{}
+
+function*g(){yield;yield a;yield*b;x=yield c;(yield d)+1;(yield a).b;(yield a)();(yield a)?b:c;-(yield a);yield(a,b);yield yield a;a=yield;f(yield a);\`\${yield}\`;(yield)\`x\`}
+
+async function f(){await a;await(a?b:c);await(a,b);await a.b;await f();await-a;await 1;await await a;await{};await(()=>1);await new A;await(this);await(a+b);await(\`x\`);(await a).b;(await a)();(await a)**b;-await a;(await a)\`x\`;await(a?.b);await(a=b);await(import('x'))}
+
+async;async();async(a);x=async function(){};x=async function*(){};
+
+import a,*as b from'c';import'a';import{d}from'b';import{e}from'b';import{'a b'as f}from'd';export{};export{a as default};export{'a b'as g}from'd';export*as'a b'from'c';export{a};export{b as'h'};export*from'x'with{type:'json'};export{y}from'z'with{type:'json'};import j from'k'with{__proto__:'x'};
+
+export default(a,b);export const x=(a,b),y=1;export function f(){}export class C{}export let z;
+
+export default a=b;
+
+export default 3;
+
+export default(function(){}());
+
+export default{}.a;
+
+export default(class{}).a;
+
+export default function*g(){}
+
+export default async function h(){}
+
+export default async()=>{};
+
+export default(function(){}).call(this);
+
+export default function(){}
+
+export default class{}
+
+export default{a:1};
+
+label:function f(){}if(a)function g(){}a:b:c:;
+
+var re=/[/]\\\\//g,s=/x/dgimsuy,v=/[a]/v;t=\`a\${b}c\`+\`\\\\\${x}\`+\`A\`+String.raw\`\\\\n\${x}\\\\t\`;u=\`line\\\\nbreak\`;tag\`\\\\unicode\`;
+
+x=null;y=!0;z=!1;w=1_000n;v=0b1n;q=\\"a'ba\\\\\\"b'\\\\\\"\\\\u2028\\\\u2029\\\\ufeff\\\\0\\\\x001\\\\b\\\\f\\\\v\\\\t\\\\r\\\\n\\\\\\\\\\";
+
+a.if;a.if;a.\\\\u{102a7};a?.\\\\u{102a7};a.\\\\u309f;a.b;a[0];a?.[0];this.x;function n(){}a.b.c.d;
+
+x=[,];y=[a,,];z=[,a];w=[a,b];v=[...a,...b];f(...a);({...a,b});
+
+'use strict';y;
+
+y;
+
+function f(){}function g(){'use strict'}x={m(){'use strict'}};class K{m(){}}
+
+'use asm';x=\\"17.5a\\\\nb\\";function f(){'use asm';return 1.50}function g(){return 1.50}
+
+function f(){'use asm';return 1.50}y=1.50;
+
+function f(){}
+
+#!/usr/bin/env node
+'use strict';
+
+#!/usr/bin/env node
+
+
+(let)[0]=1;for((let).x of y);for((async)of x);for(let.x in y);(let)[0];let=1;for((let)[0]in y);for((let)[0];;);let.a;let?.[0];async.x;for(async.x of y);
+
+with(o)a;with(o)b;with(o)a?b:c;
+
+class P{#x;m(o){#x in(a=b);#x in(a?b:c);#x in(a,b);#x in(()=>1);(#x in o)+1;!(#x in o);(#x in o).y;(#x in o)();a<(#x in o);#x in o<a;#x in o||a;a in(#x in o);#x in o in a;(#x in o)**2;#x in(#x in o);#x in a+b;#x in(a in b);#x in(a||b);#x in o?1:2;(#x in o)\`t\`}*g(){#x in(yield)}}
+
+import async from'x';import{let as l}from'y';new a[function(){b()}];new a[()=>b()];new(a[b()]);x=function(){}.y;do;while(a);{}switch(a){case 1:'y'}1. in a;.5 in a;
+
+import a from'b'with{type:'json',other:'x'};export{c}from'd'with{type:'json',other:'y'};
+
+x={'a':a,'b':b=1,c,'d e':d};
+
+do a;while(b);switch(a){case 1:;}(a??b)||c;a&&(b??c);(a??b)&&c;
+
+'use asm';f=()=>1.50;class A{x=1.50;static{y=1.50}}g=function(){return 1.50};
+
+1004 lines"
+`;
+
+exports[`JavaScript minifier printing a SyntaxTree should print each source, with wrapping options 1`] = `
+"/* p */
+var ä=1,𐊧=2
+typeof ä,ä in 𐊧,void 𐊧,new ä,ä instanceof ä
+
+
+/* p */
+new((function(){})())
+
+
+/* p */
+new(/*a*/ /*b*/(function(){})())
+
+
+/* p */
+new(function(){},/*c*/a)
+
+
+/* p */
+function f(){/*a*/;;\\"x\\"}
+
+/* p */
+function f(){}
+
+/* p */
+/*!a*/
+function f(){/*x*/return Infinity+(a,b)}
+
+/* p */
+var a={b:1,\\"c d\\":[1,,2],[e]:f,get g(){return 1},h(){},...i,1e3:2,16:3}
+
+
+/* p */
+class A extends B{#t=1
+static m(){return#t in this}static{a}get[k](){}q(){}static async*g(){}}
+
+/* p */
+import z,{b,d}from\\"f\\"with{type:\\"json\\"}
+export*from\\"g\\"
+export*as h from\\"i\\"
+export{z}
+export*as\\"*\\"from\\"j\\"
+import*as o from\\"k\\"
+import\\"l\\"
+
+
+/* p */
+export default function(){}
+
+/* p */
+export default(function(){})
+
+
+/* p */
+export default(class{}).name
+
+
+/* p */
+let x=\`a\${b}c\${\`d\${e}\`}\`
+tag\`x\\\\u{41}\${y}\\\\n\`
+new(a.b().c)
+new(a().b);[];[]
+![]
+
+
+/* p */
+for(var i=(a in b);i;){}for(let o of(a,b));for((x=1 in o);;){}
+
+/* p */
+(a=b?c:d,b)?c:d
+a??(b||c);(a??b)||c
+a**-b;(-a)**b
+
+
+/* p */
+function*g(){yield
+yield a
+yield*b
+x=yield c;(yield d)+1}
+
+/* p */
+l:for(;;)continue l
+l:;do x()
+while(y)
+with(o)p
+
+
+/* p */
+switch(a){case 1:b()
+default:c()}switch(x){}try{a}catch{b}finally{c}
+
+/* p */
+if(a){if(b)c}else d
+if(a)for(;;)b?c:d
+
+
+/* p */
+var{a:a,b:{c:c=1},...d}=e;({a:a,b:c}=d);[a,[b],...c]=d
+function f({q:a,[s]:c=1},[b=2],...d){}
+
+/* p */
+x={a:a,b:b,d:d,async e(){},*f(){},get h(){},set h(_){},__proto__:p,[\\"__proto__\\"]:q,[\\"__proto__\\"]:__proto__}
+
+
+/* p */
+a?.b
+a?.[b]
+a?.();(a?.b).c
+function t(){}import(\\"x\\")
+import(\\"y\\",{\\"with\\":{}})
+
+
+/* p */
+\\"use strict\\"
+\\"use asm\\"
+function f(){\\"use asm\\"
+return 17.5}
+
+/* p */
+var re=/a\\\\/b[/]c/gimsuy,x=/<\\\\/script>/,y=a in/x/
+z=1..toString()+1.5.toFixed()+16..x+15..x
+
+
+/* p */
+a=1n+0x1Fn+1000n
+b=1e6
+c=.5
+e=1e-4
+f=1e-7
+
+
+/* p */
+x=\\"a'bc\\\\\\"de\\\\nf\\\\u2028\\\\0<\\\\/script>\\\\x3c!----\\\\x3e\\"
+
+
+/* p */
+(let)[0]=1
+for((let).x of y);for((async)of x);
+
+/* p */
+a,b
+x=(1,2)
+f((a,b));[(a,b)];({a:(b,c)})
+a[b,c];(a,b).c
+void(a,b)
+
+
+/* p */
+c=()=>({})
+d=()=>({}.x)
+e=async a=>a
+g=(...a)=>a
+h=([a])=>a
+i=()=>{}
+
+
+/* p */
+x=typeof typeof a
+y=- -a
+v=a- -b
+t=a-- >b
+s=! --a
+r=a<! --b
+
+
+/* p */
+/** @license abc */var a=1;// trailing
+/*! keep */function f(/* p */a/* q */){/* r */return a}/* end */
+
+/* p */
+function f(){// c
+return a+b}function g(){/*x*/throw Error()}h(/*! a */x,/* b */y)
+
+
+#!/usr/bin/env node
+/* p */
+\\"use strict\\"
+console.log(1)
+
+
+/* p */
+({}=a)
+if(a)function f(){}if(c){}
+
+/* p */
+(o={\\"if\\":1,\\"class\\":2,\\"a-b\\":3,1:4,\\"01\\":5,\\" \\":7})[\\"if\\"]
+o[\\"a-b\\"]
+o[\\"1\\"]
+
+
+/* p */
+x=/*@__PURE__*/f()
+y=(/* a */b,c/* d */)
+z=/* e */g/* f */(h)
+
+
+/* p */
+import(\\"a\\",(b,c))
+new(import(\\"a\\"))
+new A(import(\\"a\\"))
+
+
+/* p */
+'use\\\\x20strict'
+\\"a\\\\\\\\b\\"
+'x\\\\x20<\\\\/script>--\\\\x3e'
+\\"y\\\\\\\\\\\\x3c!--\\"
+f()
+
+
+/* p */
+// START
+f();// END
+/*! kept */
+g()
+
+
+/* p */
+f((
+/*! a
+ b */
+/* dropped */f=>1))
+
+
+/* p */
+x=/*! a */b+c
+y=/*! b */(c,d).e
+z=/*! c */f\`t\`
+w=(0,j/*! d */)(F.Z)
+
+
+/* p */
+async function f(){/*! a */ /*! b */return(await x).y}function*g(){/*! c */yield a?b:c;/*! d */throw a+++b}
+
+/* p */
+function h(){/*! a */return a||b;/*! b */return a=1;/*! c */return a.b.c();/*! d */return a,b/*! e */
+return a[0]}
+
+/* p */
+function e(){/*! a */}x={/*! b */}
+switch(a){/*! c */}if(a){/*! d */}class K{}
+
+/* p */
+a();/*! a */b()
+{/*! b */}{a();// x
+}if(a)b();// y
+else c()
+
+
+/* p */
+a();// x
+/* y */b()
+𐐀x.y
+𐐀.z
+
+
+/* p */
+a/*! a */.b
+1/*! b */.toFixed();(let/*! c */)[0]=1
+
+
+/* p */
+for(var i=(/*! a */a in b);;)break
+x=!/*! b */--y
+
+
+throws Duplicate export 'default'
+
+/* p */
+x=/*! a */(function(){})\`\`;/*! b */(function(){})+1;/*! c */ /*! d */ /*! e */(function(){}||o).toString()
+
+
+/* p */
+x&&(/*! a */ /*! b */ /*! c */(b=a)||(b-=a,b^=a));(0,j/*! e */)(/*! d */f)
+
+
+/* p */
+/*! a */;;\\"\\"
+function f(){/*! b */}//! c;
+\\"\\"
+
+
+/* p */
+/*! a */;;\\"\\"
+
+
+/* p */
+//! a;
+/* b */;;\\"\\"
+
+
+/* p */
+(a,b)+c;-(a+b);(a+b).c;(a+b)()
+a??(b&&c);(a||b)??c
+a-(b-c);(a**b)**c
+a**(b**c)
+a*(b+c);(a=b)+c
+
+
+/* p */
+(a=b).c;-(a=b);(a=b)?c:d;({a:a}=b)
+f(a,([b]=c))
+f([b]=c)
+a+(b=c);(a?b:c).d;(a?b:c)?d:e
+a=b?c:d
+
+
+/* p */
+(-a).b;(-a)();(-a)**b;++a**b
+a++**b
+typeof(a**b);- -a;+ +a;- --a;+ ++a
+a- -b
+a+ +b
+a<! --b
+x=! --a
+a-- >b
+a-- >>b
+a-- >=b
+
+
+/* p */
+(a?.b).c;(a?.b)()
+a?.b.c
+a?.()
+a?.b()
+new(a.b())
+new(a().b)
+new a.b
+new(a());(new A).b;(new A)();(new A)\`x\`
+new(A\`x\`)
+new(a\`x\`)
+
+
+/* p */
+x=Infinity.y
+
+
+/* p */
+1 in a
+1.5 in a;.5 in a;/x/ in a;/x/ instanceof a
+a in b
+a instanceof b
+1 instanceof a
+
+
+/* p */
+!/a/ in obj
+a+/x/ in b
+typeof/x/ instanceof y
+x=!1 in a
+x=-1 in a;(a,/x/)in b
+a?b:/c/ in d;/x/ in b
+f(/x/)in b
+x=3 in a
+
+
+/* p */
+a< /script/.test(b)
+a</x/
+f(/a/,/script/)
+
+
+/* p */
+(a?b:c)\`x\`;(a,b)\`x\`;(-a)\`x\`;(()=>1)\`x\`;(function(){})\`x\`;({}.a)\`x\`;({}.a)\`x\`
+a.b\`x\`
+a[b]\`x\`;(a+b)\`x\`;(a=b)\`x\`;(new A)\`x\`
+a()\`x\`
+
+
+/* p */
+(function(){}).call();(function(){})\`x\`;({})+1;({}).a++;(function(){})+1;((function(){})()).a=1;({}).a=1
+
+
+/* p */
+
+
+/* p */
+a;(()=>a)||b
+a||(()=>b);-(()=>a);(()=>a)?b:c
+a+(()=>b)
+f((()=>a));(a=()=>b)?()=>b:()=>c
+
+
+/* p */
+(a,b)?c:d
+f((a,b));[(a,b)];({a:(a,b)})
+a[b,c];(a,b).c
+void(a,b)
+x=(1,2)
+var v=(1,2)
+for(a,b;c,d;e,f);for(x of(a,b));for(x in a,b);a,b
+
+
+/* p */
+var a=b in c
+for(var a=(b in c);;);for((a in b);;);for((a=b in c?1:2);;);for(var a=(()=>b in c);;);for(var a=function(){return b in c};;);for(var x=([b in c]);;);
+
+/* p */
+a?b:c
+if(a){if(b)c}else d
+if(a)for(;;)b?c:d
+if(a)while(b)c?d:e
+else f
+if(a)e:b?c:d
+if(a){do b
+while(c)}else d
+a?b:c?d:e
+if(a)b?c:d
+if(a);else;
+
+/* p */
+for(;;);while(a);for(x in y);for(x of y);a:;a:break a
+a:for(;;)continue a
+switch(a){}switch(a){case 1:case 2:b()}
+
+/* p */
+try{a}catch{b}try{a}catch(a){b}finally{c}try{a}finally{b}try{}catch({a:a,b:t}){}debugger
+throw a
+function f(){}
+
+/* p */
+for(var a in b);for(let[o]of b);for(let{a:o}of b);for(var i=0,j=1;i<j;i++,j--);for(let o=0;;);for(x.y in z);for([a,b]of c);
+
+/* p */
+var{a:b}=c;({a:b}=c)
+function f({a:a}){}var[{a:b}]=c,{x:{a:b}}=c,{a:b=1}=c
+function g([{a:a}]=[]){}for(var{a:b}of c);var{...rest}=c
+f=(a={b:c})=>a
+
+
+/* p */
+({a:a=1}=b)
+var{a:a=1}=b;({a:b=1}=c);({a:a=1}=c);({a:a=1}=b);({a:a}=b);({a:c}=b)
+var{a:a}=b
+
+
+/* p */
+x={a:a,\\"if\\":if_,b:if_,Infinity:Infinity,c:Infinity,async:async,get:get,set:set,\\"static\\":s}
+x={get(){},set(e){},async(){},*gen(){},async*ag(){},get[k](){},set[k](e){},async[k](){},q(){},1(){},[k]:1}
+
+
+/* p */
+x={[\\"__proto__\\"]:__proto__}
+x={__proto__:__proto__}
+x={__proto__:a}
+x={__proto__:a}
+x={[\\"__proto__\\"]:a};({__proto__:__proto__}=a);({__proto__:b}=a)
+x={__proto__(){}}
+x={get __proto__(){}}
+
+
+/* p */
+class A extends(a,b){}class B extends(a?b:c){}class C extends B.c{}class D extends class{}{}class E extends function(){}{}class F{}class G extends(a=b){}class H extends(a()){}class I extends(-a){}
+
+/* p */
+class A extends B{[function(){}](){}static[function(){}](){}#t(){}static#s=1
+get#c(){}set#c(t){}static async*[k](){}a=1
+static b;[k]=1
+x=1
+#i=1
+static{a}\\"static\\"(){}get(){}set(){}async(){}m(){super.x()
+this.#s
+#s in this}constructor(){super()}}
+
+/* p */
+x=class{}
+x=class extends B{}
+x=class{}.name
+export default class s{}
+
+/* p */
+export default class{}
+
+/* p */
+function*g(){yield
+yield a
+yield*b
+x=yield c;(yield d)+1;(yield a).b;(yield a)();(yield a)?b:c;-(yield a)
+yield(a,b)
+yield yield a
+a=yield
+f(yield a);\`\${yield}\`;(yield)\`x\`}
+
+/* p */
+async function f(){await a
+await(a?b:c)
+await(a,b)
+await a.b
+await f()
+await-a
+await 1
+await await a
+await{}
+await(()=>1)
+await new A
+await(this)
+await(a+b)
+await(\`x\`);(await a).b;(await a)();(await a)**b;-(await a);(await a)\`x\`
+await(a?.b)
+await(a=b)
+await(import(\\"x\\"))}
+
+/* p */
+async
+async()
+async(a)
+x=async function(){}
+x=async function*(){}
+
+
+/* p */
+import a,*as h from\\"c\\"
+import\\"a\\"
+import{d}from\\"b\\"
+import{e}from\\"b\\"
+import{\\"a b\\"as o}from\\"d\\"
+export{}
+export{a as default}
+export{\\"a b\\"as g}from\\"d\\"
+export*as\\"a b\\"from\\"c\\"
+export{a}
+export{h}
+export*from\\"x\\"with{type:\\"json\\"}
+export{y}from\\"z\\"with{type:\\"json\\"}
+import r from\\"k\\"with{__proto__:\\"x\\"}
+
+
+/* p */
+export default(a,b)
+export const x=(a,b),y=1
+export function f(){}export class C{}export let z
+
+
+/* p */
+export default a=b
+
+
+/* p */
+export default 3
+
+
+/* p */
+export default((function(){})())
+
+
+/* p */
+export default{}.a
+
+
+/* p */
+export default(class{}).a
+
+
+/* p */
+export default function*t(){}
+
+/* p */
+export default async function n(){}
+
+/* p */
+export default async()=>{}
+
+
+/* p */
+export default(function(){}).call(this)
+
+
+/* p */
+export default function(){}
+
+/* p */
+export default class{}
+
+/* p */
+export default{a:1}
+
+
+/* p */
+f:function f(){}if(a)function g(){}f:n:a:;
+
+/* p */
+var re=/[/]\\\\//g,s=/x/dgimsuy,v=/[a]/v
+t=\`a\${b}c\`+\`\\\\\${x}\`+\`A\`+String.raw\`\\\\n\${x}\\\\t\`
+u=\`line\\\\nbreak\`
+tag\`\\\\unicode\`
+
+
+/* p */
+x=null
+y=!0
+z=!1
+w=1000n
+v=0b1n
+q=\\"a'ba\\\\\\"b'\\\\\\"\\\\u2028\\\\u2029\\\\ufeff\\\\0\\\\x001\\\\b\\\\f\\\\x0B\\\\t\\\\r\\\\n\\\\\\\\\\"
+
+
+/* p */
+a[\\"if\\"]
+a[\\"if\\"]
+a[\\"𐊧\\"]
+a?.[\\"𐊧\\"]
+a.ゟ
+a.b
+a[0]
+a?.[0]
+this.x
+function n(){}a.b.c.d
+
+
+/* p */
+x=[,]
+y=[a,,]
+z=[,a]
+w=[a,b]
+v=[...a,...b]
+f(...a);({...a,b:b})
+
+
+/* p */
+\\"use strict\\"
+y
+
+
+/* p */
+y
+
+
+/* p */
+function f(){}function g(){\\"use strict\\"}x={m(){\\"use strict\\"}}
+class K{m(){}}
+
+/* p */
+\\"use asm\\"
+x=\\"17.5a\\\\nb\\"
+function f(){\\"use asm\\"
+return 1.50}function g(){return 1.50}
+
+/* p */
+function f(){\\"use asm\\"
+return 1.50}y=1.5
+
+
+/* p */
+function f(){}
+
+#!/usr/bin/env node
+/* p */
+\\"use strict\\"
+
+
+#!/usr/bin/env node
+/* p */
+
+
+/* p */
+(let)[0]=1
+for((let).x of y);for((async)of x);for(let.x in y);(let)[0]
+let=1
+for((let)[0]in y);for((let)[0];;);let.a
+let?.[0]
+async.x
+for(async.x of y);
+
+/* p */
+with(o)a
+with(o)b
+with(o)a?b:c
+
+
+/* p */
+class P{#i
+m(i){#i in(a=b)
+#i in(a?b:c)
+#i in(a,b)
+#i in(()=>1);(#i in i)+1
+!(#i in i);(#i in i).y;(#i in i)()
+a<(#i in i)
+#i in i<a
+#i in i||a
+a in(#i in i)
+#i in i in a;(#i in i)**2
+#i in(#i in i)
+#i in a+b
+#i in(a in b)
+#i in(a||b)
+#i in i?1:2;(#i in i)\`t\`}*g(){#i in(yield)}}
+
+/* p */
+import n from\\"x\\"
+import{let as i}from\\"y\\"
+new a[function(){b()}]
+new a[()=>b()]
+new(a[b()])
+x=(function(){}).y
+do;while(a)
+{}switch(a){case 1:\\"y\\"}1 in a;.5 in a
+
+
+/* p */
+import o from\\"b\\"with{type:\\"json\\",other:\\"x\\"}
+export{c}from\\"d\\"with{type:\\"json\\",other:\\"y\\"}
+
+
+/* p */
+x={a:a,b:b=1,c:c,\\"d e\\":d}
+
+
+/* p */
+do a
+while(b)
+switch(a){case 1:
+}(a??b)||c
+a&&(b??c);(a??b)&&c
+
+
+/* p */
+\\"use asm\\"
+f=()=>1.50
+class A{x=1.50
+static{y=1.50}}g=function(){return 1.50}
+
+
+1010 lines"
+`;
+
 exports[`jsMinify should minify: a line comment, and one written twice (with source map) 1`] = `"a();b();c();"`;
 
 exports[`jsMinify should minify: a line comment, and one written twice (with source map) 2`] = `

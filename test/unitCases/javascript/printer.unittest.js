@@ -4,7 +4,7 @@
 // cspell:ignore fnames
 // cspell:ignore argnames, bcatch, bfinally, argname
 // cspell:ignore AAAWA MAAH EAAI EAAIA EAAGC ACAA IAAYC EAAWC
-// cspell:ignore endline, endcol, endpos, nlb, thedef
+// cspell:ignore endline, endcol, endpos, nlb, thedef, ymgsid, dgimsy
 
 const vm = require("vm");
 const acorn = require("acorn");
@@ -99,6 +99,30 @@ describe("syntax-printer", () => {
 				terserUnicode.is_basic_identifier_string(name)
 			);
 		}
+		// What the printer asks of a name: any engine's, or Unicode 8's alone.
+		expect(
+			["a", "$", "\u200c", "é", "-", "\u{1E900}", "😀"].map(
+				ours.isIdentifierCharacter
+			)
+		).toEqual([true, true, true, true, false, true, false]);
+		expect(
+			[
+				["a", false],
+				["", false],
+				["9a", false],
+				["a\uD800", false],
+				["a\uD800", true],
+				["\u{1E900}x", true],
+				["é\u{1D7CE}", true],
+				["\u{10000}\u{1E900}", true],
+				["a-b", true]
+			].map(([name, allowSurrogates]) =>
+				ours.isIdentifierString(
+					/** @type {string} */ (name),
+					/** @type {boolean} */ (allowSurrogates)
+				)
+			)
+		).toEqual([true, false, false, false, false, false, true, false, false]);
 	});
 });
 
@@ -109,6 +133,71 @@ const {
 	SyntaxTree,
 	WebpackParser
 } = require("../../../lib/javascript/syntax-parser");
+
+// Sources reaching what the printer writes of names, comments, directives
+// and literals.
+const SOURCES = [
+	// Names beyond ASCII, one a surrogate pair, spaced from the words beside them.
+	"var ä = 1, 𐊧 = 2; typeof ä, ä in 𐊧, void 𐊧, new ä(), ä instanceof ä;",
+	// Comments inside the `(` a `new` reads its callee past, nested, not before
+	// the function opening it, and before a directive past an empty statement.
+	"new(/**/function(){function s(){}}())",
+	"new(/*a*/(/*b*/function(){}()))",
+	"new(function(){}, /*c*/ a);",
+	"function f(){ ; /*a*/ 'x' }",
+	"function f(){ ; /**/ 'x' }",
+	"/*!a*/\nfunction f(){return /*x*/ 1e999+(a,b)}",
+	'var a = {b:1, "c d": [1,,2,], [e]: f, get g(){return 1}, h(){}, ...i, 1e3: 2, 0x10: 3};',
+	"class A extends B { #x = 1; static m(){ return #x in this } static { a } get [k](){} 'q'(){} static async *g(){} }",
+	'import a, {b as c, "d" as e} from "f" with {type: "json"}; export * from "g"; export * as h from "i"; export {a as "z"}; export * as "*" from "j"; import * as ns from "k"; import "l";',
+	"export default function(){}",
+	"export default (function f(){});",
+	"export default (class C {}).name",
+	"let x = `a${b}c${`d${e}`}`; tag`x\\u{41}${y}\\n`; new (a.b().c)(); new (a().b); (function(){})(); (()=>{})(); !function(){}();",
+	"for (var i = (a in b); i;) {} for (const k of (a, b)) ; for (x = (1 in o);;) {}",
+	"a = b ? c : d; (a, b) ? c : d; a ?? (b || c); (a ?? b) || c; a ** -b; (-a) ** b; async () => { await (a, b); (await x) ** 2 }",
+	"function* g(){ yield; yield a; yield* b; x = yield c; (yield d) + 1 }",
+	"label: for(;;) { continue label; break label } lbl: ; do x(); while (y); with (o) p;",
+	"switch (a) { case 1: b(); default: c() } switch (x) {} try { a } catch { b } finally { c }",
+	"if (a) { if (b) c; } else d; if (a) for (;;) if (b) c; else d;",
+	"var {a, b: {c = 1}, ...d} = e; ({a, b: c} = d); [(a), [b], ...c] = d; function f({ 'q': r, [s]: t = 1 }, [u = 2], ...v) {}",
+	"x = { a, b: b, 'd': d, async e() {}, *f() {}, get h() {}, set h(v) {}, __proto__: p, ['__proto__']: q, __proto__ }",
+	"a?.b; a?.[b]; a?.(); (a?.b).c; function t() { new.target } import('x'); import('y', {with: {}});",
+	"'use strict'; 'use asm'; function f(){ 'use asm'; return 0x10 + 1.50 } ('not a directive'); 'x'",
+	"var re = /a\\/b[/]c/gimsuy, x = /<\\/script>/, y = a in /x/; z = 1..toString() + 1.5.toFixed() + 0x10.x + 017.x;",
+	"a = 1n + 0x1Fn + 1_000n; b = 1_000_000; c = .5; e = 0.0001; f = 1e-7;",
+	"x = \"a'b\" + 'c\"d' + 'e\\nf' + '\\u2028' + '\\0' + '</script>' + '<!--' + '-->';",
+	"(let)[0] = 1; for ((let).x of y); for ((async) of x);",
+	"(a, b); x = (1, 2); f((a, b)); [(a, b)]; ({a: (b, c)}); a[(b, c)]; (a, b).c; void (a, b)",
+	"c = () => ({}); d = () => ({}).x; e = async x => x; g = (...a) => a; h = ([a]) => a; i = () => { return }",
+	"x = typeof typeof a; y = - -a; v = a - -b; t = a-- > b; s = !--a; r = a < !--b",
+	"/** @license abc */ var a = 1; // trailing\n/*! keep */ function f(/* p */ a /* q */) { return /* r */ (\n a) } /* end */",
+	"function f() { return ( // c\n a + b ) } function g() { throw /*x*/ new Error() } h(/*! a */ x, /* b */ y)",
+	"#!/usr/bin/env node\n'use strict'; console.log(1)",
+	"({}).x; ({} = a); ({}) ? 1 : 2; if (a) function f(){} ; if (c) { let x = 1; }",
+	"o = { if: 1, class: 2, 'a-b': 3, 1: 4, '01': 5, ' ': 7 }; o.if; o['a-b']; o['1'];",
+	"x = /*@__PURE__*/ f(); y = (/* a */ (b, c) /* d */); z = (/* e */ g) /* f */ (h)",
+	// What a print of the print kept as written: each fixed in both printers.
+	'import("a", (b, c)); new (import("a")); new A(import("a"));',
+	"'use\\x20strict'; \"a\\\\b\"; 'x\\x20</script>-->'; \"y\\\\<!--\"; f()",
+	";// START\nf();\n;// END\n\n;/*! kept */\ng();",
+	"f(\n/*! a\n b */\n/* dropped */ (m) => 1);",
+	// Comments where a node's text, or the one holding it, starts.
+	"x = /*! a */ b + c; y = /*! b */ (c, d).e; z = (/*! c */ f)`t`; w = (0, j)(F /*! d */.Z)",
+	"async function f(){ return /*! a */ (await /*! b */ x).y } function* g(){ yield /*! c */ a ? b : c; throw /*! d */ a++ + b }",
+	"function h(){ return /*! a */ a || b; return /*! b */ a = 1; return /*! c */ a.b.c(); return /*! d */ (a, b); return /*! e */ a[0] }",
+	"function e() { /*! a */ } x = { /*! b */ }; switch (a) { /*! c */ } if (a) { /*! d */ } class K { /*! e */ }",
+	"a(); /*! a */ ; b(); { /*! b */ ; } { a() // x\n} if (a) b() // y\nelse c()",
+	"a() // x\n/* y */ b(); \u{10400}x.y; \ud801\udc00.z",
+	"(a /*! a */).b; (1 /*! b */).toFixed(); (let /*! c */)[0] = 1",
+	"for (var i = /*! a */ (a in b);;) break; x = !/*! b */--y",
+	"export default /*! a */ (function f(){}).call(); export default /*! b */ (/*! c */ function () {})();",
+	"x = (/*! a */ function(){})``; (/*! b */ function(){} + 1); /*! c */(/*! d */(/*! e */function(){} || o).toString())",
+	"x && /*! a */(/*! b */(/*! c */b = a) || (b -= a, b ^= a)); (0, j)(/*! d */ (/*! e */ f))",
+	"/*! a */ ('\\1'); function f() { /*! b */ ; ('\\1') } //! c;\n('\\1')",
+	"/*! a */ ('\\1')",
+	"//! a;\n/* b */ ('\\1')"
+];
 
 // Sources reaching what the SourceProcessor's printer reads off a node's
 // place, which its own text cannot tell it.
@@ -230,6 +319,18 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				"import a from 'b' with { type: 'json' }; a(); x = 'json'",
 				{ sourceType: "module", ecma: 2020 },
 				'import o from"b"with{type:"json"};o();x=`json`;'
+			],
+			// A `let` takes the value set after it only where that value runs no code.
+			[
+				"let a; a = [1, , {b: 2, c: function(){}}, () => 3]; let b; b = [x]; let c; c = {[k]: 1}; let d; d = {...e}; let e2; e2 = {b: x}; f(a,b,c,d,e2)",
+				{},
+				"let a=[1,,{b:2,c:function(){}},()=>3],b;b=[x];let c;c={[k]:1};let d;d={...e};let e2;e2={b:x};f(a,b,c,d,e2);"
+			],
+			// A known test's branch prints in its place, braced where it is several.
+			[
+				"if (x) { if (true) { b(); c() } } else d(); if (x) { if (false) { b() } else { c(); e() } } else d(); while (x) { if (1) { b(); c() } }",
+				{},
+				"if(x){b();c()}else d();if(x){c();e()}else d();while(x){b();c()}"
 			],
 			[
 				"if (a) { let x = h(); f(x, x) } if (a) { const y = h(); f(y, y) } if (a) { var z = 1 } if (a) { class C {} } if (a) { function g() {} } if (a) {} if (a) { b(); c() }",
@@ -1101,6 +1202,176 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		});
 		expect(code).toBe("if(a){b()}/* c */");
 	});
+
+	it("should print as the format options ask in the one pass", () => {
+		/** @type {[string, import("../../../lib/javascript/syntax-printer").MinifyOptions, string][]} */
+		const cases = [
+			// A comments option written as a regexp, a function, `some`, or anything else true
+			["/* keep */ a(); /* drop */ b()", { compress: {}, format: { comments: "/keep/" } }, "/* keep */a();b();"],
+			["/* keep */ a(); /* drop */ b()", { compress: {}, format: { comments: (_node, comment) => comment.value.includes("keep") } }, "/* keep */a();b();"],
+			["/*! lic */ a(); // @license x\nb(); /* no */ c()", { compress: {}, format: { comments: "some" } }, "/*! lic */a();// @license x\nb();c();"],
+			["/* a */ x(); // b\ny(); /*\n multi\n*/ z()", { compress: {}, format: { comments: "all" } }, "/* a */x();// b\ny();\n/*\n multi\n*/z();"],
+			// An annotation alone is kept, its own comment or not; one in prose prints nowhere
+			["/*#__PURE__*/ f(); /* @__NOINLINE__ */ g(); /* text @__PURE__ */ h()", { compress: {}, format: { preserve_annotations: true } }, "/*#__PURE__*/f();/* @__NOINLINE__ */g();"],
+			[
+				"/* plain */ a(); /*#__PURE__*/ f()",
+				{ compress: {}, format: { comments: false, preserve_annotations: true } },
+				"a();/*#__PURE__*/f();"
+			],
+			["/* </script> */ a(); /*   */ b(); /* @__PURE__ */ c()", { compress: {}, format: { comments: "all" } }, "/* <\\/script> */a();b();"],
+			["function f(){ return /* a */ x + /* b */ y } function g(){ return ( // c\n x) }", { compress: {}, format: { comments: "all" } }, "function f(){/* a */return x+/* b */y}function g(){// c\nreturn x}"],
+			["a = ( /* x */ b /* y */ ) ; c = ( // l\n d); e = (\n/* z */ f)", { compress: {}, format: { comments: "all" } }, "a=/* x */b/* y */;c=// l\nd;e=\n/* z */f;"],
+			["f(/* a */); g({ /* b */ }); h([ /* c */ ]); function k() { /* d */ } class C { /* e */ }", { compress: {}, format: { comments: "all" } }, "f();g({/* b */});h([]);function k(){/* d */}class C{}"],
+			["x = 1 // t\n", { compress: {}, format: { comments: "all" } }, "x=1;// t"],
+			["#!/usr/bin/env node\n/* a */ x()", { compress: {}, format: { comments: "all" } }, "#!/usr/bin/env node\n/* a */x();"],
+			["#!/usr/bin/env node\n/* a */ x()", { compress: {}, format: { comments: "all", shebang: false } }, "/* a */x();"],
+			["#!/usr/bin/env node\nfoo()", {}, "#!/usr/bin/env node\nfoo();"],
+			["/* a */ x()", { compress: {}, format: { comments: "all", preamble: "/* pre */\r\nline" } }, "/* pre */\nline\n/* a */x();"],
+			// `ascii_only` escapes what is past ASCII, as the edition and engine allow
+			["x = 'é\\u{1F600}\\u0100'; y = /é/; var é = 1; z = { é: 1 }", { format: { ascii_only: true } }, "x=\"\\xe9\\ud83d\\ude00\\u0100\";y=/\\xe9/;var \\u00e9=1;z={\"\\xe9\":1};"],
+			["x = 'é\\u{1F600}\\u0100'; y = /é\\u{1F600}/u", { ecma: 2015, format: { ascii_only: true } }, "x=\"\\xe9\\ud83d\\ude00\\u0100\";y=/\\xe9\\u{1F600}/u;"],
+			["x = 'é\\u{1F600}'", { ecma: 2015, format: { ascii_only: true, safari10: true } }, "x=\"\\xe9\\ud83d\\ude00\";"],
+			// A lone surrogate is escaped, a pair left as it is
+			["x = '\\uD800' + '\\uDC00x' + '\\u{1F600}'", {}, "x=\"\\ud800\"+\"\\udc00x\"+\"😀\";"],
+			// A name past Unicode 8 is escaped, which older engines read
+			["var 𞤀 = 1; o.𞤀a = 𞤀; var a𞤀 = 2; o.x = a𞤀", {}, "var \\u{1e900}=1;o[\"𞤀a\"]=\\u{1e900};var a\\u{1e900}=2;o.x=a\\u{1e900};"],
+			// Escapes, and the quotes each `quote_style` picks
+			["x = ['\\n\\r\\t\\b\\f\\v\\u2028\\u2029\\ufeff\\0 \\x001\\\\', \"a'\", 'b\"', \"'\\\"\\\"\"]", {}, "x=[\"\\n\\r\\t\\b\\f\\v\\u2028\\u2029\\ufeff\\0 \\x001\\\\\",\"a'\",'b\"','\\'\"\"'];"],
+			["x = ['\\v', \"a'\", 'b\"', \"'\\\"\\\"\"]", { format: { ie8: true, quote_style: 1 } }, "x=['\\x0B','a\\'','b\"','\\'\"\"'];"],
+			["x = [\"a'\", 'b\"', \"'\\\"\\\"\", 'c', \"d\"]", { format: { quote_style: 2 } }, "x=[\"a'\",\"b\\\"\",\"'\\\"\\\"\",\"c\",\"d\"];"],
+			["x = [\"a'\", 'b\"', \"'\\\"\\\"\", 'c', \"d\"]", { format: { quote_style: 3 } }, "x=[\"a'\",'b\"',\"'\\\"\\\"\",'c',\"d\"];"],
+			// Without `semicolons`, a statement ends in a line break where the next allows
+			["a()\n(b)()\n[c]\nd`x`", { format: { semicolons: false } }, "a()(b)()[c]\nd`x`\n"],
+			["a(); b(); c\n+d", { format: { semicolons: false } }, "a()\nb()\nc+d\n"],
+			// An edition given by its number counts from 2015
+			["x = { a: a, b: function () {} }", { ecma: 6, compress: {} }, "x={a,b:function(){}};"],
+			["x = { a: a, b: function () {} }", { ecma: 5, compress: {} }, "x={a:a,b:function(){}};"],
+			// A long string's tabs are written raw
+			[`x = 'a\\tb\\tc ${"abc ".repeat(30)}'`, {}, `x="a\tb\tc ${"abc ".repeat(30)}";`],
+			// A regular expression's flags print in order
+			["x = [/a/ig, /b/ymgsid]", {}, "x=[/a/gi,/b/dgimsy];"],
+			// A pattern's NUL is escaped, its `</script` too, and a backslash before a letter past ASCII goes.
+			[
+				"x = /a\u0000b/; y = /\\\u0000/; z = /[</script>]/; w = /\\é\\d\\\\/",
+				{},
+				"x=/a\\0b/;y=/\\0/;z=/[<\\/script>]/;w=/é\\d\\\\/;"
+			],
+			["x = RegExp('</script'); y = '<!--' + '\\\\<!--' + '</script>' + '-->'", { compress: {} }, "x=RegExp(\"</script\");y=\"\\x3c!--\\\\\\x3c!--<\\/script>--\\x3e\";"],
+		];
+		for (const [source, options, expected] of cases) {
+			expect(minifyOnePass(source, options).code).toBe(expected);
+		}
+	});
+
+	it("should refuse an option it does not know, and a module statement off the top level", () => {
+		expect(() => minifyOnePass("x", { mangle: { nope: 1 } })).toThrow(
+			"`nope` is not a supported option"
+		);
+		expect(() => minifyOnePass("x", { format: { nope: 1 } })).toThrow(
+			"`nope` is not a supported option"
+		);
+		// A script reads module syntax anywhere, which the scopes then refuse.
+		expect(() =>
+			minifyOnePass("function f(){\n  import a from 'b' }", { mangle: true })
+		).toThrow(
+			expect.objectContaining({
+				name: "SyntaxError",
+				message: '"Import" statement may only appear at the top level',
+				line: 2,
+				col: 2,
+				pos: 16
+			})
+		);
+	});
+
+	// Each source printed, whichever of these it is read with, is a program
+	// that parses as what it was read as.
+	for (const [name, options] of Object.entries({
+		"names mangled": { mangle: true },
+		"every comment, compressed": {
+			compress: {},
+			mangle: true,
+			format: { comments: "all" }
+		},
+		// ECMAScript 5 spells no name past the BMP in ASCII, as terser has it.
+		"quoting options": {
+			compress: {},
+			mangle: false,
+			ecma: 2015,
+			format: {
+				comments: "all",
+				quote_style: 3,
+				keep_quoted_props: true,
+				keep_numbers: true,
+				ascii_only: true
+			}
+		},
+		"wrapping options": {
+			mangle: true,
+			format: {
+				comments: "all",
+				wrap_iife: true,
+				wrap_func_args: true,
+				webkit: true,
+				semicolons: false,
+				preserve_annotations: true,
+				ie8: true,
+				safari10: true,
+				preamble: "/* p */"
+			}
+		},
+		"ECMAScript 2020": {
+			compress: { passes: 2 },
+			mangle: true,
+			ecma: 2020,
+			format: { comments: "/!/" }
+		}
+	})) {
+		it(`should print each source, with ${name}`, () => {
+			/** @type {string[]} */
+			const printed = [];
+			for (const source of [...SOURCES, ...PRINTED_SOURCES]) {
+				/** @type {"script" | "module"} */
+				let sourceType = "script";
+				try {
+					acorn.parse(source, {
+						ecmaVersion: "latest",
+						allowHashBang: true,
+						allowImportExportEverywhere: true
+					});
+				} catch (_err) {
+					sourceType = "module";
+				}
+				/** @type {string} */
+				let code;
+				try {
+					({ code } = minifyOnePass(source, {
+					.../** @type {Record<string, EXPECTED_ANY>} */ (
+						JSON.parse(JSON.stringify(options))
+					),
+						sourceType
+					}));
+				} catch (err) {
+					// A source a module refuses, as `export default` twice.
+					printed.push(`throws ${/** @type {Error} */ (err).message}`);
+					continue;
+				}
+				expect(() =>
+					acorn.parse(code, {
+						ecmaVersion: "latest",
+						sourceType,
+						allowHashBang: true,
+						allowImportExportEverywhere: sourceType === "script"
+					})
+				).not.toThrow();
+				// The source spelling line breaks densely prints a line per string.
+				printed.push(
+					code.length > 2000 ? `${code.split("\n").length} lines` : code
+				);
+			}
+			expect(printed.join("\n\n")).toMatchSnapshot();
+		});
+	}
 
 	it("should forget what the last one-pass print found", () => {
 		const source =
@@ -2025,6 +2296,72 @@ describe("JavaScript minifier mangling a SyntaxTree", () => {
 		);
 	});
 
+	it("should keep a sloppy block's function in its block where a lexical name would clash, in the one pass", () => {
+		const source = [
+			"function t1(){ let f = 1; { function f() { return 2 } } return typeof f }",
+			"function t2(){ { let f = 1; { function f(){} } return typeof f } }",
+			"function t3(x){ switch (x) { case 1: let g = 1; { function g(){} } return typeof g } }",
+			"function t4(){ for (let h of [1]) { { function h(){} } return typeof h } }",
+			"function t5(){ for (let i = 0; i < 1; i++) { { function i(){} } return typeof i } }",
+			"function t6(){ for (const j in {a: 1}) { { function j(){} } return typeof j } }",
+			"function t7(){ try { throw { a: [1, 2] } } catch ({ a: [b = 1, ...c], d: e }) { { function c(){} } return typeof c } }",
+			"function t8(){ try { throw 1 } catch (e) { let k = 1; { function k(){} } return typeof k } }",
+			"function t9(p) { { function p(){} } return typeof p }",
+			"function t10({ q }) { { function q(){} } return typeof q }",
+			"function t11() { { function s(){} } return typeof s }",
+			"function t12() { class u {} { function u(){} } return typeof u }",
+			"function t13([v = 1]) { { function v(){} } return typeof v }",
+			"function t14(...w) { { function w(){} } return typeof w }",
+			"function t15(){ for (;;) { { function z(){} } return typeof z } }",
+			"function t16(x){ switch (x) { case 1: let o; break; case 2: { function g2(){} } return typeof g2 } }",
+			"function t17(){ for (var k in {a: 1}) { { function k2(){} } return typeof k2 } }",
+			"function t18(){ try { throw 1 } catch (e) { { function e2(){} } return typeof e2 } }",
+			"function t19(){ try { throw 1 } catch (e) { var e = 2; return e } }",
+			"function t20(){ try { throw [1, 2] } catch ([, h]) { { function h(){} } return typeof h } }",
+			"function t21(){ try { throw {} } catch ({ ...r }) { { function r(){} } return typeof r } }",
+			"function t22(){ var o = {a: 1}, p = {b: 2}, a = 0, b = 0; with (o) { with (p) { return a + b } } }",
+			"console.log(t1(), t2(), t3(1), t4(), t5(), t6(), t7(), t8(), t9(1), t10({}), t11(), t12(), t13([]), t14(), t15(), t16(2), t17(), t18(), t19(), t20(), t21(), t22());"
+		].join("\n");
+		expect(runProgram(source)).toBe(
+			"number number number number number string object number number undefined function function number object function function function function 2 number object 3"
+		);
+		for (const options of [
+			{ compress: {}, mangle: true },
+			{ compress: false, mangle: true },
+			{ compress: {}, mangle: false }
+		]) {
+			expect(runProgram(minifyOnePass(source, options).code)).toBe(
+				runProgram(source)
+			);
+		}
+	});
+
+	it("should keep the names asked for, and give the busiest names the shortest, in the one pass", () => {
+		expect(
+			minifyOnePass(
+				"function outer(){ function inner(){} function other(){} class K {} class L {} var keepFn = function(){}, dropFn = () => 1, named = function n(){}, [d] = [], u; let KCls = class {}, LCls = class {}, M = class N {}, y = 1; return [inner, other, K, L, keepFn, dropFn, named, d, u, KCls, LCls, M, y] } outer()",
+				{ compress: false, mangle: { keep_fnames: /inner|keepFn/, keep_classnames: /K/ } }
+			).code
+		).toBe(
+			"function outer(){function inner(){}function n(){}class K{}class e{}var keepFn=function(){},s=()=>1,o=function n(){},[r]=[],t;let KCls=class{},c=class{},l=class n{},u=1;return[inner,n,K,e,keepFn,s,o,r,t,KCls,c,l,u]}outer();"
+		);
+		expect(
+			minifyOnePass("function outer(){ var a = 1, b = 2; return a + b } outer()", {
+				compress: false,
+				mangle: { reserved: ["n", "t"] }
+			}).code
+		).toBe("function outer(){var r=1,u=2;return r+u}outer();");
+		// Past the one-letter names, the name read most takes one of them.
+		const names = Array.from({ length: 70 }, (_, i) => `v${i}`);
+		const source = `function g(i) { return i } function h(...a) { console.log(a.length, a[a.length - 1]) } function f(){ var ${names
+			.map((name, i) => `${name}=g(${i})`)
+			.join(",")}; h(${names.join(",")}); h(${Array(300).fill("v69").join(",")}); } f()`;
+		const { code } = minifyOnePass(source, { compress: {}, mangle: true });
+		expect(code).toMatch(/h\(([\w$])(?:,\1){299}\)/);
+		expect(runProgram(code)).toBe(runProgram(source));
+		expect(runProgram(code)).toBe("70 69\n300 69");
+	});
+
 	it("should run as the source runs under ie8 or safari10 in the one pass", async () => {
 		const sources = [
 			"var out = []; function f(a) { try { throw a + 1 } catch (e) { out.push(e); var g = function () { return e } } return g() } var x = 5; out.push(f(x), x); result = out.join();",
@@ -2217,6 +2554,13 @@ describe("jsMinify", () => {
 			});
 		}
 	}
+
+	it("should give back an event handler it prints as nothing, as written", async () => {
+		const result = await jsMinify({ "handler.js": "void 0;" }, undefined, {
+			as: "event-handler"
+		});
+		expect(result.code).toBe("void 0;");
+	});
 
 	it("should report a parse error rather than throwing a different shape", async () => {
 		await expect(jsMinify({ "broken.js": "function (" })).rejects.toThrow();
