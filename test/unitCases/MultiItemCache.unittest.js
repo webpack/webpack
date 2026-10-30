@@ -54,6 +54,24 @@ describe("MultiItemCache", () => {
 		expect(callbacks).toBe(1);
 	});
 
+	it("resolves getPromise with the first item that has data", async () => {
+		let calls = 0;
+		const itemCaches = generateItemCaches(3, () =>
+			++calls === 2 ? { name: "second" } : undefined
+		);
+		const multiItemCache = new MultiItemCache(itemCaches);
+		await expect(multiItemCache.getPromise()).resolves.toEqual({
+			name: "second"
+		});
+		expect(calls).toBe(2);
+	});
+
+	it("resolves getPromise with undefined when no item has data", async () => {
+		const itemCaches = generateItemCaches(3, () => undefined);
+		const multiItemCache = new MultiItemCache(itemCaches);
+		await expect(multiItemCache.getPromise()).resolves.toBeUndefined();
+	});
+
 	/**
 	 * @param {number} howMany how many generation
 	 * @param {() => EXPECTED_ANY=} dataGenerator data generator fn
