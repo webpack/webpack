@@ -3,8 +3,80 @@
 const path = require("path");
 const { pathToFileURL } = require("url");
 const identifierUtil = require("../../lib/util/identifier");
+const { getScheme } = require("../../lib/util/URLAbsoluteSpecifier");
 
 describe("util/identifier", () => {
+	describe("decodeResourcePath", () => {
+		/** @type {[string, string][]} */
+		const cases = [
+			["./a%20b.png", "./a b.png"],
+			["./a%2520b.png", "./a%20b.png"],
+			["./a%23b.png?x=%23#y%20z", "./a\0#b.png?x=%23#y%20z"],
+			["./a%3Fb.png", "./a\0?b.png"],
+			["./a%21b.png", "./a\0!b.png"],
+			["a%3Ab.png", "a\0:b.png"],
+			["./100%.png", "./100%.png"]
+		];
+
+		it.each(cases)("decodes %s as %s", (resource, expected) => {
+			expect(identifierUtil.decodeResourcePath(resource)).toBe(expected);
+		});
+
+		it("should keep a decoded colon from reading as a scheme", () => {
+			expect(
+				getScheme(identifierUtil.decodeResourcePath("c%3Ad.png"))
+			).toBeUndefined();
+		});
+	});
+
+	describe("contextifySourceUrl", () => {
+		/** @type {[string, string, string][]} */
+		const cases = [
+			["/project", "file:///project/source.js", "webpack://./source.js"],
+			["/project", "file:///project/a%20file.js", "webpack://./a file.js"],
+			["/project", "file:///shared/source.js", "webpack://../shared/source.js"],
+			["/project", "file:///project/a%2520file.js", "webpack://./a%20file.js"],
+			["/project", "file:///project/a%23file.js", "webpack://./a#file.js"],
+			[
+				"/work/a?b/project",
+				"file:///work/a%3Fb/project/src/entry.js?query#fragment",
+				"webpack://./src/entry.js?query#fragment"
+			],
+			[
+				"C:\\work\\a?b",
+				"file:///C:/work/a%3Fb/entry.js",
+				"webpack://./entry.js"
+			],
+			[
+				"/project",
+				"file:///project/source.js?query=%20#fragment",
+				"webpack://./source.js?query=%20#fragment"
+			],
+			[
+				"C:\\project",
+				"file:///C:/project/a%20file.js",
+				"webpack://./a file.js"
+			],
+			[
+				"/project",
+				"file://server/share/source.js",
+				"webpack://file://server/share/source.js"
+			],
+			["/project", "file:///project/100%.js", "webpack://file:///project/100%.js"],
+			[
+				"/project",
+				"file:///project/%FF.js",
+				"webpack://file:///project/%FF.js"
+			],
+			["/project", "webpack://custom/source.js", "webpack://custom/source.js"],
+			["/project", "/project/source.js", "webpack://./source.js"]
+		];
+
+		it.each(cases)("contextifies %s and %s as %s", (context, source, expected) => {
+			expect(identifierUtil.contextifySourceUrl(context, source)).toBe(expected);
+		});
+	});
+
 	describe("normalizeSourceMapUrl", () => {
 		it("should normalize a source map's source as its readers resolve it", () => {
 			/** @type {[string, string][]} */

@@ -15,7 +15,7 @@ const require = createRequire(import.meta.url);
 /** @type {typeof import("../../../lib/javascript/syntax")} */
 const jsSyntax = require("../../../lib/javascript/syntax.js");
 
-const { minify } = await jsSyntax.printer.load();
+const { SourceProcessor } = jsSyntax;
 
 /** @type {[string, string, boolean][]} name, source, whether it is a module */
 const FIXTURES = [
@@ -36,7 +36,7 @@ const FIXTURES = [
 const MODES = [
 	["print", { compress: false, mangle: false }],
 	["mangle", { compress: false, mangle: true }],
-	["minify", {}]
+	["minify", { compress: {}, mangle: true }]
 ];
 
 /**
@@ -46,12 +46,13 @@ const MODES = [
 export default (bench) => {
 	for (const [name, source, module] of FIXTURES) {
 		for (const [mode, options] of MODES) {
-			bench.add(
-				`unit benchmark "js-printer-unit", ${mode} (${name})`,
-				async () => {
-					await minify({ [name]: source }, { ...options, module });
-				}
-			);
+			bench.add(`unit benchmark "js-printer-unit", ${mode} (${name})`, () => {
+				new SourceProcessor().process(source, {
+					mode: "minify",
+					...options,
+					module
+				});
+			});
 		}
 	}
 };

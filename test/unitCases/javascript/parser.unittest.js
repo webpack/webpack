@@ -5477,12 +5477,109 @@ describe("SyntaxTree", () => {
 		const node = tree.add(NodeType.Identifier, 0, 1);
 		expect(() => tree.set(node, "value", 1)).toThrow(/has no field value/);
 	});
+
+	it("hands a tree's columns on to the next tree once only, and lets go of a large tree's values", () => {
+		const first = new SyntaxTree();
+		parseInto(first, "a(b);");
+		const second = new SyntaxTree();
+		parseInto(second, "c(d);");
+		const types = second._types;
+		first.release();
+		// The spare is taken, so this tree's columns are not handed on.
+		second.release();
+		expect(new SyntaxTree()._types).not.toBe(types);
+		const large = new SyntaxTree();
+		parseInto(large, "a;".repeat(300000));
+		const values = large._values;
+		large.release();
+		expect(new SyntaxTree()._values).not.toBe(values);
+	});
+
+	it("reads ESTree objects the way a SyntaxTree is read", () => {
+		const { EstreeView } = require("../../../lib/javascript/syntax-parser");
+		const view = new EstreeView();
+		const program = view.add(
+			/** @type {EXPECTED_ANY} */ (
+				acorn.parse("x = [, a, 'b']; async () => {}", {
+					ecmaVersion: "latest"
+				})
+			)
+		);
+		expect(view.type(program)).toBe(NodeType.Program);
+		expect(view.fieldCount(Field.body, program)).toBe(2);
+		const statement = view.field(0, Field.body, program);
+		expect(view.object(statement).type).toBe("ExpressionStatement");
+		const assignment = view.field(0, Field.expression, statement);
+		expect(view.start(assignment)).toBe(0);
+		expect(view.textOf(Part.operator, assignment)).toBe("=");
+		expect(view.textOf(Part.kind, assignment)).toBeNull();
+		const target = view.field(0, Field.left, assignment);
+		expect(view.name(target)).toBe("x");
+		expect(view.fieldCount(Field.left, assignment)).toBe(1);
+		expect(view.fieldCount(Field.argument, assignment)).toBe(0);
+		expect(view.field(1, Field.left, assignment)).toBe(0);
+		const array = view.field(0, Field.right, assignment);
+		expect(view.field(0, Field.elements, array)).toBe(0);
+		const literal = view.field(2, Field.elements, array);
+		expect(view.value(literal)).toBe("b");
+		expect(view.name(literal)).toBe("");
+		const arrow = view.field(
+			0,
+			Field.expression,
+			view.field(1, Field.body, program)
+		);
+		expect(view.flag(Flag.async, arrow)).toBe(true);
+		expect(view.flag(Flag.generator, arrow)).toBe(false);
+		// A node placed by its range, as some parsers write it, and one of no known type.
+		const ranged = view.add(
+			/** @type {EXPECTED_ANY} */ ({ type: "Identifier", name: "r", range: [4, 5] })
+		);
+		expect(view.start(ranged)).toBe(4);
+		expect(
+			view.type(view.add(/** @type {EXPECTED_ANY} */ ({ type: "Unknown" })))
+		).toBe(0);
+		view.reset();
+		expect(view.add(/** @type {EXPECTED_ANY} */ ({ type: "Super" }))).toBe(1);
+		// A view after the first reads the same names.
+		const other = new EstreeView();
+		expect(
+			other.type(other.add(/** @type {EXPECTED_ANY} */ ({ type: "Super" })))
+		).toBe(NodeType.Super);
+	});
 });
 
 describe("JavaScript SourceProcessor", () => {
 	const { SourceProcessor } = require("../../../lib/javascript/syntax");
 
 	/** @typedef {import("../../../lib/javascript/syntax-parser").JavascriptPath} JavascriptPath */
+
+	it("walks past an array's holes, and says it walks while it does", () => {
+		const {
+			isWalkingSyntaxTree
+		} = require("../../../lib/javascript/syntax-parser");
+		/** @type {(string | boolean)[]} */
+		const seen = [];
+		new SourceProcessor()
+			.use({
+				[NodeType.Identifier]: (path) => {
+					seen.push(path.name(), isWalkingSyntaxTree());
+				}
+			})
+			.process("x = [, a, , b];", {});
+		expect(seen).toEqual(["x", true, "a", true, "b", true]);
+		expect(isWalkingSyntaxTree()).toBe(false);
+	});
+
+	it("reads a line's start past a lone carriage return, and moves a position along its line", () => {
+		const {
+			ParserPosition,
+			buildLineStarts
+		} = require("../../../lib/javascript/syntax-parser");
+		expect(buildLineStarts("a\rb\r\nc\nd")).toEqual([0, 2, 5, 7]);
+		expect(new ParserPosition(2, 3).offset(4)).toEqual(
+			new ParserPosition(2, 7)
+		);
+	});
 
 	it("fires enter and exit in source order, a template's parts taking turns", () => {
 		/** @type {string[]} */
