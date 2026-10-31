@@ -734,11 +734,14 @@ const startsIdentifier = (name) => {
  * @param {string} property a declaration's name
  * @param {string} value its value
  * @param {boolean} important whether it carries `!important`
+ * @param {(name: string) => string} decode the reader's own escape decoder, read the name with
  */
-const declaration = (events, property, value, important) => {
+const declaration = (events, property, value, important, decode) => {
 	if (!startsIdentifier(property)) return;
 	events.leaf(
-		`${property}: ${comparedText(value)}${important ? " !important" : ""}`
+		`${decode(property)}: ${comparedText(value)}${
+			important ? " !important" : ""
+		}`
 	);
 };
 
@@ -746,11 +749,12 @@ const declaration = (events, property, value, important) => {
  * @param {string} name an at-rule's name
  * @param {string} prelude its prelude
  * @param {boolean} block whether it has a block
+ * @param {(name: string) => string} decode the reader's own escape decoder, read the name with
  * @returns {string} what its start says, as every reader writes it
  */
-const atRuleOf = (name, prelude, block) => {
+const atRuleOf = (name, prelude, block, decode) => {
 	const compared = comparedText(prelude);
-	return `@${name}${compared === "" ? "" : ` ${compared}`}${
+	return `@${decode(name)}${compared === "" ? "" : ` ${compared}`}${
 		block ? " {" : ";"
 	}`;
 };
@@ -838,7 +842,12 @@ const cssTreeTree = (css) => {
 				const { block } = node;
 				events.open(
 					`@${node.name}`,
-					atRuleOf(node.name, source(node.prelude), Boolean(block))
+					atRuleOf(
+						node.name,
+						source(node.prelude),
+						Boolean(block),
+						cssTree.ident.decode
+					)
 				);
 				if (block && nested) {
 					const { start, end } = block.loc;
@@ -853,7 +862,13 @@ const cssTreeTree = (css) => {
 				}
 				events.close(block ? "}" : "");
 			} else if (node.type === "Declaration") {
-				declaration(events, node.property, source(node.value), node.important);
+				declaration(
+					events,
+					node.property,
+					source(node.value),
+					node.important,
+					cssTree.ident.decode
+				);
 			} else if (node.type === "Raw") {
 				// A stray `;` is no statement: the spec discards it (§5.4.5).
 				if (/^[\s;]*$/.test(source(node))) continue;
@@ -937,7 +952,8 @@ const webpackTree = (css) => {
 					atRuleOf(
 						written,
 						block ? prelude : prelude.replace(/;\s*$/, ""),
-						block !== null
+						block !== null,
+						unescapeIdentifier
 					),
 					block ? "}" : ""
 				);
@@ -957,7 +973,8 @@ const webpackTree = (css) => {
 					held,
 					nodePath.source(name[0], name[1]),
 					value ? nodePath.source(value[0], value[1]) : "",
-					nodePath.flag(Flag.important)
+					nodePath.flag(Flag.important),
+					unescapeIdentifier
 				);
 				for (const [, , said] of held.list) {
 					hold(nodePath.start(), "", said, undefined);
@@ -996,6 +1013,8 @@ const webpackTree = (css) => {
  */
 const postcssTree = (css) => {
 	const postcss = load("postcss");
+	// postcss keeps names as written, so they are read with the reference's decoder.
+	const { decode } = load("css-tree").ident;
 	const events = new TreeEvents();
 	/**
 	 * @param {EXPECTED_ANY} parent a postcss container
@@ -1012,7 +1031,7 @@ const postcssTree = (css) => {
 			} else if (node.type === "atrule") {
 				events.open(
 					`@${node.name}`,
-					atRuleOf(node.name, node.params, node.nodes !== undefined)
+					atRuleOf(node.name, node.params, node.nodes !== undefined, decode)
 				);
 				if (node.nodes) walk(node);
 				events.close(node.nodes ? "}" : "");
@@ -1023,7 +1042,8 @@ const postcssTree = (css) => {
 						/[^\s;]*$/.exec(node.raws.before)
 					)[0] + node.prop,
 					node.raws.value ? node.raws.value.raw : node.value,
-					Boolean(node.important)
+					Boolean(node.important),
+					decode
 				);
 			}
 		}
@@ -1815,9 +1835,9 @@ const EXPECTED = [
 	},
 	{
 		relation: "agreement",
-		contains: "css-tree @\\30 media \\;, tool @\\30 media\\;",
+		contains: "css-tree @0media \\;, tool @0media\uFFFD;",
 		source: "css/escape-at-end-of-input.css",
-		why: "a `\\` the input ends after is a valid escape (§4.3.8), so it belongs to the at-rule's name; css-tree reads it as its prelude"
+		why: "a `\\` the input ends after is a valid escape (§4.3.8) of EOF, U+FFFD in the at-rule's name (§4.3.7); css-tree reads it as its prelude"
 	}
 ];
 
