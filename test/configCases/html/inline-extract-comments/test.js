@@ -25,7 +25,7 @@ for (const [page, banner] of [
 	["page.html", DEFAULT_BANNER],
 	["sub/page.html", DEFAULT_BANNER],
 	["my pages/page.html", DEFAULT_BANNER],
-	["custom/page.html", /Licenses are in (.+?) \*\//g],
+	["custom/page.html", /Licenses are in (.+?) \(copy: (.+?)\) \*\//g],
 	["legacy/page.html", DEFAULT_BANNER]
 ]) {
 	it(`should point ${page} at the license files of what it inlines`, () => {
@@ -39,13 +39,23 @@ for (const [page, banner] of [
 		expect(html).not.toContain("js license");
 		/** @type {string[]} */
 		const licenses = [];
+		let banners = 0;
 		let match;
 		while ((match = banner.exec(html)) !== null) {
+			banners++;
 			licenses.push(
 				path.posix.join(path.posix.dirname(page), match[1])
 			);
+			// Every mention of the license file in a banner is rebased.
+			for (const mention of match.slice(2)) {
+				expect(
+					fs.existsSync(
+						path.resolve(__dirname, path.posix.dirname(page), mention)
+					)
+				).toBe(true);
+			}
 		}
-		expect(licenses).toHaveLength(2);
+		expect(banners).toBe(2);
 		for (const license of licenses) {
 			expect(fs.existsSync(path.resolve(__dirname, license))).toBe(true);
 		}

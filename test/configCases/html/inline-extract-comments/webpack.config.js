@@ -106,14 +106,15 @@ module.exports = [
 		cssFilename: "my styles/my [name].css",
 		htmlFilename: "my pages/page.html"
 	}),
-	// A banner in other words, which only the recorded `licenseBanner` finds.
+	// A banner in other words naming its license file twice, which only the
+	// recorded `licenseBanner` finds.
 	config(
 		{
 			filename: "custom scripts/[name].js",
 			cssFilename: "custom styles/[name].css",
 			htmlFilename: "custom/page.html"
 		},
-		minimizersWithBanner((file) => `Licenses are in ${file}`)
+		minimizersWithBanner((file) => `Licenses are in ${file} (copy: ${file})`)
 	),
 	// A banner naming no license file is left as written.
 	config(
