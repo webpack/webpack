@@ -1435,6 +1435,11 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				"var o={get(){return this===o}};function h(t){const y=t.get;return y()}console.log(h(o))",
 				{}
 			],
+			// An indirect `eval` reads no local name: called directly, it would.
+			[
+				"var o={h(){var e=eval;return e('this')===o}};console.log(o.h())",
+				{}
+			],
 			[
 				"function f(){var x=123;var z=0;z=x&&(z=2);return z}console.log(f())",
 				{}
