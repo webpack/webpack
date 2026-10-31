@@ -3570,15 +3570,6 @@ declare interface CommentSyntax {
 	 */
 	unstated: (comment: string) => boolean;
 }
-
-/**
- * a comment terser's tokenizer read
- */
-declare interface CommentSyntaxPrinter {
-	type: string;
-	value: string;
-	nlb?: boolean;
-}
 type CommentsOption =
 	string | boolean | RegExp | ((comment: string) => boolean);
 
@@ -4685,86 +4676,6 @@ type ComplexSerializableType =
 	| object
 	| Buffer
 	| (() => ComplexSerializableType[] | Promise<ComplexSerializableType[]>);
-
-/**
- * terser's compressor: the methods the phases call typed, the rest open.
- */
-declare interface CompressorShape {
-	[index: string]: any;
-	options: Partial<any>;
-	stack: NodeShape[];
-	option<
-		K extends
-			| "module"
-			| "warnings"
-			| "inline"
-			| "arguments"
-			| "expression"
-			| "evaluate"
-			| "ecma"
-			| "toplevel"
-			| "keep_classnames"
-			| "keep_fnames"
-			| "ie8"
-			| "unused"
-			| "properties"
-			| "global_defs"
-			| "pure_funcs"
-			| "arrows"
-			| "booleans"
-			| "booleans_as_integers"
-			| "collapse_vars"
-			| "comparisons"
-			| "computed_props"
-			| "conditionals"
-			| "dead_code"
-			| "defaults"
-			| "directives"
-			| "drop_console"
-			| "drop_debugger"
-			| "builtins_ecma"
-			| "builtins_pure"
-			| "hoist_funs"
-			| "hoist_props"
-			| "hoist_vars"
-			| "if_return"
-			| "join_vars"
-			| "keep_fargs"
-			| "keep_infinity"
-			| "lhs_constants"
-			| "loops"
-			| "negate_iife"
-			| "passes"
-			| "pure_getters"
-			| "pure_conversions"
-			| "pure_heritage"
-			| "pure_new"
-			| "reduce_funcs"
-			| "reduce_vars"
-			| "sequences"
-			| "side_effects"
-			| "switches"
-			| "top_retain"
-			| "typeofs"
-			| "unsafe"
-			| "unsafe_arrows"
-			| "unsafe_comps"
-			| "unsafe_Function"
-			| "unsafe_math"
-			| "unsafe_symbols"
-			| "unsafe_methods"
-			| "unsafe_proto"
-			| "unsafe_regexp"
-			| "unsafe_undefined"
-	>(
-		name: K
-	): any[K];
-	has_directive(directive: string): undefined | true | NodeShape;
-	parent(level?: number): NodeShape;
-	self(): NodeShape;
-	find_parent(test: (value: unknown) => boolean): undefined | NodeShape;
-	in_boolean_context(): undefined | boolean;
-}
 declare class ConcatSource extends Source {
 	constructor(...args: Child[]);
 	getChildren(): Source[];
@@ -12092,9 +12003,8 @@ declare interface GetOptionsMethod<OptionsType> {
 		check?: PrecompiledCheck
 	): OptionsType;
 }
-type GivenCompressOptions = Omit<Partial<any>, "global_defs" | "pure_funcs"> & {
+type GivenCompressOptions = Omit<Partial<any>, "global_defs"> & {
 	global_defs?: false | object;
-	pure_funcs?: null | string[] | ((node: PureCallView) => boolean);
 };
 
 /**
@@ -18271,7 +18181,7 @@ declare class JsonpTemplatePlugin {
 }
 
 /**
- * a comment as a `comments` callback is handed it: terser's comment token, its offset, line from 1 and column from 0, and the file it was read from
+ * a comment as a `comments` callback is handed it: terser's comment token, its offset, line from 1 and column from 0, whether a line break comes before it, and the file it was read from
  */
 declare interface KeptComment {
 	type: "comment1" | "comment2" | "comment3" | "comment4";
@@ -18279,6 +18189,7 @@ declare interface KeptComment {
 	pos: number;
 	line: number;
 	col: number;
+	nlb: boolean;
 	file?: string;
 }
 
@@ -19765,73 +19676,6 @@ declare interface MakeDirectoryOptions {
 }
 
 /**
- * What a print recorded for mangling to rewrite in its text: each name it
- * printed as written, and each import or export `as` clause.
- */
-declare interface MangleRecording {
-	/**
-	 * where each piece starts in the text, `count` of them
-	 */
-	starts: Int32Array;
-
-	/**
-	 * how long each piece is, negated where the frequency count leaves its name out
-	 */
-	lengths: Int32Array;
-
-	/**
-	 * how many pieces there are
-	 */
-	count: number;
-
-	/**
-	 * the definition whose name replaces each piece
-	 */
-	targets: NamedDefinition[];
-
-	/**
-	 * the pieces that are an import's or export's `as` clause, in order
-	 */
-	specifiers: MangleSpecifier[];
-
-	/**
-	 * text a string print would have written but this one did not
-	 */
-	counted: string[];
-
-	/**
-	 * text this print wrote that a string print would not
-	 */
-	uncounted: string[];
-}
-
-/**
- * A recorded `as` clause: whether the local's final name matches the foreign
- * one decides if it is written.
- */
-declare interface MangleSpecifier {
-	/**
-	 * which piece it is
-	 */
-	index: number;
-
-	/**
-	 * the other module's name
-	 */
-	foreign: string;
-
-	/**
-	 * that name as printed
-	 */
-	text: string;
-
-	/**
-	 * whether the clause precedes the local name
-	 */
-	isImport: boolean;
-}
-
-/**
  * Describes a manifest entrypoint.
  */
 declare interface ManifestEntrypoint {
@@ -20186,7 +20030,7 @@ declare interface MinifyOptions {
 		html5_comments?: boolean;
 		module?: boolean;
 		shebang?: boolean;
-		toplevel?: any;
+		toplevel?: null;
 		spidermonkey?: boolean;
 	};
 
@@ -22373,14 +22217,6 @@ declare interface NamedChunkIdsPluginOptions {
 	 */
 	delimiter?: string;
 }
-
-/**
- * what every definition of a name holds: the name it declares, and the one mangling gave it
- */
-declare interface NamedDefinition {
-	name: string;
-	mangled_name?: null | string;
-}
 declare class NamedModuleIdsPlugin {
 	/**
 	 * Creates an instance of NamedModuleIdsPlugin.
@@ -22738,80 +22574,6 @@ type NodePrintOptions = Omit<JavascriptProcessOptions, "compress"> & {
  */
 declare interface NodePrinter<TPath, TNode, TPrintOptions = object> {
 	(path: TPath, writer: PrintContext<TPath, TNode, TPrintOptions>): string;
-}
-
-/**
- * One of terser's AST nodes: the fields and methods the phases share typed, the
- * rest open.
- */
-declare interface NodeShape {
-	[index: string]: any;
-	TYPE: string;
-	type: string;
-	mapName?: null | string;
-	shorthand: boolean;
-	name: string;
-	kind: string;
-	role: string;
-	computed: boolean;
-	label: NodeShape;
-	property: NodeShape;
-	flags: number;
-	startToken: any;
-	endToken: any;
-	expression: NodeShape;
-	callee: NodeShape;
-	object: NodeShape;
-	argument: NodeShape;
-	discriminant: NodeShape;
-	left: NodeShape;
-	right: NodeShape;
-	operator: string;
-	test: NodeShape;
-	alternate: NodeShape;
-	arguments: NodeShape[];
-	elements: (null | NodeShape)[];
-	properties: NodeShape[];
-	declarations: NodeShape[];
-	expressions: NodeShape[];
-	segments: NodeShape[];
-	params: NodeShape[];
-	quote?: string;
-	raw?: string;
-	optional: boolean;
-	tag: NodeShape;
-	superClass: NodeShape;
-	scope: NodeShape;
-	definition: SymbolDefinition;
-	fixed_value(): undefined | null | false | NodeShape;
-	tail_node(): NodeShape;
-	clone(deep?: boolean): NodeShape;
-	transform(walker: CompressorShape, inList?: boolean): NodeShape;
-	optimize(compressor: CompressorShape): NodeShape;
-	has_side_effects(compressor: CompressorShape): boolean;
-	may_throw(compressor: CompressorShape): boolean;
-	drop_side_effect_free(
-		compressor: CompressorShape,
-		firstInStatement?: boolean
-	): null | NodeShape;
-	is_constant_expression(scope?: NodeShape): boolean | "f";
-	evaluate(
-		compressor: CompressorShape
-	):
-		| undefined
-		| null
-		| string
-		| number
-		| bigint
-		| boolean
-		| symbol
-		| RegExp
-		| NodeShape
-		| any
-		| { [index: string]: any }
-		| ((...args: any[]) => any);
-	negate(compressor: CompressorShape, firstInStatement?: boolean): NodeShape;
-	size(compressor?: CompressorShape, stack?: NodeShape[]): number;
 }
 declare class NodeSourcePlugin {
 	constructor();
@@ -27505,9 +27267,6 @@ declare interface ProvidesObject {
 	[index: string]: ProvidesObjectValue;
 }
 type ProvidesObjectValue = string | ProvidesConfig;
-type PureCallView = NodeShape & {
-	print_to_string(given?: Partial<any>): string;
-};
 type PureCondition =
 	boolean | ((compilation: Compilation, module: Module) => boolean);
 
@@ -32026,26 +31785,6 @@ declare abstract class SourceProcessor<
 declare interface SourceTable {
 	[index: string]: SourceBucket;
 }
-
-/**
- * A token of webpack's parse: where it sits in the source, and the parse that
- * read it. terser's `ParsedToken` keeps what this reads off that parse — its
- * line, its kind, the comments beside it — in nine fields of its own, which a
- * tree of a million nodes cannot afford.
- */
-declare abstract class SourceToken {
-	tokens: any;
-	index: number;
-	get pos(): number;
-	get type(): string;
-	get value(): string;
-	get line(): number;
-	get col(): number;
-	get file(): string;
-	nlb: boolean;
-	comments_before: CommentSyntaxPrinter[];
-	comments_after: CommentSyntaxPrinter[];
-}
 type SourceType =
 	| "html"
 	| "script"
@@ -33561,14 +33300,6 @@ declare interface Stringable {
 	toString: () => string;
 }
 type Supports = undefined | string;
-
-/**
- * one of terser's `SymbolDef`s
- */
-declare interface SymbolDefinition {
-	[index: number]: any;
-	[index: string]: any;
-}
 declare class SyncModuleIdsPlugin {
 	/**
 	 * Creates an instance of SyncModuleIdsPlugin.
@@ -34597,18 +34328,114 @@ declare class TokenStream {
 }
 
 /**
- * the tokens of one parse, read by their index past `base`
+ * The tokens and comments of one parse, a token read by its index past
+ * `base`, a list of comments and a comment by numbers of their own.
  */
 declare interface TokenTable {
+	/**
+	 * the number of its first token
+	 */
 	base: number;
-	token: (index: number) => SourceToken;
-	commentsOf: (index: number, after: boolean) => CommentSyntaxPrinter[];
-	forEachCommentGap: (
-		callback: (index: number, comments: CommentSyntaxPrinter[]) => void
-	) => void;
+
+	/**
+	 * the list of the comments before or after a token, 0 for the one empty list
+	 */
+	commentsOf: (index: number, after: boolean) => number;
+
+	/**
+	 * binds a list onto a token, as a parenthesis does
+	 */
+	bindComments: (index: number, after: boolean, list: number) => void;
+
+	/**
+	 * a list's comments, in order
+	 */
+	members: (list: number) => number[];
+
+	/**
+	 * makes a list of its own, however empty
+	 */
+	newList: (comments: number[]) => number;
+
+	/**
+	 * how many lists there are
+	 */
+	listCount: () => number;
+
+	/**
+	 * how many comments there are
+	 */
+	commentCount: () => number;
+
+	/**
+	 * its kind, as `COMMENT_TYPES` names it
+	 */
+	commentKind: (comment: number) => number;
+
+	/**
+	 * what it holds
+	 */
+	commentValue: (comment: number) => string;
+
+	/**
+	 * where it starts
+	 */
+	commentStart: (comment: number) => number;
+
+	/**
+	 * whether a line break comes before it
+	 */
+	commentBreaks: (comment: number) => boolean;
+
+	/**
+	 * records whether one does
+	 */
+	setCommentBreaks: (comment: number, broke: boolean) => void;
+
+	/**
+	 * it as a `comments` callback is handed it
+	 */
+	commentObject: (comment: number) => KeptComment;
+
+	/**
+	 * whether a line break comes before a token
+	 */
+	tokenBreaks: (index: number) => boolean;
+
+	/**
+	 * records whether one does
+	 */
+	setTokenBreaks: (index: number, broke: boolean) => void;
+
+	/**
+	 * whether a token is a `(`
+	 */
+	opensParenthesis: (index: number) => boolean;
+
+	/**
+	 * where a token sits
+	 */
+	tokenPlace: (index: number) => {
+		file?: string;
+		line: number;
+		col: number;
+		pos: number;
+	};
+
+	/**
+	 * each gap holding comments, and its list
+	 */
+	forEachCommentGap: (callback: (gap: number, list: number) => void) => void;
+
+	/**
+	 * by token, whether a comment is read before it (1) or after it (2)
+	 */
 	commentFlags: () => Uint8Array;
-	keptComments: (test: (comment: CommentSyntaxPrinter) => boolean) => number;
-	outerCounts: Map<number, number>;
+
+	/**
+	 * 0 where `test` keeps none, 1 where only those before the first token, 2 where more
+	 */
+	keptComments: (test: (comment: number) => boolean) => number;
 }
 
 /**
@@ -34620,11 +34447,11 @@ declare abstract class TokenTables {
 	lastBase: number;
 	add(table: TokenTable): void;
 	tableOf(number: number): undefined | TokenTable;
-	of(token?: null | number | any): any;
 	commentsOf(
-		token: undefined | null | number | any,
+		token: undefined | null | number,
 		after: boolean
-	): undefined | CommentSyntaxPrinter[];
+	): undefined | number;
+	members(list?: number): number[];
 }
 
 /**
@@ -34690,16 +34517,6 @@ declare interface TreeNames {
 	 * each private name's new name, null for none renamed
 	 */
 	privateNames: null | Map<string, string>;
-
-	/**
-	 * where the result was printed while mangling, what `patchRecording` rewrites
-	 */
-	recorded: null | MangleRecording;
-
-	/**
-	 * what that print wrote
-	 */
-	text: string;
 
 	/**
 	 * for the one pass, the declarators whose name no read reads any more
