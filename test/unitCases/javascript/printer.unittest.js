@@ -1393,6 +1393,11 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["(function(){var x = /a/ ?? h(); g()})()", "g();"],
 			// A class extending one made before it, and never set since, makes nothing happen.
 			["(function(){class K{} class C extends K{} g()})()", "g();"],
+			// Extending what may be no constructor throws, so the class stays.
+			[
+				"(function(){var f = () => {}; class C extends f{} g()})()",
+				"!function(){var f=()=>{};class C extends f{}g()}();"
+			],
 			[
 				"(function(){class C extends K{} class K{} g()})()",
 				"!function(){class C extends K{}class K{}g()}();"
