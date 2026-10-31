@@ -1390,6 +1390,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				"(function(){var x = /a/ || h(), y = null ?? h(); g()})()",
 				"h();g();"
 			],
+			["(function(){var x = /a/ ?? h(); g()})()", "g();"],
 			// A class extending one made before it, and never set since, makes nothing happen.
 			["(function(){class K{} class C extends K{} g()})()", "g();"],
 			[
