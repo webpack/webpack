@@ -46,7 +46,7 @@ for (const configName of ["tsconfig.json", "tsconfig.hot.json"]) {
 const coverageReport = Object.create(null);
 
 // Directories whose escape hatches and inferred `any` the report counts.
-const ESCAPE_HATCH_DIRECTORIES = ["lib/", "hot/"];
+const ESCAPE_HATCH_DIRECTORIES = ["lib/", "hot/", "declarations/"];
 
 /**
  * @typedef {object} InferredAny
@@ -290,6 +290,136 @@ for (const [sourceFile, typeChecker] of sourceFiles) {
 		};
 
 		/**
+		 * Tells whether a type names one of a signature's own type parameters,
+		 * other than one that defaults to `any` by its declaration.
+		 * @param {Set<ts.Type>} parameters the signature's type parameters
+		 * @param {ts.Type} type the declared type
+		 * @returns {boolean} true when it does
+		 */
+		const namesTypeParameter = (parameters, type) => {
+			if (type.flags & ts.TypeFlags.TypeParameter) {
+				const defaultType = type.getDefault();
+				return (
+					parameters.has(type) &&
+					!(defaultType && defaultType.flags & ts.TypeFlags.Any)
+				);
+			}
+			return (
+				type.isUnionOrIntersection() &&
+				type.types.some((member) => namesTypeParameter(parameters, member))
+			);
+		};
+
+		/**
+		 * @param {ts.Type} type a type
+		 * @returns {type is ts.TypeReference} whether it is a generic reference, such as `Map<K, V>` or an array
+		 */
+		const isTypeReference = (type) =>
+			Boolean(
+				type.flags & ts.TypeFlags.Object &&
+				/** @type {ts.ObjectType} */ (type).objectFlags &
+					ts.ObjectFlags.Reference
+			);
+
+		/**
+		 * Tells whether a call's type sets `any` where the type it was declared
+		 * with names a type parameter of the call, walking both side by side.
+		 * @param {Set<ts.Type>} parameters the call's type parameters
+		 * @param {ts.Type} declared the declared return type
+		 * @param {ts.Type} actual the type the call has
+		 * @param {number} depth how deep the walk is
+		 * @returns {boolean} true when a type parameter became `any`
+		 */
+		const setsParameterToAny = (parameters, declared, actual, depth) => {
+			if (depth > 4) return false;
+			if (actual.flags & ts.TypeFlags.Any) {
+				return namesTypeParameter(parameters, declared);
+			}
+			/** @type {readonly ts.Type[] | undefined} */
+			let declaredArguments;
+			/** @type {readonly ts.Type[] | undefined} */
+			let actualArguments;
+			if (declared.aliasSymbol && declared.aliasSymbol === actual.aliasSymbol) {
+				declaredArguments = declared.aliasTypeArguments;
+				actualArguments = actual.aliasTypeArguments;
+			} else if (
+				isTypeReference(declared) &&
+				isTypeReference(actual) &&
+				declared.target === actual.target
+			) {
+				declaredArguments = typeChecker.getTypeArguments(declared);
+				actualArguments = typeChecker.getTypeArguments(actual);
+			} else if (
+				declared.isUnionOrIntersection() &&
+				actual.isUnionOrIntersection()
+			) {
+				return declared.types.some((member) =>
+					actual.types.some((actualMember) =>
+						setsParameterToAny(parameters, member, actualMember, depth + 1)
+					)
+				);
+			}
+			if (!declaredArguments || !actualArguments) return false;
+			const { length } = actualArguments;
+			return declaredArguments.some(
+				(argument, i) =>
+					i < length &&
+					setsParameterToAny(
+						parameters,
+						argument,
+						actualArguments[i],
+						depth + 1
+					)
+			);
+		};
+
+		/**
+		 * Tells whether a `new` or call expression gets a type argument TypeScript
+		 * fills with `any`, such as `new Map()`, where nothing declares the type it should have.
+		 * @param {ts.NewExpression | ts.CallExpression} node the expression
+		 * @returns {boolean} true when it does
+		 */
+		const fillsTypeArgumentWithAny = (node) => {
+			let { parent } = node;
+			while (ts.isParenthesizedExpression(parent)) parent = parent.parent;
+			// A discarded result reads nothing, and a declared type receiving it types it.
+			if (
+				ts.isExpressionStatement(parent) ||
+				ts.isVoidExpression(parent) ||
+				typeChecker.getContextualType(node)
+			) {
+				return false;
+			}
+			const signature = typeChecker.getResolvedSignature(node);
+			if (!signature) return false;
+			const type = typeChecker.getTypeAtLocation(node);
+			const { target } =
+				/** @type {ts.Signature & { target?: ts.Signature }} */ (signature);
+			if (target) {
+				return Boolean(
+					target.typeParameters &&
+					setsParameterToAny(
+						new Set(target.typeParameters),
+						typeChecker.getReturnTypeOfSignature(target),
+						type,
+						0
+					)
+				);
+			}
+			// `new Map()` takes lib's `new (): Map<any, any>`, which has no type parameter.
+			const { declaration } = signature;
+			return (
+				ts.isNewExpression(node) &&
+				declaration !== undefined &&
+				declaration.getSourceFile().isDeclarationFile &&
+				isTypeReference(type) &&
+				typeChecker
+					.getTypeArguments(type)
+					.some((argument) => Boolean(argument.flags & ts.TypeFlags.Any))
+			);
+		};
+
+		/**
 		 * Returns an identifier's type. The name `x` in `this.x = value` declares
 		 * the property, and TypeScript answers `any` there, so it is read off
 		 * the property's symbol instead.
@@ -367,6 +497,8 @@ for (const [sourceFile, typeChecker] of sourceFiles) {
 						ts.isBreakStatement(node.parent) ||
 						ts.isContinueStatement(node.parent)) &&
 						node.parent.label === node) ||
+					// Ignore the namespace of a type name such as `NodeJS.WritableStream`
+					(ts.isQualifiedName(node.parent) && node.parent.left === node) ||
 					// Ignore `name` in `const { name: otherName } = obj;`
 					(ts.isBindingElement(node.parent) &&
 						node.parent.propertyName === node) ||
@@ -404,6 +536,22 @@ for (const [sourceFile, typeChecker] of sourceFiles) {
 				statementIndex++;
 			}
 
+			if (
+				inferredAny &&
+				(ts.isNewExpression(node) || ts.isCallExpression(node)) &&
+				fillsTypeArgumentWithAny(node)
+			) {
+				const { line } = ts.getLineAndCharacterOfPosition(
+					sourceFile,
+					node.getStart()
+				);
+				const callee = node.expression.getText(sourceFile);
+				inferredAny.push({
+					line: line + 1,
+					name: ts.isNewExpression(node) ? `new ${callee}()` : `${callee}()`
+				});
+			}
+
 			node.forEachChild(walkNode);
 		};
 
@@ -435,47 +583,91 @@ const baseAnyCounts = baseAny
 	? JSON.parse(fs.readFileSync(path.resolve(baseAny), "utf8"))
 	: undefined;
 
-// Escape-hatch types: how often each one stands in a JSDoc type in `lib/` and
-// `hot/`, against `--base` when given, for the report the pull request shows.
+// Escape-hatch types: how often each one stands in a type in `lib/`, `hot/`
+// and `declarations/`, against `--base` when given, for the report the pull request shows.
 const ESCAPE_HATCHES = [
 	"EXPECTED_ANY",
 	"EXPECTED_OBJECT",
 	"EXPECTED_FUNCTION",
 	"unknown"
 ];
-const ESCAPE_HATCH_REGEXP =
-	/\b(?:EXPECTED_ANY|EXPECTED_OBJECT|EXPECTED_FUNCTION|unknown)\b/g;
-const JSDOC_REGEXP = /\/\*\*[\s\S]*?\*\//g;
-const TYPE_TAG_REGEXP =
-	/@(?:type|param|returns?|typedef|property|prop|template|this|satisfies|callback|enum)\s*\{/g;
 /** @typedef {Record<string, number>} EscapeHatchCounts */
 
 /**
- * Counts the escape-hatch types in the braces of a file's JSDoc type tags.
- * @param {string} source the file's source
- * @returns {EscapeHatchCounts} counts by name
+ * Returns the escape hatch a type node writes: an `EXPECTED_*` alias, `unknown`
+ * or a raw type one alias stands for. An `object` constraining or testing a
+ * type, as in `@template {object} T`, says only that it is no primitive.
+ * @param {ts.Node} node the node
+ * @returns {string | undefined} the escape hatch it counts as
  */
-const countEscapeHatches = (source) => {
-	/** @type {EscapeHatchCounts} */
-	const counts = {};
-	for (const [comment] of source.matchAll(JSDOC_REGEXP)) {
-		TYPE_TAG_REGEXP.lastIndex = 0;
-		while (TYPE_TAG_REGEXP.exec(comment) !== null) {
-			// The type runs to the brace that balances the tag's opening one.
-			let depth = 1;
-			let end = TYPE_TAG_REGEXP.lastIndex;
-			while (end < comment.length && depth > 0) {
-				if (comment[end] === "{") depth++;
-				else if (comment[end] === "}") depth--;
-				end++;
-			}
-			const type = comment.slice(TYPE_TAG_REGEXP.lastIndex, end - 1);
-			for (const [name] of type.matchAll(ESCAPE_HATCH_REGEXP)) {
-				counts[name] = (counts[name] || 0) + 1;
-			}
-			TYPE_TAG_REGEXP.lastIndex = end;
+const escapeHatchOf = (node) => {
+	switch (node.kind) {
+		case ts.SyntaxKind.AnyKeyword:
+		case ts.SyntaxKind.JSDocAllType:
+		case ts.SyntaxKind.JSDocUnknownType:
+			return "EXPECTED_ANY";
+		case ts.SyntaxKind.UnknownKeyword:
+			return "unknown";
+		case ts.SyntaxKind.ObjectKeyword: {
+			const { parent } = node;
+			const isBound =
+				(ts.isTypeParameterDeclaration(parent) && parent.constraint === node) ||
+				(ts.isConditionalTypeNode(parent) && parent.extendsType === node) ||
+				(ts.isJSDocTypeExpression(parent) &&
+					ts.isJSDocTemplateTag(parent.parent) &&
+					parent.parent.constraint === parent);
+			return isBound ? undefined : "EXPECTED_OBJECT";
 		}
 	}
+	if (
+		!ts.isTypeReferenceNode(node) ||
+		!ts.isIdentifier(node.typeName) ||
+		node.typeArguments
+	) {
+		return undefined;
+	}
+	switch (node.typeName.text) {
+		case "EXPECTED_ANY":
+		case "EXPECTED_OBJECT":
+		case "EXPECTED_FUNCTION":
+			return node.typeName.text;
+		case "Object":
+			return "EXPECTED_OBJECT";
+		case "Function":
+			return "EXPECTED_FUNCTION";
+	}
+	return undefined;
+};
+
+/**
+ * Counts the escape-hatch types of a file, in its JSDoc and TypeScript types alike.
+ * @param {string} source the file's source
+ * @param {string} file the file, whose extension tells TypeScript from JavaScript
+ * @returns {EscapeHatchCounts} counts by name
+ */
+const countEscapeHatches = (source, file) => {
+	const sourceFile = ts.createSourceFile(
+		file,
+		source,
+		ts.ScriptTarget.Latest,
+		true,
+		file.endsWith(".ts") ? ts.ScriptKind.TS : ts.ScriptKind.JS
+	);
+	/** @type {EscapeHatchCounts} */
+	const counts = {};
+	/**
+	 * @param {ts.Node} node the node to count in
+	 * @returns {void}
+	 */
+	const visit = (node) => {
+		const name = escapeHatchOf(node);
+		if (name) counts[name] = (counts[name] || 0) + 1;
+		// JSDoc hangs off the node it documents rather than being one of its children.
+		const { jsDoc } = /** @type {ts.Node & { jsDoc?: ts.JSDoc[] }} */ (node);
+		if (jsDoc) for (const comment of jsDoc) visit(comment);
+		ts.forEachChild(node, visit);
+	};
+	visit(sourceFile);
 	return counts;
 };
 
@@ -498,7 +690,7 @@ const countAllEscapeHatches = (revision) => {
 		...ESCAPE_HATCH_DIRECTORIES
 	)
 		.split("\n")
-		.filter((file) => file.endsWith(".js"));
+		.filter((file) => file.endsWith(".js") || file.endsWith(".ts"));
 	/** @type {Record<string, EscapeHatchCounts>} */
 	const result = {};
 	for (const file of files) {
@@ -511,7 +703,7 @@ const countAllEscapeHatches = (revision) => {
 			// Listed by the tree but not present on this side.
 			continue;
 		}
-		const counts = countEscapeHatches(source);
+		const counts = countEscapeHatches(source, file);
 		if (Object.keys(counts).length > 0) result[file] = counts;
 	}
 	return result;
@@ -646,7 +838,7 @@ if (baseTotals && baseAnyCounts) {
 		: `| inferred \`any\` | ${totalAny(headAny)} |\n`;
 }
 report +=
-	"\nInferred `any` counts the identifiers whose type TypeScript infers as `any` though no JSDoc names it, such as `const map = new Map()`.\n";
+	"\nEscape hatches count the raw types they stand for too: `any`, `object` and `Function`. Inferred `any` counts the identifiers whose type TypeScript infers as `any` though no JSDoc names it, and the `new` or generic calls whose type arguments it fills with `any`, such as `const map = new Map()`.\n";
 
 const header = `| File | Typed lines | ${ESCAPE_HATCHES.map((name) => `\`${name}\``).join(" | ")} | inferred \`any\` |\n| :-- | --: |${" --: |".repeat(ESCAPE_HATCHES.length + 1)}\n`;
 
@@ -739,7 +931,7 @@ const remaining = [
 		);
 	return total(b) - total(a) || (a < b ? -1 : 1);
 });
-report += `\n<details><summary>${remaining.length} file(s) in <code>lib/</code> and <code>hot/</code> still use an escape hatch, infer \`any\` or have untyped lines</summary>\n\n${header}${remaining.map(fileRow).join("\n")}\n\n</details>\n`;
+report += `\n<details><summary>${remaining.length} file(s) in <code>lib/</code>, <code>hot/</code> and <code>declarations/</code> still use an escape hatch, infer \`any\` or have untyped lines</summary>\n\n${header}${remaining.map(fileRow).join("\n")}\n\n</details>\n`;
 
 fs.writeFileSync(
 	path.resolve(outputDirectory, "types-coverage.md"),
