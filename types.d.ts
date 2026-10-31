@@ -22248,7 +22248,9 @@ declare class MultiCompiler {
 		options: MultiCompilerOptions
 	);
 	hooks: Readonly<{
-		done: SyncHook<[MultiStats, Compiler[]]>;
+		done: AsyncSeriesHook<[MultiStats, Compiler[]]> & {
+			call: (stats: MultiStats, changedCompilers: Compiler[]) => void;
+		};
 		invalid: MultiHook<SyncHook<[null | string, number]>>;
 		run: MultiHook<AsyncSeriesHook<[Compiler]>>;
 		watchClose: SyncHook<[]>;
