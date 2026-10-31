@@ -20,24 +20,31 @@ const ts = require("typescript");
 const argv = require("./argv");
 const createTypeScriptProgram = require("./typescript-program");
 
-// The `Symbol.*` keys a declaration file can name.
-const WELL_KNOWN_SYMBOLS = new Set([
-	"asyncDispose",
-	"asyncIterator",
-	"dispose",
-	"hasInstance",
-	"isConcatSpreadable",
-	"iterator",
-	"match",
-	"matchAll",
-	"replace",
-	"search",
-	"species",
-	"split",
-	"toPrimitive",
-	"toStringTag",
-	"unscopables"
-]);
+/** @type {Set<string> | undefined} */
+let wellKnownSymbols;
+
+/**
+ * Returns the `Symbol.*` keys a declaration file can name: the unique symbols
+ * the `SymbolConstructor` of TypeScript's own lib declares.
+ * @param {ts.TypeChecker} checker the type checker
+ * @param {ts.Node} location any node of the program
+ * @returns {Set<string>} their names, such as `iterator`
+ */
+const getWellKnownSymbols = (checker, location) => {
+	if (wellKnownSymbols) return wellKnownSymbols;
+	wellKnownSymbols = new Set();
+	const symbol = checker
+		.getSymbolsInScope(location, ts.SymbolFlags.Variable)
+		.find((s) => s.name === "Symbol");
+	if (!symbol) return wellKnownSymbols;
+	for (const property of checker.getTypeOfSymbol(symbol).getProperties()) {
+		const type = checker.getTypeOfSymbol(property);
+		if (type.flags & ts.TypeFlags.UniqueESSymbol) {
+			wellKnownSymbols.add(property.name);
+		}
+	}
+	return wellKnownSymbols;
+};
 
 const {
 	write: doWrite,
@@ -1378,7 +1385,9 @@ const collectTypes = ({ program, checker, options }) => {
 					const description = name.slice(3, name.lastIndexOf("@"));
 					// Only `Symbol.*` keys can be written here; a module's own
 					// symbol, such as `util.inspect.custom`, is left out.
-					if (!WELL_KNOWN_SYMBOLS.has(description)) continue;
+					if (!decl || !getWellKnownSymbols(checker, decl).has(description)) {
+						continue;
+					}
 					name = `[Symbol.${description}]`;
 				} else if (!/^[_a-zA-Z$][_a-zA-Z$0-9]*$/.test(name)) {
 					name = JSON.stringify(name);
