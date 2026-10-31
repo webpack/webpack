@@ -519,6 +519,11 @@ const IMPROVED_CASES = [
 		{ compress: {}, mangle: false }
 	],
 	[
+		"a `var` guarded by `||` or `??` before anything writes it, as TypeScript writes an enum",
+		'function m() { var E = (function (E) { E[(E.A = 0)] = "A"; return E; })(E || {}); var S; (function (S) { S[(S.B = 1)] = "B"; })(S || (S = {})); var N = N ?? []; N.push(E.A, S.B); return [E, S, N]; } console.log(JSON.stringify(m()));',
+		{ compress: {}, mangle: false }
+	],
+	[
 		"a `let` whose every read folds into its value, left with its write",
 		"(function () { let x; x = 2; console.log(x); globalThis.g = function () { return x; }; })(); console.log(g());",
 		{ compress: {}, mangle: false }
@@ -11485,6 +11490,74 @@ x = a ** b ** c; x = (a ** b) ** c; x = (-a) ** b; x = a < b < c; x = a < (b < c
 				written.push(code);
 			}
 			expect(written).toMatchSnapshot();
+		});
+
+		it("should write a `var` guarded before anything writes it as `undefined`", async () => {
+			const { minify } = await load();
+			const written = [];
+			for (const input of [
+				"export function f(){var E=g(E||{});return E}",
+				"export function f(){var S;g(S||(S={}));return S}",
+				"export function f(){var S;g(S??(S={}));return S}",
+				"export function f(){var S,X=g(S||(S={}));return[S,X]}",
+				"export function f(){l:{var E=g(E||{})}return E}",
+				"export function f(){for(;;)(()=>{var S;g(S||(S={}))})()}"
+			]) {
+				const { code } = await minify(input, {
+					module: true,
+					compress: {},
+					mangle: false
+				});
+				written.push(code);
+			}
+			expect(written).toMatchSnapshot();
+		});
+
+		it("should keep a guarded `var` read that may run after a write to it", async () => {
+			const { minify } = await load();
+			for (const [input, kept] of [
+				["export function f(){var S;g(()=>S||(S={}))}", "S||(S={})"],
+				["export function f(){var S;for(;;)g(S||(S={}))}", "S||(S={})"],
+				[
+					"export function f(){var S;g(S||(S={}));g(S||(S={}))}",
+					"g(S||(S={})),g(S||(S={}))"
+				],
+				["export function f(){var S;h(S=k());g(S||(S={}));return S}", "S||"],
+				["export function f(){var S=k();h();g(S||(S={}));return S}", "S||"],
+				["export function f(){var S;g(S||(S+=1));return S}", "S||"],
+				["export function f(){var S;g(S||h());S=k();return S}", "S||"],
+				["export function f(){var S;g(S||(o.p=1));S=k();return S}", "S||"],
+				["export function f(){var S;g(S||(T={}));h(S=2);return S}", "S||"],
+				["export function f(){var S;g(S||(S={}));[S]=h();return S}", "S||"],
+				["export function f(){var E=g(E||{});E=1;h(E);return E}", "E||"],
+				["export function f(){var E=g(E||{});for(E in o);return E}", "E||"],
+				["export function f(){for(var E of h());return E||(E=2)}", "E||"],
+				["export function f(){for(var E in h());return E||(E=2)}", "E||"],
+				["export function f(){for(var[E]of h());return E||(E=2)}", "E||"],
+				["export function f(){var[E]=h();return E||(E=2)}", "E||"],
+				["export function f(){var{E}=h();return E||(E=2)}", "E||"],
+				["export function f(){for(var[E]=h();;)break;return E||(E=2)}", "E||"],
+				["export function f(){var E=1;var E=g(E||{});return E}", "E||"],
+				["export function f(S){var S;g(S||(S={}));return S}", "S||"],
+				["export function f(S){g(S||(S={}));return S}", "S||"],
+				["export function f(){g(S||(S={}));let S;return S}", "S||"],
+				["export function f(){var E=g(E||{});eval(\"\");return E}", "E||"],
+				["export function f(){var E=g(E&&{});return E}", "E&&"],
+				["export function f(){var E=g(h()||E);return E}", "h()||E"],
+				["export function f(){var E=g(h(E)||{});return E}", "h(E)||"],
+				["var E=g(E||{});", "E||"],
+				[
+					"export function f(){var S;function h(){return S||(S={a:1})}var x=h();return x===h()}",
+					"S||(S={a:1})"
+				]
+			]) {
+				const { code } = await minify(input, {
+					module: !input.startsWith("var"),
+					compress: {},
+					mangle: false
+				});
+				expect(code).toContain(kept);
+			}
 		});
 
 		it("should keep a write to a `let` that may run before its declaration", async () => {
