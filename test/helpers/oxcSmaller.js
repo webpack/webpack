@@ -4417,6 +4417,7 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: drop-unused/keep_assign",
 			"terser compress: drop-unused/unused_block_decls",
 			"terser compress: drop-unused/unused_block_decls_in_catch",
+			"terser compress: drop-unused/unused_circular_references_1",
 			"terser compress: drop-unused/unused_class_which_extends_might_throw",
 			"terser compress: drop-unused/unused_class_which_might_throw",
 			"terser compress: drop-unused/unused_class_which_might_throw_2",

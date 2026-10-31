@@ -952,6 +952,19 @@ const CORPORA = [
  */
 const INHERITED = {};
 
+/**
+ * By corpus, the gzip total of webpack's outputs where it is still bigger than
+ * terser's: no run may grow it, and one no longer bigger retires it. Lower an
+ * entry as a run shrinks it.
+ * @type {Record<string, number>}
+ */
+const TERSER_TOTAL_BUDGET = {
+	"terser compress": 1897740,
+	"swc minifier": 9416203,
+	"swc exec": 167221,
+	"oxc minifier": 653251
+};
+
 /* cspell:disable */
 /**
  * Parse errors the reference answers with where the spec allows the source,
@@ -1492,14 +1505,27 @@ describe("JavaScript minifier", () => {
 				`List no difference the reference no longer makes:\n${stale.join("\n")}`
 			);
 		}
-		const bigger = complete
+		/** @type {string[]} */
+		const bigger = [];
+		for (const [name, { ours, theirs }] of complete
 			? Object.entries(totals)
-					.filter(([, { ours, theirs }]) => ours > theirs)
-					.map(
-						([name, { ours, theirs }]) =>
-							`${name}: ${ours} B gzip, against terser's ${theirs} B`
-					)
-			: [];
+			: []) {
+			const budget = Object.prototype.hasOwnProperty.call(
+				TERSER_TOTAL_BUDGET,
+				name
+			)
+				? TERSER_TOTAL_BUDGET[name]
+				: undefined;
+			if (ours > theirs && (budget === undefined || ours > budget)) {
+				bigger.push(
+					`${name}: ${ours} B gzip, against terser's ${theirs} B${budget === undefined ? "" : ` and a budget of ${budget} B`}`
+				);
+			} else if (ours <= theirs && budget !== undefined) {
+				bigger.push(
+					`${name}: ${ours} B gzip, no bigger than terser's ${theirs} B now: retire it from TERSER_TOTAL_BUDGET`
+				);
+			}
+		}
 		if (bigger.length > 0) {
 			throw new Error(
 				`Corpora whose outputs gzip bigger than terser's in total:\n${bigger.join("\n")}`

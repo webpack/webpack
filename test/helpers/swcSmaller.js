@@ -1078,6 +1078,7 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: drop-unused/issue_t161_top_retain_9",
 			"terser compress: drop-unused/unused_block_decls",
 			"terser compress: drop-unused/unused_block_decls_in_catch",
+			"terser compress: drop-unused/unused_circular_references_1",
 			"terser compress: drop-unused/unused_funarg_1",
 			"terser compress: drop-unused/unused_funarg_2",
 			"terser compress: drop-unused/used_block_decls_in_catch",
