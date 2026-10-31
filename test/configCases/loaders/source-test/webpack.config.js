@@ -118,6 +118,28 @@ module.exports = {
 				]
 			},
 			{
+				resourceQuery: /^\?no-content$/,
+				use: [
+					{
+						loader: "./transform-loader.js",
+						options: { value: "no-content" },
+						sourceTest: /not present/
+					},
+					"./no-content-loader.js"
+				]
+			},
+			{
+				// Built after other modules resolved this loader, so its resolve is cached.
+				resourceQuery: /^\?cached$/,
+				use: [
+					{
+						loader: "./transform-loader.js",
+						options: { value: "cached" },
+						sourceTest: /marker:direct/
+					}
+				]
+			},
+			{
 				resourceQuery: /^\?pitch$/,
 				use: [{ loader: "./pitch-loader.js", sourceTest: /not present/ }]
 			}

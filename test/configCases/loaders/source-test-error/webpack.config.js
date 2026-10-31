@@ -51,6 +51,22 @@ module.exports = {
 					},
 					"./sync-loader.js"
 				]
+			},
+			{
+				test: /plain-unprintable\.js$/,
+				use: [
+					{
+						loader: "./sync-loader.js",
+						// `String` throws on an object without a prototype.
+						sourceTest: /** @type {(source: string) => boolean} */ (
+							(source) => {
+								if (source) throw Object.create(null);
+								return false;
+							}
+						)
+					},
+					"./sync-loader.js"
+				]
 			}
 		]
 	}

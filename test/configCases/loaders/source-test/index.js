@@ -20,6 +20,8 @@ import logical from "./marker.js?logical";
 import not from "./marker.js?not";
 import functionCondition from "./marker.js?function";
 import validReplacement from "./plain.js?valid-replacement";
+import noContent from "./plain.js?no-content";
+import cached from "./nested.js";
 
 it("filters normal loaders using their current input", () => {
 	expect(direct).toBe("direct");
@@ -52,6 +54,11 @@ it("preserves loader state on a miss or undecodable input", () => {
 	expect(invalidUtf8).toBe("invalid-preserved");
 	expect(metadata).toBe("__VALUE__");
 	expect(validReplacement).toBe("__VALUE__");
+	expect(noContent).toBe("no-content");
+});
+
+it("keeps the source test on a cached loader resolve", () => {
+	expect(cached).toBe("cached");
 });
 
 it("still runs the pitch phase", () => {

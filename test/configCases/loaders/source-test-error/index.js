@@ -9,3 +9,7 @@ it("should report a source test that throws a non-error value", () => {
 it("should report a source test that throws a symbol", () => {
 	expect(() => require("./plain-symbol.js")).toThrow(/sourceTest threw Symbol\(odd\)/);
 });
+
+it("should report a source test that throws an unprintable value", () => {
+	expect(() => require("./plain-unprintable.js")).toThrow(/sourceTest threw object/);
+});
