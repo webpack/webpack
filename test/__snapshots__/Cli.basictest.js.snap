@@ -10939,19 +10939,64 @@ Object {
   "module-rules-use-source-test": Object {
     "configs": Array [
       Object {
-        "description": "Run the loader's normal function when its current input contains this string, matches this regular expression, or cannot be decoded as UTF-8 text.",
+        "description": "Run the loader's normal function only when its current input matches this condition, the same kind of condition 'test' takes. Input that is not valid UTF-8 text always runs it.",
         "multiple": true,
         "path": "module.rules[].use.sourceTest",
         "type": "RegExp",
       },
       Object {
-        "description": "Run the loader's normal function when its current input contains this string, matches this regular expression, or cannot be decoded as UTF-8 text.",
+        "description": "Run the loader's normal function only when its current input matches this condition, the same kind of condition 'test' takes. Input that is not valid UTF-8 text always runs it.",
         "multiple": true,
         "path": "module.rules[].use.sourceTest",
         "type": "string",
       },
     ],
-    "description": "Run the loader's normal function when its current input contains this string, matches this regular expression, or cannot be decoded as UTF-8 text.",
+    "description": "Run the loader's normal function only when its current input matches this condition, the same kind of condition 'test' takes. Input that is not valid UTF-8 text always runs it.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-rules-use-source-test-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS; a \`!\` prefix excludes what it matches.",
+        "multiple": true,
+        "path": "module.rules[].use.sourceTest.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS; a \`!\` prefix excludes what it matches.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-rules-use-source-test-not": Object {
+    "configs": Array [
+      Object {
+        "description": "Logical NOT.",
+        "multiple": true,
+        "path": "module.rules[].use.sourceTest.not",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Logical NOT.",
+        "multiple": true,
+        "path": "module.rules[].use.sourceTest.not",
+        "type": "string",
+      },
+    ],
+    "description": "Logical NOT.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-rules-use-source-test-not-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS; a \`!\` prefix excludes what it matches.",
+        "multiple": true,
+        "path": "module.rules[].use.sourceTest.not.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS; a \`!\` prefix excludes what it matches.",
     "multiple": true,
     "simpleType": "string",
   },

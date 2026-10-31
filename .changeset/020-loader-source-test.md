@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Add sourceTest to skip loader transforms when input does not match.
+Add a `sourceTest` condition to `use` items; match `/g` regexps reliably.

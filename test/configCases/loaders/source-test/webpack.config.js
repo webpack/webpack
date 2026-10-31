@@ -16,7 +16,11 @@ module.exports = {
 				"empty",
 				"unicode",
 				"right-output",
-				"functional"
+				"functional",
+				"array",
+				"logical",
+				"not",
+				"function"
 			].map((name) => {
 				const use = [
 					"./observer-loader.js",
@@ -26,14 +30,20 @@ module.exports = {
 						sourceTest: {
 							direct: /marker:direct/,
 							regexp: /marker:regexp/g,
-							include: "marker:include",
+							include: "// marker:include",
 							excluded: "not-present",
-							"exclude-only": "__VALUE__",
+							"exclude-only": "export default",
 							"empty-regexp": /(?:)/,
 							empty: "",
-							unicode: "你好",
-							"right-output": "generated:marker",
-							functional: /marker:functional/
+							unicode: "// 你好",
+							"right-output": /generated:marker/,
+							functional: /marker:functional/,
+							array: [/not-present/, /marker:direct/],
+							logical: { and: [/marker:direct/, { not: /not-present/ }] },
+							not: { not: /marker:direct/ },
+							function: /** @type {(source: string) => boolean} */ (
+								(source) => source.includes("marker:direct")
+							)
 						}[name]
 					},
 					...(name === "right-output" ? ["./producer-loader.js"] : []),
@@ -94,6 +104,17 @@ module.exports = {
 						sourceTest: /not present/
 					},
 					"./metadata-producer-loader.js"
+				]
+			},
+			{
+				resourceQuery: /^\?valid-replacement$/,
+				use: [
+					{
+						loader: "./transform-loader.js",
+						options: { value: "wrong" },
+						sourceTest: /not present/
+					},
+					"./valid-replacement-loader.js"
 				]
 			},
 			{

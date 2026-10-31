@@ -5434,10 +5434,10 @@ export type RuleSetUseItem =
 			 */
 			options?: RuleSetLoaderOptions;
 			/**
-			 * Run the loader's normal function when its current input contains this string, matches this regular expression, or cannot be decoded as UTF-8 text.
+			 * Run the loader's normal function only when its current input matches this condition, the same kind of condition 'test' takes. Input that is not valid UTF-8 text always runs it.
 			 * @since 5.113.0
 			 */
-			sourceTest?: RegExp | string;
+			sourceTest?: RuleSetConditionOrConditions;
 	  }
 	| RuleSetUseFunction
 	| RuleSetLoader;

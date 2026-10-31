@@ -948,26 +948,29 @@ describe("Validation", () => {
 		);
 	});
 
-	it("accepts string and regular expression loader source tests", () => {
+	it("accepts the conditions a rule's test takes as loader source tests", () => {
 		const webpack = require("../..");
 		expect(() =>
 			webpack.validate({
 				module: {
 					rules: [
-						{ use: [{ loader: "example-loader", sourceTest: "use client" }] },
-						{ use: [{ loader: "example-loader", sourceTest: /use client/ }] }
-					]
+						"use client",
+						/use client/,
+						[/use client/, "use server"],
+						() => true,
+						{ and: [/use client/, { not: /use server/ }] },
+						{ or: [/use client/, /use server/] },
+						{ glob: "**/*.js" }
+					].map((sourceTest) => ({
+						use: [{ loader: "example-loader", sourceTest }]
+					}))
 				}
 			})
 		).not.toThrow();
 	});
 
 	for (const [name, sourceTest] of [
-		["array", [/marker/]],
-		["object", { include: /marker/ }],
-		["object with include array", { include: [/marker/] }],
-		["object with exclude array", { exclude: [/marker/] }],
-		["function", () => true],
+		["object with include", { include: /marker/ }],
 		["number", 42],
 		["null", null]
 	]) {

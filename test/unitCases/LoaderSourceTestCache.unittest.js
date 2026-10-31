@@ -65,7 +65,7 @@ describe("loader sourceTest filesystem cache", () => {
 		rimraf.sync(root);
 	});
 
-	for (const sourceTest of ["marker", /marker/]) {
+	for (const sourceTest of ["// marker", /marker/]) {
 		it(`restores and invalidates ${sourceTest} across compilers`, async () => {
 			fs.writeFileSync(sourceFile, '// marker\nexport default "__VALUE__";\n');
 			expect(await build(sourceTest)).toContain('"filtered"');

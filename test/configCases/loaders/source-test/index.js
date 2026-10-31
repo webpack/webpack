@@ -15,6 +15,11 @@ import stringBom from "./plain.js?string-bom";
 import invalidUtf8 from "./plain.js?invalid-utf8";
 import metadata from "./plain.js?metadata";
 import pitch from "./plain.js?pitch";
+import arrayCondition from "./marker.js?array";
+import logical from "./marker.js?logical";
+import not from "./marker.js?not";
+import functionCondition from "./marker.js?function";
+import validReplacement from "./plain.js?valid-replacement";
 
 it("filters normal loaders using their current input", () => {
 	expect(direct).toBe("direct");
@@ -30,6 +35,13 @@ it("filters normal loaders using their current input", () => {
 	expect(functional).toBe("functional");
 });
 
+it("takes the same conditions as a rule's test", () => {
+	expect(arrayCondition).toBe("array");
+	expect(logical).toBe("logical");
+	expect(not).toBe("__VALUE__");
+	expect(functionCondition).toBe("function");
+});
+
 it("ignores a UTF-8 buffer BOM", () => {
 	expect(bomHit).toBe("bom-hit");
 	expect(bomMiss).toBe("__VALUE__");
@@ -39,6 +51,7 @@ it("ignores a UTF-8 buffer BOM", () => {
 it("preserves loader state on a miss or undecodable input", () => {
 	expect(invalidUtf8).toBe("invalid-preserved");
 	expect(metadata).toBe("__VALUE__");
+	expect(validReplacement).toBe("__VALUE__");
 });
 
 it("still runs the pitch phase", () => {
