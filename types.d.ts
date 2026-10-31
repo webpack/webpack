@@ -4676,86 +4676,6 @@ type ComplexSerializableType =
 	| object
 	| Buffer
 	| (() => ComplexSerializableType[] | Promise<ComplexSerializableType[]>);
-
-/**
- * terser's compressor: the methods the phases call typed, the rest open.
- */
-declare interface CompressorShape {
-	[index: string]: any;
-	options: Partial<any>;
-	stack: NodeShape[];
-	option<
-		K extends
-			| "module"
-			| "warnings"
-			| "inline"
-			| "arguments"
-			| "expression"
-			| "evaluate"
-			| "ecma"
-			| "toplevel"
-			| "keep_classnames"
-			| "keep_fnames"
-			| "ie8"
-			| "unused"
-			| "properties"
-			| "global_defs"
-			| "pure_funcs"
-			| "arrows"
-			| "booleans"
-			| "booleans_as_integers"
-			| "collapse_vars"
-			| "comparisons"
-			| "computed_props"
-			| "conditionals"
-			| "dead_code"
-			| "defaults"
-			| "directives"
-			| "drop_console"
-			| "drop_debugger"
-			| "builtins_ecma"
-			| "builtins_pure"
-			| "hoist_funs"
-			| "hoist_props"
-			| "hoist_vars"
-			| "if_return"
-			| "join_vars"
-			| "keep_fargs"
-			| "keep_infinity"
-			| "lhs_constants"
-			| "loops"
-			| "negate_iife"
-			| "passes"
-			| "pure_getters"
-			| "pure_conversions"
-			| "pure_heritage"
-			| "pure_new"
-			| "reduce_funcs"
-			| "reduce_vars"
-			| "sequences"
-			| "side_effects"
-			| "switches"
-			| "top_retain"
-			| "typeofs"
-			| "unsafe"
-			| "unsafe_arrows"
-			| "unsafe_comps"
-			| "unsafe_Function"
-			| "unsafe_math"
-			| "unsafe_symbols"
-			| "unsafe_methods"
-			| "unsafe_proto"
-			| "unsafe_regexp"
-			| "unsafe_undefined"
-	>(
-		name: K
-	): any[K];
-	has_directive(directive: string): undefined | true | NodeShape;
-	parent(level?: number): NodeShape;
-	self(): NodeShape;
-	find_parent(test: (value: unknown) => boolean): undefined | NodeShape;
-	in_boolean_context(): undefined | boolean;
-}
 declare class ConcatSource extends Source {
 	constructor(...args: Child[]);
 	getChildren(): Source[];
@@ -12083,9 +12003,8 @@ declare interface GetOptionsMethod<OptionsType> {
 		check?: PrecompiledCheck
 	): OptionsType;
 }
-type GivenCompressOptions = Omit<Partial<any>, "global_defs" | "pure_funcs"> & {
+type GivenCompressOptions = Omit<Partial<any>, "global_defs"> & {
 	global_defs?: false | object;
-	pure_funcs?: null | string[] | ((node: PureCallView) => boolean);
 };
 
 /**
@@ -20111,7 +20030,7 @@ declare interface MinifyOptions {
 		html5_comments?: boolean;
 		module?: boolean;
 		shebang?: boolean;
-		toplevel?: any;
+		toplevel?: null;
 		spidermonkey?: boolean;
 	};
 
@@ -22656,80 +22575,6 @@ type NodePrintOptions = Omit<JavascriptProcessOptions, "compress"> & {
  */
 declare interface NodePrinter<TPath, TNode, TPrintOptions = object> {
 	(path: TPath, writer: PrintContext<TPath, TNode, TPrintOptions>): string;
-}
-
-/**
- * One of terser's AST nodes: the fields and methods the phases share typed, the
- * rest open.
- */
-declare interface NodeShape {
-	[index: string]: any;
-	TYPE: string;
-	type: string;
-	mapName?: null | string;
-	shorthand: boolean;
-	name: string;
-	kind: string;
-	role: string;
-	computed: boolean;
-	label: NodeShape;
-	property: NodeShape;
-	flags: number;
-	startToken: number;
-	endToken: number;
-	expression: NodeShape;
-	callee: NodeShape;
-	object: NodeShape;
-	argument: NodeShape;
-	discriminant: NodeShape;
-	left: NodeShape;
-	right: NodeShape;
-	operator: string;
-	test: NodeShape;
-	alternate: NodeShape;
-	arguments: NodeShape[];
-	elements: (null | NodeShape)[];
-	properties: NodeShape[];
-	declarations: NodeShape[];
-	expressions: NodeShape[];
-	segments: NodeShape[];
-	params: NodeShape[];
-	quote?: string;
-	raw?: string;
-	optional: boolean;
-	tag: NodeShape;
-	superClass: NodeShape;
-	scope: NodeShape;
-	definition: SymbolDefinition;
-	fixed_value(): undefined | null | false | NodeShape;
-	tail_node(): NodeShape;
-	clone(deep?: boolean): NodeShape;
-	transform(walker: CompressorShape, inList?: boolean): NodeShape;
-	optimize(compressor: CompressorShape): NodeShape;
-	has_side_effects(compressor: CompressorShape): boolean;
-	may_throw(compressor: CompressorShape): boolean;
-	drop_side_effect_free(
-		compressor: CompressorShape,
-		firstInStatement?: boolean
-	): null | NodeShape;
-	is_constant_expression(scope?: NodeShape): boolean | "f";
-	evaluate(
-		compressor: CompressorShape
-	):
-		| undefined
-		| null
-		| string
-		| number
-		| bigint
-		| boolean
-		| symbol
-		| RegExp
-		| NodeShape
-		| any
-		| { [index: string]: any }
-		| ((...args: any[]) => any);
-	negate(compressor: CompressorShape, firstInStatement?: boolean): NodeShape;
-	size(compressor?: CompressorShape, stack?: NodeShape[]): number;
 }
 declare class NodeSourcePlugin {
 	constructor();
@@ -27423,9 +27268,6 @@ declare interface ProvidesObject {
 	[index: string]: ProvidesObjectValue;
 }
 type ProvidesObjectValue = string | ProvidesConfig;
-type PureCallView = NodeShape & {
-	print_to_string(given?: Partial<any>): string;
-};
 type PureCondition =
 	boolean | ((compilation: Compilation, module: Module) => boolean);
 
@@ -33459,14 +33301,6 @@ declare interface Stringable {
 	toString: () => string;
 }
 type Supports = undefined | string;
-
-/**
- * one of terser's `SymbolDef`s
- */
-declare interface SymbolDefinition {
-	[index: number]: any;
-	[index: string]: any;
-}
 declare class SyncModuleIdsPlugin {
 	/**
 	 * Creates an instance of SyncModuleIdsPlugin.
