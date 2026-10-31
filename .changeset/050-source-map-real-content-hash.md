@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Fix a stale hash in the source map `file` field with `realContentHash`.
+Fix source map hashes for `file` fields and local `file:///` sources.
