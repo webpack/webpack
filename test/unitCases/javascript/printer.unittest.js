@@ -2095,6 +2095,50 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		).toBe('(function(exports){})(typeof lib=="undefined"?lib={}:lib);');
 	});
 
+	it("should print alone the comments it keeps, however they are chosen", () => {
+		const bare = { compress: false, mangle: false };
+		const print = (/** @type {string} */ source, /** @type {EXPECTED_OBJECT} */ format) =>
+			minifyOnePass(source, { ...bare, format }).code;
+		expect(print("/*! a */ f(); /* b */ g();", {})).toBe("/*! a */f();g();");
+		expect(print("f(); /*! late */ g();", {})).toBe("f();/*! late */g();");
+		expect(print("/* plain */ f();", {})).toBe("f();");
+		expect(print("/*! a */ f();", { comments: false })).toBe("f();");
+		expect(
+			print("/*#__PURE__*/ f(); /* x */ g();", {
+				comments: false,
+				preserve_annotations: true
+			})
+		).toBe("/*#__PURE__*/f();g();");
+		// A callback is asked only as each comment prints.
+		/** @type {string[]} */
+		const asked = [];
+		expect(
+			print("/* keep */ f(); /* drop */ g(); /* keep2 */ h();", {
+				comments: (/** @type {unknown} */ _node, /** @type {{ value: string }} */ comment) => {
+					asked.push(comment.value);
+					return /keep/.test(comment.value);
+				}
+			})
+		).toBe("/* keep */f();g();/* keep2 */h();");
+		expect(asked).toEqual([" drop ", " keep2 ", " keep "]);
+		// A global pattern is tested only as each prints, its `lastIndex` moving.
+		const pattern = /keep/g;
+		expect(
+			print("/* keep */ f(); /* keep */ g();", { comments: pattern })
+		).toBe("f();/* keep */g();");
+		expect(pattern.lastIndex).toBe(0);
+		expect(
+			print("/* keep */ f(); /* keep */ g();", { comments: /keep/y })
+		).toBe("f();g();");
+		expect(print("  /*! a */ /*! b */", {})).toBe("/*! a */ /*! b */");
+		expect(print("/* keep */ f(); /* x */ g();", { comments: "/keep/g" })).toBe(
+			"/* keep */f();g();"
+		);
+		expect(() => print("f();", { nonsense: 1 })).toThrow(
+			"`nonsense` is not a supported option"
+		);
+	});
+
 	it("should keep the names a global pattern keeps, however often it is asked", () => {
 		const pattern = /keep/g;
 		const { code } = minifyOnePass(

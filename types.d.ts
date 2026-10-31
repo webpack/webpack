@@ -34608,6 +34608,7 @@ declare interface TokenTable {
 		callback: (index: number, comments: CommentSyntaxPrinter[]) => void
 	) => void;
 	commentFlags: () => Uint8Array;
+	keptComments: (test: (comment: CommentSyntaxPrinter) => boolean) => number;
 	outerCounts: Map<number, number>;
 }
 
