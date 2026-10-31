@@ -32,6 +32,8 @@ const DIRECT = "(direct)";
  * @property {Record<string, string>=} dependencies
  * @property {Record<string, string>=} optionalDependencies
  * @property {Record<string, string>=} peerDependencies
+ * @property {boolean=} link whether the location links to another one
+ * @property {string=} resolved the location a link points to
  */
 
 /**
@@ -102,6 +104,20 @@ const collect = (dir) => {
 	const packages = JSON.parse(
 		fs.readFileSync(path.join(dir, "package-lock.json"), "utf8")
 	).packages;
+	// npm 11 links a `file:` dependency despite `--install-links`, leaving the
+	// link without a version: its target and all nested under it move to it.
+	for (const location of Object.keys(packages)) {
+		const entry = packages[location];
+		// A target already folded into its link is gone.
+		if (!entry || !entry.link || !entry.resolved) continue;
+		const { resolved } = entry;
+		if (!packages[resolved]) continue;
+		for (const nested of Object.keys(packages)) {
+			if (nested !== resolved && !nested.startsWith(`${resolved}/`)) continue;
+			packages[location + nested.slice(resolved.length)] = packages[nested];
+			delete packages[nested];
+		}
+	}
 	// Copies of one version npm could not hoist share a row.
 	/** @type {Map<string, ReportRow>} */
 	const rows = new Map();
@@ -374,61 +390,53 @@ const toMarkdown = (rows, installed, base, comment) => {
 	const requested = Object.keys(installed)
 		.map((name) => `\`${name}@${installed[name]}\``)
 		.join(", ");
-	const versions = groupByName(rows);
-	const duplicated = [...versions.values()].filter(
-		(list) => list.length > 1 || list[0].copies > 1
-	);
+	const packages = [...groupByName(rows).values()];
+	/**
+	 * @param {ReportRow[]} list rows of one package
+	 * @returns {boolean} whether npm installed it more than once
+	 */
+	const isDuplicated = (list) => list.length > 1 || list[0].copies > 1;
+	const duplicated = packages.filter(isDuplicated);
+	// Duplicated packages lead, as removing a copy is what the table is for.
+	const ordered = [
+		...duplicated,
+		...packages.filter((list) => !isDuplicated(list))
+	];
 	const installedSection = [
 		"## Installed dependencies",
 		"",
-		`Installing ${requested} pulls in **${versions.size}** packages (${
+		`Installing ${requested} pulls in **${packages.length}** packages (${
 			rows.length
 		} versions, ${copies} copies on disk), **${formatSize(
 			total
 		)}** in total (dependencies only, no devDependencies).`,
 		"",
+		`⚠️ ${duplicated.length} packages are installed more than once, in several versions or copies; they come first.`,
+		"",
 		"Parent packages name the version range each one asks for; the path is the shortest chain from a requested package.",
 		"",
-		"| Name | Version | Copies | Size | Parent packages | Path |",
-		"| ---- | ------- | -----: | ---: | --------------- | ---- |",
-		...rows.map(
-			(row) =>
-				`| ${row.name} | ${row.version} | ${row.copies} | ${formatSize(
-					row.size
-				)} | ${escapeCell(row.parents.join(", "))} | ${row.path.join(" › ")} |`
-		),
-		""
-	];
-	const duplicatedSection = [
-		"## Duplicated packages",
-		"",
-		`${duplicated.length} packages are installed more than once: in several versions, or one version npm could not hoist. Widening or upgrading the parent whose range excludes the newest version removes a copy.`,
-		"",
-		"| Name | Versions | Size | Parent packages and path per version |",
-		"| ---- | -------- | ---: | ------------------------------------ |",
-		...duplicated.map(
-			(list) =>
-				`| ${list[0].name} | ${formatVersions(list)} | ${formatSize(
-					sumSize(list)
-				)} | ${list
-					.map(
-						(row) =>
-							`**${row.version}**: ${escapeCell(row.parents.join(", "))}<br>path: ${row.path.join(" › ")}`
-					)
-					.join("<br>")} |`
-		),
+		"| Name | Versions | Size | Parent packages and path |",
+		"| ---- | -------- | ---: | ------------------------ |",
+		...ordered.map((list) => {
+			const name = isDuplicated(list) ? `⚠️ ${list[0].name}` : list[0].name;
+			const origins = list.map((row) => {
+				const origin = `${escapeCell(row.parents.join(", "))}<br>path: ${row.path.join(" › ")}`;
+				return list.length > 1 ? `**${row.version}**: ${origin}` : origin;
+			});
+			return `| ${name} | ${formatVersions(list)} | ${formatSize(
+				sumSize(list)
+			)} | ${origins.join("<br>")} |`;
+		}),
 		""
 	];
 	const changes = base ? toChanges(base, rows) : [];
 	if (!comment) {
-		return [...changes, ...installedSection, ...duplicatedSection].join("\n");
+		return [...changes, ...installedSection].join("\n");
 	}
 	// A scoped name such as `@types/node` would mention a GitHub user or team.
-	const head = [COMMENT_MARKER, ...changes, ...duplicatedSection]
-		.join("\n")
-		.replace(/@/g, "@\u200B");
+	const head = [COMMENT_MARKER, ...changes].join("\n").replace(/@/g, "@\u200B");
 	const table = [
-		"<details><summary>All installed dependencies</summary>",
+		`<details><summary>Installed dependencies: ${packages.length} packages, ${duplicated.length} duplicated</summary>`,
 		"",
 		...installedSection,
 		"</details>",
