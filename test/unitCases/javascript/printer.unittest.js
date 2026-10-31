@@ -2122,6 +2122,225 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		).toBe("function f(){g(()=>1);return 1}it(f());");
 	});
 
+	it("should print `Infinity`, `Number` constants and booleans as values reading the same", () => {
+		expect(
+			minifyOnePass(
+				"console.log(Infinity, Number.POSITIVE_INFINITY, -Number.NEGATIVE_INFINITY, Infinity(), new Number.NEGATIVE_INFINITY, delete Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY(), Infinity``)",
+				{ compress: {}, mangle: true }
+			).code
+		).toBe(
+			"console.log(1/0,1/0,-(-1/0),(1/0)(),new(-1/0),delete Number.POSITIVE_INFINITY,Number.POSITIVE_INFINITY(),(1/0)``);"
+		);
+		const inFunction = (/** @type {string} */ body) =>
+			`function f(b,c,d){${body}}console.log(f(1,2,3),f(0,'',null),f('1',[],{}))`;
+		for (const source of [
+			"try{Infinity()}catch(e){console.log(e.name)}try{new Infinity}catch(e){console.log(e.name)}console.log(Infinity.toString(), typeof Infinity)",
+			"try{Number.POSITIVE_INFINITY()}catch(e){console.log(e.name)}try{new Number.NEGATIVE_INFINITY}catch(e){console.log(e.name)}console.log(Number.POSITIVE_INFINITY.toString(), -Number.NEGATIVE_INFINITY)",
+			"try{Infinity``}catch(e){console.log(e.name)}try{class A extends Infinity{}}catch(e){console.log(e.name)}try{(class extends Number.POSITIVE_INFINITY{})}catch(e){console.log(e.name)}",
+			"console.log(delete Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY)",
+			"var x;x=Number.POSITIVE_INFINITY;for(var k in Number.NEGATIVE_INFINITY);console.log(x)",
+			// terser's `booleans`: `==` reads a boolean as its number.
+			inFunction("return b == true"),
+			inFunction("return b != false"),
+			inFunction("return b ? true : false"),
+			inFunction("return b ? false : true"),
+			inFunction("if (b ? true : false) return 1")
+		]) {
+			const { code } = minifyOnePass(source, { compress: {}, mangle: true });
+			expect(runProgram(code)).toBe(runProgram(source));
+		}
+	});
+
+	it("should print `Object.keys`, `values` and `entries` of a literal only where nothing writes or hands out `Object`", () => {
+		const calls =
+			"console.log(Object.keys({a:1,b:2}).join(), Object.values({a:3}).join(), Object.entries({c:4}).join());";
+		for (const [source, options] of /** @type {[string, EXPECTED_OBJECT?][]} */ ([
+			// Each of these reads `Object` without handing it anywhere.
+			[`console.log(typeof Object);${calls}`],
+			[`console.log([] instanceof Object);${calls}`],
+			[`console.log(Object(1) instanceof Number);${calls}`],
+			// These hand it out or may write its methods.
+			[`console.log(String(Object).length > 0);${calls}`],
+			[`console.log(!Object);${calls}`],
+			[`var o={v:Object.keys};console.log(o.v({z:1}).join());${calls}`],
+			[`var o={[Object.keys]:1};console.log(Object.keys(o).length);${calls}`],
+			[`({v:Object.keys}={v:function(){return ['w']}});${calls}`],
+			[`[Object.values]=[function(){return ['w']}];${calls}`],
+			[`for (Object.keys of [function(){return ['z']}]);${calls}`],
+			[`delete Object.keys;try{${calls}}catch(e){console.log(e.name)}`],
+			[`console.log(delete Object.zz);${calls}`],
+			[`Object.keys++;try{${calls}}catch(e){console.log(e.name)}`],
+			// A literal's keys are known unless a key or value is unknown.
+			[
+				"console.log(Object.keys(/*c*/{a:1}).join(), Object.keys({a:1}/*d*/).length)",
+				{ format: { comments: "all" } }
+			],
+			["console.log(Object.keys([1,2]).join(), Object.keys('ab').join(), Object.keys(5).length)"],
+			["console.log(Object.keys({...{a:1}}).join(), Object.keys({get a(){return 1}}).join(), Object.keys({a(){}}).join())"],
+			["console.log(Object.keys({[1+1]:1, [-1]:2, [f()]:3}).join());function f(){return 'q'}"],
+			["console.log(Object.keys({[Infinity]:1, [NaN]:2}).join())"]
+		])) {
+			const { code } = minifyOnePass(source, {
+				compress: {},
+				mangle: true,
+				...options
+			});
+			expect(runProgram(code)).toBe(runProgram(source));
+		}
+	});
+
+	it("should print an unread call's body, a string array split and names given by use, running alike", () => {
+		const calls = (/** @type {string} */ body) =>
+			`var log=[];function b(){log.push('b')}function c(){log.push('c')}function g(a){${body}}g(0);g(1);g(null);console.log(log.join())`;
+		const names = (/** @type {number} */ count, /** @type {string} */ prefix) =>
+			Array.from({ length: count }, (_, i) => `${prefix}${i}`);
+		const busy = names(70, "longName");
+		const many = names(60, "q");
+		const strings = (/** @type {(i: number) => string} */ element) =>
+			`[${Array.from({ length: 120 }, (_, i) => element(i)).join(",")}]`;
+		for (const [source, options] of /** @type {[string, EXPECTED_OBJECT?][]} */ ([
+			// An unread call prints its first `if`'s test, then `||` and the rest.
+			[calls("(function(){if(a)return;b();c()})()")],
+			[calls("(function(){if(a)return})()")],
+			[calls("(function(){if(a)return;'x';b()})()")],
+			[calls("(function(){if(a){return}b()})()")],
+			[calls("(function(){if(a=a)return;b()})()")],
+			[calls("(function(){if(a??0)return;b()})()")],
+			[calls("(function(){if(a)return;0,b()})()")],
+			// A function a call returns from prints as its value.
+			[
+				"function f(){var t=function(){return {a:1}};t().a++}f();console.log(1)"
+			],
+			[
+				"function f(){var t=function(){return 1};++t().a}try{f()}catch(e){console.log(e.name)}"
+			],
+			// A `var` set after the call that reads it is no constant there.
+			["function h(){g();var v=1;function g(){console.log(v)}console.log(v)}h()"],
+			["try{new RegExp('a', 5)}catch(e){console.log(e.name)}"],
+			// Enough strings print as one split, on a delimiter none holds.
+			[
+				`var a = ${strings((i) => `'${String.fromCharCode(65 + (i % 26))}'`)}; console.log(a.length, a[5])`
+			],
+			[
+				`var a = ${strings((i) => `'w${i}'`).slice(0, -1)}, 1]; console.log(a.length, a[5])`
+			],
+			[
+				`var a = ${strings((i) => `'w${i}'`).slice(0, -1)}, b]; var b; console.log(a.length, a[5])`
+			],
+			// The busiest names take the shortest, where that saves enough.
+			[
+				`function f(p){var ${busy.map((x, i) => `${x}=p+${i}`).join(",")};return [${busy.map((x) => `${x},${x},${x},${x},${x}`).join(",")}].join()}console.log(f(1))`
+			],
+			// A private name a direct `eval` reads is kept, and taken by no other.
+			[
+				`class A{${[..."abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_$"]
+					.map((letter, i) => `#${letter}=${i};`)
+					.join(
+						""
+					)}m(){return eval('this.#e')}}class B{#veryLong=1;get(){return this.#veryLong}}console.log(new A().m(), new B().get())`
+			],
+			// An array read at a known index prints as the element only where it reads alike.
+			[
+				"console.log([1][0].toString(), [this][0] === this, [function(){return 2}()][0].toFixed())"
+			],
+			["var a, b; console.log(0 || ([a] = [1]), a, 1 && ({b} = {b:2}), b)"],
+			["function f(a,c){return c?a/*x*/:a}console.log(f(1,1))", { format: { comments: "all" } }],
+			// `??` mixed with `&&` or `||` keeps its parentheses.
+			["function f(b,c,d){var t=b??c;return t&&d}console.log(f(1,2,3),f(null,0,1))"],
+			["function f(b,c,d){var t=b&&c;return t??d}console.log(f(1,2,3),f(0,null,1))"],
+			["function f(){function g(s){return s[0]}return g`x`}console.log(f())"],
+			// A function expression's name is its scope's under ie8.
+			["var f=function g(a,b){return typeof g};console.log(f())", { ie8: true }],
+			[
+				`var x = (function(){ var ${many.map((x, i) => `${x}=${i}`).join(",")}; return function g(z){return z + ${many.join("+")} + typeof g}})(); console.log(x(1))`
+			]
+		])) {
+			const { code } = minifyOnePass(source, {
+				compress: {},
+				mangle: true,
+				...options
+			});
+			expect(runProgram(code)).toBe(runProgram(source));
+		}
+	});
+
+	it("should keep a comment before a value from breaking the line after `return` or `throw`", () => {
+		const all = { compress: {}, mangle: true, format: { comments: "all" } };
+		for (const [source, expected] of [
+			// An `if` printing as `return t?a:b` parenthesizes a test comments precede.
+			[
+				"function h(c){if(//c\nc){return 1}else{return 2}}console.log(h(0),h(1))",
+				"function h(e){return(//c\ne)?1:2}console.log(h(0),h(1));"
+			],
+			[
+				"function h(c){if(/*c\n*/c.x)return c;return 2}console.log(h({x:1}).x,h({}))",
+				"function h(c){return(\n/*c\n*/\nc.x)?c:2}console.log(h({x:1}).x,h({}));"
+			],
+			// A `new` printing as a call opens with its callee, whose comments go first.
+			["throw ( new //c\n Error ( 'x' ) )", '//c\nthrow Error("x");'],
+			[
+				"function f(){return new //c\nError('x')}console.log(f().message)",
+				'function f(){//c\nreturn Error("x")}console.log(f().message);'
+			]
+		]) {
+			const { code } = minifyOnePass(source, all);
+			expect(code).toBe(expected);
+			expect(runProgram(code)).toBe(runProgram(source));
+		}
+		// A license comment is kept by default, so it breaks the line alike.
+		const source =
+			"function h(c){if(//@license\nc){return 1}else{return 2}}console.log(h(0),h(1))";
+		expect(
+			runProgram(minifyOnePass(source, { compress: {}, mangle: true }).code)
+		).toBe("2 1");
+	});
+
+	it("should print as `quote_keys`, `inline_script`, `inlinesNames` and import phases ask", () => {
+		for (const [source, options, expected] of /** @type {[string, EXPECTED_OBJECT, string][]} */ ([
+			["var o={a:1};console.log(o.a)", { format: { quote_keys: true } }, 'var o={"a":1};console.log(o.a);'],
+			// A shorter exponent moves the fraction's digits before it.
+			["console.log(1.5e-7, 2.25e30)", {}, "console.log(15e-8,2.25e30);"],
+			[
+				"import defer * as ns from './x.js'; console.log(ns)",
+				{ module: true },
+				'import defer*as o from"./x.js";console.log(o);'
+			],
+			[
+				"console.log(import.defer('./x'), import.source('./y'))",
+				{ module: true },
+				'console.log(import.defer("./x"),import.source("./y"));'
+			],
+			// A directive spelled with escapes stays as written.
+			["'\\x75se strict';console.log(1)", { format: { inline_script: false } }, "'\\x75se strict';console.log(1);"],
+			// An escaped `\\<` gives its backslash up to the `\\x3c` replacing it.
+			["'\\<!--';console.log(1)", {}, "'\\x3c!--';console.log(1);"],
+			// A reserved list may be a set, as terser reads it; anything else reserves nothing.
+			["function f(aaa){return aaa}f(1)", { mangle: { reserved: new Set(["a"]) } }, "function f(f){return f}f(1);"],
+			["function f(aaa){return aaa}f(1)", { mangle: { reserved: "a" } }, "function f(a){return a}f(1);"],
+			// Names printed in their parents' text, as a walk that skips them asks.
+			[
+				"var a = (b), c = d.e; f(a, (g), new (h)); (i)`x`",
+				{ compress: undefined, mangle: undefined, inlinesNames: true },
+				"var a=b,c=d.e;f(a,g,new h);i`x`;"
+			]
+		])) {
+			expect(
+				minifyOnePass(source, { compress: {}, mangle: true, ...options }).code
+			).toBe(expected);
+		}
+		// Each name printed so is mapped, as its parent prints it.
+		const { SourceProcessor } = require("../../../lib/javascript/syntax");
+		const inlinesNames = /** @type {EXPECTED_OBJECT} */ ({ inlinesNames: true });
+		const mapped = /** @type {{ code: string, map: EXPECTED_ANY }} */ (
+			new SourceProcessor().process("a ( b )", {
+				mode: "minify",
+				...inlinesNames,
+				source: "in.js"
+			})
+		);
+		expect(mapped.map).toEqual(expect.objectContaining({ names: ["a", "b"] }));
+	});
+
 	describe("mangling properties in one pass", () => {
 		const PROPERTY_SOURCES = [
 			'var o = { zAlpha: 1, "zGamma": 3, 4: "four", zNested: { zDeep: 5 } }; o.zDelta = o.zAlpha + 1; o["zEpsilon"] = 6; console.log(o.zAlpha, o.zGamma, o[4], o.zNested.zDeep, o.zDelta, o.zEpsilon, "zDelta" in o, "zZeta" in o);',
@@ -2218,6 +2437,39 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				props: { props: { $zFooBar: "x", $zBazQux: "o", $zOther: "p" } }
 			});
 			expect(codes.map(runProgram)).toEqual(["1 2", "3 4"]);
+		});
+
+		it("should rename a property the cache hands another, and keep to the cache where asked", () => {
+			const source = "var o={zFoo:1,zQux:2};console.log(o.zFoo,o.zQux)";
+			for (const [options, expected] of /** @type {[EXPECTED_OBJECT, string][]} */ ([
+				// The name the cache hands `zFoo` is renamed where the source has it.
+				[
+					{ mangle: { properties: {} }, nameCache: { props: { props: { $zFoo: "zQux" } } } },
+					"var o={zQux:1,o:2};console.log(o.zQux,o.o);"
+				],
+				[
+					{ mangle: { properties: { only_cache: true } }, nameCache: { props: { props: { $zFoo: "q" } } } },
+					"var o={q:1,zQux:2};console.log(o.q,o.zQux);"
+				],
+				// A debug name taken already is no debug name.
+				[
+					{ mangle: { properties: { debug: true, reserved: ["_$zFoo$_"] } } },
+					"var o={o:1,_$zQux$_:2};console.log(o.o,o._$zQux$_);"
+				],
+				// What the cache holds under a key not written as its own is not read.
+				[
+					{ mangle: { properties: {} }, nameCache: { props: { props: { zFoo: "x" } } } },
+					"var o={o:1,l:2};console.log(o.o,o.l);"
+				],
+				[
+					{ mangle: { properties: true }, nameCache: { vars: {} } },
+					"var o={o:1,l:2};console.log(o.o,o.l);"
+				]
+			])) {
+				const { code } = minifyOnePass(source, { compress: {}, ...options });
+				expect(code).toBe(expected);
+				expect(runProgram(code)).toBe("1 2");
+			}
 		});
 	});
 });
@@ -2554,6 +2806,30 @@ describe("JavaScript minifier mangling a SyntaxTree", () => {
 				throw new Error("unreachable");
 			})
 		).toThrow("The minifier's scope analysis cannot read a node of type 255");
+	});
+
+	it("should read a `with`, a loop and a catch where no option asks for more", () => {
+		const tree = new SyntaxTree();
+		const program = tree.addEstree(
+			/** @type {EXPECTED_ANY} */ (
+				WebpackParser.parse(
+					"with(o){a; var b}for(;;)break;while(0);try{}catch(e){e}",
+					{ ecmaVersion: "latest" }
+				)
+			)
+		);
+		const analysis = analyzeMinifierTree(
+			tree,
+			program,
+			Uint8Array.from(tree._types),
+			{},
+			() => {
+				throw new Error("unreachable");
+			}
+		);
+		expect(analysis.aliases).toBeNull();
+		expect(analysis.spelledNames).toBeNull();
+		expect([...analysis.globals.keys()]).toEqual(["o", "a"]);
 	});
 });
 
