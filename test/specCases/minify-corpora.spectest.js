@@ -953,16 +953,16 @@ const CORPORA = [
 const INHERITED = {};
 
 /**
- * By corpus, the gzip total of webpack's outputs where it is still bigger than
- * terser's: no run may grow it, and one no longer bigger retires it. Lower an
- * entry as a run shrinks it.
+ * By corpus, how many times terser's gzip total webpack's outputs may gzip to
+ * where they still gzip bigger, a ratio one zlib gives both sides of: no run
+ * may grow it, and one no longer bigger retires it. Lower it as a run shrinks it.
  * @type {Record<string, number>}
  */
 const TERSER_TOTAL_BUDGET = {
-	"terser compress": 1897740,
-	"swc minifier": 9416203,
-	"swc exec": 167221,
-	"oxc minifier": 653251
+	"terser compress": 1.0605,
+	"swc minifier": 1.0087,
+	"swc exec": 1.052,
+	"oxc minifier": 1.0256
 };
 
 /* cspell:disable */
@@ -1516,9 +1516,9 @@ describe("JavaScript minifier", () => {
 			)
 				? TERSER_TOTAL_BUDGET[name]
 				: undefined;
-			if (ours > theirs && (budget === undefined || ours > budget)) {
+			if (ours > theirs && (budget === undefined || ours > theirs * budget)) {
 				bigger.push(
-					`${name}: ${ours} B gzip, against terser's ${theirs} B${budget === undefined ? "" : ` and a budget of ${budget} B`}`
+					`${name}: ${ours} B gzip, against terser's ${theirs} B, ${(ours / theirs).toFixed(4)} times it${budget === undefined ? "" : ` where the budget is ${budget}`}`
 				);
 			} else if (ours <= theirs && budget !== undefined) {
 				bigger.push(
