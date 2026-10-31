@@ -1419,6 +1419,11 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				"(function(){var a; function f(){return a} function u(){return f()} g()})()",
 				"g();"
 			],
+			// One a comment keeps where it is keeps what it reads.
+			[
+				"(function(){var a={}; /*! keep */ function f(){return a} function u(){return f()} g()})()",
+				"!function(){var a={};/*! keep */function f(){return a}g()}();"
+			],
 			[
 				"(function(){var o={m(){return p}}, p={m(){return o}}; g(p)})()",
 				"!function(){var o={m(){return p}},p={m(){return o}};g(p)}();"
