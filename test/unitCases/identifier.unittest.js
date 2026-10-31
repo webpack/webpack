@@ -3,8 +3,32 @@
 const path = require("path");
 const { pathToFileURL } = require("url");
 const identifierUtil = require("../../lib/util/identifier");
+const { getScheme } = require("../../lib/util/URLAbsoluteSpecifier");
 
 describe("util/identifier", () => {
+	describe("decodeResourcePath", () => {
+		/** @type {[string, string][]} */
+		const cases = [
+			["./a%20b.png", "./a b.png"],
+			["./a%2520b.png", "./a%20b.png"],
+			["./a%23b.png?x=%23#y%20z", "./a\0#b.png?x=%23#y%20z"],
+			["./a%3Fb.png", "./a\0?b.png"],
+			["./a%21b.png", "./a\0!b.png"],
+			["a%3Ab.png", "a\0:b.png"],
+			["./100%.png", "./100%.png"]
+		];
+
+		it.each(cases)("decodes %s as %s", (resource, expected) => {
+			expect(identifierUtil.decodeResourcePath(resource)).toBe(expected);
+		});
+
+		it("should keep a decoded colon from reading as a scheme", () => {
+			expect(
+				getScheme(identifierUtil.decodeResourcePath("c%3Ad.png"))
+			).toBeUndefined();
+		});
+	});
+
 	describe("normalizeSourceMapUrl", () => {
 		it("should normalize a source map's source as its readers resolve it", () => {
 			/** @type {[string, string][]} */

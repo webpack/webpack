@@ -19,7 +19,13 @@ it("should decode asset paths in src and srcset exactly once", () => {
 	const expression = /<img src="([^"]+)"/g;
 	let match;
 	while ((match = expression.exec(page))) sources.push(match[1]);
-	expect(sources.map(readAsset)).toEqual(["space", "hash", "percent", "encoded"]);
+	expect(sources.map(readAsset)).toEqual([
+		"space",
+		"hash",
+		"percent",
+		"encoded",
+		"bang"
+	]);
 	const srcset = page.match(/srcset="([^"]+)"/)[1];
 	expect(srcset.split(", ").map(candidate => readAsset(candidate.split(" ")[0])))
 		.toEqual(["space", "hash"]);
