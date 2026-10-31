@@ -411,7 +411,7 @@ const toMarkdown = (rows, installed, base, comment) => {
 			total
 		)}** in total (dependencies only, no devDependencies).`,
 		"",
-		`⚠️ ${duplicated.length} packages are installed more than once; they come first. In several versions: widening or upgrading the parent whose range excludes the newest version removes a copy. One version in several copies: npm could not hoist it, usually because another version holds the shared spot, so aligning that version or running \`npm dedupe\` merges them.`,
+		`⚠️ ${duplicated.length} packages are installed more than once, in several versions or copies; they come first.`,
 		"",
 		"Parent packages name the version range each one asks for; the path is the shortest chain from a requested package.",
 		"",
