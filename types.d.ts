@@ -19765,73 +19765,6 @@ declare interface MakeDirectoryOptions {
 }
 
 /**
- * What a print recorded for mangling to rewrite in its text: each name it
- * printed as written, and each import or export `as` clause.
- */
-declare interface MangleRecording {
-	/**
-	 * where each piece starts in the text, `count` of them
-	 */
-	starts: Int32Array;
-
-	/**
-	 * how long each piece is, negated where the frequency count leaves its name out
-	 */
-	lengths: Int32Array;
-
-	/**
-	 * how many pieces there are
-	 */
-	count: number;
-
-	/**
-	 * the definition whose name replaces each piece
-	 */
-	targets: NamedDefinition[];
-
-	/**
-	 * the pieces that are an import's or export's `as` clause, in order
-	 */
-	specifiers: MangleSpecifier[];
-
-	/**
-	 * text a string print would have written but this one did not
-	 */
-	counted: string[];
-
-	/**
-	 * text this print wrote that a string print would not
-	 */
-	uncounted: string[];
-}
-
-/**
- * A recorded `as` clause: whether the local's final name matches the foreign
- * one decides if it is written.
- */
-declare interface MangleSpecifier {
-	/**
-	 * which piece it is
-	 */
-	index: number;
-
-	/**
-	 * the other module's name
-	 */
-	foreign: string;
-
-	/**
-	 * that name as printed
-	 */
-	text: string;
-
-	/**
-	 * whether the clause precedes the local name
-	 */
-	isImport: boolean;
-}
-
-/**
  * Describes a manifest entrypoint.
  */
 declare interface ManifestEntrypoint {
@@ -22373,14 +22306,6 @@ declare interface NamedChunkIdsPluginOptions {
 	 * delimiter
 	 */
 	delimiter?: string;
-}
-
-/**
- * what every definition of a name holds: the name it declares, and the one mangling gave it
- */
-declare interface NamedDefinition {
-	name: string;
-	mangled_name?: null | string;
 }
 declare class NamedModuleIdsPlugin {
 	/**
@@ -34691,16 +34616,6 @@ declare interface TreeNames {
 	 * each private name's new name, null for none renamed
 	 */
 	privateNames: null | Map<string, string>;
-
-	/**
-	 * where the result was printed while mangling, what `patchRecording` rewrites
-	 */
-	recorded: null | MangleRecording;
-
-	/**
-	 * what that print wrote
-	 */
-	text: string;
 
 	/**
 	 * for the one pass, the declarators whose name no read reads any more
