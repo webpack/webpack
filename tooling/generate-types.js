@@ -20,6 +20,25 @@ const ts = require("typescript");
 const argv = require("./argv");
 const createTypeScriptProgram = require("./typescript-program");
 
+// The `Symbol.*` keys a declaration file can name.
+const WELL_KNOWN_SYMBOLS = new Set([
+	"asyncDispose",
+	"asyncIterator",
+	"dispose",
+	"hasInstance",
+	"isConcatSpreadable",
+	"iterator",
+	"match",
+	"matchAll",
+	"replace",
+	"search",
+	"species",
+	"split",
+	"toPrimitive",
+	"toStringTag",
+	"unscopables"
+]);
+
 const {
 	write: doWrite,
 	verbose,
@@ -1356,7 +1375,11 @@ const collectTypes = ({ program, checker, options }) => {
 				}
 				const flags = prop.getFlags();
 				if (name.startsWith("__@")) {
-					name = `[Symbol.${name.slice(3, name.lastIndexOf("@"))}]`;
+					const description = name.slice(3, name.lastIndexOf("@"));
+					// Only `Symbol.*` keys can be written here; a module's own
+					// symbol, such as `util.inspect.custom`, is left out.
+					if (!WELL_KNOWN_SYMBOLS.has(description)) continue;
+					name = `[Symbol.${description}]`;
 				} else if (!/^[_a-zA-Z$][_a-zA-Z$0-9]*$/.test(name)) {
 					name = JSON.stringify(name);
 				}

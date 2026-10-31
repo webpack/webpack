@@ -21751,7 +21751,6 @@ declare class ModuleNotFoundError extends WebpackError {
 		err: Error & { details?: string },
 		loc: DependencyLocation
 	);
-	[index: number]: () => string;
 	error: Error & { details?: string };
 
 	/**
@@ -35632,7 +35631,6 @@ declare class WebpackError extends Error {
 	 * Creates an instance of WebpackError.
 	 */
 	constructor(message?: string, options?: { cause?: unknown });
-	[index: number]: () => string;
 	details?: string;
 	module?: null | Module;
 	loc?: SyntheticDependencyLocation | RealDependencyLocation;
