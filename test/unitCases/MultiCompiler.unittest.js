@@ -551,6 +551,21 @@ describe("MultiCompiler", () => {
 		});
 	});
 
+	it("should keep the returned watching usable when a child is already watching", (done) => {
+		const compiler = createMultiCompiler();
+		compiler.compilers[0].watch({}, () => {});
+		const watching = /** @type {MultiWatching} */ (
+			compiler.watch({}, () => {})
+		);
+		expect(watching.watchings).toHaveLength(1);
+		watching.suspend();
+		watching.resume();
+		watching.close((err) => {
+			expect(err).toBeFalsy();
+			compiler.close(done);
+		});
+	});
+
 	it("should expose `watching` when dependency validation fails", (done) => {
 		const compiler = /** @type {import("../../").MultiCompiler} */ (
 			webpack(
