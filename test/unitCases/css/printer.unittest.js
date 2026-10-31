@@ -9698,6 +9698,13 @@ describe("CssSyntax minify — unusedSymbols", () => {
 		expect(withoutSymbols(":root{--gone:red}", ["gone"])).toBe(
 			":root{--gone:red}"
 		);
+		// An escaped `:` is part of the name, not the end of it.
+		expect(
+			withoutSymbols(":root{--a\\:b:red;--kept:blue}", ["--a:b"])
+		).toBe(":root{--kept:blue}");
+		expect(withoutSymbols(":root{--a\\:b:red}", ["--a�"])).toBe(
+			":root{--a\\:b:red}"
+		);
 	});
 
 	it("reaches a rule at any depth", () => {

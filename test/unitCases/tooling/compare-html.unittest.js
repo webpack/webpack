@@ -264,7 +264,7 @@ describe("compare-html-tools — agreeing with parse5", () => {
 	const parsed = (id) => ({
 		nodeName: "#document",
 		childNodes: [
-			{ nodeName: "#documentType", name: "html" },
+			{ nodeName: "#documentType", name: "html", publicId: "", systemId: "" },
 			element("html", HTML_NAMESPACE, [
 				element("head", HTML_NAMESPACE, []),
 				element("body", HTML_NAMESPACE, [
