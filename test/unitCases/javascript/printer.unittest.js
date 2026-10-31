@@ -52,7 +52,7 @@ describe("syntax-printer", () => {
 			(
 				await minifier.minify("export function f(a){ return a + 1 }", {
 					...options,
-					compress: { passes: 3 },
+					compress: {},
 					module: true
 				})
 			).code
@@ -474,21 +474,10 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				{},
 				"function h(n){let e=n;arguments[0]=2;return e}h(1);"
 			],
-			// Each pass prints the last one's output again.
+			// A preamble prints once, before the code.
 			[
 				"function f(){ var a = undefined; return 1 } f()",
-				{ compress: { passes: 1 } },
-				"function f(){return 1}f();"
-			],
-			[
-				"function f(){ var a = undefined; return 1 } f()",
-				{ compress: { passes: 2 } },
-				"function f(){return 1}f();"
-			],
-			// A preamble is not printed twice.
-			[
-				"function f(){ var a = undefined; return 1 } f()",
-				{ compress: { passes: 2 }, format: { preamble: "/* p */" } },
+				{ format: { preamble: "/* p */" } },
 				"/* p */\nfunction f(){return 1}f();"
 			],
 			// A `with` may bind `undefined`, so every one stays a name.
@@ -1321,7 +1310,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			}
 		},
 		"ECMAScript 2020": {
-			compress: { passes: 2 },
+			compress: {},
 			mangle: true,
 			ecma: 2020,
 			format: { comments: "/!/" }
@@ -1503,12 +1492,12 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// Sloppy code ignores a function expression setting its own name.
 			[
 				"console.log(function c(){c=6;return c}(),function c(){c=6;return typeof c}())",
-				{ compress: { passes: 3 } }
+				{ compress: {} }
 			],
 			// Moved into a function moved itself, a read stays the outer name's.
 			[
 				'!function(){function foo(x){console.log("foo",x);if(x)bar(x-1)}function bar(x){console.log("bar",x);if(x)qux(x-1)}function qux(x){console.log("qux",x);if(x)foo(x-1)}qux(4)}();',
-				{ compress: { passes: 2 } }
+				{ compress: {} }
 			],
 			[
 				"console.log(delete undefined,delete void 0,delete Infinity,delete NaN);var x=1;console.log(delete x)",
@@ -1678,6 +1667,163 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		).toBe("it(function(){g(class{m(){return this.x}})});");
 	});
 
+	it("should read terser's compress options that name calls, globals and names", () => {
+		const print = (
+			/** @type {string} */ source,
+			/** @type {Record<string, unknown>} */ compress = {}
+		) => minifyOnePass(source, { compress, mangle: false }).code;
+		// `drop_debugger` drops them unless turned off, where no list holds one too.
+		expect(print("debugger;f();")).toBe("f();");
+		expect(print("if(a)debugger;f();")).toBe("if(a);f();");
+		expect(print("debugger;f();", { drop_debugger: false })).toBe(
+			"debugger;f();"
+		);
+		// `drop_console` drops a call whole, what its arguments run with it.
+		expect(print("console.log(f());g();", { drop_console: true })).toBe(
+			"g();"
+		);
+		expect(
+			print("(function(){var a=f();console.info(a);g()})()", {
+				drop_console: true
+			})
+		).toBe("f();g();");
+		expect(
+			print("console.log(1);console.warn(2);g();", { drop_console: ["log"] })
+		).toBe("console.warn(2);g();");
+		expect(
+			print("console[m](1);c.console.log(1);", { drop_console: true })
+		).toBe("console[m](1);c.console.log(1);");
+		expect(
+			print("var console=k;console.log(1);", { drop_console: true })
+		).toBe("var console=k;console.log(1);");
+		// Where no list holds it, it prints as the `undefined` it returns.
+		expect(
+			print("if(a)console.log(f());for(;;)console.log(1);x=console.log(2);", {
+				drop_console: true
+			})
+		).toBe("if(a);for(;;);x=void 0;");
+		// Where a unary cannot stand, it is grouped.
+		expect(
+			print(
+				"x=console.log()**2;y=console.log().a;z=console.log()();w=new(console.log());",
+				{ drop_console: true }
+			)
+		).toBe("x=(void 0)**2;y=(void 0).a;z=(void 0)();w=new(void 0);");
+		// So is one called through `call` or `apply`.
+		expect(
+			print("console.log.call(console,a);console.log.apply(console,b);g();", {
+				drop_console: true
+			})
+		).toBe("g();");
+		// `pure_funcs` marks the calls it names pure, by how the callee is written.
+		expect(
+			print("foo(1);a.b.c(2);a.b.d(3);a[b].c(4);(0,foo)(5);", {
+				pure_funcs: ["foo", "a.b.c"]
+			})
+		).toBe("a.b.d(3);a[b].c(4);(0,foo)(5);");
+		expect(print("var x=foo(1);h(x);", { pure_funcs: ["foo"] })).toBe(
+			"var x=foo(1);h(x);"
+		);
+		// `global_defs` replaces a global nothing sets with a primitive value.
+		const defs = {
+			global_defs: { DEBUG: false, VERSION: "1.2", "@code": "x", O: {} }
+		};
+		expect(print("if(DEBUG)x();g(VERSION,O);", defs)).toBe('g("1.2",O);');
+		expect(print("DEBUG=1;g(DEBUG);", defs)).toBe("DEBUG=1;g(DEBUG);");
+		expect(print("(function(DEBUG){g(DEBUG)})(h)", defs)).toBe(
+			"!function(DEBUG){g(DEBUG)}(h);"
+		);
+		// A shorthand prints its key and the value.
+		expect(
+			minifyOnePass("g({DEBUG,VERSION});", {
+				compress: defs,
+				mangle: false,
+				ecma: 2015
+			}).code
+		).toBe('g({DEBUG:!1,VERSION:"1.2"});');
+		// A key with dots names what is read off a global.
+		const nested = {
+			global_defs: { "process.env.NODE_ENV": "production", "env.DEBUG": 0 }
+		};
+		expect(
+			print(
+				'if(process.env.NODE_ENV!=="production")x();g(env.DEBUG,a.env.DEBUG,delete env.DEBUG);',
+				nested
+			)
+		).toBe("g(0,a.env.DEBUG,delete env.DEBUG);");
+		expect(print("var env={};g(env.DEBUG);", nested)).toBe(
+			"var env={};g(env.DEBUG);"
+		);
+		// A number a sign or point would join to what is around it is grouped.
+		expect(
+			print("g(V.toString(),-V,typeof V);", { global_defs: { V: -1 } })
+		).toBe('g((-1).toString(),-(-1),"number");');
+		expect(print("g(1/V);", { global_defs: { V: -0 } })).toBe("g(1/(-0));");
+		// `top_retain` keeps the top-level names it lists, a pattern or a test keeps.
+		const top = "var foo=1,bar=2;";
+		expect(print(top, { toplevel: true })).toBe("");
+		expect(print(top, { toplevel: true, top_retain: "foo, bar" })).toBe(
+			"var foo=1,bar=2;"
+		);
+		expect(print(top, { toplevel: true, top_retain: ["bar"] })).toBe(
+			"var bar=2;"
+		);
+		expect(print(top, { toplevel: true, top_retain: /^f/g })).toBe(
+			"var foo=1;"
+		);
+		expect(
+			print(top, {
+				toplevel: true,
+				top_retain: (/** @type {{ name: string }} */ definition) =>
+					definition.name === "bar"
+			})
+		).toBe("var bar=2;");
+		// It implies `toplevel` where that is not given, and keeps a name inlined.
+		expect(print(top, { top_retain: "foo" })).toBe("var foo=1;");
+		expect(print(top, { top_retain: "foo", toplevel: false })).toBe(
+			"var foo=1,bar=2;"
+		);
+		expect(
+			print("var foo=1;foo;g(foo);", { toplevel: true, top_retain: "foo" })
+		).toBe("var foo=1;g(foo);");
+		// `keep_infinity` prints `Infinity` as written.
+		expect(print("x(Infinity);")).toBe("x(1/0);");
+		expect(print("x(Infinity);", { keep_infinity: true })).toBe(
+			"x(Infinity);"
+		);
+	});
+
+	it("should keep what terser's `unused` and `inline` turned off keep", () => {
+		const print = (
+			/** @type {string} */ source,
+			/** @type {Record<string, unknown>} */ compress = {}
+		) => minifyOnePass(source, { compress, mangle: false }).code;
+		const unread = "(function(){var a=1;function u(){}g(a)})()";
+		expect(print(unread)).toBe("g(1);");
+		expect(print(unread, { unused: false })).toBe(
+			"!function(){var a=1;function u(){}g(a)}();"
+		);
+		expect(print("(function(a){g(a)})(1)", { unused: false })).toBe(
+			"!function(a){g(a)}(1);"
+		);
+		expect(print("(function(){var a=f();g(a)})()", { unused: false })).toBe(
+			"!function(){var a=f();g(a)}();"
+		);
+		const called = "(function(){function f(){return g()}h(f())})()";
+		expect(print(called)).toBe("h(g());");
+		expect(print(called, { inline: false })).toBe(
+			"!function(){function f(){return g()}h(f())}();"
+		);
+		const moved = "function f(x){var g=()=>C;if(x)return;class C{}return g()}";
+		expect(print(moved)).toBe("function f(x){if(x)return;class C{}return C}");
+		expect(print(moved, { inline: false })).toBe(
+			"function f(x){var g=()=>C;if(x)return;class C{}return g()}"
+		);
+		expect(print("h((function(){return 1})())", { inline: 0 })).toBe(
+			"h(function(){return 1}());"
+		);
+	});
+
 	it("should keep what may throw or run code in the one pass, as test262 reads it", () => {
 		const print = (
 			/** @type {string} */ source,
@@ -1753,7 +1899,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			/** @type {Record<string, unknown>} */ options = {}
 		) =>
 			minifyOnePass(source, {
-				compress: { passes: 2 },
+				compress: {},
 				mangle: {},
 				module: true,
 				...options
@@ -1769,7 +1915,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		);
 		expect(
 			print('export const o={["a"]:1};', {
-				compress: { passes: 2, computed_props: false }
+				compress: { computed_props: false }
 			})
 		).toBe('export const o={["a"]:1};');
 		// `RegExp` of a primitive builds as `new RegExp` does; of an expression, it may hand it back.
@@ -3006,8 +3152,8 @@ const INPUT_MAP = {
  * @type {[string, { [file: string]: string }, import("terser").MinifyOptions & { as?: "script" | "module" | "event-handler" }, EXPECTED_ANY][]}
  */
 const MINIFY_CASES = [
-	["defaults", { "script.js": SCRIPT }, { compress: { passes: 2 } }, true],
-	["extraction off", { "script.js": SCRIPT }, { compress: { passes: 2 } }, false],
+	["defaults", { "script.js": SCRIPT }, { compress: {} }, true],
+	["extraction off", { "script.js": SCRIPT }, { compress: {} }, false],
 	["extract by pattern", { "script.js": SCRIPT }, {}, /@license/],
 	["extract by condition", { "script.js": SCRIPT }, {}, { condition: "some" }],
 	["extract nothing named", { "script.js": SCRIPT }, {}, { condition: false }],
