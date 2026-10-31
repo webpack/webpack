@@ -1399,6 +1399,23 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				"!function(){var f=()=>{};class C extends f{}g()}();"
 			],
 			[
+				"(function(){var f = () => {}; var C = class extends f{}; g()})()",
+				"!function(){var f=()=>{};(class extends f{});g()}();"
+			],
+			// A class a variable is set to before, and never again, constructs.
+			[
+				"(function(){var B = class {}; var C = class extends B{}; g()})()",
+				"g();"
+			],
+			[
+				"(function(){var B = class {}; B = h(); var C = class extends B{}; g()})()",
+				"!function(){var B=class{};B=h();(class extends B{});g()}();"
+			],
+			[
+				"(function(){var C = class extends B{}; var B = class {}; g()})()",
+				"!function(){(class extends B{});var B=class{};g()}();"
+			],
+			[
 				"(function(){class C extends K{} class K{} g()})()",
 				"!function(){class C extends K{}class K{}g()}();"
 			],
