@@ -36,6 +36,21 @@ module.exports = {
 					},
 					"./sync-loader.js"
 				]
+			},
+			{
+				test: /plain-symbol\.js$/,
+				use: [
+					{
+						loader: "./sync-loader.js",
+						sourceTest: /** @type {(source: string) => boolean} */ (
+							(source) => {
+								if (source) throw Symbol("odd");
+								return false;
+							}
+						)
+					},
+					"./sync-loader.js"
+				]
 			}
 		]
 	}
