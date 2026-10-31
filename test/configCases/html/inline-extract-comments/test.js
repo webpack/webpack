@@ -19,7 +19,15 @@ const listFiles = (dir) => {
 	return files;
 };
 
-for (const page of ["page.html", "sub/page.html", "my pages/page.html"]) {
+const DEFAULT_BANNER = /For license information please see (.+?) \*\//g;
+
+for (const [page, banner] of [
+	["page.html", DEFAULT_BANNER],
+	["sub/page.html", DEFAULT_BANNER],
+	["my pages/page.html", DEFAULT_BANNER],
+	["custom/page.html", /Licenses are in (.+?) \*\//g],
+	["legacy/page.html", DEFAULT_BANNER]
+]) {
 	it(`should point ${page} at the license files of what it inlines`, () => {
 		const html = fs
 			.readFileSync(path.resolve(__dirname, page))
@@ -29,11 +37,10 @@ for (const page of ["page.html", "sub/page.html", "my pages/page.html"]) {
 		expect(html).toMatch(/<style>[^<]*--spacing:\s*1em/);
 		expect(html).not.toContain("css license");
 		expect(html).not.toContain("js license");
-		const pattern = /For license information please see (.+?) \*\//g;
 		/** @type {string[]} */
 		const licenses = [];
 		let match;
-		while ((match = pattern.exec(html)) !== null) {
+		while ((match = banner.exec(html)) !== null) {
 			licenses.push(
 				path.posix.join(path.posix.dirname(page), match[1])
 			);
@@ -49,6 +56,14 @@ for (const page of ["page.html", "sub/page.html", "my pages/page.html"]) {
 		).toMatch(/css license[\s\S]*js license|js license[\s\S]*css license/);
 	});
 }
+
+it("should leave a banner naming no license file as written", () => {
+	const html = fs
+		.readFileSync(path.resolve(__dirname, "no-link/page.html"))
+		.toString("utf-8");
+	expect(html).toContain("inlined-body");
+	expect(html.split("/*! See the licenses */")).toHaveLength(3);
+});
 
 it("should delete the chunk files it inlined", () => {
 	const chunkFiles = listFiles("").filter(
