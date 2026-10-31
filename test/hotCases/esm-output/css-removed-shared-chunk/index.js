@@ -4,15 +4,27 @@ const hasShared = () =>
 		link.href.includes("/shared.")
 	);
 
-it("should keep a stylesheet another runtime on the page still uses", async () => {
-	await require("./owner").load();
-	await import(/* webpackIgnore: true */ "./other.mjs");
-	await globalThis.otherShared;
-	expect(hasShared()).toBe(true);
-
-	await new Promise((resolve, reject) => {
+/** @returns {Promise<void>} the next compilation */
+const rebuild = () =>
+	new Promise((resolve, reject) => {
 		NEXT(error => (error ? reject(error) : resolve()));
 	});
-	await module.hot.check(true);
+
+it("should keep a stylesheet another runtime on the page still uses", async () => {
+	// Not awaited, so "other" finds the link while it is still loading.
+	const loading = require("./owner").load();
+	await import(/* webpackIgnore: true */ "./other.mjs");
+	await Promise.all([loading, globalThis.otherShared]);
 	expect(hasShared()).toBe(true);
+
+	await rebuild();
+	await module.hot.check(true);
+	await globalThis.otherHot.check(true);
+	expect(hasShared()).toBe(true);
+
+	// "third" keeps the chunk in the build, so only the marks decide.
+	await rebuild();
+	await module.hot.check(true);
+	await globalThis.otherHot.check(true);
+	expect(hasShared()).toBe(false);
 });

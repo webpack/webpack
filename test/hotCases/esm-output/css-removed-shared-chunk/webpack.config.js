@@ -2,7 +2,7 @@
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {
-	entry: { main: "./index.js", other: "./other.js" },
+	entry: { main: "./index.js", other: "./other.js", third: "./third.js" },
 	experiments: { css: true },
 	output: {
 		publicPath: "auto",

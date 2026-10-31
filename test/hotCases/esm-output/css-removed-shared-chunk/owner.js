@@ -3,3 +3,6 @@ module.hot.accept();
 ---
 exports.load = () => Promise.resolve();
 module.hot.accept();
+---
+exports.load = () => Promise.resolve();
+module.hot.accept();
