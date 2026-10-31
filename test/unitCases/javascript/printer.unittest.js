@@ -333,9 +333,9 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				"if(x){b();c()}else d();if(x){c();e()}else d();while(x){b();c()}"
 			],
 			[
-				"if (a) { let x = h(); f(x, x) } if (a) { const y = h(); f(y, y) } if (a) { var z = 1 } if (a) { class C {} } if (a) { function g() {} } if (a) {} if (a) { b(); c() }",
+				"if (a) { let x = h(); f(x, x) } if (a) { const y = h(); f(y, y) } if (a) { var z = 1 } if (a) { class C {} f(C) } if (a) { function g() {} } if (a) {} if (a) { b(); c() }",
 				{},
-				"if(a){let i=h();f(i,i)}if(a){let n=h();f(n,n)}if(a)var z=1;if(a){class s{}}if(a){function g(){}}if(a){}if(a){b();c()}"
+				"if(a){let i=h();f(i,i)}if(a){let n=h();f(n,n)}if(a)var z=1;if(a){class s{}f(s)}if(a){function g(){}}if(a){}if(a){b();c()}"
 			],
 			[
 				"if (a) /* before */ { b() } if (a) { b() /* after */ }",
@@ -506,7 +506,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"function f(a){ var a = 1; return arguments[0] } function g(){ var b = 1; var b = 2 } function e(){ var x = 1; eval('x') } function w(){ /* keep */ var c = 1 } function l(){ { function inner() {} } var m = -b, n = typeof b }",
 				{ format: { comments: /keep/ } },
-				'function f(n){var n=1;return arguments[0]}function g(){}function e(){var x=1;eval("x")}function w(){/* keep */var n=1}function l(){{}-b}'
+				'function f(n){var n=1;return arguments[0]}function g(){}function e(){var x=1;eval("x")}function w(){}function l(){{}-b}'
 			],
 			[
 				"var top = 1; let t2 = 2; export function e() {} function unusedTop() {} var ex = 1; export { ex }",
@@ -642,7 +642,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"function f(){ var a = 1; /* keep */ g(a); /* drop */ h(); } // tail",
 				{ format: { comments: /keep/ } },
-				"function f(){var a=1;/* keep */g(a);h()}"
+				"function f(){/* keep */g(1);h()}"
 			],
 			[
 				"function f(){ var a = 1; g(a) /* keep */ }",
@@ -692,7 +692,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"function f(){ var m = /* keep */ function(){}; h(m) } function i(){ /* keep */ var n = 1; g(n) }",
 				{ format: { comments: /keep/ } },
-				"function f(){var n=/* keep */function(){};h(n)}function i(){/* keep */var n=1;g(n)}"
+				"function f(){var n=/* keep */function(){};h(n)}function i(){g(1)}"
 			],
 			// A function moved to its one read.
 			[
@@ -1373,6 +1373,95 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		});
 	}
 
+	it("should drop declarations only each other reads, and classes nothing reads", () => {
+		const cases = [
+			// Each reads the other, and nothing printed reads either.
+			["(function(){class A{m(){return new B}} class B{m(){return new A}} g()})()", "g();"],
+			["(function(){class A{static x(){return A}} g()})()", "g();"],
+			["(function(){var a=function(){return b()},b=function(){return a()}; g()})()", "g();"],
+			// What a kept read reaches stays.
+			["(function(){function a(){return b()} function b(){return a()} g(a)})()", "!function(){function a(){return a()}g(a)}();"],
+			// A class running code as it is made stays.
+			["(function(){class A{static{h()}} class B{[h()](){}} g()})()", "!function(){class A{static{h()}}class B{[h()](){}}g()}();"],
+			// `null && K` never reads `K`.
+			["(function(){class K{} class C extends (null && K){} g()})()", "g();"],
+			["(function(){var x = /a/ && h(), y = 1 || h(), z = 0 ?? h(); g()})()", "/a/&&h();g();"],
+			[
+				"(function(){var x = /a/ || h(), y = null ?? h(); g()})()",
+				"h();g();"
+			],
+			["(function(){var x = /a/ ?? h(); g()})()", "g();"],
+			// A class extending one made before it, and never set since, makes nothing happen.
+			["(function(){class K{} class C extends K{} g()})()", "g();"],
+			// Extending what may be no constructor throws, so the class stays.
+			[
+				"(function(){var f = () => {}; class C extends f{} g()})()",
+				"!function(){var f=()=>{};class C extends f{}g()}();"
+			],
+			[
+				"(function(){var f = () => {}; var C = class extends f{}; g()})()",
+				"!function(){var f=()=>{};(class extends f{});g()}();"
+			],
+			// A class a variable is set to before, and never again, constructs.
+			[
+				"(function(){var B = class {}; var C = class extends B{}; g()})()",
+				"g();"
+			],
+			[
+				"(function(){var B = class {}; B = h(); var C = class extends B{}; g()})()",
+				"!function(){var B=class{};B=h();(class extends B{});g()}();"
+			],
+			[
+				"(function(){var C = class extends B{}; var B = class {}; g()})()",
+				"!function(){(class extends B{});var B=class{};g()}();"
+			],
+			[
+				"(function(){class C extends K{} class K{} g()})()",
+				"!function(){class C extends K{}class K{}g()}();"
+			],
+			[
+				"(function(){class K{} K = h(); class C extends K{} g()})()",
+				"!function(){class K{}K=h();class C extends K{}g()}();"
+			],
+			[
+				"(function(){class C extends (0, K){} g()})()",
+				"!function(){class C extends(0,K){}g()}();"
+			],
+			[
+				"(function(){class A{m(){return new B}} class B{m(){return new A}} class C{m(){return new D}} class D{m(){return new C}} g(A)})()",
+				"!function(){class A{m(){return new B}}class B{m(){return new A}}g(A)}();"
+			],
+			// A class held inside another is read once, from either side.
+			["(function(){class A{m(){class B{n(){return A}} return new B}} g()})()", "g();"],
+			[
+				"(function(){class A{m(){class B{n(){return A}} return new B}} g(A)})()",
+				"!function(){class A{m(){class B{n(){return A}}return new B}}g(A)}();"
+			],
+			// A function moved to a read that goes goes with what it reads.
+			[
+				"(function(){var a; function f(){return a} function u(){return f()} g()})()",
+				"g();"
+			],
+			// One a comment keeps where it is keeps what it reads.
+			[
+				"(function(){var a={}; /*! keep */ function f(){return a} function u(){return f()} g()})()",
+				"!function(){var a={};/*! keep */function f(){return a}g()}();"
+			],
+			[
+				"(function(){var o={m(){return p}}, p={m(){return o}}; g(p)})()",
+				"!function(){var o={m(){return p}},p={m(){return o}};g(p)}();"
+			],
+			// A comment after what goes prints before what follows, as terser has it.
+			["(function(){function a(){} /*! keep */ function b(){} g(b)})()", "!function(){/*! keep */function b(){}g(b)}();"],
+			["(function(){function a(){} /*! keep */ g()})()", "/*! keep */g();"]
+		];
+		for (const [source, expected] of cases) {
+			expect(minifyOnePass(source, { compress: {}, mangle: false }).code).toBe(
+				expected
+			);
+		}
+	});
+
 	it("should forget what the last one-pass print found", () => {
 		const source =
 			"(()=>{function f(){return [g(1),g(2)]} class K{} it(()=>f())})()";
@@ -1384,7 +1473,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			mangle: {}
 		});
 		expect(unmangled()).toBe(first);
-		expect(first).toBe("(()=>{class K{}it(()=>[g(1),g(2)])})();");
+		expect(first).toBe("it(()=>[g(1),g(2)]);");
 	});
 
 	it("should keep a name a dropped function sets where it is read", () => {
