@@ -20,6 +20,22 @@ module.exports = {
 					// Returns synchronously, so the source test runs inside its callback.
 					"./sync-loader.js"
 				]
+			},
+			{
+				test: /plain-null\.js$/,
+				use: [
+					{
+						loader: "./sync-loader.js",
+						sourceTest: /** @type {(source: string) => boolean} */ (
+							(source) => {
+								// eslint-disable-next-line no-throw-literal
+								if (source) throw null;
+								return false;
+							}
+						)
+					},
+					"./sync-loader.js"
+				]
 			}
 		]
 	}
