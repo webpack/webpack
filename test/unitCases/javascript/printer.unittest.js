@@ -1678,6 +1678,79 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		).toBe("it(function(){g(class{m(){return this.x}})});");
 	});
 
+	it("should read terser's compress options that name calls, globals and names", () => {
+		const print = (
+			/** @type {string} */ source,
+			/** @type {Record<string, unknown>} */ compress = {}
+		) => minifyOnePass(source, { compress, mangle: false }).code;
+		// `drop_debugger` drops them unless turned off, where no list holds one too.
+		expect(print("debugger;f();")).toBe("f();");
+		expect(print("if(a)debugger;f();")).toBe("if(a);f();");
+		expect(print("debugger;f();", { drop_debugger: false })).toBe(
+			"debugger;f();"
+		);
+		// `drop_console` drops a call whole, what its arguments run with it.
+		expect(print("console.log(f());g();", { drop_console: true })).toBe(
+			"g();"
+		);
+		expect(
+			print("(function(){var a=f();console.info(a);g()})()", {
+				drop_console: true
+			})
+		).toBe("f();g();");
+		expect(
+			print("console.log(1);console.warn(2);g();", { drop_console: ["log"] })
+		).toBe("console.warn(2);g();");
+		expect(
+			print("console[m](1);c.console.log(1);", { drop_console: true })
+		).toBe("console[m](1);c.console.log(1);");
+		expect(
+			print("var console=k;console.log(1);", { drop_console: true })
+		).toBe("var console=k;console.log(1);");
+		// `pure_funcs` marks the calls it names pure, by how the callee is written.
+		expect(
+			print("foo(1);a.b.c(2);a.b.d(3);a[b].c(4);(0,foo)(5);", {
+				pure_funcs: ["foo", "a.b.c"]
+			})
+		).toBe("a.b.d(3);a[b].c(4);(0,foo)(5);");
+		expect(print("var x=foo(1);h(x);", { pure_funcs: ["foo"] })).toBe(
+			"var x=foo(1);h(x);"
+		);
+		// `global_defs` replaces a global nothing sets with a primitive value.
+		const defs = {
+			global_defs: { DEBUG: false, VERSION: "1.2", "@code": "x", O: {} }
+		};
+		expect(print("if(DEBUG)x();g(VERSION,O);", defs)).toBe('g("1.2",O);');
+		expect(print("DEBUG=1;g(DEBUG);", defs)).toBe("DEBUG=1;g(DEBUG);");
+		expect(print("(function(DEBUG){g(DEBUG)})(h)", defs)).toBe(
+			"!function(DEBUG){g(DEBUG)}(h);"
+		);
+		// `top_retain` keeps the top-level names it lists, a pattern or a test keeps.
+		const top = "var foo=1,bar=2;";
+		expect(print(top, { toplevel: true })).toBe("");
+		expect(print(top, { toplevel: true, top_retain: "foo, bar" })).toBe(
+			"var foo=1,bar=2;"
+		);
+		expect(print(top, { toplevel: true, top_retain: ["bar"] })).toBe(
+			"var bar=2;"
+		);
+		expect(print(top, { toplevel: true, top_retain: /^f/g })).toBe(
+			"var foo=1;"
+		);
+		expect(
+			print(top, {
+				toplevel: true,
+				top_retain: (/** @type {{ name: string }} */ definition) =>
+					definition.name === "bar"
+			})
+		).toBe("var bar=2;");
+		// `keep_infinity` prints `Infinity` as written.
+		expect(print("x(Infinity);")).toBe("x(1/0);");
+		expect(print("x(Infinity);", { keep_infinity: true })).toBe(
+			"x(Infinity);"
+		);
+	});
+
 	it("should keep what may throw or run code in the one pass, as test262 reads it", () => {
 		const print = (
 			/** @type {string} */ source,

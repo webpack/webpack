@@ -152,7 +152,7 @@ a?b:c;if(a){if(b)c}else d;if(a)for(;;)b?c:d;if(a)while(b)c?d:e;else f;if(a)e:b?c
 
 for(;;);while(a);for(x in y);for(x of y);a:;a:break a;a:for(;;)continue a;switch(a){}switch(a){case 1:case 2:b()}
 
-try{a}catch{b}try{a}catch(a){b}finally{c}try{a}finally{b}try{}catch({a,b}){}debugger;throw a;function f(){}
+try{a}catch{b}try{a}catch(a){b}finally{c}try{a}finally{b}try{}catch({a,b}){}throw a;function f(){}
 
 for(var a in b);for(let[o]of b);for(let{a}of b);for(var i=0,j=1;i<j;i++,j--);for(let o=0;;);for(x.y in z);for([a,b]of c);
 
@@ -411,7 +411,7 @@ a?b:c;if(a){if(b)c}else d;if(a)for(;;)b?c:d;if(a)while(b)c?d:e;else f;if(a)e:b?c
 
 for(;;);while(a);for(x in y);for(x of y);a:;a:break a;a:for(;;)continue a;switch(a){}switch(a){case 1:case 2:b()}
 
-try{a}catch{b}try{a}catch(a){b}finally{c}try{a}finally{b}try{}catch({a:a,b:t}){}debugger;throw a;function f(){}
+try{a}catch{b}try{a}catch(a){b}finally{c}try{a}finally{b}try{}catch({a:a,b:t}){}throw a;function f(){}
 
 for(var a in b);for(let[o]of b);for(let{a:o}of b);for(var i=0,j=1;i<j;i++,j--);for(let o=0;;);for(x.y in z);for([a,b]of c);
 
@@ -664,7 +664,7 @@ a?b:c;if(a){if(b)c}else d;if(a)for(;;)b?c:d;if(a)while(b)c?d:e;else f;if(a)e:b?c
 
 for(;;);while(a);for(x in y);for(x of y);a:;a:break a;a:for(;;)continue a;switch(a){}switch(a){case 1:case 2:b()}
 
-try{a}catch{b}try{a}catch(a){b}finally{c}try{a}finally{b}try{}catch({a:a,b:t}){}debugger;throw a;function f(){}
+try{a}catch{b}try{a}catch(a){b}finally{c}try{a}finally{b}try{}catch({a:a,b:t}){}throw a;function f(){}
 
 for(var a in b);for(let[o]of b);for(let{a:o}of b);for(var i=0,j=1;i<j;i++,j--);for(let o=0;;);for(x.y in z);for([a,b]of c);
 
@@ -923,7 +923,7 @@ a?b:c;if(a){if(b)c}else d;if(a)for(;;)b?c:d;if(a)while(b)c?d:e;else f;if(a)label
 
 for(;;);while(a);for(x in y);for(x of y);a:;b:break b;c:for(;;)continue c;switch(a){}switch(a){case 1:case 2:b()}
 
-try{a}catch{b}try{a}catch(e){b}finally{c}try{a}finally{b}try{}catch({a,\\"b\\":c}){}debugger;throw a;function f(){}
+try{a}catch{b}try{a}catch(e){b}finally{c}try{a}finally{b}try{}catch({a,\\"b\\":c}){}throw a;function f(){}
 
 for(var a in b);for(let[a]of b);for(let{a}of b);for(var i=0,j=1;i<j;i++,j--);for(let i=0;;);for(x.y in z);for([a,b]of c);
 
@@ -1438,8 +1438,7 @@ a:for(;;)continue a
 switch(a){}switch(a){case 1:case 2:b()}
 
 /* p */
-try{a}catch{b}try{a}catch(a){b}finally{c}try{a}finally{b}try{}catch({a:a,b:t}){}debugger
-throw a
+try{a}catch{b}try{a}catch(a){b}finally{c}try{a}finally{b}try{}catch({a:a,b:t}){}throw a
 function f(){}
 
 /* p */
