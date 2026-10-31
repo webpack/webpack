@@ -3570,15 +3570,6 @@ declare interface CommentSyntax {
 	 */
 	unstated: (comment: string) => boolean;
 }
-
-/**
- * a comment terser's tokenizer read
- */
-declare interface CommentSyntaxPrinter {
-	type: string;
-	value: string;
-	nlb?: boolean;
-}
 type CommentsOption =
 	string | boolean | RegExp | ((comment: string) => boolean);
 
@@ -18271,7 +18262,7 @@ declare class JsonpTemplatePlugin {
 }
 
 /**
- * a comment as a `comments` callback is handed it: terser's comment token, its offset, line from 1 and column from 0, and the file it was read from
+ * a comment as a `comments` callback is handed it: terser's comment token, its offset, line from 1 and column from 0, whether a line break comes before it, and the file it was read from
  */
 declare interface KeptComment {
 	type: "comment1" | "comment2" | "comment3" | "comment4";
@@ -18279,6 +18270,7 @@ declare interface KeptComment {
 	pos: number;
 	line: number;
 	col: number;
+	nlb: boolean;
 	file?: string;
 }
 
@@ -22683,8 +22675,8 @@ declare interface NodeShape {
 	label: NodeShape;
 	property: NodeShape;
 	flags: number;
-	startToken: any;
-	endToken: any;
+	startToken: number;
+	endToken: number;
 	expression: NodeShape;
 	callee: NodeShape;
 	object: NodeShape;
@@ -31952,26 +31944,6 @@ declare abstract class SourceProcessor<
 declare interface SourceTable {
 	[index: string]: SourceBucket;
 }
-
-/**
- * A token of webpack's parse: where it sits in the source, and the parse that
- * read it. terser's `ParsedToken` keeps what this reads off that parse — its
- * line, its kind, the comments beside it — in nine fields of its own, which a
- * tree of a million nodes cannot afford.
- */
-declare abstract class SourceToken {
-	tokens: any;
-	index: number;
-	get pos(): number;
-	get type(): string;
-	get value(): string;
-	get line(): number;
-	get col(): number;
-	get file(): string;
-	nlb: boolean;
-	comments_before: CommentSyntaxPrinter[];
-	comments_after: CommentSyntaxPrinter[];
-}
 type SourceType =
 	| "html"
 	| "script"
@@ -34523,18 +34495,114 @@ declare class TokenStream {
 }
 
 /**
- * the tokens of one parse, read by their index past `base`
+ * The tokens and comments of one parse, a token read by its index past
+ * `base`, a list of comments and a comment by numbers of their own.
  */
 declare interface TokenTable {
+	/**
+	 * the number of its first token
+	 */
 	base: number;
-	token: (index: number) => SourceToken;
-	commentsOf: (index: number, after: boolean) => CommentSyntaxPrinter[];
-	forEachCommentGap: (
-		callback: (index: number, comments: CommentSyntaxPrinter[]) => void
-	) => void;
+
+	/**
+	 * the list of the comments before or after a token, 0 for the one empty list
+	 */
+	commentsOf: (index: number, after: boolean) => number;
+
+	/**
+	 * binds a list onto a token, as a parenthesis does
+	 */
+	bindComments: (index: number, after: boolean, list: number) => void;
+
+	/**
+	 * a list's comments, in order
+	 */
+	members: (list: number) => number[];
+
+	/**
+	 * makes a list of its own, however empty
+	 */
+	newList: (comments: number[]) => number;
+
+	/**
+	 * how many lists there are
+	 */
+	listCount: () => number;
+
+	/**
+	 * how many comments there are
+	 */
+	commentCount: () => number;
+
+	/**
+	 * its kind, as `COMMENT_TYPES` names it
+	 */
+	commentKind: (comment: number) => number;
+
+	/**
+	 * what it holds
+	 */
+	commentValue: (comment: number) => string;
+
+	/**
+	 * where it starts
+	 */
+	commentStart: (comment: number) => number;
+
+	/**
+	 * whether a line break comes before it
+	 */
+	commentBreaks: (comment: number) => boolean;
+
+	/**
+	 * records whether one does
+	 */
+	setCommentBreaks: (comment: number, broke: boolean) => void;
+
+	/**
+	 * it as a `comments` callback is handed it
+	 */
+	commentObject: (comment: number) => KeptComment;
+
+	/**
+	 * whether a line break comes before a token
+	 */
+	tokenBreaks: (index: number) => boolean;
+
+	/**
+	 * records whether one does
+	 */
+	setTokenBreaks: (index: number, broke: boolean) => void;
+
+	/**
+	 * whether a token is a `(`
+	 */
+	opensParenthesis: (index: number) => boolean;
+
+	/**
+	 * where a token sits
+	 */
+	tokenPlace: (index: number) => {
+		file?: string;
+		line: number;
+		col: number;
+		pos: number;
+	};
+
+	/**
+	 * each gap holding comments, and its list
+	 */
+	forEachCommentGap: (callback: (gap: number, list: number) => void) => void;
+
+	/**
+	 * by token, whether a comment is read before it (1) or after it (2)
+	 */
 	commentFlags: () => Uint8Array;
-	keptComments: (test: (comment: CommentSyntaxPrinter) => boolean) => number;
-	outerCounts: Map<number, number>;
+
+	/**
+	 * 0 where `test` keeps none, 1 where only those before the first token, 2 where more
+	 */
+	keptComments: (test: (comment: number) => boolean) => number;
 }
 
 /**
@@ -34546,11 +34614,11 @@ declare abstract class TokenTables {
 	lastBase: number;
 	add(table: TokenTable): void;
 	tableOf(number: number): undefined | TokenTable;
-	of(token?: null | number | any): any;
 	commentsOf(
-		token: undefined | null | number | any,
+		token: undefined | null | number,
 		after: boolean
-	): undefined | CommentSyntaxPrinter[];
+	): undefined | number;
+	members(list?: number): number[];
 }
 
 /**
