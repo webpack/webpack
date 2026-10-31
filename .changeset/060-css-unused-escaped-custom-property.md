@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Read a CSS custom property's full name, escaped `:` included, when dropping unused ones.
+Keep an escaped `:` in a CSS custom property name when dropping unused ones.
