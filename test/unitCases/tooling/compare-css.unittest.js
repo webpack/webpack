@@ -9,7 +9,11 @@ const installed = jest.fn(() => Promise.resolve(CACHE_NAME));
 // and builds nothing: what is under test is that it installs and stops.
 // css-tree is installed into that same cache, so its tree is written out by
 // hand; postcss arrives with the `css-loader` dev dependency, so it is real.
-const mockCssTree = { parse: jest.fn() };
+// Names decode as webpack decodes them: the stand-in answers parses, not escapes.
+const mockCssTree = {
+	parse: jest.fn(),
+	ident: { decode: require("../../../lib/css/syntax-parser").unescapeIdentifier }
+};
 
 jest.mock("../../../tooling/compare-tools-harness", () => ({
 	...jest.requireActual("../../../tooling/compare-tools-harness"),

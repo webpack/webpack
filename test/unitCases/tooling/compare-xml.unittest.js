@@ -163,11 +163,12 @@ describe("the XML tool comparison", () => {
 
 describe("the XML tool comparison — agreeing with @rgrove/parse-xml", () => {
 	const xml =
-		'<?xml version="1.0"?>\n<?style href="a"?>\n<r a="1" b="&amp;">t<![CDATA[c]]><!--m--><e/></r>\n';
+		'<?xml version="1.0"?>\n<!DOCTYPE r>\n<?style href="a"?>\n<r a="1" b="&amp;">t<![CDATA[c]]><!--m--><e/></r>\n';
 
 	// What `@rgrove/parse-xml` builds for it, the declaration left out.
 	const parsed = {
 		children: [
+			{ type: "doctype", name: "r", publicId: null, systemId: null },
 			{ type: "pi", name: "style", content: 'href="a"' },
 			{ type: "text", text: "\n" },
 			{
@@ -198,6 +199,7 @@ describe("the XML tool comparison — agreeing with @rgrove/parse-xml", () => {
 	// What `@xmldom/xmldom` builds for it, the declaration as an instruction.
 	const document = dom([
 		{ nodeType: 7, target: "xml", data: 'version="1.0"' },
+		{ nodeType: 10, name: "r", publicId: "", systemId: "" },
 		{ nodeType: 7, target: "style", data: 'href="a"' },
 		{
 			nodeType: 1,
@@ -302,8 +304,8 @@ describe("the XML tool comparison — the entities a DTD declares", () => {
 	// A stand-in for `@rgrove/parse-xml`, which reads no DTD: it rejects every
 	// entity unless resolved, and the internal subset is what `[…]` holds.
 	const standIn = `exports.parseXml = (xml, options) => {
-	if (xml === "broken") throw new Error(options.preserveDocumentType ? "second" : "first");
-	if (options.preserveDocumentType) {
+	if (xml === "broken") throw new Error(options.ignoreUndefinedEntities ? "second" : "first");
+	if (options.ignoreUndefinedEntities) {
 		const start = xml.indexOf("[");
 		return { children: start === -1 ? [] : [{ type: "doctype", internalSubset: xml.slice(start + 1, xml.lastIndexOf("]")) }] };
 	}

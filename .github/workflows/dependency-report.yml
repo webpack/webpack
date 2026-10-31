@@ -1,0 +1,104 @@
+name: Dependency Report
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - package.json
+      - yarn.lock
+  pull_request:
+    branches: [main]
+    paths:
+      - package.json
+      - yarn.lock
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.ref || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+  # Posting the report as a pull request comment; a fork's token stays read-only.
+  pull-requests: write
+
+jobs:
+  dependency-report:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          # A pull request's merge ref has the `main` commit it was built on
+          # as its first parent, which the report compares against.
+          fetch-depth: 2
+
+      - name: Use Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: lts/*
+
+      # A push compares against the branch tip before it, which `HEAD^1` is
+      # not when the push carries several commits.
+      - name: Check out the base commit
+        env:
+          BEFORE: ${{ github.event_name == 'push' && github.event.before || '' }}
+        run: |
+          base=HEAD^1
+          if [ -n "$BEFORE" ]; then
+            node tooling/retry.js git fetch --depth 1 origin "$BEFORE"
+            base=$BEFORE
+          fi
+          git worktree add --detach ../base "$base"
+
+      # Node builtins and npm only, so no `yarn install` first.
+      - name: Report what installing webpack, webpack-cli and webpack-dev-server pulls in
+        run: |
+          node tooling/dependency-report.js \
+            --base ../base \
+            --output dependency-report.md \
+            --json dependency-report.json \
+            --comment dependency-report-comment.md
+          cat dependency-report.md >> "$GITHUB_STEP_SUMMARY"
+
+      # One comment per pull request, updated in place on every run that
+      # changes its numbers.
+      - name: Comment the report on the pull request
+        if: >
+          github.event_name == 'pull_request' &&
+          github.event.pull_request.head.repo.full_name == github.repository
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        with:
+          script: |
+            const { upsertReportComment } = await import(
+              `${process.env.GITHUB_WORKSPACE}/.github/scripts/comment-report.mjs`
+            );
+            await upsertReportComment({
+              github,
+              context,
+              issueNumber: context.issue.number,
+              marker: "<!-- dependency-report -->",
+              report: require("fs").readFileSync("dependency-report-comment.md", "utf8")
+            });
+
+      # A fork's token cannot comment, so `pr-reports.yml` posts this from the
+      # base repository's context, without running this pull request's code.
+      - name: Upload the report for the pull request comment
+        if: >
+          github.event_name == 'pull_request' &&
+          github.event.pull_request.head.repo.full_name != github.repository
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: pr-report-dependency
+          path: dependency-report-comment.md
+          retention-days: 90
+
+      - name: Upload the report
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: dependency-report
+          path: |
+            dependency-report.md
+            dependency-report.json
+          retention-days: 90

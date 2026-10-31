@@ -135,6 +135,7 @@ import {
 	createScopesWriter,
 	encodeScopes
 } from "webpack-sources/types/helpers/scopes";
+import { originalPositionFor } from "webpack-sources/types/helpers/sourceMap";
 import {
 	disableDualStringBufferCaching,
 	enableDualStringBufferCaching,
@@ -624,35 +625,6 @@ declare interface AssetTimestamps {
 	 * last modification time, in milliseconds
 	 */
 	mtime: number;
-}
-
-/**
- * What terser's `ast.js` exports: each kind's factory, the predicate
- * `is<Kind>Node` for it, and the walkers and helpers, which stay open.
- */
-declare interface Ast {
-	[index: string]: any;
-	expressionOf(node: NodeShape): undefined | NodeShape;
-	createStackTransformer(
-		before?: (
-			this: CompressorShape,
-			node: NodeShape,
-			descend: (node: NodeShape, walker: CompressorShape) => void,
-			inList?: boolean
-		) => null | void | NodeShape | Splice | SkipMarker,
-		after?: (
-			this: CompressorShape,
-			node: NodeShape,
-			inList?: boolean
-		) => null | void | NodeShape | Splice | SkipMarker
-	): CompressorShape;
-	namesOf(node: NodeShape): (null | NodeShape)[];
-	wrapOptimizer(
-		name: string,
-		wrap: (
-			original: (self: NodeShape, compressor: CompressorShape) => NodeShape
-		) => (self: NodeShape, compressor: CompressorShape) => NodeShape
-	): boolean;
 }
 declare class AsyncDependenciesBlock extends DependenciesBlock {
 	constructor(
@@ -1483,20 +1455,6 @@ type BuiltJsonModule = NormalModule & {
 	buildInfo: JsonModuleBuildInfo;
 	buildMeta: BuildMeta;
 };
-
-/**
- * The map a minify writes, its mappings decoded, less the keys that say nothing.
- */
-declare interface BuiltSourceMap {
-	version: number;
-	file?: string;
-	names: string[];
-	sourceRoot?: string;
-	sources: string[];
-	sourcesContent?: (undefined | null | string)[];
-	mappings: DecodedSegment[][];
-	ignoreList: number[];
-}
 type BuiltSyncWasmModule = NormalModule & {
 	buildInfo: NormalModuleBuildInfo;
 	buildMeta: SyncWasmModuleBuildMeta;
@@ -1826,7 +1784,7 @@ declare interface CallbackCacheCache<T> {
  * Defines the callback cache callback.
  */
 declare interface CallbackCacheCacheFacade<T> {
-	(err?: null | Error, result?: null | T): void;
+	(err?: null | Error, result?: T): void;
 }
 
 /**
@@ -3191,6 +3149,10 @@ declare interface ChunkRenderContextJavascriptModulesPlugin {
 	 */
 	inlinedEntrySource?: Source;
 }
+declare interface ChunkRetainedDependencyIds {
+	[index: number]: ModuleId[];
+	[index: string]: ModuleId[];
+}
 declare interface ChunkRuntime {
 	[index: number]: string;
 	[index: string]: string;
@@ -3885,8 +3847,8 @@ declare class Compilation {
 	chunkTemplate: ChunkTemplate;
 	runtimeTemplate: RuntimeTemplate;
 	moduleTemplates: ModuleTemplates;
-	moduleMemCaches?: Map<Module, WeakTupleMap<any[], any>>;
-	moduleMemCaches2?: Map<Module, WeakTupleMap<any[], any>>;
+	moduleMemCaches?: Map<Module, MemCache>;
+	moduleMemCaches2?: Map<Module, MemCache>;
 	moduleGraph: ModuleGraph;
 	chunkGraph: ChunkGraph;
 	codeGenerationResults?: CodeGenerationResults;
@@ -4714,112 +4676,6 @@ type ComplexSerializableType =
 	| object
 	| Buffer
 	| (() => ComplexSerializableType[] | Promise<ComplexSerializableType[]>);
-
-/**
- * The exports of terser's `compress/common.js`, `inference.js`,
- * `compressor-flags.js` and `utils/index.js` the phases read, ported.
- */
-declare interface CompressHelpers {
-	/**
-	 * terser's `compress/common.js`
-	 */
-	common: Record<string, any>;
-
-	/**
-	 * the functions of terser's `compress/inference.js`
-	 */
-	inference: Record<string, any>;
-
-	/**
-	 * terser's `compress/compressor-flags.js`
-	 */
-	flags: Record<string, any>;
-
-	/**
-	 * terser's `utils/index.js`
-	 */
-	utils: Record<string, any>;
-}
-
-/**
- * terser's compressor: the methods the phases call typed, the rest open.
- */
-declare interface CompressorShape {
-	[index: string]: any;
-	options: Partial<any>;
-	stack: NodeShape[];
-	option<
-		K extends
-			| "module"
-			| "warnings"
-			| "inline"
-			| "arguments"
-			| "expression"
-			| "evaluate"
-			| "unused"
-			| "properties"
-			| "arrows"
-			| "booleans"
-			| "booleans_as_integers"
-			| "collapse_vars"
-			| "comparisons"
-			| "computed_props"
-			| "conditionals"
-			| "dead_code"
-			| "defaults"
-			| "directives"
-			| "drop_console"
-			| "drop_debugger"
-			| "ecma"
-			| "builtins_ecma"
-			| "builtins_pure"
-			| "global_defs"
-			| "hoist_funs"
-			| "hoist_props"
-			| "hoist_vars"
-			| "ie8"
-			| "if_return"
-			| "join_vars"
-			| "keep_classnames"
-			| "keep_fargs"
-			| "keep_fnames"
-			| "keep_infinity"
-			| "lhs_constants"
-			| "loops"
-			| "negate_iife"
-			| "passes"
-			| "pure_getters"
-			| "pure_funcs"
-			| "pure_conversions"
-			| "pure_heritage"
-			| "pure_new"
-			| "reduce_funcs"
-			| "reduce_vars"
-			| "sequences"
-			| "side_effects"
-			| "switches"
-			| "top_retain"
-			| "toplevel"
-			| "typeofs"
-			| "unsafe"
-			| "unsafe_arrows"
-			| "unsafe_comps"
-			| "unsafe_Function"
-			| "unsafe_math"
-			| "unsafe_symbols"
-			| "unsafe_methods"
-			| "unsafe_proto"
-			| "unsafe_regexp"
-			| "unsafe_undefined"
-	>(
-		name: K
-	): any[K];
-	has_directive(directive: string): undefined | true | NodeShape;
-	parent(level?: number): NodeShape;
-	self(): NodeShape;
-	find_parent(test: (value: unknown) => boolean): undefined | NodeShape;
-	in_boolean_context(): undefined | boolean;
-}
 declare class ConcatSource extends Source {
 	constructor(...args: Child[]);
 	getChildren(): Source[];
@@ -9303,6 +9159,7 @@ declare interface EffectUse {
 		loader: string;
 		options?: null | string | { [index: string]: any };
 		ident?: string;
+		sourceTest?: (value: string) => boolean;
 	};
 }
 type EffectUseType = "use" | "use-pre" | "use-post";
@@ -9477,7 +9334,6 @@ declare class EnableWasmLoadingPlugin {
 	 */
 	static checkEnabled(compiler: Compiler, type: string): void;
 }
-type EncodedSourceMap = Omit<BuiltSourceMap, "mappings"> & { mappings: string };
 type EncodingOptionFs =
 	| undefined
 	| null
@@ -10707,7 +10563,7 @@ declare abstract class ExportsInfo {
 	/**
 	 * Gets read only export info.
 	 */
-	getReadOnlyExportInfo(name: string): any;
+	getReadOnlyExportInfo(name: string): ExportInfo;
 
 	/**
 	 * Gets read only export info recursive.
@@ -12148,9 +12004,8 @@ declare interface GetOptionsMethod<OptionsType> {
 		check?: PrecompiledCheck
 	): OptionsType;
 }
-type GivenCompressOptions = Omit<Partial<any>, "global_defs" | "pure_funcs"> & {
+type GivenCompressOptions = Omit<Partial<any>, "global_defs"> & {
 	global_defs?: false | object;
-	pure_funcs?: null | string[] | ((node: PureCallView) => boolean);
 };
 
 /**
@@ -12166,6 +12021,21 @@ declare interface GivenFormatOptions {
 	 */
 	comments?:
 		string | boolean | RegExp | ((node: any, comment: KeptComment) => boolean);
+
+	/**
+	 * which edition the output may use
+	 */
+	ecma?: number;
+
+	/**
+	 * whether the output works around that engine
+	 */
+	ie8?: boolean;
+
+	/**
+	 * whether the output works around that engine
+	 */
+	safari10?: boolean;
 
 	/**
 	 * whether the output is laid out to read, always false here
@@ -12201,21 +12071,6 @@ declare interface GivenFormatOptions {
 	 * whether properties are written in shorthand, undefined until read from `ecma`
 	 */
 	shorthand?: boolean;
-
-	/**
-	 * which edition the output may use
-	 */
-	ecma?: number;
-
-	/**
-	 * whether the output works around that engine
-	 */
-	ie8?: boolean;
-
-	/**
-	 * whether the output works around that engine
-	 */
-	safari10?: boolean;
 
 	/**
 	 * whether only ASCII is written
@@ -12610,12 +12465,56 @@ declare class HotModuleReplacementPlugin {
 	 * Returns the attached hooks.
 	 */
 	static getParserHooks(parser: JavascriptParser): HMRJavascriptParserHooks;
+
+	/**
+	 * Returns the hooks a compilation calls while it renders hot updates.
+	 */
+	static getCompilationHooks: (compilation: Compilation) => {
+		/**
+		 * Called for each hot update manifest before it is emitted; add a field for your own download handler, which gets the whole manifest.
+		 * @since 5.113.0
+		 */
+		updateManifest: SyncHook<[HotUpdateManifest, HotUpdateManifestContext]>;
+	};
 }
 declare interface HotModuleReplacementPluginLoaderContext {
 	hot?: boolean;
 }
 declare class HotUpdateChunk extends Chunk {
 	constructor();
+}
+
+/**
+ * The manifest a runtime downloads first in a hot update; every download handler gets it
+ * whole, so a plugin adds a field here for its own handler.
+ */
+declare interface HotUpdateManifest {
+	[index: string]: unknown;
+	c: ChunkId[];
+	r: ChunkId[];
+	m: ModuleId[];
+	f?: ChunkId[];
+	s?: ModuleId[];
+}
+
+/**
+ * What a plugin needs to fill its manifest field.
+ */
+declare interface HotUpdateManifestContext {
+	/**
+	 * the compilation
+	 */
+	compilation: Compilation;
+
+	/**
+	 * the updated chunks that are still in this build
+	 */
+	chunks: Chunk[];
+
+	/**
+	 * the chunks that joined one of the chunk's groups since the last build, which the runtime never loads on its own
+	 */
+	joinedSiblings: (chunk: Chunk) => Chunk[];
 }
 
 /**
@@ -17949,18 +17848,20 @@ type JavascriptParserState = ParserStateBase<BuiltJavascriptModule> &
 	Record<string, any> &
 	KnownJavascriptParserState;
 type JavascriptParserTag<T = TagData> = symbol & { readonly __tagData?: T };
+type JavascriptProcessOptions = JavascriptReadOptions &
+	Omit<MinifyOptions, "sourceType" | "format" | "output" | "sourceMap">;
 
 /**
  * what the JavaScript `SourceProcessor` reads its source as, and prints it with
  */
-declare interface JavascriptProcessOptions {
+declare interface JavascriptReadOptions {
 	/**
 	 * what the source is: a module (the default), a script, or a function's body, a CommonJS module's or an event handler's
 	 */
 	sourceType?: "module" | "commonjs" | "script" | "event-handler";
 
 	/**
-	 * terser's format options a print reads, as `minify` reads them under `format`; `comments`, `beautify` and `source_map` are not read yet
+	 * terser's format options a print reads, as `minify` reads them under `format`; `comments` is read where it compresses or mangles
 	 */
 	format?: Partial<any>;
 }
@@ -18281,7 +18182,7 @@ declare class JsonpTemplatePlugin {
 }
 
 /**
- * a comment as a `comments` callback is handed it: terser's comment token, its offset, line from 1 and column from 0, and the file it was read from
+ * a comment as a `comments` callback is handed it: terser's comment token, its offset, line from 1 and column from 0, whether a line break comes before it, and the file it was read from
  */
 declare interface KeptComment {
 	type: "comment1" | "comment2" | "comment3" | "comment4";
@@ -18289,6 +18190,7 @@ declare interface KeptComment {
 	pos: number;
 	line: number;
 	col: number;
+	nlb: boolean;
 	file?: string;
 }
 
@@ -18373,7 +18275,6 @@ declare interface KnownCssModuleBuildInfo {
  */
 declare interface KnownCssModuleBuildMeta {
 	isCssModule?: boolean;
-	needIdInConcatenation?: boolean;
 }
 
 /**
@@ -18505,6 +18406,11 @@ declare interface KnownJavascriptParserState {
 	 * deprecated, use `lastESMImportOrder`
 	 */
 	lastHarmonyImportOrder?: number;
+
+	/**
+	 * the guard frames of the branches being walked, innermost last
+	 */
+	guardStack?: GuardFrame[];
 }
 
 /**
@@ -19236,6 +19142,7 @@ declare interface LoaderEntry<
 	data?: DataType;
 	pitchExecuted: boolean;
 	normalExecuted: boolean;
+	sourceTest?: (value: string) => boolean;
 	type?: "module" | "commonjs";
 }
 declare interface LoaderItem {
@@ -19243,6 +19150,11 @@ declare interface LoaderItem {
 	options?: null | string | Record<string, any>;
 	ident?: null | string;
 	type?: null | string;
+
+	/**
+	 * compiled condition the loader's current input has to match for its normal function to run
+	 */
+	sourceTest?: (value: string) => boolean;
 }
 
 /**
@@ -19922,6 +19834,38 @@ declare interface MaybeMergeableInitFragment<GenerateContext> {
 }
 type MaybePromise<T> = T | Promise<T>;
 type Media = undefined | string;
+type MemCache = {
+	get<K extends TupleElement>(
+		key: K,
+		...rest: TupleElement[]
+	): undefined | MemCacheValue<K>;
+	set<K extends TupleElement>(
+		key: K,
+		...restAndValue: [...TupleElement[], MemCacheValue<K>]
+	): void;
+	provide<K extends TupleElement, V>(
+		key: K,
+		...restAndCompute: [
+			...TupleElement[],
+			(...key: any[]) => MemCacheProvided<K, V>
+		]
+	): MemCacheProvided<K, V>;
+	cachedProvide<This, V>(
+		compute: (thisArg: This, ...key: any[]) => V,
+		thisArg: This,
+		args: TupleElement[]
+	): V;
+} & Omit<
+	WeakTupleMap<TupleElement[], unknown>,
+	"get" | "set" | "provide" | "cachedProvide"
+>;
+type MemCacheKeyValue<K> = K extends { readonly __memCacheValue?: infer V }
+	? V
+	: unknown;
+type MemCacheProvided<K, V> =
+	unknown extends MemCacheKeyValue<K> ? V : MemCacheKeyValue<K>;
+type MemCacheValue<K> =
+	unknown extends MemCacheKeyValue<K> ? any : MemCacheKeyValue<K>;
 
 /**
  * Options object for in-memory caching.
@@ -20034,30 +19978,28 @@ declare interface MinChunkSizePluginOptions {
 }
 
 /**
- * what a caller minifies with, the switches of its corrections and improvements, and the modules it is built from
+ * A label: a statement's, its `break`s and `continue`s naming it too.
  */
-declare interface Minifier {
-	minify: (
-		sources: MinifySources,
-		options?: MinifyOptions
-	) => Promise<MinifyOutput>;
-	phases: string[];
-	corrections?: { enabled: boolean };
-	improvements?: {
-		enabled: boolean;
-		lets: { enabled: boolean };
-		literalsLast: { enabled: boolean };
-		backticks: { enabled: boolean };
-	};
-	modules: MinifierModules;
+declare abstract class MinifierLabel {
+	name: string;
+	mangled_name: null | string;
+	parent: null | MinifierLabel;
+	counter: number;
 }
 
 /**
- * terser's own modules
+ * One name declared in one scope, or a global: terser's `SymbolDef`, less
+ * what only terser's compressor reads.
  */
-declare interface MinifierModules {
-	[index: string]: any;
-	ast: Ast;
+declare abstract class MinifierVariable extends Variable {
+	kind: number;
+	declarations: number;
+	global: boolean;
+	undeclared: boolean;
+	export: number;
+	mangled_name: null | string;
+	referenceCount: number;
+	written: boolean;
 }
 
 /**
@@ -20095,7 +20037,7 @@ declare interface MinifyOptions {
 		html5_comments?: boolean;
 		module?: boolean;
 		shebang?: boolean;
-		toplevel?: any;
+		toplevel?: null;
 		spidermonkey?: boolean;
 	};
 
@@ -20148,34 +20090,17 @@ declare interface MinifyOptions {
 	 * whether the output works around that engine
 	 */
 	safari10?: boolean;
+
+	/**
+	 * the global a CommonJS module is wrapped to write its exports to
+	 */
+	wrap?: string | false;
+
+	/**
+	 * the function the source is enclosed in, as `parameters:arguments`
+	 */
+	enclose?: string | boolean;
 }
-
-/**
- * What a minify answers with: the code it wrote, the map it was asked for, and
- * the tree where the format options asked for one instead of code.
- */
-declare interface MinifyOutput {
-	/**
-	 * the minified source
-	 */
-	code?: string;
-
-	/**
-	 * the source map, as a string or an object
-	 */
-	map?: string | EncodedSourceMap;
-
-	/**
-	 * the map with its mappings read
-	 */
-	decoded_map?: null | BuiltSourceMap;
-
-	/**
-	 * the tree, where `format.ast` asked for it
-	 */
-	ast?: NodeShape;
-}
-type MinifySources = string | string[] | Record<string, string> | NodeShape;
 
 /**
  * Describes the mkdir shape.
@@ -21410,9 +21335,7 @@ declare class ModuleGraph {
 	/**
 	 * Sets module mem caches.
 	 */
-	setModuleMemCaches(
-		moduleMemCaches: Map<Module, WeakTupleMap<any[], any>>
-	): void;
+	setModuleMemCaches(moduleMemCaches: Map<Module, MemCache>): void;
 
 	/**
 	 * Dependency cache provide.
@@ -21420,8 +21343,8 @@ declare class ModuleGraph {
 	dependencyCacheProvide<D extends Dependency, ARGS extends TupleElement[], R>(
 		dependency: D,
 		...args: [
-			ARGS,
-			...((moduleGraph: ModuleGraph, dependency: D, ...args: ARGS) => R)[]
+			...ARGS,
+			(moduleGraph: ModuleGraph, dependency: D, ...args: ARGS) => R
 		]
 	): R;
 
@@ -21534,7 +21457,7 @@ declare interface ModuleMemCachesItem {
 	buildInfo: BuildInfo;
 	references?: WeakMap<Dependency, Module>;
 	lazyRequests?: string;
-	memCache: WeakTupleMap<any[], any>;
+	memCache: MemCache;
 }
 declare class ModuleNotFoundError extends WebpackError {
 	/**
@@ -21545,7 +21468,6 @@ declare class ModuleNotFoundError extends WebpackError {
 		err: Error & { details?: string },
 		loc: DependencyLocation
 	);
-	[index: number]: () => string;
 	error: Error & { details?: string };
 
 	/**
@@ -22042,7 +21964,9 @@ declare class MultiCompiler {
 		options: MultiCompilerOptions
 	);
 	hooks: Readonly<{
-		done: SyncHook<[MultiStats, Compiler[]]>;
+		done: AsyncSeriesHook<[MultiStats, Compiler[]]> & {
+			call: (stats: MultiStats, changedCompilers: Compiler[]) => void;
+		};
 		invalid: MultiHook<SyncHook<[null | string, number]>>;
 		run: MultiHook<AsyncSeriesHook<[Compiler]>>;
 		watchClose: SyncHook<[]>;
@@ -22638,6 +22562,14 @@ declare interface NodePathReads<TNode, TValue = unknown> {
 	 */
 	children: (n?: TNode) => TNode[];
 }
+type NodePrintOptions = Omit<JavascriptProcessOptions, "compress"> & {
+	parsed?: ParsedTree;
+	leading?: { tables: TokenTables; token: number };
+	inlinesNames?: boolean;
+	names?: null | TreeNames;
+	compress?: null | Partial<any>;
+	mapsFrom?: { offset: number; length: number };
+};
 
 /**
  * A language node printer, fired for one node once all its visitors have run and
@@ -22649,80 +22581,6 @@ declare interface NodePathReads<TNode, TValue = unknown> {
  */
 declare interface NodePrinter<TPath, TNode, TPrintOptions = object> {
 	(path: TPath, writer: PrintContext<TPath, TNode, TPrintOptions>): string;
-}
-
-/**
- * One of terser's AST nodes: the fields and methods the phases share typed, the
- * rest open.
- */
-declare interface NodeShape {
-	[index: string]: any;
-	TYPE: string;
-	type: string;
-	mapName?: null | string;
-	shorthand: boolean;
-	name: string;
-	kind: string;
-	role: string;
-	computed: boolean;
-	label: NodeShape;
-	property: NodeShape;
-	flags: number;
-	startToken: any;
-	endToken: any;
-	expression: NodeShape;
-	callee: NodeShape;
-	object: NodeShape;
-	argument: NodeShape;
-	discriminant: NodeShape;
-	left: NodeShape;
-	right: NodeShape;
-	operator: string;
-	test: NodeShape;
-	alternate: NodeShape;
-	arguments: NodeShape[];
-	elements: (null | NodeShape)[];
-	properties: NodeShape[];
-	declarations: NodeShape[];
-	expressions: NodeShape[];
-	segments: NodeShape[];
-	params: NodeShape[];
-	quote?: string;
-	raw?: string;
-	optional: boolean;
-	tag: NodeShape;
-	superClass: NodeShape;
-	scope: NodeShape;
-	definition: SymbolDefinition;
-	fixed_value(): undefined | null | false | NodeShape;
-	tail_node(): NodeShape;
-	clone(deep?: boolean): NodeShape;
-	transform(walker: CompressorShape, inList?: boolean): NodeShape;
-	optimize(compressor: CompressorShape): NodeShape;
-	has_side_effects(compressor: CompressorShape): boolean;
-	may_throw(compressor: CompressorShape): boolean;
-	drop_side_effect_free(
-		compressor: CompressorShape,
-		firstInStatement?: boolean
-	): null | NodeShape;
-	is_constant_expression(scope?: NodeShape): boolean | "f";
-	evaluate(
-		compressor: CompressorShape
-	):
-		| undefined
-		| null
-		| string
-		| number
-		| bigint
-		| boolean
-		| symbol
-		| RegExp
-		| NodeShape
-		| any
-		| { [index: string]: any }
-		| ((...args: any[]) => any);
-	negate(compressor: CompressorShape, firstInStatement?: boolean): NodeShape;
-	size(compressor?: CompressorShape, stack?: NodeShape[]): number;
 }
 declare class NodeSourcePlugin {
 	constructor();
@@ -26161,6 +26019,36 @@ declare interface ParsedIdentifier {
 	internal: boolean;
 }
 type ParsedProgram = Program & NodeLike;
+
+/**
+ * A source `parse.parseTree` read for the tree printer.
+ */
+declare interface ParsedTree {
+	/**
+	 * the tree
+	 */
+	tree: SyntaxTree;
+
+	/**
+	 * its program
+	 */
+	program: number;
+
+	/**
+	 * what its tokens' numbers are read through
+	 */
+	tables: TokenTables;
+
+	/**
+	 * its nodes' tokens, null where nothing printing it reads them
+	 */
+	read: null | TreeTokens;
+
+	/**
+	 * whether it imports or exports
+	 */
+	module: boolean;
+}
 declare class Parser<TModule extends NormalModule = NormalModule> {
 	constructor();
 
@@ -26637,15 +26525,6 @@ declare interface PerformanceOptions {
 	 */
 	unusedModules?: boolean;
 }
-
-/**
- * One step building webpack's minifier, installing what it implements onto
- * the modules.
- */
-declare interface Phase {
-	name: string;
-	install: (modules: MinifierModules) => void;
-}
 declare interface PitchLoaderDefinitionFunction<
 	OptionsType = {},
 	ContextAdditions = {}
@@ -27019,6 +26898,13 @@ declare class PrintContext<TPath, TNode, TPrintOptions = object> {
 	): void;
 
 	/**
+	 * Anchor the text the next {@link take} writes at many places rather than at
+	 * its start alone: a grammar printing a whole program as one node maps each
+	 * piece inside it. Nothing is kept where no map is wanted.
+	 */
+	anchorWithin(mappings: number[], names: string[]): void;
+
+	/**
 	 * Tie whatever is emitted next to a source position: flush the kept comments
 	 * that precede it, then record the mapping. Split out of {@link take} for a
 	 * node printed in pieces, whose first piece is emitted well after the printer
@@ -27289,6 +27175,36 @@ declare interface ProgressPluginOptionsProgressBarBranch3Object {
 	 */
 	width?: number;
 }
+
+/**
+ * What property mangling asks of its options, as both of its walks read it.
+ */
+declare interface PropertyNames {
+	/**
+	 * records a name a walk finds, before any is renamed
+	 */
+	add: (name: string) => void;
+
+	/**
+	 * the name a property is renamed to, itself where kept
+	 */
+	mangle: (name: string) => string;
+
+	/**
+	 * whether a name written quoted is kept
+	 */
+	keepQuoted: boolean;
+
+	/**
+	 * whether a name read off an undeclared global is found too
+	 */
+	undeclared: boolean;
+
+	/**
+	 * the identifier source it names from
+	 */
+	identifiers: { get: (index: number) => string };
+}
 declare class ProvidePlugin {
 	/**
 	 * Creates an instance of ProvidePlugin.
@@ -27358,9 +27274,6 @@ declare interface ProvidesObject {
 	[index: string]: ProvidesObjectValue;
 }
 type ProvidesObjectValue = string | ProvidesConfig;
-type PureCallView = NodeShape & {
-	print_to_string(given?: Partial<any>): string;
-};
 type PureCondition =
 	boolean | ((compilation: Compilation, module: Module) => boolean);
 
@@ -29633,6 +29546,16 @@ declare interface RuleSetRule {
 						 * Loader options.
 						 */
 						options?: string | { [index: string]: any };
+						/**
+						 * Run the loader's normal function only when its current input matches this condition, the same kind of condition 'test' takes. Input that is not valid UTF-8 text always runs it.
+						 * @since 5.113.0
+						 */
+						sourceTest?:
+							| string
+							| RegExp
+							| ((value: string) => boolean)
+							| RuleSetLogicalConditions
+							| RuleSetCondition[];
 				  }
 		  )[]
 		| RuleSetUseFunction
@@ -29649,6 +29572,16 @@ declare interface RuleSetRule {
 				 * Loader options.
 				 */
 				options?: string | { [index: string]: any };
+				/**
+				 * Run the loader's normal function only when its current input matches this condition, the same kind of condition 'test' takes. Input that is not valid UTF-8 text always runs it.
+				 * @since 5.113.0
+				 */
+				sourceTest?:
+					| string
+					| RegExp
+					| ((value: string) => boolean)
+					| RuleSetLogicalConditions
+					| RuleSetCondition[];
 		  };
 
 	/**
@@ -29678,6 +29611,16 @@ type RuleSetUse =
 					 * Loader options.
 					 */
 					options?: string | { [index: string]: any };
+					/**
+					 * Run the loader's normal function only when its current input matches this condition, the same kind of condition 'test' takes. Input that is not valid UTF-8 text always runs it.
+					 * @since 5.113.0
+					 */
+					sourceTest?:
+						| string
+						| RegExp
+						| ((value: string) => boolean)
+						| RuleSetLogicalConditions
+						| RuleSetCondition[];
 			  }
 	  )[]
 	| RuleSetUseFunction
@@ -29694,6 +29637,16 @@ type RuleSetUse =
 			 * Loader options.
 			 */
 			options?: string | { [index: string]: any };
+			/**
+			 * Run the loader's normal function only when its current input matches this condition, the same kind of condition 'test' takes. Input that is not valid UTF-8 text always runs it.
+			 * @since 5.113.0
+			 */
+			sourceTest?:
+				| string
+				| RegExp
+				| ((value: string) => boolean)
+				| RuleSetLogicalConditions
+				| RuleSetCondition[];
 	  };
 type RuleSetUseFunction = (data: EffectData) =>
 	| string
@@ -29711,6 +29664,16 @@ type RuleSetUseFunction = (data: EffectData) =>
 			 * Loader options.
 			 */
 			options?: string | { [index: string]: any };
+			/**
+			 * Run the loader's normal function only when its current input matches this condition, the same kind of condition 'test' takes. Input that is not valid UTF-8 text always runs it.
+			 * @since 5.113.0
+			 */
+			sourceTest?:
+				| string
+				| RegExp
+				| ((value: string) => boolean)
+				| RuleSetLogicalConditions
+				| RuleSetCondition[];
 	  }
 	| (
 			| undefined
@@ -29732,6 +29695,16 @@ type RuleSetUseFunction = (data: EffectData) =>
 					 * Loader options.
 					 */
 					options?: string | { [index: string]: any };
+					/**
+					 * Run the loader's normal function only when its current input matches this condition, the same kind of condition 'test' takes. Input that is not valid UTF-8 text always runs it.
+					 * @since 5.113.0
+					 */
+					sourceTest?:
+						| string
+						| RegExp
+						| ((value: string) => boolean)
+						| RuleSetLogicalConditions
+						| RuleSetCondition[];
 			  }
 	  )[];
 type RuleSetUseItem =
@@ -29750,6 +29723,16 @@ type RuleSetUseItem =
 			 * Loader options.
 			 */
 			options?: string | { [index: string]: any };
+			/**
+			 * Run the loader's normal function only when its current input matches this condition, the same kind of condition 'test' takes. Input that is not valid UTF-8 text always runs it.
+			 * @since 5.113.0
+			 */
+			sourceTest?:
+				| string
+				| RegExp
+				| ((value: string) => boolean)
+				| RuleSetLogicalConditions
+				| RuleSetCondition[];
 	  };
 
 /**
@@ -31164,13 +31147,6 @@ declare class SizeOnlySource extends Source {
 }
 
 /**
- * `MAP.skip`, which a transform returns to drop a node from its list
- */
-declare interface SkipMarker {
-	[index: string]: never;
-}
-
-/**
  * `CssProcessOptions.skip`: two independent axes, so each reads unambiguously.
  */
 declare interface SkipOptions {
@@ -31918,13 +31894,6 @@ type SourceTypeOrResolver =
 	| "msapplication-task"
 	| ((attrs: Map<string, string>, css: boolean) => SourceType);
 type SourceValue = string | Buffer;
-
-/**
- * terser's `Splice`: what a transform returns to put several nodes in its place.
- */
-declare abstract class Splice<T = NodeShape> {
-	v: T[];
-}
 
 /**
  * Defines the split chunks options type used by this module.
@@ -33408,14 +33377,6 @@ declare interface Stringable {
 	toString: () => string;
 }
 type Supports = undefined | string;
-
-/**
- * one of terser's `SymbolDef`s
- */
-declare interface SymbolDefinition {
-	[index: number]: any;
-	[index: string]: any;
-}
 declare class SyncModuleIdsPlugin {
 	/**
 	 * Creates an instance of SyncModuleIdsPlugin.
@@ -34444,6 +34405,133 @@ declare class TokenStream {
 }
 
 /**
+ * The tokens and comments of one parse, a token read by its index past
+ * `base`, a list of comments and a comment by numbers of their own.
+ */
+declare interface TokenTable {
+	/**
+	 * the number of its first token
+	 */
+	base: number;
+
+	/**
+	 * the list of the comments before or after a token, 0 for the one empty list
+	 */
+	commentsOf: (index: number, after: boolean) => number;
+
+	/**
+	 * binds a list onto a token, as a parenthesis does
+	 */
+	bindComments: (index: number, after: boolean, list: number) => void;
+
+	/**
+	 * a list's comments, in order
+	 */
+	members: (list: number) => number[];
+
+	/**
+	 * makes a list of its own, however empty
+	 */
+	newList: (comments: number[]) => number;
+
+	/**
+	 * how many lists there are
+	 */
+	listCount: () => number;
+
+	/**
+	 * how many comments there are
+	 */
+	commentCount: () => number;
+
+	/**
+	 * its kind, as `COMMENT_TYPES` names it
+	 */
+	commentKind: (comment: number) => number;
+
+	/**
+	 * what it holds
+	 */
+	commentValue: (comment: number) => string;
+
+	/**
+	 * where it starts
+	 */
+	commentStart: (comment: number) => number;
+
+	/**
+	 * whether a line break comes before it
+	 */
+	commentBreaks: (comment: number) => boolean;
+
+	/**
+	 * records whether one does
+	 */
+	setCommentBreaks: (comment: number, broke: boolean) => void;
+
+	/**
+	 * it as a `comments` callback is handed it
+	 */
+	commentObject: (comment: number) => KeptComment;
+
+	/**
+	 * whether a line break comes before a token
+	 */
+	tokenBreaks: (index: number) => boolean;
+
+	/**
+	 * records whether one does
+	 */
+	setTokenBreaks: (index: number, broke: boolean) => void;
+
+	/**
+	 * whether a token is a `(`
+	 */
+	opensParenthesis: (index: number) => boolean;
+
+	/**
+	 * where a token sits
+	 */
+	tokenPlace: (index: number) => {
+		file?: string;
+		line: number;
+		col: number;
+		pos: number;
+	};
+
+	/**
+	 * each gap holding comments, and its list
+	 */
+	forEachCommentGap: (callback: (gap: number, list: number) => void) => void;
+
+	/**
+	 * by token, whether a comment is read before it (1) or after it (2)
+	 */
+	commentFlags: () => Uint8Array;
+
+	/**
+	 * 0 where `test` keeps none, 1 where only those before the first token, 2 where more
+	 */
+	keptComments: (test: (comment: number) => boolean) => number;
+}
+
+/**
+ * The tokens of the parse a tree was read from. Its nodes hold their tokens'
+ * numbers, which this answers for; a token handed in whole answers for itself.
+ */
+declare abstract class TokenTables {
+	last?: TokenTable;
+	lastBase: number;
+	add(table: TokenTable): void;
+	tableOf(number: number): undefined | TokenTable;
+	commentsOf(
+		token: undefined | null | number,
+		after: boolean
+	): undefined | number;
+	members(list?: number): number[];
+}
+
+/**
  * A token's kind, carrying what the parser needs to know about it without
  * re-inspecting the source: whether an expression may follow, its binary
  * precedence, and how it updates the tokenizer's context.
@@ -34490,6 +34578,83 @@ declare class TopLevelSymbol {
 	 */
 	setPure(pure: PureCondition): void;
 	isPure(compilation: Compilation, module: Module): boolean;
+}
+type TreeDefinition = null | MinifierVariable | MinifierLabel;
+
+/**
+ * What mangling gave a source `parse.parseTree` read, for the tree printer.
+ */
+declare interface TreeNames {
+	/**
+	 * each name's definition, by its node
+	 */
+	definitions: TreeDefinition[];
+
+	/**
+	 * each private name's new name, null for none renamed
+	 */
+	privateNames: null | Map<string, string>;
+
+	/**
+	 * for the one pass, the declarators whose name no read reads any more
+	 */
+	aliases: null | number[];
+
+	/**
+	 * for the one pass, each declarator of a function read once and that read, in pairs
+	 */
+	movedFunctions: null | number[];
+
+	/**
+	 * for the one pass, names the definitions but those it finds no name of prints, once it found what prints and how many reads of each go
+	 */
+	nameDefinitions:
+		| null
+		| ((
+				unprinted: null | Set<MinifierVariable>,
+				readsGone: null | Map<TreeDefinition, number>
+		  ) => void);
+
+	/**
+	 * for the one pass, the names property mangling gives, null where properties keep theirs
+	 */
+	properties: null | PropertyNames;
+
+	/**
+	 * for the one pass, the string literals renamed as property names
+	 */
+	propertyStrings: null | Set<number>;
+}
+
+/**
+ * Where each node of a `SyntaxTree` starts and ends among its parse's tokens,
+ * and what terser's conversion makes of it, by node.
+ */
+declare interface TreeTokens {
+	/**
+	 * each node's first token's number, 0 for none
+	 */
+	starts: Int32Array;
+
+	/**
+	 * each node's last token's number, 0 for none
+	 */
+	ends: Int32Array;
+
+	/**
+	 * each node's `NodeType`, as terser's conversion types it
+	 */
+	types: Uint8Array;
+
+	/**
+	 * each node's `MARK_` bits
+	 */
+	marks: Uint8Array;
+
+	/**
+	 * the number of the source's first token
+	 */
+	first: number;
 }
 type TreeValue =
 	| null
@@ -35106,7 +35271,7 @@ declare abstract class WeakTupleMap<K extends TupleElement[], V> {
 	/**
 	 * Stores a value at the node identified by the provided tuple key.
 	 */
-	set(...args: [K, ...V[]]): void;
+	set(...args: [...K, V]): void;
 
 	/**
 	 * Checks whether the exact tuple key has a stored value.
@@ -35122,7 +35287,7 @@ declare abstract class WeakTupleMap<K extends TupleElement[], V> {
 	 * Returns an existing value for the tuple or computes, stores, and returns a
 	 * new one when the tuple is missing.
 	 */
-	provide(...args: [K, ...((...args: K) => V)[]]): V;
+	provide(...args: [...K, (...args: K) => V]): V;
 
 	/**
 	 * Memoizes `compute(thisArg, ...args)` under the tuple key `[compute,
@@ -35196,7 +35361,6 @@ declare class WebpackError extends Error {
 	 * Creates an instance of WebpackError.
 	 */
 	constructor(message?: string, options?: { cause?: unknown });
-	[index: number]: () => string;
 	details?: string;
 	module?: null | Module;
 	loc?: SyntheticDependencyLocation | RealDependencyLocation;
@@ -36014,6 +36178,11 @@ declare namespace exports {
 		defaultObject?: false | "redirect" | "redirect-warn";
 		async?: boolean;
 		sideEffectFree?: boolean;
+
+		/**
+		 * true when the module keeps its own id after concatenation into another module, so id assignment and hot module replacement records still track it
+		 */
+		needIdInConcatenation?: boolean;
 	}
 
 	/**
@@ -36105,6 +36274,7 @@ declare namespace exports {
 		chunkModuleIds?: ChunkModuleIds;
 		chunkSiblingIds?: ChunkSiblingIds;
 		chunkInjectedModuleIds?: ChunkInjectedModuleIds;
+		chunkRetainedDependencyIds?: ChunkRetainedDependencyIds;
 	}
 
 	/**
@@ -36441,6 +36611,11 @@ declare namespace exports {
 		logging?: StatsLogging;
 		moduleTraceItem?: StatsModuleTraceItem;
 		moduleTraceDependency?: StatsModuleTraceDependency;
+
+		/**
+		 * the compilation's time, which colors other times by their share of it
+		 */
+		timeReference?: number;
 	}
 
 	/**
@@ -36810,6 +36985,7 @@ declare namespace exports {
 		export let hasSynthesizedDeferredNamespace: "has synthesized deferred namespace";
 		export let hmrChunkGroups: "__webpack_require__.hmrG";
 		export let hmrChunkVersions: "__webpack_require__.hmrV";
+		export let hmrCheckChunkVersions: "__webpack_require__.hmrK";
 		export let hmrDownloadManifest: "__webpack_require__.hmrM";
 		export let hmrDownloadUpdateHandlers: "__webpack_require__.hmrC";
 		export let hmrInvalidateModuleHandlers: "__webpack_require__.hmrI";
@@ -37628,9 +37804,23 @@ declare namespace exports {
 				};
 			}
 			export namespace printer {
-				export let NODE_KIND_ANCESTRY: Record<string, string[]>;
-				export let plainIdentifier: (name: string) => string;
-				export let load: () => Promise<Minifier>;
+				export let load: () => Promise<{
+					minify: (
+						code: string,
+						options: MinifyOptions
+					) => Promise<{ code: string }>;
+				}>;
+				export let prepareMinify: (
+					text: string,
+					options: JavascriptProcessOptions
+				) => {
+					tree: SyntaxTree;
+					program: number;
+					text: string;
+					options: NodePrintOptions;
+					inlined?: Uint8Array;
+					finish?: () => void;
+				};
 				export let printer: (
 					path: {
 						state: unknown;
@@ -37748,14 +37938,8 @@ declare namespace exports {
 						number
 					>
 				) => string;
-				export let PHASES: Phase[];
 				export let FORMAT_DEFAULTS: any;
 				export let IGNORED_FORMAT_OPTIONS: string[];
-				export let createAst: () => Ast;
-				export let createModules: () => MinifierModules;
-				export let createCompressHelpers: (
-					modules: MinifierModules
-				) => CompressHelpers;
 				export let createUnicode: () => {
 					getFullChar: (str: string, pos: number) => string;
 					getFullCharCode: (str: string, pos: number) => number;
@@ -37951,6 +38135,7 @@ declare namespace exports {
 			export let hasSynthesizedDeferredNamespace: "has synthesized deferred namespace";
 			export let hmrChunkGroups: "__webpack_require__.hmrG";
 			export let hmrChunkVersions: "__webpack_require__.hmrV";
+			export let hmrCheckChunkVersions: "__webpack_require__.hmrK";
 			export let hmrDownloadManifest: "__webpack_require__.hmrM";
 			export let hmrDownloadUpdateHandlers: "__webpack_require__.hmrC";
 			export let hmrInvalidateModuleHandlers: "__webpack_require__.hmrI";
@@ -39639,6 +39824,9 @@ declare namespace exports {
 					encodeScopes
 				};
 			}
+			export namespace sourceMap {
+				export { originalPositionFor };
+			}
 			export namespace stringBufferUtils {
 				export {
 					disableDualStringBufferCaching,
@@ -39690,6 +39878,16 @@ declare namespace exports {
 				 * Loader options.
 				 */
 				options?: string | { [index: string]: any };
+				/**
+				 * Run the loader's normal function only when its current input matches this condition, the same kind of condition 'test' takes. Input that is not valid UTF-8 text always runs it.
+				 * @since 5.113.0
+				 */
+				sourceTest?:
+					| string
+					| RegExp
+					| ((value: string) => boolean)
+					| RuleSetLogicalConditions
+					| RuleSetCondition[];
 		  }
 		| (
 				| undefined
@@ -39711,6 +39909,16 @@ declare namespace exports {
 						 * Loader options.
 						 */
 						options?: string | { [index: string]: any };
+						/**
+						 * Run the loader's normal function only when its current input matches this condition, the same kind of condition 'test' takes. Input that is not valid UTF-8 text always runs it.
+						 * @since 5.113.0
+						 */
+						sourceTest?:
+							| string
+							| RegExp
+							| ((value: string) => boolean)
+							| RuleSetLogicalConditions
+							| RuleSetCondition[];
 				  }
 		  )[];
 	export type WebpackPluginFunction = (

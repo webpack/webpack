@@ -409,3 +409,12 @@ describe("RuleSetCompiler glob conditions against path.matchesGlob", () => {
 		}
 	);
 });
+
+describe("RuleSetCompiler regexp conditions", () => {
+	it("matches a global regexp the same on every call", () => {
+		const { fn } = new RuleSetCompiler([]).compileCondition("test", /a/g);
+		expect(fn("a")).toBe(true);
+		expect(fn("a")).toBe(true);
+		expect(fn(/** @type {EXPECTED_ANY} */ (undefined))).toBe(false);
+	});
+});

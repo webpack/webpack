@@ -41,3 +41,25 @@ Every byte a runtime module emits ships in every user's bundle that needs it, an
 - Prototype keys: a chunk or module id such as `constructor` reads `Object.prototype`, so keep `hasOwnProperty` guards on id-keyed objects.
 - The ES5 fallback, for every helper whose modern form you measured.
 - Third-party overrides: a plugin or user can replace `__webpack_require__.*` functions and hooks, so keep a guard whose input comes from outside webpack unless you can prove it's dead.
+
+## Hot update manifest
+
+A hot update starts with one manifest per runtime (`[runtime].[fullhash].hot-update.json`). `HotModuleReplacementPlugin` fills its core fields: `c` updated chunk ids, `r` removed chunk ids, `m` removed module ids, and when needed `f` chunks to force-load and `s` unchanged modules a cached copy may keep running.
+
+A module type adds its own field instead of teaching the HMR plugin about it, as `CssModulesPlugin` does for `css`:
+
+```js
+HotModuleReplacementPlugin.getCompilationHooks(compilation).updateManifest.tap(
+	"MyPlugin",
+	(manifest, { compilation, chunks, joinedSiblings }) => {
+		manifest.my = chunks.map((chunk) => chunk.id);
+	}
+);
+```
+
+- `chunks` are the updated chunks still in this build; `joinedSiblings(chunk)` are the chunks that joined one of its groups since the last build, which the runtime never loads on its own.
+- The hook only runs when tapped, so an untapped field costs nothing.
+- At runtime every download handler, `__webpack_require__.hmrC.<name>`, gets the whole manifest as its 7th argument: `(chunkIds, removedChunks, removedModules, promises, applyHandlers, updatedModulesList, update)`. A runtime module installs the handler, and only for a build whose runtime needs it.
+- Every map keyed by chunk id, in records or at runtime, must read own keys only: a custom chunk id may be `constructor` or `toString`.
+
+The user-facing description of the hook belongs on webpack.js.org, on the `HotModuleReplacementPlugin` page; its JSDoc here is what `types.d.ts` publishes.

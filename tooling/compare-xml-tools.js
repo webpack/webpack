@@ -835,7 +835,10 @@ const declaredEntities = (subset) => {
  */
 const parseXmlDocument = (parseXml, xml) => {
 	try {
-		return parseXml(xml, { preserveComments: true });
+		return parseXml(xml, {
+			preserveComments: true,
+			preserveDocumentType: true
+		});
 	} catch (error) {
 		/** @type {EXPECTED_ANY} */
 		let doctype;
@@ -853,11 +856,26 @@ const parseXmlDocument = (parseXml, xml) => {
 		const declared = declaredEntities(doctype.internalSubset);
 		return parseXml(xml, {
 			preserveComments: true,
+			preserveDocumentType: true,
 			resolveUndefinedEntity: (/** @type {string} */ reference) =>
 				declared.get(reference.slice(1, -1))
 		});
 	}
 };
+
+/**
+ * @param {string} name a doctype's name
+ * @param {string} publicId its public identifier, empty where it has none
+ * @param {string} systemId its system identifier, empty where it has none
+ * @returns {string} the doctype as every reader writes it
+ */
+const doctypeOf = (name, publicId, systemId) =>
+	`doctype ${name} ${JSON.stringify(publicId)} ${JSON.stringify(systemId)}`;
+
+// htmlparser2 keeps a doctype as its directive's text: the name, then a public
+// and a system literal, or a system literal alone (XML §2.8, §4.2.2).
+const DOCTYPE_DIRECTIVE_REGEXP =
+	/^!DOCTYPE\s+([^\s[>]+)(?:\s+PUBLIC\s+(["'])([^]*?)\2(?:\s+(["'])([^]*?)\4)?|\s+SYSTEM\s+(["'])([^]*?)\6)?/;
 
 /**
  * `@rgrove/parse-xml`'s tree, as the agreement column and relation read it.
@@ -885,6 +903,10 @@ const parseXmlEvents = (parseXml, xml) => {
 				events.leaf(`comment ${JSON.stringify(child.content)}`);
 			} else if (child.type === "pi") {
 				events.leaf(`<?${child.name} ${JSON.stringify(child.content)}?>`);
+			} else if (child.type === "doctype") {
+				events.leaf(
+					doctypeOf(child.name, child.publicId || "", child.systemId || "")
+				);
 			}
 		}
 	};
@@ -931,6 +953,18 @@ const webpackTree = (xml) => {
 			},
 			exit: () => {}
 		},
+		[NodeType.Doctype]: {
+			enter: (nodePath) => {
+				events.leaf(
+					doctypeOf(
+						nodePath.name(),
+						nodePath.textOf(Part.publicId) || "",
+						nodePath.textOf(Part.systemId) || ""
+					)
+				);
+			},
+			exit: () => {}
+		},
 		[NodeType.ProcessingInstruction]: {
 			enter: (nodePath) => {
 				// The XML declaration is not a processing instruction (§2.8).
@@ -945,6 +979,13 @@ const webpackTree = (xml) => {
 	new SourceProcessor().use(visitors).process(xml, { xml: true });
 	return events;
 };
+
+/**
+ * @param {string} literal a quoted literal, or text already unquoted
+ * @returns {string} what the literal holds
+ */
+const unquoted = (literal) =>
+	/^(["'])[^]*\1$/.test(literal) ? literal.slice(1, -1) : literal;
 
 /**
  * `@xmldom/xmldom`'s DOM, as the agreement column reads it.
@@ -977,6 +1018,15 @@ const xmldomTree = (xml) => {
 				events.leaf(`comment ${JSON.stringify(child.data)}`);
 			} else if (child.nodeType === 7 && child.target !== "xml") {
 				events.leaf(`<?${child.target} ${JSON.stringify(child.data)}?>`);
+			} else if (child.nodeType === 10) {
+				// xmldom keeps each identifier's quotes, which the literal only delimits.
+				events.leaf(
+					doctypeOf(
+						child.name,
+						unquoted(child.publicId || ""),
+						unquoted(child.systemId || "")
+					)
+				);
 			}
 		}
 	};
@@ -1013,9 +1063,18 @@ const htmlparser2Tree = (xml) => {
 			} else if (child.type === "directive" && child.name !== "?xml") {
 				// A directive is a doctype or a processing instruction, kept whole.
 				const instruction = /^\?(\S+)\s*([\s\S]*?)\??$/.exec(child.data);
+				const doctype = DOCTYPE_DIRECTIVE_REGEXP.exec(child.data);
 				if (instruction !== null) {
 					events.leaf(
 						`<?${instruction[1]} ${JSON.stringify(instruction[2])}?>`
+					);
+				} else if (doctype !== null) {
+					events.leaf(
+						doctypeOf(
+							doctype[1],
+							doctype[3] || "",
+							doctype[5] === undefined ? doctype[7] || "" : doctype[5]
+						)
 					);
 				}
 			}

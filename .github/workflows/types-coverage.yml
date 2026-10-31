@@ -38,26 +38,35 @@ jobs:
       - name: Generate the declarations the type check reads
         run: yarn fix:special
 
-      - name: Collect types coverage
-        run: yarn types:cover:report
+      # The escape-hatch counts compare with the pull request's base commit.
+      - name: Fetch the base commit
+        run: git fetch --no-tags --depth=1 origin "$BASE_SHA"
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
 
-      # `output-file` renders the comment without posting it, which is all a
-      # fork's token allows; `pulls.get` for the title only needs read access.
-      - name: Render the report
-        uses: Nef10/lcov-reporter-action@797ec1c1e78e3a9a7890c1a104d58b9e05fcef76 # v0.6.1
-        with:
-          pr-number: ${{ github.event.pull_request.number }}
-          lcov-file: ./coverage/lcov.info
-          title: Types Coverage
-          output-file: lcov-report.md
+      # The same script, run on the base commit's tree, counts its inferred `any`.
+      - name: Collect the base commit's inferred `any`
+        run: |
+          git worktree add --detach "$RUNNER_TEMP/base" "$BASE_SHA"
+          ln -s "$GITHUB_WORKSPACE/node_modules" "$RUNNER_TEMP/base/node_modules"
+          node tooling/type-coverage.js --root "$RUNNER_TEMP/base" > /dev/null
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+
+      # Renders the report too: overall typed lines, the escape-hatch types and
+      # inferred `any` this pull request adds or removes, and the files that still have any.
+      - name: Collect types coverage
+        run: node tooling/type-coverage.js --base "$BASE_SHA" --base-any "$RUNNER_TEMP/base/coverage/inferred-any.json"
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
 
       - name: Mark the report for the commenter
         run: |
           {
             echo "<!-- types-coverage-report -->"
-            cat lcov-report.md
+            cat coverage/types-coverage.md
           } > types-coverage-report.md
-          cat lcov-report.md >> "$GITHUB_STEP_SUMMARY"
+          cat coverage/types-coverage.md >> "$GITHUB_STEP_SUMMARY"
 
       # Updated in place on every push, so the thread keeps one comment.
       - name: Comment the report on the pull request

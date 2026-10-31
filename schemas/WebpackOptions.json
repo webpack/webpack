@@ -7285,6 +7285,15 @@
                   "$ref": "#/definitions/RuleSetLoaderOptions"
                 }
               ]
+            },
+            "sourceTest": {
+              "description": "Run the loader's normal function only when its current input matches this condition, the same kind of condition 'test' takes. Input that is not valid UTF-8 text always runs it.",
+              "oneOf": [
+                {
+                  "$ref": "#/definitions/RuleSetConditionOrConditions"
+                }
+              ],
+              "added": "5.113.0"
             }
           }
         },

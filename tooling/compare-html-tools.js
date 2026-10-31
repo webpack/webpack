@@ -98,6 +98,8 @@ const setup = () => installPackages(CACHE_NAME);
  * @property {string=} value text, on a `#text` node
  * @property {string=} data a comment's text
  * @property {string=} name a doctype's name
+ * @property {string=} publicId a doctype's public identifier, empty where it has none
+ * @property {string=} systemId a doctype's system identifier, empty where it has none
  * @property {{ name: string, value: string, prefix?: string }[]=} attrs
  * @property {Parse5Node[]=} childNodes
  * @property {Parse5Node=} content a `<template>`'s document fragment
@@ -323,6 +325,21 @@ const NESTED_NOSCRIPT = `<!DOCTYPE html>
 <noscript><noscript>nested</noscript>tail</noscript>
 <p>after</p>
 `;
+
+// A doctype decides quirks mode (§13.2.6.4.1), which shows in the tree: there a
+// `<table>` stays inside the `<p>` before it, where elsewhere it closes the `<p>`.
+const DOCTYPE_DECLARATIONS = [
+	"<!DOCTYPE html>",
+	'<!DOCTYPE html SYSTEM "about:legacy-compat">',
+	'<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">',
+	'<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "">',
+	'<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">',
+	'<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "">',
+	"<!DOCTYPE html PUBLIC 'HTML'>",
+	'<!DOCTYPE html SYSTEM "HTTP://WWW.IBM.COM/data/dtd/v11/ibmxhtml1-transitional.dtd">',
+	"<!DOCTYPE htm>",
+	"<!DOCTYPE>"
+];
 
 // Every shape §13.2 has a recovery rule for: implied end tags, formatting
 // elements reopened across a block, and text a table fosters out of itself.
@@ -978,6 +995,15 @@ const droppedAtEnd = (data) => {
 };
 
 /**
+ * @param {string} name a doctype's name
+ * @param {string} publicId its public identifier, empty where it has none
+ * @param {string} systemId its system identifier, empty where it has none
+ * @returns {string} the doctype as both trees read it
+ */
+const doctypeOf = (name, publicId, systemId) =>
+	`doctype ${name} ${JSON.stringify(publicId)} ${JSON.stringify(systemId)}`;
+
+/**
  * parse5's tree, as the agreement column reads it. A bogus comment `<?…` the
  * input ran out in is left out where webpack's processing instruction rules
  * drop it, as they are the tree webpack is held to.
@@ -1012,7 +1038,13 @@ const parse5Tree = (html, scripting = false) => {
 				}
 				events.leaf(`comment ${JSON.stringify(child.data)}`);
 			} else if (child.nodeName === "#documentType") {
-				events.leaf(`doctype ${child.name}`);
+				events.leaf(
+					doctypeOf(
+						/** @type {string} */ (child.name),
+						/** @type {string} */ (child.publicId),
+						/** @type {string} */ (child.systemId)
+					)
+				);
 			} else {
 				const name = /** @type {string} */ (child.tagName);
 				events.open(
@@ -1114,7 +1146,14 @@ const webpackTree = (html, scripting = false) => {
 		},
 		[NodeType.Doctype]: {
 			enter: (nodePath) => {
-				events.leaf(`doctype ${nodePath.name()}`);
+				// The DOM reads an identifier the doctype left out as empty.
+				events.leaf(
+					doctypeOf(
+						nodePath.name(),
+						nodePath.textOf(Part.publicId) || "",
+						nodePath.textOf(Part.systemId) || ""
+					)
+				);
 			},
 			exit: () => {}
 		}
@@ -2101,6 +2140,12 @@ const invariantFixtures = () => {
 	out.push(["Tag soup", TAG_SOUP]);
 	out.push(["Web components", WEB_COMPONENTS]);
 	out.push(["cold constructs", COLD_CONSTRUCTS]);
+	for (const doctype of DOCTYPE_DECLARATIONS) {
+		out.push([
+			`Doctype ${doctype}`,
+			`${doctype}<title>t</title><p><table><tr><td>x</table>`
+		]);
+	}
 	/** @type {string[]} */
 	const missing = [];
 	for (const [label, file] of INSTALLED_DOCUMENTS) {
@@ -2168,6 +2213,13 @@ const EXPECTED = [
 			"select[1]/option[1]: parse5 (scripting) <html:option>, tool <html:noscript>",
 		source: "Noscript",
 		why: "a `noscript` in a `select` is read by the in-body rules since customizable selects took the in-select mode out (§13.2.6.4.7); parse5 8 predates them and drops it"
+	},
+	{
+		relation: "agreement",
+		contains: "p[1]: parse5",
+		source:
+			'Doctype <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "">',
+		why: "a system identifier that is the empty string counts as missing, so this doctype sets quirks mode and the `<table>` stays inside the `<p>` (§13.2.6.4.1); parse5 8 predates that wording and sets limited-quirks mode"
 	},
 	{
 		relation: "respelling quote-double",

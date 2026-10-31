@@ -69,8 +69,8 @@ describe("css identifier utils", () => {
 			["\\3A )", ":)"],
 			// double backslash is preserved
 			["foo\\\\bar", "foo\\bar"],
-			// trailing single backslash retained
-			["foo\\", "foo\\"],
+			// a `\` the input ends after is an escape of EOF (§4.3.7)
+			["foo\\", "foo\uFFFD"],
 			// null code point -> replacement character
 			["\\0 ", "�"],
 			// surrogate -> replacement character
