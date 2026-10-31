@@ -1702,6 +1702,12 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				drop_console: true
 			})
 		).toBe("if(a);for(;;);x=void 0;");
+		// So is one called through `call` or `apply`.
+		expect(
+			print("console.log.call(console,a);console.log.apply(console,b);g();", {
+				drop_console: true
+			})
+		).toBe("g();");
 		// `pure_funcs` marks the calls it names pure, by how the callee is written.
 		expect(
 			print("foo(1);a.b.c(2);a.b.d(3);a[b].c(4);(0,foo)(5);", {
@@ -1745,6 +1751,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		expect(
 			print("g(V.toString(),-V,typeof V);", { global_defs: { V: -1 } })
 		).toBe('g((-1).toString(),-(-1),"number");');
+		expect(print("g(1/V);", { global_defs: { V: -0 } })).toBe("g(1/(-0));");
 		// `top_retain` keeps the top-level names it lists, a pattern or a test keeps.
 		const top = "var foo=1,bar=2;";
 		expect(print(top, { toplevel: true })).toBe("");
