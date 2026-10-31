@@ -2,6 +2,10 @@ type EXPECTED_ANY = any;
 type EXPECTED_FUNCTION = Function;
 type EXPECTED_OBJECT = object;
 
+// Set only when webpack itself runs bundled by webpack.
+declare const __webpack_require__:
+	undefined | ((moduleId: string | number) => unknown);
+
 declare module "*.json";
 declare module "rimraf";
 

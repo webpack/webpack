@@ -184,6 +184,112 @@ for (const [sourceFile, typeChecker] of sourceFiles) {
 		};
 
 		/**
+		 * Tells whether a declaration names its type, in JSDoc or TypeScript.
+		 * @param {ts.Declaration} declaration the declaration
+		 * @returns {boolean} true when the declaration states a type
+		 */
+		const declaresType = (declaration) => {
+			if (
+				(ts.isJSDocPropertyLikeTag(declaration) &&
+					declaration.typeExpression !== undefined) ||
+				("type" in declaration && declaration.type !== undefined) ||
+				ts.getJSDocType(declaration) !== undefined
+			) {
+				return true;
+			}
+			// `/** @type {T} */ const x = …` puts the tag on the statement.
+			const statement = declaration.parent && declaration.parent.parent;
+			return Boolean(
+				ts.isVariableDeclaration(declaration) &&
+				statement &&
+				ts.isVariableStatement(statement) &&
+				ts.getJSDocType(statement) !== undefined
+			);
+		};
+
+		/**
+		 * Tells whether a declaration states a type in this project's own source.
+		 * @param {ts.Declaration} declaration the declaration
+		 * @returns {boolean} true when it does
+		 */
+		const declaresOwnType = (declaration) =>
+			!declaration.getSourceFile().isDeclarationFile &&
+			declaresType(declaration);
+
+		/**
+		 * Tells whether an unannotated parameter or destructured binding takes its
+		 * type from one this project declares: a callback's parameter from the
+		 * signature it is passed to, a binding from the property it reads.
+		 * @param {ts.Declaration} declaration the declaration
+		 * @returns {boolean} true when the type it takes is declared
+		 */
+		const takesDeclaredType = (declaration) => {
+			if (ts.isParameter(declaration)) {
+				const fn = declaration.parent;
+				if (!ts.isArrowFunction(fn) && !ts.isFunctionExpression(fn)) {
+					return false;
+				}
+				const contextualType = typeChecker.getContextualType(fn);
+				if (!contextualType) return false;
+				const index = fn.parameters.indexOf(declaration);
+				const signatures = contextualType.getCallSignatures();
+				return (
+					signatures.length > 0 &&
+					signatures.every((signature) => {
+						const { parameters } = signature;
+						const parameter =
+							parameters[Math.min(index, parameters.length - 1)];
+						const declarations = parameter && parameter.getDeclarations();
+						return Boolean(
+							declarations &&
+							declarations.length > 0 &&
+							declarations.every(declaresOwnType)
+						);
+					})
+				);
+			}
+			if (ts.isBindingElement(declaration) && !declaration.initializer) {
+				const key = declaration.propertyName || declaration.name;
+				if (!ts.isIdentifier(key)) return false;
+				const property = typeChecker
+					.getTypeAtLocation(declaration.parent)
+					.getProperty(key.text);
+				const declarations = property && property.getDeclarations();
+				return Boolean(
+					declarations &&
+					declarations.length > 0 &&
+					declarations.every(declaresOwnType)
+				);
+			}
+			return false;
+		};
+
+		/**
+		 * Tells whether an identifier's `any` is stated by a declaration, such as
+		 * an `EXPECTED_ANY` the escape-hatch rows already count, not inferred.
+		 * @param {ts.Node} node the identifier
+		 * @returns {boolean} true when every declaration of its symbol states a type
+		 */
+		const isDeclaredAny = (node) => {
+			const symbol =
+				(ts.isShorthandPropertyAssignment(node.parent)
+					? typeChecker.getShorthandAssignmentValueSymbol(node.parent)
+					: typeChecker.getSymbolAtLocation(node)) ||
+				(ts.isPropertyAccessExpression(node.parent) && node.parent.name === node
+					? typeChecker.getSymbolAtLocation(node.parent)
+					: undefined);
+			const declarations = symbol && symbol.getDeclarations();
+			return Boolean(
+				declarations &&
+				declarations.length > 0 &&
+				declarations.every(
+					(declaration) =>
+						declaresType(declaration) || takesDeclaredType(declaration)
+				)
+			);
+		};
+
+		/**
 		 * Returns an identifier's type. The name `x` in `this.x = value` declares
 		 * the property, and TypeScript answers `any` there, so it is read off
 		 * the property's symbol instead.
@@ -201,6 +307,10 @@ for (const [sourceFile, typeChecker] of sourceFiles) {
 			) {
 				const symbol = typeChecker.getSymbolAtLocation(parent);
 				if (symbol) return typeChecker.getTypeOfSymbol(symbol);
+			}
+			// A property name in an object literal holds the value written for it.
+			if (ts.isPropertyAssignment(parent) && parent.name === node) {
+				return typeChecker.getTypeAtLocation(parent.initializer);
 			}
 			return typeChecker.getTypeAtLocation(node);
 		};
@@ -280,7 +390,12 @@ for (const [sourceFile, typeChecker] of sourceFiles) {
 					}
 				};
 				rep.s[statementIndex] = isTyped ? typeText.length : 0;
-				if (!isTyped && inferredAny && type.flags & ts.TypeFlags.Any) {
+				if (
+					!isTyped &&
+					inferredAny &&
+					type.flags & ts.TypeFlags.Any &&
+					!isDeclaredAny(node)
+				) {
 					inferredAny.push({
 						line: line + 1,
 						name: node.getText(sourceFile)
