@@ -413,9 +413,8 @@ const TOOLS = [
 	},
 	{
 		// What a `futureDefaults` production build pays: webpack's own minify
-		// function under the options `optimization.minimize` defaults to, whose
-		// second compress pass is why this is no like for like against terser's.
-		name: "webpack (2 passes)",
+		// function, compressing and mangling in its one pass.
+		name: "webpack",
 		stage: "minify",
 		create: () => {
 			const jsMinify = require("../lib/javascript/jsMinify");
@@ -425,10 +424,7 @@ const TOOLS = [
 					await jsMinify(
 						{ "input.js": code },
 						undefined,
-						{
-							as: sourceType() === "module" ? "module" : "script",
-							compress: { passes: 2 }
-						},
+						{ as: sourceType() === "module" ? "module" : "script" },
 						false
 					)
 				).code;
@@ -439,19 +435,8 @@ const TOOLS = [
 		// shows what that function's own plumbing costs.
 		name: "webpack printer",
 		stage: "minify",
-		create: () => {
-			const loading = require("../lib/javascript/syntax").printer.load();
-
-			return async (code) =>
-				(
-					await (
-						await loading
-					).minify(code, {
-						compress: { passes: 2 },
-						module: sourceType() === "module"
-					})
-				).code;
-		}
+		create: () => (code) =>
+			minifyOnePass(code, { module: sourceType() === "module" }).code
 	},
 	{
 		name: "terser",
@@ -1217,7 +1202,10 @@ const acornDifference = (source, options) => {
 		{
 			relation: "acorn",
 			what: difference.at.replace(/\[\d+\]/g, "[]"),
-			repro: `    ours ${oneLine(difference.ours, 60)}, acorn ${oneLine(difference.acorn, 60)}`
+			repro: `    ours ${oneLine(difference.ours, 60)}, acorn ${oneLine(
+				difference.acorn,
+				60
+			)}`
 		}
 	];
 };
@@ -1225,14 +1213,32 @@ const acornDifference = (source, options) => {
 // --- The printer's invariants -----------------------------------------------
 
 // The option sets the printer is held over: what a production build minifies
-// with, a second compress pass, the printer alone, and the printer laying out.
+// with, the printer alone, and the printer laying out.
 /** @type {[string, EXPECTED_ANY][]} */
 const PRESETS = [
 	["default", {}],
-	["2 passes", { compress: { passes: 2 } }],
 	["format", { compress: false, mangle: false }],
 	["beautify", { compress: false, mangle: false, format: { beautify: true } }]
 ];
+
+/**
+ * webpack's one-pass minify: one JavaScript `SourceProcessor` run, given its
+ * options as `jsMinify` gives them, `compress` and `mangle` on where unnamed.
+ * @param {string} code the source
+ * @param {EXPECTED_ANY} options the minify options
+ * @returns {{ code: string }} the output
+ */
+const minifyOnePass = (code, options) => {
+	const { SourceProcessor } = require("../lib/javascript/syntax");
+
+	return new SourceProcessor().process(code, {
+		compress: {},
+		mangle: true,
+		...options,
+		sourceType: options.module ? "module" : "script",
+		mode: options.format && options.format.beautify ? "beautify" : "minify"
+	});
+};
 
 /**
  * The printer under one preset, and the same printer reading its output back:
@@ -1360,7 +1366,9 @@ const JS_RESPELLINGS = [
 			label === "name" &&
 			/^[A-Za-z_$]/.test(text) &&
 			!CONTEXTUAL_NAMES.has(text)
-				? `\\u${text.charCodeAt(0).toString(16).padStart(4, "0")}${text.slice(1)}`
+				? `\\u${text.charCodeAt(0).toString(16).padStart(4, "0")}${text.slice(
+						1
+					)}`
 				: null
 	}
 ];
@@ -1502,6 +1510,13 @@ const sweepRespellings = (minify, code, module, minified) => {
 /** @type {import("./compare-tools-harness").Expected[]} */
 const EXPECTED = [
 	{
+		relation: "idempotence",
+		contains: "Unexpected token",
+		source: "acorn corpus: tests.js",
+		presets: ["default"],
+		why: "acorn reads a `/` after an async function expression as a regular expression, which V8 reads as division, and the printer writes `typeof async function(){}/foo/g` on one line"
+	},
+	{
 		relation: "respelling hex",
 		contains: "0x",
 		source: "asm-js/asm.js",
@@ -1510,9 +1525,23 @@ const EXPECTED = [
 	{
 		relation: "idempotence",
 		contains: "var ",
-		source: "ECharts",
-		presets: ["default", "2 passes"],
-		why: "terser breaks the line after a statement's trailing comment only where it compresses, so a print-only reprint joins them"
+		source: ["ECharts", "Babel 8"],
+		presets: ["default"],
+		why: "terser breaks the line after a comment only where it compresses, so a print-only reprint joins them"
+	},
+	{
+		relation: "idempotence",
+		contains: "{return",
+		source: "test/statsCases/track-returned/index.js",
+		presets: ["default"],
+		why: "an arrow whose one statement is an `if` with a known test returning a value keeps its braces: the `if` prints before the arrow reads what it returns"
+	},
+	{
+		relation: "idempotence",
+		contains: "(e)>0",
+		source: "D3",
+		presets: ["default"],
+		why: "an `if` printing as `?:` parenthesizes a test opening with a function where the reprint parenthesizes the function alone, the same size"
 	}
 ];
 
@@ -1615,7 +1644,9 @@ const invariants = async (write) => {
 			for (const report of reports) groups.add(report, "parse", label);
 		}
 		log(
-			`read ranges over ${corpus.length - refused} sources (${refused} the parser refuses) …`
+			`read ranges over ${
+				corpus.length - refused
+			} sources (${refused} the parser refuses) …`
 		);
 	}
 	if (wantedRelation("slices")) {
@@ -1641,9 +1672,6 @@ const invariants = async (write) => {
 	if (wantedRelation("purity")) {
 		// Printed alone: a compress pass over every source twice costs four
 		// minutes for state the printer, not the compressor, is asked to hold.
-		const { minifySync } = (
-			await require("../lib/javascript/syntax").printer.load()
-		).modules;
 		const [, presetOptions] = /** @type {[string, EXPECTED_ANY]} */ (
 			PRESETS.find(([name]) => name === "format")
 		);
@@ -1653,7 +1681,7 @@ const invariants = async (write) => {
 			const settled = options === undefined ? goalFor(source) : options;
 			if (settled === null) continue;
 			const { minify } = printerFor(
-				minifySync,
+				minifyOnePass,
 				presetOptions,
 				settled.sourceType === "module"
 			);
@@ -1691,9 +1719,6 @@ const invariants = async (write) => {
 	);
 	const wantsBehavior = wantedRelation("behavior");
 	if (wantsIdempotence || wantsRespelling || wantsBehavior) {
-		const { minifySync } = (
-			await require("../lib/javascript/syntax").printer.load()
-		).modules;
 		// Only what a script does before it returns is compared: a promise it
 		// leaves rejected, such as an `import()` with no loader, is ignored, and
 		// for the rest of the run, as one may settle after the sweep.
@@ -1727,7 +1752,7 @@ const invariants = async (write) => {
 			const says = (text) => tokenMeaning(text, module);
 			for (const [preset, presetOptions] of printing) {
 				const { minify, reprint } = printerFor(
-					minifySync,
+					minifyOnePass,
 					presetOptions,
 					module
 				);
@@ -1849,7 +1874,9 @@ const behaviorDifference = (source, printed) => {
 		{
 			relation: "behavior",
 			what: got === null ? "times out" : "runs otherwise",
-			repro: `    ${oneLine(expected, 80)}\n      -> ${got === null ? "<timeout>" : oneLine(got, 80)}`
+			repro: `    ${oneLine(expected, 80)}\n      -> ${
+				got === null ? "<timeout>" : oneLine(got, 80)
+			}`
 		}
 	];
 };
