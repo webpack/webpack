@@ -97,6 +97,7 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: arrow/call_args",
 			"terser compress: arrow/call_args_drop_param",
 			"terser compress: collapse_vars/collapse_vars_repeated",
+			"terser compress: collapse_vars/collapse_vars_self_reference",
 			"terser compress: conditionals/cond_8c",
 			"terser compress: conditionals/issue_1645_1",
 			"terser compress: conditionals/no_evaluate",
