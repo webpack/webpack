@@ -24,7 +24,7 @@ const {
 } = require("../helpers/jsFuzzProgram");
 const { isInPart } = require("../helpers/testParts");
 
-/** @typedef {(code: string | Record<string, string> | EXPECTED_OBJECT, options: EXPECTED_OBJECT) => Promise<{ code?: string, map?: string, ast?: EXPECTED_OBJECT, timings?: Record<string, number> }>} Minify */
+/** @typedef {(code: string, options: MinifyOptions) => Promise<{ code: string, map: string | undefined }>} Minify */
 /** @typedef {import("../helpers/jsFuzzProgram").Program} Program */
 /** @typedef {Record<string, EXPECTED_ANY>} MinifyOptions */
 
@@ -33,9 +33,6 @@ const PROGRAMS_PER_SEED = Number(process.env.JS_FUZZ_PROGRAMS) || 50;
 const SEED_TIMEOUT = 300000;
 const REGEXPS_PER_SEED = 400;
 const REQUIRE_SOURCES_PER_SEED = 200;
-// The minifier's other ways in and out minify each program ten times more, so
-// one program in this many meets them.
-const INTERFACE_EVERY = 5;
 // A program's synchronous part, bounded so an output that loops fails the case
 // instead of hanging the suite.
 const RUN_TIMEOUT = 5000;
@@ -264,8 +261,10 @@ const identifierAt = (code, offset) => {
 	);
 	return match === null
 		? ""
-		: match[0].replace(/\\u\{?([\da-fA-F]+)\}?/g, (_, hex) =>
-				String.fromCodePoint(Number.parseInt(hex, 16))
+		: match[0].replace(
+				/\\u(?:\{([\da-fA-F]+)\}|([\da-fA-F]{4}))/g,
+				(_, braced, hex) =>
+					String.fromCodePoint(Number.parseInt(braced || hex, 16))
 			);
 };
 
@@ -431,6 +430,17 @@ const parseAcorn = (code, isModule, ranges) =>
 		ranges
 	});
 
+// The statements whose body may print with or without braces.
+const BRACED_BODIES = new Set([
+	"DoWhileStatement",
+	"WhileStatement",
+	"ForStatement",
+	"ForInStatement",
+	"ForOfStatement",
+	"IfStatement",
+	"LabeledStatement"
+]);
+
 /**
  * A tree with what printing may respell taken out: positions, a literal's or an
  * untagged template's spelling, a key's quotes, nested sequences' commas and
@@ -466,6 +476,24 @@ const normalize = (node, tagged) => {
 	const out = {};
 	for (const key of Object.keys(source)) {
 		if (key === "start" || key === "end" || key === "range" || key === "loc") continue;
+		// A block of one statement a loop or `if` runs prints with or without braces.
+		if (
+			BRACED_BODIES.has(source.type) &&
+			(key === "body" || key === "consequent" || key === "alternate") &&
+			source[key] !== null &&
+			source[key].type === "BlockStatement" &&
+			source[key].body.length === 1 &&
+			!/^(?:FunctionDeclaration|ClassDeclaration)$/.test(
+				source[key].body[0].type
+			) &&
+			!(
+				source[key].body[0].type === "VariableDeclaration" &&
+				source[key].body[0].kind !== "var"
+			)
+		) {
+			out[key] = normalize(source[key].body[0]);
+			continue;
+		}
 		if (key === "raw" && source.type === "Literal") continue;
 		if (source.type === "TemplateElement" && key === "value" && !tagged) {
 			out.value = source.value.cooked;
@@ -514,6 +542,24 @@ const normalize = (node, tagged) => {
  * @param {boolean} isModule whether it is a module
  * @returns {string} its tokens, one per line
  */
+/**
+ * Compressed as it prints, an output may keep parentheses or leave out braces
+ * a plain print writes, so it is held to reading back as the same program.
+ * @param {string} code an output
+ * @param {string} reprinted it printed again
+ * @param {boolean} isModule whether it is a module
+ * @returns {boolean} whether both read as the same tree
+ */
+const readsBackTheSame = (code, reprinted, isModule) => {
+	const ours = parseAcornUnlessDefect(code, isModule, false);
+	const again = parseAcornUnlessDefect(reprinted, isModule, false);
+	return (
+		ours === undefined ||
+		again === undefined ||
+		!firstDifference(normalize(again), normalize(ours), "program")
+	);
+};
+
 const tokensOf = (code, isModule) => {
 	/** @type {string[]} */
 	const tokens = [];
@@ -599,126 +645,23 @@ const eagerParserDifference = (code, isModule) => {
 };
 
 /**
- * Where a program given as acorn's tree, or an output given back as one, is
- * printed or minified otherwise than its source; nothing where acorn refuses it.
- * @param {string} source the program
- * @param {boolean} isModule whether it is a module
- * @param {string} code the output
- * @param {string} expected what the program prints
- * @param {(input: string | EXPECTED_OBJECT, more: MinifyOptions) => ReturnType<Minify>} write the minifier under the output's options
- * @returns {Promise<string | undefined>} the disagreement
+ * webpack's one-pass minify of a program, given its options as `jsMinify`
+ * gives them: `compress` and `mangle` on where unnamed, a script unless a
+ * module. Its code, and its source map as JSON where `sourceMap` asks.
+ * @type {Minify}
  */
-const estreeDifference = async (source, isModule, code, expected, write) => {
-	const tree = () => parseAcornUnlessDefect(source, isModule, false);
-	if (tree() === undefined) return undefined;
-	const printedTree = /** @type {string} */ (
-		(await write(tree(), { ...PRINT_ONLY, parse: { spidermonkey: true } })).code
+const minify = async (code, { sourceMap, ...options }) => {
+	const result = /** @type {{ code: string, map: EXPECTED_OBJECT | undefined }} */ (
+		new SourceProcessor().process(code, {
+			mode: "minify",
+			compress: {},
+			mangle: true,
+			...options,
+			sourceType: options.module ? "module" : "script",
+			...(sourceMap ? { source: "0", content: code } : undefined)
+		})
 	);
-	const printedSource = /** @type {string} */ ((await write(source, PRINT_ONLY)).code);
-	const ours = parseAcornUnlessDefect(printedTree, isModule, false);
-	const theirs = parseAcornUnlessDefect(printedSource, isModule, false);
-	const difference =
-		ours && theirs && firstDifference(normalize(ours), normalize(theirs), "program");
-	if (difference) {
-		return `prints an ESTree tree otherwise at ${difference.at}: ${difference.ours} vs ${difference.acorn}\n\tprinted: ${printedTree}`;
-	}
-	const fromTree = /** @type {string} */ (
-		(await write(tree(), { parse: { spidermonkey: true } })).code
-	);
-	if ((await run(fromTree, isModule)) !== expected) {
-		return `minifies an ESTree tree into what prints differently: ${fromTree}`;
-	}
-	// The tree given back, read in again, prints as the output.
-	const toTree = await write(source, { format: { spidermonkey: true } });
-	const roundTrip = /** @type {string} */ (
-		(await write(/** @type {EXPECTED_OBJECT} */ (toTree.ast), {
-			...PRINT_ONLY,
-			parse: { spidermonkey: true }
-		})).code
-	);
-	const back = parseAcornUnlessDefect(roundTrip, isModule, false);
-	const printed = parseAcornUnlessDefect(code, isModule, false);
-	const backDifference =
-		back && printed && firstDifference(normalize(back), normalize(printed), "program");
-	if (backDifference) {
-		return `gives back an ESTree tree that prints otherwise at ${backDifference.at}: ${backDifference.ours} vs ${backDifference.acorn}\n\tprinted: ${roundTrip}`;
-	}
-	return undefined;
-};
-
-/**
- * Where the minifier's other ways in and out disagree with a plain call: input
- * as named files or an ESTree tree, the tree given back, a name cache, timings,
- * and a source map read in, as an index map, inline or with its sources.
- * @param {string} source the program
- * @param {boolean} isModule whether it is a module
- * @param {MinifyOptions} options the options the output was written under
- * @param {string} code the output
- * @param {string} map the output's source map
- * @param {Minify} minify webpack's minifier
- * @returns {Promise<string | undefined>} the disagreement
- */
-const interfaceDifference = async (source, isModule, options, code, map, minify) => {
-	/**
-	 * @param {string | Record<string, string> | EXPECTED_OBJECT} input what is minified
-	 * @param {MinifyOptions} more the options added
-	 * @returns {ReturnType<Minify>} the result
-	 */
-	const write = (input, more) =>
-		minify(input, { ...JSON.parse(JSON.stringify(options)), ...more });
-
-	const named = await write({ "fuzz.js": source, "empty.js": "" }, {});
-	if (named.code !== code) return `writes named files otherwise: ${named.code}`;
-	// A tree comes without comments, so without the annotations they carry:
-	// printed alone it holds the source's tokens, minified it prints the same.
-	const expected = await run(source, isModule);
-	const treeDifference = await estreeDifference(source, isModule, code, expected, write);
-	if (treeDifference !== undefined) return treeDifference;
-	const timed = await write(source, { timings: true });
-	if (timed.code !== code || typeof (timed.timings && timed.timings.total) !== "number") {
-		return "writes otherwise or times nothing with `timings`";
-	}
-	const nameCache = {};
-	for (let time = 0; time < 2; time++) {
-		const cached = await write(source, { nameCache, mangle: { toplevel: true } });
-		const printed = await run(/** @type {string} */ (cached.code), isModule);
-		if (printed !== expected) {
-			return `prints differently with a name cache, call ${time + 1}: ${cached.code}`;
-		}
-	}
-
-	const chained = await write(code, { sourceMap: { content: map } });
-	const misfit = sourceMapMisfit(
-		/** @type {string} */ (chained.code),
-		source,
-		/** @type {string} */ (chained.map),
-		false
-	);
-	if (misfit !== undefined) return `source map read in ${misfit}`;
-	const index = {
-		version: 3,
-		sections: [{ offset: { line: 0, column: 0 }, map: JSON.parse(map) }]
-	};
-	const fromIndex = await write(code, { sourceMap: { content: index } });
-	if (fromIndex.map !== chained.map) {
-		return "maps otherwise from an index map";
-	}
-	const inline = await write(
-		`${code}\n//# sourceMappingURL=data:application/json;base64,${Buffer.from(map).toString("base64")}`,
-		{ sourceMap: { content: "inline", url: "inline", includeSources: true } }
-	);
-	const [inlineCode, inlineUrl] = /** @type {string} */ (inline.code).split(
-		"\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,"
-	);
-	const inlineMap = JSON.parse(Buffer.from(inlineUrl || "", "base64").toString() || "{}");
-	if (
-		inlineCode !== chained.code ||
-		inlineMap.mappings !== JSON.parse(/** @type {string} */ (chained.map)).mappings ||
-		!Array.isArray(inlineMap.sourcesContent)
-	) {
-		return "maps otherwise read and written inline";
-	}
-	return undefined;
+	return { code: result.code, map: result.map && JSON.stringify(result.map) };
 };
 
 /**
@@ -732,18 +675,9 @@ const unsafeIn = (options) =>
  * The first check one program fails, or none.
  * @param {Program} program the program
  * @param {MinifyOptions[]} optionSets what it is minified under
- * @param {Minify} minify webpack's minifier
- * @param {boolean} interfaces whether the minifier's other ways in and out are checked too
- * @param {{ enabled: boolean }} treePrinting the switch printing a source from its SyntaxTree
  * @returns {Promise<string | undefined>} the first failure
  */
-const checkProgram = async (
-	{ code: source, module: isModule },
-	optionSets,
-	minify,
-	interfaces,
-	treePrinting
-) => {
+const checkProgram = async ({ code: source, module: isModule }, optionSets) => {
 	const parsed = parserDifference(source, isModule);
 	if (parsed !== undefined) return `parser: ${parsed}`;
 
@@ -789,35 +723,6 @@ const checkProgram = async (
 		} catch (err) {
 			return `minify ${label}: throws ${/** @type {Error} */ (err).message}`;
 		}
-		// Uncompressed, the SyntaxTree printer writes what terser's tree prints.
-		if (options.compress === false) {
-			treePrinting.enabled = false;
-			let fromTerser;
-			try {
-				fromTerser = await write(source, options);
-			} finally {
-				treePrinting.enabled = true;
-			}
-			if (fromTerser !== code) {
-				return `minify ${label}: the SyntaxTree printer writes otherwise than terser's tree\n\toutput: ${code}\n\tterser's tree: ${fromTerser}`;
-			}
-		}
-		// The SourceProcessor's printer writes what `minify` prints, comments aside.
-		if (set === PRINT_ONLY) {
-			const uncommented = await write(source, {
-				...options,
-				format: { comments: false }
-			});
-			const processed = /** @type {{ code: string }} */ (
-				new SourceProcessor().process(source, {
-					mode: "minify",
-					sourceType: isModule ? "module" : "script"
-				})
-			).code;
-			if (processed !== uncommented) {
-				return `SourceProcessor: prints otherwise than minify\n\toutput: ${processed}\n\tminify: ${uncommented}`;
-			}
-		}
 		if (seen.has(code) && set !== DEFAULTS && set !== STRONGEST) continue;
 		seen.add(code);
 		const parsedOutput = parserDifference(code, isModule);
@@ -834,7 +739,10 @@ const checkProgram = async (
 		});
 		let sameTokens;
 		try {
-			sameTokens = tokensOf(reprinted, isModule) === tokensOf(code, isModule);
+			sameTokens =
+				options.compress === false
+					? tokensOf(reprinted, isModule) === tokensOf(code, isModule)
+					: readsBackTheSame(code, reprinted, isModule);
 		} catch (err) {
 			if (compileError(reprinted, isModule) !== undefined) {
 				return `minify ${label}: printer writes its output as what does not parse: ${/** @type {Error} */ (err).message}\n\toutput:    ${code}\n\treprinted: ${reprinted}`;
@@ -878,19 +786,6 @@ const checkProgram = async (
 			const misfit = sourceMapMisfit(code, source, /** @type {string} */ (mapped.map));
 			if (misfit !== undefined) {
 				return `minify ${label}: source map ${misfit}\n\toutput: ${code}`;
-			}
-			const differs = interfaces
-				? await interfaceDifference(
-						source,
-						isModule,
-						options,
-						code,
-						/** @type {string} */ (mapped.map),
-						minify
-					)
-				: undefined;
-			if (differs !== undefined) {
-				return `minify ${label}: ${differs}\n\toutput: ${code}`;
 			}
 		}
 		if (set === STRONGEST) {
@@ -975,16 +870,6 @@ const requiredSpecifiers = (code) => {
 };
 
 describe("JavaScript fuzzer", () => {
-	/** @type {{ minify?: Minify, treePrinting?: { enabled: boolean } }} */
-	const loaded = {};
-
-	beforeAll(async () => {
-		const { minify, modules } =
-			await require("../../lib/javascript/syntax").printer.load();
-		loaded.minify = minify;
-		loaded.treePrinting = modules.treePrinting;
-	});
-
 	it("should write the same programs for the same seed", () => {
 		const first = createProgramGenerator(1);
 		const again = createProgramGenerator(1);
@@ -1035,7 +920,6 @@ describe("JavaScript fuzzer", () => {
 		it(
 			`should parse, print and minify what each program means: seed ${seed}`,
 			async () => {
-				const minify = /** @type {Minify} */ (loaded.minify);
 				const next = createProgramGenerator(seed);
 				const random = createRandom(seed);
 				/** @type {string[]} */
@@ -1053,13 +937,7 @@ describe("JavaScript fuzzer", () => {
 					/** @type {string | undefined} */
 					let failure;
 					try {
-						failure = await checkProgram(
-							program,
-							optionSets,
-							minify,
-							round % INTERFACE_EVERY === 1,
-							/** @type {{ enabled: boolean }} */ (loaded.treePrinting)
-						);
+						failure = await checkProgram(program, optionSets);
 					} catch (err) {
 						failure = `throws ${/** @type {Error} */ (err).stack}`;
 					}

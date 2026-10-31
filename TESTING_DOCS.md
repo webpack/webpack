@@ -345,7 +345,7 @@ Every command is a `package.json` script; `AGENTS.md` lists the few whose use is
 - `yarn test:unit` — All `*.unittest.js`.
 - `yarn test:integration` — Integration suites (`basictest`/`longtest`/`test`).
 - `yarn test:test262` / `test:html5lib` / `test:css-parsing` / `test:xmlconf` — Spec-conformance suites.
-- `yarn test:minify-corpora` — webpack's JS minifier vs the published one it replaces, byte for byte, over every JS corpus ([details](docs/syntax.md#javascript)).
+- `yarn test:minify-corpora` — webpack's one-pass JS minifier vs the published one it replaces, run for run and size for size, over every JS corpus ([details](docs/syntax.md#javascript)).
 - `yarn test:syntax-equivalence` — HTML/CSS printers vs a real browser's reading of their output (`configCases`, `wpt`).
 - `yarn test:size` — Generated-code size over all `configCases/` (per asset, plus runtime modules per runtime).
 - `yarn cover:unit` — Unit-test coverage.
