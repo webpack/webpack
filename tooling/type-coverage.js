@@ -291,17 +291,25 @@ for (const [sourceFile, typeChecker] of sourceFiles) {
 
 		/**
 		 * Tells whether a type names one of a signature's own type parameters,
-		 * other than one that defaults to `any` by its declaration.
+		 * other than one this project's source defaults to `any` on purpose;
+		 * lib's `new <T = any>()` of `Set` still counts.
 		 * @param {Set<ts.Type>} parameters the signature's type parameters
 		 * @param {ts.Type} type the declared type
 		 * @returns {boolean} true when it does
 		 */
 		const namesTypeParameter = (parameters, type) => {
 			if (type.flags & ts.TypeFlags.TypeParameter) {
+				if (!parameters.has(type)) return false;
 				const defaultType = type.getDefault();
+				if (!defaultType || !(defaultType.flags & ts.TypeFlags.Any)) {
+					return true;
+				}
+				const declarations = type.symbol && type.symbol.getDeclarations();
 				return (
-					parameters.has(type) &&
-					!(defaultType && defaultType.flags & ts.TypeFlags.Any)
+					!declarations ||
+					declarations.every(
+						(declaration) => declaration.getSourceFile().isDeclarationFile
+					)
 				);
 			}
 			return (
