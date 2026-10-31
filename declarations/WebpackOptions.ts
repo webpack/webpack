@@ -5433,6 +5433,11 @@ export type RuleSetUseItem =
 			 * Loader options.
 			 */
 			options?: RuleSetLoaderOptions;
+			/**
+			 * Run the loader's normal function only when its current input matches this condition, the same kind of condition 'test' takes. Input that is not valid UTF-8 text always runs it.
+			 * @since 5.113.0
+			 */
+			sourceTest?: RuleSetConditionOrConditions;
 	  }
 	| RuleSetUseFunction
 	| RuleSetLoader;

@@ -947,4 +947,37 @@ describe("Validation", () => {
 		`)
 		);
 	});
+
+	it("accepts the conditions a rule's test takes as loader source tests", () => {
+		const webpack = require("../..");
+		expect(() =>
+			webpack.validate({
+				module: {
+					rules: [
+						"use client",
+						/use client/,
+						[/use client/, "use server"],
+						() => true,
+						{ and: [/use client/, { not: /use server/ }] },
+						{ or: [/use client/, /use server/] },
+						{ glob: "**/*.js" }
+					].map((sourceTest) => ({
+						use: [{ loader: "example-loader", sourceTest }]
+					}))
+				}
+			})
+		).not.toThrow();
+	});
+
+	for (const [name, sourceTest] of [
+		["object with include", { include: /marker/ }],
+		["number", 42],
+		["null", null]
+	]) {
+		createTestCaseOnlyValidate(
+			`loader sourceTest with ${name}`,
+			{ module: { rules: [{ use: [{ loader: "example-loader", sourceTest }] }] } },
+			(msg) => expect(msg).toContain("sourceTest")
+		);
+	}
 });

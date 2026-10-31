@@ -9159,6 +9159,7 @@ declare interface EffectUse {
 		loader: string;
 		options?: null | string | { [index: string]: any };
 		ident?: string;
+		sourceTest?: (value: string) => boolean;
 	};
 }
 type EffectUseType = "use" | "use-pre" | "use-post";
@@ -19141,6 +19142,7 @@ declare interface LoaderEntry<
 	data?: DataType;
 	pitchExecuted: boolean;
 	normalExecuted: boolean;
+	sourceTest?: (value: string) => boolean;
 	type?: "module" | "commonjs";
 }
 declare interface LoaderItem {
@@ -19148,6 +19150,11 @@ declare interface LoaderItem {
 	options?: null | string | Record<string, any>;
 	ident?: null | string;
 	type?: null | string;
+
+	/**
+	 * compiled condition the loader's current input has to match for its normal function to run
+	 */
+	sourceTest?: (value: string) => boolean;
 }
 
 /**
@@ -29539,6 +29546,16 @@ declare interface RuleSetRule {
 						 * Loader options.
 						 */
 						options?: string | { [index: string]: any };
+						/**
+						 * Run the loader's normal function only when its current input matches this condition, the same kind of condition 'test' takes. Input that is not valid UTF-8 text always runs it.
+						 * @since 5.113.0
+						 */
+						sourceTest?:
+							| string
+							| RegExp
+							| ((value: string) => boolean)
+							| RuleSetLogicalConditions
+							| RuleSetCondition[];
 				  }
 		  )[]
 		| RuleSetUseFunction
@@ -29555,6 +29572,16 @@ declare interface RuleSetRule {
 				 * Loader options.
 				 */
 				options?: string | { [index: string]: any };
+				/**
+				 * Run the loader's normal function only when its current input matches this condition, the same kind of condition 'test' takes. Input that is not valid UTF-8 text always runs it.
+				 * @since 5.113.0
+				 */
+				sourceTest?:
+					| string
+					| RegExp
+					| ((value: string) => boolean)
+					| RuleSetLogicalConditions
+					| RuleSetCondition[];
 		  };
 
 	/**
@@ -29584,6 +29611,16 @@ type RuleSetUse =
 					 * Loader options.
 					 */
 					options?: string | { [index: string]: any };
+					/**
+					 * Run the loader's normal function only when its current input matches this condition, the same kind of condition 'test' takes. Input that is not valid UTF-8 text always runs it.
+					 * @since 5.113.0
+					 */
+					sourceTest?:
+						| string
+						| RegExp
+						| ((value: string) => boolean)
+						| RuleSetLogicalConditions
+						| RuleSetCondition[];
 			  }
 	  )[]
 	| RuleSetUseFunction
@@ -29600,6 +29637,16 @@ type RuleSetUse =
 			 * Loader options.
 			 */
 			options?: string | { [index: string]: any };
+			/**
+			 * Run the loader's normal function only when its current input matches this condition, the same kind of condition 'test' takes. Input that is not valid UTF-8 text always runs it.
+			 * @since 5.113.0
+			 */
+			sourceTest?:
+				| string
+				| RegExp
+				| ((value: string) => boolean)
+				| RuleSetLogicalConditions
+				| RuleSetCondition[];
 	  };
 type RuleSetUseFunction = (data: EffectData) =>
 	| string
@@ -29617,6 +29664,16 @@ type RuleSetUseFunction = (data: EffectData) =>
 			 * Loader options.
 			 */
 			options?: string | { [index: string]: any };
+			/**
+			 * Run the loader's normal function only when its current input matches this condition, the same kind of condition 'test' takes. Input that is not valid UTF-8 text always runs it.
+			 * @since 5.113.0
+			 */
+			sourceTest?:
+				| string
+				| RegExp
+				| ((value: string) => boolean)
+				| RuleSetLogicalConditions
+				| RuleSetCondition[];
 	  }
 	| (
 			| undefined
@@ -29638,6 +29695,16 @@ type RuleSetUseFunction = (data: EffectData) =>
 					 * Loader options.
 					 */
 					options?: string | { [index: string]: any };
+					/**
+					 * Run the loader's normal function only when its current input matches this condition, the same kind of condition 'test' takes. Input that is not valid UTF-8 text always runs it.
+					 * @since 5.113.0
+					 */
+					sourceTest?:
+						| string
+						| RegExp
+						| ((value: string) => boolean)
+						| RuleSetLogicalConditions
+						| RuleSetCondition[];
 			  }
 	  )[];
 type RuleSetUseItem =
@@ -29656,6 +29723,16 @@ type RuleSetUseItem =
 			 * Loader options.
 			 */
 			options?: string | { [index: string]: any };
+			/**
+			 * Run the loader's normal function only when its current input matches this condition, the same kind of condition 'test' takes. Input that is not valid UTF-8 text always runs it.
+			 * @since 5.113.0
+			 */
+			sourceTest?:
+				| string
+				| RegExp
+				| ((value: string) => boolean)
+				| RuleSetLogicalConditions
+				| RuleSetCondition[];
 	  };
 
 /**
@@ -39801,6 +39878,16 @@ declare namespace exports {
 				 * Loader options.
 				 */
 				options?: string | { [index: string]: any };
+				/**
+				 * Run the loader's normal function only when its current input matches this condition, the same kind of condition 'test' takes. Input that is not valid UTF-8 text always runs it.
+				 * @since 5.113.0
+				 */
+				sourceTest?:
+					| string
+					| RegExp
+					| ((value: string) => boolean)
+					| RuleSetLogicalConditions
+					| RuleSetCondition[];
 		  }
 		| (
 				| undefined
@@ -39822,6 +39909,16 @@ declare namespace exports {
 						 * Loader options.
 						 */
 						options?: string | { [index: string]: any };
+						/**
+						 * Run the loader's normal function only when its current input matches this condition, the same kind of condition 'test' takes. Input that is not valid UTF-8 text always runs it.
+						 * @since 5.113.0
+						 */
+						sourceTest?:
+							| string
+							| RegExp
+							| ((value: string) => boolean)
+							| RuleSetLogicalConditions
+							| RuleSetCondition[];
 				  }
 		  )[];
 	export type WebpackPluginFunction = (
