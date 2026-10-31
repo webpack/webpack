@@ -1702,6 +1702,13 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				drop_console: true
 			})
 		).toBe("if(a);for(;;);x=void 0;");
+		// Where a unary cannot stand, it is grouped.
+		expect(
+			print(
+				"x=console.log()**2;y=console.log().a;z=console.log()();w=new(console.log());",
+				{ drop_console: true }
+			)
+		).toBe("x=(void 0)**2;y=(void 0).a;z=(void 0)();w=new(void 0);");
 		// So is one called through `call` or `apply`.
 		expect(
 			print("console.log.call(console,a);console.log.apply(console,b);g();", {
