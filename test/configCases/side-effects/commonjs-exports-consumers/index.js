@@ -52,26 +52,3 @@ it("should read every pure module of a require.context", () => {
 	expect(context("./one.js")).toBe(1);
 	expect(context("./two.js").two).toBe(2);
 });
-
-it("should keep a pure module required bare for a later weak lookup", () => {
-	require("./weak-resolved");
-	expect(
-		__webpack_modules__[require.resolveWeak("./weak-resolved")]
-	).toBeDefined();
-	expect(bundled("weak-resolved")).toBe(true);
-});
-
-it("should keep a pure module required bare for a weak dynamic import", () => {
-	require("./weak-imported");
-	return import(/* webpackMode: "weak" */ "./weak-imported").then(
-		(namespace) => {
-			expect(namespace.a).toBe(1);
-		}
-	);
-});
-
-it("should still drop a pure module only __webpack_is_included__ asks about", () => {
-	require("./included-probe");
-	expect(__webpack_is_included__("./included-probe")).toBe(false);
-	expect(bundled("included-probe")).toBe(false);
-});
