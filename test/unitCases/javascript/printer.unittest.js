@@ -316,7 +316,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"if (a) { let x = h(); f(x, x) } if (a) { const y = h(); f(y, y) } if (a) { var z = 1 } if (a) { class C {} f(C) } if (a) { function g() {} } if (a) {} if (a) { b(); c() }",
 				{},
-				"if(a){let i=h();f(i,i)}if(a){let n=h();f(n,n)}if(a)var z=1;if(a){class s{}f(s)}if(a){function g(){}}a;if(a){b();c()}"
+				"if(a){let i=h();f(i,i)}if(a){let n=h();f(n,n)}if(a)var z=1;if(a){class s{}f(s)}if(a){function g(){}}a;if(a)b(),c();"
 			],
 			[
 				"if (a) /* before */ { b() } if (a) { b() /* after */ }",
@@ -1206,6 +1206,8 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["function f(){0,{}.a.b;0,a(),{}.a.b}", {}, "function f(){0,{}.a.b;a(),{}.a.b}"],
 			// A `!` the compressor adds before an equality flips its operator, one written stays.
 			["function f(a,b){if(a!==b)return;h(a==b?x:!0,a===b?!1:x,!(a==b))}", {}, "function f(a,b){if(a===b)h(a!=b||x,a!==b&&x,!(a==b))}"],
+			// A body of expressions prints as one sequence, without braces.
+			["function f(x){if(x){a();b()}else c();while(x){a();var y;b()}if(x){a();(function(){if(x)b();c()})()}}", {}, "function f(f){if(f)a(),b();else c();while(f)a(),b();if(f){a();!function(){if(f)b();c()}()}}"],
 			// What a literal written in place reads of itself is known, but where a call, tag or `delete` reads it as a reference.
 			["function f(a){return[\"abc\".length,[1,,a].length+1,[g()].length,/a\\/b/.source,\"ab\".length.x,\"ab\".length(),\"ab\".length``,delete\"ab\".length]}", {}, "function f(e){return[3,4,[g()].length,\"a\\\\/b\",2..x,\"ab\".length(),\"ab\".length``,delete\"ab\".length]}"]
 		];
