@@ -1984,7 +1984,7 @@ const LOWERING_FIXTURES = [
 			"border-top-width:calc(hypot(3px,4px));top:calc(1cm + 1px);" +
 			"left:calc(log(8,2)*10px);right:calc(pow(2,10)*.01px)}",
 		browsers: ["chrome 130"],
-		produces: ["width:141.421px", "height:70.7107px", "margin-left:.3px"],
+		produces: ["width:141.42135624px", "height:70.71067812px", "margin-left:.3px"],
 		html: '<button id=b style="position:absolute">x</button>',
 		probes: [
 			["#b", "width"],

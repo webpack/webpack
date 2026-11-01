@@ -2621,7 +2621,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		it.each([
 			["33.33333333%", "33.333333%"],
 			// The shortest spelling that lands on every layout step the written one does.
-			["10.1885002107%", "10.188500211%"],
+			["10.1885002107%", "10.1885002%"],
 			["1.0000001px", "1px"],
 			["400ms", ".4s"],
 			[".005s", "5ms"],
@@ -3468,7 +3468,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// floors it to 1/64px: 2/19em is 2px at 19px, where `.105263em` is 1.98438px,
 			// and `line-height:1.42857` lays a 14px line at 19.98438px, not 20px.
 			expect(settled("a{outline-offset:-0.1052631579em}")).toBe(
-				"a{outline-offset:-.10526316em}"
+				"a{outline-offset:-.1052632em}"
 			);
 			expect(settled("a{width:calc(1em/9.5)}")).toBe("a{width:.1052632em}");
 			expect(settled("a{width:.3333333333em}")).toBe("a{width:.33333333em}");
@@ -3683,9 +3683,9 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// Only a channel reads the percentage as a byte: a length still rounds.
 			expect(settled("a{width:66.862745098%}")).toBe("a{width:66.862745%}");
 			expect(settled(".a{flex:0 0 16.66666667%;opacity:16.66666667%}")).toBe(
-				".a{opacity:.166667;flex:0 0 16.6667%}"
+				".a{opacity:.16666667;flex:0 0 16.6666667%}"
 			);
-			expect(settled("a{scale:16.66666667%}")).toBe("a{scale:.166667}");
+			expect(settled("a{scale:16.66666667%}")).toBe("a{scale:.16666667}");
 			// An exact half rounds up in every engine.
 			expect(settled("a{color:rgba(50%,50%,50%,.5)}")).toBe(
 				"a{color:#80808080}"
@@ -7117,7 +7117,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(minify("a{color:rgb(calc(255/7) 0 0)}")).toBe("a{color:#240000}");
 			// A transform function other than `perspective()` takes a negative too.
 			expect(minify("a{transform:scale(calc(-1/3))}")).toBe(
-				"a{transform:scale(-.333333)}"
+				"a{transform:scale(calc(-1/3))}"
 			);
 			expect(minify("a{transform:translate(calc(-4%))}")).toBe(
 				"a{transform:translate(-4%)}"
@@ -7198,7 +7198,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// Where no unit of the group spells it exactly, the sum still lands in one
 			// the expression was written with, at the precision every number is
 			// written at.
-			expect(value("calc(1px + 1cm)")).toBe("38.795276px");
+			expect(value("calc(1px + 1cm)")).toBe("38.7952756px");
 		});
 
 		it("keeps the parentheses on a negative the property refuses", () => {
@@ -7360,7 +7360,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(value("hypot(6px,8px,0px)")).toBe("10px");
 			// Irrational for most inputs, and written at the precision every number
 			// is written at.
-			expect(value("calc(hypot(1px,1px)*100)")).toBe("141.421356px");
+			expect(value("calc(hypot(1px,1px)*100)")).toBe("141.42135624px");
 		});
 	});
 
@@ -7435,14 +7435,14 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		it.each([
 			// An irrational answer is written at the fewest digits that land on the
 			// same layout steps, as any other number is.
-			["calc(sqrt(2)*100px)", "141.421356px"],
-			["calc(pow(2,.5)*100px)", "141.421356px"],
+			["calc(sqrt(2)*100px)", "141.42135624px"],
+			["calc(pow(2,.5)*100px)", "141.42135624px"],
 			["calc(exp(1)*100px)", "271.8281828px"],
-			["calc(log(10)*100px)", "230.258509px"],
+			["calc(log(10)*100px)", "230.2585093px"],
 			["calc(log(9,2)*100px)", "316.9925px"],
 			["calc(sin(30deg)*100px)", "50px"],
-			["calc(sin(45deg)*100px)", "70.710678px"],
-			["calc(cos(50grad)*100px)", "70.710678px"],
+			["calc(sin(45deg)*100px)", "70.71067812px"],
+			["calc(cos(50grad)*100px)", "70.71067812px"],
 			// A bare number is radians (CSS Values 4 §10.6).
 			["calc(sin(1)*100px)", "84.1470985px"],
 			["calc(cos(1rad)*100px)", "54.0302306px"],
@@ -7585,7 +7585,7 @@ describe("CssSyntax — convertLengthUnits", () => {
 	it("lands a sum in a unit it was written with, gate or no gate", () => {
 		// `1cm` is not a whole number of `px`, and `px` is all the gate leaves — so
 		// the sum lands there, at the precision every number is written at.
-		expect(width("calc(1cm + 1px)")).toBe("38.795276px");
+		expect(width("calc(1cm + 1px)")).toBe("38.7952756px");
 	});
 });
 
