@@ -958,6 +958,12 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				{},
 				"function f(){function n(){return x()}return n()}"
 			],
+			// What only unread code reads goes, though it would print first.
+			[
+				"function f() { function w() { return b() } function a() { return x() } function b() { return a() } }",
+				{},
+				"function f(){}"
+			],
 			[
 				"u(); function u() { return g() }",
 				{ compress: { toplevel: true }, mangle: { toplevel: true } },
