@@ -3484,6 +3484,37 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(settled("a{opacity:.3333333333}")).toBe("a{opacity:.333333}");
 		});
 
+		it("keeps the digits a bare number scaling a length lands on whole pixels with", () => {
+			// 20/14 is 20px at 14px, which `1.42857` misses: Chromium floors `1lh`
+			// to `19.98438px`, so Tabler's `calc((1lh - 1rem)/2)` is no longer 2px.
+			expect(settled("a{line-height:1.4285714286}")).toBe(
+				"a{line-height:1.42857143}"
+			);
+			expect(settled("a{line-height:calc(20/14)}")).toBe(
+				"a{line-height:1.42857143}"
+			);
+			expect(settled("a{font:14px/1.4285714286 x}")).toBe(
+				"a{font:14px/1.42857143 x}"
+			);
+			// A custom property may be read anywhere, a `line-height` among them.
+			/**
+			 * @param {string} css a stylesheet
+			 * @returns {string} its minified serialization, custom properties rewritten
+			 */
+			const rewritten = (css) =>
+				new SourceProcessor().process(css, {
+					mode: "minify",
+					rewriteCustomProperties: true
+				}).code;
+			expect(rewritten("a{--x:1.4285714286}")).toBe("a{--x:1.42857143}");
+			expect(rewritten("a{--x:.3333333333em}")).toBe("a{--x:.33333333em}");
+			// A number no length scales rounds as before, outside a declaration too.
+			expect(settled("a{opacity:.3333333333}")).toBe("a{opacity:.333333}");
+			expect(settled("@media (aspect-ratio:1.4285714286/1){a{top:0}}")).toBe(
+				"@media (aspect-ratio:1.42857/1){a{top:0}}"
+			);
+		});
+
 		it("drops the `@-moz-document` a later copy of its rule empties", () => {
 			expect(
 				settled(
@@ -7075,7 +7106,8 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// `calc(.333333)` is longer than `calc(1/3)`, but the declaration takes
 			// the bare number, which is shorter, as lightningcss writes it.
 			expect(minify("a{opacity:calc(1/3)}")).toBe("a{opacity:.333333}");
-			expect(minify("a{line-height:calc(4/3)}")).toBe("a{line-height:1.33333}");
+			// A `line-height` number scales the font size, so its nine digits lose.
+			expect(minify("a{line-height:calc(4/3)}")).toBe("a{line-height:calc(4/3)}");
 			expect(minify("a{animation-delay:calc(-1s/4)}")).toBe(
 				"a{animation-delay:-.25s}"
 			);
