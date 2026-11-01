@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Replace `?` and `#` of chunk names in output filenames with `_`, and warn.
+Replace `?` and `#` in chunk names, ids and asset names in filenames with `_`.
