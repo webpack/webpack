@@ -3491,6 +3491,8 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 				"a{font:14px/1.42857143 x}"
 			);
 			expect(settled("a{width:1.0526315789px}")).toBe("a{width:1.0526315789px}");
+			// ...and lands on a spelling no second pass shortens further.
+			expect(settled("a{width:1.454545455em}")).toBe("a{width:1.45454546em}");
 			expect(settled("a{width:33.33333333%}")).toBe("a{width:33.333333%}");
 			expect(settled("a{opacity:.3333333333}")).toBe("a{opacity:.33333333}");
 			expect(settled("@media (aspect-ratio:1.4285714286/1){a{top:0}}")).toBe(
