@@ -1246,6 +1246,12 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// A `!` test keeps the parentheses of what a folded or called test prints as where they are its own.
 			["function f(b){return[!(0||(a=b))?c:d,!(0||(x(),b)())?c:d]}", {}, "function f(b){return[(a=b)?d:c,(x(),b)()?d:c]}"],
 			["function g(s){return!function(s){return s.a&&s.b}(s)?a():b()}", {}, "function g(n){return n.a&&n.b?b():a()}"],
+			// `!!x` read for its truth prints as `x`, so it gives no boolean to return.
+			["function f(x,y){return[!!x?!0:y,!!x?y:!1,!!x?!0:!1]}", {}, "function f(x,n){return[x?!0:n,x?n:!1,!!x]}"],
+			["function f(x){if(!!x)return!0;return!1}", {}, "function f(n){return!!n}"],
+			// A statement printing nothing, as a call nothing reads of a function doing nothing, joins no sequence.
+			["function f(x,g){if(x){void function(){0}();g();g()}}", {}, "function f(f,i){if(f)i(),i()}"],
+			["f=b=>{void function(){0}();g();return b}", {}, "f=n=>(g(),n);"],
 			// A statement after the first that printed its own parentheses keeps the body's braces.
 			["function k(a,p){function A(x,y){x.push(1);x.push(2)}if(p){a.push(3);A(a,p)}return a}", {}, "function k(p,u){if(u){p.push(3);(function(p,u){p.push(1);p.push(2)})(p,u)}return p}"],
 			["f=x=>{a();({}).b=x;return 1}", {}, "f=r=>{a();({}).b=r;return 1};"],
