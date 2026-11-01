@@ -60,7 +60,7 @@ console.log(new square(7));
 /* 0 */,
 /* 1 */
 /*!******************************************************************************************************!*\
-  !*** delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_f71d3858e491f0e9b448 ***!
+  !*** delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_c3737c4a3a645b2d08c5 ***!
   \******************************************************************************************************/
 /*! namespace exports */
 /*! export square [provided] [no usage info] [provision prevents renaming (no use info)] */
@@ -68,12 +68,12 @@ console.log(new square(7));
 /*! runtime requirements: module, __webpack_require__ */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-module.exports = (__webpack_require__(/*! dll-reference vendor_lib_f71d3858e491f0e9b448 */ 2))(1);
+module.exports = (__webpack_require__(/*! dll-reference vendor_lib_c3737c4a3a645b2d08c5 */ 2))(1);
 
 /***/ }),
 /* 2 */
 /*!**************************************************!*\
-  !*** external "vendor_lib_f71d3858e491f0e9b448" ***!
+  !*** external "vendor_lib_c3737c4a3a645b2d08c5" ***!
   \**************************************************/
 /*! dynamic exports */
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
@@ -81,7 +81,7 @@ module.exports = (__webpack_require__(/*! dll-reference vendor_lib_f71d3858e491f
 /***/ ((module) => {
 
 "use strict";
-module.exports = vendor_lib_f71d3858e491f0e9b448;
+module.exports = vendor_lib_c3737c4a3a645b2d08c5;
 
 /***/ })
 /******/ 	]);
@@ -119,8 +119,7 @@ module.exports = vendor_lib_f71d3858e491f0e9b448;
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	// define __esModule on exports
 /******/ 	__webpack_require__.r = (exports) => {
-/******/ 		Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		Object.defineProperties(exports, { [Symbol.toStringTag]: { value: 'Module' }, __esModule: { value: true } });
 /******/ 	};
 /******/ 	
 /************************************************************************/
@@ -157,11 +156,11 @@ console.log(new example_vendor__WEBPACK_IMPORTED_MODULE_0__.square(7));
 ## Unoptimized
 
 ```
-asset app.js 3.32 KiB [emitted] (name: main)
-chunk (runtime: main) app.js (main) 178 bytes (javascript) 211 bytes (runtime) [entry] [rendered]
+asset app.js 3.29 KiB [emitted] (name: main)
+chunk (runtime: main) app.js (main) 178 bytes (javascript) 184 bytes (runtime) [entry] [rendered]
   > ./example-app main
   dependent modules 84 bytes [dependent] 2 modules
-  runtime modules 211 bytes 1 module
+  runtime modules 184 bytes 1 module
   ./example-app.js 94 bytes [built] [code generated]
     [no exports]
     [used exports unknown]
@@ -172,7 +171,7 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset app.js 339 bytes [emitted] [minimized] (name: main)
+asset app.js 337 bytes [emitted] [minimized] (name: main)
 chunk (runtime: main) app.js (main) 178 bytes [entry] [rendered]
   > ./example-app main
   dependent modules 84 bytes [dependent] 2 modules

@@ -61,10 +61,10 @@ module.exports = config;
 ## Unoptimized
 
 ```
-asset output.js 3.68 MiB [emitted] (name: main)
-chunk (runtime: main) output.js (main) 2.3 MiB (javascript) 1.23 KiB (runtime) [entry]
+asset output.js 3.69 MiB [emitted] (name: main)
+chunk (runtime: main) output.js (main) 2.3 MiB (javascript) 1.21 KiB (runtime) [entry]
   > ./example.js main
-  cached modules 2.3 MiB (javascript) 1.23 KiB (runtime) [cached] 1537 modules
+  cached modules 2.3 MiB (javascript) 1.21 KiB (runtime) [cached] 1541 modules
 webpack X.X.X compiled successfully
 ```
 
@@ -72,15 +72,15 @@ webpack X.X.X compiled successfully
 
 ```
 asset output.js 536 KiB [emitted] [minimized] [big] (name: main) 1 related asset
-chunk (runtime: main) output.js (main) 2.23 MiB (javascript) 1.98 KiB (runtime) [entry]
+chunk (runtime: main) output.js (main) 2.24 MiB (javascript) 1.95 KiB (runtime) [entry]
   > ./example.js main
-  cached modules 2.23 MiB (javascript) 1.98 KiB (runtime) [cached] 41 modules
+  cached modules 2.24 MiB (javascript) 1.95 KiB (runtime) [cached] 41 modules
 
 WARNING in asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
 This can impact web performance.
 Assets: 
   output.js (536 KiB)
-    Largest modules: ./example.js + 1495 modules (1.7 MiB), ../../node_modules/lodash/lodash.js (533 KiB), ../../node_modules/css-loader/dist/runtime/api.js (2.25 KiB)
+    Largest modules: ./example.js + 1499 modules (1.7 MiB), ../../node_modules/lodash/lodash.js (533 KiB), ../../node_modules/css-loader/dist/runtime/api.js (2.25 KiB)
 
 WARNING in entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
 Entrypoints:

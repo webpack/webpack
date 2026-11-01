@@ -188,11 +188,10 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset index.html 569 bytes [emitted] [minimized] (auxiliary name: index)
-asset styles.css 40 bytes [emitted] [minimized] (name: src-index-0)
-Entrypoint index (569 bytes) = 1 auxiliary asset
+asset index.html 663 bytes [emitted] [minimized] (auxiliary name: index)
+Entrypoint index (663 bytes) = 1 auxiliary asset
 Entrypoint src-index-1 =
-Entrypoint src-index-0 40 bytes = styles.css
+Entrypoint src-index-0 =
 chunk (runtime: index) (index) 47 bytes (css-text) 549 bytes (html) [entry]
   > ./src/index.html index
   dependent modules 47 bytes [dependent] 1 module
@@ -200,7 +199,7 @@ chunk (runtime: index) (index) 47 bytes (css-text) 549 bytes (html) [entry]
     [exports: default]
     [no exports used]
     entry ./src/index.html index
-chunk (runtime: src-index-0) styles.css (src-index-0) 55 bytes (css) 0 bytes (runtime) [entry] [rendered]
+chunk (runtime: src-index-0) (src-index-0) 55 bytes (css) 0 bytes (runtime) [entry] [rendered]
   > ./styles.css src-index-0
   runtime modules 0 bytes 1 module
   css ./src/styles.css 55 bytes [built] [code generated]

@@ -237,7 +237,7 @@ module.exports = __webpack_require__.v(exports, module.id, "7b2c601f4b203df3bce9
 /******/ 			}
 /******/ 		}
 /******/ 		const wrapDeps = (deps) => (deps.map((dep) => {
-/******/ 			if(dep !== null && typeof dep === "object") {
+/******/ 			if(dep && typeof dep === "object") {
 /******/ 		
 /******/ 				if(dep[webpackQueues]) return dep;
 /******/ 				if(dep.then) {
@@ -256,10 +256,7 @@ module.exports = __webpack_require__.v(exports, module.id, "7b2c601f4b203df3bce9
 /******/ 					return obj;
 /******/ 				}
 /******/ 			}
-/******/ 			const ret = {};
-/******/ 			ret[webpackQueues] = x => {};
-/******/ 			ret[webpackExports] = dep;
-/******/ 			return ret;
+/******/ 			return { [webpackQueues]: x => {}, [webpackExports]: dep };
 /******/ 		}));
 /******/ 		__webpack_require__.a = (module, body, hasAwait) => {
 /******/ 			let queue;
@@ -315,8 +312,7 @@ module.exports = __webpack_require__.v(exports, module.id, "7b2c601f4b203df3bce9
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	// define __esModule on exports
 /******/ 	__webpack_require__.r = (exports) => {
-/******/ 		Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		Object.defineProperties(exports, { [Symbol.toStringTag]: { value: 'Module' }, __esModule: { value: true } });
 /******/ 	};
 /******/ 	
 /******/ 	/* webpack/runtime/wasm loading */
@@ -369,13 +365,13 @@ module.exports = __webpack_require__.v(exports, module.id, "7b2c601f4b203df3bce9
 ## Unoptimized
 
 ```
-asset output.js 12.8 KiB [emitted] (name: main)
+asset output.js 12.7 KiB [emitted] (name: main)
 asset 7b2c601f4b203df3bce9.wasm 67 bytes [emitted] [immutable] (auxiliary name: main)
 asset 097acf8fdf462561c3a7.wasm 62 bytes [emitted] [immutable] (auxiliary name: main)
 asset 7210b1cf069a95877339.wasm 41 bytes [emitted] [immutable] (auxiliary name: main)
-chunk (runtime: main) output.js (main) 1.27 KiB (javascript) 170 bytes (webassembly) 3.49 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 1.27 KiB (javascript) 170 bytes (webassembly) 3.43 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 3.49 KiB 5 modules
+  runtime modules 3.43 KiB 5 modules
   dependent modules 552 bytes (javascript) 170 bytes (webassembly) [dependent] 4 modules
   ./example.js 753 bytes [built] [code generated]
     [no exports]
@@ -387,14 +383,14 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 2.72 KiB [emitted] [minimized] (name: main)
+asset output.js 2.7 KiB [emitted] [minimized] (name: main)
 asset 7572f965ce6a56064de5.wasm 67 bytes [emitted] [immutable] (auxiliary name: main)
 asset 131bb4eca051ca1f58ad.wasm 62 bytes [emitted] [immutable] (auxiliary name: main)
 asset 5743c48f2e6f7881a967.wasm 41 bytes [emitted] [immutable] (auxiliary name: main)
-chunk (runtime: main) output.js (main) 1.27 KiB (javascript) 170 bytes (webassembly) 3.28 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 1.27 KiB (javascript) 170 bytes (webassembly) 3.25 KiB (runtime) [entry] [rendered]
   > ./example.js main
   dependent modules 552 bytes (javascript) 170 bytes (webassembly) [dependent] 4 modules
-  runtime modules 3.28 KiB 4 modules
+  runtime modules 3.25 KiB 4 modules
   ./example.js 753 bytes [built] [code generated]
     [no exports]
     [no exports used]

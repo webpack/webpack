@@ -201,8 +201,7 @@ function platform() {
 /******/ /* webpack/runtime/make namespace object */
 /******/ // define __esModule on exports
 /******/ __webpack_require__.r = (exports) => {
-/******/ 	Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 	Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	Object.defineProperties(exports, { [Symbol.toStringTag]: { value: 'Module' }, __esModule: { value: true } });
 /******/ };
 /******/ 
 /******/ /* webpack/runtime/import chunk loading */
@@ -252,11 +251,10 @@ function platform() {
 /******/ 				} else {
 /******/ 					if(true) { // all chunks have JS
 /******/ 						// setup Promise in chunk cache
-/******/ 						let promise = chunkImports[chunkId]().then(installChunk, (e) => {
+/******/ 						const promise = Promise.race([chunkImports[chunkId]().then(installChunk, (e) => {
 /******/ 							if(installedChunks[chunkId] !== 0) installedChunks[chunkId] = undefined;
 /******/ 							throw e;
-/******/ 						});
-/******/ 						promise = Promise.race([promise, new Promise((resolve) => (installedChunkData = installedChunks[chunkId] = [resolve]))])
+/******/ 						}), new Promise((resolve) => (installedChunkData = installedChunks[chunkId] = [resolve]))]);
 /******/ 						promises.push(installedChunkData[1] = promise);
 /******/ 					}
 /******/ 				}
@@ -354,11 +352,11 @@ function render(message) {
 ## Unoptimized
 
 ```
-asset output.mjs 7.68 KiB [emitted] [javascript module] (name: main)
+asset output.mjs 7.62 KiB [emitted] [javascript module] (name: main)
 asset render_js.mjs 998 bytes [emitted] [javascript module]
-chunk (runtime: main) output.mjs (main) 1.16 KiB (javascript) 2.82 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.mjs (main) 1.16 KiB (javascript) 2.77 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 2.82 KiB 5 modules
+  runtime modules 2.77 KiB 5 modules
   dependent modules 562 bytes [dependent] 1 module
   ./example.js 629 bytes [built] [code generated]
     [no exports]
@@ -378,9 +376,9 @@ webpack X.X.X compiled successfully
 ```
 asset output.mjs 1.12 KiB [emitted] [javascript module] [minimized] (name: main)
 asset render_js.mjs 206 bytes [emitted] [javascript module] [minimized]
-chunk (runtime: main) output.mjs (main) 1.16 KiB (javascript) 2.61 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.mjs (main) 1.16 KiB (javascript) 2.59 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 2.61 KiB 4 modules
+  runtime modules 2.59 KiB 4 modules
   ./example.js + 1 modules 1.16 KiB [built] [code generated]
     [no exports]
     [no exports used]

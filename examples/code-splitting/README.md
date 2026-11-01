@@ -152,9 +152,9 @@ require.ensure(["c"], function(require) {
 /******/ 				doneFns?.forEach((fn) => (fn(event)));
 /******/ 				if(prev) return prev(event);
 /******/ 			}
-/******/ 			const timeout = setTimeout(onScriptComplete.bind(null, undefined, { type: 'timeout', target: script }), 120000);
-/******/ 			script.onerror = onScriptComplete.bind(null, script.onerror);
-/******/ 			script.onload = onScriptComplete.bind(null, script.onload);
+/******/ 			const timeout = setTimeout(onScriptComplete.bind(0, 0, { type: 'timeout', target: script }), 120000);
+/******/ 			script.onerror = onScriptComplete.bind(0, script.onerror);
+/******/ 			script.onload = onScriptComplete.bind(0, script.onload);
 /******/ 			needAttach && document.head.appendChild(script);
 /******/ 		};
 /******/ 	})();
@@ -195,7 +195,7 @@ require.ensure(["c"], function(require) {
 /******/ 									if(installedChunkData !== 0) installedChunks[chunkId] = undefined;
 /******/ 									if(installedChunkData) {
 /******/ 										const errorType = event && (event.type === 'load' ? 'missing' : event.type);
-/******/ 										const realSrc = event && event.target && event.target.src;
+/******/ 										const realSrc = event?.target?.src;
 /******/ 										error.message = 'Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')';
 /******/ 										error.name = 'ChunkLoadError';
 /******/ 										error.type = errorType;
@@ -319,11 +319,11 @@ Minimized
 ## Unoptimized
 
 ```
-asset output.js 9.09 KiB [emitted] (name: main)
+asset output.js 9.05 KiB [emitted] (name: main)
 asset node_modules_c_js-node_modules_d_js.output.js 562 bytes [emitted]
-chunk (runtime: main) output.js (main) 161 bytes (javascript) 4.77 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 161 bytes (javascript) 4.73 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.77 KiB 6 modules
+  runtime modules 4.73 KiB 6 modules
   dependent modules 22 bytes [dependent] 2 modules
   ./example.js 139 bytes [built] [code generated]
     [used exports unknown]
@@ -342,11 +342,11 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 1.78 KiB [emitted] [minimized] (name: main)
+asset output.js 1.75 KiB [emitted] [minimized] (name: main)
 asset node_modules_c_js-node_modules_d_js.output.js 108 bytes [emitted] [minimized]
-chunk (runtime: main) output.js (main) 161 bytes (javascript) 4.77 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 161 bytes (javascript) 4.73 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.77 KiB 6 modules
+  runtime modules 4.73 KiB 6 modules
   dependent modules 22 bytes [dependent] 2 modules
   ./example.js 139 bytes [built] [code generated]
     [no exports used]
