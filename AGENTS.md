@@ -273,13 +273,14 @@ Runtime-emitting code (chunk loading, resource hints, library and externals pres
 
 > [!REQUIRED]
 
-**Read [docs/caching.md](docs/caching.md) whenever `ConfigCacheTestCases` fails.** The rules it enforces:
+**Read [docs/caching.md](docs/caching.md) whenever `ConfigCacheTestCases` fails or a change alters which module loads a `lib/` file.** The rules it enforces:
 
 - `Pack got invalid because of write to: <identifier>` means work redone every incremental build: **treat it as a defect and find the cause**.
 - Every new serializable class (`Module`, `Dependency`, error subclass, cached value) calls `makeSerializable(...)`; `yarn fix:serializables` regenerates `internalSerializables`.
 - Deserialization re-enters a constructor with **no arguments**, so one dereferencing a parameter must guard.
 - **Never silence it with `test.filter.js`**; a new case passes both suites (post-baseline syntax gating is different — [Target the Node baseline](#target-the-node-baseline)).
 - Only a case whose subject is a build error may expect the write, via `infrastructure-log.js`; any other expectation states why it isn't a bug.
+- **Who loads a `lib/` file is part of every cold build**: the build-dependency walk follows `module.children`, so a `lib/` file a third-party package loads (a path handed to `minimizer-webpack-plugin`) that reaches `require("webpack")` adds all of webpack's loaded files; hand such plugins functions, and count the files before and after.
 
 ### Performance and memory
 

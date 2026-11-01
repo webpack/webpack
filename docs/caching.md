@@ -24,3 +24,16 @@ The one expected write webpack ships is a module carrying a **build error**: `No
 ## Diagnostics
 
 **`makeSerializable` follows from where a diagnostic is created.** Anything reachable from a module (`ModuleError`, `ModuleWarning`, `ModuleBuildError`) is serialized with the module graph and must register. One built after seal and pushed onto `compilation.warnings` never enters the pack, which is why the size-limit and duplicate-package warnings register nothing. A wrong guess is silent except for `Pack got invalid because of write to:` under `ConfigCacheTestCases`, so cover a new diagnostic there.
+
+## Build dependencies
+
+Before saving, the cache resolves its build dependencies (`FileSystemInfo#resolveBuildDependencies`) and snapshots every file it reaches, on every cold build. For CommonJS it follows `require.cache[file].children`, inside `node_modules` too, so the cost depends on **which module first loaded each file**, not only on what the code does.
+
+webpack's own directory is a managed path, so the walk normally stops there. A `lib/` file loaded by another package breaks that: it becomes a child of that package's module, which the walk reaches through the user's config. If that file reaches `require("webpack")`, `lib/index.js` joins its children and every webpack file loaded so far follows. That is how #22309 (the default CSS and HTML minifiers handed to `minimizer-webpack-plugin` as module paths) grew a cold production build of react-1k by about 15%: 729 files snapshotted instead of 44, with identical output.
+
+So:
+
+- **Hand webpack's own code to a third-party package as a value** (a function or object `lib/` already required), not a path it `require`s, unless the module never loads `webpack` in the main process.
+- **Nothing in the repo catches this.** Here webpack isn't under `node_modules`, so it isn't a managed path, and a test whose config `require`s webpack reaches everything anyway. Measure when a change alters which module loads a `lib/` file.
+
+**Measuring.** Install webpack as a real directory under a project's `node_modules` (copy `lib/`, `hot/`, `schemas/`, `package.json`, `types.d.ts`; dependencies may be symlinks, but a package that loads webpack's files must be a real copy so `webpack` resolves as its sibling). Use a config that imports the plugin, as users do, and doesn't `require` webpack. Wrap `FileSystemInfo.prototype.resolveBuildDependencies` to log `result.files.size`, delete the cache directory, and compare a cold build on `main` and on the branch.
