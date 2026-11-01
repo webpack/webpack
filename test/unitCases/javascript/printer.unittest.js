@@ -1241,6 +1241,13 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["function f(a){var r=function(x){var v;v=x.y();return v}(a);return[r,r]}", {}, "function f(r){var n=r.y();return[n,n]}"],
 			["function f(){var r=function(){let v=0;v=c.push(3);return v}();return[r,r]}", {}, "function f(){var r=c.push(3);return[r,r]}"],
 			["function f(a){var r=function(x){var v;return v}(a);return[r,r]}", {}, "function f(r){var n=function(r){var n;return n}(r);return[n,n]}"],
+			// A name the function declares whose reads print its value is no name the call reads.
+			["function f(){var r=function(){var p=1;const v={p};return v}();return[r,r]}", {}, "function f(){var r={p:1};return[r,r]}"],
+			["function f(a,b){var r=function(x,y){var v;v=g(y);return v}(a,b);return[r,r]}", {}, "function f(r,n){var v=g(n);return[v,v]}"],
+			// A statement printing nothing between guards keeps them apart.
+			["function f(a,b){void function(){0}();if(a)return;if(b)g()}", {}, "function f(f,i){if(!f&&i)g()}"],
+			// A function no longer moving to its one read keeps its call.
+			["function f(){d();function c(){x()}function d(){c()}}", {}, "function f(){n();function n(){(function(){x()})()}}"],
 			// A sum is no boolean, so `a ? x : false` stays.
 			["function f(a,b){return a+b?x:!1}", {}, "function f(n,a){return n+a?x:!1}"],
 			// A `!` test keeps the parentheses of what a folded or called test prints as where they are its own.
@@ -1270,6 +1277,24 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			});
 			expect(code).toBe(expected);
 		}
+		// A regexp source this engine rejects, as an older one rejects duplicate group names, stays unread.
+		let readsDuplicateGroups = true;
+		try {
+			// eslint-disable-next-line prefer-regex-literals
+			new RegExp("(?<a>x)|(?<a>y)");
+		} catch (_err) {
+			readsDuplicateGroups = false;
+		}
+		expect(
+			minifyOnePass("function f(){return/(?<a>x)|(?<a>y)/.source}", {
+				compress: { toplevel: false },
+				mangle: { toplevel: false }
+			}).code
+		).toBe(
+			readsDuplicateGroups
+				? 'function f(){return"(?<a>x)|(?<a>y)"}'
+				: "function f(){return/(?<a>x)|(?<a>y)/.source}"
+		);
 		// A test printed without its `!` keeps where its names were in the map.
 		const { SourceProcessor } = require("../../../lib/javascript/syntax");
 		const mapped = /** @type {{ code: string, map: { names: string[] } }} */ (
