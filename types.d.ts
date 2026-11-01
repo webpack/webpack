@@ -19982,7 +19982,7 @@ declare interface MinChunkSizePluginOptions {
  */
 declare abstract class MinifierLabel {
 	name: string;
-	mangled_name: null | string;
+	mangledName: null | string;
 	parent: null | MinifierLabel;
 	counter: number;
 }
@@ -19997,7 +19997,7 @@ declare abstract class MinifierVariable extends Variable {
 	global: boolean;
 	undeclared: boolean;
 	export: number;
-	mangled_name: null | string;
+	mangledName: null | string;
 	referenceCount: number;
 	written: boolean;
 }
