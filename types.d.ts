@@ -3488,47 +3488,47 @@ type CodeValuePrimitive =
 	undefined | null | string | number | bigint | boolean | Function | RegExp;
 type CollectedComment = CommentImport & { start: number; end: number };
 declare interface Colors {
-	reset: (value?: any) => string;
-	bold: (value?: any) => string;
-	dim: (value?: any) => string;
-	italic: (value?: any) => string;
-	underline: (value?: any) => string;
-	inverse: (value?: any) => string;
-	hidden: (value?: any) => string;
-	strikethrough: (value?: any) => string;
-	black: (value?: any) => string;
-	red: (value?: any) => string;
-	green: (value?: any) => string;
-	yellow: (value?: any) => string;
-	blue: (value?: any) => string;
-	magenta: (value?: any) => string;
-	cyan: (value?: any) => string;
-	white: (value?: any) => string;
-	gray: (value?: any) => string;
-	bgBlack: (value?: any) => string;
-	bgRed: (value?: any) => string;
-	bgGreen: (value?: any) => string;
-	bgYellow: (value?: any) => string;
-	bgBlue: (value?: any) => string;
-	bgMagenta: (value?: any) => string;
-	bgCyan: (value?: any) => string;
-	bgWhite: (value?: any) => string;
-	blackBright: (value?: any) => string;
-	redBright: (value?: any) => string;
-	greenBright: (value?: any) => string;
-	yellowBright: (value?: any) => string;
-	blueBright: (value?: any) => string;
-	magentaBright: (value?: any) => string;
-	cyanBright: (value?: any) => string;
-	whiteBright: (value?: any) => string;
-	bgBlackBright: (value?: any) => string;
-	bgRedBright: (value?: any) => string;
-	bgGreenBright: (value?: any) => string;
-	bgYellowBright: (value?: any) => string;
-	bgBlueBright: (value?: any) => string;
-	bgMagentaBright: (value?: any) => string;
-	bgCyanBright: (value?: any) => string;
-	bgWhiteBright: (value?: any) => string;
+	reset: (value?: unknown) => string;
+	bold: (value?: unknown) => string;
+	dim: (value?: unknown) => string;
+	italic: (value?: unknown) => string;
+	underline: (value?: unknown) => string;
+	inverse: (value?: unknown) => string;
+	hidden: (value?: unknown) => string;
+	strikethrough: (value?: unknown) => string;
+	black: (value?: unknown) => string;
+	red: (value?: unknown) => string;
+	green: (value?: unknown) => string;
+	yellow: (value?: unknown) => string;
+	blue: (value?: unknown) => string;
+	magenta: (value?: unknown) => string;
+	cyan: (value?: unknown) => string;
+	white: (value?: unknown) => string;
+	gray: (value?: unknown) => string;
+	bgBlack: (value?: unknown) => string;
+	bgRed: (value?: unknown) => string;
+	bgGreen: (value?: unknown) => string;
+	bgYellow: (value?: unknown) => string;
+	bgBlue: (value?: unknown) => string;
+	bgMagenta: (value?: unknown) => string;
+	bgCyan: (value?: unknown) => string;
+	bgWhite: (value?: unknown) => string;
+	blackBright: (value?: unknown) => string;
+	redBright: (value?: unknown) => string;
+	greenBright: (value?: unknown) => string;
+	yellowBright: (value?: unknown) => string;
+	blueBright: (value?: unknown) => string;
+	magentaBright: (value?: unknown) => string;
+	cyanBright: (value?: unknown) => string;
+	whiteBright: (value?: unknown) => string;
+	bgBlackBright: (value?: unknown) => string;
+	bgRedBright: (value?: unknown) => string;
+	bgGreenBright: (value?: unknown) => string;
+	bgYellowBright: (value?: unknown) => string;
+	bgBlueBright: (value?: unknown) => string;
+	bgMagentaBright: (value?: unknown) => string;
+	bgCyanBright: (value?: unknown) => string;
+	bgWhiteBright: (value?: unknown) => string;
 }
 
 /**
@@ -11992,7 +11992,7 @@ declare interface GetOptionsMethod<OptionsType> {
 			| (JSONSchema6 & ExtendedSchema)
 			| (JSONSchema7 & ExtendedSchema)
 			| (() => Parameters<typeof validateFunction>[0]),
-		check?: PrecompiledCheck
+		check?: PrecompiledCheck<OptionsType>
 	): OptionsType;
 	(
 		schema:
@@ -12001,7 +12001,7 @@ declare interface GetOptionsMethod<OptionsType> {
 			| (JSONSchema7 & ExtendedSchema)
 			| (() => Parameters<typeof validateFunction>[0]),
 		configuration?: ValidationErrorConfiguration,
-		check?: PrecompiledCheck
+		check?: PrecompiledCheck<OptionsType>
 	): OptionsType;
 }
 type GivenCompressOptions = Omit<Partial<any>, "global_defs"> & {
@@ -17938,7 +17938,7 @@ declare class JavascriptSourceProcessor<
 	},
 	number,
 	JavascriptProcessOptions,
-	object,
+	PrintOptions,
 	AnyParts,
 	TState,
 	VisitorMapSourceProcessorObject_2<{
@@ -19220,7 +19220,7 @@ declare interface LoaderPluginLoaderContext {
 		callback: (
 			err: null | Error,
 			source?: string | Buffer,
-			sourceMap?: null | object,
+			sourceMap?: null | RawSourceMap,
 			module?: Module
 		) => void
 	) => void;
@@ -20560,11 +20560,11 @@ declare class Module extends DependenciesBlock {
 		missingDependencies: LazySet<string>,
 		buildDependencies: LazySet<string>
 	): void;
-	get hasEqualsChunks(): any;
-	get isUsed(): any;
+	get hasEqualsChunks(): void;
+	get isUsed(): void;
 	get errors(): any;
 	get warnings(): any;
-	used: any;
+	used: void;
 
 	/**
 	 * Gets source basic types.
@@ -22579,7 +22579,7 @@ type NodePrintOptions = Omit<JavascriptProcessOptions, "compress"> & {
  * nothing of the walk. Returning (rather than writing to a buffer) is what lets a
  * parent compose / transform its text from its finished children.
  */
-declare interface NodePrinter<TPath, TNode, TPrintOptions = object> {
+declare interface NodePrinter<TPath, TNode, TPrintOptions = PrintOptions> {
 	(path: TPath, writer: PrintContext<TPath, TNode, TPrintOptions>): string;
 }
 declare class NodeSourcePlugin {
@@ -26631,7 +26631,7 @@ declare interface PositionLike {
  * A check precompiled from a schema with `schema-utils precompile`, it only
  * says whether the value is valid
  */
-declare interface PrecompiledCheck<T = any> {
+declare interface PrecompiledCheck<T = unknown> {
 	(value: T): boolean;
 }
 declare class PrefetchPlugin {
@@ -26697,7 +26697,7 @@ type PrimitiveSerializableType =
  * it) possible. `take` flushes a finished top-level node into the output and drops
  * the map, so a streaming grammar never holds more than one top-level subtree.
  */
-declare class PrintContext<TPath, TNode, TPrintOptions = object> {
+declare class PrintContext<TPath, TNode, TPrintOptions = PrintOptions> {
 	constructor(
 		options: PrintOptions & TPrintOptions,
 		printer: NodePrinter<TPath, TNode, TPrintOptions>
@@ -31753,7 +31753,7 @@ declare abstract class SourceProcessor<
 	TPath extends NodePath<TNode, unknown>,
 	TNode,
 	TProcessOptions = object,
-	TPrintOptions = object,
+	TPrintOptions = PrintOptions,
 	TParts extends NodeParts = AnyParts,
 	TState = unknown,
 	TVisitors = VisitorMapSourceProcessorObject_1<TPath>
@@ -32685,7 +32685,7 @@ type StatsFactoryMergeHookMap = {
 	for(key: string): SyncBailHook<[any[], StatsFactoryContext], any>;
 } & HookMap<SyncBailHook<[any[], StatsFactoryContext], any>>;
 type StatsFactoryMergedItems<K extends keyof exports.StatsFactoryItemKeys> =
-	exports.StatsFactoryItemKeys[K] extends [any, any, infer M]
+	exports.StatsFactoryItemKeys[K] extends [infer _Object, infer _Item, infer M]
 		? M
 		: exports.StatsFactoryItemKeys[K][1][];
 type StatsFactoryResultFilterHookMap = {
@@ -36921,7 +36921,7 @@ declare namespace exports {
 				duplicateItemIndex: number,
 				numberOfTimesReplaced: number
 			) => T,
-			comparator?: (firstElement: T, nextElement: T) => 0 | 1 | -1
+			comparator?: (firstIndex: number, nextIndex: number) => number
 		) => T[];
 		export let matchPart: (str: string, test: Matcher) => boolean;
 		export let matchObject: (obj: MatchObject, str: string) => boolean;
