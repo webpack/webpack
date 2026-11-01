@@ -230,21 +230,20 @@
 /*! declined: a `@supports` condition is a declaration, not a media feature */
 @supports (min-width: 1px) { .t71 { color: red } }
 
-/* Unit conversion, each verified against headless Chromium: the computed style
-   of the authored form and of the emitted one are identical. */
+/* Rounding and unit conversion, each verified against headless Chromium: the
+   computed style of the authored form and of the emitted one are identical. */
 
-/*! webpack: a number keeps every digit it is written with: an engine scales it
-   by what only it knows and floors the product to its layout grid */
+/*! webpack: a percentage keeps the digits of the float Firefox parses */
 .t72 { width: 33.33333333% }
-/*! webpack: ...a length too */
+/*! webpack: ...and below the 1/64px it lays a length out in */
 .t73 { width: 1.0000001px }
 /*! webpack: ...for a unitless number too */
 .t74 { opacity: 0.123456789 }
-/*! webpack: ...an angle, which the trig in rotate() amplifies */
+/*! webpack: declined: an angle is amplified by the trig in rotate() */
 .t75 { transform: rotate(33.33333333deg) }
-/*! webpack: ...and a plain number argument */
+/*! webpack: ...but a plain number argument rounds */
 .t76 { transform: scale(1.123456789) }
-/*! webpack: ...and a long one */
+/*! webpack: declined: past 1e4 the rounded error would pass 1/64px */
 .t77 { width: 33333.33333px }
 /*! webpack: the units CSS Values 4 fixes against each other convert */
 .t78 { width: 16px }

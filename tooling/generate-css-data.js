@@ -5110,11 +5110,13 @@ const rec2020Transfer = (c) => {
 	// answer a whole step out.
 	//
 	// Everything else folds and lets the printer decide what is worth writing.
-	// The printer rounds a fold's answer to fifteen significant digits, which
-	// drops only a double's last bits. The four basic operations and `sqrt`
+	// The printer drops a fold's last bits and writes the fewest digits that land
+	// on the same layout step at every scale, so they are below what a stylesheet
+	// can observe. The four basic operations and `sqrt`
 	// are exactly specified by IEEE 754, so an engine reaches the same double;
 	// the transcendental ones may differ in the last bit, which the same rounding
-	// covers, an angle's included.
+	// covers. An angle is not rounded (a `rotate()` runs it back through trig), so
+	// a fold answering in degrees is left to the length check to accept or not.
 	mathPrimitives: [
 		[
 			"exactAdd",
@@ -5472,11 +5474,11 @@ const eighthTurn = (degrees, table) => {
 		[
 			"statedAngle",
 			`/**
- * An inverse trigonometric function answers with an angle, which a \`rotate()\`
- * runs back through trig, where a truncated digit is a different matrix. So only
- * the arguments the table states are taken: everywhere else the real answer
- * carries digits that are noise (\`asin(.5)\` is 30.000000000000004 degrees) and
- * no shorter than the call.
+ * An inverse trigonometric function answers with an angle, and an angle is the
+ * one thing the printer does not round — a \`rotate()\` runs it back through trig,
+ * where a truncated digit is a different matrix. So only the arguments the table
+ * states are taken: everywhere else the real answer carries digits that are
+ * noise (\`asin(.5)\` is 30.000000000000004 degrees) and no shorter than the call.
  * @param {number[]} values the one argument
  * @param {string} keyword unused
  * @param {Map<number, number>} table the arguments the table states
