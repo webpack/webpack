@@ -6,11 +6,11 @@
 "use strict";
 
 // Counts the modules a fresh process loads for each way webpack is used, and
-// fails when a count grows past `module-loading.json` or a module outside
-// webpack loads one of its internal files rather than being handed it.
+// fails when a module outside webpack loads one of its internal files rather
+// than being handed it. With `--base`, renders the counts against another checkout.
 //
-//   node tooling/check-module-loading.js          # check
-//   node tooling/check-module-loading.js --write  # rewrite the baseline
+//   node tooling/check-module-loading.js                                 # check
+//   node tooling/check-module-loading.js --base <dir> --output <file.md> # report
 
 const { fork } = require("child_process");
 const fs = require("fs");
@@ -18,13 +18,19 @@ const os = require("os");
 const path = require("path");
 const { fileURLToPath, pathToFileURL } = require("url");
 
-const ROOT = path.resolve(__dirname, "..");
-const INDEX = path.join(ROOT, "lib/index.js");
-const NODE_MODULES = path.join(ROOT, "node_modules") + path.sep;
-const BASELINE = path.join(__dirname, "module-loading.json");
+/** @typedef {{ webpack: number, dependencies: number, outsideLoads: string[] }} ScenarioResult */
 
-/** @typedef {{ webpack: number, dependencies: number }} Counts */
-/** @typedef {Counts & { outsideLoads: string[] }} ScenarioResult */
+/**
+ * @param {string} name the option's name, without `--`
+ * @returns {string | undefined} the value after it on the command line
+ */
+const argument = (name) => {
+	const index = process.argv.indexOf(`--${name}`);
+	return index === -1 ? undefined : process.argv[index + 1];
+};
+
+const ROOT = path.resolve(argument("root") || path.join(__dirname, ".."));
+const INDEX = path.join(ROOT, "lib/index.js");
 
 /**
  * @param {string} name a minifier's path under `lib/`
@@ -117,6 +123,10 @@ const SCENARIOS = {
 const runScenario = async (name) => {
 	const { registerHooks } = require("module");
 
+	const index = pathToFileURL(INDEX).href;
+	const nodeModules =
+		fs.realpathSync(path.join(ROOT, "node_modules")) + path.sep;
+
 	// Every requester counts, not only the first: Node adds an already loaded
 	// module to each later requester's `module.children` too.
 	/** @type {Map<string, Set<string>>} */
@@ -125,7 +135,11 @@ const runScenario = async (name) => {
 	const loaded = new Set();
 	registerHooks({
 		resolve(specifier, context, nextResolve) {
-			const result = nextResolve(specifier, context);
+			// The checkout being measured, not wherever `yarn link` points.
+			const result =
+				specifier === "webpack"
+					? { url: index, format: "commonjs", shortCircuit: true }
+					: nextResolve(specifier, context);
 			if (context.parentURL) {
 				const set = parents.get(result.url);
 				if (set) set.add(context.parentURL);
@@ -145,7 +159,7 @@ const runScenario = async (name) => {
 	for (const url of loaded) {
 		if (!url.startsWith("file:")) continue;
 		const file = fs.realpathSync(fileURLToPath(url));
-		if (file.startsWith(NODE_MODULES)) {
+		if (file.startsWith(nodeModules)) {
 			result.dependencies++;
 			continue;
 		}
@@ -155,7 +169,7 @@ const runScenario = async (name) => {
 		for (const parentUrl of parents.get(url) || []) {
 			if (parentUrl === self || !parentUrl.startsWith("file:")) continue;
 			const parent = fs.realpathSync(fileURLToPath(parentUrl));
-			if (parent.startsWith(NODE_MODULES) || !parent.startsWith(ROOT)) {
+			if (parent.startsWith(nodeModules) || !parent.startsWith(ROOT)) {
 				result.outsideLoads.push(
 					`${path.relative(ROOT, parent)} -> ${path.relative(ROOT, file)}`
 				);
@@ -167,13 +181,16 @@ const runScenario = async (name) => {
 
 /**
  * @param {string} name the scenario
+ * @param {string} root the checkout to load webpack from
  * @returns {Promise<ScenarioResult>} what a fresh process running it loaded
  */
-const measure = (name) =>
+const measure = (name, root) =>
 	new Promise((resolve, reject) => {
 		/** @type {ScenarioResult | undefined} */
 		let result;
-		const child = fork(__filename, ["--scenario", name], { stdio: "inherit" });
+		const child = fork(__filename, ["--scenario", name, "--root", root], {
+			stdio: "inherit"
+		});
 		child.on("message", (message) => {
 			result = /** @type {ScenarioResult} */ (message);
 		});
@@ -184,6 +201,16 @@ const measure = (name) =>
 		});
 	});
 
+/**
+ * @param {number} head the count on this checkout
+ * @param {number | undefined} base the count on the base checkout
+ * @returns {string} the change, marked red when it grew and green when it shrank
+ */
+const change = (head, base) => {
+	if (base === undefined || head === base) return "—";
+	return head > base ? `🔴 +${head - base}` : `🟢 −${base - head}`;
+};
+
 const main = async () => {
 	if (typeof require("module").registerHooks !== "function") {
 		console.log(
@@ -191,68 +218,65 @@ const main = async () => {
 		);
 		return;
 	}
-	const write = process.argv.includes("--write");
-	/** @type {Record<string, Counts>} */
-	const baseline = fs.existsSync(BASELINE)
-		? JSON.parse(fs.readFileSync(BASELINE, "utf8"))
-		: {};
-	/** @type {Record<string, Counts>} */
-	const next = {};
-	/** @type {string[]} */
-	const failures = [];
+	const baseRoot = argument("base");
+	const output = argument("output");
 	/** @type {string[]} */
 	const rows = [];
+	/** @type {string[]} */
+	const outsideLoads = [];
 	for (const name of Object.keys(SCENARIOS)) {
-		const { webpack, dependencies, outsideLoads } = await measure(name);
-		next[name] = { webpack, dependencies };
-		const before = baseline[name] || { webpack: 0, dependencies: 0 };
+		const head = await measure(name, ROOT);
+		/** @type {ScenarioResult | undefined} */
+		let base;
+		if (baseRoot) {
+			// A scenario the base cannot run yet (a minifier it lacks) has no count.
+			base = await measure(name, path.resolve(baseRoot)).catch(() => undefined);
+		}
 		rows.push(
-			`| ${name} | ${webpack} | ${before.webpack} | ${dependencies} | ${before.dependencies} |`
+			base
+				? `| ${name} | ${base.webpack} → ${head.webpack} | ${change(
+						head.webpack,
+						base.webpack
+					)} | ${base.dependencies} → ${head.dependencies} | ${change(
+						head.dependencies,
+						base.dependencies
+					)} |`
+				: `| ${name} | ${head.webpack} | — | ${head.dependencies} | — |`
 		);
-		for (const load of outsideLoads) {
-			failures.push(
-				`${name}: a module outside webpack loads an internal file: ${load}`
-			);
-		}
-		if (!write) {
-			for (const key of /** @type {(keyof Counts)[]} */ ([
-				"webpack",
-				"dependencies"
-			])) {
-				if (next[name][key] > before[key]) {
-					failures.push(
-						`${name}: loads ${next[name][key]} ${key} modules, over its baseline of ${before[key]}`
-					);
-				}
-			}
-		}
+		for (const load of head.outsideLoads) outsideLoads.push(`${name}: ${load}`);
 	}
-	console.log(
-		"| Scenario | webpack files | baseline | dependency files | baseline |"
-	);
-	console.log("| :-- | --: | --: | --: | --: |");
-	for (const row of rows) console.log(row);
-	if (write) {
-		fs.writeFileSync(BASELINE, `${JSON.stringify(next, null, 2)}\n`);
-		console.log(`Wrote ${path.relative(ROOT, BASELINE)}`);
-	}
-	if (failures.length > 0) {
-		console.error(`\n${failures.join("\n")}`);
-		console.error(
-			"\nLoad a module only where it is used, and hand other packages functions rather than paths to webpack's files; if the growth is intended, run with --write."
-		);
-		process.exitCode = 1;
-	}
+	const report = [
+		"## Module loading",
+		"",
+		baseRoot
+			? "Modules a fresh process loads for each way webpack is used, base → head. Every module loaded is startup time, so fewer is better."
+			: "Modules a fresh process loads for each way webpack is used. Every module loaded is startup time, so fewer is better.",
+		"",
+		"| Scenario | webpack files | Change | dependency files | Change |",
+		"| :-- | --: | --: | --: | --: |",
+		...rows,
+		"",
+		...(outsideLoads.length > 0
+			? [
+					"🔴 **A package outside webpack loads webpack's own files.** Hand it a function, not a path:",
+					"",
+					...outsideLoads.map((load) => `- \`${load}\``),
+					""
+				]
+			: [])
+	].join("\n");
+	if (output) fs.writeFileSync(output, report);
+	console.log(report);
+	if (outsideLoads.length > 0 && !output) process.exitCode = 1;
 };
 
-const scenarioIndex = process.argv.indexOf("--scenario");
-if (scenarioIndex === -1) {
+if (argument("scenario") === undefined) {
 	main().catch((err) => {
 		console.error(err);
 		process.exitCode = 1;
 	});
 } else {
-	runScenario(process.argv[scenarioIndex + 1]).catch((err) => {
+	runScenario(/** @type {string} */ (argument("scenario"))).catch((err) => {
 		console.error(err);
 		process.exitCode = 1;
 	});

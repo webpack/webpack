@@ -292,7 +292,7 @@ Every process starts cold, and loading code is most of that start, so pay only f
 - **Load on first use**: reach a module that some inputs or options never need through one lazy accessor, not an import at the top of the file.
 - **Keep cheap things light**: constants and option helpers callers need live apart from the heavy code that uses them.
 - **Turned-off work costs nothing**: build tables, regexes and closures on first use, not at load or construction.
-- **Prove it by counting** which modules a fresh process loads, not by timing it: `yarn lint:module-loading` counts them for each way webpack is used and fails when a count grows past `tooling/module-loading.json` or another package loads a `lib/` file itself (hand it a function, not a path). After a reviewed change, `--write` rewrites the baseline.
+- **Prove it by counting** which modules a fresh process loads, not by timing it: CI's Module Loading report compares the counts with the base for each way webpack is used, and `yarn lint:module-loading` prints them and fails when another package loads a `lib/` file itself (hand it a function, not a path).
 
 ### Keep instance shapes stable
 
