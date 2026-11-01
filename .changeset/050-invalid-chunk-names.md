@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Warn when chunk names contain query or fragment delimiters.
+Replace `?` and `#` of chunk names in output filenames with `_`, and warn.

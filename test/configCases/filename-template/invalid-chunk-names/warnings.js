@@ -5,8 +5,9 @@ module.exports = [
 	"fragment#raw",
 	"styles?query",
 	"styles#fragment",
-	"mixed?query"
+	"mixed?query",
+	"lazy?query"
 ].map((name) => ({
 	chunkName: new RegExp(`^${name.replace(/[-[\]\\/{}()*+?.^$|#]/g, "\\$&")}$`),
-	message: /contains '\?' or '#'.*chunk loading/s
+	message: /contains '\?' or '#'.*output filenames use/s
 }));
