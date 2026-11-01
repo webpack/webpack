@@ -1179,6 +1179,56 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		expect(code).toBe("if(a){b()}/* c */");
 	});
 
+	it("should read terser's snake_case option names as their camelCase names", () => {
+		const named = "function f() { function foo() { return h() } g(foo, foo) }";
+		const quoted = 'a.zzLeft = 1; a["zzRight"] = 2';
+		/** @typedef {import("../../../lib/javascript/syntax-printer").MinifyOptions} MinifyOptions */
+		/** @type {[string, MinifyOptions, MinifyOptions, MinifyOptions][]} */
+		const cases = [
+			[named, {}, { keepFnames: true }, { keep_fnames: true }],
+			["function f() { class Foo {} g(Foo, Foo) }", {}, { keepClassnames: true }, { keep_classnames: true }],
+			[named, {}, { mangle: { keepFnames: true } }, { mangle: { keep_fnames: true } }],
+			["function f() { debugger; g() }", {}, { compress: { dropDebugger: false } }, { compress: { drop_debugger: false } }],
+			[
+				quoted,
+				{ mangle: { properties: { regex: /^zz/ } } },
+				{ mangle: { properties: { regex: /^zz/, keepQuoted: true } } },
+				{ mangle: { properties: { regex: /^zz/, keep_quoted: true } } }
+			],
+			['g("é")', {}, { format: { asciiOnly: true } }, { format: { ascii_only: true } }],
+			["return g()", {}, { parse: { bareReturns: true } }, { parse: { bare_returns: true } }]
+		];
+		/**
+		 * @param {string} source a program
+		 * @param {MinifyOptions} options the options beside `compress` and `mangle`
+		 * @returns {string} the code, or the error it throws
+		 */
+		const print = (source, options) => {
+			try {
+				return minifyOnePass(source, { compress: {}, mangle: {}, ...options }).code;
+			} catch (err) {
+				return /** @type {Error} */ (err).message;
+			}
+		};
+		for (const [source, baseline, camelCase, snakeCase] of cases) {
+			const printed = print(source, camelCase);
+			expect(print(source, snakeCase)).toBe(printed);
+			// Each option changes the output, so either spelling is read.
+			expect(print(source, baseline)).not.toBe(printed);
+		}
+		// A print `minify` does not read takes the format options as given.
+		expect(minifyOnePass('g("é")', { format: { ascii_only: true } }).code).toBe(
+			'g("\\xe9");'
+		);
+		// Where both are given, the camelCase name wins.
+		expect(print('g("é")', { format: { asciiOnly: false, ascii_only: true } })).toBe(
+			'g("é");'
+		);
+		expect(print(named, { keepFnames: false, keep_fnames: true })).toBe(
+			print(named, {})
+		);
+	});
+
 	it("should print as the format options ask in the one pass", () => {
 		/** @type {[string, import("../../../lib/javascript/syntax-printer").MinifyOptions, string][]} */
 		const cases = [
