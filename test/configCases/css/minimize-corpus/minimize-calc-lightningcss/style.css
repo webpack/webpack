@@ -12,13 +12,13 @@
 .k004 { width: calc(3 * 2px) }
 /*! width: calc(10px / 4) — same as lightningcss: 2.5px */
 .k005 { width: calc(10px / 4) }
-/*! width: calc(10px / 3) — same as lightningcss: 3.33333px */
+/*! width: calc(10px / 3) — lightningcss: 3.33333px — ours keeps the digits that land on the same 1/64px step */
 .k006 { width: calc(10px / 3) }
 /*! width: calc(100% / 3) — lightningcss: 33.3333% — ours keeps the digits Firefox lays a percentage out with */
 .k007 { width: calc(100% / 3) }
 /*! width: calc(100% / 4) — same as lightningcss: 25% */
 .k008 { width: calc(100% / 4) }
-/*! width: calc(100% / 6) — lightningcss: 16.6667% — ours keeps the digits Firefox lays a percentage out with */
+/*! width: calc(100% / 6) — same as lightningcss: 16.6667% */
 .k009 { width: calc(100% / 6) }
 /*! width: calc(100% / 7) — lightningcss: 14.2857% — ours keeps the digits Firefox lays a percentage out with */
 .k010 { width: calc(100% / 7) }
@@ -28,11 +28,11 @@
 .k012 { width: calc(100% / 9) }
 /*! width: calc(100% / 12) — lightningcss: 8.33333% — ours keeps the digits Firefox lays a percentage out with */
 .k013 { width: calc(100% / 12) }
-/*! width: calc(100% * 2 / 3) — lightningcss: 66.6667% — ours keeps the digits Firefox lays a percentage out with */
+/*! width: calc(100% * 2 / 3) — same as lightningcss: 66.6667% */
 .k014 { width: calc(100% * 2 / 3) }
-/*! width: calc(200px / 3) — same as lightningcss: 66.6667px */
+/*! width: calc(200px / 3) — lightningcss: 66.6667px — ours keeps the digits that land on the same 1/64px step */
 .k015 { width: calc(200px / 3) }
-/*! width: calc(1px / 3) — same as lightningcss: .333333px */
+/*! width: calc(1px / 3) — lightningcss: .333333px — ours keeps the digits that land on the same 1/64px step */
 .k016 { width: calc(1px / 3) }
 /*! width: calc(-1px / 3) — lightningcss: -.333333px — a bare negative is invalid here, where calc() clamps it to 0 */
 .k017 { width: calc(-1px / 3) }
@@ -54,7 +54,7 @@
 .k025 { width: calc(1px - 2px) }
 /*! width: calc(1.5px * 1.5) — same as lightningcss: 2.25px */
 .k026 { width: calc(1.5px * 1.5) }
-/*! width: calc(1e3px / 7) — same as lightningcss: 142.857px */
+/*! width: calc(1e3px / 7) — lightningcss: 142.857px — ours keeps the digits that land on the same 1/64px step */
 .k027 { width: calc(1e3px / 7) }
 /*! width: calc(1px * 0) — same as lightningcss: 0 */
 .k028 { width: calc(1px * 0) }
@@ -106,9 +106,9 @@
 .k051 { width: calc(-1 * (100% - 10px)) }
 /*! width: calc(100% / 3 - 10px) — lightningcss: calc(33.3333% - 10px) — ours is shorter */
 .k052 { width: calc(100% / 3 - 10px) }
-/*! width: calc(100% / 3 + 100% / 3) — lightningcss: 66.6667% — ours keeps the digits Firefox lays a percentage out with */
+/*! width: calc(100% / 3 + 100% / 3) — same as lightningcss: 66.6667% */
 .k053 { width: calc(100% / 3 + 100% / 3) }
-/*! opacity: calc(1 / 3) — same as lightningcss: .333333 */
+/*! opacity: calc(1 / 3) — lightningcss: .333333 — ours keeps the digits that land on the same 1/64px step */
 .k054 { opacity: calc(1 / 3) }
 /*! opacity: calc(1 / 2) — same as lightningcss: .5 */
 .k055 { opacity: calc(1 / 2) }
@@ -132,15 +132,15 @@
 .k064 { z-index: calc(-1 * 5) }
 /*! order: calc(1.5) — same as lightningcss: calc(1.5) */
 .k065 { order: calc(1.5) }
-/*! flex-grow: calc(1 / 3) — same as lightningcss: .333333 */
+/*! flex-grow: calc(1 / 3) — lightningcss: .333333 — ours keeps the digits that land on the same 1/64px step */
 .k066 { flex-grow: calc(1 / 3) }
 /*! tab-size: calc(8 / 2) — same as lightningcss: 4 */
 .k067 { tab-size: calc(8 / 2) }
-/*! scale: calc(1 / 3) — same as lightningcss: .333333 */
+/*! scale: calc(1 / 3) — lightningcss: .333333 — ours keeps the digits that land on the same 1/64px step */
 .k068 { scale: calc(1 / 3) }
 /*! font-weight: calc(100 * 4) — same as lightningcss: 400 */
 .k069 { font-weight: calc(100 * 4) }
-/*! font-weight: calc(1000 / 3) — same as lightningcss: 333.333 */
+/*! font-weight: calc(1000 / 3) — lightningcss: 333.333 — ours keeps the digits that land on the same 1/64px step */
 .k070 { font-weight: calc(1000 / 3) }
 /*! column-count: calc(5 / 2) — lightningcss: calc(5 / 2) — ours is shorter */
 .k071 { column-count: calc(5 / 2) }
@@ -152,17 +152,17 @@
 .k074 { rotate: calc(45deg + 45deg) }
 /*! rotate: calc(1turn - 0.5turn) — same as lightningcss: .5turn */
 .k075 { rotate: calc(1turn - 0.5turn) }
-/*! rotate: calc(1turn / 3) — same as lightningcss: .333333turn */
+/*! rotate: calc(1turn / 3) — lightningcss: .333333turn — ours keeps the digits that land on the same 1/64px step */
 .k076 { rotate: calc(1turn / 3) }
-/*! rotate: calc(90deg / 7) — same as lightningcss: 12.8571deg */
+/*! rotate: calc(90deg / 7) — lightningcss: 12.8571deg — ours keeps the digits that land on the same 1/64px step */
 .k077 { rotate: calc(90deg / 7) }
-/*! rotate: calc(1rad + 1deg) — same as lightningcss: 58.2958deg */
+/*! rotate: calc(1rad + 1deg) — lightningcss: 58.2958deg — ours keeps the digits that land on the same 1/64px step */
 .k078 { rotate: calc(1rad + 1deg) }
 /*! rotate: calc(100grad) — same as lightningcss: 100grad */
 .k079 { rotate: calc(100grad) }
 /*! transition-duration: calc(1s + 1ms) — lightningcss: 1.001s — the same length either way */
 .k080 { transition-duration: calc(1s + 1ms) }
-/*! transition-duration: calc(1s / 3) — same as lightningcss: .333333s */
+/*! transition-duration: calc(1s / 3) — lightningcss: .333333s — ours keeps the digits that land on the same 1/64px step */
 .k081 { transition-duration: calc(1s / 3) }
 /*! transition-duration: calc(100ms * 3) — same as lightningcss: .3s */
 .k082 { transition-duration: calc(100ms * 3) }
@@ -230,9 +230,9 @@
 .k113 { rotate: atan(1) }
 /*! rotate: atan2(1, 1) — same as lightningcss: 45deg */
 .k114 { rotate: atan2(1, 1) }
-/*! width: calc(pi * 1px) — same as lightningcss: 3.14159px */
+/*! width: calc(pi * 1px) — lightningcss: 3.14159px — ours keeps the digits that land on the same 1/64px step */
 .k115 { width: calc(pi * 1px) }
-/*! width: calc(e * 1px) — same as lightningcss: 2.71828px */
+/*! width: calc(e * 1px) — lightningcss: 2.71828px — ours keeps the digits that land on the same 1/64px step */
 .k116 { width: calc(e * 1px) }
 /*! width: calc(infinity * 1px) — lightningcss: 3.40282e38px — no finite number is the value calc() clamps an infinity or NaN to */
 .k117 { width: calc(infinity * 1px) }
@@ -272,7 +272,7 @@
 .k134 { width: -moz-calc(1px + 2px) }
 /*! margin: calc(1px + 1px) calc(2px * 2) — same as lightningcss: 2px 4px */
 .k135 { margin: calc(1px + 1px) calc(2px * 2) }
-/*! margin: calc(10px / 3) 0 — same as lightningcss: 3.33333px 0 */
+/*! margin: calc(10px / 3) 0 — lightningcss: 3.33333px 0 — ours keeps the digits that land on the same 1/64px step */
 .k136 { margin: calc(10px / 3) 0 }
 /*! transform: translateX(calc(100% / 3)) — lightningcss: translate(33.3333%) — ours keeps the digits Firefox lays a percentage out with */
 .k137 { transform: translateX(calc(100% / 3)) }
@@ -280,13 +280,13 @@
 .k138 { transform: translate(calc(10px + 5px), calc(100% / 3)) }
 /*! transform: rotate(calc(45deg * 2)) — same as lightningcss: rotate(90deg) */
 .k139 { transform: rotate(calc(45deg * 2)) }
-/*! transform: scale(calc(1 / 3)) — same as lightningcss: scale(.333333) */
+/*! transform: scale(calc(1 / 3)) — lightningcss: scale(.333333) — ours keeps the digits that land on the same 1/64px step */
 .k140 { transform: scale(calc(1 / 3)) }
 /*! background-position: calc(100% / 3) calc(50% + 10px) — lightningcss: 33.3333% calc(50% + 10px) — ours keeps the digits Firefox lays a percentage out with */
 .k141 { background-position: calc(100% / 3) calc(50% + 10px) }
 /*! grid-template-columns: repeat(3, calc(100% / 3)) — lightningcss: repeat(3,33.3333%) — ours keeps the digits Firefox lays a percentage out with */
 .k142 { grid-template-columns: repeat(3, calc(100% / 3)) }
-/*! box-shadow: calc(1px + 1px) 0 calc(4px / 3) #000 — lightningcss: 2px 0 1.33333px #000 — the same value, ours dropping a space the tokens do not need */
+/*! box-shadow: calc(1px + 1px) 0 calc(4px / 3) #000 — lightningcss: 2px 0 1.33333px #000 — ours keeps the digits that land on the same 1/64px step */
 .k143 { box-shadow: calc(1px + 1px) 0 calc(4px / 3) #000 }
 /*! color: rgb(calc(255 / 3) 0 0) — same as lightningcss: #500 */
 .k144 { color: rgb(calc(255 / 3) 0 0) }
@@ -294,7 +294,7 @@
 .k145 { color: rgb(calc(100 + 55) 0 0) }
 /*! color: hsl(calc(360 / 7) 50% 50%) — same as lightningcss: #bfad40 */
 .k146 { color: hsl(calc(360 / 7) 50% 50%) }
-/*! color: rgb(0 0 0 / calc(1 / 3)) — same as lightningcss: #0005 */
+/*! color: rgb(0 0 0 / calc(1 / 3)) — lightningcss: #0005 — ours keeps the digits that land on the same 1/64px step */
 .k147 { color: rgb(0 0 0 / calc(1 / 3)) }
 /*! font: calc(10px + 2px)/1.5 serif — same as lightningcss: 12px/1.5 serif */
 .k148 { font: calc(10px + 2px)/1.5 serif }
@@ -328,9 +328,9 @@
 .k162 { aspect-ratio: calc(1 - 1) }
 /*! filter: brightness(calc(1 / 2)) — same as lightningcss: brightness(.5) */
 .k163 { filter: brightness(calc(1 / 2)) }
-/*! transform: scale(calc(1 / 3), calc(1 / 2)) — same as lightningcss: scale(.333333,.5) */
+/*! transform: scale(calc(1 / 3), calc(1 / 2)) — lightningcss: scale(.333333,.5) — ours keeps the digits that land on the same 1/64px step */
 .k164 { transform: scale(calc(1 / 3), calc(1 / 2)) }
-/*! transform: matrix(calc(1 / 3), 0, 0, 1, 0, 0) — lightningcss: matrix(.333333,0,0,1,0,0) — the same matrix, which ours writes as the shorter scaleX() */
+/*! transform: matrix(calc(1 / 3), 0, 0, 1, 0, 0) — lightningcss: matrix(.333333,0,0,1,0,0) — ours keeps the digits that land on the same 1/64px step */
 .k165 { transform: matrix(calc(1 / 3), 0, 0, 1, 0, 0) }
 /*! transform: scale(calc(-1 / 3)) — same as lightningcss: scale(-.333333) */
 .k166 { transform: scale(calc(-1 / 3)) }
@@ -338,9 +338,9 @@
 .k167 { transition-timing-function: cubic-bezier(calc(1 / 2), 0, 1, 1) }
 /*! color: rgb(calc(255 / 7) 0 0) — same as lightningcss: #240000 */
 .k168 { color: rgb(calc(255 / 7) 0 0) }
-/*! color: rgba(0, 0, 0, calc(1 / 3)) — same as lightningcss: #0005 */
+/*! color: rgba(0, 0, 0, calc(1 / 3)) — lightningcss: #0005 — ours keeps the digits that land on the same 1/64px step */
 .k169 { color: rgba(0, 0, 0, calc(1 / 3)) }
-/*! color: color(srgb calc(1 / 3) 0 0) — lightningcss: color(srgb .333333 0 0) — the same color, whose channel is a whole byte, written in hex */
+/*! color: color(srgb calc(1 / 3) 0 0) — lightningcss: color(srgb .333333 0 0) — ours keeps the digits that land on the same 1/64px step */
 .k170 { color: color(srgb calc(1 / 3) 0 0) }
 /*! rotate: calc(45deg + 0.125turn) — same as lightningcss: 90deg */
 .k171 { rotate: calc(45deg + 0.125turn) }
