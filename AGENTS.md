@@ -280,7 +280,7 @@ Runtime-emitting code (chunk loading, resource hints, library and externals pres
 - Deserialization re-enters a constructor with **no arguments**, so one dereferencing a parameter must guard.
 - **Never silence it with `test.filter.js`**; a new case passes both suites (post-baseline syntax gating is different — [Target the Node baseline](#target-the-node-baseline)).
 - Only a case whose subject is a build error may expect the write, via `infrastructure-log.js`; any other expectation states why it isn't a bug.
-- **Who loads a `lib/` file is part of every cold build**: the build-dependency walk follows `module.children`, so a `lib/` file a third-party package loads (a path handed to `minimizer-webpack-plugin`) that reaches `require("webpack")` adds all of webpack's loaded files; hand such plugins functions, and count the files before and after.
+- **Build dependencies follow imports**: the cache walks every `require` and `import` from the config, `node_modules` included, so a `lib/` file another package loads by path pulls in all it imports, `webpack` too; hand packages functions, not paths, and count the files ([how](docs/caching.md#build-dependencies)).
 
 ### Performance and memory
 

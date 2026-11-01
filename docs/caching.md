@@ -27,7 +27,7 @@ The one expected write webpack ships is a module carrying a **build error**: `No
 
 ## Build dependencies
 
-Before saving, the cache resolves its build dependencies (`FileSystemInfo#resolveBuildDependencies`) and snapshots every file it reaches, on every cold build. For CommonJS it follows `require.cache[file].children`, inside `node_modules` too, so the cost depends on **which module first loaded each file**, not only on what the code does.
+Before saving, the cache resolves its build dependencies (`FileSystemInfo#resolveBuildDependencies`) and snapshots every file it reaches, on every cold build. It follows imports inside `node_modules` too: for CommonJS, `require.cache[file].children`, so the cost depends on **which module first loaded each file**, not only on what the code does; for ES modules (and every `.mjs`), the static and string-literal dynamic `import`s `es-module-lexer` finds in the source.
 
 webpack's own directory is a managed path, so the walk normally stops there. A `lib/` file loaded by another package breaks that: it becomes a child of that package's module, which the walk reaches through the user's config. If that file reaches `require("webpack")`, `lib/index.js` joins its children and every webpack file loaded so far follows. That is how #22309 (the default CSS and HTML minifiers handed to `minimizer-webpack-plugin` as module paths) grew a cold production build of react-1k by about 15%: 729 files snapshotted instead of 44, with identical output.
 
