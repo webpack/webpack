@@ -594,6 +594,11 @@ const STYLE_CONTROLS = new Map([
 	["bad line-height digits", [".a{font-size:14px;line-height:1.4285714286}", ".a{font-size:14px;line-height:1.42857}"]],
 	["bad line-height digits through a custom property", [":root{--h:1.4285714286}.a{font-size:14px;line-height:var(--h)}", ":root{--h:1.42857}.a{font-size:14px;line-height:var(--h)}"]],
 	["bad line-height digits at a queried font size", ["@media (max-width:300px){.a{font-size:14px}}.a{line-height:1.4285714286}", "@media (max-width:300px){.a{font-size:14px}}.a{line-height:1.42857}"]],
+	// The same for any length: a computed one serializes at six digits as well, so only where the box lands tells these apart.
+	["bad width digits", [".a{font-size:19px;width:.1052631579em}", ".a{font-size:19px;width:.105263em}"]],
+	["bad padding digits", [".a{font-size:19px;padding-left:.1052631579em}", ".a{font-size:19px;padding-left:.105263em}"]],
+	["bad margin digits", [".a{font-size:19px;margin-top:.1052631579em}", ".a{font-size:19px;margin-top:.105263em}"]],
+	["good length digits", [".a{font-size:19px;margin-top:.1052631579em}", ".a{font-size:19px;margin-top:.10526316em}"]],
 	["good line-height digits", [".a{font-size:14px;line-height:1.4285714286}", ".a{font-size:14px;line-height:1.42857143}"]],
 	["good spelling", [".a{color:red;margin:0px}", ".a{color:#f00;margin:0}"]],
 	["good nth spellings", ["li:nth-child(odd){color:red}li:nth-child(even){color:blue}", "li:nth-child(2n+1){color:red}li:nth-child(2n){color:blue}"]],

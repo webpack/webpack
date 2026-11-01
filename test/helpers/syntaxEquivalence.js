@@ -1903,30 +1903,21 @@ const compareStyles = async ({ pairs, types }) => {
 			);
 		});
 
-	const LENGTH = /-?\d*\.?\d+(?:e[+-]?\d+)?px/gi;
-	const NUMBER = /-?\d*\.?\d+(?:e[+-]?\d+)?/gi;
-
 	/**
 	 * @param {string} one a value
 	 * @param {string} other another
 	 * @returns {boolean} whether they differ in pixel lengths alone
 	 */
-	const sameButLengths = (one, other) =>
-		one.replace(LENGTH, "px") === other.replace(LENGTH, "px");
-
 	/**
-	 * @param {string} one a value
-	 * @param {string} other another
-	 * @returns {boolean} whether they differ past the printer's six digits nowhere
+	 * Whether serialized CSSOM text holds a number at six significant digits, the
+	 * most it keeps, so one written longer may hide behind it.
+	 * @param {string} text a declaration as CSSOM serializes it
+	 * @returns {boolean} true when a number there may have lost digits
 	 */
-	const numericallyAlike = (one, other) => {
-		if (one.replace(NUMBER, "0") !== other.replace(NUMBER, "0")) return false;
-		const theirs = other.match(NUMBER) || [];
-		return (one.match(NUMBER) || []).every((number, at) => {
-			const [a, b] = [Number(number), Number(theirs[at])];
-			return Math.abs(a - b) <= Math.max(Math.abs(a), Math.abs(b), 1) * 1e-5;
-		});
-	};
+	const _hidesDigits = (text) =>
+		(text.match(/\d*\.\d+|\d+/g) || []).some(
+			(number) => number.replace(".", "").replace(/^0+/, "").length >= 6
+		);
 
 	/**
 	 * The lengths a condition names, in pixels, by the dimension each is of.
@@ -2556,6 +2547,15 @@ const compareStyles = async ({ pairs, types }) => {
 			tracked.add("line-height");
 			tracked.add("font-size");
 		}
+		// WHY: the same six digits hide any number written longer, so a property
+		// declaring one that CSSOM cut is read wherever it lays out.
+		for (const reading of readings) {
+			for (const [property, sequence] of reading.sequences) {
+				if (!tracked.has(property) && sequence.some(_hidesDigits)) {
+					tracked.add(property);
+				}
+			}
+		}
 		const properties = [...tracked];
 		const conditioned = properties.filter(
 			(name) => one.conditioned.has(name) || other.conditioned.has(name)
@@ -2802,6 +2802,16 @@ const compareStyles = async ({ pairs, types }) => {
 					if (lineA !== lineB) {
 						changed.push([LINE_PROBE, lineA, lineB, lineA, lineB]);
 					}
+					// WHY: a computed length serializes at six digits too, so where the
+					// element lays out — at the 1/64px its box is placed to — is read as
+					// well; a box of a margin or padding a rounding moved shows it.
+					if (pseudo === "") {
+						const [boxA, boxB] = [0, 1].map((side) => {
+							const box = read[side][i].getBoundingClientRect();
+							return `${box.x},${box.y} ${box.width}x${box.height}`;
+						});
+						if (boxA !== boxB) changed.push(["box", boxA, boxB, boxA, boxB]);
+					}
 					return changed;
 				};
 				/** @type {{ i: number, pseudo: string, at: string, changed: [string, string, string, string, string][] }[]} */
@@ -2854,47 +2864,8 @@ const compareStyles = async ({ pairs, types }) => {
 						return true;
 					});
 				}
-				// WHY: a used length is floored to the layout grid, and a percentage
-				// table multiplies that step — Semantic UI's `td{width:18.75%}` moved
-				// 6/64px over an 11px padding printed at six digits. Layout follows from
-				// computed values, so a length is read again with no box to lay out.
-				const rereading = found.some(({ changed }) =>
-					changed.some(([, , , x, y]) => sameButLengths(x, y))
-				);
-				if (rereading) {
-					for (const list of read) {
-						/** @type {HTMLElement} */ (list[2]).style.setProperty(
-							"display",
-							"none",
-							"important"
-						);
-					}
-				}
-				for (const { i, pseudo, at, changed } of found) {
-					const kept = rereading
-						? changed.filter(([name, , , x, y]) => {
-								if (!sameButLengths(x, y)) return true;
-								const [a, b] = [0, 1].map((side) =>
-									cascadeValue(
-										name,
-										windows[side]
-											.getComputedStyle(read[side][i], pseudo || null)
-											.getPropertyValue(name)
-									)
-								);
-								return !numericallyAlike(a, b);
-							})
-						: changed;
-					if (kept.length > 0 && moved.length < KEPT) {
-						moved.push({ at, moved: kept });
-					}
-				}
-				if (rereading) {
-					for (const list of read) {
-						/** @type {HTMLElement} */ (list[2]).style.removeProperty(
-							"display"
-						);
-					}
+				for (const { at, changed } of found) {
+					if (moved.length < KEPT) moved.push({ at, moved: changed });
 				}
 			}
 		};
