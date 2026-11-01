@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Load the default CSS and HTML minifiers in webpack, not through the plugin.
+Load only what the default minifiers use when the minimizer plugin loads them.
