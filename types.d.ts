@@ -4655,7 +4655,7 @@ declare class Compiler {
 	/**
 	 * Validates a value against a schema, skipping the schema when the precompiled check passes
 	 */
-	validate<T extends Parameters<typeof validateFunction>[1] = object>(
+	validate<T extends Parameters<typeof validateFunction>[1]>(
 		schema:
 			| (JSONSchema4 & ExtendedSchema)
 			| (JSONSchema6 & ExtendedSchema)
@@ -19929,17 +19929,17 @@ type MemCache = {
 		key: K,
 		...restAndValue: [...TupleElement[], MemCacheValue<K>]
 	): void;
-	provide<K extends TupleElement, V>(
+	provide<K extends TupleElement, V, R extends TupleElement[]>(
 		key: K,
 		...restAndCompute: [
-			...TupleElement[],
-			(...key: any[]) => MemCacheProvided<K, V>
+			...R,
+			(key: K, ...rest: [R][R extends R ? 0 : never]) => MemCacheProvided<K, V>
 		]
 	): MemCacheProvided<K, V>;
-	cachedProvide<This, V>(
-		compute: (thisArg: This, ...key: any[]) => V,
+	cachedProvide<This, V, A extends TupleElement[]>(
+		compute: (thisArg: This, ...key: [A][A extends A ? 0 : never]) => V,
 		thisArg: This,
-		args: TupleElement[]
+		args: A
 	): V;
 } & Omit<
 	WeakTupleMap<TupleElement[], unknown>,
@@ -35506,7 +35506,7 @@ declare abstract class WeakTupleMap<K extends TupleElement[], V> {
 	 * Returns an existing value for the tuple or computes, stores, and returns a
 	 * new one when the tuple is missing.
 	 */
-	provide(...args: [...K, (...args: K) => V]): V;
+	provide<A extends TupleElement[]>(...args: [...A, (...args: A) => V]): V;
 
 	/**
 	 * Memoizes `compute(thisArg, ...args)` under the tuple key `[compute,
@@ -35515,10 +35515,10 @@ declare abstract class WeakTupleMap<K extends TupleElement[], V> {
 	 * extra rest array) on every call — `ModuleGraph#cached` runs this on hot
 	 * paths where most calls hit the cache and the closure would be pure waste.
 	 */
-	cachedProvide<This>(
-		compute: (thisArg: This, ...args: K) => V,
+	cachedProvide<This, A extends TupleElement[]>(
+		compute: (thisArg: This, ...args: [A][A extends A ? 0 : never]) => V,
 		thisArg: This,
-		args: K
+		args: A
 	): V;
 
 	/**
