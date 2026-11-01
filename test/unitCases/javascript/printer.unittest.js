@@ -316,7 +316,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"if (a) { let x = h(); f(x, x) } if (a) { const y = h(); f(y, y) } if (a) { var z = 1 } if (a) { class C {} f(C) } if (a) { function g() {} } if (a) {} if (a) { b(); c() }",
 				{},
-				"if(a){let i=h();f(i,i)}if(a){let n=h();f(n,n)}if(a)var z=1;if(a){class s{}f(s)}if(a){function g(){}}if(a){}if(a){b();c()}"
+				"if(a){let i=h();f(i,i)}if(a){let n=h();f(n,n)}if(a)var z=1;if(a){class s{}f(s)}if(a){function g(){}}a;if(a){b();c()}"
 			],
 			[
 				"if (a) /* before */ { b() } if (a) { b() /* after */ }",
@@ -725,7 +725,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"function w(o){ with (o) {} } function f(){ var a = b; }",
 				{},
-				"function w(n){with(n){}}function f(){b}"
+				"function w(n){with(n);}function f(){b}"
 			],
 			// A conversion of what may be an object may run its methods, as `in` and `instanceof` may throw.
 			[
@@ -1166,7 +1166,26 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// Setting a `const` throws, so the write stays though nothing reads it.
 			["function m(){const e=2;e=1;return 3}", {}, "function m(){const n=2;n=1;return 3}"],
 			// A `const` set to `undefined` prints as a `let` without it.
-			["function f(){const c=undefined;g(c);g(c)}", {}, "function f(){let c;g(c);g(c)}"]
+			["function f(){const c=undefined;g(c);g(c)}", {}, "function f(){let c;g(c);g(c)}"],
+			// `-Infinity` prints `-1/0` where a division reads as one value there.
+			["function f(){return-Infinity}", {}, "function f(){return-1/0}"],
+			["function f(a){return[a/-Infinity,-Infinity/a,(-Infinity).x]}", {}, "function f(n){return[n/-(1/0),-(1/0)/n,(-(1/0)).x]}"],
+			// A body printing nothing is `;`, and an `if` with one only runs its test.
+			["function f(a){for(a of b){}while(a()){}l:{}}", {}, "function f(f){for(f of b);while(f());f:;}"],
+			["function f(a){if(a()){}if(a){}else b()}", {}, "function f(f){f();if(f);else b()}"],
+			["function f(x){if(x){if(a()){}}else b()}", {}, "function f(f){if(f)a();else b()}"],
+			// `!t?a:b` is `t?b:a`, but where the test would open a statement.
+			["function f(a){return[!a?b:c,!(a||b)?c:d,! --a?b:c,!!a?b:c]}", {}, "function f(a){return[a?c:b,a||b?d:c,--a?c:b,a?b:c]}"],
+			["function f(a){if(!a)b();else c()}", {}, "function f(f){f?c():b()}"],
+			["function f(){!function(){}()?a():b()}", {}, "function f(){!function(){}()?a():b()}"],
+			["function f(n){if(!n)return 2;return g(n)}", {}, "function f(n){return n?g(n):2}"],
+			["function f(n){if(!n){return a,b}return c}", {}, "function f(n){return n?c:(a,b)}"],
+			// A test already a boolean takes no `!!`.
+			["function f(n){if(!n)return!0;return!1}", {}, "function f(n){return!n}"],
+			["function f(n){if(n>1)return!0;return!1}", {}, "function f(n){return n>1}"],
+			["function f(a,b){return a instanceof b?!0:!1}", {}, "function f(n,a){return n instanceof a}"],
+			// Writing a function runs nothing, so its `typeof` is known.
+			["function f(){return[typeof function(){},typeof(()=>4)]}", {}, "function f(){return[\"function\",\"function\"]}"]
 		];
 		for (const [source, options, expected] of cases) {
 			const { code } = minifyOnePass(source, {

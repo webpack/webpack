@@ -30,7 +30,7 @@ export default(class{}).name;
 
 let x=\`a\${b}c\${\`d\${e}\`}\`;tag\`x\\\\u{41}\${y}\\\\n\`;new(a.b().c);new(a().b);[];[];![];
 
-for(var i=(a in b);i;){}for(let o of(a,b));for((x=1 in o);;){}
+for(var i=(a in b);i;);for(let o of(a,b));for((x=1 in o);;);
 
 (a=b?c:d,b)?c:d;a??(b||c);(a??b)||c;a**-b;(-a)**b;
 
@@ -72,7 +72,7 @@ function f(){return a+b}function g(){throw Error()}h(/*! a */x,y);
 #!/usr/bin/env node
 \\"use strict\\";console.log(1);
 
-({}=a);if(a)function f(){}if(c){}
+({}=a);if(a)function f(){}c;
 
 (o={if:1,class:2,\\"a-b\\":3,1:4,\\"01\\":5,\\" \\":7}).if;o[\`a-b\`];o[\`1\`];
 
@@ -283,7 +283,7 @@ export default(class{}).name;
 
 let x=\`a\${b}c\${\`d\${e}\`}\`;tag\`x\\\\u{41}\${y}\\\\n\`;new(a.b().c);new(a().b);[];[];![];
 
-for(var i=(a in b);i;){}for(let o of(a,b));for((x=1 in o);;){}
+for(var i=(a in b);i;);for(let o of(a,b));for((x=1 in o);;);
 
 (a=b?c:d,b)?c:d;a??(b||c);(a??b)||c;a**-b;(-a)**b;
 
@@ -326,7 +326,7 @@ return a+b}function g(){/*x*/throw Error()}h(/*! a */x,/* b */y);
 #!/usr/bin/env node
 \\"use strict\\";console.log(1);
 
-({}=a);if(a)function f(){}if(c){}
+({}=a);if(a)function f(){}c;
 
 (o={if:1,class:2,\\"a-b\\":3,1:4,\\"01\\":5,\\" \\":7}).if;o[\\"a-b\\"];o[\\"1\\"];
 
@@ -542,7 +542,7 @@ export default(class{}).name;
 
 let x=\`a\${b}c\${\`d\${e}\`}\`;tag\`x\\\\u{41}\${y}\\\\n\`;new(a.b().c);new(a().b);[];[];![];
 
-for(var i=(a in b);i;){}for(let o of(a,b));for((x=1 in o);;){}
+for(var i=(a in b);i;);for(let o of(a,b));for((x=1 in o);;);
 
 (a=b?c:d,b)?c:d;a??(b||c);(a??b)||c;a**-b;(-a)**b;
 
@@ -584,7 +584,7 @@ function f(){return a+b}function g(){throw Error()}h(/*! a */x,y);
 #!/usr/bin/env node
 \\"use strict\\";console.log(1);
 
-({}=a);if(a)function f(){}if(c){}
+({}=a);if(a)function f(){}c;
 
 (o={if:1,class:2,\\"a-b\\":3,1:4,\\"01\\":5,\\" \\":7}).if;o[\\"a-b\\"];o[\\"1\\"];
 
@@ -795,7 +795,7 @@ export default(class{}).name;
 
 let x=\`a\${b}c\${\`d\${e}\`}\`;tag\`x\\\\u{41}\${y}\\\\n\`;new(a.b().c);new(a().b);[];[];![];
 
-for(var i=(a in b);i;){}for(let k of(a,b));for((x=1 in o);;){}
+for(var i=(a in b);i;);for(let k of(a,b));for((x=1 in o);;);
 
 (a=b?c:d,b)?c:d;a??(b||c);(a??b)||c;a**-b;(-a)**b;
 
@@ -838,7 +838,7 @@ return a+b}function g(){/*x*/throw Error()}h(/*! a */x,/* b */y);
 #!/usr/bin/env node
 'use strict';console.log(1);
 
-({}=a);if(a)function f(){}if(c){}
+({}=a);if(a)function f(){}c;
 
 (o={if:1,class:2,'a-b':3,1:4,'01':5,' ':7}).if;o['a-b'];o['1'];
 
@@ -1090,7 +1090,7 @@ new(a().b);[];[]
 
 
 /* p */
-for(var i=(a in b);i;){}for(let o of(a,b));for((x=1 in o);;){}
+for(var i=(a in b);i;);for(let o of(a,b));for((x=1 in o);;);
 
 /* p */
 (a=b?c:d,b)?c:d
@@ -1205,7 +1205,8 @@ console.log(1)
 
 /* p */
 ({}=a)
-if(a)function f(){}if(c){}
+if(a)function f(){}c
+
 
 /* p */
 (o={\\"if\\":1,\\"class\\":2,\\"a-b\\":3,1:4,\\"01\\":5,\\" \\":7})[\\"if\\"]
