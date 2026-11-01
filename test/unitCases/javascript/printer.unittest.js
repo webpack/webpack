@@ -1531,6 +1531,16 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		expect(print("var a = 5; function reset() { a = 6 }")).toBe("");
 	});
 
+	it("should read `global_defs` before the global `NaN` and `Infinity`", () => {
+		const print = (/** @type {EXPECTED_OBJECT} */ compress) =>
+			minifyOnePass("if (!(1 < Infinity)) t(); g(!NaN);", {
+				compress,
+				mangle: false
+			}).code;
+		expect(print({})).toBe("g(!0);");
+		expect(print({ global_defs: { Infinity: 0, NaN: 1 } })).toBe("t();g(!1);");
+	});
+
 	it("should drop an unread call to an export `#__NO_SIDE_EFFECTS__` marks", () => {
 		const print = (/** @type {string} */ source) =>
 			minifyOnePass(source, { compress: {}, mangle: {}, module: true }).code;
