@@ -17938,7 +17938,7 @@ declare class JavascriptSourceProcessor<
 	},
 	number,
 	JavascriptProcessOptions,
-	object,
+	PrintOptions,
 	AnyParts,
 	TState,
 	VisitorMapSourceProcessorObject_2<{
@@ -19220,7 +19220,7 @@ declare interface LoaderPluginLoaderContext {
 		callback: (
 			err: null | Error,
 			source?: string | Buffer,
-			sourceMap?: null | object,
+			sourceMap?: null | RawSourceMap,
 			module?: Module
 		) => void
 	) => void;
@@ -22579,7 +22579,7 @@ type NodePrintOptions = Omit<JavascriptProcessOptions, "compress"> & {
  * nothing of the walk. Returning (rather than writing to a buffer) is what lets a
  * parent compose / transform its text from its finished children.
  */
-declare interface NodePrinter<TPath, TNode, TPrintOptions = object> {
+declare interface NodePrinter<TPath, TNode, TPrintOptions = PrintOptions> {
 	(path: TPath, writer: PrintContext<TPath, TNode, TPrintOptions>): string;
 }
 declare class NodeSourcePlugin {
@@ -26697,7 +26697,7 @@ type PrimitiveSerializableType =
  * it) possible. `take` flushes a finished top-level node into the output and drops
  * the map, so a streaming grammar never holds more than one top-level subtree.
  */
-declare class PrintContext<TPath, TNode, TPrintOptions = object> {
+declare class PrintContext<TPath, TNode, TPrintOptions = PrintOptions> {
 	constructor(
 		options: PrintOptions & TPrintOptions,
 		printer: NodePrinter<TPath, TNode, TPrintOptions>
@@ -31753,7 +31753,7 @@ declare abstract class SourceProcessor<
 	TPath extends NodePath<TNode, unknown>,
 	TNode,
 	TProcessOptions = object,
-	TPrintOptions = object,
+	TPrintOptions = PrintOptions,
 	TParts extends NodeParts = AnyParts,
 	TState = unknown,
 	TVisitors = VisitorMapSourceProcessorObject_1<TPath>
