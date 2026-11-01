@@ -43,43 +43,65 @@ const minify = (name, file, code) => async () => {
 };
 
 /**
- * @returns {Promise<void>} resolves once a production build of JavaScript, CSS
- * and HTML with the default minimizers has finished
+ * @param {string} context the directory to write the project into
+ * @returns {void}
  */
-const build = async () => {
-	const context = fs.mkdtempSync(path.join(os.tmpdir(), "webpack-loading-"));
+const writeProject = (context) => {
 	fs.writeFileSync(
 		path.join(context, "index.html"),
 		'<!doctype html><link rel="stylesheet" href="./style.css"><script src="./index.js"></script>'
 	);
 	fs.writeFileSync(path.join(context, "style.css"), "body { color: red; }");
 	fs.writeFileSync(path.join(context, "index.js"), "console.log(1 + 1);");
+};
 
+/**
+ * @param {"production" | "development"} mode the build's mode
+ * @param {boolean} watch whether to watch with hot module replacement, then
+ * rebuild once after an edit
+ * @returns {() => Promise<void>} a scenario building JavaScript, CSS and HTML
+ */
+const build = (mode, watch) => async () => {
+	const context = fs.mkdtempSync(path.join(os.tmpdir(), "webpack-loading-"));
+	writeProject(context);
+
+	/** @type {typeof import("../lib/index")} */
 	const webpack = require(INDEX);
+
+	const compiler = webpack({
+		mode,
+		context,
+		entry: "./index.html",
+		output: { path: path.join(context, "dist") },
+		experiments: { css: true, html: true },
+		plugins: watch ? [new webpack.HotModuleReplacementPlugin()] : []
+	});
 
 	try {
 		await new Promise((resolve, reject) => {
-			webpack(
-				{
-					mode: "production",
-					context,
-					entry: "./index.html",
-					output: { path: path.join(context, "dist") },
-					experiments: { css: true, html: true }
-				},
-				/**
-				 * @param {Error | null} err a fatal error
-				 * @param {import("../lib/stats/Stats") | undefined} stats the build's stats
-				 * @returns {void}
-				 */
-				(err, stats) => {
-					if (err) return reject(err);
-					if (stats && stats.hasErrors()) {
-						return reject(new Error(stats.toString("errors-only")));
-					}
-					resolve(undefined);
+			let builds = 0;
+			/**
+			 * @param {Error | null} err a fatal error
+			 * @param {import("../lib/stats/Stats") | undefined} stats the build's stats
+			 * @returns {void}
+			 */
+			const done = (err, stats) => {
+				if (err) return reject(err);
+				if (stats && stats.hasErrors()) {
+					return reject(new Error(stats.toString("errors-only")));
 				}
-			);
+				// The edit lands after the first build, so the rebuild is a hot update.
+				if (watch && ++builds === 1) {
+					return fs.writeFileSync(
+						path.join(context, "index.js"),
+						"console.log(2 + 2);"
+					);
+				}
+				compiler.close(() => resolve(undefined));
+			};
+
+			if (watch) compiler.watch({ aggregateTimeout: 50 }, done);
+			else compiler.run(done);
 		});
 	} finally {
 		fs.rmSync(context, { recursive: true, force: true });
@@ -111,7 +133,9 @@ const SCENARIOS = {
 		'<svg xmlns="http://www.w3.org/2000/svg"> <g/> </svg>'
 	),
 	"json minify": minify("json/jsonMinify", "a.json", '{ "a": [1, 2] }'),
-	"production build": build
+	"development build": build("development", false),
+	"production build": build("production", false),
+	"watch with HMR": build("development", true)
 };
 
 /**
