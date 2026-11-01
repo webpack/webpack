@@ -38472,7 +38472,7 @@ declare namespace exports {
 	export namespace css {
 		export function cssMinify(
 			input: { [index: string]: string | Buffer },
-			sourceMap?: object,
+			sourceMap?: Partial<RawSourceMap>,
 			minimizerOptions?: {
 				as?: "stylesheet" | "block-contents";
 				environment?: CssEnvironment;
