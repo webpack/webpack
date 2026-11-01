@@ -2244,6 +2244,28 @@ const compareStyles = async ({ pairs, types }) => {
 	const docs = frames.map(
 		(frame) => /** @type {Document} */ (frame.contentDocument)
 	);
+	// WHY: a computed `line-height` serializes at six digits, so `1.42857` reads
+	// `20px` at 14px where layout floors it to 19.98438px. What `1lh` floors to
+	// on Blink's 1/64px grid is a length every engine serializes apart.
+	const LINE_PROBE = "--eq-line-floor";
+	const lineProbes = windows.map((view) => {
+		view.CSS.registerProperty({
+			name: LINE_PROBE,
+			syntax: "<length>",
+			inherits: false,
+			initialValue: "0px"
+		});
+		const sheet = new view.CSSStyleSheet();
+		// One rule per selector, so an engine rejecting one pseudo-element keeps the rest.
+		sheet.replaceSync(
+			["*", "*::before", "*::after", "*::marker"]
+				.map(
+					(selector) => `${selector}{${LINE_PROBE}:round(down,1lh,0.015625px)}`
+				)
+				.join("")
+		);
+		return sheet;
+	});
 
 	/**
 	 * Renders both compared frames and lays them out, so the next read sees
@@ -2452,7 +2474,7 @@ const compareStyles = async ({ pairs, types }) => {
 			// CSS Syntax §3.2: decoding drops a leading byte order mark, which
 			// `replaceSync` would read as part of the first selector.
 			sheet.replaceSync(text.charCodeAt(0) === 0xfeff ? text.slice(1) : text);
-			docs[at].adoptedStyleSheets = [sheet];
+			docs[at].adoptedStyleSheets = [lineProbes[at], sheet];
 			return readSheet(sheet);
 		});
 		const [one, other] = readings;
@@ -2520,6 +2542,17 @@ const compareStyles = async ({ pairs, types }) => {
 					tracked.add(reader);
 				}
 			}
+		}
+		// WHY: CSSOM serializes a number at six digits, so `1.4285714286` and
+		// `1.42857` declare alike above; only the line probe tells them apart.
+		if (
+			readings.some(
+				(reading) =>
+					reading.sequences.has("line-height") ||
+					reading.sequences.has("font-size")
+			)
+		) {
+			tracked.add("line-height");
 		}
 		const properties = [...tracked];
 		const conditioned = properties.filter(
@@ -2750,6 +2783,7 @@ const compareStyles = async ({ pairs, types }) => {
 					/** @type {[string, string, string, string, string][]} */
 					const changed = [];
 					for (const name of names) {
+						if (name === LINE_PROBE) continue;
 						const a = styles[0].getPropertyValue(name);
 						const b = styles[1].getPropertyValue(name);
 						if (a === b) continue;
@@ -2758,6 +2792,13 @@ const compareStyles = async ({ pairs, types }) => {
 						if (x !== y && !relaxedEqual(relax, name, x, y, a, b)) {
 							changed.push([name, a, b, x, y]);
 						}
+					}
+					// Compared as serialized whatever the relaxations: the probe is no
+					// custom property a sheet wrote, and no opt-in may move layout.
+					const lineA = styles[0].getPropertyValue(LINE_PROBE);
+					const lineB = styles[1].getPropertyValue(LINE_PROBE);
+					if (lineA !== lineB) {
+						changed.push([LINE_PROBE, lineA, lineB, lineA, lineB]);
 					}
 					return changed;
 				};

@@ -235,7 +235,9 @@ playwright's own builds of those engines, patched for automation, so
 build, never a stock browser; Chrome is the stock Chrome for Testing, and
 `CHROME_EXECUTABLE_PATH` takes any Chrome. It compares
 effects, never CSSOM text: a stylesheet by the styles elements built from its
-selectors compute, at the widths its queries switch on; a page by its DOM and
+selectors compute, and where each one's `1lh` lands on the 1/64px layout grid
+(a computed `line-height` serializes at six digits, which hides a rounded one),
+at the widths its queries switch on; a page by its DOM and
 its render, with the dark color scheme read through each frame's own. Media is
 emulated on Chromium only, the engine the filed defects were measured on, so only
 there is a stylesheet naming print also read under it. A defect only one
