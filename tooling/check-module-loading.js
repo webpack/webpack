@@ -259,11 +259,13 @@ const measure = (name, root) =>
 /**
  * @param {number} head the count on this checkout
  * @param {number | undefined} base the count on the base checkout
- * @returns {string} the change, marked red when it grew and green when it shrank
+ * @returns {string} the count, with how much it grew (red) or shrank (green)
  */
-const change = (head, base) => {
-	if (base === undefined || head === base) return "—";
-	return head > base ? `🔴 +${head - base}` : `🟢 −${base - head}`;
+const count = (head, base) => {
+	if (base === undefined || head === base) return `${head}`;
+	return head > base
+		? `${head} (🔴 +${head - base})`
+		: `${head} (🟢 −${base - head})`;
 };
 
 /**
@@ -311,10 +313,7 @@ const main = async () => {
 		const packages = head.packages.length;
 		if (base) {
 			rows.push(
-				`| ${name} | ${base.webpack.length} → ${webpack} | ${change(
-					webpack,
-					base.webpack.length
-				)} | ${base.packages.length} → ${packages} | ${change(
+				`| ${name} | ${count(webpack, base.webpack.length)} | ${count(
 					packages,
 					base.packages.length
 				)} |`
@@ -329,7 +328,7 @@ const main = async () => {
 				changes.push(`**${name}**`, "", "```diff", ...lines, "```", "");
 			}
 		} else {
-			rows.push(`| ${name} | ${webpack} | — | ${packages} | — |`);
+			rows.push(`| ${name} | ${webpack} | ${packages} |`);
 		}
 		for (const load of head.outsideLoads) {
 			const key = `${load.requester}\n${load.file}`;
@@ -344,10 +343,10 @@ const main = async () => {
 	const report = [
 		"## Module loading",
 		"",
-		`How many files a fresh Node.js process loads (\`require\` or \`import\`) to do each thing below${baseRoot ? ", on the pull request's base → this head" : ""}. Every file is startup time, so fewer is better. **webpack files** are this package's own (\`lib/\`, \`hot/\`); **\`node_modules\` files** are its dependencies'.`,
+		`How many files a fresh Node.js process loads (\`require\` or \`import\`) to do each thing below${baseRoot ? "; a change from the pull request's base is marked 🔴 when it grew and 🟢 when it shrank" : ""}. Every file is startup time, so fewer is better. **webpack files** are this package's own (\`lib/\`, \`hot/\`); **\`node_modules\` files** are its dependencies'.`,
 		"",
-		"| What the process does | webpack files | Change | `node_modules` files | Change |",
-		"| :-- | --: | --: | --: | --: |",
+		"| What the process does | webpack files | `node_modules` files |",
+		"| :-- | --: | --: |",
 		...rows,
 		"",
 		...(changes.length > 0
