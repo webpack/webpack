@@ -1185,7 +1185,13 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["function f(n){if(n>1)return!0;return!1}", {}, "function f(n){return n>1}"],
 			["function f(a,b){return a instanceof b?!0:!1}", {}, "function f(n,a){return n instanceof a}"],
 			// Writing a function runs nothing, so its `typeof` is known.
-			["function f(){return[typeof function(){},typeof(()=>4)]}", {}, "function f(){return[\"function\",\"function\"]}"]
+			["function f(){return[typeof function(){},typeof(()=>4)]}", {}, "function f(){return[\"function\",\"function\"]}"],
+			// A call prints as the value returned where the rest of the body prints nothing.
+			["function f(c){var r=function(){var v;v=c.push(3);return v}();return[r,r]}", {}, "function f(r){var n=r.push(3);return[n,n]}"],
+			["function f(c){function g(){var v;v=c.push(3);return v}var r=g();return[r,r]}", {}, "function f(r){var n=r.push(3);return[n,n]}"],
+			["function f(o){return function(){var v;v=o.m;return v}()()}", {}, "function f(n){return(0,n.m)()}"],
+			// A name of the function the value would print as stays inside it.
+			["function f(){var r=function(){var v;return v}();return[r,r]}", {}, "function f(){var r=function(){var r;return r}();return[r,r]}"]
 		];
 		for (const [source, options, expected] of cases) {
 			const { code } = minifyOnePass(source, {
