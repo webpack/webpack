@@ -273,14 +273,13 @@ Runtime-emitting code (chunk loading, resource hints, library and externals pres
 
 > [!REQUIRED]
 
-**Read [docs/caching.md](docs/caching.md) whenever `ConfigCacheTestCases` fails or a change alters which module loads a `lib/` file.** The rules it enforces:
+**Read [docs/caching.md](docs/caching.md) whenever `ConfigCacheTestCases` fails.** The rules it enforces:
 
 - `Pack got invalid because of write to: <identifier>` means work redone every incremental build: **treat it as a defect and find the cause**.
 - Every new serializable class (`Module`, `Dependency`, error subclass, cached value) calls `makeSerializable(...)`; `yarn fix:serializables` regenerates `internalSerializables`.
 - Deserialization re-enters a constructor with **no arguments**, so one dereferencing a parameter must guard.
 - **Never silence it with `test.filter.js`**; a new case passes both suites (post-baseline syntax gating is different — [Target the Node baseline](#target-the-node-baseline)).
 - Only a case whose subject is a build error may expect the write, via `infrastructure-log.js`; any other expectation states why it isn't a bug.
-- **Build dependencies follow imports**: the cache walks every `require` and `import` from the config, `node_modules` included, so a `lib/` file another package loads by path pulls in all it imports, `webpack` too; hand packages functions, not paths, and count the files ([how](docs/caching.md#build-dependencies)).
 
 ### Performance and memory
 
@@ -293,7 +292,8 @@ Every process starts cold, and loading code is most of that start, so pay only f
 - **Load on first use**: reach a module that some inputs or options never need through one lazy accessor, not an import at the top of the file.
 - **Keep cheap things light**: constants and option helpers callers need live apart from the heavy code that uses them.
 - **Turned-off work costs nothing**: build tables, regexes and closures on first use, not at load or construction.
-- **Prove it by counting** which modules a fresh process loads, not by timing it.
+- **Only webpack loads its own files**: hand another package a function, never a path to a `lib/` file; loaded by that package, the file and all it imports (`require("webpack")` included) count wherever that package is walked, such as the cache's build dependencies ([why](docs/caching.md#build-dependencies)).
+- **Prove it by counting** which modules a fresh process loads, not by timing it: `yarn lint:module-loading` reports each way webpack is used, and fails on a count past `tooling/module-loading.json` or a package loading webpack's files. Lower the baseline with `--write`.
 
 ### Keep instance shapes stable
 

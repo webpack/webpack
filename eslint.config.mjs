@@ -378,6 +378,15 @@ export default defineConfig([
 		}
 	},
 	{
+		// Records every module a fresh process loads through `module.registerHooks`,
+		// so it runs on the Node `lint` uses and skips itself on an older one.
+		files: ["tooling/check-module-loading.js"],
+		rules: {
+			"n/no-unsupported-features/es-syntax": "off",
+			"n/no-unsupported-features/node-builtins": "off"
+		}
+	},
+	{
 		// The code generators run under the repo's own Node, not the baseline the
 		// code they emit has to meet.
 		files: [
