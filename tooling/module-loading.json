@@ -8,7 +8,7 @@
     "dependencies": 0
   },
   "javascript minify": {
-    "webpack": 11,
+    "webpack": 12,
     "dependencies": 0
   },
   "css minify": {
@@ -28,7 +28,7 @@
     "dependencies": 0
   },
   "production build": {
-    "webpack": 444,
+    "webpack": 445,
     "dependencies": 133
   }
 }
