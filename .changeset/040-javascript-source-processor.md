@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Add a JavaScript `SourceProcessor` that prints minified, minify JS faster and drop `printer.load()`.
+Add a JavaScript `SourceProcessor` that minifies faster; drop `printer.load()`.
