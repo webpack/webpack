@@ -378,19 +378,6 @@ export default defineConfig([
 		}
 	},
 	{
-		// The minifiers require webpack's own modules by package path, never through
-		// `lib/index.js`, so a worker running their source resolves them alike.
-		files: [
-			"lib/css/cssMinify.js",
-			"lib/html/htmlMinify.js",
-			"lib/html/xmlMinify.js",
-			"lib/javascript/jsMinify.js"
-		],
-		rules: {
-			"import/no-extraneous-dependencies": "off"
-		}
-	},
-	{
 		// Records every module a fresh process loads through `module.registerHooks`,
 		// so it runs on the Node `lint` uses and skips itself on an older one.
 		files: ["tooling/check-module-loading.js"],

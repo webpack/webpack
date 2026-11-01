@@ -8,10 +8,7 @@
     "noEmit": true,
     "strict": true,
     "types": ["node"],
-    "esModuleInterop": true,
-    "paths": {
-      "webpack/lib/*": ["./lib/*"]
-    }
+    "esModuleInterop": true
   },
   "include": [
     "declarations.d.ts",

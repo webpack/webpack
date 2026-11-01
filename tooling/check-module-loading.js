@@ -379,7 +379,7 @@ const main = async () => {
 	console.log(report);
 	if (failures.length > 0 && !output) {
 		console.error(
-			"A file another package loads reaches `lib/index.js`: require webpack's modules by their own path (`webpack/lib/...`), not through `webpack`."
+			"A file another package loads reaches `lib/index.js`: hand that package a function, not a path to webpack's file."
 		);
 		process.exitCode = 1;
 	}

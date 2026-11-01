@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Load only what the default minifiers use when the minimizer plugin loads them.
+Pass the default minifiers as functions so cold builds stay fast.
