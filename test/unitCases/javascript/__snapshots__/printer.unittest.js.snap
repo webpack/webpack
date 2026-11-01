@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`JavaScript minifier printing a SyntaxTree should print each source, with ECMAScript 2020 1`] = `
-"var ä=1,𐊧=2;typeof ä,ä in 𐊧,void 𐊧,new ä,ä instanceof ä;
+"var ä=1,𐊧=2;f(typeof ä,ä in 𐊧,void 𐊧,new ä,ä instanceof ä);
 
 new(function(){}());
 
@@ -30,7 +30,7 @@ export default(class{}).name;
 
 let x=\`a\${b}c\${\`d\${e}\`}\`;tag\`x\\\\u{41}\${y}\\\\n\`;new(a.b().c);new(a().b);[];[];![];
 
-for(var i=(a in b);i;){}for(let o of(a,b));for((x=1 in o);;){}
+for(var i=(a in b);i;);for(let o of(a,b));for((x=1 in o);;);
 
 (a=b?c:d,b)?c:d;a??(b||c);(a??b)||c;a**-b;(-a)**b;
 
@@ -72,7 +72,7 @@ function f(){return a+b}function g(){throw Error()}h(/*! a */x,y);
 #!/usr/bin/env node
 \\"use strict\\";console.log(1);
 
-({}=a);if(a)function f(){}if(c){}
+({}=a);if(a)function f(){}c;
 
 (o={if:1,class:2,\\"a-b\\":3,1:4,\\"01\\":5,\\" \\":7}).if;o[\`a-b\`];o[\`1\`];
 
@@ -254,13 +254,13 @@ do{a}while(b);switch(a){case 1:;}(a??b)||c;a&&(b??c);(a??b)&&c;
 `;
 
 exports[`JavaScript minifier printing a SyntaxTree should print each source, with every comment, compressed 1`] = `
-"var ä=1,𐊧=2;typeof ä,ä in 𐊧,void 𐊧,new ä,ä instanceof ä;
+"var ä=1,𐊧=2;f(typeof ä,ä in 𐊧,void 𐊧,new ä,ä instanceof ä);
 
 new(function(){}());
 
 new(/*a*/ /*b*/function(){}());
 
-new(function(){},/*c*/a);
+new/*c*/a;
 
 function f(){/*a*/;;\\"x\\"}
 
@@ -283,7 +283,7 @@ export default(class{}).name;
 
 let x=\`a\${b}c\${\`d\${e}\`}\`;tag\`x\\\\u{41}\${y}\\\\n\`;new(a.b().c);new(a().b);[];[];![];
 
-for(var i=(a in b);i;){}for(let o of(a,b));for((x=1 in o);;){}
+for(var i=(a in b);i;);for(let o of(a,b));for((x=1 in o);;);
 
 (a=b?c:d,b)?c:d;a??(b||c);(a??b)||c;a**-b;(-a)**b;
 
@@ -326,7 +326,7 @@ return a+b}function g(){/*x*/throw Error()}h(/*! a */x,/* b */y);
 #!/usr/bin/env node
 \\"use strict\\";console.log(1);
 
-({}=a);if(a)function f(){}if(c){}
+({}=a);if(a)function f(){}c;
 
 (o={if:1,class:2,\\"a-b\\":3,1:4,\\"01\\":5,\\" \\":7}).if;o[\\"a-b\\"];o[\\"1\\"];
 
@@ -513,7 +513,7 @@ do{a}while(b);switch(a){case 1:;}(a??b)||c;a&&(b??c);(a??b)&&c;
 `;
 
 exports[`JavaScript minifier printing a SyntaxTree should print each source, with names mangled 1`] = `
-"var ä=1,𐊧=2;typeof ä,ä in 𐊧,void 𐊧,new ä,ä instanceof ä;
+"var ä=1,𐊧=2;f(typeof ä,ä in 𐊧,void 𐊧,new ä,ä instanceof ä);
 
 new(function(){}());
 
@@ -542,7 +542,7 @@ export default(class{}).name;
 
 let x=\`a\${b}c\${\`d\${e}\`}\`;tag\`x\\\\u{41}\${y}\\\\n\`;new(a.b().c);new(a().b);[];[];![];
 
-for(var i=(a in b);i;){}for(let o of(a,b));for((x=1 in o);;){}
+for(var i=(a in b);i;);for(let o of(a,b));for((x=1 in o);;);
 
 (a=b?c:d,b)?c:d;a??(b||c);(a??b)||c;a**-b;(-a)**b;
 
@@ -584,7 +584,7 @@ function f(){return a+b}function g(){throw Error()}h(/*! a */x,y);
 #!/usr/bin/env node
 \\"use strict\\";console.log(1);
 
-({}=a);if(a)function f(){}if(c){}
+({}=a);if(a)function f(){}c;
 
 (o={if:1,class:2,\\"a-b\\":3,1:4,\\"01\\":5,\\" \\":7}).if;o[\\"a-b\\"];o[\\"1\\"];
 
@@ -766,13 +766,13 @@ do{a}while(b);switch(a){case 1:;}(a??b)||c;a&&(b??c);(a??b)&&c;
 `;
 
 exports[`JavaScript minifier printing a SyntaxTree should print each source, with quoting options 1`] = `
-"var \\\\u00e4=1,\\\\u{102a7}=2;typeof \\\\u00e4,\\\\u00e4 in \\\\u{102a7},void \\\\u{102a7},new \\\\u00e4,\\\\u00e4 instanceof \\\\u00e4;
+"var \\\\u00e4=1,\\\\u{102a7}=2;f(typeof \\\\u00e4,\\\\u00e4 in \\\\u{102a7},void \\\\u{102a7},new \\\\u00e4,\\\\u00e4 instanceof \\\\u00e4);
 
 new(function(){}());
 
 new(/*a*/ /*b*/function(){}());
 
-new(function(){},/*c*/a);
+new/*c*/a;
 
 function f(){/*a*/;;'x'}
 
@@ -795,7 +795,7 @@ export default(class{}).name;
 
 let x=\`a\${b}c\${\`d\${e}\`}\`;tag\`x\\\\u{41}\${y}\\\\n\`;new(a.b().c);new(a().b);[];[];![];
 
-for(var i=(a in b);i;){}for(let k of(a,b));for((x=1 in o);;){}
+for(var i=(a in b);i;);for(let k of(a,b));for((x=1 in o);;);
 
 (a=b?c:d,b)?c:d;a??(b||c);(a??b)||c;a**-b;(-a)**b;
 
@@ -838,7 +838,7 @@ return a+b}function g(){/*x*/throw Error()}h(/*! a */x,/* b */y);
 #!/usr/bin/env node
 'use strict';console.log(1);
 
-({}=a);if(a)function f(){}if(c){}
+({}=a);if(a)function f(){}c;
 
 (o={if:1,class:2,'a-b':3,1:4,'01':5,' ':7}).if;o['a-b'];o['1'];
 
@@ -1027,7 +1027,7 @@ do{a}while(b);switch(a){case 1:;}(a??b)||c;a&&(b??c);(a??b)&&c;
 exports[`JavaScript minifier printing a SyntaxTree should print each source, with wrapping options 1`] = `
 "/* p */
 var ä=1,𐊧=2
-typeof ä,ä in 𐊧,void 𐊧,new ä,ä instanceof ä
+f(typeof ä,ä in 𐊧,void 𐊧,new ä,ä instanceof ä)
 
 
 /* p */
@@ -1039,7 +1039,7 @@ new(/*a*/ /*b*/(function(){})())
 
 
 /* p */
-new(function(){},/*c*/a)
+new/*c*/a
 
 
 /* p */
@@ -1090,7 +1090,7 @@ new(a().b);[];[]
 
 
 /* p */
-for(var i=(a in b);i;){}for(let o of(a,b));for((x=1 in o);;){}
+for(var i=(a in b);i;);for(let o of(a,b));for((x=1 in o);;);
 
 /* p */
 (a=b?c:d,b)?c:d
@@ -1205,7 +1205,8 @@ console.log(1)
 
 /* p */
 ({}=a)
-if(a)function f(){}if(c){}
+if(a)function f(){}c
+
 
 /* p */
 (o={\\"if\\":1,\\"class\\":2,\\"a-b\\":3,1:4,\\"01\\":5,\\" \\":7})[\\"if\\"]
