@@ -7,8 +7,7 @@
 
 // Counts the modules a fresh process loads for each way webpack is used, and
 // fails when a count grows past `module-loading.json` or a module outside
-// webpack loads one of its internal files: such a file then hangs under that
-// package, so the cache's build-dependency walk drags all of webpack in.
+// webpack loads one of its internal files rather than being handed it.
 //
 //   node tooling/check-module-loading.js          # check
 //   node tooling/check-module-loading.js --write  # rewrite the baseline

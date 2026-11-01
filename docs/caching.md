@@ -24,14 +24,3 @@ The one expected write webpack ships is a module carrying a **build error**: `No
 ## Diagnostics
 
 **`makeSerializable` follows from where a diagnostic is created.** Anything reachable from a module (`ModuleError`, `ModuleWarning`, `ModuleBuildError`) is serialized with the module graph and must register. One built after seal and pushed onto `compilation.warnings` never enters the pack, which is why the size-limit and duplicate-package warnings register nothing. A wrong guess is silent except for `Pack got invalid because of write to:` under `ConfigCacheTestCases`, so cover a new diagnostic there.
-
-## Build dependencies
-
-Before saving, the cache resolves its build dependencies (`FileSystemInfo#resolveBuildDependencies`) and snapshots every file it reaches, on every cold build. It follows imports inside `node_modules` too: for CommonJS, `require.cache[file].children`, so the cost depends on **which module first loaded each file**, not only on what the code does; for ES modules (and every `.mjs`), the static and string-literal dynamic `import`s `es-module-lexer` finds in the source.
-
-webpack's own directory is a managed path, so the walk normally stops there. A `lib/` file loaded by another package breaks that: it becomes a child of that package's module, which the walk reaches through the user's config. If that file reaches `require("webpack")`, `lib/index.js` joins its children and every webpack file loaded so far follows. That is how #22309 (the default CSS and HTML minifiers handed to `minimizer-webpack-plugin` as module paths) grew a cold production build of react-1k by about 15%: 729 files snapshotted instead of 44, with identical output.
-
-So:
-
-- **Hand webpack's own code to a third-party package as a value** (a function or object `lib/` already required), not a path it `require`s, unless the module never loads `webpack` in the main process.
-- **`yarn lint:module-loading` catches it**: it fails when a module outside webpack loads one of webpack's internal files.
