@@ -952,6 +952,12 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				{},
 				"function f(n){n.e=t;function t(){return function(){h();return g(1)}()}return n}"
 			],
+			// One printed first inside another printed first prints where that one does.
+			[
+				"function f() { function w() { return b() } function a() { return x() } function b() { return c() } function c() { return a() } return w() }",
+				{},
+				"function f(){function n(){return x()}return n()}"
+			],
 			[
 				"u(); function u() { return g() }",
 				{ compress: { toplevel: true }, mangle: { toplevel: true } },
