@@ -12554,11 +12554,11 @@ declare class HotUpdateChunk extends Chunk {
 
 /**
  * The manifest a runtime downloads first in a hot update; every download handler gets it
- * whole, so a plugin adds a field here for its own handler. It is sent as JSON, so a field is a JSON value.
+ * whole, so a plugin adds a field here for its own handler. It is sent as JSON; the field stays open so a
+ * plugin's interface-typed value, which carries no index signature, still fits.
  */
 declare interface HotUpdateManifest {
-	[index: string]:
-		undefined | null | string | number | boolean | JsonObjectFs | JsonValueFs[];
+	[index: string]: unknown;
 	c: ChunkId[];
 	r: ChunkId[];
 	m: ModuleId[];
