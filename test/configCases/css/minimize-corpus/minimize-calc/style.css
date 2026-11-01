@@ -67,9 +67,9 @@
 /*! declined: past the range the rounding covers every digit carries, and all of
    them are longer than the expression */
 .d06 { width: calc(123456px/1.1) }
-/*! the fold prints a double back, so its result is rounded to six digits, a percentage to the float Firefox parses */
+/*! the fold prints a double back, keeping the `calc()` where fifteen digits of its answer are longer */
 .f20 { width: calc(100%/3) }
-/*! an angle rounds to six digits too, as lightningcss rounds it */
+/*! ...an angle too */
 .f21 { rotate: calc(1turn/3) }
 /*! declined: a math function other than calc() */
 .d07 { width: min(1px + 2px, 4px) }
@@ -176,8 +176,8 @@
 /*! declined: calc-size() leads with a basis, which is an expression this does
    not evaluate, so it is the one math function with no arity to read */
 .n05 { width: calc-size(auto,size) }
-/*! an irrational root is written at the six significant digits every number
-   here is written at */
+/*! an irrational root is written at fifteen significant digits, past which
+   only a double's last bits sit */
 .n06 { width: calc(sqrt(2)*1px) }
 /*! ...and so is a power that does not multiply back */
 .n07 { width: calc(pow(2,.5)*1px) }
@@ -200,7 +200,7 @@
 .a06 { width: hypot(6px,8px,0px) }
 /*! math: ...including units fixed against each other */
 .a07 { width: hypot(3in,4in) }
-/*! hypot() is irrational for most inputs, and written the same way */
+/*! hypot() is irrational for most inputs, and keeps its call where shorter */
 .a08 { width: hypot(1px,1px) }
 /*! declined: abs() of a percentage depends on the basis sign */
 .a09 { width: abs(-50%) }

@@ -5110,10 +5110,8 @@ const rec2020Transfer = (c) => {
 	// answer a whole step out.
 	//
 	// Everything else folds and lets the printer decide what is worth writing.
-	// `_roundSignificant` already holds every number it writes to six significant
-	// digits below 1e4 — measured against Chromium, which serializes a computed
-	// number at six and lays a length out in 1/64px — so a fold's last bits are
-	// below what a stylesheet can observe. The four basic operations and `sqrt`
+	// The printer rounds a fold's answer to fifteen significant digits, which
+	// drops only a double's last bits. The four basic operations and `sqrt`
 	// are exactly specified by IEEE 754, so an engine reaches the same double;
 	// the transcendental ones may differ in the last bit, which the same rounding
 	// covers. An angle is not rounded (a `rotate()` runs it back through trig), so

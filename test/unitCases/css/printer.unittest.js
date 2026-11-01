@@ -2619,10 +2619,9 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 
 	describe("rounding and unit conversion", () => {
 		it.each([
-			["33.33333333%", "33.333333%"],
-			// No nine digits reach its float, so it stays as written.
-			["10.1885002107%", "10.1885002107%"],
-			["1.0000001px", "1px"],
+			// A number keeps every digit, its unit only moving the point.
+			["33.33333333%", "33.33333333%"],
+			["1.0000001px", "1.0000001px"],
 			["400ms", ".4s"],
 			[".005s", "5ms"],
 			// A zero time keeps a unit where a zero length drops one, so the shorter
@@ -3463,56 +3462,34 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		};
 		const legacy = { browsers: ["chrome 100", "firefox 100", "safari 15.4"] };
 
-		it("keeps the digits a font-relative length lands on whole pixels with", () => {
-			// 2/19em is 2px at 19px, which `.105263em` misses: Chromium floors it to
-			// `1.98438px`, and a border or outline width to `1px`.
-			expect(settled("a{outline-offset:-0.1052631579em}")).toBe(
-				"a{outline-offset:-.10526316em}"
-			);
-			expect(settled("a{width:calc(1em/9.5)}")).toBe("a{width:.10526316em}");
-			// As many digits as the float at 3px takes, and six where no whole
-			// pixel lands the length on a step.
-			expect(settled("a{width:.3333333333em}")).toBe("a{width:.33333333em}");
-			expect(settled("a{width:.7071067812em}")).toBe("a{width:.707107em}");
-			// `.125em` would land on a step at 8px where the written length does not.
-			expect(settled("a{width:.12499999em}")).toBe("a{width:.12499999em}");
-			// 13/252em at 63px: `.0515873em` is 3.25px only until parsed to a float.
-			expect(settled("a{width:.05158730159em}")).toBe("a{width:.051587302em}");
-			// A pixel and a bare number round as before, a percentage to its float.
-			expect(settled("a{width:1.0526315789px}")).toBe("a{width:1.05263px}");
-			expect(settled("a{width:33.33333333%}")).toBe("a{width:33.333333%}");
-			expect(settled("a{opacity:.3333333333}")).toBe("a{opacity:.333333}");
-		});
-
-		it("keeps the digits a bare number scaling a length lands on whole pixels with", () => {
-			// 20/14 is 20px at 14px, which `1.42857` misses: Chromium floors `1lh`
-			// to `19.98438px`, so Tabler's `calc((1lh - 1rem)/2)` is no longer 2px.
-			expect(settled("a{line-height:1.4285714286}")).toBe(
-				"a{line-height:1.42857143}"
-			);
-			expect(settled("a{line-height:calc(20/14)}")).toBe(
-				"a{line-height:1.42857143}"
-			);
-			expect(settled("a{font:14px/1.4285714286 x}")).toBe(
-				"a{font:14px/1.42857143 x}"
-			);
-			// A custom property may be read anywhere, a `line-height` among them.
-			/**
-			 * @param {string} css a stylesheet
-			 * @returns {string} its minified serialization, custom properties rewritten
-			 */
-			const rewritten = (css) =>
-				new SourceProcessor().process(css, {
+		it("keeps every digit an authored number is written with", () => {
+			// An engine multiplies a number by a scale only it knows and floors the
+			// product to its layout grid: 20/14 is 20px at 14px, where `1.42857`
+			// lays out at 19.98438px, and 27/19 at 19px the same.
+			for (const css of [
+				"a{line-height:1.4285714286}",
+				"a{line-height:1.4210526316}",
+				"a{font:14px/1.4285714286 x}",
+				"a{outline-offset:-.1052631579em}",
+				"a{width:.3333333333em}",
+				"a{width:1.0526315789px}",
+				"a{width:33.33333333%}",
+				"a{opacity:.3333333333}",
+				"@media (aspect-ratio:1.4285714286/1){a{top:0}}"
+			]) {
+				expect(settled(css)).toBe(css);
+			}
+			expect(
+				new SourceProcessor().process("a{--x:1.4285714286}", {
 					mode: "minify",
 					rewriteCustomProperties: true
-				}).code;
-			expect(rewritten("a{--x:1.4285714286}")).toBe("a{--x:1.42857143}");
-			expect(rewritten("a{--x:.3333333333em}")).toBe("a{--x:.33333333em}");
-			// A number no length scales rounds as before, outside a declaration too.
-			expect(settled("a{opacity:.3333333333}")).toBe("a{opacity:.333333}");
-			expect(settled("@media (aspect-ratio:1.4285714286/1){a{top:0}}")).toBe(
-				"@media (aspect-ratio:1.42857/1){a{top:0}}"
+				}).code
+			).toBe("a{--x:1.4285714286}");
+			// A fold keeps its `calc()` where fifteen digits of its answer are longer.
+			expect(settled("a{line-height:calc(20/14)}")).toBe(
+				"a{line-height:calc(20/14)}"
 			);
+			expect(settled("a{width:calc(1em/9.5)}")).toBe("a{width:calc(1em/9.5)}");
 		});
 
 		it("drops the `@-moz-document` a later copy of its rule empties", () => {
@@ -3686,12 +3663,10 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(
 				settled("a{color:r\\67 b(67.2549019608%, 66.862745098%, 91.9607843137%)}")
 			).toBe("a{color:rgb(67.2549019608%,66.862745098%,91.9607843137%)}");
-			// Only a channel reads the percentage as a byte: a length still rounds.
-			expect(settled("a{width:66.862745098%}")).toBe("a{width:66.862745%}");
 			expect(settled(".a{flex:0 0 16.66666667%;opacity:16.66666667%}")).toBe(
-				".a{opacity:.166667;flex:0 0 16.666667%}"
+				".a{opacity:.1666666667;flex:0 0 16.66666667%}"
 			);
-			expect(settled("a{scale:16.66666667%}")).toBe("a{scale:.166667}");
+			expect(settled("a{scale:16.66666667%}")).toBe("a{scale:.1666666667}");
 			// An exact half rounds up in every engine.
 			expect(settled("a{color:rgba(50%,50%,50%,.5)}")).toBe(
 				"a{color:#80808080}"
@@ -7082,20 +7057,16 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		});
 
 		it.each([
-			// The fold prints a double back, so its result is rounded the way an
-			// authored number is — six significant digits.
-			["calc(3px/1.1)", "2.72727px"],
-			// ...and a percentage up to the single-precision float Gecko parses.
-			["calc(100%/3)", "33.333333%"],
-			// Gecko keeps the fraction, which `14.285714%` misses by one float step.
-			["calc(100%/7)", "14.2857143%"],
-			["calc(1/3*1px)", ".333333px"],
+			// The fold prints a double back, rounded to fifteen digits to drop its
+			// last bits, and keeps the `calc()` where that is the shorter.
+			["calc(3px/1.1)", "calc(3px/1.1)"],
+			["calc(100%/3)", "calc(100%/3)"],
+			["calc(100%/7)", "calc(100%/7)"],
+			["calc(1/3*1px)", "calc(1/3*1px)"],
 			["calc((6/10 - .375)*1em)", ".225em"],
-			// ...and up to nine where the engine scales the length by a font size.
-			["calc((6/14 - .375)*1em)", ".05357143em"],
-			// An angle rounds the same way, as lightningcss rounds it.
-			["calc(1turn/3)", ".333333turn"],
-			["calc(90deg/7)", "12.8571deg"],
+			["calc((6/14 - .375)*1em)", ".0535714285714285em"],
+			["calc(1turn/3)", "calc(1turn/3)"],
+			["calc(90deg/7)", "calc(90deg/7)"],
 			// Above the range the rounding covers the digits carry, so they stay.
 			["calc(1e4px + 1px)", "10001px"]
 		])("%s folds to %s", (expression, expected) => {
@@ -7103,9 +7074,8 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		});
 
 		it("folds a number or a negative bare where the property takes one", () => {
-			// `calc(.333333)` is longer than `calc(1/3)`, but the declaration takes
-			// the bare number, which is shorter, as lightningcss writes it.
-			expect(minify("a{opacity:calc(1/3)}")).toBe("a{opacity:.333333}");
+			// Fifteen digits of `1/3` are longer than the `calc()`, so it stays.
+			expect(minify("a{opacity:calc(1/3)}")).toBe("a{opacity:calc(1/3)}");
 			// A `line-height` number scales the font size, so its nine digits lose.
 			expect(minify("a{line-height:calc(4/3)}")).toBe("a{line-height:calc(4/3)}");
 			expect(minify("a{animation-delay:calc(-1s/4)}")).toBe(
@@ -7118,18 +7088,18 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 
 		it("writes a fold bare inside a function taking a number there", () => {
 			expect(minify("a{transform:scale(calc(1/3),calc(1/2))}")).toBe(
-				"a{transform:scale(.333333,.5)}"
+				"a{transform:scale(calc(1/3),.5)}"
 			);
 			expect(minify("a{filter:brightness(calc(1/2))}")).toBe(
 				"a{filter:brightness(.5)}"
 			);
 			// ...and the color it then is shortens as any other does.
-			expect(minify("a{color:hsl(calc(360/7) 50% 50%)}")).toBe("a{color:#bfad40}");
-			expect(minify("a{color:rgb(0 0 0/calc(1/3))}")).toBe("a{color:#0005}");
-			expect(minify("a{color:rgb(calc(255/7) 0 0)}")).toBe("a{color:#240000}");
+			expect(minify("a{color:hsl(calc(360/2) 50% 50%)}")).toBe("a{color:#40bfbf}");
+			expect(minify("a{color:rgb(0 0 0/calc(1/2))}")).toBe("a{color:#00000080}");
+			expect(minify("a{color:rgb(calc(255/5) 0 0)}")).toBe("a{color:#300}");
 			// A transform function other than `perspective()` takes a negative too.
-			expect(minify("a{transform:scale(calc(-1/3))}")).toBe(
-				"a{transform:scale(-.333333)}"
+			expect(minify("a{transform:scale(calc(-1/2))}")).toBe(
+				"a{transform:scale(-.5)}"
 			);
 			expect(minify("a{transform:translate(calc(-4%))}")).toBe(
 				"a{transform:translate(-4%)}"
@@ -7168,7 +7138,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		});
 
 		it("adds a sum of angle units in degrees", () => {
-			expect(value("calc(1rad + 1deg)")).toBe("58.2958deg");
+			expect(value("calc(1rad + 1deg)")).toBe("calc(1rad + 1deg)");
 			expect(value("calc(45deg + .125turn)")).toBe("90deg");
 			expect(value("calc(100grad + 10deg)")).toBe("100deg");
 			// A length beside an angle is no sum at all.
@@ -7207,10 +7177,9 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(converted("calc(1cm + 1mm)")).toBe("11mm");
 			expect(converted("calc(1in + 1cm)")).toBe("3.54cm");
 			expect(converted("calc(4.5cm + 0cm)")).toBe("45mm");
-			// Where no unit of the group spells it exactly, the sum still lands in one
-			// the expression was written with, at the precision every number is
-			// written at.
-			expect(value("calc(1px + 1cm)")).toBe("38.7953px");
+			// Where no unit of the group spells it exactly, the sum keeps its `calc()`:
+			// fifteen digits of the `px` it lands in are longer.
+			expect(value("calc(1px + 1cm)")).toBe("calc(1px + 1cm)");
 		});
 
 		it("keeps the parentheses on a negative the property refuses", () => {
@@ -7370,9 +7339,8 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		it("takes hypot()", () => {
 			expect(value("hypot(3px,4px)")).toBe("5px");
 			expect(value("hypot(6px,8px,0px)")).toBe("10px");
-			// Irrational for most inputs, and written at the precision every number
-			// is written at.
-			expect(value("calc(hypot(1px,1px)*100)")).toBe("141.421px");
+			// Irrational for most inputs, and written at fifteen digits.
+			expect(value("calc(hypot(1px,1px)*100)")).toBe("141.42135623731px");
 		});
 	});
 
@@ -7445,23 +7413,22 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 
 	describe("sqrt(), pow(), log(), exp() and the trig functions", () => {
 		it.each([
-			// The printer holds every number it writes to six significant digits
-			// below 1e4, which is under what a stylesheet can observe, so an
-			// irrational answer is written at the precision any other number is.
-			["calc(sqrt(2)*100px)", "141.421px"],
-			["calc(pow(2,.5)*100px)", "141.421px"],
-			["calc(exp(1)*100px)", "271.828px"],
-			["calc(log(10)*100px)", "230.259px"],
-			["calc(log(9,2)*100px)", "316.993px"],
+			// An irrational answer is written at fifteen digits, past which only a
+			// double's last bits sit, or keeps its `calc()` where that is shorter.
+			["calc(sqrt(2)*100px)", "141.42135623731px"],
+			["calc(pow(2,.5)*100px)", "141.42135623731px"],
+			["calc(exp(1)*100px)", "271.828182845905px"],
+			["calc(log(10)*100px)", "230.258509299405px"],
+			["calc(log(9,2)*100px)", "316.992500144231px"],
 			["calc(sin(30deg)*100px)", "50px"],
-			["calc(sin(45deg)*100px)", "70.7107px"],
-			["calc(cos(50grad)*100px)", "70.7107px"],
+			["calc(sin(45deg)*100px)", "70.7106781186547px"],
+			["calc(cos(50grad)*100px)", "70.7106781186548px"],
 			// A bare number is radians (CSS Values 4 §10.6).
-			["calc(sin(1)*100px)", "84.1471px"],
-			["calc(cos(1rad)*100px)", "54.0302px"],
+			["calc(sin(1)*100px)", "84.1470984807897px"],
+			["calc(cos(1rad)*100px)", "54.030230586814px"],
 			// ...and the constants a calculation may name.
-			["calc(pi*100px)", "314.159px"],
-			["calc(e*100px)", "271.828px"]
+			["calc(pi*100px)", "calc(pi*100px)"],
+			["calc(e*100px)", "calc(e*100px)"]
 		])("folds %s", (expression, folded) => {
 			expect(value(expression)).toBe(folded);
 		});
@@ -7526,7 +7493,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(value("calc(tan(45deg)*1px)")).toBe("1px");
 			expect(value("calc(tan(180deg)*1px)")).toBe("0");
 			// Between them it is computed like every other irrational answer.
-			expect(value("calc(tan(30deg)*1px)")).toBe(".57735px");
+			expect(value("calc(tan(30deg)*1px)")).toBe(".577350269189626px");
 		});
 
 		it("answers the inverse functions in degrees", () => {
@@ -7597,8 +7564,8 @@ describe("CssSyntax — convertLengthUnits", () => {
 
 	it("lands a sum in a unit it was written with, gate or no gate", () => {
 		// `1cm` is not a whole number of `px`, and `px` is all the gate leaves — so
-		// the sum lands there, at the precision every number is written at.
-		expect(width("calc(1cm + 1px)")).toBe("38.7953px");
+		// the sum keeps its `calc()`, shorter than fifteen digits of `px`.
+		expect(width("calc(1cm + 1px)")).toBe("calc(1cm + 1px)");
 	});
 });
 
@@ -9930,8 +9897,8 @@ describe("CssSyntax minify — the predefined color spaces", () => {
 		expect(
 			minifyFor("a{color:oklch(0.648574 0.299485 28.958137)}", ["safari 15"])
 		).toBe(
-			"a{color:red;color:color(display-p3 1 .00000312208 .00000392647);" +
-				"color:oklch(.648574 .299485 28.9581)}"
+			"a{color:red;color:color(display-p3 1 .00000360867 .00000153782);" +
+				"color:oklch(.648574 .299485 28.958137)}"
 		);
 		// The rung carries the alpha, and every color of the declaration.
 		expect(
@@ -14095,7 +14062,7 @@ describe("CssSyntax minify — what a comparison with other minifiers found", ()
 			"a{transform:translate3d(1px,0,calc(0% + 2px))}"
 		],
 		// The digits a second pass would find, found on the first.
-		["a{max-height:89.99785714em}", "a{max-height:89.997857em}"],
+		["a{max-height:89.99785714em}", "a{max-height:89.99785714em}"],
 		// A lone basis means `1 1 <basis>`, however the three were written.
 		["a{flex:1;flex-basis:33%}", "a{flex:33%}"],
 		["a{flex-grow:1;flex-shrink:1;flex-basis:100%}", "a{flex:100%}"],
@@ -14584,7 +14551,7 @@ describe("CssSyntax minify — layered and positional spellings", () => {
 		// A layer the longhand cannot fold into keeps the longhand.
 		["a{transition:a 1s,none;transition-delay:1s,2s}", "a{transition:a 1s,none;transition-delay:1s,2s}"],
 		// Off every layout step, a scaled length rounds like any other.
-		["a{width:.12345678em}", "a{width:.123457em}"]
+		["a{width:.12345678em}", "a{width:.12345678em}"]
 	])("%s", (css, expected) => {
 		expect(minifyFor(css)).toBe(expected);
 	});
