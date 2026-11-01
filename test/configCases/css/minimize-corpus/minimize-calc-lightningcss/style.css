@@ -120,7 +120,7 @@
 .k058 { opacity: calc(1 - 0.1) }
 /*! line-height: calc(1 + 0.5) — same as lightningcss: 1.5 */
 .k059 { line-height: calc(1 + 0.5) }
-/*! line-height: calc(4 / 3) — same as lightningcss: 1.33333 */
+/*! line-height: calc(4 / 3) — lightningcss: 1.33333, which misses 20px at 15px — ours keeps the calc() */
 .k060 { line-height: calc(4 / 3) }
 /*! z-index: calc(1 + 2) — lightningcss: calc(1 + 2) — ours is shorter */
 .k061 { z-index: calc(1 + 2) }
