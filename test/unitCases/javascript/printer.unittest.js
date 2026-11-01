@@ -783,7 +783,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"function f(a, b){ if (a) return b, 1; return 2 } function g(a){ if (a) { return 1 } return void 0 } function h(a){ if (a) return; return 1 }",
 				{},
-				"function f(n,r){return n?(r,1):2}function g(n){if(n)return 1}function h(n){if(n)return;return 1}"
+				"function f(n,r){return n?(r,1):2}function g(n){if(n)return 1}function h(n){if(!n)return 1}"
 			],
 			// An `if` whose test is known false goes, and what only it read with it, but not where its body declares a `var` or function or holds a comment kept.
 			[
@@ -1192,6 +1192,14 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["function f(o){return function(){var v;v=o.m;return v}()()}", {}, "function f(n){return(0,n.m)()}"],
 			// A name of the function the value would print as stays inside it.
 			["function f(){var r=function(){var v;return v}();return[r,r]}", {}, "function f(){var r=function(){var r;return r}();return[r,r]}"],
+			// `if(t)return;x` ending a function is `if(!t)x`, and a guarded `if` continues the test.
+			["function f(a,b){if(a)return;if(b)return 1}", {}, "function f(f,n){if(!f&&n)return 1}"],
+			["function f(a,b){if(!(a||b))return;if(b)g()}", {}, "function f(f,b){if((f||b)&&b)g()}"],
+			["function f(a){if(a)return;g()}", {}, "function f(f){if(!f)g()}"],
+			["function f(a){if(a)return;g();h()}", {}, "function f(f){if(f)return;g();h()}"],
+			["function f(a,b){if(a)return;if(b)return 1;else g()}", {}, "function f(e,f){if(e)return;if(f)return 1;g()}"],
+			// A test giving a boolean picks a branch as `||` or `&&` would.
+			["function f(a,b){return[a==b?!0:x,!a?!0:x,a<b?x:!1]}", {}, "function f(a,b){return[a==b||x,!a||x,a<b&&x]}"],
 			// What a literal written in place reads of itself is known, but where a call, tag or `delete` reads it as a reference.
 			["function f(a){return[\"abc\".length,[1,,a].length+1,[g()].length,/a\\/b/.source,\"ab\".length.x,\"ab\".length(),\"ab\".length``,delete\"ab\".length]}", {}, "function f(e){return[3,4,[g()].length,\"a\\\\/b\",2..x,\"ab\".length(),\"ab\".length``,delete\"ab\".length]}"]
 		];
@@ -2221,7 +2229,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				"export function u(y,r){(function(x){if(x)return 3;r(x)})(y);(()=>{if(r(1))return 4;r(2)})();(function(x){r(x);r(1)})(y);(function(){if({}.a)return;r()})();(function(x){if(x)return;r(x,()=>x)})(y)}export function v(y,r){(function(x){if(x=y)return;r(x)})(y)}export function w(y,r){(function(x){if(x)return y=1;r(x)})(y)}"
 			)
 		).toBe(
-			"export function u(r,n){r||n(r);n(1)||n(2);n(r),n(1);!function(){if({}.a)return;n()}();!function(r){if(r)return;n(r,()=>r)}(r)}export function v(r,n){!function(t){if(t=r)return;n(t)}(r)}export function w(r,n){!function(t){if(t)return r=1;n(t)}(r)}"
+			"export function u(r,n){r||n(r);n(1)||n(2);n(r),n(1);!function(){if(!{}.a)n()}();!function(r){if(!r)n(r,()=>r)}(r)}export function v(r,n){!function(t){if(!(t=r))n(t)}(r)}export function w(r,n){!function(t){if(t)return r=1;n(t)}(r)}"
 		);
 		// A constant passed on as a name folds where it is read, after what
 		// always returns, and through `new`.
