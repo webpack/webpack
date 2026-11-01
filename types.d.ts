@@ -20091,6 +20091,7 @@ declare abstract class MinifierVariable extends Variable {
 	mangledName: null | string;
 	referenceCount: number;
 	written: boolean;
+	writes: number;
 }
 
 /**

@@ -23,7 +23,6 @@ chunk {226} (runtime: main) 226.js X bytes <{964}> [rendered]
   ./d.js [425] X bytes {226} [depth 2] [built] [code generated]
     [used exports unknown]
     CommonJS bailout: module.exports is used directly at 1:0-14
-    Statement (ExpressionStatement) with side effects in source code at 1:0-21
     ModuleConcatenation bailout: Module is not in strict mode
     require.ensure item ./d [964] ./c.js 1:0-52
     cjs self exports reference [425] ./d.js 1:0-14
@@ -32,7 +31,6 @@ chunk {226} (runtime: main) 226.js X bytes <{964}> [rendered]
   ./e.js [210] X bytes {226} [depth 2] [built] [code generated]
     [used exports unknown]
     CommonJS bailout: module.exports is used directly at 1:0-14
-    Statement (ExpressionStatement) with side effects in source code at 1:0-21
     ModuleConcatenation bailout: Module is not in strict mode
     require.ensure item ./e [964] ./c.js 1:0-52
     cjs self exports reference [210] ./e.js 1:0-14
@@ -40,50 +38,38 @@ chunk {226} (runtime: main) 226.js X bytes <{964}> [rendered]
     X ms (resolving: X ms, restoring: X ms, integration: X ms, building: X ms, storing: X ms)
 chunk {792} (runtime: main) main.js (main) X bytes (javascript) X KiB (runtime) >{899}< >{964}< [entry] [rendered]
   > ./index main
-  runtime modules X KiB
-    webpack/runtime/ensure chunk X bytes {792} [code generated]
-      [no exports]
-      [used exports unknown]
-    webpack/runtime/get javascript chunk filename X bytes {792} [code generated]
-      [no exports]
-      [used exports unknown]
-    webpack/runtime/global X bytes {792} [code generated]
-      [no exports]
-      [used exports unknown]
-    webpack/runtime/hasOwnProperty shorthand X bytes {792} [code generated]
-      [no exports]
-      [used exports unknown]
-    webpack/runtime/jsonp chunk loading X KiB {792} [code generated]
-      [no exports]
-      [used exports unknown]
-    webpack/runtime/load script X KiB {792} [code generated]
-      [no exports]
-      [used exports unknown]
-    webpack/runtime/publicPath X bytes {792} [code generated]
-      [no exports]
-      [used exports unknown]
-  cacheable modules X bytes
-    ./a.js [670] X bytes {792} [depth 1] [dependent] [built] [code generated]
-      [used exports unknown]
-      CommonJS bailout: module.exports is used directly at 1:0-14
-      Statement (ExpressionStatement) with side effects in source code at 1:0-21
-      ModuleConcatenation bailout: Module is not in strict mode
-      cjs self exports reference [670] ./a.js 1:0-14
-      cjs require ./a [237] ./index.js 1:0-14
-      X ms [237] ->
-      X ms (resolving: X ms, restoring: X ms, integration: X ms, building: X ms, storing: X ms)
-    ./index.js [237] X bytes {792} [depth 0] [built] [code generated]
-      [no exports used]
-      Statement (ExpressionStatement) with side effects in source code at 1:0-15
-      ModuleConcatenation bailout: Module is not in strict mode
-      entry ./index main
-      X ms (resolving: X ms, restoring: X ms, integration: X ms, building: X ms, storing: X ms)
+  ./index.js [237] X bytes {792} [depth 0] [built] [code generated]
+    [no exports used]
+    Statement (ExpressionStatement) with side effects in source code at 1:0-15
+    ModuleConcatenation bailout: Module is not in strict mode
+    entry ./index main
+    X ms (resolving: X ms, restoring: X ms, integration: X ms, building: X ms, storing: X ms)
+  webpack/runtime/ensure chunk X bytes {792} [code generated]
+    [no exports]
+    [used exports unknown]
+  webpack/runtime/get javascript chunk filename X bytes {792} [code generated]
+    [no exports]
+    [used exports unknown]
+  webpack/runtime/global X bytes {792} [code generated]
+    [no exports]
+    [used exports unknown]
+  webpack/runtime/hasOwnProperty shorthand X bytes {792} [code generated]
+    [no exports]
+    [used exports unknown]
+  webpack/runtime/jsonp chunk loading X KiB {792} [code generated]
+    [no exports]
+    [used exports unknown]
+  webpack/runtime/load script X KiB {792} [code generated]
+    [no exports]
+    [used exports unknown]
+  webpack/runtime/publicPath X bytes {792} [code generated]
+    [no exports]
+    [used exports unknown]
 chunk {899} (runtime: main) 899.js X bytes <{792}> [rendered]
   > ./b [237] ./index.js 2:0-16
   ./b.js [899] X bytes {899} [depth 1] [built] [code generated]
     [used exports unknown]
     CommonJS bailout: module.exports is used directly at 1:0-14
-    Statement (ExpressionStatement) with side effects in source code at 1:0-21
     ModuleConcatenation bailout: Module is not in strict mode
     cjs self exports reference [899] ./b.js 1:0-14
     amd require ./b [237] ./index.js 2:0-16
@@ -134,9 +120,9 @@ LOG from webpack.Compilation
 <t> create chunks: X ms
 <t> compute affected modules with chunk graph: X ms
 <t> optimize: X ms
-    6 modules hashed, 0 from cache (1 variants per module in average)
+    5 modules hashed, 0 from cache (0.83 variants per module in average)
 <t> module hashing: X ms
-    100% code generated (6 generated, 0 from cache)
+    100% code generated (5 generated, 0 from cache)
 <t> code generation: X ms
 <t> runtime requirements.modules: X ms
 <t> runtime requirements.chunks: X ms
@@ -184,7 +170,7 @@ LOG from webpack.buildChunkGraph
 <t> visitModules: check modules for revisit: X ms
 <t> visitModules: prepare: X ms
 <t> visitModules: visiting: X ms
-    15 queue items processed (9 blocks)
+    13 queue items processed (8 blocks)
     3 chunk groups connected
     3 chunk groups processed for merging (3 module sets, 0 forked, 0 + 0 modules forked, 0 + 0 modules merged into fork, 0 resulting modules)
     3 chunk group info updated (0 already connected chunk groups reconnected)

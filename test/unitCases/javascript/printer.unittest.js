@@ -1531,6 +1531,29 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		expect(print("var a = 5; function reset() { a = 6 }")).toBe("");
 	});
 
+	it("should drop an unread call to an export `#__NO_SIDE_EFFECTS__` marks", () => {
+		const print = (/** @type {string} */ source) =>
+			minifyOnePass(source, { compress: {}, mangle: {}, module: true }).code;
+		expect(
+			print("/*#__NO_SIDE_EFFECTS__*/ export function f() { g(); } f();")
+		).toBe("export function f(){g()}");
+		expect(
+			print("/*#__NO_SIDE_EFFECTS__*/ export const f = () => g(); f();")
+		).toBe("export const f=()=>g();");
+		expect(
+			print("export /*#__NO_SIDE_EFFECTS__*/ const f = () => g(); f();")
+		).toBe("export const f=()=>g();");
+		expect(
+			print(
+				"/*#__NO_SIDE_EFFECTS__*/ export default function f() { g(); } f();"
+			)
+		).toBe("export default function f(){g()}");
+		// An export of names declares no function the comment could mark.
+		expect(
+			print("/*#__NO_SIDE_EFFECTS__*/ export { f }; function f() { g(); } f();")
+		).toBe("export{f};function f(){g()}f();");
+	});
+
 	it("should print what runs the same for names, `delete` and pure callees", () => {
 		for (const [source, options] of /** @type {[string, EXPECTED_OBJECT][]} */ ([
 			// A dropped `var` frees its name for the catch parameter sharing it.
