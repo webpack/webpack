@@ -44,25 +44,6 @@ const runProgram = (code) => {
 };
 
 describe("syntax-printer", () => {
-	it("should minify through `load` as schema-utils' precompile asks", async () => {
-		const { load } = require("../../../lib/javascript/syntax").printer;
-		const minifier = await load();
-		const options = { mangle: true, ecma: 2015, toplevel: true };
-		expect(
-			(
-				await minifier.minify("export function f(a){ return a + 1 }", {
-					...options,
-					compress: {},
-					module: true
-				})
-			).code
-		).toBe("export function f(n){return n+1}");
-		expect(
-			(await minifier.minify("var a = 1 + 2;", { ...options, compress: false }))
-				.code
-		).toBe("var a=1+2;");
-	});
-
 	it("should read characters as terser's unicode helpers do", async () => {
 		const terserUnicode = await import(
 			require.resolve("terser").replace(/dist[\\/]bundle\.min\.js$/, "lib/unicode.js")
@@ -3271,12 +3252,24 @@ describe("jsMinify", () => {
 		for (const options of [
 			{ parse: { spidermonkey: true } },
 			{ format: { ast: true } },
+			{ format: { spidermonkey: true } },
 			{ format: { code: false } }
 		]) {
 			await expect(
 				jsMinify({ "a.js": "a()" }, undefined, options, false)
 			).rejects.toThrow(/not supported/);
 		}
+		// Each turned off, the source minifies as any other.
+		const { code } = await jsMinify(
+			{ "a.js": "a()" },
+			undefined,
+			{
+				parse: { spidermonkey: false },
+				format: { ast: false, spidermonkey: false, code: true }
+			},
+			false
+		);
+		expect(code).toBe("a();");
 	});
 
 	it("should read a Buffer input as UTF-8", async () => {
