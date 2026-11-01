@@ -169,7 +169,10 @@ const runScenario = async (name) => {
 		for (const parentUrl of parents.get(url) || []) {
 			if (parentUrl === self || !parentUrl.startsWith("file:")) continue;
 			const parent = fs.realpathSync(fileURLToPath(parentUrl));
-			if (parent.startsWith(nodeModules) || !parent.startsWith(ROOT)) {
+			if (
+				parent.startsWith(nodeModules) ||
+				!parent.startsWith(ROOT + path.sep)
+			) {
 				result.outsideLoads.push(
 					`${path.relative(ROOT, parent)} -> ${path.relative(ROOT, file)}`
 				);

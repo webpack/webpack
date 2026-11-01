@@ -36,12 +36,15 @@ jobs:
 
       - run: yarn link webpack --frozen-lockfile
 
-      # The counts compare with the pull request's base commit.
-      - name: Check out the base commit
+      # The counts compare with the pull request's base commit, on its own
+      # dependencies, so a dependency the pull request changes shows up.
+      - name: Check out and install the base commit
         run: |
           git fetch --no-tags --depth=1 origin "$BASE_SHA"
           git worktree add --detach "$RUNNER_TEMP/base" "$BASE_SHA"
-          ln -s "$GITHUB_WORKSPACE/node_modules" "$RUNNER_TEMP/base/node_modules"
+          cd "$RUNNER_TEMP/base"
+          node "$GITHUB_WORKSPACE/tooling/retry.js" yarn --frozen-lockfile --ignore-scripts
+          ln -s "$RUNNER_TEMP/base" node_modules/webpack
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
 
