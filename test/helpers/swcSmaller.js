@@ -785,7 +785,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/next/syncfusion/933-e9f9a6bf671b96fc/input.js",
 			"swc minifier: fixture/next/target-es2015/static/chunks/main-04b5934c26266542/input.js",
 			"swc minifier: fixture/next/tinymce/1/input.js",
-			"swc minifier: fixture/no-side-effect/input.js",
 			"swc minifier: fixture/non-finite-number-literals/input.js",
 			"swc minifier: fixture/object-factory-inline-cost/scalar/input.js",
 			"swc minifier: fixture/object-factory-inline-cost/single-use/input.js",
