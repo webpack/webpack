@@ -1382,6 +1382,11 @@ declare interface BufferedMap {
 	 */
 	file: string;
 }
+
+declare interface BuffersSerializerContext {
+	logger?: Logger;
+	retainedBuffer?: (x: Buffer) => Buffer;
+}
 type BuildDependencyItem =
 	| string
 	| {
@@ -4126,7 +4131,7 @@ declare class Compilation {
 	 * the load itself; anything the tap reads off the requirement set must be
 	 * captured before queueing, since `create` runs later.
 	 */
-	addLazyRuntimeModule<T extends object>(
+	addLazyRuntimeModule<T>(
 		chunk: Chunk,
 		load: () => Promise<T>,
 		create: (loaded: T) => RuntimeModule,
@@ -31110,7 +31115,7 @@ declare abstract class Serializer<DeserializedValue, SerializedValue, Context> {
 declare abstract class SerializerMiddleware<
 	DeserializedType = ComplexSerializableType,
 	SerializedType = ComplexSerializableType,
-	Context = object
+	Context = Record<never, never>
 > {
 	/**
 	 * Serializes this instance into the provided serializer context.
@@ -31865,7 +31870,7 @@ declare interface SourcePosition {
 declare abstract class SourceProcessor<
 	TPath extends NodePath<TNode, unknown>,
 	TNode,
-	TProcessOptions = object,
+	TProcessOptions = Record<never, never>,
 	TPrintOptions = PrintOptions,
 	TParts extends NodeParts = AnyParts,
 	TState = unknown,
@@ -38468,7 +38473,7 @@ declare namespace exports {
 	export namespace css {
 		export function cssMinify(
 			input: { [index: string]: string | Buffer },
-			sourceMap?: object,
+			sourceMap?: Partial<RawSourceMap>,
 			minimizerOptions?: {
 				as?: "stylesheet" | "block-contents";
 				environment?: CssEnvironment;
@@ -39903,7 +39908,7 @@ declare namespace exports {
 			export const buffersSerializer: Serializer<
 				ComplexSerializableType,
 				BufferSerializableType[],
-				object
+				BuffersSerializerContext
 			>;
 			export let createFileSerializer: <D, S, C>(
 				fs: IntermediateFileSystem,
