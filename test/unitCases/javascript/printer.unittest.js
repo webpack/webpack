@@ -1208,6 +1208,8 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["function f(a,b){if(a!==b)return;h(a==b?x:!0,a===b?!1:x,!(a==b))}", {}, "function f(a,b){if(a===b)h(a!=b||x,a!==b&&x,!(a==b))}"],
 			// A body of expressions prints as one sequence, without braces.
 			["function f(x){if(x){a();b()}else c();while(x){a();var y;b()}if(x){a();(function(){if(x)b();c()})()}}", {}, "function f(f){if(f)a(),b();else c();while(f)a(),b();if(f){a();!function(){if(f)b();c()}()}}"],
+			// An arrow of expressions ending in a `return` of a value prints as their sequence.
+			["function f(){return[x=>{a();return b},x=>{a();b();return{c:1}},x=>{a();var y;return y}]}", {}, "function f(){return[r=>(a(),b),r=>(a(),b(),{c:1}),r=>{a();var n;return n}]}"],
 			// What a literal written in place reads of itself is known, but where a call, tag or `delete` reads it as a reference.
 			["function f(a){return[\"abc\".length,[1,,a].length+1,[g()].length,/a\\/b/.source,\"ab\".length.x,\"ab\".length(),\"ab\".length``,delete\"ab\".length]}", {}, "function f(e){return[3,4,[g()].length,\"a\\\\/b\",2..x,\"ab\".length(),\"ab\".length``,delete\"ab\".length]}"]
 		];
@@ -2157,7 +2159,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				"(function(){try{throw 1}finally{return 2}})();x=(function(){try{g()}finally{return 2}})();(function(){if(g())return 1;for(;;)h()})();(async function(){g();return 1})();(function(){g();return h()})();a(),(()=>{g();return 2})(),b();(function*(){return 1})().next()"
 			)
 		).toBe(
-			"!function(){try{throw 1}finally{return}}();x=function(){try{g()}finally{return 2}}();!function(){if(g())return;for(;;)h()}();!async function(){g();return 1}();!function(){g();return h()}();a(),(()=>{g();return})(),b();(function*(){return 1})().next();"
+			"!function(){try{throw 1}finally{return}}();x=function(){try{g()}finally{return 2}}();!function(){if(g())return;for(;;)h()}();!async function(){g();return 1}();!function(){g();return h()}();a(),(()=>{g()})(),b();(function*(){return 1})().next();"
 		);
 		// A method's value is the method's, read whatever the call around its class.
 		expect(
