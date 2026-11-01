@@ -293,7 +293,7 @@ Every process starts cold, and loading code is most of that start, so pay only f
 - **Keep cheap things light**: constants and option helpers callers need live apart from the heavy code that uses them.
 - **Turned-off work costs nothing**: build tables, regexes and closures on first use, not at load or construction.
 - **Only webpack loads its own files**: hand another package a function, never a path to a `lib/` file; loaded by that package, the file and all it imports (`require("webpack")` included) count wherever that package is walked, such as the cache's build dependencies ([why](docs/caching.md#build-dependencies)).
-- **Prove it by counting** which modules a fresh process loads, not by timing it: `yarn lint:module-loading` reports each way webpack is used, and fails on a count past `tooling/module-loading.json` or a package loading webpack's files. Lower the baseline with `--write`.
+- **Prove it by counting** which modules a fresh process loads, not by timing it: `yarn lint:module-loading` reports each way webpack is used, and fails on a count past `tooling/module-loading.json` or a package loading webpack's files. After a reviewed change, `--write` rewrites the baseline, lower or higher.
 
 ### Keep instance shapes stable
 

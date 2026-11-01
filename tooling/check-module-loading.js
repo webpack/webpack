@@ -110,23 +110,27 @@ const SCENARIOS = {
 };
 
 /**
- * Runs one scenario in this process, recording every module it loads and the
- * module that first asked for it, then reports to the parent process.
+ * Runs one scenario in this process, recording every module it loads and every
+ * module that asked for it, then reports to the parent process.
  * @param {string} name the scenario
  * @returns {Promise<void>} resolves once the result has been sent
  */
 const runScenario = async (name) => {
 	const { registerHooks } = require("module");
 
-	/** @type {Map<string, string | undefined>} */
-	const firstParent = new Map();
+	// Every requester counts, not only the first: Node adds an already loaded
+	// module to each later requester's `module.children` too.
+	/** @type {Map<string, Set<string>>} */
+	const parents = new Map();
 	/** @type {Set<string>} */
 	const loaded = new Set();
 	registerHooks({
 		resolve(specifier, context, nextResolve) {
 			const result = nextResolve(specifier, context);
-			if (!firstParent.has(result.url)) {
-				firstParent.set(result.url, context.parentURL);
+			if (context.parentURL) {
+				const set = parents.get(result.url);
+				if (set) set.add(context.parentURL);
+				else parents.set(result.url, new Set([context.parentURL]));
 			}
 			return result;
 		},
@@ -148,13 +152,15 @@ const runScenario = async (name) => {
 		}
 		if (!file.startsWith(ROOT + path.sep) || file === __filename) continue;
 		result.webpack++;
-		const parentUrl = firstParent.get(url);
-		if (file === INDEX || !parentUrl || parentUrl === self) continue;
-		const parent = fs.realpathSync(fileURLToPath(parentUrl));
-		if (parent.startsWith(NODE_MODULES) || !parent.startsWith(ROOT)) {
-			result.outsideLoads.push(
-				`${path.relative(ROOT, parent)} -> ${path.relative(ROOT, file)}`
-			);
+		if (file === INDEX) continue;
+		for (const parentUrl of parents.get(url) || []) {
+			if (parentUrl === self || !parentUrl.startsWith("file:")) continue;
+			const parent = fs.realpathSync(fileURLToPath(parentUrl));
+			if (parent.startsWith(NODE_MODULES) || !parent.startsWith(ROOT)) {
+				result.outsideLoads.push(
+					`${path.relative(ROOT, parent)} -> ${path.relative(ROOT, file)}`
+				);
+			}
 		}
 	}
 	/** @type {NonNullable<typeof process.send>} */ (process.send)(result);
