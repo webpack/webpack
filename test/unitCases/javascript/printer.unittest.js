@@ -1642,6 +1642,21 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		expect(print("var a = 5; function reset() { a = 6 }")).toBe("");
 	});
 
+	it("should keep a `switch` on a known value whose case holds a comment that prints", () => {
+		const print = (/** @type {string} */ source) =>
+			minifyOnePass(source, {
+				compress: {},
+				mangle: false,
+				format: { comments: "some" }
+			}).code;
+		expect(print("function f(){switch(1){/*! keep */case 1:a()}}f()")).toBe(
+			"function f(){switch(1){/*! keep */case 1:a()}}f();"
+		);
+		expect(print("function f(){switch(1){/* drop */case 1:a()}}f()")).toBe(
+			"function f(){a()}f();"
+		);
+	});
+
 	it("should drop an unread call to an export `#__NO_SIDE_EFFECTS__` marks", () => {
 		const print = (/** @type {string} */ source) =>
 			minifyOnePass(source, { compress: {}, mangle: {}, module: true }).code;
