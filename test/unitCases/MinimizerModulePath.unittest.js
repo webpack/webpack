@@ -53,17 +53,20 @@ describe("default minimizer module paths", () => {
 	it("keeps the JavaScript task on the module-path dispatch", () => {
 		expectModulePathDispatch(
 			getRawOptions({
-				entry: path.resolve(__dirname, "../../package.json")
+				entry: path.resolve(__dirname, "../../package.json"),
+				experiments: { css: false, html: false }
 			})
 		);
 	});
 
-	it("keeps the multi-language task on the module-path dispatch", () => {
-		expectModulePathDispatch(
-			getRawOptions({
-				entry: path.resolve(__dirname, "../../package.json"),
-				experiments: { css: true, html: true }
-			})
-		);
+	it("passes the CSS and HTML minifiers as functions, not module paths", () => {
+		const rawOptions = getRawOptions({
+			entry: path.resolve(__dirname, "../../package.json"),
+			experiments: { css: true, html: true }
+		});
+		// Loaded by path, they become children of the plugin's module, and their
+		// `require("webpack")` pulls all of webpack into the cache's build dependencies.
+		expect(rawOptions.minify).toContain(require("../../lib/css/cssMinify"));
+		expect(rawOptions.minify).toContain(require("../../lib/html/htmlMinify"));
 	});
 });
