@@ -590,6 +590,7 @@ const STYLE_CONTROLS = new Map([
 	["bad nth-child among", [".a~.b:nth-child(3){color:red}", ".a~.b:nth-child(3){color:blue}"]],
 	["bad nth-of-type after", ["i+p:nth-of-type(2){color:red}", "i+p:nth-of-type(2){color:blue}"]],
 	// A computed `line-height` serializes at six digits, so only where `1lh` lands on the layout grid tells these apart.
+	// Gecko rounds a line height to its nearest 1/60px rather than flooring, so these lay out alike in Firefox.
 	["bad line-height digits", [".a{font-size:14px;line-height:1.4285714286}", ".a{font-size:14px;line-height:1.42857}"]],
 	["bad line-height digits through a custom property", [":root{--h:1.4285714286}.a{font-size:14px;line-height:var(--h)}", ":root{--h:1.42857}.a{font-size:14px;line-height:var(--h)}"]],
 	["bad line-height digits at a queried font size", ["@media (max-width:300px){.a{font-size:14px}}.a{line-height:1.4285714286}", "@media (max-width:300px){.a{font-size:14px}}.a{line-height:1.42857}"]],
@@ -978,7 +979,13 @@ describe(`printer output in real ${ENGINE}`, () => {
 				[...STYLE_CONTROLS].map(([name, [raw, min]]) => ({ name, raw, min }))
 			);
 			expect(differences.map((each) => each.name).sort()).toEqual(
-				[...STYLE_CONTROLS.keys()].filter((name) => name.startsWith("bad ")).sort()
+				[...STYLE_CONTROLS.keys()]
+					.filter(
+						(name) =>
+							name.startsWith("bad ") &&
+							!(ENGINE === "firefox" && name.startsWith("bad line-height digits"))
+					)
+					.sort()
 			);
 		},
 		FILE_TIMEOUT
