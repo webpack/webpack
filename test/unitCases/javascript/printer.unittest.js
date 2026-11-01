@@ -742,7 +742,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"function f(o){ var a = Math, b = o.x, c = [1].length, d = {}.x, e = { get x(){} }.x, h = typeof q, i = [...o], j = { ...o }, m = Function.prototype, n = (function(){}).prototype, p = o?.x, q2 = null.x, r = { ...{ a: 1 } }.a, s = (o, {}).x, t = (o ? {} : []).x, u = (void 0).x, v = (o = {}).x, w = (o &&= {}).x, y = (o ? 1 : 2).x, z = o.y.prototype; }",
 				{},
-				"function f(o){o.x;({get x(){}}).x;[...o];({...o});null.x;({...{a:1}}).a;(void 0).x;(o={}).x;(o&&={}).x;o.y.prototype}"
+				"function f(o){o.x;({get x(){}}).x;[...o];({...o});null.x;({a:1}).a;(void 0).x;(o={}).x;(o&&={}).x;o.y.prototype}"
 			],
 			// A class is made with effects where its heritage or a key may run or throw.
 			[
