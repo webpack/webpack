@@ -109,13 +109,37 @@ const build = (mode, watch) => async () => {
 	}
 };
 
+/**
+ * @returns {typeof import("../lib/index")} webpack, loaded through its public entry
+ */
+const webpack = () => require(INDEX);
+
+// Using one language's syntax or minifier must not start the compiler: what
+// these load is what a tool parsing or printing that language pays.
 /** @type {Record<string, () => Promise<void>>} */
-const SCENARIOS = {
-	'`require("webpack")`': async () => {
-		require(INDEX);
+const LANGUAGE_SCENARIOS = {
+	"JavaScript syntax": async () => {
+		new (webpack().javascript.syntax.SourceProcessor)().process(
+			"function add(a, b) { return a + b; }",
+			{ mode: "beautify" }
+		);
 	},
-	'`import "webpack"`': async () => {
-		await import(pathToFileURL(INDEX).href);
+	"CSS syntax": async () => {
+		new (webpack().css.syntax.SourceProcessor)().process("a { color: red; }", {
+			mode: "beautify"
+		});
+	},
+	"HTML syntax": async () => {
+		new (webpack().html.syntax.SourceProcessor)().process(
+			"<!doctype html><p>text</p>",
+			{ mode: "beautify" }
+		);
+	},
+	"XML syntax": async () => {
+		new (webpack().html.syntax.SourceProcessor)().process(
+			'<svg xmlns="http://www.w3.org/2000/svg"><g/></svg>',
+			{ mode: "beautify", xml: true }
+		);
 	},
 	"JavaScript minifier": minify(
 		"javascript/jsMinify",
@@ -133,7 +157,18 @@ const SCENARIOS = {
 		"a.svg",
 		'<svg xmlns="http://www.w3.org/2000/svg"> <g/> </svg>'
 	),
-	"JSON minifier": minify("json/jsonMinify", "a.json", '{ "a": [1, 2] }'),
+	"JSON minifier": minify("json/jsonMinify", "a.json", '{ "a": [1, 2] }')
+};
+
+/** @type {Record<string, () => Promise<void>>} */
+const SCENARIOS = {
+	'`require("webpack")`': async () => {
+		webpack();
+	},
+	'`import "webpack"`': async () => {
+		await import(pathToFileURL(INDEX).href);
+	},
+	...LANGUAGE_SCENARIOS,
 	"development build": build("development", false),
 	"production build": build("production", false),
 	"watch with HMR, one rebuild": build("development", true)
@@ -301,6 +336,8 @@ const main = async () => {
 	const changes = [];
 	/** @type {Map<string, OutsideLoad & { scenarios: string[] }>} */
 	const outsideLoads = new Map();
+	/** @type {string[]} */
+	const compilerLoads = [];
 	for (const name of Object.keys(SCENARIOS)) {
 		const head = await measure(name, ROOT);
 		/** @type {ScenarioResult | undefined} */
@@ -330,6 +367,12 @@ const main = async () => {
 		} else {
 			rows.push(`| ${name} | ${webpack} | ${packages} |`);
 		}
+		if (
+			name in LANGUAGE_SCENARIOS &&
+			head.webpack.includes(path.join("lib", "Compiler.js"))
+		) {
+			compilerLoads.push(name);
+		}
 		for (const load of head.outsideLoads) {
 			const key = `${load.requester}\n${load.file}`;
 			const seen = outsideLoads.get(key);
@@ -340,6 +383,7 @@ const main = async () => {
 	const failures = [...outsideLoads.values()].filter(
 		(load) => load.reachesIndex
 	);
+
 	const report = [
 		"## Module loading",
 		"",
@@ -349,6 +393,10 @@ const main = async () => {
 		"| :-- | --: | --: |",
 		...rows,
 		"",
+		...compilerLoads.map(
+			(name) =>
+				`🔴 **${name} loads \`lib/Compiler.js\`**: a language's syntax or minifier must not start webpack's compiler.\n`
+		),
 		...(changes.length > 0
 			? [
 					"<details><summary>Files behind the changes</summary>",
@@ -376,10 +424,12 @@ const main = async () => {
 	].join("\n");
 	if (output) fs.writeFileSync(output, report);
 	console.log(report);
-	if (failures.length > 0 && !output) {
+	if (failures.length > 0) {
 		console.error(
 			"A file another package loads reaches `lib/index.js`: hand that package a function, not a path to webpack's file."
 		);
+	}
+	if ((failures.length > 0 || compilerLoads.length > 0) && !output) {
 		process.exitCode = 1;
 	}
 };
