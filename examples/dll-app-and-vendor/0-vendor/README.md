@@ -46,7 +46,7 @@ export function square(n) {
 # dist/vendor.js
 
 ```javascript
-var vendor_lib_f71d3858e491f0e9b448;
+var vendor_lib_c3737c4a3a645b2d08c5;
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ([
 /* 0 */
@@ -129,8 +129,7 @@ function square(n) {
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	// define __esModule on exports
 /******/ 	__webpack_require__.r = (exports) => {
-/******/ 		Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		Object.defineProperties(exports, { [Symbol.toStringTag]: { value: 'Module' }, __esModule: { value: true } });
 /******/ 	};
 /******/ 	
 /************************************************************************/
@@ -144,7 +143,7 @@ function square(n) {
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module doesn't tell about it's top-level declarations so it can't be inlined
 /******/ 	let __webpack_exports__ = __webpack_require__(0);
-/******/ 	vendor_lib_f71d3858e491f0e9b448 = __webpack_exports__;
+/******/ 	vendor_lib_c3737c4a3a645b2d08c5 = __webpack_exports__;
 /******/ 	
 /******/ })()
 ;
@@ -153,7 +152,7 @@ function square(n) {
 # dist/vendor-manifest.json
 
 ```javascript
-{"name":"vendor_lib_f71d3858e491f0e9b448","content":{"../node_modules/example-vendor.js":{"id":1,"buildMeta":{"exportsType":"namespace"},"exports":["square"]}}}
+{"name":"vendor_lib_c3737c4a3a645b2d08c5","content":{"../node_modules/example-vendor.js":{"id":1,"buildMeta":{"exportsType":"namespace"},"exports":["square"]}}}
 ```
 
 # Info
@@ -161,10 +160,10 @@ function square(n) {
 ## Unoptimized
 
 ```
-asset vendor.js 3.49 KiB [emitted] (name: main)
-chunk (runtime: main) vendor.js (main) 57 bytes (javascript) 614 bytes (runtime) [entry] [rendered]
+asset vendor.js 3.46 KiB [emitted] (name: main)
+chunk (runtime: main) vendor.js (main) 57 bytes (javascript) 587 bytes (runtime) [entry] [rendered]
   > main
-  runtime modules 614 bytes 3 modules
+  runtime modules 587 bytes 3 modules
   dependent modules 45 bytes [dependent] 1 module
   dll main 12 bytes [built] [code generated]
     [used exports unknown]
@@ -176,10 +175,10 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset vendor.js 609 bytes [emitted] [minimized] (name: main)
-chunk (runtime: main) vendor.js (main) 57 bytes (javascript) 614 bytes (runtime) [entry] [rendered]
+asset vendor.js 588 bytes [emitted] [minimized] (name: main)
+chunk (runtime: main) vendor.js (main) 57 bytes (javascript) 587 bytes (runtime) [entry] [rendered]
   > main
-  runtime modules 614 bytes 3 modules
+  runtime modules 587 bytes 3 modules
   dependent modules 45 bytes [dependent] 1 module
   dll main 12 bytes [built] [code generated]
     dll entry

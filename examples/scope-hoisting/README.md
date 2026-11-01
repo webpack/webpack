@@ -249,9 +249,9 @@ var x = "x";
 /******/ 				doneFns?.forEach((fn) => (fn(event)));
 /******/ 				if(prev) return prev(event);
 /******/ 			}
-/******/ 			const timeout = setTimeout(onScriptComplete.bind(null, undefined, { type: 'timeout', target: script }), 120000);
-/******/ 			script.onerror = onScriptComplete.bind(null, script.onerror);
-/******/ 			script.onload = onScriptComplete.bind(null, script.onload);
+/******/ 			const timeout = setTimeout(onScriptComplete.bind(0, 0, { type: 'timeout', target: script }), 120000);
+/******/ 			script.onerror = onScriptComplete.bind(0, script.onerror);
+/******/ 			script.onload = onScriptComplete.bind(0, script.onload);
 /******/ 			needAttach && document.head.appendChild(script);
 /******/ 		};
 /******/ 	})();
@@ -259,8 +259,7 @@ var x = "x";
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	// define __esModule on exports
 /******/ 	__webpack_require__.r = (exports) => {
-/******/ 		Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		Object.defineProperties(exports, { [Symbol.toStringTag]: { value: 'Module' }, __esModule: { value: true } });
 /******/ 	};
 /******/ 	
 /******/ 	/* webpack/runtime/publicPath */
@@ -299,7 +298,7 @@ var x = "x";
 /******/ 									if(installedChunkData !== 0) installedChunks[chunkId] = undefined;
 /******/ 									if(installedChunkData) {
 /******/ 										const errorType = event && (event.type === 'load' ? 'missing' : event.type);
-/******/ 										const realSrc = event && event.target && event.target.src;
+/******/ 										const realSrc = event?.target?.src;
 /******/ 										error.message = 'Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')';
 /******/ 										error.name = 'ChunkLoadError';
 /******/ 										error.type = errorType;
@@ -497,9 +496,9 @@ chunk (runtime: main) lazy_js.output.js 263 bytes [rendered]
     [exports: c, d, x, y]
     [all exports used]
     import() ./lazy ./example.js + 2 modules ./example.js 4:0-16
-chunk (runtime: main) output.js (main) 367 bytes (javascript) 5.29 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 367 bytes (javascript) 5.22 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.29 KiB 8 modules
+  runtime modules 5.22 KiB 8 modules
   dependent modules 100 bytes [dependent] 1 module
   ./example.js + 2 modules 267 bytes [built] [code generated]
     [no exports]
@@ -511,7 +510,7 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 2.07 KiB [emitted] [minimized] (name: main)
+asset output.js 2.02 KiB [emitted] [minimized] (name: main)
 asset lazy_js.output.js 265 bytes [emitted] [minimized]
 chunk (runtime: main) lazy_js.output.js 263 bytes [rendered]
   > ./lazy ./example.js 4:0-16
@@ -520,9 +519,9 @@ chunk (runtime: main) lazy_js.output.js 263 bytes [rendered]
     [exports: c, d, x, y]
     [all exports used]
     import() ./lazy ./example.js + 2 modules ./example.js 4:0-16
-chunk (runtime: main) output.js (main) 367 bytes (javascript) 5.29 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 367 bytes (javascript) 5.22 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.29 KiB 8 modules
+  runtime modules 5.22 KiB 8 modules
   dependent modules 100 bytes [dependent] 2 modules
   ./example.js + 2 modules 267 bytes [built] [code generated]
     [no exports]

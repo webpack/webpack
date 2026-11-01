@@ -276,9 +276,9 @@ __webpack_require__.r(module.exports = {
 /******/ 				doneFns?.forEach((fn) => (fn(event)));
 /******/ 				if(prev) return prev(event);
 /******/ 			}
-/******/ 			const timeout = setTimeout(onScriptComplete.bind(null, undefined, { type: 'timeout', target: script }), 120000);
-/******/ 			script.onerror = onScriptComplete.bind(null, script.onerror);
-/******/ 			script.onload = onScriptComplete.bind(null, script.onload);
+/******/ 			const timeout = setTimeout(onScriptComplete.bind(0, 0, { type: 'timeout', target: script }), 120000);
+/******/ 			script.onerror = onScriptComplete.bind(0, script.onerror);
+/******/ 			script.onload = onScriptComplete.bind(0, script.onload);
 /******/ 			needAttach && document.head.appendChild(script);
 /******/ 		};
 /******/ 	})();
@@ -286,8 +286,7 @@ __webpack_require__.r(module.exports = {
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	// define __esModule on exports
 /******/ 	__webpack_require__.r = (exports) => {
-/******/ 		Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		Object.defineProperties(exports, { [Symbol.toStringTag]: { value: 'Module' }, __esModule: { value: true } });
 /******/ 	};
 /******/ 	
 /******/ 	/* webpack/runtime/publicPath */
@@ -312,7 +311,7 @@ __webpack_require__.r(module.exports = {
 /******/ 				const l = links[i];
 /******/ 				if(l.rel == "stylesheet" && (l.href == url || l.getAttribute("href") == url || l.getAttribute("data-webpack") == uniqueName + ":" + key)) { link = l; break; }
 /******/ 			}
-/******/ 			if(!done) return link;
+/******/ 		
 /******/ 		
 /******/ 			if(!link) {
 /******/ 				needAttach = true;
@@ -332,16 +331,15 @@ __webpack_require__.r(module.exports = {
 /******/ 				link.onerror = link.onload = null;
 /******/ 				link.removeAttribute(loadingAttribute);
 /******/ 				clearTimeout(timeout);
-/******/ 				if(event && event.type != "load") link.parentNode.removeChild(link)
+/******/ 				if(event.type != "load") link.parentNode.removeChild(link)
 /******/ 				done(event);
 /******/ 				if(prev) return prev(event);
 /******/ 			};
 /******/ 			if(link.getAttribute(loadingAttribute)) {
-/******/ 				timeout = setTimeout(onLinkComplete.bind(null, undefined, { type: 'timeout', target: link }), 120000);
-/******/ 				link.onerror = onLinkComplete.bind(null, link.onerror);
-/******/ 				link.onload = onLinkComplete.bind(null, link.onload);
-/******/ 			} else onLinkComplete(undefined, { type: 'load', target: link });
-/******/ 		
+/******/ 				timeout = setTimeout(onLinkComplete.bind(0, 0, { type: 'timeout', target: link }), 120000);
+/******/ 				link.onerror = onLinkComplete.bind(0, link.onerror);
+/******/ 				link.onload = onLinkComplete.bind(0, link.onload);
+/******/ 			} else onLinkComplete(0, { type: 'load', target: link });
 /******/ 			if (needAttach) {
 /******/ 				document.head.appendChild(link);
 /******/ 			}
@@ -371,8 +369,8 @@ __webpack_require__.r(module.exports = {
 /******/ 								if(installedChunkData !== 0) installedChunks[chunkId] = undefined;
 /******/ 								if(installedChunkData) {
 /******/ 									if(event.type !== "load") {
-/******/ 										const errorType = event && event.type;
-/******/ 										const realHref = event && event.target && event.target.href;
+/******/ 										const errorType = event.type;
+/******/ 										const realHref = event.target?.href;
 /******/ 										error.message = 'Loading css chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realHref + ')';
 /******/ 										error.name = 'ChunkLoadError';
 /******/ 										error.type = errorType;
@@ -432,7 +430,7 @@ __webpack_require__.r(module.exports = {
 /******/ 									if(installedChunkData !== 0) installedChunks[chunkId] = undefined;
 /******/ 									if(installedChunkData) {
 /******/ 										const errorType = event && (event.type === 'load' ? 'missing' : event.type);
-/******/ 										const realSrc = event && event.target && event.target.src;
+/******/ 										const realSrc = event?.target?.src;
 /******/ 										error.message = 'Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')';
 /******/ 										error.name = 'ChunkLoadError';
 /******/ 										error.type = errorType;
@@ -656,17 +654,17 @@ app, so scoping would break them): `@layer` and `@page` names,
 ## Unoptimized
 
 ```
-assets by path *.js 15.1 KiB
-  asset output.js 14.8 KiB [emitted] (name: main)
+assets by path *.js 14.9 KiB
+  asset output.js 14.6 KiB [emitted] (name: main)
   asset 1.output.js 332 bytes [emitted]
 assets by path *.css 1.16 KiB
   asset output.css 1.04 KiB [emitted] (name: main)
   asset 1.output.css 125 bytes [emitted]
 asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: images/file.png] (auxiliary name: main)
-Entrypoint main 15.8 KiB (14.6 KiB) = output.js 14.8 KiB output.css 1.04 KiB 1 auxiliary asset
-chunk (runtime: main) output.js, output.css (main) 259 bytes (javascript) 14.6 KiB (asset) 42 bytes (asset-url) 454 bytes (css) 42 bytes (css-import) 8.67 KiB (runtime) [entry] [rendered]
+Entrypoint main 15.7 KiB (14.6 KiB) = output.js 14.6 KiB output.css 1.04 KiB 1 auxiliary asset
+chunk (runtime: main) output.js, output.css (main) 259 bytes (javascript) 14.6 KiB (asset) 42 bytes (asset-url) 454 bytes (css) 42 bytes (css-import) 8.51 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 8.67 KiB 9 modules
+  runtime modules 8.51 KiB 9 modules
   dependent modules 14.6 KiB (asset) 42 bytes (asset-url) 454 bytes (css) 78 bytes (javascript) 42 bytes (css-import) [dependent] 6 modules
   ./example.js 181 bytes [built] [code generated]
     [no exports]
@@ -684,17 +682,17 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-assets by path *.js 3.2 KiB
-  asset output.js 3.12 KiB [emitted] [minimized] (name: main)
+assets by path *.js 3.13 KiB
+  asset output.js 3.04 KiB [emitted] [minimized] (name: main)
   asset 822.output.js 85 bytes [emitted] [minimized]
 assets by path *.css 357 bytes
   asset output.css 341 bytes [emitted] [minimized] (name: main)
   asset 822.output.css 16 bytes [emitted] [minimized]
 asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: images/file.png] (auxiliary name: main)
-Entrypoint main 3.45 KiB (14.6 KiB) = output.js 3.12 KiB output.css 341 bytes 1 auxiliary asset
-chunk (runtime: main) output.js, output.css (main) 467 bytes (javascript) 14.6 KiB (asset) 42 bytes (asset-url) 454 bytes (css) 42 bytes (css-import) 8.46 KiB (runtime) [entry] [rendered]
+Entrypoint main 3.38 KiB (14.6 KiB) = output.js 3.04 KiB output.css 341 bytes 1 auxiliary asset
+chunk (runtime: main) output.js, output.css (main) 467 bytes (javascript) 14.6 KiB (asset) 42 bytes (asset-url) 454 bytes (css) 42 bytes (css-import) 8.34 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 8.46 KiB 8 modules
+  runtime modules 8.34 KiB 8 modules
   dependent modules 14.6 KiB (asset) 42 bytes (asset-url) 79 bytes (css) 42 bytes (css-import) [dependent] 3 modules
   built modules 467 bytes (javascript) 375 bytes (css) [built]
     ./example.js + 5 modules 408 bytes [not cacheable] [built] [code generated]

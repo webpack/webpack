@@ -108,9 +108,9 @@ getTemplate("b", function(b) {
 /******/ 				doneFns?.forEach((fn) => (fn(event)));
 /******/ 				if(prev) return prev(event);
 /******/ 			}
-/******/ 			const timeout = setTimeout(onScriptComplete.bind(null, undefined, { type: 'timeout', target: script }), 120000);
-/******/ 			script.onerror = onScriptComplete.bind(null, script.onerror);
-/******/ 			script.onload = onScriptComplete.bind(null, script.onload);
+/******/ 			const timeout = setTimeout(onScriptComplete.bind(0, 0, { type: 'timeout', target: script }), 120000);
+/******/ 			script.onerror = onScriptComplete.bind(0, script.onerror);
+/******/ 			script.onload = onScriptComplete.bind(0, script.onload);
 /******/ 			needAttach && document.head.appendChild(script);
 /******/ 		};
 /******/ 	})();
@@ -151,7 +151,7 @@ getTemplate("b", function(b) {
 /******/ 									if(installedChunkData !== 0) installedChunks[chunkId] = undefined;
 /******/ 									if(installedChunkData) {
 /******/ 										const errorType = event && (event.type === 'load' ? 'missing' : event.type);
-/******/ 										const realSrc = event && event.target && event.target.src;
+/******/ 										const realSrc = event?.target?.src;
 /******/ 										error.message = 'Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')';
 /******/ 										error.name = 'ChunkLoadError';
 /******/ 										error.type = errorType;
@@ -327,11 +327,11 @@ module.exports = function() {
 ## Unoptimized
 
 ```
-asset output.js 8.65 KiB [emitted] (name: main)
+asset output.js 8.61 KiB [emitted] (name: main)
 asset require_context_templates_sync_recursive_.output.js 2.28 KiB [emitted]
-chunk (runtime: main) output.js (main) 251 bytes (javascript) 4.77 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 251 bytes (javascript) 4.73 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.77 KiB 6 modules
+  runtime modules 4.73 KiB 6 modules
   ./example.js 251 bytes [built] [code generated]
     [used exports unknown]
     entry ./example.js main
@@ -348,11 +348,11 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 1.86 KiB [emitted] [minimized] (name: main)
+asset output.js 1.84 KiB [emitted] [minimized] (name: main)
 asset require_context_templates_sync_recursive_.output.js 652 bytes [emitted] [minimized]
-chunk (runtime: main) output.js (main) 251 bytes (javascript) 4.77 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 251 bytes (javascript) 4.73 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.77 KiB 6 modules
+  runtime modules 4.73 KiB 6 modules
   ./example.js 251 bytes [built] [code generated]
     [no exports used]
     entry ./example.js main

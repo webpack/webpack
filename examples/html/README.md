@@ -329,15 +329,15 @@ assets by path *.png 77.9 KiB
   asset apple-touch-icon.png 14.6 KiB [emitted]
   asset icon-192.png 14.6 KiB [emitted]
   asset icon-512.png 14.6 KiB [emitted]
-assets by path *.js 7.31 KiB
-  asset app.js 6.32 KiB [emitted] (name: src-index-1)
+assets by path *.js 7.28 KiB
+  asset app.js 6.29 KiB [emitted] (name: src-index-1)
   asset index.js 1010 bytes [emitted] (name: src-index-2)
 asset favicon.ico 14.6 KiB [emitted]
 asset index.html 1.87 KiB [emitted] (auxiliary name: page)
 asset manifest.webmanifest 208 bytes [emitted]
 asset styles.css 166 bytes [emitted] (name: src-index-0)
 Entrypoint page (36.1 KiB) = 3 auxiliary assets
-Entrypoint src-index-1 6.32 KiB (14.6 KiB) = app.js 1 auxiliary asset
+Entrypoint src-index-1 6.29 KiB (14.6 KiB) = app.js 1 auxiliary asset
 Entrypoint src-index-2 1010 bytes = index.js
 Entrypoint src-index-0 166 bytes = styles.css
 chunk (runtime: page) (page) 34.2 KiB (asset) 84 bytes (asset-url) 65 bytes (css-text) 1.23 KiB (html) [entry]
@@ -354,9 +354,9 @@ chunk (runtime: src-index-0) styles.css (src-index-0) 64 bytes (css) 0 bytes (ru
     [no exports]
     [used exports unknown]
     entry ./styles.css src-index-0
-chunk (runtime: src-index-1) app.js (src-index-1) 541 bytes (javascript) 14.6 KiB (asset) 42 bytes (asset-url) 2.32 KiB (runtime) [entry] [rendered]
+chunk (runtime: src-index-1) app.js (src-index-1) 541 bytes (javascript) 14.6 KiB (asset) 42 bytes (asset-url) 2.29 KiB (runtime) [entry] [rendered]
   > ./app.js src-index-1
-  runtime modules 2.32 KiB 4 modules
+  runtime modules 2.29 KiB 4 modules
   dependent modules 124 bytes (javascript) 14.6 KiB (asset) 42 bytes (asset-url) [dependent] 2 modules
   ./src/app.js 417 bytes [built] [code generated]
     [no exports]

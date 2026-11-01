@@ -568,9 +568,9 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 				doneFns?.forEach((fn) => (fn(event)));
 /******/ 				if(prev) return prev(event);
 /******/ 			}
-/******/ 			const timeout = setTimeout(onScriptComplete.bind(null, undefined, { type: 'timeout', target: script }), 120000);
-/******/ 			script.onerror = onScriptComplete.bind(null, script.onerror);
-/******/ 			script.onload = onScriptComplete.bind(null, script.onload);
+/******/ 			const timeout = setTimeout(onScriptComplete.bind(0, 0, { type: 'timeout', target: script }), 120000);
+/******/ 			script.onerror = onScriptComplete.bind(0, script.onerror);
+/******/ 			script.onload = onScriptComplete.bind(0, script.onload);
 /******/ 			needAttach && document.head.appendChild(script);
 /******/ 		};
 /******/ 	})();
@@ -578,8 +578,7 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	// define __esModule on exports
 /******/ 	__webpack_require__.r = (exports) => {
-/******/ 		Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		Object.defineProperties(exports, { [Symbol.toStringTag]: { value: 'Module' }, __esModule: { value: true } });
 /******/ 	};
 /******/ 	
 /******/ 	/* webpack/runtime/remotes loading */
@@ -613,8 +612,7 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 		__webpack_require__.f.remotes = (chunkId, promises) => {
 /******/ 			if(__webpack_require__.o(chunkMapping, chunkId)) {
 /******/ 				chunkMapping[chunkId].forEach((id) => {
-/******/ 					let getScope = __webpack_require__.R;
-/******/ 					if(!getScope) getScope = [];
+/******/ 					const getScope = __webpack_require__.R || [];
 /******/ 					const data = idToExternalAndNameMapping[id];
 /******/ 					if(getScope.indexOf(data) >= 0) return;
 /******/ 					getScope.push(data);
@@ -661,10 +659,9 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 		const initPromises = {};
 /******/ 		const initTokens = {};
 /******/ 		__webpack_require__.I = (name, initScope) => {
-/******/ 			if(!initScope) initScope = [];
+/******/ 			initScope = initScope || [];
 /******/ 			// handling circular init calls
-/******/ 			let initToken = initTokens[name];
-/******/ 			if(!initToken) initToken = initTokens[name] = {};
+/******/ 			const initToken = initTokens[name] = initTokens[name] || {};
 /******/ 			if(initScope.indexOf(initToken) >= 0) return;
 /******/ 			initScope.push(initToken);
 /******/ 			// only runs once
@@ -687,7 +684,7 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 				try {
 /******/ 					const module = __webpack_require__(id);
 /******/ 					if(!module) return;
-/******/ 					const initFn = (module) => (module && module.init && module.init(__webpack_require__.S[name], initScope))
+/******/ 					const initFn = (module) => (module?.init?.(__webpack_require__.S[name], initScope))
 /******/ 					if(module.then) return promises.push(module.then(initFn, handleError));
 /******/ 					const initResult = initFn(module);
 /******/ 					if(initResult?.then) return promises.push(initResult['catch'](handleError));
@@ -783,7 +780,7 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 		const warn = /*#__PURE__*/ (msg) => {
 /******/ 			if (typeof console !== "undefined" && console.warn) console.warn(msg);
 /******/ 		};
-/******/ 		const init = (fn) => (function(scopeName, key, eager, c, d) {
+/******/ 		const init = (fn) => ((scopeName, key, eager, c, d) => {
 /******/ 			const promise = __webpack_require__.I(scopeName);
 /******/ 			if (promise?.then && !eager) {
 /******/ 				return promise.then(fn.bind(fn, scopeName, __webpack_require__.S[scopeName], key, false, c, d));
@@ -911,7 +908,7 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 									if(installedChunkData !== 0) installedChunks[chunkId] = undefined;
 /******/ 									if(installedChunkData) {
 /******/ 										const errorType = event && (event.type === 'load' ? 'missing' : event.type);
-/******/ 										const realSrc = event && event.target && event.target.src;
+/******/ 										const realSrc = event?.target?.src;
 /******/ 										error.message = 'Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')';
 /******/ 										error.name = 'ChunkLoadError';
 /******/ 										error.type = errorType;
@@ -1138,9 +1135,9 @@ __webpack_require__.d(exports, {
 /******/ 				doneFns?.forEach((fn) => (fn(event)));
 /******/ 				if(prev) return prev(event);
 /******/ 			}
-/******/ 			const timeout = setTimeout(onScriptComplete.bind(null, undefined, { type: 'timeout', target: script }), 120000);
-/******/ 			script.onerror = onScriptComplete.bind(null, script.onerror);
-/******/ 			script.onload = onScriptComplete.bind(null, script.onload);
+/******/ 			const timeout = setTimeout(onScriptComplete.bind(0, 0, { type: 'timeout', target: script }), 120000);
+/******/ 			script.onerror = onScriptComplete.bind(0, script.onerror);
+/******/ 			script.onload = onScriptComplete.bind(0, script.onload);
 /******/ 			needAttach && document.head.appendChild(script);
 /******/ 		};
 /******/ 	})();
@@ -1148,8 +1145,7 @@ __webpack_require__.d(exports, {
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	// define __esModule on exports
 /******/ 	__webpack_require__.r = (exports) => {
-/******/ 		Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		Object.defineProperties(exports, { [Symbol.toStringTag]: { value: 'Module' }, __esModule: { value: true } });
 /******/ 	};
 /******/ 	
 /******/ 	/* webpack/runtime/sharing */
@@ -1158,10 +1154,9 @@ __webpack_require__.d(exports, {
 /******/ 		const initPromises = {};
 /******/ 		const initTokens = {};
 /******/ 		__webpack_require__.I = (name, initScope) => {
-/******/ 			if(!initScope) initScope = [];
+/******/ 			initScope = initScope || [];
 /******/ 			// handling circular init calls
-/******/ 			let initToken = initTokens[name];
-/******/ 			if(!initToken) initToken = initTokens[name] = {};
+/******/ 			const initToken = initTokens[name] = initTokens[name] || {};
 /******/ 			if(initScope.indexOf(initToken) >= 0) return;
 /******/ 			initScope.push(initToken);
 /******/ 			// only runs once
@@ -1184,7 +1179,7 @@ __webpack_require__.d(exports, {
 /******/ 				try {
 /******/ 					const module = __webpack_require__(id);
 /******/ 					if(!module) return;
-/******/ 					const initFn = (module) => (module && module.init && module.init(__webpack_require__.S[name], initScope))
+/******/ 					const initFn = (module) => (module?.init?.(__webpack_require__.S[name], initScope))
 /******/ 					if(module.then) return promises.push(module.then(initFn, handleError));
 /******/ 					const initResult = initFn(module);
 /******/ 					if(initResult?.then) return promises.push(initResult['catch'](handleError));
@@ -1279,7 +1274,7 @@ __webpack_require__.d(exports, {
 /******/ 		const warn = /*#__PURE__*/ (msg) => {
 /******/ 			if (typeof console !== "undefined" && console.warn) console.warn(msg);
 /******/ 		};
-/******/ 		const init = (fn) => (function(scopeName, key, eager, c, d) {
+/******/ 		const init = (fn) => ((scopeName, key, eager, c, d) => {
 /******/ 			const promise = __webpack_require__.I(scopeName);
 /******/ 			if (promise?.then && !eager) {
 /******/ 				return promise.then(fn.bind(fn, scopeName, __webpack_require__.S[scopeName], key, false, c, d));
@@ -1407,7 +1402,7 @@ __webpack_require__.d(exports, {
 /******/ 									if(installedChunkData !== 0) installedChunks[chunkId] = undefined;
 /******/ 									if(installedChunkData) {
 /******/ 										const errorType = event && (event.type === 'load' ? 'missing' : event.type);
-/******/ 										const realSrc = event && event.target && event.target.src;
+/******/ 										const realSrc = event?.target?.src;
 /******/ 										error.message = 'Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')';
 /******/ 										error.name = 'ChunkLoadError';
 /******/ 										error.type = errorType;
@@ -1658,9 +1653,9 @@ __webpack_require__.d(exports, {
 /******/ 				doneFns?.forEach((fn) => (fn(event)));
 /******/ 				if(prev) return prev(event);
 /******/ 			}
-/******/ 			const timeout = setTimeout(onScriptComplete.bind(null, undefined, { type: 'timeout', target: script }), 120000);
-/******/ 			script.onerror = onScriptComplete.bind(null, script.onerror);
-/******/ 			script.onload = onScriptComplete.bind(null, script.onload);
+/******/ 			const timeout = setTimeout(onScriptComplete.bind(0, 0, { type: 'timeout', target: script }), 120000);
+/******/ 			script.onerror = onScriptComplete.bind(0, script.onerror);
+/******/ 			script.onload = onScriptComplete.bind(0, script.onload);
 /******/ 			needAttach && document.head.appendChild(script);
 /******/ 		};
 /******/ 	})();
@@ -1668,8 +1663,7 @@ __webpack_require__.d(exports, {
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	// define __esModule on exports
 /******/ 	__webpack_require__.r = (exports) => {
-/******/ 		Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		Object.defineProperties(exports, { [Symbol.toStringTag]: { value: 'Module' }, __esModule: { value: true } });
 /******/ 	};
 /******/ 	
 /******/ 	/* webpack/runtime/sharing */
@@ -1678,10 +1672,9 @@ __webpack_require__.d(exports, {
 /******/ 		const initPromises = {};
 /******/ 		const initTokens = {};
 /******/ 		__webpack_require__.I = (name, initScope) => {
-/******/ 			if(!initScope) initScope = [];
+/******/ 			initScope = initScope || [];
 /******/ 			// handling circular init calls
-/******/ 			let initToken = initTokens[name];
-/******/ 			if(!initToken) initToken = initTokens[name] = {};
+/******/ 			const initToken = initTokens[name] = initTokens[name] || {};
 /******/ 			if(initScope.indexOf(initToken) >= 0) return;
 /******/ 			initScope.push(initToken);
 /******/ 			// only runs once
@@ -1704,7 +1697,7 @@ __webpack_require__.d(exports, {
 /******/ 				try {
 /******/ 					const module = __webpack_require__(id);
 /******/ 					if(!module) return;
-/******/ 					const initFn = (module) => (module && module.init && module.init(__webpack_require__.S[name], initScope))
+/******/ 					const initFn = (module) => (module?.init?.(__webpack_require__.S[name], initScope))
 /******/ 					if(module.then) return promises.push(module.then(initFn, handleError));
 /******/ 					const initResult = initFn(module);
 /******/ 					if(initResult?.then) return promises.push(initResult['catch'](handleError));
@@ -1799,7 +1792,7 @@ __webpack_require__.d(exports, {
 /******/ 		const warn = /*#__PURE__*/ (msg) => {
 /******/ 			if (typeof console !== "undefined" && console.warn) console.warn(msg);
 /******/ 		};
-/******/ 		const init = (fn) => (function(scopeName, key, eager, c, d) {
+/******/ 		const init = (fn) => ((scopeName, key, eager, c, d) => {
 /******/ 			const promise = __webpack_require__.I(scopeName);
 /******/ 			if (promise?.then && !eager) {
 /******/ 				return promise.then(fn.bind(fn, scopeName, __webpack_require__.S[scopeName], key, false, c, d));
@@ -1933,7 +1926,7 @@ __webpack_require__.d(exports, {
 /******/ 									if(installedChunkData !== 0) installedChunks[chunkId] = undefined;
 /******/ 									if(installedChunkData) {
 /******/ 										const errorType = event && (event.type === 'load' ? 'missing' : event.type);
-/******/ 										const realSrc = event && event.target && event.target.src;
+/******/ 										const realSrc = event?.target?.src;
 /******/ 										error.message = 'Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')';
 /******/ 										error.name = 'ChunkLoadError';
 /******/ 										error.type = errorType;
@@ -2013,11 +2006,11 @@ __webpack_require__.d(exports, {
 ```
 app:
   asset src_bootstrap_js.js 46.9 KiB [emitted]
-  asset app.js 29.7 KiB [emitted] (name: app)
   asset vendors-node_modules_react_index_js.js 29.7 KiB [emitted] (id hint: vendors)
-  chunk (runtime: app) app.js (app) 672 bytes (javascript) 42 bytes (share-init) 18.9 KiB (runtime) [entry] [rendered]
+  asset app.js 29.5 KiB [emitted] (name: app)
+  chunk (runtime: app) app.js (app) 672 bytes (javascript) 42 bytes (share-init) 18.8 KiB (runtime) [entry] [rendered]
     > ./src/index.js app
-    runtime modules 18.9 KiB 13 modules
+    runtime modules 18.8 KiB 13 modules
     built modules 672 bytes (javascript) 42 bytes (share-init) [built]
       ./src/index.js 588 bytes [built] [code generated]
       external "mfeBBB@/dist/bbb/mfeBBB.js" 42 bytes [built] [code generated]
@@ -2042,11 +2035,11 @@ mfe-b:
   assets by chunk 1 MiB (id hint: vendors)
     asset vendors-node_modules_date-fns_index_js.js 997 KiB [emitted] (id hint: vendors)
     asset vendors-node_modules_react_index_js.js 29.7 KiB [emitted] (id hint: vendors)
-  asset mfeBBB.js 23.8 KiB [emitted] (name: mfeBBB)
+  asset mfeBBB.js 23.7 KiB [emitted] (name: mfeBBB)
   asset src-b_Component_js.js 4.02 KiB [emitted]
-  chunk (runtime: mfeBBB) mfeBBB.js (mfeBBB) 42 bytes (javascript) 84 bytes (share-init) 15.8 KiB (runtime) [entry] [rendered]
+  chunk (runtime: mfeBBB) mfeBBB.js (mfeBBB) 42 bytes (javascript) 84 bytes (share-init) 15.7 KiB (runtime) [entry] [rendered]
     > mfeBBB
-    runtime modules 15.8 KiB 10 modules
+    runtime modules 15.7 KiB 10 modules
     built modules 42 bytes (javascript) 84 bytes (share-init) [built]
       container entry 42 bytes [built] [code generated]
       provide shared module (default) date-fns@4.4.0 = ../../node_modules/dat...(truncated) 42 bytes [built] [code generated]
@@ -2071,12 +2064,12 @@ mfe-c:
   assets by chunk 1020 KiB (id hint: vendors)
     asset vendors-node_modules_date-fns_index_js.js 997 KiB [emitted] (id hint: vendors)
     asset vendors-node_modules_lodash_random_js.js 24.8 KiB [emitted] (id hint: vendors)
-  asset mfeCCC.js 25.2 KiB [emitted] (name: mfeCCC)
-  asset src-c_LazyComponent_js.js 4.09 KiB [emitted]
-  asset src-c_Component_js.js 3.9 KiB [emitted]
-  chunk (runtime: mfeCCC) mfeCCC.js (mfeCCC) 42 bytes (javascript) 84 bytes (share-init) 16.6 KiB (runtime) [entry] [rendered]
+  asset mfeCCC.js 25 KiB [emitted] (name: mfeCCC)
+  asset src-c_LazyComponent_js.js 3.95 KiB [emitted]
+  asset src-c_Component_js.js 3.74 KiB [emitted]
+  chunk (runtime: mfeCCC) mfeCCC.js (mfeCCC) 42 bytes (javascript) 84 bytes (share-init) 16.4 KiB (runtime) [entry] [rendered]
     > mfeCCC
-    runtime modules 16.6 KiB 12 modules
+    runtime modules 16.4 KiB 12 modules
     built modules 42 bytes (javascript) 84 bytes (share-init) [built]
       container entry 42 bytes [built] [code generated]
       provide shared module (default) date-fns@4.4.0 = ../../node_modules/dat...(truncated) 42 bytes [built] [code generated]
@@ -2112,10 +2105,10 @@ mfe-c:
 app:
   asset src_bootstrap_js.js 13.1 KiB [emitted] [minimized] 1 related asset
   asset node_modules_react_index_js.js 7.79 KiB [emitted] [minimized] 1 related asset
-  asset app.js 7.78 KiB [emitted] [minimized] (name: app)
-  chunk (runtime: app) app.js (app) 672 bytes (javascript) 42 bytes (share-init) 19.2 KiB (runtime) [entry] [rendered]
+  asset app.js 7.71 KiB [emitted] [minimized] (name: app)
+  chunk (runtime: app) app.js (app) 672 bytes (javascript) 42 bytes (share-init) 19.1 KiB (runtime) [entry] [rendered]
     > ./src/index.js app
-    runtime modules 19.2 KiB 14 modules
+    runtime modules 19.1 KiB 14 modules
     built modules 672 bytes (javascript) 42 bytes (share-init) [built]
       ./src/index.js 588 bytes [built] [code generated]
       external "mfeBBB@/dist/bbb/mfeBBB.js" 42 bytes [built] [code generated]
@@ -2139,11 +2132,11 @@ app:
 mfe-b:
   asset vendors-node_modules_date-fns_index_js.js 70.3 KiB [emitted] [minimized] (id hint: vendors)
   asset node_modules_react_index_js.js 7.79 KiB [emitted] [minimized] 1 related asset
-  asset mfeBBB.js 6.33 KiB [emitted] [minimized] (name: mfeBBB)
+  asset mfeBBB.js 6.28 KiB [emitted] [minimized] (name: mfeBBB)
   asset src-b_Component_js.js 616 bytes [emitted] [minimized]
-  chunk (runtime: mfeBBB) mfeBBB.js (mfeBBB) 42 bytes (javascript) 84 bytes (share-init) 16.1 KiB (runtime) [entry] [rendered]
+  chunk (runtime: mfeBBB) mfeBBB.js (mfeBBB) 42 bytes (javascript) 84 bytes (share-init) 16 KiB (runtime) [entry] [rendered]
     > mfeBBB
-    runtime modules 16.1 KiB 11 modules
+    runtime modules 16 KiB 11 modules
     built modules 42 bytes (javascript) 84 bytes (share-init) [built]
       container entry 42 bytes [built] [code generated]
       provide shared module (default) date-fns@4.4.0 = ../../node_modules/dat...(truncated) 42 bytes [built] [code generated]
@@ -2165,13 +2158,13 @@ mfe-b:
 
 mfe-c:
   asset vendors-node_modules_date-fns_index_js.js 70.3 KiB [emitted] [minimized] (id hint: vendors)
-  asset mfeCCC.js 7.01 KiB [emitted] [minimized] (name: mfeCCC)
+  asset mfeCCC.js 6.95 KiB [emitted] [minimized] (name: mfeCCC)
   asset node_modules_lodash_random_js.js 3.08 KiB [emitted] [minimized]
   asset src-c_LazyComponent_js.js 651 bytes [emitted] [minimized]
   asset src-c_Component_js.js 595 bytes [emitted] [minimized]
-  chunk (runtime: mfeCCC) mfeCCC.js (mfeCCC) 42 bytes (javascript) 84 bytes (share-init) 16.8 KiB (runtime) [entry] [rendered]
+  chunk (runtime: mfeCCC) mfeCCC.js (mfeCCC) 42 bytes (javascript) 84 bytes (share-init) 16.7 KiB (runtime) [entry] [rendered]
     > mfeCCC
-    runtime modules 16.8 KiB 12 modules
+    runtime modules 16.7 KiB 12 modules
     built modules 42 bytes (javascript) 84 bytes (share-init) [built]
       container entry 42 bytes [built] [code generated]
       provide shared module (default) date-fns@4.4.0 = ../../node_modules/dat...(truncated) 42 bytes [built] [code generated]

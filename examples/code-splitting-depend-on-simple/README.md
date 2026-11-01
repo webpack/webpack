@@ -205,8 +205,7 @@ module.exports = 'prop-types';
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	// define __esModule on exports
 /******/ 	__webpack_require__.r = (exports) => {
-/******/ 		Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		Object.defineProperties(exports, { [Symbol.toStringTag]: { value: 'Module' }, __esModule: { value: true } });
 /******/ 	};
 /******/ 	
 /******/ 	/* webpack/runtime/jsonp chunk loading */
@@ -286,7 +285,7 @@ module.exports = 'prop-types';
 ## Unoptimized
 
 ```
-asset react-vendors.js 7.01 KiB [emitted] (name: react-vendors)
+asset react-vendors.js 6.97 KiB [emitted] (name: react-vendors)
 asset app.js 1.59 KiB [emitted] (name: app)
 chunk (runtime: react-vendors) app.js (app) 139 bytes <{react-vendors}> [initial] [rendered]
   > ./app.js app
@@ -294,11 +293,11 @@ chunk (runtime: react-vendors) app.js (app) 139 bytes <{react-vendors}> [initial
     [no exports]
     [used exports unknown]
     entry ./app.js app
-chunk (runtime: react-vendors) react-vendors.js (react-vendors) 87 bytes (javascript) 2.9 KiB (runtime) >{app}< [entry] [rendered]
+chunk (runtime: react-vendors) react-vendors.js (react-vendors) 87 bytes (javascript) 2.87 KiB (runtime) >{app}< [entry] [rendered]
   > prop-types react-vendors
   > react react-vendors
   > react-dom react-vendors
-  runtime modules 2.9 KiB 6 modules
+  runtime modules 2.87 KiB 6 modules
   cacheable modules 87 bytes
     ./node_modules/prop-types.js 31 bytes [built] [code generated]
       [used exports unknown]

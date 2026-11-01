@@ -132,9 +132,9 @@ module.exports = config;
 /******/ 				doneFns?.forEach((fn) => (fn(event)));
 /******/ 				if(prev) return prev(event);
 /******/ 			}
-/******/ 			const timeout = setTimeout(onScriptComplete.bind(null, undefined, { type: 'timeout', target: script }), 120000);
-/******/ 			script.onerror = onScriptComplete.bind(null, script.onerror);
-/******/ 			script.onload = onScriptComplete.bind(null, script.onload);
+/******/ 			const timeout = setTimeout(onScriptComplete.bind(0, 0, { type: 'timeout', target: script }), 120000);
+/******/ 			script.onerror = onScriptComplete.bind(0, script.onerror);
+/******/ 			script.onload = onScriptComplete.bind(0, script.onload);
 /******/ 			needAttach && document.head.appendChild(script);
 /******/ 		};
 /******/ 	})();
@@ -175,7 +175,7 @@ module.exports = config;
 /******/ 									if(installedChunkData !== 0) installedChunks[chunkId] = undefined;
 /******/ 									if(installedChunkData) {
 /******/ 										const errorType = event && (event.type === 'load' ? 'missing' : event.type);
-/******/ 										const realSrc = event && event.target && event.target.src;
+/******/ 										const realSrc = event?.target?.src;
 /******/ 										error.message = 'Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')';
 /******/ 										error.name = 'ChunkLoadError';
 /******/ 										error.type = errorType;
@@ -268,7 +268,7 @@ Promise.all(/*! require.ensure */[__webpack_require__.e(670), __webpack_require_
 ## Unoptimized
 
 ```
-asset output.js 9.51 KiB [emitted] (name: main)
+asset output.js 9.47 KiB [emitted] (name: main)
 asset 670.output.js 344 bytes [emitted]
 asset 210.output.js 326 bytes [emitted]
 asset 425.output.js 326 bytes [emitted]
@@ -299,9 +299,9 @@ chunk (runtime: main) 670.output.js 21 bytes [rendered] split chunk (cache group
     require.ensure item ./a ./example.js 3:0-6:2
     require.ensure item ./a ./example.js 8:0-16:2
     cjs require ./a ./example.js 9:1-15
-chunk (runtime: main) output.js (main) 346 bytes (javascript) 4.77 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 346 bytes (javascript) 4.73 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.77 KiB 6 modules
+  runtime modules 4.73 KiB 6 modules
   ./example.js 346 bytes [built] [code generated]
     [used exports unknown]
     entry ./example.js main
@@ -341,7 +341,7 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 2.12 KiB [emitted] [minimized] (name: main)
+asset output.js 2.1 KiB [emitted] [minimized] (name: main)
 asset 210.output.js 80 bytes [emitted] [minimized]
 asset 425.output.js 80 bytes [emitted] [minimized]
 asset 670.output.js 80 bytes [emitted] [minimized]
@@ -372,9 +372,9 @@ chunk (runtime: main) 670.output.js 21 bytes [rendered] split chunk (cache group
     require.ensure item ./a ./example.js 3:0-6:2
     require.ensure item ./a ./example.js 8:0-16:2
     cjs require ./a ./example.js 9:1-15
-chunk (runtime: main) output.js (main) 346 bytes (javascript) 4.77 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 346 bytes (javascript) 4.73 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.77 KiB 6 modules
+  runtime modules 4.73 KiB 6 modules
   ./example.js 346 bytes [built] [code generated]
     [no exports used]
     entry ./example.js main
