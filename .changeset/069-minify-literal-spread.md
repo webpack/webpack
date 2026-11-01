@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Inline spread array and object literals, and drop spread primitives, when minifying.
+Inline spread literals and drop spread primitives when minifying.
