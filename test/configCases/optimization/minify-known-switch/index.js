@@ -70,6 +70,23 @@ function labeled(log) {
 	return log;
 }
 
+function guarded(log, done) {
+	if (done) return;
+	switch (1) {
+		case 1:
+			log.push("a");
+			log.push("b");
+	}
+}
+
+function guardedEmpty(log, done) {
+	if (done) return;
+	switch (1) {
+		case 2:
+			log.push("two");
+	}
+}
+
 function unknownFirst(log, at) {
 	switch (1) {
 		case at():
@@ -112,6 +129,12 @@ it("should print the statements a `switch` on a known value runs", () => {
 });
 
 it("should keep a `switch` whose path is not known or whose dropped cases declare", () => {
+	var log = [];
+	guarded(log, true);
+	guarded(log, false);
+	guardedEmpty(log, true);
+	guardedEmpty(log, false);
+	expect(log).toEqual(["a", "b"]);
 	expect(unmatched([], true)).toEqual([]);
 	expect(unmatched([], false)).toEqual(["else"]);
 	expect(labeled([])).toEqual(["one"]);
