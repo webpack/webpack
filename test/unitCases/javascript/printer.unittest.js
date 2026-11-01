@@ -518,7 +518,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"function f(o){ const a = 3, b = 2; return [a<<b, a>>b, a>>>b, a&b, a|b, a^b, a==b, a!=b, a!==b, a<b, a>b, a<=b, a>=b, a in o, ~a, +a, typeof a, void a, a - b, a / b, a % b, a ** b, a * b] }",
 				{},
-				"function f(a){return[12,0,0,2,3,1,!1,!0,!0,!1,!0,!1,!0,3 in a,~3,3,\"number\",void 3,1,3/2,1,9,6]}"
+				"function f(a){return[12,0,0,2,3,1,!1,!0,!0,!1,!0,!1,!0,3 in a,-4,3,\"number\",void 3,1,3/2,1,9,6]}"
 			],
 			[
 				"function f(){ const a = 1, z = 0, n = null; return [a && 2, a || 2, a ?? 2, z && a, z || 3, n ?? 4, a ? 5 : 6, z ? 7 : 8] }",
@@ -528,7 +528,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"function f(){ const t = true, u = false, n = null; return [t, t, t, u, u, u, !t, n, n, n, n] }",
 				{},
-				"function f(){let n=null;return[!0,!0,!0,!1,!1,!1,!!0,n,n,n,n]}"
+				"function f(){let n=null;return[!0,!0,!0,!1,!1,!1,!1,n,n,n,n]}"
 			],
 			[
 				"function f(){ const t = true; if (!t) g(); return t ? 1 : 2 }",
@@ -539,7 +539,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"function f(){ const a = ~3, b = +'1', c = typeof 1, d = typeof null, e = -1, h = !0, i = 1 && 2, j = 0 || 3, k = null ?? 5, l = 1 ? 6 : 7, m = 1 === 1, n = 1 instanceof 2, p = 0 ? 8 : 9; g(a, b, c, d, e, h, i, j, k, l, m, n, p) }",
 				{},
-				"function f(){g(~3,1,\"number\",\"object\",-1,!0,2,3,5,6,!0,1 instanceof 2,9)}"
+				"function f(){g(-4,1,\"number\",\"object\",-1,!0,2,3,5,6,!0,1 instanceof 2,9)}"
 			],
 			// What nothing reads goes where its value makes nothing happen.
 			[
@@ -1665,7 +1665,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				"export const s = (\"a b \" + \"c d\").split(\" \");",
 				'export const s="a b c d".split(" ");'
 			],
-			["export const n = ~(1 | 2);", "export const n=~3;"],
+			["export const n = ~(1 | 2);", "export const n=-4;"],
 			["export async function f(){ await (4 ** 2) }", "export async function f(){await 16}"],
 			[
 				'export const h = (e, t) => { const y = t?.get("type"); y && (o = o.push(1)) };',
@@ -1833,7 +1833,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		// A number a sign or point would join to what is around it is grouped.
 		expect(
 			print("g(V.toString(),-V,typeof V);", { global_defs: { V: -1 } })
-		).toBe('g((-1).toString(),-(-1),"number");');
+		).toBe('g((-1).toString(),1,"number");');
 		expect(print("g(1/V);", { global_defs: { V: -0 } })).toBe("g(1/(-0));");
 		// `top_retain` keeps the top-level names it lists, a pattern or a test keeps.
 		const top = "var foo=1,bar=2;";
@@ -1965,8 +1965,12 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				"async function* g() { return undefined; } async function h() { return void 0; } t(g, h);"
 			)
 		).toBe("async function*g(){return void 0}async function h(){}t(g,h);");
-		// A global read in a test folds nothing, and throws nothing.
-		expect(print("if (!(1 < Infinity)) t();")).toBe("if(!(1<1/0))t();");
+		// The global `Infinity` nothing writes folds, as terser's `evaluate` reads it;
+		// written, it may be anything.
+		expect(print("if (!(1 < Infinity)) t();")).toBe("");
+		expect(print("Infinity = 0; if (!(1 < Infinity)) t();")).toBe(
+			"if(!(1<(Infinity=0)))t();"
+		);
 	});
 
 	it("should print constant keys, `new` targets and enumerations shorter in the one pass", () => {

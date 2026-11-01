@@ -903,7 +903,7 @@ x=Infinity.y;
 
 1 in a;1.5 in a;.5 in a;/x/ in a;/x/ instanceof a;a in b;a instanceof b;1 instanceof a;
 
-!/a/ in obj;a+/x/ in b;typeof/x/ instanceof y;x=!1. in a;x=-1. in a;(a,/x/)in b;a?b:/c/ in d;/x/ in b;f(/x/)in b;x=3 in a;
+!/a/ in obj;a+/x/ in b;typeof/x/ instanceof y;x=!1 in a;x=-1 in a;(a,/x/)in b;a?b:/c/ in d;/x/ in b;f(/x/)in b;x=3 in a;
 
 a< /script/.test(b);a</x/;f(/a/,/script/);
 
