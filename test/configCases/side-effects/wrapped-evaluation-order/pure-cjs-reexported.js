@@ -1,2 +1,2 @@
 "use strict";
-exports.value = typeof __wrappedEvaluationOrder;
+exports.value = typeof __wrappedEvaluationOrderBarrel;
