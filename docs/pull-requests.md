@@ -116,7 +116,7 @@ CI tests each PR against its own base only, so two PRs that change the same code
 - **Independent** (different code, neither needs the other, either merge order is clean): branch from `main`.
 - **Dependent** (needs the other PR's change, or edits the same functions, tests, snapshots or generated files): branch from that PR's branch, open with it as the base and write `Stacked on #<number>` in the Summary. "Not behind `main`" above then means not behind that branch.
 
-When the lower PR merges, retarget the upper one to `main` and rebase it onto `main`; that rebase is part of the stack, so it needs no separate ask.
+When the lower PR merges, the upper one targets `main` next; rebase it onto `main` as for any open PR: once the requester asks or it no longer merges cleanly ([below](#watching-a-pr-and-updating-its-branch)).
 
 ## Pull request body
 
