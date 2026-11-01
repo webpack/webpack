@@ -1200,6 +1200,8 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["function f(a,b){if(a)return;if(b)return 1;else g()}", {}, "function f(e,f){if(e)return;if(f)return 1;g()}"],
 			// A test giving a boolean picks a branch as `||` or `&&` would.
 			["function f(a,b){return[a==b?!0:x,!a?!0:x,a<b?x:!1]}", {}, "function f(a,b){return[a==b||x,!a||x,a<b&&x]}"],
+			// `a ? x : true` is `!a || x` whatever `a` is, `a ? x : false` stays.
+			["function f(a){return[a?x:!0,a?x:!1]}", {}, "function f(a){return[!a||x,a?x:!1]}"],
 			// What runs nothing in a sequence goes, its last value where nothing reads it, but where one left would read as another.
 			["function f(n,o){for(;n;0,n--,0)a(),0,b();return[(1,o.m),(1,2,o.m)(),(a(),0,1)]}", {}, "function f(n,o){for(;n;n--)a(),b();return[o.m,(1,2,o.m)(),(a(),1)]}"],
 			["function f(a,r){return[(0,a).x(r),(0,a.b).c,(1,2).x,(0,let).x]}", {}, "function f(r,a){return[r.x(a),r.b.c,(1,2).x,(0,let).x]}"],
