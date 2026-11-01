@@ -11992,7 +11992,7 @@ declare interface GetOptionsMethod<OptionsType> {
 			| (JSONSchema6 & ExtendedSchema)
 			| (JSONSchema7 & ExtendedSchema)
 			| (() => Parameters<typeof validateFunction>[0]),
-		check?: PrecompiledCheck
+		check?: PrecompiledCheck<OptionsType>
 	): OptionsType;
 	(
 		schema:
@@ -12001,7 +12001,7 @@ declare interface GetOptionsMethod<OptionsType> {
 			| (JSONSchema7 & ExtendedSchema)
 			| (() => Parameters<typeof validateFunction>[0]),
 		configuration?: ValidationErrorConfiguration,
-		check?: PrecompiledCheck
+		check?: PrecompiledCheck<OptionsType>
 	): OptionsType;
 }
 type GivenCompressOptions = Omit<Partial<any>, "global_defs"> & {

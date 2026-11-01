@@ -26,7 +26,8 @@ module.exports = (check, lazy) =>
 						return recorded;
 					}
 				: recorded,
-			(value) => {
+			// typed by the options, as a loader typing its own check would
+			(/** @type {{ name: string }} */ value) => {
 				checked.push(value);
 				return check(value);
 			}
