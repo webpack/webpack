@@ -4058,7 +4058,6 @@ const OXC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/next/swc-4559/input.js",
 			"swc minifier: fixture/next/target-es2015/static/chunks/main-04b5934c26266542/input.js",
 			"swc minifier: fixture/next/tinymce/1/input.js",
-			"swc minifier: fixture/no-side-effect/input.js",
 			"swc minifier: fixture/non-finite-number-literals/input.js",
 			"swc minifier: fixture/pr/11814_class_effect_guards/input.js",
 			"swc minifier: fixture/pr/11987/input.js",
