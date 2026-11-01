@@ -5500,6 +5500,7 @@ declare class ConstDependency extends NullDependency {
 		| "loader-import"
 		| "css-icss-import"
 		| "css-icss-export"
+		| "is-included"
 	>;
 }
 declare class ConstDependencyTemplate extends NullDependencyTemplate {
@@ -8217,6 +8218,7 @@ declare class Dependency {
 			| "loader-import"
 			| "css-icss-import"
 			| "css-icss-export"
+			| "is-included"
 	>(kind: K): boolean;
 
 	/**
@@ -8389,6 +8391,7 @@ declare class Dependency {
 		| "loader-import"
 		| "css-icss-import"
 		| "css-icss-export"
+		| "is-included"
 	>;
 }
 type DependencyConstructor = abstract new (...args: never[]) => Dependency;
@@ -9161,6 +9164,7 @@ declare class ESMImportDependency extends ModuleDependency {
 		| "loader-import"
 		| "css-icss-import"
 		| "css-icss-export"
+		| "is-included"
 	>;
 
 	/**
@@ -9627,6 +9631,7 @@ declare class EntryDependency extends ModuleDependency {
 		| "loader-import"
 		| "css-icss-import"
 		| "css-icss-export"
+		| "is-included"
 	>;
 	static Template: typeof DependencyTemplate;
 
@@ -21582,6 +21587,7 @@ declare class ModuleDependency extends Dependency {
 		| "loader-import"
 		| "css-icss-import"
 		| "css-icss-export"
+		| "is-included"
 	>;
 
 	/**
@@ -24478,6 +24484,7 @@ declare class NullDependency extends Dependency {
 		| "loader-import"
 		| "css-icss-import"
 		| "css-icss-export"
+		| "is-included"
 	>;
 }
 declare class NullDependencyTemplate extends DependencyTemplate {
@@ -33343,6 +33350,7 @@ declare class StaticExportsDependency extends NullDependency {
 		| "loader-import"
 		| "css-icss-import"
 		| "css-icss-export"
+		| "is-included"
 	>;
 	static Template: typeof NullDependencyTemplate;
 
