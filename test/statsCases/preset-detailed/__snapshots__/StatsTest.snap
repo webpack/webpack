@@ -49,7 +49,7 @@ runtime modules X KiB
 cacheable modules X bytes
   ./index.js [237] X bytes {792} [depth 0] [built] [code generated]
     [no exports used]
-    Statement (ExpressionStatement) with side effects in source code at 1:0-15
+    Statement (ExpressionStatement) with side effects in source code at 2:0-17
     ModuleConcatenation bailout: Module is not in strict mode
   ./b.js [899] X bytes {899} [depth 1] [built] [code generated]
     [used exports unknown]
