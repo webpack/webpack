@@ -5,6 +5,8 @@ const CacheFacade = require("../../lib/cache/CacheFacade");
 
 const { ItemCacheFacade } = CacheFacade;
 
+/** @typedef {import("../../lib/cache/Cache").Data} Data */
+
 /**
  * @typedef {object} TestCacheOptions
  * @property {Error=} getError error every get answers with
@@ -13,10 +15,10 @@ const { ItemCacheFacade } = CacheFacade;
 
 /**
  * @param {TestCacheOptions=} options failures to inject
- * @returns {{ cache: Cache, data: Map<string, unknown> }} a cache backed by a map
+ * @returns {{ cache: Cache, data: Map<string, Data> }} a cache backed by a map
  */
 const createCache = (options = {}) => {
-	/** @type {Map<string, unknown>} */
+	/** @type {Map<string, Data>} */
 	const data = new Map();
 	const cache = new Cache();
 	cache.hooks.get.tapAsync(

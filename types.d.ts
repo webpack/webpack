@@ -1517,8 +1517,11 @@ declare class Cache {
 	 */
 	constructor();
 	hooks: {
-		get: AsyncSeriesBailHook<[string, null | Etag, GotHandler<any>[]], any>;
-		store: AsyncParallelHook<[string, null | Etag, any]>;
+		get: AsyncSeriesBailHook<
+			[string, null | Etag, GotHandler<ComplexSerializableType>[]],
+			ComplexSerializableType
+		>;
+		store: AsyncParallelHook<[string, null | Etag, ComplexSerializableType]>;
 		storeBuildDependencies: AsyncParallelHook<
 			[Iterable<string>, Iterable<string>]
 		>;
@@ -12551,10 +12554,11 @@ declare class HotUpdateChunk extends Chunk {
 
 /**
  * The manifest a runtime downloads first in a hot update; every download handler gets it
- * whole, so a plugin adds a field here for its own handler.
+ * whole, so a plugin adds a field here for its own handler. It is sent as JSON, so a field is a JSON value.
  */
 declare interface HotUpdateManifest {
-	[index: string]: unknown;
+	[index: string]:
+		undefined | null | string | number | boolean | JsonObjectFs | JsonValueFs[];
 	c: ChunkId[];
 	r: ChunkId[];
 	m: ModuleId[];
