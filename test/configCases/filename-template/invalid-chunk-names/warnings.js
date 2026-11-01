@@ -7,6 +7,6 @@ module.exports = [
 	"styles#fragment",
 	"mixed?query"
 ].map((name) => ({
-	chunkName: new RegExp(`^${name.replace(/[?#]/g, "\\$&")}$`),
+	chunkName: new RegExp(`^${name.replace(/[-[\]\\/{}()*+?.^$|#]/g, "\\$&")}$`),
 	message: /contains '\?' or '#'.*chunk loading/s
 }));
