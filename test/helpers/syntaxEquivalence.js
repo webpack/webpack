@@ -2544,7 +2544,8 @@ const compareStyles = async ({ pairs, types }) => {
 			}
 		}
 		// WHY: CSSOM serializes a number at six digits, so `1.4285714286` and
-		// `1.42857` declare alike above; only the line probe tells them apart.
+		// `1.42857` declare alike above; only the line probe tells them apart,
+		// at every width a query moves either of the two on.
 		if (
 			readings.some(
 				(reading) =>
@@ -2553,6 +2554,7 @@ const compareStyles = async ({ pairs, types }) => {
 			)
 		) {
 			tracked.add("line-height");
+			tracked.add("font-size");
 		}
 		const properties = [...tracked];
 		const conditioned = properties.filter(

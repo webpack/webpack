@@ -592,6 +592,7 @@ const STYLE_CONTROLS = new Map([
 	// A computed `line-height` serializes at six digits, so only where `1lh` lands on the layout grid tells these apart.
 	["bad line-height digits", [".a{font-size:14px;line-height:1.4285714286}", ".a{font-size:14px;line-height:1.42857}"]],
 	["bad line-height digits through a custom property", [":root{--h:1.4285714286}.a{font-size:14px;line-height:var(--h)}", ":root{--h:1.42857}.a{font-size:14px;line-height:var(--h)}"]],
+	["bad line-height digits at a queried font size", ["@media (max-width:300px){.a{font-size:14px}}.a{line-height:1.4285714286}", "@media (max-width:300px){.a{font-size:14px}}.a{line-height:1.42857}"]],
 	["good line-height digits", [".a{font-size:14px;line-height:1.4285714286}", ".a{font-size:14px;line-height:1.42857143}"]],
 	["good spelling", [".a{color:red;margin:0px}", ".a{color:#f00;margin:0}"]],
 	["good nth spellings", ["li:nth-child(odd){color:red}li:nth-child(even){color:blue}", "li:nth-child(2n+1){color:red}li:nth-child(2n){color:blue}"]],
