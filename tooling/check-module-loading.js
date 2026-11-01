@@ -5,9 +5,9 @@
 
 "use strict";
 
-// Counts the modules a fresh process loads for each way webpack is used, and
-// fails when a module outside webpack loads one of its internal files rather
-// than being handed it. With `--base`, renders the counts against another checkout.
+// Counts the files a fresh process loads for each way webpack is used, and fails
+// when a webpack file another package loads reaches `lib/index.js`. With
+// `--base`, renders the counts against another checkout.
 //
 //   node tooling/check-module-loading.js                                 # check
 //   node tooling/check-module-loading.js --base <dir> --output <file.md> # report
@@ -18,7 +18,8 @@ const os = require("os");
 const path = require("path");
 const { fileURLToPath, pathToFileURL } = require("url");
 
-/** @typedef {{ webpack: number, dependencies: number, outsideLoads: string[] }} ScenarioResult */
+/** @typedef {{ requester: string, file: string, reached: number, reachesIndex: boolean }} OutsideLoad */
+/** @typedef {{ webpack: string[], packages: string[], outsideLoads: OutsideLoad[] }} ScenarioResult */
 
 /**
  * @param {string} name the option's name, without `--`
@@ -110,36 +111,36 @@ const build = (mode, watch) => async () => {
 
 /** @type {Record<string, () => Promise<void>>} */
 const SCENARIOS = {
-	'require("webpack")': async () => {
+	'`require("webpack")`': async () => {
 		require(INDEX);
 	},
-	'import "webpack"': async () => {
+	'`import "webpack"`': async () => {
 		await import(pathToFileURL(INDEX).href);
 	},
-	"javascript minify": minify(
+	"JavaScript minifier": minify(
 		"javascript/jsMinify",
 		"a.js",
 		"function add(a, b) { return a + b; } console.log(add(1, 2));"
 	),
-	"css minify": minify("css/cssMinify", "a.css", "a { color: #ff0000; }"),
-	"html minify": minify(
+	"CSS minifier": minify("css/cssMinify", "a.css", "a { color: #ff0000; }"),
+	"HTML minifier": minify(
 		"html/htmlMinify",
 		"a.html",
 		"<!doctype html><p class=' a '>text</p><style>a { color: red }</style>"
 	),
-	"xml minify": minify(
+	"XML minifier": minify(
 		"html/xmlMinify",
 		"a.svg",
 		'<svg xmlns="http://www.w3.org/2000/svg"> <g/> </svg>'
 	),
-	"json minify": minify("json/jsonMinify", "a.json", '{ "a": [1, 2] }'),
+	"JSON minifier": minify("json/jsonMinify", "a.json", '{ "a": [1, 2] }'),
 	"development build": build("development", false),
 	"production build": build("production", false),
-	"watch with HMR": build("development", true)
+	"watch with HMR, one rebuild": build("development", true)
 };
 
 /**
- * Runs one scenario in this process, recording every module it loads and every
+ * Runs one scenario in this process, recording every file it loads and every
  * module that asked for it, then reports to the parent process.
  * @param {string} name the scenario
  * @returns {Promise<void>} resolves once the result has been sent
@@ -154,7 +155,7 @@ const runScenario = async (name) => {
 	// Every requester counts, not only the first: Node adds an already loaded
 	// module to each later requester's `module.children` too.
 	/** @type {Map<string, Set<string>>} */
-	const parents = new Map();
+	const children = new Map();
 	/** @type {Set<string>} */
 	const loaded = new Set();
 	registerHooks({
@@ -165,9 +166,9 @@ const runScenario = async (name) => {
 					? { url: index, format: "commonjs", shortCircuit: true }
 					: nextResolve(specifier, context);
 			if (context.parentURL) {
-				const set = parents.get(result.url);
-				if (set) set.add(context.parentURL);
-				else parents.set(result.url, new Set([context.parentURL]));
+				const set = children.get(context.parentURL);
+				if (set) set.add(result.url);
+				else children.set(context.parentURL, new Set([result.url]));
 			}
 			return result;
 		},
@@ -177,30 +178,57 @@ const runScenario = async (name) => {
 		}
 	});
 	await SCENARIOS[name]();
-	const self = pathToFileURL(__filename).href;
+
+	/**
+	 * @param {string} url a loaded module
+	 * @returns {string | undefined} its real path, for a file
+	 */
+	const toFile = (url) =>
+		url.startsWith("file:") ? fs.realpathSync(fileURLToPath(url)) : undefined;
+	/**
+	 * @param {string | undefined} file a real path
+	 * @returns {boolean} whether it is webpack's own, not this script
+	 */
+	const isWebpack = (file) =>
+		file !== undefined &&
+		file.startsWith(ROOT + path.sep) &&
+		!file.startsWith(nodeModules) &&
+		file !== __filename;
+
 	/** @type {ScenarioResult} */
-	const result = { webpack: 0, dependencies: 0, outsideLoads: [] };
+	const result = { webpack: [], packages: [], outsideLoads: [] };
 	for (const url of loaded) {
-		if (!url.startsWith("file:")) continue;
-		const file = fs.realpathSync(fileURLToPath(url));
+		const file = toFile(url);
+		if (file === undefined) continue;
 		if (file.startsWith(nodeModules)) {
-			result.dependencies++;
+			result.packages.push(file.slice(nodeModules.length));
+		} else if (isWebpack(file)) {
+			result.webpack.push(path.relative(ROOT, file));
+		}
+	}
+	const self = pathToFileURL(__filename).href;
+	for (const [parentUrl, set] of children) {
+		const parent = toFile(parentUrl);
+		if (parentUrl === self || parent === undefined || isWebpack(parent)) {
 			continue;
 		}
-		if (!file.startsWith(ROOT + path.sep) || file === __filename) continue;
-		result.webpack++;
-		if (file === INDEX) continue;
-		for (const parentUrl of parents.get(url) || []) {
-			if (parentUrl === self || !parentUrl.startsWith("file:")) continue;
-			const parent = fs.realpathSync(fileURLToPath(parentUrl));
-			if (
-				parent.startsWith(nodeModules) ||
-				!parent.startsWith(ROOT + path.sep)
-			) {
-				result.outsideLoads.push(
-					`${path.relative(ROOT, parent)} -> ${path.relative(ROOT, file)}`
-				);
+		for (const url of set) {
+			const file = toFile(url);
+			if (!isWebpack(file) || url === index) continue;
+			// What the walk through `module.children` reaches from here, as the
+			// persistent cache's build dependencies do.
+			const reached = new Set([url]);
+			for (const next of reached) {
+				for (const child of children.get(next) || []) {
+					if (isWebpack(toFile(child))) reached.add(child);
+				}
 			}
+			result.outsideLoads.push({
+				requester: path.relative(ROOT, parent),
+				file: path.relative(ROOT, /** @type {string} */ (file)),
+				reached: reached.size,
+				reachesIndex: reached.has(index)
+			});
 		}
 	}
 	/** @type {NonNullable<typeof process.send>} */ (process.send)(result);
@@ -238,6 +266,24 @@ const change = (head, base) => {
 	return head > base ? `🔴 +${head - base}` : `🟢 −${base - head}`;
 };
 
+/**
+ * @param {string[]} head the files this checkout loads
+ * @param {string[]} base the files the base checkout loads
+ * @returns {string[]} one line per file loaded on one side only, at most 20 each way
+ */
+const changedFiles = (head, base) => {
+	const before = new Set(base);
+	const after = new Set(head);
+	const added = head.filter((file) => !before.has(file)).sort();
+	const removed = base.filter((file) => !after.has(file)).sort();
+	return [
+		...added.slice(0, 20).map((file) => `+ ${file}`),
+		...(added.length > 20 ? [`+ … ${added.length - 20} more`] : []),
+		...removed.slice(0, 20).map((file) => `- ${file}`),
+		...(removed.length > 20 ? [`- … ${removed.length - 20} more`] : [])
+	];
+};
+
 const main = async () => {
 	if (typeof require("module").registerHooks !== "function") {
 		console.log(
@@ -250,7 +296,9 @@ const main = async () => {
 	/** @type {string[]} */
 	const rows = [];
 	/** @type {string[]} */
-	const outsideLoads = [];
+	const changes = [];
+	/** @type {Map<string, OutsideLoad & { scenarios: string[] }>} */
+	const outsideLoads = new Map();
 	for (const name of Object.keys(SCENARIOS)) {
 		const head = await measure(name, ROOT);
 		/** @type {ScenarioResult | undefined} */
@@ -259,42 +307,82 @@ const main = async () => {
 			// A scenario the base cannot run yet (a minifier it lacks) has no count.
 			base = await measure(name, path.resolve(baseRoot)).catch(() => undefined);
 		}
-		rows.push(
-			base
-				? `| ${name} | ${base.webpack} → ${head.webpack} | ${change(
-						head.webpack,
-						base.webpack
-					)} | ${base.dependencies} → ${head.dependencies} | ${change(
-						head.dependencies,
-						base.dependencies
-					)} |`
-				: `| ${name} | ${head.webpack} | — | ${head.dependencies} | — |`
-		);
-		for (const load of head.outsideLoads) outsideLoads.push(`${name}: ${load}`);
+		const webpack = head.webpack.length;
+		const packages = head.packages.length;
+		if (base) {
+			rows.push(
+				`| ${name} | ${base.webpack.length} → ${webpack} | ${change(
+					webpack,
+					base.webpack.length
+				)} | ${base.packages.length} → ${packages} | ${change(
+					packages,
+					base.packages.length
+				)} |`
+			);
+			const lines = [
+				...changedFiles(head.webpack, base.webpack),
+				...changedFiles(head.packages, base.packages).map(
+					(line) => `${line.slice(0, 2)}node_modules/${line.slice(2)}`
+				)
+			];
+			if (lines.length > 0) {
+				changes.push(`**${name}**`, "", "```diff", ...lines, "```", "");
+			}
+		} else {
+			rows.push(`| ${name} | ${webpack} | — | ${packages} | — |`);
+		}
+		for (const load of head.outsideLoads) {
+			const key = `${load.requester}\n${load.file}`;
+			const seen = outsideLoads.get(key);
+			if (seen) seen.scenarios.push(name);
+			else outsideLoads.set(key, { ...load, scenarios: [name] });
+		}
 	}
+	const failures = [...outsideLoads.values()].filter(
+		(load) => load.reachesIndex
+	);
 	const report = [
 		"## Module loading",
 		"",
-		baseRoot
-			? "Modules a fresh process loads for each way webpack is used, base → head. Every module loaded is startup time, so fewer is better."
-			: "Modules a fresh process loads for each way webpack is used. Every module loaded is startup time, so fewer is better.",
+		`How many files a fresh Node.js process loads (\`require\` or \`import\`) to do each thing below${baseRoot ? ", on the pull request's base → this head" : ""}. Every file is startup time, so fewer is better. **webpack files** are this package's own (\`lib/\`, \`hot/\`); **\`node_modules\` files** are its dependencies'.`,
 		"",
-		"| Scenario | webpack files | Change | dependency files | Change |",
+		"| What the process does | webpack files | Change | `node_modules` files | Change |",
 		"| :-- | --: | --: | --: | --: |",
 		...rows,
 		"",
-		...(outsideLoads.length > 0
+		...(changes.length > 0
 			? [
-					"🔴 **A package outside webpack loads webpack's own files.** Hand it a function, not a path:",
+					"<details><summary>Files behind the changes</summary>",
 					"",
-					...outsideLoads.map((load) => `- \`${load}\``),
+					...changes,
+					"</details>",
+					""
+				]
+			: []),
+		...(outsideLoads.size > 0
+			? [
+					"### webpack files other packages load",
+					"",
+					"A file another package loads hangs under that package, so anything that walks `module.children` from it — like the persistent cache's build dependencies — follows what it requires. It must not reach `lib/index.js`, which brings every module webpack has loaded.",
+					"",
+					"| Loaded by | webpack file | webpack files it brings | In |",
+					"| :-- | :-- | --: | :-- |",
+					...[...outsideLoads.values()].map(
+						(load) =>
+							`| \`${load.requester}\` | \`${load.file}\` | ${load.reachesIndex ? `🔴 ${load.reached}, \`lib/index.js\` among them` : load.reached} | ${load.scenarios.join(", ")} |`
+					),
 					""
 				]
 			: [])
 	].join("\n");
 	if (output) fs.writeFileSync(output, report);
 	console.log(report);
-	if (outsideLoads.length > 0 && !output) process.exitCode = 1;
+	if (failures.length > 0 && !output) {
+		console.error(
+			"A file another package loads reaches `lib/index.js`: require webpack's modules by their own path (`webpack/lib/...`), not through `webpack`."
+		);
+		process.exitCode = 1;
+	}
 };
 
 if (argument("scenario") === undefined) {
