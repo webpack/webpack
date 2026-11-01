@@ -119,7 +119,7 @@ const {
 // and literals.
 const SOURCES = [
 	// Names beyond ASCII, one a surrogate pair, spaced from the words beside them.
-	"var ä = 1, 𐊧 = 2; typeof ä, ä in 𐊧, void 𐊧, new ä(), ä instanceof ä;",
+	"var ä = 1, 𐊧 = 2; f(typeof ä, ä in 𐊧, void 𐊧, new ä(), ä instanceof ä);",
 	// Comments inside the `(` a `new` reads its callee past, nested, not before
 	// the function opening it, and before a directive past an empty statement.
 	"new(/**/function(){function s(){}}())",
@@ -579,7 +579,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"function f(H){ var x; x = g(); switch (x) {} x = g(); x ? 1 : 2; x = g(); h(...x); x = g(); delete x.y; x = g(); (x, 1); x = g(); ({ k: x }); x = g(); ({ [k]: x }); x = g(); ({ x }); x = g(); new H(x); x = g(); new H(...x); x = g(); new U(x); x = g(); [...x]; x = g(); `${x}`; x = g(); -x; return x }",
 				{},
-				"function f(x){var e=g();switch(e){}(e=g())?1:2;e=g();h(...e);e=g();delete e.y;e=g(),1;({k:e=g()});e=g();({[k]:e});e=g();new x(e=g());e=g();new x(...e);new U(e=g());e=g();[...e];`${e=g()}`;-(e=g());return e}"
+				"function f(x){var e=g();switch(e){}(e=g())?1:2;e=g();h(...e);e=g();delete e.y;e=g();({k:e=g()});e=g();({[k]:e});e=g();new x(e=g());e=g();new x(...e);new U(e=g());e=g();[...e];`${e=g()}`;-(e=g());return e}"
 			],
 			[
 				"function f(H){ var x; x = g(); H(...x) }",
@@ -810,9 +810,9 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			],
 			// A branch that is no expression keeps the `if`, a sequence test is parenthesized, and a dead `if` declaring only in its own scopes goes.
 			[
-				"function f(a, b){ const T = 1; if (a) for (;;) g(); else y(); if ((a, b)) x(); else y(); if (0) { let w = () => { var z } } g([T ? a : 2]) }",
+				"function f(a, b){ const T = 1; if (a) for (;;) g(); else y(); if ((h(), b)) x(); else y(); if (0) { let w = () => { var z } } g([T ? a : 2]) }",
 				{},
-				"function f(f,a){if(f)for(;;)g();else y();(f,a)?x():y();g([f])}"
+				"function f(f,e){if(f)for(;;)g();else y();(h(),e)?x():y();g([f])}"
 			],
 			// A statement that runs nothing goes, but not a directive, a comment kept, a `#__PURE__` call with `side_effects: false` nor a global a `try` probes for.
 			[
@@ -1084,9 +1084,9 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			],
 			// A value printed where a read opening a statement was keeps its parentheses.
 			[
-				"function f(){ var c = {}.a ? g() : h(); c, 1; var d = function(){}.call() ? g() : h(); d; (() => ({}.a ? 1 : 2))(), g() }",
+				"function f(){ var c = {}.a ? g() : h(); c, 1; var d = function(){}.call() ? g() : h(); d; (() => ({}.a ? g() : 2))(), g() }",
 				{},
-				"function f(){({}.a?g():h()),1;(function(){}.call()?g():h());({}.a?1:2),g()}"
+				"function f(){({}.a?g():h());(function(){}.call()?g():h());({}.a?g():2),g()}"
 			],
 			// A function declared as the branch kept declares it only once that runs.
 			[
@@ -1200,6 +1200,12 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["function f(a,b){if(a)return;if(b)return 1;else g()}", {}, "function f(e,f){if(e)return;if(f)return 1;g()}"],
 			// A test giving a boolean picks a branch as `||` or `&&` would.
 			["function f(a,b){return[a==b?!0:x,!a?!0:x,a<b?x:!1]}", {}, "function f(a,b){return[a==b||x,!a||x,a<b&&x]}"],
+			// What runs nothing in a sequence goes, its last value where nothing reads it, but where one left would read as another.
+			["function f(n,o){for(;n;0,n--,0)a(),0,b();return[(1,o.m),(1,2,o.m)(),(a(),0,1)]}", {}, "function f(n,o){for(;n;n--)a(),b();return[o.m,(1,2,o.m)(),(a(),1)]}"],
+			["function f(a,r){return[(0,a).x(r),(0,a.b).c,(1,2).x,(0,let).x]}", {}, "function f(r,a){return[r.x(a),r.b.c,(1,2).x,(0,let).x]}"],
+			["function f(){0,{}.a.b;0,a(),{}.a.b}", {}, "function f(){0,{}.a.b;a(),{}.a.b}"],
+			// A `!` the compressor adds before an equality flips its operator, one written stays.
+			["function f(a,b){if(a!==b)return;h(a==b?x:!0,a===b?!1:x,!(a==b))}", {}, "function f(a,b){if(a===b)h(a!=b||x,a!==b&&x,!(a==b))}"],
 			// What a literal written in place reads of itself is known, but where a call, tag or `delete` reads it as a reference.
 			["function f(a){return[\"abc\".length,[1,,a].length+1,[g()].length,/a\\/b/.source,\"ab\".length.x,\"ab\".length(),\"ab\".length``,delete\"ab\".length]}", {}, "function f(e){return[3,4,[g()].length,\"a\\\\/b\",2..x,\"ab\".length(),\"ab\".length``,delete\"ab\".length]}"]
 		];
@@ -1501,8 +1507,8 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				"!function(){class K{}K=h();class C extends K{}g()}();"
 			],
 			[
-				"(function(){class C extends (0, K){} g()})()",
-				"!function(){class C extends(0,K){}g()}();"
+				"(function(){class C extends (f(), K){} g()})()",
+				"!function(){class C extends(f(),K){}g()}();"
 			],
 			[
 				"(function(){class A{m(){return new B}} class B{m(){return new A}} class C{m(){return new D}} class D{m(){return new C}} g(A)})()",
