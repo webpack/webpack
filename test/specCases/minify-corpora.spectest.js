@@ -107,7 +107,11 @@ const withoutLayout = (options) => {
 		);
 		if (!given || typeof given !== "object") continue;
 		const format = { ...given };
-		for (const name of printer.IGNORED_FORMAT_OPTIONS) delete format[name];
+		for (const name of printer.IGNORED_FORMAT_OPTIONS) {
+			// terser reads its own snake_case spelling, which the printer aliases.
+			delete format[name];
+			delete format[name.replace(/[A-Z]/g, (c) => `_${c.toLowerCase()}`)];
+		}
 		result[key] = format;
 	}
 	return /** @type {MinifyOptions} */ (result);

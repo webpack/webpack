@@ -12004,13 +12004,13 @@ declare interface GetOptionsMethod<OptionsType> {
 		check?: PrecompiledCheck<OptionsType>
 	): OptionsType;
 }
-type GivenCompressOptions = Omit<Partial<any>, "global_defs"> & {
-	global_defs?: false | object;
-};
+type GivenCompressOptions = Omit<Partial<any>, "globalDefs"> & {
+	globalDefs?: false | object;
+} & TerserCompressAliases;
 
 /**
- * terser's `format` options as a caller gives them; `source_map` is left out,
- * as the minify writes it from `sourceMap`.
+ * terser's `format` options as a caller gives them; `sourceMap` is left out,
+ * as the minify writes it from the top-level `sourceMap` option.
  */
 declare interface GivenFormatOptions {
 	code?: boolean;
@@ -12050,17 +12050,17 @@ declare interface GivenFormatOptions {
 	/**
 	 * how far a level indents, unread here
 	 */
-	indent_level?: number;
+	indentLevel?: number;
 
 	/**
 	 * how far the output indents, unread here
 	 */
-	indent_start?: number;
+	indentStart?: number;
 
 	/**
 	 * how long a line may be, unread here
 	 */
-	max_line_len?: number | false;
+	maxLineLen?: number | false;
 
 	/**
 	 * how wide a line may be, unread here
@@ -12075,22 +12075,22 @@ declare interface GivenFormatOptions {
 	/**
 	 * whether only ASCII is written
 	 */
-	ascii_only?: boolean;
+	asciiOnly?: boolean;
 
 	/**
 	 * whether `</script` is escaped
 	 */
-	inline_script?: boolean;
+	inlineScript?: boolean;
 
 	/**
 	 * whether numbers are written as read
 	 */
-	keep_numbers?: boolean;
+	keepNumbers?: boolean;
 
 	/**
 	 * whether quoted keys stay quoted
 	 */
-	keep_quoted_props?: boolean;
+	keepQuotedProps?: boolean;
 
 	/**
 	 * text written first
@@ -12100,17 +12100,17 @@ declare interface GivenFormatOptions {
 	/**
 	 * whether annotation comments are kept
 	 */
-	preserve_annotations?: boolean;
+	preserveAnnotations?: boolean;
 
 	/**
 	 * whether every key is quoted
 	 */
-	quote_keys?: boolean;
+	quoteKeys?: boolean;
 
 	/**
 	 * which quote strings are written with
 	 */
-	quote_style?: number;
+	quoteStyle?: number;
 
 	/**
 	 * whether statements end in semicolons rather than line breaks
@@ -12130,17 +12130,77 @@ declare interface GivenFormatOptions {
 	/**
 	 * whether an immediately called function is parenthesized
 	 */
-	wrap_iife?: boolean;
+	wrapIife?: boolean;
 
 	/**
 	 * whether a function passed as an argument is parenthesized
 	 */
+	wrapFuncArgs?: boolean;
+
+	/**
+	 * terser's name for `asciiOnly`
+	 */
+	ascii_only?: boolean;
+
+	/**
+	 * terser's name for `indentLevel`
+	 */
+	indent_level?: number;
+
+	/**
+	 * terser's name for `indentStart`
+	 */
+	indent_start?: number;
+
+	/**
+	 * terser's name for `inlineScript`
+	 */
+	inline_script?: boolean;
+
+	/**
+	 * terser's name for `keepNumbers`
+	 */
+	keep_numbers?: boolean;
+
+	/**
+	 * terser's name for `keepQuotedProps`
+	 */
+	keep_quoted_props?: boolean;
+
+	/**
+	 * terser's name for `maxLineLen`
+	 */
+	max_line_len?: number | false;
+
+	/**
+	 * terser's name for `preserveAnnotations`
+	 */
+	preserve_annotations?: boolean;
+
+	/**
+	 * terser's name for `quoteKeys`
+	 */
+	quote_keys?: boolean;
+
+	/**
+	 * terser's name for `quoteStyle`
+	 */
+	quote_style?: number;
+
+	/**
+	 * terser's name for `wrapFuncArgs`
+	 */
 	wrap_func_args?: boolean;
+
+	/**
+	 * terser's name for `wrapIife`
+	 */
+	wrap_iife?: boolean;
 	spidermonkey?: boolean;
 }
 type GivenMangleOptions = Omit<Partial<any>, "properties"> & {
 	properties?: boolean | any;
-};
+} & TerserMangleAliases;
 type GivenSourceMapOptions = Omit<Partial<any>, "content"> & {
 	content?:
 		null | string | object | RawSourceMap | DecodedSourceMap | IndexSourceMap;
@@ -14171,6 +14231,32 @@ declare interface IStatsResolver {
 declare interface IdToHashMap {
 	[index: number]: string;
 	[index: string]: string;
+}
+
+/**
+ * Where mangled names come from: the name for each number, and, for a source
+ * ordering its names by the characters printed, what counts them.
+ */
+declare interface IdentifierSource {
+	/**
+	 * the name for a number
+	 */
+	get: (n: number) => string;
+
+	/**
+	 * forgets what was counted
+	 */
+	reset?: () => void;
+
+	/**
+	 * counts the characters of printed text
+	 */
+	consider?: (chars: string, delta: number) => void;
+
+	/**
+	 * orders the names by what was counted
+	 */
+	sort?: () => void;
 }
 declare class IgnorePlugin {
 	/**
@@ -17863,7 +17949,7 @@ declare interface JavascriptReadOptions {
 	/**
 	 * terser's format options a print reads, as `minify` reads them under `format`; `comments` is read where it compresses or mangles
 	 */
-	format?: Partial<any>;
+	format?: GivenFormatOptions;
 }
 
 /**
@@ -20031,14 +20117,22 @@ declare interface MinifyOptions {
 	 * how the source is read
 	 */
 	parse?: {
-		bare_returns?: boolean;
+		bareReturns?: boolean;
 		ecma?: null | number;
 		filename?: null | string;
-		html5_comments?: boolean;
+		html5Comments?: boolean;
 		module?: boolean;
 		shebang?: boolean;
 		toplevel?: null;
 		spidermonkey?: boolean;
+		/**
+		 * terser's name for `bareReturns`
+		 */
+		bare_returns?: boolean;
+		/**
+		 * terser's name for `html5Comments`
+		 */
+		html5_comments?: boolean;
 	};
 
 	/**
@@ -20074,10 +20168,20 @@ declare interface MinifyOptions {
 	/**
 	 * which class names survive
 	 */
-	keep_classnames?: boolean | RegExp;
+	keepClassnames?: boolean | RegExp;
 
 	/**
 	 * which function names survive
+	 */
+	keepFnames?: boolean | RegExp;
+
+	/**
+	 * terser's name for `keepClassnames`, read as it
+	 */
+	keep_classnames?: boolean | RegExp;
+
+	/**
+	 * terser's name for `keepFnames`, read as it
 	 */
 	keep_fnames?: boolean | RegExp;
 
@@ -22223,6 +22327,14 @@ declare interface NamedChunkIdsPluginOptions {
 	 * delimiter
 	 */
 	delimiter?: string;
+}
+
+/**
+ * what every definition of a name holds: the name it declares, and the one mangling gave it
+ */
+declare interface NamedDefinition {
+	name: string;
+	mangledName?: null | string;
 }
 declare class NamedModuleIdsPlugin {
 	/**
@@ -34255,6 +34367,113 @@ type TemplatePath = string | TemplatePathFn<PathData>;
  */
 declare interface TemplatePathFn<T extends PathData = PathData> {
 	(pathData: T, assetInfo?: AssetInfo): string;
+}
+
+/**
+ * terser's names for `compress` options webpack spells in camelCase, each read
+ * as its camelCase name so that terser's options work unchanged.
+ */
+declare interface TerserCompressAliases {
+	/**
+	 * terser's name for `builtinsEcma`
+	 */
+	builtins_ecma?: number;
+
+	/**
+	 * terser's name for `computedProps`
+	 */
+	computed_props?: boolean;
+
+	/**
+	 * terser's name for `deadCode`
+	 */
+	dead_code?: boolean;
+
+	/**
+	 * terser's name for `dropConsole`
+	 */
+	drop_console?: boolean | string[];
+
+	/**
+	 * terser's name for `dropDebugger`
+	 */
+	drop_debugger?: boolean;
+
+	/**
+	 * terser's name for `globalDefs`
+	 */
+	global_defs?: false | object;
+
+	/**
+	 * terser's name for `joinVars`
+	 */
+	join_vars?: boolean;
+
+	/**
+	 * terser's name for `keepClassnames`
+	 */
+	keep_classnames?: boolean | RegExp;
+
+	/**
+	 * terser's name for `keepFnames`
+	 */
+	keep_fnames?: boolean | RegExp;
+
+	/**
+	 * terser's name for `keepInfinity`
+	 */
+	keep_infinity?: boolean;
+
+	/**
+	 * terser's name for `negateIife`
+	 */
+	negate_iife?: boolean;
+
+	/**
+	 * terser's name for `pureConversions`
+	 */
+	pure_conversions?: boolean;
+
+	/**
+	 * terser's name for `pureFuncs`
+	 */
+	pure_funcs?: null | string[];
+
+	/**
+	 * terser's name for `sideEffects`
+	 */
+	side_effects?: boolean;
+
+	/**
+	 * terser's name for `topRetain`
+	 */
+	top_retain?:
+		| null
+		| string
+		| RegExp
+		| string[]
+		| ((definition: NamedDefinition) => boolean);
+}
+
+/**
+ * terser's names for `mangle` options webpack spells in camelCase, each read
+ * as its camelCase name so that terser's options work unchanged.
+ */
+declare interface TerserMangleAliases {
+	/**
+	 * terser's name for `keepClassnames`
+	 */
+	keep_classnames?: boolean | RegExp;
+
+	/**
+	 * terser's name for `keepFnames`
+	 */
+	keep_fnames?: boolean | RegExp;
+
+	/**
+	 * terser's name for `nthIdentifier`
+	 */
+	nth_identifier?: IdentifierSource;
 }
 
 /**
