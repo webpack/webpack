@@ -9,6 +9,7 @@ module.exports = {
 			path.join(options.output.path, "bundle0.js"),
 			"utf8"
 		);
+		expect(code).not.toContain("Size??");
 		expect(code).toContain("(Size={})");
 		expect(code).toContain("made||(made={})");
 	}
