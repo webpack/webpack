@@ -1243,6 +1243,14 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["function f(a){var r=function(x){var v;return v}(a);return[r,r]}", {}, "function f(r){var n=function(r){var n;return n}(r);return[n,n]}"],
 			// A sum is no boolean, so `a ? x : false` stays.
 			["function f(a,b){return a+b?x:!1}", {}, "function f(n,a){return n+a?x:!1}"],
+			// A `!` test keeps the parentheses of what a folded or called test prints as where they are its own.
+			["function f(b){return[!(0||(a=b))?c:d,!(0||(x(),b)())?c:d]}", {}, "function f(b){return[(a=b)?d:c,(x(),b)()?d:c]}"],
+			["function g(s){return!function(s){return s.a&&s.b}(s)?a():b()}", {}, "function g(n){return n.a&&n.b?b():a()}"],
+			// A statement after the first that printed its own parentheses keeps the body's braces.
+			["function k(a,p){function A(x,y){x.push(1);x.push(2)}if(p){a.push(3);A(a,p)}return a}", {}, "function k(p,u){if(u){p.push(3);(function(p,u){p.push(1);p.push(2)})(p,u)}return p}"],
+			["f=x=>{a();({}).b=x;return 1}", {}, "f=r=>{a();({}).b=r;return 1};"],
+			// A heritage the call prints as needs no parentheses.
+			["class C extends (function(){return B})(){}", {}, "class C extends B{}"],
 			// What a literal written in place reads of itself is known, but where a call, tag or `delete` reads it as a reference.
 			["function f(a){return[\"abc\".length,[1,,a].length+1,[g()].length,/a\\/b/.source,\"ab\".length.x,\"ab\".length(),\"ab\".length``,delete\"ab\".length]}", {}, "function f(e){return[3,4,[g()].length,\"a\\\\/b\",2..x,\"ab\".length(),\"ab\".length``,delete\"ab\".length]}"]
 		];
