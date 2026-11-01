@@ -1,1 +1,1 @@
-globalThis.__wrappedEvaluationOrder = true;
+global.__wrappedEvaluationOrder = true;
