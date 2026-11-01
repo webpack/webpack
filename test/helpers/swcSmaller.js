@@ -930,7 +930,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: projects/files/jquery-1.9.1.js",
 			"swc minifier: projects/files/react-17.0.1.js",
 			"swc minifier: projects/files/react-dom-17.0.2.js",
-			"swc minifier: projects/files/yui-3.12.0.js",
 			"terser compress: arrays/constant_join",
 			"terser compress: arrays/index",
 			"terser compress: arrays/length",

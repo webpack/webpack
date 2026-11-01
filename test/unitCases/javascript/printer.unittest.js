@@ -1249,6 +1249,8 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// A statement after the first that printed its own parentheses keeps the body's braces.
 			["function k(a,p){function A(x,y){x.push(1);x.push(2)}if(p){a.push(3);A(a,p)}return a}", {}, "function k(p,u){if(u){p.push(3);(function(p,u){p.push(1);p.push(2)})(p,u)}return p}"],
 			["f=x=>{a();({}).b=x;return 1}", {}, "f=r=>{a();({}).b=r;return 1};"],
+			// An object opening an optional chain a statement opens with keeps its parentheses.
+			["if({m(){}}?.m())a();else b()", {}, "({m(){}}?.m())?a():b();"],
 			// A heritage the call prints as needs no parentheses.
 			["class C extends (function(){return B})(){}", {}, "class C extends B{}"],
 			// What a literal written in place reads of itself is known, but where a call, tag or `delete` reads it as a reference.
