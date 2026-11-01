@@ -1235,6 +1235,16 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		);
 	});
 
+	it("should write a long string's tabs raw where only ASCII is written", () => {
+		// A tab is ASCII, so `asciiOnly` leaves the tabs of a string long enough
+		// to write them raw as they are, and escapes only what is past ASCII.
+		const text = `${"a\t".repeat(60)}é`;
+		const { code } = minifyOnePass(`g(${JSON.stringify(text)})`, {
+			format: { asciiOnly: true }
+		});
+		expect(code).toBe(`g("${"a\t".repeat(60)}\\xe9");`);
+	});
+
 	it("should print as the format options ask in the one pass", () => {
 		/** @type {[string, import("../../../lib/javascript/syntax-printer").MinifyOptions, string][]} */
 		const cases = [

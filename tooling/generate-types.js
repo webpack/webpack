@@ -2854,12 +2854,14 @@ const generateDeclarations = ({
 				let code = parsed.name;
 
 				if (state === "in type args") {
+					// A type parameter named inside a constraint or default is a
+					// reference, which declares nothing of its own.
 					if (parsed.constraint) {
-						const constraint = getCode(parsed.constraint, typeArgs, state);
+						const constraint = getCode(parsed.constraint, typeArgs);
 						code += ` extends ${constraint}`;
 					}
 					if (parsed.defaultValue) {
-						const defaultValue = getCode(parsed.defaultValue, typeArgs, state);
+						const defaultValue = getCode(parsed.defaultValue, typeArgs);
 						code += ` = ${defaultValue}`;
 					}
 				}
