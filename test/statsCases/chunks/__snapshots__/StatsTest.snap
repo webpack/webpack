@@ -23,7 +23,7 @@ chunk (runtime: main) bundle.js (main) X bytes (javascript) X KiB (runtime) >{89
   runtime modules X KiB 7 modules
   cacheable modules X bytes
     ./a.js X bytes [dependent] [built] [code generated]
-      cjs self exports reference ./a.js 1:0-14
+      cjs self exports reference ./a.js 2:0-14
       cjs require ./a ./index.js 1:0-14
       X ms ->
       X ms (resolving: X ms, restoring: X ms, integration: X ms, building: X ms, storing: X ms)

@@ -72,9 +72,6 @@ exports.named = () => log.push(\\"named\\");
 
 });
 
-;// ./log.js
-log_namespaceFn();
-
 function log_default() { return log_default.c || (log_default.c = __webpack_require__.n(log_namespaceFn())); }
 ;// ./thing.cjs
 thing_namespaceFn();
