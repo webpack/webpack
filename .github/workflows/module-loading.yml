@@ -31,6 +31,11 @@ jobs:
 
       - run: node tooling/retry.js yarn --frozen-lockfile
 
+      # The minimizer's worker threads resolve `require("webpack")` themselves.
+      - run: yarn link --frozen-lockfile || true
+
+      - run: yarn link webpack --frozen-lockfile
+
       # The counts compare with the pull request's base commit.
       - name: Check out the base commit
         run: |
