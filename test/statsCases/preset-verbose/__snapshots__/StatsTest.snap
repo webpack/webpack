@@ -40,7 +40,7 @@ chunk {792} (runtime: main) main.js (main) X bytes (javascript) X KiB (runtime) 
   > ./index main
   ./index.js [237] X bytes {792} [depth 0] [built] [code generated]
     [no exports used]
-    Statement (ExpressionStatement) with side effects in source code at 1:0-15
+    Statement (ExpressionStatement) with side effects in source code at 2:0-17
     ModuleConcatenation bailout: Module is not in strict mode
     entry ./index main
     X ms (resolving: X ms, restoring: X ms, integration: X ms, building: X ms, storing: X ms)

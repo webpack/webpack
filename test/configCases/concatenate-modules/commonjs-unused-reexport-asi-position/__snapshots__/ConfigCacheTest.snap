@@ -134,6 +134,9 @@ module.exports = Type;
 
 });
 
+;// ./log.js
+log_namespaceFn();
+
 function log_default() { return log_default.c || (log_default.c = __webpack_require__.n(log_namespaceFn())); }
 ;// ./lib.js
 lib_namespaceFn();
@@ -287,6 +290,9 @@ function Type(options) {
 module.exports = Type;
 
 });
+
+;// ./log.js
+log_namespaceFn();
 
 function log_default() { return log_default.c || (log_default.c = __webpack_require__.n(log_namespaceFn())); }
 ;// ./lib.js
@@ -442,6 +448,9 @@ module.exports = Type;
 
 });
 
+;// ./log.js
+log_namespaceFn();
+
 function log_default() { return log_default.c || (log_default.c = __webpack_require__.n(log_namespaceFn())); }
 ;// ./lib.js
 lib_namespaceFn();
@@ -595,6 +604,9 @@ function Type(options) {
 module.exports = Type;
 
 });
+
+;// ./log.js
+log_namespaceFn();
 
 function log_default() { return log_default.c || (log_default.c = __webpack_require__.n(log_namespaceFn())); }
 ;// ./lib.js
