@@ -1733,6 +1733,34 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		expect(print("var a = 5; function reset() { a = 6 }")).toBe("");
 	});
 
+	it("should print the value an object literal holds at a known key", () => {
+		const print = (/** @type {string} */ source) =>
+			minifyOnePass(`function f(x,g){return[${source}]}`, {
+				compress: {},
+				mangle: false
+			}).code.slice(23, -2);
+		for (const [source, expected] of [
+			["({a:1,a:2}).a", "2"],
+			['({b:1,c:2})["b"]', "1"],
+			['({1:"one"})["1"]', '"one"'],
+			["({['k'+1]:3}).k1", "3"],
+			["({a:x}).a", "x"],
+			["({x}).x", "x"],
+			["({a:g()}).a", "g()"],
+			['({["__proto__"]:5}).__proto__', "5"],
+			// What else it holds runs, a getter runs, `__proto__:` is the prototype.
+			["({b:g(),a:1}).a", "{b:g(),a:1}.a"],
+			["({get a(){return 1}}).a", "{get a(){return 1}}.a"],
+			["({__proto__:{p:1}}).p", "{__proto__:{p:1}}.p"],
+			["({a:1}).b", "{a:1}.b"],
+			// A call takes `this` from the object, `delete` deletes off it.
+			["({f:g}).f()", "{f:g}.f()"],
+			["delete ({a:1}).a", "delete{a:1}.a"]
+		]) {
+			expect(print(source)).toBe(expected);
+		}
+	});
+
 	it("should keep a `switch` on a known value whose case holds a comment that prints", () => {
 		const print = (/** @type {string} */ source) =>
 			minifyOnePass(source, {
