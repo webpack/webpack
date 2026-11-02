@@ -1,0 +1,1 @@
+exports.esm = require("./namespace");

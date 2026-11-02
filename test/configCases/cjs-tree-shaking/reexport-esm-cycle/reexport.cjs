@@ -1,0 +1,1 @@
+exports.reexport = require("./module");
