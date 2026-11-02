@@ -1748,6 +1748,12 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["({x}).x", "x"],
 			["({a:g()}).a", "g()"],
 			['({["__proto__"]:5}).__proto__', "5"],
+			["({a:1}).a+1", "2"],
+			["({a:1})?.a+1", "{a:1}.a+1"],
+			["({b:g(),a:1}).a+1", "{b:g(),a:1}.a+1"],
+			["({a:{b:1}}).a.b+1", "2"],
+			["({a:{b:1,c:g()}}).a.b+1", "{a:{b:1,c:g()}}.a.b+1"],
+			["x.a.b+1", "x.a.b+1"],
 			// What else it holds runs, a getter runs, `__proto__:` is the prototype.
 			["({b:g(),a:1}).a", "{b:g(),a:1}.a"],
 			["({get a(){return 1}}).a", "{get a(){return 1}}.a"],
