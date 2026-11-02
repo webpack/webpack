@@ -66,7 +66,7 @@ It is only a recommendation: keep working unless the requester switches.
 
 ## Commands
 
-Use **yarn**, not npm. A fresh checkout has no `node_modules`: if a script fails on a missing module, run `yarn --frozen-lockfile` first, as CI does. Every command is a `package.json` script; the ones whose use isn't obvious from the name:
+Use **yarn**, not npm. A fresh checkout has no `node_modules`: if a script fails on a missing module, run `yarn --frozen-lockfile` first, as CI does. Every other repository task is a `package.json` script; the ones whose use isn't obvious from the name:
 
 - `yarn fix` — `fix:code` (ESLint) + `fix:special` + `fmt` (Prettier). Prefer as the final step.
 - `yarn fix:special` — Regenerate `types.d.ts`, declarations, schema validators and generated runtime code.
@@ -199,7 +199,7 @@ Directory structure, naming and running one case: [TESTING_DOCS.md](TESTING_DOCS
 - **Snapshot printed code; assert everything else**: never snapshot a value some machine can't produce, and keep control characters out ([details](TESTING_DOCS.md#writing-a-test)).
 - **Run targeted tests only** (`--testPathPatterns` / `-t`) covering the touched code; leave broad suites to CI. Eyeball the diff before `-u`.
 
-> [!REQUIRED] > **Two kinds of change widen the blast radius**: touching `schemas/**`, `lib/config/**` or anything `yarn fix:special` generates. Still don't sweep suites locally: run only the touched `configCases/`, `yarn lint:code` and `yarn fix:special`, push, and let CI sweep. A red `lint`, `basic` or `unit` stops every integration upload, so a coverage drop then isn't one ([details](docs/verifying.md#changes-that-widen-the-blast-radius)).
+> [!REQUIRED] > **Two kinds of change widen the blast radius**: touching `schemas/**`, `lib/config/**` or anything `yarn fix:special` generates. Still don't sweep suites locally: run only the touched `configCases/`, `yarn fix:special` and `yarn lint`, push, and let CI sweep. A red `lint`, `basic` or `unit` stops every integration upload, so a coverage drop then isn't one ([details](docs/verifying.md#changes-that-widen-the-blast-radius)).
 
 > [!REQUIRED] > **Run every stage of `lint` before every push — `yarn lint`, not a chosen few, not only your files**, and read each stage's output whole, never through `tail`/`grep`. A generated file is stale as soon as any JSDoc it copies changes, prose included ([details](docs/verifying.md#running-lint)).
 
@@ -238,7 +238,7 @@ Read [docs/performance.md](docs/performance.md) before claiming or measuring a p
 - **Changeset**: every user-facing change needs one in `.changeset/`: one sentence, one per PR.
 - **Branch** `<type>/<short-description>`, the type picked from the diff and matching the PR's "What kind of change…" answer; never a `claude/`, `bot/`, `ai/` or other tool prefix. Rename before the first push; a task leaves one branch on `origin` and ends with a `Branches on origin:` line.
 - **Commit author** is the requester's GitHub account, never a bot; no `Co-authored-by` trailers; ask when the identity is unknown.
-- **Open from a branch not behind `main`**: rebase, never merge `main` in. Before opening, rebase onto `origin/main`, resolve conflicts, re-run the checks, then `git push --force-with-lease` and open the PR. Force-pushing your own branch before its PR exists needs no asking.
+- **Open from a branch not behind `main`**: rebase, never merge `main` in. Before opening, rebase onto `origin/main`, resolve conflicts, re-run the checks, then `git push --force-with-lease -u origin <branch>` and open the PR. Force-pushing your own branch before its PR exists needs no asking.
 - **Stack a PR on the open PR it depends on** (needs it or changes the same code): branch from that PR's branch and use it as the base; branch from `main` only when the two are unrelated and merge cleanly in either order. Two PRs each green against `main` can still turn `main` red together ([details](docs/pull-requests.md#stacked-prs)).
 - **PR body**: paste the org template yourself with every section, bold labels spelled exactly and `n/a` where one doesn't apply, including **Use of AI** and a **What kind of change…** answer matching the branch prefix. Keep it brief; for a fix or improvement, show a real before/after (code, output, size, memory or CPU) under **Summary**.
 - **Subscribe to every PR you open**; unsubscribe once CI is green and every automated review is handled, or the requester says stop. A PR waiting only on human review needs no live session.

@@ -6,7 +6,7 @@ How to prove a change before pushing it and how to read CI when it is red, behin
 
 ## Changes that widen the blast radius
 
-Touching `schemas/**`, `lib/config/**` or anything `yarn fix:special` generates moves the whole option surface. Still don't sweep suites locally: run only the touched `configCases/`, `yarn lint:code` and `yarn fix:special` (its output says whether a generated file is stale), push, let CI sweep and [read the failing job's log](#read-ci-rather-than-re-running-it). `lint`, `basic` and `unit` gate the `integration` matrix (`integration: needs: [lint, basic, unit]` in `.github/workflows/test.yml`), so a red one stops every integration upload, and patch coverage is then computed from whichever cheap suite did report: it reads like a coverage problem but isn't.
+Touching `schemas/**`, `lib/config/**` or anything `yarn fix:special` generates moves the whole option surface. Still don't sweep suites locally: run only the touched `configCases/`, `yarn fix:special` (its output says whether a generated file is stale) and `yarn lint` ([below](#running-lint)), push, let CI sweep and [read the failing job's log](#read-ci-rather-than-re-running-it). `lint`, `basic` and `unit` gate the `integration` matrix (`integration: needs: [lint, basic, unit]` in `.github/workflows/test.yml`), so a red one stops every integration upload, and patch coverage is then computed from whichever cheap suite did report: it reads like a coverage problem but isn't.
 
 ## Running lint
 
