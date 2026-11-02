@@ -79,6 +79,20 @@ const walkIds = (compiler) => {
 				if (resource.endsWith("using.js")) {
 					expect(buildInfo.usesTopLevelUsingDeclaration).toBe(true);
 				}
+				if (resource.endsWith("this-class.js")) {
+					expect(
+						/** @type {NonNullable<typeof buildInfo.diagnostics>} */ (
+							buildInfo.diagnostics
+						).topLevelThis
+					).toBe(2);
+				}
+				if (resource.endsWith("pure.js")) {
+					expect(
+						/** @type {NonNullable<typeof buildInfo.diagnostics>} */ (
+							buildInfo.diagnostics
+						).ineffectivePureAnnotations
+					).toBe(1);
+				}
 			});
 		}
 	);
@@ -94,6 +108,11 @@ module.exports = {
 		filename: "[name].js"
 	},
 	plugins: [walkIds],
+	performance: {
+		hints: "warning",
+		pureAnnotations: true,
+		topLevelThis: true
+	},
 	module: {
 		rules: [
 			{
