@@ -1799,6 +1799,47 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		).toBe("f(x===y?!0:1?(g(),!0):!1);");
 	});
 
+	it("should print a bitwise number compared with `0` as its truth and booleans compared loosely", () => {
+		const print = (/** @type {string} */ source) =>
+			minifyOnePass(`function f(x,y,g){return[${source}]}`, {
+				compress: {},
+				mangle: false,
+				format: { comments: "some" }
+			}).code.slice(25, -2);
+		for (const [source, expected] of [
+			["0!==(x&4)", "!!(x&4)"],
+			["(x|1)!=0", "!!(x|1)"],
+			["0===(4^x)", "!(4^x)"],
+			["(x<<1)==0", "!(x<<1)"],
+			["0!==(x>>>y)", "!!(x>>>y)"],
+			["0!==(x>>2)?y:g", "x>>2?y:g"],
+			["!(0!==(x&4))", "!(x&4)"],
+			["0!==(x&4)&&y", "!!(x&4)&&y"],
+			["(0!==(x&4))+1", "(!!(x&4))+1"],
+			// Reading it as a boolean, a test prints the comparison's value.
+			["0!==(x&4)?!0:!1", "!!(x&4)"],
+			["0!==(x&4)?!0:y", "x&4?!0:y"],
+			// A BigInt, an unknown operand or another operation may give `0n` or `NaN`.
+			["0!==(x&y)", "0!==(x&y)"],
+			["0!==(x|0n)", "0!==(x|0n)"],
+			["0!==(x+4)", "0!==x+4"],
+			["0!==-x", "0!==-x"],
+			["0<(x&4)", "0<(x&4)"],
+			["/*! c */0!==(x&4)", "/*! c */0!==(x&4)"],
+			["!x===!y", "!x==!y"],
+			["x<1!==y>2", "x<1!=y>2"],
+			["!x===y", "!x===y"]
+		]) {
+			expect(print(source)).toBe(expected);
+		}
+		expect(
+			minifyOnePass(
+				"function f(t){if(0!==(t&4))return!0;return!1}function g(t){for(;0!==(t&8);)t++}",
+				{ compress: {}, mangle: false }
+			).code
+		).toBe("function f(t){return!!(t&4)}function g(t){for(;t&8;)t++}");
+	});
+
 	it("should keep a `switch` on a known value whose case holds a comment that prints", () => {
 		const print = (/** @type {string} */ source) =>
 			minifyOnePass(source, {
