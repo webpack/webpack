@@ -6,7 +6,6 @@ const wasmHashes = {
 	xxhash64: () => {
 		const createHash = require("../../lib/util/hash/xxhash64");
 		const createReferenceHash =
-			// @ts-expect-error
 			require("hash-wasm/dist/xxhash64.umd.min").createXXHash64;
 
 		return {

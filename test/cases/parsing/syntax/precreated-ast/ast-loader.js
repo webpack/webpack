@@ -8,7 +8,6 @@ module.exports = function (source) {
 	/** @type {acorn.Comment[]} */
 	const comments = [];
 
-	//@ts-ignore
 	const ast = acornParser.parse(source, {
 		ranges: true,
 		locations: true,
@@ -17,15 +16,22 @@ module.exports = function (source) {
 		onComment: comments
 	});
 
-	// change something to test if it's really used
-	//@ts-ignore
-	ast.body[0].expression.right.arguments[0].value = "./ok";
-	//@ts-ignore
-	ast.body[0].expression.right.arguments[0].raw = '"./ok"';
+	// `module.exports = require("./wrong")`: point the request elsewhere to
+	// test that the AST from the loader is really used
+	const [statement] = ast.body;
+	if (
+		statement.type !== "ExpressionStatement" ||
+		statement.expression.type !== "AssignmentExpression" ||
+		statement.expression.right.type !== "CallExpression" ||
+		statement.expression.right.arguments[0].type !== "Literal"
+	) {
+		throw new Error("unexpected module source");
+	}
+	const request = statement.expression.right.arguments[0];
+	request.value = "./ok";
+	request.raw = '"./ok"';
 
-	//@ts-ignore
-	ast.comments = comments;
 	this.callback(null, source, null, {
-		webpackAST: ast
+		webpackAST: Object.assign(ast, { comments })
 	});
 };

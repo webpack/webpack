@@ -676,8 +676,7 @@ class FakeSheet {
 		let css = fs.readFileSync(filepath, "utf8");
 		css = css
 			// Remove comments
-			// @ts-expect-error we use es2018 for such tests
-			.replace(/\/\*.*?\*\//gs, "")
+			.replace(/\/\*[\s\S]*?\*\//g, "")
 			.replace(/@import url\("([^"]+)"\);/g, (match, url) => {
 				if (!/^https:\/\/test\.cases\/path\//.test(url)) {
 					return url;
@@ -789,9 +788,7 @@ class CSSStyleSheet {
 		};
 
 		// Remove comments
-		const cleanCss = cssText
-			// @ts-expect-error we use es2018 for such tests
-			.replace(/\/\*.*?\*\//gs, "");
+		const cleanCss = cssText.replace(/\/\*[\s\S]*?\*\//g, "");
 
 		let ruleStart = 0;
 

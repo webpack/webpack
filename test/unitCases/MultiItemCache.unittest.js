@@ -19,8 +19,12 @@ describe("MultiItemCache", () => {
 
 	it("returns the single ItemCacheFacade when passed an array of length 1", () => {
 		const itemCaches = generateItemCaches(1);
-		const multiItemCache = new MultiItemCache(itemCaches);
-		expect(multiItemCache).toBe(itemCaches[0]);
+		expect(MultiItemCache.from(itemCaches)).toBe(itemCaches[0]);
+	});
+
+	it("wraps several ItemCacheFacades", () => {
+		const itemCaches = generateItemCaches(2);
+		expect(MultiItemCache.from(itemCaches)).toBeInstanceOf(MultiItemCache);
 	});
 
 	it("retrieves items from the underlying Cache when get is called", () => {
