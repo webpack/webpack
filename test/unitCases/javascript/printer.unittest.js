@@ -800,13 +800,13 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"function f(o){ const T = 1; g(T ? o : 2); g(!T ? 1 : (o, 2)); delete (T ? o.x : 1); (T ? o.f : 1)(); (T ? o.f : 1)``; typeof (T ? u : 1); g(T ? o.f : 1); T ? function(){}() : 1; g(T ? o : h(/*! c */ 2)); return () => T ? {} : 1 }",
 				{},
-				"function f(o){g(o);g((o,2));delete(1?o.x:1);(1?o.f:1)();(1?o.f:1)``;typeof(1?u:1);g(o.f);1?function(){}():1;g(1?o:h(/*! c */2));return()=>1?{}:1}"
+				"function f(o){g(o);g((o,2));delete(1?o.x:1);(1?o.f:1)();(1?o.f:1)``;typeof(1?u:1);g(o.f);g(1?o:h(/*! c */2));return()=>1?{}:1}"
 			],
 			// So does `&&`, `||` or `??` whose left side is known.
 			[
 				"function f(o){ const T = 1, N = null; g(T && o.f, T || o, N ?? o, T ?? o); delete (T && o.x); (T && o.f)(); T && function(){}(); g(T || h(/*! c */ 2)) }",
 				{},
-				"function f(o){g(o.f,1,o,1);delete(1&&o.x);(1&&o.f)();1&&function(){}();g(1||h(/*! c */2))}"
+				"function f(o){g(o.f,1,o,1);delete(1&&o.x);(1&&o.f)();g(1||h(/*! c */2))}"
 			],
 			// A branch that is no expression keeps the `if`, a sequence test is parenthesized, and a dead `if` declaring only in its own scopes goes.
 			[
@@ -3623,7 +3623,51 @@ describe("one-pass minify of what may run before it is set", () => {
 	});
 });
 
+describe("one-pass minify of what runs nothing", () => {
+	it("should drop a call that runs nothing and fold a test it leaves known", () => {
+		const cases = [
+			["function f(){(function(){})()}", "function f(){}"],
+			["function f(x,g){if(x){void function(){0}();g()}}", "function f(f,i){if(f)i()}"],
+			["f=b=>{(function(){})();return b}", "f=n=>n;"],
+			["function f(){return!function(){return 1}()?c:d}", "function f(){return d}"],
+			["function f(a){return!(a,0)?c:d}", "function f(n){return c}"],
+			// What runs something stays.
+			["function f(a){return!(g(),0)?c:d}", "function f(n){return(g(),0)?d:c}"],
+			["function f(){return(function(x){return 1})(g())?c:d}", "function f(){return function(n){return 1}(g())?c:d}"]
+		];
+		for (const [source, expected] of cases) {
+			expect(
+				minifyOnePass(source, {
+					compress: { toplevel: false },
+					mangle: { toplevel: false }
+				}).code
+			).toBe(expected);
+		}
+	});
+});
+
 describe("one-pass minify options", () => {
+	it("should read the options given without `compress` or `mangle`, compressing and mangling nothing", () => {
+		const { SourceProcessor } = require("../../../lib/javascript/syntax");
+		const print = (
+			/** @type {string} */ source,
+			/** @type {import("../../../lib/javascript/syntax-parser").JavascriptProcessOptions} */ options
+		) =>
+			/** @type {{ code: string }} */ (
+				new SourceProcessor().process(source, { mode: "minify", ...options })
+			).code;
+		expect(print("/*! a */ var x = 1; f(x)", {})).toBe("var x=1;f(x);");
+		expect(
+			print("/*! a */ var x = 1; f(x)", { format: { comments: "some" } })
+		).toBe("/*! a */var x=1;f(x);");
+		expect(print("var x = 1; f(x)", { toplevel: true })).toBe(
+			"var x=1;f(x);"
+		);
+		expect(print("f()", { wrap: "W" })).toBe(
+			'(function(exports){f()})(typeof W=="undefined"?W={}:W);'
+		);
+	});
+
 	it("should read `output` as terser's older name for `format`, never beside it", () => {
 		expect(
 			minifyOnePass('g("é")', { compress: {}, output: { ascii_only: true } })

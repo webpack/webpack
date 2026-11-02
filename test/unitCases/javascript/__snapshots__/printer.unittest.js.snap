@@ -28,7 +28,7 @@ export default(function(){});
 
 export default(class{}).name;
 
-let x=\`a\${b}c\${\`d\${e}\`}\`;tag\`x\\\\u{41}\${y}\\\\n\`;new(a.b().c);new(a().b);[];[];![];
+let x=\`a\${b}c\${\`d\${e}\`}\`;tag\`x\\\\u{41}\${y}\\\\n\`;new(a.b().c);new(a().b);
 
 for(var i=(a in b);i;);for(let o of(a,b));for((x=1 in o);;);
 
@@ -281,7 +281,7 @@ export default(function(){});
 
 export default(class{}).name;
 
-let x=\`a\${b}c\${\`d\${e}\`}\`;tag\`x\\\\u{41}\${y}\\\\n\`;new(a.b().c);new(a().b);[];[];![];
+let x=\`a\${b}c\${\`d\${e}\`}\`;tag\`x\\\\u{41}\${y}\\\\n\`;new(a.b().c);new(a().b);
 
 for(var i=(a in b);i;);for(let o of(a,b));for((x=1 in o);;);
 
@@ -540,7 +540,7 @@ export default(function(){});
 
 export default(class{}).name;
 
-let x=\`a\${b}c\${\`d\${e}\`}\`;tag\`x\\\\u{41}\${y}\\\\n\`;new(a.b().c);new(a().b);[];[];![];
+let x=\`a\${b}c\${\`d\${e}\`}\`;tag\`x\\\\u{41}\${y}\\\\n\`;new(a.b().c);new(a().b);
 
 for(var i=(a in b);i;);for(let o of(a,b));for((x=1 in o);;);
 
@@ -793,7 +793,7 @@ export default(function(){});
 
 export default(class{}).name;
 
-let x=\`a\${b}c\${\`d\${e}\`}\`;tag\`x\\\\u{41}\${y}\\\\n\`;new(a.b().c);new(a().b);[];[];![];
+let x=\`a\${b}c\${\`d\${e}\`}\`;tag\`x\\\\u{41}\${y}\\\\n\`;new(a.b().c);new(a().b);
 
 for(var i=(a in b);i;);for(let k of(a,b));for((x=1 in o);;);
 
@@ -1085,8 +1085,7 @@ export default(class{}).name
 let x=\`a\${b}c\${\`d\${e}\`}\`
 tag\`x\\\\u{41}\${y}\\\\n\`
 new(a.b().c)
-new(a().b);[];[]
-![]
+new(a().b)
 
 
 /* p */

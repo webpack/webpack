@@ -17956,12 +17956,12 @@ declare interface JavascriptReadOptions {
 	sourceType?: "module" | "commonjs" | "script" | "event-handler";
 
 	/**
-	 * terser's format options a print reads, as `minify` reads them under `format`; `comments` is read where it compresses or mangles
+	 * terser's format options a print reads, as `minify` reads them under `format`
 	 */
 	format?: GivenFormatOptions;
 
 	/**
-	 * terser's older name for `format`, read where it compresses or mangles and never beside `format`
+	 * terser's older name for `format`, never given beside it
 	 */
 	output?: GivenFormatOptions;
 }
@@ -38049,6 +38049,9 @@ declare namespace exports {
 					inlined?: Uint8Array;
 					finish?: () => void;
 				};
+				export let readsMinifyOptions: (
+					options: JavascriptProcessOptions
+				) => boolean;
 				export let printer: (
 					path: {
 						state: unknown;
