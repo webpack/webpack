@@ -1,1 +1,1 @@
-export const child = "child";
+export { child } from "./grandchild";
