@@ -14,18 +14,13 @@ const mockCssTree = {
 	parse: jest.fn(),
 	ident: { decode: require("../../../lib/css/syntax-parser").unescapeIdentifier }
 };
-const mockAdobe = { parse: jest.fn() };
 
 jest.mock("../../../tooling/compare-tools-harness", () => ({
 	...jest.requireActual("../../../tooling/compare-tools-harness"),
 	exists: () => Promise.resolve(true),
 	installPackages: installed,
 	loaderFor: () => (/** @type {string} */ name) =>
-		name === "css-tree"
-			? mockCssTree
-			: name === "@adobe/css-tools"
-				? mockAdobe
-				: require(name)
+		name === "css-tree" ? mockCssTree : require(name)
 }));
 
 const { SourceProcessor } = require("../../../lib/css/syntax");
@@ -234,18 +229,6 @@ describe("compare-css-tools — agreeing with css-tree", () => {
 		expect(await cell("stylis")).toBe("own dialect");
 		expect(await cell("webpack")).toBe("yes");
 		expect(await cell("postcss")).toBe("yes");
-	});
-
-	// What `@adobe/css-tools` builds for the stylesheet: selectors split and
-	// comments dropped, each node's range named by 1-based line and column.
-	const adobeRules = [{"type": "comment", "comment": " c ", "position": {"start": {"line": 1, "column": 1}, "end": {"line": 1, "column": 8}}}, {"type": "rule", "selectors": [".a  .d"], "declarations": [{"type": "declaration", "property": "color", "value": "red  !important", "position": {"start": {"line": 1, "column": 25}, "end": {"line": 1, "column": 55}}}, {"type": "rule", "selectors": [".b"], "declarations": [{"type": "declaration", "property": "x", "value": "y", "position": {"start": {"line": 1, "column": 60}, "end": {"line": 1, "column": 63}}}, {"type": "declaration", "property": "z", "value": "", "position": {"start": {"line": 1, "column": 64}, "end": {"line": 1, "column": 66}}}], "position": {"start": {"line": 1, "column": 57}, "end": {"line": 1, "column": 67}}}], "position": {"start": {"line": 1, "column": 9}, "end": {"line": 1, "column": 69}}}, {"type": "media", "media": "(x)/* m */,(y)", "rules": [{"type": "rule", "selectors": [".c"], "declarations": [{"type": "declaration", "property": "d", "value": "e", "position": {"start": {"line": 1, "column": 95}, "end": {"line": 1, "column": 98}}}], "position": {"start": {"line": 1, "column": 92}, "end": {"line": 1, "column": 99}}}], "position": {"start": {"line": 1, "column": 70}, "end": {"line": 1, "column": 100}}}, {"type": "font-face", "declarations": [], "position": {"start": {"line": 1, "column": 101}, "end": {"line": 1, "column": 113}}}, {"type": "import", "import": "\"x\"", "position": {"start": {"line": 1, "column": 114}, "end": {"line": 1, "column": 126}}}];
-
-	it("reads `@adobe/css-tools`'s preludes and values off the source its positions name", async () => {
-		mockCssTree.parse.mockReturnValue(parsed(nestedRule));
-		mockAdobe.parse.mockReturnValue({ stylesheet: { rules: adobeRules } });
-		expect(
-			await agreement("css-tree", TREE_READERS, css)("@adobe/css-tools")
-		).toBe("yes");
 	});
 
 	/**

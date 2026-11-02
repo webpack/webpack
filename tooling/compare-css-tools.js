@@ -1052,77 +1052,11 @@ const postcssTree = (css) => {
 	return events;
 };
 
-/**
- * `@adobe/css-tools`'s tree, as the agreement column reads it. It splits each
- * selector list and drops comments, so every prelude and value is read off the
- * source range the node's position names instead.
- * @param {string} css a stylesheet
- * @returns {TreeEvents} what it says
- */
-const adobeCssToolsTree = (css) => {
-	const adobe = load("@adobe/css-tools");
-	// It keeps names as written, so they are read with the reference's decoder.
-	const { decode } = load("css-tree").ident;
-	const lineStarts = [0];
-	for (let i = 0; i < css.length; i++) {
-		if (css.charCodeAt(i) === 0x0a) lineStarts.push(i + 1);
-	}
-	/**
-	 * @param {{ line: number, column: number }} point a 1-based line and column
-	 * @returns {number} its offset into the source
-	 */
-	const offsetOf = (point) => lineStarts[point.line - 1] + point.column - 1;
-	const events = new TreeEvents();
-	/**
-	 * @param {EXPECTED_ANY[]} nodes one block's contents
-	 */
-	const walk = (nodes) => {
-		for (const node of nodes) {
-			if (node.type === "comment") continue;
-			const text = css.slice(
-				offsetOf(node.position.start),
-				offsetOf(node.position.end)
-			);
-			if (node.type === "declaration") {
-				const colon = text.indexOf(":");
-				// A comment may sit between `!` and `important`; the flag still holds.
-				const value = comparedText(text.slice(colon + 1).replace(/;$/, ""));
-				const important = /!\s*important$/i.exec(value);
-				declaration(
-					events,
-					text.slice(0, colon).trim(),
-					important === null ? value : value.slice(0, important.index),
-					important !== null,
-					decode
-				);
-				continue;
-			}
-			const head = /** @type {RegExpExecArray} */ (/^[^{;]*/.exec(text))[0];
-			const block = text.charCodeAt(head.length) === 0x7b;
-			const atRule = /^@([^\s{;(]+)([^]*)$/.exec(head);
-			if (atRule === null) {
-				const prelude = comparedText(head);
-				events.open(prelude, `rule ${prelude}`);
-			} else {
-				events.open(
-					`@${atRule[1]}`,
-					atRuleOf(atRule[1], atRule[2], block, decode)
-				);
-			}
-			walk(node.declarations || node.rules || node.keyframes || []);
-			events.close(block ? "}" : "");
-		}
-	};
-	walk(adobe.parse(css).stylesheet.rules);
-	return events;
-};
-
 /** @type {Map<string, import("./compare-tools-harness").TreeReader>} */
 const TREE_READERS = new Map([
 	["webpack", webpackTree],
 	["postcss", postcssTree],
-	[REFERENCE_PARSER, cssTreeTree],
-	["@adobe/css-tools", adobeCssToolsTree]
+	[REFERENCE_PARSER, cssTreeTree]
 ]);
 
 const wantedFixture = filterFrom("FIXTURE");

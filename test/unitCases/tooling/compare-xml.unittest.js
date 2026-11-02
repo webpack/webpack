@@ -237,111 +237,6 @@ describe("the XML tool comparison — agreeing with @rgrove/parse-xml", () => {
 		]
 	};
 
-	// What sax and saxes report for it, in order: each callback and its argument.
-	/** @type {[string, EXPECTED_ANY][]} */
-	const streamed = [
-		["processinginstruction", { name: "xml", body: 'version="1.0"' }],
-		["doctype", " r"],
-		["processinginstruction", { name: "style", body: 'href="a"' }],
-		["text", "\n"],
-		["opentag", { name: "r", attributes: { a: "1", b: "&" } }],
-		["text", "t"],
-		["cdata", "c"],
-		["comment", "m"],
-		["opentag", { name: "e", attributes: {} }],
-		["closetag", "e"],
-		["closetag", "r"],
-		["text", "\n"]
-	];
-
-	const sax = {
-		parser: () => {
-			/** @type {Record<string, EXPECTED_ANY>} */
-			const parser = {
-				write: () => {
-					for (const [event, argument] of streamed) {
-						parser[`on${event}`](argument);
-					}
-					return parser;
-				},
-				close: () => {}
-			};
-			return parser;
-		}
-	};
-
-	// saxes hands an instruction's target as `target`, and a close its tag.
-	const saxes = {
-		SaxesParser: class {
-			constructor() {
-				/** @type {Record<string, (argument: EXPECTED_ANY) => void>} */
-				this.handlers = {};
-			}
-
-			/**
-			 * @param {string} event an event's name
-			 * @param {(argument: EXPECTED_ANY) => void} handler what it calls
-			 */
-			on(event, handler) {
-				this.handlers[event] = handler;
-			}
-
-			write() {
-				for (const [event, argument] of streamed) {
-					this.handlers[event](
-						event === "processinginstruction"
-							? { target: argument.name, body: argument.body }
-							: event === "closetag"
-								? { name: argument }
-								: argument
-					);
-				}
-				return this;
-			}
-
-			close() {}
-		}
-	};
-
-	// What fast-xml-parser builds for it in order: no doctype, and an
-	// instruction's content read as attributes.
-	const ordered = [
-		{ "?xml": [{ "#text": "" }], ":@": { "@_version": "1.0" } },
-		{ "#text": "\n" },
-		{ "?style": [{ "#text": "" }], ":@": { "@_href": "a" } },
-		{ "#text": "\n" },
-		{
-			r: [
-				{ "#text": "t" },
-				{ "#cdata": [{ "#text": "c" }] },
-				{ "#comment": [{ "#text": "m" }] },
-				{ e: [] }
-			],
-			":@": { "@_a": "1", "@_b": "&" }
-		}
-	];
-
-	// What txml builds for it: a doctype, a comment and text as strings.
-	const strings = [
-		{ tagName: "?xml", attributes: { version: "1.0" }, children: [] },
-		"\n",
-		"!DOCTYPE r",
-		"\n",
-		{ tagName: "?style", attributes: { href: "a" }, children: [] },
-		"\n",
-		{
-			tagName: "r",
-			attributes: { a: "1", b: "&" },
-			children: [
-				"t",
-				"c",
-				"<!--m-->",
-				{ tagName: "e", attributes: {}, children: [] }
-			]
-		},
-		"\n"
-	];
-
 	/** @type {string} */
 	let directory;
 
@@ -374,17 +269,7 @@ describe("the XML tool comparison — agreeing with @rgrove/parse-xml", () => {
 								}
 							}
 						},
-						htmlparser2: { parseDocument: () => handled },
-						sax,
-						saxes,
-						"fast-xml-parser": {
-							XMLParser: class {
-								parse() {
-									return ordered;
-								}
-							}
-						},
-						txml: { parse: () => strings }
+						htmlparser2: { parseDocument: () => handled }
 					})[name]
 			)
 		);
@@ -398,17 +283,10 @@ describe("the XML tool comparison — agreeing with @rgrove/parse-xml", () => {
 	it("should hold every tree-building parser to its tree", async () => {
 		const cell = agreement("@rgrove/parse-xml", TREE_READERS, xml);
 		expect(await cell("@rgrove/parse-xml")).toBe("reference");
-		expect(await cell("a parser with no reader")).toBe("own dialect");
+		expect(await cell("saxes")).toBe("own dialect");
 		expect(await cell("webpack")).toBe("yes");
 		expect(await cell("@xmldom/xmldom")).toBe("yes");
 		expect(await cell("htmlparser2 (xmlMode)")).toBe("yes");
-		expect(await cell("sax (svgo's parser)")).toBe("yes");
-		expect(await cell("saxes")).toBe("yes");
-		expect(await cell("txml")).toBe("yes");
-		// It keeps no doctype, so a document holding one reads apart there.
-		expect(await cell("fast-xml-parser")).toBe(
-			'no — /: @rgrove/parse-xml doctype r "" "", tool nothing'
-		);
 	});
 
 	it("should name the first node a parser reads apart", async () => {
