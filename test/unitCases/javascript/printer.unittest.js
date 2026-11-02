@@ -3688,6 +3688,12 @@ describe("one-pass minify of statement sequences", () => {
 				mangle: { toplevel: false },
 				...options
 			}).code;
+		// A string where directives may be stays a statement of its own.
+		expect(
+			print('function f(){("x");g();return 1}', {
+				compress: { toplevel: false, side_effects: false }
+			})
+		).toBe('function f(){;"x";return g(),1}');
 		// A comment before the `return` stays by it.
 		expect(
 			print("function f(){a();/*c*/return b}", { format: { comments: "all" } })
