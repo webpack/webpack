@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases html remote-stylesheets-build-http exported tests should bundle remote stylesheets when HTTP builds are enabled 1`] = `
+"<!doctype html>
+<link rel=\\"stylesheet\\" href=\\"print.css\\">
+"
+`;
+
+exports[`ConfigTestCases html remote-stylesheets-build-http exported tests should bundle remote stylesheets when HTTP builds are enabled 2`] = `
+"/*!*******************************************************************************************************************!*\\\\
+  !*** css https://raw.githubusercontent.com/webpack/webpack/refs/heads/main/test/configCases/css/import/print.css ***!
+  \\\\*******************************************************************************************************************/
+body {
+	background: black;
+}
+
+"
+`;
