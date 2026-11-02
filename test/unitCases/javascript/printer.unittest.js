@@ -3571,3 +3571,37 @@ describe("jsMinify", () => {
 	});
 });
 
+describe("one-pass minify of what may run before it is set", () => {
+	it("should keep calls and reads `eval`, `with` or an earlier call can change", () => {
+		const cases = [
+			// `eval` may set the name, `with` read another for it.
+			["function f(){/*#__NO_SIDE_EFFECTS__*/var s=function(){};eval(\"s=g\");s()}", "function f(){var s=function(){};eval(\"s=g\");s()}"],
+			["function f(o){/*#__NO_SIDE_EFFECTS__*/var s=function(){};with(o)s()}", "function f(o){var s=function(){};with(o)s()}"],
+			// A function declared there may be called before the name is set.
+			["function f(){try{i()}catch(e){return 1}/*#__NO_SIDE_EFFECTS__*/var s=()=>{};function i(){s()}}", "function f(){try{(function(){s()})()}catch(e){return 1}var s=()=>{}}"],
+			["function f(x){if(x){/*#__NO_SIDE_EFFECTS__*/var s=()=>{}}s()}", "function f(x){if(x)var s=()=>{};s()}"],
+			["function f(){try{return g()}catch(e){return 0}let x=1;function g(){return x}}", "function f(){try{return x}catch(e){return 0}let x=1}"],
+			["function f(){try{return g()}catch(e){return 0}let x=1;function g(){return x+x}}", "function f(){try{return x+x}catch(e){return 0}let x=1}"],
+			// Nothing calls it first where nothing before the declarator calls anything.
+			["function f(){/*#__NO_SIDE_EFFECTS__*/var s=()=>{};function i(){s()}i()}", "function f(){(function(){})()}"],
+			["function f(){const x=2;function g(){return x}return g()}", "function f(){return 2}"]
+		];
+		for (const [source, expected] of cases) {
+			expect(
+				minifyOnePass(source, { compress: {}, mangle: false }).code
+			).toBe(expected);
+		}
+	});
+});
+
+describe("one-pass minify options", () => {
+	it("should read `output` as terser's older name for `format`, never beside it", () => {
+		expect(
+			minifyOnePass('g("é")', { compress: {}, output: { ascii_only: true } })
+				.code
+		).toBe('g("\\xe9");');
+		expect(() =>
+			minifyOnePass("g()", { compress: {}, format: {}, output: {} })
+		).toThrow("only one of them");
+	});
+});
