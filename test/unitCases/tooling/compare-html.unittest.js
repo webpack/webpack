@@ -5,9 +5,8 @@ const CACHE_NAME = "html-tool-comparison";
 const installed = jest.fn(() => Promise.resolve(CACHE_NAME));
 
 // A real install would `npm ci` the corpus into a contributor's cache, and
-// nothing here reads it: the built documents are the ones under test.
-// parse5 is installed into that same cache, so its tree is written out by hand,
-// as is what each other parser builds for the document the readers are fed.
+// nothing here reads it: the built documents are the ones under test, and the
+// tree parse5 and each other parser build for them is written out by hand.
 const mockParse5 = { parse: jest.fn() };
 /** @type {Record<string, EXPECTED_ANY>} */
 const mockParsers = {};
