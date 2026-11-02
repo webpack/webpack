@@ -21,7 +21,8 @@ module.exports = {
 				"afterSeal",
 				"afterCompile",
 				"emit",
-				"done"
+				"done",
+				"needBuild"
 			];
 			let failures = 0;
 			let failed = false;
@@ -40,7 +41,7 @@ module.exports = {
 					return;
 				}
 				expect(failures).toBe(step - 1);
-				expect(rebuiltBranches).toBe(1);
+				expect(rebuiltBranches).toBe(hook === "needBuild" ? 0 : 1);
 				failures++;
 				return new Error(`Injected plugin failure in ${hook}`);
 			};
@@ -65,6 +66,11 @@ module.exports = {
 			compiler.hooks.compilation.tap("PluginFailure", (compilation) => {
 				failed = false;
 				rebuiltBranches = 0;
+				compiler.webpack.NormalModule.getCompilationHooks(
+					compilation
+				).needBuild.tapAsync("PluginFailure", (_module, _context, callback) => {
+					process.nextTick(() => callback(takeError("needBuild")));
+				});
 				compilation.hooks.succeedModule.tap("PluginFailure", (module) => {
 					if (
 						module.identifier() === path.join(compiler.context, "branch.js")
