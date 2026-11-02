@@ -9892,6 +9892,27 @@ declare class EnvironmentPlugin {
 type ErrorWithDetail = Error & { details?: string };
 
 /**
+ * a node the parser made, as `SyntaxTree#addEstree` reads it
+ */
+declare interface EstreeSource {
+	[index: string]:
+		| undefined
+		| null
+		| string
+		| number
+		| bigint
+		| boolean
+		| RegExp
+		| { cooked?: null | string; raw: string }
+		| EstreeSource
+		| EstreeSourceItem[];
+	type: string;
+	start: number;
+	end: number;
+}
+type EstreeSourceItem = null | number | EstreeSource;
+
+/**
  * ESTree objects read the way a `SyntaxTree` is, `toEstreeObject`'s way back:
  * an object takes an id when a read first reaches it, and nothing is copied.
  */
@@ -15375,12 +15396,12 @@ type JavascriptNormalModule = NormalModule & {
 };
 declare interface JavascriptParseOptions {
 	/**
-	 * what the source is: a module (the default), a script, or a function's body, a CommonJS module's or an event handler's
+	 * what the source is: a module (the default), a script, a function's body, a CommonJS module's or an event handler's, or `auto`
 	 */
-	sourceType?: "module" | "commonjs" | "script" | "event-handler";
+	sourceType?: "module" | "commonjs" | "auto" | "script" | "event-handler";
 
 	/**
-	 * optional callback for each parse error, with the CSS and HTML parsers' signature and Babel's `reasonCode` kebab-cased as `code`; `severity` is `"error"` for one that stops the parse and `"warning"` for one it reads past; without it, the errors read past go unreported
+	 * optional callback for each parse error, with the CSS and HTML parsers' signature and Babel's `reasonCode` kebab-cased as `code`; `severity` is `"error"` for one that stops the parse and `"warning"` for one it reads past; without it, the first error throws, as acorn's does
 	 */
 	parseError?: (
 		input: string,
@@ -15389,6 +15410,26 @@ declare interface JavascriptParseOptions {
 		end: number,
 		severity: ParseErrorSeverity
 	) => void;
+
+	/**
+	 * whether a script's top level may `return`, as webpack reads a script it may wrap in a function
+	 */
+	allowReturnOutsideFunction?: boolean;
+
+	/**
+	 * where to collect the source's comments, their text read on demand
+	 */
+	comments?: CollectedComment[];
+
+	/**
+	 * whether `import defer` and `import source` parse, as they always do without the option
+	 */
+	importPhases?: boolean;
+
+	/**
+	 * whether to build ESTree objects, the program returned, rather than the `SyntaxTree` `A` reads
+	 */
+	estree?: boolean;
 }
 declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 	/**
@@ -17993,11 +18034,6 @@ declare class JavascriptSourceProcessor<
 		 * Stops the walk: no visitor fires after the current one returns.
 		 */
 		stop(): void;
-		/**
-		 * The tree walked, for a reader of many nodes that would rather not go
-		 * through the path for each.
-		 */
-		get tree(): SyntaxTree;
 		ancestor(level: number): number;
 		within(type: number): boolean;
 		type(n?: number): number;
@@ -18054,11 +18090,6 @@ declare class JavascriptSourceProcessor<
 		 * Stops the walk: no visitor fires after the current one returns.
 		 */
 		stop(): void;
-		/**
-		 * The tree walked, for a reader of many nodes that would rather not go
-		 * through the path for each.
-		 */
-		get tree(): SyntaxTree;
 		ancestor(level: number): number;
 		within(type: number): boolean;
 		type(n?: number): number;
@@ -26338,6 +26369,7 @@ type ParserOptionsSyntaxParser = Omit<OptionsSyntaxParser, "onComment"> & {
 	lazyComments?: CollectedComment[];
 	importPhases?: boolean;
 	moduleFallback?: boolean;
+	syntaxTree?: SyntaxTree;
 };
 
 /**
@@ -34258,10 +34290,95 @@ declare class SyntaxTree {
 	setPart(part: number, node: number, text: string): void;
 
 	/**
-	 * Writes a parsed node and everything under it, its children taking ids
-	 * after it in source order; a child already written stands as its id.
+	 * Writes a parsed node and everything under it, children before their
+	 * parent in source order, as the parser writes; a child already written
+	 * stands as its id.
 	 */
-	addEstree(root: NodeEstreeIndex): number;
+	addEstree(root: EstreeSource): number;
+
+	/**
+	 * The ESTree object of a node of this tree, as `toEstreeObject` builds it
+	 * for the last parse's.
+	 */
+	estree(
+		node: number,
+		fields?: string[]
+	):
+		| null
+		| Program
+		| ImportDeclaration
+		| ExportNamedDeclaration
+		| ExportAllDeclaration
+		| ImportExpressionImport
+		| UnaryExpression
+		| ArrayExpression
+		| ArrowFunctionExpression
+		| AssignmentExpression
+		| AwaitExpression
+		| BinaryExpression
+		| SimpleCallExpression
+		| NewExpression
+		| ChainExpression
+		| ClassExpression
+		| ConditionalExpression
+		| FunctionExpression
+		| Identifier
+		| SimpleLiteral
+		| RegExpLiteral
+		| BigIntLiteral
+		| LogicalExpression
+		| MemberExpression
+		| MetaProperty
+		| ObjectExpression
+		| SequenceExpression
+		| TaggedTemplateExpression
+		| TemplateLiteral
+		| ThisExpression
+		| UpdateExpression
+		| YieldExpression
+		| SpreadElement
+		| PrivateIdentifier
+		| Super
+		| FunctionDeclaration
+		| VariableDeclaration
+		| ClassDeclaration
+		| ExpressionStatement
+		| BlockStatement
+		| StaticBlock
+		| EmptyStatement
+		| DebuggerStatement
+		| WithStatement
+		| ReturnStatement
+		| LabeledStatement
+		| BreakStatement
+		| ContinueStatement
+		| IfStatement
+		| SwitchStatement
+		| ThrowStatement
+		| TryStatement
+		| WhileStatement
+		| DoWhileStatement
+		| ForStatement
+		| ForInStatement
+		| ForOfStatement
+		| ExportDefaultDeclaration
+		| MethodDefinition
+		| PropertyDefinition
+		| VariableDeclarator
+		| Property
+		| CatchClause
+		| ClassBody
+		| SwitchCase
+		| TemplateElement
+		| AssignmentProperty
+		| ImportSpecifier
+		| ImportDefaultSpecifier
+		| ImportNamespaceSpecifier
+		| ExportSpecifier
+		| ObjectPattern
+		| ArrayPattern
+		| RestElement
+		| AssignmentPattern;
 	type(node: number): number;
 	start(node: number): number;
 	end(node: number): number;
@@ -36146,7 +36263,37 @@ type WriteStreamOptions = StreamOptions & {
 	fs?: null | CreateWriteStreamFSImplementation;
 	flush?: boolean;
 };
-declare interface _functionSyntaxParser {
+declare interface _functionSyntaxParserFunction_1 {
+	/**
+	 * Parse a program, ECMA-262 §16.1 or §16.2, into a `SyntaxTree` read through
+	 * `A`, its node ids valid until the next JavaScript parse, or under `estree`
+	 * into ESTree objects.
+	 */
+	(
+		input: string,
+		pos: undefined | number,
+		options: JavascriptParseOptions & { estree: true; parseError?: undefined }
+	): Program;
+	(
+		input: string,
+		pos: undefined | number,
+		options: JavascriptParseOptions & { estree: true }
+	): undefined | Program;
+	(
+		input: string,
+		pos?: number,
+		options?: JavascriptParseOptions & {
+			estree?: false;
+			parseError?: undefined;
+		}
+	): number;
+	(
+		input: string,
+		pos?: number,
+		options?: JavascriptParseOptions
+	): undefined | number;
+}
+declare interface _functionSyntaxParserFunction_2 {
 	/**
 	 * Decode HTML character references in a string. Handles all numeric
 	 * references (with WHATWG remap of 0x00, surrogates, out-of-range, and the
@@ -37664,18 +37811,14 @@ declare namespace exports {
 					input: string,
 					options: ParserOptionsSyntaxParser
 				) => Program;
-				export let parseProgram: (
-					input: string,
-					pos?: number,
-					options?: JavascriptParseOptions
-				) => undefined | number;
+				export let parseProgram: _functionSyntaxParserFunction_1;
+				export let parsedTree: () => null | SyntaxTree;
 				export let positionAt: (
 					lineStarts: number[],
 					offset: number
 				) => SourcePosition;
 				export let releaseParserCaches: () => void;
 				export let toEstreeObject: (
-					tree: SyntaxTree,
 					node: number,
 					fields?: string[]
 				) =>
@@ -37767,11 +37910,6 @@ declare namespace exports {
 					 * Stops the walk: no visitor fires after the current one returns.
 					 */
 					stop(): void;
-					/**
-					 * The tree walked, for a reader of many nodes that would rather not go
-					 * through the path for each.
-					 */
-					get tree(): SyntaxTree;
 					ancestor(level: number): number;
 					within(type: number): boolean;
 					type(n?: number): number;
@@ -37825,11 +37963,6 @@ declare namespace exports {
 						 * Stops the walk: no visitor fires after the current one returns.
 						 */
 						stop(): void;
-						/**
-						 * The tree walked, for a reader of many nodes that would rather not go
-						 * through the path for each.
-						 */
-						get tree(): SyntaxTree;
 						ancestor(level: number): number;
 						within(type: number): boolean;
 						type(n?: number): number;
@@ -37884,11 +38017,6 @@ declare namespace exports {
 									 * Stops the walk: no visitor fires after the current one returns.
 									 */
 									stop(): void;
-									/**
-									 * The tree walked, for a reader of many nodes that would rather not go
-									 * through the path for each.
-									 */
-									get tree(): SyntaxTree;
 									ancestor(level: number): number;
 									within(type: number): boolean;
 									type(n?: number): number;
@@ -37949,11 +38077,6 @@ declare namespace exports {
 						 * Stops the walk: no visitor fires after the current one returns.
 						 */
 						stop(): void;
-						/**
-						 * The tree walked, for a reader of many nodes that would rather not go
-						 * through the path for each.
-						 */
-						get tree(): SyntaxTree;
 						ancestor(level: number): number;
 						within(type: number): boolean;
 						type(n?: number): number;
@@ -38006,11 +38129,6 @@ declare namespace exports {
 							 * Stops the walk: no visitor fires after the current one returns.
 							 */
 							stop(): void;
-							/**
-							 * The tree walked, for a reader of many nodes that would rather not go
-							 * through the path for each.
-							 */
-							get tree(): SyntaxTree;
 							ancestor(level: number): number;
 							within(type: number): boolean;
 							type(n?: number): number;
@@ -38104,11 +38222,6 @@ declare namespace exports {
 						 * Stops the walk: no visitor fires after the current one returns.
 						 */
 						stop(): void;
-						/**
-						 * The tree walked, for a reader of many nodes that would rather not go
-						 * through the path for each.
-						 */
-						get tree(): SyntaxTree;
 						ancestor(level: number): number;
 						within(type: number): boolean;
 						type(n?: number): number;
@@ -38161,11 +38274,6 @@ declare namespace exports {
 							 * Stops the walk: no visitor fires after the current one returns.
 							 */
 							stop(): void;
-							/**
-							 * The tree walked, for a reader of many nodes that would rather not go
-							 * through the path for each.
-							 */
-							get tree(): SyntaxTree;
 							ancestor(level: number): number;
 							within(type: number): boolean;
 							type(n?: number): number;
@@ -38225,7 +38333,6 @@ declare namespace exports {
 				};
 			}
 			export const toEstreeObject: (
-				tree: SyntaxTree,
 				node: number,
 				fields?: string[]
 			) =>
@@ -39351,7 +39458,7 @@ declare namespace exports {
 				) => string;
 				export let buildHeadTags: (opts: OutputHtmlOptions) => string;
 				export let collapseWhitespaceRuns: (s: string) => string;
-				export let decodeEntities: _functionSyntaxParser;
+				export let decodeEntities: _functionSyntaxParserFunction_2;
 				export let decodeXmlAttribute: (value: string) => string;
 				export let decodeXmlEntities: (value: string) => string;
 				export let escapeAttribute: (

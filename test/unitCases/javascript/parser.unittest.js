@@ -8,7 +8,7 @@
 /** @typedef {{ case: string, file: string, webpack: string, acorn: string }} VerdictDifference */
 /** @typedef {typeof import("../../../lib/javascript/syntax-parser")} ParserExports */
 /** @typedef {Partial<import("../../../lib/javascript/syntax-parser").Options>} PortOptions */
-/** @typedef {import("../../../lib/javascript/syntax-parser").Node} EstreeNode */
+/** @typedef {import("../../../lib/javascript/syntax-parser").EstreeSource} EstreeNode */
 /** @typedef {import("../../../lib/javascript/syntax-parser").ParserOptions} ParserOptions */
 /** @typedef {import("../../../lib/javascript/syntax-parser").CollectedComment} CollectedComment */
 /**
@@ -2548,7 +2548,7 @@ const PARSERS = [
 			if (!options.syntaxTree) {
 				return webpackParse(code, /** @type {ParserOptions} */ (options));
 			}
-			const { SyntaxTree, WebpackParser, toEstreeObject } = require(
+			const { SyntaxTree, WebpackParser } = require(
 				"../../../lib/javascript/syntax-parser"
 			);
 			const tree = new SyntaxTree();
@@ -2556,7 +2556,7 @@ const PARSERS = [
 				/** @type {EXPECTED_ANY} */ ({ ...options, syntaxTree: tree }),
 				code
 			).parse();
-			return toEstreeObject(tree, /** @type {EXPECTED_ANY} */ (program));
+			return tree.estree(/** @type {number} */ (/** @type {unknown} */ (program)));
 		},
 		true,
 		true
@@ -4390,8 +4390,7 @@ describe("Parser", () => {
 	describe("parses like acorn as the parser a build runs", () => {
 		const {
 			SyntaxTree,
-			WebpackParser,
-			toEstreeObject: treeToObject
+			WebpackParser
 		} = require("../../../lib/javascript/syntax-parser");
 		/**
 		 * A plugin overriding every method with one calling it, which turns off
@@ -4459,7 +4458,7 @@ describe("Parser", () => {
 						{ ...options, syntaxTree: tree },
 						code
 					).parse();
-					return treeToObject(tree, /** @type {EXPECTED_ANY} */ (program));
+					return tree.estree(/** @type {number} */ (/** @type {unknown} */ (program)));
 				}
 			]
 		];
@@ -4528,8 +4527,7 @@ describe("Parser", () => {
 	describe("parses like acorn with recoverable errors noted", () => {
 		const {
 			SyntaxTree,
-			WebpackParser,
-			toEstreeObject: treeToObject
+			WebpackParser
 		} = require("../../../lib/javascript/syntax-parser");
 		/** @type {[number, string][]} */
 		let noted = [];
@@ -4575,7 +4573,7 @@ describe("Parser", () => {
 						{ ...options, syntaxTree: tree },
 						code
 					).parse();
-					return treeToObject(tree, /** @type {EXPECTED_ANY} */ (program));
+					return tree.estree(/** @type {number} */ (/** @type {unknown} */ (program)));
 				},
 				{ lazyNodes: true, syntaxTree: true }
 			]
@@ -4802,7 +4800,7 @@ describe("Parser", () => {
 			Parser.parse(source, options),
 			webpackParse(source, options),
 			webpackParse(source, { ...options, lazyNodes: true }),
-			toEstreeObject(tree, /** @type {EXPECTED_ANY} */ (program))
+			tree.estree(/** @type {number} */ (/** @type {unknown} */ (program)))
 		]) {
 			const statement = /** @type {EXPECTED_ANY} */ (ast).body[0].body.body[0];
 			expect(statement.expression.argument.regex).toEqual({
@@ -5018,7 +5016,6 @@ describe("Parser", () => {
 	});
 });
 
-const { toEstreeObject } = require("../../../lib/javascript/syntax");
 const {
 	Field,
 	Flag,
@@ -5154,7 +5151,7 @@ describe("SyntaxTree", () => {
 					sourceType: /** @type {"script" | "module"} */ (sourceType)
 				});
 				tree.reset();
-				const rebuilt = toEstreeObject(tree, write(tree, program, seen));
+				const rebuilt = tree.estree(write(tree, program, seen));
 				expect(firstDifference(rebuilt, program, "Program")).toBeNull();
 			}
 		}
@@ -5195,7 +5192,7 @@ describe("SyntaxTree", () => {
 				(statement, index) =>
 					index % 2 === 0 ? tree.addEstree(asEstree(statement)) : statement
 			);
-			const rebuilt = toEstreeObject(tree, tree.addEstree(asEstree(program)));
+			const rebuilt = tree.estree(tree.addEstree(asEstree(program)));
 			expect(
 				firstDifference(
 					rebuilt,
@@ -5213,12 +5210,14 @@ describe("SyntaxTree", () => {
 			sourceType: "module"
 		});
 		const tree = new SyntaxTree();
-		const root = tree.addEstree(program);
+		const root = tree.addEstree(
+			asEstree(/** @type {WrittenNode} */ (/** @type {unknown} */ (program)))
+		);
 		for (let i = 0; i < 3; i++) {
 			const statement = tree.field(i, Field.body, root);
 			expect(tree.fieldCount(Field.attributes, statement)).toBe(0);
 			expect(
-				/** @type {EXPECTED_ANY} */ (toEstreeObject(tree, statement)).attributes
+				/** @type {import("estree").ImportDeclaration} */ (tree.estree(statement)).attributes
 			).toEqual([]);
 		}
 	});
@@ -5226,16 +5225,16 @@ describe("SyntaxTree", () => {
 	it("builds only the fields asked for, then the rest on the same object", () => {
 		const { tree, node } = writeExpression("f(a, b);");
 		const call = /** @type {EXPECTED_ANY} */ (
-			toEstreeObject(tree, node, ["callee"])
+			tree.estree(node, ["callee"])
 		);
 		expect(call.callee.name).toBe("f");
 		expect("arguments" in call).toBe(false);
-		expect(toEstreeObject(tree, node)).toBe(call);
+		expect(tree.estree(node)).toBe(call);
 		expect(
 			call.arguments.map((/** @type {EXPECTED_ANY} */ arg) => arg.name)
 		).toEqual(["a", "b"]);
 		expect(call.optional).toBe(false);
-		expect(toEstreeObject(tree, node, ["callee"])).toBe(call);
+		expect(tree.estree(node, ["callee"])).toBe(call);
 		expect(call.range).toEqual([0, 7]);
 		call.range = [1, 6];
 		expect(call.range).toEqual([1, 6]);
@@ -5244,13 +5243,13 @@ describe("SyntaxTree", () => {
 	it("reads a literal's regex and bigint forms when asked for alone", () => {
 		const regex = writeExpression("/a/g;");
 		const literal = /** @type {EXPECTED_ANY} */ (
-			toEstreeObject(regex.tree, regex.node, ["regex"])
+			regex.tree.estree(regex.node, ["regex"])
 		);
 		expect(literal.regex).toEqual({ pattern: "a", flags: "g" });
 		expect("value" in literal).toBe(false);
 		const bigint = writeExpression("10n;");
 		expect(
-			/** @type {EXPECTED_ANY} */ (toEstreeObject(bigint.tree, bigint.node))
+			/** @type {import("estree").BigIntLiteral} */ (bigint.tree.estree(bigint.node))
 				.bigint
 		).toBe("10");
 	});
@@ -5261,14 +5260,14 @@ describe("SyntaxTree", () => {
 		tree.set(member, "computed", true);
 		tree.set(member, "computed", false);
 		const before = /** @type {EXPECTED_ANY} */ (
-			toEstreeObject(tree, member, ["computed"])
+			tree.estree(member, ["computed"])
 		);
 		expect(before.computed).toBe(false);
 		tree.reset();
 		expect(tree.add(NodeType.ThisExpression, 0, 4)).toBe(member);
 		expect(tree.type(member)).toBe(NodeType.ThisExpression);
-		expect(toEstreeObject(tree, member)).not.toBe(before);
-		expect(toEstreeObject(tree, 0)).toBeNull();
+		expect(tree.estree(member)).not.toBe(before);
+		expect(tree.estree(0)).toBeNull();
 	});
 
 	it("reads a field never set, or set to none, as empty", () => {
@@ -5279,13 +5278,13 @@ describe("SyntaxTree", () => {
 		const statement = tree.add(NodeType.ExpressionStatement, 0, 2);
 		tree.set(statement, "directive", undefined);
 		expect(
-			/** @type {EXPECTED_ANY} */ (toEstreeObject(tree, block)).body
+			/** @type {import("estree").BlockStatement} */ (tree.estree(block)).body
 		).toEqual([]);
 		expect(
-			/** @type {EXPECTED_ANY} */ (toEstreeObject(tree, name)).name
+			/** @type {import("estree").Identifier} */ (tree.estree(name)).name
 		).toBeNull();
 		expect(
-			"directive" in /** @type {EXPECTED_OBJECT} */ (toEstreeObject(tree, statement))
+			"directive" in /** @type {import("estree").Node} */ (tree.estree(statement))
 		).toBe(false);
 		const literal = tree.add(NodeType.Literal, 0, 1);
 		expect(tree.name(name)).toBe("");
@@ -5317,8 +5316,31 @@ describe("SyntaxTree", () => {
 			0,
 			tree.addList(items, 2)
 		);
-		expect(plain(toEstreeObject(tree, array))).toEqual(
+		expect(plain(tree.estree(array))).toEqual(
 			plain(acorn.parseExpressionAt("[a, b]", 0, { ecmaVersion: "latest" }))
+		);
+	});
+
+	it("builds a tree whose parents were written before their children", () => {
+		const tree = new SyntaxTree();
+		const array = tree.add(NodeType.ArrayExpression, 0, 3);
+		const unary = tree.add(NodeType.UnaryExpression, 0, 3);
+		const name = tree.addValueNode(NodeType.Identifier, 2, 3, "a");
+		tree.set(unary, "operator", "!");
+		tree.set(unary, "prefix", true);
+		tree.set(unary, "argument", name);
+		tree.set(array, "elements", [unary]);
+		const statement = tree.add(NodeType.ExpressionStatement, 0, 3);
+		tree.set(statement, "expression", array);
+		const object = /** @type {import("estree").ExpressionStatement} */ (
+			tree.estree(statement)
+		);
+		const element = /** @type {import("estree").UnaryExpression} */ (
+			/** @type {import("estree").ArrayExpression} */ (object.expression)
+				.elements[0]
+		);
+		expect(/** @type {import("estree").Identifier} */ (element.argument).name).toBe(
+			"a"
 		);
 	});
 
@@ -5333,9 +5355,9 @@ describe("SyntaxTree", () => {
 			tree.set(unary, "argument", node);
 			node = unary;
 		}
-		let object = /** @type {EXPECTED_ANY} */ (toEstreeObject(tree, node));
+		let object = /** @type {import("estree").Expression} */ (tree.estree(node));
 		while (object.type === "UnaryExpression") object = object.argument;
-		expect(object.name).toBe("a");
+		expect(/** @type {import("estree").Identifier} */ (object).name).toBe("a");
 	});
 
 	it("reads a node as the CSS and HTML paths read theirs", () => {
@@ -5397,8 +5419,8 @@ describe("SyntaxTree", () => {
 		const source = "a(b, [c]);";
 		const program = parseInto(next, source);
 		const fresh = new SyntaxTree();
-		expect(toEstreeObject(next, program)).toEqual(
-			toEstreeObject(fresh, parseInto(fresh, source))
+		expect(next.estree(program)).toEqual(
+			fresh.estree(parseInto(fresh, source))
 		);
 		next.release();
 	});
@@ -5731,8 +5753,7 @@ describe("JavaScript SourceProcessor", () => {
 describe("WebpackParser writing a SyntaxTree", () => {
 	const {
 		SyntaxTree,
-		WebpackParser,
-		toEstreeObject
+		WebpackParser
 	} = require("../../../lib/javascript/syntax-parser");
 
 	/** @type {import("../../../lib/javascript/syntax-parser").ParserOptions} */
@@ -5785,9 +5806,87 @@ describe("WebpackParser writing a SyntaxTree", () => {
 		"({ ...j, k, [l]: m, n() {}, get o() { return 1 } }); [, p, ...q] = r;"
 	])("writes %s as the objects it would build otherwise", (source) => {
 		const { tree, program } = parseIntoTree(source);
-		expect(plain(toEstreeObject(tree, program))).toEqual(
+		expect(plain(tree.estree(program))).toEqual(
 			plain(new WebpackParser(options, source).parse())
 		);
+	});
+
+	it("parses into a tree unless asked for ESTree, read as the last parse", () => {
+		const {
+			NodeType,
+			parseProgram,
+			parsedTree,
+			toEstreeObject
+		} = require("../../../lib/javascript/syntax-parser");
+		const source = "import a from 'b'; a(1);";
+		const expected = plain(parseProgram(source, 0, { estree: true }));
+		const program = parseProgram(source);
+		const tree =
+			/** @type {InstanceType<typeof SyntaxTree>} */ (parsedTree());
+		expect(tree.type(program)).toBe(NodeType.Program);
+		expect(plain(toEstreeObject(program))).toEqual(expected);
+		expect(plain(tree.estree(program))).toEqual(expected);
+		expect(toEstreeObject(0)).toBeNull();
+	});
+
+	it("builds the same objects whether the program or a part of it is asked for first", () => {
+		const { Field } = require("../../../lib/javascript/syntax-parser");
+		const source = "x = /re/g + 10n; if (y) { z(1, 2, 3, 4, [, 5]); }";
+		const whole = parseIntoTree(source);
+		const program = /** @type {import("estree").Program} */ (
+			whole.tree.estree(whole.program)
+		);
+		const statement = whole.tree.field(1, Field.body, whole.program);
+		expect(whole.tree.estree(statement)).toBe(program.body[1]);
+		const expected = plain(new WebpackParser(options, source).parse());
+		expect(plain(program)).toEqual(expected);
+		const partFirst = parseIntoTree(source);
+		const part = partFirst.tree.estree(partFirst.tree.field(1, Field.body, partFirst.program)
+		);
+		const rest = /** @type {import("estree").Program} */ (
+			partFirst.tree.estree(partFirst.program)
+		);
+		expect(rest.body[1]).toBe(part);
+		expect(plain(rest)).toEqual(expected);
+	});
+
+	it.each([
+		'let a, c; function n() { new.target; } import.meta.url; export { a as b, c }; export * as d from "e";',
+		'import f, { g as h } from "i"; ({ j: 1, k }); switch (l) { case 1: m; }'
+	])("writes every child of %s before its parent", (source) => {
+		const { Field } = require("../../../lib/javascript/syntax-parser");
+		const { tree } = parseIntoTree(source);
+		/** @type {string[]} */
+		const later = [];
+		for (let node = 1; node <= tree._count; node++) {
+			for (const field of Object.values(Field)) {
+				for (let i = 0, n = tree.fieldCount(field, node); i < n; i++) {
+					const child = tree.field(i, field, node);
+					if (child >= node) later.push(`${node} -> ${child}`);
+				}
+			}
+		}
+		expect(later).toEqual([]);
+	});
+
+	it("writes a node acorn shares between two fields once per field", () => {
+		const { Field } = require("../../../lib/javascript/syntax-parser");
+		const { tree } = parseIntoTree('import { x } from "m"; let y; export { y };');
+		/** @type {Map<number, number>} */
+		const parents = new Map();
+		/** @type {string[]} */
+		const shared = [];
+		for (let node = 1; node <= tree._count; node++) {
+			for (const field of Object.values(Field)) {
+				for (let i = 0, n = tree.fieldCount(field, node); i < n; i++) {
+					const child = tree.field(i, field, node);
+					if (child === 0) continue;
+					if (parents.has(child)) shared.push(`${child} in ${node}`);
+					parents.set(child, node);
+				}
+			}
+		}
+		expect(shared).toEqual([]);
 	});
 
 	it("writes an import or export a loop runs, where they are allowed everywhere", () => {
@@ -5803,7 +5902,7 @@ describe("WebpackParser writing a SyntaxTree", () => {
 					new WebpackParser({ ...everywhere, syntaxTree: tree }, source).parse()
 				)
 			);
-			expect(plain(toEstreeObject(tree, program))).toEqual(
+			expect(plain(tree.estree(program))).toEqual(
 				plain(new WebpackParser(everywhere, source).parse())
 			);
 		}
@@ -6044,9 +6143,81 @@ describe("parseProgram", () => {
 		expect(errors.map(([code]) => code)).toEqual(["duplicate-export"]);
 	});
 
-	it("reads past an error without a callback", () => {
-		expect(parseProgram("let a; let a")).toBeDefined();
-		expect(parseProgram("a ~ ")).toBeUndefined();
+	it("reads a build's options: ESTree, comments, auto, a top-level return", () => {
+		/** @type {import("../../../lib/javascript/syntax-parser").CollectedComment[]} */
+		const comments = [];
+		const program = parseProgram("/* a */ import b from 'c'; b;", 0, {
+			estree: true,
+			comments
+		});
+		expect(program.type).toBe("Program");
+		expect(program.body[0].type).toBe("ImportDeclaration");
+		expect(comments.map((comment) => comment.value)).toEqual([" a "]);
+		const auto = parseProgram("x; return;", 0, {
+			sourceType: "auto",
+			estree: true
+		});
+		expect(auto.sourceType).toBe("script");
+		expect(() => parseProgram("return;", 0, { sourceType: "script" })).toThrow(
+			"'return' outside of function"
+		);
+		expect(
+			parseProgram("return;", 0, {
+				sourceType: "script",
+				allowReturnOutsideFunction: true,
+				estree: true
+			}).body[0].type
+		).toBe("ReturnStatement");
+		expect(() =>
+			parseProgram("import defer * as d from 'e';", 0, { importPhases: false })
+		).toThrow(SyntaxError);
+		expect(typeof parseProgram("import defer * as d from 'e';")).toBe("number");
+	});
+
+	it("refuses an ESTree parse a visitor starts, as a tree parse", () => {
+		expect(() =>
+			new SourceProcessor()
+				.use([NodeType.Identifier], () => {
+					parseProgram("b", 0, { estree: true });
+				})
+				.process("a", { sourceType: "script" })
+		).toThrow("a visitor cannot start another JavaScript parse");
+	});
+
+	it("lets the last tree go once an ESTree parse starts", () => {
+		const { parsedTree } = require("../../../lib/javascript/syntax-parser");
+		parseProgram("a");
+		expect(parsedTree()).not.toBeNull();
+		parseProgram("b", 0, { estree: true });
+		expect(parsedTree()).toBeNull();
+	});
+
+	it("turns `auto` into a script at a return it allows anyway", () => {
+		const program = parseProgram("return 1;", 0, {
+			sourceType: "auto",
+			allowReturnOutsideFunction: true,
+			estree: true
+		});
+		expect(program.sourceType).toBe("script");
+	});
+
+	it("reads `await` as a name once `auto` turns into a script", () => {
+		for (const code of [
+			"return; let await = 1;",
+			'"use strict"; return; var await = 1;'
+		]) {
+			expect(parseProgram(code, 0, { sourceType: "auto" })).toEqual(
+				expect.any(Number)
+			);
+		}
+	});
+
+	it("throws the first error without a callback, as acorn does", () => {
+		expect(() => parseProgram("let a; let a")).toThrow(
+			"Identifier 'a' has already been declared (1:11)"
+		);
+		expect(() => parseProgram("a ~ ")).toThrow(SyntaxError);
+		expect(parseProgram("a ~ ", 0, { parseError: () => {} })).toBeUndefined();
 	});
 
 	it("rethrows a syntax error the callback throws", () => {
@@ -6123,5 +6294,32 @@ describe("hasOctalEscape", () => {
 		["'plain'", false]
 	])("reads %s as holding a legacy octal escape: %s", (raw, expected) => {
 		expect(hasOctalEscape(raw)).toBe(expected);
+	});
+});
+
+describe("validateRegExpLiteral", () => {
+	const {
+		validateRegExpLiteral
+	} = require("../../../lib/javascript/regexp");
+
+	it.each(
+		/** @type {[string, string, import("../../../lib/javascript/syntax-parser").EcmaVersion, string | undefined][]} */ ([
+			["a+", "g", 2018, undefined],
+			["(?<a>x)\\k<a>", "", 2018, undefined],
+			["(?<a>x)", "", 2017, "Invalid group"],
+			["a", "gg", 2018, "Duplicate regular expression flag"],
+			["[a-z]", "v", 2018, "Invalid regular expression flag"],
+			["\\p{L}", "u", 2018, undefined],
+			["(", "", "latest", "Unterminated group"],
+			["[", "g", 2018, "Unterminated regular expression"],
+			["a\\", "", 2018, "Unterminated regular expression"],
+			["a/b", "", 2018, "Unterminated regular expression"],
+			["[/]", "", 2018, undefined],
+			["a\nb", "", 2018, "Unterminated regular expression"]
+		])
+	)("holds /%s/%s at %s to the spec", (pattern, flags, ecmaVersion, error) => {
+		const validate = () => validateRegExpLiteral(pattern, flags, ecmaVersion);
+		if (error === undefined) expect(validate).not.toThrow();
+		else expect(validate).toThrow(error);
 	});
 });
