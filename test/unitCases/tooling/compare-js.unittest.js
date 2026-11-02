@@ -104,6 +104,14 @@ describe("the JavaScript tool comparison — a program cut short", () => {
 					repro: "    …f(1,"
 				}
 			]);
+			// Where acorn reads the cut, any refusal is reported, a crash among them.
+			expect(crashing("f(1);", options)).toEqual([
+				{
+					relation: "acorn",
+					what: "a cut program acorn reads is refused",
+					repro: "    …f(1);: cannot read properties of undefined"
+				}
+			]);
 		});
 	});
 });
