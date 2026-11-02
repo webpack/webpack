@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Fold known `switch`, spread and unary values; read options without `compress`.
+Minify statements into sequences; fold known `switch`, spread, unary values.
