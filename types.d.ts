@@ -34410,6 +34410,12 @@ declare class SyntaxTree {
 		| { cooked?: null | string; raw: string };
 	fieldCount(field: number, node: number): number;
 	field(i: number, field: number, node: number): number;
+
+	/**
+	 * Pushes a node's children onto a stack, in no set order, so a walk of
+	 * every node allocates nothing per node.
+	 */
+	pushChildren(node: number, stack: number[]): void;
 	flag(flag: number, node: number): boolean;
 	textOf(part: number, node: number): null | string;
 }
