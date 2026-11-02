@@ -98,6 +98,8 @@ git log --format='%h author=%an <%ae> committer=%cn <%ce>' origin/main..HEAD
 
 **Then re-run the tests covering your change**: git rebases text, not meaning, so a renamed helper, changed default or shared fixture on `main` can break your code with no conflict.
 
+**Then push and open the PR**: `git push --force-with-lease` (the rebase rewrote any commits already pushed), then `create_pull_request`. Your own branch before its PR exists needs no asking; an open PR follows [the rule below](#watching-a-pr-and-updating-its-branch).
+
 A stale base makes CI lie both ways: `Code Size` and benchmarks compare against `main`'s last report and attribute commits your branch predates to you (a one-line diff reported as `+163 KiB`), and a red check may be a defect already fixed on `main`. So when `main` moves under a long-lived PR, don't read a cross-base comparison as a result: ask the requester before rebasing an open PR ([below](#watching-a-pr-and-updating-its-branch)), then rebase locally as above, or use `update_pull_request_branch` when the repo is configured to rebase.
 
 ## Stacked PRs
