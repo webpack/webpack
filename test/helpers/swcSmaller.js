@@ -49,7 +49,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/10816/input.js",
 			"swc minifier: fixture/issues/10849/input.js",
 			"swc minifier: fixture/issues/10859/input.js",
-			"swc minifier: fixture/issues/10885/input.js",
 			"swc minifier: fixture/issues/10981/input.js",
 			"swc minifier: fixture/issues/10986/input.js",
 			"swc minifier: fixture/issues/11007/input.js",
@@ -64,8 +63,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/11320/input.js",
 			"swc minifier: fixture/issues/11321/input.js",
 			"swc minifier: fixture/issues/11512-simple/input.js",
-			"swc minifier: fixture/issues/11645/eval-parent-scope-nested-block/input.js",
-			"swc minifier: fixture/issues/11645/with-parent-scope-nested-block/input.js",
 			"swc minifier: fixture/issues/11684/class-decl/input.js",
 			"swc minifier: fixture/issues/11684/class-expression/input.js",
 			"swc minifier: fixture/issues/11684/constructor-scopes/input.js",
@@ -321,11 +318,8 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/projects/next/extra/if_return/1/input.js",
 			"swc minifier: fixture/projects/react/.6/input.js",
 			"swc minifier: fixture/projects/react/10/input.js",
-			"swc minifier: fixture/projects/react/11/input.js",
 			"swc minifier: fixture/projects/react/12/input.js",
 			"swc minifier: fixture/projects/react/2/input.js",
-			"swc minifier: fixture/projects/react/3/input.js",
-			"swc minifier: fixture/projects/react/4/input.js",
 			"swc minifier: fixture/projects/react/7/input.js",
 			"swc minifier: fixture/projects/underscore/16/input.js",
 			"swc minifier: fixture/projects/underscore/17/input.js",
@@ -564,7 +558,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/2044/full/input.js",
 			"swc minifier: fixture/issues/5588/input.js",
 			"swc minifier: fixture/issues/do-while-false-terminal-jump/labels-preserved/input.js",
-			"swc minifier: fixture/issues/do-while-false-terminal-jump/loops-disabled/input.js",
 			"swc minifier: fixture/issues/do-while-false-terminal-jump/side-effects/input.js",
 			"swc minifier: fixture/next/41527/1/input.js",
 			"swc minifier: fixture/projects/mootools/.11/input.js",
@@ -676,8 +669,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: switch/constant_switch_7",
 			"terser compress: switch/constant_switch_8",
 			"terser compress: switch/constant_switch_9",
-			"terser compress: switch/drop_default_1",
-			"terser compress: switch/drop_default_2",
 			"terser compress: switch/keep_default",
 			"terser compress: switch/issue_1663",
 			"terser compress: switch/drop_case",
@@ -704,7 +695,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: switch/issue_2535",
 			"terser compress: switch/gut_entire_switch",
 			"terser compress: switch/gut_entire_switch_2",
-			"terser compress: switch/turn_into_if",
 			"terser compress: switch/turn_into_if_2",
 			"terser compress: switch/issue_1083_3",
 			"terser compress: switch/issue_1083_4"
@@ -796,7 +786,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: drop-unused/unused_funarg_1",
 			"terser compress: drop-unused/unused_funarg_2",
 			"terser compress: drop-unused/unused_circular_references_1",
-			"terser compress: drop-unused/unused_block_decls",
 			"terser compress: drop-unused/drop_assign",
 			"terser compress: drop-unused/drop_toplevel_all",
 			"terser compress: drop-unused/drop_toplevel_retain",
@@ -1089,7 +1078,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: labels/labels_3",
 			"terser compress: labels/labels_4",
 			"terser compress: labels/labels_5",
-			"terser compress: labels/labels_7",
 			"terser compress: labels/labels_9",
 			"terser compress: labels/labels_10"
 		]
@@ -1375,17 +1363,7 @@ const SWC_SMALLER_BY_REASON = [
 	],
 	[
 		"swc goes further than webpack on what terser's `block-scope` tests cover",
-		[
-			"terser compress: block-scope/remove_unused_in_global_block",
-			"terser compress: block-scope/issue_334"
-		]
-	],
-	[
-		"swc goes further than webpack on what terser's `blocks` tests cover",
-		[
-			"terser compress: blocks/remove_blocks",
-			"terser compress: blocks/keep_some_blocks"
-		]
+		["terser compress: block-scope/issue_334"]
 	],
 	[
 		"swc goes further than webpack on what terser's `global_defs` tests cover",
