@@ -38,6 +38,7 @@ const {
 	STAGES,
 	collectFiles,
 	compress,
+	cutsAt,
 	filterFrom,
 	findingGroups,
 	formatCost,
@@ -1210,6 +1211,69 @@ const acornDifference = (source, options) => {
 	];
 };
 
+// Where a cut lands, by the construct it interrupts: each pattern ends where the
+// program is cut, just inside what the end of the input then has to close.
+/** @type {[string, RegExp][]} */
+const JS_CUTS = [
+	["in a double-quoted string", /"[^"\\\n]/g],
+	["in a single-quoted string", /'[^'\\\n]/g],
+	["in a template", /`[^`$\\]/g],
+	["in a template substitution", /\$\{/g],
+	["in a block comment", /\/\*/g],
+	["in a regular expression", /[=(,:]\s*\/(?![/*])/g],
+	["in an argument list", /\w\(/g],
+	["in a block", /\)\s*\{/g],
+	["in an object literal", /[=(,:]\s*\{/g],
+	["in an array literal", /[=(,:]\s*\[/g],
+	["after an arrow", /[=]>/g],
+	["in a class body", /\bclass\b[^{;]*\{/g],
+	["in a member chain", /\w\./g]
+];
+
+/**
+ * What a program cut short reads to: the tree acorn builds where acorn reads
+ * it, and otherwise a `SyntaxError`, as acorn's own refusal is.
+ * @param {string} source a program cut short
+ * @param {EXPECTED_ANY} options what to parse it as
+ * @returns {import("./compare-tools-harness").Report[]} the difference, as a finding
+ */
+const cutDifference = (source, options) => {
+	try {
+		acornParse(source, options);
+	} catch (_error) {
+		try {
+			webpackParse(source, options);
+		} catch (error) {
+			if (error instanceof SyntaxError) return [];
+			return [
+				{
+					relation: "acorn",
+					what: `a cut program throws ${/** @type {Error} */ (error).name}, not a SyntaxError`,
+					repro: `    …${oneLine(source.slice(-60), 60)}`
+				}
+			];
+		}
+		return [
+			{
+				relation: "acorn",
+				what: "a cut program acorn rejects reads to a tree",
+				repro: `    …${oneLine(source.slice(-60), 60)}`
+			}
+		];
+	}
+	try {
+		return acornDifference(source, options);
+	} catch (error) {
+		return [
+			{
+				relation: "acorn",
+				what: "a cut program acorn reads is refused",
+				repro: `    …${oneLine(source.slice(-60), 60)}: ${thrownText(error)}`
+			}
+		];
+	}
+};
+
 // --- The printer's invariants -----------------------------------------------
 
 // The option sets the printer is held over: what a production build minifies
@@ -1693,6 +1757,7 @@ const invariants = async (write) => {
 	// own corpus is left out, as the parser's unit tests replay its trees.
 	if (wantedRelation("acorn")) {
 		let read = 0;
+		let cuts = 0;
 		for (const [label, source, options] of corpus) {
 			if (label.startsWith("acorn corpus: ")) continue;
 			const settled = options === undefined ? goalFor(source) : options;
@@ -1701,8 +1766,15 @@ const invariants = async (write) => {
 			for (const report of acornDifference(source, settled)) {
 				groups.add(report, "parse", label);
 			}
+			for (const [where, cut] of cutsAt(source, JS_CUTS)) {
+				cuts++;
+				for (const report of cutDifference(cut, settled)) {
+					groups.add(report, "parse", `${label}, cut ${where}`);
+				}
+			}
 		}
 		log(`held ${read} trees to acorn's …`);
+		log(`… and ${cuts} of them cut short inside a construct …`);
 	}
 	// The printer's two relations share a sweep: both need the output, and
 	// printing it twice to ask two questions of it would double the run.
@@ -2138,7 +2210,9 @@ started.catch((error) => {
 });
 
 module.exports = {
+	JS_CUTS,
 	behaviorDifference,
+	cutDifference,
 	firstDifference,
 	reportable,
 	roundTrip,
