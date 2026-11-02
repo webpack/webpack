@@ -5846,6 +5846,26 @@ describe("WebpackParser writing a SyntaxTree", () => {
 		expect(later).toEqual([]);
 	});
 
+	it("writes a node acorn shares between two fields once per field", () => {
+		const { Field } = require("../../../lib/javascript/syntax-parser");
+		const { tree } = parseIntoTree('import { x } from "m"; let y; export { y };');
+		/** @type {Map<number, number>} */
+		const parents = new Map();
+		/** @type {string[]} */
+		const shared = [];
+		for (let node = 1; node <= tree._count; node++) {
+			for (const field of Object.values(Field)) {
+				for (let i = 0, n = tree.fieldCount(field, node); i < n; i++) {
+					const child = tree.field(i, field, node);
+					if (child === 0) continue;
+					if (parents.has(child)) shared.push(`${child} in ${node}`);
+					parents.set(child, node);
+				}
+			}
+		}
+		expect(shared).toEqual([]);
+	});
+
 	it("writes an import or export a loop runs, where they are allowed everywhere", () => {
 		for (const source of [
 			'for (;;) import a from "b";',
