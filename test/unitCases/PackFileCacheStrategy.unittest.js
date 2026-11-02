@@ -30,12 +30,17 @@ const getSerializer = (name) => {
  */
 const createContext = (values, extra) => {
 	let index = 0;
-	return /** @type {ObjectDeserializerContext} */ (
+	const context = /** @type {ObjectDeserializerContext} */ (
 		/** @type {unknown} */ ({
 			read: () => values[index++],
+			// like `ObjectMiddleware`, `rest` is the same context
+			get rest() {
+				return context;
+			},
 			...extra
 		})
 	);
+	return context;
 };
 
 /**
