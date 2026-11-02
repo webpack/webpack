@@ -1274,7 +1274,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["function f(o,p){var x=p.q;o.f(x)}", {}, "function f(f,o){var n=o.q;f.f(n)}"],
 			["function f(o,p){var x=p;new o.F(x)}", {}, "function f(n,o){new n.F(o)}"],
 			// A pure trailing argument to a parameter nothing reads, or to none, goes.
-			["function f(){function g(a,b){return a}return[g(1,2),g(x,y()),g(1,2,3),g(...z,1)]}", {}, "function f(){function n(n,g){return n}return[n(1),n(x,y()),n(1),n(...z)]}"],
+			["function f(){function g(a,b){return a}return[g(1,2),g(x,y()),g(1,2,3),g(...z,1)]}", {}, "function f(){function n(n,g){return n}return[n(1),n(x,y()),n(1),n(...z,1)]}"],
 			["function f(z){var q=z.p;function g(a,b){return a}return[g(x,q),g(y,2)]}", {}, "function f(n){n.p;function r(n,r){return n}return[r(x),r(y)]}"],
 			["function f(){function g(a,...b){return a}return[g(1,2),g(3,4)]}", {}, "function f(){function n(n,...r){return n}return[n(1,2),n(3,4)]}"],
 			["function f(){function g(a,b){return arguments}return[g(1,2),g(3,4)]}", {}, "function f(){function n(n,r){return arguments}return[n(1,2),n(3,4)]}"],
@@ -1309,6 +1309,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["function f(){(function(o){h();g(o)})({a:1})}", {}, "function f(){!function(){h(),g({a:1})}()}"],
 			["function f(){(function(o){h(function(){});g(o)})([1])}", {}, "function f(){!function(){h(function(){}),g([1])}()}"],
 			["function f(){(function(o,p){g(o,p)})([1],h)}", {}, "function f(){!function(o){g([1],o)}(h)}"],
+			["function f(){(function(o){class A{x=o}g(new A,new A)})([1])}", {}, "function f(){!function(n){class o{x=n}g(new o,new o)}([1])}"],
 			["function f(){(function(o){g(o)})([1]);(function(p){g(p)})([2])}", {}, "function f(){!function(){g([1])}(),function(){g([2])}()}"],
 			// A `join` of constants, an empty block and a loop on a truthy constant print shorter or not at all.
 			["function f(){[1,2].join();g()}", {}, "function f(){g()}"],
