@@ -22,7 +22,8 @@ module.exports = {
 		{
 			/**
 			 * In the second build, the cache drops one module and its request
-			 * resolves to no module, so its parent must not keep its memo cache.
+			 * resolves to no module; in the third, the request resolves to a module
+			 * kept from before. Either way its parent must not keep its memo cache.
 			 * @param {Compiler} compiler the compiler
 			 */
 			apply(compiler) {
@@ -32,9 +33,9 @@ module.exports = {
 				});
 				compiler.hooks.normalModuleFactory.tap("DropCachedModule", (nmf) => {
 					nmf.hooks.beforeResolve.tap("DropCachedModule", (data) => {
-						if (build === 1 && data.request === "./unchanged-module") {
-							return false;
-						}
+						if (data.request !== "./unchanged-module") return;
+						if (build === 1) return false;
+						if (build === 2) data.request = "./shared";
 					});
 				});
 				/** @type {ReturnType<MemCaches["get"]>} */
@@ -50,7 +51,7 @@ module.exports = {
 							compilation.moduleMemCaches
 						);
 						const memCache = memCaches.get(index);
-						if (build === 1 && memCache === indexMemCache) {
+						if (build > 0 && memCache === indexMemCache) {
 							compilation.errors.push(
 								new WebpackError("index.js kept a stale memo cache")
 							);
