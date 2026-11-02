@@ -6201,6 +6201,17 @@ describe("parseProgram", () => {
 		expect(program.sourceType).toBe("script");
 	});
 
+	it("reads `await` as a name once `auto` turns into a script", () => {
+		for (const code of [
+			"return; let await = 1;",
+			'"use strict"; return; var await = 1;'
+		]) {
+			expect(parseProgram(code, 0, { sourceType: "auto" })).toEqual(
+				expect.any(Number)
+			);
+		}
+	});
+
 	it("throws the first error without a callback, as acorn does", () => {
 		expect(() => parseProgram("let a; let a")).toThrow(
 			"Identifier 'a' has already been declared (1:11)"
