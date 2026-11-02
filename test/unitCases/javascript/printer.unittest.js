@@ -412,7 +412,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"function f(a){ function h(x){ return x + a } function k(){ return 1 } function r(n){ return n ? r(n - 1) : 0 } var z = h(2); for (;;) k(); g(z, r); function late(){} late(); return [early()]; function early(){ return 2 } }",
 				{},
-				"function f(n){function r(){return 1}function t(n){return n?t(n-1):0}var u=function(){return 2+n}();for(;;)r();g(u,t),(function(){})();return[2]}"
+				"function f(n){function r(){return 1}function t(n){return n?t(n-1):0}var u=function(){return 2+n}();for(;;)r();g(u,t);(function(){})();return[2]}"
 			],
 			// A name nothing reads goes, its value still running; a `var` set
 			// after a call is a constant where only its own function reads it.
@@ -562,7 +562,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"function f(){ var g = function(){}; (g || h)(); var k = function(){}; k ? 1 : 2; var m = function(){}; m`t`; var p = class{}; (p, 1); var q = {}; q.r++; }",
 				{},
-				"function f(){(function(){}||h)(),(function(){})`t`,({}).r++}"
+				"function f(){(function(){}||h)();(function(){})`t`;({}).r++}"
 			],
 			[
 				"function f(){ var m = function(){}; h({ k: m }); var n = function(){}; h(n + 1); var p = function(){}; h({ [p]: 1 }) }",
@@ -579,7 +579,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"function f(H){ var x; x = g(); switch (x) {} x = g(); x ? 1 : 2; x = g(); h(...x); x = g(); delete x.y; x = g(); (x, 1); x = g(); ({ k: x }); x = g(); ({ [k]: x }); x = g(); ({ x }); x = g(); new H(x); x = g(); new H(...x); x = g(); new U(x); x = g(); [...x]; x = g(); `${x}`; x = g(); -x; return x }",
 				{},
-				"function f(x){var e=g();switch(e){}return(e=g())?1:2,e=g(),h(...e),e=g(),delete e.y,e=g(),({k:e=g()}),e=g(),({[k]:e}),e=g(),new x(e=g()),e=g(),new x(...e),new U(e=g()),e=g(),[...e],`${e=g()}`,-(e=g()),e}"
+				"function f(x){var e=g();switch(e){}(e=g())?1:2,e=g(),h(...e),e=g(),delete e.y,e=g();({k:e=g()});e=g();({[k]:e});return e=g(),new x(e=g()),e=g(),new x(...e),new U(e=g()),e=g(),[...e],`${e=g()}`,-(e=g()),e}"
 			],
 			[
 				"function f(H){ var x; x = g(); H(...x) }",
@@ -766,7 +766,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"function f(a, b){ if (a) x(); else y(); if (a = b) x(); else { y() } if (function(){}()) x(); else y(); if (a) x(); else if (b) y(); else (x(), y()); if (a) { if (b) x(); else y() } else z(); }",
 				{},
-				"function f(e,f){e?x():y(),(e=f)?x():y(),(function(){}())?x():y(),e?x():f?y():(x(),y()),e?f?x():y():z()}"
+				"function f(e,f){e?x():y(),(e=f)?x():y();(function(){}())?x():y();e?x():f?y():(x(),y()),e?f?x():y():z()}"
 			],
 			// A comment kept on an `if`'s branch or its `return` keeps it, and `conditionals: false` keeps every `if`.
 			[
@@ -1025,7 +1025,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"function f(a, b, o) { (() => o.x = b)(); (() => ({ a: g() }))(); g((() => a + b)()); new G((() => a - b)()); o.y = (() => a * b)(); o[(() => a + b)()] = 1; return [`${(() => a + b)()}`, ...(() => [a])(), { p: (() => a + b)(), [(() => a | b)()]: 1 }, (() => \"s\")(), (() => `t${a}`)(), (() => -a)()] }",
 				{},
-				'function f(a,b,o){o.x=b,({a:g()}),g(a+b),new G(a-b),o.y=a*b,o[a+b]=1;return[`${a+b}`,...[a],{p:a+b,[a|b]:1},"s",`t${a}`,-a]}'
+				'function f(a,b,o){o.x=b;({a:g()});g(a+b),new G(a-b),o.y=a*b,o[a+b]=1;return[`${a+b}`,...[a],{p:a+b,[a|b]:1},"s",`t${a}`,-a]}'
 			],
 			[
 				"function f() { return [(function () { g() })(), (function () { return })(), (function () { return new.target })(), (function () { return class {} })(), (function n() { return function () { return 1 } })(), (function n() { return function () { return n } })(), (function () { return function () { return 1 } })()] } class A extends B { m() { return (() => super.m())() } } function h(a, b) { throw (() => a + b)() } function k(a, b) { var v = (() => a % b)(); g(v); g(v) }",
@@ -1086,7 +1086,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"function f(){ var c = {}.a ? g() : h(); c, 1; var d = function(){}.call() ? g() : h(); d; (() => ({}.a ? g() : 2))(), g() }",
 				{},
-				"function f(){({}.a?g():h()),(function(){}.call()?g():h()),({}.a?g():2),g()}"
+				"function f(){({}.a?g():h());(function(){}.call()?g():h());({}.a?g():2),g()}"
 			],
 			// A function declared as the branch kept declares it only once that runs.
 			[
@@ -1156,7 +1156,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// A `var` set after a call folds where its function reads it after the declaration.
 			["function m(){f();var greeting=\"hello\";g(greeting+\"!\")}", {}, "function m(){f(),g(\"hello!\")}"],
 			["function m(){g(greeting+\"!\");var greeting=\"hello\"}", {}, "function m(){g(e+\"!\");var e=\"hello\"}"],
-			["function m(){function g(){return greeting}f();var greeting=\"hello\";g(greeting)}", {}, "function m(){f(),(function(){return\"hello\"})(\"hello\")}"],
+			["function m(){function g(){return greeting}f();var greeting=\"hello\";g(greeting)}", {}, "function m(){f();(function(){return\"hello\"})(\"hello\")}"],
 			["function m(){f();var contraction=\"(?:d|ll|m|re|s|t|ve)?\";g(\"x\"+contraction,\"y\"+contraction,contraction)}", {}, "function m(){f(),g(\"x(?:d|ll|m|re|s|t|ve)?\",\"y(?:d|ll|m|re|s|t|ve)?\",\"(?:d|ll|m|re|s|t|ve)?\")}"],
 			// A fold weighs the operands as printed, a string's run joined.
 			["f(x+\"a\"+\"b\"+1)", {}, "f(x+\"ab1\");"],
@@ -1260,8 +1260,8 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["function f(x,g){if(x){void function(){0}();g();g()}}", {}, "function f(f,i){if(f)i(),i()}"],
 			["f=b=>{void function(){0}();g();return b}", {}, "f=n=>(g(),n);"],
 			// A statement after the first that printed its own parentheses keeps the body's braces.
-			["function k(a,p){function A(x,y){x.push(1);x.push(2)}if(p){a.push(3);A(a,p)}return a}", {}, "function k(p,u){if(u){p.push(3),(function(p,u){p.push(1),p.push(2)})(p,u)}return p}"],
-			["f=x=>{a();({}).b=x;return 1}", {}, "f=r=>{return a(),({}).b=r,1};"],
+			["function k(a,p){function A(x,y){x.push(1);x.push(2)}if(p){a.push(3);A(a,p)}return a}", {}, "function k(p,u){if(u){p.push(3);(function(p,u){p.push(1),p.push(2)})(p,u)}return p}"],
+			["f=x=>{a();({}).b=x;return 1}", {}, "f=r=>{a();({}).b=r;return 1};"],
 			// An object opening an optional chain a statement opens with keeps its parentheses.
 			["if({m(){}}?.m())a();else b()", {}, "({m(){}}.m())?a():b();"],
 			// A heritage the call prints as needs no parentheses.
@@ -2248,10 +2248,10 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		);
 		expect(
 			print("(function(){for(;;)g()})();h()", { compress: { negate_iife: false } })
-		).toBe("(function(){for(;;)g()})(),h();");
+		).toBe("(function(){for(;;)g()})();h();");
 		expect(
 			print("(function(){for(;;)g()})();h()", { format: { wrap_iife: true } })
-		).toBe("(function(){for(;;)g()})(),h();");
+		).toBe("(function(){for(;;)g()})();h();");
 		// An empty function called where nothing reads it runs only its arguments.
 		expect(
 			print(
@@ -2279,7 +2279,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				"(function(){try{throw 1}finally{return 2}})();x=(function(){try{g()}finally{return 2}})();(function(){if(g())return 1;for(;;)h()})();(async function(){g();return 1})();(function(){g();return h()})();a(),(()=>{g();return 2})(),b();(function*(){return 1})().next()"
 			)
 		).toBe(
-			"!function(){try{throw 1}finally{return}}(),x=function(){try{g()}finally{return 2}}(),function(){if(g())return;for(;;)h()}(),async function(){return g(),1}(),function(){return g(),h()}(),a(),(()=>{g()})(),b(),(function*(){return 1})().next();"
+			"!function(){try{throw 1}finally{return}}(),x=function(){try{g()}finally{return 2}}(),function(){if(g())return;for(;;)h()}(),async function(){return g(),1}(),function(){return g(),h()}(),a(),(()=>{g()})(),b();(function*(){return 1})().next();"
 		);
 		// A method's value is the method's, read whatever the call around its class.
 		expect(
@@ -3659,6 +3659,12 @@ describe("one-pass minify of statement sequences", () => {
 			// A call of a function expression needs no `!` past the first.
 			["function f(){k();(function(){var y=g();h(y,y)})()}", "function f(){k(),function(){var n=g();h(n,n)}()}"],
 			["function f(){(function(){var y=g();h(y,y)})();return k}", "function f(){return function(){var n=g();h(n,n)}(),k}"],
+			// An arrow joins whole only where it prints as what it returns.
+			["f(()=>{s?a():b();return x})", "f(()=>(s?a():b(),x));"],
+			["f(()=>{a();if(t)return 1;return 2})", "f(()=>{a();return t?1:2});"],
+			["f(()=>{if(q)y();a();return b})", "f(()=>{if(q)y();return a(),b});"],
+			// One taking parentheses at a statement's start stays a statement.
+			["function f(){a();(function(){}).call(1);return b}", "function f(){a();(function(){}).call(1);return b}"],
 			// asm.js reads its statements as written.
 			['function f(){"use asm";function g(a){a=a|0;b=b|0;return a|0}return g}', 'function f(){"use asm";return function(n){n=n|0;b=b|0;return n|0}}']
 		];
@@ -3670,6 +3676,107 @@ describe("one-pass minify of statement sequences", () => {
 				}).code
 			).toBe(expected);
 		}
+	});
+
+	it("should join only where nothing reads the statements apart", () => {
+		const print = (
+			/** @type {string} */ source,
+			/** @type {Record<string, EXPECTED_ANY>} */ options
+		) =>
+			minifyOnePass(source, {
+				compress: { toplevel: false },
+				mangle: { toplevel: false },
+				...options
+			}).code;
+		// A comment before the `return` stays by it.
+		expect(
+			print("function f(){a();/*c*/return b}", { format: { comments: "all" } })
+		).toBe("function f(){a();/*c*/return b}");
+		// A `return` whose value goes unread prints bare, which nothing joins.
+		expect(print("(function(){if(c)return;a();return 1})()", {})).toBe(
+			"!function(){if(c)return;a();return}();"
+		);
+		// What prints nothing after the `return` ends the arrow's body too.
+		expect(print("f(()=>{a();if(t)return 1;return 2;var z})", {})).toBe(
+			"f(()=>{a();return t?1:2});"
+		);
+		expect(print("f(()=>{if(s)a();else b();return x})", {})).toBe(
+			"f(()=>(s?a():b(),x));"
+		);
+		// A call spreading its arguments folds to no value.
+		expect(
+			print("function f(){return(function(x){return 1})(...a)?c:d}", {})
+		).toBe("function f(){return function(n){return 1}(...a)?c:d}");
+		// A statement a dropped `console` call prints nothing leaves the value.
+		expect(
+			print("f=b=>{console.log(1);return b}", {
+				compress: { toplevel: false, drop_console: true }
+			})
+		).toBe("f=o=>o;");
+		const { SourceProcessor } = require("../../../lib/javascript/syntax");
+		expect(
+			/** @type {{ code: string }} */ (
+				new SourceProcessor().process(
+					"function f(){var x=g();var y=h();a(x,y);b(x);return y}",
+					{ mode: "beautify", compress: {} }
+				)
+			).code
+		).toBe("function f() {\nvar r = g(), n = h();\nreturn a(r, n), b(r), n;\n}");
+	});
+
+	it("should fold a `switch` past the loops and functions its `break`s skip, and spreads of literals", () => {
+		const cases = [
+			[
+				"function s(x){switch(1){case 1:for(;;)break;while(x)break;do{break}while(x);for(k in x)break;for(k of x)break;switch(x){case 2:break}(function(){});(()=>{});class C{};x();break}}",
+				"function s(e){{for(;;)break;while(e)break;do{break}while(e);for(k in e)break;for(k of e)break;switch(e){case 2:}(function(){});()=>{};class a{};e()}}"
+			],
+			["function s(x){switch(1){case 1:return x;case 2:y()}}", "function s(c){return c}"],
+			["function s(x){switch(1){case 1:throw x;case 2:y()}}", "function s(c){throw c}"],
+			["f({...{a:1,...b}}, [...[1,...c]])", "f({a:1,...b},[1,...c]);"],
+			["f(...[1,...[2,3]])", "f(1,2,3);"]
+		];
+		for (const [source, expected] of cases) {
+			expect(
+				minifyOnePass(source, {
+					compress: { toplevel: false },
+					mangle: { toplevel: false }
+				}).code
+			).toBe(expected);
+		}
+	});
+
+	it("should print the known `switch`, spread and unary values of the config cases", () => {
+		const fs = require("fs");
+		const path = require("path");
+		for (const name of [
+			"minify-known-switch",
+			"minify-literal-spread",
+			"minify-unary-fold"
+		]) {
+			const source = fs.readFileSync(
+				path.resolve(
+					__dirname,
+					"../../configCases/optimization",
+					name,
+					"index.js"
+				),
+				"utf8"
+			);
+			expect(
+				minifyOnePass(source, {
+					module: true,
+					compress: {},
+					mangle: {}
+				}).code
+			).toMatchSnapshot(name);
+		}
+	});
+
+	it("should fold the global `NaN` and `Infinity` however spelled", () => {
+		// cspell:ignore nfinity
+		expect(
+			minifyOnePass("f(!\\u0049nfinity,typeof \\u004eaN)", { compress: {} }).code
+		).toBe('f(!1,"number");');
 	});
 
 	it("should read `?.` after what is never nullish as `.`", () => {
