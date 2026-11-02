@@ -9892,7 +9892,7 @@ declare class EnvironmentPlugin {
 type ErrorWithDetail = Error & { details?: string };
 
 /**
- * a node the parser made, as `SyntaxTree#addEstree` reads it
+ * a node the parser made, as `SyntaxTree#addEstree` reads it, its offsets from `start` and `end` or else `range`
  */
 declare interface EstreeSource {
 	[index: string]:
@@ -9907,8 +9907,9 @@ declare interface EstreeSource {
 		| EstreeSource
 		| EstreeSourceItem[];
 	type: string;
-	start: number;
-	end: number;
+	start?: number;
+	end?: number;
+	range?: [number, number];
 }
 type EstreeSourceItem = null | number | EstreeSource;
 

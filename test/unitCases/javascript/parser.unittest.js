@@ -5321,6 +5321,28 @@ describe("SyntaxTree", () => {
 		);
 	});
 
+	it("writes the offsets of a node that has only a range", () => {
+		const tree = new SyntaxTree();
+		const program = tree.addEstree({
+			type: "Program",
+			range: [0, 3],
+			sourceType: "script",
+			body: [
+				{
+					type: "ExpressionStatement",
+					range: [1, 3],
+					expression: { type: "Identifier", range: [1, 2], name: "a" }
+				}
+			]
+		});
+		const statement = tree.field(0, Field.body, program);
+		expect(tree.range(program)).toEqual([0, 3]);
+		expect(tree.range(statement)).toEqual([1, 3]);
+		expect(tree.range(tree.field(0, Field.expression, statement))).toEqual([
+			1, 2
+		]);
+	});
+
 	it("builds a tree whose parents were written before their children", () => {
 		const tree = new SyntaxTree();
 		const array = tree.add(NodeType.ArrayExpression, 0, 3);
