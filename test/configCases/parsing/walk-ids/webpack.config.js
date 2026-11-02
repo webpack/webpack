@@ -91,7 +91,7 @@ const walkIds = (compiler) => {
 						/** @type {NonNullable<typeof buildInfo.diagnostics>} */ (
 							buildInfo.diagnostics
 						).ineffectivePureAnnotations
-					).toBe(1);
+					).toBe(2);
 				}
 			});
 		}
