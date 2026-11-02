@@ -1261,7 +1261,17 @@ const cutDifference = (source, options) => {
 			}
 		];
 	}
-	return acornDifference(source, options);
+	try {
+		return acornDifference(source, options);
+	} catch (error) {
+		return [
+			{
+				relation: "acorn",
+				what: "a cut program acorn reads is refused",
+				repro: `    …${oneLine(source.slice(-60), 60)}: ${thrownText(error)}`
+			}
+		];
+	}
 };
 
 // --- The printer's invariants -----------------------------------------------

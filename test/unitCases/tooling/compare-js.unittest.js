@@ -80,6 +80,19 @@ describe("the JavaScript tool comparison — a program cut short", () => {
 			]);
 		});
 
+		it("should report a refusal of what acorn reads", () => {
+			const refusing = withParser(() => {
+				throw new SyntaxError("Unexpected token");
+			});
+			expect(refusing("f(1);", options)).toEqual([
+				{
+					relation: "acorn",
+					what: "a cut program acorn reads is refused",
+					repro: "    …f(1);: Unexpected token"
+				}
+			]);
+		});
+
 		it("should report a refusal that is no SyntaxError", () => {
 			const crashing = withParser(() => {
 				throw new TypeError("cannot read properties of undefined");
