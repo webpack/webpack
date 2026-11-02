@@ -3694,6 +3694,18 @@ describe("one-pass minify of statement sequences", () => {
 				compress: { toplevel: false, side_effects: false }
 			})
 		).toBe('function f(){;"x";return g(),1}');
+		// A value folding to a string stays no directive, wherever it prints.
+		for (const [source, expected] of [
+			['function f(){switch(1){case 1:"use "+"strict"}return this}', 'function f(){;"use strict";return this}'],
+			['function f(){if(1){"use "+"strict"}return this}', 'function f(){;"use strict";return this}'],
+			['function f(){"use "+"strict";g()}', 'function f(){;"use strict";g()}'],
+			['function f(){switch(1){case 1:"use "+"strict";g()}return this}', 'function f(){;"use strict";g();return this}'],
+			['function f(){g();"a"+"b";return h}', 'function f(){g();"ab";return h}']
+		]) {
+			expect(
+				print(source, { compress: { toplevel: false, side_effects: false } })
+			).toBe(expected);
+		}
 		// A comment before the `return` stays by it.
 		expect(
 			print("function f(){a();/*c*/return b}", { format: { comments: "all" } })
