@@ -14,14 +14,86 @@ jest.mock("../../../tooling/compare-tools-harness", () => ({
 
 const acorn = require("acorn");
 const {
+	JS_CUTS,
 	behaviorDifference,
+	cutDifference,
 	roundTrip,
 	runMode
 } = require("../../../tooling/compare-js-tools");
+const { cutsAt } = require("../../../tooling/compare-tools-harness");
 
 // Read before anything clears the mock: an unguarded script installs while
 // being required, and a `beforeEach` would erase exactly that evidence.
 const callsWhileRequiring = installed.mock.calls.length;
+
+describe("the JavaScript tool comparison — a program cut short", () => {
+	const options = {
+		sourceType: "module",
+		ecmaVersion: "latest",
+		ranges: true,
+		allowHashBang: true
+	};
+
+	it("should cut a program inside every construct it names", () => {
+		const program =
+			"const a = \"s\", b = 's', c = `t${a}`; /* c */ const r = (/x/);\n" +
+			"f(1); if (a) { g(); } const o = { k: [1] }; const h = () => 1;\n" +
+			"class K { m() {} } a.b;\n";
+		expect(cutsAt(program, JS_CUTS).map(([where]) => where)).toEqual(
+			JS_CUTS.map(([where]) => where)
+		);
+	});
+
+	it("should hold a cut acorn reads to acorn's tree, and one it refuses to a SyntaxError", () => {
+		expect(cutDifference("f(1);", options)).toEqual([]);
+		expect(cutDifference("f(1,", options)).toEqual([]);
+		expect(cutDifference("`x${", options)).toEqual([]);
+	});
+
+	describe("with a parser reading a cut program differently", () => {
+		/**
+		 * @param {(source: string) => EXPECTED_ANY} parse the stand-in parser
+		 * @returns {typeof cutDifference} the relation reading with it
+		 */
+		const withParser = (parse) => {
+			/** @type {EXPECTED_ANY} */
+			let isolated;
+			jest.isolateModules(() => {
+				jest.doMock("../../../lib/javascript/syntax-parser", () => ({
+					...jest.requireActual("../../../lib/javascript/syntax-parser"),
+					parse
+				}));
+				isolated = require("../../../tooling/compare-js-tools");
+			});
+			jest.unmock("../../../lib/javascript/syntax-parser");
+			return isolated.cutDifference;
+		};
+
+		it("should report a tree where acorn refuses the program", () => {
+			const accepting = withParser(() => ({ type: "Program", body: [] }));
+			expect(accepting("f(1,", options)).toEqual([
+				{
+					relation: "acorn",
+					what: "a cut program acorn rejects reads to a tree",
+					repro: "    …f(1,"
+				}
+			]);
+		});
+
+		it("should report a refusal that is no SyntaxError", () => {
+			const crashing = withParser(() => {
+				throw new TypeError("cannot read properties of undefined");
+			});
+			expect(crashing("f(1,", options)).toEqual([
+				{
+					relation: "acorn",
+					what: "a cut program throws TypeError, not a SyntaxError",
+					repro: "    …f(1,"
+				}
+			]);
+		});
+	});
+});
 
 describe("the JavaScript tool comparison", () => {
 	it("should start nothing when the script is required rather than run", () => {
