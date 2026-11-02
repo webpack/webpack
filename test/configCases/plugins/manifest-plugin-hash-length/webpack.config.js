@@ -35,6 +35,11 @@ class EmitHashedAssetPlugin {
 					new RawSource("<!doctype html>\n"),
 					{ contenthash: "Ab-c_1z9" }
 				);
+				compilation.emitAsset(
+					"twice.Ab-c_1z9.Ab-c_1z9.html",
+					new RawSource("<!doctype html>\n"),
+					{ contenthash: ["Ab-c_1z9", "Ab-c_1z9"] }
+				);
 			});
 		});
 	}

@@ -17,4 +17,7 @@ it("should remove the recorded content hash whatever its length or digest", () =
 	);
 
 	expect(manifest.assets["page.html"].file).toBe("page.Ab-c_1z9.html");
+	expect(manifest.assets["twice.html"].file).toBe(
+		"twice.Ab-c_1z9.Ab-c_1z9.html"
+	);
 });
