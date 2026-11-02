@@ -9892,7 +9892,7 @@ declare class EnvironmentPlugin {
 type ErrorWithDetail = Error & { details?: string };
 
 /**
- * a node the parser made, as `SyntaxTree#addEstree` reads it
+ * a node the parser made, as `SyntaxTree#addEstree` reads it, its offsets from `start` and `end` or else `range`
  */
 declare interface EstreeSource {
 	[index: string]:
@@ -9907,8 +9907,9 @@ declare interface EstreeSource {
 		| EstreeSource
 		| EstreeSourceItem[];
 	type: string;
-	start: number;
-	end: number;
+	start?: number;
+	end?: number;
+	range?: [number, number];
 }
 type EstreeSourceItem = null | number | EstreeSource;
 
@@ -15445,6 +15446,7 @@ declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 			typescript?: boolean;
 			importPhases?: boolean;
 			strictModeViolations?: false | "error" | "warn";
+			walkIds?: boolean;
 		}
 	);
 	hooks: Readonly<{
@@ -15997,6 +15999,16 @@ declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 		>;
 		program: SyncBailHook<[Program, CommentJavascriptParser[]], boolean | void>;
 		/**
+		 * The program as a node of the flat tree, before `program`; it fires
+		 * only for a parser built with `walkIds`, and the tree is read during the call.
+		 * @since 5.113.0
+		 * @experimental
+		 */
+		programTree: SyncBailHook<
+			[SyntaxTree, number, CommentJavascriptParser[]],
+			boolean | void
+		>;
+		/**
 		 * @since 5.99.0
 		 */
 		terminate: SyncBailHook<[ReturnStatement | ThrowStatement], boolean | void>;
@@ -16015,6 +16027,7 @@ declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 		typescript?: boolean;
 		importPhases?: boolean;
 		strictModeViolations?: false | "error" | "warn";
+		walkIds?: boolean;
 	};
 	scope: ScopeInfo;
 	state: JavascriptParserState;
@@ -37813,6 +37826,7 @@ declare namespace exports {
 				) => Program;
 				export let parseProgram: _functionSyntaxParserFunction_1;
 				export let parsedTree: () => null | SyntaxTree;
+				export let takeParsedTree: () => null | SyntaxTree;
 				export let positionAt: (
 					lineStarts: number[],
 					offset: number
