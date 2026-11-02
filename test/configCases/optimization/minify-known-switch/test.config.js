@@ -10,7 +10,7 @@ module.exports = {
 			"utf8"
 		);
 		expect(code).not.toContain('"circle"');
-		expect(code).toContain("if(flag){}else");
+		expect(code).toContain("if(flag);else");
 		expect(code).toContain("found:switch");
 		expect(code).not.toContain('"two"');
 		expect(code).toContain("case at():");

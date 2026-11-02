@@ -3727,10 +3727,13 @@ describe("one-pass minify of statement sequences", () => {
 	it("should fold a `switch` past the loops and functions its `break`s skip, and spreads of literals", () => {
 		const cases = [
 			[
-				"function s(x){switch(1){case 1:for(;;)break;while(x)break;do{break}while(x);for(k in x)break;for(k of x)break;switch(x){case 2:break}(function(){});(()=>{});class C{};x();break}}",
-				"function s(e){{for(;;)break;while(e)break;do{break}while(e);for(k in e)break;for(k of e)break;switch(e){case 2:}(function(){});()=>{};class a{};e()}}"
+				"function s(x){switch(1){case 1:{for(;;)break;while(x)break;do{break}while(x);for(k in x)break;for(k of x)break;switch(x){case 2:break}(function(){});(()=>{});class C{};x()}break}}",
+				"function s(e){{for(;;)break;while(e)break;do{break}while(e);for(k in e)break;for(k of e)break;switch(e){case 2:}e()}}"
 			],
 			["function s(x){switch(1){case 1:return x;case 2:y()}}", "function s(c){return c}"],
+			// Running nothing, or what prints as one sequence.
+			["function s(x){switch(1){case 2:y()}}", "function s(c){}"],
+			["function s(e,t){if(t)return;switch(1){case 1:e.push(1);e.push(2)}}", "function s(e,s){if(!s)e.push(1),e.push(2)}"],
 			["function s(x){switch(1){case 1:throw x;case 2:y()}}", "function s(c){throw c}"],
 			["f({...{a:1,...b}}, [...[1,...c]])", "f({a:1,...b},[1,...c]);"],
 			["f(...[1,...[2,3]])", "f(1,2,3);"]
