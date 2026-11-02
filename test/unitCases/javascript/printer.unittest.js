@@ -1342,6 +1342,8 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["function f(){try{g()}catch({a}){h()}}", {"ecma": 2020}, "function f(){try{g()}catch({a}){h()}}"],
 			["function f(){try{g()}catch(r){r=1}}", {"ecma": 2020}, "function f(){try{g()}catch(c){c=1}}"],
 			["function f(a,b){return a?a:b}", {}, "function f(a,n){return a||n}"],
+			["function f(a,c){return(a?a:a)&&c}", {}, "function f(a,c){return a&&c}"],
+			["function f(a){return a?a:a}", {}, "function f(a){return a}"],
 			["function f(a,b){return a?a:b?1:2}", {}, "function f(a,n){return a?a:n?1:2}"],
 			["function f(a,b){return a?a:b=1}", {}, "function f(a,n){return a?a:n=1}"],
 			["function f(a,b){return a?a:b??1}", {}, "function f(a,n){return a?a:n??1}"],
