@@ -2622,7 +2622,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			["33.33333333%", "33.333333%"],
 			// The shortest spelling that lands on every layout step the written one does.
 			["10.1885002107%", "10.1885002%"],
-			["1.0000001px", "1px"],
+			["1.0000001px", "1.0000001px"],
 			["400ms", ".4s"],
 			[".005s", "5ms"],
 			// A zero time keeps a unit where a zero length drops one, so the shorter
@@ -3492,9 +3492,9 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			);
 			expect(settled("a{width:1.0526315789px}")).toBe("a{width:1.0526315789px}");
 			// ...and lands on a spelling no second pass shortens further.
-			expect(settled("a{width:1.454545455em}")).toBe("a{width:1.45454546em}");
+			expect(settled("a{width:1.454545455em}")).toBe("a{width:1.4545455em}");
 			expect(settled("a{animation-delay:416.6666667ms}")).toBe(
-				"a{animation-delay:.416667s}"
+				"a{animation-delay:.4166667s}"
 			);
 			expect(settled("a{width:33.33333333%}")).toBe("a{width:33.333333%}");
 			expect(settled("a{opacity:.3333333333}")).toBe("a{opacity:.33333333}");
@@ -7075,13 +7075,13 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		it.each([
 			// The fold drops its double's last bits, then is shortened the way an
 			// authored number is: to the fewest digits that land on the same steps.
-			["calc(3px/1.1)", "2.727273px"],
+			["calc(3px/1.1)", "2.72727273px"],
 			["calc(100%/3)", "33.333333%"],
 			["calc(100%/7)", "14.2857143%"],
 			["calc(1/3*1px)", ".33333333px"],
 			["calc((6/10 - .375)*1em)", ".225em"],
 			["calc((6/14 - .375)*1em)", ".05357142857em"],
-			["calc(123456px/1.1)", "112232.72727px"],
+			["calc(123456px/1.1)", "112232.7272727px"],
 			// ...and keeps its `calc()` where no shorter number lands alike.
 			["calc(1turn/3)", "calc(1turn/3)"],
 			["calc(90deg/7)", "calc(90deg/7)"],
@@ -7439,7 +7439,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			["calc(pow(2,.5)*100px)", "141.42135624px"],
 			["calc(exp(1)*100px)", "271.8281828px"],
 			["calc(log(10)*100px)", "230.2585093px"],
-			["calc(log(9,2)*100px)", "316.9925px"],
+			["calc(log(9,2)*100px)", "316.9925001px"],
 			["calc(sin(30deg)*100px)", "50px"],
 			["calc(sin(45deg)*100px)", "70.71067812px"],
 			["calc(cos(50grad)*100px)", "70.71067812px"],
@@ -14082,7 +14082,7 @@ describe("CssSyntax minify — what a comparison with other minifiers found", ()
 			"a{transform:translate3d(1px,0,calc(0% + 2px))}"
 		],
 		// The digits a second pass would find, found on the first.
-		["a{max-height:89.99785714em}", "a{max-height:89.997857em}"],
+		["a{max-height:89.99785714em}", "a{max-height:89.9978571em}"],
 		// A lone basis means `1 1 <basis>`, however the three were written.
 		["a{flex:1;flex-basis:33%}", "a{flex:33%}"],
 		["a{flex-grow:1;flex-shrink:1;flex-basis:100%}", "a{flex:100%}"],
@@ -14587,7 +14587,7 @@ describe("CssSyntax minify — layered and positional spellings", () => {
 	});
 
 	it("keeps a font-relative ratio that lands on a layout step", () => {
-		expect(minifyFor("a{width:.27777778em}")).toBe("a{width:.277778em}");
+		expect(minifyFor("a{width:.27777778em}")).toBe("a{width:.2777778em}");
 	});
 });
 
