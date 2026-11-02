@@ -5321,6 +5321,29 @@ describe("SyntaxTree", () => {
 		);
 	});
 
+	it("builds a tree whose parents were written before their children", () => {
+		const tree = new SyntaxTree();
+		const array = tree.add(NodeType.ArrayExpression, 0, 3);
+		const unary = tree.add(NodeType.UnaryExpression, 0, 3);
+		const name = tree.addValueNode(NodeType.Identifier, 2, 3, "a");
+		tree.set(unary, "operator", "!");
+		tree.set(unary, "prefix", true);
+		tree.set(unary, "argument", name);
+		tree.set(array, "elements", [unary]);
+		const statement = tree.add(NodeType.ExpressionStatement, 0, 3);
+		tree.set(statement, "expression", array);
+		const object = /** @type {import("estree").ExpressionStatement} */ (
+			tree.estree(statement)
+		);
+		const element = /** @type {import("estree").UnaryExpression} */ (
+			/** @type {import("estree").ArrayExpression} */ (object.expression)
+				.elements[0]
+		);
+		expect(/** @type {import("estree").Identifier} */ (element.argument).name).toBe(
+			"a"
+		);
+	});
+
 	it("builds a tree nested deeper than the call stack", () => {
 		const tree = new SyntaxTree();
 		let node = tree.add(NodeType.Identifier, 0, 1);
