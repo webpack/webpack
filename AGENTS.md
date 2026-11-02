@@ -24,7 +24,7 @@ These habits counter the usual coding-agent failures: assuming silently, overbui
 
 - **Goal as a check**: "add validation" → "tests for invalid inputs fail, then pass"; "fix the bug" → "a test reproduces it, then passes" ([Testing](#testing)); "refactor X" → "tests pass before and after". A checkable goal lets you loop on your own; "make it work" needs constant clarification.
 - **Steps**, each with its check: `1. [step] → verify: [check]`.
-- **Assumptions and open questions**: when the request has readings that lead to different work, list them rather than picking silently. When any reading could waste the work, stop and ask; otherwise state the assumption, go on and flag it in the report.
+- **Assumptions and open questions**: never pick silently between readings that lead to different work. When missing information could waste the work, ask one specific question and wait; otherwise state the assumption, go on and flag it in the report.
 - **Model and effort fit** ([below](#model-and-effort)).
 
 Share the plan in the reply, then continue unless a question in it blocks the work. **Skip the plan for small tasks** (a small bug fix, a regression revert, adding tests, a typo or a short docs change): state the goal in one line and go.
@@ -34,9 +34,18 @@ Share the plan in the reply, then continue unless a question in it blocks the wo
 - **Simplicity first.** Write the minimum that solves the ask: no unrequested feature, no abstraction for single-use code, no configurability nobody asked for, no error handling for impossible cases. If 200 lines could be 50, rewrite. Performance outranks size: on a hot path, longer code that measurably saves CPU or memory wins ([Performance and memory](#performance-and-memory)), but weigh the measured gain against the code it costs.
 - **Surgical changes.** Every changed line traces to the request. Don't "improve" adjacent code, comments or formatting; match the existing style. Remove imports, variables and functions your change made unused. Remove other dead code only when nothing uses it (no class, function, method or test) and it isn't public API (exported or re-exported, in `types.d.ts`, reachable through `package.json` `exports`, or a deep import `yarn find-deep-imports:check` reports); when unsure, ask.
 - **Push back.** Say when a simpler approach exists or the request looks wrong.
-- **Answer plainly.** Fewest words that keep the meaning; no preamble or restating what the reader sees. Lead with what couldn't be verified; say when a test failed or a step was skipped; never round partial work up to done. Spell out an abbreviation on first use. Cite code as `path:line`, one per sentence. Show rather than describe: before/after code blocks for changes (as the PR body's [Summary](docs/pull-requests.md#pull-request-body) asks), a table or code block for what moved, what a run printed or where a regression sits.
 
 **A regression with a known cause in history is reverted first.** When `git log` shows the commit that introduced it, undo that part, push and let CI report what moved (corpus tables, snapshots, sizes); measure or improve only afterwards, in follow-up commits.
+
+### Write plainly
+
+Applies to everything you write: replies, docs, code comments, commit messages and PR bodies.
+
+- **Active voice.** One idea per sentence; aim for under 20 words.
+- **Same term for the same thing** throughout; no idioms or jargon. Spell out an abbreviation on first use.
+- **No greetings, politeness, empathy or closing summaries.** Don't restate what the reader can see.
+- **Only what the reader needs to act**: facts, code, schemas, steps. Lead with what couldn't be verified, a failed test or a skipped step; never round partial work up to done.
+- **Lists, tables and short paragraphs**, never walls of text. Show rather than describe: before/after code blocks for changes (as the PR body's [Summary](docs/pull-requests.md#pull-request-body) asks), a table or code block for what moved, what a run printed or where a regression sits. Cite code as `path:line`, one per sentence.
 
 ### Model and effort
 
