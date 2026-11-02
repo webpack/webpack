@@ -235,7 +235,7 @@
 
 /*! webpack: a percentage keeps the digits of the float Firefox parses */
 .t72 { width: 33.33333333% }
-/*! webpack: ...and below the 1/64px it lays a length out in */
+/*! webpack: ...but not where its error could tip a sum over a step */
 .t73 { width: 1.0000001px }
 /*! webpack: ...for a unitless number too */
 .t74 { opacity: 0.123456789 }

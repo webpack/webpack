@@ -2621,8 +2621,9 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		it.each([
 			["33.33333333%", "33.333333%"],
 			// The shortest spelling that lands on every layout step the written one does.
-			["10.1885002107%", "10.1885002%"],
+			["10.1885002107%", "10.188500211%"],
 			["1.0000001px", "1.0000001px"],
+			["1.0000000001px", "1px"],
 			["400ms", ".4s"],
 			[".005s", "5ms"],
 			// A zero time keeps a unit where a zero length drops one, so the shorter
