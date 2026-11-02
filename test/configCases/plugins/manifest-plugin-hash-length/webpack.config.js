@@ -30,6 +30,11 @@ class EmitHashedAssetPlugin {
 					`third.${"a1".repeat(this.hashLength / 2)}.js`,
 					new RawSource("// some compilation result\n")
 				);
+				compilation.emitAsset(
+					"page.Ab-c_1z9.html",
+					new RawSource("<!doctype html>\n"),
+					{ contenthash: "Ab-c_1z9" }
+				);
 			});
 		});
 	}
