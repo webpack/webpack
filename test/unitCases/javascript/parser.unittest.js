@@ -6131,6 +6131,33 @@ describe("parseProgram", () => {
 		expect(typeof parseProgram("import defer * as d from 'e';")).toBe("number");
 	});
 
+	it("refuses an ESTree parse a visitor starts, as a tree parse", () => {
+		expect(() =>
+			new SourceProcessor()
+				.use([NodeType.Identifier], () => {
+					parseProgram("b", 0, { estree: true });
+				})
+				.process("a", { sourceType: "script" })
+		).toThrow("a visitor cannot start another JavaScript parse");
+	});
+
+	it("lets the last tree go once an ESTree parse starts", () => {
+		const { parsedTree } = require("../../../lib/javascript/syntax-parser");
+		parseProgram("a");
+		expect(parsedTree()).not.toBeNull();
+		parseProgram("b", 0, { estree: true });
+		expect(parsedTree()).toBeNull();
+	});
+
+	it("turns `auto` into a script at a return it allows anyway", () => {
+		const program = parseProgram("return 1;", 0, {
+			sourceType: "auto",
+			allowReturnOutsideFunction: true,
+			estree: true
+		});
+		expect(program.sourceType).toBe("script");
+	});
+
 	it("throws the first error without a callback, as acorn does", () => {
 		expect(() => parseProgram("let a; let a")).toThrow(
 			"Identifier 'a' has already been declared (1:11)"
