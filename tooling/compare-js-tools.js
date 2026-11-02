@@ -2044,7 +2044,7 @@ const main = async () => {
 				if ("error" in result) {
 					// A tool rejecting the source outright is a comparison result too.
 					process.stdout.write(
-						`  ${tool.name.padEnd(22)} rejects it: ${result.error}\n`
+						`  ${tool.name.padEnd(22)} ${result.timedOut ? "" : "rejects it: "}${result.error}\n`
 					);
 					continue;
 				}

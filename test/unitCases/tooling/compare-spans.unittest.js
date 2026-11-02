@@ -67,6 +67,17 @@ describe("the spans relation", () => {
 		).toEqual(["inverted (Ident)"]);
 	});
 
+	it("should report a range starting before the source", () => {
+		expect(
+			brokenBy({
+				what: "Rule",
+				start: 0,
+				end: 10,
+				children: [{ what: "Ident", start: -2, end: 1 }]
+			})
+		).toContain("starts before the source (Ident)");
+	});
+
 	it("should report a range reaching past the source", () => {
 		expect(
 			brokenBy(

@@ -2276,7 +2276,7 @@ const main = async () => {
 				if ("error" in result) {
 					// A tool rejecting the stylesheet outright is a comparison result too.
 					process.stdout.write(
-						`  ${tool.name.padEnd(26)} rejects it: ${result.error}\n`
+						`  ${tool.name.padEnd(26)} ${result.timedOut ? "" : "rejects it: "}${result.error}\n`
 					);
 					continue;
 				}

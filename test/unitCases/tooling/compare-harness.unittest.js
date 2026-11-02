@@ -17,6 +17,7 @@ const {
 	findingGroups,
 	formatCost,
 	formatProfile,
+	formatSecond,
 	idempotence,
 	installPackages,
 	kb,
@@ -29,6 +30,7 @@ const {
 	missingReport,
 	profileShares,
 	run,
+	shrink,
 	sweepExitCode,
 	sweepMode,
 	treeDifferences,
@@ -49,6 +51,31 @@ const TOOLS = [
 		create: () => (source) => ({ of: source.length })
 	},
 	{ name: "trims", stage: "minify", create: () => (source) => source.trim() },
+	{
+		// Its first call outlasts the warm-up's time bound on its own.
+		name: "slow",
+		stage: "parse",
+		create: () => {
+			let first = true;
+			return (source) => {
+				if (first) {
+					first = false;
+					const until = Date.now() + 510;
+					while (Date.now() < until);
+				}
+				return source.length;
+			};
+		}
+	},
+	{
+		// Prints its input trimmed, then cannot read back what it printed.
+		name: "picky",
+		stage: "minify",
+		create: () => (source) => {
+			if (source === source.trim()) throw new Error("already trimmed");
+			return source.trim();
+		}
+	},
 	{
 		name: "refuses",
 		stage: "minify",
@@ -142,6 +169,14 @@ describe("compare-tools-harness", () => {
 			);
 		});
 
+		it("gives up on a worker that outlasts its budget", async () => {
+			const file = path.join(directory, `worker${made++}.js`);
+			fs.writeFileSync(file, '"use strict";\nsetInterval(() => {}, 1000);\n');
+			await expect(
+				measureInWorker(file, "parse", "stylis", "a{}", 200)
+			).resolves.toEqual({ error: "timed out after 0.2 s", timedOut: true });
+		});
+
 		it("reports the code a failing worker exited with", async () => {
 			const entry = workerWriting("{}", 3);
 			expect((await rejection(entry)).message).toBe(
@@ -196,6 +231,22 @@ describe("compare-tools-harness", () => {
 			expect(result.peak).toBeGreaterThan(0);
 		});
 
+		it("stops warming up a tool once the time bound is spent", async () => {
+			const result = await measureHere("parse", "slow", "abcd");
+			expect(result.code).toBeUndefined();
+			expect(result.wall).toBeGreaterThanOrEqual(0);
+		});
+
+		it("reports a second pass that throws", async () => {
+			const result = await measureHere("minify", "picky", " a ");
+			expect(result.code).toBe("a");
+			expect(result.second).toEqual({
+				stable: false,
+				delta: 0,
+				error: "already trimmed"
+			});
+		});
+
 		// A parse hands back a tree, which is measured but never reported.
 		it("reports no text for a parse", async () => {
 			const result = await measureHere("parse", "counts", "abcd");
@@ -237,6 +288,36 @@ describe("compare-tools-harness", () => {
 				expect(await measureHere("minify", "tires", "a")).toEqual({
 					error: "tired"
 				});
+			});
+
+			it("reports a profiler that will not stop, unless the run failed first", async () => {
+				const { Session } = require("inspector");
+				const post = Session.prototype.post;
+				const stop = jest.spyOn(Session.prototype, "post").mockImplementation(
+					/** @type {EXPECTED_ANY} */ (
+						function post_(
+							/** @type {string} */ method,
+							/** @type {(error: Error | null) => void} */ callback
+						) {
+							if (method === "Profiler.stop") {
+								callback(new Error("cannot stop"));
+								return;
+							}
+							// @ts-expect-error this is the session the harness posts to
+							post.call(this, method, callback);
+						}
+					)
+				);
+				try {
+					expect(await measureHere("minify", "trims", " a ")).toEqual({
+						error: "cannot stop"
+					});
+					expect(await measureHere("minify", "tires", "a")).toEqual({
+						error: "tired"
+					});
+				} finally {
+					stop.mockRestore();
+				}
 			});
 		});
 
@@ -313,6 +394,20 @@ describe("compare-tools-harness", () => {
 			expect(sizes.brotli).toBeLessThan(sizes.raw);
 			// zlib carries zstd only from Node 22.15, where the column reads "-".
 			expect(sizes.zstd === undefined || sizes.zstd < sizes.raw).toBe(true);
+		});
+
+		it("weighs no zstd size where zlib has no zstd", async () => {
+			/** @type {EXPECTED_ANY} */
+			let isolated;
+			jest.isolateModules(() => {
+				jest.doMock("zlib", () => ({
+					...jest.requireActual("zlib"),
+					zstdCompress: undefined
+				}));
+				isolated = require("../../../tooling/compare-tools-harness");
+			});
+			jest.unmock("zlib");
+			expect((await isolated.compress(Buffer.from("a"))).zstd).toBeUndefined();
 		});
 
 		it("prints a count in KB, and a dash for one it cannot have", () => {
@@ -663,6 +758,20 @@ describe("compare-tools-harness", () => {
 			).toBe("differs, +1 B");
 		});
 
+		it("reports a first print that throws", () => {
+			const { printed, reports } = idempotence({
+				minify: () => {
+					throw new Error("cannot print it");
+				},
+				source: "a",
+				says
+			});
+			expect(printed).toBeNull();
+			expect(reports).toEqual([
+				{ relation: "minify", what: "threw", repro: "    cannot print it" }
+			]);
+		});
+
 		it("reports a second print that throws", () => {
 			const reprint = () => {
 				throw new Error("cannot read it back");
@@ -676,6 +785,44 @@ describe("compare-tools-harness", () => {
 			expect(printed).toBe("a");
 			expect(reports[0].relation).toBe("idempotence");
 			expect(reports[0].what).toBe("threw");
+		});
+	});
+
+	describe("formatSecond", () => {
+		it("writes each second-pass outcome as its cell", () => {
+			expect(formatSecond(undefined)).toBe("-");
+			expect(
+				formatSecond({ stable: false, delta: 0, error: "x" })
+			).toBe("threw");
+			expect(formatSecond({ stable: true, delta: 0 })).toBe("-");
+			expect(formatSecond({ stable: false, delta: 0 })).toBe("moved");
+			expect(formatSecond({ stable: false, delta: -3 })).toBe("-3 B");
+		});
+	});
+
+	describe("shrink", () => {
+		/**
+		 * @param {number} needed the site a finding needs
+		 * @returns {(sites: number[]) => { kind: string } | null} whether a subset keeps it
+		 */
+		const needs = (needed) => (sites) =>
+			sites.includes(needed) ? { kind: "differs" } : null;
+
+		it("bisects down to the one site a finding needs", () => {
+			expect(shrink(needs(5), [1, 2, 3, 4, 5, 6, 7], "differs")).toEqual([5]);
+			expect(shrink(needs(1), [1, 2, 3, 4], "differs")).toEqual([1]);
+		});
+
+		// Where neither half keeps it on its own, the sites interact.
+		it("keeps every site that only shows it together", () => {
+			const both = (/** @type {number[]} */ sites) =>
+				sites.includes(1) && sites.includes(4) ? { kind: "differs" } : null;
+			expect(shrink(both, [1, 2, 3, 4], "differs")).toEqual([1, 2, 3, 4]);
+		});
+
+		it("does not settle for a half that shows another kind", () => {
+			const other = () => ({ kind: "bytes" });
+			expect(shrink(other, [1, 2], "differs")).toEqual([1, 2]);
 		});
 	});
 
@@ -1096,6 +1243,19 @@ describe("parser agreement", () => {
 		expect(
 			treeDifferences(paragraphs(["a", "b"]), paragraphs(["a", "c"]), "ref")
 		).toEqual(['/body[1]/p[2]: ref text "b", tool text "c"']);
+		// A run of closes alone, as an unbalanced reader leaves, names its first.
+		const balanced = /** @type {EXPECTED_ANY} */ ({
+			list: [
+				["/a[1]", "open", "a"],
+				["/a[1]", "close", "}"]
+			]
+		});
+		const closedTwice = /** @type {EXPECTED_ANY} */ ({
+			list: [...balanced.list, ["/a[1]", "close", "}"]]
+		});
+		expect(treeDifferences(balanced, closedTwice, "ref")).toEqual([
+			"/a[1]: ref nothing, tool }"
+		]);
 		// A node one side lacks is one difference, not one per node after it.
 		expect(
 			treeDifferences(paragraphs(["a", "c"]), paragraphs(["a", "b", "c"]), "ref")

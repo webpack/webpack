@@ -258,7 +258,7 @@ const lossColumn = (classes, examples, notices) => {
 
 /** @typedef {[string, number][]} ProfileShares each file's share of the sampled time, largest first */
 
-/** @typedef {{ code: string | undefined, second: SecondPass | undefined, wall: number, cpu: number, peak: number, profile?: ProfileShares } | { error: string }} Measurement */
+/** @typedef {{ code: string | undefined, second: SecondPass | undefined, wall: number, cpu: number, peak: number, profile?: ProfileShares } | { error: string, timedOut?: boolean }} Measurement */
 
 /**
  * @typedef {object} CpuProfileNode
@@ -508,23 +508,48 @@ const formatCost = (result, external) => ({
 	peak: external ? "-" : `${(result.peak / 1024).toFixed(0)} MB`
 });
 
+// A worker's whole run (load, warm-up, the timed runs and the second pass):
+// one slow tool on one large input, such as `@adobe/css-tools` on Bulma, would
+// otherwise hold up every table after it for many minutes.
+const MEASURE_BUDGET_MS = 300000;
+
 /**
  * @param {string} entry the calling script's path
  * @param {string} stage which table the row belongs to
  * @param {string} name the tool's name
  * @param {string} input the source to run it over
+ * @param {number=} budget how long the worker may run, in milliseconds
  * @returns {Promise<Measurement>} the worker's report
  */
-const measureInWorker = (entry, stage, name, input) =>
+const measureInWorker = (
+	entry,
+	stage,
+	name,
+	input,
+	budget = MEASURE_BUDGET_MS
+) =>
 	new Promise((resolve, reject) => {
 		const child = spawn(process.execPath, [entry, "--measure", stage, name], {
 			stdio: ["pipe", "pipe", "inherit"]
 		});
 		/** @type {Buffer[]} */
 		const chunks = [];
+		let timedOut = false;
+		const timer = setTimeout(() => {
+			timedOut = true;
+			child.kill();
+		}, budget);
 		child.stdout.on("data", (chunk) => chunks.push(chunk));
 		child.on("error", reject);
 		child.on("close", (code) => {
+			clearTimeout(timer);
+			if (timedOut) {
+				resolve({
+					error: `timed out after ${budget / 1000} s`,
+					timedOut: true
+				});
+				return;
+			}
 			if (code !== 0) {
 				reject(new Error(`measuring ${name} exited with ${code}`));
 				return;
@@ -827,7 +852,6 @@ const treeDifferences = (reference, tree, referenceName) => {
 		x = previousX;
 		y = previousY;
 	}
-	while (x > 0 && y > 0) kept.push([--x, --y]);
 	kept.reverse();
 	kept.push([n, m]);
 	/** @type {string[]} */
