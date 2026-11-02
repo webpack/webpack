@@ -368,7 +368,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"function f(){ const b = 2; var u = 1; return void 0 } f(undefined)",
 				{ mangle: false },
-				"function f(){}f(void 0);"
+				"function f(){}f();"
 			],
 			// What only dropped code reads goes too; a constant prints as its value
 			// where that is shorter and the read prints as a name would; a comment
@@ -1156,7 +1156,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// A `var` set after a call folds where its function reads it after the declaration.
 			["function m(){f();var greeting=\"hello\";g(greeting+\"!\")}", {}, "function m(){f(),g(\"hello!\")}"],
 			["function m(){g(greeting+\"!\");var greeting=\"hello\"}", {}, "function m(){g(e+\"!\");var e=\"hello\"}"],
-			["function m(){function g(){return greeting}f();var greeting=\"hello\";g(greeting)}", {}, "function m(){f();(function(){return\"hello\"})(\"hello\")}"],
+			["function m(){function g(){return greeting}f();var greeting=\"hello\";g(greeting)}", {}, "function m(){f();(function(){return\"hello\"})()}"],
 			["function m(){f();var contraction=\"(?:d|ll|m|re|s|t|ve)?\";g(\"x\"+contraction,\"y\"+contraction,contraction)}", {}, "function m(){f(),g(\"x(?:d|ll|m|re|s|t|ve)?\",\"y(?:d|ll|m|re|s|t|ve)?\",\"(?:d|ll|m|re|s|t|ve)?\")}"],
 			// A fold weighs the operands as printed, a string's run joined.
 			["f(x+\"a\"+\"b\"+1)", {}, "f(x+\"ab1\");"],
@@ -1260,14 +1260,80 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["function f(x,g){if(x){void function(){0}();g();g()}}", {}, "function f(f,i){if(f)i(),i()}"],
 			["f=b=>{void function(){0}();g();return b}", {}, "f=n=>(g(),n);"],
 			// A statement after the first that printed its own parentheses keeps the body's braces.
-			["function k(a,p){function A(x,y){x.push(1);x.push(2)}if(p){a.push(3);A(a,p)}return a}", {}, "function k(p,u){if(u){p.push(3);(function(p,u){p.push(1),p.push(2)})(p,u)}return p}"],
+			["function k(a,p){function A(x,y){x.push(1);x.push(2)}if(p){a.push(3);A(a,p)}return a}", {}, "function k(p,u){if(u){p.push(3);(function(p,u){p.push(1),p.push(2)})(p)}return p}"],
 			["f=x=>{a();({}).b=x;return 1}", {}, "f=r=>{a();({}).b=r;return 1};"],
 			// An object opening an optional chain a statement opens with keeps its parentheses.
 			["if({m(){}}?.m())a();else b()", {}, "({m(){}}.m())?a():b();"],
 			// A heritage the call prints as needs no parentheses.
 			["class C extends (function(){return B})(){}", {}, "class C extends B{}"],
 			// What a literal written in place reads of itself is known, but where a call, tag or `delete` reads it as a reference.
-			["function f(a){return[\"abc\".length,[1,,a].length+1,[g()].length,/a\\/b/.source,\"ab\".length.x,\"ab\".length(),\"ab\".length``,delete\"ab\".length]}", {}, "function f(e){return[3,4,[g()].length,\"a\\\\/b\",2..x,\"ab\".length(),\"ab\".length``,delete\"ab\".length]}"]
+			["function f(a){return[\"abc\".length,[1,,a].length+1,[g()].length,/a\\/b/.source,\"ab\".length.x,\"ab\".length(),\"ab\".length``,delete\"ab\".length]}", {}, "function f(e){return[3,4,[g()].length,\"a\\\\/b\",2..x,\"ab\".length(),\"ab\".length``,delete\"ab\".length]}"],
+			// A name set to a stable value folds past a member callee, whose getter cannot change it.
+			["function f(o,p){var x=p;o.f(x)}", {}, "function f(f,o){f.f(o)}"],
+			["function f(o,p){var x=p;x.f(x)}", {}, "function f(f,x){var n=x;n.f(n)}"],
+			["function f(o,p){var x=p.q;o.f(x)}", {}, "function f(f,o){var n=o.q;f.f(n)}"],
+			["function f(o,p){var x=p;new o.F(x)}", {}, "function f(n,o){new n.F(o)}"],
+			// A pure trailing argument to a parameter nothing reads, or to none, goes.
+			["function f(){function g(a,b){return a}return[g(1,2),g(x,y()),g(1,2,3),g(...z,1)]}", {}, "function f(){function n(n,g){return n}return[n(1),n(x,y()),n(1),n(...z,1)]}"],
+			["function f(z){var q=z.p;function g(a,b){return a}return[g(x,q),g(y,2)]}", {}, "function f(n){n.p;function r(n,r){return n}return[r(x),r(y)]}"],
+			["function f(){function g(a,...b){return a}return[g(1,2),g(3,4)]}", {}, "function f(){function n(n,...r){return n}return[n(1,2),n(3,4)]}"],
+			["function f(){function g(a,b){return arguments}return[g(1,2),g(3,4)]}", {}, "function f(){function n(n,r){return arguments}return[n(1,2),n(3,4)]}"],
+			["function f(){function g(a,b=1){return a}return[g(1,2),g(3,4)]}", {}, "function f(){function n(n,r=1){return n}return[n(1,2),n(3,4)]}"],
+			["function f(){function g(x,y=arguments[2]){return[x,y]}return[g(1,2,3),g(5)]}", {}, "function f(){function n(n,r=arguments[2]){return[n,r]}return[n(1,2,3),n(5)]}"],
+			["function f(){function g(a,b){return a}g=h;return[g(1,2),g(3,4)]}", {}, "function f(){function n(n,g){return n}return[(n=h)(1,2),n(3,4)]}"],
+			["function f(){function g(a,b){return a}return[g(1,/*! keep */2),g(3,4)]}", {}, "function f(){function n(n,r){return n}return[n(1,/*! keep */2),n(3)]}"],
+			["function f(){function g(a,b){return a}return[g(1,[1,/*! keep */2]),g(3,4)]}", {}, "function f(){function n(n,r){return n}return[n(1,[1,/*! keep */2]),n(3)]}"],
+			["function f(){function g(a,b){return a}return[g(1,()=>/*! keep */2),g(3,()=>4)]}", {}, "function f(){function n(n,r){return n}return[n(1,()=>/*! keep */2),n(3)]}"],
+			["function f(){function g(a,b){return a}return[g(1,(/*! keep */x)=>2),g(3,4)]}", {}, "function f(){function n(n,r){return n}return[n(1,/*! keep */n=>2),n(3)]}"],
+			["function f(){function g(a,b){return a}return[g(1,(/*! keep */x)=>y=>2),g(3,4)]}", {}, "function f(){function n(n,r){return n}return[n(1,/*! keep */n=>n=>2),n(3)]}"],
+			["function f(){function g(a,b){return a}return[g(1,x=>y=>2),g(3,4)]}", {}, "function f(){function n(n,r){return n}return[n(1),n(3)]}"],
+			["function f(){function g(a,b){return a}var g;return[g(1,2),g(3,4)]}", {}, "function f(){function n(n,r){return n}var n;return[n(1,2),n(3,4)]}"],
+			["function f(){function g(a,b){return a}return[g(1,2),g(3,4)];function h(){eval(\"\")}}", {}, "function f(){function g(n,t){return n}return[g(1,2),g(3,4)];function h(){eval(\"\")}}"],
+			["function f(){function g(a,b){return a+b}return[g(1,2),g(3,4)]}", {}, "function f(){function n(n,r){return n+r}return[n(1,2),n(3,4)]}"],
+			["function f(){function g(a,{b}){return a}return[g(1,2),g(3,4)]}", {}, "function f(){function n(n,{b:r}){return n}return[n(1,2),n(3,4)]}"],
+			["function f(){function g(a,/*! keep */b){return a}return[g(1,2),g(3,4)]}", {}, "function f(){function n(n,/*! keep */r){return n}return[n(1,2),n(3,4)]}"],
+			// A literal of literals passed to a parameter read once, not in a loop, prints at the read.
+			["function f(){(function(o){g(o.a)})({a:1})}", {}, "function f(){!function(){g({a:1}.a)}()}"],
+			["function f(){return(o=>o)({a:1})}", {}, "function f(){return(()=>({a:1}))()}"],
+			["function f(){return(o=>o)([1,,-1,\"s\",{b:!0}])}", {}, "function f(){return(()=>[1,,-1,\"s\",{b:!0}])()}"],
+			["function f(){(function(o){for(;;)g(o)})([1])}", {}, "function f(){!function(o){for(;;)g(o)}([1])}"],
+			["function f(){(function(o){return function(){return o}})([1])}", {}, "function f(){!function(n){return}([1])}"],
+			["function f(){(function(o){g(o,o)})([1])}", {}, "function f(){!function(o){g(o,o)}([1])}"],
+			["function f(){(function(o){g(o)})([h])}", {}, "function f(){!function(n){g(n)}([h])}"],
+			["function f(){(function(o){g(o)})({h})}", {}, "function f(){!function(n){g(n)}({h:h})}"],
+			["function f(){(function(o){g(o)})({h(){}})}", {}, "function f(){!function(n){g(n)}({h(){}})}"],
+			["function f(){(function(o){g(o)})({[h]:1})}", {}, "function f(){!function(n){g(n)}({[h]:1})}"],
+			["function f(){(function(o){g(o)})({get h(){return 1}})}", {}, "function f(){!function(n){g(n)}({get h(){return 1}})}"],
+			["function f(){(function(o){g(o)})([/a/])}", {}, "function f(){!function(){g([/a/])}()}"],
+			["function f(){(function(o,p){g(p,o)})([1],[2])}", {}, "function f(){!function(o){g(o,[1])}([2])}"],
+			["function f(){(function(o){g(arguments)})([1])}", {}, "function f(){!function(n){g(arguments)}([1])}"],
+			["function f(){(function(o){g(o);o=1})([1])}", {}, "function f(){!function(o){g(o),o=1}([1])}"],
+			["function f(){(function(o){g(o)})({a:[1,{b:-1}]})}", {}, "function f(){!function(){g({a:[1,{b:-1}]})}()}"],
+			["function f(){(function(o){g(o)})([`t${h}`])}", {}, "function f(){!function(n){g(n)}([`t${h}`])}"],
+			["function f(){(function(o){g(o.a)})({a:1},h())}", {}, "function f(){!function(){g({a:1}.a)}(h())}"],
+			["function f(){(function(o){if(0)g(o)})([1])}", {}, "function f(){!function(f){}([1])}"],
+			["function f(){(function(o){h();g(o)})({a:1})}", {}, "function f(){!function(){h(),g({a:1})}()}"],
+			["function f(){(function(o){h(function(){});g(o)})([1])}", {}, "function f(){!function(){h(function(){}),g([1])}()}"],
+			["function f(){(function(o,p){g(o,p)})([1],h)}", {}, "function f(){!function(o){g([1],o)}(h)}"],
+			["function f(){(function(o){class A{x=o}g(new A,new A)})([1])}", {}, "function f(){!function(n){class o{x=n}g(new o,new o)}([1])}"],
+			["function f(){(function(o){g(o)})([1]);(function(p){g(p)})([2])}", {}, "function f(){!function(){g([1])}(),function(){g([2])}()}"],
+			// A `join` of constants, an empty block and a loop on a truthy constant print shorter or not at all.
+			["function f(){[1,2].join();g()}", {}, "function f(){g()}"],
+			["function f(){[1,g()].join();h()}", {}, "function f(){[1,g()].join(),h()}"],
+			["function f(){g();{}}", {}, "function f(){g()}"],
+			["function f(){g();{/*! keep */}}", {}, "function f(){g();{/*! keep */}}"],
+			["function f(){while(1)g()}", {}, "function f(){for(;;)g()}"],
+			["function f(){while(!0)g()}", {}, "function f(){for(;;)g()}"],
+			["function f(){while(x)g()}", {}, "function f(){while(x)g()}"],
+			["function f(){while(0)g()}", {}, "function f(){while(0)g()}"],
+			// An assignment of the name its value reads first prints compound.
+			["function f(x){x=x+1;g(x)}", {}, "function f(x){g(x+=1)}"],
+			["function f(x){x=x>>>g();h(x)}", {}, "function f(x){h(x>>>=g())}"],
+			["function f(x){x=x-(a-b);h(x)}", {}, "function f(x){h(x-=(a-b))}"],
+			["function f(x){x=y+x;h(x)}", {}, "function f(x){h(x=y+x)}"],
+			["function f(o){o.p=o.p+1}", {}, "function f(o){o.p=o.p+1}"],
+			["function f(x){with(o)x=x+1;h(x)}", {}, "function f(x){with(o)x=x+1;h(x)}"],
+			["function f(x){x=x&&1;h(x)}", {}, "function f(x){h(x=x&&1)}"]
 		];
 		for (const [source, options, expected] of cases) {
 			const { code } = minifyOnePass(source, {
@@ -1768,6 +1834,20 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// function stays in place, so its call is no longer its value.
 			[
 				"!function(){var p=function(o){return isS(o)?1:2};function isO(v){return v>1}function isS(v){return v&&isO(v)}console.log(p(0),p(3))}()",
+				{}
+			],
+			// Trailing arguments nothing reads go; a literal argument prints at its read.
+			[
+				"!function(){function g(a,b){return a}console.log(g(1,2),g(3),g(4,5,6))}();(function(o){o.a++;console.log(o.a,Object.keys(o))})({a:1,b:[2]})",
+				{}
+			],
+			// A default reading `arguments` reads arguments past the parameters.
+			[
+				"!function(){function*g(x=arguments[2],y=arguments[3],z){yield[x,y,z]}console.log(g(void 0,void 0,'third','fourth').next().value.join(),g().next().value.join())}()",
+				{}
+			],
+			[
+				"!function(){var x=1;x=x+2;x=x<<1;x=x-(1-3);console.log(x);(function(o,p){console.log(p,o.length)})([1,2],[3])}()",
 				{}
 			]
 		])) {
