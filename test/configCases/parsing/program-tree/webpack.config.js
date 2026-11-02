@@ -6,39 +6,27 @@ const acorn = require("acorn");
 /** @typedef {import("../../../../lib/module/NormalModule")} NormalModule */
 /** @import JavascriptParser, { ParseOptions, ParseResult } from "../../../../lib/javascript/JavascriptParser" */
 
-const PLUGIN_NAME = "walk-ids";
+const PLUGIN_NAME = "program-tree";
 
-/** @type {Record<string, "auto" | "module" | "script">} */
-const SOURCE_TYPES = {
-	"javascript/auto": "auto",
-	"javascript/esm": "module",
-	"javascript/dynamic": "script"
-};
+const MODULE_TYPES = [
+	"javascript/auto",
+	"javascript/esm",
+	"javascript/dynamic"
+];
 
 /**
- * Builds with parsers that walk ids and checks what the tree-reading taps
- * recorded on each module it built.
+ * Checks every built module fired `programTree` and what the tree-reading
+ * taps recorded on it.
  * @param {Compiler} compiler the compiler
  * @returns {void}
  */
-const walkIds = (compiler) => {
+const programTree = (compiler) => {
 	compiler.hooks.compilation.tap(
 		PLUGIN_NAME,
 		(compilation, { normalModuleFactory }) => {
 			/** @type {Set<string>} */
 			const walked = new Set();
-			for (const type of Object.keys(SOURCE_TYPES)) {
-				normalModuleFactory.hooks.createParser.for(type).tap(
-					{ name: PLUGIN_NAME, stage: -10 },
-					(options) =>
-						new compiler.webpack.javascript.JavascriptParser(
-							SOURCE_TYPES[type],
-							{
-								parse: options.parse,
-								walkIds: true
-							}
-						)
-				);
+			for (const type of MODULE_TYPES) {
 				normalModuleFactory.hooks.parser
 					.for(type)
 					.tap(PLUGIN_NAME, (moduleParser) => {
@@ -107,7 +95,7 @@ module.exports = {
 	output: {
 		filename: "[name].js"
 	},
-	plugins: [walkIds],
+	plugins: [programTree],
 	performance: {
 		hints: "warning",
 		pureAnnotations: true,
