@@ -2689,6 +2689,9 @@ const MERGE_DECLARATIONS = [
 // Stylesheets the merge changes, drawn until there are this many; about half of
 // those drawn are, and the page compares a hundred in a few seconds.
 const MERGE_SAMPLES = 1500;
+// The whole sample is one test, about a minute in Chromium and sometimes over
+// three under coverage in Firefox, so it gets more than one file's timeout.
+const MERGE_TIMEOUT = 600000;
 
 /**
  * A stylesheet drawn from the seeded sequence: rules repeating a few blocks
@@ -2822,7 +2825,7 @@ describe("a distant merge keeps every element's cascade", () => {
 			}
 			expect(await differing(pairs, MERGE_TYPES)).toEqual([]);
 		},
-		FILE_TIMEOUT
+		MERGE_TIMEOUT
 	);
 
 });
