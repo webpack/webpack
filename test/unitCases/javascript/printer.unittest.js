@@ -1430,6 +1430,8 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["function f(){switch(g()){case 2:debugger;h();default:}}", {}, "function f(){if(g()===2)h()}"],
 			["function f(){switch(g()){case 2:debugger}}", {}, "function f(){if(g()===2){}}"],
 			["function f(x){let t=1;switch(x){case t:let t=2;return t}}", {}, "function f(t){switch(t){case t:let t=2;return t}}"],
+			["function f(x){switch(x){case typeof q:label:function q(){};return 1}return 2}", {}, "function f(n){switch(n){case typeof t:n:function t(){};return 1}return 2}"],
+			["function f(){{l:function q(){}}g(typeof q)}", {}, "function f(){{f:function f(){}}g(typeof f)}"],
 			["switch (b) { case 2: switch (a) { case 2: foo()}}", {}, "if(b===2)if(a===2)foo();"],
 			["if (a) { if (c) switch (b) { case 2: switch (a) { case 2: foo()}}; b() }", {}, "if(a){if(c)if(b===2)if(a===2)foo();b()}"],
 			["if(c)switch(d){case 1:x()}else y()", {}, "if(c)switch(d){case 1:x()}else y();"],
