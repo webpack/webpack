@@ -228,6 +228,10 @@ const FILED_CONFIG_CSS_OPT_IN_DEFECTS = new Map([
 	[
 		"test/configCases/css/minimize-corpus/minimize-values/style.css",
 		"webkit only: the percentage `shape-image-threshold` again — see `minimize-values` above"
+	],
+	[
+		"test/configCases/css/minimize-vendor-prefixes/style.css",
+		"webkit only: the element read carries every class, so `.t16`'s `display:-webkit-box` lays out the `-webkit-box-align` the opt-in drops from `.t15`, whose block writes `display:flex`; WebKit centers its child in the original only, where Chrome 156 lays both alike"
 	]
 ]);
 const FILED_BENCHMARK_HTML_OPT_IN_DEFECTS = new Map();
@@ -590,7 +594,7 @@ const STYLE_CONTROLS = new Map([
 	["bad nth-child among", [".a~.b:nth-child(3){color:red}", ".a~.b:nth-child(3){color:blue}"]],
 	["bad nth-of-type after", ["i+p:nth-of-type(2){color:red}", "i+p:nth-of-type(2){color:blue}"]],
 	// A computed `line-height` serializes at six digits, so only where `1lh` lands on the layout grid tells these apart.
-	// Gecko rounds a line height to its nearest 1/60px rather than flooring, so these lay out alike in Firefox.
+	// Gecko rounds a length to its nearest 1/60px rather than flooring, so these and the length ones lay out alike in Firefox.
 	["bad line-height digits", [".a{font-size:14px;line-height:1.4285714286}", ".a{font-size:14px;line-height:1.42857}"]],
 	["bad line-height digits through a custom property", [":root{--h:1.4285714286}.a{font-size:14px;line-height:var(--h)}", ":root{--h:1.42857}.a{font-size:14px;line-height:var(--h)}"]],
 	["bad line-height digits at a queried font size", ["@media (max-width:300px){.a{font-size:14px}}.a{line-height:1.4285714286}", "@media (max-width:300px){.a{font-size:14px}}.a{line-height:1.42857}"]],
@@ -988,7 +992,7 @@ describe(`printer output in real ${ENGINE}`, () => {
 					.filter(
 						(name) =>
 							name.startsWith("bad ") &&
-							!(ENGINE === "firefox" && name.startsWith("bad line-height digits"))
+							!(ENGINE === "firefox" && / digits/.test(name))
 					)
 					.sort()
 			);

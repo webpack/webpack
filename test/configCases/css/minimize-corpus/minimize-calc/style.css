@@ -67,7 +67,7 @@
 /*! declined: past the range the rounding covers every digit carries, and all of
    them are longer than the expression */
 .d06 { width: calc(123456px/1.1) }
-/*! the fold prints a double back, so its result is rounded to six digits, a percentage to the float Firefox parses */
+/*! declined too: a third of a box lands on a step no shorter decimal does */
 .f20 { width: calc(100%/3) }
 /*! an angle keeps its `calc()` where no shorter number lands on the same step */
 .f21 { rotate: calc(1turn/3) }

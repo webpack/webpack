@@ -2619,7 +2619,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 
 	describe("rounding and unit conversion", () => {
 		it.each([
-			["33.33333333%", "33.333333%"],
+			["33.33333333%", "33.3333333%"],
 			// The shortest spelling that lands on every layout step the written one does.
 			["10.1885002107%", "10.188500211%"],
 			["1.0000001px", "1.0000001px"],
@@ -3464,15 +3464,25 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		};
 		const legacy = { browsers: ["chrome 100", "firefox 100", "safari 15.4"] };
 
+		it("shortens a number the same once the searches it keeps fill up", () => {
+			const widths = Array.from(
+				{ length: 5000 },
+				(_, i) => `.a${i}{width:${(i + 1) / 7}em}`
+			).join("");
+			const once = minify(widths);
+			expect(once).toContain(".a4999{width:714.2857143em}");
+			expect(minify(widths)).toBe(once);
+		});
+
 		it("shortens a number only where it lands on every layout step the written one does", () => {
 			// An engine scales a number by a font size, a line height or a box and
 			// floors it to 1/64px: 2/19em is 2px at 19px, where `.105263em` is 1.98438px,
 			// and `line-height:1.42857` lays a 14px line at 19.98438px, not 20px.
 			expect(settled("a{outline-offset:-0.1052631579em}")).toBe(
-				"a{outline-offset:-.1052632em}"
+				"a{outline-offset:-.10526316em}"
 			);
-			expect(settled("a{width:calc(1em/9.5)}")).toBe("a{width:.1052632em}");
-			expect(settled("a{width:.3333333333em}")).toBe("a{width:.33333333em}");
+			expect(settled("a{width:calc(1em/9.5)}")).toBe("a{width:.10526316em}");
+			expect(settled("a{width:.3333333333em}")).toBe("a{width:.333333333em}");
 			expect(settled("a{width:.7071067812em}")).toBe("a{width:.70710678em}");
 			// `.125em` would land on a step at 8px where the written length does not.
 			expect(settled("a{width:.12499999em}")).toBe("a{width:.12499999em}");
@@ -3485,20 +3495,21 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(settled("a{line-height:1.4210526316}")).toBe(
 				"a{line-height:1.421052632}"
 			);
+			// ...and a fold no shorter number lands like keeps its `calc()`.
 			expect(settled("a{line-height:calc(20/14)}")).toBe(
-				"a{line-height:1.42857143}"
+				"a{line-height:calc(20/14)}"
 			);
 			expect(settled("a{font:14px/1.4285714286 x}")).toBe(
 				"a{font:14px/1.42857143 x}"
 			);
-			expect(settled("a{width:1.0526315789px}")).toBe("a{width:1.0526315789px}");
+			expect(settled("a{width:1.0526315789px}")).toBe("a{width:1.05263157px}");
 			// ...and lands on a spelling no second pass shortens further.
 			expect(settled("a{width:1.454545455em}")).toBe("a{width:1.4545455em}");
 			expect(settled("a{animation-delay:416.6666667ms}")).toBe(
-				"a{animation-delay:.4166667s}"
+				"a{animation-delay:.41666667s}"
 			);
-			expect(settled("a{width:33.33333333%}")).toBe("a{width:33.333333%}");
-			expect(settled("a{opacity:.3333333333}")).toBe("a{opacity:.33333333}");
+			expect(settled("a{width:33.33333333%}")).toBe("a{width:33.3333333%}");
+			expect(settled("a{opacity:.3333333333}")).toBe("a{opacity:.333333333}");
 			expect(settled("@media (aspect-ratio:1.4285714286/1){a{top:0}}")).toBe(
 				"@media (aspect-ratio:1.42857143/1){a{top:0}}"
 			);
@@ -3682,11 +3693,11 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 				settled("a{color:r\\67 b(67.2549019608%, 66.862745098%, 91.9607843137%)}")
 			).toBe("a{color:rgb(67.2549019608%,66.862745098%,91.9607843137%)}");
 			// Only a channel reads the percentage as a byte: a length still rounds.
-			expect(settled("a{width:66.862745098%}")).toBe("a{width:66.862745%}");
+			expect(settled("a{width:66.86274509804%}")).toBe("a{width:66.8627451%}");
 			expect(settled(".a{flex:0 0 16.66666667%;opacity:16.66666667%}")).toBe(
-				".a{opacity:.16666667;flex:0 0 16.6666667%}"
+				".a{opacity:.166666667;flex:0 0 16.6666667%}"
 			);
-			expect(settled("a{scale:16.66666667%}")).toBe("a{scale:.16666667}");
+			expect(settled("a{scale:16.66666667%}")).toBe("a{scale:.166666667}");
 			// An exact half rounds up in every engine.
 			expect(settled("a{color:rgba(50%,50%,50%,.5)}")).toBe(
 				"a{color:#80808080}"
@@ -7074,16 +7085,18 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		});
 
 		it.each([
-			// The fold drops its double's last bits, then is shortened the way an
-			// authored number is: to the fewest digits that land on the same steps.
-			["calc(3px/1.1)", "2.72727273px"],
-			["calc(100%/3)", "33.333333%"],
-			["calc(100%/7)", "14.2857143%"],
-			["calc(1/3*1px)", ".33333333px"],
+			// The fold is shortened the way an authored number is, measured against
+			// its whole double: to the fewest digits that land on the same steps.
+			["calc(1/3*1px)", ".333333334px"],
+			["calc((6/14 - .375)*1em)", ".053571428em"],
+			// ...less the double's last bits where they are noise past a short answer.
 			["calc((6/10 - .375)*1em)", ".225em"],
-			["calc((6/14 - .375)*1em)", ".05357142857em"],
-			["calc(123456px/1.1)", "112232.7272727px"],
-			// ...and keeps its `calc()` where no shorter number lands alike.
+			// ...and keeps its `calc()` where no shorter number lands alike: a third
+			// and a seventh land on a step at some scale no decimal does.
+			["calc(3px/1.1)", "calc(3px/1.1)"],
+			["calc(100%/3)", "calc(100%/3)"],
+			["calc(100%/7)", "calc(100%/7)"],
+			["calc(123456px/1.1)", "calc(123456px/1.1)"],
 			["calc(1turn/3)", "calc(1turn/3)"],
 			["calc(90deg/7)", "calc(90deg/7)"],
 			["calc(1e4px + 1px)", "10001px"]
@@ -7114,7 +7127,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			);
 			// ...and the color it then is shortens as any other does.
 			expect(minify("a{color:hsl(calc(360/7) 50% 50%)}")).toBe("a{color:#bfad40}");
-			expect(minify("a{color:rgb(0 0 0/calc(1/3))}")).toBe("a{color:rgb(0 0 0/calc(1/3))}");
+			expect(minify("a{color:rgb(0 0 0/calc(1/3))}")).toBe("a{color:#0005}");
 			expect(minify("a{color:rgb(calc(255/7) 0 0)}")).toBe("a{color:#240000}");
 			// A transform function other than `perspective()` takes a negative too.
 			expect(minify("a{transform:scale(calc(-1/3))}")).toBe(
@@ -14082,8 +14095,8 @@ describe("CssSyntax minify — what a comparison with other minifiers found", ()
 			"a{transform:translate3d(calc(0% + 1px),0,calc(0% + 2px))}",
 			"a{transform:translate3d(1px,0,calc(0% + 2px))}"
 		],
-		// The digits a second pass would find, found on the first.
-		["a{max-height:89.99785714em}", "a{max-height:89.9978571em}"],
+		// No shorter spelling lands on the steps this one does, so none is taken.
+		["a{max-height:89.99785714em}", "a{max-height:89.99785714em}"],
 		// A lone basis means `1 1 <basis>`, however the three were written.
 		["a{flex:1;flex-basis:33%}", "a{flex:33%}"],
 		["a{flex-grow:1;flex-shrink:1;flex-basis:100%}", "a{flex:100%}"],
@@ -14588,7 +14601,7 @@ describe("CssSyntax minify — layered and positional spellings", () => {
 	});
 
 	it("keeps a font-relative ratio that lands on a layout step", () => {
-		expect(minifyFor("a{width:.27777778em}")).toBe("a{width:.2777778em}");
+		expect(minifyFor("a{width:.27777778em}")).toBe("a{width:.27777778em}");
 	});
 });
 

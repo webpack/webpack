@@ -1332,7 +1332,9 @@ const compareRenders = async ({ pairs, width }) => {
 			: boxes
 					.map(
 						([x, y, boxWidth, height]) =>
-							`${x.toFixed(2)},${y.toFixed(2)} ${boxWidth.toFixed(2)}x${height.toFixed(2)}`
+							`${x.toFixed(2)},${y.toFixed(2)} ${boxWidth.toFixed(
+								2
+							)}x${height.toFixed(2)}`
 					)
 					.join(" ");
 
@@ -2111,7 +2113,11 @@ const compareStyles = async ({ pairs, types }) => {
 					const prefix = kind === "CSSMediaRule" ? "" : "box";
 					walk(
 						any.cssRules,
-						`${context}@${kind === "CSSMediaRule" ? "media" : `container ${any.containerName}`} ${spacedOnce(condition)}`,
+						`${context}@${
+							kind === "CSSMediaRule"
+								? "media"
+								: `container ${any.containerName}`
+						} ${spacedOnce(condition)}`,
 						parents,
 						scope,
 						[
@@ -2130,7 +2136,9 @@ const compareStyles = async ({ pairs, types }) => {
 				) {
 					walk(
 						any.cssRules,
-						`${context}@${kind === "CSSSupportsRule" ? "supports" : "-moz-document"} ${spacedOnce(any.conditionText)}`,
+						`${context}@${
+							kind === "CSSSupportsRule" ? "supports" : "-moz-document"
+						} ${spacedOnce(any.conditionText)}`,
 						parents,
 						scope,
 						lengths
@@ -2180,7 +2188,10 @@ const compareStyles = async ({ pairs, types }) => {
 								if (held.cssRules !== undefined) {
 									flat(
 										held.cssRules,
-										`${where}${held.cssText.slice(0, held.cssText.indexOf("{"))}`
+										`${where}${held.cssText.slice(
+											0,
+											held.cssText.indexOf("{")
+										)}`
 									);
 								}
 								continue;
@@ -2200,7 +2211,9 @@ const compareStyles = async ({ pairs, types }) => {
 									}
 									out.unobserved.set(
 										key,
-										`${computedAs(name, style.getPropertyValue(name))}${important ? "!" : ""}`
+										`${computedAs(name, style.getPropertyValue(name))}${
+											important ? "!" : ""
+										}`
 									);
 								}
 							}
@@ -2216,7 +2229,9 @@ const compareStyles = async ({ pairs, types }) => {
 						`${context}${
 							any.style === undefined
 								? spacedOnce(text)
-								: `${text.slice(0, text.indexOf("{")).trim()}${described(any.style)}`
+								: `${text.slice(0, text.indexOf("{")).trim()}${described(
+										any.style
+									)}`
 						}`
 					);
 				}
@@ -2367,7 +2382,10 @@ const compareStyles = async ({ pairs, types }) => {
 		value.replace(
 			ABSOLUTE_LENGTH,
 			(_, amount, unit) =>
-				`${Math.round(Number(amount) * PX_PER_UNIT[unit.toLowerCase()] * 1e4) / 1e4}px`
+				`${
+					Math.round(Number(amount) * PX_PER_UNIT[unit.toLowerCase()] * 1e4) /
+					1e4
+				}px`
 		);
 
 	/**
@@ -2538,10 +2556,10 @@ const compareStyles = async ({ pairs, types }) => {
 		// `1.42857` declare alike above; only the line probe tells them apart,
 		// at every width a query moves either of the two on.
 		if (
-			readings.some(
-				(reading) =>
-					reading.sequences.has("line-height") ||
-					reading.sequences.has("font-size")
+			readings.some((reading) =>
+				["line-height", "font-size"].some((property) =>
+					(reading.sequences.get(property) || []).some(_hidesDigits)
+				)
 			)
 		) {
 			tracked.add("line-height");
@@ -2741,9 +2759,11 @@ const compareStyles = async ({ pairs, types }) => {
 						docs[at].getElementById("eq-holder")
 					);
 					holder.style.cssText = queried
-						? `container-type:size;container-name:${containerNames.join(" ") || "none"};width:${
-								sample.box || sample.width
-							}px;height:${sample.box || sample.height}px`
+						? `container-type:size;container-name:${
+								containerNames.join(" ") || "none"
+							};width:${sample.box || sample.width}px;height:${
+								sample.box || sample.height
+							}px`
 						: "";
 				}
 				const read = built.elements;
@@ -2830,7 +2850,11 @@ const compareStyles = async ({ pairs, types }) => {
 						found.push({
 							i,
 							pseudo,
-							at: `${sample.width}x${sample.height}${sample.dark ? " dark" : ""}${sample.box ? ` in ${sample.box}px` : ""}: ${whereIs(read[0][i])}${pseudo}`,
+							at: `${sample.width}x${sample.height}${
+								sample.dark ? " dark" : ""
+							}${sample.box ? ` in ${sample.box}px` : ""}: ${whereIs(
+								read[0][i]
+							)}${pseudo}`,
 							changed
 						});
 					}
