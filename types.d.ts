@@ -39781,7 +39781,7 @@ declare namespace exports {
 			export let parseVersion: (
 				str: string
 			) => (undefined | string | number | SemVerRangeItem[])[];
-			export let versionLt: (aVersion: string, bVersion: string) => boolean;
+			export let versionLt: (a: string, b: string) => boolean;
 			export let parseRange: (
 				str: string
 			) => (undefined | string | number | SemVerRangeItem[])[];
