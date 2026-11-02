@@ -228,6 +228,10 @@ const FILED_CONFIG_CSS_OPT_IN_DEFECTS = new Map([
 	[
 		"test/configCases/css/minimize-corpus/minimize-values/style.css",
 		"webkit only: the percentage `shape-image-threshold` again — see `minimize-values` above"
+	],
+	[
+		"test/configCases/css/minimize-vendor-prefixes/style.css",
+		"webkit only: the element read carries every class, so `.t16`'s `display:-webkit-box` lays out the `-webkit-box-align` the opt-in drops from `.t15`, whose block writes `display:flex`; WebKit centers its child in the original only, where Chrome 156 lays both alike"
 	]
 ]);
 const FILED_BENCHMARK_HTML_OPT_IN_DEFECTS = new Map();
@@ -589,6 +593,17 @@ const STYLE_CONTROLS = new Map([
 	["bad nth-child after", [".a+.b:nth-child(3){color:red}", ".a+.b:nth-child(3){color:blue}"]],
 	["bad nth-child among", [".a~.b:nth-child(3){color:red}", ".a~.b:nth-child(3){color:blue}"]],
 	["bad nth-of-type after", ["i+p:nth-of-type(2){color:red}", "i+p:nth-of-type(2){color:blue}"]],
+	// A computed `line-height` serializes at six digits, so only where `1lh` lands on the layout grid tells these apart.
+	// Gecko rounds a length to its nearest 1/60px rather than flooring, so these and the length ones lay out alike in Firefox.
+	["bad line-height digits", [".a{font-size:14px;line-height:1.4285714286}", ".a{font-size:14px;line-height:1.42857}"]],
+	["bad line-height digits through a custom property", [":root{--h:1.4285714286}.a{font-size:14px;line-height:var(--h)}", ":root{--h:1.42857}.a{font-size:14px;line-height:var(--h)}"]],
+	["bad line-height digits at a queried font size", ["@media (max-width:300px){.a{font-size:14px}}.a{line-height:1.4285714286}", "@media (max-width:300px){.a{font-size:14px}}.a{line-height:1.42857}"]],
+	// The same for any length: a computed one serializes at six digits as well, so only where the box lands tells these apart.
+	["bad width digits", [".a{font-size:19px;width:.1052631579em}", ".a{font-size:19px;width:.105263em}"]],
+	["bad padding digits", [".a{font-size:19px;padding-left:.1052631579em}", ".a{font-size:19px;padding-left:.105263em}"]],
+	["bad margin digits", [".a{font-size:19px;margin-top:.1052631579em}", ".a{font-size:19px;margin-top:.105263em}"]],
+	["good length digits", [".a{font-size:19px;margin-top:.1052631579em}", ".a{font-size:19px;margin-top:.10526316em}"]],
+	["good line-height digits", [".a{font-size:14px;line-height:1.4285714286}", ".a{font-size:14px;line-height:1.42857143}"]],
 	["good spelling", [".a{color:red;margin:0px}", ".a{color:#f00;margin:0}"]],
 	["good nth spellings", ["li:nth-child(odd){color:red}li:nth-child(even){color:blue}", "li:nth-child(2n+1){color:red}li:nth-child(2n){color:blue}"]],
 	["good has spacing", ["a:has( > b ){color:red}", "a:has(>b){color:red}"]],
@@ -973,7 +988,13 @@ describe(`printer output in real ${ENGINE}`, () => {
 				[...STYLE_CONTROLS].map(([name, [raw, min]]) => ({ name, raw, min }))
 			);
 			expect(differences.map((each) => each.name).sort()).toEqual(
-				[...STYLE_CONTROLS.keys()].filter((name) => name.startsWith("bad ")).sort()
+				[...STYLE_CONTROLS.keys()]
+					.filter(
+						(name) =>
+							name.startsWith("bad ") &&
+							!(ENGINE === "firefox" && / digits/.test(name))
+					)
+					.sort()
 			);
 		},
 		FILE_TIMEOUT
@@ -1967,7 +1988,7 @@ const LOWERING_FIXTURES = [
 			"border-top-width:calc(hypot(3px,4px));top:calc(1cm + 1px);" +
 			"left:calc(log(8,2)*10px);right:calc(pow(2,10)*.01px)}",
 		browsers: ["chrome 130"],
-		produces: ["width:141.421px", "height:70.7107px", "margin-left:.3px"],
+		produces: ["width:141.42135624px", "height:70.71067812px", "margin-left:.3px"],
 		html: '<button id=b style="position:absolute">x</button>',
 		probes: [
 			["#b", "width"],

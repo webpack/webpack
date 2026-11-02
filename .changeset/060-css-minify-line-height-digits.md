@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Keep the digits a CSS `line-height` or custom property number needs to land on whole pixels.
+Shorten a CSS number only to digits every engine lays out at the same pixel.

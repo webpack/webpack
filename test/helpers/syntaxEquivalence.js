@@ -1332,7 +1332,9 @@ const compareRenders = async ({ pairs, width }) => {
 			: boxes
 					.map(
 						([x, y, boxWidth, height]) =>
-							`${x.toFixed(2)},${y.toFixed(2)} ${boxWidth.toFixed(2)}x${height.toFixed(2)}`
+							`${x.toFixed(2)},${y.toFixed(2)} ${boxWidth.toFixed(
+								2
+							)}x${height.toFixed(2)}`
 					)
 					.join(" ");
 
@@ -1903,30 +1905,16 @@ const compareStyles = async ({ pairs, types }) => {
 			);
 		});
 
-	const LENGTH = /-?\d*\.?\d+(?:e[+-]?\d+)?px/gi;
-	const NUMBER = /-?\d*\.?\d+(?:e[+-]?\d+)?/gi;
-
 	/**
-	 * @param {string} one a value
-	 * @param {string} other another
-	 * @returns {boolean} whether they differ in pixel lengths alone
+	 * Whether serialized CSSOM text holds a number at six significant digits, the
+	 * most it keeps, so one written longer may hide behind it.
+	 * @param {string} text a declaration as CSSOM serializes it
+	 * @returns {boolean} true when a number there may have lost digits
 	 */
-	const sameButLengths = (one, other) =>
-		one.replace(LENGTH, "px") === other.replace(LENGTH, "px");
-
-	/**
-	 * @param {string} one a value
-	 * @param {string} other another
-	 * @returns {boolean} whether they differ past the printer's six digits nowhere
-	 */
-	const numericallyAlike = (one, other) => {
-		if (one.replace(NUMBER, "0") !== other.replace(NUMBER, "0")) return false;
-		const theirs = other.match(NUMBER) || [];
-		return (one.match(NUMBER) || []).every((number, at) => {
-			const [a, b] = [Number(number), Number(theirs[at])];
-			return Math.abs(a - b) <= Math.max(Math.abs(a), Math.abs(b), 1) * 1e-5;
-		});
-	};
+	const _hidesDigits = (text) =>
+		(text.match(/\d*\.\d+|\d+/g) || []).some(
+			(number) => number.replace(".", "").replace(/^0+/, "").length >= 6
+		);
 
 	/**
 	 * The lengths a condition names, in pixels, by the dimension each is of.
@@ -2120,7 +2108,11 @@ const compareStyles = async ({ pairs, types }) => {
 					const prefix = kind === "CSSMediaRule" ? "" : "box";
 					walk(
 						any.cssRules,
-						`${context}@${kind === "CSSMediaRule" ? "media" : `container ${any.containerName}`} ${spacedOnce(condition)}`,
+						`${context}@${
+							kind === "CSSMediaRule"
+								? "media"
+								: `container ${any.containerName}`
+						} ${spacedOnce(condition)}`,
 						parents,
 						scope,
 						[
@@ -2139,7 +2131,9 @@ const compareStyles = async ({ pairs, types }) => {
 				) {
 					walk(
 						any.cssRules,
-						`${context}@${kind === "CSSSupportsRule" ? "supports" : "-moz-document"} ${spacedOnce(any.conditionText)}`,
+						`${context}@${
+							kind === "CSSSupportsRule" ? "supports" : "-moz-document"
+						} ${spacedOnce(any.conditionText)}`,
 						parents,
 						scope,
 						lengths
@@ -2189,7 +2183,10 @@ const compareStyles = async ({ pairs, types }) => {
 								if (held.cssRules !== undefined) {
 									flat(
 										held.cssRules,
-										`${where}${held.cssText.slice(0, held.cssText.indexOf("{"))}`
+										`${where}${held.cssText.slice(
+											0,
+											held.cssText.indexOf("{")
+										)}`
 									);
 								}
 								continue;
@@ -2209,7 +2206,9 @@ const compareStyles = async ({ pairs, types }) => {
 									}
 									out.unobserved.set(
 										key,
-										`${computedAs(name, style.getPropertyValue(name))}${important ? "!" : ""}`
+										`${computedAs(name, style.getPropertyValue(name))}${
+											important ? "!" : ""
+										}`
 									);
 								}
 							}
@@ -2225,7 +2224,9 @@ const compareStyles = async ({ pairs, types }) => {
 						`${context}${
 							any.style === undefined
 								? spacedOnce(text)
-								: `${text.slice(0, text.indexOf("{")).trim()}${described(any.style)}`
+								: `${text.slice(0, text.indexOf("{")).trim()}${described(
+										any.style
+									)}`
 						}`
 					);
 				}
@@ -2244,6 +2245,28 @@ const compareStyles = async ({ pairs, types }) => {
 	const docs = frames.map(
 		(frame) => /** @type {Document} */ (frame.contentDocument)
 	);
+	// WHY: a computed `line-height` serializes at six digits, so `1.42857` reads
+	// `20px` at 14px where layout floors it to 19.98438px. What `1lh` floors to
+	// on Blink's 1/64px grid is a length every engine serializes apart.
+	const LINE_PROBE = "--eq-line-floor";
+	const lineProbes = windows.map((view) => {
+		view.CSS.registerProperty({
+			name: LINE_PROBE,
+			syntax: "<length>",
+			inherits: false,
+			initialValue: "0px"
+		});
+		const sheet = new view.CSSStyleSheet();
+		// One rule per selector, so an engine rejecting one pseudo-element keeps the rest.
+		sheet.replaceSync(
+			["*", "*::before", "*::after", "*::marker"]
+				.map(
+					(selector) => `${selector}{${LINE_PROBE}:round(down,1lh,0.015625px)}`
+				)
+				.join("")
+		);
+		return sheet;
+	});
 
 	/**
 	 * Renders both compared frames and lays them out, so the next read sees
@@ -2354,7 +2377,10 @@ const compareStyles = async ({ pairs, types }) => {
 		value.replace(
 			ABSOLUTE_LENGTH,
 			(_, amount, unit) =>
-				`${Math.round(Number(amount) * PX_PER_UNIT[unit.toLowerCase()] * 1e4) / 1e4}px`
+				`${
+					Math.round(Number(amount) * PX_PER_UNIT[unit.toLowerCase()] * 1e4) /
+					1e4
+				}px`
 		);
 
 	/**
@@ -2452,7 +2478,7 @@ const compareStyles = async ({ pairs, types }) => {
 			// CSS Syntax §3.2: decoding drops a leading byte order mark, which
 			// `replaceSync` would read as part of the first selector.
 			sheet.replaceSync(text.charCodeAt(0) === 0xfeff ? text.slice(1) : text);
-			docs[at].adoptedStyleSheets = [sheet];
+			docs[at].adoptedStyleSheets = [lineProbes[at], sheet];
 			return readSheet(sheet);
 		});
 		const [one, other] = readings;
@@ -2518,6 +2544,28 @@ const compareStyles = async ({ pairs, types }) => {
 			for (const reading of readings) {
 				for (const reader of reading.reads.get(property) || []) {
 					tracked.add(reader);
+				}
+			}
+		}
+		// WHY: CSSOM serializes a number at six digits, so `1.4285714286` and
+		// `1.42857` declare alike above; only the line probe tells them apart,
+		// at every width a query moves either of the two on.
+		if (
+			readings.some((reading) =>
+				["line-height", "font-size"].some((property) =>
+					(reading.sequences.get(property) || []).some(_hidesDigits)
+				)
+			)
+		) {
+			tracked.add("line-height");
+			tracked.add("font-size");
+		}
+		// WHY: the same six digits hide any number written longer, so a property
+		// declaring one that CSSOM cut is read wherever it lays out.
+		for (const reading of readings) {
+			for (const [property, sequence] of reading.sequences) {
+				if (!tracked.has(property) && sequence.some(_hidesDigits)) {
+					tracked.add(property);
 				}
 			}
 		}
@@ -2706,9 +2754,11 @@ const compareStyles = async ({ pairs, types }) => {
 						docs[at].getElementById("eq-holder")
 					);
 					holder.style.cssText = queried
-						? `container-type:size;container-name:${containerNames.join(" ") || "none"};width:${
-								sample.box || sample.width
-							}px;height:${sample.box || sample.height}px`
+						? `container-type:size;container-name:${
+								containerNames.join(" ") || "none"
+							};width:${sample.box || sample.width}px;height:${
+								sample.box || sample.height
+							}px`
 						: "";
 				}
 				const read = built.elements;
@@ -2750,6 +2800,7 @@ const compareStyles = async ({ pairs, types }) => {
 					/** @type {[string, string, string, string, string][]} */
 					const changed = [];
 					for (const name of names) {
+						if (name === LINE_PROBE) continue;
 						const a = styles[0].getPropertyValue(name);
 						const b = styles[1].getPropertyValue(name);
 						if (a === b) continue;
@@ -2758,6 +2809,23 @@ const compareStyles = async ({ pairs, types }) => {
 						if (x !== y && !relaxedEqual(relax, name, x, y, a, b)) {
 							changed.push([name, a, b, x, y]);
 						}
+					}
+					// Compared as serialized whatever the relaxations: the probe is no
+					// custom property a sheet wrote, and no opt-in may move layout.
+					const lineA = styles[0].getPropertyValue(LINE_PROBE);
+					const lineB = styles[1].getPropertyValue(LINE_PROBE);
+					if (lineA !== lineB) {
+						changed.push([LINE_PROBE, lineA, lineB, lineA, lineB]);
+					}
+					// WHY: a computed length serializes at six digits too, so where the
+					// element lays out — at the 1/64px its box is placed to — is read as
+					// well; a box of a margin or padding a rounding moved shows it.
+					if (pseudo === "") {
+						const [boxA, boxB] = [0, 1].map((side) => {
+							const box = read[side][i].getBoundingClientRect();
+							return `${box.x},${box.y} ${box.width}x${box.height}`;
+						});
+						if (boxA !== boxB) changed.push(["box", boxA, boxB, boxA, boxB]);
 					}
 					return changed;
 				};
@@ -2777,7 +2845,11 @@ const compareStyles = async ({ pairs, types }) => {
 						found.push({
 							i,
 							pseudo,
-							at: `${sample.width}x${sample.height}${sample.dark ? " dark" : ""}${sample.box ? ` in ${sample.box}px` : ""}: ${whereIs(read[0][i])}${pseudo}`,
+							at: `${sample.width}x${sample.height}${
+								sample.dark ? " dark" : ""
+							}${sample.box ? ` in ${sample.box}px` : ""}: ${whereIs(
+								read[0][i]
+							)}${pseudo}`,
 							changed
 						});
 					}
@@ -2799,6 +2871,23 @@ const compareStyles = async ({ pairs, types }) => {
 							else element.setAttribute("style", original);
 						}
 					}
+					// WHY: WebKit can leave a box where an incremental layout put it — an
+					// empty inline `<a>` read 16px tall in one frame and 0 in the other,
+					// passing on a re-run (seen in CI) — so a box apart is laid out anew.
+					if (
+						found.some(({ changed }) =>
+							changed.some(([name]) => name === "box")
+						)
+					) {
+						for (const doc of docs) {
+							const root = /** @type {HTMLElement} */ (doc.documentElement);
+							const original = root.getAttribute("style");
+							root.style.setProperty("display", "none", "important");
+							root.getBoundingClientRect();
+							if (original === null) root.removeAttribute("style");
+							else root.setAttribute("style", original);
+						}
+					}
 					await settleFrames();
 					found = found.filter((entry) => {
 						const changed = differ(
@@ -2811,47 +2900,8 @@ const compareStyles = async ({ pairs, types }) => {
 						return true;
 					});
 				}
-				// WHY: a used length is floored to the layout grid, and a percentage
-				// table multiplies that step — Semantic UI's `td{width:18.75%}` moved
-				// 6/64px over an 11px padding printed at six digits. Layout follows from
-				// computed values, so a length is read again with no box to lay out.
-				const rereading = found.some(({ changed }) =>
-					changed.some(([, , , x, y]) => sameButLengths(x, y))
-				);
-				if (rereading) {
-					for (const list of read) {
-						/** @type {HTMLElement} */ (list[2]).style.setProperty(
-							"display",
-							"none",
-							"important"
-						);
-					}
-				}
-				for (const { i, pseudo, at, changed } of found) {
-					const kept = rereading
-						? changed.filter(([name, , , x, y]) => {
-								if (!sameButLengths(x, y)) return true;
-								const [a, b] = [0, 1].map((side) =>
-									cascadeValue(
-										name,
-										windows[side]
-											.getComputedStyle(read[side][i], pseudo || null)
-											.getPropertyValue(name)
-									)
-								);
-								return !numericallyAlike(a, b);
-							})
-						: changed;
-					if (kept.length > 0 && moved.length < KEPT) {
-						moved.push({ at, moved: kept });
-					}
-				}
-				if (rereading) {
-					for (const list of read) {
-						/** @type {HTMLElement} */ (list[2]).style.removeProperty(
-							"display"
-						);
-					}
+				for (const { at, changed } of found) {
+					if (moved.length < KEPT) moved.push({ at, moved: changed });
 				}
 			}
 		};

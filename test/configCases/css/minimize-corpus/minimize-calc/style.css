@@ -67,9 +67,9 @@
 /*! declined: past the range the rounding covers every digit carries, and all of
    them are longer than the expression */
 .d06 { width: calc(123456px/1.1) }
-/*! the fold prints a double back, so its result is rounded to six digits, a percentage to the float Firefox parses */
+/*! declined too: a third of a box lands on a step no shorter decimal does */
 .f20 { width: calc(100%/3) }
-/*! an angle rounds to six digits too, as lightningcss rounds it */
+/*! an angle keeps its `calc()` where no shorter number lands on the same step */
 .f21 { rotate: calc(1turn/3) }
 /*! declined: a math function other than calc() */
 .d07 { width: min(1px + 2px, 4px) }
@@ -176,8 +176,8 @@
 /*! declined: calc-size() leads with a basis, which is an expression this does
    not evaluate, so it is the one math function with no arity to read */
 .n05 { width: calc-size(auto,size) }
-/*! an irrational root is written at the six significant digits every number
-   here is written at */
+/*! an irrational root is written at the fewest digits that land on the same
+   1/64px step at every scale */
 .n06 { width: calc(sqrt(2)*1px) }
 /*! ...and so is a power that does not multiply back */
 .n07 { width: calc(pow(2,.5)*1px) }
