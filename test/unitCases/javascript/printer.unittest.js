@@ -1281,6 +1281,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["function f(){function g(a,b=1){return a}return[g(1,2),g(3,4)]}", {}, "function f(){function n(n,r=1){return n}return[n(1,2),n(3,4)]}"],
 			["function f(){function g(a,b){return a}g=h;return[g(1,2),g(3,4)]}", {}, "function f(){function n(n,g){return n}return[(n=h)(1,2),n(3,4)]}"],
 			["function f(){function g(a,b){return a}return[g(1,/*! keep */2),g(3,4)]}", {}, "function f(){function n(n,r){return n}return[n(1,/*! keep */2),n(3)]}"],
+			["function f(){function g(a,b){return a}return[g(1,[1,/*! keep */2]),g(3,4)]}", {}, "function f(){function n(n,r){return n}return[n(1,[1,/*! keep */2]),n(3)]}"],
 			["function f(){function g(a,b){return a}var g;return[g(1,2),g(3,4)]}", {}, "function f(){function n(n,r){return n}var n;return[n(1,2),n(3,4)]}"],
 			["function f(){function g(a,b){return a}return[g(1,2),g(3,4)];function h(){eval(\"\")}}", {}, "function f(){function g(n,t){return n}return[g(1,2),g(3,4)];function h(){eval(\"\")}}"],
 			["function f(){function g(a,b){return a+b}return[g(1,2),g(3,4)]}", {}, "function f(){function n(n,r){return n+r}return[n(1,2),n(3,4)]}"],
