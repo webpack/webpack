@@ -1906,11 +1906,6 @@ const compareStyles = async ({ pairs, types }) => {
 		});
 
 	/**
-	 * @param {string} one a value
-	 * @param {string} other another
-	 * @returns {boolean} whether they differ in pixel lengths alone
-	 */
-	/**
 	 * Whether serialized CSSOM text holds a number at six significant digits, the
 	 * most it keeps, so one written longer may hide behind it.
 	 * @param {string} text a declaration as CSSOM serializes it
@@ -2874,6 +2869,23 @@ const compareStyles = async ({ pairs, types }) => {
 							element.style.setProperty("--eq-dirty", String(retry));
 							if (original === null) element.removeAttribute("style");
 							else element.setAttribute("style", original);
+						}
+					}
+					// WHY: WebKit can leave a box where an incremental layout put it — an
+					// empty inline `<a>` read 16px tall in one frame and 0 in the other,
+					// passing on a re-run (seen in CI) — so a box apart is laid out anew.
+					if (
+						found.some(({ changed }) =>
+							changed.some(([name]) => name === "box")
+						)
+					) {
+						for (const doc of docs) {
+							const root = /** @type {HTMLElement} */ (doc.documentElement);
+							const original = root.getAttribute("style");
+							root.style.setProperty("display", "none", "important");
+							root.getBoundingClientRect();
+							if (original === null) root.removeAttribute("style");
+							else root.setAttribute("style", original);
 						}
 					}
 					await settleFrames();
