@@ -43,6 +43,13 @@ const walkIds = (compiler) => {
 					.for(type)
 					.tap(PLUGIN_NAME, (moduleParser) => {
 						const parser = /** @type {JavascriptParser} */ (moduleParser);
+						// another parse, started before the plugins read the tree
+						parser.hooks.programTree.tap(
+							{ name: PLUGIN_NAME, stage: -100 },
+							() => {
+								parser.evaluate("1 + 1");
+							}
+						);
 						parser.hooks.programTree.tap(PLUGIN_NAME, (tree, program) => {
 							expect(tree.type(program)).toBe(
 								compiler.webpack.javascript.syntax.parser.NodeType.Program
@@ -93,21 +100,28 @@ module.exports = {
 				test: /custom\.js$/,
 				parser: {
 					/**
-					 * A program another parser read, which the build writes into a tree.
+					 * A program another parser read, marking no directive, which the
+					 * build writes into a tree.
 					 * @param {string} code source code
 					 * @param {ParseOptions} options parse options
 					 * @returns {ParseResult} parse result
 					 */
-					parse: (code, options) => ({
-						ast: /** @type {ParseResult["ast"]} */ (
-							acorn.parse(code, {
-								sourceType: options.sourceType,
-								ecmaVersion: "latest",
-								ranges: true
-							})
-						),
-						comments: []
-					})
+					parse: (code, options) => {
+						const ast = acorn.parse(code, {
+							sourceType: options.sourceType,
+							ecmaVersion: "latest",
+							ranges: true
+						});
+						for (const statement of ast.body) {
+							if (statement.type === "ExpressionStatement") {
+								statement.directive = undefined;
+							}
+						}
+						return {
+							ast: /** @type {ParseResult["ast"]} */ (ast),
+							comments: []
+						};
+					}
 				}
 			}
 		]

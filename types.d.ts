@@ -37825,6 +37825,7 @@ declare namespace exports {
 				) => Program;
 				export let parseProgram: _functionSyntaxParserFunction_1;
 				export let parsedTree: () => null | SyntaxTree;
+				export let takeParsedTree: () => null | SyntaxTree;
 				export let positionAt: (
 					lineStarts: number[],
 					offset: number
