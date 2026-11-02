@@ -17955,6 +17955,11 @@ declare interface JavascriptReadOptions {
 	 * terser's format options a print reads, as `minify` reads them under `format`; `comments` is read where it compresses or mangles
 	 */
 	format?: GivenFormatOptions;
+
+	/**
+	 * terser's older name for `format`, read where it compresses or mangles and never beside `format`
+	 */
+	output?: GivenFormatOptions;
 }
 
 /**

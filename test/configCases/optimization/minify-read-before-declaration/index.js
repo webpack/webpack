@@ -29,3 +29,22 @@ it("should fold a `let` or `const` read after its declaration, keeping a read th
 	expect(late()).toEqual(["ReferenceError", 3, 6]);
 	expect(named()).toEqual(["ReferenceError", 4]);
 });
+
+function hoisted() {
+	const read = [];
+	try {
+		read.push(get());
+	} catch (err) {
+		read.push(err.name);
+	}
+	let value = 5;
+	function get() {
+		return value;
+	}
+	read.push(get());
+	return read;
+}
+
+it("should keep a read a function declared after a `let` may make before it is set", () => {
+	expect(hoisted()).toEqual(["ReferenceError", 5]);
+});
