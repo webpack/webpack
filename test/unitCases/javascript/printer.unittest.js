@@ -3742,7 +3742,9 @@ describe("one-pass minify of statement sequences", () => {
 			["function s(e,t){if(t)return;switch(1){case 1:e.push(1);e.push(2)}}", "function s(e,s){if(!s)e.push(1),e.push(2)}"],
 			["function s(x){switch(1){case 1:throw x;case 2:y()}}", "function s(c){throw c}"],
 			["f({...{a:1,...b}}, [...[1,...c]])", "f({a:1,...b},[1,...c]);"],
-			["f(...[1,...[2,3]])", "f(1,2,3);"]
+			["f(...[1,...[2,3]])", "f(1,2,3);"],
+			// A string it runs could read as a directive where the `switch` was.
+			['function f(){switch(1){case 1:"use strict"}return this}', 'function f(){switch(1){case 1:"use strict"}return this}']
 		];
 		for (const [source, expected] of cases) {
 			expect(
