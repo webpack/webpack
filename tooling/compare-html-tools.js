@@ -1004,6 +1004,14 @@ const doctypeOf = (name, publicId, systemId) =>
 	`doctype ${name} ${JSON.stringify(publicId)} ${JSON.stringify(systemId)}`;
 
 /**
+ * Decoding strips a byte order mark before tree construction sees the text; a
+ * parser handed text would otherwise read one as content.
+ * @param {string} html a document
+ * @returns {string} it as tree construction sees it
+ */
+const withoutBom = (html) => html.replace(/^\uFEFF/, "");
+
+/**
  * parse5's tree, as the agreement column reads it. A bogus comment `<?…` the
  * input ran out in is left out where webpack's processing instruction rules
  * drop it, as they are the tree webpack is held to.
@@ -1014,9 +1022,7 @@ const doctypeOf = (name, publicId, systemId) =>
 const parse5Tree = (html, scripting = false) => {
 	const parse5 = /** @type {Parse5} */ (load("parse5"));
 	const events = new TreeEvents();
-	// Decoding strips a byte order mark before tree construction sees the text;
-	// parse5 is handed text, so it would otherwise read one as content.
-	const source = html.replace(/^\uFEFF/, "");
+	const source = withoutBom(html);
 	/**
 	 * @param {Parse5Node} node a parse5 node
 	 */
@@ -1172,10 +1178,231 @@ const webpackTree = (html, scripting = false) => {
 	return events;
 };
 
+// A doctype as a parser keeping its markup writes it: the name, then a public
+// and a system literal, or a system literal alone (§13.2.5.53 onwards).
+const DOCTYPE_MARKUP_REGEXP =
+	/^!doctype\s+([^\s>]+)(?:\s+public\s*(["'])([^]*?)\2(?:\s*(["'])([^]*?)\4)?|\s+system\s*(["'])([^]*?)\6)?/i;
+
+/**
+ * @param {string} markup a doctype's markup, `<` and `>` left off
+ * @returns {string | null} the doctype as every reader writes it, or null for none
+ */
+const doctypeOfMarkup = (markup) => {
+	const doctype = DOCTYPE_MARKUP_REGEXP.exec(markup);
+	if (doctype === null) return null;
+	// The tokenizer lowercases the name (§13.2.5.54); a parser keeping the
+	// markup leaves that to whoever reads it.
+	return doctypeOf(
+		doctype[1].toLowerCase(),
+		doctype[3] || "",
+		doctype[5] === undefined ? doctype[7] || "" : doctype[5]
+	);
+};
+
+/**
+ * The namespace an element a parser gives no namespace sits in, from the one
+ * holding it: `svg` and `math` open theirs, and HTML resumes inside the
+ * elements §13.2.6.5 names as integration points.
+ * @param {string} parent the namespace of the element holding it
+ * @param {string} parentName that element's name
+ * @param {string} name its own name
+ * @returns {string} its namespace
+ */
+const namespaceIn = (parent, parentName, name) => {
+	const lowered = name.toLowerCase();
+	if (
+		parent === "html" ||
+		(parent === "svg" && /^(?:foreignobject|desc|title)$/i.test(parentName)) ||
+		(parent === "math" && parentName.toLowerCase() === "annotation-xml")
+	) {
+		if (lowered === "svg") return "svg";
+		if (lowered === "math") return "math";
+		return "html";
+	}
+	return parent;
+};
+
+/**
+ * htmlparser2's tree, as the agreement column reads it. It builds no implied
+ * element and keeps a doctype as its markup.
+ * @param {string} html a document
+ * @returns {TreeEvents} what it says
+ */
+const htmlparser2Tree = (html) => {
+	const htmlparser2 = load("htmlparser2");
+	const events = new TreeEvents();
+	/**
+	 * @param {EXPECTED_ANY} node an htmlparser2 node
+	 * @param {string} namespace its namespace
+	 */
+	const walk = (node, namespace) => {
+		for (const child of node.children) {
+			if (child.attribs !== undefined) {
+				const inside = namespaceIn(namespace, node.name || "", child.name);
+				events.open(
+					child.name,
+					startOf(inside, child.name, Object.entries(child.attribs))
+				);
+				walk(child, inside);
+				events.close(`</${child.name}>`);
+			} else if (child.type === "text") {
+				events.text(child.data);
+			} else if (child.type === "comment") {
+				events.leaf(`comment ${JSON.stringify(child.data)}`);
+			} else if (child.type === "directive") {
+				const doctype = doctypeOfMarkup(child.data);
+				if (doctype !== null) events.leaf(doctype);
+			}
+		}
+	};
+	walk(htmlparser2.parseDocument(withoutBom(html)), "html");
+	return events;
+};
+
+/**
+ * node-html-parser's tree, as the agreement column reads it. It builds no
+ * implied element and keeps a doctype as text.
+ * @param {string} html a document
+ * @returns {TreeEvents} what it says
+ */
+const nodeHtmlParserTree = (html) => {
+	const nodeHtmlParser = load("node-html-parser");
+	const events = new TreeEvents();
+	/**
+	 * @param {EXPECTED_ANY} node a node-html-parser node
+	 * @param {string} namespace its namespace
+	 */
+	const walk = (node, namespace) => {
+		for (const child of node.childNodes) {
+			if (child.nodeType === 1) {
+				const name = child.rawTagName;
+				const inside = namespaceIn(namespace, node.rawTagName || "", name);
+				events.open(
+					name,
+					startOf(inside, name, Object.entries(child.attributes))
+				);
+				walk(child, inside);
+				events.close(`</${name}>`);
+			} else if (child.nodeType === 8) {
+				events.leaf(`comment ${JSON.stringify(child.rawText)}`);
+			} else {
+				const doctype = /^<!doctype/i.test(child.rawText)
+					? doctypeOfMarkup(child.rawText.slice(1, -1))
+					: null;
+				if (doctype === null) events.text(child.text);
+				else events.leaf(doctype);
+			}
+		}
+	};
+	walk(nodeHtmlParser.parse(withoutBom(html), { comment: true }), "html");
+	return events;
+};
+
+/**
+ * linkedom's DOM, as the agreement column reads it. It builds no implied
+ * element, and leaves a template's contents in the template as well.
+ * @param {string} html a document
+ * @returns {TreeEvents} what it says
+ */
+const linkedomTree = (html) => {
+	const { parseHTML } = load("linkedom");
+	const events = new TreeEvents();
+	/**
+	 * @param {EXPECTED_ANY} node a DOM node
+	 */
+	const walk = (node) => {
+		for (const child of node.childNodes) {
+			if (child.nodeType === 1) {
+				const name = child.localName;
+				events.open(
+					name,
+					startOf(
+						PARSE5_NAMESPACES[child.namespaceURI],
+						name,
+						Array.from(
+							child.attributes,
+							(/** @type {EXPECTED_ANY} */ attribute) => [
+								attribute.name,
+								attribute.value
+							]
+						)
+					)
+				);
+				walk(child);
+				if (child.content !== undefined) {
+					events.leaf("#document-fragment");
+					walk(child.content);
+				}
+				events.close(`</${name}>`);
+			} else if (child.nodeType === 3) {
+				events.text(child.data);
+			} else if (child.nodeType === 8) {
+				events.leaf(`comment ${JSON.stringify(child.data)}`);
+			} else if (child.nodeType === 10) {
+				events.leaf(
+					doctypeOf(child.name, child.publicId || "", child.systemId || "")
+				);
+			}
+		}
+	};
+	walk(parseHTML(withoutBom(html)).document);
+	return events;
+};
+
+/**
+ * angular-html-parser's tree, as the agreement column reads it. It builds no
+ * implied element, and names a foreign element `:svg:name` or `:math:name`.
+ * @param {string} html a document
+ * @returns {TreeEvents} what it says
+ */
+const angularTree = (html) => {
+	const angular = load("angular-html-parser");
+	const events = new TreeEvents();
+	/**
+	 * @param {EXPECTED_ANY[]} nodes a list of children
+	 */
+	const walk = (nodes) => {
+		for (const node of nodes) {
+			const kind = node.constructor.name;
+			if (kind === "Element") {
+				const foreign = /^:(svg|math):(.*)$/.exec(node.name);
+				const name = foreign === null ? node.name : foreign[2];
+				events.open(
+					name,
+					startOf(
+						foreign === null ? "html" : foreign[1],
+						name,
+						// A namespaced attribute is named `:xlink:href`, its prefix fenced.
+						node.attrs.map((/** @type {EXPECTED_ANY} */ attribute) => [
+							attribute.name.replace(/^:([^:]+):/, "$1:"),
+							attribute.value
+						])
+					)
+				);
+				walk(node.children);
+				events.close(`</${name}>`);
+			} else if (kind === "Text") {
+				events.text(node.value);
+			} else if (kind === "Comment") {
+				events.leaf(`comment ${JSON.stringify(node.value)}`);
+			} else if (kind === "DocType") {
+				const doctype = doctypeOfMarkup(`!DOCTYPE ${node.value}`);
+				if (doctype !== null) events.leaf(doctype);
+			}
+		}
+	};
+	walk(angular.parse(withoutBom(html)).rootNodes);
+	return events;
+};
+
 /** @type {Map<string, import("./compare-tools-harness").TreeReader>} */
 const TREE_READERS = new Map([
 	["webpack", webpackTree],
-	[REFERENCE_PARSER, parse5Tree]
+	[REFERENCE_PARSER, parse5Tree],
+	["htmlparser2", htmlparser2Tree],
+	["node-html-parser", nodeHtmlParserTree],
+	["linkedom", linkedomTree],
+	["angular-html-parser", angularTree]
 ]);
 
 /**
@@ -2418,7 +2645,7 @@ const main = async () => {
 				if ("error" in result) {
 					// A tool rejecting the document outright is a comparison result too.
 					process.stdout.write(
-						`  ${tool.name.padEnd(34)} rejects it: ${result.error}\n`
+						`  ${tool.name.padEnd(34)} ${result.timedOut ? "" : "rejects it: "}${result.error}\n`
 					);
 					continue;
 				}

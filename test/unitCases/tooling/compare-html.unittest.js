@@ -6,8 +6,11 @@ const installed = jest.fn(() => Promise.resolve(CACHE_NAME));
 
 // A real install would `npm ci` the corpus into a contributor's cache, and
 // nothing here reads it: the built documents are the ones under test.
-// parse5 is installed into that same cache, so its tree is written out by hand.
+// parse5 is installed into that same cache, so its tree is written out by hand,
+// as is what each other parser builds for the document the readers are fed.
 const mockParse5 = { parse: jest.fn() };
+/** @type {Record<string, EXPECTED_ANY>} */
+const mockParsers = {};
 
 jest.mock("../../../tooling/compare-tools-harness", () => {
 	const actual = jest.requireActual("../../../tooling/compare-tools-harness");
@@ -16,7 +19,9 @@ jest.mock("../../../tooling/compare-tools-harness", () => {
 		installPackages: installed,
 		loaderFor:
 			(/** @type {string} */ cache) => (/** @type {string} */ name) =>
-				name === "parse5" ? mockParse5 : actual.loaderFor(cache)(name)
+				name === "parse5"
+					? mockParse5
+					: mockParsers[name] || actual.loaderFor(cache)(name)
 	};
 });
 
@@ -305,7 +310,7 @@ describe("compare-html-tools — agreeing with parse5", () => {
 		mockParse5.parse.mockReturnValue(parsed("a"));
 		const cell = agreement("parse5", TREE_READERS, html);
 		expect(await cell("parse5")).toBe("reference");
-		expect(await cell("htmlparser2")).toBe("own dialect");
+		expect(await cell("a parser with no reader")).toBe("own dialect");
 		expect(await cell("webpack")).toBe("yes");
 		// The byte order mark is the decoder's, gone before tree construction.
 		expect(mockParse5.parse).toHaveBeenLastCalledWith(html.slice(1), {
@@ -374,6 +379,205 @@ describe("compare-html-tools — agreeing with parse5", () => {
 		expect(await agreement("parse5", TREE_READERS, source)("webpack")).toBe(
 			"yes"
 		);
+	});
+
+	describe("the trees other parsers build", () => {
+		/**
+		 * @param {string} name a tag name
+		 * @param {Record<string, string>} attribs its attributes
+		 * @param {EXPECTED_ANY[]} children its children
+		 * @returns {EXPECTED_ANY} an htmlparser2 element
+		 */
+		const tag = (name, attribs, children) => ({
+			type: "tag",
+			name,
+			attribs,
+			children
+		});
+
+		/**
+		 * @param {string} rawTagName a tag name as written
+		 * @param {Record<string, string>} attributes its attributes
+		 * @param {EXPECTED_ANY[]} childNodes its children
+		 * @returns {EXPECTED_ANY} a node-html-parser element
+		 */
+		const nhpElement = (rawTagName, attributes, childNodes) => ({
+			nodeType: 1,
+			rawTagName,
+			attributes,
+			childNodes
+		});
+
+		/**
+		 * @param {string} localName a tag name
+		 * @param {string} namespaceURI its namespace
+		 * @param {EXPECTED_ANY[]} childNodes its children
+		 * @param {{ name: string, value: string }[]} attributes its attributes
+		 * @returns {EXPECTED_ANY} a DOM element
+		 */
+		const domElement = (localName, namespaceURI, childNodes, attributes = []) => ({
+			nodeType: 1,
+			localName,
+			namespaceURI,
+			attributes,
+			childNodes
+		});
+
+		// angular-html-parser's nodes are told apart by their class's name.
+		class Element {
+			/** @param {EXPECTED_ANY} fields its name, attrs and children */
+			constructor(fields) {
+				Object.assign(this, fields);
+			}
+		}
+		class Text {
+			/** @param {string} value its text */
+			constructor(value) {
+				this.value = value;
+			}
+		}
+		class Comment extends Text {}
+		class DocType extends Text {}
+
+		/**
+		 * @param {string} name a tag name, a foreign one prefixed `:svg:`
+		 * @param {EXPECTED_ANY[]} children its children
+		 * @param {{ name: string, value: string }[]} attrs its attributes
+		 * @returns {Element} an angular-html-parser element
+		 */
+		const ngElement = (name, children, attrs = []) =>
+			new Element({ name, attrs, children });
+
+		beforeAll(() => {
+			mockParse5.parse.mockReturnValue(parsed("a"));
+			// The `<?pi y?>` is a bogus comment it keeps, but no template content.
+			mockParsers.htmlparser2 = {
+				parseDocument: () => ({
+					children: [
+						{ type: "directive", data: "!doctype html" },
+						tag("html", {}, [
+							tag("head", {}, []),
+							tag("body", {}, [
+								tag("p", { id: "a" }, [
+									{ type: "text", data: "x" },
+									{ type: "comment", data: "?pi y?" },
+									{ type: "comment", data: "c" }
+								]),
+								tag("template", {}, [{ type: "text", data: "t" }]),
+								tag("svg", {}, [tag("use", { "xlink:href": "#i" }, [])])
+							])
+						])
+					]
+				})
+			};
+			// It reads `<?pi y?>` as text, and a doctype as text too.
+			mockParsers["node-html-parser"] = {
+				parse: () =>
+					nhpElement("", {}, [
+						{ nodeType: 3, rawText: "<!doctype html>", text: "<!doctype html>" },
+						nhpElement("html", {}, [
+							nhpElement("head", {}, []),
+							nhpElement("body", {}, [
+								nhpElement("p", { id: "a" }, [
+									{ nodeType: 3, rawText: "x<?pi y?>", text: "x<?pi y?>" },
+									{ nodeType: 8, rawText: "c" }
+								]),
+								nhpElement("template", {}, [
+									{ nodeType: 3, rawText: "t", text: "t" }
+								]),
+								nhpElement("svg", {}, [
+									nhpElement("use", { "xlink:href": "#i" }, [])
+								])
+							])
+						])
+					])
+			};
+			// It drops `<?pi y?>`, and leaves the template's text in the template.
+			mockParsers.linkedom = {
+				parseHTML: () => ({
+					document: {
+						childNodes: [
+							{ nodeType: 10, name: "html", publicId: "", systemId: "" },
+							domElement("html", HTML_NAMESPACE, [
+								domElement("head", HTML_NAMESPACE, []),
+								domElement("body", HTML_NAMESPACE, [
+									domElement(
+										"p",
+										HTML_NAMESPACE,
+										[
+											{ nodeType: 3, data: "x" },
+											{ nodeType: 8, data: "c" }
+										],
+										[{ name: "id", value: "a" }]
+									),
+									{
+										...domElement("template", HTML_NAMESPACE, [
+											{ nodeType: 3, data: "t" }
+										]),
+										content: { childNodes: [{ nodeType: 3, data: "t" }] }
+									},
+									domElement("svg", SVG_NAMESPACE, [
+										domElement(
+											"use",
+											SVG_NAMESPACE,
+											[],
+											[{ name: "xlink:href", value: "#i" }]
+										)
+									])
+								])
+							])
+						]
+					}
+				})
+			};
+			// It names the SVG elements `:svg:…`, and builds no template content.
+			mockParsers["angular-html-parser"] = {
+				parse: () => ({
+					rootNodes: [
+						new DocType("html"),
+						ngElement("html", [
+							ngElement("head", []),
+							ngElement("body", [
+								ngElement(
+									"p",
+									[new Text("x"), new Comment("?pi y?"), new Comment("c")],
+									[{ name: "id", value: "a" }]
+								),
+								ngElement("template", [new Text("t")]),
+								ngElement(":svg:svg", [
+									ngElement(":svg:use", [], [{ name: ":xlink:href", value: "#i" }])
+								])
+							])
+						])
+					]
+				})
+			};
+		});
+
+		afterAll(() => {
+			for (const name of Object.keys(mockParsers)) delete mockParsers[name];
+		});
+
+		it.each([
+			[
+				"htmlparser2",
+				"no — /html[1]/body[1]/template[1]: parse5 #document-fragment, tool nothing"
+			],
+			[
+				"node-html-parser",
+				'no — /html[1]/body[1]/p[1]: parse5 text "x", tool text "x<?pi y?>" (and 1 more)'
+			],
+			[
+				"linkedom",
+				'no — /html[1]/body[1]/p[1]: parse5 comment "?pi y?", tool nothing (and 1 more)'
+			],
+			[
+				"angular-html-parser",
+				"no — /html[1]/body[1]/template[1]: parse5 #document-fragment, tool nothing"
+			]
+		])("names where %s reads apart from parse5", async (name, cell) => {
+			expect(await agreement("parse5", TREE_READERS, html)(name)).toBe(cell);
+		});
 	});
 
 	it("names the first node the two trees differ at", async () => {

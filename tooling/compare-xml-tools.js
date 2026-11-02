@@ -878,6 +878,20 @@ const DOCTYPE_DIRECTIVE_REGEXP =
 	/^!DOCTYPE\s+([^\s[>]+)(?:\s+PUBLIC\s+(["'])([^]*?)\2(?:\s+(["'])([^]*?)\4)?|\s+SYSTEM\s+(["'])([^]*?)\6)?/;
 
 /**
+ * @param {string} directive a doctype as its markup writes it, `<` and `>` left off
+ * @returns {string | null} the doctype as every reader writes it, or null for none
+ */
+const doctypeOfDirective = (directive) => {
+	const doctype = DOCTYPE_DIRECTIVE_REGEXP.exec(directive);
+	if (doctype === null) return null;
+	return doctypeOf(
+		doctype[1],
+		doctype[3] || "",
+		doctype[5] === undefined ? doctype[7] || "" : doctype[5]
+	);
+};
+
+/**
  * `@rgrove/parse-xml`'s tree, as the agreement column and relation read it.
  * @param {EXPECTED_ANY} parseXml its `parseXml`
  * @param {string} xml a document
@@ -1063,24 +1077,215 @@ const htmlparser2Tree = (xml) => {
 			} else if (child.type === "directive" && child.name !== "?xml") {
 				// A directive is a doctype or a processing instruction, kept whole.
 				const instruction = /^\?(\S+)\s*([\s\S]*?)\??$/.exec(child.data);
-				const doctype = DOCTYPE_DIRECTIVE_REGEXP.exec(child.data);
+				const doctype = doctypeOfDirective(child.data);
 				if (instruction !== null) {
 					events.leaf(
 						`<?${instruction[1]} ${JSON.stringify(instruction[2])}?>`
 					);
 				} else if (doctype !== null) {
-					events.leaf(
-						doctypeOf(
-							doctype[1],
-							doctype[3] || "",
-							doctype[5] === undefined ? doctype[7] || "" : doctype[5]
-						)
-					);
+					events.leaf(doctype);
 				}
 			}
 		}
 	};
 	walk(htmlparser2.parseDocument(xml, { xmlMode: true }));
+	return events;
+};
+
+/**
+ * What a streaming parser reports, as the agreement column reads it.
+ * @typedef {object} StreamSink
+ * @property {(name: string, attributes: Record<string, string>) => void} open a start tag
+ * @property {(name: string) => void} close an end tag, or an empty element's
+ * @property {(value: string) => void} text character data, CDATA included
+ * @property {(value: string) => void} comment a comment's content
+ * @property {(target: string, body: string) => void} instruction a processing instruction
+ * @property {(text: string) => void} doctype what follows `<!DOCTYPE`
+ */
+
+/**
+ * @param {(sink: StreamSink) => void} parse feeds one document's events to the sink
+ * @returns {TreeEvents} what they say
+ */
+const streamTree = (parse) => {
+	const events = new TreeEvents();
+	parse({
+		open: (name, attributes) =>
+			events.open(name, startOf(name, Object.entries(attributes))),
+		close: (name) => events.close(`</${name}>`),
+		text: (value) => textOf(events, value),
+		comment: (value) => events.leaf(`comment ${JSON.stringify(value)}`),
+		instruction: (target, body) => {
+			// The XML declaration is not a processing instruction (§2.8).
+			if (target !== "xml") {
+				events.leaf(`<?${target} ${JSON.stringify(body)}?>`);
+			}
+		},
+		doctype: (text) => {
+			const doctype = doctypeOfDirective(`!DOCTYPE${text}`);
+			if (doctype !== null) events.leaf(doctype);
+		}
+	});
+	return events;
+};
+
+/**
+ * sax's events in strict mode, as the agreement column reads them.
+ * @param {string} xml a document
+ * @returns {TreeEvents} what it says
+ */
+const saxTree = (xml) =>
+	streamTree((sink) => {
+		const parser = load("sax").parser(true, {});
+		parser.onopentag = (/** @type {EXPECTED_ANY} */ tag) =>
+			sink.open(tag.name, tag.attributes);
+		parser.onclosetag = sink.close;
+		parser.ontext = sink.text;
+		parser.oncdata = sink.text;
+		parser.oncomment = sink.comment;
+		parser.onprocessinginstruction = (/** @type {EXPECTED_ANY} */ pi) =>
+			sink.instruction(pi.name, pi.body);
+		parser.ondoctype = sink.doctype;
+		parser.onerror = (/** @type {Error} */ error) => {
+			throw error;
+		};
+		parser.write(xml).close();
+	});
+
+/**
+ * saxes's events, as the agreement column reads them.
+ * @param {string} xml a document
+ * @returns {TreeEvents} what it says
+ */
+const saxesTree = (xml) =>
+	streamTree((sink) => {
+		const { SaxesParser } = load("saxes");
+		const parser = new SaxesParser();
+		parser.on("opentag", (/** @type {EXPECTED_ANY} */ tag) =>
+			sink.open(tag.name, tag.attributes)
+		);
+		parser.on("closetag", (/** @type {EXPECTED_ANY} */ tag) =>
+			sink.close(tag.name)
+		);
+		parser.on("text", sink.text);
+		parser.on("cdata", sink.text);
+		parser.on("comment", sink.comment);
+		parser.on("processinginstruction", (/** @type {EXPECTED_ANY} */ pi) =>
+			sink.instruction(pi.target, pi.body)
+		);
+		parser.on("doctype", sink.doctype);
+		parser.write(xml).close();
+	});
+
+/**
+ * fast-xml-parser's ordered tree, as the agreement column reads it, with the
+ * character references it leaves alone by default decoded. It keeps no doctype,
+ * and reads a processing instruction's content as attributes.
+ * @param {string} xml a document
+ * @returns {TreeEvents} what it says
+ */
+const fastXmlParserTree = (xml) => {
+	const { XMLParser } = load("fast-xml-parser");
+	const events = new TreeEvents();
+	/**
+	 * @param {EXPECTED_ANY} node one entry's attributes, `@_`-prefixed
+	 * @returns {[string, string][]} them, in order
+	 */
+	const attributesOf = (node) =>
+		Object.entries(node[":@"] || {}).map(([key, value]) => [
+			key.slice(2),
+			String(value)
+		]);
+	/**
+	 * @param {EXPECTED_ANY[]} nodes an ordered list of entries
+	 */
+	const walk = (nodes) => {
+		for (const node of nodes) {
+			const name = /** @type {string} */ (
+				Object.keys(node).find((key) => key !== ":@")
+			);
+			if (name === "#text") {
+				textOf(events, node[name]);
+			} else if (name === "#cdata") {
+				for (const text of node[name]) textOf(events, text["#text"]);
+			} else if (name === "#comment") {
+				events.leaf(
+					`comment ${JSON.stringify(node[name].map((/** @type {EXPECTED_ANY} */ text) => text["#text"]).join(""))}`
+				);
+			} else if (name.startsWith("?")) {
+				if (name === "?xml") continue;
+				const body = attributesOf(node)
+					.map(([key, value]) => `${key}="${value}"`)
+					.join(" ");
+				events.leaf(`<?${name.slice(1)} ${JSON.stringify(body)}?>`);
+			} else {
+				events.open(name, startOf(name, attributesOf(node)));
+				walk(node[name]);
+				events.close(`</${name}>`);
+			}
+		}
+	};
+	walk(
+		new XMLParser({
+			ignoreAttributes: false,
+			preserveOrder: true,
+			trimValues: false,
+			parseTagValue: false,
+			parseAttributeValue: false,
+			commentPropName: "#comment",
+			cdataPropName: "#cdata",
+			htmlEntities: true
+		}).parse(xml)
+	);
+	return events;
+};
+
+/**
+ * txml's tree, as the agreement column reads it, with the whitespace and the
+ * references it drops by default kept and decoded. It keeps a CDATA section's
+ * content as text, and a comment and a doctype as their markup.
+ * @param {string} xml a document
+ * @returns {TreeEvents} what it says
+ */
+const txmlTree = (xml) => {
+	const events = new TreeEvents();
+	/**
+	 * @param {EXPECTED_ANY[]} nodes a list of children
+	 */
+	const walk = (nodes) => {
+		for (const node of nodes) {
+			if (typeof node === "string") {
+				const doctype = doctypeOfDirective(node);
+				if (node.startsWith("<!--") && node.endsWith("-->")) {
+					events.leaf(`comment ${JSON.stringify(node.slice(4, -3))}`);
+				} else if (doctype !== null) {
+					events.leaf(doctype);
+				} else {
+					textOf(events, node);
+				}
+			} else if (node.tagName.startsWith("?")) {
+				if (node.tagName === "?xml") continue;
+				const body = Object.entries(node.attributes)
+					.map(([key, value]) => `${key}="${value}"`)
+					.join(" ");
+				events.leaf(`<?${node.tagName.slice(1)} ${JSON.stringify(body)}?>`);
+			} else {
+				events.open(
+					node.tagName,
+					startOf(node.tagName, Object.entries(node.attributes))
+				);
+				walk(node.children);
+				events.close(`</${node.tagName}>`);
+			}
+		}
+	};
+	walk(
+		load("txml").parse(xml, {
+			keepComments: true,
+			keepWhitespace: true,
+			decodeEntities: true
+		})
+	);
 	return events;
 };
 
@@ -1090,7 +1295,11 @@ const TREE_READERS = new Map(
 		["webpack", webpackTree],
 		["@xmldom/xmldom", xmldomTree],
 		[REFERENCE_PARSER, parseXmlTree],
-		["htmlparser2 (xmlMode)", htmlparser2Tree]
+		["htmlparser2 (xmlMode)", htmlparser2Tree],
+		["sax (svgo's parser)", saxTree],
+		["saxes", saxesTree],
+		["fast-xml-parser", fastXmlParserTree],
+		["txml", txmlTree]
 	])
 );
 
@@ -1784,7 +1993,7 @@ const main = async () => {
 				if ("error" in result) {
 					// A tool rejecting the document outright is a comparison result too.
 					process.stdout.write(
-						`  ${tool.name.padEnd(40)} rejects it: ${result.error}\n`
+						`  ${tool.name.padEnd(40)} ${result.timedOut ? "" : "rejects it: "}${result.error}\n`
 					);
 					continue;
 				}

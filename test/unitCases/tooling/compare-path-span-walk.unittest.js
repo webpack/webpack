@@ -103,7 +103,26 @@ describe("the span walk over an accessor-based parser", () => {
 		]);
 	});
 
-	it("should hand over the sub-ranges a node states", () => {
+	it("should place every node when no parser says otherwise", () => {
+		/** @type {EXPECTED_ANY[]} */
+		const out = [];
+		pathSpanWalk({
+			length: 4,
+			run: (enter, exit) => {
+				enter(/** @type {EXPECTED_ANY} */ ("Comment"));
+				exit(/** @type {EXPECTED_ANY} */ ("Comment"));
+			},
+			name: (node) => String(node),
+			start: () => 0,
+			end: () => 4,
+			inner: () => undefined
+		})((node) => out.push(node));
+		expect(out.map((node) => [node.what, node.structural])).toEqual([
+			["Comment", true]
+		]);
+	});
+
+		it("should hand over the sub-ranges a node states", () => {
 		expect(
 			walked(
 				10,
