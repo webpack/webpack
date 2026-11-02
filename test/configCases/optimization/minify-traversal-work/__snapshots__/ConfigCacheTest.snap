@@ -1,8 +1,8 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
-exports[`ConfigCacheTestCases optimization minify-traversal-work exported tests should keep repeated member reads before a later write 1`] = `"function read(object){var result=object.value+object.value+(object.value=5)+object.value;object.value=9;return result}"`;
+exports[`ConfigCacheTestCases optimization minify-traversal-work exported tests should keep repeated member reads before a later write 1`] = `"function read(object){var result=object.value+object.value+(object.value=5)+object.value;return object.value=9,result}"`;
 
-exports[`ConfigCacheTestCases optimization minify-traversal-work exported tests should keep repeated member reads before a later write 2`] = `"function e(e){var a=e.value+e.value+(e.value=5)+e.value;e.value=9;return a}"`;
+exports[`ConfigCacheTestCases optimization minify-traversal-work exported tests should keep repeated member reads before a later write 2`] = `"function e(e){var a=e.value+e.value+(e.value=5)+e.value;return e.value=9,a}"`;
 
 exports[`ConfigCacheTestCases optimization minify-traversal-work exported tests should preserve assignments when joining bare declarations across blocks 1`] = `"function joined(flag,calls){if(flag)var extra=calls.push(1);calls.push(2);var result=calls.push(3);return[calls.push(4),extra,result]}"`;
 
@@ -20,6 +20,6 @@ exports[`ConfigCacheTestCases optimization minify-traversal-work exported tests 
 
 exports[`ConfigCacheTestCases optimization minify-traversal-work exported tests should preserve copies when a generator resumes inside a loop 2`] = `"function*e(e){for(var a of e)yield function(){var e=a;return()=>e.value+e.value}()}"`;
 
-exports[`ConfigCacheTestCases optimization minify-traversal-work exported tests should preserve getters and shadowed parameters during assignment folding 1`] = `"function read(object,other){return object.value+function(object){var value=object.value+object.value;object.value=7;return value+object.value}(other)+object.value}"`;
+exports[`ConfigCacheTestCases optimization minify-traversal-work exported tests should preserve getters and shadowed parameters during assignment folding 1`] = `"function read(object,other){return object.value+function(object){var value=object.value+object.value;return object.value=7,value+object.value}(other)+object.value}"`;
 
-exports[`ConfigCacheTestCases optimization minify-traversal-work exported tests should preserve getters and shadowed parameters during assignment folding 2`] = `"function e(e,a){return e.value+function(e){var a=e.value+e.value;e.value=7;return a+e.value}(a)+e.value}"`;
+exports[`ConfigCacheTestCases optimization minify-traversal-work exported tests should preserve getters and shadowed parameters during assignment folding 2`] = `"function e(e,a){return e.value+function(e){var a=e.value+e.value;return e.value=7,a+e.value}(a)+e.value}"`;
