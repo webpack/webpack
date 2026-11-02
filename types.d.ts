@@ -15445,6 +15445,7 @@ declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 			typescript?: boolean;
 			importPhases?: boolean;
 			strictModeViolations?: false | "error" | "warn";
+			walkIds?: boolean;
 		}
 	);
 	hooks: Readonly<{
@@ -15997,6 +15998,16 @@ declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 		>;
 		program: SyncBailHook<[Program, CommentJavascriptParser[]], boolean | void>;
 		/**
+		 * The program as a node of the flat tree, before `program`; it fires
+		 * only for a parser built with `walkIds`, and the tree is read during the call.
+		 * @since 5.113.0
+		 * @experimental
+		 */
+		programTree: SyncBailHook<
+			[SyntaxTree, number, CommentJavascriptParser[]],
+			boolean | void
+		>;
+		/**
 		 * @since 5.99.0
 		 */
 		terminate: SyncBailHook<[ReturnStatement | ThrowStatement], boolean | void>;
@@ -16015,6 +16026,7 @@ declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 		typescript?: boolean;
 		importPhases?: boolean;
 		strictModeViolations?: false | "error" | "warn";
+		walkIds?: boolean;
 	};
 	scope: ScopeInfo;
 	state: JavascriptParserState;
