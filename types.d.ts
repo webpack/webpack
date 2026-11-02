@@ -9892,6 +9892,27 @@ declare class EnvironmentPlugin {
 type ErrorWithDetail = Error & { details?: string };
 
 /**
+ * a node the parser made, as `SyntaxTree#addEstree` reads it
+ */
+declare interface EstreeSource {
+	[index: string]:
+		| undefined
+		| null
+		| string
+		| number
+		| bigint
+		| boolean
+		| RegExp
+		| { cooked?: null | string; raw: string }
+		| EstreeSource
+		| EstreeSourceItem[];
+	type: string;
+	start: number;
+	end: number;
+}
+type EstreeSourceItem = null | number | EstreeSource;
+
+/**
  * ESTree objects read the way a `SyntaxTree` is, `toEstreeObject`'s way back:
  * an object takes an id when a read first reaches it, and nothing is copied.
  */
@@ -34235,7 +34256,7 @@ declare class SyntaxTree {
 	 * parent in source order, as the parser writes; a child already written
 	 * stands as its id.
 	 */
-	addEstree(root: NodeEstreeIndex): number;
+	addEstree(root: EstreeSource): number;
 
 	/**
 	 * The ESTree object of a node of this tree, as `toEstreeObject` builds it

@@ -8,7 +8,7 @@
 /** @typedef {{ case: string, file: string, webpack: string, acorn: string }} VerdictDifference */
 /** @typedef {typeof import("../../../lib/javascript/syntax-parser")} ParserExports */
 /** @typedef {Partial<import("../../../lib/javascript/syntax-parser").Options>} PortOptions */
-/** @typedef {import("../../../lib/javascript/syntax-parser").Node} EstreeNode */
+/** @typedef {import("../../../lib/javascript/syntax-parser").EstreeSource} EstreeNode */
 /** @typedef {import("../../../lib/javascript/syntax-parser").ParserOptions} ParserOptions */
 /** @typedef {import("../../../lib/javascript/syntax-parser").CollectedComment} CollectedComment */
 /**
@@ -5210,7 +5210,9 @@ describe("SyntaxTree", () => {
 			sourceType: "module"
 		});
 		const tree = new SyntaxTree();
-		const root = tree.addEstree(program);
+		const root = tree.addEstree(
+			asEstree(/** @type {WrittenNode} */ (/** @type {unknown} */ (program)))
+		);
 		for (let i = 0; i < 3; i++) {
 			const statement = tree.field(i, Field.body, root);
 			expect(tree.fieldCount(Field.attributes, statement)).toBe(0);
