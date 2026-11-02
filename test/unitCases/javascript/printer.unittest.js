@@ -1279,6 +1279,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["function f(){function g(a,...b){return a}return[g(1,2),g(3,4)]}", {}, "function f(){function n(n,...r){return n}return[n(1,2),n(3,4)]}"],
 			["function f(){function g(a,b){return arguments}return[g(1,2),g(3,4)]}", {}, "function f(){function n(n,r){return arguments}return[n(1,2),n(3,4)]}"],
 			["function f(){function g(a,b=1){return a}return[g(1,2),g(3,4)]}", {}, "function f(){function n(n,r=1){return n}return[n(1,2),n(3,4)]}"],
+			["function f(){function g(x,y=arguments[2]){return[x,y]}return[g(1,2,3),g(5)]}", {}, "function f(){function n(n,r=arguments[2]){return[n,r]}return[n(1,2,3),n(5)]}"],
 			["function f(){function g(a,b){return a}g=h;return[g(1,2),g(3,4)]}", {}, "function f(){function n(n,g){return n}return[(n=h)(1,2),n(3,4)]}"],
 			["function f(){function g(a,b){return a}return[g(1,/*! keep */2),g(3,4)]}", {}, "function f(){function n(n,r){return n}return[n(1,/*! keep */2),n(3)]}"],
 			["function f(){function g(a,b){return a}return[g(1,[1,/*! keep */2]),g(3,4)]}", {}, "function f(){function n(n,r){return n}return[n(1,[1,/*! keep */2]),n(3)]}"],
@@ -1838,6 +1839,11 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// Trailing arguments nothing reads go; a literal argument prints at its read.
 			[
 				"!function(){function g(a,b){return a}console.log(g(1,2),g(3),g(4,5,6))}();(function(o){o.a++;console.log(o.a,Object.keys(o))})({a:1,b:[2]})",
+				{}
+			],
+			// A default reading `arguments` reads arguments past the parameters.
+			[
+				"!function(){function*g(x=arguments[2],y=arguments[3],z){yield[x,y,z]}console.log(g(void 0,void 0,'third','fourth').next().value.join(),g().next().value.join())}()",
 				{}
 			],
 			[
