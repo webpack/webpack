@@ -107,6 +107,17 @@ git log --format='%h author=%an <%ae> committer=%cn <%ce>' origin/main..HEAD
 
 A stale base also makes CI lie both ways: `Code Size` and benchmarks compare against `main`'s last report, attributing commits your branch predates to you (a one-line diff reported as `+163 KiB`), and a red check may be a defect already fixed on `main`. So when `main` moves under a long-lived PR, don't read a cross-base comparison as a result: ask the requester before rebasing an open PR ([below](#watching-a-pr-and-updating-its-branch)), and once they agree, rebase locally as above, or use `update_pull_request_branch` when the repo is configured to rebase.
 
+## Stacked PRs
+
+> [!REQUIRED]
+
+CI tests each PR against its own base only, so two PRs that change the same code can both be green and still break `main` once both land. Before branching, check the open PRs (yours and the requester's) for overlap:
+
+- **Independent** (different code, neither needs the other, either merge order is clean): branch from `main`.
+- **Dependent** (needs the other PR's change, or edits the same functions, tests, snapshots or generated files): branch from that PR's branch, open with it as the base and write `Stacked on #<number>` in the Summary. "Not behind `main`" above then means not behind that branch.
+
+When the lower PR merges, the upper one targets `main` next; rebase it onto `main` as for any open PR: once the requester asks or it no longer merges cleanly ([below](#watching-a-pr-and-updating-its-branch)).
+
 ## Pull request body
 
 > [!REQUIRED]
