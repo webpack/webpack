@@ -332,7 +332,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/projects/yui/10/input.js",
 			"swc minifier: fixture/projects/yui/13/input.js",
 			"swc minifier: fixture/projects/yui/14/input.js",
-			"swc minifier: fixture/projects/yui/6/input.js",
 			"swc minifier: fixture/projects/yui/7/input.js",
 			"swc minifier: fixture/projects/yui/8/input.js",
 			"swc minifier: full/helpers/1/input.js",
@@ -1188,7 +1187,6 @@ const SWC_SMALLER_BY_REASON = [
 	[
 		"swc goes further than webpack on what terser's `pure_funcs` tests cover",
 		[
-			"terser compress: pure_funcs/side_effects",
 			"terser compress: pure_funcs/unused",
 			"terser compress: pure_funcs/issue_2705_1",
 			"terser compress: pure_funcs/issue_2705_6",

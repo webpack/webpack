@@ -1297,7 +1297,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["function f(){return(o=>o)({a:1})}", {}, "function f(){return(()=>({a:1}))()}"],
 			["function f(){return(o=>o)([1,,-1,\"s\",{b:!0}])}", {}, "function f(){return(()=>[1,,-1,\"s\",{b:!0}])()}"],
 			["function f(){(function(o){for(;;)g(o)})([1])}", {}, "function f(){!function(o){for(;;)g(o)}([1])}"],
-			["function f(){(function(o){return function(){return o}})([1])}", {}, "function f(){!function(n){return}([1])}"],
+			["function f(){(function(o){return function(){return o}})([1])}", {}, "function f(){}"],
 			["function f(){(function(o){g(o,o)})([1])}", {}, "function f(){!function(o){g(o,o)}([1])}"],
 			["function f(){(function(o){g(o)})([h])}", {}, "function f(){!function(n){g(n)}([h])}"],
 			["function f(){(function(o){g(o)})({h})}", {}, "function f(){!function(n){g(n)}({h:h})}"],
@@ -1562,6 +1562,10 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["function f(){var a;return a=1}function g(b){let a;return a=c(),b}function h(){var a;x(a=1);if(a=k())l()}function i(){var a,b;x(a=b=k())}function j(){var a;x(a=k());return a}function k(){x(a=g());let a}function l(a){x(a=g());return arguments}function m(c){var a;for(a=1;c;)c()}function n(a){var m=1;if(!1)x(m=a);return m}function o(){var a;a=0,p(),q()}", { mangle: false }, "function f(){return 1}function g(b){return c(),b}function h(){x(1);if(k())l()}function i(){x(k())}function j(){var a;return x(a=k()),a}function k(){x(a=g());let a}function l(a){return x(a=g()),arguments}function m(c){for(;c;)c()}function n(a){var m=1;return m}function o(){p(),q()}"],
 			// A `for` start running nothing goes.
 			["for(0;c;)f();for(a.b,1;c;)f();for(/*! c */0;;);", {}, "for(;c;)f();for(a.b;c;)f();for(/*! c */0;;);"],
+			// A function called whose value or last `return` runs nothing runs nothing, but not past a directive or a `return` before the end.
+			["(x=>x+1)(1);((x,y)=>x+y)(1,2);(x=>{return x+1})(1);(()=>{return})();(function(){return 1})();x=(()=>2)();(()=>{return g()})();x=function(){f();return 1}();(function(){\"use strict\";return 1})();(function(){return;g()})()", {}, "x=2,g(),x=function(){return f(),1}(),function(){\"use strict\";return}(),function(){}();"],
+			// A call `pure_funcs` names keeps what its arguments run in it.
+			["debug(g());/*@__PURE__*/f(g())", { compress: { pure_funcs: ["debug"] } }, "debug(g()),g();"],
 			// `!` negates an optional chain whole.
 			["function f(){if(t?.has(x))return;y()}for(;;){if(t?.has(x))continue;y()}x=t?.a?!1:y", {}, "function f(){if(!t?.has(x))y()}for(;;){if(!t?.has(x))y()}x=!t?.a&&y;"]
 		];
