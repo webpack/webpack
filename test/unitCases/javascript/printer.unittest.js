@@ -2127,7 +2127,14 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["({f:g}).f()", "{f:g}.f()"],
 			["delete ({a:1}).a", "delete{a:1}.a"],
 			// A `void` a `return` ending its function drops prints it alone.
-			["void ({a:g()}).a", "void{a:g()}.a"]
+			["void ({a:g()}).a", "void{a:g()}.a"],
+			// `true` prints as `!0`, which `.` or `**` would not read whole.
+			["({a:true}).a.x", "{a:!0}.a.x"],
+			["[true][0].x", "[!0][0].x"],
+			['[false][0]["y"]', "[!1][0].y"],
+			["({a:true}).a**x", "{a:!0}.a**x"],
+			["x**({a:true}).a", "x**!0"],
+			["!({a:true}).a", "!1"]
 		]) {
 			expect(print(source)).toBe(expected);
 		}
