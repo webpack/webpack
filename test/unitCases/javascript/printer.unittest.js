@@ -2123,6 +2123,36 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		).toBe("({a:g()}).a;");
 	});
 
+	it("should print a conditional with a sequence or conditional branch as `||` or `&&`", () => {
+		const print = (/** @type {string} */ source) =>
+			minifyOnePass(`function f(x,y,g){return[${source}]}`, {
+				compress: {},
+				mangle: false,
+				format: { comments: "some" }
+			}).code.slice(25, -2);
+		for (const [source, expected] of [
+			["x===y?!0:(g(),!1)", "x===y||(g(),!1)"],
+			["x===y?!0:y===g?(g(),!0):!1", "x===y||y===g&&(g(),!0)"],
+			["x===y?!1:y===g?!0:!1", "x!==y&&y===g"],
+			// A `?:` branch reads more than its truth.
+			["x===y?!0:y?y.a():!1", "x===y?!0:y?y.a():!1"],
+			["x?!1:y?y||g:!0", "x?!1:!y||y||g"],
+			// A folded conditional joins as the branch it keeps.
+			["x===y?!0:1?(g(),!0):!1", "x===y||(g(),!0)"],
+			["x===y?!0:1?y?!0:g:!1", "x===y?!0:y?!0:g"],
+			// A comment kept at an edge keeps the conditional.
+			["x===y?!0:/*! c */(g(),!0)", "x===y?!0:(/*! c */g(),!0)"]
+		]) {
+			expect(print(source)).toBe(expected);
+		}
+		expect(
+			minifyOnePass("f(x===y?!0:1?(g(),!0):!1)", {
+				compress: { dead_code: false },
+				mangle: false
+			}).code
+		).toBe("f(x===y?!0:1?(g(),!0):!1);");
+	});
+
 	it("should keep a `switch` on a known value whose case holds a comment that prints", () => {
 		const print = (/** @type {string} */ source) =>
 			minifyOnePass(source, {
