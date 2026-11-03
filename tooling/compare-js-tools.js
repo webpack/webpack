@@ -1581,17 +1581,24 @@ const EXPECTED = [
 	},
 	{
 		relation: "idempotence",
-		contains: "var ",
-		source: ["ECharts", "Babel 8"],
-		presets: ["default"],
-		why: "terser breaks the line after a comment only where it compresses, so a print-only reprint joins them"
-	},
-	{
-		relation: "idempotence",
 		contains: "{return",
 		source: "test/statsCases/track-returned/index.js",
 		presets: ["default"],
 		why: "an arrow whose one statement is an `if` with a known test returning a value keeps its braces: the `if` prints before the arrow reads what it returns"
+	},
+	{
+		relation: "idempotence",
+		contains: "(e,t,n))?",
+		source: "Vue 3 (production)",
+		presets: ["default"],
+		why: "an `if` printing as `?:` parenthesizes a test opening with a function where the reprint parenthesizes the function alone, the same size"
+	},
+	{
+		relation: "idempotence",
+		contains: "(e,e.__alignTo))?",
+		source: "ECharts",
+		presets: ["default"],
+		why: "an `if` printing as `?:` parenthesizes a test opening with a function where the reprint parenthesizes the function alone, the same size"
 	},
 	{
 		relation: "idempotence",
