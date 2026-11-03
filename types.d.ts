@@ -37713,6 +37713,7 @@ declare namespace exports {
 					static: 512;
 					tail: 1024;
 					await: 2048;
+					assert: 4096;
 				}>;
 				export let SCOPE_ARROW: 16;
 				export let SCOPE_ASYNC: 4;

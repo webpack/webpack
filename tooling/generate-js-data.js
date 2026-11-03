@@ -1478,9 +1478,9 @@ const FUNCTION_FIELDS =
 	"id:node expression:flag generator:flag async:flag params:list body:node";
 const CLASS_FIELDS = "id:node superClass:node body:node";
 
-// Each node type the parser makes, its fields as `name:kind` in the order its
-// objects hold them: a child `node`, a `list` of them, a `string`, a `flag`, a
-// literal's `value`, or a string an `optional` node lacks while unset.
+// Each node type's fields as `name:kind`, in its objects' order: a `node`, a
+// `list`, a `string`, a `flag`, a literal's `value`, a string an `optional`
+// node lacks while unset, or a `record`: a flag no ESTree property holds.
 /** @type {Record<string, string>} */
 const NODE_TYPES = {
 	Identifier: "name:string",
@@ -1547,16 +1547,17 @@ const NODE_TYPES = {
 	ClassExpression: CLASS_FIELDS,
 	ChainExpression: "expression:node",
 	ImportDeclaration:
-		"specifiers:list source:node attributes:list phase:optional",
+		"specifiers:list source:node attributes:list phase:optional assert:record",
 	ImportSpecifier: "imported:node local:node",
 	ImportDefaultSpecifier: "local:node",
 	ImportNamespaceSpecifier: "local:node",
 	ImportAttribute: "key:node value:node",
 	ImportExpression: "source:node options:node phase:optional",
 	ExportNamedDeclaration:
-		"declaration:node specifiers:list source:node attributes:list",
+		"declaration:node specifiers:list source:node attributes:list assert:record",
 	ExportDefaultDeclaration: "declaration:node",
-	ExportAllDeclaration: "exported:node source:node attributes:list",
+	ExportAllDeclaration:
+		"exported:node source:node attributes:list assert:record",
 	ExportSpecifier: "local:node exported:node",
 	MetaProperty: "meta:node property:node"
 };
@@ -1590,7 +1591,7 @@ const collectNodeTables = () => {
 			const [field, kind] = part.split(":");
 			if (kind === "node" || kind === "list") {
 				if (!(field in fields)) fields[field] = Object.keys(fields).length + 1;
-			} else if (kind === "flag") {
+			} else if (kind === "flag" || kind === "record") {
 				if (!(field in flags)) flags[field] = 1 << flagCount++;
 			} else if (kind !== "value" && field !== "name" && !(field in parts)) {
 				parts[field] = Object.keys(parts).length + 1;
@@ -1617,14 +1618,18 @@ const collectNodeFields = () => {
 				const [field, kind] = part.split(":");
 				return { field, kind, slot: 0 };
 			});
-		const slotted = fields.filter((field) => field.kind !== "flag");
+		const slotted = fields.filter(
+			(field) => field.kind !== "flag" && field.kind !== "record"
+		);
 		const order = SLOT_ORDERS[name];
 		if (order !== undefined) {
 			slotted.sort((a, b) => order.indexOf(a.field) - order.indexOf(b.field));
 		}
 		for (let i = 0; i < slotted.length; i++) slotted[i].slot = i;
 		for (const field of fields) {
-			if (field.kind === "flag") field.slot = flags[field.field];
+			if (field.kind === "flag" || field.kind === "record") {
+				field.slot = flags[field.field];
+			}
 		}
 		result[name] = fields
 			.map(({ field, kind, slot }) => `${field}:${kind}:${slot}`)
