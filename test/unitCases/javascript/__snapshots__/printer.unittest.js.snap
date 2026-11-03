@@ -246,7 +246,7 @@ import o from\\"b\\"with{type:\\"json\\",other:\\"x\\"};export{c}from\\"d\\"with
 
 x={a,b:b=1,c,\\"d e\\":d};
 
-do{a}while(b);switch(a){case 1:;}(a??b)||c,a&&(b??c),(a??b)&&c;
+do{a}while(b);switch(a){case 1:}(a??b)||c,a&&(b??c),(a??b)&&c;
 
 \\"use asm\\";f=()=>1.50;class A{x=1.50;static{y=1.50}}g=function(){return 1.50};
 
@@ -505,7 +505,7 @@ import o from\\"b\\"with{type:\\"json\\",other:\\"x\\"};export{c}from\\"d\\"with
 
 x={a:a,b:b=1,c:c,\\"d e\\":d};
 
-do{a}while(b);switch(a){case 1:;}(a??b)||c,a&&(b??c),(a??b)&&c;
+do{a}while(b);switch(a){case 1:}(a??b)||c,a&&(b??c),(a??b)&&c;
 
 \\"use asm\\";f=()=>1.50;class A{x=1.50;static{y=1.50}}g=function(){return 1.50};
 
@@ -758,7 +758,7 @@ import o from\\"b\\"with{type:\\"json\\",other:\\"x\\"};export{c}from\\"d\\"with
 
 x={a:a,b:b=1,c:c,\\"d e\\":d};
 
-do{a}while(b);switch(a){case 1:;}(a??b)||c,a&&(b??c),(a??b)&&c;
+do{a}while(b);switch(a){case 1:}(a??b)||c,a&&(b??c),(a??b)&&c;
 
 \\"use asm\\";f=()=>1.50;class A{x=1.50;static{y=1.50}}g=function(){return 1.50};
 
@@ -1017,7 +1017,7 @@ import a from'b'with{type:'json',other:'x'};export{c}from'd'with{type:'json',oth
 
 x={'a':a,'b':b=1,c,'d e':d};
 
-do{a}while(b);switch(a){case 1:;}(a??b)||c,a&&(b??c),(a??b)&&c;
+do{a}while(b);switch(a){case 1:}(a??b)||c,a&&(b??c),(a??b)&&c;
 
 'use asm';f=()=>1.50;class A{x=1.50;static{y=1.50}}g=function(){return 1.50};
 
@@ -1571,8 +1571,7 @@ x={a:a,b:b=1,c:c,\\"d e\\":d}
 
 /* p */
 do{a}while(b)
-switch(a){case 1:
-}(a??b)||c,a&&(b??c),(a??b)&&c
+switch(a){case 1:}(a??b)||c,a&&(b??c),(a??b)&&c
 
 
 /* p */
