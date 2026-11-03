@@ -1040,7 +1040,6 @@ const OXC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/next/66237/input.js",
 			"swc minifier: fixture/next/chakra/input.js",
 			"swc minifier: fixture/next/feedback-3/579-dcac359116b2707c/input.js",
-			"swc minifier: fixture/next/react-pdf-renderer/input.js",
 			"swc minifier: fixture/next/regression-1/framework-798bab57daac3897/input.js",
 			"swc minifier: fixture/next/styled-components/1/input.js",
 			"swc minifier: fixture/next/target-es2015/static/chunks/main-04b5934c26266542/input.js",
@@ -3683,6 +3682,10 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc goes further than webpack on what swc's `fixture/reduced` tests cover",
 		["swc minifier: fixture/reduced/2/input.js"]
+	],
+	[
+		'webpack folds `10..toPrecision(1)` to `"1e+1"` where oxc keeps the call: raw shrinks, yet deflate matches the same call repeated with only its literal changing better than the strings it answers',
+		["swc minifier: fixture/issues/6957/exponential/input.js"]
 	]
 ];
 

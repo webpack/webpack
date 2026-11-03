@@ -1659,6 +1659,8 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["x=hasOwnProperty.call(a,b)+constructor.name(1)", {}, "x=hasOwnProperty.call(a,b)+constructor.name(1);"],
 			// An answer printing longer than the call, with the parentheses a read of it needs, stays a call.
 			["x=[Math.min(1/3-1,0,0).x,Math.min(1/3-1,0,0),Math.sqrt(1/3)]", {}, "x=[Math.min(1/3-1,0,0).x,-.6666666666666667,Math.sqrt(1/3)];"],
+			// Unread, it goes however long its answer; an outer call folds on it, and another radix needs a safe integer.
+			["Math.sqrt(2);x=[Math.ceil(Math.sqrt(2)),(1e20).toString(36),(35).toString(36)]", {}, "x=[2,1e20.toString(36),\"z\"];"],
 			// A call that stays one where the dropped `var` keeps it stays one where its value is read too.
 			["!function(){var a=\"\\\\.\";var w=\"[^\"+a+\"]\";var d=/(W)/.source.replace(\"W\",w);var t=new RegExp(\"\"+\"^\"+d+n+\"$\");g(t,w,a)}()", {}, "!function(){var a=\"[^\\\\.]\",r=\"(W)\".replace(\"W\",a);g(new RegExp(\"^\"+r+n+\"$\"),a,\"\\\\.\")}();"]
 		];
