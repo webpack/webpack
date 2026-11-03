@@ -5222,6 +5222,85 @@ describe("SyntaxTree", () => {
 		}
 	});
 
+	it("keeps a legacy `assert` clause as a record its objects carry back", () => {
+		const {
+			EstreeView,
+			LEGACY_ASSERT_ATTRIBUTES,
+			parseProgram,
+			parsedTree
+		} = require("../../../lib/javascript/syntax-parser");
+		const source =
+			'import a from "a" assert { type: "json" }; export * from "b" assert { type: "json" }; export { c } from "c" with { type: "json" };';
+		/**
+		 * @param {import("estree").Node} statement an import or export
+		 * @returns {boolean} whether its attributes carry the legacy mark
+		 */
+		const isLegacy = (statement) =>
+			/** @type {Record<symbol, boolean>} */ (
+				/** @type {unknown} */ (
+					/** @type {import("estree").ImportDeclaration} */ (statement)
+						.attributes
+				)
+			)[LEGACY_ASSERT_ATTRIBUTES] === true;
+		const expected = [true, true, false];
+
+		const program = /** @type {number} */ (
+			parseProgram(source, 0, { sourceType: "module" })
+		);
+		const tree = /** @type {SyntaxTree} */ (parsedTree());
+		const statements = [0, 1, 2].map((i) =>
+			tree.field(i, Field.body, program)
+		);
+		expect(statements.map((node) => tree.flag(Flag.assert, node))).toEqual(
+			expected
+		);
+		// One field built first, then the rest, as a hook reading one field does.
+		const lazy = /** @type {import("estree").Node} */ (
+			tree.estree(statements[0], ["attributes"])
+		);
+		expect(isLegacy(lazy)).toBe(true);
+		expect(tree.estree(statements[0])).toBe(lazy);
+		// The whole program in one pass.
+		const built = /** @type {import("estree").Program} */ (
+			tree.estree(program)
+		);
+		expect(built.body.map(isLegacy)).toEqual(expected);
+		expect("assert" in built.body[0]).toBe(false);
+
+		// Written back from objects, and set by hand.
+		const objects = /** @type {import("estree").Program} */ (
+			parseProgram(source, 0, { sourceType: "module", estree: true })
+		);
+		const copy = new SyntaxTree();
+		const root = copy.addEstree(
+			/** @type {import("../../../lib/javascript/syntax-parser").EstreeSource} */ (
+				/** @type {unknown} */ (objects)
+			)
+		);
+		const copied = [0, 1, 2].map((i) => copy.field(i, Field.body, root));
+		expect(copied.map((node) => copy.flag(Flag.assert, node))).toEqual(
+			expected
+		);
+		copy.set(copied[0], "assert", false);
+		copy.set(copied[2], "assert", true);
+		expect(copied.map((node) => copy.flag(Flag.assert, node))).toEqual([
+			false,
+			true,
+			true
+		]);
+
+		const view = new EstreeView();
+		const viewed = view.add(objects);
+		expect(
+			[0, 1, 2].map((i) =>
+				view.flag(Flag.assert, view.field(i, Field.body, viewed))
+			)
+		).toEqual(expected);
+		expect(view.flag(Flag.computed, view.field(0, Field.body, viewed))).toBe(
+			false
+		);
+	});
+
 	it("builds only the fields asked for, then the rest on the same object", () => {
 		const { tree, node } = writeExpression("f(a, b);");
 		const call = /** @type {EXPECTED_ANY} */ (
