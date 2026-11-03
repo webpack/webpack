@@ -7926,7 +7926,7 @@ declare abstract class DependenciesBlock {
 	/**
 	 * Restores this instance from the provided deserializer context.
 	 */
-	deserialize(__0: ObjectDeserializerContextObjectMiddlewareObject_3): void;
+	deserialize(context: ObjectDeserializerContextObjectMiddlewareObject_3): void;
 }
 
 /**
@@ -8124,7 +8124,7 @@ declare class Dependency {
 	/**
 	 * Restores this instance from the provided deserializer context.
 	 */
-	deserialize(__0: ObjectDeserializerContextObjectMiddlewareObject_3): void;
+	deserialize(context: ObjectDeserializerContextObjectMiddlewareObject_3): void;
 	module: void;
 	get disconnect(): void;
 
@@ -23694,7 +23694,7 @@ declare namespace ObjectDeserializerContextObjectMiddlewareObject_2 {
  * re-types the same context to `Tail<T>` so successive reads stay positional.
  */
 declare interface ObjectDeserializerContextObjectMiddlewareObject_3<
-	T = ReadonlyArray<any>
+	T = ReadonlyArray<ComplexSerializableType>
 > {
 	read: () => Head<T>;
 	rest: ObjectDeserializerContextObjectMiddlewareObject_3<Tail<T>>;
@@ -23760,11 +23760,13 @@ declare interface ObjectEncodingOptionsResolver {
 declare interface ObjectSerializer<T extends object = object> {
 	serialize(
 		value: T,
-		context: ObjectSerializerContextObjectMiddlewareObject_4<ReadonlyArray<any>>
+		context: ObjectSerializerContextObjectMiddlewareObject_4<
+			ReadonlyArray<ComplexSerializableType>
+		>
 	): void;
 	deserialize(
 		context: ObjectDeserializerContextObjectMiddlewareObject_3<
-			ReadonlyArray<any>
+			ReadonlyArray<ComplexSerializableType>
 		>
 	): object;
 }
@@ -23783,11 +23785,11 @@ declare interface ObjectSerializerContextObjectMiddlewareObject_1 {
 	snapshot: () => ObjectSerializerSnapshot;
 	rollback: (snapshot: ObjectSerializerSnapshot) => void;
 	writeLazy?: (item: ComplexSerializableType) => void;
-	writeSeparate?: (
-		item: ComplexSerializableType,
+	writeSeparate?: <T>(
+		item: T | (() => T | Promise<T>),
 		obj?: LazyOptions
 	) => LazyFunction<
-		any,
+		T,
 		PrimitiveSerializableType[],
 		SerializerMiddleware,
 		LazyOptions
@@ -23806,11 +23808,11 @@ declare interface ObjectSerializerContextObjectMiddlewareObject_2 {
 	snapshot: () => ObjectSerializerSnapshot;
 	rollback: (snapshot: ObjectSerializerSnapshot) => void;
 	writeLazy?: (item: ComplexSerializableType) => void;
-	writeSeparate?: (
-		item: ComplexSerializableType,
+	writeSeparate?: <T>(
+		item: T | (() => T | Promise<T>),
 		obj?: LazyOptions
 	) => LazyFunction<
-		any,
+		T,
 		PrimitiveSerializableType[],
 		SerializerMiddleware,
 		LazyOptions
@@ -23826,11 +23828,11 @@ declare namespace ObjectSerializerContextObjectMiddlewareObject_3 {
 	export let writeLazy: undefined | ((item: ComplexSerializableType) => void);
 	export let writeSeparate:
 		| undefined
-		| ((
-				item: ComplexSerializableType,
+		| (<T>(
+				item: T | (() => T | Promise<T>),
 				obj?: LazyOptions
 		  ) => LazyFunction<
-				any,
+				T,
 				PrimitiveSerializableType[],
 				SerializerMiddleware,
 				LazyOptions
@@ -23842,7 +23844,7 @@ declare namespace ObjectSerializerContextObjectMiddlewareObject_3 {
  * `T` is the tuple of values written in order; each `write` consumes the head.
  */
 declare interface ObjectSerializerContextObjectMiddlewareObject_4<
-	T = ReadonlyArray<any>
+	T = ReadonlyArray<ComplexSerializableType>
 > {
 	write: (
 		value: Head<T>
@@ -23851,11 +23853,11 @@ declare interface ObjectSerializerContextObjectMiddlewareObject_4<
 	snapshot: () => ObjectSerializerSnapshot;
 	rollback: (snapshot: ObjectSerializerSnapshot) => void;
 	writeLazy?: (item: ComplexSerializableType) => void;
-	writeSeparate?: (
-		item: ComplexSerializableType,
+	writeSeparate?: <T>(
+		item: T | (() => T | Promise<T>),
 		obj?: LazyOptions
 	) => LazyFunction<
-		any,
+		T,
 		PrimitiveSerializableType[],
 		SerializerMiddleware,
 		LazyOptions
@@ -23876,11 +23878,11 @@ declare interface ObjectSerializerContextObjectMiddlewareObject_5 {
 	snapshot: () => ObjectSerializerSnapshot;
 	rollback: (snapshot: ObjectSerializerSnapshot) => void;
 	writeLazy?: (item: ComplexSerializableType) => void;
-	writeSeparate?: (
-		item: ComplexSerializableType,
+	writeSeparate?: <T>(
+		item: T | (() => T | Promise<T>),
 		obj?: LazyOptions
 	) => LazyFunction<
-		any,
+		T,
 		PrimitiveSerializableType[],
 		SerializerMiddleware,
 		LazyOptions
@@ -32348,11 +32350,11 @@ declare interface StarListSerializerContext {
 	snapshot: () => ObjectSerializerSnapshot;
 	rollback: (snapshot: ObjectSerializerSnapshot) => void;
 	writeLazy?: (item: ComplexSerializableType) => void;
-	writeSeparate?: (
-		item: ComplexSerializableType,
+	writeSeparate?: <T>(
+		item: T | (() => T | Promise<T>),
 		obj?: LazyOptions
 	) => LazyFunction<
-		any,
+		T,
 		PrimitiveSerializableType[],
 		SerializerMiddleware,
 		LazyOptions
@@ -34228,7 +34230,7 @@ declare class SyntaxParser {
 	 */
 	readWord1(): string;
 	readWord(): void;
-	[Symbol.iterator](): Iterator<Token>;
+	[Symbol.iterator](): Iterator<Token, Token>;
 	static extend(...plugins: ((parser?: any) => any)[]): any;
 	static parse(
 		input: string,
@@ -35806,7 +35808,7 @@ declare class WebpackError extends Error {
 	/**
 	 * Restores this instance from the provided deserializer context.
 	 */
-	deserialize(__0: ObjectDeserializerContextObjectMiddlewareObject_3): void;
+	deserialize(context: ObjectDeserializerContextObjectMiddlewareObject_3): void;
 
 	/**
 	 * Whether an error is a webpack error rather than any other thrown value.
@@ -36202,7 +36204,7 @@ declare class WebpackParser extends SyntaxParser {
 		input: string,
 		startPos?: number
 	);
-	[Symbol.iterator](): Iterator<Token>;
+	[Symbol.iterator](): Iterator<Token, Token>;
 
 	/**
 	 * Applies parser plugins, keeping the result typed as this parser.
