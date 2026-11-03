@@ -1,6 +1,5 @@
 "use strict";
 
-// @ts-expect-error no types for yamljs
 const YAML = require("yamljs");
 const webpack = require("../../");
 

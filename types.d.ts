@@ -9135,7 +9135,12 @@ type Effect = EffectUse | EffectBasic;
  */
 declare interface EffectBasic {
 	type: string;
-	value: any;
+
+	/**
+	 * the rule's value of the setting the effect is named for
+	 */
+	value?:
+		string | boolean | ResolveOptionsWebpackOptions | { [index: string]: any };
 }
 
 /**
@@ -27219,9 +27224,9 @@ declare class Profiler {
 	/**
 	 * Creates an instance of Profiler.
 	 */
-	constructor(inspector: Inspector);
+	constructor(inspector?: Inspector);
 	session?: SessionImportInspectorClass_2;
-	inspector: Inspector;
+	inspector?: Inspector;
 	hasSession(): boolean;
 	startProfiling():
 		| Promise<void>
