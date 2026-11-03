@@ -222,12 +222,10 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/array-constructor-length/input.js",
 			"swc minifier: fixture/issues/buble/1/input.js",
 			"swc minifier: fixture/issues/do-while-false-control-flow/input.js",
-			"swc minifier: fixture/issues/do-while-false-hoisted-bindings/input.js",
 			"swc minifier: fixture/issues/do-while-false-terminal-jump/defaults-mangle/input.js",
 			"swc minifier: fixture/issues/do-while-false-terminal-jump/labels/input.js",
 			"swc minifier: fixture/issues/emotion/react/1/input.js",
 			"swc minifier: fixture/issues/emotion/react/2/input.js",
-			"swc minifier: fixture/issues/export/1/input.js",
 			"swc minifier: fixture/issues/firebase-core/1/input.js",
 			"swc minifier: fixture/issues/firebase-firestore/1/input.js",
 			"swc minifier: fixture/issues/issue-2604/1/input.js",
@@ -247,10 +245,8 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/vercel/004/input.js",
 			"swc minifier: fixture/issues/vercel/005/input.js",
 			"swc minifier: fixture/issues/vercel/006/input.js",
-			"swc minifier: fixture/projects/angular/3/input.js",
 			"swc minifier: fixture/projects/angular/5/input.js",
 			"swc minifier: fixture/projects/backbone/13/input.js",
-			"swc minifier: fixture/projects/backbone/16/input.js",
 			"swc minifier: fixture/projects/backbone/17/input.js",
 			"swc minifier: fixture/projects/backbone/18/input.js",
 			"swc minifier: fixture/projects/backbone/2/input.js",
@@ -491,10 +487,11 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/unused-let-initialization/input.js",
 			"swc minifier: fixture/next/react-pdf-renderer/input.js",
 			"swc minifier: fixture/projects/angular/1/input.js",
-			"swc minifier: fixture/projects/underscore/13/input.js",
 			"swc minifier: fixture/projects/underscore/18/input.js",
 			"swc minifier: full/size/40a586d8ac72ba5686c4b250184acfa11620d814/input.js",
-			"swc minifier: pass-1/issue-6123/1/input.js"
+			"swc minifier: pass-1/issue-6123/1/input.js",
+			"swc minifier: fixture/projects/yui/3/input.js",
+			"swc minifier: projects/files/yui-3.12.0.js"
 		]
 	],
 	[
@@ -505,7 +502,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: block-scope/switch_block_scope_mangler",
 			"terser compress: collapse_vars/issue_1631_2",
 			"terser compress: collapse_vars/issue_2365",
-			"terser compress: collapse_vars/issue_2908",
 			"terser compress: collapse_vars/collapse_rhs_regexp",
 			"terser compress: conditionals/trivial_boolean_ternary_expressions",
 			"terser compress: destructuring/unused_destructuring_assign_2",
@@ -964,7 +960,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: pass-1/8/input.js",
 			"swc minifier: pass-1/9/1/input.js",
 			"swc minifier: pass-1/9/2/input.js",
-			"swc minifier: pass-1/issue-6405/1/input.js",
 			"swc minifier: pass-1/issue-6788/1/input.js",
 			"swc minifier: pass-1/joda/1/input.js"
 		]
