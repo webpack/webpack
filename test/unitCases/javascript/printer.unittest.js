@@ -1633,6 +1633,8 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["x=a|(b|c);x=a&(b&c);x=a^(b^c);x=a|(b&c);x=a&(b|c);x=a-(b-c);x=a|((b|c)|d)", {}, "x=a|b|c,x=a&b&c,x=a^b^c,x=a|b&c,x=a&(b|c),x=a-(b-c),x=a|b|c|d;"],
 			["x=a|/*k*/(b|c)", { format: { comments: "all" } }, "x=a|(/*k*/b|c);"],
 			["function f(x){x=x+(/*k*/a-b);h(x)}", { format: { comments: "all" } }, "function f(x){h(x+=(/*k*/a-b))}"],
+			// An operand opening with a group of its own keeps it: only parentheses wrapping it whole go.
+			["function f(x){x=x|((g(),h())|f(c));k(x)}", {}, "function f(x){k(x|=(g(),h())|f(c))}"],
 			// A call of a function moved to it that runs nothing prints its arguments, or nothing as a statement no `?:` prints.
 			["x=()=>{function nested(){}nested()};y=()=>{var n=function(){};n();g()};function f(){function n(){}if(a){n()}else b()}function k(){function n(){}h(n(g()))}", {}, "x=()=>{},y=()=>{g()};function f(){a?[]:b()}function k(){h(function(){}(g()))}"],
 			["function m(){function g(){}f();g(1,h(),...a);k()}", {}, "function m(){f(),[h(),...a],k()}"],
