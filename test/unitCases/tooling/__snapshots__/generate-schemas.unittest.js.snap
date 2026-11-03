@@ -1,0 +1,22 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`generate-schemas writes changed declarations and then validates the generated schema: stale schema 1`] = `
+"0 of 1 schemas derive from their sources, 0 byte for byte.
+
+  Options.json: 4 difference(s)
+    /additionalProperties: expected (missing), generated false
+    /properties: expected (missing), generated {\\"enabled\\":{\\"type\\":\\"boolean\\"}}
+    /title: expected (missing), generated \\"Options\\"
+    /type: expected (missing), generated \\"object\\"
+"
+`;
+
+exports[`generate-schemas writes changed declarations and then validates the generated schema: validate generated schema 1`] = `
+"1 of 1 schemas derive from their sources, 1 byte for byte.
+"
+`;
+
+exports[`generate-schemas writes changed declarations and then validates the generated schema: write changed schema 1`] = `
+"1 of 1 schemas derive from their sources, 0 byte for byte.
+"
+`;

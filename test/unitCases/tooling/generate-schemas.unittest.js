@@ -46,18 +46,21 @@ describe("generate-schemas", () => {
 		const stale = run();
 		expect(stale.stderr).toBe("");
 		expect(stale.status).toBe(1);
-		expect(stale.stdout).toContain("Options.json:");
+		expect(stale.stdout).toMatchSnapshot("stale schema");
 		expect(fs.readFileSync(schema, "utf8")).toBe("{}\n");
 
 		const written = run("--write");
 		expect(written.stderr).toBe("");
 		expect(written.status).toBe(0);
+		expect(written.stdout).toMatchSnapshot("write changed schema");
 		expect(JSON.parse(fs.readFileSync(schema, "utf8"))).toMatchObject({
 			title: "Options",
 			type: "object",
 			properties: { enabled: { type: "boolean" } }
 		});
-		expect(run().status).toBe(0);
+		const validated = run();
+		expect(validated.status).toBe(0);
+		expect(validated.stdout).toMatchSnapshot("validate generated schema");
 
 		const generated = fs.readFileSync(schema, "utf8");
 		expect(run("--write").status).toBe(0);
