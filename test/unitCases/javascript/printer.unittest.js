@@ -1437,7 +1437,10 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["if(c)switch(d){case 1:x()}else y()", {}, "if(c)switch(d){case 1:x()}else y();"],
 			["if(p){if(c)switch(d){case 1:x()}}else z()", {}, "if(p){if(c)if(d===1)x()}else z();"],
 			["switch(b){case 2:switch(a){case 2:foo();break;case 3:g()}}", {}, "if(b===2)switch(a){case 2:foo();break;case 3:g()}"],
-			["if(c)switch(d){case 1:if(a)b()}", {}, "if(c)if(d===1){if(a)b()}"]
+			["if(c)switch(d){case 1:if(a)b()}", {}, "if(c)if(d===1){if(a)b()}"],
+			["x=n?true:true;y=a()?false:false", {}, "x=(n,!0),y=(a(),!1);"],
+			["function f(n,b=n?!0:!0){return n?!1:!1}", {}, "function f(n,f=!0){return!1}"],
+			["if(n?1:1)f();while(n?x:x);do;while(n?x:x);switch(n?x:x){case 1:f();break;case 2:g()}", {}, "if(n,1)f();while(n,x);do{}while(n,x);switch(n,x){case 1:f();break;case 2:g()}"]
 		];
 		for (const [source, options, expected] of cases) {
 			const { code } = minifyOnePass(source, {
