@@ -2578,8 +2578,7 @@ const OXC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/projects/next/extra/if_return/.4/input.js",
 			"terser compress: inline/inline_into_scope_conflict_enclosed",
 			"terser compress: sequences/lift_sequences_1",
-			"terser compress: yield/yield_before_punctuators",
-			"swc minifier: fixture/next/33265/static/chunks/d6e1aeb5-38a8d7ae57119c23/input.js"
+			"terser compress: yield/yield_before_punctuators"
 		]
 	],
 	[

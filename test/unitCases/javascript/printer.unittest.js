@@ -1196,7 +1196,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["function f(a,b){if(a)return;if(b)return 1}", {}, "function f(f,n){if(!f&&n)return 1}"],
 			["function f(a,b){if(!(a||b))return;if(b)g()}", {}, "function f(f,b){if((f||b)&&b)g()}"],
 			["function f(a){if(a)return;g()}", {}, "function f(f){if(!f)g()}"],
-			["function f(a){if(a)return;g();h()}", {}, "function f(f){if(f)return;g(),h()}"],
+			["function f(a){if(a)return;g();h()}", {}, "function f(f){if(!f)g(),h()}"],
 			["function f(a,b){if(a)return;if(b)return 1;else g()}", {}, "function f(e,f){if(e)return;if(f)return 1;g()}"],
 			// A test giving a boolean picks a branch as `||` or `&&` would.
 			["function f(a,b){return[a==b?!0:x,!a?!0:x,a<b?x:!1]}", {}, "function f(a,b){return[a==b||x,!a||x,a<b&&x]}"],
@@ -1604,6 +1604,8 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["if(c)if(1?a||b:0)d();if(c)if(1?a:0)d();if(c)if(0||(a||b))d();if(c)if(0||a)d()", {}, "if(c)if(a||b)d();if(c&&a)d();if(c)if(a||b)d();if(c&&a)d();"],
 			// A comparison printed as `!x` takes a `!` bare.
 			["x=!((e&6)==0);x=!((e&6)!=0);x=-((e&6)==0);function f(){return 0===(e&6)?g():!0}", {}, "x=!!(e&6),x=!(e&6),x=-((e&6)==0);function f(){return!!(e&6)||g()}"],
+			// terser's `if_return`: `if(t)return;x;y` is `if(!t){x;y}`, unbraced where they print as one statement, and kept where a block would scope what they declare.
+			["while(x){if(y)continue;z();w()}function f(){if(x)return;a();if(y)return;b();c()}function n(){if(x)return;a();for(;;)b()}function m(){if(x)return;a();class K{}b(K)}function p(){if(x)return;a();;b()}", {}, "while(x){if(!y)z(),w()}function f(){if(!x){a();if(!y)b(),c()}}function n(){if(!x){a();for(;;)b()}}function m(){if(x)return;a();class n{}b(n)}function p(){if(!x)a(),b()}"],
 			// `!` negates an optional chain whole.
 			["function f(){if(t?.has(x))return;y()}for(;;){if(t?.has(x))continue;y()}x=t?.a?!1:y", {}, "function f(){if(!t?.has(x))y()}for(;;){if(!t?.has(x))y()}x=!t?.a&&y;"]
 		];
@@ -4016,7 +4018,7 @@ describe("one-pass minify of statement sequences", () => {
 			["function f(){a();return b}", "function f(){return a(),b}"],
 			["function f(c){c?a():b();return d}", "function f(c){return c?a():b(),d}"],
 			["function f(){a();b();if(c)return 1;return 2}", "function f(){return a(),b(),c?1:2}"],
-			["function f(c){if(c)return;a();return 1}", "function f(n){if(n)return;return a(),1}"],
+			["function f(c){if(c)return;a();return 1}", "function f(n){if(!n)return a(),1}"],
 			// A `return` no space follows takes none it would need.
 			["function f(){a();return!b}", "function f(){a();return!b}"],
 			// A call of a function expression needs no `!` past the first.
@@ -4075,7 +4077,7 @@ describe("one-pass minify of statement sequences", () => {
 		).toBe("function f(){a();/*c*/return b}");
 		// A `return` whose value goes unread prints bare, which nothing joins.
 		expect(print("(function(){if(c)return;a();return 1})()", {})).toBe(
-			"!function(){if(c)return;a();return}();"
+			"!function(){if(!c){a();return}}();"
 		);
 		// What prints nothing after the `return` ends the arrow's body too.
 		expect(print("f(()=>{a();if(t)return 1;return 2;var z})", {})).toBe(
@@ -4103,6 +4105,15 @@ describe("one-pass minify of statement sequences", () => {
 				)
 			).code
 		).toBe("function f() {\nvar r = g(), n = h();\nreturn a(r, n), b(r), n;\n}");
+		// Beautified, `if(t)return` keeps the statements after it apart.
+		expect(
+			/** @type {{ code: string }} */ (
+				new SourceProcessor().process("function f(){if(x)return;a();b()}", {
+					mode: "beautify",
+					compress: {}
+				})
+			).code
+		).toBe("function f() {\nif (x) return;\na(), b();\n}");
 	});
 
 	it("should fold a `switch` past the loops and functions its `break`s skip, and spreads of literals", () => {
