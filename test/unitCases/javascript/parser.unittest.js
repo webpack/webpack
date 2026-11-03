@@ -6109,6 +6109,61 @@ describe("parseProgram", () => {
 		);
 	});
 
+	it("writes every subtree as one range of ids ending at its root", () => {
+		const source = [
+			'import d, { a as b, c } from "x";',
+			'import * as ns from "y";',
+			'export { e as f } from "z";',
+			"switch (q) { case 1: r; case s: t; default: u }",
+			"const o = { k: 1, get g() { return this; }, m() {}, [w]: v };",
+			"class C { static p = 1; method(a) { return a; } get x() { return 1; } }",
+			"for (let i = 0; i < 1; i++) {} for (const k in o) {} for (const z of o) {}",
+			"tag`a${b}c`({ y: 1 }); import.meta.url; import.defer('m');",
+			"function F() { return new.target; }",
+			"const h = async e => e, k2 = async (e) => e, l = async function () {};",
+			"const holes = [, a, , b];"
+		].join("\n");
+		const program = /** @type {number} */ (
+			parseProgram(source, 0, { importPhases: true })
+		);
+		/** @type {number[]} */
+		const order = [];
+		/** @type {number[]} */
+		const stack = [program];
+		while (stack.length > 0) {
+			const node = /** @type {number} */ (stack.pop());
+			order.push(node);
+			for (let i = 0; i < A.childCount(node); i++) stack.push(A.child(i, node));
+		}
+		/** @type {Map<number, number>} */
+		const first = new Map();
+		/** @type {Map<number, number>} */
+		const size = new Map();
+		for (let k = order.length - 1; k >= 0; k--) {
+			const node = order[k];
+			let low = node;
+			let count = 1;
+			for (let i = 0; i < A.childCount(node); i++) {
+				const child = A.child(i, node);
+				expect(child).toBeLessThan(node);
+				low = Math.min(low, /** @type {number} */ (first.get(child)));
+				count += /** @type {number} */ (size.get(child));
+			}
+			first.set(node, low);
+			size.set(node, count);
+			expect(A.subtreeStart(node)).toBe(low);
+			// every live id in the range belongs to the subtree; a dropped `async` is type 0
+			let live = 0;
+			for (let id = low; id <= node; id++) if (A.type(id) !== 0) live++;
+			expect(live).toBe(count);
+		}
+		// no node is left outside the program but the dropped `async` ones
+		let dropped = 0;
+		for (let id = 1; id <= program; id++) if (A.type(id) === 0) dropped++;
+		expect(order.length + dropped).toBe(program);
+		expect(dropped).toBe(3);
+	});
+
 	it("leaves a tree its caller keeps alone through an ESTree parse", () => {
 		const {
 			takeParsedTree,
