@@ -178,7 +178,6 @@ function useSequentialFileSystems(compiler) {
 	const fs = createSequentialFileSystem();
 	// The default 60s cache drops a level every 500ms of wall time, so how long the
 	// build takes decides which lookups hit; an unbounded cache sets no timer.
-	// @ts-expect-error need to fix on enhanced-resolve side
 	compiler.inputFileSystem = new CachedInputFileSystem(fs, Infinity);
 	compiler.outputFileSystem = fs;
 	compiler.intermediateFileSystem = fs;
