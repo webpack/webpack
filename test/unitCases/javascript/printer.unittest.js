@@ -863,7 +863,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"function f(a, b){ if (a) return 1; else b(); if (b) { x(); return 2 } else { y(); z() } if (a) throw 1; else { let q = g(); h(q) } while (a) { if (b) break; else w() } for (;;) { if (a) continue; else { /*! c */ v() } } if (b) return; else if (a) v(); else u(); } for (;;) if (a) break; else b(); l: if (a) break l; else b(); switch (a) { case 1: if (b) break; else c() }",
 				{},
-				"function f(e,a){if(e)return 1;a();if(a){return x(),2}y(),z();if(e)throw 1;h(g());while(e){if(a)break;w()}for(;;)if(!e){/*! c */v()}if(!a)e?v():u()}for(;;)if(a)break;else b();e:if(!a)b();switch(a){case 1:if(b)break;c()}"
+				"function f(e,a){if(e)return 1;a();if(a){return x(),2}y(),z();if(e)throw 1;h(g());while(e&&!a)w();for(;;)if(!e){/*! c */v()}if(!a)e?v():u()}for(;!a;)b();e:if(!a)b();switch(a){case 1:if(b)break;c()}"
 			],
 			[
 				"function f(a){ if (a) return 1; else { class C {} g(new C) } if (a) return 2; else { function q(){} q() } if (a) return 3; else /*! c */ { h() } }",
@@ -1506,6 +1506,25 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// A read in parentheses may be what they write, and with `unused` off the array stays: either keeps its reads.
 			["function g(){const a=[1,2];(a[0])=3;f(a[0],a[1])}function h(){const a=[1,2];(a[0])++;f(a[0])}", { mangle: false }, "function g(){let a=[1,2];a[0]=3,f(a[0],a[1])}function h(){let a=[1,2];a[0]++,f(a[0])}"],
 			["function g(){const a=[1,2];f(a[0],a[1])}", { mangle: false, compress: { toplevel: false, unused: false } }, "function g(){let a=[1,2];f(a[0],a[1])}"],
+			// A case ending a `switch` that runs nothing stays where a `default` before it would take its value.
+			["switch(a){default:b();case 0:break}switch(a){case 0:break;default:b();case 1:}switch(a){default:b();break;case 1:}", {}, "switch(a){default:b();case 0:}switch(a){case 0:break;default:b();case 1:}switch(a){default:b();break;case 1:}"],
+			// What runs nothing before a callee goes but one `0`, which a bare `eval` keeps to read no scope; a function or class takes no `this`.
+			["(0,1,eval)(),(0,1,f)(),(0,eval)()", {}, "(0,eval)(),f(),(0,eval)();"],
+			["function g(a){(a,function(){h(this)})(),x=(a,function(){})(),new(a,function(){})(1),new(a,class{})}", { mangle: false }, "function g(a){(function(){h(this)})(),x=function(){}(),new function(){}(1),new class{}}"],
+			// A `try` whose exit went runs nothing for its `catch`, its `finally` the tail.
+			["function f(){try{return}catch(e){throw 9}finally{return}}function g(){try{return}finally{h();return}}function k(){try{return}catch(e){var q}finally{return}}for(;;)try{continue}catch(e){h()}finally{g();continue}", { mangle: false }, "function f(){}function g(){h()}function k(){try{}catch(e){}finally{return}}for(;;){g()}"],
+			// A test known falsy, `undefined` too, runs nothing for a loop or `if`, labeled or not, that declares nothing.
+			["if(void 0)f();while(void 0)g();for(;undefined;)h();l:for(;!1;);a:b:while(void 0)f();if(void 0)var q;function k(undefined){if(undefined)g()}", { mangle: false }, "if(void 0)var q;function k(undefined){if(undefined)g()}"],
+			// A known test leaves a name called bare but `eval`, and `new` takes a name or member bare.
+			["var a;(!0?a:0)(),(!1?0:a)``,new(!0?a:0),x=new(!0?a.b:0)(1),x=new(!0?a():0),(!0?eval:0)(\"x\")", { mangle: false }, "var a;a(),a``,new a,x=new a.b(1),x=new(a()),(1?eval:0)(\"x\");"],
+			// A `finally` running nothing goes beside a `catch`; without one, the `try` runs as its block.
+			["try{f()}catch(e){g()}finally{}try{f()}catch(e){}finally{/*c*/}a();try{f();b()}finally{}if(x)try{y()}finally{}else z();function k(){try{return g()}finally{}}", { mangle: false, format: { comments: "all" } }, "try{f()}catch(e){g()}try{f()}catch(e){}finally{/*c*/}a();f(),b();if(x){y()}else z();function k(){return g()}"],
+			// terser's `loops` with an `else`: `if(x)break;else y` loops while `!x`, `if(x)y;else break` while `x`, `y` where the `if` was.
+			["for(;;)if(x)break;else y();for(;a;){if(x)break;else y();z()}for(;;)if(!x)y();else break;for(;a;)if(x||w){y();q()}else break;for(;a||b;)if(c,d)y();else break;for(;;)if(x){let q=g();y(q,q)}else break;if(a){for(;;)if(x)break;else if(y)z()}else w()", { mangle: false }, "for(;!x;)y();for(;a&&!x;){y();z()}for(;!x;)y();for(;a&&(x||w);)y(),q();for(;(a||b)&&(c,d);)y();for(;x;){let q=g();y(q,q)}if(a){for(;!x;)if(y)z()}else w();"],
+			// A block ending a loop an `if` with an `else` holds keeps its braces where it ends in an `if` the `else` would take.
+			["if(q)for(;;){if(y)z()}else w();if(q)for(;;){if(x)break;else if(y)z()}else w();if(q)l:while(a){if(y)z()}else w();if(q)while(a){if(y)z();else v()}else w()", {}, "if(q)for(;;){if(y)z()}else w();if(q)for(;!x;){if(y)z()}else w();if(q)e:while(a){if(y)z()}else w();if(q)while(a)y?z():v();else w();"],
+			// A function an `else` declares keeps its braces, and a label's comment its loop.
+			["for(;a;){if(x)break;else function f(){}}for(;a;){if(x)break;else{y();z()}}/*! c */l:while(0)f();", { mangle: false }, "for(;a&&!x;){function f(){}}for(;a&&!x;){y(),z()}/*! c */l:while(0)f();"],
 			// `!` negates an optional chain whole.
 			["function f(){if(t?.has(x))return;y()}for(;;){if(t?.has(x))continue;y()}x=t?.a?!1:y", {}, "function f(){if(!t?.has(x))y()}for(;;){if(!t?.has(x))y()}x=!t?.a&&y;"]
 		];
