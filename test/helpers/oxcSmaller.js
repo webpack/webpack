@@ -2311,6 +2311,7 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: dead-code/dead_code_constant_boolean_should_warn_more",
 			"terser compress: drop-unused/issue_3146_1",
 			"terser compress: drop-unused/issue_3146_2",
+			"terser compress: evaluate/unsafe_integer_key",
 			"terser compress: expression/pow_with_parentheses",
 			"terser compress: functions/hoist_funs",
 			"terser compress: functions/issue_2630_1",
