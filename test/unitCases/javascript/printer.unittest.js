@@ -412,7 +412,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"function f(a){ function h(x){ return x + a } function k(){ return 1 } function r(n){ return n ? r(n - 1) : 0 } var z = h(2); for (;;) k(); g(z, r); function late(){} late(); return [early()]; function early(){ return 2 } }",
 				{},
-				"function f(n){function r(){return 1}function t(n){return n?t(n-1):0}var u=function(){return 2+n}();for(;;)r();g(u,t);(function(){})();return[2]}"
+				"function f(n){function r(){return 1}function t(n){return n?t(n-1):0}var u=function(){return 2+n}();for(;;)r();g(u,t);return[2]}"
 			],
 			// A name nothing reads goes, its value still running; a `var` set
 			// after a call is a constant where only its own function reads it.
@@ -471,7 +471,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"function f(a){ var x = 1, y = g(), z = { a: 1, b: [2, -3, !0, void 0, typeof 1, `t`] }, k = { [q]: 1 }, s = { ...o }, t = `${a}`, p = [g()]; var w = [1, () => 2, function () {}]; function h() {} function used() {} used(); for (var i = 0;;) break; var v = 1, u = 2; return a } var top = 1; function topFunction() {}",
 				{},
-				"function f(n){g();({[q]:1});({...o});`${n}`;[g()];(function(){})();for(var t=0;;)break;return n}var top=1;function topFunction(){}"
+				"function f(n){g();({[q]:1});({...o});`${n}`;[g()];for(var t=0;;)break;return n}var top=1;function topFunction(){}"
 			],
 			[
 				"function f(a){ var a = 1; return arguments[0] } function g(){ var b = 1; var b = 2 } function e(){ var x = 1; eval('x') } function w(){ /* keep */ var c = 1 } function l(){ { function inner() {} } var m = -b, n = typeof b }",
@@ -1156,7 +1156,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// A `var` set after a call folds where its function reads it after the declaration.
 			["function m(){f();var greeting=\"hello\";g(greeting+\"!\")}", {}, "function m(){f(),g(\"hello!\")}"],
 			["function m(){g(greeting+\"!\");var greeting=\"hello\"}", {}, "function m(){g(e+\"!\");var e=\"hello\"}"],
-			["function m(){function g(){return greeting}f();var greeting=\"hello\";g(greeting)}", {}, "function m(){f();(function(){return\"hello\"})()}"],
+			["function m(){function g(){return greeting}f();var greeting=\"hello\";g(greeting)}", {}, "function m(){f()}"],
 			["function m(){f();var contraction=\"(?:d|ll|m|re|s|t|ve)?\";g(\"x\"+contraction,\"y\"+contraction,contraction)}", {}, "function m(){f(),g(\"x(?:d|ll|m|re|s|t|ve)?\",\"y(?:d|ll|m|re|s|t|ve)?\",\"(?:d|ll|m|re|s|t|ve)?\")}"],
 			// A fold weighs the operands as printed, a string's run joined.
 			["f(x+\"a\"+\"b\"+1)", {}, "f(x+\"ab1\");"],
@@ -1630,6 +1630,9 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// terser's `a|(b|c)` as `a|b|c`, for `|`, `&` and `^` alone.
 			["x=a|(b|c);x=a&(b&c);x=a^(b^c);x=a|(b&c);x=a&(b|c);x=a-(b-c);x=a|((b|c)|d)", {}, "x=a|b|c,x=a&b&c,x=a^b^c,x=a|b&c,x=a&(b|c),x=a-(b-c),x=a|b|c|d;"],
 			["x=a|/*k*/(b|c)", { format: { comments: "all" } }, "x=a|(/*k*/b|c);"],
+			// A call of a function moved to it that runs nothing prints its arguments, or nothing as a statement no `?:` prints.
+			["x=()=>{function nested(){}nested()};y=()=>{var n=function(){};n();g()};function f(){function n(){}if(a){n()}else b()}function k(){function n(){}h(n(g()))}", {}, "x=()=>{},y=()=>{g()};function f(){a?[]:b()}function k(){h(function(){}(g()))}"],
+			["function m(){function g(){}f();g(1,h(),...a);k()}", {}, "function m(){f(),[h(),...a],k()}"],
 			// `!` negates an optional chain whole.
 			["function f(){if(t?.has(x))return;y()}for(;;){if(t?.has(x))continue;y()}x=t?.a?!1:y", {}, "function f(){if(!t?.has(x))y()}for(;;){if(!t?.has(x))y()}x=!t?.a&&y;"]
 		];
@@ -4016,7 +4019,7 @@ describe("one-pass minify of what may run before it is set", () => {
 			["function f(){try{return g()}catch(e){return 0}let x=1;function g(){return x}}", "function f(){try{return x}catch(e){return 0}let x=1}"],
 			["function f(){try{return g()}catch(e){return 0}let x=1;function g(){return x+x}}", "function f(){try{return x+x}catch(e){return 0}let x=1}"],
 			// Nothing calls it first where nothing before the declarator calls anything.
-			["function f(){/*#__NO_SIDE_EFFECTS__*/var s=()=>{};function i(){s()}i()}", "function f(){(function(){})()}"],
+			["function f(){/*#__NO_SIDE_EFFECTS__*/var s=()=>{};function i(){s()}i()}", "function f(){}"],
 			["function f(){const x=2;function g(){return x}return g()}", "function f(){return 2}"]
 		];
 		for (const [source, expected] of cases) {
