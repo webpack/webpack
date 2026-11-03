@@ -1590,6 +1590,10 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["if((a|b)!==0)f();if((a|b)!=0)g();x=(a&b)===0;x=(a&b)==0", {}, "if((a|b)!==0)f();if(a|b)g();x=(a&b)===0,x=!(a&b);"],
 			// `eval?.()` is an indirect `eval`, which reads no local name: a guarded direct one stays.
 			["function f(eval){var v=42;eval!=null&&eval(\"v=43\");x=eval!=null?eval(\"v\"):void 0;return v}", { mangle: false, ecma: 2020, compress: { toplevel: false, ecma: 2020 } }, "function f(eval){var v=42;return eval!=null&&eval(`v=43`),x=eval!=null?eval(`v`):void 0,v}"],
+			// A name a value collapsed into prints that value, which `!` parenthesizes; an update or `await` joins `&&` bare.
+			["function f(o){var h=!1;for(var i=0;i<9;i++){h=o[i]===!0;if(h)break}return h}function g(o){var h;h=o.a===1;if(h)return;k()}for(;i--;){if(x)break;y()}x=!(i--)?1:2", { mangle: false }, "function f(o){var h=!1;for(var i=0;i<9&&!(h=o[i]===!0);i++);return h}function g(o){if(!(o.a===1))k()}for(;i--&&!x;)y();x=i--?2:1;"],
+			// A call printing as `null` or a regular expression needs no parentheses read off; a value folded into its read prints where that is; an `else if` known later leaves its `if` nothing.
+			["function r(){return null}function q(){return/a/}x=r().filepath;y=q().source;function f(a){var b=g(a);var n={a:a,b:b};return n}f(()=>{if(!1)return;else if(!1){return}else{}g()})", { mangle: false }, "function r(){return null}function q(){return/a/}x=r().filepath,y=q().source;function f(a){return{a:a,b:g(a)}}f(()=>{g()});"],
 			// `!` negates an optional chain whole.
 			["function f(){if(t?.has(x))return;y()}for(;;){if(t?.has(x))continue;y()}x=t?.a?!1:y", {}, "function f(){if(!t?.has(x))y()}for(;;){if(!t?.has(x))y()}x=!t?.a&&y;"]
 		];
