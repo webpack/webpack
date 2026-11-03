@@ -1598,6 +1598,12 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["({1:{}/2});/*@__PURE__*/f({a:g()}.a);x=+{}/2;+function(){}/3;do{}while(0);a();do;while(0);b();if(x)do{}while(0);else c();do g();while(0)", {}, "({1:{}/2});f({a:g()}.a),x=+{}/2,+function(){}/3;a();b();if(x){}else c();g();"],
 			// A strict comparison with `0` folds only where no BigInt reaches it.
 			["if((a>>>b)!==0)f();if(((a|1)&b)===0)g();if((a&b)===0)h()", {}, "if(a>>>b)f();if(!((a|1)&b))g();if((a&b)===0)h();"],
+			// `if(t)if(u)x` is `if(t&&u)x` where neither test needs parentheses there, as what a test prints as decides.
+			["if(a)if(b)c();if(a)if(b)if(c)d();if(p){if(a){if(b)c()}}else z();if(a=1)if(b=2)c();if(a)if(b)c();else d();function f(){if(x)return;if(a)if(b)c()}", {}, "if(a&&b)c();if(a&&b&&c)d();if(p){if(a&&b)c()}else z();if(a=1)if(b=2)c();if(a)b?c():d();function f(){if(!x&&a&&b)c()}"],
+			["function f(){var x=a||b;if(x)if(c)d()}function g(){if(c)if((()=>a||b)())d()}function h(){if(y)return;if((()=>a||b)())d()}function k(){while((()=>a||b)()){if(x)break;g()}}", {}, "function f(){if(a||b)if(c)d()}function g(){if(c)if(a||b)d()}function h(){if(!y&&(a||b))d()}function k(){while((a||b)&&!x)g()}"],
+			["if(c)if(1?a||b:0)d();if(c)if(1?a:0)d();if(c)if(0||(a||b))d();if(c)if(0||a)d()", {}, "if(c)if(a||b)d();if(c&&a)d();if(c)if(a||b)d();if(c&&a)d();"],
+			// A comparison printed as `!x` takes a `!` bare.
+			["x=!((e&6)==0);x=!((e&6)!=0);x=-((e&6)==0);function f(){return 0===(e&6)?g():!0}", {}, "x=!!(e&6),x=!(e&6),x=-((e&6)==0);function f(){return!!(e&6)||g()}"],
 			// `!` negates an optional chain whole.
 			["function f(){if(t?.has(x))return;y()}for(;;){if(t?.has(x))continue;y()}x=t?.a?!1:y", {}, "function f(){if(!t?.has(x))y()}for(;;){if(!t?.has(x))y()}x=!t?.a&&y;"]
 		];
