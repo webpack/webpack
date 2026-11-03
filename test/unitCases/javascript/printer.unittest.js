@@ -1555,6 +1555,8 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// terser's `a?b?c:d:d` as `a&&b?c:d` and `a?b:c?b:d` as `a||c?b:d`, but not where the inner `?:` swapped its branches.
 			["x=a?b?c:d:d;x=a?b:c?b:d;x=a?!b?c:d:c;x=(a=1)?(b||e)?c:d:d;x=a||f?b?c:d:d;x=a?b:c||e?b:d;x=a?b?c:d:e", {}, "x=a&&b?c:d,x=a||c?b:d,x=a?b?d:c:c,x=(a=1)&&(b||e)?c:d,x=(a||f)&&b?c:d,x=a||c||e?b:d,x=a?b?c:d:e;"],
 			["function k(a){x=a!=b?a:c;x=a!=null?a:b+c;x=a!=null?a:new B}x=(a,b)?(c,d)?e:f:f", { mangle: false, ecma: 2020, compress: { toplevel: false, ecma: 2020 } }, "function k(a){x=a!=b?a:c,x=a??b+c,x=a??new B}x=(a,b)&&(c,d)?e:f;"],
+			// terser's `t?f(a,x):f(b,x)` as `f(t?a:b,x)`, a local `f`, a pure test and one argument apart.
+			["function f(a,b){x=a?b(c,d):b(e,d);x=a===0?b(c):b(e);x=a?b(...c):b(...e);x=a()?b(1):b(2);x=a?b(1,2):b(3,4);a?b(g(),1):b(g(),2);x=a?b(c=1):b(e);x=a?b((c,d)):b(e)}x=a?f(1):f(2)", { mangle: false }, "function f(a,b){x=b(a?c:e,d),x=b(a===0?c:e),x=a?b(...c):b(...e),x=a()?b(1):b(2),x=a?b(1,2):b(3,4),b(g(),a?1:2),x=b(a?c=1:e),x=b(a?(c,d):e)}x=a?f(1):f(2);"],
 			// `!` negates an optional chain whole.
 			["function f(){if(t?.has(x))return;y()}for(;;){if(t?.has(x))continue;y()}x=t?.a?!1:y", {}, "function f(){if(!t?.has(x))y()}for(;;){if(!t?.has(x))y()}x=!t?.a&&y;"]
 		];
