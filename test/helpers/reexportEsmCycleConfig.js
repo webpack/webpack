@@ -1,10 +1,13 @@
 "use strict";
 
-const webpack = require("../../../../");
+// Generates CommonJS ⇄ ES module re-export cycles for the
+// `cjs-tree-shaking/reexport-esm-cycle-*` config cases, one per build variant.
+
+const webpack = require("../../");
 
 const { VirtualUrlPlugin } = webpack.experiments.schemes;
 
-/** @import { Compiler, Configuration } from "../../../../" */
+/** @import { Compiler, Configuration } from "../../" */
 
 /**
  * @typedef {object} CommonJsForm
@@ -273,24 +276,9 @@ const checkEsModuleFlag = (compiler) => {
 	});
 };
 
-/**
- * @param {string} name variant name the tests read
- * @param {Configuration} options variant-specific options
- * @returns {Configuration} configuration
- */
-const variant = (name, options) => ({
-	devtool: false,
-	...options,
-	plugins: [
-		new VirtualUrlPlugin(generateModules()),
-		new webpack.DefinePlugin({ VARIANT: JSON.stringify(name) }),
-		checkEsModuleFlag
-	]
-});
-
-/** @type {Configuration[]} */
-module.exports = [
-	variant("plain", {
+/** @type {Record<string, Configuration>} */
+const variants = {
+	plain: {
 		mode: "production",
 		optimization: {
 			concatenateModules: false,
@@ -298,22 +286,39 @@ module.exports = [
 			minimize: false,
 			moduleIds: "named"
 		}
-	}),
-	variant("concatenated", {
+	},
+	concatenated: {
 		mode: "production",
 		optimization: {
 			concatenateModules: { commonjs: true },
 			mangleExports: "deterministic",
 			minimize: false
 		}
-	}),
-	variant("minimized", {
+	},
+	minimized: {
 		mode: "production",
 		optimization: {
 			concatenateModules: { commonjs: true },
 			mangleExports: "size",
 			minimize: true
 		}
-	}),
-	variant("development", { mode: "development" })
-];
+	},
+	development: { mode: "development" }
+};
+
+/**
+ * Creates the configuration building every cycle under one variant.
+ * @param {keyof typeof variants} name variant name the tests read
+ * @returns {Configuration} configuration
+ */
+const createReexportEsmCycleConfig = (name) => ({
+	devtool: false,
+	...variants[name],
+	plugins: [
+		new VirtualUrlPlugin(generateModules()),
+		new webpack.DefinePlugin({ VARIANT: JSON.stringify(name) }),
+		checkEsModuleFlag
+	]
+});
+
+module.exports = createReexportEsmCycleConfig;
