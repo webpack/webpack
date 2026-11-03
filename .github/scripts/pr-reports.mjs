@@ -197,21 +197,30 @@ export function formatReportsComment({ runs, reportsDir, headSha, warn }) {
 				sum + separator.length + footer(section.link).length + 64,
 			0
 		);
-	const room = Math.floor(
+	const compose = (/** @type {number} */ room) =>
+		[
+			header,
+			...sections.map(
+				(section) =>
+					// A zero-width space after a mention's `@` keeps a report from pinging
+					// anyone; `webpack@<url>` in an install command stays copyable.
+					containReport(section.text, room).replace(
+						/(?<!\w)@(?=\w)/g,
+						"@\u200B"
+					) + footer(section.link)
+			)
+		].join(separator);
+	let room = Math.floor(
 		(MAX_COMMENT_LENGTH - overhead) / Math.max(sections.length, 1)
 	);
-	return [
-		header,
-		...sections.map(
-			(section) =>
-				// A zero-width space after a mention's `@` keeps a report from pinging
-				// anyone; `webpack@<url>` in an install command stays copyable.
-				containReport(section.text, room).replace(
-					/(?<!\w)@(?=\w)/g,
-					"@\u200B"
-				) + footer(section.link)
-		)
-	].join(separator);
+	let body = compose(room);
+	// WHY: escaped mentions and closed tags can outgrow the cushion; shrinking
+	// every section keeps each footer, where a cut of the tail would drop it.
+	while (body.length > MAX_COMMENT_LENGTH && room > 0) {
+		room = Math.max(0, room - (body.length - MAX_COMMENT_LENGTH));
+		body = compose(room);
+	}
+	return body;
 }
 
 /**
