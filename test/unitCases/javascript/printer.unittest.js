@@ -311,7 +311,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"if (x) { if (true) { b(); c() } } else d(); if (x) { if (false) { b() } else { c(); e() } } else d(); while (x) { if (1) { b(); c() } }",
 				{},
-				"if(x){b(),c()}else d();if(x){c(),e()}else d();while(x)b(),c();"
+				"if(x){b(),c()}else d();if(x){c(),e()}else d();while(x){b(),c()}"
 			],
 			[
 				"if (a) { let x = h(); f(x, x) } if (a) { const y = h(); f(y, y) } if (a) { var z = 1 } if (a) { class C {} f(C) } if (a) { function g() {} } if (a) {} if (a) { b(); c() }",
@@ -1197,7 +1197,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["function f(a,b){if(!(a||b))return;if(b)g()}", {}, "function f(f,b){if((f||b)&&b)g()}"],
 			["function f(a){if(a)return;g()}", {}, "function f(f){if(!f)g()}"],
 			["function f(a){if(a)return;g();h()}", {}, "function f(f){if(!f)g(),h()}"],
-			["function f(a,b){if(a)return;if(b)return 1;else g()}", {}, "function f(e,f){if(e)return;if(f)return 1;g()}"],
+			["function f(a,b){if(a)return;if(b)return 1;else g()}", {}, "function f(e,f){if(!e){if(f)return 1;g()}}"],
 			// A test giving a boolean picks a branch as `||` or `&&` would.
 			["function f(a,b){return[a==b?!0:x,!a?!0:x,a<b?x:!1]}", {}, "function f(a,b){return[a==b||x,!a||x,a<b&&x]}"],
 			// `a ? x : true` is `!a || x` whatever `a` is, `a ? x : false` stays.
@@ -1223,8 +1223,8 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["function f(a){if(a)return;do g();while(a)}", {}, "function f(a){if(!a)do{g()}while(a)}"],
 			["function f(a){if(a)return;switch(a){case 1:g()}}", {}, "function f(a){if(!a)if(a===1)g()}"],
 			["function f(a){if(a)return;try{g()}catch(e){}}", {}, "function f(t){if(!t)try{g()}catch(t){}}"],
-			["function f(a){if(a)return;l:g()}", {}, "function f(f){if(f)return;f:g()}"],
-			["function f(a){if(a)return;if(1)g()}", {}, "function f(f){if(f)return;g()}"],
+			["function f(a){if(a)return;l:g()}", {}, "function f(f){if(!f){f:g()}}"],
+			["function f(a){if(a)return;if(1)g()}", {}, "function f(f){if(!f)g()}"],
 			["function f(y){(function(x){if(x)return;if(g(x))return 3})(y)}", {}, "function f(n){!function(n){if(!n&&g(n))return}(n)}"],
 			// `if(!t)x;else y` swaps inside the `?:` it is a branch of.
 			["function f(x){if(x){if(!a)b();else c()}else d()}", {}, "function f(e){e?a?c():b():d()}"],
@@ -1614,6 +1614,11 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["function f(){if(a)try{return g()}catch{return g()}else throw i()}function k(){if(a)try{b}finally{return g()}else throw i()}function m(){if(a)try{return b}catch{c}else throw i()}function n(){if(a){if(b)return 1;else throw 2}else g();h()}function p(){if(a)try{return 1}finally{c()}else g();h()}", {}, "function f(){if(a)try{return g()}catch{return g()}throw i()}function k(){if(a)try{b}finally{return g()}throw i()}function m(){if(a)try{return b}catch{c}else throw i()}function n(){if(a){if(b)return 1;throw 2}g();h()}function p(){if(a)try{return 1}finally{c()}g();h()}"],
 			// A call printing as the unary its function returns is parenthesized as that unary.
 			["x=(()=>-a)()**2;x=(()=>!a)().b;x=(()=>!a)()();x=`${(()=>!a)()}`;x=(()=>void a)()``;function q(){do{break}while(e)}", {}, "x=(-a)**2,x=(!a).b,x=(!a)(),x=`${!a}`,x=(void a)``;function q(){}"],
+			// A statement printing its body in place, or a `switch` as an `if` and what falls through, is several statements: braces hold them.
+			["if(a){do{for(;;)g();f();break}while(x)}if(a){do{for(;;)g();f()}while(0)}if(a){try{}finally{for(;;)g();f()}}for(;;){do{for(;;)g();f();break}while(x)}if(a){try{for(;;)g();f()}finally{}}", {}, "if(a){for(;;)g();f()}if(a){for(;;)g();f()}if(a){for(;;)g();f()}for(;;){for(;;)g();f()}if(a){for(;;)g();f()}"],
+			["function f(){if(x)return;do{for(;;)g();a()}while(0)}function k(){if(x)return;switch(d){case 1:a();default:b()}}function m(){for(;;){if(x)continue;g();switch(d){case 1:a();default:b()}}}function n(){if(x)return;try{for(;;)g();a()}finally{}}l:for(let i=0;i<1;i++){switch(i){case 0:continue l;default:break l}}for(;;){if(x)continue;break}", {}, "function f(){if(!x){for(;;)g();a()}}function k(){if(!x){if(d===1)a();b()}}function m(){for(;;)if(!x){g();if(d===1)a();b()}}function n(){if(!x){for(;;)g();a()}}i:for(let i=0;i<1;i++){if(i===0)continue i;break i}for(;;)if(!x)break;"],
+			// terser's `dead_code`: a `var` past an exit declares its names and sets none, so no read folds its value; a pattern keeps it.
+			["function f(){use(()=>x);return 1;var x=g()}function k(){g();return;var x=h(),y=k()}function m(){return n;var x=5;function n(){return x}}function p(){return;var [a,b]=g();use(()=>a)}function q(){if(x)return;do{}while(y)}", {}, "function f(){return use(()=>n),1;var n}function k(){g()}function m(){return function(){return n};var n}function p(){return;var[n,r]=g()}function q(){if(!x)do{}while(y)}"],
 			// `!` negates an optional chain whole.
 			["function f(){if(t?.has(x))return;y()}for(;;){if(t?.has(x))continue;y()}x=t?.a?!1:y", {}, "function f(){if(!t?.has(x))y()}for(;;){if(!t?.has(x))y()}x=!t?.a&&y;"]
 		];
@@ -1660,6 +1665,21 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		expect(mapped.map.names).toEqual(
 			expect.arrayContaining(["a", "b", "c", "g", "x"])
 		);
+		// A brace dropped once printed moves the names after it back in the map.
+		const unbraced = /** @type {{ code: string, map: { mappings: string } }} */ (
+			new SourceProcessor().process(
+				"function f(){for(;;){if(xx)continue;yy();zz()}}",
+				{
+					mode: "minify",
+					compress: { toplevel: false },
+					mangle: false,
+					source: "a.js"
+				}
+			)
+		);
+		expect(unbraced.code).toBe("function f(){for(;;)if(!xx)yy(),zz()}");
+		// cspell:disable-next-line
+		expect(unbraced.map.mappings).toBe("AAAA,SAASA,IAAI,OAAQ,IAAGC,GAAYC");
 		// Every comment kept is still the compressor's to keep.
 		const { code } = minifyOnePass("if (a) { b() } /* c */", {
 			compress: {},
