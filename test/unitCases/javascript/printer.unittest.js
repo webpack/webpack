@@ -2177,6 +2177,24 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		).toBe("f(x===y?!0:1?(g(),!0):!1);");
 	});
 
+	it("should compare two booleans loosely", () => {
+		const print = (/** @type {string} */ source) =>
+			minifyOnePass(`function f(x,y,g){return[${source}]}`, {
+				compress: {},
+				mangle: false
+			}).code.slice(25, -2);
+		for (const [source, expected] of [
+			["!x===!y", "!x==!y"],
+			["x<1!==y>2", "x<1!=y>2"],
+			["x instanceof g===!y", "x instanceof g==!y"],
+			// Either side may be another value, or `!!x` read as `x`.
+			["!x===y", "!x===y"],
+			["!!x===!y", "!!x===!y"]
+		]) {
+			expect(print(source)).toBe(expected);
+		}
+	});
+
 	it("should keep a `switch` on a known value whose case holds a comment that prints", () => {
 		const print = (/** @type {string} */ source) =>
 			minifyOnePass(source, {
