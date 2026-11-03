@@ -42,6 +42,12 @@ describe("BasicEvaluatedExpression", () => {
 		expect(e.asBool()).toBe(false);
 		expect(e.asCompileTimeValue()).toBeNaN();
 
+		e.setNumber(-0);
+		expect(e.asBool()).toBe(false);
+
+		e.setNumber(1);
+		expect(e.asBool()).toBe(true);
+
 		e.setBigInt(BigInt(0));
 		expect(e.isBigInt()).toBe(true);
 		expect(e.bigint).toBe(BigInt(0));
