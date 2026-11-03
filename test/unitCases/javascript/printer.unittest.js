@@ -1320,6 +1320,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// A `join` of constants, an empty block and a loop on a truthy constant print shorter or not at all.
 			["function f(){[1,2].join();g()}", {}, "function f(){g()}"],
 			["function f(){[1,g()].join();h()}", {}, "function f(){[1,g()].join(),h()}"],
+			["x=[1,/*! c */2].join()", {}, "x=[1,/*! c */2].join();"],
 			["function f(){g();{}}", {}, "function f(){g()}"],
 			["function f(){g();{/*! keep */}}", {}, "function f(){g();{/*! keep */}}"],
 			["function f(){while(1)g()}", {}, "function f(){for(;;)g()}"],
@@ -1643,7 +1644,18 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// An async generator awaits what it returns, so `return void 0` ending one keeps its `return`.
 			["async function*g(){return void 0}async function*h(){x();return void 0}function k(){x();return void 0}", {}, "async function*g(){return void 0}async function*h(){return x(),void 0}function k(){x()}"],
 			// `!` negates an optional chain whole.
-			["function f(){if(t?.has(x))return;y()}for(;;){if(t?.has(x))continue;y()}x=t?.a?!1:y", {}, "function f(){if(!t?.has(x))y()}for(;;){if(!t?.has(x))y()}x=!t?.a&&y;"]
+			["function f(){if(t?.has(x))return;y()}for(;;){if(t?.has(x))continue;y()}x=t?.a?!1:y", {}, "function f(){if(!t?.has(x))y()}for(;;){if(!t?.has(x))y()}x=!t?.a&&y;"],
+			// A built-in called on primitives prints its answer where that is no longer, and folds what reads it.
+			["x=[parseInt(\"12\"),isNaN(\"a\"),Math.max(1,2),String.fromCharCode(65),\"Ab\".toLowerCase(),(12).toString(16),\"ab\".concat(\"c\").toUpperCase()];if(isNaN(1))f()", {}, "x=[12,!0,2,\"A\",\"ab\",\"c\",\"ABC\"];"],
+			["x=[Math.min(-1,2),Math.min(-1,2).x,-Math.abs(-3),Math.min(-1,2)()]", {}, "x=[-1,(-1).x,-3,(-1)()];"],
+			// One newer than `builtinsEcma` folds only once it reaches the built-in's edition.
+			["x=[\"ab\".padStart(3),Math.sign(-2),\"x\".repeat(2)]", {}, "x=[\"ab\".padStart(3),Math.sign(-2),\"x\".repeat(2)];"],
+			["x=[\"ab\".padStart(3),Math.sign(-2),\"x\".repeat(2)]", { compress: { toplevel: false, builtinsEcma: 2020 } }, "x=[\" ab\",-1,\"xx\"];"],
+			["x=[\"a\".repeat(99),(1).toPrecision(22),(1.5).toPrecision(2),(1).toFixed(20)]", { compress: { toplevel: false, builtinsEcma: 2020 } }, "x=[\"a\".repeat(99),1..toPrecision(22),\"1.5\",1..toFixed(20)];"],
+			// It stays a call where an engine may answer otherwise, throws, answers no finite primitive or runs code.
+			["x=[\"\u00c4\".toLowerCase(),decodeURI(\"%\"),parseFloat(\"x\"),Math.max(),\"a\".repeat(99),\"ab\".concat(g()),1.5.toString(2),(1).toFixed(30),parseInt(\"\u180e1\"),\"ab\".concat(\"c\").length,1..toFixed(1)]", {}, "x=[\"\u00c4\".toLowerCase(),decodeURI(\"%\"),parseFloat(\"x\"),Math.max(),\"a\".repeat(99),\"ab\".concat(g()),1.5.toString(2),1..toFixed(30),parseInt(\"\u180e1\"),\"abc\".length,\"1.0\"];"],
+			["function f(Math,parseInt){x=[Math.abs(-1),parseInt(\"1\")]}x=[Math?.abs(-1),Math.abs?.(-1),Math.abs(...[g]),Math.abs(/*! c */1)]", {}, "function f(a,t){x=[a.abs(-1),t(\"1\")]}x=[Math?.abs(-1),Math.abs?.(-1),Math.abs(g),Math.abs(/*! c */1)];"],
+			["x=[Math.abs(-1),parseInt(\"1\")]", { compress: { toplevel: false }, mangle: false, keep_fnames: true }, "x=[1,1];"]
 		];
 		for (const [source, options, expected] of cases) {
 			const { code } = minifyOnePass(source, {
