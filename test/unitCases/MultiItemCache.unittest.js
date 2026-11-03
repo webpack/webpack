@@ -22,6 +22,10 @@ describe("MultiItemCache", () => {
 		expect(MultiItemCache.from(itemCaches)).toBe(itemCaches[0]);
 	});
 
+	it("wraps no ItemCacheFacades", () => {
+		expect(MultiItemCache.from([])).toBeInstanceOf(MultiItemCache);
+	});
+
 	it("wraps several ItemCacheFacades", () => {
 		const itemCaches = generateItemCaches(2);
 		expect(MultiItemCache.from(itemCaches)).toBeInstanceOf(MultiItemCache);
