@@ -163,7 +163,8 @@ export function formatReportsComment({ runs, reportsDir, headSha, warn }) {
 		const run = runs[source.key];
 		// The dependency report only runs when dependencies change.
 		if (!run) continue;
-		const link = `[${run.name} #${run.run_number}](${run.html_url})`;
+		// WHY: not `run.name`, which a fork sets in its own workflow file.
+		const link = `[${source.title} run #${run.run_number}](${run.html_url})`;
 		if (run.status !== "completed") {
 			sections.push({
 				text: `## ${source.title}\n\n⏳ ${link} is still running.`
@@ -203,9 +204,12 @@ export function formatReportsComment({ runs, reportsDir, headSha, warn }) {
 		header,
 		...sections.map(
 			(section) =>
-				// A zero-width space after `@` keeps a report from pinging anyone.
-				containReport(section.text, room).replace(/@/g, "@​") +
-				footer(section.link)
+				// A zero-width space after a mention's `@` keeps a report from pinging
+				// anyone; `webpack@<url>` in an install command stays copyable.
+				containReport(section.text, room).replace(
+					/(?<!\w)@(?=\w)/g,
+					"@\u200B"
+				) + footer(section.link)
 		)
 	].join(separator);
 }
