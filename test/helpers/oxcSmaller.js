@@ -3124,7 +3124,6 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: collapse_vars/cond_branch_1",
 			"terser compress: collapse_vars/cond_branch_switch",
 			"terser compress: collapse_vars/issue_2873_1",
-			"terser compress: collapse_vars/issue_2873_2",
 			"terser compress: collapse_vars/issue_2908",
 			"terser compress: collapse_vars/issue_2931",
 			"terser compress: collapse_vars/issue_2954_3",
@@ -3191,7 +3190,6 @@ const OXC_SMALLER_BY_REASON = [
 			"swc exec: terser_issue_t292_no_flatten_with_arg_colliding_with_arg_value_inner_scope",
 			"swc minifier: fixture/issues/12311/input.js",
 			"swc minifier: fixture/issues/object-accessor-function-boundary/input.js",
-			"swc minifier: fixture/projects/mootools/4/input.js",
 			"terser compress: async/for_await_of",
 			"terser compress: async/for_await_of_2",
 			"terser compress: class-properties/private_properties_can_be_mangled",
@@ -3671,7 +3669,6 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: conditionals/cond_8b",
 			"terser compress: conditionals/cond_8c",
 			"terser compress: conditionals/issue_1154",
-			"terser compress: conditionals/no_evaluate",
 			"terser compress: conditionals/delete_conditional_1",
 			"terser compress: conditionals/delete_conditional_2",
 			"terser compress: conditionals/issue_2535_1",
@@ -3949,14 +3946,10 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/inline_single_use_variable.rs:47",
 			"swc exec: issue_6899_1",
 			"swc exec: issue_6899_2",
-			"swc exec: terser_reduce_vars_chained_assignments",
-			"swc minifier: pass-1/compute/1/input.js",
-			"swc minifier: pass-default/compute/1/input.js",
 			"terser compress: blocks/issue_1664",
 			"terser compress: collapse_vars/collapse_vars_array",
 			"terser compress: collapse_vars/collapse_vars_object",
 			"terser compress: inline/dont_inline_funcs_into_default_param_2",
-			"terser compress: reduce_vars/chained_assignments",
 			"terser compress: template-string/side_effects"
 		]
 	],
@@ -4231,7 +4224,6 @@ const OXC_SMALLER_BY_REASON = [
 		"oxc goes further than webpack on what terser's `if_return` tests cover",
 		[
 			"terser compress: if_return/issue_1089",
-			"terser compress: if_return/issue_512",
 			"terser compress: if_return/if_return_same_value",
 			"terser compress: if_return/issue_t1606_1",
 			"terser compress: if_return/issue_t1606_2"
@@ -4395,7 +4387,6 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"boolean and conditional forms: `!a&&b` vs `a?!1:b`, `!!a` vs `a&&!0`, `x||void 0` vs `if(x)`, an `if` with or without braces, a test's branches swapped",
 		[
-			"swc minifier: fixture/projects/backbone/15/input.js",
 			"swc minifier: fixture/projects/jquery/2/input.js",
 			"terser compress: collapse_vars/issue_2878"
 		]

@@ -257,7 +257,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/projects/angular/4/input.js",
 			"swc minifier: fixture/projects/angular/5/input.js",
 			"swc minifier: fixture/projects/backbone/13/input.js",
-			"swc minifier: fixture/projects/backbone/15/input.js",
 			"swc minifier: fixture/projects/backbone/16/input.js",
 			"swc minifier: fixture/projects/backbone/17/input.js",
 			"swc minifier: fixture/projects/backbone/18/input.js",
@@ -373,7 +372,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: collapse_vars/collapse_vars_self_reference",
 			"terser compress: conditionals/cond_8c",
 			"terser compress: conditionals/issue_1645_1",
-			"terser compress: conditionals/no_evaluate",
 			"terser compress: dead-code/dead_code_1",
 			"terser compress: dead-code/dead_code_2_should_warn",
 			"terser compress: dead-code/dead_code_2_should_warn_strict",
@@ -1303,11 +1301,7 @@ const SWC_SMALLER_BY_REASON = [
 	],
 	[
 		"swc goes further than webpack on what terser's `arrays` tests cover",
-		[
-			"terser compress: arrays/constant_join",
-			"terser compress: arrays/index",
-			"terser compress: arrays/length"
-		]
+		["terser compress: arrays/constant_join", "terser compress: arrays/length"]
 	],
 	[
 		"swc goes further than webpack on what terser's `issue-t50` tests cover",
