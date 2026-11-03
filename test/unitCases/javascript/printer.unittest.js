@@ -579,7 +579,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"function f(H){ var x; x = g(); switch (x) {} x = g(); x ? 1 : 2; x = g(); h(...x); x = g(); delete x.y; x = g(); (x, 1); x = g(); ({ k: x }); x = g(); ({ [k]: x }); x = g(); ({ x }); x = g(); new H(x); x = g(); new H(...x); x = g(); new U(x); x = g(); [...x]; x = g(); `${x}`; x = g(); -x; return x }",
 				{},
-				"function f(x){var e=g();switch(e){}(e=g())?1:2,e=g(),h(...e),e=g(),delete e.y,e=g();({k:e=g()});e=g();({[k]:e});return e=g(),new x(e=g()),e=g(),new x(...e),new U(e=g()),e=g(),[...e],`${e=g()}`,-(e=g()),e}"
+				"function f(x){var e=g();switch(e){}(e=g()),e=g(),h(...e),e=g(),delete e.y,e=g(),e=g(),e=g();({[k]:e});return e=g(),new x(e=g()),e=g(),new x(...e),new U(e=g()),e=g(),[...e],`${e=g()}`,-(e=g()),e}"
 			],
 			[
 				"function f(H){ var x; x = g(); H(...x) }",
@@ -800,13 +800,13 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"function f(o){ const T = 1; g(T ? o : 2); g(!T ? 1 : (o, 2)); delete (T ? o.x : 1); (T ? o.f : 1)(); (T ? o.f : 1)``; typeof (T ? u : 1); g(T ? o.f : 1); T ? function(){}() : 1; g(T ? o : h(/*! c */ 2)); return () => T ? {} : 1 }",
 				{},
-				"function f(o){g(o),g((o,2)),delete(1?o.x:1),(1?o.f:1)(),(1?o.f:1)``,typeof(1?u:1),g(o.f),g(1?o:h(/*! c */2));return()=>1?{}:1}"
+				"function f(o){g(o),g((o,2)),1?o.x:1,(1?o.f:1)(),(1?o.f:1)``,1?u:1,g(o.f),g(1?o:h(/*! c */2));return()=>1?{}:1}"
 			],
 			// So does `&&`, `||` or `??` whose left side is known.
 			[
 				"function f(o){ const T = 1, N = null; g(T && o.f, T || o, N ?? o, T ?? o); delete (T && o.x); (T && o.f)(); T && function(){}(); g(T || h(/*! c */ 2)) }",
 				{},
-				"function f(o){g(o.f,1,o,1),delete(1&&o.x),(1&&o.f)(),g(1||h(/*! c */2))}"
+				"function f(o){g(o.f,1,o,1),1&&o.x,(1&&o.f)(),g(1||h(/*! c */2))}"
 			],
 			// A branch that is no expression keeps the `if`, a sequence test is parenthesized, and a dead `if` declaring only in its own scopes goes.
 			[
@@ -1459,12 +1459,12 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// An empty `try` runs no `catch`, its `finally` printing in its place; a loop test known goes, true or false.
 			["try{}catch(e){foo()}a();try{}finally{foo();x()}b();try{}catch(e){foo()}finally{bar()}try{}finally{}try{}catch(e){var v}function f(){g();try{}finally{if(a)b()}c()}if(x)try{}finally{y()}try{}finally{let q=f();g(q,q)}for(;true;)foo();for(var i=0;!0;i++)k();while(0)g();for(;false;i++)h();for(;0;)var w=0", {}, "a();foo(),x();b();bar();try{}catch(f){var v}function f(){g();if(a)b();c()}if(x)try{}finally{y()}{let r=f();g(r,r)}for(;;)foo();for(var i=0;;i++)k();for(;0;)var w=0;"],
 			// What runs nothing before a name called goes, and before a member is `0`, but before `eval` or in `with`.
-			["(0,foo)();(0,foo)``;(0,foo)?.();(!0,a.b)();(1,2,a.b)();(0,a.b)();(0,eval)();typeof(0,foo);(x(),foo)``;(function(){},foo)``;(x(),a.b)()", {}, "foo(),foo``,foo?.(),(0,a.b)(),(0,a.b)(),(0,a.b)(),(0,eval)(),typeof(0,foo),(x(),foo)``,foo``,(x(),a.b)();"],
+			["(0,foo)();(0,foo)``;(0,foo)?.();(!0,a.b)();(1,2,a.b)();(0,a.b)();(0,eval)();typeof(0,foo);(x(),foo)``;(function(){},foo)``;(x(),a.b)()", {}, "foo(),foo``,foo?.(),(0,a.b)(),(0,a.b)(),(0,a.b)(),(0,eval)(),0,foo,(x(),foo)``,foo``,(x(),a.b)();"],
 			["with(o)(0,foo)()", {}, "with(o)(0,foo)();"],
 			["(0,foo)``", { compress: false, mangle: false }, "(0,foo)``;"],
 			// terser's `comparisons`: `!(a==b)` is `a!=b` where an equality takes no parentheses, and a boolean compared with one is itself or negated.
 			["x=!(a==b);if(!(a!=b))f();x=!(a<b);x=!(a==b)+1;f(!(a!==b),[!(a==b)],-!(a==b));x=!(a==b)&&c;x=!(a==b)?1:2;x=c?!(a==b):!(d===e);x=()=>!(a==b);x={k:!(a==b)};x=`${!(a==b)}`;throw!(a==b)", {}, "x=a!=b;if(a==b)f();x=!(a<b),x=!(a==b)+1,f(a===b,[a!=b],-!(a==b)),x=a!=b&&c,x=a==b?2:1,x=c?a!=b:d!==e,x=()=>a!=b,x={k:a!=b},x=`${a!=b}`;throw a!=b;"],
-			["!(a==b);var v=!(a==b);function g(){return!(a===b)}", {}, "a!=b;var v=a!=b;function g(){return a!==b}"],
+			["!(a==b);var v=!(a==b);function g(){return!(a===b)}", {}, "a==b;var v=a!=b;function g(){return a!==b}"],
 			["x=(a instanceof b)===true;x=!a===!1;x=true===(a in b);x=y===true;x=(a<b)!=true;x=delete y==false;while(x&&!0)f();x=!(y()&&true);x=!(a<b&&!0);if(a??true)b();x=a&&true;if(a&&b())c()", {}, "x=a instanceof b,x=!!a,x=a in b,x=y===!0,x=!(a<b),x=!delete y;while(x)f();x=!y(),x=!(a<b);if(a??!0)b();x=a&&!0;if(a&&b())c();"],
 			["x=!(/*c*/a==b);if(a&&/*k*/true)b()", { mangle: false, format: { comments: "all" } }, "x=!(/*c*/a==b);if(a&&/*k*/!0)b();"],
 			// A name both branches call is called bare, after the test runs; but `eval`, a member, `new` or in `with`.
@@ -1485,6 +1485,12 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["if(foo())debugger;if(x)debugger;else foo();label:debugger;for(;;)debugger;if(x);else foo();if(x){}else{foo();bar()}if(a==b);else c();if(p){if(x);else foo()}else q();if(x);else if(y)z();void x;void f();x=(void g(),1);function q(){let x=1;void x;if(x);h()}", {}, "foo();if(!x)foo();for(;;);if(!x)foo();if(!x)foo(),bar();if(a!=b)c();if(p){if(!x)foo()}else q();if(!x)if(y)z();x,f(),x=(g(),1);function q(){h()}"],
 			["function a(){\"use strict\";function b(){\"use strict\";c()}return b}function e(){\"use strict\";\"use asm\";f()}class K{m(){\"use strict\";g()}}", { mangle: false }, "function a(){\"use strict\";return function(){c()}}function e(){\"use strict\";\"use asm\";f()}class K{m(){g()}}"],
 			["\"use strict\";export function foo(){\"use strict\";g()}", { module: true, compress: {}, mangle: {} }, "export function foo(){g()}"],
+			// What nobody reads: an operator running only its operand goes, a branch running nothing goes, an array or object prints what its parts run, `x==null&&y` is `x??y`.
+			["!x.y;!x?.y;typeof x.y;typeof x;delete x.y.z();delete x.y;delete x;delete(0,x);!function(){g()}();!(a==b);f(),!(a<b),g();void(a=b);!({}.a+1);foo()?1:2;foo()?1:bar();foo()?bar():2;(a,b)?1:c();a??b?1:c();x=foo()?1:2;c?1:a=b;c?1:(d,e);c?d:1", {}, "x.y,x?.y,x.y,x.y.z(),delete x.y,delete x,0,x,g(),a==b,f(),a<b,g(),a=b,!({}.a+1),foo(),foo()||bar(),foo()&&bar(),(a,b)||c(),(a??b)||c(),x=foo()?1:2,c||(a=b),c||(d,e),c&&d;"],
+			["([a]);([foo()]);[4,...c,a];({a:foo()});({foo:{foo:foo()}});({[bar()]:foo()});({a:1,b:g(),c:h()});x=[a(),b()];({a(){},b:g()});({get a(){},b:g()});[,a(),,b()];({b});x=({a:f()},1);({a:function(){}()}.x)", {}, "a,foo(),[4,...c,a],foo();({foo:foo()});({[bar()]:foo()});g(),h(),x=[a(),b()],g();({get a(){},b:g()});a(),b(),b,x=(f(),1);"],
+			["x==null&&y", {"ecma": 2019}, "x==null&&y;"],
+			["void {a:g()}.b;typeof function(){return g()}().x;delete {a:g()}.b.c()", {}, "({a:g()}.b),g().x,({a:g()}.b.c());"],
+			["x==null&&y;x!=null||y;a==null&&(a=b);null==x&&g();o.y!=null||(o={},o.y=3);x===null&&y;x==null&&(y||z);z=x==null&&y;f()==null&&y;x==null&&!y;x==null&&new Y;x==null&&a+b", {"ecma": 2020}, "x??y,x??y,a??(a=b),x??g(),o.y!=null||(o={},o.y=3),x===null&&y,x==null&&(y||z),z=x==null&&y,f()==null&&y,x??!y,x??new Y,x??a+b;"],
 			// `!` negates an optional chain whole.
 			["function f(){if(t?.has(x))return;y()}for(;;){if(t?.has(x))continue;y()}x=t?.a?!1:y", {}, "function f(){if(!t?.has(x))y()}for(;;){if(!t?.has(x))y()}x=!t?.a&&y;"]
 		];
