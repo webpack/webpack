@@ -1,5 +1,5 @@
-import { answer } from "./barrel.js";
+import * as values from "./barrel.js";
 
-it("should resolve the request changed by stillValidModule", () => {
-	expect(answer).toBe("second");
+it("should honor resolution changes between rebuilds", () => {
+	expect({ ...values }).toEqual({ answer: "second" });
 });
