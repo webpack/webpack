@@ -302,9 +302,9 @@ for (const [sourceFile, typeChecker, program] of sourceFiles) {
 
 		/**
 		 * Tells whether an identifier calls a built-in through an overload that
-		 * returns `any`, such as `(o: {}): any[]` of `Object.values` or
-		 * `new Array(length)`, while a generic overload could type the result and
-		 * no declared type, such as `/** @type {Map<K, V>} *\/`, receives it.
+		 * returns `any`, such as `new (arrayLength?: number): any[]` of `Array`,
+		 * while a generic overload could type the result and no declared type,
+		 * such as the JSDoc type of the variable it is assigned to, receives it.
 		 * @param {ts.Node} node the identifier
 		 * @returns {boolean} true when the call should take the generic overload
 		 */
