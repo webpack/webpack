@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Keep unused imports of names a nested lazy barrel defers from failing to link.
+Skip work for activated lazy barrels and preserve unused nested imports.
