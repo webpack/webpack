@@ -11,7 +11,7 @@ const { execFileSync } = require("child_process");
 const fs = require("fs");
 const path = require("path");
 const ts = require("typescript");
-const { base, baseAny, root } = require("./argv");
+const { base, baseCounts: baseCountsFile, root } = require("./argv");
 
 const createTypeScriptProgram = require("./typescript-program");
 
@@ -103,17 +103,20 @@ for (const configName of ["tsconfig.json", "tsconfig.hot.json"]) {
 /** @type {Record<string, FileReport>} */
 const coverageReport = Object.create(null);
 
-// Directories whose escape hatches and inferred `any` the report counts.
+// Directories whose escape hatches, `any` and untyped identifiers the report counts.
 const ESCAPE_HATCH_DIRECTORIES = ["lib/", "hot/", "declarations/"];
 
 /**
- * @typedef {object} InferredAny
+ * @typedef {object} Spot
  * @property {number} line the line, from 1
- * @property {string} name the identifier
+ * @property {string} name the identifier, call or type written there
+ * @property {string=} type the type that makes an untyped identifier untyped
  */
 
-/** @type {Record<string, InferredAny[]>} */
+/** @type {Record<string, Spot[]>} */
 const inferredAnyByFile = {};
+/** @type {Record<string, Spot[]>} */
+const untypedByFile = {};
 
 /** @type {Set<string>} */
 const walkedFiles = new Set();
@@ -134,12 +137,45 @@ for (const [sourceFile, typeChecker, program] of sourceFiles) {
 		coverageReport[rep.path] = rep;
 		let statementIndex = 0;
 		const relativeFile = path.relative(root, file).split(path.sep).join("/");
-		/** @type {InferredAny[] | undefined} */
-		const inferredAny = ESCAPE_HATCH_DIRECTORIES.some((directory) =>
+		const counted = ESCAPE_HATCH_DIRECTORIES.some((directory) =>
 			relativeFile.startsWith(directory)
-		)
+		);
+		/** @type {Spot[] | undefined} */
+		const inferredAny = counted
 			? (inferredAnyByFile[relativeFile] = [])
 			: undefined;
+		/** @type {Spot[] | undefined} */
+		const untyped = counted ? (untypedByFile[relativeFile] = []) : undefined;
+
+		/**
+		 * Tells whether a node is `module` or `exports` in `module.exports`.
+		 * @param {ts.Node} node the identifier
+		 * @returns {boolean} true when it is
+		 */
+		const isModuleExports = (node) => {
+			const access = ts.isPropertyAccessExpression(node.parent)
+				? node.parent
+				: undefined;
+			return Boolean(
+				access &&
+				ts.isIdentifier(access.expression) &&
+				access.expression.text === "module" &&
+				access.name.text === "exports"
+			);
+		};
+
+		/**
+		 * Prints a type in full: a shortened union, such as `A | ... 14 more ... | B`,
+		 * could hide the member that holds an `any`.
+		 * @param {ts.Type} type the type
+		 * @returns {string} the printed type
+		 */
+		const printType = (type) =>
+			typeChecker.typeToString(
+				type,
+				undefined,
+				ts.TypeFormatFlags.NoTruncation
+			);
 
 		/**
 		 * @param {ts.Node} node the node to be walked
@@ -292,7 +328,7 @@ for (const [sourceFile, typeChecker, program] of sourceFiles) {
 				const receiver = typeChecker.getTypeAtLocation(parent.expression);
 				if (
 					receiver.flags & ts.TypeFlags.Any ||
-					mentionsAny(typeChecker.typeToString(receiver))
+					mentionsAny(printType(receiver))
 				) {
 					return false;
 				}
@@ -417,11 +453,9 @@ for (const [sourceFile, typeChecker, program] of sourceFiles) {
 		 */
 		const hasOwnAny = (type, depth) => {
 			if (type.flags & ts.TypeFlags.Any) return true;
-			if (depth > 8) return mentionsAny(typeChecker.typeToString(type));
-			if (type.isUnionOrIntersection()) {
-				return type.types.some((member) => hasOwnAny(member, depth + 1));
-			}
-			if (type.aliasSymbol) {
+			if (depth > 8) return mentionsAny(printType(type));
+			// A built-in alias before its union: `IteratorResult<T, TReturn = any>` defaults its own `any`.
+			if (type.aliasSymbol && isBuiltinSymbol(type.aliasSymbol)) {
 				const typeArguments = type.aliasTypeArguments || [];
 				const declaration = (type.aliasSymbol.getDeclarations() || [])[0];
 				const typeParameters =
@@ -435,10 +469,16 @@ for (const [sourceFile, typeChecker, program] of sourceFiles) {
 									)
 							)
 						: undefined;
+				return argumentsHaveOwnAny(typeArguments, typeParameters, true, depth);
+			}
+			if (type.isUnionOrIntersection()) {
+				return type.types.some((member) => hasOwnAny(member, depth + 1));
+			}
+			if (type.aliasSymbol) {
 				return argumentsHaveOwnAny(
-					typeArguments,
-					typeParameters,
-					isBuiltinSymbol(type.aliasSymbol),
+					type.aliasTypeArguments || [],
+					undefined,
+					false,
 					depth
 				);
 			}
@@ -494,7 +534,7 @@ for (const [sourceFile, typeChecker, program] of sourceFiles) {
 						.some((info) => hasOwnAny(info.type, depth + 1))
 				);
 			}
-			return mentionsAny(typeChecker.typeToString(type));
+			return mentionsAny(printType(type));
 		};
 
 		/**
@@ -807,7 +847,7 @@ for (const [sourceFile, typeChecker, program] of sourceFiles) {
 					checkDecls(expressionType);
 				}
 
-				const typeText = typeChecker.typeToString(type);
+				const typeText = printType(type);
 
 				if (/^(<.*>)?\(/.test(typeText)) {
 					checkDecls(type);
@@ -820,6 +860,8 @@ for (const [sourceFile, typeChecker, program] of sourceFiles) {
 						ts.isBreakStatement(node.parent) ||
 						ts.isContinueStatement(node.parent)) &&
 						node.parent.label === node) ||
+						// Ignore `module.exports`, its values are counted where they are declared
+						isModuleExports(node) ||
 						// Ignore the namespace of a type name such as `NodeJS.WritableStream`
 						(ts.isQualifiedName(node.parent) && node.parent.left === node) ||
 						// Ignore `name` in `const { name: otherName } = obj;`
@@ -848,6 +890,13 @@ for (const [sourceFile, typeChecker, program] of sourceFiles) {
 					}
 				};
 				rep.s[statementIndex] = isTyped ? typeText.length : 0;
+				if (!isTyped && untyped) {
+					untyped.push({
+						line: line + 1,
+						name: node.getText(sourceFile),
+						type: typeText
+					});
+				}
 				if (
 					!isTyped &&
 					inferredAny &&
@@ -893,47 +942,38 @@ fs.writeFileSync(
 	"utf8"
 );
 
-/** @type {Record<string, number>} */
-const headAny = {};
-for (const [file, list] of Object.entries(inferredAnyByFile)) {
-	if (list.length > 0) headAny[file] = list.length;
-}
-// A run on the base commit writes these for `--base-any` to compare with.
-fs.writeFileSync(
-	path.resolve(outputDirectory, "inferred-any.json"),
-	JSON.stringify(headAny),
-	"utf8"
-);
-/** @type {Record<string, number> | undefined} */
-const baseAnyCounts = baseAny
-	? JSON.parse(fs.readFileSync(path.resolve(baseAny), "utf8"))
-	: undefined;
-
-// Escape-hatch types: how often each one stands in a type in `lib/`, `hot/`
-// and `declarations/`, against `--base` when given, for the report the pull request shows.
-const ESCAPE_HATCHES = [
-	"EXPECTED_ANY",
-	"EXPECTED_OBJECT",
-	"EXPECTED_FUNCTION",
-	"unknown"
-];
-/** @typedef {Record<string, number>} EscapeHatchCounts */
+// What the report counts in `lib/`, `hot/` and `declarations/`, each written
+// escape hatch under the type it stands for, and the identifiers left untyped.
+const KINDS = /** @type {const} */ (["any", "unknown", "object", "Function"]);
+/** @typedef {(typeof KINDS)[number]} Kind */
+const COLUMNS = /** @type {const} */ ([...KINDS, "untyped"]);
+/** @typedef {(typeof COLUMNS)[number]} Column */
+/** @typedef {Partial<Record<Column, number>>} Counts */
 
 /**
- * Returns the escape hatch a type node writes: an `EXPECTED_*` alias, `unknown`
- * or a raw type one alias stands for. An `object` constraining or testing a
- * type, as in `@template {object} T`, says only that it is no primitive.
+ * @typedef {object} WrittenSpot
+ * @property {number} line the line, from 1
+ * @property {Kind} kind the type it stands for
+ * @property {string} spelling how it is written, such as `EXPECTED_ANY`
+ */
+
+/**
+ * Returns the escape hatch a type node writes, as the type it stands for and
+ * its spelling. An `object` constraining or testing a type, as in
+ * `@template {object} T`, says only that it is no primitive.
  * @param {ts.Node} node the node
- * @returns {string | undefined} the escape hatch it counts as
+ * @returns {{ kind: Kind, spelling: string } | undefined} the escape hatch it writes
  */
 const escapeHatchOf = (node) => {
 	switch (node.kind) {
 		case ts.SyntaxKind.AnyKeyword:
+			return { kind: "any", spelling: "any" };
 		case ts.SyntaxKind.JSDocAllType:
+			return { kind: "any", spelling: "*" };
 		case ts.SyntaxKind.JSDocUnknownType:
-			return "EXPECTED_ANY";
+			return { kind: "any", spelling: "?" };
 		case ts.SyntaxKind.UnknownKeyword:
-			return "unknown";
+			return { kind: "unknown", spelling: "unknown" };
 		case ts.SyntaxKind.ObjectKeyword: {
 			const { parent } = node;
 			const isBound =
@@ -942,7 +982,7 @@ const escapeHatchOf = (node) => {
 				(ts.isJSDocTypeExpression(parent) &&
 					ts.isJSDocTemplateTag(parent.parent) &&
 					parent.parent.constraint === parent);
-			return isBound ? undefined : "EXPECTED_OBJECT";
+			return isBound ? undefined : { kind: "object", spelling: "object" };
 		}
 	}
 	if (
@@ -952,26 +992,27 @@ const escapeHatchOf = (node) => {
 	) {
 		return undefined;
 	}
-	switch (node.typeName.text) {
+	const spelling = node.typeName.text;
+	switch (spelling) {
 		case "EXPECTED_ANY":
+			return { kind: "any", spelling };
 		case "EXPECTED_OBJECT":
-		case "EXPECTED_FUNCTION":
-			return node.typeName.text;
 		case "Object":
-			return "EXPECTED_OBJECT";
+			return { kind: "object", spelling };
+		case "EXPECTED_FUNCTION":
 		case "Function":
-			return "EXPECTED_FUNCTION";
+			return { kind: "Function", spelling };
 	}
 	return undefined;
 };
 
 /**
- * Counts the escape-hatch types of a file, in its JSDoc and TypeScript types alike.
+ * Finds the escape-hatch types of a file, in its JSDoc and TypeScript types alike.
  * @param {string} source the file's source
  * @param {string} file the file, whose extension tells TypeScript from JavaScript
- * @returns {EscapeHatchCounts} counts by name
+ * @returns {WrittenSpot[]} where each stands
  */
-const countEscapeHatches = (source, file) => {
+const findEscapeHatches = (source, file) => {
 	const sourceFile = ts.createSourceFile(
 		file,
 		source,
@@ -979,30 +1020,35 @@ const countEscapeHatches = (source, file) => {
 		true,
 		file.endsWith(".ts") ? ts.ScriptKind.TS : ts.ScriptKind.JS
 	);
-	/** @type {EscapeHatchCounts} */
-	const counts = {};
+	/** @type {WrittenSpot[]} */
+	const spots = [];
 	/**
-	 * @param {ts.Node} node the node to count in
+	 * @param {ts.Node} node the node to look in
 	 * @returns {void}
 	 */
 	const visit = (node) => {
-		const name = escapeHatchOf(node);
-		if (name) counts[name] = (counts[name] || 0) + 1;
+		const escapeHatch = escapeHatchOf(node);
+		if (escapeHatch) {
+			const { line } = sourceFile.getLineAndCharacterOfPosition(
+				node.getStart(sourceFile)
+			);
+			spots.push({ line: line + 1, ...escapeHatch });
+		}
 		// JSDoc hangs off the node it documents rather than being one of its children.
 		const { jsDoc } = /** @type {ts.Node & { jsDoc?: ts.JSDoc[] }} */ (node);
 		if (jsDoc) for (const comment of jsDoc) visit(comment);
 		ts.forEachChild(node, visit);
 	};
 	visit(sourceFile);
-	return counts;
+	return spots;
 };
 
 /**
- * Returns the escape-hatch counts of every file, from the working tree or from a git revision.
+ * Returns the escape hatches of every file, from the working tree or from a git revision.
  * @param {string=} revision a git revision, or nothing for the working tree
- * @returns {Record<string, EscapeHatchCounts>} counts by file
+ * @returns {Record<string, WrittenSpot[]>} spots by file
  */
-const countAllEscapeHatches = (revision) => {
+const findAllEscapeHatches = (revision) => {
 	const git = (/** @type {string[]} */ ...args) =>
 		execFileSync("git", args, {
 			cwd: root,
@@ -1017,7 +1063,7 @@ const countAllEscapeHatches = (revision) => {
 	)
 		.split("\n")
 		.filter((file) => file.endsWith(".js") || file.endsWith(".ts"));
-	/** @type {Record<string, EscapeHatchCounts>} */
+	/** @type {Record<string, WrittenSpot[]>} */
 	const result = {};
 	for (const file of files) {
 		let source;
@@ -1029,26 +1075,77 @@ const countAllEscapeHatches = (revision) => {
 			// Listed by the tree but not present on this side.
 			continue;
 		}
-		const counts = countEscapeHatches(source, file);
-		if (Object.keys(counts).length > 0) result[file] = counts;
+		const spots = findEscapeHatches(source, file);
+		if (spots.length > 0) result[file] = spots;
 	}
 	return result;
 };
 
+const headEscapeHatches = findAllEscapeHatches();
+
+/** @type {Record<string, Counts>} */
+const headCounts = {};
 /**
- * Sums the counts of every file by name.
- * @param {Record<string, EscapeHatchCounts>} byFile counts by file
- * @returns {EscapeHatchCounts} totals by name
+ * @param {Record<string, Counts>} byFile counts by file
+ * @param {string} file the file
+ * @param {Column} column what to add to
+ * @param {number} count how many
+ * @returns {void}
  */
-const totalEscapeHatches = (byFile) => {
-	/** @type {EscapeHatchCounts} */
-	const totals = {};
-	for (const name of ESCAPE_HATCHES) totals[name] = 0;
-	for (const counts of Object.values(byFile)) {
-		for (const name of ESCAPE_HATCHES) totals[name] += counts[name] || 0;
-	}
-	return totals;
+const addCount = (byFile, file, column, count) => {
+	if (count === 0) return;
+	const counts = (byFile[file] = byFile[file] || {});
+	counts[column] = (counts[column] || 0) + count;
 };
+for (const [file, spots] of Object.entries(inferredAnyByFile)) {
+	addCount(headCounts, file, "any", spots.length);
+}
+for (const [file, spots] of Object.entries(untypedByFile)) {
+	addCount(headCounts, file, "untyped", spots.length);
+}
+
+// A run on the base commit writes the counts only the type checker finds, for `--base-counts` to compare with.
+fs.writeFileSync(
+	path.resolve(outputDirectory, "type-counts.json"),
+	JSON.stringify(headCounts),
+	"utf8"
+);
+
+for (const [file, spots] of Object.entries(headEscapeHatches)) {
+	for (const { kind } of spots) addCount(headCounts, file, kind, 1);
+}
+
+/** @type {Record<string, Counts> | undefined} */
+let baseCounts;
+if (base) {
+	/** @type {Record<string, Counts>} */
+	const counts = baseCountsFile
+		? JSON.parse(fs.readFileSync(path.resolve(baseCountsFile), "utf8"))
+		: {};
+	for (const [file, spots] of Object.entries(findAllEscapeHatches(base))) {
+		for (const { kind } of spots) addCount(counts, file, kind, 1);
+	}
+	baseCounts = counts;
+}
+
+/**
+ * Returns a file's count in one column.
+ * @param {Record<string, Counts> | undefined} byFile counts by file
+ * @param {string} file the file
+ * @param {Column} column the column
+ * @returns {number} the count
+ */
+const countOf = (byFile, file, column) =>
+	(byFile && byFile[file] && byFile[file][column]) || 0;
+
+/**
+ * Sums a column over every file.
+ * @param {Record<string, Counts>} byFile counts by file
+ * @param {Column} column the column
+ * @returns {number} the total
+ */
+const totalOf = (byFile, column) =>
+	Object.values(byFile).reduce((sum, counts) => sum + (counts[column] || 0), 0);
 
 /**
  * Renders a change, red when it grows and green when it shrinks.
@@ -1098,37 +1195,6 @@ for (const fileReport of Object.values(coverageReport)) {
 	);
 }
 
-const headCounts = countAllEscapeHatches();
-const headTotals = totalEscapeHatches(headCounts);
-const baseCounts = base ? countAllEscapeHatches(base) : undefined;
-const baseTotals = baseCounts ? totalEscapeHatches(baseCounts) : undefined;
-
-/**
- * Returns a file's count of one escape hatch.
- * @param {Record<string, EscapeHatchCounts> | undefined} byFile counts by file
- * @param {string} file the file
- * @param {string} name the escape hatch
- * @returns {number} the count
- */
-const countOf = (byFile, file, name) =>
-	(byFile && byFile[file] && byFile[file][name]) || 0;
-
-/**
- * Returns a file's count of inferred `any`.
- * @param {Record<string, number> | undefined} byFile counts by file
- * @param {string} file the file
- * @returns {number} the count
- */
-const anyOf = (byFile, file) => (byFile && byFile[file]) || 0;
-
-/**
- * Sums the counts of every file.
- * @param {Record<string, number>} byFile counts by file
- * @returns {number} the total
- */
-const totalAny = (byFile) =>
-	Object.values(byFile).reduce((sum, count) => sum + count, 0);
-
 /**
  * Renders a count with its change against the base, or nothing when it is zero and unchanged.
  * @param {number} head the count at the head
@@ -1142,126 +1208,157 @@ const countCell = (head, baseCount) => {
 };
 
 let report = `Typed lines: **${percent(allTyped, allLines)}** (${allTyped} of ${allLines})\n\n`;
-report += baseTotals
-	? "| Escape hatch | Base | Head | Change |\n| :-- | --: | --: | --: |\n"
-	: "| Escape hatch | Count |\n| :-- | --: |\n";
-for (const name of ESCAPE_HATCHES) {
-	report += baseTotals
-		? `| \`${name}\` | ${baseTotals[name]} | ${headTotals[name]} | ${formatChange(
-				headTotals[name] - baseTotals[name]
-			)} |\n`
-		: `| \`${name}\` | ${headTotals[name]} |\n`;
-}
-if (baseTotals && baseAnyCounts) {
-	const baseAnyTotal = totalAny(baseAnyCounts);
-	const headAnyTotal = totalAny(headAny);
-	report += `| inferred \`any\` | ${baseAnyTotal} | ${headAnyTotal} | ${formatChange(
-		headAnyTotal - baseAnyTotal
-	)} |\n`;
-} else {
-	report += baseTotals
-		? `| inferred \`any\` | — | ${totalAny(headAny)} | — |\n`
-		: `| inferred \`any\` | ${totalAny(headAny)} |\n`;
+report += baseCounts
+	? "| Kind | Base | Head | Change |\n| :-- | --: | --: | --: |\n"
+	: "| Kind | Count |\n| :-- | --: |\n";
+for (const column of COLUMNS) {
+	const label = column === "untyped" ? "untyped" : `\`${column}\``;
+	const headTotal = totalOf(headCounts, column);
+	if (baseCounts) {
+		const baseTotal = totalOf(baseCounts, column);
+		report += `| ${label} | ${baseTotal} | ${headTotal} | ${formatChange(headTotal - baseTotal)} |\n`;
+	} else {
+		report += `| ${label} | ${headTotal} |\n`;
+	}
 }
 report +=
-	"\nEscape hatches count the raw types they stand for too: `any`, `object` and `Function`. Inferred `any` counts the identifiers whose type TypeScript infers as `any` though no JSDoc names it, the `new` or generic calls whose type arguments it fills with `any`, such as `const map = new Map()`, and the empty arrays declared without a type, such as `const list = []`. Typed lines leave out the `any` that TypeScript's built-in lib writes in its own signatures, such as the replacer of `String#replace`.\n";
+	"\n`any` counts `EXPECTED_ANY`, a written `any` and the `any` TypeScript infers where no type is written, such as `const map = new Map()` or `const list = []`. `object` counts `EXPECTED_OBJECT` and `Object`, `Function` counts `EXPECTED_FUNCTION`. Untyped counts the identifiers whose type is or holds `any`, wherever it comes from; the `any` TypeScript's built-in lib writes in its own signatures, such as the replacer of `String#replace`, is left out.\n";
+if (base && !baseCountsFile) {
+	report +=
+		"\nThe base's inferred `any` and untyped identifiers were not counted, as `--base-counts` was not given.\n";
+}
 
-const header = `| File | Typed lines | ${ESCAPE_HATCHES.map((name) => `\`${name}\``).join(" | ")} | inferred \`any\` |\n| :-- | --: |${" --: |".repeat(ESCAPE_HATCHES.length + 1)}\n`;
+const header = `| File | Typed lines | ${COLUMNS.map((column) =>
+	column === "untyped" ? "untyped" : `\`${column}\``
+).join(" | ")} |\n| :-- | --: |${" --: |".repeat(COLUMNS.length)}\n`;
 
 /**
- * Renders a file's row: its coverage, each escape hatch and its inferred `any`, with their changes against the base.
+ * Renders a file's row: its coverage and each count, with their changes against the base.
  * @param {string} file the file
  * @returns {string} the row
  */
 const fileRow = (file) => {
 	const coverage = coverageByFile.get(file);
-	const cells = ESCAPE_HATCHES.map((name) =>
+	const cells = COLUMNS.map((column) =>
 		countCell(
-			countOf(headCounts, file, name),
-			baseCounts ? countOf(baseCounts, file, name) : undefined
-		)
-	);
-	cells.push(
-		countCell(
-			anyOf(headAny, file),
-			baseAnyCounts ? anyOf(baseAnyCounts, file) : undefined
+			countOf(headCounts, file, column),
+			baseCounts ? countOf(baseCounts, file, column) : undefined
 		)
 	);
 	return `| \`${file}\` | ${coverage ? percent(coverage.typed, coverage.lines) : "—"} | ${cells.join(" | ")} |`;
 };
 
+/**
+ * Lists where a file's escape hatches, `any` and untyped identifiers stand, by line.
+ * @param {string} file the file
+ * @param {(column: Column) => boolean=} wanted which columns to list, all when not given
+ * @returns {string[]} one item per spot
+ */
+const spotsOf = (file, wanted = () => true) => {
+	/** @type {[number, string][]} */
+	const items = [];
+	for (const { line, kind, spelling } of headEscapeHatches[file] || []) {
+		if (!wanted(kind)) continue;
+		items.push([
+			line,
+			`\`${kind}\`${spelling === kind ? "" : ` (\`${spelling}\`)`}`
+		]);
+	}
+	for (const { line, name } of wanted("any")
+		? inferredAnyByFile[file] || []
+		: []) {
+		items.push([line, `\`any\` (inferred) \`${name}\``]);
+	}
+	for (const { line, name, type } of wanted("untyped")
+		? untypedByFile[file] || []
+		: []) {
+		const shown =
+			type && type.length > 100 ? `${type.slice(0, 100)}…` : type || "";
+		items.push([line, `untyped \`${name}\`: \`${shown.replace(/`/g, "'")}\``]);
+	}
+	return items
+		.sort((a, b) => a[0] - b[0])
+		.map(([line, text]) => `- \`${file}:${line}\` ${text}`);
+};
+
+// A pull request comment holds at most 65536 characters.
+const MAX_LISTED_SPOTS = 300;
+
 if (baseCounts) {
+	const base = baseCounts;
 	const changed = [
-		...new Set([
-			...Object.keys(baseCounts),
-			...Object.keys(headCounts),
-			...Object.keys(baseAnyCounts || {}),
-			...Object.keys(headAny)
-		])
+		...new Set([...Object.keys(base), ...Object.keys(headCounts)])
 	]
-		.filter(
-			(file) =>
-				ESCAPE_HATCHES.some(
-					(name) =>
-						countOf(headCounts, file, name) !== countOf(baseCounts, file, name)
-				) ||
-				(baseAnyCounts !== undefined &&
-					anyOf(headAny, file) !== anyOf(baseAnyCounts, file))
+		.filter((file) =>
+			COLUMNS.some(
+				(column) =>
+					countOf(headCounts, file, column) !== countOf(base, file, column)
+			)
 		)
 		.sort();
-	report +=
-		changed.length > 0
-			? `\n#### Changed by this pull request\n\n${header}${changed.map(fileRow).join("\n")}\n`
-			: baseAnyCounts
-				? "\nThis pull request adds or removes no escape-hatch type or inferred `any`.\n"
-				: "\nThis pull request adds or removes no escape-hatch type. Inferred `any` was not compared, as `--base-any` was not given.\n";
-
-	// Where each inferred `any` stands in the files this pull request gave more of them.
-	const worse = baseAnyCounts
-		? changed.filter(
-				(file) => anyOf(headAny, file) > anyOf(baseAnyCounts, file)
-			)
-		: [];
-	if (worse.length > 0) {
-		/** @type {string[]} */
-		const lines = [];
-		for (const file of worse) {
-			for (const { line, name } of inferredAnyByFile[file] || []) {
-				lines.push(`- \`${file}:${line}\` \`${name}\``);
-			}
-		}
-		report += `\n<details><summary>Inferred \`any\` in the files this pull request adds some to</summary>\n\n${lines.join("\n")}\n\n</details>\n`;
+	if (changed.length > 0) {
+		report += `\n#### Changed by this pull request\n\n${header}${changed.map(fileRow).join("\n")}\n`;
+		/**
+		 * @param {string} file the file
+		 * @param {Column} column the column
+		 * @returns {boolean} whether this pull request made the column grow in the file
+		 */
+		const grew = (file, column) =>
+			countOf(headCounts, file, column) > countOf(base, file, column);
+		/**
+		 * Renders spots as a collapsible list, cut short where a comment would grow too long.
+		 * @param {string} summary the list's summary
+		 * @param {string[]} spots the spots
+		 * @param {boolean} open whether the list starts open
+		 * @returns {string} the list, or nothing when there are no spots
+		 */
+		const spotList = (summary, spots, open) => {
+			if (spots.length === 0) return "";
+			const listed = spots.slice(0, MAX_LISTED_SPOTS);
+			const more =
+				spots.length > listed.length
+					? `\n- … and ${spots.length - listed.length} more, listed in the job summary\n`
+					: "";
+			return `\n<details${open ? " open" : ""}><summary>${summary}</summary>\n\n${listed.join("\n")}\n${more}\n</details>\n`;
+		};
+		report += spotList(
+			"Where this pull request adds them, in every column it grows",
+			changed.flatMap((file) => spotsOf(file, (column) => grew(file, column))),
+			true
+		);
+		report += spotList(
+			"What the files this pull request changes still have",
+			changed.flatMap((file) => spotsOf(file, (column) => !grew(file, column))),
+			false
+		);
+	} else {
+		report +=
+			"\nThis pull request adds or removes no escape hatch, `any` or untyped identifier.\n";
 	}
 }
 
-// Every file still owing a real type: an escape hatch, an inferred `any` or an untyped line.
-const remaining = [
-	...new Set([
-		...Object.keys(headCounts),
-		...Object.keys(headAny),
-		...[...coverageByFile]
-			.filter(
-				([file, { lines, typed }]) =>
-					typed < lines &&
-					ESCAPE_HATCH_DIRECTORIES.some((directory) =>
-						file.startsWith(directory)
-					)
-			)
-			.map(([file]) => file)
-	])
-].sort((a, b) => {
-	const total = (/** @type {string} */ file) =>
-		ESCAPE_HATCHES.reduce(
-			(sum, name) => sum + countOf(headCounts, file, name),
-			anyOf(headAny, file)
-		);
-	return total(b) - total(a) || (a < b ? -1 : 1);
-});
-report += `\n<details><summary>${remaining.length} file(s) in <code>lib/</code>, <code>hot/</code> and <code>declarations/</code> still use an escape hatch, infer \`any\` or have untyped lines</summary>\n\n${header}${remaining.map(fileRow).join("\n")}\n\n</details>\n`;
+// Every file still owing a real type.
+const remaining = Object.keys(headCounts)
+	.filter((file) => COLUMNS.some((column) => countOf(headCounts, file, column)))
+	.sort((a, b) => {
+		const total = (/** @type {string} */ file) =>
+			COLUMNS.reduce(
+				(sum, column) => sum + countOf(headCounts, file, column),
+				0
+			);
+		return total(b) - total(a) || (a < b ? -1 : 1);
+	});
+report += `\n<details><summary>${remaining.length} file(s) in <code>lib/</code>, <code>hot/</code> and <code>declarations/</code> still have an escape hatch, \`any\` or untyped identifiers</summary>\n\n${header}${remaining.map(fileRow).join("\n")}\n\n</details>\n`;
 
 fs.writeFileSync(
 	path.resolve(outputDirectory, "types-coverage.md"),
 	`## Types Coverage\n\n${report}`,
+	"utf8"
+);
+// Every spot of every file, too long for the pull request comment.
+fs.writeFileSync(
+	path.resolve(outputDirectory, "types-coverage-spots.md"),
+	`## Where types are still owed\n\n${remaining.flatMap((file) => spotsOf(file)).join("\n")}\n`,
 	"utf8"
 );
 console.log(report);
