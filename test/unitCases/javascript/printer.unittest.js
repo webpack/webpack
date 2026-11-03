@@ -357,7 +357,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				'const a = g(), b = 1; const { x, y: [z = 1, ...r] } = a; const c = 1; c = 2; const d = 1; d++; const e = 1; [e] = []; const k = 1; ({ k } = {}); const m = 1; for (m of a); export const ex = 1; for (const i of a) g(i, x, z, r, b, c, d, e, k, m); while (true) g(); while (/*! t */ true) g(); while (a) g()',
 				{ module: true },
-				'const o=g(),{x:c,y:[t=1,...e]}=o,n=1;n=2;const s=1;s++;const r=1;[r]=[];const a=1;({k:a}={});const i=1;for(i of o);export const ex=1;for(let f of o)g(f,c,t,e,1,n,s,r,a,i);for(;;)g();while(/*! t */!0)g();while(o)g();'
+				'const o=g(),{x:c,y:[t=1,...e]}=o,n=1;n=2;const s=1;s++;const r=1;[r]=[];const a=1;({k:a}={});const i=1;for(i of o);export const ex=1;for(let f of o)g(f,c,t,e,1,n,s,r,a,i);for(;;)g();while(/*! t */1)g();while(o)g();'
 			],
 			[
 				"const a = 1; function f() { const b = g(); h(b); return b } f(a)",
@@ -789,7 +789,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"function f(a){ var m = 1; if (!1) m = a; if (0) { var v = 1 } if (false) { function q(){} q() } const D = false; if (D) g(); if (!1) x(); else y(); if (0) x(/*! c */ 1); return m + v }",
 				{},
-				"function f(f){var i=1;if(0)var a=1;if(!1){function n(){}n()}y();if(0)x(/*! c */1);return i+a}"
+				"function f(f){var i=1;if(0)var a=1;if(0){function n(){}n()}y();if(0)x(/*! c */1);return i+a}"
 			],
 			[
 				"function f(a){ if (0) x() }",
@@ -1171,7 +1171,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["function f(){return-Infinity}", {}, "function f(){return-1/0}"],
 			["function f(a){return[a/-Infinity,-Infinity/a,(-Infinity).x]}", {}, "function f(n){return[n/-(1/0),-(1/0)/n,(-(1/0)).x]}"],
 			// A body printing nothing is `;`, and an `if` with one only runs its test.
-			["function f(a){for(a of b){}while(a()){}l:{}}", {}, "function f(f){for(f of b);while(f());f:;}"],
+			["function f(a){for(a of b){}while(a()){}l:{}}", {}, "function f(f){for(f of b);while(f());}"],
 			["function f(a){if(a()){}if(a){}else b()}", {}, "function f(f){f();if(f);else b()}"],
 			["function f(x){if(x){if(a()){}}else b()}", {}, "function f(f){if(f)a();else b()}"],
 			// `!t?a:b` is `t?b:a`, but where the test would open a statement.
@@ -1203,7 +1203,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// `a ? x : true` is `!a || x` whatever `a` is, `a ? x : false` stays.
 			["function f(a){return[a?x:!0,a?x:!1]}", {}, "function f(a){return[!a||x,a?x:!1]}"],
 			// What runs nothing in a sequence goes, its last value where nothing reads it, but where one left would read as another.
-			["function f(n,o){for(;n;0,n--,0)a(),0,b();return[(1,o.m),(1,2,o.m)(),(a(),0,1)]}", {}, "function f(n,o){for(;n;n--)a(),b();return[o.m,(1,2,o.m)(),(a(),1)]}"],
+			["function f(n,o){for(;n;0,n--,0)a(),0,b();return[(1,o.m),(1,2,o.m)(),(a(),0,1)]}", {}, "function f(n,o){for(;n;n--)a(),b();return[o.m,(0,o.m)(),(a(),1)]}"],
 			["function f(a,r){return[(0,a).x(r),(0,a.b).c,(1,2).x,(0,let).x]}", {}, "function f(r,a){return[r.x(a),r.b.c,(1,2).x,(0,let).x]}"],
 			["function f(){0,{}.a.b;0,a(),{}.a.b}", {}, "function f(){0,{}.a.b,a(),{}.a.b}"],
 			// A `!` the compressor adds before an equality flips its operator, one written stays.
@@ -1325,7 +1325,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["function f(){while(1)g()}", {}, "function f(){for(;;)g()}"],
 			["function f(){while(!0)g()}", {}, "function f(){for(;;)g()}"],
 			["function f(){while(x)g()}", {}, "function f(){while(x)g()}"],
-			["function f(){while(0)g()}", {}, "function f(){while(0)g()}"],
+			["function f(){while(0)g()}", {}, "function f(){}"],
 			// An assignment of the name its value reads first prints compound.
 			["function f(x){x=x+1;g(x)}", {}, "function f(x){g(x+=1)}"],
 			["function f(x){x=x>>>g();h(x)}", {}, "function f(x){h(x>>>=g())}"],
@@ -1371,7 +1371,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["{\"use strict\"}x=1", {}, "x=1;"],
 			["function f(){{(\"use strict\")}h()}", {}, "function f(){h()}"],
 			["function f(x){switch(x){case 1:{var y=g();h(y)}}}", {}, "function f(c){if(c===1){h(g())}}"],
-			["function f(){a:{g();break a}h()}", {}, "function f(){a:{g();break a}h()}"],
+			["function f(){a:{g();break a}h()}", {}, "function f(){a:g();h()}"],
 			["function f(){if(a){{g()}h()}}", {}, "function f(){if(a){g();h()}}"],
 			["function f(){for(;;){{g()}h()}}", {}, "function f(){for(;;){g();h()}}"],
 			["function f(){{if(a)return 1}return 2}", {}, "function f(){if(a)return 1;return 2}"],
@@ -1394,7 +1394,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["function f(){do{x();continue}while(a)}", {}, "function f(){do{x()}while(a)}"],
 			["function f(){for(k in o){continue}}", {}, "function f(){for(k in o);}"],
 			["function f(){for(;;){x();continue/*! c */}}", {}, "function f(){for(;;){x();continue;/*! c */}}"],
-			["function f(){l:while(a){x();continue l}}", {}, "function f(){n:while(a){x();continue n}}"],
+			["function f(){l:while(a){x();continue l}}", {}, "function f(){n:while(a)x()}"],
 			// A `switch` of one case prints as an `if`, but one a `break` leaves, labelled or not in a list.
 			["function f(){switch(foo){case\"bar\":baz()}}", {}, "function f(){if(foo===\"bar\")baz()}"],
 			["function f(){switch(foo){case\"bar\":baz();break}}", {}, "function f(){if(foo===\"bar\")baz()}"],
@@ -1445,15 +1445,23 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["for(;;){if(b){x();continue}y()}do{if(b){x();continue}y()}while(t);for(;;){if(b)continue;y()}while(c){if(b)continue;y()}", {}, "for(;;){if(b)x();else y()}do{if(b)x();else y()}while(t);for(;;){if(!b)y()}while(c){if(!b)y()}"],
 			["function f(a){if(a){x();return}y()}", { format: { semicolons: false } }, "function f(f){if(f)x()\nelse y()}"],
 			// Each keeps its exit: a label, a comment, an inner `if`, a declaration, more after, a kept test, a value returned.
-			["l:for(;;){if(b){x();continue l}y()}for(;;){if(b){x();/*c*/continue}y()}for(;;){if(b){if(c)x();continue}y()}for(;;){if(b){x();continue}function q(){}q()}for(;;){if(b){x();continue}y();y()}function f(){if(1){x();return}y()}function g(a){if(a){x();return 1}y()}for(;;){if(b){continue}y()}", { format: { comments: "all" } }, "n:for(;;){if(b){x();continue n}y()}for(;;){if(b){x();/*c*/continue}y()}for(;;){if(b){if(c)x();continue}y()}for(;;){if(b){x();continue}function q(){}q()}for(;;){if(b){x();continue}y(),y()}function f(){x();return}function g(n){if(n){return x(),1}y()}for(;;){if(!b)y()}"],
-			["for(;;){if(b){x();continue}y()}function f(a){if(a){x();return}/*c*/y()}function g(a){if(a){x();return}if(a){x();return}}", { format: { comments: "all" } }, "for(;;){if(b)x();else y()}function f(n){if(n){x();return}/*c*/y()}function g(n){if(n)x();else if(n){x();return}}"],
-			["function f(a){if(a){x();throw e}y()}for(;;){if(b){x();break}y()}function g(a){if(a){0;return}y()}function h(a){if(a){x();return}0}for(;;){if(b){x();continue}let q=y()}", {}, "function f(f){if(f){x();throw e}y()}for(;;){if(b){x();break}y()}function g(f){if(!f)y()}function h(f){if(f){x();return}}for(;;){if(b){x();continue}y()}"],
+			["l:for(;;){if(b){x();continue l}y()}for(;;){if(b){x();/*c*/continue}y()}for(;;){if(b){if(c)x();continue}y()}for(;;){if(b){x();continue}function q(){}q()}for(;;){if(b){x();continue}y();y()}function f(){if(1){x();return}y()}function g(a){if(a){x();return 1}y()}for(;;){if(b){continue}y()}", { format: { comments: "all" } }, "n:for(;;){if(b){x();continue n}y()}for(;;){if(b){x();/*c*/continue}y()}for(;;){if(b){if(c)x();continue}y()}for(;;){if(b){x();continue}function q(){}q()}for(;;){if(b){x();continue}y(),y()}function f(){x()}function g(n){if(n){return x(),1}y()}for(;;){if(!b)y()}"],
+			["for(;;){if(b){x();continue}y()}function f(a){if(a){x();return}/*c*/y()}function g(a){if(a){x();return}if(a){x();return}}", { format: { comments: "all" } }, "for(;;){if(b)x();else y()}function f(n){if(n){x();return}/*c*/y()}function g(n){if(n)x();else if(n)x()}"],
+			["function f(a){if(a){x();throw e}y()}for(;;){if(b){x();break}y()}function g(a){if(a){0;return}y()}function h(a){if(a){x();return}0}for(;;){if(b){x();continue}let q=y()}", {}, "function f(f){if(f){x();throw e}y()}for(;;){if(b){x();break}y()}function g(f){if(!f)y()}function h(f){if(f)x()}for(;;){if(b){x();continue}y()}"],
 			["function g(){var a=[1,2];f(a[0],a[1])}function n(){let a=[1,\"s\",!0,null];f(a[1]+a[0],a[2],a[3].x,typeof a[0],a[2]?3:4)}function s(){var a=[\"a long string\"];f(a[0],a[0],a[0])}function t(){g();const a=[1];function g(){f(a[0])}}function v(){var a=[1];return function(){return a[0]}}", {}, "function g(){f(1,2)}function n(){f(\"s1\",!0,null.x,\"number\",3)}function s(){var a=[\"a long string\"];f(a[0],a[0],a[0])}function t(){(function(){f(a[0])})();let a=[1]}function v(){var a=[1];return function(){return a[0]}}"],
 			// Each array stays: a write, a delete, a call, an unknown or missing index, an element not a constant.
 			["function z(){const a=[1,2];f(a[0]);f(delete a[0])} function z2(){const a=[1,2];f(a[0]);({x:a[1]}={})} function z3(){const a=[1,2];for(a[0] of b);} function z4(){const a=[1,2];f(a?.[0],a[1])} function z5(){const a=[1,2];f(a[0],a[2])} function z6(){const a=[1,2];f(a[0],a[\"0\"])} function z7(){const a=[1,2];f(a[0],a[0.5])} function z8(){const a=[1,2];f(a[0],a[1]`x`)} function z9(){const a=[1,2];f(a[0],new a[1])} function y2(){const a=[1,2];f(a[0]);[a[1]]=b} function y3(){const a=[1,2];f(a[0]);a[1]++} function y5(){const a=[1,2];f(a[0],a[1]())} function y6(){const a=[1,x];f(a[0],a[1])} function y7(){const a=[1,-1];f(a[0],a[1])} function y8(){const a=[];f(a[0],a[1])} function y9(){const a=[1,,2];f(a[0],a[1])} function w1(){const a=[1,2];f(a[-1],a[0])} function w2(){const a=[1,2];f(a[0],a.length)} function w4(){const a=[1,2];f(a[0],a[i])} function w5(){const a=[1,2];f(a[0]);a[0]=1}", {}, "function z(){let n=[1,2];f(n[0]),f(delete n[0])}function z2(){let n=[1,2];f(n[0]),({x:n[1]}={})}function z3(){let n=[1,2];for(n[0]of b);}function z4(){let n=[1,2];f(n?.[0],n[1])}function z5(){let n=[1,2];f(n[0],n[2])}function z6(){let n=[1,2];f(n[0],n[\"0\"])}function z7(){let n=[1,2];f(n[0],n[.5])}function z8(){let n=[1,2];f(n[0],n[1]`x`)}function z9(){let n=[1,2];f(n[0],new n[1])}function y2(){let n=[1,2];f(n[0]),[n[1]]=b}function y3(){let n=[1,2];f(n[0]),n[1]++}function y5(){let n=[1,2];f(n[0],n[1]())}function y6(){let n=[1,x];f(n[0],n[1])}function y7(){let n=[1,-1];f(n[0],n[1])}function y8(){let n=[];f(n[0],n[1])}function y9(){let n=[1,,2];f(n[0],n[1])}function w1(){let n=[1,2];f(n[-1],n[0])}function w2(){let n=[1,2];f(n[0],n.length)}function w4(){let n=[1,2];f(n[0],n[i])}function w5(){let n=[1,2];f(n[0]),n[0]=1}"],
 			["function w3(){const a=[1,/*c*/2];f(a[0],a[1])}", { format: { comments: "all" } }, "function w3(){let a=[1,/*c*/2];f(a[0],a[1])}"],
 			["function g(){const a=[1,2];x=a[0];f({[a[1]]:1})}", {}, "function g(){x=1,f({[2]:1})}"],
 			["for(;;){if(b)/*c*/continue;y()}", { format: { comments: "all" } }, "for(;;){if(b)/*c*/continue;y()}"],
+			// An exit ending its function's, loop's or label's body goes, but in a `finally`, of an outer loop or before more.
+			["for(x of y){if(false){a();continue}else;b();continue}function f(){if(x)return;if(y)return}function g(){try{a();return}catch(e){b();return}}function h(){try{a()}finally{return}}function i(){l:{a();break l}}l:for(;;){a();continue l}x:for(;;)for(;;){a();continue x}function j(){if(a){b();return}else{c();return}}function k(){if(a()){return}else{return}}function m(){return void 0}do{a()}while(true);for(;;){a();break}function n(){for(;;){a();return}}function*o(){a();return}", {}, "for(x of y)b();function f(){if(x||y)return}function g(){try{a()}catch(n){b()}}function h(){try{a()}finally{return}}function i(){n:a()}n:for(;;)a();n:for(;;)for(;;){a();continue n}function j(){a?b():c()}function k(){a()}function m(){}do{a()}while(1);for(;;){a();break}function n(){for(;;){a();return}}function*o(){a()}"],
+			// An empty `try` runs no `catch`, its `finally` printing in its place; a loop test known goes, true or false.
+			["try{}catch(e){foo()}a();try{}finally{foo();x()}b();try{}catch(e){foo()}finally{bar()}try{}finally{}try{}catch(e){var v}function f(){g();try{}finally{if(a)b()}c()}if(x)try{}finally{y()}try{}finally{let q=f();g(q,q)}for(;true;)foo();for(var i=0;!0;i++)k();while(0)g();for(;false;i++)h();for(;0;)var w=0", {}, "a();foo(),x();b();bar();try{}catch(f){var v}function f(){g();if(a)b();c()}if(x)try{}finally{y()}{let r=f();g(r,r)}for(;;)foo();for(var i=0;;i++)k();for(;0;)var w=0;"],
+			// What runs nothing before a name called goes, and before a member is `0`, but before `eval` or in `with`.
+			["(0,foo)();(0,foo)``;(0,foo)?.();(!0,a.b)();(1,2,a.b)();(0,a.b)();(0,eval)();typeof(0,foo);(x(),foo)``;(function(){},foo)``;(x(),a.b)()", {}, "foo(),foo``,foo?.(),(0,a.b)(),(0,a.b)(),(0,a.b)(),(0,eval)(),typeof(0,foo),(x(),foo)``,foo``,(x(),a.b)();"],
+			["with(o)(0,foo)()", {}, "with(o)(0,foo)();"],
+			["(0,foo)``", { compress: false, mangle: false }, "(0,foo)``;"],
 			// `!` negates an optional chain whole.
 			["function f(){if(t?.has(x))return;y()}for(;;){if(t?.has(x))continue;y()}x=t?.a?!1:y", {}, "function f(){if(!t?.has(x))y()}for(;;){if(!t?.has(x))y()}x=!t?.a&&y;"]
 		];
@@ -2159,7 +2167,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			print("foo(1);a.b.c(2);a.b.d(3);a[b].c(4);(0,foo)(5);", {
 				pure_funcs: ["foo", "a.b.c"]
 			})
-		).toBe("a.b.d(3),a[b].c(4),(0,foo)(5);");
+		).toBe("a.b.d(3),a[b].c(4),foo(5);");
 		expect(print("var x=foo(1);h(x);", { pure_funcs: ["foo"] })).toBe(
 			"var x=foo(1);h(x);"
 		);
@@ -2545,7 +2553,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				"export function a(){return 1;g()}export function b(){if(1)return 7;g()}export function c(){return x;var x}export function d(){return h;function h(){}}export function e(){for(;;){if(a)break;else continue;h()}}"
 			)
 		).toBe(
-			"export function a(){return 1}export function b(){return 7}export function c(){return n;var n}export function d(){return function(){}}export function e(){for(;;){if(a)break;continue}}"
+			"export function a(){return 1}export function b(){return 7}export function c(){return n;var n}export function d(){return function(){}}export function e(){for(;;)if(a)break}"
 		);
 		// A constant passed to a function called once is its parameter's value.
 		expect(

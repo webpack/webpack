@@ -36,7 +36,7 @@ for(var i=(a in b);i;);for(let o of(a,b));for((x=1 in o);;);
 
 function*g(){yield,yield a,yield*b,x=yield c,(yield d)+1}
 
-l:for(;;)continue l;l:;do{x()}while(y);with(o)p;
+l:for(;;);do{x()}while(y);with(o)p;
 
 switch(a){case 1:b();default:c()}switch(x){}try{a}catch{b}finally{c}
 
@@ -148,11 +148,11 @@ a,(()=>a)||b,a||(()=>b),-(()=>a),(()=>a)?b:c,a+(()=>b),f(()=>a),(a=()=>b)?()=>b:
 
 var a=b in c;for(var a=(b in c);;);for((a in b);;);for((a=b in c?1:2);;);for(var a=(()=>b in c);;);for(var a=function(){return b in c};;);for(var x=([b in c]);;);
 
-a?b:c;if(a){if(b)c}else d;if(a)for(;;)b?c:d;if(a)while(b)c?d:e;else f;if(a)e:b?c:d;if(a)do{b}while(c);else d;a?b:c?d:e;if(a)b?c:d;if(a);else;
+a?b:c;if(a){if(b)c}else d;if(a)for(;;)b?c:d;if(a)while(b)c?d:e;else f;if(a)e:b?c:d;if(a)do{b}while(c);else d;a?b:c?d:e;if(a)b?c:d;a;
 
-for(;;);while(a);for(x in y);for(x of y);a:;a:break a;a:for(;;)continue a;switch(a){}switch(a){case 1:case 2:b()}
+for(;;);while(a);for(x in y);for(x of y);a:for(;;)continue a;switch(a){}switch(a){case 1:case 2:b()}
 
-try{a}catch{b}try{a}catch{b}finally{c}try{a}finally{b}try{}catch({a,b}){}throw a;function f(){}
+try{a}catch{b}try{a}catch{b}finally{c}try{a}finally{b}throw a;function f(){}
 
 for(var a in b);for(let[o]of b);for(let{a}of b);for(var i=0,j=1;i<j;i++,j--);for(let o=0;;);for(x.y in z);for([a,b]of c);
 
@@ -289,7 +289,7 @@ for(var i=(a in b);i;);for(let o of(a,b));for((x=1 in o);;);
 
 function*g(){yield,yield a,yield*b,x=yield c,(yield d)+1}
 
-l:for(;;)continue l;l:;do{x()}while(y);with(o)p;
+l:for(;;);do{x()}while(y);with(o)p;
 
 switch(a){case 1:b();default:c()}switch(x){}try{a}catch{b}finally{c}
 
@@ -407,11 +407,11 @@ a,(()=>a)||b,a||(()=>b),-(()=>a),(()=>a)?b:c,a+(()=>b),f(()=>a),(a=()=>b)?()=>b:
 
 var a=b in c;for(var a=(b in c);;);for((a in b);;);for((a=b in c?1:2);;);for(var a=(()=>b in c);;);for(var a=function(){return b in c};;);for(var x=([b in c]);;);
 
-a?b:c;if(a){if(b)c}else d;if(a)for(;;)b?c:d;if(a)while(b)c?d:e;else f;if(a)e:b?c:d;if(a)do{b}while(c);else d;a?b:c?d:e;if(a)b?c:d;if(a);else;
+a?b:c;if(a){if(b)c}else d;if(a)for(;;)b?c:d;if(a)while(b)c?d:e;else f;if(a)e:b?c:d;if(a)do{b}while(c);else d;a?b:c?d:e;if(a)b?c:d;a;
 
-for(;;);while(a);for(x in y);for(x of y);a:;a:break a;a:for(;;)continue a;switch(a){}switch(a){case 1:case 2:b()}
+for(;;);while(a);for(x in y);for(x of y);a:for(;;)continue a;switch(a){}switch(a){case 1:case 2:b()}
 
-try{a}catch{b}try{a}catch(a){b}finally{c}try{a}finally{b}try{}catch({a:a,b:t}){}throw a;function f(){}
+try{a}catch{b}try{a}catch(a){b}finally{c}try{a}finally{b}throw a;function f(){}
 
 for(var a in b);for(let[o]of b);for(let{a:o}of b);for(var i=0,j=1;i<j;i++,j--);for(let o=0;;);for(x.y in z);for([a,b]of c);
 
@@ -548,7 +548,7 @@ for(var i=(a in b);i;);for(let o of(a,b));for((x=1 in o);;);
 
 function*g(){yield,yield a,yield*b,x=yield c,(yield d)+1}
 
-l:for(;;)continue l;l:;do{x()}while(y);with(o)p;
+l:for(;;);do{x()}while(y);with(o)p;
 
 switch(a){case 1:b();default:c()}switch(x){}try{a}catch{b}finally{c}
 
@@ -660,11 +660,11 @@ a,(()=>a)||b,a||(()=>b),-(()=>a),(()=>a)?b:c,a+(()=>b),f(()=>a),(a=()=>b)?()=>b:
 
 var a=b in c;for(var a=(b in c);;);for((a in b);;);for((a=b in c?1:2);;);for(var a=(()=>b in c);;);for(var a=function(){return b in c};;);for(var x=([b in c]);;);
 
-a?b:c;if(a){if(b)c}else d;if(a)for(;;)b?c:d;if(a)while(b)c?d:e;else f;if(a)e:b?c:d;if(a)do{b}while(c);else d;a?b:c?d:e;if(a)b?c:d;if(a);else;
+a?b:c;if(a){if(b)c}else d;if(a)for(;;)b?c:d;if(a)while(b)c?d:e;else f;if(a)e:b?c:d;if(a)do{b}while(c);else d;a?b:c?d:e;if(a)b?c:d;a;
 
-for(;;);while(a);for(x in y);for(x of y);a:;a:break a;a:for(;;)continue a;switch(a){}switch(a){case 1:case 2:b()}
+for(;;);while(a);for(x in y);for(x of y);a:for(;;)continue a;switch(a){}switch(a){case 1:case 2:b()}
 
-try{a}catch{b}try{a}catch(a){b}finally{c}try{a}finally{b}try{}catch({a:a,b:t}){}throw a;function f(){}
+try{a}catch{b}try{a}catch(a){b}finally{c}try{a}finally{b}throw a;function f(){}
 
 for(var a in b);for(let[o]of b);for(let{a:o}of b);for(var i=0,j=1;i<j;i++,j--);for(let o=0;;);for(x.y in z);for([a,b]of c);
 
@@ -801,7 +801,7 @@ for(var i=(a in b);i;);for(let k of(a,b));for((x=1 in o);;);
 
 function*g(){yield,yield a,yield*b,x=yield c,(yield d)+1}
 
-label:for(;;)continue label;lbl:;do{x()}while(y);with(o)p;
+label:for(;;);do{x()}while(y);with(o)p;
 
 switch(a){case 1:b();default:c()}switch(x){}try{a}catch{b}finally{c}
 
@@ -919,11 +919,11 @@ a,(()=>a)||b,a||(()=>b),-(()=>a),(()=>a)?b:c,a+(()=>b),f(()=>a),(a=()=>b)?()=>b:
 
 var a=b in c;for(var a=(b in c);;);for((a in b);;);for((a=b in c?1:2);;);for(var a=(()=>b in c);;);for(var a=function(){return b in c};;);for(var x=([b in c]);;);
 
-a?b:c;if(a){if(b)c}else d;if(a)for(;;)b?c:d;if(a)while(b)c?d:e;else f;if(a)label:b?c:d;if(a)do{b}while(c);else d;a?b:c?d:e;if(a)b?c:d;if(a);else;
+a?b:c;if(a){if(b)c}else d;if(a)for(;;)b?c:d;if(a)while(b)c?d:e;else f;if(a)label:b?c:d;if(a)do{b}while(c);else d;a?b:c?d:e;if(a)b?c:d;a;
 
-for(;;);while(a);for(x in y);for(x of y);a:;b:break b;c:for(;;)continue c;switch(a){}switch(a){case 1:case 2:b()}
+for(;;);while(a);for(x in y);for(x of y);c:for(;;)continue c;switch(a){}switch(a){case 1:case 2:b()}
 
-try{a}catch{b}try{a}catch(e){b}finally{c}try{a}finally{b}try{}catch({a,\\"b\\":c}){}throw a;function f(){}
+try{a}catch{b}try{a}catch(e){b}finally{c}try{a}finally{b}throw a;function f(){}
 
 for(var a in b);for(let[a]of b);for(let{a}of b);for(var i=0,j=1;i<j;i++,j--);for(let i=0;;);for(x.y in z);for([a,b]of c);
 
@@ -1097,8 +1097,7 @@ for(var i=(a in b);i;);for(let o of(a,b));for((x=1 in o);;);
 function*g(){yield,yield a,yield*b,x=yield c,(yield d)+1}
 
 /* p */
-l:for(;;)continue l
-l:;do{x()}while(y)
+l:for(;;);do{x()}while(y)
 with(o)p
 
 
@@ -1347,15 +1346,15 @@ if(a)e:b?c:d
 if(a){do{b}while(c)}else d
 a?b:c?d:e
 if(a)b?c:d
-if(a);else;
+a
+
 
 /* p */
-for(;;);while(a);for(x in y);for(x of y);a:;a:break a
-a:for(;;)continue a
+for(;;);while(a);for(x in y);for(x of y);a:for(;;)continue a
 switch(a){}switch(a){case 1:case 2:b()}
 
 /* p */
-try{a}catch{b}try{a}catch(a){b}finally{c}try{a}finally{b}try{}catch({a:a,b:t}){}throw a
+try{a}catch{b}try{a}catch(a){b}finally{c}try{a}finally{b}throw a
 function f(){}
 
 /* p */
@@ -1945,7 +1944,7 @@ Array [
 ]
 `;
 
-exports[`one-pass minify of statement sequences should print the known \`switch\`, spread and unary values of the config cases: minify-known-switch 1`] = `"function e(e){e.push(\\"square\\"),e.push(\\"falls through\\");return e}function t(e){e.push(\\"default\\"),e.push(\\"one\\");return e}function o(){{let e=Math.random()<2?\\"block\\":\\"never\\";return e}}function l(e,t){{let t=\\"inner\\";e.push(t)}return e.push(t),e}function a(e,t){if(t);else e.push(\\"else\\");return e}function u(e){e:switch(1){case 1:e.push(\\"one\\");break e;default:e.push(\\"default\\")}return e}function s(e,t){if(!t)e.push(\\"a\\"),e.push(\\"b\\")}function n(e,t){if(t)return}function r(e,t){switch(1){case t():e.push(\\"at\\");break;case 1:e.push(\\"one\\")}return e}function c(e,t){switch(1){case 1:if(t)break;e.push(\\"after\\");break;default:e.push(\\"default\\")}return e}function h(e){switch(1){case 0:var t=\\"set\\";case 1:e.push(typeof t)}return e}it(\\"should print the statements a \`switch\` on a known value runs\\",()=>{expect(e([])).toEqual([\\"square\\",\\"falls through\\"]),expect(t([])).toEqual([\\"default\\",\\"one\\"]),expect(o()).toBe(\\"block\\"),expect(l([],\\"outer\\")).toEqual([\\"inner\\",\\"outer\\"]),expect(l([],\\"other\\")).toEqual([\\"inner\\",\\"other\\"])}),it(\\"should keep a \`switch\` whose path is not known or whose dropped cases declare\\",()=>{var e=[];s(e,!0),s(e,!1),n(e,!0),n(e,!1),expect(e).toEqual([\\"a\\",\\"b\\"]),expect(a([],!0)).toEqual([]),expect(a([],!1)).toEqual([\\"else\\"]),expect(u([])).toEqual([\\"one\\"]),expect(r([],()=>1)).toEqual([\\"at\\"]),expect(c([],!0)).toEqual([]),expect(c([],!1)).toEqual([\\"after\\"]),expect(h([])).toEqual([\\"undefined\\"])});"`;
+exports[`one-pass minify of statement sequences should print the known \`switch\`, spread and unary values of the config cases: minify-known-switch 1`] = `"function e(e){e.push(\\"square\\"),e.push(\\"falls through\\");return e}function t(e){e.push(\\"default\\"),e.push(\\"one\\");return e}function o(){{let e=Math.random()<2?\\"block\\":\\"never\\";return e}}function l(e,t){{let t=\\"inner\\";e.push(t)}return e.push(t),e}function a(e,t){if(t);else e.push(\\"else\\");return e}function u(e){e:switch(1){case 1:e.push(\\"one\\");break e;default:e.push(\\"default\\")}return e}function s(e,t){if(!t)e.push(\\"a\\"),e.push(\\"b\\")}function n(e,t){t}function r(e,t){switch(1){case t():e.push(\\"at\\");break;case 1:e.push(\\"one\\")}return e}function c(e,t){switch(1){case 1:if(t)break;e.push(\\"after\\");break;default:e.push(\\"default\\")}return e}function h(e){switch(1){case 0:var t=\\"set\\";case 1:e.push(typeof t)}return e}it(\\"should print the statements a \`switch\` on a known value runs\\",()=>{expect(e([])).toEqual([\\"square\\",\\"falls through\\"]),expect(t([])).toEqual([\\"default\\",\\"one\\"]),expect(o()).toBe(\\"block\\"),expect(l([],\\"outer\\")).toEqual([\\"inner\\",\\"outer\\"]),expect(l([],\\"other\\")).toEqual([\\"inner\\",\\"other\\"])}),it(\\"should keep a \`switch\` whose path is not known or whose dropped cases declare\\",()=>{var e=[];s(e,!0),s(e,!1),n(e,!0),n(e,!1),expect(e).toEqual([\\"a\\",\\"b\\"]),expect(a([],!0)).toEqual([]),expect(a([],!1)).toEqual([\\"else\\"]),expect(u([])).toEqual([\\"one\\"]),expect(r([],()=>1)).toEqual([\\"at\\"]),expect(c([],!0)).toEqual([]),expect(c([],!1)).toEqual([\\"after\\"]),expect(h([])).toEqual([\\"undefined\\"])});"`;
 
 exports[`one-pass minify of statement sequences should print the known \`switch\`, spread and unary values of the config cases: minify-literal-spread 1`] = `"function e(){return Array.prototype.slice.call(arguments)}function t(){this.items=Array.prototype.slice.call(arguments)}it(\\"should print what a spread literal holds in its place\\",()=>{expect([1,2,3]).toEqual([1,2,3]),expect({a:1,b:2,c:3}).toEqual({a:1,b:2,c:3}),expect({a:1,a:2}).toEqual({a:2}),expect(e(4,5)).toEqual([4,5]),expect(new t(6).items).toEqual([6])}),it(\\"should keep a hole a spread printing nothing follows\\",()=>{expect([1,,].length).toBe(2),expect([,].length).toBe(1)}),it(\\"should run what a spread holds where only the arguments of a call run\\",()=>{let e=[];[e.push(\\"a\\"),e.push(\\"b\\")],expect(e).toEqual([\\"a\\",\\"b\\"])}),it(\\"should drop a spread primitive, which copies nothing\\",()=>{expect({a:1}).toEqual({a:1})}),it(\\"should keep a spread whose items would read otherwise inlined\\",()=>{let e=[1,...[2,,3]];expect(1 in e).toBe(!0),expect(2 in e).toBe(!0);let t=0,l={...{get value(){return t++,t}}};expect(Object.getOwnPropertyDescriptor(l,\\"value\\").value).toBe(1),expect(Object.getPrototypeOf({...{__proto__:null}})).toBe(Object.prototype),expect({...\\"ab\\"}).toEqual({0:\\"a\\",1:\\"b\\"})});"`;
 
