@@ -1582,6 +1582,8 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["console.log((function(x,y,z){return 123})());console.log(function(x,y,z){return z}());console.log(function(x){return 6}(a));function q(b){console.log(function(x,y){return x}(b))}console.log(function(x){return arguments.length}())", {}, "console.log(123),console.log(function(n,o,t){return t}()),console.log(function(n){return 6}(a));function q(n){console.log(n)}console.log(function(n){return arguments.length}());"],
 			// A logical expression a known left side folds to a name called prints the name, but not `eval`, a member or one `typeof` reads.
 			["x=null??y;(null??f)();(null??x.y)();(1&&f)();(0||x.y)``;(null??eval)(\"x\");typeof(null??q);(0||g)``", {}, "x=y,f(),(null??x.y)(),f(),(0||x.y)``,(null??eval)(\"x\"),null??q,(g)``;"],
+			// A function running nothing called runs only its arguments where nobody reads the call.
+			["(function(){})(a(),b());(()=>{})(c());x=(function(){})(a())", {}, "a(),b(),c(),x=function(){}(a());"],
 			// `!` negates an optional chain whole.
 			["function f(){if(t?.has(x))return;y()}for(;;){if(t?.has(x))continue;y()}x=t?.a?!1:y", {}, "function f(){if(!t?.has(x))y()}for(;;){if(!t?.has(x))y()}x=!t?.a&&y;"]
 		];
@@ -2588,7 +2590,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				"(function(){})(a(),b());x(),(()=>{})(...a),y();if(c)(function(a){})(...a);else d();z=(function(){})(a());(function({a}){})(b);(function(a=g()){})(b);(async function(){})(b)"
 			)
 		).toBe(
-			"[a(),b()],x(),[...a],y(),c?[...a]:d(),z=function(){}(a()),function({a:n}){}(b),function(n=g()){}(b),async function(){}(b);"
+			"a(),b(),x(),[...a],y(),c?[...a]:d(),z=function(){}(a()),function({a:n}){}(b),function(n=g()){}(b),async function(){}(b);"
 		);
 		// Branches printing alike print once, after the test where it runs anything.
 		expect(
