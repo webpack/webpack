@@ -74,7 +74,7 @@ function f(){return a+b}function g(){throw Error()}h(/*! a */x,y);
 
 ({}=a);if(a)function f(){}c;
 
-(o={if:1,class:2,\\"a-b\\":3,1:4,\\"01\\":5,\\" \\":7}).if,o[\`a-b\`],o[\`1\`];
+(o={if:1,class:2,\\"a-b\\":3,1:4,\\"01\\":5,\\" \\":7}).if,o[\`a-b\`],o[1];
 
 x=f(),y=(b,c),z=g(h);
 
@@ -328,7 +328,7 @@ return a+b}function g(){/*x*/throw Error()}h(/*! a */x,/* b */y);
 
 ({}=a);if(a)function f(){}c;
 
-(o={if:1,class:2,\\"a-b\\":3,1:4,\\"01\\":5,\\" \\":7}).if,o[\\"a-b\\"],o[\\"1\\"];
+(o={if:1,class:2,\\"a-b\\":3,1:4,\\"01\\":5,\\" \\":7}).if,o[\\"a-b\\"],o[1];
 
 x=f();y=(/* a */b,c/* d */);z=/* e */g/* f */(h);
 
@@ -586,7 +586,7 @@ function f(){return a+b}function g(){throw Error()}h(/*! a */x,y);
 
 ({}=a);if(a)function f(){}c;
 
-(o={if:1,class:2,\\"a-b\\":3,1:4,\\"01\\":5,\\" \\":7}).if,o[\\"a-b\\"],o[\\"1\\"];
+(o={if:1,class:2,\\"a-b\\":3,1:4,\\"01\\":5,\\" \\":7}).if,o[\\"a-b\\"],o[1];
 
 x=f(),y=(b,c),z=g(h);
 
@@ -840,7 +840,7 @@ return a+b}function g(){/*x*/throw Error()}h(/*! a */x,/* b */y);
 
 ({}=a);if(a)function f(){}c;
 
-(o={if:1,class:2,'a-b':3,1:4,'01':5,' ':7}).if,o['a-b'],o['1'];
+(o={if:1,class:2,'a-b':3,1:4,'01':5,' ':7}).if,o['a-b'],o[1];
 
 x=f();y=(/* a */b,c/* d */);z=/* e */g/* f */(h);
 
@@ -1180,7 +1180,7 @@ if(a)function f(){}c
 
 
 /* p */
-(o={\\"if\\":1,\\"class\\":2,\\"a-b\\":3,1:4,\\"01\\":5,\\" \\":7})[\\"if\\"],o[\\"a-b\\"],o[\\"1\\"]
+(o={\\"if\\":1,\\"class\\":2,\\"a-b\\":3,1:4,\\"01\\":5,\\" \\":7})[\\"if\\"],o[\\"a-b\\"],o[1]
 
 
 /* p */
