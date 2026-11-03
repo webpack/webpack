@@ -60,7 +60,7 @@ jobs:
               core.info(`No open pull request is at ${run.head_sha}, skipping.`);
               return;
             }
-            const runs = await findReportRuns({ github, context, headSha: run.head_sha });
+            const runs = await findReportRuns({ github, context, run });
             core.setOutput("pull", String(pull.number));
             core.setOutput("runs", JSON.stringify(runs));
             for (const [key, reportRun] of Object.entries(runs)) {

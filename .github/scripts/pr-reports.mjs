@@ -83,24 +83,30 @@ export async function findPullRequest({ github, context, run }) {
 }
 
 /**
- * Finds the latest pull request run of every report workflow for `headSha`.
- * @param {{ github: EXPECTED_ANY, context: EXPECTED_ANY, headSha: string }} params params
+ * Finds the latest pull request run of every report workflow for the head `run` measured.
+ * @param {{ github: EXPECTED_ANY, context: EXPECTED_ANY, run: EXPECTED_ANY }} params params
  * @returns {Promise<Record<string, EXPECTED_ANY>>} the run of each report source by key; a workflow that never ran for the commit is missing
  */
-export async function findReportRuns({ github, context, headSha }) {
+export async function findReportRuns({ github, context, run }) {
 	/** @type {Record<string, EXPECTED_ANY>} */
 	const runs = {};
 	for (const source of REPORT_SOURCES) {
 		const { data } = await github.rest.actions.listWorkflowRuns({
 			...context.repo,
 			workflow_id: source.workflow,
-			head_sha: headSha,
+			head_sha: run.head_sha,
 			event: "pull_request",
-			per_page: 1
+			per_page: 100
 		});
-		if (data.workflow_runs.length === 0) continue;
-		const { id, name, run_number, html_url, status, conclusion } =
-			data.workflow_runs[0];
+		// Another pull request can share the commit, e.g. a fork of the same branch.
+		const reportRun = data.workflow_runs.find(
+			(/** @type {EXPECTED_ANY} */ candidate) =>
+				candidate.head_branch === run.head_branch &&
+				candidate.head_repository &&
+				candidate.head_repository.id === run.head_repository.id
+		);
+		if (!reportRun) continue;
+		const { id, name, run_number, html_url, status, conclusion } = reportRun;
 		runs[source.key] = { id, name, run_number, html_url, status, conclusion };
 	}
 	return runs;
