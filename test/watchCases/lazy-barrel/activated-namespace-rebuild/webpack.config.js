@@ -6,7 +6,7 @@ const path = require("path");
 /** @type {import("../../../../types").Configuration[]} */
 module.exports = [false, true].map((unsafeCache) => ({
 	module: { unsafeCache, rules: [{ test: /\.js$/, sideEffects: false }] },
-	optimization: { providedExports: true, usedExports: true },
+	optimization: { providedExports: true },
 	plugins: [
 		(compiler) => {
 			compiler.hooks.finishMake.tapAsync(
