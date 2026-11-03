@@ -1565,7 +1565,6 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc drops more unused expressions, as oxc's `peephole/remove_unused_expression.rs` tests show",
 		[
-			"oxc minifier: peephole/remove_unused_expression.rs:1169",
 			"oxc minifier: peephole/remove_unused_expression.rs:31",
 			"oxc minifier: peephole/remove_unused_expression.rs:50",
 			"oxc minifier: peephole/remove_unused_expression.rs:51",
@@ -1828,7 +1827,6 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc substitutes shorter syntax, as oxc's `peephole/substitute_alternate_syntax.rs` tests show",
 		[
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:136",
 			"oxc minifier: peephole/substitute_alternate_syntax.rs:165",
 			"oxc minifier: peephole/substitute_alternate_syntax.rs:166",
 			"oxc minifier: peephole/substitute_alternate_syntax.rs:169",
@@ -1874,11 +1872,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/substitute_alternate_syntax.rs:282",
 			"oxc minifier: peephole/substitute_alternate_syntax.rs:283",
 			"oxc minifier: peephole/substitute_alternate_syntax.rs:285",
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:383",
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:387",
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:391",
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:397",
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:401",
 			"oxc minifier: peephole/substitute_alternate_syntax.rs:415",
 			"oxc minifier: peephole/substitute_alternate_syntax.rs:419",
 			"oxc minifier: peephole/substitute_alternate_syntax.rs:420",
@@ -2865,7 +2858,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/obscure_edge_cases.rs:153",
 			"oxc minifier: peephole/obscure_edge_cases.rs:154",
 			"oxc minifier: peephole/obscure_edge_cases.rs:179",
-			"oxc minifier: peephole/obscure_edge_cases.rs:229",
 			"oxc minifier: peephole/obscure_edge_cases.rs:265",
 			"oxc minifier: peephole/obscure_edge_cases.rs:366",
 			"oxc minifier: peephole/obscure_edge_cases.rs:367",

@@ -1581,13 +1581,6 @@ const EXPECTED = [
 	},
 	{
 		relation: "idempotence",
-		contains: "var ",
-		source: ["ECharts", "Babel 8"],
-		presets: ["default"],
-		why: "terser breaks the line after a comment only where it compresses, so a print-only reprint joins them"
-	},
-	{
-		relation: "idempotence",
 		contains: "{return",
 		source: "test/statsCases/track-returned/index.js",
 		presets: ["default"],

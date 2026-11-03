@@ -1329,7 +1329,9 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// An assignment of the name its value reads first prints compound.
 			["function f(x){x=x+1;g(x)}", {}, "function f(x){g(x+=1)}"],
 			["function f(x){x=x>>>g();h(x)}", {}, "function f(x){h(x>>>=g())}"],
-			["function f(x){x=x-(a-b);h(x)}", {}, "function f(x){h(x-=(a-b))}"],
+			["function f(x){x=x-(a-b);h(x)}", {}, "function f(x){h(x-=a-b)}"],
+			// The parentheses only the operator needed go with it; a sequence or a call keeps them.
+			["function f(e,t,x){e.name=e.name+(t-1);x=x*(a+b);x=x+(c?1:2);x=x+(y=2);x=x|(a||b);x=x+(a*b);x=x+(a,b);x=x+(f||g)(1);x=x+/*k*/(a-b);h(x)}function*g(x){x=x+(yield);h(x)}", {}, "function f(x,e,n){x.name+=e-1,n*=a+b,n+=c?1:2,n+=y=2,n|=a||b,n+=a*b,n+=(a,b),n+=(f||g)(1),h(n+=a-b)}function*g(x){h(x+=yield)}"],
 			["function f(x){x=y+x;h(x)}", {}, "function f(x){h(x=y+x)}"],
 			// A member of `this` or of a declared name, read again in its value, is set by `op=`; a global, a computed key, `with` or `?.` keeps it.
 			["function f(o){o.p=o.p+1}", {}, "function f(o){o.p+=1}"],
