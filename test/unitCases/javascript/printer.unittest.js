@@ -1608,6 +1608,8 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["while(x){if(y)continue;z();w()}function f(){if(x)return;a();if(y)return;b();c()}function n(){if(x)return;a();for(;;)b()}function m(){if(x)return;a();class K{}b(K)}function p(){if(x)return;a();;b()}", {}, "while(x)if(!y)z(),w();function f(){if(!x){a();if(!y)b(),c()}}function n(){if(!x){a();for(;;)b()}}function m(){if(x)return;a();class n{}b(n)}function p(){if(!x)a(),b()}"],
 			// A loop's body printing as one statement drops its braces, its last statement owing the `;` the brace took.
 			["while(x){if(y)continue;z();w()}g();for(;;){if(y)continue;z();if(q)continue;w();v()}g();for(;;){if(y)continue;z();a={}}g();if(a)for(;;){if(y)continue;z();w()}else q();for(;;){}", {}, "while(x)if(!y)z(),w();g();for(;;)if(!y){z();if(!q)w(),v()}g();for(;;)if(!y)z(),a={};g();if(a)for(;;){if(!y)z(),w()}else q();for(;;);"],
+			// A `do` body ending in a `break` runs once where the loop was, its test never.
+			["do{foo();break}while(0);do{break}while(!new Date());do{foo();break}while(x());if(a)do{f();g();break}while(x);else h();for(;;)do{break}while(x);do{let q=f(),r=g();h(q,r,q,r);break}while(x);do{a={};break}while(x);do{for(;;){}break}while(x);do{if(a)break;f();break}while(x)", {}, "foo();foo();if(a){f(),g()}else h();for(;;);{let e=f(),o=g();h(e,o,e,o)}a={};for(;;);do{if(a)break;f();break}while(x);"],
 			// `!` negates an optional chain whole.
 			["function f(){if(t?.has(x))return;y()}for(;;){if(t?.has(x))continue;y()}x=t?.a?!1:y", {}, "function f(){if(!t?.has(x))y()}for(;;){if(!t?.has(x))y()}x=!t?.a&&y;"]
 		];
@@ -4122,7 +4124,7 @@ describe("one-pass minify of statement sequences", () => {
 		const cases = [
 			[
 				"function s(x){switch(1){case 1:{for(;;)break;while(x)break;do{break}while(x);for(k in x)break;for(k of x)break;switch(x){case 2:break}(function(){});(()=>{});class C{};x()}break}}",
-				"function s(e){for(;;)break;e;do{break}while(e);for(k in e)break;for(k of e)break;e()}"
+				"function s(e){for(;;)break;e;for(k in e)break;for(k of e)break;e()}"
 			],
 			["function s(x){switch(1){case 1:return x;case 2:y()}}", "function s(c){return c}"],
 			// Running nothing, or what prints as one sequence.
