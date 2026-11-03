@@ -18725,6 +18725,10 @@ declare interface LStatSync {
 	): undefined | IBigIntStatsFs;
 	(
 		path: PathLikeFs,
+		options: StatSyncOptions & { bigint: boolean; throwIfNoEntry?: undefined }
+	): IStatsFs | IBigIntStatsFs;
+	(
+		path: PathLikeFs,
 		options?: StatSyncOptions
 	): undefined | IStatsFs | IBigIntStatsFs;
 }
@@ -32536,6 +32540,10 @@ declare interface StatSync {
 		path: PathLikeFs,
 		options: StatSyncOptions & { bigint: true; throwIfNoEntry: false }
 	): undefined | IBigIntStatsFs;
+	(
+		path: PathLikeFs,
+		options: StatSyncOptions & { bigint: boolean; throwIfNoEntry?: undefined }
+	): IStatsFs | IBigIntStatsFs;
 	(
 		path: PathLikeFs,
 		options?: StatSyncOptions
