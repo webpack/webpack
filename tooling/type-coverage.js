@@ -12,7 +12,22 @@ const fs = require("fs");
 const path = require("path");
 const ts = require("typescript");
 const { base, baseAny, root } = require("./argv");
+
 const createTypeScriptProgram = require("./typescript-program");
+
+/**
+ * Tells whether a printed type uses `any` as a type. The word also shows up
+ * where it is no type at all: inside a string literal type, and as the name of
+ * a parameter or property, such as `(any: SourceBucket) => ...`.
+ * @param {string} typeText printed type
+ * @returns {boolean} true when `any` appears as a type
+ */
+const mentionsAny = (typeText) =>
+	/\bany\b/.test(
+		typeText
+			.replace(/"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|`(?:[^`\\]|\\.)*`/g, '""')
+			.replace(/\bany\??:/g, "_:")
+	);
 
 // `hot/` is a project of its own, so its files reach only that program.
 /** @type {[ts.SourceFile, ts.TypeChecker][]} */
@@ -517,7 +532,7 @@ for (const [sourceFile, typeChecker] of sourceFiles) {
 					// Ignore where `let x;` is declared or assigned, its reads are narrowed
 					isEvolvingLetWrite(node) ||
 					// Should be not `any` and don't include `any` in types
-					(!(type.flags & ts.TypeFlags.Any) && !/\bany\b/.test(typeText));
+					(!(type.flags & ts.TypeFlags.Any) && !mentionsAny(typeText));
 
 				rep.statementMap[statementIndex] = {
 					start: {
