@@ -38,7 +38,7 @@ function*g(){yield,yield a,yield*b,x=yield c,(yield d)+1}
 
 l:for(;;);do{x()}while(y);with(o)p;
 
-switch(a){case 1:b();default:c()}x;try{a}catch{b}finally{c}
+if(a===1)b();c();x;try{a}catch{b}finally{c}
 
 if(a){if(b)c}else d;if(a)for(;;)b?c:d;
 
@@ -291,7 +291,7 @@ function*g(){yield,yield a,yield*b,x=yield c,(yield d)+1}
 
 l:for(;;);do{x()}while(y);with(o)p;
 
-switch(a){case 1:b();default:c()}x;try{a}catch{b}finally{c}
+if(a===1)b();c();x;try{a}catch{b}finally{c}
 
 if(a){if(b)c}else d;if(a)for(;;)b?c:d;
 
@@ -550,7 +550,7 @@ function*g(){yield,yield a,yield*b,x=yield c,(yield d)+1}
 
 l:for(;;);do{x()}while(y);with(o)p;
 
-switch(a){case 1:b();default:c()}x;try{a}catch{b}finally{c}
+if(a===1)b();c();x;try{a}catch{b}finally{c}
 
 if(a){if(b)c}else d;if(a)for(;;)b?c:d;
 
@@ -803,7 +803,7 @@ function*g(){yield,yield a,yield*b,x=yield c,(yield d)+1}
 
 label:for(;;);do{x()}while(y);with(o)p;
 
-switch(a){case 1:b();default:c()}x;try{a}catch{b}finally{c}
+if(a===1)b();c();x;try{a}catch{b}finally{c}
 
 if(a){if(b)c}else d;if(a)for(;;)b?c:d;
 
@@ -1102,8 +1102,9 @@ with(o)p
 
 
 /* p */
-switch(a){case 1:b()
-default:c()}x
+if(a===1)b()
+c()
+x
 try{a}catch{b}finally{c}
 
 /* p */

@@ -1406,10 +1406,10 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["function f(){switch(a){case 1:b();c()}}", {}, "function f(){if(a===1){b();c()}}"],
 			["function f(){switch(a){case 1:return b}}", {}, "function f(){if(a===1)return b}"],
 			["function f(){switch(a){case 1:b();break;default:}}", {}, "function f(){if(a===1)b()}"],
-			["function f(){switch(a){case 1:b();break;default:c()}}", {}, "function f(){switch(a){case 1:b();break;default:c()}}"],
+			["function f(){switch(a){case 1:b();break;default:c()}}", {}, "function f(){if(a===1)b();else c()}"],
 			["function f(){switch(a+b){case 1:b()}}", {}, "function f(){switch(a+b){case 1:b()}}"],
 			["function f(){switch(a){case b?1:2:c()}}", {}, "function f(){switch(a){case b?1:2:c()}}"],
-			["function f(){if(c){switch(d){case 1:if(a)b()}}else e()}", {}, "function f(){if(c){if(d===1){if(a)b()}}else e()}"],
+			["function f(){if(c){switch(d){case 1:if(a)b()}}else e()}", {}, "function f(){if(c){if(d===1)if(a)b()}else e()}"],
 			["function f(){if(c){switch(d){case 1:b()}}else e()}", {}, "function f(){if(c){if(d===1)b()}else e()}"],
 			["function f(){for(;;){switch(d){case 1:continue}}}", {}, "function f(){for(;;)if(d===1)continue}"],
 			["function f(){l:switch(d){case 1:x();break l}}", {}, "function f(){c:switch(d){case 1:x();break c}}"],
@@ -1419,7 +1419,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["function f(){switch(d){case 1:}}", {}, "function f(){d}"],
 			["function f(){switch(-x){case typeof y:g()}}", {}, "function f(){if(-x===typeof y)g()}"],
 			["switch(a){case 1:var x=1}console.log(x)", {}, "if(a===1){var x=1}console.log(x);"],
-			["function f(){switch(d){case 1:if(a)b();else c()}}", {}, "function f(){if(d===1){a?b():c()}}"],
+			["function f(){switch(d){case 1:if(a)b();else c()}}", {}, "function f(){if(d===1)a?b():c()}"],
 			["function f(){switch(d){case 1:{let x=g();h(x)}}}", {}, "function f(){if(d===1){h(g())}}"],
 			["function f(){switch(d){case 1:function q(){}q()}}", {}, "function f(){switch(d){case 1:function c(){}c()}}"],
 			["function f(){for(;;)switch(d){case 1:continue}}", {}, "function f(){for(;;)switch(d){case 1:continue}}"],
@@ -1438,7 +1438,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["if(c)switch(d){case 1:x()}else y()", {}, "if(c)switch(d){case 1:x()}else y();"],
 			["if(p){if(c)switch(d){case 1:x()}}else z()", {}, "if(p){if(c)if(d===1)x()}else z();"],
 			["switch(b){case 2:switch(a){case 2:foo();break;case 3:g()}}", {}, "if(b===2)switch(a){case 2:foo();break;case 3:g()}"],
-			["if(c)switch(d){case 1:if(a)b()}", {}, "if(c)if(d===1){if(a)b()}"],
+			["if(c)switch(d){case 1:if(a)b()}", {}, "if(c)if(d===1)if(a)b();"],
 			["x=n?true:true;y=a()?false:false", {}, "x=(n,!0),y=(a(),!1);"],
 			["function f(n,b=n?!0:!0){return n?!1:!1}", {}, "function f(n,f=!0){return!1}"],
 			["if(n?1:1)f();while(n?x:x);do;while(n?x:x);switch(n?x:x){case 1:f();break;case 2:g()}", {}, "if(n,1)f();while(n,x);do{}while(n,x);switch(n,x){case 1:f();break;case 2:g()}"],
@@ -1508,7 +1508,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["function g(){const a=[1,2];(a[0])=3;f(a[0],a[1])}function h(){const a=[1,2];(a[0])++;f(a[0])}", { mangle: false }, "function g(){let a=[1,2];a[0]=3,f(a[0],a[1])}function h(){let a=[1,2];a[0]++,f(a[0])}"],
 			["function g(){const a=[1,2];f(a[0],a[1])}", { mangle: false, compress: { toplevel: false, unused: false } }, "function g(){let a=[1,2];f(a[0],a[1])}"],
 			// A case ending a `switch` that runs nothing stays where a `default` before it would take its value.
-			["switch(a){default:b();case 0:break}switch(a){case 0:break;default:b();case 1:}switch(a){default:b();break;case 1:}", {}, "switch(a){default:b();case 0:}switch(a){case 0:break;default:b();case 1:}switch(a){default:b();case 1:}"],
+			["switch(a){default:b();case 0:break}switch(a){case 0:break;default:b();case 1:}switch(a){default:b();break;case 1:}", {}, "if(a!==0)b();switch(a){case 0:break;default:b();case 1:}if(a!==1)b();"],
 			// What runs nothing before a callee goes but one `0`, which a bare `eval` keeps to read no scope; a function or class takes no `this`.
 			["(0,1,eval)(),(0,1,f)(),(0,eval)()", {}, "(0,eval)(),f(),(0,eval)();"],
 			["function g(a){(a,function(){h(this)})(),x=(a,function(){})(),new(a,function(){})(1),new(a,class{})}", { mangle: false }, "function g(a){(function(){h(this)})(),x=function(){}(),new function(){}(1),new class{}}"],
@@ -1570,6 +1570,8 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["a||0;a&&0;a??0;f()||1,g();x=a||0;(a,b)||0;(function(){})||0;a()||b||0;(function(){}).call()||0", {}, "a,a,a,f(),g(),x=a||0,(a,b),a()||b;(function(){}).call();"],
 			// A `break` before cases running nothing does nothing, a test matched skipping the rest.
 			["switch(foo){case\"bar\":bar();break;case\"moo\":case moo:case\"baz\":break}switch(a){case 1:b();break;case 2:c();break;case 3:}switch(a){case 1:b();break;default:break;case g():}switch(a){case 1:b();break;/*! c */case g():}", {}, "switch(foo){case\"bar\":bar();case\"moo\":case moo:}switch(a){case 1:b();break;case 2:c()}switch(a){case 1:b();default:case g():}switch(a){case 1:b();break;/*! c */case g():}"],
+			// terser's `switches` of one case and a `default`: `if…else` after a `break`, the other after where one falls into it, in a list, its block keeping braces.
+			["switch(a){case 1:b();break;default:c()}switch(a){case 1:b();default:c()}switch(a){default:c();break;case 1:b()}switch(a){default:c();case 1:b()}switch(a){default:b();break;case 1:}switch(a){case 1:break;default:b()}switch(a){case 1:b();break;default:if(y)z()}w();switch(a){case 1:if(y)z();break;default:w()}switch(a){case 1:{let q=g();f(q,q)}break;default:h()}switch(a){case 1:f();if(x)break;g();break;default:h()}for(;;)switch(a){case 1:f();break;default:g()}if(x){switch(a){case 1:f();default:g()}}else h();switch(a){/*! c */case 1:b();break;default:c()}switch(b()){case 1:c();break;default:d()}switch(a){case f():c();break;default:d()}", {}, "if(a===1)b();else c();if(a===1)b();c();if(a===1)b();else c();if(a!==1)c();b();if(a!==1)b();if(a!==1)b();if(a===1)b();else if(y)z();w();if(a===1){if(y)z()}else w();if(a===1){{let a=g();f(a,a)}}else h();switch(a){case 1:f();if(x)break;g();break;default:h()}for(;;)switch(a){case 1:f();break;default:g()}if(x){if(a===1)f();g()}else h();switch(a){/*! c */case 1:b();break;default:c()}if(b()===1)c();else d();if(a===f())c();else d();"],
 			// `!` negates an optional chain whole.
 			["function f(){if(t?.has(x))return;y()}for(;;){if(t?.has(x))continue;y()}x=t?.a?!1:y", {}, "function f(){if(!t?.has(x))y()}for(;;){if(!t?.has(x))y()}x=!t?.a&&y;"]
 		];
@@ -3408,7 +3410,7 @@ describe("JavaScript SourceProcessor printing", () => {
 
 	it("should beautify: each statement, member and case on a line of its own", () => {
 		const source =
-			"function f(a,b){if(a){return b in a}for(;;)x()} class A{m(){}} switch(x){case 1:y();break;default:z()} const o={a:1,b:[2,3]};";
+			"function f(a,b){if(a){return b in a}for(;;)x()} class A{m(){}} switch(x){case 1:y();break;case 2:w();break;default:z()} const o={a:1,b:[2,3]};";
 		const print = (/** @type {object} */ options) =>
 			/** @type {{ code: string }} */ (
 				new SourceProcessor().process(source, {
@@ -3417,11 +3419,11 @@ describe("JavaScript SourceProcessor printing", () => {
 				})
 			).code;
 		expect(print({})).toBe(
-			"function f(a, b) {\nif (a) {\nreturn b in a;\n}\nfor (;;) x();\n}\nclass A {\nm() {}\n}\nswitch (x) {\ncase 1:\ny();\nbreak;\ndefault:\nz();\n}\nconst o = {a: 1, b: [ 2, 3 ]};"
+			"function f(a, b) {\nif (a) {\nreturn b in a;\n}\nfor (;;) x();\n}\nclass A {\nm() {}\n}\nswitch (x) {\ncase 1:\ny();\nbreak;\ncase 2:\nw();\nbreak;\ndefault:\nz();\n}\nconst o = {a: 1, b: [ 2, 3 ]};"
 		);
 		// Minified as it is beautified, the layout is the same.
 		expect(print({ compress: {}, mangle: {} })).toBe(
-			"function f(a, c) {\nif (a) return c in a;\nfor (;;) x();\n}\nclass A {\nm() {}\n}\nswitch (x) {\ncase 1:\ny();\nbreak;\ndefault:\nz();\n}\nconst o = {a: 1, b: [ 2, 3 ]};"
+			"function f(a, c) {\nif (a) return c in a;\nfor (;;) x();\n}\nclass A {\nm() {}\n}\nswitch (x) {\ncase 1:\ny();\nbreak;\ncase 2:\nw();\nbreak;\ndefault:\nz();\n}\nconst o = {a: 1, b: [ 2, 3 ]};"
 		);
 	});
 
