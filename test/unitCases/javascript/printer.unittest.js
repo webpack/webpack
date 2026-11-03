@@ -1508,7 +1508,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["function g(){const a=[1,2];(a[0])=3;f(a[0],a[1])}function h(){const a=[1,2];(a[0])++;f(a[0])}", { mangle: false }, "function g(){let a=[1,2];a[0]=3,f(a[0],a[1])}function h(){let a=[1,2];a[0]++,f(a[0])}"],
 			["function g(){const a=[1,2];f(a[0],a[1])}", { mangle: false, compress: { toplevel: false, unused: false } }, "function g(){let a=[1,2];f(a[0],a[1])}"],
 			// A case ending a `switch` that runs nothing stays where a `default` before it would take its value.
-			["switch(a){default:b();case 0:break}switch(a){case 0:break;default:b();case 1:}switch(a){default:b();break;case 1:}", {}, "switch(a){default:b();case 0:}switch(a){case 0:break;default:b();case 1:}switch(a){default:b();break;case 1:}"],
+			["switch(a){default:b();case 0:break}switch(a){case 0:break;default:b();case 1:}switch(a){default:b();break;case 1:}", {}, "switch(a){default:b();case 0:}switch(a){case 0:break;default:b();case 1:}switch(a){default:b();case 1:}"],
 			// What runs nothing before a callee goes but one `0`, which a bare `eval` keeps to read no scope; a function or class takes no `this`.
 			["(0,1,eval)(),(0,1,f)(),(0,eval)()", {}, "(0,eval)(),f(),(0,eval)();"],
 			["function g(a){(a,function(){h(this)})(),x=(a,function(){})(),new(a,function(){})(1),new(a,class{})}", { mangle: false }, "function g(a){(function(){h(this)})(),x=function(){}(),new function(){}(1),new class{}}"],
@@ -1568,6 +1568,8 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["debug(g());/*@__PURE__*/f(g())", { compress: { pure_funcs: ["debug"] } }, "debug(g()),g();"],
 			// Nobody reading `&&`, `||` or `??`, a right side running nothing goes.
 			["a||0;a&&0;a??0;f()||1,g();x=a||0;(a,b)||0;(function(){})||0;a()||b||0;(function(){}).call()||0", {}, "a,a,a,f(),g(),x=a||0,(a,b),a()||b;(function(){}).call();"],
+			// A `break` before cases running nothing does nothing, a test matched skipping the rest.
+			["switch(foo){case\"bar\":bar();break;case\"moo\":case moo:case\"baz\":break}switch(a){case 1:b();break;case 2:c();break;case 3:}switch(a){case 1:b();break;default:break;case g():}switch(a){case 1:b();break;/*! c */case g():}", {}, "switch(foo){case\"bar\":bar();case\"moo\":case moo:}switch(a){case 1:b();break;case 2:c()}switch(a){case 1:b();default:case g():}switch(a){case 1:b();break;/*! c */case g():}"],
 			// `!` negates an optional chain whole.
 			["function f(){if(t?.has(x))return;y()}for(;;){if(t?.has(x))continue;y()}x=t?.a?!1:y", {}, "function f(){if(!t?.has(x))y()}for(;;){if(!t?.has(x))y()}x=!t?.a&&y;"]
 		];
