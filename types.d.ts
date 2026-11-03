@@ -15793,39 +15793,41 @@ declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 				boolean | void
 			>
 		>;
-		statement: SyncBailHook<
-			[
-				| ImportDeclaration
-				| ExportNamedDeclaration
-				| ExportAllDeclaration
-				| FunctionDeclaration
-				| MaybeNamedFunctionDeclaration
-				| VariableDeclaration
-				| ClassDeclaration
-				| MaybeNamedClassDeclaration
-				| ExpressionStatement
-				| BlockStatement
-				| StaticBlock
-				| EmptyStatement
-				| DebuggerStatement
-				| WithStatement
-				| ReturnStatement
-				| LabeledStatement
-				| BreakStatement
-				| ContinueStatement
-				| IfStatement
-				| SwitchStatement
-				| ThrowStatement
-				| TryStatement
-				| WhileStatement
-				| DoWhileStatement
-				| ForStatement
-				| ForInStatement
-				| ForOfStatement
-				| ExportDefaultDeclaration
-			],
-			boolean | void
-		>;
+		statement: StatementPathTap &
+			SyncBailHook<
+				[
+					| ImportDeclaration
+					| ExportNamedDeclaration
+					| ExportAllDeclaration
+					| FunctionDeclaration
+					| MaybeNamedFunctionDeclaration
+					| VariableDeclaration
+					| ClassDeclaration
+					| MaybeNamedClassDeclaration
+					| ExpressionStatement
+					| BlockStatement
+					| StaticBlock
+					| EmptyStatement
+					| DebuggerStatement
+					| WithStatement
+					| ReturnStatement
+					| LabeledStatement
+					| BreakStatement
+					| ContinueStatement
+					| IfStatement
+					| SwitchStatement
+					| ThrowStatement
+					| TryStatement
+					| WhileStatement
+					| DoWhileStatement
+					| ForStatement
+					| ForInStatement
+					| ForOfStatement
+					| ExportDefaultDeclaration
+				],
+				boolean | void,
+				{ path?: boolean }
+			>;
 		statementIf: SyncBailHook<[IfStatement], boolean | void>;
 		/**
 		 * @since 5.105.0
@@ -32622,6 +32624,25 @@ type StatementPathItem =
 	| ForInStatement
 	| ForOfStatement
 	| ExportDefaultDeclaration;
+
+/**
+ * A `statement` tap reading the statement through the path; it fires only
+ * while the program is walked by id (the internal `_walkPath` switch).
+ */
+declare interface StatementPathTap {
+	/**
+	 * registers it
+	 */
+	tap: (
+		options: { name: string; path: true; stage?: number; before?: string },
+		fn: (path: JavascriptNodePath, statement: number) => boolean | void
+	) => void;
+
+	/**
+	 * fires every tap, one with `path` with the path first, any other with the statement's ESTree object
+	 */
+	call: (statement: number) => boolean | void;
+}
 declare class StaticExportsDependency extends NullDependency {
 	/**
 	 * Creates an instance of StaticExportsDependency.
