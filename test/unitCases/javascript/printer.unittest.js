@@ -2135,6 +2135,16 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		expect(
 			minifyOnePass("({a:g()}).a;", { compress: {}, mangle: false }).code
 		).toBe("({a:g()}).a;");
+		// A key read before a hoisted call sets it is not known yet.
+		for (const source of [
+			'(function(){console.log(f());var k="a";function f(){var v={[k]:1}.a;g(v);return v+v}function g(){}})()',
+			'(function(){console.log(f());var k="a";function f(){var v={a:1}[k];g(v);return v+v}function g(){}})()',
+			'(function(){console.log(f());var k="a";function f(){if({[k]:1}.a)return 2;return 3}})()',
+			'(function(){var k="a";console.log(f());function f(){var v={a:1}[k];g(v);return v+v}function g(){}})()'
+		]) {
+			const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+			expect(runProgram(code)).toBe(runProgram(source));
+		}
 	});
 
 	it("should print a conditional with a sequence or conditional branch as `||` or `&&`", () => {
