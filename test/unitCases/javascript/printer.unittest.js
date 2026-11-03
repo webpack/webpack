@@ -863,7 +863,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"function f(a, b){ if (a) return 1; else b(); if (b) { x(); return 2 } else { y(); z() } if (a) throw 1; else { let q = g(); h(q) } while (a) { if (b) break; else w() } for (;;) { if (a) continue; else { /*! c */ v() } } if (b) return; else if (a) v(); else u(); } for (;;) if (a) break; else b(); l: if (a) break l; else b(); switch (a) { case 1: if (b) break; else c() }",
 				{},
-				"function f(e,a){if(e)return 1;a();if(a){return x(),2}y(),z();if(e)throw 1;h(g());while(e){if(a)break;w()}for(;;)if(e)continue;else{/*! c */v()}if(a)return;e?v():u()}for(;;)if(a)break;else b();e:if(a)break e;else b();switch(a){case 1:if(b)break;c()}"
+				"function f(e,a){if(e)return 1;a();if(a){return x(),2}y(),z();if(e)throw 1;h(g());while(e){if(a)break;w()}for(;;)if(!e){/*! c */v()}if(!a)e?v():u()}for(;;)if(a)break;else b();e:if(!a)b();switch(a){case 1:if(b)break;c()}"
 			],
 			[
 				"function f(a){ if (a) return 1; else { class C {} g(new C) } if (a) return 2; else { function q(){} q() } if (a) return 3; else /*! c */ { h() } }",
@@ -1092,7 +1092,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"g(function(){ g(typeof f); if (1) function f(){} if (0) ; else function h(){} g(f, h) })",
 				{},
-				"g(function(){g(typeof f);if(1)function f(){}if(0);else function n(){}g(f,n)});"
+				"g(function(){g(typeof f);if(1)function f(){}if(!0)function n(){}g(f,n)});"
 			],
 			// With shorthands, a name printing otherwise than its key prints after it.
 			[
@@ -1147,7 +1147,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["const f=(a,b)=>{;if({}.x)return 1;if(b)return 2;return 3}", {}, "const f=(r,n)=>({}.x?1:n?2:3);"],
 			["function f(a,b,c){if(a){;if(b)return 1;if(c)return 4;return 2}return 3}", {}, "function f(r,n,f){return r?n?1:f?4:2:3}"],
 			// An empty statement prints nothing, a block of only those as `;`.
-			["function f(a){if(a){;}else g()}", {}, "function f(f){if(f);else g()}"],
+			["function f(a){if(a){;}else g()}", {}, "function f(f){if(!f)g()}"],
 			["while(a){;}", {}, "while(a);"],
 			// A `RegExp` built from constants that parse goes unused; one that throws stays.
 			["function m(){f();var rangeChars=\"abcdefghijklmnopq\";new RegExp(\"[\"+rangeChars+\"]\");new RegExp(\"[\"+rangeChars+\"0-9]\",\"g\")}", {}, "function m(){f()}"],
@@ -1172,7 +1172,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["function f(a){return[a/-Infinity,-Infinity/a,(-Infinity).x]}", {}, "function f(n){return[n/-(1/0),-(1/0)/n,(-(1/0)).x]}"],
 			// A body printing nothing is `;`, and an `if` with one only runs its test.
 			["function f(a){for(a of b){}while(a()){}l:{}}", {}, "function f(f){for(f of b);while(f());}"],
-			["function f(a){if(a()){}if(a){}else b()}", {}, "function f(f){f();if(f);else b()}"],
+			["function f(a){if(a()){}if(a){}else b()}", {}, "function f(f){f();if(!f)b()}"],
 			["function f(x){if(x){if(a()){}}else b()}", {}, "function f(f){if(f)a();else b()}"],
 			// `!t?a:b` is `t?b:a`, but where the test would open a statement.
 			["function f(a){return[!a?b:c,!(a||b)?c:d,! --a?b:c,!!a?b:c]}", {}, "function f(a){return[a?c:b,a||b?d:c,--a?c:b,a?b:c]}"],
@@ -1481,6 +1481,10 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// An optional `?.` continues a chain unbroken; arithmetic beside a number converts as `+` does; `void 0` and booleans compared loosely; `yield` of nothing.
 			["(a?.b)?.c;(a?.b).c;(a?.b)?.();(a?.b)?.[0];(a?.b)();v=1-+foo;v=+foo-1;v=1e3*+d;v=5|+b;v=+xs-(2*3);v=a-+b;v=1+ +b;v=1-+-b;v=1-+(a+b);v=(+a)**2;v=1-+x++;v=undefined!=foo;v=void 0==foo;v=!0==y;v=false!=y;function*g(){yield void 0;yield*void 0;x=yield undefined;yield void f()}", {}, "a?.b?.c,(a?.b).c,a?.b?.(),a?.b?.[0],(a?.b)(),v=1-foo,v=foo-1,v=1e3*d,v=5|b,v=xs-6,v=a-+b,v=1+ +b,v=1-+-b,v=1-(a+b),v=(+a)**2,v=1-x++,v=null!=foo,v=null==foo,v=1==y,v=0!=y;function*g(){yield,yield*void 0,x=yield,yield void f()}"],
 			["v=1-/*c*/+foo;v=/*d*/void 0!=foo;function*g(){yield/*e*/void 0}", { mangle: false, format: { comments: "all" } }, "v=1-/*c*/+foo,v=/*d*/void 0!=foo;function*g(){/*e*/yield void 0}"],
+			// A `debugger` dropped prints nothing as a body; `if(t);else x` is `if(!t)x`; `void` of a value nobody reads goes; `use strict` in strict code goes.
+			["if(foo())debugger;if(x)debugger;else foo();label:debugger;for(;;)debugger;if(x);else foo();if(x){}else{foo();bar()}if(a==b);else c();if(p){if(x);else foo()}else q();if(x);else if(y)z();void x;void f();x=(void g(),1);function q(){let x=1;void x;if(x);h()}", {}, "foo();if(!x)foo();for(;;);if(!x)foo();if(!x)foo(),bar();if(a!=b)c();if(p){if(!x)foo()}else q();if(!x)if(y)z();x,f(),x=(g(),1);function q(){h()}"],
+			["function a(){\"use strict\";function b(){\"use strict\";c()}return b}function e(){\"use strict\";\"use asm\";f()}class K{m(){\"use strict\";g()}}", { mangle: false }, "function a(){\"use strict\";return function(){c()}}function e(){\"use strict\";\"use asm\";f()}class K{m(){g()}}"],
+			["\"use strict\";export function foo(){\"use strict\";g()}", { module: true, compress: {}, mangle: {} }, "export function foo(){g()}"],
 			// `!` negates an optional chain whole.
 			["function f(){if(t?.has(x))return;y()}for(;;){if(t?.has(x))continue;y()}x=t?.a?!1:y", {}, "function f(){if(!t?.has(x))y()}for(;;){if(!t?.has(x))y()}x=!t?.a&&y;"]
 		];
@@ -2140,7 +2144,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		) => minifyOnePass(source, { compress, mangle: false }).code;
 		// `drop_debugger` drops them unless turned off, where no list holds one too.
 		expect(print("debugger;f();")).toBe("f();");
-		expect(print("if(a)debugger;f();")).toBe("if(a);f();");
+		expect(print("if(a)debugger;f();")).toBe("a;f();");
 		expect(print("debugger;f();", { drop_debugger: false })).toBe(
 			"debugger;f();"
 		);
@@ -2707,7 +2711,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				{ mangle: false }
 			)
 		).toBe(
-			'export function run(f){"use strict";return(f=eval)("this")}export function t(f){return g(),typeof(f=missing)}export function d(){return g(),x=1;let x}'
+			'export function run(f){return(f=eval)("this")}export function t(f){return g(),typeof(f=missing)}export function d(){return g(),x=1;let x}'
 		);
 		// A call printing as what it runs, unread last in a sequence or under
 		// `void` or `!`, prints bare.
