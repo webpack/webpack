@@ -2089,6 +2089,23 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		}
 	});
 
+	it("should keep a test of `0` a boolean where a conditional gives its value", () => {
+		for (const source of [
+			"function f(x){return 0!==(x&4)?!0:!1}console.log(f(4),f(0))",
+			"function f(x){if(0!==(x&4))return!0;return!1}console.log(f(4),f(0))",
+			'function f(x,y){return 0!==(x&4)?!0:y}console.log(f(4,"y"),f(0,"y"))',
+			'function f(x,y){return 0!==(x&4)?y:!1}console.log(f(4,"y"),f(0,"y"))',
+			"function f(x){return(x&4)!=0?!1:!0}console.log(f(4),f(0))"
+		]) {
+			const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+			expect(runProgram(code)).toBe(runProgram(source));
+		}
+		// Read only for its truth, it still prints the integer.
+		expect(
+			minifyOnePass("if(0!==(x&4))g()", { compress: {}, mangle: false }).code
+		).toBe("if(x&4)g();");
+	});
+
 	it("should keep a `switch` on a known value whose case holds a comment that prints", () => {
 		const print = (/** @type {string} */ source) =>
 			minifyOnePass(source, {
