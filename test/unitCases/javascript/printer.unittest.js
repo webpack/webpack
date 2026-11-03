@@ -311,7 +311,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"if (x) { if (true) { b(); c() } } else d(); if (x) { if (false) { b() } else { c(); e() } } else d(); while (x) { if (1) { b(); c() } }",
 				{},
-				"if(x){b(),c()}else d();if(x){c(),e()}else d();while(x){b(),c()}"
+				"if(x){b(),c()}else d();if(x){c(),e()}else d();while(x)b(),c();"
 			],
 			[
 				"if (a) { let x = h(); f(x, x) } if (a) { const y = h(); f(y, y) } if (a) { var z = 1 } if (a) { class C {} f(C) } if (a) { function g() {} } if (a) {} if (a) { b(); c() }",
@@ -1605,7 +1605,9 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// A comparison printed as `!x` takes a `!` bare.
 			["x=!((e&6)==0);x=!((e&6)!=0);x=-((e&6)==0);function f(){return 0===(e&6)?g():!0}", {}, "x=!!(e&6),x=!(e&6),x=-((e&6)==0);function f(){return!!(e&6)||g()}"],
 			// terser's `if_return`: `if(t)return;x;y` is `if(!t){x;y}`, unbraced where they print as one statement, and kept where a block would scope what they declare.
-			["while(x){if(y)continue;z();w()}function f(){if(x)return;a();if(y)return;b();c()}function n(){if(x)return;a();for(;;)b()}function m(){if(x)return;a();class K{}b(K)}function p(){if(x)return;a();;b()}", {}, "while(x){if(!y)z(),w()}function f(){if(!x){a();if(!y)b(),c()}}function n(){if(!x){a();for(;;)b()}}function m(){if(x)return;a();class n{}b(n)}function p(){if(!x)a(),b()}"],
+			["while(x){if(y)continue;z();w()}function f(){if(x)return;a();if(y)return;b();c()}function n(){if(x)return;a();for(;;)b()}function m(){if(x)return;a();class K{}b(K)}function p(){if(x)return;a();;b()}", {}, "while(x)if(!y)z(),w();function f(){if(!x){a();if(!y)b(),c()}}function n(){if(!x){a();for(;;)b()}}function m(){if(x)return;a();class n{}b(n)}function p(){if(!x)a(),b()}"],
+			// A loop's body printing as one statement drops its braces, its last statement owing the `;` the brace took.
+			["while(x){if(y)continue;z();w()}g();for(;;){if(y)continue;z();if(q)continue;w();v()}g();for(;;){if(y)continue;z();a={}}g();if(a)for(;;){if(y)continue;z();w()}else q();for(;;){}", {}, "while(x)if(!y)z(),w();g();for(;;)if(!y){z();if(!q)w(),v()}g();for(;;)if(!y)z(),a={};g();if(a)for(;;){if(!y)z(),w()}else q();for(;;);"],
 			// `!` negates an optional chain whole.
 			["function f(){if(t?.has(x))return;y()}for(;;){if(t?.has(x))continue;y()}x=t?.a?!1:y", {}, "function f(){if(!t?.has(x))y()}for(;;){if(!t?.has(x))y()}x=!t?.a&&y;"]
 		];
