@@ -9135,7 +9135,12 @@ type Effect = EffectUse | EffectBasic;
  */
 declare interface EffectBasic {
 	type: string;
-	value: any;
+
+	/**
+	 * the rule's value of the setting the effect is named for
+	 */
+	value?:
+		string | boolean | ResolveOptionsWebpackOptions | { [index: string]: any };
 }
 
 /**
@@ -27219,9 +27224,9 @@ declare class Profiler {
 	/**
 	 * Creates an instance of Profiler.
 	 */
-	constructor(inspector: Inspector);
+	constructor(inspector?: Inspector);
 	session?: SessionImportInspectorClass_2;
-	inspector: Inspector;
+	inspector?: Inspector;
 	hasSession(): boolean;
 	startProfiling():
 		| Promise<void>
@@ -27243,9 +27248,11 @@ declare class Profiler {
 	destroy(): Promise<void>;
 
 	/**
-	 * Returns }>} profile result.
+	 * Stops profiling and returns the profile.
 	 */
-	stopProfiling(): Promise<{ profile: { startTime: number; endTime: number } }>;
+	stopProfiling(): Promise<
+		undefined | { profile: { startTime: number; endTime: number } }
+	>;
 }
 declare class ProfilingPlugin {
 	/**
@@ -31483,14 +31490,23 @@ declare abstract class Snapshot {
 	addChild(child: Snapshot): void;
 
 	/**
-	 * Serializes this instance into the provided serializer context.
+	 * Serializes this instance into the provided serializer context: the flags,
+	 * then each field the flags say is present.
 	 */
-	serialize(__0: ObjectSerializerContextObjectMiddlewareObject_4): void;
+	serialize(
+		__0: ObjectSerializerContextObjectMiddlewareObject_4<
+			ReadonlyArray<SnapshotStreamValue>
+		>
+	): void;
 
 	/**
 	 * Restores this instance from the provided deserializer context.
 	 */
-	deserialize(__0: ObjectDeserializerContextObjectMiddlewareObject_3): void;
+	deserialize(
+		__0: ObjectDeserializerContextObjectMiddlewareObject_3<
+			ReadonlyArray<SnapshotStreamValue>
+		>
+	): void;
 
 	/**
 	 * Gets file iterable.
@@ -31657,6 +31673,18 @@ declare interface SnapshotOptionsWebpackOptions {
 	 */
 	unmanagedPaths?: (string | RegExp)[];
 }
+type SnapshotStreamValue =
+	| undefined
+	| number
+	| Map<string, null | FileSystemInfoEntry>
+	| Map<string, null | string>
+	| Map<string, null | string | TimestampAndHash>
+	| Map<string, null | ResolvedContextFileSystemInfoEntry>
+	| Map<string, null | ResolvedContextTimestampAndHash>
+	| Map<string, boolean>
+	| Map<string, string>
+	| Set<string>
+	| Set<Snapshot>;
 
 /**
  * Create a new sortable set

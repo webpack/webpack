@@ -42,8 +42,8 @@ jobs:
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
 
-      # The same script, run on the base commit's tree, counts its inferred `any`.
-      - name: Collect the base commit's inferred `any`
+      # The same script, run on the base commit's tree, counts its inferred `any` and untyped identifiers.
+      - name: Collect the base commit's inferred `any` and untyped identifiers
         run: |
           git worktree add --detach "$RUNNER_TEMP/base" "$BASE_SHA"
           ln -s "$GITHUB_WORKSPACE/node_modules" "$RUNNER_TEMP/base/node_modules"
@@ -51,10 +51,10 @@ jobs:
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
 
-      # Renders the report too: overall typed lines, the escape-hatch types and
-      # inferred `any` this pull request adds or removes, and the files that still have any.
+      # Renders the report too: overall typed lines, the escape hatches, `any` and
+      # untyped identifiers this pull request adds or removes, and the files that still have some.
       - name: Collect types coverage
-        run: node tooling/type-coverage.js --base "$BASE_SHA" --base-any "$RUNNER_TEMP/base/coverage/inferred-any.json"
+        run: node tooling/type-coverage.js --base "$BASE_SHA" --base-counts "$RUNNER_TEMP/base/coverage/type-counts.json"
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
 
@@ -64,7 +64,7 @@ jobs:
             echo "<!-- types-coverage-report -->"
             cat coverage/types-coverage.md
           } > types-coverage-report.md
-          cat coverage/types-coverage.md >> "$GITHUB_STEP_SUMMARY"
+          cat coverage/types-coverage.md coverage/types-coverage-spots.md >> "$GITHUB_STEP_SUMMARY"
 
       # `pr-reports.yml` puts this in the pull request's one report comment,
       # from the base repository's context: a fork's token is read-only.

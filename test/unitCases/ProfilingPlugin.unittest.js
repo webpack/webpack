@@ -23,7 +23,6 @@ describe("Profiling Plugin", () => {
 	});
 
 	it("should handle when unable to require the inspector", () => {
-		// @ts-expect-error intentionally calling without required argument
 		const profiler = new ProfilingPlugin.Profiler();
 		return profiler.startProfiling();
 	});
@@ -43,7 +42,6 @@ describe("Profiling Plugin", () => {
 	});
 
 	it("handles sending a profiling message when no session", () => {
-		// @ts-expect-error intentionally calling without required argument
 		const profiler = new ProfilingPlugin.Profiler();
 		return profiler.sendCommand(
 			"randy",
@@ -51,8 +49,13 @@ describe("Profiling Plugin", () => {
 		);
 	});
 
+	it("resolves no profile when stopping without a session", async () => {
+		const profiler = new ProfilingPlugin.Profiler();
+		await profiler.startProfiling();
+		await expect(profiler.stopProfiling()).resolves.toBeUndefined();
+	});
+
 	it("handles destroying when no session", () => {
-		// @ts-expect-error intentionally calling without required argument
 		const profiler = new ProfilingPlugin.Profiler();
 		return profiler.destroy();
 	});

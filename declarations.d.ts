@@ -9,6 +9,16 @@ declare const __webpack_require__:
 declare module "*.json";
 declare module "rimraf";
 
+// The yamljs 0.3 calls the examples make; the package ships no types
+declare module "yamljs" {
+	export function parse(yaml: string): unknown;
+	export function stringify(
+		value: unknown,
+		inline?: number,
+		spaces?: number
+	): string;
+}
+
 declare module "color-name" {
 	const colors: { [name: string]: [number, number, number] };
 	export = colors;
