@@ -249,7 +249,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/vercel/005/input.js",
 			"swc minifier: fixture/issues/vercel/006/input.js",
 			"swc minifier: fixture/projects/angular/3/input.js",
-			"swc minifier: fixture/projects/angular/4/input.js",
 			"swc minifier: fixture/projects/angular/5/input.js",
 			"swc minifier: fixture/projects/backbone/13/input.js",
 			"swc minifier: fixture/projects/backbone/16/input.js",
@@ -259,7 +258,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/projects/backbone/3/input.js",
 			"swc minifier: fixture/projects/backbone/4/input.js",
 			"swc minifier: fixture/projects/backbone/5/input.js",
-			"swc minifier: fixture/projects/backbone/6/input.js",
 			"swc minifier: fixture/projects/backbone/9/input.js",
 			"swc minifier: fixture/projects/jquery/.17/input.js",
 			"swc minifier: fixture/projects/jquery/1/input.js",
@@ -355,8 +353,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/11512-exhaustive/iife-anon-arg-unused/input.js",
 			"swc minifier: fixture/issues/11512-exhaustive/iife-anon-default-unused/input.js",
 			"swc minifier: fixture/issues/11684/identifier-reduce-vars-only/input.js",
-			"swc minifier: fixture/issues/12223/catch-return-no-finalizer-control/input.js",
-			"swc minifier: fixture/issues/12223/nested-function-control/input.js",
 			"swc minifier: fixture/issues/12227/input.js",
 			"swc minifier: fixture/issues/2262/1/input.js",
 			"terser compress: arrow/call_args",
@@ -768,16 +764,9 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: drop-unused/unused_funarg_1",
 			"terser compress: drop-unused/unused_funarg_2",
 			"terser compress: drop-unused/unused_circular_references_1",
-			"terser compress: drop-unused/drop_assign",
-			"terser compress: drop-unused/drop_toplevel_all",
-			"terser compress: drop-unused/drop_toplevel_retain",
-			"terser compress: drop-unused/drop_toplevel_retain_array",
-			"terser compress: drop-unused/drop_toplevel_all_retain",
 			"terser compress: drop-unused/drop_fargs",
 			"terser compress: drop-unused/iife",
-			"terser compress: drop-unused/issue_1539",
 			"terser compress: drop-unused/assign_binding",
-			"terser compress: drop-unused/assign_chain",
 			"terser compress: drop-unused/issue_1656",
 			"terser compress: drop-unused/issue_1709",
 			"terser compress: drop-unused/issue_2136_2",
@@ -954,7 +943,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: loops/drop_if_else_break_4",
 			"terser compress: loops/evaluate",
 			"terser compress: loops/issue_1648",
-			"terser compress: loops/init_side_effects",
 			"terser compress: loops/issue_2740_1",
 			"terser compress: loops/issue_2740_2",
 			"terser compress: loops/issue_2740_3"
@@ -1191,7 +1179,8 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: pure_funcs/issue_2705_1",
 			"terser compress: pure_funcs/issue_2705_6",
 			"terser compress: pure_funcs/issue_3065_3",
-			"terser compress: pure_funcs/issue_3065_4"
+			"terser compress: pure_funcs/issue_3065_4",
+			"terser compress: pure_funcs/side_effects"
 		]
 	],
 	[
@@ -1297,7 +1286,6 @@ const SWC_SMALLER_BY_REASON = [
 	[
 		"swc goes further than webpack on what swc's `fixture/reduced` tests cover",
 		[
-			"swc minifier: fixture/reduced/1/input.js",
 			"swc minifier: fixture/reduced/2/input.js",
 			"swc minifier: fixture/reduced/3/input.js"
 		]
@@ -1514,10 +1502,6 @@ const SWC_SMALLER_BY_REASON = [
 	[
 		"swc goes further than webpack on what terser's `logical-assignment` tests cover",
 		["terser compress: logical-assignment/assign_in_conditional_part"]
-	],
-	[
-		"swc goes further than webpack on what terser's `negate-iife` tests cover",
-		["terser compress: negate-iife/issue_1288_side_effects"]
 	],
 	[
 		"swc goes further than webpack on what terser's `nullish` tests cover",
