@@ -800,9 +800,17 @@ for (const [sourceFile, typeChecker, program] of sourceFiles) {
 				const symbol = typeChecker.getSymbolAtLocation(parent);
 				if (symbol) return typeChecker.getTypeOfSymbol(symbol);
 			}
-			// A property name in an object literal holds the value written for it.
+			// A property name in an object literal has the type the literal's declared
+			// type gives it, else that of the value written for it.
 			if (ts.isPropertyAssignment(parent) && parent.name === node) {
-				return typeChecker.getTypeAtLocation(parent.initializer);
+				const declared = typeChecker.getContextualType(parent.parent);
+				const property =
+					declared &&
+					ts.isIdentifier(node) &&
+					typeChecker.getPropertyOfType(declared, node.text);
+				return property
+					? typeChecker.getTypeOfSymbol(property)
+					: typeChecker.getTypeAtLocation(parent.initializer);
 			}
 			return typeChecker.getTypeAtLocation(node);
 		};
