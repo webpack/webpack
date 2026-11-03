@@ -3686,6 +3686,10 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		'webpack folds `10..toPrecision(1)` to `"1e+1"` where oxc keeps the call: raw shrinks, yet deflate matches the same call repeated with only its literal changing better than the strings it answers',
 		["swc minifier: fixture/issues/6957/exponential/input.js"]
+	],
+	[
+		"oxc folds a `parseFloat` of more than 20 digits, which ECMAScript lets an engine round otherwise, so webpack keeps the call",
+		["oxc minifier: peephole/replace_known_methods.rs:790"]
 	]
 ];
 
