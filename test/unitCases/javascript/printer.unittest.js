@@ -2134,7 +2134,11 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			['[false][0]["y"]', "[!1][0].y"],
 			["({a:true}).a**x", "{a:!0}.a**x"],
 			["x**({a:true}).a", "x**!0"],
-			["!({a:true}).a", "!1"]
+			["!({a:true}).a", "!1"],
+			// A number read with `[]` is read whole, and a key printing as `.x` spaces it.
+			["({0:1})[0][1]+1", "1[1]+1"],
+			['[1][0]["x"]', "1..x"],
+			["[1][0].x", "[1][0].x"]
 		]) {
 			expect(print(source)).toBe(expected);
 		}
