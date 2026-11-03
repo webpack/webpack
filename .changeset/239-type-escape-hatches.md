@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Type rule effect values and allow a missing inspector in `ProfilingPlugin.Profiler`.
+Type rule effect values and let `Profiler` run without an inspector.

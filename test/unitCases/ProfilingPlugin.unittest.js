@@ -49,6 +49,12 @@ describe("Profiling Plugin", () => {
 		);
 	});
 
+	it("resolves no profile when stopping without a session", async () => {
+		const profiler = new ProfilingPlugin.Profiler();
+		await profiler.startProfiling();
+		await expect(profiler.stopProfiling()).resolves.toBeUndefined();
+	});
+
 	it("handles destroying when no session", () => {
 		const profiler = new ProfilingPlugin.Profiler();
 		return profiler.destroy();

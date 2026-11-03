@@ -27248,9 +27248,11 @@ declare class Profiler {
 	destroy(): Promise<void>;
 
 	/**
-	 * Returns }>} profile result.
+	 * Stops profiling and returns the profile.
 	 */
-	stopProfiling(): Promise<{ profile: { startTime: number; endTime: number } }>;
+	stopProfiling(): Promise<
+		undefined | { profile: { startTime: number; endTime: number } }
+	>;
 }
 declare class ProfilingPlugin {
 	/**
