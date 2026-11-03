@@ -8,6 +8,8 @@ require("../helpers/warmup-webpack");
  * @typedef {object} SuiteConfig
  * @property {string} name suite name
  * @property {import("../../").FileCacheOptions=} cache filesystem cache options
+ * @property {string[]=} categories the only categories to run, every one when unset
+ * @property {boolean=} pathWalk whether JavaScript parsers walk the program by node id (internal switch)
  */
 /**
  * @typedef {object} TestConfig
@@ -91,6 +93,27 @@ const createLogger = (appendTarget, appendErrors) => ({
 });
 
 /**
+ * Turns on the internal switch walking the program by node id in every
+ * JavaScript parser of a build.
+ * @param {import("../../").Compiler} compiler the compiler
+ * @returns {void}
+ */
+const enablePathWalk = (compiler) => {
+	compiler.hooks.normalModuleFactory.tap("PathWalk", (normalModuleFactory) => {
+		for (const type of /** @type {const} */ ([
+			"javascript/auto",
+			"javascript/dynamic",
+			"javascript/esm"
+		])) {
+			normalModuleFactory.hooks.parser.for(type).tap("PathWalk", (parser) => {
+				// internal, so absent from the public types
+				Object.assign(parser, { _walkPath: true });
+			});
+		}
+	});
+};
+
+/**
  * @param {SuiteConfig} config suite config
  */
 const describeCases = (config) => {
@@ -109,6 +132,10 @@ const describeCases = (config) => {
 		jest.setTimeout(testTimeout(20000));
 
 		for (const category of categories) {
+			if (config.categories && !config.categories.includes(category.name)) {
+				continue;
+			}
+
 			// eslint-disable-next-line no-loop-func
 			describe(category.name, () => {
 				for (const testName of category.tests) {
@@ -237,6 +264,12 @@ const describeCases = (config) => {
 									options.infrastructureLogging = {};
 								}
 								options.infrastructureLogging.progress = false;
+								if (config.pathWalk) {
+									options.plugins = [
+										...(options.plugins || []),
+										enablePathWalk
+									];
+								}
 								if (!options.snapshot) options.snapshot = {};
 								if (!options.snapshot.managedPaths) {
 									options.snapshot.managedPaths = [
