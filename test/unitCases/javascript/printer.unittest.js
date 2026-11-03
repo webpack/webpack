@@ -1331,7 +1331,9 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["function f(x){x=x>>>g();h(x)}", {}, "function f(x){h(x>>>=g())}"],
 			["function f(x){x=x-(a-b);h(x)}", {}, "function f(x){h(x-=(a-b))}"],
 			["function f(x){x=y+x;h(x)}", {}, "function f(x){h(x=y+x)}"],
-			["function f(o){o.p=o.p+1}", {}, "function f(o){o.p=o.p+1}"],
+			// A member of `this` or of a declared name, read again in its value, is set by `op=`; a global, a computed key, `with` or `?.` keeps it.
+			["function f(o){o.p=o.p+1}", {}, "function f(o){o.p+=1}"],
+			["class A{m(){this.x=this.x+v;this.#p=this.#p*2}#p}o.y=o.y+1;var q;q.y=q.y+1;function f(o,p){o[k]=o[k]+1;o.y=o.z+1;o.y=p.y+1;o.y=o?.y+1;with(p)p.y=p.y+1}function g(o,b){o.b.c=o.b.c+1;({a}=b+1)}", {}, "class A{m(){this.x+=v,this.#o*=2}#o}o.y=o.y+1;var q;q.y=q.y+1;function f(o,p){o[k]=o[k]+1,o.y=o.z+1,o.y=p.y+1,o.y=o?.y+1;with(p)p.y=p.y+1}function g(o,y){o.b.c=o.b.c+1,({a:a}=y+1)}"],
 			["function f(x){with(o)x=x+1;h(x)}", {}, "function f(x){with(o)x=x+1;h(x)}"],
 			["function f(x){x=x&&1;h(x)}", {}, "function f(x){h(x=x&&1)}"],
 			// An unread catch binding goes; `a?a:b` of a local prints `a||b`; equal unary branches fold.
