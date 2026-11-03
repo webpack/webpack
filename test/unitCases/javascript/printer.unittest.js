@@ -1440,7 +1440,14 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["if(c)switch(d){case 1:if(a)b()}", {}, "if(c)if(d===1){if(a)b()}"],
 			["x=n?true:true;y=a()?false:false", {}, "x=(n,!0),y=(a(),!1);"],
 			["function f(n,b=n?!0:!0){return n?!1:!1}", {}, "function f(n,f=!0){return!1}"],
-			["if(n?1:1)f();while(n?x:x);do;while(n?x:x);switch(n?x:x){case 1:f();break;case 2:g()}", {}, "if(n,1)f();while(n,x);do{}while(n,x);switch(n,x){case 1:f();break;case 2:g()}"]
+			["if(n?1:1)f();while(n?x:x);do;while(n?x:x);switch(n?x:x){case 1:f();break;case 2:g()}", {}, "if(n,1)f();while(n,x);do{}while(n,x);switch(n,x){case 1:f();break;case 2:g()}"],
+			["function f(a){if(a){x();z();return}y()}function g(a){if(a){x();return void 0}return y()}function h(a){if(a){x();return}if(b)c()}", {}, "function f(n){if(n)x(),z();else y()}function g(n){if(n)x();else return y()}function h(n){if(n)x();else if(b)c()}"],
+			["for(;;){if(b){x();continue}y()}do{if(b){x();continue}y()}while(t);for(;;){if(b)continue;y()}while(c){if(b)continue;y()}", {}, "for(;;){if(b)x();else y()}do{if(b)x();else y()}while(t);for(;;){if(!b)y()}while(c){if(!b)y()}"],
+			["function f(a){if(a){x();return}y()}", { format: { semicolons: false } }, "function f(f){if(f)x()\nelse y()}"],
+			// Each keeps its exit: a label, a comment, an inner `if`, a declaration, more after, a kept test, a value returned.
+			["l:for(;;){if(b){x();continue l}y()}for(;;){if(b){x();/*c*/continue}y()}for(;;){if(b){if(c)x();continue}y()}for(;;){if(b){x();continue}function q(){}q()}for(;;){if(b){x();continue}y();y()}function f(){if(1){x();return}y()}function g(a){if(a){x();return 1}y()}for(;;){if(b){continue}y()}", { format: { comments: "all" } }, "n:for(;;){if(b){x();continue n}y()}for(;;){if(b){x();/*c*/continue}y()}for(;;){if(b){if(c)x();continue}y()}for(;;){if(b){x();continue}function q(){}q()}for(;;){if(b){x();continue}y(),y()}function f(){x();return}function g(n){if(n){return x(),1}y()}for(;;){if(!b)y()}"],
+			["for(;;){if(b){x();continue}y()}function f(a){if(a){x();return}/*c*/y()}function g(a){if(a){x();return}if(a){x();return}}", { format: { comments: "all" } }, "for(;;){if(b)x();else y()}function f(n){if(n){x();return}/*c*/y()}function g(n){if(n)x();else if(n){x();return}}"],
+			["function f(a){if(a){x();throw e}y()}for(;;){if(b){x();break}y()}function g(a){if(a){0;return}y()}function h(a){if(a){x();return}0}for(;;){if(b){x();continue}let q=y()}", {}, "function f(f){if(f){x();throw e}y()}for(;;){if(b){x();break}y()}function g(f){if(!f)y()}function h(f){if(f){x();return}}for(;;){if(b){x();continue}y()}"]
 		];
 		for (const [source, options, expected] of cases) {
 			const { code } = minifyOnePass(source, {
