@@ -1566,6 +1566,8 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["(x=>x+1)(1);((x,y)=>x+y)(1,2);(x=>{return x+1})(1);(()=>{return})();(function(){return 1})();x=(()=>2)();(()=>{return g()})();x=function(){f();return 1}();(function(){\"use strict\";return 1})();(function(){return;g()})()", {}, "x=2,g(),x=function(){return f(),1}(),function(){\"use strict\";return}(),function(){}();"],
 			// A call `pure_funcs` names keeps what its arguments run in it.
 			["debug(g());/*@__PURE__*/f(g())", { compress: { pure_funcs: ["debug"] } }, "debug(g()),g();"],
+			// Nobody reading `&&`, `||` or `??`, a right side running nothing goes.
+			["a||0;a&&0;a??0;f()||1,g();x=a||0;(a,b)||0;(function(){})||0;a()||b||0;(function(){}).call()||0", {}, "a,a,a,f(),g(),x=a||0,(a,b),a()||b;(function(){}).call();"],
 			// `!` negates an optional chain whole.
 			["function f(){if(t?.has(x))return;y()}for(;;){if(t?.has(x))continue;y()}x=t?.a?!1:y", {}, "function f(){if(!t?.has(x))y()}for(;;){if(!t?.has(x))y()}x=!t?.a&&y;"]
 		];
