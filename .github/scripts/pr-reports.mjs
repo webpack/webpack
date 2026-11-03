@@ -98,13 +98,23 @@ export async function findReportRuns({ github, context, run }) {
 			event: "pull_request",
 			per_page: 100
 		});
-		// Another pull request can share the commit, e.g. a fork of the same branch.
-		const reportRun = data.workflow_runs.find(
-			(/** @type {EXPECTED_ANY} */ candidate) =>
-				candidate.head_branch === run.head_branch &&
-				candidate.head_repository &&
-				candidate.head_repository.id === run.head_repository.id
-		);
+		/** @type {EXPECTED_ANY} */
+		let reportRun;
+		for (const candidate of data.workflow_runs) {
+			// Another pull request can share the commit, e.g. a fork of the same branch.
+			if (
+				candidate.head_branch !== run.head_branch ||
+				!candidate.head_repository ||
+				candidate.head_repository.id !== run.head_repository.id
+			) {
+				continue;
+			}
+			// WHY: the list is ordered by creation, so a re-run of an older run
+			// is newer than its position says.
+			if (!reportRun || candidate.run_started_at > reportRun.run_started_at) {
+				reportRun = candidate;
+			}
+		}
 		if (!reportRun) continue;
 		const { id, name, run_number, html_url, status, conclusion } = reportRun;
 		runs[source.key] = { id, name, run_number, html_url, status, conclusion };
