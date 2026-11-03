@@ -98,7 +98,7 @@ function h(){/*! a */return a||b;/*! b */return a=1;/*! c */return a.b.c();/*! d
 
 function e(){/*! a */}x={/*! b */};switch(a){/*! c */}if(a){/*! d */}class K{}
 
-a();/*! a */b();{/*! b */}{a()}a?b():c();
+a();/*! a */b();/*! b */a();a?b():c();
 
 a(),b(),𐐀x.y,𐐀.z;
 
@@ -152,7 +152,7 @@ a?b:c;if(a){if(b)c}else d;if(a)for(;;)b?c:d;if(a)while(b)c?d:e;else f;if(a)e:b?c
 
 for(;;);while(a);for(x in y);for(x of y);a:;a:break a;a:for(;;)continue a;switch(a){}switch(a){case 1:case 2:b()}
 
-try{a}catch{b}try{a}catch(a){b}finally{c}try{a}finally{b}try{}catch({a,b}){}throw a;function f(){}
+try{a}catch{b}try{a}catch{b}finally{c}try{a}finally{b}try{}catch({a,b}){}throw a;function f(){}
 
 for(var a in b);for(let[o]of b);for(let{a}of b);for(var i=0,j=1;i<j;i++,j--);for(let o=0;;);for(x.y in z);for([a,b]of c);
 
@@ -240,7 +240,7 @@ with(o)a;with(o)b;with(o)a?b:c;
 
 class P{#i;m(i){#i in(a=b),#i in(a?b:c),#i in(a,b),#i in(()=>1),(#i in i)+1,!(#i in i),(#i in i).y,(#i in i)(),a<(#i in i),#i in i<a,#i in i||a,a in(#i in i),#i in i in a,(#i in i)**2,#i in(#i in i),#i in a+b,#i in(a in b),#i in(a||b),#i in i?1:2,(#i in i)\`t\`}*g(){#i in(yield)}}
 
-import n from\\"x\\";import{let as i}from\\"y\\";new a[function(){b()}],new a[()=>b()],new(a[b()]),x=function(){}.y;do{}while(a);{}switch(a){case 1:\`y\`}1 in a,.5 in a;
+import n from\\"x\\";import{let as i}from\\"y\\";new a[function(){b()}],new a[()=>b()],new(a[b()]),x=function(){}.y;do{}while(a);if(a===1){\`y\`}1 in a,.5 in a;
 
 import o from\\"b\\"with{type:\\"json\\",other:\\"x\\"};export{c}from\\"d\\"with{type:\\"json\\",other:\\"y\\"};
 
@@ -354,8 +354,8 @@ function h(){/*! a */return a||b;/*! b */return a=1;/*! c */return a.b.c();/*! d
 
 function e(){/*! a */}x={/*! b */};switch(a){/*! c */}if(a){/*! d */}class K{}
 
-a();/*! a */b();{/*! b */}{a();// x
-}if(a)b();// y
+a();/*! a */b();/*! b */a();// x
+if(a)b();// y
 else c();
 
 a();// x
@@ -499,7 +499,7 @@ with(o)a;with(o)b;with(o)a?b:c;
 
 class P{#i;m(i){#i in(a=b),#i in(a?b:c),#i in(a,b),#i in(()=>1),(#i in i)+1,!(#i in i),(#i in i).y,(#i in i)(),a<(#i in i),#i in i<a,#i in i||a,a in(#i in i),#i in i in a,(#i in i)**2,#i in(#i in i),#i in a+b,#i in(a in b),#i in(a||b),#i in i?1:2,(#i in i)\`t\`}*g(){#i in(yield)}}
 
-import n from\\"x\\";import{let as i}from\\"y\\";new a[function(){b()}],new a[()=>b()],new(a[b()]),x=function(){}.y;do{}while(a);{}switch(a){case 1:\\"y\\"}1 in a,.5 in a;
+import n from\\"x\\";import{let as i}from\\"y\\";new a[function(){b()}],new a[()=>b()],new(a[b()]),x=function(){}.y;do{}while(a);if(a===1){\\"y\\"}1 in a,.5 in a;
 
 import o from\\"b\\"with{type:\\"json\\",other:\\"x\\"};export{c}from\\"d\\"with{type:\\"json\\",other:\\"y\\"};
 
@@ -610,7 +610,7 @@ function h(){/*! a */return a||b;/*! b */return a=1;/*! c */return a.b.c();/*! d
 
 function e(){/*! a */}x={/*! b */};switch(a){/*! c */}if(a){/*! d */}class K{}
 
-a();/*! a */b();{/*! b */}{a()}a?b():c();
+a();/*! a */b();/*! b */a();a?b():c();
 
 a(),b(),𐐀x.y,𐐀.z;
 
@@ -752,7 +752,7 @@ with(o)a;with(o)b;with(o)a?b:c;
 
 class P{#i;m(i){#i in(a=b),#i in(a?b:c),#i in(a,b),#i in(()=>1),(#i in i)+1,!(#i in i),(#i in i).y,(#i in i)(),a<(#i in i),#i in i<a,#i in i||a,a in(#i in i),#i in i in a,(#i in i)**2,#i in(#i in i),#i in a+b,#i in(a in b),#i in(a||b),#i in i?1:2,(#i in i)\`t\`}*g(){#i in(yield)}}
 
-import n from\\"x\\";import{let as i}from\\"y\\";new a[function(){b()}],new a[()=>b()],new(a[b()]),x=function(){}.y;do{}while(a);{}switch(a){case 1:\\"y\\"}1 in a,.5 in a;
+import n from\\"x\\";import{let as i}from\\"y\\";new a[function(){b()}],new a[()=>b()],new(a[b()]),x=function(){}.y;do{}while(a);if(a===1){\\"y\\"}1 in a,.5 in a;
 
 import o from\\"b\\"with{type:\\"json\\",other:\\"x\\"};export{c}from\\"d\\"with{type:\\"json\\",other:\\"y\\"};
 
@@ -866,8 +866,8 @@ function h(){/*! a */return a||b;/*! b */return a=1;/*! c */return a.b.c();/*! d
 
 function e(){/*! a */}x={/*! b */};switch(a){/*! c */}if(a){/*! d */}class K{}
 
-a();/*! a */b();{/*! b */}{a();// x
-}if(a)b();// y
+a();/*! a */b();/*! b */a();// x
+if(a)b();// y
 else c();
 
 a();// x
@@ -1011,7 +1011,7 @@ with(o)a;with(o)b;with(o)a?b:c;
 
 class P{#x;m(o){#x in(a=b),#x in(a?b:c),#x in(a,b),#x in(()=>1),(#x in o)+1,!(#x in o),(#x in o).y,(#x in o)(),a<(#x in o),#x in o<a,#x in o||a,a in(#x in o),#x in o in a,(#x in o)**2,#x in(#x in o),#x in a+b,#x in(a in b),#x in(a||b),#x in o?1:2,(#x in o)\`t\`}*g(){#x in(yield)}}
 
-import async from'x';import{let as l}from'y';new a[function(){b()}],new a[()=>b()],new(a[b()]),x=function(){}.y;do{}while(a);{}switch(a){case 1:'y'}1. in a,.5 in a;
+import async from'x';import{let as l}from'y';new a[function(){b()}],new a[()=>b()],new(a[b()]),x=function(){}.y;do{}while(a);if(a===1){'y'}1. in a,.5 in a;
 
 import a from'b'with{type:'json',other:'x'};export{c}from'd'with{type:'json',other:'y'};
 
@@ -1232,9 +1232,8 @@ function e(){/*! a */}x={/*! b */}
 switch(a){/*! c */}if(a){/*! d */}class K{}
 
 /* p */
-a();/*! a */b()
-{/*! b */}{a();// x
-}if(a)b();// y
+a();/*! a */b();/*! b */a();// x
+if(a)b();// y
 else c()
 
 
@@ -1558,7 +1557,7 @@ import n from\\"x\\"
 import{let as i}from\\"y\\"
 new a[function(){b()}],new a[()=>b()],new(a[b()]),x=(function(){}).y
 do{}while(a)
-{}switch(a){case 1:\\"y\\"}1 in a,.5 in a
+if(a===1){\\"y\\"}1 in a,.5 in a
 
 
 /* p */

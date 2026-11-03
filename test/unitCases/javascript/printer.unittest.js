@@ -398,7 +398,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"function f(m, c, e){ const s = e; let t = s; g(s.kind, t, {s}); var o = (n) => n + t; m.exports = o; if (c) { var p = () => 1 } g(p); switch (c) { case 1: var q = () => 2; case 2: g(q) } const r = () => 3; for (;;) g(r); const u = function(){}; { g(u) } }",
 				{},
-				"function f(c,s,t){g(t.kind,t,{s:t}),c.exports=c=>c+t;if(s)var n=()=>1;g(n);switch(s){case 1:var o=()=>2;case 2:g(o)}let r=()=>3;for(;;)g(r);{g(function(){})}}"
+				"function f(c,s,t){g(t.kind,t,{s:t}),c.exports=c=>c+t;if(s)var n=()=>1;g(n);switch(s){case 1:var o=()=>2;case 2:g(o)}let r=()=>3;for(;;)g(r);g(function(){})}"
 			],
 			// A `var` is a constant where nothing called before it can read it,
 			// nor a read in its own function before it.
@@ -476,7 +476,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"function f(a){ var a = 1; return arguments[0] } function g(){ var b = 1; var b = 2 } function e(){ var x = 1; eval('x') } function w(){ /* keep */ var c = 1 } function l(){ { function inner() {} } var m = -b, n = typeof b }",
 				{ format: { comments: /keep/ } },
-				'function f(n){var n=1;return arguments[0]}function g(){}function e(){var x=1;eval("x")}function w(){}function l(){{}-b}'
+				'function f(n){var n=1;return arguments[0]}function g(){}function e(){var x=1;eval("x")}function w(){}function l(){-b}'
 			],
 			[
 				"var top = 1; let t2 = 2; export function e() {} function unusedTop() {} var ex = 1; export { ex }",
@@ -886,7 +886,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"function f(c){ switch (c) { case -1: c = 1; break; case 0: c = 2; break; default: break } switch (c) { case 1: x(); break } switch (c) { default: break } switch (c) { case 1: y(); break; default: } a: switch (c) { case 1: z(); break a } switch (c) { case 1: y(); /*! c */ break } var i = r(c); return import(i) }",
 				{},
-				"function f(c){switch(c){case-1:c=1;break;case 0:c=2}switch(c){case 1:x()}switch(c){default:}switch(c){case 1:y()}c:switch(c){case 1:z();break c}switch(c){case 1:y();/*! c */break}return import(r(c))}"
+				"function f(c){switch(c){case-1:c=1;break;case 0:c=2}if(c===1)x();switch(c){default:}if(c===1)y();c:switch(c){case 1:z();break c}switch(c){case 1:y();/*! c */break}return import(r(c))}"
 			],
 			// `!!!x` read for its truth folds its innermost `!!` alone.
 			[
@@ -1221,7 +1221,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["function f(a,o){if(a)return;for(var k of o)g(k)}", {}, "function f(f,o){if(!f)for(var r of o)g(r)}"],
 			["function f(a){if(a)return;while(a)g()}", {}, "function f(a){if(!a)while(a)g()}"],
 			["function f(a){if(a)return;do g();while(a)}", {}, "function f(a){if(!a)do{g()}while(a)}"],
-			["function f(a){if(a)return;switch(a){case 1:g()}}", {}, "function f(a){if(!a)switch(a){case 1:g()}}"],
+			["function f(a){if(a)return;switch(a){case 1:g()}}", {}, "function f(a){if(!a)if(a===1)g()}"],
 			["function f(a){if(a)return;try{g()}catch(e){}}", {}, "function f(t){if(!t)try{g()}catch(t){}}"],
 			["function f(a){if(a)return;l:g()}", {}, "function f(f){if(f)return;f:g()}"],
 			["function f(a){if(a)return;if(1)g()}", {}, "function f(f){if(f)return;g()}"],
@@ -1333,7 +1333,111 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["function f(x){x=y+x;h(x)}", {}, "function f(x){h(x=y+x)}"],
 			["function f(o){o.p=o.p+1}", {}, "function f(o){o.p=o.p+1}"],
 			["function f(x){with(o)x=x+1;h(x)}", {}, "function f(x){with(o)x=x+1;h(x)}"],
-			["function f(x){x=x&&1;h(x)}", {}, "function f(x){h(x=x&&1)}"]
+			["function f(x){x=x&&1;h(x)}", {}, "function f(x){h(x=x&&1)}"],
+			// An unread catch binding goes; `a?a:b` of a local prints `a||b`; equal unary branches fold.
+			["function f(){try{g()}catch(r){h()}}", {"ecma": 2020}, "function f(){try{g()}catch{h()}}"],
+			["function f(){try{g()}catch(r){h()}}", {}, "function f(){try{g()}catch(c){h()}}"],
+			["function f(){try{g()}catch(r){h(r)}}", {"ecma": 2020}, "function f(){try{g()}catch(c){h(c)}}"],
+			["function f(){try{g()}catch(r){eval(\"h(r)\")}}", {"ecma": 2020}, "function f(){try{g()}catch(r){eval(`h(r)`)}}"],
+			["function f(){try{g()}catch({a}){h()}}", {"ecma": 2020}, "function f(){try{g()}catch({a}){h()}}"],
+			["function f(){try{g()}catch(r){r=1}}", {"ecma": 2020}, "function f(){try{g()}catch(c){c=1}}"],
+			["function f(a,b){return a?a:b}", {}, "function f(a,n){return a||n}"],
+			["function f(a,c){return(a?a:a)&&c}", {}, "function f(a,c){return a&&c}"],
+			["function f(a){return a?a:a}", {}, "function f(a){return a}"],
+			["function f(a,b){return a?a:b?1:2}", {}, "function f(a,n){return a?a:n?1:2}"],
+			["function f(a,b){return a?a:b=1}", {}, "function f(a,n){return a?a:n=1}"],
+			["function f(a,b){return a?a:b??1}", {}, "function f(a,n){return a?a:n??1}"],
+			["function f(a,b){return a?a:b||1}", {}, "function f(a,n){return a||n||1}"],
+			["function f(a,b){return a?a:b&&1}", {}, "function f(a,n){return a||n&&1}"],
+			["function f(a,b){return(a?a:b)??1}", {}, "function f(a,n){return(a||n)??1}"],
+			["function f(a,b){return a?a:(b,1)}", {}, "function f(a,n){return a?a:(n,1)}"],
+			["function f(a,b){return a?a:()=>1}", {}, "function f(a,n){return a?a:()=>1}"],
+			["function*f(a,b){return a?a:yield}", {}, "function*f(a,n){return a?a:yield}"],
+			["function f(b){return a?a:b}", {}, "function f(n){return a?a:n}"],
+			["function f(o,b){return o.a?o.a:b}", {}, "function f(o,n){return o.a?o.a:n}"],
+			["function f(a,b){with(b)return a?a:b}", {}, "function f(a,b){with(b)return a?a:b}"],
+			["function f(a,b){return a?b:a}", {}, "function f(a,n){return a?n:a}"],
+			["function f(a,b){x(a?a:b)}", {}, "function f(a,b){x(a||b)}"],
+			["function f(n){return n?-1:-1}", {}, "function f(n){return-1}"],
+			["function f(n,o){return n?typeof o:typeof o}", {}, "function f(o,n){return typeof n}"],
+			["function f(n,o){return n?-o:-o}", {}, "function f(n,o){return-o}"],
+			// A block scoping no name prints its statements in the list holding it, unless one becomes a directive.
+			["function f(){{var y=g()}h(y)}", {}, "function f(){var f=g();h(f)}"],
+			["function f(){g();{h();k()}m()}", {}, "function f(){g();h(),k();m()}"],
+			["function f(){{let y=g();h(y)}{let y=k();h(y)}}", {}, "function f(){h(g());h(k())}"],
+			["function f(){{function y(){}h(y)}}", {}, "function f(){{function n(){}h(n)}}"],
+			["function f(){{class y{}h(y)}}", {}, "function f(){{class c{}h(c)}}"],
+			["function f(){{\"use strict\";g()}h()}", {}, "function f(){g();h()}"],
+			["{\"use strict\"}x=1", {}, "x=1;"],
+			["function f(){{(\"use strict\")}h()}", {}, "function f(){h()}"],
+			["function f(x){switch(x){case 1:{var y=g();h(y)}}}", {}, "function f(c){if(c===1){h(g())}}"],
+			["function f(){a:{g();break a}h()}", {}, "function f(){a:{g();break a}h()}"],
+			["function f(){if(a){{g()}h()}}", {}, "function f(){if(a){g();h()}}"],
+			["function f(){for(;;){{g()}h()}}", {}, "function f(){for(;;){g();h()}}"],
+			["function f(){{if(a)return 1}return 2}", {}, "function f(){if(a)return 1;return 2}"],
+			["x={}", {}, "x={};"],
+			["function f(){{var a=1}{var b=2}h(a,b)}", {}, "function f(){var a=1;var b=2;h(a,b)}"],
+			["function f(){{\"use strict\";g()}h()}", {"compress": {"side_effects": false}}, "function f(){{\"use strict\";g()}h()}"],
+			["{\"use strict\";g()}x=1", {"compress": {"side_effects": false}}, "{\"use strict\";g()}x=1;"],
+			["function f(){{(\"use strict\")}h()}", {"compress": {"side_effects": false}}, "function f(){{\"use strict\"}h()}"],
+			["function f(){;{\"use strict\";g()}}", {"compress": {"side_effects": false}}, "function f(){{\"use strict\";g()}}"],
+			["function f(){{`use strict`;g()}h()}", {"compress": {"side_effects": false}}, "function f(){{`use strict`,g()}h()}"],
+			["function f(){{\"use \"+\"strict\";g()}h()}", {"compress": {"side_effects": false}}, "function f(){{;\"use strict\";g()}h()}"],
+			["function f(){{{\"use strict\"}g()}h()}", {"compress": {"side_effects": false}}, "function f(){{\"use strict\"}g();h()}"],
+			["function f(){{g();\"x\"}h()}", {"compress": {"side_effects": false}}, "function f(){g();\"x\";h()}"],
+			["function f(){g();{a();/*! keep */}h()}", {}, "function f(){g();a();/*! keep */h()}"],
+			["{/*! keep */}x()", {}, "{/*! keep */}x();"],
+			["function f(){for(k in o){{var b=5;while(--b>0)g()}}}", {}, "function f(){for(k in o){var f=5;while(--f>0)g()}}"],
+			["function f(){if(a){{g();h()}}}", {}, "function f(){if(a){g(),h()}}"],
+			// A `continue` ending its own loop's body goes; a labelled or commented one stays.
+			["function f(){while(foo){x();y();continue}}", {}, "function f(){while(foo)x(),y()}"],
+			["function f(){do{x();continue}while(a)}", {}, "function f(){do{x()}while(a)}"],
+			["function f(){for(k in o){continue}}", {}, "function f(){for(k in o);}"],
+			["function f(){for(;;){x();continue/*! c */}}", {}, "function f(){for(;;){x();continue;/*! c */}}"],
+			["function f(){l:while(a){x();continue l}}", {}, "function f(){n:while(a){x();continue n}}"],
+			// A `switch` of one case prints as an `if`, but one a `break` leaves, labelled or not in a list.
+			["function f(){switch(foo){case\"bar\":baz()}}", {}, "function f(){if(foo===\"bar\")baz()}"],
+			["function f(){switch(foo){case\"bar\":baz();break}}", {}, "function f(){if(foo===\"bar\")baz()}"],
+			["function f(){switch(foo){case 1:baz();break;}h()}", {}, "function f(){if(foo===1)baz();h()}"],
+			["function f(){switch(foo){default:baz()}}", {}, "function f(){switch(foo){default:baz()}}"],
+			["function f(){switch(foo){case 1:if(a)break;baz()}}", {}, "function f(){switch(foo){case 1:if(a)break;baz()}}"],
+			["function f(){switch(foo()){case g():let x=1;h(x)}}", {}, "function f(){switch(foo()){case g():let c=1;h(c)}}"],
+			["function f(){switch(a){case 1:b();c()}}", {}, "function f(){if(a===1){b();c()}}"],
+			["function f(){switch(a){case 1:return b}}", {}, "function f(){if(a===1)return b}"],
+			["function f(){switch(a){case 1:b();break;default:}}", {}, "function f(){if(a===1)b()}"],
+			["function f(){switch(a){case 1:b();break;default:c()}}", {}, "function f(){switch(a){case 1:b();break;default:c()}}"],
+			["function f(){switch(a+b){case 1:b()}}", {}, "function f(){switch(a+b){case 1:b()}}"],
+			["function f(){switch(a){case b?1:2:c()}}", {}, "function f(){switch(a){case b?1:2:c()}}"],
+			["function f(){if(c){switch(d){case 1:if(a)b()}}else e()}", {}, "function f(){if(c){if(d===1){if(a)b()}}else e()}"],
+			["function f(){if(c){switch(d){case 1:b()}}else e()}", {}, "function f(){if(c){if(d===1)b()}else e()}"],
+			["function f(){for(;;){switch(d){case 1:continue}}}", {}, "function f(){for(;;)if(d===1)continue}"],
+			["function f(){l:switch(d){case 1:x();break l}}", {}, "function f(){c:switch(d){case 1:x();break c}}"],
+			["function f(){switch(d){case 1:\"use strict\"}}", {}, "function f(){if(d===1){\"use strict\"}}"],
+			["function f(){switch(d){case 1:for(;;)break;g()}}", {}, "function f(){if(d===1){for(;;)break;g()}}"],
+			["function f(){switch(d){case 1:/*! k */g()}}", {}, "function f(){if(d===1)/*! k */g()}"],
+			["function f(){switch(d){case 1:}}", {}, "function f(){switch(d){case 1:}}"],
+			["function f(){switch(-x){case typeof y:g()}}", {}, "function f(){if(-x===typeof y)g()}"],
+			["switch(a){case 1:var x=1}console.log(x)", {}, "if(a===1){var x=1}console.log(x);"],
+			["function f(){switch(d){case 1:if(a)b();else c()}}", {}, "function f(){if(d===1){a?b():c()}}"],
+			["function f(){switch(d){case 1:{let x=g();h(x)}}}", {}, "function f(){if(d===1){h(g())}}"],
+			["function f(){switch(d){case 1:function q(){}q()}}", {}, "function f(){switch(d){case 1:function c(){}c()}}"],
+			["function f(){for(;;)switch(d){case 1:continue}}", {}, "function f(){for(;;)switch(d){case 1:continue}}"],
+			["function f(){a:for(;;){switch(d){case 1:break a}g()}}", {}, "function f(){a:for(;;){if(d===1)break a;g()}}"],
+			["function f(){switch(d){case 1:x();break;case 2:y()}}", {}, "function f(){switch(d){case 1:x();break;case 2:y()}}"],
+			["function f(){switch(1){case 1:x()}}", {}, "function f(){x()}"],
+			["function f(x){switch(x){case 1:g()}return x}", {"compress": {"side_effects": false}}, "function f(c){if(c===1)g();return c}"],
+			["function f(){switch(d){case 1:x()}}", {"compress": {"dead_code": false}}, "function f(){switch(d){case 1:x()}}"],
+			["function f(){switch(g()){case 2:debugger;h();default:}}", {}, "function f(){if(g()===2)h()}"],
+			["function f(){switch(g()){case 2:debugger}}", {}, "function f(){if(g()===2){}}"],
+			["function f(x){let t=1;switch(x){case t:let t=2;return t}}", {}, "function f(t){switch(t){case t:let t=2;return t}}"],
+			["function f(x){switch(x){case typeof q:label:function q(){};return 1}return 2}", {}, "function f(n){switch(n){case typeof t:n:function t(){};return 1}return 2}"],
+			["function f(){{l:function q(){}}g(typeof q)}", {}, "function f(){{f:function f(){}}g(typeof f)}"],
+			["switch (b) { case 2: switch (a) { case 2: foo()}}", {}, "if(b===2)if(a===2)foo();"],
+			["if (a) { if (c) switch (b) { case 2: switch (a) { case 2: foo()}}; b() }", {}, "if(a){if(c)if(b===2)if(a===2)foo();b()}"],
+			["if(c)switch(d){case 1:x()}else y()", {}, "if(c)switch(d){case 1:x()}else y();"],
+			["if(p){if(c)switch(d){case 1:x()}}else z()", {}, "if(p){if(c)if(d===1)x()}else z();"],
+			["switch(b){case 2:switch(a){case 2:foo();break;case 3:g()}}", {}, "if(b===2)switch(a){case 2:foo();break;case 3:g()}"],
+			["if(c)switch(d){case 1:if(a)b()}", {}, "if(c)if(d===1){if(a)b()}"]
 		];
 		for (const [source, options, expected] of cases) {
 			const { code } = minifyOnePass(source, {
@@ -2398,7 +2502,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				"export function f(r){var h;h=x=>x+1;r.add([h])}export function g(r){var a,b;b=r();return[a,b]}export function h(){var h;h=h||1;return h}export function k(r){let a;a=r();switch(r){case 1:var c;c=r();r(c,c)}return[a,a]}"
 			)
 		).toBe(
-			"export function f(r){r.add([r=>r+1])}export function g(r){var t;return[t,r()]}export function h(){var r;return r=r||1}export function k(r){let t;t=r();switch(r){case 1:var a;a=r();r(a,a)}return[t,t]}"
+			"export function f(r){r.add([r=>r+1])}export function g(r){var t;return[t,r()]}export function h(){var r;return r=r||1}export function k(r){let t;t=r();if(r===1){var a;a=r();r(a,a)}return[t,t]}"
 		);
 		// A `let` nothing reads loses the writes of closures made once it is set,
 		// not of one made before it, of a function declaration, or a closure that reads it.
@@ -3837,7 +3941,7 @@ describe("one-pass minify of statement sequences", () => {
 		const cases = [
 			[
 				"function s(x){switch(1){case 1:{for(;;)break;while(x)break;do{break}while(x);for(k in x)break;for(k of x)break;switch(x){case 2:break}(function(){});(()=>{});class C{};x()}break}}",
-				"function s(e){{for(;;)break;while(e)break;do{break}while(e);for(k in e)break;for(k of e)break;switch(e){case 2:}e()}}"
+				"function s(e){for(;;)break;while(e)break;do{break}while(e);for(k in e)break;for(k of e)break;switch(e){case 2:}e()}"
 			],
 			["function s(x){switch(1){case 1:return x;case 2:y()}}", "function s(c){return c}"],
 			// Running nothing, or what prints as one sequence.
