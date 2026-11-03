@@ -557,6 +557,14 @@ describe("JavascriptParser", () => {
 			"5n ^ 2n": "bigint=7",
 			"5n >> 2n": "bigint=1",
 			"5n << 2n": "bigint=20",
+			"1n - 1": "",
+			"1n & 1": "",
+			"+1n": "",
+			"1n / 0n": "",
+			"1n - 1": "",
+			"1n & 1": "",
+			"+1n": "",
+			"1n / 0n": "",
 			"null == null": "bool=true",
 			"null === null": "bool=true",
 			"null != null": "bool=false",
@@ -748,6 +756,23 @@ describe("JavascriptParser", () => {
 				);
 			});
 		}
+
+		it("should not warn when a const operation throws at runtime", () => {
+			const warnings = [];
+			const spy = jest.spyOn(console, "warn").mockImplementation((m) => {
+				warnings.push(String(m));
+			});
+			try {
+				// mixing BigInt with another type and BigInt division by zero throw
+				// at runtime; `+1n` cannot convert a BigInt to a number
+				for (const source of ["1n - 1", "1n & 1", "1n / 0n", "+1n"]) {
+					evaluateInParser(source);
+				}
+				expect(warnings).toEqual([]);
+			} finally {
+				spy.mockRestore();
+			}
+		});
 	});
 
 	describe("async/await support", () => {
