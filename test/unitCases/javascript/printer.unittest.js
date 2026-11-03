@@ -350,7 +350,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				'typeof a === "string" && typeof b !== typeof c && a === "s" && "s" === typeof a && "a" !== "b" && typeof a === /*! c */ "s"; o["key"]; o?.["if"]; o["a-b"]; x = 1["k"]; o[/*! c */ "k"]; o[1]; function f(){ return void 0 } function g(){ return undefined } function h(){ return void x() } function k(){ return /*! c */ void 0 }',
 				{},
-				'"string"==typeof a&&typeof b!=typeof c&&a==="s"&&"s"==typeof a&&!0&&typeof a==/*! c */"s",o.key,o?.if,o["a-b"],x=1..k,o[/*! c */"k"],o[1];function f(){}function g(){}function h(){return void x()}function k(){/*! c */return void 0}'
+				'"string"==typeof a&&typeof b!=typeof c&&a==="s"&&"s"==typeof a&&typeof a==/*! c */"s",o.key,o?.if,o["a-b"],x=1..k,o[/*! c */"k"],o[1];function f(){}function g(){}function h(){return void x()}function k(){/*! c */return void 0}'
 			],
 			// A `const` nothing writes is a `let`, private to the module or where
 			// `toplevel` says so, and a loop forever is `for(;;)`.
@@ -1497,6 +1497,10 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// `x["length"]` folds as `x.length` does; an `else if` known false goes, one known true prints its branch.
 			["use(\"abc\"[\"length\"]);use([1,2,3][\"length\"]);use([,,1][\"length\"]);use(/a/[\"source\"]);use(\"a\"[\"x\"]);use(\"a\"[0]);use(a?.[\"length\"]);delete\"ab\"[\"length\"]", {}, "use(3),use(3),use(3),use(\"a\"),use(\"a\".x),use(\"a\"[0]),use(a?.length),delete\"ab\".length;"],
 			["if(xxx){foo}else if(false){bar};if(xxx){foo}else if(false){bar}else{baz};if(xxx){foo}else if(true){bar}else if(false){baz};if(x)a();else if(0){var q=1}", {}, "if(xxx)foo;if(xxx)foo;else baz;if(xxx)foo;else bar;if(x)a();else if(0)var q=1;"],
+			// A part in parentheses, after a hole, prints what it holds.
+			["function f(p3){([,(b+1)],g());({a:(h())});[(k()),,(m())]}", { mangle: false }, "function f(p3){b+1,g(),h(),k(),m()}"],
+			// What a logical nobody reads holds is read for its truth; a conditional printing as `!t` or `!!t` takes what a unary takes.
+			["(x?true:false)&&y();(x?true:y)&&y();(x&&true)&&y();(x||false)&&y();a?true:false;a?false:true;x=(a?!0:!1)||b;x=y&&(a?!0:!1);x=(a?!1:!0).b;x=(a<b?!0:!1)&&c;x=(a?!0:!1)+1;(a+b?!0:!1)&&c();x=(a?!1:!0)**2;x=(a?!0:!1)?1:2", {}, "x&&y(),(x||y)&&y(),x&&y(),x&&y(),a,a,x=!!a||b,x=y&&!!a,x=(!a).b,x=(a<b)&&c,x=!!a+1,(a+b)&&c(),x=(!a)**2,x=a?1:2;"],
 			// `!` negates an optional chain whole.
 			["function f(){if(t?.has(x))return;y()}for(;;){if(t?.has(x))continue;y()}x=t?.a?!1:y", {}, "function f(){if(!t?.has(x))y()}for(;;){if(!t?.has(x))y()}x=!t?.a&&y;"]
 		];
