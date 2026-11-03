@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Minify equal `?:` branches, exits before a body end and constant array reads.
+Minify more conditionals, loop exits, dead code and unread values in one pass.
