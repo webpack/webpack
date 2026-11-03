@@ -939,7 +939,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: template-string/template_concattenating_string",
 			"terser compress: template-string/evaluate_nested_templates",
 			"terser compress: template-string/escape_dollar_curly",
-			"terser compress: template-string/simple_string",
 			"terser compress: template-string/sequence_2",
 			"terser compress: template-string/tagged_call_with_invalid_escape_2",
 			"terser compress: template-string/tagged_template_function_inline_1",
@@ -1105,7 +1104,6 @@ const SWC_SMALLER_BY_REASON = [
 		[
 			"swc minifier: fixture/issues/12182/hoist-props/input.js",
 			"swc minifier: fixture/issues/12182/receiver-sensitive/input.js",
-			"swc minifier: fixture/issues/12545/iife_rest_escape_object/input.js",
 			"swc minifier: fixture/issues/9610-methods/input.js",
 			"swc minifier: fixture/member_expr/callee/input.js",
 			"terser compress: hoist_props/direct_access_2"
