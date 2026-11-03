@@ -350,7 +350,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				'typeof a === "string" && typeof b !== typeof c && a === "s" && "s" === typeof a && "a" !== "b" && typeof a === /*! c */ "s"; o["key"]; o?.["if"]; o["a-b"]; x = 1["k"]; o[/*! c */ "k"]; o[1]; function f(){ return void 0 } function g(){ return undefined } function h(){ return void x() } function k(){ return /*! c */ void 0 }',
 				{},
-				'"string"==typeof a&&typeof b!=typeof c&&a==="s"&&"s"==typeof a&&typeof a==/*! c */"s",o.key,o?.if,o["a-b"],x=1..k,o[/*! c */"k"],o[1];function f(){}function g(){}function h(){return void x()}function k(){/*! c */return void 0}'
+				'"string"==typeof a&&typeof b!=typeof c&&a==="s"&&"s"==typeof a&&typeof a==/*! c */"s",o.key,o?.if,o["a-b"],x=1..k,o[/*! c */"k"],o[1];function f(){}function g(){}function h(){x()}function k(){/*! c */return void 0}'
 			],
 			// A `const` nothing writes is a `let`, private to the module or where
 			// `toplevel` says so, and a loop forever is `for(;;)`.
@@ -501,7 +501,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				{ mangle: false },
 				"const k=1;print(a+1,`${k}`,o[c]);"
 			],
-			["function f(){ return void a }", { mangle: false }, "function f(){return void a}"],
+			["function f(){ return void a }", { mangle: false }, "function f(){a}"],
 			// A `var` whose dropped declarator prints apart keeps its braces.
 			[
 				"function h(c) { if (c) { var a = f(), b = 2 } return b }",
@@ -1545,6 +1545,8 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// Nobody reading a boolean compared, its `!` goes; an integer equal to `0` is `!` of it wherever read, but not where parentheses would hold the `!`.
 			["a instanceof b===false;delete x!=true;x=(a instanceof b)===false", {}, "a instanceof b,delete x,x=!(a instanceof b);"],
 			["f((a&2)==0);f(0===(a&4));f((a&4)!=0);(a&2)==0,g();x=2+((a&2)==0);x=[(a^2)==0]", {}, "f(!(a&2)),f(!(a&4)),f((a&4)!=0),a&2,g(),x=2+((a&2)==0),x=[!(a^2)];"],
+			// A `return` of what is `undefined` anyway ending a function prints what it runs, but not nested, after an `if` or as an arrow's body.
+			["function f(){return void foo()}function g(){b;return a,void 0}function h(){if(x)return void g();else k()}function i(){return void function(){g()}()}function j(){return void {a:g()}.a}function k(){if(x)return void g();return void h()}function l(){return g(),void 0}f=()=>{return void g()};f=()=>{h();return void g()};class C{m(){return void g()}}", { mangle: false }, "function f(){foo()}function g(){b,a}function h(){if(x)return void g();k()}function i(){(function(){g()}())}function j(){({a:g()}.a)}function k(){return x?void g():void h()}function l(){g()}f=()=>void g(),f=()=>(h(),void g());class C{m(){g()}}"],
 			// `!` negates an optional chain whole.
 			["function f(){if(t?.has(x))return;y()}for(;;){if(t?.has(x))continue;y()}x=t?.a?!1:y", {}, "function f(){if(!t?.has(x))y()}for(;;){if(!t?.has(x))y()}x=!t?.a&&y;"]
 		];

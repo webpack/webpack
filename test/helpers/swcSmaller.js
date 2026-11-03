@@ -759,7 +759,8 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/simple/order/fn/1/input.js",
 			"swc minifier: full/next-30498/1/input.js",
 			"terser compress: issue-782/dont_remove_this_binding_sequence",
-			"terser compress: issue-973/this_binding_side_effects"
+			"terser compress: issue-973/this_binding_side_effects",
+			"terser compress: issue-782/remove_redundant_sequence_items"
 		]
 	],
 	[
