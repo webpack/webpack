@@ -1627,6 +1627,9 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["function f(fn){var frame=c.get(fn);if(frame!==void 0)return frame;var control;g(control=h());return control}function k(){var a=g(),b;h(a,b);var c,d;var [e]=a;var q;use(c,d,e,q)}", {}, "function f(r){var a=c.get(r),n;if(a!==void 0)return a;return g(n=h()),n}function k(){var r=g(),a;h(r,a);var n,e,[f]=r,o;use(n,e,f,o)}"],
 			// A `var` whose declarators print their values apart is several statements: a loop keeps its braces, and no bare `var` joins it.
 			["function f(){for(let i=0;i<3;i++){var v=i,w=g(i)}}function k(){var b=2,a=f();use(b);var c;use(c=1,c)}", {}, "function f(){for(let i=0;i<3;i++){i;g(i)}}function k(){f();use(2);var i;use(i=1,i)}"],
+			// terser's `a|(b|c)` as `a|b|c`, for `|`, `&` and `^` alone.
+			["x=a|(b|c);x=a&(b&c);x=a^(b^c);x=a|(b&c);x=a&(b|c);x=a-(b-c);x=a|((b|c)|d)", {}, "x=a|b|c,x=a&b&c,x=a^b^c,x=a|b&c,x=a&(b|c),x=a-(b-c),x=a|b|c|d;"],
+			["x=a|/*k*/(b|c)", { format: { comments: "all" } }, "x=a|(/*k*/b|c);"],
 			// `!` negates an optional chain whole.
 			["function f(){if(t?.has(x))return;y()}for(;;){if(t?.has(x))continue;y()}x=t?.a?!1:y", {}, "function f(){if(!t?.has(x))y()}for(;;){if(!t?.has(x))y()}x=!t?.a&&y;"]
 		];
