@@ -42,10 +42,18 @@ jobs:
           cache: yarn
       - run: node tooling/retry.js yarn --frozen-lockfile
       - run: npx pkg-pr-new publish --compact --json output.json --comment=off
-      - name: Add metadata to output
+      - name: Write the preview package report
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const { run } = await import('${{ github.workspace }}/.github/scripts/publish-to-pkg-pr-new.mjs');
-            await run({ github, context });
+            run({ context });
+
+      # `pr-reports.yml` puts this in the pull request's one report comment.
+      - name: Upload the report for the pull request comment
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: pr-report-pkg-pr-new
+          path: pkg-pr-new-report.md
+          retention-days: 90
