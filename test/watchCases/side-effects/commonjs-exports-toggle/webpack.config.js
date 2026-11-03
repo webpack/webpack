@@ -23,6 +23,7 @@ module.exports = {
 				"CommonJsExportsToggle",
 				(compilation) => {
 					compilation.hooks.afterHash.tap("CommonJsExportsToggle", () => {
+						if (!compiler.watchMode) return;
 						const step = String(currentWatchStep.step);
 						const hash = /** @type {string} */ (compilation.hash);
 						hashes.set(step, hash);
