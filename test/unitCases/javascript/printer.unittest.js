@@ -1660,6 +1660,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// A call measured by what it holds stays one where an argument is worked out, and where its answer prints longer.
 			["x=[Math.min(1/3-1,0,0),Math.sqrt(.5),Math.max(1,2).x]", {}, "x=[Math.min(1/3-1,0,0),Math.sqrt(.5),2..x];"],
 			["x=[Math.abs(-(1+1)),`ab`.concat(`c`),`a${1}`.concat(\"b\"),Math.max(1.5,2.5).x,Math.min(-1,2)()]", {}, "x=[Math.abs(-2),\"abc\",\"a1\".concat(\"b\"),2.5.x,(-1)()];"],
+			["x=[\"abcNaNdef\".indexOf(NaN),(-Infinity).toString(),String.fromCharCode(Infinity),isFinite(-Infinity),\"a function\".indexOf(typeof function(){})]", {}, "x=[3,\"-Infinity\",\"\\0\",!1,\"a function\".indexOf(\"function\")];"],
 			// Constructed, it parenthesizes only a sign, as a second print would.
 			["x=[new(\"abc\".concat(1,\"def\")),new(Math.min(-1,2)),new(Math.min(1,2))(3),new(g(1))]", {}, "x=[new\"abc1def\",new(-1),new 1(3),new(g(1))];"],
 			// Unread, it goes however long its answer; an outer call folds on it, and another radix needs a safe integer.
