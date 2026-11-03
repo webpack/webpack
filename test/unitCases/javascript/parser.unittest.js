@@ -6081,6 +6081,49 @@ describe("parseProgram", () => {
 		expect(A.source(A.child(0, program))).toBe("g()");
 	});
 
+	it("reads children in source order where fields hold them otherwise", () => {
+		const source = "x: switch (a) { case b: c; } `p${q}r${s}t`;";
+		const program = /** @type {number} */ (parseProgram(source));
+		/**
+		 * @param {number} node a node
+		 * @returns {string[]} its children's source, through `child` and `childCount`
+		 */
+		const read = (node) => {
+			/** @type {string[]} */
+			const texts = [];
+			for (let i = 0; i < A.childCount(node); i++) {
+				texts.push(A.source(A.child(i, node)));
+			}
+			// past the end, and the same answer read again from the cache
+			expect(A.child(A.childCount(node), node)).toBe(0);
+			expect(A.children(node).map((child) => A.source(child))).toEqual(texts);
+			return texts;
+		};
+		const label = A.child(0, program);
+		expect(read(label)).toEqual(["x", "switch (a) { case b: c; }"]);
+		const switchCase = A.child(1, A.child(1, label));
+		expect(read(switchCase)).toEqual(["b", "c;"]);
+		const template = A.child(0, A.child(1, program));
+		expect(read(template).map((text) => text.replace(/^\$\{|\}$/g, ""))).toEqual(
+			["p", "q", "r", "s", "t"]
+		);
+	});
+
+	it("leaves a tree its caller keeps alone through an ESTree parse", () => {
+		const {
+			takeParsedTree,
+			usePathTree
+		} = require("../../../lib/javascript/syntax-parser");
+		const program = /** @type {number} */ (parseProgram("a; b;"));
+		const tree = /** @type {SyntaxTree} */ (takeParsedTree());
+		usePathTree(tree, "a; b;");
+		expect(A.childCount(program)).toBe(2);
+		parseProgram("c", 0, { estree: true });
+		expect(A.source(A.child(1, program))).toBe("b;");
+		usePathTree(null, "");
+		tree.release();
+	});
+
 	it("starts at the offset given", () => {
 		const program = /** @type {number} */ (parseProgram("abc  def;", 5));
 		expect(A.source(A.child(0, program))).toBe("def;");

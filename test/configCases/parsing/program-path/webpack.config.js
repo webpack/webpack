@@ -6,7 +6,7 @@ const acorn = require("acorn");
 /** @typedef {import("../../../../lib/module/NormalModule")} NormalModule */
 /** @import JavascriptParser, { ParseOptions, ParseResult } from "../../../../lib/javascript/JavascriptParser" */
 
-const PLUGIN_NAME = "program-tree";
+const PLUGIN_NAME = "program-path";
 
 const MODULE_TYPES = [
 	"javascript/auto",
@@ -15,34 +15,48 @@ const MODULE_TYPES = [
 ];
 
 /**
- * Checks every built module fired `programTree` and what the tree-reading
- * taps recorded on it.
+ * Checks every built module fired `program` for path and ESTree taps, and what
+ * the path-reading taps recorded on it.
  * @param {Compiler} compiler the compiler
  * @returns {void}
  */
-const programTree = (compiler) => {
+const programPath = (compiler) => {
 	compiler.hooks.compilation.tap(
 		PLUGIN_NAME,
 		(compilation, { normalModuleFactory }) => {
 			/** @type {Set<string>} */
 			const walked = new Set();
+			/** @type {Set<string>} */
+			const estree = new Set();
 			for (const type of MODULE_TYPES) {
 				normalModuleFactory.hooks.parser
 					.for(type)
 					.tap(PLUGIN_NAME, (moduleParser) => {
 						const parser = /** @type {JavascriptParser} */ (moduleParser);
-						// another parse, started before the plugins read the tree
-						parser.hooks.programTree.tap(
-							{ name: PLUGIN_NAME, stage: -100 },
+						// another parse, started before the plugins read the path
+						parser.hooks.program.tap(
+							{ name: PLUGIN_NAME, path: true, stage: -100 },
 							() => {
 								parser.evaluate("1 + 1");
 							}
 						);
-						parser.hooks.programTree.tap(PLUGIN_NAME, (tree, program) => {
-							expect(tree.type(program)).toBe(
-								compiler.webpack.javascript.syntax.parser.NodeType.Program
-							);
-							walked.add(
+						parser.hooks.program.tap(
+							{ name: PLUGIN_NAME, path: true },
+							(path, program) => {
+								expect(path.type(program)).toBe(
+									compiler.webpack.javascript.syntax.parser.NodeType.Program
+								);
+								walked.add(
+									/** @type {NormalModule} */ (parser.state.module).resource
+								);
+							}
+						);
+						// a tap without `path` still gets the ESTree object
+						parser.hooks.program.tap(PLUGIN_NAME, (ast, comments) => {
+							expect(ast.type).toBe("Program");
+							expect(Array.isArray(ast.body)).toBe(true);
+							expect(Array.isArray(comments)).toBe(true);
+							estree.add(
 								/** @type {NormalModule} */ (parser.state.module).resource
 							);
 						});
@@ -52,6 +66,7 @@ const programTree = (compiler) => {
 				const { resource } = /** @type {NormalModule} */ (module);
 				if (!/\.js$/.test(resource)) return;
 				expect(walked.has(resource)).toBe(true);
+				expect(estree.has(resource)).toBe(true);
 				const buildInfo = /** @type {NonNullable<typeof module.buildInfo>} */ (
 					module.buildInfo
 				);
@@ -95,7 +110,7 @@ module.exports = {
 	output: {
 		filename: "[name].js"
 	},
-	plugins: [programTree],
+	plugins: [programPath],
 	performance: {
 		hints: "warning",
 		pureAnnotations: true,
@@ -108,7 +123,7 @@ module.exports = {
 				parser: {
 					/**
 					 * A program another parser read, marking no directive, which the
-					 * build writes into a tree.
+					 * build reads through the path.
 					 * @param {string} code source code
 					 * @param {ParseOptions} options parse options
 					 * @returns {ParseResult} parse result

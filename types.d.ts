@@ -15407,6 +15407,66 @@ declare class JavascriptModulesPlugin {
 	};
 	static chunkHasJs: (chunk: Chunk, chunkGraph: ChunkGraph) => boolean;
 }
+
+/**
+ * The JavaScript path: the tree's accessor with the walk's current position
+ * on it, the single argument every visitor and `{ path: true }` tap receives.
+ */
+declare abstract class JavascriptNodePath {
+	state: unknown;
+	get node(): number;
+	get parent(): null | number;
+	get index(): number;
+
+	/**
+	 * Stops the walk descending into the current node (enter only).
+	 */
+	skipChildren(): void;
+
+	/**
+	 * Stops the walk: no visitor fires after the current one returns.
+	 */
+	stop(): void;
+	ancestor(level: number): number;
+	within(type: number): boolean;
+	type(n?: number): number;
+	range(n?: number): [number, number];
+	start(n?: number): number;
+	end(n?: number): number;
+
+	/**
+	 * Every JavaScript line terminator ends a line, as a parse error's position counts them.
+	 */
+	loc(n?: number): [number, number, number, number];
+	source(n?: number, end?: number): string;
+	name(n?: number): string;
+	value(
+		n?: number
+	):
+		| undefined
+		| null
+		| string
+		| number
+		| bigint
+		| boolean
+		| RegExp
+		| { cooked?: null | string; raw: string };
+	childCount(n?: number): number;
+	child(i: number, n?: number): number;
+	children(n?: number): number[];
+	fieldCount(field: number, n?: number): number;
+	field(i: number, field: number, n?: number): number;
+	fieldNamed(field: number, name: string, n?: number): number;
+	flag(flag: number, n?: number): boolean;
+
+	/**
+	 * A JavaScript node keeps no positions beyond its own.
+	 */
+	rangeOf(part: number, n?: number): null;
+	startOf(part: number, n?: number): number;
+	endOf(part: number, n?: number): number;
+	textOf(part: number, n?: number): null | string;
+}
 type JavascriptNormalModule = NormalModule & {
 	buildInfo?: JavascriptModuleBuildInfo;
 	buildMeta?: JavascriptModuleBuildMeta;
@@ -16012,17 +16072,12 @@ declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 			[LogicalExpression],
 			boolean | void
 		>;
-		program: SyncBailHook<[Program, CommentJavascriptParser[]], boolean | void>;
-		/**
-		 * The program as a node of the flat tree, before `program`; it fires
-		 * for every program, and the tree is read during the call.
-		 * @since 5.113.0
-		 * @experimental
-		 */
-		programTree: SyncBailHook<
-			[SyntaxTree, number, CommentJavascriptParser[]],
-			boolean | void
-		>;
+		program: ProgramPathTap &
+			SyncBailHook<
+				[Program, CommentJavascriptParser[]],
+				boolean | void,
+				{ path?: boolean }
+			>;
 		/**
 		 * @since 5.99.0
 		 */
@@ -18048,113 +18103,13 @@ declare interface JavascriptReadOptions {
 declare class JavascriptSourceProcessor<
 	TState = unknown
 > extends SourceProcessor<
-	{
-		state: unknown;
-		get node(): number;
-		get parent(): null | number;
-		get index(): number;
-		/**
-		 * Stops the walk descending into the current node (enter only).
-		 */
-		skipChildren(): void;
-		/**
-		 * Stops the walk: no visitor fires after the current one returns.
-		 */
-		stop(): void;
-		ancestor(level: number): number;
-		within(type: number): boolean;
-		type(n?: number): number;
-		range(n?: number): [number, number];
-		start(n?: number): number;
-		end(n?: number): number;
-		/**
-		 * Every JavaScript line terminator ends a line, as a parse error's position counts them.
-		 */
-		loc(n?: number): [number, number, number, number];
-		source(n?: number, end?: number): string;
-		name(n?: number): string;
-		value(
-			n?: number
-		):
-			| undefined
-			| null
-			| string
-			| number
-			| bigint
-			| boolean
-			| RegExp
-			| { cooked?: null | string; raw: string };
-		childCount(n?: number): number;
-		child(i: number, n?: number): number;
-		children(n?: number): number[];
-		fieldCount(field: number, n?: number): number;
-		field(i: number, field: number, n?: number): number;
-		fieldNamed(field: number, name: string, n?: number): number;
-		flag(flag: number, n?: number): boolean;
-		/**
-		 * A JavaScript node keeps no positions beyond its own.
-		 */
-		rangeOf(part: number, n?: number): null;
-		startOf(part: number, n?: number): number;
-		endOf(part: number, n?: number): number;
-		textOf(part: number, n?: number): null | string;
-	},
+	JavascriptNodePath,
 	number,
 	JavascriptProcessOptions,
 	PrintOptions,
 	AnyParts,
 	TState,
-	VisitorMapSourceProcessorObject_2<{
-		state: unknown;
-		get node(): number;
-		get parent(): null | number;
-		get index(): number;
-		/**
-		 * Stops the walk descending into the current node (enter only).
-		 */
-		skipChildren(): void;
-		/**
-		 * Stops the walk: no visitor fires after the current one returns.
-		 */
-		stop(): void;
-		ancestor(level: number): number;
-		within(type: number): boolean;
-		type(n?: number): number;
-		range(n?: number): [number, number];
-		start(n?: number): number;
-		end(n?: number): number;
-		/**
-		 * Every JavaScript line terminator ends a line, as a parse error's position counts them.
-		 */
-		loc(n?: number): [number, number, number, number];
-		source(n?: number, end?: number): string;
-		name(n?: number): string;
-		value(
-			n?: number
-		):
-			| undefined
-			| null
-			| string
-			| number
-			| bigint
-			| boolean
-			| RegExp
-			| { cooked?: null | string; raw: string };
-		childCount(n?: number): number;
-		child(i: number, n?: number): number;
-		children(n?: number): number[];
-		fieldCount(field: number, n?: number): number;
-		field(i: number, field: number, n?: number): number;
-		fieldNamed(field: number, name: string, n?: number): number;
-		flag(flag: number, n?: number): boolean;
-		/**
-		 * A JavaScript node keeps no positions beyond its own.
-		 */
-		rangeOf(part: number, n?: number): null;
-		startOf(part: number, n?: number): number;
-		endOf(part: number, n?: number): number;
-		textOf(part: number, n?: number): null | string;
-	}>
+	VisitorMapSourceProcessorObject_2<JavascriptNodePath>
 > {
 	constructor();
 	static PrintContext: typeof PrintContext;
@@ -27424,6 +27379,32 @@ declare interface ProfilingPluginOptions {
 	 */
 	outputPath?: string;
 }
+
+/**
+ * A `program` tap reading the program through the path, as CSS and HTML
+ * visitors read theirs: `path.type(program)`, `path.field(i, Field.body, program)`.
+ */
+declare interface ProgramPathTap {
+	/**
+	 * registers it
+	 */
+	tap: (
+		options: { name: string; path: true; stage?: number; before?: string },
+		fn: (
+			path: JavascriptNodePath,
+			program: number,
+			comments: CommentJavascriptParser[]
+		) => boolean | void
+	) => void;
+
+	/**
+	 * fires every tap, one with `path` with the path first, any other with the program's ESTree object
+	 */
+	call: (
+		program: number,
+		comments: CommentJavascriptParser[]
+	) => boolean | void;
+}
 declare class ProgressPlugin {
 	/**
 	 * Creates an instance of ProgressPlugin.
@@ -34514,12 +34495,6 @@ declare class SyntaxTree {
 		| { cooked?: null | string; raw: string };
 	fieldCount(field: number, node: number): number;
 	field(i: number, field: number, node: number): number;
-
-	/**
-	 * Pushes a node's children onto a stack, in no set order, so a walk of
-	 * every node allocates nothing per node.
-	 */
-	pushChildren(node: number, stack: number[]): void;
 	flag(flag: number, node: number): boolean;
 	textOf(part: number, node: number): null | string;
 }
@@ -37938,6 +37913,10 @@ declare namespace exports {
 				export let parseProgram: _functionSyntaxParserFunction_1;
 				export let parsedTree: () => null | SyntaxTree;
 				export let takeParsedTree: () => null | SyntaxTree;
+				export let usePathTree: (
+					tree: null | SyntaxTree,
+					input: string
+				) => void;
 				export let positionAt: (
 					lineStarts: number[],
 					offset: number
@@ -38022,166 +38001,11 @@ declare namespace exports {
 					| ArrayPattern
 					| RestElement
 					| AssignmentPattern;
-				export let A: {
-					state: unknown;
-					get node(): number;
-					get parent(): null | number;
-					get index(): number;
-					/**
-					 * Stops the walk descending into the current node (enter only).
-					 */
-					skipChildren(): void;
-					/**
-					 * Stops the walk: no visitor fires after the current one returns.
-					 */
-					stop(): void;
-					ancestor(level: number): number;
-					within(type: number): boolean;
-					type(n?: number): number;
-					range(n?: number): [number, number];
-					start(n?: number): number;
-					end(n?: number): number;
-					/**
-					 * Every JavaScript line terminator ends a line, as a parse error's position counts them.
-					 */
-					loc(n?: number): [number, number, number, number];
-					source(n?: number, end?: number): string;
-					name(n?: number): string;
-					value(
-						n?: number
-					):
-						| undefined
-						| null
-						| string
-						| number
-						| bigint
-						| boolean
-						| RegExp
-						| { cooked?: null | string; raw: string };
-					childCount(n?: number): number;
-					child(i: number, n?: number): number;
-					children(n?: number): number[];
-					fieldCount(field: number, n?: number): number;
-					field(i: number, field: number, n?: number): number;
-					fieldNamed(field: number, name: string, n?: number): number;
-					flag(flag: number, n?: number): boolean;
-					/**
-					 * A JavaScript node keeps no positions beyond its own.
-					 */
-					rangeOf(part: number, n?: number): null;
-					startOf(part: number, n?: number): number;
-					endOf(part: number, n?: number): number;
-					textOf(part: number, n?: number): null | string;
-				};
+				export let A: JavascriptNodePath;
 				export let grammar: (
 					input: string,
-					visitors: CompiledVisitorBucket<{
-						state: unknown;
-						get node(): number;
-						get parent(): null | number;
-						get index(): number;
-						/**
-						 * Stops the walk descending into the current node (enter only).
-						 */
-						skipChildren(): void;
-						/**
-						 * Stops the walk: no visitor fires after the current one returns.
-						 */
-						stop(): void;
-						ancestor(level: number): number;
-						within(type: number): boolean;
-						type(n?: number): number;
-						range(n?: number): [number, number];
-						start(n?: number): number;
-						end(n?: number): number;
-						/**
-						 * Every JavaScript line terminator ends a line, as a parse error's position counts them.
-						 */
-						loc(n?: number): [number, number, number, number];
-						source(n?: number, end?: number): string;
-						name(n?: number): string;
-						value(
-							n?: number
-						):
-							| undefined
-							| null
-							| string
-							| number
-							| bigint
-							| boolean
-							| RegExp
-							| { cooked?: null | string; raw: string };
-						childCount(n?: number): number;
-						child(i: number, n?: number): number;
-						children(n?: number): number[];
-						fieldCount(field: number, n?: number): number;
-						field(i: number, field: number, n?: number): number;
-						fieldNamed(field: number, name: string, n?: number): number;
-						flag(flag: number, n?: number): boolean;
-						/**
-						 * A JavaScript node keeps no positions beyond its own.
-						 */
-						rangeOf(part: number, n?: number): null;
-						startOf(part: number, n?: number): number;
-						endOf(part: number, n?: number): number;
-						textOf(part: number, n?: number): null | string;
-					}>[],
-					writer:
-						| undefined
-						| PrintContext<
-								{
-									state: unknown;
-									get node(): number;
-									get parent(): null | number;
-									get index(): number;
-									/**
-									 * Stops the walk descending into the current node (enter only).
-									 */
-									skipChildren(): void;
-									/**
-									 * Stops the walk: no visitor fires after the current one returns.
-									 */
-									stop(): void;
-									ancestor(level: number): number;
-									within(type: number): boolean;
-									type(n?: number): number;
-									range(n?: number): [number, number];
-									start(n?: number): number;
-									end(n?: number): number;
-									/**
-									 * Every JavaScript line terminator ends a line, as a parse error's position counts them.
-									 */
-									loc(n?: number): [number, number, number, number];
-									source(n?: number, end?: number): string;
-									name(n?: number): string;
-									value(
-										n?: number
-									):
-										| undefined
-										| null
-										| string
-										| number
-										| bigint
-										| boolean
-										| RegExp
-										| { cooked?: null | string; raw: string };
-									childCount(n?: number): number;
-									child(i: number, n?: number): number;
-									children(n?: number): number[];
-									fieldCount(field: number, n?: number): number;
-									field(i: number, field: number, n?: number): number;
-									fieldNamed(field: number, name: string, n?: number): number;
-									flag(flag: number, n?: number): boolean;
-									/**
-									 * A JavaScript node keeps no positions beyond its own.
-									 */
-									rangeOf(part: number, n?: number): null;
-									startOf(part: number, n?: number): number;
-									endOf(part: number, n?: number): number;
-									textOf(part: number, n?: number): null | string;
-								},
-								number
-						  >,
+					visitors: CompiledVisitorBucket<JavascriptNodePath>[],
+					writer: undefined | PrintContext<JavascriptNodePath, number>,
 					options: JavascriptProcessOptions
 				) => void;
 				export let isWalkingSyntaxTree: () => boolean;
@@ -38189,111 +38013,8 @@ declare namespace exports {
 					tree: SyntaxTree,
 					program: number,
 					input: string,
-					visitors: CompiledVisitorBucket<{
-						state: unknown;
-						get node(): number;
-						get parent(): null | number;
-						get index(): number;
-						/**
-						 * Stops the walk descending into the current node (enter only).
-						 */
-						skipChildren(): void;
-						/**
-						 * Stops the walk: no visitor fires after the current one returns.
-						 */
-						stop(): void;
-						ancestor(level: number): number;
-						within(type: number): boolean;
-						type(n?: number): number;
-						range(n?: number): [number, number];
-						start(n?: number): number;
-						end(n?: number): number;
-						/**
-						 * Every JavaScript line terminator ends a line, as a parse error's position counts them.
-						 */
-						loc(n?: number): [number, number, number, number];
-						source(n?: number, end?: number): string;
-						name(n?: number): string;
-						value(
-							n?: number
-						):
-							| undefined
-							| null
-							| string
-							| number
-							| bigint
-							| boolean
-							| RegExp
-							| { cooked?: null | string; raw: string };
-						childCount(n?: number): number;
-						child(i: number, n?: number): number;
-						children(n?: number): number[];
-						fieldCount(field: number, n?: number): number;
-						field(i: number, field: number, n?: number): number;
-						fieldNamed(field: number, name: string, n?: number): number;
-						flag(flag: number, n?: number): boolean;
-						/**
-						 * A JavaScript node keeps no positions beyond its own.
-						 */
-						rangeOf(part: number, n?: number): null;
-						startOf(part: number, n?: number): number;
-						endOf(part: number, n?: number): number;
-						textOf(part: number, n?: number): null | string;
-					}>[],
-					writer?: PrintContext<
-						{
-							state: unknown;
-							get node(): number;
-							get parent(): null | number;
-							get index(): number;
-							/**
-							 * Stops the walk descending into the current node (enter only).
-							 */
-							skipChildren(): void;
-							/**
-							 * Stops the walk: no visitor fires after the current one returns.
-							 */
-							stop(): void;
-							ancestor(level: number): number;
-							within(type: number): boolean;
-							type(n?: number): number;
-							range(n?: number): [number, number];
-							start(n?: number): number;
-							end(n?: number): number;
-							/**
-							 * Every JavaScript line terminator ends a line, as a parse error's position counts them.
-							 */
-							loc(n?: number): [number, number, number, number];
-							source(n?: number, end?: number): string;
-							name(n?: number): string;
-							value(
-								n?: number
-							):
-								| undefined
-								| null
-								| string
-								| number
-								| bigint
-								| boolean
-								| RegExp
-								| { cooked?: null | string; raw: string };
-							childCount(n?: number): number;
-							child(i: number, n?: number): number;
-							children(n?: number): number[];
-							fieldCount(field: number, n?: number): number;
-							field(i: number, field: number, n?: number): number;
-							fieldNamed(field: number, name: string, n?: number): number;
-							flag(flag: number, n?: number): boolean;
-							/**
-							 * A JavaScript node keeps no positions beyond its own.
-							 */
-							rangeOf(part: number, n?: number): null;
-							startOf(part: number, n?: number): number;
-							endOf(part: number, n?: number): number;
-							textOf(part: number, n?: number): null | string;
-						},
-						number
-					>,
+					visitors: CompiledVisitorBucket<JavascriptNodePath>[],
+					writer?: PrintContext<JavascriptNodePath, number>,
 					inlined?: Uint8Array
 				) => void;
 				export let printEarlyIn: (early: Map<number, number>) => void;
@@ -38334,111 +38055,8 @@ declare namespace exports {
 					options: JavascriptProcessOptions
 				) => boolean;
 				export let printer: (
-					path: {
-						state: unknown;
-						get node(): number;
-						get parent(): null | number;
-						get index(): number;
-						/**
-						 * Stops the walk descending into the current node (enter only).
-						 */
-						skipChildren(): void;
-						/**
-						 * Stops the walk: no visitor fires after the current one returns.
-						 */
-						stop(): void;
-						ancestor(level: number): number;
-						within(type: number): boolean;
-						type(n?: number): number;
-						range(n?: number): [number, number];
-						start(n?: number): number;
-						end(n?: number): number;
-						/**
-						 * Every JavaScript line terminator ends a line, as a parse error's position counts them.
-						 */
-						loc(n?: number): [number, number, number, number];
-						source(n?: number, end?: number): string;
-						name(n?: number): string;
-						value(
-							n?: number
-						):
-							| undefined
-							| null
-							| string
-							| number
-							| bigint
-							| boolean
-							| RegExp
-							| { cooked?: null | string; raw: string };
-						childCount(n?: number): number;
-						child(i: number, n?: number): number;
-						children(n?: number): number[];
-						fieldCount(field: number, n?: number): number;
-						field(i: number, field: number, n?: number): number;
-						fieldNamed(field: number, name: string, n?: number): number;
-						flag(flag: number, n?: number): boolean;
-						/**
-						 * A JavaScript node keeps no positions beyond its own.
-						 */
-						rangeOf(part: number, n?: number): null;
-						startOf(part: number, n?: number): number;
-						endOf(part: number, n?: number): number;
-						textOf(part: number, n?: number): null | string;
-					},
-					writer: PrintContext<
-						{
-							state: unknown;
-							get node(): number;
-							get parent(): null | number;
-							get index(): number;
-							/**
-							 * Stops the walk descending into the current node (enter only).
-							 */
-							skipChildren(): void;
-							/**
-							 * Stops the walk: no visitor fires after the current one returns.
-							 */
-							stop(): void;
-							ancestor(level: number): number;
-							within(type: number): boolean;
-							type(n?: number): number;
-							range(n?: number): [number, number];
-							start(n?: number): number;
-							end(n?: number): number;
-							/**
-							 * Every JavaScript line terminator ends a line, as a parse error's position counts them.
-							 */
-							loc(n?: number): [number, number, number, number];
-							source(n?: number, end?: number): string;
-							name(n?: number): string;
-							value(
-								n?: number
-							):
-								| undefined
-								| null
-								| string
-								| number
-								| bigint
-								| boolean
-								| RegExp
-								| { cooked?: null | string; raw: string };
-							childCount(n?: number): number;
-							child(i: number, n?: number): number;
-							children(n?: number): number[];
-							fieldCount(field: number, n?: number): number;
-							field(i: number, field: number, n?: number): number;
-							fieldNamed(field: number, name: string, n?: number): number;
-							flag(flag: number, n?: number): boolean;
-							/**
-							 * A JavaScript node keeps no positions beyond its own.
-							 */
-							rangeOf(part: number, n?: number): null;
-							startOf(part: number, n?: number): number;
-							endOf(part: number, n?: number): number;
-							textOf(part: number, n?: number): null | string;
-						},
-						number
-					>
+					path: JavascriptNodePath,
+					writer: PrintContext<JavascriptNodePath, number>
 				) => string;
 				export let FORMAT_DEFAULTS: any;
 				export let IGNORED_FORMAT_OPTIONS: string[];
