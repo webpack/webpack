@@ -1661,6 +1661,14 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["x=[Math.min(1/3-1,0,0),Math.sqrt(.5),Math.max(1,2).x]", {}, "x=[Math.min(1/3-1,0,0),Math.sqrt(.5),2..x];"],
 			["x=[Math.abs(-(1+1)),`ab`.concat(`c`),`a${1}`.concat(\"b\"),Math.max(1.5,2.5).x,Math.min(-1,2)()]", {}, "x=[Math.abs(-2),\"abc\",\"a1\".concat(\"b\"),2.5.x,(-1)()];"],
 			["x=[\"abcNaNdef\".indexOf(NaN),(-Infinity).toString(),String.fromCharCode(Infinity),isFinite(-Infinity),\"a function\".indexOf(typeof function(){})]", {}, "x=[3,\"-Infinity\",\"\\0\",!1,\"a function\".indexOf(\"function\")];"],
+			// A built-in the program may replace, set, passed or stored anywhere, stays a call; a parse past 20 digits or in another radix too.
+			["Math.abs=f;String.prototype.concat=g;globalThis.parseFloat=h;Math[1]=k;x=[Math.abs(-1),\"a\".concat(\"b\"),parseFloat(\"1\"),Math.max(1,2),parseInt(\"1\")]", {}, "Math.abs=f,String.prototype.concat=g,globalThis.parseFloat=h,Math[1]=k,x=[Math.abs(-1),\"a\".concat(\"b\"),parseFloat(\"1\"),2,1];"],
+			["delete Number.prototype.toFixed;Math.round++;[String.prototype.trim]=[f];for(Math.ceil in o);x=[(1).toFixed(1),Math.round(1.5),\" a\".trim(),Math.ceil(1.5),Math.floor(1.5)]", {}, "delete Number.prototype.toFixed,Math.round++,[String.prototype.trim]=[f];for(Math.ceil in o);x=[1..toFixed(1),Math.round(1.5),\" a\".trim(),Math.ceil(1.5),1];"],
+			["window[k]=f;x=[parseInt(\"1\"),Math.abs(-1)]", {}, "window[k]=f,x=[parseInt(\"1\"),1];"],
+			["g(Math);function q(a=Number){}y={a:String};x=[Math.abs(-1),Number.isNaN(1),\"a\".concat(\"b\")]", {}, "g(Math);function q(a=Number){}y={a:String},x=[Math.abs(-1),Number.isNaN(1),\"a\".concat(\"b\")];"],
+			["function h(){return Math}y=[Number.prototype];var p=String;x=[Math.abs(-1),(1).toFixed(1),\"a\".concat(\"b\")]", {}, "function h(){return Math}y=[Number.prototype];var p=String;x=[Math.abs(-1),1..toFixed(1),\"a\".concat(\"b\")];"],
+			["x=[parseInt(\"z\",36),parseInt(\"123456789012345678901234\"),parseFloat(\"1.23456789012345678901234\"),parseInt(\"ff\",16)]", {}, "x=[parseInt(\"z\",36),parseInt(\"123456789012345678901234\"),parseFloat(\"1.23456789012345678901234\"),255];"],
+			["function f(Math){Math.abs=g;h(Math)}Math.prototype.abs=k;y=1;x=Math.abs(-1)", {}, "function f(a){a.abs=g,h(a)}Math.prototype.abs=k,y=1,x=1;"],
 			// Constructed, it parenthesizes only a sign, as a second print would.
 			["x=[new(\"abc\".concat(1,\"def\")),new(Math.min(-1,2)),new(Math.min(1,2))(3),new(g(1))]", {}, "x=[new\"abc1def\",new(-1),new 1(3),new(g(1))];"],
 			// Unread, it goes however long its answer; an outer call folds on it, and another radix needs a safe integer.
