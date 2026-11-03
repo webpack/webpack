@@ -15466,6 +15466,13 @@ declare abstract class JavascriptNodePath {
 	startOf(part: number, n?: number): number;
 	endOf(part: number, n?: number): number;
 	textOf(part: number, n?: number): null | string;
+
+	/**
+	 * The lowest id of a node's subtree. A parse writes each subtree as the ids
+	 * from this one to the node, children first, so a reverse scan of ids
+	 * skips a subtree by jumping here; a dropped node in between has type `0`.
+	 */
+	subtreeStart(n?: number): number;
 }
 type JavascriptNormalModule = NormalModule & {
 	buildInfo?: JavascriptModuleBuildInfo;
