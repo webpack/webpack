@@ -286,14 +286,82 @@ for (const [sourceFile, typeChecker, program] of sourceFiles) {
 				return false;
 			}
 			const { parent } = node;
-			if (!ts.isPropertyAccessExpression(parent) || parent.name !== node) {
-				return true;
+			const isMember =
+				ts.isPropertyAccessExpression(parent) && parent.name === node;
+			if (isMember) {
+				const receiver = typeChecker.getTypeAtLocation(parent.expression);
+				if (
+					receiver.flags & ts.TypeFlags.Any ||
+					mentionsAny(typeChecker.typeToString(receiver))
+				) {
+					return false;
+				}
 			}
-			const receiver = typeChecker.getTypeAtLocation(parent.expression);
-			return (
-				!(receiver.flags & ts.TypeFlags.Any) &&
-				!mentionsAny(typeChecker.typeToString(receiver))
-			);
+			return true;
+		};
+
+		/**
+		 * Tells whether an identifier calls a built-in through an overload that
+		 * returns `any`, such as `(o: {}): any[]` of `Object.values` or
+		 * `new Array(length)`, while a generic overload could type the result and
+		 * no declared type, such as `/** @type {Map<K, V>} *\/`, receives it.
+		 * @param {ts.Node} node the identifier
+		 * @returns {boolean} true when the call should take the generic overload
+		 */
+		const landsOnAnyOverload = (node) => {
+			if (!ts.isIdentifier(node)) return false;
+			const { parent } = node;
+			const callee =
+				ts.isPropertyAccessExpression(parent) && parent.name === node
+					? parent
+					: node;
+			const call = callee.parent;
+			if (
+				!(ts.isCallExpression(call) || ts.isNewExpression(call)) ||
+				call.expression !== callee
+			) {
+				return false;
+			}
+			let { parent: user } = call;
+			while (ts.isParenthesizedExpression(user)) user = user.parent;
+			// A discarded result reads nothing, and a declared type receiving it types it.
+			if (
+				ts.isExpressionStatement(user) ||
+				ts.isVoidExpression(user) ||
+				typeChecker.getContextualType(call)
+			) {
+				return false;
+			}
+			const signature = typeChecker.getResolvedSignature(call);
+			const declaration = signature && signature.declaration;
+			/**
+			 * @param {ts.Declaration | undefined} declaration a signature's declaration
+			 * @returns {boolean} true when it declares type parameters
+			 */
+			const isGeneric = (declaration) =>
+				declaration !== undefined &&
+				ts.isFunctionLike(declaration) &&
+				ts.getEffectiveTypeParameterDeclarations(declaration).length > 0;
+			if (
+				!declaration ||
+				!ts.isFunctionLike(declaration) ||
+				!program.isSourceFileDefaultLibrary(declaration.getSourceFile()) ||
+				isGeneric(declaration) ||
+				!declaration.type
+			) {
+				return false;
+			}
+			// The `any` must be the overload's own, not one of the receiver's, as in `anyList.filter(…)`.
+			/** @type {(node: ts.Node) => boolean} */
+			const writesAny = (node) =>
+				node.kind === ts.SyntaxKind.AnyKeyword ||
+				Boolean(ts.forEachChild(node, writesAny));
+			if (!writesAny(declaration.type)) return false;
+			const calleeType = typeChecker.getTypeAtLocation(callee);
+			const overloads = ts.isNewExpression(call)
+				? calleeType.getConstructSignatures()
+				: calleeType.getCallSignatures();
+			return overloads.some((overload) => isGeneric(overload.declaration));
 		};
 
 		/**
@@ -746,27 +814,28 @@ for (const [sourceFile, typeChecker, program] of sourceFiles) {
 				}
 
 				const isTyped =
-					// Ignore labeled statements
-					((ts.isLabeledStatement(node.parent) ||
+					// A built-in call should take its generic overload over one returning `any`
+					!landsOnAnyOverload(node) && // Ignore labeled statements
+					(((ts.isLabeledStatement(node.parent) ||
 						ts.isBreakStatement(node.parent) ||
 						ts.isContinueStatement(node.parent)) &&
 						node.parent.label === node) ||
-					// Ignore the namespace of a type name such as `NodeJS.WritableStream`
-					(ts.isQualifiedName(node.parent) && node.parent.left === node) ||
-					// Ignore `name` in `const { name: otherName } = obj;`
-					(ts.isBindingElement(node.parent) &&
-						node.parent.propertyName === node) ||
-					// Ignore `"string".replace("s", "t")`, because the second argument can be a function with `any` types
-					isReplaceMethod(node) ||
-					// Ignore external types
-					isExternal ||
-					// Ignore the `any` TypeScript's built-in lib writes in its own signatures
-					isBuiltinAny(node) ||
-					// Ignore where `let x;` is declared or assigned, its reads are narrowed
-					isEvolvingLetWrite(node) ||
-					// Should be not `any` and don't include `any` in types
-					(!(type.flags & ts.TypeFlags.Any) &&
-						(!mentionsAny(typeText) || !hasOwnAny(type, 0)));
+						// Ignore the namespace of a type name such as `NodeJS.WritableStream`
+						(ts.isQualifiedName(node.parent) && node.parent.left === node) ||
+						// Ignore `name` in `const { name: otherName } = obj;`
+						(ts.isBindingElement(node.parent) &&
+							node.parent.propertyName === node) ||
+						// Ignore `"string".replace("s", "t")`, because the second argument can be a function with `any` types
+						isReplaceMethod(node) ||
+						// Ignore external types
+						isExternal ||
+						// Ignore the `any` TypeScript's built-in lib writes in its own signatures
+						isBuiltinAny(node) ||
+						// Ignore where `let x;` is declared or assigned, its reads are narrowed
+						isEvolvingLetWrite(node) ||
+						// Should be not `any` and don't include `any` in types
+						(!(type.flags & ts.TypeFlags.Any) &&
+							(!mentionsAny(typeText) || !hasOwnAny(type, 0))));
 
 				rep.statementMap[statementIndex] = {
 					start: {
