@@ -38,7 +38,7 @@ function*g(){yield,yield a,yield*b,x=yield c,(yield d)+1}
 
 l:for(;;);do{x()}while(y);with(o)p;
 
-switch(a){case 1:b();default:c()}switch(x){}try{a}catch{b}finally{c}
+switch(a){case 1:b();default:c()}x;try{a}catch{b}finally{c}
 
 if(a){if(b)c}else d;if(a)for(;;)b?c:d;
 
@@ -150,7 +150,7 @@ var a=b in c;for(var a=(b in c);;);for((a in b);;);for((a=b in c?1:2);;);for(var
 
 a?b:c;if(a){if(b)c}else d;if(a)for(;;)b?c:d;if(a)while(b)c?d:e;else f;if(a)e:b?c:d;if(a)do{b}while(c);else d;a?b:c?d:e;if(a)b?c:d;a;
 
-for(;;);while(a);for(x in y);for(x of y);a:for(;;)continue a;switch(a){}switch(a){case 1:case 2:b()}
+for(;;);while(a);for(x in y);for(x of y);a:for(;;)continue a;a;switch(a){case 1:case 2:b()}
 
 try{a}catch{b}try{a}catch{b}finally{c}try{a}finally{b}throw a;function f(){}
 
@@ -291,7 +291,7 @@ function*g(){yield,yield a,yield*b,x=yield c,(yield d)+1}
 
 l:for(;;);do{x()}while(y);with(o)p;
 
-switch(a){case 1:b();default:c()}switch(x){}try{a}catch{b}finally{c}
+switch(a){case 1:b();default:c()}x;try{a}catch{b}finally{c}
 
 if(a){if(b)c}else d;if(a)for(;;)b?c:d;
 
@@ -409,7 +409,7 @@ var a=b in c;for(var a=(b in c);;);for((a in b);;);for((a=b in c?1:2);;);for(var
 
 a?b:c;if(a){if(b)c}else d;if(a)for(;;)b?c:d;if(a)while(b)c?d:e;else f;if(a)e:b?c:d;if(a)do{b}while(c);else d;a?b:c?d:e;if(a)b?c:d;a;
 
-for(;;);while(a);for(x in y);for(x of y);a:for(;;)continue a;switch(a){}switch(a){case 1:case 2:b()}
+for(;;);while(a);for(x in y);for(x of y);a:for(;;)continue a;a;switch(a){case 1:case 2:b()}
 
 try{a}catch{b}try{a}catch(a){b}finally{c}try{a}finally{b}throw a;function f(){}
 
@@ -550,7 +550,7 @@ function*g(){yield,yield a,yield*b,x=yield c,(yield d)+1}
 
 l:for(;;);do{x()}while(y);with(o)p;
 
-switch(a){case 1:b();default:c()}switch(x){}try{a}catch{b}finally{c}
+switch(a){case 1:b();default:c()}x;try{a}catch{b}finally{c}
 
 if(a){if(b)c}else d;if(a)for(;;)b?c:d;
 
@@ -662,7 +662,7 @@ var a=b in c;for(var a=(b in c);;);for((a in b);;);for((a=b in c?1:2);;);for(var
 
 a?b:c;if(a){if(b)c}else d;if(a)for(;;)b?c:d;if(a)while(b)c?d:e;else f;if(a)e:b?c:d;if(a)do{b}while(c);else d;a?b:c?d:e;if(a)b?c:d;a;
 
-for(;;);while(a);for(x in y);for(x of y);a:for(;;)continue a;switch(a){}switch(a){case 1:case 2:b()}
+for(;;);while(a);for(x in y);for(x of y);a:for(;;)continue a;a;switch(a){case 1:case 2:b()}
 
 try{a}catch{b}try{a}catch(a){b}finally{c}try{a}finally{b}throw a;function f(){}
 
@@ -803,7 +803,7 @@ function*g(){yield,yield a,yield*b,x=yield c,(yield d)+1}
 
 label:for(;;);do{x()}while(y);with(o)p;
 
-switch(a){case 1:b();default:c()}switch(x){}try{a}catch{b}finally{c}
+switch(a){case 1:b();default:c()}x;try{a}catch{b}finally{c}
 
 if(a){if(b)c}else d;if(a)for(;;)b?c:d;
 
@@ -921,7 +921,7 @@ var a=b in c;for(var a=(b in c);;);for((a in b);;);for((a=b in c?1:2);;);for(var
 
 a?b:c;if(a){if(b)c}else d;if(a)for(;;)b?c:d;if(a)while(b)c?d:e;else f;if(a)label:b?c:d;if(a)do{b}while(c);else d;a?b:c?d:e;if(a)b?c:d;a;
 
-for(;;);while(a);for(x in y);for(x of y);c:for(;;)continue c;switch(a){}switch(a){case 1:case 2:b()}
+for(;;);while(a);for(x in y);for(x of y);c:for(;;)continue c;a;switch(a){case 1:case 2:b()}
 
 try{a}catch{b}try{a}catch(e){b}finally{c}try{a}finally{b}throw a;function f(){}
 
@@ -1103,7 +1103,8 @@ with(o)p
 
 /* p */
 switch(a){case 1:b()
-default:c()}switch(x){}try{a}catch{b}finally{c}
+default:c()}x
+try{a}catch{b}finally{c}
 
 /* p */
 if(a){if(b)c}else d
@@ -1349,7 +1350,8 @@ a
 
 /* p */
 for(;;);while(a);for(x in y);for(x of y);a:for(;;)continue a
-switch(a){}switch(a){case 1:case 2:b()}
+a
+switch(a){case 1:case 2:b()}
 
 /* p */
 try{a}catch{b}try{a}catch(a){b}finally{c}try{a}finally{b}throw a

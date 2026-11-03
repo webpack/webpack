@@ -579,7 +579,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"function f(H){ var x; x = g(); switch (x) {} x = g(); x ? 1 : 2; x = g(); h(...x); x = g(); delete x.y; x = g(); (x, 1); x = g(); ({ k: x }); x = g(); ({ [k]: x }); x = g(); ({ x }); x = g(); new H(x); x = g(); new H(...x); x = g(); new U(x); x = g(); [...x]; x = g(); `${x}`; x = g(); -x; return x }",
 				{},
-				"function f(x){var e=g();switch(e){}(e=g()),e=g(),h(...e),e=g(),delete e.y,e=g(),e=g(),e=g();({[k]:e});return e=g(),new x(e=g()),e=g(),new x(...e),new U(e=g()),e=g(),[...e],`${e=g()}`,-(e=g()),e}"
+				"function f(x){var e=g();(e=g()),e=g(),h(...e),e=g(),delete e.y,e=g(),e=g(),e=g();({[k]:e});return e=g(),new x(e=g()),e=g(),new x(...e),new U(e=g()),e=g(),[...e],`${e=g()}`,-(e=g()),e}"
 			],
 			[
 				"function f(H){ var x; x = g(); H(...x) }",
@@ -886,7 +886,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"function f(c){ switch (c) { case -1: c = 1; break; case 0: c = 2; break; default: break } switch (c) { case 1: x(); break } switch (c) { default: break } switch (c) { case 1: y(); break; default: } a: switch (c) { case 1: z(); break a } switch (c) { case 1: y(); /*! c */ break } var i = r(c); return import(i) }",
 				{},
-				"function f(c){switch(c){case-1:c=1;break;case 0:c=2}if(c===1)x();switch(c){default:}if(c===1)y();c:switch(c){case 1:z();break c}switch(c){case 1:y();/*! c */break}return import(r(c))}"
+				"function f(c){switch(c){case-1:c=1;break;case 0:c=2}if(c===1)x();if(c===1)y();c:switch(c){case 1:z();break c}switch(c){case 1:y();/*! c */break}return import(r(c))}"
 			],
 			// `!!!x` read for its truth folds its innermost `!!` alone.
 			[
@@ -1415,7 +1415,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["function f(){switch(d){case 1:\"use strict\"}}", {}, "function f(){if(d===1){\"use strict\"}}"],
 			["function f(){switch(d){case 1:for(;;)break;g()}}", {}, "function f(){if(d===1){for(;;)break;g()}}"],
 			["function f(){switch(d){case 1:/*! k */g()}}", {}, "function f(){if(d===1)/*! k */g()}"],
-			["function f(){switch(d){case 1:}}", {}, "function f(){switch(d){case 1:}}"],
+			["function f(){switch(d){case 1:}}", {}, "function f(){d}"],
 			["function f(){switch(-x){case typeof y:g()}}", {}, "function f(){if(-x===typeof y)g()}"],
 			["switch(a){case 1:var x=1}console.log(x)", {}, "if(a===1){var x=1}console.log(x);"],
 			["function f(){switch(d){case 1:if(a)b();else c()}}", {}, "function f(){if(d===1){a?b():c()}}"],
@@ -1501,6 +1501,8 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["function f(p3){([,(b+1)],g());({a:(h())});[(k()),,(m())]}", { mangle: false }, "function f(p3){b+1,g(),h(),k(),m()}"],
 			// What a logical nobody reads holds is read for its truth; a conditional printing as `!t` or `!!t` takes what a unary takes.
 			["(x?true:false)&&y();(x?true:y)&&y();(x&&true)&&y();(x||false)&&y();a?true:false;a?false:true;x=(a?!0:!1)||b;x=y&&(a?!0:!1);x=(a?!1:!0).b;x=(a<b?!0:!1)&&c;x=(a?!0:!1)+1;(a+b?!0:!1)&&c();x=(a?!1:!0)**2;x=(a?!0:!1)?1:2", {}, "x&&y(),(x||y)&&y(),x&&y(),x&&y(),a,a,x=!!a||b,x=y&&!!a,x=(!a).b,x=(a<b)&&c,x=!!a+1,(a+b)&&c(),x=(!a)**2,x=a?1:2;"],
+			// terser's `switches`: cases ending a `switch` that run nothing go; one with none left runs its test, or goes from its list.
+			["switch(a()){}switch(a){default:break}switch(a){case 3:b();case 2:case 1:}switch(a){case 3:b();break;case 2:break}switch(a){case f():}switch(a){default:b()}switch(a){case 1:b();break;case 2:c();case 3:}if(x)switch(y){case 1:}else z();function f(e){switch(e){case 2:}g()}switch(a){case 1:/*! k */}", {}, "a();a;if(a===3)b();if(a===3)b();switch(a){case f():}switch(a){default:b()}switch(a){case 1:b();break;case 2:c()}if(x)y;else z();function f(a){g()}switch(a){case 1:/*! k */}"],
 			// `!` negates an optional chain whole.
 			["function f(){if(t?.has(x))return;y()}for(;;){if(t?.has(x))continue;y()}x=t?.a?!1:y", {}, "function f(){if(!t?.has(x))y()}for(;;){if(!t?.has(x))y()}x=!t?.a&&y;"]
 		];
@@ -4006,7 +4008,7 @@ describe("one-pass minify of statement sequences", () => {
 		const cases = [
 			[
 				"function s(x){switch(1){case 1:{for(;;)break;while(x)break;do{break}while(x);for(k in x)break;for(k of x)break;switch(x){case 2:break}(function(){});(()=>{});class C{};x()}break}}",
-				"function s(e){for(;;)break;while(e)break;do{break}while(e);for(k in e)break;for(k of e)break;switch(e){case 2:}e()}"
+				"function s(e){for(;;)break;while(e)break;do{break}while(e);for(k in e)break;for(k of e)break;e()}"
 			],
 			["function s(x){switch(1){case 1:return x;case 2:y()}}", "function s(c){return c}"],
 			// Running nothing, or what prints as one sequence.
