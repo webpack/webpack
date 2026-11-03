@@ -1837,6 +1837,37 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		expect(print("var a = 5; function reset() { a = 6 }")).toBe("");
 	});
 
+	it("should keep the parentheses a binary takes under a `!` of `!!`", () => {
+		const print = (/** @type {string} */ source) =>
+			minifyOnePass(`function f(e,t,g){return[${source}]}`, {
+				compress: {},
+				mangle: false
+			}).code.slice(25, -2);
+		for (const [source, expected] of [
+			["!!!(e&6)", "!(e&6)"],
+			["!!(!(e+t))", "!(e+t)"],
+			["!!!(e===t)", "!(e===t)"],
+			["!!!(e&6)?t:g", "!(e&6)?t:g"],
+			// Read only for its truth elsewhere, `!!x` still prints as `x`.
+			["!!(e&6)?t:g", "e&6?t:g"]
+		]) {
+			expect(print(source)).toBe(expected);
+		}
+		for (const [source, value] of [
+			["!!!(e&6)", [false, true]],
+			["!!(!(e+t))", [false, true]]
+		]) {
+			const { code } = minifyOnePass(`function f(e,t){return ${source}}`, {
+				compress: {},
+				mangle: false
+			});
+			expect([
+				vm.runInNewContext(`${code}f(2,0)`),
+				vm.runInNewContext(`${code}f(0,0)`)
+			]).toEqual(value);
+		}
+	});
+
 	it("should keep a `switch` on a known value whose case holds a comment that prints", () => {
 		const print = (/** @type {string} */ source) =>
 			minifyOnePass(source, {
