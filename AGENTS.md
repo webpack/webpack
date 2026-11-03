@@ -211,7 +211,7 @@ A local failure is yours only if it doesn't reproduce on `main` (check in a work
 
 A language's syntax (`lib/{css,html,javascript,json}` tokenizer, parser, printer and minifier) is held to its **own** unit tests: `yarn test:syntax-coverage [css|html|javascript|json]` fails when what they never run grows past `tooling/syntax-coverage.json`; `--list` prints it, `--write` lowers the baseline once you covered more.
 
-**Don't lower type coverage either.** CI reports the delta on the PR (`yarn types:cover:report`), counting `EXPECTED_*`, `unknown` and inferred `any` (e.g. `new Map()` with no type) added (🔴) or removed (🟢). Prefer real types ([Type annotations](#type-annotations)) and run `yarn types:cover` if you widened any annotation.
+**Don't lower type coverage either.** CI reports the delta on the PR (`yarn types:cover:report`), counting `EXPECTED_*`, `unknown` and inferred `any` (e.g. `new Map()` or `const list = []` with no type; the `any` TypeScript's built-in lib writes, such as `String#replace`'s replacer, is not counted) added (🔴) or removed (🟢). Prefer real types ([Type annotations](#type-annotations)) and run `yarn types:cover` if you widened any annotation.
 
 ### Read CI rather than re-running it
 

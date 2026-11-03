@@ -73,13 +73,13 @@ const mentionsAny = (typeText) =>
 	/\bany\b/.test(maskLiterals(typeText).replace(/\bany\??:/g, "_:"));
 
 // `hot/` is a project of its own, so its files reach only that program.
-/** @type {[ts.SourceFile, ts.TypeChecker][]} */
+/** @type {[ts.SourceFile, ts.TypeChecker, ts.Program][]} */
 const sourceFiles = [];
 for (const configName of ["tsconfig.json", "tsconfig.hot.json"]) {
 	const program = createTypeScriptProgram(configName);
 	const checker = program.getTypeChecker();
 	for (const sourceFile of program.getSourceFiles()) {
-		sourceFiles.push([sourceFile, checker]);
+		sourceFiles.push([sourceFile, checker, program]);
 	}
 }
 
@@ -117,7 +117,7 @@ const inferredAnyByFile = {};
 
 /** @type {Set<string>} */
 const walkedFiles = new Set();
-for (const [sourceFile, typeChecker] of sourceFiles) {
+for (const [sourceFile, typeChecker, program] of sourceFiles) {
 	const file = sourceFile.fileName;
 	if (!sourceFile.isDeclarationFile && !walkedFiles.has(file)) {
 		walkedFiles.add(file);
@@ -262,6 +262,194 @@ for (const [sourceFile, typeChecker] of sourceFiles) {
 				statement &&
 				ts.isVariableStatement(statement) &&
 				ts.getJSDocType(statement) !== undefined
+			);
+		};
+
+		/**
+		 * Tells whether an identifier names a member of TypeScript's built-in lib
+		 * whose own signature carries the `any`, such as the replacer of
+		 * `String#replace` or the `thisArg?: any` of `Array#map`. A receiver typed
+		 * with `any`, such as `any[]` in `list.push`, is this project's and counts.
+		 * @param {ts.Node} node the identifier
+		 * @returns {boolean} true when the `any` comes from the built-in lib
+		 */
+		const isBuiltinAny = (node) => {
+			const symbol = typeChecker.getSymbolAtLocation(node);
+			const declarations = symbol && symbol.getDeclarations();
+			if (
+				!declarations ||
+				declarations.length === 0 ||
+				!declarations.every((declaration) =>
+					program.isSourceFileDefaultLibrary(declaration.getSourceFile())
+				)
+			) {
+				return false;
+			}
+			const { parent } = node;
+			if (!ts.isPropertyAccessExpression(parent) || parent.name !== node) {
+				return true;
+			}
+			const receiver = typeChecker.getTypeAtLocation(parent.expression);
+			return (
+				!(receiver.flags & ts.TypeFlags.Any) &&
+				!mentionsAny(typeChecker.typeToString(receiver))
+			);
+		};
+
+		/**
+		 * Tells whether a declaration comes from TypeScript's built-in lib.
+		 * @param {ts.Symbol | undefined} symbol the symbol
+		 * @returns {boolean} true when every declaration is in the built-in lib
+		 */
+		const isBuiltinSymbol = (symbol) => {
+			const declarations = symbol && symbol.getDeclarations();
+			return Boolean(
+				declarations &&
+				declarations.length > 0 &&
+				declarations.every((declaration) =>
+					program.isSourceFileDefaultLibrary(declaration.getSourceFile())
+				)
+			);
+		};
+
+		/**
+		 * Tells whether type arguments hold an `any` of this project's. An `any`
+		 * a built-in generic gets from its own default, such as the `TReturn` of
+		 * `Iterator<T>`, is TypeScript's.
+		 * @param {readonly ts.Type[]} typeArguments the type arguments
+		 * @param {readonly ts.TypeParameter[] | undefined} typeParameters the parameters they fill
+		 * @param {boolean} builtin whether the generic is a built-in one
+		 * @param {number} depth how deep the walk is
+		 * @returns {boolean} true when one does
+		 */
+		const argumentsHaveOwnAny = (
+			typeArguments,
+			typeParameters,
+			builtin,
+			depth
+		) =>
+			typeArguments.some((argument, i) => {
+				if (builtin && argument.flags & ts.TypeFlags.Any) {
+					const defaultType =
+						typeParameters &&
+						typeParameters[i] &&
+						typeParameters[i].getDefault();
+					if (defaultType && defaultType.flags & ts.TypeFlags.Any) return false;
+				}
+				return hasOwnAny(argument, depth + 1);
+			});
+
+		/**
+		 * Tells whether a type holds an `any` of this project's, walking what its
+		 * printed form shows: the arguments of a named type and the members of an
+		 * anonymous one. What it cannot walk counts as its printed form says.
+		 * @param {ts.Type} type the type
+		 * @param {number} depth how deep the walk is
+		 * @returns {boolean} true when it does
+		 */
+		const hasOwnAny = (type, depth) => {
+			if (type.flags & ts.TypeFlags.Any) return true;
+			if (depth > 8) return mentionsAny(typeChecker.typeToString(type));
+			if (type.isUnionOrIntersection()) {
+				return type.types.some((member) => hasOwnAny(member, depth + 1));
+			}
+			if (type.aliasSymbol) {
+				const typeArguments = type.aliasTypeArguments || [];
+				const declaration = (type.aliasSymbol.getDeclarations() || [])[0];
+				const typeParameters =
+					declaration &&
+					ts.isTypeAliasDeclaration(declaration) &&
+					declaration.typeParameters
+						? declaration.typeParameters.map(
+								(parameter) =>
+									/** @type {ts.TypeParameter} */ (
+										typeChecker.getTypeAtLocation(parameter)
+									)
+							)
+						: undefined;
+				return argumentsHaveOwnAny(
+					typeArguments,
+					typeParameters,
+					isBuiltinSymbol(type.aliasSymbol),
+					depth
+				);
+			}
+			if (isTypeReference(type)) {
+				const { target } = type;
+				return argumentsHaveOwnAny(
+					typeChecker.getTypeArguments(type),
+					target.typeParameters,
+					isBuiltinSymbol(target.symbol),
+					depth
+				);
+			}
+			if (
+				type.flags & ts.TypeFlags.Object &&
+				/** @type {ts.ObjectType} */ (type).objectFlags &
+					ts.ObjectFlags.Anonymous
+			) {
+				return (
+					type
+						.getProperties()
+						.some((property) =>
+							hasOwnAny(typeChecker.getTypeOfSymbol(property), depth + 1)
+						) ||
+					[...type.getCallSignatures(), ...type.getConstructSignatures()].some(
+						(signature) => {
+							const predicate =
+								typeChecker.getTypePredicateOfSignature(signature);
+							return (
+								(signature.getTypeParameters() || []).some((parameter) => {
+									const constraint = parameter.getConstraint();
+									const defaultType = parameter.getDefault();
+									return (
+										(constraint !== undefined &&
+											hasOwnAny(constraint, depth + 1)) ||
+										(defaultType !== undefined &&
+											hasOwnAny(defaultType, depth + 1))
+									);
+								}) ||
+								signature
+									.getParameters()
+									.some((parameter) =>
+										hasOwnAny(typeChecker.getTypeOfSymbol(parameter), depth + 1)
+									) ||
+								(predicate !== undefined &&
+									predicate.type !== undefined &&
+									hasOwnAny(predicate.type, depth + 1)) ||
+								hasOwnAny(signature.getReturnType(), depth + 1)
+							);
+						}
+					) ||
+					typeChecker
+						.getIndexInfosOfType(type)
+						.some((info) => hasOwnAny(info.type, depth + 1))
+				);
+			}
+			return mentionsAny(typeChecker.typeToString(type));
+		};
+
+		/**
+		 * Tells whether a node names a variable an empty array literal starts
+		 * with no declared type, such as `const list = []`. TypeScript evolves
+		 * its type from what is pushed, but the declaration itself stays `any[]`.
+		 * @param {ts.Node} node the identifier
+		 * @returns {boolean} true at such a declaration
+		 */
+		const isUntypedEmptyArray = (node) => {
+			const { parent } = node;
+			if (!ts.isVariableDeclaration(parent) || parent.name !== node) {
+				return false;
+			}
+			let { initializer } = parent;
+			while (initializer && ts.isParenthesizedExpression(initializer)) {
+				initializer = initializer.expression;
+			}
+			return Boolean(
+				initializer &&
+				ts.isArrayLiteralExpression(initializer) &&
+				initializer.elements.length === 0 &&
+				!declaresType(parent)
 			);
 		};
 
@@ -572,10 +760,13 @@ for (const [sourceFile, typeChecker] of sourceFiles) {
 					isReplaceMethod(node) ||
 					// Ignore external types
 					isExternal ||
+					// Ignore the `any` TypeScript's built-in lib writes in its own signatures
+					isBuiltinAny(node) ||
 					// Ignore where `let x;` is declared or assigned, its reads are narrowed
 					isEvolvingLetWrite(node) ||
 					// Should be not `any` and don't include `any` in types
-					(!(type.flags & ts.TypeFlags.Any) && !mentionsAny(typeText));
+					(!(type.flags & ts.TypeFlags.Any) &&
+						(!mentionsAny(typeText) || !hasOwnAny(type, 0)));
 
 				rep.statementMap[statementIndex] = {
 					start: {
@@ -591,8 +782,8 @@ for (const [sourceFile, typeChecker] of sourceFiles) {
 				if (
 					!isTyped &&
 					inferredAny &&
-					type.flags & ts.TypeFlags.Any &&
-					!isDeclaredAny(node)
+					((type.flags & ts.TypeFlags.Any && !isDeclaredAny(node)) ||
+						isUntypedEmptyArray(node))
 				) {
 					inferredAny.push({
 						line: line + 1,
@@ -904,7 +1095,7 @@ if (baseTotals && baseAnyCounts) {
 		: `| inferred \`any\` | ${totalAny(headAny)} |\n`;
 }
 report +=
-	"\nEscape hatches count the raw types they stand for too: `any`, `object` and `Function`. Inferred `any` counts the identifiers whose type TypeScript infers as `any` though no JSDoc names it, and the `new` or generic calls whose type arguments it fills with `any`, such as `const map = new Map()`.\n";
+	"\nEscape hatches count the raw types they stand for too: `any`, `object` and `Function`. Inferred `any` counts the identifiers whose type TypeScript infers as `any` though no JSDoc names it, the `new` or generic calls whose type arguments it fills with `any`, such as `const map = new Map()`, and the empty arrays declared without a type, such as `const list = []`. Typed lines leave out the `any` that TypeScript's built-in lib writes in its own signatures, such as the replacer of `String#replace`.\n";
 
 const header = `| File | Typed lines | ${ESCAPE_HATCHES.map((name) => `\`${name}\``).join(" | ")} | inferred \`any\` |\n| :-- | --: |${" --: |".repeat(ESCAPE_HATCHES.length + 1)}\n`;
 
