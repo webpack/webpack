@@ -1345,7 +1345,8 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["function f(a,c){return(a?a:a)&&c}", {}, "function f(a,c){return a&&c}"],
 			["function f(a){return a?a:a}", {}, "function f(a){return a}"],
 			["function f(a,b){return a?a:b?1:2}", {}, "function f(a,n){return a?a:n?1:2}"],
-			["function f(a,b){return a?a:b=1}", {}, "function f(a,n){return a?a:n=1}"],
+			["function f(a,b){return g(b),a?a:b=1}", {}, "function f(a,b){return g(b),a?a:b=1}"],
+			["function f(a,b){return a?a:b=1}", {}, "function f(a,n){return a?a:1}"],
 			["function f(a,b){return a?a:b??1}", {}, "function f(a,n){return a?a:n??1}"],
 			["function f(a,b){return a?a:b||1}", {}, "function f(a,n){return a||n||1}"],
 			["function f(a,b){return a?a:b&&1}", {}, "function f(a,n){return a||n&&1}"],
@@ -1557,6 +1558,10 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["function k(a){x=a!=b?a:c;x=a!=null?a:b+c;x=a!=null?a:new B}x=(a,b)?(c,d)?e:f:f", { mangle: false, ecma: 2020, compress: { toplevel: false, ecma: 2020 } }, "function k(a){x=a!=b?a:c,x=a??b+c,x=a??new B}x=(a,b)&&(c,d)?e:f;"],
 			// terser's `t?f(a,x):f(b,x)` as `f(t?a:b,x)`, a local `f`, a pure test and one argument apart.
 			["function f(a,b){x=a?b(c,d):b(e,d);x=a===0?b(c):b(e);x=a?b(...c):b(...e);x=a()?b(1):b(2);x=a?b(1,2):b(3,4);a?b(g(),1):b(g(),2);x=a?b(c=1):b(e);x=a?b((c,d)):b(e)}x=a?f(1):f(2)", { mangle: false }, "function f(a,b){x=b(a?c:e,d),x=b(a===0?c:e),x=a?b(...c):b(...e),x=a()?b(1):b(2),x=a?b(1,2):b(3,4),b(g(),a?1:2),x=b(a?c=1:e),x=b(a?(c,d):e)}x=a?f(1):f(2);"],
+			// terser's `unused` of a write whose value is read: nobody reading the name, it prints as the value, but not where the name is read, in its dead zone, through `arguments` or in dead code.
+			["function f(){var a;return a=1}function g(b){let a;return a=c(),b}function h(){var a;x(a=1);if(a=k())l()}function i(){var a,b;x(a=b=k())}function j(){var a;x(a=k());return a}function k(){x(a=g());let a}function l(a){x(a=g());return arguments}function m(c){var a;for(a=1;c;)c()}function n(a){var m=1;if(!1)x(m=a);return m}function o(){var a;a=0,p(),q()}", { mangle: false }, "function f(){return 1}function g(b){return c(),b}function h(){x(1);if(k())l()}function i(){x(k())}function j(){var a;return x(a=k()),a}function k(){x(a=g());let a}function l(a){return x(a=g()),arguments}function m(c){for(;c;)c()}function n(a){var m=1;return m}function o(){p(),q()}"],
+			// A `for` start running nothing goes.
+			["for(0;c;)f();for(a.b,1;c;)f();for(/*! c */0;;);", {}, "for(;c;)f();for(a.b;c;)f();for(/*! c */0;;);"],
 			// `!` negates an optional chain whole.
 			["function f(){if(t?.has(x))return;y()}for(;;){if(t?.has(x))continue;y()}x=t?.a?!1:y", {}, "function f(){if(!t?.has(x))y()}for(;;){if(!t?.has(x))y()}x=!t?.a&&y;"]
 		];
