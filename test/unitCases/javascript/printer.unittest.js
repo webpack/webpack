@@ -1353,7 +1353,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["function f(a,b){return a?a:(b,1)}", {}, "function f(a,n){return a?a:(n,1)}"],
 			["function f(a,b){return a?a:()=>1}", {}, "function f(a,n){return a?a:()=>1}"],
 			["function*f(a,b){return a?a:yield}", {}, "function*f(a,n){return a?a:yield}"],
-			["function f(b){return a?a:b}", {}, "function f(n){return a?a:n}"],
+			["function f(b){return a?a:b}", {}, "function f(n){return a||n}"],
 			["function f(o,b){return o.a?o.a:b}", {}, "function f(o,n){return o.a?o.a:n}"],
 			["function f(a,b){with(b)return a?a:b}", {}, "function f(a,b){with(b)return a?a:b}"],
 			["function f(a,b){return a?b:a}", {}, "function f(a,n){return a?n:a}"],
@@ -1537,6 +1537,14 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["!/*@__PURE__*/f(g(),h());!/*@__PURE__*/f((g(),h()));/*@__PURE__*/f(function(){g()}())", {}, "(g(),h()),(g(),h()),(function(){g()}());"],
 			// A branch beside the `break` running nothing leaves no statement, the loop running while the test is true.
 			["while(a&&b){if(delete x.a){}else{break}f()}while(a){if(c);else break;f()}for(;;){if(c){/*! k */}else break;f()}while(a){if(c){var q}else break;f()}for(;;){if(x){}else break}", { mangle: false }, "while(a&&b&&delete x.a)f();while(a&&c)f();for(;;){if(c){/*! k */}else break;f()}while(a&&c){var q;f()}for(;x;);"],
+			// A logical assignment every branch ends in hoists past a pure test, as a compound one does.
+			["var a=foo,x=bar;x?a||=1:a||=2;f()?a||=1:a||=2;x?a||=1:a&&=2;x?a+=1:a+=2", { mangle: false }, "var a=foo,x=bar;a||=x?1:2,f()?a||=1:a||=2,x?a||=1:a&&=2,a+=x?1:2;"],
+			// `x?x:y` is `x||y` for a global too, but not where `with` may answer it.
+			["x?x:y", {}, "x||y;"],
+			["x?x:y;with(o)x?x:y", {}, "x?x:y;with(o)x?x:y;"],
+			// Nobody reading a boolean compared, its `!` goes; an integer equal to `0` is `!` of it wherever read, but not where parentheses would hold the `!`.
+			["a instanceof b===false;delete x!=true;x=(a instanceof b)===false", {}, "a instanceof b,delete x,x=!(a instanceof b);"],
+			["f((a&2)==0);f(0===(a&4));f((a&4)!=0);(a&2)==0,g();x=2+((a&2)==0);x=[(a^2)==0]", {}, "f(!(a&2)),f(!(a&4)),f((a&4)!=0),a&2,g(),x=2+((a&2)==0),x=[!(a^2)];"],
 			// `!` negates an optional chain whole.
 			["function f(){if(t?.has(x))return;y()}for(;;){if(t?.has(x))continue;y()}x=t?.a?!1:y", {}, "function f(){if(!t?.has(x))y()}for(;;){if(!t?.has(x))y()}x=!t?.a&&y;"]
 		];
