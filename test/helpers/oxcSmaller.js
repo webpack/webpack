@@ -837,13 +837,10 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/esbuild.rs:1302",
 			"oxc minifier: peephole/esbuild.rs:1303",
 			"oxc minifier: peephole/esbuild.rs:1309",
-			"oxc minifier: peephole/esbuild.rs:1321",
 			"oxc minifier: peephole/esbuild.rs:1322",
 			"oxc minifier: peephole/esbuild.rs:1323",
-			"oxc minifier: peephole/esbuild.rs:1324",
 			"oxc minifier: peephole/esbuild.rs:1325",
 			"oxc minifier: peephole/esbuild.rs:1326",
-			"oxc minifier: peephole/esbuild.rs:1327",
 			"oxc minifier: peephole/esbuild.rs:1330",
 			"oxc minifier: peephole/esbuild.rs:1331",
 			"oxc minifier: peephole/esbuild.rs:1500",
@@ -863,9 +860,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/esbuild.rs:1546",
 			"oxc minifier: peephole/esbuild.rs:1550",
 			"oxc minifier: peephole/esbuild.rs:1558",
-			"oxc minifier: peephole/esbuild.rs:1563",
-			"oxc minifier: peephole/esbuild.rs:1564",
-			"oxc minifier: peephole/esbuild.rs:1565",
 			"oxc minifier: peephole/esbuild.rs:1570",
 			"oxc minifier: peephole/esbuild.rs:1571",
 			"oxc minifier: peephole/esbuild.rs:1573",
@@ -1679,10 +1673,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/remove_unused_expression.rs:611",
 			"oxc minifier: peephole/remove_unused_expression.rs:615",
 			"oxc minifier: peephole/remove_unused_expression.rs:621",
-			"oxc minifier: peephole/remove_unused_expression.rs:628",
-			"oxc minifier: peephole/remove_unused_expression.rs:629",
-			"oxc minifier: peephole/remove_unused_expression.rs:630",
-			"oxc minifier: peephole/remove_unused_expression.rs:631",
 			"oxc minifier: peephole/remove_unused_expression.rs:632",
 			"oxc minifier: peephole/remove_unused_expression.rs:634",
 			"oxc minifier: peephole/remove_unused_expression.rs:659",
@@ -2588,7 +2578,8 @@ const OXC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/projects/next/extra/if_return/.4/input.js",
 			"terser compress: inline/inline_into_scope_conflict_enclosed",
 			"terser compress: sequences/lift_sequences_1",
-			"terser compress: yield/yield_before_punctuators"
+			"terser compress: yield/yield_before_punctuators",
+			"swc minifier: fixture/next/33265/static/chunks/d6e1aeb5-38a8d7ae57119c23/input.js"
 		]
 	],
 	[
@@ -3405,11 +3396,8 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/fold_constants.rs:436",
 			"oxc minifier: peephole/fold_constants.rs:437",
 			"oxc minifier: peephole/fold_constants.rs:521",
-			"oxc minifier: peephole/fold_constants.rs:626",
 			"oxc minifier: peephole/fold_constants.rs:627",
-			"oxc minifier: peephole/fold_constants.rs:628",
 			"oxc minifier: peephole/fold_constants.rs:629",
-			"oxc minifier: peephole/fold_constants.rs:693",
 			"oxc minifier: peephole/fold_constants.rs:1681",
 			"oxc minifier: peephole/fold_constants.rs:1689"
 		]
