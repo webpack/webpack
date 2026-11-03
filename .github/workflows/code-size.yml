@@ -21,8 +21,6 @@ permissions:
   contents: read
   # Reading the baseline report from the run that produced it on `main`.
   actions: read
-  # Posting the report as a pull request comment; a fork's token stays read-only.
-  pull-requests: write
 
 jobs:
   code-size:
@@ -153,33 +151,10 @@ jobs:
           # tell whether the baseline it found is that same commit.
           CODE_SIZE_BASE_COMMIT: ${{ steps.baseline.outputs.base }}
 
-      # On the pull request itself, not only in the job summary — a size change
-      # nobody clicks through to see is a size change nobody sees. Updated in
-      # place on every push, so the thread keeps one comment.
-      - name: Comment the report on the pull request
-        if: >
-          github.event_name == 'pull_request' &&
-          github.event.pull_request.head.repo.full_name == github.repository
-        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
-        with:
-          script: |
-            const { upsertReportComment } = await import(
-              `${process.env.GITHUB_WORKSPACE}/.github/scripts/comment-report.mjs`
-            );
-            await upsertReportComment({
-              github,
-              context,
-              issueNumber: context.issue.number,
-              marker: "<!-- code-size-report -->",
-              report: require("fs").readFileSync("code-size-report.md", "utf8")
-            });
-
-      # A fork's token cannot comment, so `pr-reports.yml` posts this from the
-      # base repository's context, without running this pull request's code.
+      # `pr-reports.yml` puts this in the pull request's one report comment,
+      # from the base repository's context: a fork's token is read-only.
       - name: Upload the report for the pull request comment
-        if: >
-          github.event_name == 'pull_request' &&
-          github.event.pull_request.head.repo.full_name != github.repository
+        if: github.event_name == 'pull_request'
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: pr-report-code-size

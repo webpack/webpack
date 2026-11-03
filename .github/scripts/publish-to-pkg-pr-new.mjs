@@ -1,12 +1,13 @@
 /* eslint-disable no-console */
-/* eslint-disable camelcase */
 
 import fs from "fs";
 
 /**
- * @param {{ github: EXPECTED_ANY, context: EXPECTED_ANY }} params params
+ * Logs what was published and, for a pull request, writes its preview package report.
+ * @param {{ context: EXPECTED_ANY }} params params
+ * @returns {void}
  */
-export async function run({ github, context }) {
+export function run({ context }) {
 	const output = JSON.parse(fs.readFileSync("output.json", "utf8"));
 
 	const sha =
@@ -16,19 +17,21 @@ export async function run({ github, context }) {
 
 	const commitUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/commit/${sha}`;
 
-	const botCommentIdentifier = "<!-- posted by pkg.pr.new -->";
+	const reportMarker = "<!-- pkg-pr-new-report -->";
 
 	/**
 	 * @param {number} issueNumber PR number
-	 * @returns {string} comment body, the same for every push to the PR
+	 * @returns {string} report, the same for every push to the PR
 	 */
-	const commentBody = (issueNumber) => {
+	const reportBody = (issueNumber) => {
 		// WHY: a URL naming the PR instead of the commit installs its latest
-		// build, so later pushes leave the comment as it is and notify nobody.
+		// build, so later pushes leave the report as it is and notify nobody.
 		const urls = output.packages
 			.map((p) => p.url.replace(/@[^@/]+$/, `@${issueNumber}`))
 			.join(" ");
-		return `${botCommentIdentifier}
+		return `${reportMarker}
+## Preview package
+
 This PR is packaged and the instant preview of its latest commit is available.
 
 Install it locally:
@@ -54,57 +57,6 @@ pnpm add -D webpack@${urls}
 	};
 
 	/**
-	 * @param {number=} issueNumber PR number
-	 * @returns {Promise<EXPECTED_ANY[]>} comments
-	 */
-	async function findBotComment(issueNumber) {
-		if (!issueNumber) return null;
-		const comments = await github.rest.issues.listComments({
-			owner: context.repo.owner,
-			repo: context.repo.repo,
-			issue_number: issueNumber
-		});
-		return comments.data.find(
-			(comment) =>
-				// Prevent unintentional overwriting
-				comment.user &&
-				comment.user.login === "github-actions[bot]" &&
-				comment.body.includes(botCommentIdentifier)
-		);
-	}
-
-	/**
-	 * @param {number=} issueNumber issue number
-	 * @returns {Promise<void>}
-	 */
-	async function createOrUpdateComment(issueNumber) {
-		if (!issueNumber) {
-			console.log("No issue number provided. Cannot post or update comment.");
-			return;
-		}
-
-		const existingComment = await findBotComment(issueNumber);
-		const body = commentBody(issueNumber);
-
-		if (existingComment) {
-			if (existingComment.body === body) return;
-			await github.rest.issues.updateComment({
-				owner: context.repo.owner,
-				repo: context.repo.repo,
-				comment_id: existingComment.id,
-				body
-			});
-		} else {
-			await github.rest.issues.createComment({
-				issue_number: issueNumber,
-				owner: context.repo.owner,
-				repo: context.repo.repo,
-				body
-			});
-		}
-	}
-
-	/**
 	 * @returns {void}
 	 */
 	function logPublishInfo() {
@@ -119,25 +71,14 @@ pnpm add -D webpack@${urls}
 		console.log(`\n${"=".repeat(50)}`);
 	}
 
-	if (context.eventName === "pull_request") {
-		if (context.issue.number) {
-			await createOrUpdateComment(context.issue.number);
-		}
-	} else if (context.eventName === "push") {
-		const { data: prs } =
-			await github.rest.repos.listPullRequestsAssociatedWithCommit({
-				owner: context.repo.owner,
-				repo: context.repo.repo,
-				commit_sha: sha
-			});
+	logPublishInfo();
 
-		if (prs.length > 0) {
-			await createOrUpdateComment(prs[0].number);
-		} else {
-			console.log(
-				"No open pull request found for this push. Logging publish information to console:"
-			);
-			logPublishInfo();
-		}
+	// `pr-reports.yml` puts this in the pull request's one report comment.
+	if (context.eventName === "pull_request") {
+		fs.writeFileSync(
+			"pkg-pr-new-report.md",
+			reportBody(context.issue.number),
+			"utf8"
+		);
 	}
 }

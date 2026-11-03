@@ -1,20 +1,28 @@
 name: Pull Request Reports
 
-# Posts the reports a fork's `code-size.yml`, `types-coverage.yml`,
-# `dependency-report.yml` and `module-loading.yml` runs upload, since their
-# token is read-only; a same-repo run comments by itself.
+# Keeps one comment on the pull request with the reports `publish-to-pkg-pr-new.yml`,
+# `code-size.yml`, `types-coverage.yml`, `module-loading.yml` and
+# `dependency-report.yml` upload. Every run rebuilds the whole comment from the
+# latest run of each, so runs finishing together cannot drop a section.
 # This runs in the base repository's context, so it never runs the PR's code.
 on:
   # zizmor: ignore[dangerous-triggers] -- only `main` is checked out; artifact is data
   workflow_run:
-    workflows: [Code Size, Types Coverage, Dependency Report, Module Loading]
+    workflows:
+      [
+        Publish to pkg.pr.new,
+        Code Size,
+        Types Coverage,
+        Module Loading,
+        Dependency Report
+      ]
     types: [completed]
 
 concurrency:
-  # One report per source workflow and branch; a newer report replaces the
-  # comment an older one would post. The numeric repository id keeps the
-  # repository and branch apart, as both names can contain hyphens.
-  group: ${{ github.workflow }}-${{ github.event.workflow_run.name }}-${{ github.event.workflow_run.head_repository.id }}-${{ github.event.workflow_run.head_branch }}
+  # One comment per branch; the newest run reads every report, so a cancelled
+  # one loses nothing. The numeric repository id keeps the repository and
+  # branch apart, as both names can contain hyphens.
+  group: ${{ github.workflow }}-${{ github.event.workflow_run.head_repository.id }}-${{ github.event.workflow_run.head_branch }}
   cancel-in-progress: true
 
 permissions: {}
@@ -38,92 +46,101 @@ jobs:
           sparse-checkout: .github/scripts
           sparse-checkout-cone-mode: false
 
-      # WHY: the artifact is written by the pull request's own run, whose
-      # workflow file a fork can edit, so it is data only: never executed,
-      # never interpolated into a shell, and its bytes are checked below.
-      - name: Download the reports
-        continue-on-error: true
-        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
-        with:
-          pattern: pr-report-*
-          # Flat whatever the count: v8 only adds a directory per artifact when
-          # more than one matches, and each report has a file name of its own.
-          merge-multiple: true
-          path: ${{ runner.temp }}/pr-reports
-          run-id: ${{ github.event.workflow_run.id }}
-          github-token: ${{ github.token }}
-
-      - name: Comment the reports on the pull request
+      - name: Find the pull request and the run of each report
+        id: runs
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
-        env:
-          REPORTS_DIR: ${{ runner.temp }}/pr-reports
         with:
           script: |
-            const fs = require("fs");
-            const path = require("path");
-            const run = context.payload.workflow_run;
-            // Each report file maps to the one marker its body must open with.
-            const REPORTS = {
-              "code-size-report.md": "<!-- code-size-report -->",
-              "types-coverage-report.md": "<!-- types-coverage-report -->",
-              "dependency-report-comment.md": "<!-- dependency-report -->",
-              "module-loading-report.md": "<!-- module-loading-report -->"
-            };
-            // WHY: `workflow_run.pull_requests` is empty for a fork, so the pull
-            // request is looked up by head branch and owner, and accepted only
-            // when its head is still the commit this run measured — a stale run
-            // then cannot overwrite a newer report.
-            const { data: pulls } = await github.rest.pulls.list({
-              ...context.repo,
-              state: "open",
-              base: "main",
-              head: `${run.head_repository.owner.login}:${run.head_branch}`,
-              per_page: 100
-            });
-            const pull = pulls.find(
-              (candidate) =>
-                candidate.base.ref === "main" &&
-                candidate.head.sha === run.head_sha &&
-                candidate.head.repo &&
-                candidate.head.repo.id === run.head_repository.id &&
-                candidate.base.repo.id === run.repository.id
+            const { findPullRequest, findReportRuns } = await import(
+              `${process.env.GITHUB_WORKSPACE}/.github/scripts/pr-reports.mjs`
             );
+            const run = context.payload.workflow_run;
+            const pull = await findPullRequest({ github, context, run });
             if (!pull) {
               core.info(`No open pull request is at ${run.head_sha}, skipping.`);
               return;
             }
-            const { upsertReportComment } = await import(
-              `${process.env.GITHUB_WORKSPACE}/.github/scripts/comment-report.mjs`
-            );
-            // WHY: right after the marker rather than at the end, where a report
-            // left open (an unclosed `<!--`) would swallow it out of sight.
-            const provenance = `<sub>Reported by [${run.name} #${run.run_number}](${run.html_url}) for ${run.head_sha}, computed by this pull request's own code.</sub>`;
-            for (const [file, marker] of Object.entries(REPORTS)) {
-              const reportPath = path.join(process.env.REPORTS_DIR, file);
-              let stat;
-              try {
-                stat = fs.lstatSync(reportPath);
-              } catch {
-                continue;
-              }
-              // A symlink could point the read at a file on the runner.
-              if (!stat.isFile() || stat.size > 1024 * 1024) {
-                core.warning(`Ignoring ${file}: not a plain file under 1 MiB.`);
-                continue;
-              }
-              const report = fs.readFileSync(reportPath, "utf8");
-              if (!report.startsWith(marker)) {
-                core.warning(`Ignoring ${file}: it does not open with ${marker}.`);
-                continue;
-              }
-              // A zero-width space after `@` keeps a report from pinging anyone.
-              await upsertReportComment({
-                github,
-                context,
-                issueNumber: pull.number,
-                marker,
-                report: `${marker}\n${provenance}\n\n${report
-                  .slice(marker.length)
-                  .replace(/@/g, "@\u200b")}`
-              });
+            const runs = await findReportRuns({ github, context, run });
+            core.setOutput("pull", String(pull.number));
+            core.setOutput("runs", JSON.stringify(runs));
+            for (const [key, reportRun] of Object.entries(runs)) {
+              if (reportRun.status === "completed") core.setOutput(key, String(reportRun.id));
             }
+
+      # WHY: each artifact is written by the pull request's own run, whose
+      # workflow file a fork can edit, so it is data only: never executed,
+      # never interpolated into a shell, and its bytes are checked below.
+      - name: Download the preview package report
+        if: steps.runs.outputs.pkg-pr-new
+        continue-on-error: true
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: pr-report-pkg-pr-new
+          path: ${{ runner.temp }}/pr-reports/pkg-pr-new
+          run-id: ${{ steps.runs.outputs.pkg-pr-new }}
+          github-token: ${{ github.token }}
+
+      - name: Download the code size report
+        if: steps.runs.outputs.code-size
+        continue-on-error: true
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: pr-report-code-size
+          path: ${{ runner.temp }}/pr-reports/code-size
+          run-id: ${{ steps.runs.outputs.code-size }}
+          github-token: ${{ github.token }}
+
+      - name: Download the types coverage report
+        if: steps.runs.outputs.types-coverage
+        continue-on-error: true
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: pr-report-types-coverage
+          path: ${{ runner.temp }}/pr-reports/types-coverage
+          run-id: ${{ steps.runs.outputs.types-coverage }}
+          github-token: ${{ github.token }}
+
+      - name: Download the module loading report
+        if: steps.runs.outputs.module-loading
+        continue-on-error: true
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: pr-report-module-loading
+          path: ${{ runner.temp }}/pr-reports/module-loading
+          run-id: ${{ steps.runs.outputs.module-loading }}
+          github-token: ${{ github.token }}
+
+      - name: Download the dependency report
+        if: steps.runs.outputs.dependency
+        continue-on-error: true
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: pr-report-dependency
+          path: ${{ runner.temp }}/pr-reports/dependency
+          run-id: ${{ steps.runs.outputs.dependency }}
+          github-token: ${{ github.token }}
+
+      - name: Comment the reports on the pull request
+        if: steps.runs.outputs.pull
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        env:
+          PULL_NUMBER: ${{ steps.runs.outputs.pull }}
+          REPORT_RUNS: ${{ steps.runs.outputs.runs }}
+          REPORTS_DIR: ${{ runner.temp }}/pr-reports
+        with:
+          script: |
+            const { formatReportsComment, commentReports } = await import(
+              `${process.env.GITHUB_WORKSPACE}/.github/scripts/pr-reports.mjs`
+            );
+            const body = formatReportsComment({
+              runs: JSON.parse(process.env.REPORT_RUNS),
+              reportsDir: process.env.REPORTS_DIR,
+              headSha: context.payload.workflow_run.head_sha,
+              warn: (message) => core.warning(message)
+            });
+            await commentReports({
+              github,
+              context,
+              issueNumber: Number(process.env.PULL_NUMBER),
+              body
+            });

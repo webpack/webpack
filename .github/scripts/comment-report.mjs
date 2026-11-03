@@ -28,7 +28,9 @@ export async function upsertReportComment({
 	const truncated = "\n\n…truncated";
 	const room = MAX_COMMENT_LENGTH - truncated.length;
 	const body =
-		report.length > room ? report.slice(0, room) + truncated : report;
+		report.length > MAX_COMMENT_LENGTH
+			? report.slice(0, room) + truncated
+			: report;
 	const comments = await github.paginate(github.rest.issues.listComments, {
 		...context.repo,
 		issue_number: issueNumber,
