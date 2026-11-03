@@ -2147,7 +2147,10 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			'(function(){console.log(f());var k="a";function f(){var v={[k]:1}.a;g(v);return v+v}function g(){}})()',
 			'(function(){console.log(f());var k="a";function f(){var v={a:1}[k];g(v);return v+v}function g(){}})()',
 			'(function(){console.log(f());var k="a";function f(){if({[k]:1}.a)return 2;return 3}})()',
-			'(function(){var k="a";console.log(f());function f(){var v={a:1}[k];g(v);return v+v}function g(){}})()'
+			'(function(){var k="a";console.log(f());function f(){var v={a:1}[k];g(v);return v+v}function g(){}})()',
+			// A value in parentheses prints, a private name is never a key.
+			"function g(){return 7}console.log(({a:(g()),b:1}).a)",
+			"class C{#x;static t(){try{return({x:1}).#x}catch(e){return e.constructor.name}}}console.log(C.t())"
 		]) {
 			const { code } = minifyOnePass(source, { compress: {}, mangle: false });
 			expect(runProgram(code)).toBe(runProgram(source));
