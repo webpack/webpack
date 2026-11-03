@@ -159,7 +159,20 @@ const containReport = (report, room) => {
 	let text =
 		report.length > room ? `${report.slice(0, room)}\n\n…truncated` : report;
 	if (text.lastIndexOf("<!--") > text.lastIndexOf("-->")) text += " -->";
-	if ((text.match(/^\s*```/gm) || []).length % 2 === 1) text += "\n```";
+	// A fence closes only on a bare line of its own character, at least as long.
+	let fence = "";
+	for (const [, marker, rest] of text.matchAll(/^ {0,3}(`{3,}|~{3,})(.*)$/gm)) {
+		if (!fence) {
+			if (!(marker[0] === "`" && rest.includes("`"))) fence = marker;
+		} else if (
+			marker[0] === fence[0] &&
+			marker.length >= fence.length &&
+			!rest.trim()
+		) {
+			fence = "";
+		}
+	}
+	if (fence) text += `\n${fence}`;
 	const open =
 		(text.match(/<details\b/g) || []).length -
 		(text.match(/<\/details>/g) || []).length;
