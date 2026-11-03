@@ -1657,8 +1657,11 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["function f(Math,parseInt){x=[Math.abs(-1),parseInt(\"1\")]}x=[Math?.abs(-1),Math.abs?.(-1),Math.abs(...[g]),Math.abs(/*! c */1)]", {}, "function f(a,t){x=[a.abs(-1),t(\"1\")]}x=[Math?.abs(-1),Math.abs?.(-1),Math.abs(g),Math.abs(/*! c */1)];"],
 			["x=[Math.abs(-1),parseInt(\"1\")]", { compress: { toplevel: false }, mangle: false, keep_fnames: true }, "x=[1,1];"],
 			["x=hasOwnProperty.call(a,b)+constructor.name(1)", {}, "x=hasOwnProperty.call(a,b)+constructor.name(1);"],
-			// An answer printing longer than the call, with the parentheses a read of it needs, stays a call.
-			["x=[Math.min(1/3-1,0,0).x,Math.min(1/3-1,0,0),Math.sqrt(1/3)]", {}, "x=[Math.min(1/3-1,0,0).x,-.6666666666666667,Math.sqrt(1/3)];"],
+			// A call measured by what it holds stays one where an argument is worked out, and where its answer prints longer.
+			["x=[Math.min(1/3-1,0,0),Math.sqrt(.5),Math.max(1,2).x]", {}, "x=[Math.min(1/3-1,0,0),Math.sqrt(.5),2..x];"],
+			["x=[Math.abs(-(1+1)),`ab`.concat(`c`),`a${1}`.concat(\"b\"),Math.max(1.5,2.5).x,Math.min(-1,2)()]", {}, "x=[Math.abs(-2),\"abc\",\"a1\".concat(\"b\"),2.5.x,(-1)()];"],
+			// Constructed, it parenthesizes only a sign, as a second print would.
+			["x=[new(\"abc\".concat(1,\"def\")),new(Math.min(-1,2)),new(Math.min(1,2))(3),new(g(1))]", {}, "x=[new\"abc1def\",new(-1),new 1(3),new(g(1))];"],
 			// Unread, it goes however long its answer; an outer call folds on it, and another radix needs a safe integer.
 			["Math.sqrt(2);x=[Math.ceil(Math.sqrt(2)),(1e20).toString(36),(35).toString(36)]", {}, "x=[2,1e20.toString(36),\"z\"];"],
 			// A call that stays one where the dropped `var` keeps it stays one where its value is read too.
