@@ -16,24 +16,61 @@ const { base, baseAny, root } = require("./argv");
 const createTypeScriptProgram = require("./typescript-program");
 
 /**
+ * Drops the text of string and template literal types from a printed type,
+ * keeping the types in template placeholders: `"any"` and `isn't ${T}` leave
+ * nothing but `T`. Scans once, so a quote inside one literal never opens another.
+ * @param {string} typeText printed type
+ * @returns {string} the type with literal text removed
+ */
+const maskLiterals = (typeText) => {
+	let out = "";
+	let i = 0;
+	while (i < typeText.length) {
+		const char = typeText[i];
+		if (char === '"' || char === "'") {
+			i++;
+			while (i < typeText.length && typeText[i] !== char) {
+				i += typeText[i] === "\\" ? 2 : 1;
+			}
+			i++;
+			out += '""';
+		} else if (char === "`") {
+			i++;
+			while (i < typeText.length && typeText[i] !== "`") {
+				if (typeText[i] === "\\") {
+					i += 2;
+				} else if (typeText[i] === "$" && typeText[i + 1] === "{") {
+					const start = i + 2;
+					let depth = 1;
+					i = start;
+					while (i < typeText.length && depth > 0) {
+						if (typeText[i] === "{") depth++;
+						else if (typeText[i] === "}") depth--;
+						i++;
+					}
+					out += ` ${maskLiterals(typeText.slice(start, i - 1))} `;
+				} else {
+					i++;
+				}
+			}
+			i++;
+		} else {
+			out += char;
+			i++;
+		}
+	}
+	return out;
+};
+
+/**
  * Tells whether a printed type uses `any` as a type. The word also shows up
- * where it is no type at all: inside a string literal type, and as the name of
- * a parameter or property, such as `(any: SourceBucket) => ...`.
+ * where it is no type at all: inside a string or template literal type, and as
+ * the name of a parameter or property, such as `(any: SourceBucket) => ...`.
  * @param {string} typeText printed type
  * @returns {boolean} true when `any` appears as a type
  */
 const mentionsAny = (typeText) =>
-	/\bany\b/.test(
-		typeText
-			.replace(/"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'/g, '""')
-			// A template literal type keeps the types of its placeholders: `a${any}`
-			.replace(/`(?:[^`\\]|\\.)*`/g, (literal) =>
-				Array.from(literal.matchAll(/\$\{([^}]*)\}/g), ([, type]) => type).join(
-					" "
-				)
-			)
-			.replace(/\bany\??:/g, "_:")
-	);
+	/\bany\b/.test(maskLiterals(typeText).replace(/\bany\??:/g, "_:"));
 
 // `hot/` is a project of its own, so its files reach only that program.
 /** @type {[ts.SourceFile, ts.TypeChecker][]} */
