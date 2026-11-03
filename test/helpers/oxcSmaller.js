@@ -1689,7 +1689,11 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/remove_unused_expression.rs:873",
 			"oxc minifier: peephole/remove_unused_expression.rs:1116",
 			"oxc minifier: peephole/remove_unused_expression.rs:1120",
-			"oxc minifier: peephole/remove_unused_expression.rs:1313"
+			"oxc minifier: peephole/remove_unused_expression.rs:1313",
+			"oxc minifier: peephole/remove_unused_expression.rs:767",
+			"oxc minifier: peephole/remove_unused_expression.rs:772",
+			"oxc minifier: peephole/remove_unused_expression.rs:777",
+			"oxc minifier: peephole/remove_unused_expression.rs:797"
 		]
 	],
 	[

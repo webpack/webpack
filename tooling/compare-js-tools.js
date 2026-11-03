@@ -1595,6 +1595,13 @@ const EXPECTED = [
 	},
 	{
 		relation: "idempotence",
+		contains: "(e,e.__alignTo))?",
+		source: "ECharts",
+		presets: ["default"],
+		why: "an `if` printing as `?:` parenthesizes a test opening with a function where the reprint parenthesizes the function alone, the same size"
+	},
+	{
+		relation: "idempotence",
 		contains: "(e)>0",
 		source: "D3",
 		presets: ["default"],
