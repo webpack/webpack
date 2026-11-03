@@ -25,7 +25,13 @@ const createTypeScriptProgram = require("./typescript-program");
 const mentionsAny = (typeText) =>
 	/\bany\b/.test(
 		typeText
-			.replace(/"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|`(?:[^`\\]|\\.)*`/g, '""')
+			.replace(/"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'/g, '""')
+			// A template literal type keeps the types of its placeholders: `a${any}`
+			.replace(/`(?:[^`\\]|\\.)*`/g, (literal) =>
+				Array.from(literal.matchAll(/\$\{([^}]*)\}/g), ([, type]) => type).join(
+					" "
+				)
+			)
 			.replace(/\bany\??:/g, "_:")
 	);
 
