@@ -1,5 +1,5 @@
-import { answer } from "./barrel.js";
+import * as values from "./barrel.js";
 
 it("should resolve the original request", () => {
-	expect(answer).toBe("first");
+	expect({ ...values }).toEqual({ answer: "first" });
 });
