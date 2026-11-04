@@ -2133,6 +2133,117 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		}
 	});
 
+	it("should fold what `+` adds to a string", () => {
+		const print = (/** @type {string} */ source) =>
+			minifyOnePass(`function f(b,c){return[${source}]}`, {
+				compress: {},
+				mangle: false,
+				format: { comments: "some" }
+			}).code.slice(23, -2);
+		for (const [source, expected] of [
+			// An array of constants adds as its items joined, a bigint as its digits.
+			["[]+0", '"0"'],
+			["[1,null,2]+\"\"", '"1,,2"'],
+			["[1,undefined,2]+\"\"", '"1,,2"'],
+			// A hole reads the prototypes at its index.
+			["[1,,2]+\"\"", '[1,,2]+""'],
+			["[-0,true]+\"\"", '"0,true"'],
+			["\"\"+123n", '"123"'],
+			["1n+[]", '"1"'],
+			// A bigint added to no string throws; an item not known stays.
+			["1n+1", "1n+1"],
+			["[1n]+\"\"", '[1n]+""'],
+			["[{}]+\"\"", '[{}]+""'],
+			["[b]+\"\"", '[b]+""'],
+			["[...b]+\"\"", '[...b]+""'],
+			// Nothing added to a string gives the string back.
+			["\"\"+typeof b", "typeof b"],
+			["`${b}`+[]", "`${b}`"],
+			["(typeof b+\"x\")+\"\"", 'typeof b+"x"'],
+			["(b+\"x\")+\"\"", 'b+"x"'],
+			["(typeof b+c)+\"\"", "typeof b+c"],
+			["(c+typeof b)+\"\"", "c+typeof b"],
+			["(c+b)+\"\"", 'c+b+""'],
+			// What may be no string, or needs the parentheses `+` gave it, stays.
+			["\"\"+b", '""+b'],
+			["\"\"+/x/", '""+/x/'],
+			["\"\"+(b+\"x\")", '""+(b+"x")'],
+			["(\"\"+typeof b)**2", '(""+typeof b)**2'],
+			["-(\"\"+typeof b)", '-(""+typeof b)'],
+			["(\"\"+typeof b).length", '(""+typeof b).length'],
+			["c+(\"\"+typeof b)", 'c+(""+typeof b)'],
+			["c||\"\"+typeof b", 'c||""+typeof b'],
+			["\"\"+({}+\"x\")", '""+({}+"x")'],
+			["\"\"/*! k */+typeof b", '""/*! k */+typeof b'],
+			// A conditional or assignment would keep the parentheses `+` gave it.
+			["(b?\"x\":\"y\")+\"\"", '(b?"x":"y")+""'],
+			["\"\"+(b.c=\"x\")", '""+(b.c="x")']
+		]) {
+			expect(print(source)).toBe(expected);
+		}
+		// An array joins only while the program writes neither its `toString` nor its `join`.
+		for (const [source, expected] of [
+			[
+				'Array.prototype.toString=()=>"!";a=[1,2]+"";b=typeof c+[]',
+				'Array.prototype.toString=()=>"!",a=[1,2]+"",b=typeof c+[];'
+			],
+			['Array.prototype.join=f;a=[1]+""', 'Array.prototype.join=f,a=[1]+"";'],
+			[
+				'Array.prototype.valueOf=()=>7;a=[1]+""',
+				'Array.prototype.valueOf=()=>7,a=[1]+"";'
+			],
+			[
+				'Object.prototype.valueOf=()=>7;a=[1]+""',
+				'Object.prototype.valueOf=()=>7,a=[1]+"";'
+			],
+			[
+				'const p=Object.prototype;p.valueOf=()=>7;a=[1]+""',
+				'const p=Object.prototype;p.valueOf=()=>7,a=[1]+"";'
+			],
+			[
+				'const A=Array;A.prototype.join=()=>"x";a=[1]+""',
+				'const A=Array;A.prototype.join=()=>"x",a=[1]+"";'
+			],
+			['a=[1?/*! keep */null:null]+""', 'a=[/*! keep */null]+"";'],
+			['String.prototype.trim=f;a=[1]+""', 'String.prototype.trim=f,a="1";'],
+			// A comment kept inside the operand dropped stays.
+			[
+				"a=typeof c+[1?/*! keep */null:null]",
+				"a=typeof c+[/*! keep */null];"
+			]
+		]) {
+			expect(
+				minifyOnePass(source, {
+					compress: { toplevel: false },
+					mangle: false,
+					format: { comments: "some" }
+				}).code
+			).toBe(expected);
+		}
+		// A name holding a string may be read before it is set, as `undefined`.
+		const source =
+			'function f(){g();var x="ab";h(x,x,x);function g(){a=""+x}}f()';
+		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+		expect(code).toContain('a=""+x');
+		// Kept for size where `unused` is off, the same read keeps its name.
+		for (const [kept, expected] of [
+			["[x]+\"\"", "[x]+\"\""],
+			['x+"y"', 'x+"y"']
+		]) {
+			const printed = minifyOnePass(
+				`function f(){g();var x="ab";function g(){a=${kept}}}f()`,
+				{ compress: { unused: false }, mangle: false }
+			).code;
+			expect(printed).toContain(`a=${expected}`);
+		}
+		expect(
+			minifyOnePass(
+				'function f(){var value="abc";g();function g(){a=value+" y"}}f()',
+				{ compress: { unused: false }, mangle: false }
+			).code
+		).toContain('a="abc y"');
+	});
+
 	it("should print the value an object literal holds at a known key", () => {
 		const print = (/** @type {string} */ source) =>
 			minifyOnePass(`function f(x,g){return[${source}]}`, {
