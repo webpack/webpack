@@ -2160,6 +2160,9 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["`${b}`+[]", "`${b}`"],
 			["(typeof b+\"x\")+\"\"", 'typeof b+"x"'],
 			["(b+\"x\")+\"\"", 'b+"x"'],
+			["(typeof b+c)+\"\"", "typeof b+c"],
+			["(c+typeof b)+\"\"", "c+typeof b"],
+			["(c+b)+\"\"", 'c+b+""'],
 			// What may be no string, or needs the parentheses `+` gave it, stays.
 			["\"\"+b", '""+b'],
 			["\"\"+/x/", '""+/x/'],
@@ -2170,10 +2173,18 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["c+(\"\"+typeof b)", 'c+(""+typeof b)'],
 			["c||\"\"+typeof b", 'c||""+typeof b'],
 			["\"\"+({}+\"x\")", '""+({}+"x")'],
-			["\"\"/*! k */+typeof b", '""/*! k */+typeof b']
+			["\"\"/*! k */+typeof b", '""/*! k */+typeof b'],
+			// A conditional or assignment would keep the parentheses `+` gave it.
+			["(b?\"x\":\"y\")+\"\"", '(b?"x":"y")+""'],
+			["\"\"+(b.c=\"x\")", '""+(b.c="x")']
 		]) {
 			expect(print(source)).toBe(expected);
 		}
+		// A name holding a string may be read before it is set, as `undefined`.
+		const source =
+			'function f(){g();var x="ab";h(x,x,x);function g(){a=""+x}}f()';
+		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+		expect(code).toContain('a=""+x');
 	});
 
 	it("should print the value an object literal holds at a known key", () => {
