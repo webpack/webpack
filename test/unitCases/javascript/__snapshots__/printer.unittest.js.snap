@@ -36,7 +36,7 @@ for(var i=(a in b);i;);for(let o of(a,b));for((x=1 in o);;);
 
 function*g(){yield,yield a,yield*b,x=yield c,(yield d)+1}
 
-l:for(;;);do{x()}while(y);with(o)p;
+for(;;);do{x()}while(y);with(o)p;
 
 if(a===1)b();c();x;try{a}catch{b}finally{c}
 
@@ -148,9 +148,9 @@ a,(()=>a)||b,a,-(()=>a),(()=>a)?b:c,a+(()=>b),f(()=>a),(a=()=>b);
 
 var a=b in c;for(var a=(b in c);;);for((a in b);;);for((a=b in c?1:2);;);for(var a=(()=>b in c);;);for(var a=function(){return b in c};;);for(var x=([b in c]);;);
 
-a?b:c;if(a){if(b)c}else d;if(a)for(;;)b?c:d;if(a)while(b)c?d:e;else f;if(a)e:b?c:d;if(a)do{b}while(c);else d;a?b:c?d:e;if(a)b?c:d;a;
+a?b:c;if(a){if(b)c}else d;if(a)for(;;)b?c:d;if(a)while(b)c?d:e;else f;if(a)b?c:d;if(a)do{b}while(c);else d;a?b:c?d:e;if(a)b?c:d;a;
 
-for(;;);while(a);for(x in y);for(x of y);a:for(;;)continue a;a;switch(a){case 1:case 2:b()}
+for(;;);while(a);for(x in y);for(x of y);for(;;)continue;a;switch(a){case 1:case 2:b()}
 
 try{a}catch{b}try{a}catch{b}finally{c}try{a}finally{b}throw a;function f(){}
 
@@ -206,7 +206,7 @@ export default class{}
 
 export default{a:1};
 
-f:function f(){}if(a)function g(){}f:n:a:;
+f:function f(){}if(a)function g(){}a:;
 
 var re=/[/]\\\\//g,s=/x/dgimsuy,v=/[a]/v;t=\`a\${b}c\\\\\${x}A\`+String.raw\`\\\\n\${x}\\\\t\`,u=\`line\\\\nbreak\`,tag\`\\\\unicode\`;
 
@@ -289,7 +289,7 @@ for(var i=(a in b);i;);for(let o of(a,b));for((x=1 in o);;);
 
 function*g(){yield,yield a,yield*b,x=yield c,(yield d)+1}
 
-l:for(;;);do{x()}while(y);with(o)p;
+for(;;);do{x()}while(y);with(o)p;
 
 if(a===1)b();c();x;try{a}catch{b}finally{c}
 
@@ -407,9 +407,9 @@ a,(()=>a)||b,a,-(()=>a),(()=>a)?b:c,a+(()=>b),f(()=>a),(a=()=>b);
 
 var a=b in c;for(var a=(b in c);;);for((a in b);;);for((a=b in c?1:2);;);for(var a=(()=>b in c);;);for(var a=function(){return b in c};;);for(var x=([b in c]);;);
 
-a?b:c;if(a){if(b)c}else d;if(a)for(;;)b?c:d;if(a)while(b)c?d:e;else f;if(a)e:b?c:d;if(a)do{b}while(c);else d;a?b:c?d:e;if(a)b?c:d;a;
+a?b:c;if(a){if(b)c}else d;if(a)for(;;)b?c:d;if(a)while(b)c?d:e;else f;if(a)b?c:d;if(a)do{b}while(c);else d;a?b:c?d:e;if(a)b?c:d;a;
 
-for(;;);while(a);for(x in y);for(x of y);a:for(;;)continue a;a;switch(a){case 1:case 2:b()}
+for(;;);while(a);for(x in y);for(x of y);for(;;)continue;a;switch(a){case 1:case 2:b()}
 
 try{a}catch{b}try{a}catch(a){b}finally{c}try{a}finally{b}throw a;function f(){}
 
@@ -465,7 +465,7 @@ export default class{}
 
 export default{a:1};
 
-f:function f(){}if(a)function g(){}f:n:a:;
+f:function f(){}if(a)function g(){}a:;
 
 var re=/[/]\\\\//g,s=/x/dgimsuy,v=/[a]/v;t=\`a\${b}c\\\\\${x}A\`+String.raw\`\\\\n\${x}\\\\t\`,u=\`line\\\\nbreak\`,tag\`\\\\unicode\`;
 
@@ -548,7 +548,7 @@ for(var i=(a in b);i;);for(let o of(a,b));for((x=1 in o);;);
 
 function*g(){yield,yield a,yield*b,x=yield c,(yield d)+1}
 
-l:for(;;);do{x()}while(y);with(o)p;
+for(;;);do{x()}while(y);with(o)p;
 
 if(a===1)b();c();x;try{a}catch{b}finally{c}
 
@@ -660,9 +660,9 @@ a,(()=>a)||b,a,-(()=>a),(()=>a)?b:c,a+(()=>b),f(()=>a),(a=()=>b);
 
 var a=b in c;for(var a=(b in c);;);for((a in b);;);for((a=b in c?1:2);;);for(var a=(()=>b in c);;);for(var a=function(){return b in c};;);for(var x=([b in c]);;);
 
-a?b:c;if(a){if(b)c}else d;if(a)for(;;)b?c:d;if(a)while(b)c?d:e;else f;if(a)e:b?c:d;if(a)do{b}while(c);else d;a?b:c?d:e;if(a)b?c:d;a;
+a?b:c;if(a){if(b)c}else d;if(a)for(;;)b?c:d;if(a)while(b)c?d:e;else f;if(a)b?c:d;if(a)do{b}while(c);else d;a?b:c?d:e;if(a)b?c:d;a;
 
-for(;;);while(a);for(x in y);for(x of y);a:for(;;)continue a;a;switch(a){case 1:case 2:b()}
+for(;;);while(a);for(x in y);for(x of y);for(;;)continue;a;switch(a){case 1:case 2:b()}
 
 try{a}catch{b}try{a}catch(a){b}finally{c}try{a}finally{b}throw a;function f(){}
 
@@ -718,7 +718,7 @@ export default class{}
 
 export default{a:1};
 
-f:function f(){}if(a)function g(){}f:n:a:;
+f:function f(){}if(a)function g(){}a:;
 
 var re=/[/]\\\\//g,s=/x/dgimsuy,v=/[a]/v;t=\`a\${b}c\\\\\${x}A\`+String.raw\`\\\\n\${x}\\\\t\`,u=\`line\\\\nbreak\`,tag\`\\\\unicode\`;
 
@@ -801,7 +801,7 @@ for(var i=(a in b);i;);for(let k of(a,b));for((x=1 in o);;);
 
 function*g(){yield,yield a,yield*b,x=yield c,(yield d)+1}
 
-label:for(;;);do{x()}while(y);with(o)p;
+for(;;);do{x()}while(y);with(o)p;
 
 if(a===1)b();c();x;try{a}catch{b}finally{c}
 
@@ -919,9 +919,9 @@ a,(()=>a)||b,a,-(()=>a),(()=>a)?b:c,a+(()=>b),f(()=>a),(a=()=>b);
 
 var a=b in c;for(var a=(b in c);;);for((a in b);;);for((a=b in c?1:2);;);for(var a=(()=>b in c);;);for(var a=function(){return b in c};;);for(var x=([b in c]);;);
 
-a?b:c;if(a){if(b)c}else d;if(a)for(;;)b?c:d;if(a)while(b)c?d:e;else f;if(a)label:b?c:d;if(a)do{b}while(c);else d;a?b:c?d:e;if(a)b?c:d;a;
+a?b:c;if(a){if(b)c}else d;if(a)for(;;)b?c:d;if(a)while(b)c?d:e;else f;if(a)b?c:d;if(a)do{b}while(c);else d;a?b:c?d:e;if(a)b?c:d;a;
 
-for(;;);while(a);for(x in y);for(x of y);c:for(;;)continue c;a;switch(a){case 1:case 2:b()}
+for(;;);while(a);for(x in y);for(x of y);for(;;)continue;a;switch(a){case 1:case 2:b()}
 
 try{a}catch{b}try{a}catch(e){b}finally{c}try{a}finally{b}throw a;function f(){}
 
@@ -977,7 +977,7 @@ export default class{}
 
 export default{a:1};
 
-label:function f(){}if(a)function g(){}a:b:c:;
+label:function f(){}if(a)function g(){}c:;
 
 var re=/[/]\\\\//g,s=/x/dgimsuy,v=/[a]/v;t=\`a\${b}c\\\\\${x}A\`+String.raw\`\\\\n\${x}\\\\t\`,u=\`line\\\\nbreak\`,tag\`\\\\unicode\`;
 
@@ -1097,7 +1097,7 @@ for(var i=(a in b);i;);for(let o of(a,b));for((x=1 in o);;);
 function*g(){yield,yield a,yield*b,x=yield c,(yield d)+1}
 
 /* p */
-l:for(;;);do{x()}while(y)
+for(;;);do{x()}while(y)
 with(o)p
 
 
@@ -1342,7 +1342,7 @@ if(a){if(b)c}else d
 if(a)for(;;)b?c:d
 if(a)while(b)c?d:e
 else f
-if(a)e:b?c:d
+if(a)b?c:d
 if(a){do{b}while(c)}else d
 a?b:c?d:e
 if(a)b?c:d
@@ -1350,7 +1350,7 @@ a
 
 
 /* p */
-for(;;);while(a);for(x in y);for(x of y);a:for(;;)continue a
+for(;;);while(a);for(x in y);for(x of y);for(;;)continue
 a
 switch(a){case 1:case 2:b()}
 
@@ -1479,7 +1479,7 @@ export default{a:1}
 
 
 /* p */
-f:function f(){}if(a)function g(){}f:n:a:;
+f:function f(){}if(a)function g(){}a:;
 
 /* p */
 var re=/[/]\\\\//g,s=/x/dgimsuy,v=/[a]/v

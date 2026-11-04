@@ -275,13 +275,13 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"if (a) { b() } while (a) { a-- } for (;;) { g() } l: { c() } with (o) { d() } do { e() } while (a); for (k in o) { f(k) } for (k of o) { f(k) }",
 				{},
-				"if(a)b();while(a)a--;for(;;)g();o:c();with(o)d();do{e()}while(a);for(k in o)f(k);for(k of o)f(k);"
+				"if(a)b();while(a)a--;for(;;)g();c();with(o)d();do{e()}while(a);for(k in o)f(k);for(k of o)f(k);"
 			],
 			// An `else` after a block keeps it where the block ends in an `if` of its own.
 			[
-				"if (a) { if (b) c(); } else d(); if (a) { for (;;) if (b) c(); } else d(); if (a) { if (b) c(); else e(); } else d(); if (a) { l: if (b) c(); } else d();",
+				"if (a) { if (b) c(); } else d(); if (a) { for (;;) if (b) c(); } else d(); if (a) { if (b) c(); else e(); } else d(); if (a) { l: if (b) for (;;) break l; } else d();",
 				{},
-				"if(a){if(b)c()}else d();if(a){for(;;)if(b)c()}else d();a?b?c():e():d();if(a){e:if(b)c()}else d();"
+				"if(a){if(b)c()}else d();if(a){for(;;)if(b)c()}else d();a?b?c():e():d();if(a){e:if(b)for(;;)break e}else d();"
 			],
 			// A block unwrapped to the `if` it holds still ends in that `if`.
 			[
@@ -936,7 +936,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			],
 			// A global or labelled exit stays; a name nothing mangles prints as written.
 			[
-				'var t; if (a === 1) t = "x"; else t = "y"; function f(a) { if (a) X = 1; else X = 2; l: for (;;) { if (a) break l; if (!a) break l; g() } }',
+				'var t; if (a === 1) t = "x"; else t = "y"; function f(a) { if (a) X = 1; else X = 2; l: { for (;;) { if (a) break l; if (!a) break l; g() } } }',
 				{},
 				'var t;t=a===1?"x":"y";function f(a){a?X=1:X=2;a:for(;;){if(a)break a;if(!a)break a;g()}}'
 			],
@@ -1223,7 +1223,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["function f(a){if(a)return;do g();while(a)}", {}, "function f(a){if(!a)do{g()}while(a)}"],
 			["function f(a){if(a)return;switch(a){case 1:g()}}", {}, "function f(a){if(!a)if(a===1)g()}"],
 			["function f(a){if(a)return;try{g()}catch(e){}}", {}, "function f(t){if(!t)try{g()}catch(t){}}"],
-			["function f(a){if(a)return;l:g()}", {}, "function f(f){if(!f){f:g()}}"],
+			["function f(a){if(a)return;l:g()}", {}, "function f(f){if(!f){g()}}"],
 			["function f(a){if(a)return;if(1)g()}", {}, "function f(f){if(!f)g()}"],
 			["function f(y){(function(x){if(x)return;if(g(x))return 3})(y)}", {}, "function f(n){!function(n){if(!n&&g(n))return}(n)}"],
 			// `if(!t)x;else y` swaps inside the `?:` it is a branch of.
@@ -1395,12 +1395,12 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["{/*! keep */}x()", {}, "{/*! keep */}x();"],
 			["function f(){for(k in o){{var b=5;while(--b>0)g()}}}", {}, "function f(){for(k in o){var f=5;while(--f>0)g()}}"],
 			["function f(){if(a){{g();h()}}}", {}, "function f(){if(a){g(),h()}}"],
-			// A `continue` ending its own loop's body goes; a labelled or commented one stays.
+			// A `continue` ending its own loop's body goes, one naming that loop's label too; a commented one stays.
 			["function f(){while(foo){x();y();continue}}", {}, "function f(){while(foo)x(),y()}"],
 			["function f(){do{x();continue}while(a)}", {}, "function f(){do{x()}while(a)}"],
 			["function f(){for(k in o){continue}}", {}, "function f(){for(k in o);}"],
 			["function f(){for(;;){x();continue/*! c */}}", {}, "function f(){for(;;){x();continue;/*! c */}}"],
-			["function f(){l:while(a){x();continue l}}", {}, "function f(){n:while(a)x()}"],
+			["function f(){l:while(a){x();continue l}}", {}, "function f(){while(a)x()}"],
 			// A `switch` of one case prints as an `if`, but one a `break` leaves, labelled or not in a list.
 			["function f(){switch(foo){case\"bar\":baz()}}", {}, "function f(){if(foo===\"bar\")baz()}"],
 			["function f(){switch(foo){case\"bar\":baz();break}}", {}, "function f(){if(foo===\"bar\")baz()}"],
@@ -1451,7 +1451,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["for(;;){if(b){x();continue}y()}do{if(b){x();continue}y()}while(t);for(;;){if(b)continue;y()}while(c){if(b)continue;y()}", {}, "for(;;){if(b)x();else y()}do{if(b)x();else y()}while(t);for(;;){if(!b)y()}while(c){if(!b)y()}"],
 			["function f(a){if(a){x();return}y()}", { format: { semicolons: false } }, "function f(f){if(f)x()\nelse y()}"],
 			// Each keeps its exit: a label, a comment, an inner `if`, a declaration, more after, a kept test, a value returned.
-			["l:for(;;){if(b){x();continue l}y()}for(;;){if(b){x();/*c*/continue}y()}for(;;){if(b){if(c)x();continue}y()}for(;;){if(b){x();continue}function q(){}q()}for(;;){if(b){x();continue}y();y()}function f(){if(1){x();return}y()}function g(a){if(a){x();return 1}y()}for(;;){if(b){continue}y()}", { format: { comments: "all" } }, "n:for(;;){if(b){x();continue n}y()}for(;;){if(b){x();/*c*/continue}y()}for(;;){if(b){if(c)x();continue}y()}for(;;){if(b){x();continue}function q(){}q()}for(;;){if(b){x();continue}y(),y()}function f(){x()}function g(n){if(n){return x(),1}y()}for(;;){if(!b)y()}"],
+			["l:for(;;){if(b){x();continue l}y()}for(;;){if(b){x();/*c*/continue}y()}for(;;){if(b){if(c)x();continue}y()}for(;;){if(b){x();continue}function q(){}q()}for(;;){if(b){x();continue}y();y()}function f(){if(1){x();return}y()}function g(a){if(a){x();return 1}y()}for(;;){if(b){continue}y()}", { format: { comments: "all" } }, "for(;;){if(b){x();continue}y()}for(;;){if(b){x();/*c*/continue}y()}for(;;){if(b){if(c)x();continue}y()}for(;;){if(b){x();continue}function q(){}q()}for(;;){if(b){x();continue}y(),y()}function f(){x()}function g(n){if(n){return x(),1}y()}for(;;){if(!b)y()}"],
 			["for(;;){if(b){x();continue}y()}function f(a){if(a){x();return}/*c*/y()}function g(a){if(a){x();return}if(a){x();return}}", { format: { comments: "all" } }, "for(;;){if(b)x();else y()}function f(n){if(n){x();return}/*c*/y()}function g(n){if(n)x();else if(n)x()}"],
 			["function f(a){if(a){x();throw e}y()}for(;;){if(b){x();break}y()}function g(a){if(a){0;return}y()}function h(a){if(a){x();return}0}for(;;){if(b){x();continue}let q=y()}", {}, "function f(f){if(f){x();throw e}y()}for(;;){if(b){x();break}y()}function g(f){if(!f)y()}function h(f){if(f)x()}for(;;){if(b){x();continue}y()}"],
 			["function g(){var a=[1,2];f(a[0],a[1])}function n(){let a=[1,\"s\",!0,null];f(a[1]+a[0],a[2],a[3].x,typeof a[0],a[2]?3:4)}function s(){var a=[\"a long string\"];f(a[0],a[0],a[0])}function t(){g();const a=[1];function g(){f(a[0])}}function v(){var a=[1];return function(){return a[0]}}", {}, "function g(){f(1,2)}function n(){f(\"s1\",!0,null.x,\"number\",3)}function s(){var a=[\"a long string\"];f(a[0],a[0],a[0])}function t(){(function(){f(a[0])})();let a=[1]}function v(){var a=[1];return function(){return a[0]}}"],
@@ -1461,7 +1461,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["function g(){const a=[1,2];x=a[0];f({[a[1]]:1})}", {}, "function g(){x=1,f({[2]:1})}"],
 			["for(;;){if(b)/*c*/continue;y()}", { format: { comments: "all" } }, "for(;;){if(b)/*c*/continue;y()}"],
 			// An exit ending its function's, loop's or label's body goes, but in a `finally`, of an outer loop or before more.
-			["for(x of y){if(false){a();continue}else;b();continue}function f(){if(x)return;if(y)return}function g(){try{a();return}catch(e){b();return}}function h(){try{a()}finally{return}}function i(){l:{a();break l}}l:for(;;){a();continue l}x:for(;;)for(;;){a();continue x}function j(){if(a){b();return}else{c();return}}function k(){if(a()){return}else{return}}function m(){return void 0}do{a()}while(true);for(;;){a();break}function n(){for(;;){a();return}}function*o(){a();return}", {}, "for(x of y)b();function f(){if(x||y)return}function g(){try{a()}catch(n){b()}}function h(){try{a()}finally{return}}function i(){n:a()}n:for(;;)a();n:for(;;)for(;;){a();continue n}function j(){a?b():c()}function k(){a()}function m(){}for(;;){a()}for(;;){a();break}function n(){for(;;){a();return}}function*o(){a()}"],
+			["for(x of y){if(false){a();continue}else;b();continue}function f(){if(x)return;if(y)return}function g(){try{a();return}catch(e){b();return}}function h(){try{a()}finally{return}}function i(){l:{a();break l}}l:for(;;){a();continue l}x:for(;;)for(;;){a();continue x}function j(){if(a){b();return}else{c();return}}function k(){if(a()){return}else{return}}function m(){return void 0}do{a()}while(true);for(;;){a();break}function n(){for(;;){a();return}}function*o(){a();return}", {}, "for(x of y)b();function f(){if(x||y)return}function g(){try{a()}catch(n){b()}}function h(){try{a()}finally{return}}function i(){n:a()}for(;;)a();n:for(;;)for(;;){a();continue n}function j(){a?b():c()}function k(){a()}function m(){}for(;;){a()}for(;;){a();break}function n(){for(;;){a();return}}function*o(){a()}"],
 			// An empty `try` runs no `catch`, its `finally` printing in its place; a loop test known goes, true or false.
 			["try{}catch(e){foo()}a();try{}finally{foo();x()}b();try{}catch(e){foo()}finally{bar()}try{}finally{}try{}catch(e){var v}function f(){g();try{}finally{if(a)b()}c()}if(x)try{}finally{y()}try{}finally{let q=f();g(q,q)}for(;true;)foo();for(var i=0;!0;i++)k();while(0)g();for(;false;i++)h();for(;0;)var w=0", {}, "a();foo(),x();b();bar();try{}catch(f){var v}function f(){g();if(a)b();c()}if(x)try{}finally{y()}{let r=f();g(r,r)}for(;;)foo();for(var i=0;;i++)k();for(;0;)var w=0;"],
 			// What runs nothing before a name called goes, and before a member is `0`, but before `eval` or in `with`.
@@ -1477,7 +1477,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["var c;(c?foo:foo)(\"x\");(c()?foo:foo)(\"y\");(c?eval:eval)(\"z\");(c?o.f:o.f)(\"w\");(c?foo:foo)`t`;(c()?foo:foo)`v`;new(c?F:F);(c?a:b)`u`", {}, "var c;foo(\"x\"),(c(),foo)(\"y\"),(c?eval:eval)(\"z\"),(c?o.f:o.f)(\"w\"),foo`t`,(c(),foo)`v`,new(c?F:F),(c?a:b)`u`;"],
 			["with(o)(c?foo:foo)()", {}, "with(o)(c?foo:foo)();"],
 			// terser's `loops`: `if(x)break` opening a loop's body joins its test as `!x`, but where the body scopes a name.
-			["for(;;)if(x)break;for(;;)if(!x)break;for(;a;){if(x)break;y()}while(x){if(y)break;z()}while(1){if(a==b)break;c()}for(;a||b;)if(c&&d)break;l:for(;;){if(x)break l;y()}for(;;){if(x)continue;y()}for(;a=b;)if(x)break;for(;a;)if(!(b&&c))break;var x=1;for(;;){if(x)break;let x=g();h(x,x)}for(;;){;if(x)break;y()}for(;true;){if(x)break;y()}", {}, "for(;!x;);for(;x;);for(;a&&!x;)y();while(x&&!y)z();while(a!=b)c();for(;(a||b)&&!(c&&d););r:for(;;){if(x)break r;y()}for(;;){if(!x)y()}for(;(a=b)&&!x;);for(;a&&b&&c;);var x=1;for(;;){if(r)break;let r=g();h(r,r)}for(;!x;)y();for(;!x;)y();"],
+			["for(;;)if(x)break;for(;;)if(!x)break;for(;a;){if(x)break;y()}while(x){if(y)break;z()}while(1){if(a==b)break;c()}for(;a||b;)if(c&&d)break;l:for(;;){if(x)break l;y()}for(;;){if(x)continue;y()}for(;a=b;)if(x)break;for(;a;)if(!(b&&c))break;var x=1;for(;;){if(x)break;let x=g();h(x,x)}for(;;){;if(x)break;y()}for(;true;){if(x)break;y()}", {}, "for(;!x;);for(;x;);for(;a&&!x;)y();while(x&&!y)z();while(a!=b)c();for(;(a||b)&&!(c&&d););for(;;){if(x)break;y()}for(;;){if(!x)y()}for(;(a=b)&&!x;);for(;a&&b&&c;);var x=1;for(;;){if(r)break;let r=g();h(r,r)}for(;!x;)y();for(;!x;)y();"],
 			["for(;;){/*c*/if(x)break;y()}class S{/*k*/static{}}", { mangle: false, format: { comments: "all" } }, "for(;;){/*c*/if(x)break;y()}class S{/*k*/static{}}"],
 			// `!!b` is `b` where `b` is a boolean; a key an integer spells is that number; a static block running nothing goes.
 			["a=!!delete b;a=!!(b==c);a=!!(b==c)+1;a=!!!(b<c);if(!!!(b<c))d();a=!!!b;!!(function(){g()}()==x);!(function(){g()}()==x);x[\"0\"];x[\"-123\"];x[\"-0\"];x[\"01\"];x?.[\"5\"];class P{static{};foo}class Q{static{123}}class R{static{g()}}", {}, "a=delete b,a=b==c,a=(b==c)+1,a=!(b<c);if(!(b<c))d();a=!b,(function(){g()}()==x),!(function(){g()}()==x),x[0],x[-123],x[\"-0\"],x[\"01\"],x?.[5];class P{foo}class Q{}class R{static{g()}}"],
@@ -1528,7 +1528,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// terser's `loops` with an `else`: `if(x)break;else y` loops while `!x`, `if(x)y;else break` while `x`, `y` where the `if` was.
 			["for(;;)if(x)break;else y();for(;a;){if(x)break;else y();z()}for(;;)if(!x)y();else break;for(;a;)if(x||w){y();q()}else break;for(;a||b;)if(c,d)y();else break;for(;;)if(x){let q=g();y(q,q)}else break;if(a){for(;;)if(x)break;else if(y)z()}else w()", { mangle: false }, "for(;!x;)y();for(;a&&!x;){y();z()}for(;!x;)y();for(;a&&(x||w);)y(),q();for(;(a||b)&&(c,d);)y();for(;x;){let q=g();y(q,q)}if(a){for(;!x;)if(y)z()}else w();"],
 			// A block ending a loop an `if` with an `else` holds keeps its braces where it ends in an `if` the `else` would take.
-			["if(q)for(;;){if(y)z()}else w();if(q)for(;;){if(x)break;else if(y)z()}else w();if(q)l:while(a){if(y)z()}else w();if(q)while(a){if(y)z();else v()}else w()", {}, "if(q)for(;;){if(y)z()}else w();if(q)for(;!x;){if(y)z()}else w();if(q)e:while(a){if(y)z()}else w();if(q)while(a)y?z():v();else w();"],
+			["if(q)for(;;){if(y)z()}else w();if(q)for(;;){if(x)break;else if(y)z()}else w();if(q)l:while(a){if(y)z()}else w();if(q)while(a){if(y)z();else v()}else w()", {}, "if(q)for(;;){if(y)z()}else w();if(q)for(;!x;){if(y)z()}else w();if(q)while(a){if(y)z()}else w();if(q)while(a)y?z():v();else w();"],
 			// A function an `else` declares keeps its braces, and a label's comment its loop.
 			["for(;a;){if(x)break;else function f(){}}for(;a;){if(x)break;else{y();z()}}/*! c */l:while(0)f();", { mangle: false }, "for(;a&&!x;){function f(){}}for(;a&&!x;){y(),z()}/*! c */l:while(0)f();"],
 			// Nobody reading it, or only its truth, `x!=null&&x.y()` is `x?.y()`, but not where `with` may read the name twice otherwise.
@@ -1578,9 +1578,9 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// terser's `switches` of one case and a `default`: `if…else` after a `break`, the other after where one falls into it, in a list, its block keeping braces.
 			["switch(a){case 1:b();break;default:c()}switch(a){case 1:b();default:c()}switch(a){default:c();break;case 1:b()}switch(a){default:c();case 1:b()}switch(a){default:b();break;case 1:}switch(a){case 1:break;default:b()}switch(a){case 1:b();break;default:if(y)z()}w();switch(a){case 1:if(y)z();break;default:w()}switch(a){case 1:{let q=g();f(q,q)}break;default:h()}switch(a){case 1:f();if(x)break;g();break;default:h()}for(;;)switch(a){case 1:f();break;default:g()}if(x){switch(a){case 1:f();default:g()}}else h();switch(a){/*! c */case 1:b();break;default:c()}switch(b()){case 1:c();break;default:d()}switch(a){case f():c();break;default:d()}", {}, "if(a===1)b();else c();if(a===1)b();c();if(a===1)b();else c();if(a!==1)c();b();if(a!==1)b();if(a!==1)b();if(a===1)b();else if(y)z();w();if(a===1){if(y)z()}else w();if(a===1){{let a=g();f(a,a)}}else h();switch(a){case 1:f();if(x)break;g();break;default:h()}for(;;)switch(a){case 1:f();break;default:g()}if(x){if(a===1)f();g()}else h();switch(a){/*! c */case 1:b();break;default:c()}if(b()===1)c();else d();if(a===f())c();else d();"],
 			// terser's `loops`: `do` forever is `for(;;)`, and a body running once with nothing leaving it early runs where the loop was, but not labeled.
-			["do{c()}while(!0);do{d();e()}while(0);f();do{if(x)break;d()}while(0);do{let q=g();h(q,q)}while(0);l:do{d()}while(0);if(a)do{d();e()}while(0);else f();do;while(0);do{switch(a){case 1:b()}}while(0);do{(function(){for(k in o)break})()}while(0)", {}, "for(;;){c()}d(),e();f();do{if(x)break;d()}while(0);{let e=g();h(e,e)}e:do{d()}while(0);if(a){d(),e()}else f();do{if(a===1)b()}while(0);!function(){for(k in o)break}();"],
+			["do{c()}while(!0);do{d();e()}while(0);f();do{if(x)break;d()}while(0);do{let q=g();h(q,q)}while(0);l:do{d()}while(0);if(a)do{d();e()}while(0);else f();do;while(0);do{switch(a){case 1:b()}}while(0);do{(function(){for(k in o)break})()}while(0)", {}, "for(;;){c()}d(),e();f();do{if(x)break;d()}while(0);{let e=g();h(e,e)}do{d()}while(0);if(a){d(),e()}else f();do{if(a===1)b()}while(0);!function(){for(k in o)break}();"],
 			// terser's `dead_code` of a loop whose body is a `break`: what sets it up and its test run once, and one running nothing goes from its list.
-			["for(;;)break;for(a();;)break;for(;b();)break;for(c();d();)break;for(;;e())break;for(f();;g())break;for(;h();i())break;for(j();k();l())break;while(x())break;while(x()){break}if(a)while(x())break;else y();for(var i=0;x;)break;l:while(x())break;for((a in b);c;)break;for(;function(){}();)break", {}, "a();b();c(),d();f();h();j(),k();x();x();if(a)x();else y();for(var i=0;x;)break;r:while(x())break;(a in b),c;"],
+			["for(;;)break;for(a();;)break;for(;b();)break;for(c();d();)break;for(;;e())break;for(f();;g())break;for(;h();i())break;for(j();k();l())break;while(x())break;while(x()){break}if(a)while(x())break;else y();for(var i=0;x;)break;l:while(x())break;for((a in b);c;)break;for(;function(){}();)break", {}, "a();b();c(),d();f();h();j(),k();x();x();if(a)x();else y();for(var i=0;x;)break;while(x())break;(a in b),c;"],
 			// terser's `evaluate`: `!` of an object made running nothing is `!1`, `delete` of what is no reference `!0` and of the global `undefined` or `NaN` `!1`, but a write in it stays.
 			["x=![1,2];x=!/foo/;x=!0;x=!\"\";x=!{};x=![f()];x=delete(1/0);x=delete void 0;x=delete undefined;x=delete NaN;x=delete(0,a);x=delete 1;x=delete a.b;x=delete(a);x=delete a?.b;x=delete f();if(delete 1)g();var b;x=delete(b=NaN)", { compress: { toplevel: true } }, "x=!1,x=!1,x=!0,x=!0,x=!1,x=![f()],x=!0,x=!0,x=!1,x=!1,x=delete(0,a),x=!0,x=delete a.b,x=delete a,x=delete a?.b,x=delete f();g();var b;x=delete(b=NaN);"],
 			// A function called prints as what it returns past parameters passed nothing nothing reads, but not one it returns or where `arguments` reads them.
@@ -1621,7 +1621,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["x=(()=>-a)()**2;x=(()=>!a)().b;x=(()=>!a)()();x=`${(()=>!a)()}`;x=(()=>void a)()``;function q(){do{break}while(e)}", {}, "x=(-a)**2,x=(!a).b,x=(!a)(),x=`${!a}`,x=(void a)``;function q(){}"],
 			// A statement printing its body in place, or a `switch` as an `if` and what falls through, is several statements: braces hold them.
 			["if(a){do{for(;;)g();f();break}while(x)}if(a){do{for(;;)g();f()}while(0)}if(a){try{}finally{for(;;)g();f()}}for(;;){do{for(;;)g();f();break}while(x)}if(a){try{for(;;)g();f()}finally{}}", {}, "if(a){for(;;)g();f()}if(a){for(;;)g();f()}if(a){for(;;)g();f()}for(;;){for(;;)g();f()}if(a){for(;;)g();f()}"],
-			["function f(){if(x)return;do{for(;;)g();a()}while(0)}function k(){if(x)return;switch(d){case 1:a();default:b()}}function m(){for(;;){if(x)continue;g();switch(d){case 1:a();default:b()}}}function n(){if(x)return;try{for(;;)g();a()}finally{}}l:for(let i=0;i<1;i++){switch(i){case 0:continue l;default:break l}}for(;;){if(x)continue;break}", {}, "function f(){if(!x){for(;;)g();a()}}function k(){if(!x){if(d===1)a();b()}}function m(){for(;;)if(!x){g();if(d===1)a();b()}}function n(){if(!x){for(;;)g();a()}}i:for(let i=0;i<1;i++){if(i===0)continue i;break i}for(;;)if(!x)break;"],
+			["function f(){if(x)return;do{for(;;)g();a()}while(0)}function k(){if(x)return;switch(d){case 1:a();default:b()}}function m(){for(;;){if(x)continue;g();switch(d){case 1:a();default:b()}}}function n(){if(x)return;try{for(;;)g();a()}finally{}}l:for(let i=0;i<1;i++){switch(i){case 0:continue l;default:break l}}for(;;){if(x)continue;break}", {}, "function f(){if(!x){for(;;)g();a()}}function k(){if(!x){if(d===1)a();b()}}function m(){for(;;)if(!x){g();if(d===1)a();b()}}function n(){if(!x){for(;;)g();a()}}i:for(let i=0;i<1;i++){if(i===0)continue;break i}for(;;)if(!x)break;"],
 			// terser's `dead_code`: a `var` past an exit declares its names and sets none, so no read folds its value; a pattern keeps it.
 			["function f(){use(()=>x);return 1;var x=g()}function k(){g();return;var x=h(),y=k()}function m(){return n;var x=5;function n(){return x}}function p(){return;var [a,b]=g();use(()=>a)}function q(){if(x)return;do{}while(y)}", {}, "function f(){return use(()=>n),1;var n}function k(){g()}function m(){return function(){return n};var n}function p(){return;var[n,r]=g()}function q(){if(!x)do{}while(y)}"],
 			// A test the guard would negate in parentheses keeps its exit, which compresses better.
@@ -4706,10 +4706,10 @@ describe("one-pass minify of statement sequences", () => {
 				"function s(x,y){A:switch(1){case 1:x();for(;;)if(y())break A;y();case 2:x();default:y()}}",
 				"function s(a,c){a:{a();for(;;)if(c())break a;c();a();c()}}"
 			],
-			["function s(x,y){A:switch(1){case 1:x();y();break;case 2:y()}}", "function s(c,s){c:c(),s()}"],
+			["function s(x,y){A:switch(1){case 1:x();y();break;case 2:y()}}", "function s(c,s){c(),s()}"],
 			// A label needs a statement, and an unlabeled `break` its `switch`.
-			["function s(x){A:switch(1){case 2:x()}}", "function s(c){c:switch(1){case 2:c()}}"],
-			["function s(x,y){A:switch(1){case 1:x();if(y())break;y()}}", "function s(c,i){c:switch(1){case 1:c();if(i())break;i()}}"]
+			["function s(x){A:switch(1){case 2:x();break A}}", "function s(c){c:switch(1){case 2:c();break c}}"],
+			["function s(x,y){A:switch(1){case 1:x();if(y())break;if(x())break A;y()}}", "function s(i,a){i:switch(1){case 1:i();if(a())break;if(i())break i;a()}}"]
 		];
 		for (const [source, expected] of cases) {
 			const { code } = minifyOnePass(source, {
@@ -4731,7 +4731,7 @@ describe("one-pass minify of statement sequences", () => {
 		const cases = [
 			["function s(w,x,y){switch(w(),42){case 13:x();case 42:y();default:x()}}", "function s(c,s,a){c(),a(),s()}"],
 			["function s(w,x,y){switch((w(),x(),42)){case 42:y();break;default:x()}}", "function s(a,c,e){a(),c(),e()}"],
-			["function s(w,x,y){A:switch(w(),42){case 42:y();x()}}", "function s(c,s,w){c:c(),w(),s()}"],
+			["function s(w,x,y){A:switch(w(),42){case 42:y();x()}}", "function s(c,s,w){c(),w(),s()}"],
 			// A comment on what it tests prints with it.
 			["function s(w,x,y){switch(/*! c */w(),42){case 42:y()}}", "function s(c,s,w){/*! c */c(),42,w()}"],
 			// What it runs first joins only expressions, before a match it ran
@@ -4760,9 +4760,9 @@ describe("one-pass minify of statement sequences", () => {
 			["class C{static{for(;;)break;g()}}", "class C{static{g()}}"],
 			// What its update read is read no more.
 			["function f(){var a=g();for(;;a())break;h()}", "function f(){g();h()}"],
-			// A label or a comment holds it, only a list drops a statement, and a
+			// A label on it or a comment holds it, only a list drops a statement, and a
 			// `var` after the `break` still declares.
-			["function f(){L:for(;;)break;for(;;)/*! c */break;for(;;/*! c */g())break;h()}", "function f(){r:for(;;)break;for(;;)/*! c */break;for(;;/*! c */g())break;h()}"],
+			["function f(){L:for(;;)break;for(;;)/*! c */break;for(;;/*! c */g())break;h()}", "function f(){for(;;)break;for(;;)/*! c */break;for(;;/*! c */g())break;h()}"],
 			["function f(a){if(a)for(;;)break;else g()}", "function f(f){if(f)for(;;)break;else g()}"],
 			["function f(){for(;;){break;var x}return x}", "function f(){for(;;){break;var r}return r}"]
 		];
@@ -4780,6 +4780,32 @@ describe("one-pass minify of statement sequences", () => {
 				mangle: { toplevel: false }
 			}).code
 		).toBe("function f(){for(;;)break;h()}");
+	});
+
+	it("should drop a label nothing names, and one a `break` or `continue` of its own loop names", () => {
+		const cases = [
+			// The nearest loop's own, a label goes from what jumps; another loop's,
+			// a block's or one a `switch` stands between keeps it.
+			["for(var i=0;i<4;i++){L:for(var j=0;j<3;j++){if(j==1)continue L;if(j==2)break L;console.log(i,j)}}", "for(var i=0;i<4;i++)for(var j=0;j<3;j++){if(j==1)continue;if(j==2)break;console.log(i,j)}"],
+			["L:for(var i=0;i<3;i++){M:for(var j=0;j<3;j++){if(j==1)continue L;if(i==2)break L;console.log(i,j)}}", "i:for(var i=0;i<3;i++)for(var j=0;j<3;j++){if(j==1)continue i;if(i==2)break i;console.log(i,j)}"],
+			["A:B:for(var i=0;i<3;i++){if(i==1)continue A;console.log(i)}", "for(var i=0;i<3;i++){if(i==1)continue;console.log(i)}"],
+			["L:for(var i=0;i<3;i++){switch(i){case 1:continue L;case 2:break L}console.log(i)}", "i:for(var i=0;i<3;i++){switch(i){case 1:continue;case 2:break i}console.log(i)}"],
+			["L:for(var i=0;i<3;i++)switch(i){case 1:break L;default:console.log(i)}", "i:for(var i=0;i<3;i++)switch(i){case 1:break i;default:console.log(i)}"],
+			["L:{for(var i=0;i<3;i++){if(i==1)break L;console.log(i)}console.log(\"after\")}", "o:{for(var i=0;i<3;i++){if(i==1)break o;console.log(i)}console.log(\"after\")}"],
+			["L:for(var i=0;i<2;i++){(function(){M:for(var j=0;j<3;j++){if(j==1)break M;console.log(i,j)}})()}", "for(var i=0;i<2;i++)!function(){for(var o=0;o<3;o++){if(o==1)break;console.log(i,o)}}();"],
+			["U:console.log(\"unused\")", "console.log(\"unused\");"]
+		];
+		for (const [source, expected] of cases) {
+			const { code } = minifyOnePass(source, { compress: {}, mangle: {} });
+			expect(code).toBe(expected);
+			expect(runProgram(code)).toBe(runProgram(source));
+		}
+		expect(
+			minifyOnePass("L:for(;;){continue L}U:x()", {
+				compress: false,
+				mangle: false
+			}).code
+		).toBe("L:for(;;){continue L}U:x();");
 	});
 
 	it("should print the known `switch`, spread and unary values of the config cases", () => {
