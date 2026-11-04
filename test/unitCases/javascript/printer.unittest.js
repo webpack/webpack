@@ -4648,6 +4648,41 @@ describe("one-pass minify of unread values", () => {
 		]);
 	});
 
+	it("should drop built-in calls and reads that run nothing", () => {
+		expectPrints([
+			["Object(),new Object,new Object({}),new Object(...[1])", ""],
+			["RegExp(),new RegExp", ""],
+			[
+				"Object.prototype.hasOwnProperty,Array.prototype.slice,String.prototype.trim",
+				""
+			],
+			[
+				'Object.getOwnPropertyDescriptor({},"x"),Object.getOwnPropertyNames({}),Object.create({})',
+				""
+			],
+			['Object.keys({}),Object.keys("s"),Object.values([1,2])', ""],
+			// What `Object` takes runs, a replaced built-in or a getter may run.
+			["Object(f())", "f();"],
+			["window.Object=f;Object()", "window.Object=f,Object();"],
+			["new RegExp(/a/)", "new RegExp(/a/);"],
+			["Object.prototype.x=f;Object.prototype.x", "Object.prototype.x=f,Object.prototype.x;"],
+			[
+				'Object.defineProperty(Object.prototype,"y",{get:f});Object.prototype.y',
+				'Object.defineProperty(Object.prototype,"y",{get:f}),Object.prototype.y;'
+			],
+			["Object.prototype[k]", "Object.prototype[k];"],
+			["Function.prototype.call", "Function.prototype.call;"],
+			["Object.create({},{a:1})", "Object.create({},{a:1});"],
+			["Object.create(null)", "Object.create(null);"],
+			["Object.create(...[{}])", "Object.create({});"],
+			["Object.getPrototypeOf(a)", "Object.getPrototypeOf(a);"],
+			["Object.getPrototypeOf()", "Object.getPrototypeOf();"],
+			["Object.getOwnPropertyDescriptor({},a)", "Object.getOwnPropertyDescriptor({},a);"],
+			["Object.entries([f()])", "Object.entries([f()]);"],
+			["Object.keys=g;Object.keys([])", "Object.keys=g,Object.keys([]);"]
+		]);
+	});
+
 	it("should drop a spread of a literal that runs no iterator or getter", () => {
 		expectPrints([
 			["[...[]]", ""],
