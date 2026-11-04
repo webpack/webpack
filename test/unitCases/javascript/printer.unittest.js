@@ -2403,6 +2403,11 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["`a${x}\\0`+'1'", '`a${x}\\0`+"1"'],
 			["`a${`b${x}\\0`}1`", "`a${`b${x}\\0`}1`"],
 			["`a${x}\\0`+'b'", "`a${x}\\0b`"],
+			// A NUL a literal holds prints as `\\0` too, and a part printing empty keeps what printed before it.
+			["'\\0'+`1${x}`", '"\\0"+`1${x}`'],
+			["`\\0${`1${x}`}`", "`\\0${`1${x}`}`"],
+			["`${`\\0`}${`1${x}`}`", "`\\0${`1${x}`}`"],
+			["`${`a${x}$`}${`{b${x}}`}`", "`a${x}$${`{b${x}}`}`"],
 			// Another operand, a comment kept or a tag keep the `+` or the template.
 			["`a${x}`+y", "`a${x}`+y"],
 			["`a${x}`+null", "`a${x}`+null"],
