@@ -642,7 +642,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: switch/issue_1680_1",
 			"terser compress: switch/issue_1690_2",
 			"terser compress: switch/if_switch_typeof",
-			"terser compress: switch/issue_2535",
 			"terser compress: switch/gut_entire_switch_2",
 			"terser compress: switch/issue_1083_3",
 			"terser compress: switch/issue_1083_4"
