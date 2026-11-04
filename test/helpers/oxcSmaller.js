@@ -261,7 +261,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/esbuild.rs:86",
 			"oxc minifier: peephole/esbuild.rs:90",
 			"oxc minifier: peephole/esbuild.rs:119",
-			"oxc minifier: peephole/esbuild.rs:141",
 			"oxc minifier: peephole/esbuild.rs:145",
 			"oxc minifier: peephole/esbuild.rs:148",
 			"oxc minifier: peephole/esbuild.rs:157",
@@ -1856,7 +1855,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/minimize_statements.rs:279",
 			"oxc minifier: peephole/minimize_statements.rs:284",
 			"oxc minifier: peephole/minimize_statements.rs:285",
-			"oxc minifier: peephole/minimize_statements.rs:297",
 			"oxc minifier: peephole/minimize_statements.rs:298",
 			"oxc minifier: peephole/minimize_statements.rs:302",
 			"oxc minifier: peephole/minimize_statements.rs:306",
@@ -2850,7 +2848,6 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc goes further than webpack on what terser's `transform` tests cover",
 		[
-			"terser compress: transform/booleans_evaluate",
 			"terser compress: transform/if_else_empty",
 			"terser compress: transform/while_if_break"
 		]

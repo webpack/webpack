@@ -214,9 +214,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/9922/2/input.js",
 			"swc minifier: fixture/issues/arguments-canonical-index/input.js",
 			"swc minifier: fixture/issues/array-constructor-length/input.js",
-			"swc minifier: fixture/issues/do-while-false-control-flow/input.js",
-			"swc minifier: fixture/issues/do-while-false-terminal-jump/defaults-mangle/input.js",
-			"swc minifier: fixture/issues/do-while-false-terminal-jump/labels/input.js",
 			"swc minifier: fixture/issues/emotion/react/1/input.js",
 			"swc minifier: fixture/issues/emotion/react/2/input.js",
 			"swc minifier: fixture/issues/firebase-core/1/input.js",
@@ -798,7 +795,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/next/feedback-util-promisify/chunks/pages/_app-72ad41192608e93a/input.js",
 			"swc minifier: fixture/next/joda/input.js",
 			"swc minifier: fixture/next/octokit/static/chunks/357-72bd409f1472b1b8/input.js",
-			"swc minifier: fixture/next/regression-1/framework-798bab57daac3897/input.js",
 			"swc minifier: fixture/next/styled-components/1/input.js",
 			"swc minifier: fixture/next/swc-4559/input.js",
 			"swc minifier: fixture/next/syncfusion/933-e9f9a6bf671b96fc/input.js",
@@ -914,8 +910,7 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: loops/evaluate",
 			"terser compress: loops/issue_1648",
 			"terser compress: loops/issue_2740_1",
-			"terser compress: loops/issue_2740_2",
-			"terser compress: loops/issue_2740_3"
+			"terser compress: loops/issue_2740_2"
 		]
 	],
 	[
@@ -1007,7 +1002,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: labels/labels_3",
 			"terser compress: labels/labels_4",
 			"terser compress: labels/labels_5",
-			"terser compress: labels/labels_9",
 			"terser compress: labels/labels_10"
 		]
 	],
@@ -1179,7 +1173,6 @@ const SWC_SMALLER_BY_REASON = [
 		[
 			"terser compress: issue-1833/iife_for",
 			"terser compress: issue-1833/iife_for_in",
-			"terser compress: issue-1833/iife_do",
 			"terser compress: issue-1833/iife_while"
 		]
 	],
