@@ -80,7 +80,7 @@ const {
 } = require("./compare-tools-harness");
 
 /** @typedef {import("../lib/html/syntax-parser").HtmlPath} HtmlPath */
-/** @typedef {import("./compare-tools-harness").Report} Report */
+/** @typedef {import("../test/helpers/syntaxInvariants/relations").Report} Report */
 
 const ROOT = path.resolve(__dirname, "..");
 const CACHE_NAME = "xml-tool-comparison";
@@ -1454,7 +1454,7 @@ const SLICE_WRAPPER_CLOSE = "</_>";
  */
 const xmlSlices = (xml) => {
 	const { runs, doctype } = xmlNodeRuns(xml);
-	/** @type {import("./compare-tools-harness").SliceCandidate[]} */
+	/** @type {import("../test/helpers/syntaxInvariants/relations").SliceCandidate[]} */
 	const candidates = [];
 	let budget = xml.length * SLICE_BUDGET_FACTOR;
 	let capped = 0;
@@ -1894,5 +1894,10 @@ module.exports = {
 	canonical,
 	printerFor,
 	runMode,
-	toolsFor
+	toolsFor,
+	idempotenceRepro,
+	sweepRespellings,
+	xmlPurityDigest,
+	xmlSlices,
+	xmlSpans
 };

@@ -10,7 +10,7 @@ const {
  * stated rather than provoked.
  * @param {string} what what to call it
  * @param {string[]} readings what each reading answers, the last repeating
- * @returns {import("../../../tooling/compare-tools-harness").PuritySource} the source
+ * @returns {import("../../helpers/syntaxInvariants/relations").PuritySource} the source
  */
 const reading = (what, readings) => {
 	let at = 0;
@@ -21,7 +21,7 @@ const reading = (what, readings) => {
 };
 
 /**
- * @param {import("../../../tooling/compare-tools-harness").PuritySource[]} sources what to read twice
+ * @param {import("../../helpers/syntaxInvariants/relations").PuritySource[]} sources what to read twice
  * @returns {{ what: string[], repro: string[], read: number }} what it made of them
  */
 const hold = (sources) => {

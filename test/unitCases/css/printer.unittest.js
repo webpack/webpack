@@ -792,7 +792,7 @@ describe("CssSyntax — minify token-boundary safety", () => {
 			// The escape's own terminator is no longer needed once `y` follows it
 			// inside the token, but the separator the comment stood for is.
 			["a{b:x/**/\\40 y}", "a{b:x \\40y}"],
-			["a{b:\\40/**/x}", "a{b:\\40 x}"],
+			["a{b:\\40/**/x}", "a{b:\\40  x}"],
 			// Non-ASCII is an ident code point, so these would join into one ident.
 			["a{b:\u00E9/**/\u00E9}", "a{b:\u00E9 \u00E9}"],
 			// `<!` and `->` guard an accidental CDO / CDC.
@@ -8691,6 +8691,16 @@ describe("CssSyntax minify — the list a joined at-rule's seam leaves", () => {
 		).toBe("@media print{.a,.b,.c{color:red}}");
 	});
 
+	it("takes back a rule the ordered list makes a copy of, whole", () => {
+		// Ordering shortens `.b,.a,.b` to `.a,.b`, so the dead copy the later one
+		// takes back is the shorter text, not the one the join wrote.
+		expect(
+			minifyFor(
+				"@media print{.a{color:red}.b{color:blue}}@media print{.a{color:blue}.b{color:blue}}@media print{.a{color:red}.b{color:blue}}@media print{.a{color:blue}.b{color:blue}}"
+			)
+		).toBe("@media print{.a{color:red}.a,.b{color:blue}}");
+	});
+
 	it("leaves the seam's list as written where selectors are not shortened", () => {
 		expect(
 			minifyForWith(
@@ -11331,6 +11341,13 @@ describe("CssSyntax minify — nesting the target cannot read", () => {
 	it("reads a nested rule that names no parent as the descendant it means", () => {
 		expect(minifyFor("a{color:red;b{color:blue}}", ["chrome 100"])).toBe(
 			"a{color:red}a b{color:blue}"
+		);
+	});
+
+	it("keeps the newline a nested selector's lone `\\` ends on", () => {
+		// Without it the `\` escapes the `{`, and the rule after is read into it.
+		expect(minifyFor("a{b\\\n{color:red}}c{color:blue}", ["chrome 100"])).toBe(
+			"a b/**/\\\n{color:red}c{color:blue}"
 		);
 	});
 
@@ -15695,6 +15712,11 @@ describe("CssSyntax minify — a name escaping a code point no identifier holds"
 		// Written raw, the code point would end the identifier there.
 		expect(minifyFor(css)).toBe(out);
 	});
+
+	it("keeps two identifiers a comment parted after a hex escape apart in a custom property", () => {
+		// The first space after a hex escape is its terminator, not a separator.
+		expect(minifyFor("a{--b:\\40/**/x}")).toBe("a{--b:\\40  x}");
+	});
 });
 
 describe("CssSyntax minify — a prefixed twin taken back", () => {
@@ -16103,9 +16125,9 @@ describe("CssSyntax minify — what a printed rule can still hit", () => {
 	).join("");
 	it.each([
 		["@custom-media --x false;@media(--x){a{b:c}}",{"transforms":{"customMedia":true,"customSelectors":true},"environment":{"browsers":["chrome 120"]}},"@media not all{a{b:c}}"],
-		[":is(a) b:::before{x:y}",{},"a b::before{x:y}"],
+		[":is(a) b:::before{x:y}",{},"a b:::before{x:y}"],
 		[":is(a) b:{x:y}",{},"a b:{x:y}"],
-		["*:::before{x:y}",{},"::before{x:y}"],
+		["*:::before{x:y}",{},":::before{x:y}"],
 		["*:{x:y}",{},":{x:y}"],
 		[":is(a:) b{x:y}",{},":is(a:) b{x:y}"],
 		["@media (width>=1px) and (height<=2px){a{b:c}}",{},"@media (width>=1px) and (height<=2px){a{b:c}}"],

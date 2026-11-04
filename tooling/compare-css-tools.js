@@ -1254,7 +1254,7 @@ const cssInnerRanges = (nodePath) => {
  * from. CSS owes every part of the relation: a component value sits inside the
  * declaration that holds it, and two of them never overlap.
  * @param {string} css a stylesheet
- * @returns {import("./compare-tools-harness").Report[]} what the ranges broke
+ * @returns {import("../test/helpers/syntaxInvariants/relations").Report[]} what the ranges broke
  */
 const cssSpans = (css) =>
 	spans({
@@ -1370,11 +1370,11 @@ const runDigest = (runs, at) => {
  * offsets, wrapped in the least context that lets them parse, give that node
  * back.
  * @param {string} css a stylesheet
- * @returns {{ reports: import("./compare-tools-harness").Report[], read: number, skipped: number, capped: number, repeats: number }} what broke, how many answered, and what was left out
+ * @returns {{ reports: import("../test/helpers/syntaxInvariants/relations").Report[], read: number, skipped: number, capped: number, repeats: number }} what broke, how many answered, and what was left out
  */
 const cssSlices = (css) => {
 	const runs = cssNodeRuns(css);
-	/** @type {import("./compare-tools-harness").SliceCandidate[]} */
+	/** @type {import("../test/helpers/syntaxInvariants/relations").SliceCandidate[]} */
 	const candidates = [];
 	let budget = css.length * SLICE_BUDGET_FACTOR;
 	let capped = 0;
@@ -1921,10 +1921,10 @@ const reproOf = (sites, respelling) => {
  * @param {(css: string) => string} minify the printer under test
  * @param {string} css a stylesheet
  * @param {string} minified what it minifies to
- * @returns {import("./compare-tools-harness").Report[]} what moved, and the smallest repro found for each
+ * @returns {import("../test/helpers/syntaxInvariants/relations").Report[]} what moved, and the smallest repro found for each
  */
 const sweepRespellings = (minify, css, minified) => {
-	/** @type {import("./compare-tools-harness").Report[]} */
+	/** @type {import("../test/helpers/syntaxInvariants/relations").Report[]} */
 	const reports = [];
 	const sites = cssSites(css);
 	for (const respelling of CSS_RESPELLINGS.filter((one) =>
@@ -2370,5 +2370,13 @@ module.exports = {
 	),
 	PACKED_FIXTURES,
 	TREE_READERS,
-	runMode
+	runMode,
+	PRESETS,
+	cssCuts,
+	cssPurityDigest,
+	cssSlices,
+	cssSpans,
+	printerFor,
+	sweepRespellings,
+	tokenStream
 };
