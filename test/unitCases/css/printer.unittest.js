@@ -11358,6 +11358,11 @@ describe("CssSyntax minify — nesting the target cannot read", () => {
 			"a:-webkit-full-screen .c{left:0}a:fullscreen .c{left:0}"
 		],
 		[
+			"a prefixed rule holding a rule of the same block",
+			":fullscreen{top:0;& .c{top:0}}",
+			":-webkit-full-screen{top:0}:fullscreen{top:0}:-webkit-full-screen .c{top:0}:fullscreen .c{top:0}"
+		],
+		[
 			"a rule after an empty prefixed one",
 			":-webkit-full-screen{}:fullscreen{color:red}",
 			":-webkit-full-screen{color:red}:fullscreen{color:red}"
