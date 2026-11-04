@@ -162,6 +162,18 @@ for (const [sourceFile, typeChecker, program] of sourceFiles) {
 			) {
 				return false;
 			}
+			// A `prototype` someone declared, as in `{ new (): T, prototype: any }`, is theirs.
+			const symbol = typeChecker.getSymbolAtLocation(node);
+			const declarations = (symbol && symbol.getDeclarations()) || [];
+			if (
+				declarations.some(
+					(declaration) =>
+						("type" in declaration && declaration.type !== undefined) ||
+						ts.getJSDocType(declaration) !== undefined
+				)
+			) {
+				return false;
+			}
 			// Any constructor value, a class name or a variable holding classes.
 			const type = typeChecker.getTypeAtLocation(parent.expression);
 			return (type.isUnion() ? type.types : [type]).every(
