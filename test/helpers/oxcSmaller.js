@@ -540,11 +540,7 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/esbuild.rs:2379",
 			"oxc minifier: peephole/esbuild.rs:2395",
 			"oxc minifier: peephole/esbuild.rs:2401",
-			"oxc minifier: peephole/esbuild.rs:2416",
-			"oxc minifier: peephole/esbuild.rs:2419",
-			"oxc minifier: peephole/esbuild.rs:2422",
 			"oxc minifier: peephole/esbuild.rs:2425",
-			"oxc minifier: peephole/esbuild.rs:2431",
 			"oxc minifier: peephole/esbuild.rs:2434"
 		]
 	],
@@ -1869,11 +1865,9 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/minimize_statements.rs:177",
 			"oxc minifier: peephole/minimize_statements.rs:188",
 			"oxc minifier: peephole/minimize_statements.rs:240",
-			"oxc minifier: peephole/minimize_statements.rs:241",
 			"oxc minifier: peephole/minimize_statements.rs:245",
 			"oxc minifier: peephole/minimize_statements.rs:246",
 			"oxc minifier: peephole/minimize_statements.rs:263",
-			"oxc minifier: peephole/minimize_statements.rs:264",
 			"oxc minifier: peephole/minimize_statements.rs:271",
 			"oxc minifier: peephole/minimize_statements.rs:278",
 			"oxc minifier: peephole/minimize_statements.rs:279",
@@ -2196,7 +2190,6 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: switch/if_else7",
 			"terser compress: switch/if_switch_typeof",
 			"terser compress: switch/beautify",
-			"terser compress: switch/issue_1758",
 			"terser compress: switch/issue_2535",
 			"terser compress: switch/issue_445",
 			"terser compress: switch/collapse_same_branches_not_in_a_row_ensure_no_evaluate_elad",
@@ -2204,7 +2197,6 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: switch/trim_empty_last_branches_3",
 			"terser compress: switch/trim_side_effect_free_branches_falling_into_default",
 			"terser compress: switch/trim_side_effect_free_branches_falling_into_default_2",
-			"terser compress: switch/gut_entire_switch",
 			"terser compress: switch/gut_entire_switch_2"
 		]
 	],
@@ -2414,7 +2406,6 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: conditionals/ifs_2",
 			"terser compress: conditionals/ifs_5",
 			"terser compress: conditionals/cond_1",
-			"terser compress: conditionals/cond_4",
 			"terser compress: conditionals/cond_5",
 			"terser compress: conditionals/cond_7",
 			"terser compress: conditionals/cond_7_1",
