@@ -627,7 +627,8 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: hoist_props/issue_2377_1",
 			"terser compress: identity/inline_identity_higher_order",
 			"terser compress: issue-t292/no_flatten_with_arg_colliding_with_arg_value_inner_scope",
-			"terser compress: issue-t292/no_flatten_with_var_colliding_with_arg_value_inner_scope"
+			"terser compress: issue-t292/no_flatten_with_var_colliding_with_arg_value_inner_scope",
+			"swc minifier: fixture/issues/12538/input.js"
 		]
 	],
 	[
@@ -692,7 +693,8 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: reduce_vars/regex_loop",
 			"terser compress: sequences/lift_sequences_2",
 			"terser compress: sequences/lift_sequences_5",
-			"terser compress: sequences/lift_sequences_6"
+			"terser compress: sequences/lift_sequences_6",
+			"swc minifier: fixture/issues/12617/input.js"
 		]
 	],
 	[
@@ -1280,7 +1282,9 @@ const SWC_SMALLER_BY_REASON = [
 		"swc drops what nothing reads or what has no effect: unused variables and destructuring, side-effect-free `new Map()` and pure calls, an empty constructor",
 		[
 			"swc minifier: fixture/simple/sequences/.0001/input.js",
-			"swc minifier: pass-1/joda/2/input.js"
+			"swc minifier: pass-1/joda/2/input.js",
+			"swc minifier: fixture/issues/12566/defaults/input.js",
+			"swc minifier: fixture/issues/12566/without-reduce-vars/input.js"
 		]
 	],
 	[

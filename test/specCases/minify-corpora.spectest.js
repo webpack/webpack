@@ -954,7 +954,10 @@ const CORPORA = [
  * that is not a defect; an entry that starts printing right fails until retired.
  * @type {Record<string, string>}
  */
-const INHERITED = {};
+const INHERITED = {
+	"swc minifier: fixture/issues/12606/runtime/input.js (the default minimizer's options)":
+		"the case keeps class names through its mangle options alone, which this set does not read, so `.name` reads the mangled name"
+};
 
 /**
  * By corpus, how many times terser's gzip total webpack's outputs may gzip to
@@ -1032,7 +1035,9 @@ const REFUSED_BY_REFERENCE = {
 	"Unexpected token name \u00ABpromise\u00BB, expected punc \u00AB,\u00BB":
 		"a module's top-level `await` may stand inside an array literal",
 	"Unexpected token name \u00ABasyncProgression\u00BB, expected punc \u00AB,\u00BB":
-		"a module's top-level `await` may stand inside a call's arguments"
+		"a module's top-level `await` may stand inside a call's arguments",
+	"Unexpected token operator \u00AB=\u00BB, expected punc \u00AB(\u00BB":
+		"a field named `get` or `set` with an escape in it ends at the semicolon inserted after it"
 };
 
 // terser's parse options for what is not a program in the spec's sense: an
@@ -1056,6 +1061,8 @@ const USING_IN_SCRIPT = "`using` may not be declared at the top level of a scrip
 const AUTO_ACCESSOR =
 	"`accessor` fields are a proposal; the spec reads `accessor` as a field name, which a name may not follow";
 const INVALID_PATTERN = "a regular expression literal must hold a valid pattern";
+const ARGUMENTS_LABEL =
+	"a label named `arguments` is no reference to it, which acorn refuses in a class field or static block, as webpack's parser does";
 const FOR_OF_SEQUENCE =
 	"the right of `for…of` is an AssignmentExpression, never a comma sequence";
 
@@ -1139,6 +1146,8 @@ const REFUSED_BY_WEBPACK = {
 	"test262: grammar-field-accessor.js": AUTO_ACCESSOR,
 	"test262: private-auto-accessor.js": AUTO_ACCESSOR,
 	"test262: public-auto-accessor.js": AUTO_ACCESSOR,
+	"test262: arrow-body-arguments-label.js": ARGUMENTS_LABEL,
+	"test262: static-init-arguments-label.js": ARGUMENTS_LABEL,
 };
 /* cspell:enable */
 
