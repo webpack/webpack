@@ -148,6 +148,28 @@ for (const [sourceFile, typeChecker, program] of sourceFiles) {
 		const untyped = counted ? (untypedByFile[relativeFile] = []) : undefined;
 
 		/**
+		 * Tells whether a node is `prototype` in `C.prototype` of a class or other constructor `C`.
+		 * @param {ts.Node} node the identifier
+		 * @returns {boolean} true when it is
+		 */
+		const isClassPrototype = (node) => {
+			const { parent } = node;
+			if (
+				!ts.isIdentifier(node) ||
+				node.text !== "prototype" ||
+				!ts.isPropertyAccessExpression(parent) ||
+				parent.name !== node
+			) {
+				return false;
+			}
+			// Any constructor value, a class name or a variable holding classes.
+			const type = typeChecker.getTypeAtLocation(parent.expression);
+			return (type.isUnion() ? type.types : [type]).every(
+				(member) => member.getConstructSignatures().length > 0
+			);
+		};
+
+		/**
 		 * Tells whether a node is `module` or `exports` in `module.exports`.
 		 * @param {ts.Node} node the identifier
 		 * @returns {boolean} true when it is
@@ -310,7 +332,9 @@ for (const [sourceFile, typeChecker, program] of sourceFiles) {
 		 * @returns {boolean} true when the `any` comes from the built-in lib
 		 */
 		const isBuiltinAny = (node) => {
-			const symbol = typeChecker.getSymbolAtLocation(node);
+			// A literal's key takes the property its declared type gives it, such as `PropertyDescriptor#get`.
+			const symbol =
+				declaredProperty(node) || typeChecker.getSymbolAtLocation(node);
 			const declarations = symbol && symbol.getDeclarations();
 			if (
 				!declarations ||
@@ -885,6 +909,8 @@ for (const [sourceFile, typeChecker, program] of sourceFiles) {
 						node.parent.label === node) ||
 						// Ignore `module.exports`, its values are counted where they are declared
 						isModuleExports(node) ||
+						// Ignore `C.prototype`, which TypeScript itself types with `any` type arguments
+						isClassPrototype(node) ||
 						// Ignore the namespace of a type name such as `NodeJS.WritableStream`
 						(ts.isQualifiedName(node.parent) && node.parent.left === node) ||
 						// Ignore `name` in `const { name: otherName } = obj;`
