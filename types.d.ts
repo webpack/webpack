@@ -144,6 +144,7 @@ import {
 	internString,
 	isDualStringBufferCachingEnabled
 } from "webpack-sources/types/helpers/stringBufferUtils";
+type Profile = import("inspector").Profiler.Profile;
 type SetSamplingIntervalParameterType =
 	import("inspector").Profiler.SetSamplingIntervalParameterType;
 type StopReturnType = import("inspector").Profiler.StopReturnType;
@@ -12580,6 +12581,15 @@ declare class HotUpdateChunk extends Chunk {
 }
 
 /**
+ * The CSS chunks a hot update removes (`r`) and loads (`l`), with the names (`n`) of the new ones.
+ */
+declare interface HotUpdateCssManifest {
+	r: ChunkId[];
+	l?: ChunkId[];
+	n?: Record<ChunkId, string>;
+}
+
+/**
  * The manifest a runtime downloads first in a hot update; every download handler gets it
  * whole, so a plugin adds a field here for its own handler. It is sent as JSON; the field stays open so a
  * plugin's interface-typed value, which carries no index signature, still fits.
@@ -12591,6 +12601,7 @@ declare interface HotUpdateManifest {
 	m: ModuleId[];
 	f?: ChunkId[];
 	s?: ModuleId[];
+	css?: HotUpdateCssManifest;
 }
 
 /**
@@ -27252,9 +27263,7 @@ declare class Profiler {
 	/**
 	 * Stops profiling and returns the profile.
 	 */
-	stopProfiling(): Promise<
-		undefined | { profile: { startTime: number; endTime: number } }
-	>;
+	stopProfiling(): Promise<undefined | { profile: Profile }>;
 }
 declare class ProfilingPlugin {
 	/**
