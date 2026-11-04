@@ -2089,6 +2089,28 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		}
 	});
 
+	it("should print an `if` whose branches print alike as its test and one branch", () => {
+		const print = (/** @type {string} */ source) =>
+			minifyOnePass(source, {
+				compress: {},
+				mangle: false,
+				format: { comments: "some" }
+			}).code;
+		for (const [source, expected] of [
+			// A local name runs nothing, a global may throw.
+			["function f(v){if(v===1)g();else if(v===2)g();else g()}", "function f(v){g()}"],
+			["if(y)f();else f()", "y,f();"],
+			["function f(y){var x;if(y)x=1+1;else x=2;return x}", "function f(y){var x;return x=2,x}"],
+			["function f(){var x;if(c())x=1;else x=1;return x}", "function f(){var x;return x=(c(),1),x}"],
+			["if(a)x=b?1:2;else if(c)f();else f()", "a?x=b?1:2:(c,f());"],
+			// A comment kept or branches printing otherwise keep the `?:`.
+			["if(y)f();else/*! c */f()", "if(y)f();else/*! c */f();"],
+			["if(y)f();else g()", "y?f():g();"]
+		]) {
+			expect(print(source)).toBe(expected);
+		}
+	});
+
 	it("should keep a `switch` on a known value whose case holds a comment that prints", () => {
 		const print = (/** @type {string} */ source) =>
 			minifyOnePass(source, {
