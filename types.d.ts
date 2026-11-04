@@ -18600,6 +18600,124 @@ declare interface KnownNormalModuleBuildInfo {
 }
 
 /**
+ * `extract` hooks of the keys in `StatsFactoryExtractKeys`, with their exact `[object, data]`.
+ */
+declare interface KnownStatsFactoryExtractHookMap {
+	for<K extends keyof exports.StatsFactoryExtractKeys>(
+		key: K
+	): SyncBailHook<
+		[
+			exports.StatsFactoryExtractKeys[K][0],
+			exports.StatsFactoryExtractKeys[K][1],
+			StatsFactoryContext
+		],
+		void
+	>;
+}
+
+/**
+ * `getItemFactory` hooks of the item names in `StatsFactoryExtractKeys` and of child compilations, with their exact data.
+ */
+declare interface KnownStatsFactoryGetItemFactoryHookMap {
+	for<K extends keyof exports.StatsFactoryExtractKeys>(
+		key: K
+	): SyncBailHook<
+		[exports.StatsFactoryExtractKeys[K][1], StatsFactoryContext],
+		void | StatsFactory
+	>;
+	for(
+		key: "compilation.children[].compilation"
+	): SyncBailHook<[Compilation, StatsFactoryContext], void | StatsFactory>;
+}
+
+/**
+ * `getItemName` hooks of the keys in `StatsFactoryItemNameKeys`, with their exact item.
+ */
+declare interface KnownStatsFactoryGetItemNameHookMap {
+	for<K extends keyof exports.StatsFactoryItemNameKeys>(
+		key: K
+	): SyncBailHook<
+		[exports.StatsFactoryItemNameKeys[K], StatsFactoryContext],
+		string | void
+	>;
+}
+
+/**
+ * `groupResults` hooks of the array paths in `StatsFactoryItemKeys`, with group configs over their exact created item and `StatsFactoryGroup`.
+ */
+declare interface KnownStatsFactoryGroupResultsHookMap {
+	for<K extends keyof exports.StatsFactoryItemKeys>(
+		key: K
+	): SyncBailHook<
+		[
+			GroupConfig<exports.StatsFactoryItemKeys[K][1], StatsFactoryGroup<K>>[],
+			StatsFactoryContext
+		],
+		void
+	>;
+}
+
+/**
+ * Filter hooks over the exact item of the array paths in `StatsFactoryItemKeys`.
+ */
+declare interface KnownStatsFactoryItemFilterHookMap {
+	for<K extends keyof exports.StatsFactoryItemKeys>(
+		key: K
+	): SyncBailHook<
+		[exports.StatsFactoryItemKeys[K][0], StatsFactoryContext, number, number],
+		boolean | void
+	>;
+}
+
+/**
+ * Sort hooks over the exact item of the array paths in `StatsFactoryItemKeys`.
+ */
+declare interface KnownStatsFactoryItemSortHookMap {
+	for<K extends keyof exports.StatsFactoryItemKeys>(
+		key: K
+	): SyncBailHook<
+		[Comparator<exports.StatsFactoryItemKeys[K][0]>[], StatsFactoryContext],
+		void
+	>;
+}
+
+/**
+ * `merge` hooks of the array paths in `StatsFactoryItemKeys`, merging their exact created items into the third element a merged key declares.
+ */
+declare interface KnownStatsFactoryMergeHookMap {
+	for<K extends keyof exports.StatsFactoryItemKeys>(
+		key: K
+	): SyncBailHook<
+		[exports.StatsFactoryItemKeys[K][1][], StatsFactoryContext],
+		void | StatsFactoryMergedItems<K>
+	>;
+}
+
+/**
+ * Filter hooks over the exact created item of the array paths in `StatsFactoryItemKeys`.
+ */
+declare interface KnownStatsFactoryResultFilterHookMap {
+	for<K extends keyof exports.StatsFactoryItemKeys>(
+		key: K
+	): SyncBailHook<
+		[exports.StatsFactoryItemKeys[K][1], StatsFactoryContext, number, number],
+		boolean | void
+	>;
+}
+
+/**
+ * Sort hooks over the exact created item of the array paths in `StatsFactoryItemKeys`.
+ */
+declare interface KnownStatsFactoryResultSortHookMap {
+	for<K extends keyof exports.StatsFactoryItemKeys>(
+		key: K
+	): SyncBailHook<
+		[Comparator<exports.StatsFactoryItemKeys[K][1]>[], StatsFactoryContext],
+		void
+	>;
+}
+
+/**
  * Defines the known stats printer color functions type used by this module.
  */
 declare interface KnownStatsPrinterColorFunctions {
@@ -18627,6 +18745,30 @@ declare interface KnownStatsPrinterFormatters {
 	formatFlag?: (flag: string) => string;
 	formatTime?: (time: number, boldQuantity?: boolean) => string;
 	formatError?: (message: string) => string;
+}
+
+/**
+ * `getItemName` hooks of the keys in `StatsPrinterItemNameKeys`, with their exact item.
+ */
+declare interface KnownStatsPrinterGetItemNameHookMap {
+	for<K extends keyof exports.StatsPrinterItemNameKeys>(
+		key: K
+	): SyncBailHook<
+		[exports.StatsPrinterItemNameKeys[K], StatsPrinterContext],
+		string | void
+	>;
+}
+
+/**
+ * `print` hooks of the keys in `StatsPrinterPrintKeys`, with their exact value.
+ */
+declare interface KnownStatsPrinterPrintHookMap {
+	for<K extends keyof exports.StatsPrinterPrintKeys>(
+		key: K
+	): SyncBailHook<
+		[exports.StatsPrinterPrintKeys[K], StatsPrinterContext],
+		undefined | string | void
+	>;
 }
 
 /**
@@ -32829,56 +32971,23 @@ declare abstract class StatsFactory {
 }
 type StatsFactoryContext = exports.KnownStatsFactoryContext &
 	Record<string, any>;
-type StatsFactoryExtractHookMap = {
-	for<K extends keyof exports.StatsFactoryExtractKeys>(
-		key: K
-	): SyncBailHook<
-		[
-			exports.StatsFactoryExtractKeys[K][0],
-			exports.StatsFactoryExtractKeys[K][1],
-			StatsFactoryContext
-		],
-		void
-	>;
+type StatsFactoryExtractHookMap = KnownStatsFactoryExtractHookMap & {
 	for(key: string): SyncBailHook<[any, any, StatsFactoryContext], void>;
 } & HookMap<SyncBailHook<[any, any, StatsFactoryContext], void>>;
-type StatsFactoryGetItemFactoryHookMap = {
-	for<K extends keyof exports.StatsFactoryExtractKeys>(
-		key: K
-	): SyncBailHook<
-		[exports.StatsFactoryExtractKeys[K][1], StatsFactoryContext],
-		void | StatsFactory
-	>;
-	for(
-		key: "compilation.children[].compilation"
-	): SyncBailHook<[Compilation, StatsFactoryContext], void | StatsFactory>;
-	for(
-		key: string
-	): SyncBailHook<[any, StatsFactoryContext], void | StatsFactory>;
-} & HookMap<SyncBailHook<[any, StatsFactoryContext], void | StatsFactory>>;
-type StatsFactoryGetItemNameHookMap = {
-	for<K extends keyof exports.StatsFactoryItemNameKeys>(
-		key: K
-	): SyncBailHook<
-		[exports.StatsFactoryItemNameKeys[K], StatsFactoryContext],
-		string | void
-	>;
+type StatsFactoryGetItemFactoryHookMap =
+	KnownStatsFactoryGetItemFactoryHookMap & {
+		for(
+			key: string
+		): SyncBailHook<[any, StatsFactoryContext], void | StatsFactory>;
+	} & HookMap<SyncBailHook<[any, StatsFactoryContext], void | StatsFactory>>;
+type StatsFactoryGetItemNameHookMap = KnownStatsFactoryGetItemNameHookMap & {
 	for(key: string): SyncBailHook<[any, StatsFactoryContext], string | void>;
 } & HookMap<SyncBailHook<[any, StatsFactoryContext], string | void>>;
 type StatsFactoryGroup<K extends keyof exports.StatsFactoryItemKeys> =
 	K extends keyof exports.StatsFactoryGroupKeys
 		? exports.StatsFactoryGroupKeys[K]
 		: object;
-type StatsFactoryGroupResultsHookMap = {
-	for<K extends keyof exports.StatsFactoryItemKeys>(
-		key: K
-	): SyncBailHook<
-		[
-			GroupConfig<exports.StatsFactoryItemKeys[K][1], StatsFactoryGroup<K>>[],
-			StatsFactoryContext
-		],
-		void
-	>;
+type StatsFactoryGroupResultsHookMap = KnownStatsFactoryGroupResultsHookMap & {
 	for(
 		key: string
 	): SyncBailHook<[GroupConfig<any, any>[], StatsFactoryContext], void>;
@@ -32900,56 +33009,32 @@ declare interface StatsFactoryHooks {
 	getItemName: StatsFactoryGetItemNameHookMap;
 	getItemFactory: StatsFactoryGetItemFactoryHookMap;
 }
-type StatsFactoryItemFilterHookMap = {
-	for<K extends keyof exports.StatsFactoryItemKeys>(
-		key: K
-	): SyncBailHook<
-		[exports.StatsFactoryItemKeys[K][0], StatsFactoryContext, number, number],
-		boolean | void
-	>;
+type StatsFactoryItemFilterHookMap = KnownStatsFactoryItemFilterHookMap & {
 	for(
 		key: string
 	): SyncBailHook<[any, StatsFactoryContext, number, number], boolean | void>;
 } & HookMap<
-	SyncBailHook<[any, StatsFactoryContext, number, number], boolean | void>
->;
-type StatsFactoryItemSortHookMap = {
-	for<K extends keyof exports.StatsFactoryItemKeys>(
-		key: K
-	): SyncBailHook<
-		[Comparator<exports.StatsFactoryItemKeys[K][0]>[], StatsFactoryContext],
-		void
+		SyncBailHook<[any, StatsFactoryContext, number, number], boolean | void>
 	>;
+type StatsFactoryItemSortHookMap = KnownStatsFactoryItemSortHookMap & {
 	for(
 		key: string
 	): SyncBailHook<[Comparator<any>[], StatsFactoryContext], void>;
 } & HookMap<SyncBailHook<[Comparator<any>[], StatsFactoryContext], void>>;
-type StatsFactoryMergeHookMap = {
-	for<K extends keyof exports.StatsFactoryItemKeys>(
-		key: K
-	): SyncBailHook<
-		[exports.StatsFactoryItemKeys[K][1][], StatsFactoryContext],
-		void | StatsFactoryMergedItems<K>
-	>;
+type StatsFactoryMergeHookMap = KnownStatsFactoryMergeHookMap & {
 	for(key: string): SyncBailHook<[any[], StatsFactoryContext], any>;
 } & HookMap<SyncBailHook<[any[], StatsFactoryContext], any>>;
 type StatsFactoryMergedItems<K extends keyof exports.StatsFactoryItemKeys> =
 	exports.StatsFactoryItemKeys[K] extends [infer _Object, infer _Item, infer M]
 		? M
 		: exports.StatsFactoryItemKeys[K][1][];
-type StatsFactoryResultFilterHookMap = {
-	for<K extends keyof exports.StatsFactoryItemKeys>(
-		key: K
-	): SyncBailHook<
-		[exports.StatsFactoryItemKeys[K][1], StatsFactoryContext, number, number],
-		boolean | void
-	>;
+type StatsFactoryResultFilterHookMap = KnownStatsFactoryResultFilterHookMap & {
 	for(
 		key: string
 	): SyncBailHook<[any, StatsFactoryContext, number, number], boolean | void>;
 } & HookMap<
-	SyncBailHook<[any, StatsFactoryContext, number, number], boolean | void>
->;
+		SyncBailHook<[any, StatsFactoryContext, number, number], boolean | void>
+	>;
 type StatsFactoryResultHookMap = {
 	for<K extends keyof exports.StatsFactoryExtractKeys>(
 		key: K
@@ -32965,13 +33050,7 @@ type StatsFactoryResultHookMap = {
 	>;
 	for(key: string): SyncBailHook<[any, StatsFactoryContext], any>;
 } & HookMap<SyncBailHook<[any, StatsFactoryContext], any>>;
-type StatsFactoryResultSortHookMap = {
-	for<K extends keyof exports.StatsFactoryItemKeys>(
-		key: K
-	): SyncBailHook<
-		[Comparator<exports.StatsFactoryItemKeys[K][1]>[], StatsFactoryContext],
-		void
-	>;
+type StatsFactoryResultSortHookMap = KnownStatsFactoryResultSortHookMap & {
 	for(
 		key: string
 	): SyncBailHook<[Comparator<any>[], StatsFactoryContext], void>;
@@ -33549,28 +33628,16 @@ type StatsPrinterContext = KnownStatsPrinterColorFunctions &
 	KnownStatsPrinterFormatters &
 	exports.KnownStatsPrinterContext &
 	Record<string, any>;
-type StatsPrinterGetItemNameHookMap = {
-	for<K extends keyof exports.StatsPrinterItemNameKeys>(
-		key: K
-	): SyncBailHook<
-		[exports.StatsPrinterItemNameKeys[K], StatsPrinterContext],
-		string | void
-	>;
+type StatsPrinterGetItemNameHookMap = KnownStatsPrinterGetItemNameHookMap & {
 	for(key: string): SyncBailHook<[any, StatsPrinterContext], string | void>;
 } & HookMap<SyncBailHook<[any, StatsPrinterContext], string | void>>;
-type StatsPrinterPrintHookMap = {
-	for<K extends keyof exports.StatsPrinterPrintKeys>(
-		key: K
-	): SyncBailHook<
-		[exports.StatsPrinterPrintKeys[K], StatsPrinterContext],
-		undefined | string | void
-	>;
+type StatsPrinterPrintHookMap = KnownStatsPrinterPrintHookMap & {
 	for(
 		key: string
 	): SyncBailHook<[any, StatsPrinterContext], undefined | string | void>;
 } & HookMap<
-	SyncBailHook<[any, StatsPrinterContext], undefined | string | void>
->;
+		SyncBailHook<[any, StatsPrinterContext], undefined | string | void>
+	>;
 type StatsPrinterSortItemsHookMap = {
 	for<K extends keyof exports.StatsPrinterItemKeys>(
 		key: K
