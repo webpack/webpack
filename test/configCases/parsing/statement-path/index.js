@@ -48,7 +48,11 @@ it("should fire the statement hook for each statement", () => {
 		7,
 		8,
 		3,
-		7
+		7,
+		4,
+		5,
+		6,
+		6
 	]);
 	return import("./tla").then(({ total }) => {
 		expect(total).toBe(3);

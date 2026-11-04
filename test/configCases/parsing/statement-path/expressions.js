@@ -1,4 +1,5 @@
 import { value } from "./module";
+import * as mod from "./module";
 
 const tag = (strings, ...values) => strings.join("|") + values.join("|");
 
@@ -39,6 +40,17 @@ export function expressions(input) {
 	var byRegExp = regExpKeyed[/x/];
 	var byTemplate = fns[`k`]();
 	var byComputed = list[input - 1];
+	var destructured = (function ({ a }) {
+		return a;
+	})({ a: 4 });
+	var applied = function (x) {
+		return x;
+	}.apply(null, [5]);
+	var doubled = mod.double(3);
+	var asm = (function () {
+		"use asm";
+		return 6;
+	})();
 	return [
 		never,
 		always,
@@ -64,6 +76,10 @@ export function expressions(input) {
 		byNumber,
 		byRegExp,
 		byTemplate,
-		byComputed
+		byComputed,
+		destructured,
+		applied,
+		doubled,
+		asm
 	];
 }
