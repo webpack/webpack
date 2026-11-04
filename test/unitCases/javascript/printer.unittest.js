@@ -4800,6 +4800,16 @@ describe("one-pass minify of statement sequences", () => {
 			expect(code).toBe(expected);
 			expect(runProgram(code)).toBe(runProgram(source));
 		}
+		// Without `dead_code`, a block listing nothing prints as `;` bare, which
+		// the next pass drops, so its label stays.
+		const kept = minifyOnePass("if(a){L:{}b()}", {
+			compress: { dead_code: false },
+			mangle: {}
+		}).code;
+		expect(kept).toBe("if(a){a:;b()}");
+		expect(
+			minifyOnePass(kept, { compress: { dead_code: false }, mangle: {} }).code
+		).toBe(kept);
 		// A string it labels would read as a directive bare.
 		const directive =
 			'function f(){L:"use strict";return this}console.log(typeof f())';
