@@ -1501,6 +1501,11 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["x==null&&y;x!=null||y;a==null&&(a=b);null==x&&g();o.y!=null||(o={},o.y=3);x===null&&y;x==null&&(y||z);z=x==null&&y;f()==null&&y;x==null&&!y;x==null&&new Y;x==null&&a+b", {"ecma": 2020}, "x??y,x??y,a??(a=b),x??g(),o.y??(o={},o.y=3),x===null&&y,x==null&&(y||z),z=x==null&&y,f()==null&&y,x??!y,x??new Y,x??a+b;"],
 			// An operand of `&&` or `||` whose truth alone is read is read for its truth too; a strict equality nobody reads runs only its sides.
 			["v=!(a||!0);v=!(a&&!1);if(!!a||!!b)throw 0;x=a||!0;if(a&&(b?!0:c))d();if(a&&(x&&!0))f();x=a??!0;if(a??!!b)g();if(!0)h();while(!1)k()", {}, "v=!(a||1),v=!(a&&0);if(a||b)throw 0;x=a||!0;if(a&&(b||c))d();if(a&&x)f();x=a??!0;if(a??!!b)g();h();"],
+			// esbuild's `!!(!b&&c)` as `!(b||!c)`, where shorter; a logical folding to a unary takes no parentheses under `!`, and `!!` of a boolean goes.
+			["a=!!(!b&&c);a=!!(!b||c);a=!!(b&&!c);a=!!(b||!c);a=!!(!b&&!c);a=!!(!b||!c);a=!!(!b&&c.d);a=!!(!(b,c)&&d);a=!!(!--b&&c);x=[!!(!b&&c)];x=-!!(!b&&c);a=!!(!b??c);a=!(0||!b);a=!!(1&&(b<c));a=!(1?!b:c)", {}, "a=!(b||!c),a=!(b&&!c),a=!(!b||c),a=!(!b&&c),a=!(b||c),a=!(b&&c),a=!(b||!c.d),a=!((b,c)||!d),a=!(--b||!c),x=[!(b||!c)],x=-!(b||!c),a=!b,a=!!b,a=b<c,a=!!b;"],
+			// No shorter, read for its truth or unread, under one `!` or one not `!`, it stays; so does one holding a comment kept.
+			["a=!!(b&&c);a=!!(!b&&c+d);a=!!(!b&&!c&&d);x=!!(!b&&c).y;if(!!(!b&&c))f();!!(!b&&c);a=!(!b&&c);a=-(1&&-b)", {}, "a=!!(b&&c),a=!!(!b&&c+d),a=!!(!b&&!c&&d),x=!!(!b&&c).y;if((!b&&c))f();!b&&c,a=!(!b&&c),a=-(-b);"],
+			["x=!!(!b&&/*c*/c);y=!!(/*k*/!b&&c)", { format: { comments: "all" } }, "x=!!(!b&&/*c*/c),y=!!(/*k*/!b&&c);"],
 			["!(x===undefined);!(typeof x()===\"undefined\");x===void 0;a()===b;a===b();f(a===b,c());g(),a()!==b(),h();x==void 0;({}).a===b();({}).a===b", {}, "x,typeof x(),x,a(),b,a,b(),f(a===b,c()),g(),a(),b(),h(),x==null,b(),b;"],
 			// `x["length"]` folds as `x.length` does; an `else if` known false goes, one known true prints its branch.
 			["use(\"abc\"[\"length\"]);use([1,2,3][\"length\"]);use([,,1][\"length\"]);use(/a/[\"source\"]);use(\"a\"[\"x\"]);use(\"a\"[0]);use(a?.[\"length\"]);delete\"ab\"[\"length\"]", {}, "use(3),use(3),use(3),use(\"a\"),use(\"a\".x),use(\"a\"[0]),use(a?.length),delete\"ab\".length;"],
