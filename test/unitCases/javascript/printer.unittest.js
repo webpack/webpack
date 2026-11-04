@@ -4616,6 +4616,32 @@ describe("one-pass minify of statement sequences", () => {
 		}
 	});
 
+	it("should fold a `switch` on a sequence known by its last, running the rest first", () => {
+		const cases = [
+			["function s(w,x,y){switch(w(),42){case 13:x();case 42:y();default:x()}}", "function s(c,s,a){c(),a(),s()}"],
+			["function s(w,x,y){switch((w(),x(),42)){case 42:y();break;default:x()}}", "function s(a,c,e){a(),c(),e()}"],
+			["function s(w,x,y){A:switch(w(),42){case 42:y();x()}}", "function s(c,s,w){c:c(),w(),s()}"],
+			// A comment on what it tests prints with it.
+			["function s(w,x,y){switch(/*! c */w(),42){case 42:y()}}", "function s(c,s,w){/*! c */c(),42,w()}"],
+			// What it runs first joins only expressions, before a match it ran
+			// a case's test, and running nothing else it stays.
+			["function s(w,x,y){switch(w(),42){case 42:if(x)y()}}", "function s(c,i,s){switch(c(),42){case 42:if(i)s()}}"],
+			["function s(w,x,y){switch(w(),42){case x():y()}}", "function s(c,s,w){switch(c(),42){case s():w()}}"],
+			["function s(w,y){switch(w(),42){case 13:y()}}", "function s(c,s){switch(c(),42){case 13:s()}}"],
+			["function s(w,y){switch(w(),y()){case 13:y()}}", "function s(c,s){switch(c(),s()){case 13:s()}}"]
+		];
+		for (const [source, expected] of cases) {
+			const { code } = minifyOnePass(source, {
+				compress: { toplevel: false },
+				mangle: { toplevel: false }
+			});
+			expect(code).toBe(expected);
+			const call =
+				"s(()=>console.log(1),()=>{console.log(2);return 13},()=>{console.log(3);return 42})";
+			expect(runProgram(`${code}${call}`)).toBe(runProgram(`${source}${call}`));
+		}
+	});
+
 	it("should print the known `switch`, spread and unary values of the config cases", () => {
 		const fs = require("fs");
 		const path = require("path");
