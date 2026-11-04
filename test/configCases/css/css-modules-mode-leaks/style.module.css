@@ -1,0 +1,28 @@
+@layer base;
+.afterLayer { color: red; }
+
+@layer tokens, base.inner;
+.afterLayerList { color: red; }
+
+@LAYER base /* comment */;
+.afterUpperLayer { color: red; }
+
+@unknown-statement foo;
+.afterUnknown { color: red; }
+
+@media screen {
+	@layer base;
+	.inMedia { color: red; }
+}
+
+@layer base {
+	@layer inner;
+	.inLayerBlock { color: red; }
+}
+
+.outer {
+	@layer base;
+	.inRule { color: red; }
+}
+
+.last { color: blue; }

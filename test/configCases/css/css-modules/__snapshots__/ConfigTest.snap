@@ -1159,7 +1159,7 @@ div {
 }
 
 .global-foo {
-	.nested-global {
+	.my-app-style_module_css-nested-global {
 		color: red;
 	}
 
@@ -4190,7 +4190,7 @@ div {
 		color: red;
 	}
 
-	./** test **/my-app-style_module_css-class {
+	./** test **/class {
 		color: red;
 	}
 
@@ -6922,7 +6922,7 @@ div {
 		color: red;
 	}
 
-	./** test **/Vx2ADA {
+	./** test **/class {
 		color: red;
 	}
 
@@ -9491,7 +9491,7 @@ div {
 }
 
 .global-foo {
-	.nested-global {
+	.ysZJYJ {
 		color: red;
 	}
 
@@ -11232,6 +11232,7 @@ Object {
   "class-1": "my-app-style_module_css-class-1",
   "class-in-container": "my-app-style_module_css-class-in-container",
   "class-local-scope": "my-app-style_module_css-class-local-scope",
+  "class-name-after-broken-keyframes": "my-app-style_module_css-class-name-after-broken-keyframes",
   "class-with-composes": "my-app-style_module_css-class-with-composes my-app-style_module_css-local-class global-class global-class-other my-app-shared_css-local-my-shared-class",
   "className": "my-app-style_module_css-className",
   "classNameLocal": "my-app-style_module_css-classNameLocal",
@@ -11364,6 +11365,7 @@ Object {
   "my-global-class-again": "my-app-style_module_css-my-global-class-again",
   "my-simple-local": "my-app-style_module_css-my-simple-local",
   "narrowScreenClass": "my-app-style_module_css-narrowScreenClass",
+  "nested-global": "my-app-style_module_css-nested-global",
   "nested-layer": "my-app-style_module_css-nested-layer",
   "nested-media": "my-app-style_module_css-nested-media",
   "nested-parens": "my-app-style_module_css-nested-parens",
@@ -12513,7 +12515,7 @@ div {
 }
 
 .global-foo {
-	.nested-global {
+	.my-app-style_module_css-nested-global {
 		color: red;
 	}
 
@@ -13540,7 +13542,7 @@ section {
 
 @keyframes broken-kf;
 
-.class-name-after-broken-keyframes {
+.my-app-style_module_css-class-name-after-broken-keyframes {
 	color: red;
 }
 
