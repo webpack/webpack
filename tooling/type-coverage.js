@@ -1007,6 +1007,36 @@ const COLUMNS = /** @type {const} */ ([...KINDS, "untyped"]);
  */
 
 /**
+ * Tells whether a type node is written in a bound: a type parameter's
+ * constraint, such as `@template {unknown[]} T`, or the type a conditional
+ * type tests against. A bound limits what may be passed; it types no value.
+ * @param {ts.Node} node the type node
+ * @returns {boolean} true when it is
+ */
+const isInBound = (node) => {
+	let child = node;
+	let { parent } = node;
+	while (parent) {
+		if (
+			(ts.isTypeParameterDeclaration(parent) && parent.constraint === child) ||
+			(ts.isConditionalTypeNode(parent) && parent.extendsType === child) ||
+			(ts.isJSDocTypeExpression(parent) &&
+				ts.isJSDocTemplateTag(parent.parent) &&
+				parent.parent.constraint === parent)
+		) {
+			return true;
+		}
+		// Stop at the end of the type, where a value's declaration begins.
+		if (!ts.isTypeNode(parent) && !ts.isJSDocTypeExpression(parent)) {
+			return false;
+		}
+		child = parent;
+		parent = parent.parent;
+	}
+	return false;
+};
+
+/**
  * Returns the escape hatch a type node writes, as the type it stands for and
  * its spelling. An `object` constraining or testing a type, as in
  * `@template {object} T`, says only that it is no primitive.
@@ -1022,17 +1052,13 @@ const escapeHatchOf = (node) => {
 		case ts.SyntaxKind.JSDocUnknownType:
 			return { kind: "any", spelling: "?" };
 		case ts.SyntaxKind.UnknownKeyword:
-			return { kind: "unknown", spelling: "unknown" };
-		case ts.SyntaxKind.ObjectKeyword: {
-			const { parent } = node;
-			const isBound =
-				(ts.isTypeParameterDeclaration(parent) && parent.constraint === node) ||
-				(ts.isConditionalTypeNode(parent) && parent.extendsType === node) ||
-				(ts.isJSDocTypeExpression(parent) &&
-					ts.isJSDocTemplateTag(parent.parent) &&
-					parent.parent.constraint === parent);
-			return isBound ? undefined : { kind: "object", spelling: "object" };
-		}
+			return isInBound(node)
+				? undefined
+				: { kind: "unknown", spelling: "unknown" };
+		case ts.SyntaxKind.ObjectKeyword:
+			return isInBound(node)
+				? undefined
+				: { kind: "object", spelling: "object" };
 	}
 	if (
 		!ts.isTypeReferenceNode(node) ||
