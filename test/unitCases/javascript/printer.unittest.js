@@ -2145,7 +2145,8 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["[]+0", '"0"'],
 			["[1,null,2]+\"\"", '"1,,2"'],
 			["[1,undefined,2]+\"\"", '"1,,2"'],
-			["[1,,2]+\"\"", '"1,,2"'],
+			// A hole reads the prototypes at its index.
+			["[1,,2]+\"\"", '[1,,2]+""'],
 			["[-0,true]+\"\"", '"0,true"'],
 			["\"\"+123n", '"123"'],
 			["1n+[]", '"1"'],
@@ -2187,6 +2188,15 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				'Array.prototype.toString=()=>"!",a=[1,2]+"",b=typeof c+[];'
 			],
 			['Array.prototype.join=f;a=[1]+""', 'Array.prototype.join=f,a=[1]+"";'],
+			[
+				'Array.prototype.valueOf=()=>7;a=[1]+""',
+				'Array.prototype.valueOf=()=>7,a=[1]+"";'
+			],
+			[
+				'const A=Array;A.prototype.join=()=>"x";a=[1]+""',
+				'const A=Array;A.prototype.join=()=>"x",a=[1]+"";'
+			],
+			['a=[1?/*! keep */null:null]+""', 'a=[/*! keep */null]+"";'],
 			['String.prototype.trim=f;a=[1]+""', 'String.prototype.trim=f,a="1";'],
 			// A comment kept inside the operand dropped stays.
 			[
