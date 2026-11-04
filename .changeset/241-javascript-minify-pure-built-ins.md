@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Drop unread built-in calls that cannot throw when minifying JavaScript.
+Drop pure built-in calls and keep `0` tests boolean when minifying JavaScript.
