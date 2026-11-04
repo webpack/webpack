@@ -1320,6 +1320,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// A `join` of constants, an empty block and a loop on a truthy constant print shorter or not at all.
 			["function f(){[1,2].join();g()}", {}, "function f(){g()}"],
 			["function f(){[1,g()].join();h()}", {}, "function f(){[1,g()].join(),h()}"],
+			["x=[1,/*! c */2].join()", {}, "x=[1,/*! c */2].join();"],
 			["function f(){g();{}}", {}, "function f(){g()}"],
 			["function f(){g();{/*! keep */}}", {}, "function f(){g();{/*! keep */}}"],
 			["function f(){while(1)g()}", {}, "function f(){for(;;)g()}"],
@@ -1643,7 +1644,40 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// An async generator awaits what it returns, so `return void 0` ending one keeps its `return`.
 			["async function*g(){return void 0}async function*h(){x();return void 0}function k(){x();return void 0}", {}, "async function*g(){return void 0}async function*h(){return x(),void 0}function k(){x()}"],
 			// `!` negates an optional chain whole.
-			["function f(){if(t?.has(x))return;y()}for(;;){if(t?.has(x))continue;y()}x=t?.a?!1:y", {}, "function f(){if(!t?.has(x))y()}for(;;){if(!t?.has(x))y()}x=!t?.a&&y;"]
+			["function f(){if(t?.has(x))return;y()}for(;;){if(t?.has(x))continue;y()}x=t?.a?!1:y", {}, "function f(){if(!t?.has(x))y()}for(;;){if(!t?.has(x))y()}x=!t?.a&&y;"],
+			// A built-in called on primitives prints its answer where that is no longer, and folds what reads it.
+			["x=[parseInt(\"12\"),isNaN(\"a\"),Math.max(1,2),String.fromCharCode(65),\"Ab\".toLowerCase(),(12).toString(16),\"ab\".concat(\"c\").toUpperCase()];if(isNaN(1))f()", {}, "x=[12,!0,2,\"A\",\"ab\",\"c\",\"ABC\"];"],
+			["x=[Math.min(-1,2),Math.min(-1,2).x,-Math.abs(-3),Math.min(-1,2)()]", {}, "x=[-1,(-1).x,-3,(-1)()];"],
+			// One newer than `builtinsEcma` folds only once it reaches the built-in's edition.
+			["x=[\"ab\".padStart(3),Math.sign(-2),\"x\".repeat(2)]", {}, "x=[\"ab\".padStart(3),Math.sign(-2),\"x\".repeat(2)];"],
+			["x=[\"ab\".padStart(3),Math.sign(-2),\"x\".repeat(2)]", { compress: { toplevel: false, builtinsEcma: 2020 } }, "x=[\" ab\",-1,\"xx\"];"],
+			["x=[\"a\".repeat(99),(1).toPrecision(22),(1.5).toPrecision(2),(1).toFixed(20)]", { compress: { toplevel: false, builtinsEcma: 2020 } }, "x=[\"a\".repeat(99),1..toPrecision(22),\"1.5\",1..toFixed(20)];"],
+			// It stays a call where an engine may answer otherwise, throws, answers no finite primitive or runs code.
+			["x=[\"\u00c4\".toLowerCase(),decodeURI(\"%\"),parseFloat(\"x\"),Math.max(),\"a\".repeat(99),\"ab\".concat(g()),1.5.toString(2),(1).toFixed(30),parseInt(\"\u180e1\"),\"ab\".concat(\"c\").length,1..toFixed(1)]", {}, "x=[\"\u00c4\".toLowerCase(),decodeURI(\"%\"),parseFloat(\"x\"),Math.max(),\"a\".repeat(99),\"ab\".concat(g()),1.5.toString(2),1..toFixed(30),parseInt(\"\u180e1\"),\"abc\".length,\"1.0\"];"],
+			["function f(Math,parseInt){x=[Math.abs(-1),parseInt(\"1\")]}x=[Math?.abs(-1),Math.abs?.(-1),Math.abs(...[g]),Math.abs(/*! c */1)]", {}, "function f(a,t){x=[a.abs(-1),t(\"1\")]}x=[Math?.abs(-1),Math.abs?.(-1),Math.abs(g),Math.abs(/*! c */1)];"],
+			["x=[Math.abs(-1),parseInt(\"1\")]", { compress: { toplevel: false }, mangle: false, keep_fnames: true }, "x=[1,1];"],
+			["x=hasOwnProperty.call(a,b)+constructor.name(1)", {}, "x=hasOwnProperty.call(a,b)+constructor.name(1);"],
+			// A call measured by what it holds stays one where an argument is worked out, and where its answer prints longer.
+			["x=[Math.min(1/3-1,0,0),Math.sqrt(.5),Math.max(1,2).x]", {}, "x=[Math.min(1/3-1,0,0),Math.sqrt(.5),2..x];"],
+			["x=[Math.abs(-(1+1)),`ab`.concat(`c`),`a${1}`.concat(\"b\"),Math.max(1.5,2.5).x,Math.min(-1,2)()]", {}, "x=[Math.abs(-2),\"abc\",\"a1\".concat(\"b\"),2.5.x,(-1)()];"],
+			["x=[\"abcNaNdef\".indexOf(NaN),(-Infinity).toString(),String.fromCharCode(Infinity),isFinite(-Infinity),\"a function\".indexOf(typeof function(){})]", {}, "x=[3,\"-Infinity\",\"\\0\",!1,\"a function\".indexOf(\"function\")];"],
+			// A built-in the program may replace, set, passed or stored anywhere, stays a call; a parse past 20 digits or in another radix too.
+			["Math.abs=f;String.prototype.concat=g;globalThis.parseFloat=h;Math[1]=k;x=[Math.abs(-1),\"a\".concat(\"b\"),parseFloat(\"1\"),Math.max(1,2),parseInt(\"1\")]", {}, "Math.abs=f,String.prototype.concat=g,globalThis.parseFloat=h,Math[1]=k,x=[Math.abs(-1),\"a\".concat(\"b\"),parseFloat(\"1\"),2,1];"],
+			["delete Number.prototype.toFixed;Math.round++;[String.prototype.trim]=[f];for(Math.ceil in o);x=[(1).toFixed(1),Math.round(1.5),\" a\".trim(),Math.ceil(1.5),Math.floor(1.5)]", {}, "delete Number.prototype.toFixed,Math.round++,[String.prototype.trim]=[f];for(Math.ceil in o);x=[1..toFixed(1),Math.round(1.5),\" a\".trim(),Math.ceil(1.5),1];"],
+			["window[k]=f;x=[parseInt(\"1\"),Math.abs(-1)]", {}, "window[k]=f,x=[parseInt(\"1\"),Math.abs(-1)];"],
+			["var g=globalThis;g.parseInt=f;x=parseInt(\"12\")", {}, "var g=globalThis;g.parseInt=f,x=parseInt(\"12\");"],
+			["({abs:Math.abs}={abs:f});[...Math.round]=[];({...Math.ceil}=o);x=[Math.abs(-1),Math.round(1.5),Math.ceil(1.5),Math.floor(1.5)]", {}, "({abs:Math.abs}={abs:f}),[...Math.round]=[],({...Math.ceil}=o),x=[Math.abs(-1),Math.round(1.5),Math.ceil(1.5),1];"],
+			["window.Math=m;String.prototype=p;x=[Math.abs(-1),parseInt(\"1\"),\"a\".concat(\"b\"),String.fromCharCode(65)]", {}, "window.Math=m,String.prototype=p,x=[Math.abs(-1),1,\"a\".concat(\"b\"),\"A\"];"],
+			["Object.assign(Math,o);function q(a=Number){}var s=String;x=[Math.abs(-1),Number.isNaN(1),\"a\".concat(\"b\")]", {}, "Object.assign(Math,o);function q(a=Number){}var s=String;x=[Math.abs(-1),Number.isNaN(1),\"a\".concat(\"b\")];"],
+			["Object.setPrototypeOf(Number.prototype,p);g(Math,[String],{a:Number});Object.keys(Math);Object[k](Math);x=[Math.abs(-1),(1).toFixed(1),\"a\".concat(\"b\")]", {}, "Object.setPrototypeOf(Number.prototype,p),g(Math,[String],{a:Number}),Object.keys(Math),Object[k](Math),x=[1,1..toFixed(1),\"ab\"];"],
+			["x=[parseInt(\"z\",36),parseInt(\"123456789012345678901234\"),parseFloat(\"1.23456789012345678901234\"),parseInt(\"ff\",16)]", {}, "x=[parseInt(\"z\",36),parseInt(\"123456789012345678901234\"),parseFloat(\"1.23456789012345678901234\"),255];"],
+			["function f(Math){Math.abs=g;h(Math)}Math.prototype.abs=k;y=1;x=Math.abs(-1)", {}, "function f(a){a.abs=g,h(a)}Math.prototype.abs=k,y=1,x=1;"],
+			// Constructed, it parenthesizes only a sign, as a second print would.
+			["x=[new(\"abc\".concat(1,\"def\")),new(Math.min(-1,2)),new(Math.min(1,2))(3),new(g(1))]", {}, "x=[new\"abc1def\",new(-1),new 1(3),new(g(1))];"],
+			// Unread, it goes however long its answer; an outer call folds on it, and another radix needs a safe integer.
+			["Math.sqrt(2);x=[Math.ceil(Math.sqrt(2)),(1e20).toString(36),(35).toString(36)]", {}, "x=[2,1e20.toString(36),\"z\"];"],
+			// A call that stays one where the dropped `var` keeps it stays one where its value is read too.
+			["!function(){var a=\"\\\\.\";var w=\"[^\"+a+\"]\";var d=/(W)/.source.replace(\"W\",w);var t=new RegExp(\"\"+\"^\"+d+n+\"$\");g(t,w,a)}()", {}, "!function(){var a=\"[^\\\\.]\",r=\"(W)\".replace(\"W\",a);g(new RegExp(\"^\"+r+n+\"$\"),a,\"\\\\.\")}();"]
 		];
 		for (const [source, options, expected] of cases) {
 			const { code } = minifyOnePass(source, {

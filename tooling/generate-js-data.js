@@ -484,7 +484,9 @@ ${properties}
  * @returns {NativeObjectTables} the tables, fresh on each call
  */
 const nativeObjectTables = () => ({
-${sections.map(({ constant, source }) => `\t${constant}: ${source}`).join(",\n")}
+${sections
+	.map(({ constant, source }) => `\t${constant}: ${source}`)
+	.join(",\n")}
 });
 `;
 };
@@ -809,6 +811,34 @@ const FOLDED_BUILT_INS = {
 	"Array.prototype": ["concat", "join"]
 };
 
+// The edition each folded built-in came in after ECMAScript 5, which the
+// printer folds only where `builtinsEcma` reaches it.
+const FOLDED_FROM_EDITION = {
+	2015: [
+		"Array.of",
+		"Math.clz32",
+		"Math.fround",
+		"Math.imul",
+		"Math.sign",
+		"Math.trunc",
+		"Number.isFinite",
+		"Number.isInteger",
+		"Number.isNaN",
+		"Number.isSafeInteger",
+		"Number.parseFloat",
+		"Number.parseInt",
+		"String.fromCodePoint",
+		"String.prototype.codePointAt",
+		"String.prototype.endsWith",
+		"String.prototype.includes",
+		"String.prototype.normalize",
+		"String.prototype.repeat",
+		"String.prototype.startsWith"
+	],
+	2017: ["String.prototype.padEnd", "String.prototype.padStart"],
+	2019: ["String.prototype.trimEnd", "String.prototype.trimStart"]
+};
+
 // Static values `improve` writes as the number they hold where that is shorter.
 const FOLDED_CONSTANTS = {
 	Number: ["NEGATIVE_INFINITY", "NaN", "POSITIVE_INFINITY"]
@@ -1045,7 +1075,7 @@ const isNoLaterThan = (version, limit) => {
 /**
  * The built-ins `improve` folds, checked against BCD: each one present, on the
  * owner it is spelled under, and in every Node webpack builds on.
- * @returns {{ globals: string[], statics: Record<string, string[]>, methods: Record<string, string[]>, constants: Record<string, string[]>, powerOfTwoConstants: Record<string, string[]>, unicodeDependent: string[], sizedByArgument: string[], constructedWhenCalled: string[] }} the tables
+ * @returns {{ editions: Record<string, number>, globals: string[], statics: Record<string, string[]>, methods: Record<string, string[]>, constants: Record<string, string[]>, powerOfTwoConstants: Record<string, string[]>, unicodeDependent: string[], sizedByArgument: string[], constructedWhenCalled: string[] }} the tables
  */
 const collectFoldedBuiltIns = () => {
 	const members = collectBuiltInMembers();
@@ -1133,7 +1163,18 @@ const collectFoldedBuiltIns = () => {
 			throw new Error(`@mdn/browser-compat-data lists no built-in ${name}`);
 		}
 	}
+	/** @type {Record<string, number>} */
+	const editions = {};
+	for (const [edition, names] of Object.entries(FOLDED_FROM_EDITION)) {
+		for (const name of names) {
+			if (placed.get(name) !== "FOLDED_BUILT_INS") {
+				throw new Error(`${name} has an edition but is not a folded built-in`);
+			}
+			editions[name] = Number(edition);
+		}
+	}
 	return {
+		editions,
 		globals,
 		statics,
 		methods,
@@ -1152,6 +1193,7 @@ const collectFoldedBuiltIns = () => {
 const renderFoldedBuiltIns = () => `
 /**
  * @typedef {object} FoldedBuiltIns
+ * @property {Record<string, number>} editions the edition each one came in after ECMAScript 5, by qualified name
  * @property {string[]} globals the global functions
  * @property {Record<string, string[]>} statics the functions of each global object
  * @property {Record<string, string[]>} methods the prototype methods of each constructor
@@ -1601,7 +1643,9 @@ const collectNodeFields = () => {
  */
 const renderNumberTable = (name, description, table) => {
 	const entries = Object.keys(table).map((key) => `${key}: ${table[key]}`);
-	return `// ${description}\n/** @type {Readonly<{ ${entries.join(", ")} }>} */\nconst ${name} = {\n${entries.join(",\n")}\n};\n`;
+	return `// ${description}\n/** @type {Readonly<{ ${entries.join(
+		", "
+	)} }>} */\nconst ${name} = {\n${entries.join(",\n")}\n};\n`;
 };
 
 // Babel names its parse errors, ECMA-262 and acorn do not, so a parse error's
@@ -2158,7 +2202,9 @@ const PARSE_ERRORS = [
  */
 const parseErrorTemplateRegExp = (template) =>
 	new RegExp(
-		`^${template.replace(/[.+?^${}()|[\]\\]/g, "\\$&").replace(/\*/g, "[\\s\\S]*")}$`
+		`^${template
+			.replace(/[.+?^${}()|[\]\\]/g, "\\$&")
+			.replace(/\*/g, "[\\s\\S]*")}$`
 	);
 
 /**
@@ -2287,7 +2333,9 @@ const collectParseErrorCodes = () => {
 				: patterns.findIndex((pattern) => pattern.test(raised.message));
 		if (matched !== index) {
 			throw new Error(
-				`probe ${JSON.stringify(probe)} raises ${raised ? `"${raised.message}"` : "nothing"}, not "${entry.template}"`
+				`probe ${JSON.stringify(probe)} raises ${
+					raised ? `"${raised.message}"` : "nothing"
+				}, not "${entry.template}"`
 			);
 		}
 		const at = /** @type {{ message: string, pos: number }} */ (raised).pos;
@@ -2370,10 +2418,26 @@ ${renderTable(
 	0
 )}
 ${renderUnicodeProperties()}
-${renderNumberTable("NodeType", "Every node type the parser makes, by its ESTree name.", nodeTables.types)}
-${renderNumberTable("Field", "The fields that hold a node or a list of them, by their ESTree name.", nodeTables.fields)}
-${renderNumberTable("Flag", "The boolean fields, as bits of a node's flags.", nodeTables.flags)}
-${renderNumberTable("Part", "The text fields beyond an identifier's name and a literal's value.", nodeTables.parts)}
+${renderNumberTable(
+	"NodeType",
+	"Every node type the parser makes, by its ESTree name.",
+	nodeTables.types
+)}
+${renderNumberTable(
+	"Field",
+	"The fields that hold a node or a list of them, by their ESTree name.",
+	nodeTables.fields
+)}
+${renderNumberTable(
+	"Flag",
+	"The boolean fields, as bits of a node's flags.",
+	nodeTables.flags
+)}
+${renderNumberTable(
+	"Part",
+	"The text fields beyond an identifier's name and a literal's value.",
+	nodeTables.parts
+)}
 // Each node type's fields as \`name:kind:slot\`, in the order its objects hold
 // them; a flag's slot is its \`Flag\` bit, any other field's its place in the record.
 /** @type {Record<string, string>} */

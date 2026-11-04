@@ -50,7 +50,7 @@ a?.b,a?.[b],a?.(),(a?.b).c;function t(){}import(\\"x\\"),import(\\"y\\",{with:{}
 
 \\"use strict\\";\\"use asm\\";function f(){\\"use asm\\";return 17.5}
 
-var re=/a\\\\/b[/]c/gimsuy,x=/<\\\\/script>/,y=a in/x/;z=1..toString()+1.5.toFixed()+16..x+15..x;
+var re=/a\\\\/b[/]c/gimsuy,x=/<\\\\/script>/,y=a in/x/;z=\\"12\\"+16..x+15..x;
 
 a=1n+0x1Fn+1000n,b=1e6,c=.5,e=1e-4,f=1e-7;
 
@@ -303,7 +303,7 @@ a?.b,a?.[b],a?.(),(a?.b).c;function t(){}import(\\"x\\"),import(\\"y\\",{with:{}
 
 \\"use strict\\";\\"use asm\\";function f(){\\"use asm\\";return 17.5}
 
-var re=/a\\\\/b[/]c/gimsuy,x=/<\\\\/script>/,y=a in/x/;z=1..toString()+1.5.toFixed()+16..x+15..x;
+var re=/a\\\\/b[/]c/gimsuy,x=/<\\\\/script>/,y=a in/x/;z=\\"12\\"+16..x+15..x;
 
 a=1n+0x1Fn+1000n,b=1e6,c=.5,e=1e-4,f=1e-7;
 
@@ -562,7 +562,7 @@ a?.b,a?.[b],a?.(),(a?.b).c;function t(){}import(\\"x\\"),import(\\"y\\",{with:{}
 
 \\"use strict\\";\\"use asm\\";function f(){\\"use asm\\";return 17.5}
 
-var re=/a\\\\/b[/]c/gimsuy,x=/<\\\\/script>/,y=a in/x/;z=1..toString()+1.5.toFixed()+16..x+15..x;
+var re=/a\\\\/b[/]c/gimsuy,x=/<\\\\/script>/,y=a in/x/;z=\\"12\\"+16..x+15..x;
 
 a=1n+0x1Fn+1000n,b=1e6,c=.5,e=1e-4,f=1e-7;
 
@@ -815,7 +815,7 @@ a?.b,a?.[b],a?.(),(a?.b).c;function t(){}import('x'),import('y',{with:{}});
 
 'use strict';'use asm';function f(){'use asm';return 17.5}
 
-var re=/a\\\\/b[/]c/gimsuy,x=/<\\\\/script>/,y=a in/x/;z=1..toString()+1.5.toFixed()+0x10.x+017.x;
+var re=/a\\\\/b[/]c/gimsuy,x=/<\\\\/script>/,y=a in/x/;z=\\"12\\"+0x10.x+017.x;
 
 a=1n+0x1Fn+1_000n,b=1_000_000,c=.5,e=0.0001,f=1e-7;
 
@@ -1133,7 +1133,7 @@ return 17.5}
 
 /* p */
 var re=/a\\\\/b[/]c/gimsuy,x=/<\\\\/script>/,y=a in/x/
-z=1..toString()+1.5.toFixed()+16..x+15..x
+z=\\"12\\"+16..x+15..x
 
 
 /* p */
