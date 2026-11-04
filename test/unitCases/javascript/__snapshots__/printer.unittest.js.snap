@@ -28,7 +28,7 @@ export default(function(){});
 
 export default(class{}).name;
 
-let x=\`a\${b}c\${\`d\${e}\`}\`;tag\`x\\\\u{41}\${y}\\\\n\`,new(a.b().c),new(a().b);
+let x=\`a\${b}cd\${e}\`;tag\`x\\\\u{41}\${y}\\\\n\`,new(a.b().c),new(a().b);
 
 for(var i=(a in b);i;);for(let o of(a,b));for((x=1 in o);;);
 
@@ -208,7 +208,7 @@ export default{a:1};
 
 f:function f(){}if(a)function g(){}f:n:a:;
 
-var re=/[/]\\\\//g,s=/x/dgimsuy,v=/[a]/v;t=\`a\${b}c\`+\`\\\\\${x}\`+\`A\`+String.raw\`\\\\n\${x}\\\\t\`,u=\`line\\\\nbreak\`,tag\`\\\\unicode\`;
+var re=/[/]\\\\//g,s=/x/dgimsuy,v=/[a]/v;t=\`a\${b}c\\\\\${x}A\`+String.raw\`\\\\n\${x}\\\\t\`,u=\`line\\\\nbreak\`,tag\`\\\\unicode\`;
 
 x=null,y=!0,z=!1,w=1000n,v=0b1n,q=\\"a'ba\\\\\\"b'\\\\\\"\\\\u2028\\\\u2029\\\\ufeff\\\\0\\\\x001\\\\b\\\\f\\\\v\\\\t\\\\r\\\\n\\\\\\\\\\";
 
@@ -281,7 +281,7 @@ export default(function(){});
 
 export default(class{}).name;
 
-let x=\`a\${b}c\${\`d\${e}\`}\`;tag\`x\\\\u{41}\${y}\\\\n\`,new(a.b().c),new(a().b);
+let x=\`a\${b}cd\${e}\`;tag\`x\\\\u{41}\${y}\\\\n\`,new(a.b().c),new(a().b);
 
 for(var i=(a in b);i;);for(let o of(a,b));for((x=1 in o);;);
 
@@ -467,7 +467,7 @@ export default{a:1};
 
 f:function f(){}if(a)function g(){}f:n:a:;
 
-var re=/[/]\\\\//g,s=/x/dgimsuy,v=/[a]/v;t=\`a\${b}c\`+\`\\\\\${x}\`+\`A\`+String.raw\`\\\\n\${x}\\\\t\`,u=\`line\\\\nbreak\`,tag\`\\\\unicode\`;
+var re=/[/]\\\\//g,s=/x/dgimsuy,v=/[a]/v;t=\`a\${b}c\\\\\${x}A\`+String.raw\`\\\\n\${x}\\\\t\`,u=\`line\\\\nbreak\`,tag\`\\\\unicode\`;
 
 x=null,y=!0,z=!1,w=1000n,v=0b1n,q=\\"a'ba\\\\\\"b'\\\\\\"\\\\u2028\\\\u2029\\\\ufeff\\\\0\\\\x001\\\\b\\\\f\\\\v\\\\t\\\\r\\\\n\\\\\\\\\\";
 
@@ -540,7 +540,7 @@ export default(function(){});
 
 export default(class{}).name;
 
-let x=\`a\${b}c\${\`d\${e}\`}\`;tag\`x\\\\u{41}\${y}\\\\n\`,new(a.b().c),new(a().b);
+let x=\`a\${b}cd\${e}\`;tag\`x\\\\u{41}\${y}\\\\n\`,new(a.b().c),new(a().b);
 
 for(var i=(a in b);i;);for(let o of(a,b));for((x=1 in o);;);
 
@@ -720,7 +720,7 @@ export default{a:1};
 
 f:function f(){}if(a)function g(){}f:n:a:;
 
-var re=/[/]\\\\//g,s=/x/dgimsuy,v=/[a]/v;t=\`a\${b}c\`+\`\\\\\${x}\`+\`A\`+String.raw\`\\\\n\${x}\\\\t\`,u=\`line\\\\nbreak\`,tag\`\\\\unicode\`;
+var re=/[/]\\\\//g,s=/x/dgimsuy,v=/[a]/v;t=\`a\${b}c\\\\\${x}A\`+String.raw\`\\\\n\${x}\\\\t\`,u=\`line\\\\nbreak\`,tag\`\\\\unicode\`;
 
 x=null,y=!0,z=!1,w=1000n,v=0b1n,q=\\"a'ba\\\\\\"b'\\\\\\"\\\\u2028\\\\u2029\\\\ufeff\\\\0\\\\x001\\\\b\\\\f\\\\v\\\\t\\\\r\\\\n\\\\\\\\\\";
 
@@ -793,7 +793,7 @@ export default(function(){});
 
 export default(class{}).name;
 
-let x=\`a\${b}c\${\`d\${e}\`}\`;tag\`x\\\\u{41}\${y}\\\\n\`,new(a.b().c),new(a().b);
+let x=\`a\${b}cd\${e}\`;tag\`x\\\\u{41}\${y}\\\\n\`,new(a.b().c),new(a().b);
 
 for(var i=(a in b);i;);for(let k of(a,b));for((x=1 in o);;);
 
@@ -979,7 +979,7 @@ export default{a:1};
 
 label:function f(){}if(a)function g(){}a:b:c:;
 
-var re=/[/]\\\\//g,s=/x/dgimsuy,v=/[a]/v;t=\`a\${b}c\`+\`\\\\\${x}\`+\`A\`+String.raw\`\\\\n\${x}\\\\t\`,u=\`line\\\\nbreak\`,tag\`\\\\unicode\`;
+var re=/[/]\\\\//g,s=/x/dgimsuy,v=/[a]/v;t=\`a\${b}c\\\\\${x}A\`+String.raw\`\\\\n\${x}\\\\t\`,u=\`line\\\\nbreak\`,tag\`\\\\unicode\`;
 
 x=null,y=!0,z=!1,w=1_000n,v=0b1n,q=\\"a'ba\\\\\\"b'\\\\\\"\\\\u2028\\\\u2029\\\\ufeff\\\\0\\\\x001\\\\b\\\\f\\\\v\\\\t\\\\r\\\\n\\\\\\\\\\";
 
@@ -1082,7 +1082,7 @@ export default(class{}).name
 
 
 /* p */
-let x=\`a\${b}c\${\`d\${e}\`}\`
+let x=\`a\${b}cd\${e}\`
 tag\`x\\\\u{41}\${y}\\\\n\`,new(a.b().c),new(a().b)
 
 
@@ -1483,7 +1483,7 @@ f:function f(){}if(a)function g(){}f:n:a:;
 
 /* p */
 var re=/[/]\\\\//g,s=/x/dgimsuy,v=/[a]/v
-t=\`a\${b}c\`+\`\\\\\${x}\`+\`A\`+String.raw\`\\\\n\${x}\\\\t\`,u=\`line\\\\nbreak\`,tag\`\\\\unicode\`
+t=\`a\${b}c\\\\\${x}A\`+String.raw\`\\\\n\${x}\\\\t\`,u=\`line\\\\nbreak\`,tag\`\\\\unicode\`
 
 
 /* p */

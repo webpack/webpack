@@ -2371,6 +2371,57 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		).toBe("if(x&4)g();");
 	});
 
+	it("should print a `+` adding to a template, or a template within one, as one template", () => {
+		const print = (/** @type {string} */ source) =>
+			minifyOnePass(`function f(x,y,g){return[${source}]}`, {
+				compress: {},
+				mangle: false,
+				format: { comments: "some" }
+			}).code.slice(25, -2);
+		for (const [source, expected] of [
+			["`a${x}`+'b'", "`a${x}b`"],
+			["1+`a${x}`", "`1a${x}`"],
+			["`a${x}`+`b${y}`", "`a${x}b${y}`"],
+			["`a${x}`+1+true", "`a${x}1`+!0"],
+			["`a${x}`+'b'+'c'", "`a${x}bc`"],
+			["(`a${x}`+1)+'b'+'c'", "`a${x}1bc`"],
+			["1+2+`a${x}`", "`3a${x}`"],
+			// A template printing as a string adds as one.
+			["`a${1}`+`b${x}`", "`a1b${x}`"],
+			["(`a${x}`+1).length", "`a${x}1`.length"],
+			["`a${`b${x}c`}d`", "`ab${x}cd`"],
+			["`a${`b${x}`+1}c`", "`ab${x}1c`"],
+			// A `$` and a `{` joined would open a substitution.
+			["'a$'+`{${x}}`", '"a$"+`{${x}}`'],
+			["`${x}a$`+'{b}'", '`${x}a$`+"{b}"'],
+			["`${x}$`+`{${y}}`", "`${x}$`+`{${y}}`"],
+			["`${x}$`+'b'+'{c}'", "`${x}$b{c}`"],
+			["`${x}$`+'{b}'+'c'", '`${x}$`+"{b}c"'],
+			["`a$${`{${x}}`}`", "`a$${`{${x}}`}`"],
+			["`${`${x}$`}{y}`", "`${`${x}$`}{y}`"],
+			// Another operand, a comment kept or a tag keep the `+` or the template.
+			["`a${x}`+y", "`a${x}`+y"],
+			["`a${x}`+null", "`a${x}`+null"],
+			["`a${x}`-1", "`a${x}`-1"],
+			["`a${x}`+/*! c */'b'", "`a${x}`+/*! c */\"b\""],
+			["/*! c */`a${x}`+'b'+'c'", "/*! c */`a${x}`+\"bc\""],
+			["x+'b'+'c'", 'x+"bc"'],
+			["g`a${`b${x}`}c`", "g`a${`b${x}`}c`"],
+			["`a${/*! c */`b${x}`}c`", "`a${/*! c */`b${x}`}c`"]
+		]) {
+			expect(print(source)).toBe(expected);
+		}
+		// A name kept for its size stays a name, a short one folds.
+		expect(
+			minifyOnePass(
+				'function h(x){const K="a long string the printer keeps";return[`a${x}`+K,K,K]}',
+				{ compress: {}, mangle: false }
+			).code
+		).toBe(
+			'function h(x){let K="a long string the printer keeps";return[`a${x}`+K,K,K]}'
+		);
+	});
+
 	it("should keep a `switch` on a known value whose case holds a comment that prints", () => {
 		const print = (/** @type {string} */ source) =>
 			minifyOnePass(source, {
