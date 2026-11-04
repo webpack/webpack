@@ -2180,6 +2180,28 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		]) {
 			expect(print(source)).toBe(expected);
 		}
+		// An array joins only while the program writes neither its `toString` nor its `join`.
+		for (const [source, expected] of [
+			[
+				'Array.prototype.toString=()=>"!";a=[1,2]+"";b=typeof c+[]',
+				'Array.prototype.toString=()=>"!",a=[1,2]+"",b=typeof c+[];'
+			],
+			['Array.prototype.join=f;a=[1]+""', 'Array.prototype.join=f,a=[1]+"";'],
+			['String.prototype.trim=f;a=[1]+""', 'String.prototype.trim=f,a="1";'],
+			// A comment kept inside the operand dropped stays.
+			[
+				"a=typeof c+[1?/*! keep */null:null]",
+				"a=typeof c+[/*! keep */null];"
+			]
+		]) {
+			expect(
+				minifyOnePass(source, {
+					compress: { toplevel: false },
+					mangle: false,
+					format: { comments: "some" }
+				}).code
+			).toBe(expected);
+		}
 		// A name holding a string may be read before it is set, as `undefined`.
 		const source =
 			'function f(){g();var x="ab";h(x,x,x);function g(){a=""+x}}f()';
