@@ -4578,6 +4578,17 @@ describe("one-pass minify of statement sequences", () => {
 		}
 	});
 
+	it("should run what a converging `switch` tests in parentheses", () => {
+		for (const [source, expected] of [
+			["switch((x())){case 1:default:y()}", "x(),y();"],
+			["switch(((x(),a))){default:y()}", "x(),a,y();"]
+		]) {
+			const { code } = minifyOnePass(source, { compress: {}, mangle: {} });
+			expect(code).toBe(expected);
+			expect(runProgram(`var a=1;function x(){console.log(1)}function y(){console.log(2)}${code}`)).toBe("1\n2");
+		}
+	});
+
 	it("should print the known `switch`, spread and unary values of the config cases", () => {
 		const fs = require("fs");
 		const path = require("path");
