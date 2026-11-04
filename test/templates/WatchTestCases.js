@@ -41,7 +41,10 @@ const supportsOptionalChaining = require("../helpers/supportsOptionalChaining");
 const testTimeout = require("../helpers/testTimeout");
 
 const testRootDirectory = path.join(__dirname, "..");
-const STEP_DELAY = 200;
+// Waits that keep each step's writes after the build before it started:
+// file times resolve to a millisecond, and a dropped event is re-sent.
+const STEP_DELAY = 50;
+const START_DELAY = 100;
 const AGGREGATE_TIMEOUT = 50;
 const RETOUCH_DELAY = 1000;
 const RETOUCH_LIMIT = 5;
@@ -944,7 +947,7 @@ const describeCases = (config) => {
 									fail(/** @type {Error} */ (error));
 								}
 							};
-							timer = setTimeout(startCompiler, 300);
+							timer = setTimeout(startCompiler, START_DELAY);
 						}, testTimeout(45000));
 
 						for (const run of runs) {
