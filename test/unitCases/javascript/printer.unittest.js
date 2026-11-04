@@ -1609,7 +1609,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// A call `pure_funcs` names keeps what its arguments run in it.
 			["debug(g());/*@__PURE__*/f(g())", { compress: { pure_funcs: ["debug"] } }, "debug(g()),g();"],
 			// Nobody reading `&&`, `||` or `??`, a right side running nothing goes.
-			["a||0;a&&0;a??0;f()||1,g();x=a||0;(a,b)||0;(function(){})||0;a()||b||0;(function(){}).call()||0", {}, "a,a,a,f(),g(),x=a||0,(a,b),a()||b;(function(){}).call();"],
+			["a||0;a&&0;a??0;f()||1,g();x=a||0;(a,b)||0;(function(){})||0;a()||b||0;(function(){}).call()||0", {}, "a,a,a,f(),g(),x=a||0,a,b,a()||b;(function(){}).call();"],
 			// A `break` before cases running nothing does nothing, a test matched skipping the rest.
 			["switch(foo){case\"bar\":bar();break;case\"moo\":case moo:case\"baz\":break}switch(a){case 1:b();break;case 2:c();break;case 3:}switch(a){case 1:b();break;default:break;case g():}switch(a){case 1:b();break;/*! c */case g():}", {}, "switch(foo){case\"bar\":bar();case\"moo\":case moo:}switch(a){case 1:b();break;case 2:c()}switch(a){case 1:b();default:case g():}switch(a){case 1:b();break;/*! c */case g():}"],
 			// terser's `switches` of one case and a `default`: `if…else` after a `break`, the other after where one falls into it, in a list, its block keeping braces.
@@ -1853,7 +1853,25 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["export default Object()", {}, "export default{};"],
 			["x=[Object(a),Object?.(),window.Object(),new(Object())]", {}, "x=[Object(a),Object?.(),window.Object(),new{}];"],
 			["var Object;x=Object()", {}, "var Object;x=Object();"],
-			["window.Object=f;x=Object()", {}, "window.Object=f,x=Object();"]
+			["window.Object=f;x=Object()", {}, "window.Object=f,x=Object();"],
+			// An empty function a rest name collects for runs nothing; one destructuring iterates or reads.
+			["(function(...a){})();((...a)=>{})();(function(b,...a){})(f(),...c);x=1", {}, "[f(),...c],x=1;"],
+			["(function(...[a]){})(...b);(function(...{length}){})();x=1", {}, "!function(...[n]){}(...b),function(...{length:n}){}(),x=1;"],
+			// A sequence opening the operations a statement is prints bare, its last value a name or a member of one.
+			["(a(),b)+c;(a(),b,c)+d;(a(),b)||c;(a(),b.c)&&d;(a(),b)+c+d;((a(),b)||c)&&d;(a(),b)*c+d;(a(),b)instanceof c", {}, "a(),b+c,a(),b,c+d,a(),b||c,a(),b.c&&d,a(),b+c+d,(a(),b||c)&&d,a(),b*c+d,a(),b instanceof c;"],
+			// Not under `**`, nor before a computed member, an assignment, a chain or a conditional's branch.
+			["(a(),b)**c;(a(),b[c])+d;(a(),b=1)+d;(a(),b)?.c+d;(a(),undefined)**d;y=(a(),b)+c;if(x)(a(),b)+c;else d()", {}, "(a(),b)**c,(a(),b[c])+d,(a(),b=1)+d,(a(),b)?.c+d,(a(),void 0)**d,y=(a(),b)+c,x?(a(),b)+c:d();"],
+			["({}.x.y(),b)+c;(class{}.x(),b)+c", {}, "({}).x.y(),b+c;(class{}).x(),b+c;"],
+			// The callee `Object(f)` is `f`; a member keeps no `this`, and `with` or `eval` may reach a name.
+			["Object(f)(1,2);Object(a.b)(x);Object(a[b])`x`;function k(f){Object(f)(1)}", {}, "f(1,2),(0,a.b)(x),(0,a[b])`x`;function k(b){b(1)}"],
+			["Object(a.b)?.(x);Object(a?.b)(x);new(Object(a.b))(x);Object(f())(1);Object(...f)(1);Object(f,g)(1);x=Object(f).y;Object(f)", {}, "Object(a.b)?.(x),Object(a?.b)(x),new(Object(a.b))(x),Object(f())(1),Object(...f)(1),Object(f,g)(1),x=Object(f).y,Object(f);"],
+			["function f(a){var x=g();(a,x)+c}function k(a){var x=a.b;Object(x)(1)}Object(1e999)(1)", {}, "function f(a){(a,g())+c}function k(a){Object(a.b)(1)}Object(Infinity)(1);"],
+			["var Object;Object(f)(1)", {}, "var Object;Object(f)(1);"],
+			["with(o)Object(f)(x)", {}, "with(o)Object(f)(x);"],
+			["Object(eval)(x)", {}, "Object(eval)(x);"],
+			// Only a static method may be named `constructor` bare.
+			["class C{static['constructor'](){}static get['constructor'](){return 1}}", {}, "class C{static constructor(){}static get constructor(){return 1}}"],
+			["class C{['constructor'](){}static['constructor']=1;get['constructor'](){return 1}}", {}, "class C{[\"constructor\"](){}static[\"constructor\"]=1;get[\"constructor\"](){return 1}}"]
 		];
 		for (const [source, options, expected] of cases) {
 			const { code } = minifyOnePass(source, {
