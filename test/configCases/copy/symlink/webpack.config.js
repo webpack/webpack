@@ -53,6 +53,11 @@ const buildTree = (source) => {
 		path.join(source, "link"),
 		"junction"
 	);
+	fs.symlinkSync(
+		path.join(source, "real"),
+		path.join(source, "second-link"),
+		"junction"
+	);
 	fs.symlinkSync(source, path.join(source, "real/loop"), "junction");
 	// relative, so it still resolves once the link and its target are copied
 	fs.symlinkSync("real/a.txt", path.join(source, "relative.txt"), "file");
@@ -69,6 +74,7 @@ module.exports = (env, { testPath }) => {
 		output: {
 			copy: [
 				{ from: source },
+				{ from: path.join(source, "second-*", "*.txt"), to: "glob" },
 				{
 					from: source,
 					globOptions: { followSymlinks: false },

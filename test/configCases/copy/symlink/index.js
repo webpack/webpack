@@ -10,9 +10,22 @@ it("should follow a symlink to a directory", () => {
 	expect(read("link/a.txt")).toBe("a");
 });
 
+it("should copy each directory alias that shares a target", () => {
+	for (const name of ["link/a.txt", "second-link/a.txt"]) {
+		expect(fs.readFileSync(path.resolve(__dirname, name))).toEqual(
+			Buffer.from("a")
+		);
+	}
+});
+
+it("should not let an unmatched alias suppress a matching glob", () => {
+	expect(read("glob/second-link/a.txt")).toBe("a");
+});
+
 it("should stop where a symlink points back at a directory it walked", () => {
 	expect(exists("real/loop/real/a.txt")).toBe(false);
 	expect(exists("link/loop/real/a.txt")).toBe(false);
+	expect(exists("second-link/loop/real/a.txt")).toBe(false);
 });
 
 it("should copy a symlink as a symlink when 'followSymlinks' is false", () => {
@@ -40,7 +53,8 @@ it("should copy nothing from below a symlink it copied as a link", () => {
 		"no-follow/link",
 		"no-follow/real/a.txt",
 		"no-follow/real/loop",
-		"no-follow/relative.txt"
+		"no-follow/relative.txt",
+		"no-follow/second-link"
 	]);
 });
 
