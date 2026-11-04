@@ -4,6 +4,11 @@ it("data-uri: should require js module from base64 data-uri", function () {
 	expect(mod.fn()).toBe("Hello world");
 });
 
+it("data-uri: should require js module from percent-escaped base64 data-uri", function () {
+	const mod = require("data:text/javascript;base64,ZXhwb3J0IGRlZmF1bHQgMQ%3D%3D");
+	expect(mod.default).toBe(1);
+});
+
 it("data-uri: should require js module from ascii data-uri", function () {
 	const mod = require('data:application/node;charset=utf-8,module.exports={number:42,fn:()=>"Hello world"}');
 	expect(mod.number).toBe(42);

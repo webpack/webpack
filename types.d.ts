@@ -40179,6 +40179,10 @@ declare namespace exports {
 			) => { warnings?: (string | Error)[]; errors?: (string | Error)[] };
 			export let decodeDataURI: (uri: string) => null | Buffer;
 			export let decodeDataURIPayload: (parsed: ParsedDataURI) => null | string;
+			export let decodeDataUriContent: (
+				encoding: false | "base64",
+				content: string
+			) => Buffer;
 			export let embeddedText: (
 				answer?: string | { code?: string }
 			) => undefined | string;

@@ -1,3 +1,10 @@
+import fs from "fs";
+import path from "path";
+import binary from "data:application/octet-stream,%00%FF%FE";
+import escapedBinary from "data:application/octet-stream;base64,AP%2F%2B";
+import inheritedBinary from "data:application/octet-stream+inline;p=1,%00%FF%FE";
+import inheritedBase64 from "data:application/octet-stream+inline;p=1;base64,YQ%3d%3D";
+import forcedBase64 from "data:application/octet-stream+base64,%00%FF%FE";
 import png from "../_images/file.png";
 import svg from "../_images/file.svg";
 import jpg from "../_images/file.jpg";
@@ -14,11 +21,45 @@ const helloWorldBase64 = new URL(
 	"data:text/plain;base64,SGVsbG8=",
 	import.meta.url
 );
+const escapedHelloWorldBase64 = new URL(
+	"data:text/plain;base64,aGk%3D",
+	import.meta.url
+);
 
 const urlSvg3 = new URL(
 	"data:image/svg+xml;,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 aria-hidden=%27true%27 fill=%27%23535A60%27 width=%2718%27 height=%2718%27 viewBox=%270 0 18 18%27%3E%3Cpath d=%27M3 3a2 2 0 012-2h6l4 4v10a2 2 0 01-2 2H5a2 2 0 01-2-2V3zm7-1.5V6h4.5L10 1.5z%27%3E%3C/path%3E%3C/svg%3E",
 	import.meta.url
 );
+
+it("should emit the decoded bytes of percent-encoded data URLs", () => {
+	for (const filename of [binary, escapedBinary]) {
+		expect(fs.readFileSync(path.join(__STATS__.outputPath, filename))).toEqual(
+			Buffer.from([0, 255, 254])
+		);
+	}
+});
+
+it("should preserve unchanged data URL encoding and parameters", () => {
+	expect(inheritedBinary).toBe(
+		"data:application/octet-stream+inline;p=1,%00%FF%FE"
+	);
+	expect(inheritedBase64).toBe(
+		"data:application/octet-stream+inline;p=1;base64,YQ%3d%3D"
+	);
+});
+
+it("should generate base64 from decoded binary bytes", () => {
+	expect(forcedBase64).toBe("data:application/octet-stream+base64;base64,AP/+");
+	expect(Buffer.from(forcedBase64.split(",")[1], "base64")).toEqual(
+		Buffer.from([0, 255, 254])
+	);
+});
+
+it("should regenerate escaped data URLs after a loader changes their bytes", () => {
+	expect(escapedHelloWorldBase64.href).toBe(
+		"data:text/plain;base64,aGksIFdvcmxkIQ=="
+	);
+});
 
 it("should generate various data-url types", () => {
 	expect(png).toContain("data:image/png;base64,");

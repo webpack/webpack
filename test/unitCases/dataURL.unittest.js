@@ -17,6 +17,60 @@ const htmlMinify = require("../../lib/html/htmlMinify");
 const htmlSyntax = require("../../lib/html/syntax");
 
 describe("dataURL", () => {
+	it.each([
+		[
+			"data:text/javascript;base64,ZXhwb3J0IGRlZmF1bHQgMQ%3D%3D",
+			"6578706f72742064656661756c742031"
+		],
+		["data:text/plain;base64,aGk%3D", "6869"],
+		["data:text/plain;base64,YQ%3d%3D", "61"],
+		["data:text/plain;base64,%2Bw%3D%3D", "fb"],
+		["data:text/plain;base64,%2Fw%3D%3D", "ff"],
+		["data:text/plain;base64,a%20Gk%3D", "6869"],
+		["data:text/plain;BASE64,aGk=", "6869"],
+		["data:text/plain;BaSe64,aGk%3D", "6869"],
+		["data:application/octet-stream,%00%FF%FE", "00fffe"],
+		["data:application/octet-stream,%80%FF", "80ff"],
+		["data:application/octet-stream,A%80B%FF", "418042ff"],
+		["data:text/plain,caf%C3%A9%20%E2%98%95", "636166c3a920e29895"],
+		["data:text/plain,café%20", "636166c3a920"],
+		["data:text/plain,Hello", "48656c6c6f"],
+		["data:text/plain,%2541", "253431"],
+		["data:,", ""],
+		["data:text/plain,", ""],
+		["data:text/plain;base64,", ""]
+	])("should decode bytes from %s", (uri, expectedHex) => {
+		expect(decodeDataURI(uri)).toEqual(Buffer.from(expectedHex, "hex"));
+	});
+
+	it.each(["100%", "%", "%A", "%GG", "%41%ZZ", "%E0%A4%A", "%C3%A9%ZZ"])(
+		"should preserve the entire malformed payload %s",
+		(payload) => {
+			expect(decodeDataURI(`data:text/plain,${payload}`)).toEqual(
+				Buffer.from(payload, "utf8")
+			);
+		}
+	);
+
+	it.each([
+		["aGk=", "6869"],
+		["aGk", "6869"],
+		["a Gk=", "6869"],
+		["aGk$", "6869"],
+		["A", ""],
+		["YQ=", "61"],
+		["_w==", "ff"],
+		["\u0141Gk=", "0069"],
+		["aGk%3D%", "686937"]
+	])(
+		"should preserve permissive base64 decoding of %s",
+		(payload, expectedHex) => {
+			expect(decodeDataURI(`data:text/plain;base64,${payload}`)).toEqual(
+				Buffer.from(expectedHex, "hex")
+			);
+		}
+	);
+
 	it("should decode base64 payloads", () => {
 		const decoded = decodeDataURI("data:text/plain;base64,aGk=");
 		expect(decoded).not.toBeNull();
