@@ -3,7 +3,7 @@
 // cspell:ignore binop, fnames, propmangle, fargs, domprops, argnames, nondeferred, loopcontrol, Defun, defun, NOINLINE, Funarg, unmangleable, Unmangleable, thedef, funs
 // cspell:ignore fnames
 // cspell:ignore argnames, bcatch, bfinally, argname
-// cspell:ignore AAAWA MAAH EAAI EAAIA EAAGC ACAA IAAYC EAAWC
+// cspell:ignore AAAWA MAAH EAAI EAAIA EAAGC ACAA IAAYC EAAWC IAAIC CAAI IAAK EAAE
 // cspell:ignore endline, endcol, endpos, nlb, thedef, ymgsid, dgimsy, elta
 
 const vm = require("vm");
@@ -2369,6 +2369,78 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		expect(
 			minifyOnePass("if(0!==(x&4))g()", { compress: {}, mangle: false }).code
 		).toBe("if(x&4)g();");
+	});
+
+	it("should print a `+` adding to a template, or a template within one, as one template", () => {
+		const print = (/** @type {string} */ source) =>
+			minifyOnePass(`function f(x,y,g){return[${source}]}`, {
+				compress: {},
+				mangle: false,
+				format: { comments: "some" }
+			}).code.slice(25, -2);
+		for (const [source, expected] of [
+			["`a${x}`+'b'", "`a${x}b`"],
+			["1+`a${x}`", "`1a${x}`"],
+			["`a${x}`+`b${y}`", "`a${x}b${y}`"],
+			["`a${x}`+1+true", "`a${x}1`+!0"],
+			["`a${x}`+'b'+'c'", "`a${x}bc`"],
+			["(`a${x}`+1)+'b'+'c'", "`a${x}1bc`"],
+			["1+2+`a${x}`", "`3a${x}`"],
+			// A template printing as a string adds as one.
+			["`a${1}`+`b${x}`", "`a1b${x}`"],
+			["(`a${x}`+1).length", "`a${x}1`.length"],
+			["`a${`b${x}c`}d`", "`ab${x}cd`"],
+			["`a${`b${x}`+1}c`", "`ab${x}1c`"],
+			// A `$` and a `{` joined would open a substitution.
+			["'a$'+`{${x}}`", '"a$"+`{${x}}`'],
+			["`${x}a$`+'{b}'", '`${x}a$`+"{b}"'],
+			["`${x}$`+`{${y}}`", "`${x}$`+`{${y}}`"],
+			["`${x}$`+'b'+'{c}'", "`${x}$b{c}`"],
+			["`${x}$`+'{b}'+'c'", '`${x}$`+"{b}c"'],
+			["`a$${`{${x}}`}`", "`a$${`{${x}}`}`"],
+			["`${`${x}$`}{y}`", "`${`${x}$`}{y}`"],
+			// `\\0` then a digit would read as an octal escape.
+			["`a${x}\\0`+'1'", '`a${x}\\0`+"1"'],
+			["`a${`b${x}\\0`}1`", "`a${`b${x}\\0`}1`"],
+			["`a${x}\\0`+'b'", "`a${x}\\0b`"],
+			// A NUL a literal holds prints as `\\0` too, and a part printing empty keeps what printed before it.
+			["'\\0'+`1${x}`", '"\\0"+`1${x}`'],
+			["`\\0${`1${x}`}`", "`\\0${`1${x}`}`"],
+			["`${`\\0`}${`1${x}`}`", "`\\0${`1${x}`}`"],
+			["`${`a${x}$`}${`{b${x}}`}`", "`a${x}$${`{b${x}}`}`"],
+			// Another operand, a comment kept or a tag keep the `+` or the template.
+			["`a${x}`+y", "`a${x}`+y"],
+			["`a${x}`+null", "`a${x}`+null"],
+			["`a${x}`-1", "`a${x}`-1"],
+			["`a${x}`+/*! c */'b'", "`a${x}`+/*! c */\"b\""],
+			["/*! c */`a${x}`+'b'+'c'", "/*! c */`a${x}`+\"bc\""],
+			["x+'b'+'c'", 'x+"bc"'],
+			["g`a${`b${x}`}c`", "g`a${`b${x}`}c`"],
+			["`a${/*! c */`b${x}`}c`", "`a${/*! c */`b${x}`}c`"]
+		]) {
+			expect(print(source)).toBe(expected);
+		}
+		// What the joined templates printed maps to where it was read.
+		const { SourceProcessor } = require("../../../lib/javascript/syntax");
+		const mapped = new SourceProcessor().process(
+			"f(`a${x}`+`b${y}`, `c${`d${z}`}e`)",
+			{ mode: "minify", compress: {}, mangle: false, source: "in.js" }
+		);
+		expect(mapped.code).toBe("f(`a${x}b${y}`,`cd${z}e`);");
+		expect(mapped.map).toEqual(
+			expect.objectContaining({
+				mappings: "AAAAA,EAAE,IAAIC,CAAI,IAAIC,IAAK,CAAI,IAAIC"
+			})
+		);
+		// A name kept for its size stays a name, a short one folds.
+		expect(
+			minifyOnePass(
+				'function h(x){const K="a long string the printer keeps";return[`a${x}`+K,K,K]}',
+				{ compress: {}, mangle: false }
+			).code
+		).toBe(
+			'function h(x){let K="a long string the printer keeps";return[`a${x}`+K,K,K]}'
+		);
 	});
 
 	it("should keep a `switch` on a known value whose case holds a comment that prints", () => {
