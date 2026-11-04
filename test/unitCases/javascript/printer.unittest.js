@@ -1539,7 +1539,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// An array or object an unread one holds prints only what it runs too.
 			["[[f()]];({a:{b:f()}});[[1,[g()]],{a:h(),b:[1]}];x=[[f()]];[{a:{b:f()},c:[1,g()]}]", {}, "f(),f(),g(),h(),x=[[f()]],f(),g();"],
 			// A call marked pure that nobody reads runs only its arguments, but not a spread or under a value read.
-			["/*@__PURE__*/f(g());/*@__PURE__*/f(1,g(),h());/*#__PURE__*/new F(g());/*@__PURE__*/f({a:g()}.a);x=(/*@__PURE__*/f(g(),h()),1);x=void /*@__PURE__*/f(g(),h());/*@__PURE__*/a.b(g(),(h(),k()));/*@__PURE__*/f(...g());/*@__PURE__*/f(g())?.(h())", {}, "g(),g(),h(),g(),f({a:g()}.a),x=(g(),h(),1),x=void f(g(),h()),g(),(h(),k()),f(...g()),f(g())?.(h());"],
+			["/*@__PURE__*/f(g());/*@__PURE__*/f(1,g(),h());/*#__PURE__*/new F(g());/*@__PURE__*/f({a:g()}.b);x=(/*@__PURE__*/f(g(),h()),1);x=void /*@__PURE__*/f(g(),h());/*@__PURE__*/a.b(g(),(h(),k()));/*@__PURE__*/f(...g());/*@__PURE__*/f(g())?.(h())", {}, "g(),g(),h(),g(),f({a:g()}.b),x=(g(),h(),1),x=void f(g(),h()),g(),(h(),k()),f(...g()),f(g())?.(h());"],
 			["!/*@__PURE__*/f(g(),h());!/*@__PURE__*/f((g(),h()));/*@__PURE__*/f(function(){g()}())", {}, "(g(),h()),(g(),h()),f(function(){g()}());"],
 			// A branch beside the `break` running nothing leaves no statement, the loop running while the test is true.
 			["while(a&&b){if(delete x.a){}else{break}f()}while(a){if(c);else break;f()}for(;;){if(c){/*! k */}else break;f()}while(a){if(c){var q}else break;f()}for(;;){if(x){}else break}", { mangle: false }, "while(a&&b&&delete x.a)f();while(a&&c)f();for(;;){if(c){/*! k */}else break;f()}while(a&&c){var q;f()}for(;x;);"],
@@ -1600,7 +1600,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// A call printing as `null` or a regular expression needs no parentheses read off; a value folded into its read prints where that is; an `else if` known later leaves its `if` nothing.
 			["function r(){return null}function q(){return/a/}x=r().filepath;y=q().source;function f(a){var b=g(a);var n={a:a,b:b};return n}f(()=>{if(!1)return;else if(!1){return}else{}g()})", { mangle: false }, "function r(){return null}function q(){return/a/}x=r().filepath,y=q().source;function f(a){return{a:a,b:g(a)}}f(()=>{g()});"],
 			// What prints first in a statement again parenthesizes an object, function or class alone, so one inside a part or argument keeps its literal or call; a `+` before one stays; a `do` running nothing once prints nothing in a list.
-			["({1:{}/2});/*@__PURE__*/f({a:g()}.a);x=+{}/2;+function(){}/3;do{}while(0);a();do;while(0);b();if(x)do{}while(0);else c();do g();while(0)", {}, "({1:{}/2});f({a:g()}.a),x=+{}/2,+function(){}/3;a();b();if(x){}else c();g();"],
+			["({1:{}/2});/*@__PURE__*/f({a:g()}.b);x=+{}/2;+function(){}/3;do{}while(0);a();do;while(0);b();if(x)do{}while(0);else c();do g();while(0)", {}, "({1:{}/2});f({a:g()}.b),x=+{}/2,+function(){}/3;a();b();if(x){}else c();g();"],
 			// A strict comparison with `0` folds only where no BigInt reaches it.
 			["if((a>>>b)!==0)f();if(((a|1)&b)===0)g();if((a&b)===0)h()", {}, "if(a>>>b)f();if(!((a|1)&b))g();if((a&b)===0)h();"],
 			// `if(t)if(u)x` is `if(t&&u)x` where neither test needs parentheses there, as what a test prints as decides.
@@ -2120,6 +2120,126 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				vm.runInNewContext(`${code}f(2,0)`),
 				vm.runInNewContext(`${code}f(0,0)`)
 			]).toEqual(value);
+		}
+	});
+
+	it("should print the value an object literal holds at a known key", () => {
+		const print = (/** @type {string} */ source) =>
+			minifyOnePass(`function f(x,g){return[${source}]}`, {
+				compress: {},
+				mangle: false
+			}).code.slice(23, -2);
+		for (const [source, expected] of [
+			["({a:1,a:2}).a", "2"],
+			['({b:1,c:2})["b"]', "1"],
+			['({1:"one"})["1"]', '"one"'],
+			["({['k'+1]:3}).k1", "3"],
+			["({a:x}).a", "x"],
+			["({x}).x", "x"],
+			["({a:g()}).a", "g()"],
+			['({["__proto__"]:5}).__proto__', "5"],
+			["({a:1}).a+1", "2"],
+			["({a:1})?.a+1", "{a:1}.a+1"],
+			["({b:g(),a:1}).a+1", "{b:g(),a:1}.a+1"],
+			["({a:{b:1}}).a.b+1", "2"],
+			["({a:{b:2}}).a.b*3", "6"],
+			['({ab:1})["a"+"b"]', "1"],
+			// A key or read not known, or a name `let` opens a declaration with.
+			["({[g()]:1}).a", "{[g()]:1}.a"],
+			["({[x]:1}).a", "{[x]:1}.a"],
+			["({[null]:1}).a", "{null:1}.a"],
+			["({a:1})[x]", "{a:1}[x]"],
+			["({a:let}).a", "{a:let}.a"],
+			["({a:{b:1,c:g()}}).a.b+1", "{a:{b:1,c:g()}}.a.b+1"],
+			["x.a.b+1", "x.a.b+1"],
+			// What else it holds runs, a getter runs, `__proto__:` is the prototype.
+			["({b:g(),a:1}).a", "{b:g(),a:1}.a"],
+			["({get a(){return 1}}).a", "{get a(){return 1}}.a"],
+			["({__proto__:{p:1}}).p", "{__proto__:{p:1}}.p"],
+			["({a:1}).b", "{a:1}.b"],
+			// A call takes `this` from the object, `delete` deletes off it.
+			["({f:g}).f()", "{f:g}.f()"],
+			["delete ({a:1}).a", "delete{a:1}.a"],
+			// A `void` a `return` ending its function drops prints it alone.
+			["void ({a:g()}).a", "void{a:g()}.a"],
+			// `true` prints as `!0`, which `.` or `**` would not read whole.
+			["({a:true}).a.x", "{a:!0}.a.x"],
+			["[true][0].x", "[!0][0].x"],
+			['[false][0]["y"]', "[!1][0].y"],
+			["({a:true}).a**x", "{a:!0}.a**x"],
+			["x**({a:true}).a", "x**!0"],
+			["!({a:true}).a", "!1"],
+			// A number read with `[]` is read whole, and a key printing as `.x` spaces it.
+			["({0:1})[0][1]+1", "1[1]+1"],
+			['[1][0]["x"]', "1..x"],
+			["[1][0].x", "[1][0].x"]
+		]) {
+			expect(print(source)).toBe(expected);
+		}
+		// Opening a statement, the object keeps the parentheses it took.
+		expect(
+			minifyOnePass("({a:g()}).a;", { compress: {}, mangle: false }).code
+		).toBe("({a:g()}).a;");
+		// A key read before a hoisted call sets it is not known yet.
+		for (const source of [
+			'(function(){console.log(f());var k="a";function f(){var v={[k]:1}.a;g(v);return v+v}function g(){}})()',
+			'(function(){console.log(f());var k="a";function f(){var v={a:1}[k];g(v);return v+v}function g(){}})()',
+			'(function(){console.log(f());var k="a";function f(){if({[k]:1}.a)return 2;return 3}})()',
+			'(function(){var k="a";console.log(f());function f(){var v={a:1}[k];g(v);return v+v}function g(){}})()',
+			// A value in parentheses prints, a private name is never a key.
+			"function g(){return 7}console.log(({a:(g()),b:1}).a)",
+			"class C{#x;static t(){try{return({x:1}).#x}catch(e){return e.constructor.name}}}console.log(C.t())"
+		]) {
+			const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+			expect(runProgram(code)).toBe(runProgram(source));
+		}
+	});
+
+	it("should print a conditional with a sequence or conditional branch as `||` or `&&`", () => {
+		const print = (/** @type {string} */ source) =>
+			minifyOnePass(`function f(x,y,g){return[${source}]}`, {
+				compress: {},
+				mangle: false,
+				format: { comments: "some" }
+			}).code.slice(25, -2);
+		for (const [source, expected] of [
+			["x===y?!0:(g(),!1)", "x===y||(g(),!1)"],
+			["x===y?!0:y===g?(g(),!0):!1", "x===y||y===g&&(g(),!0)"],
+			["x===y?!1:y===g?!0:!1", "x!==y&&y===g"],
+			// A `?:` branch reads more than its truth.
+			["x===y?!0:y?y.a():!1", "x===y?!0:y?y.a():!1"],
+			["x?!1:y?y||g:!0", "x?!1:!y||y||g"],
+			// A folded conditional joins as the branch it keeps.
+			["x===y?!0:1?(g(),!0):!1", "x===y||(g(),!0)"],
+			["x===y?!0:1?y?!0:g:!1", "x===y?!0:y?!0:g"],
+			// A comment kept at an edge keeps the conditional.
+			["x===y?!0:/*! c */(g(),!0)", "x===y?!0:(/*! c */g(),!0)"]
+		]) {
+			expect(print(source)).toBe(expected);
+		}
+		expect(
+			minifyOnePass("f(x===y?!0:1?(g(),!0):!1)", {
+				compress: { dead_code: false },
+				mangle: false
+			}).code
+		).toBe("f(x===y?!0:1?(g(),!0):!1);");
+	});
+
+	it("should compare two booleans loosely", () => {
+		const print = (/** @type {string} */ source) =>
+			minifyOnePass(`function f(x,y,g){return[${source}]}`, {
+				compress: {},
+				mangle: false
+			}).code.slice(25, -2);
+		for (const [source, expected] of [
+			["!x===!y", "!x==!y"],
+			["x<1!==y>2", "x<1!=y>2"],
+			["x instanceof g===!y", "x instanceof g==!y"],
+			// Either side may be another value, or `!!x` read as `x`.
+			["!x===y", "!x===y"],
+			["!!x===!y", "!!x===!y"]
+		]) {
+			expect(print(source)).toBe(expected);
 		}
 	});
 
