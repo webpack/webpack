@@ -1,5 +1,6 @@
 import { value } from "./module";
 import { walk } from "./statements";
+import { expressions } from "./expressions";
 
 if (value) {
 	var seen = value + 1;
@@ -20,6 +21,24 @@ it("should fire the statement hook for each statement", () => {
 		"finally",
 		"skipped",
 		"yes"
+	]);
+	expect(expressions(1)).toEqual([
+		false,
+		true,
+		1,
+		1,
+		"t1",
+		"x|y1",
+		1,
+		"guarded",
+		"small",
+		"constant",
+		"one",
+		"k,value,b",
+		1,
+		2,
+		3,
+		"function"
 	]);
 	return import("./tla").then(({ total }) => {
 		expect(total).toBe(3);
