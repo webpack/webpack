@@ -2193,6 +2193,14 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				'Array.prototype.valueOf=()=>7,a=[1]+"";'
 			],
 			[
+				'Object.prototype.valueOf=()=>7;a=[1]+""',
+				'Object.prototype.valueOf=()=>7,a=[1]+"";'
+			],
+			[
+				'const p=Object.prototype;p.valueOf=()=>7;a=[1]+""',
+				'const p=Object.prototype;p.valueOf=()=>7,a=[1]+"";'
+			],
+			[
 				'const A=Array;A.prototype.join=()=>"x";a=[1]+""',
 				'const A=Array;A.prototype.join=()=>"x",a=[1]+"";'
 			],
