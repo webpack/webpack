@@ -1523,8 +1523,8 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// A test `!!!t` printing `!t` swaps the branches for `t`, as `!t` does.
 			["x=!!!(a,b)?c:d;x=!!!(a&&b)?c:d;if(!!!a)f();else g();x=!!(!a)?c:d", {}, "x=(a,b)?d:c,x=a&&b?d:c,a?g():f(),x=a?d:c;"],
 			["!(x===undefined);!(typeof x()===\"undefined\");x===void 0;a()===b;a===b();f(a===b,c());g(),a()!==b(),h();x==void 0;({}).a===b();({}).a===b", {}, "x,typeof x(),x,a(),b,a,b(),f(a===b,c()),g(),a(),b(),h(),x==null,b(),b;"],
-			// `x["length"]` folds as `x.length` does; an `else if` known false goes, one known true prints its branch.
-			["use(\"abc\"[\"length\"]);use([1,2,3][\"length\"]);use([,,1][\"length\"]);use(/a/[\"source\"]);use(\"a\"[\"x\"]);use(\"a\"[0]);use(a?.[\"length\"]);delete\"ab\"[\"length\"]", {}, "use(3),use(3),use(3),use(\"a\"),use(\"a\".x),use(\"a\"[0]),use(a?.length),delete\"ab\".length;"],
+			// `x["length"]` folds as `x.length` does, and `"a"[0]` to its character; an `else if` known false goes, one known true prints its branch.
+			["use(\"abc\"[\"length\"]);use([1,2,3][\"length\"]);use([,,1][\"length\"]);use(/a/[\"source\"]);use(\"a\"[\"x\"]);use(\"a\"[0]);use(a?.[\"length\"]);delete\"ab\"[\"length\"]", {}, "use(3),use(3),use(3),use(\"a\"),use(\"a\".x),use(\"a\"),use(a?.length),delete\"ab\".length;"],
 			["if(xxx){foo}else if(false){bar};if(xxx){foo}else if(false){bar}else{baz};if(xxx){foo}else if(true){bar}else if(false){baz};if(x)a();else if(0){var q=1}", {}, "if(xxx)foo;if(xxx)foo;else baz;if(xxx)foo;else bar;if(x)a();else if(0)var q=1;"],
 			// A part in parentheses, after a hole, prints what it holds.
 			["function f(p3){([,(b+1)],g());({a:(h())});[(k()),,(m())]}", { mangle: false }, "function f(p3){b+1,g(),h(),k(),m()}"],
@@ -5170,6 +5170,17 @@ describe("one-pass minify of statement sequences", () => {
 		const { code } = minifyOnePass(source, { compress: {} });
 		expect(code).toBe(
 			'console.log("undefined","undefined",!1,!0);function f(e){return typeof e}console.log(f(1),typeof void console.log(2),!void 0,-void 0?3:4);'
+		);
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
+	it("should fold a string's character at a known index", () => {
+		// Out of range, not an integer, run for something or deleted, it stays.
+		const source =
+			'console.log("1234"[0]+1,"ab"[1],"ab"[2],"ab"[-1],"ab"[1.5],"ab"[1-1],"ab"[(console.log(0),1)],delete"ab"[0])';
+		const { code } = minifyOnePass(source, { compress: {}, mangle: {} });
+		expect(code).toBe(
+			'console.log("11","b","ab"[2],"ab"[-1],"ab"[1.5],"a","ab"[console.log(0),1],delete"ab"[0]);'
 		);
 		expect(runProgram(code)).toBe(runProgram(source));
 	});
