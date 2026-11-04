@@ -28,26 +28,25 @@ describe("WeakTupleMap", () => {
 
 	it("should hold function elements weakly", async () => {
 		const map = new WeakTupleMap();
-		/** @type {WeakRef<() => void> | undefined} */
-		let ref;
+		/** @type {WeakRef<() => void>[]} */
+		const refs = [];
 		(() => {
-			// ModuleGraph.cached keys its cache by the cached function
-			const fn = () => {};
-			map.set(fn, "value");
-			expect(map.get(fn)).toBe("value");
-			ref = new WeakRef(fn);
+			for (let i = 0; i < 50; i++) {
+				// ModuleGraph.cached keys its cache by the cached function
+				const fn = () => {};
+				map.set(fn, "value");
+				expect(map.get(fn)).toBe("value");
+				refs.push(new WeakRef(fn));
+			}
 		})();
-		const weak = /** @type {WeakRef<() => void>} */ (ref);
-		// A WeakRef target stays alive until the current job ends, and Bun's
-		// conservative stack scan may keep it one collection more: collect again
-		// from a fresh turn until it goes.
-		for (let round = 0; round < 10 && weak.deref() !== undefined; round++) {
-			await new Promise((resolve) => {
-				setImmediate(resolve);
-			});
-			/** @type {() => void} */ (globalThis.gc)();
-		}
-		expect(weak.deref()).toBeUndefined();
+		// a WeakRef target stays alive until the current job ends
+		await new Promise((resolve) => {
+			setImmediate(resolve);
+		});
+		/** @type {() => void} */ (globalThis.gc)();
+		// Bun's conservative stack scan may keep any one function alive, while a
+		// map holding them strongly keeps every one.
+		expect(refs.some((ref) => ref.deref() === undefined)).toBe(true);
 	});
 
 	it("should mix weak and strong key elements in one tuple", () => {

@@ -11,7 +11,9 @@ const SOURCES = [
 	["rules, a list and a condition", "a{color:red}.b,.c{margin:0 auto}@media (min-width:1px){.d{top:0}}"],
 	["four `@media` blocks joined", "@media print{.a{color:red}.b{color:blue}}@media print{.a{color:blue}.b{color:blue}}@media print{.a{color:red}.b{color:blue}}@media print{.a{color:blue}.b{color:blue}}"],
 	["two identifiers a comment parts after a hex escape", "a{b:\\40/**/x}"],
-	["a nested selector ending on a lone `\\`", "a{b\\\n{color:red}}c{color:blue}"]
+	["a nested selector ending on a lone `\\`", "a{b\\\n{color:red}}c{color:blue}"],
+	["a prefixed rule holding a rule", "a{&:fullscreen{top:0;& .c{left:0}}}"],
+	["a list one selector of which takes a prefix", "input::placeholder,:fullscreen{color:red}"]
 ];
 
 describe("CSS syntax — invariants", () => {
