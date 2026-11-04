@@ -2133,6 +2133,49 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		}
 	});
 
+	it("should fold what `+` adds to a string", () => {
+		const print = (/** @type {string} */ source) =>
+			minifyOnePass(`function f(b,c){return[${source}]}`, {
+				compress: {},
+				mangle: false,
+				format: { comments: "some" }
+			}).code.slice(23, -2);
+		for (const [source, expected] of [
+			// An array of constants adds as its items joined, a bigint as its digits.
+			["[]+0", '"0"'],
+			["[1,null,2]+\"\"", '"1,,2"'],
+			["[1,undefined,2]+\"\"", '"1,,2"'],
+			["[1,,2]+\"\"", '"1,,2"'],
+			["[-0,true]+\"\"", '"0,true"'],
+			["\"\"+123n", '"123"'],
+			["1n+[]", '"1"'],
+			// A bigint added to no string throws; an item not known stays.
+			["1n+1", "1n+1"],
+			["[1n]+\"\"", '[1n]+""'],
+			["[{}]+\"\"", '[{}]+""'],
+			["[b]+\"\"", '[b]+""'],
+			["[...b]+\"\"", '[...b]+""'],
+			// Nothing added to a string gives the string back.
+			["\"\"+typeof b", "typeof b"],
+			["`${b}`+[]", "`${b}`"],
+			["(typeof b+\"x\")+\"\"", 'typeof b+"x"'],
+			["(b+\"x\")+\"\"", 'b+"x"'],
+			// What may be no string, or needs the parentheses `+` gave it, stays.
+			["\"\"+b", '""+b'],
+			["\"\"+/x/", '""+/x/'],
+			["\"\"+(b+\"x\")", '""+(b+"x")'],
+			["(\"\"+typeof b)**2", '(""+typeof b)**2'],
+			["-(\"\"+typeof b)", '-(""+typeof b)'],
+			["(\"\"+typeof b).length", '(""+typeof b).length'],
+			["c+(\"\"+typeof b)", 'c+(""+typeof b)'],
+			["c||\"\"+typeof b", 'c||""+typeof b'],
+			["\"\"+({}+\"x\")", '""+({}+"x")'],
+			["\"\"/*! k */+typeof b", '""/*! k */+typeof b']
+		]) {
+			expect(print(source)).toBe(expected);
+		}
+	});
+
 	it("should print the value an object literal holds at a known key", () => {
 		const print = (/** @type {string} */ source) =>
 			minifyOnePass(`function f(x,g){return[${source}]}`, {
