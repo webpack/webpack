@@ -796,17 +796,17 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				{ compress: {toplevel: false,dead_code: false} },
 				"function f(f){if(0)x()}"
 			],
-			// A conditional whose test is known prints the branch it picks, but not a name or member `delete`, `typeof` or a call would read differently, nor what opens a statement or drops a comment kept.
+			// A conditional whose test is known prints the branch it picks, after `0,` where `delete`, `typeof` or a call would read a name or member differently, but not what opens a statement or drops a comment kept.
 			[
 				"function f(o){ const T = 1; g(T ? o : 2); g(!T ? 1 : (o, 2)); delete (T ? o.x : 1); (T ? o.f : 1)(); (T ? o.f : 1)``; typeof (T ? u : 1); g(T ? o.f : 1); T ? function(){}() : 1; g(T ? o : h(/*! c */ 2)); return () => T ? {} : 1 }",
 				{},
-				"function f(o){g(o),g((o,2)),1?o.x:1,(1?o.f:1)(),(1?o.f:1)``,1?u:1,g(o.f),g(1?o:h(/*! c */2));return()=>1?{}:1}"
+				"function f(o){g(o),g((o,2)),0,o.x,(0,o.f)(),(0,o.f)``,0,u,g(o.f),g(1?o:h(/*! c */2));return()=>1?{}:1}"
 			],
 			// So does `&&`, `||` or `??` whose left side is known.
 			[
 				"function f(o){ const T = 1, N = null; g(T && o.f, T || o, N ?? o, T ?? o); delete (T && o.x); (T && o.f)(); T && function(){}(); g(T || h(/*! c */ 2)) }",
 				{},
-				"function f(o){g(o.f,1,o,1),1&&o.x,(1&&o.f)(),g(1||h(/*! c */2))}"
+				"function f(o){g(o.f,1,o,1),0,o.x,(0,o.f)(),g(1||h(/*! c */2))}"
 			],
 			// A branch that is no expression keeps the `if`, a sequence test is parenthesized, and a dead `if` declaring only in its own scopes goes.
 			[
@@ -1467,6 +1467,8 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// What runs nothing before a name called goes, and before a member is `0`, but before `eval` or in `with`.
 			["(0,foo)();(0,foo)``;(0,foo)?.();(!0,a.b)();(1,2,a.b)();(0,a.b)();(0,eval)();typeof(0,foo);(x(),foo)``;(function(){},foo)``;(x(),a.b)()", {}, "foo(),foo``,foo?.(),(0,a.b)(),(0,a.b)(),(0,a.b)(),(0,eval)(),0,foo,(x(),foo)``,foo``,(x(),a.b)();"],
 			["with(o)(0,foo)()", {}, "with(o)(0,foo)();"],
+			// A known test or left side folding to a reference a call, tag, `typeof` or `delete` reads keeps it a value with `0,`; a name called bare or `new` needs none.
+			["(true&&x.y)();(1?x[y]:2)``;f(typeof(1?x:2),delete(0?1:x.y));(0||x?.y)();(1?eval:2)(s);(1?x:2)();new(1?x.y:2);(c?x.y:2)();(null??x.y)()", {}, "(0,x.y)(),(0,x[y])``,f(typeof(0,x),delete(0,x.y)),(0,x?.y)(),(0,eval)(s),x(),new x.y,(c?x.y:2)(),(0,x.y)();"],
 			["(0,foo)``", { compress: false, mangle: false }, "(0,foo)``;"],
 			// terser's `comparisons`: `!(a==b)` is `a!=b` where an equality takes no parentheses, and a boolean compared with one is itself or negated.
 			["x=!(a==b);if(!(a!=b))f();x=!(a<b);x=!(a==b)+1;f(!(a!==b),[!(a==b)],-!(a==b));x=!(a==b)&&c;x=!(a==b)?1:2;x=c?!(a==b):!(d===e);x=()=>!(a==b);x={k:!(a==b)};x=`${!(a==b)}`;throw!(a==b)", {}, "x=a!=b;if(a==b)f();x=!(a<b),x=!(a==b)+1,f(a===b,[a!=b],-!(a==b)),x=a!=b&&c,x=a==b?2:1,x=c?a!=b:d!==e,x=()=>a!=b,x={k:a!=b},x=`${a!=b}`;throw a!=b;"],
@@ -1522,7 +1524,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// A test known falsy, `undefined` too, runs nothing for a loop or `if`, labeled or not, that declares nothing.
 			["if(void 0)f();while(void 0)g();for(;undefined;)h();l:for(;!1;);a:b:while(void 0)f();if(void 0)var q;function k(undefined){if(undefined)g()}", { mangle: false }, "if(void 0)var q;function k(undefined){if(undefined)g()}"],
 			// A known test leaves a name called bare but `eval`, and `new` takes a name or member bare.
-			["var a;(!0?a:0)(),(!1?0:a)``,new(!0?a:0),x=new(!0?a.b:0)(1),x=new(!0?a():0),(!0?eval:0)(\"x\")", { mangle: false }, "var a;a(),a``,new a,x=new a.b(1),x=new(a()),(1?eval:0)(\"x\");"],
+			["var a;(!0?a:0)(),(!1?0:a)``,new(!0?a:0),x=new(!0?a.b:0)(1),x=new(!0?a():0),(!0?eval:0)(\"x\")", { mangle: false }, "var a;a(),a``,new a,x=new a.b(1),x=new(a()),(0,eval)(\"x\");"],
 			// A `finally` running nothing goes beside a `catch`; without one, the `try` runs as its block.
 			["try{f()}catch(e){g()}finally{}try{f()}catch(e){}finally{/*c*/}a();try{f();b()}finally{}if(x)try{y()}finally{}else z();function k(){try{return g()}finally{}}", { mangle: false, format: { comments: "all" } }, "try{f()}catch(e){g()}try{f()}catch(e){}finally{/*c*/}a();f(),b();if(x){y()}else z();function k(){return g()}"],
 			// terser's `loops` with an `else`: `if(x)break;else y` loops while `!x`, `if(x)y;else break` while `x`, `y` where the `if` was.
@@ -1585,8 +1587,8 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["x=![1,2];x=!/foo/;x=!0;x=!\"\";x=!{};x=![f()];x=delete(1/0);x=delete void 0;x=delete undefined;x=delete NaN;x=delete(0,a);x=delete 1;x=delete a.b;x=delete(a);x=delete a?.b;x=delete f();if(delete 1)g();var b;x=delete(b=NaN)", { compress: { toplevel: true } }, "x=!1,x=!1,x=!0,x=!0,x=!1,x=![f()],x=!0,x=!0,x=!1,x=!1,x=delete(0,a),x=!0,x=delete a.b,x=delete a,x=delete a?.b,x=delete f();g();var b;x=delete(b=NaN);"],
 			// A function called prints as what it returns past parameters passed nothing nothing reads, but not one it returns or where `arguments` reads them.
 			["console.log((function(x,y,z){return 123})());console.log(function(x,y,z){return z}());console.log(function(x){return 6}(a));function q(b){console.log(function(x,y){return x}(b))}console.log(function(x){return arguments.length}())", {}, "console.log(123),console.log(function(n,o,t){return t}()),console.log(function(n){return 6}(a));function q(n){console.log(n)}console.log(function(n){return arguments.length}());"],
-			// A logical expression a known left side folds to a name called prints the name, but not `eval`, a member or one `typeof` reads.
-			["x=null??y;(null??f)();(null??x.y)();(1&&f)();(0||x.y)``;(null??eval)(\"x\");typeof(null??q);(0||g)``", {}, "x=y,f(),(null??x.y)(),f(),(0||x.y)``,(null??eval)(\"x\"),null??q,(g)``;"],
+			// A logical expression a known left side folds to a name called prints the name, and `eval`, a member or one `typeof` reads after `0,`.
+			["x=null??y;(null??f)();(null??x.y)();(1&&f)();(0||x.y)``;(null??eval)(\"x\");typeof(null??q);(0||g)``", {}, "x=y,f(),(0,x.y)(),f(),(0,x.y)``,(0,eval)(\"x\"),0,q,(g)``;"],
 			// A function running nothing called runs only its arguments where nobody reads the call.
 			["(function(){})(a(),b());(()=>{})(c());x=(function(){})(a())", {}, "a(),b(),c(),x=function(){}(a());"],
 			// A logical folding to an assignment keeps the parentheses that needs under the same operator.
