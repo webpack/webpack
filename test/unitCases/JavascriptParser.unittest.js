@@ -557,6 +557,11 @@ describe("JavascriptParser", () => {
 			"5n ^ 2n": "bigint=7",
 			"5n >> 2n": "bigint=1",
 			"5n << 2n": "bigint=20",
+			"1n - 1": "",
+			"1n & 1": "",
+			"+1n": "",
+			"1n / 0n": "",
+			"~1n": "bigint=-2",
 			"null == null": "bool=true",
 			"null === null": "bool=true",
 			"null != null": "bool=false",
@@ -748,6 +753,18 @@ describe("JavascriptParser", () => {
 				);
 			});
 		}
+
+		it("should not warn when a const operation throws at runtime", () => {
+			const spy = jest.spyOn(console, "warn").mockImplementation(() => {});
+			try {
+				for (const source of ["1n - 1", "1n & 1", "1n / 0n", "+1n"]) {
+					evaluateInParser(source);
+				}
+				expect(spy).not.toHaveBeenCalled();
+			} finally {
+				spy.mockRestore();
+			}
+		});
 	});
 
 	describe("async/await support", () => {
