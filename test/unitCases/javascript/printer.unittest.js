@@ -1701,6 +1701,9 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// One newer than `builtinsEcma` folds only once it reaches the built-in's edition.
 			["x=[\"ab\".padStart(3),Math.sign(-2),\"x\".repeat(2)]", {}, "x=[\"ab\".padStart(3),Math.sign(-2),\"x\".repeat(2)];"],
 			["x=[\"ab\".padStart(3),Math.sign(-2),\"x\".repeat(2)]", { compress: { toplevel: false, builtinsEcma: 2020 } }, "x=[\" ab\",-1,\"xx\"];"],
+			// Not given, it is the compressor's `ecma`: an engine running that syntax has the built-ins too.
+			["x=[\"ab\".padStart(3),Math.sign(-2),\"x\".repeat(2)]", { compress: { toplevel: false, ecma: 2015 } }, "x=[\"ab\".padStart(3),-1,\"xx\"];"],
+			["x=[\"ab\".padStart(3),Math.sign(-2),\"x\".repeat(2)]", { compress: { toplevel: false, ecma: 2020, builtinsEcma: 5 } }, "x=[\"ab\".padStart(3),Math.sign(-2),\"x\".repeat(2)];"],
 			["x=[\"a\".repeat(99),(1).toPrecision(22),(1.5).toPrecision(2),(1).toFixed(20)]", { compress: { toplevel: false, builtinsEcma: 2020 } }, "x=[\"a\".repeat(99),1..toPrecision(22),\"1.5\",1..toFixed(20)];"],
 			// It stays a call where an engine may answer otherwise, throws, answers no finite primitive or runs code.
 			["x=[\"\u00c4\".toLowerCase(),decodeURI(\"%\"),parseFloat(\"x\"),Math.max(),\"a\".repeat(99),\"ab\".concat(g()),1.5.toString(2),(1).toFixed(30),parseInt(\"\u180e1\"),\"ab\".concat(\"c\").length,1..toFixed(1)]", {}, "x=[\"\u00c4\".toLowerCase(),decodeURI(\"%\"),parseFloat(\"x\"),Math.max(),\"a\".repeat(99),\"ab\".concat(g()),1.5.toString(2),1..toFixed(30),parseInt(\"\u180e1\"),\"abc\".length,\"1.0\"];"],
