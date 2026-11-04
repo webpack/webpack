@@ -517,10 +517,14 @@ for (const [sourceFile, typeChecker, program] of sourceFiles) {
 				// Declared fields with an open fallback, such as `KnownBuildInfo & Record<string, any>`:
 				// the fallback types no declared field, and a read of any other key is counted on its own.
 				const declaresFields = type.getProperties().length > 0;
+				// A member with fields of its own is still walked; only its fallback is left out.
 				return type.types.some(
 					(member) =>
-						!(declaresFields && isOpenFallback(member)) &&
-						hasOwnAny(member, depth + 1)
+						!(
+							declaresFields &&
+							isOpenFallback(member) &&
+							member.getProperties().length === 0
+						) && hasOwnAny(member, depth + 1)
 				);
 			}
 			if (type.aliasSymbol) {
