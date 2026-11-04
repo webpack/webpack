@@ -1581,8 +1581,8 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["do{c()}while(!0);do{d();e()}while(0);f();do{if(x)break;d()}while(0);do{let q=g();h(q,q)}while(0);l:do{d()}while(0);if(a)do{d();e()}while(0);else f();do;while(0);do{switch(a){case 1:b()}}while(0);do{(function(){for(;;)break})()}while(0)", {}, "for(;;){c()}d(),e();f();do{if(x)break;d()}while(0);{let e=g();h(e,e)}e:do{d()}while(0);if(a){d(),e()}else f();do{if(a===1)b()}while(0);!function(){for(;;)break}();"],
 			// terser's `dead_code` of a loop whose body is a `break`: what sets it up and its test run once.
 			["for(;;)break;for(a();;)break;for(;b();)break;for(c();d();)break;for(;;e())break;for(f();;g())break;for(;h();i())break;for(j();k();l())break;while(x())break;while(x()){break}if(a)while(x())break;else y();for(var i=0;x;)break;l:while(x())break;for((a in b);c;)break;for(;function(){}();)break", {}, "for(;;)break;a();b();c(),d();for(;;e())break;f();h();j(),k();x();x();if(a)x();else y();for(var i=0;x;)break;r:while(x())break;(a in b),c;(function(){}());"],
-			// terser's `evaluate`: `!` of an object made running nothing is `!1`, `delete` of what is no reference `!0`, but a write in it stays.
-			["x=![1,2];x=!/foo/;x=!0;x=!\"\";x=!{};x=![f()];x=delete(1/0);x=delete void 0;x=delete undefined;x=delete NaN;x=delete(0,a);x=delete 1;x=delete a.b;x=delete(a);x=delete a?.b;x=delete f();if(delete 1)g();var b;x=delete(b=NaN)", { compress: { toplevel: true } }, "x=!1,x=!1,x=!0,x=!0,x=!1,x=![f()],x=!0,x=!0,x=delete undefined,x=delete NaN,x=delete(0,a),x=!0,x=delete a.b,x=delete a,x=delete a?.b,x=delete f();g();var b;x=delete(b=NaN);"],
+			// terser's `evaluate`: `!` of an object made running nothing is `!1`, `delete` of what is no reference `!0` and of the global `undefined` or `NaN` `!1`, but a write in it stays.
+			["x=![1,2];x=!/foo/;x=!0;x=!\"\";x=!{};x=![f()];x=delete(1/0);x=delete void 0;x=delete undefined;x=delete NaN;x=delete(0,a);x=delete 1;x=delete a.b;x=delete(a);x=delete a?.b;x=delete f();if(delete 1)g();var b;x=delete(b=NaN)", { compress: { toplevel: true } }, "x=!1,x=!1,x=!0,x=!0,x=!1,x=![f()],x=!0,x=!0,x=!1,x=!1,x=delete(0,a),x=!0,x=delete a.b,x=delete a,x=delete a?.b,x=delete f();g();var b;x=delete(b=NaN);"],
 			// A function called prints as what it returns past parameters passed nothing nothing reads, but not one it returns or where `arguments` reads them.
 			["console.log((function(x,y,z){return 123})());console.log(function(x,y,z){return z}());console.log(function(x){return 6}(a));function q(b){console.log(function(x,y){return x}(b))}console.log(function(x){return arguments.length}())", {}, "console.log(123),console.log(function(n,o,t){return t}()),console.log(function(n){return 6}(a));function q(n){console.log(n)}console.log(function(n){return arguments.length}());"],
 			// A logical expression a known left side folds to a name called prints the name, but not `eval`, a member or one `typeof` reads.
@@ -3344,7 +3344,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				"export function f(p){var b=undefined;return[b[p],1]}export function g(p){var b=undefined;return b(p)}export const h=+(-0)"
 			)
 		).toBe(
-			"export function f(n){return[(void 0)[n],1]}export function g(n){return(void 0)(n)}export const h=+-0;"
+			"export function f(n){return[(void 0)[n],1]}export function g(n){return(void 0)(n)}export const h=-0;"
 		);
 		expect(
 			print(
@@ -4689,6 +4689,70 @@ describe("one-pass minify of statement sequences", () => {
 		}
 	});
 
+	it("should run what a converging `switch` tests in parentheses", () => {
+		for (const [source, expected] of [
+			["switch((x())){case 1:default:y()}", "x(),y();"],
+			["switch(((x(),a))){default:y()}", "x(),a,y();"]
+		]) {
+			const { code } = minifyOnePass(source, { compress: {}, mangle: {} });
+			expect(code).toBe(expected);
+			expect(runProgram(`var a=1;function x(){console.log(1)}function y(){console.log(2)}${code}`)).toBe("1\n2");
+		}
+	});
+
+	it("should fold a labeled `switch` of a known value", () => {
+		const cases = [
+			[
+				"function s(x,y){A:switch(1){case 1:x();for(;;)if(y())break A;y();case 2:x();default:y()}}",
+				"function s(a,c){a:{a();for(;;)if(c())break a;c();a();c()}}"
+			],
+			["function s(x,y){A:switch(1){case 1:x();y();break;case 2:y()}}", "function s(c,s){c:c(),s()}"],
+			// A label needs a statement, and an unlabeled `break` its `switch`.
+			["function s(x){A:switch(1){case 2:x()}}", "function s(c){c:switch(1){case 2:c()}}"],
+			["function s(x,y){A:switch(1){case 1:x();if(y())break;y()}}", "function s(c,i){c:switch(1){case 1:c();if(i())break;i()}}"]
+		];
+		for (const [source, expected] of cases) {
+			const { code } = minifyOnePass(source, {
+				compress: { toplevel: false },
+				mangle: { toplevel: false }
+			});
+			expect(code).toBe(expected);
+			// `y` alternates, so a loop waiting on it ends.
+			for (const call of [
+				"var n=0;s(()=>console.log(1),()=>{console.log(2);return n^=1})",
+				"var n=1;s(()=>console.log(1),()=>{console.log(2);return n^=1})"
+			]) {
+				expect(runProgram(`${code}${call}`)).toBe(runProgram(`${source}${call}`));
+			}
+		}
+	});
+
+	it("should fold a `switch` on a sequence known by its last, running the rest first", () => {
+		const cases = [
+			["function s(w,x,y){switch(w(),42){case 13:x();case 42:y();default:x()}}", "function s(c,s,a){c(),a(),s()}"],
+			["function s(w,x,y){switch((w(),x(),42)){case 42:y();break;default:x()}}", "function s(a,c,e){a(),c(),e()}"],
+			["function s(w,x,y){A:switch(w(),42){case 42:y();x()}}", "function s(c,s,w){c:c(),w(),s()}"],
+			// A comment on what it tests prints with it.
+			["function s(w,x,y){switch(/*! c */w(),42){case 42:y()}}", "function s(c,s,w){/*! c */c(),42,w()}"],
+			// What it runs first joins only expressions, before a match it ran
+			// a case's test, and running nothing else it stays.
+			["function s(w,x,y){switch(w(),42){case 42:if(x)y()}}", "function s(c,i,s){switch(c(),42){case 42:if(i)s()}}"],
+			["function s(w,x,y){switch(w(),42){case x():y()}}", "function s(c,s,w){switch(c(),42){case s():w()}}"],
+			["function s(w,y){switch(w(),42){case 13:y()}}", "function s(c,s){switch(c(),42){case 13:s()}}"],
+			["function s(w,y){switch(w(),y()){case 13:y()}}", "function s(c,s){switch(c(),s()){case 13:s()}}"]
+		];
+		for (const [source, expected] of cases) {
+			const { code } = minifyOnePass(source, {
+				compress: { toplevel: false },
+				mangle: { toplevel: false }
+			});
+			expect(code).toBe(expected);
+			const call =
+				"s(()=>console.log(1),()=>{console.log(2);return 13},()=>{console.log(3);return 42})";
+			expect(runProgram(`${code}${call}`)).toBe(runProgram(`${source}${call}`));
+		}
+	});
+
 	it("should print the known `switch`, spread and unary values of the config cases", () => {
 		const fs = require("fs");
 		const path = require("path");
@@ -4721,6 +4785,30 @@ describe("one-pass minify of statement sequences", () => {
 		expect(
 			minifyOnePass("f(!\\u0049nfinity,typeof \\u004eaN)", { compress: {} }).code
 		).toBe('f(!1,"number");');
+	});
+
+	it("should fold a unary to `-0`", () => {
+		const source =
+			'var a=1;console.log(+-"",1/+-"",a- +-"",a-+-"",-(-0),~-"",typeof +-"")';
+		const { code } = minifyOnePass(source, { compress: {} });
+		expect(code).toBe(
+			'var a=1;console.log(-0,1/-0,a- -0,a- -0,0,-1,"number");'
+		);
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
+	it("should fold a `delete` of the global `undefined`, `NaN` or `Infinity` to `false`", () => {
+		const cases = [
+			["console.log(delete undefined,delete NaN,delete Infinity)", "console.log(!1,!1,!1);"],
+			// A parameter of the name, or a `with` that may hold one, is not the global.
+			["function f(undefined){return delete undefined}console.log(f())", "function f(e){return delete e}console.log(f());"],
+			["var o={NaN:1};with(o)console.log(delete NaN)", "var o={NaN:1};with(o)console.log(delete NaN);"]
+		];
+		for (const [source, expected] of cases) {
+			const { code } = minifyOnePass(source, { compress: {} });
+			expect(code).toBe(expected);
+			expect(runProgram(code)).toBe(runProgram(source));
+		}
 	});
 
 	it("should read `?.` after what is never nullish as `.`", () => {
