@@ -1965,6 +1965,9 @@ const sweepRespellings = (minify, css, minified) => {
 };
 
 const wantedRelation = filterFrom("RELATION");
+
+// The label every recorded unit-test input carries in the invariant corpus.
+const UNIT_INPUT = "unit input";
 const wantedPreset = filterFrom("PRESET");
 
 /**
@@ -2082,6 +2085,25 @@ const invariantFixtures = () => {
 		else missing.push(label);
 	}
 	out.push(["cold branches", COLD_BRANCHES]);
+	// What the CSS unit tests handed the parser and printer, where a run recorded it.
+	if (process.env.SYNTAX_INPUTS) {
+		let at = 0;
+		for (const line of fs
+			.readFileSync(process.env.SYNTAX_INPUTS, "utf8")
+			.split("\n")) {
+			if (line === "") continue;
+			const { language, source } = JSON.parse(line);
+			if (language !== "CssSourceProcessor") continue;
+			// One the parser refuses outright, a nesting past the stack among them,
+			// is the unit test's to hold; the invariants read what parses.
+			try {
+				new SourceProcessor().process(source, {});
+			} catch (_error) {
+				continue;
+			}
+			out.push([`${UNIT_INPUT} ${++at}`, source]);
+		}
+	}
 	return { corpus: out, missing };
 };
 
@@ -2108,7 +2130,9 @@ const invariants = (write) => {
 			return cssTreeTree;
 		},
 		tree: webpackTree,
-		corpus,
+		// Agreement with css-tree is the comparison's own question; the unit
+		// tests' inputs are held to webpack's invariants alone.
+		corpus: corpus.filter(([label]) => !label.startsWith(UNIT_INPUT)),
 		expected: EXPECTED,
 		missing: _missingFixtures
 	});
