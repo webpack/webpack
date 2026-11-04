@@ -18,7 +18,7 @@ class CustomEnvironment extends NodeEnvironment {
 		super(config, context);
 		// Node and Deno expose `gc` behind `--expose-gc`; Bun has no such flag but
 		// forces a full collection with `Bun.gc(true)`, so tests get the same global.
-		const { Bun } = globalThis;
+		const { Bun } = global;
 		if (typeof this.global.gc !== "function" && Bun) {
 			this.global.gc = () => Bun.gc(true);
 		}
