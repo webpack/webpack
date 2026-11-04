@@ -41,7 +41,10 @@ const supportsOptionalChaining = require("../helpers/supportsOptionalChaining");
 const testTimeout = require("../helpers/testTimeout");
 
 const testRootDirectory = path.join(__dirname, "..");
-const STEP_DELAY = 200;
+// Waits that keep each step's writes after the build before it started:
+// file times resolve to a millisecond, and a dropped event is re-sent.
+const STEP_DELAY = 50;
+const START_DELAY = 100;
 const AGGREGATE_TIMEOUT = 50;
 const RETOUCH_DELAY = 1000;
 const RETOUCH_LIMIT = 5;
@@ -373,6 +376,9 @@ const describeCases = (config) => {
 							// each child's stats from the builds of the current step
 							/** @type {Map<import("../../").Compiler, import("../../").Stats>} */
 							let stepStats = new Map();
+							// each child's changed and removed files over the builds of the current step
+							/** @type {Map<import("../../").Compiler, Set<string>>} */
+							let stepReports = new Map();
 
 							const currentWatchStepModule = require("../helpers/currentWatchStep");
 
@@ -579,22 +585,51 @@ const describeCases = (config) => {
 												for (const child of compilers) {
 													// a child yet to rebuild still shows its last build's reports
 													if (!builtThisStep(child)) continue;
+													let reported = stepReports.get(child);
+													if (reported === undefined) {
+														reported = new Set();
+														stepReports.set(child, reported);
+													}
+													for (const file of child.modifiedFiles || []) reported.add(file);
+													for (const file of child.removedFiles || []) reported.add(file);
+												}
+												/**
+												 * @param {import("../../").Compiler} child child compiler
+												 * @param {string} file a file the step changed
+												 * @returns {boolean} true, when a build of the child this step reported it
+												 */
+												const reportedBy = (child, file) => {
+													const reported = stepReports.get(child);
+													if (reported === undefined) return false;
 													// a watched directory reports itself, not the file inside it
-													const reported = [
-														...(child.modifiedFiles || []),
-														...(child.removedFiles || [])
-													];
-													for (const file of unseenChanges) {
-														if (
-															// a file watched itself is not seen through its directory, which
-															// reports a sibling added next to it before the file's own change
-															(lastFileDependencies.has(file)
-																? reported.includes(file)
-																: isWithin(file, reported)) ||
-															reported.some((item) => isWithin(item, [file]))
-														) {
-															unseenChanges.delete(file);
-														}
+													const items = [...reported];
+													return (
+														// a file watched itself is not seen through its directory, which
+														// reports a sibling added next to it before the file's own change
+														(lastFileDependencies.has(file)
+															? reported.has(file)
+															: isWithin(file, items)) ||
+														items.some((item) => isWithin(item, [file]))
+													);
+												};
+												for (const file of unseenChanges) {
+													// two children watching one file each see it: a child that saw only
+													// some of a step's changes built stale, and a late event rebuilds it
+													const watchers = compilers.filter((child) => {
+														const compilation = lastChildCompilations.get(child);
+														return (
+															compilation !== undefined &&
+															(compilation.fileDependencies.has(file) ||
+																compilation.missingDependencies.has(file) ||
+																isWithin(file, [...compilation.contextDependencies]))
+														);
+													});
+													if (
+														watchers.length > 0
+															? watchers.every((child) => reportedBy(child, file))
+															: compilers.some((child) => reportedBy(child, file))
+													) {
+														unseenChanges.delete(file);
 													}
 												}
 												// a change the build no longer depends on (a deleted import, a context
@@ -804,6 +839,7 @@ const describeCases = (config) => {
 																	buildCount.beforeStep = buildCount.started;
 																	childBuildsBeforeStep = new Map(childBuilds);
 																	stepStats = new Map();
+																	stepReports = new Map();
 																	stepChanges = new Set();
 																	unseenChanges = new Set();
 																	if (!restartCompiler && watchedCompiler) {
@@ -911,7 +947,7 @@ const describeCases = (config) => {
 									fail(/** @type {Error} */ (error));
 								}
 							};
-							timer = setTimeout(startCompiler, 300);
+							timer = setTimeout(startCompiler, START_DELAY);
 						}, testTimeout(45000));
 
 						for (const run of runs) {
