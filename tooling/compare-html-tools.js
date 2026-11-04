@@ -1726,7 +1726,7 @@ const htmlInnerRanges = (nodePath) => {
  * and an element left open is closed by the next tag, so `<p>a<p>b` gives two
  * paragraphs whose ranges share those bytes.
  * @param {string} html a document
- * @returns {import("./compare-tools-harness").Report[]} what the ranges broke
+ * @returns {import("../test/helpers/syntaxInvariants/relations").Report[]} what the ranges broke
  */
 const htmlSpans = (html) =>
 	spans({
@@ -1880,11 +1880,11 @@ const holdsQuirksTable = (runs, at) => {
  * start tag's — §13.2 leaves it there until an end tag is read — has a range
  * that does not hold its own children, so there is no slice to reparse.
  * @param {string} html a document
- * @returns {{ reports: import("./compare-tools-harness").Report[], read: number, skipped: number, capped: number, repeats: number }} what broke, how many answered, and what was left out
+ * @returns {{ reports: import("../test/helpers/syntaxInvariants/relations").Report[], read: number, skipped: number, capped: number, repeats: number }} what broke, how many answered, and what was left out
  */
 const htmlSlices = (html) => {
 	const runs = htmlNodeRuns(html);
-	/** @type {import("./compare-tools-harness").SliceCandidate[]} */
+	/** @type {import("../test/helpers/syntaxInvariants/relations").SliceCandidate[]} */
 	const candidates = [];
 	let budget = html.length * SLICE_BUDGET_FACTOR;
 	let capped = 0;
@@ -1994,10 +1994,10 @@ const wantedPreset = filterFrom("PRESET");
  * @param {(html: string) => string} minify the printer under test
  * @param {string} html the document
  * @param {string} minified what it minifies to
- * @returns {import("./compare-tools-harness").Report[]} what moved, and the smallest repro found for each
+ * @returns {import("../test/helpers/syntaxInvariants/relations").Report[]} what moved, and the smallest repro found for each
  */
 const sweepRespellings = (minify, html, minified) => {
-	/** @type {import("./compare-tools-harness").Report[]} */
+	/** @type {import("../test/helpers/syntaxInvariants/relations").Report[]} */
 	const reports = [];
 	const sites = attributeSites(html);
 	for (const respelling of RESPELLINGS.filter((one) =>
@@ -2066,7 +2066,7 @@ const HTML_CUTS = [
  * @param {string} html the document
  * @param {HtmlPrintOptions} options the preset's printer options
  * @param {CssOptions} cssOptions the preset's CSS options
- * @returns {import("./compare-tools-harness").Report[]} what moved, and the smallest repro found for each
+ * @returns {import("../test/helpers/syntaxInvariants/relations").Report[]} what moved, and the smallest repro found for each
  */
 const sweepDocument = (minify, html, options, cssOptions) => {
 	const { printed, reports } = wantedRelation("idempotence")
@@ -2515,16 +2515,25 @@ module.exports = {
 	COLD_CONSTRUCTS,
 	EMBEDDED_LEGACY_OPTIONS,
 	EMBEDDED_OPTIONS,
+	HTML_CUTS,
 	INLINED_STYLESHEETS,
 	INSTALLED_DOCUMENTS,
+	PRESETS,
 	SPRITE_WITHIN,
 	TAG_SOUP,
 	TREE_READERS,
 	WEB_COMPONENTS,
 	htmlMeaning,
+	htmlPurityDigest,
+	htmlSlices,
+	htmlSpans,
+	idempotenceRepro,
 	inlineCssPage,
+	printerFor,
 	runMode,
 	sameSheets,
 	spritePage,
-	sweepDocument
+	sweepDocument,
+	sweepRespellings,
+	tokenStream
 };

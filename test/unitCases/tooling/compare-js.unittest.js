@@ -192,7 +192,7 @@ describe("the printing table's last column", () => {
 
 describe("the behavior relation", () => {
 	it("should report a printed script printing otherwise than its source", () => {
-		const [report] = /** @type {import("../../../tooling/compare-tools-harness").Report[]} */ (
+		const [report] = /** @type {import("../../helpers/syntaxInvariants/relations").Report[]} */ (
 			behaviorDifference("console.log((1, 2));", "console.log(1,2);")
 		);
 
@@ -206,12 +206,12 @@ describe("the behavior relation", () => {
 
 		expect(reports).toHaveLength(1);
 		expect(
-			/** @type {import("../../../tooling/compare-tools-harness").Report[]} */ (
+			/** @type {import("../../helpers/syntaxInvariants/relations").Report[]} */ (
 				reports
 			)[0].repro
 		).toContain("threw <TypeError>");
 		expect(
-			/** @type {import("../../../tooling/compare-tools-harness").Report[]} */ (
+			/** @type {import("../../helpers/syntaxInvariants/relations").Report[]} */ (
 				behaviorDifference("var a;", "throw 1;")
 			)[0].repro
 		).toContain("threw <number> 1");
@@ -248,7 +248,7 @@ describe("the behavior relation", () => {
 	});
 
 	it("should report a printed script that times out", () => {
-		const [report] = /** @type {import("../../../tooling/compare-tools-harness").Report[]} */ (
+		const [report] = /** @type {import("../../helpers/syntaxInvariants/relations").Report[]} */ (
 			behaviorDifference("console.log(1);", "for (;;) {}")
 		);
 

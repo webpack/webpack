@@ -1254,7 +1254,7 @@ const cssInnerRanges = (nodePath) => {
  * from. CSS owes every part of the relation: a component value sits inside the
  * declaration that holds it, and two of them never overlap.
  * @param {string} css a stylesheet
- * @returns {import("./compare-tools-harness").Report[]} what the ranges broke
+ * @returns {import("../test/helpers/syntaxInvariants/relations").Report[]} what the ranges broke
  */
 const cssSpans = (css) =>
 	spans({
@@ -1370,11 +1370,11 @@ const runDigest = (runs, at) => {
  * offsets, wrapped in the least context that lets them parse, give that node
  * back.
  * @param {string} css a stylesheet
- * @returns {{ reports: import("./compare-tools-harness").Report[], read: number, skipped: number, capped: number, repeats: number }} what broke, how many answered, and what was left out
+ * @returns {{ reports: import("../test/helpers/syntaxInvariants/relations").Report[], read: number, skipped: number, capped: number, repeats: number }} what broke, how many answered, and what was left out
  */
 const cssSlices = (css) => {
 	const runs = cssNodeRuns(css);
-	/** @type {import("./compare-tools-harness").SliceCandidate[]} */
+	/** @type {import("../test/helpers/syntaxInvariants/relations").SliceCandidate[]} */
 	const candidates = [];
 	let budget = css.length * SLICE_BUDGET_FACTOR;
 	let capped = 0;
@@ -1921,10 +1921,10 @@ const reproOf = (sites, respelling) => {
  * @param {(css: string) => string} minify the printer under test
  * @param {string} css a stylesheet
  * @param {string} minified what it minifies to
- * @returns {import("./compare-tools-harness").Report[]} what moved, and the smallest repro found for each
+ * @returns {import("../test/helpers/syntaxInvariants/relations").Report[]} what moved, and the smallest repro found for each
  */
 const sweepRespellings = (minify, css, minified) => {
-	/** @type {import("./compare-tools-harness").Report[]} */
+	/** @type {import("../test/helpers/syntaxInvariants/relations").Report[]} */
 	const reports = [];
 	const sites = cssSites(css);
 	for (const respelling of CSS_RESPELLINGS.filter((one) =>
@@ -1965,9 +1965,6 @@ const sweepRespellings = (minify, css, minified) => {
 };
 
 const wantedRelation = filterFrom("RELATION");
-
-// The label every recorded unit-test input carries in the invariant corpus.
-const UNIT_INPUT = "unit input";
 const wantedPreset = filterFrom("PRESET");
 
 /**
@@ -2085,25 +2082,6 @@ const invariantFixtures = () => {
 		else missing.push(label);
 	}
 	out.push(["cold branches", COLD_BRANCHES]);
-	// What the CSS unit tests handed the parser and printer, where a run recorded it.
-	if (process.env.SYNTAX_INPUTS) {
-		let at = 0;
-		for (const line of fs
-			.readFileSync(process.env.SYNTAX_INPUTS, "utf8")
-			.split("\n")) {
-			if (line === "") continue;
-			const { language, source } = JSON.parse(line);
-			if (language !== "CssSourceProcessor") continue;
-			// One the parser refuses outright, a nesting past the stack among them,
-			// is the unit test's to hold; the invariants read what parses.
-			try {
-				new SourceProcessor().process(source, {});
-			} catch (_error) {
-				continue;
-			}
-			out.push([`${UNIT_INPUT} ${++at}`, source]);
-		}
-	}
 	return { corpus: out, missing };
 };
 
@@ -2130,9 +2108,7 @@ const invariants = (write) => {
 			return cssTreeTree;
 		},
 		tree: webpackTree,
-		// Agreement with css-tree is the comparison's own question; the unit
-		// tests' inputs are held to webpack's invariants alone.
-		corpus: corpus.filter(([label]) => !label.startsWith(UNIT_INPUT)),
+		corpus,
 		expected: EXPECTED,
 		missing: _missingFixtures
 	});
@@ -2394,5 +2370,13 @@ module.exports = {
 	),
 	PACKED_FIXTURES,
 	TREE_READERS,
-	runMode
+	runMode,
+	PRESETS,
+	cssCuts,
+	cssPurityDigest,
+	cssSlices,
+	cssSpans,
+	printerFor,
+	sweepRespellings,
+	tokenStream
 };

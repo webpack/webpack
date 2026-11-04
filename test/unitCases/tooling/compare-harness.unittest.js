@@ -897,7 +897,7 @@ describe("compare-tools-harness", () => {
 		/**
 		 * @param {string} relation what the finding is about
 		 * @param {string} repro the lines reproducing it
-		 * @returns {import("../../../tooling/compare-tools-harness").Report} the finding
+		 * @returns {import("../../helpers/syntaxInvariants/relations").Report} the finding
 		 */
 		const finding = (relation, repro) => ({ relation, what: "bytes", repro });
 

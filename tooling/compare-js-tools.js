@@ -745,7 +745,7 @@ const childNodesOf = (node) => {
  * 6136 of those over the fixtures and not one defect.
  * @param {string} source a script or a module
  * @param {EXPECTED_ANY} options what to parse it as
- * @returns {import("./compare-tools-harness").Report[]} what the ranges broke
+ * @returns {import("../test/helpers/syntaxInvariants/relations").Report[]} what the ranges broke
  */
 const jsSpans = (source, options) =>
 	spans({
@@ -789,7 +789,7 @@ const jsSpans = (source, options) =>
  * Parse one source the way a build would, as a module where that reads and as a
  * script otherwise.
  * @param {string} source a script or a module
- * @returns {import("./compare-tools-harness").Report[] | null} what its ranges broke, or null where the parser refused it
+ * @returns {import("../test/helpers/syntaxInvariants/relations").Report[] | null} what its ranges broke, or null where the parser refused it
  */
 const spansEitherGoal = (source) => {
 	const options = goalFor(source);
@@ -933,7 +933,7 @@ const SLICE_BUDGET_FACTOR = 4;
  * back.
  * @param {string} source a script or a module
  * @param {EXPECTED_ANY} options what to parse it as
- * @returns {{ reports: import("./compare-tools-harness").Report[], read: number, skipped: number, capped: number, repeats: number } | null} what broke, how many answered and how many the budget cut, or null where the parser refuses the source
+ * @returns {{ reports: import("../test/helpers/syntaxInvariants/relations").Report[], read: number, skipped: number, capped: number, repeats: number } | null} what broke, how many answered and how many the budget cut, or null where the parser refuses the source
  */
 const jsSlices = (source, options) => {
 	/** @type {EXPECTED_ANY} */
@@ -945,7 +945,7 @@ const jsSlices = (source, options) => {
 		return null;
 	}
 	const runs = nodeRuns(root);
-	/** @type {import("./compare-tools-harness").SliceCandidate[]} */
+	/** @type {import("../test/helpers/syntaxInvariants/relations").SliceCandidate[]} */
 	const candidates = [];
 	let budget = source.length * SLICE_BUDGET_FACTOR;
 	let capped = 0;
@@ -1181,7 +1181,7 @@ const reportable = (differences, limit = 10) =>
  * a build parses with, or null where they agree or acorn refuses it.
  * @param {string} source a script or a module
  * @param {EXPECTED_ANY} options what to parse it as
- * @returns {import("./compare-tools-harness").Report[]} the difference, as a finding
+ * @returns {import("../test/helpers/syntaxInvariants/relations").Report[]} the difference, as a finding
  */
 const acornDifference = (source, options) => {
 	/** @type {EXPECTED_ANY} */
@@ -1235,7 +1235,7 @@ const JS_CUTS = [
  * it, and otherwise a `SyntaxError`, as acorn's own refusal is.
  * @param {string} source a program cut short
  * @param {EXPECTED_ANY} options what to parse it as
- * @returns {import("./compare-tools-harness").Report[]} the difference, as a finding
+ * @returns {import("../test/helpers/syntaxInvariants/relations").Report[]} the difference, as a finding
  */
 const cutDifference = (source, options) => {
 	try {
@@ -1512,10 +1512,10 @@ const reproOf = (sites, respelling) => {
  * @param {string} code a program
  * @param {boolean} module whether it is a module
  * @param {string} minified what the printer made of it
- * @returns {import("./compare-tools-harness").Report[]} what moved
+ * @returns {import("../test/helpers/syntaxInvariants/relations").Report[]} what moved
  */
 const sweepRespellings = (minify, code, module, minified) => {
-	/** @type {import("./compare-tools-harness").Report[]} */
+	/** @type {import("../test/helpers/syntaxInvariants/relations").Report[]} */
 	const reports = [];
 	const tokens = tokensOf(code, module);
 	if (tokens === null) return reports;
@@ -1739,7 +1739,7 @@ const invariants = async (write) => {
 		const [, presetOptions] = /** @type {[string, EXPECTED_ANY]} */ (
 			PRESETS.find(([name]) => name === "format")
 		);
-		/** @type {import("./compare-tools-harness").PuritySource[]} */
+		/** @type {import("../test/helpers/syntaxInvariants/relations").PuritySource[]} */
 		const sources = [];
 		for (const [label, source, options] of corpus) {
 			const settled = options === undefined ? goalFor(source) : options;
@@ -1933,7 +1933,7 @@ const behaviorOf = (code) => {
  * Whether a printed script still prints and throws what its source does.
  * @param {string} source the script
  * @param {string} printed what the printer wrote of it
- * @returns {import("./compare-tools-harness").Report[] | null} what differs, empty where it runs the same, null where it was not run
+ * @returns {import("../test/helpers/syntaxInvariants/relations").Report[] | null} what differs, empty where it runs the same, null where it was not run
  */
 const behaviorDifference = (source, printed) => {
 	if (source.length > BEHAVIOR_MAX_LENGTH) return null;
@@ -2218,11 +2218,21 @@ started.catch((error) => {
 
 module.exports = {
 	JS_CUTS,
+	PRESETS,
 	behaviorDifference,
 	cutDifference,
 	firstDifference,
+	goalFor,
+	jsPurityDigest,
+	jsSlices,
+	minifyOnePass,
+	parsesAsLatest,
+	printerFor,
 	reportable,
 	roundTrip,
 	runMode,
-	show
+	show,
+	spansEitherGoal,
+	sweepRespellings,
+	tokenMeaning
 };

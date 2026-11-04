@@ -193,6 +193,3 @@ afterAll(async () => {
 		else if (descriptor.writable) outerGlobal[key] = undefined;
 	}
 });
-
-// Loaded only for a recording run, so every other run pays nothing for it.
-if (process.env.RECORD_SYNTAX_INPUTS) require("../helpers/recordSyntaxInputs");
