@@ -237,7 +237,16 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/replace_known_methods.rs:1237",
 			"oxc minifier: peephole/replace_known_methods.rs:1272",
 			"oxc minifier: peephole/replace_known_methods.rs:1273",
-			"oxc minifier: peephole/replace_known_methods.rs:1274"
+			"oxc minifier: peephole/replace_known_methods.rs:1274",
+			"oxc minifier: peephole/replace_known_methods.rs:1061",
+			"oxc minifier: peephole/replace_known_methods.rs:1063",
+			"oxc minifier: peephole/replace_known_methods.rs:1067",
+			"oxc minifier: peephole/replace_known_methods.rs:1101",
+			"oxc minifier: peephole/replace_known_methods.rs:1102",
+			"oxc minifier: peephole/replace_known_methods.rs:1205",
+			"oxc minifier: peephole/replace_known_methods.rs:1206",
+			"oxc minifier: peephole/replace_known_methods.rs:1209",
+			"oxc minifier: peephole/replace_known_methods.rs:1221"
 		]
 	],
 	[
@@ -541,7 +550,8 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/esbuild.rs:2395",
 			"oxc minifier: peephole/esbuild.rs:2401",
 			"oxc minifier: peephole/esbuild.rs:2425",
-			"oxc minifier: peephole/esbuild.rs:2434"
+			"oxc minifier: peephole/esbuild.rs:2434",
+			"oxc minifier: peephole/esbuild.rs:372"
 		]
 	],
 	[
@@ -807,6 +817,7 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: ecmascript/may_have_side_effects.rs:1590",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:1591",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:1592",
+			"swc minifier: fixture/issues/9460/side-effects/input.js",
 			"swc minifier: fixture/issues/12566/defaults/input.js",
 			"swc minifier: fixture/issues/12566/without-reduce-vars/input.js"
 		]
@@ -815,7 +826,6 @@ const OXC_SMALLER_BY_REASON = [
 		"webpack writes the same program in a spelling longer or compressing worse than oxc's",
 		[
 			"oxc minifier: peephole/minimize_statements.rs:32",
-			"oxc minifier: peephole/replace_known_methods.rs:1059",
 			"oxc minifier: peephole/replace_known_methods.rs:1090",
 			"swc exec: terser_arguments_modified",
 			"swc minifier: fixture/issues/10412/input.js",
@@ -967,7 +977,7 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: ecmascript/value_type.rs:167",
 			"oxc minifier: ecmascript/value_type.rs:169",
 			"oxc minifier: mangler/mod.rs:247",
-			"oxc minifier: peephole/dead_code_elimination.rs:646",
+			"oxc minifier: peephole/dead_code_elimination.rs:664",
 			"oxc minifier: peephole/esbuild.rs:202",
 			"oxc minifier: peephole/esbuild.rs:222",
 			"oxc minifier: peephole/esbuild.rs:439",
@@ -1006,8 +1016,8 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/inline.rs:601",
 			"oxc minifier: peephole/inline.rs:603",
 			"oxc minifier: peephole/inline.rs:604",
-			"oxc minifier: peephole/inline.rs:703",
-			"oxc minifier: peephole/inline.rs:704",
+			"oxc minifier: peephole/inline.rs:715",
+			"oxc minifier: peephole/inline.rs:716",
 			"oxc minifier: peephole/minimize_conditions.rs:175",
 			"oxc minifier: peephole/minimize_conditions.rs:297",
 			"oxc minifier: peephole/minimize_conditions.rs:410",
@@ -1075,10 +1085,11 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/substitute_alternate_syntax.rs:553",
 			"oxc minifier: peephole/substitute_alternate_syntax.rs:557",
 			"oxc minifier: peephole/substitute_alternate_syntax.rs:581",
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:829",
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:948",
+			"oxc minifier: peephole/substitute_alternate_syntax.rs:842",
+			"oxc minifier: peephole/substitute_alternate_syntax.rs:988",
 			"terser compress: conditionals/cond_9",
-			"terser compress: transform/if_return"
+			"terser compress: transform/if_return",
+			"swc minifier: fixture/issues/7412/input.js"
 		]
 	],
 	[
@@ -1329,7 +1340,8 @@ const OXC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/projects/yui/8/input.js",
 			"swc minifier: full/size/991835278eecab695ad3515447b5747adcdfe1b4/input.js",
 			"swc minifier: full/size/b57e4ca6d118a9480312f6f3ac809245bbed8115/input.js",
-			"swc minifier: full/size/bfb48fed563e5fb468b88b6a6670972c3ca7ee38/input.js"
+			"swc minifier: full/size/bfb48fed563e5fb468b88b6a6670972c3ca7ee38/input.js",
+			"swc minifier: fixture/next/react-pdf-renderer/input.js"
 		]
 	],
 	[
@@ -1381,47 +1393,49 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/substitute_alternate_syntax.rs:561",
 			"oxc minifier: peephole/substitute_alternate_syntax.rs:565",
 			"oxc minifier: peephole/substitute_alternate_syntax.rs:668",
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:771",
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:803",
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:807",
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:811",
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:815",
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:819",
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:823",
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:830",
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:834",
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:835",
+			"oxc minifier: peephole/substitute_alternate_syntax.rs:784",
+			"oxc minifier: peephole/substitute_alternate_syntax.rs:816",
+			"oxc minifier: peephole/substitute_alternate_syntax.rs:820",
+			"oxc minifier: peephole/substitute_alternate_syntax.rs:824",
+			"oxc minifier: peephole/substitute_alternate_syntax.rs:828",
+			"oxc minifier: peephole/substitute_alternate_syntax.rs:832",
 			"oxc minifier: peephole/substitute_alternate_syntax.rs:836",
+			"oxc minifier: peephole/substitute_alternate_syntax.rs:843",
+			"oxc minifier: peephole/substitute_alternate_syntax.rs:847",
 			"oxc minifier: peephole/substitute_alternate_syntax.rs:848",
 			"oxc minifier: peephole/substitute_alternate_syntax.rs:849",
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:850",
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:851",
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:858",
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:860",
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:884",
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:890",
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:901",
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:946",
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:947",
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:1025",
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:1041",
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:1089",
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:1150",
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:1151",
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:1153",
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:1154",
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:1155",
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:1157",
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:1158",
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:1159",
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:1161",
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:1163",
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:1165",
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:1167",
+			"oxc minifier: peephole/substitute_alternate_syntax.rs:861",
+			"oxc minifier: peephole/substitute_alternate_syntax.rs:862",
+			"oxc minifier: peephole/substitute_alternate_syntax.rs:863",
+			"oxc minifier: peephole/substitute_alternate_syntax.rs:864",
+			"oxc minifier: peephole/substitute_alternate_syntax.rs:871",
+			"oxc minifier: peephole/substitute_alternate_syntax.rs:873",
+			"oxc minifier: peephole/substitute_alternate_syntax.rs:897",
+			"oxc minifier: peephole/substitute_alternate_syntax.rs:903",
+			"oxc minifier: peephole/substitute_alternate_syntax.rs:914",
+			"oxc minifier: peephole/substitute_alternate_syntax.rs:986",
+			"oxc minifier: peephole/substitute_alternate_syntax.rs:987",
+			"oxc minifier: peephole/substitute_alternate_syntax.rs:1065",
+			"oxc minifier: peephole/substitute_alternate_syntax.rs:1081",
+			"oxc minifier: peephole/substitute_alternate_syntax.rs:1129",
+			"oxc minifier: peephole/substitute_alternate_syntax.rs:1190",
+			"oxc minifier: peephole/substitute_alternate_syntax.rs:1191",
+			"oxc minifier: peephole/substitute_alternate_syntax.rs:1193",
+			"oxc minifier: peephole/substitute_alternate_syntax.rs:1194",
+			"oxc minifier: peephole/substitute_alternate_syntax.rs:1195",
+			"oxc minifier: peephole/substitute_alternate_syntax.rs:1197",
+			"oxc minifier: peephole/substitute_alternate_syntax.rs:1198",
+			"oxc minifier: peephole/substitute_alternate_syntax.rs:1199",
+			"oxc minifier: peephole/substitute_alternate_syntax.rs:1201",
+			"oxc minifier: peephole/substitute_alternate_syntax.rs:1203",
 			"oxc minifier: peephole/substitute_alternate_syntax.rs:1205",
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:1206",
 			"oxc minifier: peephole/substitute_alternate_syntax.rs:1207",
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:1208"
+			"oxc minifier: peephole/substitute_alternate_syntax.rs:1245",
+			"oxc minifier: peephole/substitute_alternate_syntax.rs:1246",
+			"oxc minifier: peephole/substitute_alternate_syntax.rs:1247",
+			"oxc minifier: peephole/substitute_alternate_syntax.rs:1248",
+			"oxc minifier: peephole/substitute_alternate_syntax.rs:338",
+			"oxc minifier: peephole/substitute_alternate_syntax.rs:723"
 		]
 	],
 	[
@@ -1761,10 +1775,10 @@ const OXC_SMALLER_BY_REASON = [
 			"swc exec: issue_6279_1",
 			"swc exec: issue_6279_2",
 			"swc exec: issue_8886",
-			"oxc minifier: peephole/dead_code_elimination.rs:902",
+			"oxc minifier: peephole/dead_code_elimination.rs:920",
 			"oxc minifier: peephole/fold_constants.rs:1380",
 			"oxc minifier: peephole/inline.rs:320",
-			"oxc minifier: peephole/inline.rs:635",
+			"oxc minifier: peephole/inline.rs:647",
 			"oxc minifier: peephole/minimize_conditions.rs:138",
 			"oxc minifier: peephole/minimize_exit_points.rs:183",
 			"oxc minifier: peephole/obscure_edge_cases.rs:418",
@@ -1777,15 +1791,15 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc drops more dead code, as oxc's `peephole/dead_code_elimination.rs` tests show",
 		[
-			"oxc minifier: peephole/dead_code_elimination.rs:613",
-			"oxc minifier: peephole/dead_code_elimination.rs:618",
-			"oxc minifier: peephole/dead_code_elimination.rs:623",
-			"oxc minifier: peephole/dead_code_elimination.rs:629",
-			"oxc minifier: peephole/dead_code_elimination.rs:711",
-			"oxc minifier: peephole/dead_code_elimination.rs:716",
-			"oxc minifier: peephole/dead_code_elimination.rs:726",
-			"oxc minifier: peephole/dead_code_elimination.rs:731",
-			"oxc minifier: peephole/dead_code_elimination.rs:736",
+			"oxc minifier: peephole/dead_code_elimination.rs:631",
+			"oxc minifier: peephole/dead_code_elimination.rs:636",
+			"oxc minifier: peephole/dead_code_elimination.rs:641",
+			"oxc minifier: peephole/dead_code_elimination.rs:647",
+			"oxc minifier: peephole/dead_code_elimination.rs:729",
+			"oxc minifier: peephole/dead_code_elimination.rs:734",
+			"oxc minifier: peephole/dead_code_elimination.rs:744",
+			"oxc minifier: peephole/dead_code_elimination.rs:749",
+			"oxc minifier: peephole/dead_code_elimination.rs:754",
 			"oxc minifier: peephole/dead_code_elimination.rs:126",
 			"oxc minifier: peephole/dead_code_elimination.rs:127",
 			"oxc minifier: peephole/dead_code_elimination.rs:128",
@@ -1804,22 +1818,24 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/dead_code_elimination.rs:360",
 			"oxc minifier: peephole/dead_code_elimination.rs:361",
 			"oxc minifier: peephole/dead_code_elimination.rs:438",
-			"oxc minifier: peephole/dead_code_elimination.rs:689",
-			"oxc minifier: peephole/dead_code_elimination.rs:786",
-			"oxc minifier: peephole/dead_code_elimination.rs:793",
-			"oxc minifier: peephole/dead_code_elimination.rs:814",
-			"oxc minifier: peephole/dead_code_elimination.rs:823",
-			"oxc minifier: peephole/dead_code_elimination.rs:824",
-			"oxc minifier: peephole/dead_code_elimination.rs:825",
-			"oxc minifier: peephole/dead_code_elimination.rs:849",
-			"oxc minifier: peephole/dead_code_elimination.rs:872",
+			"oxc minifier: peephole/dead_code_elimination.rs:707",
+			"oxc minifier: peephole/dead_code_elimination.rs:804",
+			"oxc minifier: peephole/dead_code_elimination.rs:811",
+			"oxc minifier: peephole/dead_code_elimination.rs:832",
+			"oxc minifier: peephole/dead_code_elimination.rs:841",
+			"oxc minifier: peephole/dead_code_elimination.rs:842",
+			"oxc minifier: peephole/dead_code_elimination.rs:843",
+			"oxc minifier: peephole/dead_code_elimination.rs:867",
 			"oxc minifier: peephole/dead_code_elimination.rs:890",
-			"oxc minifier: peephole/dead_code_elimination.rs:937",
-			"oxc minifier: peephole/dead_code_elimination.rs:960",
-			"oxc minifier: peephole/dead_code_elimination.rs:972",
-			"oxc minifier: peephole/dead_code_elimination.rs:1029",
-			"oxc minifier: peephole/dead_code_elimination.rs:1050",
-			"oxc minifier: peephole/dead_code_elimination.rs:1079"
+			"oxc minifier: peephole/dead_code_elimination.rs:908",
+			"oxc minifier: peephole/dead_code_elimination.rs:955",
+			"oxc minifier: peephole/dead_code_elimination.rs:978",
+			"oxc minifier: peephole/dead_code_elimination.rs:990",
+			"oxc minifier: peephole/dead_code_elimination.rs:1047",
+			"oxc minifier: peephole/dead_code_elimination.rs:1068",
+			"oxc minifier: peephole/dead_code_elimination.rs:1097",
+			"oxc minifier: peephole/dead_code_elimination.rs:560",
+			"oxc minifier: peephole/dead_code_elimination.rs:561"
 		]
 	],
 	[
@@ -2018,10 +2034,10 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"mangled-name choice: the same program with other mangled names, or one name given to other bindings",
 		[
-			"oxc minifier: peephole/dead_code_elimination.rs:899",
+			"oxc minifier: peephole/dead_code_elimination.rs:917",
 			"oxc minifier: peephole/fold_constants.rs:1377",
 			"oxc minifier: peephole/inline_single_use_variable.rs:359",
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:1097",
+			"oxc minifier: peephole/substitute_alternate_syntax.rs:1137",
 			"swc exec: issue_10095",
 			"swc exec: issue_8864_1",
 			"swc exec: terser_issue_t292_no_flatten_with_arg_colliding_with_arg_value_inner_scope",
@@ -2048,14 +2064,14 @@ const OXC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/projects/underscore/7/input.js",
 			"swc exec: terser_hoist_props_issue_3046",
 			"swc exec: terser_reduce_vars_issue_2420_3",
-			"oxc minifier: peephole/dead_code_elimination.rs:997",
+			"oxc minifier: peephole/dead_code_elimination.rs:1015",
 			"oxc minifier: peephole/inline_single_use_variable.rs:369",
 			"oxc minifier: peephole/minimize_exit_points.rs:444",
 			"oxc minifier: peephole/minimize_statements.rs:129",
 			"oxc minifier: peephole/minimize_statements.rs:133",
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:980",
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:992",
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:1100"
+			"oxc minifier: peephole/substitute_alternate_syntax.rs:1020",
+			"oxc minifier: peephole/substitute_alternate_syntax.rs:1032",
+			"oxc minifier: peephole/substitute_alternate_syntax.rs:1140"
 		]
 	],
 	[
@@ -2227,10 +2243,10 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc inlines more constants and functions, as oxc's `peephole/inline.rs` tests show",
 		[
-			"oxc minifier: peephole/inline.rs:698",
-			"oxc minifier: peephole/inline.rs:705",
-			"oxc minifier: peephole/inline.rs:706",
-			"oxc minifier: peephole/inline.rs:642",
+			"oxc minifier: peephole/inline.rs:710",
+			"oxc minifier: peephole/inline.rs:717",
+			"oxc minifier: peephole/inline.rs:718",
+			"oxc minifier: peephole/inline.rs:654",
 			"oxc minifier: peephole/inline.rs:12",
 			"oxc minifier: peephole/inline.rs:18",
 			"oxc minifier: peephole/inline.rs:33",
@@ -2242,14 +2258,16 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/inline.rs:455",
 			"oxc minifier: peephole/inline.rs:577",
 			"oxc minifier: peephole/inline.rs:589",
-			"oxc minifier: peephole/inline.rs:617",
-			"oxc minifier: peephole/inline.rs:626",
-			"oxc minifier: peephole/inline.rs:672",
-			"oxc minifier: peephole/inline.rs:673",
-			"oxc minifier: peephole/inline.rs:674",
-			"oxc minifier: peephole/inline.rs:681",
-			"oxc minifier: peephole/inline.rs:708",
-			"oxc minifier: peephole/inline.rs:735"
+			"oxc minifier: peephole/inline.rs:629",
+			"oxc minifier: peephole/inline.rs:638",
+			"oxc minifier: peephole/inline.rs:684",
+			"oxc minifier: peephole/inline.rs:685",
+			"oxc minifier: peephole/inline.rs:686",
+			"oxc minifier: peephole/inline.rs:693",
+			"oxc minifier: peephole/inline.rs:720",
+			"oxc minifier: peephole/inline.rs:747",
+			"oxc minifier: peephole/inline.rs:607",
+			"oxc minifier: peephole/inline.rs:612"
 		]
 	],
 	[
@@ -2675,14 +2693,7 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		'oxc converts the operands of `Math.pow` or `"".concat` in another order, writing `a ** +b`, a template or one `concat` for a chain of them, where a getter or `valueOf` of one may see what converting the other did',
 		[
-			"oxc minifier: peephole/replace_known_methods.rs:1081",
-			"oxc minifier: peephole/replace_known_methods.rs:1082",
-			"oxc minifier: peephole/replace_known_methods.rs:1083",
 			"oxc minifier: peephole/replace_known_methods.rs:1085",
-			"oxc minifier: peephole/replace_known_methods.rs:1105",
-			"oxc minifier: peephole/replace_known_methods.rs:1106",
-			"oxc minifier: peephole/replace_known_methods.rs:1116",
-			"oxc minifier: peephole/replace_known_methods.rs:1118",
 			"oxc minifier: peephole/replace_known_methods.rs:637",
 			"oxc minifier: peephole/replace_known_methods.rs:638",
 			"oxc minifier: peephole/replace_known_methods.rs:639"
@@ -2754,15 +2765,10 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc's output is wrong: it folds a string method otherwise than the spec, as its own tests now show: `slice` and `substring` keep a surrogate pair they split, an `undefined` end reads as 0, `indexOf` wraps a position past 2**32, and `trim` keeps U+FEFF and drops U+0085",
 		[
-			"oxc minifier: peephole/replace_known_methods.rs:251",
-			"oxc minifier: peephole/replace_known_methods.rs:254",
-			"oxc minifier: peephole/replace_known_methods.rs:265",
-			"oxc minifier: peephole/replace_known_methods.rs:274",
 			"oxc minifier: peephole/replace_known_methods.rs:449",
 			"oxc minifier: peephole/replace_known_methods.rs:450",
 			"oxc minifier: peephole/replace_known_methods.rs:451",
-			"oxc minifier: peephole/replace_known_methods.rs:452",
-			"oxc minifier: peephole/replace_known_methods.rs:60"
+			"oxc minifier: peephole/replace_known_methods.rs:452"
 		]
 	],
 	[
@@ -2789,16 +2795,7 @@ const OXC_SMALLER_BY_REASON = [
 	],
 	[
 		"oxc's output is wrong: it folds `delete` of a string's index or `length`, an array's `length` or a `Number` constant to `true`, where it is `false`, or a TypeError in strict code",
-		[
-			"oxc minifier: peephole/replace_known_methods.rs:1245",
-			"oxc minifier: peephole/replace_known_methods.rs:1246",
-			"oxc minifier: peephole/replace_known_methods.rs:1247",
-			"oxc minifier: peephole/replace_known_methods.rs:1248",
-			"oxc minifier: peephole/replace_known_methods.rs:1249",
-			"oxc minifier: peephole/replace_known_methods.rs:1250",
-			"oxc minifier: peephole/replace_known_methods.rs:1251",
-			"oxc minifier: peephole/replace_known_methods.rs:1252"
-		]
+		[]
 	],
 	[
 		"oxc goes further than webpack on what terser's `properties` tests cover",
@@ -2847,14 +2844,7 @@ const OXC_SMALLER_BY_REASON = [
 	],
 	[
 		"oxc's output is wrong: it drops a call in place of an empty function whose rest parameter's pattern runs a default or throws, as `(function (...[v = n++]) {})()`",
-		[
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:1187",
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:1191",
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:1195",
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:1199",
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:1203",
-			"oxc minifier: peephole/substitute_alternate_syntax.rs:1204"
-		]
+		[]
 	],
 	[
 		"oxc goes further than webpack on what terser's `destructuring` tests cover",
@@ -3024,9 +3014,7 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"constant folding: webpack writes a computed value (a string, `NaN`, an element) where the rival keeps the expression that makes it",
 		[
-			"terser compress: template-string/template_string_with_predefined_constants",
-			"terser compress: unicode/issue_2242_3",
-			"terser compress: unicode/issue_2242_4"
+			"terser compress: template-string/template_string_with_predefined_constants"
 		]
 	],
 	[
@@ -3294,7 +3282,7 @@ const OXC_SMALLER_BY_REASON = [
 	],
 	[
 		"oxc's output is wrong: it renames `slot` inside a `with` body, so a `slot` property on the `with` object is no longer called",
-		["oxc minifier: peephole/dead_code_elimination.rs:860"]
+		["oxc minifier: peephole/dead_code_elimination.rs:878"]
 	],
 	[
 		"oxc's output is wrong: it renames a `#private` name a direct `eval` reads, so the `eval` throws a SyntaxError",
