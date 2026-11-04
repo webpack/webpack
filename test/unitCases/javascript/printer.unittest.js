@@ -4558,6 +4558,41 @@ describe("one-pass minify of what runs nothing", () => {
 	});
 });
 
+describe("one-pass minify of unread values", () => {
+	/**
+	 * @param {[string, string][]} cases each source and what it prints as
+	 */
+	const expectPrints = (cases) => {
+		for (const [source, expected] of cases) {
+			expect(minifyOnePass(source, { compress: {}, mangle: false }).code).toBe(
+				expected
+			);
+		}
+	};
+
+	it("should drop a read a `typeof` test shows bound", () => {
+		expectPrints([
+			['typeof x!=="undefined"&&x', ""],
+			['typeof x=="undefined"||x', ""],
+			['"u"<=typeof x||x', ""],
+			['typeof x==="object"&&x', ""],
+			['typeof x==="undefined"?0:x', ""],
+			['"undefined"!=typeof x?x:0', ""],
+			// The read runs where the name may be unbound, or another name is read.
+			['typeof x==="undefined"&&x', 'typeof x>"u"&&x;'],
+			['typeof x!=="undefined"||x', 'typeof x<"u"||x;'],
+			['"u">=typeof x||x', '"u">=typeof x||x;'],
+			['typeof x!=="undefined"?0:x', 'typeof x<"u"||x;'],
+			['typeof x!=="undefined"&&y', 'typeof x<"u"&&y;'],
+			['typeof x!=="undefined"&&x.y', 'typeof x<"u"&&x.y;'],
+			['typeof x!=="undefined"??x', 'typeof x<"u";'],
+			// A `typeof` of a name in its dead zone throws, a `with` object answers any.
+			['x;typeof y<"u"&&y;let y', 'x,typeof y<"u"&&y;let y;'],
+			['with(o)typeof x<"u"&&x', 'with(o)typeof x<"u"&&x;']
+		]);
+	});
+});
+
 describe("one-pass minify of statement sequences", () => {
 	it("should join expression statements and the `return` after them, as terser's `sequences`", () => {
 		const cases = [
