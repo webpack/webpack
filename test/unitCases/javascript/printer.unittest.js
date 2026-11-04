@@ -4598,6 +4598,32 @@ describe("one-pass minify of unread values", () => {
 		]);
 	});
 
+	it("should drop a class whose static blocks run nothing and whose keys are literals", () => {
+		expectPrints([
+			[
+				"(class{static{[1];let x;const y=1;var z;function f(){}(function(){});()=>{};;class D{}}})",
+				""
+			],
+			['(class{["x"]=alert(1);static["y"]=2;[1](){}static[1n];[null](){}})', ""],
+			['(class{["prototype"](){}})', ""],
+			// A static member named `prototype` throws, a statement may run code.
+			[
+				'(class{static["prototype"](){}})',
+				'(class{static["prototype"](){}});'
+			],
+			["(class{static[/a/]})", "(class{static[/a/]});"],
+			["(class{[a](){}})", "(class{[a](){}});"],
+			["(class{static{f()}})", "(class{static{f()}});"],
+			["(class{static{let{a}={}}})", "(class{static{let{a:a}={}}});"],
+			["(class{static{let a=b}})", "(class{static{b}});"],
+			[
+				"(class{static{class D extends f(){}}})",
+				"(class{static{class D extends(f()){}}});"
+			],
+			["(class{static{if(1);}})", "(class{});"]
+		]);
+	});
+
 	it("should drop a spread of a literal that runs no iterator or getter", () => {
 		expectPrints([
 			["[...[]]", ""],
