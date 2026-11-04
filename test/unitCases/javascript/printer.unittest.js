@@ -1581,8 +1581,8 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["do{c()}while(!0);do{d();e()}while(0);f();do{if(x)break;d()}while(0);do{let q=g();h(q,q)}while(0);l:do{d()}while(0);if(a)do{d();e()}while(0);else f();do;while(0);do{switch(a){case 1:b()}}while(0);do{(function(){for(;;)break})()}while(0)", {}, "for(;;){c()}d(),e();f();do{if(x)break;d()}while(0);{let e=g();h(e,e)}e:do{d()}while(0);if(a){d(),e()}else f();do{if(a===1)b()}while(0);!function(){for(;;)break}();"],
 			// terser's `dead_code` of a loop whose body is a `break`: what sets it up and its test run once.
 			["for(;;)break;for(a();;)break;for(;b();)break;for(c();d();)break;for(;;e())break;for(f();;g())break;for(;h();i())break;for(j();k();l())break;while(x())break;while(x()){break}if(a)while(x())break;else y();for(var i=0;x;)break;l:while(x())break;for((a in b);c;)break;for(;function(){}();)break", {}, "for(;;)break;a();b();c(),d();for(;;e())break;f();h();j(),k();x();x();if(a)x();else y();for(var i=0;x;)break;r:while(x())break;(a in b),c;(function(){}());"],
-			// terser's `evaluate`: `!` of an object made running nothing is `!1`, `delete` of what is no reference `!0`, but a write in it stays.
-			["x=![1,2];x=!/foo/;x=!0;x=!\"\";x=!{};x=![f()];x=delete(1/0);x=delete void 0;x=delete undefined;x=delete NaN;x=delete(0,a);x=delete 1;x=delete a.b;x=delete(a);x=delete a?.b;x=delete f();if(delete 1)g();var b;x=delete(b=NaN)", { compress: { toplevel: true } }, "x=!1,x=!1,x=!0,x=!0,x=!1,x=![f()],x=!0,x=!0,x=delete undefined,x=delete NaN,x=delete(0,a),x=!0,x=delete a.b,x=delete a,x=delete a?.b,x=delete f();g();var b;x=delete(b=NaN);"],
+			// terser's `evaluate`: `!` of an object made running nothing is `!1`, `delete` of what is no reference `!0` and of the global `undefined` or `NaN` `!1`, but a write in it stays.
+			["x=![1,2];x=!/foo/;x=!0;x=!\"\";x=!{};x=![f()];x=delete(1/0);x=delete void 0;x=delete undefined;x=delete NaN;x=delete(0,a);x=delete 1;x=delete a.b;x=delete(a);x=delete a?.b;x=delete f();if(delete 1)g();var b;x=delete(b=NaN)", { compress: { toplevel: true } }, "x=!1,x=!1,x=!0,x=!0,x=!1,x=![f()],x=!0,x=!0,x=!1,x=!1,x=delete(0,a),x=!0,x=delete a.b,x=delete a,x=delete a?.b,x=delete f();g();var b;x=delete(b=NaN);"],
 			// A function called prints as what it returns past parameters passed nothing nothing reads, but not one it returns or where `arguments` reads them.
 			["console.log((function(x,y,z){return 123})());console.log(function(x,y,z){return z}());console.log(function(x){return 6}(a));function q(b){console.log(function(x,y){return x}(b))}console.log(function(x){return arguments.length}())", {}, "console.log(123),console.log(function(n,o,t){return t}()),console.log(function(n){return 6}(a));function q(n){console.log(n)}console.log(function(n){return arguments.length}());"],
 			// A logical expression a known left side folds to a name called prints the name, but not `eval`, a member or one `typeof` reads.
@@ -4610,6 +4610,20 @@ describe("one-pass minify of statement sequences", () => {
 		expect(
 			minifyOnePass("f(!\\u0049nfinity,typeof \\u004eaN)", { compress: {} }).code
 		).toBe('f(!1,"number");');
+	});
+
+	it("should fold a `delete` of the global `undefined`, `NaN` or `Infinity` to `false`", () => {
+		const cases = [
+			["console.log(delete undefined,delete NaN,delete Infinity)", "console.log(!1,!1,!1);"],
+			// A parameter of the name, or a `with` that may hold one, is not the global.
+			["function f(undefined){return delete undefined}console.log(f())", "function f(e){return delete e}console.log(f());"],
+			["var o={NaN:1};with(o)console.log(delete NaN)", "var o={NaN:1};with(o)console.log(delete NaN);"]
+		];
+		for (const [source, expected] of cases) {
+			const { code } = minifyOnePass(source, { compress: {} });
+			expect(code).toBe(expected);
+			expect(runProgram(code)).toBe(runProgram(source));
+		}
 	});
 
 	it("should read `?.` after what is never nullish as `.`", () => {
