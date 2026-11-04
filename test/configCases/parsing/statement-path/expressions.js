@@ -32,6 +32,13 @@ export function expressions(input) {
 	var fns = { k: () => 3 };
 	var computed = fns[key]();
 	var cache = require.cache.missing;
+	var list = [7];
+	var regExpKeyed = { "/x/": 8 };
+	var byString = fns["k"]();
+	var byNumber = list[0];
+	var byRegExp = regExpKeyed[/x/];
+	var byTemplate = fns[`k`]();
+	var byComputed = list[input - 1];
 	return [
 		never,
 		always,
@@ -52,6 +59,11 @@ export function expressions(input) {
 		called,
 		arrowed,
 		computed,
-		cache
+		cache,
+		byString,
+		byNumber,
+		byRegExp,
+		byTemplate,
+		byComputed
 	];
 }

@@ -20,6 +20,7 @@ it("should fire the statement hook for each statement", () => {
 		"try",
 		"finally",
 		"skipped",
+		32,
 		"yes"
 	]);
 	expect(expressions(1)).toEqual([
@@ -42,7 +43,12 @@ it("should fire the statement hook for each statement", () => {
 		2,
 		2,
 		3,
-		undefined
+		undefined,
+		3,
+		7,
+		8,
+		3,
+		7
 	]);
 	return import("./tla").then(({ total }) => {
 		expect(total).toBe(3);
