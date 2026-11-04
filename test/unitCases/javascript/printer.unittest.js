@@ -3233,7 +3233,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				"export function f(p){var b=undefined;return[b[p],1]}export function g(p){var b=undefined;return b(p)}export const h=+(-0)"
 			)
 		).toBe(
-			"export function f(n){return[(void 0)[n],1]}export function g(n){return(void 0)(n)}export const h=+-0;"
+			"export function f(n){return[(void 0)[n],1]}export function g(n){return(void 0)(n)}export const h=-0;"
 		);
 		expect(
 			print(
@@ -4610,6 +4610,16 @@ describe("one-pass minify of statement sequences", () => {
 		expect(
 			minifyOnePass("f(!\\u0049nfinity,typeof \\u004eaN)", { compress: {} }).code
 		).toBe('f(!1,"number");');
+	});
+
+	it("should fold a unary to `-0`", () => {
+		const source =
+			'var a=1;console.log(+-"",1/+-"",a- +-"",a-+-"",-(-0),~-"",typeof +-"")';
+		const { code } = minifyOnePass(source, { compress: {} });
+		expect(code).toBe(
+			'var a=1;console.log(-0,1/-0,a- -0,a- -0,0,-1,"number");'
+		);
+		expect(runProgram(code)).toBe(runProgram(source));
 	});
 
 	it("should fold a `delete` of the global `undefined`, `NaN` or `Infinity` to `false`", () => {
