@@ -11,7 +11,7 @@ module.exports = {
 		);
 		expect(code).not.toContain('"circle"');
 		expect(code).toContain('if(!flag)log.push("else")');
-		expect(code).toContain("found:switch");
+		expect(code).toContain('found:{log.push("one");break found}');
 		expect(code).not.toContain('"two"');
 		expect(code).toContain("case at():");
 		expect(code).toContain("if(flag)break");

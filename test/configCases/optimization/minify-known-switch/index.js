@@ -126,6 +126,7 @@ it("should print the statements a `switch` on a known value runs", () => {
 	expect(scoped()).toBe("block");
 	expect(shadowed([], "outer")).toEqual(["inner", "outer"]);
 	expect(shadowed([], "other")).toEqual(["inner", "other"]);
+	expect(labeled([])).toEqual(["one"]);
 });
 
 it("should keep a `switch` whose path is not known or whose dropped cases declare", () => {
@@ -137,7 +138,6 @@ it("should keep a `switch` whose path is not known or whose dropped cases declar
 	expect(log).toEqual(["a", "b"]);
 	expect(unmatched([], true)).toEqual([]);
 	expect(unmatched([], false)).toEqual(["else"]);
-	expect(labeled([])).toEqual(["one"]);
 	expect(unknownFirst([], () => 1)).toEqual(["at"]);
 	expect(nestedBreak([], true)).toEqual([]);
 	expect(nestedBreak([], false)).toEqual(["after"]);

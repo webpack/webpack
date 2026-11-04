@@ -4589,6 +4589,33 @@ describe("one-pass minify of statement sequences", () => {
 		}
 	});
 
+	it("should fold a labeled `switch` of a known value", () => {
+		const cases = [
+			[
+				"function s(x,y){A:switch(1){case 1:x();for(;;)if(y())break A;y();case 2:x();default:y()}}",
+				"function s(a,c){a:{a();for(;;)if(c())break a;c();a();c()}}"
+			],
+			["function s(x,y){A:switch(1){case 1:x();y();break;case 2:y()}}", "function s(c,s){c:c(),s()}"],
+			// A label needs a statement, and an unlabeled `break` its `switch`.
+			["function s(x){A:switch(1){case 2:x()}}", "function s(c){c:switch(1){case 2:c()}}"],
+			["function s(x,y){A:switch(1){case 1:x();if(y())break;y()}}", "function s(c,i){c:switch(1){case 1:c();if(i())break;i()}}"]
+		];
+		for (const [source, expected] of cases) {
+			const { code } = minifyOnePass(source, {
+				compress: { toplevel: false },
+				mangle: { toplevel: false }
+			});
+			expect(code).toBe(expected);
+			// `y` alternates, so a loop waiting on it ends.
+			for (const call of [
+				"var n=0;s(()=>console.log(1),()=>{console.log(2);return n^=1})",
+				"var n=1;s(()=>console.log(1),()=>{console.log(2);return n^=1})"
+			]) {
+				expect(runProgram(`${code}${call}`)).toBe(runProgram(`${source}${call}`));
+			}
+		}
+	});
+
 	it("should print the known `switch`, spread and unary values of the config cases", () => {
 		const fs = require("fs");
 		const path = require("path");
