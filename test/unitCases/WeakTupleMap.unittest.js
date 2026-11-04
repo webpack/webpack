@@ -23,6 +23,17 @@ describe("WeakTupleMap", () => {
 		expect(map.get(keyA, {})).toBeUndefined();
 	});
 
+	it("should hold function elements weakly", () => {
+		const map = new WeakTupleMap();
+		const fn = () => {};
+		map.set(fn, "value");
+		expect(map.get(fn)).toBe("value");
+		// a function is a valid WeakMap key, so it must not pin the entry
+		// in the strong map (ModuleGraph.cached keys by the cached function)
+		expect(map.m).toBeUndefined();
+		expect(map.w.has(fn)).toBe(true);
+	});
+
 	it("should mix weak and strong key elements in one tuple", () => {
 		const map = new WeakTupleMap();
 		const obj = {};
