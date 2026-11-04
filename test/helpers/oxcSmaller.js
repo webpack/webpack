@@ -1307,8 +1307,7 @@ const OXC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/projects/yui/8/input.js",
 			"swc minifier: full/size/991835278eecab695ad3515447b5747adcdfe1b4/input.js",
 			"swc minifier: full/size/b57e4ca6d118a9480312f6f3ac809245bbed8115/input.js",
-			"swc minifier: full/size/bfb48fed563e5fb468b88b6a6670972c3ca7ee38/input.js",
-			"swc minifier: fixture/next/react-pdf-renderer/input.js"
+			"swc minifier: full/size/bfb48fed563e5fb468b88b6a6670972c3ca7ee38/input.js"
 		]
 	],
 	[
