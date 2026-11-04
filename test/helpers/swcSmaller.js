@@ -87,7 +87,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/12118/input.js",
 			"swc minifier: fixture/issues/12177/input.js",
 			"swc minifier: fixture/issues/12185/input.js",
-			"swc minifier: fixture/issues/12189/input.js",
 			"swc minifier: fixture/issues/12190/input.js",
 			"swc minifier: fixture/issues/12193/input.js",
 			"swc minifier: fixture/issues/12196/input.js",
@@ -451,7 +450,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: dead-code/collapse_vars_lvalues_drop_assign",
 			"terser compress: destructuring/issue_t111_1",
 			"terser compress: destructuring/issue_t111_3",
-			"terser compress: evaluate/negative_zero",
 			"terser compress: evaluate/pow_with_number_constants",
 			"terser compress: evaluate/unsafe_constant",
 			"terser compress: evaluate/issue_1760_1",
@@ -635,8 +633,6 @@ const SWC_SMALLER_BY_REASON = [
 		[
 			"terser compress: switch/constant_switch_5",
 			"terser compress: switch/constant_switch_6",
-			"terser compress: switch/constant_switch_8",
-			"terser compress: switch/constant_switch_9",
 			"terser compress: switch/issue_1663",
 			"terser compress: switch/if_else5",
 			"terser compress: switch/if_else6",
@@ -813,7 +809,6 @@ const SWC_SMALLER_BY_REASON = [
 	[
 		"swc goes further than webpack on what terser's `evaluate` tests cover",
 		[
-			"terser compress: evaluate/positive_zero",
 			"terser compress: evaluate/prop_function",
 			"terser compress: evaluate/unsafe_array",
 			"terser compress: evaluate/unsafe_string",
