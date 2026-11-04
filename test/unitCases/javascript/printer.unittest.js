@@ -337,7 +337,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"function f(a){ return a === undefined ? undefined.x : typeof undefined } function g(undefined) { return undefined } y = { undefined: 1 }; z = o.undefined; w = [undefined]",
 				{},
-				"function f(n){return n===void 0?undefined.x:typeof void 0}function g(n){return n}y={undefined:1},z=o.undefined,w=[void 0];"
+				"function f(n){return n===void 0?undefined.x:\"undefined\"}function g(n){return n}y={undefined:1},z=o.undefined,w=[void 0];"
 			],
 			// Where anything writes it, it stays a name everywhere.
 			[
@@ -4822,6 +4822,16 @@ describe("one-pass minify of statement sequences", () => {
 		const { code } = minifyOnePass(source, { compress: {} });
 		expect(code).toBe(
 			'var a=1;console.log(-0,1/-0,a- -0,a- -0,0,-1,"number");'
+		);
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
+	it("should fold the `typeof` of `undefined`", () => {
+		const source =
+			'console.log(typeof void 0,typeof undefined,typeof void 0<"u",typeof undefined=="undefined");function f(undefined){return typeof undefined}console.log(f(1),typeof void console.log(2),!void 0,-undefined?3:4)';
+		const { code } = minifyOnePass(source, { compress: {} });
+		expect(code).toBe(
+			'console.log("undefined","undefined",!1,!0);function f(e){return typeof e}console.log(f(1),typeof void console.log(2),!void 0,-void 0?3:4);'
 		);
 		expect(runProgram(code)).toBe(runProgram(source));
 	});
