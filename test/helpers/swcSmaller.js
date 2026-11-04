@@ -215,7 +215,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/9922/2/input.js",
 			"swc minifier: fixture/issues/arguments-canonical-index/input.js",
 			"swc minifier: fixture/issues/array-constructor-length/input.js",
-			"swc minifier: fixture/issues/buble/1/input.js",
 			"swc minifier: fixture/issues/do-while-false-control-flow/input.js",
 			"swc minifier: fixture/issues/do-while-false-terminal-jump/defaults-mangle/input.js",
 			"swc minifier: fixture/issues/do-while-false-terminal-jump/labels/input.js",
@@ -927,7 +926,6 @@ const SWC_SMALLER_BY_REASON = [
 		"swc goes further than webpack on what terser's `template-string` tests cover",
 		[
 			"terser compress: template-string/template_concattenating_string",
-			"terser compress: template-string/evaluate_nested_templates",
 			"terser compress: template-string/escape_dollar_curly",
 			"terser compress: template-string/sequence_2",
 			"terser compress: template-string/tagged_call_with_invalid_escape_2",
