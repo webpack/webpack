@@ -138,7 +138,7 @@ a< /script/.test(b),a</x/,f(/a/,/script/);
 
 (a?b:c)\`x\`,(a,b)\`x\`,(-a)\`x\`,(()=>1)\`x\`;(function(){})\`x\`;({}.a)\`x\`;({}.a)\`x\`;a.b\`x\`,a[b]\`x\`,(a+b)\`x\`,(a=b)\`x\`,(new A)\`x\`,a()\`x\`;
 
-(function(){}).call();(function(){})\`x\`;({})+1;({}).a++;(function(){})+1;(function(){}()).a=1;({}).a=1;
+(function(){}).call();(function(){})\`x\`;({}).a++;(function(){})+1;(function(){}()).a=1;({}).a=1;
 
 
 
@@ -397,7 +397,7 @@ a< /script/.test(b),a</x/,f(/a/,/script/);
 
 (a?b:c)\`x\`,(a,b)\`x\`,(-a)\`x\`,(()=>1)\`x\`;(function(){})\`x\`;({}.a)\`x\`;({}.a)\`x\`;a.b\`x\`,a[b]\`x\`,(a+b)\`x\`,(a=b)\`x\`,(new A)\`x\`,a()\`x\`;
 
-(function(){}).call();(function(){})\`x\`;({})+1;({}).a++;(function(){})+1;(function(){}()).a=1;({}).a=1;
+(function(){}).call();(function(){})\`x\`;({}).a++;(function(){})+1;(function(){}()).a=1;({}).a=1;
 
 
 
@@ -650,7 +650,7 @@ a< /script/.test(b),a</x/,f(/a/,/script/);
 
 (a?b:c)\`x\`,(a,b)\`x\`,(-a)\`x\`,(()=>1)\`x\`;(function(){})\`x\`;({}.a)\`x\`;({}.a)\`x\`;a.b\`x\`,a[b]\`x\`,(a+b)\`x\`,(a=b)\`x\`,(new A)\`x\`,a()\`x\`;
 
-(function(){}).call();(function(){})\`x\`;({})+1;({}).a++;(function(){})+1;(function(){}()).a=1;({}).a=1;
+(function(){}).call();(function(){})\`x\`;({}).a++;(function(){})+1;(function(){}()).a=1;({}).a=1;
 
 
 
@@ -909,7 +909,7 @@ a< /script/.test(b),a</x/,f(/a/,/script/);
 
 (a?b:c)\`x\`,(a,b)\`x\`,(-a)\`x\`,(()=>1)\`x\`;(function(){})\`x\`;({}.a)\`x\`;({}.a)\`x\`;a.b\`x\`,a[b]\`x\`,(a+b)\`x\`,(a=b)\`x\`,(new A)\`x\`,a()\`x\`;
 
-(function(){}).call();(function(){})\`x\`;({})+1;({}).a++;(function(){})+1;(function(){}()).a=1;({}).a=1;
+(function(){}).call();(function(){})\`x\`;({}).a++;(function(){})+1;(function(){}()).a=1;({}).a=1;
 
 
 
@@ -1316,7 +1316,7 @@ a.b\`x\`,a[b]\`x\`,(a+b)\`x\`,(a=b)\`x\`,(new A)\`x\`,a()\`x\`
 
 
 /* p */
-(function(){}).call();(function(){})\`x\`;({})+1;({}).a++;(function(){})+1;((function(){})()).a=1;({}).a=1
+(function(){}).call();(function(){})\`x\`;({}).a++;(function(){})+1;((function(){})()).a=1;({}).a=1
 
 
 /* p */

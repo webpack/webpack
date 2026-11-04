@@ -1600,7 +1600,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// A call printing as `null` or a regular expression needs no parentheses read off; a value folded into its read prints where that is; an `else if` known later leaves its `if` nothing.
 			["function r(){return null}function q(){return/a/}x=r().filepath;y=q().source;function f(a){var b=g(a);var n={a:a,b:b};return n}f(()=>{if(!1)return;else if(!1){return}else{}g()})", { mangle: false }, "function r(){return null}function q(){return/a/}x=r().filepath,y=q().source;function f(a){return{a:a,b:g(a)}}f(()=>{g()});"],
 			// What prints first in a statement again parenthesizes an object, function or class alone, so one inside a part or argument keeps its literal or call; a `+` before one stays; a `do` running nothing once prints nothing in a list.
-			["({1:{}/2});/*@__PURE__*/f({a:g()}.b);x=+{}/2;+function(){}/3;do{}while(0);a();do;while(0);b();if(x)do{}while(0);else c();do g();while(0)", {}, "({1:{}/2});f({a:g()}.b),x=+{}/2,+function(){}/3;a();b();if(x){}else c();g();"],
+			["({1:{toString(){}}/2});/*@__PURE__*/f({a:g()}.b);x=+{}/2;+function(){}/3;do{}while(0);a();do;while(0);b();if(x)do{}while(0);else c();do g();while(0)", {}, "({1:{toString(){}}/2});f({a:g()}.b),x=+{}/2,+function(){}/3;a();b();if(x){}else c();g();"],
 			// A strict comparison with `0` folds only where no BigInt reaches it.
 			["if((a>>>b)!==0)f();if(((a|1)&b)===0)g();if((a&b)===0)h()", {}, "if(a>>>b)f();if(!((a|1)&b))g();if((a&b)===0)h();"],
 			// `if(t)if(u)x` is `if(t&&u)x` where neither test needs parentheses there, as what a test prints as decides.
@@ -4624,6 +4624,30 @@ describe("one-pass minify of unread values", () => {
 		]);
 	});
 
+	it("should drop a conversion of an array or object literal that runs only built-ins", () => {
+		expectPrints([
+			['+[],-{},""+{},({}+1),0-[],`${[]}`,+{foo:0},+[1,[2],{}],""=={}', ""],
+			// Its own methods, a prototype it sets, a bigint or a replaced built-in run.
+			["+{toString(){}}", "+{toString(){}};"],
+			["+{valueOf:f}", "+{valueOf:f};"],
+			["+{__proto__:p}", "+{__proto__:p};"],
+			["+{[k]:1}", "+{[k]:1};"],
+			["+[a]", "+[a];"],
+			["+[1n]", "+[1n];"],
+			["+[,1]", "+[,1];"],
+			["[]-1n", "[]-1n;"],
+			["Math.sin(...{})", "Math.sin(...{});"],
+			["Object.prototype.toString=f;+{}", "Object.prototype.toString=f,+{};"],
+			["Object.prototype.valueOf=f;+{}", "Object.prototype.valueOf=f,+{};"],
+			["Array.prototype.join=f;+[]", "Array.prototype.join=f,+[];"],
+			["Array.prototype.toString=f;+[]", "Array.prototype.toString=f,+[];"],
+			[
+				"Object.prototype[Symbol.toPrimitive]=f;+[]",
+				"Object.prototype[Symbol.toPrimitive]=f,+[];"
+			]
+		]);
+	});
+
 	it("should drop a spread of a literal that runs no iterator or getter", () => {
 		expectPrints([
 			["[...[]]", ""],
@@ -4651,6 +4675,7 @@ describe("one-pass minify of unread values", () => {
 			["[...[f()],...a]", "[f(),...a];"],
 			["isNaN(...[1])", "isNaN(1);"],
 			["Math.sin(...a)", "Math.sin(...a);"],
+			["Math.sin(...1)", "Math.sin(...1);"],
 			["Math.sin(...[a])", "Math.sin(a);"],
 			[
 				"Array.prototype[Symbol.iterator]=f;[...[1]]",
