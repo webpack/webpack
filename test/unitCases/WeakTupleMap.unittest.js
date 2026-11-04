@@ -1,3 +1,6 @@
+/// <reference lib="es2021.weakref" />
+// cspell:ignore weakref
+
 "use strict";
 
 const WeakTupleMap = require("../../lib/util/WeakTupleMap");
@@ -21,6 +24,25 @@ describe("WeakTupleMap", () => {
 		expect(map.get(keyA, keyB)).toBe("value");
 		expect(map.has(keyA, keyB)).toBe(true);
 		expect(map.get(keyA, {})).toBeUndefined();
+	});
+
+	it("should hold function elements weakly", async () => {
+		const map = new WeakTupleMap();
+		/** @type {WeakRef<() => void> | undefined} */
+		let ref;
+		(() => {
+			// ModuleGraph.cached keys its cache by the cached function
+			const fn = () => {};
+			map.set(fn, "value");
+			expect(map.get(fn)).toBe("value");
+			ref = new WeakRef(fn);
+		})();
+		// a WeakRef target stays alive until the current job ends
+		await new Promise((resolve) => {
+			setImmediate(resolve);
+		});
+		/** @type {() => void} */ (globalThis.gc)();
+		expect(/** @type {WeakRef<() => void>} */ (ref).deref()).toBeUndefined();
 	});
 
 	it("should mix weak and strong key elements in one tuple", () => {
