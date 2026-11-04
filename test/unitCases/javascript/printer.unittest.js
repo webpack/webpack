@@ -1404,7 +1404,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["function f(){switch(foo){case\"bar\":baz()}}", {}, "function f(){if(foo===\"bar\")baz()}"],
 			["function f(){switch(foo){case\"bar\":baz();break}}", {}, "function f(){if(foo===\"bar\")baz()}"],
 			["function f(){switch(foo){case 1:baz();break;}h()}", {}, "function f(){if(foo===1)baz();h()}"],
-			["function f(){switch(foo){default:baz()}}", {}, "function f(){switch(foo){default:baz()}}"],
+			["function f(){switch(foo){default:baz()}}", {}, "function f(){foo,baz()}"],
 			["function f(){switch(foo){case 1:if(a)break;baz()}}", {}, "function f(){switch(foo){case 1:if(a)break;baz()}}"],
 			["function f(){switch(foo()){case g():let x=1;h(x)}}", {}, "function f(){switch(foo()){case g():let c=1;h(c)}}"],
 			["function f(){switch(a){case 1:b();c()}}", {}, "function f(){if(a===1){b();c()}}"],
@@ -1507,7 +1507,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// What a logical nobody reads holds is read for its truth; a conditional printing as `!t` or `!!t` takes what a unary takes.
 			["(x?true:false)&&y();(x?true:y)&&y();(x&&true)&&y();(x||false)&&y();a?true:false;a?false:true;x=(a?!0:!1)||b;x=y&&(a?!0:!1);x=(a?!1:!0).b;x=(a<b?!0:!1)&&c;x=(a?!0:!1)+1;(a+b?!0:!1)&&c();x=(a?!1:!0)**2;x=(a?!0:!1)?1:2", {}, "x&&y(),(x||y)&&y(),x&&y(),x&&y(),a,a,x=!!a||b,x=y&&!!a,x=(!a).b,x=(a<b)&&c,x=!!a+1,(a+b)&&c(),x=(!a)**2,x=a?1:2;"],
 			// terser's `switches`: cases ending a `switch` that run nothing go; one with none left runs its test, or goes from its list.
-			["switch(a()){}switch(a){default:break}switch(a){case 3:b();case 2:case 1:}switch(a){case 3:b();break;case 2:break}switch(a){case f():}switch(a){default:b()}switch(a){case 1:b();break;case 2:c();case 3:}if(x)switch(y){case 1:}else z();function f(e){switch(e){case 2:}g()}switch(a){case 1:/*! k */}", {}, "a();a;if(a===3)b();if(a===3)b();switch(a){case f():}switch(a){default:b()}switch(a){case 1:b();break;case 2:c()}if(x)y;else z();function f(a){g()}switch(a){case 1:/*! k */}"],
+			["switch(a()){}switch(a){default:break}switch(a){case 3:b();case 2:case 1:}switch(a){case 3:b();break;case 2:break}switch(a){case f():}switch(a){default:b()}switch(a){case 1:b();break;case 2:c();case 3:}if(x)switch(y){case 1:}else z();function f(e){switch(e){case 2:}g()}switch(a){case 1:/*! k */}", {}, "a();a;if(a===3)b();if(a===3)b();switch(a){case f():}a,b();switch(a){case 1:b();break;case 2:c()}if(x)y;else z();function f(a){g()}switch(a){case 1:/*! k */}"],
 			// A read in parentheses may be what they write, and with `unused` off the array stays: either keeps its reads.
 			["function g(){const a=[1,2];(a[0])=3;f(a[0],a[1])}function h(){const a=[1,2];(a[0])++;f(a[0])}", { mangle: false }, "function g(){let a=[1,2];a[0]=3,f(a[0],a[1])}function h(){let a=[1,2];a[0]++,f(a[0])}"],
 			["function g(){const a=[1,2];f(a[0],a[1])}", { mangle: false, compress: { toplevel: false, unused: false } }, "function g(){let a=[1,2];f(a[0],a[1])}"],
@@ -2106,6 +2106,33 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// A comment kept or branches printing otherwise keep the `?:`.
 			["if(y)f();else/*! c */f()", "if(y)f();else/*! c */f();"],
 			["if(y)f();else g()", "y?f():g();"]
+		]) {
+			expect(print(source)).toBe(expected);
+		}
+	});
+
+	it("should print a `switch` whose every case falls into its last as what it tests and that case's expressions", () => {
+		const print = (/** @type {string} */ source) =>
+			minifyOnePass(source, {
+				compress: {},
+				mangle: false,
+				format: { comments: "some" }
+			}).code;
+		for (const [source, expected] of [
+			["var a=1,b=2;switch(a--){default:b++}", "var a=1,b=2;a--,b++;"],
+			['switch(id(123)){case 1:case 2:case 3:default:console.log("PASS")}', 'id(123),console.log("PASS");'],
+			["switch(x()){default:g();break;h()}", "x(),g();"],
+			["function f(v){switch(v){case 1:default:g()}}", "function f(v){g()}"],
+			["if(c)switch(q()){default:g()}", "if(c)q(),g();"],
+			// A test that runs anything, a case with statements, no `default`, a
+			// `break` before the end, a declaration or a comment keep the `switch`.
+			["switch(x()){case 1:case y():default:g()}", "switch(x()){case 1:case y():default:g()}"],
+			["switch(x()){case 1:case 2:g()}", "switch(x()){case 1:case 2:g()}"],
+			["switch(x()){default:if(a)break;g()}", "switch(x()){default:if(a)break;g()}"],
+			["switch(x()){default:var v=1;g(v)}", "switch(x()){default:var v=1;g(v)}"],
+			["switch(x()){default:g();break;function q(){}}", "switch(x()){default:g();break;function q(){}}"],
+			["switch(x()){/*! c */default:g()}", "switch(x()){/*! c */default:g()}"],
+			["switch(x()){default:g();break;/*! c */h()}", "switch(x()){default:g();break;/*! c */h()}"]
 		]) {
 			expect(print(source)).toBe(expected);
 		}
