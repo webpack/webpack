@@ -468,6 +468,21 @@ for (const [sourceFile, typeChecker, program] of sourceFiles) {
 			});
 
 		/**
+		 * Tells whether a type's `any` sits only in an index signature, as in
+		 * `Record<string, any>` or `{ [key: string]: any }`: the fallback that
+		 * keeps an object open for keys its declared fields do not name.
+		 * @param {ts.Type} type the type
+		 * @returns {boolean} true when it does
+		 */
+		const isOpenFallback = (type) => {
+			const indexInfos = typeChecker.getIndexInfosOfType(type);
+			return (
+				indexInfos.length > 0 &&
+				indexInfos.every((info) => Boolean(info.type.flags & ts.TypeFlags.Any))
+			);
+		};
+
+		/**
 		 * Tells whether a type holds an `any` of this project's, walking what its
 		 * printed form shows: the arguments of a named type and the members of an
 		 * anonymous one. What it cannot walk counts as its printed form says.
@@ -495,8 +510,18 @@ for (const [sourceFile, typeChecker, program] of sourceFiles) {
 						: undefined;
 				return argumentsHaveOwnAny(typeArguments, typeParameters, true, depth);
 			}
-			if (type.isUnionOrIntersection()) {
+			if (type.isUnion()) {
 				return type.types.some((member) => hasOwnAny(member, depth + 1));
+			}
+			if (type.isIntersection()) {
+				// Declared fields with an open fallback, such as `KnownBuildInfo & Record<string, any>`:
+				// the fallback types no declared field, and a read of any other key is counted on its own.
+				const declaresFields = type.getProperties().length > 0;
+				return type.types.some(
+					(member) =>
+						!(declaresFields && isOpenFallback(member)) &&
+						hasOwnAny(member, depth + 1)
+				);
 			}
 			if (type.aliasSymbol) {
 				return argumentsHaveOwnAny(
@@ -553,9 +578,11 @@ for (const [sourceFile, typeChecker, program] of sourceFiles) {
 							);
 						}
 					) ||
-					typeChecker
-						.getIndexInfosOfType(type)
-						.some((info) => hasOwnAny(info.type, depth + 1))
+					// Beside declared fields an `any` index signature is the open fallback, as above.
+					((type.getProperties().length === 0 || !isOpenFallback(type)) &&
+						typeChecker
+							.getIndexInfosOfType(type)
+							.some((info) => hasOwnAny(info.type, depth + 1)))
 				);
 			}
 			return mentionsAny(printType(type));
@@ -1297,7 +1324,7 @@ for (const column of COLUMNS) {
 	}
 }
 report +=
-	"\n`any` counts `EXPECTED_ANY`, a written `any` and the `any` TypeScript infers where no type is written, such as `const map = new Map()` or `const list = []`. `object` counts `EXPECTED_OBJECT` and `Object`, `Function` counts `EXPECTED_FUNCTION`. Untyped counts the identifiers whose type is or holds `any`, wherever it comes from; the `any` TypeScript's built-in lib writes in its own signatures, such as the replacer of `String#replace`, is left out.\n";
+	"\n`any` counts `EXPECTED_ANY`, a written `any` and the `any` TypeScript infers where no type is written, such as `const map = new Map()` or `const list = []`. `object` counts `EXPECTED_OBJECT` and `Object`, `Function` counts `EXPECTED_FUNCTION`. Untyped counts the identifiers whose type is or holds `any`, wherever it comes from; the `any` TypeScript's built-in lib writes in its own signatures, such as the replacer of `String#replace`, is left out, and so is the open fallback beside declared fields, such as `KnownBuildInfo & Record<string, any>`, though reading a key no field declares is counted.\n";
 if (base && !baseCountsFile) {
 	report +=
 		"\nThe base's inferred `any` and untyped identifiers were not counted, as `--base-counts` was not given.\n";
