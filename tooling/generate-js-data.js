@@ -964,11 +964,13 @@ const UNFOLDED_BUILT_INS = {
 	"it answers an array, which gzips worse as a literal than the call": [
 		"String.prototype.split"
 	],
+	"called as a conversion, which the printer folds by its global name": [
+		"Number.Number",
+		"String.String"
+	],
 	"rarely called on literals, so not weighed yet": [
 		"escape",
 		"unescape",
-		"Number.Number",
-		"String.String",
 		"String.raw",
 		"String.prototype.anchor",
 		"String.prototype.big",

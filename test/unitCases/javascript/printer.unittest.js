@@ -2294,6 +2294,36 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		).toContain('a="abc y"');
 	});
 
+	it("should fold the conversions `Boolean`, `Number` and `String`", () => {
+		const print = (/** @type {string} */ source) =>
+			minifyOnePass(source, {
+				compress: { toplevel: false },
+				mangle: false,
+				format: { comments: "some" }
+			}).code;
+		for (const [source, expected] of [
+			// On constants each answers its value; `Number(undefined)` answers no finite one.
+			[
+				'a=[Boolean(),Number(),Number(-123),Number(!1),Number(null),String("x"),String(1),Number(" 0x1f "),Number(void 0),Number({})]',
+				'a=[!1,0,-123,0,0,"x","1",31,Number(void 0),Number({})];'
+			],
+			// `Boolean(x)` is `!!x`, or `x` where that is a boolean already.
+			[
+				"a=Boolean(b);f(Boolean(!b));x={k:Boolean(b?c>0:c<0)};y=[Boolean((b|+c)!==0)];function g(){return Boolean(b in c)}var z=Boolean(b?!0:!1);Boolean(b?1:!1);u=[Boolean(c?true:false),Boolean(delete b.c),Boolean((b>1))]",
+				"a=!!b,f(!b),x={k:b?c>0:c<0},y=[(b|+c)!==0];function g(){return b in c}var z=!!b;b?1:!1,u=[!!c,delete b.c,b>1];"
+			],
+			// Anywhere else, with no lone argument, spread, optional, replaced or shadowed, it stays.
+			[
+				"a=Boolean(b)?1:2;c=Boolean(b).x;d=Boolean(b)+1;e=Boolean(b,c);g=Boolean(...b);h=Boolean?.(b);k=Boolean((b,c));Boolean({}.x);l=new Boolean(b);m=Boolean(b)(1);n=Boolean(/*! k */b)",
+				"a=Boolean(b)?1:2,c=Boolean(b).x,d=Boolean(b)+1,e=Boolean(b,c),g=Boolean(...b),h=Boolean?.(b),k=Boolean((b,c)),Boolean({}.x),l=new Boolean(b),m=Boolean(b)(1),n=Boolean(/*! k */b);"
+			],
+			["function f(Boolean,Number){a=[Boolean(b),Number(1)]}", "function f(Boolean,Number){a=[Boolean(b),Number(1)]}"],
+			["Boolean=f;Number=g;a=[Boolean(b),Number(1)]", "Boolean=f,Number=g,a=[Boolean(b),Number(1)];"]
+		]) {
+			expect(print(source)).toBe(expected);
+		}
+	});
+
 	it("should print the value an object literal holds at a known key", () => {
 		const print = (/** @type {string} */ source) =>
 			minifyOnePass(`function f(x,g){return[${source}]}`, {
