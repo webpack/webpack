@@ -148,6 +148,40 @@ for (const [sourceFile, typeChecker, program] of sourceFiles) {
 		const untyped = counted ? (untypedByFile[relativeFile] = []) : undefined;
 
 		/**
+		 * Tells whether a node is `prototype` in `C.prototype` of a class or other constructor `C`.
+		 * @param {ts.Node} node the identifier
+		 * @returns {boolean} true when it is
+		 */
+		const isClassPrototype = (node) => {
+			const { parent } = node;
+			if (
+				!ts.isIdentifier(node) ||
+				node.text !== "prototype" ||
+				!ts.isPropertyAccessExpression(parent) ||
+				parent.name !== node
+			) {
+				return false;
+			}
+			// A `prototype` someone declared, as in `{ new (): T, prototype: any }`, is theirs.
+			const symbol = typeChecker.getSymbolAtLocation(node);
+			const declarations = (symbol && symbol.getDeclarations()) || [];
+			if (
+				declarations.some(
+					(declaration) =>
+						("type" in declaration && declaration.type !== undefined) ||
+						ts.getJSDocType(declaration) !== undefined
+				)
+			) {
+				return false;
+			}
+			// Any constructor value, a class name or a variable holding classes.
+			const type = typeChecker.getTypeAtLocation(parent.expression);
+			return (type.isUnion() ? type.types : [type]).every(
+				(member) => member.getConstructSignatures().length > 0
+			);
+		};
+
+		/**
 		 * Tells whether a node is `module` or `exports` in `module.exports`.
 		 * @param {ts.Node} node the identifier
 		 * @returns {boolean} true when it is
@@ -310,7 +344,9 @@ for (const [sourceFile, typeChecker, program] of sourceFiles) {
 		 * @returns {boolean} true when the `any` comes from the built-in lib
 		 */
 		const isBuiltinAny = (node) => {
-			const symbol = typeChecker.getSymbolAtLocation(node);
+			// A literal's key takes the property its declared type gives it, such as `PropertyDescriptor#get`.
+			const symbol =
+				declaredProperty(node) || typeChecker.getSymbolAtLocation(node);
 			const declarations = symbol && symbol.getDeclarations();
 			if (
 				!declarations ||
@@ -444,6 +480,21 @@ for (const [sourceFile, typeChecker, program] of sourceFiles) {
 			});
 
 		/**
+		 * Tells whether a type's `any` sits only in an index signature, as in
+		 * `Record<string, any>` or `{ [key: string]: any }`: the fallback that
+		 * keeps an object open for keys its declared fields do not name.
+		 * @param {ts.Type} type the type
+		 * @returns {boolean} true when it does
+		 */
+		const isOpenFallback = (type) => {
+			const indexInfos = typeChecker.getIndexInfosOfType(type);
+			return (
+				indexInfos.length > 0 &&
+				indexInfos.every((info) => Boolean(info.type.flags & ts.TypeFlags.Any))
+			);
+		};
+
+		/**
 		 * Tells whether a type holds an `any` of this project's, walking what its
 		 * printed form shows: the arguments of a named type and the members of an
 		 * anonymous one. What it cannot walk counts as its printed form says.
@@ -471,8 +522,22 @@ for (const [sourceFile, typeChecker, program] of sourceFiles) {
 						: undefined;
 				return argumentsHaveOwnAny(typeArguments, typeParameters, true, depth);
 			}
-			if (type.isUnionOrIntersection()) {
+			if (type.isUnion()) {
 				return type.types.some((member) => hasOwnAny(member, depth + 1));
+			}
+			if (type.isIntersection()) {
+				// Declared fields with an open fallback, such as `KnownBuildInfo & Record<string, any>`:
+				// the fallback types no declared field, and a read of any other key is counted on its own.
+				const declaresFields = type.getProperties().length > 0;
+				// A member with fields of its own is still walked; only its fallback is left out.
+				return type.types.some(
+					(member) =>
+						!(
+							declaresFields &&
+							isOpenFallback(member) &&
+							member.getProperties().length === 0
+						) && hasOwnAny(member, depth + 1)
+				);
 			}
 			if (type.aliasSymbol) {
 				return argumentsHaveOwnAny(
@@ -529,9 +594,11 @@ for (const [sourceFile, typeChecker, program] of sourceFiles) {
 							);
 						}
 					) ||
-					typeChecker
-						.getIndexInfosOfType(type)
-						.some((info) => hasOwnAny(info.type, depth + 1))
+					// Beside declared fields an `any` index signature is the open fallback, as above.
+					((type.getProperties().length === 0 || !isOpenFallback(type)) &&
+						typeChecker
+							.getIndexInfosOfType(type)
+							.some((info) => hasOwnAny(info.type, depth + 1)))
 				);
 			}
 			return mentionsAny(printType(type));
@@ -885,6 +952,8 @@ for (const [sourceFile, typeChecker, program] of sourceFiles) {
 						node.parent.label === node) ||
 						// Ignore `module.exports`, its values are counted where they are declared
 						isModuleExports(node) ||
+						// Ignore `C.prototype`, which TypeScript itself types with `any` type arguments
+						isClassPrototype(node) ||
 						// Ignore the namespace of a type name such as `NodeJS.WritableStream`
 						(ts.isQualifiedName(node.parent) && node.parent.left === node) ||
 						// Ignore `name` in `const { name: otherName } = obj;`
@@ -981,6 +1050,36 @@ const COLUMNS = /** @type {const} */ ([...KINDS, "untyped"]);
  */
 
 /**
+ * Tells whether a type node is written in a bound: a type parameter's
+ * constraint, such as `@template {unknown[]} T`, or the type a conditional
+ * type tests against. A bound limits what may be passed; it types no value.
+ * @param {ts.Node} node the type node
+ * @returns {boolean} true when it is
+ */
+const isInBound = (node) => {
+	let child = node;
+	let { parent } = node;
+	while (parent) {
+		if (
+			(ts.isTypeParameterDeclaration(parent) && parent.constraint === child) ||
+			(ts.isConditionalTypeNode(parent) && parent.extendsType === child) ||
+			(ts.isJSDocTypeExpression(parent) &&
+				ts.isJSDocTemplateTag(parent.parent) &&
+				parent.parent.constraint === parent)
+		) {
+			return true;
+		}
+		// Stop at the end of the type, where a value's declaration begins.
+		if (!ts.isTypeNode(parent) && !ts.isJSDocTypeExpression(parent)) {
+			return false;
+		}
+		child = parent;
+		parent = parent.parent;
+	}
+	return false;
+};
+
+/**
  * Returns the escape hatch a type node writes, as the type it stands for and
  * its spelling. An `object` constraining or testing a type, as in
  * `@template {object} T`, says only that it is no primitive.
@@ -996,17 +1095,13 @@ const escapeHatchOf = (node) => {
 		case ts.SyntaxKind.JSDocUnknownType:
 			return { kind: "any", spelling: "?" };
 		case ts.SyntaxKind.UnknownKeyword:
-			return { kind: "unknown", spelling: "unknown" };
-		case ts.SyntaxKind.ObjectKeyword: {
-			const { parent } = node;
-			const isBound =
-				(ts.isTypeParameterDeclaration(parent) && parent.constraint === node) ||
-				(ts.isConditionalTypeNode(parent) && parent.extendsType === node) ||
-				(ts.isJSDocTypeExpression(parent) &&
-					ts.isJSDocTemplateTag(parent.parent) &&
-					parent.parent.constraint === parent);
-			return isBound ? undefined : { kind: "object", spelling: "object" };
-		}
+			return isInBound(node)
+				? undefined
+				: { kind: "unknown", spelling: "unknown" };
+		case ts.SyntaxKind.ObjectKeyword:
+			return isInBound(node)
+				? undefined
+				: { kind: "object", spelling: "object" };
 	}
 	if (
 		!ts.isTypeReferenceNode(node) ||
@@ -1245,7 +1340,7 @@ for (const column of COLUMNS) {
 	}
 }
 report +=
-	"\n`any` counts `EXPECTED_ANY`, a written `any` and the `any` TypeScript infers where no type is written, such as `const map = new Map()` or `const list = []`. `object` counts `EXPECTED_OBJECT` and `Object`, `Function` counts `EXPECTED_FUNCTION`. Untyped counts the identifiers whose type is or holds `any`, wherever it comes from; the `any` TypeScript's built-in lib writes in its own signatures, such as the replacer of `String#replace`, is left out.\n";
+	"\n`any` counts `EXPECTED_ANY`, a written `any` and the `any` TypeScript infers where no type is written, such as `const map = new Map()` or `const list = []`. `object` counts `EXPECTED_OBJECT` and `Object`, `Function` counts `EXPECTED_FUNCTION`. Untyped counts the identifiers whose type is or holds `any`, wherever it comes from; the `any` TypeScript's built-in lib writes in its own signatures, such as the replacer of `String#replace`, is left out, and so is the open fallback beside declared fields, such as `KnownBuildInfo & Record<string, any>`, though reading a key no field declares is counted.\n";
 if (base && !baseCountsFile) {
 	report +=
 		"\nThe base's inferred `any` and untyped identifiers were not counted, as `--base-counts` was not given.\n";
