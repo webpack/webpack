@@ -37,12 +37,17 @@ describe("WeakTupleMap", () => {
 			expect(map.get(fn)).toBe("value");
 			ref = new WeakRef(fn);
 		})();
-		// a WeakRef target stays alive until the current job ends
-		await new Promise((resolve) => {
-			setImmediate(resolve);
-		});
-		/** @type {() => void} */ (globalThis.gc)();
-		expect(/** @type {WeakRef<() => void>} */ (ref).deref()).toBeUndefined();
+		const weak = /** @type {WeakRef<() => void>} */ (ref);
+		// A WeakRef target stays alive until the current job ends, and Bun's
+		// conservative stack scan may keep it one collection more: collect again
+		// from a fresh turn until it goes.
+		for (let round = 0; round < 10 && weak.deref() !== undefined; round++) {
+			await new Promise((resolve) => {
+				setImmediate(resolve);
+			});
+			/** @type {() => void} */ (globalThis.gc)();
+		}
+		expect(weak.deref()).toBeUndefined();
 	});
 
 	it("should mix weak and strong key elements in one tuple", () => {
