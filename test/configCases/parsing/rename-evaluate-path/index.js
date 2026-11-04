@@ -3,8 +3,10 @@ function assigned() {
 	var copy = local;
 	var literal = "x";
 	var member = custom.member;
+	var called = local.custom();
+	var method = local.toString();
 	copy = literal;
-	return [copy, member];
+	return [copy, member, called, method];
 }
 
 it("should rename through evaluate hooks a plugin taps", () => {

@@ -5,8 +5,9 @@
 const PLUGIN_NAME = "rename-evaluate-path";
 
 /**
- * Taps the `evaluate` hooks for identifiers and literals, and
- * `evaluateIdentifier` for a member chain, so renaming evaluates them.
+ * Taps the `evaluate` hooks for identifiers and literals, `evaluateIdentifier`
+ * for a member chain and `evaluateCallExpressionMember` for a method, so
+ * renaming evaluates them.
  * @param {Compiler} compiler the compiler
  * @returns {void}
  */
@@ -21,6 +22,9 @@ const evaluateTaps = (compiler) => {
 					parser.hooks.evaluate.for("Literal").tap(PLUGIN_NAME, () => {});
 					parser.hooks.evaluateIdentifier
 						.for("custom.member")
+						.tap(PLUGIN_NAME, () => {});
+					parser.hooks.evaluateCallExpressionMember
+						.for("custom")
 						.tap(PLUGIN_NAME, () => {});
 				});
 		}
