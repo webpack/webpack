@@ -14,3 +14,9 @@
 }
 
 .last { color: blue; }
+
+:global .scopeParent {
+	@scope (.scopeRoot) {
+		.scopeChild { color: red; }
+	}
+}

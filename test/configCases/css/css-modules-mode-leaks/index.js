@@ -39,9 +39,16 @@ it("should keep a bare `:global` to its own rule, not later or nested rules", ()
 		"afterGlobalInRule",
 		"last",
 		"nestedInGlobal",
-		"outer"
+		"outer",
+		"scopeChild",
+		"scopeRoot"
 	]);
-	for (const name of ["globalInMedia", "globalInRule", "globalParent"]) {
+	for (const name of [
+		"globalInMedia",
+		"globalInRule",
+		"globalParent",
+		"scopeParent"
+	]) {
 		expect(css).toContain(`.${name} {`);
 	}
 	expect(css).toContain(".mode-leaks-nested-global_module_css-nestedInGlobal {");
