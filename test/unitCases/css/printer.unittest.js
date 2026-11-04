@@ -11351,6 +11351,24 @@ describe("CssSyntax minify — nesting the target cannot read", () => {
 		);
 	});
 
+	it.each([
+		[
+			"a prefixed rule holding only a rule",
+			"a{&:fullscreen{& .c{left:0}}}",
+			"a:-webkit-full-screen .c{left:0}a:fullscreen .c{left:0}"
+		],
+		[
+			"a top-level prefixed rule holding a rule",
+			":fullscreen{top:0;& .c{left:0}}",
+			":-webkit-full-screen{top:0}:fullscreen{top:0}:-webkit-full-screen .c{left:0}:fullscreen .c{left:0}"
+		]
+	])("writes %s out under each prefix it is copied to", (_, css, out) => {
+		// Safari 15.4 reads only `:-webkit-full-screen`, and none reads nesting.
+		expect(minifyFor(css, ["chrome 100", "firefox 100", "safari 15.4"])).toBe(
+			out
+		);
+	});
+
 	it("writes `&` wherever it stands in the nested selector", () => {
 		expect(minifyFor("a{color:red;&:hover{color:blue}}", ["chrome 100"])).toBe(
 			"a{color:red}a:hover{color:blue}"
@@ -11586,14 +11604,14 @@ describe("CssSyntax minify — nesting the target cannot read", () => {
 		);
 	});
 
-	it("leaves a prefixed rule holding a rule of its own where it stands", () => {
-		// What it holds was resolved against the prelude it was written under,
-		// which every copy but one is not — so the group stays nested.
+	it("writes a prefixed rule holding a rule of its own out with every copy", () => {
+		// What it holds is resolved against each copy's prelude as well, so no
+		// group stays nested for a target that reads no nesting.
 		expect(
 			minifyFor("a{&:fullscreen{top:0;& .child{left:0}}}", HOIST_T)
 		).toBe(
-			"a{&:-webkit-full-screen{top:0}&:fullscreen{top:0}" +
-				"&:fullscreen .child{left:0}}"
+			"a:-webkit-full-screen{top:0}a:fullscreen{top:0}" +
+				"a:-webkit-full-screen .child{left:0}a:fullscreen .child{left:0}"
 		);
 	});
 
@@ -15729,6 +15747,15 @@ describe("CssSyntax minify — a prefixed twin taken back", () => {
 		["a list in an at-rule", "@media print{.a::-moz-placeholder,.b::-moz-placeholder{opacity:1}.a::placeholder{color:red}.b::placeholder{color:blue}}", ["firefox 120"], "@media print{.a::placeholder{color:red}.b::placeholder{color:blue}}"]
 	])("drops %s as it was", (_, css, browsers, out) => {
 		expect(minifyFor(css, browsers)).toBe(out);
+	});
+
+	it("adds no copy of a list's selectors a prefixed rule before it already writes", () => {
+		// The copy writes `:-webkit-full-screen` alone, which the source carries.
+		const css =
+			":-webkit-full-screen{color:red}:fullscreen,input::placeholder{color:red}";
+		expect(minifyFor(css, ["chrome 100", "firefox 100", "safari 15.4"])).toBe(
+			css
+		);
 	});
 
 	it("lowers a `light-dark()` past a color function the target reads", () => {
