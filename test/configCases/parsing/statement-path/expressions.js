@@ -25,6 +25,13 @@ export function expressions(input) {
 	var constant = false ? "never" : "constant";
 	var truthy = 1 ? "one" : "zero";
 	var object = { [key]: 1, value, ...rest };
+	var called = function (a) {
+		return this.k + a;
+	}.call({ k: 1 }, 1);
+	var arrowed = ((b) => b + 1)(1);
+	var fns = { k: () => 3 };
+	var computed = fns[key]();
+	var cache = require.cache.missing;
 	return [
 		never,
 		always,
@@ -41,6 +48,10 @@ export function expressions(input) {
 		gen().next().value,
 		count,
 		both,
-		typeof load
+		typeof load,
+		called,
+		arrowed,
+		computed,
+		cache
 	];
 }

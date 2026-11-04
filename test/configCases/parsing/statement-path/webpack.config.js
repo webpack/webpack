@@ -8,8 +8,8 @@ const PLUGIN_NAME = "statement-path";
 /**
  * Records the statements an ESTree `statement` tap reads, and those a
  * `{ path: true }` one reads once the program is walked by id: the same
- * statements, nested ones included, but for those in a function expression,
- * which is walked as its ESTree object until expressions are walked by id.
+ * statements, nested ones included, but for those a plugin walks itself as
+ * ESTree objects.
  * @param {Compiler} compiler the compiler
  * @returns {void}
  */
@@ -79,7 +79,8 @@ const statementPath = (compiler) => {
 					// every module here nests a statement in another
 					expect(estree.length).toBeGreaterThan(top);
 					if (switchOn) {
-						// here only the `it` callback's statements, last, go unread by id
+						// only the `import().then` callback, last, goes unread by id:
+						// `ImportParserPlugin` walks it as its ESTree object
 						expect(path.length).toBeGreaterThan(top);
 						expect(path).toEqual(estree.slice(0, path.length));
 					}
