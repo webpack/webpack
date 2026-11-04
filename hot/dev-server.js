@@ -63,10 +63,10 @@ if (module.hot) {
 				}
 			});
 	};
-	/** @type {EventTarget | NodeJS.EventEmitter} */
+	/** @type {EventTarget | NodeJS.EventEmitter<{ webpackHotUpdate: [string] }>} */
 	var hotEmitter = require("./emitter");
 	/**
-	 * @param {CustomEvent<{ currentHash: string }>} event event or hash
+	 * @param {CustomEvent<{ currentHash: string }> | string} event event or hash
 	 */
 	var handler = function (event) {
 		lastHash = typeof event === "string" ? event : event.detail.currentHash;

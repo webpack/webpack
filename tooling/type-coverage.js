@@ -626,6 +626,7 @@ for (const [sourceFile, typeChecker, program] of sourceFiles) {
 		 */
 		const isDeclaredAny = (node) => {
 			const symbol =
+				declaredProperty(node) ||
 				(ts.isShorthandPropertyAssignment(node.parent)
 					? typeChecker.getShorthandAssignmentValueSymbol(node.parent)
 					: typeChecker.getSymbolAtLocation(node)) ||
@@ -782,6 +783,24 @@ for (const [sourceFile, typeChecker, program] of sourceFiles) {
 		};
 
 		/**
+		 * Returns the property an object literal's declared type gives a name written in it.
+		 * @param {ts.Node} node the identifier
+		 * @returns {ts.Symbol | undefined} the declared property
+		 */
+		const declaredProperty = (node) => {
+			const { parent } = node;
+			if (
+				!ts.isIdentifier(node) ||
+				!ts.isPropertyAssignment(parent) ||
+				parent.name !== node
+			) {
+				return undefined;
+			}
+			const declared = typeChecker.getContextualType(parent.parent);
+			return declared && typeChecker.getPropertyOfType(declared, node.text);
+		};
+
+		/**
 		 * Returns an identifier's type. The name `x` in `this.x = value` declares
 		 * the property, and TypeScript answers `any` there, so it is read off
 		 * the property's symbol instead.
@@ -800,9 +819,13 @@ for (const [sourceFile, typeChecker, program] of sourceFiles) {
 				const symbol = typeChecker.getSymbolAtLocation(parent);
 				if (symbol) return typeChecker.getTypeOfSymbol(symbol);
 			}
-			// A property name in an object literal holds the value written for it.
+			// A property name in an object literal has the type the literal's declared
+			// type gives it, else that of the value written for it.
 			if (ts.isPropertyAssignment(parent) && parent.name === node) {
-				return typeChecker.getTypeAtLocation(parent.initializer);
+				const property = declaredProperty(node);
+				return property
+					? typeChecker.getTypeOfSymbol(property)
+					: typeChecker.getTypeAtLocation(parent.initializer);
 			}
 			return typeChecker.getTypeAtLocation(node);
 		};

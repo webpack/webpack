@@ -29,6 +29,8 @@ const resolveLazy = (item) => {
 	if (SerializerMiddleware.isLazy(item)) {
 		const data = item();
 		if (Array.isArray(data)) return { resolvesTo: data.map(resolveLazy) };
+		// the lazies these tests write all resolve synchronously
+		if (data instanceof Promise) throw new Error("Unexpected async lazy");
 		return { resolvesTo: resolveLazy(data) };
 	}
 	return item;

@@ -28,7 +28,7 @@ describe("ProvideSharedDependency", () => {
 
 		let i = 0;
 		const readCtx =
-			/** @type {import("../../lib/serialization/ObjectMiddleware").ObjectDeserializerContext} */ (
+			/** @type {Parameters<typeof ProvideSharedDependency.deserialize>[0]} */ (
 				/** @type {unknown} */ ({
 					read: () => buffer[i++],
 					get rest() {
