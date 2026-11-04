@@ -202,6 +202,13 @@ const NATIVE_OBJECT_TABLES = new Map([
 	["lone_arg_is_range", "NATIVE_LONE_ARG_IS_RANGE"]
 ]);
 
+// Statics terser's tables leave out that a call of runs nothing observable,
+// by why, added to `NATIVE_PURE_STATIC_FUNCTIONS`.
+const NATIVE_PURE_STATIC_SUPPLEMENT = {
+	"no program can seed or read the generator, so a call nothing reads is unobservable":
+		["Math.random"]
+};
+
 /** @typedef {"sloppy" | number} NativeCondition */
 /** @typedef {string | { name: string, when: NativeCondition[] }} NativeName */
 /** @typedef {{ when?: NativeCondition[], names: NativeName[] }} NativeGroup */
@@ -454,6 +461,25 @@ const collectNativeObjects = () => {
 			throw new Error(
 				`terser's native-objects.js no longer declares \`${name}\``
 			);
+		}
+	}
+	const statics = /** @type {Record<string, NativeGroup>} */ (
+		tables.NATIVE_PURE_STATIC_FUNCTIONS
+	);
+	for (const names of Object.values(NATIVE_PURE_STATIC_SUPPLEMENT)) {
+		for (const qualified of names) {
+			const [owner, name] = qualified.split(".");
+			const listed = statics[owner].names;
+			if (
+				listed.some((entry) =>
+					typeof entry === "string" ? entry === name : entry.name === name
+				)
+			) {
+				throw new Error(
+					`terser's native-objects.js lists ${qualified} now: remove it from NATIVE_PURE_STATIC_SUPPLEMENT`
+				);
+			}
+			listed.push(name);
 		}
 	}
 	return tables;
