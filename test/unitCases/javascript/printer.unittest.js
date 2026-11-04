@@ -2103,11 +2103,40 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["function f(y){var x;if(y)x=1+1;else x=2;return x}", "function f(y){var x;return x=2,x}"],
 			["function f(){var x;if(c())x=1;else x=1;return x}", "function f(){var x;return x=(c(),1),x}"],
 			["if(a)x=b?1:2;else if(c)f();else f()", "a?x=b?1:2:(c,f());"],
+			// Returned alike, the `return` prints the test where it runs anything.
+			["function f(y){if(y)return 1;else return 1}", "function f(y){return 1}"],
+			["function f(y){if(g())return 1;else return 1}", "function f(y){return g(),1}"],
+			["function f(y){if(y)return 1;else return 2}", "function f(y){return y?1:2}"],
+			// An item of a sequence takes a sequence or assignment bare, a function parenthesized.
+			["function f(y){var n=0;if((n++,y))g();else g();return n}", "function f(y){var n=0;return n++,y,g(),n}"],
+			["function f(y){var n;if(n=y)g();else g();return n}", "function f(y){var n;return n=y,g(),n}"],
+			["if(function(){h()}())g();else g()", "(function(){h()}()),g();"],
+			// After a `:` a returned sequence would close on its semicolon.
+			["function f(a,b){if(a)return 1;else if(g(b))return 2;else return 2}", "function f(a,b){return a?1:g(b)?2:2}"],
+			["function f(a,b){if(a)return 1;else if(b)return 2;else return 2}", "function f(a,b){return a?1:2}"],
+			["function f(a,b){if(a){if(g(b))return 2;else return 2}return 3}", "function f(a,b){if(a)return g(b),2;return 3}"],
+			// Comments both branches keep would print once.
+			["if(y)f(/*! c */1);else f(/*! c */1)", "y?f(/*! c */1):f(/*! c */1);"],
 			// A comment kept or branches printing otherwise keep the `?:`.
 			["if(y)f();else/*! c */f()", "if(y)f();else/*! c */f();"],
 			["if(y)f();else g()", "y?f():g();"]
 		]) {
 			expect(print(source)).toBe(expected);
+		}
+	});
+
+	it("should end a returned `if` whose branches print alike as its `return`", () => {
+		for (const source of [
+			"function f(a){if(g(a))return 1;else return 1;h()}",
+			"function f(a,b){if(a)return 1;else if(b)return 2;else return 2;h()}",
+			"function f(a,b){if(a)return 1;else if(g(b))return 2;else return 2;h()}"
+		]) {
+			const program = `${source}function g(x){return x}function h(){}console.log(f(0,0),f(1,0),f(0,1))`;
+			const { code } = minifyOnePass(program, {
+				compress: { dead_code: false },
+				mangle: false
+			});
+			expect(runProgram(code)).toBe(runProgram(program));
 		}
 	});
 
