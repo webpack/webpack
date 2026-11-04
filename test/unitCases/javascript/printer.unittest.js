@@ -1834,6 +1834,37 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		expect(code).toBe("if(a){b()}/* c */");
 	});
 
+	it("should print built-in constructions and same-typed comparisons in their shorter spelling", () => {
+		/** @type {[string, import("../../../lib/javascript/syntax-parser").JavascriptProcessOptions, string][]} */
+		const cases = [
+			// Two numbers or two strings compare the same loosely; a `-` or a name may be a BigInt or anything.
+			["x=[+a===0,+a!==-1,typeof a===`number`,`number`!==typeof a,(b=1)===1,(a|1)===2,`a${b}`===`c`]", {}, "x=[+a==0,+a!=-1,typeof a==`number`,`number`!=typeof a,(b=1)==1,(a|1)==2,`a${b}`==`c`];"],
+			["x=[-a===0,a===0,(a|b)===2,`a${b}`===c,-a===-1,(b+=1)===1,+a===b]", {}, "x=[-a===0,a===0,(a|b)===2,`a${b}`===c,-a===-1,(b+=1)===1,+a===b];"],
+			// The built-in `Array` makes the array its literal does: a lone number is a length, a few holes printing shorter.
+			["x=[new Array,Array(),Array(0),Array(1),Array(5),Array(\"a\"),Array(7n),Array(a,b),Array(...a,\"b\"),Array(Array(1,\"2\")),new Array(a,...b,c),Array(...[1,2]),Array(1,2).length]", {}, "x=[[],[],[],[,],[,,,,,],[\"a\"],[7n],[a,b],[...a,\"b\"],[[1,\"2\"]],[a,...b,c],[1,2],[1,2].length];"],
+			["x=[Array(`a${b}`),Array({}),Array([]),Array(function(){}),Array(()=>1),Array(class{}),Array(null),Array(true),Array(!0),Array(/a/)]", {}, "x=[[`a${b}`],[{}],[[]],[function(){}],[()=>1],[class{}],[null],[!0],Array(!0),[/a/]];"],
+			// A lone argument that may be a number, a length printing longer, or a spread that may pass one alone stays a call.
+			["x=[Array(6),Array(1.5),Array(-1),Array(a),Array(...a),Array(...a,b),Array(3,...[]),Array?.(1,2),Array(Array?.(a)),new(Array(1,2))]", {}, "x=[Array(6),Array(1.5),Array(-1),Array(a),Array(...a),Array(...a,b),Array(3),Array?.(1,2),Array(Array?.(a)),new([1,2])];"],
+			["var Array;x=[Array(1,2),Array()]", {}, "var Array;x=[Array(1,2),Array()];"],
+			["window.Array=f;x=[Array(1,2),Array(0)]", {}, "window.Array=f,x=[Array(1,2),Array(0)];"],
+			["x=Array(1,2/*c*/);y=Array/*c*/(1,2)", { format: { comments: "all" } }, "x=Array(1,2/*c*/),y=Array/*c*/(1,2);"],
+			// The built-in `Object` passed nothing makes `{}`, parenthesized where it opens a statement or an arrow's body.
+			["x=[new Object,Object(),new Object()];Object().a=1;new Object().b=1;f=()=>Object();g=()=>new Object().c;h=a?Object():[]", {}, "x=[{},{},{}];({}).a=1;({}).b=1;f=()=>({}),g=()=>({}.c),h=a?{}:[];"],
+			["export default Object()", {}, "export default{};"],
+			["x=[Object(a),Object?.(),window.Object(),new(Object())]", {}, "x=[Object(a),Object?.(),window.Object(),new{}];"],
+			["var Object;x=Object()", {}, "var Object;x=Object();"],
+			["window.Object=f;x=Object()", {}, "window.Object=f,x=Object();"]
+		];
+		for (const [source, options, expected] of cases) {
+			const { code } = minifyOnePass(source, {
+				compress: { toplevel: false },
+				mangle: { toplevel: false },
+				...options
+			});
+			expect(code).toBe(expected);
+		}
+	});
+
 	it("should read terser's snake_case option names as their camelCase names", () => {
 		const named = "function f() { function foo() { return h() } g(foo, foo) }";
 		const quoted = 'a.zzLeft = 1; a["zzRight"] = 2';
