@@ -3,7 +3,7 @@
 // cspell:ignore binop, fnames, propmangle, fargs, domprops, argnames, nondeferred, loopcontrol, Defun, defun, NOINLINE, Funarg, unmangleable, Unmangleable, thedef, funs
 // cspell:ignore fnames
 // cspell:ignore argnames, bcatch, bfinally, argname
-// cspell:ignore AAAWA MAAH EAAI EAAIA EAAGC ACAA IAAYC EAAWC
+// cspell:ignore AAAWA MAAH EAAI EAAIA EAAGC ACAA IAAYC EAAWC IAAIC CAAI IAAK EAAE
 // cspell:ignore endline, endcol, endpos, nlb, thedef, ymgsid, dgimsy, elta
 
 const vm = require("vm");
@@ -2399,6 +2399,10 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["`${x}$`+'{b}'+'c'", '`${x}$`+"{b}c"'],
 			["`a$${`{${x}}`}`", "`a$${`{${x}}`}`"],
 			["`${`${x}$`}{y}`", "`${`${x}$`}{y}`"],
+			// `\\0` then a digit would read as an octal escape.
+			["`a${x}\\0`+'1'", '`a${x}\\0`+"1"'],
+			["`a${`b${x}\\0`}1`", "`a${`b${x}\\0`}1`"],
+			["`a${x}\\0`+'b'", "`a${x}\\0b`"],
 			// Another operand, a comment kept or a tag keep the `+` or the template.
 			["`a${x}`+y", "`a${x}`+y"],
 			["`a${x}`+null", "`a${x}`+null"],
@@ -2411,6 +2415,18 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		]) {
 			expect(print(source)).toBe(expected);
 		}
+		// What the joined templates printed maps to where it was read.
+		const { SourceProcessor } = require("../../../lib/javascript/syntax");
+		const mapped = new SourceProcessor().process(
+			"f(`a${x}`+`b${y}`, `c${`d${z}`}e`)",
+			{ mode: "minify", compress: {}, mangle: false, source: "in.js" }
+		);
+		expect(mapped.code).toBe("f(`a${x}b${y}`,`cd${z}e`);");
+		expect(mapped.map).toEqual(
+			expect.objectContaining({
+				mappings: "AAAAA,EAAE,IAAIC,CAAI,IAAIC,IAAK,CAAI,IAAIC"
+			})
+		);
 		// A name kept for its size stays a name, a short one folds.
 		expect(
 			minifyOnePass(
