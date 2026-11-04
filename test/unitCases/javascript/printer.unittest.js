@@ -273,9 +273,9 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		/** @type {[string, import("../../../lib/javascript/syntax-printer").MinifyOptions, string][]} */
 		const cases = [
 			[
-				"if (a) { b() } while (a) { a-- } for (;;) { break } l: { c() } with (o) { d() } do { e() } while (a); for (k in o) { f(k) } for (k of o) { f(k) }",
+				"if (a) { b() } while (a) { a-- } for (;;) { g() } l: { c() } with (o) { d() } do { e() } while (a); for (k in o) { f(k) } for (k of o) { f(k) }",
 				{},
-				"if(a)b();while(a)a--;for(;;)break;o:c();with(o)d();do{e()}while(a);for(k in o)f(k);for(k of o)f(k);"
+				"if(a)b();while(a)a--;for(;;)g();o:c();with(o)d();do{e()}while(a);for(k in o)f(k);for(k of o)f(k);"
 			],
 			// An `else` after a block keeps it where the block ends in an `if` of its own.
 			[
@@ -1419,7 +1419,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["function f(){for(;;){switch(d){case 1:continue}}}", {}, "function f(){for(;;)if(d===1)continue}"],
 			["function f(){l:switch(d){case 1:x();break l}}", {}, "function f(){c:switch(d){case 1:x();break c}}"],
 			["function f(){switch(d){case 1:\"use strict\"}}", {}, "function f(){if(d===1){\"use strict\"}}"],
-			["function f(){switch(d){case 1:for(;;)break;g()}}", {}, "function f(){if(d===1){for(;;)break;g()}}"],
+			["function f(){switch(d){case 1:for(k in o)break;g()}}", {}, "function f(){if(d===1){for(k in o)break;g()}}"],
 			["function f(){switch(d){case 1:/*! k */g()}}", {}, "function f(){if(d===1)/*! k */g()}"],
 			["function f(){switch(d){case 1:}}", {}, "function f(){d}"],
 			["function f(){switch(-x){case typeof y:g()}}", {}, "function f(){if(-x===typeof y)g()}"],
@@ -1578,9 +1578,9 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// terser's `switches` of one case and a `default`: `if…else` after a `break`, the other after where one falls into it, in a list, its block keeping braces.
 			["switch(a){case 1:b();break;default:c()}switch(a){case 1:b();default:c()}switch(a){default:c();break;case 1:b()}switch(a){default:c();case 1:b()}switch(a){default:b();break;case 1:}switch(a){case 1:break;default:b()}switch(a){case 1:b();break;default:if(y)z()}w();switch(a){case 1:if(y)z();break;default:w()}switch(a){case 1:{let q=g();f(q,q)}break;default:h()}switch(a){case 1:f();if(x)break;g();break;default:h()}for(;;)switch(a){case 1:f();break;default:g()}if(x){switch(a){case 1:f();default:g()}}else h();switch(a){/*! c */case 1:b();break;default:c()}switch(b()){case 1:c();break;default:d()}switch(a){case f():c();break;default:d()}", {}, "if(a===1)b();else c();if(a===1)b();c();if(a===1)b();else c();if(a!==1)c();b();if(a!==1)b();if(a!==1)b();if(a===1)b();else if(y)z();w();if(a===1){if(y)z()}else w();if(a===1){{let a=g();f(a,a)}}else h();switch(a){case 1:f();if(x)break;g();break;default:h()}for(;;)switch(a){case 1:f();break;default:g()}if(x){if(a===1)f();g()}else h();switch(a){/*! c */case 1:b();break;default:c()}if(b()===1)c();else d();if(a===f())c();else d();"],
 			// terser's `loops`: `do` forever is `for(;;)`, and a body running once with nothing leaving it early runs where the loop was, but not labeled.
-			["do{c()}while(!0);do{d();e()}while(0);f();do{if(x)break;d()}while(0);do{let q=g();h(q,q)}while(0);l:do{d()}while(0);if(a)do{d();e()}while(0);else f();do;while(0);do{switch(a){case 1:b()}}while(0);do{(function(){for(;;)break})()}while(0)", {}, "for(;;){c()}d(),e();f();do{if(x)break;d()}while(0);{let e=g();h(e,e)}e:do{d()}while(0);if(a){d(),e()}else f();do{if(a===1)b()}while(0);!function(){for(;;)break}();"],
-			// terser's `dead_code` of a loop whose body is a `break`: what sets it up and its test run once.
-			["for(;;)break;for(a();;)break;for(;b();)break;for(c();d();)break;for(;;e())break;for(f();;g())break;for(;h();i())break;for(j();k();l())break;while(x())break;while(x()){break}if(a)while(x())break;else y();for(var i=0;x;)break;l:while(x())break;for((a in b);c;)break;for(;function(){}();)break", {}, "for(;;)break;a();b();c(),d();for(;;e())break;f();h();j(),k();x();x();if(a)x();else y();for(var i=0;x;)break;r:while(x())break;(a in b),c;(function(){}());"],
+			["do{c()}while(!0);do{d();e()}while(0);f();do{if(x)break;d()}while(0);do{let q=g();h(q,q)}while(0);l:do{d()}while(0);if(a)do{d();e()}while(0);else f();do;while(0);do{switch(a){case 1:b()}}while(0);do{(function(){for(k in o)break})()}while(0)", {}, "for(;;){c()}d(),e();f();do{if(x)break;d()}while(0);{let e=g();h(e,e)}e:do{d()}while(0);if(a){d(),e()}else f();do{if(a===1)b()}while(0);!function(){for(k in o)break}();"],
+			// terser's `dead_code` of a loop whose body is a `break`: what sets it up and its test run once, and one running nothing goes from its list.
+			["for(;;)break;for(a();;)break;for(;b();)break;for(c();d();)break;for(;;e())break;for(f();;g())break;for(;h();i())break;for(j();k();l())break;while(x())break;while(x()){break}if(a)while(x())break;else y();for(var i=0;x;)break;l:while(x())break;for((a in b);c;)break;for(;function(){}();)break", {}, "a();b();c(),d();f();h();j(),k();x();x();if(a)x();else y();for(var i=0;x;)break;r:while(x())break;(a in b),c;"],
 			// terser's `evaluate`: `!` of an object made running nothing is `!1`, `delete` of what is no reference `!0` and of the global `undefined` or `NaN` `!1`, but a write in it stays.
 			["x=![1,2];x=!/foo/;x=!0;x=!\"\";x=!{};x=![f()];x=delete(1/0);x=delete void 0;x=delete undefined;x=delete NaN;x=delete(0,a);x=delete 1;x=delete a.b;x=delete(a);x=delete a?.b;x=delete f();if(delete 1)g();var b;x=delete(b=NaN)", { compress: { toplevel: true } }, "x=!1,x=!1,x=!0,x=!0,x=!1,x=![f()],x=!0,x=!0,x=!1,x=!1,x=delete(0,a),x=!0,x=delete a.b,x=delete a,x=delete a?.b,x=delete f();g();var b;x=delete(b=NaN);"],
 			// A function called prints as what it returns past parameters passed nothing nothing reads, but not one it returns or where `arguments` reads them.
@@ -4667,7 +4667,7 @@ describe("one-pass minify of statement sequences", () => {
 		const cases = [
 			[
 				"function s(x){switch(1){case 1:{for(;;)break;while(x)break;do{break}while(x);for(k in x)break;for(k of x)break;switch(x){case 2:break}(function(){});(()=>{});class C{};x()}break}}",
-				"function s(e){for(;;)break;e;for(k in e)break;for(k of e)break;e()}"
+				"function s(e){for(k in e)break;for(k of e)break;e()}"
 			],
 			["function s(x){switch(1){case 1:return x;case 2:y()}}", "function s(c){return c}"],
 			// Running nothing, or what prints as one sequence.
@@ -4751,6 +4751,35 @@ describe("one-pass minify of statement sequences", () => {
 				"s(()=>console.log(1),()=>{console.log(2);return 13},()=>{console.log(3);return 42})";
 			expect(runProgram(`${code}${call}`)).toBe(runProgram(`${source}${call}`));
 		}
+	});
+
+	it("should drop a loop whose body is a `break`, set up by nothing and testing what runs nothing", () => {
+		const cases = [
+			["function f(a){for(;;){break}while(1)break;for(;a;f())break;g()}", "function f(a){g()}"],
+			["function f(a){switch(a){case 1:while(a)break;g()}}", "function f(a){if(a===1)g()}"],
+			["class C{static{for(;;)break;g()}}", "class C{static{g()}}"],
+			// What its update read is read no more.
+			["function f(){var a=g();for(;;a())break;h()}", "function f(){g();h()}"],
+			// A label or a comment holds it, only a list drops a statement, and a
+			// `var` after the `break` still declares.
+			["function f(){L:for(;;)break;for(;;)/*! c */break;for(;;/*! c */g())break;h()}", "function f(){r:for(;;)break;for(;;)/*! c */break;for(;;/*! c */g())break;h()}"],
+			["function f(a){if(a)for(;;)break;else g()}", "function f(f){if(f)for(;;)break;else g()}"],
+			["function f(){for(;;){break;var x}return x}", "function f(){for(;;){break;var r}return r}"]
+		];
+		for (const [source, expected] of cases) {
+			expect(
+				minifyOnePass(source, {
+					compress: { toplevel: false },
+					mangle: { toplevel: false }
+				}).code
+			).toBe(expected);
+		}
+		expect(
+			minifyOnePass("function f(){for(;;)break;h()}", {
+				compress: { toplevel: false, dead_code: false },
+				mangle: { toplevel: false }
+			}).code
+		).toBe("function f(){for(;;)break;h()}");
 	});
 
 	it("should print the known `switch`, spread and unary values of the config cases", () => {
