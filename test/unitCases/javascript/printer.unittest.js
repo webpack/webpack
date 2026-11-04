@@ -4800,6 +4800,14 @@ describe("one-pass minify of statement sequences", () => {
 			expect(code).toBe(expected);
 			expect(runProgram(code)).toBe(runProgram(source));
 		}
+		// A string it labels would read as a directive bare.
+		const directive =
+			'function f(){L:"use strict";return this}console.log(typeof f())';
+		const { code } = minifyOnePass(directive, { compress: {}, mangle: {} });
+		expect(code).toBe(
+			'function f(){t:"use strict";return this}console.log(typeof f());'
+		);
+		expect(runProgram(code)).toBe(runProgram(directive));
 		expect(
 			minifyOnePass("L:for(;;){continue L}U:x()", {
 				compress: false,
