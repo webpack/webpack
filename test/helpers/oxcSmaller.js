@@ -806,7 +806,9 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: ecmascript/may_have_side_effects.rs:1585",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:1590",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:1591",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:1592"
+			"oxc minifier: ecmascript/may_have_side_effects.rs:1592",
+			"swc minifier: fixture/issues/12566/defaults/input.js",
+			"swc minifier: fixture/issues/12566/without-reduce-vars/input.js"
 		]
 	],
 	[
@@ -1639,7 +1641,8 @@ const OXC_SMALLER_BY_REASON = [
 			"swc exec: issue_9010",
 			"swc exec: issue_11517_continue",
 			"swc exec: issue_11078_math_constant_folding",
-			"swc exec: issue_12400_class_decl_self_ref_in_unused_local"
+			"swc exec: issue_12400_class_decl_self_ref_in_unused_local",
+			"swc exec: issue_12529_array_assigned_then_mutated_through_member"
 		]
 	],
 	[
