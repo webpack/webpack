@@ -742,7 +742,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"function f(o){ var a = Math, b = o.x, c = [1].length, d = {}.x, e = { get x(){} }.x, h = typeof q, i = [...o], j = { ...o }, m = Function.prototype, n = (function(){}).prototype, p = o?.x, q2 = null.x, r = { ...{ a: 1 } }.a, s = (o, {}).x, t = (o ? {} : []).x, u = (void 0).x, v = (o = {}).x, w = (o &&= {}).x, y = (o ? 1 : 2).x, z = o.y.prototype; }",
 				{},
-				"function f(o){o.x;({get x(){}}).x;[...o];({...o});null.x;({a:1}).a;(void 0).x;(o={}).x;(o&&={}).x;o.y.prototype}"
+				"function f(o){o.x;({get x(){}}).x;[...o];({...o});null.x;(void 0).x;(o={}).x;(o&&={}).x;o.y.prototype}"
 			],
 			// A class is made with effects where its heritage or a key may run or throw.
 			[
@@ -4576,6 +4576,10 @@ describe("one-pass minify of unread values", () => {
 			['typeof x=="undefined"||x', ""],
 			['"u"<=typeof x||x', ""],
 			['typeof x==="object"&&x', ""],
+			['typeof x>"u"||x', ""],
+			['typeof x<="u"&&x', ""],
+			['"u">typeof x&&x', ""],
+			['"u"<typeof x||x', ""],
 			['typeof x==="undefined"?0:x', ""],
 			['"undefined"!=typeof x?x:0', ""],
 			// The read runs where the name may be unbound, or another name is read.
@@ -4585,10 +4589,51 @@ describe("one-pass minify of unread values", () => {
 			['typeof x!=="undefined"?0:x', 'typeof x<"u"||x;'],
 			['typeof x!=="undefined"&&y', 'typeof x<"u"&&y;'],
 			['typeof x!=="undefined"&&x.y', 'typeof x<"u"&&x.y;'],
+			["function f(y){typeof x===y&&x}", "function f(y){typeof x===y&&x}"],
+			['typeof x+"u"&&x', 'typeof x+"u"&&x;'],
 			['typeof x!=="undefined"??x', 'typeof x<"u";'],
 			// A `typeof` of a name in its dead zone throws, a `with` object answers any.
 			['x;typeof y<"u"&&y;let y', 'x,typeof y<"u"&&y;let y;'],
 			['with(o)typeof x<"u"&&x', 'with(o)typeof x<"u"&&x;']
+		]);
+	});
+
+	it("should drop a spread of a literal that runs no iterator or getter", () => {
+		expectPrints([
+			["[...[]]", ""],
+			['[..."s"]', ""],
+			["[...`t${1}`]", ""],
+			["Math.sin(...[1]),Math.cos(...`1`)", ""],
+			['/*#__PURE__*/f(...[1],..."s")', ""],
+			["({...{},...[],...'s',...null,...1,...{set a(v){}}})", ""],
+			["[...[], 1][0]", ""],
+			// What a spread literal runs prints in its place.
+			["[...[i++]]", "i++;"],
+			["[f(),...[g(),[...[h()]]],1]", "f(),g(),h();"],
+			["({a:f(),...{b:g(),...{c:h()}},...null})", "f(),g(),h();"],
+			["[4,...[function(){}],a]", "a;"],
+			// An iterator or getter may run, a hole read a prototype, a call convert.
+			["[...a]", "[...a];"],
+			["[...{}]", "[...{}];"],
+			["[...null]", "[...null];"],
+			["[...[,1]]", "[...[,1]];"],
+			["[...`t${a}`]", "[...`t${a}`];"],
+			["({...a})", "({...a});"],
+			["({.../a/})", "({.../a/});"],
+			["({...{get a(){}}})", "({...{get a(){}}});"],
+			["({...{[f()]:1}})", "({[f()]:1});"],
+			["[...[f()],...a]", "[f(),...a];"],
+			["isNaN(...[1])", "isNaN(1);"],
+			["Math.sin(...a)", "Math.sin(...a);"],
+			["Math.sin(...[a])", "Math.sin(a);"],
+			[
+				"Array.prototype[Symbol.iterator]=f;[...[1]]",
+				"Array.prototype[Symbol.iterator]=f,[...[1]];"
+			],
+			[
+				'String.prototype[Symbol.iterator]=f;[..."s"]',
+				'String.prototype[Symbol.iterator]=f,[..."s"];'
+			]
 		]);
 	});
 });
