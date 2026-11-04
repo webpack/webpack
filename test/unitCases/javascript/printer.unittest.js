@@ -2225,6 +2225,23 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			'function f(){g();var x="ab";h(x,x,x);function g(){a=""+x}}f()';
 		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
 		expect(code).toContain('a=""+x');
+		// Kept for size where `unused` is off, the same read keeps its name.
+		for (const [kept, expected] of [
+			["[x]+\"\"", "[x]+\"\""],
+			['x+"y"', 'x+"y"']
+		]) {
+			const printed = minifyOnePass(
+				`function f(){g();var x="ab";function g(){a=${kept}}}f()`,
+				{ compress: { unused: false }, mangle: false }
+			).code;
+			expect(printed).toContain(`a=${expected}`);
+		}
+		expect(
+			minifyOnePass(
+				'function f(){var value="abc";g();function g(){a=value+" y"}}f()',
+				{ compress: { unused: false }, mangle: false }
+			).code
+		).toContain('a="abc y"');
 	});
 
 	it("should print the value an object literal holds at a known key", () => {
