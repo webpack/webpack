@@ -27001,7 +27001,7 @@ declare interface PositionLike {
  * A check precompiled from a schema with `schema-utils precompile`, it only
  * says whether the value is valid
  */
-declare interface PrecompiledCheck<T = unknown> {
+declare interface PrecompiledCheck<T> {
 	(value: T): boolean;
 }
 declare class PrefetchPlugin {
