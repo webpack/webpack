@@ -2289,10 +2289,26 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["function f(t){if(t/*! c */)g();else g()}", "function f(t){t/*! c */?g():g()}"],
 			["function f(v){if(v)({}).a();else({}).a()}", "function f(v){v?{}.a():{}.a()}"],
 			["function f(v){if(v)(class{}).a();else(class{}).a()}", "function f(v){v?class{}.a():class{}.a()}"],
-			["function f(v){var x;if(v)x=(class{}).a;else x=(class{}).a;return x}", "function f(v){var x;return x=class{}.a,x}"]
+			["function f(v){var x;if(v)x=(class{}).a;else x=(class{}).a;return x}", "function f(v){var x;return x=class{}.a,x}"],
+			// A shared sequence takes no parentheses after the test's comma or alone, but assigned or opening ambiguously.
+			["function f(c){if(c){g(),h()}else{g(),h()}}", "function f(c){g(),h()}"],
+			["function f(c,d){if(d)k();else if(c())g(),h();else g(),h()}", "function f(c,d){d?k():(c(),g(),h())}"],
+			["function f(c){var x;if(c)x=(g(),h());else x=(g(),h());return x}", "function f(c){var x;return x=(g(),h()),x}"],
+			["function f(c){if(c){({}).a(),h()}else{({}).a(),h()}}", "function f(c){({}.a(),h())}"]
 		]) {
 			expect(print(source)).toBe(expected);
 		}
+		const { SourceProcessor } = require("../../../lib/javascript/syntax");
+		// Printed from its text, the shared sequence still maps where it came from.
+		const mapped =
+			/** @type {{ code: string, map: { mappings: string, names: string[] } }} */ (
+				new SourceProcessor().process(
+					"function f(c){if(c){g(),h()}else{g(),h()}}",
+					{ mode: "minify", compress: {}, mangle: false, source: "a.js" }
+				)
+			);
+		expect(mapped.code).toBe("function f(c){g(),h()}");
+		expect(mapped.map.names).toEqual(expect.arrayContaining(["g", "h"]));
 	});
 
 	it("should end a returned `if` whose branches print alike as its `return`", () => {
