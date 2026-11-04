@@ -3043,8 +3043,7 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: properties/array_hole",
 			"terser compress: properties/join_object_assignments_return_2",
 			"terser compress: properties/join_object_assignments_Infinity",
-			"terser compress: properties/dont_mangle_computed_property_2",
-			"terser compress: properties/dont_flatten_computed_property"
+			"terser compress: properties/dont_mangle_computed_property_2"
 		]
 	],
 	[
