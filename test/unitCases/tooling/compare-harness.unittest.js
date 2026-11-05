@@ -10,6 +10,7 @@ const {
 	TreeEvents,
 	agreement,
 	agreementInvariant,
+	collectFiles,
 	compress,
 	cutsAt,
 	exists,
@@ -1465,5 +1466,67 @@ describe("agreementInvariant", () => {
 		expect(missing).toEqual([]);
 		expect(held.expected).toEqual([expected[1]]);
 		expect(reports).toEqual([]);
+	});
+});
+
+describe("collectFiles", () => {
+	it("walks past a directory removed after the listing named it", () => {
+		const root = fs.mkdtempSync(path.join(os.tmpdir(), "collect-files-"));
+		fs.mkdirSync(path.join(root, "kept"));
+		fs.writeFileSync(path.join(root, "kept", "a.css"), "");
+		fs.mkdirSync(path.join(root, "gone"));
+		const readdirSync = fs.readdirSync;
+		const spy = jest
+			.spyOn(fs, "readdirSync")
+			.mockImplementation((current, options) => {
+				if (current === path.join(root, "gone")) {
+					fs.rmdirSync(current);
+				}
+				return readdirSync(current, options);
+			});
+		try {
+			expect(collectFiles(root, ".css", new Set())).toEqual([
+				path.join(root, "kept", "a.css")
+			]);
+			expect(() =>
+				collectFiles(path.join(root, "missing"), ".css", new Set())
+			).toThrow(/ENOENT/);
+		} finally {
+			spy.mockRestore();
+			fs.rmSync(root, { recursive: true, force: true });
+		}
+	});
+
+	it("lists a directory again when a child it stats is removed", () => {
+		const root = fs.mkdtempSync(path.join(os.tmpdir(), "collect-files-"));
+		fs.writeFileSync(path.join(root, "a.css"), "");
+		fs.writeFileSync(path.join(root, "b.css"), "");
+		const readdirSync = fs.readdirSync;
+		let thrown = false;
+		const spy = jest
+			.spyOn(fs, "readdirSync")
+			.mockImplementation((current, options) => {
+				if (!thrown) {
+					thrown = true;
+					fs.writeFileSync(path.join(root, "c.css"), "");
+					throw Object.assign(new Error("ENOENT: vanished"), {
+						code: "ENOENT",
+						path: path.join(root, "vanished.css")
+					});
+				}
+				return readdirSync(current, options);
+			});
+		try {
+			expect(collectFiles(root, ".css", new Set())).toEqual(
+				["a.css", "b.css", "c.css"].map((name) => path.join(root, name))
+			);
+			spy.mockImplementation(() => {
+				throw Object.assign(new Error("ENOENT"), { code: "ENOENT" });
+			});
+			expect(() => collectFiles(root, ".css", new Set())).toThrow(/ENOENT/);
+		} finally {
+			spy.mockRestore();
+			fs.rmSync(root, { recursive: true, force: true });
+		}
 	});
 });
