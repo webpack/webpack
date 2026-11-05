@@ -5448,14 +5448,14 @@ describe("one-pass minify of statement sequences", () => {
 		).toBe("var[x=void 0]=[];");
 	});
 
-	it("should read a hole of an array literal at a known index as `void 0`", () => {
-		// Running something, out of range, not an integer, holding a comment,
-		// spread, or read off, it stays.
+	it("should read a hole of an array literal, or an index past its end, as `void 0`", () => {
+		// Running something, negative, not an integer, holding a comment,
+		// spread, read off, or past the end no longer than `void 0`, it stays.
 		const source =
-			"var a=[];function y(){}console.log([1,2,,3][2],[1,,2][1+0],[,y()][0],[,1][5],[,1][-1],[,1][0.5],[,/*! c */1][0],[,...a][0]);try{[,][0].x}catch(e){console.log(e.name)}";
+			"var a=[];function y(){}console.log([1,2,,3][2],[1,,2][1+0],[,y()][0],[,1][5],[10,20][2],[][1],[1][5],[y(),1][2],[,1][-1],[,1][0.5],[,/*! c */1][0],[,...a][0],[1,...a][3]);try{[,][0].x}catch(e){console.log(e.name)}";
 		const { code } = minifyOnePass(source, { compress: {}, mangle: {} });
 		expect(code).toBe(
-			"var a=[];function y(){}console.log(void 0,void 0,[,y()][0],[,1][5],[,1][-1],[,1][.5],[,/*! c */1][0],[,...a][0]);try{[,][0].x}catch(o){console.log(o.name)}"
+			"var a=[];function y(){}console.log(void 0,void 0,[,y()][0],void 0,void 0,[][1],[1][5],[y(),1][2],[,1][-1],[,1][.5],[,/*! c */1][0],[,...a][0],[1,...a][3]);try{[,][0].x}catch(o){console.log(o.name)}"
 		);
 		expect(runProgram(code)).toBe(runProgram(source));
 	});
