@@ -49,9 +49,10 @@ it("iframe-srcdoc: should rewrite asset URLs inside <iframe srcdoc>", () => {
 
 	// URLs inside srcdoc go through the same pipeline as top-level HTML: a
 	// resolvable asset is emitted/rewritten, while absolute and protocol-relative
-	// URLs become the `data:,` ignored-asset (delegated, not special-cased).
+	// URLs are kept as written, like a CSS `url()` to the same URL (delegated,
+	// not special-cased).
 	expect(page).toMatch(
-		/srcdoc="<img src=&quot;handled-pixel\.png&quot;><img src=&quot;data:,&quot;><img src=&quot;data:,&quot;>"/
+		/srcdoc="<img src=&quot;handled-pixel\.png&quot;><img src=&quot;https:\/\/cdn\.test\/x\.png&quot;><img src=&quot;\/\/cdn\.test\/y\.png&quot;>"/
 	);
 
 	// Nested `<iframe srcdoc>` recurses; the multi-level escaping turns the inner
