@@ -331,13 +331,13 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"f(true, false); x = true.toString(); y = true ** b; z = b ** true; w = { a: false }; t = typeof true; new true; true`x`; v = a(true)(false)",
 				{},
-				"f(!0,!1),x=true.toString(),y=true**b,z=b**!0,w={a:!1},t=typeof!0,new true,true`x`,v=a(!0)(!1);"
+				"f(!0,!1),x=true.toString(),y=true**b,z=b**!0,w={a:!1},t=typeof!0,new(!0),true`x`,v=a(!0)(!1);"
 			],
 			// `undefined` is `void 0` where it reads the global, not where it is bound or written.
 			[
 				"function f(a){ return a === undefined ? undefined.x : typeof undefined } function g(undefined) { return undefined } y = { undefined: 1 }; z = o.undefined; w = [undefined]",
 				{},
-				"function f(n){return n===void 0?undefined.x:\"undefined\"}function g(n){return n}y={undefined:1},z=o.undefined,w=[void 0];"
+				"function f(n){return n===void 0?(void 0).x:\"undefined\"}function g(n){return n}y={undefined:1},z=o.undefined,w=[void 0];"
 			],
 			// Where anything writes it, it stays a name everywhere.
 			[
@@ -1176,6 +1176,9 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// `-Infinity` prints `-1/0` where a division reads as one value there.
 			["function f(){return-Infinity}", {}, "function f(){return-1/0}"],
 			["function f(a){return[a/-Infinity,-Infinity/a,(-Infinity).x]}", {}, "function f(n){return[n/-(1/0),-(1/0)/n,(-(1/0)).x]}"],
+			// `false` read off and a boolean constructed print shorter in parentheses, `undefined`
+			// read off too, and an arrow's body and a class field read the global `undefined` as `void 0`.
+			["x=[false.toString(b),new true,new false(1),true.x,undefined.x];y=()=>undefined;class A{u=undefined;static v=undefined}", {}, "x=[(!1).toString(b),new(!0),new(!1)(1),true.x,(void 0).x],y=()=>void 0;class A{u=void 0;static v=void 0}"],
 			// A sequence left one item where any expression stands bare drops its parentheses, but where it names a function.
 			["x=(3,6);let y=(2,a[b]);f((1,2),...(0,c));z=[(1,()=>1)];w={a:(1,b?c:d),[(1,e)]:1,b:(1,()=>1),c:(1,class{})};v=`${(1,a)}`;u=(1,()=>1);for(var t=(1,a in b);;);", {}, "x=6;let y=a[b];f(2,...c),z=[()=>1],w={a:b?c:d,[e]:1,b:(1,()=>1),c:(1,class{})},v=`${a}`,u=(1,()=>1);for(var t=(1,a in b);;);"],
 			// A number too big for a double is no name: a binding named `Infinity` does not read it.
