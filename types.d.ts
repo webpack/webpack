@@ -3399,18 +3399,10 @@ declare interface CodeGenerationResult {
 	hash?: string;
 }
 type CodeGenerationResultData = Omit<
-	Map<string, CodeGenerationResultDataValue>,
+	Map<string, any>,
 	"get" | "set" | "has" | "delete"
 > &
 	CodeGenMapOverloads;
-type CodeGenerationResultDataValue =
-	| string
-	| AssetInfo
-	| Record<string, string>
-	| Set<string>
-	| [{ shareScope: string; initStage: number; init: string }]
-	| InitFragment<ChunkRenderContextJavascriptModulesPlugin>[]
-	| { javascript?: string; "asset-url"?: string };
 
 /**
  * Stores code generation results keyed by module and runtime so later stages
