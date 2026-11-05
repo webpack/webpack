@@ -1,0 +1,17 @@
+[
+	{
+		"relation": "respelling quote-double",
+		"contains": "<div bar=\"ZZ&gt=YY\">  ->  <div bar=\"ZZ&gt=YY\"></div>\n    <div bar=\"ZZ&amp;gt=YY\">  ->  <div bar=\"ZZ&amp;gt=YY\"></div>",
+		"why": "`&gt` followed by `=` is not decoded in an attribute, so the printer keeps it as written, where the respelled `&amp;gt` stays longer"
+	},
+	{
+		"relation": "respelling quote-single",
+		"contains": "<div bar=\"ZZ&gt=YY\">  ->  <div bar=\"ZZ&gt=YY\"></div>\n    <div bar='ZZ&amp;gt=YY'>  ->  <div bar='ZZ&amp;gt=YY'></div>",
+		"why": "`&gt` followed by `=` is not decoded in an attribute, so the printer keeps it as written, where the respelled `&amp;gt` stays longer"
+	},
+	{
+		"relation": "respelling references",
+		"contains": "<div bar=\"ZZ&gt=YY\">  ->  <div bar=\"ZZ&gt=YY\"></div>\n    <div bar=\"&#x5a;&#x5a;&#x26;&#x67;&#x74;&#x3d;&#x59;&#x59;\">  ->  <div bar=\"ZZ&amp;gt=YY\"></div>",
+		"why": "`&gt` followed by `=` is not decoded in an attribute, so the printer keeps it as written, where the respelled `&amp;gt` stays longer"
+	}
+]

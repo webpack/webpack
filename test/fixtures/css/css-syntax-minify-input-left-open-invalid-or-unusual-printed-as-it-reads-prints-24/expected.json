@@ -1,0 +1,12 @@
+[
+	{
+		"relation": "idempotence",
+		"contains": "y z@media print{@layer x{}} :is(y z@media print){y/**/ z}}\n      -> y z@media print{@layer x{}}:is(y z@media print){y/**/ z}}",
+		"why": "input left open: the space before a selector after an unclosed block goes only once a first pass closed the block"
+	},
+	{
+		"relation": "respelling escape",
+		"contains": "y\n      -> \\79",
+		"why": "a declaration, selector or block that is invalid or left open, which the printer writes back as authored, escape included"
+	}
+]

@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "idempotence",
+		"contains": "-moz-placeholder,.p .b::-moz-placeholder{x:1}.p .a::-moz-placeholder,.\n      -> placeholder,.p .b::placeholder,.p .c::placeholder{z:1}",
+		"why": "lowered nesting writes the `-moz-` copies after the twins were compared, so a second pass drops the copies a later twin covers"
+	}
+]

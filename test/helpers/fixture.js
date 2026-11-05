@@ -25,31 +25,95 @@ const fixture = (lang, name) => {
 };
 
 /**
- * @typedef {object} FixtureCase
- * @property {string} name the fixture directory
- * @property {string} source its input
- * @property {{ mode: "minify" | "beautify" }} options one option set the printer is asked under, the rest of it read by the language's printer
+ * A relation a fixture is allowed to break, with why it is owed nothing.
+ * @typedef {object} KnownDifference
+ * @property {string} relation the relation, as a finding names it
+ * @property {string} contains text the finding's repro holds
+ * @property {string} why the reason, read by whoever meets the entry later
  */
 
 /**
- * Every fixture of a language paired with each option set its `options.json`
- * names, the unit tests' inputs whose printed output is a snapshot.
- * @param {"css" | "html"} lang the language
- * @returns {FixtureCase[]} one case per fixture and option set
+ * @typedef {object} FixtureEntry
+ * @property {string} name the fixture directory
+ * @property {string} source its input
+ * @property {{ mode: "minify" | "beautify" }[]} options the option sets it is printed under, minifying with the defaults first
+ * @property {KnownDifference[]} expected what its `expected.json` lets it break
  */
-const fixtureCases = (lang) => {
-	/** @type {FixtureCase[]} */
-	const cases = [];
+
+/**
+ * @param {string} file a JSON file
+ * @returns {EXPECTED_ANY[]} its array, or none where the file is absent
+ */
+const readList = (file) =>
+	fs.existsSync(file) ? JSON.parse(fs.readFileSync(file, "utf8")) : [];
+
+/**
+ * Every fixture of a language with what the runner asks of it.
+ * @param {"css" | "html"} lang the language
+ * @returns {FixtureEntry[]} one entry per fixture, by name
+ */
+const fixtures = (lang) => {
+	/** @type {FixtureEntry[]} */
+	const entries = [];
 	const dir = path.join(FIXTURES, lang);
 	for (const name of fs.readdirSync(dir).sort()) {
-		const file = path.join(dir, name, "options.json");
-		if (!fs.existsSync(file)) continue;
-		const source = fixture(lang, name);
-		for (const options of JSON.parse(fs.readFileSync(file, "utf8"))) {
-			cases.push({ name, source, options });
+		if (!fs.existsSync(path.join(dir, name, `index.${lang}`))) continue;
+		/** @type {Map<string, { mode: "minify" | "beautify" }>} */
+		const options = new Map([['{"mode":"minify"}', { mode: "minify" }]]);
+		for (const one of readList(path.join(dir, name, "options.json"))) {
+			options.set(JSON.stringify(one), one);
 		}
+		entries.push({
+			name,
+			source: fixture(lang, name),
+			options: [...options.values()],
+			expected: readList(path.join(dir, name, "expected.json"))
+		});
 	}
-	return cases;
+	return entries;
 };
 
-module.exports = { fixture, fixtureCases };
+/**
+ * What a fixture's findings leave unexplained: each finding no entry names,
+ * and each entry no finding needs any more, which has to go.
+ * @param {{ preset: string, report: { relation: string, what: string, repro: string } }[]} findings what the relations reported
+ * @param {KnownDifference[]} expected the fixture's known differences
+ * @returns {string[]} one line per finding left over or entry gone stale
+ */
+const unexplained = (findings, expected) => {
+	/** @type {Set<KnownDifference>} */
+	const used = new Set();
+	/** @type {string[]} */
+	const left = [];
+	for (const { preset, report } of findings) {
+		const entry = expected.find(
+			(one) =>
+				one.relation === report.relation && report.repro.includes(one.contains)
+		);
+		if (entry === undefined) {
+			left.push(
+				`${report.relation} [${preset}] ${report.what}\n${report.repro}`
+			);
+		} else {
+			used.add(entry);
+		}
+	}
+	for (const entry of expected) {
+		if (!used.has(entry)) {
+			left.push(`stale: ${entry.relation} ${entry.contains}`);
+		}
+	}
+	return left;
+};
+
+/**
+ * A printed text as a snapshot holds it: raw where it reads as text, as a JSON
+ * string where a control character would otherwise land in the snapshot file.
+ * @param {string} text what was printed
+ * @returns {string} the snapshot's value
+ */
+const snapshotText = (text) =>
+	// eslint-disable-next-line no-control-regex
+	/[\u0000-\u0008\u000B-\u001F\u007F]/.test(text) ? JSON.stringify(text) : text;
+
+module.exports = { fixture, fixtures, snapshotText, unexplained };

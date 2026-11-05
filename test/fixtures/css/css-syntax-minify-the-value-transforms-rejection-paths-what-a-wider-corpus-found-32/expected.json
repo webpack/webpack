@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "idempotence",
+		"contains": ".a{color:red}@media y{top:0;left:0}}.b{top:0}@media x{.a{color:red}}\n      -> @media y{top:0;left:0}}.b{top:0}@media x{.a{color:red}}",
+		"why": "`.a{color:red}` is joined into the next `@media x` block before the identical rule after it is seen, so a second pass drops it as dead"
+	}
+]

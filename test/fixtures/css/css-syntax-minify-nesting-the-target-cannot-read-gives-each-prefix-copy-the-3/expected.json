@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "idempotence",
+		"contains": "-webkit-full-screen{color-scheme:light dark;--webpack-light:initial;--\n      -> fullscreen{color-scheme:light dark;--webpack-light:initial;--webpack-d",
+		"why": "a prefix copy is written before the twin the source carries after it is read, so a second pass drops the copy that twin covers; both say the same"
+	}
+]

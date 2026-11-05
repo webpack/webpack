@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "respelling escape",
+		"contains": "\\31 abc\n      -> \\31 \\61 bc",
+		"why": "`\\31` stays escaped and keeps its CRLF terminator as authored, where a space would be a byte shorter; both end the escape (§3.3)"
+	}
+]

@@ -1,0 +1,12 @@
+[
+	{
+		"relation": "idempotence",
+		"contains": "red;color:green;.b{color:blue}}\n      -> green;.b{color:blue}}",
+		"why": "the two `color` declarations meet only once the rule between them is lowered, so the overridden one goes on a second pass"
+	},
+	{
+		"relation": "idempotence",
+		"contains": "red;color:green}.a .b{color:blue}\n      -> green}.a .b{color:blue}",
+		"why": "the two `color` declarations meet only once the rule between them is lowered, so the overridden one goes on a second pass"
+	}
+]
