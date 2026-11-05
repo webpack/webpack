@@ -419,15 +419,29 @@ describe("CssValueSyntax", () => {
 			expect(isPlainSupport({ version_added: "10" })).toBe(true);
 		});
 
-		it.each([
+		/** @type {[string, import("@mdn/browser-compat-data").SimpleSupportStatement][]} */
+		const notPlain = [
 			["a prefixed one", { version_added: "10", prefix: "-webkit-" }],
 			[
 				"one spelled another way",
 				{ version_added: "10", alternative_name: "-webkit-box" }
 			],
-			["one behind a flag", { version_added: "10", flags: [{}] }],
+			[
+				"one behind a flag",
+				{
+					version_added: "10",
+					flags: [
+						{
+							type: "preference",
+							name: "layout.css.flag.enabled"
+						}
+					]
+				}
+			],
 			["one BCD later removed", { version_added: "10", version_removed: "30" }]
-		])("is not %s", (_why, entry) => {
+		];
+
+		it.each(notPlain)("is not %s", (_why, entry) => {
 			// Support that ended is the one every reading of a BCD entry has to
 			// exclude: a target past the removal no longer reads the construct.
 			expect(isPlainSupport(entry)).toBe(false);
@@ -916,16 +930,12 @@ describe("CssValueSyntax", () => {
 
 		it("reads the named colors carrying a row, past bcd's own `__compat`", () => {
 			expect(
-				collectLaterColorNames({
-					__compat: {},
-					rebeccapurple: { __compat: { support: {} } },
-					lime: { __compat: { support: {} } }
-				})
+				collectLaterColorNames(["__compat", "rebeccapurple", "lime"])
 			).toEqual(["lime", "rebeccapurple"]);
 		});
 
 		it("rejects a `<named-color>` node where every name lost its row", () => {
-			expect(() => collectLaterColorNames({ __compat: {} })).toThrow(
+			expect(() => collectLaterColorNames(["__compat"])).toThrow(
 				"no <named-color> carries a row of its own: bcd moved"
 			);
 		});
@@ -934,11 +944,11 @@ describe("CssValueSyntax", () => {
 			// Cast because bcd's tree is recursive where `BcdNode` names only its
 			// own `__compat`, so a stub holding sub-features is not one literally.
 			const tree = /** @type {EXPECTED_ANY} */ ({
-				__compat: {},
+				__compat: { support: {}, source_file: "css/types/color.json" },
 				display: {
 					__compat: { support: {} },
-					flex: { __compat: { support: {} } },
-					is_transitionable: { __compat: { support: {} } }
+					flex: { __compat: { support: {}, source_file: "css/types/color.json" } },
+					is_transitionable: { __compat: { support: {}, source_file: "css/types/color.json" } }
 				}
 			});
 			expect(

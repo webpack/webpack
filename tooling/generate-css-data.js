@@ -3861,11 +3861,13 @@ const collectColorNames = (colorName) => {
  * carrying a `<named-color>` compatibility row, where a name that arrived after
  * the list did is recorded. Every other name is as old as naming a color at all,
  * so one stands wherever another does.
- * @param {BcdNode=} named the `<named-color>` rows
+ * @param {string[]=} keys the keys of the `<named-color>` rows
  * @returns {string[]} the names, sorted
  */
-const collectLaterColorNames = (named = bcd.css.types.color["named-color"]) => {
-	const names = Object.keys(named).filter((name) => name !== "__compat");
+const collectLaterColorNames = (
+	keys = Object.keys(bcd.css.types.color["named-color"])
+) => {
+	const names = keys.filter((name) => name !== "__compat");
 	if (names.length === 0) {
 		throw new Error("no <named-color> carries a row of its own: bcd moved");
 	}
