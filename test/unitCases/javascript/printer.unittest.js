@@ -1197,6 +1197,8 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["function f(){if(0){var a=1}else{var b=2}return[a,b]}function g(){if(1)h();else{var c=h(),[d,{e:k=1}]=[2]}return[c,d,k]}", {}, "function f(){var r=2;var e;return[e,r]}function g(){h();var e,r,n;return[e,r,n]}"],
 			// A name the dropped branch declares again keeps the value set before it.
 			["function f(){var b=7;if(0){var b=5}return b}", {}, "function f(){var r=7;if(0)var r=5;return r}"],
+			// A name only the dropped branch reads is declared for nothing.
+			["function f(){g();if(0){var c=5,d=c}if(0){var e}return 1}", {}, "function f(){return g(),1}"],
 			// A truth known though it runs something decides: past `x()||1` the right side runs, `x()&&0` is the value,
 			// and a constant inside a chain of the same operator goes.
 			["f((x()||!0)&&y());f((x()&&0)||y());f((x()&&0)&&y());f(x()&&!0&&y);f(a&&1&&b);f(a||0||null);f(a&&\"x\"&&b);f(foo&&false?a():b());f(typeof g()?a:b);x=void 0||c;(x()||!0)&&y()", {}, "f((x()||!0,y())),f((x()&&0,y())),f(x()&&0),f(x()&&y),f(a&&b),f(a||null),f(a&&b),f((foo&&0,b())),f((typeof g(),a)),(x=c)()||1,y();"],
