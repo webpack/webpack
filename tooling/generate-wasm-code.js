@@ -9,13 +9,38 @@ const doWrite = process.argv.includes("--write");
 
 const files = ["lib/util/hash/xxhash64.js", "lib/util/hash/md4.js"];
 
+// The part of `assemblyscript/asc` this script uses, as its own `asc.d.ts`
+// declares it; that file can't be imported for types (see below).
+
+/**
+ * @typedef {object} AscOutputStream
+ * @property {(chunk: Uint8Array | string) => void} write writes a chunk of data to the stream
+ */
+
+/**
+ * @typedef {object} AscAPIOptions
+ * @property {AscOutputStream=} stdout standard output stream to use
+ * @property {AscOutputStream=} stderr standard error stream to use
+ */
+
+/**
+ * @typedef {object} AscAPIResult
+ * @property {Error | null} error encountered error, if any
+ */
+
+/**
+ * @typedef {object} Asc
+ * @property {(argv: string[], options?: AscAPIOptions) => Promise<AscAPIResult>} main runs the command line utility using the specified arguments array
+ */
+
 (async () => {
 	// Use an indirect specifier so TypeScript does not statically resolve
 	// `assemblyscript/asc` and pull in its global type declarations (which
 	// redeclare `require`).
 	const ascSpecifier = "assemblyscript/asc";
 	// eslint-disable-next-line n/no-unsupported-features/es-syntax
-	const asc = (await import(ascSpecifier)).default;
+	const asc = /** @type {{ default: Asc }} */ (await import(ascSpecifier))
+		.default;
 
 	for (const file of files) {
 		const filePath = path.resolve(__dirname, "..", file);
@@ -24,6 +49,7 @@ const files = ["lib/util/hash/xxhash64.js", "lib/util/hash/md4.js"];
 		const regexp =
 			/\n\/\/\s*#region wasm code: (.+) \((.+)\)(.*)\n[\s\S]+?\/\/[\s+]*#endregion\n/g;
 
+		/** @type {Map<string, string>} */
 		const replaces = new Map();
 
 		let match = regexp.exec(content);
@@ -78,7 +104,10 @@ const ${identifier} = new WebAssembly.Module(
 			match = regexp.exec(content);
 		}
 
-		const newContent = content.replace(regexp, (match) => replaces.get(match));
+		const newContent = content.replace(
+			regexp,
+			(match) => /** @type {string} */ (replaces.get(match))
+		);
 
 		if (newContent !== content) {
 			if (doWrite) {
