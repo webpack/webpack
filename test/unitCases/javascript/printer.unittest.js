@@ -1271,6 +1271,8 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["function f(){return[[1].source,\"ab\".source,/a/.length,1..length]}", {}, "function f(){return[[1].source,\"ab\".source,/a/.length,1..length]}"],
 			// An arrow's sequence is its expressions and the value returned, nothing after.
 			["f=x=>{a();return b;g()}", { compress: { dead_code: false } }, "f=r=>{return a(),b;g()};"],
+			// Joined into a `return` taking a space more, an `if` body drops its braces, unless more prints after it.
+			["function x(){if(c){a(),b();return!1}if(d){k();return!1;g()}}", { compress: { dead_code: false } }, "function x(){if(c)return a(),b(),!1;if(d){k();return!1;g()}}"],
 			["f=x=>{a();return}", {}, "f=r=>{a()};"],
 			["f=x=>{a();var y;return b}", {}, "f=r=>(a(),b);"],
 			["function f(x){return[(g(),0,h()),(0,a).b]}", { compress: { side_effects: false } }, "function f(n){return[(g(),0,h()),(0,a).b]}"],
