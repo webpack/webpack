@@ -1,7 +1,7 @@
 {
-  "name": "webpack",
+  "name": "webpackager",
   "version": "5.94.0",
-  "author": "Tobias Koppers @sokra",
+  "author": "lll69",
   "description": "Packs ECMAScript/CommonJs/AMD modules for the browser. Allows you to split your codebase into multiple bundles, which can be loaded on demand. Supports loaders to preprocess files, i.e. json, jsx, es7, css, less, ... and your custom stuff.",
   "license": "MIT",
   "dependencies": {
@@ -119,14 +119,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/webpack/webpack.git"
+    "url": "https://github.com/lll69/webpackager.git"
   },
-  "funding": {
-    "type": "opencollective",
-    "url": "https://opencollective.com/webpack"
-  },
-  "homepage": "https://github.com/webpack/webpack",
-  "bugs": "https://github.com/webpack/webpack/issues",
+  "homepage": "https://github.com/lll69/webpackager",
+  "bugs": "https://github.com/lll69/webpackager/issues",
   "main": "lib/index.js",
   "bin": {
     "webpack": "bin/webpack.js"
