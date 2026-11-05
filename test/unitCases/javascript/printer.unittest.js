@@ -5369,6 +5369,32 @@ describe("one-pass minify of statement sequences", () => {
 		);
 	});
 
+	it("should drop a default of `undefined` in a pattern, but a parameter's own", () => {
+		const source =
+			"var{c=void 0,d=1}={},[x=void 0]=[];function f(a=void 0,{b=void 0}={}){return[a,b]}console.log(c,d,x,f.length,f())";
+		for (const [ecma, expected] of /** @type {[number, string][]} */ ([
+			[
+				5,
+				"var{c:c,d:d=1}={},[x]=[];function f(o=void 0,{b:d}={}){return[o,d]}console.log(c,d,x,f.length,f());"
+			],
+			[
+				2015,
+				"var{c,d=1}={},[x]=[];function f(o=void 0,{b}={}){return[o,b]}console.log(c,d,x,f.length,f());"
+			]
+		])) {
+			const { code } = minifyOnePass(source, { ecma, compress: {}, mangle: {} });
+			expect(code).toBe(expected);
+			expect(runProgram(code)).toBe(runProgram(source));
+		}
+		// A comment holds it, and without compressing it prints as written.
+		expect(
+			minifyOnePass("var[x=/*! c */void 0]=[]", { compress: {}, mangle: {} }).code
+		).toBe("var[x=/*! c */void 0]=[];");
+		expect(
+			minifyOnePass("var[x=void 0]=[]", { compress: false, mangle: false }).code
+		).toBe("var[x=void 0]=[];");
+	});
+
 	it("should fold a `delete` of the global `undefined`, `NaN` or `Infinity` to `false`", () => {
 		const cases = [
 			["console.log(delete undefined,delete NaN,delete Infinity)", "console.log(!1,!1,!1);"],
