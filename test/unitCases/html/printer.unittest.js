@@ -3573,6 +3573,29 @@ describe("htmlMinify — assets webpack only passes through", () => {
 			).toBe("<!--[if IE]><p class=a>a</p><![endif]--><span>b</span>");
 		});
 
+		it.each([
+			[
+				"a block moved out of a table before the comment the table holds",
+				'<table><!--[if IE]><b  class="x">1</b><![endif]--><div><!--[if IE]><i  class="y">2</i><![endif]--></div><tr><td title="t">c</td></tr></table><p title="x">kept</p>',
+				"<div><!--[if IE]><i class=y>2</i><![endif]--></div><table><!--[if IE]><b class=x>1</b><![endif]--><tr><td title=t>c</table><p title=x>kept"
+			],
+			[
+				"a comment after `</body>` with body content following it",
+				'<body><p>a</p></body><!--[if IE]><b  class="x">1</b><![endif]--><p><!--[if IE]><i  class="y">2</i><![endif]--></p><p title="x">kept</p>',
+				"<body><p>a<p><!--[if IE]><i class=y>2</i><![endif]--><p title=x>kept</body><!--[if IE]><b class=x>1</b><![endif]-->"
+			],
+			[
+				"an option `<selectedcontent>` copies",
+				'<select><button><selectedcontent></selectedcontent></button><option selected><!--[if IE]><b  class="x">1</b><![endif]--></option></select><p title="x">kept</p>',
+				"<select><button><selectedcontent></selectedcontent></button><option selected><!--[if IE]><b class=x>1</b><![endif]--></select><p title=x>kept"
+			]
+		])("minifies each body in place for %s", async (_, page, expected) => {
+			const code = await conditional(page);
+
+			expect(code).toBe(expected);
+			expect(code).toContain("<p title=x>kept");
+		});
+
 		it("leaves a comment that only starts like one, and a plain one, to the document", async () => {
 			expect(
 				await conditional("<p>a</p><!--[if IE]> no end --><!-- plain -->")
