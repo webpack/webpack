@@ -1390,9 +1390,7 @@ describe("CssSyntax — a block of declarations written again", () => {
 			min(
 				".a{margin-top:1px;margin-right:2px}\n.a{margin-bottom:3px;margin-left:4px;background:url(./x\\'y.png)}"
 			)
-		).toBe(
-			".a{background:url(./x\\'y.png);margin-bottom:3px;margin-left:4px;margin-top:1px;margin-right:2px}"
-		);
+		).toBe(".a{background:url(./x\\'y.png);margin:1px 2px 3px 4px}");
 		expect(min('.b{color:red}\n.b{content:"\\"\'"}\n.b{top:0}')).toBe(
 			'.b{color:red;content:"\\"\'";top:0}'
 		);
@@ -14518,6 +14516,87 @@ describe("CssSyntax minify — declaration order", () => {
 		"a{font:-1px serif;line-height:2}"
 	])("keeps %s apart", (css) => {
 		expect(settled(css, modern)).toBe(css);
+	});
+});
+
+describe("CssSyntax minify — joining rules whose values hold escapes", () => {
+	/**
+	 * @param {string} css source text
+	 * @returns {string[]} each declaration's name, string and url, sorted
+	 */
+	const pieces = (css) => {
+		/** @type {string[]} */
+		const out = [];
+		/**
+		 * @param {string} kind what the piece is
+		 * @returns {(path: import("../../../lib/css/syntax-parser").CssPath) => void} visitor collecting it
+		 */
+		const collect = (kind) => (path) => {
+			out.push(
+				`${kind}:${kind === "declaration" ? path.name() : path.value()}`
+			);
+		};
+		new SourceProcessor()
+			.use({
+				[NodeType.Declaration]: collect("declaration"),
+				[NodeType.String]: collect("text"),
+				[NodeType.Url]: collect("text")
+			})
+			.process(css);
+		return out.sort();
+	};
+
+	it.each([
+		// An escaped quote in an identifier opens no string.
+		[
+			'.a{margin:a\\" ";color:red}.b{x:1;y:"}.a{top:0}',
+			'.a{margin:a\\"";color:red}.b{x:1;y:";top:0}'
+		],
+		// Nor does one in an unquoted url.
+		[
+			".a{background:url(./img\\'img.png);content:';color:red}.b{x:1;y:\"'}.a{top:0}",
+			".a{background:url(./img\\'img.png);content:';color:red}.b{x:1;y:\"';top:0}"
+		],
+		[
+			'.a{margin:url(a\\"b) ";color:red}.b{x:1;y:"}.a{top:0}',
+			'.a{margin:url(a\\"b)";color:red}.b{x:1;y:";top:0}'
+		],
+		// An unquoted url's brace opens no block.
+		[
+			".a{background:url(a{b.png);color:red;top:1px}.a{top:0}",
+			".a{background:url(a{b.png);color:red;top:1px}.a{top:0}"
+		],
+		// An escaped semicolon ends no declaration.
+		[
+			".a{grid-area:a\\;b;color:red}.a{top:0}",
+			".a{grid-area:a\\;b;color:red;top:0}"
+		]
+	])("joins %s keeping every string whole", (css, expected) => {
+		/**
+		 * @param {boolean} reorderDeclarations whether declarations may move
+		 * @returns {string} the minified output
+		 */
+		const minify = (reorderDeclarations) =>
+			/** @type {{ code: string }} */ (
+				new SourceProcessor().process(css, {
+					mode: "minify",
+					transforms: { reorderDeclarations }
+				})
+			).code;
+		expect(minify(false)).toBe(expected);
+		expect(pieces(minify(false))).toEqual(pieces(css));
+		expect(pieces(minify(true))).toEqual(pieces(css));
+	});
+
+	it("joins a block whose last string a newline cuts off", () => {
+		expect(
+			minifyFor('.a{position:relative}.a{display:block;content:"x\n}')
+		).toBe('.a{content:"x\n;display:block;position:relative}');
+		expect(
+			minifyFor(
+				'.a{margin-top:1px;margin-right:2px;margin-bottom:3px}.a{margin-left:4px;z:"x\n}'
+			)
+		).toBe('.a{margin:1px 2px 3px 4px;z:"x\n}');
 	});
 });
 
