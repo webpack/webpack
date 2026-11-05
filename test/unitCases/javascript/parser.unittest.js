@@ -6275,6 +6275,26 @@ describe("parseProgram", () => {
 			tree.release();
 		});
 
+		it("keeps a large tree's columns for its objects", () => {
+			const {
+				takeParsedTree
+			} = require("../../../lib/javascript/syntax-parser");
+			// past the size a released tree's columns are reused up to
+			const source = "a;\n".repeat(200000);
+			const program = /** @type {number} */ (parseProgram(source));
+			const tree = /** @type {SyntaxTree} */ (takeParsedTree());
+			const lazy = /** @type {import("estree").Program} */ (
+				tree.lazyEstree(program)
+			);
+			tree.release();
+			parseProgram("b; c;");
+			expect(lazy.body).toHaveLength(200000);
+			const last = /** @type {import("estree").ExpressionStatement} */ (
+				lazy.body[199999]
+			);
+			expect(last.expression).toMatchObject({ type: "Identifier", name: "a" });
+		});
+
 		it("names the node of an object of the tree the path reads", () => {
 			const {
 				lazyNodeOf,
