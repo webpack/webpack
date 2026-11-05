@@ -1174,6 +1174,8 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// `-Infinity` prints `-1/0` where a division reads as one value there.
 			["function f(){return-Infinity}", {}, "function f(){return-1/0}"],
 			["function f(a){return[a/-Infinity,-Infinity/a,(-Infinity).x]}", {}, "function f(n){return[n/-(1/0),-(1/0)/n,(-(1/0)).x]}"],
+			// A number too big for a double is no name: a binding named `Infinity` does not read it.
+			["function f(Infinity){eval(\"\");return[1e500,-1e500,1e500.x,2*1e500]}", {}, "function f(Infinity){eval(\"\");return[1/0,-1/0,(1/0).x,2*(1/0)]}"],
 			// A body printing nothing is `;`, and an `if` with one only runs its test.
 			["function f(a){for(a of b){}while(a()){}l:{}}", {}, "function f(f){for(f of b);while(f());}"],
 			["function f(a){if(a()){}if(a){}else b()}", {}, "function f(f){f();if(!f)b()}"],
@@ -1871,7 +1873,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// The callee `Object(f)` is `f`; a member keeps no `this`, and `with` or `eval` may reach a name.
 			["Object(f)(1,2);Object(a.b)(x);Object(a[b])`x`;function k(f){Object(f)(1)}", {}, "f(1,2),(0,a.b)(x),(0,a[b])`x`;function k(b){b(1)}"],
 			["Object(a.b)?.(x);Object(a?.b)(x);new(Object(a.b))(x);Object(f())(1);Object(...f)(1);Object(f,g)(1);x=Object(f).y;Object(f)", {}, "Object(a.b)?.(x),Object(a?.b)(x),new(Object(a.b))(x),Object(f())(1),Object(...f)(1),Object(f,g)(1),x=Object(f).y,f;"],
-			["function f(a){var x=g();(a,x)+c}function k(a){var x=a.b;Object(x)(1)}Object(1e999)(1)", {}, "function f(a){(a,g())+c}function k(a){Object(a.b)(1)}Object(Infinity)(1);"],
+			["function f(a){var x=g();(a,x)+c}function k(a){var x=a.b;Object(x)(1)}Object(1e999)(1)", {}, "function f(a){(a,g())+c}function k(a){Object(a.b)(1)}Object(1/0)(1);"],
 			["var Object;Object(f)(1)", {}, "var Object;Object(f)(1);"],
 			["with(o)Object(f)(x)", {}, "with(o)Object(f)(x);"],
 			["Object(eval)(x)", {}, "Object(eval)(x);"],

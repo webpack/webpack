@@ -14,7 +14,7 @@ function f(){}
 function f(){}
 
 /*!a*/
-function f(){return Infinity+(a,b)}
+function f(){return 1/0+(a,b)}
 
 var a={b:1,\\"c d\\":[1,,2],[e]:f,get g(){return 1},h(){},...i,1e3:2,16:3};
 
@@ -128,7 +128,7 @@ a,b+c,-(a+b),(a+b).c,(a+b)(),a??(b&&c),(a||b)??c,a-(b-c),(a**b)**c,a**(b**c),a*(
 
 (a?.b).c,(a?.b)(),a?.b.c,a?.(),a?.b(),new(a.b()),new(a().b),new a.b,new(a()),(new A).b,(new A)(),(new A)\`x\`,new(A\`x\`),new(a\`x\`);
 
-x=Infinity.y;
+x=(1/0).y;
 
 1 in a,1.5 in a,.5 in a,/x/ in a,/x/ instanceof a,a in b,a instanceof b,1 instanceof a;
 
@@ -160,7 +160,7 @@ var{a:b}=c;({a:b}=c);function f({a}){}var[{a:b}]=c,{x:{a:b}}=c,{a:b=1}=c;functio
 
 ({a=1}=b);var{a=1}=b;({a:b=1}=c),({a=1}=c),({a=1}=b),({a}=b),({a:c}=b);var{a}=b;
 
-x={a,if:if_,b:if_,Infinity:Infinity,c:Infinity,async,get,set,static:s},x={get(){},set(e){},async(){},*gen(){},async*ag(){},get[k](){},set[k](e){},async[k](){},q(){},1(){},[k]:1};
+x={a,if:if_,b:if_,Infinity:1/0,c:1/0,async,get,set,static:s},x={get(){},set(e){},async(){},*gen(){},async*ag(){},get[k](){},set[k](e){},async[k](){},q(){},1(){},[k]:1};
 
 x={__proto__},x={__proto__:__proto__},x={__proto__:a},x={__proto__:a},x={[\`__proto__\`]:a},({__proto__}=a),({__proto__:b}=a),x={__proto__(){}},x={get __proto__(){}};
 
@@ -267,7 +267,7 @@ function f(){/*a*/;;\\"x\\"}
 function f(){}
 
 /*!a*/
-function f(){/*x*/return Infinity+(a,b)}
+function f(){/*x*/return 1/0+(a,b)}
 
 var a={b:1,\\"c d\\":[1,,2],[e]:f,get g(){return 1},h(){},...i,1e3:2,16:3};
 
@@ -387,7 +387,7 @@ a,b+c,-(a+b),(a+b).c,(a+b)(),a??(b&&c),(a||b)??c,a-(b-c),(a**b)**c,a**(b**c),a*(
 
 (a?.b).c,(a?.b)(),a?.b.c,a?.(),a?.b(),new(a.b()),new(a().b),new a.b,new(a()),(new A).b,(new A)(),(new A)\`x\`,new(A\`x\`),new(a\`x\`);
 
-x=Infinity.y;
+x=(1/0).y;
 
 1 in a,1.5 in a,.5 in a,/x/ in a,/x/ instanceof a,a in b,a instanceof b,1 instanceof a;
 
@@ -419,7 +419,7 @@ var{a:b}=c;({a:b}=c);function f({a:a}){}var[{a:b}]=c,{x:{a:b}}=c,{a:b=1}=c;funct
 
 ({a:a=1}=b);var{a:a=1}=b;({a:b=1}=c),({a:a=1}=c),({a:a=1}=b),({a:a}=b),({a:c}=b);var{a:a}=b;
 
-x={a:a,if:if_,b:if_,Infinity:Infinity,c:Infinity,async:async,get:get,set:set,static:s},x={get(){},set(e){},async(){},*gen(){},async*ag(){},get[k](){},set[k](e){},async[k](){},q(){},1(){},[k]:1};
+x={a:a,if:if_,b:if_,Infinity:1/0,c:1/0,async:async,get:get,set:set,static:s},x={get(){},set(e){},async(){},*gen(){},async*ag(){},get[k](){},set[k](e){},async[k](){},q(){},1(){},[k]:1};
 
 x={[\\"__proto__\\"]:__proto__},x={__proto__:__proto__},x={__proto__:a},x={__proto__:a},x={[\\"__proto__\\"]:a},({__proto__:__proto__}=a),({__proto__:b}=a),x={__proto__(){}},x={get __proto__(){}};
 
@@ -526,7 +526,7 @@ function f(){}
 function f(){}
 
 /*!a*/
-function f(){return Infinity+(a,b)}
+function f(){return 1/0+(a,b)}
 
 var a={b:1,\\"c d\\":[1,,2],[e]:f,get g(){return 1},h(){},...i,1e3:2,16:3};
 
@@ -640,7 +640,7 @@ a,b+c,-(a+b),(a+b).c,(a+b)(),a??(b&&c),(a||b)??c,a-(b-c),(a**b)**c,a**(b**c),a*(
 
 (a?.b).c,(a?.b)(),a?.b.c,a?.(),a?.b(),new(a.b()),new(a().b),new a.b,new(a()),(new A).b,(new A)(),(new A)\`x\`,new(A\`x\`),new(a\`x\`);
 
-x=Infinity.y;
+x=(1/0).y;
 
 1 in a,1.5 in a,.5 in a,/x/ in a,/x/ instanceof a,a in b,a instanceof b,1 instanceof a;
 
@@ -672,7 +672,7 @@ var{a:b}=c;({a:b}=c);function f({a:a}){}var[{a:b}]=c,{x:{a:b}}=c,{a:b=1}=c;funct
 
 ({a:a=1}=b);var{a:a=1}=b;({a:b=1}=c),({a:a=1}=c),({a:a=1}=b),({a:a}=b),({a:c}=b);var{a:a}=b;
 
-x={a:a,if:if_,b:if_,Infinity:Infinity,c:Infinity,async:async,get:get,set:set,static:s},x={get(){},set(e){},async(){},*gen(){},async*ag(){},get[k](){},set[k](e){},async[k](){},q(){},1(){},[k]:1};
+x={a:a,if:if_,b:if_,Infinity:1/0,c:1/0,async:async,get:get,set:set,static:s},x={get(){},set(e){},async(){},*gen(){},async*ag(){},get[k](){},set[k](e){},async[k](){},q(){},1(){},[k]:1};
 
 x={[\\"__proto__\\"]:__proto__},x={__proto__:__proto__},x={__proto__:a},x={__proto__:a},x={[\\"__proto__\\"]:a},({__proto__:__proto__}=a),({__proto__:b}=a),x={__proto__(){}},x={get __proto__(){}};
 
@@ -779,7 +779,7 @@ function f(){/*a*/;;'x'}
 function f(){}
 
 /*!a*/
-function f(){/*x*/return Infinity+(a,b)}
+function f(){/*x*/return 1/0+(a,b)}
 
 var a={b:1,\\"c d\\":[1,,2],[e]:f,get g(){return 1},h(){},...i,1000:2,16:3};
 
@@ -899,7 +899,7 @@ a,b+c,-(a+b),(a+b).c,(a+b)(),a??(b&&c),(a||b)??c,a-(b-c),(a**b)**c,a**(b**c),a*(
 
 (a?.b).c,(a?.b)(),a?.b.c,a?.(),a?.b(),new(a.b()),new(a().b),new a.b,new(a()),(new A).b,(new A)(),(new A)\`x\`,new(A\`x\`),new(a\`x\`);
 
-x=Infinity.y;
+x=(1/0).y;
 
 1 in a,1.5 in a,.5 in a,/x/ in a,/x/ instanceof a,a in b,a instanceof b,1 instanceof a;
 
@@ -931,7 +931,7 @@ var{\\"a\\":b}=c;({'a':b}=c);function f({\\"a\\":b}){}var[{\\"a\\":b}]=c,{x:{\\"
 
 ({a=1}=b);var{a=1}=b;({a:b=1}=c),({'a':a=1}=c),({a=1}=b),({a}=b),({a:c}=b);var{a}=b;
 
-x={a,if:if_,b:if_,Infinity:Infinity,c:Infinity,async,get,set,static:s},x={get(){},set(v){},async(){},*gen(){},async*ag(){},get[k](){},set[k](v){},async[k](){},'q'(){},1(){},[k]:1};
+x={a,if:if_,b:if_,Infinity:1/0,c:1/0,async,get,set,static:s},x={get(){},set(v){},async(){},*gen(){},async*ag(){},get[k](){},set[k](v){},async[k](){},'q'(){},1(){},[k]:1};
 
 x={__proto__},x={__proto__:__proto__},x={'__proto__':a},x={__proto__:a},x={['__proto__']:a},({__proto__}=a),({__proto__:b}=a),x={__proto__(){}},x={get __proto__(){}};
 
@@ -1050,7 +1050,7 @@ function f(){}
 
 /* p */
 /*!a*/
-function f(){/*x*/return Infinity+(a,b)}
+function f(){/*x*/return 1/0+(a,b)}
 
 /* p */
 var a={b:1,\\"c d\\":[1,,2],[e]:f,get g(){return 1},h(){},...i,1e3:2,16:3}
@@ -1295,7 +1295,7 @@ a,b+c,-(a+b),(a+b).c,(a+b)(),a??(b&&c),(a||b)??c,a-(b-c),(a**b)**c,a**(b**c),a*(
 
 
 /* p */
-x=Infinity.y
+x=(1/0).y
 
 
 /* p */
@@ -1374,7 +1374,7 @@ var{a:a}=b
 
 
 /* p */
-x={a:a,\\"if\\":if_,b:if_,Infinity:Infinity,c:Infinity,async:async,get:get,set:set,\\"static\\":s},x={get(){},set(e){},async(){},*gen(){},async*ag(){},get[k](){},set[k](e){},async[k](){},q(){},1(){},[k]:1}
+x={a:a,\\"if\\":if_,b:if_,Infinity:1/0,c:1/0,async:async,get:get,set:set,\\"static\\":s},x={get(){},set(e){},async(){},*gen(){},async*ag(){},get[k](){},set[k](e){},async[k](){},q(){},1(){},[k]:1}
 
 
 /* p */
