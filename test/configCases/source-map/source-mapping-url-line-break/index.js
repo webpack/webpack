@@ -20,6 +20,6 @@ it("should keep a line comment for a JavaScript asset whose query ends in .css",
 	expect(() => __non_webpack_require__(file)).not.toThrow();
 	const source = fs.readFileSync(file, "utf-8");
 	expect(source).toMatch(
-		/\n\/\/# sourceMappingURL=[^\n]*other\.js\.map\?a\*%2Fb\.css$/
+		/\n\/\/# sourceMappingURL=[^\n]*other\.js\.map\?a%2A\/b\.css$/
 	);
 });
