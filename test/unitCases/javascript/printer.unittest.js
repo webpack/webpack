@@ -1146,6 +1146,10 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["function f(a,b){if(a)return true;if(b)return 1;return false}", {}, "function f(r,e){return r?!0:e?1:!1}"],
 			["const f=(a,b)=>{;if({}.x)return 1;if(b)return 2;return 3}", {}, "const f=(r,n)=>({}.x?1:n?2:3);"],
 			["function f(a,b,c){if(a){;if(b)return 1;if(c)return 4;return 2}return 3}", {}, "function f(r,n,f){return r?n?1:f?4:2:3}"],
+			// So do chains throwing, esbuild's `throw t?x:y`; one mixing `return` and `throw`, a body not one `throw`, or an exit dead code drops keeps its `if`.
+			["function f(a,b){if(!a)throw b;throw 1}function g(){if(a)throw b();else throw c()}function h(){if(a)throw b;if(c)throw d;throw e}function i(){if(a){throw b}throw c}function j(){if(a)throw b,c;throw d}function k(){if(a)throw b;else throw b}f=()=>{if(a)throw b;throw c}", {}, "function f(o,t){throw o?1:t}function g(){throw a?b():c()}function h(){throw a?b:c?d:e}function i(){throw a?b:c}function j(){throw a?(b,c):d}function k(){throw a,b}f=()=>{throw a?b:c};"],
+			["function f(){if(a)throw b;return c}function g(){if(a)return b;if(c)throw d;return e}function h(){if(a){g();throw b}throw c}function i(){if(a)return b;throw c}", {}, "function f(){if(a)throw b;return c}function g(){if(a)return b;if(c)throw d;return e}function h(){if(a){g();throw b}throw c}function i(){if(a)return b;throw c}"],
+			["function f(){return 1;if(d)/*j*/return e;return g}function h(){throw 1;if(d)/*j*/throw e;throw g}", { format: { comments: "all" } }, "function f(){return 1;if(d)/*j*/return e}function h(){throw 1;if(d)/*j*/throw e}"],
 			// An empty statement prints nothing, a block of only those as `;`.
 			["function f(a){if(a){;}else g()}", {}, "function f(f){if(!f)g()}"],
 			["while(a){;}", {}, "while(a);"],
