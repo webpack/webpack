@@ -1489,9 +1489,9 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["!(a==b);var v=!(a==b);function g(){return!(a===b)}", {}, "a==b;var v=a!=b;function g(){return a!==b}"],
 			["x=(a instanceof b)===true;x=!a===!1;x=true===(a in b);x=y===true;x=(a<b)!=true;x=delete y==false;while(x&&!0)f();x=!(y()&&true);x=!(a<b&&!0);if(a??true)b();x=a&&true;if(a&&b())c()", {}, "x=a instanceof b,x=!!a,x=a in b,x=y===!0,x=!(a<b),x=!delete y;while(x)f();x=!y(),x=!(a<b);if(a??!0)b();x=a&&!0;if(a&&b())c();"],
 			["x=!(/*c*/a==b);if(a&&/*k*/true)b()", { mangle: false, format: { comments: "all" } }, "x=!(/*c*/a==b);if(a&&/*k*/1)b();"],
-			// A name both branches call is called bare, after the test runs; but `eval`, a member, `new` or in `with`.
-			["var c;(c?foo:foo)(\"x\");(c()?foo:foo)(\"y\");(c?eval:eval)(\"z\");(c?o.f:o.f)(\"w\");(c?foo:foo)`t`;(c()?foo:foo)`v`;new(c?F:F);(c?a:b)`u`", {}, "var c;foo(\"x\"),(c(),foo)(\"y\"),(c?eval:eval)(\"z\"),(c?o.f:o.f)(\"w\"),foo`t`,(c(),foo)`v`,new(c?F:F),(c?a:b)`u`;"],
-			["with(o)(c?foo:foo)()", {}, "with(o)(c?foo:foo)();"],
+			// A name both branches call is called bare, after the test runs; `eval` or a member as `(0,f)`; in `with` the test stays, and `new` keeps it.
+			["var c;(c?foo:foo)(\"x\");(c()?foo:foo)(\"y\");(c?eval:eval)(\"z\");(c?o.f:o.f)(\"w\");(c?foo:foo)`t`;(c()?foo:foo)`v`;new(c?F:F);(c?a:b)`u`", {}, "var c;foo(\"x\"),(c(),foo)(\"y\"),(0,eval)(\"z\"),(0,o.f)(\"w\"),foo`t`,(c(),foo)`v`,new(c?F:F),(c?a:b)`u`;"],
+			["with(o)(c?foo:foo)()", {}, "with(o)(c,foo)();"],
 			// terser's `loops`: `if(x)break` opening a loop's body joins its test as `!x`, but where the body scopes a name.
 			["for(;;)if(x)break;for(;;)if(!x)break;for(;a;){if(x)break;y()}while(x){if(y)break;z()}while(1){if(a==b)break;c()}for(;a||b;)if(c&&d)break;l:for(;;){if(x)break l;y()}for(;;){if(x)continue;y()}for(;a=b;)if(x)break;for(;a;)if(!(b&&c))break;var x=1;for(;;){if(x)break;let x=g();h(x,x)}for(;;){;if(x)break;y()}for(;true;){if(x)break;y()}", {}, "for(;!x;);for(;x;);for(;a&&!x;)y();while(x&&!y)z();while(a!=b)c();for(;(a||b)&&!(c&&d););for(;;){if(x)break;y()}for(;;){if(!x)y()}for(;(a=b)&&!x;);for(;a&&b&&c;);for(var x=1;;){if(r)break;let r=g();h(r,r)}for(;!x;)y();for(;!x;)y();"],
 			["for(;;){/*c*/if(x)break;y()}class S{/*k*/static{}}", { mangle: false, format: { comments: "all" } }, "for(;;){/*c*/if(x)break;y()}class S{/*k*/static{}}"],
@@ -1609,7 +1609,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// A call `pure_funcs` names keeps what its arguments run in it.
 			["debug(g());/*@__PURE__*/f(g())", { compress: { pure_funcs: ["debug"] } }, "debug(g()),g();"],
 			// Nobody reading `&&`, `||` or `??`, a right side running nothing goes.
-			["a||0;a&&0;a??0;f()||1,g();x=a||0;(a,b)||0;(function(){})||0;a()||b||0;(function(){}).call()||0", {}, "a,a,a,f(),g(),x=a||0,(a,b),a()||b;(function(){}).call();"],
+			["a||0;a&&0;a??0;f()||1,g();x=a||0;(a,b)||0;(function(){})||0;a()||b||0;(function(){}).call()||0", {}, "a,a,a,f(),g(),x=a||0,a,b,a()||b;(function(){}).call();"],
 			// A `break` before cases running nothing does nothing, a test matched skipping the rest.
 			["switch(foo){case\"bar\":bar();break;case\"moo\":case moo:case\"baz\":break}switch(a){case 1:b();break;case 2:c();break;case 3:}switch(a){case 1:b();break;default:break;case g():}switch(a){case 1:b();break;/*! c */case g():}", {}, "switch(foo){case\"bar\":bar();case\"moo\":case moo:}switch(a){case 1:b();break;case 2:c()}switch(a){case 1:b();default:case g():}switch(a){case 1:b();break;/*! c */case g():}"],
 			// terser's `switches` of one case and a `default`: `if…else` after a `break`, the other after where one falls into it, in a list, its block keeping braces.
@@ -1637,6 +1637,11 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["function f(eval){var v=42;eval!=null&&eval(\"v=43\");x=eval!=null?eval(\"v\"):void 0;return v}", { mangle: false, ecma: 2020, compress: { toplevel: false, ecma: 2020 } }, "function f(eval){var v=42;return eval!=null&&eval(`v=43`),x=eval!=null?eval(`v`):void 0,v}"],
 			// A name a value collapsed into prints that value, which `!` parenthesizes; an update or `await` joins `&&` bare.
 			["function f(o){var h=!1;for(var i=0;i<9;i++){h=o[i]===!0;if(h)break}return h}function g(o){var h;h=o.a===1;if(h)return;k()}for(;i--;){if(x)break;y()}x=!(i--)?1:2", { mangle: false }, "function f(o){for(var h=!1,i=0;i<9&&!(h=o[i]===!0);i++);return h}function g(o){if(!(o.a===1))k()}for(;i--&&!x;)y();x=i--?2:1;"],
+			// An inlined body's statement prints as an operand, so its sequence keeps its parentheses; a function moved into `Object(f)` keeps the call.
+			["(function(){if(x)return;(a(),b)+c})()", {}, "x||(a(),b)+c;"],
+			["(function(){var f=function(){g()};Object(f)(1)})()", {}, "Object(function(){g()})(1);"],
+			// An assignment collapsed into the test of an `if` printing as `?:` is that test, in parentheses.
+			["x=y+c;if(x)y+c;else d();function f(){x=y+c;if(x)return a;return b}", {}, "(x=y+c)?y+c:d();function f(){return(x=y+c)?a:b}"],
 			// A call printing as `null` or a regular expression needs no parentheses read off; a value folded into its read prints where that is; an `else if` known later leaves its `if` nothing.
 			["function r(){return null}function q(){return/a/}x=r().filepath;y=q().source;function f(a){var b=g(a);var n={a:a,b:b};return n}f(()=>{if(!1)return;else if(!1){return}else{}g()})", { mangle: false }, "function r(){return null}function q(){return/a/}x=r().filepath,y=q().source;function f(a){return{a:a,b:g(a)}}f(()=>{g()});"],
 			// What prints first in a statement again parenthesizes an object, function or class alone, so one inside a part or argument keeps its literal or call; a `+` before one stays; a `do` running nothing once prints nothing in a list.
@@ -1832,6 +1837,59 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			format: { comments: "all" }
 		});
 		expect(code).toBe("if(a){b()}/* c */");
+	});
+
+	it("should print built-in constructions and same-typed comparisons in their shorter spelling", () => {
+		/** @type {[string, import("../../../lib/javascript/syntax-parser").JavascriptProcessOptions, string][]} */
+		const cases = [
+			// Two numbers or two strings compare the same loosely; a `-` or a name may be a BigInt or anything.
+			["x=[+a===0,+a!==-1,typeof a===`number`,`number`!==typeof a,(b=1)===1,(a|1)===2,`a${b}`===`c`]", {}, "x=[+a==0,+a!=-1,typeof a==`number`,`number`!=typeof a,(b=1)==1,(a|1)==2,`a${b}`==`c`];"],
+			["x=[-a===0,a===0,(a|b)===2,`a${b}`===c,-a===-1,(b+=1)===1,+a===b]", {}, "x=[-a===0,a===0,(a|b)===2,`a${b}`===c,-a===-1,(b+=1)===1,+a===b];"],
+			// The built-in `Array` makes the array its literal does: a lone number is a length, a few holes printing shorter.
+			["x=[new Array,Array(),Array(0),Array(1),Array(5),Array(\"a\"),Array(7n),Array(a,b),Array(...a,\"b\"),Array(Array(1,\"2\")),new Array(a,...b,c),Array(...[1,2]),Array(1,2).length]", {}, "x=[[],[],[],[,],[,,,,,],[\"a\"],[7n],[a,b],[...a,\"b\"],[[1,\"2\"]],[a,...b,c],[1,2],[1,2].length];"],
+			["x=[Array(-0),new Array(-0),Array(-1),Array(...[3],...[]),Array(...[],2),Array(...[-0]),Array(...[6]),Array(...[1.5]),Array(...[3],...a),Array(...[/*! c */3])]", {}, "x=[[],[],Array(-1),[,,,],[,,],[],Array(6),Array(1.5),Array(3,...a),Array(...[/*! c */3])];"],
+			["x=[Array(`a${b}`),Array({}),Array([]),Array(function(){}),Array(()=>1),Array(class{}),Array(null),Array(true),Array(!0),Array(/a/)]", {}, "x=[[`a${b}`],[{}],[[]],[function(){}],[()=>1],[class{}],[null],[!0],Array(!0),[/a/]];"],
+			// A lone argument that may be a number, a length printing longer, or a spread that may pass one alone stays a call.
+			["x=[Array(6),Array(1.5),Array(-1),Array(a),Array(...a),Array(...a,b),Array(3,...[]),Array?.(1,2),Array(Array?.(a)),new(Array(1,2))]", {}, "x=[Array(6),Array(1.5),Array(-1),Array(a),Array(...a),Array(...a,b),[,,,],Array?.(1,2),Array(Array?.(a)),new([1,2])];"],
+			["var Array;x=[Array(1,2),Array()]", {}, "var Array;x=[Array(1,2),Array()];"],
+			["window.Array=f;x=[Array(1,2),Array(0)]", {}, "window.Array=f,x=[Array(1,2),Array(0)];"],
+			["x=Array(1,2/*c*/);y=Array/*c*/(1,2)", { format: { comments: "all" } }, "x=Array(1,2/*c*/),y=Array/*c*/(1,2);"],
+			// The built-in `Object` passed nothing makes `{}`, parenthesized where it opens a statement or an arrow's body.
+			["x=[new Object,Object(),new Object()];Object().a=1;new Object().b=1;f=()=>Object();g=()=>new Object().c;h=a?Object():[]", {}, "x=[{},{},{}];({}).a=1;({}).b=1;f=()=>({}),g=()=>({}.c),h=a?{}:[];"],
+			["export default Object()", {}, "export default{};"],
+			["x=[Object(a),Object?.(),window.Object(),new(Object())]", {}, "x=[Object(a),Object?.(),window.Object(),new{}];"],
+			["var Object;x=Object()", {}, "var Object;x=Object();"],
+			["window.Object=f;x=Object()", {}, "window.Object=f,x=Object();"],
+			// An empty function a rest name collects for runs nothing; one destructuring iterates or reads.
+			["(function(...a){})();((...a)=>{})();(function(b,...a){})(f(),...c);x=1", {}, "[f(),...c],x=1;"],
+			["(function(...[a]){})(...b);(function(...{length}){})();x=1", {}, "!function(...[n]){}(...b),function(...{length:n}){}(),x=1;"],
+			// A sequence opening the operations a statement is prints bare, its last value a name or a member of one.
+			["(a(),b)+c;(a(),b,c)+d;(a(),b)||c;(a(),b.c)&&d;(a(),b)+c+d;((a(),b)||c)&&d;(a(),b)*c+d;(a(),b)instanceof c", {}, "a(),b+c,a(),b,c+d,a(),b||c,a(),b.c&&d,a(),b+c+d,(a(),b||c)&&d,a(),b*c+d,a(),b instanceof c;"],
+			// Not under `**`, nor before a computed member, an assignment, a chain or a conditional's branch.
+			["(a(),b)**c;(a(),b[c])+d;(a(),b=1)+d;(a(),b)?.c+d;(a(),undefined)**d;y=(a(),b)+c;if(x)(a(),b)+c;else d()", {}, "(a(),b)**c,(a(),b[c])+d,(a(),b=1)+d,(a(),b)?.c+d,(a(),void 0)**d,y=(a(),b)+c,x?(a(),b)+c:d();"],
+			["({}.x.y(),b)+c;(class{}.x(),b)+c", {}, "({}).x.y(),b+c;(class{}).x(),b+c;"],
+			// The callee `Object(f)` is `f`; a member keeps no `this`, and `with` or `eval` may reach a name.
+			["Object(f)(1,2);Object(a.b)(x);Object(a[b])`x`;function k(f){Object(f)(1)}", {}, "f(1,2),(0,a.b)(x),(0,a[b])`x`;function k(b){b(1)}"],
+			["Object(a.b)?.(x);Object(a?.b)(x);new(Object(a.b))(x);Object(f())(1);Object(...f)(1);Object(f,g)(1);x=Object(f).y;Object(f)", {}, "Object(a.b)?.(x),Object(a?.b)(x),new(Object(a.b))(x),Object(f())(1),Object(...f)(1),Object(f,g)(1),x=Object(f).y,f;"],
+			["function f(a){var x=g();(a,x)+c}function k(a){var x=a.b;Object(x)(1)}Object(1e999)(1)", {}, "function f(a){(a,g())+c}function k(a){Object(a.b)(1)}Object(Infinity)(1);"],
+			["var Object;Object(f)(1)", {}, "var Object;Object(f)(1);"],
+			["with(o)Object(f)(x)", {}, "with(o)Object(f)(x);"],
+			["Object(eval)(x)", {}, "Object(eval)(x);"],
+			// Only a static method may be named `constructor` bare.
+			["class C{static['constructor'](){}static get['constructor'](){return 1}}", {}, "class C{static constructor(){}static get constructor(){return 1}}"],
+			["class C{['constructor'](){}static['constructor']=1;get['constructor'](){return 1}}", {}, "class C{[\"constructor\"](){}static[\"constructor\"]=1;get[\"constructor\"](){return 1}}"],
+			// Alike branches a call or tag reads `this` off print as `(t,f)`, or `(0,f)` where the test runs nothing.
+			["function k(c){(c?eval:eval)(\"x\");(c?o.f:o.f)(\"y\");(c?o.f:o.f)`y`}(c()?eval:eval)(\"x\");(c?o[f()]:o[f()])(1);(c?o.f:o.f)?.(1)", {}, "function k(f){(0,eval)(\"x\"),(0,o.f)(\"y\"),(0,o.f)`y`}(c(),eval)(\"x\"),(c,o[f()])(1),(c,o.f)?.(1);"],
+			["new(c?o.f:o.f)(1);(c?o.f:o.g)(1);(c?a+b:a+b)(1);x=c?o.f:o.f", {}, "new(c?o.f:o.f)(1),(c?o.f:o.g)(1),(c?a+b:a+b)(1),x=(c,o.f);"]
+		];
+		for (const [source, options, expected] of cases) {
+			const { code } = minifyOnePass(source, {
+				compress: { toplevel: false },
+				mangle: { toplevel: false },
+				...options
+			});
+			expect(code).toBe(expected);
+		}
 	});
 
 	it("should read terser's snake_case option names as their camelCase names", () => {
@@ -2338,7 +2396,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// `Boolean(x)` is `!!x`, or `x` where that is a boolean already.
 			[
 				"a=Boolean(b);f(Boolean(!b));x={k:Boolean(b?c>0:c<0)};y=[Boolean((b|+c)!==0)];function g(){return Boolean(b in c)}var z=Boolean(b?!0:!1);Boolean(b?1:!1);u=[Boolean(c?true:false),Boolean(delete b.c),Boolean((b>1))]",
-				"a=!!b,f(!b),x={k:b?c>0:c<0},y=[(b|+c)!==0];function g(){return b in c}var z=!!b;b?1:!1,u=[!!c,delete b.c,b>1];"
+				"a=!!b,f(!b),x={k:b?c>0:c<0},y=[(b|+c)!=0];function g(){return b in c}var z=!!b;b?1:!1,u=[!!c,delete b.c,b>1];"
 			],
 			// Anywhere else, with no lone argument, spread, optional, replaced or shadowed, it stays.
 			[
@@ -3275,7 +3333,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				'export function q(x,o){return[x?o["read"]():o.read(),1+(g(x)?o.read():o.read()),f(g(x)?o.r:o.r),(x?o.f:o.f)(),delete(x?o.f:o.f),typeof(x?y:y)]}export function s(x,o){x?o.f():o.f();g(x)?o.f():o.f()}'
 			)
 		).toBe(
-			"export function q(o,x){return[x.read(),1+(g(o),x.read()),f((g(o),x.r)),(o?x.f:x.f)(),delete(o?x.f:x.f),typeof(o?y:y)]}export function s(o,f){f.f(),g(o),f.f()}"
+			"export function q(o,x){return[x.read(),1+(g(o),x.read()),f((g(o),x.r)),(0,x.f)(),delete(o?x.f:x.f),typeof(o?y:y)]}export function s(o,f){f.f(),g(o),f.f()}"
 		);
 		expect(
 			print("export function q(x,o){return x?o.read():o.read()}", {

@@ -1132,7 +1132,7 @@ const findingGroups = (expected = []) => {
 
 /**
  * Every file of one extension below a directory, skipping the directories a
- * sweep has no business walking.
+ * sweep has no business walking and the `temp-*` ones tests create and delete.
  * @param {string} dir directory to walk
  * @param {string} extension file extension including the dot
  * @param {Set<string>} skipped directory names to leave alone
@@ -1148,7 +1148,10 @@ const collectFiles = (dir, extension, skipped) => {
 	const walk = (current) => {
 		for (const entry of fs.readdirSync(current, { withFileTypes: true })) {
 			if (entry.isDirectory()) {
-				if (skipped.has(entry.name)) continue;
+				// A test running beside the sweep may delete its scratch one mid-walk.
+				if (skipped.has(entry.name) || entry.name.startsWith("temp-")) {
+					continue;
+				}
 				walk(path.join(current, entry.name));
 			} else if (entry.name.endsWith(extension)) {
 				files.push(path.join(current, entry.name));
