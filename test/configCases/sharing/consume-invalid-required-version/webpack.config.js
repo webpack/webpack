@@ -11,7 +11,8 @@ module.exports = {
 				"plus-range",
 				"dash-range",
 				"number-range",
-				"nested-number-range"
+				"nested-number-range",
+				"mixed-range"
 			]
 		})
 	]
