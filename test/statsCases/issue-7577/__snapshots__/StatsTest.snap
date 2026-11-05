@@ -27,7 +27,7 @@ asset c-runtime~main-XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable] (name: 
 asset c-main-XXXXXXXXXXXXXXXXXXXX.js X bytes [emitted] [immutable] (name: main)
 asset c-vendors-node_modules_vendor_js-XXXXXXXXXXXXXXXXXXXX.js X bytes [emitted] [immutable] (id hint: vendors)
 Entrypoint main X KiB = c-runtime~main-XXXXXXXXXXXXXXXXXXXX.js X KiB c-all-c_js-XXXXXXXXXXXXXXXXXXXX.js X bytes c-main-XXXXXXXXXXXXXXXXXXXX.js X bytes
-runtime modules X KiB 11 modules
+runtime modules X KiB 10 modules
 cacheable modules X bytes
   ./c.js X bytes [built] [code generated]
   ./b.js X bytes [built] [code generated]

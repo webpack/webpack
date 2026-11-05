@@ -14,7 +14,7 @@ exports[`StatsTestCases aggressive-splitting-entry should print correct stats fo
     ./b.js X bytes [built] [code generated]
   chunk (runtime: main) fitting-XXXXXXXXXXXXXXXXXXXX.js X KiB (javascript) X KiB (runtime) [entry] [rendered]
     > ./index main
-    runtime modules X KiB 11 modules
+    runtime modules X KiB 10 modules
     cacheable modules X KiB
       ./e.js X bytes [dependent] [built] [code generated]
       ./f.js X bytes [dependent] [built] [code generated]
@@ -41,7 +41,7 @@ content-change:
     ./b.js X bytes [built] [code generated]
   chunk (runtime: main) content-changX-XXXXXXXXXXXXXXXXXXXX.js X KiB (javascript) X KiB (runtime) [entry] [rendered]
     > ./index main
-    runtime modules X KiB 11 modules
+    runtime modules X KiB 10 modules
     cacheable modules X KiB
       ./e.js X bytes [dependent] [built] [code generated]
       ./f.js X bytes [dependent] [built] [code generated]

@@ -311,7 +311,7 @@ max-async-size:
     ./very-big.js?1 X KiB [built] [code generated]
   chunk (runtime: main) max-async-size-main.js (main) X KiB (javascript) X KiB (runtime) >{265}< >{565}< >{664}< >{901}< [entry] [rendered]
     > ./async main
-    runtime modules X KiB 8 modules
+    runtime modules X KiB 7 modules
     dependent modules X KiB [dependent] 6 modules
     ./async/index.js X bytes [built] [code generated]
   chunk (runtime: main) max-async-size-asynX-X-XXXXXXXX.js (async-b-77a8c116) X KiB <{792}> ={265}= ={565}= ={664}= [rendered]

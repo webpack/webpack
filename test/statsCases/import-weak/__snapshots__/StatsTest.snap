@@ -3,7 +3,7 @@
 exports[`StatsTestCases import-weak should print correct stats for import-weak 1`] = `
 "asset entry.js X KiB [emitted] (name: entry)
 asset 237.js X bytes [emitted]
-runtime modules X KiB 10 modules
+runtime modules X KiB 9 modules
 orphan modules X bytes [orphan] 1 module
 cacheable modules X bytes
   ./entry.js X bytes [built] [code generated]

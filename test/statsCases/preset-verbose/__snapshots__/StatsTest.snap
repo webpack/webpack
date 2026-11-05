@@ -50,9 +50,6 @@ chunk {792} (runtime: main) main.js (main) X bytes (javascript) X KiB (runtime) 
   webpack/runtime/get javascript chunk filename X bytes {792} [code generated]
     [no exports]
     [used exports unknown]
-  webpack/runtime/global X bytes {792} [code generated]
-    [no exports]
-    [used exports unknown]
   webpack/runtime/hasOwnProperty shorthand X bytes {792} [code generated]
     [no exports]
     [used exports unknown]
@@ -135,7 +132,7 @@ LOG from webpack.Compilation
 <t> hashing: hash digest: X ms
 <t> hashing: process full hash modules: X ms
 <t> hashing: X ms
-    100% code generated (7 generated, 0 from cache)
+    100% code generated (6 generated, 0 from cache)
 <t> record hash: X ms
 <t> module assets: X ms
 <t> create chunk assets: X ms

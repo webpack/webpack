@@ -6,7 +6,7 @@ Entrypoint b X KiB = b.js
 Chunk Group c X bytes = 628.js X bytes c.js X bytes
 chunk (runtime: b) b.js (b) X bytes (javascript) X KiB (runtime) >{390}< >{628}< [entry] [rendered]
   > ./b b
-  runtime modules X KiB 9 modules
+  runtime modules X KiB 8 modules
   ./b.js X bytes [built] [code generated]
 chunk (runtime: b) c.js (c) X bytes <{199}> ={628}= [rendered]
   > ./c ./b.js 1:0-41

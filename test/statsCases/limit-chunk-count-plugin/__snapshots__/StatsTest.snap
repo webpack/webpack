@@ -25,7 +25,7 @@ exports[`StatsTestCases limit-chunk-count-plugin should print correct stats for 
     ./b.js X bytes [built] [code generated]
     ./c.js X bytes [built] [code generated]
   chunk (runtime: main) bundle2.js (main) X bytes (javascript) X KiB (runtime) >{390}< [entry] [rendered]
-    runtime modules X KiB 10 modules
+    runtime modules X KiB 9 modules
     ./index.js X bytes [built] [code generated]
   2 chunks (webpack x.x.x) compiled successfully in X ms
 
@@ -41,7 +41,7 @@ exports[`StatsTestCases limit-chunk-count-plugin should print correct stats for 
     ./b.js X bytes [built] [code generated]
     ./c.js X bytes [built] [code generated]
   chunk (runtime: main) bundle3.js (main) X bytes (javascript) X KiB (runtime) >{390}< [entry] [rendered]
-    runtime modules X KiB 10 modules
+    runtime modules X KiB 9 modules
     ./index.js X bytes [built] [code generated]
   3 chunks (webpack x.x.x) compiled successfully in X ms
 
@@ -59,7 +59,7 @@ exports[`StatsTestCases limit-chunk-count-plugin should print correct stats for 
   chunk (runtime: main) 390.bundle4.js (c) X bytes <{792}> >{226}< [rendered]
     ./c.js X bytes [built] [code generated]
   chunk (runtime: main) bundle4.js (main) X bytes (javascript) X KiB (runtime) >{78}< >{390}< [entry] [rendered]
-    runtime modules X KiB 10 modules
+    runtime modules X KiB 9 modules
     ./index.js X bytes [built] [code generated]
   4 chunks (webpack x.x.x) compiled successfully in X ms"
 `;

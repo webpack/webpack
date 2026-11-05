@@ -4,7 +4,7 @@ exports[`StatsTestCases exclude-with-loader should print correct stats for exclu
 "hidden assets X bytes 1 asset
 asset bundle.js X KiB [emitted] (name: main)
 hidden modules X bytes 2 modules
-runtime modules X KiB 2 modules
+runtime modules X bytes 1 module
 cacheable modules X bytes
   ./index.js X bytes [built] [code generated]
   ./a.txt X bytes [built] [code generated]

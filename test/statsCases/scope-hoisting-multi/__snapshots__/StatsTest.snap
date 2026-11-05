@@ -3,7 +3,7 @@
 exports[`StatsTestCases scope-hoisting-multi should print correct stats for scope-hoisting-multi 1`] = `
 "Entrypoint first X KiB = a-vendor.js X bytes a-first.js X KiB
 Entrypoint second X KiB = a-vendor.js X bytes a-second.js X KiB
-runtime modules X KiB 20 modules
+runtime modules X KiB 18 modules
 orphan modules X bytes [orphan] 1 module
 cacheable modules X bytes
   ./first.js X bytes [built] [code generated]
@@ -20,7 +20,7 @@ webpack x.x.x compiled successfully in X ms
 
 Entrypoint first X KiB = b-vendor.js X bytes b-first.js X KiB
 Entrypoint second X KiB = b-vendor.js X bytes b-second.js X KiB
-runtime modules X KiB 20 modules
+runtime modules X KiB 18 modules
 cacheable modules X KiB
   code generated modules X bytes [code generated]
     ./first.js + 2 modules X bytes [built] [code generated]
