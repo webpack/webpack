@@ -47,10 +47,12 @@ module.exports = async (
 	context[SYNTHETIC_MODULES_STORE].push(something);
 	const code = [...new Set(["default", ...Object.keys(something)])]
 		.map(
-			(name) =>
-				`const _${name} = ${SYNTHETIC_MODULES_STORE}[${i}]${
+			(name, index) =>
+				`const _${index} = ${SYNTHETIC_MODULES_STORE}[${i}]${
 					name === "default" ? "" : `[${JSON.stringify(name)}]`
-				}; export { _${name} as ${name}};`
+				}; export { _${index} as ${
+					/^[A-Za-z_$][\w$]*$/.test(name) ? name : JSON.stringify(name)
+				}};`
 		)
 		.join("\n");
 
