@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Type the `output.html.manifest` object as JSON and `resolve.unsafeCache` entries.
+Type the `output.html.manifest` object and `resolve.unsafeCache` map without `any`.
