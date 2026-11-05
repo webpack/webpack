@@ -77,7 +77,19 @@ const walkIds = (compiler) => {
 					expect(buildInfo.strict).toBe(true);
 				}
 				if (resource.endsWith("using.js")) {
-					expect(buildInfo.usesTopLevelUsingDeclaration).toBe(true);
+					expect(buildInfo.moduleConcatenationBailout).toBe(
+						"a top-level using declaration"
+					);
+					let usesTopLevelUsingDeclaration = false;
+					for (const dependency of /** @type {NonNullable<typeof module.presentationalDependencies>} */ (
+						module.presentationalDependencies
+					)) {
+						if (dependency.is("esm-compatibility")) {
+							usesTopLevelUsingDeclaration =
+								dependency.usesTopLevelUsingDeclaration;
+						}
+					}
+					expect(usesTopLevelUsingDeclaration).toBe(true);
 				}
 			});
 		}
