@@ -7113,6 +7113,14 @@ describe("SourceProcessor — what minifying cannot turn into markup", () => {
 		expect(minify("<!doctype html><p><%= a %> &lt;%= b %&gt; <</p>")).toBe(
 			"<!doctype html><p><%= a %> &lt;%= b %&gt; &lt;"
 		);
+		// Text fostered out of a table joins a node without its range, so the
+		// source is not all of it and the whole text is printed escaped.
+		const fostered =
+			"<!doctype html><table><%= a %>&lt;%= b %&gt;<tr><td>x</td></tr>c<%= d %></table>";
+		expect(minify(fostered)).toBe(
+			"<!doctype html>&lt;%= a %>&lt;%= b %>c&lt;%= d %><table><tr><td>x</table>"
+		);
+		expect(tree(minify(fostered))).toBe(tree(fostered));
 		// A rebuilt clone keeps the spelling the same way.
 		expect(minify('<!doctype html><b title="<%= c %> &lt;%= d %&gt;"><p>a</b>b')).toBe(
 			'<!doctype html><b title="<%= c %> &lt;%= d %&gt;"></b><p><b title="<%= c %> &lt;%= d %&gt;">a</b>b'
