@@ -7093,6 +7093,14 @@ describe("SourceProcessor — what minifying cannot turn into markup", () => {
 
 	it("parses an `<iframe srcdoc>` document in no-quirks mode", async () => {
 		// A `<table>` closes the `<p>`, which only quirks mode keeps open.
+		/** @type {string[]} */
+		const errors = [];
+		parseHtmlRefs("<p>x", 0, {
+			srcdoc: true,
+			parseError: (_input, code) => errors.push(code)
+		});
+		// No missing-doctype error either: a srcdoc document may leave it out.
+		expect(errors).toEqual([]);
 		expect(tree("<p><table></table>", { srcdoc: true })).toBe(
 			"| <html>\n|   <head>\n|   <body>\n|     <p>\n|     <table>"
 		);
