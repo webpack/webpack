@@ -388,7 +388,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: loops/issue_2740_6",
 			"terser compress: loops/issue_2740_7",
 			"terser compress: loops/issue_2740_8",
-			"terser compress: new/dot_parenthesis_2",
 			"terser compress: reduce_vars/boolean_binary_assign",
 			"terser compress: reduce_vars/duplicate_lambda_defun_name_1",
 			"terser compress: reduce_vars/escape_local_sequence",
