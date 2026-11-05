@@ -5185,6 +5185,25 @@ describe("one-pass minify of statement sequences", () => {
 		expect(runProgram(code)).toBe(runProgram(source));
 	});
 
+	it("should print a template with no substitution as a string where shorter", () => {
+		const source =
+			'console.log(`\\${ beep }`,`a\\${b`,`plain`,`it"s`,`a\\nb`,`x\\`y`,`${1}\\${`)';
+		const { code } = minifyOnePass(source, { compress: {}, mangle: {} });
+		expect(code).toBe(
+			'console.log("${ beep }","a${b",`plain`,`it"s`,`a\\nb`,"x`y","1${");'
+		);
+		expect(runProgram(code)).toBe(runProgram(source));
+		// One a statement holds stays, as a string there could open a prologue.
+		const statement =
+			'`a\\${b`;"use strict";var t=function(){return this}();console.log(typeof t)';
+		expect(
+			minifyOnePass(statement, { compress: { side_effects: false }, mangle: {} })
+				.code
+		).toBe(
+			'`a\\${b`;"use strict";var t=function(){return this}();console.log(typeof t);'
+		);
+	});
+
 	it("should fold a `delete` of the global `undefined`, `NaN` or `Infinity` to `false`", () => {
 		const cases = [
 			["console.log(delete undefined,delete NaN,delete Infinity)", "console.log(!1,!1,!1);"],
