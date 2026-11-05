@@ -8330,6 +8330,11 @@ declare interface DestructuringAssignmentProperty {
 	range: [number, number];
 	pattern?: Set<DestructuringAssignmentProperty>;
 	shorthand: string | boolean;
+
+	/**
+	 * whether the key is a computed `[expression]` other than a literal
+	 */
+	computed?: boolean;
 }
 
 /**
