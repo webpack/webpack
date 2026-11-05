@@ -5509,6 +5509,19 @@ describe("one-pass minify of statement sequences", () => {
 		expect(runProgram(code)).toBe(runProgram(source));
 	});
 
+	it("should print a literal infinity as `1/0`, which a scope binding `Infinity` keeps", () => {
+		const source =
+			'(function(Infinity){eval("");console.log(1e400,-1e400,1e400+"",{1e400:1}[1/0],{[1e400]:2}[1/0],delete 1e400,new class{[1e400]=1e400}[1/0])})(5)';
+		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+		expect(code).toBe(
+			'!function(Infinity){eval(""),console.log(1/0,-1/0,1/0+"",{Infinity:1}[1/0],{[1/0]:2}[1/0],delete(1/0),new class{[1/0]=1/0}[1/0])}(5);'
+		);
+		expect(runProgram(code)).toBe(runProgram(source));
+		expect(
+			minifyOnePass(source, { compress: false, mangle: false }).code
+		).not.toContain("log(Infinity");
+	});
+
 	it("should fold a `delete` of a conditional whose test is known and branch runs nothing", () => {
 		// A branch reading a member or calling stays.
 		const source =
