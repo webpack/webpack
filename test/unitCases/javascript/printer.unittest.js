@@ -1751,6 +1751,8 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["Array.prototype.concat=f;x=[1].concat(2)", {}, "Array.prototype.concat=f,x=[1].concat(2);"],
 			["Reflect.defineProperty(Array.prototype,\"concat\",d);Reflect.set(Math,\"abs\",f);x=[[1].concat(2),Math.abs(-1)]", {}, "Reflect.defineProperty(Array.prototype,\"concat\",d),Reflect.set(Math,\"abs\",f),x=[[1].concat(2),Math.abs(-1)];"],
 			["Reflect.get(Math,\"max\");x=[[1].concat(2),Math.max(1,2)]", {}, "Reflect.get(Math,\"max\"),x=[[1,2],2];"],
+			["Reflect[\"set\"](Math,\"sign\",f);Object[\"assign\"](Number,o);x=[Math.sign(1),Number.isNaN(1)]", {}, "Reflect.set(Math,\"sign\",f),Object.assign(Number,o),x=[Math.sign(1),Number.isNaN(1)];"],
+			["Reflect[\"get\"](Math,\"abs\");Object[1](Math);x=Math.abs(-1)", {}, "Reflect.get(Math,\"abs\"),Object[1](Math),x=1;"],
 			["Reflect.deleteProperty(Array.prototype,\"concat\");Reflect.setPrototypeOf(Math,p);x=[[1].concat(2),Math.sign(1)]", {}, "Reflect.deleteProperty(Array.prototype,\"concat\"),Reflect.setPrototypeOf(Math,p),x=[[1].concat(2),Math.sign(1)];"],
 			["Array.prototype[Symbol.isConcatSpreadable]=!1;x=[1].concat([2])", {}, "Array.prototype[Symbol.isConcatSpreadable]=!1,x=[1].concat([2]);"],
 			["Object.prototype[Symbol.isConcatSpreadable]=!1;x=[1].concat([2])", {}, "Object.prototype[Symbol.isConcatSpreadable]=!1,x=[1].concat([2]);"],
