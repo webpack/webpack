@@ -3,13 +3,7 @@
 const tick = () => new Promise(resolve => setTimeout(resolve, 0));
 
 it("should load the script external even when a named element has its global name", async () => {
-	// `<div id="myGlobal">` in the page: named access on the Window object makes
-	// the bare identifier resolve to the element through the global object's
-	// prototype chain (the WindowProperties object), without the global object
-	// gaining an own property of that name
-	Object.setPrototypeOf(globalThis, {
-		myGlobal: document.createElement("div")
-	});
+	// `<div id="myGlobal">` in the page, see `test.config.js`
 	expect(typeof myGlobal).toBe("object");
 	expect(Object.prototype.hasOwnProperty.call(globalThis, "myGlobal")).toBe(
 		false
@@ -26,7 +20,7 @@ it("should load the script external even when a named element has its global nam
 	expect(script.src).toBe("https://test.cases/path/external.js");
 
 	// the script declares the global like `var myGlobal = ...` would
-	globalThis.myGlobal = { loaded: true };
+	myGlobal = { loaded: true };
 	script.onload({ type: "load", target: script });
 
 	const external = await promise;
@@ -48,11 +42,12 @@ it("should load a namespaced script external when its namespace is not defined y
 });
 
 it("should load a namespaced script external even when a form has the namespace name", async () => {
-	// `<form id="myForm"><input name="lib"></form>` in the page: the control
-	// is an own property of the form, but the form isn't one of the global object
-	const form = { lib: document.createElement("input") };
-	Object.setPrototypeOf(globalThis, { myForm: form });
+	// `<form id="myForm"><input name="lib"></form>` in the page, see
+	// `test.config.js`: the control is an own property of the form
 	expect(Object.prototype.hasOwnProperty.call(myForm, "lib")).toBe(true);
+	expect(Object.prototype.hasOwnProperty.call(globalThis, "myForm")).toBe(
+		false
+	);
 
 	const promise = import("myFormExternal");
 	await tick();
@@ -63,7 +58,7 @@ it("should load a namespaced script external even when a form has the namespace 
 	);
 	expect(script).toBeDefined();
 
-	globalThis.myForm = { lib: { loaded: true } };
+	myForm = { lib: { loaded: true } };
 	script.onload({ type: "load", target: script });
 
 	const external = await promise;
