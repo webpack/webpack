@@ -3420,6 +3420,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["x=(a=>a*2)(4);y=((a,b)=>a+b)(4,5)", "x=8,y=9;"],
 			["(function(a){g(a,a,a)})(\"a long string\")", "!function(a){g(a,a,a)}(\"a long string\");"],
 			["function x(){if(c){k();return 1}else{h();return 2}}function y(){if(c){k();return function(){if(a)b()}}else if(d){k();return 3}else g()}", "function x(){if(c)return k(),1;return h(),2}function y(){if(c)return k(),function(){if(a)b()};if(d)return k(),3;g()}"],
+			["function f(v){if(v===void 0)return;if(c())return v;return d(v)}function g(x){if(x){a();if(b)return 1;return 2}}", "function f(r){if(r!==void 0)return c()?r:d(r)}function g(r){if(r)return a(),b?1:2}"],
 			["(()=>{g()})();h()", "g(),h();"]
 		]) {
 			expect(print(source, { module: false })).toBe(expected);
