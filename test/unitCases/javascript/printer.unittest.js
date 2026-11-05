@@ -1477,6 +1477,9 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// A known test or left side folding to a reference a call, tag, `typeof` or `delete` reads keeps it a value with `0,`; a name called bare or `new` needs none.
 			["(true&&x.y)();(1?x[y]:2)``;f(typeof(1?x:2),delete(0?1:x.y));(0||x?.y)();(1?eval:2)(s);(1?x:2)();new(1?x.y:2);(c?x.y:2)();(null??x.y)()", {}, "(0,x.y)(),(0,x[y])``,f(typeof(0,x),delete(0,x.y)),(0,x?.y)(),(0,eval)(s),x(),new x.y,(c?x.y:2)(),(0,x.y)();"],
 			["x=[(1&&(0,f.g))(),(1&&(1&&f.g))``,typeof(1&&(1&&f)),delete(1?(0,f.g):2),(1&&(1&&g))(),(1&&(1&&eval))(1),new(1&&(a?f:f))]", {}, "x=[((0,f.g))(),(0,f.g)``,typeof(0,f),delete((0,f.g)),(g)(),(0,eval)(1),new((a?f:f))];"],
+			["if(t)`${a()}${b()}`;else c();if(u)`${a()}${1}`;else c();(function(){if(t)return;`${a()}${b()}`})();(function(){if(u)return;`${a()}${1}`})()", {}, "t?(`${a()}`,`${b()}`):c(),u?`${a()}`:c(),t||(`${a()}`,`${b()}`),u||`${a()}`;"],
+			["Object.create({},null);Object.create({},\"ab\");Object.create({},void 0);Object.create({},1)", {}, "Object.create({},null),Object.create({},\"ab\"),Object.create({},1);"],
+			["(class{#x;static{#x in 1}});(class{#y;static{#y in {}}});(class{#z;static{#z in o}})", {}, "(class{#s;static{#s in 1}});(class{#c;static{#c in o}});"],
 			["(0,foo)``", { compress: false, mangle: false }, "(0,foo)``;"],
 			// terser's `comparisons`: `!(a==b)` is `a!=b` where an equality takes no parentheses, and a boolean compared with one is itself or negated.
 			["x=!(a==b);if(!(a!=b))f();x=!(a<b);x=!(a==b)+1;f(!(a!==b),[!(a==b)],-!(a==b));x=!(a==b)&&c;x=!(a==b)?1:2;x=c?!(a==b):!(d===e);x=()=>!(a==b);x={k:!(a==b)};x=`${!(a==b)}`;throw!(a==b)", {}, "x=a!=b;if(a==b)f();x=!(a<b),x=!(a==b)+1,f(a===b,[a!=b],-!(a==b)),x=a!=b&&c,x=a==b?2:1,x=c?a!=b:d!==e,x=()=>a!=b,x={k:a!=b},x=`${a!=b}`;throw a!=b;"],
