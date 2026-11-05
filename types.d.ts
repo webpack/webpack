@@ -5264,7 +5264,8 @@ declare class ConstDependency extends NullDependency {
 	 */
 	static canConcatenate(
 		dependency: Dependency,
-		concatenateCommonJsModules: boolean
+		concatenateCommonJsModules: boolean,
+		module?: null | Module
 	): boolean;
 	static TRANSITIVE: symbol;
 	static LAZY_LOCAL_EXPORT: "local";
@@ -8115,7 +8116,10 @@ declare class Dependency {
 	/**
 	 * Returns true if this dependency can be concatenated
 	 */
-	canConcatenate(concatenateCommonJsModules: boolean): boolean;
+	canConcatenate(
+		concatenateCommonJsModules: boolean,
+		module?: null | Module
+	): boolean;
 
 	/**
 	 * Serializes this instance into the provided serializer context.
@@ -8153,7 +8157,8 @@ declare class Dependency {
 	 */
 	static canConcatenate(
 		dependency: Dependency,
-		concatenateCommonJsModules: boolean
+		concatenateCommonJsModules: boolean,
+		module?: null | Module
 	): boolean;
 	static TRANSITIVE: symbol;
 	static LAZY_LOCAL_EXPORT: "local";
@@ -8996,7 +9001,8 @@ declare class ESMImportDependency extends ModuleDependency {
 	 */
 	static canConcatenate(
 		dependency: Dependency,
-		concatenateCommonJsModules: boolean
+		concatenateCommonJsModules: boolean,
+		module?: null | Module
 	): boolean;
 	static TRANSITIVE: symbol;
 	static LAZY_LOCAL_EXPORT: "local";
@@ -9468,7 +9474,8 @@ declare class EntryDependency extends ModuleDependency {
 	 */
 	static canConcatenate(
 		dependency: Dependency,
-		concatenateCommonJsModules: boolean
+		concatenateCommonJsModules: boolean,
+		module?: null | Module
 	): boolean;
 	static TRANSITIVE: symbol;
 	static LAZY_LOCAL_EXPORT: "local";
@@ -21060,7 +21067,8 @@ declare class ModuleDependency extends Dependency {
 	 */
 	static canConcatenate(
 		dependency: Dependency,
-		concatenateCommonJsModules: boolean
+		concatenateCommonJsModules: boolean,
+		module?: null | Module
 	): boolean;
 	static TRANSITIVE: symbol;
 	static LAZY_LOCAL_EXPORT: "local";
@@ -23791,7 +23799,8 @@ declare class NullDependency extends Dependency {
 	 */
 	static canConcatenate(
 		dependency: Dependency,
-		concatenateCommonJsModules: boolean
+		concatenateCommonJsModules: boolean,
+		module?: null | Module
 	): boolean;
 	static TRANSITIVE: symbol;
 	static LAZY_LOCAL_EXPORT: "local";
@@ -32902,7 +32911,8 @@ declare class StaticExportsDependency extends NullDependency {
 	 */
 	static canConcatenate(
 		dependency: Dependency,
-		concatenateCommonJsModules: boolean
+		concatenateCommonJsModules: boolean,
+		module?: null | Module
 	): boolean;
 	static TRANSITIVE: symbol;
 	static LAZY_LOCAL_EXPORT: "local";

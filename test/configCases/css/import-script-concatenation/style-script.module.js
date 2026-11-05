@@ -1,0 +1,1 @@
+global.styleScriptRan = true;
