@@ -215,7 +215,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/9922/1/input.js",
 			"swc minifier: fixture/issues/9922/2/input.js",
 			"swc minifier: fixture/issues/arguments-canonical-index/input.js",
-			"swc minifier: fixture/issues/array-constructor-length/input.js",
 			"swc minifier: fixture/issues/emotion/react/1/input.js",
 			"swc minifier: fixture/issues/emotion/react/2/input.js",
 			"swc minifier: fixture/issues/firebase-core/1/input.js",
