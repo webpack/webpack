@@ -100,6 +100,11 @@ let hasUnresolvableTypes = false;
 /** @typedef {ts.Symbol & { parent?: SymbolWithParent }} SymbolWithParent */
 /** @typedef {ts.Type & { intrinsicName?: string }} TypeWithIntrinsicName */
 /** @typedef {ts.Declaration & { expression?: ts.Node }} DeclarationWithExpression */
+/** @typedef {ts.Declaration & { symbol: ts.Symbol }} DeclarationWithSymbol the symbol the binder gave it */
+/** @typedef {ts.Type & { _typeNode?: ts.TypeNode }} TypeWithTypeNode the node it was written as, recorded by `getTypeOfSymbol` and `parseType` */
+/** @typedef {ts.SourceFile & { symbol?: ts.Symbol, locals: ts.SymbolTable, externalModuleIndicator?: ts.Node | true, commonJsModuleIndicator?: ts.Node }} BoundSourceFile a module has a `symbol`, a script declares its globals in `locals` */
+/** @typedef {typeof ts & { signatureHasRestParameter: (signature: ts.Signature) => boolean }} TypeScriptInternals */
+/** @typedef {{ types?: string }} PackageJson the fields of a dependency's `package.json` read here */
 
 const AnonymousType = "__Type";
 
@@ -156,7 +161,7 @@ const joinIdentifier = (list) => {
 
 /**
  * @template T
- * @param {Iterable<Iterable<T>>} iterable the lists to concatenate
+ * @param {Iterable<T>[]} iterable the lists to concatenate
  * @returns {T[]} every item of every list
  */
 const flatten = (iterable) => {
@@ -174,15 +179,18 @@ const flatten = (iterable) => {
  */
 const quoteMeta = (str) => str.replace(/[-[\]\\/{}()*+?.^$|]/g, "\\$&");
 
+/** @typedef {string | number | boolean | ts.Type | undefined} HashPart */
+/** @typedef {HashPart | MergedType} TupleElement */
+
 /**
  * Every distinct tuple element, numbered, so a tuple can be a string key: a
  * `Map` compares an array key by identity, not by what the array holds.
- * @type {Map<EXPECTED_ANY, number>}
+ * @type {Map<TupleElement, number>}
  */
 const tupleElements = new Map();
 
 /**
- * @param {EXPECTED_ANY[]} tuple the key tuple
+ * @param {TupleElement[]} tuple the key tuple
  * @returns {string} a key equal for equal elements in equal order
  */
 const tupleKey = (tuple) => {
@@ -199,23 +207,26 @@ const tupleKey = (tuple) => {
 	return key;
 };
 
-/** A `Map` taking a tuple of anything as its key. */
+/**
+ * A `Map` taking a tuple of anything as its key.
+ * @template V
+ */
 class TupleMap {
 	constructor() {
-		/** @type {Map<string, EXPECTED_ANY>} */
+		/** @type {Map<string, V | undefined>} */
 		this.map = new Map();
 	}
 
 	/**
-	 * @param {EXPECTED_ANY[]} tuple the key tuple
-	 * @returns {EXPECTED_ANY} the value held for it, or `undefined`
+	 * @param {TupleElement[]} tuple the key tuple
+	 * @returns {V | undefined} the value held for it, or `undefined`
 	 */
 	get(tuple) {
 		return this.map.get(tupleKey(tuple));
 	}
 
 	/**
-	 * @param {EXPECTED_ANY[]} tuple the key tuple
+	 * @param {TupleElement[]} tuple the key tuple
 	 * @returns {boolean} whether the tuple is present
 	 */
 	has(tuple) {
@@ -223,8 +234,8 @@ class TupleMap {
 	}
 
 	/**
-	 * @param {EXPECTED_ANY[]} tuple the key tuple
-	 * @param {EXPECTED_ANY} value the value to hold for it
+	 * @param {TupleElement[]} tuple the key tuple
+	 * @param {V} value the value to hold for it
 	 * @returns {void}
 	 */
 	set(tuple, value) {
@@ -232,7 +243,7 @@ class TupleMap {
 	}
 
 	/**
-	 * @param {EXPECTED_ANY[]} tuple the key tuple
+	 * @param {TupleElement[]} tuple the key tuple
 	 * @returns {void}
 	 */
 	add(tuple) {
@@ -240,7 +251,7 @@ class TupleMap {
 	}
 
 	/**
-	 * @param {EXPECTED_ANY[]} tuple the key tuple
+	 * @param {TupleElement[]} tuple the key tuple
 	 * @returns {void}
 	 */
 	delete(tuple) {
@@ -276,10 +287,9 @@ class TupleMap {
  * @returns {boolean} true when the file is a module
  */
 const isSourceFileModule = (source) => {
-	const sourceAsAny = /** @type {any} */ (source);
+	const bound = /** @type {BoundSourceFile | undefined} */ (source);
 	return Boolean(
-		sourceAsAny &&
-		(sourceAsAny.externalModuleIndicator || sourceAsAny.commonJsModuleIndicator)
+		bound && (bound.externalModuleIndicator || bound.commonJsModuleIndicator)
 	);
 };
 
@@ -353,7 +363,9 @@ const getRootPackage = (program, sourceFile) => {
 	);
 	if (!match) return undefined;
 
-	const pkg = require(`${ROOT_PATH}/${match[1]}/package.json`);
+	const pkg = /** @type {PackageJson} */ (
+		require(`${ROOT_PATH}/${match[1]}/package.json`)
+	);
 
 	const types = pkg.types || "index.d.ts";
 	return program.getSourceFile(`${ROOT_PATH}/${match[1]}/${types}`);
@@ -410,10 +422,11 @@ const isAbstractConstructor = (parsed) =>
  * @param {string} prefix what kind of signature it is
  * @param {ParsedSignature} signature the signature to hash
  * @param {number} index its position among the type's signatures
- * @returns {EXPECTED_ANY[]} the hash parts
+ * @returns {HashPart[]} the hash parts
  */
 const getSigHash = (prefix, signature, index) => {
 	const { args, returnType, typeParameters, documentation } = signature;
+	/** @type {Map<HashPart, number>} */
 	const typeParametersMap = new Map(
 		typeParameters && typeParameters.map((t, i) => [t, i])
 	);
@@ -442,7 +455,7 @@ const getSigHash = (prefix, signature, index) => {
 
 /**
  * @param {MergedType} parsed type
- * @returns {any[] | undefined} hash
+ * @returns {HashPart[] | undefined} hash
  */
 const getTypeHash = (parsed) => {
 	switch (parsed.type) {
@@ -467,6 +480,7 @@ const getTypeHash = (parsed) => {
 		case "union":
 		case "intersection": {
 			const { symbolName, types, typeParameters } = parsed;
+			/** @type {Map<HashPart, number>} */
 			const typeParametersMap = new Map(
 				typeParameters && typeParameters.map((t, i) => [t, i])
 			);
@@ -476,7 +490,7 @@ const getTypeHash = (parsed) => {
 				typeParameters ? typeParameters.length : 0,
 				...types
 			].map((item) => {
-				const x = typeParametersMap.get(/** @type {ts.Type} */ (item));
+				const x = typeParametersMap.get(item);
 				return x === undefined ? item : x;
 			});
 		}
@@ -520,6 +534,7 @@ const getTypeHash = (parsed) => {
 				getSigHash.bind(null, "constructor")
 			);
 			if (constructorHashes.some((x) => !x)) return undefined;
+			/** @type {Map<HashPart, number>} */
 			const typeParametersMap = new Map(
 				typeParameters && typeParameters.map((t, i) => [t, i])
 			);
@@ -610,7 +625,7 @@ const getDeclaration = (symbol) => {
 		if (decls) decl = decls[0];
 	}
 	if (decl) {
-		const symbol = /** @type {any} */ (decl).symbol;
+		const symbol = /** @type {DeclarationWithSymbol} */ (decl).symbol;
 		if (symbol && symbol.name === ts.InternalSymbolName.Type && decl.parent) {
 			const parent = decl.parent;
 			if (parent.kind === ts.SyntaxKind.TypeAliasDeclaration) {
@@ -717,7 +732,7 @@ const isInternalTypeNode = (checker, node) => {
  * @returns {boolean} whether it is a type parameter bound by an `@internal` type, which declarations drop
  */
 const isInternalTypeParameter = (checker, type) => {
-	if (!(/** @type {any} */ (type).isTypeParameter())) return false;
+	if ((type.getFlags() & ts.TypeFlags.TypeParameter) === 0) return false;
 	const constraint = type.getConstraint();
 	if (constraint && isInternalType(checker, constraint)) return true;
 	const decl = getDeclaration(type.symbol);
@@ -750,7 +765,7 @@ const eraseTypeParameter = (checker, type) =>
  */
 const isInternalType = (checker, type) => {
 	if (type.aliasSymbol && isInternalAlias(type.aliasSymbol)) return true;
-	if (/** @type {any} */ (type).isTypeParameter()) {
+	if ((type.getFlags() & ts.TypeFlags.TypeParameter) !== 0) {
 		return (
 			isInternalTypeParameter(checker, type) &&
 			isInternalType(checker, eraseTypeParameter(checker, type))
@@ -800,7 +815,7 @@ const readGeneratorOptions = () => {
  * @param {ts.Program} context.program the program holding the sources
  * @param {ts.TypeChecker} context.checker the program's type checker
  * @param {GeneratorOptions} context.options the generator's own options
- * @returns {{ typeReferencedBy: Map<ts.Type, Set<ts.Type>>, exposedType: ts.Type | undefined, typeExports: Map<EXPECTED_ANY, EXPECTED_ANY>, parsedCollectedTypes: Map<ts.Type, MergedType>, typeUsedAsArgument: Set<ts.Type>, typeUsedAsBaseType: Set<ts.Type>, typeUsedAsConstructedValue: Set<ts.Type>, typeUsedAsReturnValue: Set<ts.Type>, typeUsedAsTypeArgument: Set<ts.Type> }} every type, parsed, and how each is used
+ * @returns {{ typeReferencedBy: Map<ts.Type, Set<ts.Type>>, exposedType: ts.Type | undefined, typeExports: Map<string, ts.Type>, parsedCollectedTypes: Map<ts.Type, MergedType>, typeUsedAsArgument: Set<ts.Type>, typeUsedAsBaseType: Set<ts.Type>, typeUsedAsConstructedValue: Set<ts.Type>, typeUsedAsReturnValue: Set<ts.Type>, typeUsedAsTypeArgument: Set<ts.Type> }} every type, parsed, and how each is used
  */
 const collectTypes = ({ program, checker, options }) => {
 	const exposedFiles = ["lib/index.js"];
@@ -845,12 +860,9 @@ const collectTypes = ({ program, checker, options }) => {
 	 * @returns {ts.Type} the type
 	 */
 	const getTypeOfSourceFile = (source) => {
-		const sourceAsAny = /** @type {any} */ (source);
-		if (
-			sourceAsAny.externalModuleIndicator ||
-			sourceAsAny.commonJsModuleIndicator
-		) {
-			const moduleSymbol = /** @type {ts.Symbol} */ (sourceAsAny.symbol);
+		const bound = /** @type {BoundSourceFile} */ (source);
+		if (bound.externalModuleIndicator || bound.commonJsModuleIndicator) {
+			const moduleSymbol = /** @type {ts.Symbol} */ (bound.symbol);
 			return checker.getTypeOfSymbolAtLocation(moduleSymbol, source);
 		}
 		throw new Error("Not a module");
@@ -864,8 +876,9 @@ const collectTypes = ({ program, checker, options }) => {
 		/** @type {Map<string, ts.Type>} */
 		const map = new Map();
 		if (isSourceFileModule(source)) {
-			const sourceAsAny = /** @type {any} */ (source);
-			const moduleSymbol = /** @type {ts.Symbol} */ (sourceAsAny.symbol);
+			const moduleSymbol = /** @type {ts.Symbol} */ (
+				/** @type {BoundSourceFile} */ (source).symbol
+			);
 			if (!moduleSymbol.exports) throw new Error("Not a module namespace");
 			for (const [name, symbol] of moduleSymbol.exports.entries()) {
 				if (name === ts.InternalSymbolName.ExportEquals) continue;
@@ -950,7 +963,7 @@ const collectTypes = ({ program, checker, options }) => {
 					(ts.isParameter(decl) && !decl.questionToken)) &&
 				decl.type
 			) {
-				/** @type {any} */ (type)._typeNode = decl.type;
+				/** @type {TypeWithTypeNode} */ (type)._typeNode = decl.type;
 			}
 			if (ts.isParameter(decl)) {
 				for (const tag of ts.getJSDocTags(decl)) {
@@ -959,7 +972,8 @@ const collectTypes = ({ program, checker, options }) => {
 						tag.typeExpression &&
 						ts.isJSDocTypeExpression(tag.typeExpression)
 					) {
-						/** @type {any} */ (type)._typeNode = tag.typeExpression.type;
+						/** @type {TypeWithTypeNode} */ (type)._typeNode =
+							tag.typeExpression.type;
 					}
 				}
 			}
@@ -975,17 +989,18 @@ const collectTypes = ({ program, checker, options }) => {
 		// TODO caching
 		/** @type Map<ts.Symbol, string> */
 		const map = new Map();
-		const sourceAsAny = /** @type {any} */ (source);
+		const bound = /** @type {BoundSourceFile} */ (source);
 		if (isSourceFileModule(source)) {
-			const moduleSymbol = /** @type {ts.Symbol} */ (sourceAsAny.symbol);
+			const moduleSymbol = /** @type {ts.Symbol} */ (bound.symbol);
 			if (moduleSymbol && moduleSymbol.exports) {
 				for (const [name, symbol] of moduleSymbol.exports.entries()) {
 					map.set(symbol, ts.unescapeLeadingUnderscores(name));
 				}
 			}
 		} else {
-			for (const [name, symbol] of sourceAsAny.locals) {
-				map.set(symbol, name);
+			for (const [name, symbol] of bound.locals) {
+				// An escaped name is a string at runtime; it is kept escaped here
+				map.set(symbol, /** @type {string} */ (name));
 			}
 		}
 		// Expand namespaces
@@ -1021,6 +1036,7 @@ const collectTypes = ({ program, checker, options }) => {
 
 	/** @type {ts.Type | undefined} */
 	let exposedType;
+	/** @type {Map<string, ts.Type>} */
 	const typeExports = new Map();
 
 	for (const exposedFile of exposedFiles) {
@@ -1069,9 +1085,7 @@ const collectTypes = ({ program, checker, options }) => {
 	 */
 	const parseName = (type, suffix = []) => {
 		if (type === exposedType) return ["exports"];
-		const symbol = /** @type {ts.Symbol} */ (
-			/** @type {EXPECTED_ANY} */ (type).symbol
-		);
+		const symbol = type.symbol;
 		const aliasSymbol = type.aliasSymbol;
 		/**
 		 * @param {ts.Symbol | undefined} symbol the symbol to name
@@ -1227,9 +1241,9 @@ const collectTypes = ({ program, checker, options }) => {
 	 */
 	const parseSignature = (signature) => {
 		let canBeOptional = true;
-		let rest = /** @type {EXPECTED_ANY} */ (ts).signatureHasRestParameter(
-			signature
-		);
+		let rest = /** @type {TypeScriptInternals} */ (
+			ts
+		).signatureHasRestParameter(signature);
 		/**
 		 * @param {ts.Symbol} p parameter
 		 * @returns {ParsedParameter} parsed
@@ -1478,7 +1492,7 @@ const collectTypes = ({ program, checker, options }) => {
 			return { type: "primitive", name: "any" };
 		}
 
-		if (/** @type {any} */ (type).isTypeParameter()) {
+		if ((type.getFlags() & ts.TypeFlags.TypeParameter) !== 0) {
 			return {
 				type: "typeParameter",
 				name: type.symbol.name,
@@ -1487,8 +1501,7 @@ const collectTypes = ({ program, checker, options }) => {
 			};
 		}
 
-		/** @type {ts.TypeNode} */
-		const typeNode = /** @type {any} */ (type)._typeNode;
+		const typeNode = /** @type {TypeWithTypeNode} */ (type)._typeNode;
 		if (type.aliasSymbol) {
 			const fullEscapedName = getFullEscapedName(type.aliasSymbol);
 			if (fullEscapedName.includes("NodeJS.")) {
@@ -1519,9 +1532,10 @@ const collectTypes = ({ program, checker, options }) => {
 					const { objectType, indexType } =
 						/** @type {ts.IndexedAccessTypeNode} */ (typeNode);
 					const objectTypeType = checker.getTypeAtLocation(objectType);
-					/** @type {any} */ (objectTypeType)._typeNode = objectType;
+					/** @type {TypeWithTypeNode} */ (objectTypeType)._typeNode =
+						objectType;
 					const indexTypeType = checker.getTypeAtLocation(indexType);
-					/** @type {any} */ (indexTypeType)._typeNode = indexType;
+					/** @type {TypeWithTypeNode} */ (indexTypeType)._typeNode = indexType;
 					if (objectTypeType && indexTypeType) {
 						return {
 							type: "index",
@@ -1539,7 +1553,7 @@ const collectTypes = ({ program, checker, options }) => {
 						? typeArguments.map((node) => {
 								const type = checker.getTypeAtLocation(node);
 								if (type) {
-									/** @type {any} */ (type)._typeNode = node;
+									/** @type {TypeWithTypeNode} */ (type)._typeNode = node;
 								}
 								return type;
 							})
@@ -1752,7 +1766,7 @@ const collectTypes = ({ program, checker, options }) => {
 
 			const decl = getDeclaration(symbol);
 			if (decl && isNodeModulesSource(decl.getSourceFile())) {
-				let symbol = /** @type {any} */ (decl).symbol;
+				const symbol = /** @type {DeclarationWithSymbol} */ (decl).symbol;
 				const isValue = Boolean(
 					symbol &&
 					symbol.valueDeclaration &&
@@ -1778,22 +1792,18 @@ const collectTypes = ({ program, checker, options }) => {
 					const symbolToExport = getExportsOfSourceFile(externalSource);
 					exportName = symbolToExport.get(symbol);
 					if (exportName) break;
-					let aliasSymbol;
 					let aliasName;
 					for (const [key, name] of symbolToExport) {
 						if (getTypeOfSymbol(key, false, false) !== type) continue;
 						if (name.slice(name.lastIndexOf(".") + 1) === preferredName) {
-							symbol = key;
 							exportName = name;
 							break outer;
 						}
 						if (aliasName === undefined) {
-							aliasSymbol = key;
 							aliasName = name;
 						}
 					}
 					if (aliasName !== undefined) {
-						symbol = aliasSymbol;
 						exportName = aliasName;
 						break;
 					}
@@ -1840,7 +1850,9 @@ const collectTypes = ({ program, checker, options }) => {
 					} else {
 						let from = match[2] + match[3];
 						try {
-							const pkg = require(`${match[1] + match[2]}/package.json`);
+							const pkg = /** @type {PackageJson} */ (
+								require(`${match[1] + match[2]}/package.json`)
+							);
 
 							const regExp = new RegExp(
 								`^(\\.\\/)?${quoteMeta(match[3].slice(1))}(\\.d\\.ts)?$`
@@ -2122,6 +2134,7 @@ const classifyInterfaces = ({ checker, parsedCollectedTypes }) => {
 		);
 	};
 
+	/** @type {Set<ts.Type>} */
 	const toBeClassified = new Set();
 
 	for (const [type, parsed] of parsedCollectedTypes) {
@@ -2242,6 +2255,7 @@ const analyseUnionsAndIntersections = ({
 			}
 		}
 		if (parsed.type === "intersection") {
+			/** @type {Set<string>} */
 			const keys = new Set();
 			/** @type {ParsedInterfaceType[]} */
 			const subtypes = [];
@@ -2274,7 +2288,7 @@ const analyseUnionsAndIntersections = ({
 				})
 			) {
 				const interfaceSubtypes = subtypes;
-				const symbol = /** @type {any} */ (type).symbol;
+				const symbol = type.symbol;
 				const declaration = symbol && getDeclaration(symbol);
 				/** @type {ParsedInterfaceType} */
 				const newParsed = {
@@ -2379,6 +2393,7 @@ const convertInterfacesToNamespaces = ({
  * @returns {void}
  */
 const mergeIdenticalTypes = ({ parsedCollectedTypes }) => {
+	/** @type {TupleMap<ts.Type>} */
 	const knownTypes = new TupleMap();
 	let updates = true;
 	while (updates) {
@@ -2387,7 +2402,8 @@ const mergeIdenticalTypes = ({ parsedCollectedTypes }) => {
 			const hash = getTypeHash(parsed);
 			if (!hash) continue;
 			const mappedHash = hash.map((item) => {
-				let parsed = parsedCollectedTypes.get(item);
+				let parsed =
+					typeof item === "object" ? parsedCollectedTypes.get(item) : undefined;
 				if (!parsed) return item;
 				while (
 					parsed.type === "reference" &&
@@ -2435,7 +2451,7 @@ const mergeIdenticalTypes = ({ parsedCollectedTypes }) => {
  * @param {GeneratorOptions} context.options the generator's own options
  * @param {Map<ts.Type, MergedType>} context.parsedCollectedTypes every type, parsed
  * @param {ts.Type | undefined} context.exposedType the type the entry file exports
- * @returns {{ usedNames: Set<string>, findName: (symbolName: string[], requeueOnConflict?: boolean) => string | undefined, typeToVariable: Map<ts.Type, string | undefined> }} the names given
+ * @returns {{ usedNames: Set<string>, findName: (symbolName: string[], requeueOnConflict?: boolean) => string, typeToVariable: Map<ts.Type, string | undefined> }} the names given
  */
 const nameTypes = ({ options, parsedCollectedTypes, exposedType }) => {
 	const usedNames = new Set([AnonymousType]);
@@ -2484,11 +2500,12 @@ const nameTypes = ({ options, parsedCollectedTypes, exposedType }) => {
 
 	const { nameMapping } = options;
 
+	/** @type {Map<string, [ts.Type, { symbolName: SymbolName }] | undefined>} */
 	const nameToQueueEntry = new Map();
 	/**
 	 * @param {string[]} symbolName the name parts to pick from
 	 * @param {boolean=} requeueOnConflict whether to requeue when the name is taken
-	 * @returns {string | undefined} the chosen name
+	 * @returns {string} the chosen name
 	 */
 	const findName = (symbolName, requeueOnConflict = false) => {
 		const key = symbolName.join(" ");
@@ -2523,6 +2540,7 @@ const nameTypes = ({ options, parsedCollectedTypes, exposedType }) => {
 		return `${name}_${i}`;
 	};
 
+	/** @type {Map<ts.Type, string | undefined>} */
 	const typeToVariable = new Map();
 	for (const entry of needName) {
 		const [type, item] = entry;
@@ -2543,9 +2561,9 @@ const nameTypes = ({ options, parsedCollectedTypes, exposedType }) => {
  * @param {Map<ts.Type, MergedType>} context.parsedCollectedTypes every type, parsed
  * @param {Map<ts.Type, string | undefined>} context.typeToVariable the name given to each type
  * @param {Set<string>} context.usedNames every name already taken
- * @param {(symbolName: string[], requeueOnConflict?: boolean) => string | undefined} context.findName takes the next free name
+ * @param {(symbolName: string[], requeueOnConflict?: boolean) => string} context.findName takes the next free name
  * @param {ts.Type | undefined} context.exposedType the type the entry file exports
- * @param {Map<EXPECTED_ANY, EXPECTED_ANY>} context.typeExports what each exposed file exports
+ * @param {Map<string, ts.Type>} context.typeExports what each exposed file exports
  * @returns {{ declarations: Set<string>, declarationKeys: Map<string, string | string[]>, imports: Map<string, Set<string>>, importDeclarations: Set<string>, exports: string[] }} the file's parts
  */
 const generateDeclarations = ({
@@ -2572,6 +2590,7 @@ const generateDeclarations = ({
 	const augmentableVariables = new Set();
 	/** @type {string[]} */
 	const exports = [];
+	/** @type {TupleMap<string | undefined>} */
 	const typeToCode = new TupleMap();
 
 	/**
@@ -2653,6 +2672,7 @@ const generateDeclarations = ({
 		} ${[...sig.args]
 			.reverse()
 			.map((arg) => {
+				/** @type {{ code: string, optional: boolean }} */
 				const { code, optional } = canBeOptional
 					? extractOptional(getCode(arg.type, innerTypeArgs), arg.optional)
 					: {
@@ -2700,6 +2720,7 @@ const generateDeclarations = ({
 	 * @returns {string[]} code items for interface
 	 */
 	const getInterfaceItems = (type, parsed, typeArgs) => {
+		/** @type {string[]} */
 		const items = [];
 		for (const construct of parsed.constructors) {
 			items.push(
@@ -2754,7 +2775,7 @@ const generateDeclarations = ({
 		};
 
 		/**
-		 * @param {Map<string, EXPECTED_ANY>} properties the properties to render
+		 * @param {PropertiesMap} properties the properties to render
 		 * @param {string=} prefix rendered before each name
 		 * @returns {void}
 		 */
@@ -3224,8 +3245,11 @@ const generateDeclarations = ({
 				 * @returns {string} the rendered namespace
 				 */
 				const ns = (variable, exportNamespace) => {
+					/** @type {string[]} */
 					const exports = [];
+					/** @type {string[]} */
 					const declarations = [];
+					/** @type {Set<string>} */
 					const exposedNames = new Set();
 					for (const [
 						name,
@@ -3337,6 +3361,7 @@ const generateDeclarations = ({
 
 	let codeGenerationContext = "";
 
+	/** @type {TupleMap<undefined>} */
 	const unusedTempNames = new TupleMap();
 
 	/**
@@ -3364,12 +3389,9 @@ const generateDeclarations = ({
 		const used = !unusedTempNames.has(tuple);
 		unusedTempNames.delete(tuple);
 		if (used) {
-			addDeclaration(
-				/** @type {string} */ (tempName),
-				`type ${tempName} = ${newCode};`
-			);
+			addDeclaration(tempName, `type ${tempName} = ${newCode};`);
 		} else {
-			usedNames.delete(/** @type {string} */ (tempName));
+			usedNames.delete(tempName);
 			typeToCode.set(tuple, newCode);
 		}
 		return newCode;
