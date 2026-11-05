@@ -23,6 +23,8 @@ test/**/*.*
 test/js/**/*.*
 test/external/test262-cases/**/*.*
 test/external/wpt/**
+test/external/css-parsing-tests/**
+test/external/html5lib-tests/**
 test/external/terser/**
 test/external/swc/**
 test/external/oxc/**
