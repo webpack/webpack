@@ -1,1 +1,0 @@
-export { child } from "./grandchild";
