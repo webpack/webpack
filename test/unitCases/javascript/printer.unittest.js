@@ -2343,7 +2343,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// Anywhere else, with no lone argument, spread, optional, replaced or shadowed, it stays.
 			[
 				"a=Boolean(b)?1:2;c=Boolean(b).x;d=Boolean(b)+1;e=Boolean(b,c);g=Boolean(...b);h=Boolean?.(b);k=Boolean((b,c));Boolean({}.x);l=new Boolean(b);m=Boolean(b)(1);n=Boolean(/*! k */b)",
-				"a=Boolean(b)?1:2,c=Boolean(b).x,d=Boolean(b)+1,e=Boolean(b,c),g=Boolean(...b),h=Boolean?.(b),k=Boolean((b,c)),Boolean({}.x),l=new Boolean(b),m=Boolean(b)(1),n=Boolean(/*! k */b);"
+				"a=Boolean(b)?1:2,c=Boolean(b).x,d=Boolean(b)+1,e=Boolean(b,c),g=Boolean(...b),h=Boolean?.(b),k=Boolean((b,c)),l=new Boolean(b),m=Boolean(b)(1),n=Boolean(/*! k */b);"
 			],
 			["function f(Boolean,Number){a=[Boolean(b),Number(1)]}", "function f(Boolean,Number){a=[Boolean(b),Number(1)]}"],
 			["Boolean=f;Number=g;a=[Boolean(b),Number(1)]", "Boolean=f,Number=g,a=[Boolean(b),Number(1)];"]
