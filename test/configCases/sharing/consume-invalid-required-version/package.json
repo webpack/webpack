@@ -1,0 +1,8 @@
+{
+  "name": "consume-invalid-required-version",
+  "dependencies": {
+    "plus-range": ">=1.0.0+",
+    "dash-range": "1.0.0-",
+    "number-range": 1
+  }
+}
