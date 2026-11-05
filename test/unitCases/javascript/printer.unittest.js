@@ -785,7 +785,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				{},
 				"function f(n,r){return n?(r,1):2}function g(n){if(n)return 1}function h(n){if(!n)return 1}"
 			],
-			// An `if` whose test is known false goes, and what only it read with it, but not where its body declares a `var` or function or holds a comment kept.
+			// An `if` whose test is known false goes, and what only it read with it, but not where its body declares a function or holds a comment kept: a `var` stays declared.
 			[
 				"function f(a){ var m = 1; if (!1) m = a; if (0) { var v = 1 } if (false) { function q(){} q() } const D = false; if (D) g(); if (!1) x(); else y(); if (0) x(/*! c */ 1); return m + v }",
 				{},
@@ -5414,6 +5414,18 @@ describe("one-pass minify of statement sequences", () => {
 		const { code } = minifyOnePass(source, { compress: {}, mangle: {} });
 		expect(code).toBe(
 			'function x(){return console.log("x"),7}console.log(2,x(),/a/,[x()]&&3,4,[],5);'
+		);
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
+	it("should print an `if` known false as the `var` names its branch declares", () => {
+		// A function its branch declares keeps the `if`, a branch picked prints before
+		// the names; a function's own `var` is not the branch's, and a name nothing reads goes.
+		const source =
+			'if(0){let foo=6;const bar=12;class Baz{}var qux;(()=>{var z})()}function f(){if(0){var a=g(),{b,c:[,d=g()],...e}=g();for(var i in g());var a}return[typeof a,b,d,e,i].join()}if(0){function h(){}var j}if(1)console.log(typeof j);else var k;function u(){if(0){var gone}if(0){var dead,read}return read}console.log(typeof qux,f(),typeof k,u())';
+		const { code } = minifyOnePass(source, { compress: {}, mangle: {} });
+		expect(code).toBe(
+			'var qux;function f(){var o,a,e,f,r;return[typeof o,a,e,f,r].join()}if(0){function h(){}var j}console.log(typeof j);var k;function u(){var o;return o}console.log(typeof qux,f(),typeof k,u());'
 		);
 		expect(runProgram(code)).toBe(runProgram(source));
 	});
