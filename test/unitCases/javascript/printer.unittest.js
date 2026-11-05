@@ -701,7 +701,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"function f(o, a){ var b = ({ ...o }).x, c = (o && {}).x, d = (o?.p).x, e = (function(){}).prototype.x, h = (o += 1).x, i = (o = {}).y, j = [1][a()], k = [1][0], l = delete o.x, m = (a ? o : {}).x, n = (() => 1).prototype.x, p = (class {}).prototype.x, q = ({} || o).x, r = (1 && {}).x; }",
 				{},
-				"function f(o,x){({...o}).x;(o&&{}).x;(o?.p).x;(o+=1).x;(o={}).y;[1][x()];delete o.x;(x?o:{}).x;(()=>1).prototype.x;({}||o).x}"
+				"function f(o,x){({...o}).x;(o&&{}).x;(o?.p).x;(o+=1).x;(o={}).y;[1][x()];delete o.x;(x?o:{}).x;(()=>1).prototype.x;({}).x}"
 			],
 			// What a value converts as is known through its operators, three levels deep.
 			[
@@ -1195,6 +1195,9 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["v=function(a,b){\"a\"+ +b;\"a\"+ ++b;b+++\"a\"}", {}, "v=function(a,b){\"\"+ +b,\"\"+ ++b,b+++\"\"};"],
 			// A branch a known test drops declares its `var`s still, without their values, each named apart.
 			["function f(){if(0){var a=1}else{var b=2}return[a,b]}function g(){if(1)h();else{var c=h(),[d,{e:k=1}]=[2]}return[c,d,k]}", {}, "function f(){var r=2;var e;return[e,r]}function g(){h();var e,r,n;return[e,r,n]}"],
+			// A truth known though it runs something decides: past `x()||1` the right side runs, `x()&&0` is the value,
+			// and a constant inside a chain of the same operator goes.
+			["f((x()||!0)&&y());f((x()&&0)||y());f((x()&&0)&&y());f(x()&&!0&&y);f(a&&1&&b);f(a||0||null);f(a&&\"x\"&&b);f(foo&&false?a():b());f(typeof g()?a:b);x=void 0||c;(x()||!0)&&y()", {}, "f((x()||!0,y())),f((x()&&0,y())),f(x()&&0),f(x()&&y),f(a&&b),f(a||null),f(a&&b),f((foo&&0,b())),f((typeof g(),a)),(x=c)()||1,y();"],
 			// A sequence left one item where any expression stands bare drops its parentheses, but where it names a function.
 			["x=(3,6);let y=(2,a[b]);f((1,2),...(0,c));z=[(1,()=>1)];w={a:(1,b?c:d),[(1,e)]:1,b:(1,()=>1),c:(1,class{})};v=`${(1,a)}`;u=(1,()=>1);for(var t=(1,a in b);;);", {}, "x=6;let y=a[b];f(2,...c),z=[()=>1],w={a:(1,b?c:d),[e]:1,b:(1,()=>1),c:(1,class{})},v=`${a}`,u=(1,()=>1);for(var t=(1,a in b);;);"],
 			// A number too big for a double is no name: a binding named `Infinity` does not read it.
@@ -1617,11 +1620,11 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["function k(a){x=null===a||a===void 0?b:a;x=a!==undefined&&a!==null?a:b;x=void 0!==a&&null!==a?a.b:void 0;x=null===a||undefined===a}", { mangle: false, ecma: 2020, compress: { toplevel: false, ecma: 2020 } }, "function k(a){x=a??b,x=a??b,x=a?.b,x=a==null}"],
 			["function k(a,c){x=a===null||c===void 0?b:a;x=a!==void 0&&a!==null?b:a;x=a===null||a===null}", { mangle: false, ecma: 2020, compress: { toplevel: false, ecma: 2020 } }, "function k(a,c){x=a===null||c===void 0?b:a,x=a!=null?b:a,x=a===null||a===null}"],
 			// esbuild's `a?c:(b,c)` as `(a||b),c`, `a?(b,c):c` as `(a&&b),c` and `a?b||c:c` as `a&&b||c`, where shorter with the parentheses it adds.
-			["a?c:(b,c);a?(b,c):c;a?b||c:c;x=a?(y=1)||c:c;x=a?b&&d||c:c;f(a?c:(b,c));x=(a?c:(b,c)).y;a?c:(f(),c);(a?c:(b,c))``;x=(a,b)?c:(d,c);a??b?c:(d,c)", {}, "a||b,c,a&&b,c,a&&b||c,x=a&&(y=1)||c,x=a&&b&&d||c,f((a||b,c)),x=(a||b,c).y,a||(f()),c,(a||b,c)``,x=((a,b)||d,c),(a??b)||d,c;"],
+			["a?c:(b,c);a?(b,c):c;a?b||c:c;x=a?(y=1)||c:c;x=a?b&&d||c:c;f(a?c:(b,c));x=(a?c:(b,c)).y;a?c:(f(),c);(a?c:(b,c))``;x=(a,b)?c:(d,c);a??b?c:(d,c)", {}, "a||b,c,a&&b,c,a&&b||c,x=a?(y=1):c,x=a&&b&&d||c,f((a||b,c)),x=(a||b,c).y,a||(f()),c,(a||b,c)``,x=((a,b)||d,c),(a??b)||d,c;"],
 			["x=a?(b||d)||c:c;x=a?c:(f(),c);x=a?c:(b,d);x=a?c:(b,e,c);x=a?b||c:c+1;x=a?b||c:d;x=a?0||c:c", {}, "x=a?b||d||c:c,x=a?c:(f(),c),x=a?c:(b,d),x=a?c:(b,e,c),x=a?b||c:c+1,x=a?b||c:d,x=a?c:c;"],
 			["x=a?c:(b,/*k*/c)", { format: { comments: "all" } }, "x=a?c:(b,/*k*/c);"],
 			// terser's `a?b?c:d:d` as `a&&b?c:d` and `a?b:c?b:d` as `a||c?b:d`, but not where the inner `?:` swapped its branches.
-			["x=a?b?c:d:d;x=a?b:c?b:d;x=a?!b?c:d:c;x=(a=1)?(b||e)?c:d:d;x=a||f?b?c:d:d;x=a?b:c||e?b:d;x=a?b?c:d:e", {}, "x=a&&b?c:d,x=a||c?b:d,x=a?b?d:c:c,x=(a=1)&&(b||e)?c:d,x=(a||f)&&b?c:d,x=a||c||e?b:d,x=a?b?c:d:e;"],
+			["x=a?b?c:d:d;x=a?b:c?b:d;x=a?!b?c:d:c;x=(a=1)?(b||e)?c:d:d;x=a||f?b?c:d:d;x=a?b:c||e?b:d;x=a?b?c:d:e", {}, "x=a&&b?c:d,x=a||c?b:d,x=a?b?d:c:c,x=(a=1,b||e?c:d),x=(a||f)&&b?c:d,x=a||c||e?b:d,x=a?b?c:d:e;"],
 			["function k(a){x=a!=b?a:c;x=a!=null?a:b+c;x=a!=null?a:new B}x=(a,b)?(c,d)?e:f:f", { mangle: false, ecma: 2020, compress: { toplevel: false, ecma: 2020 } }, "function k(a){x=a!=b?a:c,x=a??b+c,x=a??new B}x=(a,b)&&(c,d)?e:f;"],
 			// terser's `t?f(a,x):f(b,x)` as `f(t?a:b,x)`, a local `f`, a pure test and one argument apart.
 			["function f(a,b){x=a?b(c,d):b(e,d);x=a===0?b(c):b(e);x=a?b(...c):b(...e);x=a()?b(1):b(2);x=a?b(1,2):b(3,4);a?b(g(),1):b(g(),2);x=a?b(c=1):b(e);x=a?b((c,d)):b(e)}x=a?f(1):f(2)", { mangle: false }, "function f(a,b){x=b(a?c:e,d),x=b(a===0?c:e),x=a?b(...c):b(...e),x=a()?b(1):b(2),x=a?b(1,2):b(3,4),a?b(g(),1):b(g(),2),x=b(a?c=1:e),x=b(a?(c,d):e)}x=a?f(1):f(2);"],
@@ -2164,7 +2167,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["(function(){class A{static{h()}} class B{[h()](){}} g()})()", "!function(){class A{static{h()}}class B{[h()](){}}g()}();"],
 			// `null && K` never reads `K`.
 			["(function(){class K{} class C extends (null && K){} g()})()", "g();"],
-			["(function(){var x = /a/ && h(), y = 1 || h(), z = 0 ?? h(); g()})()", "/a/&&h();g();"],
+			["(function(){var x = /a/ && h(), y = 1 || h(), z = 0 ?? h(); g()})()", "h();g();"],
 			[
 				"(function(){var x = /a/ || h(), y = null ?? h(); g()})()",
 				"h();g();"
@@ -4740,7 +4743,7 @@ describe("one-pass minify of what runs nothing", () => {
 			["function f(){return!function(){return 1}()?c:d}", "function f(){return d}"],
 			["function f(a){return!(a,0)?c:d}", "function f(n){return c}"],
 			// What runs something stays.
-			["function f(a){return!(g(),0)?c:d}", "function f(n){return(g(),0)?d:c}"],
+			["function f(a){return!(g(),0)?c:d}", "function f(n){return!(g(),0),c}"],
 			["function f(){return(function(x){return 1})(g())?c:d}", "function f(){return function(n){return 1}(g())?c:d}"]
 		];
 		for (const [source, expected] of cases) {
