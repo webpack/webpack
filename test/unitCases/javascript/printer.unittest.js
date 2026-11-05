@@ -1513,7 +1513,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["with(o)(0,foo)()", {}, "with(o)(0,foo)();"],
 			// A known test or left side folding to a reference a call, tag, `typeof` or `delete` reads keeps it a value with `0,`; a name called bare or `new` needs none.
 			["(true&&x.y)();(1?x[y]:2)``;f(typeof(1?x:2),delete(0?1:x.y));(0||x?.y)();(1?eval:2)(s);(1?x:2)();new(1?x.y:2);(c?x.y:2)();(null??x.y)()", {}, "(0,x.y)(),(0,x[y])``,f(typeof(0,x),delete(0,x.y)),(0,x?.y)(),(0,eval)(s),x(),new x.y,(c?x.y:2)(),(0,x.y)();"],
-			["x=[(1&&(0,f.g))(),(1&&(1&&f.g))``,typeof(1&&(1&&f)),delete(1?(0,f.g):2),(1&&(1&&g))(),(1&&(1&&eval))(1),new(1&&(a?f:f))]", {}, "x=[((0,f.g))(),(0,f.g)``,typeof(0,f),delete((0,f.g)),(g)(),(0,eval)(1),new((a?f:f))];"],
+			["x=[(1&&(0,f.g))(),(1&&(1&&f.g))``,typeof(1&&(1&&f)),delete(1?(0,f.g):2),(1&&(1&&g))(),(1&&(1&&eval))(1),new(1&&(a?f:f))]", {}, "x=[((0,f.g))(),(0,f.g)``,typeof(0,f),delete((0,f.g)),g(),(0,eval)(1),new((a?f:f))];"],
 			["for(;;){if(x)break;else{function f(){}}}for(;;){if(y){function g(){}}else break}", {}, "for(;!x;){function f(){}}for(;y;){function g(){}}"],
 			["foo();bar();for(;i<1;)g();x=(a in b);for(;i<1;)g();x=1;for(;0;)g();y=1;for(;i<1;)g();z=function(){a in b};for(;i<1;)g()", {}, "foo();for(bar();i<1;)g();x=a in b;for(;i<1;)g();x=1;for(y=1;i<1;)g();for(z=function(){a in b};i<1;)g();"],
 			["function f(){var t=g();var e,h=0;for(;h<1;++h)e=k(e);return t+e+t}", {}, "function f(){var e=g(),r,t=0;for(;t<1;++t)r=k(r);return e+r+e}"],
@@ -5542,6 +5542,17 @@ describe("one-pass minify of statement sequences", () => {
 		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
 		expect(code).toBe(
 			'function x(){return console.log("x"),7}console.log(1,3,4,x(),([x()],7),9);'
+		);
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
+	it("should print a fold whose kept side folds again without parentheses", () => {
+		// A member called keeps no `this`, and what `new` calls keeps its own.
+		const source =
+			'var o={f(){console.log(this===o)}};function f(){console.log("f")}(0||(1&&f))();(1?(0?o:f):o)();(0||(1&&o)).f();(0||(1&&o.f))();new(0||(1&&f))';
+		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+		expect(code).toBe(
+			'var o={f(){console.log(this===o)}};function f(){console.log("f")}f(),f(),o.f(),(0,o.f)(),new f;'
 		);
 		expect(runProgram(code)).toBe(runProgram(source));
 	});
