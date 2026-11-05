@@ -2,7 +2,7 @@
 
 // cspell:ignore binop, fnames, propmangle, fargs, domprops, argnames, nondeferred, loopcontrol, Defun, defun, NOINLINE, Funarg, unmangleable, Unmangleable, thedef, funs
 // cspell:ignore fnames
-// cspell:ignore argnames, bcatch, bfinally, argname
+// cspell:ignore argnames, bcatch, bfinally, argname, truenull
 // cspell:ignore AAAWA MAAH EAAI EAAIA EAAGC ACAA IAAYC EAAWC IAAIC CAAI IAAK EAAE
 // cspell:ignore endline, endcol, endpos, nlb, thedef, ymgsid, dgimsy, elta
 
