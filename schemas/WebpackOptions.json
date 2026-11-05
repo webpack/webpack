@@ -5674,11 +5674,12 @@
             },
             {
               "type": "object",
-              "additionalProperties": true
+              "additionalProperties": true,
+              "tsType": "import('../lib/fs/fs').JsonObject"
             },
             {
               "instanceof": "Function",
-              "tsType": "((name: string) => false | string | { [key: string]: EXPECTED_ANY })"
+              "tsType": "((name: string) => false | string | import('../lib/fs/fs').JsonObject)"
             }
           ]
         },
@@ -6635,7 +6636,8 @@
             },
             {
               "type": "object",
-              "additionalProperties": true
+              "additionalProperties": true,
+              "tsType": "import('../lib/resolve/ResolverFactory').UnsafeCache"
             }
           ]
         },
