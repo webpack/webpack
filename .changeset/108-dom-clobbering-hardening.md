@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Keep page elements from changing the public path, script externals or Trusted Types.
+Prevent DOM clobbering of the public path, script externals and Trusted Types.
