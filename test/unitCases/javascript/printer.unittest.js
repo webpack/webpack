@@ -2048,7 +2048,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["(function(){class A{static{h()}} class B{[h()](){}} g()})()", "!function(){class A{static{h()}}class B{[h()](){}}g()}();"],
 			// `null && K` never reads `K`.
 			["(function(){class K{} class C extends (null && K){} g()})()", "g();"],
-			["(function(){var x = /a/ && h(), y = 1 || h(), z = 0 ?? h(); g()})()", "/a/&&h();g();"],
+			["(function(){var x = /a/ && h(), y = 1 || h(), z = 0 ?? h(); g()})()", "h();g();"],
 			[
 				"(function(){var x = /a/ || h(), y = null ?? h(); g()})()",
 				"h();g();"
@@ -5238,6 +5238,17 @@ describe("one-pass minify of statement sequences", () => {
 		const { code } = minifyOnePass(source, { compress: {}, mangle: {} });
 		expect(code).toBe(
 			"var a=[];function y(){}console.log(void 0,void 0,[,y()][0],[,1][5],[,1][-1],[,1][.5],[,/*! c */1][0],[,...a][0]);try{[,][0].x}catch(o){console.log(o.name)}"
+		);
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
+	it("should read an array, object, function or regular expression made in place as truthy", () => {
+		// What runs something stays.
+		const source =
+			'function x(){console.log("x");return 7}console.log([1]&&2,[]&&x(),/a/||x(),[x()]&&3,(()=>1)&&4,[]||x(),{}&&5)';
+		const { code } = minifyOnePass(source, { compress: {}, mangle: {} });
+		expect(code).toBe(
+			'function x(){return console.log("x"),7}console.log(2,x(),/a/,[x()]&&3,4,[],5);'
 		);
 		expect(runProgram(code)).toBe(runProgram(source));
 	});
