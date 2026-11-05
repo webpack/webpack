@@ -15585,6 +15585,11 @@ declare abstract class JavascriptNodePath {
  * while the program is walked by id, a view of ESTree objects otherwise.
  */
 declare interface JavascriptNodeReader {
+	/**
+	 * The node's ESTree object, made the first time it is asked for: what a tap
+	 * not reading the path, and an evaluated expression, take.
+	 */
+	object: (n?: number) => NodeEstreeIndex;
 	name: (n?: number) => string;
 	flag: (flag: number, n?: number) => boolean;
 	type: (n?: number) => number;
@@ -17059,6 +17064,7 @@ declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 	 */
 	walkExpression(
 		expression:
+			| number
 			| ImportExpressionImport
 			| UnaryExpression
 			| ArrayExpression
