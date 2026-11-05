@@ -921,6 +921,13 @@ const EXPECTED = [
 		source: "D3",
 		presets: ["default"],
 		why: "an `if` printing as `?:` parenthesizes a test opening with a function where the reprint parenthesizes the function alone, the same size"
+	},
+	{
+		relation: "idempotence",
+		contains: "(r.entrySeq()",
+		source: "Swagger UI 5 (bundle)",
+		presets: ["default"],
+		why: "`a?(b,c):c` printing as `a&&(b),c` parenthesizes a call left of `,`: an unread call may print as its arguments' sequence or what its function returns, which the printed text no longer tells apart"
 	}
 ];
 
