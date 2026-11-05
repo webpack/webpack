@@ -49,7 +49,7 @@ export function expressions(input) {
 	var doubled = mod.double(3);
 	var asm = (function () {
 		"use asm";
-		return 6;
+		return "asm";
 	})();
 	return [
 		never,
