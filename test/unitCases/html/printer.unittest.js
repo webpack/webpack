@@ -7137,6 +7137,13 @@ describe("SourceProcessor — what minifying cannot turn into markup", () => {
 			}
 		).code;
 		expect(printed).toBe("<style>a { b: c }</style><p>x");
+		// `</styles` ends nothing, so that answer is printed.
+		expect(
+			new SourceProcessor().process("<style>a { b: c }</style>", {
+				mode: "minify",
+				renderEmbeddedSource: () => "a{b:'</styles'}"
+			}).code
+		).toBe("<style>a{b:'</styles'}</style>");
 	});
 
 	it("keeps a conditional comment's body as written where its print would end the comment", async () => {
