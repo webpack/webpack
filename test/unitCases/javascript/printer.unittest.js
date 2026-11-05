@@ -1188,6 +1188,9 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["function f(a){return[typeof a==\"undefined\",\"undefined\"!==typeof a.b,typeof g()!=\"undefined\",typeof c>\"u\"]}", {}, "function f(e){return[e===void 0,e.b!==void 0,g()!==void 0,typeof c>\"u\"]}"],
 			// Past `typeof o=="object"`, `o` is an object or `null`, so `null` only where falsy.
 			["function f(o,p){if(typeof o==\"object\"&&o!==null)g();return[typeof o===\"object\"&&null!=o,typeof o!=\"object\"||o===null,typeof o==\"object\"&&p!==null,typeof o==\"function\"&&o!==null]}", {}, "function f(o,t){if(\"object\"==typeof o&&o)g();return[\"object\"==typeof o&&!!o,\"object\"!=typeof o||!o,\"object\"==typeof o&&t!==null,\"function\"==typeof o&&o!==null]}"],
+			// Nobody reading it, a string added keeps only the other side's conversion, and a template one for each run.
+			["\"prefix\"+f();g()+\"suffix\";\"\"+h();\"a\"+1;`a${b}c${d}e`;`${a=1}${b}`", {}, "\"\"+f(),g()+\"\",\"\"+h(),`${b}${d}`,a=1,`${b}`;"],
+			["v=function(a,b){\"a\"+ +b;\"a\"+ ++b;b+++\"a\"}", {}, "v=function(a,b){\"\"+ +b,\"\"+ ++b,b+++\"\"};"],
 			// A sequence left one item where any expression stands bare drops its parentheses, but where it names a function.
 			["x=(3,6);let y=(2,a[b]);f((1,2),...(0,c));z=[(1,()=>1)];w={a:(1,b?c:d),[(1,e)]:1,b:(1,()=>1),c:(1,class{})};v=`${(1,a)}`;u=(1,()=>1);for(var t=(1,a in b);;);", {}, "x=6;let y=a[b];f(2,...c),z=[()=>1],w={a:b?c:d,[e]:1,b:(1,()=>1),c:(1,class{})},v=`${a}`,u=(1,()=>1);for(var t=(1,a in b);;);"],
 			// A number too big for a double is no name: a binding named `Infinity` does not read it.
@@ -1498,7 +1501,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["for(;;){if(x)break;else{function f(){}}}for(;;){if(y){function g(){}}else break}", {}, "for(;!x;){function f(){}}for(;y;){function g(){}}"],
 			["foo();bar();for(;i<1;)g();x=(a in b);for(;i<1;)g();x=1;for(;0;)g();y=1;for(;i<1;)g();z=function(){a in b};for(;i<1;)g()", {}, "foo();for(bar();i<1;)g();x=a in b;for(;i<1;)g();x=1;for(y=1;i<1;)g();for(z=function(){a in b};i<1;)g();"],
 			["function f(){var t=g();var e,h=0;for(;h<1;++h)e=k(e);return t+e+t}", {}, "function f(){var e=g(),r,t=0;for(;t<1;++t)r=k(r);return e+r+e}"],
-			["if(t)`${a()}${b()}`;else c();if(u)`${a()}${1}`;else c();(function(){if(t)return;`${a()}${b()}`})();(function(){if(u)return;`${a()}${1}`})()", {}, "t?(`${a()}`,`${b()}`):c(),u?`${a()}`:c(),t||(`${a()}`,`${b()}`),u||`${a()}`;"],
+			["if(t)`${a()}${b()}`;else c();if(u)`${a()}${1}`;else c();(function(){if(t)return;`${a()}${b()}`})();(function(){if(u)return;`${a()}${1}`})()", {}, "t?`${a()}${b()}`:c(),u?`${a()}`:c(),t||`${a()}${b()}`,u||`${a()}`;"],
 			["Object.create({},null);Object.create({},\"ab\");Object.create({},void 0);Object.create({},1)", {}, "Object.create({},null),Object.create({},\"ab\"),Object.create({},1);"],
 			["(class{#x;static{#x in 1}});(class{#y;static{#y in {}}});(class{#z;static{#z in o}})", {}, "(class{#s;static{#s in 1}});(class{#c;static{#c in o}});"],
 			["(0,foo)``", { compress: false, mangle: false }, "(0,foo)``;"],
