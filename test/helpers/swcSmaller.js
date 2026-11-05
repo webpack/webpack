@@ -627,7 +627,6 @@ const SWC_SMALLER_BY_REASON = [
 		"swc goes further than webpack on what terser's `switch` tests cover",
 		[
 			"terser compress: switch/constant_switch_5",
-			"terser compress: switch/constant_switch_6",
 			"terser compress: switch/issue_1663",
 			"terser compress: switch/if_else5",
 			"terser compress: switch/if_else6",
@@ -905,7 +904,6 @@ const SWC_SMALLER_BY_REASON = [
 		[
 			"terser compress: loops/drop_if_break_4",
 			"terser compress: loops/drop_if_else_break_4",
-			"terser compress: loops/evaluate",
 			"terser compress: loops/issue_1648",
 			"terser compress: loops/issue_2740_1",
 			"terser compress: loops/issue_2740_2"
@@ -1009,7 +1007,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: object/computed_property_names_side_effects",
 			"terser compress: object/prop_arrow_to_concise_method",
 			"terser compress: object/concise_method_to_prop_arrow",
-			"terser compress: object/prop_arrows_to_concise_method_various",
 			"terser compress: object/issue_2554_1",
 			"terser compress: object/issue_2554_2",
 			"terser compress: object/issue_2554_3"
@@ -1030,11 +1027,7 @@ const SWC_SMALLER_BY_REASON = [
 	[
 		"swc goes further than webpack on what terser's `dead-code` tests cover",
 		[
-			"terser compress: dead-code/dead_code_block_decls_die",
 			"terser compress: dead-code/try_catch_finally",
-			"terser compress: dead-code/issue_2383_1",
-			"terser compress: dead-code/issue_2383_2",
-			"terser compress: dead-code/issue_2383_3",
 			"terser compress: dead-code/collapse_vars_assignment",
 			"terser compress: dead-code/throw_assignment"
 		]
@@ -1178,8 +1171,7 @@ const SWC_SMALLER_BY_REASON = [
 		[
 			"terser compress: properties/evaluate_array_length",
 			"terser compress: properties/evaluate_string_length",
-			"terser compress: properties/lhs_prop_2",
-			"terser compress: properties/array_hole"
+			"terser compress: properties/lhs_prop_2"
 		]
 	],
 	[
