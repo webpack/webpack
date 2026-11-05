@@ -1385,6 +1385,8 @@ const UNIT_INPUT_SORT =
 	"the attributes of an `<html>` the first pass merges in are sorted only on a second pass; same attributes";
 const UNIT_INPUT_TAGS =
 	"a second pass writes an implied or omitted tag differently from the first; both outputs read to the same tree";
+const TEMPLATE_DELIMITER_REFERENCES =
+	"a template delimiter (`<?`, `<%`) the source spells with character references stays one, as a template engine that reads the page next would run it; spelled literally it is the engine's and stays live";
 const UNIT_INPUT_VERBATIM =
 	"the printer cannot rebuild this tree from its own output, so it writes the source back as authored, spelling included";
 const UNIT_INPUT_SRCSET =
@@ -1401,6 +1403,12 @@ const UNIT_INPUT_NEWLINE =
  * @type {readonly import("./compare-tools-harness").Expected[]}
  */
 const EXPECTED = [
+	{
+		relation: "respelling references",
+		contains: "<link href=\"&lt;?php echo 'http://foo/' ?>\">",
+		source: "test/configCases/html/minimize-attributes/page.html",
+		why: TEMPLATE_DELIMITER_REFERENCES
+	},
 	{
 		relation: "agreement",
 		contains: '<html:a href="#x">, tool nothing',
@@ -1568,15 +1576,6 @@ const EXPECTED = [
 			"source-processor-merging-adjacent-style-reads-a-sheet-s-closed-comment-escape-22, cut in an end tag's name"
 		],
 		why: UNIT_INPUT_STYLES
-	},
-	{
-		relation: "idempotence",
-		contains: "-> </div>",
-		source: [
-			"source-processor-printing-in-pieces-keeps-the-end-tag-of-a-element-that-has-2",
-			"source-processor-printing-in-pieces-keeps-the-end-tag-of-a-element-that-has-2, cut in an end tag's name"
-		],
-		why: UNIT_INPUT_TAGS
 	},
 	{
 		relation: "agreement",

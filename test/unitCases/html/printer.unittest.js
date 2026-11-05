@@ -7089,6 +7089,15 @@ describe("SourceProcessor — what minifying cannot turn into markup", () => {
 		).toBe(
 			'<!doctype html><p>&lt;%= a %></p><a title="&lt;%= b %>" rel="&lt;?php c ?>">x</a>'
 		);
+		expect(
+			minify('<!doctype html><a title="&lt;!--#echo --&gt; &lt;b&gt;">x</a>')
+		).toBe('<!doctype html><a title="&lt;!--#echo --> <b>">x</a>');
+		// One the source wrote stays live, whatever else the value re-spells.
+		expect(
+			minify(
+				"<!doctype html><p><%= a %> &amp; b</p><a title='<?php c &#39; ?>'>x</a>"
+			)
+		).toBe("<!doctype html><p><%= a %> & b</p><a title=\"<?php c ' ?>\">x</a>");
 	});
 
 	it("parses an `<iframe srcdoc>` document in no-quirks mode", async () => {
