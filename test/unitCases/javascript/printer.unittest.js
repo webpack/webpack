@@ -3428,6 +3428,8 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["function f(a){var x=(0,a.b);x()}function g(s){var e=(0,eval);e(s)}", "function f(a){(0,a.b)()}function g(a){(0,eval)(a)}"],
 			["a&&void(x(),y());a?void(x(),y()):b();a&&!(x=1);a?!(x=1,2):b();a&&(()=>{x();y()})()", "a&&(x(),y()),a?(x(),y()):b(),a&&(x=1),a?(x=1,2):b(),a&&(()=>{x(),y()})();"],
 			["function f(a){x()&&0?a=1:a=2;return a}", "function f(a){return a=x()&&0?1:2,a}"],
+			// A `!` pushed into an arrow's body, or out of a comparison, leaves no parentheses.
+			["f=c=>!(c.e&&c.e.u);g=a=>!({}.a===1&&b);x=!(a||!(b>0));x=!(a||!(b in c))", "f=a=>!a.e||!a.e.u,g=a=>({}.a!==1||!b),x=!a&&b>0,x=!a&&(b in c);"],
 			["(()=>{g()})();h()", "g(),h();"]
 		]) {
 			expect(print(source, { module: false })).toBe(expected);

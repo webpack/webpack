@@ -1244,9 +1244,7 @@ const SWC_SMALLER_BY_REASON = [
 	],
 	[
 		"swc goes further than webpack on what terser's `if_return` tests cover",
-		[
-			"terser compress: if_return/if_return_6"
-		]
+		["terser compress: if_return/if_return_6"]
 	],
 	[
 		"swc goes further than webpack on what terser's `issue-1639` tests cover",

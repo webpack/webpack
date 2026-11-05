@@ -1968,9 +1968,7 @@ const OXC_SMALLER_BY_REASON = [
 	],
 	[
 		"oxc goes further than webpack on what terser's `if_return` tests cover",
-		[
-			"terser compress: if_return/if_return_same_value"
-		]
+		["terser compress: if_return/if_return_same_value"]
 	],
 	[
 		"oxc goes further than webpack on what terser's `issue-640` tests cover",
@@ -2322,9 +2320,7 @@ const OXC_SMALLER_BY_REASON = [
 	],
 	[
 		"oxc goes further than webpack on what swc's `fixture/simple` tests cover",
-		[
-			"swc minifier: fixture/simple/sequences/.0001/input.js"
-		]
+		["swc minifier: fixture/simple/sequences/.0001/input.js"]
 	],
 	[
 		"a shorter operator oxc writes: `**` for `Math.pow` of numbers",
