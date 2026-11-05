@@ -3,6 +3,7 @@
   "dependencies": {
     "plus-range": ">=1.0.0+",
     "dash-range": "1.0.0-",
-    "number-range": 1
+    "number-range": 1,
+    "nested-number-range": "^2.0.0"
   }
 }

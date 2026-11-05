@@ -7,7 +7,12 @@ module.exports = {
 	mode: "development",
 	plugins: [
 		new ConsumeSharedPlugin({
-			consumes: ["plus-range", "dash-range", "number-range"]
+			consumes: [
+				"plus-range",
+				"dash-range",
+				"number-range",
+				"nested-number-range"
+			]
 		})
 	]
 };
