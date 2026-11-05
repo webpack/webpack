@@ -34612,6 +34612,11 @@ declare class Template {
 	static toNormalComment(str: string): string;
 
 	/**
+	 * Returns a `//` comment of the string that stays on one line.
+	 */
+	static toLineComment(str: string): string;
+
+	/**
 	 * Returns normalized bundle-safe path.
 	 */
 	static toPath(str: string): string;

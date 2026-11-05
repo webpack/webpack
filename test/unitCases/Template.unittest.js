@@ -35,6 +35,7 @@ describe("Template", () => {
 		);
 		expect(Template.toNormalComment("./a.js")).toBe("/* ./a.js */");
 		expect(Template.toNormalComment("")).toBe("");
+		expect(Template.toLineComment("a*/b\nc")).toBe("// a*/b\\nc");
 	});
 
 	it("should strip JSDoc types from runtime function content but keep other comments", () => {
