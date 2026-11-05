@@ -1059,3 +1059,77 @@ describe("MultiCompiler deprecated 'done' hook call", () => {
 		tracker();
 	});
 });
+
+describe("MultiCompiler runWithDependencies", () => {
+	/**
+	 * @param {import("../../").MultiCompiler} compiler compiler
+	 * @returns {import("../../").Compiler[]} child compilers
+	 */
+	const childrenOf = (compiler) => compiler.compilers;
+
+	it("should run a compiler after the ones it depends on and report no result", (done) => {
+		const compiler = /** @type {import("../../").MultiCompiler} */ (
+			webpack([
+				{ name: "a", context: path.join(testDirectory, "fixtures"), entry: "./a.js" },
+				{
+					name: "b",
+					dependencies: ["a"],
+					context: path.join(testDirectory, "fixtures"),
+					entry: "./b.js"
+				}
+			])
+		);
+		/** @type {string[]} */
+		const order = [];
+		compiler.runWithDependencies(
+			childrenOf(compiler),
+			(child, callback) => {
+				order.push(/** @type {string} */ (child.name));
+				setImmediate(() => callback(null));
+			},
+			(err, results) => {
+				try {
+					expect(err).toBeNull();
+					expect(results).toBeUndefined();
+					expect(order).toEqual(["a", "b"]);
+					done();
+				} catch (assertionError) {
+					done(assertionError);
+				}
+			}
+		);
+	});
+
+	it("should report the error of a failing compiler", (done) => {
+		const compiler = /** @type {import("../../").MultiCompiler} */ (
+			webpack([
+				{ name: "a", context: path.join(testDirectory, "fixtures"), entry: "./a.js" },
+				{
+					name: "b",
+					dependencies: ["a"],
+					context: path.join(testDirectory, "fixtures"),
+					entry: "./b.js"
+				}
+			])
+		);
+		const failure = new Error("a failed");
+		/** @type {string[]} */
+		const order = [];
+		compiler.runWithDependencies(
+			childrenOf(compiler),
+			(child, callback) => {
+				order.push(/** @type {string} */ (child.name));
+				callback(failure);
+			},
+			(err) => {
+				try {
+					expect(err).toBe(failure);
+					expect(order).toEqual(["a"]);
+					done();
+				} catch (assertionError) {
+					done(assertionError);
+				}
+			}
+		);
+	});
+});

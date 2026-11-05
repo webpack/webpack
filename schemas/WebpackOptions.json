@@ -9,7 +9,8 @@
         },
         {
           "description": "You can pass an object to set the value of `require.amd` and `define.amd`.",
-          "type": "object"
+          "type": "object",
+          "tsType": "import('../lib/fs/fs').JsonObject"
         }
       ]
     },

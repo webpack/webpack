@@ -68,9 +68,7 @@ export type PositiveNumber = number;
  */
 export type Amd =
 	| /** You can pass `false` to disable AMD support. */ false
-	| /** You can pass an object to set the value of `require.amd` and `define.amd`. */ {
-			[key: string]: any;
-	  };
+	| /** You can pass an object to set the value of `require.amd` and `define.amd`. */ import("../lib/fs/fs").JsonObject;
 
 /**
  * Add a container for define/require functions in the AMD module.
