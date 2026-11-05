@@ -261,7 +261,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/esbuild.rs:86",
 			"oxc minifier: peephole/esbuild.rs:90",
 			"oxc minifier: peephole/esbuild.rs:119",
-			"oxc minifier: peephole/esbuild.rs:141",
 			"oxc minifier: peephole/esbuild.rs:145",
 			"oxc minifier: peephole/esbuild.rs:148",
 			"oxc minifier: peephole/esbuild.rs:157",
@@ -1308,8 +1307,7 @@ const OXC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/projects/yui/8/input.js",
 			"swc minifier: full/size/991835278eecab695ad3515447b5747adcdfe1b4/input.js",
 			"swc minifier: full/size/b57e4ca6d118a9480312f6f3ac809245bbed8115/input.js",
-			"swc minifier: full/size/bfb48fed563e5fb468b88b6a6670972c3ca7ee38/input.js",
-			"swc minifier: fixture/next/react-pdf-renderer/input.js"
+			"swc minifier: full/size/bfb48fed563e5fb468b88b6a6670972c3ca7ee38/input.js"
 		]
 	],
 	[
@@ -1856,7 +1854,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/minimize_statements.rs:279",
 			"oxc minifier: peephole/minimize_statements.rs:284",
 			"oxc minifier: peephole/minimize_statements.rs:285",
-			"oxc minifier: peephole/minimize_statements.rs:297",
 			"oxc minifier: peephole/minimize_statements.rs:298",
 			"oxc minifier: peephole/minimize_statements.rs:302",
 			"oxc minifier: peephole/minimize_statements.rs:306",
@@ -2850,7 +2847,6 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc goes further than webpack on what terser's `transform` tests cover",
 		[
-			"terser compress: transform/booleans_evaluate",
 			"terser compress: transform/if_else_empty",
 			"terser compress: transform/while_if_break"
 		]
