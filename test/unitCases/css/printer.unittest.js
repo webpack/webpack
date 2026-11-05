@@ -11608,6 +11608,52 @@ describe("CssSyntax minify — nesting the target cannot read", () => {
 		).toBe(minifyFor(`a:fullscreen{color-scheme:light dark}${L}`, HOIST_T));
 	});
 
+	it("gives each prefix copy the scheme toggles of the rule it copies", () => {
+		// An engine reading only the prefixed spelling reads only the copy, so the
+		// copy has to switch `light-dark()` as the rule it copies does.
+		const css = "a:fullscreen{color-scheme:light dark}b{color:light-dark(red,blue)}";
+		const minified = minifyFor(css, ["safari 15"]);
+		expect(minified).toBe(
+			"a:-webkit-full-screen{color-scheme:light dark;--webpack-light:initial;--webpack-dark:}" +
+				"a:fullscreen{color-scheme:light dark;--webpack-light:initial;--webpack-dark:}" +
+				"@media (prefers-color-scheme:dark){" +
+				"a:-webkit-full-screen{--webpack-light:;--webpack-dark:initial}" +
+				"a:fullscreen{--webpack-light:;--webpack-dark:initial}}" +
+				"b{color:var(--webpack-light,red)var(--webpack-dark,blue)}" +
+				":where(:root){--webpack-light:initial;--webpack-dark:}"
+		);
+		expect(minifyFor(minified, ["safari 15"])).toBe(minified);
+		// Hoisted, the copies share one query, and a rule with none keeps its own.
+		const nested = minifyFor(
+			"a{&:fullscreen{color-scheme:light dark}&:hover{color-scheme:light dark}}b{color:light-dark(red,blue)}",
+			["safari 15"]
+		);
+		expect(nested).toBe(
+			"a:-webkit-full-screen{color-scheme:light dark;--webpack-light:initial;--webpack-dark:}" +
+				"a:fullscreen{color-scheme:light dark;--webpack-light:initial;--webpack-dark:}" +
+				"@media (prefers-color-scheme:dark){" +
+				"a:-webkit-full-screen{--webpack-light:;--webpack-dark:initial}" +
+				"a:fullscreen{--webpack-light:;--webpack-dark:initial}}" +
+				"a:hover{color-scheme:light dark;--webpack-light:initial;--webpack-dark:}" +
+				"@media (prefers-color-scheme:dark){a:hover{--webpack-light:;--webpack-dark:initial}}" +
+				"b{color:var(--webpack-light,red)var(--webpack-dark,blue)}" +
+				":where(:root){--webpack-light:initial;--webpack-dark:}"
+		);
+		expect(minifyFor(nested, ["safari 15"])).toBe(nested);
+		// A twin no target needs still goes, toggles and all.
+		expect(
+			minifyFor(
+				"a:fullscreen{color-scheme:light dark}a:-webkit-full-screen{color-scheme:light dark}b{color:light-dark(red,blue)}",
+				["safari 17"]
+			)
+		).toBe(
+			"a:fullscreen{color-scheme:light dark;--webpack-light:initial;--webpack-dark:}" +
+				"@media (prefers-color-scheme:dark){a:fullscreen{--webpack-light:;--webpack-dark:initial}}" +
+				"b{color:var(--webpack-light,red)var(--webpack-dark,blue)}" +
+				":where(:root){--webpack-light:initial;--webpack-dark:}"
+		);
+	});
+
 	it("leaves a prefixed rule that was never nested alone", () => {
 		expect(minifyFor("a:fullscreen{top:0}", HOIST_T)).toBe(
 			"a:-webkit-full-screen{top:0}a:fullscreen{top:0}"
