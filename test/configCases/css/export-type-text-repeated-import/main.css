@@ -1,0 +1,6 @@
+@import "./left.css";
+@import "./right.css";
+
+.main {
+	color: green;
+}
