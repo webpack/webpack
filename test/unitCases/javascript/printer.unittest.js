@@ -3108,7 +3108,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		expect(
 			print("g(V.toString(),-V,typeof V);", { global_defs: { V: -1 } })
 		).toBe('g((-1).toString(),1,"number");');
-		expect(print("g(1/V);", { global_defs: { V: -0 } })).toBe("g(1/(-0));");
+		expect(print("g(a/V);", { global_defs: { V: -0 } })).toBe("g(a/(-0));");
 		// `top_retain` keeps the top-level names it lists, a pattern or a test keeps.
 		const top = "var foo=1,bar=2;";
 		expect(print(top, { toplevel: true })).toBe("");
@@ -5520,6 +5520,19 @@ describe("one-pass minify of statement sequences", () => {
 		expect(
 			minifyOnePass(source, { compress: false, mangle: false }).code
 		).not.toContain("log(Infinity");
+	});
+
+	it("should print a binary expression folding to an infinity or `NaN` as `1/0`, `-1/0` or `0/0`", () => {
+		// A division needs the parentheses its place gave the expression; `**` binds tighter.
+		const source =
+			'var a=2;console.log(123456789/0,2/0,3/0*2,-1e300*1e10,1*"a","a"*2+1,a/(2/0),a-(-2/0),-(2/0),(2/0).toFixed(),2**2e3,a**(2/0),f()/0,a/(3/0*2),a-(-3/0*2),-(3/0*2),(3/0*2).toFixed(),a**(3/0*2))';
+		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+		expect(code).toBe(
+			'var a=2;console.log(1/0,2/0,1/0,-1/0,0/0,0/0,a/(2/0),a- -2/0,-(2/0),(2/0).toFixed(),2**2e3,a**(2/0),f()/0,a/(1/0),a- -1/0,-(1/0),(1/0).toFixed(),a**(1/0));'
+		);
+		expect(runProgram(`function f(){return 1}${code}`)).toBe(
+			runProgram(`function f(){return 1}${source}`)
+		);
 	});
 
 	it("should fold a `delete` of a conditional whose test is known and branch runs nothing", () => {
