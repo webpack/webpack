@@ -7152,6 +7152,36 @@ describe("SourceProcessor — what minifying cannot turn into markup", () => {
 			}
 		).code;
 		expect(printed).toBe("<style>a { b: c }</style><p>x");
+		// Where the end tag falls decides, not how many the answer spells.
+		expect(
+			new SourceProcessor().process(
+				'<script>/* </style> */f("<\\/script><b>")</script><p>x</p>',
+				{
+					mode: "minify",
+					renderEmbeddedSource: () => 'f("</script><b>")'
+				}
+			).code
+		).toBe('<script>/* </style> */f("<\\/script><b>")</script><p>x');
+		// A `</noscript>` the body did not spell would end a `<noscript>` around it.
+		/**
+		 * @param {string} body the JSON `<script>` body
+		 * @param {string} answer what the renderer answers
+		 * @returns {string} the printed page
+		 */
+		const jsonWith = (body, answer) =>
+			new SourceProcessor().process(
+				`<script type="application/json">${body}</script>`,
+				{ mode: "minify", renderEmbeddedSource: () => answer }
+			).code;
+		expect(jsonWith('{ "a" : 1 }', '{"a":"</noscript>"}')).toBe(
+			'<script type=application/json>{ "a" : 1 }</script>'
+		);
+		expect(jsonWith('{ "a" : "</noscript>" }', '{"a":"</noscript>"}')).toBe(
+			'<script type=application/json>{"a":"</noscript>"}</script>'
+		);
+		expect(
+			jsonWith('{ "a" : "</noscript>" }', '{"a":"</noscript></noscript>"}')
+		).toBe('<script type=application/json>{ "a" : "</noscript>" }</script>');
 		// `</styles` ends nothing, so that answer is printed.
 		expect(
 			new SourceProcessor().process("<style>a { b: c }</style>", {
