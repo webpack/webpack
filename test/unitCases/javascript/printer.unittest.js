@@ -1581,6 +1581,10 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// So does a test printing as `x!=null`, from strict comparisons either way round; two names, one value twice or swapped branches stay.
 			["function k(a){x=null===a||a===void 0?b:a;x=a!==undefined&&a!==null?a:b;x=void 0!==a&&null!==a?a.b:void 0;x=null===a||undefined===a}", { mangle: false, ecma: 2020, compress: { toplevel: false, ecma: 2020 } }, "function k(a){x=a??b,x=a??b,x=a?.b,x=a==null}"],
 			["function k(a,c){x=a===null||c===void 0?b:a;x=a!==void 0&&a!==null?b:a;x=a===null||a===null}", { mangle: false, ecma: 2020, compress: { toplevel: false, ecma: 2020 } }, "function k(a,c){x=a===null||c===void 0?b:a,x=a!=null?b:a,x=a===null||a===null}"],
+			// esbuild's `a?c:(b,c)` as `(a||b),c`, `a?(b,c):c` as `(a&&b),c` and `a?b||c:c` as `a&&b||c`, where shorter with the parentheses it adds.
+			["a?c:(b,c);a?(b,c):c;a?b||c:c;x=a?(y=1)||c:c;x=a?b&&d||c:c;f(a?c:(b,c));x=(a?c:(b,c)).y;a?c:(f(),c);(a?c:(b,c))``;x=(a,b)?c:(d,c);a??b?c:(d,c)", {}, "a||b,c,a&&b,c,a&&b||c,x=a&&(y=1)||c,x=a&&b&&d||c,f((a||b,c)),x=(a||b,c).y,a||(f()),c,(a||b,c)``,x=((a,b)||d,c),(a??b)||d,c;"],
+			["x=a?(b||d)||c:c;x=a?c:(f(),c);x=a?c:(b,d);x=a?c:(b,e,c);x=a?b||c:c+1;x=a?b||c:d;x=a?0||c:c", {}, "x=a?b||d||c:c,x=a?c:(f(),c),x=a?c:(b,d),x=a?c:(b,e,c),x=a?b||c:c+1,x=a?b||c:d,x=a?c:c;"],
+			["x=a?c:(b,/*k*/c)", { format: { comments: "all" } }, "x=a?c:(b,/*k*/c);"],
 			// terser's `a?b?c:d:d` as `a&&b?c:d` and `a?b:c?b:d` as `a||c?b:d`, but not where the inner `?:` swapped its branches.
 			["x=a?b?c:d:d;x=a?b:c?b:d;x=a?!b?c:d:c;x=(a=1)?(b||e)?c:d:d;x=a||f?b?c:d:d;x=a?b:c||e?b:d;x=a?b?c:d:e", {}, "x=a&&b?c:d,x=a||c?b:d,x=a?b?d:c:c,x=(a=1)&&(b||e)?c:d,x=(a||f)&&b?c:d,x=a||c||e?b:d,x=a?b?c:d:e;"],
 			["function k(a){x=a!=b?a:c;x=a!=null?a:b+c;x=a!=null?a:new B}x=(a,b)?(c,d)?e:f:f", { mangle: false, ecma: 2020, compress: { toplevel: false, ecma: 2020 } }, "function k(a){x=a!=b?a:c,x=a??b+c,x=a??new B}x=(a,b)&&(c,d)?e:f;"],
