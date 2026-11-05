@@ -9,14 +9,14 @@ module.exports = {
 		const read = (file) =>
 			fs.readFileSync(path.join(options.output.path, file), "utf8");
 		const code = read("bundle0.js");
-		expect(code).toContain('return["b",');
-		expect(code).toMatch(/String\("\$\{ beep \}"\)/);
+		expect(code).toContain('expect(["b",');
+		expect(code).toMatch(/"x!","\$\{ beep \}"\]/);
 		expect(code).toContain("var[first,second=2]=source");
 		expect(code).toContain("{known,renamed:other,given=4}=empty");
 		expect(code).toContain("[kept=/*! keep */void 0]");
 		expect(code).toContain("function length(parameter=void 0)");
 		expect(code).toContain("method(parameter=void 0)");
-		expect(code).toContain("return[typeof void 0,3,[1,,2][1.5]");
+		expect(code).toContain("expect([typeof void 0,3,[1,,2][1.5]");
 		expect(code).toContain('[track("hole"),,2][1]');
 		expect(code).toContain(
 			'var pattern=/a/,fn="function",object="object",runs=[track("made")]&&"runs",unset={size:1}.size'
@@ -27,7 +27,7 @@ module.exports = {
 		expect(code).toContain("var first,named,last,rest,key;return");
 		expect(code).not.toContain("unread");
 		expect(code).toContain("if(0)var withFunction;");
-		expect(code).toContain('if(1)flag.push("kept");else var picked;');
+		expect(code).toContain('flag.push("kept");var picked;');
 		expect(code).toContain('flag.push("else");else var fromElse;');
 		expect(code).toContain("var commented}");
 		expect(code).toContain("try{for(;;)step()}");
