@@ -4266,8 +4266,8 @@ export interface OutputHtmlOptions {
 	manifest?:
 		| false
 		| NonEmptyString
-		| /** @additionalProperties */ { [key: string]: any }
-		| ((name: string) => false | string | { [key: string]: EXPECTED_ANY });
+		| /** @additionalProperties */ import("../lib/fs/fs").JsonObject
+		| ((name: string) => false | string | import("../lib/fs/fs").JsonObject);
 	/**
 	 * Inject `<meta>` tags into the page `<head>`. Each key is the `name` attribute (or `"charset"` for a charset declaration); the value is the `content` string. Keys beginning with `og:` use the `property` attribute instead of `name`. A tag is skipped if the HTML already contains a meta with the same name.
 	 * @since 5.109.0
@@ -5058,7 +5058,9 @@ export interface ResolveOptions {
 	/**
 	 * Enable caching of successfully resolved requests (cache entries are not revalidated).
 	 */
-	unsafeCache?: boolean | /** @additionalProperties */ { [key: string]: any };
+	unsafeCache?:
+		| boolean
+		| /** @additionalProperties */ import("../lib/resolve/ResolverFactory").UnsafeCache;
 	/**
 	 * Use synchronous filesystem calls for the resolver.
 	 */

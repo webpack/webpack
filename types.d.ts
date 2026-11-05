@@ -25900,8 +25900,8 @@ declare interface OutputHtmlOptions {
 	manifest?:
 		| string
 		| false
-		| { [index: string]: any }
-		| ((name: string) => string | false | { [index: string]: any });
+		| JsonObjectFs
+		| ((name: string) => string | false | JsonObjectFs);
 
 	/**
 	 * Inject `<meta>` tags into the page `<head>`. Each key is the `name` attribute (or `"charset"` for a charset declaration); the value is the `content` string. Keys beginning with `og:` use the `property` attribute instead of `name`. A tag is skipped if the HTML already contains a meta with the same name.
@@ -29111,7 +29111,7 @@ declare interface ResolveOptionsWebpackOptions {
 	/**
 	 * Enable caching of successfully resolved requests (cache entries are not revalidated).
 	 */
-	unsafeCache?: boolean | { [index: string]: any };
+	unsafeCache?: boolean | UnsafeCache;
 
 	/**
 	 * Use synchronous filesystem calls for the resolver.
@@ -35319,6 +35319,13 @@ declare interface UnicodePropertyTables {
 	 * each non-binary property's values, by property name
 	 */
 	nonBinary: Record<string, RegExp>;
+}
+
+/**
+ * Successfully resolved requests by cache key, as enhanced-resolve's unsafe cache holds them.
+ */
+declare interface UnsafeCache {
+	[index: string]: undefined | ResolveRequest | ResolveRequest[];
 }
 type UnsafeCacheData = KnownUnsafeCacheData & Record<string, any>;
 
