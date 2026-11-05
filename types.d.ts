@@ -38034,6 +38034,7 @@ declare namespace exports {
 					offset: number
 				) => SourcePosition;
 				export let releaseParserCaches: () => void;
+				export let lazyNodeOf: (object: NodeEstreeIndex) => number;
 				export let toEstreeObject: (
 					node: number,
 					fields?: string[]

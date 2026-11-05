@@ -6275,6 +6275,21 @@ describe("parseProgram", () => {
 			tree.release();
 		});
 
+		it("names the node of an object of the tree the path reads", () => {
+			const {
+				lazyNodeOf,
+				usePathTree
+			} = require("../../../lib/javascript/syntax-parser");
+			const { lazy, tree, program } = both();
+			// no tree for the path to read yet
+			expect(lazyNodeOf(lazy)).toBe(0);
+			usePathTree(tree, LAZY_SOURCE);
+			expect(lazyNodeOf(lazy)).toBe(program);
+			expect(lazyNodeOf({ type: "EmptyStatement" })).toBe(0);
+			usePathTree(null, "");
+			tree.release();
+		});
+
 		it("reads its fields after the tree is released", () => {
 			const { full, lazy, tree } = both();
 			tree.release();
