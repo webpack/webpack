@@ -1,0 +1,1 @@
+@custom-media --w (width>400px);@media screen and (--w){a{color:red}}

@@ -1,0 +1,1 @@
+@supports ((selector(a)) or (x:y)){a{x:1}}

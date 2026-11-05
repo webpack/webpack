@@ -1,0 +1,1 @@
+@custom-media --b (--a) and (hover);@custom-media --a (width>1px);@media (--b){a{color:red}}

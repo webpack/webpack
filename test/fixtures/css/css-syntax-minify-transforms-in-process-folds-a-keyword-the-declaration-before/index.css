@@ -1,0 +1,9 @@
+html:lang(ko),
+.lang-ko {
+  font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Sample Gothic", "Helvetica Neue", sans-serif;
+}
+.btn.btn-clear {
+  background: transparent;
+  border: 0;
+  color: currentColor;
+}

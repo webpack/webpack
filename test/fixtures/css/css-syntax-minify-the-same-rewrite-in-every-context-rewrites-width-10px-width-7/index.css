@@ -1,0 +1,1 @@
+@container card (width>=400px){.a{width:calc(var(--w)*2)}}

@@ -1,0 +1,1 @@
+@custom-media --m (width>400px),(orientation:portrait);@media screen and (--m){a{color:red}}

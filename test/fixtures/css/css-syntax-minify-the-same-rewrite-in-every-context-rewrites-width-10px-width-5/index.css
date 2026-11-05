@@ -1,0 +1,1 @@
+@supports (display:grid){.a{width:calc(var(--w)*2)}}

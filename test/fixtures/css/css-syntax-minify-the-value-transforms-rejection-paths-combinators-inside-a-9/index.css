@@ -1,0 +1,1 @@
+.x{&:where(.a > .b){color:red}}
