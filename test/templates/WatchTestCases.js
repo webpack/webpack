@@ -601,12 +601,13 @@ const describeCases = (config) => {
 												const reportedBy = (child, file) => {
 													const reported = stepReports.get(child);
 													if (reported === undefined) return false;
+													const compilation = lastChildCompilations.get(child);
 													// a watched directory reports itself, not the file inside it
 													const items = [...reported];
 													return (
 														// a file watched itself is not seen through its directory, which
 														// reports a sibling added next to it before the file's own change
-														(lastFileDependencies.has(file)
+														(compilation !== undefined && compilation.fileDependencies.has(file)
 															? reported.has(file)
 															: isWithin(file, items)) ||
 														items.some((item) => isWithin(item, [file]))
