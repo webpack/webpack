@@ -6,7 +6,7 @@ module.exports = {
 	module: {
 		rules: [
 			{
-				test: /deep\.json$/,
+				test: /(deep|over-limit)\.json$/,
 				loader: require.resolve("./deep-loader")
 			}
 		]
