@@ -1198,6 +1198,9 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// A truth known though it runs something decides: past `x()||1` the right side runs, `x()&&0` is the value,
 			// and a constant inside a chain of the same operator goes.
 			["f((x()||!0)&&y());f((x()&&0)||y());f((x()&&0)&&y());f(x()&&!0&&y);f(a&&1&&b);f(a||0||null);f(a&&\"x\"&&b);f(foo&&false?a():b());f(typeof g()?a:b);x=void 0||c;(x()||!0)&&y()", {}, "f((x()||!0,y())),f((x()&&0,y())),f(x()&&0),f(x()&&y),f(a&&b),f(a||null),f(a&&b),f((foo&&0,b())),f((typeof g(),a)),(x=c)()||1,y();"],
+			// De Morgan's laws: a `!` goes into `&&` or `||` where its operands cost less negated, the value staying a boolean,
+			// but where a test swaps its branches instead or another `!` takes it.
+			["f(!(a==b||c==d));f(!(a&&b));f(!(a==b||g(c)));f(!(x&&!(a||b)));x=!(a==b||c==d)&&e;x=!(a==b&&c==d)&&e;x=!(a==b&&c==d)||e;x=e??!(a==b||c==d);x=-!(a==b||c==d);x=!(a==b||c==d)?1:2;x=!(a||b)?c:d;f(!(!a||b));while(!(!x&&!y))g();for(;!(a||b);)g();if(!(a==b||c==d))throw x", {}, "f(a!=b&&c!=d),f(!a||!b),f(a!=b&&!g(c)),f(!(x&&!a&&!b)),x=a!=b&&c!=d&&e,x=(a!=b||c!=d)&&e,x=a!=b||c!=d||e,x=e??(a!=b&&c!=d),x=-(a!=b&&c!=d),x=a==b||c==d?2:1,x=a||b?d:c,f(!(!a||b));while(x||y)g();for(;!a&&!b;)g();if(a!=b&&c!=d)throw x;"],
 			// A sequence left one item where any expression stands bare drops its parentheses, but where it names a function.
 			["x=(3,6);let y=(2,a[b]);f((1,2),...(0,c));z=[(1,()=>1)];w={a:(1,b?c:d),[(1,e)]:1,b:(1,()=>1),c:(1,class{})};v=`${(1,a)}`;u=(1,()=>1);for(var t=(1,a in b);;);", {}, "x=6;let y=a[b];f(2,...c),z=[()=>1],w={a:(1,b?c:d),[e]:1,b:(1,()=>1),c:(1,class{})},v=`${a}`,u=(1,()=>1);for(var t=(1,a in b);;);"],
 			// A number too big for a double is no name: a binding named `Infinity` does not read it.
