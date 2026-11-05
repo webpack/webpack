@@ -21,9 +21,9 @@ permissions:
 
 env:
   # Whether a failing `lint`, `basic` or `unit` cancels the run. Fork and
-  # Dependabot pull requests get a read-only token that can't cancel, and a
-  # push to `main` always finishes, as `concurrency` explains.
-  CANCEL_ON_FAILURE: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]' }}
+  # Dependabot pull requests get a read-only token that can't cancel, so there
+  # every job runs to its end.
+  CANCEL_ON_FAILURE: ${{ github.actor != 'dependabot[bot]' && (github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository) }}
 
 jobs:
   lint:
@@ -298,38 +298,10 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: gh run cancel "$GITHUB_RUN_ID" --repo "$GITHUB_REPOSITORY"
 
-  # Every suite from here down needs `gate`, not the three cheap jobs, so it
-  # starts at once: each costs tens of runner-minutes, and a tree failing
-  # `lint`, `basic` or `unit` is not going to land on what they say. Where
-  # `CANCEL_ON_FAILURE` holds, the failing job cancels the run; elsewhere on a
-  # pull request `gate` waits for the three and fails when one does.
-  gate:
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-    permissions:
-      actions: read
-    steps:
-      - name: Wait for lint, basic and unit
-        if: github.event_name == 'pull_request' && env.CANCEL_ON_FAILURE != 'true'
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          while :; do
-            jobs=$(gh api --paginate "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/jobs?filter=latest&per_page=100" \
-              --jq '.jobs[] | select(.name | IN("lint", "basic", "unit")) | "\(.name) \(.status) \(.conclusion)"') || jobs=""
-            failed=$(echo "$jobs" | awk '$2 == "completed" && $3 != "success"')
-            if [ -n "$failed" ]; then
-              echo "::error::$failed"
-              exit 1
-            fi
-            if [ "$(echo "$jobs" | awk '$3 == "success"' | wc -l)" -eq 3 ]; then
-              exit 0
-            fi
-            sleep 30
-          done
+  # Every suite from here down starts with the three cheap ones rather than
+  # after them, and stops when one of them fails and cancels the run.
 
   test262:
-    needs: gate
     runs-on: ubuntu-latest
     timeout-minutes: 90
     steps:
@@ -384,7 +356,6 @@ jobs:
   # into one part per core (`--parts=auto`, TESTING_DOCS.md), using every core;
   # one runner per suite left all but one core idle.
   spec:
-    needs: gate
     runs-on: ubuntu-latest
     # Bounded: a stall would otherwise hold the runner for the 6h default.
     timeout-minutes: 90
@@ -432,7 +403,6 @@ jobs:
   # one engine reads differently is invisible to a suite that asks one, and
   # several of the defects filed today are ones only Gecko sees.
   syntax-equivalence:
-    needs: gate
     runs-on: ubuntu-latest
     # Bounded: a hung browser would otherwise hold a runner for the 6h default.
     timeout-minutes: 60
@@ -576,7 +546,6 @@ jobs:
 
   # Run webpack's test suite under Deno and Bun (spec validation suites excluded).
   runtimes:
-    needs: gate
     strategy:
       fail-fast: false
       matrix:
@@ -658,7 +627,6 @@ jobs:
       - run: yarn test:${{ matrix.runtime }} --ci
 
   integration:
-    needs: gate
     strategy:
       fail-fast: false
       matrix:
@@ -821,12 +789,11 @@ jobs:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   # The eight benchmark shards are around four runner-hours, so on a pull
-  # request they come through here, behind the same `gate`. A push to
-  # `main` runs `benchmarks.yml` on its own trigger instead and is never gated:
+  # request they come through here, cancelled with the rest. A push to
+  # `main` runs `benchmarks.yml` on its own trigger instead, never cancelled:
   # CodSpeed draws every later comparison against that commit's baseline.
   benchmarks:
     if: github.event_name == 'pull_request'
-    needs: gate
     # At least what the called workflow declares, or the call is rejected.
     permissions:
       contents: read
