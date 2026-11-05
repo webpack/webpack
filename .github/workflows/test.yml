@@ -20,10 +20,9 @@ permissions:
   contents: read
 
 env:
-  # Whether a failing `lint`, `basic` or `unit` cancels the run. Fork and
-  # Dependabot pull requests get a read-only token that can't cancel, so there
-  # every job runs to its end.
-  CANCEL_ON_FAILURE: ${{ github.actor != 'dependabot[bot]' && (github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository) }}
+  # Whether a failing `lint`, `basic` or `unit` cancels the run itself. A fork
+  # pull request's token is read-only, so `cancel-fork-runs.yml` cancels those.
+  CANCEL_ON_FAILURE: ${{ github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository }}
 
 jobs:
   lint:

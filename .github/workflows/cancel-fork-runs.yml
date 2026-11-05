@@ -1,0 +1,63 @@
+name: Cancel Failed Fork Runs
+
+# A fork pull request's `test.yml` run holds a read-only token, so a failing
+# `lint`, `basic` or `unit` can't cancel the rest of it. This runs in the base
+# repository's context with a write token, never checks out the pull request's
+# code and only reads job states and cancels the run through the API.
+on:
+  # zizmor: ignore[dangerous-triggers] -- nothing from the pull request is checked out or run
+  pull_request_target:
+    branches: [main]
+    types: [opened, synchronize, reopened]
+
+concurrency:
+  # Keyed on the pull request: under `pull_request_target` the ref is the base
+  # branch, which every pull request shares. A new push replaces the watch.
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+permissions: {}
+
+jobs:
+  cancel:
+    if: github.event.pull_request.head.repo.full_name != github.repository
+    runs-on: ubuntu-latest
+    # Covers the queue plus the slowest of the three cheap jobs (`basic`, 20m).
+    timeout-minutes: 45
+    permissions:
+      actions: write
+    steps:
+      - name: Cancel the run when lint, basic or unit fails
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          runs="repos/$GITHUB_REPOSITORY/actions/runs"
+          while :; do
+            run_id=$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/test.yml/runs?event=pull_request&head_sha=$HEAD_SHA" \
+              --jq '.workflow_runs[0].id // empty') || run_id=""
+            [ -n "$run_id" ] && break
+            sleep 20
+          done
+          echo "Watching $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$run_id"
+          while :; do
+            jobs=$(gh api "$runs/$run_id/jobs?filter=latest&per_page=100" \
+              --jq '.jobs[] | select(.name | IN("lint", "basic", "unit")) | "\(.name) \(.status) \(.conclusion)"') || jobs=""
+            failed=$(echo "$jobs" | awk '$3 == "failure" || $3 == "timed_out"')
+            if [ -n "$failed" ]; then
+              echo "::notice::Cancelling the run: $failed"
+              gh api -X POST "$runs/$run_id/cancel"
+              exit 0
+            fi
+            if [ "$(echo "$jobs" | awk '$2 == "completed"' | wc -l)" -eq 3 ]; then
+              exit 0
+            fi
+            # A run waiting for approval or already finished has no job left to watch.
+            if [ -z "$jobs" ]; then
+              status=$(gh api "$runs/$run_id" --jq .status) || status=""
+              if [ "$status" = "completed" ] || [ "$status" = "action_required" ]; then
+                exit 0
+              fi
+            fi
+            sleep 30
+          done
