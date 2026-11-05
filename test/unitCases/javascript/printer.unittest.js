@@ -5572,6 +5572,17 @@ describe("one-pass minify of statement sequences", () => {
 		);
 	});
 
+	it("should fold a conditional whose test is an array, object or function made in place", () => {
+		// A test running something keeps what it runs.
+		const source =
+			'function x(){console.log("x");return 7}console.log({}?1:2,[]?3:x(),function(){}?4:5,(()=>1)?x():6,[x()]?7:8,/a/?9:x())';
+		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+		expect(code).toBe(
+			'function x(){return console.log("x"),7}console.log(1,3,4,x(),([x()],7),9);'
+		);
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
 	it("should fold a `delete` of a conditional whose test is known and branch runs nothing", () => {
 		// A branch reading a member or calling stays.
 		const source =
