@@ -32,7 +32,22 @@ function patternDefaults(source, empty) {
 	function length(parameter = void 0) {
 		return parameter;
 	}
-	return [first, second, known, other, kept, given, length.length, length()];
+	class Holder {
+		method(parameter = void 0) {
+			return parameter;
+		}
+	}
+	return [
+		first,
+		second,
+		known,
+		other,
+		kept,
+		given,
+		length.length,
+		length(),
+		Holder.prototype.method.length
+	];
 }
 
 function holes(index) {
@@ -212,7 +227,8 @@ it("should drop a default of `undefined` in a pattern, but a parameter's own", (
 		undefined,
 		4,
 		0,
-		undefined
+		undefined,
+		0
 	]);
 });
 

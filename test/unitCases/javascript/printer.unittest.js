@@ -5386,6 +5386,14 @@ describe("one-pass minify of statement sequences", () => {
 			expect(code).toBe(expected);
 			expect(runProgram(code)).toBe(runProgram(source));
 		}
+		// A method's, accessor's or constructor's own default stays too.
+		const methods =
+			'class A{constructor(a=void 0){}m(a=void 0){}}var o={m(a=void 0){},set s(a=void 0){}};console.log(A.length,A.prototype.m.length,o.m.length,Object.getOwnPropertyDescriptor(o,"s").set.length)';
+		const { code } = minifyOnePass(methods, { compress: {}, mangle: false });
+		expect(code).toBe(
+			'class A{constructor(a=void 0){}m(a=void 0){}}var o={m(a=void 0){},set s(a=void 0){}};console.log(A.length,A.prototype.m.length,o.m.length,Object.getOwnPropertyDescriptor(o,"s").set.length);'
+		);
+		expect(runProgram(code)).toBe(runProgram(methods));
 		// A comment holds it, and without compressing it prints as written.
 		expect(
 			minifyOnePass("var[x=/*! c */void 0]=[]", { compress: {}, mangle: {} }).code

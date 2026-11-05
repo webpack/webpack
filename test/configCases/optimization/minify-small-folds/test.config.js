@@ -15,6 +15,7 @@ module.exports = {
 		expect(code).toContain("{known,renamed:other,given=4}=empty");
 		expect(code).toContain("[kept=/*! keep */void 0]");
 		expect(code).toContain("function length(parameter=void 0)");
+		expect(code).toContain("method(parameter=void 0)");
 		expect(code).toContain("return[typeof void 0,3,[1,,2][1.5]");
 		expect(code).toContain('[track("hole"),,2][1]');
 		expect(code).toContain(
