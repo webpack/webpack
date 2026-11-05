@@ -113,11 +113,11 @@ import {
 } from "schema-utils";
 import { default as ValidationError } from "schema-utils/declarations/ValidationError";
 import {
-	AsArray,
 	AsyncParallelHook,
 	AsyncSeriesBailHook,
 	AsyncSeriesHook,
 	AsyncSeriesWaterfallHook,
+	Hook,
 	HookMap,
 	IfSet,
 	MultiHook,
@@ -7745,8 +7745,8 @@ declare interface DecodedEntitiesWithMap {
 	map?: number[];
 }
 type DecodedSegment =
-	| [number, number, number, number]
 	| [number]
+	| [number, number, number, number]
 	| [number, number, number, number, number];
 type DecodedSourceMap = Omit<RawSourceMap, "mappings"> & {
 	mappings: DecodedSegment[][];
@@ -9934,6 +9934,7 @@ declare class EstreeView {
 	reset(): void;
 	type(node: number): number;
 	start(node: number): number;
+	end(node: number): number;
 	name(node: number): string;
 	value(
 		node: number
@@ -12549,6 +12550,95 @@ declare abstract class HelperRuntimeModule extends RuntimeModule {
 	 */
 	receivesHotUpdates(): boolean;
 }
+type HookArgument =
+	| undefined
+	| null
+	| string
+	| number
+	| boolean
+	| void
+	| string[]
+	| Program
+	| boolean[]
+	| ImportDeclaration
+	| ExportNamedDeclaration
+	| ExportAllDeclaration
+	| ImportExpressionImport
+	| BasicEvaluatedExpression
+	| UnaryExpression
+	| ArrayExpression
+	| ArrowFunctionExpression
+	| AssignmentExpression
+	| AwaitExpression
+	| BinaryExpression
+	| SimpleCallExpression
+	| NewExpression
+	| ChainExpression
+	| ClassExpression
+	| ConditionalExpression
+	| FunctionExpression
+	| Identifier
+	| SimpleLiteral
+	| RegExpLiteral
+	| BigIntLiteral
+	| LogicalExpression
+	| MemberExpression
+	| MetaProperty
+	| ObjectExpression
+	| SequenceExpression
+	| TaggedTemplateExpression
+	| TemplateLiteral
+	| ThisExpression
+	| UpdateExpression
+	| YieldExpression
+	| SpreadElement
+	| PrivateIdentifier
+	| Super
+	| FunctionDeclaration
+	| MaybeNamedFunctionDeclaration
+	| VariableDeclaration
+	| ClassDeclaration
+	| MaybeNamedClassDeclaration
+	| ExpressionStatement
+	| BlockStatement
+	| StaticBlock
+	| EmptyStatement
+	| DebuggerStatement
+	| WithStatement
+	| ReturnStatement
+	| LabeledStatement
+	| BreakStatement
+	| ContinueStatement
+	| IfStatement
+	| SwitchStatement
+	| ThrowStatement
+	| TryStatement
+	| WhileStatement
+	| DoWhileStatement
+	| ForStatement
+	| ForInStatement
+	| ForOfStatement
+	| ExportDefaultDeclaration
+	| GuardCollection
+	| MethodDefinition
+	| PropertyDefinition
+	| VariableDeclarator
+	| [number, number][]
+	| CommentJavascriptParser[]
+	| Property
+	| CatchClause
+	| ClassBody
+	| SwitchCase
+	| TemplateElement
+	| AssignmentProperty
+	| ImportSpecifier
+	| ImportDefaultSpecifier
+	| ImportNamespaceSpecifier
+	| ExportSpecifier
+	| ObjectPattern
+	| ArrayPattern
+	| RestElement
+	| AssignmentPattern;
 declare class HotModuleReplacementPlugin {
 	constructor();
 
@@ -15474,6 +15564,32 @@ declare abstract class JavascriptNodePath {
 	 */
 	subtreeStart(n?: number): number;
 }
+
+/**
+ * What a hook's `{ path: true }` tap reads its nodes through: the path `A`
+ * while the program is walked by id, a view of ESTree objects otherwise.
+ */
+declare interface JavascriptNodeReader {
+	name: (n?: number) => string;
+	flag: (flag: number, n?: number) => boolean;
+	type: (n?: number) => number;
+	end: (n?: number) => number;
+	value: (
+		n?: number
+	) =>
+		| undefined
+		| null
+		| string
+		| number
+		| bigint
+		| boolean
+		| RegExp
+		| { cooked?: null | string; raw: string };
+	start: (n?: number) => number;
+	field: (i: number, field: number, n?: number) => number;
+	fieldCount: (field: number, n?: number) => number;
+	textOf: (part: number, n?: number) => null | string;
+}
 type JavascriptNormalModule = NormalModule & {
 	buildInfo?: JavascriptModuleBuildInfo;
 	buildMeta?: JavascriptModuleBuildMeta;
@@ -15533,85 +15649,16 @@ declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 	);
 	hooks: Readonly<{
 		evaluateTypeof: HookMap<
-			SyncBailHook<
-				[UnaryExpression],
-				undefined | null | BasicEvaluatedExpression
-			>
+			PathTaps<[number], undefined | null | BasicEvaluatedExpression> &
+				SyncBailHook<
+					[UnaryExpression],
+					undefined | null | BasicEvaluatedExpression
+				>
 		>;
 		evaluate: HookMap<
-			SyncBailHook<
-				[
-					| ImportExpressionImport
-					| UnaryExpression
-					| ArrayExpression
-					| ArrowFunctionExpression
-					| AssignmentExpression
-					| AwaitExpression
-					| BinaryExpression
-					| SimpleCallExpression
-					| NewExpression
-					| ChainExpression
-					| ClassExpression
-					| ConditionalExpression
-					| FunctionExpression
-					| Identifier
-					| SimpleLiteral
-					| RegExpLiteral
-					| BigIntLiteral
-					| LogicalExpression
-					| MemberExpression
-					| MetaProperty
-					| ObjectExpression
-					| SequenceExpression
-					| TaggedTemplateExpression
-					| TemplateLiteral
-					| ThisExpression
-					| UpdateExpression
-					| YieldExpression
-					| SpreadElement
-					| PrivateIdentifier
-					| Super
-				],
-				undefined | null | BasicEvaluatedExpression
-			>
-		>;
-		evaluateIdentifier: HookMap<
-			SyncBailHook<
-				[Identifier | MemberExpression | MetaProperty | ThisExpression],
-				undefined | null | BasicEvaluatedExpression
-			>
-		>;
-		evaluateDefinedIdentifier: HookMap<
-			SyncBailHook<
-				[Identifier | MemberExpression | ThisExpression],
-				undefined | null | BasicEvaluatedExpression
-			>
-		>;
-		/**
-		 * @since 5.73.0
-		 */
-		evaluateNewExpression: HookMap<
-			SyncBailHook<[NewExpression], undefined | null | BasicEvaluatedExpression>
-		>;
-		/**
-		 * @since 5.73.0
-		 */
-		evaluateCallExpression: HookMap<
-			SyncBailHook<
-				[CallExpression],
-				undefined | null | BasicEvaluatedExpression
-			>
-		>;
-		evaluateCallExpressionMember: HookMap<
-			SyncBailHook<
-				[CallExpression, BasicEvaluatedExpression],
-				undefined | null | BasicEvaluatedExpression
-			>
-		>;
-		isPure: HookMap<
-			SyncBailHook<
-				[
-					(
+			PathTaps<[number], undefined | null | BasicEvaluatedExpression> &
+				SyncBailHook<
+					[
 						| ImportExpressionImport
 						| UnaryExpression
 						| ArrayExpression
@@ -15639,56 +15686,140 @@ declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 						| ThisExpression
 						| UpdateExpression
 						| YieldExpression
+						| SpreadElement
 						| PrivateIdentifier
-						| FunctionDeclaration
-						| MaybeNamedFunctionDeclaration
-						| VariableDeclaration
-						| ClassDeclaration
-						| MaybeNamedClassDeclaration
-					),
-					number
-				],
-				boolean | void
-			>
+						| Super
+					],
+					undefined | null | BasicEvaluatedExpression
+				>
+		>;
+		evaluateIdentifier: HookMap<
+			PathTaps<[number], undefined | null | BasicEvaluatedExpression> &
+				SyncBailHook<
+					[Identifier | MemberExpression | MetaProperty | ThisExpression],
+					undefined | null | BasicEvaluatedExpression
+				>
+		>;
+		evaluateDefinedIdentifier: HookMap<
+			PathTaps<[number], undefined | null | BasicEvaluatedExpression> &
+				SyncBailHook<
+					[Identifier | MemberExpression | ThisExpression],
+					undefined | null | BasicEvaluatedExpression
+				>
+		>;
+		/**
+		 * @since 5.73.0
+		 */
+		evaluateNewExpression: HookMap<
+			PathTaps<[number], undefined | null | BasicEvaluatedExpression> &
+				SyncBailHook<
+					[NewExpression],
+					undefined | null | BasicEvaluatedExpression
+				>
+		>;
+		/**
+		 * @since 5.73.0
+		 */
+		evaluateCallExpression: HookMap<
+			PathTaps<[number], undefined | null | BasicEvaluatedExpression> &
+				SyncBailHook<
+					[CallExpression],
+					undefined | null | BasicEvaluatedExpression
+				>
+		>;
+		evaluateCallExpressionMember: HookMap<
+			PathTaps<
+				[number, BasicEvaluatedExpression],
+				undefined | null | BasicEvaluatedExpression
+			> &
+				SyncBailHook<
+					[CallExpression, BasicEvaluatedExpression],
+					undefined | null | BasicEvaluatedExpression
+				>
+		>;
+		isPure: HookMap<
+			PathTaps<[number, number], boolean | void> &
+				SyncBailHook<
+					[
+						(
+							| ImportExpressionImport
+							| UnaryExpression
+							| ArrayExpression
+							| ArrowFunctionExpression
+							| AssignmentExpression
+							| AwaitExpression
+							| BinaryExpression
+							| SimpleCallExpression
+							| NewExpression
+							| ChainExpression
+							| ClassExpression
+							| ConditionalExpression
+							| FunctionExpression
+							| Identifier
+							| SimpleLiteral
+							| RegExpLiteral
+							| BigIntLiteral
+							| LogicalExpression
+							| MemberExpression
+							| MetaProperty
+							| ObjectExpression
+							| SequenceExpression
+							| TaggedTemplateExpression
+							| TemplateLiteral
+							| ThisExpression
+							| UpdateExpression
+							| YieldExpression
+							| PrivateIdentifier
+							| FunctionDeclaration
+							| MaybeNamedFunctionDeclaration
+							| VariableDeclaration
+							| ClassDeclaration
+							| MaybeNamedClassDeclaration
+						),
+						number
+					],
+					boolean | void
+				>
 		>;
 		/**
 		 * Every statement the hoisting pass reads, which a tap on this turns
 		 * back into a walk of them all. Tap `preStatementByType` instead.
 		 * @deprecated TODO in the next major release: remove, with the statement walk it turns on
 		 */
-		preStatement: SyncBailHook<
-			[
-				| ImportDeclaration
-				| ExportNamedDeclaration
-				| ExportAllDeclaration
-				| FunctionDeclaration
-				| MaybeNamedFunctionDeclaration
-				| VariableDeclaration
-				| ClassDeclaration
-				| MaybeNamedClassDeclaration
-				| ExpressionStatement
-				| BlockStatement
-				| StaticBlock
-				| EmptyStatement
-				| DebuggerStatement
-				| WithStatement
-				| ReturnStatement
-				| LabeledStatement
-				| BreakStatement
-				| ContinueStatement
-				| IfStatement
-				| SwitchStatement
-				| ThrowStatement
-				| TryStatement
-				| WhileStatement
-				| DoWhileStatement
-				| ForStatement
-				| ForInStatement
-				| ForOfStatement
-				| ExportDefaultDeclaration
-			],
-			boolean | void
-		>;
+		preStatement: PathTaps<[number], boolean | void> &
+			SyncBailHook<
+				[
+					| ImportDeclaration
+					| ExportNamedDeclaration
+					| ExportAllDeclaration
+					| FunctionDeclaration
+					| MaybeNamedFunctionDeclaration
+					| VariableDeclaration
+					| ClassDeclaration
+					| MaybeNamedClassDeclaration
+					| ExpressionStatement
+					| BlockStatement
+					| StaticBlock
+					| EmptyStatement
+					| DebuggerStatement
+					| WithStatement
+					| ReturnStatement
+					| LabeledStatement
+					| BreakStatement
+					| ContinueStatement
+					| IfStatement
+					| SwitchStatement
+					| ThrowStatement
+					| TryStatement
+					| WhileStatement
+					| DoWhileStatement
+					| ForStatement
+					| ForInStatement
+					| ForOfStatement
+					| ExportDefaultDeclaration
+				],
+				boolean | void
+			>;
 		/**
 		 * Each declaration the parser records: a variable, function or class
 		 * one. Any other type turns the pass back into a walk of every
@@ -15696,6 +15827,47 @@ declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 		 * @since 5.109.0
 		 */
 		preStatementByType: HookMap<
+			PathTaps<[number], boolean | void> &
+				SyncBailHook<
+					[
+						| ImportDeclaration
+						| ExportNamedDeclaration
+						| ExportAllDeclaration
+						| FunctionDeclaration
+						| MaybeNamedFunctionDeclaration
+						| VariableDeclaration
+						| ClassDeclaration
+						| MaybeNamedClassDeclaration
+						| ExpressionStatement
+						| BlockStatement
+						| StaticBlock
+						| EmptyStatement
+						| DebuggerStatement
+						| WithStatement
+						| ReturnStatement
+						| LabeledStatement
+						| BreakStatement
+						| ContinueStatement
+						| IfStatement
+						| SwitchStatement
+						| ThrowStatement
+						| TryStatement
+						| WhileStatement
+						| DoWhileStatement
+						| ForStatement
+						| ForInStatement
+						| ForOfStatement
+						| ExportDefaultDeclaration
+					],
+					boolean | void
+				>
+		>;
+		/**
+		 * Every statement the block pass reads, which a tap on this turns back
+		 * into a walk of them all. Tap `blockPreStatementByType` instead.
+		 * @deprecated TODO in the next major release: remove, with the statement walk it turns on
+		 */
+		blockPreStatement: PathTaps<[number], boolean | void> &
 			SyncBailHook<
 				[
 					| ImportDeclaration
@@ -15728,46 +15900,7 @@ declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 					| ExportDefaultDeclaration
 				],
 				boolean | void
-			>
-		>;
-		/**
-		 * Every statement the block pass reads, which a tap on this turns back
-		 * into a walk of them all. Tap `blockPreStatementByType` instead.
-		 * @deprecated TODO in the next major release: remove, with the statement walk it turns on
-		 */
-		blockPreStatement: SyncBailHook<
-			[
-				| ImportDeclaration
-				| ExportNamedDeclaration
-				| ExportAllDeclaration
-				| FunctionDeclaration
-				| MaybeNamedFunctionDeclaration
-				| VariableDeclaration
-				| ClassDeclaration
-				| MaybeNamedClassDeclaration
-				| ExpressionStatement
-				| BlockStatement
-				| StaticBlock
-				| EmptyStatement
-				| DebuggerStatement
-				| WithStatement
-				| ReturnStatement
-				| LabeledStatement
-				| BreakStatement
-				| ContinueStatement
-				| IfStatement
-				| SwitchStatement
-				| ThrowStatement
-				| TryStatement
-				| WhileStatement
-				| DoWhileStatement
-				| ForStatement
-				| ForInStatement
-				| ForOfStatement
-				| ExportDefaultDeclaration
-			],
-			boolean | void
-		>;
+			>;
 		/**
 		 * Each statement the parser records for the block pass: a variable, class
 		 * or export declaration. Any other type turns the pass back into a walk
@@ -15775,39 +15908,40 @@ declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 		 * @since 5.109.0
 		 */
 		blockPreStatementByType: HookMap<
-			SyncBailHook<
-				[
-					| ImportDeclaration
-					| ExportNamedDeclaration
-					| ExportAllDeclaration
-					| FunctionDeclaration
-					| MaybeNamedFunctionDeclaration
-					| VariableDeclaration
-					| ClassDeclaration
-					| MaybeNamedClassDeclaration
-					| ExpressionStatement
-					| BlockStatement
-					| StaticBlock
-					| EmptyStatement
-					| DebuggerStatement
-					| WithStatement
-					| ReturnStatement
-					| LabeledStatement
-					| BreakStatement
-					| ContinueStatement
-					| IfStatement
-					| SwitchStatement
-					| ThrowStatement
-					| TryStatement
-					| WhileStatement
-					| DoWhileStatement
-					| ForStatement
-					| ForInStatement
-					| ForOfStatement
-					| ExportDefaultDeclaration
-				],
-				boolean | void
-			>
+			PathTaps<[number], boolean | void> &
+				SyncBailHook<
+					[
+						| ImportDeclaration
+						| ExportNamedDeclaration
+						| ExportAllDeclaration
+						| FunctionDeclaration
+						| MaybeNamedFunctionDeclaration
+						| VariableDeclaration
+						| ClassDeclaration
+						| MaybeNamedClassDeclaration
+						| ExpressionStatement
+						| BlockStatement
+						| StaticBlock
+						| EmptyStatement
+						| DebuggerStatement
+						| WithStatement
+						| ReturnStatement
+						| LabeledStatement
+						| BreakStatement
+						| ContinueStatement
+						| IfStatement
+						| SwitchStatement
+						| ThrowStatement
+						| TryStatement
+						| WhileStatement
+						| DoWhileStatement
+						| ForStatement
+						| ForInStatement
+						| ForOfStatement
+						| ExportDefaultDeclaration
+					],
+					boolean | void
+				>
 		>;
 		statement: StatementPathTap &
 			SyncBailHook<
@@ -15844,65 +15978,224 @@ declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 				boolean | void,
 				{ path?: boolean }
 			>;
-		statementIf: SyncBailHook<[IfStatement], boolean | void>;
+		statementIf: PathTaps<[number], boolean | void> &
+			SyncBailHook<[IfStatement], boolean | void>;
 		/**
 		 * @since 5.105.0
 		 */
-		collectGuards: SyncBailHook<[Expression], void | GuardCollection>;
-		classExtendsExpression: SyncBailHook<
-			[
-				Expression,
-				ClassExpression | ClassDeclaration | MaybeNamedClassDeclaration
-			],
-			boolean | void
-		>;
-		classBodyElement: SyncBailHook<
-			[
-				StaticBlock | MethodDefinition | PropertyDefinition,
-				ClassExpression | ClassDeclaration | MaybeNamedClassDeclaration
-			],
-			boolean | void
-		>;
+		collectGuards: PathTaps<[number], void | GuardCollection> &
+			SyncBailHook<[Expression], void | GuardCollection>;
+		classExtendsExpression: PathTaps<[number, number], boolean | void> &
+			SyncBailHook<
+				[
+					Expression,
+					ClassExpression | ClassDeclaration | MaybeNamedClassDeclaration
+				],
+				boolean | void
+			>;
+		classBodyElement: PathTaps<[number, number], boolean | void> &
+			SyncBailHook<
+				[
+					StaticBlock | MethodDefinition | PropertyDefinition,
+					ClassExpression | ClassDeclaration | MaybeNamedClassDeclaration
+				],
+				boolean | void
+			>;
 		/**
 		 * @since 5.36.0
 		 */
-		classBodyValue: SyncBailHook<
-			[
-				Expression,
-				MethodDefinition | PropertyDefinition,
-				ClassExpression | ClassDeclaration | MaybeNamedClassDeclaration
-			],
-			boolean | void
+		classBodyValue: PathTaps<[number, number, number], boolean | void> &
+			SyncBailHook<
+				[
+					Expression,
+					MethodDefinition | PropertyDefinition,
+					ClassExpression | ClassDeclaration | MaybeNamedClassDeclaration
+				],
+				boolean | void
+			>;
+		label: HookMap<
+			PathTaps<[number], boolean | void> &
+				SyncBailHook<[LabeledStatement], boolean | void>
 		>;
-		label: HookMap<SyncBailHook<[LabeledStatement], boolean | void>>;
-		import: SyncBailHook<[ImportDeclaration, ImportSource], boolean | void>;
-		importSpecifier: SyncBailHook<
-			[ImportDeclaration, ImportSource, null | string, string],
+		import: PathTaps<[number, ImportSource], boolean | void> &
+			SyncBailHook<[ImportDeclaration, ImportSource], boolean | void>;
+		importSpecifier: PathTaps<
+			[number, ImportSource, null | string, string],
 			boolean | void
-		>;
-		export: SyncBailHook<
-			[ExportNamedDeclaration | ExportDefaultDeclaration],
+		> &
+			SyncBailHook<
+				[ImportDeclaration, ImportSource, null | string, string],
+				boolean | void
+			>;
+		export: PathTaps<[number], boolean | void> &
+			SyncBailHook<
+				[ExportNamedDeclaration | ExportDefaultDeclaration],
+				boolean | void
+			>;
+		exportImport: PathTaps<[number, ImportSource], boolean | void> &
+			SyncBailHook<
+				[ExportNamedDeclaration | ExportAllDeclaration, ImportSource],
+				boolean | void
+			>;
+		exportDeclaration: PathTaps<[number, number], boolean | void> &
+			SyncBailHook<
+				[
+					(
+						| ExportNamedDeclaration
+						| ExportAllDeclaration
+						| ExportDefaultDeclaration
+					),
+					Declaration
+				],
+				boolean | void
+			>;
+		exportExpression: PathTaps<[number, number], boolean | void> &
+			SyncBailHook<
+				[
+					ExportDefaultDeclaration,
+					(
+						| ImportExpressionImport
+						| UnaryExpression
+						| ArrayExpression
+						| ArrowFunctionExpression
+						| AssignmentExpression
+						| AwaitExpression
+						| BinaryExpression
+						| SimpleCallExpression
+						| NewExpression
+						| ChainExpression
+						| ClassExpression
+						| ConditionalExpression
+						| FunctionExpression
+						| Identifier
+						| SimpleLiteral
+						| RegExpLiteral
+						| BigIntLiteral
+						| LogicalExpression
+						| MemberExpression
+						| MetaProperty
+						| ObjectExpression
+						| SequenceExpression
+						| TaggedTemplateExpression
+						| TemplateLiteral
+						| ThisExpression
+						| UpdateExpression
+						| YieldExpression
+						| MaybeNamedFunctionDeclaration
+						| MaybeNamedClassDeclaration
+					)
+				],
+				boolean | void
+			>;
+		exportSpecifier: PathTaps<
+			[number, string, string, undefined | number],
 			boolean | void
-		>;
-		exportImport: SyncBailHook<
-			[ExportNamedDeclaration | ExportAllDeclaration, ImportSource],
+		> &
+			SyncBailHook<
+				[
+					(
+						| ExportNamedDeclaration
+						| ExportAllDeclaration
+						| ExportDefaultDeclaration
+					),
+					string,
+					string,
+					undefined | number
+				],
+				boolean | void
+			>;
+		exportImportSpecifier: PathTaps<
+			[number, ImportSource, null | string, null | string, undefined | number],
 			boolean | void
+		> &
+			SyncBailHook<
+				[
+					ExportNamedDeclaration | ExportAllDeclaration,
+					ImportSource,
+					null | string,
+					null | string,
+					undefined | number
+				],
+				boolean | void
+			>;
+		preDeclarator: PathTaps<[number, number], boolean | void> &
+			SyncBailHook<[VariableDeclarator, VariableDeclaration], boolean | void>;
+		declarator: PathTaps<[number, number], boolean | void> &
+			SyncBailHook<[VariableDeclarator, Statement], boolean | void>;
+		varDeclaration: HookMap<
+			PathTaps<[number], boolean | void> &
+				SyncBailHook<[Identifier], boolean | void>
 		>;
-		exportDeclaration: SyncBailHook<
-			[
-				(
-					| ExportNamedDeclaration
-					| ExportAllDeclaration
-					| ExportDefaultDeclaration
-				),
-				Declaration
-			],
+		varDeclarationLet: HookMap<
+			PathTaps<[number], boolean | void> &
+				SyncBailHook<[Identifier], boolean | void>
+		>;
+		varDeclarationConst: HookMap<
+			PathTaps<[number], boolean | void> &
+				SyncBailHook<[Identifier], boolean | void>
+		>;
+		/**
+		 * @since 5.100.0
+		 */
+		varDeclarationUsing: HookMap<
+			PathTaps<[number], boolean | void> &
+				SyncBailHook<[Identifier], boolean | void>
+		>;
+		varDeclarationVar: HookMap<
+			PathTaps<[number], boolean | void> &
+				SyncBailHook<[Identifier], boolean | void>
+		>;
+		pattern: HookMap<
+			PathTaps<[number], boolean | void> &
+				SyncBailHook<[Identifier], boolean | void>
+		>;
+		/**
+		 * @since 5.101.3
+		 */
+		collectDestructuringAssignmentProperties: PathTaps<
+			[number],
 			boolean | void
+		> &
+			SyncBailHook<[Expression], boolean | void>;
+		canRename: HookMap<
+			PathTaps<[number], boolean | void> &
+				SyncBailHook<[Expression], boolean | void>
 		>;
-		exportExpression: SyncBailHook<
-			[
-				ExportDefaultDeclaration,
-				(
+		rename: HookMap<
+			PathTaps<[number], boolean | void> &
+				SyncBailHook<[Expression], boolean | void>
+		>;
+		assign: HookMap<
+			PathTaps<[number], boolean | void> &
+				SyncBailHook<[AssignmentExpression], boolean | void>
+		>;
+		write: HookMap<
+			PathTaps<[number], boolean | void> &
+				SyncBailHook<[WriteStatement], boolean | void>
+		>;
+		writeMemberChain: HookMap<
+			PathTaps<[number, string[]], boolean | void> &
+				SyncBailHook<[WriteStatement, string[]], boolean | void>
+		>;
+		assignMemberChain: HookMap<
+			PathTaps<[number, string[]], boolean | void> &
+				SyncBailHook<[AssignmentExpression, string[]], boolean | void>
+		>;
+		typeof: HookMap<
+			PathTaps<[number], boolean | void> &
+				SyncBailHook<[Expression], boolean | void>
+		>;
+		importCall: PathTaps<[number, number], boolean | void> &
+			SyncBailHook<
+				[
+					ImportExpressionJavascriptParser,
+					undefined | SimpleCallExpression | NewExpression
+				],
+				boolean | void
+			>;
+		topLevelAwait: PathTaps<[number], boolean | void> &
+			SyncBailHook<
+				[
 					| ImportExpressionImport
 					| UnaryExpression
 					| ArrayExpression
@@ -15930,157 +16223,93 @@ declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 					| ThisExpression
 					| UpdateExpression
 					| YieldExpression
-					| MaybeNamedFunctionDeclaration
-					| MaybeNamedClassDeclaration
-				)
-			],
-			boolean | void
-		>;
-		exportSpecifier: SyncBailHook<
-			[
-				(
-					| ExportNamedDeclaration
-					| ExportAllDeclaration
-					| ExportDefaultDeclaration
-				),
-				string,
-				string,
-				undefined | number
-			],
-			boolean | void
-		>;
-		exportImportSpecifier: SyncBailHook<
-			[
-				ExportNamedDeclaration | ExportAllDeclaration,
-				ImportSource,
-				null | string,
-				null | string,
-				undefined | number
-			],
-			boolean | void
-		>;
-		preDeclarator: SyncBailHook<
-			[VariableDeclarator, VariableDeclaration],
-			boolean | void
-		>;
-		declarator: SyncBailHook<[VariableDeclarator, Statement], boolean | void>;
-		varDeclaration: HookMap<SyncBailHook<[Identifier], boolean | void>>;
-		varDeclarationLet: HookMap<SyncBailHook<[Identifier], boolean | void>>;
-		varDeclarationConst: HookMap<SyncBailHook<[Identifier], boolean | void>>;
-		/**
-		 * @since 5.100.0
-		 */
-		varDeclarationUsing: HookMap<SyncBailHook<[Identifier], boolean | void>>;
-		varDeclarationVar: HookMap<SyncBailHook<[Identifier], boolean | void>>;
-		pattern: HookMap<SyncBailHook<[Identifier], boolean | void>>;
-		/**
-		 * @since 5.101.3
-		 */
-		collectDestructuringAssignmentProperties: SyncBailHook<
-			[Expression],
-			boolean | void
-		>;
-		canRename: HookMap<SyncBailHook<[Expression], boolean | void>>;
-		rename: HookMap<SyncBailHook<[Expression], boolean | void>>;
-		assign: HookMap<SyncBailHook<[AssignmentExpression], boolean | void>>;
-		write: HookMap<SyncBailHook<[WriteStatement], boolean | void>>;
-		writeMemberChain: HookMap<
-			SyncBailHook<[WriteStatement, string[]], boolean | void>
-		>;
-		assignMemberChain: HookMap<
-			SyncBailHook<[AssignmentExpression, string[]], boolean | void>
-		>;
-		typeof: HookMap<SyncBailHook<[Expression], boolean | void>>;
-		importCall: SyncBailHook<
-			[
-				ImportExpressionJavascriptParser,
-				undefined | SimpleCallExpression | NewExpression
-			],
-			boolean | void
-		>;
-		topLevelAwait: SyncBailHook<
-			[
-				| ImportExpressionImport
-				| UnaryExpression
-				| ArrayExpression
-				| ArrowFunctionExpression
-				| AssignmentExpression
-				| AwaitExpression
-				| BinaryExpression
-				| SimpleCallExpression
-				| NewExpression
-				| ChainExpression
-				| ClassExpression
-				| ConditionalExpression
-				| FunctionExpression
-				| Identifier
-				| SimpleLiteral
-				| RegExpLiteral
-				| BigIntLiteral
-				| LogicalExpression
-				| MemberExpression
-				| MetaProperty
-				| ObjectExpression
-				| SequenceExpression
-				| TaggedTemplateExpression
-				| TemplateLiteral
-				| ThisExpression
-				| UpdateExpression
-				| YieldExpression
-				| VariableDeclaration
-				| ForOfStatement
-			],
-			boolean | void
-		>;
-		call: HookMap<SyncBailHook<[CallExpression], boolean | void>>;
-		callMemberChain: HookMap<
-			SyncBailHook<
-				[CallExpression, string[], boolean[], [number, number][]],
-				boolean | void
-			>
-		>;
-		memberChainOfCallMemberChain: HookMap<
-			SyncBailHook<
-				[Expression, string[], CallExpression, string[], [number, number][]],
-				boolean | void
-			>
-		>;
-		callMemberChainOfCallMemberChain: HookMap<
-			SyncBailHook<
-				[
-					CallExpression,
-					string[],
-					CallExpression,
-					string[],
-					[number, number][]
+					| VariableDeclaration
+					| ForOfStatement
 				],
 				boolean | void
-			>
+			>;
+		call: HookMap<
+			PathTaps<[number], boolean | void> &
+				SyncBailHook<[CallExpression], boolean | void>
 		>;
-		optionalChaining: SyncBailHook<[ChainExpression], boolean | void>;
-		new: HookMap<SyncBailHook<[NewExpression], boolean | void>>;
+		/**
+		 * Something like "a.b()"
+		 */
+		callMemberChain: HookMap<
+			PathTaps<
+				[number, string[], boolean[], [number, number][]],
+				boolean | void
+			> &
+				SyncBailHook<
+					[CallExpression, string[], boolean[], [number, number][]],
+					boolean | void
+				>
+		>;
+		/**
+		 * Something like "a.b().c.d"
+		 */
+		memberChainOfCallMemberChain: HookMap<
+			PathTaps<
+				[number, string[], number, string[], [number, number][]],
+				boolean | void
+			> &
+				SyncBailHook<
+					[Expression, string[], CallExpression, string[], [number, number][]],
+					boolean | void
+				>
+		>;
+		/**
+		 * Something like "a.b().c.d()""
+		 */
+		callMemberChainOfCallMemberChain: HookMap<
+			PathTaps<
+				[number, string[], number, string[], [number, number][]],
+				boolean | void
+			> &
+				SyncBailHook<
+					[
+						CallExpression,
+						string[],
+						CallExpression,
+						string[],
+						[number, number][]
+					],
+					boolean | void
+				>
+		>;
+		optionalChaining: PathTaps<[number], boolean | void> &
+			SyncBailHook<[ChainExpression], boolean | void>;
+		new: HookMap<
+			PathTaps<[number], boolean | void> &
+				SyncBailHook<[NewExpression], boolean | void>
+		>;
 		/**
 		 * @since 5.71.0
 		 */
-		binaryExpression: SyncBailHook<[BinaryExpression], boolean | void>;
-		expression: HookMap<SyncBailHook<[Expression], boolean | void>>;
+		binaryExpression: PathTaps<[number], boolean | void> &
+			SyncBailHook<[BinaryExpression], boolean | void>;
+		expression: HookMap<
+			PathTaps<[number], boolean | void> &
+				SyncBailHook<[Expression], boolean | void>
+		>;
 		expressionMemberChain: HookMap<
-			SyncBailHook<
-				[MemberExpression, string[], boolean[], [number, number][]],
+			PathTaps<
+				[number, string[], boolean[], [number, number][]],
 				boolean | void
-			>
+			> &
+				SyncBailHook<
+					[MemberExpression, string[], boolean[], [number, number][]],
+					boolean | void
+				>
 		>;
 		unhandledExpressionMemberChain: HookMap<
-			SyncBailHook<[MemberExpression, string[]], boolean | void>
+			PathTaps<[number, string[]], boolean | void> &
+				SyncBailHook<[MemberExpression, string[]], boolean | void>
 		>;
-		expressionConditionalOperator: SyncBailHook<
-			[ConditionalExpression],
-			boolean | void
-		>;
-		expressionLogicalOperator: SyncBailHook<
-			[LogicalExpression],
-			boolean | void
-		>;
+		expressionConditionalOperator: PathTaps<[number], boolean | void> &
+			SyncBailHook<[ConditionalExpression], boolean | void>;
+		expressionLogicalOperator: PathTaps<[number], boolean | void> &
+			SyncBailHook<[LogicalExpression], boolean | void>;
 		program: ProgramPathTap &
 			SyncBailHook<
 				[Program, CommentJavascriptParser[]],
@@ -16090,12 +16319,14 @@ declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 		/**
 		 * @since 5.99.0
 		 */
-		terminate: SyncBailHook<[ReturnStatement | ThrowStatement], boolean | void>;
+		terminate: PathTaps<[number], boolean | void> &
+			SyncBailHook<[ReturnStatement | ThrowStatement], boolean | void>;
 		finish: SyncBailHook<[Program, CommentJavascriptParser[]], boolean | void>;
 		/**
 		 * @since 5.99.9
 		 */
-		unusedStatement: SyncBailHook<[Statement], boolean | void>;
+		unusedStatement: PathTaps<[number], boolean | void> &
+			SyncBailHook<[Statement], boolean | void>;
 	}>;
 	sourceType: "module" | "auto" | "script";
 	options: {
@@ -16996,8 +17227,10 @@ declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 	/**
 	 * Call hooks for expression.
 	 */
-	callHooksForExpression<T, R>(
-		hookMap: HookMap<SyncBailHook<T, R>>,
+	callHooksForExpression<
+		H extends { call(...args: HookArgument[]): HookArgument }
+	>(
+		hookMap: HookMap<H>,
 		expr:
 			| ImportExpressionImport
 			| UnaryExpression
@@ -17027,14 +17260,16 @@ declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 			| UpdateExpression
 			| YieldExpression
 			| Super,
-		...args: AsArray<T>
-	): undefined | R;
+		...args: Parameters<H["call"]>
+	): undefined | ReturnType<H["call"]>;
 
 	/**
 	 * Call hooks for expression with fallback.
 	 */
-	callHooksForExpressionWithFallback<T, R>(
-		hookMap: HookMap<SyncBailHook<T, R>>,
+	callHooksForExpressionWithFallback<
+		H extends { call(...args: HookArgument[]): HookArgument }
+	>(
+		hookMap: HookMap<H>,
 		expr:
 			| ImportExpressionImport
 			| UnaryExpression
@@ -17070,50 +17305,57 @@ declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 					name: string,
 					rootInfo: string | VariableInfo | ScopeInfo,
 					getMembers: () => string[]
-			  ) => R),
-		defined: undefined | ((result?: string) => undefined | R),
-		...args: AsArray<T>
-	): undefined | R;
+			  ) => ReturnType<H["call"]>),
+		defined:
+			undefined | ((result?: string) => undefined | ReturnType<H["call"]>),
+		...args: Parameters<H["call"]>
+	): undefined | ReturnType<H["call"]>;
 
 	/**
 	 * Call hooks for name.
 	 */
-	callHooksForName<T, R>(
-		hookMap: HookMap<SyncBailHook<T, R>>,
+	callHooksForName<H extends { call(...args: HookArgument[]): HookArgument }>(
+		hookMap: HookMap<H>,
 		name: string,
-		...args: AsArray<T>
-	): undefined | R;
+		...args: Parameters<H["call"]>
+	): undefined | ReturnType<H["call"]>;
 
 	/**
 	 * Call hooks for info.
 	 */
-	callHooksForInfo<T, R>(
-		hookMap: HookMap<SyncBailHook<T, R>>,
+	callHooksForInfo<H extends { call(...args: HookArgument[]): HookArgument }>(
+		hookMap: HookMap<H>,
 		info: ExportedVariableInfo,
-		...args: AsArray<T>
-	): undefined | R;
+		...args: Parameters<H["call"]>
+	): undefined | ReturnType<H["call"]>;
 
 	/**
 	 * Call hooks for info with fallback.
 	 */
-	callHooksForInfoWithFallback<T, R>(
-		hookMap: HookMap<SyncBailHook<T, R>>,
+	callHooksForInfoWithFallback<
+		H extends { call(...args: HookArgument[]): HookArgument }
+	>(
+		hookMap: HookMap<H>,
 		info: ExportedVariableInfo,
-		fallback: undefined | ((name: string) => undefined | R),
-		defined: undefined | ((result?: string) => undefined | R),
-		...args: AsArray<T>
-	): undefined | R;
+		fallback: undefined | ((name: string) => undefined | ReturnType<H["call"]>),
+		defined:
+			undefined | ((result?: string) => undefined | ReturnType<H["call"]>),
+		...args: Parameters<H["call"]>
+	): undefined | ReturnType<H["call"]>;
 
 	/**
 	 * Call hooks for name with fallback.
 	 */
-	callHooksForNameWithFallback<T, R>(
-		hookMap: HookMap<SyncBailHook<T, R>>,
+	callHooksForNameWithFallback<
+		H extends { call(...args: HookArgument[]): HookArgument }
+	>(
+		hookMap: HookMap<H>,
 		name: string,
-		fallback: undefined | ((value: string) => undefined | R),
-		defined: undefined | (() => R),
-		...args: AsArray<T>
-	): undefined | R;
+		fallback:
+			undefined | ((value: string) => undefined | ReturnType<H["call"]>),
+		defined: undefined | (() => ReturnType<H["call"]>),
+		...args: Parameters<H["call"]>
+	): undefined | ReturnType<H["call"]>;
 
 	/**
 	 * Processes the provided param.
@@ -17362,6 +17604,7 @@ declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 		expr:
 			| undefined
 			| null
+			| number
 			| ImportExpressionImport
 			| UnaryExpression
 			| ArrayExpression
@@ -17772,6 +18015,12 @@ declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 				rootInfo: ExportedVariableInfo;
 				getMembers: () => string[];
 		  };
+
+	/**
+	 * Whether nothing but the parser itself intercepts a hook: the id walk's
+	 * own interceptor only rewraps taps, so a fast path may ignore it.
+	 */
+	static ownInterceptorsOnly<T, R>(hook: Hook<T, R>): boolean;
 
 	/**
 	 * Whether a definition is a variable rather than a free name or a scope.
@@ -26659,6 +26908,26 @@ type PathLikeFs = string | Buffer | URL;
 type PathLikeResolver = string | URL | Buffer;
 type PathOrFileDescriptorFs = string | number | Buffer | URL;
 type PathOrFileDescriptorResolver = string | number | URL | Buffer;
+
+/**
+ * A hook taking taps that read its nodes through the path: the id walk calls
+ * it with node ids, a `{ path: true }` tap gets the path before them and any
+ * other tap the nodes' ESTree objects.
+ */
+declare interface PathTaps<T extends HookArgument[], R> {
+	/**
+	 * registers a tap reading the path
+	 */
+	tap: (
+		options: { name: string; path: true; stage?: number; before?: string },
+		fn: (path: JavascriptNodeReader, ...args: T) => R
+	) => void;
+
+	/**
+	 * fires every tap with node ids
+	 */
+	call: (...args: T) => R;
+}
 type Pattern =
 	| Identifier
 	| MemberExpression
@@ -32824,7 +33093,7 @@ declare interface StatementPathTap {
 	 */
 	tap: (
 		options: { name: string; path: true; stage?: number; before?: string },
-		fn: (path: JavascriptNodePath, statement: number) => boolean | void
+		fn: (path: JavascriptNodeReader, statement: number) => boolean | void
 	) => void;
 
 	/**
