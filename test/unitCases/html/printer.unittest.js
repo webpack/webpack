@@ -7103,6 +7103,16 @@ describe("SourceProcessor — what minifying cannot turn into markup", () => {
 		expect(minify("<!doctype html><a title=<%x&lt;%y>z</a>")).toBe(
 			"<!doctype html><a title=<%x&lt;%y>z</a>"
 		);
+		// Only a tail the next tag would fuse with is respelled.
+		expect(minify("<!doctype html><p><%= a %> &lt;%= b %&gt; &am</p>")).toBe(
+			"<!doctype html><p><%= a %> &lt;%= b %&gt; &amp;am"
+		);
+		expect(minify("<!doctype html><p><%= a %> &lt;%= b %&gt; &amp</p>")).toBe(
+			"<!doctype html><p><%= a %> &lt;%= b %&gt; &amp;"
+		);
+		expect(minify("<!doctype html><p><%= a %> &lt;%= b %&gt; <</p>")).toBe(
+			"<!doctype html><p><%= a %> &lt;%= b %&gt; &lt;"
+		);
 		// A rebuilt clone keeps the spelling the same way.
 		expect(minify('<!doctype html><b title="<%= c %> &lt;%= d %&gt;"><p>a</b>b')).toBe(
 			'<!doctype html><b title="<%= c %> &lt;%= d %&gt;"></b><p><b title="<%= c %> &lt;%= d %&gt;">a</b>b'
