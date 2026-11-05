@@ -7092,6 +7092,21 @@ describe("SourceProcessor — what minifying cannot turn into markup", () => {
 		expect(
 			minify('<!doctype html><a title="&lt;!--#echo --&gt; &lt;b&gt;">x</a>')
 		).toBe('<!doctype html><a title="&lt;!--#echo --> <b>">x</a>');
+		// Both kinds in one text or value: each keeps the spelling it was given.
+		expect(
+			minify(
+				'<!doctype html><p><%= a %> &lt;%= b %&gt;</p><a title="<%= c %> &lt;%= d %&gt;">x</a>'
+			)
+		).toBe(
+			'<!doctype html><p><%= a %> &lt;%= b %&gt;</p><a title="<%= c %> &lt;%= d %&gt;">x</a>'
+		);
+		expect(minify("<!doctype html><a title=<%x&lt;%y>z</a>")).toBe(
+			"<!doctype html><a title=<%x&lt;%y>z</a>"
+		);
+		// A rebuilt clone keeps the spelling the same way.
+		expect(minify('<!doctype html><b title="<%= c %> &lt;%= d %&gt;"><p>a</b>b')).toBe(
+			'<!doctype html><b title="<%= c %> &lt;%= d %&gt;"></b><p><b title="<%= c %> &lt;%= d %&gt;">a</b>b'
+		);
 		// One the source wrote stays live, whatever else the value re-spells.
 		expect(
 			minify(
