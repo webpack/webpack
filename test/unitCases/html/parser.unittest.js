@@ -1,5 +1,7 @@
 "use strict";
 
+const { fixture } = require("../../helpers/fixture");
+
 // cspell:ignore apos scrip
 // cspell:ignore selectedcontent mtext mglyph colgroups viewbox definitionurl
 // cspell:ignore Silmaril basefont bgsound framesets isindex
@@ -79,7 +81,7 @@ describe("HtmlSyntax — the facade", () => {
 
 	it("holds no printer until something prints", () => {
 		const processor = new syntax.SourceProcessor();
-		processor.process("<p>x</p>");
+		processor.process(fixture("html", "html-syntax-the-facade-holds-no-printer-until-something-prints"));
 		expect(processor._printer).toBeUndefined();
 		expect(processor.process("<p>x</p>", { mode: "minify" }).code).toBe("<p>x");
 		expect(typeof processor._printer).toBe("function");
@@ -856,7 +858,7 @@ describe("parseHtml — parseError", () => {
 		["<!DOCTYPE html><script><!--<a", undefined, ["eof-in-script-html-comment-like-text", "expected-named-closing-tag-but-got-eof"]],
 		["<!DOCTYPE html><script><!--</", undefined, ["eof-in-script-html-comment-like-text", "expected-named-closing-tag-but-got-eof"]],
 		["<!DOCTYPE html><script><!--</script", undefined, ["eof-in-script-html-comment-like-text", "expected-named-closing-tag-but-got-eof"]],
-		["</b test", undefined, ["eof-in-tag", "expected-doctype-but-got-eof"]],
+		[fixture("html", "source-processor-tree-construction-corpus-round-trips-beautify-prints-b-test"), undefined, ["eof-in-tag", "expected-doctype-but-got-eof"]],
 		["<!DOCTYPE html><table><!DOCTYPE html><table></table></table>", undefined, ["unexpected-doctype", "unexpected-start-tag-implies-end-tag", "unexpected-end-tag"]],
 		["<!DOCTYPE html><table><input type=hidden><form><form>", undefined, ["unexpected-hidden-input-in-table", "unexpected-form-in-table", "unexpected-form-in-table", "expected-closing-tag-but-got-eof"]],
 		["<!DOCTYPE html><table><tr><b>x y</b>", undefined, ["unexpected-start-tag-implies-table-voodoo", "unexpected-character-implies-table-voodoo", "unexpected-character-implies-table-voodoo", "unexpected-character-implies-table-voodoo", "unexpected-end-tag-implies-table-voodoo", "expected-closing-tag-but-got-eof"]],
@@ -945,14 +947,6 @@ describe("parseHtml — SourceProcessor", () => {
 	const { SourceProcessor } = require("../../../lib/html/syntax");
 const { NodeType } = require("../../../lib/html/syntax-parser");
 
-	it("prints an implied opener only when its first piece needs it", () => {
-		// Leading whitespace is what the modes would drop, so it brings the tag back.
-		const minify = (/** @type {string} */ src) =>
-			new SourceProcessor().process(src, { mode: "minify" }).code;
-		expect(minify("</body> foo")).toBe("<body> foo</body>");
-		expect(minify("<template></template>")).toBe("<template></template>");
-	});
-
 	it("fires enter / exit visitors in source order", () => {
 		/** @type {string[]} */
 		const log = [];
@@ -966,7 +960,7 @@ const { NodeType } = require("../../../lib/html/syntax-parser");
 					[NodeType.Text]: (path) => log.push(`text:${path.value()}`)
 				})
 			)
-			.process("<div><span>a</span>b</div>");
+			.process(fixture("html", "parse-html-source-processor-fires-enter-exit-visitors-in-source-order"));
 		expect(log).toEqual([
 			"enter:html",
 			"enter:head",
@@ -990,7 +984,7 @@ const { NodeType } = require("../../../lib/html/syntax-parser");
 			.use({
 				[NodeType.Document]: (path) => seen.push([path.type(), path.parent])
 			})
-			.process("<p>x");
+			.process(fixture("html", "parse-html-source-processor-visits-the-document-root-with-a-null-parent"));
 		expect(seen).toEqual([[NodeType.Document, null]]);
 	});
 
@@ -1002,7 +996,7 @@ const { NodeType } = require("../../../lib/html/syntax-parser");
 				[NodeType.Doctype]: () => log.push("doctype"),
 				[NodeType.Comment]: (path) => log.push(`comment:${path.value()}`)
 			})
-			.process("<!DOCTYPE html><!--c--><p>x</p>");
+			.process(fixture("html", "parse-html-source-processor-fires-comment-doctype-visitors"));
 		expect(log).toEqual(["doctype", "comment:c"]);
 	});
 
@@ -1016,7 +1010,7 @@ const { NodeType } = require("../../../lib/html/syntax-parser");
 					if (path.name() === "div") path.skipChildren();
 				}
 			})
-			.process("<div><span>a</span></div><p>b</p>");
+			.process(fixture("html", "parse-html-source-processor-path-skip-children-stops-descent-into-a-node"));
 		expect(log).toEqual(["html", "head", "body", "div", "p"]);
 	});
 
@@ -1028,7 +1022,7 @@ const { NodeType } = require("../../../lib/html/syntax-parser");
 				[NodeType.DocumentFragment]: () => log.push("fragment"),
 				[NodeType.Element]: (path) => log.push(path.name())
 			})
-			.process("<template><p>x</p></template>");
+			.process(fixture("html", "parse-html-source-processor-walks-template-content-as-a-document-fragment"));
 		expect(log).toEqual(["html", "head", "template", "fragment", "p", "body"]);
 	});
 
@@ -1039,7 +1033,7 @@ const { NodeType } = require("../../../lib/html/syntax-parser");
 			.use({ [NodeType.Element]: () => a++ })
 			.use({ [NodeType.Element]: () => b++ });
 		expect(sp).toBeInstanceOf(SourceProcessor);
-		sp.process("<p>x");
+		sp.process(fixture("html", "parse-html-source-processor-visits-the-document-root-with-a-null-parent"));
 		expect(a).toBe(b);
 		expect(a).toBeGreaterThan(0);
 	});
@@ -1820,7 +1814,7 @@ describe("SourceProcessor — streamed walk recycling", () => {
 	it("materializes a streamed implied tag as the walked one does", () => {
 		// The streamed path decides this where the node is known, the walked one on
 		// the first piece emitted, so the two have to agree on the same document.
-		const opening = "<tr><style>a{color:red}</style>";
+		const opening = fixture("html", "source-processor-remove-implied-tags-materializes-an-implied-tag-whose-content");
 		/**
 		 * @param {string} src source
 		 * @returns {string} the minified document
@@ -1831,7 +1825,7 @@ describe("SourceProcessor — streamed walk recycling", () => {
 				removeImpliedTags: true
 			}).code;
 		const walked = minify(`${opening}<p>x</p>`);
-		const streamed = minify(`${opening}${"<p>x</p>".repeat(BIG)}`);
+		const streamed = minify(`${opening}${fixture("html", "html-syntax-the-facade-holds-no-printer-until-something-prints").repeat(BIG)}`);
 		expect(streamed.slice(0, walked.length)).toBe(walked);
 	});
 
@@ -1885,7 +1879,7 @@ describe("SourceProcessor — streamed walk recycling", () => {
 			// split the node too, so one text child stays one visit. The leading
 			// paragraphs push the parse past the threshold before the entity run.
 			.process(
-				`<!DOCTYPE html><html><body>${"<p>x</p>".repeat(
+				`<!DOCTYPE html><html><body>${fixture("html", "html-syntax-the-facade-holds-no-printer-until-something-prints").repeat(
 					BIG
 				)}<p id="tail">${"a&amp;b".repeat(2000)}</p></body></html>`
 			);
@@ -1904,7 +1898,7 @@ describe("SourceProcessor — streamed walk recycling", () => {
 		// `div` inside stays open, so nothing has finished. Reconciling there
 		// closes and re-enters the live `div`, which only the visit count catches.
 		const log = walk(
-			`<!DOCTYPE html><html><body><form>${"<p>x</p>".repeat(
+			`<!DOCTYPE html><html><body><form>${fixture("html", "html-syntax-the-facade-holds-no-printer-until-something-prints").repeat(
 				BIG
 			)}<div></form><p>y</p></div></body></html>`
 		);
@@ -1920,7 +1914,7 @@ describe("SourceProcessor — streamed walk recycling", () => {
 		// is streaming yet has never entered the form when `</form>` takes it off
 		// the stack. Keying the halt on "was it entered" loses the whole subtree.
 		const log = walk(
-			`<!DOCTYPE html><html><body>${"<p>x</p>".repeat(
+			`<!DOCTYPE html><html><body>${fixture("html", "html-syntax-the-facade-holds-no-printer-until-something-prints").repeat(
 				BIG
 			)}<form><div></form><p>y</p></div></body></html>`
 		);
@@ -1937,7 +1931,7 @@ describe("SourceProcessor — streamed walk recycling", () => {
 	});
 
 	it("streams tables, where flushing is held back", () => {
-		const log = walk(bigBody("<table><tr><td>a</td></tr></table>", BIG_ROWS));
+		const log = walk(bigBody(fixture("html", "source-processor-the-per-transform-switches-keeps-a-parser-inserted-table-group-5"), BIG_ROWS));
 		expect(log.filter((l) => l === "+table")).toHaveLength(BIG_ROWS);
 		expect(log.filter((l) => l === "+td")).toHaveLength(BIG_ROWS);
 	});
@@ -1945,7 +1939,7 @@ describe("SourceProcessor — streamed walk recycling", () => {
 	it.each([
 		[
 			"below the threshold",
-			"<!DOCTYPE html><html><body><p>a</p></body></html>"
+			fixture("html", "source-processor-streamed-walk-recycling-honours-skip-children-on-the-root-below")
 		],
 		["past the threshold", bigBody("<p><b>x</b></p>")]
 	])("honours skipChildren() on the root, %s", (_label, src) => {
@@ -1983,7 +1977,7 @@ describe("SourceProcessor — streamed walk offsets", () => {
 		const SRC = [
 			"<!DOCTYPE html><html><head><title>t</title>",
 			'<script src="a.js"></script>',
-			"<style>.a{color:red}</style>",
+			fixture("html", "source-processor-render-embedded-source-keeps-the-body-when-the-renderer-throws"),
 			'<link rel="stylesheet" href="a.css">',
 			"</head><body><p>x</p></body></html>"
 		].join("");
@@ -2095,7 +2089,7 @@ describe("parseHtml — path accessor completeness", () => {
 	});
 
 	it("exposes node, parent links and attribute spans on the path", () => {
-		const SRC = '<!DOCTYPE html PUBLIC "p" "s"><div id="d" checked>x</div>';
+		const SRC = fixture("html", "parse-html-path-accessor-completeness-exposes-node-parent-links-and-attribute");
 		/** @type {string[]} */
 		const log = [];
 		new SourceProcessor()
@@ -2274,10 +2268,7 @@ describe("parseHtml — path accessor completeness", () => {
 	it("clears the foster-region marks a print left on reused node slots", () => {
 		const { FLAG_FOSTER_REGION } = require("../../../lib/html/syntax-parser");
 		// A run no re-nesting reproduces prints from source, marking its holder.
-		const source = "<dt><table> </nav>x<p>";
-		expect(
-			new SourceProcessor().process(source, { mode: "minify" }).code
-		).toBe(source);
+		const source = fixture("html", "parse-html-path-accessor-completeness-clears-the-foster-region-marks-a-print");
 		/** @type {number[]} */
 		const marked = [];
 		/** @param {number} n node */
@@ -2303,11 +2294,11 @@ describe("parseHtml — path accessor completeness", () => {
 				}
 			}
 		});
-		processor.process("<a></a><b></b><i></i>");
+		processor.process(fixture("html", "parse-html-path-accessor-completeness-path-stop-ends-the-walk-after-the-current"));
 		expect(log).toEqual(["html", "head", "body", "a", "b"]);
 		// the next run starts with every visitor in place again
 		log.length = 0;
-		processor.process("<i></i>");
+		processor.process(fixture("html", "parse-html-path-accessor-completeness-path-stop-ends-the-walk-after-the-current-2"));
 		expect(log).toEqual(["html", "head", "body", "i"]);
 		// stopped from an `exit`: the enclosing elements exit no more
 		log.length = 0;
@@ -2320,7 +2311,7 @@ describe("parseHtml — path accessor completeness", () => {
 					}
 				}
 			})
-			.process("<p><a></a></p><b></b>");
+			.process(fixture("html", "parse-html-path-accessor-completeness-path-stop-ends-the-walk-after-the-current-3"));
 		expect(log).toEqual(["head", "a"]);
 	});
 
@@ -2338,7 +2329,7 @@ describe("parseHtml — path accessor completeness", () => {
 				},
 				[NodeType.Element]: (path) => log.push(path.name())
 			})
-			.process("<p>x</p>");
+			.process(fixture("html", "html-syntax-the-facade-holds-no-printer-until-something-prints"));
 		expect(log).toEqual(["enter", "exit"]);
 	});
 });
@@ -2700,7 +2691,7 @@ const CASES = [
 	],
 	[
 		"ignores every end tag the in-table insertion mode has no arc for",
-		"<table><tr></strong></b></em></i></u></strike></s></blink></tt></pre></big></small></font></select></h1></h2></h3></h4></h5></h6></body></br></a></img></title></span></style></script></table></th></td></tr></frame></area></link></param></hr></input></col></base></meta></basefont></bgsound></embed></spacer></p></dd></dt></caption></colgroup></tbody></tfoot></thead></address></blockquote></center></dir></div></dl></fieldset></listing></menu></ol></ul></li></nobr></wbr></form></button></marquee></object></html></frameset></head></iframe></image></isindex></noembed></noframes></noscript></optgroup></option></plaintext></textarea>",
+		fixture("html", "source-processor-tree-construction-corpus-round-trips-minify-prints-table-tr"),
 		undefined
 	],
 	[
@@ -2708,7 +2699,7 @@ const CASES = [
 		"<frame></frame></frame><frameset><frame><frameset><frame></frameset><noframes></frameset><noframes>",
 		undefined
 	],
-	["closes a foreign element by its own end tag", "<g></path>X", "svg path"],
+	["closes a foreign element by its own end tag", fixture("html", "source-processor-tree-construction-corpus-round-trips-beautify-prints-g-path-x"), "svg path"],
 	["opens a template with no body yet", "<head></head><template>", undefined],
 	[
 		"re-nests a badly nested table, font and anchor",
@@ -2743,7 +2734,7 @@ const CASES = [
 	],
 	[
 		"keeps an end tag inside a script fragment",
-		"<!-- inside </script> -->",
+		fixture("html", "source-processor-tree-construction-corpus-round-trips-beautify-prints-inside"),
 		"script"
 	],
 	[
@@ -2786,12 +2777,12 @@ const CASES = [
 	],
 	[
 		"runs the adoption agency past its outer-loop limit",
-		"<div><a><b><div><div><div><div><div><div><div><div><div><div></a>",
+		fixture("html", "source-processor-tree-construction-corpus-round-trips-beautify-prints-div-a-b"),
 		undefined
 	],
 	[
 		"reconstructs nobr across a table and a marquee",
-		"<nobr><table><marquee></table><nobr>",
+		fixture("html", "source-processor-tree-construction-corpus-round-trips-beautify-prints-nobr-table"),
 		undefined
 	],
 	[
@@ -2827,7 +2818,7 @@ const CASES = [
 	],
 	[
 		"merges html attributes across a template",
-		"<html a=b><template><div><html b=c><span></template>",
+		fixture("html", "source-processor-tree-construction-corpus-round-trips-beautify-prints-html-a-b"),
 		undefined
 	],
 	[
@@ -2860,7 +2851,7 @@ const CASES = [
 		"<table><tbody></body></caption></col></colgroup></html></td></th></tr>",
 		undefined
 	],
-	["drops an input from a select fragment", "<input><option>", "select"],
+	["drops an input from a select fragment", fixture("html", "source-processor-tree-construction-corpus-round-trips-beautify-prints-input"), "select"],
 
 	// A stray DOCTYPE, a repeated `<html>` or a repeated `<head>`/`<body>` has
 	// its own arc in every insertion mode, and each one is a separate ignore.
@@ -2937,7 +2928,7 @@ const CASES = [
 	],
 	[
 		"merges a repeated body start tag inside a template",
-		"<body a=b><template><div></div><body c=d><div></div></body></template></body>",
+		fixture("html", "source-processor-tree-construction-corpus-round-trips-beautify-prints-body-a-b"),
 		undefined
 	],
 	["ends the body from an html fragment", "<body></body></html>", "html"],
@@ -3017,7 +3008,7 @@ const CASES = [
 	["ignores a foreign end tag with no match", "</path>X", "svg path"],
 	[
 		"ignores a frameset start tag in an SVG desc fragment",
-		"<frameset>X",
+		fixture("html", "source-processor-tree-construction-corpus-round-trips-beautify-prints-frameset-x"),
 		"svg desc"
 	],
 	[
@@ -3025,10 +3016,10 @@ const CASES = [
 		"<math><thead><mo><tbody>",
 		"thead"
 	],
-	["closes a div across an SVG element", "<div><svg></div>a", undefined],
+	["closes a div across an SVG element", fixture("html", "source-processor-tree-construction-corpus-round-trips-beautify-prints-div-svg"), undefined],
 	[
 		"treats a self-closed math element as foreign",
-		"<!doctype html><math/><foo>",
+		fixture("html", "source-processor-tree-construction-corpus-round-trips-beautify-prints-doctype-7"),
 		undefined
 	],
 
@@ -3085,7 +3076,7 @@ const CASES = [
 	],
 	[
 		"replaces a body that is not the last child of the root with a frameset",
-		"</body><!--x--><frameset>",
+		fixture("html", "source-processor-tree-construction-the-printer-reads-back-prints-a-frameset"),
 		undefined
 	],
 	[
@@ -3205,7 +3196,7 @@ const CASES = [
 	],
 	[
 		"nests forms in a template",
-		"<template><form><form>",
+		fixture("html", "source-processor-re-serializing-keeps-the-tree-keeps-a-form-a-template-holds"),
 		undefined
 	],
 	[

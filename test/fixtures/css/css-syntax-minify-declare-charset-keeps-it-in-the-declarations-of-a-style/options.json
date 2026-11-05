@@ -1,0 +1,7 @@
+[
+	{
+		"mode": "minify",
+		"declareCharset": true,
+		"as": "block-contents"
+	}
+]

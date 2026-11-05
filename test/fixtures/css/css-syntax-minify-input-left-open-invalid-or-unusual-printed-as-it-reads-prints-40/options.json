@@ -1,0 +1,13 @@
+[
+	{
+		"environment": {
+			"browsers": [
+				"safari 15"
+			]
+		},
+		"transforms": {
+			"mergeRules": false
+		},
+		"mode": "minify"
+	}
+]

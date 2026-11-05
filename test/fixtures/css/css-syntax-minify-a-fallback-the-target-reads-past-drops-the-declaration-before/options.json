@@ -1,0 +1,22 @@
+[
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"chrome 130",
+				"firefox 130",
+				"safari 18"
+			]
+		}
+	},
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"chrome 60",
+				"firefox 60",
+				"safari 11"
+			]
+		}
+	}
+]

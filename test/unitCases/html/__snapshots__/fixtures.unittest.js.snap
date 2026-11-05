@@ -1,0 +1,1088 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`HTML syntax — fixtures prints html-syntax-the-facade-holds-no-printer-until-something-prints {"mode":"minify"} 1`] = `"<p>x"`;
+
+exports[`HTML syntax — fixtures prints parse-html-path-accessor-completeness-clears-the-foster-region-marks-a-print {"mode":"minify"} 1`] = `"<dt><table> </nav>x<p>"`;
+
+exports[`HTML syntax — fixtures prints parse-html-source-processor-prints-an-implied-opener-only-when-its-first-piece {"mode":"minify"} 1`] = `"<body> foo</body>"`;
+
+exports[`HTML syntax — fixtures prints parse-html-source-processor-prints-an-implied-opener-only-when-its-first-piece-2 {"mode":"minify"} 1`] = `"<template></template>"`;
+
+exports[`HTML syntax — fixtures prints parse-html-source-processor-visits-the-document-root-with-a-null-parent {"mode":"minify"} 1`] = `"<p>x"`;
+
+exports[`HTML syntax — fixtures prints source-processor-a-byte-order-mark-keeps-the-doctype-it-stands-before-and-prints {"mode":"minify"} 1`] = `"﻿<!doctype html><title>t</title><p>x"`;
+
+exports[`HTML syntax — fixtures prints source-processor-a-duplicate-attribute-name-is-carried-over-where-the-tag-spells {"mode":"minify"} 1`] = `"<div {{cond}} id=a id=b></div>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-a-duplicate-attribute-name-is-carried-over-where-the-tag-spells-2 {"mode":"minify"} 1`] = `"<div {{#if x}} data-a=1 {{/if}} data-a=2></div>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-a-duplicate-attribute-name-is-carried-over-where-the-tag-spells-3 {"mode":"minify","sortAttributes":true} 1`] = `"<input type=text {% if required %} required{% endif %}>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-a-duplicate-attribute-name-is-carried-over-where-the-tag-spells-3 {"mode":"minify"} 1`] = `"<input type=text {% if required %} required{% endif %}>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-a-duplicate-attribute-name-is-dropped-where-every-name-of-the {"mode":"minify"} 1`] = `"<p a=1>x"`;
+
+exports[`HTML syntax — fixtures prints source-processor-a-duplicate-attribute-name-is-dropped-where-every-name-of-the-2 {"mode":"minify"} 1`] = `"<p data-x=1>x"`;
+
+exports[`HTML syntax — fixtures prints source-processor-a-duplicate-attribute-name-is-dropped-where-every-name-of-the-3 {"mode":"minify"} 1`] = `"<svg><rect x=1 /></svg>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-a-duplicate-attribute-name-keeps-a-name-this-print-left-bare {"mode":"minify"} 1`] = `"<input type=checkbox {% if on %} checked {% endif %}>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-a-duplicate-attribute-name-keeps-a-name-this-print-left-bare-2 {"mode":"minify"} 1`] = `"<li class=row {% for x in y %} data-x=1 {% endfor %}>a"`;
+
+exports[`HTML syntax — fixtures prints source-processor-a-duplicate-attribute-name-keeps-a-name-this-print-left-bare-3 {"mode":"minify"} 1`] = `"<div {{#if x}} a {{/if}} a></div>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-a-duplicate-attribute-name-keeps-an-empty-value-written-onto-a {"mode":"minify"} 1`] = `"<p a>t"`;
+
+exports[`HTML syntax — fixtures prints source-processor-a-duplicate-attribute-name-keeps-an-empty-value-written-onto-a-2 {"mode":"minify"} 1`] = `"<input type=text {% if x %} a{% endif %}=\\"\\">"`;
+
+exports[`HTML syntax — fixtures prints source-processor-a-duplicate-attribute-name-keeps-an-empty-value-written-onto-a-3 {"mode":"minify"} 1`] = `"<input type=text {% if x %} a{% endif %}=''>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-a-duplicate-attribute-name-keeps-the-block-however-the-engine {"mode":"minify"} 1`] = `"<input type=text {%if required%} required{%endif%}>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-a-duplicate-attribute-name-keeps-the-block-however-the-engine-2 {"mode":"minify"} 1`] = `"<input type=text {%- if required -%} required{%- endif -%}>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-a-duplicate-attribute-name-keeps-the-block-however-the-engine-3 {"mode":"minify"} 1`] = `"<li class=row {% for x in y %} data-x=1 {% endfor %}>t"`;
+
+exports[`HTML syntax — fixtures prints source-processor-a-duplicate-attribute-name-keeps-the-block-however-the-engine-4 {"mode":"minify"} 1`] = `"<input type=text {% if a %} required{% endif %}{% if b %} disabled{% endif %}>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-a-duplicate-attribute-name-leaves-the-values-it-has-no-minifier {"mode":"minify"} 1`] = `"<p style=\\"color : red ;\\"{% if x %} a{% endif %}>t"`;
+
+exports[`HTML syntax — fixtures prints source-processor-a-duplicate-attribute-name-leaves-the-values-it-has-no-minifier-2 {"mode":"minify"} 1`] = `"<p onclick=\\"a  &&  b()\\"{% if x %} a{% endif %}>t"`;
+
+exports[`HTML syntax — fixtures prints source-processor-a-duplicate-attribute-name-minifies-the-attributes-the-block-is {"mode":"minify"} 1`] = `"<p class=\\"a b\\"{% if wide %} data-c=2 {% endif %}>t"`;
+
+exports[`HTML syntax — fixtures prints source-processor-a-duplicate-attribute-name-reads-a-block-written-against-the {"mode":"minify"} 1`] = `"<span{% if x %} title=a {% endif %}>t</span{%>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-a-duplicate-attribute-name-reads-a-block-written-against-the-2 {"mode":"minify"} 1`] = `"<span {% if x %} title=a {% endif %}>t</span>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-a-duplicate-attribute-name-separates-an-unquoted-value-from {"mode":"minify"} 1`] = `"<img src=a.png {% if lazy %} loading=lazy {% endif %}/>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-a-duplicate-attribute-name-separates-an-unquoted-value-from-2 {"mode":"minify"} 1`] = `"<p a=b /{{x}} c=1 c=1>t"`;
+
+exports[`HTML syntax — fixtures prints source-processor-a-duplicate-attribute-name-separates-an-unquoted-value-from-3 {"mode":"minify"} 1`] = `"<img src=a.png {{x}} b=1 b=2 c=d />"`;
+
+exports[`HTML syntax — fixtures prints source-processor-a-duplicate-attribute-name-still-spells-the-attributes-the-tag {"mode":"minify"} 1`] = `"<input type=text {% if x %} a{% endif %}>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-a-duplicate-attribute-name-still-spells-the-attributes-the-tag-2 {"mode":"minify"} 1`] = `"<input type=text {% if x %} a{% endif %}>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-a-duplicate-attribute-name-still-spells-the-attributes-the-tag-3 {"mode":"minify"} 1`] = `"<input type=text {% if x %} a{% endif %}>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-an-empty-value-is-the-bare-name-does-it-in-foreign-content-too {"mode":"minify"} 1`] = `"<svg><rect x/></svg>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-an-empty-value-is-the-bare-name-does-it-in-foreign-content-too-2 {"mode":"minify"} 1`] = `"<math><mi x></mi></math>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-an-empty-value-is-the-bare-name-keeps-a-same-length-value-that {"mode":"minify"} 1`] = `"<input checked=chicken>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-an-empty-value-is-the-bare-name-prints-a-boolean-attribute {"mode":"minify"} 1`] = `"<input disabled checked>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-an-empty-value-is-the-bare-name-prints-any-empty-value-as-the {"mode":"minify"} 1`] = `"<div title lang data-x>x</div>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-an-empty-value-is-the-bare-name-prints-any-empty-value-as-the-2 {"mode":"minify"} 1`] = `"<iframe sandbox></iframe>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-an-empty-value-is-the-bare-name-reads-a-reference-spelled-empty {"mode":"minify","removeEmptyAttributes":true} 1`] = `"<div>x</div>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-an-empty-value-is-the-bare-name-reads-a-reference-spelled-empty-2 {"mode":"minify","removeEmptyAttributes":true} 1`] = `"<div>x</div>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-an-empty-value-is-the-bare-name-writes-out-a-value-a-reference {"mode":"minify"} 1`] = `"<div title=\\" \\">x</div>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-attribute-quote-spelling-escapes-only-the-delimiter-when-a {"mode":"minify"} 1`] = `"<img alt='it&#39;s \\"x\\"'>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-attribute-quote-spelling-escapes-only-the-delimiter-when-a-2 {"mode":"minify"} 1`] = `"<img alt='&#39;a&#39; \\"b\\"'>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-attribute-quote-spelling-keeps-every-other-reference-the-value {"mode":"minify"} 1`] = `"<img alt='&amp;quot; literal \\"q\\"'>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-attribute-quote-spelling-keeps-every-other-reference-the-value-2 {"mode":"minify"} 1`] = `"<img alt='nb sp \\"q\\"'>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-attribute-quote-spelling-keeps-every-other-reference-the-value-3 {"mode":"minify"} 1`] = `"<img alt='line&#10;br \\"q\\"'>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-attribute-quote-spelling-leaves-an-implied-tag-out-on-the-first {"mode":"minify"} 1`] = `"<table><col><tr><td>a</table>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-attribute-quote-spelling-leaves-an-implied-tag-out-on-the-first-2 {"mode":"minify"} 1`] = `"<table><col><tr><td>a</table>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-attribute-quote-spelling-leaves-an-implied-tag-out-on-the-first-3 {"mode":"minify"} 1`] = `"<table><tr><td>a</table>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-attribute-quote-spelling-leaves-an-implied-tag-out-on-the-first-4 {"mode":"minify"} 1`] = `"<table><tr><td>a</table>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-attribute-quote-spelling-leaves-an-implied-tag-out-on-the-first-5 {"mode":"minify","collapseWhitespace":"all","removeImpliedTags":true} 1`] = `"<title>L</title>x"`;
+
+exports[`HTML syntax — fixtures prints source-processor-attribute-quote-spelling-leaves-an-implied-tag-out-on-the-first-6 {"mode":"minify","collapseWhitespace":"all","removeImpliedTags":true} 1`] = `"<title>L</title>x"`;
+
+exports[`HTML syntax — fixtures prints source-processor-attribute-quote-spelling-leaves-an-implied-tag-out-on-the-first-7 {"mode":"minify","removeImpliedTags":true} 1`] = `"<body> x"`;
+
+exports[`HTML syntax — fixtures prints source-processor-attribute-quote-spelling-merges-across-a-comment-the-print {"mode":"minify","mergeStyles":true,"transforms":{"comments":"all"}} 1`] = `"<style>.a{color:red}</style><!--c--><style>.b{color:blue}</style>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-attribute-quote-spelling-merges-across-a-comment-the-print {"mode":"minify","mergeStyles":true} 1`] = `"<style>.a{color:red}.b{color:blue}</style>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-attribute-quote-spelling-merges-across-an-attribute-the-print {"mode":"minify","removeRedundantAttributes":"all","mergeStyles":true} 1`] = `"<style>.a{color:red}.b{color:blue}</style>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-attribute-quote-spelling-merges-across-an-attribute-the-print-2 {"mode":"minify","removeRedundantAttributes":"all","mergeScripts":true} 1`] = `
+"<script>var a=1
+;var b=2</script>"
+`;
+
+exports[`HTML syntax — fixtures prints source-processor-attribute-quote-spelling-reads-a-value-s-last-run-as-the-whole {"mode":"minify"} 1`] = `"<p>a &amp;am"`;
+
+exports[`HTML syntax — fixtures prints source-processor-attribute-quote-spelling-reads-a-value-s-last-run-as-the-whole-2 {"mode":"minify"} 1`] = `"<p title=\\"a &am\\">t"`;
+
+exports[`HTML syntax — fixtures prints source-processor-attribute-quote-spelling-swaps-the-delimiter-so-escaped-quotes {"mode":"minify"} 1`] = `"<img alt='say \\"hi\\" to \\"them\\"'>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-attribute-quote-spelling-swaps-the-delimiter-so-escaped-quotes-2 {"mode":"minify"} 1`] = `"<div data-c='{\\"a\\":1}'></div>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-attribute-quote-spelling-writes-a-reference-the-parser-cannot {"mode":"minify"} 1`] = `"<p title=\\"<b>bold</b>\\">t"`;
+
+exports[`HTML syntax — fixtures prints source-processor-attribute-quote-spelling-writes-a-reference-the-parser-cannot-2 {"mode":"minify"} 1`] = `"<p title=\\"a & b\\">t"`;
+
+exports[`HTML syntax — fixtures prints source-processor-attribute-quote-spelling-writes-a-reference-the-parser-cannot-3 {"mode":"minify"} 1`] = `"<a href=\\"?a=1&b=2\\">t</a>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-attribute-quote-spelling-writes-a-reference-the-parser-cannot-4 {"mode":"minify"} 1`] = `"<p title=\\"a>b\\">t"`;
+
+exports[`HTML syntax — fixtures prints source-processor-attribute-quote-spelling-writes-u-00-a0-as-the-character {"mode":"minify"} 1`] = `"<img alt=nb sp>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-attribute-quote-spelling-writes-u-00-a0-as-the-character-2 {"mode":"minify"} 1`] = `"<img alt=nb sp>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-attribute-rewrites-as-switches-collapses-any-value-at-all {"mode":"minify","transforms":{"collapseBooleanAttributes":"all"}} 1`] = `"<input checked>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-attribute-rewrites-as-switches-collapses-any-value-at-all {"mode":"minify","transforms":{"collapseBooleanAttributes":false}} 1`] = `"<input checked=checked>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-attribute-rewrites-as-switches-collapses-at-all-only-where-the {"mode":"minify","transforms":{"collapseBooleanAttributes":"all"}} 1`] = `"<p contenteditable=contenteditable>x"`;
+
+exports[`HTML syntax — fixtures prints source-processor-attribute-rewrites-as-switches-collapses-at-all-only-where-the-2 {"mode":"minify","transforms":{"collapseBooleanAttributes":"all"}} 1`] = `"<p checked=false>x"`;
+
+exports[`HTML syntax — fixtures prints source-processor-attribute-rewrites-as-switches-collapses-only-the-canonical {"mode":"minify"} 1`] = `"<input checked disabled>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-attribute-rewrites-as-switches-collapses-only-the-canonical-2 {"mode":"minify","transforms":{"collapseBooleanAttributes":"all"}} 1`] = `"<input checked>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-attribute-rewrites-as-switches-collapses-only-the-canonical-2 {"mode":"minify"} 1`] = `"<input checked=false>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-attribute-rewrites-as-switches-keeps-every-spelling-with-the {"mode":"minify","transforms":{"collapseBooleanAttributes":false}} 1`] = `"<input checked>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-attribute-rewrites-as-switches-keeps-the-whitespace-in-form {"mode":"minify","transforms":{"normalizeUrlAttributes":false}} 1`] = `"<form action=\\"  /post  \\"></form>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-attribute-rewrites-as-switches-keeps-the-whitespace-in-img-src {"mode":"minify","transforms":{"normalizeUrlAttributes":false}} 1`] = `"<img src=\\"  a.png  \\" alt=a>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-attribute-rewrites-as-switches-keeps-the-whitespace-in-video {"mode":"minify","transforms":{"normalizeUrlAttributes":false}} 1`] = `"<video poster=\\"  p.png  \\"></video>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-attribute-rewrites-as-switches-sorts-a-token-list-with-list {"mode":"minify","sortTokenLists":true,"transforms":{"normalizeListAttributes":false}} 1`] = `"<p class=\\"a b c\\">x"`;
+
+exports[`HTML syntax — fixtures prints source-processor-attribute-rewrites-as-switches-sorts-a-token-list-with-list {"mode":"minify","transforms":{"normalizeListAttributes":false}} 1`] = `"<p class=\\"b a c\\">x"`;
+
+exports[`HTML syntax — fixtures prints source-processor-attribute-rewrites-as-switches-sorts-no-list-the-dom-does-not {"mode":"minify","sortTokenLists":true,"transforms":{"normalizeListAttributes":false}} 1`] = `"<a ping=\\"  b   a \\">x</a>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-attribute-rewrites-as-switches-trims-the-whitespace-around-a {"mode":"minify"} 1`] = `"<script src=/a.js></script>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-attribute-rewrites-as-switches-trims-the-whitespace-around-a-2 {"mode":"minify","transforms":{"normalizeUrlAttributes":false}} 1`] = `"<a href=\\"  /a  \\">x</a>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-attribute-rewrites-as-switches-trims-the-whitespace-around-a-2 {"mode":"minify"} 1`] = `"<a href=/a>x</a>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-attribute-values-the-minifier-rewrites-drops-an-empty-attribute {"mode":"minify","removeEmptyAttributes":true} 1`] = `"<x-foo rel></x-foo><a href=x>t</a><link><output></output>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-attribute-values-the-minifier-rewrites-keeps-a-list-as-written {"mode":"minify","transforms":{"normalizeListAttributes":false}} 1`] = `"<meta name=viewport content=' width = device-width '>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-attribute-values-the-minifier-rewrites-keeps-the-delimiter {"mode":"minify","transforms":{"normalizeAttributeQuotes":false}} 1`] = `"<p class='a b'>x<p title='a\\"b' class='c'>y<p class=\\"d'e\\">z"`;
+
+exports[`HTML syntax — fixtures prints source-processor-attribute-values-the-minifier-rewrites-keeps-the-delimiter-2 {"mode":"minify","transforms":{"normalizeAttributeQuotes":false}} 1`] = `"<p class=\\"&quot;&quot;&quot;&quot;' x\\">t"`;
+
+exports[`HTML syntax — fixtures prints source-processor-attribute-values-the-minifier-rewrites-rewrites-img-sizes-max {"mode":"minify"} 1`] = `"<img sizes=\\"(max-width: 1px)  1px,2px\\" srcset='a.png 100w'>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-attribute-values-the-minifier-rewrites-rewrites-img-srcset {"mode":"minify"} 1`] = `"<img srcset=' , '>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-attribute-values-the-minifier-rewrites-rewrites-img-srcset-a {"mode":"minify","transforms":{"normalizeListAttributes":false}} 1`] = `"<img srcset='  a.png 1x,  b.png   2x '>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-attribute-values-the-minifier-rewrites-rewrites-img-srcset-a {"mode":"minify"} 1`] = `"<img srcset=\\"a.png 1x,b.png 2x\\">"`;
+
+exports[`HTML syntax — fixtures prints source-processor-attribute-values-the-minifier-rewrites-rewrites-img-srcset-a-2 {"mode":"minify"} 1`] = `"<img srcset=\\"a.png, 1x\\">"`;
+
+exports[`HTML syntax — fixtures prints source-processor-attribute-values-the-minifier-rewrites-rewrites-img-srcset-a-3 {"mode":"minify"} 1`] = `"<img srcset=\\"a.png 1x,b.png\\">"`;
+
+exports[`HTML syntax — fixtures prints source-processor-attribute-values-the-minifier-rewrites-rewrites-img-srcset-a-4 {"mode":"minify"} 1`] = `"<img srcset='a.png 1x (x)'>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-attribute-values-the-minifier-rewrites-rewrites-img-srcset-a-5 {"mode":"minify"} 1`] = `"<img srcset='a.png, b.png 2x'>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-attribute-values-the-minifier-rewrites-rewrites-input-accept {"mode":"minify"} 1`] = `"<input accept=image/*,.png>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-attribute-values-the-minifier-rewrites-rewrites-input-tabindex {"mode":"minify"} 1`] = `"<input tabindex=0><input tabindex=-7><input maxlength=1e3>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-attribute-values-the-minifier-rewrites-rewrites-link-rel {"mode":"minify"} 1`] = `"<link rel=preload imagesrcset=\\"a.png 100w,b.png 200w\\">"`;
+
+exports[`HTML syntax — fixtures prints source-processor-attribute-values-the-minifier-rewrites-rewrites-map-area-coords {"mode":"minify"} 1`] = `"<map><area coords=1,2></map>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-attribute-values-the-minifier-rewrites-rewrites-meta-name {"mode":"minify"} 1`] = `"<meta name=description content=' a = 1 '>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-attribute-values-the-minifier-rewrites-rewrites-meta-name-2 {"mode":"minify"} 1`] = `"<meta name=viewport content=\\"width=device-width,initial-scale=1\\">"`;
+
+exports[`HTML syntax — fixtures prints source-processor-attribute-values-the-minifier-rewrites-rewrites-meta-name-118 {"mode":"minify"} 1`] = `"<meta name=viewport content=\\"a=1,b=2\\">"`;
+
+exports[`HTML syntax — fixtures prints source-processor-attribute-values-the-minifier-rewrites-rewrites-ol-start-01-li {"mode":"minify"} 1`] = `"<ol start=-1><li value=3>a</ol>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-attribute-values-the-minifier-rewrites-rewrites-p-class-ab {"mode":"minify"} 1`] = `"<p class=\\"ab axxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxb abcb axxb\\">t"`;
+
+exports[`HTML syntax — fixtures prints source-processor-attribute-values-the-minifier-rewrites-rewrites-table-tr-td {"mode":"minify"} 1`] = `"<table><tr><td colspan=2 rowspan=+3>x</table>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-attribute-values-the-minifier-rewrites-sorts-what-prints-a {"mode":"minify","sortAttributes":true,"removeRedundantAttributes":"all"} 1`] = `"<input b=2 a=1><input b=3>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-attribute-values-the-minifier-rewrites-sorts-what-prints-a-2 {"xml":true,"mode":"minify","sortAttributes":true} 1`] = `"<!DOCTYPE d [<!ATTLIST d a CDATA \\"v\\">]><d c=\\"2\\" b=\\"1\\"/><e c=\\"3\\"/>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-attribute-values-the-minifier-rewrites-writes-img-srcset-a-b {"mode":"minify"} 1`] = `"<img srcset=a'\\"b.png,,>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-attribute-values-the-minifier-rewrites-writes-p-amp-x-p-a-title {"mode":"minify"} 1`] = `"<p>&amp;#;x</p><a title=&amp;#;x>t</a>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-attribute-values-the-minifier-rewrites-writes-p-class-a-quot-b {"mode":"minify"} 1`] = `"<p class='a&#39;\\"b'>w<p a='x&#39;y\\"z'>t"`;
+
+exports[`HTML syntax — fixtures prints source-processor-attribute-values-the-minifier-rewrites-writes-p-class-a-x-p {"mode":"minify"} 1`] = `"<p class=a>x<p class=\\"a'b\\">y<p class='a\\"b'>z"`;
+
+exports[`HTML syntax — fixtures prints source-processor-attribute-values-the-minifier-rewrites-writes-p-title-a-amp-b-c {"mode":"minify"} 1`] = `"<p title=\\"a&b=c\\">t"`;
+
+exports[`HTML syntax — fixtures prints source-processor-collapse-whitespace-collapses-a-trailing-run {"mode":"minify","collapseWhitespace":true} 1`] = `"<p>a b "`;
+
+exports[`HTML syntax — fixtures prints source-processor-collapse-whitespace-collapses-each-run-of-whitespace-to-one {"mode":"minify","collapseWhitespace":true} 1`] = `"<p>a b"`;
+
+exports[`HTML syntax — fixtures prints source-processor-collapse-whitespace-keeps-already-collapsed-text-on-the-source {"mode":"minify","collapseWhitespace":true} 1`] = `"<p>a b"`;
+
+exports[`HTML syntax — fixtures prints source-processor-collapse-whitespace-keeps-text-carrying-a-on-the-passthrough {"mode":"minify","collapseWhitespace":true} 1`] = `"<p><%=   x   %>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-collapse-whitespace-keeps-whitespace-verbatim-under-pre-at-any {"mode":"minify","collapseWhitespace":true} 1`] = `"<pre>a   b</pre>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-collapse-whitespace-keeps-whitespace-verbatim-under-pre-at-any-2 {"mode":"minify","collapseWhitespace":true} 1`] = `"<pre><span>a   b</span></pre>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-collapse-whitespace-modes-leaves-whitespace-verbatim-where-it {"mode":"minify","collapseWhitespace":"all"} 1`] = `"<pre>  a   b  </pre>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-collapse-whitespace-modes-leaves-whitespace-verbatim-where-it {"mode":"minify","collapseWhitespace":"conservative"} 1`] = `"<pre>  a   b  </pre>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-collapse-whitespace-modes-leaves-whitespace-verbatim-where-it {"mode":"minify","collapseWhitespace":"smart"} 1`] = `"<pre>  a   b  </pre>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-collapse-whitespace-modes-leaves-whitespace-verbatim-where-it {"mode":"minify","collapseWhitespace":true} 1`] = `"<pre>  a   b  </pre>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-collapse-whitespace-modes-reads-true-as-conservative-which {"mode":"minify","collapseWhitespace":"all"} 1`] = `"<body><div>a b</div><div>c</div><span>d</span></body>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-collapse-whitespace-modes-reads-true-as-conservative-which {"mode":"minify","collapseWhitespace":"conservative"} 1`] = `"<body><div> a b </div> <div> c </div><span> d </span></body>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-collapse-whitespace-modes-reads-true-as-conservative-which {"mode":"minify","collapseWhitespace":"smart"} 1`] = `"<body><div>a b</div><div>c</div><span> d </span></body>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-collapse-whitespace-modes-reads-true-as-conservative-which {"mode":"minify","collapseWhitespace":true} 1`] = `"<body><div> a b </div> <div> c </div><span> d </span></body>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-collapse-whitespace-prints-a-lone-tab-as-the-shorter-single {"mode":"minify","collapseWhitespace":true} 1`] = `"<p>a b"`;
+
+exports[`HTML syntax — fixtures prints source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-227 {"mode":"minify","transforms":{"normalizeEnumeratedAttributes":false}} 1`] = `"<input type=TEXT>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-enumerated-attribute-values-folds-every-keyword-of-every-entry-227 {"mode":"minify"} 1`] = `"<input type=text>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-inline-script-type-drops-a-redundant-type-spelled-with-a {"mode":"minify","removeRedundantAttributes":"smart"} 1`] = `"<script>var a = 1</script>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-inline-script-type-drops-a-redundant-type-spelled-with-a-2 {"mode":"minify","removeRedundantAttributes":"smart"} 1`] = `"<script type=text/x-template>x</script>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-inline-script-type-offers-the-body-of-a-script-whose-type-is {"mode":"minify","removeRedundantAttributes":"smart"} 1`] = `"<script>var a = 1</script>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-merging-adjacent-script-declines-a-body-that-opens-a-script-of {"mode":"minify","mergeScripts":true} 1`] = `"<script>var a = 1</script><script>\\"use strict\\";x = 1</script>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-merging-adjacent-script-declines-a-body-that-opens-a-script-of-2 {"mode":"minify","mergeScripts":true} 1`] = `"<script>\\"use strict\\";a()</script><script>b()</script>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-merging-adjacent-script-declines-a-body-that-opens-a-script-of-3 {"mode":"minify","mergeScripts":true} 1`] = `"<script>a()</script><script>'use strict';b()</script>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-merging-adjacent-script-declines-a-body-that-opens-a-script-of-4 {"mode":"minify","mergeScripts":true} 1`] = `"<script>a()</script><script>/* c */ \\"use strict\\";b()</script>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-merging-adjacent-script-declines-a-body-that-opens-a-script-of-21 {"mode":"minify","mergeScripts":true} 1`] = `
+"<script>a()</script><script>#!/usr/bin/env node
+b()</script>"
+`;
+
+exports[`HTML syntax — fixtures prints source-processor-merging-adjacent-script-declines-an-empty-element-which-has-no {"mode":"minify","mergeScripts":true} 1`] = `"<script>a()</script><script></script>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-merging-adjacent-script-declines-an-empty-element-which-has-no-2 {"mode":"minify","mergeScripts":true} 1`] = `"<script>a()</script><script></script><script>b()</script>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-merging-adjacent-script-declines-anything-but-whitespace {"mode":"minify","mergeScripts":true} 1`] = `"<script>a()</script><p>x</p><script>b()</script>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-merging-adjacent-script-declines-anything-but-whitespace-2 {"mode":"minify","mergeScripts":true} 1`] = `
+"<script>a()
+;b()</script>"
+`;
+
+exports[`HTML syntax — fixtures prints source-processor-merging-adjacent-script-folds-a-body-ending-in-a-line-comment {"mode":"minify","mergeScripts":true} 1`] = `
+"<script>a() // note
+;b()</script>"
+`;
+
+exports[`HTML syntax — fixtures prints source-processor-merging-adjacent-script-folds-a-body-ending-in-a-line-comment-2 {"mode":"minify","mergeScripts":true} 1`] = `
+"<script>a() <!-- note
+;b()</script>"
+`;
+
+exports[`HTML syntax — fixtures prints source-processor-merging-adjacent-script-folds-a-body-that-is-only-whitespace {"mode":"minify","mergeScripts":true} 1`] = `
+"<script>a()
+; </script>"
+`;
+
+exports[`HTML syntax — fixtures prints source-processor-merging-adjacent-script-folds-a-run-in-the-head-as-readily-as {"mode":"minify","mergeScripts":true} 1`] = `
+"<!doctype html><head><script>a()
+;b()</script></head><body>x</body></html>"
+`;
+
+exports[`HTML syntax — fixtures prints source-processor-merging-adjacent-script-folds-a-run-into-one-element {"mode":"minify","mergeScripts":true} 1`] = `
+"<script>a()
+;b()</script>"
+`;
+
+exports[`HTML syntax — fixtures prints source-processor-merging-adjacent-script-folds-a-run-into-one-element {"mode":"minify"} 1`] = `"<script>a()</script><script>b()</script>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-merging-adjacent-script-folds-a-run-into-one-element-2 {"mode":"minify","mergeScripts":true} 1`] = `
+"<script>a()
+;b()
+;c()</script>"
+`;
+
+exports[`HTML syntax — fixtures prints source-processor-merging-adjacent-script-folds-a-that-keeps-the-line-it-had {"mode":"minify","mergeScripts":true} 1`] = `
+"<script>a()
+;
+--> b()</script>"
+`;
+
+exports[`HTML syntax — fixtures prints source-processor-merging-adjacent-script-folds-a-that-keeps-the-line-it-had-2 {"mode":"minify","mergeScripts":true} 1`] = `
+"<script>a()
+;/* c
+*/ --> b()</script>"
+`;
+
+exports[`HTML syntax — fixtures prints source-processor-merging-adjacent-script-folds-a-that-keeps-the-line-it-had-3 {"mode":"minify","mergeScripts":true} 1`] = `
+"<script>a()
+;b()
+--> c()</script>"
+`;
+
+exports[`HTML syntax — fixtures prints source-processor-merging-adjacent-script-folds-across-the-whitespace-between {"mode":"minify","mergeScripts":true} 1`] = `
+"<script>a()
+;b()</script>"
+`;
+
+exports[`HTML syntax — fixtures prints source-processor-merging-adjacent-script-folds-scripts-and-sheets-in-one-pass {"mode":"minify","mergeStyles":true,"mergeScripts":true} 1`] = `
+"<style>a{color:red}b{color:blue}</style><script>a()
+;b()</script>"
+`;
+
+exports[`HTML syntax — fixtures prints source-processor-merging-adjacent-script-leaves-a-script-in-foreign-content {"mode":"minify","mergeScripts":true} 1`] = `"<svg><script>a()</script><script>b()</script></svg>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-merging-adjacent-script-reads-a-closed-string-template-or {"mode":"minify","mergeScripts":true} 1`] = `
+"<script>var s = \\"a</script'\\"
+;b()</script>"
+`;
+
+exports[`HTML syntax — fixtures prints source-processor-merging-adjacent-script-reads-a-closed-string-template-or-2 {"mode":"minify","mergeScripts":true} 1`] = `
+"<script>/* done */a()
+;b()</script>"
+`;
+
+exports[`HTML syntax — fixtures prints source-processor-merging-adjacent-script-reads-a-closed-string-template-or-3 {"mode":"minify","mergeScripts":true} 1`] = `
+"<script>var t = \`x\`
+;b()</script>"
+`;
+
+exports[`HTML syntax — fixtures prints source-processor-merging-adjacent-script-reads-a-closed-string-template-or-4 {"mode":"minify","mergeScripts":true} 1`] = `
+"<script>var s = \\"a\\\\\\"\\"
+;b()</script>"
+`;
+
+exports[`HTML syntax — fixtures prints source-processor-merging-adjacent-script-reads-a-closed-string-template-or-5 {"mode":"minify","mergeScripts":true} 1`] = `
+"<script>var t = \`\${ \\"x\\" }\`
+;b()</script>"
+`;
+
+exports[`HTML syntax — fixtures prints source-processor-merging-adjacent-script-stops-a-run-at-the-first-body-it-cannot {"mode":"minify","mergeScripts":true} 1`] = `
+"<script>a()
+;b()</script><script>var s = 'open</script><script>c()</script>"
+`;
+
+exports[`HTML syntax — fixtures prints source-processor-merging-adjacent-script-what-folding-a-run-is-known-to-change {"mode":"minify","mergeScripts":true} 1`] = `
+"<script>log(typeof f)
+;function f(){}</script>"
+`;
+
+exports[`HTML syntax — fixtures prints source-processor-merging-adjacent-script-what-folding-a-run-is-known-to-change-2 {"mode":"minify","mergeScripts":true} 1`] = `
+"<script>a();null.x
+;b()</script>"
+`;
+
+exports[`HTML syntax — fixtures prints source-processor-merging-adjacent-script-writes-the-a-next-body-would-otherwise {"mode":"minify","mergeScripts":true} 1`] = `
+"<script>var a = 1
+;(function(){})()</script>"
+`;
+
+exports[`HTML syntax — fixtures prints source-processor-merging-adjacent-script-writes-the-a-next-body-would-otherwise-2 {"mode":"minify","mergeScripts":true} 1`] = `
+"<script>var a = 1
+;[1].forEach(f)</script>"
+`;
+
+exports[`HTML syntax — fixtures prints source-processor-merging-adjacent-script-writes-the-a-next-body-would-otherwise-3 {"mode":"minify","mergeScripts":true} 1`] = `
+"<script>var a = 1
+;\`x\`</script>"
+`;
+
+exports[`HTML syntax — fixtures prints source-processor-merging-adjacent-script-writes-the-a-next-body-would-otherwise-4 {"mode":"minify","mergeScripts":true} 1`] = `
+"<script>var a = 1
+;+1</script>"
+`;
+
+exports[`HTML syntax — fixtures prints source-processor-merging-adjacent-script-writes-the-a-next-body-would-otherwise-5 {"mode":"minify","mergeScripts":true} 1`] = `
+"<script>var a = 1
+;-1</script>"
+`;
+
+exports[`HTML syntax — fixtures prints source-processor-merging-adjacent-script-writes-the-a-next-body-would-otherwise-6 {"mode":"minify","mergeScripts":true} 1`] = `
+"<script>var a = 1
+;/re/.test(x)</script>"
+`;
+
+exports[`HTML syntax — fixtures prints source-processor-merging-adjacent-style-closes-a-sheet-ending-inside-a-comment {"mode":"minify","mergeStyles":true} 1`] = `"<style>a{color:red}/*x*/b{color:#00f}</style>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-merging-adjacent-style-closes-a-sheet-ending-inside-a-string {"mode":"minify","mergeStyles":true} 1`] = `"<style>a{content:\\"x\\"}b{color:#00f}</style>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-merging-adjacent-style-closes-a-sheet-left-inside-a-bracket {"mode":"minify","mergeStyles":true} 1`] = `"<style>a{color:red}b{color:#00f}</style>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-merging-adjacent-style-closes-a-sheet-left-inside-a-bracket-2 {"mode":"minify","mergeStyles":true} 1`] = `"<style>a{color:rgb(1,2,3})}b{color:#00f}</style>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-merging-adjacent-style-declines-to-join-across-a-sheet {"mode":"minify","mergeStyles":true} 1`] = `"<style>@namespace url(http://www.w3.org/2000/svg);</style><style>p{color:red}</style>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-merging-adjacent-style-declines-to-join-across-a-sheet-2 {"mode":"minify","mergeStyles":true} 1`] = `"<style>@namespace s url(x);</style><style>s|a{color:red}</style>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-merging-adjacent-style-declines-to-join-across-a-sheet-3 {"mode":"minify","mergeStyles":true} 1`] = `"<style>a{color:red}</style><style>@\\\\6e \\\\61 \\\\6d \\\\65 \\\\73 \\\\70 \\\\61 \\\\63 \\\\65 url(x);p{color:red}</style>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-merging-adjacent-style-declines-to-join-across-a-sheet-4 {"mode":"minify","mergeStyles":true} 1`] = `"<style>a{color:red}</style><style>@\\\\69 \\\\6d \\\\70 \\\\6f \\\\72 \\\\74 url(x.css);p{color:red}</style>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-merging-adjacent-style-declines-to-join-across-a-sheet-5 {"mode":"minify","mergeStyles":true} 1`] = `"<style>@\\\\6e \\\\61 \\\\6d \\\\65 \\\\73 \\\\70 \\\\61 \\\\63 \\\\65 url(x);</style><style>p{color:red}</style>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-merging-adjacent-style-reads-a-sheet-s-closed-comment-escape {"mode":"minify","mergeStyles":true} 1`] = `"<style>a{}/* x */b{}</style>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-merging-adjacent-style-reads-a-sheet-s-closed-comment-escape-2 {"mode":"minify","mergeStyles":true} 1`] = `"<style>.a\\\\{b{}b{}</style>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-merging-adjacent-style-reads-a-sheet-s-closed-comment-escape-3 {"mode":"minify","mergeStyles":true} 1`] = `"<style>a{content:\\"\\\\\\"\\"}b{}</style>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-merging-adjacent-style-reads-a-sheet-s-closed-comment-escape-4 {"mode":"minify","mergeStyles":true} 1`] = `"<style>a[x]{}b{}</style>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-merging-adjacent-style-reads-a-sheet-s-closed-comment-escape-5 {"mode":"minify","mergeStyles":true} 1`] = `"<style>a{b:(])}b{}</style>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-merging-adjacent-style-reads-a-sheet-s-closed-comment-escape-6 {"mode":"minify","mergeStyles":true} 1`] = `"<style>a{}b{c:\\"d</style>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-merging-adjacent-style-reads-a-sheet-s-closed-comment-escape-7 {"mode":"minify","mergeStyles":true} 1`] = `"<style>a{}</style><style>@import url(x.css);</style>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-merging-adjacent-style-reads-a-sheet-s-closed-comment-escape-8 {"mode":"minify","mergeStyles":true} 1`] = `"<style>b{c:\\"d\\"}a{}</style>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-merging-adjacent-style-reads-a-sheet-s-closed-comment-escape-9 {"mode":"minify","mergeStyles":true} 1`] = `"<style>a{}b{}c{}</style>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-merging-adjacent-style-reads-a-sheet-s-closed-comment-escape-10 {"mode":"minify","mergeStyles":true} 1`] = `"<style>@import url(x);c{}</style>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-merging-adjacent-style-reads-a-sheet-s-closed-comment-escape-11 {"mode":"minify","mergeStyles":true} 1`] = `"<style>a{}}{}c{}</style>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-merging-adjacent-style-reads-a-sheet-s-closed-comment-escape-12 {"mode":"minify","mergeStyles":true} 1`] = `"<style>a{--x:f(</style><style>c{}</style>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-merging-adjacent-style-reads-a-sheet-s-closed-comment-escape-23 {"mode":"minify","mergeStyles":true} 1`] = `"<style>@import url(x);<!-- a{} -->b{}</style>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-minify-serialization-edge-cases-carriage-returns-in-text {"mode":"minify"} 1`] = `
+"<p>a
+b"
+`;
+
+exports[`HTML syntax — fixtures prints source-processor-minify-serialization-edge-cases-carriage-returns-in-text-2 {"mode":"minify"} 1`] = `
+"<p>a
+b"
+`;
+
+exports[`HTML syntax — fixtures prints source-processor-minify-serialization-edge-cases-carriage-returns-in-text-3 {"mode":"minify"} 1`] = `
+"<p>a
+
+b"
+`;
+
+exports[`HTML syntax — fixtures prints source-processor-minify-serialization-edge-cases-carriage-returns-in-text-keeps {"mode":"minify"} 1`] = `
+"<table><colgroup>
+	<col></table>"
+`;
+
+exports[`HTML syntax — fixtures prints source-processor-minify-serialization-edge-cases-carriage-returns-in-text-keeps-2 {"mode":"minify"} 1`] = `
+"<table>
+	<tr><td>x</table>"
+`;
+
+exports[`HTML syntax — fixtures prints source-processor-minify-serialization-edge-cases-carriage-returns-in-text-keeps-4 {"mode":"minify"} 1`] = `
+"<table><colgroup>
+	<col></table>"
+`;
+
+exports[`HTML syntax — fixtures prints source-processor-minify-serialization-edge-cases-carriage-returns-in-text-leaves {"mode":"minify"} 1`] = `
+"<script>a
+b</script>"
+`;
+
+exports[`HTML syntax — fixtures prints source-processor-minify-serialization-edge-cases-cloned-reconstructed-formatting {"mode":"minify"} 1`] = `"<b a='x\\"y'></b><p><b a='x\\"y'>t</b>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-minify-serialization-edge-cases-cloned-reconstructed-formatting-2 {"mode":"minify"} 1`] = `"<b x=1></b><p><b x=1>x</b>y"`;
+
+exports[`HTML syntax — fixtures prints source-processor-minify-serialization-edge-cases-cloned-reconstructed-formatting-3 {"mode":"minify"} 1`] = `"<b></b><p><b>x</b>y"`;
+
+exports[`HTML syntax — fixtures prints source-processor-minify-serialization-edge-cases-cloned-reconstructed-formatting-4 {"mode":"minify"} 1`] = `"<p><b>a</b><p><b>b</b>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-minify-serialization-edge-cases-cloned-reconstructed-formatting-5 {"mode":"minify"} 1`] = `"<!doctype html><head></head><body><p><b>a</b><p><b>b</b></body></html>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-minify-serialization-edge-cases-cloned-reconstructed-formatting-6 {"mode":"minify"} 1`] = `"<body class=x><div>a</div></body>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-minify-serialization-edge-cases-cloned-reconstructed-formatting-7 {"mode":"minify"} 1`] = `"<img src=a&b>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-minify-serialization-edge-cases-cloned-reconstructed-formatting-8 {"mode":"minify"} 1`] = `"a<br>b"`;
+
+exports[`HTML syntax — fixtures prints source-processor-minify-serialization-edge-cases-cloned-reconstructed-formatting-9 {"mode":"minify"} 1`] = `"<table><tr><td>x</table>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-minify-serialization-edge-cases-cloned-reconstructed-formatting-10 {"mode":"minify"} 1`] = `"<table><td>x</table>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-minify-serialization-edge-cases-comments-keeps-both-halves-of-a {"mode":"minify"} 1`] = `"<!--[if !IE]><!--><link href=x><!--<![endif]-->"`;
+
+exports[`HTML syntax — fixtures prints source-processor-minify-serialization-edge-cases-comments-keeps-both-halves-of-a-2 {"mode":"minify"} 1`] = `"<!--[if IE]><p>ie only</p><![endif]-->"`;
+
+exports[`HTML syntax — fixtures prints source-processor-minify-serialization-edge-cases-comments-keeps-server-side {"mode":"minify"} 1`] = `"<!--#include virtual=\\"a.html\\" -->"`;
+
+exports[`HTML syntax — fixtures prints source-processor-minify-serialization-edge-cases-implied-body-with-leading {"mode":"minify"} 1`] = `"<body> foo</body></html>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-minify-serialization-edge-cases-implied-body-with-leading-2 {"mode":"minify"} 1`] = `"<body> foo</body>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-minify-serialization-edge-cases-implied-body-with-leading-3 {"mode":"minify"} 1`] = `"foo"`;
+
+exports[`HTML syntax — fixtures prints source-processor-minify-serialization-edge-cases-noscript-content-drops-head-2 {"mode":"minify","collapseWhitespace":"all","removeImpliedTags":"all"} 1`] = `"<!doctype html><title>t</title><noscript>a</noscript><p>x"`;
+
+exports[`HTML syntax — fixtures prints source-processor-minify-serialization-edge-cases-noscript-content-drops-the-head {"mode":"minify"} 1`] = `"<!doctype html><head><noscript><link rel=a href=b><!-- c --></noscript><title>t</title></head><p>x"`;
+
+exports[`HTML syntax — fixtures prints source-processor-minify-serialization-edge-cases-noscript-content-drops-the-head-2 {"mode":"minify"} 1`] = `"<!doctype html><head><noscript><!-- a --!><!----><link rel=a href=b></noscript><title>t</title></head><p>x"`;
+
+exports[`HTML syntax — fixtures prints source-processor-minify-serialization-edge-cases-noscript-content-drops-the-head-3 {"mode":"minify"} 1`] = `"<!doctype html><head><noscript><META charset=x></noscript><title>t</title></head><p>x"`;
+
+exports[`HTML syntax — fixtures prints source-processor-minify-serialization-edge-cases-noscript-content-drops-the-head-4 {"mode":"minify"} 1`] = `"<!doctype html><head><noscript></noscript><title>t</title></head><p>x"`;
+
+exports[`HTML syntax — fixtures prints source-processor-minify-serialization-edge-cases-noscript-content-keeps-the {"mode":"minify"} 1`] = `"<noscript><link href=\\"x\\"></noscript>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-minify-serialization-edge-cases-noscript-content-keeps-the-head {"mode":"minify"} 1`] = `"<!doctype html><head><noscript><img src=x></noscript> <title>t</title></head><p>x"`;
+
+exports[`HTML syntax — fixtures prints source-processor-minify-serialization-edge-cases-noscript-content-keeps-the-head-2 {"mode":"minify"} 1`] = `
+"<!doctype html><head><noscript>PASS</noscript></head>
+<body>x</body>"
+`;
+
+exports[`HTML syntax — fixtures prints source-processor-minify-serialization-edge-cases-noscript-content-keeps-the-head-3 {"mode":"minify"} 1`] = `"<!doctype html><head><noscript><!-->PASS<!-- --></noscript> <title>t</title></head><p>x"`;
+
+exports[`HTML syntax — fixtures prints source-processor-minify-serialization-edge-cases-noscript-content-keeps-the-head-4 {"mode":"minify"} 1`] = `"<!doctype html><head><noscript><!-- a --!>PASS<!-- b --></noscript> <title>t</title></head><p>x"`;
+
+exports[`HTML syntax — fixtures prints source-processor-minify-serialization-edge-cases-noscript-content-keeps-the-head-5 {"mode":"minify"} 1`] = `"<!doctype html><head><noscript><style>a{}</style></noscript> <title>t</title></head><p>x"`;
+
+exports[`HTML syntax — fixtures prints source-processor-minify-serialization-edge-cases-noscript-content-keeps-the-text {"mode":"minify"} 1`] = `"<body><noscript>a &lt;b&gt; c</noscript></body>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-minify-serialization-edge-cases-noscript-content-keeps-what-a {"mode":"minify"} 1`] = `"<!doctype html><head><noscript><img src=x.gif></noscript><title>t</title></head><p>hi"`;
+
+exports[`HTML syntax — fixtures prints source-processor-minify-serialization-edge-cases-noscript-content-minifies-a {"mode":"minify"} 1`] = `"<body><noscript><noscript>a</noscript><p>bc</body>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-minify-serialization-edge-cases-noscript-content-minifies-a-2 {"mode":"minify"} 1`] = `"<p>ab"`;
+
+exports[`HTML syntax — fixtures prints source-processor-minify-serialization-edge-cases-noscript-content-minifies-a-3 {"mode":"minify"} 1`] = `"<body><noscript>a</noscript> <p>x</body>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-minify-serialization-edge-cases-opening-tag-whitespace {"mode":"minify"} 1`] = `"<p hidden class=x>t"`;
+
+exports[`HTML syntax — fixtures prints source-processor-minify-serialization-edge-cases-opening-tag-whitespace-2 {"mode":"minify"} 1`] = `"<input disabled>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-minify-serialization-edge-cases-opening-tag-whitespace-3 {"mode":"minify"} 1`] = `"<p a b c>t"`;
+
+exports[`HTML syntax — fixtures prints source-processor-minify-serialization-edge-cases-opening-tag-whitespace-drops-a {"mode":"minify","removeRedundantAttributes":"all"} 1`] = `"<input a>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-minify-serialization-edge-cases-opening-tag-whitespace-drops-a-2 {"mode":"minify","removeRedundantAttributes":"all"} 1`] = `"<input a b>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-minify-serialization-edge-cases-opening-tag-whitespace-drops-a-3 {"mode":"minify","removeRedundantAttributes":"all"} 1`] = `"<form a>x</form>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-minify-serialization-edge-cases-opening-tag-whitespace-drops-a-4 {"mode":"minify","removeRedundantAttributes":"all"} 1`] = `"<input a/b>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-minify-serialization-edge-cases-opening-tag-whitespace-folds {"mode":"minify"} 1`] = `"<div>t</div>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-minify-serialization-edge-cases-opening-tag-whitespace-folds-2 {"mode":"minify"} 1`] = `"<svg><TITLE>t</TITLE></svg>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-minify-serialization-edge-cases-opening-tag-whitespace-keeps-a {"mode":"minify"} 1`] = `"<svg><circle r=1 /></svg>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-minify-serialization-edge-cases-opening-tag-whitespace-keeps-a-2 {"mode":"minify"} 1`] = `"<svg><circle r=1 /></svg>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-minify-serialization-edge-cases-opening-tag-whitespace-keeps-a-3 {"mode":"minify"} 1`] = `"<svg><circle/></svg>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-minify-serialization-edge-cases-opening-tag-whitespace-leaves-a {"mode":"minify"} 1`] = `"<a href=x/>t</a>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-minify-serialization-edge-cases-opening-tag-whitespace-writes {"mode":"minify"} 1`] = `"<p a/b>t"`;
+
+exports[`HTML syntax — fixtures prints source-processor-minify-serialization-edge-cases-opening-tag-whitespace-writes-2 {"mode":"minify"} 1`] = `"<p a b>t"`;
+
+exports[`HTML syntax — fixtures prints source-processor-minify-serialization-edge-cases-opening-tag-whitespace-writes-3 {"mode":"minify"} 1`] = `"<p a=b c>t"`;
+
+exports[`HTML syntax — fixtures prints source-processor-minify-serialization-edge-cases-plaintext-never-emits-a {"mode":"minify"} 1`] = `"<plaintext>foo"`;
+
+exports[`HTML syntax — fixtures prints source-processor-one-print-at-a-time-refuses-a-parse-a-visitor-starts-while-the {"mode":"minify"} 1`] = `"<p> x "`;
+
+exports[`HTML syntax — fixtures prints source-processor-optional-end-tags-read-the-output-keeps-a-caption-whitespace {"mode":"minify"} 1`] = `"<table><caption>x</caption> </table>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-optional-end-tags-read-the-output-keeps-a-p-a-quirks-mode-table {"mode":"minify"} 1`] = `"<p></p><table></table>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-optional-end-tags-read-the-output-keeps-a-p-a-quirks-mode-table-2 {"mode":"minify"} 1`] = `"<!doctype html><p><table></table>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-optional-end-tags-read-the-output-keeps-the-tag-for-a-comment {"mode":"minify","transforms":{"comments":"keep"}} 1`] = `"<ul><li>a</li><!--keep--><li>b</ul>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-optional-end-tags-read-the-output-keeps-the-tag-when-an {"mode":"minify","collapseWhitespace":"all"} 1`] = `
+"<pre><ul><li>a</li>
+<li>b</ul></pre>"
+`;
+
+exports[`HTML syntax — fixtures prints source-processor-optional-end-tags-read-the-output-reads-past-a-comment {"mode":"minify"} 1`] = `"<ul><li>a<li>b</ul>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-optional-end-tags-read-the-output-reads-past-whitespace-the {"mode":"minify","collapseWhitespace":"all"} 1`] = `"<ul><li><p>a<li><p>b</ul>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-optional-end-tags-read-the-output-reads-past-whitespace-the {"mode":"minify","collapseWhitespace":"conservative"} 1`] = `"<ul> <li><p>a</p> </li> <li><p>b</p> </li> </ul>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-optional-end-tags-read-the-output-reads-past-whitespace-the {"mode":"minify","collapseWhitespace":"smart"} 1`] = `"<ul><li><p>a<li><p>b</ul>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-optional-end-tags-read-the-output-reads-past-whitespace-the {"mode":"minify"} 1`] = `
+"<ul>
+<li><p>a</p>
+</li>
+<li><p>b</p>
+</li>
+</ul>"
+`;
+
+exports[`HTML syntax — fixtures prints source-processor-optional-end-tags-read-the-output-scans-both-ways-past {"mode":"minify","collapseWhitespace":"all"} 1`] = `"<table><thead><tr><th>h<tbody><tr><td>d</table>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-optional-end-tags-read-the-output-scans-both-ways-past {"mode":"minify"} 1`] = `
+"<table><thead><tr><th>h</thead>
+<tr><td>d</table>"
+`;
+
+exports[`HTML syntax — fixtures prints source-processor-optional-end-tags-read-the-output-still-keeps-a-tag-before {"mode":"minify"} 1`] = `"<ul><li>a</li>tail</ul>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-print-modes-beautifies-by-re-serializing-rather-than-rewriting {"mode":"beautify"} 1`] = `"<!DOCTYPE html><div id=a class=\\"x\\"><!-- c --><p>hi <b>there</b></p><ul><li>one</li><li>two</li></ul></div>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-print-modes-beautifies-by-re-serializing-rather-than-rewriting {"mode":"minify"} 1`] = `"<!doctype html><div id=a class=x><p>hi <b>there</b><ul><li>one<li>two</ul></div>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-print-modes-escapes-text-to-the-letter-of-13-3-outside {"mode":"beautify"} 1`] = `"<p>a &amp; b &lt; c &gt; d &#13; e</p>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-print-modes-escapes-text-to-the-letter-of-13-3-outside {"mode":"minify"} 1`] = `"<p>a & b < c > d &#13; e"`;
+
+exports[`HTML syntax — fixtures prints source-processor-print-modes-keeps-a-that-stands-as-a-character-so-a-second-pass-2 {"mode":"minify"} 1`] = `
+"<boo>hay
+<<<<>foo
+>>&lt;</boo>"
+`;
+
+exports[`HTML syntax — fixtures prints source-processor-printing-in-pieces-drops-a-last-child-s-end-tag-only-when-the {"mode":"minify"} 1`] = `"<select><optgroup><option>a</select>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-printing-in-pieces-drops-a-last-child-s-end-tag-only-when-the-2 {"mode":"minify"} 1`] = `"<ruby><rt>a</ruby>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-printing-in-pieces-drops-a-last-child-s-end-tag-only-when-the-3 {"mode":"minify"} 1`] = `"<div><p>x</div>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-printing-in-pieces-drops-a-last-child-s-end-tag-only-when-the-4 {"mode":"minify"} 1`] = `"<canvas><p>x</p></canvas>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-printing-in-pieces-drops-a-last-child-s-end-tag-only-when-the-5 {"mode":"minify"} 1`] = `"<my-el><p>x</p></my-el>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-printing-in-pieces-drops-a-last-child-s-end-tag-only-when-the-6 {"mode":"minify"} 1`] = `"<div><template><p>x</template></div>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-printing-in-pieces-drops-a-ruby-segment-s-end-tag-only-inside-a {"mode":"minify"} 1`] = `"<ruby><rt>a<rt>b</ruby>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-printing-in-pieces-drops-a-ruby-segment-s-end-tag-only-inside-a-2 {"mode":"minify"} 1`] = `"<div><rt>a</rt><rt>b</div>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-printing-in-pieces-drops-a-ruby-segment-s-end-tag-only-inside-a-3 {"mode":"minify"} 1`] = `"<ruby><table><tr><td><rt>a</rt><rt>b</table></ruby>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-printing-in-pieces-drops-a-ruby-segment-s-end-tag-only-inside-a-4 {"mode":"minify"} 1`] = `"<ruby><template><rt>a</rt><rt>b</template></ruby>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-printing-in-pieces-drops-a-ruby-segment-s-end-tag-only-inside-a-5 {"mode":"minify"} 1`] = `"<ruby><svg><foreignObject><rt>a</rt><rt>b</rt></foreignObject></svg></ruby>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-printing-in-pieces-drops-an-omitted-tag-that-nothing-printed {"mode":"minify"} 1`] = `"<body></body></html>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-printing-in-pieces-drops-an-omitted-tag-that-nothing-printed-2 {"mode":"minify"} 1`] = `"</body>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-printing-in-pieces-drops-an-omitted-tag-that-nothing-printed-3 {"mode":"minify"} 1`] = `""`;
+
+exports[`HTML syntax — fixtures prints source-processor-printing-in-pieces-keeps-the-end-tag-of-a-element-that-has {"mode":"minify"} 1`] = `"<div>x</div>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-printing-in-pieces-keeps-the-end-tag-of-a-element-that-has-2 {"mode":"minify"} 1`] = `"<div></div>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-printing-in-pieces-keeps-the-end-tag-of-a-element-that-has-3 {"mode":"minify"} 1`] = `"<svg><path/><circle/></svg>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-printing-in-pieces-keeps-the-end-tag-of-a-tbody-whose-start-tag {"mode":"minify"} 1`] = `"<table><tr><td>x</tbody><caption>c</table>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-printing-in-pieces-keeps-the-end-tag-of-a-tbody-whose-start-tag-2 {"mode":"minify"} 1`] = `"<table><tr><td>x</table>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-printing-in-pieces-keeps-the-end-tag-of-a-tbody-whose-start-tag-3 {"mode":"minify"} 1`] = `"<table><col><tr><td>y</table>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-printing-in-pieces-prints-a-long-sibling-chain-a-piece-at-a {"mode":"minify"} 1`] = `"<div id=a><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span><span>x</span></div>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-printing-in-pieces-prints-a-template-s-content-fragment-in-its {"mode":"minify"} 1`] = `"<div><template><p>a</template></div>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-printing-in-pieces-re-adds-the-leading-newline-listing-would {"mode":"minify"} 1`] = `
+"<div><listing>
+
+keep</listing></div>"
+`;
+
+exports[`HTML syntax — fixtures prints source-processor-printing-in-pieces-re-adds-the-leading-newline-listing-would-2 {"mode":"minify"} 1`] = `"<div><listing>x</listing></div>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-printing-in-pieces-re-adds-the-leading-newline-pre-would-lose {"mode":"minify"} 1`] = `
+"<div><pre>
+
+keep</pre></div>"
+`;
+
+exports[`HTML syntax — fixtures prints source-processor-printing-in-pieces-re-adds-the-leading-newline-pre-would-lose-2 {"mode":"minify"} 1`] = `"<div><pre>x</pre></div>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-printing-in-pieces-re-adds-the-leading-newline-textarea-would {"mode":"minify"} 1`] = `
+"<div><textarea>
+
+keep</textarea></div>"
+`;
+
+exports[`HTML syntax — fixtures prints source-processor-printing-in-pieces-re-adds-the-leading-newline-textarea-would-2 {"mode":"minify"} 1`] = `"<div><textarea>x</textarea></div>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-printing-in-pieces-swallows-a-newline-only-in-the-token-right {"mode":"minify"} 1`] = `
+"<div><listing></listing>
+after</div>"
+`;
+
+exports[`HTML syntax — fixtures prints source-processor-printing-in-pieces-swallows-a-newline-only-in-the-token-right-2 {"mode":"minify"} 1`] = `
+"<div><listing>
+
+keep</listing></div>"
+`;
+
+exports[`HTML syntax — fixtures prints source-processor-printing-in-pieces-swallows-a-newline-only-in-the-token-right-3 {"mode":"minify"} 1`] = `
+"<div><listing>
+
+keep</listing></div>"
+`;
+
+exports[`HTML syntax — fixtures prints source-processor-printing-in-pieces-swallows-a-newline-only-in-the-token-right-4 {"mode":"minify"} 1`] = `
+"<listing><span></span>
+keep</listing>"
+`;
+
+exports[`HTML syntax — fixtures prints source-processor-printing-in-pieces-swallows-a-newline-only-in-the-token-right-5 {"mode":"minify"} 1`] = `
+"<div><pre></pre>
+after</div>"
+`;
+
+exports[`HTML syntax — fixtures prints source-processor-printing-in-pieces-swallows-a-newline-only-in-the-token-right-6 {"mode":"minify"} 1`] = `
+"<div><pre>
+
+keep</pre></div>"
+`;
+
+exports[`HTML syntax — fixtures prints source-processor-printing-in-pieces-swallows-a-newline-only-in-the-token-right-7 {"mode":"minify"} 1`] = `
+"<div><pre>
+
+keep</pre></div>"
+`;
+
+exports[`HTML syntax — fixtures prints source-processor-printing-in-pieces-swallows-a-newline-only-in-the-token-right-8 {"mode":"minify"} 1`] = `
+"<pre><span></span>
+keep</pre>"
+`;
+
+exports[`HTML syntax — fixtures prints source-processor-printing-in-pieces-swallows-a-newline-only-in-the-token-right-9 {"mode":"minify"} 1`] = `
+"<div><textarea></textarea>
+after</div>"
+`;
+
+exports[`HTML syntax — fixtures prints source-processor-printing-what-re-parses-to-the-same-tree-a-fragment-keeps-the {"mode":"minify","fragmentContext":"div"} 1`] = `
+"
+<div></div>"
+`;
+
+exports[`HTML syntax — fixtures prints source-processor-printing-what-re-parses-to-the-same-tree-a-fragment-keeps-the-2 {"mode":"minify"} 1`] = `"<head></head><body></body></html>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-printing-what-re-parses-to-the-same-tree-a-fragment-leaves-out {"mode":"minify","fragmentContext":"table"} 1`] = `"<col>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-printing-what-re-parses-to-the-same-tree-a-fragment-leaves-out-2 {"mode":"minify","fragmentContext":"table"} 1`] = `"<tr><td>x"`;
+
+exports[`HTML syntax — fixtures prints source-processor-printing-what-re-parses-to-the-same-tree-a-fragment-leaves-out-3 {"mode":"minify","fragmentContext":"div"} 1`] = `"<template><colgroup><col></template>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-printing-what-re-parses-to-the-same-tree-a-start-tag-left-out-20 {"mode":"minify"} 1`] = `"<head></head></html>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-printing-what-re-parses-to-the-same-tree-a-start-tag-left-out-21 {"mode":"minify","removeImpliedTags":"all"} 1`] = `"<p>x"`;
+
+exports[`HTML syntax — fixtures prints source-processor-printing-what-re-parses-to-the-same-tree-a-start-tag-left-out-22 {"mode":"minify"} 1`] = `"<table><col><tr><td>x</table>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-printing-what-re-parses-to-the-same-tree-a-start-tag-left-out-23 {"mode":"minify"} 1`] = `"<template><tbody><tr><td>x</template>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-printing-what-re-parses-to-the-same-tree-an-end-tag-the-parser {"mode":"minify"} 1`] = `"<table><caption>x</caption><script>a()</script><tr><td>y</table>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-printing-what-re-parses-to-the-same-tree-an-end-tag-the-parser-3 {"mode":"minify"} 1`] = `"<table><caption>x<tr><td>y</table>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-printing-what-re-parses-to-the-same-tree-an-end-tag-the-parser-4 {"mode":"minify"} 1`] = `"<table><caption>x</table>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-printing-what-re-parses-to-the-same-tree-an-end-tag-the-parser-7 {"mode":"beautify"} 1`] = `"<form><div></form><form>x</form></div></form>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-printing-what-re-parses-to-the-same-tree-text-fostered-out-of-a {"mode":"beautify"} 1`] = `"<body> <table><tr><option><li>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-printing-what-re-parses-to-the-same-tree-text-fostered-out-of-a {"mode":"minify"} 1`] = `"<body> <table><tr><option><li>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-printing-what-re-parses-to-the-same-tree-what-follows-an {"mode":"beautify"} 1`] = `"<!doctype html><script><!--<script "`;
+
+exports[`HTML syntax — fixtures prints source-processor-printing-what-re-parses-to-the-same-tree-what-follows-an {"mode":"minify"} 1`] = `"<!doctype html><script><!--<script "`;
+
+exports[`HTML syntax — fixtures prints source-processor-printing-what-re-parses-to-the-same-tree-what-follows-an-2 {"mode":"beautify"} 1`] = `"<p><script><!--<SCRIPT/>x</p>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-printing-what-re-parses-to-the-same-tree-what-follows-an-2 {"mode":"minify"} 1`] = `"<p><script><!--<SCRIPT/>x</p>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-printing-what-re-parses-to-the-same-tree-what-follows-an-3 {"mode":"beautify"} 1`] = `"<script><!--<script>a</scripts>-"`;
+
+exports[`HTML syntax — fixtures prints source-processor-printing-what-re-parses-to-the-same-tree-what-follows-an-3 {"mode":"minify"} 1`] = `"<script><!--<script>a</scripts>-"`;
+
+exports[`HTML syntax — fixtures prints source-processor-printing-what-re-parses-to-the-same-tree-what-follows-an-4 {"mode":"beautify"} 1`] = `"<script><!--<script></script>x</script>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-printing-what-re-parses-to-the-same-tree-what-follows-an-5 {"mode":"beautify"} 1`] = `"<script><!--<script>--->x</script>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-printing-what-re-parses-to-the-same-tree-what-follows-an-6 {"mode":"beautify"} 1`] = `"<script><!--<scripts>x</script>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-printing-what-re-parses-to-the-same-tree-what-follows-an-7 {"mode":"beautify"} 1`] = `"<script><!-- a --></script>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-printing-what-re-parses-to-the-same-tree-what-follows-an-15 {"mode":"beautify"} 1`] = `"</body><!--c--><p><plaintext>a"`;
+
+exports[`HTML syntax — fixtures prints source-processor-printing-what-re-parses-to-the-same-tree-what-follows-an-15 {"mode":"minify"} 1`] = `"</body><!--c--><p><plaintext>a"`;
+
+exports[`HTML syntax — fixtures prints source-processor-printing-what-re-parses-to-the-same-tree-what-follows-an-16 {"mode":"beautify"} 1`] = `"<b></body><?pi?><plaintext>a"`;
+
+exports[`HTML syntax — fixtures prints source-processor-printing-what-re-parses-to-the-same-tree-what-follows-an-16 {"mode":"minify"} 1`] = `"<b></body><?pi?><plaintext>a"`;
+
+exports[`HTML syntax — fixtures prints source-processor-printing-what-re-parses-to-the-same-tree-what-follows-an-17 {"mode":"beautify"} 1`] = `"<template><tbody><li><td><plaintext>x"`;
+
+exports[`HTML syntax — fixtures prints source-processor-printing-what-re-parses-to-the-same-tree-what-follows-an-17 {"mode":"minify"} 1`] = `"<template><tbody><li><td><plaintext>x"`;
+
+exports[`HTML syntax — fixtures prints source-processor-printing-what-re-parses-to-the-same-tree-what-follows-an-18 {"mode":"beautify"} 1`] = `"<svg><plaintext>a</plaintext>b</svg>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-re-serializing-keeps-the-tree-keeps-a-comment-behind-an-implied {"mode":"beautify"} 1`] = `"<html b=\\"2\\" a=\\"1\\">ab</html><!--0-->"`;
+
+exports[`HTML syntax — fixtures prints source-processor-re-serializing-keeps-the-tree-keeps-a-run-holding-a-rebuilt {"mode":"beautify"} 1`] = `"<nobr><table><b><colgroup><nobr>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-reflected-attributes-are-read-per-element-collapses-a-boolean {"mode":"minify"} 1`] = `"<marquee truespeed>x</marquee>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-reflected-attributes-are-read-per-element-collapses-a-boolean-2 {"mode":"minify"} 1`] = `"<div truespeed=truespeed>x</div>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-reflected-attributes-are-read-per-element-collapses-a-boolean-3 {"mode":"minify"} 1`] = `"<dir compact><li>x</dir>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-reflected-attributes-are-read-per-element-collapses-a-boolean-4 {"mode":"minify"} 1`] = `"<div compact=compact>x</div>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-reflected-attributes-are-read-per-element-normalizes-an-integer {"mode":"minify"} 1`] = `"<marquee scrollamount=10 scrolldelay=85>x</marquee>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-reflected-attributes-are-read-per-element-normalizes-an-integer-2 {"mode":"minify"} 1`] = `"<div scrollamount=0010>x</div>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-reflected-attributes-are-read-per-element-normalizes-an-integer-3 {"mode":"minify"} 1`] = `"<div scrolldelay=0085>x</div>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-reflected-attributes-are-read-per-element-normalizes-an-integer-4 {"mode":"minify"} 1`] = `"<marquee hspace=7 vspace=8>x</marquee>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-reflected-attributes-are-read-per-element-normalizes-an-integer-5 {"mode":"minify"} 1`] = `"<div hspace=007>x</div>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-reflected-attributes-are-read-per-element-normalizes-an-integer-6 {"mode":"minify"} 1`] = `"<div vspace=008>x</div>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-remove-empty-elements-reads-the-output-drops-a-head-holding {"mode":"minify","removeEmptyElements":true} 1`] = `"<body>x</body>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-remove-empty-elements-reads-the-output-drops-a-run-of-nested {"mode":"minify","removeEmptyElements":true} 1`] = `""`;
+
+exports[`HTML syntax — fixtures prints source-processor-remove-empty-elements-reads-the-output-drops-a-run-of-nested-2 {"mode":"minify","removeEmptyElements":true} 1`] = `"<p>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-remove-empty-elements-reads-the-output-drops-one-left-empty-by {"mode":"minify","removeEmptyElements":true} 1`] = `""`;
+
+exports[`HTML syntax — fixtures prints source-processor-remove-empty-elements-reads-the-output-follows-the-collapse {"mode":"minify","removeEmptyElements":true,"collapseWhitespace":"all"} 1`] = `""`;
+
+exports[`HTML syntax — fixtures prints source-processor-remove-empty-elements-reads-the-output-follows-the-collapse {"mode":"minify","removeEmptyElements":true} 1`] = `"<div> </div>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-remove-empty-elements-reads-the-output-keeps-app-root-app-root {"mode":"minify","removeEmptyElements":true} 1`] = `"<app-root></app-root>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-remove-empty-elements-reads-the-output-keeps-button-button {"mode":"minify","removeEmptyElements":true} 1`] = `"<button></button>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-remove-empty-elements-reads-the-output-keeps-details-details {"mode":"minify","removeEmptyElements":true} 1`] = `"<details></details>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-remove-empty-elements-reads-the-output-keeps-fieldset-fieldset {"mode":"minify","removeEmptyElements":true} 1`] = `"<fieldset></fieldset>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-remove-empty-elements-reads-the-output-keeps-foreign-content {"mode":"minify","removeEmptyElements":true} 1`] = `"<div><svg> </svg></div>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-remove-empty-elements-reads-the-output-keeps-iframe-iframe {"mode":"minify","removeEmptyElements":true} 1`] = `"<iframe></iframe>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-remove-empty-elements-reads-the-output-keeps-one-that-spells-an {"mode":"minify","removeEmptyElements":true} 1`] = `"<div><span id=k></span></div>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-remove-empty-elements-reads-the-output-keeps-one-that-spells-an-2 {"mode":"minify","removeEmptyElements":true} 1`] = `"<div class=x></div>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-remove-empty-elements-reads-the-output-keeps-one-whose {"mode":"minify","removeEmptyElements":true,"collapseWhitespace":"all"} 1`] = `"<div><style> </style></div>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-remove-empty-elements-reads-the-output-keeps-one-whose-2 {"mode":"minify","removeEmptyElements":true,"collapseWhitespace":"all"} 1`] = `"<div><script> </script></div>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-remove-empty-elements-reads-the-output-keeps-one-whose-3 {"mode":"minify","removeEmptyElements":true,"collapseWhitespace":"all"} 1`] = `"<div><iframe> </iframe></div>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-remove-empty-elements-reads-the-output-keeps-one-whose-4 {"mode":"minify","removeEmptyElements":true,"collapseWhitespace":"all"} 1`] = `"<div><noframes> </noframes></div>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-remove-empty-elements-reads-the-output-keeps-one-whose-5 {"mode":"minify","removeEmptyElements":true,"collapseWhitespace":"all"} 1`] = `"<div><pre>  </pre></div>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-remove-empty-elements-reads-the-output-keeps-one-whose-child {"mode":"minify","removeEmptyElements":true} 1`] = `"<div><canvas></canvas></div>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-remove-empty-elements-reads-the-output-keeps-one-whose-child-2 {"mode":"minify","removeEmptyElements":true} 1`] = `"<div><span>x</span></div>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-remove-empty-elements-reads-the-output-keeps-q-q-which-renders {"mode":"minify","removeEmptyElements":true} 1`] = `"<q></q>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-remove-empty-elements-reads-the-output-keeps-select-button {"mode":"minify","removeEmptyElements":true} 1`] = `"<select><button><selectedcontent></selectedcontent></button><option>a</select>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-remove-empty-elements-reads-the-output-keeps-select-option {"mode":"minify","removeEmptyElements":true} 1`] = `"<select><option><option>a</select>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-remove-empty-elements-reads-the-output-keeps-select-select {"mode":"minify","removeEmptyElements":true} 1`] = `"<select></select>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-remove-empty-elements-reads-the-output-keeps-ul-li-li-ul-which {"mode":"minify","removeEmptyElements":true} 1`] = `"<ul><li></ul>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-remove-empty-elements-reads-the-output-keeps-video-video-which {"mode":"minify","removeEmptyElements":true} 1`] = `"<video></video>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-remove-empty-elements-reads-the-output-keeps-x-widget-x-widget {"mode":"minify","removeEmptyElements":true} 1`] = `"<x-widget></x-widget>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-remove-empty-elements-reads-the-output-omits-the-end-tags-in-p {"mode":"minify","removeEmptyElements":true} 1`] = `"<p>a<hr><p></p> <div>x</div>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-remove-empty-elements-reads-the-output-omits-the-end-tags-in-p-2 {"mode":"minify","removeEmptyElements":true} 1`] = `"<p>a<hr><p></p> <div>x</div>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-remove-empty-elements-reads-the-output-omits-the-end-tags-in-p-3 {"mode":"minify","removeEmptyElements":true} 1`] = `"<p>a<hr><p><div>x</div>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-remove-empty-elements-reads-the-output-omits-the-end-tags-in-p-4 {"mode":"minify","removeEmptyElements":true} 1`] = `"<p>a<hr><p><div>x</div>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-remove-empty-elements-reads-the-output-omits-the-end-tags-in-p-5 {"mode":"minify","removeEmptyElements":true} 1`] = `"<p>x<form></form>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-remove-empty-elements-reads-the-output-omits-the-end-tags-in-p-6 {"mode":"minify","removeEmptyElements":true} 1`] = `"<p>x<form></form>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-remove-implied-tags-a-later-li-against-a-list-item-scope {"mode":"minify","removeImpliedTags":true} 1`] = `"<table><tr><td><ul><li>a</li><script></script></ul><td><ul><li>b</ul></table>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-remove-implied-tags-a-later-li-against-a-list-item-scope-2 {"mode":"minify","removeImpliedTags":true} 1`] = `"<table><tr><th><ol><li>a</ol><th><ol><li>b</ol></table>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-remove-implied-tags-a-later-li-against-a-list-item-scope-3 {"mode":"minify","removeImpliedTags":true} 1`] = `"<ul><li>a<ul><li>b</li><script></script></ul><li>c</ul>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-remove-implied-tags-a-later-li-against-a-list-item-scope-4 {"mode":"minify","removeImpliedTags":true} 1`] = `"<ul><li>a<ul><li>b</li>tail</ul><li>c</ul>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-remove-implied-tags-a-later-li-against-a-list-item-scope-5 {"mode":"minify","removeImpliedTags":true} 1`] = `"<ul><li>a<ul><li>b</ul><li>c</ul>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-remove-implied-tags-a-later-li-against-a-list-item-scope-6 {"mode":"minify","removeImpliedTags":true} 1`] = `"<ul><li>a<li>b</ul>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-remove-implied-tags-a-later-li-against-a-list-item-scope-7 {"mode":"minify","removeImpliedTags":true} 1`] = `"<li>a<li>b"`;
+
+exports[`HTML syntax — fixtures prints source-processor-remove-implied-tags-drops-a-shell-tag-over-whitespace-that {"mode":"minify","removeImpliedTags":"all"} 1`] = `"<title>t</title>x"`;
+
+exports[`HTML syntax — fixtures prints source-processor-remove-implied-tags-drops-a-shell-tag-over-whitespace-that-2 {"mode":"minify","removeImpliedTags":"all"} 1`] = `"<title>t</title>x"`;
+
+exports[`HTML syntax — fixtures prints source-processor-remove-implied-tags-invents-no-html-for-a-source-that-spelled {"mode":"minify"} 1`] = `"<p>a"`;
+
+exports[`HTML syntax — fixtures prints source-processor-remove-implied-tags-keeps-a-html-that-carries-an-attribute {"mode":"minify"} 1`] = `"<html lang=en><body>x</body></html>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-remove-implied-tags-keeps-the-tag-whitespace-behind-it-would-re {"mode":"minify","removeImpliedTags":"all"} 1`] = `"<title>t</title><body> text"`;
+
+exports[`HTML syntax — fixtures prints source-processor-remove-implied-tags-leaves-out-only-the-html-start-tag-by {"mode":"minify","removeImpliedTags":"all"} 1`] = `"<!doctype html><title>t</title><ul><li>a</ul>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-remove-implied-tags-leaves-out-only-the-html-start-tag-by {"mode":"minify","removeImpliedTags":"smart"} 1`] = `"<!doctype html><head><title>t</title></head><body><ul><li>a</ul></body></html>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-remove-implied-tags-leaves-out-only-the-html-start-tag-by {"mode":"minify","removeImpliedTags":false} 1`] = `"<!doctype html><html><head><title>t</title></head><body><ul><li>a</ul></body></html>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-remove-implied-tags-leaves-out-only-the-html-start-tag-by {"mode":"minify","removeImpliedTags":true} 1`] = `"<!doctype html><title>t</title><ul><li>a</ul>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-remove-implied-tags-leaves-out-only-the-html-start-tag-by {"mode":"minify"} 1`] = `"<!doctype html><head><title>t</title></head><body><ul><li>a</ul></body></html>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-remove-implied-tags-looks-past-a-comment-it-is-about-to-drop {"mode":"minify","removeImpliedTags":"all"} 1`] = `"<title>t</title>x"`;
+
+exports[`HTML syntax — fixtures prints source-processor-remove-implied-tags-looks-past-a-comment-it-is-about-to-drop-2 {"mode":"minify","removeImpliedTags":"all"} 1`] = `"<title>t</title></head><!--[if IE]>i<![endif]-->x"`;
+
+exports[`HTML syntax — fixtures prints source-processor-remove-implied-tags-materializes-an-implied-tag-whose-content {"mode":"minify","removeImpliedTags":true} 1`] = `"<body><style>a{color:red}</style>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-remove-implied-tags-materializes-an-implied-tag-whose-content-3 {"mode":"minify","removeImpliedTags":true} 1`] = `"<!doctype html><body> <p>x"`;
+
+exports[`HTML syntax — fixtures prints source-processor-render-embedded-source-leaves-an-inline-script-alone-when-there {"mode":"minify"} 1`] = `"<script>var   a   =   1</script>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-runs-merged-into-one-folds-a-script-into-the-one-before-only {"mode":"minify","mergeScripts":true} 1`] = `
+"<p><script>a()</script>x<script>b()
+;c()
+;d()</script>"
+`;
+
+exports[`HTML syntax — fixtures prints source-processor-runs-merged-into-one-folds-a-script-into-the-one-before-only-2 {"mode":"minify","mergeScripts":true,"transforms":{"comments":true}} 1`] = `"<p><script>a()</script><!--x--><script>b()</script>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-runs-merged-into-one-folds-a-script-into-the-one-before-only-3 {"mode":"minify","mergeScripts":true} 1`] = `
+"<template><script>a()
+;b()</script></template>"
+`;
+
+exports[`HTML syntax — fixtures prints source-processor-sort-attributes-sort-token-lists-drops-a-set-s-repeats-ordered {"mode":"minify","sortTokenLists":true} 1`] = `"<div class=\\"a b c\\">x</div>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-sort-attributes-sort-token-lists-drops-a-set-s-repeats-ordered {"mode":"minify"} 1`] = `"<div class=\\"b a c\\">x</div>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-sort-attributes-sort-token-lists-leaves-a-list-holding-a {"mode":"minify","sortTokenLists":true} 1`] = `"<div class=\\"btn{% if active %} btn-active{% endif %}\\">x</div>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-sort-attributes-sort-token-lists-leaves-a-tag-alone-where-a {"mode":"minify","sortAttributes":true} 1`] = `"<a href=x {{#if y}} target=_blank {{/if}}>t</a>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-sort-attributes-sort-token-lists-leaves-a-tag-alone-where-a {"mode":"minify"} 1`] = `"<a href=x {{#if y}} target=_blank {{/if}}>t</a>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-sort-attributes-sort-token-lists-ranks-on-the-attributes-that-2 {"mode":"minify","removeRedundantAttributes":"all","sortAttributes":true} 1`] = `"<input><input checked type=checkbox>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-sort-attributes-sort-token-lists-sorts-a-class-list-and-only {"mode":"minify","sortTokenLists":true} 1`] = `"<div class=\\"aa mm zz\\">x</div>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-sort-attributes-sort-token-lists-sorts-a-class-list-and-only-2 {"mode":"minify","sortTokenLists":true} 1`] = `"<a ping=\\"/z /a\\">l</a>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-sort-attributes-sort-token-lists-sorts-a-token-that-is-another {"mode":"minify","sortTokenLists":true} 1`] = `"<div class=\\"btn btn-lg btn-sm\\">x</div>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-sort-attributes-sort-token-lists-sorts-an-element-s-attributes {"mode":"minify","sortAttributes":true} 1`] = `"<div aa=2 mm=3 zz=1>x</div>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-the-dropped-duplicate-flag-is-per-tag-clears-it-on-a-start-tag {"mode":"minify"} 1`] = `"<br>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-the-per-transform-switches-collapse-boolean-attributes {"mode":"minify","transforms":{"collapseBooleanAttributes":false}} 1`] = `"<input disabled=disabled>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-the-per-transform-switches-collapse-boolean-attributes {"mode":"minify"} 1`] = `"<input disabled>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-the-per-transform-switches-keeps-a-parser-inserted-table-group {"mode":"minify"} 1`] = `"<table><col></table>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-the-per-transform-switches-keeps-a-parser-inserted-table-group-2 {"mode":"minify"} 1`] = `"<table><col></table>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-the-per-transform-switches-keeps-a-parser-inserted-table-group-3 {"mode":"minify"} 1`] = `"<table><col><colgroup><col></table>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-the-per-transform-switches-keeps-a-parser-inserted-table-group-4 {"mode":"minify"} 1`] = `"<table><tr><td>a</table>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-the-per-transform-switches-keeps-a-parser-inserted-table-group-5 {"mode":"minify"} 1`] = `"<table><tr><td>a</table>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-the-per-transform-switches-leaves-every-other-rewrite-on {"mode":"minify","transforms":{"collapseBooleanAttributes":false}} 1`] = `"<input disabled=disabled tabindex=3>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-the-per-transform-switches-leaves-the-shell-to-remove-implied {"mode":"minify","transforms":{"removeOptionalTags":false}} 1`] = `"<head><title>t</title></head><body><p>a</p></body></html>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-the-per-transform-switches-normalize-attribute-quotes {"mode":"minify","transforms":{"normalizeAttributeQuotes":false}} 1`] = `"<div data-x=\\"plain\\">t</div>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-the-per-transform-switches-normalize-attribute-quotes {"mode":"minify"} 1`] = `"<div data-x=plain>t</div>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-the-per-transform-switches-normalize-attribute-quotes-empty {"mode":"minify","transforms":{"normalizeAttributeQuotes":false}} 1`] = `"<div class=\\"\\">t</div>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-the-per-transform-switches-normalize-attribute-quotes-empty {"mode":"minify"} 1`] = `"<div class>t</div>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-the-per-transform-switches-normalize-list-attributes {"mode":"minify","transforms":{"normalizeListAttributes":false}} 1`] = `"<div class=\\"  b   a \\">x</div>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-the-per-transform-switches-normalize-list-attributes {"mode":"minify"} 1`] = `"<div class=\\"b a\\">x</div>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-the-per-transform-switches-normalize-numeric-attributes {"mode":"minify","transforms":{"normalizeNumericAttributes":false}} 1`] = `"<div tabindex=\\" 03 \\">x</div>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-the-per-transform-switches-normalize-numeric-attributes {"mode":"minify"} 1`] = `"<div tabindex=3>x</div>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-the-per-transform-switches-remove-optional-tags {"mode":"minify","transforms":{"removeOptionalTags":false}} 1`] = `"<ul><li>a</li><li>b</li></ul>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-the-per-transform-switches-remove-optional-tags {"mode":"minify"} 1`] = `"<ul><li>a<li>b</ul>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-the-per-transform-switches-takes-an-absent-option-as-every {"mode":"minify","transforms":{}} 1`] = `"<div>a</div>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-the-per-transform-switches-takes-an-absent-option-as-every {"mode":"minify"} 1`] = `"<div>a</div>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-tree-construction-corpus-round-trips-beautify-prints-form-form {"mode":"beautify","fragmentContext":"template"} 1`] = `"<form><form></form></form>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-what-minifying-cannot-turn-into-markup-keeps-a-list-item-s-p {"mode":"minify"} 1`] = `"<!doctype html><ul><li><p>a<li><p>b</ul>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-what-minifying-cannot-turn-into-markup-keeps-a-template {"mode":"minify"} 1`] = `"<!doctype html><p>&lt;%= a %></p><a title=\\"&lt;%= b %>\\" rel=\\"&lt;?php c ?>\\">x</a>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-what-minifying-cannot-turn-into-markup-keeps-a-template-2 {"mode":"minify"} 1`] = `"<!doctype html><a title=\\"&lt;!--#echo --> <b>\\">x</a>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-what-minifying-cannot-turn-into-markup-keeps-a-template-3 {"mode":"minify"} 1`] = `"<!doctype html><p><%= a %> &lt;%= b %&gt;</p><a title=\\"<%= c %> &lt;%= d %&gt;\\">x</a>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-what-minifying-cannot-turn-into-markup-keeps-a-template-4 {"mode":"minify"} 1`] = `"<!doctype html><a title=<%x&lt;%y>z</a>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-what-minifying-cannot-turn-into-markup-keeps-a-template-5 {"mode":"minify"} 1`] = `"<!doctype html><p><%= a %> &lt;%= b %&gt; &amp;am"`;
+
+exports[`HTML syntax — fixtures prints source-processor-what-minifying-cannot-turn-into-markup-keeps-a-template-6 {"mode":"minify"} 1`] = `"<!doctype html><p><%= a %> &lt;%= b %&gt; &amp;"`;
+
+exports[`HTML syntax — fixtures prints source-processor-what-minifying-cannot-turn-into-markup-keeps-a-template-7 {"mode":"minify"} 1`] = `"<!doctype html><p><%= a %> &lt;%= b %&gt; &lt;"`;
+
+exports[`HTML syntax — fixtures prints source-processor-what-minifying-cannot-turn-into-markup-keeps-a-template-8 {"mode":"minify"} 1`] = `"<!doctype html>&lt;%= a %>&lt;%= b %>c&lt;%= d %><table><tr><td>x</table>"`;
+
+exports[`HTML syntax — fixtures prints source-processor-what-minifying-cannot-turn-into-markup-keeps-a-template-9 {"mode":"minify"} 1`] = `"<!doctype html><b title=\\"<%= c %> &lt;%= d %&gt;\\"></b><p><b title=\\"<%= c %> &lt;%= d %&gt;\\">a</b>b"`;
+
+exports[`HTML syntax — fixtures prints source-processor-what-minifying-cannot-turn-into-markup-keeps-a-template-10 {"mode":"minify"} 1`] = `"<!doctype html><p><%= a %> & b</p><a title=\\"<?php c ' ?>\\">x</a>"`;

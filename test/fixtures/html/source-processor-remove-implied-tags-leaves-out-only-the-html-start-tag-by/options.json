@@ -1,0 +1,21 @@
+[
+	{
+		"mode": "minify",
+		"removeImpliedTags": "all"
+	},
+	{
+		"mode": "minify",
+		"removeImpliedTags": "smart"
+	},
+	{
+		"mode": "minify",
+		"removeImpliedTags": false
+	},
+	{
+		"mode": "minify",
+		"removeImpliedTags": true
+	},
+	{
+		"mode": "minify"
+	}
+]

@@ -1,0 +1,13 @@
+[
+	{
+		"environment": {
+			"browsers": [
+				"firefox 120"
+			]
+		},
+		"transforms": {
+			"removeDeadRules": false
+		},
+		"mode": "minify"
+	}
+]

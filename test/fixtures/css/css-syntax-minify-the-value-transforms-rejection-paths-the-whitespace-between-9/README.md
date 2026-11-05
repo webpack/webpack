@@ -1,0 +1,21 @@
+the whitespace between two calls
+
+Grammar matching skips whitespace whatever the property, which is what
+
+reaches the prefixed spellings no dataset names.
+
+---
+
+CssSyntax minify — vendor prefixes (spellings an engine dropped)
+
+`-moz-outline` went in Firefox 3.6; the property it stood for is filed as
+
+complete only from 88, which is not where the spelling stopped working.
+
+Multi-column went unprefixed together — Chrome 50, Firefox 52, Safari 9 —
+
+and BCD dates `-webkit-columns` at the version the unprefixed form
+
+arrived, 46 versions after Chrome first read it.
+
+Presto read `-o-transform`; the Blink Opera that followed at 15 never did.

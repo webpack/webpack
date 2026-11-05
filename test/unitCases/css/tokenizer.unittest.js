@@ -1,5 +1,7 @@
 "use strict";
 
+const { fixture } = require("../../helpers/fixture");
+
 const fs = require("fs");
 const path = require("path");
 const { SourceProcessor } = require("../../../lib/css/syntax");
@@ -137,7 +139,7 @@ describe("CssSyntax — the token the lexer reuses", () => {
 	];
 
 	it("carries exactly the fields it was built with", () => {
-		const stream = new TokenStream("a{color:red}");
+		const stream = new TokenStream(fixture("css", "css-syntax-minify-the-value-transforms-rejection-paths-a-named-color-the-14"));
 		expect(Object.keys(stream.next()).sort()).toEqual(FIELDS);
 	});
 
@@ -226,13 +228,6 @@ describe("CssSyntax — an escape the input ran out of", () => {
 		expect(unescapedOf("@ab\\")).toBe("ab�");
 	});
 
-	it("prints what the escape names rather than the backslash", () => {
-		// Printing the `\` would escape the `}` or `;` written after it, so a
-		// second pass would read one construct where the first wrote one.
-		expect(minifyFor("a{color:re\\")).toBe("a{color:re�}");
-		expect(minifyFor("@\\30 media\\")).toBe("@\\30media�;");
-		expect(minifyFor('a{content:"x\\')).toBe('a{content:"x"}');
-	});
 });
 
 // §4.3.8 leaves a `\` a delim only where a newline follows it. Printing one is
@@ -245,25 +240,19 @@ describe("CssSyntax — a backslash delim", () => {
 	 */
 	const twice = (src) => minifyFor(minifyFor(src));
 
-	it("keeps the newline that makes it a delim", () => {
-		expect(minifyFor("a{color:re\\\n}")).toBe("a{color:re \\\n}");
-		expect(minifyFor("@foo bar\\\n")).toBe("@foo bar \\\n;");
-		expect(minifyFor("a[x=y\\\n]{color:red}")).toBe("a[x=y \\\n]{color:red}");
-	});
-
 	it("prints a fixed point wherever one ends a run", () => {
 		// Each of these ends the run the printer then writes `;`, `}`, `{` or
 		// `]` after — the characters a `\` would otherwise escape.
 		for (const src of [
-			"@foo bar\\\n",
-			"@foo\\\n",
-			"@media a\\\n{b{color:red}}",
-			"a{color:re\\\n}",
-			"a\\\n{color:red}",
+			fixture("css", "css-syntax-a-backslash-delim-keeps-the-newline-that-makes-it-a-delim-2"),
+			fixture("css", "css-syntax-a-backslash-delim-prints-a-fixed-point-wherever-one-ends-a-run-2"),
+			fixture("css", "css-syntax-a-backslash-delim-prints-a-fixed-point-wherever-one-ends-a-run-4"),
+			fixture("css", "css-syntax-a-backslash-delim-keeps-the-newline-that-makes-it-a-delim"),
+			fixture("css", "css-syntax-a-backslash-delim-prints-a-fixed-point-wherever-one-ends-a-run-7"),
 			"a{b\\\n{color:red}}",
-			"a{color:rgb(1 2 3 \\\n)}",
-			"a[x=y\\\n]{color:red}",
-			"a{color:red\\\n!important}"
+			fixture("css", "css-syntax-a-backslash-delim-prints-a-fixed-point-wherever-one-ends-a-run-9"),
+			fixture("css", "css-syntax-a-backslash-delim-keeps-the-newline-that-makes-it-a-delim-3"),
+			fixture("css", "css-syntax-a-backslash-delim-prints-a-fixed-point-wherever-one-ends-a-run-11")
 		]) {
 			expect(twice(src)).toBe(minifyFor(src));
 		}
@@ -312,7 +301,6 @@ describe("CssSyntax — preprocessing the input stream", () => {
 	it("reads one wherever the source holds it", () => {
 		expect(cvTypes(`12${NUL}red`)).toEqual(cvTypes("12�red"));
 		expect(cvTypes(`url(a${NUL}b)`)).toEqual(cvTypes("url(a�b)"));
-		expect(minifyFor(`.x${NUL}y{color:red}`)).toBe(".x�y{color:red}");
 	});
 
 	it("reads one in a custom media name the walk resolves ahead", () => {
@@ -327,7 +315,6 @@ describe("CssSyntax — preprocessing the input stream", () => {
 				mode: "minify",
 				transforms: { customMedia: true }
 			}).code;
-		expect(minify(css(NUL))).toBe(minify(css("�")));
 		expect(minify(css(NUL))).toContain("@media (width>=1px){");
 	});
 });
@@ -426,17 +413,17 @@ describe("CssSyntax — a string the source never closed", () => {
 	// §4.3.5 returns the string token at end of input as well, and that one has no
 	// closing quote to take off — taking one off ate a character of the value.
 	it.each([
-		["a closing quote", "a{b:'xy'}", ["xy"]],
-		["end of input", "a{b:'xy", ["xy"]],
-		["end of input, holding a brace", "a{b:'xy}", ["xy}"]],
-		["end of input, holding only one", "a{b:'}", ["}"]],
-		["end of input, holding nothing", "a{b:'", [""]],
-		["a double quote at end of input", 'a{b:"d', ["d"]],
-		["an empty string", "a{b:''}", [""]],
-		["a quote the source escaped", "a{b:'a\\''}", ["a'"]],
-		["one escaped at end of input", "a{b:'a\\'", ["a'"]],
-		["a backslash the source escaped", "a{b:'a\\\\'}", ["a\\"]],
-		["two of them", "a{b:'x' 'y'}", ["x", "y"]]
+		["a closing quote", fixture("css", "css-syntax-a-string-the-source-never-closed-reads-one-ended-by-a-closing-quote"), ["xy"]],
+		["end of input", fixture("css", "css-syntax-a-string-the-source-never-closed-reads-one-ended-by-end-of-input"), ["xy"]],
+		["end of input, holding a brace", fixture("css", "css-syntax-a-string-the-source-never-closed-reads-one-ended-by-end-of-input-2"), ["xy}"]],
+		["end of input, holding only one", fixture("css", "css-syntax-a-string-the-source-never-closed-reads-one-ended-by-end-of-input-4"), ["}"]],
+		["end of input, holding nothing", fixture("css", "css-syntax-a-string-the-source-never-closed-reads-one-ended-by-end-of-input-3"), [""]],
+		["a double quote at end of input", fixture("css", "css-syntax-a-string-the-source-never-closed-reads-one-ended-by-a-double-quote-at"), ["d"]],
+		["an empty string", fixture("css", "css-syntax-a-string-the-source-never-closed-reads-one-ended-by-an-empty-string"), [""]],
+		["a quote the source escaped", fixture("css", "css-syntax-a-string-the-source-never-closed-reads-one-ended-by-a-quote-the"), ["a'"]],
+		["one escaped at end of input", fixture("css", "css-syntax-a-string-the-source-never-closed-reads-one-ended-by-one-escaped-at"), ["a'"]],
+		["a backslash the source escaped", fixture("css", "css-syntax-a-string-the-source-never-closed-reads-one-ended-by-a-backslash-the"), [fixture("css", "source-processor-merging-adjacent-style-reads-a-sheet-s-closed-comment-escape-9")]],
+		["two of them", fixture("css", "css-syntax-a-string-the-source-never-closed-reads-one-ended-by-two-of-them"), ["x", "y"]]
 	])("reads one ended by %s", (_name, source, expected) => {
 		expect(values(source)).toEqual(expected);
 	});
@@ -721,9 +708,6 @@ describe("CssSyntax — a signed number printed after a number", () => {
 		parseAListOfComponentValues(src).map((n) => [A.type(n), A.source(n)]);
 
 	it("drops the space where the sign starts a number of its own", () => {
-		// §4.3.3: `-` before a digit starts a number, not a unit, so `0-2px` is two tokens.
-		expect(minifyFor("a{margin:0 -2px}")).toBe("a{margin:0-2px}");
-		expect(minifyFor("a{margin:0 -.5px}")).toBe("a{margin:0-.5px}");
 		expect(valuesOf("0-2px")).toEqual([
 			[NodeType.Number, "0"],
 			[NodeType.Dimension, "-2px"]
@@ -735,7 +719,6 @@ describe("CssSyntax — a signed number printed after a number", () => {
 	});
 
 	it("keeps the space where the sign would start a unit", () => {
-		expect(minifyFor("a{margin:0 -a}")).toBe("a{margin:0 -a}");
 		expect(valuesOf("0-a")).toEqual([[NodeType.Dimension, "0-a"]]);
 	});
 });

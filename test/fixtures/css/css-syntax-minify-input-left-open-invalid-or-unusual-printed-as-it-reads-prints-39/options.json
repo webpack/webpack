@@ -1,0 +1,13 @@
+[
+	{
+		"environment": {
+			"browsers": [
+				"chrome 130"
+			]
+		},
+		"transforms": {
+			"shortenSelectors": false
+		},
+		"mode": "minify"
+	}
+]

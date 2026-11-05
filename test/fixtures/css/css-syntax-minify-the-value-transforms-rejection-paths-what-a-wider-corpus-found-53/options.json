@@ -1,0 +1,19 @@
+[
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"chrome 80"
+			]
+		}
+	},
+	{
+		"mode": "minify",
+		"transforms": {
+			"mergeLonghands": false
+		}
+	},
+	{
+		"mode": "minify"
+	}
+]

@@ -1,0 +1,11 @@
+[
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"chrome 130",
+				"ie_mob 11"
+			]
+		}
+	}
+]

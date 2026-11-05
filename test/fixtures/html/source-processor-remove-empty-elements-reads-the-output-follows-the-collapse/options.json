@@ -1,0 +1,11 @@
+[
+	{
+		"mode": "minify",
+		"removeEmptyElements": true,
+		"collapseWhitespace": "all"
+	},
+	{
+		"mode": "minify",
+		"removeEmptyElements": true
+	}
+]

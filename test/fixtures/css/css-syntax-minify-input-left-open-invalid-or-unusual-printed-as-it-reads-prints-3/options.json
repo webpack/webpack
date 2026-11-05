@@ -1,0 +1,10 @@
+[
+	{
+		"environment": {
+			"browsers": [
+				"edge 18"
+			]
+		},
+		"mode": "minify"
+	}
+]

@@ -1,0 +1,24 @@
+[
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"chrome 120"
+			]
+		},
+		"transforms": {
+			"customMedia": true
+		}
+	},
+	{
+		"mode": "minify",
+		"environment": {
+			"browsers": [
+				"chrome 120"
+			]
+		},
+		"transforms": {
+			"customSelectors": true
+		}
+	}
+]

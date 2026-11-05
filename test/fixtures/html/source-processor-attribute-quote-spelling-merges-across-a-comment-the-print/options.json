@@ -1,0 +1,13 @@
+[
+	{
+		"mode": "minify",
+		"mergeStyles": true,
+		"transforms": {
+			"comments": "all"
+		}
+	},
+	{
+		"mode": "minify",
+		"mergeStyles": true
+	}
+]

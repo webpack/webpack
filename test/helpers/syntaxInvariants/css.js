@@ -1051,6 +1051,12 @@ const EXPECTED = [
 	},
 	{
 		relation: "idempotence",
+		contains: "-webkit-full-screen{color-scheme:light dark",
+		source: "gives-each-prefix-copy-the-3",
+		why: "a prefix copy is written before the twin the source carries after it is read, so a second pass drops the copy that twin covers; both say the same"
+	},
+	{
+		relation: "idempotence",
 		contains: "red;color:green",
 		source: "nesting-lowered-against-the-declarations-after-it",
 		why: "the two `color` declarations meet only once the rule between them is lowered, so the overridden one goes on a second pass"

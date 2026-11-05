@@ -1,0 +1,17 @@
+[
+	{
+		"mode": "minify",
+		"collapseWhitespace": "all"
+	},
+	{
+		"mode": "minify",
+		"collapseWhitespace": "conservative"
+	},
+	{
+		"mode": "minify",
+		"collapseWhitespace": "smart"
+	},
+	{
+		"mode": "minify"
+	}
+]

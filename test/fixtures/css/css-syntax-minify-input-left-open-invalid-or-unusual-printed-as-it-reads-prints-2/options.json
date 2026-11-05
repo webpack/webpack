@@ -1,0 +1,11 @@
+[
+	{
+		"environment": {
+			"browsers": [
+				"ie 9"
+			]
+		},
+		"mergeDistantRules": true,
+		"mode": "minify"
+	}
+]

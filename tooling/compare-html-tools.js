@@ -1383,6 +1383,8 @@ const UNIT_INPUT_STYLES =
 	"adjacent `<style>` elements the first pass leaves apart are joined only on a second pass; the sheets say the same";
 const UNIT_INPUT_SORT =
 	"the attributes of an `<html>` the first pass merges in are sorted only on a second pass; same attributes";
+const UNIT_INPUT_TEMPLATE =
+	"a template marker written escaped stays escaped so minifying never turns it into markup, and one written as such stays as written, so its spelling shows in the output";
 const UNIT_INPUT_TAGS =
 	"a second pass writes an implied or omitted tag differently from the first; both outputs read to the same tree";
 const TEMPLATE_DELIMITER_REFERENCES =
@@ -1466,6 +1468,24 @@ const EXPECTED = [
 		why: "the value carries both quotes, so one stays a character reference whichever delimiter is picked, and the printer echoes the spelling the source wrote rather than normalizing it — `&#34;` is a byte under `&quot;`, which is the difference reported. Writing `&#34;` everywhere was measured and refused: over the fixtures and wpt's `html/` documents it saves 5 raw bytes and costs 5 gzip, and a re-encoding has to win compressed. No build reads this: `htmlMinify` hands every `style` to the CSS minifier, and that round trip writes `&quot;` for either spelling"
 	},
 	// The inputs the unit tests feed the parser, under `test/fixtures/html/`.
+	{
+		relation: "respelling quote-double",
+		contains: " title=",
+		source: "cannot-turn-into-markup-keeps-a-template",
+		why: UNIT_INPUT_TEMPLATE
+	},
+	{
+		relation: "respelling quote-single",
+		contains: " title=",
+		source: "cannot-turn-into-markup-keeps-a-template",
+		why: UNIT_INPUT_TEMPLATE
+	},
+	{
+		relation: "respelling references",
+		contains: " title=",
+		source: "cannot-turn-into-markup-keeps-a-template",
+		why: UNIT_INPUT_TEMPLATE
+	},
 	{
 		relation: "idempotence",
 		contains: "-> </body>",

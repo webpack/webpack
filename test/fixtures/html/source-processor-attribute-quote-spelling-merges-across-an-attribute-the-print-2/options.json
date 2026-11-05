@@ -1,0 +1,7 @@
+[
+	{
+		"mode": "minify",
+		"removeRedundantAttributes": "all",
+		"mergeScripts": true
+	}
+]
