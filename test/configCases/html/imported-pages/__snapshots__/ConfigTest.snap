@@ -162,7 +162,7 @@ or
 	</template>
 </div>
 
-<img src=\\"data:,\\">
+<img src=\\"https://raw.githubusercontent.com/webpack/html-loader/main/test/fixtures/image.png\\">
 
 </body>
 </html>
