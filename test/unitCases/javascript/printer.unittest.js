@@ -1489,9 +1489,9 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["!(a==b);var v=!(a==b);function g(){return!(a===b)}", {}, "a==b;var v=a!=b;function g(){return a!==b}"],
 			["x=(a instanceof b)===true;x=!a===!1;x=true===(a in b);x=y===true;x=(a<b)!=true;x=delete y==false;while(x&&!0)f();x=!(y()&&true);x=!(a<b&&!0);if(a??true)b();x=a&&true;if(a&&b())c()", {}, "x=a instanceof b,x=!!a,x=a in b,x=y===!0,x=!(a<b),x=!delete y;while(x)f();x=!y(),x=!(a<b);if(a??!0)b();x=a&&!0;if(a&&b())c();"],
 			["x=!(/*c*/a==b);if(a&&/*k*/true)b()", { mangle: false, format: { comments: "all" } }, "x=!(/*c*/a==b);if(a&&/*k*/1)b();"],
-			// A name both branches call is called bare, after the test runs; but `eval`, a member, `new` or in `with`.
-			["var c;(c?foo:foo)(\"x\");(c()?foo:foo)(\"y\");(c?eval:eval)(\"z\");(c?o.f:o.f)(\"w\");(c?foo:foo)`t`;(c()?foo:foo)`v`;new(c?F:F);(c?a:b)`u`", {}, "var c;foo(\"x\"),(c(),foo)(\"y\"),(c?eval:eval)(\"z\"),(c?o.f:o.f)(\"w\"),foo`t`,(c(),foo)`v`,new(c?F:F),(c?a:b)`u`;"],
-			["with(o)(c?foo:foo)()", {}, "with(o)(c?foo:foo)();"],
+			// A name both branches call is called bare, after the test runs; `eval` or a member as `(0,f)`; in `with` the test stays, and `new` keeps it.
+			["var c;(c?foo:foo)(\"x\");(c()?foo:foo)(\"y\");(c?eval:eval)(\"z\");(c?o.f:o.f)(\"w\");(c?foo:foo)`t`;(c()?foo:foo)`v`;new(c?F:F);(c?a:b)`u`", {}, "var c;foo(\"x\"),(c(),foo)(\"y\"),(0,eval)(\"z\"),(0,o.f)(\"w\"),foo`t`,(c(),foo)`v`,new(c?F:F),(c?a:b)`u`;"],
+			["with(o)(c?foo:foo)()", {}, "with(o)(c,foo)();"],
 			// terser's `loops`: `if(x)break` opening a loop's body joins its test as `!x`, but where the body scopes a name.
 			["for(;;)if(x)break;for(;;)if(!x)break;for(;a;){if(x)break;y()}while(x){if(y)break;z()}while(1){if(a==b)break;c()}for(;a||b;)if(c&&d)break;l:for(;;){if(x)break l;y()}for(;;){if(x)continue;y()}for(;a=b;)if(x)break;for(;a;)if(!(b&&c))break;var x=1;for(;;){if(x)break;let x=g();h(x,x)}for(;;){;if(x)break;y()}for(;true;){if(x)break;y()}", {}, "for(;!x;);for(;x;);for(;a&&!x;)y();while(x&&!y)z();while(a!=b)c();for(;(a||b)&&!(c&&d););for(;;){if(x)break;y()}for(;;){if(!x)y()}for(;(a=b)&&!x;);for(;a&&b&&c;);for(var x=1;;){if(r)break;let r=g();h(r,r)}for(;!x;)y();for(;!x;)y();"],
 			["for(;;){/*c*/if(x)break;y()}class S{/*k*/static{}}", { mangle: false, format: { comments: "all" } }, "for(;;){/*c*/if(x)break;y()}class S{/*k*/static{}}"],
@@ -1871,7 +1871,10 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["Object(eval)(x)", {}, "Object(eval)(x);"],
 			// Only a static method may be named `constructor` bare.
 			["class C{static['constructor'](){}static get['constructor'](){return 1}}", {}, "class C{static constructor(){}static get constructor(){return 1}}"],
-			["class C{['constructor'](){}static['constructor']=1;get['constructor'](){return 1}}", {}, "class C{[\"constructor\"](){}static[\"constructor\"]=1;get[\"constructor\"](){return 1}}"]
+			["class C{['constructor'](){}static['constructor']=1;get['constructor'](){return 1}}", {}, "class C{[\"constructor\"](){}static[\"constructor\"]=1;get[\"constructor\"](){return 1}}"],
+			// Alike branches a call or tag reads `this` off print as `(t,f)`, or `(0,f)` where the test runs nothing.
+			["function k(c){(c?eval:eval)(\"x\");(c?o.f:o.f)(\"y\");(c?o.f:o.f)`y`}(c()?eval:eval)(\"x\");(c?o[f()]:o[f()])(1);(c?o.f:o.f)?.(1)", {}, "function k(f){(0,eval)(\"x\"),(0,o.f)(\"y\"),(0,o.f)`y`}(c(),eval)(\"x\"),(c,o[f()])(1),(c,o.f)?.(1);"],
+			["new(c?o.f:o.f)(1);(c?o.f:o.g)(1);(c?a+b:a+b)(1);x=c?o.f:o.f", {}, "new(c?o.f:o.f)(1),(c?o.f:o.g)(1),(c?a+b:a+b)(1),x=(c,o.f);"]
 		];
 		for (const [source, options, expected] of cases) {
 			const { code } = minifyOnePass(source, {
@@ -3324,7 +3327,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				'export function q(x,o){return[x?o["read"]():o.read(),1+(g(x)?o.read():o.read()),f(g(x)?o.r:o.r),(x?o.f:o.f)(),delete(x?o.f:o.f),typeof(x?y:y)]}export function s(x,o){x?o.f():o.f();g(x)?o.f():o.f()}'
 			)
 		).toBe(
-			"export function q(o,x){return[x.read(),1+(g(o),x.read()),f((g(o),x.r)),(o?x.f:x.f)(),delete(o?x.f:x.f),typeof(o?y:y)]}export function s(o,f){f.f(),g(o),f.f()}"
+			"export function q(o,x){return[x.read(),1+(g(o),x.read()),f((g(o),x.r)),(0,x.f)(),delete(o?x.f:x.f),typeof(o?y:y)]}export function s(o,f){f.f(),g(o),f.f()}"
 		);
 		expect(
 			print("export function q(x,o){return x?o.read():o.read()}", {
