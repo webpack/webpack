@@ -851,6 +851,7 @@ const FOLDED_CONSTANTS = {
 
 // Static values `improve` writes as a power of two, as `2**53-1`, from
 // ECMAScript 2016: their digits are longer, or gzip worse, than their name.
+/** @type {{ Number: ("EPSILON" | "MAX_SAFE_INTEGER" | "MIN_SAFE_INTEGER")[] }} */
 const POWER_OF_TWO_CONSTANTS = {
 	Number: ["EPSILON", "MAX_SAFE_INTEGER", "MIN_SAFE_INTEGER"]
 };
@@ -1139,7 +1140,7 @@ const collectFoldedBuiltIns = () => {
 		for (const name of names) {
 			place(`${owner}.${name}`, "POWER_OF_TWO_CONSTANTS");
 			// The printer writes 2**k, 2**k-1 or 1-2**k, k its magnitude's log rounded.
-			const value = Number(Reflect.get(Reflect.get(global, owner), name));
+			const value = Number[name];
 			const power = 2 ** Math.round(Math.log2(Math.abs(value)));
 			if (![power, power - 1, 1 - power].includes(value)) {
 				throw new Error(`${owner}.${name} is no power of two, nor one off it`);
@@ -1362,7 +1363,10 @@ const collectPureBuiltIns = () => {
 		globals.push(name);
 		if (!/^[A-Z]/.test(name)) continue;
 		const members = staticMembers(name);
-		if (Object.getPrototypeOf(Reflect.get(global, name)) === TypedArray) {
+		// a global looked up by a name from the compat data can hold any value
+		/** @type {unknown} */
+		const value = Reflect.get(global, name);
+		if (Object.getPrototypeOf(value) === TypedArray) {
 			for (const member of typedArrayStatics) {
 				if (!members.includes(member)) members.push(member);
 			}
