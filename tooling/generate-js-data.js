@@ -9,15 +9,19 @@
 
 const fs = require("fs");
 const path = require("path");
-const bcd =
-	/** @type {{ javascript: { builtins: { [name: string]: { __compat: BcdCompat } & BcdMembers } }, api: { Window: BcdMembers }, __meta: { version: string } }} */ (
-		/** @type {unknown} */ (require("@mdn/browser-compat-data"))
-	);
 const acorn = require("acorn");
 
-/** @typedef {{ version_added?: string | boolean | null }} BcdSupport */
-/** @typedef {{ spec_url?: string | string[], mdn_url?: string, status?: { standard_track: boolean, deprecated: boolean }, support: Record<string, BcdSupport | BcdSupport[]> }} BcdCompat */
+/** @typedef {import("@mdn/browser-compat-data").SupportStatement} BcdSupport */
+/** @typedef {import("@mdn/browser-compat-data").CompatStatement} BcdCompat */
 /** @typedef {{ [name: string]: { __compat: BcdCompat } }} BcdMembers */
+
+// `require()` returns the package's `data.json` itself, while its `require.d.ts`
+// declares that table as a default export, so it is read as the JSON it is —
+// the parts read here, where every built-in and member carries its own row.
+/** @type {{ javascript: { builtins: { [name: string]: { __compat: BcdCompat } & BcdMembers } }, api: { Window: BcdMembers }, __meta: import("@mdn/browser-compat-data").MetaBlock }} */
+const bcd = JSON.parse(
+	fs.readFileSync(require.resolve("@mdn/browser-compat-data"), "utf8")
+);
 
 const DATA_TARGET = path.resolve(__dirname, "../lib/javascript/data.js");
 const PRINTER_DATA_TARGET = path.resolve(
@@ -67,8 +71,8 @@ const encodeRanges = (accepts, from, to) => {
 const collectIdentifierTables = () => {
 	// acorn exports the predicates at runtime but leaves them out of its types.
 	const { isIdentifierStart, isIdentifierChar } =
-		/** @type {{ isIdentifierStart: (code: number, astral?: boolean) => boolean, isIdentifierChar: (code: number, astral?: boolean) => boolean }} */ (
-			/** @type {unknown} */ (acorn)
+		/** @type {typeof acorn & { isIdentifierStart: (code: number, astral?: boolean) => boolean, isIdentifierChar: (code: number, astral?: boolean) => boolean }} */ (
+			acorn
 		);
 	return {
 		start: encodeRanges((code) => isIdentifierStart(code, false), 0x80, 0xffff),
@@ -136,11 +140,13 @@ const collectNarrowIdentifierTables = () => {
 const PROPERTY_BLOCK_START = "var scriptValuesAddedInUnicode";
 const PROPERTY_BLOCK_END = "var data = {}";
 
+/** @typedef {{ binary: Record<string, string>, binaryOfStrings: Record<string, string>, generalCategory: string, script: Record<string, string> }} UnicodePropertyTables */
+
 /**
  * The per-edition Unicode property names, read out of acorn's own bundle: the
  * spec pins them by edition, so no dataset states them and the dependency is
  * the only place they are already written down.
- * @returns {{ binary: Record<string, string>, binaryOfStrings: Record<string, string>, generalCategory: string, script: Record<string, string> }} the tables
+ * @returns {UnicodePropertyTables} the tables
  */
 const collectUnicodeProperties = () => {
 	const bundle = fs.readFileSync(
@@ -155,15 +161,18 @@ const collectUnicodeProperties = () => {
 		);
 	}
 	const block = bundle.slice(from, to);
-	// eslint-disable-next-line no-new-func
-	const read = new Function(
-		`${block}
+	// The block declares exactly the four tables the body hands back.
+	const read = /** @type {() => UnicodePropertyTables} */ (
+		// eslint-disable-next-line no-new-func
+		new Function(
+			`${block}
 		return {
 			binary: unicodeBinaryProperties,
 			binaryOfStrings: unicodeBinaryPropertiesOfStrings,
 			generalCategory: unicodeGeneralCategoryValues,
 			script: unicodeScriptValues
 		};`
+		)
 	);
 	const tables = read();
 	for (const edition of [9, 10, 11, 12, 13, 14]) {
@@ -197,31 +206,31 @@ const NATIVE_OBJECT_TABLES = new Map([
 /** @typedef {string | { name: string, when: NativeCondition[] }} NativeName */
 /** @typedef {{ when?: NativeCondition[], names: NativeName[] }} NativeGroup */
 /** @typedef {NativeName[] | Record<string, NativeGroup>} NativeTable */
-/** @typedef {import("estree").Node} EstreeNode */
+/** @typedef {import("acorn").AnyNode} AcornNode */
 
 /**
- * @param {EstreeNode} node the node terser's source holds there
+ * @param {AcornNode} node the node terser's source holds there
  * @param {string} expected what the generator expected to find
  * @returns {Error} the failure naming where terser's source moved
  */
 const unexpectedNativeSyntax = (node, expected) =>
 	new Error(
 		`terser's native-objects.js holds a ${node.type} at offset ${
-			/** @type {EstreeNode & { start: number }} */ (node).start
+			node.start
 		} where this generator expects ${expected}`
 	);
 
 /**
  * Split an `a && b && c` chain into its conditions and its final value, each
  * condition read as `sloppy` or `es >= N` in the order terser evaluates them.
- * @param {EstreeNode} node the element or property value
- * @returns {{ when: NativeCondition[], value: EstreeNode }} the parts
+ * @param {AcornNode} node the element or property value
+ * @returns {{ when: NativeCondition[], value: AcornNode }} the parts
  */
 const splitNativeConditions = (node) => {
-	/** @type {EstreeNode[]} */
+	/** @type {AcornNode[]} */
 	const operands = [];
 	/**
-	 * @param {EstreeNode} current a node of the chain
+	 * @param {AcornNode} current a node of the chain
 	 * @returns {void}
 	 */
 	const flatten = (current) => {
@@ -233,7 +242,7 @@ const splitNativeConditions = (node) => {
 		}
 	};
 	flatten(node);
-	const value = /** @type {EstreeNode} */ (operands.pop());
+	const value = /** @type {AcornNode} */ (operands.pop());
 	/** @type {NativeCondition[]} */
 	const when = operands.map((operand) => {
 		if (operand.type === "Identifier" && operand.name === "sloppy") {
@@ -255,7 +264,7 @@ const splitNativeConditions = (node) => {
 };
 
 /**
- * @param {EstreeNode} node an array literal of names
+ * @param {AcornNode} node an array literal of names
  * @param {Map<string, NativeName[]>} lists the plain lists declared so far
  * @returns {NativeName[]} its names, each with its conditions
  */
@@ -283,7 +292,7 @@ const readNativeNames = (node, lists) => {
 };
 
 /**
- * @param {EstreeNode} node an array literal, or a list declared earlier
+ * @param {AcornNode} node an array literal, or a list declared earlier
  * @param {Map<string, NativeName[]>} lists the plain lists declared so far
  * @returns {NativeName[]} its names, a declared list expanded in place
  */
@@ -299,8 +308,8 @@ const readNativeList = (node, lists) => {
 };
 
 /**
- * @param {EstreeNode} node what a `make_lookup` or `make_nested_lookup` receives
- * @returns {EstreeNode} the value its arrow returns for `{ sloppy, es }`
+ * @param {AcornNode} node what a `make_lookup` or `make_nested_lookup` receives
+ * @returns {AcornNode} the value its arrow returns for `{ sloppy, es }`
  */
 const readFeatureCallback = (node) => {
 	if (
@@ -324,13 +333,13 @@ const readFeatureCallback = (node) => {
 /**
  * Read one table's initializer: a `make_lookup` list, a `make_nested_lookup`
  * object of lists, a `new Set` of names or a plain list.
- * @param {EstreeNode} init the declarator's initializer
+ * @param {AcornNode} init the declarator's initializer
  * @param {Map<string, NativeName[]>} lists the plain lists declared so far
  * @returns {NativeTable} the table
  */
 const readNativeTable = (init, lists) => {
 	/**
-	 * @param {EstreeNode} node an array literal outside any `{ sloppy, es }`
+	 * @param {AcornNode} node an array literal outside any `{ sloppy, es }`
 	 * @returns {string[]} its names, none of which can carry a condition
 	 */
 	const readPlainNames = (node) =>
@@ -349,7 +358,7 @@ const readNativeTable = (init, lists) => {
 		init.callee.name === "Set" &&
 		init.arguments.length === 1
 	) {
-		return readPlainNames(/** @type {EstreeNode} */ (init.arguments[0]));
+		return readPlainNames(/** @type {AcornNode} */ (init.arguments[0]));
 	}
 	if (
 		init.type === "CallExpression" &&
@@ -357,7 +366,7 @@ const readNativeTable = (init, lists) => {
 		init.arguments.length === 1
 	) {
 		const body = readFeatureCallback(
-			/** @type {EstreeNode} */ (init.arguments[0])
+			/** @type {AcornNode} */ (init.arguments[0])
 		);
 		if (init.callee.name === "make_lookup") {
 			return readNativeNames(body, lists);
@@ -409,9 +418,7 @@ const collectNativeObjects = () => {
 	const lists = new Map();
 	/** @type {Record<string, NativeTable>} */
 	const tables = {};
-	for (const statement of /** @type {EstreeNode[]} */ (
-		/** @type {unknown} */ (program.body)
-	)) {
+	for (const statement of program.body) {
 		const declaration =
 			statement.type === "ExportNamedDeclaration"
 				? statement.declaration
@@ -492,14 +499,14 @@ ${sections
 };
 
 /**
- * @param {EstreeNode} node the node terser's source holds there
+ * @param {AcornNode} node the node terser's source holds there
  * @param {string} expected what the generator expected to find
  * @returns {Error} the failure naming where terser's source moved
  */
 const unexpectedParserSyntax = (node, expected) =>
 	new Error(
 		`terser's parse.js holds a ${node.type} at offset ${
-			/** @type {EstreeNode & { start: number }} */ (node).start
+			node.start
 		} where this generator expects ${expected}`
 	);
 
@@ -509,7 +516,7 @@ const unexpectedParserSyntax = (node, expected) =>
  * The value of one of terser's table declarations, as far as tables are
  * written: strings, their concatenation, `makePredicate` over words and
  * `characters` over a string, and the IIFE that numbers operator precedence.
- * @param {EstreeNode} node the expression
+ * @param {AcornNode} node the expression
  * @param {Map<string, ParserValue>} known the tables read before it
  * @returns {ParserValue} its value
  */
@@ -522,7 +529,7 @@ const evaluateParserTable = (node, known) => {
 	}
 	if (node.type === "BinaryExpression" && node.operator === "+") {
 		const left = evaluateParserTable(
-			/** @type {EstreeNode} */ (node.left),
+			/** @type {AcornNode} */ (node.left),
 			known
 		);
 		const right = evaluateParserTable(node.right, known);
@@ -536,12 +543,12 @@ const evaluateParserTable = (node, known) => {
 				throw unexpectedParserSyntax(node, "an array of strings without holes");
 			}
 			const value = evaluateParserTable(
-				/** @type {EstreeNode} */ (element),
+				/** @type {AcornNode} */ (element),
 				known
 			);
 			if (typeof value !== "string") {
 				throw unexpectedParserSyntax(
-					/** @type {EstreeNode} */ (element),
+					/** @type {AcornNode} */ (element),
 					"a string"
 				);
 			}
@@ -550,7 +557,7 @@ const evaluateParserTable = (node, known) => {
 	}
 	if (node.type === "CallExpression") {
 		const { callee } = node;
-		const [argument] = /** @type {EstreeNode[]} */ (node.arguments);
+		const [argument] = /** @type {AcornNode[]} */ (node.arguments);
 		if (callee.type === "Identifier" && callee.name === "characters") {
 			const value = evaluateParserTable(argument, known);
 			if (typeof value === "string") return [...value];
@@ -571,7 +578,7 @@ const evaluateParserTable = (node, known) => {
 				levels: argument.elements.map(
 					(level) =>
 						/** @type {string[]} */ (
-							evaluateParserTable(/** @type {EstreeNode} */ (level), known)
+							evaluateParserTable(/** @type {AcornNode} */ (level), known)
 						)
 				)
 			};
@@ -612,7 +619,7 @@ const collectParserTables = () => {
 	/** @type {Map<string, ParserValue>} */
 	const known = new Map();
 	/**
-	 * @param {EstreeNode[]} statements a body
+	 * @param {AcornNode[]} statements a body
 	 * @returns {void}
 	 */
 	const read = (statements) => {
@@ -629,7 +636,7 @@ const collectParserTables = () => {
 					known.set(
 						declarator.id.name,
 						evaluateParserTable(
-							/** @type {EstreeNode} */ (declarator.init),
+							/** @type {AcornNode} */ (declarator.init),
 							known
 						)
 					);
@@ -653,7 +660,7 @@ const collectParserTables = () => {
 			}
 		}
 	};
-	read(/** @type {EstreeNode[]} */ (/** @type {unknown} */ (program.body)));
+	read(program.body);
 	/** @type {Record<string, string[] | string[][]>} */
 	const tables = {};
 	for (const name of PARSER_TABLES) {
@@ -690,12 +697,10 @@ const collectDomProperties = () => {
 		ecmaVersion: "latest",
 		sourceType: "module"
 	});
-	for (const statement of /** @type {EstreeNode[]} */ (
-		/** @type {unknown} */ (program.body)
-	)) {
+	for (const statement of program.body) {
 		const declaration =
 			statement.type === "ExportNamedDeclaration"
-				? /** @type {EstreeNode | null | undefined} */ (statement.declaration)
+				? /** @type {AcornNode | null | undefined} */ (statement.declaration)
 				: statement;
 		if (!declaration || declaration.type !== "VariableDeclaration") continue;
 		for (const declarator of declaration.declarations) {
@@ -707,7 +712,7 @@ const collectDomProperties = () => {
 			) {
 				return /** @type {string[]} */ (
 					evaluateParserTable(
-						/** @type {EstreeNode} */ (declarator.init),
+						/** @type {AcornNode} */ (declarator.init),
 						new Map()
 					)
 				);
@@ -1107,8 +1112,10 @@ const collectFoldedBuiltIns = () => {
 		for (const name of names) {
 			const qualified = owner === "global" ? name : `${owner}.${name}`;
 			place(qualified, "FOLDED_BUILT_INS");
-			const support = /** @type {BcdCompat} */ (members.get(qualified)).support
-				.nodejs;
+			// A folded built-in is one Node runs, so it carries a Node row.
+			const support = /** @type {BcdSupport} */ (
+				/** @type {BcdCompat} */ (members.get(qualified)).support.nodejs
+			);
 			const added = (Array.isArray(support) ? support[0] : support)
 				.version_added;
 			if (typeof added !== "string" || !isNoLaterThan(added, oldestNode)) {
@@ -1132,7 +1139,7 @@ const collectFoldedBuiltIns = () => {
 		for (const name of names) {
 			place(`${owner}.${name}`, "POWER_OF_TWO_CONSTANTS");
 			// The printer writes 2**k, 2**k-1 or 1-2**k, k its magnitude's log rounded.
-			const value = /** @type {EXPECTED_ANY} */ (global)[owner][name];
+			const value = Number(Reflect.get(Reflect.get(global, owner), name));
 			const power = 2 ** Math.round(Math.log2(Math.abs(value)));
 			if (![power, power - 1, 1 - power].includes(value)) {
 				throw new Error(`${owner}.${name} is no power of two, nor one off it`);
@@ -1338,6 +1345,8 @@ const collectPureBuiltIns = () => {
 	};
 	// BCD lists `of` and `from` once, on `%TypedArray%`, which each typed array inherits.
 	const typedArrayStatics = staticMembers("TypedArray");
+	// `%TypedArray%`, the constructor every typed array extends.
+	/** @type {{ prototype: ArrayBufferView }} */
 	const TypedArray = Object.getPrototypeOf(Int8Array);
 	for (const name of Object.keys(builtins).sort()) {
 		const entry = builtins[name];
@@ -1353,10 +1362,7 @@ const collectPureBuiltIns = () => {
 		globals.push(name);
 		if (!/^[A-Z]/.test(name)) continue;
 		const members = staticMembers(name);
-		if (
-			Object.getPrototypeOf(/** @type {EXPECTED_ANY} */ (global)[name]) ===
-			TypedArray
-		) {
+		if (Object.getPrototypeOf(Reflect.get(global, name)) === TypedArray) {
 			for (const member of typedArrayStatics) {
 				if (!members.includes(member)) members.push(member);
 			}
@@ -2277,11 +2283,19 @@ const collectRaisedMessages = () => {
 };
 
 /**
+ * The part of `@babel/parser` read here. It is the copy `@babel/core` resolves,
+ * loaded by path, so the typings TypeScript finds may be another version's.
+ * @typedef {object} BabelParser
+ * @property {(code: string, options: { errorRecovery: boolean, sourceType: "script" | "module", plugins: string[] }) => { errors: { pos: number, reasonCode: string }[] }} parse
+ */
+
+/**
  * Each parse error message the parser raises paired with its code: Babel's
  * for the same error, read off a probe both parsers reject.
  * @returns {[string, string][]} the templates and their codes, in match order
  */
 const collectParseErrorCodes = () => {
+	/** @type {BabelParser} */
 	const babel = require(BABEL_PARSER);
 
 	const babelSource = fs.readFileSync(BABEL_PARSER, "utf8");
@@ -2512,7 +2526,9 @@ const UNICODE_SCRIPT_VALUES = ${JSON.stringify(properties.script, null, 1)};
  */
 const renderParseErrorCodes = () => `${renderHeader(
 	`acorn ${acorn.version}, @babel/parser ${
-		require(path.join(BABEL_PARSER, "../../package.json")).version
+		/** @type {{ version: string }} */ (
+			require(path.join(BABEL_PARSER, "../../package.json"))
+		).version
 	}`
 )}
 // Each parse error message, \`*\` for its variable parts, with its code: Babel's
@@ -2571,8 +2587,10 @@ const generate = async () => {
 if (require.main === module) {
 	// `generate` is async, so a failed generation has to be turned back into a
 	// non-zero exit rather than left as an unhandled rejection.
-	generate().catch((error) => {
-		process.stderr.write(`${error.stack}\n`);
+	generate().catch((/** @type {ThrownValue} */ error) => {
+		process.stderr.write(
+			`${error instanceof Error ? error.stack : String(error)}\n`
+		);
 		process.exitCode = 1;
 	});
 }

@@ -238,7 +238,7 @@ const fetchUrl = (url) =>
 					}
 					/** @type {Buffer[]} */
 					const chunks = [];
-					res.on("data", (chunk) => chunks.push(chunk));
+					res.on("data", (/** @type {Buffer} */ chunk) => chunks.push(chunk));
 					res.on("end", () => resolve(Buffer.concat(chunks).toString("utf8")));
 					res.on("error", reject);
 				}
@@ -2232,6 +2232,8 @@ const main = async () => {
 	const config = await prettier.resolveConfig(TARGET);
 	const data = await prettier.format(source, { ...config, filepath: TARGET });
 
+	// The vendored WHATWG `entities.json`, keyed by name; only `characters` is read.
+	/** @type {Record<string, { characters: string }>} */
 	const entities = JSON.parse(fs.readFileSync(ENTITIES_PATH, "utf8"));
 	const syntax = fs.readFileSync(SYNTAX_TARGET, "utf8");
 	if (!REGION_REGEXP.test(syntax)) {
@@ -2258,6 +2260,6 @@ const main = async () => {
 	if (ok.includes(false)) process.exitCode = 1;
 };
 
-main().catch((err) => {
+main().catch((/** @type {ThrownValue} */ err) => {
 	throw err;
 });
