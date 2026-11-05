@@ -5407,6 +5407,17 @@ describe("one-pass minify of statement sequences", () => {
 		expect(runProgram(code)).toBe(runProgram(source));
 	});
 
+	it("should read an array, object, function or regular expression made in place as truthy", () => {
+		// What runs something stays.
+		const source =
+			'function x(){console.log("x");return 7}console.log([1]&&2,[]&&x(),/a/||x(),[x()]&&3,(()=>1)&&4,[]||x(),{}&&5)';
+		const { code } = minifyOnePass(source, { compress: {}, mangle: {} });
+		expect(code).toBe(
+			'function x(){return console.log("x"),7}console.log(2,x(),/a/,[x()]&&3,4,[],5);'
+		);
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
 	it("should fold a `delete` of the global `undefined`, `NaN` or `Infinity` to `false`", () => {
 		const cases = [
 			["console.log(delete undefined,delete NaN,delete Infinity)", "console.log(!1,!1,!1);"],
