@@ -1435,7 +1435,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["function f(){g();{a();/*! keep */}h()}", {}, "function f(){g();a();/*! keep */h()}"],
 			["{/*! keep */}x()", {}, "{/*! keep */}x();"],
 			["function f(){for(k in o){{var b=5;while(--b>0)g()}}}", {}, "function f(){for(k in o){var f=5;while(--f>0)g()}}"],
-			["function f(){if(a){{g();h()}}}", {}, "function f(){if(a){g(),h()}}"],
+			["function f(){if(a){{g();h()}}}", {}, "function f(){if(a)g(),h()}"],
 			// A `continue` ending its own loop's body goes, one naming that loop's label too; a commented one stays.
 			["function f(){while(foo){x();y();continue}}", {}, "function f(){while(foo)x(),y()}"],
 			["function f(){do{x();continue}while(a)}", {}, "function f(){do{x()}while(a)}"],
@@ -3421,6 +3421,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["(function(a){g(a,a,a)})(\"a long string\")", "!function(a){g(a,a,a)}(\"a long string\");"],
 			["function x(){if(c){k();return 1}else{h();return 2}}function y(){if(c){k();return function(){if(a)b()}}else if(d){k();return 3}else g()}", "function x(){if(c)return k(),1;return h(),2}function y(){if(c)return k(),function(){if(a)b()};if(d)return k(),3;g()}"],
 			["function f(v){if(v===void 0)return;if(c())return v;return d(v)}function g(x){if(x){a();if(b)return 1;return 2}}", "function f(r){if(r!==void 0)return c()?r:d(r)}function g(r){if(r)return a(),b?1:2}"],
+			["for(;;){if(a){{f()}}}if(a){{b()}}else d();if(a){{if(b)c()}}else d()", "for(;;)if(a)f();if(a)b();else d();if(a){if(b)c()}else d();"],
 			["(()=>{g()})();h()", "g(),h();"]
 		]) {
 			expect(print(source, { module: false })).toBe(expected);
