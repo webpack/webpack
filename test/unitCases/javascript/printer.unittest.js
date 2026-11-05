@@ -1749,6 +1749,9 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// A spread of a literal after what joins prints its items.
 			["x=[[1].concat(y,...[2,3]),[1].concat(y,...[],z),[1].concat(...[2],y)]", {}, "x=[[1].concat(y,2,3),[1].concat(y,z),[1].concat(2,y)];"],
 			["Array.prototype.concat=f;x=[1].concat(2)", {}, "Array.prototype.concat=f,x=[1].concat(2);"],
+			["Reflect.defineProperty(Array.prototype,\"concat\",d);Reflect.set(Math,\"abs\",f);x=[[1].concat(2),Math.abs(-1)]", {}, "Reflect.defineProperty(Array.prototype,\"concat\",d),Reflect.set(Math,\"abs\",f),x=[[1].concat(2),Math.abs(-1)];"],
+			["Reflect.get(Math,\"max\");x=[[1].concat(2),Math.max(1,2)]", {}, "Reflect.get(Math,\"max\"),x=[[1,2],2];"],
+			["Reflect.deleteProperty(Array.prototype,\"concat\");Reflect.setPrototypeOf(Math,p);x=[[1].concat(2),Math.sign(1)]", {}, "Reflect.deleteProperty(Array.prototype,\"concat\"),Reflect.setPrototypeOf(Math,p),x=[[1].concat(2),Math.sign(1)];"],
 			["Array.prototype[Symbol.isConcatSpreadable]=!1;x=[1].concat([2])", {}, "Array.prototype[Symbol.isConcatSpreadable]=!1,x=[1].concat([2]);"],
 			["Object.prototype[Symbol.isConcatSpreadable]=!1;x=[1].concat([2])", {}, "Object.prototype[Symbol.isConcatSpreadable]=!1,x=[1].concat([2]);"],
 			["Array[Symbol.species]=g;Array.prototype.constructor=h;x=[1].concat(2)", {}, "Array[Symbol.species]=g,Array.prototype.constructor=h,x=[1].concat(2);"],
