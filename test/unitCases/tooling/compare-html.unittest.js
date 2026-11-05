@@ -136,7 +136,10 @@ describe("compare-html-tools — the cold constructs fixture", () => {
 			// What the sweep skips: build output and the conformance suites, which
 			// are not the corpus it reads.
 			new Set(["js", "node_modules", "wpt"])
-		).map((file) => fs.readFileSync(file, "utf8").toLowerCase());
+		)
+			// The unit tests' inputs are fragments, not the pages this one stands in for.
+			.filter((file) => !/[\\/]fixtures[\\/]html[\\/][^\\/]+[\\/]index\.html$/.test(file))
+			.map((file) => fs.readFileSync(file, "utf8").toLowerCase());
 		const reached = COLD.filter(([, probe]) =>
 			others.some((doc) => doc.includes(probe.toLowerCase()))
 		).map(([name]) => name);

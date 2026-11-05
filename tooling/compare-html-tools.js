@@ -1162,7 +1162,9 @@ const htmlMeaning = (html, tree, cssOptions) => {
 					names.push(nodePath.name(nodePath.field(index, Field.attributes)));
 				}
 				said.push(
-					`<${_namespaceOf(nodePath.node)}:${nodePath.name()} ${names.sort().join(" ")}>`
+					`<${_namespaceOf(nodePath.node)}:${nodePath.name()} ${names
+						.sort()
+						.join(" ")}>`
 				);
 			},
 			exit: (nodePath) => {
@@ -1288,13 +1290,19 @@ const sweepDocument = (minify, html, options, cssOptions) => {
 			reports.push({
 				relation: "meaning",
 				what: "the minified document says something else",
-				repro: `    ${oneLine(before.said.slice(at, at + 4).join(" "), 76)}  ->  ${oneLine(after.said.slice(at, at + 4).join(" "), 76)}`
+				repro: `    ${oneLine(
+					before.said.slice(at, at + 4).join(" "),
+					76
+				)}  ->  ${oneLine(after.said.slice(at, at + 4).join(" "), 76)}`
 			});
 		} else if (!sameSheets(before.sheets, after.sheets, cssOptions)) {
 			reports.push({
 				relation: "meaning",
 				what: "a minified stylesheet says something else",
-				repro: `    ${oneLine(before.sheets.join(" "), 76)}  ->  ${oneLine(after.sheets.join(" "), 76)}`
+				repro: `    ${oneLine(before.sheets.join(" "), 76)}  ->  ${oneLine(
+					after.sheets.join(" "),
+					76
+				)}`
 			});
 		}
 	}
@@ -1356,6 +1364,35 @@ const invariantFixtures = () => {
 	}
 	return { corpus: out, missing };
 };
+
+// Why each unit-test input under `test/fixtures/html/` is owed nothing.
+// cspell:ignore namespaceurl importurl
+const UNIT_INPUT_SELECT =
+	"a customizable `<select>` reads its content by the in-body rules; parse5 8 predates customizable selects and drops or moves it";
+const UNIT_INPUT_SHADOW =
+	"a declarative shadow root attaches to its host, so what follows it is built elsewhere; parse5 8 predates declarative shadow roots";
+const UNIT_INPUT_CR =
+	"webpack reads the source as written, so a CR in an attribute value stays a CR; parse5 applies the input stream preprocessing that turns it into LF, which the html5lib suite normalizes away too";
+const UNIT_INPUT_NUL =
+	"webpack reads the source as written, so a NUL stays a NUL; parse5 replaces it with U+FFFD, which the html5lib suite normalizes away too";
+const UNIT_INPUT_MEANING =
+	"dropping a comment joins the text around it into one node, and dropping whitespace between `</head>` and `<body>` drops a node nothing renders; the characters read the same";
+const UNIT_INPUT_SLICE =
+	"out of its context the element is built by other rules (foster parenting, the adoption agency, implied tags), so its bytes alone read to another tree";
+const UNIT_INPUT_STYLES =
+	"adjacent `<style>` elements the first pass leaves apart are joined only on a second pass; the sheets say the same";
+const UNIT_INPUT_SORT =
+	"the attributes of an `<html>` the first pass merges in are sorted only on a second pass; same attributes";
+const UNIT_INPUT_TAGS =
+	"a second pass writes an implied or omitted tag differently from the first; both outputs read to the same tree";
+const UNIT_INPUT_VERBATIM =
+	"the printer cannot rebuild this tree from its own output, so it writes the source back as authored, spelling included";
+const UNIT_INPUT_SRCSET =
+	"an unquoted value holding a quote is a parse error the printer writes back as authored; quoted, the same `srcset` sheds its empty candidates";
+const UNIT_INPUT_GT =
+	"`&gt` followed by `=` is not decoded in an attribute, so the printer keeps it as written, where the respelled `&amp;gt` stays longer";
+const UNIT_INPUT_NEWLINE =
+	"the printer keeps the `&#10;` the source wrote in an attribute value rather than writing a raw newline; both read the same";
 
 /**
  * What the sweep reports that the printer owes nothing for. Each entry states
@@ -1419,6 +1456,606 @@ const EXPECTED = [
 		contains: "&#34;",
 		source: "style-attribute",
 		why: "the value carries both quotes, so one stays a character reference whichever delimiter is picked, and the printer echoes the spelling the source wrote rather than normalizing it — `&#34;` is a byte under `&quot;`, which is the difference reported. Writing `&#34;` everywhere was measured and refused: over the fixtures and wpt's `html/` documents it saves 5 raw bytes and costs 5 gzip, and a re-encoding has to win compressed. No build reads this: `htmlMinify` hands every `style` to the CSS minifier, and that round trip writes `&quot;` for either spelling"
+	},
+	// The inputs the unit tests feed the parser, under `test/fixtures/html/`.
+	{
+		relation: "idempotence",
+		contains: "-> </body>",
+		source: [
+			"source-processor-printing-what-re-parses-to-the-same-tree-a-start-tag-left-out-18",
+			"source-processor-printing-what-re-parses-to-the-same-tree-a-start-tag-left-out-8",
+			"source-processor-remove-implied-tags-materializes-an-implied-tag-whose-content",
+			"source-processor-streamed-walk-recycling-materializes-a-streamed-implied-tag-as",
+			"source-processor-printing-what-re-parses-to-the-same-tree-a-start-tag-left-out-8, cut in a start tag's name",
+			"source-processor-printing-what-re-parses-to-the-same-tree-a-start-tag-left-out-8, cut in an end tag's name",
+			"source-processor-printing-what-re-parses-to-the-same-tree-a-start-tag-left-out-8, cut before a tag's >",
+			"source-processor-remove-implied-tags-materializes-an-implied-tag-whose-content, cut in an end tag's name",
+			"source-processor-remove-implied-tags-materializes-an-implied-tag-whose-content, cut in a <style> body",
+			"source-processor-streamed-walk-recycling-materializes-a-streamed-implied-tag-as, cut in a start tag's name",
+			"source-processor-streamed-walk-recycling-materializes-a-streamed-implied-tag-as, cut in an end tag's name",
+			"source-processor-streamed-walk-recycling-materializes-a-streamed-implied-tag-as, cut before a tag's >",
+			"source-processor-streamed-walk-recycling-materializes-a-streamed-implied-tag-as, cut in a <style> body"
+		],
+		why: UNIT_INPUT_TAGS
+	},
+	{
+		relation: "agreement",
+		contains:
+			"/html[1]/body[1]/select[1]/table[1]: parse5 nothing, tool <html:table>",
+		source: [
+			"source-processor-re-serializing-keeps-the-tree-keeps-an-input-that-ends-a-select",
+			"source-processor-re-serializing-keeps-the-tree-keeps-an-input-the-table-fosters",
+			"source-processor-re-serializing-keeps-the-tree-keeps-an-input-under-a-fostered"
+		],
+		why: UNIT_INPUT_SELECT
+	},
+	{
+		relation: "agreement",
+		contains:
+			"/html[1]/body[1]/select[1]/table[1]: parse5 (scripting) nothing, tool <html:table>",
+		source: [
+			"source-processor-re-serializing-keeps-the-tree-keeps-an-input-that-ends-a-select",
+			"source-processor-re-serializing-keeps-the-tree-keeps-an-input-the-table-fosters",
+			"source-processor-re-serializing-keeps-the-tree-keeps-an-input-under-a-fostered"
+		],
+		why: UNIT_INPUT_SELECT
+	},
+	{
+		relation: "idempotence",
+		contains: "p></template>\n      -> template>",
+		source: [
+			"source-processor-printing-what-re-parses-to-the-same-tree-a-start-tag-left-out-19",
+			"source-processor-printing-what-re-parses-to-the-same-tree-a-start-tag-left-out-19, cut in a start tag's name",
+			"source-processor-printing-what-re-parses-to-the-same-tree-a-start-tag-left-out-19, cut before a tag's >"
+		],
+		why: UNIT_INPUT_TAGS
+	},
+	{
+		relation: "idempotence",
+		contains: "<html b=2 a=1>\n      -> <html a=1 b=2>",
+		source: [
+			"source-processor-re-serializing-keeps-the-tree-keeps-a-comment-behind-an-implied",
+			"source-processor-re-serializing-keeps-the-tree-keeps-a-comment-behind-an-implied, cut in an end tag's name",
+			"source-processor-re-serializing-keeps-the-tree-keeps-a-comment-behind-an-implied, cut in a comment"
+		],
+		why: UNIT_INPUT_SORT
+	},
+	{
+		relation: "agreement",
+		contains: "/html[1]/body[1]/select[1]: parse5 </select>, tool nothing",
+		source: [
+			"source-processor-re-serializing-keeps-the-tree-keeps-an-input-that-ends-a-select",
+			"source-processor-re-serializing-keeps-the-tree-keeps-an-input-the-table-fosters"
+		],
+		why: UNIT_INPUT_SELECT
+	},
+	{
+		relation: "agreement",
+		contains:
+			"/html[1]/body[1]/select[1]: parse5 (scripting) </select>, tool nothing",
+		source: [
+			"source-processor-re-serializing-keeps-the-tree-keeps-an-input-that-ends-a-select",
+			"source-processor-re-serializing-keeps-the-tree-keeps-an-input-the-table-fosters"
+		],
+		why: UNIT_INPUT_SELECT
+	},
+	{
+		relation: "idempotence",
+		contains:
+			"</style><style>@namespaceurl (x);p{color:red}</style>\n      -> @namespaceurl (x);p{color:red}</style>",
+		source: [
+			"source-processor-merging-adjacent-style-declines-to-join-across-a-sheet-3",
+			"source-processor-merging-adjacent-style-declines-to-join-across-a-sheet-3, cut in an end tag's name"
+		],
+		why: UNIT_INPUT_STYLES
+	},
+	{
+		relation: "idempotence",
+		contains:
+			"</style><style>@importurl (x.css);p{color:red}</style>\n      -> @importurl (x.css);p{color:red}</style>",
+		source: [
+			"source-processor-merging-adjacent-style-declines-to-join-across-a-sheet-4",
+			"source-processor-merging-adjacent-style-declines-to-join-across-a-sheet-4, cut in an end tag's name"
+		],
+		why: UNIT_INPUT_STYLES
+	},
+	{
+		relation: "idempotence",
+		contains:
+			"</style><style>c{color:#00f}</style>\n      -> c{color:#00f}</style>",
+		source: [
+			"source-processor-merging-adjacent-style-reads-a-sheet-s-closed-comment-escape-22",
+			"source-processor-merging-adjacent-style-reads-a-sheet-s-closed-comment-escape-22, cut in an end tag's name"
+		],
+		why: UNIT_INPUT_STYLES
+	},
+	{
+		relation: "idempotence",
+		contains: "-> </div>",
+		source: [
+			"source-processor-printing-in-pieces-keeps-the-end-tag-of-a-element-that-has-2",
+			"source-processor-printing-in-pieces-keeps-the-end-tag-of-a-element-that-has-2, cut in an end tag's name"
+		],
+		why: UNIT_INPUT_TAGS
+	},
+	{
+		relation: "agreement",
+		contains:
+			'/html[1]/body[1]/p[1]: parse5 <html:p data-x="a\\nb">, tool <html:p data-x="a\\rb">',
+		source:
+			"source-processor-minify-serialization-edge-cases-opening-tag-whitespace-unquotes-5",
+		why: UNIT_INPUT_CR
+	},
+	{
+		relation: "agreement",
+		contains:
+			"/html[1]/body[1]/select[1]/ruby[1]: parse5 nothing, tool <html:ruby>",
+		source:
+			"source-processor-printing-what-re-parses-to-the-same-tree-a-fragment-is-read",
+		why: UNIT_INPUT_SELECT
+	},
+	{
+		relation: "agreement",
+		contains: "/html[1]/body[1]/select[1]: parse5 </select>, tool <html:table>",
+		source:
+			"source-processor-re-serializing-keeps-the-tree-keeps-a-hidden-input-the-table",
+		why: UNIT_INPUT_SELECT
+	},
+	{
+		relation: "agreement",
+		contains:
+			"/html[1]/body[1]/select[1]/table[1]: parse5 nothing, tool </table>",
+		source:
+			"source-processor-re-serializing-keeps-the-tree-keeps-a-hidden-input-the-table",
+		why: UNIT_INPUT_SELECT
+	},
+	{
+		relation: "agreement",
+		contains: "/html[1]/body[1]/dt[1]/dd[1]: parse5 nothing, tool <html:dd>",
+		source:
+			"source-processor-re-serializing-keeps-the-tree-keeps-a-list-item-a-select-held",
+		why: UNIT_INPUT_SELECT
+	},
+	{
+		relation: "agreement",
+		contains: "/html[1]/body[1]/select[1]: parse5 </select>, tool <html:span>",
+		source:
+			"source-processor-re-serializing-keeps-the-tree-keeps-a-select-above-what-holds",
+		why: UNIT_INPUT_SELECT
+	},
+	{
+		relation: "agreement",
+		contains:
+			"/html[1]/body[1]/select[1]/span[1]/table[1]: parse5 nothing, tool <html:table>",
+		source:
+			"source-processor-re-serializing-keeps-the-tree-keeps-a-select-above-what-holds",
+		why: UNIT_INPUT_SELECT
+	},
+	{
+		relation: "agreement",
+		contains:
+			"/html[1]/body[1]/select[1]/dt[1]: parse5 nothing, tool <html:dt>",
+		source:
+			"source-processor-re-serializing-keeps-the-tree-keeps-an-hr-the-table-held-out-of",
+		why: UNIT_INPUT_SELECT
+	},
+	{
+		relation: "agreement",
+		contains:
+			"/html[1]/body[1]/select[1]/dt[1]/table[1]: parse5 nothing, tool <html:table>",
+		source:
+			"source-processor-re-serializing-keeps-the-tree-keeps-an-hr-the-table-held-out-of",
+		why: UNIT_INPUT_SELECT
+	},
+	{
+		relation: "agreement",
+		contains: "/html[1]/body[1]/select[1]: parse5 </select>, tool <html:div>",
+		source:
+			"source-processor-re-serializing-keeps-the-tree-keeps-an-input-under-a-fostered",
+		why: UNIT_INPUT_SELECT
+	},
+	{
+		relation: "agreement",
+		contains:
+			'/html[1]/body[1]/marquee[1]/b[1]/select[1]: parse5 text "x", tool nothing',
+		source:
+			"source-processor-re-serializing-keeps-the-tree-keeps-formatting-a-marquee",
+		why: UNIT_INPUT_SELECT
+	},
+	{
+		relation: "agreement",
+		contains: '/html[1]/body[1]: parse5 nothing, tool text "x"',
+		source:
+			"source-processor-re-serializing-keeps-the-tree-keeps-formatting-a-marquee",
+		why: UNIT_INPUT_SELECT
+	},
+	{
+		relation: "agreement",
+		contains:
+			"/html[1]/body[1]/select[1]/button[1]: parse5 nothing, tool <html:button>",
+		source:
+			"source-processor-remove-empty-elements-reads-the-output-keeps-select-button",
+		why: UNIT_INPUT_SELECT
+	},
+	{
+		relation: "agreement",
+		contains:
+			'/html[1]/body[1]/p[1]: parse5 <html:p title="a�b" style="color: red">, tool <html:p title="a\\u0000b" style="color: red">',
+		source:
+			"source-processor-render-embedded-source-leaves-a-nul-the-source-carried-where-it",
+		why: UNIT_INPUT_NUL
+	},
+	{
+		relation: "agreement",
+		contains: "/html[1]/body[1]/div[1]/b[1]: parse5 <html:b>, tool nothing",
+		source:
+			"source-processor-tree-construction-the-printer-reads-back-prints-a-shadow-root-2",
+		why: UNIT_INPUT_SHADOW
+	},
+	{
+		relation: "agreement",
+		contains: "/html[1]/body[1]/div[1]/b[1]: parse5 nothing, tool <html:b>",
+		source:
+			"source-processor-tree-construction-the-printer-reads-back-prints-a-shadow-root-2",
+		why: UNIT_INPUT_SHADOW
+	},
+	{
+		relation: "agreement",
+		contains: '/: parse5 comment "?pi a�b?", tool comment "?pi a\\u0000b?"',
+		source:
+			"source-processor-tree-construction-the-printer-reads-back-writes-back-a-nul-a-2",
+		why: UNIT_INPUT_NUL
+	},
+	{
+		relation: "agreement",
+		contains:
+			'/html[1]/body[1]/p[1]: parse5 (scripting) <html:p data-x="a\\nb">, tool <html:p data-x="a\\rb">',
+		source:
+			"source-processor-minify-serialization-edge-cases-opening-tag-whitespace-unquotes-5",
+		why: UNIT_INPUT_CR
+	},
+	{
+		relation: "agreement",
+		contains:
+			"/html[1]/body[1]/select[1]/ruby[1]: parse5 (scripting) nothing, tool <html:ruby>",
+		source:
+			"source-processor-printing-what-re-parses-to-the-same-tree-a-fragment-is-read",
+		why: UNIT_INPUT_SELECT
+	},
+	{
+		relation: "agreement",
+		contains:
+			"/html[1]/body[1]/select[1]: parse5 (scripting) </select>, tool <html:table>",
+		source:
+			"source-processor-re-serializing-keeps-the-tree-keeps-a-hidden-input-the-table",
+		why: UNIT_INPUT_SELECT
+	},
+	{
+		relation: "agreement",
+		contains:
+			"/html[1]/body[1]/select[1]/table[1]: parse5 (scripting) nothing, tool </table>",
+		source:
+			"source-processor-re-serializing-keeps-the-tree-keeps-a-hidden-input-the-table",
+		why: UNIT_INPUT_SELECT
+	},
+	{
+		relation: "agreement",
+		contains:
+			"/html[1]/body[1]/dt[1]/dd[1]: parse5 (scripting) nothing, tool <html:dd>",
+		source:
+			"source-processor-re-serializing-keeps-the-tree-keeps-a-list-item-a-select-held",
+		why: UNIT_INPUT_SELECT
+	},
+	{
+		relation: "agreement",
+		contains:
+			"/html[1]/body[1]/select[1]: parse5 (scripting) </select>, tool <html:span>",
+		source:
+			"source-processor-re-serializing-keeps-the-tree-keeps-a-select-above-what-holds",
+		why: UNIT_INPUT_SELECT
+	},
+	{
+		relation: "agreement",
+		contains:
+			"/html[1]/body[1]/select[1]/span[1]/table[1]: parse5 (scripting) nothing, tool <html:table>",
+		source:
+			"source-processor-re-serializing-keeps-the-tree-keeps-a-select-above-what-holds",
+		why: UNIT_INPUT_SELECT
+	},
+	{
+		relation: "agreement",
+		contains:
+			"/html[1]/body[1]/select[1]/dt[1]: parse5 (scripting) nothing, tool <html:dt>",
+		source:
+			"source-processor-re-serializing-keeps-the-tree-keeps-an-hr-the-table-held-out-of",
+		why: UNIT_INPUT_SELECT
+	},
+	{
+		relation: "agreement",
+		contains:
+			"/html[1]/body[1]/select[1]/dt[1]/table[1]: parse5 (scripting) nothing, tool <html:table>",
+		source:
+			"source-processor-re-serializing-keeps-the-tree-keeps-an-hr-the-table-held-out-of",
+		why: UNIT_INPUT_SELECT
+	},
+	{
+		relation: "agreement",
+		contains:
+			"/html[1]/body[1]/select[1]: parse5 (scripting) </select>, tool <html:div>",
+		source:
+			"source-processor-re-serializing-keeps-the-tree-keeps-an-input-under-a-fostered",
+		why: UNIT_INPUT_SELECT
+	},
+	{
+		relation: "agreement",
+		contains:
+			'/html[1]/body[1]/marquee[1]/b[1]/select[1]: parse5 (scripting) text "x", tool nothing',
+		source:
+			"source-processor-re-serializing-keeps-the-tree-keeps-formatting-a-marquee",
+		why: UNIT_INPUT_SELECT
+	},
+	{
+		relation: "agreement",
+		contains: '/html[1]/body[1]: parse5 (scripting) nothing, tool text "x"',
+		source:
+			"source-processor-re-serializing-keeps-the-tree-keeps-formatting-a-marquee",
+		why: UNIT_INPUT_SELECT
+	},
+	{
+		relation: "agreement",
+		contains:
+			"/html[1]/body[1]/select[1]/button[1]: parse5 (scripting) nothing, tool <html:button>",
+		source:
+			"source-processor-remove-empty-elements-reads-the-output-keeps-select-button",
+		why: UNIT_INPUT_SELECT
+	},
+	{
+		relation: "agreement",
+		contains:
+			'/html[1]/body[1]/p[1]: parse5 (scripting) <html:p title="a�b" style="color: red">, tool <html:p title="a\\u0000b" style="color: red">',
+		source:
+			"source-processor-render-embedded-source-leaves-a-nul-the-source-carried-where-it",
+		why: UNIT_INPUT_NUL
+	},
+	{
+		relation: "agreement",
+		contains:
+			"/html[1]/body[1]/div[1]/b[1]: parse5 (scripting) <html:b>, tool nothing",
+		source:
+			"source-processor-tree-construction-the-printer-reads-back-prints-a-shadow-root-2",
+		why: UNIT_INPUT_SHADOW
+	},
+	{
+		relation: "agreement",
+		contains:
+			"/html[1]/body[1]/div[1]/b[1]: parse5 (scripting) nothing, tool <html:b>",
+		source:
+			"source-processor-tree-construction-the-printer-reads-back-prints-a-shadow-root-2",
+		why: UNIT_INPUT_SHADOW
+	},
+	{
+		relation: "agreement",
+		contains:
+			'/: parse5 (scripting) comment "?pi a�b?", tool comment "?pi a\\u0000b?"',
+		source:
+			"source-processor-tree-construction-the-printer-reads-back-writes-back-a-nul-a-2",
+		why: UNIT_INPUT_NUL
+	},
+	{
+		relation: "slices",
+		contains:
+			"Text[3,4) Element:b[0,17)\n      -> Text[3,4) Element:a[4,17) Element:b[0,17)",
+		source:
+			"source-processor-minifying-what-the-round-trip-guard-checks-minifies-a-link",
+		why: UNIT_INPUT_SLICE
+	},
+	{
+		relation: "slices",
+		contains:
+			"Text[27,28) Element:plaintext[16,28) Element:b[0,28)\n      -> ProcessingInstruction[10,16) Text[27,28) Element:plaintext[16,28) Element:b[0,28)",
+		source:
+			"source-processor-printing-what-re-parses-to-the-same-tree-what-follows-an-16",
+		why: UNIT_INPUT_SLICE
+	},
+	{
+		relation: "slices",
+		contains:
+			"Element:input[13,20) Element:table[6,20) Element:span[0,20)\n      -> Element:table[6,20) Element:span[0,20)",
+		source:
+			"source-processor-re-serializing-keeps-the-tree-keeps-a-select-above-what-holds",
+		why: UNIT_INPUT_SLICE
+	},
+	{
+		relation: "slices",
+		contains:
+			"Element:input[5,12) Element:div[0,12)\n      -> Element:div[0,12)",
+		source:
+			"source-processor-re-serializing-keeps-the-tree-keeps-an-input-under-a-fostered",
+		why: UNIT_INPUT_SLICE
+	},
+	{
+		relation: "slices",
+		contains:
+			"Element:table[7,22) Element:a[4,25) Element:a[22,25) Element:td[0,30)\n      -> Element:table[7,22) Element:a[4,25) Element:a[22,30) Element:td[0,30)",
+		source:
+			"source-processor-tree-construction-corpus-round-trips-beautify-prints-a-table-td",
+		why: UNIT_INPUT_SLICE
+	},
+	{
+		relation: "meaning",
+		contains: "&am p; </p> </body>  ->  &amp; </p> </body> </html>",
+		source:
+			"html-minify-assets-webpack-only-passes-through-escapes-a-character-reference-3",
+		why: UNIT_INPUT_MEANING
+	},
+	{
+		relation: "meaning",
+		contains: "&am p;  ->  &amp;",
+		source:
+			"html-minify-assets-webpack-only-passes-through-escapes-a-character-reference-3",
+		why: UNIT_INPUT_MEANING
+	},
+	{
+		relation: "respelling quote-single",
+		contains:
+			'<img alt="line&#10;br &quot;q&quot;">  ->  <img alt=\'line&#10;br "q"\'>\n    <img alt=\'line br "q"\'>  ->  <img alt=\'line br "q"\'>',
+		source:
+			"source-processor-attribute-quote-spelling-keeps-every-other-reference-the-value-3",
+		why: UNIT_INPUT_NEWLINE
+	},
+	{
+		relation: "respelling quote-double",
+		contains:
+			"<img srcset=a'\"b.png,,>  ->  <img srcset=a'\"b.png,,>\n    <img srcset=\"a'&#34;b.png,,\">  ->  <img srcset='a&#39;\"b.png'>",
+		source:
+			"source-processor-attribute-values-the-minifier-rewrites-writes-img-srcset-a-b",
+		why: UNIT_INPUT_SRCSET
+	},
+	{
+		relation: "respelling quote-single",
+		contains:
+			"<img srcset=a'\"b.png,,>  ->  <img srcset=a'\"b.png,,>\n    <img srcset='a&#39;\"b.png,,'>  ->  <img srcset='a&#39;\"b.png'>",
+		source:
+			"source-processor-attribute-values-the-minifier-rewrites-writes-img-srcset-a-b",
+		why: UNIT_INPUT_SRCSET
+	},
+	{
+		relation: "respelling references",
+		contains:
+			'<img srcset=a\'"b.png,,>  ->  <img srcset=a\'"b.png,,>\n    <img srcset="&#x61;&#x27;&#x22;&#x62;&#x2e;&#x70;&#x6e;&#x67;&#x2c;&#x2c;">  ->  <img srcset=\'a&#39;"b.png\'>',
+		source:
+			"source-processor-attribute-values-the-minifier-rewrites-writes-img-srcset-a-b",
+		why: UNIT_INPUT_SRCSET
+	},
+	{
+		relation: "respelling quote-double",
+		contains: "<input disabled=disabled>   (only in the page)",
+		source:
+			"source-processor-fostered-runs-no-re-nesting-reproduces-keeps-a-holder-that",
+		why: UNIT_INPUT_VERBATIM
+	},
+	{
+		relation: "respelling quote-single",
+		contains: "<input disabled=disabled>   (only in the page)",
+		source:
+			"source-processor-fostered-runs-no-re-nesting-reproduces-keeps-a-holder-that",
+		why: UNIT_INPUT_VERBATIM
+	},
+	{
+		relation: "respelling references",
+		contains: "<input disabled=disabled>   (only in the page)",
+		source:
+			"source-processor-fostered-runs-no-re-nesting-reproduces-keeps-a-holder-that",
+		why: UNIT_INPUT_VERBATIM
+	},
+	{
+		relation: "respelling references",
+		contains: "<input disabled=disabled>   (only in the page)",
+		source:
+			"source-processor-fostered-runs-no-re-nesting-reproduces-keeps-text-beside-a",
+		why: UNIT_INPUT_VERBATIM
+	},
+	{
+		relation: "idempotence",
+		contains:
+			"</style><style>p{color:red}</style>\n      -> p{color:red}</style>",
+		source:
+			"source-processor-merging-adjacent-style-declines-to-join-across-a-sheet-5",
+		why: UNIT_INPUT_STYLES
+	},
+	{
+		relation: "meaning",
+		contains: "PASS x  ->  PASSx",
+		source:
+			"source-processor-minify-serialization-edge-cases-noscript-content-keeps-the-head-2",
+		why: UNIT_INPUT_MEANING
+	},
+	{
+		relation: "idempotence",
+		contains: "</style><style>b{}</style>\n      -> b{}</style>",
+		source:
+			"source-processor-node-path-ends-a-raw-text-body-at-its-end-tag-attributes-and",
+		why: UNIT_INPUT_STYLES
+	},
+	{
+		relation: "respelling quote-double",
+		contains: "<b id=1>   (only in the page)",
+		source:
+			"source-processor-printing-what-re-parses-to-the-same-tree-an-end-tag-the-parser-6",
+		why: UNIT_INPUT_VERBATIM
+	},
+	{
+		relation: "respelling quote-single",
+		contains: "<b id=1>   (only in the page)",
+		source:
+			"source-processor-printing-what-re-parses-to-the-same-tree-an-end-tag-the-parser-6",
+		why: UNIT_INPUT_VERBATIM
+	},
+	{
+		relation: "respelling references",
+		contains: "<b id=1>   (only in the page)",
+		source:
+			"source-processor-printing-what-re-parses-to-the-same-tree-an-end-tag-the-parser-6",
+		why: UNIT_INPUT_VERBATIM
+	},
+	{
+		relation: "idempotence",
+		contains: "<body>\n      -> ",
+		source:
+			"source-processor-printing-what-re-parses-to-the-same-tree-text-fostered-out-of-a",
+		why: UNIT_INPUT_TAGS
+	},
+	{
+		relation: "respelling quote-double",
+		contains:
+			'<div bar="ZZ&gt=YY">  ->  <div bar="ZZ&gt=YY"></div>\n    <div bar="ZZ&amp;gt=YY">  ->  <div bar="ZZ&amp;gt=YY"></div>',
+		source:
+			"source-processor-tree-construction-corpus-round-trips-minify-prints-div-bar-zz",
+		why: UNIT_INPUT_GT
+	},
+	{
+		relation: "respelling quote-single",
+		contains:
+			"<div bar=\"ZZ&gt=YY\">  ->  <div bar=\"ZZ&gt=YY\"></div>\n    <div bar='ZZ&amp;gt=YY'>  ->  <div bar='ZZ&amp;gt=YY'></div>",
+		source:
+			"source-processor-tree-construction-corpus-round-trips-minify-prints-div-bar-zz",
+		why: UNIT_INPUT_GT
+	},
+	{
+		relation: "respelling references",
+		contains:
+			'<div bar="ZZ&gt=YY">  ->  <div bar="ZZ&gt=YY"></div>\n    <div bar="&#x5a;&#x5a;&#x26;&#x67;&#x74;&#x3d;&#x59;&#x59;">  ->  <div bar="ZZ&amp;gt=YY"></div>',
+		source:
+			"source-processor-tree-construction-corpus-round-trips-minify-prints-div-bar-zz",
+		why: UNIT_INPUT_GT
+	},
+	{
+		relation: "meaning",
+		contains: "a c </p> </body>  ->  ac </p> </body> </html>",
+		source:
+			"source-processor-use-with-an-array-of-node-types-registers-one-visitor-for-every",
+		why: UNIT_INPUT_MEANING
+	},
+	{
+		relation: "meaning",
+		contains: "a c  ->  ac",
+		source:
+			"source-processor-use-with-an-array-of-node-types-registers-one-visitor-for-every",
+		why: UNIT_INPUT_MEANING
+	},
+	{
+		relation: "idempotence",
+		contains: "</style><style>b</style>\n      -> b</style>",
+		source:
+			"source-processor-node-path-ends-a-raw-text-body-at-its-end-tag-attributes-and, cut in a <style> body",
+		why: UNIT_INPUT_STYLES
+	},
+	{
+		relation: "idempotence",
+		contains: "</style><style>b</style>",
+		source:
+			"source-processor-node-path-ends-a-raw-text-body-at-its-end-tag-attributes-and",
+		why: UNIT_INPUT_STYLES
 	}
 ];
 
@@ -1611,7 +2248,9 @@ const main = async () => {
 				if ("error" in result) {
 					// A tool rejecting the document outright is a comparison result too.
 					process.stdout.write(
-						`  ${tool.name.padEnd(34)} ${result.timedOut ? "" : "rejects it: "}${result.error}\n`
+						`  ${tool.name.padEnd(34)} ${
+							result.timedOut ? "" : "rejects it: "
+						}${result.error}\n`
 					);
 					continue;
 				}
