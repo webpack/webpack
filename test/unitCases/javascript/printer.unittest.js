@@ -5181,6 +5181,35 @@ describe("one-pass minify of statement sequences", () => {
 		}
 	});
 
+	it("should fold an optional chain starting on `null` or `undefined` to `undefined`", () => {
+		// Nothing past the start runs; a start that runs code, a parameter named `undefined`, a first link read plainly or a chain `**` or a member reads stays.
+		for (const [source, expected] of [
+			[
+				"var n=0;function f(){n++;return 1}console.log(null?.[f()],(void 0)?.a.b(f()),(null?.a)?.b,typeof null?.a,(1,null)?.a);null?.[f()];console.log(n)",
+				"var n=0;function f(){return n++,1}console.log(void 0,void 0,void 0,typeof void 0,void 0),console.log(n);"
+			],
+			[
+				"function f(undefined){return undefined?.a}var o={a:{b:1}};console.log(f({a:2}),(void console.log(3))?.a,(null?.a)**2,o?.a.b)",
+				"function f(n){return n?.a}var o={a:{b:1}};console.log(f({a:2}),(void console.log(3))?.a,null?.a**2,o?.a.b);"
+			]
+		]) {
+			const { code } = minifyOnePass(source, {
+				compress: { toplevel: false },
+				mangle: { toplevel: false }
+			});
+			expect(code).toBe(expected);
+			expect(runProgram(code)).toBe(runProgram(source));
+		}
+		expect(
+			minifyOnePass("x=(null?.a).b;y=null.a?.b", {
+				compress: { toplevel: false }
+			}).code
+		).toBe("x=(null?.a).b,y=null.a?.b;");
+		expect(
+			minifyOnePass("x=/* c */null?.a", { format: { comments: "all" } }).code
+		).toBe("x=/* c */null?.a;");
+	});
+
 	it("should read `?.` after what is never nullish as `.`", () => {
 		expect(
 			minifyOnePass(
@@ -5188,7 +5217,7 @@ describe("one-pass minify of statement sequences", () => {
 				{ compress: { toplevel: false }, mangle: { toplevel: false } }
 			).code
 		).toBe(
-			"function t(n){return[(n(),{}).b,[1].x,(void 0)?.x,null?.x,`a`.length,(1+a).b,(-a).b,(void a)?.b,function(){}(),(n(),a)?.b]}"
+			"function t(n){return[(n(),{}).b,[1].x,void 0,void 0,`a`.length,(1+a).b,(-a).b,(void a)?.b,function(){}(),(n(),a)?.b]}"
 		);
 	});
 });
