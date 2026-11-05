@@ -4734,6 +4734,23 @@ describe("one-pass minify of unread values", () => {
 		]);
 	});
 
+	it("should print what an unread template's parts run and convert", () => {
+		expectPrints([
+			["`stuff ${x?1:2} ${y}`", "x,`${y}`;"],
+			["`4${c}${+a}`", "`${c}`,+a;"],
+			["`${a()===b}`", "a(),b;"],
+			["`${{a:f()}}`", "f();"],
+			["`a${1}${2}`", ""],
+			// A part converting by its methods stays in a template, in order.
+			["`${f()}`", "`${f()}`;"],
+			["`${[f()]}`", "`${[f()]}`;"],
+			["`${function(){}}`", "`${function(){}}`;"],
+			["x=`${f()}`", "x=`${f()}`;"],
+			["f`${a}`", "f`${a}`;"],
+			["`${/*c*/a}`", "`${a}`;"]
+		]);
+	});
+
 	it("should drop a private name's `in` of a literal object", () => {
 		expectPrints([
 			["(class{#x;static{#x in{};#x in[]}})", ""],
