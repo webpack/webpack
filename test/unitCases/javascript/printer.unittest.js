@@ -888,11 +888,11 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				{},
 				"function f(c){switch(c){case-1:c=1;break;case 0:c=2}if(c===1)x();if(c===1)y();c:switch(c){case 1:z();break c}switch(c){case 1:y();/*! c */break}return import(r(c))}"
 			],
-			// `!!!x` read for its truth folds its innermost `!!` alone.
+			// `!!!x` read for its truth folds its innermost `!!` alone; a test swaps its branches for the `!` left.
 			[
 				"function f(x) { if (!!!x) g(); if (!!!!x) h(); return [!!!x ? 1 : 2, !!!x] }",
 				{},
-				"function f(x){if(!x)g();if(x)h();return[!x?1:2,!x]}"
+				"function f(x){if(!x)g();if(x)h();return[x?2:1,!x]}"
 			],
 			// A parameter `arguments` reads keeps what sets it.
 			[
@@ -1513,6 +1513,8 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// No shorter, read for its truth or unread, under one `!` or one not `!`, it stays; so does one holding a comment kept.
 			["a=!!(b&&c);a=!!(!b&&c+d);a=!!(!b&&!c&&d);x=!!(!b&&c).y;if(!!(!b&&c))f();!!(!b&&c);a=!(!b&&c);a=-(1&&-b)", {}, "a=!!(b&&c),a=!!(!b&&c+d),a=!!(!b&&!c&&d),x=!!(!b&&c).y;if((!b&&c))f();!b&&c,a=!(!b&&c),a=-(-b);"],
 			["x=!!(!b&&/*c*/c);y=!!(/*k*/!b&&c)", { format: { comments: "all" } }, "x=!!(!b&&/*c*/c),y=!!(/*k*/!b&&c);"],
+			// A test `!!!t` printing `!t` swaps the branches for `t`, as `!t` does.
+			["x=!!!(a,b)?c:d;x=!!!(a&&b)?c:d;if(!!!a)f();else g();x=!!(!a)?c:d", {}, "x=(a,b)?d:c,x=a&&b?d:c,a?g():f(),x=a?d:c;"],
 			["!(x===undefined);!(typeof x()===\"undefined\");x===void 0;a()===b;a===b();f(a===b,c());g(),a()!==b(),h();x==void 0;({}).a===b();({}).a===b", {}, "x,typeof x(),x,a(),b,a,b(),f(a===b,c()),g(),a(),b(),h(),x==null,b(),b;"],
 			// `x["length"]` folds as `x.length` does; an `else if` known false goes, one known true prints its branch.
 			["use(\"abc\"[\"length\"]);use([1,2,3][\"length\"]);use([,,1][\"length\"]);use(/a/[\"source\"]);use(\"a\"[\"x\"]);use(\"a\"[0]);use(a?.[\"length\"]);delete\"ab\"[\"length\"]", {}, "use(3),use(3),use(3),use(\"a\"),use(\"a\".x),use(\"a\"[0]),use(a?.length),delete\"ab\".length;"],
@@ -2136,7 +2138,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["!!!(e&6)", "!(e&6)"],
 			["!!(!(e+t))", "!(e+t)"],
 			["!!!(e===t)", "!(e===t)"],
-			["!!!(e&6)?t:g", "!(e&6)?t:g"],
+			["!!!(e&6)?t:g", "e&6?g:t"],
 			// Read only for its truth elsewhere, `!!x` still prints as `x`.
 			["!!(e&6)?t:g", "e&6?t:g"]
 		]) {
