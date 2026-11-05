@@ -3159,7 +3159,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 				"(function(){})(a(),b());x(),(()=>{})(...a),y();if(c)(function(a){})(...a);else d();z=(function(){})(a());(function({a}){})(b);(function(a=g()){})(b);(async function(){})(b)"
 			)
 		).toBe(
-			"a(),b(),x(),[...a],y(),c?[...a]:d(),z=function(){}(a()),function({a:n}){}(b),function(n=g()){}(b),async function(){}(b);"
+			"a(),b(),x(),[...a],y(),c?[...a]:d(),z=function(){}(a()),function({a:n}){}(b),function(n=g()){}(b),b;"
 		);
 		// Branches printing alike print once, after the test where it runs anything.
 		expect(
@@ -4627,6 +4627,10 @@ describe("one-pass minify of unread values", () => {
 	it("should drop a conversion of an array or object literal that runs only built-ins", () => {
 		expectPrints([
 			['+[],-{},""+{},({}+1),0-[],`${[]}`,+{foo:0},+[1,[2],{}],""=={}', ""],
+			["+{...[]},+{...'s'},+{...`s${1}`},+{...{a:1}}", ""],
+			["+{...{toString(){}}}", "+{...{toString(){}}};"],
+			["+{...a}", "+{...a};"],
+			["+{...null}", "+{};"],
 			// Its own methods, a prototype it sets, a bigint or a replaced built-in run.
 			["+{toString(){}}", "+{toString(){}};"],
 			["+{valueOf:f}", "+{valueOf:f};"],
@@ -4680,6 +4684,63 @@ describe("one-pass minify of unread values", () => {
 			["Object.getOwnPropertyDescriptor({},a)", "Object.getOwnPropertyDescriptor({},a);"],
 			["Object.entries([f()])", "Object.entries([f()]);"],
 			["Object.keys=g;Object.keys([])", "Object.keys=g,Object.keys([]);"]
+		]);
+	});
+
+	it("should drop collections of nothing and what their arguments leave", () => {
+		const cases = [
+			["new Set(null),new Map(void 0),new Set(undefined)", ""],
+			["new Set([foo(),bar()])", "foo(),bar();"],
+			["new Map([[foo(),bar()]])", "foo(),bar();"],
+			["/*#__PURE__*/f([g(),1],{a:h()})", "g(),h();"],
+			["Boolean(obj),new Boolean(f())", "obj,f();"],
+			// What iterates or is read stays.
+			["new Set(a)", "new Set(a);"],
+			["new Map([1])", "new Map([1]);"],
+			["Set(null)", "Set(null);"],
+			["new Set(null,f())", "new Set(null,f());"],
+			["var undefined=1;new Set(undefined)", "var undefined=1;new Set(undefined);"],
+			[
+				"Array.prototype[Symbol.iterator]=f;new Set([1])",
+				"Array.prototype[Symbol.iterator]=f,new Set([1]);"
+			],
+			["Boolean=g;Boolean(1)", "(Boolean=g)(1);"],
+			["x=/*#__PURE__*/f([g()])", "x=f([g()]);"]
+		];
+		for (const [source, expected] of cases) {
+			expect(
+				minifyOnePass(source, {
+					compress: { builtinsEcma: 2015 },
+					mangle: false
+				}).code
+			).toBe(expected);
+		}
+	});
+
+	it("should drop a call of a function that runs nothing when called", () => {
+		expectPrints([
+			[
+				"((...a)=>{})(),(async()=>{})(),(function*(){f()})(),(async function(){})()",
+				""
+			],
+			["((x,...r)=>{})(a,b)", "a,b;"],
+			["(function(){function t(){}return t})(),(function(...r){return r})()", ""],
+			// A default runs, an async function settles with what it returns.
+			["(function*(a=f()){})()", "!function*(a=f()){}();"],
+			["(async function(){return 1})()", "!async function(){return 1}();"],
+			["(async()=>1)()", "(async()=>1)();"],
+			["(async()=>{f()})()", "(async()=>{f()})();"],
+			["x=(function*(){})()", "x=function*(){}();"]
+		]);
+	});
+
+	it("should drop a private name's `in` of a literal object", () => {
+		expectPrints([
+			["(class{#x;static{#x in{};#x in[]}})", ""],
+			["(class{#x;static{#x in a}})", "(class{#x;static{#x in a}});"],
+			["(class{#x;static{#x in null}})", "(class{#x;static{#x in null}});"],
+			["(class{#x;static{#x in{get a(){}}}})", "(class{#x;static{#x in{get a(){}}}});"],
+			['"a"in{}', '"a"in{};']
 		]);
 	});
 
