@@ -2,9 +2,8 @@
 
 module.exports = {
 	moduleScope(scope) {
-		// Defined for the bare identifiers but not as own properties of the global;
-		// old `vm` contexts report a prototype property of the global as its own.
-		scope.myGlobal = scope.document.createElement("div");
-		scope.myForm = { lib: scope.document.createElement("input") };
+		// A top-level `let` of a script that already ran: defined for the bare
+		// identifier, but neither an own nor an inherited property of the global.
+		scope.myLexical = { loaded: true };
 	}
 };
