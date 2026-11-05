@@ -5468,6 +5468,18 @@ describe("one-pass minify of statement sequences", () => {
 		expect(runProgram(code)).toBe(runProgram(source));
 	});
 
+	it("should print a logical read for its truth as its left side where its right side keeps that truth", () => {
+		// A right side of the other truth, `??` of a truthy one, one running something or
+		// holding a comment, or a value read stay.
+		const source =
+			'function t(u){var r=[];if(u||0)r.push(1);if(u&&"s")r.push(2);if(u??!1)r.push(3);if(u??void 0)r.push(4);if(u??null)r.push(5);while(u??"")break;if(u||1)r.push(6);if(u??1)r.push(7);if(u&&f())r.push(8);if(u??/*! k */void 0)r.push(9);r.push(u||0);return r.join()}function f(){return 1}console.log(t(0),t(""),t(null),t(void 0),t(2),t("x"))';
+		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+		expect(code).toBe(
+			'function t(u){var r=[];if(u)r.push(1);if(u)r.push(2);if(u)r.push(3);if(u)r.push(4);if(u)r.push(5);if(u||1)r.push(6);if(u??1)r.push(7);if(u&&f())r.push(8);if(u??/*! k */void 0)r.push(9);return r.push(u||0),r.join()}function f(){return 1}console.log(t(0),t(""),t(null),t(void 0),t(2),t("x"));'
+		);
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
 	it("should print `false` where no unary may stand as `(!1)`, and `true` constructed as `(!0)`", () => {
 		// `true` read as an object or called is as long either way.
 		const source =
