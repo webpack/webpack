@@ -1701,6 +1701,9 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// One newer than `builtinsEcma` folds only once it reaches the built-in's edition.
 			["x=[\"ab\".padStart(3),Math.sign(-2),\"x\".repeat(2)]", {}, "x=[\"ab\".padStart(3),Math.sign(-2),\"x\".repeat(2)];"],
 			["x=[\"ab\".padStart(3),Math.sign(-2),\"x\".repeat(2)]", { compress: { toplevel: false, builtinsEcma: 2020 } }, "x=[\" ab\",-1,\"xx\"];"],
+			// ECMAScript 5 reads no binary or octal string, which the build's engine would.
+			["x=[Number(\"0b1\"),Math.abs(\" 0O7\"),Number(\"0x1\")]", { compress: { toplevel: false, builtinsEcma: 5 } }, "x=[Number(\"0b1\"),Math.abs(\" 0O7\"),1];"],
+			["x=[Number(\"0b1\"),Math.abs(\" 0O7\")]", { compress: { toplevel: false, builtinsEcma: 2015 } }, "x=[1,7];"],
 			// Not given, it is the compressor's `ecma`: an engine running that syntax has the built-ins too.
 			["x=[\"ab\".padStart(3),Math.sign(-2),\"x\".repeat(2)]", { compress: { toplevel: false, ecma: 2015 } }, "x=[\"ab\".padStart(3),-1,\"xx\"];"],
 			["x=[\"ab\".padStart(3),Math.sign(-2),\"x\".repeat(2)]", { compress: { toplevel: false, ecma: 2020, builtinsEcma: 5 } }, "x=[\"ab\".padStart(3),Math.sign(-2),\"x\".repeat(2)];"],
@@ -1741,6 +1744,8 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// A hole reads the prototypes, an argument may be an array, and a comment stays in place.
 			["x=[[1,,2].concat(3),[1].concat([,2]),[1].concat([...a]),[...a].concat(1),[f()].concat(g(),[h()]),[1].concat(y).concat(2),[1].concat(/*! c */2),[1]?.concat(2),[1].concat?.(2),[1][\"concat\"](2),[1].concat(y).join()]", {}, "x=[[1,,2].concat(3),[1].concat([,2]),[1].concat([...a]),[...a].concat(1),[f()].concat(g(),[h()]),[1].concat(y).concat(2),[1].concat(/*! c */2),[1].concat(2),[1].concat?.(2),[1].concat(2),[1].concat(y).join()];"],
 			["x=[[g()].concat(1).join(),[1].concat([g()]).join(),[1].concat((g(),2)).join(),[1].concat(void 0,null).join()]", {}, "x=[[g(),1].join(),[1,g()].join(),[1].concat((g(),2)).join(),\"1,,\"];"],
+			// A spread of a literal after what joins prints its items.
+			["x=[[1].concat(y,...[2,3]),[1].concat(y,...[],z),[1].concat(...[2],y)]", {}, "x=[[1].concat(y,2,3),[1].concat(y,z),[1].concat(2,y)];"],
 			["Array.prototype.concat=f;x=[1].concat(2)", {}, "Array.prototype.concat=f,x=[1].concat(2);"],
 			["Array.prototype[Symbol.isConcatSpreadable]=!1;x=[1].concat([2])", {}, "Array.prototype[Symbol.isConcatSpreadable]=!1,x=[1].concat([2]);"],
 			["Object.prototype[Symbol.isConcatSpreadable]=!1;x=[1].concat([2])", {}, "Object.prototype[Symbol.isConcatSpreadable]=!1,x=[1].concat([2]);"],
