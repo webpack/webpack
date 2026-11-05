@@ -144,7 +144,7 @@ module.exports = \\"first entry\\";
 /******/ 			return __webpack_require__.O(result);
 /******/ 		}
 /******/ 		
-/******/ 		const chunkLoadingGlobal = self[\\"webpackChunk\\"] = self[\\"webpackChunk\\"] || [];
+/******/ 		const chunkLoadingGlobal = Array.isArray(self[\\"webpackChunk\\"]) ? self[\\"webpackChunk\\"] : (self[\\"webpackChunk\\"] = []);
 /******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
 /******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
 /******/ 	})();

@@ -11,9 +11,9 @@ asset XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable]
 asset XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable]
 asset XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable]
 asset XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable]
-asset XXXXXXXXXXXXXXXXXXXX.js X bytes [emitted] [immutable]
-asset XXXXXXXXXXXXXXXXXXXX.js X bytes [emitted] [immutable]
-asset XXXXXXXXXXXXXXXXXXXX.js X bytes [emitted] [immutable]
+asset XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable]
+asset XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable]
+asset XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable]
 Entrypoint main X KiB = XXXXXXXXXXXXXXXXXXXX.js
 chunk (runtime: main) XXXXXXXXXXXXXXXXXXXX.js X bytes [rendered]
   > ./c ./d ./e ./index.js 3:0-30

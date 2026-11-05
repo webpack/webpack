@@ -4,7 +4,7 @@ exports[`StatsTestCases chunks-development should print correct stats for chunks
 "PublicPath: auto
 asset bundle.js X KiB [emitted] (name: main)
 asset d_js-e_js.bundle.js X KiB [emitted]
-asset c_js.bundle.js X bytes [emitted]
+asset c_js.bundle.js X KiB [emitted]
 asset b_js.bundle.js X bytes [emitted]
 chunk (runtime: main) b_js.bundle.js X bytes <{main}> [rendered]
   > ./b ./index.js 2:0-16
