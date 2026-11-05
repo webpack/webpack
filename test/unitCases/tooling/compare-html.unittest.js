@@ -59,6 +59,24 @@ describe("the HTML tool comparison", () => {
 
 const ROOT = path.join(__dirname, "..", "..", "..");
 
+describe("the fixture walk", () => {
+	it("should skip the `temp-*` directories tests create and delete", () => {
+		const dir = fs.mkdtempSync(path.join(require("os").tmpdir(), "walk-"));
+		try {
+			fs.mkdirSync(path.join(dir, "temp-80"));
+			fs.mkdirSync(path.join(dir, "kept"));
+			fs.writeFileSync(path.join(dir, "temp-80", "a.html"), "");
+			fs.writeFileSync(path.join(dir, "kept", "b.html"), "");
+
+			expect(collectFiles(dir, ".html", new Set())).toEqual([
+				path.join(dir, "kept", "b.html")
+			]);
+		} finally {
+			fs.rmSync(dir, { recursive: true, force: true });
+		}
+	});
+});
+
 // cspell:ignore popovertarget popovertargetaction contenteditable exportparts
 // cspell:ignore autocapitalize referrerpolicy accesskey writingsuggestions
 
