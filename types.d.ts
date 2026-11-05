@@ -16341,7 +16341,12 @@ declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 		 */
 		terminate: PathTaps<[number], boolean | void> &
 			SyncBailHook<[ReturnStatement | ThrowStatement], boolean | void>;
-		finish: SyncBailHook<[Program, CommentJavascriptParser[]], boolean | void>;
+		finish: ProgramPathTap &
+			SyncBailHook<
+				[Program, CommentJavascriptParser[]],
+				boolean | void,
+				{ path?: boolean }
+			>;
 		/**
 		 * @since 5.99.9
 		 */
@@ -34955,6 +34960,12 @@ declare class SyntaxTree {
 		| ArrayPattern
 		| RestElement
 		| AssignmentPattern;
+
+	/**
+	 * Lets `estree` serve lazy objects for this tree, as `lazyEstree` does,
+	 * without making one: a parse whose walk asks for none pays nothing more.
+	 */
+	prepareLazyEstree(): void;
 	type(node: number): number;
 	start(node: number): number;
 	end(node: number): number;
