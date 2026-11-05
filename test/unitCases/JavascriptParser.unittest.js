@@ -1889,6 +1889,15 @@ class WithStatic { static { const inStaticBlock = 20; } }
 		});
 	});
 
+	describe("isAsiPosition", () => {
+		it("throws outside a statement", () => {
+			const parser = new JavascriptParser("module");
+			expect(() => parser.isAsiPosition(0)).toThrow("Not in statement");
+			parser.statementPath = [];
+			expect(() => parser.isAsiPosition(0)).toThrow("Not in statement");
+		});
+	});
+
 	describe("attached comments", () => {
 		/**
 		 * @param {string} source what to parse

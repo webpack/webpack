@@ -115,6 +115,8 @@ class ServerPlugin {
 		this.port = port;
 		this.refs = 0;
 		this.server = undefined;
+		/** @type {Promise<void> | undefined} */
+		this.listening = undefined;
 	}
 
 	/**
@@ -127,21 +129,40 @@ class ServerPlugin {
 				this.refs++;
 				if (!this.server) {
 					this.server = createServer();
-					await new Promise(
+					const server = /** @type {import("http").Server} */ (this.server);
+					// Another suite running this case in parallel may hold the port:
+					// wait for it to close rather than read from its server.
+					const deadline = Date.now() + 60000;
+					this.listening = new Promise(
 						/**
 						 * @param {(value: void) => void} resolve resolve
-						 * @param {(reason?: Error) => void} _reject reject
+						 * @param {(reason?: Error) => void} reject reject
 						 */
-						(resolve, _reject) => {
-							/** @type {import("http").Server} */
-							(this.server).listen(
-								this.port,
-								() => {
-									resolve();
+						(resolve, reject) => {
+							const listen = () => {
+								server.once("error", onError);
+								server.listen(this.port);
+							};
+							server.once("listening", () => {
+								server.removeListener("error", onError);
+								resolve();
+							});
+							/**
+							 * @param {NodeJS.ErrnoException} error the listen error
+							 */
+							const onError = (error) => {
+								if (error.code === "EADDRINUSE" && Date.now() < deadline) {
+									setTimeout(listen, 100);
+								} else {
+									reject(error);
 								}
-							);
-					});
+							};
+							listen();
+						}
+					);
 				}
+				// every compiler sharing the server waits until it listens
+				await this.listening;
 			}
 		);
 

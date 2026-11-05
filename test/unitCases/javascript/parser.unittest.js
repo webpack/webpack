@@ -5222,6 +5222,85 @@ describe("SyntaxTree", () => {
 		}
 	});
 
+	it("keeps a legacy `assert` clause as a record its objects carry back", () => {
+		const {
+			EstreeView,
+			LEGACY_ASSERT_ATTRIBUTES,
+			parseProgram,
+			parsedTree
+		} = require("../../../lib/javascript/syntax-parser");
+		const source =
+			'import a from "a" assert { type: "json" }; export * from "b" assert { type: "json" }; export { c } from "c" with { type: "json" };';
+		/**
+		 * @param {import("estree").Node} statement an import or export
+		 * @returns {boolean} whether its attributes carry the legacy mark
+		 */
+		const isLegacy = (statement) =>
+			/** @type {Record<symbol, boolean>} */ (
+				/** @type {unknown} */ (
+					/** @type {import("estree").ImportDeclaration} */ (statement)
+						.attributes
+				)
+			)[LEGACY_ASSERT_ATTRIBUTES] === true;
+		const expected = [true, true, false];
+
+		const program = /** @type {number} */ (
+			parseProgram(source, 0, { sourceType: "module" })
+		);
+		const tree = /** @type {SyntaxTree} */ (parsedTree());
+		const statements = [0, 1, 2].map((i) =>
+			tree.field(i, Field.body, program)
+		);
+		expect(statements.map((node) => tree.flag(Flag.assert, node))).toEqual(
+			expected
+		);
+		// One field built first, then the rest, as a hook reading one field does.
+		const lazy = /** @type {import("estree").Node} */ (
+			tree.estree(statements[0], ["attributes"])
+		);
+		expect(isLegacy(lazy)).toBe(true);
+		expect(tree.estree(statements[0])).toBe(lazy);
+		// The whole program in one pass.
+		const built = /** @type {import("estree").Program} */ (
+			tree.estree(program)
+		);
+		expect(built.body.map(isLegacy)).toEqual(expected);
+		expect("assert" in built.body[0]).toBe(false);
+
+		// Written back from objects, and set by hand.
+		const objects = /** @type {import("estree").Program} */ (
+			parseProgram(source, 0, { sourceType: "module", estree: true })
+		);
+		const copy = new SyntaxTree();
+		const root = copy.addEstree(
+			/** @type {import("../../../lib/javascript/syntax-parser").EstreeSource} */ (
+				/** @type {unknown} */ (objects)
+			)
+		);
+		const copied = [0, 1, 2].map((i) => copy.field(i, Field.body, root));
+		expect(copied.map((node) => copy.flag(Flag.assert, node))).toEqual(
+			expected
+		);
+		copy.set(copied[0], "assert", false);
+		copy.set(copied[2], "assert", true);
+		expect(copied.map((node) => copy.flag(Flag.assert, node))).toEqual([
+			false,
+			true,
+			true
+		]);
+
+		const view = new EstreeView();
+		const viewed = view.add(objects);
+		expect(
+			[0, 1, 2].map((i) =>
+				view.flag(Flag.assert, view.field(i, Field.body, viewed))
+			)
+		).toEqual(expected);
+		expect(view.flag(Flag.computed, view.field(0, Field.body, viewed))).toBe(
+			false
+		);
+	});
+
 	it("builds only the fields asked for, then the rest on the same object", () => {
 		const { tree, node } = writeExpression("f(a, b);");
 		const call = /** @type {EXPECTED_ANY} */ (
@@ -6000,6 +6079,244 @@ describe("parseProgram", () => {
 		expect(A.loc(call)).toEqual([1, 11, 1, 15]);
 		parseProgram("g()");
 		expect(A.source(A.child(0, program))).toBe("g()");
+	});
+
+	it("reads children in source order where fields hold them otherwise", () => {
+		const source = "x: switch (a) { case b: c; } `p${q}r${s}t`;";
+		const program = /** @type {number} */ (parseProgram(source));
+		/**
+		 * @param {number} node a node
+		 * @returns {string[]} its children's source, through `child` and `childCount`
+		 */
+		const read = (node) => {
+			/** @type {string[]} */
+			const texts = [];
+			for (let i = 0; i < A.childCount(node); i++) {
+				texts.push(A.source(A.child(i, node)));
+			}
+			// past the end, and the same answer read again from the cache
+			expect(A.child(A.childCount(node), node)).toBe(0);
+			expect(A.children(node).map((child) => A.source(child))).toEqual(texts);
+			return texts;
+		};
+		const label = A.child(0, program);
+		expect(read(label)).toEqual(["x", "switch (a) { case b: c; }"]);
+		const switchCase = A.child(1, A.child(1, label));
+		expect(read(switchCase)).toEqual(["b", "c;"]);
+		const template = A.child(0, A.child(1, program));
+		expect(read(template).map((text) => text.replace(/^\$\{|\}$/g, ""))).toEqual(
+			["p", "q", "r", "s", "t"]
+		);
+	});
+
+	it("writes every subtree as one range of ids ending at its root", () => {
+		const source = [
+			'import d, { a as b, c } from "x";',
+			'import * as ns from "y";',
+			'export { e as f } from "z";',
+			"switch (q) { case 1: r; case s: t; default: u }",
+			"const o = { k: 1, get g() { return this; }, m() {}, [w]: v };",
+			"class C { static p = 1; method(a) { return a; } get x() { return 1; } }",
+			"for (let i = 0; i < 1; i++) {} for (const k in o) {} for (const z of o) {}",
+			"tag`a${b}c`({ y: 1 }); import.meta.url; import.defer('m');",
+			"function F() { return new.target; }",
+			"const h = async e => e, k2 = async (e) => e, l = async function () {};",
+			"const holes = [, a, , b];"
+		].join("\n");
+		const program = /** @type {number} */ (
+			parseProgram(source, 0, { importPhases: true })
+		);
+		/** @type {number[]} */
+		const order = [];
+		/** @type {number[]} */
+		const stack = [program];
+		while (stack.length > 0) {
+			const node = /** @type {number} */ (stack.pop());
+			order.push(node);
+			for (let i = 0; i < A.childCount(node); i++) stack.push(A.child(i, node));
+		}
+		/** @type {Map<number, number>} */
+		const first = new Map();
+		/** @type {Map<number, number>} */
+		const size = new Map();
+		for (let k = order.length - 1; k >= 0; k--) {
+			const node = order[k];
+			let low = node;
+			let count = 1;
+			for (let i = 0; i < A.childCount(node); i++) {
+				const child = A.child(i, node);
+				expect(child).toBeLessThan(node);
+				low = Math.min(low, /** @type {number} */ (first.get(child)));
+				count += /** @type {number} */ (size.get(child));
+			}
+			first.set(node, low);
+			size.set(node, count);
+			expect(A.subtreeStart(node)).toBe(low);
+			// every live id in the range belongs to the subtree; a dropped `async` is type 0
+			let live = 0;
+			for (let id = low; id <= node; id++) if (A.type(id) !== 0) live++;
+			expect(live).toBe(count);
+		}
+		// no node is left outside the program but the dropped `async` ones
+		let dropped = 0;
+		for (let id = 1; id <= program; id++) if (A.type(id) === 0) dropped++;
+		expect(order.length + dropped).toBe(program);
+		expect(dropped).toBe(3);
+	});
+
+	it("leaves a tree its caller keeps alone through an ESTree parse", () => {
+		const {
+			takeParsedTree,
+			usePathTree
+		} = require("../../../lib/javascript/syntax-parser");
+		const program = /** @type {number} */ (parseProgram("a; b;"));
+		const tree = /** @type {SyntaxTree} */ (takeParsedTree());
+		usePathTree(tree, "a; b;");
+		expect(A.childCount(program)).toBe(2);
+		parseProgram("c", 0, { estree: true });
+		expect(A.source(A.child(1, program))).toBe("b;");
+		usePathTree(null, "");
+		tree.release();
+	});
+
+	describe("lazy ESTree objects", () => {
+		const LAZY_SOURCE = [
+			'import d, { a as b } from "x" assert { type: "json" };',
+			"const o = { k: 1, [w]: /re/g, big: 10n, m() { return this; } };",
+			"label: for (const z of o) { if (z) break label; else continue; }",
+			"class C extends D { static p = 1; #q; method(a, ...r) { return a; } }",
+			"tag`a${b}c`; x = y ? [, 1] : `t`;",
+			"try { f(); } catch ({ e }) {} finally { g?.(); }"
+		].join("\n");
+
+		/** @typedef {import("estree").Node} EstreeNode */
+		/** @typedef {EstreeNode | (EstreeNode | null)[] | RegExp | string | number | boolean | bigint | null | undefined} EstreeValue */
+
+		/**
+		 * @returns {{ full: EstreeNode, lazy: EstreeNode & { body: EstreeNode[] }, tree: SyntaxTree, program: number }} two objects of one source
+		 */
+		const both = () => {
+			const {
+				takeParsedTree
+			} = require("../../../lib/javascript/syntax-parser");
+			const fullProgram = /** @type {number} */ (
+				parseProgram(LAZY_SOURCE, 0, { sourceType: "module" })
+			);
+			const fullTree = /** @type {SyntaxTree} */ (takeParsedTree());
+			const full = fullTree.estree(fullProgram);
+			const lazyProgram = /** @type {number} */ (
+				parseProgram(LAZY_SOURCE, 0, { sourceType: "module" })
+			);
+			const tree = /** @type {SyntaxTree} */ (takeParsedTree());
+			return {
+				full: /** @type {EstreeNode} */ (full),
+				lazy: /** @type {EstreeNode & { body: EstreeNode[] }} */ (
+					tree.lazyEstree(lazyProgram)
+				),
+				tree,
+				program: lazyProgram
+			};
+		};
+
+		/**
+		 * Reads every field the full object holds off the lazy one.
+		 * @param {EstreeValue} full a fully built value
+		 * @param {EstreeValue} lazy the lazy value of the same field
+		 * @returns {void}
+		 */
+		const expectSame = (full, lazy) => {
+			if (full === null || typeof full !== "object" || full instanceof RegExp) {
+				expect(lazy).toEqual(full);
+				return;
+			}
+			if (Array.isArray(full)) {
+				const items = /** @type {(EstreeNode | null)[]} */ (lazy);
+				expect(items).toHaveLength(full.length);
+				for (let i = 0; i < full.length; i++) expectSame(full[i], items[i]);
+				return;
+			}
+			const node = /** @type {EstreeNode & Record<string, EstreeValue>} */ (
+				lazy
+			);
+			const built = /** @type {EstreeNode & Record<string, EstreeValue>} */ (
+				full
+			);
+			for (const key of Object.keys(built)) expectSame(built[key], node[key]);
+			expect(node.range).toEqual(full.range);
+		};
+
+		it("reads as the fully built objects do", () => {
+			const { full, lazy, tree } = both();
+			expectSame(full, lazy);
+			tree.release();
+		});
+
+		it("serves one object per node, and keeps what is set on a field", () => {
+			const { Field } = require("../../../lib/javascript/syntax-parser");
+			const { lazy, tree, program } = both();
+			expect(lazy.body).toBe(lazy.body);
+			expect(tree.estree(tree.field(0, Field.body, program))).toBe(
+				lazy.body[0]
+			);
+			/** @type {import("estree").EmptyStatement} */
+			const replaced = { type: "EmptyStatement" };
+			lazy.body = [replaced];
+			expect(lazy.body).toEqual([replaced]);
+			tree.release();
+		});
+
+		it("lists ESTree's fields alone to for-in", () => {
+			const { full, lazy, tree } = both();
+			/** @type {string[]} */
+			const keys = [];
+			for (const key in lazy.body[0]) keys.push(key);
+			const program = /** @type {import("estree").Program} */ (full);
+			expect(keys.sort()).toEqual(Object.keys(program.body[0]).sort());
+			tree.release();
+		});
+
+		it("keeps a large tree's columns for its objects", () => {
+			const {
+				takeParsedTree
+			} = require("../../../lib/javascript/syntax-parser");
+			// past the size a released tree's columns are reused up to
+			const source = "a;\n".repeat(200000);
+			const program = /** @type {number} */ (parseProgram(source));
+			const tree = /** @type {SyntaxTree} */ (takeParsedTree());
+			const lazy = /** @type {import("estree").Program} */ (
+				tree.lazyEstree(program)
+			);
+			tree.release();
+			parseProgram("b; c;");
+			expect(lazy.body).toHaveLength(200000);
+			const last = /** @type {import("estree").ExpressionStatement} */ (
+				lazy.body[199999]
+			);
+			expect(last.expression).toMatchObject({ type: "Identifier", name: "a" });
+		});
+
+		it("names the node of an object of the tree the path reads", () => {
+			const {
+				lazyNodeOf,
+				usePathTree
+			} = require("../../../lib/javascript/syntax-parser");
+			const { lazy, tree, program } = both();
+			// no tree for the path to read yet
+			expect(lazyNodeOf(lazy)).toBe(0);
+			usePathTree(tree, LAZY_SOURCE);
+			expect(lazyNodeOf(lazy)).toBe(program);
+			expect(lazyNodeOf({ type: "EmptyStatement" })).toBe(0);
+			usePathTree(null, "");
+			tree.release();
+		});
+
+		it("reads its fields after the tree is released", () => {
+			const { full, lazy, tree } = both();
+			tree.release();
+			// the next parse reuses the released columns
+			parseProgram("a; b; c; d;");
+			expectSame(full, lazy);
+		});
 	});
 
 	it("starts at the offset given", () => {
