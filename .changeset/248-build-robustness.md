@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Report bad package.json values as errors and keep builds fast on unusual input.
+Handle bad package.json values and deep JSON, and keep builds fast on odd input.
