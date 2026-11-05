@@ -104,7 +104,7 @@ for (const configName of ["tsconfig.json", "tsconfig.hot.json"]) {
 const coverageReport = Object.create(null);
 
 // Directories whose escape hatches, `any` and untyped identifiers the report counts.
-const ESCAPE_HATCH_DIRECTORIES = ["lib/", "hot/", "declarations/"];
+const ESCAPE_HATCH_DIRECTORIES = ["lib/", "hot/", "declarations/", "bin/"];
 
 /**
  * @typedef {object} Spot
@@ -1046,7 +1046,7 @@ fs.writeFileSync(
 	"utf8"
 );
 
-// What the report counts in `lib/`, `hot/` and `declarations/`, each written
+// What the report counts in `lib/`, `hot/`, `declarations/` and `bin/`, each written
 // escape hatch under the type it stands for, and the identifiers left untyped.
 const KINDS = /** @type {const} */ (["any", "unknown", "object", "Function"]);
 /** @typedef {(typeof KINDS)[number]} Kind */
@@ -1478,7 +1478,7 @@ const remaining = Object.keys(headCounts)
 			);
 		return total(b) - total(a) || (a < b ? -1 : 1);
 	});
-report += `\n<details><summary>${remaining.length} file(s) in <code>lib/</code>, <code>hot/</code> and <code>declarations/</code> still have an escape hatch, \`any\` or untyped identifiers</summary>\n\n${header}${remaining.map(fileRow).join("\n")}\n\n</details>\n`;
+report += `\n<details><summary>${remaining.length} file(s) in <code>lib/</code>, <code>hot/</code>, <code>declarations/</code> and <code>bin/</code> still have an escape hatch, \`any\` or untyped identifiers</summary>\n\n${header}${remaining.map(fileRow).join("\n")}\n\n</details>\n`;
 
 fs.writeFileSync(
 	path.resolve(outputDirectory, "types-coverage.md"),

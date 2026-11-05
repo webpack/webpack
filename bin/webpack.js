@@ -105,12 +105,12 @@ const runCli = (cli) => {
 
 	const pkgPath = require.resolve(`${cli.package}/package.json`);
 
-	/** @type {Record<string, EXPECTED_ANY> & { type: string, bin: Record<string, string> }} */
+	/** @type {{ type?: string, bin: Record<string, string> }} */
 	const pkg = require(pkgPath);
 
 	if (pkg.type === "module" || /\.mjs/i.test(pkg.bin[cli.binName])) {
 		import(path.resolve(path.dirname(pkgPath), pkg.bin[cli.binName])).catch(
-			(err) => {
+			(/** @type {ThrownValue} */ err) => {
 				console.error(err);
 				process.exitCode = 1;
 			}
@@ -204,7 +204,7 @@ if (!cli.installed) {
 			.then(() => {
 				runCli(cli);
 			})
-			.catch((err) => {
+			.catch((/** @type {ThrownValue} */ err) => {
 				console.error(err);
 				process.exitCode = 1;
 			});

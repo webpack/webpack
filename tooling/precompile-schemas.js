@@ -25,6 +25,8 @@ const { globSync } = require("glob");
 const { precompile } = require("schema-utils");
 const argv = require("./argv");
 
+/** @import { ExtendedSchema, JSONSchema7 } from "schema-utils" */
+
 const { write: doWrite, root, schemas: schemasGlob } = argv;
 
 /**
@@ -57,7 +59,9 @@ const updateFile = (path, expected) => {
 const precompileSchema = async (schemaPath) => {
 	if (path.basename(schemaPath).startsWith("_")) return true;
 	try {
-		const schema = JSON.parse(fs.readFileSync(schemaPath, "utf8"));
+		const schema = /** @type {JSONSchema7 & ExtendedSchema} */ (
+			JSON.parse(fs.readFileSync(schemaPath, "utf8"))
+		);
 		// A relative `$ref` to another schema resolves against this one
 		schema.$id = pathToFileURL(schemaPath).href;
 		const code = await precompile(schema, { minify: true });
@@ -79,7 +83,7 @@ const main = async () => {
 	process.exitCode = results.every(Boolean) ? 0 : 1;
 };
 
-main().catch((err) => {
+main().catch((/** @type {ThrownValue} */ err) => {
 	console.error(err);
 	process.exitCode = 1;
 });

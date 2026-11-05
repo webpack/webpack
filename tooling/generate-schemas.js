@@ -22,6 +22,52 @@ const path = require("path");
 const prettier = require("prettier");
 const ts = require("typescript");
 
+/** @import { JSONSchema7, JSONSchema7Object, JSONSchema7Type, JSONSchema7TypeName } from "json-schema" */
+
+/**
+ * The keywords webpack's schemas add to JSON Schema draft 7.
+ * @typedef {object} WebpackKeywords
+ * @property {string=} tsType the TypeScript type the declarations state for the value
+ * @property {boolean=} absolutePath whether a string is an absolute path, or a relative one when false
+ * @property {string=} instanceof the class the value is an instance of
+ * @property {{ helper?: boolean, exclude?: boolean }=} cli how the command line offers the option
+ * @property {string=} added the release that added the option
+ * @property {boolean=} experimental whether the option is experimental
+ * @property {boolean=} undefinedAsNull whether `undefined` is validated as `null`
+ * @property {string=} link where the option is documented
+ * @property {boolean=} deprecated whether the option is deprecated
+ * @property {string[]=} implements the definitions whose properties the object holds
+ */
+
+/**
+ * The keywords a declaration states for this tooling alone, which no written
+ * schema carries.
+ * @typedef {object} ToolingKeywords
+ * @property {boolean=} typeOnly whether the `tsType` names the value rather than validates it
+ * @property {boolean=} inline whether the definition is written in place of every reference to it
+ */
+
+/**
+ * The schema keywords nested schemas sit under, at every depth. `type` also
+ * names what JSON has no name for, and `required` holds an `@required` tag's order.
+ * @typedef {object} NestedKeywords
+ * @property {JSONSchema7TypeName | "unknown" | "undefined"=} type the JSON type, or the TypeScript keyword JSON has no type for
+ * @property {string[] | string=} required the required properties, or the order an `@required` tag lists them in
+ * @property {Record<string, Schema>=} definitions the definitions, by name
+ * @property {Record<string, Schema>=} properties the properties, by name
+ * @property {Schema | boolean=} additionalProperties what the object admits beyond its properties
+ * @property {Schema=} items what every item of the array is
+ * @property {Schema[]=} anyOf the schemas of which at least one holds
+ * @property {Schema[]=} oneOf the schemas of which exactly one holds
+ * @property {Schema=} not the schema that must not hold
+ */
+
+/**
+ * A schema node as webpack writes one: the JSON Schema draft 7 keywords it uses
+ * and its own, at every depth.
+ * @typedef {Pick<JSONSchema7, "$id" | "$ref" | "title" | "description" | "enum" | "minItems" | "minLength" | "minProperties" | "minimum" | "pattern" | "uniqueItems"> & WebpackKeywords & ToolingKeywords & NestedKeywords} Schema
+ */
+
 const ROOT = path.resolve(__dirname, "..");
 const SCHEMAS_DIRECTORY = path.resolve(ROOT, "schemas");
 const TYPES_DIRECTORY = path.resolve(ROOT, "declarations");
@@ -85,35 +131,44 @@ const findSchemas = (directory) => {
 };
 
 /**
- * @param {unknown} value any value
- * @returns {value is Record<string, unknown>} whether it is a plain object
+ * A schema, any part of one, or nothing where a schema has no such key.
+ * @typedef {string | number | boolean | null | undefined | SchemaParts | SchemaObject} SchemaPart
+ */
+
+/** @typedef {SchemaPart[]} SchemaParts */
+/** @typedef {{ [key: string]: SchemaPart }} SchemaObject */
+
+/**
+ * @param {SchemaPart} value any part of a schema
+ * @returns {value is SchemaObject} whether it is a plain object
  */
 const isObject = (value) =>
 	typeof value === "object" && value !== null && !Array.isArray(value);
 
 /**
  * Walks every node of a schema, replacing each with what the transform answers.
- * @param {unknown} value the schema, or any part of one
- * @param {(node: Record<string, EXPECTED_ANY>) => Record<string, EXPECTED_ANY>} transform what each node becomes
- * @returns {unknown} the rewritten schema
+ * @param {SchemaPart} value the schema, or any part of one
+ * @param {(node: SchemaObject) => SchemaObject} transform what each node becomes
+ * @returns {SchemaPart} the rewritten schema
  */
 const walkSchema = (value, transform) => {
 	if (Array.isArray(value)) {
 		return value.map((one) => walkSchema(one, transform));
 	}
 	if (!isObject(value)) return value;
-	const node = transform(/** @type {Record<string, EXPECTED_ANY>} */ (value));
-	/** @type {Record<string, unknown>} */
+	const node = transform(value);
+	/** @type {SchemaObject} */
 	const walked = {};
 	for (const [keyword, nested] of Object.entries(node)) {
 		if (keyword !== "properties" && keyword !== "definitions") {
 			walked[keyword] = walkSchema(nested, transform);
 			continue;
 		}
-		/** @type {Record<string, unknown>} */
+		/** @type {SchemaObject} */
 		const inner = {};
+		// `properties` and `definitions` hold schemas by name.
 		for (const [name, schema] of Object.entries(
-			/** @type {Record<string, unknown>} */ (nested)
+			/** @type {SchemaObject} */ (nested)
 		)) {
 			inner[name] = walkSchema(schema, transform);
 		}
@@ -123,12 +178,12 @@ const walkSchema = (value, transform) => {
 };
 
 /**
- * @param {Record<string, EXPECTED_ANY>} node a schema node
+ * @param {Schema} node a schema node
  * @param {string[]} keywords the keywords to leave out
- * @returns {Record<string, EXPECTED_ANY>} the node without them
+ * @returns {Schema} the node without them
  */
 const omit = (node, keywords) => {
-	/** @type {Record<string, EXPECTED_ANY>} */
+	/** @type {SchemaObject} */
 	const kept = {};
 	for (const [keyword, value] of Object.entries(node)) {
 		if (!keywords.includes(keyword)) kept[keyword] = value;
@@ -138,12 +193,12 @@ const omit = (node, keywords) => {
 
 /**
  * Rewrites a schema so its keywords appear in the order the corpus uses.
- * @param {unknown} value the schema, or any part of one
- * @returns {unknown} the same schema with every object's keys reordered
+ * @param {SchemaPart} value the schema, or any part of one
+ * @returns {SchemaPart} the same schema with every object's keys reordered
  */
 const orderKeys = (value) =>
 	walkSchema(value, (node) => {
-		/** @type {Record<string, EXPECTED_ANY>} */
+		/** @type {SchemaObject} */
 		const ordered = {};
 		const rank = (/** @type {string} */ keyword) => {
 			const at = KEY_ORDER.indexOf(keyword);
@@ -189,14 +244,15 @@ const IMPORT_SPECIFIER_REGEXP = /import\(\s*(["'])([^"']+)\1\s*\)/g;
 const quoteImports = (text, quote) =>
 	text.replace(
 		IMPORT_SPECIFIER_REGEXP,
-		(whole, held, specifier) => `import(${quote}${specifier}${quote})`
+		(whole, /** @type {string} */ held, /** @type {string} */ specifier) =>
+			`import(${quote}${specifier}${quote})`
 	);
 
 /**
  * A `tsType` is source text, so the same type reads differently depending on
  * which quote its author reached for.
- * @param {unknown} value the schema, or any part of one
- * @returns {unknown} the same schema with every `tsType` quoted one way
+ * @param {SchemaPart} value the schema, or any part of one
+ * @returns {SchemaPart} the same schema with every `tsType` quoted one way
  */
 const normalizeTsTypes = (value) =>
 	walkSchema(value, (node) =>
@@ -213,8 +269,8 @@ const normalizeTsTypes = (value) =>
 	);
 
 /**
- * @param {unknown} left one value
- * @param {unknown} right the other
+ * @param {SchemaPart} left one value
+ * @param {SchemaPart} right the other
  * @returns {boolean} whether the two are structurally equal
  */
 const deepEqual = (left, right) =>
@@ -224,8 +280,8 @@ const deepEqual = (left, right) =>
 /**
  * Names every place two schemas stop agreeing, deepest first, so a file that
  * does not round trip reports what is left to do rather than one path of it.
- * @param {unknown} expected the committed schema
- * @param {unknown} actual the generated one
+ * @param {SchemaPart} expected the committed schema
+ * @param {SchemaPart} actual the generated one
  * @param {string} at the path walked so far
  * @returns {string[]} one line per difference, empty when the two are equal
  */
@@ -246,7 +302,7 @@ const findDifferences = (expected, actual, at = "") => {
 		}
 	}
 	if (found.length > 0) return found;
-	const show = (/** @type {unknown} */ value) =>
+	const show = (/** @type {SchemaPart} */ value) =>
 		value === undefined ? "(missing)" : JSON.stringify(value).slice(0, 90);
 	return [
 		`${at || "/"}: expected ${show(expected)}, generated ${show(actual)}`
@@ -276,7 +332,7 @@ const readReference = (reference) => {
  * @typedef {object} EmitContext
  * @property {{ text: string, name: string }[]} lifted declarations pulled out of a nested node
  * @property {Map<string, Set<string>>} imports names to import, keyed by module
- * @property {Map<string, Record<string, EXPECTED_ANY>>} said the definitions by name
+ * @property {Map<string, Schema>} said the definitions by name
  */
 
 /**
@@ -316,6 +372,7 @@ const referencedNames = (declared) => {
  * @returns {Set<string>} that declaration and everything it reaches
  */
 const reachableFrom = (rootName, declaredByName) => {
+	/** @type {Set<string>} */
 	const reached = new Set();
 	/** @type {string[]} */
 	const pending = [rootName];
@@ -339,6 +396,7 @@ const reachableFrom = (rootName, declaredByName) => {
 const implementedMembers = (node, declaredByName) => {
 	/** @type {ts.TypeElement[]} */
 	const members = [];
+	/** @type {Set<string>} */
 	const seen = new Set();
 	for (const one of node.types) {
 		if (!ts.isTypeReferenceNode(one)) return undefined;
@@ -399,13 +457,17 @@ const halvedReference = (node, known) => {
 // #region TypeScript to schema
 
 /**
+ * A node as the parser leaves it: TypeScript's public types leave out the JSDoc
+ * blocks it attaches to the node written after them.
+ * @typedef {ts.Node & { jsDoc?: ts.JSDoc[] }} DocumentedNode
+ */
+
+/**
  * @param {ts.Node} node any node
  * @returns {{ description: string, tags: Map<string, string> }} what its JSDoc says
  */
 const readJsDoc = (node) => {
-	const blocks = /** @type {{ jsDoc?: ts.JSDoc[] }} */ (
-		/** @type {unknown} */ (node)
-	).jsDoc;
+	const blocks = /** @type {DocumentedNode} */ (node).jsDoc;
 	/** @type {Map<string, string>} */
 	const tags = new Map();
 	if (!blocks || blocks.length === 0) return { description: "", tags };
@@ -428,6 +490,7 @@ const readJsDoc = (node) => {
 // The keywords a declaration states as a tag rather than through an alias.
 // The keywords an array states about itself rather than about its items, which
 // share one comment position with it.
+/** @type {("minItems" | "uniqueItems")[]} */
 const ARRAY_CONSTRAINTS = ["minItems", "uniqueItems"];
 
 // The keywords a source states as a tag of the same name. Adding one here is
@@ -483,13 +546,13 @@ const TOOLING_TAGS = ["schema", "publishes", "definition"];
  * What a tag says, as the schema states it: a value written as JSON is that
  * value, a tag written with nothing is `true`, and anything else is its text.
  * @param {string} written what the tag says
- * @returns {EXPECTED_ANY} the value it stands for
+ * @returns {JSONSchema7Type} the value it stands for
  */
 const toKeywordValue = (written) => {
 	if (written === "") return true;
 	if (!/^[-\d{["]|^(?:true|false|null)$/.test(written)) return written;
 	try {
-		return JSON.parse(written);
+		return /** @type {JSONSchema7Type} */ (JSON.parse(written));
 	} catch (_err) {
 		return written;
 	}
@@ -497,22 +560,27 @@ const toKeywordValue = (written) => {
 
 /**
  * @param {Map<string, string>} tags the tags a declaration carries
- * @returns {Record<string, EXPECTED_ANY>} the keywords they become
+ * @returns {Schema} the keywords they become
  */
 const fromDocumentationTags = (tags) => {
-	/** @type {Record<string, EXPECTED_ANY>} */
-	const keywords = {};
+	/** @type {JSONSchema7Object} */
+	const tagged = {};
 	for (const keyword of KEYWORD_TAGS) {
 		const written = tags.get(keyword);
 		if (written === undefined) continue;
-		keywords[keyword] = FLAG_TAGS.includes(keyword)
+		tagged[keyword] = FLAG_TAGS.includes(keyword)
 			? true
 			: toKeywordValue(written);
 	}
+	// What a keyword tag says is the JSON its author wrote for that keyword.
+	/** @type {Schema} */
+	const keywords = tagged;
 	if (tags.has("since")) {
 		keywords.added = /** @type {string} */ (tags.get("since"));
 	}
-	if (tags.has("jsonType")) keywords.type = tags.get("jsonType");
+	if (tags.has("jsonType")) {
+		keywords.type = /** @type {JSONSchema7TypeName} */ (tags.get("jsonType"));
+	}
 	if (tags.has("cliHelper")) keywords.cli = { ...keywords.cli, helper: true };
 	if (tags.has("cliExclude")) keywords.cli = { ...keywords.cli, exclude: true };
 	if (tags.has("emptyProperties")) keywords.properties = {};
@@ -528,12 +596,12 @@ const fromDocumentationTags = (tags) => {
  * An array's item type, carrying the description written in front of it.
  * @param {ts.TypeNode} node the item type
  * @param {Map<string, string>} known what each name declared in the same file says
- * @returns {Record<string, EXPECTED_ANY>} the schema for the items
+ * @returns {Schema} the schema for the items
  */
 /**
  * Whether the tags alone say what the node is, because the source wrote its
  * `tsType` in place of a shape it has none of.
- * @param {Record<string, EXPECTED_ANY>} stated what the tags say
+ * @param {Schema} stated what the tags say
  * @returns {boolean} whether the parsed type underneath adds nothing
  */
 const tagsAreWholeType = (stated) =>
@@ -546,7 +614,7 @@ const tagsAreWholeType = (stated) =>
  * The item type of an array, with the description written in front of it.
  * @param {ts.TypeNode} node the item type
  * @param {Map<string, string>} known what each name declared in the same file says
- * @returns {Record<string, EXPECTED_ANY>} the schema the items are
+ * @returns {Schema} the schema the items are
  */
 const describedItems = (node, known) => {
 	const items = fromTypeNode(node, known, 1);
@@ -582,6 +650,7 @@ const KNOWN_TAG_REGEXP = new RegExp(
 const readLeadingComment = (node, at = 0, from = node.pos) => {
 	const text = node.getSourceFile().text.slice(from, node.getStart());
 	const blocks = [...text.matchAll(/\/\*\*([\s\S]*?)\*\//g)];
+	/** @type {{ description: string, tags: Map<string, string> }} */
 	const empty = { description: "", tags: new Map() };
 	if (at >= blocks.length) return empty;
 	const inside = unescapeComment(blocks[at][1].trim());
@@ -624,9 +693,7 @@ const toTsType = (node) =>
 // whether to say `instanceof: "Function"` or `type: "object"`.
 
 // Stands for a signature written as a `@callback`, which has no type node.
-const CALLABLE = /** @type {ts.TypeNode} */ (
-	/** @type {unknown} */ ({ kind: -1 })
-);
+const CALLABLE = Symbol("callable");
 
 /** @type {Map<string, ts.SourceFile | undefined>} */
 const parsedFiles = new Map();
@@ -676,10 +743,10 @@ const resolveSpecifier = (specifier, from) => {
  * @param {ts.SourceFile} source the file to look in
  * @param {string} name the type it declares
  * @param {number} depth how many aliases have been followed
- * @returns {ts.TypeNode | undefined} what the name is written as
+ * @returns {ts.TypeNode | typeof CALLABLE | undefined} what the name is written as
  */
 const declaredTypeIn = (source, name, depth = 0) => {
-	/** @type {ts.TypeNode | undefined} */
+	/** @type {ts.TypeNode | typeof CALLABLE | undefined} */
 	let written;
 	/**
 	 * @param {ts.Node} node the node to walk
@@ -687,9 +754,7 @@ const declaredTypeIn = (source, name, depth = 0) => {
 	 */
 	const visit = (node) => {
 		if (written) return;
-		const blocks = /** @type {{ jsDoc?: ts.JSDoc[] }} */ (
-			/** @type {unknown} */ (node)
-		).jsDoc;
+		const blocks = /** @type {DocumentedNode} */ (node).jsDoc;
 		for (const block of blocks || []) {
 			for (const tag of block.tags || []) {
 				// A function type is written either way round: as the type a
@@ -722,7 +787,7 @@ const declaredTypeIn = (source, name, depth = 0) => {
 };
 
 /**
- * @param {ts.TypeNode | undefined} node what a name is written as
+ * @param {ts.TypeNode | typeof CALLABLE | undefined} node what a name is written as
  * @param {ts.SourceFile} source the file writing it
  * @param {number} depth how many names have been followed
  * @returns {boolean} whether the schema should call it a function
@@ -752,6 +817,7 @@ const isWrittenCallable = (node, source, depth = 0) => {
  * @returns {boolean} whether what it exports is a class or a function
  */
 const exportsSomethingCallable = (source) => {
+	/** @type {Set<string>} */
 	const names = new Set();
 	/** @type {string | undefined} */
 	let exported;
@@ -818,7 +884,7 @@ const namesCallable = (node) => {
  * @param {ts.TypeNode} node the type to read
  * @param {Map<string, string>} known what each name declared in the same file says
  * @param {number} spoken how many comments in front of it a caller already read
- * @returns {Record<string, EXPECTED_ANY>} the schema node
+ * @returns {Schema} the schema node
  */
 const fromTypeNode = (node, known, spoken = 0) => {
 	// WHY: a function type written out is a `tsType` like a named one, and the
@@ -872,7 +938,12 @@ const fromTypeNode = (node, known, spoken = 0) => {
 				(branch) => Array.isArray(branch.enum) && !branch.description
 			);
 		const union = plain
-			? { enum: named.flatMap((branch) => branch.enum) }
+			? {
+					// Every branch of a `plain` union states an `enum`.
+					enum: named.flatMap(
+						(branch) => /** @type {JSONSchema7Type[]} */ (branch.enum)
+					)
+				}
 			: { anyOf: named };
 		return absent
 			? { ...union, undefinedAsNull: true, tsType: toTsType(node) }
@@ -883,7 +954,7 @@ const fromTypeNode = (node, known, spoken = 0) => {
 		// itself states is taken here and left out of the items below.
 		const { tags } = readLeadingComment(node.elementType, 0, node.pos);
 		const stated = fromDocumentationTags(tags);
-		/** @type {Record<string, EXPECTED_ANY>} */
+		/** @type {SchemaObject} */
 		const constraints = {};
 		for (const keyword of ARRAY_CONSTRAINTS) {
 			if (stated[keyword] !== undefined) constraints[keyword] = stated[keyword];
@@ -919,13 +990,7 @@ const fromTypeNode = (node, known, spoken = 0) => {
 			const members = node.types.flatMap((one) => [
 				.../** @type {ts.TypeLiteralNode} */ (one).members
 			]);
-			return fromMembers(
-				/** @type {ts.NodeArray<ts.TypeElement>} */ (
-					/** @type {unknown} */ (members)
-				),
-				known,
-				{}
-			);
+			return fromMembers(members, known, {});
 		}
 		return { type: "object", tsType: toTsType(node) };
 	}
@@ -977,19 +1042,19 @@ const fromTypeNode = (node, known, spoken = 0) => {
 };
 
 /**
- * @param {ts.NodeArray<ts.TypeElement>} members the members of an interface or type literal
+ * @param {readonly ts.TypeElement[]} members the members of an interface or type literal
  * @param {Map<string, string>} known what each name declared in the same file says
- * @param {Record<string, EXPECTED_ANY>} head keywords the declaration itself carries
- * @returns {Record<string, EXPECTED_ANY>} the object schema they become
+ * @param {Schema} head keywords the declaration itself carries
+ * @returns {Schema} the object schema they become
  */
 const fromMembers = (members, known, head) => {
-	/** @type {Record<string, EXPECTED_ANY>} */
+	/** @type {Record<string, Schema>} */
 	const properties = {};
 	/** @type {string[]} */
 	const required = [];
 	// WHY: an index signature says nothing a schema keyword does not, so what it
 	// holds is read from the `@additionalProperties` tag rather than from it.
-	/** @type {Record<string, EXPECTED_ANY> | boolean | undefined} */
+	/** @type {Schema | boolean | undefined} */
 	let additionalProperties = false;
 	for (const member of members) {
 		if (ts.isIndexSignatureDeclaration(member)) {
@@ -1020,9 +1085,9 @@ const fromMembers = (members, known, head) => {
 		const value = fromTypeNode(member.type, known);
 		// WHY: a member written as a bare reference carries the definition's own
 		// documentation, which the schema states there rather than twice.
-		const echoed =
-			Boolean(value.$ref) &&
-			known.get(readReference(value.$ref).name) === written;
+		const echoed = Boolean(
+			value.$ref && known.get(readReference(value.$ref).name) === written
+		);
 		const description = echoed ? "" : written;
 		const stated = echoed ? {} : fromDocumentationTags(tags);
 		const carries = description !== "" || Object.keys(stated).length > 0;
@@ -1080,9 +1145,7 @@ const declarationsOf = (source) => {
 	 * @returns {void}
 	 */
 	const visit = (node) => {
-		const blocks = /** @type {{ jsDoc?: ts.JSDoc[] }} */ (
-			/** @type {unknown} */ (node)
-		).jsDoc;
+		const blocks = /** @type {DocumentedNode} */ (node).jsDoc;
 		for (const block of blocks || []) {
 			const typedef = /** @type {ts.JSDocTypedefTag | undefined} */ (
 				(block.tags || []).find((tag) => ts.isJSDocTypedefTag(tag))
@@ -1119,11 +1182,11 @@ const declarationsOf = (source) => {
 };
 
 /**
- * @param {Record<string, EXPECTED_ANY>} head keywords the declaration carries
- * @param {Record<string, EXPECTED_ANY>} properties the members it declares
+ * @param {Schema} head keywords the declaration carries
+ * @param {Record<string, Schema>} properties the members it declares
  * @param {string[]} required the members it does not make optional
- * @param {Record<string, EXPECTED_ANY> | boolean | undefined} additionalProperties what else it admits
- * @returns {Record<string, EXPECTED_ANY>} the object schema they are
+ * @param {Schema | boolean | undefined} additionalProperties what else it admits
+ * @returns {Schema} the object schema they are
  */
 const toObjectSchema = (head, properties, required, additionalProperties) => {
 	const stated = head.required;
@@ -1146,11 +1209,11 @@ const toObjectSchema = (head, properties, required, additionalProperties) => {
  * members are `@property` tags rather than an interface's.
  * @param {readonly ts.JSDocPropertyLikeTag[]} propertyTags the `@property` tags
  * @param {Map<string, string>} known what each name declared in the file says
- * @param {Record<string, EXPECTED_ANY>} head keywords the typedef carries
- * @returns {Record<string, EXPECTED_ANY>} the object schema they are
+ * @param {Schema} head keywords the typedef carries
+ * @returns {Schema} the object schema they are
  */
 const fromPropertyTags = (propertyTags, known, head) => {
-	/** @type {Record<string, EXPECTED_ANY>} */
+	/** @type {Record<string, Schema>} */
 	const properties = {};
 	/** @type {string[]} */
 	const required = [];
@@ -1166,9 +1229,9 @@ const fromPropertyTags = (propertyTags, known, head) => {
 		const value = fromTypeNode(node, known);
 		// WHY: a member written as a bare reference carries the definition's own
 		// documentation, which the schema states there rather than twice.
-		const echoed =
-			Boolean(value.$ref) &&
-			known.get(readReference(value.$ref).name) === written;
+		const echoed = Boolean(
+			value.$ref && known.get(readReference(value.$ref).name) === written
+		);
 		const description = echoed ? "" : written;
 		properties[name] = applyTypeOnly({
 			...(description ? { description } : {}),
@@ -1190,17 +1253,17 @@ const fromPropertyTags = (propertyTags, known, head) => {
 /**
  * Drops the `type` a schema would otherwise state, for a node whose `tsType` is
  * there to name the value rather than to validate it.
- * @param {Record<string, EXPECTED_ANY>} schema a node built from a declaration
- * @returns {Record<string, EXPECTED_ANY>} the node the source asked for
+ * @param {Schema} schema a node built from a declaration
+ * @returns {Schema} the node the source asked for
  */
 const applyTypeOnly = (schema) =>
 	schema.typeOnly ? omit(schema, ["type", "typeOnly"]) : schema;
 
 /**
  * A `$ref` takes no siblings, so one that needs a description is wrapped.
- * @param {Record<string, EXPECTED_ANY>} schema the node a member became
+ * @param {Schema} schema the node a member became
  * @param {boolean} described whether it carries a description
- * @returns {Record<string, EXPECTED_ANY>} the node, wrapped where it has to be
+ * @returns {Schema} the node, wrapped where it has to be
  */
 const wrapReference = (schema, described) =>
 	described && schema.$ref && Object.keys(schema).length === 1
@@ -1211,7 +1274,7 @@ const wrapReference = (schema, described) =>
  * Derives a schema from one source file.
  * @param {ts.SourceFile} source the file to read
  * @param {Map<string, string>} schemaOf the schema each module declares, by module
- * @returns {Record<string, EXPECTED_ANY>} the schema it describes
+ * @returns {Schema} the schema it describes
  */
 const typeScriptToSchema = (source, schemaOf = new Map()) => {
 	// WHY: a schema that is nothing but a reference to another one is written as
@@ -1251,11 +1314,11 @@ const typeScriptToSchema = (source, schemaOf = new Map()) => {
 			declaration.description
 		])
 	);
-	/** @type {Record<string, EXPECTED_ANY>} */
+	/** @type {Record<string, Schema>} */
 	const definitions = {};
-	/** @type {Map<string, Record<string, EXPECTED_ANY>>} */
+	/** @type {Map<string, Schema>} */
 	const inlined = new Map();
-	/** @type {Record<string, EXPECTED_ANY> | undefined} */
+	/** @type {Schema | undefined} */
 	let root;
 	/** @type {string} */
 	let rootName = "";
@@ -1291,13 +1354,7 @@ const typeScriptToSchema = (source, schemaOf = new Map()) => {
 				? implementedMembers(type, declaredByName)
 				: undefined;
 		const body = implemented
-			? fromMembers(
-					/** @type {ts.NodeArray<ts.TypeElement>} */ (
-						/** @type {unknown} */ (implemented)
-					),
-					known,
-					keywords
-				)
+			? fromMembers(implemented, known, keywords)
 			: propertyTags
 				? fromPropertyTags(propertyTags, known, keywords)
 				: members
@@ -1348,8 +1405,8 @@ const typeScriptToSchema = (source, schemaOf = new Map()) => {
 			}
 		: { definitions };
 	/**
-	 * @param {Record<string, EXPECTED_ANY>} node a node that may name an inlined type
-	 * @returns {Record<string, EXPECTED_ANY>} what it says once put back
+	 * @param {Schema} node a node that may name an inlined type
+	 * @returns {Schema} what it says once put back
 	 */
 	const substitute = (node) => {
 		// WHY: a reference written with a description of its own is wrapped in a
@@ -1364,7 +1421,7 @@ const typeScriptToSchema = (source, schemaOf = new Map()) => {
 	};
 	/**
 	 * The inlined type a node names, from either place a reference may sit.
-	 * @param {Record<string, EXPECTED_ANY>} node a node being put back
+	 * @param {Schema} node a node being put back
 	 * @returns {string} the name, or the empty string where it names none
 	 */
 	const namedInline = (node) => {
@@ -1384,14 +1441,15 @@ const typeScriptToSchema = (source, schemaOf = new Map()) => {
 	// type, so this is the only place it is caught. It says which name comes back
 	// to itself, where the recursion running out said only how it ended.
 	/**
-	 * @param {unknown} value a schema, or any part of one
+	 * @param {SchemaPart} value a schema, or any part of one
 	 * @param {Set<string>} naming the inlined types this part is written inside
-	 * @returns {unknown} it, with every inlined body put back
+	 * @returns {SchemaPart} it, with every inlined body put back
 	 */
 	const putBack = (value, naming) => {
 		if (Array.isArray(value)) return value.map((one) => putBack(one, naming));
 		if (!isObject(value)) return value;
-		let node = /** @type {Record<string, EXPECTED_ANY>} */ (value);
+		/** @type {Schema} */
+		let node = value;
 		/** @type {string[]} */
 		const entered = [];
 		for (let name = namedInline(node); name !== ""; name = namedInline(node)) {
@@ -1404,17 +1462,18 @@ const typeScriptToSchema = (source, schemaOf = new Map()) => {
 			entered.push(name);
 			node = substitute(node);
 		}
-		/** @type {Record<string, unknown>} */
+		/** @type {SchemaObject} */
 		const walked = {};
 		for (const [keyword, nested] of Object.entries(node)) {
 			if (keyword !== "properties" && keyword !== "definitions") {
 				walked[keyword] = putBack(nested, naming);
 				continue;
 			}
-			/** @type {Record<string, unknown>} */
+			/** @type {SchemaObject} */
 			const inner = {};
+			// `properties` and `definitions` hold schemas by name.
 			for (const [name, schema] of Object.entries(
-				/** @type {Record<string, unknown>} */ (nested)
+				/** @type {Record<string, Schema>} */ (nested)
 			)) {
 				inner[name] = putBack(schema, naming);
 			}
@@ -1426,7 +1485,8 @@ const typeScriptToSchema = (source, schemaOf = new Map()) => {
 		return walked;
 	};
 	const resolved = putBack(document, new Set());
-	return /** @type {Record<string, EXPECTED_ANY>} */ (resolved);
+	// Putting back what a document holds answers a document.
+	return /** @type {Schema} */ (resolved);
 };
 
 // #endregion
@@ -1440,12 +1500,15 @@ const typeScriptToSchema = (source, schemaOf = new Map()) => {
  * @returns {string} the text, with every relative specifier re-pointed
  */
 const repointImports = (text, fromDirectory, toDirectory) =>
-	text.replace(IMPORT_SPECIFIER_REGEXP, (whole, held, specifier) => {
-		if (!specifier.startsWith(".")) return whole;
-		const target = path.resolve(fromDirectory, specifier);
-		const next = path.relative(toDirectory, target).split(path.sep).join("/");
-		return `import(${held}${next.startsWith(".") ? next : `./${next}`}${held})`;
-	});
+	text.replace(
+		IMPORT_SPECIFIER_REGEXP,
+		(whole, /** @type {string} */ held, /** @type {string} */ specifier) => {
+			if (!specifier.startsWith(".")) return whole;
+			const target = path.resolve(fromDirectory, specifier);
+			const next = path.relative(toDirectory, target).split(path.sep).join("/");
+			return `import(${held}${next.startsWith(".") ? next : `./${next}`}${held})`;
+		}
+	);
 
 /**
  * @param {string} filePath the file the text is written to
@@ -1567,7 +1630,7 @@ const main = async () => {
 		])
 	);
 	const published = findPublishedSchemas();
-	/** @type {Map<string, Record<string, EXPECTED_ANY>>} */
+	/** @type {Map<string, Schema>} */
 	const referenced = new Map();
 	for (const schemaFile of schemaFiles) {
 		const name = path
@@ -1613,11 +1676,13 @@ const main = async () => {
 	/**
 	 * Holds one derived schema against the committed one.
 	 * @param {string} schemaFile the committed schema
-	 * @param {Record<string, EXPECTED_ANY>} generated what its source derives
+	 * @param {SchemaPart} generated what its source derives
 	 * @returns {Promise<void>} once it has been reported, and written when asked
 	 */
 	const hold = async (schemaFile, generated) => {
-		const committed = JSON.parse(fs.readFileSync(schemaFile, "utf8"));
+		const committed = /** @type {Schema} */ (
+			JSON.parse(fs.readFileSync(schemaFile, "utf8"))
+		);
 		const name = path.relative(SCHEMAS_DIRECTORY, schemaFile);
 		if (!deepEqual(committed, generated)) {
 			const differences = findDifferences(committed, generated);
@@ -1649,22 +1714,20 @@ const main = async () => {
 	for (const [target, schemaFile] of sourceOf) {
 		const source = /** @type {ts.SourceFile} */ (parseFile(target));
 		const name = path.relative(SCHEMAS_DIRECTORY, schemaFile);
-		/** @type {Record<string, EXPECTED_ANY>} */
+		/** @type {SchemaPart} */
 		let generated;
 		try {
-			generated = /** @type {Record<string, EXPECTED_ANY>} */ (
-				walkSchema(typeScriptToSchema(source, schemaOf), (node) =>
-					typeof node.tsType === "string"
-						? {
-								...node,
-								tsType: repointImports(
-									node.tsType,
-									path.dirname(target),
-									path.dirname(schemaFile)
-								)
-							}
-						: node
-				)
+			generated = walkSchema(typeScriptToSchema(source, schemaOf), (node) =>
+				typeof node.tsType === "string"
+					? {
+							...node,
+							tsType: repointImports(
+								node.tsType,
+								path.dirname(target),
+								path.dirname(schemaFile)
+							)
+						}
+					: node
 			);
 		} catch (err) {
 			failures.push(`${name}: ${/** @type {Error} */ (err).message}`);
@@ -1696,7 +1759,7 @@ const main = async () => {
 	process.exitCode = failures.length > 0 ? 1 : 0;
 };
 
-main().catch((err) => {
+main().catch((/** @type {ThrownValue} */ err) => {
 	console.error(err);
 	process.exitCode = 1;
 });
