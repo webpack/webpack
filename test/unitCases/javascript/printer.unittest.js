@@ -1704,6 +1704,8 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// ECMAScript 5 reads no binary or octal string, which the build's engine would.
 			["x=[Number(\"0b1\"),Math.abs(\" 0O7\"),Number(\"0x1\")]", { compress: { toplevel: false, builtinsEcma: 5 } }, "x=[Number(\"0b1\"),Math.abs(\" 0O7\"),1];"],
 			["x=[Number(\"0b1\"),Math.abs(\" 0O7\")]", { compress: { toplevel: false, builtinsEcma: 2015 } }, "x=[1,7];"],
+			["x=[Number(+\"0b1\"),-\"0o7\",\"0b1\"*1,\"0b1\"===\"0b1\",typeof \"0b1\",!\"0b1\"]", { compress: { toplevel: false, builtinsEcma: 5 } }, "x=[Number(+\"0b1\"),-\"0o7\",\"0b1\"*1,!0,\"string\",!1];"],
+			["x=[Number(+\"0b1\"),-\"0o7\",\"0b1\"*1]", { compress: { toplevel: false, builtinsEcma: 2015 } }, "x=[1,-7,1];"],
 			// Not given, it is the compressor's `ecma`: an engine running that syntax has the built-ins too.
 			["x=[\"ab\".padStart(3),Math.sign(-2),\"x\".repeat(2)]", { compress: { toplevel: false, ecma: 2015 } }, "x=[\"ab\".padStart(3),-1,\"xx\"];"],
 			["x=[\"ab\".padStart(3),Math.sign(-2),\"x\".repeat(2)]", { compress: { toplevel: false, ecma: 2020, builtinsEcma: 5 } }, "x=[\"ab\".padStart(3),Math.sign(-2),\"x\".repeat(2)];"],
