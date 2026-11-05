@@ -1186,6 +1186,8 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["String.prototype.concat=f;x=\"a\".concat(b)", {}, "String.prototype.concat=f,x=\"a\".concat(b);"],
 			// What reading throws no more than `typeof` compares to `void 0`, but a name no declaration binds.
 			["function f(a){return[typeof a==\"undefined\",\"undefined\"!==typeof a.b,typeof g()!=\"undefined\",typeof c>\"u\"]}", {}, "function f(e){return[e===void 0,e.b!==void 0,g()!==void 0,typeof c>\"u\"]}"],
+			// Past `typeof o=="object"`, `o` is an object or `null`, so `null` only where falsy.
+			["function f(o,p){if(typeof o==\"object\"&&o!==null)g();return[typeof o===\"object\"&&null!=o,typeof o!=\"object\"||o===null,typeof o==\"object\"&&p!==null,typeof o==\"function\"&&o!==null]}", {}, "function f(o,t){if(\"object\"==typeof o&&o)g();return[\"object\"==typeof o&&!!o,\"object\"!=typeof o||!o,\"object\"==typeof o&&t!==null,\"function\"==typeof o&&o!==null]}"],
 			// A sequence left one item where any expression stands bare drops its parentheses, but where it names a function.
 			["x=(3,6);let y=(2,a[b]);f((1,2),...(0,c));z=[(1,()=>1)];w={a:(1,b?c:d),[(1,e)]:1,b:(1,()=>1),c:(1,class{})};v=`${(1,a)}`;u=(1,()=>1);for(var t=(1,a in b);;);", {}, "x=6;let y=a[b];f(2,...c),z=[()=>1],w={a:b?c:d,[e]:1,b:(1,()=>1),c:(1,class{})},v=`${a}`,u=(1,()=>1);for(var t=(1,a in b);;);"],
 			// A number too big for a double is no name: a binding named `Infinity` does not read it.
