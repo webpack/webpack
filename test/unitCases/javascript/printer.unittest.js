@@ -5253,6 +5253,17 @@ describe("one-pass minify of statement sequences", () => {
 		expect(runProgram(code)).toBe(runProgram(source));
 	});
 
+	it("should fold a `delete` of a conditional whose test is known and branch runs nothing", () => {
+		// A branch reading a member or calling stays.
+		const source =
+			'var o={p:1};function y(){console.log("y")}console.log(delete(1?void 0:x),delete(0?x:void 0),delete(1?2:x),delete(1?o.p:2),o.p,delete(1?y():2))';
+		const { code } = minifyOnePass(source, { compress: {}, mangle: {} });
+		expect(code).toBe(
+			'var o={p:1};function y(){console.log("y")}console.log(!0,!0,!0,delete(0,o.p),o.p,delete y());'
+		);
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
 	it("should fold a `delete` of the global `undefined`, `NaN` or `Infinity` to `false`", () => {
 		const cases = [
 			["console.log(delete undefined,delete NaN,delete Infinity)", "console.log(!1,!1,!1);"],
