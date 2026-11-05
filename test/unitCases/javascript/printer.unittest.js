@@ -789,7 +789,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			[
 				"function f(a){ var m = 1; if (!1) m = a; if (0) { var v = 1 } if (false) { function q(){} q() } const D = false; if (D) g(); if (!1) x(); else y(); if (0) x(/*! c */ 1); return m + v }",
 				{},
-				"function f(f){var i=1;if(0)var a=1;if(0){function n(){}n()}y();if(0)x(/*! c */1);return i+a}"
+				"function f(f){var i=1;var a;if(0){function n(){}n()}y();if(0)x(/*! c */1);return i+a}"
 			],
 			[
 				"function f(a){ if (0) x() }",
@@ -1191,6 +1191,8 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// Nobody reading it, a string added keeps only the other side's conversion, and a template one for each run.
 			["\"prefix\"+f();g()+\"suffix\";\"\"+h();\"a\"+1;`a${b}c${d}e`;`${a=1}${b}`", {}, "\"\"+f(),g()+\"\",\"\"+h(),`${b}${d}`,a=1,`${b}`;"],
 			["v=function(a,b){\"a\"+ +b;\"a\"+ ++b;b+++\"a\"}", {}, "v=function(a,b){\"\"+ +b,\"\"+ ++b,b+++\"\"};"],
+			// A branch a known test drops declares its `var`s still, without their values, each named apart.
+			["function f(){if(0){var a=1}else{var b=2}return[a,b]}function g(){if(1)h();else{var c=h(),[d,{e:k=1}]=[2]}return[c,d,k]}", {}, "function f(){var r=2;var e;return[e,r]}function g(){h();var e,r,n;return[e,r,n]}"],
 			// A sequence left one item where any expression stands bare drops its parentheses, but where it names a function.
 			["x=(3,6);let y=(2,a[b]);f((1,2),...(0,c));z=[(1,()=>1)];w={a:(1,b?c:d),[(1,e)]:1,b:(1,()=>1),c:(1,class{})};v=`${(1,a)}`;u=(1,()=>1);for(var t=(1,a in b);;);", {}, "x=6;let y=a[b];f(2,...c),z=[()=>1],w={a:b?c:d,[e]:1,b:(1,()=>1),c:(1,class{})},v=`${a}`,u=(1,()=>1);for(var t=(1,a in b);;);"],
 			// A number too big for a double is no name: a binding named `Infinity` does not read it.
@@ -1546,7 +1548,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["!(x===undefined);!(typeof x()===\"undefined\");x===void 0;a()===b;a===b();f(a===b,c());g(),a()!==b(),h();x==void 0;({}).a===b();({}).a===b", {}, "x,typeof x(),x,a(),b,a,b(),f(a===b,c()),g(),a(),b(),h(),x==null,b(),b;"],
 			// `x["length"]` folds as `x.length` does; an `else if` known false goes, one known true prints its branch.
 			["use(\"abc\"[\"length\"]);use([1,2,3][\"length\"]);use([,,1][\"length\"]);use(/a/[\"source\"]);use(\"a\"[\"x\"]);use(\"a\"[0]);use(a?.[\"length\"]);delete\"ab\"[\"length\"]", {}, "use(3),use(3),use(3),use(\"a\"),use(\"a\".x),use(\"a\"),use(a?.length),delete\"ab\".length;"],
-			["if(xxx){foo}else if(false){bar};if(xxx){foo}else if(false){bar}else{baz};if(xxx){foo}else if(true){bar}else if(false){baz};if(x)a();else if(0){var q=1}", {}, "if(xxx)foo;if(xxx)foo;else baz;if(xxx)foo;else bar;if(x)a();else if(0)var q=1;"],
+			["if(xxx){foo}else if(false){bar};if(xxx){foo}else if(false){bar}else{baz};if(xxx){foo}else if(true){bar}else if(false){baz};if(x)a();else if(0){var q=1}", {}, "if(xxx)foo;if(xxx)foo;else baz;if(xxx)foo;else bar;if(x)a();else var q;"],
 			// A part in parentheses, after a hole, prints what it holds.
 			["function f(p3){([,(b+1)],g());({a:(h())});[(k()),,(m())]}", { mangle: false }, "function f(p3){b+1,g(),h(),k(),m()}"],
 			// What a logical nobody reads holds is read for its truth; a conditional printing as `!t` or `!!t` takes what a unary takes.
