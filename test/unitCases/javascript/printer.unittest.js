@@ -5468,6 +5468,17 @@ describe("one-pass minify of statement sequences", () => {
 		expect(runProgram(code)).toBe(runProgram(source));
 	});
 
+	it("should print `false` where no unary may stand as `(!1)`, and `true` constructed as `(!0)`", () => {
+		// `true` read as an object or called is as long either way.
+		const source =
+			'try{new true}catch(e){console.log(e.name)}try{new false}catch(e){console.log(e.name)}console.log(false.a,true.a,false**2,[false][0]);try{false()}catch(e){console.log(e.name)}try{false`t`}catch(e){console.log(e.name)}';
+		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+		expect(code).toBe(
+			"try{new(!0)}catch(e){console.log(e.name)}try{new(!1)}catch(e){console.log(e.name)}console.log((!1).a,true.a,0,!1);try{(!1)()}catch(e){console.log(e.name)}try{(!1)`t`}catch(e){console.log(e.name)}"
+		);
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
 	it("should print the global `undefined` read as an object, callee or tag as `(void 0)`", () => {
 		// One a scope declares, or `delete` reads, stays.
 		const source =
