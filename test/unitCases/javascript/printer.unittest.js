@@ -1548,6 +1548,8 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["!x.y;!x?.y;typeof x.y;typeof x;delete x.y.z();delete x.y;delete x;delete(0,x);!function(){g()}();!(a==b);f(),!(a<b),g();void(a=b);!({}.a+1);foo()?1:2;foo()?1:bar();foo()?bar():2;(a,b)?1:c();a??b?1:c();x=foo()?1:2;c?1:a=b;c?1:(d,e);c?d:1", {}, "x.y,x?.y,x.y,x.y.z(),delete x.y,delete x,0,x,g(),a==b,f(),a<b,g(),a=b,!({}.a+1),foo(),foo()||bar(),foo()&&bar(),(a,b)||c(),(a??b)||c(),x=foo()?1:2,c||(a=b),c||(d,e),c&&d;"],
 			["([a]);([foo()]);[4,...c,a];({a:foo()});({foo:{foo:foo()}});({[bar()]:foo()});({a:1,b:g(),c:h()});x=[a(),b()];({a(){},b:g()});({get a(){},b:g()});[,a(),,b()];({b});x=({a:f()},1);({a:function(){}()}.x)", {}, "a,foo(),[...c,a],foo(),foo();({[bar()]:foo()});g(),h(),x=[a(),b()],g();({get a(){},b:g()});a(),b(),b,x=(f(),1);"],
 			["x==null&&y", {"ecma": 2019}, "x==null&&y;"],
+			// A `concat` whose pieces would join as a substitution or an octal escape stays a call.
+			["x=y?\"a$\".concat(\"{b}\",z):0;x=y?\"\\0\".concat(1,z):0;x=y?\"a$\".concat(\"\",\"{b}\",z):0", {"ecma": 2020}, "x=y?\"a$\".concat(\"{b}\",z):0,x=y?\"\\0\".concat(1,z):0,x=y?\"a$\".concat(\"\",\"{b}\",z):0;"],
 			["void {a:g()}.b;typeof function(){return g()}().x;delete {a:g()}.b.c()", {}, "({a:g()}.b),g().x,({a:g()}.b.c());"],
 			["x==null&&y;x!=null||y;a==null&&(a=b);null==x&&g();o.y!=null||(o={},o.y=3);x===null&&y;x==null&&(y||z);z=x==null&&y;f()==null&&y;x==null&&!y;x==null&&new Y;x==null&&a+b", {"ecma": 2020}, "x??y,x??y,a??(a=b),x??g(),o.y??(o={},o.y=3),x===null&&y,x==null&&(y||z),z=x==null&&y,f()==null&&y,x??y,x??new Y,x??a+b;"],
 			// An operand of `&&` or `||` whose truth alone is read is read for its truth too; a strict equality nobody reads runs only its sides.
@@ -3422,6 +3424,10 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["function x(){if(c){k();return 1}else{h();return 2}}function y(){if(c){k();return function(){if(a)b()}}else if(d){k();return 3}else g()}", "function x(){if(c)return k(),1;return h(),2}function y(){if(c)return k(),function(){if(a)b()};if(d)return k(),3;g()}"],
 			["function f(v){if(v===void 0)return;if(c())return v;return d(v)}function g(x){if(x){a();if(b)return 1;return 2}}", "function f(r){if(r!==void 0)return c()?r:d(r)}function g(r){if(r)return a(),b?1:2}"],
 			["for(;;){if(a){{f()}}}if(a){{b()}}else d();if(a){{if(b)c()}}else d()", "for(;;)if(a)f();if(a)b();else d();if(a){if(b)c()}else d();"],
+			// A sequence left of one item still calls as a value, an unread operand keeps its parentheses, and a hoisted assignment its head.
+			["function f(a){var x=(0,a.b);x()}function g(s){var e=(0,eval);e(s)}", "function f(a){(0,a.b)()}function g(a){(0,eval)(a)}"],
+			["a&&void(x(),y());a?void(x(),y()):b();a&&!(x=1);a?!(x=1,2):b();a&&(()=>{x();y()})()", "a&&(x(),y()),a?(x(),y()):b(),a&&(x=1),a?(x=1,2):b(),a&&(()=>{x(),y()})();"],
+			["function f(a){x()&&0?a=1:a=2;return a}", "function f(a){return a=x()&&0?1:2,a}"],
 			["(()=>{g()})();h()", "g(),h();"]
 		]) {
 			expect(print(source, { module: false })).toBe(expected);
