@@ -1870,7 +1870,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			["({}.x.y(),b)+c;(class{}.x(),b)+c", {}, "({}).x.y(),b+c;(class{}).x(),b+c;"],
 			// The callee `Object(f)` is `f`; a member keeps no `this`, and `with` or `eval` may reach a name.
 			["Object(f)(1,2);Object(a.b)(x);Object(a[b])`x`;function k(f){Object(f)(1)}", {}, "f(1,2),(0,a.b)(x),(0,a[b])`x`;function k(b){b(1)}"],
-			["Object(a.b)?.(x);Object(a?.b)(x);new(Object(a.b))(x);Object(f())(1);Object(...f)(1);Object(f,g)(1);x=Object(f).y;Object(f)", {}, "Object(a.b)?.(x),Object(a?.b)(x),new(Object(a.b))(x),Object(f())(1),Object(...f)(1),Object(f,g)(1),x=Object(f).y,Object(f);"],
+			["Object(a.b)?.(x);Object(a?.b)(x);new(Object(a.b))(x);Object(f())(1);Object(...f)(1);Object(f,g)(1);x=Object(f).y;Object(f)", {}, "Object(a.b)?.(x),Object(a?.b)(x),new(Object(a.b))(x),Object(f())(1),Object(...f)(1),Object(f,g)(1),x=Object(f).y,f;"],
 			["function f(a){var x=g();(a,x)+c}function k(a){var x=a.b;Object(x)(1)}Object(1e999)(1)", {}, "function f(a){(a,g())+c}function k(a){Object(a.b)(1)}Object(Infinity)(1);"],
 			["var Object;Object(f)(1)", {}, "var Object;Object(f)(1);"],
 			["with(o)Object(f)(x)", {}, "with(o)Object(f)(x);"],
@@ -2396,7 +2396,7 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 			// `Boolean(x)` is `!!x`, or `x` where that is a boolean already.
 			[
 				"a=Boolean(b);f(Boolean(!b));x={k:Boolean(b?c>0:c<0)};y=[Boolean((b|+c)!==0)];function g(){return Boolean(b in c)}var z=Boolean(b?!0:!1);Boolean(b?1:!1);u=[Boolean(c?true:false),Boolean(delete b.c),Boolean((b>1))]",
-				"a=!!b,f(!b),x={k:b?c>0:c<0},y=[(b|+c)!==0];function g(){return b in c}var z=!!b;b?1:!1,u=[!!c,delete b.c,b>1];"
+				"a=!!b,f(!b),x={k:b?c>0:c<0},y=[(b|+c)!=0];function g(){return b in c}var z=!!b;b?1:!1,u=[!!c,delete b.c,b>1];"
 			],
 			// Anywhere else, with no lone argument, spread, optional, replaced or shadowed, it stays.
 			[
