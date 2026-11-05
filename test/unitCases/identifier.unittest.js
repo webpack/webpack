@@ -29,6 +29,22 @@ describe("util/identifier", () => {
 		});
 	});
 
+	describe("escapeUrlRequest", () => {
+		/** @type {[string, string, string][]} */
+		const cases = [
+			["!./a.js!./b.svg", "/project", "\0!./a.js\0!./b.svg"],
+			["-!./a.js!./b.svg", "/project", "-\0!./a.js\0!./b.svg"],
+			["./a\0!b.svg", "/project", "./a\0!b.svg"],
+			["./b.svg", "/project", "./b.svg"],
+			["data:text/plain,a!b", "/project", "data:text/plain,a!b"],
+			["./a!b.svg", "https://example.com/dir/", "./a!b.svg"]
+		];
+
+		it.each(cases)("escapes %s in %s", (url, context, expected) => {
+			expect(identifierUtil.escapeUrlRequest(url, context)).toBe(expected);
+		});
+	});
+
 	describe("contextifySourceUrl", () => {
 		/** @type {[string, string, string][]} */
 		const cases = [
