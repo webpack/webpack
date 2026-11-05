@@ -5253,6 +5253,17 @@ describe("one-pass minify of statement sequences", () => {
 		expect(runProgram(code)).toBe(runProgram(source));
 	});
 
+	it("should print a folded `switch` bare in a block keeping its braces", () => {
+		// A block that may lose its braces keeps the `switch`'s.
+		const source =
+			'function x(){console.log("x")}function y(){console.log("y")}function f(a){O:{x();switch(1){case 1:x();if(a)break O;y()}}try{switch(1){case 1:x();if(a)return;y()}}finally{}if(a){switch(1){case 1:x();if(a)return;y()}}}f(0);f(1)';
+		const { code } = minifyOnePass(source, { compress: {}, mangle: {} });
+		expect(code).toBe(
+			'function x(){console.log("x")}function y(){console.log("y")}function f(c){c:{x();x();if(c)break c;y()}x();if(c)return;y();if(c){x();if(c)return;y()}}f(0),f(1);'
+		);
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
 	it("should print a `do` loop forever as `for(;;)` with its body unbraced", () => {
 		// A body leaving the loop, or a test not known, keeps the `do`'s braces.
 		const source =
