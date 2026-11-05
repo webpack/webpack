@@ -27,7 +27,11 @@ const config = {
 				exclude: /(raw-to-string|raw-to-uint8-array)\.md/,
 				type: "html",
 				parser: {
-					// Runs before the HTML is parsed for dependencies
+					/**
+					 * Runs before the HTML is parsed for dependencies
+					 * @param {string} source the Markdown source
+					 * @returns {string} the HTML it converts to
+					 */
 					template: (source) => String(markdownToHtml.processSync(source)),
 					// The result is a fragment, not a full document
 					as: "template"
