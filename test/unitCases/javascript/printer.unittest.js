@@ -5502,6 +5502,13 @@ describe("one-pass minify of statement sequences", () => {
 		expect(runProgram(code)).toBe(runProgram(source));
 	});
 
+	it("should keep a property read of the global `undefined`, which throws", () => {
+		const source = "console.log(1);undefined.a;console.log(2)";
+		const { code } = minifyOnePass(source, { compress: {}, mangle: false });
+		expect(code).toBe("console.log(1),(void 0).a,console.log(2);");
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
 	it("should fold a `delete` of a conditional whose test is known and branch runs nothing", () => {
 		// A branch reading a member or calling stays.
 		const source =
